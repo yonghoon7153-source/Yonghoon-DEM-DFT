@@ -460,6 +460,117 @@ def pore_tau(sid, vox, z_top_um, extra_solid_pts=None, box_lo=(0.0, 0.0, 0.0)):
     return out
 
 
+def pore_pnm(sid, vox, z_top_um, extra_solid_pts=None, box_lo=(0.0, 0.0, 0.0)):
+    """A13 — pore-network TOPOLOGY descriptors (nearest-seed pore-body partition; A6 확장).
+
+    Same crop + PTFE-stamp preamble as pore_tau (conventions inherited), then:
+      • EDT(pore) → plateau maxima (3³ max-filter, dist>1 voxel) = pore-body seeds →
+        `ndimage.watershed_ift` basin partition (solid = background).
+      • per-body: volume → equivalent radius r_eq = (3V/4π)^⅓ [µm].
+      • throats: face-adjacent voxel pairs with different body labels → pore-CN (degree),
+        n_throats, throat equivalent radius √(A_face/π) (voxel-resolution floor = vox).
+      • closed_from_top_pct: pore volume in components NOT reaching the top layer
+        (separator side = the open exterior; the bottom is the collector plate = sealed).
+        This is the gas/liquid-infiltration closure axis (#286 yoo2026) — DIFFERENT from
+        A6 eps_connected (both-plate percolation for the D_eff solve).
+
+    Honest limits: EDT-plateau seeding over-segments long ridges (fine-grained bodies —
+    distributions are the robust readout, single n_pores is marker-sensitive); throat area
+    is a voxel face count (0.4 µm floor, sub-voxel constriction unresolved — same caveat
+    as STEP3 σ).  Thin-pore fallback (no seed with dist>1): connected components become the
+    bodies (n_throats=0, flagged).  STRUCTURAL descriptor only — NOT a transport input
+    (same audit-#2 non-substitution rule as pore_tau)."""
+    if z_top_um is None or float(z_top_um) <= 0.0:
+        raise ValueError('pore_pnm requires z_top_um > 0 (same crop rule as pore_tau)')
+    s = np.asarray(sid)
+    nzc = int(np.floor(float(z_top_um) / vox + 0.5))
+    nzc = max(2, min(s.shape[2], nzc))
+    s = s[:, :, :nzc].copy()
+    if extra_solid_pts is not None and len(extra_solid_pts):
+        ijk = np.floor((np.asarray(extra_solid_pts, np.float64) - np.asarray(box_lo, np.float64))
+                       / vox).astype(int)
+        ok = ((ijk >= 0) & (ijk < np.array(s.shape))).all(1)
+        ijk = ijk[ok]
+        s[ijk[:, 0], ijk[:, 1], ijk[:, 2]] = 7
+    pore = (s == 0)
+    if not pore.any():
+        return {'reason': 'no_void', 'n_pores': 0}
+
+    # closed-from-top (component level — watershed 무관, 먼저 계산)
+    lab_c, _n_c = ndimage.label(pore)                       # 6-conn = face graph
+    top_ids = np.unique(lab_c[:, :, nzc - 1])
+    top_ids = top_ids[top_ids > 0]
+    v_all = float(pore.sum())
+    v_open = float(np.isin(lab_c, top_ids).sum()) if len(top_ids) else 0.0
+    closed_pct = 100.0 * (1.0 - v_open / max(v_all, 1.0))
+
+    dist = ndimage.distance_transform_edt(pore)
+    mx = ndimage.maximum_filter(dist, size=3)
+    peaks = pore & (dist >= mx) & (dist > 1.0)              # >1 voxel: 1-voxel skin/line은 seed 아님
+    mark, n_seed = ndimage.label(peaks)
+    fallback = n_seed == 0
+    if fallback:                                            # ultra-thin pore망: 성분=바디로
+        lab = lab_c
+        n_bodies = int(lab.max())
+    else:
+        # 최근접-seed 파티션 (SNOW-lite): pore 복셀을 유클리드-최근접 seed에 귀속.
+        # ⚠ scipy watershed_ift는 이 용도에 부적합 확인(selftest dumbbell 734/7 오분할 —
+        # IFT plateau/큐-순서 quirk) → 결정적 nearest-seed로 교체 (371/370, r_eq 2.23µm 정답).
+        # 한계(정직): 직선-거리 metric이라 오목 기공에서 seed-Voronoi 경계가 벽을 가로질러
+        # 그릴 수 있음 — throat 집계는 pore-내부 면만 세므로 가짜 인접은 제한적, 분포 판독 권장.
+        _, idx = ndimage.distance_transform_edt(mark == 0, return_indices=True)
+        lab = np.where(pore, mark[idx[0], idx[1], idx[2]], 0)
+        n_bodies = int(len(np.unique(lab)) - (1 if (lab == 0).any() else 0))
+    cnt = np.bincount(lab.ravel().astype(np.int64))
+    if cnt.size:
+        cnt[0] = 0
+    ids = np.nonzero(cnt)[0]
+    vol_um3 = cnt[ids] * (vox ** 3)
+    r_eq = (3.0 * vol_um3 / (4.0 * np.pi)) ** (1.0 / 3.0)
+
+    pairs = {}
+    if not fallback:
+        W = int(lab.max()) + 1
+        for ax in range(3):
+            sa = [slice(None)] * 3
+            sb = [slice(None)] * 3
+            sa[ax] = slice(0, -1)
+            sb[ax] = slice(1, None)
+            la = lab[tuple(sa)].ravel()
+            lb = lab[tuple(sb)].ravel()
+            m = (la > 0) & (lb > 0) & (la != lb)
+            if m.any():
+                lo = np.minimum(la[m], lb[m]).astype(np.int64)
+                hi = np.maximum(la[m], lb[m]).astype(np.int64)
+                key, c = np.unique(lo * W + hi, return_counts=True)
+                for k, cc in zip(key, c):
+                    pairs[int(k)] = pairs.get(int(k), 0) + int(cc)
+        deg = np.zeros(W, np.int32)
+        for k in pairs:
+            deg[k // W] += 1
+            deg[k % W] += 1
+        cn = deg[ids]
+    else:
+        cn = np.zeros(len(ids), np.int32)
+    throat_r = (np.sqrt(np.array(list(pairs.values()), float) * vox * vox / np.pi)
+                if pairs else np.array([]))
+
+    def _st(v, f=3):
+        return {} if not len(v) else {
+            'mean': float(f'{np.mean(v):.{f}g}'), 'med': float(f'{np.median(v):.{f}g}'),
+            'p90': float(f'{np.percentile(v, 90):.{f}g}'), 'max': float(f'{np.max(v):.{f}g}')}
+    out = {'n_pores': int(n_bodies), 'n_throats': int(len(pairs)),
+           'r_eq_um': _st(r_eq), 'pore_cn': _st(cn.astype(float), 3),
+           'closed_from_top_pct': round(closed_pct, 2),
+           'trust': 'STRUCTURAL PNM (nearest-seed partition, EDT-plateau seed) — 분포가 robust 판독; '
+                    'n_pores는 marker-민감, throat=face-count(vox 하한).  수송 폼 대입 금지(A6 동일)'}
+    if len(throat_r):
+        out['throat_r_eq_um'] = _st(throat_r)
+    if fallback:
+        out['fallback'] = 'components (no EDT>1 seed — ultra-thin pore)'
+    return out
+
+
 def solve_reaction_current(sid, sig_e_of_sid, sig_i_of_sid, pid, n_am, vox, gct_code,
                            z_top_um=None, z_bot_um=None):
     """STEP4-v1 — 저율·균일-SOC 갈바노스타틱 **반응전류 분포** (랩 slide-20 물리, 선형화 BV).
@@ -726,6 +837,55 @@ def _selftest_pore():
     return 0 if ok else 1
 
 
+def _selftest_pnm():
+    """A13 pore-PNM analytic checks — dumbbell 2-body/1-throat, sealed closure, thin fallback."""
+    ok = True
+    # 1) dumbbell: 두 구형 기공(r=4.4vox) + 1-voxel 목(neck) — 밀봉 박스 → n_pores=2, n_throats=1,
+    #    CN mean=1, closed_from_top=100%
+    n = (40, 20, 20)
+    sid = np.ones(n, np.int8)
+    zz = np.indices(n).astype(float)
+    for cx in (10.0, 30.0):
+        m = ((zz[0] - cx) ** 2 + (zz[1] - 10.0) ** 2 + (zz[2] - 10.0) ** 2) <= 4.4 ** 2
+        sid[m] = 0
+    sid[10:31, 10, 10] = 0                                   # 1-voxel neck (dist=1 → seed 아님)
+    r = pore_pnm(sid, 0.5, z_top_um=10.0)
+    e = (r['n_pores'] == 2 and r['n_throats'] == 1
+         and abs(r['pore_cn']['mean'] - 1.0) < 1e-9 and r['closed_from_top_pct'] == 100.0)
+    ok &= e
+    print(f"dumbbell: n_pores={r['n_pores']} throats={r['n_throats']} CN={r['pore_cn'].get('mean')} "
+          f"closed={r['closed_from_top_pct']}%  (expect 2/1/1.0/100)  {'OK' if e else 'FAIL'}")
+    # r_eq sanity: 구 r=4.4vox=2.2µm에 목 절반씩 → 등가반경 ≈2.2µm ±20%
+    e = abs(r['r_eq_um']['med'] - 2.2) / 2.2 < 0.2
+    ok &= e
+    print(f"r_eq:     med={r['r_eq_um']['med']}µm  (expect ≈2.2 ±20%)  {'OK' if e else 'FAIL'}")
+    # 2) 위-열린 직선 채널 (2×2, 전체 관통) — ultra-thin → fallback=components, closed 0%
+    sid = np.ones((6, 6, 10), np.int8)
+    sid[2:4, 2:4, :] = 0
+    r = pore_pnm(sid, 0.5, z_top_um=5.0)
+    e = r['n_pores'] == 1 and r['closed_from_top_pct'] == 0.0 and 'fallback' in r
+    ok &= e
+    print(f"channel:  n_pores={r['n_pores']} closed={r['closed_from_top_pct']}% fallback={'Y' if 'fallback' in r else 'N'}"
+          f"  (expect 1/0/Y)  {'OK' if e else 'FAIL'}")
+    # 3) 열린 채널 + 밀봉 구 공존 → closed% = 구 부피 몫 (0<closed<100)
+    sid = np.ones((20, 20, 12), np.int8)
+    sid[2:4, 2:4, :] = 0
+    m = ((zz[0][:20, :20, :12] - 12.0) ** 2 + (zz[1][:20, :20, :12] - 12.0) ** 2
+         + (zz[2][:20, :20, :12] - 5.0) ** 2) <= 3.4 ** 2
+    sid[m] = 0
+    r = pore_pnm(sid, 0.5, z_top_um=6.0)
+    e = 0.0 < r['closed_from_top_pct'] < 100.0
+    ok &= e
+    print(f"mixed:    closed={r['closed_from_top_pct']}%  (expect 0<x<100)  {'OK' if e else 'FAIL'}")
+    # 4) no void → reason
+    r = pore_pnm(np.ones((4, 4, 6), np.int8), 0.5, z_top_um=3.0)
+    e = r.get('reason') == 'no_void'
+    ok &= e
+    print(f"no-void:  reason={r.get('reason')}  {'OK' if e else 'FAIL'}")
+    print('PNM SELFTEST', 'PASS' if ok else 'FAIL')
+    return 0 if ok else 1
+
+
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--selftest', action='store_true', help='run the analytic laminate/percolation checks')
@@ -733,6 +893,8 @@ if __name__ == '__main__':
                     help='STEP4 sandwich analytic (series-R total current + uniform per-particle i + KCL)')
     ap.add_argument('--selftest-pore', action='store_true',
                     help='A6 pore-τ analytic checks (crop / PTFE stamp / TauFactor convention)')
+    ap.add_argument('--selftest-pnm', action='store_true',
+                    help='A13 pore-PNM checks (dumbbell 2-body/1-throat / closure / thin fallback)')
     ap.add_argument('--integration', action='store_true',
                     help='run the committed real14 integration probe (AM-only vs +300 synthetic VGCF, '
                          'seed 0, vox 0.4) — reproduces the review-anchored numbers + monotonicity')
@@ -743,6 +905,8 @@ if __name__ == '__main__':
         sys.exit(_selftest_rxn())
     if a.selftest_pore:
         sys.exit(_selftest_pore())
+    if a.selftest_pnm:
+        sys.exit(_selftest_pnm())
     if a.integration:
         import os
         _csv = os.path.join(os.path.dirname(__file__), '..', 'docs/data/real14_am_scaffold.csv')

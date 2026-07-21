@@ -267,3 +267,16 @@ liggghts porosity targeting").
 build, per-point pvol (coarse rigid-AM), MLS-MPM J2 return map, servo (descend + arm-guard
 [off for scaffold] + bidirectional / hold), wallP reaction, `porosity@target`, thickness
 (µm), per-type AM coverage.  Morphology viz: `scripts/viz_mpm_morphology.py`.
+
+## ★ 시간축 분업 명문화 — 압밀 vs 사이클 (A10 첫 스텝, 2026-07-21)
+
+우리 MPM은 **압밀(제조) 시간축**의 소성 모델이다: von Mises **J2**(등체적 전단 흐름) + 소성
+void-fill — 300 MPa 프레스 1회의 형상변화·다짐을 담당하고 여기서 검증됐다(Minnmann/SEM/real_14).
+**사이클(운전) 시간축의 열화는 다른 물리다**: 충방전 부피변화(ε_d = Ω/3·Δc_Li, NCA ~5.9%/NMC811
+~12.5% swing)가 **cohesive-zone(CZM) 입계/계면 박리**(damage 0→1)를 구동한다 — 랩 FEM(Kang&Shin
+2025, Voronoi+CZM)의 영역이며 우리 압밀 J2가 대체하지 않는다.  즉:
+  압밀 = J2 등체적 소성 (우리 MPM, 접촉응력 driver, 1회) ↔ 사이클 = CZM 박리 (Li-농도구배 driver, N회 누적).
+frame[5] 분업의 시간축 판.  둘을 섞으면 안 됨: 압밀-검증된 E/σ_y를 사이클 damage에 그대로 쓰거나,
+CZM 없는 J2로 사이클 접촉손실을 흉내내는 것 모두 금지.  사이클 트랙(A10)은 β_Vegard(x) 디지타이즈
+(De Biasi) + CZM 접착 파라미터(γ: SDCP E_bind DFT가 내부 앵커 후보) 확보 후 별도 커널로 —
+그때까지 사이클 축은 R_int(N) 경험 궤적(rint_reference_growthlaw_design.md)이 접촉저항 몫만 담당.

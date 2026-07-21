@@ -796,6 +796,18 @@ def main():
                                               'σ_ionic과 별개 축, 수송 폼 대입 금지; PTFE solid-stamped; '
                                               'grid cropped to z ≤ thickness'
                                               + (' ⚠UNCONVERGED' if _rp.get('unconverged') else ''))
+                    # ★ A13 — pore-PNM 위상지표 (nearest-seed 분할; τ와 같은 crop/PTFE-stamp 규약).
+                    #   실패해도 pore-τ 결과는 유지 (내부 try).
+                    try:
+                        _pnm = _s3.pore_pnm(sid3, a.step3_vox, z_top_um=_ztop, extra_solid_pts=_ppts)
+                        step3['pore']['pnm'] = _pnm
+                        if not _pnm.get('reason'):
+                            print(f"  STEP3 pore-PNM: {_pnm['n_pores']} bodies · r_eq med "
+                                  f"{(_pnm.get('r_eq_um') or {}).get('med')}µm · CN med "
+                                  f"{(_pnm.get('pore_cn') or {}).get('med')} · throats {_pnm['n_throats']}"
+                                  f" · closed-from-top {_pnm['closed_from_top_pct']}%")
+                    except Exception as _e7:
+                        print(f'  ⚠ pore-PNM skipped ({type(_e7).__name__}: {_e7}) — pore-τ 결과는 유지')
                     print(f"  STEP3 pore-τ: ε_tot {step3['pore'].get('eps_total_pct')}% (conn "
                           f"{step3['pore'].get('eps_connected_pct')}%) · D_rel {step3['pore'].get('D_rel')}"
                           f" · τ {step3['pore'].get('tau')}"
