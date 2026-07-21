@@ -97,8 +97,17 @@ def run(a):
     typ, xyz, rad0 = load_atoms(a.atoms, a.type_map)
     n = len(typ)
     am = typ == 0
+    n_am_, n_se_ = int(am.sum()), int((~am).sum())
+    print(f'  입자: AM {n_am_} / SE {n_se_}  (type-map: {a.type_map})', flush=True)
+    if n_am_ == 0 or n_se_ == 0:
+        raise SystemExit(f'❌ AM 또는 SE가 0개 — --type-map 불일치 가능성.  atoms.csv 실제 타입 확인:\n'
+                         f"   awk -F, 'NR>1{{c[$2]++}} END{{for(t in c) print t, c[t]}}' {a.atoms}\n"
+                         f'   mono-AM 케이스는 SE가 type 2 → --type-map "1:AM_P,2:SE"')
     ci, cj, d, ov0 = build_contacts(xyz, rad0)
     kind = typ[ci] + typ[cj]                                # 0=AM-AM, 1=AM-SE, 2=SE-SE
+    if not (kind == 1).any():
+        # AM-SE 접촉 0 = 열화 대상이 없음 — A_rel=0/R_ct=1 같은 모순 출력으로 침묵 진행 금지
+        raise SystemExit('❌ AM-SE 접촉 0개 (압밀 베드에선 비물리) — type-map 또는 좌표단위(µm) 확인')
     is_poly = rad0 >= a.am_split_um                         # step4와 동일 분류 규약
     # ΔV → 반경 수축률 (충전 반각): r → r·(1−ε), ε = (ΔV/100)/3 · swing (선형-등방 근사, 라벨)
     dv = np.where(is_poly, a.dv_pct_poly if a.dv_pct_poly is not None else a.dv_pct,
