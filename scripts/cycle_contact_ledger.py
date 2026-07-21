@@ -50,9 +50,30 @@ def load_atoms(path, type_map):
 
 
 def build_contacts(xyz, rad):
-    """압밀 상태 접촉 목록 (δ0 = r_i+r_j−d > 0).  반환 (i, j, d, δ0)."""
-    tree = cKDTree(xyz)
-    pairs = tree.query_pairs(2.0 * rad.max(), output_type='ndarray')
+    """압밀 상태 접촉 목록 (δ0 = r_i+r_j−d > 0).  반환 (i, j, d, δ0).
+    대형 bimodal 베드 최적화: 전역 2·r_max 탐색은 147k-입자 mono 케이스에서 수 GB —
+    소립끼리는 2·r_small, 대립은 입자별 r_i+r_small 반경으로 분리 탐색."""
+    n = len(rad)
+    big = rad > 2.0 * np.median(rad)
+    if not big.any() or big.all():
+        tree = cKDTree(xyz)
+        pairs = tree.query_pairs(2.0 * rad.max(), output_type='ndarray')
+    else:
+        idx_s, idx_b = np.where(~big)[0], np.where(big)[0]
+        t_s = cKDTree(xyz[idx_s])
+        ps = t_s.query_pairs(2.0 * rad[idx_s].max(), output_type='ndarray')
+        parts = [np.stack([idx_s[ps[:, 0]], idx_s[ps[:, 1]]], 1)] if len(ps) else []
+        r_sm = rad[idx_s].max()
+        for bi in idx_b:                                     # 대립 1개당 ball query (수천 회 OK)
+            nb = t_s.query_ball_point(xyz[bi], rad[bi] + r_sm)
+            if nb:
+                nb = idx_s[np.asarray(nb)]
+                parts.append(np.stack([np.full(len(nb), bi), nb], 1))
+        t_b = cKDTree(xyz[idx_b])
+        pb = t_b.query_pairs(2.0 * rad[idx_b].max(), output_type='ndarray')
+        if len(pb):
+            parts.append(np.stack([idx_b[pb[:, 0]], idx_b[pb[:, 1]]], 1))
+        pairs = np.concatenate(parts, 0) if parts else np.zeros((0, 2), int)
     if len(pairs) == 0:
         return (np.zeros(0, int),) * 2 + (np.zeros(0),) * 2
     i, j = pairs[:, 0], pairs[:, 1]
@@ -83,7 +104,17 @@ def rnm_sigma(n, ci, cj, g, src_mask, snk_mask):
         import warnings
         with warnings.catch_warnings():
             warnings.simplefilter('ignore')                 # 특이계(미퍼콜) 경고는 아래 isfinite가 판정
-            v[free] = spsolve(A.tocsc(), b)
+            if len(free) > 20000:                           # 대형망: 직접해 fill-in 회피 → Jacobi-CG
+                from scipy.sparse.linalg import cg
+                Ac = A.tocsr()
+                dg = Ac.diagonal(); dg[dg <= 0] = 1.0
+                from scipy.sparse import diags
+                sol, info = cg(Ac, b, M=diags(1.0 / dg), rtol=1e-8, maxiter=5000)
+                if info != 0:
+                    return 0.0
+                v[free] = sol
+            else:
+                v[free] = spsolve(A.tocsc(), b)
     except Exception:
         return 0.0
     if not np.all(np.isfinite(v[free])):                    # 부동 성분(비연결) = 특이계 → 미퍼콜
