@@ -43,9 +43,11 @@ def main():
     ap.add_argument("--label", default="comp2")
     ap.add_argument("--out", default="./phonon_out")
     ap.add_argument("--device", default="cpu")
-    ap.add_argument("--fmax_relax", type=float, default=0.02)
+    ap.add_argument("--fmax_relax", type=float, default=0.005)
     ap.add_argument("--delta", type=float, default=0.01)
     ap.add_argument("--imag_tol_cm1", type=float, default=20.0)
+    ap.add_argument("--follow", type=int, default=1,
+                    help="가장 깊은 허수 모드 N개를 ±변위-이완 추적 (진짜 안장점 판별)")
     ap.add_argument("--uma_model", default="uma-s-1p1")
     ap.add_argument("--uma_task", default="omat")
     a = ap.parse_args()
@@ -76,30 +78,64 @@ def main():
     print(f"[2] relax done ({time.time()-t:.0f}s)  fmax={fr:.4f}  MIC-RMSD vs V0 = {rmsd:.4f} A"
           f"  {'⚠ 분지 이동 의심(>0.2)' if rmsd > 0.2 else '(같은 분지)'}", flush=True)
 
-    # 3) FD Γ vibrations
+    # 3) FD Γ vibrations (캐시 이름에 기하 해시 — 재이완 후 stale 캐시 방지)
     t = time.time()
-    vib = Vibrations(at, delta=a.delta, name=f"vib_{a.label}")
+    ghash = abs(hash(at.get_positions().tobytes())) % 100000
+    vib = Vibrations(at, delta=a.delta, name=f"vib_{a.label}_{ghash}")
     vib.run()
     freqs = vib.get_frequencies()          # complex array, cm^-1
     print(f"[3] vibrations done ({time.time()-t:.0f}s)  n_modes={len(freqs)}", flush=True)
 
     # 4) 판정: 허수 모드 = ASE가 복소수로 반환 (imag part = |ω| cm-1)
     vals = [(-abs(f.imag) if abs(f.imag) > 1e-6 else f.real) for f in freqs]
-    vals = sorted(vals)
-    n_imag = sum(1 for v in vals if v < -a.imag_tol_cm1)
-    lowest = ", ".join(f"{v:+.1f}" for v in vals[:12])
+    order = np.argsort(vals)
+    vals_s = [vals[i] for i in order]
+    n_imag = sum(1 for v in vals_s if v < -a.imag_tol_cm1)
+    lowest = ", ".join(f"{v:+.1f}" for v in vals_s[:12])
     print(f"[4] lowest 12 modes (cm-1, 음수=허수): {lowest}")
     verdict = "STABLE" if n_imag == 0 else f"SOFT ({n_imag} imaginary > {a.imag_tol_cm1}i)"
     print(f"    음향 허용치 {a.imag_tol_cm1}i cm-1 밖 허수 모드: {n_imag}개  →  VERDICT: {verdict}", flush=True)
+
+    # 5) 모드 성분: 허수/최저 모드를 어느 원소가 흔드는가 (Li 지배 = 얕은 케이지 = 무죄 후보)
+    syms = np.array(at.get_chemical_symbols())
+    char = []
+    print("[5] mode character (원소별 |변위|^2 비율):")
+    for rank in range(min(8, len(order))):
+        i = int(order[rank])
+        m = vib.get_mode(i)                      # (nat, 3)
+        w = (m ** 2).sum(axis=1); w /= w.sum()
+        frac = {s: round(float(w[syms == s].sum()), 3) for s in ("Li", "P", "S", "Cl", "Br") if (syms == s).any()}
+        char.append({"freq_cm1": round(vals[i], 1), "species_frac": frac})
+        print(f"    {vals[i]:+8.1f} cm-1  " + "  ".join(f"{k} {v:.0%}" for k, v in frac.items()), flush=True)
+
+    # 6) 변위-이완 추적: 가장 깊은 허수 모드 ± 따라가면 더 낮은 최소가 있는가
+    follow = []
+    E_min = float(at.get_potential_energy())
+    for rank in range(min(a.follow, len(order))):
+        i = int(order[rank])
+        if vals[i] > -a.imag_tol_cm1:
+            break
+        m = vib.get_mode(i); m = m / np.linalg.norm(m)
+        for sgn in (+1, -1):
+            at2 = at.copy(); at2.positions += sgn * 0.25 * m; at2.calc = calc
+            BFGS(at2, logfile=None).run(fmax=0.01, steps=150)
+            dE = float(at2.get_potential_energy()) - E_min
+            rm = mic_rmsd(at2, at)
+            follow.append({"mode_cm1": round(vals[i], 1), "dir": sgn, "dE_meV": round(dE * 1e3, 2),
+                           "rmsd_A": round(rm, 4)})
+            print(f"[6] follow {vals[i]:+.1f} cm-1 dir {sgn:+d}: ΔE = {dE*1e3:+.2f} meV, RMSD {rm:.4f} A"
+                  f"  {'→ 더 낮은 최소 존재(진짜 안장)' if dE < -1e-3 else '→ 유의미한 하강 없음(평평/노이즈)'}", flush=True)
 
     out = {
         "label": a.label, "structure": os.path.basename(spath), "nat": len(at0),
         "method": f"UMA {a.uma_model}/{a.uma_task} FD Gamma vibrations, delta {a.delta} A, "
                   f"cell-fixed pre-relax fmax {a.fmax_relax}",
         "uma_fmax_at_V0_eVA": round(f0, 4), "relax_rmsd_vs_V0_A": round(rmsd, 4),
-        "lowest_modes_cm1": [round(v, 1) for v in vals[:20]],
+        "lowest_modes_cm1": [round(v, 1) for v in vals_s[:20]],
         "n_imaginary_beyond_tol": n_imag, "imag_tol_cm1": a.imag_tol_cm1,
         "verdict": verdict,
+        "mode_character": char,
+        "mode_follow": follow,
         "note": "UMA-level screen: STABLE = UMA 최소에서 동적 안정. SOFT면 DFT ph.x(Gamma) 확인 필요. "
                 "RMSD>0.2 A면 UMA가 V0 분지를 벗어난 것 — 판정 자체를 재고.",
     }
