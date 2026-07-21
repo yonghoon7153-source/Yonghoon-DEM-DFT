@@ -181,10 +181,18 @@ selftest +4 전체 PASS.  **SC/PC 앵커 (41건 적대검증 완료)**: `docs/nc
 +CSV — ★핵심: 액체-셀 "PC 1오더 빠름"(Trevisanello)은 균열-전해액 침투 기전 → **ASSB에선 역전**
 (Ruess/Jung: SE 침투불가, 5C SC74/PC42%) → poly=Chen2020 4e-15(2차입자-반경 규약)…3e-14(FEM 체인,
 현행 기본값=측정 아님 명기), SC=1.5e-15–1e-14 밴드; **i0 SC/PC 정량 부재 확인 → 값 미지정, 스윕 전용.**
-**★ A10 착수**: `docs/a10_cycle_chemomech_design.md` — 앵커(Bucci G_c 2.8±1.8·ΔV≈3% 개시·Γ<1000
-게이트; Parks poly +19% 팽창=격자 −5.1%와 부호 반대; Kang&Shin R_int(N) 4.4×/1.5× 검증타깃;
-Alabdali LIGGGHTS ±6% 반경진동 선례) + 설계 옵션 A(접촉-원장 후처리)+B(MD 보정)+C(경험 대조군)
-— **메커니즘 확정은 사용자 논의 대기 (§5 미결 5개).**
+**★ A10 v1 구현+실전+리뷰 (2026-07-22)**: `docs/a10_cycle_chemomech_design.md` — 앵커(Bucci
+G_c 2.8±1.8·ΔV≈3% 개시·Γ<1000 게이트; Parks poly +19% 팽창=격자 −5.1%와 부호 반대; Kang&Shin
+R_int(N) 4.4×/1.5× 검증타깃; Alabdali LIGGGHTS ±6% 반경진동 선례).  `scripts/cycle_contact_ledger.py`
+(옵션 A 접촉-원장 후처리): 사이클당 AM 수축→접촉 개구 Bucci CZM 판정→f_broken/A_rel/R_ct몫/
+σ_rel/Γ* 궤적, CYCLE-STEP 1~5 스텝화.  **첫 실런(WSL 100cyc): mono R_ct 1.05× vs bimodal 1.51×**
+(Kang&Shin U-NCA 1.5×/B-NCA 4.4× 방향·즉시파단·Γ* 393vs1100 판별 = 3앵커 동시 정합; 헤드라인 =
+"접촉-기계 몫 vs 화학 몫" 분해).  **3각 적대리뷰(wf_60455c5a) 6건 수정**: ①rnm_sigma 고립노드
+특이계→연결성분 제한 근본수정(퍼콜 미퍼콜 오진 차단) ②AM-AM 범주오류(δcr=SE-상 cohesive를
+강체접촉에 오용)→AM-SE+SE-SE만 CZM·AM-AM 재폐합(σ_e_rel 0.21→**1.000 정정**, 열화=반응면
+R_ct만=Yun 정합) ③R* 감쇄반경 프록시 ④forbid/partial/elastic 3-모드 재습윤(§5-4) ⑤Γ* 라벨·가드.
+selftest 6/6 PASS.  ⚠ σ_e_rel 재실런 필요(≈1 예상), R_ct·σ_ion·Γ*는 불변.  **메커니즘 확정·스택압↔
+재습윤 매핑은 §5 미결(사용자 논의).**
 SDCP 캠페인: 3.18mAh base/SBE/DBE 완료(전자 +45.4%/이온 +5.6%/반응면 +18%),
 **★σ_SDCP 250 재실행 완료(2026-07-17): σ_e 3.002 = SBE 대비 +52.0% = 새 헤드라인**
 (침대 byte-재현, 분담 10→7% 역행 지속, 천장의 82% 실현; 스윕 5점 완성.  같은 날 SBE
