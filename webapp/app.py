@@ -5236,6 +5236,22 @@ def serve_3d_mpm_data(case_id):
     return jsonify(payload)
 
 
+def _rint_anchor_pair(key):
+    """R_int 시나리오 (pristine, cycled) Ω·cm² — 정본 docs/data/rint_eis_anchors.csv에서 읽음
+    (scripts/rint_cycle_traj.load_scenario 재사용 = 단일 출처).  CSV/키 불가 시 2026-07-21 스냅샷
+    fallback.  ⚠ load_scenario는 SystemExit를 던지므로 Exception만 잡으면 앱이 죽음."""
+    try:
+        import sys as _s
+        _sd = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'scripts')
+        if _sd not in _s.path:
+            _s.path.insert(0, _sd)
+        from rint_cycle_traj import load_scenario
+        r0, rc, _nt, _pr = load_scenario(key)
+        return float(r0), float(rc)
+    except (Exception, SystemExit):
+        return {'sbe': (18.0, 110.0), 'dbe': (12.0, 46.0), 'csus': (10.0, 30.0)}[key]
+
+
 @app.route('/results/<case_id>/mpm-input')
 def mpm_input_package(case_id):
     """[MPM input 변환]: build the per-case MPM input (am/se scaffolds + run_mpm.sh +
@@ -5287,16 +5303,23 @@ def mpm_input_package(case_id):
     # labelled.  Every preset is still computed; this tags metrics.step3.collector.selected.
     _coll = request.args.get('collector', '')
     _dbe = _sd > 0                                       # recipe contains SDCP → DBE-class electrode
+    _scn = ''                                            # anchors CSV scenario key (단일 출처)
     if _coll == 'bare':
-        _rint, _cname = (46.0, 'bare_Al+DBE_electrode') if _dbe else (110.0, 'bare_Al+SBE_electrode')
+        _scn = 'dbe' if _dbe else 'sbe'
+        _rint = _rint_anchor_pair(_scn)[1]               # cycled (aged 민감도 — payload가 pristine 병기)
+        _cname = 'bare_Al+DBE_electrode' if _dbe else 'bare_Al+SBE_electrode'
     elif _coll == 'csus':
-        _rint, _cname = 30.0, ('C-SUS_primer+DBE' if _dbe else 'C-SUS_primer+SBE(proxy_DBE-anchored)')
+        _scn = 'csus'
+        _rint = _rint_anchor_pair('csus')[1]
+        _cname = 'C-SUS_primer+DBE' if _dbe else 'C-SUS_primer+SBE(proxy_DBE-anchored)'
     elif _coll == 'ideal':
         _rint, _cname = 0.0, 'ideal'
     else:
         _rint, _cname = -1.0, ''
     if _rint >= 0.0:
         cmd += ['--collector-rint', str(_rint), '--collector-name', _cname]
+        if _scn:
+            cmd += ['--collector-scenario', _scn]
     # STEP3 voxel resolution (µm).  ONLY the σ solve grid — NOT the MPM compaction (n_grid) nor the
     # porosity/thickness/coverage/econn (those are unchanged by vox).  Finer = neck/SDCP-channel detail
     # for the current-density FIELD figure; σ_e/σ_ion/R_geom can shift slightly (finite-volume grid
@@ -5345,11 +5368,17 @@ def mpm_input_package(case_id):
                 cmd += ['--step4-x100', f'{max(0.85, min(0.99, float(_x100))):g}']
             except (ValueError, TypeError):
                 pass
-        # ★풀셀 축 (A11/R_int Phase 1): &s4rint=<Ω·cm²> → STEP4 직렬 R_int (파워유저 URL 파라미터.
-        #   기본 없음 = 전극-내부 R_int=0.  앵커 docs/data/rint_eis_anchors.csv: C-SUS pristine≈10/
-        #   aged 30, DBE 12/46, SBE 18/110.  음수/비수치는 무시)
+        # ★풀셀 축 (A11/R_int Phase 1): &s4rint= → STEP4 직렬 R_int.  기본 없음 = 전극-내부 R_int=0.
+        #   숫자(Ω·cm²) 또는 키워드 'pristine'/'cycled' — 키워드는 선택된 collector+전극(SBE/DBE)에
+        #   맞는 시나리오 값을 정본 anchors CSV에서 자동 해석 (예: &collector=bare + SDCP 레시피 +
+        #   &s4rint=pristine → DBE bare-Al pristine 12).  collector 미선택 시 키워드는 무시(어느
+        #   시나리오인지 모호 — 침묵 기본값 금지).  음수/비수치는 무시.
         _s4r = request.args.get('s4rint', '')
-        if _s4r:
+        if _s4r in ('pristine', 'cycled'):
+            if _scn:
+                _pr_v, _cy_v = _rint_anchor_pair(_scn)
+                cmd += ['--step4-r-int', f'{(_pr_v if _s4r == "pristine" else _cy_v):g}']
+        elif _s4r:
             try:
                 _s4rv = float(_s4r)
                 if _s4rv >= 0.0:

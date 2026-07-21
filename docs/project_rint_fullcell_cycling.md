@@ -76,6 +76,13 @@ R_int 110/46)은 **STEP3 σ_apparent 에만** 반영되고 **STEP4 로 안 흘�
   R_int(cycle) 열화율 축(A11-②).
 - 2026-07-21: **Phase 2 첫 데이터 진행중** — DBE 2C CCCV: R_int=0 완료(89.6%) + **R_int=10(pristine
   C-SUS, panel-e 근사) V100 실행중** (같은 침대 grid 재사용, step4_only).  aged 30은 후속 스윕.
+- 2026-07-21: **★ 단일-출처 하드닝 (사용자: "확실하게")** — 시나리오 R_int 값(18/12/10·110/46/30)이
+  anchors CSV·payload·app.py **3중 하드코딩**이던 것을 정본 CSV 단일 출처로 통합: payload와 app.py가
+  `rint_cycle_traj.load_scenario`로 읽음(불가 시 스냅샷 fallback + anchors_source 라벨; ⚠SystemExit
+  캐치).  ② collector 선택 시 `--collector-scenario` 키 전달 → payload `selected`에 **pristine 짝값
+  병기**(cycled=민감도 / pristine=시간-일관 라벨, §6.1 완결).  ③ `&s4rint=pristine|cycled` 키워드
+  지원 — 선택된 collector+전극(SBE/DBE)에 맞는 값을 CSV에서 자동 해석해 STEP4 주입(collector 미선택
+  시 무시 = 침묵 기본값 금지; 숫자 입력은 기존대로).  정밀 digitize가 CSV만 고치면 전 경로 일괄 반영.
 - 2026-07-21: **A11-② 경험 R_int(N) 궤적 도구** — `scripts/rint_cycle_traj.py`: 앵커 CSV 시나리오
   2점(pristine/cycled) + 문헌 SHAPE(첫점프 j×{0.3,0.5,0.7} + g∈{√N,선형})로 **양끝-고정 밴드** 생성
   (양끝=측정, 사이=assumed-form 라벨 §F1) + STEP4 체크포인트 명령(`MPM_S4_RINT=R(N) step4_only.sh`)

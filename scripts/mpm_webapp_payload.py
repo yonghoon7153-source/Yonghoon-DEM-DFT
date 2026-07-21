@@ -313,6 +313,9 @@ def main():
                          '110 / DBE 46 / C-SUS primer 30; 0 = ideal).  <0 = no selection (presets still '
                          'reported).  Applied as a uniform areal series term (post-processing).')
     ap.add_argument('--collector-name', default='', help='label for the selected collector preset')
+    ap.add_argument('--collector-scenario', default='', choices=('', 'sbe', 'dbe', 'csus'),
+                    help='anchors-CSV scenario key of the selected collector (webapp이 전달) — selected '
+                         '항목에 pristine 짝값(시간-일관 BOL)을 병기하기 위한 단일-출처 키')
     ap.add_argument('--sigma-ion-sdcp', type=float, default=0.001,
                     help='σ_ion SDCP (S/cm) — NOT an ion-insulator (user principle: Li-hopping keeps it '
                          'conducting; pellet ×0.80 vs PTFE ×0.27).  1 mS/cm ⚠F1 hook; Li⁺ DFT 패키지가 앵커 예정.')
@@ -620,52 +623,77 @@ def main():
                 # fixes — the model states that quantitatively.
                 _Lcm = _ztop * 1e-4
                 _Rbulk = _Lcm / max(step3['sigma_e_eff_S_cm'], 1e-30)
+                # ★ 단일 출처 (2026-07-21): 시나리오 R_int 값은 정본 docs/data/rint_eis_anchors.csv에서
+                #   읽음(rint_cycle_traj.load_scenario 재사용) — payload/app.py/CSV 3중 하드코딩이
+                #   정밀-digitize 업데이트 시 어긋나는 미래 위험 제거.  ⚠ load_scenario는 키 부재 시
+                #   SystemExit(BaseException) → Exception만 잡으면 payload가 죽음.
+                try:
+                    from rint_cycle_traj import load_scenario as _ls_rint
+                    _scn_vals = {k: tuple(_ls_rint(k)[:2]) for k in ('sbe', 'dbe', 'csus')}
+                    _scn_src = 'docs/data/rint_eis_anchors.csv (정본, scenario keys)'
+                except (Exception, SystemExit) as _e_rs:
+                    _scn_vals = {'sbe': (18.0, 110.0), 'dbe': (12.0, 46.0), 'csus': (10.0, 30.0)}
+                    _scn_src = f'fallback snapshot 2026-07-21 (anchors CSV unreadable: {_e_rs})'
+                _nm_fmt = {'sbe': 'SBE_bare_{:g}', 'dbe': 'DBE_bare_{:g}',
+                           'csus': 'SBE_CSUS_{:g}_proxy_DBE_anchored'}   # SBE+C-SUS 미측정 → DBE-앵커 proxy
+                _cyc_pairs = ([('ideal_R0', 0.0)]
+                              + [(_nm_fmt[k].format(_scn_vals[k][1]), _scn_vals[k][1])
+                                 for k in ('sbe', 'dbe', 'csus')])
+                _pri_pairs = ([('ideal_R0', 0.0)]
+                              + [(_nm_fmt[k].format(_scn_vals[k][0]), _scn_vals[k][0])
+                                 for k in ('sbe', 'dbe', 'csus')])
                 step3['collector'] = {'kind': 'SCENARIO series load — measured R_int applied '
                                               'externally (NOT a model prediction; the model\'s own '
                                               'interface OUTPUT is collector_geometric.R_geom)',
                                       'R_bulk_ohm_cm2': float(f'{_Rbulk:.3g}'),
-                                      'anchors': 'Fig6e post-cycling R_int; S14 primer 1.3e4 S/cm 200nm',
+                                      'anchors': 'Fig6e R_int (cycled=1000cyc@2C, pristine=panel-e≈); '
+                                                 'S14 primer 1.3e4 S/cm 200nm',
+                                      'anchors_source': _scn_src,
                                       'sigma_apparent_S_cm': {
                                           nm2: float(f'{_Lcm / (_Rbulk + _R):.3g}')
-                                          # ★ 사용자 확정 시나리오 트리플 (2026-07-10): SBE / DBE / SBE+C-SUS.
-                                          #   SBE+C-SUS는 manuscript 미측정 → DBE-앵커(30) proxy 라벨.
-                                          for nm2, _R in (('ideal_R0', 0.0), ('SBE_bare_110', 110.0),
-                                                          ('DBE_bare_46', 46.0),
-                                                          ('SBE_CSUS_30_proxy_DBE_anchored', 30.0))},
+                                          for nm2, _R in _cyc_pairs},
                                       # ★ A11-③ (§6.1 시간축 분리): pristine 세트 병기 — BOL(fresh) 벌크와
-                                      #   시간-일관인 fresh+fresh 조합.  위 cycled(110/46/30) 세트는
-                                      #   "fresh 전극 + aged 접촉" 민감도 시나리오로 라벨 (혼합 금지·병기).
+                                      #   시간-일관인 fresh+fresh 조합.  cycled 세트는 "fresh 전극 + aged
+                                      #   접촉" 민감도 시나리오로 라벨 (혼합 금지·병기).
                                       'sigma_apparent_pristine_S_cm': {
                                           nm2: float(f'{_Lcm / (_Rbulk + _R):.3g}')
-                                          for nm2, _R in (('ideal_R0', 0.0), ('SBE_bare_18', 18.0),
-                                                          ('DBE_bare_12', 12.0),
-                                                          ('SBE_CSUS_10_proxy_DBE_anchored', 10.0))},
+                                          for nm2, _R in _pri_pairs},
                                       'time_axis': 'sigma_apparent_S_cm = aged R_int(1000cyc@2C) × BOL 벌크 '
                                                    '= 민감도 시나리오; sigma_apparent_pristine_S_cm = '
                                                    'pristine R_int × BOL 벌크 = 시간-일관(물리적 BOL 풀셀)',
-                                      'pristine_precision': 'panel_e_approx — Fig6e pristine ~18/12/10 근사'
+                                      'pristine_precision': 'panel_e_approx — Fig6e pristine 근사'
                                                             '(정밀 디지타이즈 대기, A11); '
                                                             'docs/data/rint_eis_anchors.csv scenario keys'}
                 print(f"  STEP3 σ_e_eff = {step3['sigma_e_eff_S_cm']:.4g} S/cm  (vox {a.step3_vox}µm, "
                       f"{_res3['n_dof']:,} dof, resid {_res3['resid']:.1e}, {_time.time()-_t0:.0f}s)  "
                       f"share: " + " ".join(f"{k} {100*v:.0f}%" for k, v in step3['dissipation_share'].items()))
                 if a.collector_rint >= 0.0:                # UI-selected preset → highlighted entry
-                    step3['collector']['selected'] = {
+                    _sel = {
                         'name': a.collector_name or f'R{a.collector_rint:g}',
                         'R_int_ohm_cm2': a.collector_rint,
                         'sigma_apparent_S_cm': float(f'{_Lcm / (_Rbulk + a.collector_rint):.3g}')}
+                    if a.collector_scenario in _scn_vals:  # 시간축 짝값 병기 (선택=cycled, pristine 함께)
+                        _r0s = _scn_vals[a.collector_scenario][0]
+                        _sel.update({'scenario_key': a.collector_scenario,
+                                     'time_axis': 'R_int_ohm_cm2 = cycled(aged-접촉 민감도); '
+                                                  'pristine 짝 = 시간-일관 BOL 풀셀',
+                                     'R_int_pristine_ohm_cm2': float(_r0s),
+                                     'sigma_apparent_pristine_S_cm':
+                                         float(f'{_Lcm / (_Rbulk + _r0s):.3g}'),
+                                     'pristine_precision': 'panel_e_approx'})
+                    step3['collector']['selected'] = _sel
                 _ca = step3['collector']['sigma_apparent_S_cm']
                 # carbon-free/희박 배선 케이스는 R_bulk가 계면(30-110)과 동급까지 올라옴 — "≪" 고정
                 # 문구가 그 regime에서 거짓이 되던 것을 조건화 (260714 carbon-free: R_bulk 12 Ωcm²)
                 _rel = ('≪ 계면' if _Rbulk < 3.0 else
                         '≈ 계면과 동급 — carbon-free/희박 배선 regime' if _Rbulk < 100.0 else '≫ 계면(!)')
-                print(f"  STEP3 collector scenarios: bulk {_ca['ideal_R0']:.3g} → SBE(110Ωcm²) "
-                      f"{_ca['SBE_bare_110']:.3g} / DBE(46) {_ca['DBE_bare_46']:.3g} / SBE+C-SUS(30 proxy) "
-                      f"{_ca['SBE_CSUS_30_proxy_DBE_anchored']:.3g} S/cm  (R_bulk {_Rbulk:.2g} Ωcm² {_rel})")
+                print(f"  STEP3 collector scenarios(cycled): bulk {_ca['ideal_R0']:.3g} → "
+                      + " / ".join(f"{nm2}({_R:g}Ωcm²) {_ca[nm2]:.3g}" for nm2, _R in _cyc_pairs[1:])
+                      + f" S/cm  (R_bulk {_Rbulk:.2g} Ωcm² {_rel})")
                 _cp = step3['collector']['sigma_apparent_pristine_S_cm']
-                print(f"  STEP3 collector PRISTINE(시간-일관, panel-e≈): SBE(18) {_cp['SBE_bare_18']:.3g} / "
-                      f"DBE(12) {_cp['DBE_bare_12']:.3g} / C-SUS(10 proxy) "
-                      f"{_cp['SBE_CSUS_10_proxy_DBE_anchored']:.3g} S/cm  (위 cycled 세트=aged-접촉 민감도)")
+                print("  STEP3 collector PRISTINE(시간-일관, panel-e≈): "
+                      + " / ".join(f"{nm2}({_R:g}) {_cp[nm2]:.3g}" for nm2, _R in _pri_pairs[1:])
+                      + " S/cm  (위 cycled 세트=aged-접촉 민감도)")
                 # ★ ANALYTIC-GAP GEOMETRIC pair (v3, user: "지금 하자"): the contact SELECTION now
                 # comes from EXACT sphere/point z (no voxel blur — the DEM positions are known
                 # exactly): bare = surface within 0.10µm of the collector (econn contact tol),
