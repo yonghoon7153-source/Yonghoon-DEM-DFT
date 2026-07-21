@@ -20,7 +20,9 @@ rasterized 복셀 격자의 두 망(전자/이온)을 실제 AM|SE·AM|SDCP 접�
   ~5천 집전체 접점이 한 행에 몰린 허브가 CG를 정체시켜 폐기(V100 3h+ 스톨 → 재설계).
   범위 밖(정직, 근거): 전해질 농도분극(단일이온 t⁺≈1 → 물리적으로 부재), 이중층 C_dl(시간상수
   ~ms ≪ 방전 dt — COMSOL도 방전 sim에선 통상 off), D_s(c) 농도의존(Chen2020 양극도 상수),
-  열-전기 커플(등온; Q는 출력만), anode/SE열화/체적변화(A10), **입자 표면 유입의 각도분해**
+  열-전기 커플(등온; Q는 출력만), anode/SE열화/체적변화(A10), poly/SC i0 분리는 **진폭만**
+  (SOC-모양 (x/½)^αc((1−x)/½)^αa·α_a/α_c·ASR_film·OCP는 전 클래스 공유 — 표면조성/코팅이
+   모양 자체를 바꾸는 경우는 범위 밖; 리뷰 2026-07-21), **입자 표면 유입의 각도분해**
   (총량은 접촉면이 결정하나 유입을 전표면 균일 살포로 균질화 — 커버리지 낮은 입자의
    표면포화/확산분극 개시가 계산상 지연됨; --ang-sectors 확장 예정).
   프로덕션 집계-KCL 보장 수위 = ~4×노이즈바닥(2.9M dof서 ≈1e-4 rel) — tol_rel(1e-8) 아님.
@@ -792,7 +794,7 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
         print(f'  노이즈 바닥 교정: |ΣF|_eq={_agg0:.2e} A (floor=×4), ||F||∞_eq={_inf0:.2e} A '
               f'→ floor_rel≈{sys_.agg_floor_abs / max(abs(I_cc), 1e-30):.1e}', flush=True)
     keys = ('t', 'V', 'V_terminal', 'I', 'x_mean', 'x_surf_p05', 'x_surf_p50', 'x_surf_p95',
-            'eta_kin_mean', 'eta_diff_mean', 'newton_it', 'newton_resid', 'kcl_rel',
+            'eta_kin_mean', 'eta_diff_mean', 'eta_diff_mean_iw', 'newton_it', 'newton_resid', 'kcl_rel',
             'energy_balance_rel',
             'Q_ohm_e_W', 'Q_ohm_i_W', 'Q_ct_W', 'Q_film_W', 'Q_rint_W', 'Q_rev_W')
     out = {k: [] for k in keys}
@@ -859,6 +861,11 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
         out['eta_kin_mean'].append(float((np.abs(eta_s) * w).sum() / w.sum()))
         out['eta_diff_mean'].append(float(np.mean(np.abs(ocp.U(x_s[has_face])
                                                          - ocp.U(x_mean_p[has_face])))))
+        # |i_am|-가중 짝 (리뷰 #2): 비가중 평균은 per-particle D 분리가 만드는 클래스별 확산분극을
+        # 입자수비(예 SC 12:1)로 희석 — 전류-가중이 eta_kin_mean(|I_f|-가중)과 규약 일치.
+        _wp = np.abs(i_am[has_face]) + 1e-30
+        out['eta_diff_mean_iw'].append(float((np.abs(ocp.U(x_s[has_face])
+                                                     - ocp.U(x_mean_p[has_face])) * _wp).sum() / _wp.sum()))
         out['newton_it'].append(n_it); out['newton_resid'].append(resid)
         out['kcl_rel'].append(kcl)
         out['energy_balance_rel'].append(abs(aud['balance_rel']))
@@ -1235,6 +1242,8 @@ def _selftest_discharge():
     print(f'per-particle 균일 d_s/i0_p ≡ 스칼라 (simulate bitwise): {"OK" if okpp else "FAIL"}')
     # per-particle i0 방향성: 2입자 대칭 베드, i0 10× 차이 → 큰-i0 입자가 초기 전류 과분담
     #   (방전=리튬화 → x̄ 더 많이 상승; kinetic 저항 1/i0 차이의 부호 검증)
+    #   CV/CCCV 별도 테스트 불필요(리뷰 #5 판정): i0_f는 phase 분기 이전 단일 콜사이트에서
+    #   계산돼 cc/cv가 같은 값을 씀 — CC bitwise 테스트가 메커니즘 전체를 커버.
     sid2, pid2, vox2 = _build_sandwich(nxy=4, nz=8)
     pid2 = pid2.copy()
     pid2[2:, :, :][pid2[2:, :, :] == 0] = 1                  # x-절반씩 입자 0/1 (기하 대칭)
@@ -1269,13 +1278,15 @@ def main():
                     help='D_s [m²/s] 기본 3e-14 (Kang&Shin 2025 FEM; 문헌 1e-14–1e-13) — '
                          '--d-s-poly/--d-s-sc 지정 시 무시')
     ap.add_argument('--i0', type=float, default=2.0, help='i0_ref [A/m²] @x=0.5 (⚠F1 스윕) — '
-                                                          '--i0-poly/--i0-sc 지정 시 무시')
+                         '--i0-poly/--i0-sc 지정 시 값은 상쇄되나 정규화 분모라 >0 필수')
     # ── bimodal poly/SC 전기화학 분리 (기본 미사용 = 기존 공유물성과 bitwise 동일 경로) ──
     #    대립 AM_P=polycrystalline(2차입자, GB/1차결정 경로) vs 소립 AM_S=single-crystal —
     #    σ_e의 Trevisanello NCM(r) 분리와 같은 GB-밀도 축을 확산·반응동역학에 적용.
     #    값은 문헌앵커만 (§F1; docs/ncm_sc_poly_electrochem_anchors.md 참조) — 기본값 없음.
     ap.add_argument('--d-s-poly', type=float, default=None,
-                    help='대립 poly AM(r≥--am-split-um) D_s [m²/s] — --d-s-sc와 쌍으로만')
+                    help='대립 poly AM(r≥--am-split-um) D_s [m²/s] — --d-s-sc와 쌍으로만.  '
+                         '★스케일 규약(리뷰 #0): 2차입자-반경 effective D (GITT 2차입자 측정 관례 '
+                         '— 확산길이=우리 r_um과 정합).  1차결정(grain) D를 넣으면 스케일 불일치')
     ap.add_argument('--d-s-sc', type=float, default=None,
                     help='소립 single-crystal AM(r<split) D_s [m²/s] — --d-s-poly와 쌍으로만')
     ap.add_argument('--i0-poly', type=float, default=None,
@@ -1315,6 +1326,22 @@ def main():
     a = ap.parse_args()
     global GPU
     GPU = bool(a.gpu)
+    # poly/SC 인자 가드는 grid 로드 전에 (리뷰 #18: --selftest/grid-오류 경로에서 반쪽 지정이
+    # 침묵 통과하던 순서 문제) — 분류 자체는 grid의 r_um이 필요해 아래에서.
+    if (a.d_s_poly is None) != (a.d_s_sc is None):
+        ap.error('--d-s-poly/--d-s-sc must be given together (반쪽 지정 = 침묵 기본값 혼입 금지)')
+    if (a.i0_poly is None) != (a.i0_sc is None):
+        ap.error('--i0-poly/--i0-sc must be given together')
+    for _nm, _v in (('--d-s-poly', a.d_s_poly), ('--d-s-sc', a.d_s_sc),
+                    ('--i0-poly', a.i0_poly), ('--i0-sc', a.i0_sc)):
+        if _v is not None and _v <= 0:
+            ap.error(f'{_nm} must be > 0')
+    if a.am_split_um <= 0:
+        ap.error('--am-split-um must be > 0 (µm 반경 문턱)')
+    if a.i0_poly is not None and a.i0 <= 0:
+        # _i0s = i0_p/i0_ref 정규화 분모 — 0이면 0·inf=NaN이 AMG 빌드 후 newton_fail로 오진됨
+        # (리뷰 #8 재현: '--i0 0 --i0-poly ...' → 그리드 로드·전처리 다 하고 죽음)
+        ap.error('--i0 must be > 0 even with --i0-poly/--i0-sc (값은 상쇄되나 정규화 분모)')
     if a.selftest:
         ok = _selftest_radial()
         ok &= _selftest_cell()
@@ -1328,15 +1355,8 @@ def main():
     vox_um = float(g['vox_um']); z_top = float(g['z_top_um'])
     sig_e = g['sig_e_S_cm']; sig_i = g['sig_i_S_cm']
     r_um = g['am_r_um']
-    # ── poly/SC 전기화학 분리: 반경 문턱으로 [n_am] 물성 벡터 구성 (미지정 = 기존 스칼라 경로) ──
-    if (a.d_s_poly is None) != (a.d_s_sc is None):
-        ap.error('--d-s-poly/--d-s-sc must be given together (반쪽 지정 = 침묵 기본값 혼입 금지)')
-    if (a.i0_poly is None) != (a.i0_sc is None):
-        ap.error('--i0-poly/--i0-sc must be given together')
-    for _nm, _v in (('--d-s-poly', a.d_s_poly), ('--d-s-sc', a.d_s_sc),
-                    ('--i0-poly', a.i0_poly), ('--i0-sc', a.i0_sc)):
-        if _v is not None and _v <= 0:
-            ap.error(f'{_nm} must be > 0')
+    # ── poly/SC 전기화학 분리: 반경 문턱으로 [n_am] 물성 벡터 구성 (미지정 = 기존 스칼라 경로;
+    #    인자 가드는 위 parse 직후로 이동 — 리뷰 #18) ──
     ds_arg, i0_p, split_meta = a.d_s, None, None
     if a.d_s_poly is not None or a.i0_poly is not None:
         is_poly = r_um >= a.am_split_um
@@ -1402,6 +1422,9 @@ def main():
             'kind': 'step4_viz', 'c_rate': a.c_rate, 'charge': bool(a.charge),
             'v_min': a.v_min, 'v_max': a.v_max, 'cv_hold': bool(a.cv_hold),   # 컷오프 조건 (비교 라벨용)
             'i_cut_frac': a.i_cut_frac, 'r_int_ohm_cm2': a.r_int_ohm_cm2,
+            'am_electro_split': split_meta,                 # poly/SC 분리 (None=균일) — 리뷰 #14:
+                                                            # 뷰어 고정슬롯(st4_viz.json)에서 파일명
+                                                            # 태그가 떨어져도 런 구별 가능해야 (rint 교훈)
             'x0': ocp.x0, 'x100': ocp.x100, 'nr': a.nr, 'vox_um': vox_um,
             'c_max_mol_m3': ocp.c_max,
             'i_1c_a': float(out['I_1C_A']), 'i_mean_abs_a': [float(f'{v:.4g}') for v in m_abs],
@@ -1414,6 +1437,7 @@ def main():
                       'eta_kin_mV': [round(float(v) * 1e3, 2) for v in out['eta_kin_mean']],
                       # 과전압 분해용 (뷰어 곡선 패널): η_ohm = (|Q_ohm_e|+|Q_ohm_i|)/|I|
                       'eta_diff_mV': [round(float(v) * 1e3, 2) for v in out['eta_diff_mean']],
+                      'eta_diff_iw_mV': [round(float(v) * 1e3, 2) for v in out['eta_diff_mean_iw']],
                       'I_A': [float(f'{v:.4g}') for v in out['I']],
                       'Q_ohm_e_W': [float(f'{v:.4g}') for v in out['Q_ohm_e_W']],
                       'Q_ohm_i_W': [float(f'{v:.4g}') for v in out['Q_ohm_i_W']],

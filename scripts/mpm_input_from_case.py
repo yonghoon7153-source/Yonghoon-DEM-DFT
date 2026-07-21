@@ -127,6 +127,11 @@ def main():
                     ('--step4-i0-poly', a.step4_i0_poly), ('--step4-i0-sc', a.step4_i0_sc)):
         if _v is not None and _v <= 0:
             ap.error(f'{_nm} must be > 0')
+    _es_split_req = a.step4_ds_poly is not None or a.step4_i0_poly is not None
+    if _es_split_req and a.step4_am_split_um <= 0:
+        # split≤0 은 전 입자 poly로 침묵 퇴화 — 파일명 _dsP..S.. 태그가 허위가 됨 (음수 rint와
+        # 같은 '생성 시점 명시적 거부' 계열, 리뷰 #15).  베드-분리 검증은 atoms 파싱 뒤 아래에서.
+        ap.error('--step4-am-split-um must be > 0 (µm 반경 문턱)')
     os.makedirs(a.out, exist_ok=True)
 
     def _parse_rates(s):                                     # STEP4 체크박스 (0.02–5C 화이트리스트)
@@ -208,6 +213,16 @@ def main():
         for rec in am_raw:
             rec[0] = 1 if (thr < 0 or float(rec[4]) >= thr) else 2          # AM_P=1 / AM_S=2 by size
             am_rows.append(rec)
+        # ★ poly/SC split 요청 시 생성-시점 베드-분리 검증 (리뷰 #15 — 음수 rint 거부와 같은 계열):
+        #   문턱이 실제 AM 반경분포를 못 가르면 한쪽 값이 침묵 미사용 + _dsP..S.. 태그가 허위 →
+        #   run 낭비 전에 여기서 거부.  (mono 베드에 split 킷을 만들 이유가 없음 — 균일이면
+        #   split 인자 없이 --d-s로.)  step4_dyn 쪽 경고는 수동 CLI 경로용으로 유지.
+        if _es_split_req:
+            _n_po = sum(1 for r_ in am_rows if float(r_[4]) >= a.step4_am_split_um)
+            if _n_po == 0 or _n_po == len(am_rows):
+                ap.error(f'--step4-am-split-um {a.step4_am_split_um:g}µm가 이 케이스 AM 반경분포 '
+                         f'{rmin:.2f}–{rmax:.2f}µm를 가르지 못함 (poly {_n_po}/{len(am_rows)}) — '
+                         f'split 값을 조정하거나, 균일 물성이면 split 인자 없이 생성하세요')
 
     def write_csv(path, rows, note):
         with open(path, 'w', newline='') as f:
@@ -456,7 +471,7 @@ def main():
     echo "[run_mpm] STEP4 방전 ${{CR}}C start $(date)  (컷오프 {a.step4_vmin:g}–{a.step4_vmax:g} V{_rlab}{_eslab})"
     python3 "$SCR/step4_dyn.py" --grid step4_grid.npz \\
       --ocp-csv "$AP/ocp_nmc811_chen2020.csv" --params-json "$AP/params_nmc811_chen2020.json" \\
-      --c-rate ${{CR}} {_cut}{_rint}{_es} --gpu --out step4_c${{CR}}{_rtag}{_estag}.npz --viz-out step4_viz_c${{CR}}{_rtag}{_estag}.json \\
+      --c-rate ${{CR}} {_cut}{_rint}{_es} --gpu --out "step4_c${{CR}}{_rtag}{_estag}.npz" --viz-out "step4_viz_c${{CR}}{_rtag}{_estag}.json" \\
       || echo "[run_mpm] STEP4 방전 ${{CR}}C FAILED — 다음 rate 계속 (위 트레이스 참조)"
     echo "[run_mpm] STEP4 방전 ${{CR}}C end $(date)"
   done
@@ -466,7 +481,7 @@ def main():
     python3 "$SCR/step4_dyn.py" --grid step4_grid.npz \\
       --ocp-csv "$AP/ocp_nmc811_chen2020.csv" --params-json "$AP/params_nmc811_chen2020.json" \\
       --c-rate ${{CR}} --charge --cv-hold {_cut} {_icut}{_rint}{_es} --gpu \\
-      --out step4_chg_c${{CR}}{_rtag}{_estag}.npz --viz-out step4_viz_chg_c${{CR}}{_rtag}{_estag}.json \\
+      --out "step4_chg_c${{CR}}{_rtag}{_estag}.npz" --viz-out "step4_viz_chg_c${{CR}}{_rtag}{_estag}.json" \\
       || echo "[run_mpm] STEP4 충전 ${{CR}}C FAILED — 다음 rate 계속 (위 트레이스 참조)"
     echo "[run_mpm] STEP4 충전(CCCV) ${{CR}}C end $(date)"
   done

@@ -98,6 +98,11 @@ def compare(a):
     import pybamm
     d = np.load(a.compare, allow_pickle=False)
     meta = json.loads(str(d['params_json']))
+    if isinstance(meta.get('d_s'), dict) or isinstance(meta.get('i0'), dict):
+        # poly/SC per-particle 분리 npz (step4_dyn --d-s-poly 등): 단일-대표입자 PyBaMM DFN은
+        # 입자별 물성 분포를 표현할 수 없음 — min/max를 임의로 고르면 §F1 위반 (리뷰 #13).
+        raise SystemExit('per-particle(poly/SC 분리) npz는 PyBaMM 단일입자 패리티 대상이 아님 — '
+                         '균일 물성 런의 npz를 사용하세요 (params d_s/i0가 dict=per_particle)')
     pv = pybamm.ParameterValues('Chen2020')
     c_max = meta['c_max']
     i0_ref = float(meta['i0'])

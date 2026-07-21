@@ -1,0 +1,15 @@
+param,particle_type,value_as_printed,units_as_printed,value_m2s_or_Am2,conditions,source,confidence,assb_transferable,note
+D_s,single_crystal,1e-11 to 1e-10,cm2/s,1e-15 to 1e-14,GITT liquid half-cell,Trevisanello 2021 AEM 11:2003400,web_abstract,yes,SC crack-free -> same in ASSB
+D_s,polycrystalline,1e-10 to 1e-9,cm2/s,1e-14 to 1e-13,GITT liquid half-cell (crack+electrolyte penetration),Trevisanello 2021 AEM 11:2003400,web_abstract,NO,liquid-only boost - forbidden for ASSB poly (Ruess 2020 / Jung 2023 inversion)
+D_s,polycrystalline,4e-15,m2/s,4e-15,DFN fit r=5.22um LG M50,Chen 2020 JES 167:080534,web_fulltext,yes,scale-convention match (secondary-radius effective D) - recommended poly start
+D_s,polycrystalline,O'Regan D(sto) 3-Gaussian x2.7,m2/s,~1e-15 to 1e-14,DFN SOC-dependent same cell,O'Regan 2022 EA 425:140700,web_fulltext,yes,SOC-dependent upgrade path
+D_s,polycrystalline,3e-14,m2/s,3e-14,FEM input NCA/LPSCl r=5um (not measured),Kang&Shin 2025 ACS AMI SI Table S4,pdf_local,model-input,current STEP4 default provenance
+D_s,primary_grain,3.4e-11,cm2/s,3.4e-15,operando muSR lattice-scale NMC811,McClelland 2023 Chem.Mater. acs.chemmater.2c03834,web_abstract,sanity-only,grain scale - do NOT pair with secondary radius
+D_s,single_crystal,1.5e-15,m2/s,1.5e-15,digital-twin model input SC-NCA 5um,Koo 2025 (litdb lit_koo2025),secondary_citation,model-input,SC band lower edge
+i0,polycrystalline,m_ref=3.42e-6,(A/m2)(m3/mol)^1.5,~0.6-0.9 A/m2 @mid-SOC 1M,BV liquid,Chen 2020 JES 167:080534 (pybamm source),web_fulltext,liquid-only,
+i0,polycrystalline,10,A/m2,10,FEM input (not measured) NCA/LPSCl,Kang&Shin 2025 SI Table S4,pdf_local,model-input,
+i0,sc_vs_pc_split,NOT AVAILABLE,-,-,ASSB quantitative SC/PC i0 absent (facet 25x + qualitative only),this survey 2026-07-21,confirmed-gap,-,mechanism wired but values unassigned (F1)
+R_ct,uncoated_NCM811_LPSCl,453.4/289.9/382.4,Ohm cm2,-,62/72/82wt% 3-electrode 30C 250MPa,Kim 2025 EA 542:147413 SI T.S6,pdf_local,anchor,coating dominates over crystallinity
+R_ct,LNO_coated_NCM811_LPSCl,22.4/18.2/17.2,Ohm cm2,-,62/72/82wt% same cell,Kim 2025 EA 542:147413 SI T.S4,pdf_local,anchor,
+rate,SC_vs_PC_ASSB,5C retention 74.0 vs 41.6; 150cyc 84.9 vs 65.6,%,-,Ni82 SC D50 5.0um vs PC 4.9um LPSCl,Jung 2023 CEJ 470:144381,pdf_local,validation-target,direction check for split runs
+D_s_cycling,NCM_LPSCl_dry,PTFE ~1e-10 maintained vs NBR ->1e-12 @50cyc,cm2/s,1e-14 -> 1e-16,cycle-resolved GITT binder-dependent,Hong 2026 (litdb digest),secondary_citation,A10-link,degradation trajectory hook
