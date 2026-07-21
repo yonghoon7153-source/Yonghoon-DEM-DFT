@@ -777,13 +777,16 @@ def main(argv):
                 'PTFE':   (0.30, 0.30, 0.05, 4, 'fibre',  _ad.PTFE_L, _ptfe_curl, 0.6, 0.6, 0.5, 0.5),   # drawn web + CBD + AM-wrap
                 'SDCP':   (23.6, 0.35, 1.00, 5, 'particle', 0.0,      0.0,  0.0, 0.0, 0.0, 0.0),   # ★E=23.6 GPa MANUSCRIPT-ANCHORED (AFM S6; LPSCl급 강성) — 0.3µm particles (S3), σ_y=1.0 UN-anchored rigid-proxy §F1 (stiff conjugated polymer, no PTFE-like flow; ≫press → behaves rigid); ρ 1.3 still proxy (methods 대기)
                 'SWCNT':  (0.50, 0.30, 0.10, 6, 'sheath',  0.0,       0.0,  0.0, 0.0, 0.0, 0.0),   # ★A14 (#275 koo2026) conformal sheath — E/σ_y = SuperP-class SOFT PROXY §F1: the film-effective
-                #   transverse modulus of a 2-10nm CNT skin is UN-anchored (single-tube AXIAL ~1 TPa is the
+                #   transverse modulus of a few-layer CNT skin (~2-10nm = OUR inference from tube Ø 2nm;
+                #   koo2026 publishes no sheath thickness) is UN-anchored (single-tube AXIAL ~1 TPa is the
                 #   wrong axis for a wrapped skin under radial press); ≤0.5wt% + add_pvs volume-pin → compaction
                 #   impact negligible either way.  Role is STRUCTURAL (conductive-skin morphology → STEP3/viewer).
             }
             am_box = ((am_c - off, am_r) if am_c is not None else None)   # AM in the seed-box frame (coating)
-            _se0_box = xs[phase_np == 1] - off          # ★A14: pre-additive SE cloud (seed-box frame) — the
-                                                        #   seed-time sheath↔SE ionic-contact trade-off reference
+            _se0_box = ((xs[phase_np == 1] - off) if 'SWCNT' in cnt
+                        else np.zeros((0, 3), np.float32))   # ★A14: pre-additive SE cloud (seed-box frame)
+            #   for the seed-time sheath↔SE trade-off — built ONLY when SWCNT is in the recipe (the
+            #   boolean-index copy is ~0.5 GB at 384³; don't pay it for every additive run)
             fibre_np = np.full(len(xs), -1, np.int32)   # per-point fibre/aggregate id (-1 = SE; ≥0 = a fibre /
             dia_np = np.zeros(len(xs), np.float32)      # per-point relative fibre Ø (0 = SE/non-fibre; ∝√weight)
             carbon_seed = []                            # carbon (VGCF/SuperP) pts in seed-box frame → PTFE
@@ -882,10 +885,15 @@ def main(argv):
                     _w = np.ones(len(pts), np.float32)
                     _sfrac = _wrap                       # coat-meta coverage share = the wrap fraction
                     _coated = True
+                    _nch = int(np.unique(_fid).size)     # TRUE chain count — must be read BEFORE the
+                    #   global _gfib offset below (review finding: max()+1 after offset inflated it by
+                    #   every earlier additive's object count)
                     _tro = None
                     if len(pts) and am_box is not None and len(_se0_box):
-                        _sub = (_se0_box if len(_se0_box) <= 30000
-                                else _se0_box[rng.choice(len(_se0_box), 30000, replace=False)])
+                        _sub = (_se0_box if len(_se0_box) <= 300000
+                                else _se0_box[rng.choice(len(_se0_box), 300000, replace=False)])
+                        #   300k subsample → SE NN spacing ~0.19µm (Tabor 0.26 band 근해상, Hertz 0.13
+                        #   미해상) — 밀도 한계는 tradeoff의 n_se_used/se_nn_spacing_um/trust에 자기기술
                         _tro = _ad.sheath_ion_tradeoff(pts.astype(np.float64) * um_box,
                                                        np.asarray(am_box[0], np.float64) * um_box,
                                                        np.asarray(am_box[1], np.float64) * um_box,
@@ -971,7 +979,7 @@ def main(argv):
                 if kind == 'sheath':                         # ★ A14 sheath meta (+ trade-off if computed)
                     _add_meta[nm]['sheath'] = {'wrap_frac': round(float(_wrap), 3),
                                                'shell_um': _ad.SWCNT_SHELL,
-                                               'n_chains': int(_fid.max() + 1) if len(_fid) else 0,
+                                               'n_chains': _nch,
                                                'morph': _row.get('morph', '')}
                     if _tro:
                         _add_meta[nm]['sheath_tradeoff'] = _tro

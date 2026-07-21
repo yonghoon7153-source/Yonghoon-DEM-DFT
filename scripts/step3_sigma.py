@@ -40,11 +40,17 @@ from scipy.sparse.linalg import cg
 # SDCP 250 = USER-provided anchor UPDATE (2026-07-16; supersedes interim 150 of 2026-07-10,
 # 진성호계 S-PEDOT 자릿수).  Still overridable per run.  ⚠ pre-2026-07-16 production outputs
 # (DBE +45.4% 등) were solved at 150 — re-run needed for the 250-anchored numbers.
-SIGMA_DEFAULT = {'AM_S': 0.010, 'AM_P': 0.005, 'VGCF': 100.0, 'SuperP': 10.0, 'SDCP': 250.0}
-SID_NAME = {1: 'AM_S', 2: 'AM_P', 3: 'VGCF', 4: 'SuperP', 5: 'SDCP', 6: 'SE', 7: 'PTFE'}   # voxel σ-id → name
+SIGMA_DEFAULT = {'AM_S': 0.010, 'AM_P': 0.005, 'VGCF': 100.0, 'SuperP': 10.0, 'SDCP': 250.0,
+                 'SWCNT': 100.0}
+SID_NAME = {1: 'AM_S', 2: 'AM_P', 3: 'VGCF', 4: 'SuperP', 5: 'SDCP', 6: 'SE', 7: 'PTFE',
+            8: 'SWCNT'}                                    # voxel σ-id → name
 #   sid 7 (PTFE) = SENSITIVITY-ONLY: production은 PTFE를 전도 격자에 아예 안 넣음(절연 = void와
 #   동일 취급, bulk PTFE σ~1e-16 S/cm).  --sigma-ptfe > 0 민감도 런에서만 payload가 phase-4 점을
 #   _apts에 포함시켜 여기로 스탬프됨.
+#   sid 8 (SWCNT, A14 sheath) = 전자망 도체 (σ_e VGCF급 ⚠hook — koo2026 0.20 S/cm은 분말-복합체
+#   값이지 상(phase) σ가 아님, 이식 금지) + 이온망 기본 = SE-투명(σ_i=σ_ion_se): 실제 skin은
+#   2-10nm sub-voxel이라 1-voxel(≈0.4µm) 스탬프가 이온접촉을 끊으면 차단을 40-200× 과대표현
+#   (trade-off 상한의 이중계상).  --swcnt-ion-block = 상한 시나리오 opt-in(σ_i=0 → BV면 소멸).
 
 # Set True (mpm_webapp_payload --step3-gpu) to run the Kirchhoff CG on GPU (CuPy cuSPARSE) — a
 # multi-M-dof fine-vox solve drops from ~1 h (CPU) to minutes.  Auto-falls back to scipy CPU if
@@ -138,8 +144,8 @@ def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_
         ijk = np.floor((add_pts - lo) / vox).astype(int)
         ok = ((ijk >= 0) & (ijk < n)).all(1)
         ijk, ph = ijk[ok], add_phase[ok]
-        for code, s in ((2, 3), (3, 4), (5, 5), (4, 7)):   # phase → sid (4=PTFE: sensitivity-only,
-            m = ph == code                                  #   payload가 --sigma-ptfe>0일 때만 전달)
+        for code, s in ((2, 3), (3, 4), (5, 5), (4, 7), (6, 8)):   # phase → sid (4=PTFE: sensitivity-
+            m = ph == code                                  #   only; 6=SWCNT sheath A14 → sid 8)
             if m.any():
                 sid[ijk[m, 0], ijk[m, 1], ijk[m, 2]] = s
     return sid, pid
@@ -837,6 +843,33 @@ def _selftest_pore():
     return 0 if ok else 1
 
 
+def _selftest_swcnt():
+    """A14 — phase-6(SWCNT sheath) rasterize 스탬프 + 전자-도체/이온-투명 배선 검증.
+    리뷰 CRITICAL 재발 방지: phase→sid 맵 누락 시 점이 무음 drop되어 σ_e 효과가 0이 되는 버그."""
+    ok = True
+    am_c = np.array([[5.0, 5.0, 5.0]]); am_r = np.array([2.0]); am_t = np.array([1])
+    pts = np.array([[5.0, 5.0, 7.3], [1.0, 1.0, 1.0]])       # sheath skin점 + 원거리 VGCF 대조점
+    ph = np.array([6, 2], np.int8)
+    se = np.array([[8.0, 8.0, 8.0]])
+    sid, _ = rasterize(am_c, am_r, am_t, pts, ph, (0, 0, 0), (10.0, 10.0, 10.0), 0.4, se_pts=se)
+    v6 = sid[int(5.0 / .4), int(5.0 / .4), int(7.3 / .4)]
+    v2 = sid[int(1.0 / .4), int(1.0 / .4), int(1.0 / .4)]
+    e = (v6 == 8) and (v2 == 3)
+    ok &= e; print(f'stamp:     phase6→sid {v6} (expect 8), phase2→sid {v2} (expect 3)  {"OK" if e else "FAIL"}')
+    # 전자 테이블: idx8 도체 / 이온 테이블: 기본 SE-투명(σ>0) vs 차단(0) — payload 테이블 모양 재현
+    sig_e = np.array([0, .01, .005, 100, 10, 250, 0, 0, 100.0])
+    sig_i_t = np.array([0, 0, 0, 0, 0, .0006, .003, 0, .003])
+    sig_i_b = np.array([0, 0, 0, 0, 0, .0006, .003, 0, 0.0])
+    e = sig_e[v6] > 0 and sig_i_t[v6] > 0 and sig_i_b[v6] == 0.0
+    ok &= e; print(f'tables:    σ_e[8]={sig_e[8]} σ_i_transparent[8]={sig_i_t[8]} σ_i_blockUB[8]={sig_i_b[8]}  '
+                   f'{"OK" if e else "FAIL"}')
+    # SID_NAME 완결성 (phase_current_share KeyError 방지)
+    e = SID_NAME.get(8) == 'SWCNT'
+    ok &= e; print(f'sid-name:  SID_NAME[8]={SID_NAME.get(8)}  {"OK" if e else "FAIL"}')
+    print('SWCNT-STAMP SELFTEST', 'PASS' if ok else 'FAIL')
+    return 0 if ok else 1
+
+
 def _selftest_pnm():
     """A13 pore-PNM analytic checks — dumbbell 2-body/1-throat, sealed closure, thin fallback."""
     ok = True
@@ -895,6 +928,8 @@ if __name__ == '__main__':
                     help='A6 pore-τ analytic checks (crop / PTFE stamp / TauFactor convention)')
     ap.add_argument('--selftest-pnm', action='store_true',
                     help='A13 pore-PNM checks (dumbbell 2-body/1-throat / closure / thin fallback)')
+    ap.add_argument('--selftest-swcnt', action='store_true',
+                    help='A14 SWCNT sheath 스탬프 검증 (phase6→sid8, 전자-도체/이온-투명 테이블)')
     ap.add_argument('--integration', action='store_true',
                     help='run the committed real14 integration probe (AM-only vs +300 synthetic VGCF, '
                          'seed 0, vox 0.4) — reproduces the review-anchored numbers + monotonicity')
@@ -907,6 +942,8 @@ if __name__ == '__main__':
         sys.exit(_selftest_pore())
     if a.selftest_pnm:
         sys.exit(_selftest_pnm())
+    if a.selftest_swcnt:
+        sys.exit(_selftest_swcnt())
     if a.integration:
         import os
         _csv = os.path.join(os.path.dirname(__file__), '..', 'docs/data/real14_am_scaffold.csv')

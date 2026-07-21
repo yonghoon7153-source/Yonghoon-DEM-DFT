@@ -58,7 +58,9 @@ SWCNT_BUND_D = 0.05              # vein/bundle Ø used for OBJECT COUNTING + vie
                                  # recipe volume is add_pvs-pinned downstream, so this sets point counts
                                  # only — NEVER porosity.
 SWCNT_SEG_L = 1.0                # µm of vein per counted object (same representation-budget role).
-SWCNT_SHELL = 0.08               # seeded sheath skin thickness (µm) — real sheath ~2–10 nm (sub-voxel);
+SWCNT_SHELL = 0.08               # seeded sheath skin thickness (µm).  Real few-layer sheath ~2–10 nm =
+                                 # OUR INFERENCE from the published tube Ø 2 nm (koo2026 publishes NO
+                                 # sheath-thickness number — §F1: do not cite "2-10nm (Koo)").  Sub-voxel;
                                  # same 1-voxel-overstatement class as seed_coat, volume-pinned → honest.
 
 
@@ -199,9 +201,12 @@ def seed_sheath(n_seg, box_um, dx_um, rng, am=None, in_am=None, wrap_frac=1.0,
     vein-like conductive filaments marching ON the AM sphere surfaces — geodesic random
     walks at a thin radial skin.  The THIRD carbon morphology, distinct from both existing
     ones (SuperP = discrete interstitial chains; VGCF = bulk-spanning stiff fibres) and from
-    A4 coat_block (isolated blocking-film POINTS): here every chain is CONTIGUOUS on the
-    surface, so voxelization yields a connected conductive skin per AM (koo2026 Fig 1D
-    "vein-like" wrapping; ζ≈−1.9 mV = near-complete coverage anchor).
+    A4 coat_block (isolated blocking-film POINTS): every chain is CONTIGUOUS along itself
+    (step ≈ voxel), i.e. a per-chain vein net (koo2026 Fig 1D "vein-like" wrapping; ζ≈−1.9 mV
+    = near-complete coverage anchor).  ⚠ per-AM skin CONNECTIVITY across chains at production
+    point budgets is representation-density-limited (µm inter-chain gaps at ~0.2 wt% + max_pts
+    — same caveat class as the coverage metric; honest direction: the voxel stamp UNDER-states
+    the real continuous skin, never fakes a gain).
 
     Walk: per chain, host AM chosen ∝ surface area; start uniform on the sphere (inside a
     per-sphere random CAP of fractional area `wrap_frac` when <1); each step advances the
@@ -210,9 +215,13 @@ def seed_sheath(n_seg, box_um, dx_um, rng, am=None, in_am=None, wrap_frac=1.0,
     Points sit at radius R+U(0,shell_um) (thin skin; sub-voxel reality documented at the
     SWCNT_* constants — volume add_pvs-pinned downstream so porosity stays honest).
 
-    Drops out-of-box points and points buried in a NEIGHBOURING AM (fibre convention; own
-    sphere never — offset ≥ 0).  If n_seg·steps would exceed `max_pts`, chains are
-    subsampled (visible in the dispatch's "objects → pts" print — not a silent cap).
+    Drops out-of-box points and points buried in a NEIGHBOURING AM — ANALYTIC sphere test
+    vs `am` (scipy KDTree; own host never — offset ≥ 0).  The caller's voxel-mask `in_am` is
+    used only as a scipy-less fallback: a voxel mask cannot exclude the own host (cell-center
+    -inside test drops ~20% of the skin at dx > shell), so the analytic path is authoritative.
+    If n_seg·steps would exceed `max_pts`, chains are subsampled (n_seg floors at 1, so
+    max_pts < n_steps still emits one chain; visible in the dispatch's "objects → pts" print
+    — not a silent cap).
     Returns P[(n,3) float32] (+ per-chain fid if return_ids; + host AM index if return_host).
     """
     (Lx, Ly, Lz) = box_um
@@ -253,12 +262,17 @@ def seed_sheath(n_seg, box_um, dx_um, rng, am=None, in_am=None, wrap_frac=1.0,
         if sig_w > 0:
             eps = rng.normal(0.0, sig_w, (n_seg, 1))
             tn = tn * np.cos(eps) + np.cross(un, tn) * np.sin(eps)   # wobble about the normal
-        if wf < 1.0:                                           # cap containment: steer back toward axis
-            out = (un * a).sum(1) < (zmin + 0.05)
+        un /= np.linalg.norm(un, axis=1, keepdims=True) + 1e-12      # re-normalize each step: tiny-cap
+        if wf < 1.0:                                           # steering (below) otherwise degrades the
+            # cap containment: steer back toward axis.  Threshold clamped < 1: at wf ≤ 0.025 the raw
+            # zmin+0.05 ≥ 1 fired EVERY step and broke (u,t) orthonormality (‖u‖ drifted to 3× →
+            # points 3.5 µm off-surface / inside the host — adversarial-review finding).
+            out = (un * a).sum(1) < min(zmin + 0.05, 0.999)
             if out.any():
                 g = a[out] - (a[out] * un[out]).sum(1, keepdims=True) * un[out]
                 g /= np.linalg.norm(g, axis=1, keepdims=True) + 1e-12
                 tn[out] = g                                    # tangent → toward cap centre
+        tn -= (tn * un).sum(1, keepdims=True) * un             # Gram-Schmidt: keep t ⊥ u exactly
         u, t = un, tn / (np.linalg.norm(tn, axis=1, keepdims=True) + 1e-12)
     # stack step-major: stable sort by fid downstream restores along-chain order within each fid
     P = np.concatenate(P_steps, 0)
@@ -267,8 +281,21 @@ def seed_sheath(n_seg, box_um, dx_um, rng, am=None, in_am=None, wrap_frac=1.0,
     keep = ((P[:, 0] >= 0) & (P[:, 0] < Lx) & (P[:, 1] >= 0) & (P[:, 1] < Ly)
             & (P[:, 2] >= 0) & (P[:, 2] < Lz))
     P, fid, hst = P[keep], fid[keep], hst[keep]
-    if in_am is not None and len(P):
-        kp = ~np.array([in_am(q) for q in P])                  # drop points buried in a NEIGHBOUR AM
+    dropped_analytic = False
+    if len(P) and len(C) > 1:                                  # ANALYTIC neighbour-burial (authoritative):
+        try:                                                   #   a voxel in_am can't exclude the own host
+            from scipy.spatial import cKDTree                  #   (drops ~20% of the skin at dx > shell)
+            kq = min(len(C), 8)
+            dnb, jnb = cKDTree(C).query(P, k=kq)
+            if kq == 1:
+                dnb, jnb = dnb[:, None], jnb[:, None]
+            buried = ((dnb < R[jnb] - 1e-9) & (jnb != hst[:, None])).any(1)
+            P, fid, hst = P[~buried], fid[~buried], hst[~buried]
+            dropped_analytic = True
+        except ImportError:
+            pass
+    if (not dropped_analytic) and in_am is not None and len(P):   # scipy-less fallback (voxel mask —
+        kp = ~np.array([in_am(q) for q in P])                     #   over-drops own-host skin, documented)
         P, fid, hst = P[kp], fid[kp], hst[kp]
     P = P.astype(np.float32)
     if return_ids and return_host:
@@ -301,31 +328,44 @@ def _fib_sphere_samples(am_c, am_r, n_samp, seed=0):
 
 
 def sheath_ion_tradeoff(sheath_pts_um, am_c_um, am_r_um, se_pts_um,
-                        bands_um=(0.13, 0.26), n_samp=6000, seed=0, wrap_frac=None):
+                        bands_um=(0.13, 0.26), n_samp=6000, seed=0, wrap_frac=None,
+                        se_cloud_label='pre-compaction seed positions (moves during compaction)'):
     """A14 — sheath electronic-coverage vs LPSCl ionic-contact TRADE-OFF (geometry only).
 
     TWO layers, deliberately separate (they answer different questions):
 
     • physical_bound — ANALYTIC, from `wrap_frac` alone: the real sheath is a CONTINUOUS
-      sub-voxel skin (koo2026: 2-10 nm, ζ≈−1.9 = near-complete), so wherever the wrapped
-      cap covers the AM surface the skin interposes at EVERY AM|SE contact there →
-      blocked_of_se_contact upper bound = 100·wrap_frac (cap orientation is random,
-      uncorrelated with SE contact sites).  This is the number to reason with.
+      sub-voxel skin (few-layer ~2-10 nm = OUR inference from the published tube Ø 2 nm;
+      koo2026 publishes no sheath thickness.  ζ≈−1.9 = near-complete coverage anchor), so
+      wherever the wrapped cap covers the AM surface the skin interposes at every AM|SE
+      contact there.  blocked = 100·wrap_frac is the EXPECTATION under random cap
+      orientation (exact, SE-clustering-independent: P(point ∈ random cap) = cap area
+      fraction) — a true bound only at wrap=1; for wrap<1 individual AMs can block up to
+      100% of their SE contacts when contacts cluster inside the cap (dead-AM hotspot
+      risk the case-mean hides).  "Upper bound" refers to the ION-BLOCKING-SKIN assumption
+      axis, not to cap-orientation realizations.  This is the number to reason with.
 
     • cloud_at_representation_density (per_band) — the SEEDED point cloud vs area-weighted
       Fibonacci AM-surface samples at each band b (Hertz 0.13 / Tabor 0.26 µm project
       convention): sheathed = nearest sheath pt ≤ b; se_contact = nearest SE pt ≤ b.
-      ⚠ REPRESENTATION-LIMITED: at production loadings (~0.2 wt%, max_pts cap) the cloud
-      UNDERSAMPLES the continuous skin (point spacing > band) → these numbers are density-
-      bound and UNDERSTATE the physical skin; they converge to physical_bound only when
-      spacing ≪ band (small/dense cases).  Use for chain-placement diagnostics (where the
-      veins sit vs SE contacts), NEVER as the physical coverage.
+      ⚠ REPRESENTATION-LIMITED on BOTH clouds: the sheath cloud undersamples the continuous
+      skin (~0.2 wt% + max_pts → spacing > band), and the SE side is whatever subsample the
+      caller passes (production: 300k of tens of millions → se_contact_pct GROSSLY
+      understates the real AM|SE contact).  Diagnostics only (where veins sit vs SE
+      contacts); NEVER read as physical coverage.  n_se_used/se_nn_spacing_um are recorded
+      so the density limit is self-describing.
 
-    ⚠ §F1 semantics: blocked = GEOMETRIC UPPER BOUND of ionic-contact loss — it assumes an
-    ion-blocking skin.  koo2026 (LIQUID cells) argues the vein sheath is porous and passes
-    ions; whether a SOLID LPSCl contact tolerates the interposed skin is un-anchored for
-    our system → report the bound, never a loss prediction.
-    Returns None when scipy is unavailable (no silent fallback math)."""
+    ⚠ §F1 semantics of "blocked": assumes an ion-blocking skin.  Taken literally at wrap=1
+    the bound is 100% = an electrochemically DEAD cathode — yet koo2026's cells deliver
+    11.4 mAh/cm², proving Li⁺ passes the skin in their LIQUID system (our inference:
+    electrolyte wets the nm-scale inter-tube mesh; their PUBLISHED transport claim is
+    pore-CHANNEL vacating — D_eff 2.5× — not trans-skin porosity).  For our SOLID LPSCl
+    contact the nearest same-SE anchor is kim2025 SP@CAM (interposed carbon: active surface
+    area −49%, σ_ion −31% at 2.9 wt%) = measured PARTIAL blocking → expected real loss well
+    below the bound.  Read as bracket, never a loss prediction; blocked_eff maps to
+    R_ct ∝ 1/(1−blocked_eff) in the R_int(N) reference frame.
+    Returns None when scipy is unavailable or <2 sheath points (no silent fallback math;
+    a 1-point cloud would emit spacing=inf → non-RFC JSON)."""
     try:
         from scipy.spatial import cKDTree
     except ImportError:
@@ -333,22 +373,31 @@ def sheath_ion_tradeoff(sheath_pts_um, am_c_um, am_r_um, se_pts_um,
     surf, _ = _fib_sphere_samples(am_c_um, am_r_um, n_samp, seed)
     sh = np.asarray(sheath_pts_um, np.float64)
     se = np.asarray(se_pts_um, np.float64)
-    if len(sh) == 0 or len(surf) == 0:
+    if len(sh) < 2 or len(surf) == 0:
         return None
     d_sh = cKDTree(sh).query(surf, k=1)[0]
     d_se = cKDTree(se).query(surf, k=1)[0] if len(se) else np.full(len(surf), np.inf)
-    # representation-density scale: does the cloud resolve the bands?  (median NN spacing)
-    nn = cKDTree(sh).query(sh[:min(len(sh), 4000)], k=2)[0][:, 1] if len(sh) > 1 else np.array([np.inf])
+    # representation-density scales (BOTH clouds) — recorded so readers can judge the bands
+    nn = cKDTree(sh).query(sh[:min(len(sh), 4000)], k=2)[0][:, 1]
+    se_nn = (cKDTree(se).query(se[:min(len(se), 4000)], k=2)[0][:, 1] if len(se) > 1
+             else np.array([0.0]))
     out = {'bands_um': [float(b) for b in bands_um], 'n_surf_samples': int(len(surf)),
-           'cloud_nn_spacing_um': round(float(np.median(nn)), 4), 'per_band': {}}
+           'cloud_nn_spacing_um': round(float(np.median(nn)), 4),
+           'n_se_used': int(len(se)), 'se_nn_spacing_um': round(float(np.median(se_nn)), 4),
+           'se_cloud': se_cloud_label, 'per_band': {}}
     if wrap_frac is not None:
         wf = float(np.clip(wrap_frac, 0.0, 1.0))
         out['physical_bound'] = {
-            'blocked_of_se_contact_pct': round(100.0 * wf, 1),
-            'basis': 'ANALYTIC cap-area fraction — continuous sub-voxel skin (koo2026 '
-                     '2-10nm, ζ≈−1.9 near-complete); representation cloud undersamples it. '
-                     'Upper bound: assumes ion-blocking skin (LPSCl solid-contact case '
-                     'un-anchored — koo2026 liquid claims porous/ion-passing).'}
+            'blocked_of_se_contact_pct_upper_bound': round(100.0 * wf, 1),
+            'basis': 'ANALYTIC: expectation = 100·wrap_frac under random cap orientation '
+                     '(exact, clustering-independent; per-AM tail can reach 100% at wrap<1). '
+                     '"Upper bound" = the ion-blocking-skin ASSUMPTION axis: taken literally '
+                     'at wrap=1 it means a dead cathode, while koo2026 cells deliver 11.4 '
+                     'mAh/cm2 (liquid wets the nm inter-tube mesh — our inference; their '
+                     'published claim is pore-channel vacating, not trans-skin porosity). '
+                     'Solid-LPSCl nearest anchor kim2025 SP@CAM: ASA −49%, σ_ion −31% at '
+                     '2.9wt% = measured PARTIAL blocking → expected real loss ≪ bound. '
+                     'Bracket, not prediction; maps to R_ct ∝ 1/(1−blocked_eff).'}
     for b in bands_um:
         s = d_sh <= b
         c = d_se <= b
@@ -360,10 +409,12 @@ def sheath_ion_tradeoff(sheath_pts_um, am_c_um, am_r_um, se_pts_um,
             'blocked_of_se_contact_pct': round(blocked, 2),
             'open_of_se_contact_pct': round(100.0 - blocked, 2) if n_c else 0.0}
     out['trust'] = ('physical_bound = the trade-off number (analytic, wrap_frac); per_band '
-                    'cloud values are REPRESENTATION-DENSITY-limited diagnostics (spacing '
-                    f'{out["cloud_nn_spacing_um"]}µm vs bands {list(bands_um)}µm) — they '
-                    'understate the continuous skin and must not be read as physical '
-                    'coverage.  Seed-time RIGID geometry; bands = Hertz/Tabor convention.')
+                    'cloud values are REPRESENTATION-DENSITY-limited diagnostics on BOTH '
+                    f'sides (sheath spacing {out["cloud_nn_spacing_um"]}µm, SE subsample '
+                    f'spacing {out["se_nn_spacing_um"]}µm vs bands {list(bands_um)}µm) — '
+                    'they understate the continuous skin AND the real AM|SE contact; never '
+                    'read as physical coverage.  Seed-time RIGID geometry; bands = '
+                    'Hertz/Tabor convention.')
     return out
 
 
@@ -725,13 +776,16 @@ ADDITIVE_PROCESS = {
     'SWCNT': {   # ★ A14 surface-conformal sheath (#275 koo2026, Joule 10:102392) — THIRD carbon morphology.
         # The sheath is PRE-FORMED on the CAM powder by zeta-potential self-assembly (PDDA reverses NCMA to
         # +14.2 mV → f-SWCNT −35 mV wraps it; composite ζ≈−1.9 = near-complete coverage) BEFORE electrode
-        # mixing, and SURVIVES high-shear mixing (Raman Fig 1F: SWCNT signal intact after >2000 rpm) →
-        # regime/coverage are MIXING-INDEPENDENT, unlike every other row (coverage is a property of the
-        # pre-wrapped powder, not of mixing energy).  wrap_frac=1.0 anchored by the ζ-neutralization.
+        # mixing.  Raman Fig 1F shows the attachment SURVIVES high-shear SLURRY mixing (>2000 rpm, wet);
+        # koo2026's own dry route is kneading/fibrillation/calendering → thinky/handmix are covered by the
+        # anchor.  ⚠ dry BALL-MILLING WITH MEDIA is NOT covered (§F1): abrasive media impact on a nm-scale
+        # electrostatically physisorbed skin is outside the anchor's scope (the same media this matrix
+        # credits with milling 3µm SDCP → 0.3µm singles) — wrap_frac=1.0 kept as the lit-supported
+        # DIRECTION, survival-under-media = assumption; `--swcnt-wrap <1` is the degraded-wrap knob.
         'ballmill': dict(regime='surface_conformal', wrap_frac=1.0,
-                         morph='vein-like conformal SWCNT sheath (pre-assembled, mixing-robust)'),
+                         morph='vein-like conformal SWCNT sheath (pre-assembled; media-milling survival un-anchored §F1)'),
         'thinky':   dict(regime='surface_conformal', wrap_frac=1.0,
-                         morph='vein-like conformal SWCNT sheath (pre-assembled, mixing-robust)'),
+                         morph='vein-like conformal SWCNT sheath (pre-assembled, anchor-covered: kneading/calendering-robust)'),
         'handmix':  dict(regime='surface_conformal', wrap_frac=1.0,
                          morph='vein-like conformal SWCNT sheath (pre-assembled — low shear cannot undo self-assembly)'),
     },
@@ -1005,7 +1059,7 @@ def _selftest_sheath():
     se = (C[0] + d * (R[0] + 0.05)).astype(np.float32)          # gap 0.05 < Hertz band
     tr = sheath_ion_tradeoff(P, C, R, se, n_samp=4000, wrap_frac=1.0)
     b = tr['per_band']['0.26']
-    pb = tr['physical_bound']['blocked_of_se_contact_pct']
+    pb = tr['physical_bound']['blocked_of_se_contact_pct_upper_bound']
     # dense synthetic case: cloud spacing ≪ band → cloud blocked CONVERGES to the analytic bound
     e = (30.0 < b['se_contact_pct'] < 70.0 and b['blocked_of_se_contact_pct'] >= 70.0
          and abs(b['blocked_of_se_contact_pct'] + b['open_of_se_contact_pct'] - 100.0) < 1e-6
@@ -1028,6 +1082,16 @@ def _selftest_sheath():
     Pc = seed_sheath(200000, box, dx, np.random.default_rng(5), am=(C, R), max_pts=5000)
     e = len(Pc) <= 5000
     ok &= e; print(f'budget:    n_seg=200k max_pts=5k → {len(Pc)} pts  {"OK" if e else "FAIL"}')
+    # 8) tiny-cap 안정성 (리뷰 finding: wf≤0.025에서 (u,t) 직교성 붕괴 → skin 계약 위반이었음):
+    #    wf=0.01에서도 모든 점이 [R, R+shell] 스킨 안에 있어야 함
+    for wf_t in (0.001, 0.01, 0.02):
+        Pt, _ft, ht = seed_sheath(80, box, dx, np.random.default_rng(11), am=(C, R),
+                                  wrap_frac=wf_t, return_ids=True, return_host=True)
+        rd = np.linalg.norm(Pt.astype(np.float64) - C[ht], axis=1) - R[ht]
+        e = len(Pt) > 0 and float(rd.min()) > -1e-4 and float(rd.max()) < SWCNT_SHELL + 1e-4
+        ok &= e
+        print(f'tiny-cap:  wf={wf_t} radial∈[{rd.min():.4f},{rd.max():.4f}]µm (계약 [0,{SWCNT_SHELL}])'
+              f'  {"OK" if e else "FAIL"}')
     print('SHEATH SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
 

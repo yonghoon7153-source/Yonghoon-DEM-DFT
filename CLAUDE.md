@@ -756,11 +756,13 @@ our MPM fills; Bazzoun=frame[4] CROSS-VALIDATION of our TRANSPORT side (DEM→Ki
 
 ### ★ Digest→model APPLICATION backlog (안 적용 추적, 2026-06-26 / 현행화 2026-07-15) ★
 논문 digest는 다수 완료됐으나 **모델 적용은 별개** — `docs/digest_model_application_backlog.md`가 추적.
-현행: **A1(σ_e 방향)·A2(wallP)·A3(--coh binder)·A4(coat-seeding)·A5(분산 CoV)·A6(pore-τ)·A9(크기-파괴
-압밀분) 전부 ✅ CLOSED** · A4′(SDCP) 🔶 잔여=E_bind DFT만 · A7(Phase-5 graded-z) ⛔ 본선 ·
-A8(NCA 재료)·A11(pristine R_int, 구 A8 중복 리넘버) ⛔ 데이터 대기 · A10 사이클 chemo-mech future ·
-B1-6 대조연구(B1은 envelope로 사실상 닫힘) · C3(GB-phonon ref)만 잔여 · D1-6 접촉모델 연구트랙 ·
+현행: **A1-A7·A9·A13·A14 전부 ✅ CLOSED** (A7 graded-z·A13 pore-PNM·A14 SWCNT sheath = 2026-07-21;
+A14 = seed_sheath + 2층 trade-off + STEP3 sid 8 배선, 3각 적대리뷰 22건 반영 — additive_sheath_a14.md)
+· A4′(SDCP) 🔶 잔여=E_bind DFT만 · A8(NCA)·A11(pristine 정밀 digitize) ⛔ 데이터 대기 ·
+A10(앵커 대기)·A12(taichi=V100) future · B1-6 대조연구(B1은 envelope로 사실상 닫힘) ·
+C3(GB-phonon ref)만 잔여 · D1-6 접촉모델 연구트랙(D1 테스트베드 dem3d_plastic.py 보유) ·
 F1 잔여(SuperP/PTFE 압력-형상 크기앵커 문헌 대기).  ⚠ digest 끝났다고 적용 끝 아님 — 이 표 소진까지.
+★ 리뷰 규약(2026-07-21 사용자 지시): **백로그 항목 완료 시마다 코드·전기화학·물리 3각 적대 리뷰 필수.**
 
 ### Big goal (user's vision)
 Given input design numbers → ML predicts the full metric set → draw a 2D

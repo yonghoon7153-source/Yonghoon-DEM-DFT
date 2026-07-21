@@ -519,7 +519,7 @@ function renderSt4Faces(state) {
          <b style="font-size:11.5px;color:#cbd5e1">두께방향 프로파일 — 현재 시점</b>
          <select id="st4f-prof-src" title="프로파일 소스 — 반응·SOC(기존) / 운전 φ(z)(전자·이온 층평균 전위, 새 viz만): φ_e는 µV급 평평·φ_i는 수십 mV = 상보 구도 직접 시각화" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;font-size:10.5px;padding:0 2px">
            <option value="rxn">반응·SOC</option>${st.phi_z && st.phi_z.phi_i_V ? '<option value="phi">운전 φ(z)</option>' : ''}</select>
-         <button id="st4f-prof-dl" title="이 시점의 프로파일을 PNG(3×)+CSV로 저장 (동적 Fig4e)" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 7px;cursor:pointer;font-size:12px">📈</button>
+         <button id="st4f-prof-dl" title="이 시점의 프로파일을 PNG(3×)+CSV로 저장 (동적 Fig4e; CSV는 PCHIP ×8 보간 + src 플래그)" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 7px;cursor:pointer;font-size:12px">📈</button>${st.phi_z && st.phi_z.phi_i_V ? '<button id="st4f-tlink" title="φ(z) 전 체크포인트를 방전곡선과 시간-연결한 CSV — [1] t↔V·용량 링크표 [2] φ_i(z,t) [3] φ_e(z,t) 매트릭스 (PCHIP ×8 조밀 z, src 플래그)" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 7px;cursor:pointer;font-size:12px">⏱</button>' : ''}
          <button id="st4f-zgif" title="두께방향 프로파일 전체 시간전개를 GIF로 (동적 Fig4e 무비)" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 7px;cursor:pointer;font-size:12px">🎬</button>
        </div>
        <canvas id="st4f-prof" width="220" height="120" style="width:100%;margin-top:4px;border-radius:4px"></canvas>
@@ -559,23 +559,36 @@ function renderSt4Faces(state) {
         if (pi[b] != null) { if (pi[b] < iMin2) iMin2 = pi[b]; if (pi[b] > iMax2) iMax2 = pi[b]; }
       }
       const eSw = Math.max(eMax - eMin, 1e-12), iSw = Math.max(iMax2 - iMin2, 1e-12);
+      const vE = [], vI = [];                                // 물리값 knot (CSV 보간용, 정규화 전)
       for (let b = 0; b < zs.length; b++) {
-        if (pe[b] != null) { zE.push(zs[b]); yE.push((pe[b] - eMin) / eSw); }
-        if (pi[b] != null) { zI.push(zs[b]); yI.push((pi[b] - iMin2) / iSw); }
+        if (pe[b] != null) { zE.push(zs[b]); yE.push((pe[b] - eMin) / eSw); vE.push(pe[b]); }
+        if (pi[b] != null) { zI.push(zs[b]); yI.push((pi[b] - iMin2) / iSw); vI.push(pi[b]); }
       }
-      const curves = [{ zs: zE, ys: yE, color: '#f87171', dash: false },
-                      { zs: zI, ys: yI, color: '#a78bfa', dash: false }];
+      // PCHIP ×8 조밀화 — 표시곡선을 부드럽게 (knot 통과 보간; 솔버 층값은 그대로, 사이만 채움)
+      const grid = pchipDenseGrid(zs, 8);
+      const fEn = pchipFn(zE, yE), fIn = pchipFn(zI, yI);    // 정규화 곡선 (표시)
+      const fEv = pchipFn(zE, vE), fIv = pchipFn(zI, vI);    // 물리값 곡선 (CSV)
+      const zEd = [], yEd = [], zId = [], yId = [];
+      _profRows = [];
+      grid.z.forEach((z, gi) => {
+        const ne = fEn(z), ni = fIn(z);
+        if (ne != null) { zEd.push(z); yEd.push(ne); }
+        if (ni != null) { zId.push(z); yId.push(ni); }
+        const ve = fEv(z), vi2 = fIv(z);
+        _profRows.push([z.toFixed(3), tSec.toFixed(1),
+                        ve != null ? +ve.toPrecision(8) : '', vi2 != null ? +vi2.toPrecision(8) : '',
+                        grid.raw[gi]]);
+      });
+      const curves = [{ zs: zEd, ys: yEd, color: '#f87171', dash: false },
+                      { zs: zId, ys: yId, color: '#a78bfa', dash: false }];
       drawZProfileCanvas(cv, curves, '');
       const cap = document.getElementById('st4f-prof-cap');
       if (cap) cap.innerHTML = `<span style="color:#f87171">—</span> φ_e 스윙 ${(eSw * 1e6).toPrecision(3)} µV · `
         + `<span style="color:#a78bfa">—</span> φ_i 스윙 ${(iSw * 1e3).toPrecision(3)} mV `
         + `(<b>${(iSw / eSw).toPrecision(2)}×</b>) — 각자 [0,1] 정규화(곡률 미러용); 절대 스케일은 이 숫자`;
-      _profRows = [];
-      for (let b = 0; b < zs.length; b++) {
-        _profRows.push([zs[b], tSec.toFixed(1),
-                        pe[b] != null ? pe[b] : '', pi[b] != null ? pi[b] : '']);
-      }
-      state._st4fProf = { curves, rows: _profRows, hdr: 'z_um,t_s,phi_e_V,phi_i_V' };
+      state._st4fProf = { curves, rows: _profRows, hdr: 'z_um,t_s,phi_e_V,phi_i_V,src',
+                          note: '# PCHIP x8 monotone-cubic interpolation: src=1 rows are solver z-layers, '
+                              + 'src=0 rows are display interpolation (NOT solver data)' };
       return;
     }
     const cap0 = document.getElementById('st4f-prof-cap');
@@ -597,20 +610,31 @@ function renderSt4Faces(state) {
     const lo2 = Math.min(st.x0, st.x100), hi2 = Math.max(st.x0, st.x100);
     const zc = b => (b + 0.5) / NB * zMaxF;
     const rZ = [], rY = [], bZ = [], bY = [];              // 정규화 [0,1] 두 곡선 (공유 축)
+    const rV = [], bV = [];                                // 물리값 knot (CSV 보간용)
     for (let b = 0; b < NB; b++) {
-      if (_pb.c[b]) { rZ.push(zc(b)); rY.push((_pb.i[b] / _pb.c[b]) / iMax); }
-      if (_pb.sc[b]) { bZ.push(zc(b)); bY.push(((_pb.s[b] / _pb.sc[b]) - lo2) / Math.max(hi2 - lo2, 1e-9)); }
+      if (_pb.c[b]) { rZ.push(zc(b)); rY.push((_pb.i[b] / _pb.c[b]) / iMax); rV.push(_pb.i[b] / _pb.c[b]); }
+      if (_pb.sc[b]) { bZ.push(zc(b)); bY.push(((_pb.s[b] / _pb.sc[b]) - lo2) / Math.max(hi2 - lo2, 1e-9)); bV.push(_pb.s[b] / _pb.sc[b]); }
     }
-    const curves = [{ zs: rZ, ys: rY, color: '#f87171', dash: false },
-                    { zs: bZ, ys: bY, color: '#60a5fa', dash: false }];
-    drawZProfileCanvas(cv, curves, '');                    // 인라인 (크리스프 헬퍼)
+    // PCHIP ×8 조밀화 — 표시·CSV 동일 규약 (src=1 = bin 원값, src=0 = 표시용 보간)
+    const gridR = pchipDenseGrid([...new Set([...rZ, ...bZ])], 8);
+    const fRn = pchipFn(rZ, rY), fBn = pchipFn(bZ, bY), fRv = pchipFn(rZ, rV), fBv = pchipFn(bZ, bV);
+    const rZd = [], rYd = [], bZd = [], bYd = [];
     _profRows = [];
-    for (let b = 0; b < NB; b++) {
-      _profRows.push([zc(b).toFixed(2), tSec.toFixed(1),
-                      _pb.c[b] ? (_pb.i[b] / _pb.c[b]).toFixed(5) : '',
-                      _pb.sc[b] ? (_pb.s[b] / _pb.sc[b]).toFixed(5) : '']);
-    }
-    state._st4fProf = { curves, rows: _profRows, hdr: 'z_um,t_s,i_over_ibar_mean,soc_surf_mean' };  // 고해상 export용
+    gridR.z.forEach((z, gi) => {
+      const nr2 = fRn(z), nb2 = fBn(z);
+      if (nr2 != null) { rZd.push(z); rYd.push(nr2); }
+      if (nb2 != null) { bZd.push(z); bYd.push(nb2); }
+      const vr = fRv(z), vb = fBv(z);
+      _profRows.push([z.toFixed(3), tSec.toFixed(1),
+                      vr != null ? +vr.toPrecision(6) : '', vb != null ? +vb.toPrecision(6) : '',
+                      gridR.raw[gi]]);
+    });
+    const curves = [{ zs: rZd, ys: rYd, color: '#f87171', dash: false },
+                    { zs: bZd, ys: bYd, color: '#60a5fa', dash: false }];
+    drawZProfileCanvas(cv, curves, '');                    // 인라인 (크리스프 헬퍼)
+    state._st4fProf = { curves, rows: _profRows, hdr: 'z_um,t_s,i_over_ibar_mean,soc_surf_mean,src',
+                        note: '# PCHIP x8 monotone-cubic interpolation: src=1 rows are z-bin values, '
+                            + 'src=0 rows are display interpolation (NOT solver data)' };  // 고해상 export용
   };
   const upd = (tf) => {
     const tfv = (typeof tf === 'number') ? Math.max(0, Math.min(nChk - 1, tf)) : +tS.value;
@@ -700,13 +724,77 @@ function renderSt4Faces(state) {
     a1.href = big.toDataURL('image/png');
     a1.download = `st4_zprofile_t${t_now}s.png`;
     document.body.appendChild(a1); a1.click(); a1.remove();
-    const csv = (state._st4fProf.hdr || 'z_um,t_s,i_over_ibar_mean,soc_surf_mean') + '\n'
+    const csv = (state._st4fProf.note ? state._st4fProf.note + '\n' : '')
+      + (state._st4fProf.hdr || 'z_um,t_s,i_over_ibar_mean,soc_surf_mean') + '\n'
       + _profRows.map(r => r.join(',')).join('\n');
     const a2 = document.createElement('a');
     a2.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
     a2.download = `st4_zprofile_t${t_now}s.csv`;
     document.body.appendChild(a2); a2.click(); a2.remove();
     setTimeout(() => URL.revokeObjectURL(a2.href), 5000);
+  };
+  // ⏱ φ(z) 전 체크포인트 ↔ 방전곡선 시간-연결 CSV — [1] 링크표(t↔V·I·용량·스윙) [2] φ_i(z,t)
+  // [3] φ_e(z,t) 매트릭스.  체크포인트 t는 curve 스텝의 부분집합이라 최근접 t 매칭 = 사실상 정확.
+  const tlBtn = document.getElementById('st4f-tlink');
+  if (tlBtn) tlBtn.onclick = () => {
+    const pz = st.phi_z, cu = st.curve;
+    if (!pz || !pz.phi_i_V) { alert('φ(z) 블록이 없어요 — 새 step4_dyn viz 필요'); return; }
+    const zsK = pz.z_um, nK = st.t_s.length;
+    // 용량 스케일 — 📈 곡선 다운로드와 동일 규약 (payload field_scale 있으면 mAh/cm², 없으면 DoD%)
+    const mm2 = (state.data && state.data.mpm_metrics) || {};
+    const ar2 = (((mm2.step3 || {}).field_scale_e || {}).areal_capacity_mAh_cm2) || 0;
+    const win2 = Math.max(Math.abs(st.x100 - st.x0), 1e-9);
+    const qOf2 = x => (st.charge ? (st.x100 - x) : (x - st.x0));
+    const capCol = ar2 > 0 ? 'cap_mAh_cm2' : 'dod_pct';
+    const capOf = x => ar2 > 0 ? (qOf2(x) / win2 * ar2) : (100 * qOf2(x) / win2);
+    const vAt = t => {                                     // curve 최근접 스텝의 V/I
+      if (!cu || !cu.t_s || !cu.t_s.length) return { V: '', I: '' };
+      let bi = 0, bd = Infinity;
+      for (let i = 0; i < cu.t_s.length; i++) { const d = Math.abs(cu.t_s[i] - t); if (d < bd) { bd = d; bi = i; } }
+      return { V: cu.V[bi], I: (cu.I_A || [])[bi] ?? '' };
+    };
+    const L = [];
+    L.push(`# STEP4 time-linked thickness profiles — ${st.charge ? 'charge' : 'discharge'} ${st.c_rate}C, R_int=${st.r_int_ohm_cm2 || 0} Ohm.cm2`);
+    L.push(`# [1] checkpoint <-> curve link (V,I from the full curve at nearest t; ${capCol} from x_mean, same convention as the curve download)`);
+    L.push(`k,t_s,V_V,I_A,${capCol},x_mean,phi_e_swing_uV,phi_i_swing_mV`);
+    for (let k = 0; k < nK; k++) {
+      const pe = pz.phi_e_V[k] || [], pi = pz.phi_i_V[k] || [];
+      let eMin = Infinity, eMax = -Infinity, iMin = Infinity, iMax = -Infinity;
+      for (let b = 0; b < zsK.length; b++) {
+        if (pe[b] != null) { if (pe[b] < eMin) eMin = pe[b]; if (pe[b] > eMax) eMax = pe[b]; }
+        if (pi[b] != null) { if (pi[b] < iMin) iMin = pi[b]; if (pi[b] > iMax) iMax = pi[b]; }
+      }
+      const va = vAt(st.t_s[k]);
+      L.push([k, st.t_s[k], va.V, va.I, capOf(st.x_mean[k]).toFixed(4), st.x_mean[k],
+              isFinite(eMax - eMin) ? ((eMax - eMin) * 1e6).toPrecision(4) : '',
+              isFinite(iMax - iMin) ? ((iMax - iMin) * 1e3).toPrecision(4) : ''].join(','));
+    }
+    const grid2 = pchipDenseGrid(zsK, 8);
+    const mat = key => {
+      const rows = [['z_um', 'src'].concat(st.t_s.map(t => 't' + t + 's')).join(',')];
+      const fns = [];
+      for (let k = 0; k < nK; k++) {
+        const zr = [], vr = [], col = pz[key][k] || [];
+        for (let b = 0; b < zsK.length; b++) if (col[b] != null) { zr.push(zsK[b]); vr.push(col[b]); }
+        fns.push(pchipFn(zr, vr));
+      }
+      grid2.z.forEach((z, gi) => {
+        rows.push([z.toFixed(3), grid2.raw[gi]]
+          .concat(fns.map(f => { const v = f(z); return v == null ? '' : +v.toPrecision(8); })).join(','));
+      });
+      return rows;
+    };
+    L.push('');
+    L.push('# [2] phi_i_V(z,t) matrix — PCHIP x8 dense z (src=1 raw solver layer, src=0 interpolation for smooth plotting, NOT solver data)');
+    L.push(...mat('phi_i_V'));
+    L.push('');
+    L.push('# [3] phi_e_V(z,t) matrix — same layout (phi_e json precision: old viz 1e-6 V = uV-quantized steps; new viz 1e-9)');
+    L.push(...mat('phi_e_V'));
+    const aT = document.createElement('a');
+    aT.href = URL.createObjectURL(new Blob([L.join('\n')], { type: 'text/csv' }));
+    aT.download = `st4_phi_z_timelinked_${_st4tag()}.csv`;
+    document.body.appendChild(aT); aT.click(); aT.remove();
+    setTimeout(() => URL.revokeObjectURL(aT.href), 5000);
   };
   const zGifBtn = document.getElementById('st4f-zgif');      // 🎬 두께 프로파일 전체 시간전개 → GIF (동적 Fig4e, 보간 프레임)
   if (zGifBtn) zGifBtn.onclick = async () => {
@@ -756,6 +844,7 @@ function buildControls(container, isMPM) {
         <option value="add_superp">　└ Super P만</option>
         <option value="add_ptfe">　└ PTFE만</option>
         <option value="add_sdcp">　└ SDCP만</option>
+        <option value="add_swcnt">　└ SWCNT만</option>
         <option value="cbd">CBD 도메인 (carbon+binder 통합상)</option>
       </optgroup>
       <optgroup label="기공 (pore / XCT)">
@@ -2522,7 +2611,7 @@ function applyViewMode(state, mode) {
     // 서브샘플 가중 보정 — additive_points는 phase별 서브샘플이라 raw count는 payload마다 밀도가
     // 다름.  metrics.additive_counts(전체 seeded)로 w=total/shown을 곱해 "환산 접점수"를 만들면
     // SBE↔DBE 케이스 간 수치·색 비교가 유효해짐 (uniform random subsample → unbiased estimate).
-    const _PHN = { 2: 'VGCF', 3: 'SuperP', 5: 'SDCP' };
+    const _PHN = { 2: 'VGCF', 3: 'SuperP', 5: 'SDCP', 6: 'SWCNT' };
     const _shown = { 2: 0, 3: 0, 5: 0 };
     carbonPts.forEach(p => { _shown[p[3]]++; });
     const _acnt = mm.additive_counts || {};
@@ -3254,13 +3343,13 @@ function applyViewMode(state, mode) {
     return;
   }
   if (mode === 'additives' || mode === 'add_vgcf' || mode === 'add_superp' || mode === 'add_ptfe'
-      || mode === 'add_sdcp') {
+      || mode === 'add_sdcp' || mode === 'add_swcnt') {
     /* conductive additives (payload additive_points: [x,y,z,phase]) as a coloured point cloud over a
      * dimmed SE+AM — so the carbon threading the SE/voids + bridging the AM reads clearly.  Colours are
      * BRIGHT (not SEM-black) for contrast on the dark canvas.  Sub-modes filter to one phase. */
     const PH = { 2: 'VGCF', 3: 'SuperP', 4: 'PTFE', 5: 'SDCP', 6: 'SWCNT' };
     const only = mode === 'add_vgcf' ? 2 : mode === 'add_superp' ? 3 : mode === 'add_ptfe' ? 4
-               : mode === 'add_sdcp' ? 5 : 0;
+               : mode === 'add_sdcp' ? 5 : mode === 'add_swcnt' ? 6 : 0;
     const mm = (state.data && state.data.mpm_metrics) || {};
     const all = (state.data && state.data.additive_points) || [];
     if (!all.length) {
@@ -4924,7 +5013,7 @@ function _wiringCounts(particles, addPts, addCounts, boxLx, boxLy) {
   if (!carbon.length || !counts.length) return { counts, median: 0, hits };
   // 가중치는 반드시 ghost 복제 BEFORE 계산 — shown에 ghost가 들어가면 w=total/shown이 희석돼
   // 환산 접점이 축소됨 (버그였음: 중앙값 348→290 하락의 원인).
-  const PHN = { 2: 'VGCF', 3: 'SuperP', 5: 'SDCP' };
+  const PHN = { 2: 'VGCF', 3: 'SuperP', 5: 'SDCP', 6: 'SWCNT' };
   const shown = { 2: 0, 3: 0, 5: 0 };
   carbon.forEach(p => { shown[p[3]]++; });
   const w = {};
@@ -4980,6 +5069,45 @@ function _wiringCounts(particles, addPts, addCounts, boxLx, boxLy) {
    눈금 위치는 선형 그대로가 정확); spec.sub = 부제(단위 환산) 한 줄. */
 /* z-프로파일 크리스프 렌더 (인라인 미리보기 + 고해상 export 공용) — 어떤 캔버스 크기든
    선폭·폰트·여백을 120px 기준으로 스케일해 또렷하게 그린다 (확대-뭉갬 방지). */
+/* PCHIP(Fritsch–Carlson 단조 3차) 평가기 — z-프로파일 표시/CSV 보간용.  knot를 정확히 통과(보간,
+   회귀 아님)하고 단조 구간에서 오버슈트가 없어 전위/농도 프로파일에 안전.  f(x)는 knot 범위 밖 null. */
+function pchipFn(zs, ys) {
+  const n = zs.length;
+  if (n === 0) return () => null;
+  if (n === 1) return x => (Math.abs(x - zs[0]) < 1e-9 ? ys[0] : null);
+  const h = [], d = [];
+  for (let i = 0; i < n - 1; i++) {
+    h.push(zs[i + 1] - zs[i]);
+    d.push((ys[i + 1] - ys[i]) / Math.max(zs[i + 1] - zs[i], 1e-12));
+  }
+  const m = new Array(n).fill(0);
+  m[0] = d[0]; m[n - 1] = d[n - 2];
+  for (let i = 1; i < n - 1; i++) {
+    if (d[i - 1] * d[i] <= 0) m[i] = 0;                      // 극값에서 기울기 0 (단조 보존)
+    else { const w1 = 2 * h[i] + h[i - 1], w2 = h[i] + 2 * h[i - 1]; m[i] = (w1 + w2) / (w1 / d[i - 1] + w2 / d[i]); }
+  }
+  return x => {
+    if (x < zs[0] - 1e-9 || x > zs[n - 1] + 1e-9) return null;
+    let i = 0;
+    while (i < n - 2 && x > zs[i + 1]) i++;
+    const t = (x - zs[i]) / Math.max(h[i], 1e-12), t2 = t * t, t3 = t2 * t;
+    return ys[i] * (2 * t3 - 3 * t2 + 1) + h[i] * m[i] * (t3 - 2 * t2 + t)
+         + ys[i + 1] * (-2 * t3 + 3 * t2) + h[i] * m[i + 1] * (t3 - t2);
+  };
+}
+/* 공통 조밀 z-그리드: knot 각 구간을 factor 분할.  knot 자체는 정확 포함(raw=1), 사이는 raw=0 —
+   CSV에 src 플래그로 병기해 어느 행이 솔버 출력이고 어느 행이 표시용 보간인지 항상 구분. */
+function pchipDenseGrid(zKnots, factor = 8) {
+  const zs = [...zKnots].sort((a, b) => a - b).filter((v, i, arr) => i === 0 || v > arr[i - 1] + 1e-9);
+  const Z = [], R = [];
+  for (let i = 0; i < zs.length - 1; i++) {
+    Z.push(zs[i]); R.push(1);
+    for (let k = 1; k < factor; k++) { Z.push(zs[i] + (zs[i + 1] - zs[i]) * k / factor); R.push(0); }
+  }
+  if (zs.length) { Z.push(zs[zs.length - 1]); R.push(1); }
+  return { z: Z, raw: R };
+}
+
 function drawZProfileCanvas(cv, curves, yLab, leftLab, rightLab) {
   const g = cv.getContext('2d'), W = cv.width, H = cv.height, k = H / 120;
   const mL = 6 * k, mR = 6 * k, mT = 6 * k, mB = 16 * k;
@@ -5344,6 +5472,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
           <option value="add_superp">　└ Super P만</option>
           <option value="add_ptfe">　└ PTFE만</option>
           <option value="add_sdcp">　└ SDCP만</option>
+          <option value="add_swcnt">　└ SWCNT만</option>
           <option value="pore">기공 (pore)</option>
         </select>
         <label id="cmp-bb-wrap" style="display:none;font-size:11.5px;color:#e5e7eb;align-items:center;gap:4px">
@@ -6197,9 +6326,9 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       $('cmp-leg-b').innerHTML = cap(nB3, mmB);
     } else {                                                 // additives family
       const only = mode === 'add_vgcf' ? 2 : mode === 'add_superp' ? 3 : mode === 'add_ptfe' ? 4
-                 : mode === 'add_sdcp' ? 5 : 0;
+                 : mode === 'add_sdcp' ? 5 : mode === 'add_swcnt' ? 6 : 0;
       const rA3 = buildAdditives(SA, A, only), rB3 = buildAdditives(SB, B, only);
-      const swatch = { 0: '전체', 2: 'VGCF', 3: 'SuperP', 4: 'PTFE', 5: 'SDCP' };
+      const swatch = { 0: '전체', 2: 'VGCF', 3: 'SuperP', 4: 'PTFE', 5: 'SDCP', 6: 'SWCNT' };
       const cap = (r3, mm2) => `${swatch[only]} — fibre ${r3.nFib.toLocaleString()}가닥 · ${r3.nPts.toLocaleString()} seg/점 (개별 뷰어 렌더러 재사용) · `
         + Object.entries(mm2.additive_counts || {}).map(([k, v]) => `${k} ${Number(v).toLocaleString()}`).join(' · ');
       $('cmp-leg-a').innerHTML = cap(rA3, mmA);

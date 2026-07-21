@@ -63,11 +63,11 @@ def seed_se_mask(se_csv, am_shape, h, am_mask, dz=1.0):
 
 
 def electronic_connectivity(t, c, r, se, phase, floor_z, um,
-                            tol_am_um=0.10, band_um=0.15, vox_um=0.30, cond_phases=(2, 3, 5)):
+                            tol_am_um=0.10, band_um=0.15, vox_um=0.30, cond_phases=(2, 3, 5, 6)):
     """Per-AM ELECTRONIC connectivity to the current collector (floor) — the slide-19 quantity
     (연결/고립 입자).  Zeroth-order electron-transport physics = PERCOLATION on the conductive
     phases only:
-      nodes  = AM spheres ∪ conductive-carbon clusters (phase 2 VGCF / 3 SuperP / 5 SDCP)
+      nodes  = AM spheres ∪ conductive-carbon clusters (phase 2 VGCF / 3 SuperP / 5 SDCP / 6 SWCNT sheath)
       edges  = AM–AM mechanical contact (surface gap ≤ tol_am — Holm: contact spot = conduction
                spot, mirrors the DEM σ_e network criterion)
              ∪ AM–carbon contact (carbon point within band of the AM surface = the add-cov
@@ -298,6 +298,14 @@ def main():
                          '아예 미스탬프, bulk PTFE ~1e-16 S/cm 절연체).  >0이면 PTFE phase-4 점을 sid7로 '
                          '스탬프해 전자망에 참여시킴 — "절연 가정이 결과를 만들었나" 반론 검증용 '
                          '(랩 논의 2026-07-14, 0.58 S/cm 제안값의 출처는 미확인 ⚠).  이온은 항상 절연.')
+    ap.add_argument('--sigma-swcnt', type=float, default=100.0,
+                    help='σ_e SWCNT sheath (S/cm) — A14.  VGCF급 lit order ⚠hook: 개별 SWCNT 축방향은 '
+                         '1e4-1e5 S/cm급이나 vein-번들 film 유효값은 미앵커.  ⚠ koo2026의 0.20 S/cm은 '
+                         '분말-복합체(powder-composite) 측정값이지 상(phase) σ가 아님 — 이식 금지.')
+    ap.add_argument('--swcnt-ion-block', action='store_true',
+                    help='A14 상한 시나리오 opt-in: sheath 복셀 σ_i=0 (이온 dof·BV면 소멸) = ion-blocking '
+                         'skin 가정의 기하 상한을 수송모델로 구현.  기본 OFF = SE-투명(σ_i=σ_ion_se): '
+                         '실제 skin 2-10nm sub-voxel이라 1-voxel 차단은 40-200× 과대표현(이중계상).')
     ap.add_argument('--sigma-ion-se', type=float, default=0.003,
                     help='σ_ion SE (S/cm) = 3.0 mS/cm LPSCl grain (Cronau — production σ_grain anchor)')
     ap.add_argument('--collector-rint', type=float, default=-1.0,
@@ -490,7 +498,7 @@ def main():
                              'conductive_phases': ('AM + VGCF/SuperP + neutral-SDCP as AM-grade weak conductor '
                                                    '(SE·PTFE excluded; doped/neutral split = STEP3 σ-weights)'
                                                    if _sdcp.get('variant') == 'neutral'
-                                                   else 'AM + VGCF/SuperP/SDCP (SE·PTFE excluded = e-insulators)')}
+                                                   else 'AM + VGCF/SuperP/SDCP/SWCNT-sheath (SE·PTFE excluded = e-insulators)')}
             for ty, nm in ((1, 'AM_P'), (2, 'AM_S')):
                 m = (t == ty)
                 if m.any():
@@ -526,8 +534,8 @@ def main():
             sid3, pid3 = _s3.rasterize(_am_c, _am_r, t, _apts, _aph, (0.0, 0.0, 0.0), _hi, a.step3_vox,
                                        se_pts=_septs)      # SE stamped (sid 6) → ionic solve on the same grid
             _sig3 = np.array([0.0, a.sigma_am_s, a.sigma_am_p, a.sigma_vgcf, a.sigma_superp, a.sigma_sdcp,
-                              0.0, a.sigma_ptfe])          # ELECTRONIC table: SE = e-insulator; idx7 =
-            #                                                PTFE sensitivity hook (default 0 → sid7 미존재)
+                              0.0, a.sigma_ptfe, a.sigma_swcnt])   # ELECTRONIC table: SE = e-insulator;
+            #   idx7 = PTFE sensitivity hook (default 0 → sid7 미존재); idx8 = SWCNT sheath (A14, 도체)
             _ztop = float(sim_m.get('thickness_um') or ((top - FLOOR) * UM))   # PRESS PLANE (wall_z) —
             #   `top` has a +0.01-box (~0.4µm) void-cap padding that floats the plate off the bed
             #   crowns (kgy first run: no_plate_contact); the sim thickness is the physical plate.
@@ -542,7 +550,7 @@ def main():
                 _p998e = None                               # 필드 정량 스케일용 (아래 step3에 기록)
                 if not a.no_field:                          # ELECTRONIC field (AM+carbon {1,2,3,4,5}) — the
                     _ep, _ej = _s3.field_point_cloud(       # paper Fig-4 grammar: |J_e| cloud, hot backbone
-                        _res3, sid3, _sig3, a.step3_vox, (1, 2, 3, 4, 5, 7), max_points=a.field_max_points)
+                        _res3, sid3, _sig3, a.step3_vox, (1, 2, 3, 4, 5, 7, 8), max_points=a.field_max_points)
                     if _ep is not None:
                         _ej = np.nan_to_num(_ej, nan=0.0, posinf=0.0, neginf=0.0)  # bare NaN kills JSON.parse
                         _p998e = max(float(np.percentile(_ej, 99.8)), 1e-30)
@@ -561,7 +569,9 @@ def main():
                          'dissipation_share': {_sname[k]: round(v, 4) for k, v in _share.items()},
                          'sigma_table_S_cm': {'AM_S': a.sigma_am_s, 'AM_P': a.sigma_am_p,
                                               'VGCF': a.sigma_vgcf, 'SuperP': a.sigma_superp,
-                                              'SDCP': a.sigma_sdcp,
+                                              'SDCP': a.sigma_sdcp, 'SWCNT': a.sigma_swcnt,
+                                              'SWCNT_ion_mode': ('blocked_UB_scenario' if a.swcnt_ion_block
+                                                                 else 'SE_transparent_default'),
                                               **({'PTFE': a.sigma_ptfe} if a.sigma_ptfe > 0 else {})},
                          # ★A8: CAM 프리셋 provenance (nca σ = Amin 2015 충전-상단 1e-2 S/cm,
                          #   리튬화 1e-4 캐비엇; E_AM은 프리셋 불변 — nca_material_preset.md)
@@ -738,14 +748,18 @@ def main():
                 # IONIC network on the SAME grid (paper Fig-2d/f axis): SE + SDCP conduct Li⁺
                 # (user principle — SDCP is NOT an ion insulator), AM/carbon/PTFE block.
                 _t1 = _time.time()
-                _sig3i = np.array([0.0, 0.0, 0.0, 0.0, 0.0, a.sigma_ion_sdcp, a.sigma_ion_se, 0.0])
+                # idx8 SWCNT = 기본 SE-투명(σ_i=σ_ion_se): 실제 skin 2-10nm sub-voxel → 1-voxel
+                # 스탬프가 이온망을 끊으면 차단 40-200× 과대표현(trade-off 상한 이중계상).
+                # --swcnt-ion-block = 상한 시나리오 opt-in (σ_i=0 → 해당 복셀 이온 dof·BV면 소멸).
+                _sig3i = np.array([0.0, 0.0, 0.0, 0.0, 0.0, a.sigma_ion_sdcp, a.sigma_ion_se, 0.0,
+                                   0.0 if a.swcnt_ion_block else a.sigma_ion_se])
                 _res3i = _s3.solve_sigma_z(sid3, _sig3i, a.step3_vox, return_field=True,
                                            z_top_um=_ztop, z_bot_um=0.0)
                 if _res3i['n_dof']:
                     _sharei = _s3.phase_current_share(_res3i, sid3, _sig3i)
                     if not a.no_field:                      # IONIC field (SE+SDCP {5,6}) — Li⁺ |J| cloud,
                         _ip, _ij = _s3.field_point_cloud(   # the partner panel to the electronic field
-                            _res3i, sid3, _sig3i, a.step3_vox, (5, 6), max_points=a.field_max_points)
+                            _res3i, sid3, _sig3i, a.step3_vox, (5, 6, 8), max_points=a.field_max_points)
                         if _ip is not None:
                             _ij = np.nan_to_num(_ij, nan=0.0, posinf=0.0, neginf=0.0)  # bare NaN kills JSON.parse
                             _p998i = max(float(np.percentile(_ij, 99.8)), 1e-30)
@@ -935,7 +949,8 @@ def main():
         if len(fid) != len(se):
             print(f'  ⚠ fibre length {len(fid)} != SE {len(se)} — ignoring --fibre')
         else:
-            fib_mask = np.isin(phase, (2, 4)) & (fid >= 0)   # rod phases only — coat ids (SuperP-thinky/SDCP shells) are NOT polylines
+            fib_mask = np.isin(phase, (2, 4, 6)) & (fid >= 0)   # rod/chain phases — coat ids (SuperP-thinky/SDCP shells) are
+            #   NOT polylines; SWCNT(6) sheath chains ARE (fid=chain, along-chain order preserved by the stable sort below)
             n_fib_total = len(np.unique(fid[fib_mask]))
             # subsample fibres PER PHASE so a high-count phase (SuperP — ~40k carbon-black chains) doesn't
             # crowd out the low-count binder web (PTFE — ~300 fibres).  Fewest-fibre phase first gets its

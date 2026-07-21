@@ -3,9 +3,9 @@
 `docs/digest_model_application_backlog.md`(상세 LIVING)의 **상태별 재분류**.  "digest는 끝나도 적용은
 별개"의 현재 정산 — 뭐가 닫혔고 뭐가 남았나를 한눈에.  상세 근거·커밋은 원 backlog의 각 행 참조.
 
-> 요약: **핵심 적용 항목(A1-A6, A9)은 전부 CLOSED** → Phase-3 관문 해소.  A4′(SDCP)는 E_bind DFT
-> 하나만 남음.  잔여는 (a) **본선** A7·B7, (b) **데이터/문헌 대기** A8·A11·B2·B4·B5·B6, (c) **future
-> 시간축** A10·A12·A13·A14, (d) **연구트랙** D1-D6 + E-feeds.  하자(❗)는 없음 — 남은 건 확장·검증.
+> 요약: **핵심 적용 항목(A1-A7, A9, A13, A14)은 전부 CLOSED** → Phase-3 관문 해소.  A4′(SDCP)는
+> E_bind DFT 하나만 남음.  잔여는 (a) **본선** B7, (b) **데이터/문헌 대기** A8·A11·B2·B4·B5·B6,
+> (c) **future 시간축** A10·A12, (d) **연구트랙** D1-D6 + E-feeds.  하자(❗)는 없음 — 남은 건 확장·검증.
 
 ---
 
@@ -28,6 +28,7 @@
 | **A7** | Phase-5 graded-z | ✅2026-07-21: `--poro-grad`(porosity(z) 게이트, 총량고정+ungated 폴백) + `--cb-ratio/--cb-grad`(K=8 설계프로파일 meta) + 밴드 실측 출력.  #286 gradient vs #20 uniform 둘 다 knob(재료의존이라 안 고름) |
 | **A13** | PNM pore 위상지표 | ✅2026-07-21: `step3_sigma.pore_pnm()` nearest-seed 분할(★watershed_ift 오분할 734/7 기각) — n_pores·r_eq·pore-CN·throat·closed_from_top% + payload 배선, selftest 5종 PASS |
 | **R_int P1** | 앵커DB+배선+σ_apparent 분리 | ✅2026-07-21: rint_eis_anchors.csv(kim2025 pdf_verified)·킷 --step4-r-int·webapp &s4rint=·pristine/cycled 병기(§6.1 해소)·적대리뷰 2건 즉수정.  + step4 운전-φ(z) export(phi_z) |
+| **A14** | surface_conformal SWCNT sheath | ✅2026-07-21: `seed_sheath`(AM표면 geodesic vein) + 2층 trade-off(해석 상한 100·wrap vs 표현밀도 진단) + **STEP3 sid 8 배선**(--sigma-swcnt, 이온 SE-투명 기본/--swcnt-ion-block 상한 opt-in) + viewer/서브모드.  **3각 리뷰 22건 반영**(CRITICAL sid 무배선 등).  `docs/additive_sheath_a14.md`; selftest 10+3종 |
 | (E) | Bielefeld2019 / Deysher2022 | 인용-확인(β=0.41 verbatim) / 포지셔닝(리뷰가 호명한 모델=우리 실현) |
 
 ---
@@ -66,8 +67,7 @@
 | ID | 항목 | 노트 |
 |---|---|---|
 | **A10** | 사이클 chemo-mechanics | volume change+CZM 입계박리 = 우리 압밀 MPM의 사이클 짝.  ✅분업 명문화 완료(2026-07-21, mpm3d_calibration.md) — 본체는 β_Vegard digitize+CZM γ 앵커 후.  중간 다리 = A11-② 경험 R_int(N) 궤적(구현됨) |
-| **A12** | 점탄성 MPM binder (spring-back) | SLS/Perzyna-Ludwick, η(T)/E(T) DMA → #285 3주 두께회복이 검증앵커.  4편 수렴 최대 untracked gap |
-| **A14** | surface_conformal sheath | 연속 CNT-sheath 제3 morphology(두꺼운 전극 실제 승자).  #275 |
+| **A12** | 점탄성 MPM binder (spring-back) | SLS/Perzyna-Ludwick, η(T)/E(T) DMA → #285 3주 두께회복이 검증앵커.  4편 수렴 최대 untracked gap.  ⚠클라우드 컨테이너 taichi 미설치 → 구현해도 런타임 스모크는 V100/WSL |
 
 ### 🔬 연구트랙 (접촉모델 D — 풀 digest 후 정량값 확보 시)
 - **D1** 경로A: real E=24 + Thornton–Ning p_y캡 → 18× 연화 없이 300MPa porosity 시험 (★최우선 후보; So2022/Sangrós 완전 LAW 스펙 보유)
@@ -82,6 +82,8 @@
 ---
 
 ## 진행 메모
+- 2026-07-21: **A14 CLOSED** (sheath + trade-off + STEP3 배선; 3각 리뷰 22건 반영).  future 잔여 =
+  A10(앵커 대기)·A12(taichi=V100).  D1은 `dem3d_plastic.py` 테스트베드 보유 — V100 캠페인 후보.
 - 2026-07-18 작성 (상세 backlog 재분류).  **핵심 A1-A6·A9 + C1/C2/C4 + F2 = CLOSED**; A4′는 E_bind만.
 - 현재 활성: STEP4-v2 1C 쌍 production(SBE/DBE-250) → 완주 후 본곡선 3종 + φ(z) Fig4e payload-only.
 - 원칙 불변: 반쯤 digest된 논문으로 코드 선변경 금지(D/E는 풀 digest 후); §F1 날조 금지(크기 앵커 부재 시 hook만).
