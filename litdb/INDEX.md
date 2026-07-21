@@ -193,3 +193,8 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 - 상세 목록·설명은 **INDEX_DEM_snapshot_2026-07-16.md** (DEM 브랜치 INDEX 스냅샷), DEM 관점 비교노트는 **comparison_vs_ours_DEM.md**.
 - 중복 주의: ECER 황화물 안정성 리뷰는 양쪽에서 각각 digest됨 — **정본 = fan2026_sulfide_assb_stability_review_ECERD2600097.md** (본 INDEX 최상단), DEM 브랜치의 li2026_... 버전은 가져오지 않음.
 - 이후 신규 digest는 어느 세션에서 만들든 이 브랜치(claude/friendly-meitner-lldvar)의 litdb에 커밋할 것 (로컬 워처도 여기로 푸시).
+
+## 🧰 방법론(ML) 카드 (배터리 아님 — 도구)
+| slug | 논문 | 축 |
+|---|---|---|
+| `papers/hollmann2025_tabpfn_tabular_foundation_model.md` | **[외부·ML]** Hollmann/Müller/…/Hutter (Freiburg·Prior Labs), "**TabPFN: Accurate predictions on small data with a tabular foundation model**" (*Nature* 637, 2025, open access) — 합성 1억 데이터셋 사전학습 트랜스포머가 임의 소규모 표 데이터를 **ICL 단일 forward-pass로 학습+예측** (≤10k행/500특징). 분류 2.8 s가 4 h-튜닝 CatBoost 능가(ROC AUC 0.939 vs 0.752, 5,140×), 회귀 4.8 s(−RMSE 0.923 vs 0.872, 3,000×); 전체 예측**분포** 출력(다봉 가능)·결측/이상치 견고·fine-tune/생성/밀도추정/임베딩. **🔑 DEM 코퍼스 n=88–132 = 정확히 스위트스폿** — 5-phase Phase 3(설계→전-메트릭 predictor)·STEP4 곡선 서로게이트·R_int(N) BOL→cycling 예측기의 도구 후보; 물리 스케일링 법칙(σ 삼중)의 **대체가 아니라 잔차사냥·스크리닝 보완**. ⚠ 외삽 취약·블랙박스·≤10k 스케일 | **ML 방법론·소데이터 표형 회귀/분류·서로게이트 도구** |
