@@ -721,6 +721,45 @@ echo "          (오래된 run_* 폴더는 디스크 차면 지워도 됨 — �
                    '  exit 0\nfi\ncd "$RUN"\n' + s4_body)
         sp = os.path.join(a.out, 'step4_only.sh')
         open(sp, 'w').write(s4_only); os.chmod(sp, 0o755)
+    # ── A-1 사이클 열화 앵커 companion (real_degrading_electrode §3 A-1) — 이 킷 스캐폴드 + 케이스
+    #    설정(box_x/n_grid/E_SE/ν/press)으로 바로 실행.  webapp 킷에 항상 포함(zip = dir 전체).
+    #    ★plain 문자열 + __TOKEN__ 치환 (f-string 아님 → bash ${}/$() 리터럴; \<newline> 회피 위해
+    #    배열은 () 안 다줄, 명령은 한 줄). ──────────────────────────────────────────────────────
+    a1_tmpl = ('#!/usr/bin/env bash\n'
+               'set -uo pipefail\n'
+               '# A-1 MPM 사이클 열화 앵커 — pristine(N0) + 충전앵커(SC-5.1%/poly팽창) + ΔV심화(-5.9%)\n'
+               '#   → cycle_geom_debond 로 기하 debond/void.  ⚠ 충전-상태(가역 SOC breathing) 스냅샷 =\n'
+               '#   영구 fade 아님; 비가역화 판정은 ledger 캘리브(A-3 --mpm-anchor).  사용: bash run_a1_anchors.sh\n'
+               'KIT="$(cd "$(dirname "$0")" && pwd)"\n'
+               'SCR=""; for c in "$KIT/scripts" "$KIT/../scripts"; do [ -d "$c" ] && SCR="$(cd "$c" && pwd)" && break; done\n'
+               '[ -z "$SCR" ] && { echo "scripts/ 못 찾음 — 레포 루트에 킷을 푸세요"; exit 1; }\n'
+               'if [ -z "${MPM_NO_PULL:-}" ] && [ -d "$SCR/../.git" ]; then ( cd "$SCR/.." && git pull --ff-only ) || echo "  ⚠ git pull 스킵"; fi\n'
+               'OUT="$KIT/a1_anchors"; mkdir -p "$OUT"\n'
+               'if [ -z "${A1_DETACHED:-}" ]; then\n'
+               '  export A1_DETACHED=1\n'
+               '  log="$OUT/a1_run_$(date +%Y%m%d_%H%M%S).log"\n'
+               '  echo "→ detached — log: $log"\n'
+               '  setsid nohup bash "$0" "$@" >"$log" 2>&1 </dev/null &\n'
+               '  echo "   PID $!     follow: tail -f $log"\n'
+               '  exit 0\n'
+               'fi\n'
+               'COMMON=(--am-scaffold "$KIT/am_scaffold.csv" --se-dump "$KIT/se_scaffold.csv" --periodic\n'
+               '        --lateral-box __BOX__ --n-grid __NG__ --arch cuda --gpu-mem 28 --protocol hold --frames 150\n'
+               '        --e-se __ESE__ --nu-se __NUSE__ --target-gpa __PRESS__)\n'
+               'run_one() { local lab="$1"; shift; echo "=== A-1 앵커: $lab ==="; '
+               'python3 "$SCR/mpm3d_compaction.py" "${COMMON[@]}" "$@" --save-metrics "$OUT/m_${lab}.json" '
+               '|| { echo "FAIL $lab — 위 트레이스"; exit 1; }; }\n'
+               'run_one N0\n'
+               'run_one charged --cycle-deform --cycle-n 1 --cycle-dv-sc -0.051 --cycle-dv-poly 0.059 --dv-pct-poly 0.30\n'
+               'run_one charged_deep --cycle-deform --cycle-n 2 --cycle-dv-sc -0.059 --cycle-dv-poly 0.059 --dv-pct-poly 0.30\n'
+               'echo "=== 기하 debond/void (pristine 대비) ==="\n'
+               'python3 "$SCR/cycle_geom_debond.py" "$OUT/m_N0.json" "$OUT/m_charged.json" "$OUT/m_charged_deep.json" --csv "$OUT/a1_debond.csv"\n'
+               'echo "완료 → $OUT/ (m_*.json 앵커, a1_debond.csv 기하 debond/void).  ⚠ 충전상태(가역); ledger가 비가역 판정."\n')
+    a1 = (a1_tmpl.replace('__BOX__', f'{box_x}').replace('__NG__', f'{n_grid_mpm}')
+          .replace('__ESE__', f'{e_se_mpm}').replace('__NUSE__', f'{nu_se_mpm}')
+          .replace('__PRESS__', f'{press_gpa}'))
+    ap1 = os.path.join(a.out, 'run_a1_anchors.sh')
+    open(ap1, 'w').write(a1); os.chmod(ap1, 0o755)
     print(f'MPM input for case "{case}" → {a.out}/')
     print(f'  am_scaffold.csv ({len(am_rows)} AM)  se_scaffold.csv ({len(se_rows)} SE)  '
           f'run_mpm.sh  mpm_input.json  (target_porosity={tgt})'
@@ -731,7 +770,8 @@ echo "          (오래된 run_* 폴더는 디스크 차면 지워도 됨 — �
              if s4_sched else
              f'  step4_only.sh  [STEP4 방전: {", ".join(f"{v:g}C" for v in s4_rates) or "—"}'
              f' / 충전CCCV: {", ".join(f"{v:g}C" for v in s4_chg) or "—"}]'
-             if (s4_rates or s4_chg) else '  [STEP4 미선택 — 그리드 export까지]'))
+             if (s4_rates or s4_chg) else '  [STEP4 미선택 — 그리드 export까지]')
+          + '  run_a1_anchors.sh  [A-1 사이클 열화 앵커: pristine+충전+ΔV심화 → 기하 debond/void]')
 
 
 if __name__ == '__main__':
