@@ -265,6 +265,8 @@
     "date": "2026-07-22",
     "mean_ICOHP_eV": {"P-S": -5.913, "Li-S": -2.504, "Li-Cl": -2.111, "Li-Br": -1.934},
     "n_bonds": {"P-S": 16, "Li-S": 72, "Li-Cl": 10, "Li-Br": 12},
+    "mean_ICOBI": {"P-S": 0.925, "Li-S": 0.384, "Li-Cl": 0.288, "Li-Br": 0.280},
+    "icobi_interpretation": "bond order: P-S 0.925 ~ 1 = covalent single bond (stiff PS4 framework, robust to Br). Li-S/Cl/Br 0.28-0.38 = low = IONIC. Li-Br(0.280) ~ Li-Cl(0.288) similar covalency -> Br bond weakening (ICOHP -1.93 vs -2.11) is IONIC in origin (bond elongation -> weaker electrostatic, matches Coulomb 4.34<4.70), NOT a covalency change. ICOHP(strength)+ICOBI(order) together: covalent framework + ionic Li-halide, Br softens the ionic bond.",
     "distance_cutoff_A": {"P-S": 2.3, "Li-S": 2.9, "Li-Cl": 3.3, "Li-Br": 3.5},
     "headline": "Li-Br (-1.934) WEAKER than Li-Cl (-2.111) — Br weakens the Li-halide bond. Same-structure Cl-vs-Br direct comparison (no comp1 needed).",
     "three_descriptor_consistency": "length (Li-Br 2.752 > Li-Cl 2.597), Coulomb q1q2/r (Li-Br 4.34 < Li-Cl 4.70), -ICOHP (Li-Br 1.934 < Li-Cl 2.111) ALL agree Li-Br weaker.",
