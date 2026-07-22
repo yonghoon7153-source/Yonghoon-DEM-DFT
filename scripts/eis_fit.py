@@ -162,6 +162,30 @@ def main():
         for r in rows:
             w.writerow(r)
 
+    # ★ REPRESENTATIVE means — "유동적으로 열어두는" 대표값: recomputed every run, so adding cells
+    #   (eis_archive → eis_fit) auto-updates the numbers the model anchors on.  full R_int = the
+    #   4-cell SOC100 mean (range wide → representative, not final; see README re-experiment note).
+    import statistics as _st
+
+    def _meancol(ct, key):
+        v = [float(r[key]) for r in rows if r['cell_type'] == ct and r.get(key, '') != '']
+        return (round(_st.mean(v), 2), round(min(v), 2), round(max(v), 2), len(v)) if v else ('', '', '', 0)
+    ri_mean, ri_lo, ri_hi, n_full = _meancol('full', 'R1_ohmcm2')
+    se_mean, se_lo, se_hi, n_sym = _meancol('symmetric', 'sigma_e_mScm')
+    summ = {'metric': ['full_R_int_ohmcm2', 'full_R_s_ohmcm2', 'full_R_w_ohmcm2',
+                       'sym_R_e_ohmcm2', 'sym_sigma_e_mScm'],
+            'src': ['SOC100 4-cell', 'SOC100 4-cell', 'SOC100 4-cell', 'symmetric', 'symmetric']}
+    keys = [('full', 'R1_ohmcm2'), ('full', 'R_s_ohmcm2'), ('full', 'R_w_ohmcm2'),
+            ('symmetric', 'R1_ohmcm2'), ('symmetric', 'sigma_e_mScm')]
+    with open(os.path.join(FITS, 'summary_means.csv'), 'w', newline='') as fh:
+        w = csv.writer(fh)
+        w.writerow(['metric', 'mean', 'min', 'max', 'n', 'src'])
+        for (ct, k), m, s in zip(keys, summ['metric'], summ['src']):
+            mn, lo, hi, n = _meancol(ct, k)
+            w.writerow([m, mn, lo, hi, n, s])
+    print(f"  ★ representative full-cell R_int = {ri_mean} Ω·cm² (range {ri_lo}-{ri_hi}, n={n_full}); "
+          f"sym σ_e = {se_mean} mS/cm (n={n_sym})  → fits/summary_means.csv")
+
     # per-file fit figure (data pts + fit line), Ω·cm²
     n = len(panels)
     ncol = 4

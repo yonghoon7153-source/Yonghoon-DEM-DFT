@@ -82,6 +82,13 @@ No1 ↓ (0.14→0.093), No2 ↑ (0.115→0.152); each ±~11 % from L = 40–50 �
 → single R-CPE is first-pass; a TLM refit would refine.  rmse 5–6 % (sym) / 2.6–13 % (full).
 Figure: `fits/eis_fits.png`.
 
+**★ Representative full-cell R_int (`fits/summary_means.csv`, auto-recomputed each run):**
+all 4 full cells are **SOC100 (charged, Ewe 3.61–3.67 V)** — the filename `1.3V` is that cell's
+*initial OCV* (a cell-quality flag: 1.3 V = abnormally low OCV / worse cell; normal ≈ 2.0–2.2 V),
+**not** the EIS voltage.  **Mean R_int = 49.8 Ω·cm²** (range 24–79, n=4; R_s 9.7, R_w 65).  Wide
+spread → representative, not final (see re-experiment note).  Adding cells + re-running
+`eis_archive.py` → `eis_fit.py` updates the mean automatically ("유동적으로 열어둔" 대표값).
+
 ## Parser (external, not vendored)
 `.mpr` is decoded with **[galvani](https://github.com/echemdata/galvani)** (GPL-3.0).  We
 deliberately do **not** copy galvani into this repo (license hygiene); `scripts/eis_archive.py`

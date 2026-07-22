@@ -152,8 +152,10 @@ def extract_mpr(BioLogic, mpr_path, out_csv):
     im_z = d['-Im(Z)/Ohm']
     rs = _rs_intercept(re_z, im_z)
     lf = float(re_z[int(np.argmin(f_hz))])
+    ewe = float(np.mean(d['<Ewe>/V'])) if '<Ewe>/V' in names else float('nan')   # cell V during EIS
     return {'n_points': len(d), 'f_max_Hz': float(f_hz.max()), 'f_min_Hz': float(f_hz.min()),
-            'R_s_ohm': round(rs, 3), 'Re_LF_ohm': round(lf, 3), 'arc_ohm': round(lf - rs, 3)}
+            'R_s_ohm': round(rs, 3), 'Re_LF_ohm': round(lf, 3), 'arc_ohm': round(lf - rs, 3),
+            'Ewe_V': round(ewe, 3) if ewe == ewe else ''}
 
 
 def main():
@@ -165,7 +167,7 @@ def main():
     mprs = sorted(f for f in os.listdir(RAW) if f.lower().endswith('.mpr'))
     rows = []
     cat_cols = ['filename', 'date', 'sample', 'blend', 'thickness_um', 'cell_type',
-                'cycle', 'state', 'technique', 'run', 'n_points', 'f_max_Hz', 'f_min_Hz',
+                'cycle', 'state', 'Ewe_V', 'technique', 'run', 'n_points', 'f_max_Hz', 'f_min_Hz',
                 'area_cm2', 'R_s_ohm', 'Re_LF_ohm', 'arc_ohm',
                 'R_s_ohmcm2', 'Re_LF_ohmcm2', 'arc_ohmcm2', 'extracted_csv', 'note']
     for fn in mprs:
@@ -182,6 +184,12 @@ def main():
         elif os.path.exists(out_csv):
             note = 'cached_csv (galvani absent)'
         meta.update(desc)
+        # data-derived SOC: full-cell Ewe > 3.4 V (vs Li-In) = charged/SOC100 — the filename
+        # carries no reliable SOC token (a "1.3V" tag mismatched the measured Ewe 3.67 V), so
+        # the cell voltage during the EIS is the truth.
+        _ewe = meta.get('Ewe_V', '')
+        if meta['cell_type'] == 'full' and _ewe != '' and float(_ewe) > 3.4:
+            meta['state'] = 'SOC100(charged)'
         area = _area_cm2(meta['cell_type'])          # Ω → Ω·cm² via disk area (10pi sym / 13pi full)
         meta['area_cm2'] = area if area else ''
         for k_ohm, k_asr in (('R_s_ohm', 'R_s_ohmcm2'), ('Re_LF_ohm', 'Re_LF_ohmcm2'),
