@@ -370,26 +370,24 @@
   {% set DL = '/mnt/c/Users/안용훈/Downloads' %}
   {% set BR = 'claude/stoic-knuth-NObVQ' %}
   <details open style="margin-top:12px">
-    <summary style="cursor:pointer;color:#94a3b8;font-size:0.9em;font-weight:600">GPU 서버(gabia) — ① zip 받고 아래 하나만 복사 (업로드+실행+받기)</summary>
+    <summary style="cursor:pointer;color:#94a3b8;font-size:0.9em;font-weight:600">GPU 서버(gabia) — ① zip 받고 순서대로 복사 (업로드 / 실행 / 받기 분리)</summary>
     <div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre># ⓪ gabia 최초 1회 (한 번만) — MPM worktree (DFT 브랜치 클론 안 건드림; 이미 있으면 skip)
 cd /root/work/Yonghoon-DEM-DFT && git fetch origin {{ BR }} && git worktree add -B mpmwork /root/work/mpm_run origin/{{ BR }}</pre></div>
-    <div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre># ★ 이것만 복사 = 업로드 + 실행 + 완료대기 + 자동받기 (detached라 SSH 끊겨도 서버 런 계속; 끊기면 이 명령 다시 복사)
-scp "{{ DL }}/{{ zip }}" root@121.78.116.27:/root/work/mpm_run/ && \
-ssh root@121.78.116.27 'cd /root/work/mpm_run && git pull origin {{ BR }} && unzip -o {{ zip }} && rm -f latest_run/mpm_done.marker 2>/dev/null; bash run_mpm.sh' && \
-echo "⏳ 실행 중 (detached) · 완료 대기…" && \
-until ssh root@121.78.116.27 'test -f /root/work/mpm_run/latest_run/mpm_done.marker' 2>/dev/null; do sleep 60; done && \
-scp root@121.78.116.27:/root/work/mpm_run/latest_run/mpm_payload.json root@121.78.116.27:/root/work/mpm_run/latest_run/mpm_metrics.json {{ DL }}/ && \
-echo "✅ 완료 → ③ 버튼으로 mpm_payload.json 업로드"</pre></div>
+    <div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre># 1) 업로드
+scp "{{ DL }}/{{ zip }}" root@121.78.116.27:/root/work/mpm_run/</pre></div>
+    <div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre># 2) 실행 — 복사=바로 실행 (detached → SSH 끊겨도 서버 런 계속)
+ssh root@121.78.116.27 'cd /root/work/mpm_run && git pull origin {{ BR }} && unzip -o {{ zip }} && bash run_mpm.sh'</pre></div>
+    <div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre># 3) 완료 후 받기 → WSL (latest_run/ — run 끝나고 실행)
+scp root@121.78.116.27:/root/work/mpm_run/latest_run/mpm_payload.json root@121.78.116.27:/root/work/mpm_run/latest_run/mpm_metrics.json {{ DL }}/</pre></div>
   </details>
   <details style="margin-top:8px">
-    <summary style="cursor:pointer;color:#94a3b8;font-size:0.9em;font-weight:600">GPU 서버(kgy) — ① zip 받고 아래 하나만 복사 (업로드+실행+받기)</summary>
-    <div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre># ★ 이것만 복사 = 업로드 + 실행 + 완료대기 + 자동받기 (detached라 SSH 끊겨도 서버 런 계속; 끊기면 이 명령 다시 복사)
-scp "{{ DL }}/{{ zip }}" kgy@59.12.161.91:~/work/_verify/Yonghoon-DEM-DFT/ && \
-ssh kgy@59.12.161.91 'cd ~/work/_verify/Yonghoon-DEM-DFT && git pull origin {{ BR }} && unzip -o {{ zip }} && rm -f latest_run/mpm_done.marker 2>/dev/null; bash run_mpm.sh' && \
-echo "⏳ 실행 중 (detached) · 완료 대기…" && \
-until ssh kgy@59.12.161.91 'test -f ~/work/_verify/Yonghoon-DEM-DFT/latest_run/mpm_done.marker' 2>/dev/null; do sleep 60; done && \
-scp kgy@59.12.161.91:~/work/_verify/Yonghoon-DEM-DFT/latest_run/mpm_payload.json kgy@59.12.161.91:~/work/_verify/Yonghoon-DEM-DFT/latest_run/mpm_metrics.json {{ DL }}/ && \
-echo "✅ 완료 → ③ 버튼으로 mpm_payload.json 업로드"</pre></div>
+    <summary style="cursor:pointer;color:#94a3b8;font-size:0.9em;font-weight:600">GPU 서버(kgy) — ① zip 받고 순서대로 복사 (업로드 / 실행 / 받기 분리)</summary>
+    <div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre># 1) 업로드
+scp "{{ DL }}/{{ zip }}" kgy@59.12.161.91:~/work/_verify/Yonghoon-DEM-DFT/</pre></div>
+    <div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre># 2) 실행 — 복사=바로 실행 (detached → SSH 끊겨도 서버 런 계속)
+ssh kgy@59.12.161.91 'cd ~/work/_verify/Yonghoon-DEM-DFT && git pull origin {{ BR }} && unzip -o {{ zip }} && bash run_mpm.sh'</pre></div>
+    <div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre># 3) 완료 후 받기 → WSL (latest_run/ — run 끝나고 실행)
+scp kgy@59.12.161.91:~/work/_verify/Yonghoon-DEM-DFT/latest_run/mpm_payload.json kgy@59.12.161.91:~/work/_verify/Yonghoon-DEM-DFT/latest_run/mpm_metrics.json {{ DL }}/</pre></div>
   </details>
   <details style="margin-top:8px">
     <summary style="cursor:pointer;color:#94a3b8;font-size:0.9em;font-weight:600">GPU 서버(runyourai V100 대여) 실행 명령어 — ① zip 받고 복사해서 사용</summary>
@@ -398,13 +396,12 @@ echo "✅ 완료 → ③ 버튼으로 mpm_payload.json 업로드"</pre></div>
 git clone https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT.git ~/Yonghoon-DEM-DFT
 cd ~/Yonghoon-DEM-DFT && git checkout claude/stoic-knuth-NObVQ
 sudo apt update && sudo apt install -y python3-pip unzip && python3 -m pip install taichi numpy scipy scikit-image cupy-cuda12x nvidia-cublas-cu12 nvidia-cusparse-cu12 nvidia-cusolver-cu12 nvidia-cuda-runtime-cu12 nvidia-cuda-nvrtc-cu12 nvidia-nvjitlink-cu12</pre></div>
-    <div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre># ★ 이것만 복사 = 업로드 + 실행 + 완료대기 + 자동받기 (detached라 SSH 끊겨도 서버 런 계속; 받은 뒤 대여 반납 잊지 말기!)
-scp "{{ DL }}/{{ zip }}" v100:~/Yonghoon-DEM-DFT/ && \
-ssh v100 'cd ~/Yonghoon-DEM-DFT && git pull origin {{ BR }} && unzip -o {{ zip }} && rm -f latest_run/mpm_done.marker 2>/dev/null; bash run_mpm.sh' && \
-echo "⏳ 실행 중 (detached) · 완료 대기…" && \
-until ssh v100 'test -f ~/Yonghoon-DEM-DFT/latest_run/mpm_done.marker' 2>/dev/null; do sleep 60; done && \
-scp v100:~/Yonghoon-DEM-DFT/latest_run/mpm_payload.json v100:~/Yonghoon-DEM-DFT/latest_run/mpm_metrics.json {{ DL }}/ && \
-echo "✅ 완료 → ③ 업로드 (그 뒤 대여 반납)"</pre></div>
+    <div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre># 1) 업로드
+scp "{{ DL }}/{{ zip }}" v100:~/Yonghoon-DEM-DFT/</pre></div>
+    <div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre># 2) 실행 — 복사=바로 실행 (detached → SSH 끊겨도 서버 런 계속)
+ssh v100 'cd ~/Yonghoon-DEM-DFT && git pull origin {{ BR }} && unzip -o {{ zip }} && bash run_mpm.sh'</pre></div>
+    <div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre># 3) 완료 후 받기 → WSL (latest_run/ — run 끝나고; 받은 뒤 대여 반납 잊지 말기!)
+scp v100:~/Yonghoon-DEM-DFT/latest_run/mpm_payload.json v100:~/Yonghoon-DEM-DFT/latest_run/mpm_metrics.json {{ DL }}/</pre></div>
   </details>
   <!-- MPM 결과 파라미터 — 업로드(또는 기존 결과)가 있으면 채워지고 보임 -->
   <style>
@@ -787,10 +784,10 @@ function _addTag() {
     .filter(p => p[1] > 0).map(p => p[0] + p[1]).join('_');
   if (!pairs) return '';
   const vt = (vox && vox !== '0.4') ? '_vox' + vox : '';   // finer STEP3 vox → carried into the name
-  let _ns = 0; try { _ns = s4sched ? JSON.parse(s4sched).length : 0; } catch (e) {}
-  const st = (_ns ? '_sched' + _ns + 'step' : '')          // ★Zive 스케줄 킷 구별 (체크박스 대신)
-           + (s4 && !_ns ? '_s4' + s4.split(',').map(r => r + 'C').join('_') : '')
-           + (s4chg && !_ns ? '_s4chg' + s4chg.split(',').map(r => r + 'C').join('_') : '')
+  // ⚠ 스케줄은 파일명 태그에 안 넣음 — 서버 download_name(app.py)이 &s4sched를 파일명에 반영 안 하므로,
+  //   여기서 넣으면 카드가 참조하는 zip명 ↔ 실제 다운로드명이 어긋남 (VGCFPTFESDCP 사건 재발).
+  const st = (s4 ? '_s4' + s4.split(',').map(r => r + 'C').join('_') : '')
+           + (s4chg ? '_s4chg' + s4chg.split(',').map(r => r + 'C').join('_') : '')
            + (s4pp ? '_ppds' : '');                        // poly/SC D_s 프리셋 킷 구별
   return '_' + pairs + '_' + mix + vt + st;
 }
@@ -828,22 +825,13 @@ function updateAdditiveGpuCmds() {
   let html = `<div style="margin-top:4px;color:#94a3b8;font-size:0.82em;font-weight:600">② 첨가제 zip GPU 실행 명령어 — recipe <code>${esc(recipe)}</code> · mixing ${mix}${vox !== '0.4' ? ' · STEP3 vox ' + vox + 'µm' : ''}${s4txt ? ' · <b style="color:#4ade80">STEP4 ' + s4txt + ' 자동 연속</b>' : ' · STEP4 미선택(그리드 export까지)'} · 산출물은 <code>run_*/</code> 런 전용 폴더(latest_run 심링크)</div>`;
   for (const s of SERVERS) {
     const H = s.ssh, wk = s.wk;
-    const stepFetch = (s4 || s4chg)
-      ? `scp ${H}:${wk}/latest_run/step4_viz_*.json ${H}:${wk}/latest_run/step4_*.npz ${DL}/ && \\\n` : '';
-    // ★ 한 번 복사 = 업로드 + 실행(detached) + 완료대기(poll marker) + 자동받기.  detached라 SSH 끊겨도
-    //   서버 런은 계속 → 창 닫혀 대기 끊겨도, 이 명령 다시 복사하면 이미 끝난 건 즉시 받아짐(rm으로 stale 마커 제거).
-    const one =
-      `scp "${DL}/${zip}" ${H}:${wk}/ && \\\n` +
-      `ssh ${H} 'cd ${wk} && git pull origin ${BR} && unzip -o ${zip} && rm -f latest_run/mpm_done.marker 2>/dev/null; bash run_mpm.sh' && \\\n` +
-      `echo "⏳ 실행 중 (detached — 이 창 닫혀도 서버 런 계속) · 완료 대기…" && \\\n` +
-      `until ssh ${H} 'test -f ${wk}/latest_run/mpm_done.marker' 2>/dev/null; do sleep 60; done && \\\n` +
-      `scp ${H}:${wk}/latest_run/mpm_payload.json ${H}:${wk}/latest_run/mpm_metrics.json ${DL}/ && \\\n` +
-      stepFetch +
-      `echo "✅ 완료 → ③ 버튼으로 mpm_payload.json 업로드"`;
     html += `<div style="margin-top:8px;color:#a5b4fc;font-size:0.82em;font-weight:700">▸ ${s.name} (${esc(s.ssh)})</div>`
       + (s.setup ? blk(s.lbl0 || `# ⓪ ${s.name} 최초 1회 (한 번만)`, s.setup) : '')
-      + blk('# ★ 이것만 복사 = 업로드 + 실행 + 완료대기 + 자동받기 (한 방)', one)
-      + blk('# webapp 반영', `# 구조·metrics·3D뷰어: ③ 버튼으로 mpm_payload.json 업로드`
+      + blk(`# 1) 업로드 (② 버튼으로 zip 받은 뒤)`, `scp "${DL}/${zip}" ${H}:${wk}/`)
+      + blk(`# 2) 실행 — 복사=바로 실행 (detached → SSH 끊겨도 서버 런 계속)`, `ssh ${H} 'cd ${wk} && git pull origin ${BR} && unzip -o ${zip} && bash run_mpm.sh'`)
+      + blk('# 3) 완료 후 받기 → WSL (latest_run/ — run 끝나고 실행; 진행중이면 아직 없음)', `scp ${H}:${wk}/latest_run/mpm_payload.json ${H}:${wk}/latest_run/mpm_metrics.json ${DL}/`
+            + ((s4 || s4chg) ? `\nscp ${H}:${wk}/latest_run/step4_viz_*.json ${H}:${wk}/latest_run/step4_*.npz ${DL}/   # STEP4 곡선+뷰어` : ''))
+      + blk('# 4) webapp 반영', `# 구조·metrics·3D뷰어: ③ 버튼으로 mpm_payload.json 업로드`
             + ((s4 || s4chg) ? `\n# ★STEP4 곡선/애니: 뷰어 → View Mode STEP4-v2 → 📂 교체 → ${DL}/step4_viz_*.json 선택` : ''));
   }
   el.innerHTML = html;
