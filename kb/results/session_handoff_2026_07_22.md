@@ -20,10 +20,15 @@
   - ⚠ **Li_on_hbn 0.010 eV** — 프로파일 비대칭/무피크 = Li가 hBN ring-hollow에 안 앉음(Shi: hollow−0.56 vs N-top−0.46). **낮 작업: Li의 진짜 hBN 사이트 찾아 홉 재정의**
   - ⏳ Li_in_gallery / 2L2L (핵심 값) 진행중
   - ⚠ **drag 미끄럼 버그 교훈**: 기판 완전자유(1 1 1)면 PBC 시트 병진→barrier=0. 반드시 면내 고정(0 0 1).
-- **kgy CPU — NEB 빌드 실패·연기**: QE 7.4.1 from-source GPU 빌드에서 nvfortran(NVHPC 24.11)이
-  XClib/UtilXlib/FFTXlib 일부 소스(eval_infix/pbecor/fftw)에서 `-tp` help 토하며 Error 1.
-  configure는 성공(-D__CUDA/cc86). 컴파일러-소스 궁합 이슈 → 소스별 디버깅 = **낮 작업**.
-  drag(graphene 검증)로 barrier 방어 가능하므로 비크리티컬.
+- **kgy — NEB 빌드 ✅ 성공 (2026-07-22, conda 3층 오염 격파)** → **GPU NEB 가동 중**:
+  QE 7.4.1 from-source GPU 빌드. 실패 원인이 conda(uma env)의 **3층 오염**이었음:
+  ① `CFLAGS=-march=nocona`(nvc 컴파일 거부) ② PATH의 `x86_64-conda-linux-gnu-ld/ar`
+  ③ **env 변수 `LD`/`AR`**(PATH 지워도 configure가 씀). 3층 다 걷어내야 함
+  (`build_qe_neb_gpu_kgy.sh`에 영구 박제: unset 툴체인 env + PATH purge + make.inc sed LD→mpif90).
+  neb.x = cufft/cublas 링크 GPU 빌드. `run_neb_kgy.sh`로 hBN→graphene→gallery→2L2L NEB 체인 시작.
+  **교훈: conda 오염 = 컴파일(CFLAGS)+링크(binutils PATH)+env변수(LD/AR) 3층, 정답은 셋 다 제거.**
+- **drag 결과 (NEB 교차검증용 백업)**: graphene 0.281(검증됨) / hBN 0.010(약결합 평평 PES,
+  NEB로 재확인 중) / gallery·2L2L drag는 이미지당 2h로 느려 NEB가 대체.
 - **gabia GPU** — pbrefine complex_doped(SDCP DFT+U): iter ~100, acc 하강(5 Ry 아래면 순항). iter 100서 정체면 Γ-선수렴/β0.01 카드
 - **gabia CPU** — LPSOCl ELF+CDD(`lpsoclelf`): SCF 도는 중(SG15 NC, np10). cube 3종 → §11 마지막 칸
 
