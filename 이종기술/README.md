@@ -37,3 +37,13 @@ program (samples **No.1 / No.2**) and its **poly:small = 5:5 bimodal** blend, on
 - Next: **TLM refit** of symmetric cells (CPE_a ≈ 0.3 = transport dispersion the R-CPE only
   approximates) for a cleaner σ_e; run **STEP3 on No.1/No.2 pure & 5:5** and compare σ_e vs the
   measured 0.09–0.15 mS/cm; wire full-cell R_int into the STEP4 anchor CSV (primer-SUS line).
+
+## ⚠ These are REPRESENTATIVE values — re-experiment to firm up
+The fits/σ_e above are single representative cells; before treating as final, re-measure:
+1. **순수-소립 대칭셀 복합체 두께** (집전체 제외) — pins σ_e (now a ±11 % band from L = 40–50 µm).
+2. **Full-cell R_int at a defined SOC / rested state** — the OCV vs 1.3 V arcs differ 2–3× (R_int
+   79 vs 30) and `No2_full` run2 mixes in SOC100 aging → a controlled-SOC scan gives a clean R_int.
+3. **poly effect direction** (No.1 σ_e ↓ vs No.2 σ_e ↑) — repeat with more cells to tell a real
+   sample difference from cell-to-cell scatter.
+4. **σ_ion** needs an **electron-blocking** symmetric cell (Li/In contacts) — the SUS cells give
+   σ_e only.  (= the planned 3:7 / 5:5 / 7:3 이온전도도 series in the lab notes.)
