@@ -375,6 +375,37 @@ def parse_args(argv):
                          'respond EMERGENTLY on the dilated bed.  z-only affine = die-press global mode (lateral '
                          'fixed); local non-affine rearrangement stays DEM territory.  1.0 = off (soft additives: '
                          'PTFE/SuperP flow into pores, no dilation — their thickness pin is the physics).')
+    # ── A-1 cycle-deform (real_degrading_electrode_design §3 A-1) ────────────────────────────
+    ap.add_argument('--cycle-deform', action='store_true',
+                    help='A-1 (v1 ASSUMED-FORM): re-deform the frozen AM scaffold by the CHARGE-STATE lattice '
+                         'ΔV (SC shrink / poly expand) BEFORE compaction, then let the SE MPM re-equilibrate '
+                         'around the deformed skeleton → se_dump\' re-deformed geometry + EMERGENT porosity/'
+                         'coverage/thickness at that state.  frame[5]=MPM (mechanics/void-fill re-flow); the '
+                         'N→ΔV mapping and anchor-to-anchor trajectory belong to the ledger (A-3), NOT here — '
+                         'this produces ONE deformed anchor at the ΔV you pass.  Centres & grid (dx/origin/'
+                         'nz/FLOOR/lateral_box) + the bed reference-frame am_top stay PRISTINE across N so '
+                         'porosity is measured in a FIXED box (N4 grid-invariance); only the AM radii (→ pin '
+                         'mask, SE eviction, AM_vol) change.  Scaffold-only.')
+    ap.add_argument('--cycle-dv-sc', type=float, default=-0.051,
+                    help='SC (AM_S, single-crystal, scaffold type=2 in this file) whole-particle lattice volume-change fraction, '
+                         'SIGNED (−=charge/contraction).  Default −0.051 = Kondrakov NMC811 c-axis collapse; '
+                         'sweep to −0.059 (Yun/Kang).  Radius ×(1+ΔV)^(1/3).  ISOTROPIC approximation '
+                         '(Kondrakov c-axis anisotropy ignored — for the c-aligned worst case pass the larger '
+                         '|ΔV|).  ASSUMED-FORM: this is a charge-STATE deformation, not a per-cycle law.')
+    ap.add_argument('--cycle-dv-poly', type=float, default=0.059,
+                    help='poly (AM_P, polycrystalline, scaffold type=1 in this file) OUTER-SHELL reference ΔV magnitude, SIGNED '
+                         '(+=microcrack grain-separation envelope EXPANSION — OPPOSITE sign to SC per the '
+                         'anisotropic intergranular fracture; Parks/Yun).  Scaled by --dv-pct-poly before '
+                         'use — do NOT put the full lattice ΔV/3 on the outer radius (the crack absorbs most '
+                         'internally).  radius ×(1+ΔV_poly·dv_pct_poly)^(1/3).')
+    ap.add_argument('--dv-pct-poly', type=float, default=0.30,
+                    help='fraction of --cycle-dv-poly that reaches the poly OUTER radius (default 0.30: A9 '
+                         'intergranular crack absorbs ~70%% internally as void; Kang&Shin size-weighting). '
+                         'The rest is internal void (not resolved by the rigid-obstacle AM mask at this '
+                         'grid → v1 reports it as a discount, not an explicit inner cavity).  Sweep axis.')
+    ap.add_argument('--cycle-n', type=int, default=0,
+                    help='anchor LABEL: which cycle N this deformed geometry represents (metadata only — the '
+                         'physics is driven by ΔV, not N).  Lets A-3 map anchor→N.  0 = pristine/unlabelled.')
     return ap.parse_args(argv)
 
 
@@ -465,9 +496,30 @@ def main(argv):
         am_c = np.column_stack([SW[0] + amraw[:, 1] * scl, SW[0] + amraw[:, 2] * scl,
                                 FLOOR + amraw[:, 3] * scl * DZ]).astype(np.float64)
         am_r = (amraw[:, 4] * scl).astype(np.float64)
-        AM_vol = float(np.sum((4.0 / 3.0) * np.pi * am_r ** 3))
-        am_top = float((am_c[:, 2] + am_r).max())
-        WALL0 = am_top + 0.05; WALL_MIN = FLOOR + 0.01
+        am_top = float((am_c[:, 2] + am_r).max())              # ★ PRISTINE bed top → grid/WALL0/nz + porosity
+        #   reference-frame stay N-INVARIANT (N4): the box in which porosity is measured must NOT move with
+        #   the deformation, else a porosity change would be a moving-frame artefact rather than real void.
+        if args.cycle_deform:
+            # ── A-1 (v1 ASSUMED-FORM): charge-state radius re-deformation.  ★ THIS FILE'S type convention is
+            #    1=AM_P (poly), 2=AM_S (SC) — see the coverage loop ((1,'AM_P'),(2,'AM_S')) and the scaffold
+            #    CSV header — the OPPOSITE of step3_sigma's SID_NAME.  SC (sid=2) contracts on charge; poly
+            #    (sid=1) expands its envelope via anisotropic intergranular microcracking (opposite sign),
+            #    discounted by --dv-pct-poly (crack absorbs most internally).  Isotropic approx (c-axis
+            #    anisotropy folded into the |ΔV| sweep-axis).  Centres FIXED → only radii (→ pin mask / SE
+            #    eviction / AM_vol) change.  frame[5]=MPM re-flow; the N→ΔV law is the ledger's (A-3). ──────
+            _sid = amraw[:, 0].astype(int)
+            _fac = np.ones(len(am_r), np.float64)
+            _fac[_sid == 2] = (1.0 + args.cycle_dv_sc) ** (1.0 / 3.0)                       # AM_S=SC shrink
+            _fac[_sid == 1] = (1.0 + args.cycle_dv_poly * args.dv_pct_poly) ** (1.0 / 3.0)  # AM_P=poly expand (discounted)
+            am_r = am_r * _fac
+            _dr_sc = (1.0 + args.cycle_dv_sc) ** (1.0 / 3.0) - 1.0
+            _dr_po = (1.0 + args.cycle_dv_poly * args.dv_pct_poly) ** (1.0 / 3.0) - 1.0
+            print(f"  [cycle-deform] N={args.cycle_n} (v1 ASSUMED-FORM, isotropic, grid/bed-frame N-invariant):  "
+                  f"AM_S/SC ΔV={args.cycle_dv_sc:+.3f} → r×{1+_dr_sc:.4f} ({_dr_sc*100:+.2f}%, {int((_sid==2).sum())} AM_S)  ·  "
+                  f"AM_P/poly ΔV={args.cycle_dv_poly:+.3f}×{args.dv_pct_poly:.2f} → r×{1+_dr_po:.4f} ({_dr_po*100:+.2f}%, "
+                  f"{int((_sid==1).sum())} AM_P)")
+        AM_vol = float(np.sum((4.0 / 3.0) * np.pi * am_r ** 3))  # DEFORMED solid (density/report)
+        WALL0 = am_top + 0.05; WALL_MIN = FLOOR + 0.01          # WALL0 from PRISTINE am_top → nz N-invariant
         r_se3 = 0.0005 * scl                                  # SE 0.5µm → box units
         um_box = 1000.0 / scl                                 # µm per box unit (lateral_box LIGGGHTS u = WIDTH)
         if args.am_jam:                                       # ★ OPTION C: percolating-AM rigid jam height
@@ -611,9 +663,20 @@ def main(argv):
             for _i in range(len(se_rr)):
                 cx, cy, cz = se_c[_i]; rr = float(se_rr[_i])
                 _raster(se_pin, cx, cy, cz, rr, True)        # x,y wrap when PERIODIC (boundary SE)
+            _se_raw_cells = int(se_pin.sum())                # SE cells before AM eviction
             se_pin &= (pin_np == 0)                          # SE only in non-AM cells
             sel = np.argwhere(se_pin)
             seed_str = f"{len(seraw)} real SE spheres → {len(sel):,} SE cells (REAL positions, no targeting)"
+            if args.cycle_deform:
+                # HONESTY (N4-F5a): a poly EXPANSION grows the AM mask into cells that held SE → those SE
+                # cells are EVICTED here.  v1 uses eviction-DELETION (not volume-conserving advection), so
+                # report the lost SE volume so the porosity is read with that caveat.  On CHARGE the SC
+                # SHRINK dominates (AM pulls AWAY from SE → no eviction) so this is usually small.
+                _evict = _se_raw_cells - int(se_pin.sum())
+                _evict_pct = 100.0 * _evict / max(_se_raw_cells, 1)
+                print(f"  [cycle-deform] SE eviction (poly-expansion overlap): {_evict:,}/{_se_raw_cells:,} cells "
+                      f"({_evict_pct:.2f}%) DELETED — v1 not volume-conserving; read porosity with this caveat "
+                      f"(SC-shrink charge case ≈0%).")
             # tag each SE cell with its NEAREST real SE sphere centre (Voronoi) so the original PARTICLE
             # id survives the union raster → the voxel solver can recover SE-SE plastic CONTACT AREAS
             # (per-particle Holm constriction) instead of fusing all SE into one blob.
@@ -1431,6 +1494,12 @@ def main(argv):
             'se_dump': bool(args.se_dump), 'se_frac': float(args.se_frac),
             'periodic': bool(PERIODIC),
             'dilate_z': round(float(args.dilate_z), 4) if (args.am_scaffold and float(args.dilate_z) > 1.0) else None,   # stiff-fibre prop-open stretch (None = off / no-op without a scaffold)
+            # A-1 cycle-deform (charge-state re-deformation anchor; None = pristine).  ASSUMED-FORM v1 —
+            # a single deformed geometry at this ΔV, NOT an N-trajectory (that is the A-3 ledger's job).
+            'cycle_deform': ({'N': int(args.cycle_n), 'dv_sc': round(float(args.cycle_dv_sc), 4),
+                              'dv_poly': round(float(args.cycle_dv_poly), 4), 'dv_pct_poly': round(float(args.dv_pct_poly), 3),
+                              'assumed_form': True, 'isotropic': True, 'grid_invariant': True}
+                             if (args.am_scaffold and args.cycle_deform) else None),
         }
         if args.am_scaffold:
             m.update({
