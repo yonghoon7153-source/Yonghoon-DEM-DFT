@@ -689,7 +689,9 @@ echo "          (오래된 run_* 폴더는 디스크 차면 지워도 됨 — �
     print(f'  am_scaffold.csv ({len(am_rows)} AM)  se_scaffold.csv ({len(se_rows)} SE)  '
           f'run_mpm.sh  mpm_input.json  (target_porosity={tgt})'
           + (f'  step4_only.sh  [★Zive 스케줄 {len(s4_sched)}스텝: '
-             + ' → '.join(f"{'충' if s['k']=='c' else '방'}{s['r']:g}C" for s in s4_sched) + ']'
+             + ' → '.join(('휴%gm' % s['t']) if s['k'] == 'r'
+                          else (('충' if s['k'] == 'c' else '방') + ('%gC' % s['r']))
+                          for s in s4_sched) + ']'
              if s4_sched else
              f'  step4_only.sh  [STEP4 방전: {", ".join(f"{v:g}C" for v in s4_rates) or "—"}'
              f' / 충전CCCV: {", ".join(f"{v:g}C" for v in s4_chg) or "—"}]'
