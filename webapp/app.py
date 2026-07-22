@@ -5474,6 +5474,10 @@ def mpm_input_package(case_id):
         tag += '_s4' + '_'.join(f'{v:g}C' for v in _s4_clean)
     if _s4chg_clean:
         tag += '_s4chg' + '_'.join(f'{v:g}C' for v in _s4chg_clean)
+    # ★poly/SC 크기-분리 프리셋 → run_mpm.sh 가 달라짐(σ_e 재료분류+D_s) → 파일명도 구별.
+    #   클라이언트 _addTag 의 '_ppds' 와 반드시 일치 (예전 _sched7step/VGCFPTFESDCP 어긋남 교훈).
+    if recipe and request.args.get('s4pp', '') in ('1', 'true', 'on'):
+        tag += '_ppds'
     return send_file(buf, mimetype='application/zip', as_attachment=True,
                      download_name=f'mpm_input_{case_id}{tag}.zip')
 

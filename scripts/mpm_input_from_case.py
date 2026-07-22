@@ -258,29 +258,44 @@ def main():
                          f'check the type map / atom types in atoms.csv')
 
     # AM_P (large) vs AM_S (small) by RADIUS — the physical distinction (AM_P polycrystalline
-    # ~6µm / AM_S single-crystal ~2µm), robust to the type-number convention.  Bimodal → split
-    # at the size-range geometric midpoint; single size → all AM_P (type 1).
-    # ★ mono-size → AM_P는 사용자 확정 (2026-07-14, 3.18mAh_SDCP): DEM 케이스가 mono-AM을
-    #   "AM_S"로 표기해도 manuscript NCM은 다결정 → MPM/STEP3 재료 배정은 AM_P(σ_P=5 mS/cm)가
-    #   의도된 값.  DEM 쪽 AM_S 표기는 크기-라벨 관례라 여기서 따라가지 않는다.
+    # ~6µm / AM_S single-crystal ~2µm), robust to the type-number convention.
+    # ── 두 분류 경로 (사용자 확정 2026-07-22, 이종기술) ────────────────────────────────
+    # [기본, 체크 OFF] mono-size → AM_P (2026-07-14, 3.18mAh_SDCP 관례): DEM 케이스가
+    #   mono-AM을 "AM_S"로 표기해도 SDCP manuscript NCM은 다결정 → MPM/STEP3 재료 배정은
+    #   AM_P(σ_P=5 mS/cm)가 의도된 값.  bimodal → 케이스-내 상대 크기 중앙점 분리.
+    # [체크 ON, _es_split_req = poly/SC D_s 분리 프리셋/명시] AM_S/AM_P를 ★절대 크기 문턱★
+    #   (--step4-am-split-um, 반경 µm)으로 판정 → σ_e 재료(STEP3)와 D_s(STEP4)를 함께 크기-분리.
+    #   소립 단결정 r<split = AM_S(σ_S=10 mS/cm, GB無), 대립 다결정 r≥split = AM_P(σ_P=5).
+    #   mono 4µm 단결정(이종기술 No.1/No.2) → 전부 AM_S; mono 대립 → 전부 AM_P; bimodal → 혼합.
+    #   (기본 mono→AM_P의 SDCP 관례를 이 경로에서만 덮어씀 — 단결정 실험의 정직한 재료 배정.)
     am_rows = []
+    _ds_scalar = None            # mono 베드 + poly/SC 분리 요청 → 단일 클래스 scalar D_s [m²/s]
+    _ds_scalar_cls = None        # 'sc' | 'poly' (scalar D_s가 어느 클래스인지 — 라벨/태그용)
     if am_raw:
         radii = [float(r[4]) for r in am_raw]
         rmin, rmax = min(radii), max(radii)
-        thr = (rmin * rmax) ** 0.5 if rmax / max(rmin, 1e-12) > 1.4 else -1.0
-        for rec in am_raw:
-            rec[0] = 1 if (thr < 0 or float(rec[4]) >= thr) else 2          # AM_P=1 / AM_S=2 by size
-            am_rows.append(rec)
-        # ★ poly/SC split 요청 시 생성-시점 베드-분리 검증 (리뷰 #15 — 음수 rint 거부와 같은 계열):
-        #   문턱이 실제 AM 반경분포를 못 가르면 한쪽 값이 침묵 미사용 + _dsP..S.. 태그가 허위 →
-        #   run 낭비 전에 여기서 거부.  (mono 베드에 split 킷을 만들 이유가 없음 — 균일이면
-        #   split 인자 없이 --d-s로.)  step4_dyn 쪽 경고는 수동 CLI 경로용으로 유지.
         if _es_split_req:
-            _n_po = sum(1 for r_ in am_rows if float(r_[4]) >= a.step4_am_split_um)
-            if _n_po == 0 or _n_po == len(am_rows):
-                ap.error(f'--step4-am-split-um {a.step4_am_split_um:g}µm가 이 케이스 AM 반경분포 '
-                         f'{rmin:.2f}–{rmax:.2f}µm를 가르지 못함 (poly {_n_po}/{len(am_rows)}) — '
-                         f'split 값을 조정하거나, 균일 물성이면 split 인자 없이 생성하세요')
+            split_r = a.step4_am_split_um
+            for rec in am_raw:
+                rec[0] = 1 if float(rec[4]) >= split_r else 2              # 절대 문턱: AM_P=1 / AM_S=2
+                am_rows.append(rec)
+            _n_po = sum(1 for r_ in am_rows if r_[0] == 1)
+            _n_sc = len(am_rows) - _n_po
+            # mono 베드(한 클래스만) → split 불가 → 그 클래스의 scalar D_s (분리 태그 허위 방지).
+            #   σ_e 재료는 위 절대-문턱 분류로 이미 정직 배정됨 (mono-SC → 전부 AM_S=σ_S).
+            if _n_po == 0 or _n_sc == 0:
+                if a.step4_i0_poly is not None:
+                    ap.error(f'--step4-i0-poly/sc 분리는 mono 베드(AM 반경 {rmin:.2f}–{rmax:.2f}µm, '
+                             f'split {split_r:g}µm에서 전부 {"AM_S" if _n_po == 0 else "AM_P"})에 '
+                             f'적용 불가 — i0 분리 빼거나 bimodal 케이스 사용')
+                if a.step4_ds_poly is not None:
+                    _ds_scalar = a.step4_ds_sc if _n_po == 0 else a.step4_ds_poly
+                    _ds_scalar_cls = 'sc' if _n_po == 0 else 'poly'
+        else:
+            thr = (rmin * rmax) ** 0.5 if rmax / max(rmin, 1e-12) > 1.4 else -1.0
+            for rec in am_raw:
+                rec[0] = 1 if (thr < 0 or float(rec[4]) >= thr) else 2      # AM_P=1 / AM_S=2 by size
+                am_rows.append(rec)
 
     def write_csv(path, rows, note):
         with open(path, 'w', newline='') as f:
@@ -361,10 +376,18 @@ def main():
             'lateral_box': box_x, 'mpm_n_grid': n_grid_mpm, 'mpm_est_points': est_pts,
             'step4_crates': s4_rates, 'step4_charge_crates': s4_chg,
             'step4_r_int_ohm_cm2': a.step4_r_int,
-            'step4_am_electro_split': (None if a.step4_ds_poly is None and a.step4_i0_poly is None
-                                       else {'ds_poly': a.step4_ds_poly, 'ds_sc': a.step4_ds_sc,
-                                             'i0_poly': a.step4_i0_poly, 'i0_sc': a.step4_i0_sc,
-                                             'am_split_um': a.step4_am_split_um})}
+            'step4_am_electro_split': (
+                None if a.step4_ds_poly is None and a.step4_i0_poly is None
+                # mono 베드 → scalar D_s (분리 아님); σ_e 재료는 크기-분류로 배정됨.
+                else {'mode': 'mono_scalar', 'class': _ds_scalar_cls, 'd_s': _ds_scalar,
+                      'am_split_um': a.step4_am_split_um,
+                      'sigma_e_am': ('AM_S=10mS/cm' if _ds_scalar_cls == 'sc' else 'AM_P=5mS/cm')}
+                if _ds_scalar is not None
+                else {'mode': 'bimodal_split', 'ds_poly': a.step4_ds_poly, 'ds_sc': a.step4_ds_sc,
+                      'i0_poly': a.step4_i0_poly, 'i0_sc': a.step4_i0_sc,
+                      'am_split_um': a.step4_am_split_um}),
+            # 재료 크기-분류 경로: split 요청 시 절대 문턱, 아니면 SDCP 관례(mono→AM_P).
+            'am_material_class_mode': ('size_absolute' if _es_split_req else 'sdcp_mono_amp')}
     json.dump(prov, open(os.path.join(a.out, 'mpm_input.json'), 'w'), indent=2)
 
     # Stage-1 carbon: append the additive flags to the compaction step if a recipe was given,
@@ -514,15 +537,23 @@ def main():
         # ★bimodal poly/SC 전기화학 분리: per-particle D_s/i0 주입 + env override + 산출물 태그
         #   (태그에 값 포함 — 무태그 덮어쓰기로 baseline npz 를 잃는 rint 교훈 재적용)
         _es, _estag, _eslab = '', '', ''
-        if a.step4_ds_poly is not None:
+        if _ds_scalar is not None:
+            # mono 단결정/다결정 베드 (poly/SC 분리 체크 ON, 한 클래스만) → 단일 scalar D_s.
+            #   σ_e 재료는 위 절대-문턱 분류로 이미 분리됨 (mono-SC → AM_S=σ_S 10 mS/cm).
+            _es += f' --d-s "${{MPM_S4_DS:-{_ds_scalar:g}}}"'
+            _estag += f'_ds${{MPM_S4_DS:-{_ds_scalar:g}}}'
+            _eslab = (f' · ★{"SC 단결정" if _ds_scalar_cls == "sc" else "poly 다결정"} 단일 '
+                      f'D_s={_ds_scalar:g} m²/s (mono, σ_e '
+                      f'{"AM_S=10" if _ds_scalar_cls == "sc" else "AM_P=5"} mS/cm)')
+        elif a.step4_ds_poly is not None:
             _es += (f' --d-s-poly "${{MPM_S4_DS_POLY:-{a.step4_ds_poly:g}}}"'
                     f' --d-s-sc "${{MPM_S4_DS_SC:-{a.step4_ds_sc:g}}}"')
             _estag += f'_dsP${{MPM_S4_DS_POLY:-{a.step4_ds_poly:g}}}S${{MPM_S4_DS_SC:-{a.step4_ds_sc:g}}}'
-        if a.step4_i0_poly is not None:
+        if a.step4_i0_poly is not None and _ds_scalar is None:
             _es += (f' --i0-poly "${{MPM_S4_I0_POLY:-{a.step4_i0_poly:g}}}"'
                     f' --i0-sc "${{MPM_S4_I0_SC:-{a.step4_i0_sc:g}}}"')
             _estag += f'_i0P${{MPM_S4_I0_POLY:-{a.step4_i0_poly:g}}}S${{MPM_S4_I0_SC:-{a.step4_i0_sc:g}}}'
-        if _es:
+        if a.step4_ds_poly is not None and _ds_scalar is None:
             _es += f' --am-split-um {a.step4_am_split_um:g}'
             _eslab = f' · ★poly/SC 분리(split r≥{a.step4_am_split_um:g}µm)'
         _dis_loop = f'''  for CR in {_dis}; do
