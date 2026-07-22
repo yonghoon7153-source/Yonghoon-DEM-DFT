@@ -13,6 +13,28 @@
 | adhesion dW=0.44 유도 완결 | `kb/methodology/adhesion_energy.md`, `tools/adhesion_v30u/` | dW=ΔW_strain(NCM 변형E) 계열 앙상블 평균. v30u 스크립트 백업 회수 |
 | LPSOCl Ea 완전판 | `db/properties/lpsocl_md_arrhenius.json` | 0.271±0.033 (3-seed×3-T, hiT 반영) |
 
+## ✅ 완료·등록 (07-22 낮 — CDD 그림 세팅 + 통찰)
+
+CDD(charge density difference) 3종 = Liu2022(AMI 9,2200011) (f)(g) 대응 비교그림. relaxed 구조 single-point 3-SCF 차분(complex−host−Li). kgy `~/work/vgcf_hbn/cdd/*/`.
+
+| 항목 | 내용 |
+|---|---|
+| **CDD 3-cube 확정** | graphene(레퍼런스, 깨끗한 상하 다이폴) / hBN / **gallery 2L2L(hero)**. 3패널 = Liu f/g 대응 |
+| **전하이동 크기 순위** | hBN(least yellow) < graphene < **gallery/2L2L(most yellow, Δρ ±0.033 ≈ hBN 4×)**. E_bind 방향과 일치하나 배율 다름(CDD 4× vs E_bind 6× = vdW+배위 기여) |
+| **논문 통찰 (hBN 전자받음)** | gallery에서 hBN 쪽도 노랑(축적). **hBN이 받개로 변신한 게 아님** — VGCF가 진짜 받개(Cu역할, Shi eq5), 갇힌 Li⁺가 hBN 표면 **유도분극/스크리닝**. 서사: "hBN=passive cap / VGCF=acceptor / Li=양면배위 구속" → gallery 최강결합(−1.626) 설명 |
+| **lithiophilicity 해석** | 노랑↑ = 전하이동↑ = 결합경향↑(lithiophilic 쪽). 단 정량순위는 E_bind로(상관관계, vdW+배위 동반) |
+
+**툴 (이번 세션 추가/수정):**
+- `tools/electronic/cube_to_vesta_cdd.py`: `--structure-only` 플래그(밀도·등가면 빼고 순수 구조 vesta). 한글 title → ASCII 버그 수정(assert 깨지던 것).
+- `tools/vgcf_hbn/supercell_1Li.py`: 시트(B/N/C) n×n 타일 + **Li 1개만**(넓은 시트 그림용, VESTA Boundary는 Li도 n²복제되니까). **최종결정: 원래 단일셀 4×4 유지**(이미 1 Li/4×4 희박, 타일링 왜곡 회피) — 스크립트는 필요시용 백업.
+
+**VESTA 재현 세팅 (모든 CDD 패널 통일):**
+- **iso 0.002~0.003** (낮으면 그래핀 π 재분포가 탄소마다 도배 = 노이즈). 3패널 **iso 동일** 필수(안 그럼 전하이동 크기 착시).
+- **빨강 제거**: 등가면 mode `Positive and negative`(양쪽 lobe 겹침) → No.1 `Positive`(+iso 노랑)/No.2 `Negative`(−iso 청록).
+- **색**: 노랑=축적(받개), 청록=결핍(Li⁺). 원소색 VESTA 표준(Li 보라/B 분홍/N 파랑/C 회색).
+- **unit cell 프레임 off**: `Objects → Structural Models →` 하위 unit cell 토글(논문 그림 관례).
+- **투영 parallel 표준**(거리·lobe 크기 정직). perspective는 TOC/발표 hero 한 장만.
+
 ## ⏳ 진행중 (서버)
 
 - **kgy GPU** — drag barrier (`vgcfdrag`, frozen-in-plane 수정판):
@@ -27,6 +49,11 @@
   (`build_qe_neb_gpu_kgy.sh`에 영구 박제: unset 툴체인 env + PATH purge + make.inc sed LD→mpif90).
   neb.x = cufft/cublas 링크 GPU 빌드. `run_neb_kgy.sh`로 hBN→graphene→gallery→2L2L NEB 체인 시작.
   **교훈: conda 오염 = 컴파일(CFLAGS)+링크(binutils PATH)+env변수(LD/AR) 3층, 정답은 셋 다 제거.**
+  - 📍 **라이브 (07-22 오후)**: Pass 1(endpoint-B relax) **3/4 완료** — Li_on_hbn/graphene/gallery(1L) ✅,
+    **Li_in_gallery_2L2L endpoint-B relax 중**(이온스텝 0 첫 SCF 수렴 中, mag 0.01=슬로싱 없음). 단일 GPU라 순차 —
+    2L2L 엔드포인트 끝나면 스크립트가 **Pass 2: 4개 CI-NEB(7이미지) 자동 순차**(hbn→graphene→gallery→2L2L). 전체 ~1~2일.
+    출력경로: `~/work/vgcf_hbn/neb/<case>_nebB.out`(Pass1), `~/work/vgcf_hbn/neb/<case>/neb.out`(Pass2).
+    기준: hBN Shi 0.10 / graphene 문헌~0.3(drag 0.281 검증) / gallery·2L2L=신규 핵심값. **← 수확 대기, 남겨둠**
 - **drag 결과 (NEB 교차검증용 백업)**: graphene 0.281(검증됨) / hBN 0.010(약결합 평평 PES,
   NEB로 재확인 중) / gallery·2L2L drag는 이미지당 2h로 느려 NEB가 대체.
 - **gabia GPU** — pbrefine complex_doped(SDCP DFT+U): iter ~100, acc 하강(5 Ry 아래면 순항). iter 100서 정체면 Γ-선수렴/β0.01 카드
