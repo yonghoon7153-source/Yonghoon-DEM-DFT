@@ -49,6 +49,8 @@ F_CONST = 96485.33212        # C/mol
 R_GAS = 8.314462618          # J/mol/K
 GPU = False                  # --gpu 로 켬; CuPy 실패 시 CPU 폴백 (step3_sigma 패턴)
 _CG_DUMPED = [False]         # MPM_S4_DUMP_FAIL: 실패 선형계 1회만 덤프 (디스크 보호)
+_NN_TRIGGER = 1e3            # near-null-B AMG 발동 문턱: 잔차가 목표의 이 배수 위(=정체)일 때만
+                            # (거의-수렴 solve엔 안 켜 무거운 전처리 낭비 차단; 저율 정체는 ~1/rtol배 위)
 
 
 # ---------------------------------------------------------------- CG (warm start)
@@ -69,6 +71,52 @@ def _amg_M(L):
         return ml.aspreconditioner(cycle='V')
     except Exception as e:
         print(f'    ⚠ AMG 구축 실패 ({type(e).__name__}: {e}) → Jacobi', flush=True)
+        return None
+
+
+def _nearnull_amg_M(L, diag, cache, k_b=8, k_lobpcg=12):
+    """★near-null-B AMG (sym-scaled) — 저율 후막 약결합 BV near-null 전용 전처리.
+
+    후막+저율은 전자-이온 BV 결합이 약해져 선형계가 near-null(diag_step4_nearnull.py 실측: N=4.4M
+    에서 λ_min~2e-11 클러스터 12개, 대각 1e-11).  표준 AMG는 발산, Jacobi는 정체, ★정규화(J+εI)는
+    해가 near-null에 살아 98% ε-민감(감쇠=해 왜곡)이라 부적합, ★deflation+Jacobi도 발산 — near-null
+    벡터를 pyamg 근사-영공간 B로 주입한 AMG만 수렴(sym-scaled 8.3e-14, 100 it).  그 승자를 구현.
+
+    near-null 벡터는 구조적(약결합 패턴)이라 런 내 1회 LOBPCG 계산 후 cache['nearnull_V']로 재사용;
+    AMG 계층은 L 값에 의존해 호출 시 재구축(계층 구축 << solve).  무거우니(대-coarse V-cycle) 정체
+    solve일 때만 발동(_cg 4단)."""
+    try:
+        import pyamg
+        from scipy.sparse.linalg import LinearOperator, lobpcg
+    except ImportError:
+        print('    ⚠ pyamg/scipy 없음 → near-null 폴백 불가 (`pip install pyamg`)', flush=True)
+        return None
+    N = L.shape[0]
+    V = cache.get('nearnull_V')
+    if V is None or V.shape[0] != N:                          # 런 1회: near-null 부공간 LOBPCG
+        import time as _t
+        t0 = _t.time()
+        print(f'    near-null {k_lobpcg}벡터 LOBPCG 계산 중 (~수십초, 런 1회 후 재사용)…', flush=True)
+        Minv = sparse.diags(1.0 / np.where(diag > 0, diag, 1.0))
+        rng = np.random.default_rng(0)                        # 결정론(Date/random 규약 무관, 고정 seed)
+        try:
+            _ev, V = lobpcg(L, rng.standard_normal((N, k_lobpcg)), M=Minv,
+                            largest=False, tol=1e-6, maxiter=200)
+        except Exception as e:
+            print(f'    near-null LOBPCG 실패 ({type(e).__name__}: {e})', flush=True)
+            return None
+        cache['nearnull_V'] = V
+        print(f'    near-null λ~{float(np.min(_ev)):.2e}..{float(np.max(_ev)):.2e} '
+              f'({_t.time() - t0:.0f}s, {k_lobpcg}개)', flush=True)
+    try:                                                      # sym-scaled near-null-B AMG (진단 승자)
+        kk = min(k_b, V.shape[1])
+        s = 1.0 / np.sqrt(np.maximum(np.abs(diag), 1e-300))   # 대칭 대각 스케일 (near-isolated 노드 정규화)
+        Ls = (sparse.diags(s) @ L @ sparse.diags(s)).tocsr()
+        B = np.hstack([np.ones((N, 1)), V[:, :kk]]) / s[:, None]   # [상수모드 + near-null] / s
+        ml = pyamg.smoothed_aggregation_solver(Ls, B=B, max_coarse=800).aspreconditioner('V')
+        return LinearOperator(L.shape, matvec=lambda r, _s=s, _m=ml: _s * _m.matvec(_s * r))
+    except Exception as e:
+        print(f'    near-null-B AMG 구축 실패 ({type(e).__name__}: {e})', flush=True)
         return None
 
 
@@ -205,6 +253,34 @@ def _cg(L, b, x0=None, rtol=1e-9, atol=0.0, pc_cache=None, deep=False):
             cache['amg_useless'] = True                       #   (gpu_dead 계열; near-null 격자서 AMG 매번 발산 → 낭비 차단)
             cache.pop('amg', None)
             print('    (이후 이 런의 실솔브는 AMG 생략 → Jacobi 직행)', flush=True)
+    # ★ 4단(near-null-B AMG): AMG 발산 + Jacobi 정체로도 잔차가 목표의 _NN_TRIGGER배 위(=near-null
+    #   정체)면, near-null 벡터를 AMG B로 주입한 전처리로 escalate.  diag_step4_nearnull.py 승자
+    #   (정규화 98%ε민감·deflation 발산 실패 → near-null-B AMG만 수렴).  저율 0.1C/0.2C 후막의
+    #   hard-fail 근본해결.  런 내 1회 구축 후 재사용; 정체 solve일 때만 발동(무거운 대-coarse).
+    _tgt = max(rtol * bnorm, atol, 1e-300)
+    if _rr(x) > _NN_TRIGGER * _tgt and big and not cache.get('nnamg_dead'):
+        Mnn = cache.get('nnamg')
+        if Mnn is None:
+            Mnn = _nearnull_amg_M(L, diag, cache)
+            if Mnn is not None:
+                cache['nnamg'] = Mnn
+            elif cache.get('nearnull_V') is None:            # 구축 자체 불가(pyamg 없음) → 재시도 안 함
+                cache['nnamg_dead'] = True
+        if Mnn is not None:
+            print('    ★near-null-B AMG 폴백 (저율 약결합 near-null; 런 내 재사용)…', flush=True)
+            xn, infon = _solve(Mnn, x0)                       # ★clean warm-start (발산해 금지, 3단 교훈)
+            if _rr(xn) < _rr(x):
+                x, info = xn, infon
+            else:                                             # 캐시 계층이 낡음(L 값 표류) → 계층만 1회 재구축
+                cache.pop('nnamg', None)
+                Mnn2 = _nearnull_amg_M(L, diag, cache)        # nearnull_V 재사용, Ls 계층 재구축
+                if Mnn2 is not None:
+                    cache['nnamg'] = Mnn2
+                    xn2, infon2 = _solve(Mnn2, x0)
+                    if _rr(xn2) < _rr(x):
+                        x, info = xn2, infon2
+                    else:                                     # 계층 재구축도 실패 → near-null 부공간이 표류
+                        cache.pop('nearnull_V', None)         #   → 다음 solve서 LOBPCG 재계산(구조 갱신)
     # ★ 최종 가드: 어떤 시도도 시작보다 못하면 warm-start 자체 반환 (쓰레기 해 전파 차단 →
     #   Newton Armijo 무-스텝 깔끔 정지).  재현 안 되는 발산은 실제 행렬 덤프로 진단:
     if _rr(x) > r_start:
