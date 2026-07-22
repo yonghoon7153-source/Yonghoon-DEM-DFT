@@ -63,3 +63,30 @@ if [ "$nd" = 3 ]; then
   grep -aE "comp2 Ea|anchors" "$LOG" 2>/dev/null | tail -2 | sed 's/^/  /'
 fi
 echo "── log tail ──"; tail -3 "$LOG" 2>/dev/null | sed 's/^/    /'
+
+# ═══════════════ elastic (병렬, 같은 gabia GPU) ═══════════════
+EOUT=${EOUT:-/data/work/runs/comp2_elastic_v3}
+ELOG=${ELOG:-$HOME/comp2_elastic.log}
+echo ""
+echo "══ comp2 elastic (600K snapshot×5 · relaxed-ion → VRH modulus) ══"
+if pgrep -f 'run_comp2_elastic|elastic_mlip_600K' >/dev/null 2>&1; then echo "  실행중 ✔"
+else echo "  (러너 안 보임 — 완료/미시작)"; fi
+
+if grep -aq "Averaged across" "$ELOG" 2>/dev/null; then
+  echo "  ✅ 완료 (5-snapshot 평균, ± = snapshot std):"
+  grep -aA9 "Averaged across" "$ELOG" | tail -8 | sed 's/^/    /'
+  echo "    → 비교: comp1(LPSCl) E_VRH = 29.1 GPa"
+elif [ -d "$EOUT" ]; then
+  nsnap=$(ls "$EOUT"/snapshot_*.xyz 2>/dev/null | grep -vc quenched)
+  nq=$(ls "$EOUT"/snapshot_*_quenched.xyz 2>/dev/null | wc -l)
+  if [ -f "$EOUT/md.log" ] && [ "${nsnap:-0}" = 0 ]; then
+    last=$(grep -aE '^[[:space:]]*[0-9]' "$EOUT/md.log" | tail -1)
+    [ -n "$last" ] && echo "$last" | awk '{ps=$1+0; Tk=$NF+0;
+      if(ps<=10.0) printf "  ⏳ 600K MD equilib %.1f / 10 ps  (T=%.0f K)\n", ps, Tk;
+      else printf "  ⏳ 600K MD prod %.1f / 20 ps  (총 %.1f/30 ps, T=%.0f K)\n", ps-10.0, ps, Tk }'
+  fi
+  echo "  snapshot ${nsnap:-0}/5 수집 | quench ${nq:-0}/5 | (그다음 6-strain Cij)"
+  grep -aE "Snapshot [0-9]|C11=|C44=|B_VRH=|quench done|Production" "$ELOG" 2>/dev/null | tail -4 | sed 's/^/    /'
+else
+  echo "  (out_dir 없음 — 아직 시작 전; c2elastic tmux 확인)"
+fi
