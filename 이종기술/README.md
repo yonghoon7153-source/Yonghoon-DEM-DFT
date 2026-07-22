@@ -26,14 +26,14 @@ program (samples **No.1 / No.2**) and its **poly:small = 5:5 bimodal** blend, on
 - **full-cell EIS → R_int** (reaction + primer-SUS collector) — real anchor for **STEP4**
   (V_term = V − I·R_int).  These are the project's OWN measured R_int (vs the SDCP
   manuscript's SBE/DBE/C-SUS panel-e values).
-- **symmetric-cell EIS → σ_ion / σ_e transport** — the EIS-TLM method (Minnmann 2021)
-  that our σ_ionic calibration references → **validates STEP3** σ network, and the
-  **pure-small vs 5:5 bimodal** contrast is the core project comparison.
+- **symmetric-cell EIS (SUS|cathode|SUS = ion-blocking) → σ_e (electronic)** of the composite
+  → **validates STEP3 σ_e** network.  The **pure-small vs 5:5 bimodal** σ_e contrast is the
+  core project comparison (measured: No1 0.14→0.093, No2 0.115→0.152 mS/cm — opposite effects).
 
 ## Status / open items
-- ✅ 24 raw files archived, 12 tidy CSVs, catalog (Ω + Ω·cm²), first-pass CNLS fits.
-- ⚠ pure-small symmetric-cell thickness not in notes → needed to turn a transport arc into σ.
-- ⚠ symmetric-cell blocking condition (ion- vs electron-) unconfirmed → sets R_ion vs R_e label.
-- ⚠ `No2_only_full` run2 diverges from run1 (re-measure / cell issue).
-- Next: TLM refit of symmetric cells (lower CPE_a = transport dispersion the R-CPE only
-  approximates); wire measured R_int into the STEP4 anchor CSV once labels are confirmed.
+- ✅ 24 raw files archived, 12 tidy CSVs, catalog (Ω + Ω·cm²), CNLS fits + **σ_e** (mS/cm).
+- ✅ blocking RESOLVED (SUS ion-blocking → σ_e); composite thickness RESOLVED (40–50 µm, the
+  filename 70 µm includes the collector); No2 full run2 = SOC100 degradation (not error).
+- Next: **TLM refit** of symmetric cells (CPE_a ≈ 0.3 = transport dispersion the R-CPE only
+  approximates) for a cleaner σ_e; run **STEP3 on No.1/No.2 pure & 5:5** and compare σ_e vs the
+  measured 0.09–0.15 mS/cm; wire full-cell R_int into the STEP4 anchor CSV (primer-SUS line).

@@ -29,9 +29,10 @@ archive fully usable without it.)
 ## Two measurement families → two model axes
 - **full cell** (`only_full_1cyc`) → **R_int** (reaction + collector interface) — anchors **STEP4**
   (V_term = V − I·R_int).  Nyquist: R_s (bulk/series) + interfacial arc.
-- **symmetric cell** (`sym`) → **σ_ion / σ_e transport** of the composite electrode — the
-  **EIS-TLM method** (Siroma/Minnmann 2021) our σ_ionic calibration references.  Lets us
-  compare **pure-small vs bimodal(5:5)** transport directly → validates **STEP3** σ network.
+- **symmetric cell** (`sym`) = **SUS | cathode | SUS** = **ion-blocking** (SUS passes e⁻,
+  blocks Li⁺) → the DC arc is the **ELECTRONIC** resistance → **σ_e** of the composite
+  (Hebb-Wagner).  Compares **pure-small vs bimodal(5:5)** electronic transport → validates
+  **STEP3 σ_e** network.  (NOT σ_ion — that needs electron-blocking Li/In contacts.)
 
 ## Cell fabrication (lab notes 2026-06-25 → 07-19)
 - **Composition** AM:SE:VGCF:PTFE = **80:18:1:1**.  Recipe: vortex 10 min → add PTFE →
@@ -41,9 +42,10 @@ archive fully usable without it.)
   **5:5** = poly:small = 5:5 wt%.  Specific capacity (5:5): No.1 = 202.95, No.2 = 206.5 mAh g⁻¹.
 - **Cells**: Li-In anode, 60 °C, 0.1C 2 cyc → 0.2C main.  **대칭셀(symmetric) = 10pi (⌀10 mm)**,
   **율특셀(rate)·수명셀(life, EIS source) = 13pi (⌀13 mm)**.
-- **Thickness** (primer-SUS ~15 µm excluded where noted): 5:5 sym = **70 µm** (in filename);
-  pure-small 면용량2 sym ≈ 50 µm.  ⚠ per-cell thickness for the 260715 pure-small sym is not
-  in the notes — **needed to convert a symmetric-cell arc to σ** (σ = L / (R·3) for a blocking TLM).
+- **Thickness** — the filename "70 µm" is **cathode + SUS/c-SUS collector**; the
+  **cathode-electrolyte composite (transport path) = 40–50 µm** at areal-cap 3 (user 2026-07,
+  both sym & full).  σ_e uses the composite L (collector excluded) → σ_e carries a ±~11 % band
+  from the 40–50 µm range.
 
 ## ⚠ Units / caveats (read before anchoring)
 1. **Area normalization — RESOLVED (Ω·cm² now in catalog).**  Areas inferred from disk
@@ -54,31 +56,31 @@ archive fully usable without it.)
    `R_s` = high-freq real-axis intercept (bulk+series); `arc` = `Re_LF − R_s`
    (interfacial **+** diffusion, not yet separated).  Proper **R_ion/R_int/R_w** needs a
    CNLS equivalent-circuit fit (manuscript Fig S19: r_i + r_e + r_int‖cpe + Z_w).
-3. **Symmetric-cell blocking condition** (ion- vs electron-blocking) is not encoded in the
-   files — it determines whether the arc is R_ion or R_e.  Confirm with the user before
-   converting a sym-cell arc to a σ.
-4. **Run reproducibility**: most measurements have 2 runs that agree; **`No2_only_full` run02
-   (arc 89 Ω) diverges from run01 (arc 43 Ω)** — flagged, treat as re-measure/cell issue.
+3. **Symmetric-cell blocking — RESOLVED: SUS | cathode | SUS = ion-blocking → σ_e** (electronic).
+   The DC arc is the electronic resistance R_e; **NOT** σ_ion (that needs electron-blocking Li/In).
+4. **Run reproducibility**: 2 runs agree except **`No2_only_full` run02 (R_int 66) vs run01 (24
+   Ω·cm²)** — this is the **same cell scanned twice at SOC100**; the divergence is real interfacial
+   **degradation between scans** at the fully-charged (reactive) state, not a measurement error.
 
 ## CNLS equivalent-circuit fits  (`fits/`, `scripts/eis_fit.py`)
 First-pass fits (impedance.py), **R0 fixed to the measured HF intercept**, arc free:
-- **symmetric** `R0-p(R1,CPE1)` → R_s + **R1 = transport-arc resistance** (R_ion if e-blocking)
+- **symmetric** (SUS ion-blocking) `R0-p(R1,CPE1)` → R_s + **R1 = R_e** → **σ_e = L_composite / R1**
 - **full** `R0-p(R1,CPE1)-Wo1` → R_s + **R1 = R_int** + **Wo = R_w (diffusion)**
 
-Results (`fits/eis_fit_results.csv`, Ω·cm², 2 runs each):
+Results (`fits/eis_fit_results.csv`, Ω·cm², 2 runs each; **σ_e at L = 45 µm composite**):
 
-| | R_s | transport-arc R1 |   | R_s | R_int | R_w |
-|---|---|---|---|---|---|---|
-| **sym** No1 pure | 10.1 | **32** | **full** No1 OCV | 9.8 | 79 | 51 |
-| sym No1 5:5 | 6.9 | **48 ↑** | No1 @1.3V | 6.8 | 30 | 0 |
-| sym No2 pure | 8.2 | **39** | No2 OCV run1 | 8.4 | 24 | 73 |
-| sym No2 5:5 | 5.6 | **30 ↓** | No2 OCV run2 | 13.8 | 66 | 136 |
+| symmetric → σ_e | R_s | R_e | **σ_e (mS/cm)** |  | full → R_int | R_s | R_int | R_w |
+|---|---|---|---|---|---|---|---|---|
+| No1 pure | 10.1 | 32 | **0.14** | | No1 OCV | 9.8 | 79 | 51 |
+| No1 5:5 | 6.9 | 48 | **0.093 ↓** | | No1 @1.3V | 6.8 | 30 | 0 |
+| No2 pure | 8.2 | 39 | **0.115** | | No2 OCV run1 | 8.4 | 24 | 73 |
+| No2 5:5 | 5.6 | 30 | **0.152 ↑** | | No2 OCV run2 (SOC100 aged) | 13.8 | 66 | 136 |
 
-⚠ **CPE_a ≈ 0.30–0.34** (strong transport dispersion) → the single R-CPE is a **first-pass
-approximation**; a transmission-line (TLM) refit would fit better and give a cleaner R_ion.
-rmse 5–6 % (sym) / 2.6–13 % (full; No2 run1 poor).  Bimodal transport goes **opposite ways**
-for No1 (↑) vs No2 (↓) in raw R — but **σ needs per-cell thickness** (No1 5:5 = 70 µm; pure-small
-thickness pending) since R ∝ L.  Figure: `fits/eis_fits.png`.
+**σ_e electronic (composite, 1 % VGCF, single-crystal):** poly effect is **opposite** —
+No1 ↓ (0.14→0.093), No2 ↑ (0.115→0.152); each ±~11 % from L = 40–50 µm.  These are a **STEP3
+σ_e validation target** (low-carbon SC composite).  ⚠ CPE_a ≈ 0.30–0.34 (transport dispersion)
+→ single R-CPE is first-pass; a TLM refit would refine.  rmse 5–6 % (sym) / 2.6–13 % (full).
+Figure: `fits/eis_fits.png`.
 
 ## Parser (external, not vendored)
 `.mpr` is decoded with **[galvani](https://github.com/echemdata/galvani)** (GPL-3.0).  We

@@ -29,6 +29,13 @@ EIS = os.path.join(ROOT, '이종기술', 'eis')
 EXTRACTED = os.path.join(EIS, 'extracted')
 FITS = os.path.join(EIS, 'fits')
 AREA = {'symmetric': round(math.pi * 0.5 ** 2, 4), 'full': round(math.pi * 0.65 ** 2, 4)}
+# Cathode-electrolyte COMPOSITE thickness (µm) — the transport path.  At areal-cap 3 the
+# composite is ~40–50 µm (user, 2026-07); the filename "70 µm" INCLUDES the ~15–20 µm
+# SUS/c-SUS collector and must NOT be used for σ.  Symmetric cell = SUS|cathode|SUS =
+# ION-BLOCKING (SUS passes e⁻, blocks Li⁺) → the DC arc R1 = ELECTRONIC resistance R_e
+# → σ_e = L_composite / R1  (Hebb-Wagner).  L range → σ_e carries ±~11 %.
+_THICK_UM = 45.0            # composite mid (40–50); collector excluded
+_THICK_RANGE_UM = (40.0, 50.0)
 
 
 def _load(csv_path):
@@ -120,7 +127,8 @@ def main():
                'rmse_pct': round(rmse, 2) if rmse == rmse else '',
                'R_s_ohm': '', 'R1_ohm': '', 'R_w_ohm': '',
                'R_s_ohmcm2': '', 'R1_ohmcm2': '', 'R_w_ohmcm2': '',
-               'CPE_a': '', 'note': ''}
+               'CPE_a': '', 'L_composite_um': '', 'sigma_e_mScm': '', 'sigma_e_range_mScm': '',
+               'note': ''}
         if 'error' in p:
             row['note'] = 'fit_fail: ' + p['error']
         else:
@@ -128,18 +136,26 @@ def main():
             row['R1_ohm'] = round(p['R1'], 3)
             row['CPE_a'] = round(p.get('CPE1_a', float('nan')), 3)
             row['R_s_ohmcm2'] = round(p['R0'] * area, 2)
-            row['R1_ohmcm2'] = round(p['R1'] * area, 2)
+            r1_asr = p['R1'] * area
+            row['R1_ohmcm2'] = round(r1_asr, 2)
             if 'Wo1_R' in p:
                 row['R_w_ohm'] = round(p['Wo1_R'], 3)
                 row['R_w_ohmcm2'] = round(p['Wo1_R'] * area, 2)
-            row['note'] = ('R1=R_ion?(대칭셀 blocking 확인)' if ct == 'symmetric'
-                           else 'R1=R_int, Wo=R_w')
+            if ct == 'symmetric':                       # SUS ion-blocking → R1=R_e → σ_e=L/R1
+                row['L_composite_um'] = _THICK_UM
+                row['sigma_e_mScm'] = round(_THICK_UM * 1e-4 / r1_asr * 1e3, 4)   # L[cm]/R[Ω·cm²]→S/cm→mS/cm
+                lo = round(_THICK_RANGE_UM[0] * 1e-4 / r1_asr * 1e3, 4)
+                hi = round(_THICK_RANGE_UM[1] * 1e-4 / r1_asr * 1e3, 4)
+                row['sigma_e_range_mScm'] = f'{lo}-{hi}'
+                row['note'] = 'SUS ion-blocking → R1=R_e; σ_e=L/R1 (L=40-50µm composite)'
+            else:
+                row['note'] = 'R1=R_int, Wo=R_w (primer-SUS full cell)'
         rows.append(row)
         panels.append((stem, f, Z, Zf, area, row))
 
     cols = ['filename', 'cell_type', 'area_cm2', 'circuit', 'rmse_pct',
             'R_s_ohm', 'R1_ohm', 'R_w_ohm', 'R_s_ohmcm2', 'R1_ohmcm2', 'R_w_ohmcm2',
-            'CPE_a', 'note']
+            'CPE_a', 'L_composite_um', 'sigma_e_mScm', 'sigma_e_range_mScm', 'note']
     with open(os.path.join(FITS, 'eis_fit_results.csv'), 'w', newline='') as fh:
         w = csv.DictWriter(fh, fieldnames=cols)
         w.writeheader()
