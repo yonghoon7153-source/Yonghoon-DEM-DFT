@@ -267,7 +267,13 @@
           <option value="ballmill">ball-mill (고전단)</option>
           <option value="thinky" selected>thinky (고전단 · SuperP=dry-coat)</option>
           <option value="handmix">hand-mix (저전단)</option></select></label>
-        <div title="STEP4-v2 충방전 시간전개 (복셀-DFN 방전곡선 + 뷰어 SOC/반응전류 애니메이션 데이터) — 체크한 C-rate를 압밀→σ망 뒤에 순차 자동 실행. 미선택 = step4_grid.npz export까지만 (나중에 step4_only.sh로 재개 가능). ⏱ rate당 V100 수 시간~1일. GPU 박스에 OCP 앵커(anchor_params/) 1회 필요: python3 scripts/step4_pybamm_anchor.py --export-params (없으면 STEP4는 안내 후 SKIP — 압밀/σ는 정상 완료)">STEP4 방전 (중복 선택)<br>
+        <div title="STEP4-v2 충방전 시간전개 (복셀-DFN 방전곡선 + 뷰어 SOC/반응전류 애니메이션 데이터) — 체크한 C-rate를 압밀→σ망 뒤에 순차 자동 실행. 미선택 = step4_grid.npz export까지만 (나중에 step4_only.sh로 재개 가능). ⏱ rate당 V100 수 시간~1일. GPU 박스에 OCP 앵커(anchor_params/) 1회 필요: python3 scripts/step4_pybamm_anchor.py --export-params (없으면 STEP4는 안내 후 SKIP — 압밀/σ는 정상 완료)">STEP4 충방전 <span style="color:#94a3b8;font-weight:400;font-size:0.85em">(복셀-DFN 곡선 · 체크박스 또는 스케줄)</span><br>
+          <span style="display:inline-flex;gap:8px;align-items:center;height:24px;flex-wrap:wrap;font-size:0.82em" title="컷오프: 방전은 v_min까지, 충전 CC는 v_max까지 → CV 홀드 후 |I|/I_1C가 I-cut 아래로 떨어지면 종지.  ⚠스케줄 사용 시 여기 값은 per-step 미지정 컷오프의 기본값.">
+            <span style="color:#94a3b8">컷오프</span>
+            <label style="font-weight:400">방전≥ <input id="s4-vmin" type="number" value="3.0" min="1.5" max="4.0" step="0.05" style="width:50px" onchange="updateAdditiveGpuCmds()"> V</label>
+            <label style="font-weight:400">충전≤ <input id="s4-vmax" type="number" value="4.5" min="3.5" max="4.8" step="0.05" style="width:50px" onchange="updateAdditiveGpuCmds()"> V</label>
+            <label style="font-weight:400" title="CCCV CV 홀드 종지: |I|가 이 절대 C-rate(=|I|/I_1C)보다 작아지면 끝. 0.05=완전충전(C/20), 0.5=0.5C서 종지.">CV종지 |I|≤ <input id="s4-icut" type="number" value="0.05" min="0.01" max="2.0" step="0.01" style="width:50px" onchange="updateAdditiveGpuCmds()"> C</label>
+          </span><br>
           <span style="display:inline-flex;gap:8px;align-items:center;height:24px;flex-wrap:wrap" title="CC 충전 → v_max 도달 시 CV 홀드 (step4_dyn --charge --cv-hold).  실제 셀처럼 충전이 먼저 → 방전 순서로 직렬 실행."><span style="color:#94a3b8">①충전<small>CCCV</small></span>
             <label style="font-weight:400;cursor:pointer"><input type="checkbox" id="s4g-01" onchange="updateAdditiveGpuCmds()"> 0.1C</label>
             <label style="font-weight:400;cursor:pointer"><input type="checkbox" id="s4g-02" onchange="updateAdditiveGpuCmds()"> 0.2C</label>
@@ -311,20 +317,15 @@
               <div style="margin-top:10px;color:#6b7280;font-size:0.92em">cyc = R_int(N) 태그(수명 열화는 R_int(N) 문헌투영 — 실제 N-사이클 sim 아님).  per-step 컷오프: 충전 ≤v_max·CV종지 |I|, 방전 ≥v_min.</div>
             </div>
           </div>
-          <span style="display:inline-flex;gap:10px;align-items:center;height:24px;font-size:0.82em" title="컷오프 스케줄: 방전은 v_min까지, 충전 CC는 v_max까지 → CV 홀드 후 |I|/I_1C가 I-cut 아래로 떨어지면 종지 (예: 실험 2.5~4.25V, CV 0.5C 종지).  SOC 창 끝에 먼저 닿으면 전압 컷 전에 끝날 수 있음(1C 방전이 그랬음).  ⚠스케줄 사용 시 여기 값은 per-step 미지정 컷오프의 기본값.">
-            <span style="color:#94a3b8">컷오프</span>
-            <label style="font-weight:400">방전≥ <input id="s4-vmin" type="number" value="3.0" min="1.5" max="4.0" step="0.05" style="width:52px" onchange="updateAdditiveGpuCmds()"> V</label>
-            <label style="font-weight:400">충전≤ <input id="s4-vmax" type="number" value="4.5" min="3.5" max="4.8" step="0.05" style="width:52px" onchange="updateAdditiveGpuCmds()"> V</label>
-            <label style="font-weight:400" title="CCCV 충전에서 CV 홀드 종지: |I|가 이 절대 C-rate(=|I|/I_1C, 충전 rate 아님)보다 작아지면 끝. 0.05=완전충전(C/20), 0.5=0.5C에서 종지. 예: 2C 충전을 '전류 절반(1C)에서 종지'하려면 1 입력.">CV종지 |I|≤ <input id="s4-icut" type="number" value="0.05" min="0.01" max="2.0" step="0.01" style="width:52px" onchange="updateAdditiveGpuCmds()"> C <span style="color:#6b7280;font-size:0.85em">(절대·1C기준)</span></label>
-            <label style="font-weight:400" title="STEP4 풀셀 축 — 집전체 계면저항을 충방전 곡선에 직렬로 겁니다 (V_term = V_cell − I·R_int → η_Rint 분해 항 추가). 값은 위 집전체 선택 + 전극 종류(SDCP 있으면 DBE/없으면 SBE)에 맞는 시나리오를 정본 anchors CSV에서 자동 해석: pristine(신선, panel-e≈ 18/12/10) 또는 cycled(1000cyc@2C 노화, 110/46/30). 기본 = 전극-내부(R_int=0, 기존 모든 런과 동일 축). 집전체가 '이상 접촉'이면 무시됨. 산출물엔 _rint<값> 태그가 붙어 구분됩니다.">STEP4 R_int<br><select id="s4-rint" style="padding:3px" onchange="updateS4RintHint();updateAdditiveGpuCmds()">
+          <span style="display:inline-flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:0.82em">
+            <label style="font-weight:400" title="STEP4 풀셀 축 — 집전체 계면저항을 충방전 곡선에 직렬로 겁니다 (V_term = V_cell − I·R_int → η_Rint 분해 항 추가). 값은 위 집전체 선택 + 전극 종류(SDCP 있으면 DBE/없으면 SBE)에 맞는 시나리오를 정본 anchors CSV에서 자동 해석: pristine(신선, panel-e≈ 18/12/10) 또는 cycled(1000cyc@2C 노화, 110/46/30). 기본 = 전극-내부(R_int=0, 기존 모든 런과 동일 축). 집전체가 '이상 접촉'이면 무시됨. 산출물엔 _rint<값> 태그가 붙어 구분됩니다.">STEP4 R_int <select id="s4-rint" style="padding:3px" onchange="updateS4RintHint();updateAdditiveGpuCmds()">
               <option value="" selected>전극-내부 (R_int=0 · 기본)</option>
               <option value="pristine">풀셀 pristine (신선)</option>
               <option value="cycled">풀셀 cycled (노화 민감도)</option>
               <option value="50">이종기술 SUS 실측 ~50 Ω·cm² (풀셀 SOC100 평균, primer-SUS 양극)</option></select>
             <span id="s4rint-hint" style="color:#7dd3fc;font-size:0.85em"></span></label>
             <label style="font-weight:400" title="★bimodal poly/SC 전기화학 분리 (문헌 프리셋, 2026-07-21 확정) — STEP4 확산계수를 입자 크기로 분리: 대립 poly D_s=4e-15 m²/s (Chen 2020 DFN, 2차입자-반경 규약) / 소립 SC D_s=3e-15 (Trevisanello 2021 GITT 밴드 1e-15–1e-14의 기하중앙 = 잠정, SDCP-250 계열 원장 방식 — 값 갱신 시 정본 docs/data/sc_poly_preset.csv만 교체). i0는 SC/PC 정량 문헌 부재 확정 → 공유 유지. ⚠주의: 액체-셀 'PC 1오더 빠름' GITT값은 균열-전해액 침투 기전이라 ASSB 이식 금지 — 이 프리셋은 ASSB-정합 값. 분류 반경문턱 3.5µm (반경 6:2 베드 분리); mono 베드는 생성 시점에 거부됨. 산출물엔 _dsP..S.. 태그. 파워유저: URL &s4dsp=&s4dss=로 명시값 오버라이드(프리셋과 동시 지정 불가).">
-              <input type="checkbox" id="s4-pp" onchange="updateAdditiveGpuCmds()"> poly/SC D_s 분리<br>
-              <span style="color:#9ca3af;font-size:0.85em">문헌 프리셋 4e-15/3e-15</span></label>
+              <input type="checkbox" id="s4-pp" onchange="updateAdditiveGpuCmds()"> poly/SC D_s 분리 <span style="color:#9ca3af;font-size:0.85em">(프리셋 4e-15/3e-15)</span></label>
           </span></div>
         <a class="btn btn-primary" id="add-zip-btn" href="#" onclick="return dlAdditiveZip()">② recipe zip 다운로드</a>
       </div>
