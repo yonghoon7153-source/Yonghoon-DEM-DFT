@@ -183,11 +183,16 @@ ASSUMED-FORM 보간으로 정직 표기.
   복원 → debond(N)/void(N)는 그 자체로 영구 fade 아님.  **비가역화 판정 = 풀 MPM 소성 재평형(접촉
   안 닫힘) + ledger CZM/re-contact**.  A-2 docstring·헤더·메타(reversible_charge_state)에 명기 완료.
   ⇒ 앵커의 ΔV가 *누적 비가역 변형*을 담아야 영구궤적 (스냅샷 Δ를 permanent fade로 읽기 금지).
-- **N6-b (poly 부호 상충, 전기화학#3·물리#1)**: **A-1(poly 외피 팽창=접촉 유지) ↔ A-3 δcr 헤드라인
-  (poly 수축→102nm>δcr debond)** 부호 반대.  A-3 δcr은 v1 **common-shrink** 규약 산출 = 한계.  poly-
-  팽창 적용 시 AM_P 계면 gap≤0(no debond)로 **순서 뒤집힘**; poly 진짜 열화 = **입계 내부 void**(계면
-  gap 기준 범위 밖).  ledger 라벨에 caveat 명기 완료.  → A-3 캘리브 production 전에 poly 채널을
-  '접촉'이 아닌 'void' 축으로 재정의(현 gap 기준은 SC 이탈에만 유효).
+- **N6-b (poly 부호 상충, 전기화학#3·물리#1) — ✅ 해결 도구 착지 (commit c1deaba)**: **A-1(poly 외피
+  팽창=접촉 유지) ↔ A-3 δcr(poly 수축→debond)** 부호 반대.  → ledger `--poly-mode {shrink-proxy,
+  expand-void}` 추가로 해결:
+  - `shrink-proxy`(기본, 연속성): poly 수축→계면 debond (v1 COMMON-SHRINK 프록시, 현 1.51× 재현, byte 불변).
+  - `expand-void`(정정, A-1 정합): poly 외피 팽창→계면 gap≤0(계면 CZM 제외) + `poly_internal_void_frac`
+    별도 보고(ASSUMED-FORM, **σ_e 미결합=앵커 대기**).  R_ct 성장 = SC-계면 debond 몫만.
+  - selftest7: 6µm poly 베드 shrink f_brk=0.022 → expand f_brk=0.000 + void 0.085 = 분해 실증.
+  ⇒ **물리 정정 = SC(2µm) 계면 debond / poly(6µm) 입계 내부 void**.  bimodal 1.51× 는 shrink-proxy
+  아티팩트(poly-계면 debond 몫이 물리적으로 잘못) → **방향(bimodal>mono) 불변, magnitude 재해석**.
+  ⛔ 잔여: void→σ_e 결합 캘리브(GPU A-1 앵커 + Kang&Shin bimodal 4.4× → poly 내부열화 증폭 확정).
 - **N6-c (R_ct 이중계산, 전기화학#2)**: B-1 `--i0-cycle-mult` = **CHEMICAL-ONLY g_chem** (i0↓)만.
   접촉면적 손실 R_ct 몫 g_mech = ledger(`rct_ct_area_rel`) 소관.  **B-2 통합 = ln R_ct = ln g_chem +
   ln g_mech 로그-가법** — kim2025 R_ct(N)이 *total*이면 g_chem 으로 분해 후 주입(total 직접 = 기계

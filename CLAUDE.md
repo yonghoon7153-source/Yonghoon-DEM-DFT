@@ -193,6 +193,14 @@ R_int(N) 4.4×/1.5× 검증타깃; Alabdali LIGGGHTS ±6% 반경진동 선례). 
 R_ct만=Yun 정합) ③R* 감쇄반경 프록시 ④forbid/partial/elastic 3-모드 재습윤(§5-4) ⑤Γ* 라벨·가드.
 selftest 6/6 PASS.  ⚠ σ_e_rel 재실런 필요(≈1 예상), R_ct·σ_ion·Γ*는 불변.  **메커니즘 확정·스택압↔
 재습윤 매핑은 §5 미결(사용자 논의).**
+**★ 2회 코드리뷰 + poly-mode 정합 (2026-07-22, code/electrochem/physics 3렌즈)**: bimodal 1.51× 헤드라인은
+`--poly-mode shrink-proxy`(v1 COMMON-SHRINK: poly도 수축→계면 debond) 산출 — A-1 MPM(poly 외피 '팽창')과
+**부호 상충**.  물리 정정(electrochem#3/물리#1): SC(2µm)=계면 debond / **poly(6µm)=입계 내부 void**(계면 유지).
+→ ledger `--poly-mode expand-void` 추가(poly 계면 CZM 제외 + `poly_internal_void_frac` ASSUMED-FORM 별도보고,
+σ_e 미결합=앵커 대기; selftest 7/7).  **1.51×의 poly-계면 debond 몫이 물리적으로 잘못** → expand-void 재실행 시
+R_ct 성장은 SC-계면 debond 몫만 남고 poly는 내부-void로 이동(Kang&Shin bimodal 4.4× 증폭 후보=poly 내부열화).
+**방향(bimodal>mono) 불변, 1.51× magnitude는 shrink-proxy 아티팩트 → 재해석 필요**(GPU A-1 앵커로 void→σ_e
+결합 캘리브 후 확정).  docs/real_degrading_electrode_design.md §6 N6-b.
 SDCP 캠페인: 3.18mAh base/SBE/DBE 완료(전자 +45.4%/이온 +5.6%/반응면 +18%),
 **★σ_SDCP 250 재실행 완료(2026-07-17): σ_e 3.002 = SBE 대비 +52.0% = 새 헤드라인**
 (침대 byte-재현, 분담 10→7% 역행 지속, 천장의 82% 실현; 스윕 5점 완성.  같은 날 SBE
