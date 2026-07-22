@@ -300,8 +300,11 @@ def run(a):
                             gc_J_m2=a.gc, provenance_gc='McGrogan sulfide K_IC→G_c 2.8±1.8 J/m²',
                             k_se_gpa=a.k_se_gpa, soc_swing=a.soc_swing,
                             reflow_recover=float(a.reflow_recover),
-                            provenance_reflow=('A-1 MPM 앵커 캘리브 (real_14: ledger 30/34%% vs MPM 19/23%% → 0.34, '
-                                               '두 ΔV 일반화)' if a.reflow_recover > 0 else '순수 기하 (재유동 미적용)')),
+                            provenance_reflow=('⚠경험적 metric/law 정합 계수 (재유동 아님 — 적대리뷰 2026-07-22: '
+                                               'real_14 30%→19% 갭은 대부분 Hertz-area↔voxel-coverage 지표차 '
+                                               '+13.2%p, 재유동은 −2.6%p.  metric_split_check.py; docs/a3_reflow_'
+                                               'calibration.md 철회판).  0.34는 물리상수 아님 = production 미전파'
+                                               if a.reflow_recover > 0 else '순수 기하 (정합 미적용)')),
                conventions=dict(recontact=a.recontact, rewet_frac=a.rewet_frac, aa_czm=bool(a.aa_czm),
                                 poly_mode=a.poly_mode,
                                 poly_mode_note=('shrink-proxy: poly 도 수축→계면 debond (v1 COMMON-SHRINK 프록시, '
@@ -471,21 +474,47 @@ def _selftest():
             if _os.path.exists(f):
                 _os.remove(f)
     ok &= ok7
-    # 8) ★ reflow-recover (A-1 MPM 앵커 캘리브): 개구(양수 이동)만 (1-R)배로 회복, 폐합은 불변.
-    #    selftest1 기하(gap=101nm)서 R=0.34 → gap≈101·0.66≈67nm < δcr(100) → 즉시파단 해제.
-    _ov, _r, _eps = 0.001, 6.0, 5.1 / 100 / 3
-    _mv = _r * _eps                                        # 34nm 이동... 아 selftest1은 6µm·0.017=102nm
-    gap_R0 = (-_ov + _mv) * 1e3                            # R=0: 101nm
-    gap_R34 = (-_ov + (1 - 0.34) * _mv) * 1e3              # R=0.34: 개구분만 0.66배
-    ok8 = gap_R0 > 100.0 and gap_R34 < gap_R0 and abs(gap_R34 - (-_ov + 0.66 * _mv) * 1e3) < 1e-6
-    # 폐합(음수 이동)은 회복 무관 = 그대로
-    mv_close = -0.05
-    close_R0 = -_ov + mv_close
-    close_R34 = -_ov + (mv_close if mv_close < 0 else 0.66 * mv_close)
-    ok8 &= abs(close_R0 - close_R34) < 1e-12               # 폐합 불변
+    # 8) ★ reflow-recover — 진짜 run() 관통 (code MAJOR 리뷰: 초판 selftest8은 공식=공식 tautology였음).
+    #    AM_S(2µm) 마진접촉 베드를 δcr=20nm로 돌려: R=0 → SC 34nm 개구 > δcr → 파단(f_brk>0);
+    #    R=1.0 → 개구×0 = gap≤0 → 파단 0.  reflow가 실제 f_broken을 토글하는지 run() 으로 검증.
+    lines8 = ['id,type,x,y,z,radius']
+    pid = 1
+    _am8 = [(0.0, 0.0, 5.0), (5.0, 0.0, 5.0), (0.0, 5.0, 5.0), (5.0, 5.0, 5.0)]   # AM_S 2µm
+    for (xc, yc, zc) in _am8:
+        lines8.append(f'{pid},2,{xc},{yc},{zc},2.0')
+        pid += 1
+    # SE 0.5µm 를 각 AM_S 표면에 ov0=5nm 마진접촉으로 배치(거리 = 2.0+0.5−0.005 = 2.495µm) →
+    # SC 34nm 수축 시 gap = 34−5 = 29nm > δcr(20) → R=0 파단; R=1.0 → 개구×0 → gap≤0 → 무파단.
+    _dirs = [(1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)]
+    _dist = 2.0 + 0.5 - 0.005
+    for (xc, yc, zc) in _am8:
+        for (ux, uy, uz) in _dirs:
+            lines8.append(f'{pid},3,{xc+ux*_dist:.4f},{yc+uy*_dist:.4f},{zc+uz*_dist:.4f},0.5')
+            pid += 1
+    fd8, tmp8 = tempfile.mkstemp(suffix='.csv')
+    _os.write(fd8, ('\n'.join(lines8) + '\n').encode())
+    _os.close(fd8)
+    def _run8(R):
+        a8 = _ap.Namespace(atoms=tmp8, type_map='2:AM_S,3:SE', dv_pct=5.1, dv_pct_poly=None, dv_pct_sc=None,
+                           am_split_um=3.5, poly_mode='shrink-proxy', reflow_recover=R, soc_swing=1.0,
+                           delta0_nm=5.0, deltacr_nm=20.0, gc=2.8, k_se_gpa=24.0, recontact='forbid',
+                           rewet_frac=0.5, aa_czm=False, seed=0, fatigue='miner', checkpoints='1', out=tmp8 + f'.r{R}')
+        run(a8)
+        return json.load(open(tmp8 + f'.r{R}.json'))['trajectory'][-1]['f_broken_amse']
+    try:
+        fb0 = _run8(0.0)
+        fb1 = _run8(1.0)
+        ok8 = (fb0 > 0.0) and (fb1 == 0.0) and (fb0 > fb1)   # R=0 파단 발생, R=1 개구 소거 → 파단 0
+        print(f'selftest8 reflow run() 관통: f_brk R=0 {fb0:.3f} > R=1.0 {fb1:.3f}(개구 소거)  '
+              f'{"OK" if ok8 else "FAIL"}')
+    except Exception as e:
+        ok8 = False
+        print(f'selftest8 reflow: FAIL ({e!r})')
+    finally:
+        for f in (tmp8, tmp8 + '.r0.0.json', tmp8 + '.r0.0.csv', tmp8 + '.r1.0.json', tmp8 + '.r1.0.csv'):
+            if _os.path.exists(f):
+                _os.remove(f)
     ok &= ok8
-    print(f'selftest8 reflow-recover: gap R0={gap_R0:.1f}nm → R0.34={gap_R34:.1f}nm(개구 0.66배) '
-          f'+ 폐합 불변  {"OK" if ok8 else "FAIL"}')
     print('CYCLE-LEDGER SELFTEST', 'PASS' if ok else 'FAIL')
     return ok
 
@@ -508,10 +537,12 @@ def main():
                          '★별도 보고(poly_internal_void_frac, ASSUMED-FORM, σ_e 미결합=앵커 대기).  두 모드를 '
                          '돌려 R_ct 성장의 poly-계면 vs SC-계면 분해를 정량(둘 차 = 잘못된 poly-계면 debond 몫).')
     ap.add_argument('--reflow-recover', type=float, default=0.0,
-                    help='★SE plastic 재유동 회복 분율 [0,1] (A-1 MPM 앵커 캘리브 = ε DOF).  강체구 ledger의 '
-                         '기하 접촉-개구 손실 중 이 분율만큼을 SE 재유동이 다시 메꿈(frame[5], ledger엔 없는 것).  '
-                         'real_14 앵커 캘리브값 = 0.34 (ledger 30/34%% vs MPM 19/23%%; 두 ΔV 일반화, LOAO~0.9%%p).  '
-                         '기본 0.0 = 순수기하(현행 byte 불변).  개구(SC 수축)만 회복; 폐합(poly 팽창)은 무관.')
+                    help='⚠경험적 metric/law 정합 계수 [0,1] (★재유동 아님 — 적대리뷰 2026-07-22 철회).  개구(SC '
+                         '수축, 양수 이동) 손실을 (1−R)배로 축소.  초판은 "SE plastic 재유동 회복"이라 했으나 '
+                         'metric_split_check.py 실측: real_14 30%(ledger Hertz-area)→19%(MPM voxel) 갭은 대부분 '
+                         '지표차(+13.2%%p) + elastic πRδ 과대이지 재유동(−2.6%%p) 아님.  같은 voxel 지표선 ledger '
+                         '강체 16.8%% ≈ MPM 19.4%% (정합 불필요).  기본 0.0 = 순수기하(byte 불변) = 권장.  0.34는 '
+                         '물리상수 아님(production 미전파); nonzero는 임의 metric 브리징일 뿐.  docs/a3_reflow_calibration.md.')
     ap.add_argument('--soc-swing', type=float, default=1.0, help='SOC 창 분율 (부분충전 스윕)')
     ap.add_argument('--delta0-nm', type=float, default=5.0, help='CZM δ_0 (Bucci 2017)')
     ap.add_argument('--deltacr-nm', type=float, default=100.0, help='CZM δ_cr=20δ_0 완전분리 (Bucci 2017)')

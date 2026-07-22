@@ -70,4 +70,5 @@ python3 "$SCR/calibrate_ledger_reflow.py" \
 
 echo
 echo "✅ 완료 → $OUT/  (m_*.json 앵커, a1_debond.csv 기하손실 곡선, a3_reflow_calib.json 캘리브)"
-echo "   ⚠ 충전상태(가역) — 영구 fade 아님.  reflow=ε(가역) DOF 캘리브; 영구열화(δcr,rewet)=반복사이클 MPM(v2)."
+echo "   ⚠ 충전상태(가역) — 영구 fade 아님.  ★reflow=metric/law 정합 계수(재유동 아님, 적대리뷰 철회);"
+echo "     metric_split_check.py 로 지표차 분해 필수.  같은-지표선 ledger≈MPM(reflow 불필요).  docs/a3_reflow_calibration.md."

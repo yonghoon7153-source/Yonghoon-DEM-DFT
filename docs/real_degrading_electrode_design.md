@@ -143,10 +143,14 @@ ASSUMED-FORM 보간으로 정직 표기.
   - ✅ **A-1** `--cycle-deform` se_dump' 재변형 앵커 (CPU 기하검증: SC−5.1%/poly+1.77%, N4·default-off;
     **풀 MPM 재평형 = GPU 대기**).  ⚠ 충전-상태(가역) 1점, N-궤적 아님.
   - ✅ **A-2(a)** `cycle_geom_debond.py` 기하 debond/void (crack 아님; selftest 15/15).
-  - ✅ **A-3** ledger 정직화(Γ*·σ_ion 하한) + **ε-DOF 캘리브 착지** (`--reflow-recover`, commit 대기):
-    A-1 MPM 앵커(real_14)로 SE-재유동 회복 = 0.34 회귀(ledger 기하 30/34% → MPM 19/23%; 두 ΔV 일반화
-    산포 0.024, LOAO blind 0.9~2.1%p).  `calibrate_ledger_reflow.py` = `--mpm-anchor` 훅.  docs/a3_
-    reflow_calibration.md.  ⛔ 잔여: 영구열화 DOF(δcr,rewet)=반복사이클 MPM(v2); σ_e 절대전파=poly-void 결합 대기.
+  - ✅ **A-3** ledger 정직화(Γ*·σ_ion 하한).  🔶 **reflow "캘리브"는 부분 철회** (3렌즈 적대리뷰
+    2026-07-22): 초판의 "reflow=0.34 = SE plastic 재유동"은 **오귀속** — metric_split_check.py 실측
+    결과 real_14 30%(ledger Hertz)→19%(MPM voxel) 갭은 **지표차+13.2%p(지배) + elastic πRδ 과대**이지
+    재유동(−2.6%p) 아님.  ★정직 결과: **같은 voxel 지표선 ledger 강체 16.8% ≈ MPM 19.4%(Δ2.6%p) =
+    reflow 없이 이미 일치**(단 §2.5-6대로 "독립" 아님=MPM-self-consistency).  `--reflow-recover`는
+    노브 유지(기본 0=권장), 라벨 "metric/law 정합 계수(재유동 아님)"로 정정, production 미전파.
+    docs/a3_reflow_calibration.md(철회판).  ⛔ 잔여: like-for-like 지표비교(§2.5-N5)·영구열화 MPM(v2)·
+    독립 스캐폴드·Stage-E capped area 로 ledger πRδ 교체.
   - ⛔ **A-2(b)** 취성 crack = FEM/phase-field 미구현(future).  ⛔ **A-4** percolation(N) 미착지.
   - → "하이브리드/진짜 열화 전극"의 **정량 주장**은 A-1 풀MPM 앵커 + A-3 캘리브·held-out(blind) 착지까지
     **여전히 보류**.  '설계 확정'·'코드 스캐폴드 착지'·'풀 검증 완료' 3단 분리(현재 2단).

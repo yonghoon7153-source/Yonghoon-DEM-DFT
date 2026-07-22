@@ -120,14 +120,23 @@ def calibrate(typ, xyz, rad, pristine, charged_list):
     if not rows:
         return {'error': 'no valid anchors (coverage_AM_S/cycle_deform 결측?)'}
     reflow_mean = float(np.mean([r['reflow'] for r in rows]))
-    out = {'reflow_recover': round(reflow_mean, 3), 'n_anchors': len(rows), 'per_anchor': rows,
-           'reflow_spread': round(float(np.ptp([r['reflow'] for r in rows])), 3) if len(rows) > 1 else None}
+    reflow_applied = float(min(max(reflow_mean, 0.0), 1.0))    # ledger가 실제 적용하는 값 (clamp [0,1])
+    out = {'reflow_recover': round(reflow_mean, 3),
+           'reflow_applied_clamped': round(reflow_applied, 3),  # F6: calibrated≠applied 노출
+           'clamp_warning': (None if abs(reflow_mean - reflow_applied) < 1e-9 else
+                             f'⚠ 회귀값 {reflow_mean:.3f} 이 [0,1] 밖 → ledger는 {reflow_applied:.3f} 로 클램프 적용 '
+                             f'(calibrated≠applied).  음수 = MPM 손실 > ledger = 지표역전(voxel>Hertz 가능) = '
+                             f'reflow 프레임 부적합 신호'),
+           'n_anchors': len(rows), 'per_anchor': rows,
+           'reflow_spread': round(float(np.ptp([r['reflow'] for r in rows])), 3) if len(rows) > 1 else None,
+           'label': '⚠경험적 metric/law 정합 계수 (재유동 아님 — metric_split_check.py로 지표차 분해 필수; '
+                    'docs/a3_reflow_calibration.md 철회판).  물리상수 아님 = production 미전파.'}
     # LOAO (2+ 앵커): 한 앵커로 fit → 나머지 blind 예측 오차
     if len(rows) >= 2:
         loao = []
         for i, held in enumerate(rows):
             others = [r for j, r in enumerate(rows) if j != i]
-            R_fit = float(np.mean([r['reflow'] for r in others]))
+            R_fit = float(min(max(np.mean([r['reflow'] for r in others]), 0.0), 1.0))   # F6: production 클램프 반영
             pred = _sc_area_loss(L, typ, xyz, rad, held['dv'], R_fit)
             loao.append({'held_dv': held['dv'], 'R_fit': round(R_fit, 3),
                          'pred': round(pred, 1), 'actual': round(held['mpm'], 1),
@@ -142,25 +151,29 @@ def _report(out):
         print('❌', out['error'])
         return
     print('=' * 84)
-    print('A-3 reflow 캘리브 (MPM 앵커 → ledger SE-재유동 회복 DOF)')
-    print('  ⚠ ε(가역 변형)-DOF만; 영구열화(δcr,rewet)=반복사이클 MPM(v2).  지표차이 일부 혼입(ASSUMED-FORM).')
+    print('reflow "캘리브" — ⚠경험적 metric/law 정합 계수 (★재유동 아님, 적대리뷰 철회판)')
+    print('  ⚠ 이 reflow 는 ledger Hertz-area 손실을 MPM voxel-coverage 손실에 맞추는 브리징 — 대부분')
+    print('     지표차(Hertz↔voxel) + elastic πRδ 과대이지 SE 재유동 아님.  metric_split_check.py 로 분해 필수.')
+    print('  ⚠ n=2 유사복제(같은 스캐폴드·poly ΔV)면 아래 LOAO=산포의 재진술, out-of-sample 아님(리뷰 F2/F3).')
     print('-' * 84)
     print(f"  {'ΔV(SC)':>8} {'MPM손실%':>9} {'ledger기하%':>11} {'reflow':>8}")
     for r in out['per_anchor']:
         print(f"  {r['dv']:7.1f}% {r['mpm']:9.1f} {r['ledger_geom']:11.1f} {r['reflow']:8.3f}")
     print('-' * 84)
-    print(f"  ★ 캘리브 reflow-recover = {out['reflow_recover']}  "
-          f"(SE plastic 재유동이 기하 접촉손실의 {out['reflow_recover']*100:.0f}% 회복)")
+    print(f"  metric/law 정합 계수 = {out['reflow_recover']}  (★물리 재유동 아님)")
+    if out.get('clamp_warning'):
+        print(f"  {out['clamp_warning']}")
+        print(f"    → ledger 실제 적용값(clamp) = {out['reflow_applied_clamped']}")
     if out.get('reflow_spread') is not None:
-        print(f"    앵커간 reflow 산포 = {out['reflow_spread']}  "
-              f"({'✅ 일반화(단일계수)' if out['reflow_spread'] < 0.05 else '⚠ ΔV-의존'})")
+        print(f"    앵커간 산포 = {out['reflow_spread']}  (⚠좁은 ΔV 범위·유사복제면 작은 산포는 tautology; "
+              f"'일반화' 주장 금지 — 리뷰 F2)")
     if 'loao' in out:
-        print('  LOAO (한 앵커 fit → 나머지 blind 예측):')
+        print('  LOAO (⚠n=2면 대수적으로 = 산포·in-family, out-of-sample 아님):')
         for x in out['loao']:
             print(f"    ΔV={x['held_dv']}% held: R={x['R_fit']} → pred {x['pred']}% vs 실측 {x['actual']}%  "
-                  f"(blind 오차 {x['blind_err_pp']}%p)")
-        print(f"    → LOAO 최대 blind 오차 = {out['loao_max_err_pp']}%p")
-    print(f"\n  적용: cycle_contact_ledger.py --reflow-recover {out['reflow_recover']} (+ --poly-mode expand-void)")
+                  f"(err {x['blind_err_pp']}%p)")
+    print(f"\n  ★권장: --reflow-recover 0.0 (순수기하, byte 불변).  nonzero 는 metric 브리징일 뿐 물리 아님 →")
+    print(f"     production 미전파.  진짜 재유동 몫은 같은-지표 비교(metric_split_check) 후에만.  docs/a3_reflow_calibration.md")
     print('=' * 84)
 
 
