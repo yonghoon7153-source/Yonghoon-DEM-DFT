@@ -39,7 +39,7 @@ import re
 import sys
 
 ARCHIVE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                       'docs', 'data', 'eis_measurements')
+                       '이종기술', 'eis')     # hetero-tech project (separate from SDCP)
 RAW = os.path.join(ARCHIVE, 'raw')
 EXTRACTED = os.path.join(ARCHIVE, 'extracted')
 CATALOG = os.path.join(ARCHIVE, 'eis_catalog.csv')

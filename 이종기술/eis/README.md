@@ -60,6 +60,26 @@ archive fully usable without it.)
 4. **Run reproducibility**: most measurements have 2 runs that agree; **`No2_only_full` run02
    (arc 89 Ω) diverges from run01 (arc 43 Ω)** — flagged, treat as re-measure/cell issue.
 
+## CNLS equivalent-circuit fits  (`fits/`, `scripts/eis_fit.py`)
+First-pass fits (impedance.py), **R0 fixed to the measured HF intercept**, arc free:
+- **symmetric** `R0-p(R1,CPE1)` → R_s + **R1 = transport-arc resistance** (R_ion if e-blocking)
+- **full** `R0-p(R1,CPE1)-Wo1` → R_s + **R1 = R_int** + **Wo = R_w (diffusion)**
+
+Results (`fits/eis_fit_results.csv`, Ω·cm², 2 runs each):
+
+| | R_s | transport-arc R1 |   | R_s | R_int | R_w |
+|---|---|---|---|---|---|---|
+| **sym** No1 pure | 10.1 | **32** | **full** No1 OCV | 9.8 | 79 | 51 |
+| sym No1 5:5 | 6.9 | **48 ↑** | No1 @1.3V | 6.8 | 30 | 0 |
+| sym No2 pure | 8.2 | **39** | No2 OCV run1 | 8.4 | 24 | 73 |
+| sym No2 5:5 | 5.6 | **30 ↓** | No2 OCV run2 | 13.8 | 66 | 136 |
+
+⚠ **CPE_a ≈ 0.30–0.34** (strong transport dispersion) → the single R-CPE is a **first-pass
+approximation**; a transmission-line (TLM) refit would fit better and give a cleaner R_ion.
+rmse 5–6 % (sym) / 2.6–13 % (full; No2 run1 poor).  Bimodal transport goes **opposite ways**
+for No1 (↑) vs No2 (↓) in raw R — but **σ needs per-cell thickness** (No1 5:5 = 70 µm; pure-small
+thickness pending) since R ∝ L.  Figure: `fits/eis_fits.png`.
+
 ## Parser (external, not vendored)
 `.mpr` is decoded with **[galvani](https://github.com/echemdata/galvani)** (GPL-3.0).  We
 deliberately do **not** copy galvani into this repo (license hygiene); `scripts/eis_archive.py`
