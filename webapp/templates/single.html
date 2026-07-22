@@ -257,6 +257,7 @@
         <label title="집전체 축 — 두 층 구분: ① 모델 예측(출력) = bare-vs-wetted 기하 접촉 이중솔브의 R_geom (항상 계산됨) ② 이 선택 = 실측 R_int를 직렬로 거는 「시나리오 부하」 (what-if — 모델 예측 아님). R_int는 (전극,집전체) 페어 속성 — 값은 정본 anchors CSV에서 해석: bare-Al은 레시피에 SDCP 있으면 DBE(cycled 46/pristine 12)/없으면 SBE(110/18), C-SUS 30/10 (cycled=Fig6e 1000cyc, pristine=panel-e≈; SBE+C-SUS 미측정=proxy). STEP3 σ_apparent엔 cycled+pristine 둘 다 병기되고, 오른쪽 'STEP4 R_int'를 고르면 충방전 곡선에도 흐릅니다. 이상 접촉 = 부하 없음 = 기존 그대로">집전체<br><select id="add-collector" style="padding:3px" onchange="updateS4RintHint();updateAdditiveGpuCmds()">
           <option value="ideal" selected>이상 접촉 (기본 — 시나리오 부하 없음)</option>
           <option value="bare">bare-Al</option>
+          <option value="sus">SUS (무코팅 bare · ⚠추정)</option>
           <option value="csus">C-SUS primer 코팅</option></select></label>
         <label title="STEP3 복셀 해상도 (µm) — 작을수록 입자-입자 접점(neck)·SDCP 채널이 더 선명. dof∝1/vox³: 0.4→~0.8M(σ 검증값), 0.25→~3M(논문 figure), 0.2→~6M(최고 해상, CG 오래). 전류밀도 필드/논문 그림용. σ 절대값은 vox에 약간 의존하니 비교표는 0.4로.">voxel(STEP3)<br><select id="add-vox" style="padding:3px" onchange="updateAdditiveGpuCmds()">
           <option value="0.4" selected>0.4 µm (기본 · σ 검증값)</option>
@@ -633,14 +634,15 @@ async function updateS4RintHint() {
     el.textContent = `→ R_int = ${parseFloat(s4rint)} Ω·cm² (고정 문헌/직접값, 집전체 무관)`;
     return;
   }
-  const key = coll === 'bare' ? (sd > 0 ? 'dbe' : 'sbe') : coll === 'csus' ? 'csus' : null;
-  if (!key) { el.textContent = '⚠ 집전체를 bare-Al/C-SUS로 선택해야 적용됨 (이상 접촉 = R_int=0)'; return; }
+  const key = coll === 'bare' ? (sd > 0 ? 'dbe' : 'sbe') : coll === 'csus' ? 'csus' : coll === 'sus' ? 'sus' : null;
+  if (!key) { el.textContent = '⚠ 집전체를 bare-Al/SUS/C-SUS로 선택해야 적용됨 (이상 접촉 = R_int=0)'; return; }
   if (!_rintAnchors) {
     try { _rintAnchors = await (await fetch('/rint-anchors')).json(); }
     catch (e) { el.textContent = ''; return; }
   }
   const v = (_rintAnchors[key] || {})[s4rint];
-  if (v != null) el.textContent = `→ R_int = ${v} Ω·cm² (${key.toUpperCase()} ${s4rint}${s4rint === 'pristine' ? ', panel-e≈' : ''})`;
+  const _prov = key === 'sus' ? ', ⚠추정(미측정=2×C-SUS)' : (s4rint === 'pristine' ? ', panel-e≈' : '');
+  if (v != null) el.textContent = `→ R_int = ${v} Ω·cm² (${key.toUpperCase()} ${s4rint}${_prov})`;
 }
 // VGCF and Super P are BOTH conductive carbon → use one OR the other, never both.
 // Valid combos: VGCF / Super P / PTFE / VGCF+PTFE / Super P+PTFE.
@@ -660,7 +662,7 @@ function dlAdditiveZip() {
   if (!_addExclusiveOK()) return false;
   // pristine/cycled는 집전체로 시나리오를 해석하므로 집전체 필요; 숫자(문헌/직접값)는 불필요.
   if ((s4rint === 'pristine' || s4rint === 'cycled') && (coll === 'ideal' || !coll)) {
-    alert('풀셀 pristine/cycled R_int는 집전체(bare-Al/C-SUS) 선택으로 시나리오가 정해집니다.\n집전체 무관한 값을 쓰려면 "문헌 …" 옵션(고정 Ω·cm²)을 고르세요.');
+    alert('풀셀 pristine/cycled R_int는 집전체(bare-Al/SUS/C-SUS) 선택으로 시나리오가 정해집니다.\n집전체 무관한 값을 쓰려면 "문헌 …" 옵션(고정 Ω·cm²)을 고르세요.');
     return false;
   }
   const _cut = (s4 || s4chg) ? `&s4vmin=${s4vmin}&s4vmax=${s4vmax}&s4icut=${s4icut}` : '';

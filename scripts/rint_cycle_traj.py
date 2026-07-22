@@ -123,7 +123,7 @@ def _selftest():
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('--scenario', choices=('sbe', 'dbe', 'csus'), default='csus')
+    ap.add_argument('--scenario', choices=('sbe', 'dbe', 'csus', 'sus'), default='csus')
     ap.add_argument('--checkpoints', default='0,1,10,100,300,1000',
                     help='STEP4 체크포인트 사이클들 (comma)')
     ap.add_argument('--out-csv', default='', help='R(N) 밴드 CSV 저장 경로 (기본: 출력만)')

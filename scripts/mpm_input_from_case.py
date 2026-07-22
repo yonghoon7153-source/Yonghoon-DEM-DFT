@@ -56,7 +56,7 @@ def main():
                     help='selected collector R_int (Ω·cm²; manuscript Fig6e cycled: bare-Al 110 / DBE 46 / '
                          'C-SUS primer 30 / ideal 0).  <0 = none — payload still reports every preset.')
     ap.add_argument('--collector-name', default='', help='collector preset label (metrics provenance)')
-    ap.add_argument('--collector-scenario', default='', choices=('', 'sbe', 'dbe', 'csus'),
+    ap.add_argument('--collector-scenario', default='', choices=('', 'sbe', 'dbe', 'csus', 'sus'),
                     help='anchors-CSV scenario key of the selected collector — run_mpm.sh의 payload 호출에 '
                          '전달돼 selected에 pristine 짝값(시간-일관 BOL)이 병기됨.  ⚠ 리뷰 CRITICAL 재발 '
                          '방지: webapp이 이 플래그를 보내므로 여기서 안 받으면 킷 생성이 argparse 500으로 죽음.')

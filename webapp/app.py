@@ -5240,7 +5240,7 @@ def _rint_anchor_pair(key):
     """R_int 시나리오 (pristine, cycled) Ω·cm² — 정본 docs/data/rint_eis_anchors.csv에서 읽음
     (scripts/rint_cycle_traj.load_scenario 재사용 = 단일 출처).  CSV/키 불가 시 2026-07-21 스냅샷
     fallback.  ⚠ load_scenario는 SystemExit를 던지므로 Exception만 잡으면 앱이 죽음."""
-    if key not in ('sbe', 'dbe', 'csus'):       # fallback dict에 없는 키가 CSV-실패 경로에서
+    if key not in ('sbe', 'dbe', 'csus', 'sus'):  # fallback dict에 없는 키가 CSV-실패 경로에서
         raise ValueError(f'unknown R_int scenario key: {key!r}')   # KeyError 500 되던 것 조기 차단
     try:
         import sys as _s
@@ -5251,14 +5251,15 @@ def _rint_anchor_pair(key):
         r0, rc, _nt, _pr = load_scenario(key)
         return float(r0), float(rc)
     except (Exception, SystemExit):
-        return {'sbe': (18.0, 110.0), 'dbe': (12.0, 46.0), 'csus': (10.0, 30.0)}[key]
+        return {'sbe': (18.0, 110.0), 'dbe': (12.0, 46.0), 'csus': (10.0, 30.0),
+                'sus': (20.0, 60.0)}[key]                # bare-SUS = 추정 (미측정; 2×C-SUS Cr2O3 페널티)
 
 
 @app.route('/rint-anchors')
 def rint_anchors():
     """kit-gen UI 힌트 — 정본 anchors CSV의 시나리오 (pristine, cycled) R_int Ω·cm² (단일 출처)."""
     return jsonify({k: dict(zip(('pristine', 'cycled'), _rint_anchor_pair(k)))
-                    for k in ('sbe', 'dbe', 'csus')})
+                    for k in ('sbe', 'dbe', 'csus', 'sus')})
 
 
 @app.route('/results/<case_id>/mpm-input')
@@ -5321,6 +5322,10 @@ def mpm_input_package(case_id):
         _scn = 'csus'
         _rint = _rint_anchor_pair('csus')[1]
         _cname = 'C-SUS_primer+DBE' if _dbe else 'C-SUS_primer+SBE(proxy_DBE-anchored)'
+    elif _coll == 'sus':                                 # bare SUS (무코팅) — 추정 reference (미측정)
+        _scn = 'sus'
+        _rint = _rint_anchor_pair('sus')[1]              # cycled 추정 60 (pristine 20 병기); 밴드 CSV note
+        _cname = 'SUS_bare_estimated'                    # shell-safe token (no space/paren)
     elif _coll == 'ideal':
         _rint, _cname = 0.0, 'ideal'
     else:

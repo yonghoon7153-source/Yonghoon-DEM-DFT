@@ -313,7 +313,7 @@ def main():
                          '110 / DBE 46 / C-SUS primer 30; 0 = ideal).  <0 = no selection (presets still '
                          'reported).  Applied as a uniform areal series term (post-processing).')
     ap.add_argument('--collector-name', default='', help='label for the selected collector preset')
-    ap.add_argument('--collector-scenario', default='', choices=('', 'sbe', 'dbe', 'csus'),
+    ap.add_argument('--collector-scenario', default='', choices=('', 'sbe', 'dbe', 'csus', 'sus'),
                     help='anchors-CSV scenario key of the selected collector (webapp이 전달) — selected '
                          '항목에 pristine 짝값(시간-일관 BOL)을 병기하기 위한 단일-출처 키')
     ap.add_argument('--sigma-ion-sdcp', type=float, default=0.001,
@@ -631,22 +631,24 @@ def main():
                     from rint_cycle_traj import load_scenario as _ls_rint
                     # (r0, rc, ntot, prec) 전체 유지 — precision 라벨도 CSV 단일 출처 (정밀 digitize가
                     # CSV precision 컬럼을 바꾸면 라벨까지 일괄 반영; 하드코딩 'panel_e_approx' 금지)
-                    _scn_vals = {k: tuple(_ls_rint(k)) for k in ('sbe', 'dbe', 'csus')}
+                    _scn_vals = {k: tuple(_ls_rint(k)) for k in ('sbe', 'dbe', 'csus', 'sus')}
                     _scn_src = 'docs/data/rint_eis_anchors.csv (정본, scenario keys)'
                 except (Exception, SystemExit) as _e_rs:
                     _scn_vals = {'sbe': (18.0, 110.0, 1000, 'panel_e_approx'),
                                  'dbe': (12.0, 46.0, 1000, 'panel_e_approx'),
-                                 'csus': (10.0, 30.0, 1000, 'panel_e_approx')}
+                                 'csus': (10.0, 30.0, 1000, 'panel_e_approx'),
+                                 'sus': (20.0, 60.0, 1000, 'estimated')}   # bare-SUS 추정 (미측정)
                     _scn_src = f'fallback snapshot 2026-07-21 (anchors CSV unreadable: {_e_rs})'
                 _pri_prec = '/'.join(sorted({str(v[3]) for v in _scn_vals.values()}))
                 _nm_fmt = {'sbe': 'SBE_bare_{:g}', 'dbe': 'DBE_bare_{:g}',
-                           'csus': 'SBE_CSUS_{:g}_proxy_DBE_anchored'}   # SBE+C-SUS 미측정 → DBE-앵커 proxy
+                           'csus': 'SBE_CSUS_{:g}_proxy_DBE_anchored',   # SBE+C-SUS 미측정 → DBE-앵커 proxy
+                           'sus': 'SUS_bare_{:g}_estimated'}             # bare-SUS 미측정 → 2×C-SUS 추정
                 _cyc_pairs = ([('ideal_R0', 0.0)]
                               + [(_nm_fmt[k].format(_scn_vals[k][1]), _scn_vals[k][1])
-                                 for k in ('sbe', 'dbe', 'csus')])
+                                 for k in ('sbe', 'dbe', 'csus', 'sus')])
                 _pri_pairs = ([('ideal_R0', 0.0)]
                               + [(_nm_fmt[k].format(_scn_vals[k][0]), _scn_vals[k][0])
-                                 for k in ('sbe', 'dbe', 'csus')])
+                                 for k in ('sbe', 'dbe', 'csus', 'sus')])
                 step3['collector'] = {'kind': 'SCENARIO series load — measured R_int applied '
                                               'externally (NOT a model prediction; the model\'s own '
                                               'interface OUTPUT is collector_geometric.R_geom)',
