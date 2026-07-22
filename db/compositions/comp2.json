@@ -24,6 +24,16 @@
     "basin": "single",
     "pipeline": "v1"
   },
+  "champion": {
+    "version": "v3",
+    "structure": "comp2_V0_v3_relaxed.xyz",
+    "confirmed_date": "2026-07-22",
+    "provenance": "UMA followmin from V0=v103 saddle (mode -45.8i) -> DFT single-point -508.7 meV/cell lower -> fixed-cell DFT-relax (bfgs 3 steps, max disp 0.007 A vs followmin, PS4 [4,4,4,4] intact) -> UMA-Gamma phonon rerun STABLE (0 imag). 4중 확증.",
+    "supersedes": "comp2_v2 anneal champion V0=v103 (= SADDLE, -45.8i). v3 = 0.467 A RMSD lower-energy Li-sublattice arrangement (-508.7 meV/cell DFT).",
+    "dynamical_stability": "STABLE — see phonon_stability_sweep.json comp2.champion_v3 + comp2_v3_phonon_uma.json",
+    "B0_GPa_note": "25.8 carried from EOS (fixed-cell relax, phase-invariant to Li-ordering; residual stress ~1 GPa)",
+    "property_revalidation_pending": "band_gap/bond_lengths/bader/elastic below were on V0=v103 (SADDLE, 0.467 A from v3). Re-check on v3: gap likely robust (Li negligible in VBM/CBM edges); Li-Cl/Li-Br/Li-S bonds + Li Bader WILL shift with Li rearrangement; framework(P-S, halide, B0) robust. + comp2 MD(Ea) 대기."
+  },
   "band_gap_eV": 2.04,
   "vbm_character": "S 3p + Br 4p",
   "cbm_character": "S 3p + P 3s (Li negligible)",

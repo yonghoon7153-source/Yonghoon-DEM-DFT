@@ -18,7 +18,7 @@
    "follow_dE_meV": -535.3,
    "follow_rmsd_A": 0.467,
    "imag_character": "Li 82-87%",
-   "note": "진짜 깊은 Li-부격자 안장 — DFT 확정(2026-07-22, -508.7 meV/cell). followmin = comp2 champion v3 후보; DFT-relax 정련 + gap/EOS 민감도 재검이 후속.",
+   "note": "진짜 깊은 Li-부격자 안장 — DFT 확정(2026-07-22, -508.7 meV/cell). followmin=comp2 champion v3: DFT-relax(고정셀) 후 phonon rerun STABLE로 안장 RESOLVED (아래 champion_v3).",
    "dft_cross_check": {
     "date": "2026-07-22",
     "method": "PAW kjpaw 60/480, k222, mv 0.01 single-point pair (kgy GPU)",
@@ -27,6 +27,15 @@
     "dE_meV_cell": -508.7,
     "dE_meV_atom": -9.78,
     "verdict": "DFT CONFIRMS — followmin lower; champion replacement CONFIRMED. UMA(-535.3) vs DFT(-508.7) agree within 5% = screen cross-validated."
+   },
+   "champion_v3": {
+    "date": "2026-07-22",
+    "structure": "comp2_V0_v3_relaxed.xyz",
+    "dft_relax": "fixed-cell kjpaw 60/480 k222, bfgs converged 3 steps, max disp 0.007 A vs UMA-followmin (DFT=UMA 일치), argyrodite PS4 [4,4,4,4] intact (P-S 2.06-2.07 A)",
+    "phonon_rerun": "UMA-Gamma on DFT-relaxed geom: 0 imaginary, lowest real +32.7 cm-1 (Li 70%, mobile-Li soft mode), RMSD 0.007 A, VERDICT STABLE (comp2_v3_phonon_uma.json)",
+    "B0_GPa": "25.8 carried (EOS V0, fixed-cell 자기일관; residual stress ~1 GPa = 셀 near-equilibrium)",
+    "verdict": "champion v3 CONFIRMED — 4중 확증(DFT lower / DFT-relax 수렴 / PS4 골격 intact / phonon STABLE). V0 안장(-45.8i) 해소.",
+    "pending": "gap(fixed-occ nscf)/DOS 재확인 (0.007 A 이동 -> gap 2.04 거의 불변 예상), comp2 MD(Ea)"
    }
   },
   "b2o3": {
@@ -112,7 +121,7 @@
    "verdict": "STABLE"
   }
  },
- "headline": "현역 논문 앵커 3종(modelc/lpsocl/b2o3) 전원 STABLE = 동적 안정성 검증 도장. 유일한 심각 케이스는 comp2 (Li-부격자 깊은 안장, -535 meV). comp1은 기술적 허수 1개지만 follow -3.5 meV로 무해.",
+ "headline": "현역 논문 앵커 3종(modelc/lpsocl/b2o3) 전원 STABLE = 동적 안정성 검증 도장. comp2는 V0가 깊은 Li-부격자 안장(-535 meV)이었으나 followmin->DFT-relax->phonon rerun STABLE로 해소(2026-07-22, champion v3 확정). comp1은 기술적 허수 1개지만 follow -3.5 meV로 무해.",
  "methodology_lesson": "허수 '크기'는 심각도가 아니다: comp1 63i -> -3.5 meV vs comp2 46i -> -535 meV (150x). 판정은 반드시 displace-and-relax follow ΔE로. 이후 champion 게이트 표준: FD Γ 스크린 + (허수 시) follow.",
  "limits": "Γ-only, UMA level, 단일 배열. comp3/4/5는 UMA-relax V0라 fmax~0 자명(그 분지의 최소 확인일 뿐)."
 }

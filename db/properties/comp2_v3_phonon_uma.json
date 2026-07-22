@@ -1,0 +1,15 @@
+{
+ "label": "comp2_v3_relaxed",
+ "structure": "comp2_V0_v3_relaxed.xyz",
+ "nat": 52,
+ "method": "UMA uma-s-1p1/omat FD Gamma vibrations, delta 0.01 A, cell-fixed pre-relax fmax 0.005",
+ "uma_fmax_at_V0_eVA": 0.0831,
+ "relax_rmsd_vs_V0_A": 0.007,
+ "lowest_modes_cm1": [-0.2, -0.1, 0.2, 32.7, 34.1, 49.0, 51.1, 55.5, 57.3, 59.1, 63.0, 65.3, 68.5, 71.3, 72.5, 73.7, 77.0, 77.6, 78.3, 81.9],
+ "n_imaginary_beyond_tol": 0,
+ "imag_tol_cm1": 20.0,
+ "verdict": "STABLE",
+ "mode_character_note": "lowest real modes (32.7-65 cm-1) are Li-dominated (Li 55-74%) = mobile-Li soft modes (superionic signature); P/S framework modes high-freq. 3 acoustic (-0.2/-0.1/+0.2) mixed Li/S.",
+ "context": "V0(old champion)=saddle mode -45.8i (UMA). v3 = UMA followmin (dE_UMA -535, dE_DFT -508.7 meV/cell) then fixed-cell DFT-relax (PS4 intact, max disp 0.007 A). This UMA-Gamma rerun on the DFT-relaxed geom = 0 imaginary -> saddle resolved.",
+ "note": "UMA-level screen: STABLE = dynamically stable at UMA minimum. RMSD 0.007 A « 0.2 A threshold -> UMA stays in V0 basin, verdict robust. DFT ph.x(Gamma) escalation only if SOFT (not needed here)."
+}
