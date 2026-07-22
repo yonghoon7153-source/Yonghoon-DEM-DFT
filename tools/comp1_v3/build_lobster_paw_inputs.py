@@ -32,11 +32,12 @@ PAW_PSEUDOS = {
     "P":  "P.pbe-n-kjpaw_psl.1.0.0.UPF",
     "S":  "S.pbe-nl-kjpaw_psl.1.0.0.UPF",
     "Cl": "Cl.pbe-nl-kjpaw_psl.1.0.0.UPF",
+    "Br": "Br.pbe-n-kjpaw_psl.1.0.0.UPF",  # comp2 (Li6PS5Cl0.5Br0.5) 2026-07-22
     "O":  "O.pbe-n-kjpaw_psl.0.1.UPF",     # lpsocl (2026-07-17); b2o3 KISTI run had it bash-side
 }
-SPECIES_MASS = {"Li": 6.941, "P": 30.974, "S": 32.065, "Cl": 35.453, "O": 15.999}
+SPECIES_MASS = {"Li": 6.941, "P": 30.974, "S": 32.065, "Cl": 35.453, "Br": 79.904, "O": 15.999}
 BASIS_FUNCS = {"Li": "1s 2s 2p", "P": "3s 3p 3d", "S": "3s 3p 3d",
-               "Cl": "3s 3p 3d", "O": "2s 2p"}
+               "Cl": "3s 3p 3d", "Br": "4s 4p", "O": "2s 2p"}
 
 
 def parse_namelists_and_cards(in_text):
@@ -220,6 +221,8 @@ def main():
             "cohpGenerator from 0.5 to 4.0 type Li type Cl",
             "cohpGenerator from 0.5 to 4.0 type P  type S",
             "cohpGenerator from 0.5 to 4.0 type S  type S"]
+    if "Br" in species:
+        gens += ["cohpGenerator from 0.5 to 4.0 type Li type Br"]
     if "O" in species:
         gens += ["cohpGenerator from 0.5 to 4.0 type P  type O",
                  "cohpGenerator from 0.5 to 4.0 type Li type O"]
