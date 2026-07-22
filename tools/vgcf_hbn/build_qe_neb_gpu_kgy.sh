@@ -22,7 +22,11 @@ NV=$HOME/apps/nvhpc/Linux_x86_64/24.11
 HPCX="$(ls -d "$NV"/comm_libs/*/hpcx/hpcx-*/ompi 2>/dev/null | sort | tail -1)"
 CUDAHOME=$NV/cuda/12.6
 [ -d "$CUDAHOME" ] || CUDAHOME="$(ls -d "$NV"/cuda/12.* 2>/dev/null | sort -V | tail -1)"
-export PATH="$NV/compilers/bin:$HPCX/bin:$PATH"
+# conda bin 경로 완전 제거 (2026-07-22): CFLAGS unset만으론 부족 — conda binutils
+# (x86_64-conda-linux-gnu-ld/ar)가 NVHPC GPU 링크(-cuda/-gpu/-acc)를 깨뜨림.
+# PATH에서 conda/miniforge/envs 경로 싹 걷어내고 NVHPC만 앞세움 (=conda deactivate 등가).
+PATH="$(printf '%s' "$PATH" | tr ':' '\n' | grep -viE 'conda|miniforge|mamba|/envs/' | paste -sd: -)"
+export PATH="$NV/compilers/bin:$HPCX/bin:/usr/bin:/bin:$PATH"
 export LD_LIBRARY_PATH="$NV/compilers/lib:$CUDAHOME/lib64:$NV/math_libs/lib64:$HPCX/lib:${LD_LIBRARY_PATH:-}"
 export OPAL_PREFIX="$HPCX" OMPI_FC=nvfortran OMPI_CC=nvc
 echo "toolchain: $(which nvfortran) | $(which mpif90) | CUDA=$CUDAHOME"
