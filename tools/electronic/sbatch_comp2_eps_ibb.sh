@@ -19,7 +19,7 @@
 #SBATCH -t 12:00:00
 #SBATCH -o comp2_eps_%j.out
 #SBATCH -e comp2_eps_%j.err
-set -u; set +H
+set +H   # (set -u 금지: conda.sh가 set -u 하에서 unset 변수로 즉시 exit시킴 — 출력없이 죽음)
 
 # ---- 환경 (compute 노드는 fresh — ph.x 빌드 셸과 동일하게) ----
 source /opt/ohpc/pub/apps/anaconda3/etc/profile.d/conda.sh 2>/dev/null || \
