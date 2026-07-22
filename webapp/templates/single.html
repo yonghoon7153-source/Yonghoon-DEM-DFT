@@ -284,7 +284,33 @@
             <label style="font-weight:400;cursor:pointer"><input type="checkbox" id="s4-2" onchange="updateAdditiveGpuCmds()"> 2C</label>
             <label style="font-weight:400;cursor:pointer"><input type="checkbox" id="s4-3" onchange="updateAdditiveGpuCmds()"> 3C</label>
           </span><br>
-          <span style="display:inline-flex;gap:10px;align-items:center;height:24px;font-size:0.82em" title="컷오프 스케줄: 방전은 v_min까지, 충전 CC는 v_max까지 → CV 홀드 후 |I|/I_1C가 I-cut 아래로 떨어지면 종지 (예: 실험 2.5~4.25V, CV 0.5C 종지).  SOC 창 끝에 먼저 닿으면 전압 컷 전에 끝날 수 있음(1C 방전이 그랬음).">
+          <span style="display:inline-flex;gap:8px;align-items:center;height:26px;flex-wrap:wrap;font-size:0.82em" title="Zive 스마트인터페이스식 스텝 스케줄 — 충전/방전 스텝을 순서대로(charge-first) 정의, per-step rate·컷오프.  지정 시 위 체크박스 대신 스케줄대로 순차 실행.  각 스텝=STEP4 1런.">
+            <button type="button" onclick="openSchedModal()" style="padding:2px 10px;background:#1e3a5f;color:#93c5fd;border:1px solid #3b6ea5;border-radius:5px;cursor:pointer">⚙ 스케줄 편집 (Zive식)…</button>
+            <span id="sched-summary" style="color:#7dd3fc"></span>
+            <input type="hidden" id="s4-sched-json" value="">
+          </span><br>
+          <div id="sched-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1000;align-items:center;justify-content:center">
+            <div style="background:#0f172a;border:1px solid #334155;border-radius:10px;padding:18px;max-width:660px;width:93%;max-height:86vh;overflow:auto;color:#cbd5e1;font-size:0.86em">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+                <b style="color:#e2e8f0">충방전 스케줄 <span style="color:#94a3b8;font-weight:400">(Zive식 · charge-first · 각 스텝=STEP4 1런)</span></b>
+                <button type="button" onclick="closeSchedModal()" style="background:none;border:none;color:#94a3b8;font-size:1.2em;cursor:pointer">✕</button>
+              </div>
+              <table style="width:100%;border-collapse:collapse" id="sched-table">
+                <thead><tr style="color:#94a3b8;text-align:left"><th>#</th><th>종류</th><th>rate</th><th>컷오프</th><th>cyc</th><th></th></tr></thead>
+                <tbody id="sched-rows"></tbody>
+              </table>
+              <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+                <button type="button" onclick="addSchedStep('c')" style="padding:3px 9px;cursor:pointer">+ 충전</button>
+                <button type="button" onclick="addSchedStep('d')" style="padding:3px 9px;cursor:pointer">+ 방전</button>
+                <button type="button" onclick="loadSchedPreset()" style="padding:3px 9px;cursor:pointer">기본(formation+rate)</button>
+                <button type="button" onclick="clearSched()" style="padding:3px 9px;cursor:pointer">비우기</button>
+                <span style="flex:1"></span>
+                <button type="button" onclick="applySched()" style="padding:4px 14px;background:#1d4ed8;color:white;border:none;border-radius:5px;cursor:pointer">적용</button>
+              </div>
+              <div style="margin-top:10px;color:#6b7280;font-size:0.92em">cyc = R_int(N) 태그(수명 열화는 R_int(N) 문헌투영 — 실제 N-사이클 sim 아님).  per-step 컷오프: 충전 ≤v_max·CV종지 |I|, 방전 ≥v_min.</div>
+            </div>
+          </div>
+          <span style="display:inline-flex;gap:10px;align-items:center;height:24px;font-size:0.82em" title="컷오프 스케줄: 방전은 v_min까지, 충전 CC는 v_max까지 → CV 홀드 후 |I|/I_1C가 I-cut 아래로 떨어지면 종지 (예: 실험 2.5~4.25V, CV 0.5C 종지).  SOC 창 끝에 먼저 닿으면 전압 컷 전에 끝날 수 있음(1C 방전이 그랬음).  ⚠스케줄 사용 시 여기 값은 per-step 미지정 컷오프의 기본값.">
             <span style="color:#94a3b8">컷오프</span>
             <label style="font-weight:400">방전≥ <input id="s4-vmin" type="number" value="3.0" min="1.5" max="4.0" step="0.05" style="width:52px" onchange="updateAdditiveGpuCmds()"> V</label>
             <label style="font-weight:400">충전≤ <input id="s4-vmax" type="number" value="4.5" min="3.5" max="4.8" step="0.05" style="width:52px" onchange="updateAdditiveGpuCmds()"> V</label>
@@ -620,7 +646,51 @@ function _addVals() {
     s4icut: (document.getElementById('s4-icut') || {}).value || '0.05',
     s4rint: (document.getElementById('s4-rint') || {}).value || '',
     s4pp: (document.getElementById('s4-pp') || {}).checked ? '1' : '',
+    s4sched: (document.getElementById('s4-sched-json') || {}).value || '',
   };
+}
+// ★Zive식 충방전 스케줄 빌더 (팝업) — 스텝 리스트를 JSON으로 직렬화해 hidden #s4-sched-json에 저장.
+//   지정 시 kit이 crates/charge 대신 순서대로 실행 (charge-first, per-step 컷오프).  각 스텝 = STEP4 1런.
+let _schedSteps = [];
+function _defSched() { return [
+  { k: 'c', r: 0.1, v: 4.5, i: 0.05, n: 1 }, { k: 'd', r: 0.1, v: 3.0, n: 1 },
+  { k: 'c', r: 0.2, v: 4.5, i: 0.05, n: 1 }, { k: 'd', r: 0.2, v: 3.0, n: 1 }]; }
+function openSchedModal() {
+  if (!_schedSteps.length) {
+    const cur = (document.getElementById('s4-sched-json') || {}).value;
+    try { _schedSteps = cur ? JSON.parse(cur) : _defSched(); } catch (e) { _schedSteps = _defSched(); }
+  }
+  renderSched(); const m = document.getElementById('sched-modal'); if (m) m.style.display = 'flex';
+}
+function closeSchedModal() { const m = document.getElementById('sched-modal'); if (m) m.style.display = 'none'; }
+function addSchedStep(k) { _schedSteps.push(k === 'c' ? { k: 'c', r: 0.2, v: 4.5, i: 0.05, n: 1 } : { k: 'd', r: 0.2, v: 3.0, n: 1 }); renderSched(); }
+function delSchedStep(i) { _schedSteps.splice(i, 1); renderSched(); }
+function moveSchedStep(i, d) { const j = i + d; if (j < 0 || j >= _schedSteps.length) return; const t = _schedSteps[i]; _schedSteps[i] = _schedSteps[j]; _schedSteps[j] = t; renderSched(); }
+function loadSchedPreset() { _schedSteps = _defSched(); renderSched(); }
+function clearSched() { _schedSteps = []; renderSched(); }
+function _schedSet(i, f, v) {
+  if (f === 'k') { _schedSteps[i].k = v; if (v === 'c' && _schedSteps[i].i == null) _schedSteps[i].i = 0.05; }
+  else if (f === 'n') _schedSteps[i].n = Math.max(1, parseInt(v) || 1);
+  else _schedSteps[i][f] = parseFloat(v);
+  renderSched();
+}
+function renderSched() {
+  const tb = document.getElementById('sched-rows'); if (!tb) return;
+  tb.innerHTML = _schedSteps.map((s, i) => {
+    const kind = `<select onchange="_schedSet(${i},'k',this.value)"><option value="c"${s.k === 'c' ? ' selected' : ''}>충전CC-CV</option><option value="d"${s.k === 'd' ? ' selected' : ''}>방전CC</option></select>`;
+    const cut = s.k === 'c'
+      ? `≤<input type="number" value="${s.v}" step="0.05" style="width:46px" onchange="_schedSet(${i},'v',this.value)">V, CV|I|<input type="number" value="${s.i}" step="0.01" style="width:44px" onchange="_schedSet(${i},'i',this.value)">C`
+      : `≥<input type="number" value="${s.v}" step="0.05" style="width:46px" onchange="_schedSet(${i},'v',this.value)">V`;
+    return `<tr style="border-top:1px solid #1e293b"><td>${i + 1}</td><td>${kind}</td><td><input type="number" value="${s.r}" step="0.05" min="0.01" style="width:50px" onchange="_schedSet(${i},'r',this.value)">C</td><td>${cut}</td><td><input type="number" value="${s.n}" step="1" min="1" style="width:52px" onchange="_schedSet(${i},'n',this.value)"></td><td style="white-space:nowrap"><button type="button" onclick="moveSchedStep(${i},-1)">↑</button><button type="button" onclick="moveSchedStep(${i},1)">↓</button><button type="button" onclick="delSchedStep(${i})">✕</button></td></tr>`;
+  }).join('') || '<tr><td colspan="6" style="color:#6b7280;padding:6px">스텝 없음 — [+ 충전]/[+ 방전]으로 추가하세요.</td></tr>';
+}
+function applySched() {
+  const hf = document.getElementById('s4-sched-json'); const sum = document.getElementById('sched-summary');
+  if (!_schedSteps.length) { if (hf) hf.value = ''; if (sum) sum.textContent = ''; closeSchedModal(); updateAdditiveGpuCmds(); return; }
+  const j = _schedSteps.map(s => { const o = { k: s.k, r: s.r, v: s.v, n: s.n }; if (s.k === 'c') o.i = s.i; return o; });
+  if (hf) hf.value = JSON.stringify(j);
+  if (sum) sum.textContent = '스케줄: ' + _schedSteps.map(s => (s.k === 'c' ? '충' : '방') + s.r + 'C').join(' → ');
+  closeSchedModal(); updateAdditiveGpuCmds();
 }
 // STEP4 R_int 힌트 — 선택된 collector+전극(SDCP→DBE)의 시나리오 값을 정본 CSV(/rint-anchors)에서
 // 해석해 표시.  서버(app.py &s4rint=)와 동일 규칙: collector 미선택/이상접촉이면 키워드 무시.
@@ -657,7 +727,7 @@ function _addExclusiveOK() {
 // (recalcAdditives removed — this panel is recipe-zip-only; σ/porosity analysis lives in the MPM viewer
 //  after the GPU run. The analytic /whatif-additives route is kept server-side but no longer called here.)
 function dlAdditiveZip() {
-  const { vg, sp, pt, sd, mix, coll, vox, s4, s4chg, s4vmin, s4vmax, s4icut, s4rint, s4pp } = _addVals();
+  const { vg, sp, pt, sd, mix, coll, vox, s4, s4chg, s4vmin, s4vmax, s4icut, s4rint, s4pp, s4sched } = _addVals();
   if (vg <= 0 && sp <= 0 && pt <= 0 && sd <= 0) { alert('첨가제를 하나 이상 입력하세요 (wt%).'); return false; }
   if (!_addExclusiveOK()) return false;
   // pristine/cycled는 집전체로 시나리오를 해석하므로 집전체 필요; 숫자(문헌/직접값)는 불필요.
@@ -665,10 +735,11 @@ function dlAdditiveZip() {
     alert('풀셀 pristine/cycled R_int는 집전체(bare-Al/SUS/C-SUS) 선택으로 시나리오가 정해집니다.\n집전체 무관한 값을 쓰려면 "문헌 …" 옵션(고정 Ω·cm²)을 고르세요.');
     return false;
   }
-  const _cut = (s4 || s4chg) ? `&s4vmin=${s4vmin}&s4vmax=${s4vmax}&s4icut=${s4icut}` : '';
+  const _cut = (s4 || s4chg || s4sched) ? `&s4vmin=${s4vmin}&s4vmax=${s4vmax}&s4icut=${s4icut}` : '';
   const _ri = s4rint ? `&s4rint=${s4rint}` : '';
-  if (s4pp && !(s4 || s4chg)) {
-    alert('poly/SC D_s 분리는 STEP4 rate를 하나 이상 선택해야 적용됩니다 (분리는 STEP4 확산 물성).');
+  const _sched = s4sched ? `&s4sched=${encodeURIComponent(s4sched)}` : '';   // ★Zive 스케줄 (지정 시 체크박스 대신)
+  if (s4pp && !(s4 || s4chg || s4sched)) {
+    alert('poly/SC D_s 분리는 STEP4 rate 또는 스케줄을 선택해야 적용됩니다 (분리는 STEP4 확산 물성).');
     return false;
   }
   const _ppc = s4pp ? '&s4pp=1' : '';
@@ -679,7 +750,7 @@ function dlAdditiveZip() {
   const _pp = ['s4dsp', 's4dss', 's4i0p', 's4i0s', 's4split']
     .filter(k => _pq.get(k)).map(k => `&${k}=${encodeURIComponent(_pq.get(k))}`).join('');
   updateAdditiveGpuCmds();   // ★ pressing download generates the gabia upload/run/fetch command card
-  window.location = `/results/${encodeURIComponent('{{ case.id }}')}/mpm-input?vgcf=${vg}&superp=${sp}&ptfe=${pt}&sdcp=${sd}&mixing=${mix}&collector=${coll}&vox=${vox}&step4=${s4}&step4chg=${s4chg}${_cut}${_ri}${_ppc}${_pp}`;
+  window.location = `/results/${encodeURIComponent('{{ case.id }}')}/mpm-input?vgcf=${vg}&superp=${sp}&ptfe=${pt}&sdcp=${sd}&mixing=${mix}&collector=${coll}&vox=${vox}&step4=${s4}&step4chg=${s4chg}${_cut}${_ri}${_sched}${_ppc}${_pp}`;
   return false;
 }
 // recipe string (mirror of backend _add_recipe_str) → zip filename (mirror of the download_name tag)
@@ -689,15 +760,17 @@ function _addRecipeStr(vg, sp, pt, sd = 0) {
 }
 // variant tag (_VGCF-PTFE_1-1_ballmill) + the MPM-lab variant name (caseName + tag).
 function _addTag() {
-  const { vg, sp, pt, sd, mix, vox, s4, s4chg, s4pp } = _addVals();
+  const { vg, sp, pt, sd, mix, vox, s4, s4chg, s4pp, s4sched } = _addVals();
   // [A-Za-z0-9._]만 사용하는 자기서술 쌍 형식 (서버 미러) — ':'/'-' 는 다운로드 새니타이즈로
   // 삭제돼 예측명↔실제 파일명이 어긋났음 (VGCFPTFESDCP_2.970.4950.495 사건, 2026-07-17)
   const pairs = [['VGCF', vg], ['SuperP', sp], ['PTFE', pt], ['SDCP', sd]]
     .filter(p => p[1] > 0).map(p => p[0] + p[1]).join('_');
   if (!pairs) return '';
   const vt = (vox && vox !== '0.4') ? '_vox' + vox : '';   // finer STEP3 vox → carried into the name
-  const st = (s4 ? '_s4' + s4.split(',').map(r => r + 'C').join('_') : '')
-           + (s4chg ? '_s4chg' + s4chg.split(',').map(r => r + 'C').join('_') : '')
+  let _ns = 0; try { _ns = s4sched ? JSON.parse(s4sched).length : 0; } catch (e) {}
+  const st = (_ns ? '_sched' + _ns + 'step' : '')          // ★Zive 스케줄 킷 구별 (체크박스 대신)
+           + (s4 && !_ns ? '_s4' + s4.split(',').map(r => r + 'C').join('_') : '')
+           + (s4chg && !_ns ? '_s4chg' + s4chg.split(',').map(r => r + 'C').join('_') : '')
            + (s4pp ? '_ppds' : '');                        // poly/SC D_s 프리셋 킷 구별
   return '_' + pairs + '_' + mix + vt + st;
 }

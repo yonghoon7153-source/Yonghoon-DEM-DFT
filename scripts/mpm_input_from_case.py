@@ -82,6 +82,11 @@ def main():
     ap.add_argument('--step4-charge', default='',
                     help='STEP4-v2 충전(CCCV) C-rate 목록 (쉼표) — CC 충전 → v_max 도달 시 CV 홀드 '
                          '(step4_dyn --charge --cv-hold).  방전 rate들 다음에 순차 실행.')
+    ap.add_argument('--step4-sched', default='',
+                    help='★Zive-style 충방전 스케줄 (JSON) — 지정 시 crates/charge 대신 순서대로 실행. '
+                         '형식 [{"k":"c|d","r":rate,"v":vlim,"i":icut,"n":cyc}]: k=c충전CCCV/d방전, '
+                         'r=C-rate, v=컷오프(충전 v_max/방전 v_min), i=CV종지(충전만), n=사이클번호(R_int(N) 태그·메타). '
+                         'charge-first, per-step 컷오프.  각 스텝=독립 STEP4 1런 (v1: chaining 없음).')
     ap.add_argument('--step4-vmin', type=float, default=3.0,
                     help='STEP4 방전 컷오프 전압 [V vs Li] (기본 3.0; 실험 2.5~4.25면 2.5).')
     ap.add_argument('--step4-vmax', type=float, default=4.5,
@@ -172,6 +177,32 @@ def main():
         return out
     s4_rates = _parse_rates(a.step4_crates)
     s4_chg = _parse_rates(a.step4_charge)
+    # ★Zive-style 충방전 스케줄 (JSON) — 지정 시 crates/charge 대신 순서대로 실행
+    s4_sched = None
+    if a.step4_sched:
+        try:
+            _sc = json.loads(a.step4_sched)
+        except Exception as e:
+            ap.error(f'--step4-sched JSON 파싱 실패: {e}')
+        if not isinstance(_sc, list) or not _sc:
+            ap.error('--step4-sched는 비어있지 않은 리스트여야 함')
+        s4_sched = []
+        for i, st in enumerate(_sc):
+            k = str(st.get('k', '')).lower()
+            if k not in ('c', 'd'):
+                ap.error(f'step {i}: k는 "c"(충전CCCV)/"d"(방전) — got {st.get("k")!r}')
+            try:
+                r = float(st['r'])
+            except Exception:
+                ap.error(f'step {i}: r(C-rate) 필요')
+            if not (r > 0):
+                ap.error(f'step {i}: rate>0 필요 (got {r})')
+            entry = {'k': k, 'r': r,
+                     'v': float(st.get('v', a.step4_vmax if k == 'c' else a.step4_vmin)),
+                     'n': int(st.get('n', 1))}
+            if k == 'c':
+                entry['i'] = float(st.get('i', a.step4_icut))
+            s4_sched.append(entry)
 
     atoms = os.path.join(a.results, 'atoms.csv')
     if not os.path.exists(atoms):
@@ -464,7 +495,7 @@ def main():
     # STEP4 체크박스: 미선택 = 그리드 export까지만 (step4_grid.npz 항상 저장 — 나중에 rate만
     # 골라 step4_only.sh로 재개 가능); 선택 = payload 후 각 C-rate를 순차 자동 실행.
     s4_block = ''
-    if s4_rates or s4_chg:
+    if s4_rates or s4_chg or s4_sched:
         _dis = ' '.join(f'{v:g}' for v in s4_rates)
         _chg = ' '.join(f'{v:g}' for v in s4_chg)
         _win = (('' if a.step4_x0 is None else f' --x0 {a.step4_x0:g}')
@@ -510,9 +541,40 @@ def main():
     echo "[run_mpm] STEP4 충전(CCCV) ${{CR}}C end $(date)"
   done
 ''' if s4_chg else ''
-        s4_body = f'''# 3) STEP4-v2 시간전개 — 방전({_dis or '없음'}) → 충전 CCCV({_chg or '없음'}) 순차.
-#    각 런은 독립 초기상태 (방전 = x0 충전상태에서, 충전 = x100 방전상태에서 시작) → 순서는 결과 무관;
-#    방전이 rate-비교 주축이라 먼저.  그리드는 STEP 2가 export.
+        # ★Zive 스케줄: 순서 있는 per-step 시퀀스 (charge-first, per-step 컷오프) — crates/charge 대체
+        _sched_loop = ''
+        if s4_sched:
+            _sl = []
+            for _i, _st in enumerate(s4_sched):
+                _cr = f"{_st['r']:g}"
+                _o = f"step4_sched{_i:02d}n{_st['n']}"
+                if _st['k'] == 'c':
+                    _pc = f"--v-min {a.step4_vmin:g} --v-max {_st['v']:g}{_win}"
+                    _sl.append(
+                        f'  echo "[run_mpm] STEP4 스케줄[{_i}] 충전 {_cr}C '
+                        f'(CV@{_st["v"]:g}V I<{_st["i"]:g}C cyc{_st["n"]}{_rlab}{_eslab}) $(date)"\n'
+                        f'  python3 "$SCR/step4_dyn.py" --grid step4_grid.npz \\\n'
+                        f'    --ocp-csv "$AP/ocp_nmc811_chen2020.csv" --params-json "$AP/params_nmc811_chen2020.json" \\\n'
+                        f'    --c-rate {_cr} --charge --cv-hold {_pc} --i-cut-frac {_st["i"]:g}{_rint}{_es} --gpu \\\n'
+                        f'    --out "{_o}_chg_c{_cr}{_rtag}{_estag}.npz" --viz-out "{_o}_viz_chg_c{_cr}{_rtag}{_estag}.json" \\\n'
+                        f'    || echo "[run_mpm] 스케줄[{_i}] 충전 {_cr}C FAILED — 다음 스텝 계속"')
+                else:
+                    _pc = f"--v-min {_st['v']:g} --v-max {a.step4_vmax:g}{_win}"
+                    _sl.append(
+                        f'  echo "[run_mpm] STEP4 스케줄[{_i}] 방전 {_cr}C '
+                        f'(>={_st["v"]:g}V cyc{_st["n"]}{_rlab}{_eslab}) $(date)"\n'
+                        f'  python3 "$SCR/step4_dyn.py" --grid step4_grid.npz \\\n'
+                        f'    --ocp-csv "$AP/ocp_nmc811_chen2020.csv" --params-json "$AP/params_nmc811_chen2020.json" \\\n'
+                        f'    --c-rate {_cr} {_pc}{_rint}{_es} --gpu \\\n'
+                        f'    --out "{_o}_c{_cr}{_rtag}{_estag}.npz" --viz-out "{_o}_viz_c{_cr}{_rtag}{_estag}.json" \\\n'
+                        f'    || echo "[run_mpm] 스케줄[{_i}] 방전 {_cr}C FAILED — 다음 스텝 계속"')
+            _sched_loop = '\n'.join(_sl) + '\n'
+        _run_loops = _sched_loop if s4_sched else (_dis_loop + _chg_loop)
+        _s4head = (f"# 3) STEP4-v2 — ★Zive 스케줄 {len(s4_sched)}스텝 순차 (charge-first, per-step 컷오프)."
+                   if s4_sched else
+                   f"# 3) STEP4-v2 시간전개 — 방전({_dis or '없음'}) → 충전 CCCV({_chg or '없음'}) 순차.")
+        s4_body = f'''{_s4head}
+#    각 런은 독립 초기상태 (방전 = x0 충전상태에서, 충전 = x100 방전상태에서 시작).  그리드는 STEP 2가 export.
 AP=""
 for d in "$KIT/anchor_params" "$KIT/../anchor_params"; do [ -f "$d/ocp_nmc811_chen2020.csv" ] && AP="$d" && break; done
 if [ -z "$AP" ]; then
@@ -520,7 +582,7 @@ if [ -z "$AP" ]; then
   echo "          1회 생성: python3 $SCR/step4_pybamm_anchor.py --export-params   (pybamm 필요)"
   echo "          그 뒤 재개: bash step4_only.sh"
 else
-{_dis_loop}{_chg_loop}fi
+{_run_loops}fi
 '''
         s4_block = s4_body
     # run script: edit paths/GPU as needed, then run on a GPU box
@@ -596,7 +658,7 @@ echo "          (오래된 run_* 폴더는 디스크 차면 지워도 됨 — �
 """
     rp = os.path.join(a.out, 'run_mpm.sh')
     open(rp, 'w').write(run); os.chmod(rp, 0o755)
-    if s4_rates or s4_chg:                                   # 재개/단독 실행용 — 압밀 재실행 없이 STEP4만
+    if s4_rates or s4_chg or s4_sched:                       # 재개/단독 실행용 — 압밀 재실행 없이 STEP4만
         s4_only = ('#!/usr/bin/env bash\nset -uo pipefail\n'
                    '# STEP4만 (재개/단독) — 사용법: bash step4_only.sh [런폴더]   (기본: latest_run)\n'
                    'KIT="$(cd "$(dirname "$0")" && pwd)"\n'
@@ -618,7 +680,10 @@ echo "          (오래된 run_* 폴더는 디스크 차면 지워도 됨 — �
     print(f'MPM input for case "{case}" → {a.out}/')
     print(f'  am_scaffold.csv ({len(am_rows)} AM)  se_scaffold.csv ({len(se_rows)} SE)  '
           f'run_mpm.sh  mpm_input.json  (target_porosity={tgt})'
-          + (f'  step4_only.sh  [STEP4 방전: {", ".join(f"{v:g}C" for v in s4_rates) or "—"}'
+          + (f'  step4_only.sh  [★Zive 스케줄 {len(s4_sched)}스텝: '
+             + ' → '.join(f"{'충' if s['k']=='c' else '방'}{s['r']:g}C" for s in s4_sched) + ']'
+             if s4_sched else
+             f'  step4_only.sh  [STEP4 방전: {", ".join(f"{v:g}C" for v in s4_rates) or "—"}'
              f' / 충전CCCV: {", ".join(f"{v:g}C" for v in s4_chg) or "—"}]'
              if (s4_rates or s4_chg) else '  [STEP4 미선택 — 그리드 export까지]'))
 

@@ -5358,9 +5358,22 @@ def mpm_input_package(case_id):
         return out
     _s4_clean = _rates_of('step4')
     _s4chg_clean = _rates_of('step4chg')                # 충전(CCCV) 체크박스
-    if _s4_clean:
+    # ★Zive 스케줄 (&s4sched=JSON) — 지정 시 crates/charge 대신 순서대로 실행 (charge-first, per-step 컷오프).
+    #   crates/charge 체크박스와 동시 지정 시 스케줄 우선 (kit이 s4_sched 있으면 그걸로 시퀀스 생성).
+    _s4sched = request.args.get('s4sched', '')
+    if _s4sched:
+        import json as _json
+        try:
+            _sj = _json.loads(_s4sched)
+            if isinstance(_sj, list) and _sj:
+                cmd += ['--step4-sched', _json.dumps(_sj, separators=(',', ':'), ensure_ascii=True)]
+            else:
+                _s4sched = ''
+        except Exception:
+            _s4sched = ''                               # 파싱 실패 → 스케줄 무시 (체크박스 경로 유지)
+    if _s4_clean and not _s4sched:
         cmd += ['--step4-crates', ','.join(f'{v:g}' for v in _s4_clean)]
-    if _s4chg_clean:
+    if _s4chg_clean and not _s4sched:
         cmd += ['--step4-charge', ','.join(f'{v:g}' for v in _s4chg_clean)]
 
     def _cut(name, default, lo, hi):                    # 컷오프 스케줄 (화이트리스트 클램프)
@@ -5369,7 +5382,7 @@ def mpm_input_package(case_id):
             return min(max(v, lo), hi)
         except ValueError:
             return default
-    if _s4_clean or _s4chg_clean:                       # 컷오프는 STEP4 선택 시에만 주입
+    if _s4_clean or _s4chg_clean or _s4sched:           # 컷오프·R_int·poly/SC는 STEP4 선택(또는 스케줄) 시 주입
         _vmin = _cut('s4vmin', 3.0, 1.5, 4.0)
         _vmax = _cut('s4vmax', 4.5, 3.5, 4.8)
         _icut = _cut('s4icut', 0.05, 0.01, 2.0)   # 절대 C (충전 rate와 독립) — 고율 충전의 '절반 종지' 허용 위해 2.0까지
