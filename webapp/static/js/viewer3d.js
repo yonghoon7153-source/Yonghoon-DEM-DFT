@@ -164,6 +164,14 @@ function _ppLab(st) {
   const i = s.i0_poly != null ? `i0 ${s.i0_poly}/${s.i0_sc}` : '';
   return ` · poly/SC ${[d, i].filter(Boolean).join(' ')}`;
 }
+// ★수렴품질 배지 (저율 완화-수용 투명화): worst 전류수지 상대오차 % + 완화배수.  고율(완화×1)은 생략.
+function _convLab(st) {
+  const c = st && st.conv;
+  if (!c || !(c.rate_relax > 1)) return '';
+  const pct = (c.worst_resid || 0) * 100;
+  const tag = pct < 0.5 ? '良' : (pct < 1.0 ? '주의' : '한계');
+  return `  ·  수렴 전류수지 ${pct.toFixed(2)}% [${tag}] (저율완화×${c.rate_relax})`;
+}
 function _ppTag(st) {
   const s = st && st.am_electro_split; if (!s) return '';
   const c = v => String(v).replace(/[^0-9eE.+-]/g, '');
@@ -265,7 +273,7 @@ function wireVProfileDownload(state, btnId) {
     g.font = '16px sans-serif';
     for (let i = 0; i <= 5; i++) { const x = xlo + (xhi - xlo) * i / 5; g.fillText(x.toFixed(useCap ? 2 : 0), PX(x), xAxisY + 24); }
     g.textAlign = 'left'; g.font = 'bold 18px sans-serif';
-    g.fillText(`STEP4-v2 ${st.charge ? '충전' : '방전'} ${st.c_rate}C${st.r_int_ohm_cm2 > 0 ? ` · R_int ${st.r_int_ohm_cm2}Ω·cm²` : ''}${_ppLab(st)}  (${(state.data && state.data.case) || ''})${hasD ? '  ·  과전압 분해' : ''}`, mL, mT - 18);
+    g.fillText(`STEP4-v2 ${st.charge ? '충전' : '방전'} ${st.c_rate}C${st.r_int_ohm_cm2 > 0 ? ` · R_int ${st.r_int_ohm_cm2}Ω·cm²` : ''}${_ppLab(st)}  (${(state.data && state.data.case) || ''})${hasD ? '  ·  과전압 분해' : ''}${_convLab(st)}`, mL, mT - 18);
     const dl = (url, fn) => { const a = document.createElement('a'); a.href = url; a.download = fn; document.body.appendChild(a); a.click(); a.remove(); };
     const _cn = String(state._st4SrcName || (state.data && state.data.case) || '').replace(/[^A-Za-z0-9._-]/g, '').slice(0, 48);
     const base = `step4_${st.charge ? 'charge' : 'discharge'}_${st.c_rate}C${st.r_int_ohm_cm2 > 0 ? '_rint' + st.r_int_ohm_cm2 : ''}${_ppTag(st)}${_cn ? '_' + _cn : ''}`;
@@ -901,7 +909,7 @@ function renderSt4Faces(state) {
       g.fillStyle = '#111'; g.font = 'bold 21px sans-serif'; g.textAlign = 'left';      // 헤더 (동기 수치)
       g.fillText(`${st.charge ? '충전' : '방전'} ${st.c_rate}C${st.r_int_ohm_cm2 > 0 ? ` · R_int ${st.r_int_ohm_cm2}Ω·cm²` : ''}${_ppLab(st)} — t=${tNow.toFixed(1)}s · V=${VT[ii].toFixed(3)}V`
         + `${ar2 > 0 ? ` · ${xsC[ii].toFixed(2)}mAh/cm²` : ` · ${st.charge ? '충전창' : 'DoD'} ${xsC[ii].toFixed(1)}%`}`
-        + (hasD ? '    ' + series.map(s => `${s[2]} ${Math.max(s[0][ii], 0).toFixed(1)}mV`).join(' · ') : ''), 12, 26);
+        + (hasD ? '    ' + series.map(s => `${s[2]} ${Math.max(s[0][ii], 0).toFixed(1)}mV`).join(' · ') : '') + _convLab(st), 12, 26);
       g.font = '13px sans-serif'; g.fillStyle = '#6b7280';
       g.fillText('두께 프로파일 (현재 시점)', 14, H - 8);
       const PX = x => mL + (x - xlo) / (xhi - xlo) * (W - mL - mR);

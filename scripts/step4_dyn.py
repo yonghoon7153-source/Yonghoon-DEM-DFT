@@ -805,9 +805,10 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
     #   ~1/rate 배 높은 바닥에서 정체 — 1e-8은 도달 불가.  잔차는 i_scale(=목표전류)로 정규화된 값이라
     #   저율일수록 같은 절대오차가 크게 보임.  정체-수용/하드페일 임계를 1/rate로 완화 (0.2C→×5 = 전류수지
     #   0.5%까지 곡선 수용; 그 이상은 여전히 하드페일 = 가비지 가드 유지).  galv_miss가 최종 정확도 심판.
-    _rate_relax = min(max(1.0, 1.0 / max(c_rate, 0.05)), 8.0)
+    _rate_relax = min(max(1.0, 1.0 / max(c_rate, 0.05)), 10.0)   # 0.1C→10 (전류수지 1%까지 수용), 그 이하 cap
     _hard_tol = 1e-3 * _rate_relax                          # simulate 하드페일 임계 (rate-scale)
     sys_.stall_tol = _hard_tol                              # newton() 정체-수용 임계 (동일 페어)
+    sys_._rate_relax = float(_rate_relax)                   # viz 수렴품질 배지용 (뷰어 투명 표시)
     R_int_abs = (r_int_ohm_cm2 * 1e-4 / sys_.area_m2) if r_int_ohm_cm2 > 0 else 0.0   # [Ω]
     has_face = np.zeros(n_am, bool)
     has_face[np.unique(sys_.f_pid[sys_.f_pid >= 0])] = True
@@ -1479,6 +1480,12 @@ def main():
             'c_max_mol_m3': ocp.c_max,
             'i_1c_a': float(out['I_1C_A']), 'i_mean_abs_a': [float(f'{v:.4g}') for v in m_abs],
             'end_reason': reason, 'test_only': bool(ocp.test_only), 'provenance': ocp.provenance,
+            # ★ 수렴품질 (저율 완화-수용 투명화, 2026-07-22): worst_resid = 스텝 최대 잔차(전류수지
+            #   상대오차, 0.0014=0.14%), rate_relax = 저율 완화배수(0.2C=5·0.1C=10).  뷰어가 배지로
+            #   표시 → 완화-수용 곡선의 신뢰도를 사용자가 바로 판단 (0.5%↓ 良 / 1%↓ 주의 / 그이상=하드페일).
+            'conv': {'worst_resid': round(float(max(out['newton_resid'])) if out['newton_resid'] else 0.0, 6),
+                     'worst_kcl': round(float(max(out['kcl_rel'])) if out['kcl_rel'] else 0.0, 6),
+                     'rate_relax': round(float(getattr(sysm, '_rate_relax', 1.0)), 2)},
             # ★ 전체 방전곡선 시계열 (뷰어 '📈 방전곡선' 버튼용 — 체크포인트 아닌 전 스텝; 스칼라라 가벼움)
             'curve': {'t_s': [round(float(v), 1) for v in out['t']],
                       'V': [round(float(v), 4) for v in out['V']],
