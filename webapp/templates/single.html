@@ -302,7 +302,8 @@
               <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
                 <button type="button" onclick="addSchedStep('c')" style="padding:3px 9px;cursor:pointer">+ 충전</button>
                 <button type="button" onclick="addSchedStep('d')" style="padding:3px 9px;cursor:pointer">+ 방전</button>
-                <button type="button" onclick="loadSchedPreset()" style="padding:3px 9px;cursor:pointer">기본(formation+rate)</button>
+                <button type="button" onclick="addSchedStep('r')" style="padding:3px 9px;cursor:pointer">+ Rest</button>
+                <button type="button" onclick="loadSchedPreset()" style="padding:3px 9px;cursor:pointer">기본(formation+rest+rate)</button>
                 <button type="button" onclick="clearSched()" style="padding:3px 9px;cursor:pointer">비우기</button>
                 <span style="flex:1"></span>
                 <button type="button" onclick="applySched()" style="padding:4px 14px;background:#1d4ed8;color:white;border:none;border-radius:5px;cursor:pointer">적용</button>
@@ -653,8 +654,8 @@ function _addVals() {
 //   지정 시 kit이 crates/charge 대신 순서대로 실행 (charge-first, per-step 컷오프).  각 스텝 = STEP4 1런.
 let _schedSteps = [];
 function _defSched() { return [
-  { k: 'c', r: 0.1, v: 4.5, i: 0.05, n: 1 }, { k: 'd', r: 0.1, v: 3.0, n: 1 },
-  { k: 'c', r: 0.2, v: 4.5, i: 0.05, n: 1 }, { k: 'd', r: 0.2, v: 3.0, n: 1 }]; }
+  { k: 'c', r: 0.1, v: 4.5, i: 0.05, n: 1 }, { k: 'r', t: 1, n: 1 }, { k: 'd', r: 0.1, v: 3.0, n: 1 }, { k: 'r', t: 1, n: 1 },
+  { k: 'c', r: 0.2, v: 4.5, i: 0.05, n: 1 }, { k: 'r', t: 1, n: 1 }, { k: 'd', r: 0.2, v: 3.0, n: 1 }]; }
 function openSchedModal() {
   if (!_schedSteps.length) {
     const cur = (document.getElementById('s4-sched-json') || {}).value;
@@ -663,33 +664,52 @@ function openSchedModal() {
   renderSched(); const m = document.getElementById('sched-modal'); if (m) m.style.display = 'flex';
 }
 function closeSchedModal() { const m = document.getElementById('sched-modal'); if (m) m.style.display = 'none'; }
-function addSchedStep(k) { _schedSteps.push(k === 'c' ? { k: 'c', r: 0.2, v: 4.5, i: 0.05, n: 1 } : { k: 'd', r: 0.2, v: 3.0, n: 1 }); renderSched(); }
+function addSchedStep(k) { _schedSteps.push(k === 'c' ? { k: 'c', r: 0.2, v: 4.5, i: 0.05, n: 1 } : k === 'r' ? { k: 'r', t: 1, n: 1 } : { k: 'd', r: 0.2, v: 3.0, n: 1 }); renderSched(); }
 function delSchedStep(i) { _schedSteps.splice(i, 1); renderSched(); }
 function moveSchedStep(i, d) { const j = i + d; if (j < 0 || j >= _schedSteps.length) return; const t = _schedSteps[i]; _schedSteps[i] = _schedSteps[j]; _schedSteps[j] = t; renderSched(); }
 function loadSchedPreset() { _schedSteps = _defSched(); renderSched(); }
 function clearSched() { _schedSteps = []; renderSched(); }
 function _schedSet(i, f, v) {
-  if (f === 'k') { _schedSteps[i].k = v; if (v === 'c' && _schedSteps[i].i == null) _schedSteps[i].i = 0.05; }
+  if (f === 'k') {
+    _schedSteps[i].k = v;
+    if (v === 'r' && _schedSteps[i].t == null) _schedSteps[i].t = 1;
+    if (v !== 'r' && _schedSteps[i].r == null) _schedSteps[i].r = 0.2;
+    if (v !== 'r' && _schedSteps[i].v == null) _schedSteps[i].v = (v === 'c' ? 4.5 : 3.0);
+    if (v === 'c' && _schedSteps[i].i == null) _schedSteps[i].i = 0.05;
+  }
   else if (f === 'n') _schedSteps[i].n = Math.max(1, parseInt(v) || 1);
   else _schedSteps[i][f] = parseFloat(v);
   renderSched();
 }
 function renderSched() {
   const tb = document.getElementById('sched-rows'); if (!tb) return;
+  const gray = '<span style="color:#6b7280">—</span>';
   tb.innerHTML = _schedSteps.map((s, i) => {
-    const kind = `<select onchange="_schedSet(${i},'k',this.value)"><option value="c"${s.k === 'c' ? ' selected' : ''}>충전CC-CV</option><option value="d"${s.k === 'd' ? ' selected' : ''}>방전CC</option></select>`;
-    const cut = s.k === 'c'
-      ? `≤<input type="number" value="${s.v}" step="0.05" style="width:46px" onchange="_schedSet(${i},'v',this.value)">V, CV|I|<input type="number" value="${s.i}" step="0.01" style="width:44px" onchange="_schedSet(${i},'i',this.value)">C`
-      : `≥<input type="number" value="${s.v}" step="0.05" style="width:46px" onchange="_schedSet(${i},'v',this.value)">V`;
-    return `<tr style="border-top:1px solid #1e293b"><td>${i + 1}</td><td>${kind}</td><td><input type="number" value="${s.r}" step="0.05" min="0.01" style="width:50px" onchange="_schedSet(${i},'r',this.value)">C</td><td>${cut}</td><td><input type="number" value="${s.n}" step="1" min="1" style="width:52px" onchange="_schedSet(${i},'n',this.value)"></td><td style="white-space:nowrap"><button type="button" onclick="moveSchedStep(${i},-1)">↑</button><button type="button" onclick="moveSchedStep(${i},1)">↓</button><button type="button" onclick="delSchedStep(${i})">✕</button></td></tr>`;
-  }).join('') || '<tr><td colspan="6" style="color:#6b7280;padding:6px">스텝 없음 — [+ 충전]/[+ 방전]으로 추가하세요.</td></tr>';
+    const kind = `<select onchange="_schedSet(${i},'k',this.value)"><option value="c"${s.k === 'c' ? ' selected' : ''}>충전CC-CV</option><option value="d"${s.k === 'd' ? ' selected' : ''}>방전CC</option><option value="r"${s.k === 'r' ? ' selected' : ''}>Rest</option></select>`;
+    let rate, cut, cyc;
+    if (s.k === 'r') {
+      rate = gray;
+      cut = `시간<input type="number" value="${s.t != null ? s.t : 1}" step="1" min="0" style="width:56px" onchange="_schedSet(${i},'t',this.value)">min`;
+      cyc = gray;
+    } else {
+      rate = `<input type="number" value="${s.r}" step="0.05" min="0.01" style="width:50px" onchange="_schedSet(${i},'r',this.value)">C`;
+      cut = s.k === 'c'
+        ? `≤<input type="number" value="${s.v}" step="0.05" style="width:46px" onchange="_schedSet(${i},'v',this.value)">V, CV|I|<input type="number" value="${s.i}" step="0.01" style="width:44px" onchange="_schedSet(${i},'i',this.value)">C`
+        : `≥<input type="number" value="${s.v}" step="0.05" style="width:46px" onchange="_schedSet(${i},'v',this.value)">V`;
+      cyc = `<input type="number" value="${s.n}" step="1" min="1" style="width:52px" onchange="_schedSet(${i},'n',this.value)">`;
+    }
+    return `<tr style="border-top:1px solid #1e293b"><td>${i + 1}</td><td>${kind}</td><td>${rate}</td><td>${cut}</td><td>${cyc}</td><td style="white-space:nowrap"><button type="button" onclick="moveSchedStep(${i},-1)">↑</button><button type="button" onclick="moveSchedStep(${i},1)">↓</button><button type="button" onclick="delSchedStep(${i})">✕</button></td></tr>`;
+  }).join('') || '<tr><td colspan="6" style="color:#6b7280;padding:6px">스텝 없음 — [+ 충전]/[+ 방전]/[+ Rest]로 추가하세요.</td></tr>';
 }
 function applySched() {
   const hf = document.getElementById('s4-sched-json'); const sum = document.getElementById('sched-summary');
   if (!_schedSteps.length) { if (hf) hf.value = ''; if (sum) sum.textContent = ''; closeSchedModal(); updateAdditiveGpuCmds(); return; }
-  const j = _schedSteps.map(s => { const o = { k: s.k, r: s.r, v: s.v, n: s.n }; if (s.k === 'c') o.i = s.i; return o; });
+  const j = _schedSteps.map(s => {
+    if (s.k === 'r') return { k: 'r', t: s.t != null ? s.t : 1, n: s.n || 1 };
+    const o = { k: s.k, r: s.r, v: s.v, n: s.n }; if (s.k === 'c') o.i = s.i; return o;
+  });
   if (hf) hf.value = JSON.stringify(j);
-  if (sum) sum.textContent = '스케줄: ' + _schedSteps.map(s => (s.k === 'c' ? '충' : '방') + s.r + 'C').join(' → ');
+  if (sum) sum.textContent = '스케줄: ' + _schedSteps.map(s => s.k === 'r' ? `휴${s.t != null ? s.t : 1}m` : (s.k === 'c' ? '충' : '방') + s.r + 'C').join(' → ');
   closeSchedModal(); updateAdditiveGpuCmds();
 }
 // STEP4 R_int 힌트 — 선택된 collector+전극(SDCP→DBE)의 시나리오 값을 정본 CSV(/rint-anchors)에서

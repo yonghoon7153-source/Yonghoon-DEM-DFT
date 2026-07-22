@@ -189,8 +189,11 @@ def main():
         s4_sched = []
         for i, st in enumerate(_sc):
             k = str(st.get('k', '')).lower()
-            if k not in ('c', 'd'):
-                ap.error(f'step {i}: k는 "c"(충전CCCV)/"d"(방전) — got {st.get("k")!r}')
+            if k not in ('c', 'd', 'r'):
+                ap.error(f'step {i}: k는 "c"(충전CCCV)/"d"(방전)/"r"(rest) — got {st.get("k")!r}')
+            if k == 'r':                                    # rest(완화 I=0) — v1 독립런서 무동작(프로토콜 표시만)
+                s4_sched.append({'k': 'r', 't': float(st.get('t', 1.0)), 'n': int(st.get('n', 1))})
+                continue
             try:
                 r = float(st['r'])
             except Exception:
@@ -546,6 +549,10 @@ def main():
         if s4_sched:
             _sl = []
             for _i, _st in enumerate(s4_sched):
+                if _st['k'] == 'r':                          # rest = 프로토콜 표시 (v1 독립런 → 모델 무동작)
+                    _sl.append(f'  echo "[run_mpm] STEP4 스케줄[{_i}] Rest {_st["t"]:g}min '
+                               f'— v1 독립런: 모델 무동작(프로토콜 표시; 완화 모델은 v2 chaining)"')
+                    continue
                 _cr = f"{_st['r']:g}"
                 _o = f"step4_sched{_i:02d}n{_st['n']}"
                 if _st['k'] == 'c':
