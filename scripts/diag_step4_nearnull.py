@@ -110,24 +110,41 @@ def main():
     except Exception as e:
         print(f"  안정성 체크 EXC: {type(e).__name__}: {e}")
 
+    # ── ★deflation (near-null을 감쇠 말고 정확히 분리 — 정규화 98% 민감이라 이게 답) ──
+    print(f"\n=== ★deflation: near-null 모드 분리 후 CG (원계 L x=b = 참 해, 감쇠 아님) ===")
+    from scipy.sparse.linalg import lobpcg
+    Minv = sp.diags(1.0 / np.where(d > 0, d, 1.0))
+    rng = np.random.default_rng(0)
+    kdefl = 12                                             # near-null 클러스터(~6+) 넉넉히 포착
+    print(f"  LOBPCG로 near-null {kdefl}개 계산 중 (~수십초)…")
+    ev, V = lobpcg(L, rng.standard_normal((N, kdefl)), M=Minv, largest=False,
+                   tol=1e-6, maxiter=200)
+    order = np.argsort(ev)
+    ev, V = ev[order], V[:, order]
+    print(f"  near-null λ: {np.array2string(ev, precision=2, max_line_width=200)}")
+    AV = L @ V
+    E = V.T @ AV
+    Ei = np.linalg.inv(E)
+    #   deflation 전처리 M(r) = Jacobi(r) + V E⁻¹ Vᵀ r  (coarse=near-null 정확 역산, fine=Jacobi).
+    #   ★원계 L x=b 를 그대로 풂 → 참 해(정규화 감쇠와 달리 near-null 방향도 정확).
+    for kk in (6, 9, 12):
+        Vk, Eik = V[:, :kk], np.linalg.inv(V[:, :kk].T @ (L @ V[:, :kk]))
+        run(f"deflated Jacobi (k={kk})",
+            L, LinearOperator(L.shape, matvec=lambda r, _V=Vk, _E=Eik, _M=Minv: _M @ r + _V @ (_E @ (_V.T @ r))))
     if full:
-        print(f"\n=== (--full) near-null-B AMG + deflation (무거움) ===")
-        from scipy.sparse.linalg import lobpcg
-        Minv = sp.diags(1.0 / np.where(d > 0, d, 1.0))
-        rng = np.random.default_rng(0)
-        ev, V = lobpcg(L, rng.standard_normal((N, 3)), M=Minv, largest=False, tol=1e-4, maxiter=60)
-        print(f"  near-null λ: {np.array2string(np.sort(ev), precision=2)}")
-        AV = L @ V
-        E = np.linalg.inv(V.T @ AV)
-        run("deflated Jacobi (span V, k=3)",
-            L, LinearOperator(L.shape, matvec=lambda r, _V=V, _E=E, _M=Minv: _M @ r + _V @ (_E @ (_V.T @ r))))
         try:
             import pyamg
-            B = np.hstack([np.ones((N, 1)), V])
-            run("AMG B=near-null (k=3)", L,
-                pyamg.smoothed_aggregation_solver(L, B=B, max_coarse=800).aspreconditioner('V'))
+            print("  (--full) near-null-B AMG (빌드 느릴 수 있음)…")
+            B = np.hstack([np.ones((N, 1)), V[:, :8]])
+            run("AMG B=near-null (k=8)",
+                L, pyamg.smoothed_aggregation_solver(L, B=B, max_coarse=800).aspreconditioner('V'))
+            s = 1.0 / np.sqrt(np.maximum(np.abs(d), 1e-300))
+            Ls = (sp.diags(s) @ L @ sp.diags(s)).tocsr()
+            mldef = pyamg.smoothed_aggregation_solver(Ls, B=(B / s[:, None]), max_coarse=800).aspreconditioner('V')
+            run("sym-scaled AMG B=near-null (k=8)",
+                L, LinearOperator(L.shape, matvec=lambda r, _s=s, _m=mldef: _s * _m.matvec(_s * r)))
         except Exception as e:
-            print(f"  AMG-B EXC: {type(e).__name__}: {e}")
+            print(f"  near-null-B AMG EXC: {type(e).__name__}: {e}")
 
     print(f"\n=== 판정 ===")
     print(f"  ✅수렴 뜬 가장 작은 ε = 답.  그 ε를 step4_dyn._cg에 J+εI로 심는다(LM 감쇠, 해 불변).")
