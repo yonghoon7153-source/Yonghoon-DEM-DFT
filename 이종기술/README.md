@@ -2,7 +2,9 @@
 
 **Separate experimental line from SDCP.**  소립(小粒, 4 µm single-crystal) NCM cathode
 program (samples **No.1 / No.2**) and its **poly:small = 5:5 bimodal** blend, on a
-**primer-coated SUS** current collector.  Hanyang (이종원 group), BioLogic VSP-300.
+**SUS** current collectors.  Cell stacks: **symmetric** = SUS ∣ composite cathode ∣ SUS (bare SUS,
+ion-blocking → σ_e); **full** = SUS ∣ Li-In ∣ SE-bulk ∣ composite cathode ∣ **primer-SUS** (cathode
+side).  Hanyang (이종원 group), BioLogic VSP-300.
 
 ## Contents
 ```
