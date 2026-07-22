@@ -269,6 +269,7 @@
         <div title="STEP4-v2 충방전 시간전개 (복셀-DFN 방전곡선 + 뷰어 SOC/반응전류 애니메이션 데이터) — 체크한 C-rate를 압밀→σ망 뒤에 순차 자동 실행. 미선택 = step4_grid.npz export까지만 (나중에 step4_only.sh로 재개 가능). ⏱ rate당 V100 수 시간~1일. GPU 박스에 OCP 앵커(anchor_params/) 1회 필요: python3 scripts/step4_pybamm_anchor.py --export-params (없으면 STEP4는 안내 후 SKIP — 압밀/σ는 정상 완료)">STEP4 방전 (중복 선택)<br>
           <span style="display:inline-flex;gap:8px;align-items:center;height:24px;flex-wrap:wrap"><span style="color:#94a3b8">방전</span>
             <label style="font-weight:400;cursor:pointer"><input type="checkbox" id="s4-01" onchange="updateAdditiveGpuCmds()"> 0.1C</label>
+            <label style="font-weight:400;cursor:pointer"><input type="checkbox" id="s4-02" onchange="updateAdditiveGpuCmds()"> 0.2C</label>
             <label style="font-weight:400;cursor:pointer"><input type="checkbox" id="s4-05" onchange="updateAdditiveGpuCmds()"> 0.5C</label>
             <label style="font-weight:400;cursor:pointer"><input type="checkbox" id="s4-1" onchange="updateAdditiveGpuCmds()"> 1C</label>
             <label style="font-weight:400;cursor:pointer"><input type="checkbox" id="s4-2" onchange="updateAdditiveGpuCmds()"> 2C</label>
@@ -276,6 +277,7 @@
           </span><br>
           <span style="display:inline-flex;gap:8px;align-items:center;height:24px;flex-wrap:wrap" title="CC 충전 → v_max 도달 시 CV 홀드 (step4_dyn --charge --cv-hold), 방전 rate들 다음에 순차 실행"><span style="color:#94a3b8">충전<small>CCCV</small></span>
             <label style="font-weight:400;cursor:pointer"><input type="checkbox" id="s4g-01" onchange="updateAdditiveGpuCmds()"> 0.1C</label>
+            <label style="font-weight:400;cursor:pointer"><input type="checkbox" id="s4g-02" onchange="updateAdditiveGpuCmds()"> 0.2C</label>
             <label style="font-weight:400;cursor:pointer"><input type="checkbox" id="s4g-05" onchange="updateAdditiveGpuCmds()"> 0.5C</label>
             <label style="font-weight:400;cursor:pointer"><input type="checkbox" id="s4g-1" onchange="updateAdditiveGpuCmds()"> 1C</label>
             <label style="font-weight:400;cursor:pointer"><input type="checkbox" id="s4g-2" onchange="updateAdditiveGpuCmds()"> 2C</label>
@@ -607,9 +609,9 @@ function _addVals() {
     mix: document.getElementById('add-mixing').value,
     coll: (document.getElementById('add-collector') || {value: 'ideal'}).value,
     vox: (document.getElementById('add-vox') || {value: '0.4'}).value,
-    s4: [['0.1', 's4-01'], ['0.5', 's4-05'], ['1', 's4-1'], ['2', 's4-2'], ['3', 's4-3']]
+    s4: [['0.1', 's4-01'], ['0.2', 's4-02'], ['0.5', 's4-05'], ['1', 's4-1'], ['2', 's4-2'], ['3', 's4-3']]
       .filter(p => (document.getElementById(p[1]) || {}).checked).map(p => p[0]).join(','),
-    s4chg: [['0.1', 's4g-01'], ['0.5', 's4g-05'], ['1', 's4g-1'], ['2', 's4g-2'], ['3', 's4g-3']]
+    s4chg: [['0.1', 's4g-01'], ['0.2', 's4g-02'], ['0.5', 's4g-05'], ['1', 's4g-1'], ['2', 's4g-2'], ['3', 's4g-3']]
       .filter(p => (document.getElementById(p[1]) || {}).checked).map(p => p[0]).join(','),
     s4vmin: (document.getElementById('s4-vmin') || {}).value || '3.0',
     s4vmax: (document.getElementById('s4-vmax') || {}).value || '4.5',
