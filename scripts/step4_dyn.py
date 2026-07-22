@@ -1350,6 +1350,18 @@ def main():
     ap.add_argument('--alpha-a', type=float, default=0.5)
     ap.add_argument('--alpha-c', type=float, default=0.5)
     ap.add_argument('--asr-film', type=float, default=0.0, help='계면 필름 ASR [Ω·m²] (SEI/CEI 훅)')
+    # ── B-1 사이클 계면상 성장 (R_int(N) 화학몫; 리뷰 N1-F9 비-이중계산: R_ct=i0(N)↓ 한 채널,
+    #    필름옴성=asr-film 별개) ──  ⚠ 성장'값'은 kim2025 R_ct(N) 앵커에서 산출한 배수를 주입
+    #    (법칙 N→배수 자동화는 Jung/Conforto fit 후 = §6 N1; 지금은 배수 직접 = ASSUMED-FORM 라벨).
+    ap.add_argument('--cycle-n', type=int, default=0,
+                    help='B-1 사이클 번호 N (메타·산출물 태그; 0=pristine).  전기화학엔 --i0-cycle-mult/'
+                         '--asr-film-cycle가 실제 열화를 주입 — N 자체가 물성을 안 바꿈(법칙 미탑재, §6 N1).')
+    ap.add_argument('--i0-cycle-mult', type=float, default=1.0,
+                    help='★R_ct 채널: i0 → i0×배수 (배수=R_ct,0/R_ct(N)<1 열화; kim2025 앵커).  '
+                         'BV 비선형 전하이동 저항이 정직하게 성장(옴성 asr-film과 이중계산 금지).  1.0=무열화.')
+    ap.add_argument('--asr-film-cycle-ohm-cm2', type=float, default=0.0,
+                    help='★필름옴성 채널: 사이클 계면상의 순수 Li⁺ 필름 ASR [Ω·cm²] 추가분 (--asr-film에 더함).  '
+                         '전하이동(R_ct)은 여기 넣지 말 것 — 그건 --i0-cycle-mult (비-이중계산, 리뷰 N1-F9).')
     ap.add_argument('--r-int-ohm-cm2', type=float, default=0.0,
                     help='집전체 실측 R_int 직렬 [Ω·cm²] (STEP3 시나리오 규약; 46=DBE)')
     ap.add_argument('--temp-k', type=float, default=298.15)
@@ -1442,7 +1454,22 @@ def main():
         _ovr = '  [x0/x100 CLI override]' if (a.x0 is not None or a.x100 is not None) else ''
         print(f'  OCP: {ocp.provenance}  c_max={ocp.c_max:g}  x0={ocp.x0}  x100={ocp.x100}{_ovr}', flush=True)
     dudt = _load_xy_csv(a.dudt_csv) if a.dudt_csv else None
-    kin = Kinetics(a.i0, a.alpha_a, a.alpha_c, a.asr_film, a.temp_k)
+    # ── B-1 사이클 계면상 성장 (i0(N)↓ = R_ct 채널 / asr-film += 필름옴성; 비-이중계산 리뷰 N1-F9).
+    #    i0_p 설정 시 실제 진폭=i0_p(kin.i0_ref 상쇄, L789) → i0_p만 스케일; 스칼라면 a.i0만 (이중 방지).
+    _i0_use, _asr_use = a.i0, a.asr_film
+    _b1_on = (a.i0_cycle_mult != 1.0) or (a.asr_film_cycle_ohm_cm2 != 0.0) or (a.cycle_n != 0)
+    if _b1_on:
+        if a.i0_cycle_mult <= 0:
+            ap.error('--i0-cycle-mult must be > 0 (i0 정규화 분모)')
+        if i0_p is not None:
+            i0_p = i0_p * a.i0_cycle_mult                    # per-particle 실제 진폭
+        else:
+            _i0_use = a.i0 * a.i0_cycle_mult                 # 스칼라 실제 i0
+        _asr_use = a.asr_film + a.asr_film_cycle_ohm_cm2 * 1e-4    # Ω·cm² → Ω·m²
+        print(f'  ★B-1 계면상(N={a.cycle_n}): R_ct 채널 i0×{a.i0_cycle_mult:g} · 필름옴성 '
+              f'+{a.asr_film_cycle_ohm_cm2:g} Ω·cm² (→ASR {_asr_use:g} Ω·m²)  '
+              f'[ASSUMED-FORM: 배수=kim2025 R_ct(N) 앵커; N→배수 법칙-fit 후속 §6 N1]', flush=True)
+    kin = Kinetics(_i0_use, a.alpha_a, a.alpha_c, _asr_use, a.temp_k)
     sysm = CellSystem(sid, sig_e, sig_i, pid, len(r_um), vox_um, z_top_um=z_top, z_bot_um=0.0)
     out = simulate(sysm, ocp, r_um * 1e-6, ds_arg, kin, a.c_rate, nr=a.nr,
                    v_min=a.v_min, v_max=a.v_max, t_max=a.t_max, charge=a.charge,
@@ -1454,6 +1481,10 @@ def main():
     meta['end_reason'] = reason
     if split_meta is not None:
         meta['am_electro_split'] = split_meta                # poly/SC 분리 감사 기록 (값+문턱+개수)
+    if _b1_on:                                               # B-1 사이클 계면상 감사 기록 (ASSUMED-FORM)
+        meta['cycle_interphase'] = {'cycle_n': a.cycle_n, 'i0_cycle_mult': a.i0_cycle_mult,
+                                    'asr_film_cycle_ohm_cm2': a.asr_film_cycle_ohm_cm2,
+                                    'provenance': 'ASSUMED-FORM: mult=kim2025 R_ct(N) anchor; N→mult law pending fit (§6 N1)'}
     np.savez_compressed(a.out, **out, params_json=json.dumps(meta))
     print(f'saved {a.out}  (steps {len(out["t"])}, end={reason}, '
           f'V_term {out["V_terminal"][0]:.3f}→{out["V_terminal"][-1]:.3f}, '
