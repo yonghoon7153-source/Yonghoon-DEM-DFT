@@ -20,6 +20,17 @@ nd=$(echo $done_seeds | wc -w)
 msd=$(find "$OUTROOT" -name msd.json 2>/dev/null | wc -l)
 echo "── 진행: seed ${nd}/3 완료${done_seeds:+ ($done_seeds)} | T-run(msd.json) ${msd}/9 ──"
 
+# 현재 T-run ps (ASE md.log 마지막 줄 = Time[ps]; equilib 0-5 + prod 5-205)
+ml=$(find "$OUTROOT" -name md.log -printf '%T@\t%p\n' 2>/dev/null | sort -n | tail -1 | cut -f2)
+if [ -n "$ml" ]; then
+  last=$(grep -aE '^[[:space:]]*[0-9]' "$ml" | tail -1)
+  rel=${ml#$OUTROOT/}; rel=${rel%/md.log}
+  echo "── 현재 run: ${rel} ──"
+  [ -n "$last" ] && echo "$last" | awk '{ps=$1+0; Tk=$NF+0;
+    if(ps<=5.0) printf "  ⏳ equilib %.2f / 5 ps   (T=%.0f K)\n", ps, Tk;
+    else printf "  ⏳ prod %.1f / 200 ps   (총 %.1f/205 ps, T=%.0f K)\n", ps-5.0, ps, Tk }'
+fi
+
 echo "── 최근 진행 (log) ──"
 grep -aE "seed [0-9]|T=[0-9]+|Ea =|prod|equilib" "$LOG" 2>/dev/null | tail -6 | sed 's/^/  /'
 
