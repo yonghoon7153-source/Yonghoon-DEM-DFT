@@ -33,12 +33,23 @@ archive fully usable without it.)
   **EIS-TLM method** (Siroma/Minnmann 2021) our σ_ionic calibration references.  Lets us
   compare **pure-small vs bimodal(5:5)** transport directly → validates **STEP3** σ network.
 
+## Cell fabrication (lab notes 2026-06-25 → 07-19)
+- **Composition** AM:SE:VGCF:PTFE = **80:18:1:1**.  Recipe: vortex 10 min → add PTFE →
+  ball-mill 1 h → Thinky 2000 rpm 5 min → hot-plate rolling → roll-press onto **primer-coated
+  SUS** collector.  **Areal capacity target = 3 mAh cm⁻²**.
+- **AM**: No.1 / No.2 = **소립 4 µm single-crystal**; **Poly** = large polycrystalline.
+  **5:5** = poly:small = 5:5 wt%.  Specific capacity (5:5): No.1 = 202.95, No.2 = 206.5 mAh g⁻¹.
+- **Cells**: Li-In anode, 60 °C, 0.1C 2 cyc → 0.2C main.  **대칭셀(symmetric) = 10pi (⌀10 mm)**,
+  **율특셀(rate)·수명셀(life, EIS source) = 13pi (⌀13 mm)**.
+- **Thickness** (primer-SUS ~15 µm excluded where noted): 5:5 sym = **70 µm** (in filename);
+  pure-small 면용량2 sym ≈ 50 µm.  ⚠ per-cell thickness for the 260715 pure-small sym is not
+  in the notes — **needed to convert a symmetric-cell arc to σ** (σ = L / (R·3) for a blocking TLM).
+
 ## ⚠ Units / caveats (read before anchoring)
-1. **Raw impedances are in Ω, NOT Ω·cm².**  The `.mps` `Electrode surface area` is a
-   placeholder (`0.001 cm2`), so no area normalization was applied.  To compare with
-   manuscript R_int (Ω·cm²) multiply by the **true electrode area** (⌀ / cm²) — *pending
-   from the user.*  (A ⌀10 mm ≈ 0.785 cm² would map No.1 full 78 Ω → ~61 Ω·cm², matching
-   Fig S20 pristine ~60–90 Ω·cm² — plausible but unconfirmed.)
+1. **Area normalization — RESOLVED (Ω·cm² now in catalog).**  Areas inferred from disk
+   geometry (lab notes): **symmetric 10pi → 0.7854 cm²**, **full 13pi → 1.3273 cm²**;
+   `*_ohmcm2 = *_ohm × area`.  (The `.mps` `Electrode surface area` 0.001 cm² is a placeholder
+   and was ignored.)  Areas are inferred from cell type, not measured per file.
 2. **`R_s / Re_LF / arc` in the catalog are quick descriptors, not a circuit fit.**
    `R_s` = high-freq real-axis intercept (bulk+series); `arc` = `Re_LF − R_s`
    (interfacial **+** diffusion, not yet separated).  Proper **R_ion/R_int/R_w** needs a

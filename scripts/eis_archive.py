@@ -51,6 +51,16 @@ _FIELD_MAP = [
     ('I_mA', '<I>/mA'), ('cycle', 'cycle number'),
 ]
 
+# Electrode disk diameter by cell type (lab notes 2026-06: 대칭셀=10pi, 율특/수명=13pi).
+# Ω → Ω·cm² = Ω × area.  Inferred from cell geometry, NOT per-file measured.
+_PI_DIAM_MM = {'symmetric': 10.0, 'full': 13.0}
+
+
+def _area_cm2(cell_type):
+    import math
+    d = _PI_DIAM_MM.get(cell_type)
+    return round(math.pi * (d / 2.0 / 10.0) ** 2, 4) if d else None
+
 
 def _load_biologic():
     """Return the galvani BioLogic module, or None (with a message)."""
@@ -156,7 +166,8 @@ def main():
     rows = []
     cat_cols = ['filename', 'date', 'sample', 'blend', 'thickness_um', 'cell_type',
                 'cycle', 'state', 'technique', 'run', 'n_points', 'f_max_Hz', 'f_min_Hz',
-                'R_s_ohm', 'Re_LF_ohm', 'arc_ohm', 'extracted_csv', 'note']
+                'area_cm2', 'R_s_ohm', 'Re_LF_ohm', 'arc_ohm',
+                'R_s_ohmcm2', 'Re_LF_ohmcm2', 'arc_ohmcm2', 'extracted_csv', 'note']
     for fn in mprs:
         stem = fn[:-4]
         meta = parse_name(stem)
@@ -171,6 +182,12 @@ def main():
         elif os.path.exists(out_csv):
             note = 'cached_csv (galvani absent)'
         meta.update(desc)
+        area = _area_cm2(meta['cell_type'])          # Ω → Ω·cm² via disk area (10pi sym / 13pi full)
+        meta['area_cm2'] = area if area else ''
+        for k_ohm, k_asr in (('R_s_ohm', 'R_s_ohmcm2'), ('Re_LF_ohm', 'Re_LF_ohmcm2'),
+                             ('arc_ohm', 'arc_ohmcm2')):
+            v = meta.get(k_ohm, '')
+            meta[k_asr] = round(float(v) * area, 2) if (area and v != '') else ''
         meta['extracted_csv'] = os.path.relpath(out_csv, ARCHIVE) if os.path.exists(out_csv) else ''
         meta['note'] = note
         rows.append(meta)
