@@ -109,7 +109,7 @@ gallery E_bind < min(VGCF 단독, h-BN 단독)  →  샌드위치가 두 단일�
 ### 4.2 읽는 법 세 가지
 
 **(a) Gallery가 항상 제일 세다** (−1.57~−1.63) — VGCF(−1.10)나 h-BN(−0.26) 단독보다 훨씬.
-양쪽에서 잡으니까(개념 2.1). → **Shi eq5 성립**: gallery < VGCF+hBN 합 → VGCF가 Cu 역할.
+양쪽에서 잡으니까(개념 2.1). → **Shi eq5 성립**: gallery < min(VGCF, hBN) → VGCF가 Cu 역할.
 
 **(b) 층수 민감도가 갈린다** (같은 방법의 차이값이라 오프셋 상쇄, 순수 층수 효과):
 | | Δ(2층−1층) | 해석 |
@@ -160,16 +160,29 @@ Liu 그림 (f)(g)의 노랑(전하 축적)/청록(전하 결핍) 등가면이 �
 - Li는 2s 전자 1개를 내놓고 **Li⁺**가 됨 → Li 주변은 **결핍(청록)**, 받는 쪽은 **축적(노랑)**
 - **어디에 축적되나 = 누가 전자 받개(anchor)냐**를 보여줌
 
-**우리 CDD가 보여줄 것 (예측, 계산 대기)**:
-- **Li on graphene**: Li 2s → 그래핀 π 궤도로 전이. 그래핀 표면에 축적, Li에 결핍 → Li⁺·전형적
-  이온 흡착. (Liu의 Li-Cu (f)와 대응 — 금속/도체가 전자 받개)
-- **Li on h-BN**: 전하 전이 **미미**(h-BN 절연체라 전자 못 받음) → 약한 결합(−0.26)의 전자적 근거
-- **gallery 2L2L**: Li 전하가 **VGCF(그래핀) 쪽으로 편향** 축적, h-BN 캡 쪽은 거의 없음 →
-  **"VGCF가 전자 받개(Cu 역할), h-BN은 수동적 뚜껑"**을 그림 한 장으로 증명. 이게 eq5
-  (VGCF=Cu 역할)의 **전자구조적 실체**다.
+**우리 CDD 결과 (계산 완료, kgy — 3패널 iso 0.002 e/Bohr³ 통일)**:
+- **Li on graphene**: 위=청록(Li 2s 결핍, 위로 뻗던 전자가 사라진 자리), 아래=노랑(Li–그래핀
+  계면 축적). 깨끗한 **상하 다이폴** = Li⁺·전형적 이온 흡착. Liu의 Li–Cu (f)와 대응(도체가 전자
+  받개). → **레퍼런스 패널**.
+- **Li on h-BN**: 전하 전이 **최소**(h-BN 절연체) → 노랑 제일 적음 = 약결합(−0.26)의 전자적 근거.
+- **gallery 2L2L**: 노랑이 **위(h-BN)·아래(VGCF) 양쪽**으로 뻗음 = Li가 **양면에 전자 줌**
+  (bidirectional). 전하이동 최대(Δρ 진폭 ≈ h-BN의 **4배**). → **hero 패널**.
 
-→ CDD 그림 3종(graphene/hbn/gallery_2L2L)이 Liu (c)(d)(e)+(f)(g)와 **1:1 대응**하는 비교
-그림이 된다. 계산은 `tools/vgcf_hbn/run_cdd_kgy.sh` (relaxed 구조에서 3-SCF 차분).
+**전하이동 크기 순위**: h-BN(최소) < graphene < **gallery(최대)** — E_bind 순위와 **방향 일치**.
+단 배율은 다름(CDD ~4× vs E_bind ~6×) → 결합엔 전하이동 외에 **vdW·배위**도 기여.
+
+> **⚠ 핵심 뉘앙스 (예측 대비 정정 — 논문 셀링포인트)**: gallery에서 **h-BN 쪽에도 노랑이 뜬다**
+> (초기 예측 "거의 없음"과 다름). 그러나 이건 **h-BN이 전자받개로 변신한 게 아니다** — h-BN은
+> 여전히 절연 수동캡이다. 메커니즘: **VGCF가 진짜 받개(Cu 역할)** → Li가 VGCF로 전자 주고, 층
+> 사이에 **갇힌 Li⁺가 h-BN 표면을 유도분극(polarization)/스크리닝**해서 h-BN 쪽 밀도가 유도적으로
+> 쌓인 것. 즉 "**h-BN = passive cap / VGCF = acceptor / Li = 양면배위·구속**"이 eq5(VGCF=Cu 역할)의
+> 전자구조적 실체다. (h-BN이 혼자면 lithiophobic인데 VGCF와 함께면 전하 재분포가 생기는 것 자체가
+> gallery 최강결합 −1.626의 근거.)
+
+→ CDD 그림 3종(graphene/h-BN/gallery_2L2L)이 Liu (c)(d)(e)+(f)(g)와 **1:1 대응**하는 비교그림.
+**그림 사양**: 셋 다 iso 0.002 통일(비교 공정), 등가면 mode **Positive(노랑,+축적)/Negative(청록,−결핍)**,
+**parallel 투영**(거리·lobe 정직), unit-cell 프레임 off. 계산 `tools/vgcf_hbn/run_cdd_kgy.sh`,
+vesta 변환 `tools/electronic/cube_to_vesta_cdd.py` (3-SCF 차분, relaxed 구조).
 
 ## 5. 확산 (조건 ②) — NEB 진행 중
 
@@ -179,10 +192,12 @@ Liu 그림 (f)(g)의 노랑(전하 축적)/청록(전하 결핍) 등가면이 �
 - **검증 앵커**: h-BN 표면 Shi2017 = 0.10 eV / graphene 표면 문헌 ~0.3 eV
 - **핵심 신규값**: gallery 안 확산장벽 (문헌에 없음 — 우리 논문의 기여)
 
-**예비 결과 (drag 법, NEB 검증 대기)**:
+**예비 결과 (drag 법) + CI-NEB 진행 상황**:
 - graphene 표면 0.281 eV (문헌 ~0.3과 일치 ✅ 방법 검증)
 - h-BN 표면 0.010 eV (약결합이라 PES 평평 → NEB로 재확인 중)
-- gallery: 계산 중
+- **CI-NEB (GPU, kgy — QE 7.4.1 from-source 빌드)**: Pass 1(endpoint relax) **3/4 완료**
+  (hbn·graphene·gallery-1L), **2L2L relax 중**. 끝나면 Pass 2로 4개 배리어 자동 산출
+  (7이미지, ~1~2일). gallery·2L2L = **핵심 신규값**(문헌에 없음).
 
 판정 프레임: gallery barrier가 **≲0.4 eV면** "안정하면서도 이동 가능 = 균일 삽입층 성립".
 
