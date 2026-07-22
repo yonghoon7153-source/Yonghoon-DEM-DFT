@@ -5,9 +5,9 @@
 #   recipe = comp2 DFT-relax와 동일(kjpaw 60/480, mv 0.01, k222). src = comp2_relax/relax.{in,out}.
 #   build_elastic_strain_inputs.py -> 12 pw.x relax -> fit_elastic_cij_stress.py.  (lpsocl elastic stage 복제)
 #
-# ⚠ pw.x라 UMA(MD/elastic-mlip/phonon)와 GPU 동시 실행 금지(CLAUDE.md VRAM 규율).
-#   -> wait_free_gpu가 UMA 프로세스 끝나길 대기. 즉 conductivity MD 끝난 뒤 자동 시작.
-#   지금 걸어두면 대기하다 MD 종료 시 12 strain 순차 진행(~few h). 병렬로 당장 원하면 KISTI로.
+# pw.x는 원칙상 UMA와 GPU 동시 금지(CLAUDE.md VRAM 규율) — 기본은 wait_free_gpu가 UMA 끝나길 대기.
+#   COEXIST=1 이면 대기 skip → MD와 동시 시도(comp2=52atom 소형, 46GB 여유면 OK). OOM/FAIL이면
+#   run_pw가 잡고, resume-safe라 COEXIST 없이 재실행하면 대기모드로 남은 strain 이어감.
 #
 #   gabia(root): tmux new -s c2eldft -d 'bash tools/elastic/run_comp2_elastic_dft_gabia.sh > ~/comp2_elastic_dft.log 2>&1'
 # =============================================================================
@@ -27,10 +27,12 @@ export OPAL_PREFIX=$HPCX OMP_NUM_THREADS=1 CUDA_VISIBLE_DEVICES=0 OMPI_ALLOW_RUN
 QE=/data/apps/qe-7.4.1-gpu/bin; MPIRUN=$HPCX/bin/mpirun
 ts(){ date +%H:%M:%S; }
 
-wait_free_gpu(){   # UMA(pw.x+UMA 금지) 대기 후 VRAM 확인
-  while pgrep -f 'disorder_ensemble|elastic_mlip|comp_phonon_uma' >/dev/null 2>&1; do
-    echo "[$(ts)] UMA(MD 등) 실행중 — pw.x 공존 금지, 5분 대기"; sleep 300
-  done
+wait_free_gpu(){   # COEXIST=1 이면 UMA 대기 skip(동시 시도). 아니면 UMA 끝나길 대기. 항상 VRAM 확인.
+  if [ "${COEXIST:-0}" != 1 ]; then
+    while pgrep -f 'disorder_ensemble|elastic_mlip|comp_phonon_uma|run_comp2_md' >/dev/null 2>&1; do
+      echo "[$(ts)] UMA(MD 등) 실행중 — pw.x 공존 금지, 5분 대기 (동시 원하면 COEXIST=1)"; sleep 300
+    done
+  fi
   local need=${1:-6000} free
   while :; do
     free=$(nvidia-smi --query-gpu=memory.free --format=csv,noheader,nounits -i 0 2>/dev/null | head -1); [ -z "$free" ] && free=0
