@@ -70,7 +70,7 @@ def main():
     isurf = "" if a.structure_only else (
         f"ISURF\n  1   0  {iso:.5f} 255 255   0 127 255\n"
         f"  2   0  {-iso:.5f}   0 255 255 127 255\n  0   0   0   0\n")
-    ttl = f"{cube_name} 구조 (structure only)" if a.structure_only \
+    ttl = f"{cube_name} structure only" if a.structure_only \
         else f"{cube_name} CDD (yellow=accumulation / cyan=depletion)"
     v = f"""#VESTA_FORMAT_VERSION 3.5.4
 
