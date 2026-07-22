@@ -25,6 +25,7 @@ from scipy.sparse.linalg import LinearOperator, cg
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith('--')]
     full = '--full' in sys.argv
+    deflate_only = '--deflate' in sys.argv     # 정규화 스윕 스킵(이미 98% 민감 확인) → deflation 직행
     Lpath = args[0] if len(args) > 0 else 'step4_cg_fail_L.npz'
     bpath = args[1] if len(args) > 1 else 'step4_cg_fail.npz'
     L = sp.load_npz(Lpath).tocsr().astype(np.float64)
@@ -77,7 +78,7 @@ def main():
         print(f"  {name:32s} best={r:.2e}  its≈{st['n']:4d}  {time.time()-t0:5.0f}s  {v}")
         return r
 
-    # ── ★대각 정규화 스윕 (J+εI): Jacobi & AMG ──
+    # ── ★대각 정규화 스윕 (J+εI): Jacobi & AMG ──  (--deflate면 스킵 = 98% 민감 이미 확인)
     print(f"\n=== ★대각 정규화 J+εI 스윕 (가장 작은 ε로 수렴 = 답) ===")
     try:
         import pyamg
@@ -85,7 +86,7 @@ def main():
     except ImportError:
         have_amg = False
         print("  (pyamg 없음 — Jacobi만)")
-    for eps in (1e-6, 1e-7, 1e-8, 1e-9, 1e-10):
+    for eps in () if deflate_only else (1e-6, 1e-7, 1e-8, 1e-9, 1e-10):
         A = (L + eps * I).tocsr()
         dA = A.diagonal()
         run(f"J+{eps:.0e}I · Jacobi", A, sp.diags(1.0 / dA))
