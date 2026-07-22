@@ -207,11 +207,25 @@ function wireVProfileDownload(state, btnId) {
     const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
     const g = cv.getContext('2d');
     g.fillStyle = '#fff'; g.fillRect(0, 0, W, H);
-    const V = cu.V_terminal || cu.V, vlo = Math.min(...V), vhi = Math.max(...V), xlo = Math.min(...xs), xhi = Math.max(...xs, xlo + 1e-9);   // 단자전압 = 실측 대응
+    const V = cu.V_terminal || cu.V;                     // 단자전압 = 실측 대응
+    // OCV(x̄) 기준선 = V_term − 충전부호×Σ|η| = U(x̄) 평형전압 (과전압 분해가 있을 때만).
+    //   충전은 V_term = OCV + Σ|η| → OCV = V_term − Σ|η|; 방전은 반대 부호.  두 선의 간격 = 총 과전압.
+    const ocv = hasD ? V.map((v, i) => v - (st.charge ? 1 : -1)
+                        * (Math.max(eo[i] || 0, 0) + Math.max(ek[i] || 0, 0)
+                           + Math.max(ed[i] || 0, 0) + (er ? Math.max(er[i], 0) : 0)) / 1000) : null;
+    const _vAll = ocv ? V.concat(ocv) : V;
+    const vlo = Math.min(..._vAll), vhi = Math.max(..._vAll), xlo = Math.min(...xs), xhi = Math.max(...xs, xlo + 1e-9);
     const PX = x => mL + (x - xlo) / (xhi - xlo) * (W - mL - mR), PY = v => mT + (1 - (v - vlo) / (vhi - vlo)) * (b1 - mT);
     g.strokeStyle = '#d1d5db'; g.lineWidth = 1.5; g.strokeRect(mL, mT, W - mL - mR, b1 - mT);
     g.strokeStyle = '#f1f3f5'; g.lineWidth = 1;
     for (let i = 1; i < 5; i++) { const gy = mT + (b1 - mT) * i / 5; g.beginPath(); g.moveTo(mL, gy); g.lineTo(W - mR, gy); g.stroke(); }
+    if (ocv) {                                           // OCV 평형 기준선 (점선) — V_term 아래(충전)/위(방전)
+      g.strokeStyle = '#374151'; g.setLineDash([8, 5]); g.lineWidth = 1.8; g.beginPath();
+      ocv.forEach((v, i) => { const x = PX(xs[i]), y = PY(v); i ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke();
+      g.setLineDash([]);
+      g.fillStyle = '#374151'; g.font = 'bold 15px sans-serif'; g.textAlign = 'left';
+      g.fillText('- - OCV  U(x̄) 평형 (간격 = 총 과전압)', mL + 12, mT + 22);
+    }
     g.strokeStyle = st.charge ? '#d97706' : '#1f6fb2'; g.lineWidth = 3; g.beginPath();
     V.forEach((v, i) => { const x = PX(xs[i]), y = PY(v); i ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke();
     g.fillStyle = '#111'; g.font = '22px sans-serif'; g.textAlign = 'center';
@@ -861,7 +875,11 @@ function renderSt4Faces(state) {
         series.push([iAbs.map((I, i) => Math.abs(cu.Q_rint_W[i]) / I * 1e3), '#6b7280', 'η_Rint']);
     }
     const VT = cu.V_terminal || cu.V;                     // 단자전압 = 실측 대응 (R_int=0이면 V_cell)
-    const vlo = Math.min(...VT), vhi = Math.max(...VT);
+    // OCV(x̄) = V_term − 충전부호×Σ|η| = U(x̄) 평형전압 (V_term과의 간격 = 총 과전압)
+    const ocvG = hasD ? VT.map((v, i) => v - (st.charge ? 1 : -1)
+                        * series.reduce((s, sr) => s + Math.max(sr[0][i], 0), 0) / 1000) : null;
+    const _vAllG = ocvG ? VT.concat(ocvG) : VT;
+    const vlo = Math.min(..._vAllG), vhi = Math.max(..._vAllG);
     const xlo = Math.min(...xsC), xhi = Math.max(...xsC, xlo + 1e-9);
     const ehi = hasD ? Math.max(...series.flatMap(s => s[0]).filter(isFinite), 1e-9) * 1.06 : 1;
     const tArr = cu.t_s || [];
@@ -897,6 +915,13 @@ function renderSt4Faces(state) {
       const prog = (ys, PY, col) => { if (ii < 1) return; g.strokeStyle = col; g.lineWidth = 3.2; g.beginPath();
         for (let i2 = 0; i2 <= ii; i2++) { const x = PX(xsC[i2]), y = PY(ys[i2]); i2 ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke(); };
       ghost(VT, PYv); prog(VT, PYv, curveCol);
+      if (ocvG) {                                                                         // OCV 평형 기준선(점선)
+        g.setLineDash([7, 5]); g.strokeStyle = '#374151'; g.lineWidth = 1.6; g.beginPath();
+        ocvG.forEach((v, i2) => { const x = PX(xsC[i2]), y = PYv(v); i2 ? g.lineTo(x, y) : g.moveTo(x, y); });
+        g.stroke(); g.setLineDash([]);
+        g.fillStyle = '#374151'; g.font = 'bold 13px sans-serif'; g.textAlign = 'left';
+        g.fillText('- - OCV', mL + 10, vT + 15);
+      }
       g.setLineDash([5, 4]); g.strokeStyle = '#9ca3af'; g.lineWidth = 1.4;               // 수직 시점선
       g.beginPath(); g.moveTo(PX(xsC[ii]), vT); g.lineTo(PX(xsC[ii]), eB); g.stroke(); g.setLineDash([]);
       g.fillStyle = curveCol; g.beginPath(); g.arc(PX(xsC[ii]), PYv(VT[ii]), 6.5, 0, 6.3); g.fill();
