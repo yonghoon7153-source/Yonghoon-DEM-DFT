@@ -320,8 +320,8 @@
           <span style="display:inline-flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:0.82em">
             <label style="font-weight:400" title="STEP4 풀셀 축 — 집전체 계면저항을 충방전 곡선에 직렬로 겁니다 (V_term = V_cell − I·R_int → η_Rint 분해 항 추가). 값은 위 집전체 선택 + 전극 종류(SDCP 있으면 DBE/없으면 SBE)에 맞는 시나리오를 정본 anchors CSV에서 자동 해석: pristine(신선, panel-e≈ 18/12/10) 또는 cycled(1000cyc@2C 노화, 110/46/30). 기본 = 전극-내부(R_int=0, 기존 모든 런과 동일 축). 집전체가 '이상 접촉'이면 무시됨. 산출물엔 _rint<값> 태그가 붙어 구분됩니다.">STEP4 R_int <select id="s4-rint" style="padding:3px" onchange="updateS4RintHint();updateAdditiveGpuCmds()">
               <option value="" selected>전극-내부 (R_int=0 · 기본)</option>
-              <option value="pristine">풀셀 pristine (신선)</option>
-              <option value="cycled">풀셀 cycled (노화 민감도)</option>
+              <option value="pristine">SDCP 풀셀 pristine (신선)</option>
+              <option value="cycled">SDCP 풀셀 cycled (노화 민감도)</option>
               <option value="50">이종기술 SUS 실측 ~50 Ω·cm² (풀셀 SOC100 평균, primer-SUS 양극)</option></select>
             <span id="s4rint-hint" style="color:#7dd3fc;font-size:0.85em"></span></label>
             <label style="font-weight:400" title="★bimodal poly/SC 전기화학 분리 (문헌 프리셋, 2026-07-21 확정) — STEP4 확산계수를 입자 크기로 분리: 대립 poly D_s=4e-15 m²/s (Chen 2020 DFN, 2차입자-반경 규약) / 소립 SC D_s=3e-15 (Trevisanello 2021 GITT 밴드 1e-15–1e-14의 기하중앙 = 잠정, SDCP-250 계열 원장 방식 — 값 갱신 시 정본 docs/data/sc_poly_preset.csv만 교체). i0는 SC/PC 정량 문헌 부재 확정 → 공유 유지. ⚠주의: 액체-셀 'PC 1오더 빠름' GITT값은 균열-전해액 침투 기전이라 ASSB 이식 금지 — 이 프리셋은 ASSB-정합 값. 분류 반경문턱 3.5µm (반경 6:2 베드 분리); mono 베드는 생성 시점에 거부됨. 산출물엔 _dsP..S.. 태그. 파워유저: URL &s4dsp=&s4dss=로 명시값 오버라이드(프리셋과 동시 지정 불가).">
