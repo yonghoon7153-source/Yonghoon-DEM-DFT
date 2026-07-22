@@ -258,5 +258,17 @@
     "Li-Br_change_from_old": "old 4.46 (used DB Li-Br 2.71) -> new 4.34 (measured Li-Br 2.585). Li-Br SHORTER in comp2 v2 than DB suggested.",
     "previous": {"Li-Cl": 4.69, "Li-Br": 4.46, "Li-S": 9.31, "P-S": 63.3, "note": "deprecated, used inherited/inconsistent bond lengths"},
     "notes": "VERIFIED 2026-05-05: P-S Coulomb +7.0% vs comp1 v2 (Br stiffens PS4), +20.4% vs modelC v2 (Br + no-vacancy combined)."
+  },
+  "icohp_lobster_v3": {
+    "method": "LOBSTER 5.1.1, all-PAW nscf nbnd500 ecut70/560 k222 pbeVaspFit2015; charge spilling 1.37% (<5% OK)",
+    "structure": "comp2_V0_v3_relaxed.xyz (DFT-relaxed champion)",
+    "date": "2026-07-22",
+    "mean_ICOHP_eV": {"P-S": -5.913, "Li-S": -2.504, "Li-Cl": -2.111, "Li-Br": -1.934},
+    "n_bonds": {"P-S": 16, "Li-S": 72, "Li-Cl": 10, "Li-Br": 12},
+    "distance_cutoff_A": {"P-S": 2.3, "Li-S": 2.9, "Li-Cl": 3.3, "Li-Br": 3.5},
+    "headline": "Li-Br (-1.934) WEAKER than Li-Cl (-2.111) — Br weakens the Li-halide bond. Same-structure Cl-vs-Br direct comparison (no comp1 needed).",
+    "three_descriptor_consistency": "length (Li-Br 2.752 > Li-Cl 2.597), Coulomb q1q2/r (Li-Br 4.34 < Li-Cl 4.70), -ICOHP (Li-Br 1.934 < Li-Cl 2.111) ALL agree Li-Br weaker.",
+    "dual_effect": "P-S -5.913 = strong covalent (stiff PS4 framework, robust to Br; matches Bader 'Br strengthens PS4'). Li-halide weak/ionic, Br weakens further. Br dual: stiffens covalent framework + softens ionic Li-halide.",
+    "narrative": "Br -> weaker Li-halide -> softer lattice (lower modulus) + easier Li migration (lower Ea/higher sigma). ICOHP = bond-strength descriptor for the modulus story (slide panel v)."
   }
 }
