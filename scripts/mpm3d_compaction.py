@@ -645,6 +645,7 @@ def main(argv):
         return False
 
     se_id_base = None                                       # per-base-point SE particle id (set under --se-dump)
+    _cyc_evict_pct = None                                    # A-1 cycle-deform SE eviction % (honesty; None = off)
     if args.am_scaffold:
         spc = dx * 0.5
         i0 = LO_m if PERIODIC else int(SW[0] * n_grid) + 1   # no wall inset when periodic
@@ -674,6 +675,7 @@ def main(argv):
                 # SHRINK dominates (AM pulls AWAY from SE → no eviction) so this is usually small.
                 _evict = _se_raw_cells - int(se_pin.sum())
                 _evict_pct = 100.0 * _evict / max(_se_raw_cells, 1)
+                _cyc_evict_pct = round(float(_evict_pct), 3)
                 print(f"  [cycle-deform] SE eviction (poly-expansion overlap): {_evict:,}/{_se_raw_cells:,} cells "
                       f"({_evict_pct:.2f}%) DELETED — v1 not volume-conserving; read porosity with this caveat "
                       f"(SC-shrink charge case ≈0%).")
@@ -1498,6 +1500,7 @@ def main(argv):
             # a single deformed geometry at this ΔV, NOT an N-trajectory (that is the A-3 ledger's job).
             'cycle_deform': ({'N': int(args.cycle_n), 'dv_sc': round(float(args.cycle_dv_sc), 4),
                               'dv_poly': round(float(args.cycle_dv_poly), 4), 'dv_pct_poly': round(float(args.dv_pct_poly), 3),
+                              'se_evict_pct': _cyc_evict_pct,   # SE deleted by poly-expansion overlap (v1 non-conserving); read void with this caveat
                               'assumed_form': True, 'isotropic': True, 'grid_invariant': True}
                              if (args.am_scaffold and args.cycle_deform) else None),
         }
