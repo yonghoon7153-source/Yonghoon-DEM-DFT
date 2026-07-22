@@ -73,7 +73,7 @@ if pgrep -f 'run_comp2_elastic_dft' >/dev/null 2>&1; then echo "  실행중 ✔"
 else echo "  (러너 안 보임 — 완료/미시작)"; fi
 if [ -f "$EOUT/elastic_fit.txt" ]; then
   echo "  ✅ fit 완료:"
-  grep -aiE "C1[124]|C44|B_VRH|G_VRH|E_VRH|VRH|^ *nu|zener|E *\(GPa\)|E *=" "$EOUT/elastic_fit.txt" | tail -10 | sed 's/^/    /'
+  grep -aiE "C1[124]|C44|B_VRH|G_VRH|VRH|^ *nu|zener|Pugh|Cauchy|Vickers|Universal|density|sound|Debye|E *=" "$EOUT/elastic_fit.txt" | tail -16 | sed 's/^/    /'
   echo "    → 비교: comp1(LPSCl) E_VRH = 29.1 GPa"
 elif [ -d "$EOUT" ]; then
   nd=$(grep -l "JOB DONE" "$EOUT"/strain_*.out 2>/dev/null | wc -l)

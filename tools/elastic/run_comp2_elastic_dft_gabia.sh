@@ -66,5 +66,6 @@ for t in $TAGS; do run_pw "$t.in" "$t.out" || echo "  ($t FAIL — fit 전 재�
 
 echo "[$(ts)] fit Cij -> VRH:"
 python3 "$REPO/tools/modelc_v3/fit_elastic_cij_stress.py" --workdir "$WORK" --strain 0.005 \
+  --struct "$REPO/db/structures/comp2_V0_v3_relaxed.xyz" \
   | tee "$WORK/elastic_fit.txt" || echo "fit FAIL (미완 strain 확인)"
 echo ""; echo ">> elastic_fit.txt 붙여줘 — comp2.json elastic_dft_v3 등록 + comp1(E_VRH) 비교표(슬라이드 iii)."

@@ -106,9 +106,34 @@ def vrh_averages(Cij_GPa: np.ndarray):
     nu = (3.0 * B - 2.0 * G) / (2.0 * (3.0 * B + G))
     # Cubic Zener anisotropy (only meaningful if cubic)
     A_zener = 2.0 * C[3,3] / (C[0,0] - C[0,1]) if (C[0,0] - C[0,1]) > 0 else float("nan")
+    # ---- derived mechanical descriptors (density-free) ----
+    pugh = B / G if G > 0 else float("nan")                           # >1.75 ductile / <1.75 brittle (Pugh)
+    cauchy = ((C[0,1]+C[0,2]+C[1,2]) - (C[3,3]+C[4,4]+C[5,5])) / 3.0   # + ionic/metallic, - covalent/directional
+    kBG = G / B if B > 0 else float("nan")                            # Pugh's k = G/B
+    Hv_chen = (2.0 * (kBG**2 * G)**0.585 - 3.0) if (G > 0 and B > 0) else float("nan")  # Chen 2011
+    Hv_tian = (0.92 * kBG**1.137 * G**0.708) if (G > 0 and B > 0) else float("nan")     # Tian 2012
+    A_univ = (5.0 * G_V/G_R + B_V/B_R - 6.0) if (G_R != 0 and B_R != 0) else float("nan")  # Ranganathan 2008
     return dict(B_V=B_V, B_R=B_R, B_VRH=B,
                 G_V=G_V, G_R=G_R, G_VRH=G,
-                E=E, nu=nu, A_zener=A_zener)
+                E=E, nu=nu, A_zener=A_zener,
+                pugh_B_over_G=pugh, cauchy_pressure_GPa=cauchy,
+                Hv_Chen_GPa=Hv_chen, Hv_Tian_GPa=Hv_tian, A_universal=A_univ)
+
+
+_MASS = {"Li": 6.941, "P": 30.974, "S": 32.065, "Cl": 35.453, "Br": 79.904,
+         "O": 15.999, "N": 14.007, "B": 10.811, "C": 12.011}
+
+
+def _density_and_ndens(xyz_path):
+    """xyz(Lattice header) -> (density kg/m3, number density atoms/m3); None if unreadable."""
+    try:
+        L = open(xyz_path).read().splitlines(); nat = int(L[0])
+        A = np.array([float(x) for x in re.search(r'Lattice="([^"]+)"', L[1]).group(1).split()]).reshape(3, 3)
+        V_m3 = abs(np.linalg.det(A)) * 1e-30
+        m_amu = sum(_MASS.get(l.split()[0], 0.0) for l in L[2:2 + nat])
+        return (m_amu * 1.66053907e-27) / V_m3, nat / V_m3
+    except Exception:
+        return None
 
 
 def main():
@@ -124,6 +149,8 @@ def main():
                          "QE prints σ_ij = -(1/V) ∂E/∂ε_ij so for stable "
                          "material with positive Cij, σ(+ε) < 0 → raw "
                          "(σ(+h)-σ(-h))/(2h) is NEGATIVE of Cij. Default: flip.")
+    ap.add_argument("--struct", default=None,
+                    help="champion xyz (Lattice header); density → sound velocity + Debye T")
     args = ap.parse_args()
 
     work = Path(args.workdir)
@@ -212,6 +239,26 @@ def main():
         print(f"  Young's E       = {vrh['E']:.2f} GPa")
         print(f"  Poisson ν       = {vrh['nu']:.4f}")
         print(f"  Zener A         = {vrh['A_zener']:.3f}  (cubic only; 1 = isotropic)")
+        print(f"\n=== derived mechanical descriptors ===")
+        _p = vrh['pugh_B_over_G']
+        print(f"  Pugh B/G        = {_p:.3f}  ({'ductile' if _p > 1.75 else 'brittle'}; 1.75 boundary)")
+        print(f"  Cauchy pressure = {vrh['cauchy_pressure_GPa']:.2f} GPa  (+ ionic/metallic, - covalent/directional)")
+        print(f"  Vickers H_v     = {vrh['Hv_Chen_GPa']:.2f} (Chen2011) / {vrh['Hv_Tian_GPa']:.2f} (Tian2012) GPa")
+        print(f"  Universal aniso = {vrh['A_universal']:.3f}  (0 = isotropic)")
+        if args.struct:
+            dn = _density_and_ndens(args.struct)
+            if dn:
+                rho, ndens = dn
+                Gp, Bp = vrh['G_VRH'] * 1e9, vrh['B_VRH'] * 1e9
+                vt = (Gp / rho) ** 0.5
+                vl = ((Bp + 4.0 * Gp / 3.0) / rho) ** 0.5
+                vm = (1.0 / 3.0 * (2.0 / vt**3 + 1.0 / vl**3)) ** (-1.0 / 3.0)
+                thetaD = (6.62607015e-34 / 1.380649e-23) * (3.0 * ndens / (4.0 * np.pi)) ** (1.0/3.0) * vm
+                print(f"  density         = {rho/1000.0:.3f} g/cm^3")
+                print(f"  sound v_l/v_t/v_m = {vl:.0f} / {vt:.0f} / {vm:.0f} m/s")
+                print(f"  Debye theta_D   = {thetaD:.1f} K   (lower = softer lattice)")
+            else:
+                print(f"  [density: {args.struct} 파싱 실패 — sound/Debye skip]")
 
     out = Path(args.out) if args.out else work / "elastic_results_stress.json"
     summary = {

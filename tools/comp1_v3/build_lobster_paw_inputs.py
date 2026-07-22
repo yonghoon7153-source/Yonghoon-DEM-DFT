@@ -226,8 +226,11 @@ def main():
     if "O" in species:
         gens += ["cohpGenerator from 0.5 to 4.0 type P  type O",
                  "cohpGenerator from 0.5 to 4.0 type Li type O"]
+    cobi_gens = [g.replace("cohpGenerator", "cobiGenerator") for g in gens]  # bond order (ICOBI)
     lobsterin = f"""COHPstartEnergy  -15
 COHPendEnergy      8
+COBIstartEnergy  -15
+COBIendEnergy      8
 basisSet         pbeVaspFit2015
 gaussianSmearingWidth 0.02
 skipDOS
@@ -238,8 +241,8 @@ skipGrossPopulation
 ! Extended basis (target spilling < 5%)
 {basis_lines}
 
-! pCOHP bonds
-""" + "\n".join(gens) + "\n"
+! pCOHP (bond strength) + pCOBI (bond order)
+""" + "\n".join(gens) + "\n" + "\n".join(cobi_gens) + "\n"
     (wd / "lobsterin").write_text(lobsterin)
 
     # === Runner ===
