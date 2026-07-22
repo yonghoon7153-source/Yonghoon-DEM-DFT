@@ -15,6 +15,7 @@ set -u; set +H
 REPO=${REPO:-$HOME/Yonghoon-DEM-DFT}; [ -d "$REPO" ] || REPO=$HOME/work/Yonghoon-DEM-DFT
 RELWORK=${RELWORK:-/data/work/runs/comp2_relax}
 WORK=${WORK:-/data/work/runs/comp2_elastic_dft}; mkdir -p "$WORK"
+STRAIN=${STRAIN:-0.005}   # 0.005 노이즈시 0.01로 (stress 신호 2배 → cubic 대칭 회복)
 PSE=$RELWORK/pseudo
 [ -f "$RELWORK/relax.out" ] || { echo "ERROR: $RELWORK/relax.out 없음 (comp2 relax 먼저)"; exit 1; }
 [ "$(pgrep -fc run_comp2_elastic_dft)" -le 2 ] || { echo "이미 실행중"; exit 1; }
@@ -50,10 +51,10 @@ run_pw(){   # $1=in $2=out (skip if JOB DONE)
 
 # ---- strain 입력 12개 생성 (comp2 relax를 src로, relaxed-ion, k222) ----
 if [ ! -f "$WORK/strain_11_p.in" ]; then
-  echo "[$(ts)] build 12 strain inputs (relaxed-ion, ±0.005, k222)"
+  echo "[$(ts)] build 12 strain inputs (relaxed-ion, ±$STRAIN, k222)"
   python3 "$REPO/tools/comp1_v3/build_elastic_strain_inputs.py" --relaxed_ion \
     --src_in "$RELWORK/relax.in" --src_out "$RELWORK/relax.out" \
-    --strain 0.005 --workdir "$WORK" --prefix_base strain \
+    --strain "$STRAIN" --workdir "$WORK" --prefix_base strain \
     --kpoints "2 2 2 0 0 0" || { echo "strain 생성 실패"; exit 1; }
 fi
 cd "$WORK"
@@ -64,8 +65,8 @@ for t in $TAGS; do
 done
 for t in $TAGS; do run_pw "$t.in" "$t.out" || echo "  ($t FAIL — fit 전 재실행 필요)"; done
 
-echo "[$(ts)] fit Cij -> VRH:"
-python3 "$REPO/tools/modelc_v3/fit_elastic_cij_stress.py" --workdir "$WORK" --strain 0.005 \
+echo "[$(ts)] fit Cij -> VRH (strain $STRAIN):"
+python3 "$REPO/tools/modelc_v3/fit_elastic_cij_stress.py" --workdir "$WORK" --strain "$STRAIN" \
   --struct "$REPO/db/structures/comp2_V0_v3_relaxed.xyz" \
   | tee "$WORK/elastic_fit.txt" || echo "fit FAIL (미완 strain 확인)"
 echo ""; echo ">> elastic_fit.txt 붙여줘 — comp2.json elastic_dft_v3 등록 + comp1(E_VRH) 비교표(슬라이드 iii)."
