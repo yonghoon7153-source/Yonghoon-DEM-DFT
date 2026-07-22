@@ -104,3 +104,23 @@ elif [ -d "$LOUT" ]; then
 else
   echo "  (out_dir 없음 — elastic 끝난 뒤 c2lob COEXIST=1 실행)"
 fi
+
+# ═══════════════ b2o3 elastic (comp2 elastic 후 큐) ═══════════════
+B2OUT=${B2OUT:-$HOME/work/b2o3_elastic}
+B2LOG=${B2LOG:-$HOME/b2o3_elastic.log}
+echo ""
+echo "══ b2o3 elastic DFT (128atom · 12 strain ±0.01 → VRH) ══"
+if pgrep -f 'run_b2o3_elastic_dft' >/dev/null 2>&1; then echo "  러너 실행중 ✔"
+else echo "  (러너 안 보임 — 완료/미시작)"; fi
+if [ -f "$B2OUT/elastic_fit.txt" ]; then
+  echo "  ✅ fit 완료:"
+  grep -aiE "B_VRH|G_VRH|VRH|Pugh|Cauchy|Vickers|Debye|density|sound|E *=" "$B2OUT/elastic_fit.txt" | tail -14 | sed 's/^/    /'
+elif [ -d "$B2OUT" ]; then
+  if [ -f "$B2OUT/strain_11_p.in" ]; then
+    nd=$(grep -l "JOB DONE" "$B2OUT"/strain_*.out 2>/dev/null | wc -l)
+    echo "  strain 완료 ${nd}/12"
+  else echo "  (strain 생성 전)"; fi
+  tail -3 "$B2LOG" 2>/dev/null | grep -q "comp2 elastic 아직" && echo "  ⏳ comp2 elastic 끝나길 대기중"
+  grep -aE "pw.x strain|strain_.* OK|FAIL|VRAM free|종료 감지" "$B2LOG" 2>/dev/null | tail -3 | sed 's/^/    /'
+else echo "  (out_dir 없음 — b2oel tmux 확인)"
+fi
