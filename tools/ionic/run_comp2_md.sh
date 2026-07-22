@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =============================================================================
-# comp2 (Li6PS5Cl0.5Br0.5, 52-atom V0) MD conductivity — 3-seed x 3-T 완전판
+# comp2 (Li6PS5Cl0.5Br0.5, 52-atom, DFT-confirmed champion) MD conductivity — 3-seed x 3-T 완전판
 # -- md_conductivity_protocol 정확 미러 (lpsocl/b2o3/modelc와 동일 판정 조건):
 #    UMA-s-1p1 (omat), Langevin NVT, dt 2 fs, friction 0.02, equilib 5 ps,
 #    prod 200 ps, save_fs 100, MSD window 2-50 ps, Arrhenius 600/800/1000 K.
@@ -8,26 +8,28 @@
 #    Ea 오차막대가 한 번에 완성, json 이중 갱신 불필요).
 # n_Li = 2.3132e22 cm-3 (24 Li / 1037.54 A^3) — Nernst-Einstein 단계용.
 #
-# kgy (RTX3090, uma env 활성 셸에서). GPU 대기 내장: pw.x/neb.x/phonon 끝나면
-# 자동 시작 — vgcf NEB 체인·c2phon 뒤에 지금 걸어놔도 됨.
+# kgy (RTX3090) 또는 gabia (A6000), uma env 활성 셸에서. GPU 대기 내장:
+# pw.x/neb.x/phonon 끝나면 자동 시작. SKIP_WAIT=1 로 우회 가능(CPU-only pw.x가 돌 때 —
+# 예: gabia LPSOCl ELF는 CPU라 GPU 안 씀, nvidia-smi로 GPU 빈 것 확인 후 SKIP_WAIT=1).
 #   cd ~/Yonghoon-DEM-DFT && git pull   # (or checkout)
 #   PY=$(which python3)   # (uma) 셸
 #   tmux new -s c2md -d "PY=$PY bash tools/ionic/run_comp2_md.sh > ~/work/comp2_md.log 2>&1"
-# 예상: 9 x 205 ps, 3090에서 ~하루.
+# 예상: 9 x 205 ps, ~하루 (A6000/3090).
 # =============================================================================
 set -euo pipefail; set +H
 REPO="$(cd "$(dirname "$0")/../.." && pwd)"; cd "$REPO"
 unset LD_LIBRARY_PATH OPAL_PREFIX 2>/dev/null || true   # QE env 잔재가 torch 오염
-V0XYZ=$REPO/db/structures/comp2_V0.xyz
+V0XYZ=${V0XYZ:-$REPO/db/structures/comp2_V0_v3_candidate.xyz}   # DFT-confirmed champion (UMA followmin, -508.7 meV/cell 2026-07-22). MD엔 UMA-relaxed 기하가 정답
 OUTROOT=${OUTROOT:-$HOME/work/runs/comp2_md}
 DEVICE=${DEVICE:-cuda}
 PY=${PY:-python3}
 DRIVER=$REPO/tools/modelc_v3/disorder_ensemble_diffusion.py
 test -f "$V0XYZ" || { echo "MISSING $V0XYZ -- git pull first"; exit 1; }
 
-# GPU 선점 대기 (QE relax/NEB/phonon 스크린)
-while pgrep -f 'pw\.x|neb\.x|comp_phonon_uma' >/dev/null 2>&1; do
-  echo "[$(date +%H:%M:%S)] GPU 사용중(pw.x/neb.x/phonon) — 5분 뒤 재확인"; sleep 300
+# GPU 선점 대기 (QE relax/NEB/phonon 스크린). SKIP_WAIT=1 이면 건너뜀
+# (GPU가 nvidia-smi로 비어있음을 확인했고, 도는 pw.x가 CPU-only일 때만 사용)
+while [ "${SKIP_WAIT:-0}" != 1 ] && pgrep -f 'pw\.x|neb\.x|comp_phonon_uma' >/dev/null 2>&1; do
+  echo "[$(date +%H:%M:%S)] GPU 사용중(pw.x/neb.x/phonon) — 5분 뒤 재확인 (GPU 비었으면 SKIP_WAIT=1로 재실행)"; sleep 300
 done
 echo "[$(date +%H:%M:%S)] GPU free — comp2 MD 시작"
 
