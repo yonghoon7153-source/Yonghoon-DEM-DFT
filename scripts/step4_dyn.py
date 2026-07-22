@@ -38,6 +38,7 @@ rasterized 복셀 격자의 두 망(전자/이온)을 실제 AM|SE·AM|SDCP 접�
 """
 import argparse
 import json
+import os
 import sys
 
 import numpy as np
@@ -47,6 +48,7 @@ from scipy.sparse.linalg import cg
 F_CONST = 96485.33212        # C/mol
 R_GAS = 8.314462618          # J/mol/K
 GPU = False                  # --gpu 로 켬; CuPy 실패 시 CPU 폴백 (step3_sigma 패턴)
+_CG_DUMPED = [False]         # MPM_S4_DUMP_FAIL: 실패 선형계 1회만 덤프 (디스크 보호)
 
 
 # ---------------------------------------------------------------- CG (warm start)
@@ -156,13 +158,19 @@ def _cg(L, b, x0=None, rtol=1e-9, atol=0.0, pc_cache=None, deep=False):
             cache['deep_weak'] = True                        # 심층-수렴권 CG 무용 기억 (런 전체)
         return x_sol, info
 
-    if x0 is not None:                                       # 실패한 GPU 부분해가 0보다 나쁘면 폐기
-        _r0 = float(np.linalg.norm(b - L @ x0))              # (잔차 상승-표류 방지, V100 smoke6 로그)
-        if not np.isfinite(_r0) or _r0 > float(np.linalg.norm(b)):
-            x0 = None
+    bnorm = float(np.linalg.norm(b))
+    def _rr(xx):                                             # 잔차 노름 (None = 영-시작 = ||b||); 비유한=∞
+        if xx is None:
+            return bnorm
+        r = float(np.linalg.norm(b - L @ xx))
+        return r if np.isfinite(r) else np.inf
+    if x0 is not None and _rr(x0) > bnorm:                   # 실패한 GPU 부분해가 0보다 나쁘면 폐기
+        x0 = None                                            # (잔차 상승-표류 방지, V100 smoke6 로그)
+    r_start = _rr(x0)
+    big = L.shape[0] >= 50000                                # 소형(셀프테스트급)은 Jacobi로 충분
     M = None
     fresh_amg = False
-    if L.shape[0] >= 50000:                                  # 소형(셀프테스트급)은 Jacobi로 충분
+    if big:
         M = cache.get('amg')
         if M is None:
             M = _amg_M(L)
@@ -172,13 +180,42 @@ def _cg(L, b, x0=None, rtol=1e-9, atol=0.0, pc_cache=None, deep=False):
     if M is None:
         M = sparse.diags(1.0 / diag)
     x, info = _solve(M, x0)
-    if info != 0 and 'amg' in cache and not fresh_amg:      # 낡은 계층만 재구축 (fresh 재구축=동일계층 낭비, 수치 R2#7)
-        print('    AMG 캐시 계층으로 미수렴 → 재구축 후 재시도', flush=True)
-        cache.pop('amg')
+    # ★ 낡은/약한 AMG가 미수렴 또는 발산(해가 시작보다 나쁨)이면 fresh 계층 재구축.
+    #   ⚠ 재구축은 반드시 CLEAN warm-start(x0)에서 — 발산해 x를 넘기면 resid 1e3서 시작해
+    #   회복 불가였음 (2026-07-22 0.2C 저율 수렴실패 근본원인 중 하나; 발산해=쓰레기 warm).
+    if (info != 0 or _rr(x) > r_start) and big and not fresh_amg:
+        print('    AMG 캐시 계층 미수렴/발산 → 재구축 (clean warm-start)', flush=True)
+        cache.pop('amg', None)
         M2 = _amg_M(L)
         if M2 is not None:
             cache['amg'] = M2
-            x, info = _solve(M2, x)
+            x2, info2 = _solve(M2, x0)                        # ★ 발산해 x가 아닌 clean x0에서
+            if _rr(x2) < _rr(x):
+                x, info = x2, info2
+    # ★ AMG가 여전히 발산(해가 시작보다 나쁨 = 전처리 비-SPD 신호)이면 Jacobi-CG SPD-safe 폴백.
+    #   대각(>0) 전처리는 SPD → SPD 행렬 J에서 CG는 발산 불가(정체만).  느려도 유효 하강방향 →
+    #   Newton 감쇠가 부분진행 수용 (발산해→Armijo 거부→정체 를 회피).  (2026-07-22)
+    if _rr(x) > r_start and big:
+        print('    AMG 발산 지속 → Jacobi-CG SPD-safe 폴백 (발산 불가)', flush=True)
+        xj, infoj = _solve(sparse.diags(1.0 / diag), x0)
+        if _rr(xj) < _rr(x):
+            x, info = xj, infoj
+    # ★ 최종 가드: 어떤 시도도 시작보다 못하면 warm-start 자체 반환 (쓰레기 해 전파 차단 →
+    #   Newton Armijo 무-스텝 깔끔 정지).  재현 안 되는 발산은 실제 행렬 덤프로 진단:
+    if _rr(x) > r_start:
+        if os.environ.get('MPM_S4_DUMP_FAIL') and not _CG_DUMPED[0]:
+            try:
+                fn = 'step4_cg_fail.npz'
+                sparse.save_npz('step4_cg_fail_L.npz', L.tocsr())
+                np.savez(fn, b=b, x0=(x0 if x0 is not None else np.zeros_like(b)),
+                         diag=diag, r_start=r_start, r_x=_rr(x))
+                _CG_DUMPED[0] = True
+                print(f'    ⚠ CG 발산 — 실패 선형계 덤프 저장 (step4_cg_fail_L.npz + {fn}) '
+                      f'→ 진단 요청 시 첨부', flush=True)
+            except Exception as _e:
+                print(f'    (덤프 실패: {type(_e).__name__})', flush=True)
+        x = x0 if x0 is not None else np.zeros_like(b)
+        info = 1
     return x, info
 
 
