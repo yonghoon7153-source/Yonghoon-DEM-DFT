@@ -30,6 +30,18 @@ program (samples **No.1 / No.2**) and its **poly:small = 5:5 bimodal** blend, on
   → **validates STEP3 σ_e** network.  The **pure-small vs 5:5 bimodal** σ_e contrast is the
   core project comparison (measured: No1 0.14→0.093, No2 0.115→0.152 mS/cm — opposite effects).
 
+## ★ R_int collector convention (user, 2026-07)
+- **bare-Al collector → SDCP project ONLY** (SBE 18/110, DBE 12/46 Ω·cm² — SDCP manuscript Fig6e).
+  Do not use bare-Al for 이종기술.
+- **이종기술 (and going forward) → SUS collector**, R_int ≈ **50 Ω·cm²** — the measured full-cell
+  mean (SOC100, primer-SUS; `eis/fits/summary_means.csv` = 49.8, auto-updating as cells are added).
+- **Why 50 is the "정설"**: it matches the independent ASSB full-cell R_int consensus — **Doerrer
+  2021 = 40 Ω·cm²** (SC-NMC/LPSCl full cell) — so the lab's own measurement lands on the same
+  tens-of-Ω·cm² full-cell scale.
+- ⚠ Layer: this 50 is a **full-cell** R_int (reaction + collector at SOC100, like Doerrer 40),
+  NOT the decoupled collector-contact.  Use it as the full-cell series R; if STEP4 also computes
+  BV η_kin, the reaction interface is partly shared (same caveat as the Doerrer-40 slot).
+
 ## Status / open items
 - ✅ 24 raw files archived, 12 tidy CSVs, catalog (Ω + Ω·cm²), CNLS fits + **σ_e** (mS/cm).
 - ✅ blocking RESOLVED (SUS ion-blocking → σ_e); composite thickness RESOLVED (40–50 µm, the
