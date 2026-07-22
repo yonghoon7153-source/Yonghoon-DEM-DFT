@@ -14,11 +14,12 @@ RNM) + R_ct(N) 프록시(= A(1)/A(N)) → Kang&Shin R_int(N) 4.4×/1.5× 모양�
     cohesive 신장 생존 + (--fatigue miner) 사이클당 D+=gap/δ_cr 누적, ΣD≥1 파단
     [★ASSUMED-FORM: Miner 누적은 가정 — rint_cycle_traj g(N)와 같은 지위; B(MD 보정) 대기].
   • --recontact elastic: 파단 접촉도 gap≤0 복귀 시 재접촉 (Schmidt 2024 방향) — 기본 forbid.
-  • Γ 게이트 (Bucci Fig5): Γ = ½·k_SE·(3β·φ_AM)²·H/G_c... 원식은 A_AM(면적)·H 규약 — 여기선
-    보고용 스칼라 Γ* = ½·k_SE·(ΔV_frac)²·φ_AM/(G_c/H_m) 로 기록 (동일 스케일링, 라벨 명시).
+  • Γ 게이트 (Bucci Fig5): ⚠repo Γ*는 원식과 H 부호 반대+A_AM 소실 → 크기의존, 절대 문턱 이식
+    불가 → ★RELATIVE-only(케이스 내 상대 라벨), 절대 verdict 삭제(적대리뷰 N2).  판정은 접촉별 δcr.
 한계(정직): 강체구+반경진동 = 재배열/입자내부균열/SE크리프 없음 → τ-스파이크(So 2021) 과소평가
 가능.  σ는 입자-그래프 RNM 상대값 전용 (절대는 production Kirchhoff 소관 — frame[5]).
-SE-SE 망은 v1에서 불변 → σ_ion_rel≈1 예측 = Yun 2023 (R_ion +23% ≪ R_int +187%)과 정합 검증점.
+⚠SE-SE 망 v1 불변 → σ_ion_rel≡1 = 구성적 상수(예측 아님).  Yun 2023 R_ion+23%는 원리적 미포착 =
+알려진 하한(정합 아님, 적대리뷰 M2); R_int≫R_ion 순서만 R_ct로 정합.
 """
 import argparse
 import csv
@@ -271,14 +272,20 @@ def run(a):
                                 sigma_note='입자-그래프 RNM 상대값 전용 (절대 σ = production Kirchhoff 소관)',
                                 czm_scope='CZM 영구파단 = AM-SE+SE-SE만 (AM-AM은 스택압 재폐합·비영구; --aa-czm로 포함)'
                                           if not a.aa_czm else 'CZM = 전 접촉종 (--aa-czm; AM-AM 상한 시나리오)',
-                                se_network='v1 SE 불변(ε_SE=0) → σ_ion_rel≡1 구성적 = Yun 2023 (R_int≫R_ion) 정합',
+                                se_network='⚠v1 SE 불변(ε_SE=0) → σ_ion_rel≡1 = 구성적 상수(예측 아님, M2). '
+                                           'Yun 2023 R_ion+23%는 원리적 미포착 = 알려진 하한(정합 아님). '
+                                           'R_int≫R_ion 순서만 R_ct로 정합; SE 체적응답(ε_SE·τ 상태변수) 부여 시 해소',
                                 overlap_caveat='ov0 = DEM 18×-연화 E 규약 길이; δcr=100nm는 문헌 절대값 — '
                                                '층위 혼합(리뷰 MAJOR).  δcr을 캘리브 노브로 취급(스윕 권장), '
                                                '완전-탄성 회복 가정(잔류 압평 δ_res 무시)은 개구 과소 방향'),
-               gamma_star=dict(value=float(f'{gamma_star:.4g}'), threshold=1000.0,
-                               verdict='damage-expected' if gamma_star >= 1000 else 'SE-integrity-scale',
-                               label='repo 무차원 에너지비 게이트 (Bucci Fig5 착안; ½k_SE·ε_vol²·φ_AM·H/G_c, '
-                                     '무차원 확인 — 설계문서 원식과 A_AM 차원규약 상이, 판정은 접촉별 δcr)'),
+               gamma_star=dict(value=float(f'{gamma_star:.4g}'),
+                               scope='RELATIVE-ONLY (케이스 내 상대 라벨 — 절대 verdict 삭제, N2)',
+                               abs_verdict_removed=True,
+                               label='⚠repo Γ*(½k_SE·ε_vol²·φ_AM·H/G_c) = Bucci 원식과 H 지수 부호 반대 + '
+                                     'A_AM(입자크기) 소실 → 변환계수 크기의존(6µm↔2µm 상이) → 절대 1000 문턱 '
+                                     '이식 불가.  케이스 내 상대 라벨로만; 실제 판정은 접촉별 δcr(AM_P 6µm '
+                                     '102nm>δcr / AM_S 2µm 34nm<δcr).  절대판정 원하면 Bucci (3β·A_AM)²/(H·G_c) '
+                                     'H⁻¹로 재유도 필요'),
                phi_am=float(f'{phi_am:.4f}'), thickness_um=float(f'{(zhi - zlo):.2f}'),
                trajectory=rows)
     with open(a.out + '.json', 'w') as f:
@@ -287,7 +294,7 @@ def run(a):
         w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
         w.writeheader()
         w.writerows(rows)
-    print(f'saved {a.out}.json / .csv  (Γ*={gamma_star:.3g} [{out["gamma_star"]["verdict"]}], '
+    print(f'saved {a.out}.json / .csv  (Γ*={gamma_star:.3g} [RELATIVE-only, 절대판정 삭제 N2], '
           f'접촉 AM-AM {aa.sum()}/AM-SE {ase.sum()}/SE-SE {ss.sum()})')
 
 
