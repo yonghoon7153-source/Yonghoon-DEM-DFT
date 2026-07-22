@@ -66,7 +66,17 @@
       "source": "KISTI pipeline_v2/comp2_lpscbr/v2_postproc/comp2_v2_V0.xyz (cutoff Li-Cl 3.2, Li-Br 3.4, Li-S 3.0, P-S 2.3)",
       "verified_date": "2026-05-05"
     },
-    "notes": "v2 measured: Li-Cl 2.442 (-0.044 vs comp1 v2 = Br compresses Cl bond), Li-Br 2.585 (vs Li5.4 family ~2.72 = Li6 Br shorter). Li-Br 0.14 A longer than Li-Cl in same comp."
+    "v3": {
+      "Li-Cl": 2.597, "Li-Cl_std": 0.223, "Li-Cl_n": 10,
+      "Li-Br": 2.752, "Li-Br_std": 0.164, "Li-Br_n": 12,
+      "Li-S":  2.479, "Li-S_std":  0.100, "Li-S_n":  72,
+      "P-S":   2.070, "P-S_std":   0.023, "P-S_n":   16,
+      "source": "comp2_V0_v3_relaxed.xyz (DFT-relaxed champion; cutoff Li-Cl 3.2/Li-Br 3.4/Li-S 3.0/P-S 2.3)",
+      "measured_date": "2026-07-22",
+      "vs_v2_saddle": "Li-Cl +0.155, Li-Br +0.167 (v3 champion has LONGER, more-spread Li-halide bonds than V0=v103 SADDLE); Li-S -0.031; P-S +0.007 (framework unchanged). v2 Li-X values were on the saddle -> USE v3 FOR PAPER.",
+      "note": "std larger (Li-Cl 0.223 vs v2 0.075) = true minimum has more disordered Li-halide coordination. Li-Br 0.155 A longer than Li-Cl (v2 trend 0.143 preserved)."
+    },
+    "notes": "v3(DFT-relaxed champion)이 paper값. v2 measured(Li-Cl 2.442/Li-Br 2.585)는 V0=v103 SADDLE 기준이라 Li-X ~6% 과소 — deprecated. P-S 골격은 v2/v3 동일(2.063/2.070)."
   },
   "elastic_dft_0K_GPa": {
     "C11": 73.4,
