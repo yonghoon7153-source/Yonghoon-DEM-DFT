@@ -5,10 +5,22 @@
 않는 **하이브리드**(ledger 빠른 경로 + MPM 진짜 재변형 앵커).  A10 설계문서
 (`a10_cycle_chemomech_design.md`)의 옵션 A/B를 **결합·확정**한 상위 설계.
 
-**★ 적대리뷰 반영 (2026-07-22, wf_05cb35c3, 22 확정/major 3·minor 17)**: M1(§2.5 외삽 논거
+**★ 적대리뷰 1회 — 설계 (2026-07-22, wf_05cb35c3, 22 확정/major 3·minor 17)**: M1(§2.5 외삽 논거
 코드-반증 → 정직 재라벨+LOAO/blind/shape-sweep) · M2(§4 σ_ion≡1 = 하한, 3앵커→2앵커) ·
 M3(§3 A-2 crack = J2 MPM 불가 → (a)기하 debond/void + (b)FEM/phase-field) · minor N1-N5(§6
-조각별 체크리스트).  ★ 현 산출 = **frozen-geometry contact-ledger 프록시**(0/6 조각 구현).
+조각별 체크리스트).
+
+**★ 적대리뷰 2회 — 코드 (2026-07-22, code·electrochem·physics 3렌즈, B-1/A-1/A-2/A-3 구현)**:
+critical/logic **0** (A-1 타입규약·N4 실질·B-1 비-이중계산 전부 독립검증 sound).  반영 완료(commit
+274e91f): ①code MAJOR — A-2 baseline 오검출(--cycle-n 누락 변형앵커=pristine 오인) 수정 ②전기화학#1/
+물리개념 — A-1/A-2 는 **충전상태(가역 SOC breathing)**, 영구 fade 아님(비가역화=풀MPM 재평형+ledger
+CZM) ③전기화학#3/물리#1 — **A-1(poly 팽창) ↔ A-3 δcr 헤드라인(poly 수축/debond) 부호 상충** =
+v1 common-shrink 한계, poly 진짜열화=입계 void(계면 gap 밖) ④물리#2 — 다공도는 settled wall_z 로
+적분(am_top 아님) = N4 pin 대상은 FLOOR/lateral/dx·nz ⑤전기화학#2 — B-1 i0-mult=**g_chem(화학몫)만**,
+B-2 는 ln R=ln g_chem+ln g_mech(ledger) 로그-가법(total 주입=기계 이중계산) ⑥전기화학#4 — se_dump'
+sid→STEP3 handoff 시 **1↔2 remap 필수**(step3 SID_NAME 반대).  §5·§6 에 편입.
+
+★ 현 산출 = **frozen-geometry contact-ledger 프록시 + 재변형-앵커 스캐폴드(A-1 CPU검증, 풀MPM GPU 대기)**.
 
 ## 0. 핵심 결정 (사용자 승인 2026-07-22)
 - **깊이 = 하이브리드**: ledger(전 N, 빠름) + MPM 재변형(적응 앵커 N∈{0,5,10,25,50,100},
@@ -126,15 +138,21 @@ ASSUMED-FORM 보간으로 정직 표기.
   구현 전까지 표기 안 함) via viz_mpm.  crack 필드 없는데 crack 시각화를 증거로 주장 금지(M3).
 
 ## 5. 구현 순서 (GPU 상황 + 적대리뷰 F17 게이트 반영)
-- **구현 상태: 0/6 조각.** 현 산출 = **frozen-geometry contact-ledger 열화 프록시(옵션 A) only**
-  (F18).  "하이브리드/진짜 열화 전극" 주장은 A-1(--cycle-deform se_dump' 1점) + A-3(--mpm-anchor
-  캘리브·held-out 검증) 착지까지 **보류**.  로드맵서 '설계 확정'↔'구현 완료' 분리.
-- **순서**: (i) 문서 blocker M1·M2·M3 반영(이 커밋) → (ii) **B-1**(STEP4 계면상, N1 리뷰, selftest)
-  → (iii) **A-3** 스캐폴드('unvalidated scaffold' 플래그 뒤) → (iv) **A-1 거친 MPM 앵커 1점 먼저**
-  (F17: A-3 production 커밋 전 필수) → (v) A-3 캘리브 production → (vi) A-2(재작성판 (a)기하/void).
-- **F17 blind 게이트**: **앵커 1계열을 캘리브 미사용 blind 검증셋으로 예약** — 성공판정은 blind에서만
-  (Kang/Yun로 짓고 같은 데이터로 검증하는 것 방지).
-- 각 조각 = **코드·전기화학·물리 3각 적대리뷰** 후 커밋.
+- **구현 상태 (2026-07-22 갱신): 3.5/6 조각 코드 착지 + 2회 3각리뷰 통과, 풀MPM/캘리브 GPU 대기.**
+  - ✅ **B-1** STEP4 계면상 (i0(N)↓ g_chem + 필름옴성, 비-이중계산; selftest 5/5).
+  - ✅ **A-1** `--cycle-deform` se_dump' 재변형 앵커 (CPU 기하검증: SC−5.1%/poly+1.77%, N4·default-off;
+    **풀 MPM 재평형 = GPU 대기**).  ⚠ 충전-상태(가역) 1점, N-궤적 아님.
+  - ✅ **A-2(a)** `cycle_geom_debond.py` 기하 debond/void (crack 아님; selftest 15/15).
+  - ✅ **A-3(부분)** ledger 정직화(Γ*·σ_ion 하한).  ⛔ **A-3 production `--mpm-anchor` 캘리브 미착지**
+    (F17: A-1 풀MPM 앵커 착지 후 = GPU 대기).  현 ledger = frozen-geometry 프록시(옵션 A).
+  - ⛔ **A-2(b)** 취성 crack = FEM/phase-field 미구현(future).  ⛔ **A-4** percolation(N) 미착지.
+  - → "하이브리드/진짜 열화 전극"의 **정량 주장**은 A-1 풀MPM 앵커 + A-3 캘리브·held-out(blind) 착지까지
+    **여전히 보류**.  '설계 확정'·'코드 스캐폴드 착지'·'풀 검증 완료' 3단 분리(현재 2단).
+- **순서**: (i) 문서 M1·M2·M3 ✅ → (ii) B-1 ✅ → (iii) A-3 정직화 ✅ → (iv) **A-1 스캐폴드 ✅ (거친 MPM
+  앵커 1점 = GPU 실행 대기)** → (v) A-3 캘리브 production (GPU 앵커 후) → (vi) A-2(a) ✅ / A-2(b) future.
+- **F17 blind 게이트 (미소진)**: **앵커 1계열을 캘리브 미사용 blind 검증셋으로 예약** — 성공판정은
+  blind에서만 (Kang/Yun로 짓고 같은 데이터로 검증 방지).  A-3 캘리브 착지 시 필수.
+- 각 조각 = **코드·전기화학·물리 3각 적대리뷰** 후 커밋 (1회 설계 + 2회 코드 = 완료).
 
 ## 6. 미결 + 조각별 3각리뷰 체크리스트 (적대리뷰 minor N1-N5 편입)
 **설계 미결:**
@@ -159,3 +177,29 @@ ASSUMED-FORM 보간으로 정직 표기.
 - **N5 (정직성)**: 제목 '진짜 열화 전극'은 A-1/A-3 착지까지 'frozen-geometry 프록시'로; §2.5-2 "물리
   주입"을 **명시적 MPM-ROM**(6-10 스냅샷→(N,ΔV)→{void,τ,coverage,area} 저차원맵 + LOAO)로 형식화;
   ov0 층위혼합(18×-연화 겹침 + 문헌 δcr) → gap 비교 전 ov0 real-E 재스케일 or MPM 접촉-개구 직접사용.
+
+**★ 2회 코드리뷰 편입 체크리스트 (N6, 2026-07-22 — B-1/A-1/A-2/A-3 구현 확정결함, commit 274e91f):**
+- **N6-a (가역/비가역, 전기화학#1·물리)**: A-1 앵커 = **충전상태(가역 SOC breathing)** 스냅샷 = 방전서
+  복원 → debond(N)/void(N)는 그 자체로 영구 fade 아님.  **비가역화 판정 = 풀 MPM 소성 재평형(접촉
+  안 닫힘) + ledger CZM/re-contact**.  A-2 docstring·헤더·메타(reversible_charge_state)에 명기 완료.
+  ⇒ 앵커의 ΔV가 *누적 비가역 변형*을 담아야 영구궤적 (스냅샷 Δ를 permanent fade로 읽기 금지).
+- **N6-b (poly 부호 상충, 전기화학#3·물리#1)**: **A-1(poly 외피 팽창=접촉 유지) ↔ A-3 δcr 헤드라인
+  (poly 수축→102nm>δcr debond)** 부호 반대.  A-3 δcr은 v1 **common-shrink** 규약 산출 = 한계.  poly-
+  팽창 적용 시 AM_P 계면 gap≤0(no debond)로 **순서 뒤집힘**; poly 진짜 열화 = **입계 내부 void**(계면
+  gap 기준 범위 밖).  ledger 라벨에 caveat 명기 완료.  → A-3 캘리브 production 전에 poly 채널을
+  '접촉'이 아닌 'void' 축으로 재정의(현 gap 기준은 SC 이탈에만 유효).
+- **N6-c (R_ct 이중계산, 전기화학#2)**: B-1 `--i0-cycle-mult` = **CHEMICAL-ONLY g_chem** (i0↓)만.
+  접촉면적 손실 R_ct 몫 g_mech = ledger(`rct_ct_area_rel`) 소관.  **B-2 통합 = ln R_ct = ln g_chem +
+  ln g_mech 로그-가법** — kim2025 R_ct(N)이 *total*이면 g_chem 으로 분해 후 주입(total 직접 = 기계
+  이중계산).  help text 명기 완료.
+- **N6-d (sid handoff, 전기화학#4)**: se_dump' 은 **이 파일 규약 sid(1=AM_P,2=AM_S)** 로 태깅 — STEP3
+  (SID_NAME 반대: 1=AM_S,2=AM_P)로 넘길 때 **1↔2 remap 필수**(안 하면 poly/SC σ_e·GB·D_s 뒤집힘).
+  B-1/step4 는 반경(≥3.5µm)분리라 면역.  A-1 코드 주석 가드 완료; A-1→STEP3 배선 시 remap 검증.
+- **N6-e (N4 라벨, 물리#2)**: 다공도는 **settled wall_z**(물리 두께 응답)로 적분 = am_top 아님.  N4
+  pin 대상 = FLOOR/lateral/dx·nz/초기 WALL0(이산화 틀).  'fixed box/grid_invariant' 표현 정정 완료.
+  ≥2 해상도(384·512) 비율수렴은 GPU 대기(유지).
+- **N6-f (baseline·위생, code MAJOR M1 + minors)**: A-2 baseline = pristine(cyc None) 또는 ΔV≈0 만
+  (--cycle-n 누락 변형앵커 오인 차단); SE eviction = deformation-induced Δ(정적 접촉겹침 제외); ΔV≤-1
+  가드; cycle_deform 메타는 ON일 때만(production JSON 불변).  전부 반영 완료.
+- **N6-g (i0 단일스칼라 한계, 전기화학#6)**: `--i0-cycle-mult` 단일값 → poly/SC 차등 CEI(√N vs 선형)
+  미표현.  성장법칙(N1) 탑재 시 **per-material i0-mult 분리** 필요(현 v1 범위 밖, help 명기).
