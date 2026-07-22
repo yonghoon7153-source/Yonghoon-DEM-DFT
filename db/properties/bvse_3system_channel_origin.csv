@@ -1,0 +1,9 @@
+"# BVSE Li-channel volume fraction vs iso level — 3-system (original periodic cells, canonical)."
+"# softBV Li-X R0 = S 2.105 / Cl 2.249 / O 1.466, b=0.37; BVSE=(BVS-1)^2; ~0.25 A voxel; above-min <= iso."
+# 순위·정량 = 원본 주기셀 orig 값만 (cubic 근사 인용 금지). Figure: undoped 3.32 -> +O 4.74 -> +B2O3 6.73 @iso0.5.
+bvse_iso_level_valence2,LPSCl1p6_undoped_pct,LPSOCl_plusO_pct,B2O3_champion_pct
+0.25,1.23,2.37,3.83
+0.5,3.32,4.74,6.73
+1.0,8.36,9.8,12.22
+1.5,13.44,14.76,17.09
+2.0,17.85,19.19,21.25
