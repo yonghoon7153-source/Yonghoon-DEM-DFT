@@ -275,9 +275,13 @@ def main():
         radii = [float(r[4]) for r in am_raw]
         rmin, rmax = min(radii), max(radii)
         if _es_split_req:
-            split_r = a.step4_am_split_um
+            # ⚠ 반경은 LIGGGHTS box units — µm로 변환 후 절대 문턱과 비교 (규약: 1 LU = 1000µm,
+            #   SE 0.0005 LU = 0.5µm; mpm3d_compaction um_box=1000/scl 과 동일).  변환 없이 raw LU를
+            #   3.5와 비교하면 bimodal(0.002·0.006 LU)이 둘 다 <3.5 → 전부 AM_S 오분류.
+            _UM_PER_LU = 1000.0
+            split_r = a.step4_am_split_um                                  # µm 반경 문턱
             for rec in am_raw:
-                rec[0] = 1 if float(rec[4]) >= split_r else 2              # 절대 문턱: AM_P=1 / AM_S=2
+                rec[0] = 1 if float(rec[4]) * _UM_PER_LU >= split_r else 2  # 절대 문턱(µm): AM_P=1 / AM_S=2
                 am_rows.append(rec)
             _n_po = sum(1 for r_ in am_rows if r_[0] == 1)
             _n_sc = len(am_rows) - _n_po
@@ -285,9 +289,10 @@ def main():
             #   σ_e 재료는 위 절대-문턱 분류로 이미 정직 배정됨 (mono-SC → 전부 AM_S=σ_S).
             if _n_po == 0 or _n_sc == 0:
                 if a.step4_i0_poly is not None:
-                    ap.error(f'--step4-i0-poly/sc 분리는 mono 베드(AM 반경 {rmin:.2f}–{rmax:.2f}µm, '
-                             f'split {split_r:g}µm에서 전부 {"AM_S" if _n_po == 0 else "AM_P"})에 '
-                             f'적용 불가 — i0 분리 빼거나 bimodal 케이스 사용')
+                    ap.error(f'--step4-i0-poly/sc 분리는 mono 베드(AM 반경 '
+                             f'{rmin * _UM_PER_LU:.2f}–{rmax * _UM_PER_LU:.2f}µm, split {split_r:g}µm에서 '
+                             f'전부 {"AM_S" if _n_po == 0 else "AM_P"})에 적용 불가 — '
+                             f'i0 분리 빼거나 bimodal 케이스 사용')
                 if a.step4_ds_poly is not None:
                     _ds_scalar = a.step4_ds_sc if _n_po == 0 else a.step4_ds_poly
                     _ds_scalar_cls = 'sc' if _n_po == 0 else 'poly'
