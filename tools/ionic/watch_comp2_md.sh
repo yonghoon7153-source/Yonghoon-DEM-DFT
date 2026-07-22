@@ -83,3 +83,24 @@ elif [ -d "$EOUT" ]; then
 else
   echo "  (out_dir 없음 — 아직 시작 전; c2eldft tmux 확인)"
 fi
+
+# ═══════════════ ICOHP LOBSTER (elastic 후 COEXIST) ═══════════════
+LOUT=${LOUT:-/data/work/runs/comp2_lobster}
+LLOG=${LLOG:-$HOME/comp2_lobster.log}
+echo ""
+echo "══ comp2 ICOHP (LOBSTER; all-PAW scf+nscf nbnd500 → Li-S/Cl/Br pCOHP) ══"
+if pgrep -f 'run_comp2_lobster' >/dev/null 2>&1; then echo "  실행중 ✔"
+else echo "  (러너 안 보임 — 완료/미시작)"; fi
+if [ -s "$LOUT/ICOHPLIST.lobster" ]; then
+  echo "  ✅ LOBSTER 완료 (ICOHPLIST 있음 → 추출 대기, 붙여줘):"
+  grep -aiE "charge spilling" "$LOUT/lobster_run.out" 2>/dev/null | head -2 | sed 's/^/    /'
+elif [ -d "$LOUT" ]; then
+  s="-"; n="-"
+  grep -aq "JOB DONE" "$LOUT/lobster_scf.out"  2>/dev/null && s="✔"
+  grep -aq "JOB DONE" "$LOUT/lobster_nscf.out" 2>/dev/null && n="✔"
+  echo "  scf: $s | nscf: $n | LOBSTER(CPU): 대기"
+  tail -2 "$LLOG" 2>/dev/null | grep -q "대기" && echo "  ⏳ MD/elastic 끝나길 대기중 (또는 GPU 대기)"
+  grep -aE "pw.x lobster|lobster_.* OK|FAIL|LOBSTER start|GPU free ..* — go" "$LLOG" 2>/dev/null | tail -3 | sed 's/^/    /'
+else
+  echo "  (out_dir 없음 — elastic 끝난 뒤 c2lob COEXIST=1 실행)"
+fi
