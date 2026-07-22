@@ -14,7 +14,10 @@
 set -u; set +H
 # ⚠ conda(uma) 환경이 CFLAGS="-march=nocona ..."를 심음 -> nvc가 nocona 거부(2026-07-22).
 # 빌드 전 conda 컴파일 플래그 전부 제거 (gabia_cdd_phx.md "conda deactivate 필수").
-unset CFLAGS CPPFLAGS CXXFLAGS FFLAGS FCFLAGS F90FLAGS LDFLAGS DEBUG_CFLAGS DEBUG_CXXFLAGS DEBUG_FFLAGS 2>/dev/null || true
+unset CFLAGS CPPFLAGS CXXFLAGS FFLAGS FCFLAGS F90FLAGS LDFLAGS DEBUG_CFLAGS DEBUG_CXXFLAGS DEBUG_FFLAGS \
+      LD AR RANLIB NM AS STRIP OBJCOPY OBJDUMP READELF ADDR2LINE SIZE STRINGS GPROF ELFEDIT DWP LD_GOLD \
+      CC CXX FC F77 F90 CPP CXXCPP GCC GXX GFORTRAN GCC_AR GCC_NM GCC_RANLIB \
+      HOST BUILD CONDA_TOOLCHAIN_HOST CONDA_TOOLCHAIN_BUILD CMAKE_ARGS 2>/dev/null || true
 PHASE=${1:-configure}
 SRC=$HOME/apps/qe-7.4.1-src
 GPUBIN=$HOME/apps/qe-7.4.1-gpu/bin
@@ -44,8 +47,15 @@ if [ "$PHASE" = configure ]; then
   echo "[env] conda 플래그 제거 확인: CFLAGS='${CFLAGS:-(빔)}'"
   ./configure --with-cuda="$CUDAHOME" --with-cuda-cc=86 --with-cuda-runtime=12.6 \
      --enable-openmp F90=nvfortran CC=nvc MPIF90=mpif90 2>&1 | tail -35
-  # configure가 남긴 -march/nocona 잔재를 make.inc에서도 소거 (이중 안전)
-  sed -i 's/-march=nocona[^ ]*//g; s/-mtune=[^ ]*//g' "$SRC"/make.inc 2>/dev/null || true
+  # make.inc 잔재 소거 (이중 안전): conda 컴파일 플래그 + conda binutils.
+  # LD는 QE 관례상 컴파일러(mpif90)가 드라이브 -> -cuda/-gpu/-acc 이해. AR/RANLIB은 시스템.
+  sed -i -E \
+    -e 's/-march=nocona[^ ]*//g; s/-mtune=[^ ]*//g' \
+    -e 's|^(LD *=).*|\1 mpif90|' \
+    -e 's|x86_64-conda-linux-gnu-ar|ar|g; s|x86_64-conda-linux-gnu-ranlib|ranlib|g' \
+    -e 's|x86_64-conda-linux-gnu-nm|nm|g; s|x86_64-conda-linux-gnu-||g' \
+    "$SRC"/make.inc 2>/dev/null || true
+  echo "[make.inc] LD=$(grep -E '^LD *=' "$SRC"/make.inc) | AR=$(grep -E '^AR *=' "$SRC"/make.inc) | conda잔재 $(grep -c conda "$SRC"/make.inc)"
   echo "── GPU 감지 (make.inc) ──"
   grep -iE "__CUDA|cuda|GPU_ARCH|MANUAL_DFLAGS" "$SRC"/make.inc 2>/dev/null | head -6
   echo ">> make.inc에 -D__CUDA 보이면 GPU OK -> 'build' 단계로"
