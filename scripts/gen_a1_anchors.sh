@@ -45,19 +45,29 @@ run_one() {  # $1=label  $2..=extra flags
 # ① pristine (N=0, --cycle-deform 없음 = 진짜 무변형 기저)
 run_one N0
 
-# ② 충전 앵커 (설계 step iv '거친 MPM 앵커 1점'): SC −5.1%(Kondrakov) 수축 / poly +5.9%×0.30 팽창.
-#    poly 부호 = expand(외피 팽창) = A-1/M3 정합 (ledger --poly-mode expand-void 와 짝).
-run_one charged --cycle-deform --cycle-n 1 --cycle-dv-sc -0.051 --cycle-dv-poly 0.059 --dv-pct-poly 0.30
+# ② SC ΔV 스윕 앵커 (캘리브 곡선 — 2점→5점, reflow 일반화를 넓은 충전깊이서 검증; 적대리뷰 stats#1
+#    '앵커 2점 too few' 선제 해소).  Kondrakov −5.1 ↔ Yun/Kang −5.9 를 −4.5..−6.3 로 확장.
+#    poly 부호 = expand(외피 팽창) 고정 = A-1/M3 정합 (ledger --poly-mode expand-void 와 짝).
+#    ★비용: 각 스윕점 = 풀 MPM 압밀 1회(~10분/384).  빠른 첫 확인만이면 SWEEP를 "-0.051 -0.059"로 줄여.
+SWEEP="${A1_DVSC_SWEEP:--0.045 -0.051 -0.055 -0.059 -0.063}"    # env로 override 가능
+_dbond_args=("$OUT/m_N0.json"); _i=1
+for dv in $SWEEP; do
+  lab="sc${dv#-}"                                              # 예: sc0.051
+  run_one "$lab" --cycle-deform --cycle-n "$_i" --cycle-dv-sc "$dv" --cycle-dv-poly 0.059 --dv-pct-poly 0.30
+  _dbond_args+=("$OUT/m_${lab}.json"); _i=$((_i+1))
+done
 
-# ③ ΔV-민감도 (선택): 더 깊은 충전 −5.9%(Yun/Kang) — N-궤적 아님, ΔV 축 스윕(설계 §6 미결1).
-run_one charged_deep --cycle-deform --cycle-n 2 --cycle-dv-sc -0.059 --cycle-dv-poly 0.059 --dv-pct-poly 0.30
+echo "═══ 기하 debond/void (pristine 대비, SC ΔV 스윕) ═══"
+python3 "$SCR/cycle_geom_debond.py" "${_dbond_args[@]}" --csv "$OUT/a1_debond.csv"
 
-echo "═══ 기하 debond/void (pristine 대비) ═══"
-python3 "$SCR/cycle_geom_debond.py" \
-  "$OUT/m_N0.json" "$OUT/m_charged.json" "$OUT/m_charged_deep.json" \
-  --csv "$OUT/a1_debond.csv"
+echo "═══ A-3 reflow 캘리브 (MPM 앵커 → ledger, 일반화+LOAO) ═══"
+# 킷 스캐폴드(박스단위)로 atoms 재구성 → reflow 회귀 (충전앵커 전부 사용 = 진짜 LOAO)
+python3 "$SCR/calibrate_ledger_reflow.py" \
+  --am-scaffold "$KIT/am_scaffold.csv" --se-scaffold "$KIT/se_scaffold.csv" \
+  --pristine "$OUT/m_N0.json" --charged "${_dbond_args[@]:1}" \
+  --out "$OUT/a3_reflow_calib.json" \
+  || echo "   (캘리브 스킵 — 위 오류 확인)"
 
 echo
-echo "✅ 완료 → $OUT/  (m_*.json = 앵커 metrics, a1_debond.csv = 기하 debond/void 표)"
-echo "   ⚠ 이 debond/void 는 '충전상태(가역)' — 영구 fade 아님.  ledger 캘리브(A-3)에서"
-echo "     --mpm-anchor 로 물려 {δcr,ε,rewet_frac} 회귀 (G_c 제외); 비가역화 판정은 그쪽."
+echo "✅ 완료 → $OUT/  (m_*.json 앵커, a1_debond.csv 기하손실 곡선, a3_reflow_calib.json 캘리브)"
+echo "   ⚠ 충전상태(가역) — 영구 fade 아님.  reflow=ε(가역) DOF 캘리브; 영구열화(δcr,rewet)=반복사이클 MPM(v2)."

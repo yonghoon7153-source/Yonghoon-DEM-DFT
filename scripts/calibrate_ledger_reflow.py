@@ -37,12 +37,13 @@ def _load_ledger():
     return L
 
 
-def _atoms_from_scaffold(prefix):
-    """docs/data/real14 → real14_am_scaffold.csv + real14_se_scaffold.csv (박스단위) → atoms (µm, ×1000)."""
+def _atoms_from_scaffold(prefix=None, am_path=None, se_path=None):
+    """스캐폴드(박스단위) → atoms (µm, ×1000).  prefix → <prefix>_am/se_scaffold.csv, 또는 명시 경로
+    (킷 규약 am_scaffold.csv/se_scaffold.csv)."""
     def rd(p):
         return [ln.strip().split(',') for ln in open(p) if ln.strip() and not ln.startswith('#')]
-    am = rd(prefix + '_am_scaffold.csv')
-    se = rd(prefix + '_se_scaffold.csv')
+    am = rd(am_path if am_path else prefix + '_am_scaffold.csv')
+    se = rd(se_path if se_path else prefix + '_se_scaffold.csv')
     typ = []
     xyz = []
     rad = []
@@ -203,6 +204,8 @@ def main(argv):
     ap = argparse.ArgumentParser(description='A-3 reflow 캘리브 (MPM 앵커 → ledger)')
     ap.add_argument('--atoms', help='ledger용 atoms.csv (id,type,x,y,z,radius; µm)')
     ap.add_argument('--from-scaffold', help='<prefix> → <prefix>_am_scaffold.csv/_se_scaffold.csv (박스단위→µm)')
+    ap.add_argument('--am-scaffold', help='킷 am_scaffold.csv 명시 경로 (박스단위→µm ×1000)')
+    ap.add_argument('--se-scaffold', help='킷 se_scaffold.csv 명시 경로 (--am-scaffold와 쌍)')
     ap.add_argument('--type-map', default='1:AM_P,2:AM_S,3:SE')
     ap.add_argument('--pristine', help='MPM N0 앵커 metrics JSON')
     ap.add_argument('--charged', nargs='+', help='MPM 충전 앵커 metrics JSON (1개 이상)')
@@ -213,12 +216,14 @@ def main(argv):
         sys.exit(0 if _selftest() else 1)
     if not (a.pristine and a.charged):
         ap.error('--pristine + --charged 필요 (또는 --selftest)')
-    if a.from_scaffold:
-        typ, xyz, rad = _atoms_from_scaffold(a.from_scaffold)
+    if a.am_scaffold and a.se_scaffold:
+        typ, xyz, rad = _atoms_from_scaffold(am_path=a.am_scaffold, se_path=a.se_scaffold)
+    elif a.from_scaffold:
+        typ, xyz, rad = _atoms_from_scaffold(prefix=a.from_scaffold)
     elif a.atoms:
         typ, xyz, rad = _atoms_from_csv(a.atoms, a.type_map)
     else:
-        ap.error('--atoms 또는 --from-scaffold 필요')
+        ap.error('--atoms / --from-scaffold / (--am-scaffold + --se-scaffold) 중 하나 필요')
     out = calibrate(typ, xyz, rad, a.pristine, a.charged)
     _report(out)
     if a.out:
