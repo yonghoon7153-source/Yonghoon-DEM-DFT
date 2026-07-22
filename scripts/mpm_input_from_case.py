@@ -657,6 +657,7 @@ python3 "$SCR/mpm_webapp_payload.py" \\
         echo "          sed -n '/mpm_webapp_payload/,/--out mpm_payload.json/p' $KIT/run_mpm.sh > payload_only.sh && bash payload_only.sh"; \\
         echo "          (흔한 원인: pip 모듈 누락 — python3 -m pip install scikit-image scipy)"; exit 1; }}
 {s4_block}ln -sfn "$RUN_DIR" "$KIT/latest_run"
+touch "$RUN_DIR/mpm_done.marker"     # ★ 완료 마커 — '한 줄' 명령의 poll(until test -f latest_run/mpm_done.marker)용
 echo "[run_mpm] DONE $(date) → 결과 폴더: $RUN_DIR  ($KIT/latest_run 심링크 = 여기)"
 echo "          upload mpm_payload.json + mpm_metrics.json back to the case in the webapp"
 echo "          (additive run이면 mpm_metrics.json의 step3.sigma_e_eff_S_cm = STEP3 σ_e — viewer 전류밀도 모드로 색칠)"
