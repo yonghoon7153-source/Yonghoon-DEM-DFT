@@ -168,9 +168,10 @@ def _cg(L, b, x0=None, rtol=1e-9, atol=0.0, pc_cache=None, deep=False):
         x0 = None                                            # (잔차 상승-표류 방지, V100 smoke6 로그)
     r_start = _rr(x0)
     big = L.shape[0] >= 50000                                # 소형(셀프테스트급)은 Jacobi로 충분
+    amg_ok = big and not cache.get('amg_useless')            # ★AMG 무용 판정되면 건너뜀 (매 iter 1500s→94s)
     M = None
     fresh_amg = False
-    if big:
+    if amg_ok:
         M = cache.get('amg')
         if M is None:
             M = _amg_M(L)
@@ -183,7 +184,7 @@ def _cg(L, b, x0=None, rtol=1e-9, atol=0.0, pc_cache=None, deep=False):
     # ★ 낡은/약한 AMG가 미수렴 또는 발산(해가 시작보다 나쁨)이면 fresh 계층 재구축.
     #   ⚠ 재구축은 반드시 CLEAN warm-start(x0)에서 — 발산해 x를 넘기면 resid 1e3서 시작해
     #   회복 불가였음 (2026-07-22 0.2C 저율 수렴실패 근본원인 중 하나; 발산해=쓰레기 warm).
-    if (info != 0 or _rr(x) > r_start) and big and not fresh_amg:
+    if (info != 0 or _rr(x) > r_start) and amg_ok and not fresh_amg:
         print('    AMG 캐시 계층 미수렴/발산 → 재구축 (clean warm-start)', flush=True)
         cache.pop('amg', None)
         M2 = _amg_M(L)
@@ -200,6 +201,10 @@ def _cg(L, b, x0=None, rtol=1e-9, atol=0.0, pc_cache=None, deep=False):
         xj, infoj = _solve(sparse.diags(1.0 / diag), x0)
         if _rr(xj) < _rr(x):
             x, info = xj, infoj
+        if amg_ok and not cache.get('amg_useless'):          # ★AMG 발산+Jacobi 승 확정 → 이후 AMG 생략(sticky)
+            cache['amg_useless'] = True                       #   (gpu_dead 계열; near-null 격자서 AMG 매번 발산 → 낭비 차단)
+            cache.pop('amg', None)
+            print('    (이후 이 런의 실솔브는 AMG 생략 → Jacobi 직행)', flush=True)
     # ★ 최종 가드: 어떤 시도도 시작보다 못하면 warm-start 자체 반환 (쓰레기 해 전파 차단 →
     #   Newton Armijo 무-스텝 깔끔 정지).  재현 안 되는 발산은 실제 행렬 덤프로 진단:
     if _rr(x) > r_start:
@@ -575,7 +580,7 @@ class CellSystem:
             if r >= 0.5 * best:                             # 노이즈-바닥 정체 감지 (수렴 근처 한정)
                                                             # (stall 수용 상한 1e-3 = simulate 하드페일과 의도적 페어)
                 stall += 1
-                if stall >= 2 and best < 1e-3:
+                if stall >= 2 and best < getattr(self, 'stall_tol', 1e-3):  # ★rate-aware 바닥(저율=1/rate 배 높음)
                     break
             else:
                 stall = 0
@@ -796,6 +801,13 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
     cap_As = F_CONST * ocp.c_max * abs(ocp.x100 - ocp.x0) * V_p.sum()
     I_1C = cap_As / 3600.0
     I_cc = c_rate * I_1C * (1.0 if not charge else -1.0)    # 방전 +(인출)
+    # ★rate-aware 수렴바닥 (2026-07-22): 후막+저율은 near-null-space(약한 BV결합)로 Newton 잔차가
+    #   ~1/rate 배 높은 바닥에서 정체 — 1e-8은 도달 불가.  잔차는 i_scale(=목표전류)로 정규화된 값이라
+    #   저율일수록 같은 절대오차가 크게 보임.  정체-수용/하드페일 임계를 1/rate로 완화 (0.2C→×5 = 전류수지
+    #   0.5%까지 곡선 수용; 그 이상은 여전히 하드페일 = 가비지 가드 유지).  galv_miss가 최종 정확도 심판.
+    _rate_relax = min(max(1.0, 1.0 / max(c_rate, 0.05)), 8.0)
+    _hard_tol = 1e-3 * _rate_relax                          # simulate 하드페일 임계 (rate-scale)
+    sys_.stall_tol = _hard_tol                              # newton() 정체-수용 임계 (동일 페어)
     R_int_abs = (r_int_ohm_cm2 * 1e-4 / sys_.area_m2) if r_int_ohm_cm2 > 0 else 0.0   # [Ω]
     has_face = np.zeros(n_am, bool)
     has_face[np.unique(sys_.f_pid[sys_.f_pid >= 0])] = True
@@ -877,8 +889,8 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
             print(f'    ⚠ step4 잔차 {resid:.1e} / 정전류 미스 {galv_miss:.1e} '
                   f'(경고선 {warn_thr:.1e}) @t={t:.1f}s — 신뢰 주의', flush=True)
         newton_failed = ((not np.isfinite(resid))               # NaN/Inf = 하드실패 (NaN 비교는 False라 조용히 통과하던 걸 차단)
-                         or resid > max(1e-3, 40.0 * _fl)
-                         or galv_miss > max(1e-3, 40.0 * _fl))   # 하드 실패: 확산 전진 전 중단
+                         or resid > max(_hard_tol, 40.0 * _fl)
+                         or galv_miss > max(_hard_tol, 40.0 * _fl))   # 하드 실패 (rate-aware): 확산 전진 전 중단
         kcl = abs(i_am.sum() - I_del) / max(abs(I_del), 1e-30)
         aud = sys_.energy_audit(phi, I_f, eta_s, U_f, kin, V_app)
         V_cell = V_app
