@@ -5252,7 +5252,7 @@ def _rint_anchor_pair(key):
         return float(r0), float(rc)
     except (Exception, SystemExit):
         return {'sbe': (18.0, 110.0), 'dbe': (12.0, 46.0), 'csus': (10.0, 30.0),
-                'sus': (20.0, 60.0)}[key]                # bare-SUS = 추정 (미측정; 2×C-SUS Cr2O3 페널티)
+                'sus': (50.0, 150.0)}[key]               # 이종기술 SUS = 실측 50 / 문헌투영 150 (SC √N)
 
 
 @app.route('/rint-anchors')

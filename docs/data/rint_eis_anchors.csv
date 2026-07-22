@@ -19,7 +19,7 @@ lab_dbe_pristine,dbe_pristine,R_int,12,Ohm_cm2,NCM811,LPSCl,full,bare_Al,0,,pane
 lab_dbe_cycled,dbe_cycled,R_int,46,Ohm_cm2,NCM811,LPSCl,full,bare_Al,1000@2C,,user_lab,user-lab Fig6e,
 lab_csus_pristine,csus_pristine,R_int,10,Ohm_cm2,NCM811,LPSCl,full,C-SUS_primer,0,,panel_e_approx,user-lab Fig6e,⚠근사 — 2026-07-21 rint10 런의 값
 lab_csus_cycled,csus_cycled,R_int,30,Ohm_cm2,NCM811,LPSCl,full,C-SUS_primer,1000@2C,,user_lab,user-lab Fig6e,
-lab_sus_pristine,sus_pristine,R_int,20,Ohm_cm2,NCM811,LPSCl,full,SUS_bare,0,,estimated,derived_2x_CSUS,⚠추정 미측정 — bare-SUS≈2×C-SUS(10) 무코팅 Cr2O3 페널티(문헌 카본코팅 이득 2-5× 보수적 하단); 120MPa 고압서 ≈bare-Al SBE(18); 밴드 15-30
-lab_sus_cycled,sus_cycled,R_int,60,Ohm_cm2,NCM811,LPSCl,full,SUS_bare,1000@2C,,estimated,derived_SUS_inert,⚠추정 미측정 — 무코팅→C-SUS(30)보다↑; SUS 부식-inert→bare-Al SBE(110)보다↓; 밴드 40-90
+lab_sus_pristine,sus_pristine,R_int,50,Ohm_cm2,NCM811_SC,LPSCl,full,SUS,0,,measured,이종기술 EIS 4셀 SOC100 평균,실측 풀셀 평균 49.8 (fits/summary_means.csv 자동갱신); 이종기술 SUS 집전체
+lab_sus_cycled,sus_cycled,R_int,150,Ohm_cm2,NCM811_SC,LPSCl,full,SUS,1000@0.2C,,projected_literature,SC √N + primer-collector ~3× 앵커,⚠문헌투영(assumed-form) — R0×~3 (Pritzl 10→30·C-SUS 10→30 primer 앵커); SC라 √N gentle; Conforto SC 계수 확정 전 라벨유지
 bielefeld_sigma_ion,,sigma_ion,1.6,mS_cm,,LPSCl,pellet,,,25,confirmed_snippet,Bielefeld JES abf8d7,수송 참조(계면 아님)
 bielefeld_sigma_e,,sigma_e,<1e-6,S_cm,,LPSCl,pellet,,,25,confirmed_snippet,Bielefeld JES abf8d7,

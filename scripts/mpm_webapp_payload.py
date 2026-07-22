@@ -637,12 +637,12 @@ def main():
                     _scn_vals = {'sbe': (18.0, 110.0, 1000, 'panel_e_approx'),
                                  'dbe': (12.0, 46.0, 1000, 'panel_e_approx'),
                                  'csus': (10.0, 30.0, 1000, 'panel_e_approx'),
-                                 'sus': (20.0, 60.0, 1000, 'estimated')}   # bare-SUS 추정 (미측정)
+                                 'sus': (50.0, 150.0, 1000, 'measured_projected')}   # 이종기술 SUS 실측50/투영150
                     _scn_src = f'fallback snapshot 2026-07-21 (anchors CSV unreadable: {_e_rs})'
                 _pri_prec = '/'.join(sorted({str(v[3]) for v in _scn_vals.values()}))
                 _nm_fmt = {'sbe': 'SBE_bare_{:g}', 'dbe': 'DBE_bare_{:g}',
                            'csus': 'SBE_CSUS_{:g}_proxy_DBE_anchored',   # SBE+C-SUS 미측정 → DBE-앵커 proxy
-                           'sus': 'SUS_bare_{:g}_estimated'}             # bare-SUS 미측정 → 2×C-SUS 추정
+                           'sus': 'isotech_SUS_{:g}'}                    # 이종기술 SUS 실측50/투영150
                 _cyc_pairs = ([('ideal_R0', 0.0)]
                               + [(_nm_fmt[k].format(_scn_vals[k][1]), _scn_vals[k][1])
                                  for k in ('sbe', 'dbe', 'csus', 'sus')])
