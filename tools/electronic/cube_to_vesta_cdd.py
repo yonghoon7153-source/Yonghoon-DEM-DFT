@@ -42,6 +42,7 @@ def main():
     ap.add_argument("cube")
     ap.add_argument("--iso", type=float, default=0.0, help="등가면 절대값 (0=자동 ~max/3)")
     ap.add_argument("--maxabs", type=float, default=0.0, help="cube 최대|Δρ| (자동iso용; 로그의 range로)")
+    ap.add_argument("--structure-only", action="store_true", help="밀도/등가면 빼고 순수 구조 vesta")
     a = ap.parse_args()
     cell_b, origin_b, atoms, vecs, ns = read_cube_header(a.cube)
     cell = cell_b * BOHR            # Angstrom
@@ -65,16 +66,19 @@ def main():
     atomt_lines = "\n".join(f"  {j+1} {s:>2s}  {COL.get(s,('0.5','150 150 150 150 150 150'))[0]} "
                             f"{COL.get(s,('0.5','150 150 150 150 150 150'))[1]}  50" for j, s in enumerate(atomt))
 
+    dens = "" if a.structure_only else f"\nIMPORT_DENSITY 1\n+1.000000 {cube_name}\n"
+    isurf = "" if a.structure_only else (
+        f"ISURF\n  1   0  {iso:.5f} 255 255   0 127 255\n"
+        f"  2   0  {-iso:.5f}   0 255 255 127 255\n  0   0   0   0\n")
+    ttl = f"{cube_name} 구조 (structure only)" if a.structure_only \
+        else f"{cube_name} CDD (yellow=accumulation / cyan=depletion)"
     v = f"""#VESTA_FORMAT_VERSION 3.5.4
 
 CRYSTAL
 
 TITLE
-{cube_name} CDD (yellow=accumulation / cyan=depletion)
-
-IMPORT_DENSITY 1
-+1.000000 {cube_name}
-
+{ttl}
+{dens}
 GROUP
 1 1 P 1
 CELLP
@@ -107,17 +111,14 @@ SECTS  32  1
 ATOMS   0  0  1
 BONDS   1
 POLYS   1
-ISURF
-  1   0  {iso:.5f} 255 255   0 127 255
-  2   0  {-iso:.5f}   0 255 255 127 255
-  0   0   0   0
-BKGRC
+{isurf}BKGRC
  255 255 255
 """
-    outp = os.path.splitext(a.cube)[0] + ".vesta"
+    outp = os.path.splitext(a.cube)[0] + ("_structure.vesta" if a.structure_only else ".vesta")
     assert all(ord(ch) < 128 for ch in v), "non-ASCII"
     open(outp, "w", newline="").write(v.replace("\n", "\r\n"))
-    print(f"-> {outp}  (iso ±{iso:.4f} e/Bohr^3, cube={cube_name})")
+    tag = "구조 only" if a.structure_only else f"iso ±{iso:.4f}"
+    print(f"-> {outp}  ({tag}, {len(atoms)} atoms)")
     print(f"   cell {L.round(2)} A  {len(atoms)} atoms  (cube와 같은 폴더에 둘 것)")
 
 
