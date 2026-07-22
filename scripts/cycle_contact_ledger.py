@@ -178,10 +178,25 @@ def run(a):
                   a.dv_pct_sc if a.dv_pct_sc is not None else a.dv_pct)
     eps = dv / 100.0 / 3.0 * a.soc_swing
     shrink = np.where(am, eps, 0.0)                         # SE는 불변 (v1)
+    # ★ poly 기전 (--poly-mode, electrochem#3/물리#1): expand-void 에선 poly 외피가 '팽창'해 계면
+    #   gap 이 안 열림(gap≤0) → poly 는 interface CZM debond 대상서 제외(eps<0로 뒤집어 gap 음수화).
+    #   poly 진짜 열화(입계 내부 void)는 아래 poly_internal_void_frac 로 별도 보고(σ_e 미결합).
+    poly_am = am & is_poly
+    if a.poly_mode == 'expand-void':
+        eps = np.where(poly_am, -np.abs(eps), eps)          # poly: 팽창(음수 eps) → gap = -ov0 + r·eps < 0
+        shrink = np.where(am, eps, 0.0)
     # 충전-말 gap: 원 개구 gap_c = d − (r_i(1−ε_i)+r_j(1−ε_j)) = −ov0 + r_i·ε_i + r_j·ε_j
     gap_um = -ov0 + rad0[ci] * shrink[ci] + rad0[cj] * shrink[cj]
     gap_nm = gap_um * 1e3                                   # atoms.csv 좌표 = µm 규약
     dcr = a.deltacr_nm
+    # ★ poly 내부 void 프록시 (expand-void 전용, ASSUMED-FORM, σ_e 미결합 — 앵커 대기): poly 입자의
+    #   입계 grain-isolation 분율.  A9 균열흡수분(= 격자 ΔV 중 외피에 안 간 몫)이 내부 void 로 감 →
+    #   void_rate = |dv_poly|·(1−dv_pct_poly외피분)/100/3·swing 을 사이클당 누적(단조, [0,1] clip).
+    #   ★크기 아님·방향 표기용: "poly 열화는 여기 산다"(Kang&Shin bimodal 증폭 후보).  magnitude 미앵커.
+    poly_void_rate = 0.0
+    if a.poly_mode == 'expand-void' and poly_am.any():
+        _dv_poly = abs(a.dv_pct_poly if a.dv_pct_poly is not None else a.dv_pct)
+        poly_void_rate = _dv_poly / 100.0 / 3.0 * a.soc_swing   # 사이클당 내부 void 증가(외피-미할당 몫 프록시)
     # ── ★ 접촉종별 영구파단 대상 (리뷰 MAJOR ③): Bucci δcr=100nm는 SE-상 cohesive TSL —
     #    AM-SE(계면 박리, Bucci 2018)와 SE-SE(본래 대상)에만 CZM 영구파단.  AM-AM은 결합 없는
     #    단측 강체 접촉 → 방전 스택압으로 재폐합(영구 아님) = 기본.  --aa-czm로 AM-AM도 CZM
@@ -254,13 +269,19 @@ def run(a):
                              rct_holm_rel=max(A0, 1e-30) / max(A_, 1e-30),        # =rct_proxy_rel (명시 별칭)
                              rct_ct_area_rel=max(A0_area, 1e-30) / max(A_area, 1e-30),  # 전하이동(면적)
                              sigma_e_rel=(s_e / s_e0) if s_e0 > 0 else None,
-                             sigma_i_rel=(s_i / s_i0) if s_i0 > 0 else None))
+                             sigma_i_rel=(s_i / s_i0) if s_i0 > 0 else None,
+                             # expand-void 전용: poly 입계 내부 void 분율(ASSUMED-FORM, σ_e 미결합·앵커 대기).
+                             # shrink-proxy 에선 None (poly 열화가 계면 debond 로 이미 f_broken 에 반영됨).
+                             poly_internal_void_frac=(min(1.0, poly_void_rate * N)
+                                                      if a.poly_mode == 'expand-void' else None)))
             _f = lambda v: '—(미퍼콜)' if v is None else f'{v:.3f}'
+            _pv = rows[-1]['poly_internal_void_frac']
             print(f'  N={N:4d}  f_brk(AM-SE)={rows[-1]["f_broken_amse"]:.3f}  '
                   f'A_rel={rows[-1]["A_rel_amse"]:.3f}  R_ct∝[Holm {rows[-1]["rct_holm_rel"]:.2f}–'
                   f'CT {rows[-1]["rct_ct_area_rel"]:.2f}]×  '
                   f'σ_e_rel={_f(rows[-1]["sigma_e_rel"])}  σ_ion_rel={_f(rows[-1]["sigma_i_rel"])}'
-                  f'  (AM-AM 충전개구 {rows[-1]["f_open_amam_charge"]:.2f}, 재폐합)', flush=True)
+                  f'  (AM-AM 충전개구 {rows[-1]["f_open_amam_charge"]:.2f}, 재폐합)'
+                  + (f'  poly내부void={_pv:.3f}(ASSUMED,σ_e미결합)' if _pv is not None else ''), flush=True)
     out = dict(model='A10-v1 contact-ledger (option A)', atoms=a.atoms,
                n_particles=int(n), n_am=int(am.sum()),
                n_contacts=dict(am_am=int(aa.sum()), am_se=int(ase.sum()), se_se=int(ss.sum())),
@@ -271,6 +292,13 @@ def run(a):
                             gc_J_m2=a.gc, provenance_gc='McGrogan sulfide K_IC→G_c 2.8±1.8 J/m²',
                             k_se_gpa=a.k_se_gpa, soc_swing=a.soc_swing),
                conventions=dict(recontact=a.recontact, rewet_frac=a.rewet_frac, aa_czm=bool(a.aa_czm),
+                                poly_mode=a.poly_mode,
+                                poly_mode_note=('shrink-proxy: poly 도 수축→계면 debond (v1 COMMON-SHRINK 프록시, '
+                                                '현 1.51× 재현; A-1 poly-팽창과 부호상충=한계)'
+                                                if a.poly_mode == 'shrink-proxy' else
+                                                'expand-void: poly 외피 팽창→계면 debond 제외, poly 열화=입계 내부 '
+                                                'void 별도보고(poly_internal_void_frac, ASSUMED-FORM, σ_e 미결합·앵커 '
+                                                '대기).  R_ct 성장 = SC-계면 debond 몫만 (poly-계면 제거)'),
                                 fatigue=a.fatigue,
                                 fatigue_label='ASSUMED-FORM (Miner) — 양끝 아닌 중간 궤적은 가정' if a.fatigue == 'miner' else '-',
                                 sigma_note='입자-그래프 RNM 상대값 전용 (절대 σ = production Kirchhoff 소관)',
@@ -380,9 +408,9 @@ def _selftest():
         lines.append(f'{pid},3,{p[0]:.2f},{p[1]:.2f},{p[2]:.2f},1.2'); pid += 1
     fd, tmp = tempfile.mkstemp(suffix='.csv'); _os.write(fd, ('\n'.join(lines) + '\n').encode()); _os.close(fd)
     a6 = _ap.Namespace(atoms=tmp, type_map='1:AM_P,3:SE', dv_pct=5.1, dv_pct_poly=None, dv_pct_sc=None,
-                       am_split_um=3.5, soc_swing=1.0, delta0_nm=5.0, deltacr_nm=100.0, gc=2.8,
-                       k_se_gpa=24.0, recontact='forbid', rewet_frac=0.5, aa_czm=False, seed=0,
-                       fatigue='miner', checkpoints='1,5', out=tmp + '.out')
+                       am_split_um=3.5, poly_mode='shrink-proxy', soc_swing=1.0, delta0_nm=5.0,
+                       deltacr_nm=100.0, gc=2.8, k_se_gpa=24.0, recontact='forbid', rewet_frac=0.5,
+                       aa_czm=False, seed=0, fatigue='miner', checkpoints='1,5', out=tmp + '.out')
     try:
         run(a6)
         rj = json.load(open(tmp + '.out.json'))
@@ -397,6 +425,41 @@ def _selftest():
             if _os.path.exists(f):
                 _os.remove(f)
     ok &= ok6
+    # 7) ★ poly-mode (electrochem#3/물리#1): 6µm poly(≥split) 베드 — shrink-proxy는 poly 계면 debond,
+    #    expand-void는 poly 계면 debond 제외(f_brk↓) + poly_internal_void_frac 보고(≠None,>0).
+    lines7 = ['id,type,x,y,z,radius']; pid = 1
+    for zc in (0.0, 11.0):                                   # 6µm poly 2×2×2 격자 + SE 채움
+        for xc in (0, 13):
+            for yc in (0, 13):
+                lines7.append(f'{pid},1,{xc},{yc},{zc},6.0'); pid += 1
+    rng7 = np.random.default_rng(2)
+    for _ in range(90):
+        p = rng7.uniform([-2, -2, -2], [15, 15, 13])
+        lines7.append(f'{pid},3,{p[0]:.2f},{p[1]:.2f},{p[2]:.2f},1.2'); pid += 1
+    fd7, tmp7 = tempfile.mkstemp(suffix='.csv'); _os.write(fd7, ('\n'.join(lines7) + '\n').encode()); _os.close(fd7)
+    def _run7(mode):
+        a7 = _ap.Namespace(atoms=tmp7, type_map='1:AM_P,3:SE', dv_pct=5.1, dv_pct_poly=None, dv_pct_sc=None,
+                           am_split_um=3.5, poly_mode=mode, soc_swing=1.0, delta0_nm=5.0, deltacr_nm=100.0,
+                           gc=2.8, k_se_gpa=24.0, recontact='forbid', rewet_frac=0.5, aa_czm=False, seed=0,
+                           fatigue='miner', checkpoints='5', out=tmp7 + f'.{mode}')
+        run(a7); return json.load(open(tmp7 + f'.{mode}.json'))['trajectory'][-1]
+    try:
+        rs, re = _run7('shrink-proxy'), _run7('expand-void')
+        ok7 = (rs['poly_internal_void_frac'] is None                      # shrink-proxy: 미보고
+               and re['poly_internal_void_frac'] is not None and re['poly_internal_void_frac'] > 0  # expand: 보고
+               and re['f_broken_amse'] <= rs['f_broken_amse'] + 1e-9)     # expand: poly 계면 debond 제외 → f_brk↓
+        print(f'selftest7 poly-mode: shrink f_brk={rs["f_broken_amse"]:.3f}(void {rs["poly_internal_void_frac"]}) '
+              f'vs expand f_brk={re["f_broken_amse"]:.3f}(void {re["poly_internal_void_frac"]:.3f})  '
+              f'{"OK" if ok7 else "FAIL"}')
+    except Exception as e:
+        ok7 = False
+        print(f'selftest7 poly-mode: FAIL ({e!r})')
+    finally:
+        for f in (tmp7, tmp7 + '.shrink-proxy.json', tmp7 + '.shrink-proxy.csv',
+                  tmp7 + '.expand-void.json', tmp7 + '.expand-void.csv'):
+            if _os.path.exists(f):
+                _os.remove(f)
+    ok &= ok7
     print('CYCLE-LEDGER SELFTEST', 'PASS' if ok else 'FAIL')
     return ok
 
@@ -411,6 +474,13 @@ def main():
     ap.add_argument('--dv-pct-poly', type=float, default=None, help='poly(r≥split) 별도 ΔV%% (기본 공통)')
     ap.add_argument('--dv-pct-sc', type=float, default=None, help='SC 별도 ΔV%%')
     ap.add_argument('--am-split-um', type=float, default=3.5, help='poly/SC 반경 문턱 (step4 규약)')
+    ap.add_argument('--poly-mode', choices=('shrink-proxy', 'expand-void'), default='shrink-proxy',
+                    help='★poly(r≥split) 열화 기전 (적대리뷰 electrochem#3/물리#1).  shrink-proxy(기본, 연속성): '
+                         'poly도 수축→계면 gap 개구→interface debond (v1 COMMON-SHRINK 프록시; 현 1.51× 재현).  '
+                         'expand-void(정정): A-1/M3/N3 정합 — poly 외피 팽창(eps<0)→계면 gap≤0(no interface '
+                         'debond, poly는 계면 CZM서 제외)→poly 진짜 열화는 입계 내부 void(grain-isolation)로 '
+                         '★별도 보고(poly_internal_void_frac, ASSUMED-FORM, σ_e 미결합=앵커 대기).  두 모드를 '
+                         '돌려 R_ct 성장의 poly-계면 vs SC-계면 분해를 정량(둘 차 = 잘못된 poly-계면 debond 몫).')
     ap.add_argument('--soc-swing', type=float, default=1.0, help='SOC 창 분율 (부분충전 스윕)')
     ap.add_argument('--delta0-nm', type=float, default=5.0, help='CZM δ_0 (Bucci 2017)')
     ap.add_argument('--deltacr-nm', type=float, default=100.0, help='CZM δ_cr=20δ_0 완전분리 (Bucci 2017)')
