@@ -42,5 +42,36 @@
   "note": "gallery 4칸 스프레드 52 meV (-1.574~-1.626): 단조 심화, 협동항 ~28 meV. 표면 VGCF만 층수 민감(-151 meV)."
  },
  "shi_eq5": "gallery < min(VGCF, hBN) all combos — sandwich strongest, VGCF plays the Cu role",
- "headline": "gallery = 최안정이면서 전부 lithiophobic(+0.10~+0.15 eV): VGCF는 Cu의 구조 역할(샌드위치 안정화)을 과도한 lithiophilic 앵커링 없이 수행. 층수 수렴 입증(gallery<=52 meV) — 1L 모델로 NEB 정당."
+ "headline": "gallery = 최안정이면서 전부 lithiophobic(+0.10~+0.15 eV): VGCF는 Cu의 구조 역할(샌드위치 안정화)을 과도한 lithiophilic 앵커링 없이 수행. 층수 수렴 입증(gallery<=52 meV) — 1L 모델로 NEB 정당.",
+ "representative_for_paper": {
+  "gallery": "gallery_2L2L",
+  "E_bind_eV": -1.626,
+  "rationale": "h-BN 2L matches Liu2022(AMI 9,2200011) reference (h-BN|Li|Cu 2-layer h-BN); VGCF 2L matches real multilayer graphite fiber (and bulk Cu in ref). 1L1L(-1.574) cited as layer-convergence evidence (spread 52 meV)."
+ },
+ "reference_comparison_Liu2022": {
+  "citation": "Liu et al., Adv. Mater. Interfaces 2022, 9, 2200011",
+  "note": "both vs isolated Li atom, so directly comparable; bottom = Cu (Liu) vs VGCF (ours)",
+  "Li_on_hBN": {
+   "Liu_Cu_system": -0.33,
+   "ours": [
+    -0.264,
+    -0.273
+   ],
+   "verdict": "일치 (방법 검증)"
+  },
+  "Li_on_bottom": {
+   "Liu_Cu": -2.5,
+   "ours_VGCF": [
+    -1.1,
+    -1.252
+   ],
+   "verdict": "VGCF는 Cu보다 완만한 앵커"
+  },
+  "sandwich_gallery": {
+   "Liu_hBN_Li_Cu": -3.16,
+   "ours_hBN_Li_VGCF_2L2L": -1.626,
+   "verdict": "약함 = 바닥 Cu→VGCF; 차별점: VGCF가 Cu 구조역할하되 과잉 lithiophilic 앵커 없이"
+  }
+ },
+ "cdd_planned": "graphene / hbn / gallery_2L2L 3종 CDD (ρ_complex − ρ_host − ρ_Li) — Liu (f)(g) 대응 비교그림. VGCF가 전자받개(Cu역할), h-BN 수동캡 시각화."
 }
