@@ -291,7 +291,8 @@
             <label style="font-weight:400" title="STEP4 풀셀 축 — 집전체 계면저항을 충방전 곡선에 직렬로 겁니다 (V_term = V_cell − I·R_int → η_Rint 분해 항 추가). 값은 위 집전체 선택 + 전극 종류(SDCP 있으면 DBE/없으면 SBE)에 맞는 시나리오를 정본 anchors CSV에서 자동 해석: pristine(신선, panel-e≈ 18/12/10) 또는 cycled(1000cyc@2C 노화, 110/46/30). 기본 = 전극-내부(R_int=0, 기존 모든 런과 동일 축). 집전체가 '이상 접촉'이면 무시됨. 산출물엔 _rint<값> 태그가 붙어 구분됩니다.">STEP4 R_int<br><select id="s4-rint" style="padding:3px" onchange="updateS4RintHint();updateAdditiveGpuCmds()">
               <option value="" selected>전극-내부 (R_int=0 · 기본)</option>
               <option value="pristine">풀셀 pristine (신선)</option>
-              <option value="cycled">풀셀 cycled (노화 민감도)</option></select>
+              <option value="cycled">풀셀 cycled (노화 민감도)</option>
+              <option value="40">문헌 SC-NMC/LPSCl 40 Ω·cm² (Doerrer 2021)</option></select>
             <span id="s4rint-hint" style="color:#7dd3fc;font-size:0.85em"></span></label>
             <label style="font-weight:400" title="★bimodal poly/SC 전기화학 분리 (문헌 프리셋, 2026-07-21 확정) — STEP4 확산계수를 입자 크기로 분리: 대립 poly D_s=4e-15 m²/s (Chen 2020 DFN, 2차입자-반경 규약) / 소립 SC D_s=3e-15 (Trevisanello 2021 GITT 밴드 1e-15–1e-14의 기하중앙 = 잠정, SDCP-250 계열 원장 방식 — 값 갱신 시 정본 docs/data/sc_poly_preset.csv만 교체). i0는 SC/PC 정량 문헌 부재 확정 → 공유 유지. ⚠주의: 액체-셀 'PC 1오더 빠름' GITT값은 균열-전해액 침투 기전이라 ASSB 이식 금지 — 이 프리셋은 ASSB-정합 값. 분류 반경문턱 3.5µm (반경 6:2 베드 분리); mono 베드는 생성 시점에 거부됨. 산출물엔 _dsP..S.. 태그. 파워유저: URL &s4dsp=&s4dss=로 명시값 오버라이드(프리셋과 동시 지정 불가).">
               <input type="checkbox" id="s4-pp" onchange="updateAdditiveGpuCmds()"> poly/SC D_s 분리<br>
@@ -628,6 +629,10 @@ async function updateS4RintHint() {
   if (!el) return;
   const { sd, coll, s4rint } = _addVals();
   if (!s4rint) { el.textContent = ''; return; }
+  if (!isNaN(parseFloat(s4rint))) {   // 숫자(문헌/직접값) = 집전체 무관 고정값
+    el.textContent = `→ R_int = ${parseFloat(s4rint)} Ω·cm² (고정 문헌/직접값, 집전체 무관)`;
+    return;
+  }
   const key = coll === 'bare' ? (sd > 0 ? 'dbe' : 'sbe') : coll === 'csus' ? 'csus' : null;
   if (!key) { el.textContent = '⚠ 집전체를 bare-Al/C-SUS로 선택해야 적용됨 (이상 접촉 = R_int=0)'; return; }
   if (!_rintAnchors) {
@@ -653,8 +658,9 @@ function dlAdditiveZip() {
   const { vg, sp, pt, sd, mix, coll, vox, s4, s4chg, s4vmin, s4vmax, s4icut, s4rint, s4pp } = _addVals();
   if (vg <= 0 && sp <= 0 && pt <= 0 && sd <= 0) { alert('첨가제를 하나 이상 입력하세요 (wt%).'); return false; }
   if (!_addExclusiveOK()) return false;
-  if (s4rint && (coll === 'ideal' || !coll)) {
-    alert('STEP4 R_int(풀셀 축)를 쓰려면 집전체를 bare-Al 또는 C-SUS로 선택하세요.\n(어느 시나리오 값인지 집전체+전극 종류로 정해집니다 — 침묵 기본값 없음)');
+  // pristine/cycled는 집전체로 시나리오를 해석하므로 집전체 필요; 숫자(문헌/직접값)는 불필요.
+  if ((s4rint === 'pristine' || s4rint === 'cycled') && (coll === 'ideal' || !coll)) {
+    alert('풀셀 pristine/cycled R_int는 집전체(bare-Al/C-SUS) 선택으로 시나리오가 정해집니다.\n집전체 무관한 값을 쓰려면 "문헌 …" 옵션(고정 Ω·cm²)을 고르세요.');
     return false;
   }
   const _cut = (s4 || s4chg) ? `&s4vmin=${s4vmin}&s4vmax=${s4vmax}&s4icut=${s4icut}` : '';
