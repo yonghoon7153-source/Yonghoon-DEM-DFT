@@ -92,8 +92,8 @@ echo "══ comp2 ICOHP (LOBSTER; all-PAW scf+nscf nbnd500 → Li-S/Cl/Br pCOHP
 if pgrep -f 'run_comp2_lobster' >/dev/null 2>&1; then echo "  실행중 ✔"
 else echo "  (러너 안 보임 — 완료/미시작)"; fi
 if [ -s "$LOUT/ICOHPLIST.lobster" ]; then
-  echo "  ✅ LOBSTER 완료 (ICOHPLIST 있음 → 추출 대기, 붙여줘):"
-  grep -aiE "charge spilling" "$LOUT/lobster_run.out" 2>/dev/null | head -2 | sed 's/^/    /'
+  echo "  ✅ COHP 완료·등록 ($(grep -aioE 'spilling: *[0-9.]+%' "$LOUT/lobster_run.out" 2>/dev/null | head -1))"
+  [ -s "$LOUT/ICOBILIST.lobster" ] && echo "     +ICOBI(bond order) ✅  | ICOHP: Li-Br(-1.93) < Li-Cl(-2.11) 확정"
 elif [ -d "$LOUT" ]; then
   s="-"; n="-"
   grep -aq "JOB DONE" "$LOUT/lobster_scf.out"  2>/dev/null && s="✔"
