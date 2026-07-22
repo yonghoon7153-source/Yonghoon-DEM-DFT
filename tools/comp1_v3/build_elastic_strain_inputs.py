@@ -168,11 +168,17 @@ def main():
             control = re.sub(r"outdir\s*=\s*'[^']*'",
                              f"outdir='./tmp_{tag}/'", control)
             control = re.sub(r"\n\s*restart_mode\s*=\s*'[^']*'", "", control)
-            # ensure tprnfor + tstress
+            # ensure tprnfor + tstress (독립 체크: src relax.in에 tprnfor만 있어도
+            # tstress는 반드시 추가 — 없으면 calculation='relax'가 stress를 안 찍어
+            # fit이 'no total stress block'으로 죽는다, comp2 2026-07 교훈)
+            adds = []
             if "tprnfor" not in control:
+                adds.append("  tprnfor=.true.")
+            if "tstress" not in control:
+                adds.append("  tstress=.true.")
+            if adds:
                 control = re.sub(r"\n\s*/\s*$",
-                                 "\n  tprnfor=.true.\n  tstress=.true.\n/",
-                                 control)
+                                 "\n" + "\n".join(adds) + "\n/", control)
 
             system = nls["SYSTEM"]
             electrons = nls.get(
