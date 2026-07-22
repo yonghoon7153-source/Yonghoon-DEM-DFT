@@ -103,3 +103,17 @@ R_int 110/46)은 **STEP3 σ_apparent 에만** 반영되고 **STEP4 로 안 흘�
   ~1%/화학~99%, bimodal 기계~14%[3-28%f0]/화학~86% — **R_int 성장 화학지배, 기계는 소수지만
   bimodal이 mono의 ~10× (대립입자 접촉손실 시그니처)**.  ⚠ 물리식(R_ct∝1/A vs Holm 1/√A,
   Yun 아키텍처-미상)은 적대리뷰 wf_c67ebb2b 결과 반영 대기.  다음 STEP4(N체크포인트 STEP4 곡선).
+- 2026-07-22: **STEP3 적대리뷰(wf_c67ebb2b) 반영** — Holm(1/√A 하한)↔CT(1/A 상한) 저항규약 밴드
+  정정(측정 CAM-SE=CT 지배=대표), 원장에 rct_ct_area_rel 추가.  ★리뷰 예측 반증(정직): "대립
+  우선파단→CT>Holm" 예상이 실베드선 반대(Holm 1.52>CT 1.25; gap=−ov0+Σr·ε → 초기겹침 작은
+  접촉 우선개구).  **최종: mono 기계 ~1%/bimodal ~7%(CT), 화학 86-99% 지배, bimodal 기계=mono ~7×.**
+  그림 `plot_cycle_rint_decomp.py`(svg+png+csv).  selftest 6/6.
+- 2026-07-22: **★ Phase 2 (풀셀 실험) 완결 — R_int 5점 사다리 {DBE 0/10/12, SBE 0/18}** (V100 실측,
+  `scripts/step4_rint_ladder.py`).  2C CCCV delivered: DBE 89.6→84.6(C-SUS)→**83.6**(bare-Al) /
+  SBE 88.9→**80.4**(bare-Al).  **결론 3**: ① R_int 세금 ~0.5%p/(Ω·cm²) 전극-무관 선형(두 기울기
+  동일=순수 I·R) ② 전극-내부 상한 DBE 89.6 vs SBE 88.9 = SDCP 내부수송 이득 +0.7%p(작음)
+  ③ **★풀셀 우세 +3.2%p(DBE R12 83.6 > SBE R18 80.4)는 대부분 SDCP가 계면저항 18→12로 낮춘 것**
+  = primer/SDCP 성능개선 기전 정합.  뷰어 검증: η_Rint=2C 단일-최대항(47-55%), 같은 DBE서
+  R10↔R12는 η_ohm/η_kin/η_diff 바이트-동일=단일변수 검증; R18=SBE(다른 전극, η_ohm 43.5/η_kin 64.1).
+  ⚠ R_int 10/12/18 = **user-lab Fig.6e pristine 근사**(문헌 아님, panel_e_approx, 정밀 digitize 대기).
+  다음: **CYCLE-STEP 4** (N체크포인트 STEP4 곡선 → retention 조립).
