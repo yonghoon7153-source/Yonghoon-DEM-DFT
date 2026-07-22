@@ -496,17 +496,26 @@ def main(argv):
         am_c = np.column_stack([SW[0] + amraw[:, 1] * scl, SW[0] + amraw[:, 2] * scl,
                                 FLOOR + amraw[:, 3] * scl * DZ]).astype(np.float64)
         am_r = (amraw[:, 4] * scl).astype(np.float64)
-        am_top = float((am_c[:, 2] + am_r).max())              # ★ PRISTINE bed top → grid/WALL0/nz + porosity
-        #   reference-frame stay N-INVARIANT (N4): the box in which porosity is measured must NOT move with
-        #   the deformation, else a porosity change would be a moving-frame artefact rather than real void.
+        am_r_pristine = am_r.copy()                             # kept for the cycle-deform eviction DELTA (m2)
+        am_top = float((am_c[:, 2] + am_r).max())              # ★ PRISTINE bed top → grid sizing (WALL0/nz) is
+        #   N-INVARIANT (N4).  ★ NOTE (physics#2): porosity is integrated to the SETTLED platen wall_z (which
+        #   physically descends = the thickness output), NOT to am_top — so what is pinned across N is the
+        #   FLOOR / lateral area / grid dx·nz / initial WALL0 (discretization frame), and the moving wall_z is
+        #   the real press response, not an artefact.  am_top is the grid-sizing envelope, not a porosity box.
         if args.cycle_deform:
             # ── A-1 (v1 ASSUMED-FORM): charge-state radius re-deformation.  ★ THIS FILE'S type convention is
             #    1=AM_P (poly), 2=AM_S (SC) — see the coverage loop ((1,'AM_P'),(2,'AM_S')) and the scaffold
-            #    CSV header — the OPPOSITE of step3_sigma's SID_NAME.  SC (sid=2) contracts on charge; poly
+            #    CSV header — the OPPOSITE of step3_sigma's SID_NAME.  ⚠ HANDOFF (electrochem#4): if se_dump'/
+            #    the sid-tagged deformed geometry is ever routed to STEP3, REMAP sid (1↔2) — step3 reads the
+            #    OPPOSITE SID_NAME, so a naive handoff SWAPS poly↔SC material (σ_e, GB, D_s).  (B-1/step4 is
+            #    immune: it splits poly/SC by RADIUS ≥3.5µm, not sid.)  SC (sid=2) contracts on charge; poly
             #    (sid=1) expands its envelope via anisotropic intergranular microcracking (opposite sign),
             #    discounted by --dv-pct-poly (crack absorbs most internally).  Isotropic approx (c-axis
             #    anisotropy folded into the |ΔV| sweep-axis).  Centres FIXED → only radii (→ pin mask / SE
             #    eviction / AM_vol) change.  frame[5]=MPM re-flow; the N→ΔV law is the ledger's (A-3). ──────
+            if args.cycle_dv_sc <= -1.0 or args.cycle_dv_poly * args.dv_pct_poly <= -1.0:   # (m8) guard nan radii
+                raise SystemExit(f"[cycle-deform] ΔV ≤ -1 unphysical (dv_sc={args.cycle_dv_sc}, "
+                                 f"dv_poly·pct={args.cycle_dv_poly * args.dv_pct_poly}) → radius (1+ΔV)^⅓ = nan")
             _sid = amraw[:, 0].astype(int)
             _fac = np.ones(len(am_r), np.float64)
             _fac[_sid == 2] = (1.0 + args.cycle_dv_sc) ** (1.0 / 3.0)                       # AM_S=SC shrink
@@ -593,6 +602,11 @@ def main(argv):
         for _i in range(len(am_r)):
             cx, cy, cz = am_c[_i]; rr = float(am_r[_i])
             _raster(pin_np, cx, cy, cz, rr, int(amraw[_i, 0]))
+        pin_pristine = None                                   # (m2) PRISTINE AM mask → exact eviction DELTA
+        if args.cycle_deform:                                 #   (excludes the static contact-boundary overlap
+            pin_pristine = np.zeros((n_grid, n_grid, nz), bool)  #   present even in the undeformed bed)
+            for _i in range(len(am_r_pristine)):
+                _raster(pin_pristine, am_c[_i, 0], am_c[_i, 1], am_c[_i, 2], float(am_r_pristine[_i]), True)
         se_target = AM_vol * args.se_frac / (1.0 - args.se_frac)   # SE volume to RSA-fill
         plan = [(r_se3, 1.0, MU_SE, LA_SE, YIELD_SE)]
     elif args.preset == 'real14':
@@ -665,20 +679,24 @@ def main(argv):
                 cx, cy, cz = se_c[_i]; rr = float(se_rr[_i])
                 _raster(se_pin, cx, cy, cz, rr, True)        # x,y wrap when PERIODIC (boundary SE)
             _se_raw_cells = int(se_pin.sum())                # SE cells before AM eviction
+            _se_raw_bool = se_pin.copy() if args.cycle_deform else None   # (m2) raw SE raster for the delta
             se_pin &= (pin_np == 0)                          # SE only in non-AM cells
             sel = np.argwhere(se_pin)
             seed_str = f"{len(seraw)} real SE spheres → {len(sel):,} SE cells (REAL positions, no targeting)"
             if args.cycle_deform:
-                # HONESTY (N4-F5a): a poly EXPANSION grows the AM mask into cells that held SE → those SE
-                # cells are EVICTED here.  v1 uses eviction-DELETION (not volume-conserving advection), so
-                # report the lost SE volume so the porosity is read with that caveat.  On CHARGE the SC
-                # SHRINK dominates (AM pulls AWAY from SE → no eviction) so this is usually small.
-                _evict = _se_raw_cells - int(se_pin.sum())
+                # HONESTY (N4-F5a): a poly EXPANSION grows the AM mask into cells that held SE → those SE cells
+                # are EVICTED (v1 = eviction-DELETION, not volume-conserving advection).  ★ (m2/physics#3,#4)
+                # report the DEFORMATION-INDUCED delta ONLY = SE cells now inside AM that were NOT inside the
+                # PRISTINE AM (pin_pristine) — this EXCLUDES the static contact-boundary overlap present even in
+                # the undeformed bed (which is NOT eviction), so the flag no longer false-triggers on baseline
+                # overlap.  SC shrink cannot evict (deformed AM ⊂ pristine); only poly expansion can, so the
+                # value is nonzero whenever --cycle-dv-poly>0 (NOT "≈0 on charge" — the old claim was wrong).
+                _evict = int((_se_raw_bool & (pin_np > 0) & (~pin_pristine)).sum())
                 _evict_pct = 100.0 * _evict / max(_se_raw_cells, 1)
                 _cyc_evict_pct = round(float(_evict_pct), 3)
-                print(f"  [cycle-deform] SE eviction (poly-expansion overlap): {_evict:,}/{_se_raw_cells:,} cells "
-                      f"({_evict_pct:.2f}%) DELETED — v1 not volume-conserving; read porosity with this caveat "
-                      f"(SC-shrink charge case ≈0%).")
+                print(f"  [cycle-deform] SE eviction (poly-expansion, deformation-induced Δ vs pristine, excl "
+                      f"static contact overlap): {_evict:,}/{_se_raw_cells:,} cells ({_evict_pct:.2f}%) DELETED — "
+                      f"v1 not volume-conserving; read Δvoid with this caveat (0 only if --cycle-dv-poly=0).")
             # tag each SE cell with its NEAREST real SE sphere centre (Voronoi) so the original PARTICLE
             # id survives the union raster → the voxel solver can recover SE-SE plastic CONTACT AREAS
             # (per-particle Holm constriction) instead of fusing all SE into one blob.
@@ -1496,14 +1514,19 @@ def main(argv):
             'se_dump': bool(args.se_dump), 'se_frac': float(args.se_frac),
             'periodic': bool(PERIODIC),
             'dilate_z': round(float(args.dilate_z), 4) if (args.am_scaffold and float(args.dilate_z) > 1.0) else None,   # stiff-fibre prop-open stretch (None = off / no-op without a scaffold)
-            # A-1 cycle-deform (charge-state re-deformation anchor; None = pristine).  ASSUMED-FORM v1 —
-            # a single deformed geometry at this ΔV, NOT an N-trajectory (that is the A-3 ledger's job).
-            'cycle_deform': ({'N': int(args.cycle_n), 'dv_sc': round(float(args.cycle_dv_sc), 4),
-                              'dv_poly': round(float(args.cycle_dv_poly), 4), 'dv_pct_poly': round(float(args.dv_pct_poly), 3),
-                              'se_evict_pct': _cyc_evict_pct,   # SE deleted by poly-expansion overlap (v1 non-conserving); read void with this caveat
-                              'assumed_form': True, 'isotropic': True, 'grid_invariant': True}
-                             if (args.am_scaffold and args.cycle_deform) else None),
         }
+        if args.am_scaffold and args.cycle_deform:
+            # A-1 cycle-deform (charge-state re-deformation anchor).  ASSUMED-FORM v1 — a single deformed
+            # geometry at this ΔV, NOT an N-trajectory (that is the A-3 ledger's job).  (m6) key added ONLY
+            # when the flag is on → production/pristine JSON schema stays byte-identical.  ⚠ charge-STATE
+            # (reversible SOC breathing), NOT permanent fade — see cycle_geom_debond.py docstring.
+            m['cycle_deform'] = {
+                'N': int(args.cycle_n), 'dv_sc': round(float(args.cycle_dv_sc), 4),
+                'dv_poly': round(float(args.cycle_dv_poly), 4), 'dv_pct_poly': round(float(args.dv_pct_poly), 3),
+                'se_evict_pct': _cyc_evict_pct,   # DEFORMATION-INDUCED SE deletion Δ (excl static overlap); v1 non-conserving
+                'reversible_charge_state': True,  # this is a charge-state snapshot, not permanent degradation
+                'assumed_form': True, 'isotropic': True,
+            }
         if args.am_scaffold:
             m.update({
                 'seed_AM_frac_pct': round(float(f_am), 2), 'seed_SE_frac_pct': round(float(f_se), 2),

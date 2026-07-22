@@ -14,8 +14,12 @@ RNM) + R_ct(N) 프록시(= A(1)/A(N)) → Kang&Shin R_int(N) 4.4×/1.5× 모양�
     cohesive 신장 생존 + (--fatigue miner) 사이클당 D+=gap/δ_cr 누적, ΣD≥1 파단
     [★ASSUMED-FORM: Miner 누적은 가정 — rint_cycle_traj g(N)와 같은 지위; B(MD 보정) 대기].
   • --recontact elastic: 파단 접촉도 gap≤0 복귀 시 재접촉 (Schmidt 2024 방향) — 기본 forbid.
-  • Γ 게이트 (Bucci Fig5): ⚠repo Γ*는 원식과 H 부호 반대+A_AM 소실 → 크기의존, 절대 문턱 이식
-    불가 → ★RELATIVE-only(케이스 내 상대 라벨), 절대 verdict 삭제(적대리뷰 N2).  판정은 접촉별 δcr.
+  • Γ 게이트 (Bucci Fig5): ⚠repo Γ*는 길이척도로 전극두께 H_m 사용 → Bucci 입자크기 A_AM 의존 소실
+    (주 원인; H 지수위치 상이는 부차) → 크기의존, 절대 문턱 이식 불가 → ★RELATIVE-only(케이스 내
+    상대 라벨), 절대 verdict 삭제(적대리뷰 N2).  판정은 접촉별 δcr.  ⚠δcr 페어링(AM_P 6µm 102nm>δcr
+    debond / AM_S 2µm 34nm<δcr 잔존)은 v1 COMMON-SHRINK 규약 산출 — A-1/A-2/M3/N3의 poly-'팽창'(접촉
+    유지) 정정과 부호 상충: poly 팽창 적용 시 AM_P 계면 gap≤0(no debond)로 순서 뒤집힘(poly 진짜 열화
+    =입계 내부 void, 계면 gap 범위 밖).  = v1 알려진 한계(electrochem#3/물리#1, 헤드라인은 방향 아님).
 한계(정직): 강체구+반경진동 = 재배열/입자내부균열/SE크리프 없음 → τ-스파이크(So 2021) 과소평가
 가능.  σ는 입자-그래프 RNM 상대값 전용 (절대는 production Kirchhoff 소관 — frame[5]).
 ⚠SE-SE 망 v1 불변 → σ_ion_rel≡1 = 구성적 상수(예측 아님).  Yun 2023 R_ion+23%는 원리적 미포착 =
@@ -281,11 +285,22 @@ def run(a):
                gamma_star=dict(value=float(f'{gamma_star:.4g}'),
                                scope='RELATIVE-ONLY (케이스 내 상대 라벨 — 절대 verdict 삭제, N2)',
                                abs_verdict_removed=True,
-                               label='⚠repo Γ*(½k_SE·ε_vol²·φ_AM·H/G_c) = Bucci 원식과 H 지수 부호 반대 + '
-                                     'A_AM(입자크기) 소실 → 변환계수 크기의존(6µm↔2µm 상이) → 절대 1000 문턱 '
-                                     '이식 불가.  케이스 내 상대 라벨로만; 실제 판정은 접촉별 δcr(AM_P 6µm '
-                                     '102nm>δcr / AM_S 2µm 34nm<δcr).  절대판정 원하면 Bucci (3β·A_AM)²/(H·G_c) '
-                                     'H⁻¹로 재유도 필요'),
+                               # 물리리뷰#5: 핵심 이유는 A_AM(입자크기) 소실 — repo Γ*는 길이척도로 전극 두께 H_m을
+                               #   쓰는데 Bucci의 파괴 구동력은 입자크기 A_AM에 스케일 → 크기의존(6µm↔2µm 상이)이
+                               #   사라져 절대 1000 문턱 이식 불가.  (부차: H가 Bucci와 지수 위치가 달라 방향도 상이.)
+                               label='⚠repo Γ*(½k_SE·ε_vol²·φ_AM·H_m/G_c) = 길이척도로 전극두께 H_m 사용 → Bucci의 '
+                                     '입자크기 A_AM 의존 소실(주 원인) + H 지수위치 상이 → 변환계수 크기의존 → 절대 '
+                                     '1000 문턱 이식 불가.  케이스 내 상대 라벨로만.  절대판정 원하면 Bucci '
+                                     '(3β·A_AM)²/(H·G_c) 로 A_AM 넣어 재유도 필요.',
+                               # ★ electrochem#3/물리#1: δcr 헤드라인은 v1 COMMON-SHRINK 규약(모든 AM 수축) 산출 —
+                               #   그 규약에선 6µm poly가 102nm(>δcr)로 이동해 debond, 2µm SC가 34nm(<δcr)로 잔존.
+                               #   ★그러나 A-1/A-2/M3/N3 정정에서 poly는 외피 '팽창'(접촉 유지) → AM_P 계면 gap≤0
+                               #   (debond 아님) → 이 순서가 '뒤집힘'.  즉 아래 δcr 페어링은 poly-shrink 가정의
+                               #   산물이며, poly의 진짜 열화는 계면 이탈이 아니라 '입계 내부 void'(gap 기준 범위 밖).
+                               delta_cr_headline='v1 common-shrink: AM_P 6µm 102nm>δcr(debond) / AM_S 2µm 34nm<δcr(잔존)'
+                                                 ' — ⚠M3/N3 poly-팽창 적용 시 AM_P gap≤0(no debond)로 순서 뒤집힘; '
+                                                 'poly 진짜 열화=입계 내부 void(계면 gap 범위 밖)',
+                               delta_cr_convention='common-shrink (poly-expansion OFF; A-1/A-2 와 부호 상충 — v1 한계)'),
                phi_am=float(f'{phi_am:.4f}'), thickness_um=float(f'{(zhi - zlo):.2f}'),
                trajectory=rows)
     with open(a.out + '.json', 'w') as f:

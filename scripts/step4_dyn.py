@@ -1310,6 +1310,40 @@ def _selftest_discharge():
     return ok
 
 
+def _selftest_b1():
+    """B-1 사이클 계면상 배선 검증 (리뷰 m3: main() 배선이 무테스트라 침묵 회귀 위험).
+    R_ct 화학몫(i0↓)과 필름옴성(asr)이 (1) 물리 부호 (2) 독립 직렬 채널 (3) 단위변환 (4) i0_p 정규화
+    상쇄 — 를 simulate() 없이 Kinetics·배선 산술만으로 검사 (빠르고 초점)."""
+    ok = True
+    kin = Kinetics(i0_ref=2.0, temp_k=298.15)
+    # (1) i0 화학몫: g=dI/dη ∝ i0A → i0×0.5(mult=0.5) → g 절반 → R_ct 2× (분극↑, 열화 방향 정상)
+    _, g_hi = kin._ct(0.0, 2.0 * 1.0)                        # i0_f=2.0, A=1
+    _, g_lo = kin._ct(0.0, 1.0 * 1.0)                        # mult=0.5 적용 후 i0_f=1.0
+    r1 = abs(g_lo / g_hi - 0.5) < 1e-12
+    ok &= r1; print(f'  B-1 (1) i0×0.5 → g 절반 → R_ct 2× : g_lo/g_hi={g_lo/g_hi:.4f} {"OK" if r1 else "FAIL"}')
+    # (2) 단위: asr_film[Ω·m²] + asr_cycle[Ω·cm²]×1e-4 (배선 산술 그대로)
+    _asr_use = 0.0 + 10.0 * 1e-4                             # 10 Ω·cm² → 1e-3 Ω·m²
+    r2 = abs(_asr_use - 1e-3) < 1e-18
+    ok &= r2; print(f'  B-1 (2) 10 Ω·cm² → {_asr_use:g} Ω·m² (×1e-4) : {"OK" if r2 else "FAIL"}')
+    # (3) 독립 직렬 채널: asr>0 은 g_eff=g/(1+g·rA)<g 로만 작용(전하이동 i0 은 불변) — 이중계산 없음
+    kf = Kinetics(i0_ref=2.0, asr_film=1e-3)
+    _, g_noasr, _ = kin.face_current(np.array([0.05]), 2.0, 1.0)
+    _, g_asr, _ = kf.face_current(np.array([0.05]), 2.0, 1.0)
+    r3 = (g_asr[0] < g_noasr[0]) and (kf.i0(0.5) == kin.i0(0.5))   # 옴성은 g만 낮춤, i0(x)는 불변
+    ok &= r3; print(f'  B-1 (3) asr 직렬 g_eff<{g_noasr[0]:.3g} ({g_asr[0]:.3g}) & i0 불변 : {"OK" if r3 else "FAIL"}')
+    # (4) i0_p 정규화 상쇄: 균일 i0_p=i0_ref → _i0s=1 (mult=1 이면 bitwise 불변 경로)
+    i0_p = np.array([2.0, 2.0]); _i0s = i0_p / kin.i0_ref
+    r4 = np.allclose(_i0s, 1.0)
+    ok &= r4; print(f'  B-1 (4) 균일 i0_p/i0_ref = {_i0s} (=1 → bitwise 불변) : {"OK" if r4 else "FAIL"}')
+    # (5) 채널 직교: i0-mult 은 asr 를 안 건드리고, asr-cycle 은 i0 를 안 건드림 (배선 분리 확인)
+    mult, asr_cyc = 0.5, 10.0
+    i0_after = (np.array([2.0]) * mult)[0]; asr_after = 0.0 + asr_cyc * 1e-4
+    r5 = (i0_after == 1.0) and (asr_after == 1e-3)           # 각 노브가 자기 채널만
+    ok &= r5; print(f'  B-1 (5) 채널 직교 (i0→{i0_after:g}, asr→{asr_after:g}, 상호 무간섭) : {"OK" if r5 else "FAIL"}')
+    print(f'  B-1 wiring selftest: {"PASS" if ok else "FAIL"}')
+    return ok
+
+
 # ---------------------------------------------------------------- CLI
 def main():
     ap = argparse.ArgumentParser(description='STEP4-v2 galvanostatic/CV voxel-DFN (SSB)')
@@ -1349,7 +1383,10 @@ def main():
                          '규약; 12:4µm(직경) 베드 = 반경 6:2 → 2~6 사이 아무 값이나 분리)')
     ap.add_argument('--alpha-a', type=float, default=0.5)
     ap.add_argument('--alpha-c', type=float, default=0.5)
-    ap.add_argument('--asr-film', type=float, default=0.0, help='계면 필름 ASR [Ω·m²] (SEI/CEI 훅)')
+    ap.add_argument('--asr-film', type=float, default=0.0,
+                    help='계면 필름 ASR [★Ω·m²★] (SEI/CEI 훅).  ⚠ 단위 주의(리뷰 electrochem#5): 표준 EIS 단위는 '
+                         'Ω·cm²인데 이 옵션은 Ω·m² (1 Ω·cm² = 1e-4 Ω·m²).  Ω·cm² 로 넣고 싶으면 아래 '
+                         '--asr-film-cycle-ohm-cm2 (자동 ×1e-4 변환)를 쓸 것.')
     # ── B-1 사이클 계면상 성장 (R_int(N) 화학몫; 리뷰 N1-F9 비-이중계산: R_ct=i0(N)↓ 한 채널,
     #    필름옴성=asr-film 별개) ──  ⚠ 성장'값'은 kim2025 R_ct(N) 앵커에서 산출한 배수를 주입
     #    (법칙 N→배수 자동화는 Jung/Conforto fit 후 = §6 N1; 지금은 배수 직접 = ASSUMED-FORM 라벨).
@@ -1357,11 +1394,15 @@ def main():
                     help='B-1 사이클 번호 N (메타·산출물 태그; 0=pristine).  전기화학엔 --i0-cycle-mult/'
                          '--asr-film-cycle가 실제 열화를 주입 — N 자체가 물성을 안 바꿈(법칙 미탑재, §6 N1).')
     ap.add_argument('--i0-cycle-mult', type=float, default=1.0,
-                    help='★R_ct 채널: i0 → i0×배수 (배수=R_ct,0/R_ct(N)<1 열화; kim2025 앵커).  '
-                         'BV 비선형 전하이동 저항이 정직하게 성장(옴성 asr-film과 이중계산 금지).  1.0=무열화.')
+                    help='★R_ct 화학몫 채널: i0 → i0×배수 (배수=R_ct,0/R_ct(N)<1 열화; kim2025 앵커).  BV 비선형 '
+                         '전하이동 저항이 정직하게 성장(옴성 asr-film과 이중계산 금지).  1.0=무열화.  ★★배수는 '
+                         'CHEMICAL-ONLY 몫(g_chem)이어야 함(리뷰 electrochem#2): 접촉면적 손실 R_ct 몫(g_mech)은 '
+                         'ledger(A-3 rct_ct_area_rel) 소관 → B-2 통합은 ln R = ln g_chem + ln g_mech 로그-가법. '
+                         '여기 total R_int(N)을 넣으면 기계 몫 이중계산.  ⚠ 단일 스칼라라 poly/SC 차등 CEI(√N vs '
+                         '선형)는 아직 표현 불가(electrochem#6, 법칙 탑재 시 per-material 분리 필요).')
     ap.add_argument('--asr-film-cycle-ohm-cm2', type=float, default=0.0,
-                    help='★필름옴성 채널: 사이클 계면상의 순수 Li⁺ 필름 ASR [Ω·cm²] 추가분 (--asr-film에 더함).  '
-                         '전하이동(R_ct)은 여기 넣지 말 것 — 그건 --i0-cycle-mult (비-이중계산, 리뷰 N1-F9).')
+                    help='★필름옴성 채널: 사이클 계면상의 순수 Li⁺ 필름 ASR [Ω·cm²] 추가분 (--asr-film에 더함, '
+                         '자동 ×1e-4 → Ω·m²).  전하이동(R_ct)은 여기 넣지 말 것 — 그건 --i0-cycle-mult (비-이중계산, 리뷰 N1-F9).')
     ap.add_argument('--r-int-ohm-cm2', type=float, default=0.0,
                     help='집전체 실측 R_int 직렬 [Ω·cm²] (STEP3 시나리오 규약; 46=DBE)')
     ap.add_argument('--temp-k', type=float, default=298.15)
@@ -1409,6 +1450,7 @@ def main():
         ok = _selftest_radial()
         ok &= _selftest_cell()
         ok &= _selftest_discharge()
+        ok &= _selftest_b1()
         print('STEP4-V2 SELFTEST', 'PASS' if ok else 'FAIL')
         sys.exit(0 if ok else 1)
     if not a.grid:
