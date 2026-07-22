@@ -30,7 +30,7 @@ else echo "  [1] SCF: 대기/입력생성"; fi
 if grep -aqi "Dielectric constant in cartesian" eps.out 2>/dev/null; then
   echo "  [2] ph.x epsil: ★★ DONE — ε∞ 텐서:"
   grep -aiA4 "Dielectric constant in cartesian" eps.out | tail -5 | sed 's/^/      /'
-elif grep -aqi "TIMEOUT" "$O" 2>/dev/null; then
+elif grep -aq "TIMEOUT(hang)" "$O" 2>/dev/null; then
   echo "  [2] ph.x epsil: ⚠ TIMEOUT(hang) → Route B(epsilon.x)"
 elif [ -f eps.out ]; then
   echo "  [2] ph.x epsil 진행 (DFPT iter 증가 = 살아있음, 정체 = hang 의심):"
