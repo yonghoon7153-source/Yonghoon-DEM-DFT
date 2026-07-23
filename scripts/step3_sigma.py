@@ -152,7 +152,7 @@ def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_
 
 
 def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, plate_band_um=None,
-                  z_bot_um=None, plate_band_bot_um=None, bot_allowed=None):
+                  z_bot_um=None, plate_band_bot_um=None, bot_allowed=None, periodic_xy=False):
     """Effective through-plane (z) σ of the voxel σ-id grid.  Finite volume, harmonic-mean face
     conductance g = (2σaσb/(σa+σb))·vox (cubic voxels: face area vox² / distance vox), collector
     plate φ=1 at the bed bottom, φ=0 plate at the bed top, lateral Neumann.
@@ -252,6 +252,11 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     couple(np.s_[:-1, :, :], np.s_[1:, :, :])
     couple(np.s_[:, :-1, :], np.s_[:, 1:, :])
     couple(np.s_[:, :, :-1], np.s_[:, :, 1:])
+    if periodic_xy:                                        # ★x,y 주기 wrap (MPM RVE 'boundary p p f' 정합;
+        if nx > 1:                                         #   z=plate 유지).  nx/ny=1이면 자기결합 방지 가드.
+            couple(np.s_[-1:, :, :], np.s_[:1, :, :])      # x: nx-1 ↔ 0
+        if ny > 1:
+            couple(np.s_[:, -1:, :], np.s_[:, :1, :])      # y: ny-1 ↔ 0
     # per-column plate couplings, distance-aware: g = σ·vox²/max(dist, vox/2) (= 2σ·vox at half-cell)
     def _plate_couple(mask, ksurf, plane, phi_p):
         ii, jj = np.where(mask)
