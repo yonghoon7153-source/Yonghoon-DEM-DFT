@@ -314,6 +314,35 @@ def main():
     write_csv(os.path.join(a.out, 'se_scaffold.csv'), se_rows,
               f'SE seed positions (col 0 = original atom type; MPM uses x,y,z,r) — case {a.case}')
 
+    # ── 취성 crack-void 스캐폴드 (DEM 초기압밀 Auerbach 파괴 → per-AM 심각도) ────────────────
+    #   frame[5]: DEM = WHERE(어디 균열), MPM = 형태(SE가 열린 crack-void로 흘러듦).  am_scaffold 와 행-정렬.
+    #   ★void 부피분율(frag 0.15 / pulv 0.35) = ASSUMED-FORM → run_mpm.sh 에서 MPM_FRACTURE=1 로 opt-in
+    #   (기본 OFF = 생산 default bitwise-동일 유지, §F1).  CSV 는 항상 생성(데이터/검토용).
+    _frac_note = ''
+    try:
+        import sys as _sys
+        _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        from dem_fracture_scaffold import build_fracture_scaffold, write_fracture_scaffold
+        _cont = os.path.join(a.results, 'contacts.csv')
+        _meta = os.path.join(a.results, 'meta.json')
+        if os.path.exists(_cont):
+            _amp = os.path.join(a.out, 'am_scaffold.csv')
+            _atoms_p = os.path.join(a.results, 'atoms.csv')
+            _sc, _rk, _fp, _st = build_fracture_scaffold(_atoms_p, _cont, _meta, _amp)
+            if _st['r_med'] > 0 and _st['match_dist_max'] > 0.5 * _st['r_med']:
+                _frac_note = (f'  ⚠ 취성 생략 — 위치매칭 최대 {_st["match_dist_max"]:.2g} > 0.5·r_med '
+                              f'{_st["r_med"]:.2g} (am_scaffold↔atoms 불일치 가능)')
+            else:
+                write_fracture_scaffold(os.path.join(a.out, 'fracture_scaffold.csv'), _sc, _rk, _fp)
+                _nfp = _st['n_frag'] + _st['n_pulv']
+                _frac_note = (f'  fracture_scaffold.csv ({_st["n_frag"]} frag + {_st["n_pulv"]} pulv → '
+                              f'crack-void; run_mpm.sh 에 MPM_FRACTURE=1 로 적용)' if _nfp else
+                              '  fracture_scaffold.csv (frag/pulv 0 → crack-void near-null; 취성은 수송 f_intact만)')
+        else:
+            _frac_note = '  (contacts.csv 없음 → 취성 스캐폴드 생략; DEM contacts 있는 케이스에서만 생성)'
+    except Exception as _e:                                    # 취성 실패가 킷 생성을 절대 막지 않음
+        _frac_note = f'  ⚠ 취성 스캐폴드 생성 실패 ({type(_e).__name__}: {_e}) — 킷은 정상, 취성만 생략'
+
     poro = fm.get('porosity')
     tgt = round(float(poro) / 100.0, 4) if poro is not None else 0.16
     # PRODUCTION = pure scaffold + hold; NO injected conditional (FINAL LOGIC, 2026-06-27).
@@ -672,12 +701,22 @@ fi
 cd "$RUN_DIR"
 # ===== actual run (detached; all output → this run dir only) =====
 echo "[run_mpm] $(hostname) start $(date)  n_grid={n_grid_mpm}  est_pts~{est_pts / 1e6:.0f}M  dir=$RUN_DIR"
+# ── v3 열화-근접 옵션 (기본 안전 = 기존 convention 유지; §F1) ──────────────────────────────
+#   MPM_FRACTURE=1        → 초기압밀 취성 crack-void (ASSUMED-FORM void frag0.15/pulv0.35; DEM=WHERE, MPM=형태)
+#   MPM_PERIODIC_SIGMA=1  → STEP3 σ 측면 주기BC (bulk-RVE 정합; ⚠기존 corpus=절연벽 through-thickness → 전환 시 재run)
+#   Joule 발열맵(#29) = 기본 ON (순수 진단 q∝|J|²/σ, σ/porosity 불변 → hot-spot '어디서 발열')
+FRAC=()
+if [ "${{MPM_FRACTURE:-0}}" = "1" ] && [ -f "$KIT/fracture_scaffold.csv" ]; then
+  FRAC=(--fracture-scaffold "$KIT/fracture_scaffold.csv" --fracture-min-stage fragmentation)
+  echo "[run_mpm] ★ MPM_FRACTURE=1 → 취성 crack-void 적용 (ASSUMED-FORM void; DEM 취성 위치 기반)"
+fi
+PSIG=(); [ "${{MPM_PERIODIC_SIGMA:-0}}" = "1" ] && {{ PSIG=(--periodic); echo "[run_mpm] ★ MPM_PERIODIC_SIGMA=1 → STEP3 σ 주기BC (bulk-RVE)"; }}
 # 1) plastic compaction of the REAL SE around the fixed AM scaffold (periodic x,y RVE = DEM 'boundary p p f')
 python3 "$SCR/mpm3d_compaction.py" \\
   --am-scaffold "$KIT/am_scaffold.csv" --se-dump "$KIT/se_scaffold.csv" --periodic \\
   --lateral-box {box_x} --n-grid {n_grid_mpm} --arch cuda --gpu-mem 28 --protocol hold --frames 150 \\
   --e-se {e_se_mpm} --nu-se {nu_se_mpm} --target-gpa {press_gpa} \\
-  --save-se se_dump.npy --save-dg se_dump_dg.npy --save-eps se_dump_eps.npy --save-metrics mpm_metrics.json{add_flags} \\
+  --save-se se_dump.npy --save-dg se_dump_dg.npy --save-eps se_dump_eps.npy --save-metrics mpm_metrics.json{add_flags} "${{FRAC[@]}}" \\
   || {{ echo "[run_mpm] STEP 1 (compaction) FAILED — see the trace above.  NOT running the payload: it would"; \\
         echo "          rebuild mpm_payload.json from the STALE se_dump.npy of a PREVIOUS run and report a"; \\
         echo "          leftover porosity as if it were this run.  Fix the error and re-run."; exit 1; }}
@@ -687,7 +726,7 @@ python3 "$SCR/mpm3d_compaction.py" \\
 python3 "$SCR/mpm_webapp_payload.py" \\
   --se se_dump.npy --scaffold "$KIT/am_scaffold.csv" --se-dump "$KIT/se_scaffold.csv" \\
   --n-vox 192 --tri-step 4 --smooth 1.5 --target-porosity {tgt_pay} --eps se_dump_eps.npy{pay_dilate} \\
-  --void-max 180000 --step3-vox {a.step3_vox:g} --field-max-points {_fmax}{_gpu} --metrics-json mpm_metrics.json --case {case}{pay_phase}{pay_coll} --save-step4-grid step4_grid.npz --out mpm_payload.json \\
+  --void-max 180000 --step3-vox {a.step3_vox:g} --field-max-points {_fmax}{_gpu} --joule-heat "${{PSIG[@]}}" --metrics-json mpm_metrics.json --case {case}{pay_phase}{pay_coll} --save-step4-grid step4_grid.npz --out mpm_payload.json \\
   || {{ echo "[run_mpm] STEP 2 (payload) FAILED — 압밀(se_dump.npy)은 무사하니 원인 수정 후 payload만 재실행:"; \\
         echo "          cd $RUN_DIR && bash $KIT/step4_only.sh 는 STEP4용이고, payload는:"; \\
         echo "          sed -n '/mpm_webapp_payload/,/--out mpm_payload.json/p' $KIT/run_mpm.sh > payload_only.sh && bash payload_only.sh"; \\
@@ -761,6 +800,8 @@ echo "          (오래된 run_* 폴더는 디스크 차면 지워도 됨 — �
     ap1 = os.path.join(a.out, 'run_a1_anchors.sh')
     open(ap1, 'w').write(a1); os.chmod(ap1, 0o755)
     print(f'MPM input for case "{case}" → {a.out}/')
+    if _frac_note.strip():
+        print('  [취성]' + _frac_note)
     print(f'  am_scaffold.csv ({len(am_rows)} AM)  se_scaffold.csv ({len(se_rows)} SE)  '
           f'run_mpm.sh  mpm_input.json  (target_porosity={tgt})'
           + (f'  step4_only.sh  [★Zive 스케줄 {len(s4_sched)}스텝: '
