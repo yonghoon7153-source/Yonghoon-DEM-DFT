@@ -52,7 +52,18 @@
 + SBE/DBE/SC 프리셋 + §F1 앵커 경고(C_dl·i0·D_s 미앵커).  실험 EIS(eis_fit) 위 겹치면 frame[4] 그림.
 소자는 물리서 정확 산출(R_ct=5.14 elems), DRT 피크 주파수 분리 정확(130Hz+mHz), R은 근사.
 
+## ★ 이어서 배치 (2026-07-24) — webapp 전기화학 특성화 완성 + WSL 파이프라인
+- **webapp `/eis` 패널 완성**: EIS Nyquist + DRT γ(τ) + **ICA dQ/dV** 3 도구 한 페이지 (`/api/eis` GET·
+  `/api/ica` POST = eis_drt_ica 단일소스).  SBE/DBE/SC 프리셋 + **`&case=` 자동로드**(DEM `results/` +
+  mpm_lab `<pid>` 둘 다, STEP3 σ만) + **mpm_lab 저장목록 🔌 EIS 링크**(Jinja+JS) + **σ_e-필드축 주석**
+  (EIS=이온/R_ct 지배 → SBE≈DBE EIS 정상, σ_e는 필드맵).
+- **WSL 학습 파이프라인** `scripts/train_cycle_surrogate.py`: corpus→설계knob+물리feature→CycleSurrogate
+  (GPR+RF, per-target 누출가드=2단 설계→물리→성능)→joblib+리포트.  sklearn/joblib import-guard(WSL),
+  mock corpus 30→X(30,29) selftest.  **실행만 WSL** (`pip install scikit-learn joblib`).
+- **적대 코드리뷰 2각**(webapp + WSL): HIGH 0.  webapp MED2 수정(ICA CSV parser row-desync=양쪽파싱후
+  append · body cap DoS) + LOW(case-load makedirs 제거·σ=0 is-not-None).  WSL 리뷰 반영 진행.
+
 ## 남은 것
-WSL 실학습(sklearn) · C_dl/R_w 실험 EIS 앵커(eis_fit CPE→µF/cm²) · 오픈소스 실다운로드 · webapp
-**ICA/사이클곡선 패널**(EIS 패널 완료) · EIS 케이스 자동로드(&case=) · STEP4 PyBaMM 패리티(#5) · A10-full
-CZM(연구트랙) · 앵커대기(Joule ΔT·코팅√N·SDCP E_bind·NCA175·Kang&Shin 1.51× magnitude).
+WSL **실학습 실행**(스크립트 준비완료, sklearn) · C_dl/R_w 실험 EIS 앵커(eis_fit CPE→µF/cm²) · 오픈소스
+실다운로드 · ICA **케이스 방전곡선 자동로드**(현재 붙여넣기) · STEP4 PyBaMM 패리티(#5) · A10-full CZM
+(연구트랙) · 앵커대기(Joule ΔT·코팅√N·SDCP E_bind·NCA175·Kang&Shin 1.51× magnitude).
