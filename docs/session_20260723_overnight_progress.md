@@ -63,14 +63,26 @@
 - **적대 코드리뷰 2각**(webapp + WSL): HIGH 0.  webapp MED2 수정(ICA CSV parser row-desync=양쪽파싱후
   append · body cap DoS) + LOW(case-load makedirs 제거·σ=0 is-not-None).  WSL 리뷰 반영 진행.
 
-## ★ ICA 케이스 방전곡선 자동로드 ✅ (2026-07-24)
-`/api/ica_case?case=<pid>` (app.py) — 저장된 STEP4 `st4_viz.json`(mpm_lab `<pid>` + DEM `results/<case>`,
-`step4_viz*.json` glob) `curve` 에서 **V_terminal + x_mean→용량%**(정규화 진행률, §F1 면적앵커 부재) →
-`ica_dqdv` 자동.  `eis.html` `loadCaseICA()`: `/eis?case=` 로드 시 EIS 와 함께 ICA 자동(텍스트에어리어=소스
-V,Q 채워 편집·재계산), 부재 시 조용히 붙여넣기 폴백.  drawICA y축 = 정규화 시 %/V.  코어 파이프라인 검증
-(Q 0→100%·V스팬·dQ/dV 산출) + app.py 컴파일 + eis.html JS node --check PASS.
+## ★★ 2026-07-24 오버나잇 = EIS 모듈 완성 (5 기능, 정본 docs/eis_drt_ica_cv.md) ★★
+전부 커밋·푸시·검증(py_compile·selftest 6/6·node --check·실데이터).  v3-1 EIS 를 특성화 완결 스위트로:
+1. **ICA 케이스 자동로드** `/api/ica_case` — STEP4 `st4_viz.json`(mpm_lab+DEM, glob) `curve` 에서
+   V_terminal + x_mean→용량%(정규화, §F1 면적앵커 부재) → `ica_dqdv` 자동.  `/eis?case=` 로드 시 EIS 와
+   동시, 텍스트에어리어=소스 V,Q(편집·재계산), 부재 시 붙여넣기 폴백.
+2. **C_dl/R_w 실험 EIS 앵커 (frame[4])** — eis_fit full-cell CPE(Q,α)‖R1 → **Brug C_dl**(µF/cm²geo) +
+   CPE_Q export.  eis_drt_ica `load_experimental_anchors`(C_dl 기하평균 192·R_w median 73.5·셀간 40-80×
+   분산=자릿수 앵커) + physics_eis `c_dl_areal` 오버라이드.  webapp 🔬 실험앵커 토글.  ★교차검증: 모델
+   a_spec25×c_dl_int10=250 vs 실험 192(~30% 일치)·역산 intrinsic 7.67=문헌 1-10 안·R_w 3.3→73.5(20× 보정).
+3. **D5 사이클-N EIS/DRT 궤적 (열화 기전)** — `cycle_eis_trajectory`: R_int(N) 성장(rint_cycle_traj r_of_n
+   재사용)을 arc/직렬/Warburg 분배(ASSUMED 0.7/0.2/0.1, 집전체 비열화 고정) → 각 N Z(ω)+DRT.  webapp
+   🔄 패널(Nyquist·DRT 오버레이 N=0청→N_max적 + R(N) 성장 + Kang&Shin 프리셋).  데모: R_ct ×5·f_ct 124→25Hz.
+4. **발표용 그림 export** — `save_eis_figures`(흰배경 ASCII matplotlib) png+svg, `--fig` CLI +
+   webapp `/api/eis_fig` 📥 다운로드(base Nyquist+DRT / cycle 3-패널).  랩 규약 svg/png/csv 동시 완성.
+5. **frame[4] 실험 Nyquist 오버레이** — `/api/eis_exp`(이종기술 extracted → Ω·cm² ASR) + 🔬 실험 겹치기
+   토글: physics-EIS 선 위 실험 풀셀 초록 방울.  full 4셀 6–132 Ω·cm² · physics(SBE~70)가 cloud 안 =
+   σ-triad·R_ct 자릿수 교차검증.  = EIS 모듈 핵심 약속(같은 회로→실측 대조)의 그림 완성.
 
-## 남은 것
-WSL **실학습 실행**(스크립트 준비완료, sklearn) · C_dl/R_w 실험 EIS 앵커(eis_fit CPE→µF/cm²) · 오픈소스
-실다운로드 · **EIS 케이스 방전곡선 자동로드**(완전 AC-solve) · SOC/사이클-N EIS 궤적(D5) · STEP4 PyBaMM
-패리티(#5) · A10-full CZM(연구트랙) · 앵커대기(Joule ΔT·코팅√N·SDCP E_bind·NCA175·Kang&Shin 1.51× magnitude).
+## 남은 것 (클라우드서 불가/블록)
+WSL **실학습 실행**(sklearn) · **오픈소스 실다운로드**(네트워크) · **완전 AC-solve**(2.9M-dof 미세구조 EIS,
+연구트랙) · C_dl 정밀앵커(α높은 셀 재측정)·D5 분배/C_dl(N)/D_s(N) 실측(앵커대기) · STEP4 PyBaMM 패리티(#5,
+V100) · A10-full CZM(연구·사용자설계) · 앵커대기(Joule ΔT·코팅√N·SDCP E_bind·NCA175·Kang&Shin 1.51×).
+→ 클라우드서 깨끗이 빌드가능한 EIS 확장은 소진; 다음은 WSL/실측/사용자 방향 필요.
