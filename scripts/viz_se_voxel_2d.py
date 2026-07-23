@@ -33,6 +33,19 @@ _PHASE_COLOR = {
     8: (0.05, 0.05, 0.05),   # SWCNT
 }
 _PHASE_NAME = {0: 'pore', 1: 'AM_S', 2: 'AM_P', 3: 'VGCF', 4: 'SuperP', 5: 'SDCP', 6: 'SE', 7: 'PTFE', 8: 'SWCNT'}
+# BSE-SEM 스타일 그레이스케일 (무거운 원소=밝음): NCM(Ni/Co 무거움)=밝은 회, LPSCl SE=중간 회,
+# pore(void)=검정, carbon=어두움 — 실제 후방산란-SEM 단면과 톤 일치 (배터리 SEM 감각).
+_SEM_GRAY = {
+    0: (0.03, 0.03, 0.04),   # pore  검정 (void)
+    1: (0.80, 0.80, 0.82),   # AM_S  밝은 회 (NCM BSE 밝음)
+    2: (0.88, 0.88, 0.90),   # AM_P  더 밝은
+    3: (0.13, 0.13, 0.14),   # VGCF  탄소 어두움
+    4: (0.17, 0.17, 0.18),   # SuperP
+    5: (0.24, 0.24, 0.25),   # SDCP
+    6: (0.45, 0.45, 0.48),   # SE    중간 회 (LPSCl)
+    7: (0.30, 0.30, 0.32),   # PTFE
+    8: (0.10, 0.10, 0.11),   # SWCNT
+}
 
 
 def load_sid_from_grid(path):
@@ -103,7 +116,7 @@ def crop(sl, vox, center=None, win=None):
     return sl[i0:i1, j0:j1], (j0 * vox, j1 * vox, i0 * vox, i1 * vox)
 
 
-def render(sl, extent, axnames, vox, out_png, gridlines=True, title=''):
+def render(sl, extent, axnames, vox, out_png, gridlines=True, title='', style='phase'):
     try:
         import matplotlib
         matplotlib.use('Agg')
@@ -116,24 +129,38 @@ def render(sl, extent, axnames, vox, out_png, gridlines=True, title=''):
         for s, n in zip(u, c):
             print(f'    {_PHASE_NAME.get(int(s), s)}: {n} vox ({100.0*n/sl.size:.1f}%)')
         return
-    smax = max(_PHASE_COLOR)
-    cmap = ListedColormap([_PHASE_COLOR[i] for i in range(smax + 1)])
-    fig, ax = plt.subplots(figsize=(7.5, 7.0))
+    sem = (style == 'sem')
+    PAL = _SEM_GRAY if sem else _PHASE_COLOR
+    smax = max(PAL)
+    cmap = ListedColormap([PAL[i] for i in range(smax + 1)])
+    fig, ax = plt.subplots(figsize=(7.6, 7.1))
+    if sem:                                                # BSE-SEM 룩: 검은 프레임·부제
+        fig.patch.set_facecolor('#111'); ax.set_facecolor('#111')
     ax.imshow(sl, cmap=cmap, vmin=0, vmax=smax, origin='lower', extent=extent, interpolation='nearest')
     npix = sl.size
     if gridlines and npix <= 6000:                         # 초확대일 때만 복셀 격자선 (개별 복셀 사각형)
+        gc = '#ffffff10' if sem else '#00000018'
         for x in np.arange(extent[0], extent[1] + 1e-9, vox):
-            ax.axvline(x, color='#00000018', lw=0.4)
+            ax.axvline(x, color=gc, lw=0.4)
         for y in np.arange(extent[2], extent[3] + 1e-9, vox):
-            ax.axhline(y, color='#00000018', lw=0.4)
-    ax.set_xlabel(f'{axnames[0]} (µm)')
-    ax.set_ylabel(f'{axnames[1]} (µm)')
+            ax.axhline(y, color=gc, lw=0.4)
+    _fg = '#ddd' if sem else '#111'
+    ax.set_xlabel(f'{axnames[0]} (µm)', color=_fg)
+    ax.set_ylabel(f'{axnames[1]} (µm)', color=_fg)
+    ax.tick_params(colors=_fg)
+    for sp in ax.spines.values():
+        sp.set_color(_fg)
     present = sorted(set(int(s) for s in np.unique(sl)))
-    ax.legend(handles=[Patch(facecolor=_PHASE_COLOR[s], edgecolor='#888', label=_PHASE_NAME.get(s, str(s)))
-                       for s in present], loc='upper right', fontsize=8, framealpha=0.9)
-    ax.set_title(title or f'SE voxel 2D (vox={vox}µm, {sl.shape[1]}×{sl.shape[0]} vox)', fontsize=11, fontweight='bold')
+    leg = ax.legend(handles=[Patch(facecolor=PAL[s], edgecolor='#888', label=_PHASE_NAME.get(s, str(s)))
+                             for s in present], loc='upper right', fontsize=8, framealpha=0.9)
+    if sem:
+        leg.get_frame().set_facecolor('#222')
+        for t in leg.get_texts():
+            t.set_color('#ddd')
+    ax.set_title(title or f'SE voxel 2D (vox={vox}µm, {sl.shape[1]}×{sl.shape[0]} vox)',
+                 fontsize=11, fontweight='bold', color=_fg)
     fig.tight_layout()
-    fig.savefig(out_png, dpi=150, bbox_inches='tight')
+    fig.savefig(out_png, dpi=150, bbox_inches='tight', facecolor=fig.get_facecolor())
     print(f'  saved -> {out_png}  ({sl.shape[1]}×{sl.shape[0]} vox, SE {100.0*(sl==6).sum()/sl.size:.1f}%)')
 
 
@@ -185,6 +212,8 @@ def main(argv):
     ap.add_argument('--center', help='크롭 중심 "a,b" µm (초확대)')
     ap.add_argument('--win', type=float, default=None, help='크롭 창 크기 µm (예 12 = 12µm×12µm)')
     ap.add_argument('--no-gridlines', action='store_true', help='복셀 격자선 끄기')
+    ap.add_argument('--style', default='phase', choices=['phase', 'sem'],
+                    help='phase=상별 색 / sem=BSE-SEM 그레이스케일(AM 밝음·SE 중간회·pore 검정, 실제 SEM 톤)')
     ap.add_argument('--out', default='se_voxel_2d', help='PNG prefix')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
@@ -201,7 +230,7 @@ def main(argv):
     sl, axn = slice2d(sid, a.slice, at, vox)
     center = tuple(float(x) for x in a.center.split(',')) if a.center else None
     cr, ext = crop(sl, vox, center=center, win=a.win)
-    render(cr, ext, axn, vox, a.out + '.png', gridlines=not a.no_gridlines,
+    render(cr, ext, axn, vox, a.out + '.png', gridlines=not a.no_gridlines, style=a.style,
            title=f'SE voxel 2D — {a.slice}-slice @{at:.1f}µm (vox {vox}µm)')
 
 
