@@ -177,7 +177,8 @@ def build_matrix() -> dict:
         "canonical": CANONICAL,
         "canonical_meta": CANONICAL_META,
         "built": idx.get("built"),
-        "literature_count": idx.get("literature_count", 0),
+        "literature_count": (sum(1 for _ in (LITDB / "papers").glob("*.md"))
+                             if (LITDB / "papers").exists() else idx.get("literature_count", 0)),
     }
 
 # ─────────────────────────────────────────────────────────────

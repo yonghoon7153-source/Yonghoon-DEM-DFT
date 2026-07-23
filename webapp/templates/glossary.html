@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Glossary · DFT{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>Glossary · 용어 설명집</h1>
+    <div class="sub">각 용어를 <b>무엇 / 어떻게(계산·판독) / 우리 계산</b>으로 — 클릭해서 펼치기</div></div>
+</div>
+<input class="search" placeholder="용어 검색 (DFT · ELF · DOS · ICOHP · NEB · BVSE ...)" oninput="filt(this.value)">
+{% for cat in cat_order %}{% if cats[cat] %}
+<div class="section-title">{{ cat }}</div>
+<div class="grid grid-3">
+{% for g in cats[cat] %}
+<div class="card gterm" data-t="{{ g.term|lower }} {{ g.full|lower }} {{ g.id }} {{ g.what|striptags|lower }}">
+  <div onclick="this.parentNode.classList.toggle('open')" style="cursor:pointer">
+    <div style="font-weight:700;color:var(--navy);font-size:1.02rem">{{ g.term }}
+      <span class="gplus" style="float:right;color:var(--muted);font-weight:400">＋</span></div>
+    <div class="muted" style="font-size:.76rem;margin-top:2px">{{ g.full }}</div>
+  </div>
+  <div class="gdetail">
+    <div class="gd"><span class="gd-l">무엇</span>{{ g.what|safe }}</div>
+    <div class="gd"><span class="gd-l">어떻게</span>{{ g.how|safe }}</div>
+    <div class="gd ours"><span class="gd-l">우리 계산</span>{{ g.ours|safe }}</div>
+  </div>
+</div>
+{% endfor %}
+</div>
+{% endif %}{% endfor %}
+<style>
+.gterm{align-self:start}
+.gterm .gdetail{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border2)}
+.gterm.open .gdetail{display:block}
+.gterm.open .gplus{transform:rotate(45deg);display:inline-block}
+.gd{font-size:.82rem;margin-bottom:10px;line-height:1.62}
+.gd-l{display:inline-block;font-weight:700;color:var(--accent);font-size:.66rem;text-transform:uppercase;letter-spacing:.04em;margin-right:6px}
+.gd b{color:var(--navy)}
+.gd.ours{background:var(--accent-soft);padding:9px 11px;border-radius:8px;margin-bottom:0}
+.gd.ours .gd-l{color:var(--navy)}
+</style>
+<script>
+function filt(q){q=q.toLowerCase();document.querySelectorAll('.gterm').forEach(c=>{
+  let m=c.dataset.t.includes(q);c.style.display=m?'':'none';
+  if(q&&m)c.classList.add('open');else if(!q)c.classList.remove('open');});}
+</script>
+{% endblock %}

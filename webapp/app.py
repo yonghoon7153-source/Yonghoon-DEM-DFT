@@ -7,7 +7,9 @@ app.py — DFT 지식 인프라 Flask 앱.
 from flask import Flask, render_template, jsonify, send_from_directory, abort
 from datetime import datetime
 import json
+from datetime import datetime as _dt
 import data as D
+import glossary as G
 
 app = Flask(__name__)
 _ASSET_V = str(int(datetime.now().timestamp()))
@@ -109,6 +111,65 @@ def api_paper(pid):
         abort(404)
     html = _md.markdown(p.read_text(errors="ignore"), extensions=["tables", "fenced_code"]) if _md else p.read_text()
     return jsonify({"id": pid, "html": html})
+
+
+@app.route("/glossary")
+def glossary():
+    return render_template("glossary.html", active="glossary",
+                           cats=G.by_category(), cat_order=G.CATS_G)
+
+
+# ── 작업 로그 (기록·저장) ─────────────────────────────
+JOURNAL = D.ROOT / "webapp" / "journal.jsonl"
+
+
+def _load_journal():
+    entries = []
+    if JOURNAL.exists():
+        for line in JOURNAL.read_text(errors="ignore").splitlines():
+            try:
+                entries.append(json.loads(line))
+            except Exception:
+                pass
+    return list(reversed(entries))
+
+
+def _handoffs():
+    out = []
+    rd = D.KB / "results"
+    if rd.exists():
+        for f in sorted(rd.glob("*.md"), reverse=True):
+            out.append({"id": f.stem, "name": f.stem.replace("_", " ")})
+    return out
+
+
+@app.route("/log")
+def log():
+    return render_template("log.html", active="log",
+                           entries=_load_journal(), handoffs=_handoffs())
+
+
+@app.route("/api/log", methods=["POST"])
+def api_log():
+    from flask import request
+    d = request.get_json(force=True) or {}
+    rec = {"ts": _dt.now().isoformat(timespec="minutes"),
+           "kind": d.get("kind", "note"), "comp": d.get("comp", ""),
+           "text": (d.get("text") or "").strip()}
+    if not rec["text"]:
+        return jsonify({"ok": False, "err": "empty"}), 400
+    with open(JOURNAL, "a") as f:
+        f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+    return jsonify({"ok": True, "entry": rec})
+
+
+@app.route("/api/handoff/<hid>")
+def api_handoff(hid):
+    f = D.KB / "results" / f"{hid}.md"
+    if not f.exists():
+        abort(404)
+    html = _md.markdown(f.read_text(errors="ignore"), extensions=["tables", "fenced_code"]) if _md else f.read_text()
+    return jsonify({"id": hid, "html": html})
 
 
 @app.route("/health")
