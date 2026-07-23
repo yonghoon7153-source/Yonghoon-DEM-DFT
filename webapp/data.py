@@ -666,13 +666,23 @@ def compute_preview(cid: str, calc: str) -> dict:
     species = "\n".join(f"  {e}  {_mass(e)}  {PSEUDO_LIB.get(e, e + '.UPF')}" for e in els)
     prefix = f"{cid}_{calc}"
     warn = []
+    _none = {"input_name": None, "input": None, "runner_name": None, "runner": None}
+
+    # 분자계(SDCP) = ORCA r²SCAN-3c. 평면파 QE/k-point 부적합 → 스크립트 생성 안 함.
+    if comp.get("family") == "molecular" or cid == "sdcp":
+        return dict(_none, cid=cid, calc=calc, engine="ORCA r²SCAN-3c", server="desktop WSL (ORCA)",
+                    note="SDCP는 분자계라 ORCA r²SCAN-3c(SDCP 분자 계열)로 계산해. 평면파 QE·k-point 입력은 부적합해서 만들지 않아 — desktop WSL에서 ORCA 입력을 써.",
+                    warn=["평면파 QE는 분자에 안 맞음 (진공 셀·k-point 무의미)."])
+    # Li₃N + UMA-MD = 금지 조합 → 경고만, 스크립트 생성 안 함.
+    if calc == "md" and cid == "li3n":
+        return dict(_none, cid=cid, calc=calc, engine="—", server=st["server"],
+                    note="Li₃N에는 UMA MLIP 금지 (2026-06 결정론적 편향 판정). 이 조합은 스크립트를 생성하지 않아.",
+                    warn=["Li₃N 확산은 UMA 대신 DFT-AIMD / QE-NEB 로. (CLAUDE.md 규율)"])
 
     if calc == "md":
         body = _md_template(cid, comp, st)
         runner = _runner_uma(cid, prefix, st)
         note = "UMA-s-1p1(omat) · Langevin NVT dt 2fs · equilib 5ps / prod 200ps · MSD 2–50ps. ⚠ 절대값 인용 금지(멀티시드 판정만)."
-        if cid == "li3n":
-            warn.append("Li₃N에는 UMA 사용 금지 (2026-06 편향 판정) — 이 조합은 생성하지 않는 게 원칙.")
         return {"cid": cid, "calc": calc, "engine": "UMA + ASE", "server": st["server"],
                 "input_name": f"md_{cid}.py", "input": body, "runner_name": f"run_md_{cid}.sh",
                 "runner": runner, "note": note, "warn": warn}
@@ -695,7 +705,7 @@ def compute_preview(cid: str, calc: str) -> dict:
     inp = f"""&CONTROL
   calculation = '{calc_kw}'
   prefix = '{prefix}'
-  pseudo_dir = '/scratch/x3430a02/kgy/manuscript_support/pseudo'
+  pseudo_dir = '{_pseudo_dir(st["server"])}'
   outdir = './out_{prefix}'
   tprnfor = .true.
   tstress = .true.
@@ -728,16 +738,35 @@ _MASS = {"Li": 6.94, "P": 30.97, "S": 32.06, "Cl": 35.45, "Br": 79.90, "I": 126.
          "O": 16.00, "B": 10.81, "N": 14.01, "C": 12.01, "H": 1.008, "Nd": 144.24}
 def _mass(e): return _MASS.get(e, 1.0)
 
+def _pseudo_dir(server):
+    # KISTI = Slurm scratch 경로; kgy/gabia = 로컬(경로 확인 필요)
+    return ("/scratch/x3430a02/kgy/manuscript_support/pseudo" if "KISTI" in server
+            else "./pseudo   # ← 이 서버(kgy/gabia)의 pseudo 경로로 교체")
+
 def _runner_qe(cid, prefix, st):
-    return f"""#!/bin/bash
-# {cid} · {prefix} — {st['server']}
+    server = st["server"]
+    guard = f'pgrep -f "{prefix}.in" && {{ echo "이미 실행중"; exit 1; }}   # 중복실행 가드'
+    if "KISTI" in server:   # Slurm 클러스터
+        return f"""#!/bin/bash
+# {cid} · {prefix} — {server} (Slurm)
 #SBATCH -J {prefix}
-#SBATCH -p cas_v100_4     # 서버별 파티션 확인
+#SBATCH -p <파티션 확인>   # scancel 직후 재제출 금지(QOS 카운터 지연)
 #SBATCH --time=24:00:00
+#SBATCH -o {prefix}.out
 set -e
-pgrep -f "{prefix}.in" && {{ echo "이미 실행중"; exit 1; }}   # 중복실행 가드
+{guard}
 export OMP_NUM_THREADS=1
-mpirun -np 4 pw.x -in {prefix}.in | tee {prefix}.out
+srun pw.x -in {prefix}.in
+grep -a "JOB DONE" {prefix}.out && echo "완료"
+"""
+    # kgy / gabia = 비-Slurm 인터랙티브 GPU 박스 (ssh, QE-GPU)
+    return f"""#!/bin/bash
+# {cid} · {prefix} — {server} (ssh, non-Slurm)
+set -e
+{guard}
+nvidia-smi | grep -q pw.x || true   # ⚠ pw.x·UMA 동시 실행 금지 (VRAM 점유) — nvidia-smi 확인 후
+export OMP_NUM_THREADS=1
+mpirun -np 1 pw.x -in {prefix}.in | tee {prefix}.out    # GPU 빌드는 보통 1 rank
 grep -a "JOB DONE" {prefix}.out && echo "완료"
 """
 

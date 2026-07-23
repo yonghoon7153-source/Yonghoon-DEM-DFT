@@ -47,17 +47,15 @@ function genCompute(){
   fetch('/api/compute-preview?cid='+cid+'&calc='+curCalc).then(function(r){return r.json();}).then(function(d){
     if(d.error){out.innerHTML='<div class="card">에러: '+d.error+'</div>';return;}
     var warn=(d.warn&&d.warn.length)?d.warn.map(function(w){return '<div class="callout cal-warning"><div class="cal-t">⚠ 주의</div><div class="cal-b">'+_esc(w)+'</div></div>';}).join(''):'';
+    var code = d.input ? ('<div class="code-grid">'+panel('input',d.input_name,d.input)+panel('runner',d.runner_name,d.runner)+'</div>')
+                       : '<div class="callout cal-important"><div class="cal-b">이 조성·계산 조합은 <b>스크립트를 생성하지 않아</b> (위 사유). 올바른 도구로 진행해.</div></div>';
     out.innerHTML=
       '<div class="cmp-meta">'+
         '<span class="cmp-badge">🖥 '+_esc(d.server)+'</span>'+
         '<span class="cmp-badge">⚙ '+_esc(d.engine)+'</span>'+
       '</div>'+
       '<div class="callout cal-note"><div class="cal-b">'+_esc(d.note)+'</div></div>'+
-      warn+
-      '<div class="code-grid">'+
-        panel('input',d.input_name,d.input)+
-        panel('runner',d.runner_name,d.runner)+
-      '</div>';
+      warn+ code;
   }).catch(function(){out.innerHTML='<div class="card">생성 실패</div>';});
 }
 genCompute();

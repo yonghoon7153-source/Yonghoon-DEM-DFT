@@ -18,6 +18,7 @@
     <button class="chip active" data-fam="" onclick="expFam(this)">전체</button>
     {% for fam in FAMILY_ORDER %}<button class="chip" data-fam="{{ fam }}" onclick="expFam(this)">{{ fam }}</button>{% endfor %}
   </div>
+  <label class="cc-chk" style="font-size:.82rem"><input type="checkbox" id="exp-hasval" checked onchange="expApply()"> 값 있는 조성만</label>
 </div>
 
 <div class="card" style="padding:0;overflow:hidden">
@@ -37,7 +38,8 @@
   </thead>
   <tbody>
   {% for cid,c in COMPS.items() %}
-    <tr data-fam="{{ c.family }}" data-s="{{ c.label|lower }} {{ c.formula|lower }} {{ cid }}">
+    {% set has = namespace(v=false) %}{% for key,label,unit in props %}{% if canonical.get(key,{}).get(cid) is not none %}{% set has.v = true %}{% endif %}{% endfor %}
+    <tr data-fam="{{ c.family }}" data-hasval="{{ 1 if has.v else 0 }}" data-s="{{ c.label|lower }} {{ c.formula|lower }} {{ cid }}">
       <td><a href="/composition/{{ cid }}" class="exp-comp"><span class="dot" style="background:{{ c.color }}"></span>{{ c.label }}</a>
         <div class="exp-formula mono">{{ c.formula }}</div></td>
       <td><span class="badge b-fam">{{ c.family }}</span></td>
@@ -77,10 +79,13 @@ function citeVal(comp,prop,val,unit,method){
 var expF={q:'',fam:''};
 function expFilt(){expF.q=document.getElementById('exp-q').value.toLowerCase().trim();expApply();}
 function expFam(b){expF.fam=b.dataset.fam;document.querySelectorAll('.exp-controls .chip').forEach(function(x){x.classList.remove('active')});b.classList.add('active');expApply();}
-function expApply(){document.querySelectorAll('#exp-table tbody tr').forEach(function(r){
-  var okF=!expF.fam||r.dataset.fam===expF.fam;
-  var okQ=!expF.q||r.dataset.s.indexOf(expF.q)>=0;
-  r.style.display=(okF&&okQ)?'':'none';});}
+function expApply(){var hv=document.getElementById('exp-hasval').checked;var n=0;
+  document.querySelectorAll('#exp-table tbody tr').forEach(function(r){
+    var okF=!expF.fam||r.dataset.fam===expF.fam;
+    var okQ=!expF.q||r.dataset.s.indexOf(expF.q)>=0;
+    var okV=!hv||r.dataset.hasval==='1';
+    var show=okF&&okQ&&okV; r.style.display=show?'':'none'; if(show)n++;});
+  var e=document.getElementById('exp-empty'); if(e)e.style.display=n?'none':'';}
 function expSort(idx){
   var tb=document.getElementById('exp-table'),rows=Array.prototype.slice.call(tb.tBodies[0].rows);
   var th=tb.tHead.rows[0].cells[idx];var asc=!(th._asc);
@@ -97,5 +102,6 @@ function expSort(idx){
   });
   rows.forEach(function(r){tb.tBodies[0].appendChild(r);});
 }
+expApply();  // 기본: '값 있는 조성만' 켜진 상태로 진입 (빈 행 숨김)
 </script>
 {% endblock %}
