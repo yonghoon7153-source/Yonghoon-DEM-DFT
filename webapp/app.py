@@ -3631,16 +3631,17 @@ def api_eis():
     _case = (request.args.get('case') or '').strip()
     if _case:
         def _apply(_p):                                       # STEP3 σ-triad·두께·porosity 만 override
-            if _p.get('sigma_e_S_cm'):
+            # 리뷰 LOW: is not None (σ=0 비퍼콜 케이스도 로드; 클램프 floor 가 처리) — truthiness 스킵 안 함
+            if _p.get('sigma_e_S_cm') is not None:
                 kw['sigma_e_S_cm'] = min(1e3, max(1e-6, float(_p['sigma_e_S_cm'])))
-            if _p.get('sigma_ion_S_cm'):
+            if _p.get('sigma_ion_S_cm') is not None:
                 kw['sigma_ion_S_cm'] = min(1e2, max(1e-9, float(_p['sigma_ion_S_cm'])))
-            if _p.get('thickness_um'):
+            if _p.get('thickness_um') is not None:
                 kw['thickness_um'] = min(1000.0, max(1.0, float(_p['thickness_um'])))
-            if _p.get('porosity'):
+            if _p.get('porosity') is not None:
                 kw['porosity'] = min(60.0, max(0.1, float(_p['porosity'])))
         try:                                                  # 1) DEM 케이스 (results/<case>/*metrics.json)
-            _rd = get_results_dir(_case)
+            _rd = _contained_join(app.config['RESULTS_FOLDER'], _case)   # 리뷰 LOW: makedirs 안 함(GET 부작용 방지)
             for _mf in ('mpm_metrics.json', 'full_metrics.json'):
                 _mp = os.path.join(_rd, _mf)
                 if os.path.exists(_mp):
@@ -3696,15 +3697,21 @@ def api_ica():
     except Exception as e:
         return jsonify({'error': f'import 실패: {type(e).__name__}: {e}'}), 200
     body = request.get_json(silent=True) or {}
+    _cs = body.get('csv')
+    if isinstance(_cs, str) and len(_cs) > 5_000_000:         # 리뷰 MED: body cap (~5MB≈25만행) — 방전곡선은 수천점
+        return jsonify({'error': f'CSV 너무 큼 ({len(_cs) // 1000}KB > 5MB)'}), 200
     v, q = body.get('v'), body.get('q')
-    if (not v or not q) and body.get('csv'):                  # CSV 텍스트 폴백 (헤더/구분자 관대)
+    if isinstance(v, list) and len(v) > 500_000:
+        return jsonify({'error': f'점 과다 ({len(v)} > 50만) — 방전곡선은 수천 점'}), 200
+    if (not v or not q) and _cs:                              # CSV 텍스트 폴백 (헤더/구분자 관대)
         vv, qq = [], []
-        for line in str(body['csv']).strip().splitlines():
+        for line in str(_cs).strip().splitlines():
             parts = [p for p in line.replace(',', ' ').replace('\t', ' ').split() if p]
-            try:
-                vv.append(float(parts[0])); qq.append(float(parts[1]))
+            try:                                              # ★리뷰 MED: 양쪽 파싱 성공 후 append (desync 방지)
+                a = float(parts[0]); b = float(parts[1])
             except (ValueError, IndexError):
-                continue                                      # 헤더/빈줄 스킵
+                continue                                      # 헤더/빈줄/결측셀 스킵 (행 통째로)
+            vv.append(a); qq.append(b)
         v, q = vv, qq
     try:
         v = _np.asarray(v, float); q = _np.asarray(q, float)
