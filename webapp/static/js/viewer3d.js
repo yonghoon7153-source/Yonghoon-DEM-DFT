@@ -5267,21 +5267,23 @@ function pchipDenseGrid(zKnots, factor = 8) {
 }
 
 function drawZProfileCanvas(cv, curves, yLab, leftLab, rightLab) {
+  // ★흰 배경 실선 (matplotlib 느낌) — 화면 미리보기·다운로드 톤 통일 (사용자 요청).
   const g = cv.getContext('2d'), W = cv.width, H = cv.height, k = H / 120;
   const mL = 6 * k, mR = 6 * k, mT = 6 * k, mB = 16 * k;
   const allY = curves.flatMap(c => c.ys), yMin = Math.min(...allY), yMax = Math.max(...allY, yMin + 1e-9);
   const zMax = Math.max(...curves.flatMap(c => c.zs), 1e-9);
-  g.fillStyle = '#0d1117'; g.fillRect(0, 0, W, H);
-  g.strokeStyle = '#2a2d3e'; g.lineWidth = 1 * k; g.strokeRect(mL, mT, W - mL - mR, H - mT - mB);
+  const MC = { '#f87171': '#d62728', '#a78bfa': '#7c3aed' };   // 흰 배경용 진한색
+  g.fillStyle = '#ffffff'; g.fillRect(0, 0, W, H);
+  g.strokeStyle = '#111827'; g.lineWidth = 1.2 * k; g.strokeRect(mL, mT, W - mL - mR, H - mT - mB);
   const PX = z => mL + z / zMax * (W - mL - mR), PY = y => mT + (1 - (y - yMin) / (yMax - yMin)) * (H - mT - mB);
   for (const c of curves) {
-    g.strokeStyle = c.color; g.lineWidth = 1.8 * k; g.setLineDash(c.dash ? [4 * k, 3 * k] : []);
+    g.strokeStyle = MC[c.color] || c.color; g.lineWidth = 1.8 * k; g.setLineDash(c.dash ? [4 * k, 3 * k] : []);
     g.beginPath();
     c.zs.forEach((z, i) => { const x = PX(z), y = PY(c.ys[i]); i ? g.lineTo(x, y) : g.moveTo(x, y); });
     g.stroke();
   }
   g.setLineDash([]);
-  g.fillStyle = '#9ca3af'; g.font = `${10.5 * k}px Inter,sans-serif`;
+  g.fillStyle = '#374151'; g.font = `${10.5 * k}px Inter,sans-serif`;
   g.textAlign = 'left'; g.fillText(leftLab || '집전체', mL + 1.5 * k, H - 4.5 * k);
   g.textAlign = 'right'; g.fillText(rightLab || '분리막', W - mR - 1.5 * k, H - 4.5 * k);
   g.textAlign = 'left'; g.fillText(yLab, mL + 4 * k, mT + 11 * k);
