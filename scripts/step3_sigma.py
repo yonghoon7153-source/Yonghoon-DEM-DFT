@@ -368,11 +368,13 @@ def thermal_k_table(k_am=K_AM_THERMAL, k_se=K_SE_THERMAL, k_carbon=None, k_sdcp=
     return np.array([k_pore, k_am, k_am, kc, kc, ks, k_se, k_ptfe, kc], float), prov
 
 
-def solve_thermal(sid, vox, z_top_um, z_bot_um=0.0, k_table=None):
+def solve_thermal(sid, vox, z_top_um, z_bot_um=0.0, k_table=None, field_sids=None, field_max=90000):
     """복셀 through-plane 열전도 k_eff + 상별 ΔT/열저항(병목) 몫.  solve_sigma_z 재사용(∇·(k∇T)=0, 同 격자).
     ★多상이라 압밀 베드선 全상 연결 → 보통 항상 퍼콜(유한).  반환: k_eff_W_mK(=k_eff[W/cm·K]×100, ★Kapitza
     무시 상한), temp_drop_share(상별 through-plane 온도강하/열저항 몫 — 높을수록 열 병목; ★열류 아님 —
-    직렬 flux는 상별 동일), n_dof, cg_resid, reason/unconverged."""
+    직렬 flux는 상별 동일), n_dof, cg_resid, reason/unconverged.
+    field_sids 주면 out['_field_pts']/['_field_j'] = 열류 |k∇T| 점군(電子/이온 필드와 동일 문법, 多상=全상
+    solid; payload가 p99.8 정규화·직렬화 — '_' prefix = JSON 前 임시)."""
     if k_table is None:
         k_table, _ = thermal_k_table()
     res = solve_sigma_z(sid, k_table, vox, return_field=True, z_top_um=z_top_um, z_bot_um=z_bot_um)
@@ -384,6 +386,11 @@ def solve_thermal(sid, vox, z_top_um, z_bot_um=0.0, k_table=None):
         # ★열류(∝ k∇T) 아님 — 정상 전도 ∇·(k∇T)=0 은 소산 0, 직렬 flux 상별 동일.
         share = phase_current_share(res, sid, k_table)
         out['temp_drop_share'] = {SID_NAME[k]: round(v, 4) for k, v in share.items()}
+        if field_sids is not None:                             # 열류 |k∇T| 점군 (多상 = 全상 solid conduct)
+            fp, fj = field_point_cloud(res, sid, k_table, vox, tuple(field_sids), max_points=field_max)
+            if fp is not None:
+                out['_field_pts'] = fp
+                out['_field_j'] = fj
     return out
 
 

@@ -521,6 +521,7 @@ def main():
     # cross-calibration (sub-voxel constriction not modelled).  scripts/step3_sigma.py has the
     # analytic laminate/percolation self-tests that pin the assembly.
     step3 = None; je_am = None; jb_am = None; elec_field = None; ion_field = None; jrxn_am = None
+    thermal_field = None                                     # STEP3 열류 |k∇T| 점군 (전자/이온 필드처럼)
     if len(r) and not a.no_step3:                       # phase=None → AM-skeleton-only σ (SBE baseline)
         try:
             import time as _time
@@ -856,7 +857,11 @@ def main():
                 if not a.no_thermal:
                     try:
                         _kt, _kprov = _s3.thermal_k_table(k_carbon=a.k_carbon)
-                        _th = _s3.solve_thermal(sid3, a.step3_vox, _ztop, 0.0, _kt)
+                        _th = _s3.solve_thermal(sid3, a.step3_vox, _ztop, 0.0, _kt,
+                                                field_sids=(None if a.no_field else (1, 2, 3, 4, 5, 6, 7, 8)),
+                                                field_max=a.field_max_points)
+                        _tfp = _th.pop('_field_pts', None)
+                        _tfj = _th.pop('_field_j', None)
                         step3['thermal'] = {
                             'k_eff_W_mK': _th['k_eff_W_mK'], 'n_dof': _th['n_dof'],
                             'cg_resid': _th['cg_resid'], 'temp_drop_share': _th.get('temp_drop_share'),
@@ -867,6 +872,14 @@ def main():
                                       'carbon/SDCP/PTFE/pore=ASSUMED(소분율·--k-carbon 스윕); network_conductivity '
                                       'thermal과 같은 k 앵커 공유 → 표현-일치만, 스케일 다름(W/mK vs mScm-eq), 독립검증 아님'
                                       + (' ⚠UNCONVERGED' if _th.get('unconverged') else ''))}
+                        if _tfp is not None and _tfj is not None:   # 열류 |k∇T| 필드 (전자/이온 필드 문법)
+                            _tfj = np.nan_to_num(_tfj, nan=0.0, posinf=0.0, neginf=0.0)
+                            _p998t = max(float(np.percentile(_tfj, 99.8)), 1e-30)
+                            _tfjn = _tfj / _p998t                   # p99.8 정규화 (상위 0.2%>1 = 열 hot-spot)
+                            thermal_field = [[round(float(_tfp[i, 0]), 2), round(float(_tfp[i, 1]), 2),
+                                              round(float(_tfp[i, 2]), 2), round(float(_tfjn[i]), 4)]
+                                             for i in range(len(_tfp))]
+                            print(f"  STEP3 thermal FIELD: {len(thermal_field):,} pts (|k∇T| cloud)")
                         if _th['k_eff_W_mK'] is not None:
                             print(f"  STEP3 κ_eff = {_th['k_eff_W_mK']} W/m·K  (多상 열전도, vox {a.step3_vox}µm, "
                                   f"resid {_th['cg_resid']})")
@@ -1166,6 +1179,7 @@ def main():
         'additive_fibres': additive_fibres,                # [{phase, pts:[[x,y,z],…]}] — VGCF/PTFE as polylines
         'electronic_field': elec_field,                    # [x,y,z,|J|₀₋₁] µm — STEP3 e⁻ current-density cloud (AM+carbon)
         'ionic_field': ion_field,                          # [x,y,z,|J|₀₋₁] µm — STEP3 Li⁺ current-density cloud (SE+SDCP)
+        'thermal_field': thermal_field,                    # [x,y,z,|k∇T|₀₋₁] µm — STEP3 열류 cloud (多상, 열 hot-spot)
         'void_points': void_points,                        # [x,y,z] µm — pore voxel centres (XCT "기공만" mode)
         'box': {'x_min': 0.0, 'x_max': round(lat, 2), 'y_min': 0.0, 'y_max': round(lat, 2),
                 'z_min': 0.0, 'z_max': round(thick, 2)},

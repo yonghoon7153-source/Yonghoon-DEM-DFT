@@ -985,6 +985,7 @@ function buildControls(container, isMPM) {
         <option value="econn">전기 연결성 — 연결/고립 (econn)</option>
         <option value="je_field">⚡ 전자 전류밀도 — 필드 (AM+카본, 논문)</option>
         <option value="ji_field">⚡ 이온 전류밀도 — 필드 (SE+SDCP, 논문)</option>
+        <option value="kt_field">&#x1F525; 열류 — 필드 (|k∇T|, 多상 열전도)</option>
         <option value="je">└ 전자 — AM 입자별 (je)</option>
         <option value="je_delta">└ Δ 재분배 — bare/wetted 비율 (접점 상실)</option>
         <option value="jrxn">🔋 반응 전류밀도 — 충전 저율 (STEP4)</option>
@@ -3002,18 +3003,21 @@ function applyViewMode(state, mode) {
        <div style="margin-top:2px;color:#9ca3af;font-size:11px">시각화 lumping — STEP3 σ 물리는 상별 유지 (PTFE=절연)</div>`);
     return;
   }
-  if (mode === 'je_field' || mode === 'ji_field') {
+  if (mode === 'je_field' || mode === 'ji_field' || mode === 'kt_field') {
     /* STEP3 current-density FIELD (paper Fig-2/Fig-4 grammar): a per-voxel |J| point cloud of the
      * CONDUCTING phase — electronic (AM+carbon) or ionic (SE+SDCP) — coloured jet + gamma-compressed
      * so only the true conduction backbone leaves the deep-blue field.  The OPPOSITE (blocking) phase
-     * is a faint dark ghost for context.  Same p99.8/gamma normalisation as the je AM-sphere map. */
+     * is a faint dark ghost for context.  Same p99.8/gamma normalisation as the je AM-sphere map.
+     * ★kt_field = 열류 |k∇T| (STEP3 열전도, 多상=全상 solid) — 전자 ghost 경로 재사용, 색=열 hot-spot. */
     const ionic = mode === 'ji_field';
-    const fld = (state.data && state.data[ionic ? 'ionic_field' : 'electronic_field']) || [];
+    const thermal = mode === 'kt_field';
+    const fld = thermal ? ((state.data && state.data.thermal_field) || [])
+                        : ((state.data && state.data[ionic ? 'ionic_field' : 'electronic_field']) || []);
     const mm = (state.data && state.data.mpm_metrics) || {};
     const s3 = mm.step3 || (state.data && state.data.step3) || null;
     if (!fld.length) {
-      setLegend(state, '<i>이 payload엔 ' + (ionic ? '이온' : '전자') + ' 전류밀도 FIELD가 없어요 — 최신 '
-        + '<b>mpm_webapp_payload.py</b>(--field 기본 ON)로 payload를 재생성해 업로드하세요 '
+      setLegend(state, '<i>이 payload엔 ' + (thermal ? '열류(|k∇T|)' : ionic ? '이온' : '전자') + ' FIELD가 없어요 — 최신 '
+        + '<b>mpm_webapp_payload.py</b>(--field·thermal 기본 ON)로 payload를 재생성해 업로드하세요 '
         + '(MPM 재실행 불필요).</i>');
       return;
     }
@@ -3130,7 +3134,9 @@ function applyViewMode(state, mode) {
     if (state.scene) state.scene.add(grp);
     if (state.applyClip) state.applyClip();                  // 단면 뷰를 새 point 재질에도 적용
     const stops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
-    const sigTxt = ionic
+    const sigTxt = thermal
+      ? (s3 && s3.thermal && s3.thermal.k_eff_W_mK != null ? 'κ_eff ' + Number(s3.thermal.k_eff_W_mK).toFixed(2) + ' W/m·K (多상·상한)' : '')
+      : ionic
       ? (s3 && s3.sigma_ion_eff_S_cm != null ? 'σ_ion_eff ' + Number(s3.sigma_ion_eff_S_cm).toExponential(2) + ' S/cm' : '')
       : (s3 && s3.sigma_e_eff_S_cm != null ? 'σ_e_eff ' + Number(s3.sigma_e_eff_S_cm).toExponential(2) + ' S/cm' : '');
     const share = ionic ? (s3 && s3.ion_dissipation_share) : (s3 && s3.dissipation_share);
@@ -3248,13 +3254,13 @@ function applyViewMode(state, mode) {
     // 컬러바 PNG 버튼용 정량 스펙 (수치 눈금 + 단위 부제) — 구 payload는 상대 라벨 폴백
     state.cbarSpec = fsc
       ? { map: 'jet', gamma: 1.6,
-          title: (ionic ? '|J_ion|' : '|J_e|') + ' / ⟨J_z⟩ current-focusing (p99.8-normalized)',
+          title: (thermal ? '|k∇T|' : ionic ? '|J_ion|' : '|J_e|') + ' / ⟨J_z⟩ current-focusing (p99.8-normalized)',
           ticks: _focusTicks(fsc),
           sub: 'top(p99.8) = ' + fmtP(fsc.j_top_A_cm2_per_V) + ' A/cm² @ΔV=1V'
              + (fsc.j_1C_mA_cm2 ? ' · @1C: ⟨J⟩ ' + fmtP(fsc.j_1C_mA_cm2) + ' · top '
                 + fmtP(fsc.j_1C_mA_cm2 * fsc.focus_top) + ' mA/cm²' : '') }
       : { map: 'jet', gamma: 1.6,
-          title: (ionic ? '|J_ion|' : '|J_e|') + ' relative current density (p99.8-normalized)',
+          title: (thermal ? '|k∇T|' : ionic ? '|J_ion|' : '|J_e|') + ' relative current density (p99.8-normalized)',
           left: '0', right: 'high' };
     state.cbarSpecMode = mode;
     return;
@@ -5680,6 +5686,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
           <option value="wiring_delta">Δ 배선 — 접점 차이 A−B (같은 골격 전용 ★)</option>
           <option value="je_field">⚡ 전자 전류밀도 필드</option>
           <option value="ji_field">⚡ 이온 전류밀도 필드</option>
+          <option value="kt_field">&#x1F525; 열류 필드 (|k∇T|)</option>
           <option value="je">전자 — AM 입자별 (je)</option>
           <option value="je_delta">Δ 재분배 — bare/wetted 비율</option>
           <option value="jrxn">🔋 반응 전류밀도 (STEP4)</option>
