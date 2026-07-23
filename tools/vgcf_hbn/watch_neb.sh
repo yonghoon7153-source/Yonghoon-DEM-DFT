@@ -46,11 +46,20 @@ if [ -n "$ACT" ]; then
     echo "    (endpoint-B relax 수렴하면 이 케이스 NEB 입력 자동 생성)"
   else
     no=$N/$ACT/neb.out
-    # 살아있음 지표: neb.out 커지는지(=pw.x가 이미지 계산 중) + GPU util
-    s1=$(stat -c%s "$no" 2>/dev/null); sleep 2; s2=$(stat -c%s "$no" 2>/dev/null)
-    if [ "${s2:-0}" -gt "${s1:-0}" ]; then echo "    ✔ 살아있음 (neb.out 2초새 +$((s2-s1))B 증가)"
-    else echo "    ⚠ neb.out 2초새 정체 — 아래 GPU util·최근활동 확인(0%면 hang)"; fi
-    echo "    갱신 $(stat -c '%y' "$no" 2>/dev/null | cut -d. -f1) · GPU util $(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits 2>/dev/null | head -1)%"
+    # 살아있음 지표: 이미지 SCF(tmp/*/PW.out)가 진짜 진행 — neb.out은 iteration 경계에서만 갱신되므로 정체가 정상
+    gu=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits 2>/dev/null | head -1)
+    imgf=$(find "$N/$ACT/tmp" -name "PW.out" -printf '%T@ %p\n' 2>/dev/null | sort -n | tail -1 | cut -d' ' -f2)
+    if [ -n "$imgf" ]; then
+      img=$(basename "$(dirname "$imgf")"); isc=$(grep -ac "iteration #" "$imgf" 2>/dev/null)
+      iage=$(( $(date +%s) - $(stat -c%Y "$imgf" 2>/dev/null || echo 0) ))
+      if [ "$iage" -lt 120 ] || [ "${gu:-0}" -ge 50 ] 2>/dev/null; then
+        echo "    ✔ 살아있음: 이미지 ${img} SCF iter ${isc} 진행중 (${iage}s前 갱신, GPU ${gu}%) · 첫 NEB iter은 무거움"
+      else echo "    ⚠ 이미지 out ${iage}s 정체 + GPU ${gu}% — hang 의심"; fi
+    else
+      s1=$(stat -c%s "$no" 2>/dev/null); sleep 2; s2=$(stat -c%s "$no" 2>/dev/null)
+      [ "${s2:-0}" -gt "${s1:-0}" ] && echo "    ✔ neb.out 증가중" || echo "    ⚠ neb.out 정체·GPU ${gu}%"
+    fi
+    echo "    neb.out 갱신 $(stat -c '%y' "$no" 2>/dev/null | cut -d. -f1) (iteration 경계에서만 갱신)"
     it=$(grep -ac "activation energy (->)" "$no" 2>/dev/null)
     dat=$(ls -t "$N/$ACT"/*.dat 2>/dev/null | head -1)
     if [ -n "$dat" ] && [ -s "$dat" ]; then
