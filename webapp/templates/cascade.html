@@ -52,7 +52,12 @@
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
       <h3 style="margin:0">합성 스코어 리더보드</h3>
       <input class="search" style="max-width:220px" placeholder="도펀트 검색…" oninput="filtRows('board-tbl',this.value)">
-      <span class="muted" style="font-size:.74rem">헤더 클릭 = 정렬 · <b>파랑 링</b> = deep-dive 있음</span>
+      <span class="muted" style="font-size:.74rem">헤더 클릭 = 정렬 · <span class="pareto-y">✓ DFT검증</span> = 심층검증됨</span>
+    </div>
+    <div class="callout cal-warning" style="margin:0 0 12px">
+      <div class="cal-b" style="font-size:.8rem">⚠ 스크리닝 순위는 <b>UMA 상대 프록시</b>야 — 절대 E(GPa)·ox_V는 실험 대비 부풀어 있고(상대비교만), 점수 가중치는 수작업이고,
+      <b>ox_V는 47개 중 19개가 2.14로 축퇴</b>(호스트가 pin)라 변별력이 약해. <b>score 차 ~0.02 이내는 사실상 동점</b>.
+      실제 신뢰는 <b>✓검증</b> 행(Nd2O3·B2O3)의 조성 페이지 DFT값만.</div>
     </div>
     <div class="tbl-scroll"><table class="data-table sortable" id="board-tbl"><thead><tr>
       <th onclick="sortT(this,0)">rank</th><th onclick="sortT(this,1)">dopant</th>
@@ -63,7 +68,7 @@
     {% for r in (casc.ranked.data or []) %}
     <tr>
       <td class="num">{{ r.rank|int }}</td>
-      <td>{% if deep_map.get(r.dopant) %}<a href="/composition/{{ deep_map[r.dopant] }}" class="deep">{{ r.dopant }} ●</a>{% else %}{{ r.dopant }}{% endif %}</td>
+      <td>{% if deep_map.get(r.dopant) %}<a href="/composition/{{ deep_map[r.dopant] }}" class="deep">{{ r.dopant }}</a> <span class="pareto-y" style="font-size:.66rem">✓검증</span>{% else %}{{ r.dopant }}{% endif %}</td>
       <td><span class="grp-pill" style="background:{{ gcol.get(r.group,'#6b7280') }}">{{ r.group }}</span></td>
       <td class="num" style="font-weight:700">{{ sf(r.score,3) }}</td>
       <td class="num">{{ sf(r.de,3) }}</td>

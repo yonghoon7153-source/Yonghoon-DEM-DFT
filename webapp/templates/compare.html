@@ -19,6 +19,7 @@
     <h3>Property 별 비교 <span class="muted" style="font-weight:400;font-size:.8rem">— 절대값 (막대)</span></h3>
     <div class="chip-bar" id="pkeys"></div>
     <div class="chart" id="cmpchart"></div>
+    <div class="muted" id="cmp-caveat" style="font-size:.74rem;margin-top:6px"></div>
   </div>
   <div class="card">
     <h3>다축 프로파일 <span class="muted" style="font-weight:400;font-size:.8rem">— 정규화 레이더 (0–1, 열별 min–max)</span></h3>
@@ -54,6 +55,10 @@ function drawChart(){
   let x=sel.map(id=>COMPS[id].label);
   let y=sel.map(id=>CANON[activeKey][id]??null);
   let colors=sel.map(id=>COMPS[id].color);
+  document.getElementById('cmp-caveat').textContent =
+    (activeKey==='MD_Ea_eV') ? '⚠ MD Ea 절대값은 인용 주의 — UMA 멀티시드 판정만(CLAUDE.md). 조성 간 순서 비교로만 사용.'
+    : (activeKey==='gap_eV') ? 'comp2 2.04는 잠정(legacy, eigenvalue 재확인중). 절대값은 PBE-level.'
+    : (META[activeKey]||'');
   Plotly.newPlot('cmpchart',[{x:x,y:y,type:'bar',marker:{color:colors}}],
     Object.assign({margin:{t:16,b:40},font:plotlyFont(),yaxis:{title:KLAB[activeKey]||activeKey}},plotlyBG()),
     {responsive:true,displaylogo:false});
