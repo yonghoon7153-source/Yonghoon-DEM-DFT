@@ -5588,8 +5588,7 @@ def _mpm_lab_list():
                 out.append(m)
             except Exception:
                 pass
-    out.sort(key=lambda x: x.get('uploaded_at', ''), reverse=True)
-    out.sort(key=lambda x: 0 if x.get('fav') else 1)       # ★ 즐겨찾기 상단 고정 (그룹 내 날짜순 유지)
+    out.sort(key=lambda x: x.get('uploaded_at', ''), reverse=True)  # 순수 시간순(최신 위) — 즐겨찾기 상단고정 제거
     return out
 
 

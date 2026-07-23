@@ -69,7 +69,7 @@
       <tr data-id="{{ it.id }}" data-add="{{ 1 if it.has_additives else 0 }}"
           style="border-bottom:1px solid #1e293b; color:#e2e8f0">
         <td style="padding:6px 10px 6px 0; font-weight:600"><span class="lab-fav{{ ' on' if it.fav }}" data-pid="{{ it.id }}"
-              onclick="labFavToggle(this)" title="즐겨찾기 — 목록 상단 고정"
+              onclick="labFavToggle(this)" title="즐겨찾기 (표시만, 정렬 영향 없음)"
               style="cursor:pointer; margin-right:6px; color:{{ '#fbbf24' if it.fav else '#475569' }}">{{ '★' if it.fav else '☆' }}</span><span class="lab-name" data-id="{{ it.id }}"
               onclick="labRenameStart(this)" title="클릭해서 이름 수정"
               style="cursor:pointer; border-bottom:1px dashed #475569; display:inline-block; max-width:240px; overflow-wrap:anywhere; word-break:break-word; white-space:normal; vertical-align:top">{{ it.name }}</span></td>
@@ -194,8 +194,8 @@ async function labCompareOpen() {
   }
 }
 async function labFavToggle(el) {
-  // ★ 즐겨찾기 토글 — 서버 meta.json에 영속(브라우저 무관).  fav 그룹은 목록 상단 고정;
-  // 클라이언트 재배치는 근사(fav→상단 fav 그룹 끝, 해제→맨 아래)이고 정확한 날짜순은 새로고침 시.
+  // ★ 즐겨찾기 토글 — 서버 meta.json에 영속(브라우저 무관).  정렬은 순수 시간순이라
+  // 별표만 토글하고 행 위치는 그대로 둔다 (상단 고정 안 함).
   const pid = el.dataset.pid;
   try {
     const r = await fetch('/mpm-lab/fav/' + encodeURIComponent(pid), { method: 'POST' });
@@ -204,14 +204,6 @@ async function labFavToggle(el) {
     el.classList.toggle('on', j.fav);
     el.textContent = j.fav ? '★' : '☆';
     el.style.color = j.fav ? '#fbbf24' : '#475569';
-    const tb = document.getElementById('lab-tbody');
-    const row = el.closest('tr');
-    if (j.fav) {
-      const firstOff = [...tb.children].find(r2 => r2 !== row && !r2.querySelector('.lab-fav.on'));
-      tb.insertBefore(row, firstOff || null);
-    } else {
-      tb.appendChild(row);
-    }
   } catch (e) { alert('즐겨찾기 실패: ' + e.message); }
 }
 function labAddRow(it) {
@@ -223,7 +215,7 @@ function labAddRow(it) {
   const f = (v, s, d = '—') => (v === null || v === undefined) ? d : (s ? s(v) : v);
   tr.innerHTML =
     `<td style="padding:6px 10px 6px 0;font-weight:600"><span class="lab-fav" data-pid="${it.id}" ` +
-      `onclick="labFavToggle(this)" title="즐겨찾기 — 목록 상단 고정" style="cursor:pointer;margin-right:6px;color:#475569">☆</span>` +
+      `onclick="labFavToggle(this)" title="즐겨찾기 (표시만, 정렬 영향 없음)" style="cursor:pointer;margin-right:6px;color:#475569">☆</span>` +
       `<span class="lab-name" data-id="${it.id}" ` +
       `onclick="labRenameStart(this)" title="클릭해서 이름 수정" style="cursor:pointer;border-bottom:1px dashed #475569;display:inline-block;max-width:240px;overflow-wrap:anywhere;word-break:break-word;white-space:normal;vertical-align:top">${it.name}</span></td>` +
     `<td style="padding:6px 10px">${it.has_additives ? `<span style="color:#fbbf24">⚡ ${it.recipe}</span>` : '<span style="color:#64748b">—</span>'}${it.collector ? `<br><span style="color:#7dd3fc;font-size:0.85em">🔌 ${it.collector}</span>` : ''}${(it.vox_um && it.vox_um != 0.4) ? `<br><span style="color:#a7f3d0;font-size:0.85em">🔲 vox ${it.vox_um}µm</span>` : ''}</td>` +
@@ -238,9 +230,8 @@ function labAddRow(it) {
       `<button class="btn btn-secondary btn-sm" onclick="labOpen('${it.id}', ${it.has_additives ? 1 : 0}, this)">보기</button> ` +
       `<button class="btn btn-secondary btn-sm" onclick="labSummary('${it.id}', this)" title="물성 요약을 클립보드에 복사 (AI에 먹이기용)">요약</button> ` +
       `<button class="btn btn-secondary btn-sm" onclick="labDelete('${it.id}', this)">삭제</button></td>`;
-  // 새 업로드는 ★고정 그룹 아래, 비-fav 그룹의 맨 앞에 (fav 상단 고정 유지)
-  const firstOff = [...tb.children].find(r2 => !r2.querySelector('.lab-fav.on'));
-  tb.insertBefore(tr, firstOff || null);
+  // 새 업로드 = 최신 → 순수 시간순이므로 맨 위에
+  tb.insertBefore(tr, tb.firstChild || null);
   const c = document.getElementById('lab-count');
   c.textContent = `(${tb.querySelectorAll('tr').length})`;
 }
