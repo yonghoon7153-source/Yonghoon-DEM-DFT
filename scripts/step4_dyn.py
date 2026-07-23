@@ -258,7 +258,12 @@ def _cg(L, b, x0=None, rtol=1e-9, atol=0.0, pc_cache=None, deep=False):
     #   (정규화 98%ε민감·deflation 발산 실패 → near-null-B AMG만 수렴).  저율 0.1C/0.2C 후막의
     #   hard-fail 근본해결.  런 내 1회 구축 후 재사용; 정체 solve일 때만 발동(무거운 대-coarse).
     _tgt = max(rtol * bnorm, atol, 1e-300)
-    if _rr(x) > _NN_TRIGGER * _tgt and big and not cache.get('nnamg_dead'):
+    # ★트리거 수정 (2026-07-23 v100 0.2C 실런 진단): 자기-바닥(_CGStop)이 CG를 ~10×목표서 멈춰 잔차가
+    #   1000×문턱에 도달 못 → near-null-B AMG 실전 미발동 = 0.2C hard-fail 근본원인.  near-null 오차는
+    #   J·v≈0 라 잔차 norm에 작게 실려 '비율'판정이 부적합 → 판정을 '목표 미달(info≠0=자기-바닥 단축)
+    #   + 유의미 초과(>3×목표)'로 전환 (기존 1000× 조건은 belt-and-suspenders로 유지).
+    _stall_short = (info != 0 and _rr(x) > 3.0 * _tgt) or (_rr(x) > _NN_TRIGGER * _tgt)
+    if _stall_short and big and not cache.get('nnamg_dead'):
         Mnn = cache.get('nnamg')
         if Mnn is None:
             Mnn = _nearnull_amg_M(L, diag, cache)
