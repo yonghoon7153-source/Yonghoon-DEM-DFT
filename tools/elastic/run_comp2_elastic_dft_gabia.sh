@@ -15,7 +15,8 @@ set -u; set +H
 REPO=${REPO:-$HOME/Yonghoon-DEM-DFT}; [ -d "$REPO" ] || REPO=$HOME/work/Yonghoon-DEM-DFT
 RELWORK=${RELWORK:-/data/work/runs/comp2_relax}
 WORK=${WORK:-/data/work/runs/comp2_elastic_dft}; mkdir -p "$WORK"
-STRAIN=${STRAIN:-0.005}   # 0.005 노이즈시 0.01로 (stress 신호 2배 → cubic 대칭 회복)
+STRAIN=${STRAIN:-0.005}   # comp1/modelc paper-grade = 0.005 (비교시 통일)
+KPOINTS=${KPOINTS:-"2 2 2 0 0 0"}   # comp1 paper-grade = 4 4 4 (k×L=40); LPSCl 비교는 반드시 통일
 PSE=$RELWORK/pseudo
 [ -f "$RELWORK/relax.out" ] || { echo "ERROR: $RELWORK/relax.out 없음 (comp2 relax 먼저)"; exit 1; }
 [ "$(pgrep -fc run_comp2_elastic_dft)" -le 2 ] || { echo "이미 실행중"; exit 1; }
@@ -55,7 +56,7 @@ if [ ! -f "$WORK/strain_11_p.in" ]; then
   python3 "$REPO/tools/comp1_v3/build_elastic_strain_inputs.py" --relaxed_ion \
     --src_in "$RELWORK/relax.in" --src_out "$RELWORK/relax.out" \
     --strain "$STRAIN" --workdir "$WORK" --prefix_base strain \
-    --kpoints "2 2 2 0 0 0" || { echo "strain 생성 실패"; exit 1; }
+    --kpoints "$KPOINTS" || { echo "strain 생성 실패"; exit 1; }
 fi
 cd "$WORK"
 TAGS="strain_11_p strain_11_m strain_22_p strain_22_m strain_33_p strain_33_m \
