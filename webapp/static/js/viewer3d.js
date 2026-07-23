@@ -4871,6 +4871,16 @@ function showMPMAnalysisSummary(state) {
   const chips = [
     ['σ_e_eff (전자전도도·벌크)', s3.sigma_e_eff_S_cm != null ? Number(s3.sigma_e_eff_S_cm).toExponential(2) + ' S/cm' : '—'],
     ['σ_ion_eff (이온전도도)', s3.sigma_ion_eff_S_cm != null ? Number(s3.sigma_ion_eff_S_cm).toExponential(2) + ' S/cm' : '—'],
+    ['κ_eff (열전도·多상, Kapitza무시 상한)', (() => {
+      const th = s3.thermal;                                   // ★STEP3 열전도 (payload step3.thermal)
+      if (!th || th.k_eff_W_mK == null) return '—';
+      let s = Number(th.k_eff_W_mK).toFixed(2) + ' W/m·K';
+      if (th.temp_drop_share) {                                // 열 병목 = ΔT/열저항 최대 상 (열류 아님)
+        const top = Object.entries(th.temp_drop_share).sort((a, b) => b[1] - a[1])[0];
+        if (top) s += ' · 병목 ' + top[0] + ' ' + Math.round(100 * top[1]) + '%';
+      }
+      return s;
+    })()],
     ['R_geom (기하 계면저항)', (s3.collector_geometric && s3.collector_geometric.R_geom_ohm_cm2 != null) ? Number(s3.collector_geometric.R_geom_ohm_cm2).toExponential(2) + ' Ω·cm²' : '—'],
     ['porosity (공극률)', porosity != null ? Number(porosity).toFixed(2) + ' %' : '—'],
     ['thickness (두께)', thickness != null ? Number(thickness).toFixed(1) + ' µm' : '—'],
