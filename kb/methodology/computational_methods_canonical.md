@@ -105,16 +105,21 @@ Clamped-ion(원자 고정)은 argyrodite 탄성을 ~2.3× 과대평가(comp1 cla
 
 ---
 
-## 8. 정리 액션 목록 (이번 재구축에서 실행)
+## 8. 정리 액션 목록 (2026-07-23 재구축)
 
-- [ ] **MLIP-elastic 11블록 삭제** — `elastic.json` 의 mlip_300K/600K 5섹션 + `comp1~5.json`·`modelc.json` 의 `elastic_mlip_*` + `_index.json` data_points. (MD/전도도/phonon/EOS의 MLIP은 **삭제 금지**.) 다운스트림 동기화: `adhesion.json` mlip 상관블록, `kb/methodology/elastic_constants.md`.
-- [ ] **elastic.json 에 pseudo·ecut·k 메타 소급 기재** (표2 값) — 재발 방지의 핵심.
-- [ ] **comp2 비정상 v2 elastic 격리** (`comp2.json` C44=77.6, E=120.2 `ANOMALOUS_DO_NOT_USE` 헤더 강화).
-- [ ] **modelc ICOHP -5.12 stale 처리** (`modelc_v3.json:107` → "superseded by ext-basis -6.0").
-- [ ] **modelc EOS 19.59 vs 21.71 통일** (`modelc.json` 의 19.59 "confirmed_final" → legacy 표기).
-- [ ] **band gap canonical만** (DOS-thr·1.65 폐기 명기).
-- [ ] **comp3/4/5 elastic 강등** ("v1 clamped ordered-Li, C44 과대, v3 재측정 필요").
-- [ ] **doping_cascade UMA-elastic**(E_VRH/E_young) 삭제 여부 결정 (EOS_B0/형성E는 존치).
+- [x] **MLIP-elastic 삭제** — elastic.json 4섹션 + comp1~5·modelc 13키 + _index 152 data_points 제거(값 보존 검증). MD/전도도/phonon/EOS MLIP 유지. ✅
+- [x] **elastic.json 셋업 메타 소급** — comp1_v3/modelc_v3 (pseudo·ecut·k·cell). ✅
+- [x] **comp2 비정상 v2 elastic 격리** — `comp2.json` `_WARNING`(정본=comp2_elastic_uspp 재측정). ✅
+- [x] **modelc ICOHP -5.12 stale** — `modelc_v3.json` `_superseded`(ext-basis -6.0 정본). ✅
+- [x] **modelc EOS 19.59 통일** — `modelc.json` status LEGACY(eos.json 21.71 PRIMARY). ✅
+- [x] **band gap 폐기 명기** — DOS-thr 1.76/1.82 + 1.65 `_DEPRECATED`(eigenvalue canonical). ✅
+- [x] **comp3/4/5 elastic 강등** — elastic.json `_status`(v1 clamped, v3 재측정 필요). ✅
+- [x] **다운스트림 동기화** — adhesion mlip 상관 deprecated, kb/methodology/elastic_constants.md 갱신. ✅
+- [x] **litdb whitten2023 gap** — DOS-thr 1.76/1.82 → eigenvalue 2.066/2.099 (litdb 전수감사 결과 유일 stale). ✅
+
+### 남은 것 (사용자 결정 대기)
+- [ ] **doping_cascade UMA-elastic**(E_VRH/E_young) 삭제 여부 — EOS_B0/형성E는 존치.
+- [ ] **litdb 커버리지 확장** — Kim 2025 halogen-modulus/Kim 2026 I-rich를 litdb papers에 등록(현재 elastic.json literature 섹션에만 존재); comp2/lpsocl/b2o3 문헌 비교행 추가; modelc elastic 각주(rhombo-62 셀 差).
 
 ## 9. Pseudo 규율 (앞으로 새 DFT 계산 시)
 
