@@ -2667,4 +2667,65 @@ document.querySelectorAll('tr.grade-row[data-grade-tip]').forEach(tr => {
   fetchWhatif(wtSlider.value);
 })();
 </script>
+
+<style>
+/* ── DEM 고유 지표 노란 하이라이트 (frame[5]: MPM 대체 불가 — 접촉망 수송·취성) ── */
+tr.dem-only-metric > td { background: rgba(234, 179, 8, 0.13) !important; }
+tr.dem-only-metric > td.metric-label {
+  box-shadow: inset 3px 0 0 0 #eab308; font-weight: 600;
+}
+:root[data-theme="light"] tr.dem-only-metric > td { background: rgba(234, 179, 8, 0.18) !important; }
+.dem-only-legend {
+  background: rgba(234,179,8,0.15); border: 1px solid rgba(234,179,8,0.45);
+  color: #eab308; border-radius: 6px; padding: 2px 8px; font-size: 12px; font-weight: 600;
+}
+</style>
+<script>
+/* ── DEM-only 지표 하이라이트 (client-side, frame[5]) ─────────────────────────
+ * MPM에 밀리지 않고 DEM만 확실히 주는 값 = 접촉망 수송(σ 삼중·연결성·굴곡도·경로품질·
+ * 구속저항) + 취성(Auerbach) + 접촉역학(coordination·접촉면적·AM-AM·활성/취약 AM) +
+ * Stage-E·ASR·Bruggeman.  제외 = 구조(porosity/두께·MPM 교차검증)·coverage(both)·
+ * von Mises(MPM 공간응력장이 더 풍부)·MPM 결과 파라미터 섹션.  섹션 헤더 텍스트로 판정. */
+(function(){
+  const SECT_DEM = ['연결성','Network connectivity','경로 효율','Geodesic tortuosity',
+    '경로 품질','Path quality','활성도','active surface','Bruggeman EMT',
+    '네트워크 솔버','Network solver','굴곡도 비교','Dijkstra vs Laplacian','Tier-1',
+    'AM-AM 접촉','AM-AM contact','Stage E','ASR','취성 파괴','Auerbach',
+    '단계별 분포','Severe','Pair-type','P_c','F_DEM','F / P_c','Contact counts'];
+  const SECT_EXCL = ['구조','Structure','MPM 결과','응력 분포','von Mises','계면','Interfacial'];
+  const ROW_INCL = ['contact area','A_AM-SE','A_SE-SE','Binding regime'];   // 계면 中 접촉면적만
+  const ROW_EXCL = ['Coverage','coverage','cov_AM'];                        // coverage = both → 제외
+  const hit = (t, arr) => arr.some(s => t.indexOf(s) !== -1);
+  function paint(){
+    document.querySelectorAll('table.data-table:not(.grade-table)').forEach(tbl => {
+      let demSect = false;
+      tbl.querySelectorAll('tbody > tr').forEach(tr => {
+        if (tr.classList.contains('section-header')) {
+          const t = tr.textContent || '';
+          demSect = hit(t, SECT_DEM) && !hit(t, SECT_EXCL);
+          return;
+        }
+        const cell = tr.querySelector('td.metric-label, [data-metric]');
+        if (!cell) return;
+        const lbl = cell.getAttribute('data-metric') || cell.textContent || '';
+        let hl = demSect || hit(lbl, ROW_INCL);
+        if (hit(lbl, ROW_EXCL)) hl = false;
+        tr.classList.toggle('dem-only-metric', hl);
+      });
+    });
+    // 범례 칩 (요약 카드 헤더에 1회)
+    const hdr = document.querySelector('.card .card-header-row > div');
+    if (hdr && !document.querySelector('.dem-only-legend')) {
+      const chip = document.createElement('span');
+      chip.className = 'dem-only-legend';
+      chip.textContent = '🟡 DEM 고유 (MPM 대체불가)';
+      chip.title = 'frame[5]: 접촉망 수송(σ 삼중·연결성·굴곡도·경로품질)·취성(Auerbach)·접촉역학·Stage-E·ASR = ' +
+                   'DEM만 확실히 산출.  구조/coverage/von Mises = MPM이 교차검증·대체 → 미표시.';
+      hdr.appendChild(chip);
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', paint);
+  else paint();
+})();
+</script>
 {% endblock %}
