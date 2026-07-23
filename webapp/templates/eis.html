@@ -69,9 +69,14 @@
 <!-- ── Nyquist + DRT ── -->
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
   <div class="card">
-    <div class="card-title" style="margin-bottom:6px">Nyquist (Z′ vs −Z″) — 실험 위 겹치면 frame[4]</div>
+    <div class="card-title" style="margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;gap:8px">
+      <span>Nyquist (Z′ vs −Z″) — frame[4]</span>
+      <button id="e-exp-toggle" class="btn btn-sm btn-secondary" style="font-size:.72rem;padding:2px 8px"
+              title="실험 EIS(이종기술) Ω·cm² 오버레이 — 모델↔실측 대조">🔬 실험 겹치기</button>
+    </div>
     <canvas id="e-nyq" width="440" height="380"
             style="width:100%;border-radius:8px;background:var(--card-bg,#0e1526)"></canvas>
+    <div id="e-exp-hint" style="font-size:.72rem;color:var(--dim);margin-top:4px"></div>
   </div>
   <div class="card">
     <div class="card-title" style="margin-bottom:6px">DRT γ(τ) — 프로세스 시상수 분리</div>
@@ -209,7 +214,26 @@ const EIS = {
       this.runCycle();                   // 사이클 궤적도 로드된 σ 로 갱신
       this.caseId = '';   // 로드 완료 → 이후 수동 조정 시 케이스 재덮어쓰기 안 함
     } else if(badge && !badge.innerHTML){ badge.innerHTML=''; }
+    this.lastD = d;   // 실험 오버레이 재드로용
     this.elems(d); this.drawNyquist(d); this.drawDRT(d); this.renderAnchor(d);
+  },
+  showExp:false, expNyq:null, lastD:null,
+  async toggleExp(){
+    this.showExp = !this.showExp;
+    const b=this.el('e-exp-toggle');
+    b.classList.toggle('btn-primary', this.showExp); b.classList.toggle('btn-secondary', !this.showExp);
+    const hint=this.el('e-exp-hint');
+    if(this.showExp && !this.expNyq){
+      try { const r=await (await fetch('/api/eis_exp?cell=full')).json();
+        this.expNyq = r && r.available ? r : {curves:[], hint:(r&&r.hint)||'실험 EIS 없음'}; }
+      catch(e){ this.expNyq={curves:[], hint:'fetch 실패'}; }
+    }
+    if(this.showExp){
+      const nc=(this.expNyq&&this.expNyq.curves||[]).length;
+      hint.innerHTML = nc ? `<span style="color:#2ecc71">🔬 실험 풀셀 ${nc}개 (Ω·cm² ASR) — physics-EIS 선과 자릿수 대조 (반쪽셀 vs 풀셀=배치 다름)</span>`
+        : `<span style="color:#c9a24b">실험 EIS 오버레이 불가: ${(this.expNyq&&this.expNyq.hint)||'데이터 없음'}</span>`;
+    } else { hint.innerHTML=''; }
+    if(this.lastD) this.drawNyquist(this.lastD);
   },
   elems(d){
     const e = d.elements, fmt=(x,n=2)=> (x==null?'—':(Math.abs(x)>=100||Math.abs(x)<0.01?x.toPrecision(3):x.toFixed(n)));
@@ -243,20 +267,33 @@ const EIS = {
     cv.width=W*dpr; cv.height=H*dpr; const ctx=cv.getContext('2d'); ctx.scale(dpr,dpr); ctx.clearRect(0,0,W,H);
     const pts=d.nyquist.filter(p=>p.zre!=null&&p.zim!=null);
     if(!pts.length) return;
+    // 실험 오버레이 점 (frame[4]) — 축 스케일에 포함
+    let expCurves=[];
+    if(this.showExp && this.expNyq && this.expNyq.curves) expCurves=this.expNyq.curves;
+    const expAll=[]; expCurves.forEach(c=>(c.pts||[]).forEach(p=>expAll.push(p)));
     const mL=52,mR=14,mT=14,mB=34;
-    const xmax=Math.max(...pts.map(p=>p.zre))*1.05, xmin=0;
-    const ymax=Math.max(Math.max(...pts.map(p=>p.zim)),xmax*0.15)*1.05, ymin=Math.min(0,...pts.map(p=>p.zim));
+    const allZre=pts.map(p=>p.zre).concat(expAll.map(p=>p.zre));
+    const allZim=pts.map(p=>p.zim).concat(expAll.map(p=>p.zim));
+    const xmax=Math.max(...allZre)*1.05, xmin=0;
+    const ymax=Math.max(Math.max(...allZim),xmax*0.15)*1.05, ymin=Math.min(0,...allZim);
     const {pw,ph}=this._axes(ctx,W,H,mL,mB,mT,mR,'Z′ (Ω·cm²)','−Z″ (Ω·cm²)',xmin,xmax,ymin,ymax,false);
     const X=v=>mL+((v-xmin)/(xmax-xmin||1))*pw, Y=v=>mT+ph-((v-ymin)/(ymax-ymin||1))*ph;
+    // 실험 방울 (physics 선 아래에 먼저)
+    expCurves.forEach(c=>{ (c.pts||[]).forEach(p=>{ if(p.zre==null||p.zim==null) return;
+      ctx.beginPath(); ctx.arc(X(p.zre),Y(p.zim),2.0,0,7);
+      ctx.fillStyle='rgba(46,204,113,.55)'; ctx.fill(); }); });
+    // physics-EIS 선
     ctx.beginPath(); pts.forEach((p,i)=>{ const x=X(p.zre),y=Y(p.zim); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
     ctx.strokeStyle='#5aa9e6'; ctx.lineWidth=2; ctx.stroke();
-    // 데이터 점 (10진 주파수마다 강조)
     pts.forEach((p,i)=>{ if(i%7===0){ ctx.beginPath(); ctx.arc(X(p.zre),Y(p.zim),2.4,0,7);
       ctx.fillStyle='#e8edf6'; ctx.fill(); } });
-    // R0 마커
     const e=d.elements;
     if(e.R0_ohm_cm2!=null){ ctx.fillStyle='#c9a24b'; ctx.textAlign='center';
       ctx.fillText('R0', X(e.R0_ohm_cm2), Y(0)-4); }
+    // 범례
+    if(expCurves.length){ ctx.textAlign='left'; ctx.font='10px "JetBrains Mono",monospace';
+      ctx.fillStyle='#5aa9e6'; ctx.fillText('— physics-EIS', W-mR-108, mT+10);
+      ctx.fillStyle='rgba(46,204,113,.9)'; ctx.fillText('● 실험(풀셀)', W-mR-108, mT+23); }
   },
   drawDRT(d){
     const cv=this.el('e-drt'), dpr=window.devicePixelRatio||1, W=cv.clientWidth||440, H=380;
@@ -399,6 +436,7 @@ const EIS = {
     this.caseId = (new URLSearchParams(location.search).get('case')||'').trim();  // /eis?case=X 자동로드
     this.el('e-run').addEventListener('click', ()=>this.run());
     this.el('e-expanchor').addEventListener('click', ()=>this.toggleExpAnchor());
+    this.el('e-exp-toggle').addEventListener('click', ()=>this.toggleExp());
     this.el('e-ica-run').addEventListener('click', ()=>this.runICA());
     this.el('ec-run').addEventListener('click', ()=>this.runCycle());
     document.querySelectorAll('[data-cyc]').forEach(b=>

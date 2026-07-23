@@ -3979,6 +3979,48 @@ def api_eis_fig():
                               headers={'Content-Disposition': f'attachment; filename="eis_{kind}.{fmt}"'})
 
 
+@app.route('/api/eis_exp')
+def api_eis_exp():
+    """실험 EIS Nyquist (이종기술/eis/extracted) → Ω·cm² 정규화 = physics-EIS 위 오버레이(frame[4]).
+    cell=full(primer-SUS 풀셀, 1.327cm²)|sym(SUS 대칭, 0.785cm²).  Z(Ω)×area = ASR(eis_fit 규약).
+    데이터 부재 시 available:false (클라우드 graceful)."""
+    import csv as _csv
+    import glob as _glob
+    import math as _math
+    cell = 'sym' if request.args.get('cell') == 'sym' else 'full'
+    area = 0.7854 if cell == 'sym' else 1.3273                 # eis_fit AREA 규약(10π/13π 반경²)
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    exdir = os.path.join(root, '이종기술', 'eis', 'extracted')
+    if not os.path.isdir(exdir):
+        return jsonify({'available': False, 'hint': '실험 EIS 추출본 없음 (이종기술/eis/extracted) — 랩 데이터'}), 200
+    curves = []
+    for p in sorted(_glob.glob(os.path.join(exdir, '*.csv'))):
+        name = os.path.basename(p)[:-4]
+        if (('sym' in name) != (cell == 'sym')):              # full/sym 필터
+            continue
+        pts = []
+        try:
+            for row in _csv.DictReader(open(p)):
+                try:
+                    zr = float(row['ReZ_ohm']) * area
+                    zi = float(row['negImZ_ohm']) * area
+                except (KeyError, ValueError, TypeError):
+                    continue
+                if _math.isfinite(zr) and _math.isfinite(zi) and abs(zr) < 1e6 and abs(zi) < 1e6:
+                    pts.append({'zre': round(zr, 3), 'zim': round(zi, 3)})
+        except Exception:
+            continue
+        if len(pts) > 80:                                     # 오버레이용 다운샘플
+            pts = pts[::(len(pts) // 80 + 1)]
+        if len(pts) >= 4:
+            curves.append({'name': name, 'pts': pts})
+    if not curves:
+        return jsonify({'available': False, 'hint': f'{cell} 셀 추출본 없음'}), 200
+    return jsonify({'available': True, 'cell': cell, 'area_cm2': area, 'curves': curves,
+                    'note': 'Z(Ω)×area→Ω·cm²(ASR, eis_fit 규약); 방울=실측 Nyquist, physics-EIS 선과 겹치면 frame[4] '
+                            '(반쪽셀 모델 vs primer-SUS 풀셀 = 배치 다름, 자릿수-대조)'})
+
+
 @app.route('/')
 def index():
     cases = list_cases()

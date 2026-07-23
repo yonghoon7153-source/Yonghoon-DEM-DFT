@@ -52,6 +52,13 @@ R(N) 성장 3-패널).  webapp `/api/eis_fig?kind=eis|cycle&fmt=png|svg` + eis.h
 - **framing 정직화**(리뷰#4): "주파수 위치=예측력" 은 **σ-triad(R0_hf) 한정**; arc f_ct 는 i0·c_dl(둘 다
   미앵커), Warburg τ_w 는 D_s(미측정)가 결정 → 동역학 위치는 앵커 대기(§F1, provenance dict 명시).
 
+## ★ frame[4] 실험 Nyquist 오버레이 — BUILT (2026-07-24)
+webapp `/api/eis_exp?cell=full|sym` + eis.html **🔬 실험 겹치기** 토글: 실험 EIS(`이종기술/eis/extracted`)
+Nyquist 를 **Z(Ω)×area = ASR(Ω·cm²)**(eis_fit AREA 규약 정합) 로 정규화 → physics-EIS 선 위에 **초록 방울**
+오버레이 = 모델↔실측 자릿수-대조.  검증: full 4셀 Z′ 6–132 Ω·cm² · physics-EIS(SBE ~70) 가 그 cloud 안
+= σ-triad·R_ct 자릿수 교차검증.  ★정직: 반쪽셀 모델 vs primer-SUS 풀셀 = 배치 다름 → 자릿수 대조(정밀X).
+데이터 부재(클라우드) 시 hint.  이로써 EIS 모듈의 핵심 약속(같은 회로 → 실측 대조)이 그림으로 완성.
+
 ## frame[4] 대조 (실험 EIS)
 `eis_fit.py` 가 랩 BioLogic .mpr(→ `eis_archive.py`)를 R0-p(R1,CPE1)-Wo1 로 피팅 → R0/R1(R_ct)/CPE(C_dl)/
 Wo1(R_w,τ) 추출.  우리 `physics_eis` 가 **같은 소자를 우리 물리로 예측** → 실측과 대조:
