@@ -3338,15 +3338,15 @@ function applyViewMode(state, mode) {
       + (sigTxt ? `<div style="margin-top:3px"><b style="font-size:13px">${sigTxt}</b></div>` : '')
       + `<div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>`
       + (fsc
-         ? `<div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af"><span>0</span><span>|J| / ⟨J_z⟩</span><span>×${fmtP(fsc.focus_top)}</span></div>`
-           + `<div style="font-size:9.5px;color:#6b7280;margin-top:1px;line-height:1.35">상단(p99.8) = ${fmtP(fsc.j_top_A_cm2_per_V)} A/cm² @ΔV=1V · ⟨J_z⟩ = ${fmtP(fsc.j_mean_z_A_cm2_per_V)} A/cm²/V</div>`
+         ? `<div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af"><span>0</span><span>|J| / ⟨J_z⟩ &nbsp;(색 패턴 = 1V·1C 동일)</span><span>×${fmtP(fsc.focus_top)}</span></div>`
            + (fsc.j_1C_mA_cm2
-              ? `<div style="margin-top:5px;padding:6px 8px;background:#0d1117;border:1px solid #2a2d3e;border-radius:6px">
-                   <div style="font-size:11.5px;color:#9ca3af">운전 환산&nbsp; <input id="fld-crate" type="number" value="1" min="0.05" step="0.05" style="width:46px;font-size:12px;background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:4px;padding:1px 4px"> C</div>
-                   <div style="font-size:12.5px;color:#e5e7eb;margin-top:3px">⟨J⟩ <b><span id="fld-jmean-abs"></span></b> · 피크 <b><span id="fld-jtop-abs"></span></b> mA/cm²</div>
-                   <div style="font-size:10px;color:#6b7280;margin-top:2px">면적용량 ${fmtP(fsc.areal_capacity_mAh_cm2)} mAh/cm² 자동산출 · 피크 = p99.8 지점</div>
+              ? `<div style="margin-top:5px;padding:6px 8px;background:#0d1117;border:1px solid #f97316;border-radius:6px">
+                   <div style="font-size:11.5px;color:#fbbf24">🔋 운전 전류밀도&nbsp; <input id="fld-crate" type="number" value="1" min="0.05" step="0.05" style="width:46px;font-size:12px;background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:4px;padding:1px 4px"> C 기준 (mA/cm²)</div>
+                   <div style="font-size:12.5px;color:#e5e7eb;margin-top:3px">⟨J⟩ <b><span id="fld-jmean-abs"></span></b> · 피크(p99.8) <b><span id="fld-jtop-abs"></span></b></div>
+                   <div style="font-size:10px;color:#6b7280;margin-top:2px">= 면적용량 ${fmtP(fsc.areal_capacity_mAh_cm2)} mAh/cm² × C-rate × (평균 / 집중 ×${fmtP(fsc.focus_top)}) · 색 패턴은 선형이라 그대로</div>
                  </div>`
               : `<div style="font-size:9.5px;color:#6b7280">운전 국소값 = (|J|/⟨J⟩) × 면적전류밀도(mA/cm²)</div>`)
+           + `<div style="font-size:9px;color:#4b5563;margin-top:3px;line-height:1.3">참고(선형 프로브, 운전점 아님): @ΔV=1V 상단 ${fmtP(fsc.j_top_A_cm2_per_V)} A/cm² · ⟨J_z⟩ ${fmtP(fsc.j_mean_z_A_cm2_per_V)}</div>`
          : `<div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af"><span>0</span><span>|J| (0–p99.8)</span><span>high</span></div>`)
       + `<label style="display:block;margin-top:5px;font-size:11.5px;color:#e5e7eb;cursor:pointer">
            <input type="checkbox" id="fld-backbone" ${backboneGrp.visible ? 'checked' : ''}>
@@ -3445,9 +3445,11 @@ function applyViewMode(state, mode) {
       ? { map: 'jet', gamma: 1.6,
           title: (thermal ? '|k∇T|' : ionic ? '|J_ion|' : '|J_e|') + ' / ⟨J_z⟩ current-focusing (p99.8-normalized)',
           ticks: _focusTicks(fsc),
-          sub: 'top(p99.8) = ' + fmtP(fsc.j_top_A_cm2_per_V) + ' A/cm² @ΔV=1V'
-             + (fsc.j_1C_mA_cm2 ? ' · @1C: ⟨J⟩ ' + fmtP(fsc.j_1C_mA_cm2) + ' · top '
-                + fmtP(fsc.j_1C_mA_cm2 * fsc.focus_top) + ' mA/cm²' : '') }
+          sub: (fsc.j_1C_mA_cm2
+                ? '@1C 운전: ⟨J⟩ ' + fmtP(fsc.j_1C_mA_cm2) + ' · 피크(p99.8) '
+                  + fmtP(fsc.j_1C_mA_cm2 * fsc.focus_top) + ' mA/cm² · '
+                : '')
+             + 'top ' + fmtP(fsc.j_top_A_cm2_per_V) + ' A/cm² @ΔV=1V(선형프로브)' }
       : { map: 'jet', gamma: 1.6,
           title: (thermal ? '|k∇T|' : ionic ? '|J_ion|' : '|J_e|') + ' relative current density (p99.8-normalized)',
           left: '0', right: 'high' };
