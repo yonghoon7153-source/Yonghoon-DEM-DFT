@@ -324,6 +324,10 @@ def main():
                          'High for paper figures; ~90k/field ≈ a few MB JSON.  Hottest 35%% always kept.')
     ap.add_argument('--no-field', action='store_true',
                     help='skip the STEP3 current-density FIELD export (electronic_field / ionic_field)')
+    ap.add_argument('--no-thermal', action='store_true',
+                    help='skip STEP3 열전도 (σ_thermal 多상 k_eff) 솔브')
+    ap.add_argument('--k-carbon', type=float, default=None,
+                    help='열전도 carbon(VGCF/SuperP/SWCNT) k [W/cm·K] override (기본 =k_AM 보수적 ASSUMED; 스윕용)')
     ap.add_argument('--step3-gpu', action='store_true',
                     help='run the STEP3 Kirchhoff CG on GPU (CuPy cuSPARSE) — ~10-50× faster, esp. fine '
                          'vox; auto-falls back to scipy CPU if CuPy/CUDA missing (same σ either way).')
@@ -848,6 +852,27 @@ def main():
                           f"({_res3i['n_dof']:,} dof, resid {_res3i['resid']:.1e}, {_time.time()-_t1:.0f}s)  "
                           f"share: " + " ".join(f"{k} {100*v:.0f}%"
                                                 for k, v in step3['ion_dissipation_share'].items()))
+                # ── STEP3 열전도 (σ_thermal, 多상 k) — 同 sid3 격자 재사용, ∇·(k∇T)=0 (σ_e/σ_ion과 동일 솔버) ──
+                if not a.no_thermal:
+                    try:
+                        _kt, _kprov = _s3.thermal_k_table(k_carbon=a.k_carbon)
+                        _th = _s3.solve_thermal(sid3, a.step3_vox, _ztop, 0.0, _kt)
+                        step3['thermal'] = {
+                            'k_eff_W_mK': _th['k_eff_W_mK'], 'n_dof': _th['n_dof'],
+                            'cg_resid': _th['cg_resid'], 'heat_flux_share': _th.get('heat_flux_share'),
+                            'k_table_provenance': _kprov,
+                            'trust': ('多상 k(全상 열통과, σ_e[AM만]/σ_ion[SE만] 단상과 다름); AM/SE=Ketter2025 '
+                                      '문헌앵커, carbon/PTFE/pore=ASSUMED(소분율·--k-carbon 스윕); Kapitza 계면 '
+                                      '열저항 무시(sub-voxel constriction 동일 캐비엇); network_conductivity thermal'
+                                      '과 다른 표현(복셀-field vs 입자-graph)=교차검증(독립 아님)'
+                                      + (' ⚠UNCONVERGED' if _th.get('unconverged') else ''))}
+                        if _th['k_eff_W_mK'] is not None:
+                            print(f"  STEP3 κ_eff = {_th['k_eff_W_mK']} W/m·K  (多상 열전도, vox {a.step3_vox}µm, "
+                                  f"resid {_th['cg_resid']})")
+                        elif _th.get('reason'):
+                            print(f"  ⚠ STEP3 thermal not solvable: {_th['reason']}")
+                    except (Exception, SystemExit) as _e_th:
+                        print(f"  ⚠ STEP3 thermal skip: {type(_e_th).__name__}: {_e_th}")
                 # ★ A6 — PORE-phase effective-diffusion τ (DiffuDict/TauFactor 규약, #281/#286 축):
                 # 같은 격자에서 void상 σ=1 Laplace → D_eff/D0, τ = ε_total/D_rel.  STRUCTURAL
                 # descriptor (frame[4] cross-check) — ASSB Li⁺ 수송은 SE 접촉망(σ_ion 위)이 담당,
