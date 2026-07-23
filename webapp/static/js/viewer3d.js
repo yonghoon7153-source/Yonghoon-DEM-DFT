@@ -766,8 +766,10 @@ function renderSt4Faces(state) {
   if (pfBtn) pfBtn.onclick = () => {
     if (!_profRows.length || !state._st4fProf) return;
     const big = document.createElement('canvas');
-    big.width = 1200; big.height = 660;
-    drawZProfileCanvas(big, state._st4fProf.curves, '');   // 고해상 재그리기 (확대-뭉갬 방지)
+    big.width = 1280; big.height = 760;
+    const _pm = ((document.getElementById('st4f-prof-src') || {}).value) || 'rxn';   // ★흰배경 실선판
+    const _yl = _pm === 'phi' ? 'φ (전자·이온 층평균, 정규화)' : '⟨|i/ī|⟩ · 표면 SOC';
+    drawZProfileMPL(big, state._st4fProf.curves, _yl, '집전체', '분리막', '두께방향 프로파일 (동적 Fig4e)');
     const t_now = _profRows[0][1];
     const a1 = document.createElement('a');
     a1.href = big.toDataURL('image/png');
@@ -3204,8 +3206,9 @@ function applyViewMode(state, mode) {
     if (pfBtn) pfBtn.onclick = () => {
       const pr = state._fldProf;
       if (!pr) return;
-      const big = document.createElement('canvas'); big.width = 1200; big.height = 660;   // 고해상 재그리기
-      drawZProfileCanvas(big, pr.curves, pr.yLab);
+      const big = document.createElement('canvas'); big.width = 1280; big.height = 760;   // ★matplotlib 흰배경 실선판 (다운로드)
+      drawZProfileMPL(big, pr.curves, pr.yLab, '집전체', '분리막',
+        (String(pr.yLab).indexOf('φ') >= 0 ? '두께방향 φ(z) 프로파일 (Oh2025 Fig4e)' : '두께방향 프로파일 (Fig4e)'));
       // 케이스별 유니크 파일명 (안 그러면 elec_zprofile / _1 로 뭉개짐).  ★레시피(additive_counts)를
       // 우선 — payload에 내재적이라 SBE(VGCF-PTFE)↔DBE(VGCF-PTFE-SDCP)가 항상 다름.  collector selected는
       // 두 payload에서 같은 기본값(SBE)일 수 있어 구분 불가 → SBE/DBE 토큰만 가독성용으로 덧붙임.
@@ -5282,6 +5285,52 @@ function drawZProfileCanvas(cv, curves, yLab, leftLab, rightLab) {
   g.textAlign = 'left'; g.fillText(leftLab || '집전체', mL + 1.5 * k, H - 4.5 * k);
   g.textAlign = 'right'; g.fillText(rightLab || '분리막', W - mR - 1.5 * k, H - 4.5 * k);
   g.textAlign = 'left'; g.fillText(yLab, mL + 4 * k, mT + 11 * k);
+}
+
+/* 두께방향 프로파일 — matplotlib 느낌 "흰 배경 · 실선" 판 (★다운로드 전용; 인라인 미리보기는 위 다크판).
+   축 프레임·눈금 숫자·격자·축 라벨·제목·범례를 갖춘 python plot 스타일.  곡선 색은 흰 배경용으로 진하게 매핑,
+   실선(정본)/점선(bare) 구분은 물리적 의미라 유지. */
+function drawZProfileMPL(cv, curves, yLab, leftLab, rightLab, title) {
+  const g = cv.getContext('2d'), W = cv.width, H = cv.height;
+  g.fillStyle = '#ffffff'; g.fillRect(0, 0, W, H);
+  const mL = 104, mR = 30, mT = title ? 56 : 26, mB = 78, pw = W - mL - mR, ph = H - mT - mB;
+  const allY = curves.flatMap(c => c.ys);
+  let yMin = Math.min(...allY), yMax = Math.max(...allY);
+  if (!(yMax > yMin)) yMax = yMin + 1e-9;
+  const pad = (yMax - yMin) * 0.06; yMin -= pad; yMax += pad;      // matplotlib 축 여백
+  const zMax = Math.max(...curves.flatMap(c => c.zs), 1e-9);
+  const yr = yMax - yMin, yDec = yr < 0.2 ? 3 : yr < 2 ? 2 : yr < 50 ? 1 : 0;
+  const zDec = zMax < 2 ? 2 : zMax < 50 ? 1 : 0;
+  const PX = z => mL + z / zMax * pw, PY = y => mT + (1 - (y - yMin) / (yMax - yMin)) * ph;
+  const nX = 6, nY = 5;
+  g.strokeStyle = '#e5e7eb'; g.lineWidth = 1;                     // 격자
+  for (let i = 0; i <= nY; i++) { const y = mT + i / nY * ph; g.beginPath(); g.moveTo(mL, y); g.lineTo(W - mR, y); g.stroke(); }
+  for (let i = 0; i <= nX; i++) { const x = mL + i / nX * pw; g.beginPath(); g.moveTo(x, mT); g.lineTo(x, H - mB); g.stroke(); }
+  g.strokeStyle = '#111827'; g.lineWidth = 1.4; g.strokeRect(mL, mT, pw, ph);   // 축 프레임
+  g.fillStyle = '#111827'; g.font = '20px Inter,Arial,sans-serif';
+  g.textAlign = 'right'; g.textBaseline = 'middle';              // y 눈금 숫자
+  for (let i = 0; i <= nY; i++) { const v = yMax - i / nY * (yMax - yMin), y = mT + i / nY * ph;
+    g.fillText(v.toFixed(yDec), mL - 10, y); g.beginPath(); g.moveTo(mL - 5, y); g.lineTo(mL, y); g.stroke(); }
+  g.textAlign = 'center'; g.textBaseline = 'top';                // x 눈금 숫자
+  for (let i = 0; i <= nX; i++) { const v = i / nX * zMax, x = mL + i / nX * pw;
+    g.fillText(v.toFixed(zDec), x, H - mB + 8); g.beginPath(); g.moveTo(x, H - mB); g.lineTo(x, H - mB + 5); g.stroke(); }
+  g.font = '22px Inter,Arial,sans-serif'; g.textAlign = 'center'; g.textBaseline = 'bottom';
+  g.fillText(`z (µm)  —  ${leftLab || '집전체'}(좌) → ${rightLab || '분리막'}(우)`, mL + pw / 2, H - 18);
+  g.save(); g.translate(28, mT + ph / 2); g.rotate(-Math.PI / 2); g.textBaseline = 'top'; g.textAlign = 'center';
+  g.fillText(yLab, 0, 0); g.restore();
+  if (title) { g.font = 'bold 24px Inter,Arial,sans-serif'; g.textAlign = 'center'; g.textBaseline = 'top'; g.fillText(title, W / 2, 16); }
+  const MC = { '#f87171': '#d62728', '#a78bfa': '#7c3aed' };      // 흰 배경용 진한색
+  curves.forEach(c => { g.strokeStyle = MC[c.color] || c.color; g.lineWidth = 2.6; g.setLineDash(c.dash ? [9, 6] : []);
+    g.beginPath(); c.zs.forEach((z, i) => { const x = PX(z), y = PY(c.ys[i]); i ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke(); });
+  g.setLineDash([]);
+  if (curves.length > 1) {                                       // 범례 (실선 정본 / 점선 bare)
+    const lx = W - mR - 232, ly = mT + 16; g.font = '18px Inter,Arial,sans-serif'; g.textBaseline = 'middle';
+    const labs = ['실선: 정본', '점선: bare 집전체'];
+    curves.slice(0, 2).forEach((c, i) => { const yy = ly + i * 27;
+      g.strokeStyle = MC[c.color] || c.color; g.lineWidth = 2.6; g.setLineDash(c.dash ? [9, 6] : []);
+      g.beginPath(); g.moveTo(lx, yy); g.lineTo(lx + 36, yy); g.stroke(); g.setLineDash([]);
+      g.fillStyle = '#111827'; g.textAlign = 'left'; g.fillText(labs[i], lx + 44, yy); });
+  }
 }
 
 /* 3D 뷰 고해상 캡처 — 렌더 버퍼를 일시적으로 scale배 키워 render→toDataURL 후 복원.
