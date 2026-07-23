@@ -262,16 +262,20 @@ def _selftest():
     return 1 if fails else 0
 
 
-def _load_step3_params(metrics_json):
-    """mpm_metrics.json(step3) → physics_eis 입력 dict (σ-triad·두께·집전체)."""
-    import json
-    m = json.loads(open(metrics_json).read())
-    s3 = m.get('step3', m)
-    fse = (s3.get('field_scale_e') or {})
+def _step3_params_from_metrics(m):
+    """metrics dict(step3 최상위 또는 중첩) → physics_eis 입력 dict (σ-triad·두께·porosity·집전체).
+    mpm_metrics.json 과 mpm_lab payload 의 mpm_metrics 둘 다 이 구조(step3 + thickness_mpm_um…)."""
+    s3 = m.get('step3', m) or {}
     return {'sigma_e_S_cm': s3.get('sigma_e_eff_S_cm'), 'sigma_ion_S_cm': s3.get('sigma_ion_eff_S_cm'),
             'thickness_um': m.get('thickness_um') or m.get('thickness_mpm_um'),
             'porosity': m.get('porosity_mpm_pct') or m.get('porosity_settled_pct'),
             'r_int_ohm_cm2': (s3.get('collector_geometric') or {}).get('R_geom_ohm_cm2', 0.0)}
+
+
+def _load_step3_params(metrics_json):
+    """mpm_metrics.json(step3) 파일 → physics_eis 입력 dict."""
+    import json
+    return _step3_params_from_metrics(json.loads(open(metrics_json).read()))
 
 
 def main(argv=None):

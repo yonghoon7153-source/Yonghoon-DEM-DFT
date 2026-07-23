@@ -3630,24 +3630,33 @@ def api_eis():
     case_loaded = None
     _case = (request.args.get('case') or '').strip()
     if _case:
-        try:
+        def _apply(_p):                                       # STEP3 σ-triad·두께·porosity 만 override
+            if _p.get('sigma_e_S_cm'):
+                kw['sigma_e_S_cm'] = min(1e3, max(1e-6, float(_p['sigma_e_S_cm'])))
+            if _p.get('sigma_ion_S_cm'):
+                kw['sigma_ion_S_cm'] = min(1e2, max(1e-9, float(_p['sigma_ion_S_cm'])))
+            if _p.get('thickness_um'):
+                kw['thickness_um'] = min(1000.0, max(1.0, float(_p['thickness_um'])))
+            if _p.get('porosity'):
+                kw['porosity'] = min(60.0, max(0.1, float(_p['porosity'])))
+        try:                                                  # 1) DEM 케이스 (results/<case>/*metrics.json)
             _rd = get_results_dir(_case)
             for _mf in ('mpm_metrics.json', 'full_metrics.json'):
                 _mp = os.path.join(_rd, _mf)
                 if os.path.exists(_mp):
-                    _p = _eis._load_step3_params(_mp)
-                    if _p.get('sigma_e_S_cm'):
-                        kw['sigma_e_S_cm'] = min(1e3, max(1e-6, float(_p['sigma_e_S_cm'])))
-                    if _p.get('sigma_ion_S_cm'):
-                        kw['sigma_ion_S_cm'] = min(1e2, max(1e-9, float(_p['sigma_ion_S_cm'])))
-                    if _p.get('thickness_um'):
-                        kw['thickness_um'] = min(1000.0, max(1.0, float(_p['thickness_um'])))
-                    if _p.get('porosity'):
-                        kw['porosity'] = min(60.0, max(0.1, float(_p['porosity'])))
-                    case_loaded = _case
-                    break
+                    _apply(_eis._load_step3_params(_mp)); case_loaded = _case; break
         except Exception:
-            case_loaded = None                                # 케이스 로드 실패 → UI 기본값 (조용히)
+            pass
+        if not case_loaded:                                   # 2) mpm_lab 저장 payload (mpm_lab/<pid>/meta.json → mpm_metrics)
+            try:
+                import json as _json
+                _mj = os.path.join(_contained_join(app.config['MPM_LAB_FOLDER'], _case), 'meta.json')
+                if os.path.exists(_mj):
+                    _mm = (_json.loads(open(_mj).read()).get('mpm_metrics')) or {}
+                    if _mm:
+                        _apply(_eis._step3_params_from_metrics(_mm)); case_loaded = _case
+            except Exception:
+                pass
     try:
         freqs = _np.logspace(5, -2, 70)
         Z, el = _eis.physics_eis(freqs, **kw)
