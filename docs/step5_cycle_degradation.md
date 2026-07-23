@@ -64,18 +64,23 @@ pristine 전극(STEP1–4 산출)이 주어졌을 때 **N 사이클 후 어떻�
   Yun/Kim 2점 table-verified + Park √t 함수형.  다음 추적: Seok 2026 AEM(aenm.202506351)·ORNL DRT·Trevisanello.
 
 ## 현 위치 · 산출물
-- ✅ **도구**: `cycle_contact_ledger.py`(fade), `plot_fade_trajectory.py`(정직-분해 그림),
+- ✅ **도구**: `cycle_contact_ledger.py`(fade), `b1_chem_fade.py`(화학 N-전개 → 총 R_int(N),
+  `trajectory_scalar` 웹패널 공용 코어 + selftest 11/11), `plot_fade_trajectory.py`(정직-분해 그림),
   `plot_focusing_colorbar.py`(current-focusing joint 컬러바), `calibrate_ledger_reflow.py`(철회판),
   `metric_split_check.py`(지표 분해), `gen_a1_anchors.sh`/kit companion(MPM 앵커).
-- ✅ **webapp**: viewer3d.js 용어집 "사이클 열화 fade(N)" 정직 항목.
-- ⛔ **B-1 N-전개** (지배적 화학 몫) — 다음 핵심.
-- ⛔ **실험 R_int(N) 곡선** (WSL PDF #5) — 모양·크기 검증.
+- ✅ **webapp 인터랙티브 fade(N) 패널** (`/step5`, `templates/step5.html` + `/api/step5/fade` +
+  `app.py:api_step5_fade`): pristine R_int₀ · 실험 총 성장 ×@N · 접촉 ledger 끝점(하한) · 화학 shape
+  (√N Park2023 / linear) · 화학몫(bare 나머지 / 코팅 chem_x) 슬라이더 → canvas 스택 분해도(접촉/화학/
+  OTHER) 실시간.  프리셋 SBE·DBE·Yun·코팅.  ★정직 라벨 상시 노출(magnitude=실험앵커, shape=ASSUMED,
+  reflow·v2 기각 명시).  `b1_chem_fade.trajectory_scalar` = CLI와 동일 코어(단일 소스).
+- ✅ **webapp 용어집**: viewer3d.js "사이클 열화 fade(N)" 정직 항목.
+- ✅ **B-1 N-전개** (지배적 화학 몫) — `b1_chem_fade.py` 착지 (실험앵커·정직 shape).
+- ⛔ **실험 R_int(N) 곡선** (WSL PDF #5) — 모양·크기 검증 (남은 유일한 검증 게이트).
 
 ## 다음
-1. **B-1 N-전개**: `step4_dyn.py --cycle-n N --i0-cycle-mult ...`로 CEI R_chem(N) 산출 →
-   ledger 접촉(1.1×) + B-1 화학 합산 = 총 R_int(N) → 실험(3.8~6.1×) 재현.  ★크기 맞추는 길.
-2. **실험 곡선** 디지타이즈(WSL) → 모양(√N/선형/포화) 검증.
-3. (이후) webapp 인터랙티브 fade(N) 패널.
+1. **실험 곡선** 디지타이즈(WSL) → 모양(√N/선형/포화) 검증 → `/step5` 패널·`b1_chem_fade`에 오버레이.
+2. STEP4 저율 galvano(0.1C/0.2C) GPU 런(v100)으로 near-null-B AMG end-to-end 검증 → B-1 화학 R_chem(N)의
+   step4-기반 산출(현 `--i0-cycle-mult`)과 스칼라 앵커 교차확인.
 
 ## 매뉴스크립트 narrative (한 문단)
 STEP5는 pristine 전극(STEP1–4)의 사이클 열화 R_int(N)을 **first-principles 분해**로 예측한다:
@@ -86,4 +91,5 @@ Yun 2023)하고 접촉은 소수(ledger 하한 ~1.1×; frozen-AM이라 골격재
 ~13~20× 억제**(Kim 2025)해 화학 몫이 작아지고(coated 93%@200cyc, Payandeh) 잔여 열화는 골격재배열·
 CAM/SE 이탈(Ni≥85, Nature Energy 2025) 등 **모델 밖(OTHER)** 으로 이동한다.  ⇒ STEP5의 기여 = 각 채널을
 frame[5]로 **정직하게 분리**(MPM/ledger=기전·방향, 크기=실험앵커), 좋은 양극재엔 열린 프레임(--chem-x)으로
-작은 접촉몫만 정직히 잡는다.  (반증: reflow 지표착시·v2 반복사이클 MPM은 적대리뷰로 코딩전 기각.)
+작은 접촉몫만 정직히 잡는다.  (반증: reflow=0.34 지표착시는 **코딩 후** 적대리뷰로 철회[commit 31470f9] ·
+v2 반복사이클 MPM은 **코딩 전** 3렌즈 리뷰로 기각.)

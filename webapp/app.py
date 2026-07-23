@@ -3522,6 +3522,60 @@ def case_whatif_additives(case_id):
     return jsonify(out)
 
 
+@app.route('/step5')
+def step5():
+    """STEP5 사이클 열화 fade(N) 인터랙티브 패널 — 총 R_int(N) 정직 분해
+    (접촉 ledger 하한 + 화학 CEI[√N Park2023] + OTHER 모델밖).  ASSUMED-shape 라벨 상시 노출."""
+    return render_template('step5.html')
+
+
+@app.route('/api/step5/fade')
+def api_step5_fade():
+    """fade(N) 궤적 계산 — b1_chem_fade.trajectory_scalar (단일 소스, CLI와 동일 코어).
+    Query: rint0, exp_x, n_exp, r_contact0, ledger_end_x, shape=sqrt|linear, chem_x(빈값=bare 나머지)."""
+    import math as _math
+
+    def _f(name, default, lo, hi):
+        # ★리뷰 MAJOR: non-finite(inf/nan) 차단 + 상한(finite) — 아니면 jsonify가 NaN/Infinity 방출 →
+        #   브라우저 JSON.parse 거부 → 패널이 잘못된 'fetch 실패'로 죽음.
+        try:
+            v = float(request.args.get(name, default))
+        except (ValueError, TypeError):
+            return default
+        if not _math.isfinite(v):
+            return default
+        return min(hi, max(lo, v))
+    rint0 = _f('rint0', 18.0, 0.1, 1e6)
+    exp_x = _f('exp_x', 6.1, 1.0, 1e6)
+    n_exp = int(_f('n_exp', 1000, 1, 100000))
+    r_contact0 = _f('r_contact0', 2.0, 0.0, 1e6)
+    ledger_end_x = _f('ledger_end_x', 1.1, 1.0, 1e4)
+    chem_p = _f('chem_p', 1.5, 0.2, 6.0)
+    shape = request.args.get('shape', 'sqrt')
+    if shape not in ('sqrt', 'linear', 'power'):
+        shape = 'sqrt'
+    chem_x_raw = (request.args.get('chem_x', '') or '').strip().lower()
+    chem_x = None
+    if chem_x_raw not in ('', 'none', 'auto', 'bare'):
+        try:
+            cx = float(chem_x_raw)
+            chem_x = min(1e6, max(1.0, cx)) if _math.isfinite(cx) else None
+        except ValueError:
+            chem_x = None
+    try:
+        import sys as _sys
+        scripts_dir = os.path.join(os.path.dirname(__file__), '..', 'scripts')
+        if scripts_dir not in _sys.path:
+            _sys.path.insert(0, scripts_dir)
+        import b1_chem_fade
+        out = b1_chem_fade.trajectory_scalar(rint0, exp_x, n_exp, r_contact0, shape,
+                                             chem_x=chem_x, ledger_end_x=ledger_end_x, chem_p=chem_p)
+    except Exception as e:
+        return jsonify({'available': False, 'reason': f'{type(e).__name__}: {e}'}), 200
+    out['available'] = True
+    return jsonify(out)
+
+
 @app.route('/')
 def index():
     cases = list_cases()

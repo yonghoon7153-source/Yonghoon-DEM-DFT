@@ -1,0 +1,258 @@
+{% extends "base.html" %}
+{% set active = "step5" %}
+{% block title %}STEP5 사이클 열화 - DEM/MPM Analyzer{% endblock %}
+
+{% block content %}
+<h1>&#x1F50B; STEP5 — 사이클 열화 fade(N)</h1>
+<p style="color:var(--dim);max-width:820px;margin:-4px 0 14px">
+  pristine 전극(STEP1–4)이 <b>N 사이클 후 어떻게 열화하는가</b>(총 R_int(N))를
+  <b>frame[5] 정직 분해</b>로 예측한다: <b>접촉-기계</b>(A-3 ledger 하한) + <b>화학 CEI</b>(B-1,
+  √N/가속 shape · Park2023 [B] 지지) + <b>OTHER</b>(모델 밖).  ★크기(magnitude)는 실험 <b>총 R_int
+  끝점</b>만 앵커(채널 split은 가정), 모양(shape)은 ASSUMED — 실험 곡선(≥4 N점) 검증 대기.
+</p>
+
+<!-- ── 정직 프레임 (적대리뷰가 오버클레임 차단한 결과) ── -->
+<div class="card" style="border-left:3px solid var(--accent)">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px">
+    <div style="background:rgba(41,128,185,.10);border-radius:8px;padding:9px 11px">
+      <div style="font-weight:600;color:#5aa9e6">접촉-기계 (A-3 ledger)</div>
+      <div style="font-size:.82rem;color:var(--dim);margin-top:3px">δcr CZM · recontact=forbid →
+        영구 접촉파단.  <b>작은 몫</b>(기본 파라미터서 ~0.2%; r_contact0 의존 — 접촉=전체 R_int 가정시 ~2%).
+        frozen-AM 하한이라 골격재배열 제외.</div>
+    </div>
+    <div style="background:rgba(230,126,34,.10);border-radius:8px;padding:9px 11px">
+      <div style="font-weight:600;color:#e08a3c">화학 CEI (B-1)</div>
+      <div style="font-size:.82rem;color:var(--dim);margin-top:3px">계면상 성장 — √N(확산제한 Wagner
+        <b>form</b>, Park2023 <b>코팅</b>셀 R∝√t 지지 [B]) 또는 가속(Park2023 <b>bare</b> 파라볼릭).
+        bare서 잔차 지배 · nm-코팅서 억제(Kim2025 ~13–20×↓).</div>
+    </div>
+    <div style="background:rgba(192,57,43,.10);border-radius:8px;padding:9px 11px">
+      <div style="font-weight:600;color:#d05a4d">OTHER (모델 밖)</div>
+      <div style="font-size:.82rem;color:var(--dim);margin-top:3px">CAM/SE 이탈 = <b>접촉손실</b>(frozen-AM
+        하한 초과분, Nature2025 Ni≥85) · 계면 SE분해 = CEI 일부 · <b>Li쪽</b> = 진짜 OTHER.  코팅셀서 지배 → 실험 대기.</div>
+    </div>
+  </div>
+  <div style="font-size:.78rem;color:var(--dim);margin-top:9px;border-top:1px solid var(--border);padding-top:7px">
+    ⚠ <b>기각/철회된 것(정직화 과정)</b>: <b>reflow=0.34</b>는 <b>코딩 후</b> 적대리뷰로 <b>철회</b>
+    (commit 31470f9로 실렸다가 = Hertz-area↔voxel-coverage 지표 아티팩트로 밝혀져 되돌림, 재유동 아님) ·
+    <b>v2 반복사이클 MPM</b>은 <b>코딩 전</b> 3렌즈 리뷰로 기각(rigid pin-mask·isochoric J2 → 물리 불가).
+    살아남은 것 = 이 열린 분해.  &nbsp;·&nbsp; MPM 스캐폴드(mm·type-2 SE)는 ledger 입력과 호환 안 됨 →
+    접촉 채널은 여기서 <b>스칼라 끝점</b>(ledger 실측 하한)으로 주입.
+  </div>
+</div>
+
+<!-- ── 컨트롤 ── -->
+<div class="card">
+  <div class="card-title" style="margin-bottom:8px">입력 (magnitude = 실험 앵커)</div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px">
+    <button class="btn btn-sm btn-secondary" data-preset="sbe">SBE (R_int 18→6.1×@1000)</button>
+    <button class="btn btn-sm btn-secondary" data-preset="dbe">DBE (R_int 18→3.8×@1000)</button>
+    <button class="btn btn-sm btn-secondary" data-preset="yun">Yun (R_ct 341.7→2.87×@100)</button>
+    <button class="btn btn-sm btn-secondary" data-preset="coated">코팅 (ASSUMED, chem×1.3)</button>
+  </div>
+  <div id="s5-prov" style="font-size:.76rem;color:#c9a24b;margin-bottom:12px;min-height:1.1em;line-height:1.35"></div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px">
+    <label class="s5-lab">pristine R_int₀ (Ω·cm²)
+      <input id="s5-rint0" type="number" step="0.1" value="18" class="s5-in"></label>
+    <label class="s5-lab">실험 총 성장 ×@N
+      <input id="s5-expx" type="number" step="0.1" value="6.1" class="s5-in"></label>
+    <label class="s5-lab">끝점 사이클 N
+      <input id="s5-nexp" type="number" step="10" value="1000" class="s5-in"></label>
+    <label class="s5-lab">접촉 ledger 끝점 × <span class="s5-hint">(하한, A-3)</span>
+      <input id="s5-ledx" type="number" step="0.01" value="1.1" class="s5-in"></label>
+    <label class="s5-lab">pristine 접촉 성분 R (Ω·cm²)
+      <input id="s5-rc0" type="number" step="0.1" value="2.0" class="s5-in"></label>
+    <label class="s5-lab">화학 성장 ×@N <span class="s5-hint">(빈칸=bare 나머지 · 코팅=예 1.3)</span>
+      <input id="s5-chemx" type="text" placeholder="bare" class="s5-in"></label>
+  </div>
+  <div style="margin-top:10px;display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+    <span class="s5-lab" style="margin:0">화학 shape:</span>
+    <label class="s5-radio"><input type="radio" name="s5shape" value="sqrt" checked>
+      √N <span class="s5-hint">(Wagner form · Park2023 코팅 [B])</span></label>
+    <label class="s5-radio"><input type="radio" name="s5shape" value="power">
+      가속 <span class="s5-hint">(super-√N · Park2023 bare 파라볼릭)</span></label>
+    <label class="s5-radio"><input type="radio" name="s5shape" value="linear">
+      linear <span class="s5-hint">(ASSUMED)</span></label>
+    <button id="s5-run" class="btn btn-primary btn-sm" style="margin-left:auto">계산 · 그리기</button>
+  </div>
+</div>
+
+<!-- ── 결과: 그림 + 분해 ── -->
+<div class="card">
+  <div class="card-header-row" style="display:flex;justify-content:space-between;align-items:center">
+    <div class="card-title" style="margin:0">총 R_int(N) 분해</div>
+    <div id="s5-shares" style="font-size:.82rem;color:var(--dim)"></div>
+  </div>
+  <canvas id="s5-canvas" width="900" height="420"
+          style="width:100%;max-width:900px;margin-top:8px;border-radius:8px;background:var(--card-bg,#0e1526)"></canvas>
+  <div id="s5-foot" style="font-size:.76rem;color:var(--dim);margin-top:6px"></div>
+</div>
+
+<!-- ── 표 ── -->
+<div class="card">
+  <div class="card-title" style="margin-bottom:6px">궤적 표</div>
+  <div style="overflow-x:auto">
+    <table id="s5-table" style="width:100%;border-collapse:collapse;font-size:.85rem">
+      <thead><tr id="s5-thead"></tr></thead>
+      <tbody id="s5-tbody"></tbody>
+    </table>
+  </div>
+  <div style="font-size:.76rem;color:var(--dim);margin-top:8px">
+    출처: <code>scripts/b1_chem_fade.py</code> (trajectory_scalar, CLI와 동일 코어) ·
+    문헌: <code>docs/data/rint_eis_anchors.csv</code> · 전체 프레임: <code>docs/step5_cycle_degradation.md</code>
+  </div>
+</div>
+
+<style>
+  .s5-lab{display:flex;flex-direction:column;gap:4px;font-size:.82rem;color:var(--text);font-weight:500}
+  .s5-in{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);
+    padding:6px 8px;font-family:'JetBrains Mono',monospace;font-size:.85rem;width:100%}
+  .s5-in:focus{outline:none;border-color:var(--accent)}
+  .s5-hint{color:var(--dim);font-weight:400;font-size:.72rem}
+  .s5-radio{display:flex;align-items:center;gap:5px;font-size:.84rem;color:var(--text);cursor:pointer}
+  #s5-table th,#s5-table td{padding:5px 9px;text-align:right;border-bottom:1px solid var(--border)}
+  #s5-table th:first-child,#s5-table td:first-child{text-align:left}
+  #s5-table th{color:var(--dim);font-weight:600}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const S5 = {
+  el: id => document.getElementById(id),
+  COL: { base:'#7f8c9b', contact:'#2980b9', chem:'#e67e22', other:'#c0392b', total:'#e8edf6', anchor:'#c0392b' },
+  presets: {
+    sbe:    { rint0:18,    expx:6.1,  nexp:1000, ledx:1.1,  rc0:2.0, chemx:'',    shape:'sqrt',
+              prov:'너 랩 Fig6e = R_int @1000cyc@2C (근사, 디지타이즈 대기) · bare/coated 미결 (pristine R_int 18 = 코팅영역일 수 있음 → chemx 넣어 열어보라)' },
+    dbe:    { rint0:18,    expx:3.8,  nexp:1000, ledx:1.1,  rc0:2.0, chemx:'',    shape:'sqrt',
+              prov:'너 랩 Fig6e = R_int @1000cyc@2C (근사) · bare/coated 미결 (SBE와 동일 캐비엇)' },
+    yun:    { rint0:341.7, expx:2.87, nexp:100,  ledx:1.1,  rc0:0,   chemx:'',    shape:'sqrt',
+              prov:'Yun2023 = R_ct-only @100cyc(SC) [A] — ★R_int 아님(전하이동 arc만). 접촉 sub-채널 없음(rc0=0)·화학=100% 정의상. SBE/DBE(R_int@1000/poly)와 축 달라 나란히 비교 금지' },
+    coated: { rint0:18,    expx:1.5,  nexp:200,  ledx:1.05, rc0:2.0, chemx:'1.3', shape:'sqrt',
+              prov:'★ASSUMED magnitude — 코팅 sulfide ASSB R_int(N) 곡선 부재. Payandeh 93%@200=용량유지(R_int 아님)·Kim2025=R_ct비. 화학 shape·split 전부 가정' },
+  },
+  applyPreset(p){
+    const v = this.presets[p]; if(!v) return;
+    this.el('s5-rint0').value=v.rint0; this.el('s5-expx').value=v.expx;
+    this.el('s5-nexp').value=v.nexp;   this.el('s5-ledx').value=v.ledx;
+    this.el('s5-rc0').value=v.rc0;     this.el('s5-chemx').value=v.chemx;
+    document.querySelector(`input[name=s5shape][value=${v.shape}]`).checked = true;
+    this.el('s5-prov').innerHTML = '📌 ' + (v.prov||'');
+    this.run();
+  },
+  params(){
+    const shape = document.querySelector('input[name=s5shape]:checked').value;
+    return { rint0:this.el('s5-rint0').value, exp_x:this.el('s5-expx').value,
+             n_exp:this.el('s5-nexp').value, ledger_end_x:this.el('s5-ledx').value,
+             r_contact0:this.el('s5-rc0').value, chem_x:this.el('s5-chemx').value.trim(), shape };
+  },
+  async run(){
+    const q = new URLSearchParams(this.params()).toString();
+    let d;
+    try { d = await (await fetch('/api/step5/fade?'+q)).json(); }
+    catch(e){ this.el('s5-foot').textContent = 'fetch 실패: '+e; return; }
+    if(!d.available){ this.el('s5-foot').textContent = '계산 실패: '+(d.reason||'unknown'); return; }
+    this.draw(d); this.table(d); this.shares(d);
+  },
+  shares(d){
+    const coated = d.chem_x !== null && d.chem_x !== undefined;
+    const chemLbl = coated ? '화학' : '화학+기타(잔차)';
+    let s = '';
+    if(d.inconsistent)
+      s += `<b style="color:#e74c3c">⚠ 입력 비정합(접촉/화학 &gt; 총, 또는 exp_x≤1) — shares 무의미</b> · `;
+    s += `접촉 <b style="color:${this.COL.contact}">${d.contact_share_pct.toFixed(1)}%</b> · ` +
+         `${chemLbl} <b style="color:${this.COL.chem}">${d.chem_share_pct.toFixed(1)}%</b>`;
+    if(coated) s += ` (×${d.chem_x}) · OTHER <b style="color:${this.COL.other}">${d.other_share_pct.toFixed(1)}%</b>`;
+    s += ` &nbsp;@N${d.n_exp}`;
+    this.el('s5-shares').innerHTML = s;
+    const SHP = { sqrt:'√N (Wagner form · Park2023 코팅 [B] 지지)',
+                  power:`가속 super-√N p=${(d.chem_p||1.5).toFixed(2)} (Park2023 bare 파라볼릭)`,
+                  linear:'linear (ASSUMED)' };
+    this.el('s5-foot').innerHTML =
+      `chem shape: <b>${SHP[d.shape]||d.shape}</b> · magnitude = 실험 <b>총 R_int 끝점만</b> 앵커(split은 가정) · ` +
+      `접촉(파랑) = ledger 하한(frozen-AM) · ` +
+      (coated ? `OTHER(빨강) = 모델 밖(접촉초과이탈·SE분해·Li) — 코팅셀 지배 · `
+              : `bare = 화학밴드가 잔차(총−접촉) = CEI 지배 <b>가정·상한</b>, OTHER=0 가정 · `) +
+      `⚠ shape는 끝점 하나론 구별 불가(√N은 √<i>시간</i> 가정 = 사이클당 등시간·등율) → 실험 R_int(N) 곡선(≥4점, fit_rint_curve.py) 검증 대기.`;
+  },
+  table(d){
+    const cols = ['N','R_int','R_int_x','dR_contact','dR_chem'];
+    const coated = d.chem_x !== null && d.chem_x !== undefined;
+    if(coated) cols.push('dR_other');
+    const hdr = {N:'N', R_int:'R_int (Ω·cm²)', R_int_x:'×pristine', dR_contact:'ΔR 접촉',
+                 dR_chem:'ΔR 화학', dR_other:'ΔR OTHER'};
+    this.el('s5-thead').innerHTML = cols.map(c=>`<th>${hdr[c]}</th>`).join('');
+    this.el('s5-tbody').innerHTML = d.rows.map(r=>'<tr>'+cols.map(c=>{
+      const v = r[c];
+      const t = c==='N' ? v : (c==='R_int_x' ? v.toFixed(2)+'×' : v.toFixed(2));
+      return `<td>${t}</td>`;
+    }).join('')+'</tr>').join('');
+  },
+  draw(d){
+    const cv = this.el('s5-canvas'), dpr = window.devicePixelRatio||1;
+    const W = cv.clientWidth||900, H = 420;
+    cv.width = W*dpr; cv.height = H*dpr;
+    const ctx = cv.getContext('2d'); ctx.scale(dpr,dpr);
+    ctx.clearRect(0,0,W,H);
+    const mL=58, mR=16, mT=16, mB=40, pw=W-mL-mR, ph=H-mT-mB;
+    const rows = d.rows, nMax = d.n_exp;
+    const anchor = d.rint0 * d.rint_exp_x;
+    const yMax = Math.max(anchor, ...rows.map(r=>r.R_int)) * 1.08;
+    const X = n => mL + (nMax<=0?0:(n/nMax))*pw;
+    const Y = v => mT + ph - (v/yMax)*ph;
+    // grid + axes
+    ctx.strokeStyle='rgba(255,255,255,.08)'; ctx.fillStyle='#8a93a6';
+    ctx.font='11px "JetBrains Mono",monospace'; ctx.lineWidth=1;
+    for(let i=0;i<=5;i++){ const v=yMax*i/5, y=Y(v);
+      ctx.beginPath(); ctx.moveTo(mL,y); ctx.lineTo(W-mR,y); ctx.stroke();
+      ctx.textAlign='right'; ctx.fillText(v.toFixed(0), mL-6, y+3); }
+    for(let i=0;i<=5;i++){ const n=nMax*i/5, x=X(n);
+      ctx.textAlign='center'; ctx.fillText(n.toFixed(0), x, H-mB+16); }
+    ctx.textAlign='center'; ctx.fillText('cycle N', mL+pw/2, H-6);
+    ctx.save(); ctx.translate(14,mT+ph/2); ctx.rotate(-Math.PI/2);
+    ctx.fillText('R_int (Ω·cm²)', 0, 0); ctx.restore();
+    // stacked bands: base → +contact → +chem → +other
+    const band = (loFn, hiFn, color) => {
+      ctx.beginPath();
+      rows.forEach((r,i)=>{ const x=X(r.N), y=Y(hiFn(r)); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+      for(let i=rows.length-1;i>=0;i--){ const r=rows[i]; ctx.lineTo(X(r.N), Y(loFn(r))); }
+      ctx.closePath(); ctx.fillStyle=color; ctx.globalAlpha=.55; ctx.fill(); ctx.globalAlpha=1;
+    };
+    const b0 = r=>d.rint0, b1=r=>d.rint0+r.dR_contact,
+          b2=r=>d.rint0+r.dR_contact+r.dR_chem, b3=r=>r.R_int;
+    band(()=>0, b0, this.COL.base);
+    band(b0, b1, this.COL.contact);
+    band(b1, b2, this.COL.chem);
+    const coated = d.chem_x !== null && d.chem_x !== undefined;
+    if(coated) band(b2, b3, this.COL.other);
+    // total line
+    ctx.beginPath(); rows.forEach((r,i)=>{ const x=X(r.N),y=Y(r.R_int); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+    ctx.strokeStyle=this.COL.total; ctx.lineWidth=2; ctx.stroke();
+    rows.forEach(r=>{ ctx.beginPath(); ctx.arc(X(r.N),Y(r.R_int),2.6,0,7); ctx.fillStyle=this.COL.total; ctx.fill(); });
+    // exp anchor dashed
+    ctx.setLineDash([6,4]); ctx.strokeStyle=this.COL.anchor; ctx.lineWidth=1.3;
+    ctx.beginPath(); ctx.moveTo(mL,Y(anchor)); ctx.lineTo(W-mR,Y(anchor)); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle=this.COL.anchor; ctx.textAlign='right';
+    ctx.fillText(`실험앵커 ×${d.rint_exp_x} @N${d.n_exp}`, W-mR-4, Y(anchor)-5);
+    // legend
+    const chemLeg = coated ? '+ 화학 CEI (억제, ASSUMED shape)' : '+ 화학+기타 잔차 (ASSUMED)';
+    const leg = [['R_int₀',this.COL.base],['+ 접촉(ledger 하한)',this.COL.contact],
+                 [chemLeg,this.COL.chem]];
+    if(coated) leg.push(['+ OTHER (모델 밖)',this.COL.other]);
+    let lx=mL+8, ly=mT+12; ctx.textAlign='left';
+    leg.forEach(([t,c])=>{ ctx.fillStyle=c; ctx.globalAlpha=.55; ctx.fillRect(lx,ly-8,11,11);
+      ctx.globalAlpha=1; ctx.fillStyle='#c6cede'; ctx.fillText(t, lx+15, ly+1);
+      lx += ctx.measureText(t).width + 40; });
+  },
+  init(){
+    this.el('s5-run').addEventListener('click', ()=>this.run());
+    document.querySelectorAll('[data-preset]').forEach(b=>
+      b.addEventListener('click', ()=>this.applyPreset(b.dataset.preset)));
+    document.querySelectorAll('.s5-in,input[name=s5shape]').forEach(el=>
+      el.addEventListener('keydown', e=>{ if(e.key==='Enter') this.run(); }));
+    this.run();  // 초기 = SBE 기본값
+  }
+};
+S5.init();
+</script>
+{% endblock %}
