@@ -3346,7 +3346,11 @@ function applyViewMode(state, mode) {
                    <div style="font-size:10px;color:#6b7280;margin-top:2px">= 면적용량 ${fmtP(fsc.areal_capacity_mAh_cm2)} mAh/cm² × C-rate × (평균 / 집중 ×${fmtP(fsc.focus_top)}) · 색 패턴은 선형이라 그대로</div>
                  </div>`
               : `<div style="font-size:9.5px;color:#6b7280">운전 국소값 = (|J|/⟨J⟩) × 면적전류밀도(mA/cm²)</div>`)
-           + `<div style="font-size:9px;color:#4b5563;margin-top:3px;line-height:1.3">참고(선형 프로브, 운전점 아님): @ΔV=1V 상단 ${fmtP(fsc.j_top_A_cm2_per_V)} A/cm² · ⟨J_z⟩ ${fmtP(fsc.j_mean_z_A_cm2_per_V)}</div>`
+           + `<div style="margin-top:4px;padding:5px 8px;background:#0d1117;border:1px solid #374151;border-radius:6px">
+                <div style="font-size:10.5px;color:#9ca3af">🔎 수송 프로브 @ΔV=1V (A/cm²) — <b>운전점 아님</b>, σ 특성화용</div>
+                <div style="font-size:11.5px;color:#cbd5e1;margin-top:2px">⟨J_z⟩ <b>${fmtP(fsc.j_mean_z_A_cm2_per_V)}</b> · 피크(p99.8) <b>${fmtP(fsc.j_top_A_cm2_per_V)}</b>&nbsp; = σ_eff·ΔV/L (×focus ${fmtP(fsc.focus_top)})</div>
+                <div style="font-size:9px;color:#6b7280;margin-top:1px">1V는 큰 바이어스라 값이 큼(σ 반영) — 물리 운전은 위 🔋@1C</div>
+              </div>`
          : `<div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af"><span>0</span><span>|J| (0–p99.8)</span><span>high</span></div>`)
       + `<label style="display:block;margin-top:5px;font-size:11.5px;color:#e5e7eb;cursor:pointer">
            <input type="checkbox" id="fld-backbone" ${backboneGrp.visible ? 'checked' : ''}>
