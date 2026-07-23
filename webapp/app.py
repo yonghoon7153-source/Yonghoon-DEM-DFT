@@ -3672,6 +3672,52 @@ def api_eis():
         return jsonify({'error': f'직렬화 실패: {type(e).__name__}: {e}'}), 200
 
 
+@app.route('/api/ica', methods=['POST'])
+def api_ica():
+    """ICA(dQ/dV): 방전(또는 충전) 곡선 V,Q → dQ/dV(V) + OCP 상전이 피크.  eis_drt_ica.ica_dqdv.
+    POST JSON {v:[...], q:[...]} 또는 {csv:'V,Q\\n…'}.  기존 STEP4 방전곡선 후처리 = 공짜."""
+    import math as _math
+    try:
+        import sys as _sys
+        _sd = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'scripts')
+        if _sd not in _sys.path:
+            _sys.path.insert(0, _sd)
+        import eis_drt_ica as _eis
+        import numpy as _np
+    except Exception as e:
+        return jsonify({'error': f'import 실패: {type(e).__name__}: {e}'}), 200
+    body = request.get_json(silent=True) or {}
+    v, q = body.get('v'), body.get('q')
+    if (not v or not q) and body.get('csv'):                  # CSV 텍스트 폴백 (헤더/구분자 관대)
+        vv, qq = [], []
+        for line in str(body['csv']).strip().splitlines():
+            parts = [p for p in line.replace(',', ' ').replace('\t', ' ').split() if p]
+            try:
+                vv.append(float(parts[0])); qq.append(float(parts[1]))
+            except (ValueError, IndexError):
+                continue                                      # 헤더/빈줄 스킵
+        v, q = vv, qq
+    try:
+        v = _np.asarray(v, float); q = _np.asarray(q, float)
+        m = _np.isfinite(v) & _np.isfinite(q)
+        if int(m.sum()) < 4:
+            return jsonify({'error': f'유효 (V,Q) 점 부족(<4): {int(m.sum())}'}), 200
+        vg, dq, peaks = _eis.ica_dqdv(v[m], q[m])
+    except Exception as e:
+        return jsonify({'error': f'ICA 계산 실패: {type(e).__name__}: {e}'}), 200
+
+    def _cl(x):
+        return float(x) if _math.isfinite(float(x)) else None
+    try:
+        return jsonify({
+            'ica': [{'v': _cl(a), 'dqdv': _cl(b)} for a, b in zip(vg, dq)],
+            'peaks': [{'v': _cl(p['V']), 'dqdv': _cl(p['dQdV'])} for p in peaks],
+            'n_in': int(m.sum()),
+        })
+    except Exception as e:
+        return jsonify({'error': f'직렬화 실패: {type(e).__name__}: {e}'}), 200
+
+
 @app.route('/')
 def index():
     cases = list_cases()
