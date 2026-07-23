@@ -134,7 +134,7 @@ function elCard(e){
           (rc.battery_role?'<span class="cmpd-role">'+_esc(rc.battery_role)+'</span>':'')+'</div>'+
           (rc.note?'<div class="cmpd-note">'+_esc(rc.note)+'</div>':'')+'</div>';}).join('')+'</div>';}
     if(k.sei_relevance)h+='<div class="el-sei"><div class="el-sec-t">🔋 SEI 관련성</div><div>'+_esc(k.sei_relevance)+'</div></div>';
-    if(k.xps&&k.xps.length)h+='<div class="el-sec"><div class="el-sec-t">XPS</div>'+xtable(k.xps)+'</div>';
+    if(k.xps&&k.xps.length)h+='<div class="el-sec"><div class="el-sec-t">XPS</div>'+xtable(k.xps)+'<p class="tbl-note">※ BE는 문헌 참조 <b>점값</b> — 화학환경에 따라 보통 ±0.3–0.5 eV, 인접 화학종 봉우리가 겹칠 수 있어 (예: O 1s carbonate/P-O/OH).</p></div>';
     if(k.raman&&k.raman.length)h+='<div class="el-sec"><div class="el-sec-t">Raman</div>'+rtable(k.raman)+'</div>';
     if(k.dos_character)h+='<div class="el-sec"><div class="el-sec-t">DOS 성격</div><div class="el-txt">'+_esc(k.dos_character)+'</div></div>';
   }

@@ -1063,3 +1063,31 @@ def _cascade_by_element_c(_mt) -> dict:
 
 def cascade_for_element(sym: str) -> list:
     return _cascade_by_element().get(sym, [])
+
+
+# ── 대시보드 '핵심 발견' 하이라이트 (커버리지% 대신 히어로로) ──
+def dashboard_highlights() -> list:
+    C, L = CANONICAL, {k: v["label"] for k, v in COMPOSITIONS.items()}
+    hi = []
+    g = sorted(((v, cid) for cid, v in C["gap_eV"].items() if v is not None), reverse=True)
+    if g:
+        hi.append({"t": "Band gap", "v": f"{L.get(g[0][1], g[0][1])} {g[0][0]} eV",
+                   "n": "+O(LPSOCl)가 전자 절연 최강 · fixed-occ eigenvalue (comp2 잠정)"})
+    hi.append({"t": "P–S 골격 vs Li–X 이온", "v": "ICOHP −6.0 ≫ −2.1 eV",
+               "n": "강한 공유 골격 + 약한 이온결합 · Li–Br(−1.93) < Li–Cl(−2.11) → Br이 comp2 연성↑"})
+    e = sorted((v, cid) for cid, v in C["MD_Ea_eV"].items() if v is not None)
+    if e:
+        hi.append({"t": "이온 전도 Ea (UMA)", "v": f"{L.get(e[0][1], e[0][1])} {e[0][0]} eV 최저",
+                   "n": "Cl-rich가 Li 이동 유리 · ⚠멀티시드 판정(절대값 인용주의)"})
+    ce = _cascade_by_element()
+    top = None
+    for rows in ce.values():
+        for r in rows:
+            if r.get("rank") == 1:
+                top = r
+    if top:
+        hi.append({"t": "도핑 스크리닝 챔피언", "v": f"{top['dopant']} (UMA #1)",
+                   "n": "코팅 후보 상위 · Nd₂O₃·B₂O₃는 DFT 검증됨 (절대값은 상대비교만)"})
+    hi.append({"t": "VGCF/hBN Li 확산 (CI-NEB)", "v": "hBN 0.007 · graphene 0.273 · gallery 0.357 eV",
+               "n": "confinement 심할수록 barrier↑ (2L2L 수렴중)"})
+    return hi

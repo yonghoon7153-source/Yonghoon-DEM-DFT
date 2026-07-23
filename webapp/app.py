@@ -39,7 +39,7 @@ def index():
     b = D.build_matrix()
     cov = D.build_coverage(b["properties"], b["prop_category"], b["index_metrics"])
     return render_template("index.html", active="home", b=b, cov=cov,
-                           covstat=D.coverage_stats(cov))
+                           covstat=D.coverage_stats(cov), highlights=D.dashboard_highlights())
 
 
 @app.route("/composition/<cid>")

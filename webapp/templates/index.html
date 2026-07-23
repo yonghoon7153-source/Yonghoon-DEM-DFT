@@ -12,11 +12,22 @@
   </div>
 </div>
 
-<div class="stat-grid">
+<div class="section-title" style="margin-top:0">핵심 발견 <span class="muted">— Key Findings</span></div>
+<div class="grid grid-3">
+{% for h in highlights %}
+<div class="card find-card">
+  <div class="fc-t">{{ h.t }}</div>
+  <div class="fc-v">{{ h.v }}</div>
+  <div class="fc-n">{{ h.n }}</div>
+</div>
+{% endfor %}
+</div>
+
+<div class="stat-grid" style="margin-top:20px">
   <div class="stat"><div class="num">{{ COMPS|length }}</div><div class="lbl">조성 / 프로젝트</div></div>
-  <div class="stat"><div class="num accent">{{ covstat.pct }}%</div><div class="lbl">커버리지 · {{ covstat.done }}/{{ covstat.total }}</div></div>
   <div class="stat"><div class="num">{{ b.properties|length }}</div><div class="lbl">post-processing 파일</div></div>
   <div class="stat"><div class="num">{{ b.literature_count }}</div><div class="lbl">litdb 문헌</div></div>
+  <div class="stat"><div class="num accent">{{ covstat.pct }}%</div><div class="lbl">커버리지 · {{ covstat.done }}/{{ covstat.total }} (계산된 물성)</div></div>
 </div>
 
 <div class="section-title">Pipeline</div>

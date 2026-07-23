@@ -104,7 +104,6 @@ textarea:focus-visible,[tabindex]:focus-visible,.tabs button:focus-visible{
 .card h3{font-size:1.02rem;margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .grid{display:grid;gap:16px}
 .grid-3{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
-.grid-4{grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
 .section-title{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);
   font-weight:700;margin:28px 0 12px}
 
@@ -185,10 +184,6 @@ textarea:focus-visible,[tabindex]:focus-visible,.tabs button:focus-visible{
 .tab-panel.active{display:block}
 
 /* figures / structure / chart */
-.figures-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
-.fig{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;cursor:pointer;box-shadow:var(--shadow)}
-.fig img{width:100%;display:block}
-.fig .cap{padding:8px 12px;font-size:.76rem;color:var(--dim)}
 .viewer3d{width:100%;height:420px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);position:relative}
 .chart{width:100%;min-height:360px}
 
@@ -402,8 +397,6 @@ kbd{font-family:var(--mono);font-size:.72em;background:var(--bg);border:1px soli
 .cmdk-foot kbd{margin-right:3px}
 
 /* 주기율표 */
-.pt-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:22px;align-items:start}
-@media(max-width:920px){.pt-layout{grid-template-columns:1fr}}
 .pt-wrap{overflow-x:auto}
 .pt{display:grid;grid-template-columns:repeat(18,minmax(34px,1fr));gap:4px;min-width:660px}
 .pt-cell{position:relative;aspect-ratio:1;border-radius:7px;border:1px solid var(--border);background:var(--surface);
@@ -424,20 +417,8 @@ kbd{font-family:var(--mono);font-size:.72em;background:var(--bg);border:1px soli
 .pt-legend i{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:middle;margin-right:5px}
 .pt-legend .lg-on{background:var(--accent-soft);border:1px solid var(--accent)}
 .pt-legend .lg-off{background:var(--surface);border:1px solid var(--border);opacity:.5}
-.pt-panel{position:sticky;top:20px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
   padding:20px;box-shadow:var(--shadow);min-height:220px}
-.pt-panel-empty{text-align:center;color:var(--muted);padding:26px 10px}
-.pt-panel-empty .pe-ico{font-size:2.4rem;opacity:.4;margin-bottom:10px}
-.pd-head{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
-.pd-sym{font-size:2.2rem;font-weight:800;color:var(--navy);line-height:1}
-.pd-comps{display:flex;flex-direction:column;gap:8px}
-.pd-comp{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:9px;
   transition:.13s;color:var(--text)}
-.pd-comp:hover{border-color:var(--accent);background:var(--accent-soft)}
-.pd-comp .pd-dot{width:10px;height:10px;border-radius:50%;flex:0 0 auto}
-.pd-comp .pd-l{display:flex;flex-direction:column;line-height:1.3}
-.pd-comp .pd-f{font-family:var(--mono);font-size:.72rem;color:var(--muted)}
-.pd-comp .pd-arrow{margin-left:auto;color:var(--accent)}
 
 /* Property Explorer */
 .exp-controls{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:16px}
@@ -516,8 +497,6 @@ kbd{font-family:var(--mono);font-size:.72em;background:var(--bg);border:1px soli
   display:flex;align-items:center;justify-content:center;border-radius:14px;flex:0 0 auto}
 .el-name{font-weight:700;font-size:1.05rem;color:var(--navy)}
 .el-role{font-size:.82rem;color:var(--dim);margin-top:2px;line-height:1.4}
-.el-meta{display:flex;gap:16px;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid var(--border2);margin-bottom:8px;font-size:.84rem}
-.el-meta em{font-style:normal;color:var(--muted);font-weight:600;margin-right:5px;font-size:.9em}
 .el-sec{margin:10px 0}
 .el-sec-t{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);margin-bottom:6px}
 .el-txt{font-size:.86rem;line-height:1.6;color:var(--text2)}
@@ -622,3 +601,9 @@ kbd{font-family:var(--mono);font-size:.72em;background:var(--bg);border:1px soli
 .chart-ctrls select{font-family:var(--font);font-size:.79rem;padding:3px 7px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text)}
 .chart-ctrls .cc-chk{display:inline-flex;align-items:center;gap:4px;cursor:pointer;white-space:nowrap}
 .chart-ctrls .cc-y{font-weight:700;color:var(--muted);margin-left:4px;text-transform:uppercase;font-size:.7rem}
+
+/* 대시보드 핵심 발견 카드 */
+.find-card{border-left:3px solid var(--accent)}
+.find-card .fc-t{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--dim)}
+.find-card .fc-v{font-size:1.12rem;font-weight:800;color:var(--navy);margin:5px 0;line-height:1.35}
+.find-card .fc-n{font-size:.8rem;color:var(--dim);line-height:1.55}
