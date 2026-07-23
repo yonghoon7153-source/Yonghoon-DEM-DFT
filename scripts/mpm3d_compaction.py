@@ -1091,17 +1091,25 @@ def main(argv):
                 _bind = (f" binder_cap={_cap:.2f} [{_reg}] (opt {args.binder_opt_wt}wt%)" if code == 4 else "")
                 _bind += f" regime={_proc_regime}" + ("  (A4 coat-seeded)" if _coated else
                                                        "  (A4: coat seeding TBD → bulk)" if _proc_regime != 'bulk' else "")
-                print(f"  [additives] {nm}: {nobj} objects ({cnt[nm]['wt_pct']}wt% = "
-                      f"{cnt[nm]['vol_pct_of_solid']}vol% of solid) → {len(pts):,} pts "
+                # ★MED-1(감사 정직수정): SuperP recipe n = 응집체(aggregate)수이나 seed_carbon_black은 k개
+                #   응집체를 하나의 agglomerate-chain으로 뭉쳐 ~n/k chain 시딩(docstring "loosely grouping into
+                #   µm agglomerates" = 물리적).  n_objects=recipe n 보고는 chain 수를 k× 과대 → 실제 시딩 chain
+                #   수(_fid 고유수)로 정직 보고.  seeding·부피·σ 전부 불변(라벨만 정정, VGCF는 nobj 그대로).
+                _cb = (kind == 'cblack' and not _coated)
+                _n_obj_rep = (int(_fid.max()) + 1) if (_cb and len(_fid)) else int(nobj)
+                print(f"  [additives] {nm}: {_n_obj_rep} {'agglom-chains' if _cb else 'objects'} "
+                      f"({cnt[nm]['wt_pct']}wt% = {cnt[nm]['vol_pct_of_solid']}vol% of solid) → {len(pts):,} pts "
                       f"(E={E} σ_y={sy} coh={_coh}, phase {code}){_bind}")
                 _add_meta[nm] = {                            # → mpm_metrics['additives'][nm] → 요약
                     'wt_pct': float(cnt[nm]['wt_pct']), 'vol_pct_of_solid': float(cnt[nm]['vol_pct_of_solid']),
-                    'vol_um3': round(float(cnt[nm]['vol_um3']), 2), 'n_objects': int(nobj), 'n_points': int(len(pts)),
+                    'vol_um3': round(float(cnt[nm]['vol_um3']), 2), 'n_objects': int(_n_obj_rep), 'n_points': int(len(pts)),
                     'E_GPa': float(E), 'sigma_y_GPa': float(sy), 'phase_code': int(code),
                     'mixing': args.mixing, 'mixing_regime': _proc_regime,   # NAME + regime: ballmill & handmix BOTH regime='bulk' → the NAME is what tells them apart (regime alone can't)
                 }
                 if kind == 'cblack' and not _coated:         # CB_MIX params — only when seed_carbon_black RAN
                     _cbm = _ad.CB_MIX.get(args.mixing, {})   # (a coat-routed SuperP-thinky run must not claim
+                    _add_meta[nm]['n_recipe_aggregates'] = int(nobj)   # ★MED-1: recipe 0.2µm 응집체수 (n_objects는
+                    _add_meta[nm]['obj_kind'] = 'agglom_chain'         #   그 k개가 뭉친 실제 chain 수 = 정직 대표값)
                     if _cbm:                                 # CB-chain morphology it didn't seed)
                         _add_meta[nm]['cb_mix'] = {_k: _cbm[_k] for _k in ('k', 'surface_frac', 'step', 'clump') if _k in _cbm}
                 if _coated:                                  # A4 coat: record what ACTUALLY seeded

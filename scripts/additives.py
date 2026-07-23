@@ -827,8 +827,10 @@ def seed_carbon_black(n, box_um, dx_um, rng, in_am=None, am=None, mixing='ballmi
     branched structure); a `surface_frac` fraction nucleate in a thin shell on an AM surface (coating),
     the rest in the pore space.  `mixing` (ball-mill/Thinky vs hand-mix) sets chain length, surface
     fraction and agglomerate clustering (CB_MIX).  am=(centres[m,3], radii[m]) in box_um's frame for the
-    coating bias (None → pore-only).  n = target point count → n_agg = n/k aggregates.  Returns the
-    point cloud (+ per-aggregate ids if return_ids) so the viewer draws the chains as short lines."""
+    coating bias (None → pore-only).  ★MED-1(감사): n = recipe 0.2µm 응집체(aggregate) 수.  k개 응집체가
+    뭉쳐 agglomerate-chain 1개 → n_agg = round(n/k) chain 시딩(각 ~µm agglomerate = 물리적); 총 점≈n
+    (부피는 add_pvs 고정).  ⚠ mpm3d n_objects는 recipe n 아니라 **실제 chain 수**로 정직 보고(recipe 응집체수
+    = n_recipe_aggregates).  Returns point cloud (+ per-chain ids if return_ids) so the viewer draws chains."""
     if n <= 0:                                          # 0-wt% carbon → emit nothing (else max(1,…) below
         z = (np.zeros((0, 3), np.float32), np.zeros(0, np.int32))   # would inject a stray ~k-point chain)
         return z if return_ids else z[0]

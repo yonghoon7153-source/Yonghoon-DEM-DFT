@@ -789,7 +789,11 @@ def solve_reaction_current(sid, sig_e_of_sid, sig_i_of_sid, pid, n_am, vox, gct_
         _net_couple(idx_i, sig_i, n_e, sl_a, sl_b)
     # BV 계면 결합 + per-face 기록 (입자별 합산용) — 전도와 동일 _dirs(주기 wrap 포함)로 계면도 일관 주기
     am_m = (sid == 1) | (sid == 2)
-    ion_m = (sid == 5) | (sid == 6)
+    # ★MED-2(감사): 반응 계면 = AM↔이온공급상.  이온상 = SDCP(5)·SE(6)·SWCNT-sheath(8, 투명할 때만).
+    #   sid 8 누락 시 σ_ion 솔브(sheath 투명=σ_i[8]>0)와 STEP4 반응(8 제외)이 모순 → wrap_frac↑ AM
+    #   표면이 반응서 사라져 STEP4가 --swcnt-ion-block인 것처럼 반응전류 과소.  cond_i(σ_i>0)로 게이트
+    #   하여 --swcnt-ion-block(σ_i[8]=0)이면 sid 8 자동 제외 = 솔브와 계면 일관.  기본 bimodal 무영향.
+    ion_m = ((sid == 5) | (sid == 6) | (sid == 8)) & cond_i
     bv_e, bv_i, bv_pid = [], [], []
     gct = float(gct_code)
     for sl_a, sl_b in _dirs:
