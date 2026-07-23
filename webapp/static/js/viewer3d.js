@@ -5902,11 +5902,11 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
           ✨<input type="checkbox" id="cmp-glow" checked>glow</label>
         <span id="cmp-fldops-wrap" style="display:none;font-size:11.5px;color:#e5e7eb;align-items:center;gap:8px">
           <label style="display:flex;align-items:center;gap:3px"
-            title="σ-공동스케일: 두 쪽 색을 σ_eff 비율로 정렬해 절대 세기 차이가 색으로 보이게 (근사 — 상위꼬리 모양 유사 가정; 끄면 자기 정규화=패턴 비교)">
-            <input type="checkbox" id="cmp-joint">σ공동</label>
-          <select id="cmp-joint-ref" title="공동 스케일의 기준(컬러 상단 앵커) — auto=σ-max(클리핑 없음, 절대비교 기본) / A·B=그 케이스 기준(반대쪽이 넘치면 포화-클립 = baseline-대비 수사용)"
+            title="공동스케일: 두 필드를 같은 눈금으로 정렬 → 절대 세기 차이가 색으로 (끄면 자기 정규화=패턴만).  드롭다운으로 프레임 선택: σ-max=@1V 수송(σ_eff 정렬, σ 큰쪽 밝음) / @1C-peak=운전 핫스팟(focus×j_1C 정렬, 피크 큰쪽=천장 273)">
+            <input type="checkbox" id="cmp-joint">공동스케일</label>
+          <select id="cmp-joint-ref" title="공동 스케일 기준(프레임·컬러 상단 앵커) — σ-max=@1V 수송(σ_eff, 클리핑없음) / @1C-peak=운전 핫스팟(focus×j_1C, 273 천장·SBE) / A·B=그 케이스 기준(반대쪽 넘치면 포화-클립)"
             style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;font-size:11px;padding:1px 2px">
-            <option value="max">기준 auto(σ-max)</option><option value="A">기준 A</option><option value="B">기준 B</option></select>
+            <option value="max">기준 σ-max (@1V 수송)</option><option value="1C">기준 @1C-peak (핫스팟)</option><option value="A">기준 A</option><option value="B">기준 B</option></select>
           <label style="display:flex;align-items:center;gap:3px"
             title="백본을 점 대신 복셀 큐브로 — 인접 복셀이 붙어 연속 통로로 보임 (COMSOL 볼륨 문법)">
             <input type="checkbox" id="cmp-cube" checked>이어짐</label>
@@ -6667,12 +6667,18 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       // σ비율만큼 눌러 절대 세기 차이가 색으로 보이게.  근사임을 legend에 명시 (★).
       const sgA = ionic ? sA.sigma_ion_eff_S_cm : sA.sigma_e_eff_S_cm;
       const sgB = ionic ? sB.sigma_ion_eff_S_cm : sB.sigma_e_eff_S_cm;
-      const smx = Math.max(sgA || 0, sgB || 0) || 1;
-      // 앵커 선택: auto=σ-max(클리핑 없음) / A·B=그 케이스 기준 (반대쪽 k>1 → 상단 포화-클립
-      //   = "baseline 대비" 수사용.  클립은 정보손실이므로 legend에 명시)
       const refSel = ($('cmp-joint-ref') || {}).value || 'max';
-      const sref = (refSel === 'A' && sgA) ? sgA : (refSel === 'B' && sgB) ? sgB : smx;
-      const kA2 = jointOn && sgA ? sgA / sref : 1, kB2 = jointOn && sgB ? sgB / sref : 1;
+      // 정렬 프레임: '1C' = 운전 국소 피크(focus×j_1C, 핫스팟 — 피크 큰 SBE가 천장 273) ·
+      //             else = σ_eff(@1V 수송 — σ-max=DBE가 천장).  두 프레임은 밝기 순서가 반대일 수 있음.
+      const _fjA = ionic ? sA.field_scale_ion : sA.field_scale_e;
+      const _fjB = ionic ? sB.field_scale_ion : sB.field_scale_e;
+      const is1C = refSel === '1C';
+      const _met = (f, sg) => is1C ? ((f && f.focus_top && f.j_1C_mA_cm2) ? f.focus_top * f.j_1C_mA_cm2 : 0) : (sg || 0);
+      const mA2 = _met(_fjA, sgA), mB2 = _met(_fjB, sgB);
+      const smx = Math.max(mA2, mB2) || 1;
+      // 앵커: max(1C면 @1C-peak-max=핫스팟천장 / σ면 σ-max)=클리핑없음 · A·B=그 케이스(반대쪽 넘치면 클립)
+      const sref = (!is1C && refSel === 'A' && mA2) ? mA2 : (!is1C && refSel === 'B' && mB2) ? mB2 : smx;
+      const kA2 = jointOn && mA2 ? mA2 / sref : 1, kB2 = jointOn && mB2 ? mB2 / sref : 1;
       const ghostOn = $('cmp-ghost') ? $('cmp-ghost').checked : true;
       const rA2 = buildField(SA, A, ionic, bbOn, bbPct, glowOn, kA2, cubeOn, ghostOn),
             rB2 = buildField(SB, B, ionic, bbOn, bbPct, glowOn, kB2, cubeOn, ghostOn);
@@ -6681,7 +6687,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
         return (r.n ? `${r.n.toLocaleString()}점` : 'FIELD 없음 (payload 재생성 필요)') + r.bbTxt
           + ' · ' + (ionic ? 'σ_ion ' + fmtQ(s3x.sigma_ion_eff_S_cm) : 'σ_e ' + fmtQ(s3x.sigma_e_eff_S_cm)) + ' S/cm'
           + (fscX ? ` · p99.8 = ×${Number(fscX.focus_top).toPrecision(2)} ⟨J_z⟩ (${Number(fscX.j_top_A_cm2_per_V).toPrecision(2)} A/cm²@1V)` : '')
-          + (jointOn ? ` · σ-공동 ×${k2.toFixed(2)}${k2 > 1.001 ? ' ⚠상단 클립' : ''} (기준 ${refSel === 'max' ? 'σ-max' : refSel} · 비례 근사 ★색 비교 유효)`
+          + (jointOn ? ` · ${is1C ? '@1C-공동' : 'σ-공동'} ×${k2.toFixed(2)}${k2 > 1.001 ? ' ⚠상단 클립' : ''} (기준 ${refSel === 'max' ? 'σ-max(@1V)' : refSel === '1C' ? '@1C-peak(핫스팟)' : refSel} · ${is1C ? '운전 국소전류 비례 ★핫스팟' : '@1V σ 비례 근사 ★색비교'})`
                      : ' · 자기 p99.8 정규화 — 패턴 비교용(절대는 σ)');
       };
       $('cmp-leg-a').innerHTML = cap(rA2, sA, kA2);
@@ -6692,13 +6698,16 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       // 그 기준 케이스의 focus/절대값.  자기-정규화(비공동)에서는 케이스별 상단이 달라
       // 수치 눈금이 성립 안 함 → 양쪽 상단을 부제에 병기.
       const fscT = jointOn ? (refSel === 'A' ? (fA3 || fB3) : refSel === 'B' ? (fB3 || fA3)
-                              : (((sgB || 0) >= (sgA || 0)) ? (fB3 || fA3) : (fA3 || fB3))) : (fA3 || fB3);
+                              : ((is1C ? (mB2 >= mA2) : ((sgB || 0) >= (sgA || 0))) ? (fB3 || fA3) : (fA3 || fB3))) : (fA3 || fB3);
       let subT;
       if (jointOn && fscT) {
-        subT = 'joint reference = ' + (refSel === 'max' ? 'σ-max case' : 'case ' + refSel + ' (반대쪽 상단 클립 가능)')
+        subT = is1C
+          ? 'joint reference = @1C-peak max (핫스팟 천장 = case ' + (mB2 >= mA2 ? 'B' : 'A') + ') · 천장(p99.8) '
+            + Number(fscT.j_1C_mA_cm2 * fscT.focus_top).toPrecision(3) + ' mA/cm² @1C · ⟨J⟩ '
+            + Number(fscT.j_1C_mA_cm2).toPrecision(3) + ' mA/cm² (운전 전류밀도)'
+          : 'joint reference = ' + (refSel === 'max' ? 'σ-max case (@1V 수송)' : 'case ' + refSel + ' (반대쪽 상단 클립 가능)')
              + ' · top(p99.8) = ' + Number(fscT.j_top_A_cm2_per_V).toPrecision(3)
-             + ' A/cm² @ΔV=1V' + (fscT.j_1C_mA_cm2 ? ' · @1C: ⟨J⟩ ' + Number(fscT.j_1C_mA_cm2).toPrecision(3)
-             + ' · top ' + Number(fscT.j_1C_mA_cm2 * fscT.focus_top).toPrecision(3) + ' mA/cm²' : '');
+             + ' A/cm² @ΔV=1V' + (fscT.j_1C_mA_cm2 ? ' · @1C top ' + Number(fscT.j_1C_mA_cm2 * fscT.focus_top).toPrecision(3) + ' mA/cm²' : '');
       } else if (fA3 && fB3) {
         subT = 'per-case self-normalized: A top ×' + Number(fA3.focus_top).toPrecision(3) + ' / B top ×'
              + Number(fB3.focus_top).toPrecision(3) + ' ⟨J⟩ — 수치 눈금은 σ공동 스케일에서 유효';
