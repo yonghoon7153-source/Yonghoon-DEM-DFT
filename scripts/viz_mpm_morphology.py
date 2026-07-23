@@ -203,7 +203,8 @@ def main():
         pc = plt.cm.hsv((gid * 0.6180339887) % 1.0)            # golden-ratio hue → adjacent grains differ
 
     fig, (axf, axz) = plt.subplots(1, 2, figsize=(16, 7.6))
-    if phase_slab is not None:                                  # composite: full panel = AM grey + SE strain scatter
+    if phase_slab is not None and dg_slab is not None:          # composite: full panel = AM grey + SE strain scatter
+        #   ★그레인 색 모드(--se-dump, strain 없음)에선 dg_slab=None → full 패널은 phase 래스터로 폴백(아래 else)
         nfull = min(150000, len(slab))
         fi = (np.random.default_rng(1).choice(len(slab), nfull, replace=False)
               if len(slab) > nfull else np.arange(len(slab)))
@@ -220,7 +221,7 @@ def main():
     axf.set_title(f'full — AM {am_f:.0f}% · SE {se_f:.0f}% · void {por:.0f}% · contact {ct_f:.1f}% (red)', fontsize=10)
 
     axz.set_facecolor('white')
-    if phase_slab is not None:                                 # composite: AM grey + SE strain
+    if phase_slab is not None and dgw is not None:             # composite: AM grey + SE strain
         sc = scatter_phase(axz, xu, zu, dgw, phase_slab[win], dg_vmax, a.pt_size)
         if sc is not None:
             fig.colorbar(sc, ax=axz, fraction=0.046, pad=0.04, label=field_label)
