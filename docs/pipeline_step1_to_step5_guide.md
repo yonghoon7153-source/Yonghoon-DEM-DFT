@@ -1,5 +1,8 @@
 # 황화물 전고체전지 양극 통합 시뮬레이션 — STEP1 → STEP5 설명서
-### (처음 보시는 분을 위한 자립형 안내서, 2026-07-23)
+### (처음 보시는 분을 위한 자립형 안내서, 2026-07-23 · v3 확장 반영)
+> **v3 업데이트(2026-07-23)**: STEP3 carbon-SE 계면·Joule 발열 hot-spot·periodic BC / STEP4 near-null-B
+> 승자 래치 / STEP5 사이클 기전 확장(VGCF촉매·PTFE·Joule 재분배·취성→MPM·코팅 프리셋) / v3 ML 설계
+> 폐루프(Sobol·SISSO·BO).  각 STEP의 ★표시가 신규.
 
 > **한 문단 요약.** 우리는 황화물 고체전해질(LPSCl) + 단결정/코팅 NCM 양극을 **냉간압축(≈300 MPa)**
 > 한 복합 양극을, 입자 하나하나의 수준에서 **디지털로 재현**하고 그로부터 **성능(전도도·용량·분극)**
@@ -127,8 +130,12 @@ flowchart TD
 - **current-focusing**(전류 집중): 좁은 목에서 전류밀도가 평균의 수십 배로 치솟는 지점(p99.8 상위
   0.2%) — 열화·발열의 씨앗.  공동 컬러바는 **케이스-최대(안 잘림)** 천장으로 표시.
 - **coverage**(피복률): AM 표면 중 SE가 덮은 비율. Hertz(접촉) ~18% vs **Tabor(소성 퍼짐) ~52%**.
+- **★ 2026-07-23 v3 추가**:
+  - **carbon-SE 3상 계면 면적**(#30): 탄소(VGCF/SuperP/SWCNT)↔SE 복셀-면 = SE 분해 촉매 반응면(kim2024 Fig3b) → STEP5 화학열화 입력.
+  - **Joule 발열 hot-spot**(#29, `--joule-heat`): 발열밀도 q=∣J∣²/σ 맵 = "어디서 발열이 몰리나"(뷰어 🔥Joule 모드).  전류가 구속 neck에 몰리고 σ 낮은 곳서 최대.
+  - **periodic BC**(#28, `--periodic`): σ-solve(전자/이온/열/pore/반응)에 x,y 주기 wrap = MPM RVE 'boundary p p f' 정합(측면 절연벽 대신).
 - **입력**: STEP2 payload / STEP1 베드.  **출력**: σ_e/σ_ion/σ_thermal(mS/cm), τ(굴곡도),
-  퍼콜레이션 분율, current-focusing 맵, coverage.
+  퍼콜레이션 분율, current-focusing 맵, coverage, **carbon-SE 면적·Joule hot-spot(신규)**.
 - **실험 앵커**: **Bazzoun 2026**(같은 LPSCl+NCM+LIGGGHTS+RNM) σ_eff,ion EIS 0.065~0.137 mS/cm,
   압력-의존 σ-vs-P(400 MPa 포화).
 - **한계**: 접촉망은 있으나 시간전개(충방전)는 없음 → STEP4로.
@@ -146,6 +153,8 @@ flowchart TD
   SC/poly 크기-의존 확산계수 D_s.
 - **수치 안정화(near-null-B AMG)**: 저율(0.1C/0.2C)에서 계가 near-singular → 일반 풀개가 실패.
   **near-null 벡터 기반 대수다중격자 전처리기**가 유일하게 수렴(8.3e-14, 100 it).
+  **★ 승자 직행 래치(2026-07-23)**: near-null-B가 이기면 이후 솔브는 정체하는 AMG/Jacobi 사다리를
+  건너뛰고 직행 → 저율 후막 ~15-34% 절감.  ★전처리는 CG 해를 안 바꿈 = 물리 불변, 속도만 개선.
 - **대표 결과**: 2C CCCV 충전 완주(CC끝 81.5→CV후 89.6%), ΔV 분해(옴 4.5 + kinetics 4.8 mV) —
   방전(7.9 mV)과 대칭 = 수송-기원 양방향 확인.  σ_e ↑(SDCP)이 rate-capability를 개선.
 - **입력**: STEP3 전도 그리드(step4_grid.npz), OCP/파라미터 앵커.  **출력**: 전압-시간 곡선, 과전압
@@ -317,6 +326,19 @@ step 30 t=975.0s [cc] V=4.0100 I=8.302e-08 x̄=0.4237 ηkin=17.0mV E-bal 1.6e-05
   확증/기각**한다(검증 게이트).
 - **코팅 인식**(요즘 양극재): nm 코팅(LNO 등)은 CEI를 **13~20× 억제**(Kim 2025) → 화학 몫이 작아지고
   잔여는 **OTHER(모델 밖)**로 이동 → `b1_chem_fade --chem-x`로 **화학 몫을 열어둠**(하드코딩 아님).
+- **★ 2026-07-23 v3 사이클 기전 확장 (전부 기본 OFF·앵커-안전)**:
+  - **#30 VGCF carbon-촉매 SE분해**: 탄소 3상계면이 SE 분해 촉매 → 화학 채널을 carbon-촉매몫+baseline으로
+    **분해**(kim2024 비가역용량 +63%·cho2024 R_int 2.1×@100cyc).  ★이중계산 가드: 실험끝점=with-carbon 셀
+    이라 carbon 이미 포함 → **ADD 아닌 SPLIT**(총 R_int 궤적 불변).
+  - **#31 PTFE 브릿지 열화**: 피브릴이 접촉을 초기 더 잡아주다(dcr_eff↑) **defluorination**(Li→LiF+비정질C)으로
+    놓음 → ledger에 지연 후 방출.  ⚠크기 앵커 없음 = F1 튜너블 훅(날조 금지, 기본 OFF).
+  - **#29 Joule 발열→열화 재분배**(v2): 발열 몰린 복셀이 더 빨리 열화 → ΔR_total(끝점 앵커)을 q=∣J∣²/σ로
+    **공간 재분배**(Σ 보존).  ★Arrhenius 곱 아님 — **LPSCl 분해-율 Eₐ가 문헌에 없어서**(전도/계면 Eₐ는
+    틀린 양) = Eₐ-free 재분배.  이중계산 회피(끝점이 자기발열 이미 포함).
+  - **취성→MPM crack-void**: DEM 초기압밀서 fragmentation+ 난 AM 균열이 MPM 형상에(SE ingress) — frame[5]:
+    DEM=WHERE(균열 개시), MPM=morphology(형태 결과).  기본 OFF(고압/poly 전용, 저압은 near-null).
+  - **코팅 프리셋 셀렉터**(`coating_presets.py` + `/step5` 드롭다운): none/LNO/LZO/Li₃PO₄/SDCP/SWCNT →
+    화학 CEI 억제(크기=앵커 Kim2025, shape=√N ASSUMED, 앵커없으면 미변경).
 - **입력**: ledger 접촉 궤적 + 실험 총 R_int 끝점(×@N).  **출력**: 총 R_int(N) 분해 곡선.
 - **실험 앵커**: **Yun 2023**(우리 랩, bare SC-NMC R_ct 341.7→982.3 = 2.87×@100), **Kim 2025**(LNO
   13~20× 억제), **Payandeh 2023**(코팅 93%@200cyc).
@@ -345,8 +367,12 @@ step 30 t=975.0s [cc] V=4.0100 I=8.302e-08 x̄=0.4237 ηkin=17.0mV E-bal 1.6e-05
 | STEP5 | 열화 크기 | Yun 2023 R_ct 2.87×@100 | 실험 끝점 앵커 |
 | STEP5 | 열화 모양 | Park 2023 √t 선형(코팅) | √N 기본(fit_rint_curve 검증) |
 | STEP5 | 코팅 억제 | Kim 2025 LNO 13~20× | --chem-x 열어둠 |
+| STEP5 | carbon-촉매 SE분해 | kim2024 +63% · cho2024 R_int 2.1×@100 | 화학 채널 SPLIT |
+| STEP5 | 자기발열 유의성 | Ayyaswamy AEM2026 (~5-30K) | Joule 재분배(Eₐ 부재→Eₐ-free) |
 
-ML 예측기(설계→σ triad): **σ_ionic LOOCV 0.975 · σ_e 0.953 · σ_thermal 0.90**.
+ML 예측기(설계→σ triad): **σ_ionic LOOCV 0.975 · σ_e 0.953 · σ_thermal 0.90** (predictor_engine, GPR+RF).
+**★ v3 ML 설계 폐루프**(`ml_design_loop.py`): Sobol DOE(공간충전, 검증) → SISSO 형식발견 → Bayesian
+다목적 역설계(GP+gp_hedge) — Duquesnoy 2023 원형, 우리 5-phase 비전의 폐루프.  실학습은 WSL(sklearn/pysisso/skopt).
 
 ---
 
@@ -360,8 +386,49 @@ ML 예측기(설계→σ triad): **σ_ionic LOOCV 0.975 · σ_e 0.953 · σ_ther
 
 **모델 밖(OTHER)**: 골격 재배열의 이산 성분, SE 화학분해, Li 음극쪽 — 실험값이 들어오면 채움.
 
+**닫힘의 정확한 정의(2026-07-23)**: "**돌릴 수 있고 정직하게 분해된다**"는 닫혔다 — 파이프라인 STEP1→5가
+끝까지 돌고, 매 스텝 감사(질량·KCL·에너지)가 통과하며, 각 항이 measured/assumed/ASSUMED-FORM/
+literature-anchored로 라벨된다.  아래 3부류는 **미결이되 무엇이 왜 미결인지 명시**된 상태(모르는 걸
+아는 척하지 않음 = 정직):
+
+- **① 실험앵커 대기(날조 금지·미변경/스윕전용)**: LPSCl **분해-율 Arrhenius Eₐ**(문헌 부재 — 전도/계면
+  Eₐ는 틀린 양 → Joule→열화는 절대 곱 금지, **끝점-보존 재분배**로만) · 코팅 **√N shape**(끝점 하나론
+  구별 불가 → ASSUMED, `fit_rint_curve`가 ≥4 N점으로 게이트) · **Joule 절대 ΔT** · **SDCP E_bind**(DFT) ·
+  **Kang&Shin bimodal 1.51× magnitude**(현재 `shrink-proxy` 아티팩트 → `expand-void` 재해석 필요; **방향
+  bimodal>mono는 불변**, 크기만 미확정) · NCA E=175 · LZO/Li₃PO₄ 코팅 배수.
+- **② 연구트랙(구현-미완, 프레임워크는 있음)**: **A10-full 전기-화학-역학 CZM**(#17 — ledger 옵션A +
+  A-1 MPM만 구현, 완전 CZM-FEM 미완) · **B6 운전압 σ-시간축 decay** · **D5 R_ct/C_dl/Warburg 사이클
+  시그니처**.
+- **③ 수치 확증 대기(#5)**: **R_int(N) 계수확정**(WSL PDF digitize) · **STEP4 PyBaMM 매치드-조건 패리티
+  런**(ΔV-RMS mV — 이게 "defensible→bullet-proof"의 유일한 남은 조각, V100 하루).
+
+⇒ **"돌아가고 정직하게 분해된다" = 닫힘.  "실험곡선으로 shape·magnitude 확증"과 "완전 사이클 CZM" =
+앵커/연구 대기.**  둘은 다른 종류의 미결이다 — 전자는 *신뢰 가능한 산출물*, 후자는 *더 강한 주장을 위한
+추가 증거*.
+
 **절대 안 하는 것**: DEM↔MPM 상호보정(순환논리), ASSUMED를 검증된 것으로 표기, 문헌값 날조.
 provenance 라벨(measured / assumed / ASSUMED-FORM / literature-anchored)을 항상 붙인다.
+
+### 9-1. COMSOL을 대체하나? (범위별 YES/NO — 정본 `docs/defense_review_20260720.md`)
+
+5-에이전트 적대검증(코드·물리·숫자·정직·COMSOL-대체)의 결론.  **curve-fit이 아니라 정당한 물리 시스템**이다
+(STEP4-v2 = 복셀-해상 SSB-특화 DFN: 전하보존 2망 FV·**완전 비선형 BV**·입자별 구형확산 ~1271개; STEP3 =
+Kirchhoff 전도 = COMSOL 전도 모듈과 **같은 PDE**, 볼륨메시 대신 접촉그래프).
+
+| | 항목 | 근거 |
+|---|---|---|
+| ✅ **대체 가능** | σ 삼중(이온/전자/열) 침대 | **Bazzoun 2026 독립 입증**: 같은 재료·코드·접촉물리를 실측 EIS+COMSOL FEM에 검증(RNM≈FEM≈실험, 32-98× 빠름) — 우리는 +전자/열 삼중 |
+| ✅ | 미세구조-해상 전류/SOC/핫스팟 **필드** | COMSOL은 이미지 메시 필요, 우리는 DEM/MPM에서 바로 = **최대 우위** |
+| ✅ | 반쪽셀 V(t) (단일이온 sulfide) | 빠진 항(전해질 NP·이중층)은 t⁺≈1 SE에서 **물리적으로 없는 것**(근사 아님) |
+| ❌ **COMSOL 필요** | 액체/혼성 전해질·풀셀·음극 | 우리 범위 밖(설계상) |
+| ❌ | 고-CAM 절대 σ | 수축-only → FEM 대비 ~2× 과소(정직히 bracket) |
+| ❌ | 커플드 열/역학 멀티피직스 | A10-full CZM 미완(위 ②) |
+| ❌ | 보장수렴·재료 라이브러리·고율 과도 | FEM식 수렴보장 없음(안전망 = 매스텝 KCL+에너지 감사) |
+
+**빠진 단 하나(defensible→bullet-proof)**: STEP4의 **완료된 외부 수치 패리티**.  방정식·기능 패리티 +
+내부 검증(selftest 19/19: 질량 2.7e-12·Cottrell 2.9%·KCL 7e-9·에너지 4e-13)은 **진짜**지만, PyBaMM/COMSOL과의
+**ΔV-RMS 매치드-조건 런은 아직**(인프라만 있음).  → "COMSOL-패리티"는 **"방정식-수준 패리티·내부 검증;
+수치 패리티 대기"**로 읽어야 정직.  이 한 조각(V100 하루)이 STEP4 갭을 닫는다.  STEP3는 이미 Bazzoun으로 닫힘.
 
 ---
 
@@ -377,8 +444,11 @@ provenance 라벨(measured / assumed / ASSUMED-FORM / literature-anchored)을 �
 | STEP5 화학 N-전개 | `scripts/b1_chem_fade.py`(--chem-x 코팅) |
 | STEP5 실험 shape 검증 | `scripts/fit_rint_curve.py --csv/--points` |
 | STEP5 인터랙티브 패널 | **webapp `/step5`** (슬라이더 + 실시간 분해도) |
-| MPM 3D 뷰어 | webapp `/mpm-lab` |
-| 설계→σ ML 예측 | webapp `/predictor` |
+| MPM 3D 뷰어 (🔬 2D 단면 morphology · 🔥 Joule 발열 · ⚡ σ 필드) | webapp `/mpm-lab` |
+| 설계→σ ML 예측 / **v3 설계 폐루프**(Sobol·SISSO·BO) | webapp `/predictor` · `scripts/ml_design_loop.py`(WSL) |
+| STEP3 carbon-SE 면적·Joule hot-spot·periodic | `mpm_webapp_payload.py --joule-heat/--periodic` |
+| 취성→MPM crack-void | `dem_fracture_scaffold.py` → `mpm3d_compaction --fracture-scaffold` |
+| 결과 자동 등록(V100→db) | `webapp/mpm_lab_register.py`(--dest/--url/--rsync) |
 
 킷 = 웹앱이 케이스별로 zip 산출(스캐폴드 CSV + run_mpm.sh + step4 + A-1 앵커) → GPU(v100)에서 실행.
 
