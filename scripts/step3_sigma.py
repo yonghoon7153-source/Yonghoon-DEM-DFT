@@ -418,6 +418,61 @@ def carbon_se_contact_area(sid, vox):
     return float(faces) * vox * vox
 
 
+def _voxel_jmag(P, cond, sig):
+    """Cell-centred |J| proxy (∝ σ·Δφ, run-relative) — per_particle_current 와 동일 규약.
+    각 축의 양면 전류 |g·Δφ|(g=조화평균 컨덕턴스)를 셀에 반씩 배분 → |J|=√(ΣJ축²).
+    field_point_cloud·joule_hotspot 공유(단일 소스, 중복 제거)."""
+    jmag = np.zeros(sig.shape, np.float64)
+    for axis in (0, 1, 2):
+        sa_sl = [slice(None)] * 3; sb_sl = [slice(None)] * 3
+        sa_sl[axis] = slice(0, -1); sb_sl[axis] = slice(1, None)
+        sa_sl, sb_sl = tuple(sa_sl), tuple(sb_sl)
+        both = cond[sa_sl] & cond[sb_sl]
+        sa, sb = sig[sa_sl], sig[sb_sl]
+        g = np.where(both, 2.0 * sa * sb / np.maximum(sa + sb, 1e-30), 0.0)
+        f = np.abs(g * (P[sa_sl] - P[sb_sl]))               # face current ∝ σ·Δφ (per face area)
+        comp = np.zeros(sig.shape, np.float64)
+        comp[sa_sl] += f * 0.5
+        comp[sb_sl] += f * 0.5
+        jmag += comp * comp
+    return np.sqrt(jmag)
+
+
+def joule_hotspot(res, sid, sigma_of_sid, vox, sel_sids, box_lo=(0.0, 0.0, 0.0),
+                  max_points=40000, hot_budget_frac=0.35, seed=1):
+    """#29 — 복셀 Joule 발열밀도 q ∝ |J|²/σ (run-relative) 점군 = '어디서 발열이 몰리는지' hot-spot MAP.
+    전류가 구속(소수 percolating neck)에 몰리고 σ 낮은 곳에서 q 최대 → 발열 hot-spot.  field_point_cloud
+    와 동일 |J|(_voxel_jmag) 재사용 = 순수 readout(재솔브 없음, σ 불변).  전자망(sel_sids=AM+carbon)에 적용.
+    ★한계 (정직): 절대 ΔT(K) 온도상승은 Poisson 열확산(∇·(k∇ΔT)=−q) + 실전류 스케일 + LPSCl 분해
+    Arrhenius Eₐ 앵커가 필요(미보유) → v2.  이 함수는 발열 '생성' 분포(hot-spot 위치)까지만 정직 산출.
+    Returns dict(pts_um [N,3], q [N], hot_frac_50, conc_ratio, n) 또는 None.  viewer가 percentile 정규화."""
+    if 'phi' not in res:
+        return None
+    P, cond = res['phi'], res['cond']
+    sig = sigma_of_sid[sid]
+    jmag = _voxel_jmag(P, cond, sig)
+    q = np.where(cond, jmag * jmag / np.maximum(sig, 1e-30), 0.0)     # 발열밀도 (run-relative, W/cm³ 스케일 전)
+    sel = np.isin(sid, np.asarray(list(sel_sids), np.int64)) & cond & (q > 0)
+    ii, jj, kk = np.where(sel)
+    if not len(ii):
+        return None
+    vals = q[ii, jj, kk]
+    # hot-spot 집중도: q 총합의 50%를 담는 상위-복셀 분율 (작을수록 집중=hot-spot 뚜렷) + 최대/평균 비
+    srt = np.sort(vals)[::-1]; cum = np.cumsum(srt); tot = float(cum[-1])
+    hot_frac_50 = float((np.searchsorted(cum, 0.5 * tot) + 1) / len(vals)) if tot > 0 else 0.0
+    conc_ratio = float(vals.max() / max(vals.mean(), 1e-30))
+    if len(ii) > max_points:                                          # field_point_cloud 규약: 상위 hot 유지 + 균일 배경
+        rng = np.random.default_rng(seed)
+        order = np.argsort(vals)[::-1]
+        n_hot = int(max_points * hot_budget_frac)
+        pick = np.concatenate([order[:n_hot], rng.choice(order[n_hot:], size=max_points - n_hot, replace=False)])
+        ii, jj, kk, vals = ii[pick], jj[pick], kk[pick], vals[pick]
+    pts = np.stack([(ii + 0.5) * vox + box_lo[0], (jj + 0.5) * vox + box_lo[1],
+                    (kk + 0.5) * vox + box_lo[2]], axis=1).astype(np.float32)
+    return {'pts': pts, 'q': vals.astype(np.float32), 'hot_frac_50': hot_frac_50,
+            'conc_ratio': conc_ratio, 'n': int(len(vals))}
+
+
 def field_point_cloud(res, sid, sigma_of_sid, vox, sel_sids, box_lo=(0.0, 0.0, 0.0),
                       max_points=40000, hot_budget_frac=0.35, seed=1):
     """Per-voxel current-density MAGNITUDE sampled at the selected conducting phase(s), as a
@@ -442,20 +497,7 @@ def field_point_cloud(res, sid, sigma_of_sid, vox, sel_sids, box_lo=(0.0, 0.0, 0
         return None, None
     P, cond = res['phi'], res['cond']
     sig = sigma_of_sid[sid]
-    jmag = np.zeros(sid.shape, np.float64)
-    for axis in (0, 1, 2):
-        sa_sl = [slice(None)] * 3; sb_sl = [slice(None)] * 3
-        sa_sl[axis] = slice(0, -1); sb_sl[axis] = slice(1, None)
-        sa_sl, sb_sl = tuple(sa_sl), tuple(sb_sl)
-        both = cond[sa_sl] & cond[sb_sl]
-        sa, sb = sig[sa_sl], sig[sb_sl]
-        g = np.where(both, 2.0 * sa * sb / np.maximum(sa + sb, 1e-30), 0.0)
-        f = np.abs(g * (P[sa_sl] - P[sb_sl]))               # face current ∝ σ·Δφ (per face area)
-        comp = np.zeros(sid.shape, np.float64)
-        comp[sa_sl] += f * 0.5
-        comp[sb_sl] += f * 0.5
-        jmag += comp * comp
-    jmag = np.sqrt(jmag)
+    jmag = _voxel_jmag(P, cond, sig)
     sel = np.isin(sid, np.asarray(list(sel_sids), np.int64)) & cond
     ii, jj, kk = np.where(sel)
     if not len(ii):

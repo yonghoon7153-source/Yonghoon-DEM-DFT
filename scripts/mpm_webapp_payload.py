@@ -329,6 +329,10 @@ def main():
     ap.add_argument('--periodic', action='store_true',
                     help='STEP3 σ-solve(전자/이온/열/pore-τ/반응)에 x,y 주기 BC 적용 (MPM RVE '
                          "'boundary p p f' 정합 — 측면 wrap, z=plate 유지).  기본 OFF = 절연 측벽(기존).")
+    ap.add_argument('--joule-heat', action='store_true',
+                    help='#29 — 전자망 Joule 발열밀도 q∝|J|²/σ hot-spot 맵 산출 (어디서 발열 몰리는지; '
+                         'step3.joule + joule_field).  기본 OFF.  ★절대 ΔT(K)·STEP5 R(N) Arrhenius 연동은 '
+                         'LPSCl 분해 Eₐ 앵커 미보유 → v2(이 플래그는 발열 생성분포까지만).')
     ap.add_argument('--k-carbon', type=float, default=None,
                     help='열전도 carbon(VGCF/SuperP/SWCNT) k [W/cm·K] override (기본 =k_AM 보수적 ASSUMED; 스윕용)')
     ap.add_argument('--step3-gpu', action='store_true',
@@ -539,6 +543,7 @@ def main():
     # analytic laminate/percolation self-tests that pin the assembly.
     step3 = None; je_am = None; jb_am = None; elec_field = None; ion_field = None; jrxn_am = None
     thermal_field = None                                     # STEP3 열류 |k∇T| 점군 (전자/이온 필드처럼)
+    joule_field = None                                       # #29 STEP3 Joule 발열밀도 q∝|J|²/σ hot-spot 점군
     if len(r) and not a.no_step3:                       # phase=None → AM-skeleton-only σ (SBE baseline)
         try:
             import time as _time
@@ -584,6 +589,19 @@ def main():
                                        round(float(_ep[i, 2]), 2), round(float(_ejn[i]), 4)]     # keeps dim-end
                                       for i in range(len(_ep))]                                  # range vs max-norm)
                         print(f"  STEP3 electronic FIELD: {len(elec_field):,} pts (AM+carbon |J| cloud)")
+                _jhs = None                                 # #29 Joule 발열 hot-spot (전자망 q∝|J|²/σ; --joule-heat)
+                if a.joule_heat:
+                    _jhs = _s3.joule_hotspot(_res3, sid3, _sig3, a.step3_vox, (1, 2, 3, 4, 5, 7, 8),
+                                             max_points=a.field_max_points)
+                    if _jhs is not None:
+                        _jq = np.nan_to_num(_jhs['q'], nan=0.0, posinf=0.0, neginf=0.0)
+                        _p998j = max(float(np.percentile(_jq, 99.8)), 1e-30)
+                        _jqn = _jq / _p998j                                        # p99.8-norm (전자/이온 필드 동일)
+                        joule_field = [[round(float(_jhs['pts'][i, 0]), 2), round(float(_jhs['pts'][i, 1]), 2),
+                                        round(float(_jhs['pts'][i, 2]), 2), round(float(_jqn[i]), 4)]
+                                       for i in range(len(_jhs['pts']))]
+                        print(f"  STEP3 Joule hot-spot: {len(joule_field):,} pts · 집중 hot_frac_50 "
+                              f"{_jhs['hot_frac_50']:.3f} (작을수록 집중) · conc {_jhs['conc_ratio']:.1f}× — 어디서 발열 몰리나")
                 _share = _s3.phase_current_share(_res3, sid3, _sig3)
                 _sname = _s3.SID_NAME
                 step3 = {'sigma_e_eff_S_cm': float(f"{_res3['sigma_eff']:.4g}"),
@@ -696,6 +714,12 @@ def main():
                 print(f"  STEP3 σ_e_eff = {step3['sigma_e_eff_S_cm']:.4g} S/cm  (vox {a.step3_vox}µm, "
                       f"{_res3['n_dof']:,} dof, resid {_res3['resid']:.1e}, {_time.time()-_t0:.0f}s)  "
                       f"share: " + " ".join(f"{k} {100*v:.0f}%" for k, v in step3['dissipation_share'].items()))
+                if _jhs is not None:                        # #29 Joule 발열 hot-spot 요약 (joule_field는 별도 export)
+                    step3['joule'] = {'hot_frac_50': _jhs['hot_frac_50'], 'conc_ratio': round(_jhs['conc_ratio'], 2),
+                                      'n_pts': _jhs['n'],
+                                      'note': 'Joule 발열밀도 q∝|J|²/σ (전자망, run-relative) — 어디서 발열 몰리나. '
+                                              'hot_frac_50=q 총합 50% 담는 상위복셀 분율(작을수록 집중).  ★절대 ΔT(K)·'
+                                              'STEP5 R(N) Arrhenius 연동 = LPSCl 분해 Eₐ 앵커 대기(v2).'}
                 if a.collector_rint >= 0.0:                # UI-selected preset → highlighted entry
                     _sel = {
                         'name': a.collector_name or f'R{a.collector_rint:g}',
@@ -1209,6 +1233,7 @@ def main():
         'electronic_field': elec_field,                    # [x,y,z,|J|₀₋₁] µm — STEP3 e⁻ current-density cloud (AM+carbon)
         'ionic_field': ion_field,                          # [x,y,z,|J|₀₋₁] µm — STEP3 Li⁺ current-density cloud (SE+SDCP)
         'thermal_field': thermal_field,                    # [x,y,z,|k∇T|₀₋₁] µm — STEP3 열류 cloud (多상, 열 hot-spot)
+        'joule_field': joule_field,                        # [x,y,z,q₀₋₁] µm — #29 STEP3 Joule 발열밀도 hot-spot (--joule-heat)
         'void_points': void_points,                        # [x,y,z] µm — pore voxel centres (XCT "기공만" mode)
         'box': {'x_min': 0.0, 'x_max': round(lat, 2), 'y_min': 0.0, 'y_max': round(lat, 2),
                 'z_min': 0.0, 'z_max': round(thick, 2)},

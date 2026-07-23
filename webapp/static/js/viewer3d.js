@@ -987,6 +987,7 @@ function buildControls(container, isMPM) {
         <option value="je_field">⚡ 전자 전류밀도 — 필드 (AM+카본, 논문)</option>
         <option value="ji_field">⚡ 이온 전류밀도 — 필드 (SE+SDCP, 논문)</option>
         <option value="kt_field">&#x1F525; 열류 — 필드 (|k∇T|, 多상 열전도)</option>
+        <option value="jt_field">&#x1F525; Joule 발열 — hot-spot (|J|²/σ, 어디서 발열 몰리나)</option>
         <option value="je">└ 전자 — AM 입자별 (je)</option>
         <option value="je_delta">└ Δ 재분배 — bare/wetted 비율 (접점 상실)</option>
         <option value="jrxn">🔋 반응 전류밀도 — 충전 저율 (STEP4)</option>
@@ -3185,7 +3186,7 @@ function applyViewMode(state, mode) {
        <div style="margin-top:2px;color:#9ca3af;font-size:11px">시각화 lumping — STEP3 σ 물리는 상별 유지 (PTFE=절연)</div>`);
     return;
   }
-  if (mode === 'je_field' || mode === 'ji_field' || mode === 'kt_field') {
+  if (mode === 'je_field' || mode === 'ji_field' || mode === 'kt_field' || mode === 'jt_field') {
     /* STEP3 current-density FIELD (paper Fig-2/Fig-4 grammar): a per-voxel |J| point cloud of the
      * CONDUCTING phase — electronic (AM+carbon) or ionic (SE+SDCP) — coloured jet + gamma-compressed
      * so only the true conduction backbone leaves the deep-blue field.  The OPPOSITE (blocking) phase
@@ -3193,14 +3194,17 @@ function applyViewMode(state, mode) {
      * ★kt_field = 열류 |k∇T| (STEP3 열전도, 多상=全상 solid) — 전자 ghost 경로 재사용, 색=열 hot-spot. */
     const ionic = mode === 'ji_field';
     const thermal = mode === 'kt_field';
-    const fld = thermal ? ((state.data && state.data.thermal_field) || [])
+    const joule = mode === 'jt_field';                        // #29: 전자망 Joule 발열밀도 q∝|J|²/σ (AM+carbon phase)
+    const fld = joule ? ((state.data && state.data.joule_field) || [])
+              : thermal ? ((state.data && state.data.thermal_field) || [])
                         : ((state.data && state.data[ionic ? 'ionic_field' : 'electronic_field']) || []);
     const mm = (state.data && state.data.mpm_metrics) || {};
     const s3 = mm.step3 || (state.data && state.data.step3) || null;
     if (!fld.length) {
-      setLegend(state, '<i>이 payload엔 ' + (thermal ? '열류(|k∇T|)' : ionic ? '이온' : '전자') + ' FIELD가 없어요 — 최신 '
-        + '<b>mpm_webapp_payload.py</b>(--field·thermal 기본 ON)로 payload를 재생성해 업로드하세요 '
-        + '(MPM 재실행 불필요).</i>');
+      setLegend(state, '<i>이 payload엔 ' + (joule ? 'Joule 발열(q∝|J|²/σ)' : thermal ? '열류(|k∇T|)' : ionic ? '이온' : '전자')
+        + ' FIELD가 없어요 — ' + (joule ? 'payload를 <b>--joule-heat</b>로 재생성하세요 (전자망 percolation 필요; '
+        + 'SE-only 베드는 σ_e=0이라 발열 없음).' : '최신 <b>mpm_webapp_payload.py</b>(--field·thermal 기본 ON)로 payload를 '
+        + '재생성해 업로드하세요 (MPM 재실행 불필요).') + '</i>');
       return;
     }
     // AM spheres = dark translucent GHOST in BOTH field modes (user: "전자에도 AM 넣어줘") —
@@ -3316,7 +3320,9 @@ function applyViewMode(state, mode) {
     if (state.scene) state.scene.add(grp);
     if (state.applyClip) state.applyClip();                  // 단면 뷰를 새 point 재질에도 적용
     const stops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
-    const sigTxt = thermal
+    const sigTxt = joule
+      ? (s3 && s3.joule ? '집중 hot_frac_50 ' + Number(s3.joule.hot_frac_50).toFixed(3) + ' · conc ' + Number(s3.joule.conc_ratio).toFixed(1) + '× (작을수록 발열 집중)' : '')
+      : thermal
       ? (s3 && s3.thermal && s3.thermal.k_eff_W_mK != null ? 'κ_eff ' + Number(s3.thermal.k_eff_W_mK).toFixed(2) + ' W/m·K (多상·상한)' : '')
       : ionic
       ? (s3 && s3.sigma_ion_eff_S_cm != null ? 'σ_ion_eff ' + Number(s3.sigma_ion_eff_S_cm).toExponential(2) + ' S/cm' : '')
@@ -3324,10 +3330,11 @@ function applyViewMode(state, mode) {
     const share = ionic ? (s3 && s3.ion_dissipation_share) : (s3 && s3.dissipation_share);
     // 정량 스케일 (payload field_scale_*): focus_top = 컬러바 상단(p99.8)의 |J|/⟨J_z⟩ 배율
     // (바이어스 무관), j_top = A/cm² @ΔV=1V.  구 payload엔 없음 → 기존 상대 라벨 폴백.
-    const fsc = ionic ? (s3 && s3.field_scale_ion) : (s3 && s3.field_scale_e);
+    const fsc = (joule || thermal) ? null   // Joule q∝|J|²/σ·열류는 전자 mA/cm² 크레이트 무의미 → 상대 바
+              : ionic ? (s3 && s3.field_scale_ion) : (s3 && s3.field_scale_e);
     const fmtP = v => { const x = Number(v); return x >= 100 ? x.toPrecision(3) : x.toPrecision(2); };
     setLegend(state,
-      `<b>${ionic ? '이온 (Li⁺)' : '전자 (e⁻)'} 전류밀도 FIELD (STEP3 · ${ionic ? 'SE+SDCP' : 'AM+carbon'})</b>`
+      `<b>${joule ? '🔥 Joule 발열밀도 q∝|J|²/σ' : thermal ? '🔥 열류 |k∇T|' : ionic ? '이온 (Li⁺) 전류밀도' : '전자 (e⁻) 전류밀도'} FIELD (STEP3 · ${ionic ? 'SE+SDCP' : 'AM+carbon'}${joule ? ' 발열=전자망' : ''})</b>`
       + (sigTxt ? `<div style="margin-top:3px"><b style="font-size:13px">${sigTxt}</b></div>` : '')
       + `<div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>`
       + (fsc
