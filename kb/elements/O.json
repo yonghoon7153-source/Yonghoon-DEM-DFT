@@ -25,13 +25,13 @@
   },
   {
    "formula": "P-O (LPSOCl)",
-   "context": "our lpsocl",
+   "context": "우리 lpsocl",
    "battery_role": "O가 PS4의 S 자리 치환 → P-O",
    "note": "P-O ICOHP ~ -8.4 eV (우리 nd/lpsocl db) — 매우 강함"
   },
   {
    "formula": "B2O3 / Nd2O3",
-   "context": "our doping",
+   "context": "우리 도핑",
    "battery_role": "산화물 도펀트",
    "note": ""
   }
