@@ -5057,6 +5057,10 @@ function showMPMAnalysisSummary(state) {
     ['전류 집중 (focus)', '|J|(p99.8)/⟨J_z⟩ · 전류 쏠림 무차원 지표(선형해라 바이어스 무관) · 낮을수록 균일=병목 해소 · 운전 국소 mA/cm² = focus×면적전류×C'],
     ['면적용량 / BV faces', '면적용량 = F·c_max·|Δx|·V_AM/면적 (Chen2020 창, 자동산출); 1C 전류밀도 = 면적용량/1h · BV faces = AM|SE·AM|SDCP 반응계면 수(STEP4), active% = 반응 참여 입자'],
     ['SE/solid · ρ_bulk', 'SE 부피 / 전 고체상 % · ρ_bulk = 침대 벌크 밀도 (g/cm³)'],
+    ['사이클 열화 fade(N)', '진짜 열화 = ★정직 분해(frame[5]): ①접촉-기계 몫 = ledger(recontact-forbid: 충전상태 gap→δcr 접촉파단→R_ct↑, v1 MPM으로 gap 검증) ②화학 몫 = B-1 계면상(CEI). '
+      + '⚠ 접촉-기계는 총 fade의 ~2%뿐(ledger R_ct 1.09× vs 실험 총 R_int 3.8~6.1×@1000cyc) = 화학(B-1)이 지배. '
+      + 'MPM/ledger는 방향·기전, 크기·모양은 화학+실험(끝점비율 아닌 R_int(N) 곡선). N-스케일·포화모양 = ASSUMED-FORM(Miner, 실험곡선 앵커 대기). '
+      + 'MPM v1(--cycle-deform)=충전상태(가역) 형상앵커; 영구 열화=ledger 이산파단. ★반복사이클 MPM(v2)은 물리상 불가로 기각(pin-mask 스프링백 불가·isochoric 영구손실 금지·sub-voxel).'],
   ];
   gloss.forEach((g, i) => {
     const gy = glossY + 40 + i * 15.5;
