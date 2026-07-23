@@ -82,8 +82,8 @@ def assemble_features(case, cycle_N=0, design=None):
     phys = {
         'porosity': g('porosity_mpm_pct', 'porosity_settled_pct', 'porosity'),
         'sigma_e_eff': g('sigma_e_eff_S_cm', src=s3), 'sigma_ion_eff': g('sigma_ion_eff_S_cm', src=s3),
-        'sigma_thermal': g('thermal_sigma_full_mScm', 'k_eff_W_mK'),
-        'tau_se': g('tau', src=(s3.get('pore') or {})),
+        'sigma_thermal': g('k_eff_W_mK', src=(s3.get('thermal') or {})),   # ★리뷰: step3['thermal'] 밑
+        'tau_se': g('tau', src=(s3.get('pore') or {})),                    # step3['pore']['tau'] (존재 확인)
         'coverage_AM_hertz': g('coverage_AM_P_hertz_pct', 'coverage_AM_hertz_pct'),
         'coverage_AM_tabor': g('coverage_AM_P_tabor_pct', 'coverage_AM_tabor_pct'),
         'cn_am_am': g('am_am_cn', 'coordination_AM'), 'cn_se_se': g('se_se_cn'),
@@ -133,6 +133,11 @@ class CycleSurrogate:
         self._med = np.nanmedian(np.where(np.isfinite(X), X, np.nan), axis=0)
         self._med = np.where(np.isfinite(self._med), self._med, 0.0)
         Xi = np.where(np.isfinite(X), X, self._med)
+        _allnan = ~np.isfinite(X).any(axis=0)                 # ★리뷰: 전-결측 feature 경고(median→0 무정보 숨김 방지)
+        if _allnan.any():
+            _bad = ([self.feat_names[i] for i in np.where(_allnan)[0]]
+                    if self.feat_names else list(map(int, np.where(_allnan)[0])))
+            print(f'  ⚠ 전-결측 feature {int(_allnan.sum())}개 → median=0 impute(무정보, 해당 타깃 퇴화 위험): {_bad[:10]}')
         for t in self.targets:
             if t not in Y:
                 continue
