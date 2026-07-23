@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Cascade / ML · Doping Screening{% endblock %}
-{% block head %}<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>{% endblock %}
+{% block head %}<script src="{{ vsrc('plotly.min.js','https://cdn.plot.ly/plotly-2.35.2.min.js') }}"></script>{% endblock %}
 
 {% macro num(v) %}{% if v is number %}{% if v == v|round(0) %}{{ v|int }}{% else %}{{ '%.3f'|format(v) }}{% endif %}{% else %}{{ v }}{% endif %}{% endmacro %}
 {% macro sf(v, nd=3) %}{% if v is number %}{{ ('%.'~nd~'f')|format(v) }}{% else %}{{ v if v is not none else '' }}{% endif %}{% endmacro %}

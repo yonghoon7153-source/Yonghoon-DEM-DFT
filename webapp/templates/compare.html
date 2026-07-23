@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Comparison · DFT{% endblock %}
-{% block head %}<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>{% endblock %}
+{% block head %}<script src="{{ vsrc('plotly.min.js','https://cdn.plot.ly/plotly-2.35.2.min.js') }}"></script>{% endblock %}
 {% block content %}
 <div class="page-header">
   <div><h1>Comparison</h1><div class="sub">조성 선택 → canonical 값 나란히 (같은 방법끼리만 유효)</div></div>

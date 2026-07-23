@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block title %}{{ comp.label }} · DFT{% endblock %}
 {% block head %}
-<script src="https://3dmol.org/build/3Dmol-min.js"></script>
-<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<script src="{{ vsrc('3Dmol-min.js','https://3dmol.org/build/3Dmol-min.js') }}"></script>
+<script src="{{ vsrc('plotly.min.js','https://cdn.plot.ly/plotly-2.35.2.min.js') }}"></script>
 {% endblock %}
 {% block content %}
 <div class="page-header">
@@ -152,6 +152,7 @@ let viewer;
 function loadStruct(name,ext,btn){
   document.querySelectorAll('#tab-structure .btn').forEach(x=>x.classList.remove('primary'));
   if(btn)btn.classList.add('primary');
+  if(typeof $3Dmol==='undefined'){var v=document.getElementById('viewer');if(v)v.innerHTML='<div class="muted" style="padding:28px">3D 뷰어(3Dmol)를 불러오지 못했어요 — 네트워크/CDN 확인. cif/xyz는 다운로드로 VESTA에서 볼 수 있어요.</div>';return;}
   fetch('/api/structure/'+encodeURIComponent(name)).then(r=>r.text()).then(txt=>{
     if(!viewer)viewer=$3Dmol.createViewer('viewer',{backgroundColor:'white'});
     viewer.clear();
@@ -199,6 +200,7 @@ function _buildCtrls(){
 function _toggleY(){window._CH.y=[].slice.call(document.querySelectorAll('#chart-ctrls input[data-y]:checked')).map(function(i){return i.getAttribute('data-y');});_renderChart();}
 function _renderChart(){
   var c=window._CH,d=c.d,x=c.x,ys=c.y,box=document.getElementById('chart');
+  if(typeof Plotly==='undefined'){box.innerHTML='<span class="muted">차트 라이브러리(Plotly)를 불러오지 못했어요 — 네트워크/CDN 확인 (tools/vendor_libs.sh 로 로컬화 가능).</span>';return;}
   if(!ys||!ys.length){box.innerHTML='<span class="muted">y 시리즈를 선택하세요</span>';return;}
   var xCat=c.cat.indexOf(x)>=0, traces=[], lay2={};
   if(c.grp&&c.useGrp){

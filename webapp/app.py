@@ -27,9 +27,18 @@ def _css_ver():
         return "1"
 
 
+def _vsrc(name, cdn):
+    """static/vendor/<name> 이 있으면 로컬(에어갭 OK), 없으면 CDN.
+    tools/vendor_libs.sh 로 vendor/ 채우면 자동으로 로컬 전환."""
+    p = os.path.join(app.static_folder, "vendor", name)
+    if os.path.exists(p):
+        return f"/static/vendor/{name}?v={int(os.path.getmtime(p))}"
+    return cdn
+
+
 @app.context_processor
 def _inject():
-    return {"asset_version": _css_ver(), "COMPS": D.COMPOSITIONS,
+    return {"asset_version": _css_ver(), "vsrc": _vsrc, "COMPS": D.COMPOSITIONS,
             "CATS": D.CATEGORIES, "FAMILY_ORDER": D.FAMILY_ORDER}
 
 
