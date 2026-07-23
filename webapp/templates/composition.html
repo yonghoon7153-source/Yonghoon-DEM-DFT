@@ -82,7 +82,9 @@
   <div class="chip-bar">
     {% for d in datafiles %}<button class="chip {% if loop.first %}active{% endif %}" onclick="plotCsv('{{ d.rel }}','{{ d.kind }}',this)">{{ d.kind }}</button>{% endfor %}
   </div>
-  <div class="card"><div class="chart" id="chart"></div>
+  <div class="card">
+    <div class="chart-ctrls" id="chart-ctrls"></div>
+    <div class="chart" id="chart"></div>
     <div class="muted" id="chart-src" style="font-size:.74rem;margin-top:6px"></div>
   </div>
   {% else %}<div class="card"><span class="muted">CSV 데이터 없음 <span class="badge b-todo">TODO</span></span></div>{% endif %}
@@ -163,16 +165,60 @@ function loadStruct(name,ext,btn){
 function plotCsv(rel,kind,btn){
   document.querySelectorAll('#tab-charts .chip').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');
   document.getElementById('chart-src').textContent='db/'+rel;
-  fetch('/api/csv/'+rel).then(r=>r.json()).then(d=>{
-    if(!d.data||!d.data.length){document.getElementById('chart').innerHTML='<span class="muted">빈 데이터</span>';return;}
-    let cols=d.columns.filter(c=>typeof d.data[0][c]==='number');
-    if(!cols.length){document.getElementById('chart').innerHTML='<span class="muted">수치 열 없음</span>';return;}
-    let xcol=cols[0], x=d.data.map(r=>r[xcol]);
-    let traces=cols.slice(1).map(c=>({x:x,y:d.data.map(r=>r[c]),name:c,mode:'lines',type:'scatter'}));
-    Plotly.newPlot('chart',traces,{margin:{t:16,r:16,b:44},font:{family:'Inter',size:12},
-      xaxis:{title:xcol},yaxis:{title:kind},legend:{orientation:'h',y:-0.2}},{responsive:true,displaylogo:false});
-  });
+  fetch('/api/csv/'+encodeURIComponent(rel)).then(r=>r.json()).then(d=>{
+    var box=document.getElementById('chart'), ctr=document.getElementById('chart-ctrls');
+    if(!d.data||!d.data.length){box.innerHTML='<span class="muted">빈 데이터</span>';ctr.innerHTML='';return;}
+    var cols=d.columns;
+    // 열 분류: 값의 60%+ 가 숫자면 numeric
+    function isNum(c){var n=0,t=0;d.data.forEach(function(r){var v=r[c];if(v!==''&&v!=null){t++;if(typeof v==='number')n++;}});return t>0&&n/t>=0.6;}
+    var numeric=cols.filter(isNum), cat=cols.filter(function(c){return numeric.indexOf(c)<0;});
+    // 그룹 열(계열별 여러 곡선) 감지
+    var group=cols.filter(function(c){return /^(series|system|site|kind|variant|dopant|seed|basin|_dir)$/i.test(c);})
+      .filter(function(c){var u={};d.data.forEach(function(r){u[r[c]]=1;});var n=Object.keys(u).length;return n>1&&n<=10;})[0]||'';
+    // 자연 x 후보
+    var XPREF=/(e_minus|e_vbm|e_ef|1000_?over_?t|inv_?t|invt|volume|\bvol\b|x_scale|x_ang|\bxi\b|freq|frequenc|omega|distance|\bdist|t_ps|\btime\b|r_ang|be_ev|energy_ev)/i;
+    var xdef=numeric.filter(function(c){return XPREF.test(c);})[0] || (cat.length?cat[0]:numeric[0]);
+    // y 기본: 노이즈(절대에너지·불확도·개수) 제외
+    var NOISE=/(_pm$|_std$|^t_k$|_ry$|^n_li|_bohr|count|^rank$|^index$|vperfu)/i;
+    var ydef=numeric.filter(function(c){return c!==xdef && !NOISE.test(c);}); if(!ydef.length)ydef=numeric.filter(function(c){return c!==xdef;});
+    window._CH={rel:rel,kind:kind,d:d,cols:cols,numeric:numeric,cat:cat,x:xdef,y:ydef,grp:group,useGrp:!!group,logy:false};
+    _buildCtrls(); _renderChart();
+  }).catch(function(){document.getElementById('chart').innerHTML='<span class="muted">차트 로드 실패</span>';document.getElementById('chart-ctrls').innerHTML='';});
 }
+function _cesc(s){return (s+'').replace(/[&<>"]/g,function(m){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m];});}
+function _buildCtrls(){
+  var c=window._CH,h='';
+  h+='<label>x <select onchange="_CH.x=this.value;_renderChart()">'+c.cols.map(function(col){return '<option'+(col===c.x?' selected':'')+'>'+_cesc(col)+'</option>';}).join('')+'</select></label>';
+  if(c.grp)h+='<label class="cc-chk"><input type="checkbox"'+(c.useGrp?' checked':'')+' onchange="_CH.useGrp=this.checked;_renderChart()"> '+_cesc(c.grp)+'별</label>';
+  h+='<label class="cc-chk"><input type="checkbox" onchange="_CH.logy=this.checked;_renderChart()"> log y</label>';
+  h+='<span class="cc-y">y</span>'+c.numeric.filter(function(col){return col!==c.x;}).map(function(col){
+    return '<label class="cc-chk"><input type="checkbox" data-y="'+_cesc(col)+'"'+(c.y.indexOf(col)>=0?' checked':'')+' onchange="_toggleY()"> '+_cesc(col)+'</label>';}).join('');
+  document.getElementById('chart-ctrls').innerHTML=h;
+}
+function _toggleY(){window._CH.y=[].slice.call(document.querySelectorAll('#chart-ctrls input[data-y]:checked')).map(function(i){return i.getAttribute('data-y');});_renderChart();}
+function _renderChart(){
+  var c=window._CH,d=c.d,x=c.x,ys=c.y,box=document.getElementById('chart');
+  if(!ys||!ys.length){box.innerHTML='<span class="muted">y 시리즈를 선택하세요</span>';return;}
+  var xCat=c.cat.indexOf(x)>=0, traces=[], lay2={};
+  if(c.grp&&c.useGrp){
+    var groups={},order=[]; d.data.forEach(function(r){var g=r[c.grp];if(!(g in groups)){groups[g]=[];order.push(g);}groups[g].push(r);});
+    order.forEach(function(g){ys.forEach(function(y){var rows=groups[g];
+      traces.push({x:rows.map(function(r){return r[x];}),y:rows.map(function(r){return r[y];}),
+        name:g+(ys.length>1?'·'+y:''),mode:'lines+markers',type:xCat?'bar':'scatter'});});});
+  }else{
+    var mag={},mx=0; ys.forEach(function(y){var m=0;d.data.forEach(function(r){if(typeof r[y]==='number')m=Math.max(m,Math.abs(r[y]));});mag[y]=m;mx=Math.max(mx,m);});
+    var useY2=!xCat&&ys.length>1&&ys.some(function(y){return mag[y]>0&&mx/mag[y]>100;});
+    ys.forEach(function(y){var small=useY2&&mag[y]>0&&mx/mag[y]>100;
+      traces.push({x:d.data.map(function(r){return r[x];}),y:d.data.map(function(r){return r[y];}),
+        name:y+(small?' (우축)':''),mode:'lines+markers',type:xCat?'bar':'scatter',yaxis:small?'y2':'y'});});
+    if(useY2)lay2={yaxis2:{overlaying:'y',side:'right',showgrid:false}};
+  }
+  var layout=Object.assign({margin:{t:14,r:(lay2.yaxis2?54:16),b:48,l:58},font:plotlyFont(),
+    xaxis:{title:x},yaxis:{title:c.kind,type:c.logy?'log':'linear'},barmode:'group',
+    legend:{orientation:'h',y:-0.28},hovermode:'closest'},plotlyBG(),lay2);
+  Plotly.newPlot('chart',traces,layout,{responsive:true,displaylogo:false});
+}
+window.addEventListener('themechange',function(){if(window._CH&&window._CH.d)_renderChart();});
 {% if datafiles %}window._firstCsv=function(){plotCsv('{{ datafiles[0].rel }}','{{ datafiles[0].kind }}',document.querySelector('#tab-charts .chip'));};{% endif %}
 function copyComp(){
   let t="{{ comp.label }} ({{ comp.formula }})\n";

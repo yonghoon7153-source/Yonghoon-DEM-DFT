@@ -151,11 +151,13 @@ document.querySelectorAll('#tabs button').forEach(function(b){b.onclick=function
       colorbar:{title:'score',thickness:12,len:.7},
       line: ring?{color:'#2563eb',width:2.5}:{color:'rgba(0,0,0,.15)',width:.5}},
     hovertemplate:'%{text}<br>E=%{x:.1f} GPa · ox=%{y:.2f} V<extra></extra>'};}
-  Plotly.newPlot('scatter',[tr(reg,false),tr(par,true)],
-    {margin:{t:10,r:14,b:46,l:52},font:{family:'Inter',size:12},
+  function drawScatter(){Plotly.newPlot('scatter',[tr(reg,false),tr(par,true)],
+    Object.assign({margin:{t:10,r:14,b:46,l:52},font:plotlyFont(),
      xaxis:{title:"Young's modulus E (GPa, UMA)"},yaxis:{title:'oxidation onset (V vs Li)'},
-     legend:{orientation:'h',y:-0.22},hovermode:'closest'},
-    {responsive:true,displaylogo:false});
+     legend:{orientation:'h',y:-0.22},hovermode:'closest'},plotlyBG()),
+    {responsive:true,displaylogo:false});}
+  drawScatter();
+  window.addEventListener('themechange',drawScatter);
 })();
 
 function sortT(th, idx){

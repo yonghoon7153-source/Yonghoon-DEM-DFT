@@ -616,3 +616,9 @@ kbd{font-family:var(--mono);font-size:.72em;background:var(--bg);border:1px soli
 .combo-row{display:flex;gap:12px;align-items:baseline;margin:9px 0;font-size:.88rem}
 .combo-row>b{min-width:150px;flex:0 0 auto;color:var(--navy);font-size:.78rem}
 .combo-row>div{flex:1;line-height:1.9}
+
+/* 차트 컨트롤 바 (composition Charts 탭 — x축·시리즈 선택) */
+.chart-ctrls{display:flex;flex-wrap:wrap;gap:7px 13px;align-items:center;margin-bottom:12px;font-size:.79rem;color:var(--dim)}
+.chart-ctrls select{font-family:var(--font);font-size:.79rem;padding:3px 7px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text)}
+.chart-ctrls .cc-chk{display:inline-flex;align-items:center;gap:4px;cursor:pointer;white-space:nowrap}
+.chart-ctrls .cc-y{font-weight:700;color:var(--muted);margin-left:4px;text-transform:uppercase;font-size:.7rem}

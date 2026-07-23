@@ -60,16 +60,16 @@ function drawChart(){
 }
 function drawRadar(){
   let sel=ids();
-  // 열별 min–max 정규화 (선택 조성 기준)
+  // 선택 조성이 모두 값을 가진 축만 사용 (결측 축은 폴리곤을 왜곡 → 제외)
+  let uk=KEYS.filter(k=>sel.every(id=>CANON[k][id]!=null));
+  if(sel.length<2||uk.length<3){
+    document.getElementById('cmpradar').innerHTML='<div class="muted" style="padding:44px;text-align:center;line-height:1.7">레이더는 <b>2개 이상</b> 조성 + 공통 물성 <b>3축 이상</b>일 때 그려져요.<br><span style="font-size:.85em">현재 '+sel.length+'개 선택 · 공통축 '+uk.length+'개</span></div>';return;}
   let norm={};
-  KEYS.forEach(k=>{
-    let vals=sel.map(id=>CANON[k][id]).filter(v=>v!==undefined&&v!==null);
-    let mn=Math.min(...vals),mx=Math.max(...vals);
-    norm[k]=v=>(v===undefined||v===null)?null:(mx===mn?0.5:(v-mn)/(mx-mn));
-  });
-  let axes=KEYS.map(k=>KSHORT[k]||k);
+  uk.forEach(k=>{let vals=sel.map(id=>CANON[k][id]);let mn=Math.min(...vals),mx=Math.max(...vals);
+    norm[k]=v=>(mx===mn?0.5:(v-mn)/(mx-mn));});
+  let axes=uk.map(k=>KSHORT[k]||k);
   let traces=sel.map(id=>{
-    let r=KEYS.map(k=>norm[k](CANON[k][id]));
+    let r=uk.map(k=>norm[k](CANON[k][id]));
     return {type:'scatterpolar',r:r.concat([r[0]]),theta:axes.concat([axes[0]]),
       name:COMPS[id].label,fill:'toself',opacity:.55,
       line:{color:COMPS[id].color},marker:{color:COMPS[id].color}};
