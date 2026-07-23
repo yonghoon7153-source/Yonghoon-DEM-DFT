@@ -461,6 +461,20 @@ def main():
         else:
             print(f'  ⚠ strain npy length {len(sv)} != SE {len(se)} — skipping strain points')
 
+    # ── #4b: SE morphology 점군 (뷰어 "2D 단면 morphology" 모드용) — 다운샘플 SE 물질점 (µm) ──
+    #   [x,y,z] µm (AM 구·SE 메쉬와 동일 (pt−off)·UM 규약).  뷰어가 클릭 평면서 슬라이스 → 그레인색
+    #   (위치-해시 golden-ratio hue) + AM + void 로 canvas 렌더 → SE void-filling 실시간 확인.
+    se_morph_points = []
+    if len(se_se):
+        _Nm = min(a.strain_pts, len(se_se))
+        _idxm = (np.random.default_rng(2).choice(len(se_se), _Nm, replace=False)
+                 if len(se_se) > _Nm else np.arange(len(se_se)))
+        _Pm = se_se[_idxm]
+        se_morph_points = np.column_stack([((_Pm[:, 0] - SW[0]) * UM).round(2),
+                                           ((_Pm[:, 1] - SW[0]) * UM).round(2),
+                                           ((_Pm[:, 2] - FLOOR) * UM).round(2)]).tolist()
+        print(f'  SE morphology points: {len(se_morph_points):,} (#4b 2D 단면 morphology)')
+
     # seed (loose, pre-compaction) SE surface — the real DEM SE spheres on the same grid
     seed_tris = []
     seed_por = None
@@ -1173,6 +1187,7 @@ def main():
         'econn_summary': econn_summary,                    # 전기적 연결성 (slide-19): % connected + graph params
         'am_coverage_patches': cov_patches,                # covered AM-surface points (spatial map)
         'se_strain_points': se_strain_points,              # [x,y,z,Σdg] µm — viewer "SE 소성변형" mode
+        'se_morph_points': se_morph_points,                # [x,y,z] µm — viewer "2D 단면 morphology" mode (#4b, SE void-filling)
         'mesh_triangles': tris,                            # COMPACTED SE plastic continuum (default)
         'seed_mesh_triangles': seed_tris,                  # loose SE before compaction (before/after)
         'additive_points': additive_points,                # [x,y,z,phase] µm — VGCF(2)/SuperP(3)/PTFE(4)
