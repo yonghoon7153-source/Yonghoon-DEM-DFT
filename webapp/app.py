@@ -35,6 +35,7 @@ from flask import (
 )
 import storage_sync
 import predictor_engine
+import mpm_lab_register           # MPM payload 등록 훅과 meta 스키마 공유 (single source of truth)
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024 * 1024  # 2GB max
@@ -5622,39 +5623,12 @@ def mpm_lab_upload():
         data = json.load(f.stream)
     except Exception as e:
         return jsonify({'ok': False, 'error': f'JSON 파싱 실패: {e}'}), 400
-    if data.get('kind') != 'mpm' or 'particles' not in data:
-        return jsonify({'ok': False, 'error': 'MPM payload이 아님 (kind=mpm + particles 필요). '
-                        'mpm_payload.json을 올리세요 (metrics 파일 아님).'}), 400
-    mm = data.get('mpm_metrics', {}) or {}
-    ac = mm.get('additive_counts') or {}
-    _sel = ((mm.get('step3') or {}).get('collector') or {}).get('selected') or {}
-    collector = (f"{_sel.get('name')} (R_int {_sel.get('R_int_ohm_cm2'):g}Ωcm²)"
-                 if _sel.get('name') else '')
-    _vox_um = (mm.get('step3') or {}).get('vox_um')     # STEP3 voxel size — show when finer than default
     name = (request.form.get('name') or data.get('case') or 'payload').strip()
-    pid = f"{_mpm_lab_slug(name)[:52]}_{uuid.uuid4().hex[:6]}"   # cap NAME part → folder ≤ 59 chars, uuid intact
-    d = os.path.join(app.config['MPM_LAB_FOLDER'], pid)
-    os.makedirs(d, exist_ok=True)
-    with open(os.path.join(d, 'payload.json'), 'w') as out:
-        json.dump(data, out)
-    meta = {
-        'name': name,
-        'source_case': data.get('case', ''),
-        'porosity': mm.get('porosity_mpm_pct'),
-        'thickness': mm.get('thickness_mpm_um'),
-        'se_fraction': mm.get('se_fraction_pct'),
-        'n_am': mm.get('n_am') or len(data.get('particles', [])),
-        'additive_counts': ac,
-        'recipe': ' · '.join(f'{k} {int(v):,}' for k, v in ac.items()) if ac else '',
-        'collector': collector,                     # STEP3 선택 집전체 (시나리오 태그) — 목록/요약 표기
-        'vox_um': _vox_um,                          # STEP3 복셀 해상도 — 목록 뱃지 (0.4 기본이면 숨김)
-        'has_additives': bool(ac),
-        'uploaded_at': datetime.now().strftime('%Y-%m-%d %H:%M'),
-        'size_mb': round(os.path.getsize(os.path.join(d, 'payload.json')) / 1e6, 1),
-        'mpm_metrics': mm,                          # full metrics dict → 요약 button (small, fast to read)
-    }
-    with open(os.path.join(d, 'meta.json'), 'w') as mf:
-        json.dump(meta, mf)
+    # 등록 로직은 mpm_lab_register.register_local 한 곳 — CLI 훅(원격 결과회수)과 meta 공유.
+    try:
+        pid, _d, meta = mpm_lab_register.register_local(data, name, app.config['MPM_LAB_FOLDER'])
+    except ValueError as e:      # non-mpm payload
+        return jsonify({'ok': False, 'error': str(e)}), 400
     meta['id'] = pid
     return jsonify({'ok': True, 'item': meta})
 
