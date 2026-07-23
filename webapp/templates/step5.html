@@ -175,7 +175,10 @@ const S5 = {
     if(coated) s += ` (×${d.chem_x}) · OTHER <b style="color:${this.COL.other}">${d.other_share_pct.toFixed(1)}%</b>`;
     if(d.coating_info){ const ci=d.coating_info;
       s += ` &nbsp;·&nbsp; <b style="color:#a78bfa">🧪 ${ci.coating}</b> 코팅: chem_x ${ci.chem_x_bare}→<b>${ci.chem_x_coated}</b>` +
-           (ci.cei_suppress?` (CEI ×${ci.cei_suppress} 억제)`:' (앵커없음=미변경)'); }
+           (ci.cei_suppress?` (CEI ×${ci.cei_suppress} 억제)`:' (앵커없음=미변경)');
+      if(ci.cei_suppress && d.other_share_pct>60)
+        s += ` <span style="color:#f59e0b">⚠ OTHER ${d.other_share_pct.toFixed(0)}% — 코팅은 화학채널만 억제. `
+           + `코팅셀 예측은 그 셀의 낮은 실측 끝점(총 성장 ×)을 입력하세요 (bare 끝점 유지 시 억제분이 OTHER로 이동)</span>`; }
     s += ` &nbsp;@N${d.n_exp}`;
     this.el('s5-shares').innerHTML = s;
     const SHP = { sqrt:'√N (Wagner form · Park2023 코팅 [B] 지지)',

@@ -59,16 +59,24 @@ APP_OBJECTIVES = {
 }
 
 
-def scalarize(metrics: dict, app: str = 'balanced') -> float:
-    """정규화된 metric dict → 앱-가중 스칼라 (클수록 좋음).  누락 metric 은 0.5(중립)."""
+def scalarize(metrics: dict, app: str = 'balanced', missing: str = 'penalize') -> float:
+    """정규화된([0,1] 전제) metric dict → 앱-가중 스칼라 (클수록 좋음).
+    ★리뷰#1(§F1 날조금지): 누락 metric 을 0.5(중립)로 fabricate하면 미결정 설계가 실측-저값
+    설계보다 유리해져 BO를 under-determined 영역으로 유인 → 기본 **'penalize'** = 그 목적축의
+    최악값(max축→0.0 / min축→1.0)으로 계상.  missing='neutral'(0.5) / 'nan'(NaN 전파→BO 스킵) 선택."""
     obj = APP_OBJECTIVES.get(app, APP_OBJECTIVES['balanced'])
     s = 0.0
     for key, sign, w in obj:
-        v = metrics.get(key, 0.5)
-        try:
-            v = float(v)
-        except (TypeError, ValueError):
-            v = 0.5
+        present = (key in metrics) and (metrics[key] is not None)
+        if not present:
+            if missing == 'nan':
+                return float('nan')
+            v = 0.5 if missing == 'neutral' else (0.0 if sign > 0 else 1.0)   # penalize=최악값
+        else:
+            try:
+                v = float(metrics[key])
+            except (TypeError, ValueError):
+                v = 0.0 if sign > 0 else 1.0
         s += w * sign * v
     return float(s)
 
@@ -82,10 +90,17 @@ def sisso_discover(X, y, feature_names, n_dim=2, ops=('+', '-', '*', '/'), **kw)
         from pysisso.sklearn import SISSORegressor          # noqa: F401
     except ImportError:
         return {'available': False, 'reason': 'pysisso 미설치 (WSL 전용) — pip install pysisso',
-                'note': 'sobol_doe/scalarize 는 클라우드 검증됨; SISSO 는 WSL에서 실행'}
+                'note': 'sobol_doe/scalarize 는 클라우드 검증됨; SISSO 는 WSL에서 실행 '
+                        '(★pysisso 파이썬패키지 + SISSO Fortran 바이너리 둘 다 필요)'}
     from pysisso.sklearn import SISSORegressor
-    reg = SISSORegressor(rung=n_dim, opset=list(ops), **kw)
-    reg.fit(np.asarray(X, float), np.asarray(y, float))
+    # ⚠리뷰#2/#6: rung=연산자-트리 깊이, n_dim=서술자 차원(별개 knob) — pysisso API 버전 확인 필요.
+    #   SISSO Fortran 바이너리 부재 시 fit 이 크래시 → 안내 dict 로 감싸 반환(크래시 금지).
+    try:
+        reg = SISSORegressor(rung=n_dim, opset=list(ops), **kw)
+        reg.fit(np.asarray(X, float), np.asarray(y, float))
+    except Exception as e:
+        return {'available': False, 'reason': f'SISSO 실행 실패 ({type(e).__name__}: {e}) — '
+                'SISSO Fortran 바이너리 설치/PATH 확인, rung/opset API 버전 확인'}
     return {'available': True, 'model': reg, 'feature_names': list(feature_names)}
 
 
@@ -103,12 +118,15 @@ def bayes_minimize(objective_fn, bounds: dict, n_calls=40, app='balanced', seed=
     from skopt.space import Real
     keys = list(bounds)
     space = [Real(bounds[k][0], bounds[k][1], name=k) for k in keys]
+    n_init = 10                                              # skopt 기본 random 초기점
+    n_calls = max(int(n_calls), n_init + 2)                 # ★리뷰#2: n_calls<n_init 이면 GP 스텝 0/ValueError
 
     def _neg(x):
         d = {k: x[j] for j, k in enumerate(keys)}
-        return -scalarize(objective_fn(d), app)
+        return -scalarize(objective_fn(d), app, missing='penalize')   # 누락=최악(§F1 편향차단)
 
-    res = gp_minimize(_neg, space, n_calls=n_calls, acq_func='gp_hedge', random_state=seed, **kw)
+    res = gp_minimize(_neg, space, n_calls=n_calls, n_initial_points=n_init,
+                      acq_func='gp_hedge', random_state=seed, **kw)
     best = {k: res.x[j] for j, k in enumerate(keys)}
     return {'available': True, 'best_design': best, 'best_score': -res.fun, 'result': res}
 
@@ -136,16 +154,26 @@ def _selftest() -> int:
     lo_sig = scalarize({'sigma_e': 0.0, 'tau': 1.0, 'current_focus': 1.0}, 'fast_charge')
     if not (hi_sig > lo_sig):
         fails.append(f'scalarize 방향 오류 {hi_sig} !> {lo_sig}')
-    # 4) 누락 metric → 0.5 중립 (크래시 금지)
-    _ = scalarize({}, 'high_energy')
-    # 5) WSL 조각 import-guard (크래시 대신 안내 dict)
-    s = sisso_discover([[1, 2]], [1], ['a', 'b'])
-    b = bayes_minimize(lambda d: {}, bounds, n_calls=5)
-    if s.get('available') is not False or b.get('available') is not False:
-        # pysisso/skopt 가 있으면 available=True 도 정상 (WSL) — 클라우드선 False 기대
-        pass
-    if 'reason' not in s and not s.get('available'):
-        fails.append('sisso guard dict 이상')
+    # 4) ★리뷰#1: 누락 metric = penalize(최악) → 실측-저값이 미결정보다 유리해야 (0.5 fabricate 편향 없음)
+    missing_se = scalarize({'tau': 0.0, 'current_focus': 0.0}, 'fast_charge')          # sigma_e 누락
+    present_lo = scalarize({'sigma_e': 0.1, 'tau': 0.0, 'current_focus': 0.0}, 'fast_charge')
+    if not (present_lo > missing_se):
+        fails.append(f'penalize 편향차단 실패 (present_lo {present_lo} !> missing {missing_se})')
+    if not (scalarize({}, 'high_energy', 'neutral') != scalarize({}, 'high_energy', 'penalize')):
+        fails.append('missing 모드 구분 안 됨')
+    # 5) WSL 조각 import-guard: 클라우드(skopt/pysisso 부재)선 available=False + reason (크래시 금지)
+    s = sisso_discover([[1.0, 2.0], [3.0, 4.0]], [1.0, 2.0], ['a', 'b'])
+    b = bayes_minimize(lambda d: {'sigma_ionic': 0.5}, bounds, n_calls=5)
+    try:
+        import skopt, pysisso  # noqa: F401
+        _wsl = True                                          # deps 있으면 WSL — available True 도 정상
+    except ImportError:
+        _wsl = False
+    if not _wsl:
+        if s.get('available') is not False or 'reason' not in s:
+            fails.append(f'클라우드 sisso guard 이상 {s}')
+        if b.get('available') is not False or 'reason' not in b:
+            fails.append(f'클라우드 bayes guard 이상 {b}')
     # 6) n=0 / 빈 bounds 안전
     assert sobol_doe({}, 5) == [] and sobol_doe(bounds, 0) == []
     print('selftest OK' if not fails else 'selftest FAIL: ' + '; '.join(fails))

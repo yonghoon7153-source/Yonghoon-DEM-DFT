@@ -19,15 +19,22 @@ import numpy as np
 
 def redistribute(q, dR_total: float, focus_p: float = 1.0):
     """Joule 발열밀도 q(per-voxel/region 배열) 로 스칼라 ΔR_total 을 끝점-보존 분배.
-    반환: ΔR_local 배열 (Σ = ΔR_total; q 총합 0이면 전부 0 = 발열 없으면 재분배 대상 없음).
+    반환: ΔR_local 배열, **항상 Σ = ΔR_total** (끝점 보존).  q≡0(비퍼콜=발열없음)/수치붕괴 →
+    균일 분배(ΔR_total/n)로 보존 유지(비퍼콜 셀도 화학열화는 균일; zeros 반환=보존위반 금지).
     ★q^p 가중 — p=1 권장(열화∝발열), p>1 = 집중 ASSUMED 스윕(Eₐ 아님)."""
     q = np.asarray(q, dtype=np.float64)
-    q = np.where(np.isfinite(q) & (q > 0.0), q, 0.0)
+    valid = np.isfinite(q) & (q > 0.0)
+    q = np.where(valid, q, 0.0)
     p = max(0.0, float(focus_p))
-    w = q ** p
+    w = np.where(valid, q ** p, 0.0)          # ★리뷰#5: invalid(q≤0/비유한)는 ALL p에서 0 (p=0의 0**0=1 재진입 방지)
     s = float(w.sum())
-    if s <= 0.0:
-        return np.zeros_like(q)
+    n = q.size
+    # ★리뷰#3/#7: q≡0(비퍼콜=발열없음, 화학열화는 여전) 또는 수치붕괴(s=inf/NaN, 극단 p) → 균일 분배로
+    #   끝점 보존(Σ=dR_total).  zeros 반환은 Σ=0≠dR_total 로 보존 위반이라 금지.
+    if n == 0:
+        return np.zeros(0)
+    if not np.isfinite(s) or s <= 0.0:
+        return np.full(n, float(dR_total) / n)
     return float(dR_total) * w / s
 
 
@@ -67,18 +74,24 @@ def _selftest() -> int:
     c1 = d1.max() / d1.mean(); c2 = d2.max() / d2.mean()
     if not (c2 > c1):
         fails.append(f'p=2 집중도 {c2:.2f} !> p=1 {c1:.2f}')
-    # 4) 발열 없음(q=0) → 전부 0 (재분배 대상 없음)
-    if redistribute(np.zeros(10), dR).sum() != 0.0:
-        fails.append('q=0인데 분배됨')
+    # 4) 발열 없음(q≡0) → 균일 분배로 끝점 보존 (리뷰#3: zeros 아님, Σ=dR)
+    d0 = redistribute(np.zeros(10), dR)
+    if abs(d0.sum() - dR) > 1e-9 or not np.allclose(d0, dR / 10.0):
+        fails.append(f'q≡0 균일보존 실패 Σ={d0.sum()}')
     # 5) 균일 q → 균등 분배 (dR/n)
     du = redistribute(np.ones(10), dR, 1.0)
     if not np.allclose(du, dR / 10.0):
         fails.append('균일 q 균등분배 실패')
-    # 6) 음수/비유한 q 안전 (제거 후 분배, 보존)
+    # 6) 음수/비유한 q 안전 (제거 후 분배, 보존) — p=1 AND p=0 (리뷰#5: p=0 재진입 방지)
     qm = q.copy(); qm[0] = -1.0; qm[1] = np.inf; qm[2] = np.nan
-    dm = redistribute(qm, dR)
-    if abs(dm.sum() - dR) > 1e-9 or dm[0] != 0 or dm[1] != 0 or dm[2] != 0:
-        fails.append('음수/비유한 처리 실패')
+    for pp in (1.0, 0.0):
+        dm = redistribute(qm, dR, pp)
+        if abs(dm.sum() - dR) > 1e-9 or dm[0] != 0 or dm[1] != 0 or dm[2] != 0:
+            fails.append(f'p={pp} 음수/비유한 처리 실패 (Σ={dm.sum()}, dm[:3]={dm[:3]})')
+    # 6b) 극단 p 수치붕괴 → 균일 폴백(보존) (리뷰#7)
+    de = redistribute(q, dR, 1e4)
+    if abs(de.sum() - dR) > 1e-6:
+        fails.append(f'극단 p 보존 실패 Σ={de.sum()}')
     # 7) summary 보존 플래그
     s = redistribute_summary(q, dR, 1.5)
     if not s['preserved'] or not (0 < s['hot_frac_50'] <= 1):
