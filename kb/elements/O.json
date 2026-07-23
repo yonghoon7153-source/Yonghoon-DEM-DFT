@@ -1,0 +1,83 @@
+{
+ "symbol": "O",
+ "name": "Oxygen",
+ "Z": 8,
+ "role": "도핑 음이온(S 자리 hard-hard 치환) — 골격 강화·안정성 이동; SEI에선 Li2O/Li2CO3",
+ "oxidation_states": [
+  "-2"
+ ],
+ "electronegativity": 3.44,
+ "ionic_radius_A": {
+  "O2-": 1.4
+ },
+ "representative_compounds": [
+  {
+   "formula": "Li2O",
+   "context": "SEI",
+   "battery_role": "주요 무기 SEI(산화물)",
+   "note": "O 1s ~528.5 eV"
+  },
+  {
+   "formula": "Li2CO3",
+   "context": "SEI carbonate",
+   "battery_role": "탄산염 SEI(대기/전해질 반응)",
+   "note": "O 1s ~531.5, C 1s ~290"
+  },
+  {
+   "formula": "P-O (LPSOCl)",
+   "context": "our lpsocl",
+   "battery_role": "O가 PS4의 S 자리 치환 → P-O",
+   "note": "P-O ICOHP ~ -8.4 eV (우리 nd/lpsocl db) — 매우 강함"
+  },
+  {
+   "formula": "B2O3 / Nd2O3",
+   "context": "our doping",
+   "battery_role": "산화물 도펀트",
+   "note": ""
+  }
+ ],
+ "sei_relevance": "Li2O는 Li 음극 SEI의 대표 무기상(치밀·이온전도 낮음), Li2CO3는 대기/전해질 유래 탄산염 SEI. O-도핑(P-O 결합 형성)은 골격을 국소 강화하고 산화/환원 안정성을 이동(우리 LPSOCl·B2O3 작업).",
+ "xps": [
+  {
+   "core": "O 1s",
+   "BE_eV": 528.5,
+   "assignment": "Li2O",
+   "ref": "NIST XPS DB"
+  },
+  {
+   "core": "O 1s",
+   "BE_eV": 531.5,
+   "assignment": "Li2CO3 / P-O / 표면 OH",
+   "ref": "NIST"
+  },
+  {
+   "core": "O 1s",
+   "BE_eV": 532.5,
+   "assignment": "sulfate/phosphate O",
+   "ref": "NIST"
+  }
+ ],
+ "raman": [
+  {
+   "cm1": 1090,
+   "assignment": "Li2CO3 ν1(CO3)",
+   "ref": "consensus"
+  },
+  {
+   "cm1": "~950-1000",
+   "assignment": "P-O / phosphate 신축(O-doped)",
+   "ref": "consensus"
+  }
+ ],
+ "dos_character": "O 2p는 VBM보다 깊게(강한 이온성). P-O σ 결합 형성. 도핑 시 국소 상태 이동.",
+ "key_references": [
+  "Banik 2022 — O/치환과 산화 안정성",
+  "우리 LPSOCl·B2O3 DFT(내부)"
+ ],
+ "litdb_slugs": [
+  "banik2022_substitutions_oxidative_stability_argyrodite",
+  "sundar2025_oxide_coating_screening_lpscl",
+  "ke2025_orbital_hybridization_mgclo"
+ ],
+ "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
+}

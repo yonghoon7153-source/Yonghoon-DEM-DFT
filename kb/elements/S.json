@@ -1,0 +1,90 @@
+{
+ "symbol": "S",
+ "name": "Sulfur",
+ "Z": 16,
+ "role": "황화물 argyrodite 골격의 음이온 — PS₄³⁻ 공유골격 + free S²⁻; 산화 한계를 pin(VBM=S 3p)",
+ "oxidation_states": [
+  "-2",
+  "+6(in SO4)"
+ ],
+ "electronegativity": 2.58,
+ "ionic_radius_A": {
+  "S2-": 1.84
+ },
+ "representative_compounds": [
+  {
+   "formula": "Li2S",
+   "context": "SEI / argyrodite",
+   "battery_role": "주요 황화 SEI 환원생성물",
+   "note": "Li 음극에서 argyrodite 환원 → Li2S; 이온 절연성 강함"
+  },
+  {
+   "formula": "PS4 3-",
+   "context": "framework",
+   "battery_role": "공유 골격(backbone)",
+   "note": "P-S ICOHP ~ -6 eV (우리 db)"
+  },
+  {
+   "formula": "Li3PS4",
+   "context": "electrolyte",
+   "battery_role": "β-Li3PS4 모체",
+   "note": ""
+  }
+ ],
+ "sei_relevance": "Li 음극 계면에서 황화물 SE가 환원되면 Li2S(+Li3P, LiX)가 SEI 무기성분으로 생성. Li2S는 전자절연·이온전도 낮아 SEI 저항의 주요 기여. 산화쪽에선 free S²⁻가 VBM을 pin해 산화 onset을 고정(치환 무관).",
+ "xps": [
+  {
+   "core": "S 2p3/2",
+   "BE_eV": 160.5,
+   "assignment": "Li2S / sulfide",
+   "ref": "NIST XPS DB"
+  },
+  {
+   "core": "S 2p3/2",
+   "BE_eV": 161.8,
+   "assignment": "PS4 3- thiophosphate",
+   "ref": "Dietrich 2017; Banik 2022"
+  },
+  {
+   "core": "S 2p",
+   "BE_eV": 163.5,
+   "assignment": "bridging/polysulfide S",
+   "ref": "Wenzel 2016"
+  },
+  {
+   "core": "S 2p",
+   "BE_eV": 168.0,
+   "assignment": "oxidized S (sulfate)",
+   "ref": "NIST"
+  }
+ ],
+ "raman": [
+  {
+   "cm1": 420,
+   "assignment": "PS4 3- ν1 대칭신축 (argyrodite 지문)",
+   "ref": "Dietrich 2017"
+  },
+  {
+   "cm1": 383,
+   "assignment": "P2S6 4- (impurity/신축)",
+   "ref": "Dietrich 2017"
+  },
+  {
+   "cm1": 220,
+   "assignment": "lattice / PS4 bending",
+   "ref": "Dietrich 2017"
+  }
+ ],
+ "dos_character": "VBM은 S 3p 지배 (free S²⁻ + PS₄ 비결합 S). 우리 PDOS/문헌(Banik·Zeier) 정합.",
+ "key_references": [
+  "Banik 2022 (Zeier/Mo) — 치환은 S-limited 산화 onset 못 옮김",
+  "Dietrich 2017 J.Mater.Chem.A — argyrodite Raman PS4 지문",
+  "Wenzel 2016 — 황화물|Li 계면 XPS SEI"
+ ],
+ "litdb_slugs": [
+  "banik2022_substitutions_oxidative_stability_argyrodite",
+  "bai2020_argyrodite_review_progress",
+  "gilgonzalez2022_synergistic_cl_constricted_esw"
+ ],
+ "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
+}

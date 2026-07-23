@@ -21,6 +21,12 @@
     <div class="gd"><span class="gd-l">무엇</span>{{ g.what|safe }}</div>
     <div class="gd"><span class="gd-l">어떻게</span>{{ g.how|safe }}</div>
     <div class="gd ours"><span class="gd-l">우리 계산</span>{{ g.ours|safe }}</div>
+    {% set gp = gpapers.get(g.id, []) %}
+    {% if gp %}
+    <div class="gpapers"><span class="gd-l">이 기법을 쓴 논문 · {{ gp|length }}</span><br>
+      {% for p in gp[:8] %}<a class="gpaper-chip tb-{{ p.track }}" href="/literature?open={{ p.id }}" title="{{ p.title }}">{{ p.id.split('_')[0] }}</a>{% endfor %}
+    </div>
+    {% endif %}
     {% if g.id in concepts %}
     <a class="gmore" href="/concept/{{ g.id }}">더보기 — 상세 개념 문서 (유도·수식) →</a>
     {% endif %}

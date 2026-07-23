@@ -117,6 +117,13 @@ def api_compute_preview():
     return jsonify(D.compute_preview(cid, calc))
 
 
+@app.route("/api/element")
+def api_element():
+    from flask import request
+    syms = [s.strip() for s in request.args.get("syms", "").split(",") if s.strip()]
+    return jsonify(D.element_briefing(syms))
+
+
 @app.route("/methods")
 def methods():
     md = D.load_canonical_methods()
@@ -165,9 +172,10 @@ def api_paper(pid):
 
 @app.route("/glossary")
 def glossary():
+    gpapers = {g["id"]: D.glossary_papers(g["id"]) for g in G.GLOSSARY}
     return render_template("glossary.html", active="glossary",
                            cats=G.by_category(), cat_order=G.CATS_G,
-                           concepts=D.concept_ids())
+                           concepts=D.concept_ids(), gpapers=gpapers)
 
 
 @app.route("/concept/<cid>")
@@ -185,7 +193,8 @@ def concept(cid):
     # 서버 렌더 fallback — marked.js CDN 미로드시에도 raw dump 대신 서식 유지
     fallback = _md.markdown(md, extensions=["tables", "fenced_code"]) if _md else "<pre>" + md + "</pre>"
     return render_template("concept.html", active="glossary", cid=cid,
-                           term=term, raw_md=md, siblings=siblings, fallback_html=fallback)
+                           term=term, raw_md=md, siblings=siblings, fallback_html=fallback,
+                           papers=D.glossary_papers(cid))
 
 
 @app.route("/api/concept/<cid>")

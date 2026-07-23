@@ -17,6 +17,19 @@
   <article class="doc concept" id="concept-body">{{ fallback_html|safe }}</article>
 </div>
 
+{% if papers %}
+<div class="section-title">이 기법을 쓴 litdb 논문 · {{ papers|length }}</div>
+<div class="grid grid-3">
+{% for p in papers %}
+<a class="card sibling" href="/literature?open={{ p.id }}">
+  <div style="display:flex;align-items:center;gap:7px"><span class="tbadge tb-{{ p.track }}">{{ 'DFT' if p.track=='dft' else 'DEM' }}</span>
+    <span class="mono muted" style="font-size:.68rem">{{ p.id }}</span></div>
+  <div style="font-weight:600;font-size:.82rem;margin-top:5px;line-height:1.4">{{ p.title }}</div>
+</a>
+{% endfor %}
+</div>
+{% endif %}
+
 {% if siblings %}
 <div class="section-title">같은 분야 개념 문서</div>
 <div class="grid grid-3">

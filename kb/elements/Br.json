@@ -1,0 +1,52 @@
+{
+ "symbol": "Br",
+ "name": "Bromine",
+ "Z": 35,
+ "role": "argyrodite 할라이드 — Cl보다 크고 약한 결합(더 분극성) → 이온 이동↑; comp2(Cl0.5Br0.5)",
+ "oxidation_states": [
+  "-1"
+ ],
+ "electronegativity": 2.96,
+ "ionic_radius_A": {
+  "Br-": 1.96
+ },
+ "representative_compounds": [
+  {
+   "formula": "LiBr",
+   "context": "anode SEI",
+   "battery_role": "무기 SEI 성분",
+   "note": "Br 3d ~68.5 eV"
+  },
+  {
+   "formula": "Li6PS5Cl0.5Br0.5",
+   "context": "our comp2",
+   "battery_role": "할라이드 혼합 argyrodite",
+   "note": "Li-Br ICOHP -1.93 eV < Li-Cl -2.11 (우리 db) → 약한 이온결합"
+  }
+ ],
+ "sei_relevance": "LiBr는 Li 음극 SEI 성분. Br은 Cl보다 결합이 약해(우리 ICOHP·ICOBI) 격자 유연·Li 이동에 유리하나 기계강성엔 둔감; 산화 onset은 S가 pin해 크게 안 변함.",
+ "xps": [
+  {
+   "core": "Br 3d5/2",
+   "BE_eV": 68.5,
+   "assignment": "LiBr / bromide",
+   "ref": "NIST XPS DB"
+  }
+ ],
+ "raman": [
+  {
+   "cm1": 420,
+   "assignment": "Br 자리치환이 PS4 모드에 미세 영향",
+   "ref": "Dietrich 2017"
+  }
+ ],
+ "dos_character": "Br 4p는 Cl 3p보다 얕게(에너지↑) 위치 → 밴드엣지 근처 기여 약간 증가.",
+ "key_references": [
+  "Li 2025 — CuBr2 dual-doping argyrodite",
+  "Kraft 2017 (Zeier) — 할라이드와 격자동역학·전도도"
+ ],
+ "litdb_slugs": [
+  "li2025_cubr2_dualdoping_argyrodite"
+ ],
+ "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
+}

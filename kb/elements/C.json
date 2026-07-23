@@ -1,0 +1,63 @@
+{
+  "symbol": "C",
+  "name": "Carbon",
+  "Z": 6,
+  "role": "Anode-side conductive host and SEI carbonate former. sp2 carbon (graphite/VGCF/amorphous carbon) is the electronic-percolation matrix and Li intercalation host (LiC6); Li2CO3 is a principal inorganic SEI carbonate.",
+  "oxidation_states": ["-4", "0", "+2", "+4"],
+  "electronegativity": 2.55,
+  "ionic_radius_A": {
+    "C4+_CN4": 0.15,
+    "C4+_CN6": 0.16
+  },
+  "ionic_radius_note": "Shannon (1976): C4+ CN3 = -0.08, CN4 = 0.15, CN6 = 0.16 A. Covalent radius ~0.76 A (sp3), ~0.73 A (sp2) is more physical for graphitic C. Approximate.",
+  "representative_compounds": [
+    {
+      "formula": "C (graphite / VGCF / amorphous)",
+      "context": "conductive host / additive",
+      "battery_role": "sp2 electronic-percolation network (VGCF 1D fiber, amorphous carbon), Li intercalation host; semimetal",
+      "note": "D/G Raman fingerprint; ID/IG tracks disorder. VGCF used in our campaign as SE-domain conductive agent."
+    },
+    {
+      "formula": "LiC6",
+      "context": "lithiated-graphite anode baseline",
+      "battery_role": "stage-1 graphite intercalation compound, 372 mAh/g anode; baseline vs Li3N/nitride interphase",
+      "note": "gold-colored, sqrt3 x sqrt3 R30 Li ordering; Li donates 2s electron into graphene pi* band -> metallic. C 1s shifts slightly below graphitic 284.5 eV from metal-C charge transfer."
+    },
+    {
+      "formula": "Li2CO3",
+      "context": "SEI",
+      "battery_role": "major inorganic SEI carbonate (passivating but ionically resistive); also sulfide-SE/moisture and CO2-reduction byproduct",
+      "note": "XPS C 1s ~290 eV (carbonate CO3), Raman nu1 symmetric stretch ~1090 cm-1. Wide-gap insulator."
+    }
+  ],
+  "sei_relevance": "Li2CO3 is one of the dominant inorganic SEI carbonates on carbon/Li anodes: C 1s ~290 eV, Raman ~1090 cm-1, passivating but Li+-resistive; forms from electrolyte/CO2 reduction and surface reaction with moisture, and can further react to LiF/Li2O ladders. Graphite staging (LiC6 <-> LiC12 <-> ...) sets the anode potential plateau. VGCF/amorphous carbon itself is not an SEI phase but provides electronic percolation and can catalyze electrolyte decomposition at high surface area.",
+  "xps": [
+    { "core": "C 1s", "BE_eV": 284.5, "assignment": "graphitic sp2 carbon (C=C)", "ref": "XPS handbooks / Thermo; Ferrari 2000 context" },
+    { "core": "C 1s", "BE_eV": 285.2, "assignment": "sp3 / amorphous carbon (C-C)", "ref": "Anal. Chem. 2016 (origins of sp3 C1s); a-C studies" },
+    { "core": "C 1s", "BE_eV": 286.5, "assignment": "C-O (ether/alkoxide, SEI organics)", "ref": "SEI XPS reviews" },
+    { "core": "C 1s", "BE_eV": 288.5, "assignment": "C=O / -OCO2- (alkyl carbonate SEI)", "ref": "SEI XPS reviews" },
+    { "core": "C 1s", "BE_eV": 290.0, "assignment": "carbonate CO3 (Li2CO3), ~290.0-290.3 eV", "ref": "Wood & Teeter 2018 (NREL); XPS database (Li2CO3)" }
+  ],
+  "raman": [
+    { "cm1": 1580, "assignment": "G band, E2g in-plane sp2 stretch (crystallinity)", "ref": "Ferrari & Robertson, PRB 61, 14095 (2000)" },
+    { "cm1": 1350, "assignment": "D band, disorder/edge A1g breathing (defect-activated)", "ref": "Ferrari & Robertson, PRB 61, 14095 (2000)" },
+    { "cm1": 2700, "assignment": "2D band (overtone), tracks layer number", "ref": "Ferrari & Robertson, PRB 2000; graphene Raman reviews" },
+    { "cm1": 1090, "assignment": "Li2CO3 nu1 symmetric CO3 stretch (SEI carbonate marker)", "ref": "carbonate Raman studies; battery-interphase IR/Raman/XPS database arXiv:2310.13871" }
+  ],
+  "dos_character": "Graphite is a semimetal: C 2pz-derived pi/pi* bands overlap slightly at the Fermi level (small but finite DOS at E_F near K/H points), while sigma bands from C 2s/2px/2py sit well below. Upon lithiation to LiC6, Li 2s electrons fill graphene pi* states, raising E_F and making the compound metallic (Li nearly fully ionized, Li+). Li2CO3 is a wide-gap insulator (~5 eV), consistent with its passivating/electron-blocking SEI role. Refs: Holzwarth et al., PRB 18, 5190 (1978) Li-graphite DOS; stage-1 Li-GIC DFT (arXiv 2006.12055).",
+  "oxidation_states_note": "0 in graphite/VGCF; -4 in Li carbide-like; +2 CO; +4 in Li2CO3/CO2 (SEI-relevant).",
+  "key_references": [
+    "Ferrari & Robertson 2000, Phys. Rev. B 61, 14095 - D/G bands and interpretation of disordered/amorphous carbon Raman",
+    "Holzwarth et al. 1978, Phys. Rev. B 18, 5190 - Li-graphite band structure, DOS, Fermi surface",
+    "Wood & Teeter 2018, ACS Appl. Energy Mater. (NREL) - inorganic SEI XPS incl. Li2CO3, charge-correction methodology",
+    "Origins of sp3 C peaks in C 1s XPS 2016, Anal. Chem. - sp2/sp3 C 1s assignment",
+    "Battery-interphase IR/Raman/XPS database 2023, arXiv:2310.13871 - Li2CO3/organic SEI fingerprints"
+  ],
+  "litdb_slugs": [
+    "reisacher2023_percolation_sulfide_carbon_matrix",
+    "kim2024_carbon_volumetric_occupation_se_domain",
+    "kim2025_conductive_agent_se_coating_cathode"
+  ],
+  "campaign_note": "Our campaign has an internal LiC6 (0001) Li-adatom NEB baseline (db/interphases/lic6.json, tools/neb_diffusion) used as the graphite reference vs Li3N interphase. Those are our own DFT/MLIP absolute values and are intentionally NOT imported into the numeric fields here.",
+  "_provenance": "literature/web reference values (소환값); 우리 db 절대값과 분리"
+}

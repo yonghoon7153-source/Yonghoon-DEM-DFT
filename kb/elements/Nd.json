@@ -1,0 +1,44 @@
+{
+  "symbol": "Nd",
+  "name": "Neodymium",
+  "Z": 60,
+  "role": "Rare-earth dopant (added as Nd2O3). Nd3+ (4f3, open-shell) substitutes Li+ aliovalently — creating charge-compensating Li vacancies — while its co-introduced O sits on an S site, forming P-O-Nd bridges. Oxophilic hard-acid anchor for O; local-distortion / Li-mobility lever; not a native SE element.",
+  "oxidation_states": ["+3"],
+  "electronegativity": 1.14,
+  "ionic_radius_A": {
+    "Nd3+_VI": 0.983,
+    "Nd3+_VIII": 1.109,
+    "_note": "Shannon 1976: Nd3+ VI (octahedral) 0.983 A, VIII 1.109 A. Much larger than Li+ (0.76) -> substituting Li+ forces local lattice distortion; smaller than Ba2+ (see Xiong BaSnF4 precedent) so it contracts/strengthens its own M-anion bond."
+  },
+  "representative_compounds": [
+    {"formula": "Nd2O3", "context": "dopant precursor", "battery_role": "basic-oxide dopant/getter; source of Nd3+ + O; O-anchoring", "note": "Basic oxide -> H2S getter archetype (air-stability) but at an ionic-conductivity cost; delivers O to the sulfide with Nd as the oxophilic carrier"},
+    {"formula": "Nd-O in doped argyrodite (P-O-Nd bridge)", "context": "dopant motif", "battery_role": "O on S-site bridged to P and Nd; local oxysulfide (PS3O-like) unit", "note": "HSAB: hard O2- binds hard Nd3+ -> Nd oxophilically anchors O; analogous to La-O in La+O dual-doped argyrodite (Yang 2025)"},
+    {"formula": "NdCl3", "context": "possible SEI / alt source", "battery_role": "wide-gap insulating decomposition product; alternative Nd source", "note": "Preserved under Li-metal reduction (robust Nd-Cl ionic bond) -> contributes to electron-blocking, Li+-passing SEI"},
+    {"formula": "NdPO4 (monazite motif)", "context": "interphase / phosphate", "battery_role": "Nd-in-phosphate high-voltage structural motif; possible wide-gap interphase", "note": "Resonates with P-O-Nd bridge chemistry; Nd3+ in phosphate lattices gives structural/thermal stability"}
+  ],
+  "sei_relevance": "Nd is a rare-earth dopant, not an intrinsic SE ion. Function split (from our Nd/O mechanism map): O does the oxidative/moisture stabilization (with a documented sigma penalty), Nd3+ is the oxophilic hard-acid carrier/anchor for that O (P-O-Nd) plus a basic-oxide air-stability getter and microstructure modifier. Aliovalent Nd3+ -> Li+ substitution injects Li vacancies (carrier concentration lever) and the large Nd3+ radius distorts the local cage (Li-mobility lever). For the SEI: Nd2O3 / NdCl3 / NdPO4 are all wide-gap insulators expected to survive Li-metal reduction -> a self-limiting, electron-blocking, Li+-conductive passivation layer (Xiong BaSnF4 SEI argument transferred). Standalone Nd gap/sigma effects are neutral-to-negative -> classic RE/oxide 'stability-for-conductivity' trade.",
+  "xps": [
+    {"core": "Nd 3d5/2", "BE_eV": 982.0, "assignment": "Nd3+ in Nd2O3 (main line; unscreened 3d9 4f3 final state; reported ~981.5-982.5 eV)", "ref": "XPS databases (xpsdatabase.com Z=60); Nd niobate/tantalate XPS study"},
+    {"core": "Nd 3d3/2", "BE_eV": 1005.1, "assignment": "Nd3+ spin-orbit partner of 3d5/2 (doublet)", "ref": "Nd2O3 XPS (supercapacitor / oxide studies)"},
+    {"core": "Nd 3d5/2 satellite", "BE_eV": 977.0, "assignment": "screened 3d9 4f4 L (charge-transfer) final-state satellite", "ref": "Nd2O3 core-level multiplet analyses"},
+    {"core": "Nd 3d", "BE_eV": null, "assignment": "NOTE: Nd 3d shows multiplet + charge-transfer satellites from 3d-hole x 4f3 coupling; use as Nd3+ survival probe (O-doping / P-O-Nd)", "ref": "arXiv:2110.00400 (rare-earth sesquioxides)"}
+  ],
+  "raman": [
+    {"cm1": null, "assignment": "Nd3+ is not a primary Raman probe in this context (no diagnostic battery mode identified); Nd environment is tracked via XPS (Nd 3d) and DFT+U PDOS (Nd 4f) instead of Raman. Omitted rather than invented.", "ref": "n/a"}
+  ],
+  "dos_character": "Nd carries a localized, open-shell 4f3 configuration (S=3/2, ground term 4I9/2). PBE/PBE+U mis-place the 4f manifold and give a wrong gap/DOS, so the Nd 4f states REQUIRE DFT+U (Dudarev formulation) with spin-polarization (ISPIN=2); literature U_eff on Ln 4f ~6 eV (Loschen 2007; Topsakal & Wentzcovitch 2014). In Nd2O3 the optical/edge transition is O 2p -> Nd 4f upper Hubbard band. The 4f shell is contracted and shielded by 5s2 5p6 (spectator), so Nd bonds via 5d/6s; the 4f local moment should be projected EXPLICITLY (projwfc onto Nd 4f, spin-resolved) to expose the 3 unpaired electrons rather than hidden as core. CAMPAIGN NOTE: the Xiong BaSnF4 study treated 4f as core with no spin/+U — our protocol deliberately corrects this (ISPIN=2 + DFT+U on 4f3).",
+  "key_references": [
+    "Xiong et al., J. Power Sources 2022, 518, 230718 — Nd-doped BaSnF4 DFT (Nd-M-anion distortion lowers migration barrier); our critique: it omits ISPIN=2 and DFT+U on 4f3, which our Nd-argyrodite protocol requires (db/literature/refs.json:xiong2022)",
+    "Loschen et al. 2007; Topsakal & Wentzcovitch 2014 — U_eff (~6 eV) on lanthanide 4f",
+    "Dudarev et al., Phys. Rev. B 1998, 57, 1505 — rotationally-invariant DFT+U formulation",
+    "Rare-earth sesquioxides via semi-local + DMFT, arXiv:2110.00400 — Nd2O3 gap = O 2p -> 4f upper Hubbard band",
+    "Yang et al., Electrochim. Acta 2025 — La+O dual-doped argyrodite via LaCl3 (closest sulfide-argyrodite rare-earth precedent; P-O-La bridges analogous to our P-O-Nd) (litdb)",
+    "Nd 3d XPS: Nd2O3 3d5/2 ~981.5-982.5 eV, 3d3/2 ~1005 eV (XPS databases; neodymium niobate/tantalate study)"
+  ],
+  "litdb_slugs": [
+    "yang2025_lao_dualdoping_argyrodite_lacl3",
+    "db/literature/refs.json:xiong2022",
+    "db/literature/nd_o_doping_mechanism_refs"
+  ],
+  "_provenance": "literature/web reference values (소환값); 우리 db 절대값과 분리. Nd DFT+U/spin guidance from Xiong BaSnF4 precedent (refs.json) — method note, not our band-gap absolutes."
+}

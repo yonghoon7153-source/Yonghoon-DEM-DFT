@@ -1,0 +1,46 @@
+{
+  "symbol": "B",
+  "name": "Boron",
+  "Z": 5,
+  "role": "Dopant / glass-former (added as B2O3). B3+ is a hard Lewis acid that strongly prefers O (B-O over B-S); forms trigonal BO3 and tetrahedral BO4 units. In our campaign B2O3 doping targets oxidative-stability / free-S stabilization; borate (LiBO2, Li3BO3) also used as cathode-interface coatings.",
+  "oxidation_states": ["+3"],
+  "electronegativity": 2.04,
+  "ionic_radius_A": {
+    "B3+_III": 0.01,
+    "B3+_IV": 0.11,
+    "_note": "Shannon 1976: trigonal BO3 (III) = 0.01 A, tetrahedral BO4 (IV) = 0.11 A. BO3/BO4 fraction shifts with alkali (Li2O) content."
+  },
+  "representative_compounds": [
+    {"formula": "B2O3", "context": "dopant precursor", "battery_role": "glass-former dopant; introduces B-O network + O into the sulfide", "note": "B3+ hard acid stays B-O coordinated (HSAB). Widens oxidative window in our campaign; but B3+ is a hydrolysis liability if it goes B-S (Zhu 2020) — B must remain B-O"},
+    {"formula": "LiBO2", "context": "cathode coating", "battery_role": "Li+-conductive buffer at cathode/SE interface; suppresses side reactions & space-charge layer", "note": "metaborate; improves capacity retention on NCM in solid-state cells (J. Power Sources 2019)"},
+    {"formula": "Li3BO3", "context": "cathode coating / sintering aid", "battery_role": "Li+-conductive interphase; gradient coating builds 3D Li+ network; enhances cathode-SE adhesion", "note": "orthoborate; gradient Li3BO3 coating raised LiCoO2 capacity/retention markedly (Appl. Surf. Sci. 2023)"},
+    {"formula": "LiBOB (Li bis(oxalato)borate)", "context": "coating / additive", "battery_role": "borate-derived surface layer for high-Ni cathodes in ASSB", "note": "organic-borate source of a B-O-rich interphase"}
+  ],
+  "sei_relevance": "B enters via B2O3 (oxide dopant) and borate coatings, not as a native SE element. Its SEI/interface role is O-affinity driven: B3+ (hard acid) x O2- (hard base) forms a robust, wide-gap, electron-insulating B-O network that stabilizes the framework and cathode interface. In our B2O3-doped argyrodite the B-S bond stabilizes free S (oxidation-axis and electronic-axis gain), while borate coatings act as Li+-conductive, electron-blocking buffers. Caveat (Zhu 2020 design map): B3+ shows worst-in-class hydrolysis in both sulfide and chloride systems — the moisture-axis benefit holds only if B stays B-O coordinated; B-S formation is a hydration risk.",
+  "xps": [
+    {"core": "B 1s", "BE_eV": 193.0, "assignment": "B2O3 / fully oxidized B3+ (BO3); orthoboric acid H3BO3 ~192.9 eV", "ref": "Ong & Hui, XPS of boron compounds (193-193.8 eV B2O3)"},
+    {"core": "B 1s", "BE_eV": 192.0, "assignment": "partially oxidized / mixed B-O (e.g. B-C-O, sub-oxide borate)", "ref": "B-TiO2 / boron-compound XPS studies"},
+    {"core": "B 1s", "BE_eV": 190.5, "assignment": "h-BN / B-N reference (NOT borate) — 190.23->190.46 eV", "ref": "Liu et al. 2022, h-BN Li-anode (litdb)"}
+  ],
+  "raman": [
+    {"cm1": 806, "assignment": "boroxol (B3O6) ring breathing (trigonal BO3 network); shifts 790->806 with alkali oxide", "ref": "Lithium borate glass Raman studies (J. Non-Cryst. Solids)"},
+    {"cm1": 770, "assignment": "tetrahedral BO4 / six-membered ring with BO4- (grows with Li2O content)", "ref": "Structural Raman of lithium borate glasses"},
+    {"cm1": 1480, "assignment": "B-O stretch of non-ring BO2 O- / metaborate chains (BO3 asymmetric stretch region ~1300-1500)", "ref": "Borate glass Raman review"}
+  ],
+  "dos_character": "B-O is strongly covalent and wide-gap: B 2s/2p hybridize with O 2p to form deep bonding states and high-lying antibonding states, so borate/B2O3 phases are insulating and introduce essentially no states inside the host band gap. In the doped sulfide, B-O(-S) states sit away from the band edges, so B acts as a structural/oxidative stabilizer and electron-insulating interphase former rather than a band-edge redox center. (BO3 trigonal vs BO4 tetrahedral coordination changes local DOS but both remain wide-gap.)",
+  "key_references": [
+    "Ong & Hui et al. — XPS of boron compounds; B 1s B2O3 ~193 eV (fully oxidized B3+)",
+    "Lithium borate glass Raman (J. Non-Cryst. Solids; struct. review) — boroxol 806 cm-1, BO4 units, BO3/BO4 vs Li2O",
+    "Kim et al., J. Power Sources 2019, 434, 226730 — LiBO2 coating ameliorates NCM622 cathode/SE interface in solid-state Li batteries",
+    "Li3BO3 gradient-coated LiCoO2, Appl. Surf. Sci. 2023 (S0169433223011662) — 3D gradient Li+ network, adhesion/sintering aid",
+    "Zhu et al. 2020 — air-stable SE design principles; B3+ worst-class hydrolysis (litdb)",
+    "Banik et al. 2022 — substitutions & oxidative stability of argyrodite (litdb)"
+  ],
+  "litdb_slugs": [
+    "zhu2020_air_stable_se_design_principles",
+    "banik2022_substitutions_oxidative_stability_argyrodite",
+    "fan2026_sulfide_assb_stability_review_ECERD2600097",
+    "liu2022_hbn_lithiophobic_sandwich_li_anode"
+  ],
+  "_provenance": "literature/web reference values (소환값); 우리 db 절대값과 분리"
+}

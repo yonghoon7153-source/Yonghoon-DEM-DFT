@@ -1,0 +1,48 @@
+{
+  "symbol": "P",
+  "name": "Phosphorus",
+  "Z": 15,
+  "role": "Framework center of the PS4 3- thiophosphate tetrahedron (covalent backbone of Li6PS5Cl). Formally P5+, sp3-hybridized with 4 S. Redox-active on reduction (P5+ -> P -3, Li3P) and on condensation/oxidation (P2S7 4-, P2S6 4-, phosphate).",
+  "oxidation_states": ["+5", "-3"],
+  "electronegativity": 2.19,
+  "ionic_radius_A": {
+    "P5+_IV": 0.17,
+    "_note": "Shannon 1976, tetrahedral (IV) P5+ = 0.17 A. In PS4 the P-S bond is strongly covalent (~2.0 A P-S), so 'ionic radius' is nominal."
+  },
+  "representative_compounds": [
+    {"formula": "PS4 3-", "context": "framework", "battery_role": "covalent backbone tetrahedron of the argyrodite; hosts the Li+ cage", "note": "P-S sigma network; free/non-bonding S carries the VBM. Anchor of the whole SE structure"},
+    {"formula": "Li3PS4", "context": "solid electrolyte", "battery_role": "binary thiophosphate SE end-member; PS4 3- building block of the Li2S-P2S5 family", "note": "beta-Li3PS4 nanoporous SE; parent of argyrodite chemistry"},
+    {"formula": "Li3P", "context": "SEI", "battery_role": "terminal reduction product of PS4 vs Li metal (P -3); Li+-conductive interphase component", "note": "Diagnostic P 2p3/2 collapse to ~125.4 eV; reached stepwise via LixP intermediates"},
+    {"formula": "P2S7 4- / P2S6 4-", "context": "framework degradation", "battery_role": "condensed (P-S-P bridged / P-P bonded) thiophosphate units from thermal/oxidative evolution", "note": "PS4 -> P2S7 -> P2S6 condensation raises thermal stability but P2S7 over-binds Li+ (suppresses conduction); Raman fingerprints below"},
+    {"formula": "Li3PO4 (phosphate)", "context": "oxidized / O-doped product", "battery_role": "oxidation/O-substitution product; wide-gap insulating interphase", "note": "P 2p3/2 ~133.3 eV; forms on oxidation and in O-doped (PS3O) chemistries; NdPO4-type P-O-Nd bridges in Nd2O3-doped variant"}
+  ],
+  "sei_relevance": "P is the redox-active SEI former of the sulfide SE. PS4 3- is reduced at ~1.08 V vs Li/Li+ (Schwietert/Wagemaker grand-potential, via Bai 2020) to P / Li3P together with Li2S + LiCl. XPS shows the P 2p3/2 line move from ~131.7 eV (PS4/thiophosphate) DOWN to ~125.4 eV (terminal Li3P), passing through LixP intermediates — one of the clearest SEI-reduction diagnostics in argyrodites. On the oxidizing side, P shifts UP to ~133.3 eV (phosphate) and PS4 condenses to P2Sx. Li3P/Li2S/LiCl form the passivating interphase against Li metal.",
+  "xps": [
+    {"core": "P 2p3/2", "BE_eV": 131.7, "assignment": "PS4 3- / thiophosphate (pristine argyrodite framework)", "ref": "Nat. Commun. 2025 (P role in argyrodite SEI); Liu 2022 gives 131.9 eV"},
+    {"core": "P 2p3/2", "BE_eV": 125.4, "assignment": "Li3P (terminal reduced P -3 in SEI)", "ref": "Nat. Commun. 2025, s41467-025-64357-3"},
+    {"core": "P 2p3/2", "BE_eV": 133.3, "assignment": "phosphate / Li3PO4 (oxidized or O-doped P-O)", "ref": "Cha et al. 2024 (litdb); consistent with SEI XPS refs"},
+    {"core": "P 2p", "BE_eV": null, "assignment": "NOTE: P 2p is a spin-orbit doublet (2p3/2, 2p1/2 split ~0.85 eV); reduction proceeds PS4 -> LixP -> Li3P giving a broad low-BE tail", "ref": "Nat. Commun. 2025"}
+  ],
+  "raman": [
+    {"cm1": 420, "assignment": "PS4 3- symmetric stretch nu1 (argyrodite fingerprint; observed ~420-427 cm-1)", "ref": "Wang et al., InfoMat 2022 (litdb); Lewis-acid-treated LPSCl 424->420-423"},
+    {"cm1": 405, "assignment": "P2S7 4- (bridged di-thiophosphate; ~404-405 cm-1)", "ref": "Wang et al., InfoMat 2022 (litdb)"},
+    {"cm1": 380, "assignment": "P2S6 4- (P-P bonded hexathio-hypodiphosphate; ~380-386 cm-1)", "ref": "Wang et al., InfoMat 2022 (litdb)"},
+    {"cm1": 265, "assignment": "PS4-related low-frequency mode (accompanies 425/577/600 cm-1 PS4 set)", "ref": "Ke et al., Energy Storage Mater. 2025 (litdb)"}
+  ],
+  "dos_character": "P-S forms the covalent sigma framework. The valence band top is dominated by S 3p (non-bonding/free S), with P 3s/3p contributing to deeper P-S bonding states; the conduction band minimum is PS4 antibonding (P 3s/3p x S 3p sigma*) with minor Li admixture. Thus P governs the CBM character and the framework's oxidative/reductive redox: removing electrons attacks S 3p (VBM), adding electrons populates PS4 sigma* (P-centered) leading to P-S cleavage and P reduction. O-for-S substitution (PS3O) deepens/reconfigures these states (S-p/p-p hybridization, Ke 2025).",
+  "key_references": [
+    "Nature Communications 2025 (s41467-025-64357-3) — 'Role of phosphorus in the SEI of argyrodite SEs'; P 2p 131.7 (PS4) -> 125.4 eV (Li3P), stepwise LixP",
+    "Wang et al., InfoMat 2022, 4, e12316 — Raman polyhedra fingerprints [P2S6]4- 380 / [P2S7]4- 405 / [PS4]3- 420 cm-1 (litdb)",
+    "Liu et al. 2022 — Li|LPSCl AIMD + XPS; PS4 P 2p 131.9 eV, PS4 breaks vs Li (litdb)",
+    "Schwietert/Wagemaker (via Bai 2020 review) — PS4 reduction ~1.08 V -> Li3P + Li2S + LiCl (litdb)",
+    "Ke et al., Energy Storage Mater. 2025 — PS4 Raman set + P 2p/S 2p redox XPS; S-p/p-p hybridization (litdb)"
+  ],
+  "litdb_slugs": [
+    "wang2022_sulfide_thermal_stability_th_descriptor",
+    "liu2022_cl_crystallization_interface_argyrodite",
+    "bai2020_argyrodite_review_progress",
+    "ke2025_orbital_hybridization_mgclo",
+    "cha2024_dualcompatible_halide_ncm_lpscl_interface"
+  ],
+  "_provenance": "literature/web reference values (소환값); 우리 db 절대값과 분리"
+}

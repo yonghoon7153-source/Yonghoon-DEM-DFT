@@ -1,0 +1,52 @@
+{
+ "symbol": "I",
+ "name": "Iodine",
+ "Z": 53,
+ "role": "argyrodite 할라이드 최대반경 — 가장 분극성/연한 결합; LiI는 자체로 Li⁺ 전도체",
+ "oxidation_states": [
+  "-1"
+ ],
+ "electronegativity": 2.66,
+ "ionic_radius_A": {
+  "I-": 2.2
+ },
+ "representative_compounds": [
+  {
+   "formula": "LiI",
+   "context": "anode SEI / conductor",
+   "battery_role": "보호 SEI · Li⁺ 전도 무기상",
+   "note": "I 3d ~619.5 eV"
+  },
+  {
+   "formula": "Li6PS5I",
+   "context": "our comp5",
+   "battery_role": "iodide argyrodite",
+   "note": "큰 I⁻ → 자리 질서↑ 경향"
+  }
+ ],
+ "sei_relevance": "LiI는 Li 음극 계면 보호막으로 알려짐(높은 Li⁺ 전도, 계면 안정화). argyrodite에서 I는 커서 S/I 무질서가 줄어 전도 특성이 Cl/Br과 다름.",
+ "xps": [
+  {
+   "core": "I 3d5/2",
+   "BE_eV": 619.3,
+   "assignment": "LiI / iodide",
+   "ref": "NIST XPS DB"
+  }
+ ],
+ "raman": [
+  {
+   "cm1": 420,
+   "assignment": "PS4 ν1 (I 치환 시 자리질서 변화)",
+   "ref": "Dietrich 2017"
+  }
+ ],
+ "dos_character": "I 5p 얕은 준위 → 밴드엣지 근처 기여 halide 중 가장 큼.",
+ "key_references": [
+  "Rao 2025 — iodide argyrodite DFT+AIMD",
+  "Kraft 2017 (Zeier) — 할라이드 전도도 계열"
+ ],
+ "litdb_slugs": [
+  "rao2025_iodide_argyrodite"
+ ],
+ "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
+}

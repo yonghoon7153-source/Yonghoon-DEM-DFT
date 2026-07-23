@@ -667,3 +667,157 @@ for T in (600, 800, 1000):            # 아레니우스 3점
         dyn.run(2500)                 # 5 ps 평형
         # 생산 200 ps + MSD(2–50ps) 저장 …
 """
+
+
+# ═════════════════════════════════════════════════════════════
+# 원소 브리핑 시스템 (Periodic Table → 원소별/조합별 정보 + 우리 db 앵커 + 문헌)
+# ═════════════════════════════════════════════════════════════
+ELEMENTS_KB = KB / "elements"
+
+def load_element_kb() -> dict:
+    out = {}
+    if ELEMENTS_KB.exists():
+        for f in ELEMENTS_KB.glob("*.json"):
+            d = _load_json(f)
+            if d and d.get("symbol"):
+                out[d["symbol"]] = d
+    return out
+
+@lru_cache(maxsize=1)
+def _all_icohp_bonds():
+    """모든 *_icohp.json 의 bonds → [(system, bond, data)]."""
+    out = []
+    for f in sorted((DB / "properties").glob("*_icohp.json")):
+        d = _load_json(f)
+        if d and isinstance(d.get("bonds"), dict):
+            sysn = f.stem.replace("_icohp", "")
+            for bond, v in d["bonds"].items():
+                if isinstance(v, dict):
+                    out.append((sysn, bond, v))
+    return out
+
+# 원소 → 문헌 매칭 토큰 (slug/title/type 소문자에 substring)
+ELEMENT_TOKENS = {
+    "Cl": ["chlor", "chloride", "chlorinat", "cl-rich", "cl_rich", "cl_cryst", "cucl", "constricted_esw"],
+    "Br": ["brom", "cubr", "lpsclbr", "bromide"],
+    "I":  ["iodide", "iodine", "lpsi_", "rao2025_iodide"],
+    "O":  ["oxide", "oxygen", "o-doping", "lpsocl", "b2o3", "bzox", "zro2_", "mgf2", "lao_"],
+    "S":  ["sulfid", "argyrodite", "ps4", "sulfur", "thio"],
+    "P":  ["phosph", "ps4", "argyrodite", "sb_doping"],
+    "B":  ["b2o3", "boron", "borate", "bzox"],
+    "Nd": ["neodym", "nd2o3", "nd-dop", "nd dop", "lanthan", "rare earth", "rare-earth"],
+    "C":  ["carbon", "graphit", "graphene", "vgcf", "conductive_additive", "conductive agent", "conductive_agent"],
+    "N":  ["nitrid", "li3n", "hbn", "h-bn", "nitrogen"],
+    "H":  ["hydride", "lih ", "moisture", "air stability", "air_stability", "dry_process", "dryprocess"],
+    "Li": ["lithium argyrodite", "li-metal", "li metal", "lithiophobic", "cl_rich_anode"],
+}
+
+@lru_cache(maxsize=1)
+def _paper_index():
+    """[{id,title,type,track,blob}] — blob = slug+title+type+본문 앞 60줄(소문자). 토큰매칭용, 캐시.
+    litdb-curator가 새 digest push → 이 캐시는 프로세스 재시작/리로드 때 갱신(개발서버 auto-reload)."""
+    idx = []
+    pd = LITDB / "papers"
+    for p in list_papers():
+        blob = f"{p['id']} {p['title']} {p['type']}"
+        try:
+            head = (pd / f"{p['id']}.md").read_text(errors="ignore").splitlines()[:60]
+            blob += " " + " ".join(head)
+        except Exception:
+            pass
+        idx.append({**p, "blob": blob.lower()})
+    return idx
+
+def _match_papers(tokens, limit) -> list:
+    if not tokens:
+        return []
+    hits = []
+    for p in _paper_index():
+        if any(t in p["blob"] for t in tokens):
+            hits.append({"id": p["id"], "title": p["title"], "track": p["track"]})
+    return hits[:limit]
+
+def element_papers(sym: str, limit: int = 14) -> list:
+    """이 원소 관련 litdb 논문 — 브리핑에서 클릭 → digest."""
+    return _match_papers(ELEMENT_TOKENS.get(sym, []), limit)
+
+# 용어(기법) → 논문 매칭 토큰 (그 기법을 쓴 논문 링크)
+GLOSSARY_TOKENS = {
+    "dft": ["dft", "first-principles", "first principles", "density functional"],
+    "scf": ["self-consistent", "scf convergence"],
+    "pseudo": ["pseudopotential", "paw", "ultrasoft", "norm-conserving", "projector augmented"],
+    "kpoint": ["k-point", "brillouin", "monkhorst"],
+    "functional": ["pbe", "gga", "hse", "r2scan", "scan functional", "hybrid functional", "meta-gga"],
+    "bandgap": ["band gap", "bandgap", "vbm", "cbm", "valence band maximum"],
+    "dos": ["density of states"],
+    "pdos": ["projected density", "pdos", "projwfc", "projected dos"],
+    "elf": ["electron localization", "elf"],
+    "bader": ["bader"],
+    "cohp": ["cohp", "icohp", "crystal orbital hamilton", "lobster"],
+    "cobi": ["cobi", "icobi", "bond index", "mayer bond"],
+    "lobster": ["lobster"],
+    "eos": ["equation of state", "birch-murnaghan", "birch murnaghan", "bulk modulus"],
+    "elastic": ["elastic constant", "elastic tensor", "stress-strain", "stress–strain", "voigt", "reuss", "pugh", "young's modulus", "shear modulus"],
+    "bvse": ["bvse", "bond valence", "bond-valence"],
+    "md": ["molecular dynamics", "aimd", "ab initio molecular", "machine-learned potential"],
+    "msd": ["mean squared displacement", "mean-squared displacement", "diffusion coefficient"],
+    "arrhenius": ["arrhenius", "activation energy", "ionic conductivity"],
+    "phonon": ["phonon", "dynamical matrix", "imaginary frequenc", "vibrational"],
+    "neb": ["neb", "nudged elastic", "climbing image", "migration barrier", "transition-state", "transition state"],
+    "esw": ["electrochemical stability window", "grand potential", "grand-potential", "stability window"],
+    "adhesion": ["work of adhesion", "interfacial energy", "adhesion energy"],
+    "mlip": ["mlip", "machine-learned", "foundation model", "sevennet", "uma", "chgnet", "m3gnet", "neural network potential"],
+}
+
+def glossary_papers(term_id: str, limit: int = 14) -> list:
+    """이 기법(용어)을 쓴 litdb 논문 — glossary/concept에서 클릭 → digest."""
+    return _match_papers(GLOSSARY_TOKENS.get(term_id, []), limit)
+
+def element_db_anchors(sym: str) -> dict:
+    """우리 db에서 이 원소가 나오는 결과 앵커 (실시간 스캔 = 자동 갱신)."""
+    comps = [cid for cid, els in COMP_ELEMENTS.items() if sym in els]
+    bonds = []
+    for system, bond, v in _all_icohp_bonds():
+        if sym in re.split(r"[-–]", bond):
+            bonds.append({"system": system, "bond": bond,
+                          "icohp": v.get("ICOHP_total_eV_per_bond"),
+                          "d": v.get("d_mean_A"), "N": v.get("N")})
+    pdos = []
+    for f in sorted((DB / "properties").glob("*pdos_element*smooth.csv")):
+        try:
+            hdr = f.open().readline().strip().lower().split(",")
+            if any(sym.lower() == h.strip().split()[0] if h.strip() else False for h in hdr) or sym.lower() in [h.strip() for h in hdr]:
+                pdos.append(str(f.relative_to(DB)))
+        except Exception:
+            pass
+    xps = []
+    for f in sorted((DB / "properties").glob("*xps*.csv")):
+        try:
+            if re.search(rf"(^|[^A-Za-z]){re.escape(sym)}([^A-Za-z]|$)", f.read_text(errors="ignore")):
+                xps.append(str(f.relative_to(DB)))
+        except Exception:
+            pass
+    return {"compositions": comps, "icohp": bonds,
+            "pdos": pdos, "xps": sorted(set(xps)), "papers": element_papers(sym)}
+
+def element_briefing(syms: list) -> dict:
+    kb = load_element_kb()
+    syms = [s for s in syms if s in {p[0] for p in PERIODIC}]
+    elems = [{"symbol": s, "kb": kb.get(s), "anchors": element_db_anchors(s)} for s in syms]
+    out = {"elements": elems, "multi": None}
+    if len(syms) >= 2:
+        common = [cid for cid, els in COMP_ELEMENTS.items() if all(s in els for s in syms)]
+        sset = set(syms)
+        pair = []
+        for system, bond, v in _all_icohp_bonds():
+            parts = set(re.split(r"[-–]", bond))
+            if len(parts) == 2 and parts <= sset:
+                pair.append({"system": system, "bond": bond,
+                             "icohp": v.get("ICOHP_total_eV_per_bond"), "d": v.get("d_mean_A")})
+        papers = {}
+        for e in elems:
+            for p in e["anchors"]["papers"]:
+                papers[p["id"]] = p
+        out["multi"] = {"syms": syms, "compositions": common,
+                        "bonds": pair, "papers_union": list(papers.values())}
+    return out

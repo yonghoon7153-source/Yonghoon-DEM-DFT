@@ -486,3 +486,69 @@ kbd{font-family:var(--mono);font-size:.72em;background:var(--bg);border:1px soli
 .page-header h1{letter-spacing:-.02em}
 .card{transition:box-shadow .15s,border-color .15s}
 .section-title:first-child{margin-top:0}
+
+/* ============================================================
+   원소 브리핑 (Periodic Table → 다중선택 브리핑) + 논문 링크칩
+   ============================================================ */
+.sel-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:16px 0 6px}
+.sel-bar .sel-lbl{font-size:.74rem;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.04em}
+.sel-chip{background:var(--brand-fill);color:var(--on-brand);border:none;border-radius:20px;padding:4px 12px;
+  font-size:.82rem;font-weight:700;cursor:pointer;font-family:var(--font)}
+.sel-chip:hover{background:var(--brand-fill2)}
+
+.briefing{margin-top:14px;display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:1100px){.briefing{grid-template-columns:1fr 1fr}.briefing .combo-card,.briefing>.brief-hint{grid-column:1/-1}}
+.brief-hint{grid-column:1/-1;background:var(--card);border:1px dashed var(--border);border-radius:var(--radius);
+  padding:34px;text-align:center;color:var(--dim);display:flex;flex-direction:column;align-items:center;gap:12px}
+.brief-hint .bh-ico{font-size:2.6rem;opacity:.4}
+.brief-hint b{color:var(--text)}
+
+.combo-card{border-left:4px solid var(--teal);background:color-mix(in srgb,var(--teal) 9%,var(--card))}
+.combo-tag{font-weight:800;color:var(--teal);margin-bottom:10px;font-size:1rem}
+.combo-row{margin:8px 0;font-size:.88rem;line-height:1.8}
+.combo-row>b{display:inline-block;min-width:150px;color:var(--navy);font-size:.8rem}
+.bond-chip{display:inline-block;background:var(--card);border:1px solid var(--border);border-radius:7px;
+  padding:2px 9px;font-size:.78rem;font-family:var(--mono);margin:2px}
+
+.el-card{display:flex;flex-direction:column;gap:2px}
+.el-head{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+.el-sym{font-size:2.4rem;font-weight:800;color:var(--on-brand);background:var(--brand-fill);width:64px;height:64px;
+  display:flex;align-items:center;justify-content:center;border-radius:14px;flex:0 0 auto}
+.el-name{font-weight:700;font-size:1.05rem;color:var(--navy)}
+.el-role{font-size:.82rem;color:var(--dim);margin-top:2px;line-height:1.4}
+.el-meta{display:flex;gap:16px;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid var(--border2);margin-bottom:8px;font-size:.84rem}
+.el-meta em{font-style:normal;color:var(--muted);font-weight:600;margin-right:5px;font-size:.9em}
+.el-sec{margin:10px 0}
+.el-sec-t{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);margin-bottom:6px}
+.el-txt{font-size:.86rem;line-height:1.6;color:var(--text2)}
+.cmpd{padding:6px 0;border-bottom:1px dashed var(--border2)}
+.cmpd-f{font-family:var(--mono);font-weight:700;color:var(--navy);margin-right:8px}
+.cmpd-role{font-size:.74rem;background:var(--accent-soft);color:var(--accent);padding:1px 8px;border-radius:12px;font-weight:600}
+.cmpd-ctx{font-size:.72rem;color:var(--muted);margin-left:6px}
+.cmpd-note{font-size:.78rem;color:var(--dim);margin-top:2px;line-height:1.5}
+.el-sei{background:color-mix(in srgb,var(--green) 10%,var(--card));border-left:3px solid var(--green);
+  border-radius:0 8px 8px 0;padding:10px 14px;margin:10px 0;font-size:.85rem;line-height:1.6}
+.el-sei .el-sec-t{color:var(--green)}
+.mini-table{width:100%;border-collapse:collapse;font-size:.8rem}
+.mini-table th{text-align:left;font-size:.64rem;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);
+  font-weight:700;padding:4px 8px;border-bottom:1px solid var(--border)}
+.mini-table td{padding:4px 8px;border-bottom:1px solid var(--border2);color:var(--text2)}
+.mini-table td:first-child{font-family:var(--mono);color:var(--navy);font-weight:600;white-space:nowrap}
+.el-anchor{background:var(--bg);border-radius:8px;padding:11px 14px;margin:10px 0}
+.anchor-row{margin:5px 0;font-size:.84rem;line-height:1.7}
+.anchor-row em{font-style:normal;color:var(--muted);font-weight:700;margin-right:6px;font-size:.72rem;text-transform:uppercase}
+.anchor-comp{display:inline-flex;align-items:center;gap:5px;background:var(--card);border:1px solid var(--border);
+  border-radius:7px;padding:2px 9px;font-size:.8rem;font-weight:600;color:var(--navy);margin:2px}
+.anchor-comp:hover{border-color:var(--accent);color:var(--accent)}
+.anchor-comp .dot{width:8px;height:8px;border-radius:50%}
+.el-refs{margin-top:8px;font-size:.78rem;color:var(--dim)}
+.el-refs em{font-style:normal;font-weight:700;color:var(--muted);text-transform:uppercase;font-size:.68rem}
+.el-refs ul{margin:4px 0 0;padding-left:18px}.el-refs li{margin:2px 0;line-height:1.5}
+
+/* 논문 링크 칩 (glossary·concept·element 공통) */
+.gpapers{margin-top:10px}
+.gpaper-chip{display:inline-block;font-family:var(--mono);font-size:.72rem;font-weight:600;padding:2px 8px;
+  border-radius:6px;margin:2px 3px 2px 0;text-decoration:none;border:1px solid transparent}
+.gpaper-chip.tb-dft{background:var(--accent-soft);color:var(--accent);border-color:color-mix(in srgb,var(--accent) 30%,transparent)}
+.gpaper-chip.tb-dem{background:color-mix(in srgb,var(--orange) 15%,var(--card));color:var(--orange);border-color:color-mix(in srgb,var(--orange) 30%,transparent)}
+.gpaper-chip:hover{filter:brightness(1.08);text-decoration:underline}

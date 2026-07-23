@@ -1,0 +1,47 @@
+{
+  "symbol": "Li",
+  "name": "Lithium",
+  "Z": 3,
+  "role": "Mobile cation (Li+) — the working ion in Li6PS5Cl argyrodite; also the Li-metal anode. Occupies partially-filled 48h/24g cage sites; hops through the PS4/halide framework. Ionic, closed-shell (2s0 as Li+).",
+  "oxidation_states": ["+1", "0"],
+  "electronegativity": 0.98,
+  "ionic_radius_A": {
+    "Li+_VI": 0.76,
+    "Li+_IV": 0.59,
+    "_note": "Shannon 1976 effective ionic radii; VI (octahedral) 0.76 A, IV (tetrahedral) 0.59 A. Argyrodite Li sits in distorted tetrahedral/triangular cage sites."
+  },
+  "representative_compounds": [
+    {"formula": "Li (metal)", "context": "anode", "battery_role": "Li-metal negative electrode; plating/stripping substrate for SEI", "note": "Li0; argyrodite is thermodynamically reduced against Li metal (reduction onset ~1.7 V vs Li/Li+, Bai 2020 review) -> forms Li2S + Li3P + LiCl interphase"},
+    {"formula": "Li2S", "context": "SEI / cathode", "battery_role": "reduction product of the S sublattice; also conversion-cathode active material and Li reservoir", "note": "Electronically insulating but a soft, Li+-conductive SEI phase; forms with LiCl+Li3P on argyrodite reduction"},
+    {"formula": "Li3P", "context": "SEI", "battery_role": "terminal reduction product of PS4 3- against Li metal (P in -3 state)", "note": "Diagnostic: drives P 2p3/2 down to ~125.4 eV (see P.json). Mixed Li3P-Li2S solid solutions proposed as fully-reduced SE for Li anodes (PMC9479069)"},
+    {"formula": "LiCl", "context": "SEI", "battery_role": "wide-gap insulating passivator from Cl sublattice reduction; blocks electron transfer while passing Li+", "note": "Cl-rich argyrodite gives LiCl-rich SEI (Liu 2022); wide gap ~6-6.6 eV -> self-limiting passivation logic"},
+    {"formula": "LiC6", "context": "anode", "battery_role": "graphite-intercalation anode end-member (staging)", "note": "Reference intercalation host; contrasts with plating on bare Li metal"},
+    {"formula": "Li3N", "context": "anode coating / fast-ion conductor", "battery_role": "very low Li+ migration barrier; anode interlayer candidate", "note": "CAMPAIGN RULE: UMA MLIP is FORBIDDEN for Li3N (2026-06 deterministic-bias ruling) — use DFT/AIMD, not UMA, for any Li3N energetics"}
+  ],
+  "sei_relevance": "Li metal anode is the SEI-forming electrode. Argyrodite is not stable vs Li: reduced (~1.7 V vs Li/Li+) to a Li2S + Li3P + LiCl interphase. Because these are wide-gap insulators (LiCl ~6-6.6, Li2O ~5.2, Li2S), the SEI is electronically blocking but Li+-conductive -> a self-limiting/passivating layer that widens the effective electrochemical window beyond the thermodynamic prediction. Li 1s XPS is a weak chemical-state probe (see xps); SEI phase ID relies on the anion core levels (S 2p, Cl 2p, P 2p).",
+  "xps": [
+    {"core": "Li 1s", "BE_eV": 52.5, "assignment": "Li metal (Li0) / Li-C (range ~50-54 eV)", "ref": "Wood & Teeter, ACS Appl. Energy Mater. 2018"},
+    {"core": "Li 1s", "BE_eV": 54.9, "assignment": "Li2O (reference oxide phase)", "ref": "Wood & Teeter 2018"},
+    {"core": "Li 1s", "BE_eV": 55.5, "assignment": "LiF / Li2CO3 / LixPOyFz region (~55-60 eV); Li2S also ~55", "ref": "ACS Energy Lett. 2022 SEI XPS primer"},
+    {"core": "Li 1s", "BE_eV": null, "assignment": "NOTE: total Li 1s chemical shift across SEI phases is only ~3-5 eV and peaks overlap -> Li 1s alone poorly discriminates SEI; use O 1s/S 2p/Cl 2p/P 2p and BE separations", "ref": "Wood & Teeter 2018; ACS Energy Lett. 2022"}
+  ],
+  "raman": [
+    {"cm1": 370, "assignment": "Li2S (SEI reduction-product marker; appears when PS4 framework is damaged vs Li)", "ref": "Ke et al., Energy Storage Mater. 2025"},
+    {"cm1": null, "assignment": "NOTE: metallic Li and ionic Li+ are not Raman-diagnostic; Li environments are tracked indirectly via framework (PS4) and SEI (Li2S) modes", "ref": "n/a"}
+  ],
+  "dos_character": "Li is essentially ionic (Li+): it donates its 2s electron to the framework and contributes little density of states at the band edges. In Li6PS5Cl the VBM is S 3p (non-bonding S lone pairs) and the CBM is PS4 antibonding + a minor Li 2s/2p admixture; Li 1s is a deep, inert core level. Consequently Li acts as a rigid-band electron donor / carrier, not a redox center.",
+  "key_references": [
+    "Wood & Teeter, ACS Appl. Energy Mater. 2018, 1, 4493 — XPS on Li-battery inorganic compounds + Li 1s charge-correction methodology (soncalled values for Li 1s SEI phases)",
+    "ACS Energy Lett. 2022, 7, 2932 — XPS primer for SEI characterization on Li-metal anodes",
+    "Bai et al. 2020 (Adv. review) — argyrodite reduction ~1.7 V vs Li -> Li2S/Li3P/LiCl interphase (litdb)",
+    "Liu et al. 2022 — Li|LPSCl interface AIMD + post-mortem XPS; Cl-rich -> LiCl-rich insulating SEI (litdb)",
+    "Dewald/Janek et al., Nat. Commun. 2022, 13, 7186 — current-density dependence of Li|Li6PS5Cl SEI formation"
+  ],
+  "litdb_slugs": [
+    "bai2020_argyrodite_review_progress",
+    "liu2022_cl_crystallization_interface_argyrodite",
+    "gilgonzalez2022_synergistic_cl_constricted_esw",
+    "whitten2023_ups_practical_best_practices"
+  ],
+  "_provenance": "literature/web reference values (소환값); 우리 db 절대값과 분리"
+}
