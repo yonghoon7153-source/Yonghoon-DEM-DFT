@@ -11,10 +11,10 @@ GLOSSARY = [
 # ── 기초 이론 ─────────────────────────────────────────
 {"id":"dft","term":"DFT","full":"Density Functional Theory (밀도범함수이론)","cat":"기초 이론",
  "what":"수많은 전자의 상호작용 문제를 파동함수 대신 <b>전자 밀도 ρ(r)</b> 하나의 범함수로 바꿔 푸는 양자역학 계산법. 정확한 다체 슈뢰딩거 방정식은 못 푸니, Kohn–Sham이 '같은 밀도를 주는 가상의 비상호작용 전자계'로 치환해 풀 수 있게 만들었다. 바닥상태 에너지·힘·전자구조를 제1원리(경험 파라미터 없이)로 얻는다.",
- "how":"① 결정 구조(원자 좌표+격자) 입력 → ② 교환상관 범함수(PBE 등)와 기저(평면파+cutoff), pseudopotential, k-point 격자 선택 → ③ <b>SCF</b> 반복으로 전자밀도를 자기무결하게 수렴 → ④ 총에너지·힘(→구조최적화)·응력(→탄성/EOS)·고유값(→밴드/gap) 산출. 후처리로 DOS/ELF/Bader/COHP 등을 뽑는다.",
+ "how":"① 결정 구조(원자 좌표+격자) 입력 → ② 교환상관 범함수(PBE 등)와 기저(평면파+cutoff), pseudopotential, k-point 격자 선택 → ③ <b>SCF</b> 반복으로 전자밀도를 자기일관되게 수렴 → ④ 총에너지·힘(→구조최적화)·응력(→탄성/EOS)·고유값(→밴드/gap) 산출. 후처리로 DOS/ELF/Bader/COHP 등을 뽑는다.",
  "ours":"Quantum ESPRESSO(평면파+pseudopotential)로 gap·EOS·elastic·ε∞를, LOBSTER로 ICOHP를 계산. canonical 레시피는 methods 페이지 참조 — pseudo/ecut/k가 물성·조성마다 달라 비교 전 반드시 확인."},
 
-{"id":"scf","term":"SCF","full":"Self-Consistent Field (자기무결장)","cat":"기초 이론",
+{"id":"scf","term":"SCF","full":"Self-Consistent Field (자기일관장)","cat":"기초 이론",
  "what":"전자밀도가 만드는 퍼텐셜이 다시 그 밀도를 결정하는 '닭-달걀' 관계를, 초기 추정 → 계산 → 갱신을 반복해 <b>입출력이 일치(self-consistent)</b>할 때까지 수렴시키는 절차. DFT 한 스텝의 심장.",
  "how":"초기 밀도 → 퍼텐셜 → Kohn–Sham 방정식 풀어 새 밀도 → mixing(예: β=0.3)으로 섞어 갱신 → 에너지 변화(conv_thr, 예 1e-8 Ry)가 임계값 이하가 되면 수렴. iteration 수와 'estimated scf accuracy'로 진행을 본다.",
  "ours":"러너/watch가 'iteration #'과 accuracy를 추적. SCF가 iter 1~2 만에 'JOB DONE'이면 skip 의심(ε∞ 삽질의 원인이었음)."},
@@ -30,7 +30,7 @@ GLOSSARY = [
  "ours":"comp1(cubic-52)=k444, modelc(rhombo-62)=k221. 셀이 달라 k숫자가 다른 게 정상 — comp2를 k222→k444로 올린 건 comp1과 같은 셀이라 밀도를 맞춘 것."},
 
 {"id":"functional","term":"XC Functional","full":"교환상관 범함수 (PBE 등)","cat":"기초 이론",
- "what":"DFT에서 유일하게 근사가 들어가는 부분 = 전자 교환+상관 에너지. GGA(PBE)가 표준, 밴드갭을 <b>과소평가</b>하는 경향(HSE 같은 hybrid이 보정하나 무거움).",
+ "what":"DFT에서 유일하게 근사가 들어가는 부분 = 전자 교환+상관 에너지. GGA(PBE)가 표준, 밴드갭을 <b>과소평가</b>하는 경향(HSE 같은 hybrid가 보정하나 무거움).",
  "how":"pseudopotential에 함께 지정(예 pbe). gap이 실험보다 작게 나오는 건 PBE의 알려진 한계 — 경향/상대비교엔 유효.",
  "ours":"PBE 표준. ORCA SDCP 분자는 r²SCAN-3c(meta-GGA)."},
 

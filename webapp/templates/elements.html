@@ -57,7 +57,8 @@ function sync(){
     b.classList.toggle('pt-sel',on);b.setAttribute('aria-pressed',on);});
   var bar=document.getElementById('sel-bar');
   if(selected.length){bar.hidden=false;document.getElementById('sel-chips').innerHTML=selected.map(function(s){
-    return '<button class="sel-chip" onclick="toggleEl(\''+s+'\')">'+s+' ✕</button>';}).join('');}
+    return '<button class="sel-chip" data-el="'+_esc(s)+'">'+_esc(s)+' ✕</button>';}).join('');
+    document.querySelectorAll('#sel-chips .sel-chip').forEach(function(b){b.onclick=function(){toggleEl(b.dataset.el);};});}
   else bar.hidden=true;
   history.replaceState(null,'',selected.length?('?sel='+selected.join(',')):location.pathname);
 }
@@ -149,6 +150,6 @@ function elCard(e){
   return h+'</div>';
 }
 (function(){var s=new URLSearchParams(location.search).get('sel');
-  if(s){selected=s.split(',').filter(function(x){return E2C[x]||true;});sync();render();}})();
+  if(s){selected=s.split(',').filter(function(x){return document.getElementById('el-'+x);});sync();render();}})();
 </script>
 {% endblock %}

@@ -17,7 +17,7 @@
     {
       "id": "comp3",
       "gap_eV": 2.1,
-      "vbm": "S 3p + Br 4p",
+      "vbm": "S 3p + I 5p",
       "cbm": "Li 2s, P 3s"
     },
     {
@@ -29,7 +29,7 @@
     {
       "id": "comp5",
       "gap_eV": 2.06,
-      "vbm": "S 3p + Br 4p",
+      "vbm": "S 3p + I 5p",
       "cbm": "Li 2s, P 3s",
       "basin": "B"
     },

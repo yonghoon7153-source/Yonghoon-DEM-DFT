@@ -125,13 +125,13 @@ graph TD
 | 조성 | 약칭 | Canonical gap (eV) | 비고 |
 |------|------|--------------------|------|
 | Li₆PS₅Cl | comp1 | **2.066** | 기준 argyrodite |
-| LPSClBr | comp2 | **2.04** | Br 치환 |
+| LPSClBr | comp2 | **2.04**† | Br 치환 (†잠정 — legacy band_gaps; fixed-occ nscf 재확인 중) |
 | Li₅.₄PS₄.₄Cl₁.₆ | modelc | **2.099** | Cl-rich (LPSCl1.6) |
 | LPSOCl (+O) | lpsocl | **2.2309** | O 도핑, gap 최대 |
 | ~~comp1 DOS-threshold~~ | — | ~~1.76 / 1.82~~ | **틀린 값, 인용 금지** |
 
 - 순서: **+O(2.2309) > modelc(2.099) > comp1(2.066) > comp2(2.04)**. +O가 전자 절연을 강화, Br은 소폭 낮춘다.
-- 이 값들은 (db/properties/electronic.json) canonical과 일치. 절대값은 PBE-level임을 명시하되, 같은 레시피 조성 비교는 신뢰.
+- comp1·modelc·+O·+B₂O₃는 (db/properties/electronic.json) fixed-occ eigenvalue canonical과 일치. **comp2 2.04는 잠정**(legacy band_gaps 유래, fixed-occ nscf 재확인 중 — eigenvalue canonical 아님). 절대값은 PBE-level임을 명시하되, 같은 레시피 조성 비교는 신뢰.
 - DOS-threshold(1.76/1.82)는 **~0.3 eV 과소 아티팩트**라 문서/그림 어디에도 쓰지 않는다.
 
 *tags: band gap · VBM · CBM · fixed occupation · nscf · DOS threshold · PBE underestimate · electronic insulation · argyrodite*

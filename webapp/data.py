@@ -53,12 +53,12 @@ def load_compositions() -> dict:
     return out
 
 def load_properties() -> dict:
-    """db/properties/*.json 전부 (하위폴더 포함 최상위만)."""
+    """db/properties/**.json 전부 (하위폴더 per_bond_json/·bvse_*/ 포함 — rglob)."""
     out = {}
-    for f in sorted((DB / "properties").glob("*.json")):
+    for f in sorted((DB / "properties").rglob("*.json")):
         d = _load_json(f)
         if d is not None:
-            out[f.stem] = d
+            out.setdefault(f.stem, d)  # 스템 충돌 시 최상위 우선
     return out
 
 def load_canonical_methods() -> str:
@@ -95,8 +95,8 @@ CATEGORIES = [
     {"id": "electronic", "label": "Electronic",  "icon": "⚡", "keys": ["electronic", "dos", "pdos", "bader", "elf", "xps"]},
     {"id": "mechanical", "label": "Mechanical",  "icon": "🔩", "keys": ["elastic", "eos", "thermal_thprime"]},
     {"id": "bonding",    "label": "Bonding",     "icon": "🔗", "keys": ["bonds", "icohp", "cohp", "nd_icohp"]},
-    {"id": "ionic",      "label": "Ionic",       "icon": "🔋", "keys": ["diffusion", "li_transport", "md_arrhenius", "bvse", "msd", "dualx"]},
-    {"id": "interface",  "label": "Interface",   "icon": "🧩", "keys": ["adhesion", "oxidation", "sei", "interface", "esw", "anode"]},
+    {"id": "ionic",      "label": "Ionic",       "icon": "🔋", "keys": ["diffusion", "li_transport", "md_arrhenius", "bvse", "msd", "dualx", "neb", "barrier", "drag", "conductivity"]},
+    {"id": "interface",  "label": "Interface",   "icon": "🧩", "keys": ["adhesion", "oxidation", "sei", "interface", "esw", "anode", "binding", "adsorption"]},
     {"id": "structural", "label": "Structural",  "icon": "🧊", "keys": ["phonon", "voronoi", "coordination", "bond_lengths", "eos_dft"]},
     {"id": "cascade",    "label": "Cascade/ML",  "icon": "🤖", "keys": ["cascade", "doping", "alpha_sensitivity"]},
     {"id": "literature", "label": "Literature",  "icon": "📚", "keys": ["literature", "audit"]},
@@ -114,7 +114,7 @@ def categorize(prop_name: str) -> str:
 # ─────────────────────────────────────────────────────────────
 _PREFIX = {
     "comp1": ["comp1"], "comp2": ["comp2"], "comp3": ["comp3"], "comp4": ["comp4"],
-    "comp5": ["comp5"], "modelc": ["modelc", "modelC"], "modelc_v3": ["modelc_v3", "modelC_v3"],
+    "comp5": ["comp5"], "modelc": ["modelc", "modelC", "lpscl16"], "modelc_v3": ["modelc_v3", "modelC_v3"],
     "modelc_nd_doped": ["modelc_nd", "nd_"], "lpsocl": ["lpsocl"], "b2o3": ["b2o3"],
     "vgcf_hbn": ["vgcf", "hbn", "li3n", "lic6"],
 }
@@ -145,23 +145,30 @@ def structures_for(cid: str) -> list[dict]:
     return out
 
 def datafiles_for(cid: str) -> list[dict]:
-    """조성 관련 CSV/데이터 (차트용) — properties 전역에서 prefix 매칭."""
+    """조성 관련 CSV/데이터 (차트용) — properties + spectra 전역에서 prefix 매칭."""
     pref = _PREFIX.get(cid, [cid])
-    out = []
-    for f in (DB / "properties").rglob("*"):
-        if f.is_file() and f.suffix.lower() in (".csv",):
-            # startswith는 최장 prefix 소유규칙 적용, 공유파일은 _infix_ 로 허용
-            if _prefix_starts(f.name, pref) or any(f"_{p.lower()}" in f.name.lower() for p in pref):
-                kind = _csv_kind(f.name)
-                out.append({"name": f.name, "rel": str(f.relative_to(DB)), "kind": kind})
+    out, seen = [], set()
+    for base in ("properties", "spectra"):
+        d = DB / base
+        if not d.exists():
+            continue
+        for f in d.rglob("*"):
+            if f.is_file() and f.suffix.lower() == ".csv" and f.name not in seen:
+                # startswith는 최장 prefix 소유규칙 적용, 공유파일은 _infix_ 로 허용
+                if _prefix_starts(f.name, pref) or any(f"_{p.lower()}" in f.name.lower() for p in pref):
+                    seen.add(f.name)
+                    out.append({"name": f.name, "rel": str(f.relative_to(DB)), "kind": _csv_kind(f.name)})
     return out
 
 def _csv_kind(name: str) -> str:
     n = name.lower()
     for k, tag in [("pdos", "PDOS"), ("dos", "DOS"), ("arrhenius", "Arrhenius"),
-                   ("msd", "MSD"), ("eos", "EOS"), ("phonon", "Phonon"),
-                   ("bvse", "BVSE"), ("elf", "ELF"), ("bader", "Bader"),
-                   ("xps", "XPS"), ("voronoi", "Voronoi"), ("ir", "IR")]:
+                   ("conductivity", "Conductivity"), ("msd", "MSD"), ("eos", "EOS"),
+                   ("phonon", "Phonon"), ("bvse", "BVSE"), ("elf", "ELF"),
+                   ("charge", "Charge"), ("bader", "Bader"), ("xps", "XPS"),
+                   ("voronoi", "Voronoi"), ("neb", "NEB"), ("barrier", "Barrier"),
+                   ("drag", "Drag"), ("diffusion", "Diffusion"), ("binding", "Binding"),
+                   ("_ir", "IR")]:  # "_ir"로 "pairs" 오탐 방지
         if k in n:
             return tag
     return "data"
@@ -177,10 +184,10 @@ def index_metrics_by_comp(index: dict) -> dict:
 
 # canonical 앵커값 (kb 나침반과 일치 — 사이트 상단 요약/비교용)
 CANONICAL = {
-    "gap_eV":     {"comp1": 2.066, "comp2": 2.04, "modelc": 2.099, "lpsocl": 2.2309},
+    "gap_eV":     {"comp1": 2.066, "comp2": 2.04, "modelc": 2.099, "lpsocl": 2.2309, "b2o3": 1.9671},
     "B0_GPa":     {"comp1": 26.23, "comp2": 25.8, "modelc": 21.71, "lpsocl": 24.71, "b2o3": 24.48},
     "E_VRH_GPa":  {"comp1": 22.06, "modelc": 27.66, "lpsocl": 35.04},  # relaxed-ion USPP; comp2 재측정중
-    "MD_Ea_eV":   {"comp1": 0.253, "modelc": 0.224, "lpsocl": 0.279},  # UMA
+    "MD_Ea_eV":   {"comp1": 0.253, "modelc": 0.224, "lpsocl": 0.271},  # UMA (lpsocl 4-seed headline 0.271±0.033)
     "ICOHP_PS":   {"comp1": -6.0, "comp2": -5.913, "modelc": -6.0, "lpsocl": -6.04, "modelc_nd_doped": -5.976},
 }
 CANONICAL_META = {
@@ -283,6 +290,56 @@ def build_matrix() -> dict:
 # ─────────────────────────────────────────────────────────────
 # CSV → Plotly 시리즈 (차트 API)
 # ─────────────────────────────────────────────────────────────
+# 집계형 property JSON — 파일명엔 조성토큰이 없고 내부 results/id/key 에 조성별 값이 있음
+AGGREGATES = {
+    "bonds": "bonding", "eos": "mechanical", "elastic": "mechanical",
+    "oxidation_stability": "interface", "adhesion": "interface",
+    "li_transport": "ionic", "diffusion": "ionic",
+}
+_COMP_ALIASES = {
+    "comp1": ["comp1"], "comp2": ["comp2"], "comp3": ["comp3"], "comp4": ["comp4"], "comp5": ["comp5"],
+    "modelc": ["modelc", "lpscl16"], "modelc_v3": ["modelc_v3"],
+    "modelc_nd_doped": ["modelc_nd_doped", "nd_doped", "nd2o3", "nd_pair"],
+    "lpsocl": ["lpsocl"], "b2o3": ["b2o3"], "vgcf_hbn": ["vgcf", "hbn", "li3n", "lic6"],
+    "li3n": ["li3n"], "lic6": ["lic6"], "sdcp": ["sdcp"],
+}
+
+@lru_cache(maxsize=32)
+def _agg_ids(fname):
+    """집계 JSON의 '식별자'만 추출 — id 필드·results/systems 키·최상위 키.
+    (자유텍스트 note에 조성명이 스쳐도 오탐 안 하게 — sdcp 오탐 사례)."""
+    d = _load_json(DB / "properties" / f"{fname}.json")
+    if not isinstance(d, dict):
+        return frozenset()
+    ids = {str(k).lower() for k in d.keys()}
+    def walk(x):
+        if isinstance(x, dict):
+            for k, v in x.items():
+                if k == "id" and isinstance(v, str):
+                    ids.add(v.lower())
+                if k in ("results", "result", "systems", "by_comp", "per_comp") and isinstance(v, dict):
+                    ids.update(str(kk).lower() for kk in v.keys())
+                walk(v)
+        elif isinstance(x, list):
+            for it in x:
+                walk(it)
+    walk(d)
+    return frozenset(ids)
+
+def _aggregate_covers(cid, cat_id):
+    aliases = _COMP_ALIASES.get(cid, [cid])
+    for fname, fcat in AGGREGATES.items():
+        if fcat == cat_id:
+            ids = _agg_ids(fname)
+            if any(a in i for i in ids for a in aliases):
+                return True
+    return False
+
+@lru_cache(maxsize=32)
+def _lit_covers(cid):
+    return any(element_papers(e, limit=1) for e in COMP_ELEMENTS.get(cid, []))
+
+
 def _has_category_data(cid, cat_id, props, prop_cat, idx_metrics) -> bool:
     pref = _PREFIX.get(cid, [cid])
     # (a) property 파일 중 이 조성+카테고리
@@ -306,6 +363,12 @@ def _has_category_data(cid, cat_id, props, prop_cat, idx_metrics) -> bool:
                 return True
     # (d) 캐스케이드 히트 조성(Nd2O3/B2O3 …) = 스크리닝 심층검증 대상
     if cat_id == "cascade" and cid in CASCADE_DOPANT:
+        return True
+    # (e) 집계형 JSON 내부에 조성별 값 (bonds/eos/elastic/oxidation/li_transport/diffusion)
+    if _aggregate_covers(cid, cat_id):
+        return True
+    # (f) 문헌 — 이 조성의 원소를 다룬 litdb 논문이 있으면
+    if cat_id == "literature" and _lit_covers(cid):
         return True
     return False
 
@@ -424,21 +487,32 @@ def list_papers() -> list:
     return out
 
 
+def _is_blank(r):
+    return (not r) or (not any((c or "").strip() for c in r))
+
 def read_csv(rel: str) -> dict:
     p = (DB / rel).resolve()
     if not p.is_relative_to(DB.resolve()) or not p.exists():
         return {"error": "not found"}
     rows = list(csv.reader(p.open()))
-    # 선행 주석(#)·빈 줄 제거 — cascade CSV들이 헤더 앞에 # 메타줄을 둠
-    rows = [r for r in rows if r and not r[0].lstrip().startswith("#")]
-    if not rows:
+    # 헤더 = 선행 주석(#)·빈 줄을 건너뛴 첫 실질 행
+    i = 0
+    while i < len(rows) and (_is_blank(rows[i]) or rows[i][0].lstrip().startswith("#")):
+        i += 1
+    if i >= len(rows):
         return {"columns": [], "data": []}
-    header = rows[0]
+    header = rows[i]
     data = []
-    for r in rows[1:]:
+    for r in rows[i + 1:]:
+        if _is_blank(r):
+            break                    # 첫 빈 줄에서 멈춤 — 한 파일 속 두번째 표 누수 방지
+        if r[0].lstrip().startswith("#"):
+            continue
+        if r == header:
+            break                    # 두번째 헤더 = 다른 표 시작
         rec = {}
-        for i, h in enumerate(header):
-            v = r[i] if i < len(r) else ""
+        for j, h in enumerate(header):
+            v = r[j] if j < len(r) else ""
             try:
                 rec[h] = float(v)
             except (ValueError, TypeError):
@@ -559,6 +633,8 @@ def compute_preview(cid: str, calc: str) -> dict:
     comp = COMPOSITIONS.get(cid)
     if not comp:
         return {"error": "unknown composition"}
+    if calc not in ("scf", "gap", "vcrelax", "md"):
+        return {"error": f"unknown calc '{calc}'"}
     st = COMPUTE_SETTINGS.get(cid, {"ecutwfc": 60, "ecutrho": 480, "k": [2, 2, 1],
                                     "struct": f"{cid}.cif", "server": "KISTI neuron"})
     els = COMP_ELEMENTS.get(cid, [])
