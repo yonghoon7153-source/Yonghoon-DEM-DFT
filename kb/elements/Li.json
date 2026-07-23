@@ -2,40 +2,40 @@
   "symbol": "Li",
   "name": "Lithium",
   "Z": 3,
-  "role": "Mobile cation (Li+) — the working ion in Li6PS5Cl argyrodite; also the Li-metal anode. Occupies partially-filled 48h/24g cage sites; hops through the PS4/halide framework. Ionic, closed-shell (2s0 as Li+).",
+  "role": "이동 양이온(Li+) — Li6PS5Cl argyrodite의 작동 이온이자 Li-metal 음극. 부분점유 48h/24g 케이지 자리를 차지하고 PS4/할라이드 골격을 통해 hopping. 이온성·닫힌껍질(Li+는 2s0).",
   "oxidation_states": ["+1", "0"],
   "electronegativity": 0.98,
   "ionic_radius_A": {
     "Li+_VI": 0.76,
     "Li+_IV": 0.59,
-    "_note": "Shannon 1976 effective ionic radii; VI (octahedral) 0.76 A, IV (tetrahedral) 0.59 A. Argyrodite Li sits in distorted tetrahedral/triangular cage sites."
+    "_note": "Shannon 1976 유효 이온반경; VI(팔면체) 0.76 A, IV(사면체) 0.59 A. Argyrodite의 Li는 일그러진 사면체/삼각 케이지 자리에 위치."
   },
   "representative_compounds": [
-    {"formula": "Li (metal)", "context": "anode", "battery_role": "Li-metal negative electrode; plating/stripping substrate for SEI", "note": "Li0; argyrodite is thermodynamically reduced against Li metal (reduction onset ~1.7 V vs Li/Li+, Bai 2020 review) -> forms Li2S + Li3P + LiCl interphase"},
-    {"formula": "Li2S", "context": "SEI / cathode", "battery_role": "reduction product of the S sublattice; also conversion-cathode active material and Li reservoir", "note": "Electronically insulating but a soft, Li+-conductive SEI phase; forms with LiCl+Li3P on argyrodite reduction"},
-    {"formula": "Li3P", "context": "SEI", "battery_role": "terminal reduction product of PS4 3- against Li metal (P in -3 state)", "note": "Diagnostic: drives P 2p3/2 down to ~125.4 eV (see P.json). Mixed Li3P-Li2S solid solutions proposed as fully-reduced SE for Li anodes (PMC9479069)"},
-    {"formula": "LiCl", "context": "SEI", "battery_role": "wide-gap insulating passivator from Cl sublattice reduction; blocks electron transfer while passing Li+", "note": "Cl-rich argyrodite gives LiCl-rich SEI (Liu 2022); wide gap ~6-6.6 eV -> self-limiting passivation logic"},
-    {"formula": "LiC6", "context": "anode", "battery_role": "graphite-intercalation anode end-member (staging)", "note": "Reference intercalation host; contrasts with plating on bare Li metal"},
-    {"formula": "Li3N", "context": "anode coating / fast-ion conductor", "battery_role": "very low Li+ migration barrier; anode interlayer candidate", "note": "CAMPAIGN RULE: UMA MLIP is FORBIDDEN for Li3N (2026-06 deterministic-bias ruling) — use DFT/AIMD, not UMA, for any Li3N energetics"}
+    {"formula": "Li (metal)", "context": "음극", "battery_role": "Li-metal 음극; SEI가 형성되는 plating/stripping 기재", "note": "Li0; argyrodite는 Li metal 대비 열역학적으로 환원됨(환원 onset ~1.7 V vs Li/Li+, Bai 2020 리뷰) -> Li2S + Li3P + LiCl 계면상 생성"},
+    {"formula": "Li2S", "context": "SEI / 양극", "battery_role": "S 부격자의 환원생성물; 전환형 양극 활물질이자 Li 저장고", "note": "전자 절연이지만 무른 Li+ 전도 SEI 상; argyrodite 환원 시 LiCl+Li3P와 함께 생성"},
+    {"formula": "Li3P", "context": "SEI", "battery_role": "Li metal 대비 PS4 3-의 최종 환원생성물(P가 -3 상태)", "note": "진단 지표: P 2p3/2를 ~125.4 eV까지 내림(P.json 참고). Li3P-Li2S 혼합 고용체가 Li 음극용 완전환원 SE로 제안됨(PMC9479069)"},
+    {"formula": "LiCl", "context": "SEI", "battery_role": "Cl 부격자 환원으로 생기는 wide-gap 절연 부동태화상; 전자 이동은 막고 Li+는 통과", "note": "Cl-rich argyrodite는 LiCl-rich SEI 형성(Liu 2022); 넓은 갭 ~6-6.6 eV -> 자기제한 부동태화 논리"},
+    {"formula": "LiC6", "context": "음극", "battery_role": "흑연 삽입 음극의 말단조성(staging)", "note": "기준 삽입 호스트; 맨 Li metal 위 plating과 대비"},
+    {"formula": "Li3N", "context": "음극 코팅 / 속이온 전도체", "battery_role": "매우 낮은 Li+ 이동장벽; 음극 중간층 후보", "note": "캠페인 규칙: Li3N에는 UMA MLIP 금지(2026-06 결정론적 편향 판정) — Li3N 에너지 계산은 UMA 말고 DFT/AIMD 사용"}
   ],
-  "sei_relevance": "Li metal anode is the SEI-forming electrode. Argyrodite is not stable vs Li: reduced (~1.7 V vs Li/Li+) to a Li2S + Li3P + LiCl interphase. Because these are wide-gap insulators (LiCl ~6-6.6, Li2O ~5.2, Li2S), the SEI is electronically blocking but Li+-conductive -> a self-limiting/passivating layer that widens the effective electrochemical window beyond the thermodynamic prediction. Li 1s XPS is a weak chemical-state probe (see xps); SEI phase ID relies on the anion core levels (S 2p, Cl 2p, P 2p).",
+  "sei_relevance": "Li metal 음극이 SEI를 형성하는 전극. Argyrodite는 Li 대비 불안정: ~1.7 V vs Li/Li+에서 Li2S + Li3P + LiCl 계면상으로 환원. 이들이 wide-gap 절연체라(LiCl ~6-6.6, Li2O ~5.2, Li2S) SEI는 전자는 막고 Li+는 전도 -> 자기제한·부동태화 층이 되어 유효 전기화학창을 열역학 예측보다 넓힘. Li 1s XPS는 화학상태 감별력이 약함(xps 참고); SEI 상 동정은 음이온 core level(S 2p, Cl 2p, P 2p)에 의존.",
   "xps": [
     {"core": "Li 1s", "BE_eV": 52.5, "assignment": "Li metal (Li0) / Li-C (range ~50-54 eV)", "ref": "Wood & Teeter, ACS Appl. Energy Mater. 2018"},
     {"core": "Li 1s", "BE_eV": 54.9, "assignment": "Li2O (reference oxide phase)", "ref": "Wood & Teeter 2018"},
     {"core": "Li 1s", "BE_eV": 55.5, "assignment": "LiF / Li2CO3 / LixPOyFz region (~55-60 eV); Li2S also ~55", "ref": "ACS Energy Lett. 2022 SEI XPS primer"},
-    {"core": "Li 1s", "BE_eV": null, "assignment": "NOTE: total Li 1s chemical shift across SEI phases is only ~3-5 eV and peaks overlap -> Li 1s alone poorly discriminates SEI; use O 1s/S 2p/Cl 2p/P 2p and BE separations", "ref": "Wood & Teeter 2018; ACS Energy Lett. 2022"}
+    {"core": "Li 1s", "BE_eV": null, "assignment": "참고: SEI 상들 전체의 Li 1s 화학이동은 ~3-5 eV뿐이고 피크가 겹침 -> Li 1s 단독으론 SEI 구별력 낮음; O 1s/S 2p/Cl 2p/P 2p와 BE 간격을 사용", "ref": "Wood & Teeter 2018; ACS Energy Lett. 2022"}
   ],
   "raman": [
     {"cm1": 370, "assignment": "Li2S (SEI reduction-product marker; appears when PS4 framework is damaged vs Li)", "ref": "Ke et al., Energy Storage Mater. 2025"},
-    {"cm1": null, "assignment": "NOTE: metallic Li and ionic Li+ are not Raman-diagnostic; Li environments are tracked indirectly via framework (PS4) and SEI (Li2S) modes", "ref": "n/a"}
+    {"cm1": null, "assignment": "참고: 금속 Li와 이온 Li+는 Raman 진단이 안 됨; Li 환경은 골격(PS4)·SEI(Li2S) 모드로 간접 추적", "ref": "n/a"}
   ],
-  "dos_character": "Li is essentially ionic (Li+): it donates its 2s electron to the framework and contributes little density of states at the band edges. In Li6PS5Cl the VBM is S 3p (non-bonding S lone pairs) and the CBM is PS4 antibonding + a minor Li 2s/2p admixture; Li 1s is a deep, inert core level. Consequently Li acts as a rigid-band electron donor / carrier, not a redox center.",
+  "dos_character": "Li는 본질적으로 이온성(Li+): 2s 전자를 골격에 내주고 밴드엣지 상태밀도엔 거의 기여 안 함. Li6PS5Cl에서 VBM은 S 3p(비결합 S 고립쌍), CBM은 PS4 반결합 + 소량의 Li 2s/2p 혼입; Li 1s는 깊고 비활성인 core level. 따라서 Li는 redox 중심이 아니라 rigid-band 전자 공여자/운반체로 작동.",
   "key_references": [
-    "Wood & Teeter, ACS Appl. Energy Mater. 2018, 1, 4493 — XPS on Li-battery inorganic compounds + Li 1s charge-correction methodology (soncalled values for Li 1s SEI phases)",
-    "ACS Energy Lett. 2022, 7, 2932 — XPS primer for SEI characterization on Li-metal anodes",
-    "Bai et al. 2020 (Adv. review) — argyrodite reduction ~1.7 V vs Li -> Li2S/Li3P/LiCl interphase (litdb)",
-    "Liu et al. 2022 — Li|LPSCl interface AIMD + post-mortem XPS; Cl-rich -> LiCl-rich insulating SEI (litdb)",
-    "Dewald/Janek et al., Nat. Commun. 2022, 13, 7186 — current-density dependence of Li|Li6PS5Cl SEI formation"
+    "Wood & Teeter, ACS Appl. Energy Mater. 2018, 1, 4493 — XPS on Li-battery inorganic compounds + Li 1s charge-correction methodology (soncalled values for Li 1s SEI phases) (Li 전지 무기물 XPS + Li 1s 전하보정 방법론; Li 1s SEI 상 기준값)",
+    "ACS Energy Lett. 2022, 7, 2932 — XPS primer for SEI characterization on Li-metal anodes (Li-metal 음극 SEI 분석용 XPS 입문)",
+    "Bai et al. 2020 (Adv. review) — argyrodite reduction ~1.7 V vs Li -> Li2S/Li3P/LiCl interphase (litdb) (argyrodite가 ~1.7 V vs Li에서 환원 -> Li2S/Li3P/LiCl 계면상)",
+    "Liu et al. 2022 — Li|LPSCl interface AIMD + post-mortem XPS; Cl-rich -> LiCl-rich insulating SEI (litdb) (Li|LPSCl 계면 AIMD + 사후 XPS; Cl-rich -> LiCl-rich 절연 SEI)",
+    "Dewald/Janek et al., Nat. Commun. 2022, 13, 7186 — current-density dependence of Li|Li6PS5Cl SEI formation (Li|Li6PS5Cl SEI 형성의 전류밀도 의존성)"
   ],
   "litdb_slugs": [
     "bai2020_argyrodite_review_progress",

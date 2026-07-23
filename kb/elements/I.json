@@ -13,7 +13,7 @@
  "representative_compounds": [
   {
    "formula": "LiI",
-   "context": "anode SEI / conductor",
+   "context": "음극 SEI / 전도체",
    "battery_role": "보호 SEI · Li⁺ 전도 무기상",
    "note": "I 3d ~619.5 eV"
   },

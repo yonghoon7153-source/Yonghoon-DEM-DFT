@@ -20,13 +20,13 @@
   },
   {
    "formula": "PS4 3-",
-   "context": "framework",
+   "context": "골격",
    "battery_role": "공유 골격(backbone)",
    "note": "P-S ICOHP ~ -6 eV (우리 db)"
   },
   {
    "formula": "Li3PS4",
-   "context": "electrolyte",
+   "context": "전해질",
    "battery_role": "β-Li3PS4 모체",
    "note": ""
   }

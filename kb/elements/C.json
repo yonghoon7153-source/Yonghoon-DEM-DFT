@@ -2,35 +2,35 @@
   "symbol": "C",
   "name": "Carbon",
   "Z": 6,
-  "role": "Anode-side conductive host and SEI carbonate former. sp2 carbon (graphite/VGCF/amorphous carbon) is the electronic-percolation matrix and Li intercalation host (LiC6); Li2CO3 is a principal inorganic SEI carbonate.",
+  "role": "음극쪽 도전 호스트이자 SEI 탄산염 형성자. sp2 탄소(흑연/VGCF/비정질 탄소)는 전자 percolation 매트릭스이자 Li 삽입 호스트(LiC6); Li2CO3는 주요 무기 SEI 탄산염.",
   "oxidation_states": ["-4", "0", "+2", "+4"],
   "electronegativity": 2.55,
   "ionic_radius_A": {
     "C4+_CN4": 0.15,
     "C4+_CN6": 0.16
   },
-  "ionic_radius_note": "Shannon (1976): C4+ CN3 = -0.08, CN4 = 0.15, CN6 = 0.16 A. Covalent radius ~0.76 A (sp3), ~0.73 A (sp2) is more physical for graphitic C. Approximate.",
+  "ionic_radius_note": "Shannon(1976): C4+ CN3 = -0.08, CN4 = 0.15, CN6 = 0.16 A. 흑연질 C엔 공유반경 ~0.76 A(sp3), ~0.73 A(sp2)가 더 물리적. 근사값.",
   "representative_compounds": [
     {
       "formula": "C (graphite / VGCF / amorphous)",
-      "context": "conductive host / additive",
-      "battery_role": "sp2 electronic-percolation network (VGCF 1D fiber, amorphous carbon), Li intercalation host; semimetal",
-      "note": "D/G Raman fingerprint; ID/IG tracks disorder. VGCF used in our campaign as SE-domain conductive agent."
+      "context": "도전 호스트 / 첨가제",
+      "battery_role": "sp2 전자 percolation network(VGCF 1D 섬유, 비정질 탄소), Li 삽입 호스트; 반금속",
+      "note": "D/G 라만 지문; ID/IG가 무질서를 반영. VGCF는 우리 캠페인에서 SE 도메인 도전재로 사용."
     },
     {
       "formula": "LiC6",
-      "context": "lithiated-graphite anode baseline",
-      "battery_role": "stage-1 graphite intercalation compound, 372 mAh/g anode; baseline vs Li3N/nitride interphase",
-      "note": "gold-colored, sqrt3 x sqrt3 R30 Li ordering; Li donates 2s electron into graphene pi* band -> metallic. C 1s shifts slightly below graphitic 284.5 eV from metal-C charge transfer."
+      "context": "리튬화 흑연 음극 기준",
+      "battery_role": "stage-1 흑연 삽입화합물, 372 mAh/g 음극; Li3N/질화물 계면상 대비 기준",
+      "note": "금색, sqrt3 x sqrt3 R30 Li 규칙배열; Li가 2s 전자를 graphene pi* 밴드에 내줌 -> 금속성. metal-C 전하이동으로 C 1s가 흑연질 284.5 eV보다 약간 아래로 이동."
     },
     {
       "formula": "Li2CO3",
       "context": "SEI",
-      "battery_role": "major inorganic SEI carbonate (passivating but ionically resistive); also sulfide-SE/moisture and CO2-reduction byproduct",
-      "note": "XPS C 1s ~290 eV (carbonate CO3), Raman nu1 symmetric stretch ~1090 cm-1. Wide-gap insulator."
+      "battery_role": "주요 무기 SEI 탄산염(부동태화하나 이온저항 큼); 황화물-SE/수분·CO2 환원 부산물이기도",
+      "note": "XPS C 1s ~290 eV(탄산염 CO3), 라만 nu1 대칭신축 ~1090 cm-1. Wide-gap 절연체."
     }
   ],
-  "sei_relevance": "Li2CO3 is one of the dominant inorganic SEI carbonates on carbon/Li anodes: C 1s ~290 eV, Raman ~1090 cm-1, passivating but Li+-resistive; forms from electrolyte/CO2 reduction and surface reaction with moisture, and can further react to LiF/Li2O ladders. Graphite staging (LiC6 <-> LiC12 <-> ...) sets the anode potential plateau. VGCF/amorphous carbon itself is not an SEI phase but provides electronic percolation and can catalyze electrolyte decomposition at high surface area.",
+  "sei_relevance": "Li2CO3는 탄소/Li 음극의 지배적 무기 SEI 탄산염 중 하나: C 1s ~290 eV, 라만 ~1090 cm-1, 부동태화하나 Li+ 저항 큼; 전해질/CO2 환원과 수분 표면반응으로 생성되며 LiF/Li2O 사다리로 더 반응 가능. 흑연 staging(LiC6 <-> LiC12 <-> ...)이 음극 전위 평탄부를 결정. VGCF/비정질 탄소 자체는 SEI 상이 아니지만 전자 percolation을 제공하고 표면적이 크면 전해질 분해를 촉진할 수 있음.",
   "xps": [
     { "core": "C 1s", "BE_eV": 284.5, "assignment": "graphitic sp2 carbon (C=C)", "ref": "XPS handbooks / Thermo; Ferrari 2000 context" },
     { "core": "C 1s", "BE_eV": 285.2, "assignment": "sp3 / amorphous carbon (C-C)", "ref": "Anal. Chem. 2016 (origins of sp3 C1s); a-C studies" },
@@ -44,20 +44,20 @@
     { "cm1": 2700, "assignment": "2D band (overtone), tracks layer number", "ref": "Ferrari & Robertson, PRB 2000; graphene Raman reviews" },
     { "cm1": 1090, "assignment": "Li2CO3 nu1 symmetric CO3 stretch (SEI carbonate marker)", "ref": "carbonate Raman studies; battery-interphase IR/Raman/XPS database arXiv:2310.13871" }
   ],
-  "dos_character": "Graphite is a semimetal: C 2pz-derived pi/pi* bands overlap slightly at the Fermi level (small but finite DOS at E_F near K/H points), while sigma bands from C 2s/2px/2py sit well below. Upon lithiation to LiC6, Li 2s electrons fill graphene pi* states, raising E_F and making the compound metallic (Li nearly fully ionized, Li+). Li2CO3 is a wide-gap insulator (~5 eV), consistent with its passivating/electron-blocking SEI role. Refs: Holzwarth et al., PRB 18, 5190 (1978) Li-graphite DOS; stage-1 Li-GIC DFT (arXiv 2006.12055).",
-  "oxidation_states_note": "0 in graphite/VGCF; -4 in Li carbide-like; +2 CO; +4 in Li2CO3/CO2 (SEI-relevant).",
+  "dos_character": "흑연은 반금속: C 2pz 유래 pi/pi* 밴드가 페르미 준위에서 약간 겹침(K/H점 근처 E_F에 작지만 유한한 DOS), C 2s/2px/2py의 sigma 밴드는 훨씬 아래. LiC6로 리튬화하면 Li 2s 전자가 graphene pi* 상태를 채워 E_F를 올려 금속성이 됨(Li는 거의 완전 이온화, Li+). Li2CO3는 wide-gap 절연체(~5 eV)로 부동태화·전자차단 SEI 역할과 정합. 참고: Holzwarth et al., PRB 18, 5190 (1978) Li-graphite DOS; stage-1 Li-GIC DFT (arXiv 2006.12055).",
+  "oxidation_states_note": "흑연/VGCF에서 0; Li 카바이드류에서 -4; CO에서 +2; Li2CO3/CO2에서 +4(SEI 관련).",
   "key_references": [
-    "Ferrari & Robertson 2000, Phys. Rev. B 61, 14095 - D/G bands and interpretation of disordered/amorphous carbon Raman",
-    "Holzwarth et al. 1978, Phys. Rev. B 18, 5190 - Li-graphite band structure, DOS, Fermi surface",
-    "Wood & Teeter 2018, ACS Appl. Energy Mater. (NREL) - inorganic SEI XPS incl. Li2CO3, charge-correction methodology",
-    "Origins of sp3 C peaks in C 1s XPS 2016, Anal. Chem. - sp2/sp3 C 1s assignment",
-    "Battery-interphase IR/Raman/XPS database 2023, arXiv:2310.13871 - Li2CO3/organic SEI fingerprints"
+    "Ferrari & Robertson 2000, Phys. Rev. B 61, 14095 - D/G bands and interpretation of disordered/amorphous carbon Raman (D/G 밴드와 무질서/비정질 탄소 라만 해석)",
+    "Holzwarth et al. 1978, Phys. Rev. B 18, 5190 - Li-graphite band structure, DOS, Fermi surface (Li-graphite 밴드구조·DOS·페르미면)",
+    "Wood & Teeter 2018, ACS Appl. Energy Mater. (NREL) - inorganic SEI XPS incl. Li2CO3, charge-correction methodology (무기 SEI XPS, Li2CO3 포함·전하보정)",
+    "Origins of sp3 C peaks in C 1s XPS 2016, Anal. Chem. - sp2/sp3 C 1s assignment (C 1s의 sp2/sp3 귀속)",
+    "Battery-interphase IR/Raman/XPS database 2023, arXiv:2310.13871 - Li2CO3/organic SEI fingerprints (전지 계면상 IR/라만/XPS DB; Li2CO3/유기 SEI 지문)"
   ],
   "litdb_slugs": [
     "reisacher2023_percolation_sulfide_carbon_matrix",
     "kim2024_carbon_volumetric_occupation_se_domain",
     "kim2025_conductive_agent_se_coating_cathode"
   ],
-  "campaign_note": "Our campaign has an internal LiC6 (0001) Li-adatom NEB baseline (db/interphases/lic6.json, tools/neb_diffusion) used as the graphite reference vs Li3N interphase. Those are our own DFT/MLIP absolute values and are intentionally NOT imported into the numeric fields here.",
+  "campaign_note": "우리 캠페인엔 흑연 기준으로 쓰는 내부 LiC6 (0001) Li-adatom NEB 기준선이 있음(db/interphases/lic6.json, tools/neb_diffusion) — Li3N 계면상 대비용. 이는 우리 자체 DFT/MLIP 절대값이며 여기 수치 필드엔 의도적으로 넣지 않음.",
   "_provenance": "literature/web reference values (소환값); 우리 db 절대값과 분리"
 }

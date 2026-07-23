@@ -13,13 +13,13 @@
  "representative_compounds": [
   {
    "formula": "LiBr",
-   "context": "anode SEI",
+   "context": "음극 SEI",
    "battery_role": "무기 SEI 성분",
    "note": "Br 3d ~68.5 eV"
   },
   {
    "formula": "Li6PS5Cl0.5Br0.5",
-   "context": "our comp2",
+   "context": "우리 comp2",
    "battery_role": "할라이드 혼합 argyrodite",
    "note": "Li-Br ICOHP -1.93 eV < Li-Cl -2.11 (우리 db) → 약한 이온결합"
   }

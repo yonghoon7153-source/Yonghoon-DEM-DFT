@@ -13,13 +13,13 @@
  "representative_compounds": [
   {
    "formula": "LiCl",
-   "context": "anode SEI",
+   "context": "음극 SEI",
    "battery_role": "무기 SEI 성분",
    "note": "Cl 2p ~198.5 eV; Cl-rich 계면은 산화 onset↑"
   },
   {
    "formula": "Li6PS5Cl",
-   "context": "our comp1",
+   "context": "우리 comp1",
    "battery_role": "argyrodite 모체",
    "note": "Li-Cl ICOHP -2.11 eV (우리 db)"
   }

@@ -2,58 +2,58 @@
   "symbol": "N",
   "name": "Nitrogen",
   "Z": 7,
-  "role": "Interphase-defining element on the anode side. Li3N is the archetypal superionic artificial SEI (fast Li+, electron-insulating, dendrite-suppressing); nitrate additives (AgNO3/LiNO3) reduce to a nitride-rich SEI; h-BN is an N-based lithiophobic electron-insulating anode coating.",
+  "role": "음극쪽 계면상을 규정하는 원소. Li3N은 전형적 초이온 인공 SEI(빠른 Li+, 전자절연, 덴드라이트 억제); nitrate 첨가제(AgNO3/LiNO3)는 질화물 풍부 SEI로 환원; h-BN은 N 기반 소수리튬(lithiophobic)·전자절연 음극 코팅.",
   "oxidation_states": ["-3", "+3", "+5"],
   "electronegativity": 3.04,
   "ionic_radius_A": {
     "N3-_CN4": 1.46
   },
-  "ionic_radius_note": "Shannon (1976) N3- CN4 = 1.46 A. Nitrate/nitrite N is small and highly charged (N5+/N3+), radius not meaningfully tabulated. Approximate.",
+  "ionic_radius_note": "Shannon(1976) N3- CN4 = 1.46 A. Nitrate/nitrite의 N은 작고 고전하(N5+/N3+)라 반경이 의미있게 표로 정리되지 않음. 근사값.",
   "representative_compounds": [
     {
       "formula": "Li3N",
-      "context": "interphase / artificial SEI",
-      "battery_role": "superionic artificial SEI: alpha-Li3N sigma ~1.2e-3 S/cm in ab-plane (300 K), ~1e-5 S/cm along c; low Li migration barrier, electron-insulating, stable vs Li metal -> dendrite suppression",
-      "note": "P6/mmm, alternating Li2N layers and pure-Li layers. beta-Li3N (vacancy-rich) explored as ASSB electrolyte. METHOD: our campaign computes Li3N(001) Li-adatom NEB by QE-DFT; UMA is FORBIDDEN for Li3N (deterministic bias, 2026-06 decision) - so any Li3N migration numbers must come from DFT, not UMA."
+      "context": "계면상 / 인공 SEI",
+      "battery_role": "초이온 인공 SEI: alpha-Li3N sigma ~1.2e-3 S/cm(ab면, 300 K), ~1e-5 S/cm(c축); 낮은 Li 이동장벽, 전자절연, Li metal 대비 안정 -> 덴드라이트 억제",
+      "note": "P6/mmm, Li2N 층과 순수 Li 층이 교대. beta-Li3N(공공 풍부)은 ASSB 전해질로 탐색. 방법: 우리 캠페인은 Li3N(001) Li-adatom NEB를 QE-DFT로 계산; Li3N에는 UMA 금지(결정론적 편향, 2026-06 결정) - 따라서 Li3N 이동 수치는 UMA 아닌 DFT에서 나와야 함."
     },
     {
       "formula": "h-BN (hexagonal boron nitride)",
-      "context": "anode coating / interlayer",
-      "battery_role": "lithiophobic, electron-insulating (wide-gap) interfacial layer; drives under-cover / h-BN-Li-Cu sandwich Li plating and suppresses dendrites",
-      "note": "Raman E2g ~1366 cm-1; N 1s ~398 eV. litdb: shi2017_hbn (DFT mechanism), liu2022_hbn (lithiophobic sandwich)."
+      "context": "음극 코팅 / 중간층",
+      "battery_role": "소수리튬·전자절연(wide-gap) 계면층; under-cover / h-BN-Li-Cu 샌드위치 Li plating을 유도하고 덴드라이트 억제",
+      "note": "라만 E2g ~1366 cm-1; N 1s ~398 eV. litdb: shi2017_hbn(DFT 메커니즘), liu2022_hbn(소수리튬 샌드위치)."
     },
     {
       "formula": "LiNO3 (nitrate additive)",
-      "context": "electrolyte additive / SEI precursor",
-      "battery_role": "N source that reduces at Li metal to Li3N + LiNxOy SEI, improving Coulombic efficiency and interphase stability",
-      "note": "N 1s ~407 eV (nitrate); intermediate LiNO2 nitrite ~404 eV. Relevant to our anode-free AgNO3-derived SEI (N 1s ladder LiNO3+LiNO2+Li3N+LiNxOy)."
+      "context": "전해질 첨가제 / SEI 전구체",
+      "battery_role": "Li metal에서 Li3N + LiNxOy SEI로 환원되는 N 원, 쿨롱효율·계면 안정성 개선",
+      "note": "N 1s ~407 eV(nitrate); 중간체 LiNO2 nitrite ~404 eV. 우리 anode-free AgNO3 유래 SEI와 관련(N 1s 사다리 LiNO3+LiNO2+Li3N+LiNxOy)."
     }
   ],
-  "sei_relevance": "Li3N is the benchmark fast-ion artificial SEI: high Li+ conductivity, negligible electronic conductivity, and thermodynamic stability against Li metal, which together suppress dendrites and homogenize plating. It forms from N2 or nitrate-additive reduction at the anode. In our anode-free campaign an AgNO3/nitrate additive yields a Li3N-dominant SEI, tracked by the XPS N 1s ladder (LiNO3 -> LiNO2 -> Li3N + LiNxOy). h-BN is a distinct N-based lever: not a nitride SEI but an electron-insulating, lithiophobic coating that forces Li to plate beneath/within it.",
+  "sei_relevance": "Li3N은 벤치마크 속이온 인공 SEI: 높은 Li+ 전도, 무시할 전자전도, Li metal 대비 열역학 안정성이 함께 덴드라이트를 억제하고 plating을 균질화. N2나 nitrate 첨가제 환원으로 음극에서 생성. 우리 anode-free 캠페인에선 AgNO3/nitrate 첨가제가 Li3N 지배 SEI를 주며, XPS N 1s 사다리(LiNO3 -> LiNO2 -> Li3N + LiNxOy)로 추적. h-BN은 별개의 N 기반 레버: 질화물 SEI가 아니라 전자절연·소수리튬 코팅으로 Li를 그 아래/안에 plating하도록 강제.",
   "xps": [
     { "core": "N 1s", "BE_eV": 398.0, "assignment": "Li3N (common SEI-paper assignment ~397-399 eV); h-BN N also ~398 eV", "ref": "liu2022_hbn (h-BN N1s 398.03; N-Li 399.38); SEI XPS literature" },
     { "core": "N 1s", "BE_eV": 395.0, "assignment": "Li3N, charge-corrected reference compound (~394.4-395 eV) - lower than many uncorrected SEI reports; referencing controversy", "ref": "Wood & Teeter 2018, ACS Appl. Energy Mater. (NREL)" },
     { "core": "N 1s", "BE_eV": 399.4, "assignment": "N-Li interfacial interaction on Li-deposited h-BN (charge transfer)", "ref": "liu2022_hbn" },
     { "core": "N 1s", "BE_eV": 407.0, "assignment": "nitrate NO3- (LiNO3 additive / SEI precursor); nitrite LiNO2 ~404 eV", "ref": "SEI additive XPS literature" }
   ],
-  "xps_note": "Li3N N 1s is genuinely method-dependent: charge-corrected reference-compound work (NREL) places it near 395 eV, while many battery SEI papers and h-BN report ~398 eV. Cite both; do not average.",
+  "xps_note": "Li3N N 1s는 실제로 방법 의존적: 전하보정 기준물질 연구(NREL)는 ~395 eV, 다수의 전지 SEI 논문과 h-BN은 ~398 eV로 봄. 둘 다 인용하고 평균내지 말 것.",
   "raman": [
     { "cm1": 1366, "assignment": "h-BN E2g in-plane B-N stretch (downshifts 1370->1366 mono->few-layer)", "ref": "liu2022_hbn (Raman 1366 cm-1); h-BN E2g phonon studies (PMC5772347)" }
   ],
-  "raman_note": "Li3N Raman-active phonon wavenumbers were not reliably sourced in this pass and are omitted rather than guessed (data-discipline rule).",
-  "dos_character": "alpha-Li3N is a strongly ionic semiconductor (Li+ / N3-): DFT indirect band gap ~1.0-1.3 eV (PBE, likely underestimate), valence-band top dominated by N 2p, low-lying states from Li s / N p; the ionic picture underlies both its wide-ish gap (electron blocking) and fast in-plane Li+ transport in the Li2N layers. h-BN is a wide-gap insulator: experimental optical gap ~6 eV, PBE ~4.3 eV; VB top N 2p, CB bottom B 2p. Refs: shi2017_hbn (h-BN PBE gap 4.3 eV; 2-layer tunneling barrier 1.33-1.65 eV); alpha-Li3N electronic structure arXiv:0801.1848; UV-vis gaps of alpha/beta-Li3N (ScienceDirect).",
+  "raman_note": "Li3N 라만 활성 포논 파수는 이번에 신뢰성 있게 확보 못해 추정 대신 생략(데이터 규율).",
+  "dos_character": "alpha-Li3N은 강한 이온성 반도체(Li+ / N3-): DFT 간접 밴드갭 ~1.0-1.3 eV(PBE, 과소평가 가능), 가전자대 상단은 N 2p 지배, 저에너지 상태는 Li s / N p. 이 이온 그림이 넓은 편의 갭(전자차단)과 Li2N 층 내 빠른 면내 Li+ 수송 둘 다를 뒷받침. h-BN은 wide-gap 절연체: 실험 광학 갭 ~6 eV, PBE ~4.3 eV; VB 상단 N 2p, CB 하단 B 2p. 참고: shi2017_hbn(h-BN PBE 갭 4.3 eV; 2층 터널링 장벽 1.33-1.65 eV); alpha-Li3N 전자구조 arXiv:0801.1848; alpha/beta-Li3N UV-vis 갭(ScienceDirect).",
   "key_references": [
-    "Rabenau 1982, Solid State Ionics (and Rabenau & Schulz 1976) - alpha-Li3N P6/mmm structure and 1.2e-3 S/cm ab-plane Li+ conductivity",
-    "Wood & Teeter 2018, ACS Appl. Energy Mater. (NREL) - Li3N and inorganic-SEI N 1s XPS reference + charge correction",
-    "Shi et al. 2017, ACS Appl. Mater. Interfaces 9, 1987 (shi2017_hbn) - h-BN interfacial-layer DFT: gap, electron-tunneling barrier",
-    "Liu et al. 2022, Adv. Mater. Interfaces 9, 2200011 (liu2022_hbn) - h-BN lithiophobic sandwich, N 1s XPS, Raman 1366",
-    "alpha-Li3N local electronic structure 2008, arXiv:0801.1848 - ionic bonding, N 2p valence",
-    "Vacancy-rich beta-Li3N solid electrolyte 2024, Nature Nanotechnology - superionic Li3N for all-solid-state Li-metal batteries"
+    "Rabenau 1982, Solid State Ionics (and Rabenau & Schulz 1976) - alpha-Li3N P6/mmm structure and 1.2e-3 S/cm ab-plane Li+ conductivity (alpha-Li3N P6/mmm 구조·ab면 1.2e-3 S/cm Li+ 전도)",
+    "Wood & Teeter 2018, ACS Appl. Energy Mater. (NREL) - Li3N and inorganic-SEI N 1s XPS reference + charge correction (Li3N·무기 SEI N 1s XPS 기준·전하보정)",
+    "Shi et al. 2017, ACS Appl. Mater. Interfaces 9, 1987 (shi2017_hbn) - h-BN interfacial-layer DFT: gap, electron-tunneling barrier (h-BN 계면층 DFT: 갭·전자 터널링 장벽)",
+    "Liu et al. 2022, Adv. Mater. Interfaces 9, 2200011 (liu2022_hbn) - h-BN lithiophobic sandwich, N 1s XPS, Raman 1366 (h-BN 소수리튬 샌드위치·N 1s XPS·라만 1366)",
+    "alpha-Li3N local electronic structure 2008, arXiv:0801.1848 - ionic bonding, N 2p valence (alpha-Li3N 국소 전자구조; 이온결합·N 2p 가전자)",
+    "Vacancy-rich beta-Li3N solid electrolyte 2024, Nature Nanotechnology - superionic Li3N for all-solid-state Li-metal batteries (공공 풍부 beta-Li3N 고체전해질; 전고체 Li-metal 전지용 초이온 Li3N)"
   ],
   "litdb_slugs": [
     "shi2017_hbn_interfacial_layer_li_anode",
     "liu2022_hbn_lithiophobic_sandwich_li_anode"
   ],
-  "campaign_note": "Internal Li3N NEB / adsorption work lives in db/interphases/li3n.json, db/properties/diffusion.json, tools/neb_diffusion/ (QE-DFT; cui2023 reference). Those absolute barriers/energies are our own data and are deliberately kept OUT of the numeric fields here. UMA-forbidden-for-Li3N rule (CLAUDE.md) applies to any future Li3N method choices.",
+  "campaign_note": "내부 Li3N NEB / 흡착 작업은 db/interphases/li3n.json, db/properties/diffusion.json, tools/neb_diffusion/에 있음(QE-DFT; cui2023 참조). 이 절대 장벽/에너지는 우리 자체 데이터로 여기 수치 필드엔 의도적으로 배제. UMA-Li3N-금지 규칙(CLAUDE.md)은 향후 Li3N 방법 선택 전반에 적용.",
   "_provenance": "literature/web reference values (소환값); 우리 db 절대값과 분리"
 }

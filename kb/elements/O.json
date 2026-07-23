@@ -19,7 +19,7 @@
   },
   {
    "formula": "Li2CO3",
-   "context": "SEI carbonate",
+   "context": "SEI 탄산염",
    "battery_role": "탄산염 SEI(대기/전해질 반응)",
    "note": "O 1s ~531.5, C 1s ~290"
   },
