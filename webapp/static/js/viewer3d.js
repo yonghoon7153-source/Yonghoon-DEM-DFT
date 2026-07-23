@@ -981,6 +981,7 @@ function buildControls(container, isMPM) {
       <option value="coverage">Coverage Heat (AM)</option>
       <option value="coverage_patches">Coverage 패치 (표면 partial)</option>
       <option value="se_strain">SE 변형 (vs seed)</option>
+      <option value="se_morph">🔬 2D 단면 morphology (클릭→복셀 슬라이스)</option>
       <optgroup label="전기 (electrical)">
         <option value="econn">전기 연결성 — 연결/고립 (econn)</option>
         <option value="je_field">⚡ 전자 전류밀도 — 필드 (AM+카본, 논문)</option>
@@ -1914,6 +1915,144 @@ function buildCarbonOverlay(state, only, size, colorOverride) {
   return n;
 }
 
+/* ── #4b: 2D 단면 morphology (클릭 → 그 위치 초미세 복셀 슬라이스) ──────────────
+ * payload.se_morph_points([x,y,z]µm)로 3D를 클릭한 지점의 두께(z) 얇은 슬랩을 x-y 복셀
+ * 래스터로 재구성.  좌=상 지도(AM_P/AM_S/SE/void), 우=SE 그레인색(위치-해시 hue) → SE가
+ * AM 사이 void를 어떻게 채웠는지 실시간 확인.  viz_se_voxel_2d의 브라우저 판. */
+function _morphGrainHue(x, y, z) {                              // ~0.6µm 셀 위치-해시 → 그레인색
+  const q = 0.6;
+  let h = (Math.floor(x / q) * 73856093) ^ (Math.floor(y / q) * 19349663) ^ (Math.floor(z / q) * 83492791);
+  return ((h >>> 0) % 360) / 360;
+}
+function _hsl2rgb(h, s, l) {                                    // h,s,l∈[0,1] → [r,g,b] 0-255
+  const a = s * Math.min(l, 1 - l);
+  const f = n => { const k = (n + h * 12) % 12; return Math.round(255 * (l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1)))); };
+  return [f(0), f(8), f(4)];
+}
+function _ensureMorphOverlay(state) {
+  if (state._morphOverlay) return state._morphOverlay;
+  const host = state.renderer.domElement.parentElement;
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'position:absolute;right:8px;bottom:8px;z-index:60;background:rgba(8,11,22,.94);'
+    + 'border:1px solid #2a3350;border-radius:8px;padding:8px 8px 6px;font:11px ui-monospace,Menlo,monospace;'
+    + 'color:#cbd5e1;box-shadow:0 4px 18px rgba(0,0,0,.5)';
+  const bar = document.createElement('div');
+  bar.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:5px';
+  bar.innerHTML = '<b style="color:#e2e8f0">🔬 2D 단면 morphology</b>';
+  const close = document.createElement('span');
+  close.textContent = '✕'; close.title = '닫기';
+  close.style.cssText = 'cursor:pointer;color:#94a3b8;padding:0 4px';
+  close.onclick = () => { wrap.style.display = 'none'; };
+  bar.appendChild(close);
+  const cv = document.createElement('canvas');
+  cv.style.cssText = 'display:block;image-rendering:pixelated;border-radius:4px';
+  const rd = document.createElement('div');
+  rd.style.cssText = 'margin-top:5px;color:#93a4bf;font-size:10px;line-height:1.4';
+  rd.textContent = '3D를 클릭하면 그 지점의 x-y 단면이 여기 뜹니다 (드래그=회전).';
+  wrap.appendChild(bar); wrap.appendChild(cv); wrap.appendChild(rd);
+  host.appendChild(wrap);
+  state._morphOverlay = { wrap, cv, ctx: cv.getContext('2d'), rd };
+  return state._morphOverlay;
+}
+function _removeMorphOverlay(state) {
+  if (state._morphOverlay) { state._morphOverlay.wrap.remove(); state._morphOverlay = null; }
+}
+function _drawMorphSlice(state, cxu, cyu, czu) {
+  const mp = (state.data && state.data.se_morph_points) || [];
+  const parts = (state.data && state.data.particles) || [];
+  const ov = _ensureMorphOverlay(state); ov.wrap.style.display = '';
+  const W = 8, SLAB = 1.5, N = 140, cell = (2 * W) / N;          // 16µm 창, ±1.5µm 슬랩, 0.114µm 복셀
+  const x0 = cxu - W, y0 = cyu - W;
+  const phase = new Uint8Array(N * N);                           // 0 void · 1 AM_P · 2 AM_S · 3 SE
+  const hue = new Float32Array(N * N);
+  let nSE = 0, nAM = 0;
+  for (const p of parts) {                                       // AM 구를 z=czu 평면서 원으로 절단
+    if (p.type === 'SE') continue;
+    const dz = Math.abs(p.z - czu); if (dz >= p.r) continue;
+    const rr = Math.sqrt(p.r * p.r - dz * dz);
+    if (p.x + rr < x0 || p.x - rr > x0 + 2 * W || p.y + rr < y0 || p.y - rr > y0 + 2 * W) continue;
+    const code = p.type === 'AM_P' ? 1 : 2;
+    const gi0 = Math.max(0, Math.floor((p.x - rr - x0) / cell)), gi1 = Math.min(N - 1, Math.ceil((p.x + rr - x0) / cell));
+    const gj0 = Math.max(0, Math.floor((p.y - rr - y0) / cell)), gj1 = Math.min(N - 1, Math.ceil((p.y + rr - y0) / cell));
+    for (let gi = gi0; gi <= gi1; gi++) for (let gj = gj0; gj <= gj1; gj++) {
+      const dx = x0 + (gi + 0.5) * cell - p.x, dy = y0 + (gj + 0.5) * cell - p.y;
+      if (dx * dx + dy * dy < rr * rr) phase[gj * N + gi] = code;
+    }
+  }
+  const SES = 0.35;                                             // SE 물질점 splat 반경 µm (SE=연속체 → 점을 작은 원반으로)
+  for (const q of mp) {                                          // 슬랩·창 안 SE 물질점 → 복셀(splat)
+    if (Math.abs(q[2] - czu) >= SLAB) continue;
+    if (q[0] < x0 - SES || q[0] >= x0 + 2 * W + SES || q[1] < y0 - SES || q[1] >= y0 + 2 * W + SES) continue;
+    const h = _morphGrainHue(q[0], q[1], q[2]);
+    const gi0 = Math.max(0, Math.floor((q[0] - SES - x0) / cell)), gi1 = Math.min(N - 1, Math.floor((q[0] + SES - x0) / cell));
+    const gj0 = Math.max(0, Math.floor((q[1] - SES - y0) / cell)), gj1 = Math.min(N - 1, Math.floor((q[1] + SES - y0) / cell));
+    for (let gi = gi0; gi <= gi1; gi++) for (let gj = gj0; gj <= gj1; gj++) {
+      const dx = x0 + (gi + 0.5) * cell - q[0], dy = y0 + (gj + 0.5) * cell - q[1];
+      if (dx * dx + dy * dy > SES * SES) continue;
+      const idx = gj * N + gi;
+      if (phase[idx] === 0) { phase[idx] = 3; hue[idx] = h; nSE++; }
+    }
+  }
+  const GAP = 12, sc = 2;                                        // 2px/복셀 확대
+  ov.cv.width = (2 * N + GAP) * sc; ov.cv.height = N * sc + 16;
+  const ctx = ov.ctx; ctx.imageSmoothingEnabled = false;
+  const left = ctx.createImageData(N, N), right = ctx.createImageData(N, N);
+  const put = (img, i, r, g, b) => { img.data[4 * i] = r; img.data[4 * i + 1] = g; img.data[4 * i + 2] = b; img.data[4 * i + 3] = 255; };
+  for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+    const idx = j * N + i, pj = (N - 1 - j) * N + i, ph = phase[idx];   // +y 위로 뒤집기
+    if (ph === 1) { put(left, pj, 192, 132, 252); put(right, pj, 46, 40, 60); nAM++; }
+    else if (ph === 2) { put(left, pj, 150, 160, 176); put(right, pj, 44, 48, 62); }
+    else if (ph === 3) { put(left, pj, 255, 210, 77); const c = _hsl2rgb(hue[idx], 0.62, 0.56); put(right, pj, c[0], c[1], c[2]); }
+    else { put(left, pj, 10, 14, 26); put(right, pj, 8, 11, 20); }
+  }
+  // 두 패널을 오프스크린서 확대 후 blit
+  const blit = (img, ox) => { const t = document.createElement('canvas'); t.width = N; t.height = N;
+    t.getContext('2d').putImageData(img, 0, 0); ctx.drawImage(t, 0, 0, N, N, ox, 14, N * sc, N * sc); };
+  ctx.fillStyle = '#080b16'; ctx.fillRect(0, 0, ov.cv.width, ov.cv.height);
+  blit(left, 0); blit(right, (N + GAP) * sc);
+  ctx.fillStyle = '#94a3b8'; ctx.font = '10px ui-monospace,Menlo,monospace';
+  ctx.fillText('phase (AM_P/AM_S/SE)', 2, 10); ctx.fillText('SE grain', (N + GAP) * sc + 2, 10);
+  ov.rd.innerHTML = `클릭 (x,y,z)=(${cxu.toFixed(1)}, ${cyu.toFixed(1)}, ${czu.toFixed(1)})µm · 창 16µm · 슬랩 ±${SLAB}µm · `
+    + `<span style="color:#ffd24d">SE ${nSE}</span> · 좌:상 우:그레인색(위치-해시)`;
+}
+function _attachMorphClick(state) {
+  if (state._morphClick) return;
+  const dom = state.renderer.domElement, ray = new THREE.Raycaster(), m = new THREE.Vector2();
+  ray.params.Points = { threshold: 0.6 };
+  let down = null;
+  const onDown = e => { down = [e.clientX, e.clientY]; };
+  const onUp = e => {
+    if (!down) return;
+    const moved = Math.hypot(e.clientX - down[0], e.clientY - down[1]); down = null;
+    if (moved > 5) return;                                       // 드래그(회전)면 슬라이스 안 함
+    const rect = dom.getBoundingClientRect();
+    m.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    m.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+    ray.setFromCamera(m, state.camera);
+    const objs = [];
+    Object.values(state.meshes || {}).forEach(o => { if (o && o.visible) objs.push(o); });
+    if (state.morphPointGroup) objs.push(state.morphPointGroup);
+    const hits = ray.intersectObjects(objs, true);
+    let P;
+    if (hits.length) P = hits[0].point;
+    else {                                                       // 빈 곳 클릭 → 중앙높이 수평면 교차
+      const b = state.data.box, midY = (b.z_min + b.z_max) / 2;
+      P = new THREE.Vector3();
+      if (!ray.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 1, 0), -midY), P)) return;
+    }
+    _drawMorphSlice(state, P.x, P.z, P.y);                       // world(x,z,y) → µm(x,y,z)
+  };
+  dom.addEventListener('pointerdown', onDown);
+  dom.addEventListener('pointerup', onUp);
+  state._morphClick = { dom, onDown, onUp };
+}
+function _detachMorphClick(state) {
+  if (!state._morphClick) return;
+  const { dom, onDown, onUp } = state._morphClick;
+  dom.removeEventListener('pointerdown', onDown); dom.removeEventListener('pointerup', onUp);
+  state._morphClick = null;
+}
+
 /* ── View-mode rendering — re-colour all instanced meshes ─── */
 function applyViewMode(state, mode) {
   state.viewMode = mode;
@@ -1963,6 +2102,14 @@ function applyViewMode(state, mode) {
     if (state.strainPointGroup.material) state.strainPointGroup.material.dispose();
     state.strainPointGroup = null;
   }
+  if (state.morphPointGroup && state.scene) {                 // #4b: 2D morphology 점군 + 클릭 핸들러 + 오버레이
+    state.scene.remove(state.morphPointGroup);
+    if (state.morphPointGroup.geometry) state.morphPointGroup.geometry.dispose();
+    if (state.morphPointGroup.material) state.morphPointGroup.material.dispose();
+    state.morphPointGroup = null;
+  }
+  _detachMorphClick(state);
+  _removeMorphOverlay(state);
   ['st4Group', 'st4FaceGroup'].forEach(k => {               // STEP4-v2 동역학 레이어
     if (state[k] && state.scene) {
       state.scene.remove(state[k]);
@@ -2695,6 +2842,41 @@ function applyViewMode(state, mode) {
        <div style="margin-top:4px">밝을수록 변형 큼 (seed 구 대비). total = 탄성압축 포함(갇힌 안쪽도 보임)</div>
        <span style="color:#9ca3af;font-size:11px">vmax ${vmax} · mean ${mm.dg_mean ?? '–'} · `
        + `max ${mm.dg_max ?? '–'} · ${pts.length.toLocaleString()}점</span>`);
+    return;
+  }
+
+  if (mode === 'se_morph') {
+    /* #4b: 3D를 클릭 → 그 지점 x-y 초미세 복셀 단면 (좌:상, 우:SE 그레인색).  SE void-filling 확인용.
+     * 3D엔 SE 물질점을 그레인색으로 옅게 깔아 클릭 대상 제공(+AM 구 유지); 클릭 슬라이스는 2D 오버레이. */
+    const mpts = (state.data && state.data.se_morph_points) || [];
+    if (!mpts.length) {
+      setLegend(state, state.isMPM
+        ? '<i>이 payload엔 se_morph_points가 없어요 — payload를 최신 mpm_webapp_payload로 재생성하면 '
+          + '이 모드가 활성화됩니다.</i>'
+        : '<i>No se_morph_points in this payload.</i>');
+      return;
+    }
+    if (state.meshes.MESH) state.meshes.MESH.visible = false;    // SE 표면은 숨기고 점군으로
+    const g = new THREE.BufferGeometry();
+    const pos = new Float32Array(mpts.length * 3), col = new Float32Array(mpts.length * 3);
+    const cc = new THREE.Color();
+    for (let i = 0; i < mpts.length; i++) {
+      const p = mpts[i];
+      pos[3 * i] = p[0]; pos[3 * i + 1] = p[2]; pos[3 * i + 2] = p[1];   // µm(x,y,z) → world(x,z,y)
+      cc.setHSL(_morphGrainHue(p[0], p[1], p[2]), 0.6, 0.56);
+      col[3 * i] = cc.r; col[3 * i + 1] = cc.g; col[3 * i + 2] = cc.b;
+    }
+    g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    state.morphPointGroup = new THREE.Points(g, new THREE.PointsMaterial({
+      size: 0.3, vertexColors: true, sizeAttenuation: true, transparent: true, opacity: 0.55 }));
+    if (state.scene) state.scene.add(state.morphPointGroup);
+    _ensureMorphOverlay(state);
+    _attachMorphClick(state);
+    setLegend(state,
+      `<b>🔬 2D 단면 morphology</b>
+       <div style="margin-top:4px">3D를 <b>클릭</b>하면 그 지점의 x-y 단면을 초미세 복셀로 재구성 (좌:상 AM/SE/void, 우:SE 그레인색). 드래그=회전.</div>
+       <span style="color:#9ca3af;font-size:11px">SE 물질점 ${mpts.length.toLocaleString()} · 창 16µm · 슬랩 ±1.5µm</span>`);
     return;
   }
 
