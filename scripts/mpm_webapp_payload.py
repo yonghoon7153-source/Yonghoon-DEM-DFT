@@ -326,6 +326,9 @@ def main():
                     help='skip the STEP3 current-density FIELD export (electronic_field / ionic_field)')
     ap.add_argument('--no-thermal', action='store_true',
                     help='skip STEP3 열전도 (σ_thermal 多상 k_eff) 솔브')
+    ap.add_argument('--periodic', action='store_true',
+                    help='STEP3 σ-solve(전자/이온/열/pore-τ/반응)에 x,y 주기 BC 적용 (MPM RVE '
+                         "'boundary p p f' 정합 — 측면 wrap, z=plate 유지).  기본 OFF = 절연 측벽(기존).")
     ap.add_argument('--k-carbon', type=float, default=None,
                     help='열전도 carbon(VGCF/SuperP/SWCNT) k [W/cm·K] override (기본 =k_AM 보수적 ASSUMED; 스윕용)')
     ap.add_argument('--step3-gpu', action='store_true',
@@ -562,7 +565,7 @@ def main():
             #   `top` has a +0.01-box (~0.4µm) void-cap padding that floats the plate off the bed
             #   crowns (kgy first run: no_plate_contact); the sim thickness is the physical plate.
             _res3 = _s3.solve_sigma_z(sid3, _sig3, a.step3_vox, return_field=True,
-                                      z_top_um=_ztop, z_bot_um=0.0)
+                                      z_top_um=_ztop, z_bot_um=0.0, periodic_xy=a.periodic)
             if _res3.get('reason'):
                 print(f"  ⚠ STEP3 σ_e not solvable: {_res3['reason']}")
                 step3 = {'sigma_e_eff_S_cm': 0.0, 'reason': _res3['reason'], 'vox_um': a.step3_vox}
@@ -756,9 +759,9 @@ def main():
                     return _mm2
                 _mw, _mb = _bot_mask(0.30), _bot_mask(0.10)
                 _res3w = _s3.solve_sigma_z(sid3, _sig3, a.step3_vox, return_field=False,
-                                           z_top_um=_ztop, z_bot_um=0.0, bot_allowed=_mw)
+                                           z_top_um=_ztop, z_bot_um=0.0, bot_allowed=_mw, periodic_xy=a.periodic)
                 _res3b = _s3.solve_sigma_z(sid3, _sig3, a.step3_vox, return_field=True,
-                                           z_top_um=_ztop, z_bot_um=0.0, bot_allowed=_mb)
+                                           z_top_um=_ztop, z_bot_um=0.0, bot_allowed=_mb, periodic_xy=a.periodic)
                 jb_am = None
                 if 'phi' in _res3b:
                     jb_am = np.nan_to_num(_s3.per_particle_current(_res3b, sid3, pid3, _sig3, len(r)),
@@ -808,7 +811,7 @@ def main():
                 _sig3i = np.array([0.0, 0.0, 0.0, 0.0, 0.0, a.sigma_ion_sdcp, a.sigma_ion_se, 0.0,
                                    0.0 if a.swcnt_ion_block else a.sigma_ion_se])
                 _res3i = _s3.solve_sigma_z(sid3, _sig3i, a.step3_vox, return_field=True,
-                                           z_top_um=_ztop, z_bot_um=0.0)
+                                           z_top_um=_ztop, z_bot_um=0.0, periodic_xy=a.periodic)
                 if _res3i['n_dof']:
                     _sharei = _s3.phase_current_share(_res3i, sid3, _sig3i)
                     if not a.no_field:                      # IONIC field (SE+SDCP {5,6}) — Li⁺ |J| cloud,
@@ -873,7 +876,7 @@ def main():
                         _kt, _kprov = _s3.thermal_k_table(k_carbon=a.k_carbon)
                         _th = _s3.solve_thermal(sid3, a.step3_vox, _ztop, 0.0, _kt,
                                                 field_sids=(None if a.no_field else (1, 2, 3, 4, 5, 6, 7, 8)),
-                                                field_max=a.field_max_points)
+                                                field_max=a.field_max_points, periodic_xy=a.periodic)
                         _tfp = _th.pop('_field_pts', None)
                         _tfj = _th.pop('_field_j', None)
                         step3['thermal'] = {
@@ -910,7 +913,8 @@ def main():
                     _t6 = _time.time()
                     _ppts = ((se[phase == 4] - _off) * UM
                              if (phase is not None and (phase == 4).any()) else None)
-                    _rp = _s3.pore_tau(sid3, a.step3_vox, z_top_um=_ztop, extra_solid_pts=_ppts)
+                    _rp = _s3.pore_tau(sid3, a.step3_vox, z_top_um=_ztop, extra_solid_pts=_ppts,
+                                       periodic_xy=a.periodic)
                     step3['pore'] = {k: _rp[k] for k in ('eps_total_pct', 'eps_connected_pct',
                                                          'D_rel', 'tau', 'n_dof') if k in _rp}
                     if _rp.get('reason'):
@@ -950,7 +954,7 @@ def main():
                     _gpp = a.i0_a_m2 * 1e-4 * 38.92          # i0[A/m²→A/cm²] × F/RT[V⁻¹] = g″ [S/cm²]
                     _gct = _gpp * (a.step3_vox ** 2) * 1e-4  # face-conductance (σ·vox_µm 코드 규약 정합)
                     _r4 = _s3.solve_reaction_current(sid3, _sig3, _sig3i, pid3, len(r), a.step3_vox,
-                                                     _gct, z_top_um=_ztop, z_bot_um=0.0)
+                                                     _gct, z_top_um=_ztop, z_bot_um=0.0, periodic_xy=a.periodic)
                     if _r4.get('reason'):
                         print(f"  ⚠ STEP4 rxn skipped: {_r4['reason']}")
                     else:

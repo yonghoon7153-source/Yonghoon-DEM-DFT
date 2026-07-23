@@ -61,11 +61,34 @@ def load_atoms(path, type_map):
     return typ, xyz, rad
 
 
-def build_contacts(xyz, rad):
+def build_contacts(xyz, rad, box_xy=None):
     """압밀 상태 접촉 목록 (δ0 = r_i+r_j−d > 0).  반환 (i, j, d, δ0).
     대형 bimodal 베드 최적화: 전역 2·r_max 탐색은 147k-입자 mono 케이스에서 수 GB —
-    소립끼리는 2·r_small, 대립은 입자별 r_i+r_small 반경으로 분리 탐색."""
+    소립끼리는 2·r_small, 대립은 입자별 r_i+r_small 반경으로 분리 탐색.
+    box_xy=(Lx,Ly)µm 주면 x,y **주기 BC**(STEP3 RVE 'p p f' 정합): 경계 r_max 이내 입자를
+    8-이웃(±Lx,±Ly, 모서리 포함) ghost image로 복제 → wrap 접촉 포함, z=plate 비주기.
+    탐색 후 ghost→원본 인덱스 back-map + 무순서 (i,j) dedup(최대 overlap 우선)."""
     n = len(rad)
+    ghost_of = np.arange(n)
+    if box_xy is not None and n:                             # ── x,y 주기 ghost 복제 (모서리 포함 8-이웃) ──
+        Lx, Ly = float(box_xy[0]), float(box_xy[1])
+        rmax = 2.0 * float(rad.max())
+        exz, erd, esrc = [xyz], [rad], [ghost_of]
+        for sx in (-1, 0, 1):
+            for sy in (-1, 0, 1):
+                if sx == 0 and sy == 0:
+                    continue
+                near = np.ones(n, bool)
+                if sx > 0:   near &= xyz[:, 0] < rmax
+                elif sx < 0: near &= xyz[:, 0] > Lx - rmax
+                if sy > 0:   near &= xyz[:, 1] < rmax
+                elif sy < 0: near &= xyz[:, 1] > Ly - rmax
+                if near.any():
+                    g = xyz[near].copy(); g[:, 0] += sx * Lx; g[:, 1] += sy * Ly
+                    exz.append(g); erd.append(rad[near]); esrc.append(np.where(near)[0])
+        xyz = np.concatenate(exz, 0); rad = np.concatenate(erd, 0)
+        ghost_of = np.concatenate(esrc)
+        n = len(rad)                                          # ghosted 크기 (분리탐색은 이 위에서 동작)
     big = rad > 2.0 * np.median(rad)
     if not big.any() or big.all():
         tree = cKDTree(xyz)
@@ -88,11 +111,20 @@ def build_contacts(xyz, rad):
         pairs = np.concatenate(parts, 0) if parts else np.zeros((0, 2), int)
     if len(pairs) == 0:
         return (np.zeros(0, int),) * 2 + (np.zeros(0),) * 2
-    i, j = pairs[:, 0], pairs[:, 1]
-    d = np.linalg.norm(xyz[i] - xyz[j], axis=1)
-    ov = rad[i] + rad[j] - d
-    m = ov > 0
-    return i[m], j[m], d[m], ov[m]
+    ig, jg = pairs[:, 0], pairs[:, 1]
+    d = np.linalg.norm(xyz[ig] - xyz[jg], axis=1)             # ghosted 좌표 = 실제 wrap 거리
+    ov = rad[ig] + rad[jg] - d                                # ghost rad == 원본 rad (복사)
+    i, j = ghost_of[ig], ghost_of[jg]                         # ghost → 원본 인덱스
+    m = (ov > 0) & (i != j)                                   # 자기-이미지 접촉 제거
+    i, j, d, ov = i[m], j[m], d[m], ov[m]
+    if box_xy is not None and len(i):                         # 무순서 (i,j) dedup (경계쌍 real-real·real-ghost 중복 → 최대 overlap)
+        lo = np.minimum(i, j).astype(np.int64); hi = np.maximum(i, j).astype(np.int64)
+        key = lo * (hi.max() + 1) + hi
+        order = np.argsort(-ov)                               # 큰 overlap 우선 채택
+        _, uniq = np.unique(key[order], return_index=True)
+        sel = order[uniq]
+        i, j, d, ov = i[sel], j[sel], d[sel], ov[sel]
+    return i, j, d, ov
 
 
 def rnm_sigma(n, ci, cj, g, src_mask, snk_mask):
@@ -166,7 +198,10 @@ def run(a):
         raise SystemExit(f'❌ AM 또는 SE가 0개 — --type-map 불일치 가능성.  atoms.csv 실제 타입 확인:\n'
                          f"   awk -F, 'NR>1{{c[$2]++}} END{{for(t in c) print t, c[t]}}' {a.atoms}\n"
                          f'   mono-AM 케이스는 SE가 type 2 → --type-map "1:AM_P,2:SE"')
-    ci, cj, d, ov0 = build_contacts(xyz, rad0)
+    _box_xy = (a.box_xy_um, a.box_xy_um) if getattr(a, 'periodic', False) else None
+    if _box_xy:
+        print(f'  [periodic] x,y 주기 BC (박스 {a.box_xy_um}µm, 경계 ghost image) — STEP3 RVE 정합', flush=True)
+    ci, cj, d, ov0 = build_contacts(xyz, rad0, box_xy=_box_xy)
     kind = typ[ci] + typ[cj]                                # 0=AM-AM, 1=AM-SE, 2=SE-SE
     if not (kind == 1).any():
         # AM-SE 접촉 0 = 열화 대상이 없음 — A_rel=0/R_ct=1 같은 모순 출력으로 침묵 진행 금지
@@ -369,6 +404,15 @@ def _selftest():
     gap_nm = (-ov[0] + 6.0 * eps) * 1e3
     ok &= gap_nm > 100.0
     print(f'selftest1 즉시파단 기하: gap={gap_nm:.1f}nm > δ_cr=100  {"OK" if ok else "FAIL"}')
+    # 1b) periodic ghost: 경계 양끝 두 입자(x=0.5, x=49.5; r=1, 박스 50µm) — 비주기=접촉없음, 주기=접촉
+    typ_p = np.array([0, 0]); rad_p = np.array([1.0, 1.0])
+    xyz_p = np.array([[0.5, 25.0, 5.0], [49.5, 25.0, 5.0]])
+    ci_np, _, _, _ = build_contacts(xyz_p, rad_p)                       # 비주기: dist 49µm → 접촉 0
+    ci_p, cj_p, dp, ovp = build_contacts(xyz_p, rad_p, box_xy=(50.0, 50.0))  # 주기: ghost dist 1µm → 접촉 1
+    ok1b = (len(ci_np) == 0) and (len(ci_p) == 1) and abs(dp[0] - 1.0) < 1e-9 and abs(ovp[0] - 1.0) < 1e-9
+    ok &= ok1b
+    print(f'selftest1b periodic ghost: 비주기 {len(ci_np)}개 / 주기 {len(ci_p)}개(d={dp[0] if len(dp) else 0:.2f}µm)  '
+          f'{"OK" if ok1b else "FAIL"}')
     # 2) Miner 누적: δ0=60nm·같은 ε → gap≈42nm ≤ δ_cr → D+=0.42/cyc → N=3에 파단
     ov2 = 0.060
     gap2 = (-ov2 + 6.0 * eps) * 1e3
@@ -558,6 +602,10 @@ def main():
     ap.add_argument('--seed', type=int, default=0, help='partial 재습윤 RNG 시드 (재현성)')
     ap.add_argument('--fatigue', choices=('miner', 'off'), default='miner',
                     help='δ_cr 이하 개구의 사이클 누적 (miner=ASSUMED-FORM 라벨 / off=즉시파단만)')
+    ap.add_argument('--periodic', action='store_true',
+                    help='접촉 재구성에 x,y 주기 BC (STEP3 RVE p p f 정합; 경계 ghost image로 wrap 접촉 포함, '
+                         'z=plate 비주기).  기본 OFF = 절연 측벽(기존).')
+    ap.add_argument('--box-xy-um', type=float, default=50.0, help='주기 박스 측면 크기 µm (--periodic; 기본 50)')
     ap.add_argument('--checkpoints', default='1,2,5,10,25,50,75,100', help='기록 사이클 (Kang&Shin 격자)')
     ap.add_argument('--out', default='cycle_ledger_out')
     a = ap.parse_args()

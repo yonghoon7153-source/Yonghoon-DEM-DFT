@@ -373,7 +373,8 @@ def thermal_k_table(k_am=K_AM_THERMAL, k_se=K_SE_THERMAL, k_carbon=None, k_sdcp=
     return np.array([k_pore, k_am, k_am, kc, kc, ks, k_se, k_ptfe, kc], float), prov
 
 
-def solve_thermal(sid, vox, z_top_um, z_bot_um=0.0, k_table=None, field_sids=None, field_max=90000):
+def solve_thermal(sid, vox, z_top_um, z_bot_um=0.0, k_table=None, field_sids=None, field_max=90000,
+                  periodic_xy=False):
     """복셀 through-plane 열전도 k_eff + 상별 ΔT/열저항(병목) 몫.  solve_sigma_z 재사용(∇·(k∇T)=0, 同 격자).
     ★多상이라 압밀 베드선 全상 연결 → 보통 항상 퍼콜(유한).  반환: k_eff_W_mK(=k_eff[W/cm·K]×100, ★Kapitza
     무시 상한), temp_drop_share(상별 through-plane 온도강하/열저항 몫 — 높을수록 열 병목; ★열류 아님 —
@@ -382,7 +383,8 @@ def solve_thermal(sid, vox, z_top_um, z_bot_um=0.0, k_table=None, field_sids=Non
     solid; payload가 p99.8 정규화·직렬화 — '_' prefix = JSON 前 임시)."""
     if k_table is None:
         k_table, _ = thermal_k_table()
-    res = solve_sigma_z(sid, k_table, vox, return_field=True, z_top_um=z_top_um, z_bot_um=z_bot_um)
+    res = solve_sigma_z(sid, k_table, vox, return_field=True, z_top_um=z_top_um, z_bot_um=z_bot_um,
+                        periodic_xy=periodic_xy)
     out = {'k_eff_W_mK': None, 'reason': res.get('reason'), 'n_dof': int(res.get('n_dof', 0)),
            'cg_resid': float(f"{res.get('resid', 0.0):.2g}"), 'unconverged': bool(res.get('unconverged'))}
     if not res.get('reason') and res.get('n_dof'):
@@ -456,7 +458,7 @@ def field_point_cloud(res, sid, sigma_of_sid, vox, sel_sids, box_lo=(0.0, 0.0, 0
     return pts.astype(np.float32), vals.astype(np.float32)
 
 
-def pore_tau(sid, vox, z_top_um, extra_solid_pts=None, box_lo=(0.0, 0.0, 0.0)):
+def pore_tau(sid, vox, z_top_um, extra_solid_pts=None, box_lo=(0.0, 0.0, 0.0), periodic_xy=False):
     """A6 — PORE-phase effective-diffusion tortuosity (DiffuDict/TauFactor convention).
 
     Runs the SAME validated finite-volume machinery (solve_sigma_z, physics unchanged) on the
@@ -513,7 +515,7 @@ def pore_tau(sid, vox, z_top_um, extra_solid_pts=None, box_lo=(0.0, 0.0, 0.0)):
         return {'eps_total_pct': 0.0, 'eps_connected_pct': 0.0, 'D_rel': 0.0, 'tau': None,
                 'n_dof': 0, 'resid': 0.0, 'unconverged': False, 'reason': 'no_void'}
     res = solve_sigma_z(pore.astype(np.int8), np.array([0.0, 1.0]), vox,
-                        z_top_um=z_top_um, z_bot_um=0.0, plate_band_um=vox)
+                        z_top_um=z_top_um, z_bot_um=0.0, plate_band_um=vox, periodic_xy=periodic_xy)
     d_rel = float(res['sigma_eff'])
     out = {'eps_total_pct': round(100.0 * eps, 2),
            # on early-return paths n_dof counts ALL pore voxels (floating filter never ran) —
@@ -640,7 +642,7 @@ def pore_pnm(sid, vox, z_top_um, extra_solid_pts=None, box_lo=(0.0, 0.0, 0.0)):
 
 
 def solve_reaction_current(sid, sig_e_of_sid, sig_i_of_sid, pid, n_am, vox, gct_code,
-                           z_top_um=None, z_bot_um=None):
+                           z_top_um=None, z_bot_um=None, periodic_xy=False):
     """STEP4-v1 — 저율·균일-SOC 갈바노스타틱 **반응전류 분포** (랩 slide-20 물리, 선형화 BV).
 
     같은 복셀 격자 위 TWO networks를 반응 계면에서만 결합한 단일 SPD Kirchhoff 시스템:
@@ -714,17 +716,23 @@ def solve_reaction_current(sid, sig_e_of_sid, sig_i_of_sid, pid, n_am, vox, gct_
         rows.append(b2); cols.append(a2); vals.append(-g)
         np.add.at(diag, a2, g); np.add.at(diag, b2, g)
 
-    for sl_a, sl_b in ((np.s_[:-1, :, :], np.s_[1:, :, :]), (np.s_[:, :-1, :], np.s_[:, 1:, :]),
-                       (np.s_[:, :, :-1], np.s_[:, :, 1:])):
+    # 방향 목록 (전도·BV가 공유 → 주기성 일관 보장).  periodic_xy면 x,y wrap 추가 (z=plate 유지).
+    _dirs = [(np.s_[:-1, :, :], np.s_[1:, :, :]), (np.s_[:, :-1, :], np.s_[:, 1:, :]),
+             (np.s_[:, :, :-1], np.s_[:, :, 1:])]
+    if periodic_xy:                                        # ★RVE 'boundary p p f' 정합 (σ-solve와 동일 규약)
+        if sid.shape[0] > 1:
+            _dirs.append((np.s_[-1:, :, :], np.s_[:1, :, :]))   # x: nx-1 ↔ 0
+        if sid.shape[1] > 1:
+            _dirs.append((np.s_[:, -1:, :], np.s_[:, :1, :]))   # y: ny-1 ↔ 0
+    for sl_a, sl_b in _dirs:
         _net_couple(idx_e, sig_e, 0, sl_a, sl_b)
         _net_couple(idx_i, sig_i, n_e, sl_a, sl_b)
-    # BV 계면 결합 + per-face 기록 (입자별 합산용)
+    # BV 계면 결합 + per-face 기록 (입자별 합산용) — 전도와 동일 _dirs(주기 wrap 포함)로 계면도 일관 주기
     am_m = (sid == 1) | (sid == 2)
     ion_m = (sid == 5) | (sid == 6)
     bv_e, bv_i, bv_pid = [], [], []
     gct = float(gct_code)
-    for sl_a, sl_b in ((np.s_[:-1, :, :], np.s_[1:, :, :]), (np.s_[:, :-1, :], np.s_[:, 1:, :]),
-                       (np.s_[:, :, :-1], np.s_[:, :, 1:])):
+    for sl_a, sl_b in _dirs:
         for am_first in (True, False):
             slA, slB = (sl_a, sl_b) if am_first else (sl_b, sl_a)
             m = am_m[slA] & ion_m[slB]
