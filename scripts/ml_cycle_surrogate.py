@@ -31,10 +31,10 @@ PHYS_FEATURES = ['porosity', 'sigma_e_eff', 'sigma_ion_eff', 'sigma_thermal', 't
 CYCLE_DIM = ['cycle_N']
 # 타깃 + provenance (model = 우리 파이프라인 산출 / exp = 실험 앵커 필요)
 TARGETS = {
-    'R_int_ohm_cm2': 'model+exp (R_int(N): 접촉-기계 몫 model, 화학·절대 exp 앵커)',
-    'retention_pct': 'exp-anchored (fade shape 오픈소스 FORM, sulfide 절대 exp)',
+    'R_int_ohm_cm2': 'model+PENDING-exp (R_int(N): 접촉-기계 몫 model, 화학·절대 = sulfide exp 대기)',
+    'retention_pct': 'PENDING-exp (현재 form-only: 오픈소스 FORM 만; sulfide 절대 fade 실험 미배선 §F1)',
     'sigma_e_eff': 'model (STEP3 Kirchhoff)', 'sigma_ion_eff': 'model (STEP3 Bazzoun-검증)',
-    'R_ct_ohm_cm2': 'model (STEP4 BV)', 'C_dl_uF_cm2': 'exp-anchored (EIS)',
+    'R_ct_ohm_cm2': 'model (STEP4 BV) — ⚠i0 의존(미앵커, 스윕전용)', 'C_dl_uF_cm2': 'PENDING-exp (EIS CPE 앵커 대기)',
     'polarization_mV': 'model (STEP4)', 'porosity': 'model (DEM/MPM)',
 }
 
@@ -110,8 +110,16 @@ class CycleSurrogate:
         self.feat_names = None
         self._ready = False
 
+    def _feat_idx_for_target(self, target, names):
+        """★리뷰#5 leakage 가드 (2단 surrogate 설계→물리→타깃): 타깃이 물리-feature 면(σ_e 등)
+        입력을 **설계 knob 만**으로(자기·타 물리 누출 차단; 파이프라인 1단=설계→물리 예측).  파생타깃
+        (R_int·retention·R_ct 등)은 **자기 이름만 제외**한 물리+설계+cycle(2단=물리→성능)."""
+        if target in PHYS_FEATURES:
+            return [i for i, n in enumerate(names) if n in DESIGN_KNOBS]
+        return [i for i, n in enumerate(names) if n != target]
+
     def fit(self, X, Y, feat_names=None):
-        """X[n,d] 물리-feature, Y{target: y[n]}.  결측(nan) 열-중앙값 impute + 표준화 → GPR+RF."""
+        """X[n,d] 물리-feature, Y{target: y[n]}.  결측 impute + per-target 마스킹(누출가드) + 표준화 → GPR+RF."""
         try:
             from sklearn.gaussian_process import GaussianProcessRegressor
             from sklearn.gaussian_process.kernels import RBF, ConstantKernel, WhiteKernel
@@ -121,35 +129,39 @@ class CycleSurrogate:
             return {'status': 'sklearn 부재 (WSL 전용) — 학습 스킵.  pip install scikit-learn',
                     'ready': False}
         X = np.asarray(X, float)
-        self.feat_names = feat_names
+        self.feat_names = feat_names or (DESIGN_KNOBS + PHYS_FEATURES + CYCLE_DIM)
         self._med = np.nanmedian(np.where(np.isfinite(X), X, np.nan), axis=0)
         self._med = np.where(np.isfinite(self._med), self._med, 0.0)
         Xi = np.where(np.isfinite(X), X, self._med)
-        self._scaler = StandardScaler().fit(Xi)
-        Xs = self._scaler.transform(Xi)
         for t in self.targets:
             if t not in Y:
                 continue
             y = np.asarray(Y[t], float); m = np.isfinite(y)
             if m.sum() < 5:
                 continue
-            k = ConstantKernel(1.0) * RBF(length_scale=np.ones(Xs.shape[1])) + WhiteKernel(1e-3)
+            idx = self._feat_idx_for_target(t, self.feat_names)   # 누출가드: 타깃별 입력 feature 집합
+            if not idx:
+                continue
+            scaler = StandardScaler().fit(Xi[m][:, idx])
+            Xs = scaler.transform(Xi[m][:, idx])
+            k = ConstantKernel(1.0) * RBF(length_scale=np.ones(len(idx))) + WhiteKernel(1e-3)
             gpr = GaussianProcessRegressor(kernel=k, n_restarts_optimizer=3, alpha=1e-6, normalize_y=True)
             rf = RandomForestRegressor(n_estimators=100, max_depth=6, min_samples_leaf=3, random_state=42)
-            gpr.fit(Xs[m], y[m]); rf.fit(Xs[m], y[m])
-            self.models[t] = (gpr, rf)
+            gpr.fit(Xs, y[m]); rf.fit(Xs, y[m])
+            self.models[t] = (gpr, rf, scaler, idx)               # per-target: 모델+스케일러+feature idx
         self._ready = len(self.models) > 0
-        return {'status': f'{len(self.models)} 타깃 학습', 'ready': self._ready,
+        return {'status': f'{len(self.models)} 타깃 학습 (per-target 누출가드)', 'ready': self._ready,
                 'targets': list(self.models)}
 
     def predict(self, X):
-        """X[n,d] → {target: (mean, std)}.  GPR mean±std(불확실성) + RF mean(비선형) 평균."""
+        """X[n,d] → {target: (mean, std)}.  타깃별 feature 마스크 적용(누출가드) + GPR±std + RF."""
         if not self._ready:
             return {'error': 'not fitted (sklearn/WSL 학습 필요)'}
         Xi = np.where(np.isfinite(X), X, self._med)
-        Xs = self._scaler.transform(np.atleast_2d(Xi))
+        Xa = np.atleast_2d(Xi)
         out = {}
-        for t, (gpr, rf) in self.models.items():
+        for t, (gpr, rf, scaler, idx) in self.models.items():
+            Xs = scaler.transform(Xa[:, idx])
             gm, gs = gpr.predict(Xs, return_std=True)
             rm = rf.predict(Xs)
             out[t] = {'mean': float(0.5 * (gm[0] + rm[0])), 'std': float(gs[0]),

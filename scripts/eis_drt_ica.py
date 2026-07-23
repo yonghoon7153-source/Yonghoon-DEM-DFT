@@ -48,23 +48,30 @@ def randles_eis(freqs_hz, R0, R_ct, C_dl, R_w, tau_w):
 
 def physics_eis(freqs_hz, *, sigma_e_S_cm, sigma_ion_S_cm, thickness_um, r_int_ohm_cm2=0.0,
                 i0_A_m2=2.0, a_spec=None, spec_area_cm2_cm3=None, porosity=None,
+                am_vol_frac=None, coverage_frac=0.5,
                 d_s_m2_s=3e-14, r_p_um=3.0, c_dl_uF_cm2=10.0, dudx_V=None, c_max_mol_m3=63104.0,
                 alpha_a=0.5, alpha_c=0.5, temp_k=298.15, r_w_ohm_cm2=None):
     """우리 물리 파라미터 → EIS Z(ω) + 소자 dict.  각 소자 provenance 반환.
     a_spec = 반응면적/기하면적 [cm²/cm²].  없으면 spec_area_cm2_cm3·thickness 로 추정(구형 3φ/r)."""
     L_cm = float(thickness_um) * 1e-4
     T = float(temp_k)
-    # R0 = 이온 벌크 + 전자 벌크 + 집전체 (Ω·cm²)
-    R_ion = L_cm / max(float(sigma_ion_S_cm), 1e-30)
+    # R0 = HF 실축 절편(전자 벌크 + 집전체) + 전극 이온수송(분산 TL의 DC극한 R_ion/3).  ★리뷰#1: 전극
+    #   L/σ_ion 을 전량 HF 직렬에 넣으면 실험 HF 절편(eis_fit R0=직렬/분리막/접촉)과 프레임 어긋나고 3×
+    #   과대 → 다공전극 균일반응 TL DC극한 R_ion/3 만 직렬 기여(중간주파 45° feature 의 DC 한계).
+    R_ion = L_cm / max(float(sigma_ion_S_cm), 1e-30)           # 전극 이온수송 전저항 (분산)
     R_e = L_cm / max(float(sigma_e_S_cm), 1e-30)
-    R0 = R_ion + R_e + float(r_int_ohm_cm2)
-    # a_spec (반응 계면 면적비): 직접 주거나, 비표면적(cm²/cm³)×두께, 또는 구형 3·φ_AM/r 근사
+    R0_hf = R_e + float(r_int_ohm_cm2)                        # HF 실축 절편 = eis_fit R0 와 프레임 정합
+    R_ion_tl_dc = R_ion / 3.0                                 # TL DC극한 (Newman 다공전극 균일반응)
+    R0 = R0_hf + R_ion_tl_dc
+    # a_spec (반응 계면 면적비): 직접 주거나, 비표면적×두께, 또는 구형 3·φ_AM·coverage/r 근사
     if a_spec is None:
         if spec_area_cm2_cm3 is not None:
             a_spec = float(spec_area_cm2_cm3) * L_cm
-        else:                                                  # 구형 근사: (1−ε)·3/r · L  (φ_AM≈고체)
-            phi = (1.0 - (float(porosity) / 100.0 if porosity and porosity > 1 else (porosity or 0.15)))
-            a_spec = phi * (3.0 / (float(r_p_um) * 1e-4)) * L_cm
+        else:                                                  # ★리뷰#3: φ_AM·coverage·3/r·L (φ_AM≠전고체,
+            #   반응은 SE-덮인 AM 면만 = coverage) — 옛 (1−ε)전고체는 반응면 2-4× 과대→R_ct 과소.
+            phi_solid = (1.0 - (float(porosity) / 100.0 if porosity and porosity > 1 else (porosity or 0.15)))
+            phi_am = float(am_vol_frac) if am_vol_frac is not None else 0.75 * phi_solid  # AM≈75%고체(기본)
+            a_spec = phi_am * float(coverage_frac) * (3.0 / (float(r_p_um) * 1e-4)) * L_cm
     a_spec = max(float(a_spec), 1e-6)
     # R_ct = RT/(F·i0·(αa+αc)·a_spec).  i0 A/m² → A/cm² (×1e-4)
     i0_cm2 = float(i0_A_m2) * 1e-4
@@ -83,12 +90,20 @@ def physics_eis(freqs_hz, *, sigma_e_S_cm, sigma_ion_S_cm, thickness_um, r_int_o
         R_w = dudx * r_m / (F * float(c_max_mol_m3) * float(d_s_m2_s) * a_spec) * 1e4  # →Ω·cm² 스케일
         rw_src = 'ASSUMED-FORM (dU/dx·r/(F·c_max·D·a); O(1) 인자 미정 → 실험 Wo1_R 로 교체 권장)'
     Z = randles_eis(freqs_hz, R0, R_ct, C_dl, R_w, tau_w)
-    elems = {'R0_ohm_cm2': R0, 'R_ion': R_ion, 'R_e': R_e, 'R_int': float(r_int_ohm_cm2),
+    elems = {'R0_ohm_cm2': R0, 'R0_hf_ohm_cm2': R0_hf, 'R_ion_tl_dc': R_ion_tl_dc, 'R_ion_full': R_ion,
+             'R_e': R_e, 'R_int': float(r_int_ohm_cm2),
              'R_ct_ohm_cm2': R_ct, 'C_dl_F_cm2': C_dl, 'C_dl_uF_cm2_int': float(c_dl_uF_cm2),
-             'R_w_ohm_cm2': R_w, 'tau_w_s': tau_w, 'a_spec': a_spec, 'f_ct_Hz': 1.0 / (2 * np.pi * R_ct * C_dl),
-             'provenance': {'R0': 'STEP3 σ-triad + collector', 'R_ct': 'STEP4 BV lin (i0·a_spec)',
+             'R_w_ohm_cm2': R_w, 'tau_w_s': tau_w, 'a_spec': a_spec, 'coverage_frac': float(coverage_frac),
+             'f_ct_Hz': 1.0 / (2 * np.pi * R_ct * C_dl),
+             'provenance': {'R0_hf': 'STEP3 σ_e+collector (HF 절편, frame[4] 정합)',
+                            'R_ion_tl': 'STEP3 σ_ion 전극수송 TL DC극한 R_ion/3 (분산 feature)',
+                            'R_ct': '⚠STEP4 BV lin — i0 의존(i0 정량부재, 스윕전용 §F1)',
                             'C_dl': '★앵커 µF/cm² (실험 EIS CPE 또는 sulfide|NMC 문헌 1-10) — §F1',
-                            'R_w': rw_src, 'tau_w': 'r²/D_s (STEP4 구형확산)'}}
+                            'R_w': rw_src + '; ⚠D_s 도 미측정(스윕)',
+                            'tau_w': 'r²/D_s (STEP4 구형확산) — ⚠D_s 미앵커',
+                            'note': '★framing: 미세구조-emergent 는 주로 R0_hf(σ-triad); arc 주파수 f_ct 는 '
+                                    'i0·c_dl(둘 다 미앵커)가 결정, Warburg 위치는 D_s(미측정) — "위치=예측력"은 '
+                                    'σ-triad 한정, 동역학 위치는 앵커 대기(§F1).'}}
     return Z, elems
 
 
@@ -117,15 +132,29 @@ def drt(freqs_hz, Z, tau_min=None, tau_max=None, n_tau=80, lam=1e-3, subtract_R0
 
 
 def drt_peaks(tau, gamma, rel_height=0.05):
-    """γ(τ) 피크 → (τ_peak, R_peak=∫γ 근사) 리스트 (프로세스 분리 진단)."""
+    """γ(τ) 피크 → (τ_peak, R_peak=∫γ dlnτ over basin) 리스트 (프로세스 분리 진단).
+    ★리뷰#2: 프로세스 저항 = 피크 basin 전체의 ∫γ dlnτ (단일 빈 height×Δlnτ 아님 — R_ct ~8× 과소보고).
+    basin = 인접 극소(minima) 사이 구간 (watershed)."""
     from scipy.signal import find_peaks
     g = np.asarray(gamma, float)
+    ln_t = np.log(np.asarray(tau, float))
+    dln = np.gradient(ln_t)
     if g.max() <= 0:
         return []
     idx, _ = find_peaks(g, height=rel_height * g.max())
-    dln = np.gradient(np.log(tau))
-    return [{'tau_s': float(tau[i]), 'f_Hz': float(1.0 / (2 * np.pi * tau[i])),
-             'R_ohm_cm2': float(g[i] * dln[i]), 'gamma': float(g[i])} for i in idx]
+    if len(idx) == 0:
+        return []
+    # 피크 사이 극소 = basin 경계 (양끝은 배열 끝).  각 피크 basin 에서 γ·dlnτ 적분.
+    mins, _ = find_peaks(-g)
+    bounds = np.concatenate([[0], mins, [len(g) - 1]])
+    out = []
+    for i in idx:
+        lo = bounds[bounds <= i].max() if (bounds <= i).any() else 0
+        hi = bounds[bounds >= i].min() if (bounds >= i).any() else len(g) - 1
+        R = float(np.sum(g[lo:hi + 1] * dln[lo:hi + 1]))     # basin 적분 = 프로세스 저항
+        out.append({'tau_s': float(tau[i]), 'f_Hz': float(1.0 / (2 * np.pi * tau[i])),
+                    'R_ohm_cm2': R, 'gamma_peak': float(g[i]), 'basin': [int(lo), int(hi)]})
+    return out
 
 
 # ─────────────────────── ICA (dQ/dV) ───────────────────────
@@ -141,10 +170,15 @@ def ica_dqdv(V, Q, n_grid=400, smooth_V=0.005):
         return np.array([]), np.array([]), []
     Vg = np.linspace(Vs.min() + smooth_V, Vs.max() - smooth_V, int(n_grid))
     Qg = np.interp(Vg, Vs, Qs)
+    from scipy.signal import savgol_filter, find_peaks
+    # ★리뷰#9: Savitzky-Golay 평활 = 미분 전 노이즈 억제 (안 하면 수치 wiggle 이 중복피크로 오검출).
+    w = min(max(5, (int(n_grid) // 30) | 1), len(Qg) if len(Qg) % 2 else len(Qg) - 1)
+    if w > 3:
+        Qg = savgol_filter(Qg, w, 3)
     dQdV = np.gradient(Qg, Vg)
-    from scipy.signal import find_peaks
     a = np.abs(dQdV)
-    idx, _ = find_peaks(a, height=0.1 * a.max()) if a.max() > 0 else (np.array([], int), None)
+    idx, _ = (find_peaks(a, height=0.1 * a.max(), prominence=0.05 * a.max())
+              if a.max() > 0 else (np.array([], int), None))
     peaks = [{'V': float(Vg[i]), 'dQdV': float(dQdV[i])} for i in idx]
     return Vg, dQdV, peaks
 
@@ -152,9 +186,9 @@ def ica_dqdv(V, Q, n_grid=400, smooth_V=0.005):
 # ─────────────────────── CV (OCP + BV 동역학) ───────────────────────
 def cv_curve(ocp_x, ocp_U, x0, x100, c_rate_equiv=None, scan_rate_mV_s=0.1, v_lo=3.0, v_hi=4.3,
              R_ct_ohm_cm2=5.0, cap_mAh_cm2=3.0, n=400):
-    """CV: 전압을 v_lo↔v_hi 선형 스윕, 각 V 에서 준평형 x(OCP 역함수)+옴/kin 보정으로 I(V).
-    I ≈ (dQ/dV 준평형)·scan_rate − (V−U(x))/R_ct.  피크 = OCP 상전이.  간이 물리판(전 CV solve 는
-    step4_dyn --cv-hold; 이건 빠른 진단).  반환 (V, I_mA_cm2, x)."""
+    """CV(준평형 열역학 dQ/dV 스윕): 전압 v_lo↔v_hi 삼각 스윕, 각 V 에서 준평형 x(OCP 역함수) →
+    I = (dQ/dV)·scan_rate·방향.  피크 = OCP 상전이.  ★리뷰#8: 동역학/옴 보정(−(V−U)/R_ct)은 미포함
+    (R_ct_ohm_cm2 인자는 예약, 미사용) — 완전 동역학 CV 는 step4_dyn --cv-hold.  반환 (V, I_mA_cm2, x)."""
     ocp_x = np.asarray(ocp_x, float); ocp_U = np.asarray(ocp_U, float)
     ox = np.argsort(ocp_x); Xs, Us = ocp_x[ox], ocp_U[ox]     # x 오름차순 → OCP 기울기 dU/dx
     dUdx = np.gradient(Us, Xs)
@@ -202,21 +236,24 @@ def _selftest():
     if not any(0.2 * tau_ct < p['tau_s'] < 5 * tau_ct for p in pk):
         _pts = ', '.join('%.1e' % p['tau_s'] for p in pk)
         fails.append(f'DRT 가 arc τ≈{tau_ct:.1e}s 피크 못 찾음: {_pts}')
-    # 4) ICA: 2-plateau 합성 방전 → dQ/dV 2 피크
-    xg = np.linspace(0, 1, 300)
-    U = 4.0 - 0.3 * xg - 0.15 * (np.tanh((xg - 0.35) * 25) + np.tanh((xg - 0.7) * 25))  # 2 상전이
-    Qg = xg * 3.0                                             # mAh/cm²
-    Vg, dq, pk2 = ica_dqdv(U, Qg)
-    if len(pk2) < 2:
-        fails.append(f'ICA 2-plateau 피크 <2: {len(pk2)}')
+    # 4) ICA: 2-스텝 합성 방전 Q(V) (V=3.5·3.9서 용량 계단) → dQ/dV 2 뚜렷 피크.  SG평활이 노이즈
+    #   더블릿 억제하되 진짜 2피크는 보존해야 함(리뷰#9).
+    Vt = np.linspace(3.0, 4.2, 300)
+    Qt = 1.5 * (1.0 / (1 + np.exp((Vt - 3.5) / 0.03)) + 1.0 / (1 + np.exp((Vt - 3.9) / 0.03)))
+    Qt = Qt + 0.002 * np.sin(Vt * 400)                       # 미세 노이즈 (평활 검증용)
+    Vg, dq, pk2 = ica_dqdv(Vt, Qt)
+    if not (len(pk2) == 2):                                  # 정확히 2 (노이즈 더블릿 없이)
+        fails.append(f'ICA 2-스텝 피크 ≠2: {len(pk2)} @ V={[round(p["V"],2) for p in pk2]}')
     # 5) CV: OCP 스윕 → 유한 I, 상전이서 피크
-    Vc, Ic, xc = cv_curve(xg, U, 0.05, 0.95, scan_rate_mV_s=0.1)
+    xoc = np.linspace(0.05, 0.95, 200)
+    Uoc = 4.2 - 0.6 * xoc - 0.1 * np.tanh((xoc - 0.5) * 10)   # 단조감소 OCP (역보간 가능)
+    Vc, Ic, xc = cv_curve(xoc, Uoc, 0.05, 0.95, scan_rate_mV_s=0.1)
     if not (len(Vc) and np.isfinite(Ic).all() and np.abs(Ic).max() > 0):
         fails.append('CV I(V) 유한/비영 실패')
     print('selftest OK' if not fails else 'selftest FAIL:\n  ' + '\n  '.join(fails))
     if not fails:
         print(f"  Randles: R0={hf.real:.1f} arc+Warburg → LF {lf.real:.1f}{lf.imag:+.1f}j Ω·cm²")
-        print(f"  physics_eis: R0={el['R0_ohm_cm2']:.1f}(ion{el['R_ion']:.1f}+e{el['R_e']:.2g}+int{el['R_int']:.0f}) "
+        print(f"  physics_eis: R0={el['R0_ohm_cm2']:.1f}(hf{el['R0_hf_ohm_cm2']:.1f}+ionTL{el['R_ion_tl_dc']:.1f}) "
               f"R_ct={el['R_ct_ohm_cm2']:.1f} C_dl={el['C_dl_F_cm2']*1e6:.1f}µF/cm² f_ct={el['f_ct_Hz']:.1f}Hz "
               f"R_w={el['R_w_ohm_cm2']:.2g} τ_w={el['tau_w_s']:.2g}s")
         print(f"  DRT: {len(pk)} 피크 (recon {recon_err*100:.1f}%), arc τ_ct≈{tau_ct:.1e}s")
