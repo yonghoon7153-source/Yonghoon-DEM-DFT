@@ -3,7 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
 <title>{% block title %}DFT Infrastructure · Battery Materials Lab{% endblock %}</title>
+<script>
+// 테마 초기화 (FOUC 방지 — 페인트 전에 data-theme 결정)
+(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -11,38 +16,111 @@
 {% block head %}{% endblock %}
 </head>
 <body>
-<button class="menu-toggle" onclick="document.body.classList.toggle('nav-open')" aria-label="menu">☰</button>
-<nav class="sidebar">
+<a class="skip-link" href="#main">본문으로 건너뛰기</a>
+<button class="menu-toggle" onclick="document.body.classList.toggle('nav-open')" aria-label="메뉴 열기/닫기" aria-expanded="false">☰</button>
+<nav class="sidebar" aria-label="주 메뉴">
   <div class="sidebar-header">
-    <a href="/" class="brand">DFT<span class="brand-accent">·Infra</span></a>
+    <a href="/" class="brand" aria-label="DFT Infrastructure 홈">DFT<span class="brand-accent">·Infra</span></a>
     <div class="brand-sub">Battery Materials Lab</div>
   </div>
+  <button class="cmdk-trigger" onclick="openCmdk()" aria-label="전역 검색 열기 (단축키 Ctrl 또는 Cmd + K)">
+    <span>🔍 검색…</span><kbd>⌘K</kbd>
+  </button>
   <ul class="nav-links">
-    <li><a href="/" class="{% if active=='home' %}active{% endif %}"><span class="ic">▦</span> Dashboard</a></li>
-    <li><a href="/compare" class="{% if active=='compare' %}active{% endif %}"><span class="ic">⇄</span> Comparison</a></li>
-    <li><a href="/cascade" class="{% if active=='cascade' %}active{% endif %}"><span class="ic">🤖</span> Cascade/ML</a></li>
-    <li><a href="/methods" class="{% if active=='methods' %}active{% endif %}"><span class="ic">▤</span> Methods</a></li>
-    <li><a href="/literature" class="{% if active=='lit' %}active{% endif %}"><span class="ic">▣</span> Literature</a></li>
-    <li><a href="/glossary" class="{% if active=='glossary' %}active{% endif %}"><span class="ic">▧</span> Glossary</a></li>
-    <li><a href="/log" class="{% if active=='log' %}active{% endif %}"><span class="ic">✎</span> Work Log</a></li>
+    <li><a href="/" {% if active=='home' %}aria-current="page" class="active"{% endif %}><span class="ic" aria-hidden="true">▦</span> Dashboard</a></li>
+    <li><a href="/explorer" {% if active=='explorer' %}aria-current="page" class="active"{% endif %}><span class="ic" aria-hidden="true">▤</span> Property Explorer</a></li>
+    <li><a href="/elements" {% if active=='elements' %}aria-current="page" class="active"{% endif %}><span class="ic" aria-hidden="true">⊞</span> Periodic Table</a></li>
+    <li><a href="/compare" {% if active=='compare' %}aria-current="page" class="active"{% endif %}><span class="ic" aria-hidden="true">⇄</span> Comparison</a></li>
+    <li><a href="/cascade" {% if active=='cascade' %}aria-current="page" class="active"{% endif %}><span class="ic" aria-hidden="true">🤖</span> Cascade/ML</a></li>
+    <li><a href="/compute" {% if active=='compute' %}aria-current="page" class="active"{% endif %}><span class="ic" aria-hidden="true">⚡</span> Compute</a></li>
+    <li><a href="/methods" {% if active=='methods' %}aria-current="page" class="active"{% endif %}><span class="ic" aria-hidden="true">▤</span> Methods</a></li>
+    <li><a href="/literature" {% if active=='lit' %}aria-current="page" class="active"{% endif %}><span class="ic" aria-hidden="true">▣</span> Literature</a></li>
+    <li><a href="/glossary" {% if active=='glossary' %}aria-current="page" class="active"{% endif %}><span class="ic" aria-hidden="true">▧</span> Glossary</a></li>
+    <li><a href="/log" {% if active=='log' %}aria-current="page" class="active"{% endif %}><span class="ic" aria-hidden="true">✎</span> Work Log</a></li>
   </ul>
-  <div class="nav-section">Compositions</div>
-  <ul class="nav-links compact">
+  <div class="nav-section" id="nav-comps-label">Compositions</div>
+  <ul class="nav-links compact" aria-labelledby="nav-comps-label">
     {% for cid, c in COMPS.items() %}
-    <li><a href="/composition/{{ cid }}" class="{% if cid==(cid_active if cid_active is defined else '') %}active{% endif %}"
-           title="{{ c.formula }}"><span class="dot" style="background:{{ c.color }}"></span>{{ c.label }}</a></li>
+    <li><a href="/composition/{{ cid }}" {% if cid==(cid_active if cid_active is defined else '') %}aria-current="page" class="active"{% endif %}
+           title="{{ c.formula }}"><span class="dot" style="background:{{ c.color }}" aria-hidden="true"></span>{{ c.label }}</a></li>
     {% endfor %}
   </ul>
-  <div class="sidebar-footer">Solid-State · Sulfide SE<br><span class="muted">synced from db/</span></div>
+  <div class="sidebar-footer">
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="라이트/다크 테마 전환">
+      <span class="tt-icon" aria-hidden="true">🌙</span><span class="tt-label">다크 모드</span>
+    </button>
+    <div style="margin-top:10px">Solid-State · Sulfide SE<br><span class="muted">synced from db/</span></div>
+  </div>
 </nav>
-<main class="content">
+<main class="content" id="main" tabindex="-1">
   {% block content %}{% endblock %}
 </main>
-<div id="toast" class="toast"></div>
+
+<!-- ⌘K command palette -->
+<div class="cmdk" id="cmdk" role="dialog" aria-modal="true" aria-label="전역 검색" hidden>
+  <div class="cmdk-box" role="document">
+    <input id="cmdk-input" class="cmdk-input" type="text" placeholder="조성 · 물성 · 용어 · 논문 · 개념 · 페이지 검색…"
+           aria-label="검색어" aria-controls="cmdk-results" aria-expanded="true" autocomplete="off" spellcheck="false">
+    <div class="cmdk-results" id="cmdk-results" role="listbox" aria-label="검색 결과"></div>
+    <div class="cmdk-foot"><span><kbd>↑</kbd><kbd>↓</kbd> 이동</span><span><kbd>↵</kbd> 열기</span><span><kbd>esc</kbd> 닫기</span></div>
+  </div>
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
 <script>
 function showToast(m){var t=document.getElementById('toast');if(!t)return;t.textContent=m;t.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(function(){t.classList.remove('show')},2200);}
 function copyText(s){navigator.clipboard.writeText(s).then(function(){showToast('클립보드에 복사됨');});}
-document.addEventListener('keydown',function(e){if(e.key==='Escape')document.body.classList.remove('nav-open');});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){document.body.classList.remove('nav-open');closeCmdk();}});
+
+// ── theme toggle ──
+function _effTheme(){var e=document.documentElement.getAttribute('data-theme');if(e)return e;
+  return window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}
+function _syncThemeBtn(){var d=_effTheme()==='dark';var i=document.querySelector('.tt-icon'),l=document.querySelector('.tt-label');
+  if(i)i.textContent=d?'☀️':'🌙';if(l)l.textContent=d?'라이트 모드':'다크 모드';}
+function toggleTheme(){var n=_effTheme()==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',n);try{localStorage.setItem('theme',n);}catch(e){}_syncThemeBtn();
+  window.dispatchEvent(new Event('themechange'));
+  if(window.Plotly){document.querySelectorAll('.js-plotly-plot').forEach(function(g){try{Plotly.Plots.resize(g);}catch(e){}});}}
+_syncThemeBtn();
+// Plotly 테마 헬퍼 (차트가 라이트/다크에 맞게 글꼴색·투명배경)
+function plotlyFont(){return {family:'Inter',size:12,color:getComputedStyle(document.body).color};}
+function plotlyBG(){return {paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)'};}
+
+// ── ⌘K command palette ──
+var _cx={items:null,shown:[],sel:0};
+function openCmdk(){var m=document.getElementById('cmdk');m.hidden=false;requestAnimationFrame(function(){m.classList.add('open');});
+  var inp=document.getElementById('cmdk-input');inp.value='';inp.focus();
+  if(_cx.items===null){fetch('/api/search').then(function(r){return r.json();}).then(function(d){_cx.items=d.items||[];renderCmdk('');});}
+  else renderCmdk('');}
+function closeCmdk(){var m=document.getElementById('cmdk');if(!m||m.hidden)return;m.classList.remove('open');setTimeout(function(){m.hidden=true;},150);}
+function renderCmdk(q){
+  q=(q||'').toLowerCase().trim();var items=_cx.items||[];
+  var res=!q?items.slice(0,12):items.map(function(it){
+      var hay=(it.label+' '+(it.sub||'')+' '+(it.kw||'')).toLowerCase();
+      var i=hay.indexOf(q);return i<0?null:{it:it,score:(hay.indexOf(q)===0?0:1)+(it.label.toLowerCase().indexOf(q)<0?2:0)};
+    }).filter(Boolean).sort(function(a,b){return a.score-b.score;}).slice(0,20).map(function(x){return x.it;});
+  _cx.shown=res;_cx.sel=0;
+  var box=document.getElementById('cmdk-results');
+  if(!res.length){box.innerHTML='<div class="cmdk-empty">결과 없음</div>';return;}
+  box.innerHTML=res.map(function(it,i){return '<a class="cmdk-item'+(i===0?' sel':'')+'" role="option" href="'+it.url+'" data-i="'+i+'">'+
+    '<span class="ci-t">'+it.t+'</span><span class="ci-l">'+_esc(it.label)+'</span>'+
+    (it.sub?'<span class="ci-s">'+_esc(it.sub)+'</span>':'')+'</a>';}).join('');
+  box.querySelectorAll('.cmdk-item').forEach(function(el){el.addEventListener('mouseenter',function(){_setSel(+el.dataset.i);});});
+}
+function _esc(s){return (s+'').replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+function _setSel(i){var els=document.querySelectorAll('.cmdk-item');if(!els.length)return;
+  els[_cx.sel]&&els[_cx.sel].classList.remove('sel');_cx.sel=(i+els.length)%els.length;
+  els[_cx.sel].classList.add('sel');els[_cx.sel].scrollIntoView({block:'nearest'});}
+document.addEventListener('keydown',function(e){
+  var open=!document.getElementById('cmdk').hidden;
+  if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();open?closeCmdk():openCmdk();return;}
+  if(!open)return;
+  if(e.key==='ArrowDown'){e.preventDefault();_setSel(_cx.sel+1);}
+  else if(e.key==='ArrowUp'){e.preventDefault();_setSel(_cx.sel-1);}
+  else if(e.key==='Enter'){e.preventDefault();var el=document.querySelectorAll('.cmdk-item')[_cx.sel];if(el)location.href=el.href;}
+});
+document.addEventListener('input',function(e){if(e.target&&e.target.id==='cmdk-input')renderCmdk(e.target.value);});
+document.getElementById('cmdk').addEventListener('click',function(e){if(e.target===this)closeCmdk();});
 </script>
 {% block scripts %}{% endblock %}
 </body>

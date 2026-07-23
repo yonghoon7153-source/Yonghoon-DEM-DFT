@@ -78,6 +78,45 @@ def cascade_page():
                            stats=stats, deep_map=deep_map)
 
 
+@app.route("/elements")
+def elements():
+    e2c = D.element_to_comps()
+    return render_template("elements.html", active="elements",
+                           periodic=D.PERIODIC, e2c=e2c,
+                           campaign=sorted(D.campaign_elements()),
+                           comp_elements=D.COMP_ELEMENTS)
+
+
+@app.route("/explorer")
+def explorer():
+    cov = None
+    b = D.build_matrix()
+    cov = D.build_coverage(b["properties"], b["prop_category"], b["index_metrics"])
+    return render_template("explorer.html", active="explorer",
+                           canonical=D.CANONICAL, canonical_meta=D.CANONICAL_META,
+                           comp_elements=D.COMP_ELEMENTS, cov=cov,
+                           categories=D.CATEGORIES)
+
+
+@app.route("/compute")
+def compute():
+    return render_template("compute.html", active="compute",
+                           calcs=D.COMPUTE_CALCS, settings=D.COMPUTE_SETTINGS)
+
+
+@app.route("/api/search")
+def api_search():
+    return jsonify({"items": D.search_index()})
+
+
+@app.route("/api/compute-preview")
+def api_compute_preview():
+    from flask import request
+    cid = request.args.get("cid", "")
+    calc = request.args.get("calc", "scf")
+    return jsonify(D.compute_preview(cid, calc))
+
+
 @app.route("/methods")
 def methods():
     md = D.load_canonical_methods()

@@ -57,5 +57,8 @@ function openPaper(id){
   document.getElementById('pmodal').classList.add('open');
   fetch('/api/paper/'+id).then(r=>r.json()).then(d=>{document.getElementById('pbody').innerHTML=d.html;});
 }
+// ⌘K/딥링크로 온 경우 ?open=<id> 자동 오픈
+(function(){var m=new URLSearchParams(location.search).get('open');
+  if(m&&document.querySelector('.paper[onclick*="'+m+'"]'))openPaper(m);})();
 </script>
 {% endblock %}

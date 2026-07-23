@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Compute · 계산 자동생성{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>⚡ Compute — 원클릭 계산 입력 생성</h1>
+    <div class="sub">조성 + 계산 타입 선택 → canonical 레시피대로 <b>QE 입력 + 러너 스크립트</b> 자동 생성</div></div>
+</div>
+
+<div class="cmp-controls card">
+  <div class="cmp-row">
+    <label class="cmp-lab" for="cmp-comp">조성</label>
+    <select id="cmp-comp" class="search" style="max-width:260px" onchange="genCompute()">
+      {% for cid,c in COMPS.items() %}<option value="{{ cid }}">{{ c.label }} — {{ c.formula }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="cmp-row">
+    <span class="cmp-lab">계산 타입</span>
+    <div class="seg" role="tablist" aria-label="계산 타입">
+      {% for c in calcs %}
+      <button class="seg-btn {% if loop.first %}active{% endif %}" role="tab" data-calc="{{ c.id }}"
+              onclick="pickCalc(this)">{{ c.label }}</button>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div id="cmp-out" class="cmp-out" aria-live="polite">
+  <div class="muted" style="padding:30px;text-align:center">생성 중…</div>
+</div>
+
+<div class="card" style="margin-top:16px;background:color-mix(in srgb,var(--accent) 6%,var(--card))">
+  <div style="font-size:.85rem;line-height:1.6"><b>참고:</b> 생성물은 canonical 레시피를 따른 <b>템플릿</b>이에요 — 구조(CELL_PARAMETERS/ATOMIC_POSITIONS)는 db 구조파일에서 삽입하고, 제출 전 파티션·pseudo 경로를 서버에 맞게 확인하세요. 실제 실행은 서버 워크플로(붙여넣기 블록)로.</div>
+</div>
+
+<script>
+var curCalc='scf';
+function pickCalc(b){curCalc=b.dataset.calc;document.querySelectorAll('.seg-btn').forEach(function(x){x.classList.remove('active')});b.classList.add('active');genCompute();}
+function panel(title,name,body,lang){
+  return '<div class="code-card"><div class="code-head"><span class="code-name">'+name+'</span>'+
+    '<button class="btn sm" onclick="copyText(this.closest(\'.code-card\').querySelector(\'code\').textContent)">📋 복사</button></div>'+
+    '<pre class="code-body"><code>'+_esc(body)+'</code></pre></div>';
+}
+function genCompute(){
+  var cid=document.getElementById('cmp-comp').value;
+  var out=document.getElementById('cmp-out');
+  out.innerHTML='<div class="muted" style="padding:30px;text-align:center">생성 중…</div>';
+  fetch('/api/compute-preview?cid='+cid+'&calc='+curCalc).then(function(r){return r.json();}).then(function(d){
+    if(d.error){out.innerHTML='<div class="card">에러: '+d.error+'</div>';return;}
+    var warn=(d.warn&&d.warn.length)?d.warn.map(function(w){return '<div class="callout cal-warning"><div class="cal-t">⚠ 주의</div><div class="cal-b">'+_esc(w)+'</div></div>';}).join(''):'';
+    out.innerHTML=
+      '<div class="cmp-meta">'+
+        '<span class="cmp-badge">🖥 '+_esc(d.server)+'</span>'+
+        '<span class="cmp-badge">⚙ '+_esc(d.engine)+'</span>'+
+      '</div>'+
+      '<div class="callout cal-note"><div class="cal-b">'+_esc(d.note)+'</div></div>'+
+      warn+
+      '<div class="code-grid">'+
+        panel('input',d.input_name,d.input)+
+        panel('runner',d.runner_name,d.runner)+
+      '</div>';
+  }).catch(function(){out.innerHTML='<div class="card">생성 실패</div>';});
+}
+genCompute();
+</script>
+{% endblock %}

@@ -445,3 +445,225 @@ def read_csv(rel: str) -> dict:
                 rec[h] = v
         data.append(rec)
     return {"columns": header, "data": data, "n": len(data)}
+
+
+# ═════════════════════════════════════════════════════════════
+# 신규 기능 데이터층 (검색 / 주기율표 / Compute)
+# ═════════════════════════════════════════════════════════════
+
+# ── 조성별 원소 구성 (주기율표 explorer) ──
+COMP_ELEMENTS = {
+    "comp1": ["Li", "P", "S", "Cl"],
+    "comp2": ["Li", "P", "S", "Cl", "Br"],
+    "comp3": ["Li", "P", "S", "Cl", "I"],
+    "comp4": ["Li", "P", "S", "Br"],
+    "comp5": ["Li", "P", "S", "I"],
+    "modelc": ["Li", "P", "S", "Cl"],
+    "modelc_v3": ["Li", "P", "S", "Cl"],
+    "modelc_nd_doped": ["Li", "P", "Nd", "S", "O", "Cl"],
+    "lpsocl": ["Li", "P", "S", "O", "Cl"],
+    "b2o3": ["Li", "P", "S", "Cl", "B", "O"],
+    "vgcf_hbn": ["Li", "C", "B", "N", "H"],
+    "li3n": ["Li", "N"],
+    "lic6": ["Li", "C"],
+    "sdcp": ["C", "H", "O", "S", "N", "Li"],
+}
+
+# 주기율표 배치 (sym, Z, group=열1..18, period=행; 란탄=8행·악티늄=9행 표시)
+PERIODIC = [
+    ("H",1,1,1),("He",2,18,1),
+    ("Li",3,1,2),("Be",4,2,2),("B",5,13,2),("C",6,14,2),("N",7,15,2),("O",8,16,2),("F",9,17,2),("Ne",10,18,2),
+    ("Na",11,1,3),("Mg",12,2,3),("Al",13,13,3),("Si",14,14,3),("P",15,15,3),("S",16,16,3),("Cl",17,17,3),("Ar",18,18,3),
+    ("K",19,1,4),("Ca",20,2,4),("Sc",21,3,4),("Ti",22,4,4),("V",23,5,4),("Cr",24,6,4),("Mn",25,7,4),("Fe",26,8,4),("Co",27,9,4),("Ni",28,10,4),("Cu",29,11,4),("Zn",30,12,4),("Ga",31,13,4),("Ge",32,14,4),("As",33,15,4),("Se",34,16,4),("Br",35,17,4),("Kr",36,18,4),
+    ("Rb",37,1,5),("Sr",38,2,5),("Y",39,3,5),("Zr",40,4,5),("Nb",41,5,5),("Mo",42,6,5),("Tc",43,7,5),("Ru",44,8,5),("Rh",45,9,5),("Pd",46,10,5),("Ag",47,11,5),("Cd",48,12,5),("In",49,13,5),("Sn",50,14,5),("Sb",51,15,5),("Te",52,16,5),("I",53,17,5),("Xe",54,18,5),
+    ("Cs",55,1,6),("Ba",56,2,6),("La",57,3,6),("Hf",72,4,6),("Ta",73,5,6),("W",74,6,6),("Re",75,7,6),("Os",76,8,6),("Ir",77,9,6),("Pt",78,10,6),("Au",79,11,6),("Hg",80,12,6),("Tl",81,13,6),("Pb",82,14,6),("Bi",83,15,6),("Po",84,16,6),("At",85,17,6),("Rn",86,18,6),
+    ("Fr",87,1,7),("Ra",88,2,7),("Ac",89,3,7),("Rf",104,4,7),("Db",105,5,7),("Sg",106,6,7),("Bh",107,7,7),("Hs",108,8,7),("Mt",109,9,7),("Ds",110,10,7),("Rg",111,11,7),("Cn",112,12,7),("Nh",113,13,7),("Fl",114,14,7),("Mc",115,15,7),("Lv",116,16,7),("Ts",117,17,7),("Og",118,18,7),
+    ("Ce",58,4,8),("Pr",59,5,8),("Nd",60,6,8),("Pm",61,7,8),("Sm",62,8,8),("Eu",63,9,8),("Gd",64,10,8),("Tb",65,11,8),("Dy",66,12,8),("Ho",67,13,8),("Er",68,14,8),("Tm",69,15,8),("Yb",70,16,8),("Lu",71,17,8),
+    ("Th",90,4,9),("Pa",91,5,9),("U",92,6,9),("Np",93,7,9),("Pu",94,8,9),("Am",95,9,9),("Cm",96,10,9),("Bk",97,11,9),("Cf",98,12,9),("Es",99,13,9),("Fm",100,14,9),("Md",101,15,9),("No",102,16,9),("Lr",103,17,9),
+]
+
+def element_to_comps() -> dict:
+    out = {}
+    for cid, els in COMP_ELEMENTS.items():
+        for e in els:
+            out.setdefault(e, []).append(cid)
+    return out
+
+def campaign_elements() -> set:
+    return {e for els in COMP_ELEMENTS.values() for e in els}
+
+
+# ── 전역 검색 인덱스 (⌘K) ──
+def search_index() -> list:
+    import glossary as G
+    idx = []
+    pages = [
+        ("페이지", "Dashboard", "커버리지 매트릭스·조성 요약", "/"),
+        ("페이지", "Property Explorer", "정렬·필터 물성 표 + provenance", "/explorer"),
+        ("페이지", "Periodic Table", "원소별 조성 탐색", "/elements"),
+        ("페이지", "Comparison", "조성 간 비교 + 레이더", "/compare"),
+        ("페이지", "Cascade/ML", "UMA 도핑 스크리닝", "/cascade"),
+        ("페이지", "Compute", "원클릭 계산 입력 생성", "/compute"),
+        ("페이지", "Methods", "계산 방법 canonical", "/methods"),
+        ("페이지", "Literature", "DEM/DFT 문헌", "/literature"),
+        ("페이지", "Glossary", "용어 설명집", "/glossary"),
+        ("페이지", "Work Log", "작업 기록", "/log"),
+    ]
+    for t, label, sub, url in pages:
+        idx.append({"t": t, "label": label, "sub": sub, "url": url, "kw": label})
+    for cid, c in COMPOSITIONS.items():
+        idx.append({"t": "조성", "label": c["label"], "sub": c["formula"],
+                    "url": f"/composition/{cid}",
+                    "kw": f"{cid} {c['family']} {c['cell']} " + " ".join(COMP_ELEMENTS.get(cid, []))})
+    have = concept_ids()
+    for g in G.GLOSSARY:
+        url = f"/concept/{g['id']}" if g["id"] in have else "/glossary"
+        idx.append({"t": "용어", "label": g["term"], "sub": g["full"],
+                    "url": url, "kw": f"{g['id']} {g['cat']}"})
+    for cid in sorted(have):
+        idx.append({"t": "개념", "label": cid.upper(), "sub": "상세 개념 문서",
+                    "url": f"/concept/{cid}", "kw": cid})
+    for p in list_papers():
+        idx.append({"t": "논문", "label": p["title"][:70], "sub": p["type"][:40],
+                    "url": f"/literature?open={p['id']}", "kw": f"{p['id']} {p['track']}"})
+    return idx
+
+
+# ── Compute: 계산 입력 자동생성 (디지털 트윈 원클릭 스캐폴드) ──
+PSEUDO_LIB = {
+    "Li": "li_pbe_v1.4.uspp.F.UPF", "P": "P.pbe-n-rrkjus_psl.1.0.0.UPF",
+    "S": "s_pbe_v1.4.uspp.F.UPF", "Cl": "cl_pbe_v1.4.uspp.F.UPF",
+    "Br": "br_pbe_v1.4.uspp.F.UPF", "I": "i_pbe_v1.4.uspp.F.UPF",
+    "O": "O.pbe-n-kjpaw_psl.1.0.0.UPF", "B": "b_pbe_v1.4.uspp.F.UPF",
+    "N": "N.pbe-n-radius_5.UPF", "C": "C.pbe-n-kjpaw_psl.1.0.0.UPF",
+    "H": "H.pbe-rrkjus_psl.1.0.0.UPF", "Nd": "Nd.GGA-PBE-paw.UPF",
+}
+# 조성별 canonical 계산 설정 (methods 문서와 정합)
+COMPUTE_SETTINGS = {
+    "comp1":  {"ecutwfc": 52, "ecutrho": 520, "k": [4, 4, 4], "struct": "comp1_V0_relaxed.cif",  "server": "kgy (RTX3090, QE-GPU)"},
+    "comp2":  {"ecutwfc": 52, "ecutrho": 520, "k": [4, 4, 4], "struct": "comp2_V0_v3_candidate.xyz", "server": "gabia (A6000, QE-GPU)"},
+    "modelc": {"ecutwfc": 60, "ecutrho": 480, "k": [2, 2, 1], "struct": "modelc_V0_k663.cif",     "server": "kgy (RTX3090, QE-GPU)"},
+    "modelc_v3": {"ecutwfc": 60, "ecutrho": 480, "k": [2, 2, 1], "struct": "modelc_v3_62atom_V0.cif", "server": "kgy (RTX3090, QE-GPU)"},
+    "modelc_nd_doped": {"ecutwfc": 60, "ecutrho": 480, "k": [6, 6, 1], "struct": "modelc_nd_doped_DFTrelax.cif", "server": "KISTI neuron", "dftu": True},
+    "lpsocl": {"ecutwfc": 60, "ecutrho": 480, "k": [2, 2, 1], "struct": "lpsocl_candidates",      "server": "KISTI neuron"},
+    "b2o3":   {"ecutwfc": 60, "ecutrho": 480, "k": [1, 1, 1], "struct": "b2o3 128-SC",            "server": "KISTI neuron"},
+}
+COMPUTE_CALCS = [
+    {"id": "scf",     "label": "SCF (총에너지)",       "engine": "QE pw.x"},
+    {"id": "gap",     "label": "Band gap (fixed-occ nscf)", "engine": "QE pw.x"},
+    {"id": "vcrelax", "label": "EOS / vc-relax (구조·B₀)",  "engine": "QE pw.x"},
+    {"id": "md",      "label": "MLIP-MD (UMA, 확산)",   "engine": "UMA + ASE"},
+]
+
+def compute_preview(cid: str, calc: str) -> dict:
+    comp = COMPOSITIONS.get(cid)
+    if not comp:
+        return {"error": "unknown composition"}
+    st = COMPUTE_SETTINGS.get(cid, {"ecutwfc": 60, "ecutrho": 480, "k": [2, 2, 1],
+                                    "struct": f"{cid}.cif", "server": "KISTI neuron"})
+    els = COMP_ELEMENTS.get(cid, [])
+    kx, ky, kz = st["k"]
+    species = "\n".join(f"  {e}  {_mass(e)}  {PSEUDO_LIB.get(e, e + '.UPF')}" for e in els)
+    prefix = f"{cid}_{calc}"
+    warn = []
+
+    if calc == "md":
+        body = _md_template(cid, comp, st)
+        runner = _runner_uma(cid, prefix, st)
+        note = "UMA-s-1p1(omat) · Langevin NVT dt 2fs · equilib 5ps / prod 200ps · MSD 2–50ps. ⚠ 절대값 인용 금지(멀티시드 판정만)."
+        if cid == "li3n":
+            warn.append("Li₃N에는 UMA 사용 금지 (2026-06 편향 판정) — 이 조합은 생성하지 않는 게 원칙.")
+        return {"cid": cid, "calc": calc, "engine": "UMA + ASE", "server": st["server"],
+                "input_name": f"md_{cid}.py", "input": body, "runner_name": f"run_md_{cid}.sh",
+                "runner": runner, "note": note, "warn": warn}
+
+    calc_kw = {"scf": "scf", "gap": "nscf", "vcrelax": "vc-relax"}[calc]
+    occ = ("  occupations = 'fixed'\n" if calc == "gap" else
+           "  occupations = 'smearing'\n  smearing = 'mv'\n  degauss = 0.01\n")
+    extra_sys = "  nbnd = <VBM+여유>\n" if calc == "gap" else ""
+    cell_block = ("&CELL\n  cell_dofree = 'all'\n/\n" if calc == "vcrelax" else "")
+    ions_block = ("&IONS\n  ion_dynamics = 'bfgs'\n/\n" if calc == "vcrelax" else "")
+    if calc == "gap":
+        note = "정본 gap = 이 nscf의 VBM/CBM 고유값 차. ⚠ DOS-threshold 판독 금지(~0.3 eV 과소). scf 먼저 수렴 후 nscf."
+    elif calc == "vcrelax":
+        note = "Birch–Murnaghan EOS는 여러 부피 고정셀 relax로. vc-relax는 V₀ 확정용. B₀ ≠ elastic B_VRH."
+    else:
+        note = "기본 SCF. conv_thr 1e-8, forc_conv 필요시 relax로 전환."
+    if st.get("dftu"):
+        warn.append("Nd 4f: DFT+U (U_eff≈6 eV) + ISPIN=2 필요 (litdb Nd 교훈) — &SYSTEM에 Hubbard 블록 추가.")
+
+    inp = f"""&CONTROL
+  calculation = '{calc_kw}'
+  prefix = '{prefix}'
+  pseudo_dir = '/scratch/x3430a02/kgy/manuscript_support/pseudo'
+  outdir = './out_{prefix}'
+  tprnfor = .true.
+  tstress = .true.
+/
+&SYSTEM
+  ibrav = 0
+  nat = <구조에서>   ntyp = {len(els)}
+  ecutwfc = {st['ecutwfc']}
+  ecutrho = {st['ecutrho']}
+{occ}{extra_sys}/
+&ELECTRONS
+  conv_thr = 1.0d-8
+  mixing_beta = 0.3
+/
+{ions_block}{cell_block}ATOMIC_SPECIES
+{species}
+
+K_POINTS automatic
+  {kx} {ky} {kz} 0 0 0
+
+! CELL_PARAMETERS / ATOMIC_POSITIONS ← 구조파일에서 삽입:
+!   db/structures/{st['struct']}
+"""
+    return {"cid": cid, "calc": calc, "engine": "QE pw.x", "server": st["server"],
+            "input_name": f"{prefix}.in", "input": inp,
+            "runner_name": f"run_{prefix}.sh", "runner": _runner_qe(cid, prefix, st),
+            "note": note, "warn": warn}
+
+_MASS = {"Li": 6.94, "P": 30.97, "S": 32.06, "Cl": 35.45, "Br": 79.90, "I": 126.90,
+         "O": 16.00, "B": 10.81, "N": 14.01, "C": 12.01, "H": 1.008, "Nd": 144.24}
+def _mass(e): return _MASS.get(e, 1.0)
+
+def _runner_qe(cid, prefix, st):
+    return f"""#!/bin/bash
+# {cid} · {prefix} — {st['server']}
+#SBATCH -J {prefix}
+#SBATCH -p cas_v100_4     # 서버별 파티션 확인
+#SBATCH --time=24:00:00
+set -e
+pgrep -f "{prefix}.in" && {{ echo "이미 실행중"; exit 1; }}   # 중복실행 가드
+export OMP_NUM_THREADS=1
+mpirun -np 4 pw.x -in {prefix}.in | tee {prefix}.out
+grep -a "JOB DONE" {prefix}.out && echo "완료"
+"""
+
+def _runner_uma(cid, prefix, st):
+    return f"""#!/bin/bash
+# {cid} MLIP-MD — {st['server']} (uma env)
+set -e
+pgrep -f "md_{cid}.py" && {{ echo "이미 실행중"; exit 1; }}
+nvidia-smi | grep -q pw.x && {{ echo "pw.x 실행중 — VRAM 충돌 회피, 대기"; exit 1; }}
+conda run -n uma python md_{cid}.py 2>&1 | tee md_{cid}.log
+"""
+
+def _md_template(cid, comp, st):
+    return f"""# {cid} ({comp['formula']}) — UMA MLIP-MD (Langevin NVT)
+from ase.io import read
+from ase.md.langevin import Langevin
+from ase import units
+from fairchem.core import OCPCalculator   # UMA-s-1p1
+
+atoms = read('db/structures/{st['struct']}')
+atoms.calc = OCPCalculator(model_name='uma-s-1p1', task='omat')
+
+for T in (600, 800, 1000):            # 아레니우스 3점
+    for seed in (1, 2, 3):            # 멀티시드
+        dyn = Langevin(atoms, timestep=2*units.fs, temperature_K=T,
+                       friction=0.02, rng=__import__('numpy').random.default_rng(seed))
+        dyn.run(2500)                 # 5 ps 평형
+        # 생산 200 ps + MSD(2–50ps) 저장 …
+"""

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Periodic Table · Elements{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>Periodic Table</h1>
+    <div class="sub">캠페인에 쓰인 원소를 강조 — 원소 클릭 → 그 원소가 든 조성</div></div>
+  <div class="page-actions"><span class="badge b-canon">{{ campaign|length }} elements in use</span></div>
+</div>
+
+<div class="pt-layout">
+  <div class="pt-wrap">
+    <div class="pt" role="group" aria-label="주기율표">
+      {% for sym,z,g,p in periodic %}
+      {% set active = sym in e2c %}
+      <button class="pt-cell {% if active %}pt-on{% else %}pt-off{% endif %}"
+              style="grid-column:{{ g }};grid-row:{{ p }}"
+              data-el="{{ sym }}" {% if active %}onclick="pickEl('{{ sym }}')"{% else %}tabindex="-1" aria-hidden="true"{% endif %}
+              {% if active %}aria-label="{{ sym }} — {{ e2c[sym]|length }} 조성"{% endif %}>
+        <span class="pt-z">{{ z }}</span>
+        <span class="pt-sym">{{ sym }}</span>
+        {% if active %}<span class="pt-n">{{ e2c[sym]|length }}</span>{% endif %}
+      </button>
+      {% endfor %}
+      <div class="pt-gap" style="grid-column:3;grid-row:8"></div>
+    </div>
+    <div class="pt-legend">
+      <span><i class="lg-on"></i> 캠페인 사용 원소 (숫자 = 조성 수)</span>
+      <span><i class="lg-off"></i> 미사용</span>
+    </div>
+  </div>
+
+  <aside class="pt-panel" id="pt-panel" aria-live="polite">
+    <div class="pt-panel-empty" id="pt-empty">
+      <div class="pe-ico">⊞</div>
+      <div>원소를 클릭하면 그 원소가 들어간<br>조성 목록이 여기 떠요.</div>
+    </div>
+    <div id="pt-detail" hidden>
+      <div class="pd-head"><span class="pd-sym" id="pd-sym"></span><span class="pd-name muted" id="pd-cnt"></span></div>
+      <div class="section-title">이 원소가 든 조성</div>
+      <div id="pd-comps" class="pd-comps"></div>
+    </div>
+  </aside>
+</div>
+
+<script>
+var E2C = {{ e2c|tojson }};
+var COMPS = {{ COMPS|tojson }};
+function pickEl(sym){
+  document.querySelectorAll('.pt-cell').forEach(function(b){b.classList.toggle('pt-sel',b.dataset.el===sym);});
+  document.getElementById('pt-empty').hidden=true;
+  var d=document.getElementById('pt-detail');d.hidden=false;
+  document.getElementById('pd-sym').textContent=sym;
+  var cids=E2C[sym]||[];
+  document.getElementById('pd-cnt').textContent=cids.length+' 조성';
+  document.getElementById('pd-comps').innerHTML=cids.map(function(cid){
+    var c=COMPS[cid]||{};
+    return '<a class="pd-comp" href="/composition/'+cid+'">'+
+      '<span class="pd-dot" style="background:'+(c.color||'#888')+'"></span>'+
+      '<span class="pd-l"><b>'+(c.label||cid)+'</b><span class="pd-f">'+(c.formula||'')+'</span></span>'+
+      '<span class="pd-arrow">→</span></a>';
+  }).join('');
+}
+</script>
+{% endblock %}

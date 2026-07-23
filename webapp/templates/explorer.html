@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}Property Explorer{% endblock %}
+{% block content %}
+{% set props = [
+  ('gap_eV','Band gap','eV'),
+  ('B0_GPa','EOS B₀','GPa'),
+  ('E_VRH_GPa','E_VRH','GPa'),
+  ('MD_Ea_eV','MD Ea','eV'),
+  ('ICOHP_PS','ICOHP P–S','eV')] %}
+<div class="page-header">
+  <div><h1>Property Explorer</h1>
+    <div class="sub">조성 × canonical 물성 — 정렬·필터 + 값마다 <b>method provenance</b> · 클릭하면 인용 복사</div></div>
+</div>
+
+<div class="exp-controls">
+  <input class="search" placeholder="조성 검색 (label · formula)…" oninput="expFilt()" id="exp-q" aria-label="조성 검색">
+  <div class="chip-bar" role="group" aria-label="family 필터">
+    <button class="chip active" data-fam="" onclick="expFam(this)">전체</button>
+    {% for fam in FAMILY_ORDER %}<button class="chip" data-fam="{{ fam }}" onclick="expFam(this)">{{ fam }}</button>{% endfor %}
+  </div>
+</div>
+
+<div class="card" style="padding:0;overflow:hidden">
+<div class="tbl-scroll">
+<table class="data-table exp-table" id="exp-table">
+  <thead>
+    <tr>
+      <th onclick="expSort(0)" class="sortable-h">조성</th>
+      <th onclick="expSort(1)" class="sortable-h">family</th>
+      {% for key,label,unit in props %}
+      <th onclick="expSort({{ loop.index+1 }})" class="sortable-h num" title="{{ canonical_meta.get(key,'') }}">
+        {{ label }} <span class="th-unit">{{ unit }}</span>
+        <span class="th-prov" aria-hidden="true">ⓘ</span>
+      </th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+  {% for cid,c in COMPS.items() %}
+    <tr data-fam="{{ c.family }}" data-s="{{ c.label|lower }} {{ c.formula|lower }} {{ cid }}">
+      <td><a href="/composition/{{ cid }}" class="exp-comp"><span class="dot" style="background:{{ c.color }}"></span>{{ c.label }}</a>
+        <div class="exp-formula mono">{{ c.formula }}</div></td>
+      <td><span class="badge b-fam">{{ c.family }}</span></td>
+      {% for key,label,unit in props %}
+        {% set v = canonical.get(key,{}).get(cid) %}
+        <td class="num">
+          {% if v is not none %}
+          <button class="cell-cite" onclick="citeVal('{{ c.label }}','{{ label }}','{{ v }}','{{ unit }}',{{ canonical_meta.get(key,'')|tojson }})"
+                  title="클릭 → 인용 복사&#10;{{ canonical_meta.get(key,'') }}">{{ v }}</button>
+          {% else %}<span class="cell-todo">TODO</span>{% endif %}
+        </td>
+      {% endfor %}
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+</div>
+
+<div class="prov-legend">
+  <div class="section-title">Provenance — 각 열의 계산 방법</div>
+  <div class="grid grid-3">
+  {% for key,label,unit in props %}
+    <div class="prov-card">
+      <div class="pc-t">{{ label }} <span class="muted">({{ unit }})</span></div>
+      <div class="pc-m">{{ canonical_meta.get(key,'—') }}</div>
+    </div>
+  {% endfor %}
+  </div>
+  <p class="muted" style="font-size:.8rem;margin-top:12px">⚠ 서로 다른 pseudo/cell로 계산된 값은 직접 비교 금지 — comp1↔comp2(둘 다 cubic-52 USPP)만 완전비교쌍. MD Ea는 UMA(멀티시드 판정).</p>
+</div>
+
+<script>
+function citeVal(comp,prop,val,unit,method){
+  copyText(comp+' — '+prop+' = '+val+' '+unit+'  ['+method+']');
+}
+var expF={q:'',fam:''};
+function expFilt(){expF.q=document.getElementById('exp-q').value.toLowerCase().trim();expApply();}
+function expFam(b){expF.fam=b.dataset.fam;document.querySelectorAll('.exp-controls .chip').forEach(function(x){x.classList.remove('active')});b.classList.add('active');expApply();}
+function expApply(){document.querySelectorAll('#exp-table tbody tr').forEach(function(r){
+  var okF=!expF.fam||r.dataset.fam===expF.fam;
+  var okQ=!expF.q||r.dataset.s.indexOf(expF.q)>=0;
+  r.style.display=(okF&&okQ)?'':'none';});}
+function expSort(idx){
+  var tb=document.getElementById('exp-table'),rows=Array.prototype.slice.call(tb.tBodies[0].rows);
+  var th=tb.tHead.rows[0].cells[idx];var asc=!(th._asc);
+  tb.querySelectorAll('th').forEach(function(x){x.removeAttribute('data-sort');x._asc=false;});
+  th._asc=asc;th.setAttribute('data-sort',asc?'▲':'▼');
+  rows.sort(function(a,b){
+    var x=a.cells[idx].innerText.trim().replace('TODO','');
+    var y=b.cells[idx].innerText.trim().replace('TODO','');
+    var nx=parseFloat(x),ny=parseFloat(y);
+    var ex=isNaN(nx),ey=isNaN(ny);
+    if(ex&&ey)return x.localeCompare(y)*(asc?1:-1);
+    if(ex)return 1; if(ey)return -1;          // 빈값(TODO)은 항상 아래로
+    return (asc?nx-ny:ny-nx);
+  });
+  rows.forEach(function(r){tb.tBodies[0].appendChild(r);});
+}
+</script>
+{% endblock %}
