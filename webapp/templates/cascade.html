@@ -3,10 +3,11 @@
 {% block head %}<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>{% endblock %}
 
 {% macro num(v) %}{% if v is number %}{% if v == v|round(0) %}{{ v|int }}{% else %}{{ '%.3f'|format(v) }}{% endif %}{% else %}{{ v }}{% endif %}{% endmacro %}
+{% macro sf(v, nd=3) %}{% if v is number %}{{ ('%.'~nd~'f')|format(v) }}{% else %}{{ v if v is not none else '' }}{% endif %}{% endmacro %}
 {% macro gtable(t, cols) %}
 <div class="tbl-scroll"><table class="data-table sortable"><thead><tr>
 {% for c in cols %}<th onclick="sortT(this,{{ loop.index0 }})">{{ c }}</th>{% endfor %}</tr></thead><tbody>
-{% for row in t.data %}<tr>{% for c in cols %}<td class="{% if row[c] is number %}num{% endif %}">{{ num(row[c]) }}</td>{% endfor %}</tr>{% endfor %}
+{% for row in (t.data or []) %}<tr>{% for c in cols %}<td class="{% if row[c] is number %}num{% endif %}">{{ num(row[c]) }}</td>{% endfor %}</tr>{% endfor %}
 </tbody></table></div>{% endmacro %}
 
 {% block content %}
@@ -59,17 +60,17 @@
       <th onclick="sortT(this,4)">Δe</th><th onclick="sortT(this,5)">ox_V</th>
       <th onclick="sortT(this,6)">red_V</th><th onclick="sortT(this,7)">E (GPa)</th>
       <th onclick="sortT(this,8)">Pugh B/G</th><th onclick="sortT(this,9)">Pareto</th></tr></thead><tbody>
-    {% for r in casc.ranked.data %}
+    {% for r in (casc.ranked.data or []) %}
     <tr>
       <td class="num">{{ r.rank|int }}</td>
       <td>{% if deep_map.get(r.dopant) %}<a href="/composition/{{ deep_map[r.dopant] }}" class="deep">{{ r.dopant }} ●</a>{% else %}{{ r.dopant }}{% endif %}</td>
       <td><span class="grp-pill" style="background:{{ gcol.get(r.group,'#6b7280') }}">{{ r.group }}</span></td>
-      <td class="num" style="font-weight:700">{{ '%.3f'|format(r.score) }}</td>
-      <td class="num">{{ '%.3f'|format(r.de) }}</td>
-      <td class="num">{{ '%.3f'|format(r.ox_V) }}</td>
-      <td class="num">{{ '%.3f'|format(r.red_V) }}</td>
-      <td class="num">{{ '%.1f'|format(r.E_GPa) }}</td>
-      <td class="num">{{ '%.2f'|format(r.pugh) }}</td>
+      <td class="num" style="font-weight:700">{{ sf(r.score,3) }}</td>
+      <td class="num">{{ sf(r.de,3) }}</td>
+      <td class="num">{{ sf(r.ox_V,3) }}</td>
+      <td class="num">{{ sf(r.red_V,3) }}</td>
+      <td class="num">{{ sf(r.E_GPa,1) }}</td>
+      <td class="num">{{ sf(r.pugh,2) }}</td>
       <td class="num">{% if r.pareto and r.pareto|string|upper=='Y' %}<span class="pareto-y">◆ Y</span>{% endif %}</td>
     </tr>{% endfor %}
     </tbody></table></div>
@@ -87,7 +88,7 @@
       {% set cc = ['dopant','concentration','rerank_de_post_anneal','anneal_dV_pct','eos_B0_GPa','elastic_E_young_GPa','elastic_B_hill_GPa','elastic_G_hill_GPa','elastic_pugh_GoverB','combined_score'] %}
       {% for c in cc %}<th onclick="sortT(this,{{ loop.index0 }})">{{ c.replace('elastic_','').replace('_GPa','').replace('rerank_','') }}</th>{% endfor %}
     </tr></thead><tbody>
-    {% for row in casc.champions.data %}<tr>{% for c in cc %}<td class="{% if row[c] is number %}num{% endif %}">{{ num(row[c]) }}</td>{% endfor %}</tr>{% endfor %}
+    {% for row in (casc.champions.data or []) %}<tr>{% for c in cc %}<td class="{% if row[c] is number %}num{% endif %}">{{ num(row[c]) }}</td>{% endfor %}</tr>{% endfor %}
     </tbody></table></div>
     <div class="muted" style="font-size:.74rem;margin-top:6px">Δe_post_anneal &lt; 0 = 무도핑 baseline보다 안정. EOS B0 ≠ elastic B_hill(=B_VRH).</div>
   </div>
@@ -127,7 +128,7 @@
 {% endif %}
 
 <script>
-var RANKED = {{ casc.ranked.data|tojson }};
+var RANKED = {{ (casc.ranked.data or [])|tojson }};
 var GCOL = {{ gcol|tojson }};
 document.querySelectorAll('#tabs button').forEach(function(b){b.onclick=function(){
   document.querySelectorAll('#tabs button').forEach(function(x){x.classList.remove('active')});

@@ -40,7 +40,7 @@
   <div class="cb-body">
     <div><b>{{ cascade_dopant }}</b> 는 UMA 도핑 스크리닝의 히트 조성 — 이 페이지는 그 <b>DFT 심층검증</b>이에요.</div>
     <div class="cb-stats">
-      <span class="cb-s"><em>rank</em> #{{ cr.rank|int }}/47</span>
+      <span class="cb-s"><em>rank</em> #{{ cr.rank|int }}{% if cascade_rows.total %}/{{ cascade_rows.total }}{% endif %}</span>
       <span class="cb-s"><em>score</em> {{ cr.score }}</span>
       <span class="cb-s"><em>ox_V</em> {{ cr.ox_V }}</span>
       <span class="cb-s"><em>E (UMA)</em> {{ cr.E_GPa }} GPa</span>

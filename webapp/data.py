@@ -7,7 +7,7 @@ canonical 방법 메타(kb/methodology/computational_methods_canonical.md)와 �
 각 값에 pseudo/k/cell·비교가능성·stale 배지를 붙일 수 있게 한다.
 """
 from __future__ import annotations
-import json, csv, re
+import json, csv, re, os
 from pathlib import Path
 from functools import lru_cache
 
@@ -27,10 +27,8 @@ def concept_ids() -> set:
 
 def read_concept(cid: str) -> str | None:
     """개념 원본 마크다운. 경로 탈출 방어."""
-    p = (CONCEPTS / f"{cid}.md")
-    if not p.exists():
-        return None
-    if not str(p.resolve()).startswith(str(CONCEPTS.resolve())):
+    p = (CONCEPTS / f"{cid}.md").resolve()
+    if not p.is_relative_to(CONCEPTS.resolve()) or not p.exists():
         return None
     return p.read_text(errors="ignore")
 
@@ -121,6 +119,20 @@ _PREFIX = {
     "vgcf_hbn": ["vgcf", "hbn", "li3n", "lic6"],
 }
 
+# 파일이 여러 조성 prefix에 걸릴 때 "가장 긴(구체적) prefix"가 소유
+# — modelc 페이지가 modelc_nd_doped_* / modelc_v3_* 파일을 끌어오지 않게.
+_ALL_PREFIXES = sorted(
+    {p.lower() for cid in COMPOSITIONS for p in _PREFIX.get(cid, [cid])},
+    key=len, reverse=True)
+
+def _blocked_by_longer(fname_lower: str, p: str) -> bool:
+    return any(len(q) > len(p) and fname_lower.startswith(q) for q in _ALL_PREFIXES)
+
+def _prefix_starts(fname: str, pref: list) -> bool:
+    n = fname.lower()
+    return any(n.startswith(p.lower()) and not _blocked_by_longer(n, p.lower()) for p in pref)
+
+
 def structures_for(cid: str) -> list[dict]:
     pref = _PREFIX.get(cid, [cid])
     sd = DB / "structures"
@@ -128,7 +140,7 @@ def structures_for(cid: str) -> list[dict]:
     if sd.exists():
         for f in sorted(sd.iterdir()):
             if f.is_file() and f.suffix.lower() in (".cif", ".xyz", ".vasp", ".vesta", ".cube"):
-                if any(f.name.lower().startswith(p.lower()) for p in pref):
+                if _prefix_starts(f.name, pref):
                     out.append({"name": f.name, "ext": f.suffix.lstrip("."), "viewable": f.suffix.lower() in (".cif", ".xyz")})
     return out
 
@@ -138,7 +150,8 @@ def datafiles_for(cid: str) -> list[dict]:
     out = []
     for f in (DB / "properties").rglob("*"):
         if f.is_file() and f.suffix.lower() in (".csv",):
-            if any(f.name.lower().startswith(p.lower()) or f"_{p.lower()}" in f.name.lower() for p in pref):
+            # startswith는 최장 prefix 소유규칙 적용, 공유파일은 _infix_ 로 허용
+            if _prefix_starts(f.name, pref) or any(f"_{p.lower()}" in f.name.lower() for p in pref):
                 kind = _csv_kind(f.name)
                 out.append({"name": f.name, "rel": str(f.relative_to(DB)), "kind": kind})
     return out
@@ -226,6 +239,7 @@ def cascade_rows_for(dopant: str) -> dict:
     casc = load_cascade()
     return {
         "dopant": dopant,
+        "total": len(casc.get("ranked", {}).get("data", [])),
         "ranked": _match(casc["ranked"], ["dopant"]),
         "champions": _match(casc["champions"], ["dopant", "_dir"]),
         "litransport": _match(casc["litransport"], ["_dir"]),
@@ -412,7 +426,7 @@ def list_papers() -> list:
 
 def read_csv(rel: str) -> dict:
     p = (DB / rel).resolve()
-    if not str(p).startswith(str(DB.resolve())) or not p.exists():
+    if not p.is_relative_to(DB.resolve()) or not p.exists():
         return {"error": "not found"}
     rows = list(csv.reader(p.open()))
     # 선행 주석(#)·빈 줄 제거 — cascade CSV들이 헤더 앞에 # 메타줄을 둠

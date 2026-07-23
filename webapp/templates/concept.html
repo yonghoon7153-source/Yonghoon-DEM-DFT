@@ -72,8 +72,10 @@
   // 4) 콜아웃 복원 (marked이 <p>로 감쌌을 수 있음)
   html = html.replace(new RegExp('<p>'+L+'C(\\d+)'+R+'</p>','g'), function(_,n){ return calls[n]; });
   html = html.replace(new RegExp(L+'C(\\d+)'+R,'g'),             function(_,n){ return calls[n]; });
-  // 5) 수식 복원 (콜아웃 내부 포함)
-  html = html.replace(new RegExp(L+'M(\\d+)'+R,'g'),             function(_,n){ return maths[n]; });
+  // 5) 수식 복원 — innerHTML 삽입 전 <,>,& 이스케이프
+  //    (부등호가 든 수식 $\sum_{i<j}$ 등이 태그로 먹히는 것 방지; KaTeX는 textContent를 읽어 정상 렌더)
+  function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  html = html.replace(new RegExp(L+'M(\\d+)'+R,'g'),             function(_,n){ return esc(maths[n]); });
 
   box.innerHTML = html;
 
