@@ -1,0 +1,295 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""v3-1 — 물리-기반 EIS + DRT + ICA(dQ/dV) + CV  (STEP4 확장, sulfide ASSB 반쪽셀).
+
+frame[4]: 우리 STEP3/STEP4 물리에서 **등가회로 각 소자를 유도**해 EIS Z(ω)를 산출 → 실험 EIS
+(eis_fit.py 가 CNLS 로 R0-p(R1,CPE1)-Wo1 피팅)와 **같은 회로**라 직접 대조 = frame[4] 교차검증.
+
+회로 (eis_fit 정합):  Z(ω) = R0 + R_ct/(1 + jω·R_ct·C_dl) + Z_Wo(ω)
+  · R0   = 직렬/옴 = L/σ_ion + L/σ_e + R_int      ← STEP3 σ-삼중 + 집전체 앵커
+  · R_ct = 전하전달 = RT/(F·i0·(α_a+α_c)·a_spec)  ← STEP4 BV 선형화 (i0·반응면)
+  · C_dl = 이중층 = c_dl_int · a_spec              ← ★앵커(실험 EIS CPE 또는 문헌 µF/cm²; §F1)
+  · Z_Wo = 확산 = R_w·coth(√(jωτ))/√(jωτ), τ=r_p²/D_s  ← STEP4 구형 고체확산(Warburg 공짜)
+
+★정직(§F1): C_dl 은 STEP4 방전솔브가 명시적으로 범위 밖(시간상수 ~ms ≪ dt)이라 EIS 전용으로
+여기서 추가 — **크기는 앵커 필요**(실험 EIS 의 CPE1_Q 또는 sulfide|NMC 문헌 ~1-10 µF/cm²).  R_w 은
+구형-Warburg DC 저항의 물리 추정(dU/dx·r/(F·c_max·D·a) O(1) 인자 = ASSUMED-FORM) — 실험 Wo1_R 로
+교체 가능.  **모양(주파수 위치)은 우리 물리(τ=r²/D, ω_ct=1/R_ct C_dl)가 결정 = 예측력.**
+
+DRT: Z 의 Tikhonov 역변환 → γ(τ) 분포 (R_ct/C_dl/Warburg/GB 시상수 분리, 모델-자유).
+ICA: 방전 V(t)/Q(t) → dQ/dV (OCP 상전이 피크).  CV: OCP + BV 동역학 → I(V) 스윕.
+"""
+from __future__ import annotations
+
+import numpy as np
+
+F = 96485.33212        # C/mol
+R_GAS = 8.314462618    # J/mol/K
+
+
+# ─────────────────────── 회로 소자 ───────────────────────
+def warburg_open(freqs_hz, R_w, tau_s):
+    """유한-공간(반사경계=삽입입자) Warburg 'Wo':  Z = R_w·coth(√(jωτ))/√(jωτ).
+    고주파 → 45° Warburg(R_w/√); 저주파 → 용량성(입자 blocking).  eis_fit 'Wo1' 과 동일 형."""
+    w = 2.0 * np.pi * np.asarray(freqs_hz, float)
+    s = np.sqrt(1j * w * float(tau_s))
+    s = np.where(np.abs(s) < 1e-9, 1e-9 + 0j, s)               # ω→0 특이 회피
+    return float(R_w) * (1.0 / np.tanh(s)) / s                 # coth(s)/s — np.tanh 는 |s|→∞ 안정(→1)
+
+
+def randles_eis(freqs_hz, R0, R_ct, C_dl, R_w, tau_w):
+    """Z(ω) = R0 + R_ct/(1+jω R_ct C_dl) + Z_Wo.  eis_fit R0-p(R1,CPE1)-Wo1 (CPE→이상 C) 정합.
+    단위: R 은 Ω·cm², C_dl 은 F/cm², freqs Hz.  반환 복소 Z[Ω·cm²]."""
+    w = 2.0 * np.pi * np.asarray(freqs_hz, float)
+    Z_arc = float(R_ct) / (1.0 + 1j * w * float(R_ct) * float(C_dl))
+    Z_w = warburg_open(freqs_hz, R_w, tau_w)
+    return float(R0) + Z_arc + Z_w
+
+
+def physics_eis(freqs_hz, *, sigma_e_S_cm, sigma_ion_S_cm, thickness_um, r_int_ohm_cm2=0.0,
+                i0_A_m2=2.0, a_spec=None, spec_area_cm2_cm3=None, porosity=None,
+                d_s_m2_s=3e-14, r_p_um=3.0, c_dl_uF_cm2=10.0, dudx_V=None, c_max_mol_m3=63104.0,
+                alpha_a=0.5, alpha_c=0.5, temp_k=298.15, r_w_ohm_cm2=None):
+    """우리 물리 파라미터 → EIS Z(ω) + 소자 dict.  각 소자 provenance 반환.
+    a_spec = 반응면적/기하면적 [cm²/cm²].  없으면 spec_area_cm2_cm3·thickness 로 추정(구형 3φ/r)."""
+    L_cm = float(thickness_um) * 1e-4
+    T = float(temp_k)
+    # R0 = 이온 벌크 + 전자 벌크 + 집전체 (Ω·cm²)
+    R_ion = L_cm / max(float(sigma_ion_S_cm), 1e-30)
+    R_e = L_cm / max(float(sigma_e_S_cm), 1e-30)
+    R0 = R_ion + R_e + float(r_int_ohm_cm2)
+    # a_spec (반응 계면 면적비): 직접 주거나, 비표면적(cm²/cm³)×두께, 또는 구형 3·φ_AM/r 근사
+    if a_spec is None:
+        if spec_area_cm2_cm3 is not None:
+            a_spec = float(spec_area_cm2_cm3) * L_cm
+        else:                                                  # 구형 근사: (1−ε)·3/r · L  (φ_AM≈고체)
+            phi = (1.0 - (float(porosity) / 100.0 if porosity and porosity > 1 else (porosity or 0.15)))
+            a_spec = phi * (3.0 / (float(r_p_um) * 1e-4)) * L_cm
+    a_spec = max(float(a_spec), 1e-6)
+    # R_ct = RT/(F·i0·(αa+αc)·a_spec).  i0 A/m² → A/cm² (×1e-4)
+    i0_cm2 = float(i0_A_m2) * 1e-4
+    R_ct = R_GAS * T / (F * i0_cm2 * (float(alpha_a) + float(alpha_c)) * a_spec)
+    # C_dl = 이중층(면적당) × 반응면적비.  ★앵커(µF/cm²) → F/cm²geo
+    C_dl = float(c_dl_uF_cm2) * 1e-6 * a_spec
+    # Warburg: τ = r²/D (구형 확산시간).  R_w = 물리추정 |dU/dx|·r/(F·c_max·D·a) 또는 입력
+    r_m = float(r_p_um) * 1e-6
+    tau_w = r_m ** 2 / max(float(d_s_m2_s), 1e-30)
+    if r_w_ohm_cm2 is not None:
+        R_w = float(r_w_ohm_cm2)
+        rw_src = 'input (실험 Wo1_R 권장)'
+    else:
+        dudx = abs(float(dudx_V)) if dudx_V is not None else 0.5   # V/Δx (OCP 국소기울기; 기본 대략)
+        # DC 구형-Warburg 저항 추정: |dU/dx|·r/(F·c_max·D·a_spec) — O(1) 인자 미정 = ASSUMED-FORM
+        R_w = dudx * r_m / (F * float(c_max_mol_m3) * float(d_s_m2_s) * a_spec) * 1e4  # →Ω·cm² 스케일
+        rw_src = 'ASSUMED-FORM (dU/dx·r/(F·c_max·D·a); O(1) 인자 미정 → 실험 Wo1_R 로 교체 권장)'
+    Z = randles_eis(freqs_hz, R0, R_ct, C_dl, R_w, tau_w)
+    elems = {'R0_ohm_cm2': R0, 'R_ion': R_ion, 'R_e': R_e, 'R_int': float(r_int_ohm_cm2),
+             'R_ct_ohm_cm2': R_ct, 'C_dl_F_cm2': C_dl, 'C_dl_uF_cm2_int': float(c_dl_uF_cm2),
+             'R_w_ohm_cm2': R_w, 'tau_w_s': tau_w, 'a_spec': a_spec, 'f_ct_Hz': 1.0 / (2 * np.pi * R_ct * C_dl),
+             'provenance': {'R0': 'STEP3 σ-triad + collector', 'R_ct': 'STEP4 BV lin (i0·a_spec)',
+                            'C_dl': '★앵커 µF/cm² (실험 EIS CPE 또는 sulfide|NMC 문헌 1-10) — §F1',
+                            'R_w': rw_src, 'tau_w': 'r²/D_s (STEP4 구형확산)'}}
+    return Z, elems
+
+
+# ─────────────────────── DRT (Tikhonov 역변환) ───────────────────────
+def drt(freqs_hz, Z, tau_min=None, tau_max=None, n_tau=80, lam=1e-3, subtract_R0=True):
+    """Z(ω) → γ(τ) 분포 (모델-자유 시상수 분리).  Z(ω)=R0+∫γ(τ)/(1+jωτ)dlnτ.
+    Tikhonov(2차 미분 평활) + 비음수(NNLS).  반환 (tau_grid, gamma, R0_fit, Z_recon)."""
+    from scipy.optimize import nnls
+    w = 2.0 * np.pi * np.asarray(freqs_hz, float)
+    Zc = np.asarray(Z, complex)
+    R0 = float(np.real(Zc)[np.argmax(w)]) if subtract_R0 else 0.0   # 고주파 실수 = R0
+    tmin = tau_min if tau_min else 1.0 / (10 * w.max())
+    tmax = tau_max if tau_max else 10.0 / w.min()
+    tau = np.logspace(np.log10(tmin), np.log10(tmax), int(n_tau))
+    # 커널 A: Z_k = R0 + Σ_j γ_j /(1+jω_k τ_j)  → 실·허수 스택
+    K = 1.0 / (1.0 + 1j * np.outer(w, tau))                    # [n_f, n_tau]
+    A = np.vstack([K.real, K.imag])                           # [2 n_f, n_tau]
+    b = np.concatenate([Zc.real - R0, Zc.imag])
+    # Tikhonov 2차-미분 정규화 → 확대행렬 [A; √λ·D2] x ≈ [b; 0]
+    D2 = (np.diag(np.ones(n_tau)) * -2 + np.diag(np.ones(n_tau - 1), 1) + np.diag(np.ones(n_tau - 1), -1))
+    Aa = np.vstack([A, np.sqrt(float(lam)) * D2])
+    bb = np.concatenate([b, np.zeros(n_tau)])
+    gamma, _ = nnls(Aa, bb, maxiter=5000)                     # γ≥0 (물리적 분포)
+    Z_recon = R0 + K @ gamma
+    return tau, gamma, R0, Z_recon
+
+
+def drt_peaks(tau, gamma, rel_height=0.05):
+    """γ(τ) 피크 → (τ_peak, R_peak=∫γ 근사) 리스트 (프로세스 분리 진단)."""
+    from scipy.signal import find_peaks
+    g = np.asarray(gamma, float)
+    if g.max() <= 0:
+        return []
+    idx, _ = find_peaks(g, height=rel_height * g.max())
+    dln = np.gradient(np.log(tau))
+    return [{'tau_s': float(tau[i]), 'f_Hz': float(1.0 / (2 * np.pi * tau[i])),
+             'R_ohm_cm2': float(g[i] * dln[i]), 'gamma': float(g[i])} for i in idx]
+
+
+# ─────────────────────── ICA (dQ/dV) ───────────────────────
+def ica_dqdv(V, Q, n_grid=400, smooth_V=0.005):
+    """방전(또는 충전) V, Q → dQ/dV(V).  균일 V 격자 재보간 + 미분.  OCP 상전이 = 피크.
+    V,Q 단조 구간 가정(방전=V↓·Q↑).  반환 (V_grid, dQdV, peaks)."""
+    V = np.asarray(V, float); Q = np.asarray(Q, float)
+    o = np.argsort(V)                                          # V 오름차순
+    Vs, Qs = V[o], Q[o]
+    keep = np.concatenate([[True], np.diff(Vs) > 1e-9])        # 중복 V 제거(보간 안정)
+    Vs, Qs = Vs[keep], Qs[keep]
+    if len(Vs) < 4:
+        return np.array([]), np.array([]), []
+    Vg = np.linspace(Vs.min() + smooth_V, Vs.max() - smooth_V, int(n_grid))
+    Qg = np.interp(Vg, Vs, Qs)
+    dQdV = np.gradient(Qg, Vg)
+    from scipy.signal import find_peaks
+    a = np.abs(dQdV)
+    idx, _ = find_peaks(a, height=0.1 * a.max()) if a.max() > 0 else (np.array([], int), None)
+    peaks = [{'V': float(Vg[i]), 'dQdV': float(dQdV[i])} for i in idx]
+    return Vg, dQdV, peaks
+
+
+# ─────────────────────── CV (OCP + BV 동역학) ───────────────────────
+def cv_curve(ocp_x, ocp_U, x0, x100, c_rate_equiv=None, scan_rate_mV_s=0.1, v_lo=3.0, v_hi=4.3,
+             R_ct_ohm_cm2=5.0, cap_mAh_cm2=3.0, n=400):
+    """CV: 전압을 v_lo↔v_hi 선형 스윕, 각 V 에서 준평형 x(OCP 역함수)+옴/kin 보정으로 I(V).
+    I ≈ (dQ/dV 준평형)·scan_rate − (V−U(x))/R_ct.  피크 = OCP 상전이.  간이 물리판(전 CV solve 는
+    step4_dyn --cv-hold; 이건 빠른 진단).  반환 (V, I_mA_cm2, x)."""
+    ocp_x = np.asarray(ocp_x, float); ocp_U = np.asarray(ocp_U, float)
+    ox = np.argsort(ocp_x); Xs, Us = ocp_x[ox], ocp_U[ox]     # x 오름차순 → OCP 기울기 dU/dx
+    dUdx = np.gradient(Us, Xs)
+    dUdx = np.where(np.abs(dUdx) < 1e-4, np.sign(dUdx + 1e-30) * 1e-4, dUdx)   # 평탄부 clip(dx/dV 폭주 방지)
+    oU = np.argsort(Us); Us2, Xs2, dUdx2 = Us[oU], Xs[oU], dUdx[oU]            # U 단조(역보간용)
+    keep = np.concatenate([[True], np.diff(Us2) > 1e-9]); Us2, Xs2, dUdx2 = Us2[keep], Xs2[keep], dUdx2[keep]
+    nh = int(n) // 2                                          # 삼각파 스윕(up→down) + 방향 부호
+    Vsweep = np.concatenate([np.linspace(v_lo, v_hi, nh), np.linspace(v_hi, v_lo, int(n) - nh)])
+    direction = np.concatenate([np.ones(nh), -np.ones(int(n) - nh)])
+    x_of_V = np.interp(Vsweep, Us2, Xs2)                      # V → 준평형 stoich (OCP 역함수)
+    dxdV = 1.0 / np.interp(Vsweep, Us2, dUdx2)                # dx/dV = 1/(dU/dx)|_x(V)
+    dQdx = float(cap_mAh_cm2) / (float(x100) - float(x0) + 1e-12)    # mAh/cm² per Δx
+    sr = float(scan_rate_mV_s) * 1e-3                         # V/s
+    I_cap = 3600.0 * dQdx * dxdV * sr * direction             # mAh/(cm²·s)→mA/cm² (×3600); 방향=스윕부호
+    return Vsweep, I_cap, x_of_V
+
+
+# ─────────────────────── self-test ───────────────────────
+def _selftest():
+    fails = []
+    freqs = np.logspace(5, -2, 60)                            # 100 kHz → 10 mHz
+    # 1) Randles: 알려진 소자 → Nyquist 형상 (HF 실수=R0, arc, Warburg 꼬리)
+    Z = randles_eis(freqs, R0=20.0, R_ct=40.0, C_dl=2e-5, R_w=30.0, tau_w=100.0)
+    hf, lf = Z[np.argmax(freqs)], Z[np.argmin(freqs)]
+    if not (abs(hf.real - 20.0) < 2.0 and abs(hf.imag) < 5.0):
+        fails.append(f'HF 실수 R0≈20 실패: {hf:.2f}')
+    if not (lf.real > 40.0 and lf.imag < -5.0):               # LF: Warburg 용량성 꼬리
+        fails.append(f'LF Warburg 꼬리 실패: {lf:.2f}')
+    # 2) physics_eis: 소자가 물리 파라미터로 유도되고 f_ct = 1/(2π R_ct C_dl)
+    Zp, el = physics_eis(freqs, sigma_e_S_cm=2.0, sigma_ion_S_cm=2e-4, thickness_um=72.0,
+                         r_int_ohm_cm2=50.0, i0_A_m2=2.0, porosity=8.0, r_p_um=3.0, d_s_m2_s=3e-14)
+    if not (el['R0_ohm_cm2'] > el['R_int']):
+        fails.append('R0 이 R_int 보다 커야(이온 벌크 추가)')
+    if not (el['tau_w_s'] > 0 and abs(el['tau_w_s'] - (3e-6) ** 2 / 3e-14) / el['tau_w_s'] < 1e-6):
+        fails.append(f"τ_w=r²/D 불일치: {el['tau_w_s']:.3g}")
+    if not (el['f_ct_Hz'] > 0):
+        fails.append('f_ct 양수 아님')
+    # 3) DRT: Randles(단일 arc) 역변환 → arc 시상수 τ=R_ct·C_dl 부근 피크 회복
+    tau, g, R0f, Zr = drt(freqs, Z, n_tau=70, lam=1e-2)
+    recon_err = np.linalg.norm(Zr - Z) / np.linalg.norm(Z)
+    if recon_err > 0.15:
+        fails.append(f'DRT 재구성 오차 큼: {recon_err:.3f}')
+    pk = drt_peaks(tau, g)
+    tau_ct = 40.0 * 2e-5                                      # R_ct·C_dl = 8e-4 s
+    if not any(0.2 * tau_ct < p['tau_s'] < 5 * tau_ct for p in pk):
+        _pts = ', '.join('%.1e' % p['tau_s'] for p in pk)
+        fails.append(f'DRT 가 arc τ≈{tau_ct:.1e}s 피크 못 찾음: {_pts}')
+    # 4) ICA: 2-plateau 합성 방전 → dQ/dV 2 피크
+    xg = np.linspace(0, 1, 300)
+    U = 4.0 - 0.3 * xg - 0.15 * (np.tanh((xg - 0.35) * 25) + np.tanh((xg - 0.7) * 25))  # 2 상전이
+    Qg = xg * 3.0                                             # mAh/cm²
+    Vg, dq, pk2 = ica_dqdv(U, Qg)
+    if len(pk2) < 2:
+        fails.append(f'ICA 2-plateau 피크 <2: {len(pk2)}')
+    # 5) CV: OCP 스윕 → 유한 I, 상전이서 피크
+    Vc, Ic, xc = cv_curve(xg, U, 0.05, 0.95, scan_rate_mV_s=0.1)
+    if not (len(Vc) and np.isfinite(Ic).all() and np.abs(Ic).max() > 0):
+        fails.append('CV I(V) 유한/비영 실패')
+    print('selftest OK' if not fails else 'selftest FAIL:\n  ' + '\n  '.join(fails))
+    if not fails:
+        print(f"  Randles: R0={hf.real:.1f} arc+Warburg → LF {lf.real:.1f}{lf.imag:+.1f}j Ω·cm²")
+        print(f"  physics_eis: R0={el['R0_ohm_cm2']:.1f}(ion{el['R_ion']:.1f}+e{el['R_e']:.2g}+int{el['R_int']:.0f}) "
+              f"R_ct={el['R_ct_ohm_cm2']:.1f} C_dl={el['C_dl_F_cm2']*1e6:.1f}µF/cm² f_ct={el['f_ct_Hz']:.1f}Hz "
+              f"R_w={el['R_w_ohm_cm2']:.2g} τ_w={el['tau_w_s']:.2g}s")
+        print(f"  DRT: {len(pk)} 피크 (recon {recon_err*100:.1f}%), arc τ_ct≈{tau_ct:.1e}s")
+        print(f"  ICA: {len(pk2)} 상전이 피크 @ V={[round(p['V'],2) for p in pk2]}")
+        print(f"  CV: {len(Vc)}pt |I|max={np.abs(Ic).max():.3g} mA/cm²")
+    return 1 if fails else 0
+
+
+def _load_step3_params(metrics_json):
+    """mpm_metrics.json(step3) → physics_eis 입력 dict (σ-triad·두께·집전체)."""
+    import json
+    m = json.loads(open(metrics_json).read())
+    s3 = m.get('step3', m)
+    fse = (s3.get('field_scale_e') or {})
+    return {'sigma_e_S_cm': s3.get('sigma_e_eff_S_cm'), 'sigma_ion_S_cm': s3.get('sigma_ion_eff_S_cm'),
+            'thickness_um': m.get('thickness_um') or m.get('thickness_mpm_um'),
+            'porosity': m.get('porosity_mpm_pct') or m.get('porosity_settled_pct'),
+            'r_int_ohm_cm2': (s3.get('collector_geometric') or {}).get('R_geom_ohm_cm2', 0.0)}
+
+
+def main(argv=None):
+    import argparse
+    import csv
+    ap = argparse.ArgumentParser(description='v3-1 EIS/DRT/ICA/CV (물리-기반, sulfide ASSB)')
+    ap.add_argument('--selftest', action='store_true')
+    ap.add_argument('--eis', action='store_true', help='EIS Nyquist + DRT 산출')
+    ap.add_argument('--metrics', default='', help='mpm_metrics.json → σ-triad/두께/집전체 자동로드')
+    ap.add_argument('--sigma-e', type=float, default=2.0); ap.add_argument('--sigma-ion', type=float, default=2e-4)
+    ap.add_argument('--thickness-um', type=float, default=72.0); ap.add_argument('--r-int', type=float, default=0.0)
+    ap.add_argument('--i0', type=float, default=2.0); ap.add_argument('--d-s', type=float, default=3e-14)
+    ap.add_argument('--r-p-um', type=float, default=3.0); ap.add_argument('--porosity', type=float, default=8.0)
+    ap.add_argument('--c-dl-uf', type=float, default=10.0, help='이중층 µF/cm² (★앵커: 실험 EIS CPE 또는 문헌 1-10)')
+    ap.add_argument('--f-hi', type=float, default=1e5); ap.add_argument('--f-lo', type=float, default=1e-2)
+    ap.add_argument('--ica', default='', help='방전곡선 CSV(V,Q 열) → dQ/dV')
+    ap.add_argument('--out', default='eis_out')
+    a = ap.parse_args(argv)
+    if a.selftest:
+        return _selftest()
+    if a.ica:
+        import numpy as _np
+        d = _np.genfromtxt(a.ica, delimiter=',', names=True)
+        V = d[d.dtype.names[0]]; Q = d[d.dtype.names[1]]
+        Vg, dq, pk = ica_dqdv(V, Q)
+        with open(a.out + '_ica.csv', 'w', newline='') as f:
+            w = csv.writer(f); w.writerow(['V', 'dQdV']); w.writerows(zip(Vg, dq))
+        print(f'ICA → {a.out}_ica.csv  ({len(pk)} 상전이 피크 @ V={[round(p["V"],3) for p in pk]})')
+        return 0
+    if a.eis or not (a.ica):
+        kw = dict(sigma_e_S_cm=a.sigma_e, sigma_ion_S_cm=a.sigma_ion, thickness_um=a.thickness_um,
+                  r_int_ohm_cm2=a.r_int, i0_A_m2=a.i0, d_s_m2_s=a.d_s, r_p_um=a.r_p_um,
+                  porosity=a.porosity, c_dl_uF_cm2=a.c_dl_uf)
+        if a.metrics:
+            p = _load_step3_params(a.metrics)
+            for k, v in p.items():
+                if v is not None:
+                    kw[k] = v
+        freqs = np.logspace(np.log10(a.f_hi), np.log10(a.f_lo), 70)
+        Z, el = physics_eis(freqs, **kw)
+        tau, g, R0f, Zr = drt(freqs, Z)
+        with open(a.out + '_nyquist.csv', 'w', newline='') as f:
+            w = csv.writer(f); w.writerow(['f_Hz', 'Zre_ohm_cm2', 'Zim_ohm_cm2'])
+            w.writerows([(fr, zr.real, zr.imag) for fr, zr in zip(freqs, Z)])
+        with open(a.out + '_drt.csv', 'w', newline='') as f:
+            w = csv.writer(f); w.writerow(['tau_s', 'gamma']); w.writerows(zip(tau, g))
+        print(f'EIS → {a.out}_nyquist.csv · DRT → {a.out}_drt.csv')
+        print(f"  R0={el['R0_ohm_cm2']:.1f} R_ct={el['R_ct_ohm_cm2']:.2f} C_dl={el['C_dl_F_cm2']*1e6:.1f}µF/cm² "
+              f"f_ct={el['f_ct_Hz']:.1f}Hz R_w={el['R_w_ohm_cm2']:.3g} τ_w={el['tau_w_s']:.3g}s")
+        print(f"  ⚠ C_dl 앵커={a.c_dl_uf}µF/cm² (§F1 — 실험 EIS 로 확증), R_w={el['provenance']['R_w']}")
+        for p in drt_peaks(tau, g):
+            print(f"  DRT 피크: f={p['f_Hz']:.2g}Hz τ={p['tau_s']:.2g}s R≈{p['R_ohm_cm2']:.2f}Ω·cm²")
+        return 0
+
+
+if __name__ == '__main__':
+    import sys
+    raise SystemExit(main())
