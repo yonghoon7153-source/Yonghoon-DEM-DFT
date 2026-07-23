@@ -37,7 +37,10 @@
     <button class="btn btn-sm btn-secondary" data-preset="sbe">SBE (σ_e 1.98)</button>
     <button class="btn btn-sm btn-secondary" data-preset="dbe">DBE (σ_e 3.00)</button>
     <button class="btn btn-sm btn-secondary" data-preset="sc">SC 풀셀 (R_int 50·D_s 3e-15)</button>
+    <button id="e-expanchor" class="btn btn-sm btn-secondary" style="margin-left:auto"
+            title="실험 EIS(eis_fit) CPE→Brug C_dl + Wo1_R 로 소자 고정 = frame[4]">🔬 실험앵커 OFF</button>
   </div>
+  <div id="e-anchor-info" style="font-size:.76rem;color:var(--dim);margin-bottom:8px;line-height:1.5"></div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px">
     <label class="e-lab">σ_e (S/cm)<input id="e-sige" type="number" step="0.01" value="1.98" class="e-in"></label>
     <label class="e-lab">σ_ion (S/cm)<input id="e-sigi" type="text" value="2.03e-4" class="e-in"></label>
@@ -127,11 +130,33 @@ const EIS = {
     this.el('e-rp').value=v.rp; this.el('e-cdl').value=v.cdl; this.el('e-cov').value=v.cov;
     this.el('e-por').value=v.por; this.run(); },
   caseId: '',
+  useExpAnchor: false,
   params(){ const p = { sigma_e:this.el('e-sige').value, sigma_ion:this.el('e-sigi').value,
     thickness_um:this.el('e-th').value, r_int:this.el('e-rint').value, i0:this.el('e-i0').value,
     d_s:this.el('e-ds').value, r_p_um:this.el('e-rp').value, c_dl_uf:this.el('e-cdl').value,
     coverage:this.el('e-cov').value, porosity:this.el('e-por').value };
-    if(this.caseId) p.case = this.caseId; return p; },
+    if(this.caseId) p.case = this.caseId;
+    if(this.useExpAnchor) p.expanchor = 1;
+    return p; },
+  toggleExpAnchor(){ this.useExpAnchor = !this.useExpAnchor;
+    const b=this.el('e-expanchor');
+    b.textContent = this.useExpAnchor ? '🔬 실험앵커 ON' : '🔬 실험앵커 OFF';
+    b.classList.toggle('btn-primary', this.useExpAnchor);
+    b.classList.toggle('btn-secondary', !this.useExpAnchor);
+    if(!this.useExpAnchor) this.el('e-anchor-info').innerHTML='';
+    this.run(); },
+  renderAnchor(d){
+    const box=this.el('e-anchor-info');
+    if(!this.useExpAnchor){ box.innerHTML=''; return; }
+    const a=d.exp_anchor;
+    if(!a){ box.innerHTML='<span style="color:#c9a24b">🔬 실험앵커 요청됨 — 데이터 없음 '+
+      '(이종기술/eis/fits 부재, 예: 클라우드) → 문헌 기본값 유지</span>'; return; }
+    const rng=a.c_dl_range_uF_cm2||[], pr=a.provenance||{};
+    box.innerHTML='<b style="color:#5aa9e6">🔬 frame[4] 실험앵커 적용</b> — '+
+      `C_dl≈<b>${a.c_dl_areal_uF_cm2}</b> µF/cm²geo (기하평균, 범위 ${rng[0]}–${rng[1]}, n=${a.n_full}) · `+
+      `R_w=<b>${a.r_w_ohm_cm2}</b> Ω·cm² (Wo1_R median) · R_int≈${a.r_int_ohm_cm2} · R0_hf≈${a.r0_hf_ohm_cm2}<br>`+
+      `<span style="color:var(--dim)">${pr.C_dl||''}</span>`;
+  },
   async run(){
     const q = new URLSearchParams(this.params()).toString();
     let d; try { d = await (await fetch('/api/eis?'+q)).json(); }
@@ -149,14 +174,14 @@ const EIS = {
       this.loadCaseICA(d.case_loaded);   // 방전곡선 저장돼 있으면 ICA 도 자동 (caseId 비우기 전에)
       this.caseId = '';   // 로드 완료 → 이후 수동 조정 시 케이스 재덮어쓰기 안 함
     } else if(badge && !badge.innerHTML){ badge.innerHTML=''; }
-    this.elems(d); this.drawNyquist(d); this.drawDRT(d);
+    this.elems(d); this.drawNyquist(d); this.drawDRT(d); this.renderAnchor(d);
   },
   elems(d){
     const e = d.elements, fmt=(x,n=2)=> (x==null?'—':(Math.abs(x)>=100||Math.abs(x)<0.01?x.toPrecision(3):x.toFixed(n)));
     const cards = [
       ['R0', fmt(e.R0_ohm_cm2)+' Ω·cm²', `HF절편 ${fmt(e.R0_hf_ohm_cm2)} + 이온TL ${fmt(e.R_ion_tl_dc)}`],
       ['R_ct', fmt(e.R_ct_ohm_cm2)+' Ω·cm²', 'BV i0·반응면 (⚠i0 스윕)'],
-      ['C_dl', fmt(e.C_dl_uF_cm2_int)+' µF/cm²', '★앵커 (실험 EIS 확증)'],
+      ['C_dl', fmt(e.C_dl_uF_cm2_int)+' µF/cm²int', (e.C_dl_uF_cm2_areal!=null?('총 '+fmt(e.C_dl_uF_cm2_areal,0)+' µF/cm²geo'):'★앵커 (실험 EIS 확증)')],
       ['f_ct', fmt(e.f_ct_Hz,1)+' Hz', 'arc 정점 = 1/2πR_ctC_dl'],
       ['R_w', fmt(e.R_w_ohm_cm2)+' Ω·cm²', 'ASSUMED-FORM'],
       ['τ_w', fmt(e.tau_w_s)+' s', 'r²/D_s (⚠D_s 미측정)'],
@@ -273,6 +298,7 @@ const EIS = {
   init(){
     this.caseId = (new URLSearchParams(location.search).get('case')||'').trim();  // /eis?case=X 자동로드
     this.el('e-run').addEventListener('click', ()=>this.run());
+    this.el('e-expanchor').addEventListener('click', ()=>this.toggleExpAnchor());
     this.el('e-ica-run').addEventListener('click', ()=>this.runICA());
     document.querySelectorAll('[data-preset]').forEach(b=>
       b.addEventListener('click', ()=>{ this.caseId=''; this.applyPreset(b.dataset.preset); }));

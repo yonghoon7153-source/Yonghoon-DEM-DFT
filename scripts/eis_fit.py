@@ -78,6 +78,23 @@ def _rmse_pct(Z, Zf):
     return float(100.0 * np.sqrt(np.mean(np.abs(Z - Zf) ** 2)) / np.mean(np.abs(Z)))
 
 
+def _cpe_to_cdl_uF_cm2(Q, a, R1_ohm, area_cm2):
+    """CPE(Q,α) ‖ R1 아크 → 유효 이중층 정전용량 (Brug/Hsu-Mansfeld):
+        C_eff = Q^(1/α) · R1^((1−α)/α)  [F]   (분산표면 대표 C; α<1 depressed arc)
+    면적정규화 → µF/cm²geo.  R1 = 아크 병렬저항[Ω] (비정규화 — CPE Q 도 Ω기반 피팅값이라 정합).
+    ★ 이것이 physics_eis C_dl 앵커(§F1): 실험 EIS 의 실측 이중층 → 모델 C_dl 을 문헌 대신 실측으로 고정."""
+    try:
+        Q = float(Q); a = float(a); R1_ohm = float(R1_ohm); area_cm2 = float(area_cm2)
+    except (TypeError, ValueError):
+        return ''
+    if not (Q > 0 and 0 < a <= 1 and R1_ohm > 0 and area_cm2 > 0):
+        return ''
+    C_eff_F = (Q ** (1.0 / a)) * (R1_ohm ** ((1.0 - a) / a))
+    if not math.isfinite(C_eff_F):
+        return ''
+    return round(C_eff_F / area_cm2 * 1e6, 1)                   # F → µF/cm²geo
+
+
 def fit_one(CustomCircuit, stem, f, Z, cell_type, r0_fixed):
     """Fit with R0 FIXED to the measured HF intercept (well-determined from data);
     only the arc (+Warburg) is free.  Return (params, Zfit, circuit, rmse_pct)."""
@@ -127,7 +144,8 @@ def main():
                'rmse_pct': round(rmse, 2) if rmse == rmse else '',
                'R_s_ohm': '', 'R1_ohm': '', 'R_w_ohm': '',
                'R_s_ohmcm2': '', 'R1_ohmcm2': '', 'R_w_ohmcm2': '',
-               'CPE_a': '', 'L_composite_um': '', 'sigma_e_mScm': '', 'sigma_e_range_mScm': '',
+               'CPE_a': '', 'CPE_Q': '', 'C_dl_uF_cm2': '',
+               'L_composite_um': '', 'sigma_e_mScm': '', 'sigma_e_range_mScm': '',
                'note': ''}
         if 'error' in p:
             row['note'] = 'fit_fail: ' + p['error']
@@ -135,6 +153,9 @@ def main():
             row['R_s_ohm'] = round(p['R0'], 3)
             row['R1_ohm'] = round(p['R1'], 3)
             row['CPE_a'] = round(p.get('CPE1_a', float('nan')), 3)
+            row['CPE_Q'] = float(f"{p.get('CPE1_Q', float('nan')):.4e}")   # S·s^α (CPE 크기)
+            # C_dl(Brug): full=파라데익 이중층(R1=R_int 아크) = C_dl 앵커; symmetric=SUS 블로킹/기하 C (라벨 구분)
+            row['C_dl_uF_cm2'] = _cpe_to_cdl_uF_cm2(p.get('CPE1_Q'), p.get('CPE1_a'), p.get('R1'), area)
             row['R_s_ohmcm2'] = round(p['R0'] * area, 2)
             r1_asr = p['R1'] * area
             row['R1_ohmcm2'] = round(r1_asr, 2)
@@ -155,7 +176,8 @@ def main():
 
     cols = ['filename', 'cell_type', 'area_cm2', 'circuit', 'rmse_pct',
             'R_s_ohm', 'R1_ohm', 'R_w_ohm', 'R_s_ohmcm2', 'R1_ohmcm2', 'R_w_ohmcm2',
-            'CPE_a', 'L_composite_um', 'sigma_e_mScm', 'sigma_e_range_mScm', 'note']
+            'CPE_a', 'CPE_Q', 'C_dl_uF_cm2', 'L_composite_um', 'sigma_e_mScm',
+            'sigma_e_range_mScm', 'note']
     with open(os.path.join(FITS, 'eis_fit_results.csv'), 'w', newline='') as fh:
         w = csv.DictWriter(fh, fieldnames=cols)
         w.writeheader()
@@ -173,10 +195,11 @@ def main():
     ri_mean, ri_lo, ri_hi, n_full = _meancol('full', 'R1_ohmcm2')
     se_mean, se_lo, se_hi, n_sym = _meancol('symmetric', 'sigma_e_mScm')
     summ = {'metric': ['full_R_int_ohmcm2', 'full_R_s_ohmcm2', 'full_R_w_ohmcm2',
-                       'sym_R_e_ohmcm2', 'sym_sigma_e_mScm'],
-            'src': ['SOC100 4-cell', 'SOC100 4-cell', 'SOC100 4-cell', 'symmetric', 'symmetric']}
+                       'full_C_dl_uF_cm2', 'sym_R_e_ohmcm2', 'sym_sigma_e_mScm'],
+            'src': ['SOC100 4-cell', 'SOC100 4-cell', 'SOC100 4-cell',
+                    'SOC100 4-cell (CPE→Brug)', 'symmetric', 'symmetric']}
     keys = [('full', 'R1_ohmcm2'), ('full', 'R_s_ohmcm2'), ('full', 'R_w_ohmcm2'),
-            ('symmetric', 'R1_ohmcm2'), ('symmetric', 'sigma_e_mScm')]
+            ('full', 'C_dl_uF_cm2'), ('symmetric', 'R1_ohmcm2'), ('symmetric', 'sigma_e_mScm')]
     with open(os.path.join(FITS, 'summary_means.csv'), 'w', newline='') as fh:
         w = csv.writer(fh)
         w.writerow(['metric', 'mean', 'min', 'max', 'n', 'src'])

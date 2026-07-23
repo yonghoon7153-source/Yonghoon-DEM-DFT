@@ -60,9 +60,23 @@ STEP3 σ-triad·두께·porosity만; R_int앵커·i0/D_s스윕·C_dl앵커는 UI
 링크**(클릭→그 케이스 σ로 EIS).  소자 카드(R0=hf+ionTL·R_ct·C_dl·f_ct·R_w·τ_w) + §F1 앵커 경고 + **σ_e-필드축
 주석**(EIS=이온/R_ct 지배, σ_e는 필드맵 → SBE≈DBE EIS 정상).  코드리뷰 HIGH/MED 0 + LOW 하드닝.
 
+## ★ C_dl/R_w 실험 EIS 앵커 (frame[4]) — BUILT (2026-07-24)
+실험 EIS(`이종기술/eis`, eis_fit CNLS)를 physics_eis 앵커로 = 문헌/ASSUMED-FORM 을 실측으로 교체.
+- **eis_fit.py**: full-cell CPE(Q,α) ‖ R1 아크 → **Brug/Hsu-Mansfeld 유효 이중층** C_eff=Q^(1/α)·R1^((1−α)/α)
+  → `C_dl_uF_cm2`(µF/cm²geo) + `CPE_Q` export + summary_means `full_C_dl_uF_cm2`.  ★발견: **셀간 40-80×
+  분산**(No1 ~1440 vs No2 ~18-37) — α 0.33-0.48 **depressed arc** 라 Brug C 가 α-초민감 → **자릿수 앵커**(정밀X).
+- **eis_drt_ica.py** `load_experimental_anchors()`: full-cell 로부터 C_dl **기하평균**(로그-분산 대표 ≈192
+  µF/cm²geo, 범위 18-1460) · R_w **median**(Wo1_R, 0=미포착 제외 → 73.5 Ω·cm²) · R_int/R0_hf 평균.  파일
+  부재 시 None(클라우드 graceful).  `physics_eis(c_dl_areal_uF_cm2=…)` 오버라이드 = 총 이중층 직접(a_spec 곱
+  안 함) + intrinsic 역산 표시.  `--use-exp-anchors` CLI.
+- **★ frame[4] 교차검증**: 모델 자체 a_spec(25)×c_dl_int(10)=**250 µF/cm²geo** vs 실험 Brug **192**(기하평균)
+  = ~30% 내 일치 · 역산 intrinsic **7.67 µF/cm²** = 문헌 1-10 범위 안.  R_w ASSUMED(3.3)→실측(73.5)=20× 보정.
+- **webapp**: `/api/eis&expanchor=1` + eis.html **🔬 실험앵커 토글**(C_dl≈192·R_w=73.5·범위·provenance 표시,
+  데이터 없으면 문헌 유지) · 소자카드 C_dl int+총(µF/cm²geo) 병기.  검증: py_compile·selftest·node --check PASS.
+
 ## 잔여 (v3-1 후속)
 - **완전 AC-solve**(step4_dyn 2.9M-dof 에 소신호 섭동 + FFT) = 미세구조-해상 EIS (지금은 reduced-order 등가회로).
-- C_dl **실험 앵커**(eis_fit CPE1_Q → µF/cm²) 배선 · R_w 실험 Wo1_R 채택.
+- C_dl 정밀앵커 = **α 높은(덜 depressed) 셀** 재측정 필요(현재 자릿수만) · SOC-의존 C_dl(사이클-N 궤적, D5).
 - ICA **케이스 방전곡선 자동로드 ✅ BUILT (2026-07-24)**: `/api/ica_case?case=<pid>` — 저장된 STEP4
   `st4_viz.json`(mpm_lab `<pid>` + DEM `results/<case>` 둘 다, `step4_viz*.json` glob 포함)의 `curve`
   에서 **V_terminal(측정 전압) + x_mean→용량%**(|Δx|/|x100−x0|×100, §F1: 면적/질량 앵커 부재 → 정규화

@@ -2,5 +2,6 @@ metric,mean,min,max,n,src
 full_R_int_ohmcm2,49.8,24.22,78.7,4,SOC100 4-cell
 full_R_s_ohmcm2,9.71,6.82,13.8,4,SOC100 4-cell
 full_R_w_ohmcm2,65.11,0.0,135.83,4,SOC100 4-cell
+full_C_dl_uF_cm2,734.2,17.8,1460.0,4,SOC100 4-cell (CPE→Brug)
 sym_R_e_ohmcm2,37.2,29.5,48.94,8,symmetric
 sym_sigma_e_mScm,0.13,0.09,0.15,8,symmetric

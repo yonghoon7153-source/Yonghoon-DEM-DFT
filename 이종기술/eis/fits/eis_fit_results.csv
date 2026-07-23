@@ -1,13 +1,13 @@
-filename,cell_type,area_cm2,circuit,rmse_pct,R_s_ohm,R1_ohm,R_w_ohm,R_s_ohmcm2,R1_ohmcm2,R_w_ohmcm2,CPE_a,L_composite_um,sigma_e_mScm,sigma_e_range_mScm,note
-260715_No1_only_sym_01_C01,symmetric,0.7854,"R0-p(R1,CPE1)",5.73,12.879,40.088,,10.11,31.49,,0.336,45.0,0.1429,0.127-0.1588,SUS ion-blocking → R1=R_e; σ_e=L/R1 (L=40-50µm composite)
-260715_No1_only_sym_02_C01,symmetric,0.7854,"R0-p(R1,CPE1)",5.56,13.241,40.861,,10.4,32.09,,0.343,45.0,0.1402,0.1246-0.1558,SUS ion-blocking → R1=R_e; σ_e=L/R1 (L=40-50µm composite)
-260715_No2_only_sym_01_C01,symmetric,0.7854,"R0-p(R1,CPE1)",6.25,10.363,50.092,,8.14,39.34,,0.303,45.0,0.1144,0.1017-0.1271,SUS ion-blocking → R1=R_e; σ_e=L/R1 (L=40-50µm composite)
-260715_No2_only_sym_02_C01,symmetric,0.7854,"R0-p(R1,CPE1)",6.19,10.488,49.678,,8.24,39.02,,0.301,45.0,0.1153,0.1025-0.1281,SUS ion-blocking → R1=R_e; σ_e=L/R1 (L=40-50µm composite)
-260719_No1_55_70um_sym_01_C01,symmetric,0.7854,"R0-p(R1,CPE1)",5.65,8.692,60.41,,6.83,47.45,,0.321,45.0,0.0948,0.0843-0.1054,SUS ion-blocking → R1=R_e; σ_e=L/R1 (L=40-50µm composite)
-260719_No1_55_70um_sym_02_C01,symmetric,0.7854,"R0-p(R1,CPE1)",5.51,8.841,62.309,,6.94,48.94,,0.319,45.0,0.092,0.0817-0.1022,SUS ion-blocking → R1=R_e; σ_e=L/R1 (L=40-50µm composite)
-260719_No1_only_full_1cyc_01_C06_1.3V,full,1.3273,"R0-p(R1,CPE1)-Wo1",2.64,5.137,22.874,0.0,6.82,30.36,0.0,0.334,,,,"R1=R_int, Wo=R_w (primer-SUS full cell)"
-260719_No1_only_full_1cyc_02_1_C01,full,1.3273,"R0-p(R1,CPE1)-Wo1",8.7,7.414,59.293,38.524,9.84,78.7,51.13,0.328,,,,"R1=R_int, Wo=R_w (primer-SUS full cell)"
-260719_No2_55_70um_sym_01_C02,symmetric,0.7854,"R0-p(R1,CPE1)",5.68,6.94,37.891,,5.45,29.76,,0.335,45.0,0.1512,0.1344-0.168,SUS ion-blocking → R1=R_e; σ_e=L/R1 (L=40-50µm composite)
-260719_No2_55_70um_sym_02_C02,symmetric,0.7854,"R0-p(R1,CPE1)",5.5,7.219,37.556,,5.67,29.5,,0.337,45.0,0.1526,0.1356-0.1695,SUS ion-blocking → R1=R_e; σ_e=L/R1 (L=40-50µm composite)
-260719_No2_only_full_1cyc_01_C01,full,1.3273,"R0-p(R1,CPE1)-Wo1",12.99,6.314,18.246,55.365,8.38,24.22,73.49,0.376,,,,"R1=R_int, Wo=R_w (primer-SUS full cell)"
-260719_No2_only_full_1cyc_02_C01,full,1.3273,"R0-p(R1,CPE1)-Wo1",8.75,10.4,49.648,102.334,13.8,65.9,135.83,0.483,,,,"R1=R_int, Wo=R_w (primer-SUS full cell)"
+filename,cell_type,area_cm2,circuit,rmse_pct,R_s_ohm,R1_ohm,R_w_ohm,R_s_ohmcm2,R1_ohmcm2,R_w_ohmcm2,CPE_a,CPE_Q,C_dl_uF_cm2,L_composite_um,sigma_e_mScm,sigma_e_range_mScm,note
+260715_No1_only_sym_01_C01,symmetric,0.7854,"R0-p(R1,CPE1)",5.73,12.879,40.088,,10.11,31.49,,0.336,0.00051383,0.3,45.0,0.1429,0.127-0.1588,SUS ion-blocking → R1=R_e; σ_e=L/R1 (L=40-50µm composite)
+260715_No1_only_sym_02_C01,symmetric,0.7854,"R0-p(R1,CPE1)",5.56,13.241,40.861,,10.4,32.09,,0.343,0.00042075,0.2,45.0,0.1402,0.1246-0.1558,SUS ion-blocking → R1=R_e; σ_e=L/R1 (L=40-50µm composite)
+260715_No2_only_sym_01_C01,symmetric,0.7854,"R0-p(R1,CPE1)",6.25,10.363,50.092,,8.14,39.34,,0.303,0.001219,2.5,45.0,0.1144,0.1017-0.1271,SUS ion-blocking → R1=R_e; σ_e=L/R1 (L=40-50µm composite)
+260715_No2_only_sym_02_C01,symmetric,0.7854,"R0-p(R1,CPE1)",6.19,10.488,49.678,,8.24,39.02,,0.301,0.0012108,2.3,45.0,0.1153,0.1025-0.1281,SUS ion-blocking → R1=R_e; σ_e=L/R1 (L=40-50µm composite)
+260719_No1_55_70um_sym_01_C01,symmetric,0.7854,"R0-p(R1,CPE1)",5.65,8.692,60.41,,6.83,47.45,,0.321,0.00098695,3.2,45.0,0.0948,0.0843-0.1054,SUS ion-blocking → R1=R_e; σ_e=L/R1 (L=40-50µm composite)
+260719_No1_55_70um_sym_02_C01,symmetric,0.7854,"R0-p(R1,CPE1)",5.51,8.841,62.309,,6.94,48.94,,0.319,0.00092404,2.6,45.0,0.092,0.0817-0.1022,SUS ion-blocking → R1=R_e; σ_e=L/R1 (L=40-50µm composite)
+260719_No1_only_full_1cyc_01_C06_1.3V,full,1.3273,"R0-p(R1,CPE1)-Wo1",2.64,5.137,22.874,0.0,6.82,30.36,0.0,0.334,0.0153,1422.4,,,,"R1=R_int, Wo=R_w (primer-SUS full cell)"
+260719_No1_only_full_1cyc_02_1_C01,full,1.3273,"R0-p(R1,CPE1)-Wo1",8.7,7.414,59.293,38.524,9.84,78.7,51.13,0.328,0.0082864,1460.0,,,,"R1=R_int, Wo=R_w (primer-SUS full cell)"
+260719_No2_55_70um_sym_01_C02,symmetric,0.7854,"R0-p(R1,CPE1)",5.68,6.94,37.891,,5.45,29.76,,0.335,0.0012025,3.4,45.0,0.1512,0.1344-0.168,SUS ion-blocking → R1=R_e; σ_e=L/R1 (L=40-50µm composite)
+260719_No2_55_70um_sym_02_C02,symmetric,0.7854,"R0-p(R1,CPE1)",5.5,7.219,37.556,,5.67,29.5,,0.337,0.0010674,2.4,45.0,0.1526,0.1356-0.1695,SUS ion-blocking → R1=R_e; σ_e=L/R1 (L=40-50µm composite)
+260719_No2_only_full_1cyc_01_C01,full,1.3273,"R0-p(R1,CPE1)-Wo1",12.99,6.314,18.246,55.365,8.38,24.22,73.49,0.376,0.0039018,36.6,,,,"R1=R_int, Wo=R_w (primer-SUS full cell)"
+260719_No2_only_full_1cyc_02_C01,full,1.3273,"R0-p(R1,CPE1)-Wo1",8.75,10.4,49.648,102.334,13.8,65.9,135.83,0.483,0.00077215,17.8,,,,"R1=R_int, Wo=R_w (primer-SUS full cell)"

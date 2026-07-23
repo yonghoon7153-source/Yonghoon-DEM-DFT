@@ -3658,6 +3658,17 @@ def api_eis():
                         _apply(_eis._step3_params_from_metrics(_mm)); case_loaded = _case
             except Exception:
                 pass
+    # ── 실험앵커 (&expanchor=1): eis_fit CPE→Brug C_dl + Wo1_R → physics_eis 앵커 (frame[4]) ──
+    exp_anchor = None
+    if (request.args.get('expanchor') or '').strip() in ('1', 'true', 'yes', 'on'):
+        try:
+            exp_anchor = _eis.load_experimental_anchors()
+        except Exception:
+            exp_anchor = None
+        if exp_anchor:
+            kw['c_dl_areal_uF_cm2'] = exp_anchor['c_dl_areal_uF_cm2']
+            if exp_anchor.get('r_w_ohm_cm2') is not None:
+                kw['r_w_ohm_cm2'] = exp_anchor['r_w_ohm_cm2']
     try:
         freqs = _np.logspace(5, -2, 70)
         Z, el = _eis.physics_eis(freqs, **kw)
@@ -3677,6 +3688,7 @@ def api_eis():
             'provenance': el.get('provenance', {}),
             'params': {k: kw[k] for k in kw},
             'case_loaded': case_loaded,
+            'exp_anchor': exp_anchor,
         })
     except Exception as e:
         return jsonify({'error': f'직렬화 실패: {type(e).__name__}: {e}'}), 200

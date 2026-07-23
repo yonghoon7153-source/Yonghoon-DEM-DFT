@@ -49,8 +49,8 @@ def randles_eis(freqs_hz, R0, R_ct, C_dl, R_w, tau_w):
 def physics_eis(freqs_hz, *, sigma_e_S_cm, sigma_ion_S_cm, thickness_um, r_int_ohm_cm2=0.0,
                 i0_A_m2=2.0, a_spec=None, spec_area_cm2_cm3=None, porosity=None,
                 am_vol_frac=None, coverage_frac=0.5,
-                d_s_m2_s=3e-14, r_p_um=3.0, c_dl_uF_cm2=10.0, dudx_V=None, c_max_mol_m3=63104.0,
-                alpha_a=0.5, alpha_c=0.5, temp_k=298.15, r_w_ohm_cm2=None):
+                d_s_m2_s=3e-14, r_p_um=3.0, c_dl_uF_cm2=10.0, c_dl_areal_uF_cm2=None, dudx_V=None,
+                c_max_mol_m3=63104.0, alpha_a=0.5, alpha_c=0.5, temp_k=298.15, r_w_ohm_cm2=None):
     """우리 물리 파라미터 → EIS Z(ω) + 소자 dict.  각 소자 provenance 반환.
     a_spec = 반응면적/기하면적 [cm²/cm²].  없으면 spec_area_cm2_cm3·thickness 로 추정(구형 3φ/r)."""
     L_cm = float(thickness_um) * 1e-4
@@ -76,8 +76,19 @@ def physics_eis(freqs_hz, *, sigma_e_S_cm, sigma_ion_S_cm, thickness_um, r_int_o
     # R_ct = RT/(F·i0·(αa+αc)·a_spec).  i0 A/m² → A/cm² (×1e-4)
     i0_cm2 = float(i0_A_m2) * 1e-4
     R_ct = R_GAS * T / (F * i0_cm2 * (float(alpha_a) + float(alpha_c)) * a_spec)
-    # C_dl = 이중층(면적당) × 반응면적비.  ★앵커(µF/cm²) → F/cm²geo
-    C_dl = float(c_dl_uF_cm2) * 1e-6 * a_spec
+    # C_dl = 이중층.  기본 = c_dl_int(µF/cm²_계면) × 반응면적비 a_spec → F/cm²geo.
+    #   ★실험앵커(c_dl_areal_uF_cm2)를 주면 총 이중층(µF/cm²_기하)을 직접 사용 = eis_fit CPE→Brug
+    #   실측값(이미 총량이라 a_spec 곱 안 함); intrinsic 은 역산해 표시.  §F1: depressed arc(α낮음)라
+    #   실측 C_dl 은 자릿수-앵커(셀간 40-80× 분산) — arc 주파수 f_ct 의 자릿수만 고정, 정밀앵커 아님.
+    if c_dl_areal_uF_cm2 is not None:
+        C_dl = float(c_dl_areal_uF_cm2) * 1e-6                  # F/cm²geo 직접 (실험 총 이중층)
+        c_dl_int_eff = C_dl / a_spec * 1e6                      # 역산 intrinsic µF/cm²계면 (표시용)
+        cdl_src = (f'실험앵커 eis_fit CPE→Brug ≈{float(c_dl_areal_uF_cm2):.0f} µF/cm²geo '
+                   '(⚠α낮은 depressed arc → 자릿수 앵커, 정밀X)')
+    else:
+        C_dl = float(c_dl_uF_cm2) * 1e-6 * a_spec
+        c_dl_int_eff = float(c_dl_uF_cm2)
+        cdl_src = '★앵커 µF/cm² (실험 EIS CPE 또는 sulfide|NMC 문헌 1-10) — §F1'
     # Warburg: τ = r²/D (구형 확산시간).  R_w = 물리추정 |dU/dx|·r/(F·c_max·D·a) 또는 입력
     r_m = float(r_p_um) * 1e-6
     tau_w = r_m ** 2 / max(float(d_s_m2_s), 1e-30)
@@ -92,13 +103,14 @@ def physics_eis(freqs_hz, *, sigma_e_S_cm, sigma_ion_S_cm, thickness_um, r_int_o
     Z = randles_eis(freqs_hz, R0, R_ct, C_dl, R_w, tau_w)
     elems = {'R0_ohm_cm2': R0, 'R0_hf_ohm_cm2': R0_hf, 'R_ion_tl_dc': R_ion_tl_dc, 'R_ion_full': R_ion,
              'R_e': R_e, 'R_int': float(r_int_ohm_cm2),
-             'R_ct_ohm_cm2': R_ct, 'C_dl_F_cm2': C_dl, 'C_dl_uF_cm2_int': float(c_dl_uF_cm2),
+             'R_ct_ohm_cm2': R_ct, 'C_dl_F_cm2': C_dl, 'C_dl_uF_cm2_int': c_dl_int_eff,
+             'C_dl_uF_cm2_areal': C_dl * 1e6,
              'R_w_ohm_cm2': R_w, 'tau_w_s': tau_w, 'a_spec': a_spec, 'coverage_frac': float(coverage_frac),
              'f_ct_Hz': 1.0 / (2 * np.pi * R_ct * C_dl),
              'provenance': {'R0_hf': 'STEP3 σ_e+collector (HF 절편, frame[4] 정합)',
                             'R_ion_tl': 'STEP3 σ_ion 전극수송 TL DC극한 R_ion/3 (분산 feature)',
                             'R_ct': '⚠STEP4 BV lin — i0 의존(i0 정량부재, 스윕전용 §F1)',
-                            'C_dl': '★앵커 µF/cm² (실험 EIS CPE 또는 sulfide|NMC 문헌 1-10) — §F1',
+                            'C_dl': cdl_src,
                             'R_w': rw_src + '; ⚠D_s 도 미측정(스윕)',
                             'tau_w': 'r²/D_s (STEP4 구형확산) — ⚠D_s 미앵커',
                             'note': '★framing: 미세구조-emergent 는 주로 R0_hf(σ-triad); arc 주파수 f_ct 는 '
@@ -278,6 +290,63 @@ def _load_step3_params(metrics_json):
     return _step3_params_from_metrics(json.loads(open(metrics_json).read()))
 
 
+def load_experimental_anchors(fits_dir=None):
+    """실험 EIS(eis_fit) 피팅값 → physics_eis 앵커 dict (frame[4] — 문헌/ASSUMED-FORM 을 실측으로 교체).
+    full-cell(R0-p(R1,CPE1)-Wo1) 로부터:
+      · c_dl_areal_uF_cm2 = 셀별 CPE→Brug C_dl 의 GEOMETRIC MEAN (로그-분산 → 산술평균보다 대표적;
+        ⚠ depressed arc α 낮아 셀간 40-80× 분산 → 자릿수 앵커, 정밀X)
+      · r_w_ohm_cm2 = full-cell Wo1_R 의 MEDIAN (0=Warburg 미포착 셀 제외)
+      · r_int_ohm_cm2 / r0_hf_ohm_cm2 = full-cell R1 / R_s 평균
+    파일 없으면 None (클라우드/데이터 부재 시 graceful — 호출측이 문헌 기본값 유지)."""
+    import csv
+    import os
+    import statistics as st
+    if fits_dir is None:
+        _root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        fits_dir = os.path.join(_root, '이종기술', 'eis', 'fits')
+    res = os.path.join(fits_dir, 'eis_fit_results.csv')
+    if not os.path.isfile(res):
+        return None
+    cdl, rw, r1, rs = [], [], [], []
+    try:
+        for row in csv.DictReader(open(res)):
+            if row.get('cell_type') != 'full':
+                continue
+
+            def _g(k):
+                try:
+                    return float(row.get(k, ''))
+                except (TypeError, ValueError):
+                    return None
+            c, w, a1, s = _g('C_dl_uF_cm2'), _g('R_w_ohmcm2'), _g('R1_ohmcm2'), _g('R_s_ohmcm2')
+            if c and c > 0:
+                cdl.append(c)
+            if w and w > 0:                                    # 0 = Warburg 미포착(1.3V 셀) 제외
+                rw.append(w)
+            if a1 and a1 > 0:
+                r1.append(a1)
+            if s and s > 0:
+                rs.append(s)
+    except Exception:
+        return None
+    if not cdl:
+        return None
+    geo = float(np.exp(np.mean(np.log(np.asarray(cdl, float)))))    # 기하평균 (로그-분산 대표값)
+    return {
+        'c_dl_areal_uF_cm2': round(geo, 1),
+        'c_dl_range_uF_cm2': [round(min(cdl), 1), round(max(cdl), 1)],
+        'r_w_ohm_cm2': (round(st.median(rw), 1) if rw else None),
+        'r_int_ohm_cm2': (round(st.mean(r1), 1) if r1 else None),
+        'r0_hf_ohm_cm2': (round(st.mean(rs), 1) if rs else None),
+        'n_full': len(cdl),
+        'provenance': {
+            'C_dl': 'eis_fit CPE→Brug 기하평균 (⚠α낮은 depressed arc → 셀간 40-80× 분산 = 자릿수-앵커)',
+            'R_w': 'eis_fit Wo1_R median (0=미포착 제외)',
+            'R_int': 'eis_fit full-cell R1 평균 (SOC100)',
+            'R0_hf': 'eis_fit full-cell R_s 평균 (HF 절편)',
+            'note': 'frame[4] 실험앵커 — 실측 EIS 로 물리-EIS 소자 고정 (C_dl 자릿수·R_w 실측)'}}
+
+
 def main(argv=None):
     import argparse
     import csv
@@ -290,6 +359,8 @@ def main(argv=None):
     ap.add_argument('--i0', type=float, default=2.0); ap.add_argument('--d-s', type=float, default=3e-14)
     ap.add_argument('--r-p-um', type=float, default=3.0); ap.add_argument('--porosity', type=float, default=8.0)
     ap.add_argument('--c-dl-uf', type=float, default=10.0, help='이중층 µF/cm² (★앵커: 실험 EIS CPE 또는 문헌 1-10)')
+    ap.add_argument('--use-exp-anchors', action='store_true',
+                    help='실험 EIS(eis_fit) 로 C_dl(CPE→Brug)·R_w(Wo1_R) 앵커 = frame[4] (데이터 있으면)')
     ap.add_argument('--f-hi', type=float, default=1e5); ap.add_argument('--f-lo', type=float, default=1e-2)
     ap.add_argument('--ica', default='', help='방전곡선 CSV(V,Q 열) → dQ/dV')
     ap.add_argument('--out', default='eis_out')
@@ -314,6 +385,16 @@ def main(argv=None):
             for k, v in p.items():
                 if v is not None:
                     kw[k] = v
+        if a.use_exp_anchors:                                 # frame[4] 실험앵커 (데이터 있으면)
+            anc = load_experimental_anchors()
+            if anc:
+                kw['c_dl_areal_uF_cm2'] = anc['c_dl_areal_uF_cm2']
+                if anc.get('r_w_ohm_cm2') is not None:
+                    kw['r_w_ohm_cm2'] = anc['r_w_ohm_cm2']
+                print(f'  실험앵커: C_dl≈{anc["c_dl_areal_uF_cm2"]} µF/cm²geo '
+                      f'(범위 {anc["c_dl_range_uF_cm2"]}, n={anc["n_full"]}) · R_w={anc.get("r_w_ohm_cm2")} Ω·cm²')
+            else:
+                print('  ⚠ 실험앵커 파일 없음 (이종기술/eis/fits) — 문헌 기본값 유지')
         freqs = np.logspace(np.log10(a.f_hi), np.log10(a.f_lo), 70)
         Z, el = physics_eis(freqs, **kw)
         tau, g, R0f, Zr = drt(freqs, Z)
@@ -325,7 +406,9 @@ def main(argv=None):
         print(f'EIS → {a.out}_nyquist.csv · DRT → {a.out}_drt.csv')
         print(f"  R0={el['R0_ohm_cm2']:.1f} R_ct={el['R_ct_ohm_cm2']:.2f} C_dl={el['C_dl_F_cm2']*1e6:.1f}µF/cm² "
               f"f_ct={el['f_ct_Hz']:.1f}Hz R_w={el['R_w_ohm_cm2']:.3g} τ_w={el['tau_w_s']:.3g}s")
-        print(f"  ⚠ C_dl 앵커={a.c_dl_uf}µF/cm² (§F1 — 실험 EIS 로 확증), R_w={el['provenance']['R_w']}")
+        print(f"  C_dl int={el['C_dl_uF_cm2_int']:.2f}µF/cm²계면·총 {el['C_dl_uF_cm2_areal']:.0f}µF/cm²geo "
+              f"({el['provenance']['C_dl']})")
+        print(f"  R_w: {el['provenance']['R_w']}")
         for p in drt_peaks(tau, g):
             print(f"  DRT 피크: f={p['f_Hz']:.2g}Hz τ={p['tau_s']:.2g}s R≈{p['R_ohm_cm2']:.2f}Ω·cm²")
         return 0
