@@ -17,7 +17,7 @@
 {% for p in papers %}
 <div class="card paper track-{{ p.track }}" data-track="{{ p.track }}"
      data-t="{{ p.title|lower }} {{ p.id|lower }} {{ p.type|lower }}"
-     onclick="openPaper('{{ p.id }}')" style="cursor:pointer;padding:16px 18px">
+     onclick="openPaper('{{ p.id }}')" onkeydown="_kbd(event)" tabindex="0" role="button" style="cursor:pointer;padding:16px 18px">
   <div class="paper-top">
     <span class="tbadge tb-{{ p.track }}">{{ 'DFT' if p.track=='dft' else 'DEM' }}</span>
     {% if p.type %}<span class="ptype">{{ p.type[:38] }}</span>{% endif %}
@@ -59,6 +59,6 @@ function openPaper(id){
 }
 // ⌘K/딥링크로 온 경우 ?open=<id> 자동 오픈
 (function(){var m=new URLSearchParams(location.search).get('open');
-  if(m&&document.querySelector('.paper[onclick*="'+m+'"]'))openPaper(m);})();
+  if(m&&/^[a-z0-9_]+$/i.test(m)&&document.querySelector('.paper[onclick*="'+m+'"]'))openPaper(m);})();
 </script>
 {% endblock %}

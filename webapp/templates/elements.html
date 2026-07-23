@@ -121,7 +121,7 @@ function elCard(e){
   if(e.cascade&&e.cascade.length){
     h+='<div class="el-casc"><div class="el-sec-t" style="color:var(--violet)">🤖 도핑 스크리닝 (캐스케이드)</div>'+
       e.cascade.map(function(c){return '<a class="casc-hit" href="/cascade#'+c.dopant+'"><b>'+c.dopant+'</b>'+
-        '<span>#'+(c.rank!=null?Math.round(c.rank):'?')+'/47</span><span>score '+(c.score!=null?c.score:'—')+'</span>'+
+        '<span>rank #'+(c.rank!=null?Math.round(c.rank):'?')+'</span><span>score '+(c.score!=null?c.score:'—')+'</span>'+
         '<span>ox '+(c.ox_V!=null?c.ox_V:'—')+' V</span><span>E '+(c.E_GPa!=null?c.E_GPa:'—')+' GPa</span>'+
         '<span>Pugh '+(c.pugh!=null?c.pugh:'—')+'</span> →</a>';}).join('')+'</div>';
   }

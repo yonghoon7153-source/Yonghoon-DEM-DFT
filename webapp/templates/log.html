@@ -44,7 +44,7 @@
 <div class="section-title">Session Handoffs · kb/results ({{ handoffs|length }})</div>
 <div class="grid grid-3">
 {% for h in handoffs %}
-<div class="card" onclick="openH('{{ h.id }}')" style="cursor:pointer;padding:14px 18px">
+<div class="card" onclick="openH('{{ h.id }}')" onkeydown="_kbd(event)" tabindex="0" role="button" style="cursor:pointer;padding:14px 18px">
   <div style="font-weight:600;font-size:.84rem;line-height:1.4">{{ h.name }}</div>
   <div class="mono muted" style="font-size:.68rem;margin-top:4px">{{ h.id }}.md</div>
 </div>

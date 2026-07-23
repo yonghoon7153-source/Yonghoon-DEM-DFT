@@ -11,7 +11,7 @@
 <div class="grid grid-3">
 {% for g in cats[cat] %}
 <div class="card gterm" data-t="{{ g.term|lower }} {{ g.full|lower }} {{ g.id }} {{ g.what|striptags|lower }}">
-  <div onclick="this.parentNode.classList.toggle('open')" style="cursor:pointer">
+  <div onclick="this.parentNode.classList.toggle('open')" onkeydown="_kbd(event)" tabindex="0" role="button" aria-label="{{ g.term }} 설명 펼치기" style="cursor:pointer">
     <div style="font-weight:700;color:var(--navy);font-size:1.02rem">{{ g.term }}
       <span class="gplus" style="float:right;color:var(--muted);font-weight:400">＋</span></div>
     <div class="muted" style="font-size:.76rem;margin-top:2px">{{ g.full }}

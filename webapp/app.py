@@ -90,7 +90,6 @@ def elements():
 
 @app.route("/explorer")
 def explorer():
-    cov = None
     b = D.build_matrix()
     cov = D.build_coverage(b["properties"], b["prop_category"], b["index_metrics"])
     return render_template("explorer.html", active="explorer",

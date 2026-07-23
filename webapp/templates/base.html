@@ -71,6 +71,8 @@
 <script>
 function showToast(m){var t=document.getElementById('toast');if(!t)return;t.textContent=m;t.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(function(){t.classList.remove('show')},2200);}
 function copyText(s){navigator.clipboard.writeText(s).then(function(){showToast('클립보드에 복사됨');});}
+// 클릭 가능한 div의 키보드 활성화 (Enter/Space) — 접근성
+function _kbd(e,el){if(e.key==='Enter'||e.key===' '){e.preventDefault();(el||e.currentTarget).click();}}
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){document.body.classList.remove('nav-open');closeCmdk();}});
 
 // ── theme toggle ──
