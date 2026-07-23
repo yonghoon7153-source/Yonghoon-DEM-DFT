@@ -6,13 +6,15 @@
   "atoms": 62,
   "cell_type": "rhombohedral",
   "formula_units": 5,
-  "halogen": {"Cl": 8, "Br": 0},
+  "halogen": {
+    "Cl": 8,
+    "Br": 0
+  },
   "li_per_fu": 5.4,
   "s_per_fu": 4.4,
   "has_vacancy": true,
   "vacancy_per_fu": 0.6,
   "notes": "Cl-only Li5.4 composition. No Br. Control for isolating Br effect.",
-
   "postprocessing": {
     "V0_volume": "v102.6 (interpolated from EOS)",
     "V0_coords": "v103 Basin A relaxed coords in v102.6 cell",
@@ -24,9 +26,7 @@
       "PDOS": "done"
     }
   },
-
   "band_gap_eV": 1.65,
-
   "pdos_v2_retry": {
     "status": "DONE 2026-04-30 (after K=12x12x6 GPU bug fix with K=6x6x3 + comp1 v2 working pattern)",
     "method": "QE projwfc.x v7.4.1 (qe-gpu, K=6x6x3 nosym, smearing/mv/0.005)",
@@ -40,25 +40,16 @@
     "battery_safety_implication": "Li negligible in CBM = electron reduction does not nucleate at Li sites -> reduced Li dendrite formation tendency (paper #1 SI candidate)",
     "k_mesh_lesson": "K=12x12x6 too dense for QE GPU projwfc.x (NaN propagate); K=6x6x3 (matching comp1 v2 0.81 k/A density) safe for paper-quality PDOS"
   },
-
   "elastic_dft_0K_GPa": {
-    "C11": 85.3, "C12": 25.6, "C44": 28.0, "K": 43.7, "G": 30.0, "E": 73.3, "nu": 0.221,
+    "C11": 85.3,
+    "C12": 25.6,
+    "C44": 28.0,
+    "K": 43.7,
+    "G": 30.0,
+    "E": 73.3,
+    "nu": 0.221,
     "notes": "C11(85.3)≈comp3(85.6)≈comp4(85.5). C44(28.0)≈comp3(27.5). E(73.3)>comp3(71.7)→Cl-only slightly more rigid."
   },
-
-  "elastic_mlip_300K_GPa": {
-    "unit_cell": {"C11": 36.7, "C12": 15.5, "C44": 10.3, "E": 28.9},
-    "supercell_2x2x1": {"C11": 34.8, "C12": 13.5, "C44": 12.5, "E": 29.7}
-  },
-
-  "elastic_mlip_600K_GPa": {
-    "method": "600K_snapshot_x5",
-    "C11": 39.3, "C11_std": 1.1, "C12": 15.4, "C12_std": 0.7, "C44": 12.9, "C44_std": 0.7,
-    "K_VRH": 23.4, "G_VRH": 13.0,
-    "E_VRH": 32.9, "E_std": 0.9,
-    "notes": "Sign-corrected. Highest E of all comps! Cl-only = most rigid."
-  },
-
   "eos": {
     "basin_A": {
       "B0_GPa": 21.7,
@@ -77,8 +68,16 @@
       "n_points": 11,
       "volume_range": "v096-v106",
       "R_squared": 0.998,
-      "EOS_models_consistent": ["BM3(Bp=4.31)", "BM3 free", "Vinet", "Murnaghan"],
-      "all_models_B0_range_GPa": [19.58, 19.59],
+      "EOS_models_consistent": [
+        "BM3(Bp=4.31)",
+        "BM3 free",
+        "Vinet",
+        "Murnaghan"
+      ],
+      "all_models_B0_range_GPa": [
+        19.58,
+        19.59
+      ],
       "completed_date": "2026-04-26",
       "kisti_path": "/scratch/x3430a02/kgy/manuscript_support/pipeline_v2/modelC_lpsc16/dft_eos/",
       "status": "confirmed_final",
@@ -100,10 +99,26 @@
       "delta_meV": -1.4,
       "status": "EOS_impossible",
       "eos_attempt": {
-        "stable_volumes": ["v101", "v103", "v105"],
-        "unstable_volumes": ["v100", "v102", "v104"],
-        "unstable_n_moved": [50, 54, 53],
-        "unstable_disp_mean": {"Li": 0.11, "S": 0.09, "Cl": 0.07},
+        "stable_volumes": [
+          "v101",
+          "v103",
+          "v105"
+        ],
+        "unstable_volumes": [
+          "v100",
+          "v102",
+          "v104"
+        ],
+        "unstable_n_moved": [
+          50,
+          54,
+          53
+        ],
+        "unstable_disp_mean": {
+          "Li": 0.11,
+          "S": 0.09,
+          "Cl": 0.07
+        },
         "pattern": "Basin B stable only at odd volumes, collapses at even volumes (50+ atoms rearrange)"
       },
       "conclusion": "Basin B is 1.4 meV more stable but EOS impossible. Paper uses Basin A (B0=21.7 GPa). Basin B NOT mentioned in paper.",
@@ -113,55 +128,123 @@
       "delta_vs_A_meV": -199,
       "n_atoms_moved": 28,
       "nature": "full_rearrangement",
-      "mean_disp": {"Li": 0.057, "Cl": 0.040, "S": 0.022, "P": 0.016},
-      "max_disp": {"Li": 0.264, "Cl": 0.082, "S": 0.051, "P": 0.018},
+      "mean_disp": {
+        "Li": 0.057,
+        "Cl": 0.04,
+        "S": 0.022,
+        "P": 0.016
+      },
+      "max_disp": {
+        "Li": 0.264,
+        "Cl": 0.082,
+        "S": 0.051,
+        "P": 0.018
+      },
       "notes": "28/62 atoms moved. Li18 largest (Dx=-0.145, Dy=+0.219). Cl also moves unlike comp5."
     }
   },
-
   "bader_charge": {
-    "Li": 0.857, "Cl": -0.886, "S": -1.728, "P": 4.396,
+    "Li": 0.857,
+    "Cl": -0.886,
+    "S": -1.728,
+    "P": 4.396,
     "notes": "v1 Bader. Cl ionicity: comp1(0.925)>ModelC(0.886)>comp3(0.903). Li6 more ionic than Li5.4 for Cl."
   },
-
   "bader_charge_v2": {
     "method": "Henkelman bader_lnx_64 v1.05 (08/19/23) on pp.x charge density (plot_num=0)",
     "structure": "modelc_v2_V0.xyz at v103 cell (V0 from BM3 fit)",
-    "Li": 0.883, "P": 4.340, "S": -1.736, "Cl": -0.918,
-    "Li_std": 0.009, "P_std": 0.525, "S_std": 0.271, "Cl_std": 0.004,
-    "Li_range": [0.867, 0.897],
-    "P_range": [3.512, 4.892],
-    "S_range": [-1.888, -1.026],
-    "Cl_range": [-0.925, -0.913],
-    "n_atoms": {"Li": 27, "P": 5, "S": 22, "Cl": 8},
+    "Li": 0.883,
+    "P": 4.34,
+    "S": -1.736,
+    "Cl": -0.918,
+    "Li_std": 0.009,
+    "P_std": 0.525,
+    "S_std": 0.271,
+    "Cl_std": 0.004,
+    "Li_range": [
+      0.867,
+      0.897
+    ],
+    "P_range": [
+      3.512,
+      4.892
+    ],
+    "S_range": [
+      -1.888,
+      -1.026
+    ],
+    "Cl_range": [
+      -0.925,
+      -0.913
+    ],
+    "n_atoms": {
+      "Li": 27,
+      "P": 5,
+      "S": 22,
+      "Cl": 8
+    },
     "total_electrons": 294.00003,
     "completed_date": "2026-04-29",
-    "v1_v2_delta": {"Li": 0.026, "Cl": -0.032, "P": -0.056, "S": -0.008},
+    "v1_v2_delta": {
+      "Li": 0.026,
+      "Cl": -0.032,
+      "P": -0.056,
+      "S": -0.008
+    },
     "v1_v2_interpretation": "Annealing -> Li/Cl more ionic (+0.03), PS4 nearly invariant. Champion v2 strengthens ionic Li-X network without disturbing covalent PS4."
   },
-
   "v2_vs_comp1_v2_bader": {
-    "modelC_v2": {"Li": 0.883, "P": 4.340, "S": -1.736, "Cl": -0.918},
-    "comp1_v2":  {"Li": 0.877, "P": 4.686, "S": -1.807, "Cl": -0.914},
+    "modelC_v2": {
+      "Li": 0.883,
+      "P": 4.34,
+      "S": -1.736,
+      "Cl": -0.918
+    },
+    "comp1_v2": {
+      "Li": 0.877,
+      "P": 4.686,
+      "S": -1.807,
+      "Cl": -0.914
+    },
     "delta_modelC_minus_comp1": {
-      "Li": 0.006,  "P": -0.346,  "S": 0.071,  "Cl": -0.004
+      "Li": 0.006,
+      "P": -0.346,
+      "S": 0.071,
+      "Cl": -0.004
     },
     "key_finding": "PS4 charge polarization is REDUCED by Li vacancy. P +0.35 less cationic + S +0.07 less anionic in modelC. Li/Cl essentially identical between systems.",
     "physical_explanation": "In comp1 Li6 sublattice surrounds each PS4 fully -> strong Coulomb pull -> efficient P->S charge transfer. In modelC Li5.4 some PS4 face vacancies -> reduced electrostatic environment -> P retains more electrons -> less polarized PS4 unit.",
     "implication_for_paper": "Vacancy weakens not only ionic Li-X bonds (long-range) but also covalent PS4 polarization (short-range), explaining why Li5.4 family has lower B0 despite same PS4 topology."
   },
-
   "v2_q2_over_r_v2bader_recompute": {
     "method": "q1*q2/r with k=14.4 eV*A, using v2 Bader for BOTH systems (fair comparison)",
     "modelC_v2": {
-      "P-S": {"r_mean_A": 2.062, "q1q2_over_r_eV": 52.5},
-      "Li-S": {"r_mean_A": 2.553, "q1q2_over_r_eV": 8.65},
-      "Li-Cl": {"r_mean_A": 2.568, "q1q2_over_r_eV": 4.55}
+      "P-S": {
+        "r_mean_A": 2.062,
+        "q1q2_over_r_eV": 52.5
+      },
+      "Li-S": {
+        "r_mean_A": 2.553,
+        "q1q2_over_r_eV": 8.65
+      },
+      "Li-Cl": {
+        "r_mean_A": 2.568,
+        "q1q2_over_r_eV": 4.55
+      }
     },
     "comp1_v2": {
-      "P-S": {"r_mean_A": 2.064, "q1q2_over_r_eV": 59.0},
-      "Li-S": {"r_mean_A": 2.498, "q1q2_over_r_eV": 9.13},
-      "Li-Cl": {"r_mean_A": 2.486, "q1q2_over_r_eV": 4.65}
+      "P-S": {
+        "r_mean_A": 2.064,
+        "q1q2_over_r_eV": 59.0
+      },
+      "Li-S": {
+        "r_mean_A": 2.498,
+        "q1q2_over_r_eV": 9.13
+      },
+      "Li-Cl": {
+        "r_mean_A": 2.486,
+        "q1q2_over_r_eV": 4.65
+      }
     },
     "delta_pct_vacancy_effect": {
       "P-S": "-11.0%  <-- most affected",
@@ -170,18 +253,26 @@
     },
     "narrative": "Vacancy effect on bond strength proxy is anisotropic: hits PS4 covalent character hardest (-11%), then Li-S ionic (-5%), least Li-Cl (-2%). PS4 backbone is the most sensitive to local charge environment."
   },
-
-
   "bond_lengths_A": {
-    "Li-Cl": 2.547, "Li-Cl_std": 0.105, "Li-Cl_n": 41,
-    "Li-S": 2.460,  "Li-S_std": 0.078,  "Li-S_n": 67,
-    "P-S": 2.062,   "P-S_std": 0.014,   "P-S_n": 20,
+    "Li-Cl": 2.547,
+    "Li-Cl_std": 0.105,
+    "Li-Cl_n": 41,
+    "Li-S": 2.46,
+    "Li-S_std": 0.078,
+    "Li-S_n": 67,
+    "P-S": 2.062,
+    "P-S_std": 0.014,
+    "P-S_n": 20,
     "source": "KISTI v2_postproc/gabia_pkg/modelc_v2_V0.xyz (cutoff Li-Cl 3.2, Li-S 3.0, P-S 2.3)",
     "verified_date": "2026-05-05",
     "notes": "VERIFIED 2026-05-05 (replaced DB Li-S 2.514 -> 2.460, Li-Cl 2.552 -> 2.547). Earlier DB value used cutoff too wide (r_max 3.497) inflating Li-S mean. Anomaly: modelC v2 Li-Cl(2.547) > Li-S(2.460) by 0.087 A — Cl-rich (1.6/fu) at both 4a+4c sites + vacancy compression of Li-S. PS4 invariant.",
-    "previous_db": {"Li-Cl": 2.552, "Li-S": 2.514, "P-S": 2.063, "note": "deprecated, cutoff issue"}
+    "previous_db": {
+      "Li-Cl": 2.552,
+      "Li-S": 2.514,
+      "P-S": 2.063,
+      "note": "deprecated, cutoff issue"
+    }
   },
-
   "v2_postproc": {
     "V0_structure": "v103 (closest to BM3 V0 = 983.58 A^3 at Cl-only Li5.4 family modelC)",
     "structure_xyz": "/scratch/x3430a02/kgy/manuscript_support/pipeline_v2/modelC_lpsc16/v2_postproc/gabia_pkg/modelc_v2_V0.xyz",
@@ -197,23 +288,36 @@
       "method": "q1*q2/r Coulomb proxy with v1 Bader charges (Li=+0.87, P=+4.50, S=-1.70, Cl=-0.87)",
       "k_constant_eV_A": 14.4,
       "P-S": {
-        "n_bonds": 20, "r_mean_A": 2.062, "r_std_A": 0.014,
-        "r_min_A": 2.034, "r_max_A": 2.089,
-        "q1q2_over_r_eV_mean": 53.42, "q1q2_over_r_eV_std": 0.37,
+        "n_bonds": 20,
+        "r_mean_A": 2.062,
+        "r_std_A": 0.014,
+        "r_min_A": 2.034,
+        "r_max_A": 2.089,
+        "q1q2_over_r_eV_mean": 53.42,
+        "q1q2_over_r_eV_std": 0.37,
         "type": "PS4 covalent (Pauling formal Q overestimates ionic but rank correct)"
       },
       "Li-S": {
-        "n_bonds": 67, "r_mean_A": 2.460, "r_std_A": 0.078,
-        "n_bonds_old": 75, "r_mean_A_old": 2.553, "r_std_A_old": 0.283,
+        "n_bonds": 67,
+        "r_mean_A": 2.46,
+        "r_std_A": 0.078,
+        "n_bonds_old": 75,
+        "r_mean_A_old": 2.553,
+        "r_std_A_old": 0.283,
         "r_max_A_old_cutoff": 3.497,
-        "q1q2_over_r_eV_mean": 8.97, "q1q2_over_r_eV_std": 0.28,
+        "q1q2_over_r_eV_mean": 8.97,
+        "q1q2_over_r_eV_std": 0.28,
         "type": "ionic (re-measured 2026-05-05 with cutoff 3.0; old cutoff 3.497 included non-bonded pairs)",
         "note": "VERIFIED. Old r_mean 2.553 inflated by wide cutoff. Real Li-S 2.460 = SHORTER than comp1 v2 (2.498) by 0.04 A — Cl-rich + vacancy compresses Li-S environment."
       },
       "Li-Cl": {
-        "n_bonds": 42, "r_mean_A": 2.568, "r_std_A": 0.168,
-        "r_min_A": 2.414, "r_max_A": 3.417,
-        "q1q2_over_r_eV_mean": 4.26, "q1q2_over_r_eV_std": 0.24,
+        "n_bonds": 42,
+        "r_mean_A": 2.568,
+        "r_std_A": 0.168,
+        "r_min_A": 2.414,
+        "r_max_A": 3.417,
+        "q1q2_over_r_eV_mean": 4.26,
+        "q1q2_over_r_eV_std": 0.24,
         "type": "ionic (weakest of three)"
       },
       "ranking_strongest_to_weakest": "P-S (53.4 eV) >>>> Li-S (8.4 eV) > Li-Cl (4.3 eV)",
@@ -231,13 +335,14 @@
       "verdict": "v2 V0 structure is consistent with v1 reference; PS4 framework invariant; Li-S elongation tracks v2 EOS softening (B0 21.7 -> 19.59 GPa)"
     }
   },
-
-
   "pipeline_v2": {
     "halogen_screening": {
       "n_configs": 45,
       "best_config_idx": 0,
-      "best_s_indices": [1, 4],
+      "best_s_indices": [
+        1,
+        4
+      ],
       "status": "completed",
       "notes": "C(10,2)=45 halogen configs. Best S at free_sites [1,4]. Clear winner."
     },
@@ -247,7 +352,13 @@
       "energy_spread_meV": 157.1,
       "li_spread_within_best_halogen_meV": 0.1,
       "top5_all_H0": true,
-      "top5_energies_eV": [-258.0913, -258.0912, -258.0912, -258.0912, -258.0912],
+      "top5_energies_eV": [
+        -258.0913,
+        -258.0912,
+        -258.0912,
+        -258.0912,
+        -258.0912
+      ],
       "status": "completed",
       "notes": "Top 5 ALL from H0 (S=[1,4]). Li ordering almost irrelevant (0.1 meV). Pure Cl cage too symmetric for Li to matter."
     },
@@ -264,7 +375,7 @@
     },
     "mlip_eos": {
       "B0_GPa": 20.0,
-      "B0_prime": 7.50,
+      "B0_prime": 7.5,
       "V0_A3": 1213.01,
       "V0_pct": 100.7,
       "R_squared": 0.999289,
@@ -279,13 +390,13 @@
       "notes": "V0≈v101. Use champion xyz as starting coords."
     }
   },
-
   "comparison_to_comp3": {
     "modelc_B0": 21.7,
     "comp3_B0": 20.8,
     "delta": 0.9,
     "interpretation": "No Br -> more rigid. Confirms Br weakening effect."
   },
-
-  "references": ["adeli2019"]
+  "references": [
+    "adeli2019"
+  ]
 }

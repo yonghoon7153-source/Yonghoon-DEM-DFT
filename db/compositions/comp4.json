@@ -34,37 +34,6 @@
     "E": 71.5,
     "nu": 0.2
   },
-  "elastic_mlip_300K_GPa": {
-    "unit_cell": {
-      "C11": 46.2,
-      "C12": 7.7,
-      "C44": 13.9,
-      "K": 20.5,
-      "G": 15.1,
-      "E": 36.4
-    },
-    "supercell_2x2x1": {
-      "C11": 48.6,
-      "C12": 8.1,
-      "C44": 14.6,
-      "K": 21.5,
-      "G": 16.0,
-      "E": 38.5
-    }
-  },
-  "elastic_mlip_600K_GPa": {
-    "method": "600K_snapshot_x5",
-    "C11": 33.4,
-    "C11_std": 1.1,
-    "C12": 14.1,
-    "C12_std": 0.5,
-    "C44": 10.7,
-    "C44_std": 0.6,
-    "E_VRH": 26.4,
-    "E_std": 1.6,
-    "K_VRH": 20.5,
-    "G_VRH": 10.3
-  },
   "surface_energy_Jm2": 0.45,
   "two_gamma_Jm2": 0.9,
   "adhesion_v1": {
@@ -94,16 +63,35 @@
     "S_std": 0.381,
     "Cl_std": 0.005,
     "Br_std": 0.009,
-    "P_range": [3.200, 4.367],
+    "P_range": [
+      3.2,
+      4.367
+    ],
     "source": "/scratch/x3430a02/kgy/manuscript_support/post_relax/comp4_ACF.dat (KISTI 2026-05-04 measured)",
     "P_VALUE_WARNING": "DO NOT cite P=+3.631 in paper without v2 cross-check. v1 Bader pipeline anomaly known (comp1 v1 P=+3.27 vs comp1 v2 +4.686). comp4 P=+3.631 may be partly v1 systematic + partly comp4 frustration. Need v2 anneal + Bader to disentangle.",
     "notes": "TRIPLE ANOMALY (v1): P=+3.631 (lowest), S=-1.551 (lowest |q|), HIGH std (0.49, 0.38). Cl=Br=0.8 maximum frustration disrupts both covalent (PS4) and ionic backbone. Microscopic origin candidate for comp4 E -9%, but v1 Bader pipeline reliability question requires v2 confirmation."
   },
   "bond_lengths_v1_measured": {
-    "Li-Cl": {"mean": 2.495, "std": 0.142, "n": 19},
-    "Li-Br": {"mean": 2.723, "std": 0.114, "n": 22},
-    "Li-S": {"mean": 2.479, "std": 0.123, "n": 70},
-    "P-S": {"mean": 2.065, "std": 0.013, "n": 20},
+    "Li-Cl": {
+      "mean": 2.495,
+      "std": 0.142,
+      "n": 19
+    },
+    "Li-Br": {
+      "mean": 2.723,
+      "std": 0.114,
+      "n": 22
+    },
+    "Li-S": {
+      "mean": 2.479,
+      "std": 0.123,
+      "n": 70
+    },
+    "P-S": {
+      "mean": 2.065,
+      "std": 0.013,
+      "n": 20
+    },
     "source": "KISTI post_relax/comp4_post_relax.out (mic, same cutoffs as comp3)"
   },
   "q1q2_over_r_eV_v1bader": {

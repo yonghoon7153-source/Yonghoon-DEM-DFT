@@ -34,37 +34,6 @@
     "E": 71.7,
     "nu": 0.2
   },
-  "elastic_mlip_300K_GPa": {
-    "unit_cell": {
-      "C11": 54.3,
-      "C12": 15.0,
-      "C44": 14.5,
-      "K": 28.1,
-      "G": 15.3,
-      "E": 39.0
-    },
-    "supercell_2x2x1": {
-      "C11": 47.8,
-      "C12": 9.2,
-      "C44": 13.4,
-      "K": 22.0,
-      "G": 15.0,
-      "E": 36.6
-    }
-  },
-  "elastic_mlip_600K_GPa": {
-    "method": "600K_snapshot_x5",
-    "C11": 34.5,
-    "C11_std": 0.8,
-    "C12": 14.0,
-    "C12_std": 0.3,
-    "C44": 10.9,
-    "C44_std": 0.4,
-    "E_VRH": 27.3,
-    "E_std": 0.4,
-    "K_VRH": 20.9,
-    "G_VRH": 10.6
-  },
   "surface_energy_Jm2": 0.565,
   "two_gamma_Jm2": 1.13,
   "adhesion_v1": {
@@ -83,26 +52,45 @@
     "kraft2018"
   ],
   "bader_charge_v1": {
-    "Li": 0.880,
+    "Li": 0.88,
     "P": 4.444,
-    "S": -1.760,
+    "S": -1.76,
     "Cl": -0.912,
-    "Br": -0.900,
+    "Br": -0.9,
     "Li_std": 0.008,
     "P_std": 0.589,
-    "S_std": 0.260,
+    "S_std": 0.26,
     "Cl_std": 0.007,
     "Br_std": 0.013,
-    "P_range": [3.436, 4.893],
+    "P_range": [
+      3.436,
+      4.893
+    ],
     "source": "/scratch/x3430a02/kgy/manuscript_support/post_relax/comp3_ACF.dat (KISTI 2026-05-04 measured)",
     "P_VALUE_WARNING": "DO NOT cite P=+4.444 in paper without v2 cross-check. v1 Bader pipeline showed P anomaly (comp1 v1 P=+3.27 vs comp1 v2 P=+4.686, delta -1.4 e). Same systematic issue may affect comp3 v1 P. Use v2 anneal champion + Bader for paper-quality P. Li/Cl/Br/S values consistent with v1 db (use those).",
     "notes": "P_std=0.589 HIGH: 5 P atoms span [+3.44, +4.89] = strongly heterogeneous PS4 environment from Cl/Br site mixing. ANOMALY (Br>Cl ionicity 0.900 vs 0.912 — within std overlap, ionicity gap less anomalous than v1 db noted)."
   },
   "bond_lengths_v1_measured": {
-    "Li-Cl": {"mean": 2.498, "std": 0.122, "n": 24},
-    "Li-Br": {"mean": 2.754, "std": 0.105, "n": 17},
-    "Li-S": {"mean": 2.478, "std": 0.117, "n": 70},
-    "P-S": {"mean": 2.065, "std": 0.013, "n": 20},
+    "Li-Cl": {
+      "mean": 2.498,
+      "std": 0.122,
+      "n": 24
+    },
+    "Li-Br": {
+      "mean": 2.754,
+      "std": 0.105,
+      "n": 17
+    },
+    "Li-S": {
+      "mean": 2.478,
+      "std": 0.117,
+      "n": 70
+    },
+    "P-S": {
+      "mean": 2.065,
+      "std": 0.013,
+      "n": 20
+    },
     "source": "KISTI post_relax/comp3_post_relax.out (mic, cutoff Li-Cl 3.2, Li-Br 3.4, Li-S 3.0, P-S 2.3)"
   },
   "q1q2_over_r_eV_v1bader": {

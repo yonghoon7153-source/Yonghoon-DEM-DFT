@@ -7,23 +7,24 @@
   "cell_type": "cubic",
   "formula_units": 4,
   "space_group": "F-43m",
-  "halogen": {"Cl": 4, "Br": 0},
+  "halogen": {
+    "Cl": 4,
+    "Br": 0
+  },
   "li_per_fu": 6.0,
   "s_per_fu": 5.0,
   "has_vacancy": false,
   "notes": "Pure Cl end-member. No compositional vacancy.",
-
   "eos": {
     "B0_GPa": 26.2,
     "B0_prime": 4.17,
     "n_points": 8,
-    "R_squared": 1.000000,
+    "R_squared": 1.0,
     "volume_range": "v096-v106",
     "status": "confirmed",
     "basin": "single",
     "pipeline": "v1"
   },
-
   "eos_v2": {
     "B0_GPa_mlip": 26.9,
     "B0_GPa_dft": 26.5,
@@ -35,63 +36,102 @@
     "pipeline": "v2",
     "notes": "Li annealing champion #0. DFT 11pts DONE. v1(26.2) vs v2(26.5) = +0.3 GPa. Li6 insensitive to Li ordering (no vacancy)."
   },
-
-  "band_gap_eV": {"v1": 2.28, "v2": 2.25, "v2_notes": "DOS smearing=mv/0.005, thresh=1.0. v1≈v2 within 0.03 eV."},
+  "band_gap_eV": {
+    "v1": 2.28,
+    "v2": 2.25,
+    "v2_notes": "DOS smearing=mv/0.005, thresh=1.0. v1≈v2 within 0.03 eV."
+  },
   "vbm_character": "S 3p",
   "cbm_character": "Li 2s, P 3s",
-
   "bader_charge_v2": {
-    "Li": 0.877, "P": 4.686, "S": -1.807, "Cl": -0.914,
-    "Li_std": 0.010, "P_std": 0.358, "S_std": 0.186, "Cl_std": 0.004,
+    "Li": 0.877,
+    "P": 4.686,
+    "S": -1.807,
+    "Cl": -0.914,
+    "Li_std": 0.01,
+    "P_std": 0.358,
+    "S_std": 0.186,
+    "Cl_std": 0.004,
     "notes": "V0=v102.37(a=9.9291A). v1 vs v2: Li(0.874→0.877), Cl(-0.925→-0.914), S(-1.518→-1.807), P(4.396→4.686). Li/Cl nearly identical. S/P differ but may be FFT grid effect."
   },
-
   "bond_lengths_A": {
-    "v1": {"Li-Cl": 2.607, "Li-S": 2.461, "P-S": 2.072},
-    "v2": {"Li-Cl": 2.486, "Li-S": 2.498, "P-S": 2.064},
+    "v1": {
+      "Li-Cl": 2.607,
+      "Li-S": 2.461,
+      "P-S": 2.072
+    },
+    "v2": {
+      "Li-Cl": 2.486,
+      "Li-S": 2.498,
+      "P-S": 2.064
+    },
     "notes": "v2 at V0=v102.37. Li-Cl shorter (2.607→2.486), Li-S longer (2.461→2.498), P-S same (~2.06). Annealing Li rearrangement changes local bonding."
   },
-
   "elastic_dft_0K_GPa": {
-    "v1": {"C11": 74.4, "C12": 29.4, "C44": 37.9, "K": 44.4, "G": 30.3, "E": 76.9, "nu": 0.178},
-    "v2": {"C11": 78.8, "C12": 29.8, "C44": 39.0, "K": 46.2, "G": 32.4, "E": 78.9, "nu": 0.216},
-    "delta_v1v2": {"C11": 4.4, "C12": 0.4, "C44": 1.1, "E": 2.0},
-    "deng2016_ref": {"C11": 39.9, "C12": 23.1, "C44": 7.8, "E": 22.1},
+    "v1": {
+      "C11": 74.4,
+      "C12": 29.4,
+      "C44": 37.9,
+      "K": 44.4,
+      "G": 30.3,
+      "E": 76.9,
+      "nu": 0.178
+    },
+    "v2": {
+      "C11": 78.8,
+      "C12": 29.8,
+      "C44": 39.0,
+      "K": 46.2,
+      "G": 32.4,
+      "E": 78.9,
+      "nu": 0.216
+    },
+    "delta_v1v2": {
+      "C11": 4.4,
+      "C12": 0.4,
+      "C44": 1.1,
+      "E": 2.0
+    },
+    "deng2016_ref": {
+      "C11": 39.9,
+      "C12": 23.1,
+      "C44": 7.8,
+      "E": 22.1
+    },
     "notes": "v2 slightly stiffer: E +2.0 GPa (+2.6%). Li annealing -> stronger local bonding.",
     "v2_protocol": "clamped-ion finite-strain (calculation='scf', no atom relax in strained cell), 12 strain x 0.005, ATOMIC_POSITIONS (crystal)",
     "v2_machine": "KISTI /scratch/x3430a02/kgy/manuscript_support/post_relax_comp1_v2/",
     "v2_files": "comp1v2_elastic_{1,2,3,4,5,6}{p,m}.out (12 files, all JOB DONE Apr 14-15)",
     "v2_compute_script": "compute_cij_check.py",
     "v2_verified_2026_05_01": {
-      "C11": 79.27, "C12": 29.68, "C44": 38.87, "K_VRH": 46.21, "G_VRH": 33.24, "E_VRH": 80.43, "nu": 0.210,
+      "C11": 79.27,
+      "C12": 29.68,
+      "C44": 38.87,
+      "K_VRH": 46.21,
+      "G_VRH": 33.24,
+      "E_VRH": 80.43,
+      "nu": 0.21,
       "match_with_db": "0.6% (E 78.9 db -> 79.27 recompute)"
     }
   },
-
-  "elastic_mlip_300K_GPa": {
-    "unit_cell": {"C11": 40.1, "C12": 15.7, "C44": 25.0, "K": 23.7, "G": 18.6, "E": 44.3},
-    "supercell_2x2x1": {"C11": 48.8, "C12": 25.2, "C44": 24.7, "K": 33.0, "G": 18.3, "E": 46.4}
-  },
-
-  "elastic_mlip_600K_GPa": {
-    "method": "600K_snapshot_x5",
-    "C11": 33.1, "C11_std": 1.2, "C12": 15.0, "C12_std": 0.5, "C44": 13.1, "C44_std": 0.6,
-    "E_VRH": 29.1, "E_std": 1.1,
-    "K_VRH": 21.0, "G_VRH": 11.5
-  },
-
   "surface_energy_Jm2": 1.211,
   "two_gamma_Jm2": 2.42,
-
   "adhesion_v2": {
-    "seeds": [1, 2, 3],
-    "Wad_Jm2": [1.081, 1.153, 1.105],
+    "seeds": [
+      1,
+      2,
+      3
+    ],
+    "Wad_Jm2": [
+      1.081,
+      1.153,
+      1.105
+    ],
     "Wad_mean": 1.113,
     "Wad_std": 0.037,
     "method": "3000K_melt_quench",
     "status": "confirmed_3seeds"
   },
-
   "adhesion_v5": {
     "method": "crystalline_slab_surface_MQA",
     "SE_cell": "prim_2x2x1_52at",
@@ -100,7 +140,6 @@
     "z_cuts": 5,
     "status": "in_progress"
   },
-
   "pipeline_v2": {
     "halogen_screening": {
       "n_configs": 70,
@@ -112,8 +151,20 @@
     "li_screening": {
       "n_configs": 20,
       "energy_spread_meV": 1162,
-      "top5_ids": [0, 1, 8, 15, 9],
-      "top5_energies_eV": [-217.468, -217.283, -217.200, -217.175, -217.131],
+      "top5_ids": [
+        0,
+        1,
+        8,
+        15,
+        9
+      ],
+      "top5_energies_eV": [
+        -217.468,
+        -217.283,
+        -217.2,
+        -217.175,
+        -217.131
+      ],
       "status": "completed"
     },
     "li_annealing": {
@@ -121,8 +172,20 @@
       "duration_ps": 50,
       "champion_id": 0,
       "champion_energy_eV": -217.533,
-      "ranking_after": [0, 15, 8, 9, 1],
-      "energies_after_eV": [-217.533, -217.042, -217.030, -217.013, -216.953],
+      "ranking_after": [
+        0,
+        15,
+        8,
+        9,
+        1
+      ],
+      "energies_after_eV": [
+        -217.533,
+        -217.042,
+        -217.03,
+        -217.013,
+        -216.953
+      ],
       "ranking_reversed": true,
       "notes": "#15 was screening rank 4, became annealing rank 2. #1 was rank 2, became rank 5.",
       "status": "completed"
@@ -138,14 +201,23 @@
       "location": "KISTI_GPU_0"
     }
   },
-
-  "references": ["deiseroth2006", "kraft2018", "adeli2019", "deng2016"],
-
+  "references": [
+    "deiseroth2006",
+    "kraft2018",
+    "adeli2019",
+    "deng2016"
+  ],
   "bvse_5x5x5_paired_2026_06_03": {
     "_cross_link": "Cubic 5x5x5 supercell BVSE for comp1 (Li6PS5Cl, 6500 atoms, 3000 Li). Built from comp1_v3 V0_init.cif tiled 5x5x5. Paired with modelc (modelc_v3.json bvse_5x5x5_paired_2026_06_03) which is the SAME cell with 300 S->Cl + 300 Li removals applied -- equal lattice, grid, cutoff for an apples-to-apples slide comparison.",
     "path": "container:/home/ubuntu/work/runs/bvse_cubic_5x5x5/comp1_5x5x5/",
-    "grid_shape": [100, 100, 100], "cutoff_A": 5.0,
-    "Li_BVS_mean": 1.626, "Li_BVS_std": 0.016,
+    "grid_shape": [
+      100,
+      100,
+      100
+    ],
+    "cutoff_A": 5.0,
+    "Li_BVS_mean": 1.626,
+    "Li_BVS_std": 0.016,
     "low_bvse_channel_fraction": 0.0875,
     "see_modelc_v3_for_full_pair_block": "db/compositions/modelc_v3.json -> v3_postprocess_pipeline_v2_8.bvse_5x5x5_paired_2026_06_03"
   }

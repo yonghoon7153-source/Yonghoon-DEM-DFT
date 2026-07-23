@@ -57,20 +57,41 @@
     "notes": "|Cl charge| > |Br charge| confirmed."
   },
   "bond_lengths_A": {
-    "v1": {"Li-Cl": 2.51, "Li-Br": 2.71, "P-S": 2.06, "note": "v1 BasinB approximate"},
+    "v1": {
+      "Li-Cl": 2.51,
+      "Li-Br": 2.71,
+      "P-S": 2.06,
+      "note": "v1 BasinB approximate"
+    },
     "v2": {
-      "Li-Cl": 2.442, "Li-Cl_std": 0.075, "Li-Cl_n": 9,
-      "Li-Br": 2.585, "Li-Br_std": 0.108, "Li-Br_n": 9,
-      "Li-S":  2.510, "Li-S_std":  0.078, "Li-S_n":  78,
-      "P-S":   2.063, "P-S_std":   0.017, "P-S_n":   16,
+      "Li-Cl": 2.442,
+      "Li-Cl_std": 0.075,
+      "Li-Cl_n": 9,
+      "Li-Br": 2.585,
+      "Li-Br_std": 0.108,
+      "Li-Br_n": 9,
+      "Li-S": 2.51,
+      "Li-S_std": 0.078,
+      "Li-S_n": 78,
+      "P-S": 2.063,
+      "P-S_std": 0.017,
+      "P-S_n": 16,
       "source": "KISTI pipeline_v2/comp2_lpscbr/v2_postproc/comp2_v2_V0.xyz (cutoff Li-Cl 3.2, Li-Br 3.4, Li-S 3.0, P-S 2.3)",
       "verified_date": "2026-05-05"
     },
     "v3": {
-      "Li-Cl": 2.597, "Li-Cl_std": 0.223, "Li-Cl_n": 10,
-      "Li-Br": 2.752, "Li-Br_std": 0.164, "Li-Br_n": 12,
-      "Li-S":  2.479, "Li-S_std":  0.100, "Li-S_n":  72,
-      "P-S":   2.070, "P-S_std":   0.023, "P-S_n":   16,
+      "Li-Cl": 2.597,
+      "Li-Cl_std": 0.223,
+      "Li-Cl_n": 10,
+      "Li-Br": 2.752,
+      "Li-Br_std": 0.164,
+      "Li-Br_n": 12,
+      "Li-S": 2.479,
+      "Li-S_std": 0.1,
+      "Li-S_n": 72,
+      "P-S": 2.07,
+      "P-S_std": 0.023,
+      "P-S_n": 16,
       "source": "comp2_V0_v3_relaxed.xyz (DFT-relaxed champion; cutoff Li-Cl 3.2/Li-Br 3.4/Li-S 3.0/P-S 2.3)",
       "measured_date": "2026-07-22",
       "vs_v2_saddle": "Li-Cl +0.155, Li-Br +0.167 (v3 champion has LONGER, more-spread Li-halide bonds than V0=v103 SADDLE); Li-S -0.031; P-S +0.007 (framework unchanged). v2 Li-X values were on the saddle -> USE v3 FOR PAPER.",
@@ -96,18 +117,60 @@
     "protocol": "12 strain (6 directions x 2 signs) x 0.005, ATOMIC_POSITIONS (crystal), calculation='scf', no atom relax in strained cell",
     "C11": 78.93,
     "C12": 29.68,
-    "C44": 77.60,
-    "K_VRH": 46.10,
+    "C44": 77.6,
+    "K_VRH": 46.1,
     "G_VRH": 56.41,
-    "E_VRH": 120.20,
+    "E_VRH": 120.2,
     "nu": 0.065,
     "C_matrix_GPa": [
-      [79.0, 30.65, 29.25, -0.95, -1.5, -2.1],
-      [30.65, 78.7, 29.15, 0.4, -0.95, 2.0],
-      [29.25, 29.15, 79.1, -0.95, 0.65, 0.5],
-      [-0.95, 0.4, -0.95, 77.3, 0.95, -1.8],
-      [-1.5, -0.95, 0.65, 0.95, 76.5, -1.15],
-      [-2.1, 2.0, 0.5, -1.8, -1.15, 79.0]
+      [
+        79.0,
+        30.65,
+        29.25,
+        -0.95,
+        -1.5,
+        -2.1
+      ],
+      [
+        30.65,
+        78.7,
+        29.15,
+        0.4,
+        -0.95,
+        2.0
+      ],
+      [
+        29.25,
+        29.15,
+        79.1,
+        -0.95,
+        0.65,
+        0.5
+      ],
+      [
+        -0.95,
+        0.4,
+        -0.95,
+        77.3,
+        0.95,
+        -1.8
+      ],
+      [
+        -1.5,
+        -0.95,
+        0.65,
+        0.95,
+        76.5,
+        -1.15
+      ],
+      [
+        -2.1,
+        2.0,
+        0.5,
+        -1.8,
+        -1.15,
+        79.0
+      ]
     ],
     "completed_date": "2026-05-01",
     "n_strain": 12,
@@ -119,8 +182,18 @@
     },
     "vs_comp1_v2_VERIFIED": {
       "_note": "Both clamped-ion (calculation='scf') - SAME protocol. Anomaly confirmed.",
-      "comp1_v2": {"C11": 79.27, "C44": 38.87, "E_VRH": 80.43, "nu": 0.210},
-      "comp2_v2": {"C11": 78.93, "C44": 77.60, "E_VRH": 120.20, "nu": 0.065},
+      "comp1_v2": {
+        "C11": 79.27,
+        "C44": 38.87,
+        "E_VRH": 80.43,
+        "nu": 0.21
+      },
+      "comp2_v2": {
+        "C11": 78.93,
+        "C44": 77.6,
+        "E_VRH": 120.2,
+        "nu": 0.065
+      },
       "delta_C44_pct": 99.6,
       "delta_E_pct": 49.5,
       "physical_expectation": "Br -> -2 to -5% softening (Li-X polarization, ionic weakening)",
@@ -132,64 +205,6 @@
       "C. Redo comp2 v2 0K Cij on KISTI (where comp1 v2 was done, paper-quality)"
     ],
     "interpretation": "DO NOT cite this value in paper. For Section 3 mechanical, use 600K MLIP comparison (comp1 29.1 / comp2 28.6 GPa v1; comp2 v2 anneal = 34.7 GPa)."
-  },
-  "elastic_mlip_300K_GPa": {
-    "unit_cell": {
-      "C11": 39.5,
-      "C12": 17.0,
-      "C44": 22.8,
-      "K": 24.4,
-      "G": 17.0,
-      "E": 41.4
-    },
-    "supercell_2x2x1": {
-      "C11": 42.1,
-      "C12": 19.3,
-      "C44": 24.0,
-      "K": 26.5,
-      "G": 17.6,
-      "E": 43.3
-    }
-  },
-  "elastic_mlip_600K_GPa": {
-    "method": "600K_snapshot_x5",
-    "C11": 33.1,
-    "C11_std": 1.0,
-    "C12": 15.2,
-    "C12_std": 0.4,
-    "C44": 12.7,
-    "C44_std": 0.5,
-    "E_VRH": 28.6,
-    "E_std": 1.1,
-    "K_VRH": 21.2,
-    "G_VRH": 11.2
-  },
-  "elastic_mlip_600K_GPa_v2": {
-    "method": "600K_snapshot_x5_anneal_V0",
-    "structure": "comp2_v2 anneal champion (V0=v103, Bader-confirmed)",
-    "script": "mlip_snapshot_elastic_comp2v2.py (paper #1 v1 working pattern)",
-    "protocol": "MD 600K 10ps + 5 snap × 2ps + LBFGS quench + relaxed-ion finite-strain Cij",
-    "C11": 44.1,
-    "C11_std": 0.8,
-    "C12": 17.8,
-    "C12_std": 0.4,
-    "C44": 13.7,
-    "C44_std": 0.3,
-    "K_VRH": 26.6,
-    "K_std": 0.5,
-    "G_VRH": 13.5,
-    "G_std": 0.2,
-    "E_VRH": 34.7,
-    "E_std": 0.5,
-    "completed_date": "2026-04-30",
-    "sign_note": "raw output had reversed sign (paper #1 v1 code convention: s = -atoms.get_stress); absolute values stored consistent with v1 db",
-    "v1_v2_delta": {
-      "C11": 11.0,
-      "C12": 2.6,
-      "C44": 1.0,
-      "E_VRH": 6.1
-    },
-    "v1_v2_interpretation": "Anneal champion +21% stiffer (E_VRH 28.6 -> 34.7, +6.1 GPa). Br ordering improvement strengthens 600K thermal averaged elastic response."
   },
   "surface_energy_Jm2": 1.189,
   "two_gamma_Jm2": 2.38,
@@ -230,7 +245,13 @@
     "S_std": 0.073,
     "Cl_std": 0.007,
     "Br_std": 0.003,
-    "n_atoms": {"Li": 24, "P": 4, "S": 20, "Cl": 2, "Br": 2},
+    "n_atoms": {
+      "Li": 24,
+      "P": 4,
+      "S": 20,
+      "Cl": 2,
+      "Br": 2
+    },
     "total_electrons": 240.0004,
     "n_bader_maxima": 280,
     "charge_balance": -0.006,
@@ -247,7 +268,7 @@
   },
   "q1q2_over_r_eV_v2bader": {
     "P-S": 63.2,
-    "Li-Cl": 4.70,
+    "Li-Cl": 4.7,
     "Li-Br": 4.34,
     "Li-S": 9.32,
     "_recalc_date": "2026-05-05",
@@ -256,18 +277,44 @@
     "P-S_vs_comp1_v2_pct": 7.0,
     "P-S_vs_modelC_v2_pct": 20.4,
     "Li-Br_change_from_old": "old 4.46 (used DB Li-Br 2.71) -> new 4.34 (measured Li-Br 2.585). Li-Br SHORTER in comp2 v2 than DB suggested.",
-    "previous": {"Li-Cl": 4.69, "Li-Br": 4.46, "Li-S": 9.31, "P-S": 63.3, "note": "deprecated, used inherited/inconsistent bond lengths"},
+    "previous": {
+      "Li-Cl": 4.69,
+      "Li-Br": 4.46,
+      "Li-S": 9.31,
+      "P-S": 63.3,
+      "note": "deprecated, used inherited/inconsistent bond lengths"
+    },
     "notes": "VERIFIED 2026-05-05: P-S Coulomb +7.0% vs comp1 v2 (Br stiffens PS4), +20.4% vs modelC v2 (Br + no-vacancy combined)."
   },
   "icohp_lobster_v3": {
     "method": "LOBSTER 5.1.1, all-PAW nscf nbnd500 ecut70/560 k222 pbeVaspFit2015; charge spilling 1.37% (<5% OK)",
     "structure": "comp2_V0_v3_relaxed.xyz (DFT-relaxed champion)",
     "date": "2026-07-22",
-    "mean_ICOHP_eV": {"P-S": -5.913, "Li-S": -2.504, "Li-Cl": -2.111, "Li-Br": -1.934},
-    "n_bonds": {"P-S": 16, "Li-S": 72, "Li-Cl": 10, "Li-Br": 12},
-    "mean_ICOBI": {"P-S": 0.925, "Li-S": 0.384, "Li-Cl": 0.288, "Li-Br": 0.280},
+    "mean_ICOHP_eV": {
+      "P-S": -5.913,
+      "Li-S": -2.504,
+      "Li-Cl": -2.111,
+      "Li-Br": -1.934
+    },
+    "n_bonds": {
+      "P-S": 16,
+      "Li-S": 72,
+      "Li-Cl": 10,
+      "Li-Br": 12
+    },
+    "mean_ICOBI": {
+      "P-S": 0.925,
+      "Li-S": 0.384,
+      "Li-Cl": 0.288,
+      "Li-Br": 0.28
+    },
     "icobi_interpretation": "bond order: P-S 0.925 ~ 1 = covalent single bond (stiff PS4 framework, robust to Br). Li-S/Cl/Br 0.28-0.38 = low = IONIC. Li-Br(0.280) ~ Li-Cl(0.288) similar covalency -> Br bond weakening (ICOHP -1.93 vs -2.11) is IONIC in origin (bond elongation -> weaker electrostatic, matches Coulomb 4.34<4.70), NOT a covalency change. ICOHP(strength)+ICOBI(order) together: covalent framework + ionic Li-halide, Br softens the ionic bond.",
-    "distance_cutoff_A": {"P-S": 2.3, "Li-S": 2.9, "Li-Cl": 3.3, "Li-Br": 3.5},
+    "distance_cutoff_A": {
+      "P-S": 2.3,
+      "Li-S": 2.9,
+      "Li-Cl": 3.3,
+      "Li-Br": 3.5
+    },
     "headline": "Li-Br (-1.934) WEAKER than Li-Cl (-2.111) — Br weakens the Li-halide bond. Same-structure Cl-vs-Br direct comparison (no comp1 needed).",
     "three_descriptor_consistency": "length (Li-Br 2.752 > Li-Cl 2.597), Coulomb q1q2/r (Li-Br 4.34 < Li-Cl 4.70), -ICOHP (Li-Br 1.934 < Li-Cl 2.111) ALL agree Li-Br weaker.",
     "dual_effect": "P-S -5.913 = strong covalent (stiff PS4 framework, robust to Br; matches Bader 'Br strengthens PS4'). Li-halide weak/ionic, Br weakens further. Br dual: stiffens covalent framework + softens ionic Li-halide.",
