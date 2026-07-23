@@ -64,25 +64,25 @@ if [ "$nd" = 3 ]; then
 fi
 echo "── log tail ──"; tail -3 "$LOG" 2>/dev/null | sed 's/^/    /'
 
-# ═══════════════ comp2 elastic DFT 0.01 (strain 재측정; cubic 대칭↑) ═══════════════
-EOUT=${EOUT:-/data/work/runs/comp2_elastic_dft_0p01}
-ELOG=${ELOG:-$HOME/comp2_elastic_0p01.log}
+# ═══════════════ comp2 elastic DFT k444·0.005 (comp1과 셀·k·pseudo·strain 완전 통일) ═══════════════
+EOUT=${EOUT:-/data/work/runs/comp2_elastic_k444}
+ELOG=${ELOG:-$HOME/comp2_elastic_k444.log}
 echo ""
-echo "══ comp2 elastic DFT (12 relaxed-ion strain ±0.01 → VRH; 0.005 노이즈 재측정) ══"
+echo "══ comp2 elastic DFT (relaxed-ion · strain 0.005 · k444 → VRH; comp1 22.06과 직접비교) ══"
 if pgrep -f 'run_comp2_elastic_dft' >/dev/null 2>&1; then echo "  실행중 ✔"
 else echo "  (러너 안 보임)"; fi
 # ✅는 실제 값(Young/Bulk VRH)이 있을 때만 — 헤더만 있는 껍데기 fit.txt에 안 속게
 if [ -f "$EOUT/elastic_fit.txt" ] && grep -qaiE "Young|Bulk +Voigt" "$EOUT/elastic_fit.txt"; then
   echo "  ✅ fit 완료 (실제 값):"
   grep -aiE "C11|C44|C12|Bulk|Shear|Young|Zener|Pugh|Cauchy|Vickers|Universal|density|sound|Debye" "$EOUT/elastic_fit.txt" | tail -16 | sed 's/^/    /'
-  echo "    → 비교: comp1 E_VRH 29.1 | comp2 0.005판 29.75 (σ3.7 노이즈로 뒤집힘)"
+  echo "    → 비교: comp1 E_VRH 22.06 (relaxed-ion k444) — 같은 cubic 52-atom·k444·PAW·0.005라 직접 비교 OK"
 elif [ -d "$EOUT" ]; then
   nd=$(grep -l "JOB DONE" "$EOUT"/strain_*.out 2>/dev/null | wc -l)
   cur=$(ls -t "$EOUT"/strain_*.out 2>/dev/null | head -1)
-  echo "  strain 완료 ${nd}/12 ${cur:+(최근 $(basename "$cur" .out))}"
+  echo "  strain 완료 ${nd}/12 ${cur:+(최근 $(basename "$cur" .out))}  [k444라 k222보다 훨씬 느림]"
   grep -aE "pw.x strain|strain_.* OK|FAIL|GPU free" "$ELOG" 2>/dev/null | tail -3 | sed 's/^/    /'
 else
-  echo "  (out_dir 없음 — c2el01 tmux 확인)"
+  echo "  (out_dir 없음 — c2elk444 tmux 확인)"
 fi
 
 # ═══════════════ ICOHP LOBSTER (elastic 후 COEXIST) ═══════════════
