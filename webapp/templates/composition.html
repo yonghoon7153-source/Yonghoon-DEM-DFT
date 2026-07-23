@@ -170,14 +170,15 @@ function plotCsv(rel,kind,btn){
     if(!d.data||!d.data.length){box.innerHTML='<span class="muted">빈 데이터</span>';ctr.innerHTML='';return;}
     var cols=d.columns;
     // 열 분류: 값의 60%+ 가 숫자면 numeric
-    function isNum(c){var n=0,t=0;d.data.forEach(function(r){var v=r[c];if(v!==''&&v!=null){t++;if(typeof v==='number')n++;}});return t>0&&n/t>=0.6;}
+    function isNum(c){var n=0,t=0;d.data.forEach(function(r){var v=r[c];if(v!==''&&v!=null){t++;if(typeof v==='number')n++;}});return t>0&&n/t>=0.85;}
     var numeric=cols.filter(isNum), cat=cols.filter(function(c){return numeric.indexOf(c)<0;});
     // 그룹 열(계열별 여러 곡선) 감지
     var group=cols.filter(function(c){return /^(series|system|site|kind|variant|dopant|seed|basin|_dir)$/i.test(c);})
       .filter(function(c){var u={};d.data.forEach(function(r){u[r[c]]=1;});var n=Object.keys(u).length;return n>1&&n<=10;})[0]||'';
-    // 자연 x 후보
-    var XPREF=/(e_minus|e_vbm|e_ef|1000_?over_?t|inv_?t|invt|volume|\bvol\b|x_scale|x_ang|\bxi\b|freq|frequenc|omega|distance|\bdist|t_ps|\btime\b|r_ang|be_ev|energy_ev)/i;
-    var xdef=numeric.filter(function(c){return XPREF.test(c);})[0] || (cat.length?cat[0]:numeric[0]);
+    // 자연 x 후보 — energy는 보통 종속변수(y)라 제외; 그룹열도 x 후보에서 제외
+    var XPREF=/(e_minus|e_vbm|e_ef|1000_?over_?t|inv_?t|invt|volume|\bvol\b|x_scale|x_ang|\bxi\b|freq|frequenc|omega|distance|\bdist|t_ps|\btime\b|r_ang)/i;
+    var xcands=numeric.filter(function(c){return c!==group;});
+    var xdef=xcands.filter(function(c){return XPREF.test(c);})[0] || cat.filter(function(c){return c!==group;})[0] || xcands[0] || numeric[0];
     // y 기본: 노이즈(절대에너지·불확도·개수) 제외
     var NOISE=/(_pm$|_std$|^t_k$|_ry$|^n_li|_bohr|count|^rank$|^index$|vperfu)/i;
     var ydef=numeric.filter(function(c){return c!==xdef && !NOISE.test(c);}); if(!ydef.length)ydef=numeric.filter(function(c){return c!==xdef;});
@@ -206,8 +207,10 @@ function _renderChart(){
       traces.push({x:rows.map(function(r){return r[x];}),y:rows.map(function(r){return r[y];}),
         name:g+(ys.length>1?'·'+y:''),mode:'lines+markers',type:xCat?'bar':'scatter'});});});
   }else{
-    var mag={},mx=0; ys.forEach(function(y){var m=0;d.data.forEach(function(r){if(typeof r[y]==='number')m=Math.max(m,Math.abs(r[y]));});mag[y]=m;mx=Math.max(mx,m);});
-    var useY2=!xCat&&ys.length>1&&ys.some(function(y){return mag[y]>0&&mx/mag[y]>100;});
+    // 규모차 판정은 max 아닌 median(|value|) — outlier 하나에 안 속게
+    function _med(vs){vs=vs.filter(function(v){return typeof v==='number'&&isFinite(v);}).map(Math.abs).sort(function(a,b){return a-b;});return vs.length?vs[Math.floor(vs.length/2)]:0;}
+    var mag={},mx=0; ys.forEach(function(y){var m=_med(d.data.map(function(r){return r[y];}));mag[y]=m;mx=Math.max(mx,m);});
+    var useY2=!xCat&&ys.length>1&&ys.some(function(y){return mag[y]>0&&mx/mag[y]>50;});
     ys.forEach(function(y){var small=useY2&&mag[y]>0&&mx/mag[y]>100;
       traces.push({x:d.data.map(function(r){return r[x];}),y:d.data.map(function(r){return r[y];}),
         name:y+(small?' (우축)':''),mode:'lines+markers',type:xCat?'bar':'scatter',yaxis:small?'y2':'y'});});
