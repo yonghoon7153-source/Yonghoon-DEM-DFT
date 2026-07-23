@@ -406,6 +406,21 @@ def parse_args(argv):
     ap.add_argument('--cycle-n', type=int, default=0,
                     help='anchor LABEL: which cycle N this deformed geometry represents (metadata only — the '
                          'physics is driven by ΔV, not N).  Lets A-3 map anchor→N.  0 = pristine/unlabelled.')
+    # ── 취성 파괴 → MPM crack-void 게이트 (frame[5]: DEM=WHERE 균열 개시, MPM=morphology 결과) ──────────
+    ap.add_argument('--fracture-scaffold', default='',
+                    help='per-AM Auerbach 심각도 CSV (am_scaffold와 행-정렬; 마지막 두 열 = worst_stage_rank '
+                         '(0 intact..4 pulv), f_over_pc).  scripts/dem_fracture_scaffold.py로 생성.  게이트 '
+                         '통과 AM에 crack-void 반경감소 → SE ingress.  기본 미사용 = bitwise 동일(기본값 없음).')
+    ap.add_argument('--fracture-min-stage', default='fragmentation',
+                    choices=['fragmentation', 'pulverization'],
+                    help='이 단계 이상만 crack-void 주입 (기본 fragmentation).  micro/multi crack은 열린 '
+                         '부피≈0이라 MPM morphology에 기여 안 함(near-null) → crack-void 맵에서 제외 = '
+                         '게이트 선택지도 frag/pulv만.  DEM 취성의 전-스펙트럼은 수송 f_intact가 담당.')
+    ap.add_argument('--fracture-void-frag', type=float, default=0.15,
+                    help='fragmentation AM의 crack-void 부피분율 (ASSUMED-FORM; r×(1−v)^⅓ → 유효반경 감소 → '
+                         'SE가 균열공간 채움).  --dv-pct-poly와 같은 스윕-축 성격(문헌앵커 대기).')
+    ap.add_argument('--fracture-void-pulv', type=float, default=0.35,
+                    help='pulverization AM의 crack-void 부피분율 (ASSUMED-FORM; 분쇄 = 더 큰 열린 부피).')
     return ap.parse_args(argv)
 
 
@@ -527,6 +542,32 @@ def main(argv):
                   f"AM_S/SC ΔV={args.cycle_dv_sc:+.3f} → r×{1+_dr_sc:.4f} ({_dr_sc*100:+.2f}%, {int((_sid==2).sum())} AM_S)  ·  "
                   f"AM_P/poly ΔV={args.cycle_dv_poly:+.3f}×{args.dv_pct_poly:.2f} → r×{1+_dr_po:.4f} ({_dr_po*100:+.2f}%, "
                   f"{int((_sid==1).sum())} AM_P)")
+        if args.fracture_scaffold:
+            # ── 취성 파괴 → MPM crack-void 게이트.  DEM Auerbach가 '어디서' 균열이 개시하는지(WHERE)를 주고,
+            #    MPM이 그 형태적 결과(SE가 열린 균열공간으로 흘러듦)를 보여줌 = frame[5] 분업.  fragmentation+
+            #    심각도만 게이트(microcrack=열린 부피≈0, near-null).  crack-void를 유효반경 감소로 근사
+            #    (--cycle-deform과 동일한 radius-factor 규약; 정확한 fragment-split은 v2 후보).  기본 OFF. ──
+            fr = np.atleast_2d(np.loadtxt(args.fracture_scaffold, delimiter=','))
+            if len(fr) != len(am_r):
+                raise SystemExit(f"[fracture] fracture-scaffold 행수 {len(fr)} != am_scaffold {len(am_r)} — "
+                                 "행-정렬 CSV 필요 (scripts/dem_fracture_scaffold.py로 동일 순서 생성).")
+            _rank = fr[:, -2].astype(int)                          # worst_stage_rank 0..4
+            _RANKMIN = {'microcrack': 1, 'multicrack': 2, 'fragmentation': 3, 'pulverization': 4}[args.fracture_min_stage]
+            _void = np.zeros(len(am_r), np.float64)
+            _void[_rank == 3] = args.fracture_void_frag           # 단계별 crack-void 부피분율 (ASSUMED-FORM)
+            _void[_rank >= 4] = args.fracture_void_pulv
+            _void[_rank < _RANKMIN] = 0.0                         # 심각도 게이트 (문턱 미만 무시)
+            _gate = _void > 0
+            if _gate.any():
+                am_r = am_r * (1.0 - _void) ** (1.0 / 3.0)         # crack-void → 유효반경↓ → pin-mask↓ → SE ingress
+                print(f"  [fracture-gate] {int(_gate.sum())}/{len(am_r)} AM에 crack-void 주입 "
+                      f"(min-stage={args.fracture_min_stage}, ASSUMED-FORM): frag {int((_rank==3).sum())} "
+                      f"pulv {int((_rank>=4).sum())} → r×(1−v)^⅓ (v_frag={args.fracture_void_frag}, "
+                      f"v_pulv={args.fracture_void_pulv}).  frame[5]: DEM=WHERE, MPM=morphology.  "
+                      f"⚠ 이중계산 주의 — DEM f_intact(σ 수송보정)와 별개 축(형태/공극); 두 보정 동시 적용 시 doc §guard 참조")
+            else:
+                print(f"  [fracture-gate] {args.fracture_min_stage}+ AM 없음 (micro/multi만 존재 = 열린 부피≈0) "
+                      f"→ crack-void 미적용, near-null.  DEM 취성은 수송(f_intact)에만 반영됨.")
         AM_vol = float(np.sum((4.0 / 3.0) * np.pi * am_r ** 3))  # DEFORMED solid (density/report)
         WALL0 = am_top + 0.05; WALL_MIN = FLOOR + 0.01          # WALL0 from PRISTINE am_top → nz N-invariant
         r_se3 = 0.0005 * scl                                  # SE 0.5µm → box units
