@@ -712,34 +712,67 @@ ELEMENT_TOKENS = {
     "Li": ["lithium argyrodite", "li-metal", "li metal", "lithiophobic", "cl_rich_anode"],
 }
 
+# 기법명 → glossary id (litdb-curator의 '> methods:' 태그 파싱용)
+METHOD_MAP = {
+    "dft": "dft", "first-principles": "dft", "first principles": "dft", "density functional": "dft",
+    "vasp": "dft", "quantum espresso": "dft", "qe": "dft",
+    "scf": "scf", "pseudopotential": "pseudo", "paw": "pseudo", "uspp": "pseudo", "ultrasoft": "pseudo",
+    "k-point": "kpoint", "kpoint": "kpoint",
+    "pbe": "functional", "gga": "functional", "hse": "functional", "scan": "functional", "r2scan": "functional",
+    "band gap": "bandgap", "bandgap": "bandgap", "gap": "bandgap",
+    "dos": "dos", "density of states": "dos", "pdos": "pdos", "projwfc": "pdos",
+    "elf": "elf", "bader": "bader",
+    "cohp": "cohp", "icohp": "cohp", "lobster": "cohp", "cobi": "cobi", "icobi": "cobi",
+    "eos": "eos", "birch-murnaghan": "eos", "equation of state": "eos",
+    "elastic": "elastic", "elastic constants": "elastic",
+    "bvse": "bvse", "bond valence": "bvse",
+    "md": "md", "aimd": "md", "molecular dynamics": "md", "mlip": "mlip", "uma": "mlip", "sevennet": "mlip",
+    "msd": "msd", "arrhenius": "arrhenius", "phonon": "phonon", "phonons": "phonon",
+    "neb": "neb", "ci-neb": "neb", "nudged elastic band": "neb",
+    "esw": "esw", "grand-potential": "esw", "grand potential": "esw",
+    "adhesion": "adhesion",
+}
+_PSYMS = {s[0] for s in PERIODIC}
+
 @lru_cache(maxsize=1)
 def _paper_index():
-    """[{id,title,type,track,blob}] — blob = slug+title+type+본문 앞 60줄(소문자). 토큰매칭용, 캐시.
-    litdb-curator가 새 digest push → 이 캐시는 프로세스 재시작/리로드 때 갱신(개발서버 auto-reload)."""
+    """[{id,title,type,track,blob,el_tags,method_tags}]. blob=slug+title+type+본문앞60줄(소문자).
+    litdb-curator가 digest 헤더에 '> elements:'/'> methods:' 태그를 넣으면 정밀 링크(토큰스캔은 보조).
+    캐시 — 새 digest는 프로세스 리로드(개발서버 auto-reload) 때 갱신."""
     idx = []
     pd = LITDB / "papers"
     for p in list_papers():
         blob = f"{p['id']} {p['title']} {p['type']}"
+        el_tags, method_tags = set(), set()
         try:
             head = (pd / f"{p['id']}.md").read_text(errors="ignore").splitlines()[:60]
             blob += " " + " ".join(head)
+            for line in head:
+                m = re.search(r"(?:elements|원소)\s*[:：]\s*(.+)", line, re.I)
+                if m:
+                    for t in re.split(r"[,\s/·]+", m.group(1)):
+                        t = t.strip("`*_ ")
+                        if t in _PSYMS:
+                            el_tags.add(t)
+                m2 = re.search(r"(?:methods|기법|기술)\s*[:：]\s*(.+)", line, re.I)
+                if m2:
+                    for t in re.split(r"[,/·]+", m2.group(1).lower()):
+                        gid = METHOD_MAP.get(t.strip("`*_ ").strip())
+                        if gid:
+                            method_tags.add(gid)
         except Exception:
             pass
-        idx.append({**p, "blob": blob.lower()})
+        idx.append({**p, "blob": blob.lower(), "el_tags": el_tags, "method_tags": method_tags})
     return idx
 
-def _match_papers(tokens, limit) -> list:
-    if not tokens:
-        return []
+def element_papers(sym: str, limit: int = 14) -> list:
+    """이 원소 관련 litdb 논문 — 태그(정밀) ∪ 토큰스캔(보조). 클릭 → digest."""
+    toks = ELEMENT_TOKENS.get(sym, [])
     hits = []
     for p in _paper_index():
-        if any(t in p["blob"] for t in tokens):
+        if sym in p["el_tags"] or (toks and any(t in p["blob"] for t in toks)):
             hits.append({"id": p["id"], "title": p["title"], "track": p["track"]})
     return hits[:limit]
-
-def element_papers(sym: str, limit: int = 14) -> list:
-    """이 원소 관련 litdb 논문 — 브리핑에서 클릭 → digest."""
-    return _match_papers(ELEMENT_TOKENS.get(sym, []), limit)
 
 # 용어(기법) → 논문 매칭 토큰 (그 기법을 쓴 논문 링크)
 GLOSSARY_TOKENS = {
@@ -770,8 +803,13 @@ GLOSSARY_TOKENS = {
 }
 
 def glossary_papers(term_id: str, limit: int = 14) -> list:
-    """이 기법(용어)을 쓴 litdb 논문 — glossary/concept에서 클릭 → digest."""
-    return _match_papers(GLOSSARY_TOKENS.get(term_id, []), limit)
+    """이 기법(용어)을 쓴 litdb 논문 — 태그(정밀) ∪ 토큰스캔(보조). 클릭 → digest."""
+    toks = GLOSSARY_TOKENS.get(term_id, [])
+    hits = []
+    for p in _paper_index():
+        if term_id in p["method_tags"] or (toks and any(t in p["blob"] for t in toks)):
+            hits.append({"id": p["id"], "title": p["title"], "track": p["track"]})
+    return hits[:limit]
 
 def element_db_anchors(sym: str) -> dict:
     """우리 db에서 이 원소가 나오는 결과 앵커 (실시간 스캔 = 자동 갱신)."""
