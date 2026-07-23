@@ -48,6 +48,21 @@ pristine 전극(STEP1–4 산출)이 주어졌을 때 **N 사이클 후 어떻�
 (ledger R_ct 1.09× vs 실험 총 R_int 3.8~6.1×@1000cyc; 너 랩 Fig6e SBE/DBE.)
 → **MPM/ledger = 방향·기전; 크기·모양 = 화학 + 실험.**  이게 "MPM이 다 해준다"를 대체하는 정직한 형태.
 
+
+## ★ 문헌 앵커 (2026-07-23 리서치, provenance 라벨)
+[A]=table-verified(litdb PDF digest) · [B]=text-stated(search snippet, PDF 미검증).
+- **SHAPE 문헌-앵커 (ASSUMED → 문헌지지 승격)**: **Park 2023 AEM**(10.1002/aenm.202203861) —
+  계면 R vs √t가 **코팅/첨가제 = 선형-√t**(확산제한 Wagner film, 기울기 25.73 Ω·h⁻⁰·⁵), **bare =
+  파라볼릭(super-√t)**.  ⇒ **화학 CEI 채널 = √N**(우리 기본값 문헌지지) · **bare 초과분 = 접촉손실이
+  화학 위에 얹힘** = 우리 [화학√N + 접촉] 분해와 정확히 일치. [B]
+- **화학 크기 앵커**: **Yun 2023 EnSM**(우리 랩, TableS1 [A]) — bare SC-NMC LPSCl **R_ct 341.7→982.3
+  = 2.87×@100cyc**, R_ion 1.24×(전송은 열화 덜).  **Kim 2025**(우리 랩, TableS4/S6 [A]) — LNO 코팅이
+  R_ct **~13~20× 억제**(453→22).
+- **코팅 = modest fade**: **Payandeh 2023**(admi.202201806 [B]) 코팅 SC-NMC **93%@200cyc** vs 비코팅
+  ~79%.  **Nature Energy 2025**(s41560-025-01726-8 [B]) Ni≥85 = CAM/SE **이탈(접촉손실)** 지배(=OTHER).
+- ⛔ **여전히 없음**: 코팅 sulfide ASSB의 깨끗한 ≥4-N-점 R_int(N) **곡선**(WebFetch 403 차단).  가장 근접 =
+  Yun/Kim 2점 table-verified + Park √t 함수형.  다음 추적: Seok 2026 AEM(aenm.202506351)·ORNL DRT·Trevisanello.
+
 ## 현 위치 · 산출물
 - ✅ **도구**: `cycle_contact_ledger.py`(fade), `plot_fade_trajectory.py`(정직-분해 그림),
   `plot_focusing_colorbar.py`(current-focusing joint 컬러바), `calibrate_ledger_reflow.py`(철회판),
@@ -61,3 +76,14 @@ pristine 전극(STEP1–4 산출)이 주어졌을 때 **N 사이클 후 어떻�
    ledger 접촉(1.1×) + B-1 화학 합산 = 총 R_int(N) → 실험(3.8~6.1×) 재현.  ★크기 맞추는 길.
 2. **실험 곡선** 디지타이즈(WSL) → 모양(√N/선형/포화) 검증.
 3. (이후) webapp 인터랙티브 fade(N) 패널.
+
+## 매뉴스크립트 narrative (한 문단)
+STEP5는 pristine 전극(STEP1–4)의 사이클 열화 R_int(N)을 **first-principles 분해**로 예측한다:
+계면저항 성장은 (i) **화학 계면상(CEI)** — 확산제한 Wagner 성장으로 **√N**(Park 2023, 코팅 셀서 선형-√t
+문헌확인) — 과 (ii) **기계적 접촉손실** — MPM 충전-상태 gap(A-1, SC coverage −19% GPU검증)을 ledger
+이산-CZM(recontact-forbid)으로 전개 — 의 **합**이다.  bare SC-NMC LPSCl서 화학이 지배(R_ct 2.87×@100cyc,
+Yun 2023)하고 접촉은 소수(ledger 하한 ~1.1×; frozen-AM이라 골격재배열 제외).  **nm-코팅 양극재는 CEI를
+~13~20× 억제**(Kim 2025)해 화학 몫이 작아지고(coated 93%@200cyc, Payandeh) 잔여 열화는 골격재배열·
+CAM/SE 이탈(Ni≥85, Nature Energy 2025) 등 **모델 밖(OTHER)** 으로 이동한다.  ⇒ STEP5의 기여 = 각 채널을
+frame[5]로 **정직하게 분리**(MPM/ledger=기전·방향, 크기=실험앵커), 좋은 양극재엔 열린 프레임(--chem-x)으로
+작은 접촉몫만 정직히 잡는다.  (반증: reflow 지표착시·v2 반복사이클 MPM은 적대리뷰로 코딩전 기각.)

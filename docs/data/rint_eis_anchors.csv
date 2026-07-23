@@ -23,3 +23,9 @@ lab_sus_pristine,sus_pristine,R_int,50,Ohm_cm2,NCM811_SC,LPSCl,full,SUS,0,,measu
 lab_sus_cycled,sus_cycled,R_int,150,Ohm_cm2,NCM811_SC,LPSCl,full,SUS,1000@0.2C,,projected_literature,SC √N + primer-collector ~3× 앵커,⚠문헌투영(assumed-form) — R0×~3 (Pritzl 10→30·C-SUS 10→30 primer 앵커); SC라 √N gentle; Conforto SC 계수 확정 전 라벨유지
 bielefeld_sigma_ion,,sigma_ion,1.6,mS_cm,,LPSCl,pellet,,,25,confirmed_snippet,Bielefeld JES abf8d7,수송 참조(계면 아님)
 bielefeld_sigma_e,,sigma_e,<1e-6,S_cm,,LPSCl,pellet,,,25,confirmed_snippet,Bielefeld JES abf8d7,
+park2023_coated_shape,,R_interphase_shape,sqrt_t_linear_slope_25.73,Ohm_h^-0.5,NMC_additiveCEI,sulfide,full,,cycling,,text_stated_search,Park 2023 AEM 10.1002/aenm.202203861,★코팅/첨가제=선형-√t(확산제한 Wagner film); bare=파라볼릭(super-√t=화학+접촉손실 얹힘) → √N shape 문헌앵커
+park2023_bare_shape,,R_interphase_shape,parabolic_super_sqrt_t,dimensionless,NMC_bare,sulfide,full,,cycling,,text_stated_search,Park 2023 AEM 10.1002/aenm.202203861,bare=가속(접촉손실이 화학 √t 위에 더해짐) = 우리 접촉+화학 분해 일치
+yun2023_rct_growth,,R_ct,341.7to982.3,Ohm_cm2,SC_NMC811_uncoated,LPSCl,full,,~100,,table_verified_litdb,Yun 2023 EnSM 10.1016/j.ensm.2023.102787 TableS1,★2.87× R_ct 성장(bare SC-NMC LPSCl 100cyc); 화학 채널 크기 앵커
+yun2023_rion_growth,,R_ion,126to156,Ohm_cm2,SC_NMC811_uncoated,LPSCl,full,,~100,,table_verified_litdb,Yun 2023 EnSM TableS1,1.24× R_ion(전송) 성장 — R_ct보다 훨씬 작음(접촉/전송은 열화 덜)
+payandeh_coated_retention,,capacity_retention,93,pct,SC_NMC_Ni83_LNO,thiophosphate,full,,200,,text_stated_search,Payandeh 2023 AdvMatInterf 10.1002/admi.202201806,코팅 SC-NMC 93%@200cyc vs 비코팅 ~79% — 코팅=modest fade(good 양극재)
+nature2025_ni85_detach,,mechanism,CAM_SE_detachment_dominant,qualitative,SC_NMC_Ni85plus,sulfide,full,,cycling,,text_stated_search,Nature Energy 2025 10.1038/s41560-025-01726-8,Ni≥85=입자내부 고립+CAM/SE 이탈(접촉손실) 지배; Ni80=표면/CEI 지배 — OTHER 채널 정체

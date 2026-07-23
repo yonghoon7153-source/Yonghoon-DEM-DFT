@@ -78,7 +78,8 @@ def trajectory(fade_json, rint0, rint_exp_x, n_exp, r_contact0, shape, chem_x=No
 
 def _report(out, label):
     print('=' * 88)
-    print(f'B-1 화학 N-전개 → 총 R_int(N)  [{label}]  ★shape={out["shape"]} ASSUMED · endpoint 실험앵커')
+    _shp = '√N (Park2023 확산제한 Wagner 문헌앵커)' if out['shape'] == 'sqrt' else 'linear (ASSUMED)'
+    print(f'B-1 화학 N-전개 → 총 R_int(N)  [{label}]  ★shape={_shp} · endpoint 실험앵커')
     print('-' * 88)
     print(f"  {'N':>6} {'R_int(Ω·cm²)':>13} {'×pristine':>10} {'ΔR_chem':>9} {'ΔR_contact':>11}")
     for r in out['rows']:
@@ -124,8 +125,10 @@ def _plot(out, label, prefix):
     ax.set_title('STEP5 total R_int(N) = contact(ledger) + chemical(B-1, %s) [%s]' % (out['shape'], label),
                  fontsize=11, fontweight='bold')
     ax.legend(fontsize=8, loc='upper left')
-    ax.text(0.5, -0.16, 'shape=%s ASSUMED-FORM (endpoint anchored to experiment; curve validation pending)'
-            % out['shape'], transform=ax.transAxes, ha='center', fontsize=7.5, color='#888')
+    _sl = ('sqrt-N = Park2023 diffusion-Wagner (lit-anchored form)' if out['shape'] == 'sqrt'
+           else 'linear (ASSUMED)')
+    ax.text(0.5, -0.16, 'chem shape: %s . magnitude endpoint-anchored to experiment . exact N-scale: curve pending'
+            % _sl, transform=ax.transAxes, ha='center', fontsize=7.3, color='#888')
     fig.tight_layout()
     fn = f'{prefix}.png'
     fig.savefig(fn, dpi=130, bbox_inches='tight')
@@ -139,7 +142,7 @@ def main(argv):
     ap.add_argument('--rint-exp-x', type=float, required=True, help='실험 총 R_int 성장 × @ n-exp')
     ap.add_argument('--n-exp', type=int, default=1000, help='실험 끝점 사이클')
     ap.add_argument('--r-contact0', type=float, default=2.0, help='pristine 접촉 R 성분 (Ω·cm², ledger rel 곱함)')
-    ap.add_argument('--shape', default='sqrt', choices=['sqrt', 'linear'], help='CEI 성장 모양(ASSUMED)')
+    ap.add_argument('--shape', default='sqrt', choices=['sqrt', 'linear'], help='CEI 성장 모양 — √N=확산제한 Wagner(★Park 2023 AEM 문헌앵커: 코팅=선형-√t) / linear')
     ap.add_argument('--chem-x', type=float, default=None,
                     help='화학 R 성장 × @n_exp (코팅 NCM = CEI 억제 → 작게, 예 1.3).  미지정 = 화학이 나머지'
                          '(bare 가정).  지정 시 나머지 = OTHER(골격재배열·SE분해·Li = 모델 밖) 노출.')
