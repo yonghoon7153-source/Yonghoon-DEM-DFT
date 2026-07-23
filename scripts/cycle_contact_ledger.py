@@ -277,14 +277,22 @@ def run(a):
     open_ever_aa = np.zeros(len(ci), bool)                  # AM-AM 충전-말 개구 누적 (보고용, 비영구)
     chk = sorted(set(int(x) for x in a.checkpoints.split(',') if x.strip()))
     rows = []
+    _ptfe_on = getattr(a, 'ptfe_bridge', False) and getattr(a, 'ptfe_hold', 0.0) > 0
     for N in range(1, max(chk) + 1):
+        # ★#31 PTFE 브릿지 hold (F1, 기본 OFF): 피브릴이 접촉을 초기 더 잡아줌(dcr_eff↑) → defluorination
+        #   (f_defluor=1−e^(−N/τ))으로 hold 감쇠 → dcr_eff→dcr → 지연 파단 방출.  OFF면 dcr_eff≡dcr(byte 불변).
+        if _ptfe_on:
+            f_defluor = 1.0 - np.exp(-N / max(getattr(a, 'ptfe_defluor_tau', 30.0), 1e-9))   # ASSUMED-FORM
+            dcr_eff = dcr * (1.0 + a.ptfe_hold * getattr(a, 'ptfe_bridged_frac', 0.0) * (1.0 - f_defluor))
+        else:
+            dcr_eff = dcr
         # ── 충전 반각 (수축): 개구 판정 (czm_kind = 영구파단 대상 접촉종만) ──
         opened = alive & (gap_nm > 0)
         open_ever_aa |= opened & aa                         # AM-AM 개구는 기록만 (재폐합 → 비영구)
-        brk_now = opened & czm_kind & (gap_nm > dcr)        # 즉시 파단 (δ_cr 초과 — Bucci 완전분리)
+        brk_now = opened & czm_kind & (gap_nm > dcr_eff)    # 즉시 파단 (δ_cr 초과 — Bucci; PTFE hold 반영)
         if a.fatigue == 'miner':
             st = opened & czm_kind & ~brk_now               # cohesive 신장 생존 → Miner 누적 (ASSUMED-FORM)
-            dmg[st] += np.clip(gap_nm[st] / dcr, 0, 1)
+            dmg[st] += np.clip(gap_nm[st] / dcr_eff, 0, 1)  # PTFE hold 시 dcr_eff↑ → 누적 느려짐(지연)
             brk_now |= st & (dmg >= 1.0)
         # ── 방전 반각 부분-재습윤 (§5-4): 스택압이 신규 파단분의 f_rewet를 다시 눌러앉힘.
         #    forbid=0(하한) / elastic=1(무열화 상한) / partial=중간(재현 --seed).  전량-복원
@@ -554,11 +562,36 @@ def _selftest():
     except Exception as e:
         ok8 = False
         print(f'selftest8 reflow: FAIL ({e!r})')
-    finally:
-        for f in (tmp8, tmp8 + '.r0.0.json', tmp8 + '.r0.0.csv', tmp8 + '.r1.0.json', tmp8 + '.r1.0.csv'):
+    finally:                                                # tmp8(atoms)은 selftest9가 재사용 → 여기선 출력만 정리
+        for f in (tmp8 + '.r0.0.json', tmp8 + '.r0.0.csv', tmp8 + '.r1.0.json', tmp8 + '.r1.0.csv'):
             if _os.path.exists(f):
                 _os.remove(f)
     ok &= ok8
+    # 9) ★#31 PTFE 브릿지 hold — 같은 베드(gap 29nm > δcr 20)에서 OFF는 N=1 즉시파단, ON(hold=1,frac=1)은
+    #    dcr_eff≈39nm > gap → N=1 held(파단 지연) → 지연 확인 + OFF-경로 byte 불변.
+    def _run9(ptfe_on):
+        a9 = _ap.Namespace(atoms=tmp8, type_map='2:AM_S,3:SE', dv_pct=5.1, dv_pct_poly=None, dv_pct_sc=None,
+                           am_split_um=3.5, poly_mode='shrink-proxy', reflow_recover=0.0, soc_swing=1.0,
+                           delta0_nm=5.0, deltacr_nm=20.0, gc=2.8, k_se_gpa=24.0, recontact='forbid',
+                           rewet_frac=0.5, aa_czm=False, seed=0, fatigue='miner', checkpoints='1',
+                           out=tmp8 + f'.p{ptfe_on}',
+                           ptfe_bridge=ptfe_on, ptfe_hold=1.0, ptfe_defluor_tau=30.0, ptfe_bridged_frac=1.0)
+        run(a9)
+        return json.load(open(tmp8 + f'.p{ptfe_on}.json'))['trajectory'][-1]['f_broken_amse']
+    try:
+        fp_off = _run9(False)                               # OFF: dcr_eff≡dcr → 즉시파단 (selftest8 fb0와 동일)
+        fp_on = _run9(True)                                 # ON: hold → N=1 held → 파단 0 (지연)
+        ok9 = (fp_off > 0.0) and (fp_on == 0.0) and abs(fp_off - fb0) < 1e-9   # OFF==selftest8(byte 불변) + 지연
+        print(f'selftest9 PTFE hold: f_brk OFF {fp_off:.3f}(=selftest8 {fb0:.3f}) → ON {fp_on:.3f}(held)  '
+              f'{"OK" if ok9 else "FAIL"}')
+    except Exception as e:
+        ok9 = False
+        print(f'selftest9 PTFE: FAIL ({e!r})')
+    finally:
+        for f in (tmp8, tmp8 + '.pFalse.json', tmp8 + '.pFalse.csv', tmp8 + '.pTrue.json', tmp8 + '.pTrue.csv'):
+            if _os.path.exists(f):
+                _os.remove(f)
+    ok &= ok9
     print('CYCLE-LEDGER SELFTEST', 'PASS' if ok else 'FAIL')
     return ok
 
@@ -606,6 +639,16 @@ def main():
                     help='접촉 재구성에 x,y 주기 BC (STEP3 RVE p p f 정합; 경계 ghost image로 wrap 접촉 포함, '
                          'z=plate 비주기).  기본 OFF = 절연 측벽(기존).')
     ap.add_argument('--box-xy-um', type=float, default=50.0, help='주기 박스 측면 크기 µm (--periodic; 기본 50)')
+    # ── #31 PTFE 바인더-브릿지 열화 (F1-style, 기본 OFF, magnitude 미앵커 = 튜너블 훅) ──────────────
+    ap.add_argument('--ptfe-bridge', action='store_true',
+                    help='PTFE 피브릴 브릿지 hold 모델 (F1 규약: cathode-side 기계 R-vs-N 미앵커 → OFF 기본 '
+                         '튜너블 훅, 날조 금지).  피브릴이 접촉을 초기 더 잡아주다(dcr↑) defluorination으로 감쇠.')
+    ap.add_argument('--ptfe-hold', type=float, default=0.0,
+                    help='PTFE 브릿지 초기 dcr 부스트 계수 (dcr_eff=dcr·(1+hold·frac·(1−f_defluor))).  0=무영향.')
+    ap.add_argument('--ptfe-defluor-tau', type=float, default=30.0,
+                    help='defluorination 감쇠 사이클 상수 τ (f_defluor=1−e^(−N/τ); Li→LiF+비정질C, kang2025 LiF@100cyc).')
+    ap.add_argument('--ptfe-bridged-frac', type=float, default=0.0,
+                    help='PTFE-브릿지된 접촉 분율 (평균장; additive_counts[PTFE]/피브릴에서 유도 or 스윕).  0=무영향.')
     ap.add_argument('--checkpoints', default='1,2,5,10,25,50,75,100', help='기록 사이클 (Kang&Shin 격자)')
     ap.add_argument('--out', default='cycle_ledger_out')
     a = ap.parse_args()
