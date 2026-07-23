@@ -46,13 +46,20 @@ if [ -n "$ACT" ]; then
     echo "    (endpoint-B relax 수렴하면 이 케이스 NEB 입력 자동 생성)"
   else
     no=$N/$ACT/neb.out
+    # 살아있음 지표: neb.out 커지는지(=pw.x가 이미지 계산 중) + GPU util
+    s1=$(stat -c%s "$no" 2>/dev/null); sleep 2; s2=$(stat -c%s "$no" 2>/dev/null)
+    if [ "${s2:-0}" -gt "${s1:-0}" ]; then echo "    ✔ 살아있음 (neb.out 2초새 +$((s2-s1))B 증가)"
+    else echo "    ⚠ neb.out 2초새 정체 — 아래 GPU util·최근활동 확인(0%면 hang)"; fi
+    echo "    갱신 $(stat -c '%y' "$no" 2>/dev/null | cut -d. -f1) · GPU util $(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits 2>/dev/null | head -1)%"
+    it=$(grep -ac "activation energy (->)" "$no" 2>/dev/null)
     dat=$(ls -t "$N/$ACT"/*.dat 2>/dev/null | head -1)
-    if [ -n "$dat" ]; then
-      echo "    barrier 프로파일 (reaction-coord  E[eV], 피크=안장):"
+    if [ -n "$dat" ] && [ -s "$dat" ]; then
+      echo "    barrier 프로파일 (iter $it, 피크=안장):"
       awk 'NF>=2 && ($1+0==$1){printf "      %5.2f   %+9.4f\n",$1,$2}' "$dat" 2>/dev/null | head -9
+    else
+      echo "    (iter $it 완료 — 첫 iteration은 7 image 초기 SCF라 오래; 프로파일은 iter 1부터)"
     fi
-    grep -a "activation energy" "$no" 2>/dev/null | tail -2 | sed 's/^/    /'
-    grep -aiE "tot_error|climbing image|neb: reached" "$no" 2>/dev/null | tail -2 | sed 's/^/    /'
+    grep -aiE "image [0-9]|scf iteration|estimated scf|activation energy|tot_error|climbing image|reached" "$no" 2>/dev/null | tail -4 | sed 's/^/    /'
   fi
 fi
 echo "  기준: hBN 표면 Shi2017=0.10 / graphene 문헌~0.3 / gallery=신규(핵심값). 수렴 전 Ea는 추정치."
