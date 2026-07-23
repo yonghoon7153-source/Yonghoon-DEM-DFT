@@ -42,8 +42,17 @@
 - **v3-3 cycling 인제스트** (`cycling_data_ingest.py`): **§F1 chemistry 게이트** — sulfide=ABSOLUTE /
   liquid(Severson/NASA/Stanford/Oxford)=FORM/METHOD-ONLY(기전 다름).  CSV 인제스트+자동헤더+fade/R_int FORM
   적합(liquid=form_only 라벨) + 데이터셋 레지스트리.  selftest PASS.
+- **v3 전기화학·물리 적대리뷰 반영** (§F1 날조0·방정식0 확인): MED5+LOW6 수정 — DRT drt_peaks **basin 적분**
+  (R_ct 8×과소→정확) · a_spec **φ_AM·coverage**(R_ct 2-4× 편향 제거) · R0 전극이온수송 **TL DC극한 R_ion/3**
+  분리(HF절편 frame[4] 정합) · surrogate **per-target 누출가드**(σ_e feature↔target 항등누출 차단, 2단
+  설계→물리→타깃) · ICA **SG 평활**(더블릿 제거) · framing 정직화(i0/D_s도 미앵커) · NASA/Oxford **liquid_lco** 정정.
+
+## 4. webapp EIS/DRT 패널 (`/eis`, `eis.html` + `/api/eis`)
+`eis_drt_ica` 단일소스 → 인터랙티브 Nyquist + DRT γ(τ) 2 캔버스 + 소자 요약(R0 hf+ionTL/R_ct/C_dl/f_ct/R_w/τ_w)
++ SBE/DBE/SC 프리셋 + §F1 앵커 경고(C_dl·i0·D_s 미앵커).  실험 EIS(eis_fit) 위 겹치면 frame[4] 그림.
+소자는 물리서 정확 산출(R_ct=5.14 elems), DRT 피크 주파수 분리 정확(130Hz+mHz), R은 근사.
 
 ## 남은 것
 WSL 실학습(sklearn) · C_dl/R_w 실험 EIS 앵커(eis_fit CPE→µF/cm²) · 오픈소스 실다운로드 · webapp
-EIS/사이클곡선 패널 · STEP4 PyBaMM 패리티(#5) · A10-full CZM(연구트랙) · 앵커대기(Joule ΔT·코팅√N·SDCP
-E_bind·NCA175·Kang&Shin 1.51× magnitude).
+**ICA/사이클곡선 패널**(EIS 패널 완료) · EIS 케이스 자동로드(&case=) · STEP4 PyBaMM 패리티(#5) · A10-full
+CZM(연구트랙) · 앵커대기(Joule ΔT·코팅√N·SDCP E_bind·NCA175·Kang&Shin 1.51× magnitude).
