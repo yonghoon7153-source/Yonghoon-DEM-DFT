@@ -6046,7 +6046,8 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
   const wireB = _wiringCounts(B.particles, B.additive_points, mmB.additive_counts,
                               (B.box || {}).x_max || 0, (B.box || {}).y_max || 0);
   const gsh = (s, k, ph) => 100 * (((s || {})[k] || {})[ph] || 0);
-  // 운전(1C) 평균 전류밀도 = 면적용량[mAh/cm²]×1C = j_1C [mA/cm²] (셀-수준값; 전자·이온 직렬보존 동일).
+  // 운전(1C) 평균 전류밀도 = 면적용량[mAh/cm²]×1C = j_1C [mA/cm²] (payload field_scale_e.j_1C_mA_cm2).
+  //   초표면(σ_eff/L) 평균 → 전류보존으로 전자·이온 동일값.  국소 피크는 ×focus(아래 집중 행).
   const jc1 = (s) => { const f = (s || {}).field_scale_e || {}; return (f.j_1C_mA_cm2 != null ? f.j_1C_mA_cm2 : f.areal_capacity_mAh_cm2); };
   // 축별 설명 카드 (hover) — 정의·유도식·논문 표현 팁 (분석 요약 문법)
   const rowsQ = [
@@ -6055,13 +6056,13 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     ['σ_ion_eff (S/cm)', sA.sigma_ion_eff_S_cm, sB.sigma_ion_eff_S_cm,
      '유효 through-plane 이온전도도 (같은 솔브, 전도상 = SE + SDCP).\nSE는 t⁺≈1 단일이온 전도체 → 정상상태 이온망은 순수 옴 저항망.\n논문: Bazzoun 2026 RNM/EIS 축과 직접 비교 가능 — "effective ionic conductivity".'],
     ['⟨J_e⟩ 평균 (A/cm²@1V)', (sA.field_scale_e || {}).j_mean_z_A_cm2_per_V, (sB.field_scale_e || {}).j_mean_z_A_cm2_per_V,
-     '평균 관통 전류밀도 ⟨J_z⟩ = σ_eff·ΔV/L (옴 항등식 — σ 행과 Δ% 동일해야 정상 = 자기검산 행).\n운전 환산: 1C에서 두 전극 모두 ⟨J⟩ = 면적전류(≈3.07 mA/cm²)로 강제(직렬) — σ 차이는 대신 전압손실 η=J·L/σ로 나타남 (DBE가 같은 전류를 1.52× 적은 손실로 나름).\n논문: "mean through-plane current density".'],
+     '평균 관통 전류밀도 ⟨J_z⟩ = σ_eff·ΔV/L (옴 항등식 — σ 행과 Δ% 동일해야 정상 = 자기검산 행).\n⚠ @1V = 수송능 프로브(선형, 운전점 아님) — 1V 물리 ≠ 1C 물리.  실운전 전류는 아래 @1C 행.\n논문: "mean through-plane current density @1V bias".'],
     ['⟨J_ion⟩ 평균 (A/cm²@1V)', (sA.field_scale_ion || {}).j_mean_z_A_cm2_per_V, (sB.field_scale_ion || {}).j_mean_z_A_cm2_per_V,
-     '이온판 옴 항등식 ⟨J_z⟩ = σ_ion·ΔV/L.\n정상 작동에선 이온·전자 총 전류가 같아야 함(반응점 직렬 릴레이) → 운전 ⟨J_ion⟩=⟨J_e⟩=면적전류.\n이온은 σ가 10⁴× 작아 같은 J의 "가격"(과전위)이 훨씬 비쌈 — 분극의 주범 축.'],
+     '이온판 옴 항등식 ⟨J_z⟩ = σ_ion·ΔV/L.\n@1V은 σ_ion/L(전송능) → 전자와 10⁴× 격차나 이는 프로브값(1V 물리).  실운전(1C)에선 전류보존으로 전자와 같아지고, 격차는 과전위(분극)로 이동.'],
     ['⟨J_e⟩ 평균 (mA/cm²@1C)', jc1(sA), jc1(sB),
-     '운전(1C) 전자 평균 전류밀도 = 면적용량[mAh/cm²]×1C = j_1C [mA/cm²] (payload field_scale_e.j_1C_mA_cm2, 면적용량 행과 수치동일).\n위 @1V 프로브(273 A/cm²)는 σ_e 큰 전자망의 "수송능"일 뿐 — 실운전은 전류가 rate-고정이라 ⟨J_e⟩@1C = j_1C(~3 mA/cm²)로 수렴.\nσ 차이는 대신 전압손실 η=J·L/σ로 나타남 (DBE가 같은 전류를 1.52× 적은 손실로 나름). 논문: "operating (1C) mean electronic current density".'],
+     '운전(1C) 전자 평균 전류밀도 = 면적용량[mAh/cm²]×1C = j_1C [mA/cm²] (payload j_1C_mA_cm2).\n@1V 프로브(σ_e/L=273 A/cm²)를 실운전 전류로 환산한 값 — 전류가 rate-고정이라 평균은 j_1C(~3 mA/cm²).\n전류보존으로 이온판과 동일값; σ 차이는 과전위 η=J·L/σ로 이동(이온이 10⁴× 비쌈). 국소 피크 = j_1C × 집중(focus 행).'],
     ['⟨J_ion⟩ 평균 (mA/cm²@1C)', jc1(sA), jc1(sB),
-     '운전(1C) 이온 평균 전류밀도 = j_1C [mA/cm²].\n전류보존(반응점 직렬 릴레이) → ⟨J_ion⟩@1C = ⟨J_e⟩@1C = j_1C (두 판 동일; @1V의 273↔0.028 σ비는 운전선 사라지고 과전위비로 이동).\n국소 1C 값 = j_1C × 집중계수(아래 focus 행) — 핫스팟/열화의 실운전 전류밀도.'],
+     '운전(1C) 이온 평균 전류밀도 = j_1C [mA/cm²] — 전류보존이라 전자판과 같은 값.\n@1V의 σ_ion/L(0.028 A/cm²)와 전자 273의 10⁴× 격차는 운전전류에선 사라짐(둘 다 총전류 j_1C를 나름).\n채널 차이는 평균이 아니라 국소 집중(focus 행)·과전위에서 드러남.'],
     ['e-집중 p99.8 (×⟨J_e⟩)', (sA.field_scale_e || {}).focus_top, (sB.field_scale_e || {}).focus_top,
      '전류 집중계수 focus = |J|(p99.8) / ⟨J_z⟩ — 선형해라 바이어스 무관(구조 고유량).\n국소 운전값 = focus × 면적전류 × C-rate [mA/cm²].\n↓ = 직렬 병목 해소: "평균은 오르고(+52%) 극단 핫스팟 의존은 줄어든다(−23%)" — 원고 §3-④ "brightens as a whole"의 숫자화. 논문: "current-focusing factor" (메인-1 캡션 병기 권고).'],
     ['ion-집중 p99.8 (×⟨J_ion⟩)', (sA.field_scale_ion || {}).focus_top, (sB.field_scale_ion || {}).focus_top,
