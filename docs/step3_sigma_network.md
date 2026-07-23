@@ -18,8 +18,8 @@
   | AM_P | 0.005 | ✅ A1-locked (5 mS/cm) |
   | VGCF | 100 | ⚠ §F1 자릿수 hook (graphitic fibre 문헌 10²-10³) |
   | SuperP | 10 | ⚠ §F1 자릿수 hook (CB compact 1-50) |
-  | SDCP | **150** | 🔶 **사용자 지정 INTERIM 앵커 (2026-07-10)** — S-PEDOT급 소재 전도도 자릿수.
-      (pellet ×5.1은 composite-수준이라 별개; doped/neutral 분리는 후속) |
+  | SDCP | **250** | **사용자 지정 앵커 (2026-07-16; interim 150 대체)** — 진성호계 S-PEDOT 자릿수.
+      (⚠pellet ×5.1은 composite-수준 — phase σ 아님, +52% σ_e는 network solve EMERGENT; doped/neutral 분리는 후속) |
 
 ## 신뢰 모델 (정직)
 - **v1 신뢰 단위 = 상대 비교** (σ표+vox 동일 세팅의 런끼리). 절대 σ_e는 sub-voxel constriction

@@ -127,7 +127,7 @@ def seed_coat(n, box_um, dx_um, rng, am=None, shell_um=0.20, surface_frac=1.0,
               in_am=None, return_ids=False):
     """CONFORMAL COAT seeding (A4 coat regime): n points in a thin shell ON the AM sphere
     surfaces — the anchored film morphology (SDCP self-doped binder: sulfonate chemisorbs
-    into the Li-O layer, E_bind −4.8 eV — INTERIM MLIP, DFT pending; also SuperP thinky
+    into the Li-O layer; E_bind ⚠INVALID(wrong-monomer 2026-07-10, DFT recompute pending — do NOT cite −4.8 eV); also SuperP thinky
     dry-coat coat_block).  Area-weighted across AM (big spheres get ∝R² points);
     UNIFORM-on-sphere dirs + per-sphere random cap axis (contiguous patch when
     surface_frac<1).

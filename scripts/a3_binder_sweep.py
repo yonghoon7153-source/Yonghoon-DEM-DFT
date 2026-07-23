@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
-"""A3 validation — PTFE binder wt% sweep → MPM porosity ∪-shape check.
+"""A3 validation — PTFE binder wt% sweep → MPM porosity/mechanics check.
 
-Tests the A3 non-monotonic binder model (mpm3d_compaction.binder_cap): the PTFE
-binder cohesion peaks at --binder-opt-wt and decays for over-application, so the
-compacted porosity should be a ∪ in PTFE wt% — LOWEST near the optimum (max
-fibril densification, Hong 2026 void -6.4%p) and RISING for over-application
-(over-crosslink / agglomeration, #264 X14, Cho 2024).  If the ∪ appears →
-A3 agrees with the literature; if porosity is monotone → the binder volume-fill
-dominates the cohesion effect at this scale → tune --coh-ptfe up / --binder-opt-wt,
-or record as a model limit.
+★ 확정 결과 (docs/a3_binder_sweep_result.md, real14/384/CUDA): 생산압(300 MPa)에서 porosity 는
+  MONOTONE-감소 (15.91→4.40 %, 0→8 wt%) — PTFE(E=0.30, σ_y=0.05 GPa)가 50 MPa≪300 에서 항복해
+  void 를 **채우기** 때문.  binder_cap 비단조(0.93→0.96→0.50→0.07)는 volume-fill 에 **가려짐**.
+  → non-monotonic 바인더 역할은 **기계 무결성 + 수송 σ-block** 에 있지 raw porosity 아님.
+  ∪(propping bump)는 ≲5 MPa (항복-게이트 지지) 에서만 나타남.
+
+Tests the A3 binder model (mpm3d_compaction.binder_cap): cohesion peaks at --binder-opt-wt and
+decays for over-application (Hong 2026 void −6.4%p; over-crosslink Cho 2024).  The verdict logic
+(:96-119) correctly prints MONOTONE at production pressure; run at low --target-gpa to see the ∪.
 
 Runs mpm3d_compaction once per PTFE wt% (real14 scaffold by default) and collects
 porosity.  GPU: --arch cuda.  One command after `git pull`:

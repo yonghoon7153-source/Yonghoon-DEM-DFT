@@ -1648,7 +1648,9 @@ _POR_FLOOR          = 3.0      # %  pore cannot fibrillate below ~ this
 _CARB_PC_WT         = 4.0      # wt% carbon e-percolation threshold (Reisacher 2023, C65/LPSCl)
 _SION_BLOCK_VGCF    = 0.05     # σ_ion reduction slope /wt, VGCF (mild — concentrated fibre)
 _SION_BLOCK_SUPERP  = 0.09     # σ_ion reduction slope /wt, Super P (~1.8× VGCF; our voxel + Kim2025 SP lowest)
-_SIGMA_C_MSCM       = 1000.0   # effective carbon σ after percolation losses (mS/cm)
+_SIGMA_C_MSCM       = 1000.0   # ⚠§F1 ANALYTIC what-if hook (NOT measured) — effective carbon σ after
+                               #   percolation losses (mS/cm).  ~10× above Reisacher 5wt% (≈1e-1 S/cm=100 mS/cm);
+                               #   drives d_sig_e in the PURE-ANALYTIC grade axis only, not the STEP3 solve.
 
 
 def _sat(x):

@@ -91,6 +91,10 @@ def _cg_solve(A, b, tol=1e-6, label=''):
 #       ONLY by MORPHOLOGY (fibre reach vs aggregate), NOT by 1e5 vs 5e5.
 #   • thermal SE 0.7 / AM 4.0 (LPSCl / NMC lit); carbon VGCF 20 / SuperP 5 / PTFE 0.25 (graphitic / binder
 #       ballpark).  All thermal numbers are representative, not single-source-cited.
+# ⚠ LEGACY/STANDALONE 솔버 — 생산 파이프라인은 이 파일을 import 안 함(step3_sigma.py 가 정본).
+#   전자 σ 자릿수 hook 이 정본과 다름: 여기 VGCF 5.0e5/SuperP 1.0e5 mS/cm(=500/100 S/cm) vs
+#   step3_sigma.SIGMA_DEFAULT VGCF 100/SuperP 10 S/cm.  둘 다 "문헌 자릿수 hook" 라벨이나 미정합 —
+#   ★생산 값은 step3_sigma 를 쓸 것(이 파일 값 인용/복사 금지).  contrast 는 200×AM 로 clamp(:139).
 PHASE_SIGMA = {  # per channel; void always 0.  ionic/electronic mS/cm, thermal W/m·K
     'ionic':      {'SE': 3.0, 'AM': 0.0, 'VGCF': 0.0, 'SuperP': 0.0, 'PTFE': 0.0},
     'electronic': {'SE': 0.0, 'AM': 50.0, 'VGCF': 5.0e5, 'SuperP': 1.0e5, 'PTFE': 0.0},

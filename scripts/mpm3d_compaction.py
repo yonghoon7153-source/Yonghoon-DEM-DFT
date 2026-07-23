@@ -332,13 +332,13 @@ def parse_args(argv):
                     help='SDCP binder cohesion (GPa, Cauchy) among SDCP/SE points — BULK film integrity, '
                          'variant-independent + FLAT in wt% (no PTFE-style binder_cap arc: anchoring has no '
                          'fibrillation/over-crosslink peak mechanism).  The AM-interface anchoring '
-                         '(γ≈0.93 J/m² doped / 0.42 neutral — INTERIM MLIP −4.8/−3.0 eV, DFT U-ramp pending; '
-                         '~10× PTFE γ) is represented STRUCTURALLY (film seeded ON the AM, seed_coat) — a '
+                         '(γ ⚠INVALID: wrong-monomer 2026-07-10, DFT recompute pending — do NOT cite 0.93/0.42 J/m² '
+                         'or −4.8/−3.0 eV, direction only) is represented STRUCTURALLY (film seeded ON the AM, seed_coat) — a '
                          'boundary-adhesion energy term is future work; do NOT put the interface γ-ratio '
                          'into this bulk coh (wrong term, both directions).')
     ap.add_argument('--sdcp-neutral', action='store_true',
                     help='SDCP NEUTRAL (−SO₃H) variant — recorded as provenance for STEP3 σ-weighting.  '
-                         'Anchoring γ 0.42 vs doped 0.93 J/m² (INTERIM MLIP −3.0/−4.8 eV, DFT pending) lives '
+                         'Anchoring γ (⚠INVALID: wrong-monomer 2026-07-10, DFT recompute pending — 0.42/0.93 J/m²·−3.0/−4.8 eV 인용 금지) lives '
                          'in the AM-interface term (future), NOT the bulk coh; conductivity: undoped PEDOT '
                          '~1e-3..1e-1 S/cm ≈ AM-scale → still an AM-grade conductor in the binary econn '
                          '(NOT dropped — an insulator-drop would misclassify by ~13 orders vs ≤1).  '
@@ -1081,7 +1081,7 @@ def main(argv):
                             else 'near-optimal')
                 elif code == 5:                                    # SDCP conductive binder — BULK film-integrity coh,
                     _cap = 1.0                                     #   variant-INDEPENDENT (same PEDOT film both ways;
-                    _coh = round(args.coh_sdcp, 4)                 #   doped/neutral γ 0.93/0.42 = AM-INTERFACE anchor →
+                    _coh = round(args.coh_sdcp, 4)                 #   doped/neutral γ (⚠INVALID wrong-monomer, recompute) = AM-INTERFACE →
                     _reg = 'neutral(−SO₃H)' if args.sdcp_neutral else 'doped(−SO₃⁻)'   # future boundary term + STEP3,
                     #   NOT this bulk coh — scaling bulk by the interface γ-ratio would be the same cross-
                     #   attribution the --coh-sdcp help forbids for the 10× inflation.

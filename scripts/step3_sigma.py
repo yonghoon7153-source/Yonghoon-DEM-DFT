@@ -20,9 +20,10 @@ DESIGN / TRUST (docs/step3_sigma_network.md):
   · σ table (S/cm), every value overridable:
       AM_S 0.010 / AM_P 0.005   ✅ A1-locked (Trevisanello 10/5 mS/cm)
       VGCF 100 · SuperP 10      ⚠ literature order-of-magnitude hooks (graphitic fibre / CB compact)
-      SDCP 0.010                ⚠ 'AM-grade conductor' default (= the econn classification; the
-                                  pellet ×5.1 anchor is COMPOSITE-level — do not paste onto a phase σ.
-                                  --sigma-sdcp overrides; doped/neutral split = future refinement)
+                                  ⚠ voxel_conductivity.py(레거시·미사용)는 500/100 — 생산 정본은 이 100/10
+      SDCP 250                  USER anchor (2026-07-16; 진성호계 S-PEDOT, interim 150 대체 — code L43).
+                                  ⚠ the pellet ×5.1 anchor is COMPOSITE-level — do NOT paste onto a phase σ;
+                                  the +52% σ_e is EMERGENT from the network solve.  --sigma-sdcp overrides.
       SE · PTFE 0               (electronic insulators)
 
 Analytic self-tests (python3 scripts/step3_sigma.py --selftest):
