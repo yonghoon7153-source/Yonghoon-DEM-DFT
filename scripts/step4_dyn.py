@@ -216,16 +216,26 @@ def _cg(L, b, x0=None, rtol=1e-9, atol=0.0, pc_cache=None, deep=False):
         x0 = None                                            # (잔차 상승-표류 방지, V100 smoke6 로그)
     r_start = _rr(x0)
     big = L.shape[0] >= 50000                                # 소형(셀프테스트급)은 Jacobi로 충분
-    amg_ok = big and not cache.get('amg_useless')            # ★AMG 무용 판정되면 건너뜀 (매 iter 1500s→94s)
+    # ★승자 직행 래치 (2026-07-23): near-null-B AMG가 이 런의 승자로 확정되면(nnamg_direct) 이후
+    #   솔브는 정체하는 AMG·Jacobi 사다리를 건너뛰고 near-null-B AMG로 직행 → Newton당 ~280s 절감
+    #   (AMG 무용 정체 ~140s + 중복 Jacobi ~140s 제거).  전처리 M은 CG의 해 x를 바꾸지 않고 수렴
+    #   속도만 바꿈(CG는 어떤 SPD M에서도 같은 Jx=b로 수렴) → 물리(해) 완전 불변, 안전.
+    _direct_nn = big and bool(cache.get('nnamg_direct')) and cache.get('nnamg') is not None
+    amg_ok = big and not cache.get('amg_useless') and not _direct_nn  # ★AMG 무용/직행이면 건너뜀
     M = None
     fresh_amg = False
-    if amg_ok:
+    _pc_kind = 'jacobi'                                       # 첫 솔브 전처리 종류(중복 Jacobi 판정용)
+    if _direct_nn:
+        M = cache['nnamg']; _pc_kind = 'nnamg'               # near-null-B AMG를 1순위 전처리로 직행
+        print('    ★near-null-B AMG 직행 (승자 래치 — AMG·Jacobi 사다리 생략; 해 불변)', flush=True)
+    elif amg_ok:
         M = cache.get('amg')
         if M is None:
             M = _amg_M(L)
             fresh_amg = M is not None
             if M is not None:
                 cache['amg'] = M
+        _pc_kind = 'amg' if M is not None else 'jacobi'
     if M is None:
         M = sparse.diags(1.0 / diag)
     x, info = _solve(M, x0)
@@ -245,14 +255,22 @@ def _cg(L, b, x0=None, rtol=1e-9, atol=0.0, pc_cache=None, deep=False):
     #   대각(>0) 전처리는 SPD → SPD 행렬 J에서 CG는 발산 불가(정체만).  느려도 유효 하강방향 →
     #   Newton 감쇠가 부분진행 수용 (발산해→Armijo 거부→정체 를 회피).  (2026-07-22)
     if _rr(x) > r_start and big:
-        print('    AMG 발산 지속 → Jacobi-CG SPD-safe 폴백 (발산 불가)', flush=True)
-        xj, infoj = _solve(sparse.diags(1.0 / diag), x0)
-        if _rr(xj) < _rr(x):
-            x, info = xj, infoj
-        if amg_ok and not cache.get('amg_useless'):          # ★AMG 발산+Jacobi 승 확정 → 이후 AMG 생략(sticky)
-            cache['amg_useless'] = True                       #   (gpu_dead 계열; near-null 격자서 AMG 매번 발산 → 낭비 차단)
-            cache.pop('amg', None)
-            print('    (이후 이 런의 실솔브는 AMG 생략 → Jacobi 직행)', flush=True)
+        if _pc_kind == 'jacobi':
+            # 첫 솔브가 이미 Jacobi(자기-바닥) → 동일 전처리 재솔브는 bit-동일 무의미 → 생략(중복 ~140s 제거).
+            # x(자기-바닥 Jacobi 해) 유지하고 아래 near-null-B escalate 로 직행.
+            pass
+        else:
+            print('    AMG 발산 지속 → Jacobi-CG SPD-safe 폴백 (발산 불가)', flush=True)
+            xj, infoj = _solve(sparse.diags(1.0 / diag), x0)
+            if _rr(xj) < _rr(x):
+                x, info = xj, infoj
+            if amg_ok and not cache.get('amg_useless'):      # ★AMG 발산+Jacobi 승 확정 → 이후 AMG 생략(sticky)
+                cache['amg_useless'] = True                   #   (gpu_dead 계열; near-null 격자서 AMG 매번 발산 → 낭비 차단)
+                cache.pop('amg', None)
+                print('    (이후 이 런의 실솔브는 AMG 생략 → Jacobi 직행)', flush=True)
+        if _direct_nn:                                        # ★직행 nnamg가 시작보다 나빠짐(계층 표류) → 래치 해제
+            cache.pop('nnamg_direct', None); cache.pop('nnamg', None)
+            print('    (near-null-B AMG 직행 열화 → 래치 해제, 다음 솔브 사다리 재구축)', flush=True)
     # ★ 4단(near-null-B AMG): AMG 발산 + Jacobi 정체로도 잔차가 목표의 _NN_TRIGGER배 위(=near-null
     #   정체)면, near-null 벡터를 AMG B로 주입한 전처리로 escalate.  diag_step4_nearnull.py 승자
     #   (정규화 98%ε민감·deflation 발산 실패 → near-null-B AMG만 수렴).  저율 0.1C/0.2C 후막의
@@ -263,7 +281,8 @@ def _cg(L, b, x0=None, rtol=1e-9, atol=0.0, pc_cache=None, deep=False):
     #   J·v≈0 라 잔차 norm에 작게 실려 '비율'판정이 부적합 → 판정을 '목표 미달(info≠0=자기-바닥 단축)
     #   + 유의미 초과(>3×목표)'로 전환 (기존 1000× 조건은 belt-and-suspenders로 유지).
     _stall_short = (info != 0 and _rr(x) > 3.0 * _tgt) or (_rr(x) > _NN_TRIGGER * _tgt)
-    if _stall_short and big and not cache.get('nnamg_dead'):
+    # ★ _direct_nn(승자 직행)이면 이미 near-null-B AMG로 풀었으니 재-escalate 생략(이중 ~550s 방지).
+    if _stall_short and big and not cache.get('nnamg_dead') and not _direct_nn:
         Mnn = cache.get('nnamg')
         if Mnn is None:
             Mnn = _nearnull_amg_M(L, diag, cache)
@@ -276,6 +295,7 @@ def _cg(L, b, x0=None, rtol=1e-9, atol=0.0, pc_cache=None, deep=False):
             xn, infon = _solve(Mnn, x0)                       # ★clean warm-start (발산해 금지, 3단 교훈)
             if _rr(xn) < _rr(x):
                 x, info = xn, infon
+                cache['nnamg_direct'] = True                  # ★승자 확정 → 다음 솔브부터 직행 래치(사다리 생략)
             else:                                             # 캐시 계층이 낡음(L 값 표류) → 계층만 1회 재구축
                 cache.pop('nnamg', None)
                 Mnn2 = _nearnull_amg_M(L, diag, cache)        # nearnull_V 재사용, Ls 계층 재구축
@@ -284,6 +304,7 @@ def _cg(L, b, x0=None, rtol=1e-9, atol=0.0, pc_cache=None, deep=False):
                     xn2, infon2 = _solve(Mnn2, x0)
                     if _rr(xn2) < _rr(x):
                         x, info = xn2, infon2
+                        cache['nnamg_direct'] = True          # ★재구축본이 승자 → 직행 래치
                     else:                                     # 계층 재구축도 실패 → near-null 부공간이 표류
                         cache.pop('nearnull_V', None)         #   → 다음 solve서 LOBPCG 재계산(구조 갱신)
     # ★ 최종 가드: 어떤 시도도 시작보다 못하면 warm-start 자체 반환 (쓰레기 해 전파 차단 →
