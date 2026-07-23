@@ -163,6 +163,28 @@ LNO/LZO…, /step5 UI) + **ML 설계 폐루프**(ml_design_loop.py, Sobol 검증
 코팅 LZO/Li₃PO₄ 배수)·후속훅(코팅 계면전도 --coat-sigma-b·So2022 core-shell·ML objective↔predictor 배선).
 ⚠ 데이터 폴더: 코드=stoic-knuth worktree(dem-web), 데이터=~/Yonghoon-DEM-DFT/webapp/* → WEBAPP_*_FOLDER 연결.
 
+### ★ 2026-07-23 오버나잇 = 필드 프레임 + 첨가제 전면감사 + v3 ML (docs/ml_v3_surrogate_cycling.md 등) ★
+**필드 라벨링(발표용, "1V물리≠1C물리")**: 비교표 ⟨J_e/ion⟩ **@1V(수송프로브)+@1C(운전=j_1C, 전류보존)**
+병기 · 필드 컬러바 **@1C 주라벨 승격**(색패턴=1V·1C 동일=선형) · 비교 **공동스케일 @1C-peak 프레임**
+드롭다운(σ-max=@1V→DBE천장 / @1C-peak→SBE천장 273, 프레임별 천장케이스 자동전환) · 단일모드 @1V🔎+@1C🔋
+두 박스.  ★교훈: @1V은 σ_e/L 선형외삽(비운전), 논문 절대값 차이=**프레임(바이어스)** 이지 VGCF 아님
+(@1C 운전전류=용량×rate=VGCF 무관; @1V만 σ_e∝VGCF 반영).  **킷 배선**: 취성 fracture-scaffold(opt-in
+MPM_FRACTURE)+Joule 발열맵(기본ON)+periodic-σ(opt-in) → webapp 다운로드 zip 에 v3 열화물리 포함.
+**★ 첨가제 전면감사 (VGCF/PTFE/SuperP/SDCP/SWCNT, 5 병렬 에이전트 + 2차 코드·물리 리뷰)**: 코어 물리
+GREEN(**phase↔sid 규약 중앙화·정확·회귀테스트**; 탄소 전자망전용·PTFE 양망배제·#30 저항보존·날조 0).
+수정: 라벨/문서 7(E_bind INVALID·SDCP docstring 250·coating seed_morph particle·a3 ∪→monotone·voxel_cond
+레거시 σ 경고·carbon 1000 §F1) + 물리 3(**grade 밀도 조화평균 +13%편향 제거·4.8/2.0·C_am175 통일** ·
+**SuperP n_objects=실제 chain수**[2차리뷰 HIGH버그 `_fid.max()+1`→`np.unique().size` 전역오프셋 수정] ·
+**SWCNT ion_m 에 sid8(투명시) 포함**=σ_ion솔브↔BV계면 정합).
+**★ v3 ML (frame[5] payoff = 물리-유도 feature)**: **v3-1 EIS/DRT/ICA/CV**(`eis_drt_ica.py` — Randles
+R0+R_ct∥C_dl+Wo Warburg 각 소자를 STEP3/STEP4 물리서 유도=eis_fit 회로 정합=frame[4] 대조; Tikhonov DRT
+가 R_ct arc↔확산 분리; C_dl 앵커·R_w ASSUMED §F1) · **v3-2 surrogate**(`ml_cycle_surrogate.py` — 설계13+
+물리15(★차별)+cycle → R_int(N)·retention·σ 예측; GPR+RF WSL import-guard; 성장모델 ASSUMED-FORM) ·
+**v3-3 cycling 인제스트**(`cycling_data_ingest.py` — chemistry 게이트: sulfide=ABSOLUTE / liquid=FORM/METHOD-
+ONLY §F1; 레지스트리 Severson/NASA/Stanford/Oxford/sulfide).  전부 selftest PASS·커밋·푸시.
+남은 것: WSL 실학습(sklearn) · C_dl/R_w 실험 EIS 앵커 · 오픈소스 실다운로드 · webapp EIS/사이클곡선 패널 ·
+STEP4 PyBaMM 패리티(#5) · 앵커대기(불변: Joule ΔT·코팅√N·SDCP E_bind·NCA175).
+
 ### ★ 활성 트랙 (2026-07-15): SDCP manuscript + STEP 파이프라인 ★
 STEP1(DEM)·STEP2(MPM 압밀/payload)·STEP3(복셀 Kirchhoff σ_e/σ_ion + pore-τ +
 분산 + collector) = production.  STEP4-v1(저율 선형 BV 반응분포) = payload 탑재.
