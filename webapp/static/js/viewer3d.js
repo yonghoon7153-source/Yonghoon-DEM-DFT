@@ -6046,6 +6046,8 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
   const wireB = _wiringCounts(B.particles, B.additive_points, mmB.additive_counts,
                               (B.box || {}).x_max || 0, (B.box || {}).y_max || 0);
   const gsh = (s, k, ph) => 100 * (((s || {})[k] || {})[ph] || 0);
+  // 운전(1C) 평균 전류밀도 = 면적용량[mAh/cm²]×1C = j_1C [mA/cm²] (셀-수준값; 전자·이온 직렬보존 동일).
+  const jc1 = (s) => { const f = (s || {}).field_scale_e || {}; return (f.j_1C_mA_cm2 != null ? f.j_1C_mA_cm2 : f.areal_capacity_mAh_cm2); };
   // 축별 설명 카드 (hover) — 정의·유도식·논문 표현 팁 (분석 요약 문법)
   const rowsQ = [
     ['σ_e_eff (S/cm)', sA.sigma_e_eff_S_cm, sB.sigma_e_eff_S_cm,
@@ -6056,6 +6058,10 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
      '평균 관통 전류밀도 ⟨J_z⟩ = σ_eff·ΔV/L (옴 항등식 — σ 행과 Δ% 동일해야 정상 = 자기검산 행).\n운전 환산: 1C에서 두 전극 모두 ⟨J⟩ = 면적전류(≈3.07 mA/cm²)로 강제(직렬) — σ 차이는 대신 전압손실 η=J·L/σ로 나타남 (DBE가 같은 전류를 1.52× 적은 손실로 나름).\n논문: "mean through-plane current density".'],
     ['⟨J_ion⟩ 평균 (A/cm²@1V)', (sA.field_scale_ion || {}).j_mean_z_A_cm2_per_V, (sB.field_scale_ion || {}).j_mean_z_A_cm2_per_V,
      '이온판 옴 항등식 ⟨J_z⟩ = σ_ion·ΔV/L.\n정상 작동에선 이온·전자 총 전류가 같아야 함(반응점 직렬 릴레이) → 운전 ⟨J_ion⟩=⟨J_e⟩=면적전류.\n이온은 σ가 10⁴× 작아 같은 J의 "가격"(과전위)이 훨씬 비쌈 — 분극의 주범 축.'],
+    ['⟨J_e⟩ 평균 (mA/cm²@1C)', jc1(sA), jc1(sB),
+     '운전(1C) 전자 평균 전류밀도 = 면적용량[mAh/cm²]×1C = j_1C [mA/cm²] (payload field_scale_e.j_1C_mA_cm2, 면적용량 행과 수치동일).\n위 @1V 프로브(273 A/cm²)는 σ_e 큰 전자망의 "수송능"일 뿐 — 실운전은 전류가 rate-고정이라 ⟨J_e⟩@1C = j_1C(~3 mA/cm²)로 수렴.\nσ 차이는 대신 전압손실 η=J·L/σ로 나타남 (DBE가 같은 전류를 1.52× 적은 손실로 나름). 논문: "operating (1C) mean electronic current density".'],
+    ['⟨J_ion⟩ 평균 (mA/cm²@1C)', jc1(sA), jc1(sB),
+     '운전(1C) 이온 평균 전류밀도 = j_1C [mA/cm²].\n전류보존(반응점 직렬 릴레이) → ⟨J_ion⟩@1C = ⟨J_e⟩@1C = j_1C (두 판 동일; @1V의 273↔0.028 σ비는 운전선 사라지고 과전위비로 이동).\n국소 1C 값 = j_1C × 집중계수(아래 focus 행) — 핫스팟/열화의 실운전 전류밀도.'],
     ['e-집중 p99.8 (×⟨J_e⟩)', (sA.field_scale_e || {}).focus_top, (sB.field_scale_e || {}).focus_top,
      '전류 집중계수 focus = |J|(p99.8) / ⟨J_z⟩ — 선형해라 바이어스 무관(구조 고유량).\n국소 운전값 = focus × 면적전류 × C-rate [mA/cm²].\n↓ = 직렬 병목 해소: "평균은 오르고(+52%) 극단 핫스팟 의존은 줄어든다(−23%)" — 원고 §3-④ "brightens as a whole"의 숫자화. 논문: "current-focusing factor" (메인-1 캡션 병기 권고).'],
     ['ion-집중 p99.8 (×⟨J_ion⟩)', (sA.field_scale_ion || {}).focus_top, (sB.field_scale_ion || {}).focus_top,
