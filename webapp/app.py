@@ -3625,6 +3625,29 @@ def api_eis():
               i0_A_m2=_f('i0', 2.0, 1e-3, 1e3), d_s_m2_s=_f('d_s', 3e-14, 1e-18, 1e-10),
               r_p_um=_f('r_p_um', 3.0, 0.1, 50.0), c_dl_uF_cm2=_f('c_dl_uf', 10.0, 0.01, 1000.0),
               coverage_frac=_f('coverage', 0.5, 0.01, 1.0), porosity=_f('porosity', 8.0, 0.1, 60.0))
+    # ── 케이스 자동로드 (&case=): STEP3 미세구조(σ-triad·두께·porosity)만 로드.  R_int(실험앵커)·
+    #    i0/D_s(스윕)·C_dl(앵커)은 UI 유지 — 케이스의 R_geom 은 µΩ급 기하값이라 실험 R_int 아님. ──
+    case_loaded = None
+    _case = (request.args.get('case') or '').strip()
+    if _case:
+        try:
+            _rd = get_results_dir(_case)
+            for _mf in ('mpm_metrics.json', 'full_metrics.json'):
+                _mp = os.path.join(_rd, _mf)
+                if os.path.exists(_mp):
+                    _p = _eis._load_step3_params(_mp)
+                    if _p.get('sigma_e_S_cm'):
+                        kw['sigma_e_S_cm'] = min(1e3, max(1e-6, float(_p['sigma_e_S_cm'])))
+                    if _p.get('sigma_ion_S_cm'):
+                        kw['sigma_ion_S_cm'] = min(1e2, max(1e-9, float(_p['sigma_ion_S_cm'])))
+                    if _p.get('thickness_um'):
+                        kw['thickness_um'] = min(1000.0, max(1.0, float(_p['thickness_um'])))
+                    if _p.get('porosity'):
+                        kw['porosity'] = min(60.0, max(0.1, float(_p['porosity'])))
+                    case_loaded = _case
+                    break
+        except Exception:
+            case_loaded = None                                # 케이스 로드 실패 → UI 기본값 (조용히)
     try:
         freqs = _np.logspace(5, -2, 70)
         Z, el = _eis.physics_eis(freqs, **kw)
@@ -3643,6 +3666,7 @@ def api_eis():
             'peaks': [{'f_Hz': _cl(p['f_Hz']), 'tau_s': _cl(p['tau_s']), 'R': _cl(p['R_ohm_cm2'])} for p in peaks],
             'provenance': el.get('provenance', {}),
             'params': {k: kw[k] for k in kw},
+            'case_loaded': case_loaded,
         })
     except Exception as e:
         return jsonify({'error': f'직렬화 실패: {type(e).__name__}: {e}'}), 200

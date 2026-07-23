@@ -20,9 +20,19 @@
   </div>
 </div>
 
+<div class="card" style="border-left:3px solid #5aa9e6">
+  <div style="font-size:.82rem;color:var(--dim);line-height:1.5">
+    💡 <b>EIS ≈ 이온·계면 축</b> (발표 주의): 임피던스는 <b>이온수송 + R_ct + R_int</b>가 지배 —
+    <b>σ_e(전자)는 EIS에 거의 안 나타남</b>(R_e ≪ R0).  DBE의 σ_e +52% 개선은 <b>전자 전송 이득 → 운전
+    전류밀도 필드(@1C 핫스팟 273→207)</b>에 나타나지 EIS엔 아님.  <b>상보</b>: σ_e=필드맵, EIS=이온/R_ct축.
+    → <b>SBE≈DBE EIS 는 정상</b>(버그 아님).
+  </div>
+</div>
+
 <!-- ── 컨트롤 ── -->
 <div class="card">
-  <div class="card-title" style="margin-bottom:8px">입력 (σ = STEP3 · i0/D_s = STEP4 · C_dl = 앵커)</div>
+  <div class="card-title" style="margin-bottom:8px">입력 (σ = STEP3 · i0/D_s = STEP4 · C_dl = 앵커)
+    <span id="e-case-badge" style="font-size:.72rem;font-weight:400"></span></div>
   <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
     <button class="btn btn-sm btn-secondary" data-preset="sbe">SBE (σ_e 1.98)</button>
     <button class="btn btn-sm btn-secondary" data-preset="dbe">DBE (σ_e 3.00)</button>
@@ -95,15 +105,28 @@ const EIS = {
     this.el('e-rint').value=v.rint; this.el('e-i0').value=v.i0; this.el('e-ds').value=v.ds;
     this.el('e-rp').value=v.rp; this.el('e-cdl').value=v.cdl; this.el('e-cov').value=v.cov;
     this.el('e-por').value=v.por; this.run(); },
-  params(){ return { sigma_e:this.el('e-sige').value, sigma_ion:this.el('e-sigi').value,
+  caseId: '',
+  params(){ const p = { sigma_e:this.el('e-sige').value, sigma_ion:this.el('e-sigi').value,
     thickness_um:this.el('e-th').value, r_int:this.el('e-rint').value, i0:this.el('e-i0').value,
     d_s:this.el('e-ds').value, r_p_um:this.el('e-rp').value, c_dl_uf:this.el('e-cdl').value,
-    coverage:this.el('e-cov').value, porosity:this.el('e-por').value }; },
+    coverage:this.el('e-cov').value, porosity:this.el('e-por').value };
+    if(this.caseId) p.case = this.caseId; return p; },
   async run(){
     const q = new URLSearchParams(this.params()).toString();
     let d; try { d = await (await fetch('/api/eis?'+q)).json(); }
     catch(e){ this.el('e-foot').textContent='fetch 실패: '+e; return; }
     if(d.error){ this.el('e-foot').textContent='계산 실패: '+d.error; return; }
+    // 케이스 자동로드: 서버가 STEP3 σ 로 덮어썼으면 입력칸 갱신 + 배지 (한 번만, 무한루프 방지)
+    const badge = this.el('e-case-badge');
+    if(d.case_loaded && this.caseId){
+      const pr = d.params||{};
+      if(pr.sigma_e_S_cm!=null) this.el('e-sige').value = (+pr.sigma_e_S_cm).toPrecision(3);
+      if(pr.sigma_ion_S_cm!=null) this.el('e-sigi').value = (+pr.sigma_ion_S_cm).toPrecision(3);
+      if(pr.thickness_um!=null) this.el('e-th').value = (+pr.thickness_um).toFixed(2);
+      if(pr.porosity!=null) this.el('e-por').value = (+pr.porosity).toFixed(1);
+      badge.innerHTML = ` · <span style="color:#5aa9e6">📁 ${d.case_loaded}</span> STEP3 σ 로드됨`;
+      this.caseId = '';   // 로드 완료 → 이후 수동 조정 시 케이스 재덮어쓰기 안 함
+    } else if(badge && !badge.innerHTML){ badge.innerHTML=''; }
     this.elems(d); this.drawNyquist(d); this.drawDRT(d);
   },
   elems(d){
@@ -176,12 +199,13 @@ const EIS = {
       ' &nbsp;<span style="color:var(--dim)">= 전하전달(고주파)·확산(저주파) 분리</span>';
   },
   init(){
+    this.caseId = (new URLSearchParams(location.search).get('case')||'').trim();  // /eis?case=X 자동로드
     this.el('e-run').addEventListener('click', ()=>this.run());
     document.querySelectorAll('[data-preset]').forEach(b=>
-      b.addEventListener('click', ()=>this.applyPreset(b.dataset.preset)));
+      b.addEventListener('click', ()=>{ this.caseId=''; this.applyPreset(b.dataset.preset); }));
     document.querySelectorAll('.e-in').forEach(el=>
       el.addEventListener('keydown', e=>{ if(e.key==='Enter') this.run(); }));
-    this.run();  // 초기 = SBE 기본값
+    this.run();  // 초기 = SBE 기본값 (또는 ?case= 로드)
   }
 };
 EIS.init();
