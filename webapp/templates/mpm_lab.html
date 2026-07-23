@@ -83,6 +83,7 @@
         <td style="padding:6px 10px; white-space:nowrap">
           <label title="비교 선택 (2개)" style="cursor:pointer;margin-right:4px">⚖<input type="checkbox" class="lab-cmp-cb" data-pid="{{ it.id }}" data-name="{{ it.name }}" onchange="labCmpCount(this)" style="vertical-align:middle;margin-left:2px"></label>
           <button class="btn btn-secondary btn-sm" onclick="labOpen('{{ it.id }}', {{ 1 if it.has_additives else 0 }}, this)">보기</button>
+          <a class="btn btn-secondary btn-sm" href="/eis?case={{ it.id }}" target="_blank" title="이 케이스의 σ(STEP3)로 물리-EIS/DRT 계산" style="text-decoration:none">🔌 EIS</a>
           <button class="btn btn-secondary btn-sm" onclick="labSummary('{{ it.id }}', this)" title="물성 요약을 클립보드에 복사 (AI에 먹이기용)">요약</button>
           <button class="btn btn-secondary btn-sm" onclick="labDelete('{{ it.id }}', this)">삭제</button>
         </td>
@@ -228,6 +229,7 @@ function labAddRow(it) {
     `<td style="padding:6px 10px;white-space:nowrap">` +
       `<label title="비교 선택 (2개)" style="cursor:pointer;margin-right:4px">⚖<input type="checkbox" class="lab-cmp-cb" data-pid="${it.id}" data-name="${it.name}" onchange="labCmpCount(this)" style="vertical-align:middle;margin-left:2px"></label>` +
       `<button class="btn btn-secondary btn-sm" onclick="labOpen('${it.id}', ${it.has_additives ? 1 : 0}, this)">보기</button> ` +
+      `<a class="btn btn-secondary btn-sm" href="/eis?case=${encodeURIComponent(it.id)}" target="_blank" title="이 케이스의 σ(STEP3)로 물리-EIS/DRT" style="text-decoration:none">🔌 EIS</a> ` +
       `<button class="btn btn-secondary btn-sm" onclick="labSummary('${it.id}', this)" title="물성 요약을 클립보드에 복사 (AI에 먹이기용)">요약</button> ` +
       `<button class="btn btn-secondary btn-sm" onclick="labDelete('${it.id}', this)">삭제</button></td>`;
   // 새 업로드 = 최신 → 순수 시간순이므로 맨 위에
