@@ -20,7 +20,7 @@ pristine 전극(STEP1–4 산출)이 주어졌을 때 **N 사이클 후 어떻�
 |---|---|---|---|---|
 | **A-1** | 충전상태 형상변화 (SC 수축→접촉 gap) | MPM v1 `--cycle-deform` | 형상앵커(가역) | ✅ GPU검증 (SC coverage −19%) |
 | **A-3** | 영구 접촉파단 | ledger (δcr CZM + `recontact=forbid`) | **~2%** | ✅ R_ct 1.09×@N100(포화) |
-| **B-1** | 화학 계면상(CEI) 성장 | STEP4 interphase (i0(N)↓+필름옴성) | **~98% 지배** | 🔶 훅 있음, N-전개 미실행 |
+| **B-1** | 화학 계면상(CEI) 성장 | STEP4 interphase (i0(N)↓+필름옴성) | **~98% 지배** | ✅ N-전개 착지(b1_chem_fade): 총 R_int(N) 실험앵커, 화학 99.6~99.8% |
 | **실험** | 크기·모양 앵커 | R_int(N)/retention(N) 곡선 | 검증 게이트 | ⛔ WSL PDF(#5) |
 
 합산: **총 R_int(N) = R_contact(N)[A-1 검증 gap → A-3 ledger] + R_chem(N)[B-1] + R_collector(N)**.
