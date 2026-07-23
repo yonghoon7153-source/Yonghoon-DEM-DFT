@@ -3569,8 +3569,20 @@ def api_step5_fade():
         if scripts_dir not in _sys.path:
             _sys.path.insert(0, scripts_dir)
         import b1_chem_fade
+        # #33 이종기술: 코팅 프리셋 → bare chem_x 에 CEI 억제 적용 (coating_presets, 크기=앵커·shape=ASSUMED)
+        coating = (request.args.get('coating', 'none') or 'none').strip()
+        coat_info = None
+        if coating.lower() != 'none' and chem_x is not None:
+            import coating_presets as _cp
+            _p = _cp.get_preset(coating)
+            _eff = _cp.coated_chem_x(coating, chem_x)
+            coat_info = {'coating': coating, 'chem_x_bare': chem_x, 'chem_x_coated': round(_eff, 4),
+                         'cei_suppress': _p.get('cei_suppress'), 'anchor': _p['anchor'], 'shape': _p['shape']}
+            chem_x = _eff
         out = b1_chem_fade.trajectory_scalar(rint0, exp_x, n_exp, r_contact0, shape,
                                              chem_x=chem_x, ledger_end_x=ledger_end_x, chem_p=chem_p)
+        if coat_info:
+            out['coating_info'] = coat_info
     except Exception as e:
         return jsonify({'available': False, 'reason': f'{type(e).__name__}: {e}'}), 200
     out['available'] = True

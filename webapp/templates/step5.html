@@ -64,6 +64,15 @@
       <input id="s5-rc0" type="number" step="0.1" value="2.0" class="s5-in"></label>
     <label class="s5-lab">화학 성장 ×@N <span class="s5-hint">(빈칸=bare 나머지 · 코팅=예 1.3)</span>
       <input id="s5-chemx" type="text" placeholder="bare" class="s5-in"></label>
+    <label class="s5-lab">이종기술 코팅 <span class="s5-hint">(CAM 표면 이종층 → 화학 CEI 억제)</span>
+      <select id="s5-coat" class="s5-in">
+        <option value="none">none (무코팅)</option>
+        <option value="LNO">LiNbO₃ (CEI 15× 억제 · Kim2025/Payandeh)</option>
+        <option value="LZO">Li₂ZrO₃ (8× · Kang&amp;Shin 6-8nm)</option>
+        <option value="Li3PO4">Li₃PO₄ (⛔ 앵커없음 · 미변경)</option>
+        <option value="SDCP">SDCP (전도상 · 화학 미변경)</option>
+        <option value="SWCNT">SWCNT (전도상 · 화학 미변경)</option>
+      </select></label>
   </div>
   <div style="margin-top:10px;display:flex;gap:16px;align-items:center;flex-wrap:wrap">
     <span class="s5-lab" style="margin:0">화학 shape:</span>
@@ -144,7 +153,8 @@ const S5 = {
     const shape = document.querySelector('input[name=s5shape]:checked').value;
     return { rint0:this.el('s5-rint0').value, exp_x:this.el('s5-expx').value,
              n_exp:this.el('s5-nexp').value, ledger_end_x:this.el('s5-ledx').value,
-             r_contact0:this.el('s5-rc0').value, chem_x:this.el('s5-chemx').value.trim(), shape };
+             r_contact0:this.el('s5-rc0').value, chem_x:this.el('s5-chemx').value.trim(), shape,
+             coating:(this.el('s5-coat')?this.el('s5-coat').value:'none') };
   },
   async run(){
     const q = new URLSearchParams(this.params()).toString();
@@ -163,6 +173,9 @@ const S5 = {
     s += `접촉 <b style="color:${this.COL.contact}">${d.contact_share_pct.toFixed(1)}%</b> · ` +
          `${chemLbl} <b style="color:${this.COL.chem}">${d.chem_share_pct.toFixed(1)}%</b>`;
     if(coated) s += ` (×${d.chem_x}) · OTHER <b style="color:${this.COL.other}">${d.other_share_pct.toFixed(1)}%</b>`;
+    if(d.coating_info){ const ci=d.coating_info;
+      s += ` &nbsp;·&nbsp; <b style="color:#a78bfa">🧪 ${ci.coating}</b> 코팅: chem_x ${ci.chem_x_bare}→<b>${ci.chem_x_coated}</b>` +
+           (ci.cei_suppress?` (CEI ×${ci.cei_suppress} 억제)`:' (앵커없음=미변경)'); }
     s += ` &nbsp;@N${d.n_exp}`;
     this.el('s5-shares').innerHTML = s;
     const SHP = { sqrt:'√N (Wagner form · Park2023 코팅 [B] 지지)',
