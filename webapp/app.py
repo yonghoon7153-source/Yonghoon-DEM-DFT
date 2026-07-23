@@ -84,6 +84,7 @@ def elements():
     return render_template("elements.html", active="elements",
                            periodic=D.PERIODIC, e2c=e2c,
                            campaign=sorted(D.campaign_elements()),
+                           casc_els=sorted(D._cascade_by_element().keys()),
                            comp_elements=D.COMP_ELEMENTS)
 
 

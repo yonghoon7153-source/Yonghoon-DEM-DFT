@@ -1,134 +1,154 @@
 {% extends "base.html" %}
-{% block title %}Periodic Table · Element Briefing{% endblock %}
+{% block title %}Periodic Table · 원소 브리핑{% endblock %}
 {% block content %}
 <div class="page-header">
-  <div><h1>Periodic Table · Element Briefing</h1>
-    <div class="sub">원소 클릭(여러 개 가능) → 대표 화합물·SEI·XPS·Raman·DOS + <b>우리 db 앵커</b> + 관련 문헌</div></div>
-  <div class="page-actions"><span class="badge b-canon">{{ campaign|length }} elements in campaign</span></div>
+  <div><h1>Periodic Table · 원소 브리핑</h1>
+    <div class="sub">원소를 클릭(여러 개 가능) → 대표 화합물·SEI·XPS·Raman·DOS + <b>우리 db 앵커</b> + 관련 문헌</div></div>
 </div>
 
 <div class="pt-wrap">
-  <div class="pt" role="group" aria-label="주기율표 (다중선택)">
+  <div class="pt" role="group" aria-label="주기율표">
     {% for sym,z,g,p in periodic %}
-    {% set active = sym in e2c %}
-    <button class="pt-cell {% if active %}pt-on{% else %}pt-off{% endif %}"
+    {% set camp = sym in e2c %}{% set casc = sym in casc_els %}
+    <button class="pt-cell {% if camp %}pt-on{% elif casc %}pt-casc{% else %}pt-off{% endif %}"
             style="grid-column:{{ g }};grid-row:{{ p }}" id="el-{{ sym }}"
-            data-el="{{ sym }}" {% if active %}onclick="toggleEl('{{ sym }}')" aria-pressed="false"{% else %}tabindex="-1" aria-hidden="true"{% endif %}>
+            data-el="{{ sym }}" onclick="toggleEl('{{ sym }}')" aria-pressed="false">
       <span class="pt-z">{{ z }}</span><span class="pt-sym">{{ sym }}</span>
-      {% if active %}<span class="pt-n">{{ e2c[sym]|length }}</span>{% endif %}
+      {% if camp %}<span class="pt-n">{{ e2c[sym]|length }}</span>{% elif casc %}<span class="pt-dot" title="도핑 스크리닝 도펀트"></span>{% endif %}
     </button>
     {% endfor %}
   </div>
   <div class="pt-legend">
     <span><i class="lg-on"></i> 캠페인 원소 (숫자=조성 수)</span>
-    <span><i class="lg-off"></i> 미사용</span>
-    <span class="muted">여러 개 누르면 조합(공통 조성·결합) 브리핑</span>
+    <span><i class="lg-casc"></i> 도핑 스크리닝 도펀트</span>
+    <span><i class="lg-off"></i> 기타 (기본정보)</span>
+    <span class="muted">여러 개 = 조합 브리핑</span>
   </div>
 </div>
 
 <div class="sel-bar" id="sel-bar" hidden>
-  <span class="sel-lbl">선택:</span>
-  <span id="sel-chips"></span>
+  <span class="sel-lbl">선택</span><span id="sel-chips"></span>
   <button class="btn sm" onclick="clearSel()">✕ 초기화</button>
 </div>
 
 <div id="briefing" class="briefing" aria-live="polite">
-  <div class="brief-hint">
-    <div class="bh-ico">⊞</div>
+  <div class="brief-hint"><div class="bh-ico">⊞</div>
     <div>원소를 클릭하면 여기에 <b>대표 화합물 · SEI 관련성 · XPS · Raman · DOS</b>,<br>
-      그리고 <b>우리 계산 결과(ICOHP·조성·PDOS)</b>와 <b>관련 논문</b>이 브리핑돼요.<br>
-      <span class="muted">예: Nd + Cl 를 같이 누르면 둘 다 든 조성과 Nd–Cl 결합이 나와요.</span></div>
-  </div>
+      그리고 <b>우리 계산 결과(ICOHP·조성·PDOS)</b>와 <b>관련 논문</b>이 정리돼요.<br>
+      <span class="muted">예: Nd + Cl 을 같이 누르면 둘 다 든 조성과 Nd–Cl 결합이 나와요.</span></div></div>
 </div>
 
 <script>
 var E2C={{ e2c|tojson }}, COMPS={{ COMPS|tojson }}, selected=[];
-function trackBadge(t){return '<span class="tbadge tb-'+t+'">'+(t==='dft'?'DFT':'DEM')+'</span>';}
+var CATKR={"alkali metal":"알칼리 금속","alkaline earth":"알칼리토금속","transition metal":"전이금속",
+  "post-transition metal":"전이후 금속","metalloid":"준금속","nonmetal":"비금속","halogen":"할로겐",
+  "noble gas":"비활성 기체","lanthanide":"란타넘족","actinide":"악티늄족","other":"기타"};
+var CATCOL={"alkali metal":"#c026d3","alkaline earth":"#d97706","transition metal":"#2563eb",
+  "post-transition metal":"#0891b2","metalloid":"#0d9488","nonmetal":"#16a34a","halogen":"#65a30d",
+  "noble gas":"#6b7280","lanthanide":"#7c3aed","actinide":"#be123c","other":"#6b7280"};
+function _esc(s){return (s+'').replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
 function compLink(cid){var c=COMPS[cid]||{};return '<a class="anchor-comp" href="/composition/'+cid+'"><span class="dot" style="background:'+(c.color||'#888')+'"></span>'+(c.label||cid)+'</a>';}
 function paperChip(p){return '<a class="gpaper-chip tb-'+p.track+'" href="/literature?open='+p.id+'" title="'+_esc(p.title)+'">'+_esc(p.id.split('_')[0])+'</a>';}
 
-function toggleEl(sym){
-  var i=selected.indexOf(sym);
-  if(i>=0)selected.splice(i,1); else selected.push(sym);
-  syncCells(); render();
-}
-function clearSel(){selected=[];syncCells();render();}
-function syncCells(){
-  document.querySelectorAll('.pt-cell').forEach(function(b){
-    var on=selected.indexOf(b.dataset.el)>=0;
-    b.classList.toggle('pt-sel',on); if(b.hasAttribute('aria-pressed'))b.setAttribute('aria-pressed',on);
-  });
+function toggleEl(sym){var i=selected.indexOf(sym);if(i>=0)selected.splice(i,1);else selected.push(sym);sync();render();}
+function clearSel(){selected=[];sync();render();}
+function sync(){
+  document.querySelectorAll('.pt-cell').forEach(function(b){var on=selected.indexOf(b.dataset.el)>=0;
+    b.classList.toggle('pt-sel',on);b.setAttribute('aria-pressed',on);});
   var bar=document.getElementById('sel-bar');
-  if(selected.length){bar.hidden=false;
-    document.getElementById('sel-chips').innerHTML=selected.map(function(s){
-      return '<button class="sel-chip" onclick="toggleEl(\''+s+'\')">'+s+' ✕</button>';}).join('');
-  } else bar.hidden=true;
+  if(selected.length){bar.hidden=false;document.getElementById('sel-chips').innerHTML=selected.map(function(s){
+    return '<button class="sel-chip" onclick="toggleEl(\''+s+'\')">'+s+' ✕</button>';}).join('');}
+  else bar.hidden=true;
   history.replaceState(null,'',selected.length?('?sel='+selected.join(',')):location.pathname);
 }
 function render(){
   var box=document.getElementById('briefing');
-  if(!selected.length){box.innerHTML=document.querySelector('.brief-hint')?box.innerHTML:'';location.reload?0:0;
-    box.innerHTML='<div class="brief-hint"><div class="bh-ico">⊞</div><div>원소를 클릭하면 브리핑이 떠요.</div></div>';return;}
+  if(!selected.length){box.innerHTML='<div class="brief-hint"><div class="bh-ico">⊞</div><div>원소를 클릭하면 브리핑이 떠요.</div></div>';return;}
   box.innerHTML='<div class="muted" style="padding:24px">불러오는 중…</div>';
   fetch('/api/element?syms='+selected.join(',')).then(function(r){return r.json();}).then(function(d){
     var h='';
-    if(d.multi){
-      h+='<div class="card combo-card"><div class="combo-tag">🔗 조합 — '+d.multi.syms.join(' + ')+'</div>';
-      h+='<div class="combo-row"><b>모두 든 조성 ('+d.multi.compositions.length+')</b> '+
-         (d.multi.compositions.length?d.multi.compositions.map(compLink).join(' '):'<span class="muted">없음</span>')+'</div>';
-      if(d.multi.bonds.length)h+='<div class="combo-row"><b>이들 사이 결합 (ICOHP)</b> '+
-         d.multi.bonds.map(function(x){return '<span class="bond-chip">'+x.bond+' <b>'+(x.icohp!=null?x.icohp.toFixed(3):'—')+'</b> eV <span class="muted">@'+x.system+'</span></span>';}).join(' ')+'</div>';
-      if(d.multi.papers_union.length)h+='<div class="combo-row"><b>관련 논문 (합집합)</b> '+d.multi.papers_union.slice(0,12).map(paperChip).join('')+'</div>';
-      h+='</div>';
-    }
-    d.elements.forEach(function(e){ h+=elCard(e); });
+    if(d.multi)h+=comboCard(d.multi);
+    d.elements.forEach(function(e){h+=elCard(e);});
     box.innerHTML=h;
   }).catch(function(){box.innerHTML='<div class="card">불러오기 실패</div>';});
 }
-function tbl(rows,cols){ if(!rows||!rows.length)return '';
-  var h='<table class="mini-table"><thead><tr>'+cols.map(function(c){return '<th>'+c[1]+'</th>';}).join('')+'</tr></thead><tbody>';
-  rows.forEach(function(r){h+='<tr>'+cols.map(function(c){var v=r[c[0]];return '<td>'+(v!=null?_esc(''+v):'')+'</td>';}).join('')+'</tr>';});
-  return h+'</tbody></table>';
-}
-function elCard(e){
-  var k=e.kb, a=e.anchors, sym=e.symbol;
-  var c=COMPS, col='#2563eb';
-  var h='<div class="card el-card"><div class="el-head"><span class="el-sym">'+sym+'</span>'+
-    '<div class="el-h-txt"><div class="el-name">'+(k?_esc(k.name):sym)+' <span class="muted">· Z '+(k?k.Z:'')+'</span></div>'+
-    (k&&k.role?'<div class="el-role">'+_esc(k.role)+'</div>':'')+'</div></div>';
-  if(!k){ h+='<div class="muted" style="margin:8px 0">reference 데이터 준비중 — 아래는 우리 db 앵커.</div>'; }
-  else{
-    h+='<div class="el-meta">'+
-       (k.oxidation_states?'<span><em>산화수</em> '+k.oxidation_states.join(', ')+'</span>':'')+
-       (k.electronegativity?'<span><em>전기음성도</em> '+k.electronegativity+'</span>':'')+
-       (k.ionic_radius_A?'<span><em>이온반경(Å)</em> '+Object.keys(k.ionic_radius_A).map(function(i){return i+' '+k.ionic_radius_A[i];}).join(', ')+'</span>':'')+
-       '</div>';
-    if(k.representative_compounds&&k.representative_compounds.length){
-      h+='<div class="el-sec"><div class="el-sec-t">대표 화합물</div>'+k.representative_compounds.map(function(rc){
-        return '<div class="cmpd"><span class="cmpd-f">'+_esc(rc.formula)+'</span>'+
-          (rc.battery_role?'<span class="cmpd-role">'+_esc(rc.battery_role)+'</span>':'')+
-          (rc.context?'<span class="cmpd-ctx">'+_esc(rc.context)+'</span>':'')+
-          (rc.note?'<div class="cmpd-note">'+_esc(rc.note)+'</div>':'')+'</div>';}).join('')+'</div>';
-    }
-    if(k.sei_relevance)h+='<div class="el-sei"><div class="el-sec-t">🔋 SEI 관련성</div>'+_esc(k.sei_relevance)+'</div>';
-    if(k.xps&&k.xps.length)h+='<div class="el-sec"><div class="el-sec-t">XPS</div>'+tbl(k.xps,[['core','core'],['BE_eV','BE (eV)'],['assignment','assignment'],['ref','ref']])+'</div>';
-    if(k.raman&&k.raman.length)h+='<div class="el-sec"><div class="el-sec-t">Raman</div>'+tbl(k.raman,[['cm1','cm⁻¹'],['assignment','assignment'],['ref','ref']])+'</div>';
-    if(k.dos_character)h+='<div class="el-sec"><div class="el-sec-t">DOS character</div><div class="el-txt">'+_esc(k.dos_character)+'</div></div>';
-  }
-  // 우리 db 앵커
-  h+='<div class="el-anchor"><div class="el-sec-t">⚓ 우리 계산 앵커</div>';
-  if(a.compositions.length)h+='<div class="anchor-row"><em>조성</em> '+a.compositions.map(compLink).join(' ')+'</div>';
-  if(a.icohp.length)h+='<div class="anchor-row"><em>ICOHP</em> '+a.icohp.map(function(x){return '<span class="bond-chip">'+x.bond+' <b>'+(x.icohp!=null?x.icohp.toFixed(3):'—')+'</b> @'+x.system+'</span>';}).join(' ')+'</div>';
-  if(a.pdos.length)h+='<div class="anchor-row"><em>PDOS</em> <span class="muted mono" style="font-size:.72rem">'+a.pdos.map(function(f){return f.split('/').pop();}).join(' · ')+'</span></div>';
-  if(a.xps.length)h+='<div class="anchor-row"><em>XPS ref</em> <span class="muted mono" style="font-size:.72rem">'+a.xps.map(function(f){return f.split('/').pop();}).join(' · ')+'</span></div>';
-  h+='</div>';
-  // 문헌
-  if(a.papers.length)h+='<div class="el-sec"><div class="el-sec-t">📚 관련 litdb 논문 · '+a.papers.length+'</div>'+a.papers.map(paperChip).join('')+'</div>';
-  if(k&&k.key_references&&k.key_references.length)h+='<div class="el-refs"><em>참고문헌</em><ul>'+k.key_references.map(function(r){return '<li>'+_esc(r)+'</li>';}).join('')+'</ul></div>';
+function comboCard(m){
+  var h='<div class="card combo-card"><div class="combo-tag">🔗 조합 — '+m.syms.join(' + ')+'</div>';
+  h+='<div class="combo-row"><b>모두 든 조성 · '+m.compositions.length+'</b><div>'+
+     (m.compositions.length?m.compositions.map(compLink).join(' '):'<span class="muted">없음</span>')+'</div></div>';
+  if(m.bonds.length)h+='<div class="combo-row"><b>이들 사이 결합 (ICOHP)</b><div>'+
+     m.bonds.map(function(x){return '<span class="bond-chip">'+x.bond+' <b>'+(x.icohp!=null?x.icohp.toFixed(3):'—')+'</b> eV <span class="muted">@'+x.system+'</span></span>';}).join(' ')+'</div></div>';
+  if(m.papers_union.length)h+='<div class="combo-row"><b>관련 논문 (합집합)</b><div>'+m.papers_union.slice(0,12).map(paperChip).join('')+'</div></div>';
   return h+'</div>';
 }
-// ?sel=Cl,Nd 로 진입 시 자동선택
+function xtable(rows){ // BE 있는 행=표, 없는 행(주석)=footnote 로 분리
+  var main=rows.filter(function(r){return r.BE_eV!=null&&r.BE_eV!=='';}),
+      note=rows.filter(function(r){return r.BE_eV==null||r.BE_eV==='';});
+  var h='';
+  if(main.length){h+='<table class="mini-table"><thead><tr><th>core</th><th>BE (eV)</th><th>assignment</th><th>ref</th></tr></thead><tbody>'+
+    main.map(function(r){return '<tr><td>'+_esc(r.core||'')+'</td><td>'+_esc(r.BE_eV)+'</td><td>'+_esc(r.assignment||'')+'</td><td class="ref">'+_esc(r.ref||'')+'</td></tr>';}).join('')+'</tbody></table>';}
+  note.forEach(function(r){h+='<p class="tbl-note">※ '+_esc(r.assignment||'')+(r.ref?' <span class="muted">('+_esc(r.ref)+')</span>':'')+'</p>';});
+  return h;
+}
+function rtable(rows){
+  var main=rows.filter(function(r){return r.cm1!=null&&(''+r.cm1).match(/[0-9]/);}),
+      note=rows.filter(function(r){return !(r.cm1!=null&&(''+r.cm1).match(/[0-9]/));});
+  var h='';
+  if(main.length){h+='<table class="mini-table"><thead><tr><th>cm⁻¹</th><th>assignment</th><th>ref</th></tr></thead><tbody>'+
+    main.map(function(r){return '<tr><td>'+_esc(r.cm1)+'</td><td>'+_esc(r.assignment||'')+'</td><td class="ref">'+_esc(r.ref||'')+'</td></tr>';}).join('')+'</tbody></table>';}
+  note.forEach(function(r){h+='<p class="tbl-note">※ '+_esc(r.assignment||'')+'</p>';});
+  return h;
+}
+function elCard(e){
+  var k=e.kb, a=e.anchors, inf=e.info||{}, sym=e.symbol;
+  var cat=inf.category||'other', col=CATCOL[cat]||'#6b7280';
+  var h='<div class="card el-card">';
+  // 헤더
+  h+='<div class="el-head"><span class="el-sym" style="background:'+col+'">'+sym+'</span>'+
+     '<div class="el-h-txt"><div class="el-name">'+_esc(inf.name||sym)+' <span class="muted">· '+(inf.Z||'')+'</span>'+
+     (inf.in_campaign?' <span class="badge b-canon" style="font-size:.6rem">캠페인</span>':'')+'</div>'+
+     '<div class="el-cat" style="color:'+col+'">'+(CATKR[cat]||cat)+'</div></div></div>';
+  if(k&&k.role)h+='<p class="el-role">'+_esc(k.role)+'</p>';
+  // 기본 사실
+  var facts='';
+  if(k&&k.oxidation_states)facts+='<span><em>산화수</em> '+k.oxidation_states.join(', ')+'</span>';
+  if(inf.en!=null)facts+='<span><em>전기음성도</em> '+inf.en+'</span>';
+  if(k&&k.ionic_radius_A){var rk=Object.keys(k.ionic_radius_A).filter(function(x){return x[0]!=='_';});
+    if(rk.length)facts+='<span><em>이온반경(Å)</em> '+rk.map(function(i){return i+' '+k.ionic_radius_A[i];}).join(', ')+'</span>';}
+  if(facts)h+='<div class="el-facts">'+facts+'</div>';
+  // 캐스케이드
+  if(e.cascade&&e.cascade.length){
+    h+='<div class="el-casc"><div class="el-sec-t" style="color:var(--violet)">🤖 도핑 스크리닝 (캐스케이드)</div>'+
+      e.cascade.map(function(c){return '<a class="casc-hit" href="/cascade#'+c.dopant+'"><b>'+c.dopant+'</b>'+
+        '<span>#'+(c.rank!=null?Math.round(c.rank):'?')+'/47</span><span>score '+(c.score!=null?c.score:'—')+'</span>'+
+        '<span>ox '+(c.ox_V!=null?c.ox_V:'—')+' V</span><span>E '+(c.E_GPa!=null?c.E_GPa:'—')+' GPa</span>'+
+        '<span>Pugh '+(c.pugh!=null?c.pugh:'—')+'</span> →</a>';}).join('')+'</div>';
+  }
+  if(!k)h+='<p class="muted" style="font-size:.84rem;margin:8px 0">이 원소는 아직 상세 KB가 없어요 — 위 기본정보/스크리닝과 아래 우리 앵커로 정리했어요.</p>';
+  else{
+    if(k.representative_compounds&&k.representative_compounds.length){
+      h+='<div class="el-sec"><div class="el-sec-t">대표 화합물</div>'+k.representative_compounds.map(function(rc){
+        return '<div class="cmpd"><div class="cmpd-top"><span class="cmpd-f">'+_esc(rc.formula)+'</span>'+
+          (rc.context?'<span class="cmpd-ctx">'+_esc(rc.context)+'</span>':'')+
+          (rc.battery_role?'<span class="cmpd-role">'+_esc(rc.battery_role)+'</span>':'')+'</div>'+
+          (rc.note?'<div class="cmpd-note">'+_esc(rc.note)+'</div>':'')+'</div>';}).join('')+'</div>';}
+    if(k.sei_relevance)h+='<div class="el-sei"><div class="el-sec-t">🔋 SEI 관련성</div><div>'+_esc(k.sei_relevance)+'</div></div>';
+    if(k.xps&&k.xps.length)h+='<div class="el-sec"><div class="el-sec-t">XPS</div>'+xtable(k.xps)+'</div>';
+    if(k.raman&&k.raman.length)h+='<div class="el-sec"><div class="el-sec-t">Raman</div>'+rtable(k.raman)+'</div>';
+    if(k.dos_character)h+='<div class="el-sec"><div class="el-sec-t">DOS 성격</div><div class="el-txt">'+_esc(k.dos_character)+'</div></div>';
+  }
+  // 우리 앵커
+  var an='';
+  if(a.compositions.length)an+='<div class="anchor-row"><em>조성</em><div>'+a.compositions.map(compLink).join(' ')+'</div></div>';
+  if(a.icohp.length)an+='<div class="anchor-row"><em>ICOHP</em><div>'+a.icohp.map(function(x){return '<span class="bond-chip">'+x.bond+' <b>'+(x.icohp!=null?x.icohp.toFixed(3):'—')+'</b> @'+x.system+'</span>';}).join(' ')+'</div></div>';
+  if(a.pdos.length)an+='<div class="anchor-row"><em>PDOS</em><div class="muted mono" style="font-size:.72rem">'+a.pdos.map(function(f){return f.split('/').pop();}).join(' · ')+'</div></div>';
+  if(a.xps.length)an+='<div class="anchor-row"><em>XPS ref</em><div class="muted mono" style="font-size:.72rem">'+a.xps.map(function(f){return f.split('/').pop();}).join(' · ')+'</div></div>';
+  if(an)h+='<div class="el-anchor"><div class="el-sec-t">⚓ 우리 계산 결과</div>'+an+'</div>';
+  if(a.papers.length)h+='<div class="el-sec"><div class="el-sec-t">📚 관련 litdb 논문 · '+a.papers.length+'</div>'+a.papers.map(paperChip).join('')+'</div>';
+  if(k&&k.key_references&&k.key_references.length)h+='<div class="el-refs"><div class="el-sec-t">참고문헌 <span class="muted" style="font-weight:400;text-transform:none">— 영어 원출처 · 한국어 풀이</span></div><ul>'+k.key_references.map(function(r){return '<li>'+_esc(r)+'</li>';}).join('')+'</ul></div>';
+  return h+'</div>';
+}
 (function(){var s=new URLSearchParams(location.search).get('sel');
-  if(s){selected=s.split(',').filter(function(x){return E2C[x];});syncCells();render();}})();
+  if(s){selected=s.split(',').filter(function(x){return E2C[x]||true;});sync();render();}})();
 </script>
 {% endblock %}

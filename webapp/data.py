@@ -841,7 +841,9 @@ def element_db_anchors(sym: str) -> dict:
 def element_briefing(syms: list) -> dict:
     kb = load_element_kb()
     syms = [s for s in syms if s in {p[0] for p in PERIODIC}]
-    elems = [{"symbol": s, "kb": kb.get(s), "anchors": element_db_anchors(s)} for s in syms]
+    elems = [{"symbol": s, "kb": kb.get(s), "info": element_info(s),
+              "anchors": element_db_anchors(s), "cascade": cascade_for_element(s)}
+             for s in syms]
     out = {"elements": elems, "multi": None}
     if len(syms) >= 2:
         common = [cid for cid, els in COMP_ELEMENTS.items() if all(s in els for s in syms)]
@@ -859,3 +861,67 @@ def element_briefing(syms: list) -> dict:
         out["multi"] = {"syms": syms, "compositions": common,
                         "bonds": pair, "papers_union": list(papers.values())}
     return out
+
+
+# ── 전체 주기율표 원소 데이터 (캠페인 밖 원소도 클릭 가능하게) ──
+ELEMENT_NAMES = {
+ 1:"Hydrogen",2:"Helium",3:"Lithium",4:"Beryllium",5:"Boron",6:"Carbon",7:"Nitrogen",8:"Oxygen",9:"Fluorine",10:"Neon",
+ 11:"Sodium",12:"Magnesium",13:"Aluminium",14:"Silicon",15:"Phosphorus",16:"Sulfur",17:"Chlorine",18:"Argon",19:"Potassium",20:"Calcium",
+ 21:"Scandium",22:"Titanium",23:"Vanadium",24:"Chromium",25:"Manganese",26:"Iron",27:"Cobalt",28:"Nickel",29:"Copper",30:"Zinc",
+ 31:"Gallium",32:"Germanium",33:"Arsenic",34:"Selenium",35:"Bromine",36:"Krypton",37:"Rubidium",38:"Strontium",39:"Yttrium",40:"Zirconium",
+ 41:"Niobium",42:"Molybdenum",43:"Technetium",44:"Ruthenium",45:"Rhodium",46:"Palladium",47:"Silver",48:"Cadmium",49:"Indium",50:"Tin",
+ 51:"Antimony",52:"Tellurium",53:"Iodine",54:"Xenon",55:"Cesium",56:"Barium",57:"Lanthanum",58:"Cerium",59:"Praseodymium",60:"Neodymium",
+ 61:"Promethium",62:"Samarium",63:"Europium",64:"Gadolinium",65:"Terbium",66:"Dysprosium",67:"Holmium",68:"Erbium",69:"Thulium",70:"Ytterbium",
+ 71:"Lutetium",72:"Hafnium",73:"Tantalum",74:"Tungsten",75:"Rhenium",76:"Osmium",77:"Iridium",78:"Platinum",79:"Gold",80:"Mercury",
+ 81:"Thallium",82:"Lead",83:"Bismuth",84:"Polonium",85:"Astatine",86:"Radon",87:"Francium",88:"Radium",89:"Actinium",90:"Thorium",
+ 91:"Protactinium",92:"Uranium",93:"Neptunium",94:"Plutonium",95:"Americium",96:"Curium",97:"Berkelium",98:"Californium",99:"Einsteinium",100:"Fermium",
+ 101:"Mendelevium",102:"Nobelium",103:"Lawrencium",104:"Rutherfordium",105:"Dubnium",106:"Seaborgium",107:"Bohrium",108:"Hassium",109:"Meitnerium",110:"Darmstadtium",
+ 111:"Roentgenium",112:"Copernicium",113:"Nihonium",114:"Flerovium",115:"Moscovium",116:"Livermorium",117:"Tennessine",118:"Oganesson",
+}
+ELEMENT_EN = {"H":2.20,"Li":0.98,"Be":1.57,"B":2.04,"C":2.55,"N":3.04,"O":3.44,"F":3.98,"Na":0.93,"Mg":1.31,"Al":1.61,
+ "Si":1.90,"P":2.19,"S":2.58,"Cl":3.16,"K":0.82,"Ca":1.00,"Sc":1.36,"Ti":1.54,"V":1.63,"Cr":1.66,"Mn":1.55,"Fe":1.83,
+ "Co":1.88,"Ni":1.91,"Cu":1.90,"Zn":1.65,"Ga":1.81,"Ge":2.01,"As":2.18,"Se":2.55,"Br":2.96,"Rb":0.82,"Sr":0.95,"Y":1.22,
+ "Zr":1.33,"Nb":1.60,"Mo":2.16,"Tc":1.90,"Ru":2.20,"Rh":2.28,"Pd":2.20,"Ag":1.93,"Cd":1.69,"In":1.78,"Sn":1.96,"Sb":2.05,
+ "Te":2.10,"I":2.66,"Cs":0.79,"Ba":0.89,"La":1.10,"Ce":1.12,"Pr":1.13,"Nd":1.14,"Sm":1.17,"Eu":1.20,"Gd":1.20,"Tb":1.10,
+ "Dy":1.22,"Ho":1.23,"Er":1.24,"Tm":1.25,"Yb":1.10,"Lu":1.27,"Hf":1.30,"Ta":1.50,"W":2.36,"Re":1.90,"Os":2.20,"Ir":2.20,
+ "Pt":2.28,"Au":2.54,"Hg":2.00,"Tl":1.62,"Pb":2.33,"Bi":2.02,"Po":2.00,"At":2.20,"Fr":0.70,"Ra":0.90,"Ac":1.10,"Th":1.30,
+ "U":1.38,"Np":1.36,"Pu":1.28}
+_METALLOID = {"B","Si","Ge","As","Sb","Te","Po","At"}
+_NONMETAL = {"H","C","N","O","P","S","Se"}
+_ELEM_GP = {p[0]: (p[1], p[2]) for p in PERIODIC}  # sym -> (Z, group)
+
+def element_category(sym: str) -> str:
+    z, grp = _ELEM_GP.get(sym, (0, 0))
+    if 57 <= z <= 71:  return "lanthanide"
+    if 89 <= z <= 103: return "actinide"
+    if sym in _METALLOID: return "metalloid"
+    if grp == 1: return "nonmetal" if sym == "H" else "alkali metal"
+    if grp == 2: return "alkaline earth"
+    if grp == 18: return "noble gas"
+    if grp == 17: return "halogen"
+    if 3 <= grp <= 12: return "transition metal"
+    if sym in _NONMETAL: return "nonmetal"
+    if grp >= 13: return "post-transition metal"
+    return "other"
+
+def element_info(sym: str) -> dict:
+    z = _ELEM_GP.get(sym, (None, None))[0]
+    return {"name": ELEMENT_NAMES.get(z, sym), "Z": z,
+            "category": element_category(sym), "en": ELEMENT_EN.get(sym),
+            "in_campaign": sym in campaign_elements()}
+
+@lru_cache(maxsize=1)
+def _cascade_by_element() -> dict:
+    """캐스케이드 도펀트(Sc2O3, Fe2O3…) → 그 금속 원소별 랭킹 행. 전체 주기율표 앵커."""
+    rows = load_cascade().get("ranked", {}).get("data", [])
+    out = {}
+    for r in rows:
+        m = re.match(r"([A-Z][a-z]?)", str(r.get("dopant", "")))
+        if m:
+            out.setdefault(m.group(1), []).append({
+                "dopant": r.get("dopant"), "rank": r.get("rank"), "score": r.get("score"),
+                "ox_V": r.get("ox_V"), "E_GPa": r.get("E_GPa"), "pugh": r.get("pugh"), "group": r.get("group")})
+    return out
+
+def cascade_for_element(sym: str) -> list:
+    return _cascade_by_element().get(sym, [])

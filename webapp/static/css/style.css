@@ -552,3 +552,67 @@ kbd{font-family:var(--mono);font-size:.72em;background:var(--bg);border:1px soli
 .gpaper-chip.tb-dft{background:var(--accent-soft);color:var(--accent);border-color:color-mix(in srgb,var(--accent) 30%,transparent)}
 .gpaper-chip.tb-dem{background:color-mix(in srgb,var(--orange) 15%,var(--card));color:var(--orange);border-color:color-mix(in srgb,var(--orange) 30%,transparent)}
 .gpaper-chip:hover{filter:brightness(1.08);text-decoration:underline}
+
+/* ============================================================
+   원소 브리핑 v2 — 전체 원소 클릭 + 가독성
+   ============================================================ */
+/* 전체 원소 클릭 가능 */
+.pt-off{opacity:.62;cursor:pointer}
+.pt-off .pt-sym{color:var(--dim);font-weight:600}
+.pt-off:hover{opacity:1;border-color:var(--accent)}
+.pt-casc{cursor:pointer;border-color:color-mix(in srgb,var(--violet) 45%,var(--border));
+  background:color-mix(in srgb,var(--violet) 9%,var(--card))}
+.pt-casc .pt-sym{color:var(--violet);font-weight:700}
+.pt-casc:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.pt-casc.pt-sel,.pt-off.pt-sel{background:var(--brand-fill);border-color:var(--brand-fill)}
+.pt-casc.pt-sel .pt-sym,.pt-off.pt-sel .pt-sym{color:var(--on-brand)}
+.pt-dot{position:absolute;bottom:3px;right:4px;width:6px;height:6px;border-radius:50%;background:var(--violet)}
+.pt-legend .lg-casc{background:color-mix(in srgb,var(--violet) 20%,var(--card));border:1px solid var(--violet)}
+
+/* 카드 가독성 */
+.el-card{gap:0}
+.el-cat{font-size:.74rem;font-weight:700;margin-top:2px}
+.el-role{font-size:.9rem;line-height:1.65;color:var(--text2);margin:10px 0 4px}
+.el-facts{display:flex;gap:10px;flex-wrap:wrap;padding:11px 0;margin:8px 0 4px;
+  border-top:1px solid var(--border2);border-bottom:1px solid var(--border2)}
+.el-facts span{font-size:.82rem;background:var(--bg);border-radius:7px;padding:4px 11px}
+.el-facts em{font-style:normal;color:var(--muted);font-weight:700;margin-right:6px;font-size:.86em}
+.el-sec{margin:16px 0 0;padding-top:14px;border-top:1px solid var(--border2)}
+.el-sec-t{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);margin-bottom:8px}
+.el-txt{font-size:.87rem;line-height:1.7;color:var(--text2)}
+
+/* 캐스케이드 히트 */
+.el-casc{margin:14px 0 0;padding-top:14px;border-top:1px solid var(--border2)}
+.casc-hit{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:color-mix(in srgb,var(--violet) 8%,var(--card));
+  border:1px solid color-mix(in srgb,var(--violet) 25%,var(--border));border-radius:9px;padding:9px 13px;margin-bottom:6px;
+  font-size:.8rem;color:var(--text2)}
+.casc-hit b{color:var(--violet);font-size:.92rem}
+.casc-hit span{background:var(--card);border:1px solid var(--border2);border-radius:6px;padding:1px 8px;font-family:var(--mono);font-size:.72rem}
+.casc-hit:hover{border-color:var(--violet)}
+
+/* 대표 화합물 — 포뮬러/역할/노트 분리 */
+.cmpd{padding:9px 0;border-bottom:1px dashed var(--border2)}
+.cmpd:last-child{border-bottom:none}
+.cmpd-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cmpd-f{font-family:var(--mono);font-weight:700;color:var(--navy);font-size:.92rem}
+.cmpd-ctx{font-size:.68rem;color:var(--muted);background:var(--bg);border-radius:10px;padding:1px 8px}
+.cmpd-role{font-size:.72rem;background:var(--accent-soft);color:var(--accent);padding:1px 9px;border-radius:12px;font-weight:600}
+.cmpd-note{font-size:.8rem;color:var(--dim);margin-top:4px;line-height:1.55;padding-left:2px}
+
+/* SEI 콜아웃 */
+.el-sei{background:color-mix(in srgb,var(--green) 9%,var(--card));border-left:3px solid var(--green);
+  border-radius:0 8px 8px 0;padding:11px 15px;margin:16px 0 0;font-size:.87rem;line-height:1.7;color:var(--text2)}
+.el-sei .el-sec-t{color:var(--green);border:none;padding:0}
+/* 표 + 주석 분리 */
+.mini-table td.ref{font-size:.72rem;color:var(--muted);white-space:normal}
+.tbl-note{font-size:.78rem;color:var(--dim);line-height:1.55;margin:7px 0 0;padding:7px 11px;background:var(--bg);border-radius:7px}
+.el-anchor{margin:16px 0 0;padding-top:14px;border-top:1px solid var(--border2);background:none}
+.anchor-row{display:flex;gap:10px;align-items:baseline;margin:7px 0;font-size:.84rem}
+.anchor-row>em{font-style:normal;color:var(--muted);font-weight:700;font-size:.68rem;text-transform:uppercase;min-width:56px;flex:0 0 auto}
+.anchor-row>div{flex:1;line-height:1.9}
+.el-refs{margin-top:16px;padding-top:14px;border-top:1px solid var(--border2)}
+.el-refs ul{margin:6px 0 0;padding-left:18px;font-size:.8rem;color:var(--dim)}
+.el-refs li{margin:5px 0;line-height:1.6}
+.combo-row{display:flex;gap:12px;align-items:baseline;margin:9px 0;font-size:.88rem}
+.combo-row>b{min-width:150px;flex:0 0 auto;color:var(--navy);font-size:.78rem}
+.combo-row>div{flex:1;line-height:1.9}
