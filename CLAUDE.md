@@ -144,12 +144,24 @@ reference는 로컬 PDF+형식예시 기반(링크만으로 금지), 웹검색 �
 
 ---
 
-## Current roadmap & open tasks (updated 2026-07-15)
+## Current roadmap & open tasks (updated 2026-07-23)
 
 Working branch: `claude/stoic-knuth-NObVQ`. Never put the model identifier
 in commits/PRs. sklearn is NOT installed in the cloud container →
 predictor (GPR/RF) training can only be statically checked here; real
 training verified on the user's WSL machine.
+
+### ★ 2026-07-23 세션 = 15 기능 + 5 적대리뷰 + 2 리서치 (docs/session_20260723_progress.md 정본) ★
+전부 완료·커밋·푸시: 자동화 등록훅③ · STEP4 near-null-B AMG **승자 직행 래치**(저율 ~15-34% 절감,
+해 불변) · #4b 뷰어 2D 단면 morphology(클릭→복셀) · DEM 고유 노란 하이라이트 · **취성→MPM crack-void**
+(fracture_scaffold+게이트) · #28 STEP3/ledger **periodic** · #30 **VGCF carbon-촉매 SE분해**(STEP3
+carbon-SE면적+STEP5 SPLIT) · #31 PTFE 브릿지(F1 OFF) · #29 **Joule hot-spot v1(맵)+v2(끝점보존 재분배기,
+Eₐ-free)** · **#33 v3**: litdb 적용표(litdb_application_table.md) + **코팅 프리셋 셀렉터**(coating_presets.py,
+LNO/LZO…, /step5 UI) + **ML 설계 폐루프**(ml_design_loop.py, Sobol 검증·SISSO/BO WSL).
+리서치: **LPSCl 분해-율 Eₐ 문헌 부재 확인**(날조 회피, Joule v2가 Eₐ-free인 이유) + litdb 65장 종합.
+남은 것: WSL 실학습(sklearn/pysisso/skopt)·앵커대기(Joule ΔT·코팅 √N shape·SDCP E_bind·NCA E175·
+코팅 LZO/Li₃PO₄ 배수)·후속훅(코팅 계면전도 --coat-sigma-b·So2022 core-shell·ML objective↔predictor 배선).
+⚠ 데이터 폴더: 코드=stoic-knuth worktree(dem-web), 데이터=~/Yonghoon-DEM-DFT/webapp/* → WEBAPP_*_FOLDER 연결.
 
 ### ★ 활성 트랙 (2026-07-15): SDCP manuscript + STEP 파이프라인 ★
 STEP1(DEM)·STEP2(MPM 압밀/payload)·STEP3(복셀 Kirchhoff σ_e/σ_ion + pore-τ +
