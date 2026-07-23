@@ -74,9 +74,24 @@ STEP3 σ-triad·두께·porosity만; R_int앵커·i0/D_s스윕·C_dl앵커는 UI
 - **webapp**: `/api/eis&expanchor=1` + eis.html **🔬 실험앵커 토글**(C_dl≈192·R_w=73.5·범위·provenance 표시,
   데이터 없으면 문헌 유지) · 소자카드 C_dl int+총(µF/cm²geo) 병기.  검증: py_compile·selftest·node --check PASS.
 
+## ★ D5 — 사이클-N EIS/DRT 궤적 (열화 기전 진단) — BUILT (2026-07-24)
+R_int(N) 성장을 EIS 로 투영 → **어느 저항(R_ct arc·확산·접촉)이 자라는지 = 기전 지문**.
+- **eis_drt_ica.py** `cycle_eis_trajectory(freqs, base_elems, cycles, growth_mult, rct/r0/rw_share)`:
+  base(N=0) 소자 + 사이클별 성장곱수 → 각 N Z(ω)+DRT.  총 성장 ΔR_dc(N)=(mult−1)·R_dc0 를 arc/직렬/
+  Warburg 분배(★ASSUMED 0.7/0.2/0.1 = 황화물 접촉손실 지배, §F1) · **집전체 R_int 비열화 고정**(fold
+  기준서 제외) · C_dl·τ_w 고정(성장=크기만).  `rint_growth_mult()` = rint_cycle_traj r_of_n 형(끝점측정·
+  사이 assumed-form) 재사용 → 기존 사이클 작업과 일관.  `--cycle-traj r0,rc,ntot[,shape,jump]` CLI +
+  `_cycle.csv`.  selftest +1(6/6): R_ct 단조증가·성장총량보존.
+- **검증 데모**(DBE, R_int 50→125@1000, sqrt): R_ct **5.1→25.8 Ω·cm²(×5)** · f_ct **124→25 Hz**(저주파
+  이동=arc 성장) · DRT 피크 134→28 Hz + 확산 mHz 분리 = 접촉손실 지문.
+- **webapp** `/api/eis_cycle` + eis.html **🔄 사이클-N 궤적 패널**: Nyquist 오버레이(N=0 파랑→N_max 빨강)
+  + DRT γ(τ) 오버레이(자라는 피크) + 프리셋(Kang&Shin B-NCA 50→125·완만 50→80) + 기전요약.  케이스 σ
+  로드 시 자동 갱신.  검증: py_compile·selftest·node --check PASS.
+
 ## 잔여 (v3-1 후속)
 - **완전 AC-solve**(step4_dyn 2.9M-dof 에 소신호 섭동 + FFT) = 미세구조-해상 EIS (지금은 reduced-order 등가회로).
-- C_dl 정밀앵커 = **α 높은(덜 depressed) 셀** 재측정 필요(현재 자릿수만) · SOC-의존 C_dl(사이클-N 궤적, D5).
+- C_dl 정밀앵커 = **α 높은(덜 depressed) 셀** 재측정 필요(현재 자릿수만) · D5 분배(R_ct/R0/R_w)·C_dl(N)·
+  D_s(N) 실측 앵커(현재 ASSUMED) · SOC-의존 EIS.
 - ICA **케이스 방전곡선 자동로드 ✅ BUILT (2026-07-24)**: `/api/ica_case?case=<pid>` — 저장된 STEP4
   `st4_viz.json`(mpm_lab `<pid>` + DEM `results/<case>` 둘 다, `step4_viz*.json` glob 포함)의 `curve`
   에서 **V_terminal(측정 전압) + x_mean→용량%**(|Δx|/|x100−x0|×100, §F1: 면적/질량 앵커 부재 → 정규화

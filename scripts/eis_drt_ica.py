@@ -218,6 +218,55 @@ def cv_curve(ocp_x, ocp_U, x0, x100, c_rate_equiv=None, scan_rate_mV_s=0.1, v_lo
     return Vsweep, I_cap, x_of_V
 
 
+# ─────────────── 사이클-N EIS/DRT 궤적 (열화 기전 진단, D5) ───────────────
+def rint_growth_mult(cycles, r0, rc, ntot, shape='sqrt', jump=0.5):
+    """rint_cycle_traj r_of_n 형(양끝-고정 assumed-form) → 성장곱수 R_int(N)/R_int(0) (≥1).
+    r0=pristine·rc=cycled(@N_total) 측정 끝점, shape∈{sqrt,linear}, jump=즉시-점프 분율.
+    §F1: 끝점 측정, 사이 곡선 assumed-form (rint_cycle_traj.r_of_n 과 동일 법 → 일관)."""
+    import math as _m
+    r0 = max(float(r0), 1e-9); rc = float(rc); ntot = max(int(ntot), 1)
+    out = []
+    for n in cycles:
+        if n <= 0:
+            out.append(1.0); continue
+        d = rc - r0
+        g = _m.sqrt(n / ntot) if shape == 'sqrt' else (n / ntot)
+        r = r0 + float(jump) * d + (1.0 - float(jump)) * d * g
+        out.append(max(r / r0, 1.0))
+    return out
+
+
+def cycle_eis_trajectory(freqs_hz, base_elems, cycles, growth_mult,
+                         rct_share=0.7, r0_share=0.2, rw_share=0.1):
+    """사이클-N EIS/DRT 궤적 (열화 기전 진단, D5).  base(N=0) physics_eis 소자 dict + 사이클별 성장곱수
+    growth_mult(=R_int(N)/R_int(0)≥1) → 각 N 의 Z(ω)+DRT.  총 성장 ΔR_dc(N)=(mult−1)·R_dc0 를
+    arc(R_ct)/직렬(R0)/Warburg(R_w) 로 분배(★ASSUMED partition §F1; 기본 0.7/0.2/0.1 = 황화물 CAM|SE
+    접촉손실 지배 = R_ct arc 주성장, Kang&Shin/Yun).  C_dl·τ_w 는 고정(성장=크기만; D_s 저하로 τ_w
+    이동은 별도).  DRT 로 어느 시상수(R_ct arc vs 확산 vs 접촉)가 자라는지 = 기전 지문.
+    반환 list[{N, mult, R0/R_ct/R_w/R_dc, f_ct, Z(복소 array), tau, gamma, peaks}]."""
+    R0_0 = float(base_elems['R0_ohm_cm2']); Rct_0 = float(base_elems['R_ct_ohm_cm2'])
+    Rw_0 = float(base_elems['R_w_ohm_cm2']); Cdl = float(base_elems['C_dl_F_cm2'])
+    tau_w = float(base_elems['tau_w_s'])
+    R_int_coll = float(base_elems.get('R_int', 0.0))          # 집전체 = 비열화 → fold 기준서 제외(고정 floor)
+    R_dc0 = max((R0_0 - R_int_coll) + Rct_0 + Rw_0, 1e-9)     # 열화-가능 총 DC (집전체 뺀 = 성장 기준 스케일)
+    s = float(rct_share) + float(r0_share) + float(rw_share)
+    rct_s, r0_s, rw_s = ((float(rct_share) / s, float(r0_share) / s, float(rw_share) / s)
+                         if s > 0 else (1.0, 0.0, 0.0))
+    out = []
+    for n, mult in zip(cycles, growth_mult):
+        dR = max(float(mult) - 1.0, 0.0) * R_dc0              # 총 성장분 (mult≥1 → dR≥0)
+        R0_n, Rct_n, Rw_n = R0_0 + r0_s * dR, Rct_0 + rct_s * dR, Rw_0 + rw_s * dR
+        Z = randles_eis(freqs_hz, R0_n, Rct_n, Cdl, Rw_n, tau_w)
+        tau, g, _R0f, _Zr = drt(freqs_hz, Z)
+        out.append({'N': int(n), 'mult': float(mult),
+                    'R0_ohm_cm2': R0_n, 'R_ct_ohm_cm2': Rct_n, 'R_w_ohm_cm2': Rw_n,
+                    'R_dc_ohm_cm2': R0_n + Rct_n + Rw_n,
+                    'f_ct_Hz': 1.0 / (2 * np.pi * Rct_n * Cdl),
+                    'Z': Z, 'tau': tau, 'gamma': g, 'peaks': drt_peaks(tau, g),
+                    'shares': {'R_ct': rct_s, 'R0': r0_s, 'R_w': rw_s}})
+    return out
+
+
 # ─────────────────────── self-test ───────────────────────
 def _selftest():
     fails = []
@@ -262,6 +311,20 @@ def _selftest():
     Vc, Ic, xc = cv_curve(xoc, Uoc, 0.05, 0.95, scan_rate_mV_s=0.1)
     if not (len(Vc) and np.isfinite(Ic).all() and np.abs(Ic).max() > 0):
         fails.append('CV I(V) 유한/비영 실패')
+    # 6) 사이클-N EIS 궤적 (D5): R_int 2× 성장(30→60 @1000) → R_dc 2×, R_ct 단조증가, arc 성장
+    cyc = [0, 100, 500, 1000]
+    mult = rint_growth_mult(cyc, r0=30.0, rc=60.0, ntot=1000)          # 2.0 at N_total
+    traj = cycle_eis_trajectory(freqs, el, cyc, mult)
+    if not (len(traj) == 4 and abs(traj[0]['mult'] - 1.0) < 1e-9 and traj[-1]['mult'] > 1.5):
+        fails.append(f'cycle EIS mult 실패: {[round(t["mult"], 2) for t in traj]}')
+    rct_seq = [t['R_ct_ohm_cm2'] for t in traj]
+    if not all(rct_seq[i] <= rct_seq[i + 1] + 1e-9 for i in range(len(rct_seq) - 1)):
+        fails.append(f'R_ct(N) 단조증가 실패: {[round(r, 2) for r in rct_seq]}')
+    # 성장 총량 보존: ΔR_dc(N_total) == (mult−1)·R_dc0_degradable (집전체 R_int 제외 기준)
+    R_deg0 = traj[0]['R_dc_ohm_cm2'] - float(el.get('R_int', 0.0))
+    added = traj[-1]['R_dc_ohm_cm2'] - traj[0]['R_dc_ohm_cm2']
+    if not (abs(added - (traj[-1]['mult'] - 1.0) * R_deg0) < 1e-6):
+        fails.append(f"성장 총량 보존 실패: Δ={added:.3f} vs (mult−1)·R_deg0={((traj[-1]['mult'] - 1.0) * R_deg0):.3f}")
     print('selftest OK' if not fails else 'selftest FAIL:\n  ' + '\n  '.join(fails))
     if not fails:
         print(f"  Randles: R0={hf.real:.1f} arc+Warburg → LF {lf.real:.1f}{lf.imag:+.1f}j Ω·cm²")
@@ -361,6 +424,10 @@ def main(argv=None):
     ap.add_argument('--c-dl-uf', type=float, default=10.0, help='이중층 µF/cm² (★앵커: 실험 EIS CPE 또는 문헌 1-10)')
     ap.add_argument('--use-exp-anchors', action='store_true',
                     help='실험 EIS(eis_fit) 로 C_dl(CPE→Brug)·R_w(Wo1_R) 앵커 = frame[4] (데이터 있으면)')
+    ap.add_argument('--cycle-traj', default='',
+                    help='사이클-N EIS/DRT 궤적(D5): "r0,rc,ntot[,shape,jump]" R_int 끝점 (예 50,125,1000)')
+    ap.add_argument('--cycle-ns', default='0,50,100,300,500,1000', help='궤적 N 목록(쉼표)')
+    ap.add_argument('--cycle-shares', default='0.7,0.2,0.1', help='성장 분배 R_ct,R0,R_w (ASSUMED §F1)')
     ap.add_argument('--f-hi', type=float, default=1e5); ap.add_argument('--f-lo', type=float, default=1e-2)
     ap.add_argument('--ica', default='', help='방전곡선 CSV(V,Q 열) → dQ/dV')
     ap.add_argument('--out', default='eis_out')
@@ -411,6 +478,27 @@ def main(argv=None):
         print(f"  R_w: {el['provenance']['R_w']}")
         for p in drt_peaks(tau, g):
             print(f"  DRT 피크: f={p['f_Hz']:.2g}Hz τ={p['tau_s']:.2g}s R≈{p['R_ohm_cm2']:.2f}Ω·cm²")
+        if a.cycle_traj:                                       # 사이클-N EIS/DRT 궤적 (D5)
+            _cp = [float(x) for x in a.cycle_traj.split(',')]
+            r0c, rcc, ntot = _cp[0], _cp[1], int(_cp[2])
+            shape = a.cycle_traj.split(',')[3] if len(_cp) > 3 else 'sqrt'
+            jump = _cp[4] if len(_cp) > 4 else 0.5
+            ns = [int(x) for x in a.cycle_ns.split(',')]
+            sh = [float(x) for x in a.cycle_shares.split(',')]
+            mult = rint_growth_mult(ns, r0c, rcc, ntot, shape, jump)
+            traj = cycle_eis_trajectory(freqs, el, ns, mult, rct_share=sh[0], r0_share=sh[1], rw_share=sh[2])
+            with open(a.out + '_cycle.csv', 'w', newline='') as f:
+                w = csv.writer(f)
+                w.writerow(['N', 'mult', 'R0_ohm_cm2', 'R_ct_ohm_cm2', 'R_w_ohm_cm2', 'R_dc_ohm_cm2', 'f_ct_Hz'])
+                for t in traj:
+                    w.writerow([t['N'], round(t['mult'], 3), round(t['R0_ohm_cm2'], 2),
+                                round(t['R_ct_ohm_cm2'], 2), round(t['R_w_ohm_cm2'], 2),
+                                round(t['R_dc_ohm_cm2'], 2), round(t['f_ct_Hz'], 2)])
+            print(f'사이클-N EIS 궤적 → {a.out}_cycle.csv  (R_int {r0c}→{rcc}@N{ntot}, {shape} shape, '
+                  f'분배 R_ct/R0/R_w={sh} ★ASSUMED §F1)')
+            print(f"  N={traj[0]['N']}: R_ct={traj[0]['R_ct_ohm_cm2']:.2f} f_ct={traj[0]['f_ct_Hz']:.1f}Hz "
+                  f"→ N={traj[-1]['N']}: R_ct={traj[-1]['R_ct_ohm_cm2']:.2f}(×{traj[-1]['R_ct_ohm_cm2']/max(traj[0]['R_ct_ohm_cm2'],1e-9):.1f}) "
+                  f"f_ct={traj[-1]['f_ct_Hz']:.1f}Hz — R_ct arc 성장=접촉손실 지문")
         return 0
 
 

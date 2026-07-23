@@ -99,6 +99,36 @@
   </div>
 </div>
 
+<!-- ── 사이클-N EIS/DRT 궤적 (D5) ── -->
+<div class="card" style="border-left:3px solid #b06ab3">
+  <div class="card-title" style="margin-bottom:6px">🔄 사이클-N EIS/DRT 궤적 (D5) — 열화 기전 진단</div>
+  <div style="font-size:.78rem;color:var(--dim);margin-bottom:8px;line-height:1.5">
+    R_int(N) 성장을 EIS 로 투영: <b>어느 저항(R_ct arc·확산·접촉)이 자라는지 = 기전 지문</b>.
+    황화물 CAM|SE 접촉손실 → R_ct arc 주성장(저주파 이동).  <b>§F1</b>: R_int 끝점=측정, 사이 곡선·
+    분배(R_ct/R0/R_w)=<b>assumed-form</b> (rint_cycle_traj 와 동일 법 · 집전체 R_int 은 비열화 고정).
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:10px;margin-bottom:10px">
+    <label class="e-lab">R_int pristine (Ω·cm²)<input id="ec-r0" type="number" value="50" class="e-in"></label>
+    <label class="e-lab">R_int cycled<input id="ec-rc" type="number" value="125" class="e-in"></label>
+    <label class="e-lab">@ N_total<input id="ec-ntot" type="number" value="1000" class="e-in"></label>
+    <label class="e-lab">shape<select id="ec-shape" class="e-in"><option value="sqrt">sqrt (√N)</option><option value="linear">linear</option></select></label>
+    <label class="e-lab">분배 R_ct,R0,R_w<input id="ec-shares" type="text" value="0.7,0.2,0.1" class="e-in"></label>
+    <label class="e-lab">N 목록<input id="ec-ns" type="text" value="0,100,300,500,1000" class="e-in"></label>
+  </div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;align-items:center">
+    <button class="btn btn-sm btn-secondary" data-cyc="kang">Kang&amp;Shin B-NCA (50→125)</button>
+    <button class="btn btn-sm btn-secondary" data-cyc="mild">완만 (50→80)</button>
+    <button id="ec-run" class="btn btn-primary btn-sm" style="margin-left:auto">궤적 계산</button>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+    <div><div style="font-size:.8rem;color:var(--dim);margin-bottom:4px">Nyquist 오버레이 (N=0 → N_max)</div>
+      <canvas id="ec-nyq" width="440" height="340" style="width:100%;border-radius:8px;background:var(--card-bg,#0e1526)"></canvas></div>
+    <div><div style="font-size:.8rem;color:var(--dim);margin-bottom:4px">DRT γ(τ) 오버레이 — 자라는 피크 = 기전</div>
+      <canvas id="ec-drt" width="440" height="340" style="width:100%;border-radius:8px;background:var(--card-bg,#0e1526)"></canvas></div>
+  </div>
+  <div id="ec-summary" style="font-size:.76rem;color:var(--dim);margin-top:8px;line-height:1.5"></div>
+</div>
+
 <div id="e-foot" style="font-size:.76rem;color:var(--dim);margin:8px 2px">
   출처: <code>scripts/eis_drt_ica.py</code> (physics_eis + drt + ica_dqdv, CLI/API 동일 코어) ·
   실험 대조: <code>scripts/eis_fit.py</code> (BioLogic .mpr → 등가회로) · 문서: <code>docs/eis_drt_ica_cv.md</code>
@@ -172,6 +202,7 @@ const EIS = {
       if(pr.porosity!=null) this.el('e-por').value = (+pr.porosity).toFixed(1);
       badge.innerHTML = ` · <span style="color:#5aa9e6">📁 ${d.case_loaded}</span> STEP3 σ 로드됨`;
       this.loadCaseICA(d.case_loaded);   // 방전곡선 저장돼 있으면 ICA 도 자동 (caseId 비우기 전에)
+      this.runCycle();                   // 사이클 궤적도 로드된 σ 로 갱신
       this.caseId = '';   // 로드 완료 → 이후 수동 조정 시 케이스 재덮어쓰기 안 함
     } else if(badge && !badge.innerHTML){ badge.innerHTML=''; }
     this.elems(d); this.drawNyquist(d); this.drawDRT(d); this.renderAnchor(d);
@@ -295,16 +326,78 @@ const EIS = {
       d.peaks.map(p=>`<b style="color:#c9a24b">${p.v.toFixed(3)} V</b>`).join(' · ') : '—')
       + ` &nbsp;<span style="color:var(--dim)">(${d.n_in||0} 점 입력)</span>`;
   },
+  // ── 사이클-N EIS/DRT 궤적 (D5) ──
+  cyclePresets:{ kang:{r0:50,rc:125,ntot:1000}, mild:{r0:50,rc:80,ntot:1000} },
+  applyCyclePreset(k){ const v=this.cyclePresets[k]; if(!v) return;
+    this.el('ec-r0').value=v.r0; this.el('ec-rc').value=v.rc; this.el('ec-ntot').value=v.ntot; this.runCycle(); },
+  cycleParams(){ const p=this.params(); delete p.case;   // base σ(현재 입력값) + 사이클 파라미터
+    p.cycle_r0=this.el('ec-r0').value; p.cycle_rc=this.el('ec-rc').value; p.cycle_ntot=this.el('ec-ntot').value;
+    p.cycle_shape=this.el('ec-shape').value; p.cycle_shares=this.el('ec-shares').value; p.cycle_ns=this.el('ec-ns').value;
+    return p; },
+  _cycColor(i,n){ const t=n>1?i/(n-1):0;   // 파랑(pristine) → 빨강(cycled)
+    const a=[90,169,230], b=[231,76,60];
+    return `rgb(${Math.round(a[0]+(b[0]-a[0])*t)},${Math.round(a[1]+(b[1]-a[1])*t)},${Math.round(a[2]+(b[2]-a[2])*t)})`; },
+  async runCycle(){
+    const q=new URLSearchParams(this.cycleParams()).toString();
+    let d; try { d=await (await fetch('/api/eis_cycle?'+q)).json(); }
+    catch(e){ this.el('ec-summary').textContent='fetch 실패: '+e; return; }
+    if(d.error){ this.el('ec-summary').textContent='실패: '+d.error; return; }
+    this.drawCycleNyquist(d); this.drawCycleDRT(d);
+    const S=d.series||[]; if(!S.length){ this.el('ec-summary').textContent='데이터 없음'; return; }
+    const a=S[0], b=S[S.length-1], sh=d.shares||{};
+    const rows=S.map(s=>`N=${s.N}: R_ct=${s.R_ct} R_dc=${s.R_dc} f_ct=${s.f_ct_Hz!=null?s.f_ct_Hz.toFixed(0):'—'}Hz (×${s.mult})`).join(' · ');
+    this.el('ec-summary').innerHTML=`<b style="color:#b06ab3">기전 지문</b>: R_ct ${a.R_ct}→${b.R_ct} Ω·cm² `+
+      `(×${(b.R_ct/Math.max(a.R_ct,1e-9)).toFixed(1)}), f_ct ${a.f_ct_Hz!=null?a.f_ct_Hz.toFixed(0):'—'}→`+
+      `${b.f_ct_Hz!=null?b.f_ct_Hz.toFixed(0):'—'}Hz (저주파 이동=arc 성장) · 분배 R_ct/R0/R_w=`+
+      `${sh.R_ct}/${sh.R0}/${sh.R_w} <span style="color:#c9a24b">(ASSUMED §F1)</span>`+
+      `<br><span style="font-size:.72rem">${rows}</span>`;
+  },
+  drawCycleNyquist(d){
+    const cv=this.el('ec-nyq'), dpr=window.devicePixelRatio||1, W=cv.clientWidth||440, H=340;
+    cv.width=W*dpr; cv.height=H*dpr; const ctx=cv.getContext('2d'); ctx.scale(dpr,dpr); ctx.clearRect(0,0,W,H);
+    const S=d.series||[]; if(!S.length) return;
+    let xmax=0, ymax=0, ymin=0;
+    S.forEach(s=>(s.nyquist||[]).forEach(p=>{ if(p.zre!=null) xmax=Math.max(xmax,p.zre);
+      if(p.zim!=null){ ymax=Math.max(ymax,p.zim); ymin=Math.min(ymin,p.zim); } }));
+    xmax=(xmax||1)*1.05; ymax=Math.max(ymax, xmax*0.15)*1.05;
+    const mL=52,mR=14,mT=14,mB=34;
+    const {pw,ph}=this._axes(ctx,W,H,mL,mB,mT,mR,'Z′ (Ω·cm²)','−Z″ (Ω·cm²)',0,xmax,ymin,ymax,false);
+    const X=v=>mL+(v/(xmax||1))*pw, Y=v=>mT+ph-((v-ymin)/(ymax-ymin||1))*ph;
+    S.forEach((s,i)=>{ ctx.beginPath();
+      (s.nyquist||[]).filter(p=>p.zre!=null&&p.zim!=null).forEach((p,j)=>{ const x=X(p.zre),y=Y(p.zim); j?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+      ctx.strokeStyle=this._cycColor(i,S.length); ctx.lineWidth=1.8; ctx.stroke(); });
+    ctx.font='10px "JetBrains Mono",monospace'; ctx.textAlign='left';
+    S.forEach((s,i)=>{ ctx.fillStyle=this._cycColor(i,S.length); ctx.fillText('N='+s.N, W-mR-44, mT+12+i*13); });
+  },
+  drawCycleDRT(d){
+    const cv=this.el('ec-drt'), dpr=window.devicePixelRatio||1, W=cv.clientWidth||440, H=340;
+    cv.width=W*dpr; cv.height=H*dpr; const ctx=cv.getContext('2d'); ctx.scale(dpr,dpr); ctx.clearRect(0,0,W,H);
+    const S=d.series||[]; if(!S.length) return;
+    let ltmin=Infinity, ltmax=-Infinity, gmax=0;
+    S.forEach(s=>(s.drt||[]).forEach(p=>{ if(p.tau!=null&&p.tau>0){ const lt=Math.log10(p.tau);
+      ltmin=Math.min(ltmin,lt); ltmax=Math.max(ltmax,lt); } if(p.gamma!=null) gmax=Math.max(gmax,p.gamma); }));
+    if(!isFinite(ltmin)||!isFinite(ltmax)) return;
+    const mL=52,mR=14,mT=14,mB=34, gm=(gmax||1)*1.08;
+    const {pw,ph}=this._axes(ctx,W,H,mL,mB,mT,mR,'log₁₀ τ (s)','γ (Ω·cm²)',ltmin,ltmax,0,gm,true);
+    const X=v=>mL+((v-ltmin)/(ltmax-ltmin||1))*pw, Y=v=>mT+ph-(v/(gm||1))*ph;
+    S.forEach((s,i)=>{ ctx.beginPath();
+      (s.drt||[]).filter(p=>p.tau!=null&&p.tau>0&&p.gamma!=null).forEach((p,j)=>{ const x=X(Math.log10(p.tau)),y=Y(p.gamma); j?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+      ctx.strokeStyle=this._cycColor(i,S.length); ctx.lineWidth=1.8; ctx.stroke(); });
+  },
   init(){
     this.caseId = (new URLSearchParams(location.search).get('case')||'').trim();  // /eis?case=X 자동로드
     this.el('e-run').addEventListener('click', ()=>this.run());
     this.el('e-expanchor').addEventListener('click', ()=>this.toggleExpAnchor());
     this.el('e-ica-run').addEventListener('click', ()=>this.runICA());
+    this.el('ec-run').addEventListener('click', ()=>this.runCycle());
+    document.querySelectorAll('[data-cyc]').forEach(b=>
+      b.addEventListener('click', ()=>this.applyCyclePreset(b.dataset.cyc)));
     document.querySelectorAll('[data-preset]').forEach(b=>
       b.addEventListener('click', ()=>{ this.caseId=''; this.applyPreset(b.dataset.preset); }));
     document.querySelectorAll('.e-in').forEach(el=>
       el.addEventListener('keydown', e=>{ if(e.key==='Enter') this.run(); }));
     this.run();  // 초기 = SBE 기본값 (또는 ?case= 로드)
+    this.runCycle();  // 사이클 궤적 초기뷰 (Kang 기본값)
   }
 };
 EIS.init();

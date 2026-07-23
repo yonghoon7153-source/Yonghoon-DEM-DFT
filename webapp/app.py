@@ -3832,6 +3832,80 @@ def api_ica_case():
         return jsonify({'available': False, 'error': f'직렬화 실패: {type(e).__name__}: {e}'}), 200
 
 
+@app.route('/api/eis_cycle')
+def api_eis_cycle():
+    """사이클-N EIS/DRT 궤적 (열화 기전 진단, D5).  base σ-triad + R_int 끝점(r0→rc@ntot) → 각 N 의
+    Nyquist+DRT (성장 ΔR 을 R_ct/R0/R_w 분배, ASSUMED §F1).  eis_drt_ica.cycle_eis_trajectory 단일소스."""
+    import math as _math
+
+    def _f(name, default, lo, hi):
+        try:
+            v = float(request.args.get(name, default))
+        except (TypeError, ValueError):
+            return default
+        return default if not _math.isfinite(v) else min(hi, max(lo, v))
+    try:
+        import sys as _sys
+        _sd = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'scripts')
+        if _sd not in _sys.path:
+            _sys.path.insert(0, _sd)
+        import eis_drt_ica as _eis
+        import numpy as _np
+    except Exception as e:
+        return jsonify({'error': f'eis_drt_ica import 실패: {type(e).__name__}: {e}'}), 200
+    kw = dict(sigma_e_S_cm=_f('sigma_e', 2.0, 1e-6, 1e3), sigma_ion_S_cm=_f('sigma_ion', 2e-4, 1e-9, 1e2),
+              thickness_um=_f('thickness_um', 72.0, 1.0, 1000.0), r_int_ohm_cm2=_f('r_int', 50.0, 0.0, 1e4),
+              i0_A_m2=_f('i0', 2.0, 1e-3, 1e3), d_s_m2_s=_f('d_s', 3e-14, 1e-18, 1e-10),
+              r_p_um=_f('r_p_um', 3.0, 0.1, 50.0), c_dl_uF_cm2=_f('c_dl_uf', 10.0, 0.01, 1000.0),
+              coverage_frac=_f('coverage', 0.5, 0.01, 1.0), porosity=_f('porosity', 8.0, 0.1, 60.0))
+    if (request.args.get('expanchor') or '').strip() in ('1', 'true', 'yes', 'on'):
+        try:
+            _anc = _eis.load_experimental_anchors()
+        except Exception:
+            _anc = None
+        if _anc:
+            kw['c_dl_areal_uF_cm2'] = _anc['c_dl_areal_uF_cm2']
+            if _anc.get('r_w_ohm_cm2') is not None:
+                kw['r_w_ohm_cm2'] = _anc['r_w_ohm_cm2']
+    r0c, rcc = _f('cycle_r0', 50.0, 1e-3, 1e4), _f('cycle_rc', 125.0, 1e-3, 1e4)
+    ntot = int(_f('cycle_ntot', 1000, 1, 1e6))
+    shape = 'linear' if (request.args.get('cycle_shape') == 'linear') else 'sqrt'
+    jump = _f('cycle_jump', 0.5, 0.0, 1.0)
+    try:
+        ns = [int(float(x)) for x in (request.args.get('cycle_ns') or '0,100,300,500,1000').split(',') if x.strip()][:24]
+        sh = [float(x) for x in (request.args.get('cycle_shares') or '0.7,0.2,0.1').split(',')][:3]
+        while len(sh) < 3:
+            sh.append(0.0)
+    except Exception:
+        ns, sh = [0, 100, 300, 500, 1000], [0.7, 0.2, 0.1]
+    if not ns:
+        ns = [0, ntot]
+    try:
+        freqs = _np.logspace(5, -2, 60)
+        _Z, el = _eis.physics_eis(freqs, **kw)
+        mult = _eis.rint_growth_mult(ns, r0c, rcc, ntot, shape, jump)
+        traj = _eis.cycle_eis_trajectory(freqs, el, ns, mult, rct_share=sh[0], r0_share=sh[1], rw_share=sh[2])
+    except Exception as e:
+        return jsonify({'error': f'궤적 계산 실패: {type(e).__name__}: {e}'}), 200
+
+    def _cl(x):
+        return float(x) if _math.isfinite(float(x)) else None
+    try:
+        series = [{
+            'N': t['N'], 'mult': round(t['mult'], 3),
+            'R0': round(t['R0_ohm_cm2'], 2), 'R_ct': round(t['R_ct_ohm_cm2'], 2),
+            'R_w': round(t['R_w_ohm_cm2'], 2), 'R_dc': round(t['R_dc_ohm_cm2'], 2), 'f_ct_Hz': _cl(t['f_ct_Hz']),
+            'nyquist': [{'zre': _cl(z.real), 'zim': _cl(-z.imag)} for z in t['Z']],
+            'drt': [{'tau': _cl(tt), 'gamma': _cl(gg)} for tt, gg in zip(t['tau'], t['gamma'])],
+            'peaks': [{'f_Hz': _cl(p['f_Hz']), 'R': _cl(p['R_ohm_cm2'])} for p in t['peaks']],
+        } for t in traj]
+        return jsonify({'series': series, 'shares': {'R_ct': sh[0], 'R0': sh[1], 'R_w': sh[2]},
+                        'cycle': {'r0': r0c, 'rc': rcc, 'ntot': ntot, 'shape': shape, 'jump': jump},
+                        'note': 'ΔR_int(N) 분배(R_ct/R0/R_w)=ASSUMED §F1; R_int 끝점=측정, 사이=assumed-form'})
+    except Exception as e:
+        return jsonify({'error': f'직렬화 실패: {type(e).__name__}: {e}'}), 200
+
+
 @app.route('/')
 def index():
     cases = list_cases()
