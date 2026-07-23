@@ -32,8 +32,20 @@ python3 scripts/eis_drt_ica.py --eis --metrics mpm_metrics.json --c-dl-uf 10   #
 python3 scripts/eis_drt_ica.py --eis --sigma-e 1.98 --sigma-ion 2.03e-4 --thickness-um 72.48 --r-int 50
 python3 scripts/eis_drt_ica.py --ica discharge.csv        # V,Q 곡선 → dQ/dV
 ```
-실행 예(SBE): R0=85.7 · R_ct=1.93 · C_dl=667µF/cm² · **f_ct=124Hz** · R_w=1.23 · **τ_w=300s(=r²/D)**.
-DRT 2피크: **130Hz(전하전달) + 0.0017Hz(확산)** 분리 — 실험 Nyquist 위에 겹치면 frame[4] 그림.
+실행 예(리뷰-반영): R0=62(=HF절편 R_e+R_int + 전극이온수송 TL DC극한 R_ion/3) · R_ct≈5(φ_AM·coverage
+반영) · C_dl · **f_ct=124Hz** · **τ_w=300s(=r²/D)**.  DRT 2피크: **전하전달(130Hz) + 확산(mHz)** 분리 —
+실험 Nyquist 위에 겹치면 frame[4] 그림.
+
+## ★ 물리·전기화학 리뷰 반영 (§F1 날조0·방정식0 확인)
+- **R0 분리**(리뷰#1): 전극 L/σ_ion 을 전량 HF 직렬에 넣으면 실험 HF절편(eis_fit R0=직렬/접촉)과 3× 어긋남
+  → **R0_hf(=R_e+R_int, frame[4] 정합) + R_ion_tl_dc(=R_ion/3, 다공전극 TL DC극한, 중간주파 45° feature)**
+  로 분리 보고.  per-element R0 분할은 model-의존 → 총 DC(R0+R_ct+R_w)가 더 신뢰.
+- **a_spec = φ_AM·coverage·3/r·L**(리뷰#3): 옛 (1−ε)전고체는 반응면 2-4× 과대→R_ct 과소.  φ_AM(≈75%고체)·
+  coverage(SE덮인 AM면만) 반영.  ★a_spec 은 R_ct∝1/a·C_dl∝a 라 **f_ct 서 상쇄**(주파수 불변, 크기만).
+- **DRT 프로세스 저항 = basin 적분**(리뷰#2): 옛 단일-빈 height×Δlnτ 는 R_ct ~8× 과소 → 피크 basin(인접
+  극소 사이) ∫γ dlnτ.
+- **framing 정직화**(리뷰#4): "주파수 위치=예측력" 은 **σ-triad(R0_hf) 한정**; arc f_ct 는 i0·c_dl(둘 다
+  미앵커), Warburg τ_w 는 D_s(미측정)가 결정 → 동역학 위치는 앵커 대기(§F1, provenance dict 명시).
 
 ## frame[4] 대조 (실험 EIS)
 `eis_fit.py` 가 랩 BioLogic .mpr(→ `eis_archive.py`)를 R0-p(R1,CPE1)-Wo1 로 피팅 → R0/R1(R_ct)/CPE(C_dl)/
