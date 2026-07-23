@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+{% set active = "eis" %}
+{% block title %}EIS / DRT - DEM/MPM Analyzer{% endblock %}
+
+{% block content %}
+<h1>&#x1F300; v3-1 — 물리-기반 EIS / DRT</h1>
+<p style="color:var(--dim);max-width:860px;margin:-4px 0 14px">
+  우리 STEP3/STEP4 물리에서 <b>등가회로 각 소자를 유도</b>해 임피던스를 산출한다:
+  <b>R0</b>(σ-삼중+집전체) + <b>R_ct</b>(BV i0·반응면) ‖ <b>C_dl</b>(★앵커) + <b>Warburg</b>(구형확산 τ=r²/D).
+  실험 EIS(<code>eis_fit.py</code>가 <b>R0-p(R1,CPE1)-Wo1</b>로 CNLS 피팅)와 <b>같은 회로</b> →
+  <b>frame[4] 대조</b>(모델↔실측 Nyquist 겹침).
+</p>
+
+<div class="card" style="border-left:3px solid #c9a24b">
+  <div style="font-size:.82rem;color:var(--dim);line-height:1.5">
+    ⚠ <b>§F1 정직</b>: <b>C_dl</b>은 방전솔브 범위 밖(τ~ms≪dt)이라 EIS 전용 추가 — <b>크기는 앵커 필요</b>
+    (실험 EIS CPE 또는 sulfide|NMC 문헌 1–10 µF/cm²).  <b>arc 주파수 f_ct</b>는 i0·C_dl가, <b>Warburg 위치
+    τ_w</b>는 D_s가 결정 — 둘 다 <b>미측정(스윕전용)</b>.  <b>미세구조-emergent 예측</b>은 주로 <b>R0(σ-삼중)</b>.
+    R_w는 ASSUMED-FORM(실험 Wo1_R로 교체 권장).
+  </div>
+</div>
+
+<!-- ── 컨트롤 ── -->
+<div class="card">
+  <div class="card-title" style="margin-bottom:8px">입력 (σ = STEP3 · i0/D_s = STEP4 · C_dl = 앵커)</div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+    <button class="btn btn-sm btn-secondary" data-preset="sbe">SBE (σ_e 1.98)</button>
+    <button class="btn btn-sm btn-secondary" data-preset="dbe">DBE (σ_e 3.00)</button>
+    <button class="btn btn-sm btn-secondary" data-preset="sc">SC 풀셀 (R_int 50·D_s 3e-15)</button>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px">
+    <label class="e-lab">σ_e (S/cm)<input id="e-sige" type="number" step="0.01" value="1.98" class="e-in"></label>
+    <label class="e-lab">σ_ion (S/cm)<input id="e-sigi" type="text" value="2.03e-4" class="e-in"></label>
+    <label class="e-lab">두께 (µm)<input id="e-th" type="number" step="1" value="72.48" class="e-in"></label>
+    <label class="e-lab">R_int (Ω·cm²) <span class="e-hint">집전체</span><input id="e-rint" type="number" step="1" value="50" class="e-in"></label>
+    <label class="e-lab">i0 (A/m²) <span class="e-hint">⚠스윕</span><input id="e-i0" type="number" step="0.1" value="2.0" class="e-in"></label>
+    <label class="e-lab">D_s (m²/s) <span class="e-hint">⚠미측정</span><input id="e-ds" type="text" value="3e-14" class="e-in"></label>
+    <label class="e-lab">r_p (µm)<input id="e-rp" type="number" step="0.1" value="3.0" class="e-in"></label>
+    <label class="e-lab">C_dl (µF/cm²) <span class="e-hint">★앵커</span><input id="e-cdl" type="number" step="1" value="10" class="e-in"></label>
+    <label class="e-lab">coverage <span class="e-hint">반응면분율</span><input id="e-cov" type="number" step="0.05" value="0.5" class="e-in"></label>
+  </div>
+  <div style="margin-top:10px;display:flex;justify-content:flex-end">
+    <button id="e-run" class="btn btn-primary btn-sm">계산 · 그리기</button>
+  </div>
+</div>
+
+<!-- ── 소자 요약 ── -->
+<div class="card">
+  <div class="card-title" style="margin-bottom:6px">등가회로 소자 (우리 물리서 유도)</div>
+  <div id="e-elems" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;font-size:.85rem"></div>
+</div>
+
+<!-- ── Nyquist + DRT ── -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+  <div class="card">
+    <div class="card-title" style="margin-bottom:6px">Nyquist (Z′ vs −Z″) — 실험 위 겹치면 frame[4]</div>
+    <canvas id="e-nyq" width="440" height="380"
+            style="width:100%;border-radius:8px;background:var(--card-bg,#0e1526)"></canvas>
+  </div>
+  <div class="card">
+    <div class="card-title" style="margin-bottom:6px">DRT γ(τ) — 프로세스 시상수 분리</div>
+    <canvas id="e-drt" width="440" height="380"
+            style="width:100%;border-radius:8px;background:var(--card-bg,#0e1526)"></canvas>
+    <div id="e-peaks" style="font-size:.78rem;color:var(--dim);margin-top:6px"></div>
+  </div>
+</div>
+<div id="e-foot" style="font-size:.76rem;color:var(--dim);margin:8px 2px">
+  출처: <code>scripts/eis_drt_ica.py</code> (physics_eis + drt, CLI/API 동일 코어) ·
+  실험 대조: <code>scripts/eis_fit.py</code> (BioLogic .mpr → 등가회로) · 문서: <code>docs/eis_drt_ica_cv.md</code>
+</div>
+
+<style>
+  .e-lab{display:flex;flex-direction:column;gap:4px;font-size:.82rem;color:var(--text);font-weight:500}
+  .e-in{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);
+    padding:6px 8px;font-family:'JetBrains Mono',monospace;font-size:.85rem;width:100%}
+  .e-in:focus{outline:none;border-color:var(--accent)}
+  .e-hint{color:var(--dim);font-weight:400;font-size:.72rem}
+  .e-card{background:rgba(41,128,185,.08);border-radius:8px;padding:8px 10px}
+  .e-card b{font-size:1.02rem;color:#e8edf6}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const EIS = {
+  el: id => document.getElementById(id),
+  presets: {
+    sbe: { sige:1.98, sigi:'2.03e-4', th:72.48, rint:50, i0:2.0, ds:'3e-14', rp:3.0, cdl:10, cov:0.5 },
+    dbe: { sige:3.00, sigi:'2.15e-4', th:72.48, rint:50, i0:2.0, ds:'3e-14', rp:3.0, cdl:10, cov:0.5 },
+    sc:  { sige:1.98, sigi:'2.03e-4', th:72.48, rint:50, i0:2.0, ds:'3e-15', rp:2.0, cdl:10, cov:0.5 },
+  },
+  applyPreset(p){ const v=this.presets[p]; if(!v) return;
+    this.el('e-sige').value=v.sige; this.el('e-sigi').value=v.sigi; this.el('e-th').value=v.th;
+    this.el('e-rint').value=v.rint; this.el('e-i0').value=v.i0; this.el('e-ds').value=v.ds;
+    this.el('e-rp').value=v.rp; this.el('e-cdl').value=v.cdl; this.el('e-cov').value=v.cov; this.run(); },
+  params(){ return { sigma_e:this.el('e-sige').value, sigma_ion:this.el('e-sigi').value,
+    thickness_um:this.el('e-th').value, r_int:this.el('e-rint').value, i0:this.el('e-i0').value,
+    d_s:this.el('e-ds').value, r_p_um:this.el('e-rp').value, c_dl_uf:this.el('e-cdl').value,
+    coverage:this.el('e-cov').value }; },
+  async run(){
+    const q = new URLSearchParams(this.params()).toString();
+    let d; try { d = await (await fetch('/api/eis?'+q)).json(); }
+    catch(e){ this.el('e-foot').textContent='fetch 실패: '+e; return; }
+    if(d.error){ this.el('e-foot').textContent='계산 실패: '+d.error; return; }
+    this.elems(d); this.drawNyquist(d); this.drawDRT(d);
+  },
+  elems(d){
+    const e = d.elements, fmt=(x,n=2)=> (x==null?'—':(Math.abs(x)>=100||Math.abs(x)<0.01?x.toPrecision(3):x.toFixed(n)));
+    const cards = [
+      ['R0', fmt(e.R0_ohm_cm2)+' Ω·cm²', `HF절편 ${fmt(e.R0_hf_ohm_cm2)} + 이온TL ${fmt(e.R_ion_tl_dc)}`],
+      ['R_ct', fmt(e.R_ct_ohm_cm2)+' Ω·cm²', 'BV i0·반응면 (⚠i0 스윕)'],
+      ['C_dl', fmt(e.C_dl_uF_cm2_int)+' µF/cm²', '★앵커 (실험 EIS 확증)'],
+      ['f_ct', fmt(e.f_ct_Hz,1)+' Hz', 'arc 정점 = 1/2πR_ctC_dl'],
+      ['R_w', fmt(e.R_w_ohm_cm2)+' Ω·cm²', 'ASSUMED-FORM'],
+      ['τ_w', fmt(e.tau_w_s)+' s', 'r²/D_s (⚠D_s 미측정)'],
+    ];
+    this.el('e-elems').innerHTML = cards.map(([k,v,s])=>
+      `<div class="e-card"><div style="color:var(--dim);font-size:.76rem">${k}</div><b>${v}</b>`+
+      `<div style="color:var(--dim);font-size:.7rem;margin-top:2px">${s}</div></div>`).join('');
+  },
+  _axes(ctx,W,H,mL,mB,mT,mR,xlab,ylab,xmin,xmax,ymin,ymax,logx){
+    const pw=W-mL-mR, ph=H-mT-mB;
+    ctx.strokeStyle='rgba(255,255,255,.08)'; ctx.fillStyle='#8a93a6';
+    ctx.font='10px "JetBrains Mono",monospace'; ctx.lineWidth=1;
+    for(let i=0;i<=5;i++){ const y=mT+ph-(i/5)*ph, v=ymin+(ymax-ymin)*i/5;
+      ctx.beginPath(); ctx.moveTo(mL,y); ctx.lineTo(W-mR,y); ctx.stroke();
+      ctx.textAlign='right'; ctx.fillText(v.toPrecision(2), mL-4,y+3); }
+    for(let i=0;i<=5;i++){ const x=mL+(i/5)*pw, v=xmin+(xmax-xmin)*i/5;
+      ctx.textAlign='center'; ctx.fillText(logx?('1e'+v.toFixed(0)):v.toPrecision(2), x, H-mB+14); }
+    ctx.textAlign='center'; ctx.fillText(xlab, mL+pw/2, H-4);
+    ctx.save(); ctx.translate(11,mT+ph/2); ctx.rotate(-Math.PI/2); ctx.fillText(ylab,0,0); ctx.restore();
+    return {pw,ph};
+  },
+  drawNyquist(d){
+    const cv=this.el('e-nyq'), dpr=window.devicePixelRatio||1, W=cv.clientWidth||440, H=380;
+    cv.width=W*dpr; cv.height=H*dpr; const ctx=cv.getContext('2d'); ctx.scale(dpr,dpr); ctx.clearRect(0,0,W,H);
+    const pts=d.nyquist.filter(p=>p.zre!=null&&p.zim!=null);
+    if(!pts.length) return;
+    const mL=52,mR=14,mT=14,mB=34;
+    const xmax=Math.max(...pts.map(p=>p.zre))*1.05, xmin=0;
+    const ymax=Math.max(Math.max(...pts.map(p=>p.zim)),xmax*0.15)*1.05, ymin=Math.min(0,...pts.map(p=>p.zim));
+    const {pw,ph}=this._axes(ctx,W,H,mL,mB,mT,mR,'Z′ (Ω·cm²)','−Z″ (Ω·cm²)',xmin,xmax,ymin,ymax,false);
+    const X=v=>mL+((v-xmin)/(xmax-xmin||1))*pw, Y=v=>mT+ph-((v-ymin)/(ymax-ymin||1))*ph;
+    ctx.beginPath(); pts.forEach((p,i)=>{ const x=X(p.zre),y=Y(p.zim); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+    ctx.strokeStyle='#5aa9e6'; ctx.lineWidth=2; ctx.stroke();
+    // 데이터 점 (10진 주파수마다 강조)
+    pts.forEach((p,i)=>{ if(i%7===0){ ctx.beginPath(); ctx.arc(X(p.zre),Y(p.zim),2.4,0,7);
+      ctx.fillStyle='#e8edf6'; ctx.fill(); } });
+    // R0 마커
+    const e=d.elements;
+    if(e.R0_ohm_cm2!=null){ ctx.fillStyle='#c9a24b'; ctx.textAlign='center';
+      ctx.fillText('R0', X(e.R0_ohm_cm2), Y(0)-4); }
+  },
+  drawDRT(d){
+    const cv=this.el('e-drt'), dpr=window.devicePixelRatio||1, W=cv.clientWidth||440, H=380;
+    cv.width=W*dpr; cv.height=H*dpr; const ctx=cv.getContext('2d'); ctx.scale(dpr,dpr); ctx.clearRect(0,0,W,H);
+    const pts=d.drt.filter(p=>p.tau!=null&&p.gamma!=null&&p.tau>0);
+    if(!pts.length) return;
+    const lt=pts.map(p=>Math.log10(p.tau)), g=pts.map(p=>p.gamma);
+    const mL=52,mR=14,mT=14,mB=34, xmin=Math.min(...lt),xmax=Math.max(...lt),ymax=Math.max(...g)*1.08;
+    const {pw,ph}=this._axes(ctx,W,H,mL,mB,mT,mR,'log₁₀ τ (s)','γ (Ω·cm²)',xmin,xmax,0,ymax,true);
+    const X=v=>mL+((v-xmin)/(xmax-xmin||1))*pw, Y=v=>mT+ph-(v/(ymax||1))*ph;
+    ctx.beginPath(); pts.forEach((p,i)=>{ const x=X(lt[i]),y=Y(g[i]); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+    ctx.strokeStyle='#e67e22'; ctx.lineWidth=2; ctx.stroke();
+    ctx.lineTo(X(xmax),Y(0)); ctx.lineTo(X(xmin),Y(0)); ctx.closePath();
+    ctx.fillStyle='rgba(230,126,34,.18)'; ctx.fill();
+    // 피크 마커 + 라벨
+    (d.peaks||[]).forEach(p=>{ if(p.tau_s==null) return; const x=X(Math.log10(p.tau_s));
+      ctx.strokeStyle='#c9a24b'; ctx.setLineDash([3,3]); ctx.beginPath();
+      ctx.moveTo(x,mT); ctx.lineTo(x,mT+ph); ctx.stroke(); ctx.setLineDash([]); });
+    this.el('e-peaks').innerHTML = '피크: ' + ((d.peaks||[]).length?
+      d.peaks.map(p=>`<b style="color:#c9a24b">${p.f_Hz>=1?p.f_Hz.toPrecision(2)+'Hz':(p.f_Hz*1000).toPrecision(2)+'mHz'}</b>`+
+        ` (R≈${p.R!=null?p.R.toFixed(2):'—'} Ω·cm²)`).join(' · ') : '—') +
+      ' &nbsp;<span style="color:var(--dim)">= 전하전달(고주파)·확산(저주파) 분리</span>';
+  },
+  init(){
+    this.el('e-run').addEventListener('click', ()=>this.run());
+    document.querySelectorAll('[data-preset]').forEach(b=>
+      b.addEventListener('click', ()=>this.applyPreset(b.dataset.preset)));
+    document.querySelectorAll('.e-in').forEach(el=>
+      el.addEventListener('keydown', e=>{ if(e.key==='Enter') this.run(); }));
+    this.run();  // 초기 = SBE 기본값
+  }
+};
+EIS.init();
+</script>
+{% endblock %}

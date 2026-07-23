@@ -3589,6 +3589,60 @@ def api_step5_fade():
     return jsonify(out)
 
 
+@app.route('/eis')
+def eis_page():
+    """v3-1 EIS/DRT 인터랙티브 패널 — 물리-기반 Randles(우리 σ·i0·D_s 유도) Nyquist + DRT.
+    실험 EIS(eis_fit R0-p(R1,CPE1)-Wo1)와 같은 회로 = frame[4] 대조."""
+    return render_template('eis.html')
+
+
+@app.route('/api/eis')
+def api_eis():
+    """물리-EIS Z(ω) + DRT.  Query: sigma_e, sigma_ion, thickness_um, r_int, i0, d_s, r_p_um,
+    c_dl_uf, coverage.  eis_drt_ica.physics_eis + drt (단일 소스, CLI와 동일 코어).
+    ★C_dl 은 앵커(§F1) — 사용자 입력(실험 EIS CPE 또는 문헌 1-10 µF/cm²)."""
+    import math as _math
+    import numpy as _np
+
+    def _f(name, default, lo, hi):
+        try:
+            v = float(request.args.get(name, default))
+        except (TypeError, ValueError):
+            return default
+        if not _math.isfinite(v):
+            return default
+        return min(hi, max(lo, v))
+    try:
+        import sys as _sys
+        _sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'scripts'))
+        import eis_drt_ica as _eis
+    except Exception as e:
+        return jsonify({'error': f'eis_drt_ica import 실패: {type(e).__name__}: {e}'}), 200
+    kw = dict(sigma_e_S_cm=_f('sigma_e', 2.0, 1e-6, 1e3), sigma_ion_S_cm=_f('sigma_ion', 2e-4, 1e-9, 1e2),
+              thickness_um=_f('thickness_um', 72.0, 1.0, 1000.0), r_int_ohm_cm2=_f('r_int', 50.0, 0.0, 1e4),
+              i0_A_m2=_f('i0', 2.0, 1e-3, 1e3), d_s_m2_s=_f('d_s', 3e-14, 1e-18, 1e-10),
+              r_p_um=_f('r_p_um', 3.0, 0.1, 50.0), c_dl_uF_cm2=_f('c_dl_uf', 10.0, 0.01, 1000.0),
+              coverage_frac=_f('coverage', 0.5, 0.01, 1.0), porosity=_f('porosity', 8.0, 0.1, 60.0))
+    try:
+        freqs = _np.logspace(5, -2, 70)
+        Z, el = _eis.physics_eis(freqs, **kw)
+        tau, g, R0f, Zr = _eis.drt(freqs, Z)
+        peaks = _eis.drt_peaks(tau, g)
+    except Exception as e:
+        return jsonify({'error': f'EIS 계산 실패: {type(e).__name__}: {e}'}), 200
+    # jsonify NaN/Inf 방출 방지 — finite 만
+    def _cl(x):
+        return float(x) if _math.isfinite(float(x)) else None
+    return jsonify({
+        'nyquist': [{'f': _cl(fr), 'zre': _cl(z.real), 'zim': _cl(-z.imag)} for fr, z in zip(freqs, Z)],
+        'drt': [{'tau': _cl(t), 'gamma': _cl(gg)} for t, gg in zip(tau, g)],
+        'elements': {k: _cl(v) for k, v in el.items() if isinstance(v, (int, float))},
+        'peaks': [{'f_Hz': _cl(p['f_Hz']), 'tau_s': _cl(p['tau_s']), 'R': _cl(p['R_ohm_cm2'])} for p in peaks],
+        'provenance': el.get('provenance', {}),
+        'params': {k: kw[k] for k in kw},
+    })
+
+
 @app.route('/')
 def index():
     cases = list_cases()
