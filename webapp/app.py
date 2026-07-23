@@ -41,11 +41,15 @@ def composition(cid):
         abort(404)
     b = D.build_matrix()
     cov = D.build_coverage(b["properties"], b["prop_category"], b["index_metrics"])
+    dop = D.CASCADE_DOPANT.get(cid)
     return render_template(
-        "composition.html", active="", cid=cid, comp=D.COMPOSITIONS[cid], b=b,
+        "composition.html", active="", cid=cid, cid_active=cid,
+        comp=D.COMPOSITIONS[cid], b=b,
         cov=cov.get(cid, {}), structures=D.structures_for(cid),
         datafiles=D.datafiles_for(cid), metrics=b["index_metrics"].get(cid, []),
-        rollup=b["comp_data"].get(cid),
+        rollup=b["comp_data"].get(cid), icohp=D.icohp_for(cid),
+        cascade_dopant=dop,
+        cascade_rows=D.cascade_rows_for(dop) if dop else None,
         canonical={k: v.get(cid) for k, v in D.CANONICAL.items()},
         canonical_meta=D.CANONICAL_META)
 
@@ -55,6 +59,23 @@ def compare():
     b = D.build_matrix()
     cov = D.build_coverage(b["properties"], b["prop_category"], b["index_metrics"])
     return render_template("compare.html", active="compare", b=b, cov=cov)
+
+
+@app.route("/cascade")
+def cascade_page():
+    casc = D.load_cascade()
+    ranked = casc.get("ranked", {}).get("data", [])
+    ver = casc.get("verified") or {}
+    comp = ver.get("compounds")
+    stats = {
+        "dopants": len(ranked),
+        "pareto": sum(1 for r in ranked if str(r.get("pareto", "")).strip().upper() == "Y"),
+        "champions": len(casc.get("champions", {}).get("data", [])),
+        "verified": (len(comp) if isinstance(comp, (list, dict)) else None),
+    }
+    deep_map = {v: k for k, v in D.CASCADE_DOPANT.items()}
+    return render_template("cascade.html", active="cascade", casc=casc,
+                           stats=stats, deep_map=deep_map)
 
 
 @app.route("/methods")
@@ -67,22 +88,12 @@ def methods():
 
 @app.route("/literature")
 def literature():
-    papers = []
-    pd = D.LITDB / "papers"
-    if pd.exists():
-        for f in sorted(pd.glob("*.md")):
-            if f.stem.startswith("_"):
-                continue
-            title = f.stem.replace("_", " ")
-            try:
-                for line in f.read_text(errors="ignore").splitlines()[:15]:
-                    if line.startswith("#"):
-                        title = line.lstrip("# ").strip()
-                        break
-            except Exception:
-                pass
-            papers.append({"id": f.stem, "title": title})
-    return render_template("literature.html", active="lit", papers=papers, count=len(papers))
+    papers = D.list_papers()
+    counts = {"all": len(papers),
+              "dft": sum(1 for p in papers if p["track"] == "dft"),
+              "dem": sum(1 for p in papers if p["track"] == "dem")}
+    return render_template("literature.html", active="lit", papers=papers,
+                           count=len(papers), counts=counts)
 
 
 # ── API (구조뷰 / 차트 / 원본) ──────────────────────────
@@ -116,7 +127,32 @@ def api_paper(pid):
 @app.route("/glossary")
 def glossary():
     return render_template("glossary.html", active="glossary",
-                           cats=G.by_category(), cat_order=G.CATS_G)
+                           cats=G.by_category(), cat_order=G.CATS_G,
+                           concepts=D.concept_ids())
+
+
+@app.route("/concept/<cid>")
+def concept(cid):
+    md = D.read_concept(cid)
+    if md is None:
+        abort(404)
+    term = next((g for g in G.GLOSSARY if g["id"] == cid), None)
+    # 같은 카테고리 이웃 개념(=상세 문서 있는 것) 링크
+    siblings = []
+    if term:
+        have = D.concept_ids()
+        siblings = [g for g in G.GLOSSARY
+                    if g["cat"] == term["cat"] and g["id"] != cid and g["id"] in have]
+    return render_template("concept.html", active="glossary", cid=cid,
+                           term=term, raw_md=md, siblings=siblings)
+
+
+@app.route("/api/concept/<cid>")
+def api_concept(cid):
+    md = D.read_concept(cid)
+    if md is None:
+        abort(404)
+    return jsonify({"id": cid, "markdown": md})
 
 
 # ── 작업 로그 (기록·저장) ─────────────────────────────

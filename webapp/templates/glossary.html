@@ -14,12 +14,16 @@
   <div onclick="this.parentNode.classList.toggle('open')" style="cursor:pointer">
     <div style="font-weight:700;color:var(--navy);font-size:1.02rem">{{ g.term }}
       <span class="gplus" style="float:right;color:var(--muted);font-weight:400">＋</span></div>
-    <div class="muted" style="font-size:.76rem;margin-top:2px">{{ g.full }}</div>
+    <div class="muted" style="font-size:.76rem;margin-top:2px">{{ g.full }}
+      {% if g.id in concepts %}<span class="doc-chip">📄 상세</span>{% endif %}</div>
   </div>
   <div class="gdetail">
     <div class="gd"><span class="gd-l">무엇</span>{{ g.what|safe }}</div>
     <div class="gd"><span class="gd-l">어떻게</span>{{ g.how|safe }}</div>
     <div class="gd ours"><span class="gd-l">우리 계산</span>{{ g.ours|safe }}</div>
+    {% if g.id in concepts %}
+    <a class="gmore" href="/concept/{{ g.id }}">더보기 — 상세 개념 문서 (유도·수식) →</a>
+    {% endif %}
   </div>
 </div>
 {% endfor %}

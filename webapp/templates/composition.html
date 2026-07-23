@@ -33,10 +33,31 @@
 {% endfor %}
 </div>
 
+{% if cascade_dopant and cascade_rows and cascade_rows.ranked %}
+{% set cr = cascade_rows.ranked[0] %}
+<div class="card cascade-banner">
+  <div class="cb-tag">🤖 Cascade hit</div>
+  <div class="cb-body">
+    <div><b>{{ cascade_dopant }}</b> 는 UMA 도핑 스크리닝의 히트 조성 — 이 페이지는 그 <b>DFT 심층검증</b>이에요.</div>
+    <div class="cb-stats">
+      <span class="cb-s"><em>rank</em> #{{ cr.rank|int }}/47</span>
+      <span class="cb-s"><em>score</em> {{ cr.score }}</span>
+      <span class="cb-s"><em>ox_V</em> {{ cr.ox_V }}</span>
+      <span class="cb-s"><em>E (UMA)</em> {{ cr.E_GPa }} GPa</span>
+      <span class="cb-s"><em>Pugh</em> {{ cr.pugh }}</span>
+      {% if cr.group %}<span class="cb-s"><em>group</em> {{ cr.group }}</span>{% endif %}
+    </div>
+  </div>
+  <a class="btn primary" href="/cascade#{{ cascade_dopant }}">캐스케이드 리더보드 →</a>
+</div>
+{% endif %}
+
 <div class="tabs" id="tabs">
   <button class="active" data-tab="structure">🧊 Structure ({{ structures|length }})</button>
   <button data-tab="charts">📊 Charts ({{ datafiles|length }})</button>
-  <button data-tab="raw">🗂 Raw metrics ({{ metrics|length }})</button>
+  {% if icohp %}<button data-tab="bonding">🔗 Bonding</button>{% endif %}
+  <button data-tab="raw">🗂 Raw ({{ metrics|length }})</button>
+  {% if rollup %}<button data-tab="record">📄 Record</button>{% endif %}
 </div>
 
 <!-- Structure -->
@@ -77,6 +98,45 @@
   </div>
   {% else %}<div class="card"><span class="muted">인덱스 메트릭 없음 <span class="badge b-todo">TODO</span></span></div>{% endif %}
 </div>
+
+<!-- Bonding (LOBSTER ICOHP) -->
+{% if icohp %}
+<div class="tab-panel" id="tab-bonding">
+  <div class="card">
+    <h3>결합 강도 — LOBSTER ICOHP <span class="muted" style="font-weight:400;font-size:.8rem">음수 클수록 강한 결합</span></h3>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 12px">
+      {% set spill = icohp.spilling_pct if icohp.spilling_pct is defined else icohp.charge_spilling_pct %}
+      {% if spill is not none %}<span class="badge {% if spill < 5 %}b-canon{% else %}b-todo{% endif %}">charge spilling {{ spill }}%</span>{% endif %}
+      <span class="badge b-fam mono" style="font-size:.68rem">{{ icohp.system }}</span>
+    </div>
+    <div style="overflow-x:auto">
+    <table class="data-table"><thead><tr>
+      <th>Bond</th><th class="num">N</th><th class="num">d̄ (Å)</th><th class="num">ICOHP (eV/bond)</th><th class="num">range</th></tr></thead><tbody>
+    {% for bond, v in icohp.bonds.items() %}
+    <tr><td><b>{{ bond }}</b></td>
+      <td class="num">{{ v.N if v.N is defined else '—' }}</td>
+      <td class="num">{{ '%.3f'|format(v.d_mean_A) if v.d_mean_A is defined else '—' }}</td>
+      <td class="num" style="font-weight:600">{{ '%.3f'|format(v.ICOHP_total_eV_per_bond) if v.ICOHP_total_eV_per_bond is defined else '—' }}</td>
+      <td class="num muted" style="font-size:.76rem">{% if v.ICOHP_min is defined %}{{ '%.2f'|format(v.ICOHP_min) }} … {{ '%.2f'|format(v.ICOHP_max) }}{% endif %}</td></tr>
+    {% endfor %}
+    </tbody></table>
+    </div>
+    {% if icohp.headline_CORRECTED or icohp.headline %}
+    <div class="muted" style="font-size:.82rem;margin-top:10px;line-height:1.6">{{ icohp.headline_CORRECTED or icohp.headline }}</div>{% endif %}
+    <div class="muted mono" style="font-size:.68rem;margin-top:6px">{{ icohp.method }}</div>
+  </div>
+</div>
+{% endif %}
+
+<!-- Record (db JSON 원본) -->
+{% if rollup %}
+<div class="tab-panel" id="tab-record">
+  <div class="card">
+    <h3>Composition record <span class="muted" style="font-weight:400;font-size:.8rem">— db/compositions/{{ cid }}.json</span></h3>
+    <pre class="record-json">{{ rollup|tojson(indent=2) }}</pre>
+  </div>
+</div>
+{% endif %}
 
 <script>
 document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{

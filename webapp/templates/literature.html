@@ -2,17 +2,33 @@
 {% block title %}Literature · DFT{% endblock %}
 {% block content %}
 <div class="page-header">
-  <div><h1>Literature</h1><div class="sub">litdb · {{ count }}편 · 클릭 → digest</div></div>
+  <div><h1>Literature</h1>
+    <div class="sub">litdb · {{ count }}편 · <b>DFT·MLIP</b>(전해질 화학) ↔ <b>DEM·MPM</b>(미세구조·역학) 분류 · 클릭 → digest</div></div>
 </div>
-<input class="search" placeholder="검색 (제목·id)..." oninput="filt(this.value)">
+
+<div class="track-tabs">
+  <button class="tt active" data-track="all" onclick="setTrack(this)">전체 <span>{{ counts.all }}</span></button>
+  <button class="tt tt-dft" data-track="dft" onclick="setTrack(this)">⚛ DFT · MLIP <span>{{ counts.dft }}</span></button>
+  <button class="tt tt-dem" data-track="dem" onclick="setTrack(this)">🧱 DEM · MPM <span>{{ counts.dem }}</span></button>
+</div>
+
+<input class="search" placeholder="검색 (제목·id·type)..." oninput="filt(this.value)">
 <div class="grid grid-3" id="plist" style="margin-top:16px">
 {% for p in papers %}
-<div class="card paper" data-t="{{ p.title|lower }} {{ p.id|lower }}" onclick="openPaper('{{ p.id }}')" style="cursor:pointer;padding:16px 18px">
-  <div style="font-weight:600;font-size:.9rem;line-height:1.4">{{ p.title }}</div>
+<div class="card paper track-{{ p.track }}" data-track="{{ p.track }}"
+     data-t="{{ p.title|lower }} {{ p.id|lower }} {{ p.type|lower }}"
+     onclick="openPaper('{{ p.id }}')" style="cursor:pointer;padding:16px 18px">
+  <div class="paper-top">
+    <span class="tbadge tb-{{ p.track }}">{{ 'DFT' if p.track=='dft' else 'DEM' }}</span>
+    {% if p.type %}<span class="ptype">{{ p.type[:38] }}</span>{% endif %}
+  </div>
+  <div style="font-weight:600;font-size:.9rem;line-height:1.4;margin-top:7px">{{ p.title }}</div>
   <div class="mono muted" style="font-size:.7rem;margin-top:6px">{{ p.id }}</div>
 </div>
 {% endfor %}
 </div>
+<div class="muted" id="nores" style="display:none;margin-top:20px">검색 결과 없음</div>
+
 <div class="modal" id="pmodal" onclick="if(event.target===this)this.classList.remove('open')">
   <div class="modal-body" style="max-width:840px;width:100%">
     <div class="modal-head"><h3 id="ptitle" class="mono" style="font-size:.85rem"></h3>
@@ -21,7 +37,20 @@
   </div>
 </div>
 <script>
-function filt(q){q=q.toLowerCase();document.querySelectorAll('.paper').forEach(c=>{c.style.display=c.dataset.t.includes(q)?'':'none';});}
+var curTrack='all', curQ='';
+function apply(){
+  var n=0;
+  document.querySelectorAll('.paper').forEach(function(c){
+    var okT = curTrack==='all' || c.dataset.track===curTrack;
+    var okQ = !curQ || c.dataset.t.indexOf(curQ)>=0;
+    var show = okT && okQ; c.style.display=show?'':'none'; if(show)n++;
+  });
+  document.getElementById('nores').style.display=n?'none':'';
+}
+function setTrack(b){curTrack=b.dataset.track;
+  document.querySelectorAll('.track-tabs .tt').forEach(function(x){x.classList.remove('active')});
+  b.classList.add('active'); apply();}
+function filt(q){curQ=q.toLowerCase().trim(); apply();}
 function openPaper(id){
   document.getElementById('ptitle').textContent=id;
   document.getElementById('pbody').innerHTML='<span class="muted">로딩...</span>';

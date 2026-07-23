@@ -199,3 +199,122 @@ h1,h2,h3,h4{margin:0;font-weight:700;letter-spacing:-.01em}
   .content{margin-left:0;padding:64px 18px 60px}
   .menu-toggle{display:block}
 }
+
+/* ============================================================
+   Concept detail pages (Glossary 더보기) — 개념 상세 문서
+   ============================================================ */
+.concept-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.concept-head .crumb a{color:var(--muted);font-size:.8rem;text-decoration:none}
+.concept-head .crumb a:hover{color:var(--accent)}
+.concept-wrap{display:grid;grid-template-columns:220px minmax(0,1fr);gap:26px;align-items:start}
+.concept-wrap .doc.concept{grid-column:2;max-width:none}
+.concept-toc{grid-column:1;grid-row:1;position:sticky;top:20px;background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:14px 14px;box-shadow:var(--shadow);font-size:.8rem;max-height:80vh;overflow:auto}
+.concept-toc .toc-t{font-weight:700;color:var(--navy);font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.concept-toc ul{list-style:none;margin:0;padding:0}
+.concept-toc li{margin:3px 0;line-height:1.4}
+.concept-toc a{color:var(--dim);text-decoration:none;display:block;padding:2px 6px;border-radius:5px;border-left:2px solid transparent}
+.concept-toc a:hover{color:var(--accent);background:var(--accent-soft);border-left-color:var(--accent)}
+@media(max-width:960px){.concept-wrap{grid-template-columns:1fr}.concept-toc{display:none}.concept-wrap .doc.concept{grid-column:1}}
+
+.doc.concept{line-height:1.72;font-size:.94rem}
+.doc.concept h2{font-size:1.22rem;margin-top:34px}
+.doc.concept h3{font-size:1.02rem;color:var(--navy2);border:none}
+.doc.concept blockquote{border-left:3px solid var(--accent);background:var(--accent-soft);margin:14px 0;
+  padding:10px 16px;border-radius:0 8px 8px 0;color:var(--text2)}
+.doc.concept ul,.doc.concept ol{padding-left:22px}
+.doc.concept li{margin:4px 0}
+.doc.concept hr{border:none;border-top:1px solid var(--border2);margin:26px 0}
+.doc.concept .katex-display{overflow-x:auto;overflow-y:hidden;padding:6px 2px;margin:14px 0}
+.doc.concept .katex{font-size:1.04em}
+/* 표는 좁은 화면에서 가로 스크롤 */
+.doc.concept table{display:block;overflow-x:auto;white-space:nowrap;max-width:100%}
+.doc.concept .mermaid{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);
+  padding:16px;margin:18px 0;text-align:center;overflow-x:auto}
+
+/* Obsidian 콜아웃 */
+.callout{border-radius:8px;padding:12px 16px;margin:16px 0;border-left:4px solid var(--dim);background:var(--bg)}
+.callout .cal-t{font-weight:700;margin-bottom:5px;font-size:.9rem}
+.callout .cal-b>*:first-child{margin-top:0}.callout .cal-b>*:last-child{margin-bottom:0}
+.callout .cal-b{font-size:.9rem}
+.cal-note,.cal-info{border-left-color:var(--accent);background:var(--accent-soft)}
+.cal-note .cal-t,.cal-info .cal-t{color:var(--navy)}
+.cal-tip,.cal-success,.cal-hint{border-left-color:var(--green);background:#e9f7f1}
+.cal-tip .cal-t,.cal-success .cal-t,.cal-hint .cal-t{color:var(--green)}
+.cal-important,.cal-warning,.cal-caution{border-left-color:var(--amber);background:#fef6e7}
+.cal-important .cal-t,.cal-warning .cal-t,.cal-caution .cal-t{color:var(--amber)}
+.cal-danger,.cal-error,.cal-bug{border-left-color:var(--red);background:#fdecec}
+.cal-danger .cal-t,.cal-error .cal-t,.cal-bug .cal-t{color:var(--red)}
+.cal-example,.cal-quote,.cal-abstract{border-left-color:var(--violet);background:#f3edfb}
+.cal-example .cal-t,.cal-quote .cal-t,.cal-abstract .cal-t{color:var(--violet)}
+
+/* Glossary → 더보기 링크 + 상세칩 + sibling 카드 */
+.gmore{display:inline-block;margin-top:10px;padding:8px 14px;background:var(--navy);color:#fff;border-radius:8px;
+  font-size:.8rem;font-weight:600;text-decoration:none;transition:.15s}
+.gmore:hover{background:var(--navy2)}
+.doc-chip{display:inline-block;background:var(--accent-soft);color:var(--accent);font-size:.64rem;font-weight:700;
+  padding:1px 7px;border-radius:20px;margin-left:5px;vertical-align:middle}
+.card.sibling{text-decoration:none;display:block;transition:.15s}
+.card.sibling:hover{border-color:var(--accent);box-shadow:var(--shadow-lg);transform:translateY(-1px)}
+@media print{.sidebar,.menu-toggle,.concept-head .btn,.concept-toc,.section-title+.grid{display:none}
+  .content{margin:0;padding:0}.doc.concept{border:none;box-shadow:none;padding:0}}
+
+/* ============================================================
+   Cascade / ML 페이지 + 조성 캐스케이드 배너
+   ============================================================ */
+.cascade-method .cm-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 22px}
+.cascade-method .cm-l{display:block;font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);margin-bottom:3px}
+.cascade-method .cm-warn{grid-column:1/-1;background:#fef6e7;border-left:3px solid var(--amber);padding:8px 12px;border-radius:0 8px 8px 0;font-size:.85rem}
+.cascade-method .cm-warn .cm-l{color:var(--amber)}
+.cascade-method>.cm-grid>div{font-size:.88rem;line-height:1.5}
+@media(max-width:720px){.cascade-method .cm-grid{grid-template-columns:1fr}}
+
+.stat-tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:16px 0 20px}
+.stat-tiles .st{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow)}
+.stat-tiles .st-v{font-size:1.9rem;font-weight:800;color:var(--navy);line-height:1}
+.stat-tiles .st-l{font-size:.76rem;color:var(--dim);margin-top:5px}
+@media(max-width:720px){.stat-tiles{grid-template-columns:repeat(2,1fr)}}
+
+.grp-pill{display:inline-block;color:#fff;font-size:.66rem;font-weight:700;padding:1px 8px;border-radius:20px}
+.pareto-y{color:var(--green);font-weight:700}
+a.deep{color:var(--navy);font-weight:700;text-decoration:none;border-bottom:2px solid var(--accent)}
+a.deep:hover{color:var(--accent)}
+.tbl-scroll{overflow-x:auto;max-width:100%}
+table.sortable th{cursor:pointer;user-select:none;white-space:nowrap;position:relative}
+table.sortable th:hover{color:var(--accent)}
+table.sortable th[data-sort]::after{content:attr(data-sort);font-size:.7em;margin-left:4px;color:var(--accent)}
+tr.row-hi{background:var(--accent-soft) !important;outline:2px solid var(--accent)}
+.insight-card{border-left:4px solid var(--violet);background:#f3edfb}
+.insight-card .ic-tag{font-weight:700;color:var(--violet);margin-bottom:5px;font-size:.9rem}
+
+.cascade-banner{display:flex;align-items:center;gap:16px;flex-wrap:wrap;border-left:4px solid var(--teal);background:#e9f7f5}
+.cascade-banner .cb-tag{font-weight:800;color:var(--teal);font-size:.82rem;white-space:nowrap}
+.cascade-banner .cb-body{flex:1;min-width:240px;font-size:.9rem}
+.cascade-banner .cb-stats{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.cascade-banner .cb-s{background:#fff;border:1px solid var(--border);border-radius:7px;padding:3px 9px;font-size:.78rem;font-weight:600;color:var(--navy)}
+.cascade-banner .cb-s em{font-style:normal;color:var(--dim);font-weight:400;margin-right:4px;font-size:.9em}
+
+.record-json{background:#0e1a2b;color:#dfe4f2;padding:16px;border-radius:var(--radius-sm);overflow:auto;max-height:560px;
+  font-family:var(--mono);font-size:.76rem;line-height:1.55;white-space:pre}
+
+/* ============================================================
+   Literature 트랙 분류 (DFT / DEM)
+   ============================================================ */
+.track-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 14px}
+.track-tabs .tt{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:7px 16px;
+  font-size:.86rem;font-weight:600;color:var(--dim);cursor:pointer;transition:.15s;font-family:var(--font)}
+.track-tabs .tt span{display:inline-block;margin-left:6px;background:var(--bg);border-radius:12px;padding:0 8px;
+  font-size:.74rem;color:var(--muted)}
+.track-tabs .tt:hover{border-color:var(--accent);color:var(--accent)}
+.track-tabs .tt.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.track-tabs .tt.active span{background:rgba(255,255,255,.2);color:#fff}
+.track-tabs .tt-dft.active{background:var(--accent);border-color:var(--accent)}
+.track-tabs .tt-dem.active{background:var(--orange);border-color:var(--orange)}
+
+.paper .paper-top{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.tbadge{font-size:.62rem;font-weight:800;padding:2px 7px;border-radius:5px;letter-spacing:.03em;flex-shrink:0}
+.tb-dft{background:var(--accent-soft);color:var(--accent)}
+.tb-dem{background:#fbeee6;color:var(--orange)}
+.ptype{font-size:.68rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card.paper.track-dft{border-left:3px solid var(--accent)}
+.card.paper.track-dem{border-left:3px solid var(--orange)}

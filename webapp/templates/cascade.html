@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+{% block title %}Cascade / ML · Doping Screening{% endblock %}
+{% block head %}<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>{% endblock %}
+
+{% macro num(v) %}{% if v is number %}{% if v == v|round(0) %}{{ v|int }}{% else %}{{ '%.3f'|format(v) }}{% endif %}{% else %}{{ v }}{% endif %}{% endmacro %}
+{% macro gtable(t, cols) %}
+<div class="tbl-scroll"><table class="data-table sortable"><thead><tr>
+{% for c in cols %}<th onclick="sortT(this,{{ loop.index0 }})">{{ c }}</th>{% endfor %}</tr></thead><tbody>
+{% for row in t.data %}<tr>{% for c in cols %}<td class="{% if row[c] is number %}num{% endif %}">{{ num(row[c]) }}</td>{% endfor %}</tr>{% endfor %}
+</tbody></table></div>{% endmacro %}
+
+{% block content %}
+{% set gcol = {'TM':'#2563eb','lanthanide':'#7c3aed','main-group':'#0d9488','alk.earth':'#c05621','alkali':'#d97706'} %}
+<div class="page-header">
+  <div><h1>🤖 Cascade / ML — Doping Screening</h1>
+    <div class="sub">{{ casc.meta.scope }}</div></div>
+</div>
+
+<div class="card cascade-method">
+  <div class="cm-grid">
+    <div><span class="cm-l">엔진</span>{{ casc.meta.engine }}</div>
+    <div><span class="cm-l">스코어</span><span class="mono">{{ casc.meta.score_formula }}</span></div>
+    <div class="cm-warn"><span class="cm-l">⚠ 주의</span>{{ casc.meta.caveat }}</div>
+    <div><span class="cm-l">검증</span>{{ casc.meta.verified }}</div>
+  </div>
+</div>
+
+<div class="stat-tiles">
+  <div class="st"><div class="st-v">{{ stats.dopants }}</div><div class="st-l">랭킹된 도펀트</div></div>
+  <div class="st"><div class="st-v">{{ stats.pareto }}</div><div class="st-l">Pareto-optimal</div></div>
+  <div class="st"><div class="st-v">{{ stats.champions }}</div><div class="st-l">챔피언 실행</div></div>
+  <div class="st"><div class="st-v">{{ stats.verified if stats.verified is not none else '—' }}</div><div class="st-l">DFT 검증 서브셋</div></div>
+</div>
+
+<div class="tabs" id="tabs">
+  <button class="active" data-tab="board">🏆 Leaderboard</button>
+  <button data-tab="champ">⚙️ Champions</button>
+  <button data-tab="ion">🔋 Li transport</button>
+  <button data-tab="esw">🧪 Oxidation ESW</button>
+  <button data-tab="syn">🤝 Co-doping synergy</button>
+</div>
+
+<!-- Leaderboard -->
+<div class="tab-panel active" id="tab-board">
+  <div class="card">
+    <h3>설계공간 — Young's modulus vs 산화 onset <span class="muted" style="font-weight:400;font-size:.8rem">색=score · Pareto는 링</span></h3>
+    <div class="chart" id="scatter"></div>
+    <div class="muted" style="font-size:.74rem;margin-top:4px">낮은 E(연질) + 높은 ox_V(넓은 창)이 코팅에 유리. UMA 상대값.</div>
+  </div>
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+      <h3 style="margin:0">합성 스코어 리더보드</h3>
+      <input class="search" style="max-width:220px" placeholder="도펀트 검색…" oninput="filtRows('board-tbl',this.value)">
+      <span class="muted" style="font-size:.74rem">헤더 클릭 = 정렬 · <b>파랑 링</b> = deep-dive 있음</span>
+    </div>
+    <div class="tbl-scroll"><table class="data-table sortable" id="board-tbl"><thead><tr>
+      <th onclick="sortT(this,0)">rank</th><th onclick="sortT(this,1)">dopant</th>
+      <th onclick="sortT(this,2)">group</th><th onclick="sortT(this,3)">score</th>
+      <th onclick="sortT(this,4)">Δe</th><th onclick="sortT(this,5)">ox_V</th>
+      <th onclick="sortT(this,6)">red_V</th><th onclick="sortT(this,7)">E (GPa)</th>
+      <th onclick="sortT(this,8)">Pugh B/G</th><th onclick="sortT(this,9)">Pareto</th></tr></thead><tbody>
+    {% for r in casc.ranked.data %}
+    <tr>
+      <td class="num">{{ r.rank|int }}</td>
+      <td>{% if deep_map.get(r.dopant) %}<a href="/composition/{{ deep_map[r.dopant] }}" class="deep">{{ r.dopant }} ●</a>{% else %}{{ r.dopant }}{% endif %}</td>
+      <td><span class="grp-pill" style="background:{{ gcol.get(r.group,'#6b7280') }}">{{ r.group }}</span></td>
+      <td class="num" style="font-weight:700">{{ '%.3f'|format(r.score) }}</td>
+      <td class="num">{{ '%.3f'|format(r.de) }}</td>
+      <td class="num">{{ '%.3f'|format(r.ox_V) }}</td>
+      <td class="num">{{ '%.3f'|format(r.red_V) }}</td>
+      <td class="num">{{ '%.1f'|format(r.E_GPa) }}</td>
+      <td class="num">{{ '%.2f'|format(r.pugh) }}</td>
+      <td class="num">{% if r.pareto and r.pareto|string|upper=='Y' %}<span class="pareto-y">◆ Y</span>{% endif %}</td>
+    </tr>{% endfor %}
+    </tbody></table></div>
+  </div>
+</div>
+
+<!-- Champions -->
+<div class="tab-panel" id="tab-champ">
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+      <h3 style="margin:0">챔피언 — EOS · 탄성 · anneal</h3>
+      <input class="search" style="max-width:220px" placeholder="도펀트 검색…" oninput="filtRows('champ-tbl',this.value)">
+    </div>
+    <div class="tbl-scroll"><table class="data-table sortable" id="champ-tbl"><thead><tr>
+      {% set cc = ['dopant','concentration','rerank_de_post_anneal','anneal_dV_pct','eos_B0_GPa','elastic_E_young_GPa','elastic_B_hill_GPa','elastic_G_hill_GPa','elastic_pugh_GoverB','combined_score'] %}
+      {% for c in cc %}<th onclick="sortT(this,{{ loop.index0 }})">{{ c.replace('elastic_','').replace('_GPa','').replace('rerank_','') }}</th>{% endfor %}
+    </tr></thead><tbody>
+    {% for row in casc.champions.data %}<tr>{% for c in cc %}<td class="{% if row[c] is number %}num{% endif %}">{{ num(row[c]) }}</td>{% endfor %}</tr>{% endfor %}
+    </tbody></table></div>
+    <div class="muted" style="font-size:.74rem;margin-top:6px">Δe_post_anneal &lt; 0 = 무도핑 baseline보다 안정. EOS B0 ≠ elastic B_hill(=B_VRH).</div>
+  </div>
+</div>
+
+<!-- Li transport -->
+<div class="tab-panel" id="tab-ion">
+  <div class="card">
+    <h3>Li 수송 프록시 <span class="muted" style="font-weight:400;font-size:.8rem">BVS proxy · migration volume · blocking · disorder</span></h3>
+    {{ gtable(casc.litransport, ['_dir','bvs_li_proxy_score','migration_volume_fraction','tier2_dopant_blocking_fraction','tier2_li_li_disorder_std','cation_site','anion_site']) }}
+    <div class="muted" style="font-size:.74rem;margin-top:6px">BVSE·기하 기반 프록시(빠른 스크리닝) — 정밀 확산은 DFT/MD 심층검증에서.</div>
+  </div>
+</div>
+
+<!-- Oxidation ESW -->
+<div class="tab-panel" id="tab-esw">
+  <div class="card">
+    <h3>Grand-potential 전기화학 안정성창(ESW)</h3>
+    {{ gtable(casc.oxidation, ['dopant','anion','valence','group','ox_V','red_V','ocv_V','window_V','clrich_ox_V','note']) }}
+    <div class="muted" style="font-size:.74rem;margin-top:6px">MP-hull(GGA/GGA+U) 기반 → elastic/EOS 재계산과 무관. collapse(window&lt;0.05V)=후기전이금속 회피. Cl-rich buffer가 산화 onset↑.</div>
+  </div>
+</div>
+
+<!-- Synergy -->
+<div class="tab-panel" id="tab-syn">
+  <div class="card">
+    <h3>공동도핑 시너지 <span class="muted" style="font-weight:400;font-size:.8rem">단일도펀트 프록시 기반 가설 — 미검증</span></h3>
+    {{ gtable(casc.synergy, ['rank','pairA','pairB','synergy','joint_window_V','gain_vs_best_single','radius_match','avg_stab','tags']) }}
+  </div>
+</div>
+
+{% if casc.trivalent and casc.trivalent.site_rule %}
+<div class="card insight-card">
+  <div class="ic-tag">🧩 Site rule (trivalent M³⁺)</div>
+  <div>{{ casc.trivalent.site_rule }}</div>
+</div>
+{% endif %}
+
+<script>
+var RANKED = {{ casc.ranked.data|tojson }};
+var GCOL = {{ gcol|tojson }};
+document.querySelectorAll('#tabs button').forEach(function(b){b.onclick=function(){
+  document.querySelectorAll('#tabs button').forEach(function(x){x.classList.remove('active')});
+  document.querySelectorAll('.tab-panel').forEach(function(x){x.classList.remove('active')});
+  b.classList.add('active');document.getElementById('tab-'+b.dataset.tab).classList.add('active');
+  if(b.dataset.tab==='board'&&window.Plotly)Plotly.Plots.resize('scatter');
+};});
+
+// scatter: E vs ox_V, color=score, pareto=ring
+(function(){
+  var reg = RANKED.filter(function(r){return r.pareto!=='Y'&&r.pareto!=='y';});
+  var par = RANKED.filter(function(r){return r.pareto==='Y'||r.pareto==='y';});
+  function tr(rows, ring){return {
+    x:rows.map(function(r){return r.E_GPa;}), y:rows.map(function(r){return r.ox_V;}),
+    text:rows.map(function(r){return r.dopant+' (#'+r.rank+', '+r.group+')';}),
+    mode:'markers', type:'scatter', name: ring?'Pareto':'others',
+    marker:{ size:rows.map(function(r){return 8+r.score*22;}),
+      color:rows.map(function(r){return r.score;}), colorscale:'Viridis',
+      cmin:0.15, cmax:0.85, showscale:!ring,
+      colorbar:{title:'score',thickness:12,len:.7},
+      line: ring?{color:'#2563eb',width:2.5}:{color:'rgba(0,0,0,.15)',width:.5}},
+    hovertemplate:'%{text}<br>E=%{x:.1f} GPa · ox=%{y:.2f} V<extra></extra>'};}
+  Plotly.newPlot('scatter',[tr(reg,false),tr(par,true)],
+    {margin:{t:10,r:14,b:46,l:52},font:{family:'Inter',size:12},
+     xaxis:{title:"Young's modulus E (GPa, UMA)"},yaxis:{title:'oxidation onset (V vs Li)'},
+     legend:{orientation:'h',y:-0.22},hovermode:'closest'},
+    {responsive:true,displaylogo:false});
+})();
+
+function sortT(th, idx){
+  var tb=th.closest('table'), rows=Array.prototype.slice.call(tb.tBodies[0].rows);
+  var asc=!(th._asc); th._asc=asc;
+  tb.querySelectorAll('th').forEach(function(x){x.removeAttribute('data-sort');});
+  th.setAttribute('data-sort',asc?'▲':'▼');
+  rows.sort(function(a,b){
+    var x=a.cells[idx].innerText.trim(), y=b.cells[idx].innerText.trim();
+    var nx=parseFloat(x), ny=parseFloat(y);
+    if(!isNaN(nx)&&!isNaN(ny))return asc?nx-ny:ny-nx;
+    return asc?x.localeCompare(y):y.localeCompare(x);
+  });
+  rows.forEach(function(r){tb.tBodies[0].appendChild(r);});
+}
+function filtRows(tid,q){q=q.toLowerCase();
+  document.querySelectorAll('#'+tid+' tbody tr').forEach(function(r){
+    r.style.display=r.innerText.toLowerCase().indexOf(q)>=0?'':'none';});
+}
+// 딥링크(#Nd2O3) 도착 시 해당 행 하이라이트
+if(location.hash){var d=decodeURIComponent(location.hash.slice(1)).toLowerCase();
+  document.querySelectorAll('#board-tbl tbody tr').forEach(function(r){
+    if(r.cells[1].innerText.toLowerCase().indexOf(d)>=0){r.classList.add('row-hi');r.scrollIntoView({block:'center'});}});}
+</script>
+{% endblock %}

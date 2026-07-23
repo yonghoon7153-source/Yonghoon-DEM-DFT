@@ -15,6 +15,24 @@ ROOT = Path(__file__).resolve().parent.parent
 DB = ROOT / "db"
 KB = ROOT / "kb"
 LITDB = ROOT / "litdb"
+CONCEPTS = KB / "concepts"
+
+
+# ─────────────────────────────────────────────────────────────
+# 개념 상세 페이지 (Glossary '더보기' → kb/concepts/<id>.md)
+# ─────────────────────────────────────────────────────────────
+def concept_ids() -> set:
+    """kb/concepts/*.md 로 존재하는 개념 id 집합 (더보기 링크 노출 판단)."""
+    return {f.stem for f in CONCEPTS.glob("*.md")} if CONCEPTS.exists() else set()
+
+def read_concept(cid: str) -> str | None:
+    """개념 원본 마크다운. 경로 탈출 방어."""
+    p = (CONCEPTS / f"{cid}.md")
+    if not p.exists():
+        return None
+    if not str(p.resolve()).startswith(str(CONCEPTS.resolve())):
+        return None
+    return p.read_text(errors="ignore")
 
 # ─────────────────────────────────────────────────────────────
 # 로더 (캐시 없음 — 항상 최신 db 반영; 무거우면 mtime 캐시로 교체)
@@ -76,7 +94,7 @@ FAMILY_ORDER = ["argyrodite", "doped", "anode", "interphase", "molecular"]
 # 물성 카테고리 (post-processing 축) — 파일명 키워드로 분류
 # ─────────────────────────────────────────────────────────────
 CATEGORIES = [
-    {"id": "electronic", "label": "Electronic",  "icon": "⚡", "keys": ["electronic", "dos", "pdos", "bader", "elf"]},
+    {"id": "electronic", "label": "Electronic",  "icon": "⚡", "keys": ["electronic", "dos", "pdos", "bader", "elf", "xps"]},
     {"id": "mechanical", "label": "Mechanical",  "icon": "🔩", "keys": ["elastic", "eos", "thermal_thprime"]},
     {"id": "bonding",    "label": "Bonding",     "icon": "🔗", "keys": ["bonds", "icohp", "cohp", "nd_icohp"]},
     {"id": "ionic",      "label": "Ionic",       "icon": "🔋", "keys": ["diffusion", "li_transport", "md_arrhenius", "bvse", "msd", "dualx"]},
@@ -150,7 +168,7 @@ CANONICAL = {
     "B0_GPa":     {"comp1": 26.23, "comp2": 25.8, "modelc": 21.71, "lpsocl": 24.71, "b2o3": 24.48},
     "E_VRH_GPa":  {"comp1": 22.06, "modelc": 27.66, "lpsocl": 35.04},  # relaxed-ion USPP; comp2 재측정중
     "MD_Ea_eV":   {"comp1": 0.253, "modelc": 0.224, "lpsocl": 0.279},  # UMA
-    "ICOHP_PS":   {"comp1": -6.0, "comp2": -5.913, "modelc": -6.0, "lpsocl": -6.04},
+    "ICOHP_PS":   {"comp1": -6.0, "comp2": -5.913, "modelc": -6.0, "lpsocl": -6.04, "modelc_nd_doped": -5.976},
 }
 CANONICAL_META = {
     "gap_eV":    "fixed-occ eigenvalue (DOS-threshold 금지)",
@@ -159,6 +177,73 @@ CANONICAL_META = {
     "MD_Ea_eV":  "UMA-s-1p1, 600/800/1000K 3-seed (pseudo 무관)",
     "ICOHP_PS":  "LOBSTER all-PAW ext-basis",
 }
+
+# ─────────────────────────────────────────────────────────────
+# Cascade / ML 도핑 스크리닝 (디지털 트윈) — UMA 상대 스크리닝 번들
+# ─────────────────────────────────────────────────────────────
+CASCADE_FILES = {
+    "ranked":      "cascade_v23_ranked.csv",       # 조성 합성점수 리더보드
+    "champions":   "cascade_v23_champions.csv",    # 챔피언별 EOS·탄성·anneal
+    "litransport": "cascade_v23_litransport.csv",  # Li 수송 프록시
+    "synergy":     "cascade_v23_synergy_pairs.csv",# 공동도핑 시너지 가설
+    "oxidation":   "oxidation_stability_cascade.csv",  # grand-potential ESW
+}
+CASCADE_META = {
+    "title": "Doping Cascade — UMA 스크리닝 디지털 트윈",
+    "scope": "Model C (Li₅.₄PS₄.₄Cl₁.₆) 기반 산화물/불화물 도펀트 스크리닝, x=0.25",
+    "engine": "UMA-s-1p1 (task=omat) · anneal→champion→EOS/elastic/ESW/Li-proxy 캐스케이드",
+    "score_formula": "score = 0.30·ox + 0.25·stable + 0.20·soft + 0.15·ductile + 0.10·window (min–max 정규화)",
+    "caveat": "절대 탄성값은 실험(AFM/UPE 12–22 GPa) 대비 높게 나옴 — 캐스케이드 내부(UMA-vs-UMA) 순위·상대비교만. EOS B0 ≠ elastic B_VRH.",
+    "verified": "직접 확인된 검증 서브셋은 doping_cascade_verified.json (41 챔피언 all-converged).",
+}
+# 조성 노드 ↔ 캐스케이드 도펀트 (스크리닝 히트의 DFT 심층검증)
+CASCADE_DOPANT = {"modelc_nd_doped": "Nd2O3", "b2o3": "B2O3"}
+
+
+def load_cascade() -> dict:
+    out = {"meta": CASCADE_META}
+    for k, fn in CASCADE_FILES.items():
+        out[k] = read_csv(f"properties/{fn}")
+    out["trivalent"] = _load_json(DB / "properties" / "doping_cascade_trivalent_M3.json")
+    out["verified"] = _load_json(DB / "properties" / "doping_cascade_verified.json")
+    out["alpha"] = _load_json(DB / "properties" / "alpha_sensitivity_FINAL.json")
+    return out
+
+
+def cascade_rows_for(dopant: str) -> dict:
+    """특정 도펀트(예: Nd2O3)의 캐스케이드 행만 추림 — 조성 심층페이지용."""
+    if not dopant:
+        return {}
+    d = dopant.lower()
+    def _match(rows, cols):
+        hit = []
+        for r in rows.get("data", []):
+            for c in cols:
+                v = str(r.get(c, "")).lower()
+                if v == d or v.startswith(d + "_") or v.startswith(d + "+"):
+                    hit.append(r); break
+        return hit
+    casc = load_cascade()
+    return {
+        "dopant": dopant,
+        "ranked": _match(casc["ranked"], ["dopant"]),
+        "champions": _match(casc["champions"], ["dopant", "_dir"]),
+        "litransport": _match(casc["litransport"], ["_dir"]),
+        "oxidation": _match(casc["oxidation"], ["dopant"]),
+    }
+
+
+def icohp_for(cid: str):
+    """조성별 LOBSTER ICOHP JSON (있으면) — bonds 테이블 렌더용. 공통 스키마."""
+    pref = _PREFIX.get(cid, [cid])
+    for f in sorted((DB / "properties").glob("*_icohp.json")):
+        stem = f.stem.lower()
+        if any(p.lower() in stem for p in pref):
+            d = _load_json(f)
+            if d and isinstance(d.get("bonds"), dict):
+                return d
+    return None
+
 
 def build_matrix() -> dict:
     """사이트 전역 데이터 번들."""
@@ -205,6 +290,9 @@ def _has_category_data(cid, cat_id, props, prop_cat, idx_metrics) -> bool:
             kind = df["kind"].lower()
             if cat and any(k in kind for k in cat["keys"]):
                 return True
+    # (d) 캐스케이드 히트 조성(Nd2O3/B2O3 …) = 스크리닝 심층검증 대상
+    if cat_id == "cascade" and cid in CASCADE_DOPANT:
+        return True
     return False
 
 def build_coverage(props, prop_cat, idx_metrics) -> dict:
@@ -221,11 +309,114 @@ def coverage_stats(cov: dict) -> dict:
     return {"done": done, "total": total, "pct": round(100 * done / total) if total else 0}
 
 
+# ─────────────────────────────────────────────────────────────
+# 문헌 트랙 분류 (DEM·MPM 미세구조/역학  ↔  DFT·MLIP 전해질 화학)
+# 각 논문 digest 의 자기신고 `type` 필드 + 슬러그 키워드로 점수화, 애매한 건 override.
+# ─────────────────────────────────────────────────────────────
+LIT_DEM_KW = [
+    "dem", "mpm", "fem", "czm", "lbm", "rnm", " continuum", "contact", "percolation",
+    "calender", "calendering", "compaction", "densification", "packing", "tortuosity",
+    "impedance", "tlm", "de levie", "equivalent-circuit", "equivalent circuit",
+    "microstructure", "drying", "mixer", "powder", "sps", "indentation", "adhesive",
+    "cohesive", "binder", "dry electrode", "dry-electrode", "dry process", "dry-process",
+    "dryprocess", "manufacturing", "multiphysics", "hertz", "holm", "constriction",
+    "geodict", "elastoplastic", "sand", "snow", "co-rolling", "corolling", "mold",
+    "sintering", "slurry", "morphology", "porosity", "digital twin", "digital-twin",
+]
+LIT_DFT_KW = [
+    "dft", "mlip", "aimd", "first-principles", "first principles", "bvse", "pdos",
+    "elf", "argyrodite", "orbital", "sevennet", "vasp", "screening", "thermodynamic",
+    "migration", "bond order", "bond-order", "homo", "lumo", "haxpes", " ups ", "ups)",
+    "band structure", "band gap", "bandgap", "cohp", "icohp", "oxidation", "esw",
+    "halide", "iodide", "chlorination", "electron redistribution", "convex hull",
+    "phase-stability", "phase stability", "adsorption", "hybridization", "dualdoping",
+    "dual-doping", "dopant", "conductivity", "diffusion barrier", "hopping",
+]
+# 스코어로 못 가르는(또는 오분류되는) 논문 수동 지정
+LIT_TRACK_OVERRIDE = {
+    # 역학/미세구조/제조 쪽(내용에 DFT·ML 보조가 있어도 주제는 DEM 트랙)
+    "han2025_icep_conductive_elastic_binder": "dem",
+    "kang2025_bollard_anchored_binder_dry_electrode": "dem",
+    "duquesnoy2023_ml_multiobjective_manufacturing_optimization": "dem",
+    "schneider2023_particle_size_pressure_transport": "dem",
+    "lee2026_eecfp_dnn_electrolyte_ce_lmb": "dem",
+    "hollmann2025_tabpfn_tabular_foundation_model": "dem",
+    "bzox_dry_zro2x_nmc_shell_coating_sulfide_assb": "dem",
+    "jung2023_single_crystal_ncm_morphology": "dem",
+    "kim2024_carbon_volumetric_occupation_se_domain": "dem",
+    "reisacher2023_percolation_sulfide_carbon_matrix": "dem",
+    "minnmann2024_microstructure_porosity_visualization": "dem",
+    "mcgeary1961_bimodal_sphere_packing": "dem",
+    "taufactor_tortuosity_factor_tomography_tool": "dem",
+    "kim2025_conductive_agent_se_coating_cathode": "dem",   # 전극 미세구조/제조 (type의 'DFT 없음'이 kw 오탐)
+    "kang2026_intertwined_electrochemo_mechanical_sulfide_assb_review": "dem",  # echemo-역학 총설
+    "deysher2022_transport_mechanical_aspects_assb_review": "dem",  # 전극 전달+역학 총설
+    # 전해질 화학/전자구조/전기화학 쪽(순수 exp·경험식이어도 DFT 트랙 주제)
+    "wang2022_sulfide_thermal_stability_th_descriptor": "dft",
+    "kang2025_highvoltage_parasitic_reaction_benefit_sulfide_assb": "dft",
+    "kim2026_iccf_molten_salt_sei_lpscl_sheet": "dft",
+    "fan2026_sulfide_assb_stability_review_ECERD2600097": "dft",
+    "whitten2023_ups_practical_best_practices": "dft",
+    "hikima2022_operando_band_structure_assb": "dft",
+    "ishikawa2025_site_percolation_cooperative_ion_conduction": "dft",
+    "dyre2004_hopping_models_ion_conduction_noncrystals": "dft",
+    "rao2011_argyrodite_se_studies_bvse": "dft",
+    "cha2024_dualcompatible_halide_ncm_lpscl_interface": "dft",
+    "yang2025_lao_dualdoping_argyrodite_lacl3": "dft",
+    "liu2013_cage_methane_adsorption_hydrate_nucleation": "dft",
+}
+
+
+def literature_track(slug: str, type_str: str = "", title: str = "") -> str:
+    if slug in LIT_TRACK_OVERRIDE:
+        return LIT_TRACK_OVERRIDE[slug]
+    hay = f" {slug} {type_str} {title} ".lower().replace("_", " ")
+    dem = sum(1 for k in LIT_DEM_KW if k in hay)
+    dft = sum(1 for k in LIT_DFT_KW if k in hay)
+    if dem != dft:
+        return "dem" if dem > dft else "dft"
+    t = (type_str or "").lower().lstrip()
+    if t.startswith(("dem", "mpm", "fem", "czm", "continuum", "tool")):
+        return "dem"
+    if t.startswith(("dft", "mlip", "aimd", "theory")):
+        return "dft"
+    return "dft"
+
+
+def list_papers() -> list:
+    """litdb/papers/*.md → [{id, title, type, track}] (DEM/DFT 분류 포함)."""
+    out = []
+    pd = LITDB / "papers"
+    if not pd.exists():
+        return out
+    for f in sorted(pd.glob("*.md")):
+        if f.stem.startswith("_"):
+            continue
+        title, type_str = f.stem.replace("_", " "), ""
+        got_title = False
+        try:
+            head = f.read_text(errors="ignore").splitlines()[:18]
+        except Exception:
+            head = []
+        for line in head:
+            if not got_title and line.startswith("#"):
+                title = line.lstrip("# ").strip()
+                got_title = True
+            m = re.search(r"type `([^`]+)`", line)
+            if m and not type_str:
+                type_str = m.group(1)
+        out.append({"id": f.stem, "title": title, "type": type_str,
+                    "track": literature_track(f.stem, type_str, title)})
+    return out
+
+
 def read_csv(rel: str) -> dict:
     p = (DB / rel).resolve()
     if not str(p).startswith(str(DB.resolve())) or not p.exists():
         return {"error": "not found"}
     rows = list(csv.reader(p.open()))
+    # 선행 주석(#)·빈 줄 제거 — cascade CSV들이 헤더 앞에 # 메타줄을 둠
+    rows = [r for r in rows if r and not r[0].lstrip().startswith("#")]
     if not rows:
         return {"columns": [], "data": []}
     header = rows[0]

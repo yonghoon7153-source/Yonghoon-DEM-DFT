@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}{{ term.term if term else cid }} · Concept{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+{% endblock %}
+{% block content %}
+<div class="page-header concept-head">
+  <div>
+    <div class="crumb"><a href="/glossary">← Glossary</a></div>
+    <h1>{{ term.term if term else cid }}</h1>
+    {% if term %}<div class="sub">{{ term.full }} · <span class="badge b-fam">{{ term.cat }}</span></div>{% endif %}
+  </div>
+  <button class="btn sm" onclick="window.print()">🖨 인쇄/PDF</button>
+</div>
+
+<div class="concept-wrap">
+  <article class="doc concept" id="concept-body"><span class="muted">렌더링 중…</span></article>
+</div>
+
+{% if siblings %}
+<div class="section-title">같은 분야 개념 문서</div>
+<div class="grid grid-3">
+{% for s in siblings %}
+<a class="card sibling" href="/concept/{{ s.id }}">
+  <div style="font-weight:700;color:var(--navy)">{{ s.term }} <span style="float:right;color:var(--accent)">→</span></div>
+  <div class="muted" style="font-size:.76rem;margin-top:2px">{{ s.full }}</div>
+</a>
+{% endfor %}
+</div>
+{% endif %}
+
+<script type="application/json" id="md-src">{{ raw_md|tojson }}</script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+(function(){
+  var box = document.getElementById('concept-body');
+  var raw;
+  try { raw = JSON.parse(document.getElementById('md-src').textContent); }
+  catch(e){ box.innerHTML = '<span class="muted">원본을 불러오지 못했어요.</span>'; return; }
+  if (typeof marked === 'undefined'){ box.textContent = raw; return; }
+
+  var L = '', R = '';           // private-use sentinel (marked이 건드리지 않음)
+  var maths = [], calls = [];
+
+  // 1) 수식 보호 — display($$) 먼저, 그다음 inline($)
+  raw = raw.replace(/\$\$([\s\S]+?)\$\$/g, function(m){ maths.push(m); return L+'M'+(maths.length-1)+R; });
+  raw = raw.replace(/\$([^\$\n]+?)\$/g,     function(m){ maths.push(m); return L+'M'+(maths.length-1)+R; });
+
+  // 2) Obsidian 콜아웃 ( > [!note] title ) → 스타일 div (본문은 marked로 파싱)
+  var lines = raw.split('\n'), out = [], i = 0;
+  while (i < lines.length){
+    var m = lines[i].match(/^>\s*\[!(\w+)\]\s*(.*)$/);
+    if (m){
+      var type = m[1].toLowerCase(), title = m[2] || '', body = [];
+      i++;
+      while (i < lines.length && /^>/.test(lines[i])){ body.push(lines[i].replace(/^>\s?/, '')); i++; }
+      var inner = marked.parse(body.join('\n'));
+      var head = title ? '<div class="cal-t">'+title+'</div>' : '';
+      calls.push('<div class="callout cal-'+type+'">'+head+'<div class="cal-b">'+inner+'</div></div>');
+      out.push(''); out.push(L+'C'+(calls.length-1)+R); out.push('');
+    } else { out.push(lines[i]); i++; }
+  }
+  raw = out.join('\n');
+
+  // 3) 마크다운 → HTML
+  marked.setOptions({ gfm:true, breaks:false, headerIds:true, mangle:false });
+  var html = marked.parse(raw);
+
+  // 4) 콜아웃 복원 (marked이 <p>로 감쌌을 수 있음)
+  html = html.replace(new RegExp('<p>'+L+'C(\\d+)'+R+'</p>','g'), function(_,n){ return calls[n]; });
+  html = html.replace(new RegExp(L+'C(\\d+)'+R,'g'),             function(_,n){ return calls[n]; });
+  // 5) 수식 복원 (콜아웃 내부 포함)
+  html = html.replace(new RegExp(L+'M(\\d+)'+R,'g'),             function(_,n){ return maths[n]; });
+
+  box.innerHTML = html;
+
+  // 6) mermaid 코드블록 → .mermaid div
+  box.querySelectorAll('code.language-mermaid').forEach(function(c){
+    var d = document.createElement('div'); d.className = 'mermaid'; d.textContent = c.textContent;
+    (c.closest('pre') || c).replaceWith(d);
+  });
+
+  // 7) KaTeX 렌더 (스크립트 로드 타이밍 대비 폴링)
+  (function katex(){
+    if (window.renderMathInElement){
+      renderMathInElement(box, { delimiters:[
+        {left:'$$', right:'$$', display:true},
+        {left:'$',  right:'$',  display:false}
+      ], throwOnError:false });
+    } else { setTimeout(katex, 60); }
+  })();
+
+  // 8) mermaid 렌더
+  (function mm(){
+    if (window.mermaid){
+      try { mermaid.initialize({ startOnLoad:false, theme:'neutral', securityLevel:'strict' });
+            mermaid.run({ nodes: box.querySelectorAll('.mermaid') }); } catch(e){}
+    } else { setTimeout(mm, 60); }
+  })();
+
+  // 9) 목차 자동생성 (H2 스캔)
+  var heads = box.querySelectorAll('h2');
+  if (heads.length > 3){
+    var toc = document.createElement('nav'); toc.className = 'concept-toc';
+    var html2 = '<div class="toc-t">목차</div><ul>';
+    heads.forEach(function(h,idx){
+      if(!h.id) h.id = 'h'+idx;
+      html2 += '<li><a href="#'+h.id+'">'+h.textContent+'</a></li>';
+    });
+    toc.innerHTML = html2 + '</ul>';
+    document.querySelector('.concept-wrap').prepend(toc);
+  }
+})();
+</script>
+{% endblock %}
