@@ -63,7 +63,14 @@
 - **적대 코드리뷰 2각**(webapp + WSL): HIGH 0.  webapp MED2 수정(ICA CSV parser row-desync=양쪽파싱후
   append · body cap DoS) + LOW(case-load makedirs 제거·σ=0 is-not-None).  WSL 리뷰 반영 진행.
 
+## ★ ICA 케이스 방전곡선 자동로드 ✅ (2026-07-24)
+`/api/ica_case?case=<pid>` (app.py) — 저장된 STEP4 `st4_viz.json`(mpm_lab `<pid>` + DEM `results/<case>`,
+`step4_viz*.json` glob) `curve` 에서 **V_terminal + x_mean→용량%**(정규화 진행률, §F1 면적앵커 부재) →
+`ica_dqdv` 자동.  `eis.html` `loadCaseICA()`: `/eis?case=` 로드 시 EIS 와 함께 ICA 자동(텍스트에어리어=소스
+V,Q 채워 편집·재계산), 부재 시 조용히 붙여넣기 폴백.  drawICA y축 = 정규화 시 %/V.  코어 파이프라인 검증
+(Q 0→100%·V스팬·dQ/dV 산출) + app.py 컴파일 + eis.html JS node --check PASS.
+
 ## 남은 것
 WSL **실학습 실행**(스크립트 준비완료, sklearn) · C_dl/R_w 실험 EIS 앵커(eis_fit CPE→µF/cm²) · 오픈소스
-실다운로드 · ICA **케이스 방전곡선 자동로드**(현재 붙여넣기) · STEP4 PyBaMM 패리티(#5) · A10-full CZM
-(연구트랙) · 앵커대기(Joule ΔT·코팅√N·SDCP E_bind·NCA175·Kang&Shin 1.51× magnitude).
+실다운로드 · **EIS 케이스 방전곡선 자동로드**(완전 AC-solve) · SOC/사이클-N EIS 궤적(D5) · STEP4 PyBaMM
+패리티(#5) · A10-full CZM(연구트랙) · 앵커대기(Joule ΔT·코팅√N·SDCP E_bind·NCA175·Kang&Shin 1.51× magnitude).

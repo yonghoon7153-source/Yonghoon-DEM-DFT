@@ -3734,6 +3734,92 @@ def api_ica():
         return jsonify({'error': f'직렬화 실패: {type(e).__name__}: {e}'}), 200
 
 
+@app.route('/api/ica_case')
+def api_ica_case():
+    """케이스의 저장된 STEP4 방전곡선(st4_viz.json)에서 V_terminal·용량을 뽑아 dQ/dV 자동 산출 —
+    붙여넣기 없이 &case=<pid> 로 ICA.  V = V_terminal(측정 전압) 우선.  용량 = |Δx_mean|/|x100−x0|×100
+    (정규화 %, §F1: 면적/질량 앵커가 viz 에 없어 절대 mAh/cm² 못 만듦 → 정규화 진행률만 = 정직)."""
+    import math as _math
+    import glob as _glob
+    _case = (request.args.get('case') or '').strip()
+    if not _case:
+        return jsonify({'available': False, 'error': 'case 파라미터 없음'}), 200
+    # st4_viz.json 위치: mpm_lab/<pid>/(뷰어 st4 자동저장) 우선 → results/<case>/ → step4_viz*.json glob
+    _paths = []
+    for _base_key in ('MPM_LAB_FOLDER', 'RESULTS_FOLDER'):
+        _base = app.config.get(_base_key)
+        if not _base:
+            continue
+        try:
+            _d = _contained_join(_base, _case)                # 경로탈출 거부 (GET 부작용 없음: makedirs 안 함)
+        except Exception:
+            continue
+        _paths.append(os.path.join(_d, 'st4_viz.json'))
+        try:
+            _paths += sorted(_glob.glob(os.path.join(_d, 'step4_viz*.json')))
+        except Exception:
+            pass
+    _viz = None
+    for _p in _paths:
+        if os.path.isfile(_p):
+            try:
+                _cand = json.loads(open(_p).read())
+            except Exception:
+                continue
+            if isinstance(_cand, dict) and _cand.get('kind') == 'step4_viz':
+                _viz = _cand
+                break
+    if not _viz:
+        return jsonify({'available': False,
+                        'hint': '이 케이스엔 저장된 STEP4 방전곡선이 없음 — 뷰어 STEP4-v2 모드에서 📂로 '
+                                '한 번 열면 자동 저장됨 (또는 아래에 V,Q 직접 붙여넣기)'}), 200
+    cu = _viz.get('curve') or {}
+    Vt = cu.get('V_terminal') or cu.get('V') or []
+    xm = cu.get('x_mean') or []
+    if not Vt or not xm or len(Vt) != len(xm) or len(Vt) < 4:
+        return jsonify({'available': False,
+                        'hint': f'방전곡선 점 부족({len(Vt)}) — 최신 step4_dyn(--viz-out)로 재생성 필요'}), 200
+    try:
+        import sys as _sys
+        _sd = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'scripts')
+        if _sd not in _sys.path:
+            _sys.path.insert(0, _sd)
+        import eis_drt_ica as _eis
+        import numpy as _np
+    except Exception as e:
+        return jsonify({'available': False, 'error': f'import 실패: {type(e).__name__}: {e}'}), 200
+    v = _np.asarray(Vt, float); x = _np.asarray(xm, float)
+    m = _np.isfinite(v) & _np.isfinite(x)
+    v, x = v[m], x[m]
+    if len(v) < 4:
+        return jsonify({'available': False, 'error': f'유효 (V,x) 점 부족(<4): {len(v)}'}), 200
+    x0, x100 = _viz.get('x0'), _viz.get('x100')                # 용량 진행률 정규화 창
+    _win = (abs(float(x100) - float(x0)) if (x0 is not None and x100 is not None) else 0.0)
+    if not (_win and _math.isfinite(_win) and _win > 1e-6):
+        _win = max(abs(float(x.max() - x.min())), 1e-6)        # 폴백: 관측 x 스팬
+    q = _np.abs(x - x[0]) / _win * 100.0                       # 전달 용량 % (0→진행)
+    try:
+        vg, dq, peaks = _eis.ica_dqdv(v, q)
+    except Exception as e:
+        return jsonify({'available': False, 'error': f'ICA 계산 실패: {type(e).__name__}: {e}'}), 200
+
+    def _cl(z):
+        return float(z) if _math.isfinite(float(z)) else None
+    try:
+        return jsonify({
+            'available': True, 'case': _case, 'q_unit': '용량 % (정규화)',
+            'v': [_cl(a) for a in v], 'q': [round(float(b), 3) for b in q],
+            'ica': [{'v': _cl(a), 'dqdv': _cl(b)} for a, b in zip(vg, dq)],
+            'peaks': [{'v': _cl(p['V']), 'dqdv': _cl(p['dQdV'])} for p in peaks],
+            'n_in': int(len(v)),
+            'meta': {'c_rate': _viz.get('c_rate'), 'charge': bool(_viz.get('charge')),
+                     'end_reason': _viz.get('end_reason'),
+                     'v_span': [round(float(v.min()), 3), round(float(v.max()), 3)]},
+        })
+    except Exception as e:
+        return jsonify({'available': False, 'error': f'직렬화 실패: {type(e).__name__}: {e}'}), 200
+
+
 @app.route('/')
 def index():
     cases = list_cases()

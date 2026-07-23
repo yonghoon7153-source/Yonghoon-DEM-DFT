@@ -63,5 +63,10 @@ STEP3 σ-triad·두께·porosity만; R_int앵커·i0/D_s스윕·C_dl앵커는 UI
 ## 잔여 (v3-1 후속)
 - **완전 AC-solve**(step4_dyn 2.9M-dof 에 소신호 섭동 + FFT) = 미세구조-해상 EIS (지금은 reduced-order 등가회로).
 - C_dl **실험 앵커**(eis_fit CPE1_Q → µF/cm²) 배선 · R_w 실험 Wo1_R 채택.
-- ICA/EIS **케이스 방전곡선 자동로드**(step4 출력 → dQ/dV; 지금은 붙여넣기) · SOC/사이클-N EIS 궤적(D5).
+- ICA **케이스 방전곡선 자동로드 ✅ BUILT (2026-07-24)**: `/api/ica_case?case=<pid>` — 저장된 STEP4
+  `st4_viz.json`(mpm_lab `<pid>` + DEM `results/<case>` 둘 다, `step4_viz*.json` glob 포함)의 `curve`
+  에서 **V_terminal(측정 전압) + x_mean→용량%**(|Δx|/|x100−x0|×100, §F1: 면적/질량 앵커 부재 → 정규화
+  진행률만) 뽑아 `ica_dqdv` 자동 산출.  `/eis?case=` 로드 시 EIS 와 함께 자동 채움(텍스트에어리어 = 소스
+  V,Q 로 채워 열람·편집·재계산 가능) · 부재 시 조용히 붙여넣기 폴백(hint).  **EIS 케이스 방전곡선 자동로드**
+  (완전 AC-solve)와 **SOC/사이클-N EIS 궤적(D5)** 은 잔여.
 - **DRT 사이클 전개**: R_int(N) 성장을 DRT 피크별(R_ct vs 확산 vs 접촉)로 분해 = 열화 기전 진단.

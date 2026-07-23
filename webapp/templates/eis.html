@@ -81,7 +81,8 @@
   <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start">
     <div style="flex:0 0 250px">
       <div style="font-size:.76rem;color:var(--dim);margin-bottom:4px">방전(충전) V,Q 붙여넣기 — 2열
-        <b>V [V], Q [mAh/cm²]</b> (STEP4 방전곡선 CSV·뷰어 📈 다운로드)</div>
+        <b>V [V], Q</b> (STEP4 방전곡선 CSV·뷰어 📈 다운로드).  <b style="color:#5aa9e6">케이스
+        <code>?case=</code> 로 열면 저장된 STEP4 곡선(V_terminal·용량%)에서 자동</b></div>
       <textarea id="e-ica-in" class="e-in" style="height:150px;font-size:.74rem;resize:vertical"
         placeholder="V, Q&#10;4.20, 0.00&#10;4.05, 0.35&#10;3.85, 1.20&#10;..."></textarea>
       <button id="e-ica-run" class="btn btn-primary btn-sm" style="margin-top:6px;width:100%">dQ/dV 계산</button>
@@ -90,7 +91,7 @@
       <canvas id="e-ica" width="440" height="300"
               style="width:100%;border-radius:8px;background:var(--card-bg,#0e1526)"></canvas>
       <div id="e-ica-peaks" style="font-size:.78rem;color:var(--dim);margin-top:6px">
-        붙여넣고 계산 — 피크 = OCP 상전이(상변태·스테이징).  SG평활로 노이즈 더블릿 억제.</div>
+        케이스 로드 시 자동 · 붙여넣고 계산 — 피크 = OCP 상전이(상변태·스테이징).  SG평활로 노이즈 더블릿 억제.</div>
     </div>
   </div>
 </div>
@@ -145,6 +146,7 @@ const EIS = {
       if(pr.thickness_um!=null) this.el('e-th').value = (+pr.thickness_um).toFixed(2);
       if(pr.porosity!=null) this.el('e-por').value = (+pr.porosity).toFixed(1);
       badge.innerHTML = ` · <span style="color:#5aa9e6">📁 ${d.case_loaded}</span> STEP3 σ 로드됨`;
+      this.loadCaseICA(d.case_loaded);   // 방전곡선 저장돼 있으면 ICA 도 자동 (caseId 비우기 전에)
       this.caseId = '';   // 로드 완료 → 이후 수동 조정 시 케이스 재덮어쓰기 안 함
     } else if(badge && !badge.innerHTML){ badge.innerHTML=''; }
     this.elems(d); this.drawNyquist(d); this.drawDRT(d);
@@ -227,6 +229,28 @@ const EIS = {
     if(d.error){ this.el('e-ica-peaks').textContent='실패: '+d.error; return; }
     this.drawICA(d);
   },
+  async loadCaseICA(caseId){
+    // 케이스의 저장된 STEP4 방전곡선 → dQ/dV 자동.  실패/부재는 조용히(붙여넣기 폴백 유지).
+    if(!caseId) return;
+    let d; try { d = await (await fetch('/api/ica_case?case='+encodeURIComponent(caseId))).json(); }
+    catch(e){ return; }
+    const pk = this.el('e-ica-peaks');
+    if(!d || d.available===false){
+      if(d && d.hint) pk.innerHTML = `<span style="color:var(--dim)">📁 ${caseId}: ${d.hint}</span>`;
+      return;
+    }
+    if(d.error){ return; }
+    if(d.v && d.q && d.v.length===d.q.length){   // 소스 V,Q 를 텍스트에어리어에 (사용자 열람·편집·재계산)
+      const rows=['V, Q(%)'];
+      for(let i=0;i<d.v.length;i++) rows.push(`${(+d.v[i]).toFixed(4)}, ${(+d.q[i]).toFixed(3)}`);
+      this.el('e-ica-in').value = rows.join('\n');
+    }
+    this.drawICA(d);
+    const mt=d.meta||{}, cr=(mt.c_rate!=null)?`${mt.c_rate}C ${mt.charge?'충전':'방전'}`:'';
+    const badge=`<div style="color:#5aa9e6;margin-bottom:3px">📁 <b>${caseId}</b> STEP4 방전곡선 자동로드`+
+      ` (${cr} · ${d.n_in}점 · ${d.q_unit})</div>`;
+    pk.innerHTML = badge + pk.innerHTML;   // drawICA 가 채운 피크 위에 케이스 배지 추가
+  },
   drawICA(d){
     const cv=this.el('e-ica'), dpr=window.devicePixelRatio||1, W=cv.clientWidth||440, H=300;
     cv.width=W*dpr; cv.height=H*dpr; const ctx=cv.getContext('2d'); ctx.scale(dpr,dpr); ctx.clearRect(0,0,W,H);
@@ -234,7 +258,8 @@ const EIS = {
     if(!pts.length){ this.el('e-ica-peaks').textContent='유효 데이터 없음'; return; }
     const mL=54,mR=14,mT=14,mB=34, xs=pts.map(p=>p.v), ys=pts.map(p=>p.dqdv);
     const xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(0,...ys),ymax=Math.max(0,...ys)*1.08||1;
-    const {pw,ph}=this._axes(ctx,W,H,mL,mB,mT,mR,'V (V)','dQ/dV',xmin,xmax,ymin,ymax,false);
+    const yl = d.q_unit ? ('dQ/dV ('+(String(d.q_unit).indexOf('%')>=0?'%/V':'a.u.')+')') : 'dQ/dV';
+    const {pw,ph}=this._axes(ctx,W,H,mL,mB,mT,mR,'V (V)',yl,xmin,xmax,ymin,ymax,false);
     const X=v=>mL+((v-xmin)/(xmax-xmin||1))*pw, Y=v=>mT+ph-((v-ymin)/(ymax-ymin||1))*ph;
     ctx.beginPath(); pts.forEach((p,i)=>{ const x=X(p.v),y=Y(p.dqdv); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
     ctx.strokeStyle='#2ecc71'; ctx.lineWidth=2; ctx.stroke();
