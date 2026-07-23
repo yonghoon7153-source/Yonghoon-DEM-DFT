@@ -473,7 +473,7 @@ AXES: list[dict[str, Any]] = [
      'key': '__Q_areal_mAhcm2', 'label': 'Q_areal (mAh/cm²) ⭐',
      'direction': 'higher', 'thresholds': [5.0, 3.5, 2.5, 1.5, 0.8, 0.3],
      'formula': 'Q_areal = T(μm) × ρ_AM × C_AM × wt_AM × 1e-4 '
-                '(ρ_NMC ≈ 4.7, C_NMC ≈ 175 mAh/g)',
+                '(ρ_NMC ≈ 4.8, C_NMC ≈ 175 mAh/g)',
      'meaning': '면용량 — high-capacity cell이면 같은 ASR이라도 더 가치 ↑. '
                 '박막(<2 mAh/cm²)은 unit-cell test, >5는 commercial target.',
      'weight': 1.5},
@@ -968,7 +968,10 @@ def _derived_value(key: str, metrics: dict) -> float | None:
         wt_pct = _derived_value('__wt_am_pct', metrics)
         if wt_pct is None:
             return None
-        return (wt_pct / 100.0) * 190   # NCM811 real C ~ 190 mAh/g
+        return (wt_pct / 100.0) * 175   # NMC811 C_am=175 mAh/g — STEP4 x-window(|Δx|·275≈177) 정합,
+        #   vol/areal 축과 통일 (감사 F1-A, 2026-07-23; 옛 190=4.3V lit 값은 우리 창과 불일치).  ⚠ 밀도
+        #   조화평균+C_am 통일로 용량 절대값이 옛(과대) 대비 ~11-15% 낮아짐 = 정직; grade 문턱(Janek ≥500
+        #   mAh/cc 등 문헌 목표)은 불변 → 보정된 정직 용량이 목표에 정직히 대비됨(재보정 아님).
 
     if key == '__Q_volumetric_mAhcc':
         wt_pct = _derived_value('__wt_am_pct', metrics)

@@ -707,8 +707,8 @@ def solve_reaction_current(sid, sig_e_of_sid, sig_i_of_sid, pid, n_am, vox, gct_
 
     같은 복셀 격자 위 TWO networks를 반응 계면에서만 결합한 단일 SPD Kirchhoff 시스템:
       · electronic net (σ_e table: AM+carbon+SDCP) ← 집전체 plate (bottom, φ_e=1 소스)
-      · ionic net      (σ_i table: SE+SDCP)        ← 분리막 plate (top,   φ_i=0 싱크)
-      · BV faces: AM(sid 1,2) ↔ ion-conductor(sid 5,6) 인접 면마다 선형화 Butler-Volmer
+      · ionic net      (σ_i table: SE+SDCP+SWCNT-sheath-if-transparent) ← 분리막 plate (top, φ_i=0 싱크)
+      · BV faces: AM(sid 1,2) ↔ ion-conductor(sid 5,6,8-투명시; σ_i>0 게이트) 인접 면마다 선형화 Butler-Volmer
         컨덕턴스 g_ct = (i0·F/RT)·A_face.  Li는 이 면으로만 두 망을 건넌다 — 반응 면적이
         rasterized 접촉(=coverage)에서 자연히 나온다.
     가정(정직): 저율 선형화(과전압≪RT/F), 균일 SOC(OCV 상수 소거 — linear라 총전류로 스케일),

@@ -1096,7 +1096,9 @@ def main(argv):
                 #   µm agglomerates" = 물리적).  n_objects=recipe n 보고는 chain 수를 k× 과대 → 실제 시딩 chain
                 #   수(_fid 고유수)로 정직 보고.  seeding·부피·σ 전부 불변(라벨만 정정, VGCF는 nobj 그대로).
                 _cb = (kind == 'cblack' and not _coated)
-                _n_obj_rep = (int(_fid.max()) + 1) if (_cb and len(_fid)) else int(nobj)
+                # ⚠ _fid 는 line 1059 에서 전역 오프셋(_gfib) 됨 → max()+1 은 이전 첨가제 개수만큼 부풀음
+                #   (VGCF+SuperP 조합서 오작동, 코드리뷰 HIGH).  unique().size 는 오프셋-불변 = 실제 chain 수.
+                _n_obj_rep = int(np.unique(_fid).size) if (_cb and len(_fid)) else int(nobj)
                 print(f"  [additives] {nm}: {_n_obj_rep} {'agglom-chains' if _cb else 'objects'} "
                       f"({cnt[nm]['wt_pct']}wt% = {cnt[nm]['vol_pct_of_solid']}vol% of solid) → {len(pts):,} pts "
                       f"(E={E} σ_y={sy} coh={_coh}, phase {code}){_bind}")
