@@ -975,8 +975,10 @@ def _derived_value(key: str, metrics: dict) -> float | None:
         if wt_pct is None:
             return None
         wt_am = wt_pct / 100.0
-        rho_am, rho_se, C_am = 4.8, 2.0, 190   # user-provided constants
-        rho_comp = wt_am * rho_am + (1 - wt_am) * rho_se
+        rho_am, rho_se, C_am = 4.8, 2.0, 175   # 정본 밀도(additives.DENS) + STEP4 x-window 정합 C_am (감사 F4)
+        # 복합 고체밀도 = 질량분율의 조화평균 (부피 가산 1/ρ=Σw_i/ρ_i).  산술평균(wt·ρ 합)은 wt%를
+        # vol%로 오용 → 80:20서 4.24 vs 정답 3.75 = +13% 과대 (감사 F1 수정 2026-07-23).
+        rho_comp = 1.0 / (wt_am / rho_am + (1 - wt_am) / rho_se)
         eps = metrics.get('porosity')
         try:
             eps_f = float(eps)
@@ -1198,8 +1200,8 @@ def _derived_value(key: str, metrics: dict) -> float | None:
         # Guard against degenerate values
         if not (0.05 < wt_am < 0.99):
             wt_am = 0.80
-        rho_am = 4.7    # g/cc, NMC bulk
-        C_am   = 175    # mAh/g, NMC811 @ 4.3V cutoff (representative)
+        rho_am = 4.8    # g/cc, NMC bulk — 정본 additives.DENS (was 4.7; 감사 F4 통일)
+        C_am   = 175    # mAh/g, NMC811 STEP4 x-window 정합 (Q_volumetric과 통일)
         # Solid (non-porous) fraction of the electrode by volume
         eps = metrics.get('porosity')
         try:
@@ -1214,8 +1216,9 @@ def _derived_value(key: str, metrics: dict) -> float | None:
         except (TypeError, ValueError):
             solid = 0.85
         # AM volume fraction in the solid = wt_am × ρ_composite / ρ_am
-        rho_se = 1.85   # LPSCl bulk g/cc
-        rho_comp = wt_am * rho_am + (1 - wt_am) * rho_se
+        rho_se = 2.0    # LPSCl bulk g/cc — 정본 additives.DENS (was 1.85; 감사 F4 통일)
+        # 복합 고체밀도 = 조화평균 (질량분율 → 부피 가산; 산술평균은 +13% 과대, 감사 F1)
+        rho_comp = 1.0 / (wt_am / rho_am + (1 - wt_am) / rho_se)
         am_vol_frac = wt_am * rho_comp / rho_am
         return float(L) * solid * am_vol_frac * rho_am * C_am * 1e-4
 
