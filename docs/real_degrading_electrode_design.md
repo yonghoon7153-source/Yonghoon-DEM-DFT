@@ -149,7 +149,10 @@ ASSUMED-FORM 보간으로 정직 표기.
     재유동(−2.6%p) 아님.  ★정직 결과: **같은 voxel 지표선 ledger 강체 16.8% ≈ MPM 19.4%(Δ2.6%p) =
     reflow 없이 이미 일치**(단 §2.5-6대로 "독립" 아님=MPM-self-consistency).  `--reflow-recover`는
     노브 유지(기본 0=권장), 라벨 "metric/law 정합 계수(재유동 아님)"로 정정, production 미전파.
-    docs/a3_reflow_calibration.md(철회판).  ⛔ 잔여: like-for-like 지표비교(§2.5-N5)·영구열화 MPM(v2)·
+    docs/a3_reflow_calibration.md(철회판).  ★영구열화 = **ledger(δcr+recontact-forbid) 소관 확정**
+    (v2 반복사이클 MPM은 3렌즈 설계리뷰서 기각 — 물리(pin-mask 스프링백 불가·isochoric 영구손실 금지)·
+    방법(sub-voxel voxel-metric 계단)·taichi(Δr 0.2셀=null mask) 만장일치; docs/a1_v2_cycle_ratchet_design.md).
+    ⛔ 잔여: like-for-like 지표비교(§2.5-N5)·ledger fade(N) 실험곡선 앵커·
     독립 스캐폴드·Stage-E capped area 로 ledger πRδ 교체.
   - ⛔ **A-2(b)** 취성 crack = FEM/phase-field 미구현(future).  ⛔ **A-4** percolation(N) 미착지.
   - → "하이브리드/진짜 열화 전극"의 **정량 주장**은 A-1 풀MPM 앵커 + A-3 캘리브·held-out(blind) 착지까지

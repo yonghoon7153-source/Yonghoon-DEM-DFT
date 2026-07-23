@@ -1,3 +1,41 @@
+# A-1 v2 — 반복사이클 MPM: ★설계 리뷰서 기각 → 재scope (2026-07-23)
+
+## ★★ ABANDONED as fade-engine (코딩 전 3렌즈 적대리뷰, 물리+방법 만장일치) ★★
+"반복사이클 MPM이 소성 ratchet으로 fade(N)를 first-principles로 준다"는 **불가능**으로 판정 — 코딩
+전에 차단(reflow 교훈 = 설계 리뷰 먼저).  결정적 반증:
+- **물리**: ①AM rigid v=0 pin-mask는 방전 시 SE를 **밀어낼 수 없음** → "탄성 스프링백+소성 잔류"
+  히스테리시스 미계산 → 포화(=v1) or 치밀화(coverage↑ 부호반대). ②Σdg 단조=**tautology**(증가만,
+  가역도 ↑). ③isochoric J2는 영구 접촉손실 **금지**(부피보존 SE는 void 메꿈); 유일 경로=eviction-삭제
+  =질량파괴=가짜 fade. ④⑤진짜 사이클 fade(SC수축→SE 못되돌아감→gap 영구 + 골격재배열)=**DEM/ledger
+  소관**, frozen-AM MPM 아님; coverage=이산 on/off=CZM 영역, 연속체 판정불가.
+- **방법**: ⒜fade를 **금지 voxel-adjacency coverage**로 잼, 34nm=0.26voxel=sub-voxel→**격자 양자화
+  계단 아티팩트**(reflow 함정의 N축 버전). ⒝모양=shakedown 이론상 입력(ΔV/σ_y/경화)의 함수=답 가정.
+  ⒟ledger fit=Hertz↔voxel 불일치 reflow redux+MPM↔ledger 비독립. ⒠1 스캐폴드=법칙 불가. ⒢Kang&Shin
+  =끝점비율(모양 아님)→anchor 영구 IOU.
+- **구현(taichi)**: ⓒ**CRITICAL: 재변형이 sub-voxel** — SC −1.7% 반경 = 0.12~0.24 cell(n_grid=384)
+  → whole-voxel raster가 충전↔방전서 **≈0 셀 재flag** → 마스크 동일 → cyclic drive 0 → **null ratchet**
+  (Δr≥1셀 하려면 n_grid≳2900=비현실). ⓒ**CRITICAL: servo 자기-drift** — const-σ가 plate를 스스로
+  내려 15.9→9.5%(사이클 물리 0인데 단조 porosity drift) → fade 신호와 **분리 불가**. (+재-pin 셀 SE
+  freeze·재진입 구조 없음·수렴 하드페일 없음 = MAJOR).  ⇒ 마스크-재raster 접근 자체가 불가.
+
+## ★ 재scope: 정직한 "진짜 열화" 형태 (리뷰가 가리키는 곳)
+- **fade(N) = ledger** (δcr CZM + `recontact='forbid'` = 이산 접촉파단·영구; MPM 아님).
+- **gap 크기 = v1 MPM 충전앵커로 검증** (SC coverage −19% ≈ ledger 강체 16.8%, 같은-voxel 지표).
+- **N-모양 = ASSUMED-FORM** (Miner) — first-principles 엔진 부재; 실 검증 = **실험 retention(N)/R_int(N)
+  곡선**(≥4 N점, 끝점비율 아님)을 blind 게이트로.  없으면 "후보 모양"이지 "법칙" 아님.
+- **MPM 역할 = morphology/충전-상태 앵커만** (v1 --cycle-deform; cycling 아님).  frame[5]: MPM=형상/void,
+  ledger=이산 파단/transport, FEM=취성, B-1=화학.
+- **ledger fade 산출 시 필수(방법 리뷰)**: ①ledger에 voxel-coverage readout 추가해야 like-for-like
+  (아니면 Hertz↔voxel 브릿지=reflow) ②검증은 **실험만**(MPM fit 자기검증 금지) ③다-스캐폴드 전 "법칙"
+  금지 ④사이-N은 여전히 ASSUMED-FORM(blind mid-N MPM 1점으로 오차 노출).
+
+## 가치
+reflow(magnitude 오귀속)에 이어 v2(shape 오귀속)를 **코딩 전 차단** = 적대리뷰 프로세스 작동.  "MPM이
+다 해준다" 대신 정직한 분업(MPM 형상앵커 + ledger 이산파단 + 실험 크기·모양)으로.
+
+---
+## (원 설계 — 아래는 리뷰가 기각한 내용, 기록용) ▽▽▽
+
 # A-1 v2 — 반복사이클 MPM: 소성 ratcheting 영구(비가역) 열화 설계 (2026-07-23)
 
 ## 목표 (v1 대비)
