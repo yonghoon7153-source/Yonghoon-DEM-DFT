@@ -3614,7 +3614,9 @@ def api_eis():
         return min(hi, max(lo, v))
     try:
         import sys as _sys
-        _sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'scripts'))
+        _sd = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'scripts')
+        if _sd not in _sys.path:                              # 리뷰 LOW: 매 요청 중복 insert 방지
+            _sys.path.insert(0, _sd)
         import eis_drt_ica as _eis
     except Exception as e:
         return jsonify({'error': f'eis_drt_ica import 실패: {type(e).__name__}: {e}'}), 200
@@ -3633,14 +3635,17 @@ def api_eis():
     # jsonify NaN/Inf 방출 방지 — finite 만
     def _cl(x):
         return float(x) if _math.isfinite(float(x)) else None
-    return jsonify({
-        'nyquist': [{'f': _cl(fr), 'zre': _cl(z.real), 'zim': _cl(-z.imag)} for fr, z in zip(freqs, Z)],
-        'drt': [{'tau': _cl(t), 'gamma': _cl(gg)} for t, gg in zip(tau, g)],
-        'elements': {k: _cl(v) for k, v in el.items() if isinstance(v, (int, float))},
-        'peaks': [{'f_Hz': _cl(p['f_Hz']), 'tau_s': _cl(p['tau_s']), 'R': _cl(p['R_ohm_cm2'])} for p in peaks],
-        'provenance': el.get('provenance', {}),
-        'params': {k: kw[k] for k in kw},
-    })
+    try:                                                      # 리뷰 LOW: 직렬화 예외도 500 대신 JSON error
+        return jsonify({
+            'nyquist': [{'f': _cl(fr), 'zre': _cl(z.real), 'zim': _cl(-z.imag)} for fr, z in zip(freqs, Z)],
+            'drt': [{'tau': _cl(t), 'gamma': _cl(gg)} for t, gg in zip(tau, g)],
+            'elements': {k: _cl(v) for k, v in el.items() if isinstance(v, (int, float))},
+            'peaks': [{'f_Hz': _cl(p['f_Hz']), 'tau_s': _cl(p['tau_s']), 'R': _cl(p['R_ohm_cm2'])} for p in peaks],
+            'provenance': el.get('provenance', {}),
+            'params': {k: kw[k] for k in kw},
+        })
+    except Exception as e:
+        return jsonify({'error': f'직렬화 실패: {type(e).__name__}: {e}'}), 200
 
 
 @app.route('/')

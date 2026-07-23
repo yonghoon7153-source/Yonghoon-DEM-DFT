@@ -38,6 +38,7 @@
     <label class="e-lab">r_p (µm)<input id="e-rp" type="number" step="0.1" value="3.0" class="e-in"></label>
     <label class="e-lab">C_dl (µF/cm²) <span class="e-hint">★앵커</span><input id="e-cdl" type="number" step="1" value="10" class="e-in"></label>
     <label class="e-lab">coverage <span class="e-hint">반응면분율</span><input id="e-cov" type="number" step="0.05" value="0.5" class="e-in"></label>
+    <label class="e-lab">porosity (%) <span class="e-hint">a_spec 추정</span><input id="e-por" type="number" step="1" value="8" class="e-in"></label>
   </div>
   <div style="margin-top:10px;display:flex;justify-content:flex-end">
     <button id="e-run" class="btn btn-primary btn-sm">계산 · 그리기</button>
@@ -85,18 +86,19 @@
 const EIS = {
   el: id => document.getElementById(id),
   presets: {
-    sbe: { sige:1.98, sigi:'2.03e-4', th:72.48, rint:50, i0:2.0, ds:'3e-14', rp:3.0, cdl:10, cov:0.5 },
-    dbe: { sige:3.00, sigi:'2.15e-4', th:72.48, rint:50, i0:2.0, ds:'3e-14', rp:3.0, cdl:10, cov:0.5 },
-    sc:  { sige:1.98, sigi:'2.03e-4', th:72.48, rint:50, i0:2.0, ds:'3e-15', rp:2.0, cdl:10, cov:0.5 },
+    sbe: { sige:1.98, sigi:'2.03e-4', th:72.48, rint:50, i0:2.0, ds:'3e-14', rp:3.0, cdl:10, cov:0.5, por:8 },
+    dbe: { sige:3.00, sigi:'2.15e-4', th:72.48, rint:50, i0:2.0, ds:'3e-14', rp:3.0, cdl:10, cov:0.5, por:7.4 },
+    sc:  { sige:1.98, sigi:'2.03e-4', th:72.48, rint:50, i0:2.0, ds:'3e-15', rp:2.0, cdl:10, cov:0.5, por:8 },
   },
   applyPreset(p){ const v=this.presets[p]; if(!v) return;
     this.el('e-sige').value=v.sige; this.el('e-sigi').value=v.sigi; this.el('e-th').value=v.th;
     this.el('e-rint').value=v.rint; this.el('e-i0').value=v.i0; this.el('e-ds').value=v.ds;
-    this.el('e-rp').value=v.rp; this.el('e-cdl').value=v.cdl; this.el('e-cov').value=v.cov; this.run(); },
+    this.el('e-rp').value=v.rp; this.el('e-cdl').value=v.cdl; this.el('e-cov').value=v.cov;
+    this.el('e-por').value=v.por; this.run(); },
   params(){ return { sigma_e:this.el('e-sige').value, sigma_ion:this.el('e-sigi').value,
     thickness_um:this.el('e-th').value, r_int:this.el('e-rint').value, i0:this.el('e-i0').value,
     d_s:this.el('e-ds').value, r_p_um:this.el('e-rp').value, c_dl_uf:this.el('e-cdl').value,
-    coverage:this.el('e-cov').value }; },
+    coverage:this.el('e-cov').value, porosity:this.el('e-por').value }; },
   async run(){
     const q = new URLSearchParams(this.params()).toString();
     let d; try { d = await (await fetch('/api/eis?'+q)).json(); }
