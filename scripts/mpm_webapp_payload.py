@@ -904,6 +904,16 @@ def main():
                             print(f"  ⚠ STEP3 thermal not solvable: {_th['reason']}")
                     except (Exception, SystemExit) as _e_th:
                         print(f"  ⚠ STEP3 thermal skip: {type(_e_th).__name__}: {_e_th}")
+                # ★#30 — carbon(VGCF3/SuperP4/SWCNT8)↔SE(6) 3상 계면 면적 (kim2024 Fig3b: SE 분해 촉매면).
+                #   STEP5 VGCF-촉매 화학열화(b1_chem_fade carbon_se_area)의 구조 입력.  carbon 있을 때만 기록.
+                try:
+                    _csa = _s3.carbon_se_contact_area(sid3, a.step3_vox)
+                    if _csa > 0:
+                        step3['carbon_se_area_um2'] = float(f"{_csa:.4g}")
+                        print(f"  STEP3 carbon–SE 계면 {step3['carbon_se_area_um2']} µm² "
+                              f"(VGCF-촉매 SE분해 화학열화 STEP5 입력)")
+                except Exception as _e_csa:
+                    print(f"  ⚠ carbon–SE area skip: {type(_e_csa).__name__}")
                 # ★ A6 — PORE-phase effective-diffusion τ (DiffuDict/TauFactor 규약, #281/#286 축):
                 # 같은 격자에서 void상 σ=1 Laplace → D_eff/D0, τ = ε_total/D_rel.  STRUCTURAL
                 # descriptor (frame[4] cross-check) — ASSB Li⁺ 수송은 SE 접촉망(σ_ion 위)이 담당,

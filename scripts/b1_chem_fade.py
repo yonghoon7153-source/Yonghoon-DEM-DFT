@@ -54,14 +54,20 @@ def _shape_label(out, en=False):
     return base
 
 
-def _assemble(rct_rel_at, extra_Ns, rint0, rint_exp_x, n_exp, r_contact0, shape, chem_x, chem_p=1.5):
+def _assemble(rct_rel_at, extra_Ns, rint0, rint_exp_x, n_exp, r_contact0, shape, chem_x, chem_p=1.5,
+              carbon_se_area=0.0, k_cat_carbon=0.0, vgcf_wt=0.0):
     """공통 조립 코어: 접촉 rel 콜백(rct_rel_at) + 화학/OTHER 분해 → 궤적 rows.
     trajectory()(ledger JSON 접촉궤적)와 trajectory_scalar()(스칼라 끝점)가 **둘 다 이 코어**를
     호출 = 단일 소스(분해 로직 중복 금지, 웹패널↔CLI 발산 방지).
 
     ★분해 정직 (리뷰 반영): magnitude(끝점)만 앵커, 채널 SPLIT은 가정(r_contact0·chem_x 미측정).
       bare(chem_x=None)에서 '화학'은 실은 '총−접촉' 잔차(=CEI 지배 가정, 상한).  입력 비정합
-      (접촉/화학 > 총)이면 inconsistent=True 로 노출(shares 조작 안 함)."""
+      (접촉/화학 > 총)이면 inconsistent=True 로 노출(shares 조작 안 함).
+
+    ★#30 VGCF carbon-촉매 SE분해 (k_cat_carbon>0 일 때만): 화학 채널을 carbon-촉매몫 + baseline-CEI
+      몫으로 **분해**(kim2024 3상계면 촉매·cho2024 R_int 2.1×@100cyc).  ★이중계산 가드: 실험 끝점
+      (rint_exp_x)은 with-carbon 셀 측정 = carbon 효과 이미 포함 → carbon몫을 화학 위에 **더하지 않고
+      SPLIT**(carbon = min(화학, k·area·wt), baseline = 화학−carbon).  k_cat_carbon=0 = 기본 = 무영향."""
     dR_total_exp = rint0 * (rint_exp_x - 1.0)                 # 실험 총 성장 Δ (Ω·cm²) @ n_exp
     dR_contact_exp = r_contact0 * (rct_rel_at(n_exp) - 1.0)   # 접촉 몫 @ n_exp (ledger, ★하한 = frozen-AM)
     if chem_x is None:
@@ -70,6 +76,9 @@ def _assemble(rct_rel_at, extra_Ns, rint0, rint_exp_x, n_exp, r_contact0, shape,
     else:                                                     # 코팅 인식: 화학=명시(억제), OTHER=나머지
         dR_chem_exp = rint0 * (chem_x - 1.0)
         dR_other_exp = max(0.0, dR_total_exp - dR_contact_exp - dR_chem_exp)   # 접촉초과이탈·SE분해·Li (모델 밖)
+    # 화학 채널 내부 분해 (carbon-촉매 vs baseline) — 앵커 초과 방지 min() = 더하기 아닌 쪼개기
+    dR_chem_carbon_exp = min(dR_chem_exp, max(0.0, k_cat_carbon) * max(0.0, carbon_se_area) * max(0.0, vgcf_wt))
+    dR_chem_base_exp = max(0.0, dR_chem_exp - dR_chem_carbon_exp)
     # 입력 비정합 판정: 총 성장이 비양수(exp_x≤1)이거나, 접촉/명시화학이 총을 초과 → shares 무의미
     inconsistent = (dR_total_exp <= 1e-9
                     or dR_contact_exp > dR_total_exp + 1e-9
@@ -90,10 +99,16 @@ def _assemble(rct_rel_at, extra_Ns, rint0, rint_exp_x, n_exp, r_contact0, shape,
             'inconsistent': bool(inconsistent),
             'chem_share_pct': 100.0 * dR_chem_exp / denom,
             'contact_share_pct': 100.0 * dR_contact_exp / denom,
-            'other_share_pct': 100.0 * dR_other_exp / denom}
+            'other_share_pct': 100.0 * dR_other_exp / denom,
+            # #30: 화학 채널 내부 분해 (carbon-촉매 vs baseline-CEI).  carbon_frac = 화학 중 carbon 몫.
+            'chem_carbon_share_pct': 100.0 * dR_chem_carbon_exp / denom,
+            'chem_base_share_pct': 100.0 * dR_chem_base_exp / denom,
+            'chem_carbon_frac': (dR_chem_carbon_exp / dR_chem_exp) if dR_chem_exp > 1e-12 else 0.0,
+            'carbon_se_area': carbon_se_area, 'k_cat_carbon': k_cat_carbon, 'vgcf_wt': vgcf_wt}
 
 
-def trajectory(fade_json, rint0, rint_exp_x, n_exp, r_contact0, shape, chem_x=None, chem_p=1.5):
+def trajectory(fade_json, rint0, rint_exp_x, n_exp, r_contact0, shape, chem_x=None, chem_p=1.5,
+               carbon_se_area=0.0, k_cat_carbon=0.0, vgcf_wt=0.0):
     """chem_x=None → 화학=나머지(bare NCM 가정, 옛 방식).  chem_x 지정 → 화학 성장 ×를 명시
     (코팅 NCM = CEI 억제 → 작게) → 나머지 = OTHER(골격재배열·SE분해·Li쪽 = 우리 모델 밖).
     접촉 채널 = ledger fade JSON 의 rct_holm_rel 궤적(앵커 N점 사이 선형보간)."""
@@ -114,11 +129,13 @@ def trajectory(fade_json, rint0, rint_exp_x, n_exp, r_contact0, shape, chem_x=No
                 return ledger_rct[ks[i]] * (1 - t) + ledger_rct[ks[i + 1]] * t
         return ledger_rct[ks[-1]]
 
-    return _assemble(rct_rel_at, ks, rint0, rint_exp_x, n_exp, r_contact0, shape, chem_x, chem_p)
+    return _assemble(rct_rel_at, ks, rint0, rint_exp_x, n_exp, r_contact0, shape, chem_x, chem_p,
+                     carbon_se_area=carbon_se_area, k_cat_carbon=k_cat_carbon, vgcf_wt=vgcf_wt)
 
 
 def trajectory_scalar(rint0, rint_exp_x, n_exp, r_contact0, shape, chem_x=None,
-                      ledger_end_x=1.1, ledger_shape='sqrt', chem_p=1.5):
+                      ledger_end_x=1.1, ledger_shape='sqrt', chem_p=1.5,
+                      carbon_se_area=0.0, k_cat_carbon=0.0, vgcf_wt=0.0):
     """웹패널/스크립트용: ledger fade JSON 없이 접촉 채널을 **스칼라 끝점**(ledger_end_x, 예 1.1×)
     + ledger_shape 로 해석 → contact rct_rel(N) = 1 + (ledger_end_x−1)·shape_ledger(N).  나머지
     화학/OTHER 분해는 trajectory()와 동일 코어(_assemble).  ★ledger_end_x 는 A-3 ledger 실측(하한)에서
@@ -131,7 +148,8 @@ def trajectory_scalar(rint0, rint_exp_x, n_exp, r_contact0, shape, chem_x=None,
         return 1.0 + (end - 1.0) * _shape(N, n_exp, ledger_shape, chem_p)
 
     return _assemble(rct_rel_at, [n_exp // 20, n_exp // 5], rint0, rint_exp_x, n_exp,
-                     r_contact0, shape, chem_x, chem_p)
+                     r_contact0, shape, chem_x, chem_p,
+                     carbon_se_area=carbon_se_area, k_cat_carbon=k_cat_carbon, vgcf_wt=vgcf_wt)
 
 
 def _report(out, label):
@@ -223,6 +241,17 @@ def _selftest():
     mSq = [r for r in o['rows'] if r['N'] == 250][0]['R_int']
     mLn = [r for r in oln['rows'] if r['N'] == 250][0]['R_int']
     chk('shape 중간 다름 (√N > linear)', mSq > mLn + 1e-3)
+    # #30 VGCF carbon-촉매 화학 분해 (SPLIT not ADD; k=0 무영향; carbon+base=chem; R_int 불변)
+    cOff = trajectory_scalar(18, 6.1, 1000, 2.8, 'sqrt', chem_x=1.3, ledger_end_x=1.1)
+    cOn = trajectory_scalar(18, 6.1, 1000, 2.8, 'sqrt', chem_x=1.3, ledger_end_x=1.1,
+                            carbon_se_area=5000.0, k_cat_carbon=1e-5, vgcf_wt=2.0)
+    chk('carbon OFF(k=0) → carbon몫 0', abs(cOff['chem_carbon_share_pct']) < 1e-12)
+    chk('carbon ON → chem 불변 (SPLIT not ADD)', abs(cOff['chem_share_pct'] - cOn['chem_share_pct']) < 1e-9)
+    chk('carbon+base = chem (분해)', abs(cOn['chem_carbon_share_pct'] + cOn['chem_base_share_pct']
+                                        - cOn['chem_share_pct']) < 1e-9)
+    chk('carbon split R_int 궤적 불변 (이중계산 가드)',
+        all(abs(a['R_int'] - b['R_int']) < 1e-9 for a, b in zip(cOff['rows'], cOn['rows'])))
+    chk('carbon_frac ∈ [0,1]', 0.0 <= cOn['chem_carbon_frac'] <= 1.0)
     import tempfile
     import os as _os
     fd = {'trajectory': [{'cycle': 0, 'rct_holm_rel': 1.0}, {'cycle': 100, 'rct_holm_rel': 1.1}]}

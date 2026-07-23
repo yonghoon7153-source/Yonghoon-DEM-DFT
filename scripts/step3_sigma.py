@@ -401,6 +401,19 @@ def solve_thermal(sid, vox, z_top_um, z_bot_um=0.0, k_table=None, field_sids=Non
     return out
 
 
+def carbon_se_contact_area(sid, vox):
+    """탄소(VGCF 3·SuperP 4·SWCNT 8) ↔ SE(6) 복셀-면 접촉 면적 (µm²).
+    kim2024 Fig3b: NCM–SE–carbon 3상 계면이 sulfide SE 전기화학 분해를 촉매 → 이 면적이
+    STEP5 VGCF-촉매 화학열화(carbon_se_area)의 구조 입력.  phase_current_share 면-순회와 동일 규약."""
+    carb = np.isin(sid, (3, 4, 8)); se = (sid == 6)
+    faces = 0
+    for a, b in ((np.s_[:-1, :, :], np.s_[1:, :, :]),
+                 (np.s_[:, :-1, :], np.s_[:, 1:, :]),
+                 (np.s_[:, :, :-1], np.s_[:, :, 1:])):
+        faces += int((carb[a] & se[b]).sum()) + int((se[a] & carb[b]).sum())
+    return float(faces) * vox * vox
+
+
 def field_point_cloud(res, sid, sigma_of_sid, vox, sel_sids, box_lo=(0.0, 0.0, 0.0),
                       max_points=40000, hot_budget_frac=0.35, seed=1):
     """Per-voxel current-density MAGNITUDE sampled at the selected conducting phase(s), as a
