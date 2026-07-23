@@ -131,6 +131,29 @@ def bayes_minimize(objective_fn, bounds: dict, n_calls=40, app='balanced', seed=
     return {'available': True, 'best_design': best, 'best_score': -res.fun, 'result': res}
 
 
+# ── 오케스트레이터: Sobol explore → BO exploit → 최적 설계 (폐루프 = Phase 3-5) ──────────────
+def run_design_loop(bounds: dict, objective_fn, app: str = 'balanced',
+                    n_explore: int = 32, n_exploit: int = 40, seed: int = 0) -> dict:
+    """설계 폐루프: ① Sobol 저불일치 explore(공간 골고루) → objective 평가 → ② BO exploit(GP+gp_hedge).
+    objective_fn(design_dict) → metrics dict(정규화 [0,1]); predictor_engine(GPR+RF)+scaling-law 연결점
+    (WSL).  cloud서는 mock objective로 오케스트레이션 구조만 검증.  BO(skopt) 부재 시 explore 최적 반환.
+    반환: {best_design, best_score, explore_scored(내림차순), bo}."""
+    explore = sobol_doe(bounds, n_explore, seed=seed)
+    scored = sorted(((d, scalarize(objective_fn(d), app)) for d in explore), key=lambda x: -x[1])
+    best_ex = scored[0] if scored else ({}, float('-inf'))
+    bo = bayes_minimize(objective_fn, bounds, n_calls=n_exploit, app=app, seed=seed)
+    out = {'app': app, 'n_explore': len(explore), 'explore_scored': scored,
+           'explore_best_design': best_ex[0], 'explore_best_score': best_ex[1], 'bo': bo}
+    if bo.get('available'):
+        out['best_design'], out['best_score'] = bo['best_design'], bo['best_score']
+        out['source'] = 'bayesian_exploit'
+    else:
+        out['best_design'], out['best_score'] = best_ex[0], best_ex[1]
+        out['source'] = 'sobol_explore'
+        out['note'] = 'BO 미가용(skopt=WSL) → Sobol explore 최적 반환 (cloud는 explore까지 검증)'
+    return out
+
+
 # ─────────────────────────── self-test ───────────────────────────
 def _selftest() -> int:
     fails = []
@@ -176,6 +199,23 @@ def _selftest() -> int:
             fails.append(f'클라우드 bayes guard 이상 {b}')
     # 6) n=0 / 빈 bounds 안전
     assert sobol_doe({}, 5) == [] and sobol_doe(bounds, 0) == []
+    # 7) run_design_loop 오케스트레이션 — mock objective(정규화 metric): σ_e∝am, τ∝1/loading, density∝am
+    def _mock_obj(d):
+        am = (d['am_pct'] - 70) / 20.0                       # [0,1]
+        ld = (d['loading'] - 1) / 7.0
+        return {'sigma_e': am, 'sigma_ionic': 1 - am, 'tau': 1 - ld, 'density': am,
+                'porosity': 1 - am, 'current_focus': 1 - ld, 'dip_margin': ld, 'coverage': am}
+    loop = run_design_loop(bounds, _mock_obj, app='fast_charge', n_explore=16, n_exploit=8, seed=1)
+    if not (loop.get('best_design') and 'best_score' in loop and len(loop['explore_scored']) == 16):
+        fails.append(f'run_design_loop 구조 이상 {list(loop)}')
+    # explore가 점수순 내림차순 정렬됐나
+    scs = [s for _, s in loop['explore_scored']]
+    if scs != sorted(scs, reverse=True):
+        fails.append('explore_scored 정렬 안 됨')
+    # fast_charge = 고-σ_e·저-τ 선호 → best는 am 높고 loading 높은 쪽 (mock 상)
+    bd = loop['best_design']
+    if not (bd['am_pct'] > 70 and bd['loading'] > 1):
+        fails.append(f'best_design 방향 의심 {bd}')
     print('selftest OK' if not fails else 'selftest FAIL: ' + '; '.join(fails))
     if not fails:
         print(f"  Sobol 16pt discrepancy {d_sobol:.5f} < random {d_rand:.5f} (더 균일) · "

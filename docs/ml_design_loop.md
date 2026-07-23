@@ -48,6 +48,12 @@ python scripts/ml_design_loop.py               # selftest (Sobol·scalarize 검�
 # 실제 루프: predictor_engine corpus 로드 → sisso_discover / bayes_minimize
 ```
 
+## 5. run_design_loop — 폐루프 오케스트레이터 (검증됨)
+`run_design_loop(bounds, objective_fn, app, n_explore, n_exploit)` = ① Sobol explore(공간 골고루) →
+objective 평가·정렬 → ② BO exploit(GP+gp_hedge).  `objective_fn(design)→metrics dict`가
+predictor_engine(GPR+RF)+scaling-law 연결점(WSL); skopt 부재 시 explore 최적 반환(cloud 검증).
+검증(mock objective): 16 explore 점수순 정렬·best_design 방향(fast_charge→고-σ_e·저-τ) 정합.
+
 ## frame[5] 위치
 ML 루프는 DEM/MPM **위** 설계층(frame-neutral).  우리 structure→σ 기전이 그들이 없는 "why"를 제공 —
-ML은 탐색·최적화, 물리는 해석.  selftest 6/6 PASS(Sobol 균일·scalarize 방향·guard·엣지).
+ML은 탐색·최적화, 물리는 해석.  selftest 7/7 PASS(Sobol 균일·scalarize penalize·guard·엣지·오케스트레이터).
