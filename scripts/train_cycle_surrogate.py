@@ -162,7 +162,10 @@ def train_and_save(X, Y, feat_names, out_dir):
     rep = {'n_samples': int(X.shape[0]), 'n_features': int(X.shape[1]),
            'targets': {t: {'n': int(np.isfinite(Y[t]).sum()), 'provenance': TARGETS.get(t, '')}
                        for t in res['targets']},
-           'note': 'GPR+RF per-target(누출가드).  물리타깃=설계knob·파생타깃=물리feature.'}
+           'note': 'GPR+RF per-target(누출가드: 물리타깃=설계knob·파생타깃=물리feature).  ⚠cycle_N 축은 '
+                   'corpus 에 사이클런(cycle_N 있는 metrics)이 있어야 학습됨 — 없으면 uniform 0 → R_int(N)/'
+                   'retention(N)은 ASSUMED-FORM(rint_growth/retention) 계수로만(surrogate 미학습).  fit 로그의 '
+                   '⚠전-결측 경고 확인(설계 미결측 = input_params.json 있어야).'}
     json.dump(rep, open(os.path.join(out_dir, 'train_report.json'), 'w'), indent=2, ensure_ascii=False)
     return {'status': f"{len(res['targets'])} 타깃 학습·저장", 'saved': True,
             'out': out_dir, 'report': rep}
