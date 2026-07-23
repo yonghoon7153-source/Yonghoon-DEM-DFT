@@ -7,7 +7,8 @@
 <title>{% block title %}DFT Infrastructure · Battery Materials Lab{% endblock %}</title>
 <script>
 // 테마 초기화 (FOUC 방지 — 페인트 전에 data-theme 결정)
-(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+(function(){try{var u=new URLSearchParams(location.search).get('theme');var t=u||localStorage.getItem('theme');
+  if(t==='dark'||t==='light'){document.documentElement.setAttribute('data-theme',t);if(u)localStorage.setItem('theme',t);}}catch(e){}})();
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

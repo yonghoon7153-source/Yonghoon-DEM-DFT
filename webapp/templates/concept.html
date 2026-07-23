@@ -14,7 +14,7 @@
 </div>
 
 <div class="concept-wrap">
-  <article class="doc concept" id="concept-body"><span class="muted">렌더링 중…</span></article>
+  <article class="doc concept" id="concept-body">{{ fallback_html|safe }}</article>
 </div>
 
 {% if siblings %}
@@ -37,10 +37,10 @@
 <script>
 (function(){
   var box = document.getElementById('concept-body');
-  var raw;
-  try { raw = JSON.parse(document.getElementById('md-src').textContent); }
-  catch(e){ box.innerHTML = '<span class="muted">원본을 불러오지 못했어요.</span>'; return; }
-  if (typeof marked === 'undefined'){ box.textContent = raw; return; }
+  var raw=null;
+  try { raw = JSON.parse(document.getElementById('md-src').textContent); } catch(e){}
+  // marked 로드+raw 있으면 풀 파이프라인 재렌더; 아니면 서버 fallback HTML 유지(raw dump 없음)
+  if (typeof marked !== 'undefined' && raw){
 
   var L = '', R = '';           // private-use sentinel (marked이 건드리지 않음)
   var maths = [], calls = [];
@@ -78,29 +78,33 @@
   html = html.replace(new RegExp(L+'M(\\d+)'+R,'g'),             function(_,n){ return esc(maths[n]); });
 
   box.innerHTML = html;
+  }
 
-  // 6) mermaid 코드블록 → .mermaid div
+  // mermaid 코드블록 → .mermaid div (marked·서버 fallback 공통)
   box.querySelectorAll('code.language-mermaid').forEach(function(c){
     var d = document.createElement('div'); d.className = 'mermaid'; d.textContent = c.textContent;
     (c.closest('pre') || c).replaceWith(d);
   });
 
-  // 7) KaTeX 렌더 (스크립트 로드 타이밍 대비 폴링)
+  // KaTeX 렌더 (로드 타이밍 대비 폴링 — 최대 ~3s)
+  var _kt=0;
   (function katex(){
     if (window.renderMathInElement){
       renderMathInElement(box, { delimiters:[
         {left:'$$', right:'$$', display:true},
         {left:'$',  right:'$',  display:false}
       ], throwOnError:false });
-    } else { setTimeout(katex, 60); }
+    } else if (_kt++ < 50){ setTimeout(katex, 60); }
   })();
 
-  // 8) mermaid 렌더
+  // mermaid 렌더 (다크모드 테마 반영)
+  var _mm=0;
   (function mm(){
     if (window.mermaid){
-      try { mermaid.initialize({ startOnLoad:false, theme:'neutral', securityLevel:'strict' });
+      try { mermaid.initialize({ startOnLoad:false, securityLevel:'strict',
+            theme:(document.documentElement.getAttribute('data-theme')==='dark'?'dark':'neutral') });
             mermaid.run({ nodes: box.querySelectorAll('.mermaid') }); } catch(e){}
-    } else { setTimeout(mm, 60); }
+    } else if (_mm++ < 50){ setTimeout(mm, 60); }
   })();
 
   // 9) 목차 자동생성 (H2 스캔)

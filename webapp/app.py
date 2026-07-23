@@ -182,8 +182,10 @@ def concept(cid):
         have = D.concept_ids()
         siblings = [g for g in G.GLOSSARY
                     if g["cat"] == term["cat"] and g["id"] != cid and g["id"] in have]
+    # 서버 렌더 fallback — marked.js CDN 미로드시에도 raw dump 대신 서식 유지
+    fallback = _md.markdown(md, extensions=["tables", "fenced_code"]) if _md else "<pre>" + md + "</pre>"
     return render_template("concept.html", active="glossary", cid=cid,
-                           term=term, raw_md=md, siblings=siblings)
+                           term=term, raw_md=md, siblings=siblings, fallback_html=fallback)
 
 
 @app.route("/api/concept/<cid>")
