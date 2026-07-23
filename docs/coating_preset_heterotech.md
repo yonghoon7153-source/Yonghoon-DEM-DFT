@@ -26,6 +26,13 @@ frame[5]: **코팅 = 화학 CEI 축**(Stage-E 기계 coverage와 별개).
 
 `coated_chem_x(coating, bare_chem_x)` = 1 + (bare−1)/cei_suppress (증분만 억제).  앵커 없으면 bare 유지.
 
+**추가 API (앵커-안전):**
+- `coated_rint0(coating, rint0, rct_frac)` — 계면 R_ct 억제(r_ct_factor, LNO 1/20)를 pristine R_int0에.
+  ★R_ct는 R_int **한 성분** → 성분 분율(rct_frac, EIS-TLM 앵커)을 **줄 때만** 적용, 미상=미적용(날조금지).
+  R_int0_coated = R_int0·[(1−f)+f·r_ct_factor].
+- `coating_effect(coating, bare_chem_x)` — 코팅 전체 효과 1-dict(webapp 단일소스): chem_x(앵커 계산)·
+  r_ct/σ_mod(앵커 계수, 적용은 성분분율/STEP3 필요)·anchor·note.
+
 ## STEP5 배선 (`b1_chem_fade --coating`)
 `--coating LNO --chem-x 1.30`(bare) → 화학성장 1.30 → **1.02** (CEI 15× 억제).  검증(6.1× 총성장,
 ledger 1.1): 화학몫 5.9% → **0.4%**.  selftest 8/8(coating) + b1 20/20.

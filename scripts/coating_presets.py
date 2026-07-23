@@ -79,6 +79,32 @@ def coated_chem_x(coating: str, bare_chem_x: float) -> float:
     return 1.0 + (b - 1.0) / float(s)
 
 
+def coated_rint0(coating: str, bare_rint0: float, rct_frac=None) -> float:
+    """코팅의 계면 R_ct 억제(r_ct_factor, 예 LNO 1/20)를 pristine R_int0에 적용.
+    ★정직: R_ct는 R_int의 **한 성분**이라, 그 성분 분율(rct_frac)을 caller가 줄 때만 적용 —
+    분율은 별도 앵커(EIS-TLM 분해), 미상이면 None=미적용(날조 금지, bare 유지).
+    R_int0_coated = R_int0·[(1−f) + f·r_ct_factor]  (f=rct_frac, R_ct 성분만 억제)."""
+    p = get_preset(coating)
+    rf = p.get('r_ct_factor')
+    if rf is None or rct_frac is None:
+        return float(bare_rint0)
+    f = min(1.0, max(0.0, float(rct_frac)))
+    return float(bare_rint0) * ((1.0 - f) + f * float(rf))
+
+
+def coating_effect(coating: str, bare_chem_x=None) -> dict:
+    """코팅의 **전체** 문서화 효과를 한 dict로 (webapp/CLI 표기 단일소스).
+    chem_x는 앵커(bare 주면 계산), r_ct/σ_mod는 앵커된 '적용 계수'(적용엔 성분분율/STEP3 필요)."""
+    p = get_preset(coating)
+    return {'coating': coating, 'label': p['label'], 'anchor': p['anchor'], 'shape': p['shape'],
+            'cei_suppress': p.get('cei_suppress'),
+            'chem_x_coated': (coated_chem_x(coating, bare_chem_x) if bare_chem_x is not None else None),
+            'r_ct_factor': p.get('r_ct_factor'), 'sigma_ion_mod': p.get('sigma_ion_mod'),
+            'sigma_e_mod': p.get('sigma_e_mod'), 'seed_morph': p.get('seed_morph'),
+            'note': '화학 CEI는 chem_x로 적용됨(앵커).  r_ct/σ_mod는 앵커된 계수이나 적용은 '
+                    'R_ct 성분분율(coated_rint0)·STEP3(σ) 필요 — 미상 시 미적용(날조 금지).'}
+
+
 def preset_summary() -> str:
     """프리셋 표 텍스트 (webapp/CLI 표기용)."""
     rows = ['coating        cei_suppress  r_ct×   σ_ion×  σ_e×   morph   anchor']
@@ -110,6 +136,15 @@ def _selftest() -> int:
     assert coated_chem_x('LNO', 1.5) < coated_chem_x('LZO', 1.5) < 1.5
     # 억제 후에도 ≥1 (성장은 음수 안 됨)
     assert coated_chem_x('LNO', 1.30) >= 1.0
+    # coated_rint0: rct_frac 없으면 bare 유지(날조금지), 주면 R_ct 성분만 억제
+    assert abs(coated_rint0('LNO', 18.0) - 18.0) < 1e-9              # rct_frac=None → bare
+    assert abs(coated_rint0('none', 18.0, rct_frac=0.5) - 18.0) < 1e-9   # 앵커없음 → bare
+    # LNO r_ct_factor=1/20, rct_frac=0.5 → 18·(0.5 + 0.5/20) = 18·0.525 = 9.45
+    assert abs(coated_rint0('LNO', 18.0, rct_frac=0.5) - 18.0 * 0.525) < 1e-9, coated_rint0('LNO', 18.0, rct_frac=0.5)
+    # coating_effect: chem_x 계산 + 전체 필드
+    eff = coating_effect('LNO', bare_chem_x=1.30)
+    assert abs(eff['chem_x_coated'] - 1.02) < 1e-9 and eff['r_ct_factor'] == 1.0 / 20.0 and 'note' in eff
+    assert coating_effect('SDCP')['chem_x_coated'] is None      # bare 안 주면 None
     print('selftest OK' if not fails else 'selftest FAIL: ' + '; '.join(fails))
     print(preset_summary())
     return 1 if fails else 0
