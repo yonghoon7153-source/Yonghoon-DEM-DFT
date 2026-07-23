@@ -426,6 +426,9 @@ def parse_args(argv):
 
 def main(argv):
     args = parse_args(argv)
+    if args.fracture_scaffold and not args.am_scaffold:       # ★L1(리뷰): crack-void는 스캐폴드 경로 전용
+        raise SystemExit('[fracture] --fracture-scaffold 는 --am-scaffold 필요 (crack-void는 '
+                         'DEM→MPM 스캐폴드 경로에서만 동작 — 다른 경로에선 무시되므로 침묵 no-op 차단).')
     import taichi as ti
     arch = {'gpu': ti.gpu, 'cuda': ti.cuda, 'vulkan': ti.vulkan, 'cpu': ti.cpu}[args.arch]
     kw = dict(arch=arch, default_fp=ti.f32, random_seed=args.seed)
@@ -551,6 +554,12 @@ def main(argv):
             if len(fr) != len(am_r):
                 raise SystemExit(f"[fracture] fracture-scaffold 행수 {len(fr)} != am_scaffold {len(am_r)} — "
                                  "행-정렬 CSV 필요 (scripts/dem_fracture_scaffold.py로 동일 순서 생성).")
+            # ★M1(리뷰): 행수만으론 순서-불일치/다른-전극 CSV를 못 잡음.  fracture CSV는 cols 0-4에
+            #   type,x,y,z,r 을 재수록하므로 좌표로 실제 정렬 검증 (생성기의 .6f 반올림 허용).
+            if fr.shape[1] >= 5 and not np.allclose(fr[:, 1:4], amraw[:, 1:4], atol=1e-4):
+                _nbad = int((np.abs(fr[:, 1:4] - amraw[:, 1:4]).max(1) > 1e-4).sum())
+                raise SystemExit(f"[fracture] fracture-scaffold 좌표가 am_scaffold와 불일치 ({_nbad}행) — "
+                                 "다른 전극/순서의 CSV.  같은 am_scaffold로 dem_fracture_scaffold.py 재생성.")
             _rank = fr[:, -2].astype(int)                          # worst_stage_rank 0..4
             _RANKMIN = {'microcrack': 1, 'multicrack': 2, 'fragmentation': 3, 'pulverization': 4}[args.fracture_min_stage]
             _void = np.zeros(len(am_r), np.float64)

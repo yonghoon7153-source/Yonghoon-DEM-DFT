@@ -46,11 +46,30 @@ DEM `f_intact`(σ 수송보정, network_conductivity)와 MPM crack-void는 **서
 - `f_intact` → 깨진 접촉의 **전도도** 감소 (DEM 수송).
 - crack-void → 균열의 **형태/공극** (MPM morphology).
 
-둘을 **동시에** 켜면, MPM crack-void가 바꾼 구조 위에서 STEP3 σ를 다시 계산할 때 파괴의
-전도-영향이 **한 번 더** 실릴 수 있다(구조-경유).  현재 기본은 crack-void OFF이므로
-프로덕션 이중계산 없음.  동시 사용 시: **crack-void는 morphology-only로 해석하고, 그
-구조에서 나온 σ에는 f_intact를 재적용하지 말 것**(같은 파괴를 형태 1회 + 수송 1회로만
-계상).  최종 규약은 GPU 실런 캘리브 후 확정(사용자 논의 대상).
+둘을 **동시에** 켜면, MPM crack-void가 바꾼 구조 위에서 STEP3 σ를 다시 계산할 때 **frag/pulv**
+파괴의 전도-영향이 **한 번 더** 실릴 수 있다(구조-경유 + f_intact).  현재 기본은 crack-void
+OFF이므로 프로덕션 이중계산 없음.
+
+★ 정정(리뷰 M3): "f_intact를 통째로 끄라"는 blunt 규약은 틀렸다 — crack-void는 **frag/pulv만**
+표현하는데 f_intact는 **micro/multi까지** 담당하므로, f_intact를 통째로 끄면 micro/multi의
+수송 열화가 **누락**(under-count)된다.  올바른 규약은 **단계별 분리**:
+- **frag/pulv 접촉**: 형태(crack-void, STEP3 구조-경유)로 1회 계상 → 이 접촉엔 f_intact **재적용 금지**.
+- **micro/multi 접촉**: crack-void가 표현 안 하므로 f_intact(수송)로 계상 **유지**.
+즉 "crack-void가 소유한 frag/pulv에만 f_intact를 빼고, micro/multi f_intact는 남긴다."
+구현은 f_intact를 stage로 분해(frag/pulv 몫 vs micro/multi 몫)해야 함 — GPU 실런 캘리브 후
+확정(사용자 논의 대상).
+
+## ⚠ 근사 한계 (리뷰 L2/L3)
+
+- **질량 비보존 (L2):** `am_r×(1−v)^⅓`는 구의 **고체 부피**를 (1−v)배로 줄인다 = 활물질을
+  삭제.  실제 파괴는 AM 질량 보존(파편이 퍼지고 그 **사이**에 void).  → 파괴 구조의 AM-분율/
+  용량 readout은 물리보다 활물질을 덜 본다.  또 **비-se-dump(uniform-fill) 경로**에서는
+  `se_target ∝ AM_vol`이라 AM 축소가 SE 주입을 **줄인다(역방향 — 균열공간엔 SE가 더 들어와야)**.
+  → **`--se-dump` 경로 사용 권장**(se_target 무관, 실제 SE 위치로 seeding하므로 이 back-coupling
+  회피).  정확한 fragment-split(질량보존 다-구 분할)은 v2 후보.
+- **cycle-deform × fracture 조합 (L3):** 반경 인자는 곱해짐(`am_r·_fac·(1−v)^⅓`, math OK)이나,
+  충전-**팽창**(cycle-deform poly)과 균열-**수축**을 같은 입자에 곱하면 서로 다른 기전을 한
+  반경에 섞는 것 → 깨끗한 중첩 아님(물리적으로 모호).  조합은 허용하되 해석 주의.
 
 ## 정직한 한계 (현 SDCP 케이스 = near-null)
 

@@ -94,9 +94,11 @@ def build_fracture_scaffold(atoms_csv, contacts_csv, meta_json, am_scaffold_csv)
         aid = am_ids[int(j)]
         rank[k] = STAGE_RANK.get(worst.get(aid, 'intact'), 0)
         fpc[k] = float(maxf.get(aid, 0.0))
+    r_med = float(np.median(scaf[:, 4])) if scaf.shape[1] > 4 and len(scaf) else 0.0
     stats = {'n_scaffold': len(scaf), 'n_am_atoms': len(am_ids),
              'match_dist_med': float(np.median(d)) if len(d) else 0.0,
              'match_dist_max': float(d.max()) if len(d) else 0.0,
+             'r_med': r_med,
              'n_micro': int((rank == 1).sum()), 'n_multi': int((rank == 2).sum()),
              'n_frag': int((rank == 3).sum()), 'n_pulv': int((rank >= 4).sum())}
     return scaf, rank, fpc, stats
@@ -129,6 +131,15 @@ def main(argv=None):
         if not os.path.exists(p):
             raise SystemExit(f'없음: {p} (--case-dir 또는 --atoms/--contacts 확인)')
     scaf, rank, fpc, st = build_fracture_scaffold(atoms, contacts, meta, a.am_scaffold)
+    # ★M2(리뷰): 위치-매칭 거리 게이트 — 다른 전극/프레임 CSV면 KDTree가 무관 입자에 심각도를 붙여도
+    #   조용히 그럴싸한 값을 냄.  최대 매칭거리가 AM 반경의 상당 부분을 넘으면 = 다른 전극 → 중단.
+    if st['r_med'] > 0 and st['match_dist_max'] > 0.5 * st['r_med']:
+        raise SystemExit(f"[fracture] 위치-매칭 최대거리 {st['match_dist_max']:.3g} > 0.5×AM반경중앙값 "
+                         f"{st['r_med']:.3g} — atoms.csv와 am_scaffold가 다른 전극/프레임일 가능성.  "
+                         "같은 케이스의 atoms/contacts + 그 케이스로 만든 am_scaffold를 쓰세요.")
+    if st['r_med'] > 0 and st['match_dist_max'] > 0.1 * st['r_med']:
+        print(f"  ⚠ 매칭거리 최대 {st['match_dist_max']:.3g} (AM반경중앙 {st['r_med']:.3g}의 "
+              f"{100*st['match_dist_max']/st['r_med']:.0f}%) — 정렬 재확인 권장.")
     write_fracture_scaffold(a.out, scaf, rank, fpc)
     print(f'✓ {a.out}  ({st["n_scaffold"]} AM 행-정렬; 위치매칭 중앙거리 {st["match_dist_med"]:.2g} '
           f'최대 {st["match_dist_max"]:.2g})')
