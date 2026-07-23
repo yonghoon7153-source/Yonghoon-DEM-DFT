@@ -124,7 +124,7 @@ $$\boxed{\Phi = h\nu - \text{SECO}} \quad (\text{Eq.1, SECO} = E_{\text{cutoff}}
 **물리 (왜 UPS가 산화안정성과 직결되나):**
 - **산화 = 가전자대에서 전자를 빼는 사건.** 그 난이도를 정하는 양이 **이온화에너지 IE**(= 진공준위−VBM, "가전자 전자 하나 빼는 데 드는 에너지"). 분자 직관으로는 **−E(HOMO) ≈ IP**(Koopmans, 수직 이온화) → **VBM/IE가 깊을수록(IE 큼) 산화 onset이 높음 = 더 산화안정.**
 - **UPS가 재는 양 = 바로 이 VBM/IE다** (§5: 가전자대 onset 선형외삽 → VBM(E_F 기준) 또는 IE(진공준위 기준)). 즉 **UPS는 산화안정성의 *밴드엣지 관측량*을 직접 측정하는 실험기법**. 우리 보고서 §6 "UPS가 실제로 재는 것 = VBM + Φ → IE = 수직이온화 = 밴드엣지"가 정확히 이 논문의 Eq.4/§3.1.
-- **우리 DFT의 VBM이 그 계산판**: comp1 **VBM = S 3p** (`electronic.json`: comp1_v3 VBM 2.48 eV·gap 1.76 / modelc_v3 VBM 2.72·gap 1.82, QE PBE k=6×6×6, S 3p ~91%). **UPS VBM onset 외삽 = 우리 PDOS VBM(S 3p)의 실험 카운터파트.** 산화의 *화학적 주역*(S²⁻→폴리설파이드)이 곧 VBM 성격(S 3p)이라는 우리 결론을, UPS가 "VBM=S-유래 상태, IE 깊이"로 실측해 받쳐줄 수 있다.
+- **우리 DFT의 VBM이 그 계산판**: comp1 **VBM = S 3p** (`electronic.json`: comp1 gap 2.066 / modelc gap 2.099 eV, eigenvalue fixed-occ nscf `eigenvalue_gaps_v100` — supersedes DOS-threshold 1.76/1.82; QE PBE, VBM=S 3p ~91%). **UPS VBM onset 외삽 = 우리 PDOS VBM(S 3p)의 실험 카운터파트.** 산화의 *화학적 주역*(S²⁻→폴리설파이드)이 곧 VBM 성격(S 3p)이라는 우리 결론을, UPS가 "VBM=S-유래 상태, IE 깊이"로 실측해 받쳐줄 수 있다.
 
 **그러나 — UPS(밴드엣지)와 grand-potential(분해열역학)은 산화안정성의 *두 다른 정의*이고, 둘 다 필요 (보고서 핵심):**
 - 우리 보고서(`…VBM_vs_grandpotential…`)의 thesis = **분해형 고체전해질의 산화 onset은 VBM(밴드엣지)이 아니라 grand-potential 분해창으로 본다.** 이유: 재료가 *밴드엣지에 닿기 전에 상으로 분해*하므로, **밴드엣지(VBM/UPS) 창은 실제 열역학 분해창을 2–3배 과대평가**(Schwietert 2020 Nat. Mater.: "band-gap window"(과대) vs "decomposition window"(실제) 분리).
@@ -133,7 +133,7 @@ $$\boxed{\Phi = h\nu - \text{SECO}} \quad (\text{Eq.1, SECO} = E_{\text{cutoff}}
 
 ### 7-2. ★ 우리 자체증거가 "UPS-VBM 단독 ≠ 산화안정성"을 보여줌 — 그리고 dopant 스크리닝 test
 - **보고서 §8의 결정적 데이터**: comp1/modelc는 **VBM이 다른데(절대 VBM Δ~0.32 eV)도 산화 onset이 둘 다 2.14 V로 동일**(grand-potential, S²⁻→폴리설파이드 limited). → **UPS로 VBM만 재서 "Cl-rich가 산화창 0.3 V 다르다"고 읽으면 틀림.** 산화는 밴드엣지 위치가 아니라 *S²⁻ 분해화학*이 결정. UPS-VBM은 **band-edge 관측량이지 분해 onset이 아님**을 우리 두 시료가 자체증명.
-  - (주의: 위 ~0.32 eV는 절대 VBM(정렬 미보정·§7-3). `electronic.json` 수렴 k-mesh에선 comp1/modelc gap이 1.76 vs 1.82로 거의 같음(Δ−0.06) — 밴드갭은 Cl 함량에 둔감. 어느 쪽이든 **onset 동일(2.14 V)**이라는 결론은 robust.)
+  - (주의: 위 ~0.32 eV는 절대 VBM(정렬 미보정·§7-3). `electronic.json` eigenvalue gap은 comp1/modelc 2.066 vs 2.099로 거의 같음(Δ−0.03; DOS-threshold 1.76/1.82은 폐기) — 밴드갭은 Cl 함량에 둔감. 어느 쪽이든 **onset 동일(2.14 V)**이라는 결론은 robust.)
 - **★ dopant 스크리닝에 UPS가 주는 깨끗한 test** (`db/properties/oxidation_stability_cascade.csv`): 우리 cascade는 dopant별 grand-potential 산화 onset을 갖는다 — 대부분 **2.14 V(=S²⁻-limited, dopant가 limiting reaction을 안 바꿈)**, 그러나 일부는 *limiting reaction 자체를 바꿔* onset이 오름: 예 **B2O3 ox=2.317 V**(undoped 2.14 대비 +0.18). **여기서 UPS의 역할**: "VBM을 깊게 만든다고 알려진 dopant가 *실제로 측정 산화 onset을 올리나*"를 UPS(VBM/IE) + CV(분해 onset)로 *동시에* test. 두 가지 결과로 갈림 —
   - dopant가 **VBM은 깊게(UPS IE↑) 했는데 grand-potential onset은 그대로(2.14, S²⁻ limited)** → 우리 보고서 결론 재확인(밴드엣지≠분해 onset, S²⁻가 lim).
   - dopant가 **limiting reaction을 바꿔 onset↑(B2O3형)** → 이땐 VBM 깊어짐과 onset↑이 *함께* 가는지 UPS로 검증 → "VBM 깊이 ↔ 산화안정"이 *언제* 성립하는지(limiting chemistry가 anion p-band일 때) 판별.
@@ -144,7 +144,7 @@ $$\boxed{\Phi = h\nu - \text{SECO}} \quad (\text{Eq.1, SECO} = E_{\text{cutoff}}
 우리 `concepts/dos_vbm_efermi_methods.md`의 두 핵심 경고가 UPS로 *해결*되는 지점:
 - **(a) DFT 절대 VBM은 셀마다 0점(셀 평균전위)이 달라 비교 불가** → 공통 기준 정렬(core-level/slab 진공준위) 필요. **UPS는 이 문제를 실험으로 우회**: UPS는 **분광기 E_F(또는 진공준위)라는 절대 외부기준**에 직접 잰다. 즉 UPS는 우리가 DFT에서 못 가진 "절대 기준 VBM"을 제공 → DFT VBM 검증의 외부 앵커.
   - 단 매핑 시: DFT VBM(E_F 기준, 절연체 E_F는 smearing artifact!)을 UPS(E_F 기준 또는 진공준위 IE)와 비교하려면 **기준을 맞춰야** — 우리 노트대로 절연체 DFT E_F는 못 쓰므로, **slab IP(진공준위−VBM)를 계산해 UPS의 IE와 비교**하는 게 엄밀(우리 H-목록의 "slab IP / absolute VBM" 항목과 정확히 같은 미래작업).
-- **(b) PBE는 gap ~1 eV 과소·무질서 ±0.2–0.3 scatter** → 우리 gap(comp1 1.76 PBE)은 "wide-gap insulator" 수준으로만. UPS는 **점유측(VBM)만** 직접 줌(빈자리 CBM은 **IPES/역광전자분광** 필요). 따라서 UPS+IPES 합쳐야 실험 gap; UPS 단독으론 VBM만 검증.
+- **(b) PBE는 gap ~1 eV 과소·무질서 ±0.2–0.3 scatter** → 우리 gap(comp1 2.066 PBE)은 "wide-gap insulator" 수준으로만. UPS는 **점유측(VBM)만** 직접 줌(빈자리 CBM은 **IPES/역광전자분광** 필요). 따라서 UPS+IPES 합쳐야 실험 gap; UPS 단독으론 VBM만 검증.
 - **함정 공유**: UPS VBM = **표면민감(~1–2 nm)·수직(vertical) 이온화** → 표면오염/band bending에 취약, adiabatic 분해와 또 다름(보고서 §6 caveat). DFT bulk VBM과 직접 등치 전에 표면효과 고려.
 
 ### 7-4. (보조) XPS(코어) ↔ UPS(가전자대+Φ) 상보성 — 우리 core-hole 작업과 짝
@@ -185,7 +185,7 @@ $$\boxed{\Phi = h\nu - \text{SECO}} \quad (\text{Eq.1, SECO} = E_{\text{cutoff}}
 - **UPS≠산화안정성**: UPS VBM은 band alignment용. 분해형 SE 산화 onset은 grand-potential/CV (우리 보고서 §6 위계). "UPS로 산화창" = 우리가 명시적으로 거부한 프레임 → **이 논문은 그 거부의 방법론적 근거**(UPS가 재는 건 수직 이온화=밴드엣지, 분해창 아님).
 - **표면·수직 측정**: UPS ~1–2 nm 표면민감 + vertical ionization → bulk DFT VBM·adiabatic 분해와 직접 등치 금지. 표면오염/band bending 보정 필수.
 - **절연체 직접 불가**: 우리 SE(wide-gap)/SEI는 절연성 → 대전 때문에 **도전기판 위 박막·바이어스·박막두께 시리즈** 없이는 측정불가. (우리가 실측 추진 시 가장 큰 실무장벽.)
-- **VBM만, CBM 아님**: UPS=점유측. 실험 gap엔 **IPES/역광전자** 필요. UPS 단독으론 우리 gap(1.76/1.82) 검증 못 하고 VBM만.
+- **VBM만, CBM 아님**: UPS=점유측. 실험 gap엔 **IPES/역광전자** 필요. UPS 단독으론 우리 gap(2.066/2.099) 검증 못 하고 VBM만.
 - **Φ는 σ_e 아님**: Φ/VBM=밴드정렬, σ_e=결함/carrier. UPS로 "전자차단 정도(σ_e)"를 직접 못 잼 — 밴드정렬·주입장벽까지만.
 - **단색화 안 한 He 램프 위성선**(He Iβ/Iγ 23.1/23.75/24.05 eV)이 갭 근처 약한 위성 → 미세 가전자대 분석 시 빼야.
 - 단독저자·tutorial → "best practice"는 **저자 실험실 관행 중심**(VG Scientific MKII ESCALAB/UVL-Hi). 장비·시료별 세부는 다를 수 있음(저자도 "in the author's experience" 명시).
