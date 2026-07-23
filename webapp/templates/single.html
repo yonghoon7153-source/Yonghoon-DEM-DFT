@@ -311,6 +311,11 @@
                 <button type="button" onclick="addSchedStep('r')" style="padding:3px 9px;cursor:pointer">+ Rest</button>
                 <button type="button" onclick="loadSchedPreset()" style="padding:3px 9px;cursor:pointer">기본(formation+rest+rate)</button>
                 <button type="button" onclick="clearSched()" style="padding:3px 9px;cursor:pointer">비우기</button>
+                <button type="button" onclick="saveSchedPreset()" style="padding:3px 9px;cursor:pointer" title="현재 스케줄을 이름 붙여 브라우저에 저장">&#x1F4BE; 저장</button>
+                <select id="sched-preset-sel" onchange="loadSavedSched(this.value)" style="padding:3px;max-width:160px" title="저장한 스케줄 불러오기">
+                  <option value="">&#x1F4C2; 불러오기…</option>
+                </select>
+                <button type="button" onclick="delSavedSched()" style="padding:3px 7px;cursor:pointer" title="선택한 저장 스케줄 삭제">&#x1F5D1;</button>
                 <span style="flex:1"></span>
                 <button type="button" onclick="applySched()" style="padding:4px 14px;background:#1d4ed8;color:white;border:none;border-radius:5px;cursor:pointer">적용</button>
               </div>
@@ -658,7 +663,8 @@ function openSchedModal() {
     const cur = (document.getElementById('s4-sched-json') || {}).value;
     try { _schedSteps = cur ? JSON.parse(cur) : _defSched(); } catch (e) { _schedSteps = _defSched(); }
   }
-  renderSched(); const m = document.getElementById('sched-modal'); if (m) m.style.display = 'flex';
+  renderSched(); _refreshSchedPresetSel();
+  const m = document.getElementById('sched-modal'); if (m) m.style.display = 'flex';
 }
 function closeSchedModal() { const m = document.getElementById('sched-modal'); if (m) m.style.display = 'none'; }
 function addSchedStep(k) { _schedSteps.push(k === 'c' ? { k: 'c', r: 0.2, v: 4.5, i: 0.05, n: 1 } : k === 'r' ? { k: 'r', t: 1, n: 1 } : { k: 'd', r: 0.2, v: 3.0, n: 1 }); renderSched(); }
@@ -666,6 +672,39 @@ function delSchedStep(i) { _schedSteps.splice(i, 1); renderSched(); }
 function moveSchedStep(i, d) { const j = i + d; if (j < 0 || j >= _schedSteps.length) return; const t = _schedSteps[i]; _schedSteps[i] = _schedSteps[j]; _schedSteps[j] = t; renderSched(); }
 function loadSchedPreset() { _schedSteps = _defSched(); renderSched(); }
 function clearSched() { _schedSteps = []; renderSched(); }
+// ── 스케줄 저장/불러오기 (localStorage, 브라우저 영속 — 서버 불필요) ──
+const _SCHED_LS_KEY = 'mpm_s4_sched_presets';
+function _schedPresets() { try { return JSON.parse(localStorage.getItem(_SCHED_LS_KEY) || '{}'); } catch (e) { return {}; } }
+function _refreshSchedPresetSel() {
+  const sel = document.getElementById('sched-preset-sel'); if (!sel) return;
+  const cur = sel.value, p = _schedPresets();
+  sel.innerHTML = '<option value="">📂 불러오기…</option>'
+    + Object.keys(p).sort().map(n => `<option value="${n.replace(/"/g, '&quot;')}">${n}</option>`).join('');
+  sel.value = (cur && p[cur]) ? cur : '';
+}
+function saveSchedPreset() {
+  const name = (prompt('스케줄 이름 (같은 이름이면 덮어씀):', '') || '').trim();
+  if (!name) return;
+  const p = _schedPresets(); p[name] = _schedSteps;
+  try { localStorage.setItem(_SCHED_LS_KEY, JSON.stringify(p)); } catch (e) { alert('저장 실패: ' + e.message); return; }
+  _refreshSchedPresetSel();
+  const sel = document.getElementById('sched-preset-sel'); if (sel) sel.value = name;
+}
+function loadSavedSched(name) {
+  if (!name) return;
+  const p = _schedPresets(); if (!p[name]) return;
+  _schedSteps = JSON.parse(JSON.stringify(p[name]));   // deep copy (원본 프리셋 보존)
+  renderSched();
+}
+function delSavedSched() {
+  const sel = document.getElementById('sched-preset-sel');
+  if (!sel || !sel.value) { alert('삭제할 저장 스케줄을 먼저 골라줘'); return; }
+  const name = sel.value;
+  if (!confirm('"' + name + '" 삭제?')) return;
+  const p = _schedPresets(); delete p[name];
+  localStorage.setItem(_SCHED_LS_KEY, JSON.stringify(p));
+  _refreshSchedPresetSel();
+}
 function _schedSet(i, f, v) {
   if (f === 'k') {
     _schedSteps[i].k = v;
