@@ -53,8 +53,15 @@ Wo1(R_w,τ) 추출.  우리 `physics_eis` 가 **같은 소자를 우리 물리�
 - 일치 → 우리 σ-삼중·i0·D_s·구형확산이 EIS를 재현(교차검증).
 - 편차 → 정량적 모델-한계(정직).  **C_dl 은 실측서 앵커, 나머지는 예측** = 진짜 예측력 시험.
 
+## ★ webapp 패널 (`/eis`) — BUILT (2026-07-24)
+한 페이지에 **Nyquist + DRT γ(τ) + ICA dQ/dV** 3 도구.  `/api/eis`(GET)·`/api/ica`(POST) = eis_drt_ica
+단일소스.  SBE/DBE/SC **프리셋** + **`&case=` 자동로드**(DEM `results/<case>` + mpm_lab `<pid>` 둘 다 —
+STEP3 σ-triad·두께·porosity만; R_int앵커·i0/D_s스윕·C_dl앵커는 UI 유지).  **mpm_lab 저장목록 각 행에 🔌 EIS
+링크**(클릭→그 케이스 σ로 EIS).  소자 카드(R0=hf+ionTL·R_ct·C_dl·f_ct·R_w·τ_w) + §F1 앵커 경고 + **σ_e-필드축
+주석**(EIS=이온/R_ct 지배, σ_e는 필드맵 → SBE≈DBE EIS 정상).  코드리뷰 HIGH/MED 0 + LOW 하드닝.
+
 ## 잔여 (v3-1 후속)
 - **완전 AC-solve**(step4_dyn 2.9M-dof 에 소신호 섭동 + FFT) = 미세구조-해상 EIS (지금은 reduced-order 등가회로).
 - C_dl **실험 앵커**(eis_fit CPE1_Q → µF/cm²) 배선 · R_w 실험 Wo1_R 채택.
-- webapp /step4 패널에 Nyquist·DRT 표시 · SOC/사이클-N EIS 궤적(D5 R_ct/C_dl/Warburg 시그니처).
+- ICA/EIS **케이스 방전곡선 자동로드**(step4 출력 → dQ/dV; 지금은 붙여넣기) · SOC/사이클-N EIS 궤적(D5).
 - **DRT 사이클 전개**: R_int(N) 성장을 DRT 피크별(R_ct vs 확산 vs 접촉)로 분해 = 열화 기전 진단.

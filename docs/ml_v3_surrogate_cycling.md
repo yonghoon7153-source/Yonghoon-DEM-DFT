@@ -34,12 +34,20 @@ matching-chemistry(sulfide-ASSB)에만**.  liquid 로 학습해 "sulfide 다" = 
 python3 scripts/ml_cycle_surrogate.py --selftest         # 구조·feature·성장모델(cloud)
 python3 scripts/cycling_data_ingest.py --selftest        # 게이트·인제스트·FORM 적합(cloud)
 python3 scripts/cycling_data_ingest.py --csv cyc.csv --chemistry sulfide_assb   # 실데이터
-pip install scikit-learn                                 # WSL: surrogate 실학습
-# corpus(88-132) + STEP4 사이클런 → CycleSurrogate.fit → predict_cycle_curve
+pip install scikit-learn joblib                          # WSL: surrogate 실학습
+python scripts/train_cycle_surrogate.py --results webapp/results --out models/cycle_surrogate
+# → corpus 로드 → 설계knob+물리feature 조립 → CycleSurrogate.fit(per-target 누출가드) → joblib+리포트
 ```
 
+## ★ WSL 학습 파이프라인 (`scripts/train_cycle_surrogate.py`) — BUILT (2026-07-24)
+corpus(results/<case>/*metrics.json) → `design_from_metrics`(설계knob) + `assemble_features`(물리 15) +
+`targets_from_metrics`(σ-triad 상시·R_int/retention 사이클런만) → `build_matrix`(X[n,29]·Y, 결측 nan §F1) →
+`train_and_save`(CycleSurrogate.fit → joblib + train_report.json).  sklearn/joblib **import-guard**(클라우드
+graceful, WSL 실학습).  selftest: mock corpus 30 → X(30,29)·σ_e 30·R_int 15·retention 0(미배선 nan).
+★per-target **누출가드**(물리타깃=설계knob만·파생타깃=자기제외) = 2단 surrogate(설계→물리→성능).
+
 ## 잔여 (v3 후속)
-- **실학습**(WSL): predictor_engine corpus + STEP4 사이클런 → surrogate 계수.
+- **실학습 실행**(WSL): 위 스크립트를 실 corpus 로 → CycleSurrogate 계수·CV R².
 - **오픈소스 실다운로드**(WSL): Severson/NASA CSV → fit_fade/rint_form(FORM 앵커).
 - **폐루프 배선**: ml_design_loop(Sobol/SISSO/BO) ↔ CycleSurrogate ↔ predictor_engine → 역설계.
 - webapp /predictor 에 사이클곡선 예측 패널 · EIS(v3-1) 소자를 surrogate 타깃에 추가.
