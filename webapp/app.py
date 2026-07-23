@@ -4,15 +4,14 @@ app.py — DFT 지식 인프라 Flask 앱.
      흰색+한양네이비로 각색하고, 데이터소스를 db/*.json 으로 교체.
 동기화: db 파일을 요청마다 읽으므로 계산 등록 즉시 사이트 반영.
 """
-from flask import Flask, render_template, jsonify, send_from_directory, abort
+from flask import Flask, render_template, jsonify, send_from_directory, abort, request
 from datetime import datetime
-import json
+import json, os
 from datetime import datetime as _dt
 import data as D
 import glossary as G
 
 app = Flask(__name__)
-_ASSET_V = str(int(datetime.now().timestamp()))
 
 try:
     import markdown as _md
@@ -20,9 +19,17 @@ except Exception:
     _md = None
 
 
+def _css_ver():
+    """style.css mtime 기반 캐시버스팅 키 (요청마다 계산 → CSS 수정 즉시 반영)."""
+    try:
+        return str(int(os.path.getmtime(os.path.join(app.static_folder, "css", "style.css"))))
+    except Exception:
+        return "1"
+
+
 @app.context_processor
 def _inject():
-    return {"asset_version": _ASSET_V, "COMPS": D.COMPOSITIONS,
+    return {"asset_version": _css_ver(), "COMPS": D.COMPOSITIONS,
             "CATS": D.CATEGORIES, "FAMILY_ORDER": D.FAMILY_ORDER}
 
 
@@ -156,9 +163,10 @@ def api_csv(rel):
 @app.route("/api/property/<name>")
 def api_property(name):
     p = D.DB / "properties" / f"{name}.json"
-    if not p.exists():
+    d = D._load_json(p) if p.exists() else None
+    if d is None:            # 없거나 깨진 JSON → 500 대신 404 (silent 500+traceback 방지)
         abort(404)
-    return jsonify(json.loads(p.read_text()))
+    return jsonify(d)
 
 
 @app.route("/api/paper/<pid>")
@@ -260,8 +268,13 @@ def api_handoff(hid):
 
 @app.route("/health")
 def health():
-    return jsonify({"ok": True, "asset": _ASSET_V})
+    return jsonify({"ok": True, "asset": _css_ver()})
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5001)
+    # 보안 기본값: 디버거 OFF·localhost 바인드. 자동리로드는 유지(디버거와 분리).
+    # LAN 접근: FLASK_HOST=0.0.0.0 · 디버거: FLASK_DEBUG=1 (신뢰 네트워크에서만).
+    _dbg = os.environ.get("FLASK_DEBUG", "").lower() in ("1", "true", "yes")
+    app.run(host=os.environ.get("FLASK_HOST", "127.0.0.1"),
+            port=int(os.environ.get("PORT", "5001")),
+            debug=_dbg, use_reloader=True)
