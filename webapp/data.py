@@ -41,6 +41,20 @@ def _load_json(p: Path):
     except Exception:
         return None
 
+# ── 실시간 동기화용 mtime 시그니처 (캐시 키로 써서 db 변경 즉시 반영) ──
+def _mtime_ns(p: Path) -> int:
+    try:
+        return p.stat().st_mtime_ns
+    except Exception:
+        return 0
+
+def _dir_sig(path: Path, pattern: str):
+    """(파일수, 최신 mtime) — add/modify/delete 모두 값이 바뀌므로 캐시 무효화에 충분."""
+    if not path.exists():
+        return (0, 0)
+    fs = list(path.glob(pattern))
+    return (len(fs), max((f.stat().st_mtime_ns for f in fs), default=0))
+
 def load_index() -> dict:
     return _load_json(DB / "_index.json") or {}
 
@@ -99,8 +113,9 @@ CATEGORIES = [
     {"id": "interface",  "label": "Interface",   "icon": "🧩", "keys": ["adhesion", "oxidation", "sei", "interface", "esw", "anode", "binding", "adsorption"]},
     {"id": "structural", "label": "Structural",  "icon": "🧊", "keys": ["phonon", "voronoi", "coordination", "bond_lengths", "eos_dft"]},
     {"id": "cascade",    "label": "Cascade/ML",  "icon": "🤖", "keys": ["cascade", "doping", "alpha_sensitivity"]},
-    {"id": "literature", "label": "Literature",  "icon": "📚", "keys": ["literature", "audit"]},
 ]
+# 참고: 'literature' 열은 제거함 — 조성별 문헌 유무는 원소 기반이라 항상 True(vanity)였음.
+# 문헌은 Literature 페이지 + 원소/용어 논문칩으로 충분히 노출.
 
 def categorize(prop_name: str) -> str:
     n = prop_name.lower()
@@ -187,15 +202,21 @@ CANONICAL = {
     "gap_eV":     {"comp1": 2.066, "comp2": 2.04, "modelc": 2.099, "lpsocl": 2.2309, "b2o3": 1.9671},
     "B0_GPa":     {"comp1": 26.23, "comp2": 25.8, "modelc": 21.71, "lpsocl": 24.71, "b2o3": 24.48},
     "E_VRH_GPa":  {"comp1": 22.06, "modelc": 27.66, "lpsocl": 35.04},  # relaxed-ion USPP; comp2 재측정중
-    "MD_Ea_eV":   {"comp1": 0.253, "modelc": 0.224, "lpsocl": 0.271},  # UMA (lpsocl 4-seed headline 0.271±0.033)
-    "ICOHP_PS":   {"comp1": -6.0, "comp2": -5.913, "modelc": -6.0, "lpsocl": -6.04, "modelc_nd_doped": -5.976},
+    "MD_Ea_eV":   {"comp1": 0.253, "modelc": 0.224, "lpsocl": 0.271},  # UMA — ⚠절대값 인용주의, 멀티시드 판정만
+    "ICOHP_PS":   {"comp1": -5.938, "modelc": -6.000, "lpsocl": -6.04, "modelc_nd_doped": -5.976},  # per_bond_json/lobster
 }
+# 잠정/미커밋 표시 — (property, comp) : 사유. 배지·툴팁에 '잠정' 노출.
+CANONICAL_PROVISIONAL = {
+    ("gap_eV", "comp2"): "잠정 — legacy band_gaps, fixed-occ nscf 재확인중 (eigenvalue canonical 아님)",
+}
+# comp2 gap 2.04 는 잠정이라 CANONICAL 에서 뺐다 (원하면 위 PROVISIONAL 로만 표시).
+CANONICAL["gap_eV"]["comp2"] = 2.04  # 유지하되 아래 META/PROVISIONAL 로 잠정 표기
 CANONICAL_META = {
-    "gap_eV":    "fixed-occ eigenvalue (DOS-threshold 금지)",
+    "gap_eV":    "fixed-occ eigenvalue (DOS-threshold 금지) · comp2는 잠정(legacy, 재확인중)",
     "B0_GPa":    "DFT BM3 EOS",
     "E_VRH_GPa": "DFT relaxed-ion USPP·k444(comp1)/셀별·0.005 — comp1↔comp2만 완전비교",
-    "MD_Ea_eV":  "UMA-s-1p1, 600/800/1000K 3-seed (pseudo 무관)",
-    "ICOHP_PS":  "LOBSTER all-PAW ext-basis",
+    "MD_Ea_eV":  "UMA-s-1p1, 600/800/1000K 3-seed · ⚠절대값 인용 주의(멀티시드 판정)",
+    "ICOHP_PS":  "LOBSTER all-PAW ext-basis · comp2 값은 handoff(db 미커밋)이라 제외",
 }
 
 # ─────────────────────────────────────────────────────────────
@@ -292,10 +313,11 @@ def build_matrix() -> dict:
 # ─────────────────────────────────────────────────────────────
 # 집계형 property JSON — 파일명엔 조성토큰이 없고 내부 results/id/key 에 조성별 값이 있음
 AGGREGATES = {
-    "bonds": "bonding", "eos": "mechanical", "elastic": "mechanical",
+    "electronic": "electronic", "bonds": "bonding", "eos": "mechanical", "elastic": "mechanical",
     "oxidation_stability": "interface", "adhesion": "interface",
     "li_transport": "ionic", "diffusion": "ionic",
 }
+_AGG_CONTAINER = re.compile(r"(result|system|eigenvalue|band_?gap)", re.I)
 _COMP_ALIASES = {
     "comp1": ["comp1"], "comp2": ["comp2"], "comp3": ["comp3"], "comp4": ["comp4"], "comp5": ["comp5"],
     "modelc": ["modelc", "lpscl16"], "modelc_v3": ["modelc_v3"],
@@ -304,26 +326,31 @@ _COMP_ALIASES = {
     "li3n": ["li3n"], "lic6": ["lic6"], "sdcp": ["sdcp"],
 }
 
-@lru_cache(maxsize=32)
 def _agg_ids(fname):
-    """집계 JSON의 '식별자'만 추출 — id 필드·results/systems 키·최상위 키.
-    (자유텍스트 note에 조성명이 스쳐도 오탐 안 하게 — sdcp 오탐 사례)."""
+    """집계 JSON의 실제 '레코드 id'만 추출 — 결과 컨테이너(results/eigenvalue_gaps/band_gaps)의
+    하위키(값이 dict일 때) + 어디든 'id' 필드. 최상위 prose 제목(comp1_vs_modelc_comparison 등)은 제외."""
+    return _agg_ids_c(fname, _mtime_ns(DB / "properties" / f"{fname}.json"))
+
+@lru_cache(maxsize=64)
+def _agg_ids_c(fname, _mt):
     d = _load_json(DB / "properties" / f"{fname}.json")
     if not isinstance(d, dict):
         return frozenset()
-    ids = {str(k).lower() for k in d.keys()}
-    def walk(x):
+    ids = set()
+    def walk(x, pk):
         if isinstance(x, dict):
+            vals = list(x.values())
+            # '레코드 컨테이너'(키명이 result/eigenvalue/…, 값이 전부 dict)면 하위키=id
+            if _AGG_CONTAINER.search(pk or "") and vals and all(isinstance(v, dict) for v in vals):
+                ids.update(str(k).lower() for k in x.keys())
             for k, v in x.items():
                 if k == "id" and isinstance(v, str):
                     ids.add(v.lower())
-                if k in ("results", "result", "systems", "by_comp", "per_comp") and isinstance(v, dict):
-                    ids.update(str(kk).lower() for kk in v.keys())
-                walk(v)
+                walk(v, k)
         elif isinstance(x, list):
             for it in x:
-                walk(it)
-    walk(d)
+                walk(it, pk)
+    walk(d, "")
     return frozenset(ids)
 
 def _aggregate_covers(cid, cat_id):
@@ -352,8 +379,8 @@ def _has_category_data(cid, cat_id, props, prop_cat, idx_metrics) -> bool:
         for dp in idx_metrics.get(cid, []):
             if any(k in str(dp.get("path", "")).lower() for k in cat["keys"]):
                 return True
-    # (c) 구조/CSV 존재 (structural/electronic 등)
-    if cat_id in ("structural", "electronic") and structures_for(cid):
+    # (c) 구조파일 존재 → structural 만 (electronic은 실제 dos/pdos/gap 데이터가 있어야 True)
+    if cat_id == "structural" and structures_for(cid):
         return True
     if datafiles_for(cid):
         # 어떤 CSV가 이 카테고리에 속하면
@@ -364,11 +391,8 @@ def _has_category_data(cid, cat_id, props, prop_cat, idx_metrics) -> bool:
     # (d) 캐스케이드 히트 조성(Nd2O3/B2O3 …) = 스크리닝 심층검증 대상
     if cat_id == "cascade" and cid in CASCADE_DOPANT:
         return True
-    # (e) 집계형 JSON 내부에 조성별 값 (bonds/eos/elastic/oxidation/li_transport/diffusion)
+    # (e) 집계형 JSON 의 실제 레코드에 조성별 값 (electronic/bonds/eos/elastic/oxidation/li_transport/diffusion)
     if _aggregate_covers(cid, cat_id):
-        return True
-    # (f) 문헌 — 이 조성의 원소를 다룬 litdb 논문이 있으면
-    if cat_id == "literature" and _lit_covers(cid):
         return True
     return False
 
@@ -759,9 +783,12 @@ def load_element_kb() -> dict:
                 out[d["symbol"]] = d
     return out
 
-@lru_cache(maxsize=1)
 def _all_icohp_bonds():
-    """모든 *_icohp.json 의 bonds → [(system, bond, data)]."""
+    return _all_icohp_bonds_c(_dir_sig(DB / "properties", "*_icohp.json"))
+
+@lru_cache(maxsize=2)
+def _all_icohp_bonds_c(_sig):
+    """모든 *_icohp.json 의 bonds → [(system, bond, data)]. mtime-keyed (실시간)."""
     out = []
     for f in sorted((DB / "properties").glob("*_icohp.json")):
         d = _load_json(f)
@@ -810,11 +837,14 @@ METHOD_MAP = {
 }
 _PSYMS = {s[0] for s in PERIODIC}
 
-@lru_cache(maxsize=1)
 def _paper_index():
+    return _paper_index_c(_dir_sig(LITDB / "papers", "*.md"))
+
+@lru_cache(maxsize=2)
+def _paper_index_c(_sig):
     """[{id,title,type,track,blob,el_tags,method_tags}]. blob=slug+title+type+본문앞60줄(소문자).
     litdb-curator가 digest 헤더에 '> elements:'/'> methods:' 태그를 넣으면 정밀 링크(토큰스캔은 보조).
-    캐시 — 새 digest는 프로세스 리로드(개발서버 auto-reload) 때 갱신."""
+    mtime-keyed 캐시 — 새 digest push 시 즉시 반영(실시간 동기화)."""
     idx = []
     pd = LITDB / "papers"
     for p in list_papers():
@@ -986,9 +1016,12 @@ def element_info(sym: str) -> dict:
             "category": element_category(sym), "en": ELEMENT_EN.get(sym),
             "in_campaign": sym in campaign_elements()}
 
-@lru_cache(maxsize=1)
 def _cascade_by_element() -> dict:
-    """캐스케이드 도펀트(Sc2O3, Fe2O3…) → 그 금속 원소별 랭킹 행. 전체 주기율표 앵커."""
+    return _cascade_by_element_c(_mtime_ns(DB / "properties" / CASCADE_FILES["ranked"]))
+
+@lru_cache(maxsize=2)
+def _cascade_by_element_c(_mt) -> dict:
+    """캐스케이드 도펀트(Sc2O3, Fe2O3…) → 그 금속 원소별 랭킹 행. mtime-keyed (실시간)."""
     rows = load_cascade().get("ranked", {}).get("data", [])
     out = {}
     for r in rows:
