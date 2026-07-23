@@ -3906,6 +3906,79 @@ def api_eis_cycle():
         return jsonify({'error': f'직렬화 실패: {type(e).__name__}: {e}'}), 200
 
 
+@app.route('/api/eis_fig')
+def api_eis_fig():
+    """발표/논문용 EIS 그림 다운로드 (matplotlib png/svg, 흰 배경 ASCII 라벨).  kind=eis(Nyquist+DRT) |
+    cycle(사이클 오버레이 + R(N) 성장).  /api/eis 와 동일 σ 파라미터 + kind·fmt·cycle_*.
+    eis_drt_ica.save_eis_figures 단일소스 (CLI --fig 와 동일 코어) = 랩 규약 svg/png/csv 동시."""
+    import math as _math
+    import shutil as _sh
+    import tempfile as _tf
+
+    def _f(name, default, lo, hi):
+        try:
+            v = float(request.args.get(name, default))
+        except (TypeError, ValueError):
+            return default
+        return default if not _math.isfinite(v) else min(hi, max(lo, v))
+    try:
+        import sys as _sys
+        _sd = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'scripts')
+        if _sd not in _sys.path:
+            _sys.path.insert(0, _sd)
+        import eis_drt_ica as _eis
+        import numpy as _np
+    except Exception as e:
+        return jsonify({'error': f'eis_drt_ica import 실패: {type(e).__name__}: {e}'}), 200
+    kw = dict(sigma_e_S_cm=_f('sigma_e', 2.0, 1e-6, 1e3), sigma_ion_S_cm=_f('sigma_ion', 2e-4, 1e-9, 1e2),
+              thickness_um=_f('thickness_um', 72.0, 1.0, 1000.0), r_int_ohm_cm2=_f('r_int', 50.0, 0.0, 1e4),
+              i0_A_m2=_f('i0', 2.0, 1e-3, 1e3), d_s_m2_s=_f('d_s', 3e-14, 1e-18, 1e-10),
+              r_p_um=_f('r_p_um', 3.0, 0.1, 50.0), c_dl_uF_cm2=_f('c_dl_uf', 10.0, 0.01, 1000.0),
+              coverage_frac=_f('coverage', 0.5, 0.01, 1.0), porosity=_f('porosity', 8.0, 0.1, 60.0))
+    if (request.args.get('expanchor') or '').strip() in ('1', 'true', 'yes', 'on'):
+        try:
+            _anc = _eis.load_experimental_anchors()
+        except Exception:
+            _anc = None
+        if _anc:
+            kw['c_dl_areal_uF_cm2'] = _anc['c_dl_areal_uF_cm2']
+            if _anc.get('r_w_ohm_cm2') is not None:
+                kw['r_w_ohm_cm2'] = _anc['r_w_ohm_cm2']
+    kind = 'cycle' if request.args.get('kind') == 'cycle' else 'eis'
+    fmt = 'svg' if request.args.get('fmt') == 'svg' else 'png'
+    tmp = _tf.mkdtemp()
+    try:
+        freqs = _np.logspace(5, -2, 60)
+        Z, el = _eis.physics_eis(freqs, **kw)
+        tau, g, _r0, _zr = _eis.drt(freqs, Z)
+        traj = None
+        if kind == 'cycle':
+            r0c, rcc = _f('cycle_r0', 50.0, 1e-3, 1e4), _f('cycle_rc', 125.0, 1e-3, 1e4)
+            ntot = int(_f('cycle_ntot', 1000, 1, 1e6))
+            shape = 'linear' if request.args.get('cycle_shape') == 'linear' else 'sqrt'
+            jump = _f('cycle_jump', 0.5, 0.0, 1.0)
+            ns = [int(float(x)) for x in (request.args.get('cycle_ns') or '0,100,300,500,1000').split(',')
+                  if x.strip()][:24] or [0, ntot]
+            sh = [float(x) for x in (request.args.get('cycle_shares') or '0.7,0.2,0.1').split(',')][:3]
+            while len(sh) < 3:
+                sh.append(0.0)
+            mult = _eis.rint_growth_mult(ns, r0c, rcc, ntot, shape, jump)
+            traj = _eis.cycle_eis_trajectory(freqs, el, ns, mult, rct_share=sh[0], r0_share=sh[1], rw_share=sh[2])
+        prefix = os.path.join(tmp, 'eis')
+        _eis.save_eis_figures(prefix, freqs, Z, el, tau, g, _eis.drt_peaks(tau, g), traj=traj, fmt=(fmt,))
+        path = f'{prefix}_{kind}.{fmt}'
+        if not os.path.isfile(path):
+            return jsonify({'error': f'그림 생성 실패 ({kind}.{fmt})'}), 200
+        with open(path, 'rb') as fh:
+            data = fh.read()
+    except Exception as e:
+        return jsonify({'error': f'그림 생성 실패: {type(e).__name__}: {e}'}), 200
+    finally:
+        _sh.rmtree(tmp, ignore_errors=True)
+    return app.response_class(data, mimetype=('image/svg+xml' if fmt == 'svg' else 'image/png'),
+                              headers={'Content-Disposition': f'attachment; filename="eis_{kind}.{fmt}"'})
+
+
 @app.route('/')
 def index():
     cases = list_cases()

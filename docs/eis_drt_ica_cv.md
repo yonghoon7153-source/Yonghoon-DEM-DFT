@@ -31,7 +31,12 @@ python3 scripts/eis_drt_ica.py --selftest                 # 5-검증 (Randles·p
 python3 scripts/eis_drt_ica.py --eis --metrics mpm_metrics.json --c-dl-uf 10   # 케이스 σ→EIS+DRT CSV
 python3 scripts/eis_drt_ica.py --eis --sigma-e 1.98 --sigma-ion 2.03e-4 --thickness-um 72.48 --r-int 50
 python3 scripts/eis_drt_ica.py --ica discharge.csv        # V,Q 곡선 → dQ/dV
+python3 scripts/eis_drt_ica.py --eis --fig --cycle-traj 50,125,1000   # 발표용 png+svg (Nyquist+DRT+사이클)
 ```
+**발표/논문용 그림** (`--fig`, 랩 규약 svg/png/csv 동시): 흰 배경·ASCII 라벨(한글 tofu 회피) matplotlib —
+`{out}_eis.{png,svg}`(Nyquist+DRT) + `--cycle-traj` 시 `{out}_cycle.{png,svg}`(Nyquist/DRT 오버레이 +
+R(N) 성장 3-패널).  webapp `/api/eis_fig?kind=eis|cycle&fmt=png|svg` + eis.html **📥 그림** 버튼(현재
+파라미터로 서버 렌더 다운로드) = 동일 코어(`save_eis_figures`).
 실행 예(리뷰-반영): R0=62(=HF절편 R_e+R_int + 전극이온수송 TL DC극한 R_ion/3) · R_ct≈5(φ_AM·coverage
 반영) · C_dl · **f_ct=124Hz** · **τ_w=300s(=r²/D)**.  DRT 2피크: **전하전달(130Hz) + 확산(mHz)** 분리 —
 실험 Nyquist 위에 겹치면 frame[4] 그림.

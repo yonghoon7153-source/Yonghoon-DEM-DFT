@@ -53,7 +53,9 @@
     <label class="e-lab">coverage <span class="e-hint">반응면분율</span><input id="e-cov" type="number" step="0.05" value="0.5" class="e-in"></label>
     <label class="e-lab">porosity (%) <span class="e-hint">a_spec 추정</span><input id="e-por" type="number" step="1" value="8" class="e-in"></label>
   </div>
-  <div style="margin-top:10px;display:flex;justify-content:flex-end">
+  <div style="margin-top:10px;display:flex;justify-content:flex-end;gap:6px">
+    <button data-fig="eis:png" class="btn btn-sm btn-secondary" title="발표용 흰배경 Nyquist+DRT">📥 그림 PNG</button>
+    <button data-fig="eis:svg" class="btn btn-sm btn-secondary">SVG</button>
     <button id="e-run" class="btn btn-primary btn-sm">계산 · 그리기</button>
   </div>
 </div>
@@ -118,7 +120,9 @@
   <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;align-items:center">
     <button class="btn btn-sm btn-secondary" data-cyc="kang">Kang&amp;Shin B-NCA (50→125)</button>
     <button class="btn btn-sm btn-secondary" data-cyc="mild">완만 (50→80)</button>
-    <button id="ec-run" class="btn btn-primary btn-sm" style="margin-left:auto">궤적 계산</button>
+    <button data-fig="cycle:png" class="btn btn-sm btn-secondary" style="margin-left:auto">📥 PNG</button>
+    <button data-fig="cycle:svg" class="btn btn-sm btn-secondary">SVG</button>
+    <button id="ec-run" class="btn btn-primary btn-sm">궤적 계산</button>
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
     <div><div style="font-size:.8rem;color:var(--dim);margin-bottom:4px">Nyquist 오버레이 (N=0 → N_max)</div>
@@ -384,6 +388,13 @@ const EIS = {
       (s.drt||[]).filter(p=>p.tau!=null&&p.tau>0&&p.gamma!=null).forEach((p,j)=>{ const x=X(Math.log10(p.tau)),y=Y(p.gamma); j?ctx.lineTo(x,y):ctx.moveTo(x,y); });
       ctx.strokeStyle=this._cycColor(i,S.length); ctx.lineWidth=1.8; ctx.stroke(); });
   },
+  downloadFig(kind, fmt){   // 발표용 흰배경 matplotlib 그림 (서버 save_eis_figures) 다운로드
+    const p = kind==='cycle' ? this.cycleParams() : this.params();
+    delete p.case; p.kind=kind; p.fmt=fmt;
+    const a=document.createElement('a');
+    a.href='/api/eis_fig?'+new URLSearchParams(p).toString();
+    a.download=`eis_${kind}.${fmt}`; document.body.appendChild(a); a.click(); a.remove();
+  },
   init(){
     this.caseId = (new URLSearchParams(location.search).get('case')||'').trim();  // /eis?case=X 자동로드
     this.el('e-run').addEventListener('click', ()=>this.run());
@@ -392,6 +403,8 @@ const EIS = {
     this.el('ec-run').addEventListener('click', ()=>this.runCycle());
     document.querySelectorAll('[data-cyc]').forEach(b=>
       b.addEventListener('click', ()=>this.applyCyclePreset(b.dataset.cyc)));
+    document.querySelectorAll('[data-fig]').forEach(b=>
+      b.addEventListener('click', ()=>{ const [k,f]=b.dataset.fig.split(':'); this.downloadFig(k,f); }));
     document.querySelectorAll('[data-preset]').forEach(b=>
       b.addEventListener('click', ()=>{ this.caseId=''; this.applyPreset(b.dataset.preset); }));
     document.querySelectorAll('.e-in').forEach(el=>

@@ -267,6 +267,61 @@ def cycle_eis_trajectory(freqs_hz, base_elems, cycles, growth_mult,
     return out
 
 
+# ─────────────── 발표/논문용 그림 (matplotlib, svg+png) ───────────────
+def save_eis_figures(out_prefix, freqs, Z, elems, tau=None, gamma=None, peaks=None,
+                     traj=None, fmt=('png', 'svg')):
+    """발표/논문용 EIS 그림 (matplotlib, 흰 배경, ASCII 라벨 — 한글 폰트 tofu 회피).  base = Nyquist +
+    DRT 2-패널.  traj(사이클 궤적) 있으면 Nyquist/DRT 오버레이 + R(N) 성장 3-패널 추가.  svg+png 동시
+    (CSV 는 CLI 가 별도) = 랩 규약(svg/png/csv 동시).  반환 저장 파일 리스트."""
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    saved = []
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(9.5, 4.0))
+    zre, zim = np.real(Z), -np.imag(Z)
+    ax1.plot(zre, zim, '-o', ms=3, color='#2a6fb0', lw=1.5)
+    ax1.axhline(0, color='k', lw=0.4)
+    ax1.set_xlabel("Z' (Ohm cm2)"); ax1.set_ylabel("-Z'' (Ohm cm2)"); ax1.set_title('Nyquist (physics-EIS)')
+    r0 = elems.get('R0_ohm_cm2')
+    if r0 is not None:
+        ax1.annotate('R0', (r0, 0), textcoords='offset points', xytext=(0, 7), ha='center', color='#c9772b')
+    if tau is not None and gamma is not None:
+        ax2.plot(tau, gamma, '-', color='#e07b39', lw=1.6)
+        ax2.fill_between(tau, gamma, color='#e07b39', alpha=0.18)
+        ax2.set_xscale('log'); ax2.set_xlabel('tau (s)'); ax2.set_ylabel('gamma (Ohm cm2)'); ax2.set_title('DRT g(tau)')
+        for p in (peaks or []):
+            ax2.axvline(p['tau_s'], color='#c9a24b', ls='--', lw=0.8)
+    fig.tight_layout()
+    for f in fmt:
+        fn = f'{out_prefix}_eis.{f}'; fig.savefig(fn, dpi=150, facecolor='white'); saved.append(fn)
+    plt.close(fig)
+    if traj:
+        n = len(traj)
+
+        def _col(i):
+            t = i / (n - 1) if n > 1 else 0.0
+            return (0.35 + 0.55 * t, 0.66 - 0.40 * t, 0.90 - 0.66 * t)   # 파랑→빨강
+        fig2, (bx1, bx2, bx3) = plt.subplots(1, 3, figsize=(13.5, 4.0))
+        for i, tr in enumerate(traj):
+            bx1.plot(np.real(tr['Z']), -np.imag(tr['Z']), '-', color=_col(i), lw=1.5, label=f"N={tr['N']}")
+            bx2.plot(tr['tau'], tr['gamma'], '-', color=_col(i), lw=1.5)
+        bx1.axhline(0, color='k', lw=0.4); bx1.set_xlabel("Z' (Ohm cm2)"); bx1.set_ylabel("-Z'' (Ohm cm2)")
+        bx1.set_title('Nyquist vs cycle N'); bx1.legend(fontsize=7)
+        bx2.set_xscale('log'); bx2.set_xlabel('tau (s)'); bx2.set_ylabel('gamma (Ohm cm2)'); bx2.set_title('DRT vs cycle N')
+        ns = [tr['N'] for tr in traj]
+        bx3.plot(ns, [tr['R_ct_ohm_cm2'] for tr in traj], '-o', color='#c0392b', label='R_ct (arc)')
+        bx3.plot(ns, [tr['R0_ohm_cm2'] for tr in traj], '-s', color='#2a6fb0', label='R0 (series)')
+        bx3.plot(ns, [tr['R_w_ohm_cm2'] for tr in traj], '-^', color='#e07b39', label='R_w (diffusion)')
+        bx3.plot(ns, [tr['R_dc_ohm_cm2'] for tr in traj], '-D', color='#333333', label='R_dc (total)')
+        bx3.set_xlabel('cycle N'); bx3.set_ylabel('R (Ohm cm2)')
+        bx3.set_title('R(N) growth (assumed-form partition)'); bx3.legend(fontsize=7)
+        fig2.tight_layout()
+        for f in fmt:
+            fn = f'{out_prefix}_cycle.{f}'; fig2.savefig(fn, dpi=150, facecolor='white'); saved.append(fn)
+        plt.close(fig2)
+    return saved
+
+
 # ─────────────────────── self-test ───────────────────────
 def _selftest():
     fails = []
@@ -428,6 +483,7 @@ def main(argv=None):
                     help='사이클-N EIS/DRT 궤적(D5): "r0,rc,ntot[,shape,jump]" R_int 끝점 (예 50,125,1000)')
     ap.add_argument('--cycle-ns', default='0,50,100,300,500,1000', help='궤적 N 목록(쉼표)')
     ap.add_argument('--cycle-shares', default='0.7,0.2,0.1', help='성장 분배 R_ct,R0,R_w (ASSUMED §F1)')
+    ap.add_argument('--fig', action='store_true', help='발표/논문용 그림 저장 (matplotlib png+svg; Nyquist+DRT[+사이클])')
     ap.add_argument('--f-hi', type=float, default=1e5); ap.add_argument('--f-lo', type=float, default=1e-2)
     ap.add_argument('--ica', default='', help='방전곡선 CSV(V,Q 열) → dQ/dV')
     ap.add_argument('--out', default='eis_out')
@@ -478,6 +534,7 @@ def main(argv=None):
         print(f"  R_w: {el['provenance']['R_w']}")
         for p in drt_peaks(tau, g):
             print(f"  DRT 피크: f={p['f_Hz']:.2g}Hz τ={p['tau_s']:.2g}s R≈{p['R_ohm_cm2']:.2f}Ω·cm²")
+        traj = None
         if a.cycle_traj:                                       # 사이클-N EIS/DRT 궤적 (D5)
             _cp = [float(x) for x in a.cycle_traj.split(',')]
             r0c, rcc, ntot = _cp[0], _cp[1], int(_cp[2])
@@ -499,6 +556,9 @@ def main(argv=None):
             print(f"  N={traj[0]['N']}: R_ct={traj[0]['R_ct_ohm_cm2']:.2f} f_ct={traj[0]['f_ct_Hz']:.1f}Hz "
                   f"→ N={traj[-1]['N']}: R_ct={traj[-1]['R_ct_ohm_cm2']:.2f}(×{traj[-1]['R_ct_ohm_cm2']/max(traj[0]['R_ct_ohm_cm2'],1e-9):.1f}) "
                   f"f_ct={traj[-1]['f_ct_Hz']:.1f}Hz — R_ct arc 성장=접촉손실 지문")
+        if a.fig:                                              # 발표/논문용 그림 (png+svg)
+            saved = save_eis_figures(a.out, freqs, Z, el, tau, g, drt_peaks(tau, g), traj=traj)
+            print('  그림 저장: ' + ', '.join(saved))
         return 0
 
 
