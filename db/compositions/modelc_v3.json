@@ -106,6 +106,7 @@
         "ELF (NCPP plot_num=8) — extra",
         "LOBSTER ICOHP (PAW SCF + NSCF) — done 2026-06-03 (ICOHP P-S=-5.12, Li-Cl=-1.21, Li-S=-0.61, S-S=-0.06 eV/bond; charge spilling 17%)"
       ],
+      "_superseded_2026_07_23": "minimal-basis artifact (spilling 17%). 정본은 bonds.json ext-basis P-S -6.0 (spilling 1.37%). 인용 금지.",
       "data_path": "container:/home/ubuntu/work/runs/modelC_v3/"
     }
   },

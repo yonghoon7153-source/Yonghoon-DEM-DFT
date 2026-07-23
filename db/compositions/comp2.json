@@ -109,6 +109,7 @@
     "nu": 0.178
   },
   "elastic_dft_0K_GPa_v2": {
+    "_WARNING_2026_07_23": "인용 절대 금지. comp2 elastic 정본은 USPP·k444·52/520·cubic 재측정본(gabia comp2_elastic_uspp, comp1 22.06과 비교쌍). 이 v2 값은 clamped·비정상.",
     "_STATUS": "ANOMALOUS_DO_NOT_USE_FOR_PAPER",
     "_REASON": "C44 = 77.60 GPa is 2x higher than comp1 v2 (38.87) under SAME clamped-ion protocol. Br doping cannot physically double C44 - calculation has setup issue (strain protocol or starting structure).",
     "method": "DFT 0K finite-strain (affine, clamped-ion, SCF only)",

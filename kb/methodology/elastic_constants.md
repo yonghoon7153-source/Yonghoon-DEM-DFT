@@ -2,7 +2,8 @@
 
 ## Overview
 Two approaches: DFT 0K clamped-ion (ordered) vs MLIP 600K snapshot (disordered).
-The 600K snapshot method is used for paper values because it naturally includes Li disorder.
+
+> **UPDATE 2026-07-23:** DFT relaxed-ion (comp1 22.06 GPa)이 paper 정본. 600K MLIP elastic은 2026-07-23 db/properties/elastic.json에서 제거됨 (deprecated). 상세는 `computational_methods_canonical.md`.
 
 ## DFT 0K Clamped-Ion
 
@@ -16,7 +17,9 @@ The 600K snapshot method is used for paper values because it naturally includes 
 - QE outputs stress with positive = compression
 - Cij = -dσ/dε (use kbar columns 3,4,5 for shear)
 
-## MLIP 600K Snapshot Method (Paper Values)
+## MLIP 600K Snapshot Method (DEPRECATED — removed 2026-07-23)
+
+> **DEPRECATED 2026-07-23:** 이 600K MLIP elastic은 db/properties/elastic.json에서 제거됨. paper 정본은 DFT relaxed-ion (comp1 22.06 GPa). 아래 표/수치는 참고용 이력으로만 유지. 상세는 `computational_methods_canonical.md`.
 
 **Protocol:**
 1. MLIP MD at 600K (NVT, Langevin, dt=2fs, ~10ps equilibration + ~20ps production)

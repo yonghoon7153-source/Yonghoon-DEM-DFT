@@ -1189,6 +1189,7 @@
         ]
       },
       "F_cij_vs_adhesion_v27b": {
+        "_DEPRECATED_2026_07_23": "source elastic.json mlip_600K_snapshot 삭제됨. 이 상관 재계산 필요(DFT relaxed-ion 기준).",
         "status": "PATCHED — v27 originally failed because elastic.json keyed comp5 as 'comp5_A' / 'comp5_B' (Li ordering basin split). v27b uses comp5_B (representative basin: C44=10.2, K=19.6, close to comp3/4) and mlip_600K_snapshot source.",
         "source": "db/properties/elastic.json mlip_600K_snapshot",
         "Cij_per_comp": {

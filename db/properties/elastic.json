@@ -31,6 +31,7 @@
    {
     "id": "comp3",
     "version": "v1",
+    "_status_2026_07_23": "v1 clamped energy-curvature (ordered-Li, C44 과대). v3 relaxed-ion 재측정 필요 — 현재 인용은 순위 참고만.",
     "C11": 85.6,
     "C12": 21.0,
     "C44": 27.5,
@@ -42,6 +43,7 @@
    {
     "id": "comp4",
     "version": "v1",
+    "_status_2026_07_23": "v1 clamped energy-curvature (ordered-Li, C44 과대). v3 relaxed-ion 재측정 필요 — 현재 인용은 순위 참고만.",
     "C11": 85.5,
     "C12": 20.9,
     "C44": 27.3,
@@ -53,6 +55,7 @@
    {
     "id": "comp5_A",
     "version": "v1",
+    "_status_2026_07_23": "v1 clamped energy-curvature (ordered-Li, C44 과대). v3 relaxed-ion 재측정 필요 — 현재 인용은 순위 참고만.",
     "C11": 87.4,
     "C12": 20.6,
     "C44": 39.9,
@@ -64,6 +67,7 @@
    {
     "id": "comp5_B",
     "version": "v1",
+    "_status_2026_07_23": "v1 clamped energy-curvature (ordered-Li, C44 과대). v3 relaxed-ion 재측정 필요 — 현재 인용은 순위 참고만.",
     "C11": 84.6,
     "C12": 20.4,
     "C44": 27.2,

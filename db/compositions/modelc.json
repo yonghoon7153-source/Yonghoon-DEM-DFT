@@ -27,6 +27,7 @@
     }
   },
   "band_gap_eV": 1.65,
+  "_DEPRECATED": "canonical 2.099 (eigenvalue) 사용.",
   "pdos_v2_retry": {
     "status": "DONE 2026-04-30 (after K=12x12x6 GPU bug fix with K=6x6x3 + comp1 v2 working pattern)",
     "method": "QE projwfc.x v7.4.1 (qe-gpu, K=6x6x3 nosym, smearing/mv/0.005)",
@@ -80,7 +81,7 @@
       ],
       "completed_date": "2026-04-26",
       "kisti_path": "/scratch/x3430a02/kgy/manuscript_support/pipeline_v2/modelC_lpsc16/dft_eos/",
-      "status": "confirmed_final",
+      "status": "LEGACY (superseded by eos.json PRIMARY B0=21.71 GPa, 2026-07-23 통일)",
       "pipeline": "v2 (annealed champion)",
       "delta_v1_v2_GPa": -2.1,
       "delta_v1_v2_pct": -9.7,
