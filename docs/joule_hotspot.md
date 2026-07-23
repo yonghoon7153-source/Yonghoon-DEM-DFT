@@ -42,12 +42,21 @@ q ∝ ∣J∣²/σ 가 최대 → **발열 hot-spot 위치 맵**.
 (10.1002/aenm.70978): SSB 자기발열·미세구조 열구배 설계-유의, 작은 SE→큰 구배, 2C서 +40 Wh/kg
 "온도상승만으로".  낮은 복합 k(0.08–1 W/m·K)가 국소 hot-spot 증폭.  → 발열-열화 커플링은 물리적 정당.
 
-## v2 경로 (Eₐ 없이 정직하게 구현 가능 — 권장)
+## v2 — 끝점-보존 공간 재분배기 (구현됨, `scripts/joule_redistribute.py`)
 
-★ **끝점-보존 공간 재분배기 (절대 Eₐ 불요):** STEP5 R_int(N) 끝점(이미 cho2024/yun2023 실측 앵커)을
-Joule hot-spot 맵으로 **공간 재분배**(hot 복셀 빠르게·cold 느리게, **Σ = 앵커 끝점 보존**).  Arrhenius 곱을
-끝점 위에 얹지 **않음** → 이중계산 회피(실측 끝점은 실셀 자기발열을 이미 포함).  = 절대 K 없이 "발열 몰린
-곳이 더 빨리 열화"를 정직 표현.  구현 시 STEP5를 스칼라→공간(hot_frac 가중)으로 확장.
+문헌조사가 Eₐ 부재를 확인 → **절대 Arrhenius 곱 대신 재분배**로 정직하게 구현:
+
+  **ΔR_local = ΔR_total · q^p / Σ(q^p)**   (Σ ΔR_local = ΔR_total = 앵커 끝점 보존)
+
+- ΔR_total = STEP5 스칼라 총 열화 증분(이미 cho2024/yun2023 실측 끝점 앵커, **실셀 자기발열 포함**).
+- q = #29 v1 `joule_hotspot` 발열밀도.  p = 집중 지수(**p=1 자연=열화∝국소발열** / p>1 = ASSUMED 스윕).
+- ★Arrhenius 곱을 끝점 위에 얹지 **않음** → 이중계산 회피(끝점이 자기발열 이미 포함).  = 절대 K·Eₐ 없이
+  "발열 몰린 곳이 더 빨리 열화(공간)"를 정직 표현.  **공간 패턴 = Joule hot-spot 맵(joule_field)과 동일**,
+  절대 스케일만 ΔR_total 로 보존-정규화.
+- 검증(selftest 7/7): Σ 보존(p=1·2 불변)·p>1 집중↑(3.8→6.7×)·q≤0 안전·균일 q 균등분배.
+- 대안(절대 K 필요 시): ASSUMED 스윕 Eₐ∈0.4–0.9 eV 게이트(kim2025 전달 하한→liquid-LIB SEI 유사).
+
+★남은 절대 ΔT(K) 정밀값: Ayyaswamy AEM2026 PDF digitize(egress 제한서 재시도) — 재분배기는 절대 K 불요.
 - 대안: ASSUMED 스윕 Eₐ∈0.4–0.9 eV 게이트 뒤 (kim2025 전달 하한 → liquid-LIB SEI 유사).
 - PDF 타깃(egress 제한서 재시도): Chem.Eng.J. 2024 S1385894724063940(고온저장 열화)·Ayyaswamy ΔT digit.
 
