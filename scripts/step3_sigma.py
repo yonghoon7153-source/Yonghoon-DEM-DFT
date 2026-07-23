@@ -338,11 +338,12 @@ def phase_current_share(res, sid, sigma_of_sid):
 
 
 # ── STEP3 열전도 (σ_thermal) — 범용 Laplace 솔버(solve_sigma_z) 재사용, 多상 k 맵 ──────────────
-# k 값 (W/cm·K; ×100 = W/m·K).  AM/SE = 문헌앵커(Ketter 2025 = network_conductivity.py와 동일 값),
+# k 값 (W/cm·K; ×100 = W/m·K).  ★SE=문헌앵커(Ketter 2025 = LPSCl/SE 논문); AM=generic NCM 문헌-order
+# (전용 인용 없음; network_conductivity.py의 uncited NCM 기본과 同값 — Ketter 아님[Ketter는 SE]),
 # carbon/SDCP/PTFE/pore = ASSUMED order-of-mag (라벨 · 소체적분율이라 k_eff 영향 작음 · 스윕용).
-K_AM_THERMAL = 4.0e-2    # NCM, W/cm·K (≈4 W/m·K)      [lit: Ketter 2025 / network_conductivity]
-K_SE_THERMAL = 0.7e-2    # LPSCl, W/cm·K (≈0.7 W/m·K)   [lit: Ketter 2025]
-K_PTFE_THERMAL = 2.5e-3  # PTFE, W/cm·K (≈0.25 W/m·K)   [polymer lit]
+K_AM_THERMAL = 4.0e-2    # NCM, ≈4 W/m·K  [generic NCM 문헌-order; 전용 인용 없음, NOT Ketter(=SE)]
+K_SE_THERMAL = 0.7e-2    # LPSCl, ≈0.7 W/m·K  [lit: Ketter 2025 (LPSCl thermal)]
+K_PTFE_THERMAL = 2.5e-3  # PTFE, ≈0.25 W/m·K  [polymer generic; 전용 인용 없음]
 K_PORE_THERMAL = 0.0     # 압밀 ASSB 공극(Ar/진공, ~7% 고립) → 무시 [ASSUMED; 가스면 ~2.6e-4]
 
 
@@ -350,23 +351,28 @@ def thermal_k_table(k_am=K_AM_THERMAL, k_se=K_SE_THERMAL, k_carbon=None, k_sdcp=
                     k_ptfe=K_PTFE_THERMAL, k_pore=K_PORE_THERMAL):
     """sid-indexed 열전도 k 배열 (_sig3 電子표와 동일 레이아웃: 0=pore,1=AM_S,2=AM_P,3=VGCF,
     4=SuperP,5=SDCP,6=SE,7=PTFE,8=SWCNT).  ★열은 多상: σ_e(AM만)/σ_ion(SE만)과 달리 全상이 열
-    통과 → SE(6)·PTFE(7)·pore도 0 아님.  carbon(VGCF/SuperP/SWCNT) 기본 = k_am(도체≥AM 보수적
-    ASSUMED); SDCP 기본 = k_se.  반환 (k_array, provenance_dict)."""
+    통과 → SE(6)·PTFE(7)는 0 아님(pore는 기본 0=진공 가정).  carbon(VGCF/SuperP/SWCNT) 기본 =
+    k_am(도체≥AM 보수적 ASSUMED, --k-carbon 상향 스윕 권장); SDCP 기본 = k_se.  반환 (k_array, prov)."""
     kc = k_am if k_carbon is None else float(k_carbon)
     ks = k_se if k_sdcp is None else float(k_sdcp)
-    prov = {'AM(NCM)': '4 W/mK [lit Ketter2025]', 'SE(LPSCl)': '0.7 W/mK [lit Ketter2025]',
-            'carbon(VGCF/SuperP/SWCNT)': f'{kc * 100:.1f} W/mK [ASSUMED ~AM; 소분율·--k-carbon 스윕]',
-            'SDCP': f'{ks * 100:.2f} W/mK [ASSUMED ~SE]', 'PTFE': f'{k_ptfe * 100:.2f} W/mK [polymer lit]',
-            'pore': f'{k_pore * 100:.3f} W/mK [ASSUMED 압밀ASSB≈0]',
-            'caveats': 'Kapitza 계면 열저항 무시(σ_e/σ_ion과 동일 sub-voxel constriction 캐비엇) · '
-                       'network_conductivity thermal과 다른 표현(복셀-field vs 입자-graph)=교차검증(독립 아님)'}
+    prov = {'AM(NCM)': f'{k_am*100:.1f} W/mK [generic NCM 문헌-order; 전용 인용 없음 — NOT Ketter(=LPSCl/SE); '
+                       'network_conductivity.py uncited NCM 기본과 同값]',
+            'SE(LPSCl)': f'{k_se*100:.2f} W/mK [lit Ketter2025 (LPSCl thermal)]',
+            'carbon(VGCF/SuperP/SWCNT)': f'{kc * 100:.1f} W/mK [ASSUMED ~AM 하한; 소분율·--k-carbon 상향 스윕]',
+            'SDCP': f'{ks * 100:.2f} W/mK [ASSUMED ~SE; ⚠전자적으론 최강도체 → k_carbon가 더 맞을 수(스윕)]',
+            'PTFE': f'{k_ptfe * 100:.2f} W/mK [polymer generic; 전용 인용 없음]',
+            'pore': f'{k_pore * 100:.3f} W/mK [ASSUMED 압밀ASSB≈0(진공/고립)]',
+            'caveats': 'k_eff = 문헌/ASSUMED k 입력의 복셀-solve 전파값 — 열전도 실험 앵커 없음(Kapitza 계면 '
+                       '열저항 무시 → 상한); network_conductivity thermal과 같은 k 앵커 공유 → 표현(복셀-field '
+                       'vs 입자-graph)-일치만이지 입력·물리 검증 아님, 스케일도 다름(W/mK vs mScm-eq), 독립 아님'}
     return np.array([k_pore, k_am, k_am, kc, kc, ks, k_se, k_ptfe, kc], float), prov
 
 
 def solve_thermal(sid, vox, z_top_um, z_bot_um=0.0, k_table=None):
-    """복셀 through-plane 열전도 k_eff + 상별 열류 분담.  solve_sigma_z 재사용(∇·(k∇T)=0, 同 격자).
-    ★多상이라 압밀 베드선 全상 연결 → 보통 항상 퍼콜(유한).  반환: k_eff_W_mK(=k_eff[W/cm·K]×100),
-    heat_flux_share(상별), n_dof, cg_resid, reason/unconverged."""
+    """복셀 through-plane 열전도 k_eff + 상별 ΔT/열저항(병목) 몫.  solve_sigma_z 재사용(∇·(k∇T)=0, 同 격자).
+    ★多상이라 압밀 베드선 全상 연결 → 보통 항상 퍼콜(유한).  반환: k_eff_W_mK(=k_eff[W/cm·K]×100, ★Kapitza
+    무시 상한), temp_drop_share(상별 through-plane 온도강하/열저항 몫 — 높을수록 열 병목; ★열류 아님 —
+    직렬 flux는 상별 동일), n_dof, cg_resid, reason/unconverged."""
     if k_table is None:
         k_table, _ = thermal_k_table()
     res = solve_sigma_z(sid, k_table, vox, return_field=True, z_top_um=z_top_um, z_bot_um=z_bot_um)
@@ -374,8 +380,10 @@ def solve_thermal(sid, vox, z_top_um, z_bot_um=0.0, k_table=None):
            'cg_resid': float(f"{res.get('resid', 0.0):.2g}"), 'unconverged': bool(res.get('unconverged'))}
     if not res.get('reason') and res.get('n_dof'):
         out['k_eff_W_mK'] = float(f"{res['sigma_eff'] * 100.0:.4g}")   # W/cm·K → W/m·K
-        share = phase_current_share(res, sid, k_table)                 # 열류(∝k∇T)² 분담
-        out['heat_flux_share'] = {SID_NAME[k]: round(v, 4) for k, v in share.items()}
+        # phase_current_share = ∝ k(∇T)² 소산 functional의 상별 분담 = through-plane ΔT/열저항 몫(병목).
+        # ★열류(∝ k∇T) 아님 — 정상 전도 ∇·(k∇T)=0 은 소산 0, 직렬 flux 상별 동일.
+        share = phase_current_share(res, sid, k_table)
+        out['temp_drop_share'] = {SID_NAME[k]: round(v, 4) for k, v in share.items()}
     return out
 
 

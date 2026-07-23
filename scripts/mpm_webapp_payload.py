@@ -859,12 +859,13 @@ def main():
                         _th = _s3.solve_thermal(sid3, a.step3_vox, _ztop, 0.0, _kt)
                         step3['thermal'] = {
                             'k_eff_W_mK': _th['k_eff_W_mK'], 'n_dof': _th['n_dof'],
-                            'cg_resid': _th['cg_resid'], 'heat_flux_share': _th.get('heat_flux_share'),
+                            'cg_resid': _th['cg_resid'], 'temp_drop_share': _th.get('temp_drop_share'),
                             'k_table_provenance': _kprov,
-                            'trust': ('多상 k(全상 열통과, σ_e[AM만]/σ_ion[SE만] 단상과 다름); AM/SE=Ketter2025 '
-                                      '문헌앵커, carbon/PTFE/pore=ASSUMED(소분율·--k-carbon 스윕); Kapitza 계면 '
-                                      '열저항 무시(sub-voxel constriction 동일 캐비엇); network_conductivity thermal'
-                                      '과 다른 표현(복셀-field vs 입자-graph)=교차검증(독립 아님)'
+                            'trust': ('k_eff = 문헌/ASSUMED k 입력의 복셀-solve 전파값 — 열전도 실험 앵커 없음(Kapitza '
+                                      '무시 상한); 多상 k(全상 열통과, σ_e[AM만]/σ_ion[SE만] 단상과 다름); SE=Ketter2025'
+                                      '(LPSCl) 문헌앵커, AM=generic NCM 문헌-order(전용 인용 없음, NOT Ketter), '
+                                      'carbon/SDCP/PTFE/pore=ASSUMED(소분율·--k-carbon 스윕); network_conductivity '
+                                      'thermal과 같은 k 앵커 공유 → 표현-일치만, 스케일 다름(W/mK vs mScm-eq), 독립검증 아님'
                                       + (' ⚠UNCONVERGED' if _th.get('unconverged') else ''))}
                         if _th['k_eff_W_mK'] is not None:
                             print(f"  STEP3 κ_eff = {_th['k_eff_W_mK']} W/m·K  (多상 열전도, vox {a.step3_vox}µm, "
