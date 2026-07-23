@@ -219,7 +219,11 @@ def _cg(L, b, x0=None, rtol=1e-9, atol=0.0, pc_cache=None, deep=False):
     # ★승자 직행 래치 (2026-07-23): near-null-B AMG가 이 런의 승자로 확정되면(nnamg_direct) 이후
     #   솔브는 정체하는 AMG·Jacobi 사다리를 건너뛰고 near-null-B AMG로 직행 → Newton당 ~280s 절감
     #   (AMG 무용 정체 ~140s + 중복 Jacobi ~140s 제거).  전처리 M은 CG의 해 x를 바꾸지 않고 수렴
-    #   속도만 바꿈(CG는 어떤 SPD M에서도 같은 Jx=b로 수렴) → 물리(해) 완전 불변, 안전.
+    #   속도만 바꿈(CG는 어떤 SPD M에서도 같은 Jx=b로 수렴).  ★정밀 (리뷰 B#2): 이는 CG가 목표
+    #   잔차에 '도달할 때' 정확 — _CGStop 자기-바닥(≈10×목표)에서 멈추면 전처리별 self-floored
+    #   iterate가 달라 Newton 궤적이 pre-latch와 bit-동일하진 않을 수 있음(단 같은 근으로 수렴,
+    #   최종가드가 r_start 초과 금지).  nnamg가 승자인 상황에선 직행·escalate 둘 다 같은 x0서
+    #   _solve(nnamg) → bit-동일.  = 실질 해-불변, 안전.
     _direct_nn = big and bool(cache.get('nnamg_direct')) and cache.get('nnamg') is not None
     amg_ok = big and not cache.get('amg_useless') and not _direct_nn  # ★AMG 무용/직행이면 건너뜀
     M = None

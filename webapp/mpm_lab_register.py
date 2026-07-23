@@ -67,6 +67,13 @@ def compute_trust(mm: dict) -> dict:
     def _add(key, label, present, unconv, resid=None, detail=''):
         if not present:
             return
+        # ★F1(리뷰): resid 문턱(solver 규약 1e-6)도 unconv 로 판정 — payload 가 trust 문자열을 안 넣는
+        #   채널(σ_ion 은 ion_resid 만 방출, trust 문자열 없음)이 항상 'ok' 로 새는 false-green 방어.
+        if not unconv and resid is not None:
+            try:
+                unconv = float(resid) > 1e-6
+            except (TypeError, ValueError):
+                pass
         badges.append({'key': key, 'label': label,
                        'status': 'warn' if unconv else 'ok',
                        'resid': resid, 'detail': detail})
@@ -78,7 +85,7 @@ def compute_trust(mm: dict) -> dict:
          resid=s3.get('cg_resid'))
     _add('sigma_ion', 'σ_ion (이온)',
          present=('sigma_ion_eff_S_cm' in s3),
-         unconv=_has_unconverged(s3.get('ion_trust')),   # 문자열 없으면 resid 만 보고 (아래)
+         unconv=_has_unconverged(s3.get('ion_trust')),   # payload 미방출 → _add 의 resid 문턱(1e-6)이 판정
          resid=s3.get('ion_resid'))
     _th = s3.get('thermal') or {}
     _add('thermal', 'κ (열전도)',
@@ -106,10 +113,10 @@ def compute_trust(mm: dict) -> dict:
 
     conv_badges = [b for b in badges if b['key'] != 'porosity']
     n_warn = sum(1 for b in badges if b['status'] == 'warn')
-    if not conv_badges:
-        overall = 'na'          # STEP3 미실행 → 수렴 판정 대상 없음(구조 배지만)
-    elif n_warn:
+    if n_warn:                  # ★F3(리뷰): 어떤 배지든 warn(porosity=과압축 sentinel 포함) → warn (na 로 숨기지 않음)
         overall = 'warn'
+    elif not conv_badges:       # STEP3 미실행 + 구조 정상 → na (수렴 판정 대상 없음)
+        overall = 'na'
     else:
         overall = 'ok'
     return {'overall': overall, 'converged': (overall == 'ok'),
@@ -181,6 +188,7 @@ def push_http(payload_path: str, url: str, name: str, *,
     except ImportError:
         raise RuntimeError("--url 모드는 requests 필요 (pip install requests)")
     last = None
+    last = None
     for attempt in range(retries):
         try:
             with open(payload_path, 'rb') as fh:
@@ -188,14 +196,15 @@ def push_http(payload_path: str, url: str, name: str, *,
                                   data={'name': name}, timeout=timeout)
             if r.status_code == 200:
                 return r.json()
-            # 4xx(잘못된 payload 등)는 재시도 무의미 → 즉시 실패
+            # ★F2(리뷰): 4xx(클라이언트 오류: 400/404/413/415/422…)는 재시도 무의미 → 상태코드로 즉시 실패
+            #   (기존 body 문자열 '400'/'415' 검사는 404/413 등을 놓쳐 대용량 payload를 4회 재-POST했음).
             if 400 <= r.status_code < 500:
-                raise RuntimeError(f"HTTP {r.status_code}: {r.text[:200]}")
-            last = f"HTTP {r.status_code}: {r.text[:200]}"
-        except Exception as e:   # 네트워크류만 재시도
+                raise RuntimeError(f"HTTP {r.status_code} (4xx, 재시도 안 함): {r.text[:200]}")
+            last = f"HTTP {r.status_code}: {r.text[:200]}"          # 5xx = 서버 일시오류 → 재시도
+        except RuntimeError:                                        # 4xx fast-fail (위 raise) — 재시도 금지
+            raise
+        except Exception as e:                                      # 네트워크/타임아웃류만 재시도
             last = str(e)
-            if '400' in last or '415' in last:
-                break
         if attempt < retries - 1:
             wait = 2 ** (attempt + 1)
             print(f"  push 실패({last}) — {wait}s 후 재시도 [{attempt + 1}/{retries}]", file=sys.stderr)
@@ -274,9 +283,18 @@ def _selftest() -> int:
     t0 = compute_trust({'porosity_mpm_pct': 12.7})
     assert t0['overall'] == 'na' and t0['converged'] is False, t0
     assert any(b['key'] == 'porosity' and b['status'] == 'ok' for b in t0['badges'])
-    # porosity 0 = sentinel → warn
-    assert compute_trust({'porosity_mpm_pct': 0})['n_warn'] >= 1
-    assert compute_trust({'porosity_mpm_pct': 65})['n_warn'] >= 1
+    # porosity 0 = sentinel → warn (★F3: step3 없어도 overall='warn', 'na' 로 숨기지 않음)
+    _p0 = compute_trust({'porosity_mpm_pct': 0})
+    assert _p0['n_warn'] >= 1 and _p0['overall'] == 'warn', _p0
+    assert compute_trust({'porosity_mpm_pct': 65})['overall'] == 'warn'
+    # ★F1: σ_ion 은 payload 가 trust 문자열 없이 ion_resid 만 방출 — resid>1e-6 → warn (false-green 방어)
+    _ion = compute_trust({'porosity_mpm_pct': 15, 'step3': {
+        'sigma_ion_eff_S_cm': 1.0, 'ion_resid': 1e-2}})
+    assert _ion['overall'] == 'warn' and any(
+        b['key'] == 'sigma_ion' and b['status'] == 'warn' for b in _ion['badges']), _ion
+    # 반대로 낮은 ion_resid → ok
+    assert compute_trust({'porosity_mpm_pct': 15, 'step3': {
+        'sigma_ion_eff_S_cm': 1.0, 'ion_resid': 1e-9}})['overall'] == 'ok'
     # step3 수렴 = ok
     ok = compute_trust({'porosity_mpm_pct': 15, 'step3': {
         'sigma_e_eff_S_cm': 3.0, 'cg_resid': 1e-9, 'trust': 'σ_e OK',

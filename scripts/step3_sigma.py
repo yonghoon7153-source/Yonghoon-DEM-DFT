@@ -217,6 +217,10 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
                           f'z_b={z_b:.2f},z_plate={z_plate:.2f},band={band:.2f})'}
     # FLOATING ISLANDS (components touching NEITHER plate contact) = singular blocks, zero current
     # by physics → dropped (their je reads 0).
+    # ★ 리뷰 B#1 caveat: 이 label 은 6-connectivity(비주기)라 periodic_xy=True 의 x/y wrap 커플링을
+    #   모른다.  σ_z/thermal/pore 는 무해(plate 안 닿는 성분은 어차피 net through-flux 0=dangling).
+    #   solve_reaction_current 은 seam으로만 본류에 붙은 경계 patch의 BV 반응전류를 0으로 과소계상할
+    #   수 있으나, 프로덕션 조밀 베드는 본류가 bulk로 x=0 에 닿아 실질 영향 미미(경계 몇 입자).
     lab, _nl = ndimage.label(cond)                         # 6-connectivity = the face-coupling graph
     _ii, _jj = np.where(bot_m); _lb = lab[_ii, _jj, k_first[bot_m]]
     _ii, _jj = np.where(top_m); _lt = lab[_ii, _jj, k_last[top_m]]
