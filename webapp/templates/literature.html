@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Literature · DFT{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>Literature</h1><div class="sub">litdb · {{ count }}편 · 클릭 → digest</div></div>
+</div>
+<input class="search" placeholder="검색 (제목·id)..." oninput="filt(this.value)">
+<div class="grid grid-3" id="plist" style="margin-top:16px">
+{% for p in papers %}
+<div class="card paper" data-t="{{ p.title|lower }} {{ p.id|lower }}" onclick="openPaper('{{ p.id }}')" style="cursor:pointer;padding:16px 18px">
+  <div style="font-weight:600;font-size:.9rem;line-height:1.4">{{ p.title }}</div>
+  <div class="mono muted" style="font-size:.7rem;margin-top:6px">{{ p.id }}</div>
+</div>
+{% endfor %}
+</div>
+<div class="modal" id="pmodal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal-body" style="max-width:840px;width:100%">
+    <div class="modal-head"><h3 id="ptitle" class="mono" style="font-size:.85rem"></h3>
+      <button class="btn sm" onclick="document.getElementById('pmodal').classList.remove('open')">✕ 닫기</button></div>
+    <div class="doc" id="pbody" style="border:none;box-shadow:none;border-radius:0"></div>
+  </div>
+</div>
+<script>
+function filt(q){q=q.toLowerCase();document.querySelectorAll('.paper').forEach(c=>{c.style.display=c.dataset.t.includes(q)?'':'none';});}
+function openPaper(id){
+  document.getElementById('ptitle').textContent=id;
+  document.getElementById('pbody').innerHTML='<span class="muted">로딩...</span>';
+  document.getElementById('pmodal').classList.add('open');
+  fetch('/api/paper/'+id).then(r=>r.json()).then(d=>{document.getElementById('pbody').innerHTML=d.html;});
+}
+</script>
+{% endblock %}

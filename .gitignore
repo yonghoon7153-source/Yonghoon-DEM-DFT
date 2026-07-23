@@ -10,3 +10,6 @@ docs/figures/bvse_cubes/
 litdb/.processed_inbox.txt
 litdb/inbox/
 litdb/.watcher_run.log
+__pycache__/
+*.pyc
+webapp/uploads/

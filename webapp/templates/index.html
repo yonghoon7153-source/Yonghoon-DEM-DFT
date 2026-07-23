@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · DFT Infrastructure{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>DFT Knowledge Infrastructure</h1>
+    <div class="sub">황화물 SE 전고체전지 · 조성 × 물성 지식 매트릭스 · <code>db/</code> 실시간 동기화</div>
+  </div>
+  <div class="page-actions">
+    <a class="btn" href="/methods">▤ Canonical Methods</a>
+    <a class="btn primary" href="/compare">⇄ 비교</a>
+  </div>
+</div>
+
+<div class="stat-grid">
+  <div class="stat"><div class="num">{{ COMPS|length }}</div><div class="lbl">조성 / 프로젝트</div></div>
+  <div class="stat"><div class="num accent">{{ covstat.pct }}%</div><div class="lbl">커버리지 · {{ covstat.done }}/{{ covstat.total }}</div></div>
+  <div class="stat"><div class="num">{{ b.properties|length }}</div><div class="lbl">post-processing 파일</div></div>
+  <div class="stat"><div class="num">{{ b.literature_count }}</div><div class="lbl">litdb 문헌</div></div>
+</div>
+
+<div class="section-title">Pipeline</div>
+<div class="flow">
+  <div class="flow-box"><div class="fb-t">STRUCTURE</div><div class="fb-b">cif / xyz → V0 relax · BM-EOS</div></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box dark"><div class="fb-t">DFT / MLIP</div><div class="fb-b">QE: gap·EOS·elastic·ε∞ · LOBSTER: ICOHP/ICOBI · UMA: MD·phonon · BVSE</div></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box"><div class="fb-t">PROPERTIES</div><div class="fb-b">canonical db → 이 사이트 (자동 동기화)</div></div>
+</div>
+
+<div class="section-title">Coverage Matrix <span class="muted">— 옅은 칸 = TODO (미계산)</span></div>
+<div class="card" style="overflow-x:auto;padding:14px 16px">
+<table class="matrix">
+<thead><tr><th style="text-align:left">Composition</th>
+{% for c in CATS %}<th>{{ c.icon }}<br>{{ c.label }}</th>{% endfor %}</tr></thead>
+<tbody>
+{% for cid, comp in COMPS.items() %}
+<tr>
+  <td class="rowh"><a href="/composition/{{ cid }}"><span class="dot" style="background:{{ comp.color }}"></span>{{ comp.label }}</a></td>
+  {% for c in CATS %}
+    {% if cov[cid][c.id] %}<td><span class="cell done" title="{{ comp.label }} · {{ c.label }} 데이터 있음">✓</span></td>
+    {% else %}<td><span class="cell todo" title="{{ comp.label }} · {{ c.label }} 미계산">·</span></td>{% endif %}
+  {% endfor %}
+</tr>
+{% endfor %}
+</tbody></table>
+</div>
+
+{% for fam in FAMILY_ORDER %}
+{% set fam_comps = [] %}
+{% for cid, comp in COMPS.items() %}{% if comp.family==fam %}{% set _ = fam_comps.append((cid, comp)) %}{% endif %}{% endfor %}
+{% if fam_comps %}
+<div class="section-title">{{ fam|capitalize }}</div>
+<div class="grid grid-3">
+{% for cid, comp in fam_comps %}
+<a class="comp-card" href="/composition/{{ cid }}">
+  <div class="cc-top">
+    <span class="dot" style="background:{{ comp.color }}"></span>
+    <span class="cc-name">{{ comp.label }}</span>
+    <span class="cc-cell">{{ comp.cell }}</span>
+  </div>
+  <div class="cc-formula">{{ comp.formula }}</div>
+  <div class="cov-strip">
+    {% set nt = namespace(todo=0) %}
+    {% for c in CATS %}
+      {% if cov[cid][c.id] %}<span class="cov-chip done">{{ c.label }}</span>
+      {% else %}{% set nt.todo = nt.todo + 1 %}{% endif %}
+    {% endfor %}
+    {% if nt.todo %}<span class="cov-chip todo">+{{ nt.todo }} TODO</span>{% endif %}
+  </div>
+</a>
+{% endfor %}
+</div>
+{% endif %}
+{% endfor %}
+{% endblock %}

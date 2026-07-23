@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Comparison · DFT{% endblock %}
+{% block head %}<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>Comparison</h1><div class="sub">조성 선택 → canonical 값 나란히 (같은 방법끼리만 유효)</div></div>
+</div>
+<div class="card">
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+  {% for cid, c in COMPS.items() %}
+    <label class="chip"><input type="checkbox" value="{{ cid }}" onchange="upd()" style="margin-right:6px;vertical-align:middle"
+      {% if cid in ['comp1','comp2','modelc','lpsocl'] %}checked{% endif %}>{{ c.label }}</label>
+  {% endfor %}
+  </div>
+  <div style="overflow-x:auto"><table class="data-table" id="cmp"></table></div>
+</div>
+<div class="card" style="margin-top:16px">
+  <h3>Property 별 비교</h3>
+  <div class="chip-bar" id="pkeys"></div>
+  <div class="chart" id="cmpchart"></div>
+</div>
+<script>
+const CANON={{ b.canonical|tojson }};
+const META={{ b.canonical_meta|tojson }};
+const COMPS={{ COMPS|tojson }};
+const KEYS=Object.keys(CANON);
+const KLAB={gap_eV:'Band gap (eV)',B0_GPa:'EOS B0 (GPa)',E_VRH_GPa:'E_VRH (GPa)',MD_Ea_eV:'MD Ea (eV)',ICOHP_PS:'ICOHP P–S (eV)'};
+let activeKey='E_VRH_GPa';
+function ids(){return [...document.querySelectorAll('.card input[type=checkbox]:checked')].map(x=>x.value);}
+function upd(){
+  let sel=ids();
+  let t='<thead><tr><th>Property</th>';sel.forEach(id=>t+='<th>'+COMPS[id].label+'</th>');t+='</tr></thead><tbody>';
+  KEYS.forEach(k=>{
+    t+='<tr><td title="'+(META[k]||'')+'"><b>'+(KLAB[k]||k)+'</b><div class="mm muted" style="font-size:.68rem">'+(META[k]||'')+'</div></td>';
+    sel.forEach(id=>{let v=CANON[k][id];t+='<td class="num">'+(v!==undefined&&v!==null?v:'<span class="muted">TODO</span>')+'</td>';});
+    t+='</tr>';
+  });
+  document.getElementById('cmp').innerHTML=t+'</tbody>';
+  // property key chips
+  document.getElementById('pkeys').innerHTML=KEYS.map(k=>'<button class="chip'+(k===activeKey?' active':'')+'" onclick="setKey(\''+k+'\')">'+(KLAB[k]||k)+'</button>').join('');
+  drawChart();
+}
+function setKey(k){activeKey=k;upd();}
+function drawChart(){
+  let sel=ids();
+  let x=sel.map(id=>COMPS[id].label);
+  let y=sel.map(id=>CANON[activeKey][id]??null);
+  let colors=sel.map(id=>COMPS[id].color);
+  Plotly.newPlot('cmpchart',[{x:x,y:y,type:'bar',marker:{color:colors}}],
+    {margin:{t:16,b:40},font:{family:'Inter',size:12},yaxis:{title:KLAB[activeKey]||activeKey}},
+    {responsive:true,displaylogo:false});
+}
+upd();
+</script>
+{% endblock %}

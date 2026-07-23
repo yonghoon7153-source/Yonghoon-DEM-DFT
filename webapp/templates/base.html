@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}DFT Infrastructure · Battery Materials Lab{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v={{ asset_version }}">
+{% block head %}{% endblock %}
+</head>
+<body>
+<button class="menu-toggle" onclick="document.body.classList.toggle('nav-open')" aria-label="menu">☰</button>
+<nav class="sidebar">
+  <div class="sidebar-header">
+    <a href="/" class="brand">DFT<span class="brand-accent">·Infra</span></a>
+    <div class="brand-sub">Battery Materials Lab</div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="/" class="{% if active=='home' %}active{% endif %}"><span class="ic">▦</span> Dashboard</a></li>
+    <li><a href="/compare" class="{% if active=='compare' %}active{% endif %}"><span class="ic">⇄</span> Comparison</a></li>
+    <li><a href="/methods" class="{% if active=='methods' %}active{% endif %}"><span class="ic">▤</span> Methods</a></li>
+    <li><a href="/literature" class="{% if active=='lit' %}active{% endif %}"><span class="ic">▣</span> Literature</a></li>
+  </ul>
+  <div class="nav-section">Compositions</div>
+  <ul class="nav-links compact">
+    {% for cid, c in COMPS.items() %}
+    <li><a href="/composition/{{ cid }}" class="{% if cid==(cid_active if cid_active is defined else '') %}active{% endif %}"
+           title="{{ c.formula }}"><span class="dot" style="background:{{ c.color }}"></span>{{ c.label }}</a></li>
+    {% endfor %}
+  </ul>
+  <div class="sidebar-footer">Solid-State · Sulfide SE<br><span class="muted">synced from db/</span></div>
+</nav>
+<main class="content">
+  {% block content %}{% endblock %}
+</main>
+<div id="toast" class="toast"></div>
+<script>
+function showToast(m){var t=document.getElementById('toast');if(!t)return;t.textContent=m;t.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(function(){t.classList.remove('show')},2200);}
+function copyText(s){navigator.clipboard.writeText(s).then(function(){showToast('클립보드에 복사됨');});}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.body.classList.remove('nav-open');});
+</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>
