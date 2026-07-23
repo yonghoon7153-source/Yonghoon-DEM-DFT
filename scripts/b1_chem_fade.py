@@ -291,10 +291,21 @@ def main(argv):
                     help='화학 R 성장 × @n_exp (코팅 NCM = CEI 억제 → 작게, 예 1.3).  미지정 = 화학이 나머지'
                          '(bare 가정).  지정 시 나머지 = OTHER(골격재배열·SE분해·Li = 모델 밖) 노출.')
     ap.add_argument('--label', default='case', help='라벨 (SBE/DBE 등)')
+    ap.add_argument('--coating', default='none',
+                    help='이종기술 코팅 프리셋 (none/LNO/LZO/Li3PO4/carbon/SDCP/SWCNT) — --chem-x(bare)에 '
+                         'CEI 억제 적용 (coating_presets.py; 크기=앵커·shape=ASSUMED).  none=무코팅.')
     ap.add_argument('--out', default='rint_N', help='PNG prefix')
     a = ap.parse_args(argv)
     if a.selftest:
         sys.exit(0 if _selftest() else 1)
+    if a.coating and a.coating.lower() != 'none' and a.chem_x is not None:
+        import os as _os2, sys as _sys2
+        _sys2.path.insert(0, _os2.path.dirname(_os2.path.abspath(__file__)))
+        import coating_presets as _cp
+        _p = _cp.get_preset(a.coating); _eff = _cp.coated_chem_x(a.coating, a.chem_x)
+        print(f"[coating {a.coating}] chem_x {a.chem_x} (bare) → {_eff:.4g}  "
+              f"(CEI ×{_p.get('cei_suppress')} 억제; {_p['anchor']}; shape={_p['shape']})")
+        a.chem_x = _eff
     missing = [n for n, v in (('--fade', a.fade), ('--rint0', a.rint0),
                               ('--rint-exp-x', a.rint_exp_x)) if v is None]
     if missing:
