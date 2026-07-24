@@ -53,8 +53,10 @@
         <th style="text-align:right">R_w</th><th style="text-align:right">C_dl</th><th style="text-align:right">σ_e</th>
         <th style="text-align:right" title="합제(cathode) 두께 µm — 대칭셀 σ_e=L/R1. 기본 45, 셀별 변경 가능">L(µm)</th>
         <th style="text-align:right">rmse%</th><th style="text-align:right">N</th>
-        <th style="text-align:center" title="전체 선택/해제"><input type="checkbox" id="xe-all" onchange="EIS.selAll(this.checked)">겹칠</th>
-        <th style="text-align:center">삭제</th></tr></thead>
+        <th style="text-align:center;width:50px" title="전체 선택/해제">
+          <input type="checkbox" id="xe-all" onchange="EIS.selAll(this.checked)">
+          <span style="margin-left:8px">겹칠</span>
+        </th></tr></thead>
       <tbody id="xe-tbody"></tbody>
     </table>
   </div>
@@ -433,7 +435,11 @@ const EIS = {
       const cell=r.cell_type==='full'?'<span style="color:#2a5db0">full</span>'
         :(r.cell_type==='symmetric'?'<span style="color:#1e8f5e">sym</span>':(r.cell_type||'—'));
       return `<tr style="border-bottom:1px solid rgba(0,0,0,.05)">`+
-        `<td style="padding:4px 8px;text-align:left" title="${r.filename}">${(r.filename||'').replace(/^2607\d\d_/,'').slice(0,30)}</td>`+
+        `<td style="padding:4px 8px;text-align:left;display:flex;align-items:center;gap:6px" title="${r.filename}">`+
+        `<span style="flex:1">${(r.filename||'').replace(/^2607\d\d_/,'').slice(0,30)}</span>`+
+        `<button onclick="EIS.deleteExp('${r.filename}')" style="background:none;border:none;color:var(--dim);cursor:pointer;font-size:.9rem;padding:0;transition:color.2s" `+
+        `onmouseover="this.style.color='#c0392b'" onmouseout="this.style.color='var(--dim)'" title="이 측정 삭제">🗑️</button>`+
+        `</td>`+
         `<td style="text-align:left">${cell}</td><td style="text-align:left;color:var(--dim)">${(r.state||'').slice(0,11)}</td>`+
         `<td style="text-align:right">${f(r.R_s_ohmcm2)}</td><td style="text-align:right"><b>${f(r.R_int_ohmcm2)}</b></td>`+
         `<td style="text-align:right">${f(r.R_w_ohmcm2)}</td><td style="text-align:right">${f(r.C_dl_uF_cm2,1)}</td>`+
@@ -441,10 +447,8 @@ const EIS = {
         `<td style="text-align:right;color:${r.rmse_pct>10?'#c0392b':'var(--dim)'}">${f(r.rmse_pct,1)}</td>`+
         `<td style="text-align:right;color:var(--dim)">${r.n_points||'—'}</td>`+
         `<td style="text-align:center"><input type="checkbox" class="xe-sel" value="${r.filename}" `+
-        `onchange="EIS.onSelChange()" title="체크 → 아래 Nyquist '🔬 실험 겹치기' 로 이 측정만 겹침"></td>`+
-        `<td style="text-align:center"><button class="btn btn-sm" style="padding:2px 6px;background:#f5e6e6;border:1px solid #d9a5a5;color:#c0392b;cursor:pointer;font-size:.7rem" `+
-        `onclick="EIS.deleteExp('${r.filename}')" title="이 측정 삭제">✕ 삭제</button></td></tr>`;
-    }).join('')) || '<tr><td colspan="12" style="padding:8px;color:var(--dim)">측정 없음 — 위에서 .mpr/.csv 업로드</td></tr>';
+        `onchange="EIS.onSelChange()" title="체크 → 아래 Nyquist '🔬 실험 겹치기' 로 이 측정만 겹침"></td></tr>`;
+    }).join('')) || '<tr><td colspan="11" style="padding:8px;color:var(--dim)">측정 없음 — 위에서 .mpr/.csv 업로드</td></tr>';
     const a=d.anchor;
     this.el('xe-anchor').innerHTML = a ?
       `<b style="color:#1e8f5e">frame[4] 대표앵커</b> (full-cell ${a.n_full}개): C_dl≈<b>${a.c_dl_areal_uF_cm2}</b> µF/cm²geo`+
