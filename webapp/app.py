@@ -3992,10 +3992,20 @@ def api_eis_exp():
     import math as _math
     cell = 'sym' if request.args.get('cell') == 'sym' else 'full'
     _files = set(x.strip() for x in (request.args.get('files') or '').split(',') if x.strip())
+    _want_drt = (request.args.get('drt') or '1') not in ('0', 'false', 'no')   # 실험 DRT 계산(기본 on)
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     exdir = os.path.join(root, '이종기술', 'eis', 'extracted')
     if not os.path.isdir(exdir):
         return jsonify({'available': False, 'hint': '실험 EIS 추출본 없음 (이종기술/eis/extracted) — 랩 데이터'}), 200
+    try:
+        import sys as _sys
+        _sd = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'scripts')
+        if _sd not in _sys.path:
+            _sys.path.insert(0, _sd)
+        import eis_drt_ica as _eis
+        import numpy as _np
+    except Exception:
+        _eis, _np, _want_drt = None, None, False
     curves = []
     for p in sorted(_glob.glob(os.path.join(exdir, '*.csv'))):
         name = os.path.basename(p)[:-4]
@@ -4005,22 +4015,41 @@ def api_eis_exp():
         elif ('sym' in name) != (cell == 'sym'):              # 선택 없으면 full/sym 전체
             continue
         area = 0.7854 if ('sym' in name) else 1.3273          # 파일별 AREA (10π sym / 13π full)
-        pts = []
+        fs, zr_l, zi_l = [], [], []
         try:
             for row in _csv.DictReader(open(p)):
                 try:
-                    zr = float(row['ReZ_ohm']) * area
-                    zi = float(row['negImZ_ohm']) * area
+                    fv = float(row['freq_Hz']); zr = float(row['ReZ_ohm']) * area; zi = float(row['negImZ_ohm']) * area
                 except (KeyError, ValueError, TypeError):
                     continue
-                if _math.isfinite(zr) and _math.isfinite(zi) and abs(zr) < 1e6 and abs(zi) < 1e6:
-                    pts.append({'zre': round(zr, 3), 'zim': round(zi, 3)})
+                if all(_math.isfinite(v) for v in (fv, zr, zi)) and fv > 0 and abs(zr) < 1e6 and abs(zi) < 1e6:
+                    fs.append(fv); zr_l.append(zr); zi_l.append(zi)
         except Exception:
             continue
-        if len(pts) > 80:                                     # 오버레이용 다운샘플
+        if len(fs) < 4:
+            continue
+        pts = [{'zre': round(a, 3), 'zim': round(b, 3)} for a, b in zip(zr_l, zi_l)]
+        if len(pts) > 80:
             pts = pts[::(len(pts) // 80 + 1)]
-        if len(pts) >= 4:
-            curves.append({'name': name, 'pts': pts})
+        cobj = {'name': name, 'pts': pts}
+        if _want_drt and _eis is not None:                    # 실험 DRT (분포 = 눌린 Nyquist 보다 프로세스 명확)
+            try:
+                # DRT 안정화: 선두 인덕턴스(zim<0=Im(Z)>0) crop → 첫 용량성부터.  Z=Re+jIm, Im=-zim.
+                _fa, _Za = _np.asarray(fs, float), _np.asarray(zr_l, float) - 1j * _np.asarray(zi_l, float)
+                _cap = _np.asarray(zi_l, float) > 0
+                if _cap.any():
+                    _k0 = int(_np.argmax(_cap))
+                    _fa, _Za = _fa[_k0:], _Za[_k0:]
+                if len(_fa) >= 6:
+                    _tau, _g, _r0, _zr = _eis.drt(_fa, _Za, n_tau=60, lam=1e-2)
+                    _dpts = list(zip(_tau, _g))
+                    if len(_dpts) > 70:
+                        _dpts = _dpts[::(len(_dpts) // 70 + 1)]
+                    cobj['drt'] = [{'tau': float(t), 'gamma': (float(gg) if _math.isfinite(float(gg)) else 0.0)}
+                                   for t, gg in _dpts]
+            except Exception:
+                pass
+        curves.append(cobj)
     if not curves:
         return jsonify({'available': False, 'hint': ('선택 측정 추출본 없음' if _files else f'{cell} 셀 추출본 없음')}), 200
     return jsonify({'available': True, 'cell': cell, 'selected': bool(_files), 'curves': curves,

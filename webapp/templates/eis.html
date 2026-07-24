@@ -274,12 +274,12 @@ const EIS = {
   onSelChange(){ if(this.showExp) this.refreshExpOverlay(); },   // 체크 변경 → 켜져있으면 즉시 갱신
   async refreshExpOverlay(){
     const hint=this.el('e-exp-hint');
-    if(!this.showExp){ this.expNyq=null; hint.innerHTML=''; if(this.lastD) this.drawNyquist(this.lastD); return; }
+    if(!this.showExp){ this.expNyq=null; hint.innerHTML=''; if(this.lastD){ this.drawNyquist(this.lastD); this.drawDRT(this.lastD); } return; }
     const files=this.selectedExpFiles();
     if(!files.length){
       this.expNyq={curves:[]};
       hint.innerHTML='<span style="color:#a07c1f">위 표에서 측정을 체크하면 그 측정만 Nyquist 에 겹칩니다</span>';
-      if(this.lastD) this.drawNyquist(this.lastD); return;
+      if(this.lastD){ this.drawNyquist(this.lastD); this.drawDRT(this.lastD); } return;
     }
     try { const r=await (await fetch('/api/eis_exp?files='+encodeURIComponent(files.join(',')))).json();
       this.expNyq = (r && r.available) ? r : {curves:[], hint:(r&&r.hint)||'선택 측정 없음'}; }
@@ -288,7 +288,7 @@ const EIS = {
     hint.innerHTML = nc
       ? `<span style="color:#1e8f5e">🔬 실험 ${nc}개 겹침 (Ω·cm² ASR) — physics-EIS 선과 대조 (셀 배치차 → 자릿수 대조)</span>`
       : `<span style="color:#a07c1f">${this.expNyq.hint||'선택 측정 없음'}</span>`;
-    if(this.lastD) this.drawNyquist(this.lastD);
+    if(this.lastD){ this.drawNyquist(this.lastD); this.drawDRT(this.lastD); }
   },
   elems(d){
     const e = d.elements, fmt=(x,n=2)=> (x==null?'—':(Math.abs(x)>=100||Math.abs(x)<0.01?x.toPrecision(3):x.toFixed(n)));
@@ -363,7 +363,14 @@ const EIS = {
     const pts=d.drt.filter(p=>p.tau!=null&&p.gamma!=null&&p.tau>0);
     if(!pts.length) return;
     const lt=pts.map(p=>Math.log10(p.tau)), g=pts.map(p=>p.gamma);
-    const mL=52,mR=14,mT=14,mB=34, xmin=Math.min(...lt),xmax=Math.max(...lt),ymax=Math.max(...g)*1.08;
+    // 실험 DRT 오버레이 (체크된 측정, /api/eis_exp 가 curve별 drt 반환)
+    let expDrt=[];
+    if(this.showExp && this.expNyq && this.expNyq.curves)
+      expDrt=this.expNyq.curves.filter(c=>c.drt&&c.drt.length)
+        .map(c=>({name:c.name, pts:c.drt.filter(p=>p.tau>0&&p.gamma!=null)})).filter(c=>c.pts.length);
+    const allLt=lt.slice(), allG=g.slice();
+    expDrt.forEach(c=>c.pts.forEach(p=>{ allLt.push(Math.log10(p.tau)); allG.push(p.gamma); }));
+    const mL=52,mR=14,mT=14,mB=34, xmin=Math.min(...allLt),xmax=Math.max(...allLt),ymax=Math.max(...allG)*1.08;
     const {pw,ph}=this._axes(ctx,W,H,mL,mB,mT,mR,'log₁₀ τ (s)','γ(lnτ) (Ω·cm²)',xmin,xmax,0,ymax,true);
     const X=v=>mL+((v-xmin)/(xmax-xmin||1))*pw, Y=v=>mT+ph-(v/(ymax||1))*ph;
     // 문헌스타일: 깨끗한 남색 곡선 + 옅은 채움 (피크 수직선 제거 — 피크는 아래 텍스트로)
@@ -372,6 +379,13 @@ const EIS = {
     ctx.fillStyle='rgba(31,78,140,.10)'; ctx.fill();
     ctx.beginPath(); pts.forEach((p,i)=>{ const x=X(lt[i]),y=Y(g[i]); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
     ctx.strokeStyle='#16355e'; ctx.lineWidth=1.6; ctx.stroke();
+    // 실험 DRT (초록 선, 측정별) — 분포가 눌린 Nyquist 보다 프로세스 명확 (frame[4])
+    expDrt.forEach(c=>{ ctx.beginPath();
+      c.pts.forEach((p,i)=>{ const x=X(Math.log10(p.tau)),y=Y(p.gamma); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+      ctx.strokeStyle='#1e8f5e'; ctx.lineWidth=1.4; ctx.stroke(); });
+    if(expDrt.length){ ctx.font='10px "JetBrains Mono",monospace'; ctx.textAlign='left';
+      ctx.fillStyle='#16355e'; ctx.fillText('— 모델', W-mR-92, mT+11);
+      ctx.fillStyle='#1e8f5e'; ctx.fillText('— 실험 '+expDrt.length+'개', W-mR-92, mT+24); }
     // 피크 = 곡선 위 작은 점 (수직선 대신 — 문헌스타일 깔끔) + hover hit-test 저장
     this._drtHits=[];
     (d.peaks||[]).forEach(p=>{ if(p.tau_s==null) return;
