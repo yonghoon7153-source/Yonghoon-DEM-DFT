@@ -6007,6 +6007,11 @@ def mpm_input_package(case_id):
                 _s4sched = ''
         except Exception:
             _s4sched = ''                               # 파싱 실패 → 스케줄 무시 (체크박스 경로 유지)
+    # ★STEP4 grid까지만 (&s4grid=1): step4_grid.npz 만 만들고 step4_dyn(v2) 스킵 — C-rate/충전/스케줄 무시
+    _s4grid = request.args.get('s4grid', '') in ('1', 'true', 'yes', 'on')
+    if _s4grid:
+        cmd.append('--step4-grid-only')
+        _s4_clean, _s4chg_clean, _s4sched = [], [], ''       # 아래 컷오프/R_int 주입 게이트도 함께 끔
     if _s4_clean and not _s4sched:
         cmd += ['--step4-crates', ','.join(f'{v:g}' for v in _s4_clean)]
     if _s4chg_clean and not _s4sched:

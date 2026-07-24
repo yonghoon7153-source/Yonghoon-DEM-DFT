@@ -290,6 +290,10 @@
             <label style="font-weight:400;cursor:pointer"><input type="checkbox" id="s4-2" onchange="updateAdditiveGpuCmds()"> 2C</label>
             <label style="font-weight:400;cursor:pointer"><input type="checkbox" id="s4-3" onchange="updateAdditiveGpuCmds()"> 3C</label>
           </span><br>
+          <span style="display:inline-flex;gap:8px;align-items:center;height:26px;flex-wrap:wrap;font-size:0.85em" title="체크 시 step4_grid.npz(복셀-DFN 격자)까지만 만들고 step4_dyn(v2 시간전개 방전솔브)은 실행 안 함 — 위 C-rate/충전/스케줄 선택은 무시됩니다. 나중에 GPU 박스에서 step4_dyn.py를 직접 태워 원하는 rate만 재개 가능. σ-삼중·payload·뷰어 데이터는 정상 산출.">
+            <label style="font-weight:600;cursor:pointer;color:#fbbf24"><input type="checkbox" id="s4-gridonly" onchange="updateAdditiveGpuCmds()"> ⏹ STEP4 grid까지만</label>
+            <span style="color:#94a3b8;font-weight:400">(step4_grid.npz 만 · v2 방전솔브 스킵)</span>
+          </span><br>
           <span style="display:inline-flex;gap:8px;align-items:center;height:26px;flex-wrap:wrap;font-size:0.82em" title="Zive 스마트인터페이스식 스텝 스케줄 — 충전/방전 스텝을 순서대로(charge-first) 정의, per-step rate·컷오프.  지정 시 위 체크박스 대신 스케줄대로 순차 실행.  각 스텝=STEP4 1런.">
             <button type="button" onclick="openSchedModal()" style="padding:2px 10px;background:#1e3a5f;color:#93c5fd;border:1px solid #3b6ea5;border-radius:5px;cursor:pointer">⚙ 스케줄 편집 (Zive식)…</button>
             <span id="sched-summary" style="color:#7dd3fc"></span>
@@ -650,6 +654,7 @@ function _addVals() {
     s4rint: (document.getElementById('s4-rint') || {}).value || '',
     s4pp: (document.getElementById('s4-pp') || {}).checked ? '1' : '',
     s4sched: (document.getElementById('s4-sched-json') || {}).value || '',
+    s4grid: (document.getElementById('s4-gridonly') || {}).checked ? '1' : '',
   };
 }
 // ★Zive식 충방전 스케줄 빌더 (팝업) — 스텝 리스트를 JSON으로 직렬화해 hidden #s4-sched-json에 저장.
@@ -783,7 +788,7 @@ function _addExclusiveOK() {
 // (recalcAdditives removed — this panel is recipe-zip-only; σ/porosity analysis lives in the MPM viewer
 //  after the GPU run. The analytic /whatif-additives route is kept server-side but no longer called here.)
 function dlAdditiveZip() {
-  const { vg, sp, pt, sd, mix, coll, vox, s4, s4chg, s4vmin, s4vmax, s4icut, s4rint, s4pp, s4sched } = _addVals();
+  const { vg, sp, pt, sd, mix, coll, vox, s4, s4chg, s4vmin, s4vmax, s4icut, s4rint, s4pp, s4sched, s4grid } = _addVals();
   if (vg <= 0 && sp <= 0 && pt <= 0 && sd <= 0) { alert('첨가제를 하나 이상 입력하세요 (wt%).'); return false; }
   if (!_addExclusiveOK()) return false;
   // pristine/cycled는 집전체로 시나리오를 해석하므로 집전체 필요; 숫자(문헌/직접값)는 불필요.
@@ -797,6 +802,7 @@ function dlAdditiveZip() {
   // ★poly/SC 크기-분리는 STEP4 없어도 유효: STEP3 σ_e 재료(AM_S=10/AM_P=5 mS/cm)를 크기로
   //   분류함 (D_s 분리는 STEP4 실행 시에만 추가로 적용).  → 차단하지 않음 (2026-07-22).
   const _ppc = s4pp ? '&s4pp=1' : '';
+  const _sg = s4grid ? '&s4grid=1' : '';   // ★STEP4 grid까지만 (v2 방전솔브 스킵)
   // ★poly/SC 전기화학 분리 (파워유저): 케이스 페이지 URL에 &s4dsp=4e-15&s4dss=3e-15
   //   (&s4i0p=&s4i0s=&s4split=)를 붙여 열면 킷 다운로드 URL로 관통 (s4x100 문법; 서버가
   //   쌍/양수 검증 — 값 가이드 docs/ncm_sc_poly_electrochem_anchors.md)
@@ -804,7 +810,7 @@ function dlAdditiveZip() {
   const _pp = ['s4dsp', 's4dss', 's4i0p', 's4i0s', 's4split']
     .filter(k => _pq.get(k)).map(k => `&${k}=${encodeURIComponent(_pq.get(k))}`).join('');
   updateAdditiveGpuCmds();   // ★ pressing download generates the gabia upload/run/fetch command card
-  window.location = `/results/${encodeURIComponent('{{ case.id }}')}/mpm-input?vgcf=${vg}&superp=${sp}&ptfe=${pt}&sdcp=${sd}&mixing=${mix}&collector=${coll}&vox=${vox}&step4=${s4}&step4chg=${s4chg}${_cut}${_ri}${_sched}${_ppc}${_pp}`;
+  window.location = `/results/${encodeURIComponent('{{ case.id }}')}/mpm-input?vgcf=${vg}&superp=${sp}&ptfe=${pt}&sdcp=${sd}&mixing=${mix}&collector=${coll}&vox=${vox}&step4=${s4}&step4chg=${s4chg}${_cut}${_ri}${_sched}${_ppc}${_sg}${_pp}`;
   return false;
 }
 // recipe string (mirror of backend _add_recipe_str) → zip filename (mirror of the download_name tag)

@@ -82,6 +82,9 @@ def main():
     ap.add_argument('--step4-charge', default='',
                     help='STEP4-v2 충전(CCCV) C-rate 목록 (쉼표) — CC 충전 → v_max 도달 시 CV 홀드 '
                          '(step4_dyn --charge --cv-hold).  방전 rate들 다음에 순차 실행.')
+    ap.add_argument('--step4-grid-only', action='store_true',
+                    help='STEP4 grid까지만 — step4_grid.npz 만들고 step4_dyn(v2 방전솔브)는 스킵 '
+                         '(C-rate/충전/스케줄 선택 무시).  나중에 step4_dyn 을 직접 태워 재개 가능.')
     ap.add_argument('--step4-sched', default='',
                     help='★Zive-style 충방전 스케줄 (JSON) — 지정 시 crates/charge 대신 순서대로 실행. '
                          '형식 [{"k":"c|d","r":rate,"v":vlim,"i":icut,"n":cyc}]: k=c충전CCCV/d방전, '
@@ -554,6 +557,8 @@ def main():
     run_tag = re.sub(r'[^A-Za-z0-9._]', '', run_tag.replace(':', '_')) or 'plain'
     # STEP4 체크박스: 미선택 = 그리드 export까지만 (step4_grid.npz 항상 저장 — 나중에 rate만
     # 골라 step4_only.sh로 재개 가능); 선택 = payload 후 각 C-rate를 순차 자동 실행.
+    if a.step4_grid_only:                                      # ★grid까지만 = C-rate 무시(v2 스킵)
+        s4_rates, s4_chg, s4_sched = [], [], None
     s4_block = ''
     if s4_rates or s4_chg or s4_sched:
         _dis = ' '.join(f'{v:g}' for v in s4_rates)
@@ -811,7 +816,9 @@ echo "          (오래된 run_* 폴더는 디스크 차면 지워도 됨 — �
              if s4_sched else
              f'  step4_only.sh  [STEP4 방전: {", ".join(f"{v:g}C" for v in s4_rates) or "—"}'
              f' / 충전CCCV: {", ".join(f"{v:g}C" for v in s4_chg) or "—"}]'
-             if (s4_rates or s4_chg) else '  [STEP4 미선택 — 그리드 export까지]')
+             if (s4_rates or s4_chg) else
+             ('  [★STEP4 grid까지만 (v2 스킵 — step4_grid.npz 만 생성)]' if a.step4_grid_only
+              else '  [STEP4 미선택 — 그리드 export까지]'))
           + '  run_a1_anchors.sh  [A-1 사이클 열화 앵커: pristine+충전+ΔV심화 → 기하 debond/void]')
 
 
