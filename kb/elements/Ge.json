@@ -1,0 +1,38 @@
+{
+  "symbol": "Ge",
+  "name": "Germanium",
+  "Z": 32,
+  "role": "argyrodite 골격 P-자리 치환의 대표 도펀트. Ge⁴⁺(d¹⁰)가 P⁵⁺ 사면체 자리를 치환 → Li₆₊ₓGeₓP₁₋ₓS₅X (Kraft 2018), 이가치 1가 차이로 치환당 Li⁺ 1개 추가 → 초이온전도 유도. GeS₄ 사면체가 PS₄와 등전자적으로 호환. LGPS(Li₁₀GeP₂S₁₂)의 그 Ge. 캐스케이드 산화물 후보 형태는 GeO₂.",
+  "oxidation_states": ["+4", "+2"],
+  "electronegativity": 2.01,
+  "ionic_radius_A": {
+    "Ge4+_IV": 0.39,
+    "Ge4+_VI": 0.53,
+    "Ge2+_VI": 0.73,
+    "_note": "Shannon 1976: Ge⁴⁺(d¹⁰) 사면체 IV 0.39 A, 팔면체 VI 0.53 A; Ge²⁺ VI 0.73 A. 사면체 IV 0.39은 P⁵⁺ IV(0.17)보다 크지만 사면체 배위 자체는 유지 → GeS₄가 PS₄ 골격에 자연스럽게 들어가 국소 팽창은 적당. Li⁺ VI(0.76)보다 작음."
+  },
+  "representative_compounds": [
+    {"formula": "Li6+xGexP1-xS5X (Ge-doped argyrodite)", "context": "골격 치환(대표)", "battery_role": "Ge⁴⁺@P 자리 → 치환당 Li⁺ 1개 추가 → σ 대폭↑(초이온전도)", "note": "Kraft 2018: Li₆₊ₓP₁₋ₓGeₓS₅I가 argyrodite 최고 σ 중 하나; GeS₄가 PS₄와 등전자 호환"},
+    {"formula": "Li10GeP2S12 (LGPS)", "context": "관련 초이온전도체", "battery_role": "Ge 티오포스페이트 초이온전도체(σ ~12 mS/cm)", "note": "Ge가 골격 사면체 양이온으로 3D Li⁺ 통로를 여는 원형 사례(Kamaya/Kanno 2011); 단 좁은 gap·Ge⁴⁺ 환원 여지로 Li 금속 계면 불안정"},
+    {"formula": "GeO2", "context": "도펀트 전구체(캐스케이드 산화물)", "battery_role": "Ge⁴⁺ 산화물 도펀트 원; O 도입", "note": "rutile-type GeO₂ wide-gap(~4.7-5.4 eV); Ge 3d 32.5 eV(vs 원소 Ge⁰ 29.3 eV, ~3.2 eV 이동)"}
+  ],
+  "sei_relevance": "Ge는 (도펀트 중에선 드물게) argyrodite 골격 자체에 앉는 P-치환 원소라 벌크 σ 향상이 주기능. 계면/SEI 측면은 양날: Ge⁴⁺는 Li 금속에 환원(Ge⁴⁺→Ge⁰, 이어 Li-Ge 합금화)되기 쉬워 LGPS 계열의 고질적 Li 금속 계면 불안정(연속 분해)의 원인 — 즉 Ge는 벌크 전도엔 훌륭하나 Li 음극 SEI 안정성엔 불리한 종. GeO₂로 넣어 Ge–O로 붙들면 환원 저항이 나아질 수 있음(캐스케이드 산화물 전략의 근거).",
+  "xps": [
+    {"core": "Ge 3d", "BE_eV": 32.5, "assignment": "GeO2 / Ge⁴⁺ (보고 ~32.2-32.7 eV)", "ref": "NIST XPS DB; xpsdatabase.com Ge Z=32"},
+    {"core": "Ge 3d", "BE_eV": 29.3, "assignment": "elemental Ge / Ge⁰ (환원 생성물; ~3.2 eV 화학이동)", "ref": "NIST XPS DB"},
+    {"core": "Ge 3d", "BE_eV": 30.5, "assignment": "GeS2 / thio-germanate Ge (중간 이동; 골격 GeS₄ 프로브)", "ref": "germanium sulfide XPS 문헌"}
+  ],
+  "raman": [
+    {"cm1": 440, "assignment": "hexagonal(α-quartz-type) GeO2 A1 dominant Ge-O mode; rutile-type는 ~700 cm-1", "ref": "GeO2 Raman 표준 참조"},
+    {"cm1": 345, "assignment": "GeS4 사면체 대칭신축(thio-germanate; PS4 ν1 420과 구분되는 골격 지문)", "ref": "thio-germanate/LGPS Raman 문헌"}
+  ],
+  "dos_character": "Ge⁴⁺는 d¹⁰ 닫힌껍질, Ge 3d는 깊은 반코어 준위. GeS₄는 PS₄와 등전자적이라 골격 치환 시 밴드 구조를 크게 안 흩뜨리고 gap을 유지 → 벌크 전자적으론 클린. 다만 Ge 4s/4p 유래 CBM이 P보다 낮게 내려와 LGPS 계열은 gap이 좁고 CBM이 Li 금속 환원전위에 가까워짐 → Ge⁴⁺ 환원(→ midgap/합금)이 계면 열화의 씨앗. '벌크는 클린, 저전위 계면은 취약'으로 요약.",
+  "key_references": [
+    "Kraft et al., J. Am. Chem. Soc. 2018, 140, 16330 — Li₆₊ₓP₁₋ₓGeₓS₅I: Ge⁴⁺@P 자리 이가치 치환으로 초이온전도 유도 (argyrodite Ge 도핑 정본)",
+    "Kamaya/Kanno et al., Nat. Mater. 2011, 10, 682 — Li₁₀GeP₂S₁₂(LGPS) 초이온전도체; Ge 골격 사면체 (LGPS 원형)",
+    "Shannon 1976 — Ge⁴⁺ 유효이온반경(IV 0.39, VI 0.53) (Shannon 반경)",
+    "NIST XPS DB — GeO2 Ge 3d 32.5 eV vs 원소 Ge 29.3 eV (~3.2 eV 화학이동) (Ge XPS 기준)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
+}

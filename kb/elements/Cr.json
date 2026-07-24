@@ -1,0 +1,38 @@
+{
+  "symbol": "Cr",
+  "name": "Chromium",
+  "Z": 24,
+  "role": "cascade 산화물 도펀트 후보(Cr₂O₃). Cr³⁺=3d³(t2g 반충전) hard 산이고 Cr₂O₃는 견고한 wide-gap 산화물이라 도펀트로 매력적 — 단 Cr⁶⁺(chromate)로 산화되면 독성·불안정 유의. Cr³⁺ 반경이 Li⁺보다 작아 전하보상 치환 성향.",
+  "oxidation_states": ["+3", "+6", "+2"],
+  "electronegativity": 1.66,
+  "ionic_radius_A": {
+    "Cr3+_VI": 0.615,
+    "Cr2+_VI_HS": 0.800,
+    "Cr6+_IV": 0.260,
+    "_note": "Shannon 1976: Cr3+ VI 0.615 A(가장 안정), Cr2+ VI HS 0.80 A, Cr6+ IV(사면체 chromate) 0.26 A. Cr3+는 Li+(0.76)보다 작아 aliovalent 치환 시 전하보상 필요; Cr6+는 사면체 CrO4로만."
+  },
+  "representative_compounds": [
+    {"formula": "Cr2O3", "context": "도펀트 전구체 (cascade oxide)", "battery_role": "견고한 wide-gap 산화물 도펀트; Cr3+ 안정상", "note": "Cr 2p3/2 ~576.6 eV(Cr3+). 화학적으로 매우 안정(부동태 산화물)"},
+    {"formula": "LiCrO2", "context": "층상 산화물", "battery_role": "층상 Cr3+ 산화물(전기화학 활성 낮음, 구조 참고)", "note": "LiCoO2형 층상 골격 속 Cr3+ 참고상"},
+    {"formula": "Cr2S3", "context": "황화물 유사상", "battery_role": "S 자리 화학의 Cr3+ 참고상(황화 Cr)", "note": "황화물 골격에 Cr가 들어갈 때 참고; 산화물보다 이온성 약함"}
+  ],
+  "sei_relevance": "Cr는 native SE 이온이 아니라 cascade의 TM 산화물 도펀트/양극측 후보. Cr₂O₃는 대표적 부동태 산화물이라 wide-gap 절연층으로 견고하나, 산화측에서 Cr⁶⁺(chromate)로 넘어가면 불안정·독성 이슈. Li-metal 음극과 접하면 부분 환원 가능 — 주로 벌크/양극 도펀트로 검토. SSB 계면 문헌에 Cr 특이 anode-SEI 부동태 역할 보고는 제한적.",
+  "xps": [
+    {"core": "Cr 2p3/2", "BE_eV": 576.6, "assignment": "Cr3+ in Cr2O3 (보고 576.3-576.8 eV)", "ref": "Biesinger et al. 2011, Appl. Surf. Sci. 257, 2717"},
+    {"core": "Cr 2p3/2", "BE_eV": 579.2, "assignment": "Cr6+ chromate (예: BaCrO4 ~579.1 eV)", "ref": "NIST XPS DB; Biesinger 2011"},
+    {"core": "Cr 2p3/2", "BE_eV": 574.2, "assignment": "Cr metal (Cr0)", "ref": "Biesinger et al. 2011"}
+  ],
+  "raman": [
+    {"cm1": 551, "assignment": "Cr2O3 (eskolaite, corundum-type) A1g — 최강 지문(도펀트 산화물상 확인용, 호스트 SSB 모드 아님)", "ref": "Cr2O3 Raman (corundum R-3c)"},
+    {"cm1": 350, "assignment": "Cr2O3 Eg 모드(추가 ~610 cm-1)", "ref": "Cr2O3 Raman"}
+  ],
+  "dos_character": "Cr³⁺=3d³(t2g³ 반충전) 국소 점유준위가 argyrodite 갭 안에 들어올 수 있음(Cr₂O₃ 자체는 Mott/charge-transfer 절연체, gap ~3.4 eV). 반충전 t2g는 교환분열이 커 스핀분극이 필수이고 국소화 3d에 DFT+U(Dudarev)가 필요 — midgap 결함준위 여부가 도펀트 판정의 핵심.",
+  "key_references": [
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Cr3+ VI 0.615 A)",
+    "Biesinger et al., Appl. Surf. Sci. 257, 2717 (2011) — first-row TM 2p XPS reference (Cr/Mn/Fe/Co/Ni)",
+    "Cr2O3 (eskolaite) Raman — A1g ~551 cm-1",
+    "Banik et al. 2022 — substitutions & oxidative stability of argyrodite (도펀트 맥락 일반)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
+}

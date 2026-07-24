@@ -1,0 +1,36 @@
+{
+  "symbol": "Ga",
+  "name": "Gallium",
+  "Z": 31,
+  "role": "3가 양이온 도펀트(Ga₂O₃로 첨가). Ga³⁺(d¹⁰)는 사면체 선호가 강해 P⁵⁺ 사면체 자리 치환 후보 — 이가치(3+ vs 5+)라 치환당 Li⁺ 2개 추가(캐리어 레버). 닫힌껍질 wide-gap 종이라 midgap 상태를 거의 안 만듦. Ga₂O₃는 O를 도입하는 캐스케이드 산화물 후보; Ga는 할라이드 SE(Li-Ga-X)에서도 골격 양이온으로 등장.",
+  "oxidation_states": ["+3"],
+  "electronegativity": 1.81,
+  "ionic_radius_A": {
+    "Ga3+_IV": 0.47,
+    "Ga3+_VI": 0.62,
+    "_note": "Shannon 1976: Ga³⁺(d¹⁰) 사면체 IV 0.47 A, 팔면체 VI 0.62 A. 사면체 IV 0.47은 P⁵⁺ IV(0.17)보다 크지만 Ge⁴⁺ IV(0.39)와 근접 → P 자리 사면체 치환 시 Ge와 비슷한 정도의 국소 팽창. Li⁺ VI(0.76)보다 작음."
+  },
+  "representative_compounds": [
+    {"formula": "Ga2O3", "context": "도펀트 전구체(캐스케이드 산화물)", "battery_role": "ultra-wide-gap 산화물 도펀트; Ga·O 공급원", "note": "β-Ga₂O₃ gap ~4.8 eV(초광대역); 황화물에 O 도입 + 강한 Ga–O(hard-ish 산). Ga 2p3/2 ~1118 eV, Ga 3d5/2 ~20.5 eV"},
+    {"formula": "Li6+2xP1-xGaxS5Cl (Ga-doped argyrodite)", "context": "골격 치환 모티프", "battery_role": "Ga³⁺가 P 자리 → 치환당 Li⁺ 2개 추가(강한 캐리어 주입)", "note": "이가치 3+/5+ 치환 → Ge(4+/5+, Li⁺ 1개)보다 Li 주입 폭 큼; Ga³⁺ 사면체 선호가 P 자리와 궁합"},
+    {"formula": "Li3GaS3 / thio-gallate motif", "context": "관련 황화물상", "battery_role": "Ga가 S 사면체 골격 양이온으로 들어간 리튬 티오갈레이트 모티프", "note": "Ga–S 골격이 존재 → Ga가 황화물 계와 화학적으로 호환됨을 시사(단 도펀트로선 Ga–O 앵커가 주 의도)"}
+  ],
+  "sei_relevance": "Ga는 native SE 원소가 아니라 Ga₂O₃(산화물 도펀트)로 들어오는 벌크 도펀트. 특이적 SEI 성분 역할 보고는 제한적 — 주로 벌크에서 P-치환 캐리어 주입(Li⁺ 2개/치환)과 O-앵커·구조 조절. Ga₂O₃는 초광대역 절연체라 계면에 남으면 전자차단 부동태층에 우호적. 단 Ga³⁺도 저전위에서 Ga 금속으로 환원되어 Li-Ga 합금(액상 가능)을 형성할 여지가 있어, 계면 안정성은 Zr/Y 같은 hard·비환원 종보다는 주의가 필요.",
+  "xps": [
+    {"core": "Ga 2p3/2", "BE_eV": 1118.0, "assignment": "Ga2O3 / Ga³⁺ (보고 범위 ~1117.4-1118.4 eV; Ga⁰와 ~2.1 eV 차)", "ref": "NIST XPS DB; xpsdatabase.com Ga2O3"},
+    {"core": "Ga 3d5/2", "BE_eV": 20.5, "assignment": "Ga2O3 / Ga³⁺ (얕은 준위; 금속 Ga 3d ~18.6 eV)", "ref": "NIST XPS DB"},
+    {"core": "Ga 2p3/2", "BE_eV": 1116.4, "assignment": "Ga metal / Ga⁰ (환원 생성물)", "ref": "NIST XPS DB"}
+  ],
+  "raman": [
+    {"cm1": 767, "assignment": "β-Ga2O3 high-frequency Ga-O stretch(Ag); 저역엔 ~200 cm-1 격자모드", "ref": "β-Ga2O3 Raman 표준 참조"}
+  ],
+  "dos_character": "Ga³⁺는 d¹⁰ 닫힌껍질 → Ga 3d는 깊은 반코어 준위, 밴드엣지를 안 건드림. Ga2O3는 초광대역(~4.8 eV)이고 CBM은 Ga 4s/4p 혼성 → 도핑된 황화물에서 Ga는 midgap 상태를 거의 안 넣는 클린 wide-gap 종(Zn·Ge와 동류). 밴드엣지 redox 중심이 아니라 구조/캐리어 레버 + O-앵커로 작동. (저전위 Ga³⁺→Ga⁰ 환원 가능성은 계면 화학 주의점.)",
+  "key_references": [
+    "Shannon 1976, Acta Cryst. A32, 751 — Ga³⁺ 유효이온반경(IV 0.47, VI 0.62) (Shannon 반경)",
+    "Kraft et al., J. Am. Chem. Soc. 2018, 140, 16330 — argyrodite P-자리 이가치 치환 일반틀(Ge 사례; Ga³⁺ 사면체 치환도 같은 프레임) (P-자리 aliovalent 치환)",
+    "β-Ga2O3 전자구조/XPS — Ga 2p3/2 ~1118 eV, gap ~4.8 eV (Ga2O3 XPS·밴드)",
+    "NIST XPS DB — Ga2O3 Ga 2p3/2 ~1118 eV, Ga 3d5/2 ~20.5 eV (Ga XPS 기준)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
+}

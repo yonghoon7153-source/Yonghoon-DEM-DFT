@@ -1,0 +1,38 @@
+{
+  "symbol": "Ti",
+  "name": "Titanium",
+  "Z": 22,
+  "role": "cascade 산화물 도펀트 후보(TiO₂). Ti⁴⁺=3d⁰(빈 3d)면 wide-gap이지만 쉽게 Ti³⁺(3d¹)로 환원돼 midgap 준위·다가 redox가 생김 — 양극 코팅으로 흔히 쓰이나 환원 취약. 작은 Ti⁴⁺는 P 자리/전하보상 치환 성향.",
+  "oxidation_states": ["+4", "+3", "+2"],
+  "electronegativity": 1.54,
+  "ionic_radius_A": {
+    "Ti4+_VI": 0.605,
+    "Ti3+_VI": 0.670,
+    "Ti2+_VI": 0.860,
+    "_note": "Shannon 1976: Ti4+ VI 0.605 A, Ti3+ VI 0.670 A, Ti2+ VI 0.86 A. Ti4+는 Li+(0.76)보다 훨씬 작아 aliovalent 치환 시 전하보상 필요; 환원되면 반경이 커져 국소 왜곡이 커짐."
+  },
+  "representative_compounds": [
+    {"formula": "TiO2", "context": "도펀트 전구체 / 양극 코팅", "battery_role": "cascade 산화물 도펀트; ALD/코팅으로 양극-SE 계면 보호에 흔함", "note": "Ti 2p3/2 ~458.7 eV(Ti4+, anatase/rutile). Ti4+=3d0이면 wide-gap(~3 eV)"},
+    {"formula": "Li4Ti5O12", "context": "음극 (LTO)", "battery_role": "제로-스트레인 삽입 음극; Ti4+/Ti3+ redox ~1.55 V", "note": "Ti 2p3/2 삽입 시 Ti4+->Ti3+(~457 eV) 이동; 안전한 다가 redox 예시"},
+    {"formula": "TiS2", "context": "층상 황화물 양극", "battery_role": "고전적 Li 인터칼레이션 양극; Ti4+/Ti3+", "note": "황화물 골격 속 Ti 참고상; 준금속적 층상"}
+  ],
+  "sei_relevance": "Ti는 native SE 이온이 아니라 cascade의 TM 산화물 도펀트/양극측 코팅 후보. TiO₂는 Li과 만나면 Li_xTiO₂ 삽입 또는 저전압에서 Ti⁴⁺→Ti³⁺ 환원 거동 — 그래서 anode보다 양극측 코팅으로 잘 맞음(고전압 안정). Li-metal 음극과 직접 접촉 시 부분 환원 우려. SSB 계면 문헌에 Ti 특이 anode-SEI 부동태 역할 보고는 제한적, 주로 양극계면/벌크 도펀트로 검토.",
+  "xps": [
+    {"core": "Ti 2p3/2", "BE_eV": 458.7, "assignment": "Ti4+ in TiO2 (anatase/rutile; 보고 458.5-459.0 eV)", "ref": "NIST XPS DB; Thermo Fisher Ti"},
+    {"core": "Ti 2p3/2", "BE_eV": 457.0, "assignment": "Ti3+ in Ti2O3 / reduced titania", "ref": "NIST XPS DB"},
+    {"core": "Ti 2p3/2", "BE_eV": 453.8, "assignment": "Ti metal (Ti0)", "ref": "NIST XPS DB"}
+  ],
+  "raman": [
+    {"cm1": 144, "assignment": "TiO2 anatase Eg(1) — 최강 지문 모드(도펀트 산화물상 확인용, 호스트 SSB 모드 아님)", "ref": "Ohsaka 1978, anatase Raman"},
+    {"cm1": 447, "assignment": "TiO2 rutile Eg(추가로 A1g ~612) — 결정상 구분", "ref": "Rutile TiO2 Raman"}
+  ],
+  "dos_character": "Ti⁴⁺=3d⁰이면 빈 3d가 CBM 근처(TiO₂ 갭 ~3 eV)라 자체는 wide-gap이지만, Ti⁴⁺→Ti³⁺(3d¹) 환원 시 갭 내 점유 결함준위가 생김. 다가라 midgap state·전자 누설 우려가 도펀트로서 핵심 리스크; 국소화 3d¹에는 스핀분극+DFT+U(Dudarev) 권장.",
+  "key_references": [
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Ti4+ VI 0.605 A)",
+    "Ohsaka, J. Raman Spectrosc. 7, 321 (1978) — anatase TiO2 Raman modes",
+    "NIST XPS Database — Ti 2p3/2 (TiO2 ~458.7 eV, metal 453.8 eV)",
+    "Banik et al. 2022 — substitutions & oxidative stability of argyrodite (도펀트 맥락 일반)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
+}

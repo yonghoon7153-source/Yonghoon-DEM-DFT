@@ -1,0 +1,37 @@
+{
+  "symbol": "Ni",
+  "name": "Nickel",
+  "Z": 28,
+  "role": "cascade 산화물 도펀트 후보(NiO). Ni²⁺(3d⁸)는 강상관 Mott 절연체; NCM/LiNiO₂ 양극의 주 redox 원소. 도펀트로는 강상관 d 준위·환원 취약이 리스크. Ni²⁺ 반경이 Li⁺보다 약간 작아 전하보상 성향.",
+  "oxidation_states": ["+2", "+3"],
+  "electronegativity": 1.91,
+  "ionic_radius_A": {
+    "Ni2+_VI": 0.690,
+    "Ni3+_VI_LS": 0.560,
+    "Ni3+_VI_HS": 0.600,
+    "_note": "Shannon 1976: Ni2+ VI 0.690 A, Ni3+ VI LS 0.56 A(HS 0.60). Ni2+는 Li+(0.76)보다 약간 작아 aliovalent 치환 시 전하보상 필요; Ni3+는 더 작음. Ni2+는 보통 LS(d8)."
+  },
+  "representative_compounds": [
+    {"formula": "NiO", "context": "도펀트 전구체 (cascade oxide)", "battery_role": "Ni2+ rock-salt 산화물 도펀트(전형적 Mott 절연체)", "note": "Ni 2p3/2 ~853.8 eV(Ni2+) + 강한 shake-up 위성 ~860.7 eV(진단 열쇠)"},
+    {"formula": "LiNiO2 (NCM/NCA 모체)", "context": "층상 양극", "battery_role": "고용량 층상 양극; Ni2+/Ni3+/Ni4+ redox", "note": "고Ni 양극의 주 redox; Ni2+/Ni3+ 혼재가 XPS로 관측"},
+    {"formula": "NiS / Ni3S2", "context": "황화물 유사상", "battery_role": "S 자리 화학의 Ni 참고상; conversion 거동", "note": "황화물 골격에 Ni가 들어갈 때 참고; 금속성 강함"}
+  ],
+  "sei_relevance": "Ni는 native SE 이온이 아니라 cascade의 TM 산화물 도펀트/양극측 후보. NiO는 전형적 conversion 재료라 Li-metal 음극과 접하면 Ni + Li₂O로 환원 — 직접 anode 접촉엔 부적합, 양극측 코팅/벌크 도펀트로 검토(고Ni 양극 환경). SSB 계면 문헌에 Ni 특이 anode-SEI 부동태 역할 보고는 제한적.",
+  "xps": [
+    {"core": "Ni 2p3/2", "BE_eV": 853.8, "assignment": "Ni2+ in NiO (강한 shake-up 위성 ~860.7 eV)", "ref": "Biesinger et al. 2011, Appl. Surf. Sci. 257, 2717"},
+    {"core": "Ni 2p3/2", "BE_eV": 855.6, "assignment": "Ni2+ in Ni(OH)2 / oxyhydroxide", "ref": "Biesinger et al. 2011"},
+    {"core": "Ni 2p3/2", "BE_eV": 852.6, "assignment": "Ni metal (Ni0)", "ref": "Biesinger et al. 2011"}
+  ],
+  "raman": [
+    {"cm1": 1090, "assignment": "NiO 2-magnon(2M) 산란 — NiO의 특징적 신호(1차 산란은 약함); ~500(1LO)도 관측. 도펀트 산화물상 확인용, 호스트 SSB 모드 아님", "ref": "NiO Raman (2-phonon/2-magnon)"}
+  ],
+  "dos_character": "Ni²⁺=3d⁸ 강상관 — NiO는 전형적 Mott/charge-transfer 절연체(gap ~3.5 eV, VBM은 O 2p–Ni 3d 혼성). 도펀트로 들어가면 국소 3d 준위가 argyrodite 갭 안에 결함준위·전자 누설을 낼 소지. 스핀분극+DFT+U(문헌 U~6 eV급) 필수 — LDA/GGA 단독은 갭·자성을 크게 틀리게 줌.",
+  "key_references": [
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Ni2+ VI 0.690 A)",
+    "Biesinger et al., Appl. Surf. Sci. 257, 2717 (2011) — Ni 2p XPS reference (NiO 853.8 eV + 위성)",
+    "NiO 2-magnon/2-phonon Raman",
+    "Banik et al. 2022 — substitutions & oxidative stability of argyrodite (도펀트 맥락 일반)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
+}

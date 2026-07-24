@@ -1,0 +1,38 @@
+{
+  "symbol": "Cu",
+  "name": "Copper",
+  "Z": 29,
+  "role": "연산(soft-acid) 양이온 도펀트. Cu²⁺/Cu⁺가 argyrodite P⁵⁺ 자리(4b)를 부분 치환 → 전하보상 Li⁺ 추가 + 주변 S²⁻ 전하밀도↓ → Li 확산장벽↓. 강한 Cu–S 결합(HSAB soft-soft)이 PS₄를 가수분해로부터 보호 → 대기안정성↑, 덤으로 밴드갭 확장. 캐스케이드 산화물 후보 형태는 CuO. (CuCl·CuBr₂ 이원도핑으로 σ·Li 호환·대기안정 동시 개선한 실증 있음.)",
+  "oxidation_states": ["+1", "+2"],
+  "electronegativity": 1.9,
+  "ionic_radius_A": {
+    "Cu+_VI": 0.77,
+    "Cu2+_VI": 0.73,
+    "Cu2+_IV_sq": 0.57,
+    "_note": "Shannon 1976: Cu⁺(d¹⁰) VI 0.77 A, Cu²⁺(d⁹) VI 0.73 A(얀-텔러로 축방향 늘어남), 사각평면 IV 0.57 A. Cu²⁺ VI(0.73)이 Li⁺ VI(0.76)와 거의 같아 Li 자리 치환 시 크기 정합은 좋지만, P⁵⁺ 사면체(IV 0.17)에 넣으면 훨씬 커서 국소 팽창을 강제."
+  },
+  "representative_compounds": [
+    {"formula": "CuO", "context": "도펀트 전구체(캐스케이드 산화물)", "battery_role": "Cu²⁺ 산화물 도펀트 원; Cu·O 공급원", "note": "Cu 2p3/2 933.6 eV + shake-up satellite ~942 eV(Cu²⁺ d⁹ 지문). 주의: Li 금속에 Cu²⁺→Cu⁰ 환원 취약 → 금속 Cu 석출은 전자단락 위험"},
+    {"formula": "Cu2O", "context": "대체 Cu⁺ 산화물", "battery_role": "1가 Cu 도펀트 원(더 부드럽고 환원 안정)", "note": "Cu 2p3/2 932.4 eV, satellite 없음 → Cu⁺/Cu⁰ 구분은 Auger LMM 필요"},
+    {"formula": "Li6+xP1-xCuxS5Cl (Cu-doped argyrodite)", "context": "골격 치환 모티프", "battery_role": "Cu²⁺가 P 자리 → Li⁺ 추가 + (P/Cu)S₄ 강공유결합", "note": "Taklu 2021(CuCl)·Li 2025(CuBr₂) 실증; Cu–S>P–S로 PS₄를 H₂O 공격에서 보호(물 흡착 ΔE↑)"},
+    {"formula": "CuCl / CuBr2", "context": "이원도핑 전구체", "battery_role": "Cu 양이온 + 할라이드 음이온 동시 공급(dual doping)", "note": "하나의 전구체로 cation+anion 캐스케이드 → Li 금속 계면에 wide-gap LiCl/LiBr 절연층 형성 보고(dendrite 억제)"}
+  ],
+  "sei_relevance": "Cu는 native SE 원소가 아니라 연산(soft-acid) 도펀트. 주 효과는 벌크(P 자리 치환)에서 σ·대기안정 개선. 계면 측면: Cu²⁺는 Li 금속에 환원(Cu²⁺→Cu⁺→Cu⁰)될 수 있어 단독으론 금속 Cu 석출(전자단락) 우려가 있으나, CuCl/CuBr₂ 이원도핑 실증에선 함께 들어온 할라이드가 Li 금속과 wide-gap LiCl/LiBr 절연층을 만들어 오히려 dendrite를 억제(CCD↑). Cu 자체가 SEI 무기성분으로 기능한다는 보고는 제한적 — Cu의 진짜 가치는 Cu–S 결합의 가수분해 방어와 P-치환 캐리어 주입.",
+  "xps": [
+    {"core": "Cu 2p3/2", "BE_eV": 933.6, "assignment": "CuO / Cu²⁺ (+ shake-up satellite ~942 eV = Cu²⁺ 진단 지문)", "ref": "NIST XPS DB; Biesinger Cu 2p analysis"},
+    {"core": "Cu 2p3/2", "BE_eV": 932.4, "assignment": "Cu2O / Cu⁺ (satellite 없음)", "ref": "NIST XPS DB"},
+    {"core": "Cu 2p3/2", "BE_eV": 932.6, "assignment": "Cu metal / Cu⁰ (환원 생성물); Cu⁺와 BE 근접 → Auger LMM로 구분", "ref": "NIST XPS DB"}
+  ],
+  "raman": [
+    {"cm1": 296, "assignment": "CuO Ag mode (Cu–O stretch); Cu2O는 ~218 cm-1", "ref": "CuO/Cu2O Raman 표준 참조"}
+  ],
+  "dos_character": "Cu²⁺(d⁹)는 열린 껍질 → 점유/비점유 Cu 3d 상태가 밴드엣지 근처·gap 안으로 들어와 midgap 상태나 VBM 상승(Cu 3d–S 3p 혼성)을 만들 수 있음 → gap 축소·전자전도↑ 우려. Cu⁺(d¹⁰)는 채워져 상대적으로 얌전. Cu는 환원성(Cu²⁺→Cu⁺→Cu⁰)이라 저전위에서 금속 석출 가능 → redox-active 도펀트(밴드엣지 redox 중심이 될 수 있어 순수 벌크 안정제인 Zn/Ga와 다르게 취급 필요).",
+  "key_references": [
+    "Taklu et al., Nano Energy 2021, 90, 106542 — dual CuCl doped argyrodite; Cu²⁺@P 자리 → Li⁺ 추가·σ↑·대기안정·CCD↑ (litdb) (CuCl 이원도핑 argyrodite 원조)",
+    "Li et al., Energy Storage Mater. 2025, 77, 104221 — CuBr₂ dual doping; Cu–S>P–S로 PS₄ 보호, 밴드갭 1.82→2.41 eV (litdb) (CuBr₂ 이원도핑; 밴드갭 확장·가수분해 방어)",
+    "Biesinger et al. — Cu 2p XPS: CuO 933.6 eV + shake-up satellite(Cu²⁺ 지문) vs Cu2O 932.4 eV (Cu 2p 산화상태 판별)",
+    "Pearson HSAB — soft-acid Cu가 soft-base S²⁻ 선호(강한 Cu–S) → 가수분해 억제 원리 (HSAB 원리)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
+}

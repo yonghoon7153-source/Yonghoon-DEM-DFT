@@ -1,0 +1,37 @@
+{
+  "symbol": "Nb",
+  "name": "Niobium",
+  "Z": 41,
+  "role": "5가 양이온 도펀트/코팅재(Nb₂O₅로 첨가). Nb⁵⁺(d⁰)는 P⁵⁺와 등가(isovalent) → P 자리 치환 시 Li 함량 불변(구조/분극 레버, 캐리어는 안 늘림). LiNbO₃는 황화물 ASSB의 고전적 양극 완충 코팅(Ohta 2006). Nb₂O₅는 캐스케이드 산화물 후보. 단 Nb⁵⁺는 저전위서 Nb⁴⁺로 환원(색중심/midgap)될 수 있어 계면엔 주의.",
+  "oxidation_states": ["+5", "+4"],
+  "electronegativity": 1.6,
+  "ionic_radius_A": {
+    "Nb5+_VI": 0.64,
+    "Nb5+_IV": 0.48,
+    "Nb4+_VI": 0.68,
+    "_note": "Shannon 1976: Nb⁵⁺(d⁰) 팔면체 VI 0.64 A, 사면체 IV 0.48 A; Nb⁴⁺(d¹) VI 0.68 A. 사면체 IV 0.48은 P⁵⁺ IV(0.17)보다 크지만 Nb⁵⁺는 통상 팔면체(VI 0.64)를 선호 → P 사면체 자리 치환은 배위 부정합 부담. Li⁺ VI(0.76)보다 작음."
+  },
+  "representative_compounds": [
+    {"formula": "LiNbO3", "context": "양극 코팅(고전)", "battery_role": "황화물 ASSB 양극-SE 완충 코팅; 공간전하층·부반응 억제로 계면저항↓", "note": "Ohta 2006/2007: LiCoO₂에 LiNbO₃ 나노코팅 → 고율 성능 대폭 개선(황화물 ASSB 코팅의 정석); Nb⁵⁺가 Li⁺ 전도성 wide-gap 완충층 형성"},
+    {"formula": "Nb2O5", "context": "도펀트 전구체(캐스케이드 산화물)", "battery_role": "Nb⁵⁺ 산화물 도펀트/코팅 원; O 도입", "note": "gap ~3.4 eV(다른 도펀트 산화물보다 좁음); Nb 3d5/2 207.3 eV(범위 206.6-208.2); Nb⁵⁺→Nb⁴⁺ 환원 시 3d5/2 ~206 eV로 하향"},
+    {"formula": "Li6P1-xNbxS5X (Nb-substituted argyrodite)", "context": "골격 치환 모티프", "battery_role": "Nb⁵⁺@P 자리(등가 치환) → Li 함량 불변, 분극/골격 강성 레버", "note": "isovalent라 캐리어는 안 늘지만 Nb–S 결합·격자 분극 변화로 σ·안정성 조절 시도 가능(고배위 선호가 사면체 P 자리와 상충하는 점 유의)"}
+  ],
+  "sei_relevance": "Nb는 native SE 원소가 아니라 LiNbO₃ 코팅(양극측)·Nb₂O₅ 도펀트로 들어옴. 강점은 양극-SE 계면: LiNbO₃ 완충층이 고전압 황화물 계면의 공간전하층·산화 부반응을 억제(황화물 ASSB 코팅의 표준). 반면 Li 음극측 SEI엔 불리 — Nb⁵⁺는 저전위에서 Nb⁴⁺(d¹)로 쉽게 환원되어 색중심/midgap·전자전도 경로를 만들 수 있음 → Zr/Y 같은 완전 비환원 종과 달리 환원 안정성이 낮음. 즉 '고전압 양극 완충엔 우수, 저전위 환원엔 주의'.",
+  "xps": [
+    {"core": "Nb 3d5/2", "BE_eV": 207.3, "assignment": "Nb2O5 / Nb⁵⁺ (NIST 중앙값 ~207.35, 범위 206.6-208.2; 3d3/2 ~210 eV)", "ref": "NIST XPS DB"},
+    {"core": "Nb 3d5/2", "BE_eV": 206.0, "assignment": "NbO2 / Nb⁴⁺ (부분 환원 지표)", "ref": "NIST XPS DB"},
+    {"core": "Nb 3d5/2", "BE_eV": 202.3, "assignment": "Nb metal / Nb⁰ (강환원 생성물)", "ref": "NIST XPS DB"}
+  ],
+  "raman": [
+    {"cm1": 690, "assignment": "amorphous/crystalline Nb2O5 broad Nb-O-Nb stretch(~650-700 cm-1)", "ref": "Nb2O5 Raman 표준 참조"},
+    {"cm1": 630, "assignment": "LiNbO3 A1(TO) 강모드(코팅 지문); ~253 cm-1 동반", "ref": "LiNbO3 Raman 표준 참조"}
+  ],
+  "dos_character": "Nb⁵⁺는 d⁰지만 빈 Nb 4d가 다른 도펀트보다 낮게 내려와 Nb₂O₅ gap이 ~3.4 eV로 좁은 편 → CBM이 상대적으로 낮음. 저전위에서 Nb⁵⁺→Nb⁴⁺(d¹) 환원이 쉬워 점유 4d 전자가 gap 안 상태(색중심/폴라론)를 만들 수 있음 → redox-active·환원성 종으로 취급(Mo와 유사, Zr/Y와 대비). 등가(5+/5+) P-치환은 캐리어를 안 늘리는 대신 골격 분극/강성만 조절.",
+  "key_references": [
+    "Ohta et al., Adv. Mater. 2006, 18, 2226 & Electrochem. Commun. 2007 — LiNbO₃ 나노코팅으로 황화물 ASSB LiCoO₂ 계면저항 급감(황화물 ASSB 코팅 정석)",
+    "Shannon 1976, Acta Cryst. A32, 751 — Nb⁵⁺ 유효이온반경(VI 0.64, IV 0.48), Nb⁴⁺ VI 0.68 (Shannon 반경)",
+    "NIST XPS DB — Nb2O5 Nb 3d5/2 중앙값 ~207.35 eV(범위 206.6-208.2); Nb⁴⁺ ~206 eV (Nb XPS 기준·환원 지표)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
+}

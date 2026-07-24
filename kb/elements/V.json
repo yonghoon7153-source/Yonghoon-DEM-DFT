@@ -1,0 +1,39 @@
+{
+  "symbol": "V",
+  "name": "Vanadium",
+  "Z": 23,
+  "role": "cascade 산화물 도펀트 후보(V₂O₅). V는 +5/+4/+3/+2 다가라 redox·midgap 준위가 풍부 — 전자전도/촉매엔 유리하나 SE의 절연성엔 리스크. 작은 고가 V⁵⁺는 P 자리/전하보상 성향.",
+  "oxidation_states": ["+5", "+4", "+3", "+2"],
+  "electronegativity": 1.63,
+  "ionic_radius_A": {
+    "V5+_VI": 0.540,
+    "V4+_VI": 0.580,
+    "V3+_VI": 0.640,
+    "V2+_VI": 0.790,
+    "_note": "Shannon 1976: V5+ VI 0.54, V4+ VI 0.58, V3+ VI 0.640, V2+ VI 0.79 A. 고가일수록 작아짐 -> V5+는 Li+(0.76)보다 훨씬 작아 aliovalent 치환 시 전하보상; 환원되며 반경 팽창(격자 스트레인 변동)."
+  },
+  "representative_compounds": [
+    {"formula": "V2O5", "context": "도펀트 전구체 / 고전 양극", "battery_role": "cascade 산화물 도펀트; 다가 redox 층상 양극", "note": "V 2p3/2 ~517.1 eV(V5+). V=O 이중결합 특유; 쉽게 환원"},
+    {"formula": "Li3V2(PO4)3", "context": "NASICON 양극", "battery_role": "3D Li+ 골격 다전자 redox 양극(V3+/V4+/V5+)", "note": "PO4 골격 속 V 참고상; 우리 인산염 가교 화학과 연결"},
+    {"formula": "VS2", "context": "층상 황화물", "battery_role": "층상 인터칼레이션 호스트; 준금속 V 황화물", "note": "황화물 골격 속 V 참고상; 금속성 강함(절연 SE와 대비)"}
+  ],
+  "sei_relevance": "V는 native SE 이온이 아니라 cascade의 TM 산화물 도펀트/양극측 후보. V 산화물은 다가·redox 활성이 강해 Li-metal 음극측에서 쉽게 환원(V⁵⁺→V⁴⁺→…) — 부동태 SEI보다는 redox 셔틀/전자 누설 리스크가 커서 anode 접촉엔 부적합. 양극 코팅/벌크 도펀트로 국한 검토. SSB 계면 문헌에 V 특이 SEI 부동태 역할 보고는 제한적.",
+  "xps": [
+    {"core": "V 2p3/2", "BE_eV": 517.1, "assignment": "V5+ in V2O5", "ref": "Silversmit et al. 2004, J. Electron Spectrosc. 135, 167"},
+    {"core": "V 2p3/2", "BE_eV": 516.0, "assignment": "V4+ in VO2", "ref": "Silversmit et al. 2004"},
+    {"core": "V 2p3/2", "BE_eV": 515.6, "assignment": "V3+ in V2O3", "ref": "Silversmit et al. 2004"},
+    {"core": "V 2p3/2", "BE_eV": 513.0, "assignment": "V2+ (VO)", "ref": "Silversmit et al. 2004"}
+  ],
+  "raman": [
+    {"cm1": 994, "assignment": "V2O5 V=O 말단 신축 — 최강 지문(도펀트 산화물상 확인용, 호스트 SSB 모드 아님)", "ref": "V2O5 Raman (orthorhombic, Pmmn)"},
+    {"cm1": 145, "assignment": "V2O5 저파수 층간/격자 모드(추가 285/404/700)", "ref": "V2O5 Raman"}
+  ],
+  "dos_character": "V 3d 부분점유(V⁴⁺=3d¹, V³⁺=3d²)가 argyrodite 갭(~2 eV) 안에 점유 결함준위를 만들 소지가 큼; 다가 redox로 전자 누설 리스크가 3d TM 중에서도 높은 편. V⁵⁺=3d⁰만은 wide-gap(V₂O₅ ~2.3 eV)이나 환원되기 쉬움. 국소화 3d에 스핀분극+DFT+U 필요.",
+  "key_references": [
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (V5+ VI 0.54 A)",
+    "Silversmit et al., J. Electron Spectrosc. Relat. Phenom. 135, 167 (2004) — V 2p3/2 for V5+/V4+/V3+/V2+",
+    "Banik et al. 2022 — substitutions & oxidative stability of argyrodite (도펀트 맥락 일반)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
+}

@@ -1,0 +1,38 @@
+{
+  "symbol": "Mo",
+  "name": "Molybdenum",
+  "Z": 42,
+  "role": "고가수(high-valent) 양이온 도펀트(MoO₃로 첨가). Mo⁶⁺(d⁰)/Mo⁴⁺(d²)의 다중 산화상태를 갖는 redox-active 종. argyrodite P-자리 치환 연구 있음(Banik 2022, Zeier) — 치환은 σ·격자엔 영향 주나 S-limited 산화 onset은 못 옮김. MoS₂(Mo⁴⁺)로 황화물과 호환; MoO₃는 캐스케이드 산화물 후보. Mo 4d가 낮아 midgap/환원 우려가 큰 축.",
+  "oxidation_states": ["+6", "+4"],
+  "electronegativity": 2.16,
+  "ionic_radius_A": {
+    "Mo6+_IV": 0.41,
+    "Mo6+_VI": 0.59,
+    "Mo4+_VI": 0.65,
+    "_note": "Shannon 1976: Mo⁶⁺(d⁰) 사면체 IV 0.41 A, 팔면체 VI 0.59 A; Mo⁴⁺(d²) VI 0.65 A. 사면체 IV 0.41은 P⁵⁺ IV(0.17)보다 크지만 Ge⁴⁺ IV(0.39)와 근접 → P 사면체 자리 치환은 가능하되 이가치(6+ vs 5+)라 전하보상(Li 공공) 필요. Li⁺ VI(0.76)보다 작음."
+  },
+  "representative_compounds": [
+    {"formula": "MoO3", "context": "도펀트 전구체(캐스케이드 산화물)", "battery_role": "Mo⁶⁺ 산화물 도펀트 원; O 도입", "note": "층상 α-MoO₃ gap ~3 eV; Mo 3d5/2 232.5 eV(Mo⁶⁺). 주의: Mo⁶⁺는 쉽게 환원(→Mo⁴⁺/금속)되어 저전위 계면서 불안정"},
+    {"formula": "MoS2", "context": "관련 황화물/치환 생성상", "battery_role": "Mo⁴⁺ 층상 황화물; Mo가 S와 결합 시 형성", "note": "Mo 3d5/2 229.2 eV(Mo⁴⁺); 반도체 gap ~1.2-1.8 eV(좁음) → 계면서 MoS₂ 생성은 전자전도 경로 우려. Raman E2g 383/A1g 408 지문"},
+    {"formula": "Li6P1-xMoxS5X (Mo-substituted argyrodite)", "context": "골격 치환 모티프", "battery_role": "Mo⁶⁺@P 자리 → 전하보상 Li 공공, 격자/분극 조절", "note": "Banik 2022: argyrodite 치환은 S 3p 지배 VBM(산화 onset)을 못 옮김 → Mo 치환도 산화창 확장엔 한계(S-limited)"}
+  ],
+  "sei_relevance": "Mo는 native SE 원소가 아니라 MoO₃(산화물 도펀트)로 들어오는 고가수 redox-active 종. 벌크 치환 효과는 Banik 2022이 정리 — 격자/σ엔 영향 주나 S-limited 산화 onset은 못 옮김. SEI/계면 측면은 불리한 축: Mo⁶⁺는 매우 쉽게 환원(Mo⁶⁺→Mo⁴⁺→Mo⁰)되어 저전위 Li 금속 계면에서 좁은-gap MoS₂/MoO₂나 금속 Mo를 만들 수 있음 → 전자전도 경로·단락 위험. 즉 Zr/Y(비환원 안정 앵커)와 정반대 극 — Mo는 redox 다양성이 큰 만큼 계면 안정성 리스크가 큼(cascade에서 '전도도 vs 안정성' 판정의 반례 재료).",
+  "xps": [
+    {"core": "Mo 3d5/2", "BE_eV": 232.5, "assignment": "MoO3 / Mo⁶⁺ (3d3/2 ~235.6 eV, 분리 ~3.15 eV)", "ref": "NIST XPS DB"},
+    {"core": "Mo 3d5/2", "BE_eV": 229.2, "assignment": "MoS2 / Mo⁴⁺ (황화물; ~229.0-229.4 eV)", "ref": "NIST XPS DB"},
+    {"core": "Mo 3d5/2", "BE_eV": 227.9, "assignment": "Mo metal / Mo⁰ (강환원 생성물)", "ref": "NIST XPS DB"}
+  ],
+  "raman": [
+    {"cm1": 820, "assignment": "α-MoO3 Mo-O-Mo bridge stretch; ~995 cm-1 terminal Mo=O 동반", "ref": "MoO3 Raman 표준 참조"},
+    {"cm1": 383, "assignment": "MoS2 E2g in-plane mode; A1g ~408 cm-1(둘의 간격이 층수 지표)", "ref": "MoS2 Raman 표준 참조"}
+  ],
+  "dos_character": "Mo는 빈/부분점유 4d가 낮게 위치 → MoO₃(Mo⁶⁺ d⁰)조차 gap이 ~3 eV로 좁고, 환원되면 Mo 4d 전자가 gap 안 상태(폴라론)를 채움. MoS₂(Mo⁴⁺ d²)는 좁은-gap 반도체 → 계면 생성 시 전자전도 우려. 다중 산화상태(6+/5+/4+/…)로 redox-active → 밴드엣지·midgap redox 중심이 되기 쉬움. Cu·Nb와 함께 'redox-active·환원성' 군, Zr/Y/Zn/Ga의 클린 wide-gap 군과 대비 — 도펀트 안정성 스펙트럼의 위험단.",
+  "key_references": [
+    "Banik et al. 2022 (Zeier 그룹) — argyrodite 치환과 산화안정성; 치환은 S-limited 산화 onset(VBM=S 3p) 못 옮김 (litdb) (Mo 포함 치환·산화안정)",
+    "Shannon 1976, Acta Cryst. A32, 751 — Mo⁶⁺(IV 0.41, VI 0.59), Mo⁴⁺ VI 0.65 (Shannon 반경)",
+    "NIST XPS DB — MoO3 Mo 3d5/2 232.5 eV(Mo⁶⁺) vs MoS2 229.2 eV(Mo⁴⁺); 분리 ~3.15 eV (Mo 산화상태 판별)",
+    "MoS2 Raman — E2g 383 / A1g 408 cm-1 간격이 층수 지표 (MoS2 라만 지문)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
+}

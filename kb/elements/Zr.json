@@ -1,0 +1,37 @@
+{
+  "symbol": "Zr",
+  "name": "Zirconium",
+  "Z": 40,
+  "role": "4가 hard-산 도펀트/코팅재(ZrO₂로 첨가). Zr⁴⁺(d⁰, 빈 4d)는 친산소성·비환원 → wide-gap 절연 앵커. ZrO₂는 NMC 양극 표면 코팅으로 널리 쓰이는 캐스케이드 산화물(우리 litdb choi2026 BZOx); LLZO garnet의 그 Zr. argyrodite에선 이가치(P⁵⁺ 자리면 Li⁺ 1개 추가) 치환 또는 계면 부동태층으로 검토.",
+  "oxidation_states": ["+4"],
+  "electronegativity": 1.33,
+  "ionic_radius_A": {
+    "Zr4+_VI": 0.72,
+    "Zr4+_VIII": 0.84,
+    "Zr4+_IV": 0.59,
+    "_note": "Shannon 1976: Zr⁴⁺(d⁰) 팔면체 VI 0.72 A, VIII 0.84 A, 사면체 IV 0.59 A. VI 0.72는 Li⁺ VI(0.76)와 근접 → Li 자리 정합 양호(단 4+라 강한 전하보상 필요). P⁵⁺ 사면체(IV 0.17)엔 커서(IV 0.59) 부적합 → Li 자리/팔면체 간극 선호."
+  },
+  "representative_compounds": [
+    {"formula": "ZrO2", "context": "도펀트/코팅 전구체(캐스케이드 산화물)", "battery_role": "NMC 양극 wide-gap 절연 코팅; Zr·O 공급원, 계면 부반응 억제", "note": "gap ~5.0-5.8 eV; monoclinic/tetragonal 다형; 건식 ZrO2ₓ shell 코팅이 황화물 ASSB 계면 안정화(choi2026 BZOx); Zr 3d5/2 182.2 eV(흔한 charge 기준상)"},
+    {"formula": "Li7La3Zr2O12 (LLZO)", "context": "관련 고체전해질", "battery_role": "garnet 산화물 SE 골격 양이온(Zr⁴⁺@팔면체)", "note": "Zr가 산화물 SE 골격을 이루는 대표 사례(Murugan 2007); cubic LLZO는 Li⁺ 초전도 — Zr의 구조 안정화 능력 방증"},
+    {"formula": "Li2ZrO3 / Li-Zr-oxide interphase", "context": "계면상 후보", "battery_role": "Li⁺ 전도성 wide-gap Zr 리튬산화물 계면상", "note": "양극-SE 계면에서 Li₂ZrO₃가 완충층으로 거론 — Zr–O가 견고해 전자차단·Li⁺ 통과에 유리"}
+  ],
+  "sei_relevance": "Zr는 native SE 원소가 아니라 ZrO₂(코팅/도펀트)로 들어오는 hard-산 종. 주 역할은 양극 표면 wide-gap 절연 코팅(공간전하층·부반응 억제)과 벌크 O-앵커·구조 안정화. SEI/계면 측면이 강점: Zr⁴⁺는 d⁰·비환원이라 Li 금속·고전압 양쪽에서 견고 → ZrO₂/Li₂ZrO₃가 Li 금속 환원에서 살아남아 자기제한 전자차단·Li⁺ 전도 부동태층을 이룸(우리 캠페인의 대표적 '안정성 앵커'). Cu/Mo/Nb 같은 redox 단락 위험 없음 — 안정성 대 전도도 트레이드의 안정성 축 대표.",
+  "xps": [
+    {"core": "Zr 3d5/2", "BE_eV": 182.2, "assignment": "ZrO2 / Zr⁴⁺ (3d3/2 ~184.6 eV, 분리 ~2.4 eV)", "ref": "NIST XPS DB"},
+    {"core": "Zr 3d5/2", "BE_eV": 178.9, "assignment": "Zr metal / Zr⁰ (환원 생성물)", "ref": "NIST XPS DB"}
+  ],
+  "raman": [
+    {"cm1": 178, "assignment": "monoclinic(baddeleyite) ZrO2 강한 doublet(178/190 cm-1)", "ref": "ZrO2 Raman 표준 참조"},
+    {"cm1": 148, "assignment": "tetragonal ZrO2 Eg 모드(정방정 지문)", "ref": "ZrO2 Raman 표준 참조"}
+  ],
+  "dos_character": "Zr⁴⁺는 d⁰(빈 4d) → 점유는 O 2p(VBM), CBM은 빈 Zr 4d로 gap ~5 eV 초광대역. 도핑된 황화물/계면에서 Zr는 점유 d가 없어 midgap 상태를 안 넣는 클린·비환원 wide-gap 종. Y와 함께 '빈 4d hard-산 안정성 앵커' 군의 대표 — 밴드엣지 redox 중심이 아니라 전자차단 절연층 형성자·구조 안정제. DFT+U 불필요(개방껍질 없음).",
+  "key_references": [
+    "Shannon 1976, Acta Cryst. A32, 751 — Zr⁴⁺ 유효이온반경(VI 0.72, VIII 0.84) (Shannon 반경)",
+    "Choi et al., Small 2026, DOI 10.1002/smll.73805 — 건식 ZrO2ₓ shell 코팅(BZOx)로 황화물 ASSB NMC 계면 안정화 (litdb) (ZrO2 코팅 계면 안정)",
+    "Murugan et al., Angew. Chem. 2007, 46, 7778 — cubic Li₇La₃Zr₂O₁₂(LLZO) garnet; Zr⁴⁺ 골격 (LLZO 원형)",
+    "NIST XPS DB — ZrO2 Zr 3d5/2 182.2 eV(흔한 charge 기준), 금속 178.9 eV (Zr XPS 기준)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
+}

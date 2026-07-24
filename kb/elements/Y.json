@@ -1,0 +1,35 @@
+{
+  "symbol": "Y",
+  "name": "Yttrium",
+  "Z": 39,
+  "role": "3가 hard-산 도펀트(Y₂O₃로 첨가). Y³⁺(d⁰, 빈 4d)는 강한 친산소성 → O를 붙드는 앵커; 이가치 치환(Li⁺ 자리면 Li 공공 주입, P⁵⁺ 자리면 Li⁺ 2개 추가)으로 캐리어/구조 레버. Y₂O₃는 염기성 wide-gap 산화물로 H₂S 게터·안정화가 알려진 캐스케이드 산화물 후보. YSZ·Y-도핑 LLZO처럼 '안정화제' 계보의 rare-earth-유사 원소.",
+  "oxidation_states": ["+3"],
+  "electronegativity": 1.22,
+  "ionic_radius_A": {
+    "Y3+_VI": 0.9,
+    "Y3+_VIII": 1.019,
+    "_note": "Shannon 1976: Y³⁺(d⁰) 팔면체 VI 0.900 A, VIII 1.019 A. Li⁺ VI(0.76)보다 훨씬 커서 Li 자리 치환 시 국소 케이지를 크게 왜곡(Nd³⁺ VI 0.983과 유사한 rare-earth-급 큰 반경). P⁵⁺ 사면체엔 너무 커서 부적합 → Li 자리/간극 앵커로 감."
+  },
+  "representative_compounds": [
+    {"formula": "Y2O3", "context": "도펀트 전구체(캐스케이드 산화물)", "battery_role": "염기성 wide-gap 산화물 도펀트/게터; Y·O 공급원, O 고정", "note": "gap ~5.6 eV(초광대역 절연체); 염기성 산화물 → H₂S 게터·대기안정화 전형이나 이온전도 대가; Y 3d5/2 156.8 eV"},
+    {"formula": "Y2O3-stabilized ZrO2 (YSZ)", "context": "안정화제 선례", "battery_role": "Y³⁺가 ZrO₂에 산소공공 주입 → 산화물 이온전도 안정화(고전 O²⁻ 전도체)", "note": "Y의 '이가치 도핑으로 공공 주입' 메커니즘 원형 — 우리 맥락에선 Li 공공 주입으로 번역"},
+    {"formula": "Y-doped Li7La3Zr2O12 (LLZO)", "context": "관련 고체전해질", "battery_role": "garnet에서 Y³⁺가 Zr 자리 치환 → cubic 안정화·Li 공공/함량 조절", "note": "Y가 산화물 SE에서 구조 안정화+Li 캐리어 레버로 쓰인 선례(황화물 도펀트로 이식 시 근거)"}
+  ],
+  "sei_relevance": "Y는 native SE 원소가 아니라 Y₂O₃(염기성 산화물 도펀트)로 들어오는 hard-산 벌크 도펀트. 기능은 Nd 같은 rare-earth 계열과 유사 — O를 친산소성으로 고정(P-O-Y 가교 가능)하고 산화/수분 안정화(H₂S 게터)를 담당하되 이온전도는 대가. SEI 측면: Y₂O₃는 초광대역 절연체이고 Y³⁺는 비환원적(d⁰, 저전위서도 견고) → Li 금속 환원에서 살아남아 전자차단·Li⁺ 통과 부동태층에 우호적(Zr/희토류 산화물 SEI 논리와 동류). Cu/Ge 같은 redox 단락 위험 없음.",
+  "xps": [
+    {"core": "Y 3d5/2", "BE_eV": 156.8, "assignment": "Y2O3 / Y³⁺ (3d3/2 ~158.9 eV, 스핀궤도 분리 ~2.05 eV)", "ref": "NIST XPS DB; xpsfitting.com Yttrium"},
+    {"core": "Y 3d5/2", "BE_eV": 155.8, "assignment": "Y metal / Y⁰ (환원 생성물; 산화 시 ~1 eV 상향)", "ref": "NIST XPS DB"}
+  ],
+  "raman": [
+    {"cm1": 377, "assignment": "cubic(bixbyite) Y2O3 강한 Fg+Ag 모드(Y-O)", "ref": "Y2O3 Raman 표준 참조"}
+  ],
+  "dos_character": "Y³⁺는 d⁰(빈 4d) → 점유 상태는 O 2p(VBM), 빈 Y 4d는 CB로 높이 떠 있음 → Y2O3 gap ~5.6 eV 초광대역. 도핑된 황화물에서 Y는 점유 d 전자가 없어 midgap 상태를 안 넣는 클린·비환원 wide-gap 종(Zr과 동류). 밴드엣지 redox 중심이 아니라 친산소성 앵커·구조/캐리어 레버. PBE에서 빈 4d 위치는 비교적 무난(개방껍질 4f를 가진 Nd와 달리 DFT+U 불필요).",
+  "key_references": [
+    "Shannon 1976, Acta Cryst. A32, 751 — Y³⁺ 유효이온반경(VI 0.900, VIII 1.019) (Shannon 반경)",
+    "YSZ(yttria-stabilized zirconia) — Y³⁺ 이가치 도핑으로 산소공공 주입·안정화(공공 주입 메커니즘 원형)",
+    "Y-doped LLZO garnet 문헌 — Y³⁺@Zr 자리 cubic 안정화·Li 캐리어 조절(산화물 SE 도핑 선례)",
+    "NIST XPS DB / xpsfitting.com — Y2O3 Y 3d5/2 156.8 eV, 분리 ~2.05 eV (Y XPS 기준)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
+}

@@ -1,0 +1,37 @@
+{
+  "symbol": "Co",
+  "name": "Cobalt",
+  "Z": 27,
+  "role": "cascade 산화물 도펀트 후보(CoO). Co²⁺/Co³⁺ redox — LiCoO₂ 양극의 산화환원 중심 원소. 도펀트로는 midgap d 준위·Li-metal측 환원 우려. Co²⁺ 반경이 Li⁺에 가까워 Li 자리 치환에 유리한 편.",
+  "oxidation_states": ["+2", "+3"],
+  "electronegativity": 1.88,
+  "ionic_radius_A": {
+    "Co2+_VI_HS": 0.745,
+    "Co3+_VI_LS": 0.545,
+    "Co3+_VI_HS": 0.610,
+    "_note": "Shannon 1976: Co2+ VI HS 0.745 A(LS 0.65), Co3+ VI LS 0.545 A(HS 0.61). Co2+는 Li+(0.76)와 거의 같아 Li 자리 치환에 유리; Co3+(특히 LS, LiCoO2형)는 훨씬 작아 전하보상 필요. LS/HS로 반경이 크게 갈림."
+  },
+  "representative_compounds": [
+    {"formula": "CoO", "context": "도펀트 전구체 (cascade oxide)", "battery_role": "Co2+ rock-salt 산화물 도펀트", "note": "Co 2p3/2 ~780.0 eV(Co2+), 강한 위성 ~786 eV(고스핀 진단)"},
+    {"formula": "LiCoO2", "context": "층상 양극 (LCO)", "battery_role": "고전적 층상 양극; Co3+/Co4+ redox ~3.9 V", "note": "Co3+ 2p3/2 ~779.6 eV(위성 약함). 밴드엣지 근처 Co 3d redox의 대표"},
+    {"formula": "Co3O4", "context": "spinel 산화물", "battery_role": "혼합원자가 spinel(Co2+/Co3+); conversion/촉매", "note": "Co 2p3/2 ~779.6 eV; A1g Raman 691 cm-1 지문"}
+  ],
+  "sei_relevance": "Co는 native SE 이온이 아니라 cascade의 TM 산화물 도펀트/양극측 후보. Co 산화물(CoO/Co₃O₄)은 전형적 conversion 재료라 Li-metal 음극과 접하면 Co + Li₂O로 환원 — 직접 anode 접촉엔 부적합, 양극측 코팅/벌크 도펀트로 검토(고전압 LiCoO₂ 환경에서 안정). SSB 계면 문헌에 Co 특이 anode-SEI 부동태 역할 보고는 제한적.",
+  "xps": [
+    {"core": "Co 2p3/2", "BE_eV": 780.0, "assignment": "Co2+ in CoO (강한 shake-up 위성 ~786 eV)", "ref": "Biesinger et al. 2011, Appl. Surf. Sci. 257, 2717"},
+    {"core": "Co 2p3/2", "BE_eV": 779.6, "assignment": "Co3+ in LiCoO2 / mixed Co3O4 (위성 약함)", "ref": "Biesinger et al. 2011"},
+    {"core": "Co 2p3/2", "BE_eV": 778.2, "assignment": "Co metal (Co0)", "ref": "Biesinger et al. 2011"}
+  ],
+  "raman": [
+    {"cm1": 691, "assignment": "Co3O4 spinel A1g — Co 산화물상 지문(도펀트 산화물 확인용, 호스트 SSB 모드 아님); 추가 482/521/618", "ref": "Co3O4 spinel Raman"}
+  ],
+  "dos_character": "Co²⁺=3d⁷/Co³⁺=3d⁶(LS 가능) 3d가 argyrodite 갭 안에 점유/부분점유 준위를 형성 가능 — LiCoO₂류에서 Co 3d가 밴드엣지 근처 redox를 담당하듯 midgap/엣지 결함준위 우려. 스핀분극+DFT+U 필요하며 LS/HS(특히 Co³⁺) 상태 판정이 전자구조를 크게 바꿈.",
+  "key_references": [
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Co2+ VI HS 0.745 A, Co3+ VI LS 0.545 A)",
+    "Biesinger et al., Appl. Surf. Sci. 257, 2717 (2011) — Co 2p XPS reference (CoO/Co3O4)",
+    "Co3O4 spinel Raman — A1g ~691 cm-1",
+    "Banik et al. 2022 — substitutions & oxidative stability of argyrodite (도펀트 맥락 일반)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
+}

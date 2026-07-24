@@ -1,0 +1,38 @@
+{
+  "symbol": "Mn",
+  "name": "Manganese",
+  "Z": 25,
+  "role": "cascade 산화물 도펀트 후보(MnO/Mn계 산화물). Mn²⁺=3d⁵ HS(반충전)는 비교적 안정하나 +2/+3/+4 다가라 산화물 형태·redox가 조건 의존 — spinel LiMn₂O₄ 등 양극 화학과 연결. Mn²⁺ 반경이 Li⁺보다 커 국소 왜곡 큼.",
+  "oxidation_states": ["+2", "+3", "+4", "+7"],
+  "electronegativity": 1.55,
+  "ionic_radius_A": {
+    "Mn2+_VI_HS": 0.830,
+    "Mn3+_VI_HS": 0.645,
+    "Mn4+_VI": 0.530,
+    "_note": "Shannon 1976: Mn2+ VI HS 0.83 A(LS 0.67), Mn3+ VI HS 0.645 A(LS 0.58), Mn4+ VI 0.53 A. Mn2+는 Li+(0.76)보다 커 치환 시 팽창 왜곡; 고가로 갈수록 작아짐. Mn7+(과망간)는 사면체만."
+  },
+  "representative_compounds": [
+    {"formula": "MnO", "context": "도펀트 전구체 (cascade oxide)", "battery_role": "Mn2+ rock-salt 산화물 도펀트", "note": "Mn 2p3/2 ~640.6 eV(Mn2+). 다중항 분열 큼(2p 형상으로 산화수 판독)"},
+    {"formula": "LiMn2O4", "context": "spinel 양극", "battery_role": "3D Li+ 확산 spinel 양극; Mn3+/Mn4+ redox ~4 V", "note": "Mn3+ Jahn-Teller/용해 이슈; 양극 화학의 대표 Mn 참고상"},
+    {"formula": "MnS", "context": "황화물 유사상", "battery_role": "S 자리 화학의 Mn2+ 참고상(황화 Mn)", "note": "황화물 골격에 Mn가 들어갈 때 참고; conversion 거동"}
+  ],
+  "sei_relevance": "Mn는 native SE 이온이 아니라 cascade의 TM 산화물 도펀트/양극측 후보. Mn 산화물(MnO/Mn₂O₃/MnO₂)은 전형적 conversion 재료라 Li-metal 음극과 접하면 Mn + Li₂O로 환원 — 직접 anode 접촉엔 부적합, 양극측 코팅/벌크 도펀트로 검토. 캐소드 화학에서 Mn 용해(특히 Mn³⁺ 불균등화)가 알려진 열화 경로. SSB 계면 문헌에 Mn 특이 anode-SEI 부동태 역할 보고는 제한적.",
+  "xps": [
+    {"core": "Mn 2p3/2", "BE_eV": 640.6, "assignment": "Mn2+ in MnO", "ref": "Biesinger et al. 2011, Appl. Surf. Sci. 257, 2717"},
+    {"core": "Mn 2p3/2", "BE_eV": 641.6, "assignment": "Mn3+ in Mn2O3", "ref": "Biesinger et al. 2011"},
+    {"core": "Mn 2p3/2", "BE_eV": 642.6, "assignment": "Mn4+ in MnO2", "ref": "Biesinger et al. 2011"},
+    {"core": "Mn 2p3/2", "BE_eV": 638.7, "assignment": "Mn metal (Mn0)", "ref": "Biesinger et al. 2011"}
+  ],
+  "raman": [
+    {"cm1": 657, "assignment": "Mn3O4 (hausmannite) A1g — Mn 산화물상 지문(도펀트 산화물 확인용, 호스트 SSB 모드 아님); MnO2는 ~575-640으로 이동", "ref": "Mn3O4/MnO2 Raman"}
+  ],
+  "dos_character": "Mn²⁺=3d⁵ HS(반충전)는 큰 교환분열로 점유 up-스핀은 깊고 빈 down-스핀은 높이 밀려(MnO는 전형적 Mott 절연체) 상대적으로 안정하나, 다가라 Mn³⁺/⁴⁺가 되면 argyrodite 갭 안에 midgap 준위가 생김. 국소화 3d⁵에 스핀분극(ISPIN=2)+DFT+U 필수 — 반충전 껍질을 core에 숨기지 말고 명시 투영.",
+  "key_references": [
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Mn2+ VI HS 0.83 A)",
+    "Biesinger et al., Appl. Surf. Sci. 257, 2717 (2011) — Mn 2p XPS reference (MnO/Mn2O3/MnO2)",
+    "Mn3O4 hausmannite Raman — A1g ~657 cm-1",
+    "Banik et al. 2022 — substitutions & oxidative stability of argyrodite (도펀트 맥락 일반)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
+}
