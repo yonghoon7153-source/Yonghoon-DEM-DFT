@@ -34,6 +34,8 @@
     <div style="display:flex; gap:6px">
       <button class="btn btn-secondary" id="lab-btn-mpm" onclick="labShow('mpm')">SE / AM</button>
       <button class="btn btn-secondary" id="lab-btn-add" onclick="labShow('additives')" style="display:none">⚡ 도전재</button>
+      <button class="btn btn-secondary" id="lab-btn-eis" onclick="labOpenEIS()"
+        title="이 payload의 STEP3 σ-triad·두께·porosity로 EIS/DRT/ICA (새 탭) — 저장된 STEP4 곡선 있으면 dQ/dV도 자동">🔌 EIS/DRT</button>
     </div>
   </div>
   <div id="lab-viewer" class="viewer-container" style="display:block; height:560px; margin-top:8px"></div>
@@ -108,6 +110,12 @@
 </script>
 <script>
 let labCurId = null, labCurMode = null;
+
+// 뷰어 헤더 🔌 EIS/DRT — 지금 열린 payload 의 σ 로 /eis 새 탭 (mpm 뷰어↔EIS 연동)
+function labOpenEIS() {
+  if (!labCurId) { alert('먼저 payload를 열어주세요'); return; }
+  window.open('/eis?case=' + encodeURIComponent(labCurId), '_blank');
+}
 
 // open a saved payload in the 3D viewer.  mode 'mpm' = SE/AM, 'additives' = auto-pick 도전재 view.
 async function labOpen(id, hasAdd, btn) {

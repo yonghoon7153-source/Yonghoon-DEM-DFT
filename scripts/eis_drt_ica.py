@@ -267,57 +267,105 @@ def cycle_eis_trajectory(freqs_hz, base_elems, cycles, growth_mult,
     return out
 
 
-# ─────────────── 발표/논문용 그림 (matplotlib, svg+png) ───────────────
+# ─────────────── 발표/논문용 그림 (matplotlib, svg+png — 랩 figure format) ───────────────
+_PAPER_BLUE_LO = (0.663, 0.784, 0.898)     # 연한 파랑 (series 시작 — 랩 예시 SOC-legend 스타일)
+_PAPER_BLUE_HI = (0.086, 0.208, 0.365)     # 진한 남색 (series 끝)
+
+
+def _paper_ax(ax):
+    """랩/논문 figure format: 사방 box frame + 안쪽 tick(상·우 포함) + 작은 폰트."""
+    for s in ax.spines.values():
+        s.set_linewidth(0.8)
+    ax.tick_params(direction='in', which='both', top=True, right=True, labelsize=8, length=3.5, width=0.8)
+    ax.tick_params(which='minor', length=2.0, width=0.6)
+
+
+def _paper_blue(i, n):
+    """단일-색군 파랑 gradient (연함→진남색) — 랩 예시 DRT SOC-series 재현."""
+    t = i / (n - 1) if n > 1 else 1.0
+    return tuple(_PAPER_BLUE_LO[k] + (_PAPER_BLUE_HI[k] - _PAPER_BLUE_LO[k]) * t for k in range(3))
+
+
+_LBL_ZRE = r"$Z'$ ($\Omega$ cm$^2$)"
+_LBL_ZIM = r"$-Z''$ ($\Omega$ cm$^2$)"
+_LBL_DRT_Y = r"$\gamma(\ln\tau)$ ($\Omega$ cm$^2$)"
+_LBL_DRT_X = r"$\tau$ (s)"
+
+
 def save_eis_figures(out_prefix, freqs, Z, elems, tau=None, gamma=None, peaks=None,
                      traj=None, fmt=('png', 'svg')):
-    """발표/논문용 EIS 그림 (matplotlib, 흰 배경, ASCII 라벨 — 한글 폰트 tofu 회피).  base = Nyquist +
-    DRT 2-패널.  traj(사이클 궤적) 있으면 Nyquist/DRT 오버레이 + R(N) 성장 3-패널 추가.  svg+png 동시
-    (CSV 는 CLI 가 별도) = 랩 규약(svg/png/csv 동시).  반환 저장 파일 리스트."""
+    """발표/논문용 EIS 그림 — 랩 figure format 재현 (2026-07-24 사용자 예시): 흰 배경 · 사방 box frame ·
+    안쪽 tick · **open-circle Nyquist**(Pristine/N=### 주석) · **단일-색군 blue-gradient DRT**(SOC-legend
+    스타일) · mathtext 라벨 γ(lnτ)/τ/Z′/−Z″ (Ω cm²) — 한글 없음 = 폰트 tofu 無.  base = Nyquist+DRT
+    2-패널; traj(사이클) 있으면 오버레이+R(N) 성장 3-패널 추가.  svg+png 동시(CSV 는 CLI 별도) = 랩 규약."""
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
     saved = []
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(9.5, 4.0))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7.6, 3.1))
     zre, zim = np.real(Z), -np.imag(Z)
-    ax1.plot(zre, zim, '-o', ms=3, color='#2a6fb0', lw=1.5)
-    ax1.axhline(0, color='k', lw=0.4)
-    ax1.set_xlabel("Z' (Ohm cm2)"); ax1.set_ylabel("-Z'' (Ohm cm2)"); ax1.set_title('Nyquist (physics-EIS)')
-    r0 = elems.get('R0_ohm_cm2')
-    if r0 is not None:
-        ax1.annotate('R0', (r0, 0), textcoords='offset points', xytext=(0, 7), ha='center', color='#c9772b')
+    ax1.plot(zre, zim, 'o', ms=3.8, mfc='white', mec='#1f4e8c', mew=0.9)      # open circles (랩 예시 Nyquist)
+    ax1.set_xlabel(_LBL_ZRE, fontsize=9)
+    ax1.set_ylabel(_LBL_ZIM, fontsize=9)
+    ax1.set_xlim(left=0)
+    ax1.set_ylim(bottom=0)
+    r0v = elems.get('R0_ohm_cm2')
+    if r0v is not None:
+        ax1.annotate(r'$R_0$', (r0v, 0), textcoords='offset points', xytext=(2, 5), fontsize=8, color='#666666')
+    _paper_ax(ax1)
     if tau is not None and gamma is not None:
-        ax2.plot(tau, gamma, '-', color='#e07b39', lw=1.6)
-        ax2.fill_between(tau, gamma, color='#e07b39', alpha=0.18)
-        ax2.set_xscale('log'); ax2.set_xlabel('tau (s)'); ax2.set_ylabel('gamma (Ohm cm2)'); ax2.set_title('DRT g(tau)')
-        for p in (peaks or []):
-            ax2.axvline(p['tau_s'], color='#c9a24b', ls='--', lw=0.8)
+        ax2.plot(tau, gamma, '-', color=_paper_blue(1, 1), lw=1.2)
+        ax2.set_xscale('log')
+        ax2.set_xlabel(_LBL_DRT_X, fontsize=9)
+        ax2.set_ylabel(_LBL_DRT_Y, fontsize=9)
+        ax2.set_xlim(float(np.min(tau)), float(np.max(tau)))
+        ax2.set_ylim(bottom=0)
+    _paper_ax(ax2)
     fig.tight_layout()
     for f in fmt:
-        fn = f'{out_prefix}_eis.{f}'; fig.savefig(fn, dpi=150, facecolor='white'); saved.append(fn)
+        fn = f'{out_prefix}_eis.{f}'; fig.savefig(fn, dpi=200, facecolor='white'); saved.append(fn)
     plt.close(fig)
     if traj:
         n = len(traj)
-
-        def _col(i):
-            t = i / (n - 1) if n > 1 else 0.0
-            return (0.35 + 0.55 * t, 0.66 - 0.40 * t, 0.90 - 0.66 * t)   # 파랑→빨강
-        fig2, (bx1, bx2, bx3) = plt.subplots(1, 3, figsize=(13.5, 4.0))
+        fig2, (bx1, bx2, bx3) = plt.subplots(1, 3, figsize=(10.8, 3.2))
         for i, tr in enumerate(traj):
-            bx1.plot(np.real(tr['Z']), -np.imag(tr['Z']), '-', color=_col(i), lw=1.5, label=f"N={tr['N']}")
-            bx2.plot(tr['tau'], tr['gamma'], '-', color=_col(i), lw=1.5)
-        bx1.axhline(0, color='k', lw=0.4); bx1.set_xlabel("Z' (Ohm cm2)"); bx1.set_ylabel("-Z'' (Ohm cm2)")
-        bx1.set_title('Nyquist vs cycle N'); bx1.legend(fontsize=7)
-        bx2.set_xscale('log'); bx2.set_xlabel('tau (s)'); bx2.set_ylabel('gamma (Ohm cm2)'); bx2.set_title('DRT vs cycle N')
+            c = _paper_blue(i, n)
+            lab = 'Pristine' if tr['N'] == 0 else f"N = {tr['N']}"
+            bx1.plot(np.real(tr['Z']), -np.imag(tr['Z']), 'o', ms=3.0, mfc='white', mec=c, mew=0.8)
+            bx2.plot(tr['tau'], tr['gamma'], '-', color=c, lw=1.15, label=lab)
+        # Nyquist = 텍스트 주석 (랩 예시 2: Pristine/500th Cycle 을 arc 정점 옆에), DRT = legend (예시 1)
+        for i in sorted({0, n - 1}):
+            tr = traj[i]
+            zr_i, zi_i = np.real(tr['Z']), -np.imag(tr['Z'])
+            k = int(np.argmax(zi_i))
+            bx1.annotate('Pristine' if tr['N'] == 0 else f"N = {tr['N']}",
+                         (zr_i[k], zi_i[k]), textcoords='offset points', xytext=(0, 7),
+                         ha='center', fontsize=7.5, color=_paper_blue(i, n))
+        bx1.set_xlabel(_LBL_ZRE, fontsize=9); bx1.set_ylabel(_LBL_ZIM, fontsize=9)
+        _zi_max = max(float(np.max(-np.imag(tr['Z']))) for tr in traj)
+        bx1.set_xlim(left=0); bx1.set_ylim(0, _zi_max * 1.18)     # 주석(N=…) 머리공간
+
+        bx2.set_xscale('log')
+        bx2.set_xlabel(_LBL_DRT_X, fontsize=9); bx2.set_ylabel(_LBL_DRT_Y, fontsize=9)
+        bx2.set_xlim(float(np.min(traj[0]['tau'])), float(np.max(traj[0]['tau'])))
+        bx2.set_ylim(bottom=0)
+        bx2.legend(fontsize=7, frameon=False, handlelength=1.2, labelspacing=0.3, loc='upper left')
         ns = [tr['N'] for tr in traj]
-        bx3.plot(ns, [tr['R_ct_ohm_cm2'] for tr in traj], '-o', color='#c0392b', label='R_ct (arc)')
-        bx3.plot(ns, [tr['R0_ohm_cm2'] for tr in traj], '-s', color='#2a6fb0', label='R0 (series)')
-        bx3.plot(ns, [tr['R_w_ohm_cm2'] for tr in traj], '-^', color='#e07b39', label='R_w (diffusion)')
-        bx3.plot(ns, [tr['R_dc_ohm_cm2'] for tr in traj], '-D', color='#333333', label='R_dc (total)')
-        bx3.set_xlabel('cycle N'); bx3.set_ylabel('R (Ohm cm2)')
-        bx3.set_title('R(N) growth (assumed-form partition)'); bx3.legend(fontsize=7)
+        for key, mk, c, lab in (('R_ct_ohm_cm2', 'o', '#c0392b', r'$R_{ct}$ (arc)'),
+                                ('R0_ohm_cm2', 's', '#1f4e8c', r'$R_0$ (series)'),
+                                ('R_w_ohm_cm2', '^', '#e08b3d', r'$R_W$ (diffusion)'),
+                                ('R_dc_ohm_cm2', 'D', '#333333', r'$R_{DC}$ (total)')):
+            bx3.plot(ns, [tr[key] for tr in traj], '-' + mk, color=c, lw=1.1, ms=4, mfc='white', mew=0.9, label=lab)
+        bx3.set_xlabel('Cycle number', fontsize=9)
+        bx3.set_ylabel(r'$R$ ($\Omega$ cm$^2$)', fontsize=9)
+        bx3.legend(fontsize=7, frameon=False, loc='center right')
+        bx3.text(0.97, 0.03, 'assumed-form partition', transform=bx3.transAxes,   # §F1 정직 라벨
+                 ha='right', fontsize=6.5, color='#888888')
+        for bx in (bx1, bx2, bx3):
+            _paper_ax(bx)
         fig2.tight_layout()
         for f in fmt:
-            fn = f'{out_prefix}_cycle.{f}'; fig2.savefig(fn, dpi=150, facecolor='white'); saved.append(fn)
+            fn = f'{out_prefix}_cycle.{f}'; fig2.savefig(fn, dpi=200, facecolor='white'); saved.append(fn)
         plt.close(fig2)
     return saved
 

@@ -11,7 +11,7 @@
   <b>frame[4] 대조</b>(모델↔실측 Nyquist 겹침).
 </p>
 
-<div class="card" style="border-left:3px solid #c9a24b">
+<div class="card" style="border-left:3px solid #a07c1f">
   <div style="font-size:.82rem;color:var(--dim);line-height:1.5">
     ⚠ <b>§F1 정직</b>: <b>C_dl</b>은 방전솔브 범위 밖(τ~ms≪dt)이라 EIS 전용 추가 — <b>크기는 앵커 필요</b>
     (실험 EIS CPE 또는 sulfide|NMC 문헌 1–10 µF/cm²).  <b>arc 주파수 f_ct</b>는 i0·C_dl가, <b>Warburg 위치
@@ -20,7 +20,7 @@
   </div>
 </div>
 
-<div class="card" style="border-left:3px solid #5aa9e6">
+<div class="card" style="border-left:3px solid #2a5db0">
   <div style="font-size:.82rem;color:var(--dim);line-height:1.5">
     💡 <b>EIS ≈ 이온·계면 축</b> (발표 주의): 임피던스는 <b>이온수송 + R_ct + R_int</b>가 지배 —
     <b>σ_e(전자)는 EIS에 거의 안 나타남</b>(R_e ≪ R0).  DBE의 σ_e +52% 개선은 <b>전자 전송 이득 → 운전
@@ -75,13 +75,13 @@
               title="실험 EIS(이종기술) Ω·cm² 오버레이 — 모델↔실측 대조">🔬 실험 겹치기</button>
     </div>
     <canvas id="e-nyq" width="440" height="380"
-            style="width:100%;border-radius:8px;background:var(--card-bg,#0e1526)"></canvas>
+            class="e-canvas"></canvas>
     <div id="e-exp-hint" style="font-size:.72rem;color:var(--dim);margin-top:4px"></div>
   </div>
   <div class="card">
     <div class="card-title" style="margin-bottom:6px">DRT γ(τ) — 프로세스 시상수 분리</div>
     <canvas id="e-drt" width="440" height="380"
-            style="width:100%;border-radius:8px;background:var(--card-bg,#0e1526)"></canvas>
+            class="e-canvas"></canvas>
     <div id="e-peaks" style="font-size:.78rem;color:var(--dim);margin-top:6px"></div>
   </div>
 </div>
@@ -91,7 +91,7 @@
   <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start">
     <div style="flex:0 0 250px">
       <div style="font-size:.76rem;color:var(--dim);margin-bottom:4px">방전(충전) V,Q 붙여넣기 — 2열
-        <b>V [V], Q</b> (STEP4 방전곡선 CSV·뷰어 📈 다운로드).  <b style="color:#5aa9e6">케이스
+        <b>V [V], Q</b> (STEP4 방전곡선 CSV·뷰어 📈 다운로드).  <b style="color:#2a5db0">케이스
         <code>?case=</code> 로 열면 저장된 STEP4 곡선(V_terminal·용량%)에서 자동</b></div>
       <textarea id="e-ica-in" class="e-in" style="height:150px;font-size:.74rem;resize:vertical"
         placeholder="V, Q&#10;4.20, 0.00&#10;4.05, 0.35&#10;3.85, 1.20&#10;..."></textarea>
@@ -99,7 +99,7 @@
     </div>
     <div style="flex:1 1 320px;min-width:280px">
       <canvas id="e-ica" width="440" height="300"
-              style="width:100%;border-radius:8px;background:var(--card-bg,#0e1526)"></canvas>
+              class="e-canvas"></canvas>
       <div id="e-ica-peaks" style="font-size:.78rem;color:var(--dim);margin-top:6px">
         케이스 로드 시 자동 · 붙여넣고 계산 — 피크 = OCP 상전이(상변태·스테이징).  SG평활로 노이즈 더블릿 억제.</div>
     </div>
@@ -131,9 +131,9 @@
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
     <div><div style="font-size:.8rem;color:var(--dim);margin-bottom:4px">Nyquist 오버레이 (N=0 → N_max)</div>
-      <canvas id="ec-nyq" width="440" height="340" style="width:100%;border-radius:8px;background:var(--card-bg,#0e1526)"></canvas></div>
+      <canvas id="ec-nyq" width="440" height="340" class="e-canvas"></canvas></div>
     <div><div style="font-size:.8rem;color:var(--dim);margin-bottom:4px">DRT γ(τ) 오버레이 — 자라는 피크 = 기전</div>
-      <canvas id="ec-drt" width="440" height="340" style="width:100%;border-radius:8px;background:var(--card-bg,#0e1526)"></canvas></div>
+      <canvas id="ec-drt" width="440" height="340" class="e-canvas"></canvas></div>
   </div>
   <div id="ec-summary" style="font-size:.76rem;color:var(--dim);margin-top:8px;line-height:1.5"></div>
 </div>
@@ -144,13 +144,21 @@
 </div>
 
 <style>
+  /* ★ /eis = 흰색 기반 (발표 가독성, 2026-07-24 사용자 지시): 페이지 한정 라이트 변수 재정의 —
+     사이드바는 그대로, 콘텐츠(.content)만 흰 배경 + 진한 글씨.  캔버스도 흰 배경 논문 스타일. */
+  .content{ --bg:#f4f6fa; --bg2:#ffffff; --card:#ffffff; --border:#d9dee8; --text:#1a2233;
+    --dim:#5b6478; --accent:#2a5db0; --accent-hover:#1f4a92;
+    background:#f4f6fa; color:var(--text); }
+  .content .card{ background:#ffffff; border-color:#d9dee8; box-shadow:0 1px 3px rgba(20,30,60,.06); }
+  .content code{ background:#eef1f6; color:#1a2233; }
   .e-lab{display:flex;flex-direction:column;gap:4px;font-size:.82rem;color:var(--text);font-weight:500}
-  .e-in{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);
+  .e-in{background:#fbfcfe;border:1px solid #c9d2e0;border-radius:6px;color:#1a2233;
     padding:6px 8px;font-family:'JetBrains Mono',monospace;font-size:.85rem;width:100%}
   .e-in:focus{outline:none;border-color:var(--accent)}
   .e-hint{color:var(--dim);font-weight:400;font-size:.72rem}
-  .e-card{background:rgba(41,128,185,.08);border-radius:8px;padding:8px 10px}
-  .e-card b{font-size:1.02rem;color:#e8edf6}
+  .e-card{background:#eef3fa;border-radius:8px;padding:8px 10px}
+  .e-card b{font-size:1.02rem;color:#1a2233}
+  .e-canvas{width:100%;border-radius:8px;background:#ffffff;border:1px solid #d9dee8}
 </style>
 {% endblock %}
 
@@ -188,10 +196,10 @@ const EIS = {
     const box=this.el('e-anchor-info');
     if(!this.useExpAnchor){ box.innerHTML=''; return; }
     const a=d.exp_anchor;
-    if(!a){ box.innerHTML='<span style="color:#c9a24b">🔬 실험앵커 요청됨 — 데이터 없음 '+
+    if(!a){ box.innerHTML='<span style="color:#a07c1f">🔬 실험앵커 요청됨 — 데이터 없음 '+
       '(이종기술/eis/fits 부재, 예: 클라우드) → 문헌 기본값 유지</span>'; return; }
     const rng=a.c_dl_range_uF_cm2||[], pr=a.provenance||{};
-    box.innerHTML='<b style="color:#5aa9e6">🔬 frame[4] 실험앵커 적용</b> — '+
+    box.innerHTML='<b style="color:#2a5db0">🔬 frame[4] 실험앵커 적용</b> — '+
       `C_dl≈<b>${a.c_dl_areal_uF_cm2}</b> µF/cm²geo (기하평균, 범위 ${rng[0]}–${rng[1]}, n=${a.n_full}) · `+
       `R_w=<b>${a.r_w_ohm_cm2}</b> Ω·cm² (Wo1_R median) · R_int≈${a.r_int_ohm_cm2} · R0_hf≈${a.r0_hf_ohm_cm2}<br>`+
       `<span style="color:var(--dim)">${pr.C_dl||''}</span>`;
@@ -209,7 +217,7 @@ const EIS = {
       if(pr.sigma_ion_S_cm!=null) this.el('e-sigi').value = (+pr.sigma_ion_S_cm).toPrecision(3);
       if(pr.thickness_um!=null) this.el('e-th').value = (+pr.thickness_um).toFixed(2);
       if(pr.porosity!=null) this.el('e-por').value = (+pr.porosity).toFixed(1);
-      badge.innerHTML = ` · <span style="color:#5aa9e6">📁 ${d.case_loaded}</span> STEP3 σ 로드됨`;
+      badge.innerHTML = ` · <span style="color:#2a5db0">📁 ${d.case_loaded}</span> STEP3 σ 로드됨`;
       this.loadCaseICA(d.case_loaded);   // 방전곡선 저장돼 있으면 ICA 도 자동 (caseId 비우기 전에)
       this.runCycle();                   // 사이클 궤적도 로드된 σ 로 갱신
       this.caseId = '';   // 로드 완료 → 이후 수동 조정 시 케이스 재덮어쓰기 안 함
@@ -231,7 +239,7 @@ const EIS = {
     if(this.showExp){
       const nc=(this.expNyq&&this.expNyq.curves||[]).length;
       hint.innerHTML = nc ? `<span style="color:#2ecc71">🔬 실험 풀셀 ${nc}개 (Ω·cm² ASR) — physics-EIS 선과 자릿수 대조 (반쪽셀 vs 풀셀=배치 다름)</span>`
-        : `<span style="color:#c9a24b">실험 EIS 오버레이 불가: ${(this.expNyq&&this.expNyq.hint)||'데이터 없음'}</span>`;
+        : `<span style="color:#a07c1f">실험 EIS 오버레이 불가: ${(this.expNyq&&this.expNyq.hint)||'데이터 없음'}</span>`;
     } else { hint.innerHTML=''; }
     if(this.lastD) this.drawNyquist(this.lastD);
   },
@@ -251,7 +259,7 @@ const EIS = {
   },
   _axes(ctx,W,H,mL,mB,mT,mR,xlab,ylab,xmin,xmax,ymin,ymax,logx){
     const pw=W-mL-mR, ph=H-mT-mB;
-    ctx.strokeStyle='rgba(255,255,255,.08)'; ctx.fillStyle='#8a93a6';
+    ctx.strokeStyle='rgba(0,0,0,.07)'; ctx.fillStyle='#55607a';
     ctx.font='10px "JetBrains Mono",monospace'; ctx.lineWidth=1;
     for(let i=0;i<=5;i++){ const y=mT+ph-(i/5)*ph, v=ymin+(ymax-ymin)*i/5;
       ctx.beginPath(); ctx.moveTo(mL,y); ctx.lineTo(W-mR,y); ctx.stroke();
@@ -281,19 +289,18 @@ const EIS = {
     // 실험 방울 (physics 선 아래에 먼저)
     expCurves.forEach(c=>{ (c.pts||[]).forEach(p=>{ if(p.zre==null||p.zim==null) return;
       ctx.beginPath(); ctx.arc(X(p.zre),Y(p.zim),2.0,0,7);
-      ctx.fillStyle='rgba(46,204,113,.55)'; ctx.fill(); }); });
-    // physics-EIS 선
-    ctx.beginPath(); pts.forEach((p,i)=>{ const x=X(p.zre),y=Y(p.zim); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
-    ctx.strokeStyle='#5aa9e6'; ctx.lineWidth=2; ctx.stroke();
-    pts.forEach((p,i)=>{ if(i%7===0){ ctx.beginPath(); ctx.arc(X(p.zre),Y(p.zim),2.4,0,7);
-      ctx.fillStyle='#e8edf6'; ctx.fill(); } });
+      ctx.fillStyle='rgba(24,138,88,.55)'; ctx.fill(); }); });
+    // physics-EIS = open circles (논문 스타일, 흰 배경)
+    ctx.lineWidth=1.4; ctx.strokeStyle='#1f4e8c';
+    pts.forEach(p=>{ ctx.beginPath(); ctx.arc(X(p.zre),Y(p.zim),3.0,0,7);
+      ctx.fillStyle='#ffffff'; ctx.fill(); ctx.stroke(); });
     const e=d.elements;
-    if(e.R0_ohm_cm2!=null){ ctx.fillStyle='#c9a24b'; ctx.textAlign='center';
+    if(e.R0_ohm_cm2!=null){ ctx.fillStyle='#a07c1f'; ctx.textAlign='center';
       ctx.fillText('R0', X(e.R0_ohm_cm2), Y(0)-4); }
     // 범례
     if(expCurves.length){ ctx.textAlign='left'; ctx.font='10px "JetBrains Mono",monospace';
-      ctx.fillStyle='#5aa9e6'; ctx.fillText('— physics-EIS', W-mR-108, mT+10);
-      ctx.fillStyle='rgba(46,204,113,.9)'; ctx.fillText('● 실험(풀셀)', W-mR-108, mT+23); }
+      ctx.fillStyle='#1f4e8c'; ctx.fillText('○ physics-EIS', W-mR-108, mT+10);
+      ctx.fillStyle='#1e8f5e'; ctx.fillText('● 실험(풀셀)', W-mR-108, mT+23); }
   },
   drawDRT(d){
     const cv=this.el('e-drt'), dpr=window.devicePixelRatio||1, W=cv.clientWidth||440, H=380;
@@ -302,18 +309,18 @@ const EIS = {
     if(!pts.length) return;
     const lt=pts.map(p=>Math.log10(p.tau)), g=pts.map(p=>p.gamma);
     const mL=52,mR=14,mT=14,mB=34, xmin=Math.min(...lt),xmax=Math.max(...lt),ymax=Math.max(...g)*1.08;
-    const {pw,ph}=this._axes(ctx,W,H,mL,mB,mT,mR,'log₁₀ τ (s)','γ (Ω·cm²)',xmin,xmax,0,ymax,true);
+    const {pw,ph}=this._axes(ctx,W,H,mL,mB,mT,mR,'log₁₀ τ (s)','γ(lnτ) (Ω·cm²)',xmin,xmax,0,ymax,true);
     const X=v=>mL+((v-xmin)/(xmax-xmin||1))*pw, Y=v=>mT+ph-(v/(ymax||1))*ph;
     ctx.beginPath(); pts.forEach((p,i)=>{ const x=X(lt[i]),y=Y(g[i]); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
-    ctx.strokeStyle='#e67e22'; ctx.lineWidth=2; ctx.stroke();
+    ctx.strokeStyle='#16355e'; ctx.lineWidth=1.6; ctx.stroke();
     ctx.lineTo(X(xmax),Y(0)); ctx.lineTo(X(xmin),Y(0)); ctx.closePath();
-    ctx.fillStyle='rgba(230,126,34,.18)'; ctx.fill();
+    ctx.fillStyle='rgba(31,78,140,.08)'; ctx.fill();
     // 피크 마커 + 라벨
     (d.peaks||[]).forEach(p=>{ if(p.tau_s==null) return; const x=X(Math.log10(p.tau_s));
-      ctx.strokeStyle='#c9a24b'; ctx.setLineDash([3,3]); ctx.beginPath();
+      ctx.strokeStyle='#a07c1f'; ctx.setLineDash([3,3]); ctx.beginPath();
       ctx.moveTo(x,mT); ctx.lineTo(x,mT+ph); ctx.stroke(); ctx.setLineDash([]); });
     this.el('e-peaks').innerHTML = '피크: ' + ((d.peaks||[]).length?
-      d.peaks.map(p=>`<b style="color:#c9a24b">${p.f_Hz>=1?p.f_Hz.toPrecision(2)+'Hz':(p.f_Hz*1000).toPrecision(2)+'mHz'}</b>`+
+      d.peaks.map(p=>`<b style="color:#a07c1f">${p.f_Hz>=1?p.f_Hz.toPrecision(2)+'Hz':(p.f_Hz*1000).toPrecision(2)+'mHz'}</b>`+
         ` (R≈${p.R!=null?p.R.toFixed(2):'—'} Ω·cm²)`).join(' · ') : '—') +
       ' &nbsp;<span style="color:var(--dim)">= 전하전달(고주파)·확산(저주파) 분리</span>';
   },
@@ -344,7 +351,7 @@ const EIS = {
     }
     this.drawICA(d);
     const mt=d.meta||{}, cr=(mt.c_rate!=null)?`${mt.c_rate}C ${mt.charge?'충전':'방전'}`:'';
-    const badge=`<div style="color:#5aa9e6;margin-bottom:3px">📁 <b>${caseId}</b> STEP4 방전곡선 자동로드`+
+    const badge=`<div style="color:#2a5db0;margin-bottom:3px">📁 <b>${caseId}</b> STEP4 방전곡선 자동로드`+
       ` (${cr} · ${d.n_in}점 · ${d.q_unit})</div>`;
     pk.innerHTML = badge + pk.innerHTML;   // drawICA 가 채운 피크 위에 케이스 배지 추가
   },
@@ -359,12 +366,12 @@ const EIS = {
     const {pw,ph}=this._axes(ctx,W,H,mL,mB,mT,mR,'V (V)',yl,xmin,xmax,ymin,ymax,false);
     const X=v=>mL+((v-xmin)/(xmax-xmin||1))*pw, Y=v=>mT+ph-((v-ymin)/(ymax-ymin||1))*ph;
     ctx.beginPath(); pts.forEach((p,i)=>{ const x=X(p.v),y=Y(p.dqdv); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
-    ctx.strokeStyle='#2ecc71'; ctx.lineWidth=2; ctx.stroke();
+    ctx.strokeStyle='#1e8f5e'; ctx.lineWidth=2; ctx.stroke();
     (d.peaks||[]).forEach(p=>{ if(p.v==null) return; const x=X(p.v);
-      ctx.strokeStyle='#c9a24b'; ctx.setLineDash([3,3]); ctx.beginPath();
+      ctx.strokeStyle='#a07c1f'; ctx.setLineDash([3,3]); ctx.beginPath();
       ctx.moveTo(x,mT); ctx.lineTo(x,mT+ph); ctx.stroke(); ctx.setLineDash([]); });
     this.el('e-ica-peaks').innerHTML = '상전이 피크: ' + ((d.peaks||[]).length?
-      d.peaks.map(p=>`<b style="color:#c9a24b">${p.v.toFixed(3)} V</b>`).join(' · ') : '—')
+      d.peaks.map(p=>`<b style="color:#a07c1f">${p.v.toFixed(3)} V</b>`).join(' · ') : '—')
       + ` &nbsp;<span style="color:var(--dim)">(${d.n_in||0} 점 입력)</span>`;
   },
   // ── 사이클-N EIS/DRT 궤적 (D5) ──
@@ -375,8 +382,8 @@ const EIS = {
     p.cycle_r0=this.el('ec-r0').value; p.cycle_rc=this.el('ec-rc').value; p.cycle_ntot=this.el('ec-ntot').value;
     p.cycle_shape=this.el('ec-shape').value; p.cycle_shares=this.el('ec-shares').value; p.cycle_ns=this.el('ec-ns').value;
     return p; },
-  _cycColor(i,n){ const t=n>1?i/(n-1):0;   // 파랑(pristine) → 빨강(cycled)
-    const a=[90,169,230], b=[231,76,60];
+  _cycColor(i,n){ const t=n>1?i/(n-1):0;   // 논문 스타일 단일-색군: 연파랑(pristine) → 진남색(cycled)
+    const a=[169,200,229], b=[22,53,93];
     return `rgb(${Math.round(a[0]+(b[0]-a[0])*t)},${Math.round(a[1]+(b[1]-a[1])*t)},${Math.round(a[2]+(b[2]-a[2])*t)})`; },
   async runCycle(){
     const q=new URLSearchParams(this.cycleParams()).toString();
@@ -390,7 +397,7 @@ const EIS = {
     this.el('ec-summary').innerHTML=`<b style="color:#b06ab3">기전 지문</b>: R_ct ${a.R_ct}→${b.R_ct} Ω·cm² `+
       `(×${(b.R_ct/Math.max(a.R_ct,1e-9)).toFixed(1)}), f_ct ${a.f_ct_Hz!=null?a.f_ct_Hz.toFixed(0):'—'}→`+
       `${b.f_ct_Hz!=null?b.f_ct_Hz.toFixed(0):'—'}Hz (저주파 이동=arc 성장) · 분배 R_ct/R0/R_w=`+
-      `${sh.R_ct}/${sh.R0}/${sh.R_w} <span style="color:#c9a24b">(ASSUMED §F1)</span>`+
+      `${sh.R_ct}/${sh.R0}/${sh.R_w} <span style="color:#a07c1f">(ASSUMED §F1)</span>`+
       `<br><span style="font-size:.72rem">${rows}</span>`;
   },
   drawCycleNyquist(d){
@@ -404,9 +411,10 @@ const EIS = {
     const mL=52,mR=14,mT=14,mB=34;
     const {pw,ph}=this._axes(ctx,W,H,mL,mB,mT,mR,'Z′ (Ω·cm²)','−Z″ (Ω·cm²)',0,xmax,ymin,ymax,false);
     const X=v=>mL+(v/(xmax||1))*pw, Y=v=>mT+ph-((v-ymin)/(ymax-ymin||1))*ph;
-    S.forEach((s,i)=>{ ctx.beginPath();
-      (s.nyquist||[]).filter(p=>p.zre!=null&&p.zim!=null).forEach((p,j)=>{ const x=X(p.zre),y=Y(p.zim); j?ctx.lineTo(x,y):ctx.moveTo(x,y); });
-      ctx.strokeStyle=this._cycColor(i,S.length); ctx.lineWidth=1.8; ctx.stroke(); });
+    S.forEach((s,i)=>{ const c=this._cycColor(i,S.length);   // open circles (논문 스타일)
+      ctx.lineWidth=1.2; ctx.strokeStyle=c;
+      (s.nyquist||[]).filter(p=>p.zre!=null&&p.zim!=null).forEach(p=>{
+        ctx.beginPath(); ctx.arc(X(p.zre),Y(p.zim),2.4,0,7); ctx.fillStyle='#ffffff'; ctx.fill(); ctx.stroke(); }); });
     ctx.font='10px "JetBrains Mono",monospace'; ctx.textAlign='left';
     S.forEach((s,i)=>{ ctx.fillStyle=this._cycColor(i,S.length); ctx.fillText('N='+s.N, W-mR-44, mT+12+i*13); });
   },
@@ -419,7 +427,7 @@ const EIS = {
       ltmin=Math.min(ltmin,lt); ltmax=Math.max(ltmax,lt); } if(p.gamma!=null) gmax=Math.max(gmax,p.gamma); }));
     if(!isFinite(ltmin)||!isFinite(ltmax)) return;
     const mL=52,mR=14,mT=14,mB=34, gm=(gmax||1)*1.08;
-    const {pw,ph}=this._axes(ctx,W,H,mL,mB,mT,mR,'log₁₀ τ (s)','γ (Ω·cm²)',ltmin,ltmax,0,gm,true);
+    const {pw,ph}=this._axes(ctx,W,H,mL,mB,mT,mR,'log₁₀ τ (s)','γ(lnτ) (Ω·cm²)',ltmin,ltmax,0,gm,true);
     const X=v=>mL+((v-ltmin)/(ltmax-ltmin||1))*pw, Y=v=>mT+ph-(v/(gm||1))*ph;
     S.forEach((s,i)=>{ ctx.beginPath();
       (s.drt||[]).filter(p=>p.tau!=null&&p.tau>0&&p.gamma!=null).forEach((p,j)=>{ const x=X(Math.log10(p.tau)),y=Y(p.gamma); j?ctx.lineTo(x,y):ctx.moveTo(x,y); });
