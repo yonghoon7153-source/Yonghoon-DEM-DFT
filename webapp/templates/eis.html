@@ -52,7 +52,7 @@
         <th style="text-align:left">state</th><th style="text-align:right">R_s</th><th style="text-align:right">R_int</th>
         <th style="text-align:right">R_w</th><th style="text-align:right">C_dl</th><th style="text-align:right">σ_e</th>
         <th style="text-align:right" title="합제(cathode) 두께 µm — 대칭셀 σ_e=L/R1. 기본 45, 셀별 변경 가능">L(µm)</th>
-        <th style="text-align:right">rmse%</th><th style="text-align:right">N</th>
+        <th style="text-align:right">rmse%</th>
         <th style="text-align:center;width:40px" title="전체 선택/해제">
           <input type="checkbox" id="xe-all" onchange="EIS.selAll(this.checked)">
         </th>
@@ -441,12 +441,11 @@ const EIS = {
         `<td style="text-align:right">${f(r.R_w_ohmcm2)}</td><td style="text-align:right">${f(r.C_dl_uF_cm2,1)}</td>`+
         `<td style="text-align:right">${f(r.sigma_e_mScm,4)}</td>`+
         `<td style="text-align:right;color:${r.rmse_pct>10?'#c0392b':'var(--dim)'}">${f(r.rmse_pct,1)}</td>`+
-        `<td style="text-align:right;color:var(--dim)">${r.n_points||'—'}</td>`+
         `<td style="text-align:center"><input type="checkbox" class="xe-sel" value="${r.filename}" `+
         `onchange="EIS.onSelChange()" title="체크 → 아래 Nyquist '🔬 실험 겹치기' 로 이 측정만 겹침"></td>`+
         `<td style="text-align:center"><button onclick="EIS.deleteExp('${r.filename}')" style="background:none;border:none;color:var(--dim);cursor:pointer;font-size:1.1rem;padding:0;transition:color.2s" `+
         `onmouseover="this.style.color='#c0392b'" onmouseout="this.style.color='var(--dim)'" title="이 측정 삭제">🗑️</button></td></tr>`;
-    }).join('')) || '<tr><td colspan="12" style="padding:8px;color:var(--dim)">측정 없음 — 위에서 .mpr/.csv 업로드</td></tr>';
+    }).join('')) || '<tr><td colspan="11" style="padding:8px;color:var(--dim)">측정 없음 — 위에서 .mpr/.csv 업로드</td></tr>';
     const a=d.anchor;
     this.el('xe-anchor').innerHTML = a ?
       `<b style="color:#1e8f5e">frame[4] 대표앵커</b> (full-cell ${a.n_full}개): C_dl≈<b>${a.c_dl_areal_uF_cm2}</b> µF/cm²geo`+
