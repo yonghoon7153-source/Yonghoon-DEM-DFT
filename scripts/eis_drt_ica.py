@@ -145,6 +145,53 @@ def physics_eis(freqs_hz, *, sigma_e_S_cm, sigma_ion_S_cm, thickness_um, r_int_o
     return Z, elems
 
 
+# ─────────────── 랩 EC-Lab PEIS 주파수 그리드 (full/sym cell .mps 설정) ───────────────
+def lab_freq_grid(f_hi_hz=7.0e6, f_lo_hz=1.0e-2, per_decade=10):
+    """랩 BioLogic VSP-300 PEIS 설정 그리드 (full_cell.mps·symmetric_cell.mps 2025):
+    fi=7 MHz → ff=10 mHz, 10 pts/decade (로그), Va=5 mV(소신호 선형 — 우리 모델과 정합), E=0 vs OCV.
+    → 실측과 **같은 주파수축** = frame[4] Nyquist/DRT 직접 겹침."""
+    n = int(round((np.log10(f_hi_hz) - np.log10(f_lo_hz)) * per_decade)) + 1
+    return np.logspace(np.log10(f_hi_hz), np.log10(f_lo_hz), max(n, 8))
+
+
+# ─────────────── DRT 피크 → 물리 프로세스 배정 (hover 툴팁용) ───────────────
+def assign_drt_peak(tau_s, elems=None):
+    """DRT 피크 τ → 물리 프로세스 배정.  모델 소자(f_ct·τ_w·f_int)와 먼저 매칭(같은 물리서 유도 →
+    정확), 실패 시 τ-band 휴리스틱.  반환 {process, label, detail} — 피크 위 hover 박스 내용."""
+    tau_s = float(tau_s)
+    if not (tau_s > 0):
+        return {'process': 'na', 'label': '—', 'detail': ''}
+    f = 1.0 / (2.0 * np.pi * tau_s)
+    lt = np.log10(tau_s)
+    if elems:
+        f_ct = elems.get('f_ct_Hz'); tau_w = elems.get('tau_w_s'); f_int = elems.get('f_int_Hz')
+        if f_ct and f_ct > 0 and abs(lt - np.log10(1.0 / (2 * np.pi * f_ct))) < 0.55:
+            return {'process': 'charge_transfer', 'label': '전하전달 R_ct (CAM|SE 계면)',
+                    'detail': (f'BV 반응 + 이중층 C_dl.  f_ct≈{f_ct:.0f} Hz = 1/2πR_ct·C_dl.  '
+                               '충·방전 계면 kinetics — σ_e/σ_ion 개선엔 둔감(i0·반응면적이 지배).  '
+                               '사이클 열화 시 접촉손실→R_ct↑ = 이 피크 성장·저주파 이동.')}
+        if f_int and f_int > 0 and abs(lt - np.log10(1.0 / (2 * np.pi * f_int))) < 0.55:
+            return {'process': 'interface', 'label': '집전체|전극 계면 R_int',
+                    'detail': (f'집전체 접촉/계면 arc.  f_int≈{f_int:.0f} Hz.  '
+                               'aged(SBE/DBE 집전체)→R_int↑ = 열화 지문 (pristine 대비 접촉저항 증가).')}
+        if tau_w and tau_w > 0 and abs(lt - np.log10(tau_w)) < 0.7:
+            return {'process': 'diffusion', 'label': '고체확산 Warburg (AM 입자내 Li⁺)',
+                    'detail': (f'AM 입자 반경방향 Li⁺ 확산.  τ_w=r²/D_s≈{tau_w:.0f} s.  ⚠D_s 미측정(스윕).  '
+                               '방전 상전이/스테이징(OCP 평탄부)이 이 저주파 대역에 겹침 — ICA(dQ/dV)가 상전이를 분리.')}
+    # τ-band 휴리스틱 (모델 매칭 실패)
+    if tau_s < 1e-4:
+        return {'process': 'hf', 'label': '고주파 (접촉·입계)',
+                'detail': f'f≈{f:.1e} Hz — 입자접촉·입계(grain boundary)·잔류 인덕턴스 대역 (모델 R0 근방).'}
+    if tau_s < 1e-1:
+        return {'process': 'charge_transfer', 'label': '전하전달 대역',
+                'detail': f'f≈{f:.0f} Hz — 계면 전하전달(R_ct∥C_dl) 유력.'}
+    if tau_s < 3.0:
+        return {'process': 'film', 'label': '계면필름·느린반응',
+                'detail': f'f≈{f * 1000:.0f} mHz — 계면상(interphase)/필름 또는 느린 전하전달.'}
+    return {'process': 'diffusion', 'label': '저주파 확산·상전이',
+            'detail': f'f≈{f * 1000:.1f} mHz — 고체확산(Warburg) 또는 방전 상전이(스테이징).'}
+
+
 # ─────────────────────── DRT (Tikhonov 역변환) ───────────────────────
 def drt(freqs_hz, Z, tau_min=None, tau_max=None, n_tau=80, lam=1e-3, subtract_R0=True):
     """Z(ω) → γ(τ) 분포 (모델-자유 시상수 분리).  Z(ω)=R0+∫γ(τ)/(1+jωτ)dlnτ.

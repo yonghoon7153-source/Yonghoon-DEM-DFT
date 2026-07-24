@@ -3670,7 +3670,7 @@ def api_eis():
             if exp_anchor.get('r_w_ohm_cm2') is not None:
                 kw['r_w_ohm_cm2'] = exp_anchor['r_w_ohm_cm2']
     try:
-        freqs = _np.logspace(5, -2, 70)
+        freqs = _eis.lab_freq_grid()   # 랩 EC-Lab PEIS: 7 MHz→10 mHz, 10 pts/dec (full/sym .mps 정합)
         Z, el = _eis.physics_eis(freqs, **kw)
         tau, g, R0f, Zr = _eis.drt(freqs, Z)
         peaks = _eis.drt_peaks(tau, g)
@@ -3684,7 +3684,8 @@ def api_eis():
             'nyquist': [{'f': _cl(fr), 'zre': _cl(z.real), 'zim': _cl(-z.imag)} for fr, z in zip(freqs, Z)],
             'drt': [{'tau': _cl(t), 'gamma': _cl(gg)} for t, gg in zip(tau, g)],
             'elements': {k: _cl(v) for k, v in el.items() if isinstance(v, (int, float))},
-            'peaks': [{'f_Hz': _cl(p['f_Hz']), 'tau_s': _cl(p['tau_s']), 'R': _cl(p['R_ohm_cm2'])} for p in peaks],
+            'peaks': [{'f_Hz': _cl(p['f_Hz']), 'tau_s': _cl(p['tau_s']), 'R': _cl(p['R_ohm_cm2']),
+                       **_eis.assign_drt_peak(p['tau_s'], el)} for p in peaks],
             'provenance': el.get('provenance', {}),
             'params': {k: kw[k] for k in kw},
             'case_loaded': case_loaded,
@@ -3881,7 +3882,7 @@ def api_eis_cycle():
     if not ns:
         ns = [0, ntot]
     try:
-        freqs = _np.logspace(5, -2, 60)
+        freqs = _eis.lab_freq_grid()   # 랩 EC-Lab PEIS 주파수축 (frame[4] 정합)
         _Z, el = _eis.physics_eis(freqs, **kw)
         mult = _eis.rint_growth_mult(ns, r0c, rcc, ntot, shape, jump)
         traj = _eis.cycle_eis_trajectory(freqs, el, ns, mult, rct_share=sh[0], r0_share=sh[1], rw_share=sh[2])
@@ -3949,7 +3950,7 @@ def api_eis_fig():
     fmt = 'svg' if request.args.get('fmt') == 'svg' else 'png'
     tmp = _tf.mkdtemp()
     try:
-        freqs = _np.logspace(5, -2, 60)
+        freqs = _eis.lab_freq_grid()   # 랩 EC-Lab PEIS 주파수축 (frame[4] 정합)
         Z, el = _eis.physics_eis(freqs, **kw)
         tau, g, _r0, _zr = _eis.drt(freqs, Z)
         traj = None

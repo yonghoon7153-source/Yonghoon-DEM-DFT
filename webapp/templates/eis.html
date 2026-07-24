@@ -79,9 +79,14 @@
     <div id="e-exp-hint" style="font-size:.72rem;color:var(--dim);margin-top:4px"></div>
   </div>
   <div class="card">
-    <div class="card-title" style="margin-bottom:6px">DRT γ(τ) — 프로세스 시상수 분리</div>
-    <canvas id="e-drt" width="440" height="380"
-            class="e-canvas"></canvas>
+    <div class="card-title" style="margin-bottom:6px">DRT γ(τ) — 프로세스 시상수 분리
+      <span style="font-size:.72rem;color:var(--dim);font-weight:400">(피크 위 커서 = 물리 설명 박스)</span></div>
+    <div style="position:relative">
+      <canvas id="e-drt" width="440" height="380" class="e-canvas"></canvas>
+      <div id="e-drt-tip" style="position:absolute;display:none;pointer-events:none;max-width:236px;
+        background:#141c2b;color:#eef2f8;border:1px solid #2a5db0;border-radius:6px;padding:7px 9px;
+        font-size:.72rem;line-height:1.45;z-index:20;box-shadow:0 3px 12px rgba(15,25,50,.35)"></div>
+    </div>
     <div id="e-peaks" style="font-size:.78rem;color:var(--dim);margin-top:6px"></div>
   </div>
 </div>
@@ -325,14 +330,34 @@ const EIS = {
     ctx.fillStyle='rgba(31,78,140,.10)'; ctx.fill();
     ctx.beginPath(); pts.forEach((p,i)=>{ const x=X(lt[i]),y=Y(g[i]); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
     ctx.strokeStyle='#16355e'; ctx.lineWidth=1.6; ctx.stroke();
-    // 피크 = 곡선 위 작은 점 (수직선 대신 — 문헌스타일 깔끔)
+    // 피크 = 곡선 위 작은 점 (수직선 대신 — 문헌스타일 깔끔) + hover hit-test 저장
+    this._drtHits=[];
     (d.peaks||[]).forEach(p=>{ if(p.tau_s==null) return;
       const lp=Math.log10(p.tau_s); let j=0; for(let i=1;i<lt.length;i++) if(Math.abs(lt[i]-lp)<Math.abs(lt[j]-lp)) j=i;
-      ctx.beginPath(); ctx.arc(X(lt[j]),Y(g[j]),2.6,0,7); ctx.fillStyle='#c0392b'; ctx.fill(); });
+      const px=X(lt[j]), py=Y(g[j]);
+      ctx.beginPath(); ctx.arc(px,py,3.2,0,7); ctx.fillStyle='#c0392b'; ctx.fill();
+      ctx.strokeStyle='#ffffff'; ctx.lineWidth=1; ctx.stroke();
+      this._drtHits.push({x:px, y:py, peak:p}); });
+    this._drtWH=[W,H];
     this.el('e-peaks').innerHTML = '피크: ' + ((d.peaks||[]).length?
       d.peaks.map(p=>`<b style="color:#a07c1f">${p.f_Hz>=1?p.f_Hz.toPrecision(2)+'Hz':(p.f_Hz*1000).toPrecision(2)+'mHz'}</b>`+
         ` (R≈${p.R!=null?p.R.toFixed(2):'—'} Ω·cm²)`).join(' · ') : '—') +
       ' &nbsp;<span style="color:var(--dim)">= 전하전달(고주파)·확산(저주파) 분리</span>';
+  },
+  drtHover(e){   // 피크 위 커서 → 물리 프로세스 설명 박스
+    const cv=this.el('e-drt'), tip=this.el('e-drt-tip'), hits=this._drtHits||[], wh=this._drtWH||[440,380];
+    const r=cv.getBoundingClientRect();
+    const mx=(e.clientX-r.left)*(wh[0]/(r.width||1)), my=(e.clientY-r.top)*(wh[1]/(r.height||1));
+    let best=null, bd=1e9;
+    hits.forEach(h=>{ const dx=h.x-mx, dy=h.y-my, dd=dx*dx+dy*dy; if(dd<bd){ bd=dd; best=h; } });
+    if(best && bd < 20*20){
+      const p=best.peak, fl=p.f_Hz>=1?p.f_Hz.toPrecision(3)+' Hz':(p.f_Hz*1000).toPrecision(3)+' mHz';
+      tip.innerHTML=`<b style="color:#8fb4f0">${p.label||'피크'}</b> · ${fl} · R≈${p.R!=null?p.R.toFixed(2):'—'} Ω·cm²`+
+        `<br><span style="color:#c9d3e6">${p.detail||''}</span>`;
+      tip.style.display='block';
+      tip.style.left=Math.max(4, Math.min((e.clientX-r.left)*(cv.clientWidth/(r.width||1))+12, (cv.clientWidth||440)-240))+'px';
+      tip.style.top=Math.max(2,(e.clientY-r.top)*(380/(r.height||1))-8)+'px';
+    } else tip.style.display='none';
   },
   async runICA(){
     const txt = this.el('e-ica-in').value.trim();
@@ -459,6 +484,8 @@ const EIS = {
     this.el('e-run').addEventListener('click', ()=>this.run());
     this.el('e-expanchor').addEventListener('click', ()=>this.toggleExpAnchor());
     this.el('e-exp-toggle').addEventListener('click', ()=>this.toggleExp());
+    this.el('e-drt').addEventListener('mousemove', e=>this.drtHover(e));
+    this.el('e-drt').addEventListener('mouseleave', ()=>{ this.el('e-drt-tip').style.display='none'; });
     this.el('e-ica-run').addEventListener('click', ()=>this.runICA());
     this.el('ec-run').addEventListener('click', ()=>this.runCycle());
     document.querySelectorAll('[data-cyc]').forEach(b=>
