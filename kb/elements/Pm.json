@@ -1,0 +1,40 @@
+{
+  "symbol": "Pm",
+  "name": "Promethium",
+  "Z": 61,
+  "role": "란타나이드 aliovalent 도펀트 — Nd(4f³)/Sm(4f⁵) 사이의 4f⁴ 멤버로 계열 완결을 위해 포함. 단 Pm은 안정 동위원소가 없는 방사성 원소(전부 합성, ¹⁴⁵Pm 반감기 ~17.7 y) → 실제 SE 도펀트로는 비현실적. Pm³⁺(4f⁴)만 실질 산화수; 서사는 Nd/Sm 프로토콜의 보간 추정.",
+  "oxidation_states": ["+3"],
+  "electronegativity": 1.13,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f⁵ 5s² 5p⁶ 6s²",
+    "electron_config": "[Xe] 4f⁵ 6s²",
+    "valence_orbitals": "4f⁵ 6s² — Pm³⁺면 4f⁴(개방껍질, S=2, ⁵I₄); P 자리 치환+O 동반(원리상)",
+    "band_character": "Pm³⁺=4f⁴ 부분점유 → 스핀분극(ISPIN=2)+DFT+U(U_eff ~6 eV) 필수(Nd 프로토콜과 동일). 방사성이라 실험 PDOS·XPS 데이터가 희소 — 4f⁴ 국재준위는 Nd(4f³)와 Sm(4f⁵) 사이로 보간 추정. O 2p→Pm 4f/5d 엣지(원리상)",
+    "bonding": "Pm–O 이온성(Pm2O3, hard-산 친산소 앵커, 원리상); 4f는 5s²5p⁶에 가려 결합은 5d/6s, 4f⁴ 국소모멘트는 명시 투영 필요"
+  },
+  "ionic_radius_A": {
+    "Pm3+_VI": 0.97,
+    "Pm3+_VIII": 1.093,
+    "_note": "Shannon 1976: Pm³⁺ VI 0.97 A, VIII 1.093(Nd 0.983과 Sm 0.958 사이 보간에 부합). Li⁺(0.76)보다 큼. 방사성이라 실측 결정학 데이터는 제한적."
+  },
+  "representative_compounds": [
+    {"formula": "Pm2O3", "context": "도펀트 전구체(원리상)", "battery_role": "염기성 RE 산화물; Pm³⁺ + O 공급원(원리상)", "note": "안정 동위원소 없음 → 방사성으로 취급/특성화 제한; La/Nd 계열과 화학적 유사로 추정"},
+    {"formula": "PmCl3", "context": "대체 원료(원리상)", "battery_role": "wide-gap Pm³⁺ 염화물(원리상)", "note": "Pm³⁺ 안정 염화물로 유비"},
+    {"formula": "Pm-O in doped argyrodite (P-O-Pm bridge, 가정)", "context": "도펀트 모티프(유비)", "battery_role": "S 자리 O가 P·Pm과 가교하는 국소 옥시설파이드 단위(원리상)", "note": "La-O(Yang)/Nd-O(우리)와 평행한 RE³⁺ hard-산 O 앵커 가정; Pm은 실물 실험 비현실"}
+  ],
+  "sei_relevance": "Pm은 native SE 이온도, 실용 도펀트도 아님 — 안정 동위원소가 없는 방사성 원소라 실제 캠페인에는 배제. 그럼에도 4fⁿ 계열 완결(Nd 4f³ → Pm 4f⁴ → Sm 4f⁵) 관점에서 이론 멤버로 기록. 화학적으로는 다른 RE³⁺ 도판트처럼 친산소 hard-산 앵커(P-O-Pm 가정)·Li 공공 주입 유비가 성립하나, 방사선·희소성으로 검증 불가. 정직히: 모든 서술은 Nd/Sm 사이 보간 추정이며 실측 근거 없음.",
+  "xps": [
+    {"core": "Pm 3d/4d", "BE_eV": null, "assignment": "Pm은 방사성으로 표준 XPS 참조 스펙트럼이 사실상 부재 → 지어내지 않고 생략. 위치는 Nd(3d5/2 ~982)와 Sm(~1083) 사이로 추정만.", "ref": "n/a"}
+  ],
+  "raman": [
+    {"cm1": null, "assignment": "방사성으로 표준 라만 데이터 부재 → 지어내지 않고 생략.", "ref": "n/a"}
+  ],
+  "dos_character": "Pm³⁺는 4f⁴(S=2) 개방껍질 -> 원리상 스핀분극(ISPIN=2)+DFT+U(Dudarev, U_eff ~6 eV) 필수(Nd 프로토콜과 동일). 부분점유 4f⁴는 갭 내/근처 국재준위 -> PBE 단독 오배치. 다만 방사성으로 실측 데이터가 없어 Nd(4f³)/Sm(4f⁵) 사이 보간으로만 특성화; 명시 4f 투영은 계산상으로만 의미.",
+  "key_references": [
+    "Shannon 1976 — effective ionic radii (Pm³⁺ VI 0.97, Nd/Sm 사이 보간)",
+    "Dudarev et al., PRB 1998, 57, 1505 + Loschen et al. 2007 — DFT+U(U_eff ~6 eV) on lanthanide 4f (원리상 Pm 4f⁴ 프로토콜)",
+    "Pm 방사성(안정 동위원소 없음, ¹⁴⁵Pm 반감기 ~17.7 y) — 실용 도펀트 배제 근거"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "SSB 앵커 없음(비캠페인). Pm은 방사성으로 실용 도펀트 아님 — 4fⁿ 계열 완결용 이론 멤버로만 기록; 모든 값은 Nd/Sm 사이 보간 추정(Shannon 4f⁴ 반경 제외) — 우리 db 절대값과 분리."
+}
