@@ -44,7 +44,8 @@
       </div>
 
       <div class="input-group">
-        <label><input type="checkbox" class="fix-check" data-param="d_am_s" checked> d<sub>AM_S</sub> (소립 AM)</label>
+        <label><input type="checkbox" class="fix-check" data-param="d_am_s" checked> d<sub>AM_S</sub> (소립 AM)
+          <span style="color:#c9a24b;cursor:help" title="⚠ 현재 예측 모델은 d_AM = max(대립,소립) 단일 피처만 씀 → 이 소립 슬라이더는 대립보다 클 때만 예측에 반영됨. 진짜 bimodal(대·소립 분리) 반영은 predictor 2-피처 재학습 필요 (sklearn/WSL). 지금은 표시·문서용.">⚠</span></label>
         <div class="slider-row">
           <input type="range" id="d_am_s" min="1" max="8" step="0.5" value="4">
           <span class="slider-val" id="d_am_s_val">4 &mu;m</span>
