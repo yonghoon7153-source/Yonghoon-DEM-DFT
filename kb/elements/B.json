@@ -42,5 +42,12 @@
     "fan2026_sulfide_assb_stability_review_ECERD2600097",
     "liu2022_hbn_lithiophobic_sandwich_li_anode"
   ],
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p¹",
+    "electron_config": "[He] 2s² 2p¹",
+    "valence_orbitals": "2s² 2p¹ — sp²(BO₃ 삼각)/sp³(BO₄ 사면체) 혼성, 형식상 B³⁺",
+    "band_character": "우리 B2O3-도핑 argyrodite PDOS(+B2O3, gap 1.9671 eV): VBM 여전히 S 3p ~89.5% 지배, B 2p는 성기고 밴드엣지에서 묻힘(band edge 미기여) — B는 밴드엣지 redox 중심이 아니라 wide-gap B–O 절연 네트워크로 구조/산화 안정화(electronic.json)",
+    "bonding": "B–O 강한 공유(B 2s2p–O 2p 혼성; BO₃ 삼각/BO₄ 사면체) wide-gap; HSAB상 B³⁺(hard)는 B–O 선호, B–S는 가수분해 취약(Zhu 2020)"
+  },
   "_provenance": "literature/web reference values (소환값); 우리 db 절대값과 분리"
 }

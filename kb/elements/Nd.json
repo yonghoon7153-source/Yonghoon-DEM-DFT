@@ -36,9 +36,14 @@
     "Nd 3d XPS: Nd2O3 3d5/2 ~981.5-982.5 eV, 3d3/2 ~1005 eV (XPS databases; neodymium niobate/tantalate study) (Nd 3d XPS 기준값)"
   ],
   "litdb_slugs": [
-    "yang2025_lao_dualdoping_argyrodite_lacl3",
-    "db/literature/refs.json:xiong2022",
-    "db/literature/nd_o_doping_mechanism_refs"
+    "yang2025_lao_dualdoping_argyrodite_lacl3"
   ],
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 5s² 5p⁶ 4f⁴ 6s²",
+    "electron_config": "[Xe] 4f⁴ 6s²",
+    "valence_orbitals": "4f⁴ 6s²(중성); 결합은 5d/6s로, 4f는 5s²5p⁶에 가려진 core-like 국소 모멘트. 도핑상태 Nd³⁺ = 4f³(개방껍질, S=3/2)",
+    "band_character": "우리 Nd2O3-도핑 argyrodite PDOS(DFT+U 4f U=8 eV, AFM): 밴드엣지는 host — VBM S 3p, CBM PS₄ 유래(S/P/Li). Nd 4f는 갭 밖(채워진 -7.4 eV, 빈 +1.9 eV), Nd 5d/6s는 CBM 바로 위 — in-gap 도펀트 준위가 아니라 Nd³⁺ 5d/6s + 이가치 전기장이 PS₄ 유래 CBM을 끌어내려 갭 0.55 eV 축소(matched U0 2.184 → Nd 1.632 eV; electronic.json)",
+    "bonding": "이온성 Nd³⁺(친산소 hard 산): P–O–Nd 가교(hard O²⁻ 고정), Nd–Cl/Nd–O 이온결합; 결합은 5d/6s, 4f³는 국소 모멘트로 명시 투영 필요(우리 프로토콜: ISPIN=2 + 4f DFT+U)"
+  },
   "_provenance": "literature/web reference values (소환값); 우리 db 절대값과 분리. Nd DFT+U/spin guidance from Xiong BaSnF4 precedent (refs.json) — method note, not our band-gap absolutes."
 }

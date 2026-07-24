@@ -42,7 +42,16 @@
     "liu2022_cl_crystallization_interface_argyrodite",
     "bai2020_argyrodite_review_progress",
     "ke2025_orbital_hybridization_mgclo",
-    "cha2024_dualcompatible_halide_ncm_lpscl_interface"
+    "cha2024_dualcompatible_halide_ncm_lpscl_interface",
+    "torii2025_lpscl_mechanical_anisotropy_dft",
+    "kraft2017_lattice_polarizability_argyrodite_Li6PS5X"
   ],
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p³",
+    "electron_config": "[Ne] 3s² 3p³",
+    "valence_orbitals": "3s² 3p³ — PS₄에서 sp³ 혼성(형식상 P⁵⁺); 3s/3p가 S 3p와 σ 결합",
+    "band_character": "우리 comp1_v3 PDOS: CBM에 P 3s ~25% + P 3p ~7%(S 3p ~42%와 함께 PS₄ 반결합 σ* 구성) — P는 전도대 하단(CBM) 성격을 좌우; VBM엔 거의 없음(더 깊은 P–S 결합 상태에 기여). electronic.json 인용",
+    "bonding": "PS₄ 사면체 sp³ 공유결합(P 3s3p–S 3p σ), 우리 db P–S ICOHP ~-6 eV; 형식상 P⁵⁺이나 실제론 강한 공유 backbone"
+  },
   "_provenance": "literature/web reference values (소환값); 우리 db 절대값과 분리"
 }

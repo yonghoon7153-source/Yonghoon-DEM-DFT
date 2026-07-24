@@ -6,9 +6,9 @@
   "oxidation_states": ["-1", "+1"],
   "electronegativity": 2.2,
   "ionic_radius_A": {
-    "H-_hydride": 1.4
+    "H-_hydride": 1.4,
+    "_note": "하이드라이드 H- 반경은 크고 호스트 의존적(~1.3-1.5 A; LiH에서 a=4.08 A 암염이면 ~1.3 A). H+는 맨 양성자로 의미있는 이온반경 없음(사실상 점전하). 근사값."
   },
-  "ionic_radius_note": "하이드라이드 H- 반경은 크고 호스트 의존적(~1.3-1.5 A; LiH에서 a=4.08 A 암염이면 ~1.3 A). H+는 맨 양성자로 의미있는 이온반경 없음(사실상 점전하). 근사값.",
   "representative_compounds": [
     {
       "formula": "LiH",
@@ -31,14 +31,13 @@
   ],
   "sei_relevance": "LiH는 Li metal에서 미량 수소(용매/수분 유래) 환원으로 생성; 오래도록 죽은-Li 같은 유해 상으로 여겨졌으나 최근 연구는 음극을 안정화할 수 있다고 봄. 검출이 가장 어려운 SEI 종 중 하나: 극도로 공기민감하고 XPS에서 Li metal이나 Li2O로 오귀속되기 쉬워 cryo-ToF-SIMS가 신뢰 프로브. LiOH(수분 유래)는 저항이 크고 Li2CO3로 전환. 수소는 대체로 불순물/제어 축: 황화물 SSB에서 수분이 H2S 발생과 LiOH 형성을 유발해 낮은 H는 설계된 계면상이라기보다 공정 요건.",
   "xps": [
-    { "core": "Li 1s (LiH)", "BE_eV": 54.5, "assignment": "LiH - NOT a clean isolated peak; overlaps Li metal (~52-53), Li2O and LiF (~55-56). Inferred, not resolved", "ref": "XPS SEI primer, ACS Energy Lett. 2022; cross-check by ToF-SIMS" },
+    { "core": "Li 1s (LiH)", "BE_eV": 54.5, "assignment": "LiH - NOT a clean isolated peak; overlaps Li metal (~52-53), Li2O and LiF (~55-56). Inferred, not resolved", "ref": "XPS SEI primer, ACS Energy Lett. 2022; cross-check by ToF-SIMS", "note": "수소 자체는 XPS로 안 보임: 유일한 전자(H 1s)가 가전자라 H 함유 SEI 상은 짝 원소(LiH는 Li 1s, LiOH는 O 1s)와 ToF-SIMS/라만으로 동정, 직접적인 H core line은 결코 없음." },
     { "core": "O 1s (LiOH)", "BE_eV": 531.0, "assignment": "LiOH / hydroxyl (OH), ~531-532 eV region (overlaps CO/CO3)", "ref": "battery-interphase IR/Raman/XPS database arXiv:2310.13871; SEI XPS reviews" }
   ],
-  "xps_note": "수소 자체는 XPS로 안 보임: 유일한 전자(H 1s)가 가전자라 H 함유 SEI 상은 짝 원소(LiH는 Li 1s, LiOH는 O 1s)와 ToF-SIMS/라만으로 동정, 직접적인 H core line은 결코 없음.",
   "raman": [
-    { "cm1": 3676, "assignment": "LiOH O-H stretching mode (hydroxyl SEI marker)", "ref": "hydroxide Raman / battery-interphase database arXiv:2310.13871" }
+    { "cm1": 3676, "assignment": "LiOH O-H stretching mode (hydroxyl SEI marker)", "ref": "hydroxide Raman / battery-interphase database arXiv:2310.13871" },
+    { "cm1": null, "assignment": "참고: LiH는 1차 라만 신호 없음(암염, 중심대칭 Oh); 존재는 부식생성물(LiOH/Li2CO3)로 분광 추적", "ref": "LiH corrosion Raman (OSTI 1018047)" }
   ],
-  "raman_note": "LiH는 1차 라만 신호 없음(암염, 중심대칭 Oh); 존재는 부식생성물(LiOH/Li2CO3)로 분광 추적 - LiH-부식 라만 연구 참고(OSTI).",
   "dos_character": "LiH는 이온 wide-gap 절연체(암염): 채워진 H-(H 1s 유래) 가전자대와 빈 Li 2s 전도대, 실험 갭 ~5 eV(DFT/PBE는 과소평가). LiOH도 wide-gap 절연체(층상)로 가전자대는 O 2p/OH. 둘 다 강한 전자절연(좋은 부동태화)이지만 Li+ 전도는 보통 수준이라 하이드라이드/수산기 풍부 SEI는 저항이 큰 편.",
   "key_references": [
     "Identifying the positive role of lithium hydride in stabilizing Li-metal anodes 2022 (PMC8782449) - LiH as beneficial SEI (LiH가 이로운 SEI라는 규명)",
@@ -48,6 +47,12 @@
     "Raman Spectroscopy of Lithium Hydride Corrosion (OSTI 1018047) - LiH -> LiOH/Li2CO3 corrosion tracking (수소화리튬 부식 라만; LiH -> LiOH/Li2CO3 추적)"
   ],
   "litdb_slugs": [],
-  "litdb_note": "우리 litdb에 H 전용 항목 없음; LiH/LiOH 맥락은 외부 SEI 문헌에서만 가져옴.",
-  "_provenance": "literature/web reference values (소환값); 우리 db 절대값과 분리"
+  "orbital": {
+    "electron_config_full": "1s¹",
+    "electron_config": "1s¹",
+    "valence_orbitals": "1s¹ — 유일 전자가 가전자; H⁻(1s²)/H⁺(맨 양성자)",
+    "band_character": "H는 argyrodite 골격 원소가 아님(SEI/불순물) — 우리 argyrodite 계산엔 없음. 문헌 전자구조: LiH는 채워진 H⁻(H 1s 유래) VB + 빈 Li 2s CB의 이온 wide-gap 절연체(실험 ~5 eV, PBE 과소), LiOH는 VB 상단 O 2p/OH의 wide-gap 절연체 — 둘 다 강한 전자절연",
+    "bonding": "LiH 이온성 Li⁺–H⁻(암염); LiOH 이온성 Li⁺ + 공유 O–H; H2O/양성자는 오염축(황화물과 H2S·LiOH 유발)"
+  },
+  "_provenance": "literature/web reference values (소환값); 우리 db 절대값과 분리. H 전용 litdb 항목 없음 — LiH/LiOH 맥락은 외부 SEI 문헌에서만 인용."
 }

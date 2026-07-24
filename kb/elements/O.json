@@ -80,5 +80,12 @@
   "ke2025_orbital_hybridization_mgclo",
   "yang2025_lao_dualdoping_argyrodite_lacl3"
  ],
+ "orbital": {
+  "electron_config_full": "1s² 2s² 2p⁴",
+  "electron_config": "[He] 2s² 2p⁴",
+  "valence_orbitals": "2s² 2p⁴ — 2p가 원자가/lone pair, O²⁻(2p⁶)",
+  "band_character": "우리 LPSOCl(+O)·Nd-도핑 PDOS: O 2p는 VBM보다 깊게(~ -4 eV) 묻혀 밴드엣지를 정의하지 않음 — VBM은 여전히 S 3p, gap은 pristine PS₄가 결정. O-도핑은 갭을 오히려 넓힘(+O LPSOCl 2.2309 vs modelc 2.099 eV, 강한 이온성 O가 결합상태를 깊게 내림; electronic.json 카노니컬)",
+  "bonding": "P–O 공유 σ(PO₄/PS₃O, O가 S 자리 hard 치환), 우리 db P–O ICOHP ~-8.4 eV로 매우 강함; SEI에선 이온성 Li–O(Li2O)"
+ },
  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
 }

@@ -6,9 +6,9 @@
   "oxidation_states": ["-3", "+3", "+5"],
   "electronegativity": 3.04,
   "ionic_radius_A": {
-    "N3-_CN4": 1.46
+    "N3-_CN4": 1.46,
+    "_note": "Shannon(1976) N3- CN4 = 1.46 A. Nitrate/nitrite의 N은 작고 고전하(N5+/N3+)라 반경이 의미있게 표로 정리되지 않음. 근사값."
   },
-  "ionic_radius_note": "Shannon(1976) N3- CN4 = 1.46 A. Nitrate/nitrite의 N은 작고 고전하(N5+/N3+)라 반경이 의미있게 표로 정리되지 않음. 근사값.",
   "representative_compounds": [
     {
       "formula": "Li3N",
@@ -31,16 +31,15 @@
   ],
   "sei_relevance": "Li3N은 벤치마크 속이온 인공 SEI: 높은 Li+ 전도, 무시할 전자전도, Li metal 대비 열역학 안정성이 함께 덴드라이트를 억제하고 plating을 균질화. N2나 nitrate 첨가제 환원으로 음극에서 생성. 우리 anode-free 캠페인에선 AgNO3/nitrate 첨가제가 Li3N 지배 SEI를 주며, XPS N 1s 사다리(LiNO3 -> LiNO2 -> Li3N + LiNxOy)로 추적. h-BN은 별개의 N 기반 레버: 질화물 SEI가 아니라 전자절연·소수리튬 코팅으로 Li를 그 아래/안에 plating하도록 강제.",
   "xps": [
-    { "core": "N 1s", "BE_eV": 398.0, "assignment": "Li3N (common SEI-paper assignment ~397-399 eV); h-BN N also ~398 eV", "ref": "liu2022_hbn (h-BN N1s 398.03; N-Li 399.38); SEI XPS literature" },
-    { "core": "N 1s", "BE_eV": 395.0, "assignment": "Li3N, charge-corrected reference compound (~394.4-395 eV) - lower than many uncorrected SEI reports; referencing controversy", "ref": "Wood & Teeter 2018, ACS Appl. Energy Mater. (NREL)" },
+    { "core": "N 1s", "BE_eV": 398.0, "assignment": "Li3N (common SEI-paper assignment ~397-399 eV); h-BN N also ~398 eV", "ref": "liu2022_hbn (h-BN N1s 398.03; N-Li 399.38); SEI XPS literature", "note": "Li3N N 1s는 방법 의존적 이중값: 다수 전지 SEI 논문·h-BN은 여기 ~398 eV, NREL 전하보정 기준물질은 ~395 eV(아래 항목) — 둘 다 인용, 평균 금지." },
+    { "core": "N 1s", "BE_eV": 395.0, "assignment": "Li3N, charge-corrected reference compound (~394.4-395 eV) - lower than many uncorrected SEI reports; referencing controversy", "ref": "Wood & Teeter 2018, ACS Appl. Energy Mater. (NREL)", "note": "Li3N N 1s 방법 의존적 이중값의 NREL 전하보정 쪽(~395); SEI/h-BN ~398(위 항목)과 둘 다 인용, 평균 금지." },
     { "core": "N 1s", "BE_eV": 399.4, "assignment": "N-Li interfacial interaction on Li-deposited h-BN (charge transfer)", "ref": "liu2022_hbn" },
     { "core": "N 1s", "BE_eV": 407.0, "assignment": "nitrate NO3- (LiNO3 additive / SEI precursor); nitrite LiNO2 ~404 eV", "ref": "SEI additive XPS literature" }
   ],
-  "xps_note": "Li3N N 1s는 실제로 방법 의존적: 전하보정 기준물질 연구(NREL)는 ~395 eV, 다수의 전지 SEI 논문과 h-BN은 ~398 eV로 봄. 둘 다 인용하고 평균내지 말 것.",
   "raman": [
-    { "cm1": 1366, "assignment": "h-BN E2g in-plane B-N stretch (downshifts 1370->1366 mono->few-layer)", "ref": "liu2022_hbn (Raman 1366 cm-1); h-BN E2g phonon studies (PMC5772347)" }
+    { "cm1": 1366, "assignment": "h-BN E2g in-plane B-N stretch (downshifts 1370->1366 mono->few-layer)", "ref": "liu2022_hbn (Raman 1366 cm-1); h-BN E2g phonon studies (PMC5772347)" },
+    { "cm1": null, "assignment": "참고: Li3N 라만 활성 포논 파수는 신뢰값 미확보로 생략(추정 금지, 데이터 규율)", "ref": "n/a" }
   ],
-  "raman_note": "Li3N 라만 활성 포논 파수는 이번에 신뢰성 있게 확보 못해 추정 대신 생략(데이터 규율).",
   "dos_character": "alpha-Li3N은 강한 이온성 반도체(Li+ / N3-): DFT 간접 밴드갭 ~1.0-1.3 eV(PBE, 과소평가 가능), 가전자대 상단은 N 2p 지배, 저에너지 상태는 Li s / N p. 이 이온 그림이 넓은 편의 갭(전자차단)과 Li2N 층 내 빠른 면내 Li+ 수송 둘 다를 뒷받침. h-BN은 wide-gap 절연체: 실험 광학 갭 ~6 eV, PBE ~4.3 eV; VB 상단 N 2p, CB 하단 B 2p. 참고: shi2017_hbn(h-BN PBE 갭 4.3 eV; 2층 터널링 장벽 1.33-1.65 eV); alpha-Li3N 전자구조 arXiv:0801.1848; alpha/beta-Li3N UV-vis 갭(ScienceDirect).",
   "key_references": [
     "Rabenau 1982, Solid State Ionics (and Rabenau & Schulz 1976) - alpha-Li3N P6/mmm structure and 1.2e-3 S/cm ab-plane Li+ conductivity (alpha-Li3N P6/mmm 구조·ab면 1.2e-3 S/cm Li+ 전도)",
@@ -54,6 +53,12 @@
     "shi2017_hbn_interfacial_layer_li_anode",
     "liu2022_hbn_lithiophobic_sandwich_li_anode"
   ],
-  "campaign_note": "내부 Li3N NEB / 흡착 작업은 db/interphases/li3n.json, db/properties/diffusion.json, tools/neb_diffusion/에 있음(QE-DFT; cui2023 참조). 이 절대 장벽/에너지는 우리 자체 데이터로 여기 수치 필드엔 의도적으로 배제. UMA-Li3N-금지 규칙(CLAUDE.md)은 향후 Li3N 방법 선택 전반에 적용.",
-  "_provenance": "literature/web reference values (소환값); 우리 db 절대값과 분리"
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p³",
+    "electron_config": "[He] 2s² 2p³",
+    "valence_orbitals": "2s² 2p³ — 2p³ 반쯤 채움; N³⁻(2p⁶, Li3N)/nitrate에선 sp² N⁵⁺",
+    "band_character": "N은 argyrodite 골격 원소가 아님(음극 계면상) — 우리 argyrodite 계산엔 없음. 문헌 전자구조: α-Li3N은 이온성 반도체로 VB 상단 N 2p 지배·저에너지 Li s/N p(PBE 간접갭 ~1.0-1.3 eV, 과소 가능); h-BN은 VB 상단 N 2p·CB 하단 B 2p의 wide-gap 절연체(광학 ~6 eV, PBE ~4.3)",
+    "bonding": "Li3N: 이온성 Li⁺–N³⁻(Li2N 층 + Li 층 교대); h-BN: 공유 sp² B–N(면내) + 층간 반데르발스; nitrate: sp² N(π 비편재)"
+  },
+  "_provenance": "literature/web reference values (소환값); 우리 db 절대값과 분리. 캠페인 노트: 내부 Li3N NEB/흡착 작업은 db/interphases/li3n.json·db/properties/diffusion.json·tools/neb_diffusion/(QE-DFT; cui2023) — 우리 자체 절대값이라 수치 필드엔 배제; UMA-Li3N-금지 규칙(CLAUDE.md)은 향후 Li3N 방법 선택 전반에 적용."
 }

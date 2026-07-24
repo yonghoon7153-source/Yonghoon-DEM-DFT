@@ -2,14 +2,14 @@
   "symbol": "C",
   "name": "Carbon",
   "Z": 6,
-  "role": "음극쪽 도전 호스트이자 SEI 탄산염 형성자. sp2 탄소(흑연/VGCF/비정질 탄소)는 전자 percolation 매트릭스이자 Li 삽입 호스트(LiC6); Li2CO3는 주요 무기 SEI 탄산염.",
+  "role": "음극쪽 도전 호스트이자 SEI 탄산염 형성자. sp2 탄소(흑연/VGCF/비정질 탄소)는 전자 percolation 매트릭스이자 Li 삽입 호스트(LiC6); Li2CO3는 주요 무기 SEI 탄산염. 산화수 맥락: 원소탄소(흑연/VGCF) 0, Li 카바이드류 -4, CO +2, Li2CO3/CO2 +4(SEI 관련).",
   "oxidation_states": ["-4", "0", "+2", "+4"],
   "electronegativity": 2.55,
   "ionic_radius_A": {
     "C4+_CN4": 0.15,
-    "C4+_CN6": 0.16
+    "C4+_CN6": 0.16,
+    "_note": "Shannon(1976): C4+ CN3 = -0.08, CN4 = 0.15, CN6 = 0.16 A. 흑연질 C엔 공유반경 ~0.76 A(sp3), ~0.73 A(sp2)가 더 물리적. 근사값."
   },
-  "ionic_radius_note": "Shannon(1976): C4+ CN3 = -0.08, CN4 = 0.15, CN6 = 0.16 A. 흑연질 C엔 공유반경 ~0.76 A(sp3), ~0.73 A(sp2)가 더 물리적. 근사값.",
   "representative_compounds": [
     {
       "formula": "C (graphite / VGCF / amorphous)",
@@ -45,7 +45,6 @@
     { "cm1": 1090, "assignment": "Li2CO3 nu1 symmetric CO3 stretch (SEI carbonate marker)", "ref": "carbonate Raman studies; battery-interphase IR/Raman/XPS database arXiv:2310.13871" }
   ],
   "dos_character": "흑연은 반금속: C 2pz 유래 pi/pi* 밴드가 페르미 준위에서 약간 겹침(K/H점 근처 E_F에 작지만 유한한 DOS), C 2s/2px/2py의 sigma 밴드는 훨씬 아래. LiC6로 리튬화하면 Li 2s 전자가 graphene pi* 상태를 채워 E_F를 올려 금속성이 됨(Li는 거의 완전 이온화, Li+). Li2CO3는 wide-gap 절연체(~5 eV)로 부동태화·전자차단 SEI 역할과 정합. 참고: Holzwarth et al., PRB 18, 5190 (1978) Li-graphite DOS; stage-1 Li-GIC DFT (arXiv 2006.12055).",
-  "oxidation_states_note": "흑연/VGCF에서 0; Li 카바이드류에서 -4; CO에서 +2; Li2CO3/CO2에서 +4(SEI 관련).",
   "key_references": [
     "Ferrari & Robertson 2000, Phys. Rev. B 61, 14095 - D/G bands and interpretation of disordered/amorphous carbon Raman (D/G 밴드와 무질서/비정질 탄소 라만 해석)",
     "Holzwarth et al. 1978, Phys. Rev. B 18, 5190 - Li-graphite band structure, DOS, Fermi surface (Li-graphite 밴드구조·DOS·페르미면)",
@@ -56,8 +55,15 @@
   "litdb_slugs": [
     "reisacher2023_percolation_sulfide_carbon_matrix",
     "kim2024_carbon_volumetric_occupation_se_domain",
-    "kim2025_conductive_agent_se_coating_cathode"
+    "kim2025_conductive_agent_se_coating_cathode",
+    "cho2024_conflicting_roles_conductive_additive"
   ],
-  "campaign_note": "우리 캠페인엔 흑연 기준으로 쓰는 내부 LiC6 (0001) Li-adatom NEB 기준선이 있음(db/interphases/lic6.json, tools/neb_diffusion) — Li3N 계면상 대비용. 이는 우리 자체 DFT/MLIP 절대값이며 여기 수치 필드엔 의도적으로 넣지 않음.",
-  "_provenance": "literature/web reference values (소환값); 우리 db 절대값과 분리"
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p²",
+    "electron_config": "[He] 2s² 2p²",
+    "valence_orbitals": "2s² 2p² — sp²(흑연 면내 σ + 비편재 π)/sp³ 혼성",
+    "band_character": "C는 argyrodite 골격 원소가 아님(도전재/음극) — 우리 argyrodite 계산엔 없음. 문헌 전자구조: 흑연은 반금속(C 2pz π/π*가 E_F에서 약간 겹침, K/H점 근처 유한 DOS; σ 밴드는 깊음), LiC6는 Li 2s가 π* 채워 금속성, Li2CO3는 wide-gap 절연체(~5 eV)",
+    "bonding": "흑연 sp² 공유(면내 σ + 층간 반데르발스 π); LiC6는 Li⁺ + graphene π* 채움; Li2CO3는 공유 CO₃²⁻ + 이온성 Li⁺"
+  },
+  "_provenance": "literature/web reference values (소환값); 우리 db 절대값과 분리. 캠페인 노트: 흑연 기준 내부 LiC6 (0001) Li-adatom NEB 기준선(db/interphases/lic6.json, tools/neb_diffusion) — Li3N 계면상 대비용, 우리 자체 DFT/MLIP 절대값이라 여기 수치 필드엔 의도적으로 배제."
 }
