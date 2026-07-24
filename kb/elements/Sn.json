@@ -26,12 +26,19 @@
     {"cm1": 634, "assignment": "SnO2 rutile A1g — 최강 지문(Sn-O stretch; 도펀트 산화물상 확인용, 호스트 SSB 모드 아님; +Eg 476/B2g 776)", "ref": "SnO2 rutile Raman 표준 참조"}
   ],
   "dos_character": "Sn⁴⁺는 4d¹⁰5s⁰ — 빈 5s가 CBM을 이뤄 SnO₂는 wide-gap(~3.6 eV) 반도체이고 midgap 상태를 거의 안 넣는 clean 종(Zn/Ga/In 군). 단 Sn²⁺(5s² lone pair)로 환원되면 stereochemically active 고립전자쌍이 VBM 근처 상태를 만들고, Sn⁰까지 가면 합금화 — 즉 Sn⁴⁺ 유지 시엔 clean, 환원되면 성격이 바뀌는 조건부 도펀트. 스핀분극 불필요(closed-shell).",
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 5s² 5p²",
+    "electron_config": "[Kr] 4d¹⁰ 5s² 5p²",
+    "valence_orbitals": "5s² 5p² (4d¹⁰ 반코어) — Sn⁴⁺면 4d¹⁰5s⁰(빈 5s), Sn²⁺면 5s² 고립전자쌍",
+    "band_character": "Sn⁴⁺=4d¹⁰5s⁰ → 빈 5s가 CBM, SnO₂ wide-gap ~3.6 eV로 midgap 거의 없는 clean 종; 단 Sn²⁺(5s² lone pair) 환원 시 VBM 근처 상태 생성, Sn⁰까지 가면 Li-Sn 합금 → 조건부 clean",
+    "bonding": "Sn–O(SnO₂ rutile)·Sn–S(Li₁₀SnP₂S₁₂ 골격 사면체) 양쪽 호환, Sn 5s/5p–O 2p/S 3p 혼성"
+  },
   "key_references": [
     "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Sn⁴⁺ VI 0.69 A)",
     "Bron et al., J. Am. Chem. Soc. 135, 15694 (2013) — Li10SnP2S12 (LGPS형 Sn 초이온전도체)",
     "Kraft/Zeier — argyrodite P-자리 이가원자가 치환 프레임(Sn⁴⁺ 포함 크기/연화 효과)",
     "NIST XPS DB — SnO2 Sn 3d5/2 ~486.6 eV, metal 484.9 eV(SnO/SnO2 구분엔 Auger)"
   ],
-  "litdb_slugs": [],
+  "litdb_slugs": ["ma2024_sb_doping_lpsc_conductivity"],
   "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
 }

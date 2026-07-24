@@ -39,6 +39,6 @@
     "Murugan et al., Angew. Chem. 2007, 46, 7778 — cubic Li₇La₃Zr₂O₁₂(LLZO) garnet; Zr⁴⁺ 골격 (LLZO 원형)",
     "NIST XPS DB — ZrO2 Zr 3d5/2 182.2 eV(흔한 charge 기준), 금속 178.9 eV (Zr XPS 기준)"
   ],
-  "litdb_slugs": [],
+  "litdb_slugs": ["choi2026_bzox_dry_zro2x_nmc_shell_coating", "kang2025_toughened_bimodal_nca_lzo"],
   "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
 }

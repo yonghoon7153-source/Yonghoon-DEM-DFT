@@ -27,6 +27,13 @@
     {"cm1": 807, "assignment": "monoclinic WO3 O-W-O stretch 최강 지문(+715 stretch, ~273 bend) — 도펀트 산화물상 확인용(호스트 SSB 모드 아님)", "ref": "monoclinic WO3 Raman 표준 참조"}
   ],
   "dos_character": "W⁶⁺=5d⁰라 WO₃는 명목 wide-gap(~2.7 eV)이지만 W⁵⁺(5d¹) polaron/midgap 상태가 브론즈·환원에서 생겨 착색중심·전자전도를 만듦 → 명목 d⁰라도 redox-active(Mo/V류). 즉 clean wide-gap이 아니라 '환원되면 갭 내 상태가 켜지는' 종. 국소화 5d¹에는 스핀분극+DFT+U 고려. 이 그룹에서 Hf/Ta의 clean 5d⁰과 정반대로 전자 누설 리스크가 큰 쪽.",
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹⁴ 5s² 5p⁶ 5d⁴ 6s²",
+    "electron_config": "[Xe] 4f¹⁴ 5d⁴ 6s²",
+    "valence_orbitals": "5d⁴ 6s² (4f¹⁴ 채움) — W⁶⁺면 5d⁰, W⁵⁺면 5d¹, W⁴⁺면 5d²",
+    "band_character": "W⁶⁺=5d⁰라 WO₃ 명목 wide-gap(~2.7 eV)이나, W⁵⁺(5d¹) polaron/midgap이 LiₓWO₃ 브론즈·환원서 생겨 착색·전자전도 → 명목 d⁰라도 redox-active(Mo 동족, Hf/Ta clean 5d⁰와 정반대); 국소화 5d¹엔 스핀분극+DFT+U 고려",
+    "bonding": "W–O 공유성 큼(WO₃, 높은 EN 2.36)·W–S 강공유(WS₂), W 5d–O 2p/S 3p 혼성"
+  },
   "key_references": [
     "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (W⁶⁺ VI 0.60 A)",
     "WO3 electrochromic / LixWO3 브론즈 문헌 — W⁶⁺/W⁵⁺ redox·삽입 전도(전자 누설 맥락)",

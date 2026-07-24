@@ -24,6 +24,13 @@
     {"cm1": 680, "assignment": "amorphous Ta2O5 주 band(Ta-O-Ta stretch) — 도펀트 산화물상 지문(결정상은 ~250 cm-1 O-Ta-O bend)", "ref": "Ta2O5 Raman(amorphous/orthorhombic) 표준 참조"}
   ],
   "dos_character": "Ta⁵⁺=5d⁰ → 점유 5d 상태가 없고 Ta₂O₅는 wide-gap(~4.0-4.6 eV) 절연체라 갭 내 결함준위·스핀이 없음. 같은 5d⁰인 Nb⁵⁺가 환원되기 쉬운 것과 달리 Ta⁵⁺는 더 robust한 clean wide-gap 종 → 스핀분극·DFT+U 불필요. Hf⁴⁺/Zr⁴⁺/Sc³⁺와 함께 '결함준위 안 넣는' clean 도펀트 군(W⁶⁺·V·Cu 같은 redox-active 종과 대비).",
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹⁴ 5s² 5p⁶ 5d³ 6s²",
+    "electron_config": "[Xe] 4f¹⁴ 5d³ 6s²",
+    "valence_orbitals": "5d³ 6s² (4f¹⁴ 채움) — Ta⁵⁺면 5d⁰(빈 5d)",
+    "band_character": "Ta⁵⁺=5d⁰ → Ta₂O₅ wide-gap(~4.0-4.6 eV), 갭 내 결함준위·스핀 없음; 같은 5d⁰ Nb⁵⁺보다 환원 robust한 clean wide-gap 안정화제(Hf/Zr/Sc 군) → DFT+U 불필요",
+    "bonding": "Ta–O 강한 이온-공유(Ta₂O₅·LLZO:Ta 상 안정화), Ta 5d–O 2p 혼성; Ta–S(TaS₂) 참고"
+  },
   "key_references": [
     "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Ta⁵⁺ VI 0.64 A)",
     "Murugan et al., Angew. Chem. 2007 및 Ta-doped LLZO 연구 — Ta⁵⁺@Zr⁴⁺로 cubic garnet 안정화",

@@ -25,6 +25,13 @@
     {"cm1": 500, "assignment": "monoclinic HfO2 Ag 최강 모드(~500-520 cm-1) — 도펀트 산화물상 지문(호스트 SSB 모드 아님; +low-freq 133/257 cm-1)", "ref": "monoclinic HfO2 Raman 표준 참조"}
   ],
   "dos_character": "Hf⁴⁺=5d⁰ → 점유 5d 상태가 없고 빈 5d는 CBM 위로 깊숙이 밀려 argyrodite 갭 안에 결함준위를 거의 안 만듦. HfO₂ 자체가 ultra-wide-gap(~5.7 eV) 절연체. open-shell이 아니라 스핀분극·DFT+U 불필요 — Sc(3d⁰)의 5d 판, 이 그룹에서 전자적으로 가장 무해한 종. Ta⁵⁺(5d⁰)와 함께 clean wide-gap 군의 대표.",
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹⁴ 5s² 5p⁶ 5d² 6s²",
+    "electron_config": "[Xe] 4f¹⁴ 5d² 6s²",
+    "valence_orbitals": "5d² 6s² (4f¹⁴ 채움) — Hf⁴⁺면 5d⁰(빈 5d), 사실상 +4만",
+    "band_character": "Hf⁴⁺=5d⁰ → 갭 내 결함준위 거의 없는 ultra-wide-gap(HfO₂ ~5.7 eV) 절연체, 환원 매우 어려움 → 이 그룹서 전자적으로 가장 무해(Zr 동족, Ta⁵⁺와 함께 clean 5d⁰ 대표); 스핀분극·DFT+U 불필요",
+    "bonding": "Hf–O 강한 이온-공유(HfO₂ high-k 유전체), Hf 5d–O 2p 혼성; Hf–S(HfS₂)는 이온성 약함"
+  },
   "key_references": [
     "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Hf⁴⁺ VI 0.71 A; Zr⁴⁺ 0.72와 동일)",
     "xpsfitting.com Hafnium / Thermo Fisher — Hf 4f7/2 HfO2 ~16.7 eV, metal ~14.3 eV",
