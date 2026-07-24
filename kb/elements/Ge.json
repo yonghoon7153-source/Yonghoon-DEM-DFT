@@ -5,6 +5,13 @@
   "role": "argyrodite 골격 P-자리 치환의 대표 도펀트. Ge⁴⁺(d¹⁰)가 P⁵⁺ 사면체 자리를 치환 → Li₆₊ₓGeₓP₁₋ₓS₅X (Kraft 2018), 이가치 1가 차이로 치환당 Li⁺ 1개 추가 → 초이온전도 유도. GeS₄ 사면체가 PS₄와 등전자적으로 호환. LGPS(Li₁₀GeP₂S₁₂)의 그 Ge. 캐스케이드 산화물 후보 형태는 GeO₂.",
   "oxidation_states": ["+4", "+2"],
   "electronegativity": 2.01,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p²",
+    "electron_config": "[Ar] 3d¹⁰ 4s² 4p²",
+    "valence_orbitals": "4s² 4p² 원자가 + 3d¹⁰ 닫힌 코어 — Ge⁴⁺면 빈 4s4p(+2도 가능); P⁵⁺ 사면체 자리 치환(GeS₄)",
+    "band_character": "Ge⁴⁺ d¹⁰ 닫힌껍질 → Ge 3d 깊은 반코어; GeS₄가 PS₄와 등전자라 gap 유지 clean(벌크). 단 Ge 4s4p 유래 CBM이 낮아 LGPS 계열 gap 좁고, 저전위 Ge⁴⁺ 환원→midgap/합금(계면 취약)",
+    "bonding": "Ge–O 이온-공유(GeO₂), Ge 4s4p–O 2p; Ge–S4 사면체(PS₄ 등전자 호환)"
+  },
   "ionic_radius_A": {
     "Ge4+_IV": 0.39,
     "Ge4+_VI": 0.53,
@@ -33,6 +40,8 @@
     "Shannon 1976 — Ge⁴⁺ 유효이온반경(IV 0.39, VI 0.53) (Shannon 반경)",
     "NIST XPS DB — GeO2 Ge 3d 32.5 eV vs 원소 Ge 29.3 eV (~3.2 eV 화학이동) (Ge XPS 기준)"
   ],
-  "litdb_slugs": [],
+  "litdb_slugs": [
+    "banik2022_substitutions_oxidative_stability_argyrodite"
+  ],
   "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
 }

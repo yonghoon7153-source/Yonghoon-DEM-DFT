@@ -27,6 +27,13 @@
     {"cm1": 383, "assignment": "MoS2 E2g in-plane mode; A1g ~408 cm-1(둘의 간격이 층수 지표)", "ref": "MoS2 Raman 표준 참조"}
   ],
   "dos_character": "Mo는 빈/부분점유 4d가 낮게 위치 → MoO₃(Mo⁶⁺ d⁰)조차 gap이 ~3 eV로 좁고, 환원되면 Mo 4d 전자가 gap 안 상태(폴라론)를 채움. MoS₂(Mo⁴⁺ d²)는 좁은-gap 반도체 → 계면 생성 시 전자전도 우려. 다중 산화상태(6+/5+/4+/…)로 redox-active → 밴드엣지·midgap redox 중심이 되기 쉬움. Cu·Nb와 함께 'redox-active·환원성' 군, Zr/Y/Zn/Ga의 클린 wide-gap 군과 대비 — 도펀트 안정성 스펙트럼의 위험단.",
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d⁵ 5s¹",
+    "electron_config": "[Kr] 4d⁵ 5s¹",
+    "valence_orbitals": "4d⁵ 5s¹(예외적 반채움 4d⁵+5s¹) — Mo⁶⁺면 4d⁰, Mo⁴⁺면 4d², 다가",
+    "band_character": "Mo는 빈/부분점유 4d가 낮아 MoO₃(Mo⁶⁺ 4d⁰)조차 gap ~3 eV로 좁고, 다가(6+/5+/4+) redox-active → 환원 시 4d 폴라론/midgap 채움, MoS₂(4d²)는 좁은-gap 반도체 → 전자누설 위험(Zr/Y 정반대 극)",
+    "bonding": "Mo–O(MoO₃, 말단 Mo=O)·Mo–S(MoS₂ 강공유) 모두 공유성 큼, Mo 4d–O 2p/S 3p 혼성"
+  },
   "key_references": [
     "Banik et al. 2022 (Zeier 그룹) — argyrodite 치환과 산화안정성; 치환은 S-limited 산화 onset(VBM=S 3p) 못 옮김 (litdb) (Mo 포함 치환·산화안정)",
     "Shannon 1976, Acta Cryst. A32, 751 — Mo⁶⁺(IV 0.41, VI 0.59), Mo⁴⁺ VI 0.65 (Shannon 반경)",

@@ -5,6 +5,13 @@
   "role": "cascade 산화물 도펀트 후보(Fe₂O₃). Fe²⁺/Fe³⁺ 다가 redox — LiFePO₄ 양극 화학의 원소이자 저가·풍부. 도펀트로는 midgap d 준위·Li-metal측 환원(conversion) 가능성이 리스크. Fe³⁺ 반경이 Li⁺보다 작아 전하보상 성향.",
   "oxidation_states": ["+2", "+3"],
   "electronegativity": 1.83,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d⁶ 4s²",
+    "electron_config": "[Ar] 3d⁶ 4s²",
+    "valence_orbitals": "3d⁶ 4s² — 4s²부터 내줘 Fe²⁺(3d⁶), 이어 3d에서 Fe³⁺(3d⁵). Fe²⁺/Fe³⁺ 다가 redox는 3d",
+    "band_character": "도펀트 Fe³⁺=3d⁵/Fe²⁺=3d⁶ 국소 3d가 argyrodite 갭 안에 결함준위를 만들어 midgap state·전자누설 우려. Fe₂O₃ 갭(~2.2 eV)이 호스트 갭과 겹쳐 특히 리스크. 다가",
+    "bonding": "Fe–S: Fe는 borderline acid라 황화물(FeS₂ pyrite)을 잘 만들고 3d–S 3p 혼성으로 공유성↑. redox-active"
+  },
   "ionic_radius_A": {
     "Fe3+_VI_HS": 0.645,
     "Fe2+_VI_HS": 0.780,

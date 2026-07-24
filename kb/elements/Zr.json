@@ -26,6 +26,13 @@
     {"cm1": 148, "assignment": "tetragonal ZrO2 Eg 모드(정방정 지문)", "ref": "ZrO2 Raman 표준 참조"}
   ],
   "dos_character": "Zr⁴⁺는 d⁰(빈 4d) → 점유는 O 2p(VBM), CBM은 빈 Zr 4d로 gap ~5 eV 초광대역. 도핑된 황화물/계면에서 Zr는 점유 d가 없어 midgap 상태를 안 넣는 클린·비환원 wide-gap 종. Y와 함께 '빈 4d hard-산 안정성 앵커' 군의 대표 — 밴드엣지 redox 중심이 아니라 전자차단 절연층 형성자·구조 안정제. DFT+U 불필요(개방껍질 없음).",
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d² 5s²",
+    "electron_config": "[Kr] 4d² 5s²",
+    "valence_orbitals": "4d² 5s² — d⁰ 산화(Zr⁴⁺)면 비환원, 사실상 +4만 안정",
+    "band_character": "Zr⁴⁺=4d⁰ wide-gap(ZrO₂ ~5 eV) → 밴드갭 내 결함준위 없음(clean 비환원 앵커); Cu/Mo/Nb 같은 redox 단락 위험 없는 안정성 축 대표",
+    "bonding": "Zr–O 강한 이온-공유 결합(ZrO₂·Li₂ZrO₃ 계면상), Zr 4d–O 2p 혼성; 황화물선 Zr–S"
+  },
   "key_references": [
     "Shannon 1976, Acta Cryst. A32, 751 — Zr⁴⁺ 유효이온반경(VI 0.72, VIII 0.84) (Shannon 반경)",
     "Choi et al., Small 2026, DOI 10.1002/smll.73805 — 건식 ZrO2ₓ shell 코팅(BZOx)로 황화물 ASSB NMC 계면 안정화 (litdb) (ZrO2 코팅 계면 안정)",

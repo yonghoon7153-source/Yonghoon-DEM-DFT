@@ -5,6 +5,13 @@
   "role": "란타나이드 aliovalent 도펀트(Sm2O3). Sm3+는 4f5(S=5/2, 6H5/2) 개방껍질 -> 스핀분극+DFT+U 필수(Nd/Gd와 동일). +2(4f6)도 가능해 Sm2+/Sm3+ 혼합원자가가 XPS로 구분됨(진단 특징). La(Yang)·Nd(우리) RE3+ 도판트 형제; Sm-doped ceria(SDC)는 SOFC 전해질로 유명(별개 산화물 맥락).",
   "oxidation_states": ["+3", "+2"],
   "electronegativity": 1.17,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f⁶ 5s² 5p⁶ 6s²",
+    "electron_config": "[Xe] 4f⁶ 6s²",
+    "valence_orbitals": "4f⁶ 6s² — Sm³⁺면 4f⁵(개방껍질, S=5/2), Sm²⁺(4f⁶)도 가능(혼합원자가); P 자리 치환 + O 동반",
+    "band_character": "Sm³⁺ = 4f⁵ 개방껍질 → 스핀분극(ISPIN=2)+DFT+U(U_eff ~6 eV) 필수(Nd/Gd 프로토콜과 동일). 부분점유 4f⁵가 밴드갭 내/근처 국재준위 → PBE 단독 오배치; +2/+3 유연성으로 4f 점유 환경 민감. O 2p→Sm 5d/4f 엣지",
+    "bonding": "Sm–O 이온성(Sm₂O₃, hard-산 친산소 앵커), Sm 5d6s–O 2p(4f는 5s5p에 가려 결합 관망); P–O–Sm 가교(가정)"
+  },
   "ionic_radius_A": {
     "Sm3+_VI": 0.958,
     "Sm3+_VIII": 1.079,

@@ -5,6 +5,13 @@
   "role": "cascade 산화물 도펀트 후보(SrO). Sr2+는 hard 대형 2가 양이온(1.18 A) — Li 자리 aliovalent 치환 시 Li 공공 + 강한 국소 왜곡. 알칼리토 Ca(1.00)<Sr(1.18)<Ba(1.35) 크기 계열의 중간; 큰 양이온이 격자 팽창·다면체 부피를 키우는 레버.",
   "oxidation_states": ["+2"],
   "electronegativity": 0.95,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 5s²",
+    "electron_config": "[Kr] 5s²",
+    "valence_orbitals": "5s² — Sr²⁺면 빈 5s + 닫힌 [Kr] 코어(이온성 2가); Li 자리 aliovalent 치환 → Li 공공 + 대형 왜곡(1.18 Å)",
+    "band_character": "Sr²⁺ wide-gap 절연 산화물(SrO) → clean; 빈 4d/5s가 전도대 하단, midgap 상태 거의 없음 → 대형 정전기·자리크기 레버지 밴드엣지 redox 아님",
+    "bonding": "Sr–O 이온성(SrO rock salt), Sr 5s(+빈 4d)–O 2p; Sr–S hard(O 선호)"
+  },
   "ionic_radius_A": {
     "Sr2+_VI": 1.18,
     "Sr2+_VIII": 1.26,

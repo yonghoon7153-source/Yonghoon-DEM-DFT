@@ -24,6 +24,13 @@
   ],
   "raman": [],
   "dos_character": "Ag⁺는 4d¹⁰5s⁰ 닫힌 껍질이지만 Ag 4d 밴드가 Cu 3d보다 얕아 은-칼코겐에서 Ag 4d–S 3p 혼성으로 VBM을 밀어올려 gap을 좁힐 수 있음. Ag₂O 자체가 narrow-gap(~1.2-1.5 eV) 반도체(산화물치곤 이례적으로 좁음)이고 Ag⁺→Ag⁰ 환원이 매우 쉬워 redox-active — Sc/Hf/Zn/Ga 같은 clean wide-gap 도펀트와 정반대 성격. 밴드엣지 근처 기여·환원 석출이 벌크 도펀트로서의 핵심 리스크.",
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 5s¹",
+    "electron_config": "[Kr] 4d¹⁰ 5s¹",
+    "valence_orbitals": "4d¹⁰ 5s¹(예외적 채움 4d¹⁰+5s¹) — Ag⁺면 4d¹⁰5s⁰",
+    "band_character": "Ag⁺=4d¹⁰ 닫힌껍질이나 Ag 4d 밴드가 얕아 Ag–S에서 4d–S 3p 혼성으로 VBM↑·gap 좁힘; Ag₂O 자체가 narrow-gap(~1.2-1.5 eV)이고 Ag⁺→Ag⁰ 환원 쉬워 redox-active(clean 아님, 무음극 계면 씨앗엔 최상)",
+    "bonding": "Ag–S soft-soft 친화 강함(Ag₂S 초이온전도), Ag 4d–S 3p 혼성; Ag–O는 약하고 이례적(anomalous)"
+  },
   "key_references": [
     "Lee et al., Nat. Energy 5, 299 (2020) — Ag-C 무음극(anode-free) 전고체전지; Ag lithiophilic 핵생성 씨앗",
     "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Ag⁺ VI 1.15 A)",

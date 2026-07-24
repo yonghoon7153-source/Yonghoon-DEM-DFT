@@ -5,6 +5,13 @@
   "role": "연산(soft-acid) 양이온 도펀트. Cu²⁺/Cu⁺가 argyrodite P⁵⁺ 자리(4b)를 부분 치환 → 전하보상 Li⁺ 추가 + 주변 S²⁻ 전하밀도↓ → Li 확산장벽↓. 강한 Cu–S 결합(HSAB soft-soft)이 PS₄를 가수분해로부터 보호 → 대기안정성↑, 덤으로 밴드갭 확장. 캐스케이드 산화물 후보 형태는 CuO. (CuCl·CuBr₂ 이원도핑으로 σ·Li 호환·대기안정 동시 개선한 실증 있음.)",
   "oxidation_states": ["+1", "+2"],
   "electronegativity": 1.9,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s¹",
+    "electron_config": "[Ar] 3d¹⁰ 4s¹",
+    "valence_orbitals": "3d¹⁰(채워짐) 4s¹ (예외배치) — Cu⁺(3d¹⁰)/Cu²⁺(3d⁹) redox 시 3d/4s",
+    "band_character": "도펀트 Cu²⁺(3d⁹, 열린껍질)의 3d가 밴드갭 상부~VBM 근처에 기여(Cu 3d–S 3p 혼성) → midgap 3d state·VBM 상승 → gap 축소·전자누설 우려. Cu⁺(3d¹⁰)는 채워져 상대적 clean. redox-active(Cu²⁺→Cu⁺→Cu⁰)",
+    "bonding": "Cu–S soft-covalent: Cu 3d–S 3p 혼성 (soft acid–soft base) → 강한 Cu–S가 PS₄를 가수분해에서 보호"
+  },
   "ionic_radius_A": {
     "Cu+_VI": 0.77,
     "Cu2+_VI": 0.73,
@@ -33,6 +40,9 @@
     "Biesinger et al. — Cu 2p XPS: CuO 933.6 eV + shake-up satellite(Cu²⁺ 지문) vs Cu2O 932.4 eV (Cu 2p 산화상태 판별)",
     "Pearson HSAB — soft-acid Cu가 soft-base S²⁻ 선호(강한 Cu–S) → 가수분해 억제 원리 (HSAB 원리)"
   ],
-  "litdb_slugs": [],
+  "litdb_slugs": [
+    "taklu2021_cucl_dualdoping_air_stability_argyrodite",
+    "li2025_cubr2_dualdoping_argyrodite"
+  ],
   "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
 }

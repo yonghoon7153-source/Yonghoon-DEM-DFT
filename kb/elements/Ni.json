@@ -5,6 +5,13 @@
   "role": "cascade 산화물 도펀트 후보(NiO). Ni²⁺(3d⁸)는 강상관 Mott 절연체; NCM/LiNiO₂ 양극의 주 redox 원소. 도펀트로는 강상관 d 준위·환원 취약이 리스크. Ni²⁺ 반경이 Li⁺보다 약간 작아 전하보상 성향.",
   "oxidation_states": ["+2", "+3"],
   "electronegativity": 1.91,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d⁸ 4s²",
+    "electron_config": "[Ar] 3d⁸ 4s²",
+    "valence_orbitals": "3d⁸ 4s² — 4s²부터 내줘 Ni²⁺(3d⁸), 더 산화하면 Ni³⁺(3d⁷). redox는 3d(강상관)",
+    "band_character": "도펀트 Ni²⁺=3d⁸ 강상관 국소 3d 준위가 argyrodite 갭 안에 결함준위·전자누설을 낼 소지. NiO가 Mott/charge-transfer 절연체라 VBM이 O 2p–Ni 3d 혼성 — 도핑 시 엣지·midgap 기여 우려",
+    "bonding": "Ni–S: Ni는 soft 쪽으로 기울어 황화물(NiS, Ni₃S₂)을 잘 만들고 3d–S 3p 혼성이 강해 금속성↑. redox-active"
+  },
   "ionic_radius_A": {
     "Ni2+_VI": 0.690,
     "Ni3+_VI_LS": 0.560,

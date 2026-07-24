@@ -5,6 +5,13 @@
   "role": "2가 양이온 도펀트(ZnO로 첨가). Zn²⁺는 d¹⁰ 닫힌껍질이라 전자적으로 얌전한 wide-gap 종 — midgap 상태를 거의 안 만듦. ZnO는 황화물에 O를 도입하며 대기안정성/H₂S 게터 목적으로 검토되는 캐스케이드 산화물 후보. Zn²⁺는 경계(borderline) 산이라 O/S 양쪽과 결합 가능하나 도펀트로선 주로 O-앵커·구조 조절자.",
   "oxidation_states": ["+2"],
   "electronegativity": 1.65,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s²",
+    "electron_config": "[Ar] 3d¹⁰ 4s²",
+    "valence_orbitals": "3d¹⁰(채워짐) 4s² — 4s²만 내줘 Zn²⁺(3d¹⁰)로 고정. +2 단일 산화수라 redox 비활성(닫힌껍질 d¹⁰)",
+    "band_character": "도펀트 Zn²⁺=3d¹⁰ 닫힌껍질이라 Zn 3d가 VBM 아래 깊이(~ -7 eV) 국소화돼 밴드엣지를 pin하지 않음. CBM은 Zn 4s, midgap 상태 거의 없음 → 상대적으로 clean(d¹⁰ wide-gap 군)",
+    "bonding": "Zn–S: Zn²⁺는 borderline acid라 O·S 양쪽과 결합(ZnO, ZnS). 채워진 3d¹⁰라 3d–S 3p 혼성 약하고 redox 비활성"
+  },
   "ionic_radius_A": {
     "Zn2+_IV": 0.6,
     "Zn2+_VI": 0.745,
@@ -30,6 +37,8 @@
     "Banik et al. 2022 — argyrodite 이가치/이종원자 치환과 산화안정성 일반틀 (litdb) (argyrodite 치환·산화안정)",
     "NIST XPS DB — ZnO Zn 2p3/2 ~1021.8 eV; Zn⁰/Zn²⁺ 구분엔 LMM Auger (Zn XPS 기준)"
   ],
-  "litdb_slugs": [],
+  "litdb_slugs": [
+    "banik2022_substitutions_oxidative_stability_argyrodite"
+  ],
   "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
 }

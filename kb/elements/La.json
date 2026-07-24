@@ -5,6 +5,13 @@
   "role": "란타나이드 aliovalent 도펀트 — 우리 Nd2O3 프로그램의 가장 가까운 실험 자매(Yang 2025 La+O 이중도핑, LaCl3/La2O3). La3+는 4f0 닫힌껍질(개방 4f Nd/Gd/Sm과 달리 +U/스핀 불필요) 대형 3가: argyrodite에서 P5+ 자리(4b) 치환 = LaS4 + 함께 든 O가 PS3O -> P-O 결합으로 대기안정↑, σ는 희생(9.58->6.23 mS/cm). 산화물 가넷 LLZO의 골격 양이온이기도.",
   "oxidation_states": ["+3"],
   "electronegativity": 1.10,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 5s² 5p⁶ 5d¹ 6s²",
+    "electron_config": "[Xe] 5d¹ 6s²",
+    "valence_orbitals": "5d¹ 6s² (4f⁰) — La³⁺면 빈 원자가(닫힌껍질, 이온성 3가); P 자리 치환(LaS₄) + O 동반",
+    "band_character": "La³⁺ = 4f⁰(빈 f) 닫힌껍질 → Nd/Gd/Sm과 달리 부분점유 4f 없어 DFT+U·스핀분극 불필요(계산 단순, clean). La 5d/4f 비어 전도대 상부, La₂O₃ wide-gap(VB=O 2p), 4f가 밴드갭 내 국재준위 안 만듦 — RE 도판트 중 유일하게 clean",
+    "bonding": "La–O 이온성(La₂O₃, hard-산 친산소 앵커), La 5d6s–O 2p; La–S/La–Cl(도핑 격자·SEI)"
+  },
   "ionic_radius_A": {
     "La3+_VI": 1.032,
     "La3+_VIII": 1.160,

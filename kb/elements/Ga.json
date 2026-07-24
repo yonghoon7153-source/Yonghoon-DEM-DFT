@@ -5,6 +5,13 @@
   "role": "3가 양이온 도펀트(Ga₂O₃로 첨가). Ga³⁺(d¹⁰)는 사면체 선호가 강해 P⁵⁺ 사면체 자리 치환 후보 — 이가치(3+ vs 5+)라 치환당 Li⁺ 2개 추가(캐리어 레버). 닫힌껍질 wide-gap 종이라 midgap 상태를 거의 안 만듦. Ga₂O₃는 O를 도입하는 캐스케이드 산화물 후보; Ga는 할라이드 SE(Li-Ga-X)에서도 골격 양이온으로 등장.",
   "oxidation_states": ["+3"],
   "electronegativity": 1.81,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p¹",
+    "electron_config": "[Ar] 3d¹⁰ 4s² 4p¹",
+    "valence_orbitals": "4s² 4p¹ 원자가 + 3d¹⁰ 닫힌 코어 — Ga³⁺면 빈 4s4p(이온성 3가); P⁵⁺ 사면체 자리 치환 후보",
+    "band_character": "Ga³⁺ d¹⁰ 닫힌껍질 → Ga 3d는 깊은 반코어, 밴드엣지 안 건드림; Ga₂O₃ 초광대역(~4.8 eV) clean wide-gap, midgap 거의 없음(Zn·Ge 동류). 저전위 Ga³⁺→Ga⁰ 환원은 계면 주의점",
+    "bonding": "Ga–O 이온-공유(Ga₂O₃, hard-ish 산), Ga 4s4p–O 2p; Ga–S 골격도 존재(리튬 티오갈레이트)"
+  },
   "ionic_radius_A": {
     "Ga3+_IV": 0.47,
     "Ga3+_VI": 0.62,

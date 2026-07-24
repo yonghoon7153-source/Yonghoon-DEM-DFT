@@ -5,6 +5,13 @@
   "role": "cascade 산화물 도펀트 후보 + 대표 계면 코팅재(Al2O3). Al3+는 hard 3가 루이스 산 -> O 강선호(Al-O). Al2O3 ALD 코팅은 황화물 SSB 계면보호의 고전(Sundar 2025 ref13 Hood/Connell서 LPSCl에 검증); 격자 축에선 Al3+가 P/Li 자리 치환 aliovalent 도판트 후보. LLZO 가넷에선 Al이 cubic 상 안정화제로 유명.",
   "oxidation_states": ["+3"],
   "electronegativity": 1.61,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p¹",
+    "electron_config": "[Ne] 3s² 3p¹",
+    "valence_orbitals": "3s² 3p¹ — Al³⁺면 빈 원자가(이온성)",
+    "band_character": "Al³⁺ wide-gap 절연 산화물(Al₂O₃) → 결함준위 없는 clean 코팅상; s/p 원자가라 midgap 상태 거의 없음",
+    "bonding": "Al–O 이온-공유(Al₂O₃), Al 3s3p–O 2p"
+  },
   "ionic_radius_A": {
     "Al3+_IV": 0.39,
     "Al3+_V": 0.48,

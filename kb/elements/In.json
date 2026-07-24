@@ -25,6 +25,13 @@
     {"cm1": 307, "assignment": "In2O3 bixbyite (cubic Ia-3) 최강 모드 — 도펀트 산화물상 지문(호스트 SSB 모드 아님; +495/630 cm-1)", "ref": "In2O3 bixbyite Raman 표준 참조"}
   ],
   "dos_character": "In³⁺는 4d¹⁰5s⁰ — In 4d는 깊은 반코어(semicore) 준위라 밴드엣지를 안 건드리고, 빈 5s가 CBM을 이룸(In₂O₃가 TCO인 이유). 도핑된 황화물에서 In은 midgap 상태를 거의 안 넣는 closed-shell 종(Sn⁴⁺·Ga³⁺과 동류)이라 스핀분극·DFT+U 불필요. 다만 5s⁰라 In³⁺→In⁺→In⁰ 환원 여지가 있어 저전위 계면 화학은 주의(합금화로 이어짐).",
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 5s² 5p¹",
+    "electron_config": "[Kr] 4d¹⁰ 5s² 5p¹",
+    "valence_orbitals": "5s² 5p¹ (4d¹⁰ 반코어) — In³⁺면 4d¹⁰5s⁰(빈 5s), In⁺면 5s²",
+    "band_character": "In³⁺=4d¹⁰5s⁰ → In 4d는 깊은 반코어라 밴드엣지 안 건드리고 빈 5s가 CBM(In₂O₃가 TCO인 이유); midgap 거의 없는 closed-shell(clean-ish, Sn⁴⁺·Ga³⁺과 동류), 단 5s⁰라 In³⁺→In⁺→In⁰ 환원·합금 여지",
+    "bonding": "In–O(In₂O₃)·In–S(In₂S₃) 양쪽 borderline 결합, In 5s/5p–O 2p/S 3p 혼성"
+  },
   "key_references": [
     "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (In³⁺ VI 0.80 A)",
     "Santhosha et al. 2019 — Li-In 합금 음극/기준전극의 전기화학(황화물 SSB 벤치마크 맥락)",

@@ -27,6 +27,13 @@
     {"cm1": 630, "assignment": "LiNbO3 A1(TO) 강모드(코팅 지문); ~253 cm-1 동반", "ref": "LiNbO3 Raman 표준 참조"}
   ],
   "dos_character": "Nb⁵⁺는 d⁰지만 빈 Nb 4d가 다른 도펀트보다 낮게 내려와 Nb₂O₅ gap이 ~3.4 eV로 좁은 편 → CBM이 상대적으로 낮음. 저전위에서 Nb⁵⁺→Nb⁴⁺(d¹) 환원이 쉬워 점유 4d 전자가 gap 안 상태(색중심/폴라론)를 만들 수 있음 → redox-active·환원성 종으로 취급(Mo와 유사, Zr/Y와 대비). 등가(5+/5+) P-치환은 캐리어를 안 늘리는 대신 골격 분극/강성만 조절.",
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d⁴ 5s¹",
+    "electron_config": "[Kr] 4d⁴ 5s¹",
+    "valence_orbitals": "4d⁴ 5s¹(예외적 5s¹) — Nb⁵⁺면 4d⁰, Nb⁴⁺면 4d¹",
+    "band_character": "Nb⁵⁺=4d⁰지만 빈 4d가 낮아 Nb₂O₅ gap ~3.4 eV로 좁고, 저전위서 Nb⁵⁺→Nb⁴⁺(4d¹) 환원 → 색중심/midgap 폴라론(전자누설) → redox-active 주의(고전압 양극 완충엔 우수, Zr/Y와 대비)",
+    "bonding": "Nb–O 공유성 큼(LiNbO₃ 완충코팅·Nb₂O₅), Nb 4d–O 2p 혼성; Nb–S도 호환"
+  },
   "key_references": [
     "Ohta et al., Adv. Mater. 2006, 18, 2226 & Electrochem. Commun. 2007 — LiNbO₃ 나노코팅으로 황화물 ASSB LiCoO₂ 계면저항 급감(황화물 ASSB 코팅 정석)",
     "Shannon 1976, Acta Cryst. A32, 751 — Nb⁵⁺ 유효이온반경(VI 0.64, IV 0.48), Nb⁴⁺ VI 0.68 (Shannon 반경)",

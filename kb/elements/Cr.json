@@ -5,6 +5,13 @@
   "role": "cascade 산화물 도펀트 후보(Cr₂O₃). Cr³⁺=3d³(t2g 반충전) hard 산이고 Cr₂O₃는 견고한 wide-gap 산화물이라 도펀트로 매력적 — 단 Cr⁶⁺(chromate)로 산화되면 독성·불안정 유의. Cr³⁺ 반경이 Li⁺보다 작아 전하보상 치환 성향.",
   "oxidation_states": ["+3", "+6", "+2"],
   "electronegativity": 1.66,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d⁵ 4s¹",
+    "electron_config": "[Ar] 3d⁵ 4s¹",
+    "valence_orbitals": "3d⁵ 4s¹ (반충전 안정화 예외배치) — 4s¹와 3d를 내줘 Cr³⁺(3d³)이 최안정, Cr⁶⁺(3d⁰)까지 산화. redox는 3d",
+    "band_character": "도펀트 Cr³⁺=3d³(t2g³ 반충전) 국소 점유준위가 argyrodite 갭 안에 들어와 midgap 결함준위가 될 수 있음. Cr⁶⁺(3d⁰)면 clean하나 chromate 산화는 불안정. 반충전이라 교환분열 큼",
+    "bonding": "Cr–S: Cr³⁺는 hard acid라 견고한 Cr₂O₃(O)를 선호하고 S와는 이온성 약함(Cr₂S₃). t2g³–S 3p 혼성 약함"
+  },
   "ionic_radius_A": {
     "Cr3+_VI": 0.615,
     "Cr2+_VI_HS": 0.800,

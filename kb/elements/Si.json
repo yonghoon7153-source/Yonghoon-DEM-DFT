@@ -5,6 +5,13 @@
   "role": "cascade 산화물 도펀트 후보(SiO2, glass former) + P 자리 aliovalent 치환자. Si4+는 hard 사면체 형성 양이온: SiO2는 Sundar 2025 코팅 스크린 후보(유리형성 절연 코팅). 티오인산염에선 Si4+가 P5+ 자리를 치환해 Li 추가(Li10SiP2S12 superionic — thio-LISICON). Li-Si 합금은 음극 활물질로도 유명(별개 맥락).",
   "oxidation_states": ["+4", "-4"],
   "electronegativity": 1.90,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p²",
+    "electron_config": "[Ne] 3s² 3p²",
+    "valence_orbitals": "3s² 3p² — Si⁴⁺면 빈 원자가(사면체 형성); Si⁴⁻(Li-Si 합금)도 가능",
+    "band_character": "Si⁴⁺ wide-gap 유리형성 절연 산화물(SiO₂ ~9 eV) → clean 코팅상; 티오인산염선 Si–S4가 P–S 골격 밴드에 편입(캐리어 치환으로 σ↑)",
+    "bonding": "Si–O 이온-공유(SiO₂ network former), Si 3s3p–O 2p; Si–S4 사면체(PS₄와 등전자)"
+  },
   "ionic_radius_A": {
     "Si4+_IV": 0.26,
     "Si4+_VI": 0.40,
@@ -30,6 +37,9 @@
     "Sundar et al., Adv. Sci. 2025 — LPSCl 산화물 코팅 DFT 스크린(SiO2 후보 포함) (litdb)",
     "NIST XPS DB — Si 2p (SiO2 ~103.3, elemental ~99.4 eV)"
   ],
-  "litdb_slugs": [],
+  "litdb_slugs": [
+    "banik2022_substitutions_oxidative_stability_argyrodite",
+    "sundar2025_oxide_coating_screening_lpscl"
+  ],
   "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB lit · Shannon radii); 우리 db 절대값과 분리"
 }

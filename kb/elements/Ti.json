@@ -5,6 +5,13 @@
   "role": "cascade 산화물 도펀트 후보(TiO₂). Ti⁴⁺=3d⁰(빈 3d)면 wide-gap이지만 쉽게 Ti³⁺(3d¹)로 환원돼 midgap 준위·다가 redox가 생김 — 양극 코팅으로 흔히 쓰이나 환원 취약. 작은 Ti⁴⁺는 P 자리/전하보상 치환 성향.",
   "oxidation_states": ["+4", "+3", "+2"],
   "electronegativity": 1.54,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d² 4s²",
+    "electron_config": "[Ar] 3d² 4s²",
+    "valence_orbitals": "3d² 4s² — 4s와 3d를 순차로 내줘 Ti⁴⁺(3d⁰)이 기본, 환원되면 Ti³⁺(3d¹). redox는 3d에서 일어남",
+    "band_character": "도펀트 Ti⁴⁺=3d⁰이면 clean(빈 3d가 CBM 근처)이지만, Ti³⁺(3d¹)로 환원되면 갭 안에 점유 3d 결함준위가 생겨 midgap state·전자누설 우려. 다가라 조건 의존",
+    "bonding": "Ti–S: Ti⁴⁺는 hard acid라 O 선호(TiO₂)지만 TiS₂처럼 3d–S 3p 혼성으로 준금속 층상도 가능. 환원되면 3d¹가 국소화"
+  },
   "ionic_radius_A": {
     "Ti4+_VI": 0.605,
     "Ti3+_VI": 0.670,

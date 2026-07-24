@@ -5,6 +5,13 @@
   "role": "cascade 산화물 도펀트 후보(Sc₂O₃로 첨가). Sc³⁺=3d⁰ 닫힌껍질이라 밴드갭 안에 결함준위를 거의 안 넣고 wide-gap을 유지 — 3d TM 중 가장 '깨끗한' 도펀트. Li⁺와 반경이 비슷한 hard 루이스 산이라 국소 왜곡이 작음.",
   "oxidation_states": ["+3"],
   "electronegativity": 1.36,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹ 4s²",
+    "electron_config": "[Ar] 3d¹ 4s²",
+    "valence_orbitals": "3d¹ 4s² — 이온화 때 4s²와 3d¹를 모두 내주고 Sc³⁺(3d⁰)로만 감. 사실상 +3 단일 산화수라 redox 비활성(빈 3d)",
+    "band_character": "도펀트 Sc³⁺=3d⁰라 argyrodite 갭 안에 점유 결함준위를 안 넣는 clean 종. 빈 3d는 CBM 위로 밀려 midgap state 없음 — 3d TM 중 가장 깨끗한 도펀트",
+    "bonding": "Sc–S: Sc³⁺는 hard acid라 hard base O를 선호(Sc₂O₃)하고 soft base S와는 이온성 약한 결합. 빈 3d⁰라 3d–S 3p 혼성 거의 없음"
+  },
   "ionic_radius_A": {
     "Sc3+_VI": 0.745,
     "Sc3+_VIII": 0.870,

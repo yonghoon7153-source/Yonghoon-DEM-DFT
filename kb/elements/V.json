@@ -5,6 +5,13 @@
   "role": "cascade 산화물 도펀트 후보(V₂O₅). V는 +5/+4/+3/+2 다가라 redox·midgap 준위가 풍부 — 전자전도/촉매엔 유리하나 SE의 절연성엔 리스크. 작은 고가 V⁵⁺는 P 자리/전하보상 성향.",
   "oxidation_states": ["+5", "+4", "+3", "+2"],
   "electronegativity": 1.63,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d³ 4s²",
+    "electron_config": "[Ar] 3d³ 4s²",
+    "valence_orbitals": "3d³ 4s² — 4s부터 3d까지 순차 이온화로 V⁵⁺~V²⁺ 다가. redox는 3d(3d⁰~3d³)에서 풍부",
+    "band_character": "도펀트 V⁵⁺=3d⁰만 clean(빈 3d)이고, 쉽게 V⁴⁺(3d¹)/V³⁺(3d²)로 환원돼 갭 안에 부분점유 3d 결함준위 → 전자누설 리스크가 3d TM 중에서도 높은 편. 다가 redox가 풍부",
+    "bonding": "V–S: V 고가는 hard acid로 O 선호(V₂O₅의 V=O), 저가·황화물(VS₂)에선 3d–S 3p 혼성으로 금속성↑. redox-active"
+  },
   "ionic_radius_A": {
     "V5+_VI": 0.540,
     "V4+_VI": 0.580,

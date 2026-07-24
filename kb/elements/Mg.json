@@ -5,6 +5,13 @@
   "role": "cascade 산화물 도펀트 후보(MgO) + 계면 공도판트. Mg2+는 hard 2가 양이온 — Li 자리 aliovalent 치환 시 Li 공공 주입 가능. 문헌 근거 강함: Ke 2025는 Mg(ClO4)2 공도핑(MgClO)으로 Li-Mg/Mg-S 궤도 혼성을 유도해 음극 redox 분해를 억제; Sundar 2025는 MgO를 LPSCl 표면 ALD 코팅 중 다면적 최고(σ_ion↑·σ_e↓·Li 안정)로 지목.",
   "oxidation_states": ["+2"],
   "electronegativity": 1.31,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s²",
+    "electron_config": "[Ne] 3s²",
+    "valence_orbitals": "3s² — Mg²⁺면 빈 3s + 닫힌 [Ne] 코어(이온성 2가); Li 자리 aliovalent 치환 → Li 공공",
+    "band_character": "Mg²⁺ wide-gap 절연 산화물(MgO ~7.8 eV) → clean; 빈 3s가 전도대, midgap 상태 거의 없음 → 전자차단 SEI/코팅 우호(Ke: 계면 gap 열어 Li→PS₄ 전자공여 차단)",
+    "bonding": "Mg–O 이온성(MgO rock salt), Mg 3s–O 2p; Mg–S는 hard-soft 중간(HSAB상 O 선호)"
+  },
   "ionic_radius_A": {
     "Mg2+_IV": 0.57,
     "Mg2+_VI": 0.72,
@@ -31,6 +38,9 @@
     "Sundar et al., Adv. Sci. 2025 — DFT screening of binary-oxide ALD coatings on Li6PS5Cl; MgO multifaceted best (litdb) (LPSCl 산화물 코팅 스크린; MgO 최고)",
     "NIST XPS DB — Mg 2p (MgO ~50.8 eV), Mg 1s (~1304 eV)"
   ],
-  "litdb_slugs": [],
+  "litdb_slugs": [
+    "ke2025_orbital_hybridization_mgclo",
+    "sundar2025_oxide_coating_screening_lpscl"
+  ],
   "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB lit · Shannon radii); 우리 db 절대값과 분리"
 }

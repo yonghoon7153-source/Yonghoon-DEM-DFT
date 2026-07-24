@@ -5,6 +5,13 @@
   "role": "cascade 산화물 도펀트 후보(MnO/Mn계 산화물). Mn²⁺=3d⁵ HS(반충전)는 비교적 안정하나 +2/+3/+4 다가라 산화물 형태·redox가 조건 의존 — spinel LiMn₂O₄ 등 양극 화학과 연결. Mn²⁺ 반경이 Li⁺보다 커 국소 왜곡 큼.",
   "oxidation_states": ["+2", "+3", "+4", "+7"],
   "electronegativity": 1.55,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d⁵ 4s²",
+    "electron_config": "[Ar] 3d⁵ 4s²",
+    "valence_orbitals": "3d⁵ 4s² — 4s²부터 내줘 Mn²⁺(3d⁵ 반충전)이 안정, 고가(Mn³⁺/⁴⁺/⁷⁺)는 3d 산화. redox는 3d",
+    "band_character": "도펀트 Mn²⁺=3d⁵ HS(반충전)는 점유 up-스핀이 깊어 상대적으로 얌전하나, Mn³⁺(3d⁴)/Mn⁴⁺(3d³)로 가면 갭 안에 midgap 준위가 생김. 교환분열이 큰 종",
+    "bonding": "Mn–S: Mn²⁺는 borderline acid라 O·S 양쪽과 결합(MnO, MnS). 반충전 3d⁵라 3d–S 3p 혼성은 약한 편"
+  },
   "ionic_radius_A": {
     "Mn2+_VI_HS": 0.830,
     "Mn3+_VI_HS": 0.645,

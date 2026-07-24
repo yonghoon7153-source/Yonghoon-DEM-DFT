@@ -5,6 +5,13 @@
   "role": "cascade 산화물 도펀트 후보(CaO). Ca2+는 hard 대형 2가 양이온 — Li 자리 aliovalent 치환 시 Li 공공 주입 + 큰 반경(1.00 A)이 국소 케이지 왜곡. CaO는 Sundar 2025 산화물 코팅 스크린 후보군에 포함. 알칼리토 Ca/Sr/Ba 크기 계열의 하단.",
   "oxidation_states": ["+2"],
   "electronegativity": 1.00,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s²",
+    "electron_config": "[Ar] 4s²",
+    "valence_orbitals": "4s² — Ca²⁺면 빈 4s + 닫힌 [Ar] 코어(이온성 2가); Li 자리 aliovalent 치환 → Li 공공, 대형 반경이 케이지 왜곡",
+    "band_character": "Ca²⁺ wide-gap 절연 산화물(CaO ~7 eV) → clean; 빈 3d/4s가 전도대 하단, midgap 상태 거의 없음 → 전자차단 경향",
+    "bonding": "Ca–O 이온성(CaO rock salt), Ca 4s(+빈 3d)–O 2p; Ca–S hard(O 선호)"
+  },
   "ionic_radius_A": {
     "Ca2+_VI": 1.00,
     "Ca2+_VII": 1.06,

@@ -5,6 +5,13 @@
   "role": "Li 대체 알칼리(cascade 산화물 도펀트 아님) — argyrodite Li6PS5X의 Li 자리에 앉는 대형 1가 양이온. Na+(1.02 A)가 Li+(0.76 A)보다 훨씬 커서 채널/자리에너지를 바꿈; 자매상 Na3PS4·Na6PS5Cl은 Na+ 전도체지만 이동도가 Li계보다 낮은 게 일반적. 우리 맥락에선 알칼리 치환 레버·Li vs Na 자매 비교축.",
   "oxidation_states": ["+1"],
   "electronegativity": 0.93,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s¹",
+    "electron_config": "[Ne] 3s¹",
+    "valence_orbitals": "3s¹ — Na⁺면 빈 3s + 닫힌 [Ne] 코어(순수 이온성 1가)",
+    "band_character": "Na⁺ s-block 1가, 빈 3s가 전도대 상부 → 밴드엣지 redox 무관; 골격 밴드는 P–S 유래이고 Na는 자리/정전기만 바꿈. Na₂O도 wide-gap clean 이온상",
+    "bonding": "Na–O 거의 순이온성(Na₂O), Na 3s–O 2p(강한 전하이동); 황화물선 Na⁺가 Li 자리 대체 1가 캐리어"
+  },
   "ionic_radius_A": {
     "Na+_IV": 0.99,
     "Na+_VI": 1.02,

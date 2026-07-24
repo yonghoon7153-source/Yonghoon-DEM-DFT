@@ -5,6 +5,13 @@
   "role": "cascade 산화물 도펀트 후보(BaO) — 알칼리토 최대반경(1.35 A). Ba2+는 hard 대형 2가 양이온: Li 자리 aliovalent 치환 시 Li 공공 + 최대 국소 왜곡. F-이온 전도체 BaSnF4(Xiong 2022, Nd-doped 선례)의 host 양이온으로, 대형 2가가 음이온 부격자를 여는 사례. 알칼리토 크기 계열(Ca<Sr<Ba) 상단.",
   "oxidation_states": ["+2"],
   "electronegativity": 0.89,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 5s² 5p⁶ 6s²",
+    "electron_config": "[Xe] 6s²",
+    "valence_orbitals": "6s² — Ba²⁺면 빈 6s + 닫힌 [Xe] 코어(이온성 2가); 알칼리토 최대반경(1.35 Å), Li 자리 aliovalent 치환 → Li 공공 + 최대 왜곡",
+    "band_character": "Ba²⁺ wide-gap 절연 산화물(BaO, 가장 염기성) → clean; 빈 5d/6s가 전도대 하단, midgap 상태 거의 없음 → 최대 정전기·자리크기 레버지 밴드엣지 redox 아님",
+    "bonding": "Ba–O 이온성(BaO rock salt), Ba 6s(+빈 5d)–O 2p; Ba–S hard(O 선호)"
+  },
   "ionic_radius_A": {
     "Ba2+_VI": 1.35,
     "Ba2+_VIII": 1.42,
