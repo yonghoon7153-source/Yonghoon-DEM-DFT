@@ -905,12 +905,21 @@ def _paper_index_c(_sig):
     return idx
 
 def element_papers(sym: str, limit: int = 14) -> list:
-    """이 원소 관련 litdb 논문 — 태그(정밀) ∪ 토큰스캔(보조). 클릭 → digest."""
+    """이 원소 관련 litdb 논문 — 태그(정밀) ∪ KB litdb_slugs(authored) ∪ 토큰스캔(보조). 클릭 → digest."""
     toks = ELEMENT_TOKENS.get(sym, [])
-    hits = []
+    kb_slugs = set()
+    try:                          # KB의 authored litdb_slugs — cascade 원소 논문 링크의 주 소스
+        d = _load_json(KB / "elements" / f"{sym}.json")
+        if d:
+            kb_slugs = set(d.get("litdb_slugs") or [])
+    except Exception:
+        pass
+    hits, seen = [], set()
     for p in _paper_index():
-        if sym in p["el_tags"] or (toks and any(t in p["blob"] for t in toks)):
-            hits.append({"id": p["id"], "title": p["title"], "track": p["track"]})
+        if sym in p["el_tags"] or p["id"] in kb_slugs or (toks and any(t in p["blob"] for t in toks)):
+            if p["id"] not in seen:
+                seen.add(p["id"])
+                hits.append({"id": p["id"], "title": p["title"], "track": p["track"]})
     return hits[:limit]
 
 # 용어(기법) → 논문 매칭 토큰 (그 기법을 쓴 논문 링크)

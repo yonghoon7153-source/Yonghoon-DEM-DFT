@@ -12,13 +12,33 @@ import argparse, os
 import numpy as np
 
 BOHR = 0.529177210903
-ZSYM = {3: "Li", 5: "B", 6: "C", 7: "N", 8: "O", 15: "P", 16: "S", 17: "Cl", 35: "Br"}
+ZSYM = {3: "Li", 5: "B", 6: "C", 7: "N", 8: "O", 15: "P", 16: "S", 17: "Cl", 35: "Br", 53: "I"}
 # VESTA 표준 원소색 (elements.ini) + 공유결합 반지름 → VASP 열었을 때와 동일한 외형
 COL = {"Li": ("1.2800", "204 128 255 204 128 255"), "B": ("0.8400", "255 181 181 255 181 181"),
        "C": ("0.7600", "128 128 128 90 90 90"),     "N": ("0.7100", " 48  80 248  48  80 248"),
        "O": ("0.6600", "255  13  13 254 3 0"),       "P": ("1.0600", "255 128  0 204 191 224"),
        "S": ("1.0500", "255 255  48 255 250 0"),     "Cl": ("1.0200", " 31 240  31 49 252 2"),
-       "Br": ("1.2000", "166  41  41 200 60 60")}
+       "Br": ("1.2000", "166  41  41 200 60 60"),     "I": ("1.3900", "148   0 148 130 0 130")}
+
+# argyrodite 결합/다면체 — P중심 PS4·PO4 사면체는 polyhedra(poly=1), Li–음이온 배위는 stick(poly=0)
+# max 거리는 argyrodite 표준 결합상한 (Å); poly=1이면 그 중심원자로 다면체 렌더
+BONDPAIRS = [
+    ("P", "S", 2.35, 1), ("P", "O", 1.95, 1),
+    ("Li", "S", 3.00, 0), ("Li", "Cl", 3.10, 0), ("Li", "Br", 3.25, 0),
+    ("Li", "I", 3.40, 0), ("Li", "O", 2.70, 0),
+]
+
+
+def make_sbond(syms):
+    """등장 원소에 맞는 SBOND 섹션. VESTA 필드: id A B min max search(0) boundary(1)
+    show_polyhedra search_by(0) style(1=stick) radius width R G B."""
+    s = set(syms); out = []; n = 0
+    for A, B, mx, poly in BONDPAIRS:
+        if A in s and B in s:
+            n += 1
+            out.append(f"  {n}  {A:>3s}  {B:>3s}    0.00000  {mx:8.5f}  0  1  {poly}  0  1  0.000  0.000 127 127 127")
+    out.append("  0 0 0 0")
+    return "\n".join(out)
 
 
 def read_cube_header(path):
@@ -96,7 +116,7 @@ BOUND
        0        1         0        1         0        1
   0   0   0   0  0
 SBOND
-  0 0 0 0
+{make_sbond(atomt)}
 SITET
 {chr(10).join(sitet)}
   0 0 0 0 0 0
