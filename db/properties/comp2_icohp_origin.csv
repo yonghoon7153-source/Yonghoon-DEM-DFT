@@ -1,0 +1,5 @@
+bond,n_bonds,ICOHP_eV_mean,neg_ICOHP_eV_strength,ICOBI_mean_bondorder,distance_cutoff_A,character
+P-S,16,-5.913,5.913,0.925,2.3,covalent framework
+Li-S,72,-2.504,2.504,0.384,2.9,ionic
+Li-Cl,10,-2.111,2.111,0.288,3.3,ionic
+Li-Br,12,-1.934,1.934,0.280,3.5,ionic (weakest)
