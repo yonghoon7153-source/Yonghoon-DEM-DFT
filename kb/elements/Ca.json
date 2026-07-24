@@ -1,0 +1,34 @@
+{
+  "symbol": "Ca",
+  "name": "Calcium",
+  "Z": 20,
+  "role": "cascade 산화물 도펀트 후보(CaO). Ca2+는 hard 대형 2가 양이온 — Li 자리 aliovalent 치환 시 Li 공공 주입 + 큰 반경(1.00 A)이 국소 케이지 왜곡. CaO는 Sundar 2025 산화물 코팅 스크린 후보군에 포함. 알칼리토 Ca/Sr/Ba 크기 계열의 하단.",
+  "oxidation_states": ["+2"],
+  "electronegativity": 1.00,
+  "ionic_radius_A": {
+    "Ca2+_VI": 1.00,
+    "Ca2+_VII": 1.06,
+    "Ca2+_VIII": 1.12,
+    "_note": "Shannon 1976: Ca2+ VI(팔면체) 1.00 A, VII 1.06, VIII 1.12. Li+(0.76)보다 훨씬 커 Li 치환 시 국소 왜곡 강제; Sr2+(1.18)/Ba2+(1.35)보다 작음."
+  },
+  "representative_compounds": [
+    {"formula": "CaO", "context": "산화물 코팅 후보", "battery_role": "wide-gap 절연 산화물; 염기성 -> H2S 게터 경향", "note": "rock salt, Eg ~7 eV; Ca 2p3/2 ~346.5 eV. Sundar 2025 코팅 스크린 후보"},
+    {"formula": "CaS", "context": "황화물 격자 내 Ca-S", "battery_role": "Ca가 S와 배위하는 국소단위", "note": "rock salt CaS; Ca는 hard라 O를 더 선호"},
+    {"formula": "CaCl2", "context": "가능 SEI / 대체 원료", "battery_role": "wide-gap 이온 할라이드 분해생성물", "note": "Ca-Cl 견고 이온결합; 전자차단 SEI 기여 가능"}
+  ],
+  "sei_relevance": "Ca는 native SE 이온이 아니라 알칼리토 산화물 도펀트/코팅 후보. CaO는 염기성 wide-gap 산화물이라 H2S 게터·전자절연 계면상 경향(Mg/Ba 산화물과 같은 계열 논리). 단독 Ca의 전도도 효과는 큰 Ca2+가 채널을 왜곡할 수 있어 중립~부정 가능 — 전형적 '안정성 대 전도도' 트레이드. 정직히: Ca 특이 SEI 분광 근거는 우리 문헌셋에 강하지 않음.",
+  "xps": [
+    {"core": "Ca 2p3/2", "BE_eV": 346.5, "assignment": "CaO / Ca2+ (CaCO3 ~346.9)", "ref": "NIST XPS DB"}
+  ],
+  "raman": [
+    {"cm1": null, "assignment": "CaO(rock salt)는 1차 라만 비활성. (탄산화 시 CaCO3 calcite v1 ~1086 cm-1이 표면상 프로브로 나올 수 있음.) SSB 진단 밴드 아님 -> 생략.", "ref": "n/a"}
+  ],
+  "dos_character": "CaO는 wide-gap(~7 eV) 이온 절연체 — Ca 3p semicore, 빈 Ca 3d/4s가 전도대 하단, O 2p가 VB 지배. 도핑/코팅 시 밴드갭 안 상태 기여 적어 전자차단 경향. Ca2+는 정전기·자리크기 레버이지 밴드엣지 redox 중심 아님.",
+  "key_references": [
+    "Shannon 1976 — effective ionic radii",
+    "Sundar et al., Adv. Sci. 2025 — LPSCl 산화물 코팅 DFT 스크린(CaO 후보 포함) (litdb)",
+    "NIST XPS DB — Ca 2p3/2 (CaO ~346.5, CaCO3 ~346.9 eV)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB lit · Shannon radii); 우리 db 절대값과 분리"
+}

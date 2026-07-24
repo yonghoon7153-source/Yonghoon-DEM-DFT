@@ -1,0 +1,35 @@
+{
+  "symbol": "Na",
+  "name": "Sodium",
+  "Z": 11,
+  "role": "Li 대체 알칼리(cascade 산화물 도펀트 아님) — argyrodite Li6PS5X의 Li 자리에 앉는 대형 1가 양이온. Na+(1.02 A)가 Li+(0.76 A)보다 훨씬 커서 채널/자리에너지를 바꿈; 자매상 Na3PS4·Na6PS5Cl은 Na+ 전도체지만 이동도가 Li계보다 낮은 게 일반적. 우리 맥락에선 알칼리 치환 레버·Li vs Na 자매 비교축.",
+  "oxidation_states": ["+1"],
+  "electronegativity": 0.93,
+  "ionic_radius_A": {
+    "Na+_IV": 0.99,
+    "Na+_VI": 1.02,
+    "Na+_VIII": 1.18,
+    "_note": "Shannon 1976: Na+ VI(팔면체) 1.02 A, IV 0.99, VIII 1.18. Li+(VI 0.76)보다 ~34% 큼 -> Li 자리 치환 시 격자 팽창·자리에너지 재편."
+  },
+  "representative_compounds": [
+    {"formula": "Na3PS4", "context": "Na SE 자매상", "battery_role": "Na+ superionic 황화물 전해질(tetragonal/cubic)", "note": "Li3PS4의 Na 대응; PS4 골격 동일, 캐리어만 Na+. Hayashi 2012 glass-ceramic ~2e-4 S/cm"},
+    {"formula": "Na6PS5Cl", "context": "Na-argyrodite", "battery_role": "argyrodite 골격의 Na 버전", "note": "큰 Na+ -> Li6PS5Cl 대비 자리질서·이동도 다름; 직접 성능 비교축"},
+    {"formula": "Na2O", "context": "SEI / 표면상", "battery_role": "알칼리 산화물 SEI 유사상", "note": "Na 1s ~1072.5 eV; NaCl ~1071.7 eV"}
+  ],
+  "sei_relevance": "Na는 native Li-SE 이온이 아니라 Li 대체 알칼리. Na 함유 SEI(Na2O·NaCl 등)는 Li계 Li2O/LiCl과 유사한 wide-gap 이온상이지만, 우리 캠페인의 주 관심은 SEI보다 '알칼리 치환이 채널/이동도에 주는 영향'. Na3PS4/Na6PS5Cl 자매 비교로 Li vs Na 이동도 차이를 봄.",
+  "xps": [
+    {"core": "Na 1s", "BE_eV": 1071.7, "assignment": "Na+ in NaCl / halide (Na+ 일반)", "ref": "NIST XPS DB"},
+    {"core": "Na 1s", "BE_eV": 1072.5, "assignment": "Na2O / oxide Na+", "ref": "XPS databases"}
+  ],
+  "raman": [
+    {"cm1": 420, "assignment": "PS4 v1 symmetric stretch (Na3PS4; Li3PS4와 근접 위치)", "ref": "Na3PS4 Raman lit (Hayashi/Tatsumisago)"}
+  ],
+  "dos_character": "Na 2p는 깊은 semicore, 3s는 비어 전도대 상부에 기여 -> 강한 이온성 s-block 양이온. 밴드엣지 redox에 직접 관여 안 함; 골격 밴드는 P-S 유래이고 Na는 자리/정전기만 바꿈.",
+  "key_references": [
+    "Shannon 1976 — effective ionic radii (유효이온반경)",
+    "Hayashi et al., Nat. Commun. 2012 — Na3PS4 superionic glass-ceramic Na conductor (Na3PS4 초이온 전도체)",
+    "NIST XPS DB — Na 1s (NaCl ~1071.7, Na2O ~1072.5 eV)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB lit · Shannon radii); 우리 db 절대값과 분리"
+}

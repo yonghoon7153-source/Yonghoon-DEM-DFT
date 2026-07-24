@@ -1,0 +1,36 @@
+{
+  "symbol": "Mg",
+  "name": "Magnesium",
+  "Z": 12,
+  "role": "cascade 산화물 도펀트 후보(MgO) + 계면 공도판트. Mg2+는 hard 2가 양이온 — Li 자리 aliovalent 치환 시 Li 공공 주입 가능. 문헌 근거 강함: Ke 2025는 Mg(ClO4)2 공도핑(MgClO)으로 Li-Mg/Mg-S 궤도 혼성을 유도해 음극 redox 분해를 억제; Sundar 2025는 MgO를 LPSCl 표면 ALD 코팅 중 다면적 최고(σ_ion↑·σ_e↓·Li 안정)로 지목.",
+  "oxidation_states": ["+2"],
+  "electronegativity": 1.31,
+  "ionic_radius_A": {
+    "Mg2+_IV": 0.57,
+    "Mg2+_VI": 0.72,
+    "Mg2+_VIII": 0.89,
+    "_note": "Shannon 1976: Mg2+ VI(팔면체) 0.72 A, IV 0.57, VIII 0.89. Li+(VI 0.76)과 근접 -> Li 자리 치환 시 크기 미스핏 작아 aliovalent 도핑에 유리."
+  },
+  "representative_compounds": [
+    {"formula": "MgO", "context": "표면 코팅 / 계면상", "battery_role": "wide-gap 절연 코팅·H2S 게터; Sundar 2025서 다면적 최고 코팅", "note": "rock salt, Eg ~7.8 eV; Mg 2p ~50.8 eV. σ_ion↑·σ_e↓·Li-metal 안정"},
+    {"formula": "Mg(ClO4)2", "context": "우리 cascade 공도판트원(Ke 2025)", "battery_role": "Mg+Cl+O 동시 공급 공도판트; Li-Mg/Mg-S 혼성 유도", "note": "2 wt% 공도핑 -> Li2O(전자절연)+LiMg(친리튬) SEI, 대칭 Li 2000 h@0.2 mA/cm2 (Ke 2025)"},
+    {"formula": "MgS", "context": "황화물 격자 내 Mg-S", "battery_role": "Mg가 S와 배위하는 국소단위", "note": "Mg-S는 hard-soft 중간; Mg는 O를 더 선호(HSAB)"}
+  ],
+  "sei_relevance": "Mg의 SEI/계면 기여는 문헌으로 잘 뒷받침됨. (1) Ke 2025: Mg(ClO4)2 공도핑이 계면 전자구조를 재배치해 PS4 3- 환원 분해를 막고 Li2O+LiMg SEI 형성 -> Li 금속 호환 대폭 개선. (2) Sundar 2025: MgO ALD 코팅이 분해산물의 이온전도·전자절연 균형에서 최고 -> R_int↓·CCD↑. Mg는 우리 cascade에서 '전자 차폐 + 친리튬' 두 축을 동시에 주는 드문 도판트.",
+  "xps": [
+    {"core": "Mg 2p", "BE_eV": 50.8, "assignment": "MgO / Mg2+ (metallic Mg ~49.5)", "ref": "NIST XPS DB"},
+    {"core": "Mg 1s", "BE_eV": 1303.8, "assignment": "MgO / Mg2+", "ref": "XPS databases"}
+  ],
+  "raman": [
+    {"cm1": null, "assignment": "MgO(rock salt)는 1차 라만 비활성 -> 진단 밴드 없음(2차 산란 ~1090 cm-1만). 지어내지 않고 생략.", "ref": "n/a"}
+  ],
+  "dos_character": "MgO는 wide-gap(~7.8 eV) 이온 절연체 — Mg 2p semicore, 3s 비어 전도대; O 2p가 VB 지배. 도핑/코팅 시 호스트 밴드갭 안에 상태를 거의 안 넣어 전자 차단(SEI 전자절연)에 유리. Ke 2025 요지: Mg 도입이 계면 PDOS에 gap을 열어 Li->PS4 전자공여(metallic 접촉)를 차단.",
+  "key_references": [
+    "Shannon 1976 — effective ionic radii",
+    "Ke et al., Energy Storage Mater. 2025 — Mg(ClO4)2 (MgClO) orbital-hybridization doping of LPSC1.5; Li2O+LiMg SEI, reductive stability (litdb) (Mg 궤도혼성 도핑; 환원 안정)",
+    "Sundar et al., Adv. Sci. 2025 — DFT screening of binary-oxide ALD coatings on Li6PS5Cl; MgO multifaceted best (litdb) (LPSCl 산화물 코팅 스크린; MgO 최고)",
+    "NIST XPS DB — Mg 2p (MgO ~50.8 eV), Mg 1s (~1304 eV)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB lit · Shannon radii); 우리 db 절대값과 분리"
+}

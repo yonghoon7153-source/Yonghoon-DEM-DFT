@@ -23,13 +23,13 @@
     {"core": "Ni 2p3/2", "BE_eV": 852.6, "assignment": "Ni metal (Ni0)", "ref": "Biesinger et al. 2011"}
   ],
   "raman": [
-    {"cm1": 1090, "assignment": "NiO 2-magnon(2M) 산란 — NiO의 특징적 신호(1차 산란은 약함); ~500(1LO)도 관측. 도펀트 산화물상 확인용, 호스트 SSB 모드 아님", "ref": "NiO Raman (2-phonon/2-magnon)"}
+    {"cm1": 1090, "assignment": "NiO 2LO(two-phonon) 밴드 — 강한 2차 산란이 지문(rock-salt라 1차 산란은 대칭 금지·약함; 무질서활성 1LO ~560). 도펀트 산화물상 확인용, 호스트 SSB 모드 아님; 반강자성 2-magnon은 별개로 ~1500 cm-1", "ref": "NiO Raman 2LO ~1090 / 2-magnon ~1500 (Mironova-Ulmane et al.)"}
   ],
   "dos_character": "Ni²⁺=3d⁸ 강상관 — NiO는 전형적 Mott/charge-transfer 절연체(gap ~3.5 eV, VBM은 O 2p–Ni 3d 혼성). 도펀트로 들어가면 국소 3d 준위가 argyrodite 갭 안에 결함준위·전자 누설을 낼 소지. 스핀분극+DFT+U(문헌 U~6 eV급) 필수 — LDA/GGA 단독은 갭·자성을 크게 틀리게 줌.",
   "key_references": [
     "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Ni2+ VI 0.690 A)",
     "Biesinger et al., Appl. Surf. Sci. 257, 2717 (2011) — Ni 2p XPS reference (NiO 853.8 eV + 위성)",
-    "NiO 2-magnon/2-phonon Raman",
+    "Mironova-Ulmane et al. — NiO Raman (2LO ~1090 cm-1, 2-magnon ~1500 cm-1)",
     "Banik et al. 2022 — substitutions & oxidative stability of argyrodite (도펀트 맥락 일반)"
   ],
   "litdb_slugs": [],

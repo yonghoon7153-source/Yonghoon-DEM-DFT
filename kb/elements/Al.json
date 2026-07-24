@@ -1,0 +1,35 @@
+{
+  "symbol": "Al",
+  "name": "Aluminum",
+  "Z": 13,
+  "role": "cascade 산화물 도펀트 후보 + 대표 계면 코팅재(Al2O3). Al3+는 hard 3가 루이스 산 -> O 강선호(Al-O). Al2O3 ALD 코팅은 황화물 SSB 계면보호의 고전(Sundar 2025 ref13 Hood/Connell서 LPSCl에 검증); 격자 축에선 Al3+가 P/Li 자리 치환 aliovalent 도판트 후보. LLZO 가넷에선 Al이 cubic 상 안정화제로 유명.",
+  "oxidation_states": ["+3"],
+  "electronegativity": 1.61,
+  "ionic_radius_A": {
+    "Al3+_IV": 0.39,
+    "Al3+_V": 0.48,
+    "Al3+_VI": 0.535,
+    "_note": "Shannon 1976: Al3+ VI(팔면체) 0.535 A, IV(사면체) 0.39, V 0.48. 작고 hard -> O 배위(AlO4/AlO6) 강선호; 사면체 Al3+는 Si4+ 자리 치환에 유리."
+  },
+  "representative_compounds": [
+    {"formula": "Al2O3", "context": "ALD 계면 코팅", "battery_role": "wide-gap 절연 보호코팅; Li/산화 계면 안정화", "note": "corundum Eg ~8.8 eV; Al 2p ~74.5 eV. ALD Al2O3 on LPSCl -> σ_ion 2x↑·σ_e↓ (Sundar ref13)"},
+    {"formula": "LiAlO2", "context": "계면상 / 코팅", "battery_role": "Li+ 전도 계면 버퍼(Li-Al-O)", "note": "Al2O3가 Li과 반응해 형성 가능한 Li-Al-O 상"},
+    {"formula": "Li7La3Zr2O12 (Al-stabilized)", "context": "가넷 SE(참고계)", "battery_role": "Al3+가 cubic LLZO 안정화(Li 자리 부분치환)", "note": "Al 도핑이 고전도 cubic 상을 상온 안정화 — 산화물 가넷 맥락"}
+  ],
+  "sei_relevance": "Al2O3 ALD 코팅은 SSB 계면보호의 대표 사례 — Li 금속·산화 분위기에서 살아남는 wide-gap 전자절연층으로 부반응을 자기제한. Sundar 2025의 출발점이 바로 선행 Al2O3 ALD(ref13): LPSCl 표면에서 σ_ion 2배↑·σ_e↓·Li/산화 안정. Al2O3는 '검증된 baseline 코팅'이라 Sundar가 이를 능가할 다면적 코팅(MgO)을 찾는 기준선으로 씀. 격자 도판트로선 Al3+가 hard-산 O 앵커.",
+  "xps": [
+    {"core": "Al 2p", "BE_eV": 74.5, "assignment": "Al2O3 / Al3+ (metallic Al ~72.7)", "ref": "NIST XPS DB"}
+  ],
+  "raman": [
+    {"cm1": 418, "assignment": "Al2O3 corundum A1g (강, sapphire); 부수 Eg ~378, ~645 cm-1", "ref": "sapphire/corundum Raman lit"}
+  ],
+  "dos_character": "Al2O3는 wide-gap(~8.8 eV) 이온-공유 절연체 — Al 3s/3p가 O 2p와 혼성해 깊은 결합상·높은 반결합상 형성; 호스트 밴드갭 안에 상태 거의 없음 -> 전자차단 코팅에 이상적. Al은 밴드엣지 redox 중심이 아니라 구조/산화 안정제이자 전자절연 계면상 형성자.",
+  "key_references": [
+    "Shannon 1976 — effective ionic radii",
+    "Sundar et al., Adv. Sci. 2025 — LPSCl 산화물 코팅 DFT 스크린; Al2O3 ALD baseline 재확인(ref13 Hood/Connell) (litdb)",
+    "Rangasamy et al., Solid State Ionics 2012 — Al content controls cubic Li7La3Zr2O12 garnet stabilization (Al이 cubic 가넷 안정화; 산화물 SE 맥락)",
+    "NIST XPS DB — Al 2p (Al2O3 ~74.5 eV, metallic ~72.7 eV)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB lit · Shannon radii); 우리 db 절대값과 분리"
+}
