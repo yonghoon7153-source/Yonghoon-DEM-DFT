@@ -1,0 +1,44 @@
+{
+  "symbol": "Lu",
+  "name": "Lutetium",
+  "Z": 71,
+  "role": "란타나이드 aliovalent 도펀트(Lu2O3) — Nd/La/Gd/Sm RE³⁺ 계열 동족이자 계열의 마지막. Lu³⁺(4f¹⁴ 완전충만, 닫힌껍질) → La³⁺(4f⁰ 빈껍질)와 함께 4fⁿ 계열의 두 clean 양단: 부분점유 4f가 없어 DFT+U·스핀분극 불필요. 완충 4f는 깊은 core-like라 Lu³⁺는 사실상 큰 Y³⁺/Sc³⁺(3족 화학)처럼 거동. 신틸레이터 LSO/LYSO:Ce(PET)의 광학적 비활성 호스트. Lu³⁺면 P 자리 치환+O 동반(P-O-Lu 가정); 계열 최소 Ln³⁺ 반경.",
+  "oxidation_states": ["+3"],
+  "electronegativity": 1.27,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹⁴ 5s² 5p⁶ 5d¹ 6s²",
+    "electron_config": "[Xe] 4f¹⁴ 5d¹ 6s²",
+    "valence_orbitals": "4f¹⁴ 5d¹ 6s²(중성; Ln 중 5d¹ 동반) — Lu³⁺면 4f¹⁴(완전충만, 닫힌껍질, 반자성)로 산화, 개방 4f 없는 단일 산화수",
+    "band_character": "Lu³⁺=4f¹⁴ 완전충만 → La³⁺(4f⁰)와 더불어 부분점유 4f가 없어 DFT+U·스핀분극 불필요(clean; Yb²⁺ 4f¹⁴와 동류). 채운 4f¹⁴는 깊은 core-like 준위(밴드엣지 무관), Lu 5d/6s는 전도대 상부, Lu2O3 wide-gap(VB=O 2p, 엣지 O 2p→Lu 5d). 즉 계열에서 계산이 가장 단순한 RE(La와 함께 clean 북엔드)",
+    "bonding": "Lu–O 강한 이온성(Lu2O3, hard-산 친산소 앵커), Lu 5d6s–O 2p; Lu–Cl/Lu–S(도핑·SEI). 4f¹⁴는 core로 처리 가능(투영 불필요) — Y³⁺(4d⁰)/Sc³⁺ 화학과 근사"
+  },
+  "ionic_radius_A": {
+    "Lu3+_VI": 0.861,
+    "Lu3+_VIII": 0.977,
+    "Lu3+_IX": 1.032,
+    "_note": "Shannon 1976: Lu³⁺ VI 0.861 A, VIII 0.977, IX 1.032. 란탄족 수축의 종점 — 계열 최소 Ln³⁺(La 1.032 → Lu 0.861, ~17% 수축). Y³⁺(0.900)보다도 작음; Li⁺(0.76)보다 크나 RE 중 가장 접근. Sc³⁺(0.745)와 함께 3족 소형 3가."
+  },
+  "representative_compounds": [
+    {"formula": "Lu2O3", "context": "도펀트 전구체", "battery_role": "염기성 wide-gap RE 산화물 도펀트; Lu³⁺ + O 공급원", "note": "cubic bixbyite(C-type); Lu 4d5/2 ~196 eV, Lu 4f7/2 ~7-8 eV(원자가대 근처 얕은 완충 4f)"},
+    {"formula": "Lu2SiO5:Ce (LSO) / (Lu,Y)2SiO5:Ce (LYSO)", "context": "신틸레이터(참고계)", "battery_role": "Lu³⁺가 광학적 비활성 호스트, Ce³⁺가 발광 활성 도판트", "note": "PET용 대표 신틸레이터 — Lu의 clean 4f¹⁴ 호스트 성격을 상징(발광은 Ce가 담당; 우리 Ce 파일과 연결)"},
+    {"formula": "Lu-O in doped argyrodite (P-O-Lu bridge, 가정)", "context": "도펀트 모티프(유비)", "battery_role": "S 자리 O가 P·Lu와 가교하는 국소 옥시설파이드 단위", "note": "La-O(Yang)/Nd-O(우리)와 평행한 RE³⁺ hard-산 O 앵커 가정; Lu는 단일 +3 clean(inert)"},
+    {"formula": "LuCl3", "context": "대체 원료/SEI", "battery_role": "wide-gap Lu³⁺ 염화물; 대체 Lu 원료·분해생성물", "note": "Lu³⁺ 안정 염화물 → Li 금속 환원서 보존, 전자차단 passivation SEI 기대(inert RE 계열 공통)"}
+  ],
+  "sei_relevance": "Lu는 native SE 이온이 아니라 희토류 aliovalent 도펀트. 기능 분리(RE/O 논리): O가 안정성, Lu³⁺가 친산소 hard-산 앵커(P-O-Lu 가정). Ce/Pr/Eu/Tb/Yb과 달리 Lu는 단일 +3, 완충 4f¹⁴로 redox-완전-비활성 -> Lu2O3/LuCl3는 wide-gap 절연이라 Li 금속 환원서 살아남는 부동태 SEI 기대(La/Nd/Gd/Dy과 같은 inert 계열, 그중 계산상 가장 clean). aliovalent Lu³⁺→Li 공공 주입 유비. Lu³⁺는 반경이 계열 최소라 Y³⁺/Sc³⁺에 가까워 그쪽 도핑 선례 이식이 자연스러움. 정직히: Lu-argyrodite 직접 문헌 부재 → Nd/La/Y 계보 유비.",
+  "xps": [
+    {"core": "Lu 4d5/2", "BE_eV": 196.0, "assignment": "Lu³⁺ in Lu2O3 (4d; 완충 4f¹⁴라 개방껍질 다중구조 없어 상대적 단순, 근사 위치)", "ref": "Lu2O3 XPS 문헌 / xpsdatabase (근사)"},
+    {"core": "Lu 4f7/2", "BE_eV": 7.5, "assignment": "Lu³⁺ 완충 4f¹⁴의 얕은 예리 준위(원자가대 근처; 개방껍질 Ln과 달리 단일 doublet — clean 지문)", "ref": "Lu 4f XPS 문헌 (근사)"}
+  ],
+  "raman": [
+    {"cm1": 391, "assignment": "Lu2O3 cubic bixbyite Fg 격자모드(주 라만선 대역, Y2O3 계열과 유사, 계열 최소반경이라 소폭 고파수)", "ref": "Lu2O3 Raman 문헌"}
+  ],
+  "dos_character": "Lu³⁺는 4f¹⁴ 완전충만 -> La³⁺(4f⁰)와 함께 부분점유 4f가 없어 DFT+U·스핀분극 불필요(계열에서 계산이 가장 단순한 clean 북엔드; Yb²⁺ 4f¹⁴와 동류). 채운 4f¹⁴는 깊은 core-like 준위라 밴드엣지에 무관 -> Lu2O3는 wide-gap, O 2p가 VB 지배·엣지는 O 2p->Lu 5d. 4f를 core로 처리 가능(개방껍질 Nd/Gd과 정반대). 황화물 도핑 시 Lu-S/Lu-O도 밴드엣지 밖 -> Lu는 순수 구조/친산소 앵커.",
+  "key_references": [
+    "Shannon 1976 — effective ionic radii (Lu³⁺ VI 0.861 = 란탄족 수축 종점; Y³⁺ 0.900보다 작음)",
+    "DFT+U 불필요(La³⁺ 4f⁰ / Lu³⁺·Yb²⁺ 4f¹⁴는 완충 clean) — Dudarev/Loschen 4f U는 개방껍질 Ln에만 적용(방법 대비)",
+    "LSO/LYSO:Ce 신틸레이터(PET) — Lu가 clean 4f¹⁴ 광학 비활성 호스트(Ce가 발광 활성; 우리 Ce 파일 연결)",
+    "Lu2O3 XPS — Lu 4d5/2 ~196 eV, Lu 4f7/2 ~7-8 eV (xpsdatabase, 근사)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "SSB 앵커 없음(비캠페인, 우리 Nd 프로그램 동족). literature/handbook 소환값(Shannon radii · Lu2O3 XPS/Raman · 방법 대비); Lu는 La와 함께 4fⁿ 계열의 clean 양단(완충 4f¹⁴, +U 불필요)이며 Y³⁺/Sc³⁺급 3족 화학 — 우리 db 절대값과 분리."
+}

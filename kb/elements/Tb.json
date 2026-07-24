@@ -1,0 +1,45 @@
+{
+  "symbol": "Tb",
+  "name": "Terbium",
+  "Z": 65,
+  "role": "란타나이드 aliovalent 도펀트(Tb4O7/Tb2O3) — Nd/La/Gd/Sm RE³⁺ 계열 동족. +3/+4 혼합원자가인데, 특이하게 Tb⁴⁺(4f⁷ 반충만)이 반충만 안정성으로 접근 가능: Tb4O7이 대기안정 혼합원자가 산화물(TbO2도 존재). Tb³⁺는 대표적 녹색 형광체(⁵D₄→⁷F₅ 545 nm), Terfenol-D 자기변형 합금 성분. Tb³⁺면 P 자리 치환+O 동반(P-O-Tb 가정); Ce/Pr/Eu와 함께 redox 활성 소수파.",
+  "oxidation_states": ["+3", "+4"],
+  "electronegativity": 1.20,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f⁹ 5s² 5p⁶ 6s²",
+    "electron_config": "[Xe] 4f⁹ 6s²",
+    "valence_orbitals": "4f⁹ 6s² — Tb³⁺면 4f⁸(개방껍질, S=3, ⁷F₆), Tb⁴⁺면 4f⁷ 반충만(S=7/2, Gd³⁺/Eu²⁺ 유사, 특히 안정)",
+    "band_character": "Tb³⁺=4f⁸ 부분점유 → 스핀분극(ISPIN=2)+DFT+U(U_eff ~6 eV) 필수(Nd 프로토콜과 동일). Tb⁴⁺=4f⁷ 반충만은 majority 채워지고 minority 비어 잘 분리(반충만 안정성이 Tb⁴⁺를 접근가능케 함) — 자성이라 ISPIN=2 필수·+U 표준. Tb4O7은 Tb³⁺/Tb⁴⁺ 혼합 4f 준위가 갭 내/근처. O 2p→Tb 4f/5d 엣지",
+    "bonding": "Tb–O 이온성(Tb4O7/Tb2O3, hard-산 친산소 앵커), Tb–Cl/Tb–S; 4f는 5s²5p⁶에 가려 결합은 5d/6s, 4f⁸/4f⁷ 국소모멘트는 명시 투영(projwfc 스핀분해) 필요"
+  },
+  "ionic_radius_A": {
+    "Tb3+_VI": 0.923,
+    "Tb3+_VIII": 1.040,
+    "Tb4+_VI": 0.76,
+    "Tb4+_VIII": 0.88,
+    "_note": "Shannon 1976: Tb³⁺ VI 0.923 A, VIII 1.040; Tb⁴⁺ VI 0.76, VIII 0.88. 란탄족 수축상 Gd(0.938)>Tb(0.923)>Dy(0.912); Tb⁴⁺ VI 0.76은 마침 Li⁺(0.76)과 같아 크게 수축. Tb³⁺는 Li⁺보다 큼."
+  },
+  "representative_compounds": [
+    {"formula": "Tb4O7", "context": "도펀트 전구체(대기안정 산화물)", "battery_role": "혼합원자가(Tb³⁺/Tb⁴⁺) 표준 터븀 산화물; O 공급원·redox buffer", "note": "대기 중 Tb2O3가 산화돼 도달하는 안정상; Tb 4d5/2 ~148 eV(Tb³⁺/Tb⁴⁺ 다중구조 ~146.5/~155 eV)"},
+    {"formula": "Tb2O3 / TbO2", "context": "환원형·산화형 산화물", "battery_role": "Tb³⁺(Tb2O3) 또는 Tb⁴⁺(TbO2, fluorite); 원자가 양단", "note": "TbO2는 Tb⁴⁺(4f⁷); Li 금속 환원서 Tb⁴⁺→Tb³⁺ 경향"},
+    {"formula": "Tb-O in doped argyrodite (P-O-Tb bridge, 가정)", "context": "도펀트 모티프(유비)", "battery_role": "S 자리 O가 P·Tb와 가교하는 국소 옥시설파이드 단위", "note": "La-O(Yang)/Nd-O(우리)와 평행한 RE³⁺ hard-산 O 앵커 가정; Tb는 +4 접근 가능"},
+    {"formula": "TbCl3", "context": "대체 원료/SEI", "battery_role": "wide-gap Tb³⁺ 염화물; 대체 Tb 원료", "note": "Tb³⁺ 안정 염화물 → 염화물 계면상은 Tb³⁺로 고정"}
+  ],
+  "sei_relevance": "Tb는 native SE 이온이 아니라 희토류 aliovalent 도펀트. 기능 분리(RE/O 논리): O가 안정성, Tb³⁺가 친산소 hard-산 앵커(P-O-Tb 가정). Ce/Pr/Eu와 함께 redox-활성 RE(반충만 4f⁷ 안정성 덕에 Tb⁴⁺ 접근가능)라, Tb4O7(Tb⁴⁺ 함유)은 Li 금속 계면서 Tb³⁺로 환원되며 O·전자 완충 — inert La/Nd/Gd과 다른 SEI 변수. XPS Tb 4d(Tb³⁺ ~146.5 / Tb⁴⁺ ~155 eV 다중구조)로 원자가 정량. 정직히: Tb-argyrodite 직접 문헌 부재 → Nd/La 유비 + redox 단서 병기.",
+  "xps": [
+    {"core": "Tb 4d5/2", "BE_eV": 148.4, "assignment": "Tb³⁺ in Tb2O3 (4d 다중구조; Tb⁴⁺ 4d5/2 ~148.9 eV, 4d 성분 ~146.5(Tb³⁺)/~155 eV(Tb⁴⁺))", "ref": "Tb4O7/TbO2 XPS 문헌 / xpsdatabase"},
+    {"core": "Tb 3d5/2", "BE_eV": 1241.0, "assignment": "Tb³⁺ 근사 위치(란탄족 3d5/2 계열 진행상 Gd 1187↔Dy 1296 사이; 다중구조 broad)", "ref": "란탄족 3d XPS 진행 / xpsdatabase (근사)"}
+  ],
+  "raman": [
+    {"cm1": null, "assignment": "Tb 산화물 라만은 혼합원자가(Tb4O7)로 복잡; 진단은 XPS(Tb 4d Tb³⁺/Tb⁴⁺)·DFT+U PDOS(Tb 4f)로. 확실한 전지-맥락 라만선 미확인 → 지어내지 않고 생략.", "ref": "n/a"}
+  ],
+  "dos_character": "Tb³⁺는 4f⁸(S=3), Tb⁴⁺는 4f⁷ 반충만(S=7/2)으로 둘 다 스핀분극(ISPIN=2)+DFT+U(Dudarev, U_eff ~6 eV) 필수(Nd 프로토콜과 동일). Tb4O7 혼합원자가는 Tb³⁺/Tb⁴⁺ 4f 준위가 갭 안팎에 국재상태 -> PBE 단독 오배치. Tb⁴⁺ 4f⁷는 majority 채워지고 minority 비어 잘 분리(Gd³⁺-유사). O 2p->Tb 4f/5d 엣지. 4f는 5s5p에 가려 결합은 5d/6s -> 명시 4f 투영(projwfc 스핀분해).",
+  "key_references": [
+    "Shannon 1976 — effective ionic radii (Tb³⁺ VI 0.923 / Tb⁴⁺ VI 0.76)",
+    "Dudarev et al., PRB 1998, 57, 1505 + Loschen et al. 2007 — DFT+U(U_eff ~6 eV) on lanthanide 4f (Tb 4f⁸/4f⁷ 스핀분극 프로토콜)",
+    "Tb4O7 혼합원자가 산화물·Tb³⁺ 녹색 형광체(⁵D₄→⁷F₅)·Terfenol-D 자기변형 — 4f redox/응용 맥락",
+    "Tb 4d XPS — Tb³⁺ ~146.5 eV/Tb⁴⁺ ~155 eV 다중구조, 4d5/2 ~148 eV (xpsdatabase)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "SSB 앵커 없음(비캠페인, 우리 Nd 프로그램 동족). literature/handbook 소환값(Shannon radii · Tb4O7 XPS 표준 · DFT+U 4f 프로토콜); Tb는 반충만 4f⁷ 안정성으로 Tb⁴⁺ 접근 가능한 redox-활성 RE라 inert La/Nd 유비에 Tb⁴⁺/Tb³⁺ 단서를 부기 — 우리 db 절대값과 분리."
+}

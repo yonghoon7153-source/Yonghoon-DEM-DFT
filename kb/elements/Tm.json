@@ -1,0 +1,44 @@
+{
+  "symbol": "Tm",
+  "name": "Thulium",
+  "Z": 69,
+  "role": "란타나이드 aliovalent 도펀트(Tm2O3) — Nd/La/Gd/Sm RE³⁺ 계열 동족. 실질 산화수 +3(Tm²⁺ 4f¹³은 이색적/드묾). Tm³⁺(4f¹²)는 ~1.9-2 μm 레이저(Tm:YAG/fiber)·청색 상향변환(¹G₄→³H₆) 발광 이온. Tm³⁺면 P 자리 치환+O 동반(P-O-Tm 가정); 무거운 RE라 반경 작고 inert(주로 비-redox).",
+  "oxidation_states": ["+3", "+2"],
+  "electronegativity": 1.25,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹³ 5s² 5p⁶ 6s²",
+    "electron_config": "[Xe] 4f¹³ 6s²",
+    "valence_orbitals": "4f¹³ 6s² — Tm³⁺면 4f¹²(개방껍질, S=1, ³H₆), Tm²⁺(이색적)면 4f¹³(개방껍질, one f-hole); P 자리 치환+O 동반",
+    "band_character": "Tm³⁺=4f¹² 부분점유 → 스핀분극(ISPIN=2)+DFT+U(U_eff ~6 eV) 필수(Nd 프로토콜과 동일). Tm²⁺=4f¹³도 완충 아닌 한-홀이라 clean 아님(부분점유). 부분점유 4f가 갭 내/근처 국재준위; O 2p→Tm 5d/4f 엣지. 주로 단일 +3라 inert(Tm²⁺는 강환원 조건서만)",
+    "bonding": "Tm–O 이온성(Tm2O3, hard-산 친산소 앵커), Tm–Cl/Tm–S; 4f는 5s²5p⁶에 가려 결합은 5d/6s, 4f¹² 국소모멘트는 명시 투영(projwfc 스핀분해) 필요"
+  },
+  "ionic_radius_A": {
+    "Tm3+_VI": 0.880,
+    "Tm3+_VIII": 0.994,
+    "Tm2+_VI": 1.03,
+    "Tm2+_VII": 1.09,
+    "_note": "Shannon 1976: Tm³⁺ VI 0.880 A, VIII 0.994; Tm²⁺(이색적) VI 1.03, VII 1.09(훨씬 큼). 란탄족 수축상 Er(0.890)>Tm(0.880)>Yb(0.868); Li⁺(0.76)보다 크나 초기 RE(La 1.032)보다 작아 왜곡 완화."
+  },
+  "representative_compounds": [
+    {"formula": "Tm2O3", "context": "도펀트 전구체", "battery_role": "염기성 RE 산화물 도펀트; Tm³⁺ + O 공급원", "note": "cubic bixbyite(C-type); Tm 4d5/2 ~176 eV(다중구조 broad, 근사); 연녹색 산화물"},
+    {"formula": "Tm-O in doped argyrodite (P-O-Tm bridge, 가정)", "context": "도펀트 모티프(유비)", "battery_role": "S 자리 O가 P·Tm과 가교하는 국소 옥시설파이드 단위", "note": "La-O(Yang)/Nd-O(우리)와 평행한 RE³⁺ hard-산 O 앵커 가정; Tm은 주로 단일 +3로 inert"},
+    {"formula": "TmCl3", "context": "대체 원료/SEI", "battery_role": "wide-gap Tm³⁺ 염화물; 대체 Tm 원료·분해생성물", "note": "Tm³⁺ 안정 염화물 → Li 금속 환원서 보존, 전자차단 passivation SEI 기대(inert RE 계열 공통); 강환원서 TmCl2(Tm²⁺) 가능성만"}
+  ],
+  "sei_relevance": "Tm은 native SE 이온이 아니라 희토류 aliovalent 도펀트. 기능 분리(RE/O 논리): O가 안정성, Tm³⁺가 친산소 hard-산 앵커(P-O-Tm 가정). 주로 단일 +3로 redox-비활성 -> Tm2O3/TmCl3는 wide-gap 절연이라 Li 금속 환원서 살아남는 부동태 SEI 기대(La/Nd/Gd/Dy과 같은 inert 계열). aliovalent Tm³⁺→Li 공공 주입 유비. Tm²⁺(4f¹³)는 이색적이라 매우 강한 환원서만 고려 대상. 정직히: Tm-argyrodite 직접 문헌 부재 → Nd/La 계보 유비.",
+  "xps": [
+    {"core": "Tm 4d5/2", "BE_eV": 176.0, "assignment": "Tm³⁺ in Tm2O3 (4d 다중구조; 개방껍질 4f¹²로 broad, 근사 위치)", "ref": "Tm2O3 XPS 문헌 / xpsdatabase (근사)"},
+    {"core": "Tm 4f", "BE_eV": null, "assignment": "참고: Tm 4f는 원자가대 근처 얕은 준위 — Tm³⁺ 4f¹² 다중항으로 원자가 프로브 가능하나 위치는 화합물 의존(정밀값 미확정 → 생략)", "ref": "n/a"}
+  ],
+  "raman": [
+    {"cm1": 382, "assignment": "Tm2O3 cubic bixbyite Fg 격자모드(주 라만선 대역, Y2O3 계열과 유사)", "ref": "Tm2O3 Raman 문헌"}
+  ],
+  "dos_character": "Tm³⁺는 4f¹²(S=1, ³H₆) 개방껍질 -> 스핀분극(ISPIN=2)+DFT+U(Dudarev, U_eff ~6 eV) 필수(Nd 프로토콜과 동일). 부분점유 4f¹²가 갭 안팎에 국재상태 -> PBE 단독 오배치; O 2p->Tm 5d/4f 엣지. Tm²⁺(4f¹³)는 한-홀이라 역시 부분점유(clean 아님)이나 이색적. 주로 단일 +3 고정. 4f는 5s5p에 가려 결합은 5d/6s -> 명시 4f 투영(projwfc 스핀분해).",
+  "key_references": [
+    "Shannon 1976 — effective ionic radii (Tm³⁺ VI 0.880 / Tm²⁺ VI 1.03)",
+    "Dudarev et al., PRB 1998, 57, 1505 + Loschen et al. 2007 — DFT+U(U_eff ~6 eV) on lanthanide 4f (Tm 4f¹² 스핀분극 프로토콜)",
+    "Tm³⁺ ~2 μm 레이저(Tm:YAG)·청색 상향변환(¹G₄→³H₆) — 4f 광학 응용 맥락",
+    "Tm2O3 XPS — Tm 4d5/2 ~176 eV (xpsdatabase, 근사)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "SSB 앵커 없음(비캠페인, 우리 Nd 프로그램 동족). literature/handbook 소환값(Shannon radii · Tm2O3 XPS/Raman · DFT+U 4f 프로토콜); Tm은 주로 단일 +3 inert RE라 La/Nd/Gd 유비가 직접 성립(XPS는 근사; Tm²⁺는 이색적) — 우리 db 절대값과 분리."
+}

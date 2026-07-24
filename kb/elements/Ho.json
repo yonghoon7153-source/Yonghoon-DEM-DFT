@@ -1,0 +1,43 @@
+{
+  "symbol": "Ho",
+  "name": "Holmium",
+  "Z": 67,
+  "role": "란타나이드 aliovalent 도펀트(Ho2O3) — Nd/La/Gd/Sm RE³⁺ 계열 동족. 실질 산화수 +3만(inert, 비-redox). Ho³⁺(4f¹⁰)는 원소 통틀어 최대급 자기모멘트(⁵I₈, ~10.6 μB)로 단분자자석·자기소자, Ho:YAG ~2 μm 레이저의 핵심. Ho³⁺면 P 자리 치환+O 동반(P-O-Ho 가정); 무거운 RE라 반경 작아 왜곡 완화.",
+  "oxidation_states": ["+3"],
+  "electronegativity": 1.23,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹¹ 5s² 5p⁶ 6s²",
+    "electron_config": "[Xe] 4f¹¹ 6s²",
+    "valence_orbitals": "4f¹¹ 6s² — Ho³⁺면 4f¹⁰(개방껍질, S=2, ⁵I₈; 최대급 J·모멘트); P 자리 치환+O 동반",
+    "band_character": "Ho³⁺=4f¹⁰ 부분점유 → 스핀분극(ISPIN=2)+DFT+U(U_eff ~6 eV) 필수(Nd 프로토콜과 동일). 매우 큰 국소모멘트(~10.6 μB)라 스핀 처리 필수; 부분점유 4f¹⁰가 갭 내/근처 국재준위. O 2p→Ho 5d/4f 엣지. 단일 +3라 원자가 변동 없음(inert)",
+    "bonding": "Ho–O 이온성(Ho2O3, hard-산 친산소 앵커), Ho–Cl/Ho–S; 4f는 5s²5p⁶에 가려 결합은 5d/6s, 4f¹⁰ 국소모멘트는 명시 투영(projwfc 스핀분해) 필요"
+  },
+  "ionic_radius_A": {
+    "Ho3+_VI": 0.901,
+    "Ho3+_VIII": 1.015,
+    "Ho3+_IX": 1.072,
+    "_note": "Shannon 1976: Ho³⁺ VI 0.901 A, VIII 1.015, IX 1.072. 란탄족 수축상 Dy(0.912)>Ho(0.901)>Er(0.890); Li⁺(0.76)보다 크나 초기 RE(La 1.032)보다 작아 왜곡 완화. Y³⁺(0.900)와 거의 동일(Ho-Y 화학 유사)."
+  },
+  "representative_compounds": [
+    {"formula": "Ho2O3", "context": "도펀트 전구체", "battery_role": "염기성 RE 산화물 도펀트; Ho³⁺ + O 공급원", "note": "cubic bixbyite(C-type); Ho 4d5/2 ~161 eV, Ho 3d5/2 ~1351 eV(다중구조 broad, 근사)"},
+    {"formula": "Ho-O in doped argyrodite (P-O-Ho bridge, 가정)", "context": "도펀트 모티프(유비)", "battery_role": "S 자리 O가 P·Ho와 가교하는 국소 옥시설파이드 단위", "note": "La-O(Yang)/Nd-O(우리)와 평행한 RE³⁺ hard-산 O 앵커 가정; Ho는 단일 +3로 inert"},
+    {"formula": "HoCl3", "context": "대체 원료/SEI", "battery_role": "wide-gap Ho³⁺ 염화물; 대체 Ho 원료·분해생성물", "note": "Ho³⁺ 안정 염화물 → Li 금속 환원서 보존, 전자차단 passivation SEI 기대(inert RE 계열 공통)"}
+  ],
+  "sei_relevance": "Ho는 native SE 이온이 아니라 희토류 aliovalent 도펀트. 기능 분리(RE/O 논리): O가 안정성, Ho³⁺가 친산소 hard-산 앵커(P-O-Ho 가정). Ce/Pr/Eu/Tb과 달리 단일 +3로 redox-비활성 -> Ho2O3/HoCl3는 wide-gap 절연이라 Li 금속 환원서 살아남는 부동태 SEI 기대(La/Nd/Gd/Dy과 같은 inert 계열). aliovalent Ho³⁺→Li 공공 주입 유비. Ho³⁺ 반경이 Y³⁺(0.900)와 거의 같아 Y 도핑 선례(YSZ/Y-LLZO) 이식이 특히 자연스러움. 정직히: Ho-argyrodite 직접 문헌 부재 → Nd/La/Y 계보 유비.",
+  "xps": [
+    {"core": "Ho 4d5/2", "BE_eV": 161.0, "assignment": "Ho³⁺ in Ho2O3 (4d 다중구조; 개방껍질 4f¹⁰로 broad, 근사 위치)", "ref": "Ho2O3 XPS 문헌 / xpsdatabase (근사)"},
+    {"core": "Ho 3d5/2", "BE_eV": 1351.0, "assignment": "Ho³⁺ 근사 위치(란탄족 3d5/2 계열 진행상 Dy 1296↔Er 1409 사이)", "ref": "란탄족 3d XPS 진행 / xpsdatabase (근사)"}
+  ],
+  "raman": [
+    {"cm1": 377, "assignment": "Ho2O3 cubic bixbyite Fg 격자모드(주 라만선 대역, Y2O3/Dy2O3 계열과 유사)", "ref": "Ho2O3 Raman 문헌"}
+  ],
+  "dos_character": "Ho³⁺는 4f¹⁰(S=2, ⁵I₈) 개방껍질 -> 스핀분극(ISPIN=2)+DFT+U(Dudarev, U_eff ~6 eV) 필수(Nd 프로토콜과 동일); 최대급 국소모멘트라 스핀 처리 필수. 부분점유 4f¹⁰가 갭 안팎에 국재상태 -> PBE 단독 오배치; O 2p->Ho 5d/4f 엣지. 단일 +3라 4f¹⁰ 고정. 4f는 5s5p에 가려 결합은 5d/6s -> 명시 4f 투영(projwfc 스핀분해).",
+  "key_references": [
+    "Shannon 1976 — effective ionic radii (Ho³⁺ VI 0.901; Y³⁺ 0.900과 근사)",
+    "Dudarev et al., PRB 1998, 57, 1505 + Loschen et al. 2007 — DFT+U(U_eff ~6 eV) on lanthanide 4f (Ho 4f¹⁰ 스핀분극 프로토콜)",
+    "Ho³⁺ 최대급 자기모멘트(~10.6 μB)·단분자자석·Ho:YAG ~2 μm 레이저 — 4f 대모멘트/광학 응용 맥락",
+    "Ho2O3 XPS — Ho 4d5/2 ~161 eV, Ho 3d5/2 ~1351 eV (xpsdatabase, 근사)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "SSB 앵커 없음(비캠페인, 우리 Nd 프로그램 동족). literature/handbook 소환값(Shannon radii · Ho2O3 XPS/Raman · DFT+U 4f 프로토콜); Ho는 단일 +3 inert RE(반경 Y³⁺급)라 La/Nd/Gd/Y 유비가 직접 성립(XPS는 근사) — 우리 db 절대값과 분리."
+}
