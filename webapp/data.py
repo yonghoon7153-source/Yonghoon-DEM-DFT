@@ -992,7 +992,13 @@ def load_molecular_orbitals() -> dict:
 
 @lru_cache(maxsize=2)
 def _mo_cache(_mt) -> dict:
-    return _load_json(KB / "molecular_orbitals.json") or {}
+    raw = _load_json(KB / "molecular_orbitals.json") or {}
+    out = dict(raw)
+    for v in raw.values():                       # aliases → 같은 데이터로 키 확장 (formula 표기차 흡수)
+        if isinstance(v, dict):
+            for a in (v.get("aliases") or []):
+                out.setdefault(a, v)
+    return out
 
 
 def element_briefing(syms: list) -> dict:

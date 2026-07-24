@@ -59,7 +59,8 @@ function compLink(cid){var c=COMPS[cid]||{};return '<a class="anchor-comp" href=
 function paperChip(p){return '<a class="gpaper-chip tb-'+p.track+'" href="/literature?open='+p.id+'" title="'+_esc(p.title)+'">'+_esc(p.id.split('_')[0])+'</a>';}
 // ── 분자오비탈(MO) 팝업 ──
 function moKey(f){var sub={'₀':'0','₁':'1','₂':'2','₃':'3','₄':'4','₅':'5','₆':'6','₇':'7','₈':'8','₉':'9'};
-  return (f+'').replace(/[₀-₉]/g,function(c){return sub[c];}).replace(/[\s·]/g,'');}
+  return (f+'').replace(/[₀-₉]/g,function(c){return sub[c];})
+    .replace(/\([^)]*\)/g,'').replace(/[¹²³⁴⁵⁶⁷⁸⁹⁰⁺⁻]/g,'').replace(/\s*\d*[+\-]\s*$/,'').replace(/[\s·–—\-]/g,'');}
 function moSVG(mo){var lv=mo.levels||[],n=lv.length;if(!n)return'';
   var W=280,H=44+n*40,top=26,bot=H-18,gap=n>1?(bot-top)/(n-1):0,midY=(top+bot)/2;
   var col={bonding:'#2563eb',nonbonding:'#6b7280',antibonding:'#dc2626'};
@@ -75,7 +76,7 @@ function moSVG(mo){var lv=mo.levels||[],n=lv.length;if(!n)return'';
     s+='<text x="175" y="'+(y-5)+'" font-size="9" fill="'+c+'" font-weight="700">'+_esc(l.label)+'</text>';});
   return s+'</svg>';}
 function moText(mo){var tk={bonding:'결합',nonbonding:'비결합',antibonding:'반결합'};
-  return (mo.levels||[]).map(function(l){return '<div class="mo-lv mo-'+l.type+'"><b>'+_esc(l.label)+'</b> <span class="mo-tag">'+(tk[l.type]||l.type)+'</span>'+
+  return (mo.levels||[]).map(function(l){var ty=(l.type||'').replace(/[^a-z]/g,'');return '<div class="mo-lv mo-'+ty+'"><b>'+_esc(l.label)+'</b> <span class="mo-tag">'+(tk[l.type]||_esc(l.type))+'</span>'+
     (l.character?'<div class="mo-ch">'+_esc(l.character)+'</div>':'')+
     (l.dos?'<div class="mo-dos">→ DOS: '+_esc(l.dos)+'</div>':'')+'</div>';}).join('');}
 function openMO(key){var mo=MO_DB[key];if(!mo)return;
@@ -124,8 +125,8 @@ function xtable(rows){ // BE 있는 행=표, 없는 행(주석)=footnote 로 분
       note=rows.filter(function(r){return r.BE_eV==null||r.BE_eV==='';});
   var h='';
   if(main.length){h+='<table class="mini-table"><thead><tr><th>core</th><th>BE (eV)</th><th>assignment</th><th>ref</th></tr></thead><tbody>'+
-    main.map(function(r){return '<tr><td>'+_esc(r.core||'')+'</td><td>'+_esc(r.BE_eV)+'</td><td>'+_esc(r.assignment||'')+'</td><td class="ref">'+_esc(r.ref||'')+'</td></tr>';}).join('')+'</tbody></table>';}
-  note.forEach(function(r){h+='<p class="tbl-note">※ '+_esc(r.assignment||'')+(r.ref?' <span class="muted">('+_esc(r.ref)+')</span>':'')+'</p>';});
+    main.map(function(r){return '<tr><td>'+_esc(r.core||'')+'</td><td>'+_esc(r.BE_eV)+'</td><td>'+_esc(r.assignment||'')+(r.note?'<div class="mm muted" style="font-size:.68rem;white-space:normal">'+_esc(r.note)+'</div>':'')+'</td><td class="ref">'+_esc(r.ref||'')+'</td></tr>';}).join('')+'</tbody></table>';}
+  note.forEach(function(r){h+='<p class="tbl-note">※ '+_esc(r.assignment||'')+(r.note?' — '+_esc(r.note):'')+(r.ref?' <span class="muted">('+_esc(r.ref)+')</span>':'')+'</p>';});
   return h;
 }
 function rtable(rows){
@@ -183,6 +184,7 @@ function elCard(e){
       if(o.valence_orbitals)h+='<div class="el-txt"><b class="orb-k">원자가</b> '+_esc(o.valence_orbitals)+'</div>';
       if(o.band_character)h+='<div class="el-txt"><b class="orb-k">밴드</b> '+_esc(o.band_character)+'</div>';
       if(o.bonding)h+='<div class="el-txt"><b class="orb-k">결합</b> '+_esc(o.bonding)+'</div>';
+      if(k.dos_character)h+='<div class="el-txt"><b class="orb-k">DOS</b> '+_esc(k.dos_character)+'</div>';
       h+='</div>';
     }
     else if(k.dos_character)h+='<div class="el-sec"><div class="el-sec-t">DOS 성격</div><div class="el-txt">'+_esc(k.dos_character)+'</div></div>';

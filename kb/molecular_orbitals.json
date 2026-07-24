@@ -19,8 +19,8 @@
     "ao_right": ["S 3p", "Cl 3p"],
     "levels": [
       {"label": "P–S σ", "type": "bonding", "character": "P 3s3p + S 3p σ (PS₄ backbone)", "dos": "VBM 아래 ~5–7 eV 깊이"},
-      {"label": "S 3p lone pair", "type": "nonbonding", "character": "free S²⁻ + PS₄ 비결합 S 3p — VBM 주도", "dos": "VBM (첫 피크)"},
       {"label": "Cl 3p lone pair", "type": "nonbonding", "character": "이온성 Cl⁻ 3p⁶ 고립쌍 (밴드엣지에 소량)", "dos": "VBM 바로 아래 (~1%)"},
+      {"label": "S 3p lone pair", "type": "nonbonding", "character": "free S²⁻ + PS₄ 비결합 S 3p — VBM 주도", "dos": "VBM (첫 피크)"},
       {"label": "PS₄ σ* + Li", "type": "antibonding", "character": "P–S 반결합 σ* + Li 2s/2p 혼입", "dos": "CBM"}
     ],
     "dos_link": "VBM = S 3p lone pair, CBM = PS₄ σ* (우리 계산 comp1: gap 2.066 eV, VBM S 3p ~91% + Li 2p ~6% + Cl 3p ~1%, CBM S 3p ~42% + P 3s ~25% + Li 2p ~14% + S 3s ~11%)",
@@ -79,6 +79,7 @@
     "source": "framework-consistent (I 5p VBM 혼입 우리 계산; LiI 절대 gap은 문헌)"
   },
   "PO4": {
+    "aliases": ["PO", "Li3PO4"],
     "name": "PO₄ / P–O (O 도핑, LPSOCl)",
     "summary": "O가 PS₄의 S 자리를 hard-hard 치환해 만든 P–O 결합(PS₃O/PO₄형). 골격 국소 강화 + gap 확장.",
     "ao_left": ["P 3s", "P 3p"],
