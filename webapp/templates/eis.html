@@ -440,12 +440,13 @@ const EIS = {
         `<td style="text-align:right">${f(r.R_s_ohmcm2)}</td><td style="text-align:right"><b>${f(r.R_int_ohmcm2)}</b></td>`+
         `<td style="text-align:right">${f(r.R_w_ohmcm2)}</td><td style="text-align:right">${f(r.C_dl_uF_cm2,1)}</td>`+
         `<td style="text-align:right">${f(r.sigma_e_mScm,4)}</td>`+
+        `<td style="text-align:right;color:var(--dim)">${f(r.L_composite_um,1)}</td>`+
         `<td style="text-align:right;color:${r.rmse_pct>10?'#c0392b':'var(--dim)'}">${f(r.rmse_pct,1)}</td>`+
         `<td style="text-align:center"><input type="checkbox" class="xe-sel" value="${r.filename}" `+
         `onchange="EIS.onSelChange()" title="체크 → 아래 Nyquist '🔬 실험 겹치기' 로 이 측정만 겹침"></td>`+
         `<td style="text-align:center"><button onclick="EIS.deleteExp('${r.filename}')" style="background:none;border:none;color:var(--dim);cursor:pointer;font-size:1.1rem;padding:0;transition:color.2s" `+
         `onmouseover="this.style.color='#c0392b'" onmouseout="this.style.color='var(--dim)'" title="이 측정 삭제">🗑️</button></td></tr>`;
-    }).join('')) || '<tr><td colspan="11" style="padding:8px;color:var(--dim)">측정 없음 — 위에서 .mpr/.csv 업로드</td></tr>';
+    }).join('')) || '<tr><td colspan="12" style="padding:8px;color:var(--dim)">측정 없음 — 위에서 .mpr/.csv 업로드</td></tr>';
     const a=d.anchor;
     this.el('xe-anchor').innerHTML = a ?
       `<b style="color:#1e8f5e">frame[4] 대표앵커</b> (full-cell ${a.n_full}개): C_dl≈<b>${a.c_dl_areal_uF_cm2}</b> µF/cm²geo`+
