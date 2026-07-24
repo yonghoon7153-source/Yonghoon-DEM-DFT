@@ -34,8 +34,21 @@ AREA = {'symmetric': round(math.pi * 0.5 ** 2, 4), 'full': round(math.pi * 0.65 
 # SUS/c-SUS collector and must NOT be used for σ.  Symmetric cell = SUS|cathode|SUS =
 # ION-BLOCKING (SUS passes e⁻, blocks Li⁺) → the DC arc R1 = ELECTRONIC resistance R_e
 # → σ_e = L_composite / R1  (Hebb-Wagner).  L range → σ_e carries ±~11 %.
-_THICK_UM = 45.0            # composite mid (40–50); collector excluded
+_THICK_UM = 45.0            # composite mid (40–50); collector excluded — DEFAULT (셀별 미지정 시)
 _THICK_RANGE_UM = (40.0, 50.0)
+# ★셀별 두께 override (filename stem → composite µm) — webapp 두께 입력이 여기 씀.  σ_e ∝ L 이라
+#   두께가 σ_e 절대값을 바로 정함.  없으면 위 45µm 기본.
+_THICK_OVERRIDES_PATH = os.path.join(EIS, 'thickness_overrides.json')
+
+
+def _load_thickness_overrides():
+    """이종기술/eis/thickness_overrides.json ({stem: µm}) → dict.  없으면 빈 dict."""
+    import json
+    try:
+        return {str(k): float(v) for k, v in json.load(open(_THICK_OVERRIDES_PATH)).items()
+                if v not in (None, '') and float(v) > 0}
+    except Exception:
+        return {}
 
 
 def _load(csv_path):
@@ -132,6 +145,7 @@ def main():
     import matplotlib.pyplot as plt
 
     stems = sorted(s[:-4] for s in os.listdir(EXTRACTED) if s.endswith('.csv'))
+    _tov = _load_thickness_overrides()                       # 셀별 두께 (webapp 입력; 없으면 45µm)
     rows, panels = [], []
     for stem in stems:
         ct = _cell_type(stem)
@@ -163,12 +177,16 @@ def main():
                 row['R_w_ohm'] = round(p['Wo1_R'], 3)
                 row['R_w_ohmcm2'] = round(p['Wo1_R'] * area, 2)
             if ct == 'symmetric':                       # SUS ion-blocking → R1=R_e → σ_e=L/R1
-                row['L_composite_um'] = _THICK_UM
-                row['sigma_e_mScm'] = round(_THICK_UM * 1e-4 / r1_asr * 1e3, 4)   # L[cm]/R[Ω·cm²]→S/cm→mS/cm
-                lo = round(_THICK_RANGE_UM[0] * 1e-4 / r1_asr * 1e3, 4)
-                hi = round(_THICK_RANGE_UM[1] * 1e-4 / r1_asr * 1e3, 4)
+                _meas = stem in _tov                     # 셀별 두께 지정되면 그걸로 (없으면 45µm 기본)
+                thick = _tov[stem] if _meas else _THICK_UM
+                t_lo, t_hi = (thick - 2.0, thick + 2.0) if _meas else _THICK_RANGE_UM
+                row['L_composite_um'] = thick
+                row['sigma_e_mScm'] = round(thick * 1e-4 / r1_asr * 1e3, 4)       # L[cm]/R[Ω·cm²]→S/cm→mS/cm
+                lo = round(max(t_lo, 0.1) * 1e-4 / r1_asr * 1e3, 4)
+                hi = round(t_hi * 1e-4 / r1_asr * 1e3, 4)
                 row['sigma_e_range_mScm'] = f'{lo}-{hi}'
-                row['note'] = 'SUS ion-blocking → R1=R_e; σ_e=L/R1 (L=40-50µm composite)'
+                row['note'] = ('SUS ion-blocking → R1=R_e; σ_e=L/R1 '
+                               + (f'(L={thick:g}µm 지정)' if _meas else '(L=45µm 기본; 표서 두께 변경 가능)'))
             else:
                 row['note'] = 'R1=R_int, Wo=R_w (primer-SUS full cell)'
         rows.append(row)
