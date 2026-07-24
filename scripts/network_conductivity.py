@@ -870,8 +870,6 @@ def dump_network_raw(dump_dir, atoms_raw, net, field_full, tag='hertzian'):
     # solution.json: σ, V_source, top-10 hot edges, basic stats
     top10 = []
     if erecs:
-        for r in erecs[:10] if erecs else []:
-            pass  # placeholder (erecs not re-sorted here)
         top10_ranked = sorted(erecs, key=lambda r: r['abs_I'], reverse=True)[:10]
         top10 = [{k: r[k] for k in ('id1', 'id2', 'type1', 'type2',
                                      'delta_over_R', 'A_hertzian', 'A_physics',

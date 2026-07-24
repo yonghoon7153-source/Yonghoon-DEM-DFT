@@ -2240,7 +2240,7 @@ def plot_formx_decomposition(data_list, names, outdir):
     x_labels = [t.get_text() for t in ax.get_xticklabels()]
     if not any(x_labels) or all(t == '' for t in x_labels):
         x_labels = list(names)
-    ax.set_title(f'FORM X Factor Decomposition (ref: {x_labels[ref] if ref < len(x_labels) else names[ref]})', fontsize=12, fontweight='bold')
+    ax.set_title(f'v12-clean v3 (=v29/v32) Factor Decomposition (ref: {x_labels[ref] if ref < len(x_labels) else names[ref]})', fontsize=12, fontweight='bold')
     ax.legend(fontsize=9, loc='upper left', ncol=4)
     ax.spines['top'].set_visible(False); ax.spines['right'].set_visible(False)
 
@@ -3573,23 +3573,23 @@ PLOT_REGISTRY = {
     "ionic_scaling_fit": {
         "func": plot_ionic_scaling_fit,
         "file": "ionic_scaling_fit.png",
-        "title": "Ionic: FORM X Scaling Law (Predicted vs Actual)",
-        "description": "FORM X v9 BLEND:\nσ = [(1-w)·C_v5(τ) + w·C_p3(τ)] × σ_grain × CN^1.5 × (φ-φc)^¾ × ⁴√cov × fp²\nw(τ) = σ(15·(τ-2.0))  # sharp transition\nC_v5(τ) = sigmoid(thick→thin) — captures moderate τ\nC_p3(τ) = cubic in lnτ — captures extreme thin (τ>3)\n\nφ_c=0.185, 6 params (2 v5 + 4 poly3)\nR²={formx_r2}, LOOCV={formx_loocv}",
-        "origin_tip": "Scatter (log-log): X=actual (Network solver), Y=predicted (FORM X).\n1:1 line (black dashed), ±20% band (green).",
+        "title": "Ionic: σ_ion Scaling Law v12-clean v3 (=v29/v32) — Predicted vs Actual",
+        "description": "v12-clean v3 (≡ v29_FINAL ≡ v32, 같은 수식·3이름):\nσ = C_blend(τ) × σ_grain × √(φ−0.2) × CN^(3/2) × cov^(2/5) × f_p³\n(σ_grain=3.0 Cronau, φc=0.20; C_blend = logpoly2 in lnτ)\nR²={formx_r2}, LOOCV={formx_loocv}",
+        "origin_tip": "Scatter (log-log): X=actual (Network solver), Y=predicted (v12-clean v3).\n1:1 line (black dashed), ±20% band (green).",
     },
     "multiscale_sigma": {
         "func": plot_multiscale_sigma,
         "file": "multiscale_sigma.png",
-        "title": "Ionic: FORM X Scaling Law",
-        "description": "FORM X v9 BLEND:\nσ = C_blend(τ) × σ_grain × CN^1.5 × (φ\u2011φc)^¾ × ⁴√cov × fp²\nv5 sigmoid (τ<2) + poly3(lnτ) (τ≥2), smooth blend at τ=2.0\nv5 handles moderate, poly3 handles extreme thin (τ>3)\nR²={formx_r2}, w20=51/55",
-        "origin_tip": "Red: FORM X prediction.\nGreen dashed: Network solver (ground truth).",
+        "title": "Ionic: σ_ion Scaling Law v12-clean v3 (=v29/v32)",
+        "description": "v12-clean v3 (≡ v29_FINAL ≡ v32, 같은 수식·3이름):\nσ = C_blend(τ) × σ_grain × √(φ−0.2) × CN^(3/2) × cov^(2/5) × f_p³\n(σ_grain=3.0 Cronau, φc=0.20; C_blend = logpoly2 in lnτ)\nR²={formx_r2}, w20=51/55",
+        "origin_tip": "Red: v12-clean v3 prediction.\nGreen dashed: Network solver (ground truth).",
     },
     "formx_decomposition": {
         "func": plot_formx_decomposition,
         "file": "formx_decomposition.png",
         "csv": "formx_decomposition.csv",
-        "title": "FORM X Factor Decomposition",
-        "description": "FORM X v9 각 항의 상대 기여도:\n(φ\u2011φc)^¾: percolation excess\nCN^1.5: network connectivity\n⁴√cov: AM\u2011SE 계면\nC_blend(τ): v5 + poly3 혼합 regime\nfp²: SE percolation fraction\nref: 최고 σ case 기준",
+        "title": "v12-clean v3 (=v29/v32) Factor Decomposition",
+        "description": "v12-clean v3 (=v29/v32) 각 항의 상대 기여도:\n√(φ−0.2): percolation excess\nCN^(3/2): network connectivity\ncov^(2/5): AM−SE 계면\nC_blend(τ): logpoly2(lnτ) tortuosity\nf_p³: SE percolation fraction\nref: 최고 σ case 기준",
         "origin_tip": "Stacked bar (top): factor contributions.\nHorizontal bar (bottom): dominant factor per case.",
     },
 }

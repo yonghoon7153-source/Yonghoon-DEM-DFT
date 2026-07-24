@@ -9428,9 +9428,15 @@ def predictor_page():
 
 @app.route('/predictor/train')
 def predictor_train():
-    """Train GPR models from existing data."""
-    result = predictor_engine.train_models(
-        app.config['RESULTS_FOLDER'], app.config['ARCHIVE_FOLDER'])
+    """Train GPR models from existing data.  sklearn 부재(클라우드) 시 raw 500 대신 JSON 안내."""
+    try:
+        result = predictor_engine.train_models(
+            app.config['RESULTS_FOLDER'], app.config['ARCHIVE_FOLDER'])
+    except ImportError as e:                                   # sklearn/joblib 미설치 → WSL 안내
+        return jsonify({'success': False,
+                        'error': f'학습 라이브러리 미설치 ({e}) — WSL/로컬서 pip install scikit-learn joblib 후 학습'}), 200
+    except Exception as e:                                     # 그 외도 JSON (JS "Unexpected token <" 방지)
+        return jsonify({'success': False, 'error': f'{type(e).__name__}: {e}'}), 200
     return jsonify(result)
 
 
