@@ -493,7 +493,7 @@ def list_papers() -> list:
     for f in sorted(pd.glob("*.md")):
         if f.stem.startswith("_"):
             continue
-        title, type_str = f.stem.replace("_", " "), ""
+        title, type_str, digested = f.stem.replace("_", " "), "", ""
         got_title = False
         try:
             head = f.read_text(errors="ignore").splitlines()[:18]
@@ -506,8 +506,12 @@ def list_papers() -> list:
             m = re.search(r"type `([^`]+)`", line)
             if m and not type_str:
                 type_str = m.group(1)
+            md = re.search(r"digest(?:ed)?\s*`?(\d{4}-\d{2}-\d{2})`?", line, re.I)
+            if md and not digested:
+                digested = md.group(1)
         out.append({"id": f.stem, "title": title, "type": type_str,
-                    "track": literature_track(f.stem, type_str, title)})
+                    "track": literature_track(f.stem, type_str, title),
+                    "digested": digested})
     return out
 
 

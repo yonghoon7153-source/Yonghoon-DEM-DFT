@@ -10,20 +10,25 @@
   <button class="tt active" data-track="all" onclick="setTrack(this)">전체 <span>{{ counts.all }}</span></button>
   <button class="tt tt-dft" data-track="dft" onclick="setTrack(this)">⚛ DFT · MLIP <span>{{ counts.dft }}</span></button>
   <button class="tt tt-dem" data-track="dem" onclick="setTrack(this)">🧱 DEM · MPM <span>{{ counts.dem }}</span></button>
+  <button class="tt" id="sortbtn" onclick="toggleSort()" style="margin-left:auto" title="digest 등록일 최신순 ↔ 기본순">📅 최신 digest순</button>
 </div>
 
 <input class="search" placeholder="검색 (제목·id·type)..." oninput="filt(this.value)">
 <div class="grid grid-3" id="plist" style="margin-top:16px">
 {% for p in papers %}
 <div class="card paper track-{{ p.track }}" data-track="{{ p.track }}"
-     data-t="{{ p.title|lower }} {{ p.id|lower }} {{ p.type|lower }}"
+     data-t="{{ p.title|lower }} {{ p.id|lower }} {{ p.type|lower }} {{ p.digested }}"
+     data-digested="{{ p.digested }}"
      onclick="openPaper('{{ p.id }}')" onkeydown="_kbd(event)" tabindex="0" role="button" style="cursor:pointer;padding:16px 18px">
   <div class="paper-top">
     <span class="tbadge tb-{{ p.track }}">{{ 'DFT' if p.track=='dft' else 'DEM' }}</span>
     {% if p.type %}<span class="ptype">{{ p.type[:38] }}</span>{% endif %}
   </div>
   <div style="font-weight:600;font-size:.9rem;line-height:1.4;margin-top:7px">{{ p.title }}</div>
-  <div class="mono muted" style="font-size:.7rem;margin-top:6px">{{ p.id }}</div>
+  <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:6px;gap:8px">
+    <span class="mono muted" style="font-size:.7rem">{{ p.id }}</span>
+    {% if p.digested %}<span class="muted" style="font-size:.68rem;white-space:nowrap" title="논문 에이전트 digest 등록일">📅 {{ p.digested }}</span>{% endif %}
+  </div>
 </div>
 {% endfor %}
 </div>
@@ -37,7 +42,18 @@
   </div>
 </div>
 <script>
-var curTrack='all', curQ='';
+var curTrack='all', curQ='', sortMode=false, origOrder=null;
+function toggleSort(){
+  var plist=document.getElementById('plist');
+  var cards=[].slice.call(plist.querySelectorAll('.paper'));
+  if(!origOrder) origOrder=cards.slice();
+  sortMode=!sortMode;
+  document.getElementById('sortbtn').classList.toggle('active',sortMode);
+  var arr = sortMode
+    ? cards.slice().sort(function(a,b){return (b.dataset.digested||'').localeCompare(a.dataset.digested||'') || a.dataset.t.localeCompare(b.dataset.t);})
+    : origOrder;
+  arr.forEach(function(c){plist.appendChild(c);});
+}
 function apply(){
   var n=0;
   document.querySelectorAll('.paper').forEach(function(c){
