@@ -135,6 +135,31 @@ def _rs_intercept(re_z, im_z):
     return float(re_z[int(np.argmin(np.abs(im_z)))])
 
 
+def _desc_from_csv(csv_path):
+    """이미 추출된 tidy CSV → 디스크립터 dict (galvani 없이 재-catalog 시 사용 — 재실행이 캐시 descriptor
+    를 지우지 않게).  extract_mpr 과 동일 산출(Ω, not Ω·cm²)."""
+    import numpy as np
+    f_hz, re_z, im_z, ewe = [], [], [], []
+    for row in csv.DictReader(open(csv_path)):
+        try:
+            f_hz.append(float(row['freq_Hz'])); re_z.append(float(row['ReZ_ohm'])); im_z.append(float(row['negImZ_ohm']))
+        except (KeyError, ValueError, TypeError):
+            continue
+        try:
+            ewe.append(float(row.get('Ewe_V', 'nan')))
+        except (ValueError, TypeError):
+            ewe.append(float('nan'))
+    if len(f_hz) < 2:
+        return {'n_points': '', 'f_max_Hz': '', 'f_min_Hz': '', 'R_s_ohm': '', 'Re_LF_ohm': '', 'arc_ohm': '', 'Ewe_V': ''}
+    f_hz = np.array(f_hz); re_z = np.array(re_z); im_z = np.array(im_z)
+    rs = _rs_intercept(re_z, im_z)
+    lf = float(re_z[int(np.argmin(f_hz))])
+    ew = float(np.nanmean(ewe)) if ewe else float('nan')
+    return {'n_points': len(f_hz), 'f_max_Hz': float(f_hz.max()), 'f_min_Hz': float(f_hz.min()),
+            'R_s_ohm': round(rs, 3), 'Re_LF_ohm': round(lf, 3), 'arc_ohm': round(lf - rs, 3),
+            'Ewe_V': round(ew, 3) if ew == ew else ''}
+
+
 def extract_mpr(BioLogic, mpr_path, out_csv):
     """Parse one .mpr -> tidy CSV; return a descriptor dict (Ω, not Ω·cm²)."""
     import numpy as np
@@ -182,7 +207,12 @@ def main():
             except Exception as e:
                 note = f'extract_fail: {e}'
         elif os.path.exists(out_csv):
-            note = 'cached_csv (galvani absent)'
+            # galvani 부재 → 캐시 tidy CSV 에서 descriptor 재구성 (재-catalog 이 값을 지우지 않게)
+            try:
+                desc = _desc_from_csv(out_csv)
+                note = 'from_cached_csv (galvani absent)'
+            except Exception as e:
+                note = f'cached_csv 재구성 실패: {e}'
         meta.update(desc)
         # data-derived SOC: full-cell Ewe > 3.4 V (vs Li-In) = charged/SOC100 — the filename
         # carries no reliable SOC token (a "1.3V" tag mismatched the measured Ewe 3.67 V), so
@@ -199,6 +229,26 @@ def main():
         meta['extracted_csv'] = os.path.relpath(out_csv, ARCHIVE) if os.path.exists(out_csv) else ''
         meta['note'] = note
         rows.append(meta)
+    # CSV 직접 업로드(matching .mpr 없음)도 카탈로그 — descriptor 를 tidy CSV 서 재구성 (webapp .csv 업로드 경로)
+    _have = {r['filename'] for r in rows}
+    if os.path.isdir(EXTRACTED):
+        for cf in sorted(f for f in os.listdir(EXTRACTED) if f.endswith('.csv')):
+            stem = cf[:-4]
+            if stem in _have:
+                continue
+            meta = parse_name(stem)
+            meta.update(_desc_from_csv(os.path.join(EXTRACTED, cf)))
+            _ewe = meta.get('Ewe_V', '')
+            if meta['cell_type'] == 'full' and _ewe != '' and float(_ewe) > 3.4:
+                meta['state'] = 'SOC100(charged)'
+            area = _area_cm2(meta['cell_type'])
+            meta['area_cm2'] = area if area else ''
+            for k_ohm, k_asr in (('R_s_ohm', 'R_s_ohmcm2'), ('Re_LF_ohm', 'Re_LF_ohmcm2'), ('arc_ohm', 'arc_ohmcm2')):
+                v = meta.get(k_ohm, '')
+                meta[k_asr] = round(float(v) * area, 2) if (area and v != '') else ''
+            meta['extracted_csv'] = os.path.relpath(os.path.join(EXTRACTED, cf), ARCHIVE)
+            meta['note'] = 'csv_only (no .mpr)'
+            rows.append(meta)
     # stable order: date, cell_type, blend, sample, filename
     rows.sort(key=lambda r: (r['date'], r['cell_type'], r['blend'], r['sample'], r['filename']))
     with open(CATALOG, 'w', newline='') as f:

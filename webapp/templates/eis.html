@@ -29,6 +29,37 @@
   </div>
 </div>
 
+<!-- ── 실험 EIS 관리 (업로드 + CNLS fit + 값도출) ── -->
+<div class="card" style="border-left:3px solid #1e8f5e">
+  <div class="card-title" style="margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;gap:8px">
+    <span>🧪 실험 EIS 측정 — BioLogic .mpr → CNLS fit → 값도출 (frame[4] 앵커)</span>
+    <span id="xe-count" style="font-size:.74rem;color:var(--dim);font-weight:400"></span></div>
+  <div style="font-size:.76rem;color:var(--dim);margin-bottom:8px;line-height:1.5">
+    <b>.mpr</b>(BioLogic 바이너리)·<b>.csv</b>(tidy: <code>freq_Hz,ReZ_ohm,negImZ_ohm</code>) 업로드 →
+    <code>eis_archive</code> 추출 + <code>eis_fit</code> CNLS(<b>R0-p(R1,CPE1)-Wo1</b>) → R_s·R_int·R_w·C_dl·σ_e
+    자동도출.  회로가 physics-EIS 와 같아 <b>직접 대조</b>.
+    <span style="color:#a07c1f">⚠ .mpr 파싱엔 galvani 필요(WSL) — 클라우드선 .csv 즉시 fit / .mpr 은 파싱대기</span>.
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px">
+    <input id="xe-file" type="file" multiple accept=".mpr,.mps,.csv" class="e-in" style="flex:1 1 300px;padding:5px">
+    <button id="xe-upload" class="btn btn-primary btn-sm">⬆ 업로드 · fit</button>
+    <button id="xe-refresh" class="btn btn-sm btn-secondary">↻ 목록</button>
+  </div>
+  <div id="xe-status" style="font-size:.74rem;color:var(--dim);margin-bottom:8px"></div>
+  <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-size:.76rem;white-space:nowrap">
+      <thead><tr style="color:var(--dim);border-bottom:1px solid var(--border)">
+        <th style="text-align:left;padding:5px 8px">측정 파일</th><th style="text-align:left">셀</th>
+        <th style="text-align:left">state</th><th style="text-align:right">R_s</th><th style="text-align:right">R_int</th>
+        <th style="text-align:right">R_w</th><th style="text-align:right">C_dl</th><th style="text-align:right">σ_e</th>
+        <th style="text-align:right">rmse%</th><th style="text-align:right">N</th><th></th></tr></thead>
+      <tbody id="xe-tbody"></tbody>
+    </table>
+  </div>
+  <div style="font-size:.68rem;color:var(--dim);margin-top:4px">단위: R Ω·cm² · C_dl µF/cm² · σ_e mS/cm(대칭셀 Hebb-Wagner) · full=풀셀(R_w 확산) / symmetric=SUS 블로킹(σ_e)</div>
+  <div id="xe-anchor" style="font-size:.74rem;margin-top:8px"></div>
+</div>
+
 <!-- ── 컨트롤 ── -->
 <div class="card">
   <div class="card-title" style="margin-bottom:8px">입력 (σ = STEP3 · i0/D_s = STEP4 · C_dl = 앵커)
@@ -237,7 +268,7 @@ const EIS = {
     b.classList.toggle('btn-primary', this.showExp); b.classList.toggle('btn-secondary', !this.showExp);
     const hint=this.el('e-exp-hint');
     if(this.showExp && !this.expNyq){
-      try { const r=await (await fetch('/api/eis_exp?cell=full')).json();
+      try { const r=await (await fetch('/api/eis_exp?cell='+(this._expCell||'full'))).json();
         this.expNyq = r && r.available ? r : {curves:[], hint:(r&&r.hint)||'실험 EIS 없음'}; }
       catch(e){ this.expNyq={curves:[], hint:'fetch 실패'}; }
     }
@@ -343,6 +374,60 @@ const EIS = {
       d.peaks.map(p=>`<b style="color:#a07c1f">${p.f_Hz>=1?p.f_Hz.toPrecision(2)+'Hz':(p.f_Hz*1000).toPrecision(2)+'mHz'}</b>`+
         ` (R≈${p.R!=null?p.R.toFixed(2):'—'} Ω·cm²)`).join(' · ') : '—') +
       ' &nbsp;<span style="color:var(--dim)">= 전하전달(고주파)·확산(저주파) 분리</span>';
+  },
+  // ── 실험 EIS 관리 (업로드 · CNLS fit · 값도출 표) ──
+  async loadExpList(){
+    let d; try { d=await (await fetch('/api/eis_exp_list')).json(); } catch(e){ return; }
+    this.renderExpTable(d);
+  },
+  async uploadExp(){
+    const inp=this.el('xe-file');
+    if(!inp.files||!inp.files.length){ this.el('xe-status').textContent='파일을 선택해줘 (.mpr / .csv)'; return; }
+    const fd=new FormData(); for(const f of inp.files) fd.append('files', f);
+    this.el('xe-status').innerHTML='<span style="color:#2a5db0">⏳ 업로드·추출·fit 중… (수 초~수십 초)</span>';
+    let d; try { d=await (await fetch('/api/eis_exp_upload',{method:'POST',body:fd})).json(); }
+    catch(e){ this.el('xe-status').textContent='업로드 실패: '+e; return; }
+    if(d.error){ this.el('xe-status').innerHTML='<span style="color:#c0392b">실패: '+d.error+'</span>'; }
+    else {
+      const nt=(d.notes||[]).length?' · <span style="color:#a07c1f">⚠ '+d.notes.join('; ')+'</span>':'';
+      this.el('xe-status').innerHTML=`<span style="color:#1e8f5e">✓ ${(d.saved||[]).length}개 저장</span> · `+
+        `fit: ${d.fit||'—'}${nt}`;
+      inp.value='';
+    }
+    this.renderExpTable(d);
+    this.expNyq=null;   // 오버레이 캐시 무효화 (새 측정 반영)
+  },
+  renderExpTable(d){
+    const tb=this.el('xe-tbody'); if(!d||!d.rows) return;
+    this.el('xe-count').textContent=`${d.n||0}개 측정 · ${d.fitted||0} fit 완료`;
+    const f=(x,n=2)=> x==null?'—':(Math.abs(x)>=100?(''+x.toPrecision(3)):x.toFixed(n));
+    tb.innerHTML = (d.rows.map(r=>{
+      const cell=r.cell_type==='full'?'<span style="color:#2a5db0">full</span>'
+        :(r.cell_type==='symmetric'?'<span style="color:#1e8f5e">sym</span>':(r.cell_type||'—'));
+      return `<tr style="border-bottom:1px solid rgba(0,0,0,.05)">`+
+        `<td style="padding:4px 8px;text-align:left" title="${r.filename}">${(r.filename||'').replace(/^2607\d\d_/,'').slice(0,30)}</td>`+
+        `<td style="text-align:left">${cell}</td><td style="text-align:left;color:var(--dim)">${(r.state||'').slice(0,11)}</td>`+
+        `<td style="text-align:right">${f(r.R_s_ohmcm2)}</td><td style="text-align:right"><b>${f(r.R_int_ohmcm2)}</b></td>`+
+        `<td style="text-align:right">${f(r.R_w_ohmcm2)}</td><td style="text-align:right">${f(r.C_dl_uF_cm2,1)}</td>`+
+        `<td style="text-align:right">${f(r.sigma_e_mScm,4)}</td>`+
+        `<td style="text-align:right;color:${r.rmse_pct>10?'#c0392b':'var(--dim)'}">${f(r.rmse_pct,1)}</td>`+
+        `<td style="text-align:right;color:var(--dim)">${r.n_points||'—'}</td>`+
+        `<td style="text-align:right"><button class="btn btn-sm btn-secondary" style="padding:1px 7px;font-size:.7rem" `+
+        `onclick="EIS.overlayCell('${r.cell_type}')" title="이 셀타입 실험 Nyquist 를 physics-EIS 위 겹치기">📈</button></td></tr>`;
+    }).join('')) || '<tr><td colspan="11" style="padding:8px;color:var(--dim)">측정 없음 — 위에서 .mpr/.csv 업로드</td></tr>';
+    const a=d.anchor;
+    this.el('xe-anchor').innerHTML = a ?
+      `<b style="color:#1e8f5e">frame[4] 대표앵커</b> (full-cell ${a.n_full}개): C_dl≈<b>${a.c_dl_areal_uF_cm2}</b> µF/cm²geo`+
+      `${a.c_dl_range_uF_cm2?' (기하평균, '+a.c_dl_range_uF_cm2[0]+'–'+a.c_dl_range_uF_cm2[1]+')':''} · `+
+      `R_w=<b>${a.r_w_ohm_cm2}</b> · R_int≈${a.r_int_ohm_cm2} · R_s≈${a.r0_hf_ohm_cm2} Ω·cm² `+
+      `<span style="color:var(--dim)">→ 🔬실험앵커 토글로 physics-EIS 에 적용</span>` : '';
+  },
+  overlayCell(cell){   // 표 행 📈 → 그 셀타입 실험 Nyquist 오버레이
+    this._expCell=(cell==='symmetric')?'sym':'full';
+    this.expNyq=null;                          // 셀타입 바뀜 → 재로드
+    if(this.showExp){ this.showExp=false; }    // 강제 재로드 위해 리셋
+    this.toggleExp();
+    this.el('e-nyq').scrollIntoView({behavior:'smooth',block:'center'});
   },
   drtHover(e){   // 피크 위 커서 → 물리 프로세스 설명 박스
     const cv=this.el('e-drt'), tip=this.el('e-drt-tip'), hits=this._drtHits||[], wh=this._drtWH||[440,380];
@@ -486,6 +571,9 @@ const EIS = {
     this.el('e-exp-toggle').addEventListener('click', ()=>this.toggleExp());
     this.el('e-drt').addEventListener('mousemove', e=>this.drtHover(e));
     this.el('e-drt').addEventListener('mouseleave', ()=>{ this.el('e-drt-tip').style.display='none'; });
+    this.el('xe-upload').addEventListener('click', ()=>this.uploadExp());
+    this.el('xe-refresh').addEventListener('click', ()=>this.loadExpList());
+    this.loadExpList();   // 이미 먹인 측정 목록(표) 초기 로드
     this.el('e-ica-run').addEventListener('click', ()=>this.runICA());
     this.el('ec-run').addEventListener('click', ()=>this.runCycle());
     document.querySelectorAll('[data-cyc]').forEach(b=>

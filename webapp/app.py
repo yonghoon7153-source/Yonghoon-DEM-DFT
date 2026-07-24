@@ -4023,6 +4023,141 @@ def api_eis_exp():
                             '(반쪽셀 모델 vs primer-SUS 풀셀 = 배치 다름, 자릿수-대조)'})
 
 
+def _eis_archive_paths():
+    """이종기술/eis 아카이브 경로 (raw/extracted/catalog/fits)."""
+    _root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    a = os.path.join(_root, '이종기술', 'eis')
+    return {'root': _root, 'archive': a, 'raw': os.path.join(a, 'raw'),
+            'extracted': os.path.join(a, 'extracted'), 'catalog': os.path.join(a, 'eis_catalog.csv'),
+            'fits': os.path.join(a, 'fits', 'eis_fit_results.csv')}
+
+
+def _eis_exp_table():
+    """실험 EIS 측정 목록 = eis_catalog.csv(메타) ⋈ eis_fit_results.csv(도출값) by filename.
+    반환 {rows:[...], n, fitted, summary}.  파일 없으면 빈 리스트 (graceful)."""
+    import csv as _csv
+    P = _eis_archive_paths()
+    cat = {}
+    if os.path.isfile(P['catalog']):
+        try:
+            for r in _csv.DictReader(open(P['catalog'])):
+                cat[r.get('filename', '')] = r
+        except Exception:
+            pass
+    fit = {}
+    if os.path.isfile(P['fits']):
+        try:
+            for r in _csv.DictReader(open(P['fits'])):
+                fit[r.get('filename', '')] = r
+        except Exception:
+            pass
+
+    def _num(d, k):
+        try:
+            v = d.get(k, '')
+            return round(float(v), 4) if v not in ('', None) else None
+        except (TypeError, ValueError):
+            return None
+    rows = []
+    for fn in sorted(set(cat) | set(fit)):
+        c, f = cat.get(fn, {}), fit.get(fn, {})
+        rows.append({
+            'filename': fn, 'date': c.get('date', ''), 'cell_type': c.get('cell_type', '') or f.get('cell_type', ''),
+            'blend': c.get('blend', ''), 'state': c.get('state', ''), 'Ewe_V': _num(c, 'Ewe_V'),
+            'n_points': _num(c, 'n_points'), 'f_max_Hz': _num(c, 'f_max_Hz'), 'f_min_Hz': _num(c, 'f_min_Hz'),
+            'R_s_ohmcm2': _num(f, 'R_s_ohmcm2'), 'R_int_ohmcm2': _num(f, 'R1_ohmcm2'),
+            'R_w_ohmcm2': _num(f, 'R_w_ohmcm2'), 'C_dl_uF_cm2': _num(f, 'C_dl_uF_cm2'),
+            'sigma_e_mScm': _num(f, 'sigma_e_mScm'), 'rmse_pct': _num(f, 'rmse_pct'),
+            'circuit': f.get('circuit', ''), 'fitted': bool(f.get('R1_ohm')),
+            'area_cm2': _num(c, 'area_cm2') or _num(f, 'area_cm2'), 'note': c.get('note', '') or f.get('note', ''),
+        })
+    fitted = sum(1 for r in rows if r['fitted'])
+    # 대표값 (frame[4] 앵커) — load_experimental_anchors 와 동일 소스
+    summ = None
+    try:
+        import sys as _sys
+        _sd = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'scripts')
+        if _sd not in _sys.path:
+            _sys.path.insert(0, _sd)
+        import eis_drt_ica as _eis
+        summ = _eis.load_experimental_anchors()
+    except Exception:
+        summ = None
+    return {'rows': rows, 'n': len(rows), 'fitted': fitted, 'anchor': summ}
+
+
+@app.route('/api/eis_exp_list')
+def api_eis_exp_list():
+    """이미 먹인 + 업로드된 실험 EIS 측정 목록(표) + 도출값 + frame[4] 대표앵커."""
+    try:
+        return jsonify(_eis_exp_table())
+    except Exception as e:
+        return jsonify({'error': f'목록 실패: {type(e).__name__}: {e}', 'rows': []}), 200
+
+
+@app.route('/api/eis_exp_upload', methods=['POST'])
+def api_eis_exp_upload():
+    """실험 EIS 파일 업로드 → 아카이브 → 추출(.mpr=galvani/WSL) → CNLS fit(eis_fit) → 값도출.
+    허용: .mpr(BioLogic 바이너리)·.mps(설정)·.csv(우리 tidy: freq_Hz,ReZ_ohm,negImZ_ohm).
+    galvani 부재(클라우드) 시 .mpr 은 raw 저장+파싱대기(WSL), .csv 는 즉시 fit."""
+    import csv as _csv
+    import subprocess as _sp
+    P = _eis_archive_paths()
+    os.makedirs(P['raw'], exist_ok=True); os.makedirs(P['extracted'], exist_ok=True)
+    files = request.files.getlist('files')
+    if not files:
+        return jsonify({'error': '파일 없음'}), 200
+    saved, notes = [], []
+    for fs in files:
+        raw_name = (fs.filename or '').strip()
+        if not raw_name:
+            continue
+        base = os.path.basename(raw_name).replace('\\', '_').replace('/', '_')
+        stem, ext = os.path.splitext(base); ext = ext.lower()
+        if ext not in ('.mpr', '.mps', '.csv'):
+            notes.append(f'{base}: 확장자 미지원 (.mpr/.mps/.csv)'); continue
+        # 셀타입 미상시 파일명으로 추정 (sym/full) — 없으면 사용자 접두어 권장
+        if ext == '.csv':
+            dst = _contained_join(P['extracted'], base)
+            fs.save(dst)
+            # tidy 검증 (필수 열)
+            try:
+                hdr = next(_csv.reader(open(dst)), [])
+                if not ({'freq_Hz', 'ReZ_ohm', 'negImZ_ohm'} <= set(h.strip() for h in hdr)):
+                    notes.append(f'{base}: CSV 열 부족 (freq_Hz,ReZ_ohm,negImZ_ohm 필요) — 저장은 됨')
+            except Exception:
+                pass
+            saved.append(base)
+        else:                                                 # .mpr / .mps → raw
+            dst = _contained_join(P['raw'], base)
+            fs.save(dst)
+            saved.append(base)
+    if not saved:
+        return jsonify({'error': '저장된 파일 없음', 'notes': notes, **_eis_exp_table()}), 200
+    # 추출(.mpr, galvani 있으면) + 카탈로그 재생성
+    py = os.environ.get('PYTHON', 'python3')
+    arch_msg = ''
+    try:
+        r = _sp.run([py, os.path.join(P['root'], 'scripts', 'eis_archive.py')],
+                    capture_output=True, text=True, timeout=180, cwd=P['root'])
+        _ao = (r.stdout or r.stderr or '').strip().splitlines()
+        arch_msg = _ao[-1] if _ao else ''
+    except Exception as e:
+        arch_msg = f'archive 실패: {e}'
+    # CNLS fit (impedance 있으면) → 값도출
+    fit_msg = ''
+    try:
+        r = _sp.run([py, os.path.join(P['root'], 'scripts', 'eis_fit.py')],
+                    capture_output=True, text=True, timeout=300, cwd=P['root'])
+        _out = (r.stdout or '').strip().splitlines()
+        fit_msg = _out[-1] if _out else (r.stderr or '').strip()[:200]
+    except Exception as e:
+        fit_msg = f'fit 실패 (impedance 미설치?): {e}'
+    tab = _eis_exp_table()
+    return jsonify({'ok': True, 'saved': saved, 'notes': notes,
+                    'archive': arch_msg, 'fit': fit_msg, **tab})
+
+
 @app.route('/')
 def index():
     cases = list_cases()
