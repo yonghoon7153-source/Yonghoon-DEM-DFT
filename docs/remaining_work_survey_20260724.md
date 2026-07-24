@@ -1,5 +1,18 @@
 # 남은 작업 종합 서베이 (2026-07-24, 5-스캐너 워크플로 wf_17cb6734)
 
+## ★ 진행상태 & 다음 픽 (2026-07-24, "나중에 하자" 재개점) ★
+- **A-1 완료 4건** (커밋됨): ① network_conductivity dead-code 삭제 ② Predictor /train
+  graceful 500 ③ ionic 라벨 "FORM X"→v12-clean v3(=v29/v32) 통일+식정정 ④ Predictor
+  d_AM_S 슬라이더 오해방지 ⚠툴팁.
+- **A-1 남은 quick-win** (재개 시 먼저): three.js 로컬 vendoring(M) · mpm-lab GIF Pillow
+  폴백(S) · STEP4 I_1C 규약 문서화(S) · dump_case_summary 헬퍼(S) · paper 인용정정(S).
+- **다음 큰 픽 후보 3** (사용자 선택 대기): ⓐ webapp 예측 패널 신설(EIS/DRT/ICA·사이클곡선
+  예측 UI) · ⓑ 로드맵 Phase 2→4(데이터층→2D synth) · ⓒ porosity 관계식 도출(D, 사용자 명시목표).
+- 나머지 A/B/C/D 전체 목록은 아래 그대로.  B=WSL·GPU 실행블록, C=앵커대기(§F1), D=연구트랙.
+
+---
+
+
 원시 ~110 → 병합 ~55.  완료분(v3 EIS/DRT/ICA 스위트·첨가제 감사·실행배치 스크립트) 제외.
 카테고리: **A** 클라우드 do-now / **B** WSL·GPU 실행블록 / **C** 실험·문헌 앵커대기(§F1) / **D** 연구트랙.
 
