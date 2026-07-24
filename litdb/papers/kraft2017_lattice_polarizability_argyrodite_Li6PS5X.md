@@ -1,6 +1,6 @@
 # Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li₆PS₅X (X = Cl, Br, I) — Kraft et al. (J. Am. Chem. Soc. 2017)
 
-> slug `kraft2017_lattice_polarizability_argyrodite_Li6PS5X` · DOI `10.1021/jacs.7b06327` · type `exp (neutron + PDF + impedance + ultrasound; DFT 없음)` · PDF `litdb/inbox/31. Influence of Lattice Polarizability….pdf`(본문 10 pp, **inbox #31, 사용자 분류 `DFT`**; SI 미포함) + 업로드 main `664401af…`/SI `38f51c84…` · digested `2026-07-24` · status ✅
+> slug `kraft2017_lattice_polarizability_argyrodite_Li6PS5X` · DOI `10.1021/jacs.7b06327` · type `exp (neutron + PDF + impedance + ultrasound; DFT 없음)` · PDF 본문 = 업로드 `664401af…`(10 pp, inbox #31 슬롯 대조 확인) · **SI = `litdb/inbox/31. Sup) Influence of Lattice Polarizability….pdf`(15 pp, inbox #31 Sup, 사용자 분류 `DFT`) — 2026-07-24 실물 대조 감사 완료(§3a 감사 노트)** + 업로드 SI `38f51c84…` · digested `2026-07-24` · status ✅
 > elements: Li, P, S, Cl, Br, I
 > methods: impedance-spectroscopy, ultrasonic-speed-of-sound, RUS, Debye-frequency, neutron-diffraction, Rietveld, synchrotron-PDF, Meyer-Neldel
 > **저자**: Marvin A. Kraft, Sean P. Culver, Mario Calderon, Felix Böcher, Thorben Krauskopf, Anatoliy Senyshyn, Christian Dietrich, Alexandra Zevalkink, Jürgen Janek, **Wolfgang G. Zeier*** (JLU Giessen / TU München FRM II / Michigan State) · JACS 2017, 139, 10909−10918. Received 2017-06-22, Published 2017-07-25. **Not open access** (© ACS 2017; Hanyang 기관 접근).
@@ -46,6 +46,12 @@ Li₆PS₅X에서 Cl→Br→I 치환은 전도 경로·carrier 농도·결함형
 | **I (=comp5 조성)** | 10.14135(6) | 10.181(8) | **0 %** | 0.391 | 0.219 | 1.5 % Li₃PO₄ · 1.6 % LiI |
 
 *무질서 = 할라이드가 S²⁻ 자리(4d)에 앉은 비율(=Cl-2/Br-2/I-2 occ 합), SI 점유율표에서 계산. Fig 3c와 일치. **Cl 62 % → I 0 %로 단조 소멸** (I⁻ 반경 2.2 Å ≫ S²⁻ 1.84 Å라 섞이지 못함; Cl⁻ 1.81 ≈ S²⁻ 1.84 ≈ Br⁻ 1.96 Å라 잘 섞임).
+
+> **✅ SI 실물 감사 (2026-07-24, `inbox/31. Sup)…pdf` 15 pp 전문 추출 대조)**: 위 표의 9조성 전값(a·Li/음이온 occ·무질서 %·불순물)이 SI **Table S6–S14**(중성자 Rietveld)·**S1–S5**(X-ray synchrotron PDF, 5조성)와 **전부 일치**. SI가 추가로 주는 것:
+> - **중성자 fit 잔차**: Rwp 2.73–3.13 % · Rexp 2.01–2.13 % · χ² 1.71–2.26 (전조성 양호). X-ray PDF Rw는 17.8 %(Cl) → 9.3 %(I)로 단조 개선.
+> - **Uiso(Li1 48h, 중성자) 0.070(2) → 0.024(1) Å² 단조 감소(Cl→I)** — Li 변위 파라미터가 I로 갈수록 축소. σ 3자릿수 하락·48h→24g 재배치와 방향 정합(*이 해석은 우리 것* — 저자는 SI에서 언급 안 함). X-ray 표(S1–S5)에서는 Li ADP를 0.05로 고정(좌표는 중성자값 고정) — Li에는 중성자 표가 원천.
+> - X-ray 불순물 정량은 중성자와 소폭 다름(예: Cl 조성 X-ray 7.1 % Li₃PO₄·3.0 % LiCl vs 중성자 6.6 %·1.2 %) — 방법차, 인용은 중성자 기준 유지.
+> - **속도·C_ij·E_A·σ·σ₀·점프거리 표는 SI에도 없음 확정** (SI 구성 = 결정학표 S1–S14 + Fig S1 G(r) overlay + Fig S2 Meyer–Neldel이 전부) → §14 figure-read(≈) 캐비앳 그대로 유효.
 > 격자상수는 Vegard 법칙 선형 (**Cl 9.86 → I 10.14 Å, +2.8 %**) = 고용체 합성 성공 증거. Li는 48h→24g로 재배치: I로 갈수록 **48h occ 0.50→0.39↓, 24g(전이상태 삼각자리) occ 0→0.22↑** (큰 격자 = 24g 안정화).
 
 ### 3b. 격자 무름 (Fig 6a·7a, **figure-read ≈**)
@@ -210,7 +216,7 @@ Li₆PS₅X에서 Cl→Br→I 치환은 전도 경로·carrier 농도·결함형
 - "Halide substitution is *not* modulus-neutral (Kraft: −15–24 % full exchange); but over our comp1→comp2 window (50 % Br) the softening is modest (~6–8 % in sound speed), part of it a density effect."
 
 ## 14. 주의 / 한계 (over-claim 방지)
-- **속도·Debye·E_A·σ·prefactor·점프거리는 SI에 표가 없음** → 전부 **Fig 4/6/7·S2 figure-read(≈)**, ±수 % 판독오차. 정량 인용 시 "figure-read" 명시.
+- **속도·Debye·E_A·σ·prefactor·점프거리는 SI에 표가 없음**(2026-07-24 SI 15 pp 실물 감사로 **확정** — SI는 결정학표 S1–S14 + Fig S1·S2뿐) → 전부 **Fig 4/6/7·S2 figure-read(≈)**, ±수 % 판독오차. 정량 인용 시 "figure-read" 명시.
 - **E_A = total(bulk+GB) 임피던스** — bulk/GB 미분리(저자 명시). 우리 bulk MD Ea와 절대 비교 금지.
 - **DFT 없음** — 이 논문엔 우리 방법(functional/k/무질서) 대조점 없음. 순수 실험 앵커.
 - **B/G 미보고** — Kraft는 speed of sound·Debye·C_ij만. "Kraft B/G X %" 인용 불가.
