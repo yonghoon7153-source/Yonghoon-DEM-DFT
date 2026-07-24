@@ -101,7 +101,7 @@ def elements():
                            periodic=D.PERIODIC, e2c=e2c,
                            campaign=sorted(D.campaign_elements()),
                            casc_els=sorted(D._cascade_by_element().keys()),
-                           comp_elements=D.COMP_ELEMENTS)
+                           comp_elements=D.COMP_ELEMENTS, mo_db=D.load_molecular_orbitals())
 
 
 @app.route("/explorer")

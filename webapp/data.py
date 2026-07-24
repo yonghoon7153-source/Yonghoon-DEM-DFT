@@ -986,6 +986,15 @@ def element_db_anchors(sym: str) -> dict:
     return {"compositions": comps, "icohp": bonds,
             "pdos": pdos, "xps": sorted(set(xps)), "papers": element_papers(sym)}
 
+def load_molecular_orbitals() -> dict:
+    """kb/molecular_orbitals.json — 화합물 formula → MO 정의 (칩 클릭 팝업용). mtime 캐시(실시간)."""
+    return _mo_cache(_mtime_ns(KB / "molecular_orbitals.json"))
+
+@lru_cache(maxsize=2)
+def _mo_cache(_mt) -> dict:
+    return _load_json(KB / "molecular_orbitals.json") or {}
+
+
 def element_briefing(syms: list) -> dict:
     kb = load_element_kb()
     syms = [s for s in syms if s in {p[0] for p in PERIODIC}]

@@ -1,0 +1,240 @@
+{
+  "PS4": {
+    "name": "PS₄³⁻ 사면체",
+    "summary": "P가 4개 S와 sp³ σ 결합한 정사면체 음이온. argyrodite 골격의 강성과 band edge를 지배하는 backbone.",
+    "ao_left": ["P 3s", "P 3p"],
+    "ao_right": ["S 3p ×4", "S 3s (deep)"],
+    "levels": [
+      {"label": "P–S σ", "type": "bonding", "character": "P 3s3p + S 3p 결합 (sp³ σ backbone, ICOHP ~ -6 eV)", "dos": "VBM 아래 ~5–7 eV 깊이"},
+      {"label": "S 3p lone pair", "type": "nonbonding", "character": "비결합 S 3p (free S²⁻ + PS₄ 미결합 S 고립쌍)", "dos": "VBM (첫 피크)"},
+      {"label": "P–S σ*", "type": "antibonding", "character": "P 3s3p–S 3p 반결합 (+ 소량 Li)", "dos": "CBM"}
+    ],
+    "dos_link": "VBM = S 3p lone pair, CBM = P–S σ* (우리 comp1 계산: VBM S 3p ~91%, CBM S 3p ~42% + P 3s ~25% + Li 2p ~14%)",
+    "source": "our_calc (electronic.json comp1_v3)"
+  },
+  "Li6PS5Cl": {
+    "name": "Li₆PS₅Cl 아지로다이트 (comp1)",
+    "summary": "PS₄ 공유 골격 + free S²⁻ + Cl⁻ 케이지에 이동 Li⁺가 hopping하는 우리 표준 argyrodite. Gap 2.066 eV의 clean 절연체.",
+    "ao_left": ["P 3s", "P 3p", "Li 2s/2p"],
+    "ao_right": ["S 3p", "Cl 3p"],
+    "levels": [
+      {"label": "P–S σ", "type": "bonding", "character": "P 3s3p + S 3p σ (PS₄ backbone)", "dos": "VBM 아래 ~5–7 eV 깊이"},
+      {"label": "S 3p lone pair", "type": "nonbonding", "character": "free S²⁻ + PS₄ 비결합 S 3p — VBM 주도", "dos": "VBM (첫 피크)"},
+      {"label": "Cl 3p lone pair", "type": "nonbonding", "character": "이온성 Cl⁻ 3p⁶ 고립쌍 (밴드엣지에 소량)", "dos": "VBM 바로 아래 (~1%)"},
+      {"label": "PS₄ σ* + Li", "type": "antibonding", "character": "P–S 반결합 σ* + Li 2s/2p 혼입", "dos": "CBM"}
+    ],
+    "dos_link": "VBM = S 3p lone pair, CBM = PS₄ σ* (우리 계산 comp1: gap 2.066 eV, VBM S 3p ~91% + Li 2p ~6% + Cl 3p ~1%, CBM S 3p ~42% + P 3s ~25% + Li 2p ~14% + S 3s ~11%)",
+    "source": "our_calc (electronic.json comp1_v3 / eigenvalue 2.066)"
+  },
+  "Li2S": {
+    "name": "Li₂S (반형석/antifluorite)",
+    "summary": "Li 음극 SEI의 대표 환원생성물. Li⁺가 2s 전자를 S²⁻에 내준 완전 이온성 wide-gap 상.",
+    "ao_left": ["Li 2s"],
+    "ao_right": ["S 3s", "S 3p"],
+    "levels": [
+      {"label": "S 3s", "type": "nonbonding", "character": "깊은 S 3s (닫힌껍질)", "dos": "깊은 VB"},
+      {"label": "S 3p lone pair", "type": "nonbonding", "character": "S²⁻ 3p⁶ 고립쌍 (이온성)", "dos": "VBM"},
+      {"label": "Li 2s", "type": "antibonding", "character": "빈 Li 2s (약한 Li–S 반결합)", "dos": "CBM"}
+    ],
+    "dos_link": "VBM = S²⁻ 3p lone pair, CBM = Li 2s. 완전 이온성이라 S가 밴드엣지를 지배(우리 argyrodite에서도 free S²⁻가 VBM S 3p ~91% 주도) — wide-gap 전자절연 SEI (Li2S 자체 gap ~3.9 eV는 문헌)",
+    "source": "framework-consistent (S 3p VBM 우리 계산 정합; Li2S 절대 gap은 문헌)"
+  },
+  "LiCl": {
+    "name": "LiCl (암염/rock salt)",
+    "summary": "Cl⁻ 부격자 환원으로 생기는 무기 SEI 상. wide-gap 절연 부동태층(전자 차단·Li⁺ 통과).",
+    "ao_left": ["Li 2s"],
+    "ao_right": ["Cl 3s", "Cl 3p"],
+    "levels": [
+      {"label": "Cl 3s", "type": "nonbonding", "character": "깊은 Cl 3s", "dos": "깊은 VB"},
+      {"label": "Cl 3p lone pair", "type": "nonbonding", "character": "Cl⁻ 3p⁶ 고립쌍 (이온성)", "dos": "VBM"},
+      {"label": "Li 2s", "type": "antibonding", "character": "빈 Li 2s", "dos": "CBM"}
+    ],
+    "dos_link": "VBM = Cl⁻ 3p lone pair, CBM = Li 2s. 완전 이온성 wide-gap(~6–6.6 eV, 우리 Li KB) → 전자 막고 Li⁺ 통과. 우리 comp1 계산에서 Cl 3p는 VBM에 ~1%만 기여(이온성)",
+    "source": "framework-consistent (Cl 3p VBM ~1% 우리 계산; LiCl 절대 gap은 문헌)"
+  },
+  "LiBr": {
+    "name": "LiBr (암염/rock salt)",
+    "summary": "Br⁻ 부격자 환원 SEI 상. Cl보다 분극성↑·결합 약함 → Br 4p가 Cl 3p보다 얕음.",
+    "ao_left": ["Li 2s"],
+    "ao_right": ["Br 4s", "Br 4p"],
+    "levels": [
+      {"label": "Br 4s", "type": "nonbonding", "character": "깊은 Br 4s", "dos": "깊은 VB"},
+      {"label": "Br 4p lone pair", "type": "nonbonding", "character": "Br⁻ 4p⁶ 고립쌍 (Cl 3p보다 얕음)", "dos": "VBM"},
+      {"label": "Li 2s", "type": "antibonding", "character": "빈 Li 2s", "dos": "CBM"}
+    ],
+    "dos_link": "VBM = Br⁻ 4p lone pair (Cl 3p보다 얕아 밴드엣지에 더 가까움), CBM = Li 2s. 우리 comp2(Cl₀.₅Br₀.₅) 계산에서 Br 4p가 VBM S 3p에 섞여 gap 소폭 축소; 이온성 wide-gap SEI 상",
+    "source": "framework-consistent (Br 4p VBM 혼입 우리 계산; LiBr 절대 gap은 문헌)"
+  },
+  "LiI": {
+    "name": "LiI (암염/rock salt)",
+    "summary": "I⁻ 부격자 상. 할라이드 중 최대반경·최분극성이라 I 5p가 가장 얕음. LiI 자체가 Li⁺ 전도체·계면 보호막.",
+    "ao_left": ["Li 2s"],
+    "ao_right": ["I 5s", "I 5p"],
+    "levels": [
+      {"label": "I 5s", "type": "nonbonding", "character": "깊은 I 5s", "dos": "깊은 VB"},
+      {"label": "I 5p lone pair", "type": "nonbonding", "character": "I⁻ 5p⁶ 고립쌍 (할라이드 중 가장 얕음)", "dos": "VBM"},
+      {"label": "Li 2s", "type": "antibonding", "character": "빈 Li 2s", "dos": "CBM"}
+    ],
+    "dos_link": "VBM = I⁻ 5p lone pair (할라이드 중 가장 얕아 밴드엣지 기여 최대), CBM = Li 2s. 우리 comp3/comp5 계산에서 I 5p가 VBM S 3p에 섞임; LiI 자체가 Li⁺ 전도 무기상",
+    "source": "framework-consistent (I 5p VBM 혼입 우리 계산; LiI 절대 gap은 문헌)"
+  },
+  "PO4": {
+    "name": "PO₄ / P–O (O 도핑, LPSOCl)",
+    "summary": "O가 PS₄의 S 자리를 hard-hard 치환해 만든 P–O 결합(PS₃O/PO₄형). 골격 국소 강화 + gap 확장.",
+    "ao_left": ["P 3s", "P 3p"],
+    "ao_right": ["O 2p ×4", "O 2s (deep)"],
+    "levels": [
+      {"label": "P–O σ", "type": "bonding", "character": "P 3s3p + O 2p 결합 (P–S보다 강함, ICOHP ~ -8.4 eV)", "dos": "VBM 아래 깊이 ~ -8 eV (P–S σ보다 더 깊음)"},
+      {"label": "O 2p lone pair", "type": "nonbonding", "character": "비결합 O 2p (강한 이온성)", "dos": "VBM보다 깊게 ~ -4 eV에 묻힘 (VBM 아님)"},
+      {"label": "P–O σ*", "type": "antibonding", "character": "P–O 반결합 σ* (P–S σ*보다 위로 밀림)", "dos": "CBM보다 위 (gap 안 정의)"}
+    ],
+    "dos_link": "O 2p는 VBM보다 깊게(~ -4 eV) 묻혀 밴드엣지를 정의 안 함 → VBM은 여전히 S 3p, gap은 pristine PS₄가 결정. P–O σ가 깊고 σ*가 높아 두 frontier가 갭 엣지에서 멀어짐 → gap 오히려 넓어짐 (우리 계산: +O LPSOCl 2.2309 vs modelc 2.099 eV)",
+    "source": "our_calc (electronic.json LPSOCl 2.2309)"
+  },
+  "Cu2O": {
+    "name": "Cu₂O (적동석/cuprite, Cu⁺ d¹⁰)",
+    "summary": "Cu⁺(d¹⁰) 산화물. Cu 3d¹⁰가 VBM 상부에서 O 2p와 섞이는 narrow-gap p형 반도체.",
+    "ao_left": ["Cu 3d", "Cu 4s"],
+    "ao_right": ["O 2p"],
+    "levels": [
+      {"label": "Cu 3d–O 2p bonding", "type": "bonding", "character": "Cu 3d + O 2p 결합", "dos": "VB 하부"},
+      {"label": "Cu 3d¹⁰ block", "type": "nonbonding", "character": "채워진 Cu 3d¹⁰ (+ O 2p 반결합 혼입)", "dos": "VBM 상부 (첫 피크)"},
+      {"label": "Cu 4s", "type": "antibonding", "character": "빈 Cu 4s (+ Cu 3d)", "dos": "CBM"}
+    ],
+    "dos_link": "VBM = Cu 3d¹⁰ (+ O 2p 혼성) 상부, CBM = Cu 4s → Cu 3d가 VBM을 끌어올려 narrow-gap(~2.1 eV, 문헌). Cu⁺(d¹⁰)는 채워져 상대적으로 얌전하나 3d가 밴드엣지에 있어 도핑 시 gap 축소·전자누설 소지 (문헌/일반 MO)",
+    "source": "literature/general MO"
+  },
+  "CuO": {
+    "name": "CuO (흑동석/tenorite, Cu²⁺ d⁹)",
+    "summary": "Cu²⁺(d⁹, 열린껍질) 산화물. Charge-transfer 절연체로 redox-active midgap 3d 홀을 가짐.",
+    "ao_left": ["Cu 3d", "Cu 4s"],
+    "ao_right": ["O 2p"],
+    "levels": [
+      {"label": "Cu 3d–O 2p bonding", "type": "bonding", "character": "Cu 3d + O 2p 결합", "dos": "VB 하부"},
+      {"label": "O 2p + Cu 3d", "type": "nonbonding", "character": "O 2p–Cu 3d 혼성 (charge-transfer 상단)", "dos": "VBM"},
+      {"label": "Cu 3d upper Hubbard", "type": "antibonding", "character": "Cu 3d–O 2p 반결합, 빈 d⁹ 홀 (upper Hubbard band)", "dos": "CBM (좁은 gap 위)"}
+    ],
+    "dos_link": "VBM = O 2p + Cu 3d 혼성, CBM = 빈 Cu 3d(upper Hubbard band) → Cu²⁺(d⁹) 열린껍질이라 gap 좁고(~1.4 eV, 문헌) 3d 홀이 redox-active. 도핑 시 midgap·전자누설 위험(Cu²⁺→Cu⁺→Cu⁰; 스핀분극+U 필요) (문헌/일반 MO)",
+    "source": "literature/general MO"
+  },
+  "ZnO": {
+    "name": "ZnO (우르차이트/wurtzite, Zn²⁺ d¹⁰)",
+    "summary": "Zn²⁺(d¹⁰ 닫힌껍질) wide-gap 반도체. Zn 3d가 깊어 midgap을 거의 안 만드는 clean 종.",
+    "ao_left": ["Zn 4s", "Zn 3d (semicore)"],
+    "ao_right": ["O 2p"],
+    "levels": [
+      {"label": "Zn 3d semicore", "type": "nonbonding", "character": "채워진 Zn 3d¹⁰ (반코어)", "dos": "VBM 아래 깊이 ~ -7 eV"},
+      {"label": "O 2p", "type": "nonbonding", "character": "O 2p (소량 Zn 4s 혼성)", "dos": "VBM"},
+      {"label": "Zn 4s", "type": "antibonding", "character": "빈 Zn 4s", "dos": "CBM"}
+    ],
+    "dos_link": "VBM = O 2p, CBM = Zn 4s. Zn 3d¹⁰는 VBM 아래 깊이(~ -7 eV) 국소화돼 밴드엣지 안 건드림 → clean wide-gap(~3.3 eV, 문헌), midgap 없음(redox 비활성 d¹⁰) (문헌/일반 MO)",
+    "source": "literature/general MO"
+  },
+  "ZrO2": {
+    "name": "ZrO₂ (지르코니아, Zr⁴⁺ d⁰)",
+    "summary": "Zr⁴⁺(빈 4d) 비환원 초광대역 절연 앵커. NMC 표면 코팅재이자 LLZO garnet의 Zr.",
+    "ao_left": ["Zr 4d", "Zr 5s"],
+    "ao_right": ["O 2p"],
+    "levels": [
+      {"label": "Zr 4d–O 2p bonding", "type": "bonding", "character": "O 2p + Zr 4d 결합", "dos": "VB 하부"},
+      {"label": "O 2p lone pair", "type": "nonbonding", "character": "비결합 O 2p", "dos": "VBM"},
+      {"label": "Zr 4d (empty)", "type": "antibonding", "character": "빈 Zr 4d (Zr 4d–O 2p 반결합)", "dos": "CBM"}
+    ],
+    "dos_link": "VBM = O 2p, CBM = 빈 Zr 4d. Zr⁴⁺(d⁰) 비환원 → gap ~5–5.8 eV 초광대역, midgap 없음 → clean 절연 앵커·전자차단 코팅(개방껍질 없어 DFT+U 불필요) (문헌/일반 MO)",
+    "source": "literature/general MO"
+  },
+  "MgO": {
+    "name": "MgO (암염/rock salt, Mg²⁺)",
+    "summary": "Mg²⁺([Ne] 닫힌 코어) 매우 넓은 갭 이온 절연체. 전자차단 코팅/SEI에 우호적.",
+    "ao_left": ["Mg 3s"],
+    "ao_right": ["O 2s", "O 2p"],
+    "levels": [
+      {"label": "O 2s", "type": "nonbonding", "character": "깊은 O 2s", "dos": "깊은 VB"},
+      {"label": "O 2p", "type": "nonbonding", "character": "O²⁻ 2p 고립쌍 (소량 Mg 3s 혼성)", "dos": "VBM"},
+      {"label": "Mg 3s", "type": "antibonding", "character": "빈 Mg 3s", "dos": "CBM"}
+    ],
+    "dos_link": "VBM = O²⁻ 2p, CBM = Mg 3s. Mg²⁺는 빈 3s·닫힌 [Ne] 코어라 midgap 없음, gap ~7.8 eV(문헌) → 전자차단 SEI/코팅 우호(Ke 2025: 계면 gap 열어 Li→PS₄ 전자공여 차단) (문헌/일반 MO)",
+    "source": "literature/general MO"
+  },
+  "Al2O3": {
+    "name": "Al₂O₃ (강옥/corundum, Al³⁺)",
+    "summary": "Al³⁺(빈 원자가) 매우 넓은 갭 이온-공유 절연체. 검증된 ALD 계면 코팅 baseline.",
+    "ao_left": ["Al 3s", "Al 3p"],
+    "ao_right": ["O 2p"],
+    "levels": [
+      {"label": "Al 3s3p–O 2p σ", "type": "bonding", "character": "Al 3s3p + O 2p 결합", "dos": "VB 하부 (깊은 결합상)"},
+      {"label": "O 2p lone pair", "type": "nonbonding", "character": "비결합 O 2p", "dos": "VBM"},
+      {"label": "Al 3s3p σ*", "type": "antibonding", "character": "Al 3s3p–O 2p 반결합", "dos": "CBM"}
+    ],
+    "dos_link": "VBM = O 2p, CBM = Al 3s/3p σ*. Al³⁺(빈 원자가)라 midgap 없음, gap ~8.8 eV(문헌) → 전자절연 코팅에 이상적(검증된 ALD baseline) (문헌/일반 MO)",
+    "source": "literature/general MO"
+  },
+  "TiO2": {
+    "name": "TiO₂ (아나타제/anatase, Ti⁴⁺ d⁰)",
+    "summary": "Ti⁴⁺(d⁰)이면 clean wide-gap이나 Ti³⁺(3d¹) 환원 시 midgap 결함준위가 생기는 다가 종.",
+    "ao_left": ["Ti 3d", "Ti 4s"],
+    "ao_right": ["O 2p"],
+    "levels": [
+      {"label": "Ti 3d–O 2p bonding", "type": "bonding", "character": "O 2p + Ti 3d 결합(π)", "dos": "VB 하부"},
+      {"label": "O 2p nonbonding", "type": "nonbonding", "character": "비결합 O 2p", "dos": "VBM"},
+      {"label": "Ti³⁺ 3d¹ (환원 시)", "type": "nonbonding", "character": "환원 시 점유 3d¹ 결함준위 (Ti⁴⁺→Ti³⁺)", "dos": "gap 내부 (midgap, VBM과 CBM 사이)"},
+      {"label": "Ti 3d (empty t₂g)", "type": "antibonding", "character": "빈 Ti 3d (Ti 3d–O 2p π*)", "dos": "CBM"}
+    ],
+    "dos_link": "VBM = O 2p, CBM = 빈 Ti 3d. Ti⁴⁺(d⁰)이면 clean wide-gap(~3 eV, 문헌)이나 Ti⁴⁺→Ti³⁺(3d¹) 환원 시 갭 안 점유 3d 결함준위(midgap)·전자누설 → 다가 redox 리스크(스핀분극+U) (문헌/일반 MO)",
+    "source": "literature/general MO"
+  },
+  "Fe2O3": {
+    "name": "Fe₂O₃ (적철석/hematite, Fe³⁺ d⁵)",
+    "summary": "Fe³⁺(d⁵ 열린껍질) charge-transfer 절연체. gap이 호스트 argyrodite와 겹쳐 전자누설 우려.",
+    "ao_left": ["Fe 3d", "Fe 4s"],
+    "ao_right": ["O 2p"],
+    "levels": [
+      {"label": "Fe 3d–O 2p bonding", "type": "bonding", "character": "Fe 3d + O 2p 결합", "dos": "VB 하부"},
+      {"label": "O 2p + Fe 3d", "type": "nonbonding", "character": "O 2p–Fe 3d 혼성 (charge-transfer 상단)", "dos": "VBM"},
+      {"label": "Fe 3d upper Hubbard", "type": "antibonding", "character": "빈 소수스핀 Fe 3d (upper Hubbard band)", "dos": "CBM"}
+    ],
+    "dos_link": "VBM = O 2p + Fe 3d(charge-transfer), CBM = 빈 Fe 3d. Fe³⁺(d⁵) 열린껍질이라 gap ~2.0–2.2 eV(문헌)로 호스트 argyrodite 갭(~2 eV)과 겹침 → 3d 결함준위·전자누설, 다가 Fe²⁺/Fe³⁺ redox 리스크(스핀분극+U 필수) (문헌/일반 MO)",
+    "source": "literature/general MO"
+  },
+  "SiO2": {
+    "name": "SiO₂ (석영/quartz, Si⁴⁺)",
+    "summary": "Si⁴⁺(빈 원자가) 유리형성 초광대역 절연체. 전자차단 코팅 후보(B₂O₃형 network former).",
+    "ao_left": ["Si 3s", "Si 3p"],
+    "ao_right": ["O 2p"],
+    "levels": [
+      {"label": "Si 3s3p–O 2p σ", "type": "bonding", "character": "Si 3s3p + O 2p σ 결합 (network)", "dos": "VB 하부"},
+      {"label": "O 2p lone pair", "type": "nonbonding", "character": "비결합 O 2p 고립쌍", "dos": "VBM"},
+      {"label": "Si 3s3p σ*", "type": "antibonding", "character": "Si 3s3p–O 2p 반결합", "dos": "CBM"}
+    ],
+    "dos_link": "VBM = O 2p 비결합 lone pair, CBM = Si 3s/3p σ*. Si⁴⁺(빈 원자가) 유리형성 절연체, gap ~9 eV(문헌), midgap 없음 → 전자차단 코팅 (문헌/일반 MO)",
+    "source": "literature/general MO"
+  },
+  "Nd2O3": {
+    "name": "Nd₂O₃ (희토류 산화물, Nd³⁺ 4f³)",
+    "summary": "Nd³⁺(4f³ 국소 개방껍질) 염기성 산화물. 우리 캠페인에선 host-band를 끌어내려 gap을 축소하는 도펀트.",
+    "ao_left": ["Nd 5d", "Nd 6s", "Nd 4f (국소)"],
+    "ao_right": ["O 2p"],
+    "levels": [
+      {"label": "Nd 4f (filled)", "type": "nonbonding", "character": "채워진 국소 Nd 4f (5s5p에 가린 core-like 모멘트)", "dos": "갭 밖 깊이 ~ -7.4 eV (우리 도핑)"},
+      {"label": "O 2p", "type": "nonbonding", "character": "비결합 O 2p", "dos": "VBM"},
+      {"label": "Nd 4f upper Hubbard", "type": "nonbonding", "character": "빈 Nd 4f 상부 Hubbard band", "dos": "Nd₂O₃ 광학 엣지 / 우리 도핑에선 갭 밖 +1.9 eV"},
+      {"label": "Nd 5d/6s", "type": "antibonding", "character": "Nd 5d/6s (실제 결합 원자가)", "dos": "CBM 바로 위"}
+    ],
+    "dos_link": "Nd₂O₃ 자체: VBM O 2p, gap = O 2p→Nd 4f 상부 Hubbard band. 우리 Nd 도핑 argyrodite: 밴드엣지는 host(VBM S 3p, CBM PS₄ 유래) — Nd 4f는 갭 밖(채워진 -7.4, 빈 +1.9 eV), Nd 5d/6s가 PS₄ CBM을 끌어내려 gap 0.55 eV 축소(우리 계산: matched U0 2.184→Nd 1.632 eV). 4f는 in-gap 준위 아님(ISPIN=2+DFT+U 필수)",
+    "source": "our_calc (electronic.json Nd narrowing) + literature (Nd₂O₃ 4f)"
+  },
+  "Ga2O3": {
+    "name": "Ga₂O₃ (β-갈리아, Ga³⁺ d¹⁰)",
+    "summary": "Ga³⁺(3d¹⁰ 반코어) 초광대역 clean 산화물. P 자리 치환 시 도핑당 Li⁺ 2개 캐리어 레버.",
+    "ao_left": ["Ga 4s", "Ga 4p", "Ga 3d (semicore)"],
+    "ao_right": ["O 2p"],
+    "levels": [
+      {"label": "Ga 3d semicore", "type": "nonbonding", "character": "채워진 Ga 3d¹⁰ (깊은 반코어)", "dos": "VB 훨씬 아래"},
+      {"label": "Ga 4s4p–O 2p bonding", "type": "bonding", "character": "Ga 4s4p + O 2p 결합", "dos": "VB 하부"},
+      {"label": "O 2p", "type": "nonbonding", "character": "비결합 O 2p", "dos": "VBM"},
+      {"label": "Ga 4s (+4p)", "type": "antibonding", "character": "빈 Ga 4s/4p (Ga–O 반결합)", "dos": "CBM"}
+    ],
+    "dos_link": "VBM = O 2p, CBM = Ga 4s/4p. Ga³⁺ 3d¹⁰는 깊은 반코어라 밴드엣지 안 건드림 → 초광대역 clean gap(~4.8 eV, 문헌), midgap 없음. 도핑당 Li⁺ 2개 캐리어 레버(저전위 Ga³⁺→Ga⁰ 환원은 계면 주의) (문헌/일반 MO)",
+    "source": "literature/general MO"
+  }
+}
