@@ -500,6 +500,10 @@ kbd{font-family:var(--mono);font-size:.72em;background:var(--bg);border:1px soli
 .el-sec{margin:10px 0}
 .el-sec-t{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);margin-bottom:6px}
 .el-txt{font-size:.86rem;line-height:1.6;color:var(--text2)}
+.orb-cfg{font-family:var(--mono);font-size:.9rem;font-weight:700;color:var(--navy);margin:6px 0 9px;line-height:1.55}
+.orb-cfg .muted{font-weight:400;font-size:.8rem}
+.orb-k{display:inline-block;min-width:42px;color:var(--accent);font-weight:700;font-size:.78rem;margin-right:2px}
+.el-orb .el-txt{margin:3px 0}
 .cmpd{padding:6px 0;border-bottom:1px dashed var(--border2)}
 .cmpd-f{font-family:var(--mono);font-weight:700;color:var(--navy);margin-right:8px}
 .cmpd-role{font-size:.74rem;background:var(--accent-soft);color:var(--accent);padding:1px 8px;border-radius:12px;font-weight:600}
