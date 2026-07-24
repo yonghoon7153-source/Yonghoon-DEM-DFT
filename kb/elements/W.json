@@ -1,0 +1,37 @@
+{
+  "symbol": "W",
+  "name": "Tungsten",
+  "Z": 74,
+  "role": "cascade 산화물 도펀트 후보(WO₃)이나 명목 5d⁰치곤 redox-active·환원성이 커 주의 대상. W⁶⁺=5d⁰라 WO₃는 명목상 wide-gap(~2.7 eV)이지만 W⁵⁺/W⁴⁺로 쉽게 환원돼 LiₓWO₃ 텅스텐 브론즈(Li 삽입, 착색·전도)를 형성 → 전기변색·전자 누설. Mo의 무거운 동류. W⁶⁺→P⁵⁺는 aliovalent(6+ vs 5+)라 전하보상으로 Li 공공↑(캐리어 감소 방향). 높은 EN(2.36)으로 W–O/W–S 공유성 큼.",
+  "oxidation_states": ["+6", "+5", "+4"],
+  "electronegativity": 2.36,
+  "ionic_radius_A": {
+    "W6+_IV": 0.42,
+    "W6+_VI": 0.6,
+    "W4+_VI": 0.66,
+    "_note": "Shannon 1976: W⁶⁺ 사면체 IV 0.42 A, 팔면체 VI 0.60 A; W⁴⁺ VI 0.66 A(환원 시 팽창). W⁶⁺ VI 0.60은 Li⁺ VI(0.76)보다 작아 aliovalent 치환 시 전하보상 필요; P⁵⁺ IV(0.17)엔 훨씬 커 P 자리 치환 시 국소 팽창."
+  },
+  "representative_compounds": [
+    {"formula": "WO3", "context": "도펀트 전구체(캐스케이드 산화물)", "battery_role": "전기변색 산화물 도펀트; W·O 공급원", "note": "monoclinic; gap ~2.6-2.8 eV(비교적 좁음). W 4f7/2 ~35.7 eV(W⁶⁺). LiₓWO₃ 브론즈로 쉽게 환원 → 전도·착색"},
+    {"formula": "WS2", "context": "층상 황화물 참고상", "battery_role": "W가 S 골격에 들어간 반도체 층상(고체윤활제); W–S 공유 참고", "note": "gap ~1.3-2 eV; W–S 강공유. 황화물 계 W 참고상이나 도펀트 의도는 WO₃의 O-앵커"},
+    {"formula": "Li2WO4 / LixWO3 bronze", "context": "Li-W-O 상 / 삽입 브론즈", "battery_role": "W redox 활성상 — 브론즈는 Li 삽입 혼합전도체", "note": "W⁶⁺/W⁵⁺ redox로 전자·Li 혼합전도 → 절연 SE와 상반되는 거동(전자 누설 예시)"}
+  ],
+  "sei_relevance": "W는 native SE 이온이 아니라 WO₃ 산화물 도펀트/양극측 종. 문제는 WO₃가 LiₓWO₃ 텅스텐 브론즈(Li 삽입 호스트, 혼합전도체)를 쉽게 형성한다는 점 — 부동태 절연층이 아니라 전자 누설·환원 경로가 돼 Li 금속 계면엔 부적합. Mo/V처럼 redox-active 주의종으로, SE의 절연성 요구와 상충. 벌크·양극 도펀트로 검토하더라도 W⁶⁺→W⁵⁺/W⁴⁺ 환원 취약이 핵심 리스크(전자전도↑·midgap 상태).",
+  "xps": [
+    {"core": "W 4f7/2", "BE_eV": 35.7, "assignment": "WO3 / W⁶⁺ (보고 35.6-36.1 eV; 4f5/2 ~38.0 eV 더블릿)", "ref": "NIST XPS DB; xpsfitting.com Tungsten"},
+    {"core": "W 4f7/2", "BE_eV": 34.5, "assignment": "W⁵⁺ (WO3-x 서브옥사이드/브론즈의 저BE shoulder ~33-34.5 eV)", "ref": "xpsfitting.com Tungsten; 환원 WO3 XPS"},
+    {"core": "W 4f7/2", "BE_eV": 32.9, "assignment": "WO2 / W⁴⁺ (~32.9 eV)", "ref": "NIST XPS DB; xpsfitting.com Tungsten"},
+    {"core": "W 4f7/2", "BE_eV": 31.2, "assignment": "W metal / W⁰ (~31.15 eV; 환원 생성물)", "ref": "NIST XPS DB"}
+  ],
+  "raman": [
+    {"cm1": 807, "assignment": "monoclinic WO3 O-W-O stretch 최강 지문(+715 stretch, ~273 bend) — 도펀트 산화물상 확인용(호스트 SSB 모드 아님)", "ref": "monoclinic WO3 Raman 표준 참조"}
+  ],
+  "dos_character": "W⁶⁺=5d⁰라 WO₃는 명목 wide-gap(~2.7 eV)이지만 W⁵⁺(5d¹) polaron/midgap 상태가 브론즈·환원에서 생겨 착색중심·전자전도를 만듦 → 명목 d⁰라도 redox-active(Mo/V류). 즉 clean wide-gap이 아니라 '환원되면 갭 내 상태가 켜지는' 종. 국소화 5d¹에는 스핀분극+DFT+U 고려. 이 그룹에서 Hf/Ta의 clean 5d⁰과 정반대로 전자 누설 리스크가 큰 쪽.",
+  "key_references": [
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (W⁶⁺ VI 0.60 A)",
+    "WO3 electrochromic / LixWO3 브론즈 문헌 — W⁶⁺/W⁵⁺ redox·삽입 전도(전자 누설 맥락)",
+    "xpsfitting.com Tungsten — W 4f7/2 WO3 35.7 eV, WO2 32.9 eV, W⁵⁺ shoulder ~34.5 eV, metal ~31.2 eV"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
+}

@@ -1,0 +1,34 @@
+{
+  "symbol": "Ta",
+  "name": "Tantalum",
+  "Z": 73,
+  "role": "cascade 산화물 도펀트 후보(Ta₂O₅)이자 산화물 SE에서 검증된 안정화제. Ta⁵⁺=5d⁰ hard-ish wide-gap 종 → 갭 안 결함준위가 거의 없고 환원도 잘 안 됨(Nb⁵⁺보다 robust). cubic garnet LLZO의 대표 안정화제(Li₆.₅La₃Zr₁.₅Ta₀.₅O₁₂에서 Ta⁵⁺@Zr⁴⁺ 자리). 황화물에선 Ta⁵⁺→P⁵⁺ 등가원자가(isovalent) 치환(크기·분극성 레버, Ta⁵⁺ 0.64≫P⁵⁺ 0.17).",
+  "oxidation_states": ["+5"],
+  "electronegativity": 1.5,
+  "ionic_radius_A": {
+    "Ta5+_VI": 0.64,
+    "Ta5+_VIII": 0.74,
+    "_note": "Shannon 1976: Ta⁵⁺ 팔면체 VI 0.64 A, VIII 0.74 A. VI 0.64는 Nb⁵⁺(0.64)와 동일(란탄족 수축)하나 Ta가 더 환원 안정. P⁵⁺ IV(0.17)보다 훨씬 커 P 자리 등가치환 시 큰 국소 팽창·연화; Li⁺ VI(0.76)보다 작음."
+  },
+  "representative_compounds": [
+    {"formula": "Ta2O5", "context": "도펀트 전구체(캐스케이드 산화물)", "battery_role": "wide-gap 절연 산화물 도펀트; ALD 코팅 계면 보호", "note": "gap ~4.0-4.6 eV. Ta 4f7/2 ~26.3 eV. d⁰라 환원 robust; 산화물-금속 이동이 커(~4.6 eV) 산화상태 판별 쉬움"},
+    {"formula": "Li6.5La3Zr1.5Ta0.5O12 (LLZO:Ta)", "context": "garnet 산화물 SE 안정화", "battery_role": "Ta⁵⁺@Zr⁴⁺ → cubic garnet 상 안정화·고σ의 표준 도핑", "note": "Ta가 SE 상 안정화제로 검증된 대표 사례(산화물 SE) — 5d⁰ aliovalent(5+@4+)로 Li 공공 조절"},
+    {"formula": "TaS2", "context": "층상 황화물 참고상", "battery_role": "Ta가 S 골격에 들어간 금속성 층상(CDW 물질) 참고", "note": "Ta–S 호환 참고 — 단 도펀트 주 의도는 Ta₂O₅의 O-앵커/안정화"}
+  ],
+  "sei_relevance": "Ta는 native SE 이온이 아니라 Ta₂O₅ 산화물 도펀트/코팅 종. Ta⁵⁺는 5d⁰라 환원이 어려워 Ta₂O₅는 Li 금속에 비교적 견고(Hf/Zr급까진 아니어도 Nb보다 안정) — ALD Ta₂O₅ 계면 코팅은 부동태·전자차단에 우호적. 게다가 LLZO:Ta처럼 SE 상 자체를 안정화한 실적이 있어 '구조 안정화제' 성격이 강함. 특이 SEI 무기성분보단 안정 절연 코팅/상 안정화가 Ta의 핵심.",
+  "xps": [
+    {"core": "Ta 4f7/2", "BE_eV": 26.3, "assignment": "Ta2O5 / Ta⁵⁺ (보고 26.2-26.7 eV)", "ref": "NIST XPS DB; xpsfitting.com Tantalum"},
+    {"core": "Ta 4f7/2", "BE_eV": 21.7, "assignment": "Ta metal / Ta⁰ (보고 20.7-21.8 eV). 산화물-금속 split ~4.6 eV로 크게 벌어짐", "ref": "NIST XPS DB; xpsfitting.com Tantalum"}
+  ],
+  "raman": [
+    {"cm1": 680, "assignment": "amorphous Ta2O5 주 band(Ta-O-Ta stretch) — 도펀트 산화물상 지문(결정상은 ~250 cm-1 O-Ta-O bend)", "ref": "Ta2O5 Raman(amorphous/orthorhombic) 표준 참조"}
+  ],
+  "dos_character": "Ta⁵⁺=5d⁰ → 점유 5d 상태가 없고 Ta₂O₅는 wide-gap(~4.0-4.6 eV) 절연체라 갭 내 결함준위·스핀이 없음. 같은 5d⁰인 Nb⁵⁺가 환원되기 쉬운 것과 달리 Ta⁵⁺는 더 robust한 clean wide-gap 종 → 스핀분극·DFT+U 불필요. Hf⁴⁺/Zr⁴⁺/Sc³⁺와 함께 '결함준위 안 넣는' clean 도펀트 군(W⁶⁺·V·Cu 같은 redox-active 종과 대비).",
+  "key_references": [
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Ta⁵⁺ VI 0.64 A)",
+    "Murugan et al., Angew. Chem. 2007 및 Ta-doped LLZO 연구 — Ta⁵⁺@Zr⁴⁺로 cubic garnet 안정화",
+    "xpsfitting.com Tantalum — Ta 4f7/2 Ta2O5 ~26.3 eV, metal ~21.7 eV(split ~4.6 eV)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
+}

@@ -1,0 +1,35 @@
+{
+  "symbol": "Hf",
+  "name": "Hafnium",
+  "Z": 72,
+  "role": "cascade 산화물 도펀트 후보(HfO₂)로 이 그룹에서 전자구조상 가장 '깨끗한' 종. Hf⁴⁺=5d⁰ 닫힌/빈 껍질 hard Lewis acid → 갭 안에 결함준위를 안 넣고 wide-gap을 유지, 환원이 거의 안 됨. 사실상 Zr의 동족(란탄족 수축으로 Zr⁴⁺ 0.72≈Hf⁴⁺ 0.71, 화학 거의 동일)이라 검증된 ZrO₂ 지식을 유추 가능. HfO₂는 high-k 유전체(gap ~5.7 eV)라 ALD 코팅으로 계면 보호에 흔함.",
+  "oxidation_states": ["+4"],
+  "electronegativity": 1.3,
+  "ionic_radius_A": {
+    "Hf4+_IV": 0.58,
+    "Hf4+_VI": 0.71,
+    "Hf4+_VIII": 0.83,
+    "_note": "Shannon 1976: Hf⁴⁺ 사면체 IV 0.58 A, 팔면체 VI 0.71 A, VIII 0.83 A. VI 0.71은 Zr⁴⁺ VI(0.72)와 사실상 동일(란탄족 수축) → Zr와 크기·화학 거의 같음. Li⁺ VI(0.76)보다 약간 작아 aliovalent 치환 시 전하보상 필요."
+  },
+  "representative_compounds": [
+    {"formula": "HfO2", "context": "도펀트 전구체(캐스케이드 산화물) / high-k", "battery_role": "ultra-wide-gap 절연 산화물 도펀트; ALD 코팅으로 계면 보호", "note": "monoclinic; gap ~5.7 eV(초광대역). Hf 4f7/2 ~16.7 eV. d⁰라 환원 매우 어려움 → 견고한 wide-gap 유지"},
+    {"formula": "HfS2", "context": "층상 황화물 참고상", "battery_role": "Hf가 S 골격에 들어간 참고상(CdI2형 반도체)", "note": "Hf–S 골격 gap ~2 eV; 황화물 계 Hf⁴⁺ 참고 — 산화물보다 이온성 약함"},
+    {"formula": "ZrO2 (Zr-congener 비교)", "context": "동족 유추 기준", "battery_role": "Hf와 거의 동일 거동의 검증된 클린 wide-gap 도펀트(치수 안정제)", "note": "Zr⁴⁺≈Hf⁴⁺라 ZrO2 지식 이식 가능(단 우리 db 절대값은 분리) — Hf는 '무거운 Zr'"}
+  ],
+  "sei_relevance": "Hf는 native SE 이온이 아니라 HfO₂ 산화물 도펀트/코팅 종. Hf⁴⁺는 d⁰ hard 산이라 환원이 매우 어려워 HfO₂는 ZrO₂/Al₂O₃급으로 Li 금속에도 비교적 견고 — ALD HfO₂ 계면 코팅은 전자차단 부동태층으로 우호적. 특이적 SEI 반응성보다는 안정 절연 코팅/벌크 치수 안정제 역할이 핵심이고, 이 그룹(Ag/In/Sn/Sb/W 대비)에서 계면 환원 안정성은 Ta와 함께 최상급. 갭 내 결함준위를 안 만들어 전자 누설 리스크도 낮음.",
+  "xps": [
+    {"core": "Hf 4f7/2", "BE_eV": 16.7, "assignment": "HfO2 / Hf⁴⁺ (보고 ~16.7 eV~; 조건에 따라 상단 존재)", "ref": "NIST XPS DB; xpsfitting.com Hafnium; Thermo Fisher Hf"},
+    {"core": "Hf 4f7/2", "BE_eV": 14.3, "assignment": "Hf metal / Hf⁰ (보고 14.3-14.4 eV; 비대칭 라인). 산화물-금속 이동 ~2.4 eV", "ref": "NIST XPS DB; xpsfitting.com Hafnium"}
+  ],
+  "raman": [
+    {"cm1": 500, "assignment": "monoclinic HfO2 Ag 최강 모드(~500-520 cm-1) — 도펀트 산화물상 지문(호스트 SSB 모드 아님; +low-freq 133/257 cm-1)", "ref": "monoclinic HfO2 Raman 표준 참조"}
+  ],
+  "dos_character": "Hf⁴⁺=5d⁰ → 점유 5d 상태가 없고 빈 5d는 CBM 위로 깊숙이 밀려 argyrodite 갭 안에 결함준위를 거의 안 만듦. HfO₂ 자체가 ultra-wide-gap(~5.7 eV) 절연체. open-shell이 아니라 스핀분극·DFT+U 불필요 — Sc(3d⁰)의 5d 판, 이 그룹에서 전자적으로 가장 무해한 종. Ta⁵⁺(5d⁰)와 함께 clean wide-gap 군의 대표.",
+  "key_references": [
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Hf⁴⁺ VI 0.71 A; Zr⁴⁺ 0.72와 동일)",
+    "xpsfitting.com Hafnium / Thermo Fisher — Hf 4f7/2 HfO2 ~16.7 eV, metal ~14.3 eV",
+    "HfO2 high-k 유전체 밴드구조 문헌 — gap ~5.7 eV, monoclinic Raman ~500 cm-1"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
+}
