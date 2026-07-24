@@ -150,6 +150,88 @@ def fit_rint_form(N, rint, chemistry='unknown'):
             'r2': float(r2), 'form_only': not g['transfer_absolute'], 'provenance': g}
 
 
+# ── 오픈소스 .mat 컨버터 (실다운로드 → per-cell CSV → ingest_csv 경로) ────────
+def convert_nasa_mat(mat_path, out_dir):
+    """NASA PCoE 배터리 .mat (B0005…, 구식 MATLAB struct) → cycle,discharge_capacity_Ah CSV.
+    공개 규약 구조: top 키 = 파일명 stem, .cycle 배열 — 원소별 type('charge'/'discharge'/'impedance'),
+    .data.Capacity (방전만).  방전 사이클만 순번 매김.  scipy.io 만 필요 (h5py 불필요).
+    chemistry = liquid_lco → §F1 FORM/METHOD-ONLY (인제스트 시 게이트가 라벨)."""
+    import csv as _csv
+    from scipy.io import loadmat
+    try:
+        m = loadmat(mat_path, squeeze_me=True, struct_as_record=False)
+    except Exception as e:
+        return {'error': f'loadmat 실패 ({type(e).__name__}: {e}) — v7.3(HDF5)이면 NASA 규약 아님'}
+    stem = os.path.splitext(os.path.basename(mat_path))[0]
+    key = stem if stem in m else next((k for k in m if not k.startswith('__')), None)
+    root = m.get(key) if key else None
+    cycles = getattr(root, 'cycle', None) if root is not None else None
+    if cycles is None:
+        return {'error': f"'{key}.cycle' 없음 — NASA PCoE 규약 아님 (키: {[k for k in m if not k.startswith('__')]})"}
+    rows, n_dis = [], 0
+    for c in np.atleast_1d(cycles):
+        if str(getattr(c, 'type', '')).strip().lower() != 'discharge':
+            continue
+        n_dis += 1
+        cap = getattr(getattr(c, 'data', None), 'Capacity', None)
+        try:
+            cap = float(np.atleast_1d(np.asarray(cap, float)).ravel()[0])
+        except (TypeError, ValueError, IndexError):
+            cap = float('nan')                                  # 결측 = nan (§F1 — 0 아님)
+        rows.append((n_dis, cap))
+    if n_dis < 4:
+        return {'error': f'방전 사이클 부족({n_dis}<4): {mat_path}'}
+    os.makedirs(out_dir, exist_ok=True)
+    out_csv = os.path.join(out_dir, f'{stem}_nasa.csv')
+    with open(out_csv, 'w', newline='') as f:
+        w = _csv.writer(f); w.writerow(['cycle_N', 'discharge_capacity_Ah'])
+        w.writerows(rows)
+    return {'csv': out_csv, 'n_discharge': n_dis, 'chemistry': 'liquid_lco',
+            'note': 'NASA PCoE — §F1 FORM/METHOD-ONLY (liquid LCO/layered)'}
+
+
+def convert_severson_mat(mat_path, out_dir, max_cells=None):
+    """Severson/MIT-Stanford-TRI batchdata .mat (v7.3 = HDF5) → per-cell CSV (cycle,QDischarge).
+    h5py 필요 (WSL: pip install h5py — 클라우드 컨테이너 없음 → import-guard).
+    공개 규약 구조: f['batch']['summary'][i] → HDF5 ref → summary 그룹 'cycle'/'QDischarge'.
+    ⚠ EXPERIMENTAL — 첫 실런(WSL)서 배치별 필드명 확인 (에러는 명시적, 조용한 오파싱 없음).
+    chemistry = liquid_lfp → §F1 FORM/METHOD-ONLY."""
+    import csv as _csv
+    try:
+        import h5py
+    except ImportError:
+        return {'error': 'h5py 미설치 — WSL에서 pip install h5py 후 실행'}
+    stem = os.path.splitext(os.path.basename(mat_path))[0][:40]
+    os.makedirs(out_dir, exist_ok=True)
+    out, errs = [], []
+    with h5py.File(mat_path, 'r') as f:
+        if 'batch' not in f:
+            return {'error': f"'batch' 그룹 없음 — Severson batchdata 규약 아님 (top: {list(f.keys())[:6]})"}
+        summ = f['batch']['summary']
+        n_cell = summ.shape[0] if summ.ndim >= 1 else 0
+        lim = n_cell if max_cells is None else min(n_cell, int(max_cells))
+        for i in range(lim):
+            try:
+                ref = summ[i, 0] if summ.ndim == 2 else summ[i]
+                g = f[ref]
+                cyc = np.asarray(g['cycle']).ravel()
+                qd = np.asarray(g['QDischarge']).ravel()
+                m_ok = np.isfinite(cyc) & np.isfinite(qd) & (qd > 0)
+                if m_ok.sum() < 4:
+                    errs.append(f'cell{i}: 점 부족'); continue
+                p = os.path.join(out_dir, f'{stem}_cell{i:03d}.csv')
+                with open(p, 'w', newline='') as fh:
+                    w = _csv.writer(fh); w.writerow(['cycle_N', 'discharge_capacity_Ah'])
+                    w.writerows(zip(cyc[m_ok].astype(int), qd[m_ok]))
+                out.append(p)
+            except Exception as e:                              # 셀 단위 격리 (명시적 수집)
+                errs.append(f'cell{i}: {type(e).__name__}: {e}')
+    if not out:
+        return {'error': f'변환된 셀 0 (errors: {errs[:3]})'}
+    return {'csvs': out, 'n_cells': len(out), 'n_errors': len(errs), 'errors_head': errs[:3],
+            'chemistry': 'liquid_lfp', 'note': 'Severson — §F1 FORM/METHOD-ONLY (LFP-liquid)'}
+
+
 # ── 알려진 공개 데이터셋 레지스트리 (provenance 포함) ────────────────────────
 DATASET_REGISTRY = [
     {'name': 'Severson-MIT-Toyota 2019', 'chemistry': 'liquid_lfp', 'n_cells': 124,
@@ -216,6 +298,32 @@ def _selftest():
         rf = fit_rint_form(Ntrue, Rt, chemistry='sulfide_assb')
         if 'error' in rf or rf['r2'] < 0.98 or rf['form_only']:
             fails.append(f"R_int 적합: {rf.get('error', rf.get('r2'))} form_only={rf.get('form_only')}")
+        # 5) NASA .mat 컨버터 왕복 (합성 .mat — 실배포와 같은 struct 배열 규약)
+        from scipy.io import savemat
+        mp = os.path.join(td, 'B9999.mat')
+        _cycles = []
+        _q = [1.85, 1.82, 1.80, 1.77, 1.74]
+        for k in range(9):                                     # discharge 5 + charge 4 교차
+            if k % 2 == 0:
+                _cycles.append({'type': 'discharge', 'data': {'Capacity': _q[k // 2]}})
+            else:
+                _cycles.append({'type': 'charge', 'data': {'Capacity': np.array([])}})
+        savemat(mp, {'B9999': {'cycle': np.array(_cycles, dtype=object)}})
+        cv = convert_nasa_mat(mp, td)
+        if 'error' in cv:
+            fails.append(f"NASA 컨버터: {cv['error']}")
+        elif cv['n_discharge'] != 5:
+            fails.append(f"NASA 방전수 5≠{cv['n_discharge']}")
+        else:
+            d2 = ingest_csv(cv['csv'], chemistry='liquid_lco', cap_nominal=1.85)
+            if 'error' in d2 or d2['n_cycles'] != 5 or d2['provenance']['transfer_absolute']:
+                fails.append(f"NASA CSV 인제스트: {d2.get('error', d2.get('n_cycles'))}")
+        # 6) Severson 컨버터 가드 (h5py 없는 클라우드 → 명시적 에러, 조용한 실패 없음)
+        sv = convert_severson_mat(mp, td, max_cells=1)
+        if 'error' not in sv:
+            pass                                               # h5py 있으면 규약검사가 배치그룹 없음으로 에러났어야
+        elif ('h5py' not in sv['error']) and ('batch' not in sv['error']) and ('규약' not in sv['error']):
+            fails.append(f"Severson 가드 비명시적: {sv['error']}")
     print('selftest OK' if not fails else 'selftest FAIL:\n  ' + '\n  '.join(fails))
     if not fails:
         print(f"  게이트: sulfide=절대OK · liquid=form-only(§F1) · 미상=보수")
@@ -233,11 +341,24 @@ def main(argv=None):
     ap.add_argument('--chemistry', default='unknown', choices=list(CHEMISTRIES))
     ap.add_argument('--cap-nominal', type=float, default=None)
     ap.add_argument('--registry', action='store_true', help='알려진 데이터셋 레지스트리 출력')
+    ap.add_argument('--nasa-mat', default='', help='NASA PCoE B00xx.mat → CSV 변환 (scipy)')
+    ap.add_argument('--severson-mat', default='', help='Severson batchdata .mat(v7.3) → per-cell CSV (h5py, WSL)')
+    ap.add_argument('--out-dir', default='data/open_cycling/csv', help='.mat 변환 CSV 출력 폴더')
+    ap.add_argument('--max-cells', type=int, default=None, help='Severson 셀 수 제한')
     a = ap.parse_args(argv)
-    if a.selftest or (not a.csv and not a.registry):
+    if a.selftest or (not a.csv and not a.registry and not a.nasa_mat and not a.severson_mat):
         return _selftest()
     if a.registry:
         print(registry_summary()); return 0
+    if a.nasa_mat:
+        cv = convert_nasa_mat(a.nasa_mat, a.out_dir)
+        print(json.dumps(cv, ensure_ascii=False) if 'error' in cv
+              else f"NASA 변환: {cv['csv']} ({cv['n_discharge']} 방전) — {cv['note']}")
+        return 1 if 'error' in cv else 0
+    if a.severson_mat:
+        cv = convert_severson_mat(a.severson_mat, a.out_dir, max_cells=a.max_cells)
+        print(json.dumps({k: v for k, v in cv.items() if k != 'csvs'}, ensure_ascii=False))
+        return 1 if 'error' in cv else 0
     d = ingest_csv(a.csv, chemistry=a.chemistry, cap_nominal=a.cap_nominal)
     if 'error' in d:
         print(d['error']); return 1

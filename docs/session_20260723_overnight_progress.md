@@ -81,6 +81,23 @@
    토글: physics-EIS 선 위 실험 풀셀 초록 방울.  full 4셀 6–132 Ω·cm² · physics(SBE~70)가 cloud 안 =
    σ-triad·R_ct 자릿수 교차검증.  = EIS 모듈 핵심 약속(같은 회로→실측 대조)의 그림 완성.
 
+## ★ 2026-07-24 이어서 — 논문 figure format + 흰색 /eis + 뷰어연동 + 실행배치 준비
+- **DRT/EIS 논문 포맷 (사용자 예시 재현, "앞으로 이 스타일")**: `save_eis_figures` 전면 재작성 —
+  box frame·안쪽 tick(`_paper_ax`)·**open-circle Nyquist**(Pristine/N=### 주석)·**단일-색군 blue-gradient
+  DRT**(SOC-legend 스타일)·mathtext **γ(lnτ)/τ/Z′/−Z″ (Ω cm²)**·R(N) open-marker·assumed-form §F1 라벨.
+- **/eis 흰색 기반**(글씨 가독): `.content` 한정 라이트 변수(사이드바 불변) + 캔버스 5개 흰 배경 +
+  캔버스 드로잉도 논문 스타일(open circle·blue gradient·남색 DRT·γ(lnτ)) + 강조색 스윕.
+- **mpm 뷰어 연동**: 3D 뷰어 헤더 **🔌 EIS/DRT** 버튼(labOpenEIS, labCurId→/eis?case=) — 저장목록 링크에
+  더해 뷰어 안에서 직행.
+- **실행배치 준비 ("이거 다하자" 사용자-머신 몫)**: ① `cycling_data_ingest.py` **NASA .mat 컨버터**
+  (scipy, 합성 .mat 왕복 selftest PASS) + **Severson v7.3 h5py 컨버터**(EXPERIMENTAL, h5py 가드) + CLI
+  `--nasa-mat/--severson-mat`.  ② `scripts/run_wsl_batch.sh` — sklearn 설치→**NASA S3 실다운로드(URL 200
+  검증)**→변환→인제스트(§F1 게이트)→**v3 surrogate 실학습**; Severson 은 matr.io 동적링크라 수동입수→자동
+  변환(§F1: 미검증 URL 하드코딩 안 함).  ③ `scripts/run_v100_pybamm_parity.sh` — 지금 도는 0.2C 런의
+  mpm_metrics.json 서 σ/ε/두께 자동추출(검증: 0.00536/3.94e-4/119.31µm)→`step4_pybamm_anchor --compare`
+  = **#5 패리티 원커맨드**.  ④ `docs/step4_ac_solve_design.md` — 완전 AC-solve(주파수영역 선형화 G+jωC,
+  face-분해 C_dl·per-particle Warburg = depressed-arc 기원 해상) 연구트랙 킥오프.
+
 ## 남은 것 (클라우드서 불가/블록)
 WSL **실학습 실행**(sklearn) · **오픈소스 실다운로드**(네트워크) · **완전 AC-solve**(2.9M-dof 미세구조 EIS,
 연구트랙) · C_dl 정밀앵커(α높은 셀 재측정)·D5 분배/C_dl(N)/D_s(N) 실측(앵커대기) · STEP4 PyBaMM 패리티(#5,
