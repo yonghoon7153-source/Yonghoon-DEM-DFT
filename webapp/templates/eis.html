@@ -483,8 +483,9 @@ const EIS = {
     } else { tip.style.display='none'; return; }
     tip.innerHTML=html; tip.style.display='block';
     const cw=cv.clientWidth||440;
-    tip.style.left=Math.max(4, Math.min((e.clientX-r.left)*(cw/(r.width||1))+12, cw-250))+'px';
-    tip.style.top=Math.max(2,(e.clientY-r.top)*(380/(r.height||1))-8)+'px';
+    // 컨테이너(캔버스) 기준 CSS px 로 배치 — 커서 약간 아래·오른쪽(커서와 안 겹치게)
+    tip.style.left=Math.max(4, Math.min((e.clientX-r.left)+14, cw-248))+'px';
+    tip.style.top=((e.clientY-r.top)+22)+'px';
   },
   async runICA(){
     const txt = this.el('e-ica-in').value.trim();
