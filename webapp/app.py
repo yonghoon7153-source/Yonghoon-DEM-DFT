@@ -4101,7 +4101,8 @@ def _eis_exp_table():
             'n_points': _num(c, 'n_points'), 'f_max_Hz': _num(c, 'f_max_Hz'), 'f_min_Hz': _num(c, 'f_min_Hz'),
             'R_s_ohmcm2': _num(f, 'R_s_ohmcm2'), 'R_int_ohmcm2': _num(f, 'R1_ohmcm2'),
             'R_w_ohmcm2': _num(f, 'R_w_ohmcm2'), 'C_dl_uF_cm2': _num(f, 'C_dl_uF_cm2'),
-            'sigma_e_mScm': _num(f, 'sigma_e_mScm'), 'rmse_pct': _num(f, 'rmse_pct'),
+            'sigma_e_mScm': _num(f, 'sigma_e_mScm'), 'L_composite_um': _num(f, 'L_composite_um'),
+            'rmse_pct': _num(f, 'rmse_pct'),
             'circuit': f.get('circuit', ''), 'fitted': bool(f.get('R1_ohm')),
             'area_cm2': _num(c, 'area_cm2') or _num(f, 'area_cm2'), 'note': c.get('note', '') or f.get('note', ''),
         })
@@ -4127,6 +4128,60 @@ def api_eis_exp_list():
         return jsonify(_eis_exp_table())
     except Exception as e:
         return jsonify({'error': f'목록 실패: {type(e).__name__}: {e}', 'rows': []}), 200
+
+
+@app.route('/api/eis_exp_thickness', methods=['POST'])
+def api_eis_exp_thickness():
+    """대칭셀 σ_e 두께 설정 (site 두께 입력) → thickness_overrides.json 저장 + σ_e 즉시 재계산
+    (σ_e = L/R1, R1 은 이미 fit된 값 재사용 → CNLS 재fit 불필요, 즉답).  기본 45µm."""
+    import csv as _csv
+    import json as _json
+    P = _eis_archive_paths()
+    body = request.get_json(silent=True) or {}
+    fn = (body.get('filename') or '').strip()
+    if not fn:
+        return jsonify({'error': 'filename 없음'}), 200
+    try:
+        thick = float(body.get('thickness_um'))
+    except (TypeError, ValueError):
+        return jsonify({'error': '두께 숫자 아님'}), 200
+    if not (0.5 <= thick <= 300):
+        return jsonify({'error': f'두께 범위 벗어남 ({thick} — 0.5~300µm)'}), 200
+    ov_path = os.path.join(P['archive'], 'thickness_overrides.json')
+    try:                                                      # override JSON 갱신
+        ov = _json.load(open(ov_path)) if os.path.isfile(ov_path) else {}
+    except Exception:
+        ov = {}
+    ov[fn] = round(thick, 2)
+    try:
+        with open(ov_path, 'w') as fh:
+            _json.dump(ov, fh, ensure_ascii=False, indent=1)
+    except Exception as e:
+        return jsonify({'error': f'override 저장 실패: {e}'}), 200
+    # fits CSV 의 해당 대칭셀 행 σ_e 즉시 재계산 (R1 재사용)
+    fits = P['fits']
+    if os.path.isfile(fits):
+        try:
+            with open(fits, newline='') as fh:
+                rd = _csv.DictReader(fh); cols = rd.fieldnames; rows = list(rd)
+            for r in rows:
+                if r.get('filename') == fn and r.get('cell_type') == 'symmetric':
+                    try:
+                        r1 = float(r.get('R1_ohmcm2', ''))
+                        if r1 > 0:
+                            r['L_composite_um'] = round(thick, 2)
+                            r['sigma_e_mScm'] = round(thick * 1e-4 / r1 * 1e3, 4)
+                            _lo = round(max(thick - 2, 0.1) * 1e-4 / r1 * 1e3, 4)
+                            _hi = round((thick + 2) * 1e-4 / r1 * 1e3, 4)
+                            r['sigma_e_range_mScm'] = f'{_lo}-{_hi}'
+                            r['note'] = f'SUS ion-blocking → R1=R_e; σ_e=L/R1 (L={thick:g}µm 지정)'
+                    except (TypeError, ValueError):
+                        pass
+            with open(fits, 'w', newline='') as fh:
+                w = _csv.DictWriter(fh, fieldnames=cols); w.writeheader(); w.writerows(rows)
+        except Exception as e:
+            return jsonify({'error': f'σ_e 재계산 실패: {e}', **_eis_exp_table()}), 200
+    return jsonify({'ok': True, 'filename': fn, 'thickness_um': round(thick, 2), **_eis_exp_table()})
 
 
 @app.route('/api/eis_exp_upload', methods=['POST'])
@@ -4190,6 +4245,66 @@ def api_eis_exp_upload():
     tab = _eis_exp_table()
     return jsonify({'ok': True, 'saved': saved, 'notes': notes,
                     'archive': arch_msg, 'fit': fit_msg, **tab})
+
+
+@app.route('/api/eis_exp_delete', methods=['POST'])
+def api_eis_exp_delete():
+    """실험 EIS 측정 파일 삭제 — 원본·추출·fit 기록 제거.
+    POST JSON {filename: 'name.csv'}."""
+    import csv as _csv
+    P = _eis_archive_paths()
+    body = request.get_json(silent=True) or {}
+    fn = (body.get('filename') or '').strip()
+    if not fn:
+        return jsonify({'error': 'filename 없음'}), 200
+    # path traversal 방지
+    try:
+        safe_fn = _contained_join(P['archive'], fn)
+        if not safe_fn.startswith(P['archive']):
+            return jsonify({'error': 'invalid path'}), 403
+    except Exception:
+        return jsonify({'error': 'path error'}), 400
+    # 1) 원본/추출 파일 삭제
+    deleted = []
+    for folder in ['raw', 'extracted']:
+        path = _contained_join(P[folder], fn)
+        if os.path.isfile(path):
+            try:
+                os.remove(path)
+                deleted.append(folder)
+            except Exception:
+                pass
+    # 2) fit 기록에서 행 제거
+    fits = P['fits']
+    if os.path.isfile(fits):
+        try:
+            with open(fits, newline='') as fh:
+                rd = _csv.DictReader(fh)
+                cols = rd.fieldnames
+                rows = [r for r in rd if r.get('filename') != fn]
+            with open(fits, 'w', newline='') as fh:
+                w = _csv.DictWriter(fh, fieldnames=cols)
+                w.writeheader()
+                w.writerows(rows)
+            deleted.append('fit_record')
+        except Exception:
+            pass
+    # 3) 카탈로그에서 행 제거
+    cat = P['catalog']
+    if os.path.isfile(cat):
+        try:
+            with open(cat, newline='') as fh:
+                rd = _csv.DictReader(fh)
+                cols = rd.fieldnames
+                rows = [r for r in rd if r.get('filename') != fn]
+            with open(cat, 'w', newline='') as fh:
+                w = _csv.DictWriter(fh, fieldnames=cols)
+                w.writeheader()
+                w.writerows(rows)
+            deleted.append('catalog')
+        except Exception:
+            pass
+    return jsonify({'ok': True, 'filename': fn, 'deleted': deleted, **_eis_exp_table()})
 
 
 @app.route('/')

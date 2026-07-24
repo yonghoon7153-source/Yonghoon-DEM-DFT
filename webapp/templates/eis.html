@@ -41,8 +41,7 @@
     <span style="color:#a07c1f">⚠ .mpr 파싱엔 galvani 필요(WSL) — 클라우드선 .csv 즉시 fit / .mpr 은 파싱대기</span>.
   </div>
   <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px">
-    <input id="xe-file" type="file" multiple accept=".mpr,.mps,.csv" class="e-in" style="flex:1 1 300px;padding:5px">
-    <button id="xe-upload" class="btn btn-primary btn-sm">⬆ 업로드 · fit</button>
+    <input id="xe-file" type="file" multiple accept=".mpr,.mps,.csv" class="e-in" style="flex:1 1 300px;padding:5px" title="파일을 선택하면 자동으로 업로드 · fit 진행">
     <button id="xe-refresh" class="btn btn-sm btn-secondary">↻ 목록</button>
   </div>
   <div id="xe-status" style="font-size:.74rem;color:var(--dim);margin-bottom:8px"></div>
@@ -52,8 +51,10 @@
         <th style="text-align:left;padding:5px 8px">측정 파일</th><th style="text-align:left">셀</th>
         <th style="text-align:left">state</th><th style="text-align:right">R_s</th><th style="text-align:right">R_int</th>
         <th style="text-align:right">R_w</th><th style="text-align:right">C_dl</th><th style="text-align:right">σ_e</th>
+        <th style="text-align:right" title="합제(cathode) 두께 µm — 대칭셀 σ_e=L/R1. 기본 45, 셀별 변경 가능">L(µm)</th>
         <th style="text-align:right">rmse%</th><th style="text-align:right">N</th>
-        <th style="text-align:center" title="전체 선택/해제"><input type="checkbox" id="xe-all" onchange="EIS.selAll(this.checked)">겹칠</th></tr></thead>
+        <th style="text-align:center" title="전체 선택/해제"><input type="checkbox" id="xe-all" onchange="EIS.selAll(this.checked)">겹칠</th>
+        <th style="text-align:center">삭제</th></tr></thead>
       <tbody id="xe-tbody"></tbody>
     </table>
   </div>
@@ -409,12 +410,13 @@ const EIS = {
   },
   async uploadExp(){
     const inp=this.el('xe-file');
-    if(!inp.files||!inp.files.length){ this.el('xe-status').textContent='파일을 선택해줘 (.mpr / .csv)'; return; }
+    if(!inp.files||!inp.files.length) return;
     const fd=new FormData(); for(const f of inp.files) fd.append('files', f);
-    this.el('xe-status').innerHTML='<span style="color:#2a5db0">⏳ 업로드·추출·fit 중… (수 초~수십 초)</span>';
+    const fnames = Array.from(inp.files).map(f=>f.name).join(', ');
+    this.el('xe-status').innerHTML=`<span style="color:#2a5db0">⏳ ${fnames} 업로드·추출·fit 중… (수 초~수십 초)</span>`;
     let d; try { d=await (await fetch('/api/eis_exp_upload',{method:'POST',body:fd})).json(); }
-    catch(e){ this.el('xe-status').textContent='업로드 실패: '+e; return; }
-    if(d.error){ this.el('xe-status').innerHTML='<span style="color:#c0392b">실패: '+d.error+'</span>'; }
+    catch(e){ this.el('xe-status').innerHTML='<span style="color:#c0392b">🔥 업로드 실패: '+e+'</span>'; return; }
+    if(d.error){ this.el('xe-status').innerHTML='<span style="color:#c0392b">🔥 실패: '+d.error+'</span>'; }
     else {
       const nt=(d.notes||[]).length?' · <span style="color:#a07c1f">⚠ '+d.notes.join('; ')+'</span>':'';
       this.el('xe-status').innerHTML=`<span style="color:#1e8f5e">✓ ${(d.saved||[]).length}개 저장</span> · `+
@@ -439,8 +441,10 @@ const EIS = {
         `<td style="text-align:right;color:${r.rmse_pct>10?'#c0392b':'var(--dim)'}">${f(r.rmse_pct,1)}</td>`+
         `<td style="text-align:right;color:var(--dim)">${r.n_points||'—'}</td>`+
         `<td style="text-align:center"><input type="checkbox" class="xe-sel" value="${r.filename}" `+
-        `onchange="EIS.onSelChange()" title="체크 → 아래 Nyquist '🔬 실험 겹치기' 로 이 측정만 겹침"></td></tr>`;
-    }).join('')) || '<tr><td colspan="11" style="padding:8px;color:var(--dim)">측정 없음 — 위에서 .mpr/.csv 업로드</td></tr>';
+        `onchange="EIS.onSelChange()" title="체크 → 아래 Nyquist '🔬 실험 겹치기' 로 이 측정만 겹침"></td>`+
+        `<td style="text-align:center"><button class="btn btn-sm" style="padding:2px 6px;background:#f5e6e6;border:1px solid #d9a5a5;color:#c0392b;cursor:pointer;font-size:.7rem" `+
+        `onclick="EIS.deleteExp('${r.filename}')" title="이 측정 삭제">✕ 삭제</button></td></tr>`;
+    }).join('')) || '<tr><td colspan="12" style="padding:8px;color:var(--dim)">측정 없음 — 위에서 .mpr/.csv 업로드</td></tr>';
     const a=d.anchor;
     this.el('xe-anchor').innerHTML = a ?
       `<b style="color:#1e8f5e">frame[4] 대표앵커</b> (full-cell ${a.n_full}개): C_dl≈<b>${a.c_dl_areal_uF_cm2}</b> µF/cm²geo`+
@@ -449,6 +453,26 @@ const EIS = {
       `<span style="color:var(--dim)">→ 🔬실험앵커 토글로 physics-EIS 에 적용</span>` : '';
     const allb=this.el('xe-all'); if(allb) allb.checked=false;   // 재렌더 → 전체선택 리셋
     this.onSelChange();                                          // 켜져있으면 오버레이 갱신(선택 비면 힌트)
+  },
+  async deleteExp(filename){
+    if(!confirm(`"${filename}" 을(를) 정말 삭제할까요?`)) return;
+    this.el('xe-status').innerHTML='<span style="color:#2a5db0">⏳ 삭제 중…</span>';
+    let d; try {
+      d = await (await fetch('/api/eis_exp_delete', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({filename})
+      })).json();
+    } catch(e) {
+      this.el('xe-status').innerHTML='<span style="color:#c0392b">삭제 실패: '+e+'</span>';
+      return;
+    }
+    if(d.error) {
+      this.el('xe-status').innerHTML='<span style="color:#c0392b">삭제 실패: '+d.error+'</span>';
+    } else {
+      this.el('xe-status').innerHTML='<span style="color:#1e8f5e">✓ '+filename+' 삭제됨</span>';
+    }
+    this.renderExpTable(d);
   },
   selAll(on){   // 표 헤더 전체선택 → 모든 행 체크/해제 + 켜져있으면 즉시 갱신
     document.querySelectorAll('.xe-sel').forEach(c=>{ c.checked=on; });
@@ -614,7 +638,8 @@ const EIS = {
     this.el('e-exp-toggle').addEventListener('click', ()=>this.toggleExp());
     this.el('e-drt').addEventListener('mousemove', e=>this.drtHover(e));
     this.el('e-drt').addEventListener('mouseleave', ()=>{ this.el('e-drt-tip').style.display='none'; });
-    this.el('xe-upload').addEventListener('click', ()=>this.uploadExp());
+    // 파일 선택 시 자동 업로드 (삭제된 수동 버튼 대신)
+    this.el('xe-file').addEventListener('change', ()=>this.uploadExp());
     this.el('xe-refresh').addEventListener('click', ()=>this.loadExpList());
     this.loadExpList();   // 이미 먹인 측정 목록(표) 초기 로드
     this.el('e-ica-run').addEventListener('click', ()=>this.runICA());
