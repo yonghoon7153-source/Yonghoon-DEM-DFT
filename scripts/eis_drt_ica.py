@@ -37,20 +37,25 @@ def warburg_open(freqs_hz, R_w, tau_s):
     return float(R_w) * (1.0 / np.tanh(s)) / s                 # coth(s)/s — np.tanh 는 |s|→∞ 안정(→1)
 
 
-def randles_eis(freqs_hz, R0, R_ct, C_dl, R_w, tau_w):
-    """Z(ω) = R0 + R_ct/(1+jω R_ct C_dl) + Z_Wo.  eis_fit R0-p(R1,CPE1)-Wo1 (CPE→이상 C) 정합.
-    단위: R 은 Ω·cm², C_dl 은 F/cm², freqs Hz.  반환 복소 Z[Ω·cm²]."""
+def randles_eis(freqs_hz, R0, R_ct, C_dl, R_w, tau_w, R_int_arc=0.0, C_int=0.0):
+    """Z(ω) = R0 + [R_int‖C_int 계면 arc] + R_ct/(1+jω R_ct C_dl) + Z_Wo.
+    eis_fit R0-p(R1,CPE1)-Wo1 (CPE→이상 C) 정합 — 실험의 R1 arc = 집전체/계면 R_int.
+    R_int_arc>0 & C_int>0 이면 계면 arc 로, C_int=0 이면 직렬(레거시).  단위: R Ω·cm², C F/cm²."""
     w = 2.0 * np.pi * np.asarray(freqs_hz, float)
-    Z_arc = float(R_ct) / (1.0 + 1j * w * float(R_ct) * float(C_dl))
-    Z_w = warburg_open(freqs_hz, R_w, tau_w)
-    return float(R0) + Z_arc + Z_w
+    Z = float(R0) + float(R_ct) / (1.0 + 1j * w * float(R_ct) * float(C_dl)) \
+        + warburg_open(freqs_hz, R_w, tau_w)
+    if R_int_arc > 0.0:
+        Z = Z + (float(R_int_arc) / (1.0 + 1j * w * float(R_int_arc) * float(C_int))
+                 if C_int > 0.0 else float(R_int_arc))
+    return Z
 
 
 def physics_eis(freqs_hz, *, sigma_e_S_cm, sigma_ion_S_cm, thickness_um, r_int_ohm_cm2=0.0,
                 i0_A_m2=2.0, a_spec=None, spec_area_cm2_cm3=None, porosity=None,
                 am_vol_frac=None, coverage_frac=0.5,
                 d_s_m2_s=3e-14, r_p_um=3.0, c_dl_uF_cm2=10.0, c_dl_areal_uF_cm2=None, dudx_V=None,
-                c_max_mol_m3=63104.0, alpha_a=0.5, alpha_c=0.5, temp_k=298.15, r_w_ohm_cm2=None):
+                c_max_mol_m3=63104.0, alpha_a=0.5, alpha_c=0.5, temp_k=298.15, r_w_ohm_cm2=None,
+                r_int_mode='arc', c_int_uF_cm2=None):
     """우리 물리 파라미터 → EIS Z(ω) + 소자 dict.  각 소자 provenance 반환.
     a_spec = 반응면적/기하면적 [cm²/cm²].  없으면 spec_area_cm2_cm3·thickness 로 추정(구형 3φ/r)."""
     L_cm = float(thickness_um) * 1e-4
@@ -60,7 +65,22 @@ def physics_eis(freqs_hz, *, sigma_e_S_cm, sigma_ion_S_cm, thickness_um, r_int_o
     #   과대 → 다공전극 균일반응 TL DC극한 R_ion/3 만 직렬 기여(중간주파 45° feature 의 DC 한계).
     R_ion = L_cm / max(float(sigma_ion_S_cm), 1e-30)           # 전극 이온수송 전저항 (분산)
     R_e = L_cm / max(float(sigma_e_S_cm), 1e-30)
-    R0_hf = R_e + float(r_int_ohm_cm2)                        # HF 실축 절편 = eis_fit R0 와 프레임 정합
+    # ★R_int 배치 (2026-07-24 물리정정): 실험(eis_fit)의 R_int 는 중간주파 **arc**(R1‖CPE1)지 HF 직렬
+    #   절편이 아님 — 집전체/계면 접촉은 자기 이중층을 가진 계면.  직렬 배치는 "큰 오프셋+작은 arc"
+    #   (실측은 "작은 오프셋~10 + 큰 arc~50")로 Nyquist 모양이 실험과 어긋났음.  기본 = arc 모드
+    #   (r_int_mode='series' 레거시 유지).  DC 총저항은 두 모드 동일 (배치만 이동).
+    R_int = max(float(r_int_ohm_cm2), 0.0)
+    arc_int = (str(r_int_mode) == 'arc') and (R_int > 0.0)
+    if arc_int:
+        # 실험(eis_fit) R1‖CPE1 arc = 이 계면 arc (R1~24-79Ω 大 = 우리 R_int, ≠ 작은 BV R_ct).
+        # → 🔬실험앵커의 Brug C_dl(c_dl_areal)이 이 C_int(계면 arc)를 앵커 (BV C_dl 아님).
+        _cint = c_int_uF_cm2 if c_int_uF_cm2 is not None else c_dl_areal_uF_cm2
+        C_int = (float(_cint) if _cint is not None else 100.0) * 1e-6   # F/cm²geo
+        cint_src = (f'실험앵커 eis_fit CPE→Brug ≈{float(_cint):.0f} µF/cm²geo (계면 arc)' if _cint is not None
+                    else 'ASSUMED 100 µF/cm²geo — 🔬실험앵커(CPE→Brug)로 교체 권장 §F1')
+    else:
+        C_int, cint_src = 0.0, ('직렬(레거시) — arc 권장' if R_int > 0 else 'R_int=0')
+    R0_hf = R_e + (0.0 if arc_int else R_int)                 # HF 실축 절편 (arc 모드: 전자 벌크만)
     R_ion_tl_dc = R_ion / 3.0                                 # TL DC극한 (Newman 다공전극 균일반응)
     R0 = R0_hf + R_ion_tl_dc
     # a_spec (반응 계면 면적비): 직접 주거나, 비표면적×두께, 또는 구형 3·φ_AM·coverage/r 근사
@@ -80,15 +100,16 @@ def physics_eis(freqs_hz, *, sigma_e_S_cm, sigma_ion_S_cm, thickness_um, r_int_o
     #   ★실험앵커(c_dl_areal_uF_cm2)를 주면 총 이중층(µF/cm²_기하)을 직접 사용 = eis_fit CPE→Brug
     #   실측값(이미 총량이라 a_spec 곱 안 함); intrinsic 은 역산해 표시.  §F1: depressed arc(α낮음)라
     #   실측 C_dl 은 자릿수-앵커(셀간 40-80× 분산) — arc 주파수 f_ct 의 자릿수만 고정, 정밀앵커 아님.
-    if c_dl_areal_uF_cm2 is not None:
+    if (c_dl_areal_uF_cm2 is not None) and not arc_int:        # 직렬모드서만 실험앵커→BV C_dl (arc 모드는 C_int로 감)
         C_dl = float(c_dl_areal_uF_cm2) * 1e-6                  # F/cm²geo 직접 (실험 총 이중층)
         c_dl_int_eff = C_dl / a_spec * 1e6                      # 역산 intrinsic µF/cm²계면 (표시용)
         cdl_src = (f'실험앵커 eis_fit CPE→Brug ≈{float(c_dl_areal_uF_cm2):.0f} µF/cm²geo '
                    '(⚠α낮은 depressed arc → 자릿수 앵커, 정밀X)')
     else:
-        C_dl = float(c_dl_uF_cm2) * 1e-6 * a_spec
+        C_dl = float(c_dl_uF_cm2) * 1e-6 * a_spec              # BV 이중층 (문헌 1-10 µF/cm²계면 × a_spec)
         c_dl_int_eff = float(c_dl_uF_cm2)
-        cdl_src = '★앵커 µF/cm² (실험 EIS CPE 또는 sulfide|NMC 문헌 1-10) — §F1'
+        cdl_src = ('BV arc — 문헌 µF/cm²계면 (실험앵커는 계면 arc C_int로; BV는 작은 sub-arc)' if arc_int
+                   else '★앵커 µF/cm² (실험 EIS CPE 또는 sulfide|NMC 문헌 1-10) — §F1')
     # Warburg: τ = r²/D (구형 확산시간).  R_w = 물리추정 |dU/dx|·r/(F·c_max·D·a) 또는 입력
     r_m = float(r_p_um) * 1e-6
     tau_w = r_m ** 2 / max(float(d_s_m2_s), 1e-30)
@@ -100,15 +121,20 @@ def physics_eis(freqs_hz, *, sigma_e_S_cm, sigma_ion_S_cm, thickness_um, r_int_o
         # DC 구형-Warburg 저항 추정: |dU/dx|·r/(F·c_max·D·a_spec) — O(1) 인자 미정 = ASSUMED-FORM
         R_w = dudx * r_m / (F * float(c_max_mol_m3) * float(d_s_m2_s) * a_spec) * 1e4  # →Ω·cm² 스케일
         rw_src = 'ASSUMED-FORM (dU/dx·r/(F·c_max·D·a); O(1) 인자 미정 → 실험 Wo1_R 로 교체 권장)'
-    Z = randles_eis(freqs_hz, R0, R_ct, C_dl, R_w, tau_w)
+    Z = randles_eis(freqs_hz, R0, R_ct, C_dl, R_w, tau_w, R_int_arc=(R_int if arc_int else 0.0), C_int=C_int)
+    f_int = (1.0 / (2 * np.pi * R_int * C_int)) if (arc_int and C_int > 0) else None
     elems = {'R0_ohm_cm2': R0, 'R0_hf_ohm_cm2': R0_hf, 'R_ion_tl_dc': R_ion_tl_dc, 'R_ion_full': R_ion,
-             'R_e': R_e, 'R_int': float(r_int_ohm_cm2),
+             'R_e': R_e, 'R_int': R_int, 'R_int_mode': ('arc' if arc_int else 'series'),
+             'C_int_uF_cm2': (C_int * 1e6 if arc_int else None), 'f_int_Hz': f_int,
+             'R_dc_total_ohm_cm2': R0 + R_ct + R_w + (R_int if arc_int else 0.0),
              'R_ct_ohm_cm2': R_ct, 'C_dl_F_cm2': C_dl, 'C_dl_uF_cm2_int': c_dl_int_eff,
              'C_dl_uF_cm2_areal': C_dl * 1e6,
              'R_w_ohm_cm2': R_w, 'tau_w_s': tau_w, 'a_spec': a_spec, 'coverage_frac': float(coverage_frac),
              'f_ct_Hz': 1.0 / (2 * np.pi * R_ct * C_dl),
-             'provenance': {'R0_hf': 'STEP3 σ_e+collector (HF 절편, frame[4] 정합)',
+             'provenance': {'R0_hf': 'STEP3 σ_e (+직렬모드 R_int) — HF 절편, frame[4] 정합',
                             'R_ion_tl': 'STEP3 σ_ion 전극수송 TL DC극한 R_ion/3 (분산 feature)',
+                            'R_int': ('집전체/계면 arc R‖C_int — 실험 R1(중간주파 arc) 정합; C_int=' + cint_src
+                                      if arc_int else '직렬 절편 배치 (레거시); ' + cint_src),
                             'R_ct': '⚠STEP4 BV lin — i0 의존(i0 정량부재, 스윕전용 §F1)',
                             'C_dl': cdl_src,
                             'R_w': rw_src + '; ⚠D_s 도 미측정(스윕)',
@@ -247,23 +273,40 @@ def cycle_eis_trajectory(freqs_hz, base_elems, cycles, growth_mult,
     R0_0 = float(base_elems['R0_ohm_cm2']); Rct_0 = float(base_elems['R_ct_ohm_cm2'])
     Rw_0 = float(base_elems['R_w_ohm_cm2']); Cdl = float(base_elems['C_dl_F_cm2'])
     tau_w = float(base_elems['tau_w_s'])
-    R_int_coll = float(base_elems.get('R_int', 0.0))          # 집전체 = 비열화 → fold 기준서 제외(고정 floor)
-    R_dc0 = max((R0_0 - R_int_coll) + Rct_0 + Rw_0, 1e-9)     # 열화-가능 총 DC (집전체 뺀 = 성장 기준 스케일)
+    arc_mode = base_elems.get('R_int_mode') == 'arc'          # ★arc: 계면 성장이 R_int arc 로 (실측 접촉손실 지점)
+    Rint_0 = float(base_elems.get('R_int', 0.0))
+    C_int = float(base_elems.get('C_int_uF_cm2') or 0.0) * 1e-6    # 계면 arc 용량 (고정)
+    R_e = float(base_elems.get('R_e', 0.0))                        # σ 전자직렬 = 비열화 floor
+    # 열화-가능 base: 반응 arc(R_ct)+확산(R_w)+계면(arc면 R_int, 직렬이면 R0−R_e 근사 계면몫).
+    #   σ-수송(R_e+R_ion/3)은 미세구조 고정 → 비열화 floor (성장서 제외).
+    R_face0 = Rint_0 if arc_mode else max(R0_0 - R_e, 0.0)
+    R_dc0 = max(Rct_0 + Rw_0 + R_face0, 1e-9)                     # fold 기준 (열화-가능 스케일)
+    R0_floor = R0_0 if arc_mode else R_e                          # arc: R0 통째 floor; 직렬: R_e 만
     s = float(rct_share) + float(r0_share) + float(rw_share)
-    rct_s, r0_s, rw_s = ((float(rct_share) / s, float(r0_share) / s, float(rw_share) / s)
-                         if s > 0 else (1.0, 0.0, 0.0))
+    _a, _b, _c = ((float(rct_share) / s, float(r0_share) / s, float(rw_share) / s)
+                  if s > 0 else (1.0, 0.0, 0.0))
+    # ★arc 모드: 지배 성장분(rct_share=0.7)은 **계면 arc R_int**(황화물 접촉손실 지점)로, r0_share 는 BV R_ct 로.
+    #   직렬 모드: 원래대로 R_ct=rct_share, 계면(R0-몫)=r0_share.  (dominant share 를 물리 지배 arc 에 배정)
+    face_s, rct_s, rw_s = (_a, _b, _c) if arc_mode else (_b, _a, _c)
     out = []
     for n, mult in zip(cycles, growth_mult):
         dR = max(float(mult) - 1.0, 0.0) * R_dc0              # 총 성장분 (mult≥1 → dR≥0)
-        R0_n, Rct_n, Rw_n = R0_0 + r0_s * dR, Rct_0 + rct_s * dR, Rw_0 + rw_s * dR
-        Z = randles_eis(freqs_hz, R0_n, Rct_n, Cdl, Rw_n, tau_w)
+        Rct_n, Rw_n = Rct_0 + rct_s * dR, Rw_0 + rw_s * dR
+        Rface_n = R_face0 + face_s * dR                       # 계면(arc R_int 또는 직렬 R0-몫) 성장
+        if arc_mode:
+            R0_n, Rint_n = R0_floor, Rface_n
+            Z = randles_eis(freqs_hz, R0_n, Rct_n, Cdl, Rw_n, tau_w, R_int_arc=Rint_n, C_int=C_int)
+        else:
+            R0_n, Rint_n = R0_floor + Rface_n, 0.0           # 직렬: 성장을 R0 에 합산
+            Z = randles_eis(freqs_hz, R0_n, Rct_n, Cdl, Rw_n, tau_w)
         tau, g, _R0f, _Zr = drt(freqs_hz, Z)
+        R_dc_n = R0_n + Rct_n + Rw_n + (Rint_n if arc_mode else 0.0)
         out.append({'N': int(n), 'mult': float(mult),
                     'R0_ohm_cm2': R0_n, 'R_ct_ohm_cm2': Rct_n, 'R_w_ohm_cm2': Rw_n,
-                    'R_dc_ohm_cm2': R0_n + Rct_n + Rw_n,
+                    'R_int_ohm_cm2': Rint_n, 'R_dc_ohm_cm2': R_dc_n,
                     'f_ct_Hz': 1.0 / (2 * np.pi * Rct_n * Cdl),
                     'Z': Z, 'tau': tau, 'gamma': g, 'peaks': drt_peaks(tau, g),
-                    'shares': {'R_ct': rct_s, 'R0': r0_s, 'R_w': rw_s}})
+                    'shares': {'R_ct': rct_s, 'R_face': face_s, 'R_w': rw_s}})
     return out
 
 
@@ -384,8 +427,10 @@ def _selftest():
     # 2) physics_eis: 소자가 물리 파라미터로 유도되고 f_ct = 1/(2π R_ct C_dl)
     Zp, el = physics_eis(freqs, sigma_e_S_cm=2.0, sigma_ion_S_cm=2e-4, thickness_um=72.0,
                          r_int_ohm_cm2=50.0, i0_A_m2=2.0, porosity=8.0, r_p_um=3.0, d_s_m2_s=3e-14)
-    if not (el['R0_ohm_cm2'] > el['R_int']):
-        fails.append('R0 이 R_int 보다 커야(이온 벌크 추가)')
+    if not (el['R0_ohm_cm2'] > el['R_e']):                    # R0 = R_e + R_ion/3 (arc 모드: R_int 은 별도 arc)
+        fails.append('R0 이 R_e 보다 커야(이온 TL 추가)')
+    if not (el.get('R_int_mode') == 'arc' and el.get('f_int_Hz') and el['f_int_Hz'] > 0):
+        fails.append(f"R_int arc 모드/f_int 실패: mode={el.get('R_int_mode')} f_int={el.get('f_int_Hz')}")
     if not (el['tau_w_s'] > 0 and abs(el['tau_w_s'] - (3e-6) ** 2 / 3e-14) / el['tau_w_s'] < 1e-6):
         fails.append(f"τ_w=r²/D 불일치: {el['tau_w_s']:.3g}")
     if not (el['f_ct_Hz'] > 0):
@@ -423,11 +468,16 @@ def _selftest():
     rct_seq = [t['R_ct_ohm_cm2'] for t in traj]
     if not all(rct_seq[i] <= rct_seq[i + 1] + 1e-9 for i in range(len(rct_seq) - 1)):
         fails.append(f'R_ct(N) 단조증가 실패: {[round(r, 2) for r in rct_seq]}')
-    # 성장 총량 보존: ΔR_dc(N_total) == (mult−1)·R_dc0_degradable (집전체 R_int 제외 기준)
-    R_deg0 = traj[0]['R_dc_ohm_cm2'] - float(el.get('R_int', 0.0))
+    # 성장 총량 보존: ΔR_dc(N_total) == (mult−1)·R_dc0_degradable.
+    #   arc 모드 degradable = R_ct + R_w + R_int(계면 arc); σ-floor(R0)은 비열화.
+    R_deg0 = traj[0]['R_ct_ohm_cm2'] + traj[0]['R_w_ohm_cm2'] + traj[0]['R_int_ohm_cm2']
     added = traj[-1]['R_dc_ohm_cm2'] - traj[0]['R_dc_ohm_cm2']
     if not (abs(added - (traj[-1]['mult'] - 1.0) * R_deg0) < 1e-6):
         fails.append(f"성장 총량 보존 실패: Δ={added:.3f} vs (mult−1)·R_deg0={((traj[-1]['mult'] - 1.0) * R_deg0):.3f}")
+    # arc 모드: 계면 R_int 이 단조 성장(접촉손실 지점)
+    ri_seq = [t['R_int_ohm_cm2'] for t in traj]
+    if not all(ri_seq[i] <= ri_seq[i + 1] + 1e-9 for i in range(len(ri_seq) - 1)):
+        fails.append(f"R_int(N) 단조증가 실패: {[round(r, 1) for r in ri_seq]}")
     print('selftest OK' if not fails else 'selftest FAIL:\n  ' + '\n  '.join(fails))
     if not fails:
         print(f"  Randles: R0={hf.real:.1f} arc+Warburg → LF {lf.real:.1f}{lf.imag:+.1f}j Ω·cm²")
@@ -594,16 +644,19 @@ def main(argv=None):
             traj = cycle_eis_trajectory(freqs, el, ns, mult, rct_share=sh[0], r0_share=sh[1], rw_share=sh[2])
             with open(a.out + '_cycle.csv', 'w', newline='') as f:
                 w = csv.writer(f)
-                w.writerow(['N', 'mult', 'R0_ohm_cm2', 'R_ct_ohm_cm2', 'R_w_ohm_cm2', 'R_dc_ohm_cm2', 'f_ct_Hz'])
+                w.writerow(['N', 'mult', 'R0_ohm_cm2', 'R_int_ohm_cm2', 'R_ct_ohm_cm2',
+                            'R_w_ohm_cm2', 'R_dc_ohm_cm2', 'f_ct_Hz'])
                 for t in traj:
                     w.writerow([t['N'], round(t['mult'], 3), round(t['R0_ohm_cm2'], 2),
+                                round(t.get('R_int_ohm_cm2', 0.0), 2),
                                 round(t['R_ct_ohm_cm2'], 2), round(t['R_w_ohm_cm2'], 2),
                                 round(t['R_dc_ohm_cm2'], 2), round(t['f_ct_Hz'], 2)])
             print(f'사이클-N EIS 궤적 → {a.out}_cycle.csv  (R_int {r0c}→{rcc}@N{ntot}, {shape} shape, '
-                  f'분배 R_ct/R0/R_w={sh} ★ASSUMED §F1)')
-            print(f"  N={traj[0]['N']}: R_ct={traj[0]['R_ct_ohm_cm2']:.2f} f_ct={traj[0]['f_ct_Hz']:.1f}Hz "
-                  f"→ N={traj[-1]['N']}: R_ct={traj[-1]['R_ct_ohm_cm2']:.2f}(×{traj[-1]['R_ct_ohm_cm2']/max(traj[0]['R_ct_ohm_cm2'],1e-9):.1f}) "
-                  f"f_ct={traj[-1]['f_ct_Hz']:.1f}Hz — R_ct arc 성장=접촉손실 지문")
+                  f'분배 (계면/R_ct/R_w)={sh} ★ASSUMED §F1)')
+            _ri0, _ri1 = traj[0].get('R_int_ohm_cm2', 0.0), traj[-1].get('R_int_ohm_cm2', 0.0)
+            print(f"  N={traj[0]['N']}: R_int(계면)={_ri0:.1f} R_ct={traj[0]['R_ct_ohm_cm2']:.1f} → "
+                  f"N={traj[-1]['N']}: R_int={_ri1:.1f}(×{_ri1/max(_ri0,1e-9):.1f}) R_ct={traj[-1]['R_ct_ohm_cm2']:.1f} "
+                  f"— 계면 arc 지배 성장 = 접촉손실 지문 (Kang&Shin/Yun)")
         if a.fig:                                              # 발표/논문용 그림 (png+svg)
             saved = save_eis_figures(a.out, freqs, Z, el, tau, g, drt_peaks(tau, g), traj=traj)
             print('  그림 저장: ' + ', '.join(saved))

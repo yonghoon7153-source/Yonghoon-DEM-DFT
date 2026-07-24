@@ -5,8 +5,14 @@ frame[4]: 실험 EIS(`eis_fit.py` CNLS 피팅)와 **같은 회로**(R0-p(R1,CPE1
 
 ## 회로 (eis_fit 정합)
 ```
-Z(ω) = R0 + R_ct/(1 + jω·R_ct·C_dl) + Z_Wo(ω)
+Z(ω) = R0 + R_int/(1+jω·R_int·C_int) + R_ct/(1+jω·R_ct·C_dl) + Z_Wo(ω)
 ```
+★**R_int 배치 물리정정 (2026-07-24)**: 실험(eis_fit)의 R_int 는 **중간주파 arc**(R1‖CPE1, R1~24-79Ω 大)지
+HF 직렬 절편이 아님 — 집전체/계면 접촉은 자기 이중층을 가진 계면.  직렬 배치는 "큰 오프셋(62)+작은
+arc(3)" 로 실험("작은 오프셋~10 + 큰 arc~50")과 Nyquist **모양이 어긋났음**.  → 기본 = **arc 모드**
+(R_int‖C_int, f_int=1/2πR_intC_int).  DC 총저항 불변(배치만 이동), HF 절편 62→12 (실측 ~10 정합).
+🔬실험앵커의 Brug C_dl 은 이 **계면 arc C_int** 를 앵커(R1‖CPE1 = 계면 arc, ≠ 작은 BV R_ct).
+r_int_mode='series' 레거시 유지.  사이클 궤적도 arc-aware: 지배 성장분이 **계면 R_int** 로(접촉손실 지점).
 | 소자 | 물리 유도 | provenance |
 |---|---|---|
 | **R0** 직렬/옴 | L/σ_ion + L/σ_e + R_int | STEP3 σ-삼중 + 집전체 앵커 |

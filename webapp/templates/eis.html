@@ -246,8 +246,10 @@ const EIS = {
   elems(d){
     const e = d.elements, fmt=(x,n=2)=> (x==null?'—':(Math.abs(x)>=100||Math.abs(x)<0.01?x.toPrecision(3):x.toFixed(n)));
     const cards = [
-      ['R0', fmt(e.R0_ohm_cm2)+' Ω·cm²', `HF절편 ${fmt(e.R0_hf_ohm_cm2)} + 이온TL ${fmt(e.R_ion_tl_dc)}`],
-      ['R_ct', fmt(e.R_ct_ohm_cm2)+' Ω·cm²', 'BV i0·반응면 (⚠i0 스윕)'],
+      ['R0 (직렬)', fmt(e.R0_ohm_cm2)+' Ω·cm²', `HF절편 σ_e ${fmt(e.R_e)} + 이온TL ${fmt(e.R_ion_tl_dc)}`],
+      ...(e.R_int>0 ? [['R_int (계면 arc)', fmt(e.R_int)+' Ω·cm²',
+          e.R_int_mode==='arc' ? `중간주파 arc @ ${fmt(e.f_int_Hz,0)} Hz (실험 R1 정합)` : '직렬(레거시)']] : []),
+      ['R_ct (BV)', fmt(e.R_ct_ohm_cm2)+' Ω·cm²', 'BV i0·반응면 (⚠i0 스윕)'],
       ['C_dl', fmt(e.C_dl_uF_cm2_int)+' µF/cm²int', (e.C_dl_uF_cm2_areal!=null?('총 '+fmt(e.C_dl_uF_cm2_areal,0)+' µF/cm²geo'):'★앵커 (실험 EIS 확증)')],
       ['f_ct', fmt(e.f_ct_Hz,1)+' Hz', 'arc 정점 = 1/2πR_ctC_dl'],
       ['R_w', fmt(e.R_w_ohm_cm2)+' Ω·cm²', 'ASSUMED-FORM'],
@@ -393,11 +395,13 @@ const EIS = {
     this.drawCycleNyquist(d); this.drawCycleDRT(d);
     const S=d.series||[]; if(!S.length){ this.el('ec-summary').textContent='데이터 없음'; return; }
     const a=S[0], b=S[S.length-1], sh=d.shares||{};
-    const rows=S.map(s=>`N=${s.N}: R_ct=${s.R_ct} R_dc=${s.R_dc} f_ct=${s.f_ct_Hz!=null?s.f_ct_Hz.toFixed(0):'—'}Hz (×${s.mult})`).join(' · ');
-    this.el('ec-summary').innerHTML=`<b style="color:#b06ab3">기전 지문</b>: R_ct ${a.R_ct}→${b.R_ct} Ω·cm² `+
-      `(×${(b.R_ct/Math.max(a.R_ct,1e-9)).toFixed(1)}), f_ct ${a.f_ct_Hz!=null?a.f_ct_Hz.toFixed(0):'—'}→`+
-      `${b.f_ct_Hz!=null?b.f_ct_Hz.toFixed(0):'—'}Hz (저주파 이동=arc 성장) · 분배 R_ct/R0/R_w=`+
-      `${sh.R_ct}/${sh.R0}/${sh.R_w} <span style="color:#a07c1f">(ASSUMED §F1)</span>`+
+    const hasInt=(a.R_int!=null&&a.R_int>0);
+    const rows=S.map(s=>`N=${s.N}: ${hasInt?'R_int='+s.R_int+' ':''}R_ct=${s.R_ct} R_dc=${s.R_dc} (×${s.mult})`).join(' · ');
+    const face=hasInt
+      ? `R_int(계면) ${a.R_int}→${b.R_int} Ω·cm² (×${(b.R_int/Math.max(a.R_int,1e-9)).toFixed(1)}, 접촉손실 지배)`
+      : `R_ct ${a.R_ct}→${b.R_ct} Ω·cm² (×${(b.R_ct/Math.max(a.R_ct,1e-9)).toFixed(1)})`;
+    this.el('ec-summary').innerHTML=`<b style="color:#b06ab3">기전 지문</b>: ${face} · R_dc ${a.R_dc}→${b.R_dc} `+
+      `· 분배 (계면/R_ct/R_w)=${sh.R_ct}/${sh.R0}/${sh.R_w} <span style="color:#a07c1f">(ASSUMED §F1)</span>`+
       `<br><span style="font-size:.72rem">${rows}</span>`;
   },
   drawCycleNyquist(d){

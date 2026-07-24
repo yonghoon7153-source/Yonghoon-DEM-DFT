@@ -3894,6 +3894,7 @@ def api_eis_cycle():
         series = [{
             'N': t['N'], 'mult': round(t['mult'], 3),
             'R0': round(t['R0_ohm_cm2'], 2), 'R_ct': round(t['R_ct_ohm_cm2'], 2),
+            'R_int': round(t.get('R_int_ohm_cm2', 0.0), 2),
             'R_w': round(t['R_w_ohm_cm2'], 2), 'R_dc': round(t['R_dc_ohm_cm2'], 2), 'f_ct_Hz': _cl(t['f_ct_Hz']),
             'nyquist': [{'zre': _cl(z.real), 'zim': _cl(-z.imag)} for z in t['Z']],
             'drt': [{'tau': _cl(tt), 'gamma': _cl(gg)} for tt, gg in zip(t['tau'], t['gamma'])],
