@@ -46,7 +46,15 @@
   "Kraft 2017 (Zeier) — 할라이드 전도도 계열"
  ],
  "litdb_slugs": [
-  "rao2025_iodide_argyrodite"
+  "rao2025_iodide_argyrodite",
+  "kraft2017_lattice_polarizability_argyrodite_Li6PS5X"
  ],
+ "orbital": {
+  "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 5s² 5p⁵",
+  "electron_config": "[Kr] 4d¹⁰ 5s² 5p⁵",
+  "valence_orbitals": "5s² 5p⁵ — 5p⁵ lone pair, I⁻(5p⁶)",
+  "band_character": "우리 comp3/comp5 PDOS: VBM에 S 3p + I 5p(I 5p가 halide 중 가장 얕아 밴드엣지 기여 최대); CBM은 PS₄ 주도 — I는 halide 중 VBM에 가장 크게 관여(electronic.json)",
+  "bonding": "이온성 Li–I(halide 중 가장 크고 분극성/연한 결합), 5p⁶ lone pair; LiI 자체가 Li⁺ 전도체"
+ },
  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
 }

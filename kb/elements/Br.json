@@ -46,7 +46,15 @@
   "Kraft 2017 (Zeier) — 할라이드와 격자동역학·전도도"
  ],
  "litdb_slugs": [
-  "li2025_cubr2_dualdoping_argyrodite"
+  "li2025_cubr2_dualdoping_argyrodite",
+  "kraft2017_lattice_polarizability_argyrodite_Li6PS5X"
  ],
+ "orbital": {
+  "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁵",
+  "electron_config": "[Ar] 3d¹⁰ 4s² 4p⁵",
+  "valence_orbitals": "4s² 4p⁵ — 4p⁵ lone pair, Br⁻(4p⁶)",
+  "band_character": "우리 comp2(Cl0.5Br0.5) PDOS: VBM에 S 3p와 함께 Br 4p가 소량 섞임(Cl 3p보다 얕아 밴드엣지 기여↑) — 갭 약간 축소(우리 trends: Br 4p→VBM); CBM은 여전히 PS₄(S/P) 주도, Br 기여 없음",
+  "bonding": "이온성 Li–Br(Cl보다 크고 분극성↑·약한 결합; 우리 db Li–Br ICOHP -1.93 vs Li–Cl -2.11 eV), 4p⁶ lone pair"
+ },
  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
 }

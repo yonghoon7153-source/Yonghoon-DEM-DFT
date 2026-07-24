@@ -77,7 +77,8 @@
  "litdb_slugs": [
   "banik2022_substitutions_oxidative_stability_argyrodite",
   "sundar2025_oxide_coating_screening_lpscl",
-  "ke2025_orbital_hybridization_mgclo"
+  "ke2025_orbital_hybridization_mgclo",
+  "yang2025_lao_dualdoping_argyrodite_lacl3"
  ],
  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
 }

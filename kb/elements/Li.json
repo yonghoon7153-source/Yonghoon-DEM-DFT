@@ -104,5 +104,12 @@
   "gilgonzalez2022_synergistic_cl_constricted_esw",
   "whitten2023_ups_practical_best_practices"
  ],
+ "orbital": {
+  "electron_config_full": "1s² 2s¹",
+  "electron_config": "[He] 2s¹",
+  "valence_orbitals": "2s¹ — 이온화하면 2s⁰ 닫힌껍질(Li⁺), 밴드엣지에 거의 기여 없는 전자 공여자",
+  "band_character": "우리 comp1_v3(Li6PS5Cl) PDOS: VBM에 Li 2p ~6% + Li 2s ~1% 소량, CBM엔 Li 2p ~14% 기여(electronic.json) — Li는 밴드엣지 주도자가 아니라 골격에 2s 전자 내준 이온성 캐리어",
+  "bonding": "이온성 Li⁺(2s⁰): PS₄/할라이드 골격 케이지 자리에서 정전 결합, 공유 기여 거의 없음(우리 ELF Li basin ~0.07)"
+ },
  "_provenance": "literature/web reference values (소환값); 우리 db 절대값과 분리"
 }

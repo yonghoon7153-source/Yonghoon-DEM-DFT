@@ -2,10 +2,10 @@
  "symbol": "S",
  "name": "Sulfur",
  "Z": 16,
- "role": "황화물 argyrodite 골격의 음이온 — PS₄³⁻ 공유골격 + free S²⁻; 산화 한계를 pin(VBM=S 3p)",
+ "role": "황화물 argyrodite 골격의 음이온 — PS₄³⁻ 공유골격 + free S²⁻; 산화 한계를 pin(VBM=S 3p). 완전 산화 극한에선 S가 +6(sulfate, SO₄²⁻)까지 감",
  "oxidation_states": [
   "-2",
-  "+6(in SO4)"
+  "+6"
  ],
  "electronegativity": 2.58,
  "ionic_radius_A": {
@@ -84,7 +84,16 @@
  "litdb_slugs": [
   "banik2022_substitutions_oxidative_stability_argyrodite",
   "bai2020_argyrodite_review_progress",
-  "gilgonzalez2022_synergistic_cl_constricted_esw"
+  "gilgonzalez2022_synergistic_cl_constricted_esw",
+  "torii2025_lpscl_mechanical_anisotropy_dft",
+  "kraft2017_lattice_polarizability_argyrodite_Li6PS5X"
  ],
+ "orbital": {
+  "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁴",
+  "electron_config": "[Ne] 3s² 3p⁴",
+  "valence_orbitals": "3s² 3p⁴ — 3p가 원자가/lone pair",
+  "band_character": "우리 comp1_v3 PDOS: VBM S 3p ~91% 지배(free S²⁻ + PS₄ 비결합 S lone pair), CBM도 S 3p ~42% + S 3s ~11%(PS₄ σ* 상단) — S가 밴드갭 양쪽 엣지를 주도, 특히 VBM=산화 onset을 pin(electronic.json)",
+  "bonding": "P–S: P 3s3p–S 3p σ 공유(PS₄ 사면체) + 잔여 S 3p lone pair(free S²⁻); Li–S는 이온성"
+ },
  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
 }
