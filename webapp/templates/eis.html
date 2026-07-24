@@ -260,15 +260,19 @@ const EIS = {
       `<div style="color:var(--dim);font-size:.7rem;margin-top:2px">${s}</div></div>`).join('');
   },
   _axes(ctx,W,H,mL,mB,mT,mR,xlab,ylab,xmin,xmax,ymin,ymax,logx){
+    // 문헌스타일: 사방 box frame + 안쪽 tick + 라벨 (matplotlib _paper_ax 와 통일)
     const pw=W-mL-mR, ph=H-mT-mB;
-    ctx.strokeStyle='rgba(0,0,0,.07)'; ctx.fillStyle='#55607a';
-    ctx.font='10px "JetBrains Mono",monospace'; ctx.lineWidth=1;
+    ctx.fillStyle='#55607a'; ctx.font='10px "JetBrains Mono",monospace';
     for(let i=0;i<=5;i++){ const y=mT+ph-(i/5)*ph, v=ymin+(ymax-ymin)*i/5;
-      ctx.beginPath(); ctx.moveTo(mL,y); ctx.lineTo(W-mR,y); ctx.stroke();
+      ctx.strokeStyle='#334155'; ctx.lineWidth=1;            // 안쪽 tick (좌·우)
+      ctx.beginPath(); ctx.moveTo(mL,y); ctx.lineTo(mL+5,y); ctx.moveTo(W-mR,y); ctx.lineTo(W-mR-5,y); ctx.stroke();
       ctx.textAlign='right'; ctx.fillText(v.toPrecision(2), mL-4,y+3); }
     for(let i=0;i<=5;i++){ const x=mL+(i/5)*pw, v=xmin+(xmax-xmin)*i/5;
+      ctx.strokeStyle='#334155'; ctx.lineWidth=1;            // 안쪽 tick (하·상)
+      ctx.beginPath(); ctx.moveTo(x,mT+ph); ctx.lineTo(x,mT+ph-5); ctx.moveTo(x,mT); ctx.lineTo(x,mT+5); ctx.stroke();
       ctx.textAlign='center'; ctx.fillText(logx?('1e'+v.toFixed(0)):v.toPrecision(2), x, H-mB+14); }
-    ctx.textAlign='center'; ctx.fillText(xlab, mL+pw/2, H-4);
+    ctx.strokeStyle='#334155'; ctx.lineWidth=1.1; ctx.strokeRect(mL,mT,pw,ph);   // box frame
+    ctx.fillStyle='#1a2233'; ctx.textAlign='center'; ctx.fillText(xlab, mL+pw/2, H-4);
     ctx.save(); ctx.translate(11,mT+ph/2); ctx.rotate(-Math.PI/2); ctx.fillText(ylab,0,0); ctx.restore();
     return {pw,ph};
   },
@@ -281,12 +285,14 @@ const EIS = {
     let expCurves=[];
     if(this.showExp && this.expNyq && this.expNyq.curves) expCurves=this.expNyq.curves;
     const expAll=[]; expCurves.forEach(c=>(c.pts||[]).forEach(p=>expAll.push(p)));
-    const mL=52,mR=14,mT=14,mB=34;
+    const mL=52,mR=14,mT=14,mB=34, pw=W-mL-mR, ph=H-mT-mB;
     const allZre=pts.map(p=>p.zre).concat(expAll.map(p=>p.zre));
     const allZim=pts.map(p=>p.zim).concat(expAll.map(p=>p.zim));
-    const xmax=Math.max(...allZre)*1.05, xmin=0;
-    const ymax=Math.max(Math.max(...allZim),xmax*0.15)*1.05, ymin=Math.min(0,...allZim);
-    const {pw,ph}=this._axes(ctx,W,H,mL,mB,mT,mR,'Z′ (Ω·cm²)','−Z″ (Ω·cm²)',xmin,xmax,ymin,ymax,false);
+    const dxmax=Math.max(...allZre)*1.03, xmin=0, dymin=Math.min(0,...allZim), dymax=Math.max(...allZim)*1.05;
+    // ★equal aspect (Nyquist 표준): 같은 Ω·cm²/px → 짧은 축을 큰 축 스케일로 확장 (arc = 진짜 반원)
+    const u=Math.max((dxmax-xmin)/pw,(dymax-dymin)/ph)||1;   // Ω·cm² per px (지배 축)
+    const xmax=xmin+u*pw, ymin=dymin, ymax=dymin+u*ph;
+    this._axes(ctx,W,H,mL,mB,mT,mR,'Z′ (Ω·cm²)','−Z″ (Ω·cm²)',xmin,xmax,ymin,ymax,false);
     const X=v=>mL+((v-xmin)/(xmax-xmin||1))*pw, Y=v=>mT+ph-((v-ymin)/(ymax-ymin||1))*ph;
     // 실험 방울 (physics 선 아래에 먼저)
     expCurves.forEach(c=>{ (c.pts||[]).forEach(p=>{ if(p.zre==null||p.zim==null) return;
@@ -313,14 +319,16 @@ const EIS = {
     const mL=52,mR=14,mT=14,mB=34, xmin=Math.min(...lt),xmax=Math.max(...lt),ymax=Math.max(...g)*1.08;
     const {pw,ph}=this._axes(ctx,W,H,mL,mB,mT,mR,'log₁₀ τ (s)','γ(lnτ) (Ω·cm²)',xmin,xmax,0,ymax,true);
     const X=v=>mL+((v-xmin)/(xmax-xmin||1))*pw, Y=v=>mT+ph-(v/(ymax||1))*ph;
+    // 문헌스타일: 깨끗한 남색 곡선 + 옅은 채움 (피크 수직선 제거 — 피크는 아래 텍스트로)
+    ctx.beginPath(); pts.forEach((p,i)=>{ const x=X(lt[i]),y=Y(g[i]); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+    ctx.lineTo(X(xmax),Y(0)); ctx.lineTo(X(xmin),Y(0)); ctx.closePath();
+    ctx.fillStyle='rgba(31,78,140,.10)'; ctx.fill();
     ctx.beginPath(); pts.forEach((p,i)=>{ const x=X(lt[i]),y=Y(g[i]); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
     ctx.strokeStyle='#16355e'; ctx.lineWidth=1.6; ctx.stroke();
-    ctx.lineTo(X(xmax),Y(0)); ctx.lineTo(X(xmin),Y(0)); ctx.closePath();
-    ctx.fillStyle='rgba(31,78,140,.08)'; ctx.fill();
-    // 피크 마커 + 라벨
-    (d.peaks||[]).forEach(p=>{ if(p.tau_s==null) return; const x=X(Math.log10(p.tau_s));
-      ctx.strokeStyle='#a07c1f'; ctx.setLineDash([3,3]); ctx.beginPath();
-      ctx.moveTo(x,mT); ctx.lineTo(x,mT+ph); ctx.stroke(); ctx.setLineDash([]); });
+    // 피크 = 곡선 위 작은 점 (수직선 대신 — 문헌스타일 깔끔)
+    (d.peaks||[]).forEach(p=>{ if(p.tau_s==null) return;
+      const lp=Math.log10(p.tau_s); let j=0; for(let i=1;i<lt.length;i++) if(Math.abs(lt[i]-lp)<Math.abs(lt[j]-lp)) j=i;
+      ctx.beginPath(); ctx.arc(X(lt[j]),Y(g[j]),2.6,0,7); ctx.fillStyle='#c0392b'; ctx.fill(); });
     this.el('e-peaks').innerHTML = '피크: ' + ((d.peaks||[]).length?
       d.peaks.map(p=>`<b style="color:#a07c1f">${p.f_Hz>=1?p.f_Hz.toPrecision(2)+'Hz':(p.f_Hz*1000).toPrecision(2)+'mHz'}</b>`+
         ` (R≈${p.R!=null?p.R.toFixed(2):'—'} Ω·cm²)`).join(' · ') : '—') +
@@ -408,12 +416,14 @@ const EIS = {
     const cv=this.el('ec-nyq'), dpr=window.devicePixelRatio||1, W=cv.clientWidth||440, H=340;
     cv.width=W*dpr; cv.height=H*dpr; const ctx=cv.getContext('2d'); ctx.scale(dpr,dpr); ctx.clearRect(0,0,W,H);
     const S=d.series||[]; if(!S.length) return;
-    let xmax=0, ymax=0, ymin=0;
-    S.forEach(s=>(s.nyquist||[]).forEach(p=>{ if(p.zre!=null) xmax=Math.max(xmax,p.zre);
-      if(p.zim!=null){ ymax=Math.max(ymax,p.zim); ymin=Math.min(ymin,p.zim); } }));
-    xmax=(xmax||1)*1.05; ymax=Math.max(ymax, xmax*0.15)*1.05;
-    const mL=52,mR=14,mT=14,mB=34;
-    const {pw,ph}=this._axes(ctx,W,H,mL,mB,mT,mR,'Z′ (Ω·cm²)','−Z″ (Ω·cm²)',0,xmax,ymin,ymax,false);
+    let dxmax=0, dymax=0, dymin=0;
+    S.forEach(s=>(s.nyquist||[]).forEach(p=>{ if(p.zre!=null) dxmax=Math.max(dxmax,p.zre);
+      if(p.zim!=null){ dymax=Math.max(dymax,p.zim); dymin=Math.min(dymin,p.zim); } }));
+    dxmax=(dxmax||1)*1.03; dymax=(dymax||1)*1.05;
+    const mL=52,mR=14,mT=14,mB=34, pw=W-mL-mR, ph=H-mT-mB;
+    const u=Math.max(dxmax/pw,(dymax-dymin)/ph)||1;         // ★equal aspect (Ω·cm²/px 동일)
+    const xmax=u*pw, ymin=dymin, ymax=dymin+u*ph;
+    this._axes(ctx,W,H,mL,mB,mT,mR,'Z′ (Ω·cm²)','−Z″ (Ω·cm²)',0,xmax,ymin,ymax,false);
     const X=v=>mL+(v/(xmax||1))*pw, Y=v=>mT+ph-((v-ymin)/(ymax-ymin||1))*ph;
     S.forEach((s,i)=>{ const c=this._cycColor(i,S.length);   // open circles (논문 스타일)
       ctx.lineWidth=1.2; ctx.strokeStyle=c;

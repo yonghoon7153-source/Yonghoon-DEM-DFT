@@ -348,6 +348,7 @@ def save_eis_figures(out_prefix, freqs, Z, elems, tau=None, gamma=None, peaks=No
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7.6, 3.1))
     zre, zim = np.real(Z), -np.imag(Z)
     ax1.plot(zre, zim, 'o', ms=3.8, mfc='white', mec='#1f4e8c', mew=0.9)      # open circles (랩 예시 Nyquist)
+    ax1.set_aspect('equal', adjustable='datalim')             # ★equal aspect (Nyquist 표준: arc=진짜 반원)
     ax1.set_xlabel(_LBL_ZRE, fontsize=9)
     ax1.set_ylabel(_LBL_ZIM, fontsize=9)
     ax1.set_xlim(left=0)
@@ -384,6 +385,7 @@ def save_eis_figures(out_prefix, freqs, Z, elems, tau=None, gamma=None, peaks=No
             bx1.annotate('Pristine' if tr['N'] == 0 else f"N = {tr['N']}",
                          (zr_i[k], zi_i[k]), textcoords='offset points', xytext=(0, 7),
                          ha='center', fontsize=7.5, color=_paper_blue(i, n))
+        bx1.set_aspect('equal', adjustable='datalim')         # ★equal aspect
         bx1.set_xlabel(_LBL_ZRE, fontsize=9); bx1.set_ylabel(_LBL_ZIM, fontsize=9)
         _zi_max = max(float(np.max(-np.imag(tr['Z']))) for tr in traj)
         bx1.set_xlim(left=0); bx1.set_ylim(0, _zi_max * 1.18)     # 주석(N=…) 머리공간
