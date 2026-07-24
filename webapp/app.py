@@ -3686,6 +3686,7 @@ def api_eis():
             'elements': {k: _cl(v) for k, v in el.items() if isinstance(v, (int, float))},
             'peaks': [{'f_Hz': _cl(p['f_Hz']), 'tau_s': _cl(p['tau_s']), 'R': _cl(p['R_ohm_cm2']),
                        **_eis.assign_drt_peak(p['tau_s'], el)} for p in peaks],
+            'bands': _eis.drt_band_map(el),   # τ-대역 물리지도 (hover-anywhere, 전고체 복합양극)
             'provenance': el.get('provenance', {}),
             'params': {k: kw[k] for k in kw},
             'case_loaded': case_loaded,

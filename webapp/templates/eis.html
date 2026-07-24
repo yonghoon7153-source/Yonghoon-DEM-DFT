@@ -112,7 +112,7 @@
   </div>
   <div class="card">
     <div class="card-title" style="margin-bottom:6px">DRT γ(τ) — 프로세스 시상수 분리
-      <span style="font-size:.72rem;color:var(--dim);font-weight:400">(피크 위 커서 = 물리 설명 박스)</span></div>
+      <span style="font-size:.72rem;color:var(--dim);font-weight:400">(τ 어디든 커서 = 그 위치가 전고체 복합양극의 무슨 프로세스인지 박스로)</span></div>
     <div style="position:relative">
       <canvas id="e-drt" width="440" height="380" class="e-canvas"></canvas>
       <div id="e-drt-tip" style="position:absolute;display:none;pointer-events:none;max-width:236px;
@@ -381,6 +381,8 @@ const EIS = {
       ctx.strokeStyle='#ffffff'; ctx.lineWidth=1; ctx.stroke();
       this._drtHits.push({x:px, y:py, peak:p}); });
     this._drtWH=[W,H];
+    this._drtAxis={mL:mL, pw:pw, mT:mT, ph:ph, ltmin:xmin, ltmax:xmax};   // hover τ 역산용
+    this._drtBands=d.bands||[];                                            // τ-대역 물리지도
     this.el('e-peaks').innerHTML = '피크: ' + ((d.peaks||[]).length?
       d.peaks.map(p=>`<b style="color:#a07c1f">${p.f_Hz>=1?p.f_Hz.toPrecision(2)+'Hz':(p.f_Hz*1000).toPrecision(2)+'mHz'}</b>`+
         ` (R≈${p.R!=null?p.R.toFixed(2):'—'} Ω·cm²)`).join(' · ') : '—') +
@@ -438,20 +440,37 @@ const EIS = {
     document.querySelectorAll('.xe-sel').forEach(c=>{ c.checked=on; });
     this.onSelChange();
   },
-  drtHover(e){   // 피크 위 커서 → 물리 프로세스 설명 박스
-    const cv=this.el('e-drt'), tip=this.el('e-drt-tip'), hits=this._drtHits||[], wh=this._drtWH||[440,380];
+  drtHover(e){   // 커서 위치 τ → 전고체 복합양극 프로세스 대역 설명 (피크 없어도) + 근처 피크 R
+    const cv=this.el('e-drt'), tip=this.el('e-drt-tip'), wh=this._drtWH||[440,380], ax=this._drtAxis;
     const r=cv.getBoundingClientRect();
     const mx=(e.clientX-r.left)*(wh[0]/(r.width||1)), my=(e.clientY-r.top)*(wh[1]/(r.height||1));
-    let best=null, bd=1e9;
-    hits.forEach(h=>{ const dx=h.x-mx, dy=h.y-my, dd=dx*dx+dy*dy; if(dd<bd){ bd=dd; best=h; } });
-    if(best && bd < 20*20){
-      const p=best.peak, fl=p.f_Hz>=1?p.f_Hz.toPrecision(3)+' Hz':(p.f_Hz*1000).toPrecision(3)+' mHz';
-      tip.innerHTML=`<b style="color:#8fb4f0">${p.label||'피크'}</b> · ${fl} · R≈${p.R!=null?p.R.toFixed(2):'—'} Ω·cm²`+
-        `<br><span style="color:#c9d3e6">${p.detail||''}</span>`;
-      tip.style.display='block';
-      tip.style.left=Math.max(4, Math.min((e.clientX-r.left)*(cv.clientWidth/(r.width||1))+12, (cv.clientWidth||440)-240))+'px';
-      tip.style.top=Math.max(2,(e.clientY-r.top)*(380/(r.height||1))-8)+'px';
-    } else tip.style.display='none';
+    if(!ax || mx<ax.mL || mx>ax.mL+ax.pw || my<ax.mT || my>ax.mT+ax.ph){ tip.style.display='none'; return; }
+    const lt=ax.ltmin+(mx-ax.mL)/(ax.pw||1)*(ax.ltmax-ax.ltmin);   // log10 τ
+    const tau=Math.pow(10,lt), f=1/(2*Math.PI*tau);
+    const fl=f>=1?f.toPrecision(3)+' Hz':(f*1000).toPrecision(3)+' mHz';
+    const ts=tau>=1?tau.toPrecision(3):tau.toExponential(1);
+    const bands=this._drtBands||[];
+    const band=bands.find(b=>tau>=b.tau_lo && tau<b.tau_hi) || bands[bands.length-1];
+    let pk=null, bd=1e9;
+    (this._drtHits||[]).forEach(h=>{ const dx=h.x-mx, dd=dx*dx; if(dd<bd){ bd=dd; pk=h; } });
+    const nearPk = pk && Math.abs(pk.x-mx)<12;
+    let html='';
+    if(nearPk){
+      const p=pk.peak, pf=p.f_Hz>=1?p.f_Hz.toPrecision(3)+'Hz':(p.f_Hz*1000).toPrecision(3)+'mHz';
+      html=`<b style="color:#e8a07a">★ 검출 피크</b> · ${pf} · R≈${p.R!=null?p.R.toFixed(2):'—'} Ω·cm²<br>`+
+        `<b style="color:#8fb4f0">${(band&&band.label)||p.label||''}</b>`+
+        ((band&&band.model&&band.model.length)?`<br><span style="color:#c9a24b">◆ ${band.model.join(' · ')}</span>`:'')+
+        `<br><span style="color:#c9d3e6">${(band&&band.detail)||p.detail||''}</span>`;
+    } else if(band){
+      html=`<b style="color:#8fb4f0">${band.label}</b> · τ≈${ts} s (${fl})`+
+        ((band.model&&band.model.length)?`<br><span style="color:#c9a24b">◆ ${band.model.join(' · ')}</span>`:'')+
+        `<br><span style="color:#c9d3e6">${band.detail}</span>`+
+        `<br><span style="color:#7c8798;font-size:.94em">(여기 피크가 있다면 위 프로세스의 저항 몫 R = ∫γ dlnτ)</span>`;
+    } else { tip.style.display='none'; return; }
+    tip.innerHTML=html; tip.style.display='block';
+    const cw=cv.clientWidth||440;
+    tip.style.left=Math.max(4, Math.min((e.clientX-r.left)*(cw/(r.width||1))+12, cw-250))+'px';
+    tip.style.top=Math.max(2,(e.clientY-r.top)*(380/(r.height||1))-8)+'px';
   },
   async runICA(){
     const txt = this.el('e-ica-in').value.trim();

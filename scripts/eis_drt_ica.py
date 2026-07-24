@@ -192,6 +192,44 @@ def assign_drt_peak(tau_s, elems=None):
             'detail': f'f≈{f * 1000:.1f} mHz — 고체확산(Warburg) 또는 방전 상전이(스테이징).'}
 
 
+def drt_band_map(elems=None):
+    """전고체(sulfide ASSB) 복합양극 DRT τ-대역 물리 지도 — 피크가 없어도 그 위치가 무슨 시상수인지
+    설명(hover-anywhere).  모델 소자(f_ct·f_int·τ_w) 위치를 대역에 주석.  반환 list[{tau_lo,tau_hi,
+    label,detail,model[]}] (τ 오름차순, s)."""
+    bands = [
+        (0.0, 1e-6, 'SE 벌크 이온전도 + 인덕턴스 (초고주파)',
+         'sulfide SE(LPSCl) 격자내 Li⁺ 벌크 전도 + 케이블/셀 인덕턴스.  보통 HF 절편 R0 근방 — 별도 arc 아님 '
+         '(Nyquist 좌측 실축 절편).'),
+        (1e-6, 1e-4, 'SE 입계 + 입자접촉 (고주파)',
+         'SE 입계(grain boundary) 저항 + SE–SE·AM–SE 입자 접촉 저항.  냉간압축 복합양극서 두드러짐 '
+         '(접촉 품질·성형압력 의존; 우리 STEP3 CN·coverage 와 대응).'),
+        (1e-4, 1e-2, 'CAM|SE 전하전달(BV) + 이중층 (중주파)',
+         '양극활물질|고체전해질 계면 전하전달(Butler-Volmer) + 이중층 C_dl.  ★전고체 복합양극 핵심 kinetics '
+         '— i0·반응면적(coverage) 지배.  우리 STEP4 BV·계면면적서 유도.'),
+        (1e-2, 1.0, 'CAM|SE 계면상·공간전하층 / 접촉손실 (중저주파)',
+         'CAM–SE 분해로 생긴 저항성 계면상(interphase)·공간전하층, 또는 충·방전 부피변화에 의한 계면 개구'
+         '(contact loss).  ★전고체 열화의 주 무대 — 사이클 시 성장(우리 A10 CZM·D5 사이클-EIS 대상).'),
+        (1.0, 100.0, '고체확산 Warburg (CAM 입자내 Li⁺) (저주파)',
+         'CAM 입자 반경방향 Li⁺ 고체확산.  τ_w=r²/D_s.  방전 OCP 상전이·스테이징(평탄부)이 이 대역에 겹침 '
+         '— ICA(dQ/dV)가 상전이를 분리.'),
+        (100.0, 1e12, '초저주파 확산·상전이·완속과정',
+         '복합양극 tortuous 경로 장거리 확산, 상전이, 매우 느린 열화.  실험 하한 10 mHz(τ≈16 s) 근처 이상.'),
+    ]
+    out = [{'tau_lo': lo, 'tau_hi': hi, 'label': lab, 'detail': det, 'model': []}
+           for lo, hi, lab, det in bands]
+    if elems:                                                 # 모델 소자가 어느 대역에 떨어지는지 주석
+        marks = []
+        if elems.get('f_ct_Hz'):
+            marks.append((1.0 / (2 * np.pi * float(elems['f_ct_Hz'])), f"모델 R_ct arc (f_ct={float(elems['f_ct_Hz']):.0f} Hz)"))
+        if elems.get('f_int_Hz'):
+            marks.append((1.0 / (2 * np.pi * float(elems['f_int_Hz'])), f"모델 계면 R_int arc (f_int={float(elems['f_int_Hz']):.0f} Hz)"))
+        if elems.get('tau_w_s'):
+            marks.append((float(elems['tau_w_s']), f"모델 Warburg (τ_w={float(elems['tau_w_s']):.0f} s)"))
+        for b in out:
+            b['model'] = [lbl for t, lbl in marks if b['tau_lo'] <= t < b['tau_hi']]
+    return out
+
+
 # ─────────────────────── DRT (Tikhonov 역변환) ───────────────────────
 def drt(freqs_hz, Z, tau_min=None, tau_max=None, n_tau=80, lam=1e-3, subtract_R0=True):
     """Z(ω) → γ(τ) 분포 (모델-자유 시상수 분리).  Z(ω)=R0+∫γ(τ)/(1+jωτ)dlnτ.
