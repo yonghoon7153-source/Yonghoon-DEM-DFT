@@ -1,6 +1,6 @@
 # Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li₆PS₅X (X = Cl, Br, I) — Kraft et al. (J. Am. Chem. Soc. 2017)
 
-> slug `kraft2017_lattice_polarizability_argyrodite_Li6PS5X` · DOI `10.1021/jacs.7b06327` · type `exp (neutron + PDF + impedance + ultrasound; DFT 없음)` · PDF main `664401af…` + SI `38f51c84…` · digested `2026-07-24` · status ✅
+> slug `kraft2017_lattice_polarizability_argyrodite_Li6PS5X` · DOI `10.1021/jacs.7b06327` · type `exp (neutron + PDF + impedance + ultrasound; DFT 없음)` · PDF `litdb/inbox/31. Influence of Lattice Polarizability….pdf`(본문 10 pp, **inbox #31, 사용자 분류 `DFT`**; SI 미포함) + 업로드 main `664401af…`/SI `38f51c84…` · digested `2026-07-24` · status ✅
 > elements: Li, P, S, Cl, Br, I
 > methods: impedance-spectroscopy, ultrasonic-speed-of-sound, RUS, Debye-frequency, neutron-diffraction, Rietveld, synchrotron-PDF, Meyer-Neldel
 > **저자**: Marvin A. Kraft, Sean P. Culver, Mario Calderon, Felix Böcher, Thorben Krauskopf, Anatoliy Senyshyn, Christian Dietrich, Alexandra Zevalkink, Jürgen Janek, **Wolfgang G. Zeier*** (JLU Giessen / TU München FRM II / Michigan State) · JACS 2017, 139, 10909−10918. Received 2017-06-22, Published 2017-07-25. **Not open access** (© ACS 2017; Hanyang 기관 접근).
