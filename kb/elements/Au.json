@@ -1,0 +1,76 @@
+{
+  "symbol": "Au",
+  "name": "Gold",
+  "Z": 79,
+  "role": "79번 5d 귀금속(Group 11, Cu/Ag 동족). SSB 앵커 없음 — 백과사전/전극·표면화학 관점. 상대론 효과로 금속 중 전기음성도 최대(2.54)이고 5d¹⁰6s¹(예외적 채움), 심지어 −1(오라이드 Au⁻, CsAu)도 가능. +3(Au₂O₃, AuCl₃)/+1(AuCl, Au(CN)₂⁻)이 흔함. Au 4f7/2 84.0 eV는 XPS 에너지 눈금 보정의 표준. 불활성 전극·접점·집전체, 나노금 촉매(CO 산화)·플라스몬, Au–티올 자기조립막(SAM)의 핵심 금속. SSB 직접 무관.",
+  "oxidation_states": [
+    "+3",
+    "+1",
+    "-1"
+  ],
+  "electronegativity": 2.54,
+  "ionic_radius_A": {
+    "Au+_VI": 1.37,
+    "Au3+_sq": 0.68,
+    "Au3+_VI": 0.85,
+    "_note": "Shannon 1976: Au⁺(d¹⁰) 팔면체 VI 1.37 Å(매우 큼, 상대론적), Au³⁺(d⁸) 사각평면 IVSQ 0.68 Å·팔면체 VI 0.85 Å. Au³⁺는 사각평면 선호. 귀금속이라 SSB 격자 치환 대상 아님."
+  },
+  "representative_compounds": [
+    {
+      "formula": "Au2O3",
+      "context": "산화물(+3)",
+      "battery_role": "SSB 무관 — 가장 안정한(그래도 불안정) Au 산화물; ~160°C 이상서 금속으로 분해",
+      "note": "Au³⁺ 사각평면; Au 4f7/2 ~85.9 eV(Au³⁺)"
+    },
+    {
+      "formula": "HAuCl4 (염화금산)",
+      "context": "가용성 전구체",
+      "battery_role": "SSB 무관 — 금 나노입자(Turkevich)·도금·촉매 합성 표준 출발물",
+      "note": "Au³⁺; 노란 결정, 조해성"
+    },
+    {
+      "formula": "Au 나노입자 · Au–티올 SAM",
+      "context": "나노/표면화학",
+      "battery_role": "SSB 무관 — 나노금 촉매(저온 CO 산화), 플라스몬/센서, Au–S 자기조립 단분자막",
+      "note": "Au–티올(soft–soft) 결합이 표면 기능화의 간판. 벌크 Au는 촉매 불활성이나 나노는 활성"
+    },
+    {
+      "formula": "Au electrode / contact",
+      "context": "전극·접점 금속",
+      "battery_role": "SSB 무관 — 불활성 작업전극, 집전체·본딩와이어·SEM 스퍼터 코팅",
+      "note": "화학적 불활성·전도성으로 전극/접점 표준. XPS 눈금 Au 4f7/2 84.0 eV"
+    }
+  ],
+  "sei_relevance": "native SE 이온 아님, SSB/SEI와 직접 무관. 다만 불활성 전극·집전체·접점 금속 관점은 확고(SSB 셀 측정에서 Au 프로브·집전체로 접할 수 있음). Au–티올 SAM은 표면 기능화 도구지 SE 계면상은 아님. Cu/Ag 동족이지만 Cu(환원 단락)·Ag(무음극 씨앗)와 달리 Au는 계면 반응성이 가장 낮은 불활성 쪽.",
+  "xps": [
+    {
+      "core": "Au 4f7/2",
+      "BE_eV": 84.0,
+      "assignment": "Au metal / Au⁰ — XPS 에너지 눈금 보정 표준(ISO 15472; 83.96 eV). 4f5/2 ~+3.67 eV 더블릿",
+      "ref": "NIST XPS DB; ISO 15472:2010"
+    },
+    {
+      "core": "Au 4f7/2",
+      "BE_eV": 85.9,
+      "assignment": "Au2O3 / Au³⁺ (보고 ~85.5-86.3 eV); Au⁺는 ~84.5-85 eV 중간",
+      "ref": "NIST XPS DB"
+    }
+  ],
+  "raman": [],
+  "dos_character": "5d¹⁰6s¹ 귀금속 — 금속 Au는 채워진 5d 밴드가 E_F 아래 ~2 eV(상대론적 안정화로 깊어짐)에 있고 6s sp 밴드가 E_F를 지나감 → 금색·높은 일함수·화학적 불활성의 근원. Au³⁺(d⁸) 사각평면. SERS 기판·플라스몬 공명(가시광)도 이 sp/d 구조와 연관. SSB 절연 밴드갭과 무관한 귀금속/전극 계열.",
+  "key_references": [
+    "Greenwood & Earnshaw, Chemistry of the Elements 2nd ed. (1997) — Group 11(Cu/Ag/Au)·상대론 효과",
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Au⁺ VI 1.37 Å)",
+    "ISO 15472:2010 / NIST XPS DB — Au 4f7/2 84.0 eV 에너지 눈금 표준",
+    "Haruta, Chem. Rec. 3, 75 (2003) — 나노금 저온 CO 산화 촉매"
+  ],
+  "litdb_slugs": [],
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹⁴ 5s² 5p⁶ 5d¹⁰ 6s¹",
+    "electron_config": "[Xe] 4f¹⁴ 5d¹⁰ 6s¹",
+    "valence_orbitals": "5d¹⁰ 6s¹ — 예외적 채움(Cu/Ag처럼 d¹⁰s¹). Au³⁺면 5d⁸ 사각평면, Au⁺면 5d¹⁰; 상대론으로 Au⁻(5d¹⁰6s²)도 존재",
+    "band_character": "금속 Au는 채워진 5d 밴드가 E_F 아래 ~2 eV(상대론적 안정화), 6s sp 밴드가 E_F 통과 → 금색·높은 일함수·불활성. Au³⁺(d⁸) 사각평면. 플라스몬/SERS도 이 구조와 연관. SSB 밴드엣지와 무관",
+    "bonding": "Au–S soft–soft(티올 SAM 간판)·Au–Cl(AuCl₃/HAuCl₄)·Au–C(NHC), 금속상 fcc 결합. 상대론으로 aurophilic Au···Au 인력·Au⁻ 화학"
+  },
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · Shannon 1976 radii · Greenwood & Earnshaw / CRC Handbook); SSB 앵커 없음(비캠페인) — 우리 db 절대값과 분리"
+}

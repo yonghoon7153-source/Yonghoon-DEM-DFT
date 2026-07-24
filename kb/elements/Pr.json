@@ -1,0 +1,44 @@
+{
+  "symbol": "Pr",
+  "name": "Praseodymium",
+  "Z": 59,
+  "role": "란타나이드 aliovalent 도펀트(Pr6O11/Pr2O3) — Nd/La/Gd/Sm RE³⁺ 계열 동족. Ce처럼 Pr³⁺(4f²)/Pr⁴⁺(4f¹) redox 활성: Pr6O11이 대기 중 안정한 혼합원자가 산화물(PrO2도 존재). Pr³⁺면 P 자리 aliovalent 치환+O 동반(P-O-Pr 가정). redox 활성이라 Li 계면서 Pr⁴⁺→Pr³⁺ 환원 가능 — Ce와 함께 redox-활성 RE 소수파.",
+  "oxidation_states": ["+3", "+4"],
+  "electronegativity": 1.13,
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f³ 5s² 5p⁶ 6s²",
+    "electron_config": "[Xe] 4f³ 6s²",
+    "valence_orbitals": "4f³ 6s² — Pr³⁺면 4f²(개방껍질, S=1, ³H₄), Pr⁴⁺면 4f¹(개방껍질); P 자리 치환+O 동반",
+    "band_character": "Pr³⁺=4f² 부분점유 → 스핀분극(ISPIN=2)+DFT+U(U_eff ~6 eV) 필수(Nd 프로토콜과 동일). Pr⁴⁺=4f¹도 부분점유라 clean 아님 → praseodymia는 혼합원자가 4f 준위가 갭 내/근처. O 2p→Pr 4f/5d 엣지",
+    "bonding": "Pr–O 이온성(Pr6O11/Pr2O3, hard-산 친산소 앵커), Pr–Cl/Pr–S(도핑·SEI); 4f는 5s²5p⁶에 가려 결합은 5d/6s, 4f² 국소모멘트는 명시 투영(projwfc 스핀분해) 필요"
+  },
+  "ionic_radius_A": {
+    "Pr3+_VI": 0.99,
+    "Pr3+_VIII": 1.126,
+    "Pr4+_VI": 0.85,
+    "Pr4+_VIII": 0.96,
+    "_note": "Shannon 1976: Pr³⁺ VI 0.99 A, VIII 1.126; Pr⁴⁺ VI 0.85, VIII 0.96. 란탄족 수축상 Ce(1.01)>Pr(0.99)>Nd(0.983); Pr⁴⁺는 Pr³⁺보다 작음. Li⁺(0.76)보다 큼."
+  },
+  "representative_compounds": [
+    {"formula": "Pr6O11", "context": "도펀트 전구체(대기안정 산화물)", "battery_role": "혼합원자가(Pr³⁺/Pr⁴⁺) 표준 프라세오디뮴 산화물; O 공급원·redox buffer", "note": "대기 중 Pr2O3가 산화돼 도달하는 안정상; Pr 3d5/2 ~933 eV(Pr³⁺)/~935(Pr⁴⁺) 성분"},
+    {"formula": "Pr2O3", "context": "환원형 산화물", "battery_role": "Pr³⁺ 산화물; hard-산 O 앵커", "note": "A-type; 공기 중 쉽게 Pr6O11로 산화 → Pr³⁺ 단일 고정은 불활성 분위기 필요"},
+    {"formula": "Pr-O in doped argyrodite (P-O-Pr bridge, 가정)", "context": "도펀트 모티프(유비)", "battery_role": "S 자리 O가 P·Pr과 가교하는 국소 옥시설파이드 단위", "note": "La-O(Yang)/Nd-O(우리)와 평행한 RE³⁺ hard-산 O 앵커 가정; Pr은 redox 활성"},
+    {"formula": "PrCl3", "context": "대체 원료/SEI", "battery_role": "wide-gap Pr³⁺ 염화물; 대체 Pr 원료", "note": "Pr³⁺ 안정 염화물 → 염화물 계면상은 Pr³⁺로 고정"}
+  ],
+  "sei_relevance": "Pr은 native SE 이온이 아니라 희토류 aliovalent 도펀트. 기능 분리(RE/O 논리): O가 안정성, Pr³⁺가 친산소 hard-산 앵커(P-O-Pr 가정). Ce와 함께 redox-활성 RE라, Pr6O11(Pr⁴⁺ 함유)은 Li 금속 계면서 Pr³⁺로 환원되며 O·전자를 완충 — inert La/Nd/Gd과 다른 SEI 변수(비활성 절연막 가정 약화). XPS Pr 3d(Pr³⁺ ~933 / Pr⁴⁺ ~935 eV)로 원자가 추적. 정직히: Pr-argyrodite 직접 문헌 부재 → Nd/La 유비하되 Ce와 같은 redox 단서 병기.",
+  "xps": [
+    {"core": "Pr 3d5/2", "BE_eV": 933.0, "assignment": "Pr³⁺ in Pr6O11 주선; Pr⁴⁺ 성분 ~935 eV·shake-off 위성 ~928-930 eV로 원자가 판별", "ref": "Pr6O11 XPS 문헌 / xpsdatabase (SO 분열 ~20.6 eV)"}
+  ],
+  "raman": [
+    {"cm1": null, "assignment": "Pr 산화물 라만은 혼합원자가(Pr6O11)로 복잡; 진단은 XPS(Pr 3d Pr³⁺/Pr⁴⁺)·DFT+U PDOS(Pr 4f)로. 확실한 전지-맥락 라만선 미확인 → 지어내지 않고 생략.", "ref": "n/a"}
+  ],
+  "dos_character": "Pr³⁺는 4f²(S=1), Pr⁴⁺는 4f¹로 둘 다 부분점유 -> 스핀분극(ISPIN=2)+DFT+U(Dudarev, U_eff ~6 eV) 필수(Nd 프로토콜과 동일). Pr6O11 같은 혼합원자가 산화물은 Pr³⁺/Pr⁴⁺ 4f 준위가 갭 안팎에 국재상태를 넣어 PBE 단독은 오배치; O 2p->Pr 4f/5d 엣지. 4f는 5s5p에 가려 결합은 5d/6s -> 4f 국소모멘트는 명시 투영(projwfc 스핀분해).",
+  "key_references": [
+    "Shannon 1976 — effective ionic radii (Pr³⁺ VI 0.99 / Pr⁴⁺ VI 0.85)",
+    "Dudarev et al., PRB 1998, 57, 1505 + Loschen et al. 2007 — DFT+U(U_eff ~6 eV) on lanthanide 4f (Pr 4f²/4f¹ 스핀분극 프로토콜)",
+    "Pr6O11 혼합원자가 산화물 문헌 — Pr³⁺/Pr⁴⁺ redox·대기안정상(redox 단서 근거)",
+    "Pr 3d XPS — Pr³⁺ ~933 eV, Pr⁴⁺ ~935 eV, SO 분열 ~20.6 eV (xpsdatabase)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "SSB 앵커 없음(비캠페인, 우리 Nd 프로그램 동족). literature/handbook 소환값(Shannon radii · Pr6O11 XPS 표준 · DFT+U 4f 프로토콜); Pr은 Ce와 함께 redox-활성 RUE라 inert La/Nd 유비에 Pr⁴⁺/Pr³⁺ 단서를 부기 — 우리 db 절대값과 분리."
+}

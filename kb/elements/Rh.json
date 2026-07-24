@@ -1,0 +1,75 @@
+{
+  "symbol": "Rh",
+  "name": "Rhodium",
+  "Z": 45,
+  "role": "45번 4d 백금족 귀금속(Group 9, Co/Ir 동족). SSB 앵커 없음 — 백과사전/촉매 관점. +3가 압도적으로 안정(Rh₂O₃, RhCl₃), +1(Wilkinson 촉매)·+4도 존재. 삼원촉매(자동차 배기 NOx 환원)·수소화·hydroformylation의 핵심 귀금속. SSB와 직접 무관.",
+  "oxidation_states": [
+    "+3",
+    "+1",
+    "+4",
+    "+2"
+  ],
+  "electronegativity": 2.28,
+  "ionic_radius_A": {
+    "Rh3+_VI": 0.665,
+    "Rh4+_VI": 0.6,
+    "_note": "Shannon 1976: Rh³⁺(d⁶) 팔면체 VI 0.665 Å, Rh⁴⁺ VI 0.60 Å. +3가 지배적. 귀금속이라 SSB 격자 치환 대상 아님."
+  },
+  "representative_compounds": [
+    {
+      "formula": "Rh2O3",
+      "context": "산화물(+3)",
+      "battery_role": "SSB 무관 — 가장 안정한 Rh 산화물(corundum형)",
+      "note": "Rh 3d5/2 ~308.5 eV(Rh³⁺)"
+    },
+    {
+      "formula": "RhCl3 (수화물)",
+      "context": "가용성 전구체",
+      "battery_role": "SSB 무관 — Rh 촉매·도금·나노입자 합성 출발물",
+      "note": "적갈색; 무수물은 층상"
+    },
+    {
+      "formula": "RhCl(PPh3)3 (Wilkinson 촉매)",
+      "context": "균일 수소화 촉매(+1)",
+      "battery_role": "SSB 무관 — 알켄 균일 수소화의 고전 Rh(I) 촉매",
+      "note": "Rh¹ 사각평면 d⁸ 착물"
+    },
+    {
+      "formula": "Rh / 삼원촉매(TWC)·hydroformylation",
+      "context": "산업 촉매",
+      "battery_role": "SSB 무관 — 자동차 배기 NOx 환원(삼원촉매), 옥소법 hydroformylation",
+      "note": "귀금속 촉매의 대표 용도; SSB 접점 없음"
+    }
+  ],
+  "sei_relevance": "native SE 이온 아님, SSB/SEI와 직접 무관. 전기화학 접점도 촉매(배기·수소화)가 주라 황화물 SE 계면과 별개. Group 9 동족 Co/Ir의 산화상태 비교(Co는 전지 양극에서 활성, Rh는 촉매 특화) 참고 정도.",
+  "xps": [
+    {
+      "core": "Rh 3d5/2",
+      "BE_eV": 307.2,
+      "assignment": "Rh metal / Rh⁰ (보고 ~307.0-307.3 eV)",
+      "ref": "NIST XPS DB"
+    },
+    {
+      "core": "Rh 3d5/2",
+      "BE_eV": 308.5,
+      "assignment": "Rh2O3 / Rh³⁺ (산화물; RhCl₃는 ~310 eV로 더 높음)",
+      "ref": "NIST XPS DB"
+    }
+  ],
+  "raman": [],
+  "dos_character": "4d⁸5s¹ 귀금속 — 거의 채워진 4d 밴드가 E_F 바로 아래, 금속성. Rh³⁺(d⁶)는 팔면체장에서 저스핀 t2g⁶ 닫힘이라 Rh₂O₃는 반도체성. d-band center가 촉매 활성(수소화·배기)과 직결되는 전형적 백금족. SSB 절연 밴드갭 논의와는 무관한 금속/촉매 계열.",
+  "key_references": [
+    "Greenwood & Earnshaw, Chemistry of the Elements 2nd ed. (1997) — 백금족(Rh/Ir) 화학",
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Rh³⁺ VI 0.665 Å)",
+    "Osborn, Jardine, Young, Wilkinson, J. Chem. Soc. A 1966, 1711 — Wilkinson 촉매"
+  ],
+  "litdb_slugs": [],
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d⁸ 5s¹",
+    "electron_config": "[Kr] 4d⁸ 5s¹",
+    "valence_orbitals": "4d⁸ 5s¹ — 예외적 채움(4d⁸+5s¹). Rh³⁺면 4d⁶(저스핀 t2g⁶), Rh¹면 4d⁸ 사각평면",
+    "band_character": "금속 Rh는 거의 채워진 4d 밴드가 E_F 바로 아래(금속); Rh³⁺(d⁶ 저스핀)라 Rh₂O₃는 반도체성. d-band center가 촉매 활성 지표. SSB 밴드엣지와 무관",
+    "bonding": "Rh–O(Rh₂O₃)·Rh–Cl(RhCl₃)·Rh–P(Wilkinson) 공유 배위, 금속상 fcc 결합. 백금족 촉매 표면화학"
+  },
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · Shannon 1976 radii · Greenwood & Earnshaw / CRC Handbook); SSB 앵커 없음(비캠페인) — 우리 db 절대값과 분리"
+}

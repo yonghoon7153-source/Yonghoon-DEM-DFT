@@ -1,0 +1,85 @@
+{
+  "symbol": "Os",
+  "name": "Osmium",
+  "Z": 76,
+  "role": "76번 5d 백금족 귀금속(Group 8, Fe/Ru 동족). SSB 앵커 없음 — 백과사전/촉매 관점. 자연계에서 가장 밀도 큰 원소(~22.59 g/cm³). +4가 흔하고 +8(OsO₄)이 특징적 — OsO₄는 휘발성·독성 강산화제로 알켄 이수산화(dihydroxylation)·생물 조직 염색에 씀. 경질 합금(오스미리듐, 만년필 촉·계측기 피벗)도 용도. SSB 직접 무관.",
+  "oxidation_states": [
+    "+4",
+    "+8",
+    "+3",
+    "+6",
+    "+2"
+  ],
+  "electronegativity": 2.2,
+  "ionic_radius_A": {
+    "Os4+_VI": 0.63,
+    "Os5+_VI": 0.575,
+    "Os6+_VI": 0.545,
+    "Os7+_VI": 0.525,
+    "Os8+_IV": 0.39,
+    "_note": "Shannon 1976: Os⁴⁺(d⁴) 팔면체 VI 0.63 Å, Os⁶⁺ VI 0.545 Å; Os⁸⁺는 OsO₄ 사면체 IV 0.39 Å. 5d라 4d Ru와 크기 근접(란탄족 수축). 귀금속이라 SSB 격자 치환 대상 아님."
+  },
+  "representative_compounds": [
+    {
+      "formula": "OsO4",
+      "context": "사산화물(+8)",
+      "battery_role": "SSB 무관 — 휘발성 독성 강산화제; 알켄 syn-이수산화 촉매, 전자현미경 조직 염색",
+      "note": "무색~옅은 노랑 사면체 분자; 융점 41°C, 승화성. Raman ν1(A1) ~965 cm⁻¹(Os=O)"
+    },
+    {
+      "formula": "OsO2",
+      "context": "이산화물(+4)",
+      "battery_role": "SSB 무관 — 루타일형 금속성 산화물(환원상)",
+      "note": "OsO₄ 환원 생성물"
+    },
+    {
+      "formula": "osmiridium (Os–Ir 합금)",
+      "context": "천연/경질 합금",
+      "battery_role": "SSB 무관 — 초경질 내마모 합금(만년필 촉, 계측기 피벗, 전기접점)",
+      "note": "밀도·경도 활용"
+    },
+    {
+      "formula": "Os 배위착물 / 촉매",
+      "context": "배위화학",
+      "battery_role": "SSB 무관 — 이수산화(AD-mix), 산화 촉매·전자전달 매개체 연구",
+      "note": "귀금속 촉매·모델 착물"
+    }
+  ],
+  "sei_relevance": "native SE 이온 아님, SSB/SEI와 직접 무관. 전기화학 접점은 촉매·모델 착물 수준이라 황화물 SE 계면과 별개. 귀금속·고밀도 경질금속 특성이 주 용도라 전지 재료로 쓰지 않음. Group 8 동족 Ru/Fe와 산화상태 비교 참고 정도.",
+  "xps": [
+    {
+      "core": "Os 4f7/2",
+      "BE_eV": 50.7,
+      "assignment": "Os metal / Os⁰ (4f5/2 ~+2.7 eV 더블릿; 보고 ~50.6-51.0 eV)",
+      "ref": "NIST XPS DB"
+    },
+    {
+      "core": "Os 4f7/2",
+      "BE_eV": 52.0,
+      "assignment": "OsO2 / Os⁴⁺ (근사 ~52 eV); OsO₄(Os⁸⁺)는 ~54-55 eV로 더 높음",
+      "ref": "NIST XPS DB"
+    }
+  ],
+  "raman": [
+    {
+      "cm1": 965,
+      "assignment": "OsO4 ν1(A1) Os=O 대칭 신축(사면체 분자, 기상/용액 고전값)",
+      "ref": "OsO4 분자 진동 참조"
+    }
+  ],
+  "dos_character": "5d⁶6s² 귀금속 — 금속 Os는 5d 밴드가 E_F에 걸친 hcp 금속(최고 밀도·매우 단단). OsO₄(Os⁸⁺ d⁰)는 사면체 분자성 산화물, OsO₂(d⁴)는 금속성. 강한 5d–2p 공유성으로 고가수 안정. SSB 절연 밴드갭과 무관한 귀금속 계열.",
+  "key_references": [
+    "Greenwood & Earnshaw, Chemistry of the Elements 2nd ed. (1997) — 백금족(Os/Ru) 화학·OsO4",
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Os⁴⁺ VI 0.63 Å)",
+    "Arndt et al., CRC Handbook of Chemistry and Physics — Os 물성(밀도·융점)"
+  ],
+  "litdb_slugs": [],
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹⁴ 5s² 5p⁶ 5d⁶ 6s²",
+    "electron_config": "[Xe] 4f¹⁴ 5d⁶ 6s²",
+    "valence_orbitals": "5d⁶ 6s² (4f¹⁴ 채움) — 규칙적(Ru=4d⁷5s¹ 예외와 달리 Os는 정상 d⁶s²). Os⁴⁺면 5d⁴, Os⁸⁺면 5d⁰",
+    "band_character": "금속 Os는 5d 밴드가 E_F 걸친 최고밀도 hcp 금속; OsO₄(5d⁰)는 사면체 분자성, OsO₂(5d⁴)는 금속성. 강한 5d–2p 공유로 고가수(+8) 안정. SSB 밴드엣지와 무관",
+    "bonding": "Os–O 강공유(OsO₄ 말단 Os=O로 +8 안정화), 금속상 hcp 결합. 백금족 촉매·경질합금"
+  },
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · Shannon 1976 radii · Greenwood & Earnshaw / CRC Handbook); SSB 앵커 없음(비캠페인) — 우리 db 절대값과 분리"
+}

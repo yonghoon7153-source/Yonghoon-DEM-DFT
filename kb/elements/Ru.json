@@ -1,0 +1,83 @@
+{
+  "symbol": "Ru",
+  "name": "Ruthenium",
+  "Z": 44,
+  "role": "44번 4d 백금족 귀금속(Group 8, Fe/Os 동족). SSB 캠페인 앵커 없음 — 백과사전/촉매 관점. 다채로운 산화상태(+2~+8), +3/+4가 흔하고 RuO₄(+8)는 휘발성 강산화제. RuO₂는 금속성 산화물이라 DSA 전극·수전해 OER·슈퍼커패시터에서 전극재로 쓰임(전기화학 인접하나 SSB 아님). 수소화·암모니아 합성 등 촉매도 대표 용도.",
+  "oxidation_states": [
+    "+3",
+    "+4",
+    "+2",
+    "+8",
+    "+6"
+  ],
+  "electronegativity": 2.2,
+  "ionic_radius_A": {
+    "Ru3+_VI": 0.68,
+    "Ru4+_VI": 0.62,
+    "Ru5+_VI": 0.565,
+    "_note": "Shannon 1976: Ru³⁺(d⁵) 팔면체 VI 0.68 Å, Ru⁴⁺(d⁴, RuO₂) VI 0.62 Å, Ru⁵⁺ VI 0.565 Å. RuO₄(+8)·RuO₄⁻ 등 고가수는 사면체 배위. 귀금속이라 SSB 격자 치환 대상은 아님."
+  },
+  "representative_compounds": [
+    {
+      "formula": "RuO2",
+      "context": "금속성 루타일 산화물",
+      "battery_role": "SSB 무관 — DSA 전극·OER 전기촉매·RuO₂ 슈퍼커패시터(의사용량) 전극재",
+      "note": "루타일형 금속성 전도체; Ru 3d5/2 ~280.7 eV. Raman A1g ~645 / Eg ~528 cm⁻¹"
+    },
+    {
+      "formula": "RuO4",
+      "context": "사산화물(+8)",
+      "battery_role": "SSB 무관 — 휘발성·독성 강산화제(유기 산화, 염색)",
+      "note": "노란 휘발성 고체, 저온 승화; 매우 강한 산화력"
+    },
+    {
+      "formula": "RuCl3 (수화물)",
+      "context": "가용성 전구체",
+      "battery_role": "SSB 무관 — Ru 촉매·박막·나노입자 합성 출발물",
+      "note": "α-RuCl₃는 별개로 Kitaev 양자자성 물질로 유명"
+    },
+    {
+      "formula": "Ru(bpy)3²⁺ / Ru 수소화 촉매",
+      "context": "배위·촉매 화합물",
+      "battery_role": "SSB 무관 — 광촉매/광화학(Ru(bpy)₃²⁺), 수소화·Fischer–Tropsch·암모니아 합성 촉매",
+      "note": "귀금속 촉매로서의 대표 활용"
+    }
+  ],
+  "sei_relevance": "native SE 이온 아님, SSB/SEI와 직접 무관. 전기화학 접점은 있으나(RuO₂ OER·수전해 양극, 슈퍼커패시터 전극) 이는 수계/산화물 전극 맥락이지 황화물 SE 계면과는 별개. 귀금속이라 Li 금속 계면 도펀트로도 쓰지 않음.",
+  "xps": [
+    {
+      "core": "Ru 3d5/2",
+      "BE_eV": 280.0,
+      "assignment": "Ru metal / Ru⁰ (3d3/2 ~284.1 eV가 C 1s ~284.6과 겹침 → 정량은 3d5/2 또는 Ru 3p3/2 ~462 eV 사용)",
+      "ref": "NIST XPS DB"
+    },
+    {
+      "core": "Ru 3d5/2",
+      "BE_eV": 280.7,
+      "assignment": "RuO2 / Ru⁴⁺ (보고 ~280.7-281.0 eV)",
+      "ref": "NIST XPS DB"
+    }
+  ],
+  "raman": [
+    {
+      "cm1": 645,
+      "assignment": "RuO2 루타일 A1g 신축(Eg ~528, B2g ~716 동반) — 금속성 산화물 지문",
+      "ref": "RuO2 rutile Raman 표준"
+    }
+  ],
+  "dos_character": "4d⁷5s¹ 귀금속 — 금속 Ru는 채워지는 4d 밴드가 E_F에 걸친 금속. RuO₂는 드물게 '금속성 산화물'(Ru 4d–O 2p 혼성 밴드가 E_F 통과)로 절연 wide-gap 산화물과 정반대 → 전극재로 쓰이는 이유. 다가 redox로 산화상태 폭이 넓음. SSB 절연성 요구와는 성격이 다른 계열.",
+  "key_references": [
+    "Greenwood & Earnshaw, Chemistry of the Elements 2nd ed. (1997) — 백금족(Ru/Os) 화학",
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Ru⁴⁺ VI 0.62 Å)",
+    "Over, Chem. Rev. 112, 3356 (2012) — RuO2(110) 표면·전기촉매(OER) 종설"
+  ],
+  "litdb_slugs": [],
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d⁷ 5s¹",
+    "electron_config": "[Kr] 4d⁷ 5s¹",
+    "valence_orbitals": "4d⁷ 5s¹ — 예외적 채움(4d⁷+5s¹, 정상 4d⁶5s²가 아님). Ru⁴⁺면 4d⁴, Ru³⁺면 4d⁵",
+    "band_character": "금속 Ru는 4d 밴드가 E_F 걸친 금속; RuO₂는 Ru 4d–O 2p 혼성 밴드가 E_F 통과하는 '금속성 산화물'(절연 wide-gap과 정반대) → 전극재. 다가 redox로 산화상태 폭 넓음",
+    "bonding": "Ru–O 공유(RuO₂ 금속성, RuO₄ 말단 Ru=O), 금속상 hcp 결합. 귀금속 촉매 활성면(Ru 4d 밴드센터)"
+  },
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · Shannon 1976 radii · Greenwood & Earnshaw / CRC Handbook); SSB 앵커 없음(비캠페인) — 우리 db 절대값과 분리"
+}
