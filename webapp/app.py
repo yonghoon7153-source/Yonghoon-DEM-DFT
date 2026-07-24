@@ -3984,13 +3984,13 @@ def api_eis_fig():
 @app.route('/api/eis_exp')
 def api_eis_exp():
     """실험 EIS Nyquist (이종기술/eis/extracted) → Ω·cm² 정규화 = physics-EIS 위 오버레이(frame[4]).
-    cell=full(primer-SUS 풀셀, 1.327cm²)|sym(SUS 대칭, 0.785cm²).  Z(Ω)×area = ASR(eis_fit 규약).
-    데이터 부재 시 available:false (클라우드 graceful)."""
+    ★files=<stem1,stem2,…> 지정 시 그 측정만(표 체크박스 선택), 없으면 cell=full|sym 전체.
+    Z(Ω)×area = ASR(eis_fit 규약; area 는 파일명 sym/full 로 파일별 결정).  데이터 부재 시 available:false."""
     import csv as _csv
     import glob as _glob
     import math as _math
     cell = 'sym' if request.args.get('cell') == 'sym' else 'full'
-    area = 0.7854 if cell == 'sym' else 1.3273                 # eis_fit AREA 규약(10π/13π 반경²)
+    _files = set(x.strip() for x in (request.args.get('files') or '').split(',') if x.strip())
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     exdir = os.path.join(root, '이종기술', 'eis', 'extracted')
     if not os.path.isdir(exdir):
@@ -3998,8 +3998,12 @@ def api_eis_exp():
     curves = []
     for p in sorted(_glob.glob(os.path.join(exdir, '*.csv'))):
         name = os.path.basename(p)[:-4]
-        if (('sym' in name) != (cell == 'sym')):              # full/sym 필터
+        if _files:                                            # 선택 측정만 (셀타입 무관, 파일별 area)
+            if name not in _files:
+                continue
+        elif ('sym' in name) != (cell == 'sym'):              # 선택 없으면 full/sym 전체
             continue
+        area = 0.7854 if ('sym' in name) else 1.3273          # 파일별 AREA (10π sym / 13π full)
         pts = []
         try:
             for row in _csv.DictReader(open(p)):
@@ -4017,8 +4021,8 @@ def api_eis_exp():
         if len(pts) >= 4:
             curves.append({'name': name, 'pts': pts})
     if not curves:
-        return jsonify({'available': False, 'hint': f'{cell} 셀 추출본 없음'}), 200
-    return jsonify({'available': True, 'cell': cell, 'area_cm2': area, 'curves': curves,
+        return jsonify({'available': False, 'hint': ('선택 측정 추출본 없음' if _files else f'{cell} 셀 추출본 없음')}), 200
+    return jsonify({'available': True, 'cell': cell, 'selected': bool(_files), 'curves': curves,
                     'note': 'Z(Ω)×area→Ω·cm²(ASR, eis_fit 규약); 방울=실측 Nyquist, physics-EIS 선과 겹치면 frame[4] '
                             '(반쪽셀 모델 vs primer-SUS 풀셀 = 배치 다름, 자릿수-대조)'})
 
