@@ -1,0 +1,35 @@
+{
+  "symbol": "Si",
+  "name": "Silicon",
+  "Z": 14,
+  "role": "cascade 산화물 도펀트 후보(SiO2, glass former) + P 자리 aliovalent 치환자. Si4+는 hard 사면체 형성 양이온: SiO2는 Sundar 2025 코팅 스크린 후보(유리형성 절연 코팅). 티오인산염에선 Si4+가 P5+ 자리를 치환해 Li 추가(Li10SiP2S12 superionic — thio-LISICON). Li-Si 합금은 음극 활물질로도 유명(별개 맥락).",
+  "oxidation_states": ["+4", "-4"],
+  "electronegativity": 1.90,
+  "ionic_radius_A": {
+    "Si4+_IV": 0.26,
+    "Si4+_VI": 0.40,
+    "_note": "Shannon 1976: Si4+ IV(사면체) 0.26 A, VI 0.40. 작고 hard -> SiO4/SiS4 사면체 형성; P5+(IV 0.17)보다 커서 P 자리 치환 시 사면체 팽창·전하보상 Li 추가."
+  },
+  "representative_compounds": [
+    {"formula": "SiO2", "context": "유리형성 코팅 후보", "battery_role": "wide-gap 절연 유리형성 코팅; Sundar 2025 스크린 후보", "note": "Eg ~9 eV; Si 2p ~103.3 eV(elemental Si0 ~99.4). B2O3처럼 network former"},
+    {"formula": "Li10SiP2S12", "context": "thio-LISICON SE(참고계)", "battery_role": "Si4+가 P/Ge 자리 치환한 superionic 황화물", "note": "LGPS 계열; Si-S4 사면체 + PS4; Li ~10 mS/cm급 초이온 전도(Kato 2016 Cl 변형)"},
+    {"formula": "SiS2", "context": "황화물 격자 내 Si-S", "battery_role": "edge-sharing SiS4 사슬 유리형성제", "note": "Si-S network; 황화물 유리 기질 형성"}
+  ],
+  "sei_relevance": "Si의 배터리 기여는 두 갈래. (1) SiO2는 wide-gap 유리형성 절연 코팅 후보(Sundar 2025 스크린) — 전자차단·표면 부동태화. (2) 격자 축에선 Si4+가 P5+를 aliovalent 치환해 캐리어(Li) 농도를 올리는 superionic 전략(Li10SiP2S12/LGPS 계열)의 핵심 치환자. 별개로 Li-Si 합금 음극(고용량, 큰 부피팽창)은 SEI 화학이 다른 주제. SiO2 특이 계면 분광 근거는 코팅 문헌 기반.",
+  "xps": [
+    {"core": "Si 2p", "BE_eV": 103.3, "assignment": "SiO2 / Si4+ oxide", "ref": "NIST XPS DB"},
+    {"core": "Si 2p", "BE_eV": 99.4, "assignment": "elemental Si0 (Li-Si 합금·환원 Si 참조)", "ref": "NIST XPS DB"}
+  ],
+  "raman": [
+    {"cm1": 464, "assignment": "SiO2 quartz A1 symmetric stretch (강); 부수 ~206, ~128 cm-1", "ref": "quartz/silica Raman lit"}
+  ],
+  "dos_character": "SiO2는 wide-gap(~9 eV) 이온-공유 절연체 — Si 3s/3p가 O 2p와 혼성; 호스트 밴드갭 안 상태 거의 없음 -> 전자차단 코팅에 적합. 티오인산염 내 Si는 Si-S4 사면체로 P-S 골격에 편입되어 골격 밴드에 기여하되 캐리어 농도(치환)로 전도를 올림. Si4+는 hard 사면체 형성자.",
+  "key_references": [
+    "Shannon 1976 — effective ionic radii",
+    "Kato et al., Nat. Energy 2016 — Li9.54Si1.74P1.44S11.7Cl0.3 초고전도 황화물(Si4+ P자리 치환, LGPS 계열) (Si-substituted superionic)",
+    "Sundar et al., Adv. Sci. 2025 — LPSCl 산화물 코팅 DFT 스크린(SiO2 후보 포함) (litdb)",
+    "NIST XPS DB — Si 2p (SiO2 ~103.3, elemental ~99.4 eV)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB lit · Shannon radii); 우리 db 절대값과 분리"
+}

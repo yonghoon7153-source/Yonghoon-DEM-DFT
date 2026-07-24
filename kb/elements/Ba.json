@@ -1,0 +1,34 @@
+{
+  "symbol": "Ba",
+  "name": "Barium",
+  "Z": 56,
+  "role": "cascade 산화물 도펀트 후보(BaO) — 알칼리토 최대반경(1.35 A). Ba2+는 hard 대형 2가 양이온: Li 자리 aliovalent 치환 시 Li 공공 + 최대 국소 왜곡. F-이온 전도체 BaSnF4(Xiong 2022, Nd-doped 선례)의 host 양이온으로, 대형 2가가 음이온 부격자를 여는 사례. 알칼리토 크기 계열(Ca<Sr<Ba) 상단.",
+  "oxidation_states": ["+2"],
+  "electronegativity": 0.89,
+  "ionic_radius_A": {
+    "Ba2+_VI": 1.35,
+    "Ba2+_VIII": 1.42,
+    "Ba2+_XII": 1.61,
+    "_note": "Shannon 1976: Ba2+ VI(팔면체) 1.35 A, VIII 1.42, XII 1.61. Li+(0.76)의 ~1.8x -> Li 치환 시 최대 국소 왜곡; 알칼리토 중 최대."
+  },
+  "representative_compounds": [
+    {"formula": "BaO", "context": "산화물 도펀트 후보", "battery_role": "가장 염기성인 알칼리토 산화물; H2S 게터·전자절연 경향", "note": "rock salt; Ba 3d5/2 ~780 eV. 대형 2가 aliovalent Li 공공원"},
+    {"formula": "BaSnF4", "context": "F-이온 전도체(참고계, Xiong 2022)", "battery_role": "대형 Ba2+ host + F- 이동; Nd-도핑 migration 연구 선례", "note": "Xiong 2022 DFT: Nd-M-anion 왜곡이 이동장벽↓ (우리 Nd 프로토콜의 비교 선례)"},
+    {"formula": "BaS", "context": "황화물 격자 내 Ba-S", "battery_role": "Ba가 S와 배위하는 국소단위", "note": "rock salt BaS; Ba는 hard라 O 선호"}
+  ],
+  "sei_relevance": "Ba는 native SE 이온이 아니라 최대형 알칼리토 산화물 도펀트 후보. BaO는 가장 염기성이라 H2S 게터·전자절연 계면 논리가 가장 강한 축(Mg/Ca/Sr 계열의 극단). 큰 Ba2+는 채널 왜곡으로 전도도엔 중립~부정 가능하나, BaSnF4 선례처럼 대형 2가가 음이온 부격자를 열어 이동을 돕는 반례도 있음. Xiong 2022(Nd-doped BaSnF4)는 우리 Nd-argyrodite 프로토콜의 직접 비교 선례.",
+  "xps": [
+    {"core": "Ba 3d5/2", "BE_eV": 780.0, "assignment": "BaO / Ba2+ (BaCO3 ~780.5)", "ref": "NIST XPS DB"}
+  ],
+  "raman": [
+    {"cm1": null, "assignment": "BaO(rock salt)는 1차 라만 비활성 -> SSB 진단 밴드 없음. (BaSO4 표면상이면 v1 ~988 cm-1.) 생략.", "ref": "n/a"}
+  ],
+  "dos_character": "BaO는 wide-gap 이온 절연체 — Ba 5p semicore, 빈 Ba 5d/6s가 전도대 하단, O 2p가 VB 지배. 도핑 시 밴드갭 안 상태 기여 적음. Ba2+는 최대 정전기·자리크기 레버(최대 격자팽창)이지 밴드엣지 redox 중심 아님.",
+  "key_references": [
+    "Shannon 1976 — effective ionic radii",
+    "Xiong et al., J. Power Sources 2022, 518, 230718 — Nd-doped BaSnF4 DFT (대형 Ba2+ host; Nd-M-anion 왜곡이 이동장벽↓; 우리 Nd 프로토콜 비교 선례)",
+    "NIST XPS DB — Ba 3d5/2 (BaO ~780, BaCO3 ~780.5 eV)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB lit · Shannon radii); 우리 db 절대값과 분리"
+}
