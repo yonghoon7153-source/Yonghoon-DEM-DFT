@@ -1,0 +1,37 @@
+{
+  "symbol": "Am",
+  "name": "Americium",
+  "Z": 95,
+  "role": "방사성 악티나이드(배터리 무관, 백과사전 완성용). 5f⁷7s². 초우라늄이며 Am-241(반감기 432년, α선원)은 연기감지기에 실제로 쓰이는 유일한 '생활 속' 초우라늄. 여기서부터 5f가 국재(localized)로 확실히 넘어가 란타나이드처럼 굴러 — 주 산화수 +3(가장 안정). 전지와 무관.",
+  "oxidation_states": ["+3", "+4", "+5", "+6"],
+  "electronegativity": 1.13,
+  "ionic_radius_A": {
+    "Am3+_VI": 0.975,
+    "Am3+_VIII": 1.09,
+    "Am4+_VI": 0.85,
+    "_note": "Shannon 1976: Am3+ VI 0.975 / VIII 1.09, Am4+ VI 0.85 A. Am3+가 Gd3+(0.938)와 근접 — 5f 국재로 란타나이드 유사 거동."
+  },
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹⁴ 5s² 5p⁶ 5d¹⁰ 6s² 6p⁶ 5f⁷ 7s²",
+    "electron_config": "[Rn] 5f⁷ 7s²",
+    "valence_orbitals": "5f⁷ 7s² — 5f 반충만(half-filled) 안정. Am³⁺면 5f⁶",
+    "band_character": "5f⁷ — 악티나이드 국재화 전환의 확정점. Am 금속부터 5f가 완전히 국재(localized, 자성 국소모멘트)해 앞의 U/Pu(편재 경향)와 갈라지고, 이후 원소는 란타나이드 4f처럼 굴러 → DFT+U/스핀분극으로 국재 5f를 다뤄야 함. '5f 국재, 강상관'의 시작.",
+    "bonding": "Am–O 이온성(Am₂O₃, AmO₂), 국재 5f는 결합 관망하고 6d/7s가 결합 — 란타나이드형 이온결합."
+  },
+  "representative_compounds": [
+    {"formula": "AmO2", "context": "산화물(+4)", "battery_role": "해당 없음(방사성)", "note": "fluorite형; 국재 5f 강상관"},
+    {"formula": "Am2O3", "context": "산화물(+3, 대표 산화수)", "battery_role": "해당 없음", "note": "+3가 가장 안정 — 란타나이드 유사"},
+    {"formula": "AmF3", "context": "할라이드(+3)", "battery_role": "해당 없음", "note": "LaF₃형; Am-241은 연기감지기 α선원으로 실용"}
+  ],
+  "sei_relevance": "해당 없음(방사성/비배터리)",
+  "xps": [],
+  "raman": [],
+  "dos_character": "5f⁷(반충만) — 악티나이드에서 5f가 편재→국재로 확실히 넘어가는 지점. Am 금속부터 5f가 국재해 국소모멘트를 갖고, 화학적으로 +3가 안정한 란타나이드형 거동을 보임 → 국재 5f를 위해 DFT+U/스핀분극 필요(Gd 4f⁷ 프로토콜과 유사). 초우라늄이라 실측 전자구조는 특수시설 한정.",
+  "key_references": [
+    "Shannon 1976 — effective ionic radii (Am3+/Am4+)",
+    "Greenwood & Earnshaw, Chemistry of the Elements — Am 화학·5f 국재화 전환",
+    "Katz, Seaborg, Morss (eds.), The Chemistry of the Actinide and Transactinide Elements"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "SSB 앵커 없음(방사성 비캠페인). 핸드북 소환값(Shannon radii · CRC/Greenwood) — 우리 db 절대값과 분리."
+}

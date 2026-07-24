@@ -1,0 +1,36 @@
+{
+  "symbol": "Xe",
+  "name": "Xenon",
+  "Z": 54,
+  "role": "SSB 캠페인과 직접 무관 - 가장 반응성 큰 비활성기체([Kr]4d¹⁰5s²5p⁶). XeF2/4/6·XeO3/XeO4 등 +2~+8 산화 화학이 풍부; HID 조명·이온엔진 추진제·마취.",
+  "oxidation_states": ["0", "+2", "+4", "+6", "+8"],
+  "electronegativity": 2.60,
+  "ionic_radius_A": {
+    "_note": "비활성기체 - Shannon 표준 이온반경 없음(불화물에서 Xe는 형식 양이온 +2~+8). 참고 van der Waals 반경 ~2.16 Å (Bondi 1964)."
+  },
+  "representative_compounds": [
+    {"formula": "XeF2", "context": "불소화 시약", "battery_role": "없음(유기합성 시약)", "note": "linear, 온화한 F 공여 산화제. Xe(+2)."},
+    {"formula": "XeF4 / XeF6", "context": "고차 불화물", "battery_role": "없음", "note": "Xe(+4/+6), 초원자가 초강산화."},
+    {"formula": "XeO3 / Na4XeO6", "context": "산화물·퍼제네이트", "battery_role": "없음", "note": "XeO3 폭발성 강산화(+6), perxenate Xe(+8)."}
+  ],
+  "sei_relevance": "SSB 계면 특이 역할 없음 - XeF2가 불소화 시약으로 유기합성에 쓰이나 SSB 계면과 무관.",
+  "xps": [
+    {"core": "Xe 3d5/2", "BE_eV": 669.9, "assignment": "implanted Xe (matrix 668.9-674.1)", "ref": "Handbook of XPS (Moulder)"}
+  ],
+  "raman": [],
+  "dos_character": "닫힌 5p⁶ 껍질이나 5p가 얕아(낮은 IE) 비활성기체 중 가장 반응성 - F/O와 초원자가 화합물. 자유상태는 vdW 절연.",
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 5s² 5p⁶",
+    "electron_config": "[Kr] 4d¹⁰ 5s² 5p⁶",
+    "valence_orbitals": "5s² 5p⁶ - 닫힌 5p⁶이나 얕아 F·O와 +2~+8 폭넓은 산화 화학",
+    "band_character": "(앵커 없음) 닫힌 5p⁶ - argyrodite 무관. 5p가 얕아 비활성기체 중 가장 반응성.",
+    "bonding": "고전기음성 F/O와 Xe-F/Xe-O 공유(초원자가, +2~+8); 자유상태는 vdW."
+  },
+  "key_references": [
+    "CRC Handbook of Chemistry and Physics",
+    "Bondi 1964 - van der Waals radii",
+    "Handbook of X-ray Photoelectron Spectroscopy (Moulder 1992) - implanted Xe 3d"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: CRC handbook · Bondi vdW · Moulder XPS); SSB 앵커 없음(비캠페인 비활성기체)."
+}

@@ -1,0 +1,44 @@
+{
+  "symbol": "Pb",
+  "name": "Lead",
+  "Z": 82,
+  "role": "14족 무거운 post-transition 금속 — 6s² inert pair가 강해 Pb²⁺(6s²)가 Pb⁴⁺(6s⁰)보다 안정(Sn은 +4도 흔한 것과 대비). 배터리에선 납축전지(lead-acid)의 주역: PbO2(양극)//Pb(음극), 방전 시 양쪽이 PbSO4로. Pb²⁺의 6s² 고립전자쌍은 stereochemically active해 왜곡 배위를 낳음. Li-Pb·Na-Pb 합금 음극 원소이기도 함.",
+  "oxidation_states": ["+2", "+4"],
+  "electronegativity": 2.33,
+  "ionic_radius_A": {
+    "Pb2+_VI": 1.19,
+    "Pb2+_VIII": 1.29,
+    "Pb2+_XII": 1.49,
+    "Pb4+_VI": 0.775,
+    "Pb4+_IV": 0.65,
+    "_note": "Shannon 1976: Pb2+ VI 1.19 A(6s² lone pair로 크고 왜곡), VIII 1.29, XII 1.49; Pb4+ VI 0.775, IV 0.65 A. Pb²⁺가 inert pair로 지배적이며 큰 반경; Pb⁴⁺는 강산화성."
+  },
+  "representative_compounds": [
+    {"formula": "PbO2", "context": "납축전지 양극 활물질", "battery_role": "충전상태 양극(β-PbO2 rutile형, 금속성 전도) — 방전 시 PbSO4로", "note": "Pb⁴⁺. 금속성 스크리닝으로 Pb 4f7/2가 오히려 낮게(~137 eV대) 보고되기도 함(상·참조에 따라 편차)"},
+    {"formula": "Pb (스펀지 납)", "context": "납축전지 음극 / 합금 음극 원소", "battery_role": "충전상태 음극(금속 Pb); Li-Pb·Na-Pb alloying 음극 원소", "note": "Pb 4f7/2 ~136.8 eV(금속). 방전 시 PbSO4로; 합금계에선 Li22Pb5 등 고용량 합금"},
+    {"formula": "PbSO4", "context": "납축전지 방전 생성물", "battery_role": "양·음극 공통 방전 생성물(double-sulfate 이론) — wide-gap 절연 이온상", "note": "Pb²⁺; Pb 4f7/2 ~139.0 eV(가장 높은 BE). 재충전성의 핵심 중간상"},
+    {"formula": "PbO", "context": "활물질 전구체(litharge/massicot)", "battery_role": "납축전지 페이스트 전구체(리사지 α-PbO)", "note": "Pb²⁺ 6s² lone pair; Pb 4f7/2 ~137.9 eV. 층상 구조(고립전자쌍이 층 사이로)"}
+  ],
+  "sei_relevance": "(일반적) 우리 황화물 캠페인의 SEI 이온은 아니지만, Pb는 배터리 관련성이 매우 큰 원소 — 납축전지의 PbO2/Pb/PbSO4 산화환원이 대표적이고, Li/Na 이온전지에선 Pb가 alloying(전환+합금) 음극으로 작동. 계면 거동의 핵심은 SEI 무기 부동태보다 Pb²⁺↔Pb⁴⁺(수계 납축) 또는 Pb⁰↔Li-Pb 합금화(유기계)임.",
+  "xps": [
+    {"core": "Pb 4f7/2", "BE_eV": 136.8, "assignment": "Pb metal / Pb⁰ (4f 스핀궤도 분리 ~4.87 eV)", "ref": "NIST XPS DB"},
+    {"core": "Pb 4f7/2", "BE_eV": 137.9, "assignment": "PbO / Pb²⁺ (litharge)", "ref": "NIST XPS DB"},
+    {"core": "Pb 4f7/2", "BE_eV": 139.0, "assignment": "PbSO4 / Pb²⁺ (방전 생성물, 가장 높은 BE)", "ref": "NIST XPS DB"}
+  ],
+  "raman": [],
+  "dos_character": "Pb²⁺는 6s²6p⁰ — 5d¹⁰은 깊은 반코어, 채워진 6s² 고립전자쌍이 VBM 상단에 크게 기여하고(O 2p와 혼성) 빈 6p가 CBM을 이룸(PbO 등은 stereochem active lone pair로 왜곡·층상). Pb⁴⁺(6s⁰)는 강산화성이고 PbO2는 금속성 전도체(양극 활물질로 적합). inert pair로 Pb²⁺가 안정.",
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹⁴ 5s² 5p⁶ 5d¹⁰ 6s² 6p²",
+    "electron_config": "[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p²",
+    "valence_orbitals": "6s² 6p² (4f¹⁴5d¹⁰ 반코어) — Pb²⁺면 6s² 고립전자쌍(inert pair, 6p²만 잃음), Pb⁴⁺면 6s⁰6p⁰",
+    "band_character": "(일반 전자구조) 상대론적 inert pair로 6s²가 안정화 -> Pb²⁺(6s²) 지배; Pb²⁺ 산화물은 6s²가 VBM 상단, 빈 6p가 CBM(stereochem active lone pair -> 층상·왜곡). Pb⁴⁺의 PbO2는 금속성 전도체",
+    "bonding": "Pb–O(PbO 층상·PbO2 rutile형)·Pb–S(galena PbS) 호환, Pb 6s/6p–음이온 p 혼성; Pb²⁺ 6s² 고립전자쌍이 배위를 한쪽으로 밀어 비대칭 결합"
+  },
+  "key_references": [
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Pb2+ VI 1.19 A, Pb4+ VI 0.775 A)",
+    "NIST XPS DB — Pb 4f7/2 (metal 136.8, PbO 137.9, PbSO4 139.0 eV)",
+    "WebElements / CRC — Pauling EN 2.33, [Xe]4f14 5d10 6s2 6p2, 6s² inert pair; 납축전지 double-sulfate 화학"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · Shannon radii); SSB 앵커 없음(비캠페인 원소)"
+}

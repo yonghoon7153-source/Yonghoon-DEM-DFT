@@ -1,0 +1,28 @@
+{
+  "symbol": "Lr",
+  "name": "Lawrencium",
+  "Z": 103,
+  "role": "방사성 악티나이드(배터리 무관, 백과사전 완성용). 악티나이드 계열의 마지막(Z=103). 5f¹⁴이 다 찬 뒤 마지막 전자가 상대론 효과로 6d가 아니라 7p에 들어가리라 예측되는 것으로 유명([Rn]5f¹⁴7s²7p¹ 예측; 옛 표기 6d¹). 원자 단위로만 생성. 주 산화수 +3만 알려짐. 전지와 무관, 데이터 극히 제한적.",
+  "oxidation_states": ["+3"],
+  "ionic_radius_A": {
+    "_note": "Shannon 1976 미수록(고체 시료 없음). 계열 수축 외삽으로 Lr3+ VI ~0.88 A 추정(참고값, 확정치 아님)."
+  },
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹⁴ 5s² 5p⁶ 5d¹⁰ 6s² 6p⁶ 5f¹⁴ 7s² 7p¹",
+    "electron_config": "[Rn] 5f¹⁴ 7s² 7p¹ (예측; 옛 표기 [Rn] 5f¹⁴ 6d¹ 7s²)",
+    "valence_orbitals": "5f¹⁴(완충) + 7s² 7p¹ — 상대론적 7p 안정화로 마지막 전자가 6d 대신 7p에 든다는 예측. Lr³⁺면 5f¹⁴",
+    "band_character": "5f¹⁴ 완충이라 5f 강상관 이슈는 약함. 핵심은 상대론 효과로 바닥상태가 6d¹→7p¹로 바뀐다는 예측(무거운 원소 상대론의 교과서 사례). 고체·밴드 실측은 전무.",
+    "bonding": "고체 화합물 미확립 — 용액에서 3가 Lr³⁺(닫힌 5f¹⁴, 란타나이드 Lu의 악티나이드 대응) 이온성 거동만 추정."
+  },
+  "representative_compounds": [],
+  "sei_relevance": "해당 없음(방사성/비배터리)",
+  "xps": [],
+  "raman": [],
+  "dos_character": "5f¹⁴ 완충 — f가 다 차 국소모멘트·강상관 이슈는 약하고, 대신 상대론적 7p 안정화로 바닥상태 배치가 6d¹ 대신 7p¹로 예측되는 게 물리적 관심사(무거운 원소 상대론). 원자 단위 생성이라 칭량 고체·밴드 실측은 없음. 악티나이드의 종착(Lu에 대응).",
+  "key_references": [
+    "Greenwood & Earnshaw, Chemistry of the Elements — Lr 화학·상대론적 7p 바닥상태 예측",
+    "Katz, Seaborg, Morss (eds.), The Chemistry of the Actinide and Transactinide Elements"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "SSB 앵커 없음(방사성 비캠페인). 핸드북 소환값(CRC/Greenwood; 상대론적 배치 예측); 고체 데이터 없음(atom-at-a-time), EN 확정치 없어 생략 — 우리 db 절대값과 분리."
+}

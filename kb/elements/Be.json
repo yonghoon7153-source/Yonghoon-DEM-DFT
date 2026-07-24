@@ -1,0 +1,38 @@
+{
+  "symbol": "Be",
+  "name": "Beryllium",
+  "Z": 4,
+  "role": "SSB 캠페인과 직접 무관 - 최경량 알칼리토(2가) 금속. BeO는 초고열전도 wide-gap 절연 세라믹(독성 주의), Cu-Be는 스프링 합금. 작고 전하밀도 높은 Be²⁺.",
+  "oxidation_states": ["+2"],
+  "electronegativity": 1.57,
+  "ionic_radius_A": {
+    "Be2+_IV": 0.27,
+    "Be2+_VI": 0.45,
+    "_note": "Shannon 1976: Be²⁺가 매우 작아 거의 항상 4배위(IV 0.27 Å), VI 0.45. Li⁺(VI 0.76)보다 훨씬 작아 편극·공유성이 큼."
+  },
+  "representative_compounds": [
+    {"formula": "BeO", "context": "고열전도 절연 세라믹", "battery_role": "없음(독성으로 실사용 제한)", "note": "wurtzite, wide-gap(Eg ~10.6 eV), 금속급 열전도; Be 1s ~113.4 eV. 독성(베릴리오시스) 주의."},
+    {"formula": "BeF2", "context": "유리형성 불화물", "battery_role": "없음", "note": "SiO2 유사 network glass, 강한 이온-공유 Be-F; 작은 Be²⁺가 4배위 tetrahedra."},
+    {"formula": "Cu-Be 합금 / Be metal", "context": "구조·스프링 합금", "battery_role": "없음", "note": "경량·고강성 구조재; Be 1s(metal) ~110.5 eV."}
+  ],
+  "sei_relevance": "SSB 계면 특이 역할 제한적 - Be는 황화물 SE/계면의 native 이온이 아님. BeO가 wide-gap 절연 세라믹이라 개념상 코팅 후보로 보이나 독성 때문에 배터리 실사용은 사실상 배제. 일반적 언급 수준.",
+  "xps": [
+    {"core": "Be 1s", "BE_eV": 113.4, "assignment": "BeO / Be²⁺ (metallic Be ~110.5)", "ref": "NIST XPS DB / Surface Science Spectra"}
+  ],
+  "raman": [],
+  "dos_character": "BeO는 wide-gap(~10.6 eV) 이온 절연체 - O 2p가 VB, 빈 Be 2s/2p가 CB 하단. Be²⁺는 닫힌 [He] 코어라 밴드 안 상태 기여 없음.",
+  "orbital": {
+    "electron_config_full": "1s² 2s²",
+    "electron_config": "[He] 2s²",
+    "valence_orbitals": "2s² - Be²⁺면 빈 2s + 닫힌 [He] 코어(이온성 2가); 작고 편극이 강해 결합에 상당한 공유성",
+    "band_character": "(앵커 없음) BeO 등은 wide-gap 이온 절연체(Eg ~10.6 eV) - O 2p VB, 빈 Be 2s/2p CB; argyrodite 골격과 무관.",
+    "bonding": "Be-O/Be-F 강한 이온-공유 혼성(높은 전하밀도 Be²⁺ -> sp³ 4배위 선호); BeF2는 SiO2 유사 network glass."
+  },
+  "key_references": [
+    "Shannon 1976 - effective ionic radii",
+    "CRC Handbook of Chemistry and Physics",
+    "Surface Science Spectra - Beryllium and Beryllium Oxide by XPS (Be 1s ~110.5/113.4 eV)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · Shannon radii); SSB 앵커 없음(비캠페인 원소)."
+}

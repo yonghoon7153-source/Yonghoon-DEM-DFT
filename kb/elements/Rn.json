@@ -1,0 +1,32 @@
+{
+  "symbol": "Rn",
+  "name": "Radon",
+  "Z": 86,
+  "role": "SSB 캠페인과 직접 무관 - 방사성 비활성기체([Xe]4f¹⁴5d¹⁰6s²6p⁶, ²²²Rn α붕괴 반감기 3.8일). RnF2 보고만 있고 실용 화학 없음; 실내 축적 시 방사선 위해.",
+  "oxidation_states": ["0", "+2"],
+  "electronegativity": 2.2,
+  "ionic_radius_A": {
+    "_note": "비활성기체(방사성) - Shannon 반경 없음. 참고 van der Waals 반경 ~2.20 Å (추정)."
+  },
+  "representative_compounds": [
+    {"formula": "RnF2", "context": "보고된 불화물", "battery_role": "없음", "note": "Rn(+2)로 보고되나 방사성이라 특성분석 극히 제한적."},
+    {"formula": "Rn (원소 기체)", "context": "방사성 위해", "battery_role": "없음", "note": "²²²Rn(반감기 3.8일) α붕괴; 실내 축적은 폐암 위험 요인."}
+  ],
+  "sei_relevance": "SSB 계면 특이 역할 없음 - 방사성·비활성으로 배터리 화학과 무관.",
+  "xps": [],
+  "raman": [],
+  "dos_character": "닫힌 6p⁶ 껍질 - 원자가 상태 없이 불활성. 방사성이라 통상 분광 데이터 없음.",
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹⁴ 5s² 5p⁶ 5d¹⁰ 6s² 6p⁶",
+    "electron_config": "[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁶",
+    "valence_orbitals": "6s² 6p⁶ - 닫힌 6p⁶; 방사성, RnF2(+2)만 보고",
+    "band_character": "(앵커 없음) 닫힌 6p⁶ - argyrodite 무관. 방사성 비활성기체.",
+    "bonding": "거의 없음(비활성). F와 RnF2만 보고(방사성으로 연구 제한)."
+  },
+  "key_references": [
+    "CRC Handbook of Chemistry and Physics",
+    "Bondi 1964 / 확장 vdW radii (Rn ~2.20 Å, 추정)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: CRC handbook · vdW radii 추정); SSB 앵커 없음(비캠페인 방사성 비활성기체), 방사성으로 XPS core line 데이터 없음."
+}

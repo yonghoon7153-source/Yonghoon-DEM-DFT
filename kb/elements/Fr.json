@@ -1,0 +1,32 @@
+{
+  "symbol": "Fr",
+  "name": "Francium",
+  "Z": 87,
+  "role": "1족 가장 무거운 알칼리 금속 — 방사성(가장 안정한 Fr-223도 반감기 약 22분)이라 벌크 화합물이 사실상 없고 미량(추적자)만 다뤄짐. 화학적으로 Fr⁺ 1가로 Cs와 유사하되 상대론적 효과로 성질이 약간 되돌아오는(Cs보다 살짝 덜 전기양성) 경향이 예측됨. 실용 배터리·SE 맥락은 없음.",
+  "oxidation_states": ["+1"],
+  "electronegativity": 0.7,
+  "ionic_radius_A": {
+    "Fr+_VI_est": 1.8,
+    "_note": "Shannon 미수록(방사성). Fr+ VI 반경은 알칼리 계열 외삽 추정 ~1.80 A(K 1.38 < Rb 1.52 < Cs 1.67 < Fr). 상대론적 6s/7s 수축으로 Cs보다 크게 벌어지지 않을 수 있어 추정 불확실. EN도 Pauling 0.7(추정, 일부 개정치 ~0.79)."
+  },
+  "representative_compounds": [
+    {"formula": "FrClO4 / FrCl (미량)", "context": "추적자 화학(공침 연구)", "battery_role": "없음", "note": "분리된 벌크상은 사실상 없음 — Cs 화합물과 공침시켜 거동만 추정. 형식상 알칼리 할라이드/과염소산염"}
+  ],
+  "sei_relevance": "(일반적) 해당 없음 — 방사성·초미량이라 SEI·전해질·SE 맥락 자체가 성립하지 않음. Fr⁺는 화학적으로 Cs⁺의 더 큰 유사체로만 취급됨.",
+  "xps": [],
+  "raman": [],
+  "dos_character": "예측상 Cs와 같은 순수 이온성 s-block 1가 — 빈 7s가 전도대 상부, 밴드엣지 redox 무관. 실측 데이터 없음(방사성).",
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹⁴ 5s² 5p⁶ 5d¹⁰ 6s² 6p⁶ 7s¹",
+    "electron_config": "[Rn] 7s¹",
+    "valence_orbitals": "7s¹ — Fr⁺면 빈 7s + 닫힌 [Rn] 코어(순수 이온성 1가); 상대론적 7s 수축이 성질에 관여",
+    "band_character": "(일반 전자구조) Fr⁺ s-block 1가 예측 — 빈 7s가 전도대 상부, 밴드엣지 redox 무관(Cs의 더 큰 유사체). 실측 밴드구조 데이터 없음",
+    "bonding": "예측상 Fr–할라이드 순이온성(Cs 유사) — 실제 결정학 데이터 없음"
+  },
+  "key_references": [
+    "CRC Handbook / WebElements — Fr 방사성·[Rn]7s¹·Pauling EN ~0.7(추정)",
+    "알칼리 반경 외삽 — Fr+ VI ~1.80 A(추정, Shannon 미수록)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "handbook/추정값 (방사성 원소: 반경은 외삽 추정, EN은 handbook 추정치; XPS 데이터 없음); SSB 앵커 없음(비캠페인 원소)"
+}

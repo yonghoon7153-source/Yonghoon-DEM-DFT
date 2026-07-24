@@ -1,0 +1,30 @@
+{
+  "symbol": "He",
+  "name": "Helium",
+  "Z": 2,
+  "role": "SSB 캠페인과 직접 무관 - 닫힌 껍질(1s²) 비활성기체, 화학적으로 완전 불활성. 극저온 냉매(4 K)·불활성 캐리어가스·리크(누설) 검지에 쓰임.",
+  "oxidation_states": ["0"],
+  "ionic_radius_A": {
+    "_note": "비활성기체 - 통상적 이온을 안 만들어 Shannon 이온반경 없음. 참고로 van der Waals 반경 ~1.40 Å (Bondi 1964)."
+  },
+  "representative_compounds": [
+    {"formula": "He (원소 기체)", "context": "안정 화합물 없음", "battery_role": "없음 (불활성)", "note": "중성 안정 화합물 미형성(HeH⁺·엑시머만 극한 조건). 실용: NMR/MRI 초전도자석 냉매(4.2 K), 글러브박스·리크테스트 캐리어."}
+  ],
+  "sei_relevance": "SSB 계면 특이 역할 없음 - 완전 불활성이라 SEI/전해질 화학에 관여하지 않음. 실험실에선 불활성 분위기·누설 검지 가스로만 쓰임.",
+  "xps": [],
+  "raman": [],
+  "dos_character": "닫힌 1s² 껍질 - 채워진 1s가 매우 깊고 원자가 상태가 없어 화학적으로 불활성. 응집상(4 K 이하)은 van der Waals 절연 고체. 참고: He I(21.22 eV)/He II(40.8 eV) 공명선은 UPS 여기원.",
+  "orbital": {
+    "electron_config_full": "1s²",
+    "electron_config": "1s²",
+    "valence_orbitals": "1s² - K각 완전충전(닫힌 껍질), 원자가 전자 없음 -> 이온·결합 미형성",
+    "band_character": "(앵커 없음) 닫힌 1s² - argyrodite 골격과 무관. 자유원자로 존재하며 응집상은 wide-gap van der Waals 절연 고체.",
+    "bonding": "결합 없음(비활성) - 약한 London 분산력만. He I/He II 선은 UPS 광원."
+  },
+  "key_references": [
+    "CRC Handbook of Chemistry and Physics - 전자배치·물성",
+    "Bondi 1964 - van der Waals radii"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: CRC handbook · Bondi vdW radii); SSB 앵커 없음(비캠페인 비활성기체), XPS core line 없음."
+}

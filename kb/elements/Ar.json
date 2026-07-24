@@ -1,0 +1,35 @@
+{
+  "symbol": "Ar",
+  "name": "Argon",
+  "Z": 18,
+  "role": "SSB 캠페인과 직접 무관 - 닫힌 껍질([Ne]3s²3p⁶) 비활성기체. 실험실 표준 불활성 분위기 가스(글러브박스·용접·XPS Ar⁺ 스퍼터링). 화합물은 극저온 HArF만 관측.",
+  "oxidation_states": ["0"],
+  "ionic_radius_A": {
+    "_note": "비활성기체 - Shannon 반경 없음. 참고 van der Waals 반경 ~1.88 Å (Bondi 1964)."
+  },
+  "representative_compounds": [
+    {"formula": "HArF", "context": "극저온 매트릭스만", "battery_role": "없음", "note": "argon fluorohydride, ~40 K에서만 관측(Khriachtchev 2000). 실용 화합물 아님."},
+    {"formula": "Ar (원소 기체)", "context": "불활성 분위기 가스", "battery_role": "없음 (공정 가스)", "note": "글러브박스·용접 실드가스, XPS depth-profiling Ar⁺ 스퍼터원. 황화물 SE 취급 표준 분위기."}
+  ],
+  "sei_relevance": "SSB 계면 특이 역할 없음 - 불활성이라 SEI 화학엔 무관. 단 황화물 SE·Li metal 취급의 글러브박스 불활성 분위기 표준 가스로 공정상 상시 사용.",
+  "xps": [
+    {"core": "Ar 2p3/2", "BE_eV": 241.5, "assignment": "implanted Ar (matrix 240.3-241.9)", "ref": "Handbook of XPS (Moulder)"}
+  ],
+  "raman": [],
+  "dos_character": "닫힌 3p⁶ 껍질 - 원자가 상태 없이 불활성. Ar⁺(스퍼터링 이온)는 표면 depth-profiling에 쓰임.",
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶",
+    "electron_config": "[Ne] 3s² 3p⁶",
+    "valence_orbitals": "3s² 3p⁶ - 완전충전 3p⁶ 닫힌 껍질; 통상 화합물 없음(HArF만 극저온)",
+    "band_character": "(앵커 없음) 닫힌 3p⁶ - argyrodite 무관. 실용상 불활성 분위기·Ar⁺ 스퍼터링 이온.",
+    "bonding": "결합 없음(비활성). Ar⁺는 XPS depth-profiling 스퍼터원."
+  },
+  "key_references": [
+    "CRC Handbook of Chemistry and Physics",
+    "Bondi 1964 - van der Waals radii",
+    "Handbook of X-ray Photoelectron Spectroscopy (Moulder 1992) - implanted Ar 2p",
+    "Khriachtchev et al., Nature 2000 - HArF"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: CRC handbook · Bondi vdW · Moulder XPS); SSB 앵커 없음(비캠페인 비활성기체)."
+}

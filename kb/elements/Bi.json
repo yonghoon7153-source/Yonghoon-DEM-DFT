@@ -1,0 +1,42 @@
+{
+  "symbol": "Bi",
+  "name": "Bismuth",
+  "Z": 83,
+  "role": "15족 무거운 pnictogen(P·Sb의 최무거운 동족) — 6s² inert pair가 강해 Bi³⁺(6s²)가 Bi⁵⁺(6s⁰)보다 훨씬 안정. 배터리에선 Na-ion·K-ion용 alloying(전환+합금) 음극으로 잘 알려짐(Na3Bi·K3Bi·Li3Bi 형성, 큰 층간 여유로 다가이온 수용). 저독성 'green' 중금속. Bi2Te3(열전·위상절연체)의 주원소이기도 함.",
+  "oxidation_states": ["+3", "+5", "-3"],
+  "electronegativity": 2.02,
+  "ionic_radius_A": {
+    "Bi3+_V": 0.96,
+    "Bi3+_VI": 1.03,
+    "Bi3+_VIII": 1.17,
+    "Bi5+_VI": 0.76,
+    "_note": "Shannon 1976: Bi3+ VI 1.03 A(6s² lone pair로 크고 왜곡), V 0.96, VIII 1.17; Bi5+ VI 0.76 A. Bi³⁺가 inert pair로 지배적; Bi⁵⁺는 강산화성(NaBiO3 등)이라 드묾."
+  },
+  "representative_compounds": [
+    {"formula": "Bi2O3", "context": "대표 산화물 / 산화물이온 전도체", "battery_role": "δ-Bi2O3는 최고 수준의 산화물이온(O²⁻) 전도체 중 하나(고온 SOFC 맥락)", "note": "상온 α(monoclinic), 고온 δ(fluorite형, 산소공공 다량). Bi 4f7/2 ~159.0 eV(Bi³⁺). 6s² lone pair가 왜곡 유발"},
+    {"formula": "Bi (metal)", "context": "Na/K/Li-ion alloying 음극", "battery_role": "다가이온전지 합금 음극 원소 — Na3Bi·K3Bi·Li3Bi로 합금화(큰 층간 여유가 대형 이온 수용에 유리)", "note": "Bi 4f7/2 ~156.9 eV(금속). 부피팽창은 크나 전환+합금 고용량; rhombohedral 층상(고립전자쌍)"},
+    {"formula": "Na3Bi / Li3Bi", "context": "합금화 생성물", "battery_role": "완전 방전(합금) 생성물(Bi³⁻ 비스무타이드)", "note": "Na3Bi는 위상학적 Dirac 준금속으로도 유명. 합금 음극의 만충 상태 상"},
+    {"formula": "Bi2Te3", "context": "열전/위상절연체(비배터리)", "battery_role": "없음 — 대표적 열전 소재·3D 위상절연체", "note": "Bi의 가장 유명한 기능성 화합물 중 하나(층상 tetradymite)"}
+  ],
+  "sei_relevance": "(일반적) 우리 황화물 캠페인의 SEI 이온은 아니지만, Bi는 다가이온전지(특히 Na-ion·K-ion) 합금 음극으로 관련성이 큼 — 계면 거동의 핵심은 SEI 무기 부동태보다 Bi⁰↔M3Bi 합금화(M=Li/Na/K)와 그에 따른 부피변화·전환 반응임. Bi³⁺ 산화물/할라이드는 저전위에서 Bi⁰로 환원돼 합금화로 이어짐.",
+  "xps": [
+    {"core": "Bi 4f7/2", "BE_eV": 156.9, "assignment": "Bi metal / Bi⁰ (4f 스핀궤도 분리 ~5.3 eV)", "ref": "NIST XPS DB; xpsfitting.com Bismuth"},
+    {"core": "Bi 4f7/2", "BE_eV": 159.0, "assignment": "Bi2O3 / Bi³⁺ (보고 159.0-159.4 eV)", "ref": "NIST XPS DB; xpsfitting.com Bismuth"}
+  ],
+  "raman": [],
+  "dos_character": "Bi³⁺는 6s²6p⁰ — 5d¹⁰은 깊은 반코어, 채워진 6s² 고립전자쌍이 VBM 근처에 기여(음이온 p와 혼성)하고 빈 6p가 CBM 하단을 이룸(stereochem active lone pair -> 왜곡 배위). Bi⁰(반금속)는 6p³로 반금속성(작은 밴드겹침, 강한 스핀궤도결합 -> Bi2Te3류 위상물성). inert pair로 Bi³⁺가 안정, Bi⁵⁺는 강산화성.",
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹⁴ 5s² 5p⁶ 5d¹⁰ 6s² 6p³",
+    "electron_config": "[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p³",
+    "valence_orbitals": "6s² 6p³ (4f¹⁴5d¹⁰ 반코어, P·Sb의 최무거운 동족) — Bi³⁺면 6s² 고립전자쌍(inert pair, 6p³만 잃음), Bi⁵⁺면 6s⁰6p⁰",
+    "band_character": "(일반 전자구조) 상대론적 inert pair로 6s²가 안정화 -> Bi³⁺(6s²) 지배; Bi³⁺ 상은 6s²가 VBM 근처·빈 6p가 CBM(stereochem active lone pair 왜곡). 원소 Bi⁰는 강한 스핀궤도로 반금속·위상물성(Bi2Te3)",
+    "bonding": "Bi–O(Bi2O3)·Bi–S(Bi2S3)·Bi–Te(Bi2Te3) 호환, Bi 6s/6p–음이온 p 혼성; Bi³⁺ 6s² 고립전자쌍이 층상·왜곡 배위를 유도. P의 무거운 동족이라 pnictogen 화학이되 훨씬 금속성·분극성"
+  },
+  "key_references": [
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Bi3+ VI 1.03 A, Bi5+ VI 0.76 A)",
+    "NIST XPS DB / xpsfitting.com Bismuth — Bi 4f7/2 (metal 156.9, Bi2O3 ~159.0 eV)",
+    "WebElements / CRC — Pauling EN 2.02, [Xe]4f14 5d10 6s2 6p3, 6s² inert pair; Bi alloying 음극(Na/K-ion) 문헌"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · Shannon radii); SSB 앵커 없음(비캠페인 원소)"
+}

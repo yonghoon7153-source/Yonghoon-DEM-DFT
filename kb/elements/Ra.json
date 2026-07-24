@@ -1,0 +1,35 @@
+{
+  "symbol": "Ra",
+  "name": "Radium",
+  "Z": 88,
+  "role": "2족 가장 무거운 알칼리토 금속 — 방사성(Ra-226 반감기 약 1600년). Ra²⁺ 2가로 Ba와 유사한 최대형 hard 2가 양이온. 역사적으로 발광 도료·의료용으로 쓰였고, 화학은 Ba의 더 큰 유사체. 실용 배터리·SE 맥락은 없음(방사성).",
+  "oxidation_states": ["+2"],
+  "electronegativity": 0.9,
+  "ionic_radius_A": {
+    "Ra2+_VIII": 1.48,
+    "Ra2+_XII": 1.7,
+    "_note": "Shannon 1976: Ra2+ VIII 1.48 A, XII 1.70 A(방사성이나 수록됨). 알칼리토 최대(Ca 1.12 < Sr 1.26 < Ba 1.42 < Ra, VIII 기준); Li+(0.76)의 약 2배."
+  },
+  "representative_compounds": [
+    {"formula": "RaSO4", "context": "극난용 황산염", "battery_role": "없음", "note": "알칼리토 황산염 중 가장 난용 — BaSO4와 공침시켜 분리(퀴리의 라듐 정제 경로)"},
+    {"formula": "RaCl2 / RaBr2", "context": "역사적 분리·정제상", "battery_role": "없음", "note": "퀴리가 분별결정으로 Ra를 농축한 할라이드; Ba 할라이드와 화학 유사"},
+    {"formula": "RaO", "context": "염기성 산화물", "battery_role": "없음", "note": "가장 염기성인 알칼리토 산화물(BaO의 더 무거운 유사체)"}
+  ],
+  "sei_relevance": "(일반적) 해당 없음 — 방사성이라 배터리·SE·SEI 맥락이 성립하지 않음. Ra²⁺는 화학적으로 Ba²⁺의 더 큰 유사체(더 염기성·더 큰 반경)로만 취급됨.",
+  "xps": [],
+  "raman": [],
+  "dos_character": "Ba와 같은 wide-gap 이온성 2가 예측 — 빈 7s/6d가 전도대 하단, 산화물은 O 2p가 VB 지배, midgap 거의 없음. 실측 데이터 희박(방사성).",
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹⁴ 5s² 5p⁶ 5d¹⁰ 6s² 6p⁶ 7s²",
+    "electron_config": "[Rn] 7s²",
+    "valence_orbitals": "7s² — Ra²⁺면 빈 7s + 닫힌 [Rn] 코어(이온성 2가); 상대론적 7s 안정화로 2가가 확고",
+    "band_character": "(일반 전자구조) Ra²⁺ wide-gap 이온성 2가 예측 — 빈 7s/6d가 전도대 하단, 밴드엣지 redox 아닌 정전기·자리크기 레버(Ba의 더 큰 유사체). 실측 밴드구조 희박",
+    "bonding": "Ra–O 순이온성(RaO, Ba보다 더 염기성) 예측; Ra–S는 hard라 O 선호. 실제 결정학 데이터 제한적"
+  },
+  "key_references": [
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Ra2+ VIII 1.48 A)",
+    "CRC Handbook / WebElements — Ra 방사성·[Rn]7s²·Pauling EN ~0.9"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "handbook/reference values (방사성 원소: Shannon Ra2+ 반경 수록·EN handbook; XPS 데이터 없음); SSB 앵커 없음(비캠페인 원소)"
+}

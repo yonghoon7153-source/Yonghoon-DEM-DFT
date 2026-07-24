@@ -1,0 +1,41 @@
+{
+  "symbol": "Th",
+  "name": "Thorium",
+  "Z": 90,
+  "role": "방사성 악티나이드(배터리 무관, 백과사전 완성용). 바닥상태가 5f⁰(6d² 7s²)라 f 전자 없이 사실상 4가 d-원소처럼 굴러 — 악티나이드 초반의 '전이금속형' 극단. Th-232(반감기 140억년)는 사실상 자연 준안정, 토륨 핵연료 사이클(Th-232→U-233)의 모원소. 전지와는 무관하지만 악티나이드 중 데이터가 가장 풍부.",
+  "oxidation_states": ["+4", "+3", "+2"],
+  "electronegativity": 1.3,
+  "ionic_radius_A": {
+    "Th4+_VI": 0.94,
+    "Th4+_VIII": 1.05,
+    "Th4+_IX": 1.09,
+    "_note": "Shannon 1976: Th4+ VI 0.94, VIII 1.05, IX 1.09 A. 악티나이드 4가 중 최대(계열 수축 출발점); U4+(0.89)보다 큼."
+  },
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹⁴ 5s² 5p⁶ 5d¹⁰ 6s² 6p⁶ 6d² 7s²",
+    "electron_config": "[Rn] 6d² 7s²",
+    "valence_orbitals": "6d² 7s² (5f⁰!) — 예외적으로 바닥상태에 5f 전자 없음. Th⁴⁺면 완전 빈 원가(닫힌껍질)",
+    "band_character": "5f⁰ 바닥이라 5f는 전도대에 빈 채로 얹혀 있고 국재 f 준위가 밴드갭에 안 생김 → 강상관 무관, clean. ThO₂는 광폭갭 절연체(실험 광학갭 ~5.75 eV, VB=O 2p). 초기 악티나이드의 5f 편재(itinerant) 극단에서 f가 아예 비어 있는 시작점.",
+    "bonding": "Th–O 이온성(ThO₂ fluorite), 큰 4가 hard 양이온. 6d/7s–O 2p 혼성; 5f는 결합에 미참여."
+  },
+  "representative_compounds": [
+    {"formula": "ThO2", "context": "대표 산화물(thoria)", "battery_role": "해당 없음(방사성)", "note": "fluorite형; 모든 산화물 중 최고 융점(~3350°C); wide-gap 절연체. Th 4f7/2 ~335.4 eV"},
+    {"formula": "ThF4", "context": "대표 할라이드", "battery_role": "해당 없음", "note": "핵연료 처리·광학 코팅용"},
+    {"formula": "ThCl4", "context": "대표 할라이드", "battery_role": "해당 없음", "note": "용융염 화학"},
+    {"formula": "Th(NO3)4", "context": "가용성 4가염", "battery_role": "해당 없음", "note": "수용액 Th⁴⁺ 화학의 전형(강한 가수분해)"}
+  ],
+  "sei_relevance": "해당 없음(방사성/비배터리)",
+  "xps": [
+    {"core": "Th 4f7/2", "BE_eV": 335.4, "assignment": "Th4+ in ThO2 (metal ~333.1 eV; 4f5/2 ~344.7, spin-orbit split ~9.3 eV)", "ref": "NIST XPS DB / ThO2 XPS lit"}
+  ],
+  "raman": [],
+  "dos_character": "5f⁰(6d² 7s²) 바닥이라 부분점유 5f가 없어 악티나이드 강상관 이슈에서 자유로움 — 이 점에서 La/Ac과 비슷하게 clean. ThO₂는 O 2p가 VB를 지배하는 wide-gap(~5.75 eV) 절연체이고 전도대 하단은 Th 6d/5f. 5f 준위가 전도대에 비어 있어 국소모멘트·+U 불필요. 악티나이드 5f 편재→국재 흐름의 f=0 출발점.",
+  "key_references": [
+    "Shannon 1976 — effective ionic radii (Th4+)",
+    "Greenwood & Earnshaw, Chemistry of the Elements — Th 화학",
+    "Katz, Seaborg, Morss (eds.), The Chemistry of the Actinide and Transactinide Elements",
+    "NIST XPS DB — Th 4f (ThO2 ~335.4 eV)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "SSB 앵커 없음(방사성 비캠페인). 핸드북 소환값(Shannon radii · NIST XPS DB · CRC/Greenwood) — 우리 db 절대값과 분리."
+}

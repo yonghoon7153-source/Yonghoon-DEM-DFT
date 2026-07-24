@@ -1,0 +1,40 @@
+{
+  "symbol": "F",
+  "name": "Fluorine",
+  "Z": 9,
+  "role": "일반 화학 역할 + 예외적 배터리 관련 - 최강 전기음성 원소(항상 -1). LiF는 대표 무기 SEI 상, 불소화 첨가제(FEC)·LiPF6 분해 화학의 핵심. 단, 우리 황화물 argyrodite 골격엔 native 하지 않음(할라이드는 Cl/Br/I).",
+  "oxidation_states": ["-1"],
+  "electronegativity": 3.98,
+  "ionic_radius_A": {
+    "F-_IV": 1.31,
+    "F-_VI": 1.33,
+    "_note": "Shannon 1976: F⁻ VI 1.33 Å - Shannon 스케일이 기준으로 삼는 음이온. IV 1.31. O²⁻(1.40)보다 약간 작음."
+  },
+  "representative_compounds": [
+    {"formula": "LiF", "context": "대표 무기 SEI", "battery_role": "핵심 SEI 상 - 전자절연·높은 계면에너지, LiF-rich SEI가 균일 도금·수지상 억제에 유리", "note": "rock salt, wide-gap 절연; F 1s ~685.0 eV. Li⁺ 전도는 낮음."},
+    {"formula": "LiPF6 / PF6⁻ 분해", "context": "액전해질 F 소스", "battery_role": "분해되어 LiF SEI 공급 + POF3 등 부산물", "note": "F 1s: PF6⁻ ~687, 분해 LiF ~685 eV."},
+    {"formula": "FEC 등 불소화 첨가제", "context": "SEI 조성 제어 첨가제", "battery_role": "환원 분해로 LiF-rich SEI 유도", "note": "유기 C-F는 F 1s ~688-689 eV."}
+  ],
+  "sei_relevance": "F는 예외적으로 배터리 관련! LiF는 Li 음극 SEI의 대표 무기상 - 전자절연·낮은 Li⁺ 전도·높은 계면에너지로 LiF-rich SEI가 균일 리튬 도금과 수지상 억제에 유리하다고 널리 인용. 불소화 첨가제(FEC)·LiPF6 분해가 LiF 공급원. 다만 우리 황화물 argyrodite 자체엔 F가 골격 음이온으로 들어가지 않음(native 할라이드는 Cl/Br/I).",
+  "xps": [
+    {"core": "F 1s", "BE_eV": 685.0, "assignment": "LiF / metal fluoride", "ref": "NIST XPS DB"},
+    {"core": "F 1s", "BE_eV": 687.0, "assignment": "PF6⁻ / P-F", "ref": "NIST XPS DB"},
+    {"core": "F 1s", "BE_eV": 688.5, "assignment": "organic C-F (fluorinated)", "ref": "NIST XPS DB"}
+  ],
+  "raman": [],
+  "dos_character": "F 2p는 VBM보다 매우 깊게(최고 전기음성·강한 이온성) - LiF는 wide-gap 이온 절연체(실험 갭 큼, PBE 과소), F 2p가 VB / 빈 Li 2s가 CB.",
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁵",
+    "electron_config": "[He] 2s² 2p⁵",
+    "valence_orbitals": "2s² 2p⁵ - 2p⁵, 전자 1개 받아 F⁻(2p⁶) 닫힌 껍질; 최고 전기음성",
+    "band_character": "(앵커 없음) 불화물(LiF 등)은 wide-gap 이온 절연체 - F 2p가 VB 깊이 위치(강한 이온성), 빈 Li 2s가 CB; 우리 argyrodite엔 native 하지 않음(할라이드는 Cl/Br/I).",
+    "bonding": "이온성 Li-F(매우 강한 이온결합·높은 격자에너지), 2p⁶ lone pair; 최강 전기음성으로 항상 -1."
+  },
+  "key_references": [
+    "Shannon 1976 - effective ionic radii (F⁻ = 1.33 Å 기준)",
+    "NIST XPS DB - F 1s (LiF ~685.0 eV)",
+    "SEI XPS reviews - LiF-rich interphase (전자절연·수지상 억제)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · Shannon radii · consensus SEI lit); SSB 골격 앵커 없음(할라이드는 Cl/Br/I), F는 SEI 맥락만 배터리 관련."
+}

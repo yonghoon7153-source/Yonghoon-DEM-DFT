@@ -1,0 +1,39 @@
+{
+  "symbol": "Cs",
+  "name": "Cesium",
+  "Z": 55,
+  "role": "1족 가장 무거운 안정 알칼리 금속 — Cs⁺ 1가로만 존재하는 최대 hard 양이온(가장 낮은 EN 0.79, 가장 낮은 이온화에너지). Li 대체 알칼리 관점: Cs⁺(VI 1.67 Å)는 안정 알칼리 중 최대라 격자를 가장 크게 연다. Li 음극 덴드라이트 억제 첨가제(자기치유 정전기 실드)의 대표 양이온이지만, 우리 황화물 SE 캠페인의 직접 앵커는 아님.",
+  "oxidation_states": ["+1"],
+  "electronegativity": 0.79,
+  "ionic_radius_A": {
+    "Cs+_VI": 1.67,
+    "Cs+_VIII": 1.74,
+    "Cs+_XII": 1.88,
+    "_note": "Shannon 1976: Cs+ VI(팔면체) 1.67 A, VIII 1.74, XII 1.88. 안정 알칼리 중 최대(Rb+ 1.52 < Cs+); Li+(0.76)의 2.2배 -> Li 치환 시 최대 격자 팽창. CsCl 구조형(8배위)의 원형 양이온."
+  },
+  "representative_compounds": [
+    {"formula": "CsCl", "context": "대표 할라이드 / 구조형 원조", "battery_role": "Cs 자체는 SE 아님 — Cs 3d XPS 기준물", "note": "CsCl-type 구조(bcc형 8배위)의 이름값 화합물; Cs 3d5/2 ~724.7 eV"},
+    {"formula": "Cs2CO3 / CsOH", "context": "강염기 Cs+ 상", "battery_role": "wide-gap 이온상(참고상)", "note": "가장 염기성인 알칼리 계열; Cs 3d5/2 ~724.6 eV(Cs2CO3)"},
+    {"formula": "Cs+ (전해질 첨가제)", "context": "Li 음극 덴드라이트 억제", "battery_role": "자기치유 정전기 실드(self-healing electrostatic shield) — 낮은 환원전위로 Li 돌기 주변을 정전기 차폐해 평활 증착 유도", "note": "Ding 2013(JACS) 대표 개념 — Cs+가 환원되지 않고 흡착막 형성. Cs의 가장 잘 알려진 배터리 역할"}
+  ],
+  "sei_relevance": "(일반적) Cs는 native Li-SE 이온이 아니라 최대형 Li 대체 알칼리. CsF·CsCl·Cs2O 등 Cs 무기상은 wide-gap 이온상이지만 우리 캠페인 SEI 앵커는 아님. Cs⁺의 배터리 관련성은 SEI 성분보다 Li 음극 덴드라이트 억제 첨가제(정전기 실드)로 가장 잘 알려짐 — 표면에 환원 증착되지 않는 게 핵심.",
+  "xps": [
+    {"core": "Cs 3d5/2", "BE_eV": 724.7, "assignment": "Cs+ 화합물(CsCl·Cs2CO3 ~724-725 eV; Cs metal ~726.4; 3d 이중선 3d3/2 ~738.6, 분리 ~13.9 eV)", "ref": "NIST XPS DB"}
+  ],
+  "raman": [],
+  "dos_character": "Cs 5p는 semicore, 6s는 비어 전도대 상부에 기여 -> 순수 이온성 s-block 1가(가장 전기양성). 밴드엣지 redox 무관; 결합/밴드는 음이온 지배, Cs는 정전기·최대 자리크기만 바꿈.",
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 5s² 5p⁶ 6s¹",
+    "electron_config": "[Xe] 6s¹",
+    "valence_orbitals": "6s¹ — Cs⁺면 빈 6s + 닫힌 [Xe] 코어(순수 이온성 1가, 가장 전기양성)",
+    "band_character": "(일반 전자구조) Cs⁺ s-block 1가, 빈 6s가 전도대 상부 -> 밴드엣지 redox 무관; Cs2O·CsCl은 wide-gap clean 이온상, Cs는 자리/정전기만 바꿈(최대 격자 팽창)",
+    "bonding": "Cs–O·Cs–Cl 순이온성(가장 이온성 강한 결합), Cs 6s–음이온 p 완전 전하이동; 최대 hard 1가라 산소·할라이드 선호"
+  },
+  "key_references": [
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Cs+ VI 1.67 A)",
+    "Ding et al., J. Am. Chem. Soc. 135, 4450 (2013) — 자기치유 정전기 실드(Cs+ 첨가제, Li 덴드라이트 억제)",
+    "NIST XPS DB — Cs 3d5/2 (Cs+ ~724.7 eV); WebElements — Pauling EN 0.79, [Xe]6s¹"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · Shannon radii); SSB 앵커 없음(비캠페인 원소)"
+}

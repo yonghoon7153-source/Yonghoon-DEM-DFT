@@ -1,0 +1,37 @@
+{
+  "symbol": "Pa",
+  "name": "Protactinium",
+  "Z": 91,
+  "role": "방사성 악티나이드(배터리 무관, 백과사전 완성용). 5f²6d¹7s²로 악티나이드 중 5f가 채워지기 시작하는 첫 원소. 자연계에 극미량(U 붕괴열)만 존재하고 Pa-231(반감기 3.3만년)이 주 동위원소 — 분리·취급이 매우 까다로워 데이터가 제한적. 주 산화수 +5(초기 악티나이드는 고산화수 선호). 전지와 무관.",
+  "oxidation_states": ["+5", "+4"],
+  "electronegativity": 1.5,
+  "ionic_radius_A": {
+    "Pa5+_VI": 0.78,
+    "Pa5+_VIII": 0.91,
+    "Pa4+_VI": 0.90,
+    "_note": "Shannon 1976: Pa5+ VI 0.78, VIII 0.91; Pa4+ VI 0.90 A. 고산화수(+5)일수록 작아짐."
+  },
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s² 4p⁶ 4d¹⁰ 4f¹⁴ 5s² 5p⁶ 5d¹⁰ 6s² 6p⁶ 5f² 6d¹ 7s²",
+    "electron_config": "[Rn] 5f² 6d¹ 7s²",
+    "valence_orbitals": "5f² 6d¹ 7s² — 5f 채움 시작; Pa⁵⁺면 5f⁰(빈 원가), Pa⁴⁺면 5f¹",
+    "band_character": "초기 악티나이드라 5f가 아직 편재(itinerant)·결합성 쪽 — 5f/6d가 섞여 결합에 참여(전이금속형). 고산화수 Pa⁵⁺에선 5f⁰라 국재 문제 약함. 데이터 제한적이나 U/Np으로 이어지는 5f 편재→국재 전환의 초반부.",
+    "bonding": "Pa–O 이온성/공유성 혼합(Pa₂O₅, PaO₂), 5f·6d 혼성이 결합에 관여하는 초기 악티나이드 특유."
+  },
+  "representative_compounds": [
+    {"formula": "Pa2O5", "context": "대표 산화물(+5)", "battery_role": "해당 없음(방사성)", "note": "주 산화물; Pa 특유의 안정 +5"},
+    {"formula": "PaO2", "context": "산화물(+4)", "battery_role": "해당 없음", "note": "fluorite형"},
+    {"formula": "PaCl5", "context": "대표 할라이드(+5)", "battery_role": "해당 없음", "note": "휘발성 5가 염화물, 분리 화학에 이용"}
+  ],
+  "sei_relevance": "해당 없음(방사성/비배터리)",
+  "xps": [],
+  "raman": [],
+  "dos_character": "5f²6d¹7s²의 초기 악티나이드라 5f가 아직 결합성·편재 쪽에 가까움(전이금속처럼 5f/6d가 원가 밴드에 섞임). 고산화수 Pa⁵⁺(5f⁰)에선 국재 f 준위 이슈가 약함. 방사능·희소성 탓에 실측 전자구조는 빈약 — U/Np 대비 자료가 훨씬 적음.",
+  "key_references": [
+    "Shannon 1976 — effective ionic radii (Pa4+/Pa5+)",
+    "Greenwood & Earnshaw, Chemistry of the Elements — Pa 화학",
+    "Katz, Seaborg, Morss (eds.), The Chemistry of the Actinide and Transactinide Elements"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "SSB 앵커 없음(방사성 비캠페인). 핸드북 소환값(Shannon radii · CRC/Greenwood) — 우리 db 절대값과 분리."
+}
