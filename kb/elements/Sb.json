@@ -1,0 +1,36 @@
+{
+  "symbol": "Sb",
+  "name": "Antimony",
+  "Z": 51,
+  "role": "cascade 산화물 도펀트 후보(Sb₂O₅/Sb₂O₃)이자 P와 같은 pnictogen이라 P⁵⁺ 자리 등가원자가(isovalent) 치환종. Sb⁵⁺(0.60)은 P⁵⁺(0.17)보다 훨씬 크고 분극성이 커 PS₄→SbS₄로 골격을 연화·팽창시켜 σ를 올리는 크기/soft 레버(Li 추가 없이 튜닝). Sb⁵⁺=4d¹⁰5s⁰; Sb³⁺(5s² 고립전자쌍)·Sb⁰(Li₃Sb 합금)로 환원 가능. Li₃SbS₄ 같은 thio-antimonate SE 모티프도 존재.",
+  "oxidation_states": ["+5", "+3", "-3"],
+  "electronegativity": 2.05,
+  "ionic_radius_A": {
+    "Sb5+_VI": 0.6,
+    "Sb3+_VI": 0.76,
+    "_note": "Shannon 1976: Sb⁵⁺ 팔면체 VI 0.60 A; Sb³⁺(5s² lone pair) VI 0.76 A(고립전자쌍으로 왜곡). Sb⁵⁺ 0.60은 P⁵⁺ IV(0.17)보다 훨씬 커 P 자리 등가치환 시 큰 국소 팽창·연화(σ 레버). 환원돼 Sb³⁺가 되면 반경↑ + stereochem 왜곡."
+  },
+  "representative_compounds": [
+    {"formula": "Sb2O5", "context": "도펀트 전구체(캐스케이드 산화물, Sb⁵⁺)", "battery_role": "wide-gap 산화물 도펀트; Sb·O 공급원(등가치환용 5+)", "note": "Sb 3d5/2 ~530.9 eV인데 O 1s(~530.5)와 겹침 → 진단은 겹치지 않는 Sb 3d3/2(~540.4) 사용 권장"},
+    {"formula": "Sb2O3", "context": "대체 Sb³⁺ 산화물(senarmontite)", "battery_role": "Sb³⁺(5s² lone pair) 산화물 원; 더 환원된 형태", "note": "Sb 3d5/2 ~530.2 eV(역시 O 1s 겹침) / 3d3/2 ~539.8 eV. 고립전자쌍 stereochem 활성"},
+    {"formula": "Li3SbS4 / Sb-substituted argyrodite", "context": "thio-antimonate SE 모티프 / 골격 치환", "battery_role": "Sb⁵⁺@S 사면체(티오안티모네이트) 또는 Sb⁵⁺@P 자리(isovalent, soft 튜닝)", "note": "Sb⁵⁺가 SbS₄³⁻ 사면체로 황화물 골격과 호환 — P의 무거운 등가 동족으로 연화·분극 레버"}
+  ],
+  "sei_relevance": "Sb는 Li과 Li₃Sb 합금(고용량 alloy/conversion 음극)을 만드는 alloying 원소 — Li 금속 계면에서 Sb⁵⁺/Sb³⁺→Sb⁰→Li₃Sb로 환원됨. 즉 계면 거동은 합금화가 지배적이고, 특이적 SEI 무기 부동태 성분 보고보다는 alloying 음극/벌크 soft-치환 레버가 Sb의 핵심. Sb₂O₃/Sb₂O₅ 도펀트는 벌크 종. 등가원자가(5+/5+) 치환이라 Li 캐리어 수를 안 바꾸고 골격 연화·분극만 조절하는 게 특징(aliovalent Sn/Ta6+ 계열과 대비).",
+  "xps": [
+    {"core": "Sb 3d5/2", "BE_eV": 530.9, "assignment": "Sb2O5 / Sb⁵⁺ (주의: O 1s ~530.5와 중첩)", "ref": "NIST XPS DB; xpsfitting.com Antimony"},
+    {"core": "Sb 3d5/2", "BE_eV": 530.2, "assignment": "Sb2O3 / Sb³⁺ (보고 530.1-530.3 eV; O 1s와 중첩)", "ref": "xpsfitting.com Antimony; anodic Sb oxide XPS"},
+    {"core": "Sb 3d3/2", "BE_eV": 540.4, "assignment": "Sb2O5 / Sb⁵⁺ — O 1s와 안 겹치는 진단 라인(Sb2O3는 3d3/2 ~539.8 eV)", "ref": "xpsfitting.com Antimony"},
+    {"core": "Sb 3d5/2", "BE_eV": 528.2, "assignment": "Sb metal / Sb⁰ (환원 생성물)", "ref": "NIST XPS DB"}
+  ],
+  "raman": [
+    {"cm1": 450, "assignment": "Sb2O3 senarmontite(cubic) 강모드 — 도펀트 산화물상 지문(호스트 SSB 모드 아님; +254 cm-1)", "ref": "Sb2O3 senarmontite Raman 표준 참조"}
+  ],
+  "dos_character": "Sb⁵⁺는 4d¹⁰5s⁰ — 빈 5s가 CBM을 이뤄 Sb₂O₅는 wide-gap, midgap 상태 거의 없음(clean-ish). Sb³⁺(5s² lone pair)로 환원되면 stereochemically active 고립전자쌍이 VBM 근처 상태를 만듦(Sn²⁺/Pb²⁺류). 즉 Sb⁵⁺ 상태선 clean, 환원되면 gap 상태 생성 — 조건부. closed-shell d¹⁰라 스핀분극 불필요. P의 무거운 동족이라 밴드엣지 화학이 P와 유사하되 더 분극성/연함.",
+  "key_references": [
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Sb⁵⁺ VI 0.60 A)",
+    "thio-antimonate/Sb-치환 argyrodite 문헌 — Li3SbS4 및 P⁵⁺ 등가치환 연화 효과",
+    "xpsfitting.com Antimony — Sb 3d5/2 O 1s 중첩; 진단에 Sb 3d3/2(Sb2O5 540.4 / Sb2O3 539.8 eV) 사용"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
+}

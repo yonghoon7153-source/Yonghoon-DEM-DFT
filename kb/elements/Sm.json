@@ -1,0 +1,36 @@
+{
+  "symbol": "Sm",
+  "name": "Samarium",
+  "Z": 62,
+  "role": "란타나이드 aliovalent 도펀트(Sm2O3). Sm3+는 4f5(S=5/2, 6H5/2) 개방껍질 -> 스핀분극+DFT+U 필수(Nd/Gd와 동일). +2(4f6)도 가능해 Sm2+/Sm3+ 혼합원자가가 XPS로 구분됨(진단 특징). La(Yang)·Nd(우리) RE3+ 도판트 형제; Sm-doped ceria(SDC)는 SOFC 전해질로 유명(별개 산화물 맥락).",
+  "oxidation_states": ["+3", "+2"],
+  "electronegativity": 1.17,
+  "ionic_radius_A": {
+    "Sm3+_VI": 0.958,
+    "Sm3+_VIII": 1.079,
+    "Sm2+_VIII": 1.27,
+    "_note": "Shannon 1976: Sm3+ VI 0.958 A, VIII 1.079; Sm2+ VIII 1.27(훨씬 큼). 란탄족 수축상 Nd(0.983)와 Gd(0.938) 사이; Li+(0.76)보다 큼."
+  },
+  "representative_compounds": [
+    {"formula": "Sm2O3", "context": "도펀트 전구체", "battery_role": "염기성 RE 산화물 도펀트; Sm3+ + O 공급원", "note": "cubic C-type; Sm 3d5/2 ~1083 eV(Sm3+), Sm2+ 성분 ~1072 eV로 원자가 구분"},
+    {"formula": "Sm-doped CeO2 (SDC)", "context": "SOFC 전해질(참고계)", "battery_role": "Sm3+ aliovalent 치환 -> 산소공공 -> O2- 전도", "note": "GDC와 함께 대표 doped-ceria; aliovalent 공공 캐리어 고전 사례"},
+    {"formula": "Sm-O in doped argyrodite (P-O-Sm bridge, 가정)", "context": "도펀트 모티프(유비)", "battery_role": "S 자리 O가 P·Sm과 가교하는 국소 옥시설파이드 단위", "note": "La-O(Yang)/Nd-O(우리)와 평행한 RE3+ hard-산 O 앵커 가정"}
+  ],
+  "sei_relevance": "Sm은 native SE 이온이 아니라 희토류 aliovalent 도펀트. 기능 분리(RE/O 논리): O가 안정성, Sm3+가 친산소 hard-산 앵커(P-O-Sm 가정). Sm-doped ceria(SDC)가 보여주듯 aliovalent RE3+ 치환은 산소공공 캐리어를 만드는 전형 — Li-공공 유비. Sm은 +2/+3 혼합원자가라 환원 분위기(Li 금속 계면)서 Sm3+->Sm2+ 환원이 XPS로 추적 가능(La/Gd와 다른 진단 레버). 정직히: Sm-argyrodite 직접 문헌은 La(Yang)만큼 강하지 않음 -> Nd/La 계보 유비.",
+  "xps": [
+    {"core": "Sm 3d5/2", "BE_eV": 1083.0, "assignment": "Sm3+ in Sm2O3 (4f5; Sm2+ 성분 ~1072 eV로 원자가 구분)", "ref": "Sm2O3 XPS lit / xpsdatabase"},
+    {"core": "Sm 3d3/2", "BE_eV": 1109.8, "assignment": "Sm3+ spin-orbit partner (split ~26.8 eV)", "ref": "Sm2O3 XPS lit"}
+  ],
+  "raman": [
+    {"cm1": 360, "assignment": "Sm2O3 cubic C-type 격자모드(주 라만선); SDC fluorite F2g ~465 cm-1", "ref": "Sm2O3 / SDC Raman lit"}
+  ],
+  "dos_character": "Sm3+는 4f5(S=5/2) 개방껍질 -> 스핀분극(ISPIN=2)+DFT+U(Dudarev, U_eff ~6 eV) 필수(Nd/Gd 프로토콜과 동일). 부분점유 4f5가 gap 안팎에 국소상태를 넣어 PBE 단독은 오배치; O 2p->Sm 5d/4f 엣지. +2/+3 원자가 유연성으로 4f 점유가 환경에 민감 -> 명시 투영(projwfc 스핀분해) 권장.",
+  "key_references": [
+    "Shannon 1976 — effective ionic radii",
+    "Dudarev et al., PRB 1998, 57, 1505 + Loschen et al. 2007 — DFT+U (U_eff ~6 eV) on lanthanide 4f (Sm 4f5 스핀분극 프로토콜)",
+    "Sm-doped ceria (SDC) SOFC electrolyte lit — aliovalent RE3+ -> 산소공공 전도(공공 캐리어 유비)",
+    "xpsdatabase / Sm2O3 XPS — Sm 3d5/2 ~1083 eV(Sm3+), ~1072 eV(Sm2+)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB lit · Shannon radii); Sm DFT+U/spin은 Nd 프로토콜 유비(방법 노트) — 우리 db 절대값과 분리"
+}

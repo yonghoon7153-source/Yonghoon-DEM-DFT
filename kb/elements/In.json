@@ -1,0 +1,35 @@
+{
+  "symbol": "In",
+  "name": "Indium",
+  "Z": 49,
+  "role": "cascade 산화물 도펀트 후보(In₂O₃)이자 황화물 ASSB의 표준 Li-In 합금 기준전극 원소. In³⁺=4d¹⁰5s⁰(닫힌 d껍질+빈 5s → CBM은 In 5s)라 Sn⁴⁺·Ga³⁺과 동류의 비교적 clean한 종. 3가라 P⁵⁺ 자리 치환 시 치환당 Li⁺ 2개 추가(캐리어 레버). In₂O₃는 TCO(투명전도산화물)라 그 자체론 wide-ish지만 In³⁺→In⁺→In⁰ 환원 여지가 있음.",
+  "oxidation_states": ["+3", "+1"],
+  "electronegativity": 1.78,
+  "ionic_radius_A": {
+    "In3+_IV": 0.62,
+    "In3+_VI": 0.8,
+    "In3+_VIII": 0.92,
+    "_note": "Shannon 1976: In³⁺(d¹⁰) 사면체 IV 0.62 A, 팔면체 VI 0.80 A, VIII 0.92 A. IV 0.62는 P⁵⁺ IV(0.17)보다 훨씬 크고 Ga³⁺ IV(0.47)보다도 커 P 자리 치환 시 국소 팽창이 Ga보다 큼. VI 0.80은 Li⁺ VI(0.76)와 근접."
+  },
+  "representative_compounds": [
+    {"formula": "In2O3", "context": "도펀트 전구체(캐스케이드 산화물) / TCO", "battery_role": "wide-ish 산화물 도펀트; In·O 공급원", "note": "bixbyite; 광학 gap ~2.9 eV(기본 gap ~2.6). In 3d5/2 ~444.6 eV. In³⁺는 borderline 산으로 O/S 양쪽 결합 가능"},
+    {"formula": "Li-In alloy", "context": "황화물 SSB 하프셀 기준/상대 전극", "battery_role": "표준 Li-In 합금 음극(안정 plateau ~0.62 V vs Li/Li⁺); 실험 벤치마크", "note": "lithiophilic → LiIn/Li13In3 형성. 우리/문헌 σ·계면 비교의 사실상 표준 대극"},
+    {"formula": "In2S3", "context": "thio-indate 참고상", "battery_role": "In이 S 골격에 들어간 리튬 티오인데이트 모티프(In–S 호환)", "note": "In³⁺의 황화물 골격 호환 참고 — 단 도펀트 주 의도는 In₂O₃의 O-앵커"}
+  ],
+  "sei_relevance": "In의 계면 관련성은 크지만 방향이 다름 — Li-In 합금은 황화물 SSB 하프셀의 사실상 표준 상대/기준 전극(안정 plateau ~0.62 V vs Li/Li⁺라 Li 금속 대신 재현성 좋은 기준으로 씀). In은 lithiophilic해 Li과 LiIn/Li13In3 합금을 만들어 Li 금속 계면에서 완충 합금상으로 작동. In₂O₃(산화물 도펀트)는 벌크 종이고, In³⁺는 저전위에서 In 금속→Li-In으로 환원될 수 있음. 특이 SEI 무기성분 보고보다는 합금 완충·기준전극 역할이 In의 핵심.",
+  "xps": [
+    {"core": "In 3d5/2", "BE_eV": 444.6, "assignment": "In2O3 / In³⁺ (보고 444.6-444.8 eV)", "ref": "NIST XPS DB; xpsfitting.com Indium; Henderson SIA 2025"},
+    {"core": "In 3d5/2", "BE_eV": 443.7, "assignment": "In metal / In⁰ (금속-산화물 이동 작음 ~0.9 eV → 보조로 Auger/valence 권장)", "ref": "NIST XPS DB; xpsfitting.com Indium"}
+  ],
+  "raman": [
+    {"cm1": 307, "assignment": "In2O3 bixbyite (cubic Ia-3) 최강 모드 — 도펀트 산화물상 지문(호스트 SSB 모드 아님; +495/630 cm-1)", "ref": "In2O3 bixbyite Raman 표준 참조"}
+  ],
+  "dos_character": "In³⁺는 4d¹⁰5s⁰ — In 4d는 깊은 반코어(semicore) 준위라 밴드엣지를 안 건드리고, 빈 5s가 CBM을 이룸(In₂O₃가 TCO인 이유). 도핑된 황화물에서 In은 midgap 상태를 거의 안 넣는 closed-shell 종(Sn⁴⁺·Ga³⁺과 동류)이라 스핀분극·DFT+U 불필요. 다만 5s⁰라 In³⁺→In⁺→In⁰ 환원 여지가 있어 저전위 계면 화학은 주의(합금화로 이어짐).",
+  "key_references": [
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (In³⁺ VI 0.80 A)",
+    "Santhosha et al. 2019 — Li-In 합금 음극/기준전극의 전기화학(황화물 SSB 벤치마크 맥락)",
+    "Henderson, Surf. Interface Anal. 2025 — In 및 In 화합물 XPS(In 3d5/2 In2O3 ~444.6 eV)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
+}

@@ -1,0 +1,34 @@
+{
+  "symbol": "Ag",
+  "name": "Silver",
+  "Z": 47,
+  "role": "cascade 산화물 도펀트 후보(Ag₂O)이자 무음극(anode-free) 계면 종. Ag⁺는 매우 부드럽고 분극성 큰 soft acid라 Ag–S 친화가 강하지만 Li에 쉽게 Ag⁰로 환원됨(redox-active) → 벌크 절연 도펀트론 부적합(금속 Ag 석출=전자 단락 위험). 진짜 무기는 계면: Ag는 lithiophilic해 Li과 고용체/합금(α-Li-Ag)을 만들어 균일 Li 핵생성 씨앗으로 작동 — Samsung Ag–C 무음극 SSB의 핵심.",
+  "oxidation_states": ["+1", "+2", "+3"],
+  "electronegativity": 1.93,
+  "ionic_radius_A": {
+    "Ag+_IV": 1.0,
+    "Ag+_VI": 1.15,
+    "Ag2+_VI": 0.94,
+    "_note": "Shannon 1976: Ag⁺(d¹⁰) IV 1.00 A, VI 1.15 A(매우 큼), Ag²⁺(d⁹) VI 0.94 A. Ag⁺ VI 1.15는 Li⁺ VI(0.76)보다 훨씬 커서 Li 자리에 넣으면 큰 국소 팽창; P⁵⁺ 사면체(IV 0.17)엔 전혀 안 맞음 → Ag는 격자 치환보다 계면/합금 종으로 봄."
+  },
+  "representative_compounds": [
+    {"formula": "Ag2O", "context": "도펀트 전구체(캐스케이드 산화물)", "battery_role": "soft-acid Ag²⁺/Ag⁺ 산화물 도펀트 원; Ag·O 공급원", "note": "특이하게 narrow-gap(~1.2-1.5 eV) 산화물 — wide-gap 아님. Ag 3d5/2 ~367.8 eV로 금속(368.2)보다 낮은 이상(anomalous) 음의 이동. Li에 Ag²⁺→Ag⁰ 환원 쉬움"},
+    {"formula": "Ag-C composite / Ag interlayer", "context": "무음극(anode-free) SSB 계면", "battery_role": "lithiophilic Li 핵생성 씨앗; α-Li-Ag 고용체로 균일 Li 도금·덴드라이트 억제", "note": "Samsung Lee et al. Nat. Energy 2020(Li6PS5Cl 기반 무음극)의 핵심 — Ag가 SE가 아니라 음극 계면 종으로 작동"},
+    {"formula": "Ag2S", "context": "soft Ag-S 참고상", "battery_role": "soft-acid–soft-base(Ag–S) 친화의 대표; 고온 초이온(Ag⁺) 전도체 참고", "note": "Ag⁺ 빠른 양이온 전도 고전 예 — Li⁺ 전도 유추 참고이나 도펀트로선 Ag–S가 P–S를 대체할 뿐 환원 취약"}
+  ],
+  "sei_relevance": "Ag는 native SE 이온이 아니지만 이 그룹에서 SEI/계면 관련성이 가장 큼. Ag–C 무음극 설계에서 Ag는 lithiophilic 핵생성 씨앗으로 Li과 고용체/합금(Li-Ag)을 만들어 첫 도금부터 균일한 Li 성장을 유도(덴드라이트·전류집중 억제). 즉 Ag의 가치는 계면 씨앗이지 벌크 절연 도펀트가 아님 — Ag⁺는 Li에 매우 쉽게 Ag⁰로 환원돼 금속 Ag가 석출되면 전자 단락 경로가 될 수 있음. 산화물(Ag₂O)조차 narrow-gap이라 호스트 밴드갭을 좁힐 우려. 결론: 무음극 계면종으로는 최상급, 벌크 SE 도펀트로는 redox 취약.",
+  "xps": [
+    {"core": "Ag 3d5/2", "BE_eV": 368.2, "assignment": "Ag metal / Ag⁰ (ISO 15472 보정 기준 368.21 eV)", "ref": "NIST XPS DB; ISO 15472:2010; xpsfitting.com Silver"},
+    {"core": "Ag 3d5/2", "BE_eV": 367.8, "assignment": "Ag2O / Ag⁺ — 산화물이 금속보다 BE 낮은 이상(anomalous) 음이동. 진단은 Auger param·O 1s·피크폭 병행 필요", "ref": "xpsfitting.com Silver; 은 산화물 anomalous shift 문헌"},
+    {"core": "Ag 3d5/2", "BE_eV": 367.4, "assignment": "AgO / Ag(II,III) (보고 367.3-368.1 eV)", "ref": "xpsfitting.com Silver"}
+  ],
+  "raman": [],
+  "dos_character": "Ag⁺는 4d¹⁰5s⁰ 닫힌 껍질이지만 Ag 4d 밴드가 Cu 3d보다 얕아 은-칼코겐에서 Ag 4d–S 3p 혼성으로 VBM을 밀어올려 gap을 좁힐 수 있음. Ag₂O 자체가 narrow-gap(~1.2-1.5 eV) 반도체(산화물치곤 이례적으로 좁음)이고 Ag⁺→Ag⁰ 환원이 매우 쉬워 redox-active — Sc/Hf/Zn/Ga 같은 clean wide-gap 도펀트와 정반대 성격. 밴드엣지 근처 기여·환원 석출이 벌크 도펀트로서의 핵심 리스크.",
+  "key_references": [
+    "Lee et al., Nat. Energy 5, 299 (2020) — Ag-C 무음극(anode-free) 전고체전지; Ag lithiophilic 핵생성 씨앗",
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Ag⁺ VI 1.15 A)",
+    "xpsfitting.com Silver — Ag 3d5/2 metal 368.2 eV, 산화물 anomalous 음이동(367.8/367.4 eV)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
+}

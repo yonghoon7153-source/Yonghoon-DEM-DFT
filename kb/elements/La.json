@@ -1,0 +1,36 @@
+{
+  "symbol": "La",
+  "name": "Lanthanum",
+  "Z": 57,
+  "role": "란타나이드 aliovalent 도펀트 — 우리 Nd2O3 프로그램의 가장 가까운 실험 자매(Yang 2025 La+O 이중도핑, LaCl3/La2O3). La3+는 4f0 닫힌껍질(개방 4f Nd/Gd/Sm과 달리 +U/스핀 불필요) 대형 3가: argyrodite에서 P5+ 자리(4b) 치환 = LaS4 + 함께 든 O가 PS3O -> P-O 결합으로 대기안정↑, σ는 희생(9.58->6.23 mS/cm). 산화물 가넷 LLZO의 골격 양이온이기도.",
+  "oxidation_states": ["+3"],
+  "electronegativity": 1.10,
+  "ionic_radius_A": {
+    "La3+_VI": 1.032,
+    "La3+_VIII": 1.160,
+    "La3+_IX": 1.216,
+    "_note": "Shannon 1976: La3+ VI 1.032 A, VIII 1.160, IX 1.216. 란타나이드 최대반경(La->Lu 수축 시작점); Li+(0.76)의 ~1.5x -> Li/P 자리 치환 시 큰 왜곡(Yang: a 9.793->9.823 A 팽창)."
+  },
+  "representative_compounds": [
+    {"formula": "La2O3", "context": "도펀트 전구체", "battery_role": "염기성 RE 산화물 도펀트; La3+ + O 공급원; 대기안정 P-O 유도", "note": "A-type hexagonal; La 3d5/2 ~834.5 eV(+CT 위성 ~838). O 1s 이례적 저BE ~528.6"},
+    {"formula": "La-doped Li5.5PS4.5Cl1.5 (Yang 2025)", "context": "직접 문헌 선례", "battery_role": "La->4b(P자리)=LaS4, O->PS3O 코너; σ 희생·대기안정+Li계면 이득", "note": "x=0.04 최적; La0/LiCl SEI로 CCD 0.9->3.1 mA/cm2 (음극 SEI 분광증거는 제한적, 도식/선행 차용)"},
+    {"formula": "Li7La3Zr2O12 (LLZO)", "context": "산화물 가넷 SE(참고계)", "battery_role": "La3+가 가넷 골격 A자리; 고전도 cubic 상 구성", "note": "La는 산화물 가넷의 필수 골격 양이온(황화물 도판트와 별개 맥락)"}
+  ],
+  "sei_relevance": "La는 native 황화물-SE 이온이 아니라 희토류 aliovalent 도펀트. 기능 분리(Nd/O 논리와 평행): O가 산화/수분 안정(P-O 결합)을, La3+가 그 O의 친산소성 hard-산 운반체/앵커를 담당(Yang 2025 P-O-La). 대형 La3+가 채널을 넓힐 수 있으나 실측 σ는 하락(안정성 대 전도도 트레이드). Li 금속 계면에선 La0/LiCl(+주장된 LaCl3) passivation SEI 기대 — 단 Yang은 이 음극 SEI에 직접 분광증거 없이 도식/선행(Yao Nature LaCl3) 차용(증거 위계 주의).",
+  "xps": [
+    {"core": "La 3d5/2", "BE_eV": 834.5, "assignment": "La3+ in La2O3 (main; charge-transfer 위성 ~838 eV 동반, 분열 ~3.5-4.6 eV)", "ref": "NIST XPS DB / xpsdatabase"},
+    {"core": "La 3d3/2", "BE_eV": 851.0, "assignment": "La3+ spin-orbit partner (doublet, split ~16.8 eV)", "ref": "La2O3 XPS lit"}
+  ],
+  "raman": [
+    {"cm1": 405, "assignment": "La2O3 A-type Eg/A1g 격자모드(부수 ~105 cm-1)", "ref": "La2O3 Raman lit"}
+  ],
+  "dos_character": "La3+는 4f0(빈 f) 닫힌껍질 -> Nd/Gd/Sm과 달리 부분점유 4f가 없어 DFT+U/스핀분극 불필요(계산이 단순). La 5d/4f는 비어 전도대 상부; La2O3는 wide-gap, O 2p가 VB 지배·엣지는 O 2p->La 5d. 황화물 도핑 시 La-S/La-O는 밴드엣지에서 벗어나 La는 구조/친산소 앵커 역할.",
+  "key_references": [
+    "Shannon 1976 — effective ionic radii",
+    "Yang et al., Electrochim. Acta 2025, 535, 146619 — La+O dual-doped Li5.5PS4.5Cl1.5 via La2O3/LaCl3; P-O bond 대기안정, La0/LiCl SEI (우리 Nd2O3 프로그램의 가장 가까운 실험 자매) (litdb)",
+    "Murugan et al., Angew. Chem. Int. Ed. 2007 — cubic Li7La3Zr2O12 garnet (La 골격 산화물 SE 맥락)",
+    "NIST XPS DB / xpsdatabase — La 3d5/2 (La2O3 ~834.5 eV + CT 위성 ~838)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB lit · Shannon radii); La+O 도핑 서사는 Yang 2025 문헌 소환값 — 우리 db 절대값과 분리"
+}

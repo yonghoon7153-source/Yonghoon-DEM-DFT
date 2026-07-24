@@ -1,0 +1,37 @@
+{
+  "symbol": "Sn",
+  "name": "Tin",
+  "Z": 50,
+  "role": "cascade 산화물 도펀트 후보(SnO₂)이자 P⁵⁺ 자리 이가원자가(aliovalent) 치환종. Sn⁴⁺=4d¹⁰5s⁰(빈 5s → CBM)라 Sn⁴⁺ 상태에선 clean wide-gap(SnO₂ ~3.6 eV)이지만 Sn²⁺(5s² 고립전자쌍)·Sn⁰(Li-Sn 합금)로 환원 가능. Li10SnP2S12(LGPS형 Sn SE)처럼 SE 골격 양이온으로도 등장. Sn⁴⁺→P⁵⁺ 치환 시 치환당 Li⁺ 1개 추가 + 넓은 bottleneck으로 σ 레버.",
+  "oxidation_states": ["+4", "+2"],
+  "electronegativity": 1.96,
+  "ionic_radius_A": {
+    "Sn4+_IV": 0.55,
+    "Sn4+_VI": 0.69,
+    "Sn2+_VIII": 1.22,
+    "_note": "Shannon 1976: Sn⁴⁺ 사면체 IV 0.55 A, 팔면체 VI 0.69 A; Sn²⁺(5s² lone pair) VIII 1.22 A(크고 왜곡). Sn⁴⁺ IV 0.55는 P⁵⁺ IV(0.17)보다 훨씬 커 P 자리 치환 시 국소 팽창; VI 0.69는 Li⁺ VI(0.76)보다 약간 작음. 환원돼 Sn²⁺가 되면 급팽창."
+  },
+  "representative_compounds": [
+    {"formula": "SnO2", "context": "도펀트 전구체(캐스케이드 산화물)", "battery_role": "rutile wide-gap 산화물 도펀트; Sn·O 공급원", "note": "gap ~3.6 eV. Sn 3d5/2 ~486.6 eV(SnO2)지만 SnO(486.2)와 ~0.8 eV만 차 → 구분에 Auger MNN/valence band 필요. n형·환원성"},
+    {"formula": "Li10SnP2S12", "context": "LGPS형 Sn SE(참고상)", "battery_role": "Sn이 SE 골격 사면체 자리에 직접 들어간 초이온전도체(σ~수 mS/cm)", "note": "Bron 2013; Sn⁴⁺가 (Sn/P)S₄ 골격 구성 — Sn이 도펀트가 아니라 골격 양이온으로 기능하는 대표 예"},
+    {"formula": "Sn-substituted argyrodite / Li-Sn alloy", "context": "골격 치환 모티프 / 합금 음극", "battery_role": "Sn⁴⁺@P 자리(aliovalent, +Li·연화) 또는 Li-Sn 고용량 합금 음극", "note": "Li4.4Sn급 합금은 conversion+alloying 음극; 도펀트로선 Sn⁴⁺ 유지 조건에서만 clean"}
+  ],
+  "sei_relevance": "Sn은 Li과 Li-Sn 합금(Li4.4Sn 등 고용량 합금)을 만드는 대표적 alloying 원소 — SnO₂는 conversion+alloying 음극이자 SnF₂/SnO₂ SEI 첨가제로 쓰임. Li 금속 계면에서 Sn⁴⁺→Sn⁰→Li-Sn으로 환원되므로 벌크 SE 도펀트로 쓸 땐 Sn⁴⁺가 유지되는 산화 조건이 관건. Li10SnP2S12에선 Sn⁴⁺가 SE 골격 자체를 이뤄 안정 — 즉 골격 양이온으로는 검증됐으나, 음극 접촉 시엔 환원·합금화가 핵심 거동.",
+  "xps": [
+    {"core": "Sn 3d5/2", "BE_eV": 486.6, "assignment": "SnO2 / Sn⁴⁺ (보고 486.6-486.9 eV)", "ref": "NIST XPS DB; xpsfitting.com Tin"},
+    {"core": "Sn 3d5/2", "BE_eV": 486.2, "assignment": "SnO / Sn²⁺ (SnO2와 ~0.8 eV만 차 → 3d만으론 구분 곤란, Auger MNN/valence 필요)", "ref": "NIST XPS DB; HAXPES Sn/SnO/SnO2 연구"},
+    {"core": "Sn 3d5/2", "BE_eV": 484.9, "assignment": "Sn metal / Sn⁰ (환원 생성물; 약간 비대칭)", "ref": "xpsfitting.com Tin"}
+  ],
+  "raman": [
+    {"cm1": 634, "assignment": "SnO2 rutile A1g — 최강 지문(Sn-O stretch; 도펀트 산화물상 확인용, 호스트 SSB 모드 아님; +Eg 476/B2g 776)", "ref": "SnO2 rutile Raman 표준 참조"}
+  ],
+  "dos_character": "Sn⁴⁺는 4d¹⁰5s⁰ — 빈 5s가 CBM을 이뤄 SnO₂는 wide-gap(~3.6 eV) 반도체이고 midgap 상태를 거의 안 넣는 clean 종(Zn/Ga/In 군). 단 Sn²⁺(5s² lone pair)로 환원되면 stereochemically active 고립전자쌍이 VBM 근처 상태를 만들고, Sn⁰까지 가면 합금화 — 즉 Sn⁴⁺ 유지 시엔 clean, 환원되면 성격이 바뀌는 조건부 도펀트. 스핀분극 불필요(closed-shell).",
+  "key_references": [
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Sn⁴⁺ VI 0.69 A)",
+    "Bron et al., J. Am. Chem. Soc. 135, 15694 (2013) — Li10SnP2S12 (LGPS형 Sn 초이온전도체)",
+    "Kraft/Zeier — argyrodite P-자리 이가원자가 치환 프레임(Sn⁴⁺ 포함 크기/연화 효과)",
+    "NIST XPS DB — SnO2 Sn 3d5/2 ~486.6 eV, metal 484.9 eV(SnO/SnO2 구분엔 Auger)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
+}

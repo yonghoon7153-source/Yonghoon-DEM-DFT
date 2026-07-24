@@ -1,0 +1,36 @@
+{
+  "symbol": "Gd",
+  "name": "Gadolinium",
+  "Z": 64,
+  "role": "란타나이드 aliovalent 도펀트(Gd2O3). Gd3+는 4f7 반충만(S=7/2, 8S7/2 — 란타나이드 중 특히 안정한 half-filled) 개방껍질: Nd처럼 스핀분극+DFT+U 필수. La+O(Yang)·Nd2O3(우리) 계보의 RE3+ 도판트 형제로, P 자리 치환 + O 동반(P-O-Gd) 가정 가능. Gd-doped ceria(GDC)는 SOFC 산소이온 전도체로 유명(별개 산화물 맥락).",
+  "oxidation_states": ["+3"],
+  "electronegativity": 1.20,
+  "ionic_radius_A": {
+    "Gd3+_VI": 0.938,
+    "Gd3+_VIII": 1.053,
+    "Gd3+_IX": 1.107,
+    "_note": "Shannon 1976: Gd3+ VI 0.938 A, VIII 1.053, IX 1.107. 란탄족 수축상 La(1.032)>Nd(0.983)>Gd(0.938); Li+(0.76)보다 큼."
+  },
+  "representative_compounds": [
+    {"formula": "Gd2O3", "context": "도펀트 전구체", "battery_role": "염기성 RE 산화물 도펀트; Gd3+ + O 공급원", "note": "cubic bixbyite(C-type); Gd 4d5/2 ~142.2 eV(multiplet), Gd 3d5/2 ~1187.3 eV"},
+    {"formula": "Gd-doped CeO2 (GDC/CGO)", "context": "SOFC 전해질(참고계)", "battery_role": "Gd3+ aliovalent 치환 -> 산소공공 -> O2- 전도", "note": "aliovalent 도핑이 공공 캐리어를 만드는 고전 사례(우리 Li-공공 논리의 산화물 유비)"},
+    {"formula": "Gd-O in doped argyrodite (P-O-Gd bridge, 가정)", "context": "도펀트 모티프(유비)", "battery_role": "S 자리 O가 P·Gd와 가교하는 국소 옥시설파이드 단위", "note": "La-O(Yang)/Nd-O(우리)와 평행한 RE3+ hard-산 O 앵커 가정"}
+  ],
+  "sei_relevance": "Gd는 native SE 이온이 아니라 희토류 aliovalent 도펀트. 기능 분리(RE/O 논리): O가 안정성, Gd3+가 친산소 hard-산 앵커(P-O-Gd 가정). Gd-doped ceria(GDC)가 보여주듯 aliovalent RE3+ 치환은 공공 캐리어를 만드는 전형 — 우리 Li-공공 주입 논리의 산화물 유비. Gd2O3/GdCl3는 wide-gap 절연이라 Li 금속 환원서 살아남는 passivation SEI 기대(RE 계열 공통). 정직히: Gd-argyrodite 직접 문헌은 La(Yang)만큼 강하지 않음 -> Nd/La 계보에서 유비.",
+  "xps": [
+    {"core": "Gd 4d5/2", "BE_eV": 142.2, "assignment": "Gd3+ in Gd2O3 (multiplet; 성분 ~139.9/142.2 eV, many-body 분열)", "ref": "Gd2O3 XPS lit / xpsdatabase"},
+    {"core": "Gd 3d5/2", "BE_eV": 1187.3, "assignment": "Gd3+ in Gd2O3 (3d3/2 ~1220 eV, split ~32.7)", "ref": "Gd2O3 XPS lit"}
+  ],
+  "raman": [
+    {"cm1": 361, "assignment": "Gd2O3 cubic bixbyite Fg 격자모드(주 라만선)", "ref": "Gd2O3 Raman lit"}
+  ],
+  "dos_character": "Gd3+는 4f7 반충만(S=7/2) 개방껍질 -> PBE/PBE+U가 4f를 오배치하므로 스핀분극(ISPIN=2)+DFT+U(Dudarev, U_eff ~6 eV) 필수(Nd 프로토콜과 동일). 4f7 majority는 깊이 채워지고 minority는 비어 높이 위치; Gd2O3 엣지는 O 2p->Gd 5d. 4f는 5s2 5p6에 가려져 결합은 5d/6s -> 4f 국소모멘트는 명시 투영(projwfc, 스핀분해)해야 함.",
+  "key_references": [
+    "Shannon 1976 — effective ionic radii",
+    "Dudarev et al., PRB 1998, 57, 1505 + Loschen et al. 2007 — DFT+U (U_eff ~6 eV) on lanthanide 4f (Gd 4f7 스핀분극 프로토콜)",
+    "Gd-doped ceria (GDC/CGO) SOFC electrolyte lit — aliovalent RE3+ -> 산소공공 전도(공공 캐리어 유비)",
+    "xpsdatabase / Gd2O3 XPS — Gd 4d5/2 ~142.2 eV, Gd 3d5/2 ~1187.3 eV"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB lit · Shannon radii); Gd DFT+U/spin은 Nd 프로토콜 유비(방법 노트) — 우리 db 절대값과 분리"
+}
