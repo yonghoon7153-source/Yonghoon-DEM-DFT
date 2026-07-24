@@ -1,0 +1,34 @@
+{
+  "symbol": "Sc",
+  "name": "Scandium",
+  "Z": 21,
+  "role": "cascade 산화물 도펀트 후보(Sc₂O₃로 첨가). Sc³⁺=3d⁰ 닫힌껍질이라 밴드갭 안에 결함준위를 거의 안 넣고 wide-gap을 유지 — 3d TM 중 가장 '깨끗한' 도펀트. Li⁺와 반경이 비슷한 hard 루이스 산이라 국소 왜곡이 작음.",
+  "oxidation_states": ["+3"],
+  "electronegativity": 1.36,
+  "ionic_radius_A": {
+    "Sc3+_VI": 0.745,
+    "Sc3+_VIII": 0.870,
+    "_note": "Shannon 1976: Sc3+ VI(팔면체) 0.745 A, VIII 0.870 A. Li+(VI 0.76 A)와 거의 같은 크기 -> Li 자리 치환 시 격자 스트레인 작음. Sc는 사실상 +3만 안정(3d0)이라 배위 무관하게 단일 산화수."
+  },
+  "representative_compounds": [
+    {"formula": "Sc2O3", "context": "도펀트 전구체 (cascade oxide)", "battery_role": "wide-gap 절연 산화물 도펀트; Sc3+(d0)+O 공급원; 소결조제로도 사용", "note": "Sc 2p3/2 ~401.8 eV(Sc3+). d0라 환원 어려움 -> 견고한 wide-gap 유지"},
+    {"formula": "Sc2S3", "context": "황화물 유사상", "battery_role": "S 자리 화학의 Sc 참고상(황화 Sc3+)", "note": "황화물 골격에 Sc가 들어갈 때의 참고; 산화물보다 이온성 약함"},
+    {"formula": "ScF3", "context": "대체 원료 / F 공여", "battery_role": "wide-gap 절연 불화물; 음성 열팽창 골격, 대체 Sc 원료·F 소스", "note": "견고한 Sc-F 이온결합 -> 환원 안정, 절연 SEI 유사거동 기대"}
+  ],
+  "sei_relevance": "Sc는 native SE 이온이 아니라 cascade의 TM 산화물 도펀트/양극측 후보. Sc³⁺는 d⁰라 환원이 어려워 Sc₂O₃는 다른 3d TM 산화물보다 Li-metal에도 비교적 견고 — wide-gap 절연 부동태층으로 남을 여지가 있어 벌크/양극 도펀트로 안정적. SSB 계면 문헌에 Sc 특이적 anode-SEI 역할 보고는 제한적이나, d⁰ hard 산화물이라 산화측·환원측 모두에서 결함준위를 덜 만든다는 점이 이점.",
+  "xps": [
+    {"core": "Sc 2p3/2", "BE_eV": 401.8, "assignment": "Sc3+ in Sc2O3 (lattice oxide)", "ref": "XPS reference (xpsfitting.com Sc; Sc2O3 2p3/2 ~401.7-402.0 eV)"},
+    {"core": "Sc 2p3/2", "BE_eV": 398.4, "assignment": "Sc metal (Sc0; asymmetric line)", "ref": "XPS reference (xpsfitting.com Sc metal 398.45 eV)"}
+  ],
+  "raman": [
+    {"cm1": 418, "assignment": "Sc2O3 bixbyite (cubic Ia-3) 최강 Fg/Ag 모드 — 도펀트 산화물상 지문(호스트 SSB 모드 아님)", "ref": "Sc2O3 Raman (bixbyite sesquioxide)"}
+  ],
+  "dos_character": "Sc³⁺=3d⁰ → 점유 3d 상태가 없고 빈 3d는 CBM 위로 깊숙이 밀려 argyrodite 갭(~2 eV) 안에 결함준위를 거의 안 만듦(3d TM 중 가장 '깨끗'). Sc₂O₃ 자체가 wide-gap(~6 eV) 절연체. open-shell이 아니라 DFT+U 필요성 낮고 스핀분극 불필요 — 다른 3d 도펀트와 대비되는 '무해한' 전자구조.",
+  "key_references": [
+    "Shannon, Acta Cryst. A32, 751 (1976) — effective ionic radii (Sc3+ VI 0.745 A)",
+    "XPS reference pages (xpsfitting.com, Scandium) — Sc 2p3/2 metal 398.45 eV, Sc2O3 ~401.7 eV",
+    "Banik et al. 2022 — substitutions & oxidative stability of argyrodite (도펀트 맥락 일반)"
+  ],
+  "litdb_slugs": [],
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
+}
