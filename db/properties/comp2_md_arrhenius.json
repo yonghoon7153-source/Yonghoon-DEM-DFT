@@ -34,26 +34,26 @@
  ],
  "Ea_eV": "0.275 +/- 0.033",
  "data_quality_flag": "800K per-seed scatter large (s3 800K 2.15e-6 < its 600K 2.44e-6 = non-physical; s4 800K high). Mean is monotonic; 800K under-sampled at 200ps. 1000K tight.",
- "anchors_same_window": {
-  "comp1_LPSCl_Ea": 0.23892345566424977,
-  "modelc_LPSCl1.6_Ea": 0.2234655205050159,
+ "anchors_CANONICAL_3seed": {
+  "comp1_LPSCl_Ea": 0.2532391187582002,
+  "modelc_LPSCl1.6_Ea": 0.22334512161270018,
   "comp1_D": [
-   1.9511342987178036e-06,
-   5.625101579236431e-06,
-   1.2608055716644667e-05
+   3.09e-06,
+   1.03e-05,
+   2.2e-05
   ],
   "modelc_D": [
-   7.900948982137257e-06,
-   2.0540573971174334e-05,
-   4.5537313832265074e-05
+   7.9e-06,
+   2.05e-05,
+   4.55e-05
   ],
-  "_note": "comp1/modelc recomputed from msd_comp1_modelc.csv same 2-50ps; modelc 0.224 == DB. comp1 single-seed ref."
+  "_note": "comp1/modelc = CANONICAL 3-seed (deck slide 5 = DB/littable): comp1 Ea 0.253/D0 4.11e-4/sig300 3.4; modelc Ea 0.224/D0 5.8e-4/sig300 14. kgy build_final modelc 0.200 was b2o3-campaign reseed (run_modelc_600K_reseed.sh 'for b2o3-vs-LPSCl1.6 symmetric bar') -> NOT canonical, disregarded."
  },
  "sigma_300K_NE_mS_cm_INTERNAL": {
-  "_note": "Nernst-Einstein Haven=1, n_Li/V0; INTERNAL ONLY (discipline: absolute sigma not cited). Method validated: modelc 13.94 == DB.",
-  "comp1": 2.74,
+  "_note": "Nernst-Einstein Haven=1, n_Li/V0; INTERNAL ONLY (discipline: absolute sigma not cited). Method validated: comp1 3.4 & modelc 14 == deck.",
+  "comp1": 3.36,
   "comp2_central": 1.39,
-  "modelc": 13.94,
+  "modelc": 13.97,
   "comp2_range_Ea_pm033": [
    0.39,
    4.98
@@ -65,14 +65,14 @@
   }
  },
  "sigma_ratio_300K": {
-  "comp2_over_comp1_central": 0.51,
+  "comp2_over_comp1_central": 0.41,
   "comp2_over_comp1_range": [
-   0.14,
-   1.82
+   0.12,
+   1.48
   ],
-  "modelc_over_comp1": 5.09
+  "modelc_over_comp1": 4.16
  },
- "physics_verdict": "VACANCY is the robust conductivity lever: modelc (Li5.4, vacancy) sigma300 ~5x comp1 (survives all uncertainty). Br isovalent Cl->Br (comp2, Li6 no-vacancy) shows NO clear boost: central sigma300 0.51x comp1 (slightly worse), but 800K seed scatter makes Ea 0.276+/-0.033 -> sigma300 ratio 0.14-1.82x = INCONCLUSIVE. In the measured 600-1000K range comp2 D > comp1 at every T, but the steeper/uncertain Ea makes the 300K extrapolation unreliable. Experimental Br benefit (Kraft 2018) is driven by anion site disorder (Br/S2- mixing) NOT sampled by our single champion config.",
- "recommendation": "For a paper-grade Br-vs-Cl sigma claim: reseed 800K (s5/s6) to tighten Ea, and run comp1 multi-seed (currently single). Consider anion-disorder ensemble to capture the experimental Br mechanism.",
- "discipline": "absolute sigma INTERNAL only; comp2 3-seed; comp1 single-seed = ratio not definitive."
+ "physics_verdict": "VACANCY is the robust conductivity lever: modelc (Li5.4, vacancy) sigma300 ~4x comp1 (survives all uncertainty). Br isovalent Cl->Br (comp2, Li6 no-vacancy) shows NO clear boost: central sigma300 0.41x comp1 (worse), but 800K seed scatter makes Ea 0.276+/-0.033 -> sigma300 ratio 0.12-1.48x = INCONCLUSIVE. In the measured 600-1000K range comp2 D ~ comp1, but the steeper/uncertain Ea makes the 300K extrapolation unreliable. Experimental Br benefit (Kraft 2018) is driven by anion site disorder (Br/S2- mixing) NOT sampled by our single champion config. comp1/modelc anchors 3-seed.",
+ "recommendation": "For a paper-grade Br-vs-Cl sigma claim: reseed comp2 800K (s5/s6) to tighten Ea. Consider anion-disorder ensemble to capture the experimental Br mechanism.",
+ "discipline": "absolute sigma INTERNAL only; comp1/modelc/comp2 all 3-seed; comp2 800K scatter = ratio inconclusive."
 }

@@ -120,10 +120,10 @@ axA.text(26, 118, "2-50 ps\nfit window", fontsize=7.2, color=MUT, ha="center", v
 fig.suptitle("Li mean-squared displacement — comp1 vs comp2 (UMA-s-1p1, seed-averaged)",
              fontsize=11.5, color=INK, y=1.05)
 fig.text(0.5, -0.04,
-         "comp2 = 3-seed mean (gabia comp2_md); comp1 = db msd_comp1_modelc.  "
-         "1000 K nearly identical (~115 $\\AA^2$ @100 ps); comp2 800 K noisier (seed scatter).  "
-         "D from 2-50 ps slope -> Arrhenius (see comp2_arrhenius).",
-         ha="center", fontsize=7.4, color=MUT)
+         "comp2 = 3-seed mean (gabia comp2_md).  comp1 curve = earlier export (its 2-50 ps D ~0.63x the "
+         "canonical 3-seed anchor; use comp2_arrhenius/conductivity for D/Ea/$\\sigma$).  "
+         "comp2 800 K noisier (seed scatter).  Illustrative of diffusive growth; quantitative D from 2-50 ps slope.",
+         ha="center", fontsize=7.0, color=MUT)
 
 OUTD = REPO / "docs/figures/comp2"; OUTD.mkdir(parents=True, exist_ok=True)
 png = OUTD / "comp2_msd.png"

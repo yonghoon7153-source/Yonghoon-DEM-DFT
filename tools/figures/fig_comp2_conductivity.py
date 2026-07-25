@@ -5,11 +5,12 @@ comp1 (LPSCl) / comp2 (LPSCl0.5Br0.5) / modelc (LPSCl1.6, vacancy).
 Left axis  = Nernst-Einstein sigma(300K) [mS/cm] (Haven=1), INTERNAL-only absolute.
 Right axis = Arrhenius Ea [eV] (2-50 ps, 600/800/1000 K).
 
-HONEST framing: the Li VACANCY (modelc) is the robust conductivity lever (~5x,
+HONEST framing: the Li VACANCY (modelc) is the robust conductivity lever (~4x,
 survives all noise). Br isovalent Cl->Br (comp2, Li6 no-vacancy) shows no clear
 boost and its 300 K sigma is UNDETERMINED (Ea 0.276+/-0.033 from 800 K seed
-scatter -> sigma300 spans 0.39-4.98 mS/cm). comp2 carries that error bar; comp1
-is single-seed (soft). Method validated: modelc sigma300 13.94 == DB.
+scatter -> sigma300 spans 0.39-4.98 mS/cm). comp2 carries that error bar.
+comp1/modelc = canonical 3-seed anchors (deck slide 5). Method validated:
+comp1 sigma300 3.4 & modelc 14 mS/cm == deck.
 
 Outputs docs/figures/comp2/comp2_conductivity.png
       + db/properties/comp2_conductivity_origin.csv
@@ -35,18 +36,10 @@ C2COL = "#c2410c"; SIGCOL = "#0f766e"; EACOL = "#b45309"
 
 NLI = {"comp1": 24 / (1016.62e-24), "comp2": 24 / (1037.55e-24), "modelc": 27 / (1216.44e-24)}
 
-# D per T: comp1/modelc from local MSD (2-50 ps), comp2 from gabia 3-seed
-rows = list(csv.reader(open(REPO / "db/properties/msd_comp1_modelc.csv")))
-body = np.array([[float(x) for x in r] for r in rows[1:]]); tt = body[:, 0]
-mfit = (tt >= 2) & (tt <= 50)
-
-
-def dfit(col):
-    return np.polyfit(tt[mfit], body[:, col][mfit], 1)[0] / 6.0 * 1e-4
-
-
-D = {"comp1": np.array([dfit(1), dfit(2), dfit(3)]),
-     "modelc": np.array([dfit(4), dfit(5), dfit(6)]),
+# D per T (cm2/s): comp1/modelc = CANONICAL 3-seed (deck slide 5 = DB/littable),
+# comp2 = gabia 3-seed mean. Reproduces deck: comp1 sig300 3.4, modelc 14 mS/cm.
+D = {"comp1": np.array([3.09e-6, 1.03e-5, 2.20e-5]),    # LPSCl, Ea 0.253
+     "modelc": np.array([7.90e-6, 2.05e-5, 4.55e-5]),   # LPSCl1.6, Ea 0.224
      "comp2": np.array([2.2681e-06, 7.6248e-06, 2.0316e-05])}
 SEEDS2 = np.array([[1.8231e-06, 6.2380e-06, 2.1425e-05],
                    [2.4388e-06, 2.1464e-06, 1.8506e-05],
@@ -110,10 +103,10 @@ axL.set_title("Conductivity lever: vacancy (modelC), not isovalent Br", fontsize
 axL.legend(loc="upper left", fontsize=9, frameon=False)
 axR.legend(loc="upper center", fontsize=9, frameon=False)
 fig.text(0.5, -0.06,
-         "NE Haven=1, 2-50 ps, 600/800/1000 K.  modelC vacancy $\\sigma$300 ~5x comp1 (robust).  "
-         "comp2 (isovalent Cl->Br) central 0.51x comp1 but error bar spans 0.14-1.8x = "
-         "INCONCLUSIVE (800 K seed scatter).\ncomp1 single-seed (soft); absolute $\\sigma$ INTERNAL only "
-         "(method validated: modelC 13.9 == DB).  Experimental Br gain needs anion-disorder sampling.",
+         "NE Haven=1, 2-50 ps, 600/800/1000 K.  comp1/modelC = canonical 3-seed (deck).  modelC vacancy "
+         "$\\sigma$300 ~4x comp1 (robust lever).\ncomp2 (isovalent Cl->Br, 3-seed) central 0.41x comp1 but "
+         "error bar spans 0.12-1.5x = INCONCLUSIVE (comp2 800 K seed scatter).  absolute $\\sigma$ INTERNAL "
+         "(validated: comp1 3.4 & modelC 14 == deck).  Experimental Br gain needs anion-disorder sampling.",
          ha="center", fontsize=7.1, color=MUT)
 
 OUTD = REPO / "docs/figures/comp2"; OUTD.mkdir(parents=True, exist_ok=True)

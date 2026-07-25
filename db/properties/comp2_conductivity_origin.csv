@@ -1,4 +1,4 @@
 system,sigma300K_mS_cm_NE_INTERNAL,sigma_err_lo,sigma_err_hi,Ea_eV,Ea_err_eV,n_Li_cm3,note
-comp1,2.737,,,0.239,,2.361e+22,single-seed
+comp1,3.355,,,0.253,,2.361e+22,single-seed
 comp2,1.389,0.392,4.931,0.280,0.033,2.313e+22,3-seed
-modelc,13.942,,,0.223,,2.220e+22,single-seed
+modelc,13.968,,,0.223,,2.220e+22,single-seed
