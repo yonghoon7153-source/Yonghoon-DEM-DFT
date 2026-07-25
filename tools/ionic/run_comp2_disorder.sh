@@ -37,9 +37,10 @@ PRODPS=${PRODPS:-200}
 DRIVER=$REPO/tools/modelc_v3/disorder_ensemble_diffusion.py
 test -f "$V0XYZ" || { echo "MISSING $V0XYZ -- git pull first"; exit 1; }
 
-# dup-run guard
-if pgrep -f "run_comp2_disorder|comp2_disorder" | grep -qv $$ 2>/dev/null; then
-  echo "[guard] comp2_disorder already running — abort"; exit 0
+# dup-run guard — check the actual python DRIVER (label comp2_disorder), NOT the
+# launching shell/tmux cmdline (which also contains the string "comp2_disorder").
+if pgrep -af 'disorder_ensemble_diffusion\.py' 2>/dev/null | grep -q 'comp2_disorder'; then
+  echo "[guard] comp2 disorder driver already computing — abort"; exit 0
 fi
 
 # GPU-share wait (skip with SKIP_WAIT=1 after nvidia-smi shows GPU free + only CPU pw.x)
