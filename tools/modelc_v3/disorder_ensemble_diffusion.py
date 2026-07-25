@@ -62,11 +62,14 @@ kB_eV = 8.617333262e-5  # eV/K
 
 # ----------------------------- disorder model -----------------------------
 def identify_free_anions(atoms, p_s_cut=2.6):
-    """Return (free_S_idx, cl_idx). free S = S with no P neighbor < p_s_cut."""
+    """Return (free_S_idx, hal_idx). free S = S with no P neighbor < p_s_cut.
+    hal_idx = ALL halides (Cl, Br, I) so mixed-halide argyrodites (e.g. comp2
+    Li6PS5Cl0.5Br0.5) disorder BOTH Cl<->S2- and Br<->S2-. Pure-Cl systems
+    (comp1/modelc) are unaffected (no Br/I present)."""
     syms = np.array(atoms.get_chemical_symbols())
     P_idx = np.where(syms == "P")[0]
     S_idx = np.where(syms == "S")[0]
-    Cl_idx = np.where(syms == "Cl")[0].tolist()
+    Cl_idx = np.where(np.isin(syms, ["Cl", "Br", "I"]))[0].tolist()
     if len(P_idx) == 0:
         return S_idx.tolist(), Cl_idx
     D = atoms.get_all_distances(mic=True)
