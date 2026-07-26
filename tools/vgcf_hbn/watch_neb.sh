@@ -12,23 +12,23 @@ sess=$(tmux ls 2>/dev/null | grep -oE 'vgcf(qe|2L|neb)' | tr '\n' ' ')
 echo "  세션: ${sess:-없음}"
 
 echo "── 케이스 요약 (Pass1 endpoint / Pass2 CI-NEB) ──"
-for c in Li_on_hbn Li_on_graphene Li_in_gallery Li_in_gallery_2L2L Li_in_gallery_gr2L Li_in_gallery_2L; do
+for c in Li_on_hbn Li_on_graphene Li_in_gallery Li_in_gallery_2L2L Li_in_gallery_gr2L Li_in_gallery_2L Li_on_graphene_2L; do
   bo=$N/${c}_nebB.out; no=$N/$c/neb.out
-  if [ ! -f "$bo" ]; then printf "  %-18s · endpoint-B 대기\n" "$c"; continue; fi
+  if [ ! -f "$bo" ]; then printf "  %-19s · endpoint-B 대기\n" "$c"; continue; fi
   if ! grep -aq "JOB DONE" "$bo" 2>/dev/null; then
     ni=$(grep -ac "Total force" "$bo"); tf=$(grep -a "Total force" "$bo" | tail -1 | awk '{print $4}')
-    printf "  %-18s ↻ endpoint relax (ion %s, |F|=%s)\n" "$c" "${ni:-0}" "${tf:-?}"; continue
+    printf "  %-19s ↻ endpoint relax (ion %s, |F|=%s)\n" "$c" "${ni:-0}" "${tf:-?}"; continue
   fi
-  if [ ! -f "$no" ]; then printf "  %-18s ✅endpoint → NEB 대기\n" "$c"; continue; fi
+  if [ ! -f "$no" ]; then printf "  %-19s ✅endpoint → NEB 대기\n" "$c"; continue; fi
   it=$(grep -ac "activation energy (->)" "$no")
   ef=$(grep -a "activation energy (->)" "$no" | tail -1 | awk '{print $(NF-1)}')
   eb=$(grep -a "activation energy (<-)" "$no" | tail -1 | awk '{print $(NF-1)}')
   if grep -aiq "convergence achieved" "$no"; then
-    printf "  %-18s ✅수렴  Ea→ %s / ← %s eV (iter %s)\n" "$c" "${ef:-?}" "${eb:-?}" "$it"
+    printf "  %-19s ✅수렴  Ea→ %s / ← %s eV (iter %s)\n" "$c" "${ef:-?}" "${eb:-?}" "$it"
   elif grep -aqE "Error in routine|MPI_ABORT|%%%%%%" "$no"; then
-    printf "  %-18s 💥 crash (tail 확인)\n" "$c"
+    printf "  %-19s 💥 crash (tail 확인)\n" "$c"
   else
-    printf "  %-18s ↻ NEB iter %s  Ea→~%s / ←~%s\n" "$c" "${it:-0}" "${ef:-?}" "${eb:-?}"
+    printf "  %-19s ↻ NEB iter %s  Ea→~%s / ←~%s\n" "$c" "${it:-0}" "${ef:-?}" "${eb:-?}"
   fi
 done
 

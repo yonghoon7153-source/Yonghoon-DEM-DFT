@@ -43,8 +43,15 @@ NEB = f"{WORK}/neb"
 #   Li_in_gallery_gr2L  2L|1L   E_bind -1.580 eV   <- VGCF side doubled
 #   Li_in_gallery_2L    1L|2L   E_bind -1.592 eV   <- h-BN side doubled
 #   Li_in_gallery_2L2L  2L|2L   E_bind -1.626 eV   Ea 147.3 meV  (done, representative)
+# Li_on_graphene_2L (65at) added 2026-07-27: the surface barrier is the reference
+# the gallery claim is measured against, so it has to be the SAME layer count as
+# the quoted gallery (2L). The binding matrix makes this the least safe case to
+# assume layer-insensitive — VGCF surface adsorption moves -152 meV from 1L to 2L,
+# 8-25x more than any gallery or h-BN entry.
+# Li_on_hbn_2L is deliberately NOT run: that barrier is already below resolution
+# (7 meV) and its E_bind layer effect is 9 meV, so there is nothing to learn.
 CASES = ["Li_on_hbn", "Li_on_graphene", "Li_in_gallery", "Li_in_gallery_2L2L",
-         "Li_in_gallery_gr2L", "Li_in_gallery_2L"]
+         "Li_in_gallery_gr2L", "Li_in_gallery_2L", "Li_on_graphene_2L"]
 HOP = 2.46  # A, one hollow-lattice vector (+x)
 
 

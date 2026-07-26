@@ -37,7 +37,7 @@ echo "pw.x=$PW"; echo "neb.x=$NEBX"
 
 # 2026-07-27: 혼합층 2개 추가 (gr2L = 2L|1L, 2L = 1L|2L) -> 2x2 barrier 행렬.
 # 이미 수렴한 4개는 "NEB done skip"으로 건너뛰므로 그대로 재실행하면 됨.
-CASES="Li_on_hbn Li_on_graphene Li_in_gallery Li_in_gallery_2L2L Li_in_gallery_gr2L Li_in_gallery_2L"
+CASES="Li_on_hbn Li_on_graphene Li_in_gallery Li_in_gallery_2L2L Li_in_gallery_gr2L Li_in_gallery_2L Li_on_graphene_2L"
 
 # ---- pass 1: endpoint-B 입력 생성 + relax (Li +2.46A, 기판 dimple 재형성) ----
 python3 "$REPO/tools/vgcf_hbn/neb_build_kgy.py"
