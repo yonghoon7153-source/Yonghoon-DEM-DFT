@@ -69,6 +69,17 @@ if [ -n "$ACT" ]; then
       echo "    (iter $it 완료 — 첫 iteration은 7 image 초기 SCF라 오래; 프로파일은 iter 1부터)"
     fi
     grep -aiE "image [0-9]|scf iteration|estimated scf|activation energy|tot_error|climbing image|reached" "$no" 2>/dev/null | tail -4 | sed 's/^/    /'
+    # ── 수렴 ETA: max force error → path_thr, iter당 감소율로 남은 iter 추정 ──
+    thr=$(grep -aiE 'path_thr' "$N/$ACT"/*.in 2>/dev/null | grep -aoE '[0-9.]+' | head -1); thr=${thr:-0.05}
+    errs=$(grep -aE '^ +[0-9]+ +-?[0-9]+\.[0-9]+ +[0-9]+\.[0-9]+ +[TF]' "$no" 2>/dev/null | awk '{print $3}' | \
+           awk '{a[NR]=$1} END{for(i=1;i<=NR;i+=7){m=0;for(j=i;j<i+7;j++)if(a[j]>m)m=a[j];print m}}')
+    en=$(echo "$errs" | tail -1); ep=$(echo "$errs" | tail -2 | head -1)
+    if [ -n "$en" ]; then
+      left=$(awk -v n="$en" -v p="$ep" -v t="$thr" 'BEGIN{
+        if(n+0<=t+0){print "0 (수렴권)"; exit}
+        if(p!="" && p+0>n+0 && n+0>0){r=n/p; L=log(t/n)/log(r); printf "%.0f", (L<0?0:L)} else print "?(추이부족)"}')
+      echo "    ⏱ 수렴 ETA: max|F|=${en} → 목표 ${thr} (직전 ${ep:-–}) · 대략 ${left} iter 남음"
+    fi
   fi
 fi
 echo "  기준: hBN 표면 Shi2017=0.10 / graphene 문헌~0.3 / gallery=신규(핵심값). 수렴 전 Ea는 추정치."
