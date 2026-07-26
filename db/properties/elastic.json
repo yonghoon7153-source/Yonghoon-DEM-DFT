@@ -446,6 +446,40 @@
     "sanity_vs_b2o3_failure": "PASSES all three checks that b2o3 failed: eigenvalues all >0 (b2o3 had -2.87); shear-column forbidden couplings max 3.55 GPa (b2o3 ~30); C44/55/66 = 21.4/18.6/7.15 coherent (C66 soft but physical, min eigenvalue 6.96>0). K_R/K_V tight (27.79/27.86); G_R/G_V 12.32/14.83 = moderate anisotropy.",
     "vs_family": "comp1 E_VRH 22.06 / modelc 27.66 / lpsocl 35.04 GPa; modelc K~23.5 -> lpsocl K 27.8. Direction (O stiffens, P-O -8.41 top bond) consistent, but SINGLE disorder configuration - family cell-to-cell scatter is ~15-25%, so quote as 'O-doped cell is the stiffest of the three' rather than a precise +27%.",
     "raw": "gabia:/data/work/runs/lpsocl_dft/{elastic/, elastic_fit.txt}"
+   },
+   {
+    "id": "comp2_v3",
+    "composition": "Li6PS5Cl0.5Br0.5 (mixed halide, Li6 no-vacancy, ordered v3 champion)",
+    "lineage": "comp2 v3 champion -> USPP V0 relax -> 12 strain relax SCFs (+-0.005, relaxed-ion, k444). strain_11_p resumed via geometry-carry (verified-carry: last ATOMIC_POSITIONS splice) after a conda(uma)-env libgomp crash; env -i clean shell fixed it.",
+    "setup": "USPP li/s/cl/br v1.4.uspp + P.pbe-n-rrkjus, ecut 52/520, k 4x4x4, cubic-52 — IDENTICAL to comp1_v3 => LPSCl vs LPSClBr LEGITIMATE pair.",
+    "C11_avg": 34.6,
+    "C11_std": 4.19,
+    "C11_C22_C33_individual": [28.7, 37.1, 38.0],
+    "C12_avg": 14.58,
+    "C12_std": 2.58,
+    "C12_C13_C23_individual": [13.65, 12.0, 18.1],
+    "C44_avg": 6.23,
+    "C44_std": 0.83,
+    "C44_C55_C66_individual": [7.4, 5.7, 5.6],
+    "B_VRH": 20.87,
+    "G_VRH": 7.47,
+    "E_VRH": 20.03,
+    "nu": 0.3401,
+    "Zener_A": 0.983,
+    "eigenvalues_GPa": [5.59, 5.71, 7.36, 18.28, 20.78, 64.78],
+    "mechanically_stable": true,
+    "strain_step": 0.005,
+    "n_scfs": 12,
+    "completed_date": "2026-07-26",
+    "data_path": "gabia:/data/work/runs/comp2_elastic_uspp/elastic_results_stress.json",
+    "vs_comp1_v3_same_USPP_k444": {
+     "E_VRH_pct": "-9.2% (22.06 -> 20.03): comp2 SOFTER than comp1",
+     "B_VRH_pct": "-18.2% (25.51 -> 20.87): Br softens bulk most (larger anion => more compressible)",
+     "G_VRH_pct": "-8.1% (8.13 -> 7.47): softer shear",
+     "headline": "Br isovalent Cl->Br SOFTENS the lattice: comp2 E_VRH 20.03 < comp1 22.06 < modelc 27.66. Consistent with Li-Br longer (+0.15 A) + weaker Li-Br ICOHP (-1.934 < -2.111). Length + bond-strength + elastic-modulus all agree."
+    },
+    "supersedes_PAW_k222_29.75": "PAW comp2 (comp2_elastic_dft, E_VRH 29.75, k222/ecut60/kjpaw) RETRACTED — coarse k222 + different pseudo made comp2 spuriously the STIFFEST (physically impossible for a Cl+Br mixed halide vs pure-Cl comp1). USPP k444 (comp1-identical setup) resolves it: comp2 is the SOFTEST, exactly as Br size/bond physics demands.",
+    "note": "ORDERED v3 champion, single config (no anion site disorder). C11 (28.7) < C22/C33 (37-38) reflects Cl/Br disorder anisotropy but Zener A 0.98 near-isotropic, all eigenvalues >0. Pugh B/G 2.79 (ductile)."
    }
   ]
  },

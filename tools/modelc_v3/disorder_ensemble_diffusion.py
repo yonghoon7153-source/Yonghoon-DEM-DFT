@@ -125,6 +125,17 @@ def li_diffusion_from_frames(frames, save_fs, fit_window_ps):
 def run_md(atoms, calc, T, equilib_ps, prod_ps, dt_fs, friction, save_fs,
            out_dir, fit_window_ps, seed, save_traj=False):
     out_dir.mkdir(parents=True, exist_ok=True)
+    # resume-safe: 완료된 (config,T)는 msd.json 있으면 재계산 없이 그대로 사용
+    mj = out_dir / "msd.json"
+    if mj.exists():
+        try:
+            d = json.loads(mj.read_text())
+            if d.get("D_Li_cm2_s") is not None:
+                print(f"    [resume] {out_dir.name} msd.json 있음 -> skip "
+                      f"(D={d['D_Li_cm2_s']:.3e})")
+                return float(d["D_Li_cm2_s"])
+        except Exception:
+            pass
     atoms = atoms.copy()
     atoms.calc = calc
     rng_seed = seed
