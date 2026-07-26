@@ -46,6 +46,14 @@
 - σ_e_rel 재실런(--poly-mode expand-void) · A8 NCA σ_e 재보정 · A14 SWCNT 검증런
 - 오픈소스 사이클데이터 실다운로드+변환 · EIS .mpr galvani 파싱 · A12 점탄성 binder(spring-back, 최대 gap)
 - multi-seed sim outlier 해소 · resolved-grain MPM(가) GitHub 푸시
+- ★ STEP4 저율(0.2C) near-null → **GPU-AMG 배선 (AMGX/pyamgx)** [2026-07-26 발견·deferred]:
+  0.2C는 e-ion BV 약결합으로 선형계 near-null(λ~1e-11) → 이 코드 GPU 경로엔 Jacobi-CG만 있어
+  발산(info=20000) → CPU AMG 강제 폴백.  CPU near-null-B AMG는 **수렴은 함**(hard-fail 아님)
+  but 11s/CG-iter·46min/solve·3h/step → 4.4M-dof 완주 ~143일(비현실).  실측: run_VGCF1_PTFE1
+  0.2C 충전이 3일에 창 2.1%(step19, t=372s).  **고율(1C/2C)은 무영향**(near-null 없음, GPU Jacobi-CG
+  OK — 2C는 완주 실적).  대안: ⓐ 고율만 사용 ⓑ 0.2C면 그리드 coarsen(dof↓→CPU 수시간) ⓒ GPU-AMG
+  도입(AMGX/pyamgx, near-null deflation을 GPU서 = 근본해결, 반나절 코드).  ★사용자 우선순위: 지금은
+  2C만, ⓒ 개발은 나중(V100 요금 이슈).  step4_dyn.py `_solve_cg` GPU 분기가 Jacobi 고정인 게 근인.
 
 ## C) 실험·문헌 앵커 대기 (§F1 날조금지 — 훅만)
 - Joule ΔT(Ayyaswamy) · 코팅 √N-shape+배수(LNO/LZO만 실효) · SDCP E_bind DFT(gabia, A4′ 유일잔여)
