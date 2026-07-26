@@ -70,7 +70,7 @@ if [ -n "$ACT" ]; then
     fi
     grep -aiE "image [0-9]|scf iteration|estimated scf|activation energy|tot_error|climbing image|reached" "$no" 2>/dev/null | tail -4 | sed 's/^/    /'
     # ── 수렴 ETA: max force error → path_thr, iter당 감소율로 남은 iter 추정 ──
-    thr=$(grep -aiE 'path_thr' "$N/$ACT"/*.in 2>/dev/null | grep -aoE '[0-9.]+' | head -1); thr=${thr:-0.05}
+    thr=$(grep -aiE 'path_thr' "$N/$ACT"/neb.in 2>/dev/null | head -1 | sed -E 's/.*=[[:space:]]*//; s/[^0-9.].*//'); thr=${thr:-0.05}
     errs=$(grep -aE '^ +[0-9]+ +-?[0-9]+\.[0-9]+ +[0-9]+\.[0-9]+ +[TF]' "$no" 2>/dev/null | awk '{print $3}' | \
            awk '{a[NR]=$1} END{for(i=1;i<=NR;i+=7){m=0;for(j=i;j<i+7;j++)if(a[j]>m)m=a[j];print m}}')
     en=$(echo "$errs" | tail -1); ep=$(echo "$errs" | tail -2 | head -1)
