@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 """neb_build_kgy.py — CI-NEB inputs for Li hollow->hollow hops (run ON kgy).
 
+!! 2026-07-27 — THE PREMISE BELOW IS FALSIFIED. The 2L2L spot check came back at
+!! 147.3 meV vs 356.7 meV for 1L1L: layer effects do NOT cancel in the barrier,
+!! they move it by 209 meV (4x the 52 meV E_bind spread), and they flip the
+!! gallery from slower to faster than graphene-surface diffusion. Gallery width
+!! is ruled out (identical to 0.015 A) — see db/properties/vgcf_hbn_neb.json.
+!! Quote 2L2L; do not build new 1L NEBs on this justification.
+
 Cases (1L models — the 2x2 matrix proved layer effects <20 meV on E_bind, and a
 barrier is a site-energy DIFFERENCE on the same host so layer effects cancel
 further; graphene-surface 1L is also the literature-standard model):

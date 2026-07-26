@@ -39,10 +39,10 @@
   "gallery_hBN_2L-1L": -0.018,
   "gallery_VGCF_2L-1L": -0.006,
   "gallery_2L2L-1L1L": -0.052,
-  "note": "gallery 4칸 스프레드 52 meV (-1.574~-1.626): 단조 심화, 협동항 ~28 meV. 표면 VGCF만 층수 민감(-151 meV)."
+  "note": "gallery 4칸 스프레드 52 meV (-1.574~-1.626): 단조 심화, 협동항 ~28 meV. 표면 VGCF만 층수 민감(-151 meV). [2026-07-27] 이 52 meV 둔감성은 E_bind에만 해당 — barrier는 209 meV 민감(vgcf_hbn_neb.json)."
  },
  "shi_eq5": "gallery < min(VGCF, hBN) all combos — sandwich strongest, VGCF plays the Cu role",
- "headline": "gallery = 최안정이면서 전부 lithiophobic(+0.10~+0.15 eV): VGCF는 Cu의 구조 역할(샌드위치 안정화)을 과도한 lithiophilic 앵커링 없이 수행. 층수 수렴 입증(gallery<=52 meV) — 1L 모델로 NEB 정당.",
+ "headline": "gallery = 최안정이면서 전부 lithiophobic(+0.10~+0.15 eV): VGCF는 Cu의 구조 역할(샌드위치 안정화)을 과도한 lithiophilic 앵커링 없이 수행. 층수 수렴 입증(gallery<=52 meV). [2026-07-27 정정] 뒤의 '1L 모델로 NEB 정당' 절은 철회 — CI-NEB 결과 barrier는 1L1L 356.7 -> 2L2L 147.3 meV로 209 meV 움직였다(E_bind 스프레드의 4배). E_bind의 층수 둔감성은 barrier로 이전되지 않는다. vgcf_hbn_neb.json 참조.",
  "representative_for_paper": {
   "gallery": "gallery_2L2L",
   "E_bind_eV": -1.626,
