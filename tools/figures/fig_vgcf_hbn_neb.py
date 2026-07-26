@@ -23,9 +23,11 @@ db/properties/vgcf_hbn_binding_matrix.json ("headline") no longer holds.
 2L2L is quoted as the representative value, matching that file's
 representative_for_paper = gallery_2L2L (E_bind -1.626 eV).
 
-Outputs: docs/figures/vgcf_hbn/vgcf_hbn_neb.png
-         db/properties/vgcf_hbn_neb_origin.csv         (interpolated MEP, wide)
-         db/properties/vgcf_hbn_neb_images_origin.csv  (7 image points per case)
+Outputs: docs/figures/vgcf_hbn/vgcf_hbn_neb.png            (all 4 cases)
+         db/properties/vgcf_hbn_neb_origin.csv         (interpolated MEP)
+         db/properties/vgcf_hbn_neb_images_origin.csv  (7 image points)
+The two CSVs carry only Li_on_graphene (reference) and Li_in_gallery_2L2L
+(representative) — the pair the paper claim rests on.
 """
 import sys
 from pathlib import Path
@@ -194,20 +196,24 @@ fig.savefig(OUT / "vgcf_hbn_neb.png", dpi=300, bbox_inches="tight", facecolor="w
 print(f"[fig] {OUT / 'vgcf_hbn_neb.png'}")
 
 # ================= Origin-ready CSVs =================
+# Only the two cases that carry the paper claim: graphene surface (reference) and
+# the representative 2L|2L gallery. The 1L cases stay in vgcf_hbn_neb.json / this
+# script; they are shown in the figure but are not meant for re-plotting.
 PROP = REPO / "db/properties"
-cols = ["Li_on_hBN_1L", "Li_on_graphene_1L", "Li_in_gallery_1L1L", "Li_in_gallery_2L2L"]
+CSV_CASES = ["graphene", "g2L2L"]
+CSV_COLS = {"graphene": "Li_on_graphene_1L", "g2L2L": "Li_in_gallery_2L2L"}
 with open(PROP / "vgcf_hbn_neb_origin.csv", "w") as f:
     f.write("# h-BN@VGCF Li migration MEP - QE neb.x cubic interpolation, 7-image CI-NEB, "
             "hollow->hollow 2.46 A. Energies in meV relative to the first image.\n")
-    f.write("reaction_coordinate," + ",".join(f"E_meV_{c}" for c in cols) + "\n")
+    f.write("reaction_coordinate," + ",".join(f"E_meV_{CSV_COLS[k]}" for k in CSV_CASES) + "\n")
     for j, x in enumerate(XI):
-        f.write(f"{x:.2f}," + ",".join(f"{INT[k][j]*1000:.4f}" for k in ORDER) + "\n")
+        f.write(f"{x:.2f}," + ",".join(f"{INT[k][j]*1000:.4f}" for k in CSV_CASES) + "\n")
 print(f"[csv] {PROP / 'vgcf_hbn_neb_origin.csv'}")
 
 with open(PROP / "vgcf_hbn_neb_images_origin.csv", "w") as f:
     f.write("# h-BN@VGCF Li migration - the 7 CI-NEB image points per case (neb.x .dat). "
             "Energies in meV relative to the first image.\n")
-    f.write(",".join(f"xi_{c},E_meV_{c}" for c in cols) + "\n")
+    f.write(",".join(f"xi_{CSV_COLS[k]},E_meV_{CSV_COLS[k]}" for k in CSV_CASES) + "\n")
     for i in range(7):
-        f.write(",".join(f"{DAT[k][i][0]:.6f},{DAT[k][i][1]*1000:.4f}" for k in ORDER) + "\n")
+        f.write(",".join(f"{DAT[k][i][0]:.6f},{DAT[k][i][1]*1000:.4f}" for k in CSV_CASES) + "\n")
 print(f"[csv] {PROP / 'vgcf_hbn_neb_images_origin.csv'}")
