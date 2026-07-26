@@ -3,6 +3,9 @@
 
   python3 make_path_viz.py --min <case>_min.vasp --ts <case>_ts.xyz --out <case>_pathviz
 
+Reaction coordinates and the saddle image index come from the case preset / the
+"image N/M" stamp in the TS xyz, so the same command works for every case.
+
 ILLUSTRATION ONLY — do not feed this to any calculation. Only three Li positions
 in it are DFT: endpoint A (from the relaxed minimum), the CI-NEB saddle (from the
 TS frame), and endpoint B (= A + one hollow-lattice vector, degenerate with A by
@@ -21,11 +24,16 @@ Outputs an xyz + POSCAR(.vasp) pair per house convention (xyz carries no lattice
 so Boundary tiling has to be done from the .vasp).
 """
 import argparse
+import re
 
-# reaction coordinates of the 7 NEB images (neb.x .dat) — 2L2L gallery run
-XI_2L2L = [0.0, 0.1895986772, 0.3446900038, 0.4885989580,
-           0.6335860707, 0.7984897818, 1.0]
-XI_TS_INDEX = 4          # image 5/7 carries the barrier top
+# reaction coordinates of the 7 NEB images, per case (neb.x <prefix>.dat col 1).
+# Defaults so the common cases need no --xi; anything else passes its own list.
+XI = {
+    "Li_in_gallery_2L2L": [0.0, 0.1895986772, 0.3446900038, 0.4885989580,
+                           0.6335860707, 0.7984897818, 1.0],
+    "Li_on_graphene": [0.0, 0.1946143614, 0.3553932821, 0.4998587133,
+                       0.6445009937, 0.8053800471, 1.0],
+}
 
 
 def read_poscar(path):
@@ -46,6 +54,12 @@ def read_xyz_last(path):
     L = open(path).read().splitlines()
     s = L[2 + int(L[0].strip()) - 1].split()
     return (s[0], float(s[1]), float(s[2]), float(s[3]))
+
+
+def ts_index_from_comment(path):
+    """mk_vesta stamps 'CI-NEB saddle, image N/M' — N-1 is the 0-based TS index."""
+    m = re.search(r"image\s+(\d+)\s*/\s*(\d+)", open(path).read().splitlines()[1])
+    return (int(m.group(1)) - 1, int(m.group(2))) if m else (None, None)
 
 
 def quad(p0, pt, p1, xt):
@@ -91,6 +105,10 @@ def main():
     ap.add_argument("--ts", required=True, help="CI-NEB saddle xyz")
     ap.add_argument("--out", required=True, help="output basename")
     ap.add_argument("--hop", type=float, default=2.46, help="hop along +x (A)")
+    ap.add_argument("--case", default="",
+                    help="reaction-coordinate preset key (default: guess from --ts name)")
+    ap.add_argument("--xi", default="",
+                    help="comma-separated NEB reaction coordinates (overrides --case)")
     ap.add_argument("--dense", type=int, default=0,
                     help="if >0, draw this many evenly spaced trail markers instead "
                          "of the 7 NEB image positions")
@@ -103,14 +121,29 @@ def main():
     B = (ax + a.hop, ay, az)
     _, tx, ty, tz = read_xyz_last(a.ts)
     TS = (tx, ty, tz)
-    xt = XI_2L2L[XI_TS_INDEX]
+
+    ts_i, n_img = ts_index_from_comment(a.ts)
+    if a.xi:
+        xis_all = [float(v) for v in a.xi.split(",")]
+    else:
+        key = a.case or next((k for k in XI if k in a.ts), "")
+        if key in XI:
+            xis_all = XI[key]
+        else:
+            n = n_img or 7
+            xis_all = [i / (n - 1) for i in range(n)]
+            print(f"      (반응좌표 프리셋 없음 — {n}점 등간격으로 대체)")
+    if ts_i is None:
+        ts_i = min(range(len(xis_all)), key=lambda i: abs(xis_all[i] - 0.5))
+    assert len(xis_all) == (n_img or len(xis_all)), "이미지 수와 반응좌표 개수 불일치"
+    xt = xis_all[ts_i]
     f = quad(A, TS, B, xt)
 
     if a.dense:
         xis = [i / (a.dense + 1) for i in range(1, a.dense + 1)]
     else:
-        xis = [x for i, x in enumerate(XI_2L2L)
-               if i not in (0, XI_TS_INDEX, len(XI_2L2L) - 1)]
+        xis = [x for i, x in enumerate(xis_all)
+               if i not in (0, ts_i, len(xis_all) - 1)]
 
     out = list(host)
     out.append(("Li", *A))
