@@ -1,0 +1,4 @@
+# h-BN@VGCF Li migration - CI-NEB activation barriers (panel b). Forward = TS - first image, backward = TS - last image. meV. kT(300 K) = 25.69 meV.
+case,Ea_forward_meV,Ea_backward_meV,literature_meV
+Li_on_graphene_1L,272.95,272.02,300
+Li_in_gallery_2L2L,147.31,145.78,

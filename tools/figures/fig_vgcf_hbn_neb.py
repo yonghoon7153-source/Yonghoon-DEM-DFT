@@ -26,6 +26,7 @@ representative_for_paper = gallery_2L2L (E_bind -1.626 eV).
 Outputs: docs/figures/vgcf_hbn/vgcf_hbn_neb.png            (all 4 cases)
          db/properties/vgcf_hbn_neb_origin.csv         (interpolated MEP)
          db/properties/vgcf_hbn_neb_images_origin.csv  (7 image points)
+         db/properties/vgcf_hbn_neb_barriers_origin.csv (panel b forward/backward)
 The two CSVs carry only Li_on_graphene (reference) and Li_in_gallery_2L2L
 (representative) — the pair the paper claim rests on.
 """
@@ -217,3 +218,16 @@ with open(PROP / "vgcf_hbn_neb_images_origin.csv", "w") as f:
     for i in range(7):
         f.write(",".join(f"{DAT[k][i][0]:.6f},{DAT[k][i][1]*1000:.4f}" for k in CSV_CASES) + "\n")
 print(f"[csv] {PROP / 'vgcf_hbn_neb_images_origin.csv'}")
+
+# panel (b) source: forward / backward activation barriers
+LIT_MEV = {"graphene": 300.0, "g2L2L": None}   # gallery barrier is a new number
+with open(PROP / "vgcf_hbn_neb_barriers_origin.csv", "w") as f:
+    f.write("# h-BN@VGCF Li migration - CI-NEB activation barriers (panel b). "
+            "Forward = TS - first image, backward = TS - last image. meV. "
+            "kT(300 K) = 25.69 meV.\n")
+    f.write("case,Ea_forward_meV,Ea_backward_meV,literature_meV\n")
+    for k in CSV_CASES:
+        lit = LIT_MEV[k]
+        f.write(f"{CSV_COLS[k]},{EA[k][0]*1000:.2f},{EA[k][1]*1000:.2f},"
+                f"{'' if lit is None else f'{lit:.0f}'}\n")
+print(f"[csv] {PROP / 'vgcf_hbn_neb_barriers_origin.csv'}")
