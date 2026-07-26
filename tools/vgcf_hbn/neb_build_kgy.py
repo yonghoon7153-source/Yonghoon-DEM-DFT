@@ -7,14 +7,21 @@
 !! gallery from slower to faster than graphene-surface diffusion. Gallery width
 !! is ruled out (identical to 0.015 A) — see db/properties/vgcf_hbn_neb.json.
 !! Quote 2L2L; do not build new 1L NEBs on this justification.
+!! Follow-up (2026-07-27): the two mixed-layer galleries (2L|1L, 1L|2L) were added
+!! to CASES so the 2x2 binding matrix gets a matching 2x2 BARRIER matrix — it
+!! decomposes whether the VGCF side or the h-BN side carries the shift, and shows
+!! whether the trend saturates at 2L.
 
 Cases (1L models — the 2x2 matrix proved layer effects <20 meV on E_bind, and a
 barrier is a site-energy DIFFERENCE on the same host so layer effects cancel
 further; graphene-surface 1L is also the literature-standard model):
   Li_on_hbn       surface diffusion on the h-BN coating   (Shi 2017 ref: 0.10 eV)
   Li_on_graphene  surface diffusion on bare VGCF          (lit baseline ~0.3 eV)
-  Li_in_gallery   in-gallery diffusion hBN|Li|VGCF        (THE new number)
+  Li_in_gallery   in-gallery diffusion hBN|Li|VGCF        (1L|1L, 356.7 meV)
   Li_in_gallery_2L2L  스팟체크(마지막): 최심 우물(-1.626)에서 barrier 층수-무의존 도장 (129at, heavy)
+                      -> 도장이 아니라 반증으로 나옴: 147.3 meV. 이게 대표값.
+  Li_in_gallery_gr2L  2L|1L, 97at — 209 meV 중 VGCF 쪽 몫 (2026-07-27 추가)
+  Li_in_gallery_2L    1L|2L, 97at — 209 meV 중 h-BN 쪽 몫 (2026-07-27 추가)
 
 Path = one hop between adjacent hollows (+a1 = +2.46 A, x). TS (bridge/atop —
 and in the gallery, whatever the cap registry makes of it) is found by CI-NEB,
@@ -29,7 +36,15 @@ import re
 
 WORK = os.environ.get("WORK", os.path.expanduser("~/work/vgcf_hbn"))
 NEB = f"{WORK}/neb"
-CASES = ["Li_on_hbn", "Li_on_graphene", "Li_in_gallery", "Li_in_gallery_2L2L"]
+# Gallery layer matrix — slab file name -> matrix label (VGCF|h-BN layer count).
+# The two mixed cases were added 2026-07-27 to decompose the -209 meV layer shift;
+# their slabs and E_bind already exist from the 2x2 binding matrix.
+#   Li_in_gallery       1L|1L   E_bind -1.574 eV   Ea 356.7 meV  (done)
+#   Li_in_gallery_gr2L  2L|1L   E_bind -1.580 eV   <- VGCF side doubled
+#   Li_in_gallery_2L    1L|2L   E_bind -1.592 eV   <- h-BN side doubled
+#   Li_in_gallery_2L2L  2L|2L   E_bind -1.626 eV   Ea 147.3 meV  (done, representative)
+CASES = ["Li_on_hbn", "Li_on_graphene", "Li_in_gallery", "Li_in_gallery_2L2L",
+         "Li_in_gallery_gr2L", "Li_in_gallery_2L"]
 HOP = 2.46  # A, one hollow-lattice vector (+x)
 
 

@@ -12,7 +12,7 @@ sess=$(tmux ls 2>/dev/null | grep -oE 'vgcf(qe|2L|neb)' | tr '\n' ' ')
 echo "  세션: ${sess:-없음}"
 
 echo "── 케이스 요약 (Pass1 endpoint / Pass2 CI-NEB) ──"
-for c in Li_on_hbn Li_on_graphene Li_in_gallery Li_in_gallery_2L2L; do
+for c in Li_on_hbn Li_on_graphene Li_in_gallery Li_in_gallery_2L2L Li_in_gallery_gr2L Li_in_gallery_2L; do
   bo=$N/${c}_nebB.out; no=$N/$c/neb.out
   if [ ! -f "$bo" ]; then printf "  %-18s · endpoint-B 대기\n" "$c"; continue; fi
   if ! grep -aq "JOB DONE" "$bo" 2>/dev/null; then
@@ -82,4 +82,5 @@ if [ -n "$ACT" ]; then
     fi
   fi
 fi
-echo "  기준: hBN 표면 Shi2017=0.10 / graphene 문헌~0.3 / gallery=신규(핵심값). 수렴 전 Ea는 추정치."
+echo "  기준: hBN 표면 Shi2017=0.10 / graphene 문헌~0.3 / gallery 2L2L=0.1473(대표값). 수렴 전 Ea는 추정치."
+echo "  2x2 gallery 행렬: 1L1L 0.3567 · 2L2L 0.1473 완료 / gr2L(2L|1L) · 2L(1L|2L) 진행 — 209 meV 층수효과 분해용."

@@ -35,7 +35,9 @@ export PATH="$(dirname "$PW"):$HPCX/bin:$PATH"
 MPIRUN="$HPCX/bin/mpirun"
 echo "pw.x=$PW"; echo "neb.x=$NEBX"
 
-CASES="Li_on_hbn Li_on_graphene Li_in_gallery Li_in_gallery_2L2L"
+# 2026-07-27: 혼합층 2개 추가 (gr2L = 2L|1L, 2L = 1L|2L) -> 2x2 barrier 행렬.
+# 이미 수렴한 4개는 "NEB done skip"으로 건너뛰므로 그대로 재실행하면 됨.
+CASES="Li_on_hbn Li_on_graphene Li_in_gallery Li_in_gallery_2L2L Li_in_gallery_gr2L Li_in_gallery_2L"
 
 # ---- pass 1: endpoint-B 입력 생성 + relax (Li +2.46A, 기판 dimple 재형성) ----
 python3 "$REPO/tools/vgcf_hbn/neb_build_kgy.py"
@@ -69,4 +71,5 @@ for c in $CASES; do
   echo "  $c : ${ea:-대기} eV"
 done
 echo ">> 기준: h-BN 표면 Shi2017 0.10 eV / graphene 문헌 ~0.3 eV / gallery=신규(핵심값)."
-echo ">> 붙여주면 db 등록 + 균일분산 판정."
+echo ">> 2x2 gallery 행렬: 1L1L 0.3567 / 2L2L 0.1473 (완료) + gr2L(2L|1L) / 2L(1L|2L) (신규)."
+echo ">> 붙여주면 db 등록 + 층수 분해 판정."
