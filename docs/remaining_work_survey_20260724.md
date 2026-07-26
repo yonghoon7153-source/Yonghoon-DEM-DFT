@@ -46,14 +46,18 @@
 - σ_e_rel 재실런(--poly-mode expand-void) · A8 NCA σ_e 재보정 · A14 SWCNT 검증런
 - 오픈소스 사이클데이터 실다운로드+변환 · EIS .mpr galvani 파싱 · A12 점탄성 binder(spring-back, 최대 gap)
 - multi-seed sim outlier 해소 · resolved-grain MPM(가) GitHub 푸시
-- ★ STEP4 저율(0.2C) near-null → **GPU-AMG 배선 (AMGX/pyamgx)** [2026-07-26 발견·deferred]:
-  0.2C는 e-ion BV 약결합으로 선형계 near-null(λ~1e-11) → 이 코드 GPU 경로엔 Jacobi-CG만 있어
-  발산(info=20000) → CPU AMG 강제 폴백.  CPU near-null-B AMG는 **수렴은 함**(hard-fail 아님)
-  but 11s/CG-iter·46min/solve·3h/step → 4.4M-dof 완주 ~143일(비현실).  실측: run_VGCF1_PTFE1
-  0.2C 충전이 3일에 창 2.1%(step19, t=372s).  **고율(1C/2C)은 무영향**(near-null 없음, GPU Jacobi-CG
-  OK — 2C는 완주 실적).  대안: ⓐ 고율만 사용 ⓑ 0.2C면 그리드 coarsen(dof↓→CPU 수시간) ⓒ GPU-AMG
-  도입(AMGX/pyamgx, near-null deflation을 GPU서 = 근본해결, 반나절 코드).  ★사용자 우선순위: 지금은
-  2C만, ⓒ 개발은 나중(V100 요금 이슈).  step4_dyn.py `_solve_cg` GPU 분기가 Jacobi 고정인 게 근인.
+- ★ STEP4 near-null solve — 후막·첨가제 격자 [2026-07-26 진단; OOM은 commit 6394a01로 해결]:
+  VGCF/PTFE 첨가 후막(4.44M dof, 119µm)은 e-ion BV 약결합 + σ_e 10⁴×대비(VGCF100/AM_S0.01)로
+  선형계가 **율 무관 구조적 near-null**(λ~1e-11).  ⚠정정: 어제 "고율 무영향"은 **틀림** — 2C도
+  near-null(GPU Jacobi-CG 발산 info=20000 → CPU 폴백).  **① OOM crash [해결됨, 6394a01]**: rtol=1e-9
+  목표 도달불가 → 자기-바닥(rel~7e-9)이 매 솔브 near-null-B AMG 발동 → 대-coarse 빌드 OOM(Killed).
+  게이트에 물리-충분 잔차바닥(_NN_ACCEPT_RTOL=1e-7, 노이즈바닥 1e-5의 100×아래) 추가 → 물리-정확 솔브
+  통과.  게이트 단위테스트 + selftest PASS, **V100 2C 재실행 1회로 최종확인 대기**.  **② SPEED [남음·deferred]**:
+  fix 후 2C는 CPU AMG로 완주(~시간대, OOM 아님)하나 GPU Jacobi-CG는 near-null 못 풀어 여전히 CPU.
+  진짜 빠르게 = ⓐ GPU-AMG(AMGX/pyamgx, near-null deflation GPU서) or ⓑ near-null-B AMG 메모리 절감
+  (coarse 레벨↓) or ⓒ 0.2C 등 극저율은 그리드 coarsen.  0.2C 크롤(11s/iter·3h/step·완주~143일)도
+  ①로 near-null-B AMG 미발동되면 CPU AMG 자기-바닥 수용으로 개선 예상(검증 필요).  ★사용자 우선순위:
+  지금 2C만, GPU-AMG 개발은 나중(V100 요금).  step4_dyn.py GPU 분기가 Jacobi 고정인 게 speed 근인.
 
 ## C) 실험·문헌 앵커 대기 (§F1 날조금지 — 훅만)
 - Joule ΔT(Ayyaswamy) · 코팅 √N-shape+배수(LNO/LZO만 실효) · SDCP E_bind DFT(gabia, A4′ 유일잔여)
