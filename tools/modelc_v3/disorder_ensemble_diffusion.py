@@ -56,6 +56,7 @@ from ase import units
 from ase.io import read, write
 from ase.md.langevin import Langevin
 from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
+from ase.optimize import FIRE
 
 kB_eV = 8.617333262e-5  # eV/K
 
@@ -122,6 +123,30 @@ def li_diffusion_from_frames(frames, save_fs, fit_window_ps):
     return float(D), t_ps.tolist(), msd.tolist()
 
 
+def anneal_relax_config(atoms, calc, anneal_T, anneal_ps, dt_fs, friction, fmax, seed):
+    """Prepare a disordered (label-swapped) config for MD: ANNEAL the Li sublattice at
+    anneal_T so Li redistributes around the new anion arrangement, keep the lowest-E
+    snapshot, then RELAX (FIRE) to a real local minimum. Without this, a Br/Cl label
+    forced onto a small S2- site stays metastable -> unphysical over-diffusion in MD
+    (sigma_300K blew up to ~70 mS/cm, 2026-07-27). Returns (relaxed_atoms, E0, E_relaxed).
+    Anions are heavy -> stay put; only Li hops + local anion settling occur."""
+    a = atoms.copy(); a.calc = calc
+    E0 = float(a.get_potential_energy())
+    MaxwellBoltzmannDistribution(a, temperature_K=anneal_T, rng=np.random.default_rng(seed))
+    md = Langevin(a, dt_fs * units.fs, temperature_K=anneal_T, friction=friction, logfile=None)
+    best = {"E": E0, "at": a.copy()}
+
+    def _track(a=a, best=best):
+        e = float(a.get_potential_energy())
+        if e < best["E"]:
+            best["E"] = e; best["at"] = a.copy()
+    md.attach(_track, interval=max(1, int(50.0 / dt_fs)))   # sample ~every 50 fs
+    md.run(int(anneal_ps * 1000 / dt_fs))
+    r = best["at"]; r.calc = calc
+    FIRE(r, logfile=None).run(fmax=fmax, steps=400)
+    return r, E0, float(r.get_potential_energy())
+
+
 def run_md(atoms, calc, T, equilib_ps, prod_ps, dt_fs, friction, save_fs,
            out_dir, fit_window_ps, seed, save_traj=False):
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -186,6 +211,16 @@ def main():
                     help="anti-site fractions to test (0.0 = ordered baseline)")
     ap.add_argument("--n_configs", type=int, default=3,
                     help="replicas per disorder level (d=0 forced to 1)")
+    ap.add_argument("--relax_configs", action="store_true",
+                    help="anneal Li + relax each swapped config to a real minimum before "
+                         "MD (prevents metastable label-swap over-diffusion). STRONGLY "
+                         "recommended for mixed-halide (Br on S2- site).")
+    ap.add_argument("--anneal_T", type=float, default=700.0,
+                    help="Li-anneal temperature (K) for --relax_configs")
+    ap.add_argument("--anneal_ps", type=float, default=20.0,
+                    help="Li-anneal duration (ps) for --relax_configs")
+    ap.add_argument("--relax_fmax", type=float, default=0.03,
+                    help="FIRE force threshold (eV/A) for post-anneal relax")
     ap.add_argument("--temperatures", type=float, nargs="+",
                     default=[600, 800, 1000])
     ap.add_argument("--equilib_ps", type=float, default=5.0)
@@ -234,6 +269,21 @@ def main():
             atoms_d, swaps = make_disordered(base, n_swaps, free_S, cl_idx, rng)
             cdir = out_root / f"d{d_actual:.2f}_cfg{ci}"
             cdir.mkdir(parents=True, exist_ok=True)
+            # anneal Li + relax the swapped config to a real minimum before MD
+            # (skip for d=0 ordered baseline; resume-safe via config_relaxed.xyz)
+            if args.relax_configs and swaps:
+                rx = cdir / "config_relaxed.xyz"
+                if rx.exists():
+                    atoms_d = read(str(rx))
+                    print(f"    [resume] {cdir.name} config_relaxed.xyz 있음 -> skip anneal")
+                else:
+                    atoms_d, E0, E1 = anneal_relax_config(
+                        atoms_d, calc, args.anneal_T, args.anneal_ps,
+                        args.timestep_fs, args.friction, args.relax_fmax,
+                        seed=args.seed + 500 + ci)
+                    print(f"    cfg{ci} anneal({args.anneal_T}K,{args.anneal_ps}ps)+relax: "
+                          f"E {E0:.3f} -> {E1:.3f} eV (dropped {E0 - E1:.3f})")
+                    write(str(rx), atoms_d)
             write(str(cdir / "config.xyz"), atoms_d)
             Ds = []
             for T in args.temperatures:

@@ -28,7 +28,9 @@ set -euo pipefail; set +H
 REPO="$(cd "$(dirname "$0")/../.." && pwd)"; cd "$REPO"
 unset LD_LIBRARY_PATH OPAL_PREFIX 2>/dev/null || true   # QE env leak pollutes torch
 V0XYZ=${V0XYZ:-$REPO/db/structures/comp2_V0_v3_candidate.xyz}
-OUTROOT=${OUTROOT:-$HOME/work/runs/comp2_disorder}
+# NEW dir: v1 (comp2_disorder) used un-relaxed label swaps -> sigma_300K ~70 mS/cm
+# artifact (2026-07-27). This run anneal+relaxes each config first (real minimum).
+OUTROOT=${OUTROOT:-$HOME/work/runs/comp2_disorder_relaxed}
 DEVICE=${DEVICE:-cuda}
 PY=${PY:-python3}
 LEVELS=${LEVELS:-0.5 1.0}
@@ -54,6 +56,7 @@ $PY "$DRIVER" \
   --v0_xyz "$V0XYZ" --label comp2_disorder \
   --out_root "$OUTROOT" \
   --disorder_levels $LEVELS --n_configs "$NCONF" \
+  --relax_configs --anneal_T 700 --anneal_ps 20 --relax_fmax 0.03 \
   --temperatures 600 800 1000 \
   --equilib_ps 5 --prod_ps "$PRODPS" \
   --timestep_fs 2.0 --friction 0.02 \
