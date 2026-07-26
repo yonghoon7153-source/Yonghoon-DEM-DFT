@@ -51,6 +51,13 @@ GPU = False                  # --gpu 로 켬; CuPy 실패 시 CPU 폴백 (step3_
 _CG_DUMPED = [False]         # MPM_S4_DUMP_FAIL: 실패 선형계 1회만 덤프 (디스크 보호)
 _NN_TRIGGER = 1e3            # near-null-B AMG 발동 문턱: 잔차가 목표의 이 배수 위(=정체)일 때만
                             # (거의-수렴 solve엔 안 켜 무거운 전처리 낭비 차단; 저율 정체는 ~1/rtol배 위)
+_NN_ACCEPT_RTOL = 1e-7      # near-null-B AMG escalate 판정의 '물리-충분' 상대잔차 바닥 (2026-07-26 v100
+#   2C OOM 진단): rtol=1e-9 목표는 near-null 격자(λ~1e-11)서 도달불가 — 자기-바닥이 rel≈7e-9(abs~2e-12)
+#   에서 멈춤.  기존 게이트(287)는 이 '목표 미달'만 보고 near-null-B AMG를 매 솔브 발동 → 4.44M dof
+#   대-coarse 계층 빌드가 메모리 초과(Killed).  실제 물리 노이즈바닥은 rel~1e-5 → 그 100× 아래인
+#   1e-7 이하 잔차면 선형해가 이미 물리적으로 정확 → escalate 불필요.  판정을 max(rtol·‖b‖,
+#   _NN_ACCEPT_RTOL·‖b‖) 기준으로 → 물리-충분 솔브 통과(OOM 회피) & 진짜 정체(0.2C hard-fail, rel≫1e-7)
+#   만 발동(그 fix 보존).  MPM_S4_NN_ACCEPT_RTOL 로 override(0 → 옛 rtol-only 게이트 복원).
 
 
 # ---------------------------------------------------------------- CG (warm start)
@@ -280,11 +287,16 @@ def _cg(L, b, x0=None, rtol=1e-9, atol=0.0, pc_cache=None, deep=False):
     #   (정규화 98%ε민감·deflation 발산 실패 → near-null-B AMG만 수렴).  저율 0.1C/0.2C 후막의
     #   hard-fail 근본해결.  런 내 1회 구축 후 재사용; 정체 solve일 때만 발동(무거운 대-coarse).
     _tgt = max(rtol * bnorm, atol, 1e-300)
+    # ★물리-충분 바닥 (2026-07-26 v100 2C OOM 진단): rtol=1e-9 목표는 near-null서 도달불가라 자기-바닥
+    #   (rel≈7e-9)이 항상 '목표 미달'로 잡혀 near-null-B AMG가 매 솔브 발동→4.44M dof 빌드 OOM(Killed).
+    #   노이즈바닥(rel~1e-5)의 100× 아래(_NN_ACCEPT_RTOL)까진 '충분 수렴'으로 인정 → 물리-정확 솔브 통과.
+    _acc_rtol = float(os.environ.get('MPM_S4_NN_ACCEPT_RTOL', _NN_ACCEPT_RTOL))
+    _accept = max(_tgt, _acc_rtol * bnorm)
     # ★트리거 수정 (2026-07-23 v100 0.2C 실런 진단): 자기-바닥(_CGStop)이 CG를 ~10×목표서 멈춰 잔차가
     #   1000×문턱에 도달 못 → near-null-B AMG 실전 미발동 = 0.2C hard-fail 근본원인.  near-null 오차는
-    #   J·v≈0 라 잔차 norm에 작게 실려 '비율'판정이 부적합 → 판정을 '목표 미달(info≠0=자기-바닥 단축)
-    #   + 유의미 초과(>3×목표)'로 전환 (기존 1000× 조건은 belt-and-suspenders로 유지).
-    _stall_short = (info != 0 and _rr(x) > 3.0 * _tgt) or (_rr(x) > _NN_TRIGGER * _tgt)
+    #   J·v≈0 라 잔차 norm에 작게 실려 '비율'판정이 부적합 → 판정을 '충분-수렴 미달(info≠0=자기-바닥
+    #   단축) + 유의미 초과(>3×바닥)'로 전환 (기존 1000× 조건은 belt-and-suspenders로 유지).
+    _stall_short = (info != 0 and _rr(x) > 3.0 * _accept) or (_rr(x) > _NN_TRIGGER * _accept)
     # ★ _direct_nn(승자 직행)이면 이미 near-null-B AMG로 풀었으니 재-escalate 생략(이중 ~550s 방지).
     if _stall_short and big and not cache.get('nnamg_dead') and not _direct_nn:
         Mnn = cache.get('nnamg')
