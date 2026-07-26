@@ -31,16 +31,48 @@ cd "$DIR"
 git checkout -B "$BRANCH" "origin/$BRANCH"
 git log --oneline -1
 
-echo "══ [3/7] venv ══"
-[ -d venv ] || python3 -m venv venv
-# shellcheck disable=SC1091
-source venv/bin/activate
+echo "══ [3/7] python 환경 ══"
+# taichi 글리브 호환: 1.7.4=glibc2.32 필요 / 1.6.0=glibc2.27(구형서버 OK)이나 py<=3.11 wheel만.
+# → 구 glibc 서버(kgy 등)는 python 3.11 필요.  이미 비-base conda env 안이면 그걸 그대로 사용
+#   (중첩 venv 회피); 아니면 python3.11/3.10 우선으로 venv 생성.
+if [ -n "${CONDA_DEFAULT_ENV:-}" ] && [ "${CONDA_DEFAULT_ENV}" != "base" ]; then
+  echo "  conda env '$CONDA_DEFAULT_ENV' 사용 (venv 생략)"
+else
+  PYBIN=""
+  for p in python3.11 python3.10 python3.12 python3; do command -v "$p" >/dev/null 2>&1 && PYBIN="$p" && break; done
+  echo "  venv python = $PYBIN ($("$PYBIN" -c 'import sys;print("%d.%d"%sys.version_info[:2])'))"
+  [ -d venv ] || "$PYBIN" -m venv venv
+  # shellcheck disable=SC1091
+  source venv/bin/activate
+fi
 python -m pip install --upgrade pip -q
 
 echo "══ [4/7] python 패키지 (코어 + MPM + STEP4 + 파이프라인) ══"
-# taichi 1.7.4(py3.8–3.12); 실패(예 py3.13/구 glibc) 시 1.6.0 폴백 (API·결과 동일)
-python -m pip install -q "taichi==1.7.4" || python -m pip install -q "taichi==1.6.0"
 python -m pip install -q numpy scipy matplotlib pandas networkx scikit-image pyamg pybamm
+# taichi: 1.7.4(glibc2.32) 시도 → IMPORT 검증(설치성공≠import성공: glibc/py 문제는 import서 터짐)
+#   실패면 1.6.0(glibc2.27, py<=3.11) 재시도.  둘 다 실패면 py3.11 안내 후 STOP.
+python -m pip install -q "taichi==1.7.4" 2>/dev/null || true
+if ! python -c "import taichi" 2>/dev/null; then
+  echo "  taichi 1.7.4 import 실패(glibc/py 조합) → 1.6.0 재시도"
+  python -m pip uninstall -y -q taichi 2>/dev/null || true
+  python -m pip install -q "taichi==1.6.0" 2>/dev/null || true
+fi
+if ! python -c "import taichi" 2>/dev/null; then
+  PYV=$(python -c 'import sys;print("%d.%d"%sys.version_info[:2])')
+  cat <<MSG
+
+  ✗✗ taichi가 이 (python $PYV / glibc) 조합서 안 됩니다 — MPM GPU 불가.
+     원인: 대개 python 3.13 + 구 glibc(<2.32).  taichi 글리브-안전판(1.6.0)은 py<=3.11 wheel만 존재.
+     ▶ 해결 (conda 있으면 = kgy):
+         conda create -y -n mpm python=3.11 && conda activate mpm
+         bash $DIR/scripts/setup_gpu_server.sh          # 이 스크립트 다시 (conda env 자동감지)
+     ▶ 또는 apt:
+         $_SUDO apt-get install -y python3.11 python3.11-venv
+         rm -rf $DIR/venv && bash $DIR/scripts/setup_gpu_server.sh
+MSG
+  exit 1
+fi
+python -c "import taichi as ti; print('  ✓ taichi', ti.__version__, '(import OK)')"
 
 echo "══ [5/7] GPU 가속 (cupy + CUDA 라이브러리 + 헤더) ══"
 # [ctk] = CUDA toolkit 헤더 (없으면 'Failed to find CUDA headers'로 커널 JIT 실패 — 이번 세션 실화).
@@ -76,23 +108,28 @@ except Exception as e:
 PY
 python3 scripts/step4_dyn.py --selftest 2>&1 | tail -1
 
-# 편의 실행 헬퍼(activate_dem.sh)를 alias로 등록 — 재접속마다 venv + CUDA 경로 한 번에
+# 편의 실행 헬퍼(activate_dem.sh)를 alias로 등록 — 재접속마다 env + CUDA 경로 한 번에
 BRC="$HOME/.bashrc"
 if ! grep -q "alias dem=" "$BRC" 2>/dev/null; then
   echo "alias dem='source $DIR/scripts/activate_dem.sh'" >> "$BRC"
+fi
+if [ -n "${CONDA_DEFAULT_ENV:-}" ] && [ "${CONDA_DEFAULT_ENV}" != "base" ]; then
+  _PRE="conda activate $CONDA_DEFAULT_ENV && "
+else
+  _PRE=""
 fi
 
 cat <<EOF
 
 ════════════════════ 세팅 완료 ════════════════════
-매번 이렇게 실행하세요 (venv + CUDA 경로 자동):
+매번 이렇게 실행하세요 (env + CUDA 경로 자동):
 
-  source $DIR/scripts/activate_dem.sh      # 또는 새 셸이면:  dem
+  ${_PRE}source $DIR/scripts/activate_dem.sh    # (새 셸마다.  venv면 'dem' alias 로도 됨)
   # (킷 zip을 $DIR 에 풀고)
   bash run_mpm.sh                          # 전체 파이프라인 (detached, SSH 끊겨도 안 죽음)
   bash step4_only.sh                       # step4만 재개 (step4_grid.npz 있을 때)
 
 ★ activate_dem.sh 를 반드시 source 한 셸에서 run 하세요 — 그래야 detached 자식이
-  venv(numpy/cupy) + CUDA 라이브러리 경로를 물려받아 안 멈춥니다.
+  파이썬 환경(numpy/cupy) + CUDA 라이브러리 경로를 물려받아 안 멈춥니다.
 ════════════════════════════════════════════════════
 EOF
