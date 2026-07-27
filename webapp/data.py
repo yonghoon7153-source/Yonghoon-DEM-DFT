@@ -205,12 +205,10 @@ CANONICAL = {
     "MD_Ea_eV":   {"comp1": 0.253, "modelc": 0.224, "lpsocl": 0.271},  # UMA — ⚠절대값 인용주의, 멀티시드 판정만
     "ICOHP_PS":   {"comp1": -5.938, "modelc": -6.000, "lpsocl": -6.04, "modelc_nd_doped": -5.976},  # per_bond_json/lobster
 }
-# 잠정/미커밋 표시 — (property, comp) : 사유. 배지·툴팁에 '잠정' 노출.
+# 잠정/미커밋 표시 — (property, comp) : 사유. composition/explorer 라우트에서 '잠정' 배지·툴팁으로 렌더.
 CANONICAL_PROVISIONAL = {
     ("gap_eV", "comp2"): "잠정 — legacy band_gaps, fixed-occ nscf 재확인중 (eigenvalue canonical 아님)",
 }
-# comp2 gap 2.04 는 잠정이라 CANONICAL 에서 뺐다 (원하면 위 PROVISIONAL 로만 표시).
-CANONICAL["gap_eV"]["comp2"] = 2.04  # 유지하되 아래 META/PROVISIONAL 로 잠정 표기
 CANONICAL_META = {
     "gap_eV":    "fixed-occ eigenvalue (DOS-threshold 금지) · comp2는 잠정(legacy, 재확인중)",
     "B0_GPa":    "DFT BM3 EOS",
@@ -235,7 +233,7 @@ CASCADE_META = {
     "engine": "UMA-s-1p1 (task=omat) · anneal→champion→EOS/elastic/ESW/Li-proxy 캐스케이드",
     "score_formula": "score = 0.30·ox + 0.25·stable + 0.20·soft + 0.15·ductile + 0.10·window (min–max 정규화)",
     "caveat": "절대 탄성값은 실험(AFM/UPE 12–22 GPa) 대비 높게 나옴 — 캐스케이드 내부(UMA-vs-UMA) 순위·상대비교만. EOS B0 ≠ elastic B_VRH.",
-    "verified": "직접 확인된 검증 서브셋은 doping_cascade_verified.json (41 챔피언 all-converged).",
+    "verified": "doping_cascade_verified.json 은 UMA-내부(EOS·elastic·anneal) 수렴 감사 서브셋 (41 챔피언 all-converged, DFT 검증 아님) — DFT 심층검증은 Nd₂O₃·B₂O₃ 2건뿐.",
 }
 # 조성 노드 ↔ 캐스케이드 도펀트 (스크리닝 히트의 DFT 심층검증)
 CASCADE_DOPANT = {"modelc_nd_doped": "Nd2O3", "b2o3": "B2O3"}
@@ -778,7 +776,7 @@ grep -a "JOB DONE" {prefix}.out && echo "완료"
 # {cid} · {prefix} — {server} (ssh, non-Slurm)
 set -e
 {guard}
-nvidia-smi | grep -q pw.x || true   # ⚠ pw.x·UMA 동시 실행 금지 (VRAM 점유) — nvidia-smi 확인 후
+nvidia-smi | grep -qE "python|md_" && {{ echo "UMA/MD 실행중 — VRAM 충돌 회피, 대기"; exit 1; }}   # ⚠ pw.x·UMA 동시 실행 금지 (_runner_uma 가드의 대칭형)
 export OMP_NUM_THREADS=1
 mpirun -np 1 pw.x -in {prefix}.in | tee {prefix}.out    # GPU 빌드는 보통 1 rank
 grep -a "JOB DONE" {prefix}.out && echo "완료"

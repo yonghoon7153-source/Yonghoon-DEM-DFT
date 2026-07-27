@@ -123,10 +123,10 @@ function elCard(e){
   if(facts)h+='<div class="el-facts">'+facts+'</div>';
   // 캐스케이드
   if(e.cascade&&e.cascade.length){
-    h+='<div class="el-casc"><div class="el-sec-t" style="color:var(--violet)">🤖 도핑 스크리닝 (캐스케이드)</div>'+
-      e.cascade.map(function(c){return '<a class="casc-hit" href="/cascade#'+c.dopant+'"><b>'+c.dopant+'</b>'+
+    h+='<div class="el-casc"><div class="el-sec-t" style="color:var(--violet)">🤖 도핑 스크리닝 (캐스케이드 · UMA 상대값)</div>'+
+      e.cascade.map(function(c){return '<a class="casc-hit" href="/cascade#'+c.dopant+'" title="UMA-s-1p1 상대 스크리닝 — score·ox·E 절대값은 캐스케이드 내부 상대비교만 (DFT 아님)"><b>'+c.dopant+'</b>'+
         '<span>rank #'+(c.rank!=null?Math.round(c.rank):'?')+'</span><span>score '+(c.score!=null?c.score:'—')+'</span>'+
-        '<span>ox '+(c.ox_V!=null?c.ox_V:'—')+' V</span><span>E '+(c.E_GPa!=null?c.E_GPa:'—')+' GPa</span>'+
+        '<span>ox '+(c.ox_V!=null?c.ox_V:'—')+' V</span><span>E '+(c.E_GPa!=null?c.E_GPa:'—')+' GPa (UMA)</span>'+
         '<span>Pugh '+(c.pugh!=null?c.pugh:'—')+'</span> →</a>';}).join('')+'</div>';
   }
   if(!k)h+='<p class="muted" style="font-size:.84rem;margin:8px 0">이 원소는 아직 상세 KB가 없어요 — 위 기본정보/스크리닝과 아래 우리 앵커로 정리했어요.</p>';
@@ -134,7 +134,7 @@ function elCard(e){
     if(k.representative_compounds&&k.representative_compounds.length){
       h+='<div class="el-sec"><div class="el-sec-t">대표 화합물 <span class="muted" style="font-weight:400;text-transform:none">— ⚛ 배지 클릭 → 분자오비탈</span></div>'+k.representative_compounds.map(function(rc){
         var mk=moKey(rc.formula), hasMO=!!MO_DB[mk];
-        return '<div class="cmpd'+(hasMO?' has-mo':'')+'"'+(hasMO?' tabindex="0" role="button" onclick="openMO(\''+mk+'\')" onkeydown="if(event.key===\'Enter\'){openMO(\''+mk+'\');}"':'')+'>'+
+        return '<div class="cmpd'+(hasMO?' has-mo':'')+'"'+(hasMO?' tabindex="0" role="button" onclick="openMO(\''+mk+'\')" onkeydown="_kbd(event)"':'')+'>'+
           '<div class="cmpd-top"><span class="cmpd-f">'+_esc(rc.formula)+'</span>'+
           (hasMO?'<span class="mo-badge">⚛ MO</span>':'')+
           (rc.context?'<span class="cmpd-ctx">'+_esc(rc.context)+'</span>':'')+

@@ -30,7 +30,11 @@
   <div class="st"><div class="st-v">{{ stats.dopants }}</div><div class="st-l">랭킹된 도펀트</div></div>
   <div class="st"><div class="st-v">{{ stats.pareto }}</div><div class="st-l">Pareto-optimal</div></div>
   <div class="st"><div class="st-v">{{ stats.champions }}</div><div class="st-l">챔피언 실행</div></div>
-  <div class="st"><div class="st-v">{{ stats.verified if stats.verified is not none else '—' }}</div><div class="st-l">DFT 검증 서브셋</div></div>
+  <div class="st" title="doping_cascade_verified.json — 전부 UMA-s-1p1 내부(EOS·elastic·anneal) 수렴 감사, DFT 검증 아님">
+    <div class="st-v">{{ stats.verified if stats.verified is not none else '—' }}</div>
+    <div class="st-l">UMA 수렴 감사 서브셋</div>
+    <div class="st-l">DFT 심층검증은 {{ deep_map|length }}건 ({{ deep_map.keys()|join('·') }})</div>
+  </div>
 </div>
 
 <div class="tabs" id="tabs">

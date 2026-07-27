@@ -21,8 +21,9 @@ v1(cascade_v23_synergy_pairs.csv, 휴리스틱)과 같은 지위 — 실험/계�
          (v1 수록 40쌍 가중 1.0, 미수록 1041쌍은 synergy≈0 근사·가중 0.1 —
          0-근사의 신뢰가 낮으므로. 비가중 시 0 홍수로 계수가 과축소되는 것 확인).
          ml_score = base_z(이식) + Σ v_j·inter_j(증류).
-  4단계  불확실성: 1단계 LOOCV 잔차 std(leverage 보정)를 두 도펀트에 전파 +
-         3단계 ridge 계수 공분산의 쌍별 사영(x'Cov(v)x) → quadrature 합 ±.
+  4단계  불확실성: 1단계 LOOCV 잔차 std(leverage 보정)를 base_z 단위로 정합해 두 도펀트에
+         전파 + 3단계 ridge 계수 공분산의 쌍별 사영(x'Cov(v)x) → quadrature 합 ±.
+         수치상 **stage3 사영이 지배**(stage1 성분 ~0.02 수준 — 무시 가능).
          이 ±는 **모델 내부 적합 노이즈만** 반영 — 물리적 타당성 불확실성 아님(라벨 부재).
 
 입력:  db/properties/cascade_v23_ranked.csv, oxidation_stability_cascade.csv,
@@ -182,8 +183,7 @@ def main():
 
     w1, lam1, e1, h1, r2_1 = ridge_loocv(Z1, yc, rule="1se")
     sigma1 = float(np.sqrt(np.mean(e1**2)))          # score 단위
-    sigma1_z = sigma1 / float(y.std())               # z 단위 상대 잔차
-    u_single = sigma1_z * np.sqrt(1.0 + h1)          # 도펀트별 leverage 보정 예측 불확실성
+    u1_score = sigma1 * np.sqrt(1.0 + h1)            # 도펀트별 leverage 보정 예측 불확실성 (score 단위)
     feat_names1 = SINGLE_FEATS + [f"group={g}" for g in GROUPS_OH]
 
     # ---------- 2단계: pair 특징 (1081쌍) ----------
@@ -225,6 +225,9 @@ def main():
     PGz_s = (PG - mu_g) / sd_g
     base_raw = Pz_s @ w1[:len(SINGLE_FEATS)] + PGz_s @ w1[len(SINGLE_FEATS):]
     base_z = (base_raw - base_raw.mean()) / base_raw.std()
+    # stage1 예측 불확실성을 ml_score의 base 성분 스케일(base_z 단위)로 정합 —
+    # y.std()로 나누면 1.26x 과소 (2026-07-27 리뷰 수정)
+    u_single = u1_score / float(base_raw.std())
 
     # 교호작용용: pair 분포 기준 z-score
     Pz_p, _, _ = zscore(P)
@@ -261,6 +264,8 @@ def main():
     t_z = (t - t.mean()) / t.std()
     sw = np.where(listed, 1.0, 0.1)
 
+    # 특징도 sw-가중 중심화 — 타깃만 가중중심화하면 잔존 절편(~0.12 t_z)이 계수에 흡수됨 (2026-07-27 리뷰 수정)
+    Xi_z = Xi_z - (sw[:, None] * Xi_z).sum(axis=0) / sw.sum()
     w3, lam3, e3, _, r2_3 = ridge_loocv(Xi_z, t_z - (sw * t_z).sum() / sw.sum(), sw)
     sigma3 = float(np.sqrt(np.sum(sw * e3**2) / np.sum(sw)))
     inter_contrib = Xi_z * w3           # (1081, 8) 쌍별 교호작용 기여
@@ -342,6 +347,9 @@ def main():
                  "to pair features + 8 physics interaction terms distilled from v1 heuristic "
                  "(weighted ridge: listed 1.0 / unlisted~0 weight 0.1). ml_score = base_z + "
                  "sum(v_j*inter_j); uncertainty = internal LOOCV-residual propagation only.\n")
+        fo.write("# columns: gap_min = min(gap_lit_eV) 문헌 큐레이션 값(우리 계산 갭 아님); "
+                 "air_max = HSAB 정성등급 큐레이션; transport_min = min(bvs_x005) BVS proxy(절대 σ 아님); "
+                 "joint_window_V = max(ox)-min(red) 상보 가정.\n")
         w = csv.writer(fo)
         w.writerow(["rank", "pairA", "pairB", "ml_score", "uncertainty",
                     "joint_window_V", "transport_min", "gap_min", "air_max",
@@ -368,6 +376,9 @@ def main():
             "n": n, "lambda": float(lam1), "lambda_rule": "1se",
             "loocv_r2": round(r2_1, 4),
             "loocv_residual_std_score_units": round(sigma1, 4),
+            "loocv_note": "표준화(mu/sd)·y평균·λ선택은 전표본 고정(폴드 밖 재사용) — 폴드별 재계산으로 "
+                          "누수 정량화: σ_loo +3.4%(0.00178→0.00184), R² Δ<1e-4, λ 폴드별 재선택(nested)도 "
+                          "R²=0.9998 (타깃이 특징의 정확 선형합성이라 결과 왜곡 없음)",
             "coefficients_std_units": {k: round(float(v), 4)
                                        for k, v in zip(feat_names1, w1)},
             "note": "계수 = 표준화 특징 1σ당 score 변화. λ는 1-SE 규칙 — score가 5성분 "
@@ -380,6 +391,9 @@ def main():
             "n_pairs": len(pairs), "lambda": float(lam3),
             "weighted_loocv_r2": round(r2_3, 4),
             "weighted_loocv_residual_std_tz_units": round(sigma3, 4),
+            "loocv_note": "stage1과 동일 — 표준화·λ는 전표본 고정 (누수 영향 무시 수준, stage1 loocv_note 참조)",
+            "intercept_note": "특징·타깃 모두 sw-가중 중심화로 절편 정합 (2026-07-27 수정 — 비중심화 대비 "
+                              "계수 max|Δ|≈0.013, top10 집합 동일, top50 순위이동 ≤1계단)",
             "interaction_coefficients": {nm: round(float(c), 4)
                                          for nm, c in zip(inter_names, w3)},
             "interaction_rationale": {nm: why for nm, _, why in INTERACTIONS},
@@ -402,8 +416,9 @@ def main():
             "1단계 계수의 pair 이식: 단일도펀트 스케일러 유지 시 물리 방향성 보존 가정",
             "v1 미수록 쌍 synergy=0 근사 (v1은 top40만 저장; 실제는 0~0.059 사이) — "
             "0-근사 신뢰가 낮아 증류 가중 0.1 부여 (가중 1.0이면 0 홍수로 계수 전멸)",
-            "불확실성 ±는 모델 내부 적합 노이즈만 (stage1 LOOCV leverage 전파 + stage3 "
-            "ridge 계수 공분산 사영, ridge 축소로 하한 추정) — 물리적 타당성 불확실성 아님",
+            "불확실성 ±는 모델 내부 적합 노이즈만 (stage1 LOOCV leverage 전파를 base_z 단위로 정합 + "
+            "stage3 ridge 계수 공분산 사영, ridge 축소로 하한 추정) — 수치상 stage3 사영이 지배"
+            "(stage1 성분 ~0.02 수준으로 무시 가능)이며 물리적 타당성 불확실성 아님",
             "cost_tier/gap_lit_eV/air_hsab 는 큐레이션 값(문헌 전형/정성 등급) — 우리 계산 아님",
         ],
         "limitations": [

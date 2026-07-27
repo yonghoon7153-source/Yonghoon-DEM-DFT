@@ -21,10 +21,11 @@
 {% set labels = {'gap_eV':'Band gap','B0_GPa':'EOS B0','E_VRH_GPa':'E_VRH','MD_Ea_eV':'MD Ea','ICOHP_PS':'ICOHP P–S'} %}
 <div class="metrics-row">
 {% for key, val in canonical.items() %}
+  {% set prov = canonical_provisional.get(key) %}
   {% if val is not none %}
-  <div class="metric" title="{{ canonical_meta[key] }}">
+  <div class="metric" title="{{ canonical_meta[key] }}{% if prov %}&#10;⚠ {{ prov }}{% endif %}">
     <div class="mv">{{ val }}<span style="font-size:.55em;color:var(--dim)"> {{ units[key] }}</span></div>
-    <div class="ml">{{ labels[key] }}</div>
+    <div class="ml">{{ labels[key] }}{% if prov %} <span class="badge b-prov" title="{{ prov }}">잠정</span>{% endif %}</div>
     <div class="mm">{{ canonical_meta[key][:40] }}</div>
   </div>
   {% else %}

@@ -38,7 +38,7 @@ GLOSSARY = [
 {"id":"bandgap","term":"Band gap","full":"밴드 갭","cat":"전자 구조",
  "what":"채워진 최고 준위(VBM)와 빈 최저 준위(CBM) 사이의 에너지 간극. 전자·이온 전도의 절연성과 전기화학 안정성의 1차 지표. SE는 전자절연·이온전도가 이상적이라 gap이 클수록 유리.",
  "how":"<b>fixed-occupation nscf의 VBM/CBM 고유값</b>으로 읽는 게 정본. DOS의 문턱(threshold)으로 읽으면 ~0.3 eV 과소평가되니 금지.",
- "ours":"canonical(eigenvalue): comp1 2.066 / comp2 2.04 / modelc 2.099 / lpsocl 2.2309 eV. DOS-threshold(1.76/1.82)는 폐기."},
+ "ours":"canonical(eigenvalue): comp1 2.066 / modelc 2.099 / +B₂O₃ 1.9671 / lpsocl 2.2309 eV · comp2 2.04는 <b>잠정</b>(legacy band_gaps, fixed-occ 재확인중 — eigenvalue canonical 아님). DOS-threshold(1.76/1.82)는 폐기."},
 
 {"id":"dos","term":"DOS","full":"Density of States (상태밀도)","cat":"전자 구조",
  "what":"에너지 E에서 전자가 차지할 수 있는 상태의 개수 분포 g(E). 어디에 상태가 몰려있고 어디가 비었는지(gap)를 보여준다. 페르미 준위 근처 형태가 전도 특성을 좌우.",
@@ -117,7 +117,7 @@ GLOSSARY = [
 {"id":"neb","term":"NEB / CI-NEB","full":"Nudged Elastic Band","cat":"계면·안정성",
  "what":"두 안정 상태(예 이웃 site) 사이 <b>최소에너지경로(MEP)와 안장점(장벽 Ea)</b>을 찾는 방법. 이미지 여러 개를 스프링으로 연결해 경로를 이완, CI(climbing image)가 안장을 정밀화.",
  "how":"끝점 2개 relax → 중간 이미지 보간 → 각 이미지 힘 계산·이완 반복(iteration). 프로파일 피크가 중간(대칭)이면 진짜 안장, 단조증가면 경로/끝점 재검토.",
- "ours":"VGCF/hBN Li 확산: hBN표면 ~0.007(near-flat) · graphene 0.273(문헌 일치) · gallery 0.357(양면 confinement trap). 2L2L 진행중."},
+ "ours":"VGCF/hBN Li 확산: hBN표면 ~0.007(near-flat) · graphene 0.273(문헌 일치) · gallery <b>2L2L 0.147 eV(대표)</b>. barrier가 층수에 민감(1L1L 0.357→2L2L 0.147, −209 meV — gallery가 느린 채널↔빠른 채널로 뒤집힘)해 층수 트렌드 자체가 결과 — 1L1L 0.357은 대표값 아님. 2L 수렴(3L·혼합층) 검증 진행중."},
 
 {"id":"esw","term":"ESW / onset","full":"전기화학 안정성창 (grand-potential)","cat":"계면·안정성",
  "what":"SE가 산화/환원 없이 버티는 전압 범위. grand-potential(Li 화학퍼텐셜 함수) 방법으로 분해 시작 전압(onset)과 분해 산물을 예측. VBM≠onset(반응 자유에너지가 결정).",

@@ -156,6 +156,7 @@ textarea:focus-visible,[tabindex]:focus-visible,.tabs button:focus-visible{
 .badge.b-stale{background:color-mix(in srgb,var(--red) 14%,var(--card));color:var(--red)}
 .badge.b-todo{background:var(--todo-bg);color:var(--todo-fg)}
 .badge.b-fam{background:var(--bg);color:var(--dim)}
+.badge.b-prov{background:color-mix(in srgb,var(--amber) 16%,var(--card));color:var(--amber)}  /* canonical 잠정값 */
 
 /* tables */
 .data-table{width:100%;border-collapse:collapse;font-size:.86rem}

@@ -71,7 +71,8 @@ def composition(cid):
         cascade_dopant=dop,
         cascade_rows=D.cascade_rows_for(dop) if dop else None,
         canonical={k: v.get(cid) for k, v in D.CANONICAL.items()},
-        canonical_meta=D.CANONICAL_META)
+        canonical_meta=D.CANONICAL_META,
+        canonical_provisional={k: r for (k, c), r in D.CANONICAL_PROVISIONAL.items() if c == cid})
 
 
 @app.route("/compare")
@@ -115,6 +116,7 @@ def explorer():
     cov = D.build_coverage(b["properties"], b["prop_category"], b["index_metrics"])
     return render_template("explorer.html", active="explorer",
                            canonical=D.CANONICAL, canonical_meta=D.CANONICAL_META,
+                           canonical_provisional=D.CANONICAL_PROVISIONAL,
                            comp_elements=D.COMP_ELEMENTS, cov=cov,
                            categories=D.CATEGORIES)
 

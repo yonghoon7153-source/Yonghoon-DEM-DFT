@@ -45,10 +45,14 @@
       <td><span class="badge b-fam">{{ c.family }}</span></td>
       {% for key,label,unit in props %}
         {% set v = canonical.get(key,{}).get(cid) %}
+        {% set prov = canonical_provisional.get((key, cid)) %}
         <td class="num">
           {% if v is not none %}
-          <button class="cell-cite" onclick="citeVal('{{ c.label }}','{{ label }}','{{ v }}','{{ unit }}',{{ canonical_meta.get(key,'')|tojson }})"
-                  title="클릭 → 인용 복사&#10;{{ canonical_meta.get(key,'') }}">{{ v }}</button>
+          {# method는 data-* 속성으로 전달 — onclick 속성 안 tojson은 쌍따옴표가 속성을 조기 종료시킴 #}
+          <button class="cell-cite" data-method="{{ canonical_meta.get(key,'') }}{% if prov %} · ⚠ {{ prov }}{% endif %}"
+                  onclick="citeVal('{{ c.label }}','{{ label }}','{{ v }}','{{ unit }}',this.dataset.method)"
+                  title="클릭 → 인용 복사&#10;{{ canonical_meta.get(key,'') }}{% if prov %}&#10;⚠ {{ prov }}{% endif %}">{{ v }}</button>
+          {%- if prov %} <span class="badge b-prov" title="{{ prov }}">잠정</span>{% endif %}
           {% else %}<span class="cell-todo">TODO</span>{% endif %}
         </td>
       {% endfor %}

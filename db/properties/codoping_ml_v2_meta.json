@@ -16,6 +16,7 @@
   "lambda_rule": "1se",
   "loocv_r2": 0.9998,
   "loocv_residual_std_score_units": 0.0018,
+  "loocv_note": "표준화(mu/sd)·y평균·λ선택은 전표본 고정(폴드 밖 재사용) — 폴드별 재계산으로 누수 정량화: σ_loo +3.4%(0.00178→0.00184), R² Δ<1e-4, λ 폴드별 재선택(nested)도 R²=0.9998 (타깃이 특징의 정확 선형합성이라 결과 왜곡 없음)",
   "coefficients_std_units": {
    "de": -0.0548,
    "ox_V": 0.0739,
@@ -44,17 +45,19 @@
   "target": "v1 synergy (top40 수록값 가중 1.0, 미수록 1041쌍=0 근사·가중 0.1)",
   "n_pairs": 1081,
   "lambda": 39.81071705534978,
-  "weighted_loocv_r2": 0.0853,
-  "weighted_loocv_residual_std_tz_units": 2.3323,
+  "weighted_loocv_r2": 0.0884,
+  "weighted_loocv_residual_std_tz_units": 2.3282,
+  "loocv_note": "stage1과 동일 — 표준화·λ는 전표본 고정 (누수 영향 무시 수준, stage1 loocv_note 참조)",
+  "intercept_note": "특징·타깃 모두 sw-가중 중심화로 절편 정합 (2026-07-27 수정 — 비중심화 대비 계수 max|Δ|≈0.013, top10 집합 동일, top50 순위이동 ≤1계단)",
   "interaction_coefficients": {
-   "air_max*gap_min": 0.0834,
-   "joint_window*transport_min": 0.0877,
-   "disorder_max*dose_slope_min": -0.1964,
-   "transport_min*blocking_max": 0.0615,
-   "joint_window*gap_min": -0.2066,
-   "group_cross*joint_window": -0.1681,
-   "de_avg*joint_window": -0.6125,
-   "air_max*transport_min": -0.0641
+   "air_max*gap_min": 0.0828,
+   "joint_window*transport_min": 0.0932,
+   "disorder_max*dose_slope_min": -0.2004,
+   "transport_min*blocking_max": 0.0649,
+   "joint_window*gap_min": -0.2091,
+   "group_cross*joint_window": -0.1727,
+   "de_avg*joint_window": -0.6252,
+   "air_max*transport_min": -0.0646
   },
   "interaction_rationale": {
    "air_max*gap_min": "soft-acid 공기보호 <-> 전자절연 트레이드오프",
@@ -68,7 +71,7 @@
   }
  },
  "vs_v1": {
-  "spearman_on_v1_top40_pairs": 0.661,
+  "spearman_on_v1_top40_pairs": 0.66,
   "top10_overlap_count": 2,
   "corr_base_z_vs_v1_target": 0.215,
   "v1_top10": [
@@ -161,9 +164,9 @@
      "V2O5",
      "Y2O3"
     ],
-    "rank_v2": 49,
+    "rank_v2": 48,
     "rank_base_only": 181,
-    "lift": 132,
+    "lift": 133,
     "top_interaction": "de_avg*joint_window"
    },
    {
@@ -181,9 +184,9 @@
      "Nb2O5",
      "Y2O3"
     ],
-    "rank_v2": 18,
+    "rank_v2": 17,
     "rank_base_only": 82,
-    "lift": 64,
+    "lift": 65,
     "top_interaction": "de_avg*joint_window"
    },
    {
@@ -213,7 +216,7 @@
   "합동 ESW = max(ox) - min(red): 두 상이 각각 양극측/음극측을 커버한다는 상보 가정 (실제 계면상 형성/혼상 반응 미반영)",
   "1단계 계수의 pair 이식: 단일도펀트 스케일러 유지 시 물리 방향성 보존 가정",
   "v1 미수록 쌍 synergy=0 근사 (v1은 top40만 저장; 실제는 0~0.059 사이) — 0-근사 신뢰가 낮아 증류 가중 0.1 부여 (가중 1.0이면 0 홍수로 계수 전멸)",
-  "불확실성 ±는 모델 내부 적합 노이즈만 (stage1 LOOCV leverage 전파 + stage3 ridge 계수 공분산 사영, ridge 축소로 하한 추정) — 물리적 타당성 불확실성 아님",
+  "불확실성 ±는 모델 내부 적합 노이즈만 (stage1 LOOCV leverage 전파를 base_z 단위로 정합 + stage3 ridge 계수 공분산 사영, ridge 축소로 하한 추정) — 수치상 stage3 사영이 지배(stage1 성분 ~0.02 수준으로 무시 가능)이며 물리적 타당성 불확실성 아님",
   "cost_tier/gap_lit_eV/air_hsab 는 큐레이션 값(문헌 전형/정성 등급) — 우리 계산 아님"
  ],
  "limitations": [
