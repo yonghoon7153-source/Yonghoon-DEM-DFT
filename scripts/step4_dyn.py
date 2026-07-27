@@ -51,18 +51,24 @@ GPU = False                  # --gpu 로 켬; CuPy 실패 시 CPU 폴백 (step3_
 _CG_DUMPED = [False]         # MPM_S4_DUMP_FAIL: 실패 선형계 1회만 덤프 (디스크 보호)
 _NN_TRIGGER = 1e3            # near-null-B AMG 발동 문턱: 잔차가 목표의 이 배수 위(=정체)일 때만
                             # (거의-수렴 solve엔 안 켜 무거운 전처리 낭비 차단; 저율 정체는 ~1/rtol배 위)
-_NN_ACCEPT_RTOL = 1e-7      # near-null-B AMG escalate 판정의 '물리-충분' 상대잔차 바닥 (2026-07-26 v100
-#   2C OOM 진단): rtol=1e-9 목표는 near-null 격자(λ~1e-11)서 도달불가 — 자기-바닥이 rel≈7e-9(abs~2e-12)
-#   에서 멈춤.  기존 게이트(287)는 이 '목표 미달'만 보고 near-null-B AMG를 매 솔브 발동 → 4.44M dof
-#   대-coarse 계층 빌드가 메모리 초과(Killed).  실제 물리 노이즈바닥은 rel~1e-5 → 그 100× 아래인
-#   1e-7 이하 잔차면 선형해가 이미 물리적으로 정확 → escalate 불필요.  판정을 max(rtol·‖b‖,
-#   _NN_ACCEPT_RTOL·‖b‖) 기준으로 → 물리-충분 솔브 통과(OOM 회피) & 진짜 정체(0.2C hard-fail, rel≫1e-7)
-#   만 발동(그 fix 보존).  MPM_S4_NN_ACCEPT_RTOL 로 override(0 → 옛 rtol-only 게이트 복원).
+_NN_ACCEPT_RTOL = 1e-7      # near-null-B AMG escalate 판정의 '물리-충분' 상대잔차 바닥.
+#   ★정정 (2026-07-27 진단1 [3] 확정): 프로덕션 유일 콜사이트(newton, rtol=1e-5)에선
+#   max(1e-5·‖b‖, atol, 1e-7·‖b‖) ≡ max(1e-5·‖b‖, atol) = 대수적 no-op — escalate 판정을 단 한 번도
+#   안 바꿈 (EW inexact-Newton 도입 후에도 η≥1e-5라 no-op 성질 유지; selftest S5가 회귀 고정).
+#   게이트가 실작동하는 곳은 rtol<1e-7 외부호출(test_step4_nearnull_integration.py:78)뿐이며, 실제
+#   OOM 재발 방지 담보는 이 게이트가 아니라 nnamg_direct 승자 래치 + _CGStop 자기-바닥.  깊은 보정해
+#   (atol=frac·floor 가 Jacobi 자기바닥 ~1.4e-12 아래)는 게이트와 무관하게 nnAMG로 '정당하게'
+#   escalate — 속도는 GPU V-cycle(MPM_S4_GPU_AMG)이 치료, 회피는 MPM_S4_ATOL_FLOOR_FRAC=0.5(opt-in).
+#   env MPM_S4_NN_ACCEPT_RTOL 는 외부 호출자용으로 유지(0 → 옛 rtol-only 게이트 복원).  ‖b‖-상대
+#   게이트는 후기 Newton(‖b‖ 붕괴)에 구조적으로 무력 → 절대바닥 결합 MPM_S4_NN_ACCEPT_ABS_FRAC
+#   (accept에 frac·agg_floor_abs 병합, 기본 0=OFF)가 실효 대안.
 
 
 # ---------------------------------------------------------------- CG (warm start)
 def _amg_M(L):
-    """pyamg AMG preconditioner (그래프-라플라시안 특화) — 설치 시에만.  실패하면 None."""
+    """pyamg AMG preconditioner (그래프-라플라시안 특화) — 설치 시에만.  실패하면 None.
+    MPM_S4_GPU_AMG(기본 ON)+GPU면 apply를 GPU V-cycle 미러로 (빌드는 CPU 1회) — 전처리는 CG의
+    해를 바꾸지 않음(해-불변).  cupy 부재/OFF면 kw 자체 미전달 = 기본 GS 스무더 = 현행 bitwise."""
     try:
         import pyamg
     except ImportError:
@@ -73,8 +79,17 @@ def _amg_M(L):
         import time as _t
         t0 = _t.time()
         print(f'    AMG 전처리 구축 중 (dof {L.shape[0]:,} — 수십초~수분)…', flush=True)
-        ml = pyamg.smoothed_aggregation_solver(sparse.csr_matrix(L), max_coarse=500)
+        _g = _gpu_amg_on()
+        kw = (dict(presmoother=('jacobi', {'omega': 2.0 / 3.0, 'iterations': 1}),
+                   postsmoother=('jacobi', {'omega': 2.0 / 3.0, 'iterations': 1}))
+              if _g else {})                                  # GPU 미러=ω-Jacobi 대칭 (CPU·GPU 동수학)
+        ml = pyamg.smoothed_aggregation_solver(sparse.csr_matrix(L), max_coarse=500, **kw)
         print(f'    AMG 구축 완료 (levels {len(ml.levels)}, {_t.time() - t0:.0f}s) → CG', flush=True)
+        if _g:
+            Mg = _gpu_vcycle_wrap(ml)
+            if Mg is not None:
+                print('    (AMG apply=GPU V-cycle — MPM_S4_GPU_AMG=0 해제)', flush=True)
+                return Mg
         return ml.aspreconditioner(cycle='V')
     except Exception as e:
         print(f'    ⚠ AMG 구축 실패 ({type(e).__name__}: {e}) → Jacobi', flush=True)
@@ -91,7 +106,10 @@ def _nearnull_amg_M(L, diag, cache, k_b=8, k_lobpcg=12):
 
     near-null 벡터는 구조적(약결합 패턴)이라 런 내 1회 LOBPCG 계산 후 cache['nearnull_V']로 재사용;
     AMG 계층은 L 값에 의존해 호출 시 재구축(계층 구축 << solve).  무거우니(대-coarse V-cycle) 정체
-    solve일 때만 발동(_cg 4단)."""
+    solve일 때만 발동(_cg 4단).
+    ★R3 deflation k=64-128 기각 (2026-07-27): near-null 차원은 약결속 carbon cluster 수 O(10⁴)≫k라
+    소-k deflation은 발산(1cf8d43 실측)하고 B-확장(k↑)은 대-coarse 재빌드 OOM을 재유발 — 부공간 몇
+    개 늘려서 될 문제가 아님.  치료는 C0 부유-pruning(정확-특이 제거)+C3 GPU apply가 담당."""
     try:
         import pyamg
         from scipy.sparse.linalg import LinearOperator, lobpcg
@@ -120,14 +138,127 @@ def _nearnull_amg_M(L, diag, cache, k_b=8, k_lobpcg=12):
         s = 1.0 / np.sqrt(np.maximum(np.abs(diag), 1e-300))   # 대칭 대각 스케일 (near-isolated 노드 정규화)
         Ls = (sparse.diags(s) @ L @ sparse.diags(s)).tocsr()
         B = np.hstack([np.ones((N, 1)), V[:, :kk]]) / s[:, None]   # [상수모드 + near-null] / s
-        ml = pyamg.smoothed_aggregation_solver(Ls, B=B, max_coarse=800).aspreconditioner('V')
+        _g = _gpu_amg_on()
+        kw = (dict(presmoother=('jacobi', {'omega': 2.0 / 3.0, 'iterations': 1}),
+                   postsmoother=('jacobi', {'omega': 2.0 / 3.0, 'iterations': 1}))
+              if _g else {})                                  # GPU 미러=ω-Jacobi 대칭 (CPU·GPU 동수학)
+        mls = pyamg.smoothed_aggregation_solver(Ls, B=B, max_coarse=800, **kw)
+        if _g:
+            Mg = _gpu_vcycle_wrap(mls, s=s)                   # matvec(r)=s·V(s·r) — CPU 래퍼와 동수학
+            if Mg is not None:
+                print('    (near-null-B AMG apply=GPU V-cycle)', flush=True)
+                return Mg
+        ml = mls.aspreconditioner('V')
         return LinearOperator(L.shape, matvec=lambda r, _s=s, _m=ml: _s * _m.matvec(_s * r))
     except Exception as e:
         print(f'    near-null-B AMG 구축 실패 ({type(e).__name__}: {e})', flush=True)
         return None
 
 
-def _cg(L, b, x0=None, rtol=1e-9, atol=0.0, pc_cache=None, deep=False):
+# ---------------------------------------------------------------- GPU V-cycle 전처리 미러 (C3)
+_GPU_AMG_STATE = {'ok': None}                      # cupy 가용성 런-1회 판정 캐시
+
+
+def _gpu_amg_on():
+    """MPM_S4_GPU_AMG(기본 ON) ∧ GPU(--gpu) ∧ cupy import 성공.  gpu_dead 라치와 무관
+    (Jacobi-CG 미수렴 ≠ GPU 고장 — SpMV는 유효).  실패 시 런 1회 로그 후 False 캐시."""
+    if os.environ.get('MPM_S4_GPU_AMG', '1') == '0' or not GPU:
+        return False
+    if _GPU_AMG_STATE['ok'] is None:
+        try:
+            import cupy, cupyx.scipy.sparse        # noqa: F401
+            _GPU_AMG_STATE['ok'] = True
+        except Exception as e:
+            _GPU_AMG_STATE['ok'] = False
+            print(f'    (GPU V-cycle 불가: {type(e).__name__} → CPU 전처리 유지)', flush=True)
+    return _GPU_AMG_STATE['ok']
+
+
+def _mirror_levels(ml, xp, dtype=np.float64):
+    """pyamg 계층 → [{'A','P','R','Dinv'}...] (xp=numpy: CPU 동수학 / xp=cupy: GPU 미러 —
+    cupyx.scipy.sparse.csr_matrix 1회 전송).  coarsest(≤max_coarse 500/800)는 CPU dense LU
+    (scipy.linalg.lu_factor) 1회 캐시 — it당 왕복 ~KB.  반환 (levels, lu_pair)."""
+    from scipy.linalg import lu_factor
+    if xp is np:
+        def _csr(A):
+            return sparse.csr_matrix(A).astype(dtype)
+
+        def _vec(v):
+            return np.asarray(v, dtype)
+    else:
+        import cupyx.scipy.sparse as _cxs
+
+        def _csr(A):
+            return _cxs.csr_matrix(sparse.csr_matrix(A).astype(dtype))
+
+        def _vec(v):
+            return xp.asarray(v, dtype)
+    levels = []
+    for lv in ml.levels[:-1]:
+        A = lv.A.tocsr()
+        d = A.diagonal()
+        levels.append({'A': _csr(A), 'P': _csr(lv.P.tocsr()), 'R': _csr(lv.P.T.tocsr()),
+                       'Dinv': _vec(1.0 / np.where(d != 0, d, 1.0))})
+    lu_pair = lu_factor(np.asarray(ml.levels[-1].A.todense(), np.float64))
+    return levels, lu_pair
+
+
+def _vcycle_matvec(levels, lu_pair, b, xp, omega=2.0 / 3.0, lvl=0):
+    """대칭 V(1,1): pre ω-Jacobi(x0=0 → x=ωD⁻¹b) → r=b−Ax → R·r 재귀 → x+=P·xc →
+    post ω-Jacobi(x += ωD⁻¹(b−Ax)).  R=Pᵀ(SA 대칭) + pre/post 동일 스무더 ⇒ M 대칭
+    SPD-호환(CG 요건 — pyamg 기본 GS는 순차라 GPU 부적합, ω-Jacobi로 통일).
+    xp-디스패치 단일 구현 = CPU/GPU 동수학 (클라우드 selftest는 xp=numpy로 수식 검증)."""
+    if lvl == len(levels):                                    # coarsest: CPU dense LU (1회 캐시)
+        from scipy.linalg import lu_solve
+        bc = b if xp is np else xp.asnumpy(b)
+        xc = lu_solve(lu_pair, np.asarray(bc, np.float64))
+        return xc.astype(b.dtype) if xp is np else xp.asarray(xc, b.dtype)
+    lv = levels[lvl]
+    x = omega * lv['Dinv'] * b                                # pre ω-Jacobi (x0=0)
+    r = b - lv['A'] @ x
+    x = x + lv['P'] @ _vcycle_matvec(levels, lu_pair, lv['R'] @ r, xp, omega, lvl + 1)
+    return x + omega * lv['Dinv'] * (b - lv['A'] @ x)         # post ω-Jacobi
+
+
+def _gpu_vcycle_wrap(ml, s=None):
+    """scipy LinearOperator 반환: matvec = numpy r → (s·)V-cycle(GPU)(·s) → numpy.
+    s≠None(nnAMG): s를 GPU 상주, matvec(r)=s·V(s·r) — _nearnull_amg_M CPU 래퍼와 동수학.
+    dtype: MPM_S4_GPU_AMG_F32=1 → float32 미러(전처리 정밀도만 — CG는 CPU f64, 해 불변).
+    apply 중 예외 1회 → 내장 CPU ml.aspreconditioner 로 자가 강등 + 로그 1줄 (그 콜부터 CPU).
+    미러 실패(OOM 등) → None 반환 (호출측 기존 CPU 경로 폴백)."""
+    from scipy.sparse.linalg import LinearOperator
+    try:
+        import cupy as cp
+        dtype = np.float32 if os.environ.get('MPM_S4_GPU_AMG_F32', '0') == '1' else np.float64
+        levels, lu_pair = _mirror_levels(ml, cp, dtype=dtype)
+        sg = None if s is None else cp.asarray(s, dtype)
+    except Exception as e:
+        print(f'    (GPU V-cycle 미러 실패: {type(e).__name__}: {e} → CPU 전처리 폴백)', flush=True)
+        return None
+    st = {'cpu': None}                                        # 자가 강등 상태 (예외 1회 → 이후 CPU)
+
+    def _mv(r):
+        if st['cpu'] is None:
+            try:
+                import cupy as cp
+                rg = cp.asarray(r, dtype)
+                if sg is not None:
+                    rg = sg * rg
+                zg = _vcycle_matvec(levels, lu_pair, rg, cp)
+                if sg is not None:
+                    zg = sg * zg
+                return cp.asnumpy(zg).astype(np.float64, copy=False)
+            except Exception as e:
+                print(f'    (GPU V-cycle apply 예외: {type(e).__name__} → CPU 전처리 자가 강등)',
+                      flush=True)
+                st['cpu'] = ml.aspreconditioner(cycle='V')
+        z = st['cpu'].matvec(r if s is None else s * r)
+        return np.asarray(z if s is None else s * z, np.float64)
+
+    return LinearOperator(ml.levels[0].A.shape, matvec=_mv)
+
+
+def _cg(L, b, x0=None, rtol=1e-9, atol=0.0, pc_cache=None, deep=False, floor_abs=0.0):
     """3단 솔브: GPU Jacobi-CG → (실패시) CPU AMG-CG(pyamg) → CPU Jacobi-CG.
     실전 격자(VGCF 100 S/cm ↔ BV면 1e-11 S, ~9자릿수 대비)에서 Jacobi 단독은 정체할 수
     있어(2026-07-15 V100 스모크: 50k iter 미수렴) AMG 폴백이 프로덕션 안전망.
@@ -145,7 +276,8 @@ def _cg(L, b, x0=None, rtol=1e-9, atol=0.0, pc_cache=None, deep=False):
                 print(f'      GPU Jacobi-CG 시도 (≤20k it, ~1분 — 실패 시 AMG 폴백)…', flush=True)
             Lg = cxs.csr_matrix(L.astype(np.float64))
             bg = cp.asarray(b, np.float64)
-            Mg = cxs.diags(1.0 / cp.asarray(diag))
+            dg = cp.asarray(diag)
+            Mg = cxs.diags(1.0 / cp.where(dg > 0, dg, dg.max()))   # zero/음-diag → inf/NaN 전처리 차단 (벨트-앤-서스펜더)
             x0g = cp.asarray(x0, np.float64) if x0 is not None else None
             try:
                 xg, info = cg_gpu(Lg, bg, x0=x0g, tol=rtol, maxiter=20000, M=Mg)
@@ -291,7 +423,10 @@ def _cg(L, b, x0=None, rtol=1e-9, atol=0.0, pc_cache=None, deep=False):
     #   (rel≈7e-9)이 항상 '목표 미달'로 잡혀 near-null-B AMG가 매 솔브 발동→4.44M dof 빌드 OOM(Killed).
     #   노이즈바닥(rel~1e-5)의 100× 아래(_NN_ACCEPT_RTOL)까진 '충분 수렴'으로 인정 → 물리-정확 솔브 통과.
     _acc_rtol = float(os.environ.get('MPM_S4_NN_ACCEPT_RTOL', _NN_ACCEPT_RTOL))
-    _accept = max(_tgt, _acc_rtol * bnorm)
+    # ★accept 절대바닥 (C4c, 기본 0=OFF): ‖b‖-상대 게이트는 후기 Newton(‖b‖ 붕괴)서 무력 —
+    #   frac·agg_floor_abs 를 병합하면 노이즈바닥-스케일 '물리-충분' 판정이 ‖b‖와 무관하게 성립.
+    _accept = max(_tgt, _acc_rtol * bnorm,
+                  float(os.environ.get('MPM_S4_NN_ACCEPT_ABS_FRAC', '0') or 0) * floor_abs)
     # ★트리거 수정 (2026-07-23 v100 0.2C 실런 진단): 자기-바닥(_CGStop)이 CG를 ~10×목표서 멈춰 잔차가
     #   1000×문턱에 도달 못 → near-null-B AMG 실전 미발동 = 0.2C hard-fail 근본원인.  near-null 오차는
     #   J·v≈0 라 잔차 norm에 작게 실려 '비율'판정이 부적합 → 판정을 '충분-수렴 미달(info≠0=자기-바닥
@@ -339,6 +474,9 @@ def _cg(L, b, x0=None, rtol=1e-9, atol=0.0, pc_cache=None, deep=False):
                 print(f'    (덤프 실패: {type(_e).__name__})', flush=True)
         x = x0 if x0 is not None else np.zeros_like(b)
         info = 1
+    if big:                                                   # 경로 감사 로그 (C5): 전처리 종류·잔차·목표
+        print(f'      [cg] pc={_pc_kind}{"→nnamg" if (cache.get("nnamg_direct") and _pc_kind != "nnamg") else ""}'
+              f' resid {_rr(x):.2e} tgt {_tgt:.2e} info {info}', flush=True)
     return x, info
 
 
@@ -497,12 +635,32 @@ class CellSystem:
     CSR 구조를 1회 조립(BV 자리 = 0 placeholder)하고, Newton 반복에서는 data 배열만 갱신
     (15M+ 엔트리 재조립/재전송 없음 — 프로덕션 성능의 핵심)."""
 
+    _cap_hinted = False                                      # σ대비 권고 로그 프로세스-1회 (C1)
+
     def __init__(self, sid, sig_e_tab_S_cm, sig_i_tab_S_cm, pid, n_am, vox_um,
                  z_top_um=None, z_bot_um=0.0):
         vox_m = vox_um * 1e-6
         self.vox_m = vox_m
         sig_e = np.asarray(sig_e_tab_S_cm, np.float64)[sid] * 100.0   # S/m
         sig_i = np.asarray(sig_i_tab_S_cm, np.float64)[sid] * 100.0
+        # ★σ-contrast cap (R4; 레거시 voxel_conductivity.py:139-143 동일 200×min-positive 규약, opt-in).
+        #   A2 실측: cap200× → λ꼬리 ×44-49·CG 276→52 it; σ_eff(e) −7.8%(이 기하 — 레거시 '<0.2%' 비전이),
+        #   셀-V ≤2.5µV@2C → 시간전개 안전.  ⚠σ_e-류 수송 메트릭 보고는 uncapped 런으로 (meta 라벨).
+        _cap = float(os.environ.get('MPM_S4_CONTRAST_CAP', '0') or 0.0)
+        self.contrast_cap = _cap
+        for _nm, _s in (('e', sig_e), ('i', sig_i)):
+            _pos = _s[_s > 0]
+            if _pos.size == 0:
+                continue
+            _ratio = float(_pos.max() / _pos.min())
+            if _cap > 0 and _ratio > _cap:
+                np.minimum(_s, float(_pos.min()) * _cap, out=_s)
+                print(f'    ★σ-contrast cap({_nm}-망): {_ratio:.1e} → ≤{_cap:g}×min '
+                      f'(near-null 완화; σ-메트릭은 uncapped 런으로 보고)', flush=True)
+            elif _cap <= 0 and _ratio > 1e3 and not CellSystem._cap_hinted:
+                CellSystem._cap_hinted = True
+                print(f'    ℹ σ대비 {_ratio:.1e}({_nm}-망)>1e3 — 수렴 정체 시 MPM_S4_CONTRAST_CAP=200 권장 '
+                      f'(기본 OFF; A2 실측: 셀-V ≤2.5µV@2C, σ_eff −7.8% → 보고용은 uncapped)', flush=True)
         cond_e, cond_i = sig_e > 0, sig_i > 0
         nx, ny, nz = sid.shape
         self.area_m2 = nx * ny * vox_m * vox_m              # 측면(RVE) 단면적 — R_int 환산용
@@ -523,6 +681,24 @@ class CellSystem:
         anch.discard(0)
         keep = np.isin(lab, list(anch))
         cond_e &= keep; cond_i &= keep
+        # ★e-망 부유클러스터 pruning (2026-07-27 A2/A3: union-anchored는 SE가 앵커라 SE-매몰 carbon 섬
+        #   keep — e-망 6-conn으론 집전체·AM 무접촉 = BV·판 부재의 정확 특이블록, GPU-CG 사망 구조 근원.
+        #   RHS=0 → 잔여 해 수학 불변.  AM-포함 성분은 KEEP.  MPM_S4_PRUNE_FLOAT=0 → 구 경로 bitwise 복원)
+        self.n_pruned_e_comp = self.n_pruned_e_vox = 0
+        if os.environ.get('MPM_S4_PRUNE_FLOAT', '1') != '0':
+            lab_e, n_lab = ndimage.label(cond_e)              # 6-conn = FV 행렬 결합 그래프와 동일
+            keep_lab = np.zeros(n_lab + 1, bool); keep_lab[0] = True
+            keep_lab[np.unique(lab_e[((sid == 1) | (sid == 2)) & cond_e])] = True   # AM 포함(BV 가능)
+            ii, jj = np.where(bot_e)
+            keep_lab[np.unique(lab_e[ii, jj, k_first[bot_e]])] = True               # 집전체 band 접촉
+            drop = cond_e & ~keep_lab[lab_e]
+            if drop.any():
+                self.n_pruned_e_comp = int(np.unique(lab_e[drop]).size)
+                self.n_pruned_e_vox = int(drop.sum())
+                cond_e &= ~drop
+                print(f'    e-망 부유클러스터 pruning: {self.n_pruned_e_comp:,}성분/'
+                      f'{self.n_pruned_e_vox:,}복셀 드롭 (AM·집전체 무접촉=정확특이; '
+                      f'MPM_S4_PRUNE_FLOAT=0 복원)', flush=True)
         self.n_e, self.n_i = int(cond_e.sum()), int(cond_i.sum())
         idx_e = -np.ones(sid.shape, np.int64); idx_e[cond_e] = np.arange(self.n_e)
         idx_i = -np.ones(sid.shape, np.int64); idx_i[cond_i] = np.arange(self.n_i)
@@ -668,6 +844,7 @@ class CellSystem:
         수렴 = max(노드별 잔차 ∞-norm, e-망 집계잔차 |Σ_e F| = |I_in−ΣI_f|) / i_scale."""
         Fv, I_f, eta_s = self.residual(phi, U_f, i0_f, kin, V_app)
         scale = max(abs(i_scale), 1e-12)
+        self._ew_f2_prev = None; self._ew_eta_prev = None    # ★EW inexact-Newton 상태 (콜마다 초기화)
 
         def _err(F, phi_ref):
             # 집계 노이즈 바닥: 공식(ε·Σ|entries|)은 코히런트 상한이라 실전에서 ~10³× 후함
@@ -703,8 +880,27 @@ class CellSystem:
             else:
                 stall = 0
             best = min(best, r)
+            # ★EW inexact-Newton (choice-2 γ=0.9,α=2; MPM_S4_EW=0 → 구식 고정 rtol=1e-5).
+            #   η_min=1e-5=구식 → 느슨화 전용(솔브당 CG 일량 ≤ 현행).  atol_cg 불변 → tgt=max(η‖F‖,atol):
+            #   교정-바닥/심층(deep)/stall/Armijo 로직 전부 무수정.  해 논거: 최종 수렴판정은 매 반복
+            #   '정확 재계산' F 기준(tol_rel 동일) — EW는 중간 보정해 정밀도만 조절.
+            f2_cur = float(np.linalg.norm(Fv))
+            _ew = os.environ.get('MPM_S4_EW', '1') != '0'
+            if _ew:
+                eta = 0.1 if self._ew_f2_prev is None else 0.9 * (f2_cur / self._ew_f2_prev) ** 2
+                if self._ew_eta_prev is not None and 0.9 * self._ew_eta_prev ** 2 > 0.1:
+                    eta = max(eta, 0.9 * self._ew_eta_prev ** 2)          # 급조임 진동 safeguard
+                eta = max(eta, min(0.1, 0.5 * tol_rel * scale / max(f2_cur, 1e-300)))   # over-solve 방지
+                rtol_cg = float(np.clip(eta, 1e-5, 0.1))
+            else:
+                rtol_cg = 1e-5
+            self._ew_eta_prev = rtol_cg; self._ew_f2_prev = f2_cur
+            if not hasattr(self, '_ew_eta_log'):
+                self._ew_eta_log = []                        # η 감사 기록 (selftest S3; float라 부담 無)
+            self._ew_eta_log.append(rtol_cg)
             if self.N >= 50000:                             # 대형계 Newton 진행 라인 (침묵 방지)
-                print(f'    Newton it{it}: 잔차 {r:.2e} (목표 {tol_rel:.0e}) → 보정해 CG…', flush=True)
+                print(f'    Newton it{it}: 잔차 {r:.2e} (목표 {tol_rel:.0e}, η={rtol_cg:.0e}) '
+                      f'→ 보정해 CG…', flush=True)
             X = phi[self.f_e] - phi[self.f_i] - U_f
             I_f, g_f, eta_s = kin.face_current(X, i0_f, self.A_face, I_init=I_f)
             data = self.data0.copy()
@@ -721,21 +917,39 @@ class CellSystem:
                 self._pc_cache = {}                          # sticky-GPU + AMG 계층 (스텝 간 보존)
             # CG atol = 교정-바닥 기반 (코히런트 공식은 ~10³× 후해 CG 조기종료 → 부분해 →
             # Newton 정체 r~e-3 를 유발했음: V100 smoke7 t=1-9s 거부 + 스트레스 리프로로 실증)
-            atol_cg = 0.05 * float(getattr(self, 'agg_floor_abs', 0.0))
-            dphi, info = _cg(self.J, -Fv, x0=None, rtol=1e-5, atol=atol_cg,
-                             pc_cache=self._pc_cache, deep=deep)
+            # C4b: MPM_S4_ATOL_FLOOR_FRAC(기본 0.05=현행 bitwise) — 0.5로 올리면 심층 목표가
+            # Jacobi 자기바닥(~1.4e-12) 위 = nnAMG 없이 종료 (opt-in; V100 감사 통과 전 기본 변경 금지)
+            _atol_frac = float(os.environ.get('MPM_S4_ATOL_FLOOR_FRAC', '0.05'))
+            atol_cg = _atol_frac * float(getattr(self, 'agg_floor_abs', 0.0))
+            self.last_atol_cg = atol_cg                      # 감사용 (selftest S5)
+            dphi, info = _cg(self.J, -Fv, x0=None, rtol=rtol_cg, atol=atol_cg,
+                             pc_cache=self._pc_cache, deep=deep,
+                             floor_abs=getattr(self, 'agg_floor_abs', 0.0))
             self.last_cg_info = max(getattr(self, 'last_cg_info', 0), int(info))
             self._cg_failed = bool(info)
-            step = 1.0
-            accepted = False
-            f2_old = float(np.linalg.norm(Fv))              # ℓ2-merit (∞는 단일노드 거부로 정체 유발)
-            for k in range(10):                             # 감쇠: merit 감소 보장 (Armijo c=1e-4)
-                Fn, I_fn, eta_n = self.residual(phi + step * dphi, U_f, i0_f, kin, V_app,
-                                                I_faces_init=I_f)
-                if float(np.linalg.norm(Fn)) <= f2_old * (1.0 - 1e-4 * step):
-                    accepted = True
-                    break
-                step *= 0.5
+            f2_old = f2_cur                                 # ℓ2-merit (∞는 단일노드 거부로 정체 유발) = ‖Fv‖₂
+
+            def _armijo_try(dphi_):                         # 감쇠: merit 감소 보장 (Armijo c=1e-4)
+                step = 1.0
+                for _k in range(10):
+                    Fn, I_fn, eta_n = self.residual(phi + step * dphi_, U_f, i0_f, kin, V_app,
+                                                    I_faces_init=I_f)
+                    if float(np.linalg.norm(Fn)) <= f2_old * (1.0 - 1e-4 * step):
+                        return True, step, Fn, I_fn, eta_n
+                    step *= 0.5
+                return False, step, Fn, I_fn, eta_n
+
+            accepted, step, Fn, I_fn, eta_n = _armijo_try(dphi)
+            if not accepted and _ew and rtol_cg > 1.0001e-5 and not self._cg_failed:
+                # ★EW 느슨해가 하강방향 실패 → tight(구식 1e-5) 재솔브 1회 (느슨해 warm-start).
+                #   인라인이라 stall 카운터/외부 루프 재진입 간섭 없음; F당 최대 1회 = 무한루프 불가.
+                print('    (EW 느슨해 Armijo 거부 → tight 재솔브 1회)', flush=True)
+                self._ew_tight_n = getattr(self, '_ew_tight_n', 0) + 1
+                dphi, info = _cg(self.J, -Fv, x0=dphi, rtol=1e-5, atol=atol_cg,
+                                 pc_cache=self._pc_cache, deep=deep,
+                                 floor_abs=getattr(self, 'agg_floor_abs', 0.0))
+                self.last_cg_info = max(self.last_cg_info, int(info)); self._cg_failed = bool(info)
+                accepted, step, Fn, I_fn, eta_n = _armijo_try(dphi)
             if not accepted:
                 break                                        # ||F|| 미감소 → 스텝 거부, phi 보존
                                                              # (강제수용이 V100 폭주의 방아쇠였음)
@@ -1428,6 +1642,228 @@ def _selftest_discharge():
     return ok
 
 
+def _selftest_solver():
+    """2026-07-27 솔버 치료 회귀 (C0 pruning / C1 cap / C2 EW / C3 V-cycle / C4 게이트·atol 노브).
+    env는 try/finally 복원 — 다른 selftest 오염 금지.  GPU 경로는 cupy 부재 시 guard만 검증."""
+    import contextlib
+    import io
+    ok = True
+    _ENV = ('MPM_S4_PRUNE_FLOAT', 'MPM_S4_CONTRAST_CAP', 'MPM_S4_EW', 'MPM_S4_GPU_AMG',
+            'MPM_S4_GPU_AMG_F32', 'MPM_S4_ATOL_FLOOR_FRAC', 'MPM_S4_NN_ACCEPT_ABS_FRAC')
+    _saved = {k: os.environ.get(k) for k in _ENV}
+
+    def _env(k, v):
+        if v is None:
+            os.environ.pop(k, None)
+        else:
+            os.environ[k] = v
+
+    try:
+        ocp = OCP.synthetic_test()
+        sig_i = np.array([0., 0., 0., 0., 0., 0., 2.])
+        r_p = np.array([10.0e-6])
+        kin = Kinetics(5.0)
+        # ---- S1: e-망 부유클러스터 pruning 해-불변 (SE-매몰 2복셀 VGCF 섬 = a2_exact_null 미러) ----
+        sid1 = _build_sandwich(nxy=4, nz=8)[0].copy()
+        sid1[1, 1, 6] = 3; sid1[1, 2, 6] = 3                 # SE 내부 매몰 (AM·집전체 6-conn 무접촉)
+        pid1 = np.where(sid1 == 1, 0, -1).astype(np.int32)
+        sig_e1 = np.array([0., 1., 0., 100., 0., 0., 0.])    # sid3=VGCF (σ대비 100 — 1e4 대비는 S2)
+        _env('MPM_S4_PRUNE_FLOAT', None)                     # 기본 ON
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            sys_on = CellSystem(sid1, sig_e1, sig_i, pid1, 1, 0.5, z_top_um=8 * 0.5, z_bot_um=0.0)
+        _env('MPM_S4_PRUNE_FLOAT', '0')
+        sys_off = CellSystem(sid1, sig_e1, sig_i, pid1, 1, 0.5, z_top_um=8 * 0.5, z_bot_um=0.0)
+        _env('MPM_S4_PRUNE_FLOAT', None)
+        s1a = (sys_on.n_pruned_e_comp == 1 and sys_on.n_pruned_e_vox == 2
+               and sys_off.n_e - sys_on.n_e == 2 and sys_off.n_pruned_e_comp == 0
+               and '부유클러스터' in buf.getvalue())
+        ok &= s1a
+        print(f'solver S1a pruning 카운트+로그: comp {sys_on.n_pruned_e_comp} vox '
+              f'{sys_on.n_pruned_e_vox} (Δn_e {sys_off.n_e - sys_on.n_e})  {"OK" if s1a else "FAIL"}')
+        out_on = simulate(sys_on, ocp, r_p, 1e-13, kin, c_rate=0.2, nr=15, v_min=2.8, t_max=400.0,
+                          dx_max=0.03, dt_init=2.0, dt_max=300.0, verbose=False)
+        _env('MPM_S4_PRUNE_FLOAT', '0')
+        out_off = simulate(sys_off, ocp, r_p, 1e-13, kin, c_rate=0.2, nr=15, v_min=2.8, t_max=400.0,
+                           dx_max=0.03, dt_init=2.0, dt_max=300.0, verbose=False)
+        _env('MPM_S4_PRUNE_FLOAT', None)
+        dV = (float(np.max(np.abs(out_on['V'] - out_off['V'])))
+              if len(out_on['V']) == len(out_off['V']) else np.inf)
+        s1b = (dV < 1e-9 and float(np.max(out_on['kcl_rel'])) < 1e-6
+               and float(np.max(out_on['energy_balance_rel'])) < 1e-7)
+        ok &= s1b
+        print(f'solver S1b pruning ON≡OFF 방전 (|ΔV|max {dV:.1e}, KCL {np.max(out_on["kcl_rel"]):.1e}, '
+              f'E-bal {np.max(out_on["energy_balance_rel"]):.1e}): {"OK" if s1b else "FAIL"}')
+        # ---- S2: σ-contrast cap (합성 고대비 0.01/100 = 1e4; AM-접촉 VGCF → pruning 비대상) ----
+        sid2 = _build_sandwich(nxy=4, nz=8)[0].copy()
+        sid2[1, 1, 4] = 3; sid2[1, 2, 4] = 3                 # AM 슬래브(z=3) 위 접촉 → e-망 잔존
+        pid2 = np.where(sid2 == 1, 0, -1).astype(np.int32)
+        sig_hi = np.array([0., 0.01, 0., 100., 0., 0., 0.])
+        _env('MPM_S4_CONTRAST_CAP', None)
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            sU = CellSystem(sid2, sig_hi, sig_i, pid2, 1, 0.5, z_top_um=8 * 0.5, z_bot_um=0.0)
+        hint = 'MPM_S4_CONTRAST_CAP=200 권장' in buf.getvalue()
+        _env('MPM_S4_CONTRAST_CAP', '0')
+        s0 = CellSystem(sid2, sig_hi, sig_i, pid2, 1, 0.5, z_top_um=8 * 0.5, z_bot_um=0.0)
+        s2a = np.array_equal(sU.data0, s0.data0) and sU.contrast_cap == 0.0 and hint
+        ok &= s2a
+        print(f'solver S2a cap 미설정 bitwise + 권고로그: {"OK" if s2a else "FAIL"}')
+        _env('MPM_S4_CONTRAST_CAP', '200')
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            sC = CellSystem(sid2, sig_hi, sig_i, pid2, 1, 0.5, z_top_um=8 * 0.5, z_bot_um=0.0)
+        cap_log = 'σ-contrast cap(e-망)' in buf.getvalue()
+        _env('MPM_S4_CONTRAST_CAP', None)
+
+        def _face_ratio(sysX):                               # e-블록 off-diag(−g) 양수 max/min
+            blk = sysX.J[:sysX.n_e, :sysX.n_e].tocsr()
+            gv = -blk.data[blk.data < 0]
+            return float(gv.max() / gv.min())
+        rat_u, rat_c = _face_ratio(sU), _face_ratio(sC)
+        iU = sU.J[sU.n_e:].tocsr(); iC = sC.J[sC.n_e:].tocsr()
+        s2b = (rat_u > 1e3 and rat_c <= 200.0001 and cap_log
+               and np.array_equal(iU.indptr, iC.indptr) and np.array_equal(iU.indices, iC.indices)
+               and np.array_equal(iU.data, iC.data)          # i-망(대비≤cap) bitwise 불변
+               and not sC.data0[sC.pos_ei].any() and not sC.data0[sC.pos_ie].any())   # BV placeholder 0
+        ok &= s2b
+        print(f'solver S2b cap=200 적용 (e-face비 {rat_u:.1e}→{rat_c:.1f}, i-망 불변, BV=0): '
+              f'{"OK" if s2b else "FAIL"}')
+        # ---- S3: EW inexact-Newton on/off 최종해 동등 + η 범위 + tight-재솔브 분기 ----
+        sid3, pid3, vox3 = _build_sandwich(nxy=4, nz=8)
+        se3 = np.array([0., 1., 0., 0., 0., 0., 0.])
+        _env('MPM_S4_EW', None)                              # 기본 ON
+        sysE = CellSystem(sid3, se3, sig_i, pid3, 1, vox3, z_top_um=8 * 0.5, z_bot_um=0.0)
+        outE = simulate(sysE, ocp, r_p, 1e-13, kin, c_rate=0.2, nr=15, v_min=2.8, t_max=400.0,
+                        dx_max=0.03, dt_init=2.0, dt_max=300.0, verbose=False)
+        _env('MPM_S4_EW', '0')
+        sysF = CellSystem(sid3, se3, sig_i, pid3, 1, vox3, z_top_um=8 * 0.5, z_bot_um=0.0)
+        outF = simulate(sysF, ocp, r_p, 1e-13, kin, c_rate=0.2, nr=15, v_min=2.8, t_max=400.0,
+                        dx_max=0.03, dt_init=2.0, dt_max=300.0, verbose=False)
+        _env('MPM_S4_EW', None)
+        eta_h = np.asarray(getattr(sysE, '_ew_eta_log', []))
+        dV3 = (float(np.max(np.abs(outE['V'] - outF['V'])))
+               if len(outE['V']) == len(outF['V']) else np.inf)
+        s3a = (dV3 < 1e-6
+               and float(np.max(outE['kcl_rel'])) < 1e-6 and float(np.max(outF['kcl_rel'])) < 1e-6
+               and float(np.max(outE['energy_balance_rel'])) < 1e-7
+               and float(np.max(outF['energy_balance_rel'])) < 1e-7
+               and eta_h.size > 0 and float(eta_h.min()) >= 1e-5 and float(eta_h.max()) <= 0.1)
+        ok &= s3a
+        print(f'solver S3a EW on≡off 방전 (|ΔV|max {dV3:.1e}, η∈[{eta_h.min():.0e},{eta_h.max():.0e}] '
+              f'n={eta_h.size}): {"OK" if s3a else "FAIL"}')
+        # tight-재솔브 분기: 모듈 _cg 몽키패치 (첫 콜=쓰레기 하강방향 info=0 → Armijo 거부 → 재솔브)
+        g_mod = globals()
+        real_cg = g_mod['_cg']
+        calls = {'n': 0}
+
+        def _bad_cg(L, b, **kw):
+            calls['n'] += 1
+            if calls['n'] == 1:
+                return np.random.default_rng(1).standard_normal(L.shape[0]) * 1e3, 0
+            return real_cg(L, b, **kw)
+
+        sysT = CellSystem(sid3, se3, sig_i, pid3, 1, vox3, z_top_um=8 * 0.5, z_bot_um=0.0)
+        U0 = float(ocp.U(ocp.x0))
+        U_fT = np.full(sysT.n_bv, U0)
+        i0T = np.full(sysT.n_bv, float(kin.i0(ocp.x0)))
+        phiT0 = np.zeros(sysT.N); phiT0[:sysT.n_e] = U0
+        buf = io.StringIO()
+        g_mod['_cg'] = _bad_cg
+        try:
+            with contextlib.redirect_stdout(buf):
+                _, _, _, rT, itT = sysT.newton(phiT0, U_fT, i0T, kin, U0 - 0.05, i_scale=1e-8)
+        finally:
+            g_mod['_cg'] = real_cg
+        s3b = (getattr(sysT, '_ew_tight_n', 0) >= 1 and calls['n'] >= 2 and itT >= 1
+               and np.isfinite(rT) and 'tight 재솔브' in buf.getvalue())
+        ok &= s3b
+        print(f'solver S3b EW tight-재솔브 발동 (n={getattr(sysT, "_ew_tight_n", 0)}, '
+              f'cg콜 {calls["n"]}, it {itT}): {"OK" if s3b else "FAIL"}')
+        # ---- S4: V-cycle CPU 동수학 (xp=numpy — GPU와 단일 구현) ----
+        try:
+            import pyamg
+            _has_pyamg = True
+        except ImportError:
+            _has_pyamg = False
+            print('solver S4 V-cycle: pyamg 미설치 → SKIP (프로덕션도 동일 강등)')
+        if _has_pyamg:
+            A4 = sparse.csr_matrix(pyamg.gallery.poisson((12, 12), format='csr'), dtype=np.float64)
+            _kw = dict(presmoother=('jacobi', {'omega': 2.0 / 3.0, 'iterations': 1}),
+                       postsmoother=('jacobi', {'omega': 2.0 / 3.0, 'iterations': 1}))
+            ml4 = pyamg.smoothed_aggregation_solver(A4, max_coarse=30, **_kw)
+            lv4, lu4 = _mirror_levels(ml4, np)
+            rng4 = np.random.default_rng(2)
+            N4 = A4.shape[0]
+            sym = 0.0
+            for _ in range(5):                               # (i) M 대칭 (CG SPD-호환 요건)
+                u = rng4.standard_normal(N4); v = rng4.standard_normal(N4)
+                Mu = _vcycle_matvec(lv4, lu4, u, np); Mv = _vcycle_matvec(lv4, lu4, v, np)
+                sym = max(sym, abs(float(u @ Mv) - float(Mu @ v)) / max(abs(float(u @ Mv)), 1e-30))
+            b4 = rng4.standard_normal(N4)
+            x1 = _vcycle_matvec(lv4, lu4, b4, np)            # (ii) 1-apply 잔차 감소 (전처리 유효성)
+            red = float(np.linalg.norm(b4 - A4 @ x1) / np.linalg.norm(b4))
+            from scipy.sparse.linalg import LinearOperator
+
+            def _cg_run(M):
+                try:
+                    return cg(A4, b4, rtol=1e-12, atol=0.0, maxiter=8000, M=M)
+                except TypeError:
+                    return cg(A4, b4, tol=1e-12, maxiter=8000, M=M)
+            xv, iv = _cg_run(LinearOperator((N4, N4), matvec=lambda r: _vcycle_matvec(lv4, lu4, r, np)))
+            xj, ij = _cg_run(sparse.diags(1.0 / A4.diagonal()))
+            rel = float(np.linalg.norm(xv - xj) / np.linalg.norm(xj))   # (iii) 전처리 해-불변
+            s4a = sym < 1e-10 and red < 0.9 and iv == 0 and ij == 0 and rel < 1e-8
+            ok &= s4a
+            print(f'solver S4a V-cycle 동수학 (대칭 {sym:.1e}, 1-apply resid {red:.2f}, '
+                  f'CG해 Δ {rel:.1e}): {"OK" if s4a else "FAIL"}')
+        try:                                                 # (iv) GPU 게이트: cupy 부재 → False 무해
+            import cupy                                      # noqa: F401
+            _has_cupy = True
+        except Exception:
+            _has_cupy = False
+        _GPU_AMG_STATE['ok'] = None
+        g_mod['GPU'] = True
+        try:
+            got = bool(_gpu_amg_on())
+        finally:
+            g_mod['GPU'] = False
+            _GPU_AMG_STATE['ok'] = None
+        s4b = (got == _has_cupy)
+        ok &= s4b
+        print(f'solver S4b GPU 게이트 (cupy {"有" if _has_cupy else "無"} → {got}): '
+              f'{"OK" if s4b else "FAIL"}')
+        # ---- S5: 게이트 no-op 대수 (회귀 문서화) + atol 노브 ----
+        rng5 = np.random.default_rng(3)
+        bn5 = 10.0 ** rng5.uniform(-16, 2, 100)
+        at5 = 10.0 ** rng5.uniform(-20, -6, 100)
+        s5a = all(max(1e-5 * b_, a_, 1e-7 * b_) == max(1e-5 * b_, a_)
+                  for b_, a_ in zip(bn5, at5))               # 프로덕션 rtol=1e-5 전제 (깨지면 조기검출)
+        ok &= s5a
+        print(f'solver S5a _NN_ACCEPT_RTOL no-op 대수 (100조합): {"OK" if s5a else "FAIL"}')
+        s5b = (getattr(sysE, 'last_atol_cg', None) is not None
+               and sysE.last_atol_cg == 0.05 * sysE.agg_floor_abs)   # 미설정 = 현행 bitwise
+        _env('MPM_S4_ATOL_FLOOR_FRAC', '0.5')
+        sys6 = CellSystem(sid3, se3, sig_i, pid3, 1, vox3, z_top_um=8 * 0.5, z_bot_um=0.0)
+        out6 = simulate(sys6, ocp, r_p, 1e-13, kin, c_rate=0.2, nr=15, v_min=2.8, t_max=400.0,
+                        dx_max=0.03, dt_init=2.0, dt_max=300.0, verbose=False)
+        _env('MPM_S4_ATOL_FLOOR_FRAC', None)
+        s5c = (sys6.last_atol_cg == 0.5 * sys6.agg_floor_abs
+               and float(np.max(out6['kcl_rel'])) < 1e-6
+               and float(np.max(out6['energy_balance_rel'])) < 1e-7)
+        ok &= s5b and s5c
+        print(f'solver S5b atol 미설정=0.05·floor bitwise: {"OK" if s5b else "FAIL"}')
+        print(f'solver S5c atol=0.5·floor 방전 감사 통과 (KCL {np.max(out6["kcl_rel"]):.1e}, '
+              f'E-bal {np.max(out6["energy_balance_rel"]):.1e}): {"OK" if s5c else "FAIL"}')
+    finally:
+        for k, v in _saved.items():
+            if v is None:
+                os.environ.pop(k, None)
+            else:
+                os.environ[k] = v
+    return ok
+
+
 def _selftest_b1():
     """B-1 사이클 계면상 배선 검증 (리뷰 m3: main() 배선이 무테스트라 침묵 회귀 위험).
     R_ct 화학몫(i0↓)과 필름옴성(asr)이 (1) 물리 부호 (2) 독립 직렬 채널 (3) 단위변환 (4) i0_p 정규화
@@ -1568,6 +2004,7 @@ def main():
         ok = _selftest_radial()
         ok &= _selftest_cell()
         ok &= _selftest_discharge()
+        ok &= _selftest_solver()
         ok &= _selftest_b1()
         print('STEP4-V2 SELFTEST', 'PASS' if ok else 'FAIL')
         sys.exit(0 if ok else 1)
@@ -1637,6 +2074,15 @@ def main():
                    r_int_ohm_cm2=a.r_int_ohm_cm2, x_init=a.x_init, dudt=dudt,
                    i0_p=i0_p, dx_max=a.dx_max, dt_max=a.dt_max, n_chk=a.n_chk)
     meta = out.pop('params')
+    # C5: 솔버 env 감사 기록 (>0 contrast_cap = capped 런 → σ-메트릭 보고 금지 라벨)
+    meta['solver_env'] = {
+        'prune_float_comp': int(getattr(sysm, 'n_pruned_e_comp', 0)),
+        'prune_float_vox': int(getattr(sysm, 'n_pruned_e_vox', 0)),
+        'contrast_cap': float(getattr(sysm, 'contrast_cap', 0.0)),
+        'ew': os.environ.get('MPM_S4_EW', '1') != '0',
+        'gpu_amg': os.environ.get('MPM_S4_GPU_AMG', '1') != '0',
+        'atol_floor_frac': float(os.environ.get('MPM_S4_ATOL_FLOOR_FRAC', '0.05')),
+    }
     reason = out.pop('end_reason')
     meta['end_reason'] = reason
     if split_meta is not None:
