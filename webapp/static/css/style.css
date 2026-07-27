@@ -626,3 +626,24 @@ kbd{font-family:var(--mono);font-size:.72em;background:var(--bg);border:1px soli
 .find-card .fc-t{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--dim)}
 .find-card .fc-v{font-size:1.12rem;font-weight:800;color:var(--navy);margin:5px 0;line-height:1.35}
 .find-card .fc-n{font-size:.8rem;color:var(--dim);line-height:1.55}
+
+/* 🎯 cascade 테마 탭 — 테마 카드 그리드 + 조합 UI */
+.theme-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-bottom:16px}
+.theme-card{transition:border-color .12s,box-shadow .12s}
+.theme-card:hover{border-color:var(--accent)}
+.theme-card.sel{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.tc-head{display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:700;color:var(--navy);font-size:.95rem}
+.tc-head input{accent-color:var(--accent);width:15px;height:15px;flex:0 0 auto;cursor:pointer}
+.tc-icon{font-size:1.05rem}
+.tc-q{font-size:.8rem;color:var(--text2);margin:7px 0 5px;line-height:1.5}
+.tc-metric{font-size:.7rem;color:var(--accent);margin-bottom:7px;line-height:1.5}
+.tc-top{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+.th-chip{display:inline-block;font-size:.72rem;font-weight:600;padding:2px 9px;border-radius:14px;
+  border:1px solid var(--border);background:var(--bg);color:var(--text2);font-family:var(--mono)}
+button.th-chip.mo-chip{cursor:pointer;border-color:color-mix(in srgb,var(--accent) 45%,var(--border));color:var(--accent)}
+button.th-chip.mo-chip:hover{background:var(--accent-soft);border-color:var(--accent)}
+.tc-caveat{font-size:.71rem;color:var(--dim);line-height:1.5;border-top:1px dashed var(--border);padding-top:6px}
+/* MO 팝업 열리는 도펀트명 — 밑줄점선 (MO_DB에 키 있을 때만 부여) */
+.mo-click{cursor:pointer;border-bottom:1px dashed var(--accent);color:var(--navy)}
+.mo-click:hover{color:var(--accent)}
+span.mo-badge.mo-click{border-bottom:none}

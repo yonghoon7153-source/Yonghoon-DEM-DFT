@@ -20,9 +20,13 @@ except Exception:
 
 
 def _css_ver():
-    """style.css mtime 기반 캐시버스팅 키 (요청마다 계산 → CSS 수정 즉시 반영)."""
+    """style.css + static/js/*.js 최신 mtime 기반 캐시버스팅 키 (요청마다 계산 → 수정 즉시 반영)."""
     try:
-        return str(int(os.path.getmtime(os.path.join(app.static_folder, "css", "style.css"))))
+        paths = [os.path.join(app.static_folder, "css", "style.css")]
+        jsd = os.path.join(app.static_folder, "js")
+        if os.path.isdir(jsd):
+            paths += [os.path.join(jsd, f) for f in os.listdir(jsd) if f.endswith(".js")]
+        return str(int(max(os.path.getmtime(p) for p in paths)))
     except Exception:
         return "1"
 
@@ -91,7 +95,8 @@ def cascade_page():
     }
     deep_map = {v: k for k, v in D.CASCADE_DOPANT.items()}
     return render_template("cascade.html", active="cascade", casc=casc,
-                           stats=stats, deep_map=deep_map)
+                           stats=stats, deep_map=deep_map,
+                           mo_db=D.load_molecular_orbitals())
 
 
 @app.route("/elements")

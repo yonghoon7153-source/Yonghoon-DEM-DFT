@@ -38,55 +38,21 @@
       <span class="muted">예: Nd + Cl 을 같이 누르면 둘 다 든 조성과 Nd–Cl 결합이 나와요.</span></div></div>
 </div>
 
-<div class="modal" id="mo-modal" onclick="if(event.target===this)this.classList.remove('open')">
-  <div class="modal-body" style="max-width:680px;width:100%">
-    <div class="modal-head"><h3 id="mo-title" style="font-size:.92rem">⚛ 분자오비탈</h3>
-      <button class="btn sm" onclick="document.getElementById('mo-modal').classList.remove('open')">✕ 닫기</button></div>
-    <div id="mo-body"></div>
-  </div>
-</div>
+{% include "_mo_modal.html" %}
 
+<script>window.MO_DB={{ mo_db|tojson }};</script>
+<script src="{{ url_for('static', filename='js/mo.js') }}?v={{ asset_version }}"></script>
 <script>
-var E2C={{ e2c|tojson }}, COMPS={{ COMPS|tojson }}, MO_DB={{ mo_db|tojson }}, selected=[];
+var E2C={{ e2c|tojson }}, COMPS={{ COMPS|tojson }}, MO_DB=window.MO_DB, selected=[];
 var CATKR={"alkali metal":"알칼리 금속","alkaline earth":"알칼리토금속","transition metal":"전이금속",
   "post-transition metal":"전이후 금속","metalloid":"준금속","nonmetal":"비금속","halogen":"할로겐",
   "noble gas":"비활성 기체","lanthanide":"란타넘족","actinide":"악티늄족","other":"기타"};
 var CATCOL={"alkali metal":"#c026d3","alkaline earth":"#d97706","transition metal":"#2563eb",
   "post-transition metal":"#0891b2","metalloid":"#0d9488","nonmetal":"#16a34a","halogen":"#65a30d",
   "noble gas":"#6b7280","lanthanide":"#7c3aed","actinide":"#be123c","other":"#6b7280"};
-function _esc(s){return (s+'').replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+// _esc·moKey·moSVG·moText·openMO 는 static/js/mo.js (공용 MO 렌더러)에서 로드됨
 function compLink(cid){var c=COMPS[cid]||{};return '<a class="anchor-comp" href="/composition/'+cid+'"><span class="dot" style="background:'+(c.color||'#888')+'"></span>'+(c.label||cid)+'</a>';}
 function paperChip(p){return '<a class="gpaper-chip tb-'+p.track+'" href="/literature?open='+p.id+'" title="'+_esc(p.title)+'">'+_esc(p.id.split('_')[0])+'</a>';}
-// ── 분자오비탈(MO) 팝업 ──
-function moKey(f){var sub={'₀':'0','₁':'1','₂':'2','₃':'3','₄':'4','₅':'5','₆':'6','₇':'7','₈':'8','₉':'9'};
-  return (f+'').replace(/[₀-₉]/g,function(c){return sub[c];})
-    .replace(/\([^)]*\)/g,'').replace(/[¹²³⁴⁵⁶⁷⁸⁹⁰⁺⁻]/g,'').replace(/\s*\d*[+\-]\s*$/,'').replace(/[\s·–—\-]/g,'');}
-function moSVG(mo){var lv=mo.levels||[],n=lv.length;if(!n)return'';
-  var W=280,H=44+n*40,top=26,bot=H-18,gap=n>1?(bot-top)/(n-1):0,midY=(top+bot)/2;
-  var col={bonding:'#2563eb',nonbonding:'#6b7280',antibonding:'#dc2626'};
-  var s='<svg viewBox="0 0 '+W+' '+H+'" class="mo-svg" xmlns="http://www.w3.org/2000/svg">';
-  s+='<defs><marker id="ar" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="#9ca3af"/></marker></defs>';
-  s+='<line x1="20" y1="'+bot+'" x2="20" y2="'+(top-8)+'" stroke="#9ca3af" stroke-width="1" marker-end="url(#ar)"/>';
-  s+='<text x="7" y="'+midY+'" font-size="8" fill="#9ca3af" transform="rotate(-90 9 '+midY+')">Energy →</text>';
-  var aoL=(mo.ao_left||[]).join(', ');
-  if(aoL)s+='<text x="30" y="'+(midY+3)+'" font-size="8.5" fill="#374151">'+_esc(aoL)+'</text>';
-  lv.forEach(function(l,i){var y=bot-i*gap,c=col[l.type]||'#6b7280';
-    s+='<line x1="135" y1="'+midY+'" x2="175" y2="'+y+'" stroke="#d1d5db" stroke-width="0.7"/>';
-    s+='<line x1="175" y1="'+y+'" x2="235" y2="'+y+'" stroke="'+c+'" stroke-width="3.5"/>';
-    s+='<text x="175" y="'+(y-5)+'" font-size="9" fill="'+c+'" font-weight="700">'+_esc(l.label)+'</text>';});
-  return s+'</svg>';}
-function moText(mo){var tk={bonding:'결합',nonbonding:'비결합',antibonding:'반결합'};
-  return (mo.levels||[]).map(function(l){var ty=(l.type||'').replace(/[^a-z]/g,'');return '<div class="mo-lv mo-'+ty+'"><b>'+_esc(l.label)+'</b> <span class="mo-tag">'+(tk[l.type]||_esc(l.type))+'</span>'+
-    (l.character?'<div class="mo-ch">'+_esc(l.character)+'</div>':'')+
-    (l.dos?'<div class="mo-dos">→ DOS: '+_esc(l.dos)+'</div>':'')+'</div>';}).join('');}
-function openMO(key){var mo=MO_DB[key];if(!mo)return;
-  document.getElementById('mo-title').innerHTML='⚛ '+_esc(mo.name||key);
-  var b='<div class="mo-sum">'+_esc(mo.summary||'')+'</div>'+
-    '<div class="mo-grid"><div class="mo-diag">'+moSVG(mo)+'</div><div class="mo-levels">'+moText(mo)+'</div></div>';
-  if(mo.dos_link)b+='<div class="mo-doslink"><b>📊 DOS 연결</b> '+_esc(mo.dos_link)+'</div>';
-  if(mo.source)b+='<div class="mo-src">'+_esc(mo.source)+'</div>';
-  document.getElementById('mo-body').innerHTML=b;
-  document.getElementById('mo-modal').classList.add('open');}
 
 function toggleEl(sym){var i=selected.indexOf(sym);if(i>=0)selected.splice(i,1);else selected.push(sym);sync();render();}
 function clearSel(){selected=[];sync();render();}

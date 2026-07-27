@@ -1,0 +1,225 @@
+{
+ "property": "codoping_ml_v2_meta",
+ "date": "2026-07-27",
+ "status": "HYPOTHESIS GENERATOR — NOT VALIDATED (co-doping 라벨 부재; doping_cascade_verified.json 은 단일 도펀트만)",
+ "inputs": [
+  "cascade_v23_ranked.csv",
+  "oxidation_stability_cascade.csv",
+  "cascade_v23_litransport.csv",
+  "cascade_v23_themes.json",
+  "cascade_v23_synergy_pairs.csv (v1, 증류 타깃)"
+ ],
+ "stage1_single_dopant_ridge": {
+  "target": "cascade v23 score (합성 지표 — 물성 실측 아님)",
+  "n": 47,
+  "lambda": 0.07943282347242822,
+  "lambda_rule": "1se",
+  "loocv_r2": 0.9998,
+  "loocv_residual_std_score_units": 0.0018,
+  "coefficients_std_units": {
+   "de": -0.0548,
+   "ox_V": 0.0739,
+   "red_V": 0.0048,
+   "window_V": 0.0357,
+   "E_GPa": -0.0434,
+   "pugh": -0.0316,
+   "bvs_x002": -0.0002,
+   "bvs_x005": 0.0,
+   "bvs_x010": -0.0001,
+   "bvs_slope": -0.0001,
+   "blocking": 0.0,
+   "disorder_std": 0.0002,
+   "mass_per_cation": -0.0001,
+   "cost_tier": 0.0002,
+   "gap_lit_eV": -0.0002,
+   "air_hsab": -0.0002,
+   "group=TM": 0.0,
+   "group=lanthanide": 0.0004,
+   "group=alk.earth": 0.0002,
+   "group=alkali": 0.0001
+  },
+  "note": "계수 = 표준화 특징 1σ당 score 변화. λ는 1-SE 규칙 — score가 5성분 정확 선형합성이라 min-λ에선 정확공선 트리오(window=ox-red, slope=x010-x002)에 스퓨리어스 가중이 새는 것 확인. one-hot 기준그룹=main-group."
+ },
+ "stage3_interaction_distillation": {
+  "target": "v1 synergy (top40 수록값 가중 1.0, 미수록 1041쌍=0 근사·가중 0.1)",
+  "n_pairs": 1081,
+  "lambda": 39.81071705534978,
+  "weighted_loocv_r2": 0.0853,
+  "weighted_loocv_residual_std_tz_units": 2.3323,
+  "interaction_coefficients": {
+   "air_max*gap_min": 0.0834,
+   "joint_window*transport_min": 0.0877,
+   "disorder_max*dose_slope_min": -0.1964,
+   "transport_min*blocking_max": 0.0615,
+   "joint_window*gap_min": -0.2066,
+   "group_cross*joint_window": -0.1681,
+   "de_avg*joint_window": -0.6125,
+   "air_max*transport_min": -0.0641
+  },
+  "interaction_rationale": {
+   "air_max*gap_min": "soft-acid 공기보호 <-> 전자절연 트레이드오프",
+   "joint_window*transport_min": "넓은 합동창이 수송 약한 고리와 동반되는가",
+   "disorder_max*dose_slope_min": "무질서 유도 <-> 농도 강건성",
+   "transport_min*blocking_max": "수송 약한 고리 x 채널 차단 최악치",
+   "joint_window*gap_min": "전기화학 창을 전자누설이 잠식하는가",
+   "group_cross*joint_window": "이종 그룹 조합의 창 상보성",
+   "de_avg*joint_window": "열역학 도핑 안정성이 동반된 합동창",
+   "air_max*transport_min": "공기보호와 수송의 겸비"
+  }
+ },
+ "vs_v1": {
+  "spearman_on_v1_top40_pairs": 0.661,
+  "top10_overlap_count": 2,
+  "corr_base_z_vs_v1_target": 0.215,
+  "v1_top10": [
+   [
+    "Cr2O3",
+    "HfO2"
+   ],
+   [
+    "Al2O3",
+    "Cr2O3"
+   ],
+   [
+    "HfO2",
+    "In2O3"
+   ],
+   [
+    "Ga2O3",
+    "HfO2"
+   ],
+   [
+    "AlF3",
+    "Cr2O3"
+   ],
+   [
+    "HfO2",
+    "Sc2O3"
+   ],
+   [
+    "Cr2O3",
+    "ScF3"
+   ],
+   [
+    "Gd2O3",
+    "In2O3"
+   ],
+   [
+    "Cr2O3",
+    "MgF2"
+   ],
+   [
+    "Cr2O3",
+    "MgO"
+   ]
+  ],
+  "v2_top10": [
+   [
+    "Cr2O3",
+    "Gd2O3"
+   ],
+   [
+    "Gd2O3",
+    "In2O3"
+   ],
+   [
+    "Cr2O3",
+    "Sc2O3"
+   ],
+   [
+    "Gd2O3",
+    "Sc2O3"
+   ],
+   [
+    "Cr2O3",
+    "Y2O3"
+   ],
+   [
+    "Sc2O3",
+    "Ta2O5"
+   ],
+   [
+    "Nb2O5",
+    "Sc2O3"
+   ],
+   [
+    "Cr2O3",
+    "HfO2"
+   ],
+   [
+    "Sc2O3",
+    "WO3"
+   ],
+   [
+    "Sc2O3",
+    "V2O5"
+   ]
+  ],
+  "interaction_lifted_pairs": [
+   {
+    "pair": [
+     "V2O5",
+     "Y2O3"
+    ],
+    "rank_v2": 49,
+    "rank_base_only": 181,
+    "lift": 132,
+    "top_interaction": "de_avg*joint_window"
+   },
+   {
+    "pair": [
+     "Fe2O3",
+     "Y2O3"
+    ],
+    "rank_v2": 44,
+    "rank_base_only": 174,
+    "lift": 130,
+    "top_interaction": "de_avg*joint_window"
+   },
+   {
+    "pair": [
+     "Nb2O5",
+     "Y2O3"
+    ],
+    "rank_v2": 18,
+    "rank_base_only": 82,
+    "lift": 64,
+    "top_interaction": "de_avg*joint_window"
+   },
+   {
+    "pair": [
+     "Ta2O5",
+     "Y2O3"
+    ],
+    "rank_v2": 26,
+    "rank_base_only": 80,
+    "lift": 54,
+    "top_interaction": "de_avg*joint_window"
+   },
+   {
+    "pair": [
+     "WO3",
+     "Y2O3"
+    ],
+    "rank_v2": 39,
+    "rank_base_only": 93,
+    "lift": 54,
+    "top_interaction": "de_avg*joint_window"
+   }
+  ]
+ },
+ "assumptions": [
+  "co-doping 상호작용은 단일도펀트 특징의 집계(min/max/avg)+2차 곱항으로 근사 가능",
+  "합동 ESW = max(ox) - min(red): 두 상이 각각 양극측/음극측을 커버한다는 상보 가정 (실제 계면상 형성/혼상 반응 미반영)",
+  "1단계 계수의 pair 이식: 단일도펀트 스케일러 유지 시 물리 방향성 보존 가정",
+  "v1 미수록 쌍 synergy=0 근사 (v1은 top40만 저장; 실제는 0~0.059 사이) — 0-근사 신뢰가 낮아 증류 가중 0.1 부여 (가중 1.0이면 0 홍수로 계수 전멸)",
+  "불확실성 ±는 모델 내부 적합 노이즈만 (stage1 LOOCV leverage 전파 + stage3 ridge 계수 공분산 사영, ridge 축소로 하한 추정) — 물리적 타당성 불확실성 아님",
+  "cost_tier/gap_lit_eV/air_hsab 는 큐레이션 값(문헌 전형/정성 등급) — 우리 계산 아님"
+ ],
+ "limitations": [
+  "타깃(cascade score, v1 synergy) 자체가 휴리스틱 합성 지표 — 이 모델은 그 휴리스틱의 해부+확장이지 물성 예측이 아님",
+  "co-doping 시 도펀트간 화학 상호작용(공석 보상, 상분리, 계면상)은 특징에 없음",
+  "검증 경로: top 후보 소수를 UMA cascade(공동 치환 슈퍼셀)로 직접 계산해 라벨 확보 후 재학습",
+  "ml_score 절대값은 무의미(z 단위 합성) — 순위와 ±만 사용"
+ ]
+}

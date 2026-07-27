@@ -248,6 +248,16 @@ def load_cascade() -> dict:
     out["trivalent"] = _load_json(DB / "properties" / "doping_cascade_trivalent_M3.json")
     out["verified"] = _load_json(DB / "properties" / "doping_cascade_verified.json")
     out["alpha"] = _load_json(DB / "properties" / "alpha_sensitivity_FINAL.json")
+    # 테마별 재구성 (13종 + 도펀트별 norm[theme]∈[0,1]) — 🎯 테마 탭 + 조합 UI 데이터
+    out["themes"] = _load_json(DB / "properties" / "cascade_v23_themes.json")
+    # co-doping ML v2 (교호작용) — 파일이 아직 없을 수 있음(동시 생성 중) → 존재할 때만 노출 (graceful)
+    v2_csv = DB / "properties" / "codoping_ml_v2.csv"
+    if v2_csv.exists():
+        t = read_csv("properties/codoping_ml_v2.csv")
+        out["codoping_v2"] = t if t.get("data") else None
+    else:
+        out["codoping_v2"] = None
+    out["codoping_v2_meta"] = _load_json(DB / "properties" / "codoping_ml_v2_meta.json")
     return out
 
 
@@ -1116,6 +1126,9 @@ def dashboard_highlights() -> list:
     if top:
         hi.append({"t": "도핑 스크리닝 챔피언", "v": f"{top['dopant']} (UMA #1)",
                    "n": "코팅 후보 상위 · Nd₂O₃·B₂O₃는 DFT 검증됨 (절대값은 상대비교만)"})
-    hi.append({"t": "VGCF/hBN Li 확산 (CI-NEB)", "v": "hBN 0.007 · graphene 0.273 · gallery 0.357 eV",
-               "n": "confinement 심할수록 barrier↑ (2L2L 수렴중)"})
+    hi.append({"t": "VGCF/hBN Li 확산 (CI-NEB)", "v": "hBN 0.007 · graphene(1L) 0.273 · gallery 2L2L 0.147 eV (대표)",
+               "n": "barrier 층수 민감 −209 meV 반증 → 혼합층 2건·graphene 2L NEB 진행중"})
+    # comp2 disorder ensemble — ⚠ 단일 config Ea/σ 수치 인용 금지(멀티 config 판정 전, 데이터 규율)
+    hi.append({"t": "comp2 disorder ensemble", "v": "d=0.50 anneal+relax 파이프라인 가동",
+               "n": "cfg0 3온도 완료 · 멀티 config 판정 대기"})
     return hi

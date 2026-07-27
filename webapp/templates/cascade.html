@@ -4,10 +4,10 @@
 
 {% macro num(v) %}{% if v is number %}{% if v == v|round(0) %}{{ v|int }}{% else %}{{ '%.3f'|format(v) }}{% endif %}{% else %}{{ v }}{% endif %}{% endmacro %}
 {% macro sf(v, nd=3) %}{% if v is number %}{{ ('%.'~nd~'f')|format(v) }}{% else %}{{ v if v is not none else '' }}{% endif %}{% endmacro %}
-{% macro gtable(t, cols) %}
+{% macro gtable(t, cols, mo_col=None, modb={}) %}
 <div class="tbl-scroll"><table class="data-table sortable"><thead><tr>
 {% for c in cols %}<th onclick="sortT(this,{{ loop.index0 }})">{{ c }}</th>{% endfor %}</tr></thead><tbody>
-{% for row in (t.data or []) %}<tr>{% for c in cols %}<td class="{% if row[c] is number %}num{% endif %}">{{ num(row[c]) }}</td>{% endfor %}</tr>{% endfor %}
+{% for row in (t.data or []) %}<tr>{% for c in cols %}<td class="{% if row[c] is number %}num{% endif %}">{% if mo_col and c == mo_col and row[c] in modb %}<span class="mo-click" role="button" tabindex="0" title="클릭 → 분자오비탈" onclick="openMO('{{ row[c] }}')" onkeydown="_kbd(event)">{{ row[c] }}</span>{% else %}{{ num(row[c]) }}{% endif %}</td>{% endfor %}</tr>{% endfor %}
 </tbody></table></div>{% endmacro %}
 
 {% block content %}
@@ -35,10 +35,11 @@
 
 <div class="tabs" id="tabs">
   <button class="active" data-tab="board">🏆 Leaderboard</button>
+  {% if casc.themes %}<button data-tab="theme">🎯 테마</button>{% endif %}
   <button data-tab="champ">⚙️ Champions</button>
   <button data-tab="ion">🔋 Li transport</button>
   <button data-tab="esw">🧪 Oxidation ESW</button>
-  <button data-tab="syn">🤝 Co-doping synergy</button>
+  <button data-tab="syn">🤝 Co-doping</button>
 </div>
 
 <!-- Leaderboard -->
@@ -68,7 +69,7 @@
     {% for r in (casc.ranked.data or []) %}
     <tr>
       <td class="num">{{ r.rank|int }}</td>
-      <td>{% if deep_map.get(r.dopant) %}<a href="/composition/{{ deep_map[r.dopant] }}" class="deep">{{ r.dopant }}</a> <span class="pareto-y" style="font-size:.66rem">✓검증</span>{% else %}{{ r.dopant }}{% endif %}</td>
+      <td>{% if deep_map.get(r.dopant) %}<a href="/composition/{{ deep_map[r.dopant] }}" class="deep">{{ r.dopant }}</a> <span class="pareto-y" style="font-size:.66rem">✓검증</span>{% if r.dopant in mo_db %} <span class="mo-badge mo-click" role="button" tabindex="0" title="클릭 → 분자오비탈" onclick="openMO('{{ r.dopant }}')" onkeydown="_kbd(event)">⚛ MO</span>{% endif %}{% elif r.dopant in mo_db %}<span class="mo-click" role="button" tabindex="0" title="클릭 → 분자오비탈" onclick="openMO('{{ r.dopant }}')" onkeydown="_kbd(event)">{{ r.dopant }}</span>{% else %}{{ r.dopant }}{% endif %}</td>
       <td><span class="grp-pill" style="background:{{ gcol.get(r.group,'#6b7280') }}">{{ r.group }}</span></td>
       <td class="num" style="font-weight:700">{{ sf(r.score,3) }}</td>
       <td class="num">{{ sf(r.de,3) }}</td>
@@ -81,6 +82,46 @@
     </tbody></table></div>
   </div>
 </div>
+
+<!-- 🎯 테마 — 테마별 재구성 + 조합(기하평균) UI -->
+{% if casc.themes %}
+<div class="tab-panel" id="tab-theme">
+  <div class="callout cal-warning" style="margin:0 0 12px">
+    <div class="cal-t">⚠ 큐레이션 값 포함</div>
+    <div class="cal-b" style="font-size:.8rem">{{ casc.themes.curation_disclaimer }}</div>
+  </div>
+  <div class="card" style="margin-bottom:14px">
+    <h3>🎯 테마 선택 <span class="muted" style="font-weight:400;font-size:.8rem">카드 체크 = 조합에 넣기 (2개 이상 권장) · 칩 클릭 = 분자오비탈</span></h3>
+    <div class="muted" style="font-size:.78rem;line-height:1.6">조합 규칙: <span class="mono">{{ casc.themes.combine_rule }}</span></div>
+  </div>
+  <div class="theme-grid">
+  {% for tid, th in casc.themes.themes.items() %}
+    <div class="card theme-card" id="tc-{{ tid }}">
+      <label class="tc-head">
+        <input type="checkbox" id="tchk-{{ tid }}" onchange="tgThemeSel('{{ tid }}')">
+        <span class="tc-icon">{{ th.icon }}</span><span class="tc-label">{{ th.label }}</span>
+      </label>
+      <div class="tc-q">{{ th.question }}</div>
+      <div class="tc-metric mono">{{ th.metric }}</div>
+      <div class="tc-top">
+        {% for dp in th.top[:5] %}
+          {% if dp in mo_db %}<button type="button" class="th-chip mo-chip" title="클릭 → 분자오비탈" onclick="openMO('{{ dp }}')">{{ dp }} ⚛</button>
+          {% else %}<span class="th-chip">{{ dp }}</span>{% endif %}
+        {% endfor %}
+      </div>
+      <div class="tc-caveat">⚠ {{ th.caveat }}</div>
+    </div>
+  {% endfor %}
+  </div>
+  <div class="card">
+    <h3>⚗️ 조합 랭킹 <span class="muted" style="font-weight:400;font-size:.8rem">선택 테마 norm의 기하평균 · 전 {{ casc.themes.dopants|length }}개 도펀트 · 헤더 클릭 = 정렬</span></h3>
+    <div id="combine-hint" class="muted" style="font-size:.84rem;padding:10px 0">위에서 테마를 골라줘 — <b>2개 이상</b>이면 조합 랭킹 테이블, <b>정확히 2개</b>면 산점도(X·Y=각 테마 norm, 점 크기=combined, Pareto=링)까지 떠.</div>
+    <div class="chart" id="theme-scatter" hidden></div>
+    <div id="combine-tbl-wrap"></div>
+    <div class="muted" style="font-size:.74rem;margin-top:6px">norm∈[0,1] (1=좋음, 방향보정) · <b>게이트 탈락 도펀트는 norm=0.05 바닥값</b> 처리 — 기하평균(AND 의미)이라 한 테마라도 바닥이면 combined도 바닥. cost/gap/HSAB 테마는 큐레이션 값 기반(위 면책 참조).</div>
+  </div>
+</div>
+{% endif %}
 
 <!-- Champions -->
 <div class="tab-panel" id="tab-champ">
@@ -111,18 +152,40 @@
 <!-- Oxidation ESW -->
 <div class="tab-panel" id="tab-esw">
   <div class="card">
-    <h3>Grand-potential 전기화학 안정성창(ESW)</h3>
-    {{ gtable(casc.oxidation, ['dopant','anion','valence','group','ox_V','red_V','ocv_V','window_V','clrich_ox_V','note']) }}
+    <h3>Grand-potential 전기화학 안정성창(ESW) <span class="muted" style="font-weight:400;font-size:.8rem">도펀트명 클릭 = 분자오비탈</span></h3>
+    {{ gtable(casc.oxidation, ['dopant','anion','valence','group','ox_V','red_V','ocv_V','window_V','clrich_ox_V','note'], mo_col='dopant', modb=mo_db) }}
     <div class="muted" style="font-size:.74rem;margin-top:6px">MP-hull(GGA/GGA+U) 기반 → elastic/EOS 재계산과 무관. collapse(window&lt;0.05V)=후기전이금속 회피. Cl-rich buffer가 산화 onset↑.</div>
   </div>
 </div>
 
-<!-- Synergy -->
+<!-- Synergy (v1 휴리스틱 + ML v2 교호작용) -->
 <div class="tab-panel" id="tab-syn">
   <div class="card">
-    <h3>공동도핑 시너지 <span class="muted" style="font-weight:400;font-size:.8rem">단일도펀트 프록시 기반 가설 — 미검증</span></h3>
+    <h3>공동도핑 시너지 — v1 휴리스틱 <span class="muted" style="font-weight:400;font-size:.8rem">단일도펀트 프록시 기반 가설 — 미검증</span></h3>
     {{ gtable(casc.synergy, ['rank','pairA','pairB','synergy','joint_window_V','gain_vs_best_single','radius_match','avg_stab','tags']) }}
   </div>
+  {% if casc.codoping_v2 %}
+  <div class="card">
+    <h3>ML v2 (교호작용) <span class="muted" style="font-weight:400;font-size:.8rem">codoping_ml_v2.csv — pair 교호작용 항 포함 모델, v1과 별도</span></h3>
+    <div class="callout cal-warning" style="margin:0 0 12px">
+      <div class="cal-b" style="font-size:.8rem">⚠ <b>NOT validated</b> — 단일도펀트 프록시로 학습한 모델의 <b>pair 외삽 가설</b>이야.
+      LOOCV R²·v1 상관은 내부 일관성 지표일 뿐 검증이 아니고, DFT/실험 확인 전까지 <b>탐색 순위 참고용</b> — 절대값·순위 인용 금지.</div>
+    </div>
+    {% if casc.codoping_v2_meta %}
+    {% set m = casc.codoping_v2_meta %}
+    {% set s1 = m.stage1_single_dopant_ridge or {} %}
+    {% set v1c = m.vs_v1 or {} %}
+    <div class="cm-grid" style="margin-bottom:10px">
+      {% if m.status %}<div class="cm-warn"><span class="cm-l">상태</span>{{ m.status }}</div>{% endif %}
+      {% if s1.loocv_r2 is defined %}<div><span class="cm-l">LOOCV R²</span>{{ s1.loocv_r2 }} <span class="muted">(단일도펀트 ridge{% if s1.n is defined %}, n={{ s1.n }}{% endif %} — 타깃이 합성지표라 높게 나옴)</span></div>{% endif %}
+      {% if v1c.spearman_on_v1_top40_pairs is defined %}<div><span class="cm-l">v1 상관</span>Spearman {{ v1c.spearman_on_v1_top40_pairs }} (v1 top40 기준){% if v1c.top10_overlap_count is defined %} · top10 겹침 {{ v1c.top10_overlap_count }}/10{% endif %}</div>{% endif %}
+    </div>
+    {% endif %}
+    {{ gtable({'data': casc.codoping_v2.data[:40]}, casc.codoping_v2.columns) }}
+    <div class="muted" style="font-size:.74rem;margin-top:6px">상위 40쌍만 표시 (전체 {{ casc.codoping_v2.n }}쌍 → <a href="/api/csv/properties/codoping_ml_v2.csv">CSV 원본</a>) ·
+      ml_score ± uncertainty = 모델 예측 ± 내부 LOOCV-잔차 전파 불확실도 · joint_window = pair 합동 ESW 창 · top_interaction = 기여 최대 교호작용 항.</div>
+  </div>
+  {% endif %}
 </div>
 
 {% if casc.trivalent and casc.trivalent.site_rule %}
@@ -132,6 +195,10 @@
 </div>
 {% endif %}
 
+{% include "_mo_modal.html" %}
+
+<script>window.MO_DB={{ mo_db|tojson }};</script>
+<script src="{{ url_for('static', filename='js/mo.js') }}?v={{ asset_version }}"></script>
 <script>
 var RANKED = {{ (casc.ranked.data or [])|tojson }};
 var GCOL = {{ gcol|tojson }};
@@ -140,6 +207,7 @@ document.querySelectorAll('#tabs button').forEach(function(b){b.onclick=function
   document.querySelectorAll('.tab-panel').forEach(function(x){x.classList.remove('active')});
   b.classList.add('active');document.getElementById('tab-'+b.dataset.tab).classList.add('active');
   if(b.dataset.tab==='board'&&window.Plotly)Plotly.Plots.resize('scatter');
+  if(b.dataset.tab==='theme'&&window.Plotly&&_tsDrawn)Plotly.Plots.resize('theme-scatter');
 };});
 
 // scatter: E vs ox_V, color=score, pareto=ring
@@ -186,5 +254,69 @@ function filtRows(tid,q){q=q.toLowerCase();
 if(location.hash){var d=decodeURIComponent(location.hash.slice(1)).toLowerCase();
   document.querySelectorAll('#board-tbl tbody tr').forEach(function(r){
     if(r.cells[1].innerText.toLowerCase().indexOf(d)>=0){r.classList.add('row-hi');r.scrollIntoView({block:'center'});}});}
+
+// ── 🎯 테마 조합 — 선택 테마 norm 기하평균 랭킹 + (정확히 2개) 산점도 ──
+var THEMES={{ (casc.themes.themes if casc.themes else {})|tojson }};
+var TDOP={{ (casc.themes.dopants if casc.themes else [])|tojson }};
+var selThemes=[], _tsDrawn=false;
+function tgThemeSel(tid){
+  var i=selThemes.indexOf(tid);
+  if(i>=0)selThemes.splice(i,1);else selThemes.push(tid);
+  var card=document.getElementById('tc-'+tid),chk=document.getElementById('tchk-'+tid);
+  if(card)card.classList.toggle('sel',i<0);
+  if(chk)chk.checked=(i<0);
+  renderCombine();
+}
+function _fmt(v,nd){return (v==null||isNaN(v))?'—':(+v).toFixed(nd==null?3:nd);}
+function combineRows(){ // combined = (∏ norm)^(1/n) — themes.json combine_rule 그대로
+  return TDOP.map(function(d){var p=1;
+    selThemes.forEach(function(t){p*=Math.max(d.norm&&d.norm[t]!=null?d.norm[t]:0,0);});
+    return {d:d,combined:Math.pow(p,1/selThemes.length)};
+  }).sort(function(a,b){return b.combined-a.combined;});
+}
+function renderCombine(){
+  var hint=document.getElementById('combine-hint'),wrap=document.getElementById('combine-tbl-wrap'),
+      sc=document.getElementById('theme-scatter');
+  if(!wrap)return;
+  if(!selThemes.length){hint.hidden=false;wrap.innerHTML='';sc.hidden=true;_tsDrawn=false;return;}
+  hint.hidden=true;
+  var rows=combineRows();
+  if(selThemes.length===2&&window.Plotly){sc.hidden=false;drawThemeScatter(rows);}
+  else{sc.hidden=true;_tsDrawn=false;}
+  var head='<th onclick="sortT(this,0)">#</th><th onclick="sortT(this,1)">dopant</th>'+
+    '<th onclick="sortT(this,2)">group</th><th onclick="sortT(this,3)">combined</th>'+
+    selThemes.map(function(t,i){return '<th onclick="sortT(this,'+(4+i)+')" title="'+_esc(THEMES[t].metric)+'">'+_esc(THEMES[t].icon+' '+THEMES[t].label)+'</th>';}).join('');
+  var body=rows.map(function(r,i){var d=r.d;
+    var name=(window.MO_DB&&window.MO_DB[d.dopant])?
+      '<span class="mo-click" role="button" tabindex="0" title="클릭 → 분자오비탈" onclick="openMO(\''+d.dopant+'\')" onkeydown="_kbd(event)">'+_esc(d.dopant)+'</span>':_esc(d.dopant);
+    return '<tr><td class="num">'+(i+1)+'</td><td>'+name+(d.pareto==='Y'?' <span class="pareto-y" style="font-size:.66rem">◆</span>':'')+'</td>'+
+      '<td><span class="grp-pill" style="background:'+(GCOL[d.group]||'#6b7280')+'">'+_esc(d.group)+'</span></td>'+
+      '<td class="num" style="font-weight:700">'+_fmt(r.combined)+'</td>'+
+      selThemes.map(function(t){var raw=d[THEMES[t].metric_key];
+        return '<td class="num" title="원값 '+_esc(THEMES[t].metric_key)+' = '+_fmt(raw)+'">'+_fmt(d.norm?d.norm[t]:null)+'</td>';}).join('')+'</tr>';
+  }).join('');
+  wrap.innerHTML='<div class="tbl-scroll"><table class="data-table sortable" id="combine-tbl"><thead><tr>'+head+'</tr></thead><tbody>'+body+'</tbody></table></div>';
+}
+function drawThemeScatter(rows){
+  var t1=selThemes[0],t2=selThemes[1],m1=THEMES[t1],m2=THEMES[t2];
+  function tr(rs,ring){return {
+    x:rs.map(function(r){return r.d.norm[t1];}),y:rs.map(function(r){return r.d.norm[t2];}),
+    text:rs.map(function(r){return r.d.dopant+'<br>'+m1.metric_key+'='+_fmt(r.d[m1.metric_key])+' · '+m2.metric_key+'='+_fmt(r.d[m2.metric_key])+'<br>combined='+_fmt(r.combined);}),
+    mode:'markers',type:'scatter',name:ring?'Pareto':'others',
+    marker:{size:rs.map(function(r){return 7+r.combined*22;}),
+      color:rs.map(function(r){return r.combined;}),colorscale:'Viridis',cmin:0,cmax:1,showscale:!ring,
+      colorbar:{title:'combined',thickness:12,len:.7},
+      line:ring?{color:'#2563eb',width:2.5}:{color:'rgba(0,0,0,.15)',width:.5}},
+    hovertemplate:'%{text}<extra></extra>'};}
+  var reg=rows.filter(function(r){return r.d.pareto!=='Y';}),par=rows.filter(function(r){return r.d.pareto==='Y';});
+  Plotly.newPlot('theme-scatter',[tr(reg,false),tr(par,true)],
+    Object.assign({margin:{t:10,r:14,b:46,l:56},font:plotlyFont(),
+      xaxis:{title:m1.icon+' '+m1.label+' (norm)',range:[-0.04,1.06]},
+      yaxis:{title:m2.icon+' '+m2.label+' (norm)',range:[-0.04,1.06]},
+      legend:{orientation:'h',y:-0.22},hovermode:'closest'},plotlyBG()),
+    {responsive:true,displaylogo:false});
+  _tsDrawn=true;
+}
+window.addEventListener('themechange',function(){if(_tsDrawn&&selThemes.length===2)drawThemeScatter(combineRows());});
 </script>
 {% endblock %}
