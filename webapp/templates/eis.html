@@ -449,7 +449,11 @@ const EIS = {
         `value="${r.L_composite_um!=null?r.L_composite_um:''}" placeholder="45" `+
         `onchange="EIS.setThick('${r.filename}',this.value)" `+
         `style="width:52px;border:1px solid var(--border);background:none;color:inherit;font-size:.74rem;text-align:right;padding:1px 3px;border-radius:3px" `+
-        `title="이 측정의 합제 두께 µm — 수정하면 σ_e=L/R1 즉시 재계산 (대칭셀만 유효)"></td>`+
+        `title="이 측정의 합제(cathode) 두께 µm — 수정하면 σ_e=L/R1 즉시 재계산 (대칭셀만 유효).`+
+        (r.filename_thickness_um!=null?` ⚠파일명은 ${r.filename_thickness_um}µm 이지만 그건 집전체(SUS ~15-20µm) 포함 총두께 → σ_e 엔 합제만(≈45) 쓸 것`:'')+`">`+
+        (r.filename_thickness_um!=null&&r.L_composite_um!=null&&Math.abs(r.filename_thickness_um-r.L_composite_um)<0.51
+          ?`<span style="color:#c0392b" title="파일명 총두께(집전체 포함)를 합제 L 로 입력한 듯 — σ_e 과대">⚠</span>`:'')+
+        `</td>`+
         `<td style="text-align:right;color:${r.rmse_pct>10?'#c0392b':'var(--dim)'}">${f(r.rmse_pct,1)}</td>`+
         `<td style="text-align:center"><input type="checkbox" class="xe-sel" value="${r.filename}" `+
         `onchange="EIS.onSelChange()" title="체크 → 아래 Nyquist '🔬 실험 겹치기' 로 이 측정만 겹침"></td>`+

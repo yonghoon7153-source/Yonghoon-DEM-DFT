@@ -4099,6 +4099,9 @@ def _eis_exp_table():
             'filename': fn, 'date': c.get('date', ''), 'cell_type': c.get('cell_type', '') or f.get('cell_type', ''),
             'blend': c.get('blend', ''), 'state': c.get('state', ''), 'Ewe_V': _num(c, 'Ewe_V'),
             'n_points': _num(c, 'n_points'), 'f_max_Hz': _num(c, 'f_max_Hz'), 'f_min_Hz': _num(c, 'f_min_Hz'),
+            # 파일명이 알려주는 두께(예 '70um') — ⚠집전체(SUS/c-SUS ~15-20µm) 포함 총두께라 σ_e 에
+            # 그대로 쓰면 안 됨(eis_fit.py:32-36).  σ_e 용 L 은 합제만(기본 45).  표에 병기해 오입력 방지.
+            'filename_thickness_um': _num(c, 'thickness_um'),
             'R_s_ohmcm2': _num(f, 'R_s_ohmcm2'), 'R_int_ohmcm2': _num(f, 'R1_ohmcm2'),
             'R_w_ohmcm2': _num(f, 'R_w_ohmcm2'), 'C_dl_uF_cm2': _num(f, 'C_dl_uF_cm2'),
             'sigma_e_mScm': _num(f, 'sigma_e_mScm'), 'L_composite_um': _num(f, 'L_composite_um'),
@@ -6225,6 +6228,12 @@ def mpm_input_package(case_id):
                     cmd += ['--step4-r-int', f'{_s4rv:g}']
             except (ValueError, TypeError):
                 pass
+        # ★STEP4 솔버 σ-대비 cap (&s4cap=) — near-null 수렴정체 완화 (docs/step4_bottleneck_analysis_20260727).
+        #   화이트리스트만 허용(임의값 금지): 0=OFF 기본 · 200 권장(CG ×5.2, σ_eff −7.8%) · 1000/2000=보수적.
+        #   킷은 이 값을 MPM_S4_CONTRAST_CAP 기본값으로 굽고, 런타임 env 가 다시 override 가능.
+        _s4cap = request.args.get('s4cap', '')
+        if _s4cap in ('200', '1000', '2000'):
+            cmd += ['--step4-solver-cap', _s4cap]
         # ★bimodal poly/SC 전기화학 분리 (파워유저 URL, s4x100 문법): &s4dsp=&s4dss= (D_s [m²/s])
         #   &s4i0p=&s4i0s= (i0 [A/m²]) &s4split= (반경 문턱 µm, 기본 3.5).  반쪽 지정은 400으로
         #   명시 거부(생성기 ap.error를 500 stderr로 흘리지 않고 앞단에서 — 침묵/불명확 실패 금지).

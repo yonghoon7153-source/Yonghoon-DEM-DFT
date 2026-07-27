@@ -107,6 +107,8 @@ except Exception as e:
     print("  ⚠ cupy GPU 미가동 (", type(e).__name__, ") → STEP3는 CPU fallback (결과 동일, 몇 분 더).")
 PY
 python3 scripts/step4_dyn.py --selftest 2>&1 | tail -1
+# DB 대조 진단 (config/env_db.json 정본) — 빠진 패키지/앵커를 고침 명령과 함께 재확인.  非치명.
+python3 scripts/env_db.py --doctor 2>&1 | tail -12 || true
 
 # 편의 실행 헬퍼(activate_dem.sh)를 alias로 등록 — 재접속마다 env + CUDA 경로 한 번에
 BRC="$HOME/.bashrc"

@@ -337,6 +337,11 @@
               <option value="cycled">SDCP 풀셀 cycled (노화 민감도)</option>
               <option value="50">이종기술 SUS 실측 ~50 Ω·cm² (풀셀 SOC100 평균, primer-SUS 양극)</option></select>
             <span id="s4rint-hint" style="color:#7dd3fc;font-size:0.85em"></span></label>
+            <label style="font-weight:400" title="★STEP4 솔버 σ-대비 상한 (near-null 수렴정체 완화, 2026-07-27 대수술). VGCF/PTFE 첨가 후막은 carbon 조각이 6-conn으로 5만+개 파편화돼 선형계가 구조적 near-null(λ~1e-11)이 되고, CPU AMG가 iter당 11초로 기어 스텝당 1-3시간이 됩니다. e-망 σ대비를 200×로 자르면 λ꼬리가 44-49× 올라 CG iter ×5.2 단축(실측·2벤치 교차검증). ⚠대가: σ_eff −7.8% (이 기하) — 셀 전압 왜곡은 ≤2.5µV@2C라 충방전 곡선엔 안전하지만, σ_e 같은 수송 메트릭 보고는 반드시 cap OFF 런으로. i-망엔 적용 안 됩니다(이온 옴강하가 지배 분극). 기본 OFF = 기존 모든 런과 동일 축. 킷의 MPM_S4_CONTRAST_CAP 기본값이 되고 런타임 env로 다시 override 가능.">솔버 cap <select id="s4-cap" style="padding:3px" onchange="updateAdditiveGpuCmds()">
+              <option value="" selected>OFF (기본 · σ-메트릭 보고용)</option>
+              <option value="200">200× (권장 · CG ×5.2 · σ_eff −7.8%)</option>
+              <option value="1000">1000× (보수적 · σ_eff −2.6%)</option>
+              <option value="2000">2000× (최보수 · σ_eff −1.3%)</option></select></label>
             <label style="font-weight:400" title="★poly/SC 크기-분리 (문헌 프리셋, 2026-07-21 · σ_e 재료분리 2026-07-22) — 체크 시 AM을 절대 크기문턱(반경 3.5µm)으로 AM_S(단결정)/AM_P(다결정)로 나눠 STEP3 σ_e 재료와 STEP4 확산 D_s를 함께 분리. ● σ_e: 소립 단결정 AM_S=10 mS/cm(GB無) / 대립 다결정 AM_P=5 mS/cm (A1). ● D_s: 대립 poly=4e-15 m²/s (Chen 2020 DFN, 2차입자-반경 규약) / 소립 SC=3e-15 (Trevisanello 2021 GITT 밴드 1e-15–1e-14의 기하중앙=잠정, 정본 docs/data/sc_poly_preset.csv). i0는 SC/PC 정량 문헌 부재 확정 → 공유. ⚠ 액체-셀 'PC 1오더 빠름' GITT값은 균열-전해액 침투 기전이라 ASSB 이식 금지 — 이 프리셋은 ASSB-정합 값. ★mono 베드(예: 이종기술 4µm 단결정)는 전부 그 클래스 단일물성으로 자동 처리(전부 AM_S+scalar D_s=3e-15). 체크 OFF = 기존 SDCP 관례(mono→AM_P) 유지. 산출물 태그 _dsP..S.. (bimodal) / _ds.. (mono). 파워유저: URL &s4dsp=&s4dss= 명시 오버라이드.">
               <input type="checkbox" id="s4-pp" onchange="updateAdditiveGpuCmds()"> poly/SC 크기-분리 <span style="color:#9ca3af;font-size:0.85em">(σ_e 10/5 + D_s 4e-15/3e-15)</span></label>
           </span></div>
@@ -656,6 +661,7 @@ function _addVals() {
     s4vmax: (document.getElementById('s4-vmax') || {}).value || '4.5',
     s4icut: (document.getElementById('s4-icut') || {}).value || '0.05',
     s4rint: (document.getElementById('s4-rint') || {}).value || '',
+    s4cap: (document.getElementById('s4-cap') || {}).value || '',
     s4pp: (document.getElementById('s4-pp') || {}).checked ? '1' : '',
     s4sched: (document.getElementById('s4-sched-json') || {}).value || '',
     s4grid: (document.getElementById('s4-gridonly') || {}).checked ? '1' : '',
@@ -814,7 +820,7 @@ function _addExclusiveOK() {
 // (recalcAdditives removed — this panel is recipe-zip-only; σ/porosity analysis lives in the MPM viewer
 //  after the GPU run. The analytic /whatif-additives route is kept server-side but no longer called here.)
 function dlAdditiveZip() {
-  const { vg, sp, pt, sd, mix, coll, vox, s4, s4chg, s4vmin, s4vmax, s4icut, s4rint, s4pp, s4sched, s4grid } = _addVals();
+  const { vg, sp, pt, sd, mix, coll, vox, s4, s4chg, s4vmin, s4vmax, s4icut, s4rint, s4cap, s4pp, s4sched, s4grid } = _addVals();
   if (vg <= 0 && sp <= 0 && pt <= 0 && sd <= 0) { alert('첨가제를 하나 이상 입력하세요 (wt%).'); return false; }
   if (!_addExclusiveOK()) return false;
   // pristine/cycled는 집전체로 시나리오를 해석하므로 집전체 필요; 숫자(문헌/직접값)는 불필요.
@@ -824,6 +830,7 @@ function dlAdditiveZip() {
   }
   const _cut = (s4 || s4chg || s4sched) ? `&s4vmin=${s4vmin}&s4vmax=${s4vmax}&s4icut=${s4icut}` : '';
   const _ri = s4rint ? `&s4rint=${s4rint}` : '';
+  const _cap = s4cap ? `&s4cap=${s4cap}` : '';   // ★STEP4 솔버 σ-대비 cap (near-null 정체 완화)
   const _sched = s4sched ? `&s4sched=${encodeURIComponent(s4sched)}` : '';   // ★Zive 스케줄 (지정 시 체크박스 대신)
   // ★poly/SC 크기-분리는 STEP4 없어도 유효: STEP3 σ_e 재료(AM_S=10/AM_P=5 mS/cm)를 크기로
   //   분류함 (D_s 분리는 STEP4 실행 시에만 추가로 적용).  → 차단하지 않음 (2026-07-22).
@@ -836,7 +843,7 @@ function dlAdditiveZip() {
   const _pp = ['s4dsp', 's4dss', 's4i0p', 's4i0s', 's4split']
     .filter(k => _pq.get(k)).map(k => `&${k}=${encodeURIComponent(_pq.get(k))}`).join('');
   updateAdditiveGpuCmds();   // ★ pressing download generates the gabia upload/run/fetch command card
-  window.location = `/results/${encodeURIComponent('{{ case.id }}')}/mpm-input?vgcf=${vg}&superp=${sp}&ptfe=${pt}&sdcp=${sd}&mixing=${mix}&collector=${coll}&vox=${vox}&step4=${s4}&step4chg=${s4chg}${_cut}${_ri}${_sched}${_ppc}${_sg}${_pp}`;
+  window.location = `/results/${encodeURIComponent('{{ case.id }}')}/mpm-input?vgcf=${vg}&superp=${sp}&ptfe=${pt}&sdcp=${sd}&mixing=${mix}&collector=${coll}&vox=${vox}&step4=${s4}&step4chg=${s4chg}${_cut}${_ri}${_cap}${_sched}${_ppc}${_sg}${_pp}`;
   return false;
 }
 // recipe string (mirror of backend _add_recipe_str) → zip filename (mirror of the download_name tag)
@@ -864,7 +871,10 @@ function _addVariantName() { const t = _addTag(); return t ? `{{ case.name }}${t
 // Show the GPU scp/run commands for the (dynamically-named) additive zip, mirroring the ① card.
 function updateAdditiveGpuCmds() {
   const el = document.getElementById('add-gpu-cmds'); if (!el) return;
-  const { vg, sp, pt, sd, mix, vox, s4, s4chg, s4vmin, s4vmax, s4icut } = _addVals();
+  const { vg, sp, pt, sd, mix, vox, s4, s4chg, s4vmin, s4vmax, s4icut, s4cap } = _addVals();
+  // ★솔버 cap: 킷에 기본값으로 구워지지만(=&s4cap), 명령줄에도 명시해 로그·재현성을 남긴다.
+  const capEnv = s4cap ? `MPM_S4_CONTRAST_CAP=${s4cap} ` : '';
+  const capTxt = s4cap ? `솔버 cap ${s4cap}× (near-null 정체 완화 · CG iter↓; ⚠σ-메트릭 보고는 cap OFF 런으로)` : '';
   const vn = document.getElementById('add-variant-name');
   if (vn) vn.textContent = _addVariantName() || '…';
   if ((vg <= 0 && sp <= 0 && pt <= 0 && sd <= 0) || (vg > 0 && sp > 0)) { el.innerHTML = ''; return; }
@@ -883,8 +893,10 @@ function updateAdditiveGpuCmds() {
     // runyourai 대여 V100(32GB): WSL ~/.ssh/config의 v100 별칭 사용 (HostName machine.runyour.ai —
     // 대여마다 실기계·호스트키·pem이 바뀜 → WSL에서 ~/.ssh/v100.pem 덮어쓰기(최신 pem) 먼저, 컨테이너엔 pip 없음).
     { name: 'runyourai(V100)', ssh: 'v100', wk: '~/Yonghoon-DEM-DFT',
-      lbl0: '# ⓪ 대여마다 1회 — WSL: cp <새pem>.pem ~/.ssh/v100.pem && chmod 600 (별칭이 이 경로를 봄) 후, ssh v100 안에서:',
-      setup: `git clone https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT.git ~/Yonghoon-DEM-DFT; cd ~/Yonghoon-DEM-DFT && git checkout ${BR}\nsudo apt update && sudo apt install -y python3-pip unzip && python3 -m pip install taichi numpy scipy scikit-image cupy-cuda12x nvidia-cublas-cu12 nvidia-cusparse-cu12 nvidia-cusolver-cu12 nvidia-cuda-runtime-cu12 nvidia-cuda-nvrtc-cu12 nvidia-nvjitlink-cu12` },
+      lbl0: '# ⓪ 대여마다 1회 — WSL: cp <새pem>.pem ~/.ssh/v100.pem && chmod 600 (별칭이 이 경로를 봄) 후, ssh v100 안에서\n'
+          + '#    (setup_gpu_server.sh = apt·repo·venv·taichi/pyamg/pybamm·cupy[ctk]+CUDA libs·OCP앵커·검증 한 방;\n'
+          + '#     docs/server_bootstrap_runbook.md 정본.  이후 매 셸: dem  ← venv+CUDA 경로)',
+      setup: `curl -fsSL https://raw.githubusercontent.com/yonghoon7153-source/Yonghoon-DEM-DFT/${BR}/scripts/setup_gpu_server.sh | bash` },
   ];
   const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
   const blk = (lbl, body) => `<div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre>${esc(lbl)}\n${esc(body)}</pre></div>`;
@@ -897,7 +909,8 @@ function updateAdditiveGpuCmds() {
     html += `<div style="margin-top:8px;color:#a5b4fc;font-size:0.82em;font-weight:700">▸ ${s.name} (${esc(s.ssh)})</div>`
       + (s.setup ? blk(s.lbl0 || `# ⓪ ${s.name} 최초 1회 (한 번만)`, s.setup) : '')
       + blk(`# 1) 업로드 (② 버튼으로 zip 받은 뒤)`, `scp "${DL}/${zip}" ${H}:${wk}/`)
-      + blk(`# 2) 실행 — 복사=바로 실행 (detached → SSH 끊겨도 서버 런 계속)`, `ssh ${H} 'cd ${wk} && git pull origin ${BR} && unzip -o ${zip} && bash run_mpm.sh'`)
+      + blk(`# 2) 실행 — 복사=바로 실행 (detached → SSH 끊겨도 서버 런 계속)${capTxt ? '\n#    ' + capTxt : ''}`,
+            `ssh ${H} 'cd ${wk} && git pull origin ${BR} && unzip -o ${zip} && ${capEnv}bash run_mpm.sh'`)
       + blk('# 3) 완료 후 받기 → WSL (latest_run/ — run 끝나고 실행; 진행중이면 아직 없음)', `scp ${H}:${wk}/latest_run/mpm_payload.json ${H}:${wk}/latest_run/mpm_metrics.json ${DL}/`
             + ((s4 || s4chg) ? `\nscp ${H}:${wk}/latest_run/step4_viz_*.json ${H}:${wk}/latest_run/step4_*.npz ${DL}/   # STEP4 곡선+뷰어` : ''))
       + blk('# 4) webapp 반영', `# 구조·metrics·3D뷰어: ③ 버튼으로 mpm_payload.json 업로드`

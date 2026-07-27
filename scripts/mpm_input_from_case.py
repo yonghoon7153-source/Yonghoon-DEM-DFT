@@ -96,6 +96,10 @@ def main():
                     help='STEP4 충전 컷오프 전압 [V vs Li] (기본 4.5; 실험이면 4.25).')
     ap.add_argument('--step4-icut', type=float, default=0.05,
                     help='CCCV 충전의 CV-종지 전류 |I|/I_1C (기본 0.05; "1C→0.5C서 끝"이면 0.5).')
+    ap.add_argument('--step4-solver-cap', type=float, default=0.0,
+                    help='STEP4 e-망 σ-대비 상한(MPM_S4_CONTRAST_CAP 기본값, 0=OFF).  near-null 수렴정체 '
+                         '완화용: 200 → CG iter ×5.2 실측(docs/step4_bottleneck_analysis_20260727.md) 이나 '
+                         'σ_eff −7.8% → σ-메트릭 보고는 uncapped 런으로.  런타임 env 가 이 기본값을 override.')
     ap.add_argument('--step4-x0', type=float, default=None,
                     help='STEP4 방전창 시작 stoich(충전끝/저리튬) 오버라이드 — 기본 None=params_json(0.2638).')
     ap.add_argument('--step4-x100', type=float, default=0.9084,
@@ -686,6 +690,18 @@ def main():
                    f"# 3) STEP4-v2 시간전개 — 방전({_dis or '없음'}) → 충전 CCCV({_chg or '없음'}) 순차.")
         s4_body = f'''{_s4head}
 #    각 런은 독립 초기상태 (방전 = x0 충전상태에서, 충전 = x100 방전상태에서 시작).  그리드는 STEP 2가 export.
+# ★STEP4 솔버 노브 (2026-07-27 near-null 대수술; docs/step4_bottleneck_analysis_20260727.md)
+#   기본값 = 권장값.  런타임 env 로 override 가능 (예: MPM_S4_CONTRAST_CAP=200 bash step4_only.sh).
+#   prune_float: 집전체·AM 무접촉 부유 e-클러스터 제거 = 정확특이 블록 소거(해-불변, GPU-CG 회생)
+#   ew        : Eisenstat-Walker inexact Newton (초기 반복 느슨 → 총 CG 일량 절감; 최종 수렴판정 동일)
+#   gpu_amg   : AMG apply 를 GPU V-cycle 미러로 (빌드는 CPU 1회; cupy 없으면 자동 CPU 폴백)
+#   contrast_cap: e-망 σ대비 상한 (0=OFF).  200 → CG iter ×5.2 실측이나 σ_eff −7.8% →
+#                 ★수렴 정체 시에만, 그리고 σ-메트릭 보고는 uncapped 런으로 (npz meta 에 태그됨)
+export MPM_S4_PRUNE_FLOAT="${{MPM_S4_PRUNE_FLOAT:-1}}"
+export MPM_S4_EW="${{MPM_S4_EW:-1}}"
+export MPM_S4_GPU_AMG="${{MPM_S4_GPU_AMG:-1}}"
+export MPM_S4_CONTRAST_CAP="${{MPM_S4_CONTRAST_CAP:-{a.step4_solver_cap:g}}}"
+echo "[run_mpm] STEP4 솔버: prune=$MPM_S4_PRUNE_FLOAT ew=$MPM_S4_EW gpu_amg=$MPM_S4_GPU_AMG cap=$MPM_S4_CONTRAST_CAP"
 AP=""
 for d in "$KIT/anchor_params" "$KIT/../anchor_params"; do [ -f "$d/ocp_nmc811_chen2020.csv" ] && AP="$d" && break; done
 if [ -z "$AP" ]; then

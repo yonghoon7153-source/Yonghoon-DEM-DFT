@@ -5,6 +5,20 @@
 이 세션(2026-07-26~27)에서 실제로 밟은 지뢰 전부가 `scripts/setup_gpu_server.sh` 에
 자동화-회피되어 있다 (숫자·원인은 맨 아래 "지뢰 목록").
 
+## ★ 기계-판독 정본 = `config/env_db.json` (+ `scripts/env_db.py`)
+
+이 문서는 사람용 서술이고, **같은 내용의 기계-판독 정본이 `config/env_db.json`** 이다
+(패키지·머신 프로필·솔버 env·앵커·레시피·지뢰).  외우지 말고 물어보면 된다:
+
+```bash
+python3 scripts/env_db.py --doctor      # ★현재 머신 진단 → 빠진 것 + 고침 명령 그대로 출력 (종료코드 0/1)
+python3 scripts/env_db.py --machine v100   # 그 머신의 셋업/실행/회수 명령 + 주의사항
+python3 scripts/env_db.py --pitfalls    # 증상→원인→고침 (아래 지뢰표와 동일 소스)
+python3 scripts/env_db.py --env         # STEP4 솔버 노브 기본값·의미·현재값
+```
+`setup_gpu_server.sh` 의 마지막 단계가 `--doctor` 를 자동 실행한다.  DB 와 코드가 어긋나면
+`--selftest` 가 잡는다(solver_env 키가 step4_dyn 에 실재하는지까지 대조).
+
 ## ⓪ 머신 프로필 (뭐가 어디에 있나)
 
 | 머신 | 역할 | 경로/env | 비고 |

@@ -755,7 +755,12 @@ class CellSystem:
         np.add.at(diag0, self.aT, self.gT)                  # 접지(φ=0): diag-only
         # BV 면 목록 (+면 중점 µm 좌표 — 뷰어 표면-반응 필드용; 격자 프레임 = payload µm 프레임)
         am_m = (sid == 1) | (sid == 2)
-        ion_m = (sid == 5) | (sid == 6)
+        # ★반응 계면 = AM ↔ 이온공급상.  이온상 = SDCP(5)·SE(6)·SWCNT-sheath(8).  sid 8 누락 시
+        #   σ_ion 솔브(sheath 투명=σ_i[8]>0)와 STEP4 반응이 모순 — A14 sheath 가 감싼 AM 표면이
+        #   반응서 사라져 wrap_frac↑ 일수록 --swcnt-ion-block 인 것처럼 반응전류 과소 (STEP3 v1
+        #   solve_reaction_current MED-2 감사서 이미 정정된 규약; v2 만 누락돼 있었음 — 2026-07-27).
+        #   게이트는 idx_i≥0(=cond_i=σ_i>0)이 담당 → --swcnt-ion-block(σ_i[8]=0)이면 자동 제외 = 솔브와 일관.
+        ion_m = (sid == 5) | (sid == 6) | (sid == 8)
         fe, fi, fp, fpos = [], [], [], []
         for d, (sl_a, sl_b) in enumerate(SL):
             for am_first in (True, False):
@@ -1702,6 +1707,28 @@ def _selftest_solver():
         ok &= s1b
         print(f'solver S1b pruning ON≡OFF 방전 (|ΔV|max {dV:.1e}, KCL {np.max(out_on["kcl_rel"]):.1e}, '
               f'E-bal {np.max(out_on["energy_balance_rel"]):.1e}): {"OK" if s1b else "FAIL"}')
+        # ---- S1c: SWCNT(sid 8) 반응계면 — STEP3 v1 MED-2 규약 정합 (투명 sheath = BV 면) ----
+        #   AM 표면 한 칸을 sheath(8)로 덮고, σ_i[8]>0(투명)이면 BV 면이 유지되어야 한다.
+        #   --swcnt-ion-block(σ_i[8]=0)이면 그 면은 자동 소멸 = 솔브(cond_i)와 일관.
+        sid8 = _build_sandwich(nxy=4, nz=8)[0].copy()
+        _se_over = np.argwhere((sid8 == 6))                   # AM 슬래브 바로 위 SE 한 칸 → sheath 로 치환
+        _amz = int(np.argwhere(sid8 == 1)[:, 2].max())
+        _cand = [tuple(p) for p in _se_over if p[2] == _amz + 1]
+        sig_i8_on = np.array([0., 0., 0., 0., 0., 0., 2e-4, 0., 2e-4])    # sid8 투명(=SE σ_i)
+        sig_i8_off = np.array([0., 0., 0., 0., 0., 0., 2e-4, 0., 0.])     # --swcnt-ion-block
+        sig_e8 = np.array([0., 1., 0., 0., 0., 0., 0., 0., 100.])         # sheath 는 전자도체
+        s1c = False
+        if _cand:
+            sid8[_cand[0]] = 8
+            pid8 = np.where(sid8 == 1, 0, -1).astype(np.int32)
+            _n_on = CellSystem(sid8, sig_e8, sig_i8_on, pid8, 1, 0.5, z_top_um=8 * 0.5, z_bot_um=0.0).n_bv
+            _n_off = CellSystem(sid8, sig_e8, sig_i8_off, pid8, 1, 0.5, z_top_um=8 * 0.5, z_bot_um=0.0).n_bv
+            _base = CellSystem(_build_sandwich(nxy=4, nz=8)[0], sig_e8, sig_i8_on, pid8, 1, 0.5,
+                               z_top_um=8 * 0.5, z_bot_um=0.0).n_bv
+            s1c = (_n_on == _base and _n_off == _base - 1)     # 투명=면 보존, 차단=그 면만 소멸
+        ok &= s1c
+        print(f'solver S1c SWCNT(sid8) BV 계면 (투명 {_n_on if _cand else "—"} = SE기준 '
+              f'{_base if _cand else "—"}, ion-block {_n_off if _cand else "—"}): {"OK" if s1c else "FAIL"}')
         # ---- S2: σ-contrast cap (합성 고대비 0.01/100 = 1e4; AM-접촉 VGCF → pruning 비대상) ----
         sid2 = _build_sandwich(nxy=4, nz=8)[0].copy()
         sid2[1, 1, 4] = 3; sid2[1, 2, 4] = 3                 # AM 슬래브(z=3) 위 접촉 → e-망 잔존
