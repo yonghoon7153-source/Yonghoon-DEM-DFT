@@ -21,6 +21,36 @@ import os
 import re
 
 
+def expand_sched(seq, warn=print):
+    """★Zive Loop 전개: {'k':'l','to':T,'n':N} = [T..직전] 블록을 총 N회 반복 ("Go to step T, N cycles").
+    → [(원본 스텝 idx, cyc, step)] 평면 리스트.  킷 생성 시점에 평면화하므로 step4_only.sh 는 단순
+    순차 유지(재개·부분실패 연속성 보존).
+
+    ★cyc 출처 단일화: Loop 블록에 든 스텝의 cyc 는 **루프 회차(1..N)로만** 매긴다.  수동 n 을 함께
+    쓰면 산출물명 step4_sched{i}n{cyc} 가 충돌해 결과가 조용히 덮어써지기 때문(예: 스텝0 n=3 +
+    Loop×3 → n3 두 번; 2026-07-27 적대검증서 발견·수정).  무시된 수동 n 은 warn 으로 알린다.
+
+    §F1: v1 은 각 런이 독립 초기상태 → 프로토콜 반복이지 상태-체이닝 열화 사이클이 아니다
+    (그건 v2 chaining / R_int(N) 문헌투영 몫).  cyc 태그는 R_int(N) 축 라벨."""
+    covered = set()
+    for i, st in enumerate(seq):
+        if st['k'] == 'l':
+            covered |= {j for j in range(st['to'] - 1, i) if seq[j]['k'] != 'l'}
+    ovr = sorted(j for j in covered if int(seq[j].get('n', 1) or 1) > 1)
+    if ovr and warn:
+        warn(f'  ⚠ Loop 블록 안 스텝 {[j + 1 for j in ovr]} 의 수동 cyc(n)은 무시 — '
+             f'cyc 는 Loop 회차(1..N)로 자동 부여 (산출물명 충돌 방지)')
+    flat = []
+    for i, st in enumerate(seq):
+        if st['k'] == 'l':
+            blk = [(j, seq[j]) for j in range(st['to'] - 1, i) if seq[j]['k'] != 'l']
+            for c in range(2, int(st['n']) + 1):             # 1회차 = 아래 원본 pass(cyc 1)
+                flat += [(j, c, s) for j, s in blk]
+        else:
+            flat.append((i, 1 if i in covered else max(int(st.get('n', 1) or 1), 1), st))
+    return flat
+
+
 def _find_atom_dump(results_dir):
     """The FINAL-state raw LIGGGHTS atom dump (highest timestep) in the case dir, if present.
     The webapp keeps atom_<step>.liggghts (app.detect_mode reads it for type count); it carries the
@@ -639,18 +669,8 @@ def main():
         #   cyc 태그 자동 부여(1회차=원본 pass=수동 n, 반복=2..N).  v1 정직성(§F1): 각 런 독립 초기상태
         #   → 프로토콜 반복이지 상태-체이닝 열화 사이클 아님(그건 v2 chaining/R_int(N) 문헌투영 몫) —
         #   cyc 태그는 R_int(N) 축 라벨.  per-step 컷오프(V/CV-I) 달성 = 다음 스텝 = "조건 달성시 next".
-        def _expand_sched(seq):
-            flat = []                                        # (원본 스텝 idx, cyc, st)
-            for _i, _st in enumerate(seq):
-                if _st['k'] == 'l':
-                    blk = [(j, seq[j]) for j in range(_st['to'] - 1, _i) if seq[j]['k'] != 'l']
-                    for _c in range(2, _st['n'] + 1):        # 1회차 = 이미 flat에 있는 원본 pass
-                        flat += [(j, _c, s) for j, s in blk]
-                else:
-                    flat.append((_i, max(int(_st.get('n', 1)), 1), _st))
-            return flat
         _sched_loop = ''
-        s4_sched_flat = _expand_sched(s4_sched) if s4_sched else []
+        s4_sched_flat = expand_sched(s4_sched) if s4_sched else []
         if s4_sched:
             _sl = []
             for _i, _cyc, _st in s4_sched_flat:
