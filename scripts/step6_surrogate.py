@@ -807,7 +807,8 @@ def rank_candidates(model, designs, app='balanced', n_draw=256, metrics_norm=Non
         cur = res['curve']
         V, tt = np.asarray(cur['V']), np.asarray(cur['t'])
         v0 = float(V[0])
-        vmean = float(np.trapezoid(V, tt) / max(tt[-1] - tt[0], 1e-9)) if len(V) > 1 else v0
+        _trapz = np.trapezoid if hasattr(np, 'trapezoid') else np.trapz   # WSL numpy<2 호환 (repo 선례: pybamm_predictor)
+        vmean = float(_trapz(V, tt) / max(tt[-1] - tt[0], 1e-9)) if len(V) > 1 else v0
         dmean, dlo, dhi = res['delivered_frac']
         st0 = res['state0_used']
         r0, rct, rf = st0.get('r0_eff'), st0.get('r_ct_eff'), st0.get('r_film_eff')

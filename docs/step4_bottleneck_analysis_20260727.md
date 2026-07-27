@@ -323,3 +323,26 @@ MPM_S4_EW=0 MPM_S4_GPU_AMG=0 bash step4_only.sh    # 구식 경로 bitwise 복�
 a2_*/bench_a5 계열 — 세션-휘발) · git 49687dd/8b2853f/…/6394a01 커밋 본문(진단3) ·
 docs/sdcp_318_base_sbe_dbe_comparison.md(옛 침대 사양) · voxel_conductivity.py:139-143
 (cap 선례).  본 문서가 이 사안의 정본; 세션 기록의 "옛 침대 섬유 없음" 서술은 §4-2로 정정.*
+
+---
+
+## 부록 — 3렌즈 적대검증 결과 (2026-07-27 resume, wf_707e0321)
+
+**V1 수치리뷰: PASS-with-findings** — 6개 검증축(전처리 대칭성 7e-15·SPD 실측·EW 무한루프
+불가·cupy-부재 bitwise·라치 상태기계 적대프로브·실그리드 pruning 7,954성분 재현) 회귀 없음.
+발견 medium 1 + low 4 → **medium(cap이 i-망에도 적용되는 경로: 토이서 셀-V 0.516mV 왜곡,
+A2 근거는 e-망 전용)은 즉시 수정** — cap을 e-망 전용으로 제한, i-망 고대비는 경고만.
+low 중 2건 수정(EW safeguard dead-code → 클립-전 η 저장 / step6 np.trapezoid WSL 가드),
+2건 이월(GPU 자가강등 mid-CG 전처리 교체 = best-effort 문서화, V100서 확인 · i-망 부유
+171성분/180복셀 = e-망 pruning이 98.6% 해소, 잔여는 v2).
+
+**V2 §F1 리뷰: PASS — 위반 0건.** 라벨(SURROGATE/UNCALIBRATED/ASSUMED/TEST-ONLY) 전수 확인,
+날조 앵커 0, 문서↔실그리드 수치 전부 exact 재현(8,115성분·부유 7,963·VGCF 54,650조각 등),
+sklearn 은닉 의존 없음(AST). selftest 2회 md5 동일(결정론).
+
+**V3 통합+재벤치: PASS 2/2.** selftest 46줄 전부 OK. stride-3 병리-보존 벤치(N=168k):
+- Jacobi-CG: **cap200 → 7,362→1,418 iter = ×5.2** (A2 독립실측 276→52=×5.3과 교차검증 일치)
+- AMG-PCG: iter ×46-51 (uncapped 159 it / capped 144 it)
+- GPU 배속·EW 상한은 클라우드 미검증 → **V100 A/B 프로토콜로 확정** (아래 실행 가이드).
+
+수정 반영 후 재검증: STEP4-V2 SELFTEST PASS + step6 8/8 (2026-07-27).

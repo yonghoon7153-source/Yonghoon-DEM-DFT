@@ -648,19 +648,25 @@ class CellSystem:
         #   셀-V ≤2.5µV@2C → 시간전개 안전.  ⚠σ_e-류 수송 메트릭 보고는 uncapped 런으로 (meta 라벨).
         _cap = float(os.environ.get('MPM_S4_CONTRAST_CAP', '0') or 0.0)
         self.contrast_cap = _cap
+        # ★cap은 e-망 전용 (리뷰 V1 medium): near-null 병리·A2 셀-V≤2.5µV 근거 모두 e-망 실측 —
+        #   i-망은 이온 옴강하가 지배 분극(2C 84-90mV)이라 cap 시 0.5mV급 왜곡 재현됨(코팅 프리셋
+        #   LZO/LNO 저-σ_i 층이 200× 초과 가능).  i-망 고대비는 cap 없이 경고만.
         for _nm, _s in (('e', sig_e), ('i', sig_i)):
             _pos = _s[_s > 0]
             if _pos.size == 0:
                 continue
             _ratio = float(_pos.max() / _pos.min())
-            if _cap > 0 and _ratio > _cap:
+            if _cap > 0 and _ratio > _cap and _nm == 'e':
                 np.minimum(_s, float(_pos.min()) * _cap, out=_s)
-                print(f'    ★σ-contrast cap({_nm}-망): {_ratio:.1e} → ≤{_cap:g}×min '
+                print(f'    ★σ-contrast cap(e-망): {_ratio:.1e} → ≤{_cap:g}×min '
                       f'(near-null 완화; σ-메트릭은 uncapped 런으로 보고)', flush=True)
+            elif _cap > 0 and _ratio > _cap:
+                print(f'    ℹ i-망 σ대비 {_ratio:.1e}>{_cap:g}× — cap 미적용(e-망 전용; i-망 옴강하가 '
+                      f'지배 분극이라 cap 왜곡 큼, A2 미검증)', flush=True)
             elif _cap <= 0 and _ratio > 1e3 and not CellSystem._cap_hinted:
                 CellSystem._cap_hinted = True
                 print(f'    ℹ σ대비 {_ratio:.1e}({_nm}-망)>1e3 — 수렴 정체 시 MPM_S4_CONTRAST_CAP=200 권장 '
-                      f'(기본 OFF; A2 실측: 셀-V ≤2.5µV@2C, σ_eff −7.8% → 보고용은 uncapped)', flush=True)
+                      f'(e-망 전용 적용; A2 실측: 셀-V ≤2.5µV@2C, σ_eff −7.8% → 보고용은 uncapped)', flush=True)
         cond_e, cond_i = sig_e > 0, sig_i > 0
         nx, ny, nz = sid.shape
         self.area_m2 = nx * ny * vox_m * vox_m              # 측면(RVE) 단면적 — R_int 환산용
@@ -891,10 +897,12 @@ class CellSystem:
                 if self._ew_eta_prev is not None and 0.9 * self._ew_eta_prev ** 2 > 0.1:
                     eta = max(eta, 0.9 * self._ew_eta_prev ** 2)          # 급조임 진동 safeguard
                 eta = max(eta, min(0.1, 0.5 * tol_rel * scale / max(f2_cur, 1e-300)))   # over-solve 방지
-                rtol_cg = float(np.clip(eta, 1e-5, 0.1))
+                _eta_raw = eta                               # ★클립 前 η 저장 (리뷰 V1: 클립 후 저장은
+                rtol_cg = float(np.clip(eta, 1e-5, 0.1))     #   0.9·0.1²=0.009<0.1이라 safeguard 영구 dead)
             else:
+                _eta_raw = None
                 rtol_cg = 1e-5
-            self._ew_eta_prev = rtol_cg; self._ew_f2_prev = f2_cur
+            self._ew_eta_prev = _eta_raw; self._ew_f2_prev = f2_cur
             if not hasattr(self, '_ew_eta_log'):
                 self._ew_eta_log = []                        # η 감사 기록 (selftest S3; float라 부담 無)
             self._ew_eta_log.append(rtol_cg)
