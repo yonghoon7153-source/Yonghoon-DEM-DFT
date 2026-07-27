@@ -18,8 +18,8 @@
   "loocv_residual_std_score_units": 0.0018,
   "loocv_note": "표준화(mu/sd)·y평균·λ선택은 전표본 고정(폴드 밖 재사용) — 폴드별 재계산으로 누수 정량화: σ_loo +3.4%(0.00178→0.00184), R² Δ<1e-4, λ 폴드별 재선택(nested)도 R²=0.9998 (타깃이 특징의 정확 선형합성이라 결과 왜곡 없음)",
   "coefficients_std_units": {
-   "de": -0.0548,
-   "ox_V": 0.0739,
+   "de": -0.0549,
+   "ox_V": 0.074,
    "red_V": 0.0048,
    "window_V": 0.0357,
    "E_GPa": -0.0434,
@@ -28,14 +28,14 @@
    "bvs_x005": 0.0,
    "bvs_x010": -0.0001,
    "bvs_slope": -0.0001,
-   "blocking": 0.0,
+   "blocking": -0.0,
    "disorder_std": 0.0002,
    "mass_per_cation": -0.0001,
-   "cost_tier": 0.0002,
+   "cost_tier": 0.0001,
    "gap_lit_eV": -0.0002,
    "air_hsab": -0.0002,
-   "group=TM": 0.0,
-   "group=lanthanide": 0.0004,
+   "group=TM": 0.0001,
+   "group=lanthanide": 0.0005,
    "group=alk.earth": 0.0002,
    "group=alkali": 0.0001
   },
@@ -45,19 +45,19 @@
   "target": "v1 synergy (top40 수록값 가중 1.0, 미수록 1041쌍=0 근사·가중 0.1)",
   "n_pairs": 1081,
   "lambda": 39.81071705534978,
-  "weighted_loocv_r2": 0.0884,
-  "weighted_loocv_residual_std_tz_units": 2.3282,
+  "weighted_loocv_r2": 0.0892,
+  "weighted_loocv_residual_std_tz_units": 2.3273,
   "loocv_note": "stage1과 동일 — 표준화·λ는 전표본 고정 (누수 영향 무시 수준, stage1 loocv_note 참조)",
   "intercept_note": "특징·타깃 모두 sw-가중 중심화로 절편 정합 (2026-07-27 수정 — 비중심화 대비 계수 max|Δ|≈0.013, top10 집합 동일, top50 순위이동 ≤1계단)",
   "interaction_coefficients": {
-   "air_max*gap_min": 0.0828,
-   "joint_window*transport_min": 0.0932,
-   "disorder_max*dose_slope_min": -0.2004,
-   "transport_min*blocking_max": 0.0649,
-   "joint_window*gap_min": -0.2091,
-   "group_cross*joint_window": -0.1727,
-   "de_avg*joint_window": -0.6252,
-   "air_max*transport_min": -0.0646
+   "air_max*gap_min": 0.0968,
+   "joint_window*transport_min": 0.1127,
+   "disorder_max*dose_slope_min": -0.1916,
+   "transport_min*blocking_max": 0.0659,
+   "joint_window*gap_min": -0.2122,
+   "group_cross*joint_window": -0.1681,
+   "de_avg*joint_window": -0.6259,
+   "air_max*transport_min": 0.0226
   },
   "interaction_rationale": {
    "air_max*gap_min": "soft-acid 공기보호 <-> 전자절연 트레이드오프",
@@ -68,10 +68,63 @@
    "group_cross*joint_window": "이종 그룹 조합의 창 상보성",
    "de_avg*joint_window": "열역학 도핑 안정성이 동반된 합동창",
    "air_max*transport_min": "공기보호와 수송의 겸비"
+  },
+  "diagnostics_on_listed_labels": {
+   "n_listed": 40,
+   "stage3_pearson_r": 0.5503,
+   "stage3_spearman_r": 0.4979,
+   "full_score_pearson_r": 0.6545,
+   "full_score_spearman_r": 0.6734,
+   "note": "weighted_loocv_r2(위)를 '실제 synergy 설명분산'으로 읽으면 안 된다 — 가중치의 ~72%(1041×0.1)가 v1 미수록 쌍의 0-근사에 실려 있어서, 그 값은 주로 '0 을 0 으로 맞추는' 성능이다. 실측 라벨에 대한 신호는 여기 상관/순위상관으로만 판단할 것 (원 synergy 와 z-단위 점수는 스케일이 달라 R² 자체가 정의상 무의미하므로 싣지 않는다). 상태: HYPOTHESIS GENERATOR."
+  },
+  "dopant_concentration": {
+   "top10_counts": {
+    "Sc2O3": 6,
+    "Cr2O3": 4,
+    "Gd2O3": 3,
+    "In2O3": 1,
+    "Y2O3": 1,
+    "Ta2O5": 1,
+    "Nb2O5": 1,
+    "HfO2": 1,
+    "WO3": 1,
+    "V2O5": 1
+   },
+   "top50_counts": {
+    "Sc2O3": 22,
+    "Cr2O3": 13,
+    "In2O3": 11,
+    "Y2O3": 8,
+    "Gd2O3": 6,
+    "Ta2O5": 3,
+    "Nb2O5": 3,
+    "HfO2": 3,
+    "WO3": 3,
+    "Al2O3": 3,
+    "Sm2O3": 3,
+    "Nd2O3": 3,
+    "Fe2O3": 2,
+    "ScF3": 2,
+    "LaF3": 2,
+    "La2O3": 2,
+    "V2O5": 1,
+    "CrO3": 1,
+    "YF3": 1,
+    "MnO": 1,
+    "MoO3": 1,
+    "B2O3": 1,
+    "ZrF4": 1,
+    "Ga2O3": 1,
+    "CaO": 1,
+    "Sb2O5": 1,
+    "ZrO2": 1
+   },
+   "distinct_in_top10": 10,
+   "note": "편중의 출처는 교호작용이 아니라 base_z(단일도펀트 cascade score)다 — base_z 단독 랭킹도 top10 중 7개를 그대로 재현하고 corr(base_z, ml_score)≈0.86. 다양성이 필요하면 '도펀트당 최상위 쌍' 목록을 따로 뽑을 것."
   }
  },
  "vs_v1": {
-  "spearman_on_v1_top40_pairs": 0.66,
+  "spearman_on_v1_top40_pairs": 0.672,
   "top10_overlap_count": 2,
   "corr_base_z_vs_v1_target": 0.215,
   "v1_top10": [
@@ -126,11 +179,11 @@
     "In2O3"
    ],
    [
-    "Cr2O3",
+    "Gd2O3",
     "Sc2O3"
    ],
    [
-    "Gd2O3",
+    "Cr2O3",
     "Sc2O3"
    ],
    [
@@ -161,22 +214,12 @@
   "interaction_lifted_pairs": [
    {
     "pair": [
-     "V2O5",
-     "Y2O3"
-    ],
-    "rank_v2": 48,
-    "rank_base_only": 181,
-    "lift": 133,
-    "top_interaction": "de_avg*joint_window"
-   },
-   {
-    "pair": [
      "Fe2O3",
      "Y2O3"
     ],
-    "rank_v2": 44,
+    "rank_v2": 45,
     "rank_base_only": 174,
-    "lift": 130,
+    "lift": 129,
     "top_interaction": "de_avg*joint_window"
    },
    {
@@ -184,19 +227,9 @@
      "Nb2O5",
      "Y2O3"
     ],
-    "rank_v2": 17,
+    "rank_v2": 23,
     "rank_base_only": 82,
-    "lift": 65,
-    "top_interaction": "de_avg*joint_window"
-   },
-   {
-    "pair": [
-     "Ta2O5",
-     "Y2O3"
-    ],
-    "rank_v2": 26,
-    "rank_base_only": 80,
-    "lift": 54,
+    "lift": 59,
     "top_interaction": "de_avg*joint_window"
    },
    {
@@ -208,6 +241,26 @@
     "rank_base_only": 93,
     "lift": 54,
     "top_interaction": "de_avg*joint_window"
+   },
+   {
+    "pair": [
+     "Ta2O5",
+     "Y2O3"
+    ],
+    "rank_v2": 33,
+    "rank_base_only": 80,
+    "lift": 47,
+    "top_interaction": "de_avg*joint_window"
+   },
+   {
+    "pair": [
+     "In2O3",
+     "Y2O3"
+    ],
+    "rank_v2": 32,
+    "rank_base_only": 75,
+    "lift": 43,
+    "top_interaction": "disorder_max*dose_slope_min"
    }
   ]
  },

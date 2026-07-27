@@ -1,4 +1,11 @@
-t_ps,comp1_600K,comp1_800K,comp1_1000K,modelc_600K,modelc_800K,modelc_1000K
+# comp1_* columns are NON-CANONICAL: a DIFFERENT (slower) trajectory than the deck comp1.
+#   They do NOT reproduce the slide (D ~60% of deck).  Source: b2o3_vs_modelc_md.json
+#   honesty.comp1_LPSCl_baseline.  Use the deck reference (D 3.09/1.03e-5/2.20e-5,
+#   Ea 0.2532, sigma300 3.35) for the LPSCl baseline instead.
+# The column names carry the tag because the site CSV reader (webapp/data.py::read_csv)
+#   skips leading '#' comments -- a header comment alone never reaches a chart viewer.
+# modelc_* columns are unaffected.
+t_ps,comp1_600K_NONCANONICAL,comp1_800K_NONCANONICAL,comp1_1000K_NONCANONICAL,modelc_600K,modelc_800K,modelc_1000K
 0.000000000000000000e+00,0.000000000000000000e+00,0.000000000000000000e+00,0.000000000000000000e+00,0.000000000000000000e+00,0.000000000000000000e+00,0.000000000000000000e+00
 1.000000000000000056e-01,4.751369999999999760e-01,7.954440000000000399e-01,1.002739999999999965e+00,4.652609999999999801e-01,7.857359999999999900e-01,9.114179999999999504e-01
 2.000000000000000111e-01,1.282810000000000006e+00,1.037369999999999903e+00,1.348880000000000079e+00,1.388290000000000024e+00,1.113839999999999941e+00,1.636509999999999909e+00

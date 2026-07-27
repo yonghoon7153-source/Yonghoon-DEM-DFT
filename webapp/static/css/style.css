@@ -13,6 +13,14 @@
   --hover:rgba(16,24,40,.035);
   --shadow:0 1px 2px rgba(16,24,40,.06), 0 1px 3px rgba(16,24,40,.05);
   --shadow-lg:0 14px 38px rgba(16,24,40,.14);
+  /* ── 도메인 색 토큰 (ux-6/ux-10): 원소 카테고리 · 도펀트 그룹 · MO 준위 ──
+     JS 리터럴로 흩어져 있던 색을 여기로 모아 테마를 따라가게 한다. */
+  --el-alkali:#c026d3; --el-alkaline:#b45309; --el-tm:#1d4ed8; --el-ptm:#0e7490;
+  --el-metalloid:#0f766e; --el-nonmetal:#15803d; --el-halogen:#4d7c0f;
+  --el-noble:#57606f; --el-lanthanide:#6d28d9; --el-actinide:#a5142f; --el-other:#57606f;
+  --grp-tm:#1d4ed8; --grp-lanthanide:#6d28d9; --grp-main:#0f766e;
+  --grp-alkearth:#9a3412; --grp-alkali:#b45309;
+  --mo-bonding:#2563eb; --mo-nonbonding:#6b7280; --mo-antibonding:#dc2626;
   --font:'Inter',sans-serif; --mono:'JetBrains Mono',monospace;
   --sidebar-w:240px; --radius:12px; --radius-sm:8px;
   color-scheme:light;
@@ -27,6 +35,13 @@
   --todo-bg:#1b2331; --todo-fg:#5b6577; --todo-border:#2b3446;
   --hover:rgba(255,255,255,.05);
   --shadow:0 1px 2px rgba(0,0,0,.32),0 1px 3px rgba(0,0,0,.3);
+  /* 다크: 어두운 카드 위 대비 확보용 밝은 변형 */
+  --el-alkali:#e879f9; --el-alkaline:#fbbf24; --el-tm:#93b4ff; --el-ptm:#4dd8e8;
+  --el-metalloid:#5eead4; --el-nonmetal:#6ee7a8; --el-halogen:#bef264;
+  --el-noble:#aab3c2; --el-lanthanide:#c4a6ff; --el-actinide:#ff9aa6; --el-other:#aab3c2;
+  --grp-tm:#93b4ff; --grp-lanthanide:#c4a6ff; --grp-main:#5eead4;
+  --grp-alkearth:#f7a878; --grp-alkali:#fbbf24;
+  --mo-bonding:#7ea8ff; --mo-nonbonding:#a8b1c2; --mo-antibonding:#ff8f86;
   --shadow-lg:0 16px 42px rgba(0,0,0,.55);
   color-scheme:dark;
 }
@@ -40,6 +55,13 @@
     --todo-bg:#1b2331; --todo-fg:#5b6577; --todo-border:#2b3446;
     --hover:rgba(255,255,255,.05);
     --shadow:0 1px 2px rgba(0,0,0,.32),0 1px 3px rgba(0,0,0,.3);
+    /* 다크: 어두운 카드 위 대비 확보용 밝은 변형 */
+    --el-alkali:#e879f9; --el-alkaline:#fbbf24; --el-tm:#93b4ff; --el-ptm:#4dd8e8;
+    --el-metalloid:#5eead4; --el-nonmetal:#6ee7a8; --el-halogen:#bef264;
+    --el-noble:#aab3c2; --el-lanthanide:#c4a6ff; --el-actinide:#ff9aa6; --el-other:#aab3c2;
+    --grp-tm:#93b4ff; --grp-lanthanide:#c4a6ff; --grp-main:#5eead4;
+    --grp-alkearth:#f7a878; --grp-alkali:#fbbf24;
+    --mo-bonding:#7ea8ff; --mo-nonbonding:#a8b1c2; --mo-antibonding:#ff8f86;
     --shadow-lg:0 16px 42px rgba(0,0,0,.55);
     color-scheme:dark;
   }
@@ -104,6 +126,7 @@ textarea:focus-visible,[tabindex]:focus-visible,.tabs button:focus-visible{
 .card h3{font-size:1.02rem;margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .grid{display:grid;gap:16px}
 .grid-3{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.grid-2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
 .section-title{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);
   font-weight:700;margin:28px 0 12px}
 
@@ -142,6 +165,14 @@ textarea:focus-visible,[tabindex]:focus-visible,.tabs button:focus-visible{
 .metrics-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:6px}
 .metric{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);
   padding:10px 14px;box-shadow:var(--shadow);min-width:120px}
+/* ux-3: method 문자열을 자르지 않고 2줄 clamp — 폭 상한이 없으면 clamp 가 발동 안 한다. */
+.metric{max-width:300px}
+.metric .mm{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;line-height:1.35}
+.metric .mm-prov{color:var(--amber);font-weight:600}
+.cascade-banner .cb-warn{color:var(--amber);font-weight:700}
+.cascade-banner .cb-cav{font-size:.7rem;line-height:1.5;margin-top:6px}
+
 .metric .mv{font-size:1.28rem;font-weight:800;color:var(--navy);font-family:var(--mono);line-height:1.1}
 .metric .ml{font-size:.72rem;color:var(--dim);margin-top:3px}
 .metric .mm{font-size:.64rem;color:var(--muted);margin-top:2px}
@@ -218,7 +249,10 @@ textarea:focus-visible,[tabindex]:focus-visible,.tabs button:focus-visible{
   background:var(--surface);color:var(--dim);cursor:pointer}
 .chip.active{background:var(--brand-fill);color:var(--on-brand);border-color:var(--navy)}
 .search{width:100%;max-width:320px;padding:9px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:.86rem;font-family:var(--font)}
-.search:focus{outline:none;border-color:var(--accent)}
+/* ⚠ outline:none 을 :focus 전체에 걸면 명시도(0,2,0)가 전역 input:focus-visible(0,1,1) 을 이겨
+   키보드 포커스링이 사라진다. 마우스 클릭 때만 끄고 테두리 강조는 양쪽 다 유지. */
+.search:focus{border-color:var(--accent)}
+.search:focus:not(:focus-visible){outline:none}
 
 /* markdown doc */
 .doc{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:32px 40px;box-shadow:var(--shadow);max-width:900px}
@@ -315,7 +349,12 @@ textarea:focus-visible,[tabindex]:focus-visible,.tabs button:focus-visible{
 .stat-tiles .st-l{font-size:.76rem;color:var(--dim);margin-top:5px}
 @media(max-width:720px){.stat-tiles{grid-template-columns:repeat(2,1fr)}}
 
-.grp-pill{display:inline-block;color:#fff;font-size:.66rem;font-weight:700;padding:1px 8px;border-radius:20px}
+/* 흰 글자 0.66rem 은 라이트/다크 어느 배경에서도 4.5:1 미달이라 옅은 배경 + 진한 글자로.
+   색은 --_g (인라인 style 로 그룹 토큰 주입) — JS 리터럴 대신 CSS 변수라 테마를 따라간다. */
+.grp-pill{--_g:var(--muted);display:inline-block;color:var(--_g);
+  background:color-mix(in srgb,var(--_g) 15%,var(--card));
+  border:1px solid color-mix(in srgb,var(--_g) 35%,transparent);
+  font-size:.66rem;font-weight:700;padding:1px 8px;border-radius:20px}
 .pareto-y{color:var(--green);font-weight:700}
 a.deep{color:var(--navy);font-weight:700;text-decoration:none;border-bottom:2px solid var(--accent)}
 a.deep:hover{color:var(--accent)}
@@ -407,8 +446,7 @@ kbd{font-family:var(--mono);font-size:.72em;background:var(--bg);border:1px soli
 .pt-cell .pt-sym{font-size:.92rem;font-weight:700;color:var(--text)}
 .pt-cell .pt-n{position:absolute;bottom:2px;right:4px;font-size:.52rem;font-weight:700;color:var(--on-brand);
   background:var(--accent);border-radius:8px;padding:0 4px;min-width:12px;text-align:center}
-.pt-off{opacity:.4}
-.pt-off .pt-sym{color:var(--muted);font-weight:500}
+/* (.pt-off 중복 정의 삭제 — 아래 '원소 브리핑 v2' 블록의 .62/--dim 규칙이 항상 이겨 죽은 코드였음) */
 .pt-on{cursor:pointer;border-color:var(--accent);background:var(--accent-soft)}
 .pt-on:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
 .pt-on.pt-sel{background:var(--brand-fill);border-color:var(--brand-fill)}
@@ -418,8 +456,9 @@ kbd{font-family:var(--mono);font-size:.72em;background:var(--bg);border:1px soli
 .pt-legend i{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:middle;margin-right:5px}
 .pt-legend .lg-on{background:var(--accent-soft);border:1px solid var(--accent)}
 .pt-legend .lg-off{background:var(--surface);border:1px solid var(--border);opacity:.5}
-  padding:20px;box-shadow:var(--shadow);min-height:220px}
-  transition:.13s;color:var(--text)}
+/* (여기 있던 셀렉터 없는 고아 선언 2줄 삭제 — CSS 파서가 다음 .exp-controls 규칙까지
+   프렐류드로 삼켜 Explorer 컨트롤바 레이아웃이 통째로 죽어 있었다. 원 소유자였던
+   .pt-panel / .pd-comp 는 현재 템플릿 사용 0회라 복원하지 않는다.) */
 
 /* Property Explorer */
 .exp-controls{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:16px}
@@ -513,7 +552,9 @@ kbd{font-family:var(--mono);font-size:.72em;background:var(--bg);border:1px soli
 .mo-grid{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start}
 .mo-svg{width:270px;max-width:100%;height:auto}
 .mo-lv{padding:6px 10px;margin-bottom:6px;border-left:3px solid var(--border);border-radius:0 6px 6px 0;background:var(--bg)}
-.mo-lv.mo-bonding{border-left-color:#2563eb}.mo-lv.mo-nonbonding{border-left-color:#6b7280}.mo-lv.mo-antibonding{border-left-color:#dc2626}
+.mo-lv.mo-bonding{border-left-color:var(--mo-bonding)}
+.mo-lv.mo-nonbonding{border-left-color:var(--mo-nonbonding)}
+.mo-lv.mo-antibonding{border-left-color:var(--mo-antibonding)}
 .mo-lv b{font-size:.84rem;color:var(--navy)}
 .mo-tag{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
 .mo-ch{font-size:.78rem;color:var(--text2);margin-top:2px;line-height:1.5}
@@ -558,7 +599,8 @@ kbd{font-family:var(--mono);font-size:.72em;background:var(--bg);border:1px soli
 /* 전체 원소 클릭 가능 */
 .pt-off{opacity:.62;cursor:pointer}
 .pt-off .pt-sym{color:var(--dim);font-weight:600}
-.pt-off:hover{opacity:1;border-color:var(--accent)}
+/* 포커스에서도 흐림 해제 — 전역 focus-visible 링만 선명하고 글자는 흐린 상태를 방지 */
+.pt-off:hover,.pt-off:focus-visible{opacity:1;border-color:var(--accent)}
 .pt-casc{cursor:pointer;border-color:color-mix(in srgb,var(--violet) 45%,var(--border));
   background:color-mix(in srgb,var(--violet) 9%,var(--card))}
 .pt-casc .pt-sym{color:var(--violet);font-weight:700}

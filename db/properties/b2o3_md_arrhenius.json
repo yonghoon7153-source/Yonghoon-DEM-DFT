@@ -12,13 +12,15 @@
       "1000": 5.067e-05
     },
     "Ea_eV": 0.2234,
-    "Ea_eV_PAPER": "0.206 (+0.038/-0.030)  [3-seed 600K error bar; single-seed 0.2234 is ONE draw inside it -> quote this]",
     "D0_cm2_s": 0.0007112,
     "D_300K_cm2_s": 1.2547e-07,
     "D_273K_cm2_s": 5.337e-08,
     "sigma_300K_mS_cm": 18.51,
     "sigma_273K_mS_cm": 8.65,
-    "vs_modelc": "Ea identical (modelc 0.2235); sigma 1.33x higher, D0-driven (1.24x). See b2o3_vs_modelc_md.json."
+    "Ea_eV_PAPER_SUPERSEDED_600K_only": "0.206 (+0.038/-0.030)  [3-seed 600K error bar; single-seed 0.2234 is ONE draw inside it -> quote this]",
+    "Ea_eV_PAPER": "0.199 +/- 0.034  [FINAL: fully symmetric 3-seed x 3-T reseed, 2026-07-07 (b2o3_vs_lpscl16_conductivity.csv). Supersedes the 0.206 (+0.038/-0.030) 600K-only-error-bar figure and the single-seed 0.2234 -> quote this]",
+    "vs_modelc_SUPERSEDED": "Ea identical (modelc 0.2235); sigma 1.33x higher, D0-driven (1.24x). See b2o3_vs_modelc_md.json.",
+    "vs_modelc": "Ea EQUAL (b2o3 0.199+/-0.034 vs LPSCl1.6 0.197+/-0.032; dEa +0.002+/-0.047). sigma EQUIVALENT (per-T ratio 1.08+/-0.18 / 0.82+/-0.15 / 1.15+/-0.12). The earlier 'sigma 1.33x higher, D0-driven 1.24x' was single-seed noise, RETRACTED 2026-07-09. See b2o3_vs_lpscl16_conductivity.csv (FINAL)."
   },
   "supplementary_lowT_400_500": {
     "note": "low-T MD for curvature check. D extracted at the MD script's own window (5-40 ps); NOT yet re-extracted at 2-50 ps, so do NOT mix into the FINAL 3-pt fit above. 400 K D has the largest statistical noise (slow diffusion, marginal MSD diffusive regime).",

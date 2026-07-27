@@ -22,6 +22,7 @@
     "status": "completed",
     "results": {
       "band_gap_eV": 1.65,
+      "_DEPRECATED_band_gap_eV": "canonical = fixed-occ eigenvalue gap (comp1 2.066 / modelc 2.099). CLAUDE.md: DOS-threshold 판독 금지.",
       "DOS": "done",
       "PDOS": "done"
     }

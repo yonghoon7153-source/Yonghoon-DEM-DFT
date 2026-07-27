@@ -36,9 +36,9 @@ GLOSSARY = [
 
 # ── 전자 구조 ─────────────────────────────────────────
 {"id":"bandgap","term":"Band gap","full":"밴드 갭","cat":"전자 구조",
- "what":"채워진 최고 준위(VBM)와 빈 최저 준위(CBM) 사이의 에너지 간극. 전자·이온 전도의 절연성과 전기화학 안정성의 1차 지표. SE는 전자절연·이온전도가 이상적이라 gap이 클수록 유리.",
+ "what":"채워진 최고 준위(VBM)와 빈 최저 준위(CBM) 사이의 에너지 간극. SE는 전자절연·이온전도가 이상적이라 bulk intrinsic 캐리어(σ_e ∝ exp(−Eg/2kT)) 관점에선 gap이 클수록 유리. <b>단 전기화학 안정성의 지표는 아니다</b> — 분해 onset은 반응 자유에너지가 결정하고 band-edge는 분해창을 2–3× 과대평가한다(Schwietert 2020; 우리 직접 증거: comp1/modelc VBM이 0.32 eV 다른데 onset은 동일). ESW 항목 참조.",
  "how":"<b>fixed-occupation nscf의 VBM/CBM 고유값</b>으로 읽는 게 정본. DOS의 문턱(threshold)으로 읽으면 ~0.3 eV 과소평가되니 금지.",
- "ours":"canonical(eigenvalue): comp1 2.066 / modelc 2.099 / +B₂O₃ 1.9671 / lpsocl 2.2309 eV · comp2 2.04는 <b>잠정</b>(legacy band_gaps, fixed-occ 재확인중 — eigenvalue canonical 아님). DOS-threshold(1.76/1.82)는 폐기."},
+ "ours":"canonical(eigenvalue): comp1 2.066 / modelc 2.099 / +B₂O₃ 1.9671 / lpsocl 2.2309 eV · comp2 2.04는 <b>잠정</b>(legacy band_gaps, fixed-occ 재확인중 — eigenvalue canonical 아님). DOS-threshold(1.76/1.82)는 폐기. ⚠ 도핑 델타는 <b>같은 호스트끼리</b>: +O(LPSOCl)는 modelc 기준 +0.132, +B₂O₃는 modelc 기준 −0.132(comp1 2.066을 before로 쓰면 Cl 증량 효과가 섞인다). 그리고 gap↑이 실측 전자전도도 하락을 뜻하진 않는다 — Nd 도핑에선 bulk gap이 0.55 eV <b>좁아지는데</b> 실측 σ_e는 떨어졌다(계면/미세구조 지배, electronic.json)."},
 
 {"id":"dos","term":"DOS","full":"Density of States (상태밀도)","cat":"전자 구조",
  "what":"에너지 E에서 전자가 차지할 수 있는 상태의 개수 분포 g(E). 어디에 상태가 몰려있고 어디가 비었는지(gap)를 보여준다. 페르미 준위 근처 형태가 전도 특성을 좌우.",
@@ -64,7 +64,7 @@ GLOSSARY = [
 {"id":"cohp","term":"COHP / ICOHP","full":"Crystal Orbital Hamilton Population","cat":"화학 결합",
  "what":"두 원자 사이 결합의 <b>세기(에너지 기여)</b>를 에너지축으로 분해. 음수=결합성(bonding), 양수=반결합성. 에너지 적분값 <b>ICOHP</b>(eV, 음수 클수록 강함)가 결합강도 단일 지표.",
  "how":"DFT 파동함수를 원자궤도 기저로 재투영(LOBSTER) → 원자쌍별 -COHP(E) → 페르미까지 적분 = ICOHP. <b>all-PAW nscf + charge spilling<5%</b> 필요.",
- "ours":"comp1 P–S ≈ −6.0(강한 공유 골격) ≫ Li–Cl −2.11 > Li–Br −1.93(약한 이온). Br이 약해 이온전도↑·기계강성엔 둔감. minimal-basis −5.12는 artifact(폐기)."},
+ "ours":"골격 P–S: comp1 −5.938 / comp2 −5.913(강한 공유) ≫ 이온결합 Li–X. <b>Li–Cl/Li–Br(−2.111 / −1.934)은 comp2 값</b>이다 — comp1엔 Br이 없고 comp1의 Li–Cl은 −1.861. Li–Br이 Li–Cl보다 약한 건 <b>격자 연화</b>로 나타난다(comp2 E_VRH 22.06→20.03, B_VRH −18.2%; 동일 USPP·k444·cubic-52 비교쌍). ⚠ 이온전도 이득은 <b>미확인</b> — comp2 σ300 중앙 0.41× comp1, 3-seed 범위 0.12–1.48× inconclusive. '기계강성엔 둔감'도 틀렸다(bulk −18%는 계열 내 최대 변화). minimal-basis −5.12는 artifact(폐기)."},
 
 {"id":"cobi","term":"COBI / ICOBI","full":"Crystal Orbital Bond Index","cat":"화학 결합",
  "what":"결합 <b>차수(order, 몇 겹 결합인가)</b>를 무차원으로. ICOHP가 '얼마나 세냐(에너지)'라면 ICOBI는 '얼마나 겹치냐(전자쌍 공유 정도)'. 이온결합은 ICOBI가 작다.",
@@ -85,18 +85,18 @@ GLOSSARY = [
 {"id":"elastic","term":"Elastic Cij / VRH","full":"탄성상수 · Voigt-Reuss-Hill","cat":"기계 물성",
  "what":"작은 변형에 대한 응력 반응 = 탄성텐서 Cij(6×6). 이걸 방향 평균해 <b>B(부피)·G(전단)·E(영률)</b>를 얻는다(VRH=Voigt상한·Reuss하한의 평균). Pugh(B/G)로 연성/취성, Debye로 격자 강성.",
  "how":"6 Voigt 방향 × ±변형 12개 SCF → 응력에서 Cij 열별 추출 → VRH 평균. <b>relaxed-ion</b>(변형 후 원자 이완)이 실험과 맞음(clamped-ion은 ~2.3× 과대). 노이즈는 k-density·strain 크기로 좌우.",
- "ours":"comp1 relaxed E_VRH 22.06(문헌 23 일치). comp2만 comp1과 같은 cubic-52라 완전비교쌍 — 지금 USPP·k444로 재측정 중. modelc/lpsocl은 rhombo셀이라 순위/각주만."},
+ "ours":"comp1 relaxed E_VRH 22.06(문헌 23 일치). comp2만 comp1과 같은 cubic-52라 완전비교쌍 — <b>2026-07-26 완료: comp2 E_VRH 20.03 &lt; comp1 22.06</b>(−9.2%, B_VRH −18.2%, G_VRH −8.1% = Br 치환이 격자를 연화). 단 Pugh B/G는 3.14→2.79로 감소라 연성은 오히려 내려간다. modelc/lpsocl은 rhombo셀이라 순위/각주만."},
 
 # ── 이온 수송 ─────────────────────────────────────────
 {"id":"bvse","term":"BVSE","full":"Bond Valence Site Energy","cat":"이온 수송",
- "what":"결합가(bond valence) 경험식으로 Li⁺가 격자 각 지점에서 느끼는 <b>이동 퍼텐셜 지도</b>를 싸게 계산. 낮은 계곡을 잇는 경로 = 이온 채널, 문턱 = 대략적 확산 장벽.",
- "how":"softBV 파라미터(Li–X R₀)로 BVSE=(BVS−1)² 맵 → 등가면/퍼콜레이션 분석으로 채널 연결성. DFT-NEB보다 훨씬 빠른 스크리닝.",
+ "what":"결합가(bond valence) 경험식으로 Li⁺가 격자 각 지점에서 느끼는 <b>이동 퍼텐셜 지도</b>를 싸게 계산. 낮은 계곡을 잇는 경로 = 이온 채널, 문턱 = <b>상대적</b> 병목 지표(에너지 유사 척도이지 eV 장벽이 아님).",
+ "how":"softBV 파라미터(Li–X R₀)로 BVSE=(BVS−1)² 맵 → 등가면/퍼콜레이션 분석으로 채널 연결성. DFT-NEB보다 훨씬 빠른 스크리닝. ⚠ <b>우리 구현의 단위는 valence²(무차원)</b>이지 eV가 아니다 — 문헌 softBV(Coulomb+Morse형 척력으로 eV 깊이 우물)와 같은 양이 아니므로 eV-BVSE 문헌값과 직접 비교 금지.",
  "ours":"comp1/modelc/b2o3 BVSE cube+percolation. 정량·순위는 원본 주기셀 값만 인용(큐빅박스는 표시용)."},
 
 {"id":"md","term":"MD (MLIP)","full":"분자동역학 · UMA","cat":"이온 수송",
  "what":"원자를 뉴턴 방정식으로 시간에 따라 움직여 <b>유한온도에서 Li가 실제로 확산하는 궤적</b>을 얻는다. 힘을 DFT로 매번 계산하면 비싸서, 학습된 퍼텐셜(MLIP, 우리는 UMA)로 대체.",
  "how":"Langevin NVT(dt 2fs, 온도 고정) 평형 5ps + 생산 200ps. 여러 온도·여러 시드로 통계. MLIP라 <b>pseudopotential 개념이 없다</b>(DFT와 다른 축).",
- "ours":"UMA-s-1p1(omat), 600/800/1000K, 3-seed. 절대값 인용 금지·멀티시드 판정만. UMA는 Li₃N엔 금지(편향)."},
+ "ours":"UMA-s-1p1(omat), 600/800/1000K. 절대값 인용 금지·멀티시드 판정만. <b>시드 수는 조성마다 다르다</b> — comp1/modelc deck 앵커는 온도당 <b>단일 궤적</b>(오차막대 없음), modelc의 멀티시드 값은 3-seed×3-T 0.197±0.032, b2o3 3-seed, LPSOCl 4-seed, comp2 3-seed. 조성 간 비교는 같은 시드 프로토콜끼리만. UMA는 Li₃N엔 금지(편향)."},
 
 {"id":"msd","term":"MSD → D","full":"Mean Squared Displacement","cat":"이온 수송",
  "what":"시간에 따른 이온의 <b>평균제곱변위</b> ⟨r²(t)⟩. 확산이면 시간에 선형 → 기울기가 확산계수 D (Einstein 관계 ⟨r²⟩=6Dt).",
@@ -106,18 +106,18 @@ GLOSSARY = [
 {"id":"arrhenius","term":"Arrhenius / Ea","full":"활성화에너지 · 전도도","cat":"이온 수송",
  "what":"확산이 온도에 지수적으로 의존: D=D₀·exp(−Ea/kT). log D vs 1/T 직선의 기울기 = <b>활성화에너지 Ea</b>(낮을수록 빠른 전도). σ는 Nernst–Einstein으로 D에서 환산.",
  "how":"3온도(600/800/1000K) D를 log-1/T에 피팅. 저온(400/500K)은 통계부족으로 제외 판정. Ea 오차막대는 시드 분산.",
- "ours":"comp1 0.253 / modelc 0.224 / lpsocl 0.271 / comp2 0.275±0.033 eV(3-seed 완료, comp2_md_arrhenius.json). 단 comp2는 800K 시드 산포가 커서 300K 외삽 σ 비율은 판정 보류(0.12–1.48×, inconclusive)."},
+ "ours":"<b>단일 궤적 deck 앵커</b>: comp1 0.253 / modelc 0.224 (comp1↔modelc 비교 전용, 시드 오차막대 없음). <b>멀티시드</b>: modelc 0.197±0.032 · b2o3 0.199±0.034 (3-seed×3-T) / LPSOCl 0.287±0.024 (4-seed×3-T) / comp2 0.275±0.033 (3-seed). LPSOCl vs modelc = +90 meV(둘 다 멀티시드). comp2는 800K 시드 산포가 커서 300K 외삽 σ 비율 판정 보류(0.12–1.48×, inconclusive). ⚠ 프로토콜이 다른 값끼리 빼면 안 됨."},
 
 # ── 계면·안정성 ───────────────────────────────────────
 {"id":"phonon","term":"Phonon","full":"격자 진동 · 동역학 안정성","cat":"계면·안정성",
  "what":"결정 격자의 진동 모드(포논) 주파수. <b>허수(음수) 주파수가 있으면 구조가 불안정</b>(안장점). 구조가 진짜 최소점인지 검증.",
  "how":"작은 변위에 대한 힘상수(동역학 행렬)의 고유값 → 주파수. Γ점만으로 1차 스크리닝, 전체 안정성은 q-격자.",
- "ours":"comp2 v3 champion STABLE(최저 +32.7 cm⁻¹). 첫 champion이 saddle(−45.8i)이라 phonon 검증이 없었으면 큰일날 뻔."},
+ "ours":"comp2 v3 champion = <b>UMA-s-1p1 Γ점 FD 스크린</b>에서 허수 0(허용치 20 cm⁻¹) = UMA 최소점 기준 통과. q-격자·DFT phonon은 미수행. 최저 실수모드 +32.7 cm⁻¹은 <b>Li 지배(55–74%)</b>라 판정 지표로만 쓰고 정량 인용은 금지(조화 Li 주파수는 강비조화). 첫 champion이 saddle(−45.8i)이라 phonon 검증이 없었으면 큰일날 뻔."},
 
 {"id":"neb","term":"NEB / CI-NEB","full":"Nudged Elastic Band","cat":"계면·안정성",
  "what":"두 안정 상태(예 이웃 site) 사이 <b>최소에너지경로(MEP)와 안장점(장벽 Ea)</b>을 찾는 방법. 이미지 여러 개를 스프링으로 연결해 경로를 이완, CI(climbing image)가 안장을 정밀화.",
  "how":"끝점 2개 relax → 중간 이미지 보간 → 각 이미지 힘 계산·이완 반복(iteration). 프로파일 피크가 중간(대칭)이면 진짜 안장, 단조증가면 경로/끝점 재검토.",
- "ours":"VGCF/hBN Li 확산: hBN표면 ~0.007(near-flat) · graphene 0.273(문헌 일치) · gallery <b>2L2L 0.147 eV(대표)</b>. barrier가 층수에 민감(1L1L 0.357→2L2L 0.147, −209 meV — gallery가 느린 채널↔빠른 채널로 뒤집힘)해 층수 트렌드 자체가 결과 — 1L1L 0.357은 대표값 아님. 2L 수렴(3L·혼합층) 검증 진행중."},
+ "ours":"VGCF/hBN Li 확산: hBN표면 <b>&lt;0.01 eV(사실상 무장벽)</b> — 경로 전체 폭 7 meV가 이미지당 힘오차 46 meV/Å보다 작아 수치 인용 불가(Shi2017 0.10 eV와 '일치'로 쓰는 것도 금지) · graphene 0.273(문헌 일치) · gallery <b>2L2L 0.147 eV(대표, 2L 수렴 미확인 = 상한)</b>. barrier가 층수에 민감(1L1L 0.357→2L2L 0.147, −209 meV — gallery가 느린 채널↔빠른 채널로 뒤집힘)해 층수 트렌드 자체가 결과 — 1L1L 0.357은 대표값 아님. 2L 수렴(3L·혼합층) 검증 진행중."},
 
 {"id":"esw","term":"ESW / onset","full":"전기화학 안정성창 (grand-potential)","cat":"계면·안정성",
  "what":"SE가 산화/환원 없이 버티는 전압 범위. grand-potential(Li 화학퍼텐셜 함수) 방법으로 분해 시작 전압(onset)과 분해 산물을 예측. VBM≠onset(반응 자유에너지가 결정).",
@@ -139,7 +139,7 @@ GLOSSARY = [
 {"id":"ordered_vs_disordered","term":"Ordered vs Disordered","full":"질서/무질서 구조 선택 — 어떤 LPSCl 셀로 계산하나","cat":"방법론·모델링",
  "what":"'질서셀 vs 무질서셀 누가 맞냐'는 잘못된 질문 — 진짜 질문은 <b>어떤 양을 계산하느냐</b>. 0 K DFT는 에너지 E를, 합성온도의 실험 무질서 구조는 F = E − TS_config를 산다. 무질서는 실패한 결정화가 아니라 <b>합성 T의 진짜 자유에너지 최소(부분 무질서 x*(T), 예: Kraft Cl 4d 62%)</b>를 급랭으로 실온에 동결한 것. Rietveld 점유율(예 48h occ 0.5)은 시공간 평균 확률이지 스냅샷이 아니다.",
  "how":"<b>0 K 미분·에너지(phonon·gap·formation/hull·elastic) → relaxed ordered 셀 / 유한온도 수송(σ·Ea) → 무질서 유지 + 다중 배열 앙상블 평균</b>. 무질서(48h 빈자리·anti-site)는 전도의 필요조건이 아니라 핵심 증강 레버 — 질서화하면 Ea 계통 과대(+0.03 eV, σ 1/4; comp1 vs modelc). 경고 사례: Deng SQS A=0.92 vs Torii ordered A=1.09 — 둘 다 A≈1(거의 등방)이지만 무질서 처리·D3 등 방법차만으로 A−1 부호가 흔들리는 미세 지표.",
- "ours":"canonical gap: comp1만 52at ordered 정형셀, modelc(62at)·+B₂O₃(128at)·LPSOCl(62at)은 배치 확정 단일-config 셀에서 동일 fixed-occ 레시피(electronic.json doping_family_2026_07_16). 수송은 d=0.5/1.0 × cfg0/1/2 disorder ensemble(UMA anneal+relax; v1 un-relaxed swap은 artifact 폐기). 단일 config 판정 금지(단일시드 1.33× 철회 교훈). 우리 A=1.14 ≈ Torii 1.09는 공유 편향(둘 다 ordered) 가능성 자기비판 유지."},
+ "ours":"canonical gap: comp1만 52at ordered 정형셀, modelc(62at)·+B₂O₃(128at)·LPSOCl(62at)은 배치 확정 단일-config 셀에서 동일 fixed-occ 레시피(electronic.json doping_family_2026_07_16). 수송은 d=0.5/1.0 × cfg0/1/2 disorder ensemble(UMA anneal+relax; v1 un-relaxed swap은 artifact 폐기). 단일 config 판정 금지(단일시드 1.33× 철회 교훈). 우리 A=1.14 ≈ Torii 1.09는 공유 편향(둘 다 ordered) 가능성 자기비판 유지 — 게다가 <b>A는 성분 선택에 민감</b>하다(comp1 relaxed 3추정치 1.14/0.75/0.92, 평균-Cij 기준 0.93; 저장값은 1번 삼중항 규약). 산포가 Deng 0.92↔Torii 1.09 간극(0.17)보다 크므로 Torii와의 근접을 정합 논거로 쓰지 않는다."},
 ]
 
 def by_category():

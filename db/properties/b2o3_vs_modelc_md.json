@@ -29,13 +29,16 @@
     "sigma_273K_mS_cm": 8.65
   },
   "comparison": {
+    "_SUPERSEDED_2026_07_09": "이 블록 전체가 단일시드 산물이라 SUPERSEDED. 3-seed×3-T 재시드에서 σ비율은 1.08/0.82/1.15 (1.0 주변 산포 = 통계적 동등)이고 D0비도 0.965× (b2o3가 오히려 낮음)라, 아래 sigma300_ratio 1.33 · D0_ratio 1.24 · sigma_hierarchy · D0_decomposition 은 모두 철회됐다. Ea 동일(ΔEa +0.002±0.047)만 재시드에서 살아남았다. CANONICAL: db/properties/b2o3_vs_lpscl16_conductivity.csv (FINAL 2026-07-07). 필드는 traceability로 유지 — 값 인용 금지.",
     "delta_Ea_meV": 0.0,
     "Ea_verdict": "b2o3 and modelc have IDENTICAL Ea (0.223 eV) at the consistent 2-50 ps window. The transport gain is NOT a lower barrier.",
-    "D0_ratio_b2o3_over_modelc": 1.24,
-    "sigma300_ratio_b2o3_over_modelc": 1.33,
-    "verdict": "B2O3 doping raises Li conductivity by ~1.33x vs LPSCl1.6 at RT, driven entirely by the prefactor D0 (more carriers / higher attempt rate), at the SAME activation energy. sigma300 18.5 vs 13.9 mS/cm; sigma273 8.7 vs 6.5 mS/cm.",
-    "sigma_hierarchy": "sigma_ratio 1.33 = D0(1.24) x n_Li(1.07) x barrier(1.00). log-share D0 74% / carriers 25% / barrier ~0.",
-    "D0_decomposition": {
+    "D0_ratio_b2o3_over_modelc_SUPERSEDED": 1.24,
+    "sigma300_ratio_b2o3_over_modelc_SUPERSEDED": 1.33,
+    "verdict_SUPERSEDED": "B2O3 doping raises Li conductivity by ~1.33x vs LPSCl1.6 at RT, driven entirely by the prefactor D0 (more carriers / higher attempt rate), at the SAME activation energy. sigma300 18.5 vs 13.9 mS/cm; sigma273 8.7 vs 6.5 mS/cm.",
+    "verdict": "B2O3 PRESERVES Li conductivity vs LPSCl1.6 (3-seed×3-T: per-T σ ratio 1.08±0.18 / 0.82±0.15 / 1.15±0.12 = statistically equivalent), at the SAME activation energy (ΔEa +0.002±0.047 eV). The earlier '1.33x, D0-driven' reading was single-seed noise (retracted 2026-07-09). Robust b2o3 gains are mechanical (+13% bulk) and the covalent B–S network, not transport.",
+    "sigma_hierarchy_SUPERSEDED": "sigma_ratio 1.33 = D0(1.24) x n_Li(1.07) x barrier(1.00). log-share D0 74% / carriers 25% / barrier ~0.",
+    "D0_decomposition_SUPERSEDED": {
+      "_SUPERSEDED_2026_07_09": "전제 붕괴: 분해 대상인 D0_ratio 1.236 이 재시드에서 0.965× 로 뒤집혔다 (b2o3 4.625e-04 vs LPSCl1.6 4.791e-04). 설명할 이득이 없다.",
       "note": "D0 = (1/6) z a^2 nu exp(S_m/kB). D0_ratio 1.24 split into structural geometry (from DFT-V0 CIFs) x dynamics (residual).",
       "D0_ratio": 1.236,
       "geometry_a2z": 1.09,

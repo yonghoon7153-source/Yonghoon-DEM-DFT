@@ -30,14 +30,22 @@ def read_concept(cid: str) -> str | None:
     p = (CONCEPTS / f"{cid}.md").resolve()
     if not p.is_relative_to(CONCEPTS.resolve()) or not p.exists():
         return None
-    return p.read_text(errors="ignore")
+    return p.read_text(encoding="utf-8", errors="ignore")
 
 # ─────────────────────────────────────────────────────────────
 # 로더 (캐시 없음 — 항상 최신 db 반영; 무거우면 mtime 캐시로 교체)
 # ─────────────────────────────────────────────────────────────
 def _load_json(p: Path):
+    """실패 시 None. 단 '파일 없음'과 '깨진 JSON/인코딩'은 구분해 로그를 남긴다
+    (예전엔 둘 다 조용히 None → app.py 가 똑같이 404 로 뭉갰다)."""
     try:
-        return json.loads(p.read_text())
+        return json.loads(p.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return None
+    except (json.JSONDecodeError, UnicodeDecodeError) as e:
+        import sys as _s
+        print(f"[data] 손상된 파일 무시: {p} — {type(e).__name__}: {e}", file=_s.stderr)
+        return None
     except Exception:
         return None
 
@@ -77,7 +85,7 @@ def load_properties() -> dict:
 
 def load_canonical_methods() -> str:
     p = KB / "methodology" / "computational_methods_canonical.md"
-    return p.read_text() if p.exists() else ""
+    return p.read_text(encoding="utf-8") if p.exists() else ""
 
 # ─────────────────────────────────────────────────────────────
 # 조성 노드 정의 (표시 메타)
@@ -90,7 +98,9 @@ COMPOSITIONS = {
     "comp5":       {"formula": "Li₆PS₅I",              "label": "LPSI",      "family": "argyrodite", "cell": "rhombo-62", "color": "#be123c"},
     "modelc":      {"formula": "Li₅.₄PS₄.₄Cl₁.₆",      "label": "LPSCl1.6",  "family": "argyrodite", "cell": "rhombo-62", "color": "#0284c7"},
     "modelc_v3":   {"formula": "Li₅.₄PS₄.₄Cl₁.₆ (v3)", "label": "LPSCl1.6 v3","family": "argyrodite","cell": "rhombo-62", "color": "#0369a1"},
-    "modelc_nd_doped": {"formula": "Nd-doped LPSCl1.6","label": "NdO-LPSCl", "family": "doped",     "cell": "rhombo-62", "color": "#65a30d"},
+    # 표기 규칙: label/formula = 아래첨자(표시용), 키·앵커(#Nd2O3)·db 파일명 = ASCII.
+    #   'NdO' 는 화학식마저 틀렸었다(실제 도펀트 Nd₂O₃) — B₂O₃-LPSCl 과 규칙을 맞춘다.
+    "modelc_nd_doped": {"formula": "Nd₂O₃-doped LPSCl1.6", "label": "Nd₂O₃-LPSCl", "family": "doped", "cell": "rhombo-62", "color": "#65a30d"},
     "lpsocl":      {"formula": "Li₂₇P₅S₂₁OCl₈",        "label": "LPSOCl (+O)","family": "doped",     "cell": "rhombo-62", "color": "#be123c"},
     "b2o3":        {"formula": "B₂O₃-doped LPSCl1.6",  "label": "B₂O₃-LPSCl","family": "doped",      "cell": "128-SC",    "color": "#0284c7"},
     "vgcf_hbn":    {"formula": "VGCF / h-BN + Li",     "label": "VGCF-hBN",  "family": "anode",      "cell": "slab",      "color": "#6b7280"},
@@ -148,6 +158,11 @@ def _prefix_starts(fname: str, pref: list) -> bool:
     return any(n.startswith(p.lower()) and not _blocked_by_longer(n, p.lower()) for p in pref)
 
 
+# 3Dmol.js 에 넘길 파서 이름. .vasp(POSCAR)를 'xyz'로 넘기면 첫 줄이 원자수가 아니라 제목이라
+# 조용히 깨진다 — 확장자별로 명시 매핑하고, 파서가 없는 건 다운로드 전용으로.
+_VIEWER_FMT = {".cif": "cif", ".xyz": "xyz", ".vasp": "vasp", ".cube": "cube"}
+
+
 def structures_for(cid: str) -> list[dict]:
     pref = _PREFIX.get(cid, [cid])
     sd = DB / "structures"
@@ -156,11 +171,43 @@ def structures_for(cid: str) -> list[dict]:
         for f in sorted(sd.iterdir()):
             if f.is_file() and f.suffix.lower() in (".cif", ".xyz", ".vasp", ".vesta", ".cube"):
                 if _prefix_starts(f.name, pref):
-                    out.append({"name": f.name, "ext": f.suffix.lstrip("."), "viewable": f.suffix.lower() in (".cif", ".xyz")})
+                    sfx = f.suffix.lower()
+                    out.append({"name": f.name, "ext": f.suffix.lstrip("."),
+                                "fmt": _VIEWER_FMT.get(sfx, ""),
+                                # 자동로드/기본 선택은 파서가 확실한 cif/xyz 만 (vasp 는 클릭 시 시도)
+                                "viewable": sfx in (".cif", ".xyz")})
     return out
 
+# 사이트 차트에서 제외할 폐기 CSV (db엔 traceability로 남기되 사용자에겐 안 보이게).
+# ⚠ 하위폴더 이동으로는 못 막는다 — 아래 rglob("*")가 db/properties 를 재귀 탐색하기 때문.
+_SUPERSEDED_CSV = {
+    # 철회된 단일시드 σ 1.33× 계보 (SEMIFINAL 2026-07-09) — 정본: b2o3_vs_lpscl16_conductivity.csv
+    "b2o3_vs_lpscl16_D_decomposition.csv",
+    "b2o3_vs_lpscl16_D0_decomposition.csv",
+    # 폐기된 5–40 ps 창 (canonical = 2–50). b2o3 Ea 우위를 가짜로 만들었던 표.
+    "b2o3_vs_modelc_arrhenius.csv",
+    # 단일시드 절대 σ (CLAUDE.md: σ 절대값 인용 금지)
+    "md_conductivity_SUPERSEDED_single_seed_2026_06_30.csv",
+}
+
+
 def datafiles_for(cid: str) -> list[dict]:
-    """조성 관련 CSV/데이터 (차트용) — properties + spectra 전역에서 prefix 매칭."""
+    """조성 관련 CSV/데이터 (차트용) — properties + spectra 전역에서 prefix 매칭.
+    폐기 표(_SUPERSEDED_CSV)는 제외 — db엔 남기되 사이트로는 내보내지 않는다.
+
+    build_coverage 1회당 ~84번 호출되고 매번 db 두 트리를 rglob 하므로 mtime 캐시를 건다.
+    ⚠ 캐시 키에 properties **와 spectra 둘 다** 넣어야 한다 — 한쪽만 넣으면 다른 트리에
+    CSV를 추가해도 사이트에 안 뜨는, 원래 없던 동기화 버그가 새로 생긴다.
+    (_dir_sig 는 (파일수, 최신 mtime)이라 add/modify/delete 를 모두 잡는다 =
+     data.py 모듈 독스트링·app.py 의 '요청마다 읽어 db 변경 즉시 반영' 계약 유지.)
+    """
+    return _datafiles_for_c(cid,
+                            _dir_sig(DB / "properties", "**/*"),
+                            _dir_sig(DB / "spectra", "**/*"))
+
+
+@lru_cache(maxsize=64)
+def _datafiles_for_c(cid: str, _sig_prop, _sig_spec) -> tuple:
     pref = _PREFIX.get(cid, [cid])
     out, seen = [], set()
     for base in ("properties", "spectra"):
@@ -168,12 +215,14 @@ def datafiles_for(cid: str) -> list[dict]:
         if not d.exists():
             continue
         for f in d.rglob("*"):
+            if f.name in _SUPERSEDED_CSV:
+                continue
             if f.is_file() and f.suffix.lower() == ".csv" and f.name not in seen:
                 # startswith는 최장 prefix 소유규칙 적용, 공유파일은 _infix_ 로 허용
                 if _prefix_starts(f.name, pref) or any(f"_{p.lower()}" in f.name.lower() for p in pref):
                     seen.add(f.name)
                     out.append({"name": f.name, "rel": str(f.relative_to(DB)), "kind": _csv_kind(f.name)})
-    return out
+    return tuple(out)
 
 def _csv_kind(name: str) -> str:
     n = name.lower()
@@ -191,35 +240,102 @@ def _csv_kind(name: str) -> str:
 # ─────────────────────────────────────────────────────────────
 # 조성별 메트릭 (평탄 인덱스 + canonical 앵커)
 # ─────────────────────────────────────────────────────────────
+# _index.json 은 2026-06-02 스냅샷이라 eigenvalue gap canonical(2026-06-16) 이전 값을 담고 있다.
+# 값을 손으로 고치면 스냅샷이 거짓말을 하게 되므로, 렌더 단계에서 '폐기·canonical 아님' 플래그만 붙인다.
+_STALE_PATH = re.compile(r"band_?gap", re.I)
+
+
 def index_metrics_by_comp(index: dict) -> dict:
+    """평탄 인덱스 → 조성별 메트릭. canonical 과 어긋나는 폐기 항목엔 stale 플래그를 실어 보낸다."""
     m = {}
     for dp in index.get("data_points", []):
-        m.setdefault(dp.get("comp"), []).append(dp)
+        cid = dp.get("comp")
+        rec = dict(dp)
+        if _STALE_PATH.search(str(dp.get("path", ""))):
+            canon = CANONICAL.get("gap_eV", {}).get(cid)
+            try:
+                same = canon is not None and abs(float(dp.get("value")) - canon) < 5e-3
+            except (TypeError, ValueError):
+                same = False
+            if not same:
+                rec["stale"] = ("폐기 — canonical 아님. 정본은 fixed-occ nscf 고유값"
+                                + (f" {canon} eV" if canon is not None else "")
+                                + " (DOS-threshold/legacy k-mesh 판독 금지)")
+        m.setdefault(cid, []).append(rec)
     return m
 
 # canonical 앵커값 (kb 나침반과 일치 — 사이트 상단 요약/비교용)
 CANONICAL = {
     "gap_eV":     {"comp1": 2.066, "comp2": 2.04, "modelc": 2.099, "lpsocl": 2.2309, "b2o3": 1.9671},
     "B0_GPa":     {"comp1": 26.23, "comp2": 25.8, "modelc": 21.71, "lpsocl": 24.71, "b2o3": 24.48},
-    "E_VRH_GPa":  {"comp1": 22.06, "modelc": 27.66, "lpsocl": 35.04},  # relaxed-ion USPP; comp2 재측정중
-    "MD_Ea_eV":   {"comp1": 0.253, "modelc": 0.224, "lpsocl": 0.271},  # UMA — ⚠절대값 인용주의, 멀티시드 판정만
-    "ICOHP_PS":   {"comp1": -5.938, "modelc": -6.000, "lpsocl": -6.04, "modelc_nd_doped": -5.976},  # per_bond_json/lobster
+    # relaxed-ion USPP. comp2_v3 완료 2026-07-26 (elastic.json) — comp1과 동일 USPP·k444·cubic-52.
+    "E_VRH_GPa":  {"comp1": 22.06, "comp2": 20.03, "modelc": 27.66, "lpsocl": 35.04},
+    # UMA — ⚠절대값 인용주의. 시드 프로토콜이 조성마다 다르다(아래 CANONICAL_PROVISIONAL 참조):
+    #   comp1/modelc = 단일 궤적 deck 앵커 / lpsocl = 4-seed×3-T / comp2 = 3-seed(잠정).
+    "MD_Ea_eV":   {"comp1": 0.253, "modelc": 0.224, "lpsocl": 0.287},
+    "ICOHP_PS":   {"comp1": -5.938, "comp2": -5.913, "modelc": -6.000, "lpsocl": -6.04,
+                   "modelc_nd_doped": -5.976},  # per_bond_json/lobster
 }
-# 잠정/미커밋 표시 — (property, comp) : 사유. composition/explorer 라우트에서 '잠정' 배지·툴팁으로 렌더.
+# 잠정/시드-프로토콜 표시 — (property, comp) : 사유. composition/explorer/compare 에서 '잠정' 배지·툴팁.
 CANONICAL_PROVISIONAL = {
     ("gap_eV", "comp2"): "잠정 — legacy band_gaps, fixed-occ nscf 재확인중 (eigenvalue canonical 아님)",
+    # ⚠ MD Ea는 조성별로 시드 프로토콜이 달라, 값마다 그 사실을 달고 다녀야 비교 오독을 막는다.
+    ("MD_Ea_eV", "comp1"):
+        "단일 궤적(온도당 1개, 시드 오차막대 없음) — deck 앵커. modelc(단일시드 0.224)와만 짝지어 비교",
+    ("MD_Ea_eV", "modelc"):
+        "단일 궤적 deck 앵커. modelc는 3-seed×3-T 값(0.197±0.032)도 있음 — "
+        "b2o3(0.199±0.034)·LPSOCl(0.287±0.024)과 비교할 땐 그쪽을 써야 함(같은 시드 프로토콜끼리만)",
+    ("MD_Ea_eV", "comp2"):
+        "잠정 — 3-seed지만 800 K 시드 산포가 비물리(s3 800K 2.15e-6 < 자기 600K 2.44e-6). "
+        "300 K 외삽 σ비는 0.12–1.48× inconclusive → 확정값 취급 금지 (reseed s5/s6 권고)",
+}
+# CANONICAL 에 넣기엔 품질 플래그가 붙었지만 db엔 등록된 값 (사이트 표시는 PROVISIONAL 사유와 함께).
+CANONICAL_PROVISIONAL_VALUES = {
+    ("MD_Ea_eV", "comp2"): 0.275,
+}
+# (metric, comp) : 사유 — 이 값은 '아직 안 한 것'이 아니라 '하면 안 되거나 정의되지 않는 것'.
+# composition/explorer 에서 TODO 가 아니라 'N/A' 로 렌더된다.
+CANONICAL_NA = {
+    ("MD_Ea_eV", "li3n"):  "UMA MLIP 금지 조성 (2026-06 편향 판정) — DFT-AIMD/QE-NEB 축으로만. TODO 아님",
+    ("MD_Ea_eV", "sdcp"):  "분자계(ORCA) — 격자 Li 확산 축이 없음",
+    ("MD_Ea_eV", "lic6"):  "interphase 상 — 격자 Li 확산 Arrhenius 축 아님",
+    ("gap_eV", "sdcp"):    "분자계 — 주기 밴드갭 대신 HOMO–LUMO 축",
+    ("B0_GPa", "sdcp"):    "분자계 — 주기셀 EOS 정의 안 됨",
+    ("E_VRH_GPa", "sdcp"): "분자계 — 탄성텐서 정의 안 됨",
+    ("B0_GPa", "vgcf_hbn"): "슬랩 — 주기 벌크 EOS 정의 안 됨",
+    ("E_VRH_GPa", "vgcf_hbn"): "슬랩 — 벌크 탄성텐서 정의 안 됨",
 }
 CANONICAL_META = {
     "gap_eV":    "fixed-occ eigenvalue (DOS-threshold 금지) · comp2는 잠정(legacy, 재확인중)",
     "B0_GPa":    "DFT BM3 EOS",
-    "E_VRH_GPa": "DFT relaxed-ion USPP·k444(comp1)/셀별·0.005 — comp1↔comp2만 완전비교",
-    "MD_Ea_eV":  "UMA-s-1p1, 600/800/1000K 3-seed · ⚠절대값 인용 주의(멀티시드 판정)",
-    "ICOHP_PS":  "LOBSTER all-PAW ext-basis · comp2 값은 handoff(db 미커밋)이라 제외",
+    "E_VRH_GPa": "DFT relaxed-ion USPP·k444(comp1·comp2)/셀별·0.005 — comp1↔comp2만 완전비교쌍",
+    "MD_Ea_eV":  "UMA-s-1p1 · 600/800/1000 K 3점 피팅 · ⚠절대값 인용 금지. "
+                 "시드 프로토콜 혼재: comp1/modelc=단일 궤적(오차막대 없음), lpsocl=4-seed×3-T, "
+                 "comp2=3-seed(잠정) — 조성 간 비교는 같은 프로토콜끼리만",
+    "ICOHP_PS":  "LOBSTER all-PAW ext-basis (comp2 = comp2_icohp_origin.csv, 2026-07-25 커밋)",
 }
 
 # ─────────────────────────────────────────────────────────────
 # Cascade / ML 도핑 스크리닝 (디지털 트윈) — UMA 상대 스크리닝 번들
 # ─────────────────────────────────────────────────────────────
+def canonical_values(cid: str) -> dict:
+    """조성 하나의 canonical 값 — 잠정값(CANONICAL_PROVISIONAL_VALUES)도 채워 넣는다.
+    잠정값은 템플릿에서 CANONICAL_PROVISIONAL 사유와 '잠정' 배지를 달고 렌더된다."""
+    out = {k: v.get(cid) for k, v in CANONICAL.items()}
+    for (k, c), val in CANONICAL_PROVISIONAL_VALUES.items():
+        if c == cid and out.get(k) is None:
+            out[k] = val
+    return out
+
+
+def canonical_table() -> dict:
+    """explorer/compare 표용 — CANONICAL 전체 + 잠정값 병합."""
+    out = {k: dict(v) for k, v in CANONICAL.items()}
+    for (k, c), val in CANONICAL_PROVISIONAL_VALUES.items():
+        out.setdefault(k, {}).setdefault(c, val)
+    return out
+
+
 CASCADE_FILES = {
     "ranked":      "cascade_v23_ranked.csv",       # 조성 합성점수 리더보드
     "champions":   "cascade_v23_champions.csv",    # 챔피언별 EOS·탄성·anneal
@@ -309,10 +425,13 @@ def build_matrix() -> dict:
         "properties": props,
         "prop_category": prop_cat,
         "index_metrics": index_metrics_by_comp(idx),
-        "canonical": CANONICAL,
+        "canonical": canonical_table(),      # CANONICAL + 잠정값 병합 (compare 표)
         "canonical_meta": CANONICAL_META,
         "built": idx.get("built"),
-        "literature_count": (sum(1 for _ in (LITDB / "papers").glob("*.md"))
+        # ⚠ list_papers() 와 같은 정의를 써야 대시보드 카운트와 /literature 목록이 안 어긋난다
+        #   (예전엔 _TEMPLATE.md 를 세서 106 vs 105 로 갈렸음).
+        "literature_count": (sum(1 for f in (LITDB / "papers").glob("*.md")
+                                 if not f.stem.startswith("_"))
                              if (LITDB / "papers").exists() else idx.get("literature_count", 0)),
     }
 
@@ -361,18 +480,47 @@ def _agg_ids_c(fname, _mt):
     walk(d, "")
     return frozenset(ids)
 
+_ALL_ALIASES = sorted({a.lower() for v in _COMP_ALIASES.values() for a in v}, key=len, reverse=True)
+
+
+def _alias_hits(rec_id: str, alias: str) -> bool:
+    """레코드 id 가 이 별칭 소유인가.
+
+    substring 매칭('modelc' in 'modelc_v3')은 최장-prefix 소유규칙을 우회해서
+    modelc 페이지가 modelc_v3 레코드만으로 커버리지 True 가 됐다. 그렇다고
+    startswith(alias+'_') 로 좁히면 nd_pair01_nd2o3_doped 같은 실제 id 를 놓쳐
+    modelc_nd_doped/ionic 이 ✓→✗ 로 회귀한다. 그래서 세 가지만 허용한다:
+      (1) 정확 일치  (2) alias 뒤가 숫자거나 비-영숫자인 접두  (3) 언더스코어로 끊긴 infix
+    그 위에 _ALL_ALIASES 최장 양보를 얹어 더 구체적인 별칭이 있으면 넘겨준다.
+    """
+    if rec_id == alias:
+        return True
+    ok = False
+    if rec_id.startswith(alias):
+        nxt = rec_id[len(alias):len(alias) + 1]
+        ok = (not nxt) or nxt.isdigit() or not nxt.isalnum()
+    if not ok and f"_{alias}" in rec_id:
+        j = rec_id.index(f"_{alias}") + 1 + len(alias)
+        nxt = rec_id[j:j + 1]
+        ok = (not nxt) or nxt.isdigit() or not nxt.isalnum()
+    if not ok:
+        return False
+    # 더 긴(구체적) 별칭이 같은 id 를 접두로 소유하면 양보 — modelc ↛ modelc_v3
+    return not any(len(q) > len(alias) and rec_id.startswith(q) for q in _ALL_ALIASES)
+
+
 def _aggregate_covers(cid, cat_id):
     aliases = _COMP_ALIASES.get(cid, [cid])
     for fname, fcat in AGGREGATES.items():
         if fcat == cat_id:
             ids = _agg_ids(fname)
-            if any(a in i for i in ids for a in aliases):
+            if any(_alias_hits(i, a) for i in ids for a in aliases):
                 return True
     return False
 
-@lru_cache(maxsize=32)
-def _lit_covers(cid):
-    return any(element_papers(e, limit=1) for e in COMP_ELEMENTS.get(cid, []))
+# (_lit_covers 삭제 — 'literature' 커버리지 열이 제거되면서 남은 죽은 코드였고,
+#  무효화 키 없는 lru_cache 라 되살리면 litdb 갱신이 반영 안 되는 버그가 됐을 것.
+#  문헌 파생 계산은 list_papers() 한 군데로 통일한다.)
 
 
 def _has_category_data(cid, cat_id, props, prop_cat, idx_metrics) -> bool:
@@ -390,9 +538,10 @@ def _has_category_data(cid, cat_id, props, prop_cat, idx_metrics) -> bool:
     # (c) 구조파일 존재 → structural 만 (electronic은 실제 dos/pdos/gap 데이터가 있어야 True)
     if cat_id == "structural" and structures_for(cid):
         return True
-    if datafiles_for(cid):
+    dfs = datafiles_for(cid)          # ⚠ 두 번 호출하면 db 전체 rglob 이 두 배가 된다
+    if dfs:
         # 어떤 CSV가 이 카테고리에 속하면
-        for df in datafiles_for(cid):
+        for df in dfs:
             kind = df["kind"].lower()
             if cat and any(k in kind for k in cat["keys"]):
                 return True
@@ -412,10 +561,40 @@ def build_coverage(props, prop_cat, idx_metrics) -> dict:
                     for c in CATEGORIES}
     return cov
 
+# 물성이 그 조성에 애초에 성립하지 않는 칸 = N/A (미계산 TODO 와 구분).
+# 1순위 이유는 진척률 정확도가 아니라 **금지된 계산을 TODO 로 광고하지 않기**다
+# (예: li3n × ionic — CLAUDE.md 상 UMA 는 Li₃N 에 사용 금지).
+NOT_APPLICABLE = {
+    ("sdcp", "mechanical"): "분자계(ORCA) — 주기셀 EOS·탄성 정의 안 됨",
+    ("sdcp", "ionic"):      "분자계 — 격자 Li 수송 축이 없음",
+    ("sdcp", "cascade"):    "도핑 스크리닝 대상 아님 (호스트가 argyrodite 아님)",
+    ("sdcp", "electronic"): "분자 MO 축 — 주기 밴드/PDOS 정의 안 됨",
+    # ⚠ li3n/lic6 의 ionic 은 N/A 가 아니다 — NEB barrier 등 실제 데이터가 있다.
+    #    '금지된 계산'은 카테고리가 아니라 특정 metric(MD_Ea_eV) 축이라 CANONICAL_NA 로 처리한다.
+    ("li3n", "cascade"):    "interphase 상 — 도펀트 스크리닝 로스터 밖",
+    ("li3n", "mechanical"): "interphase 상 — 벌크 EOS 비교축 아님",
+    ("lic6", "cascade"):    "interphase 상 — 도펀트 스크리닝 로스터 밖",
+    ("lic6", "mechanical"): "interphase 상 — 벌크 EOS 비교축 아님",
+    ("vgcf_hbn", "cascade"): "anode 슬랩 — 도펀트 스크리닝 로스터 밖",
+    ("vgcf_hbn", "mechanical"): "슬랩 — 주기 벌크 EOS 정의 안 됨",
+}
+for _c in COMPOSITIONS:
+    if _c not in ("modelc_nd_doped", "b2o3"):
+        NOT_APPLICABLE.setdefault((_c, "cascade"), "DFT 심층검증 대상 도핑 히트가 아님")
+
+
 def coverage_stats(cov: dict) -> dict:
-    total = sum(len(v) for v in cov.values())
-    done = sum(1 for v in cov.values() for ok in v.values() if ok)
-    return {"done": done, "total": total, "pct": round(100 * done / total) if total else 0}
+    """진척률은 '해당되는 칸' 기준. N/A 는 분모에서 뺀다."""
+    total = done = na = 0
+    for cid, row in cov.items():
+        for k, ok in row.items():
+            if (cid, k) in NOT_APPLICABLE:
+                na += 1
+                continue
+            total += 1
+            done += 1 if ok else 0
+    return {"done": done, "total": total, "na": na,
+            "pct": round(100 * done / total) if total else 0}
 
 
 # ─────────────────────────────────────────────────────────────
@@ -504,7 +683,7 @@ def list_papers() -> list:
         title, type_str, digested = f.stem.replace("_", " "), "", ""
         got_title = False
         try:
-            head = f.read_text(errors="ignore").splitlines()[:18]
+            head = f.read_text(encoding="utf-8", errors="ignore").splitlines()[:18]
         except Exception:
             head = []
         for line in head:
@@ -526,11 +705,17 @@ def list_papers() -> list:
 def _is_blank(r):
     return (not r) or (not any((c or "").strip() for c in r))
 
+
+# 데이터 행이 아니라 '요약/파생' 행 (ratio_…, => sigma_ratio 등). 차트 데이터에서 빼고 각주로 보낸다.
+# 이걸 안 빼면 요약행의 문자열 셀('1.08+/-0.18')이 열 타입 판정을 오염시켜 진짜 값 열이
+# categorical 로 떨어진다(= σ·Ea 열이 차트에서 통째로 사라지는 원인).
+_SUMMARY_ROW = re.compile(r"^\s*(=>|ratio[_/]|delta[_ ]|Δ|d?Ea\s*=)", re.I)
+
 def read_csv(rel: str) -> dict:
     p = (DB / rel).resolve()
     if not p.is_relative_to(DB.resolve()) or not p.exists():
         return {"error": "not found"}
-    rows = list(csv.reader(p.open()))
+    rows = list(csv.reader(p.open(encoding="utf-8")))
     # 헤더 = 선행 주석(#)·빈 줄을 건너뛴 첫 실질 행
     i = 0
     while i < len(rows) and (_is_blank(rows[i]) or rows[i][0].lstrip().startswith("#")):
@@ -538,7 +723,7 @@ def read_csv(rel: str) -> dict:
     if i >= len(rows):
         return {"columns": [], "data": []}
     header = rows[i]
-    data = []
+    data, summary = [], []
     for r in rows[i + 1:]:
         if _is_blank(r):
             break                    # 첫 빈 줄에서 멈춤 — 한 파일 속 두번째 표 누수 방지
@@ -553,8 +738,8 @@ def read_csv(rel: str) -> dict:
                 rec[h] = float(v)
             except (ValueError, TypeError):
                 rec[h] = v
-        data.append(rec)
-    return {"columns": header, "data": data, "n": len(data)}
+        (summary if _SUMMARY_ROW.match(str(r[0])) else data).append(rec)
+    return {"columns": header, "data": data, "n": len(data), "summary": summary}
 
 
 # ═════════════════════════════════════════════════════════════
@@ -622,9 +807,13 @@ def search_index() -> list:
     for t, label, sub, url in pages:
         idx.append({"t": t, "label": label, "sub": sub, "url": url, "kw": label})
     for cid, c in COMPOSITIONS.items():
+        # 아래첨자 표기와 ASCII 표기를 둘 다 kw 에 (Nd₂O₃ ↔ Nd2O3, B₂O₃ ↔ B2O3 …)
+        _sub = str.maketrans("₀₁₂₃₄₅₆₇₈₉", "0123456789")
+        _ascii = f"{c['label']} {c['formula']}".translate(_sub)
         idx.append({"t": "조성", "label": c["label"], "sub": c["formula"],
                     "url": f"/composition/{cid}",
-                    "kw": f"{cid} {c['family']} {c['cell']} " + " ".join(COMP_ELEMENTS.get(cid, []))})
+                    "kw": f"{cid} {c['family']} {c['cell']} {_ascii} "
+                          f"{CASCADE_DOPANT.get(cid, '')} " + " ".join(COMP_ELEMENTS.get(cid, []))})
     have = concept_ids()
     for g in G.GLOSSARY:
         url = f"/concept/{g['id']}" if g["id"] in have else "/glossary"
@@ -824,6 +1013,16 @@ def load_element_kb() -> dict:
                 out[d["symbol"]] = d
     return out
 
+def _icohp_val(v):
+    """결합값 — 파일마다 키가 갈려 있어(ICOHP_total_eV_per_bond vs ICOHP_eV) 폴백으로 읽는다."""
+    if not isinstance(v, dict):
+        return None
+    for k in ("ICOHP_total_eV_per_bond", "ICOHP_eV"):
+        if v.get(k) is not None:
+            return v[k]
+    return None
+
+
 def _all_icohp_bonds():
     return _all_icohp_bonds_c(_dir_sig(DB / "properties", "*_icohp.json"))
 
@@ -892,7 +1091,7 @@ def _paper_index_c(_sig):
         blob = f"{p['id']} {p['title']} {p['type']}"
         el_tags, method_tags = set(), set()
         try:
-            head = (pd / f"{p['id']}.md").read_text(errors="ignore").splitlines()[:60]
+            head = (pd / f"{p['id']}.md").read_text(encoding="utf-8", errors="ignore").splitlines()[:60]
             blob += " " + " ".join(head)
             for line in head:
                 m = re.search(r"(?:elements|원소)\s*[:：]\s*(.+)", line, re.I)
@@ -974,12 +1173,12 @@ def element_db_anchors(sym: str) -> dict:
     for system, bond, v in _all_icohp_bonds():
         if sym in re.split(r"[-–]", bond):
             bonds.append({"system": system, "bond": bond,
-                          "icohp": v.get("ICOHP_total_eV_per_bond"),
+                          "icohp": _icohp_val(v),
                           "d": v.get("d_mean_A"), "N": v.get("N")})
     pdos = []
     for f in sorted((DB / "properties").glob("*pdos_element*smooth.csv")):
         try:
-            hdr = f.open().readline().strip().lower().split(",")
+            hdr = f.open(encoding="utf-8").readline().strip().lower().split(",")
             if any(sym.lower() == h.strip().split()[0] if h.strip() else False for h in hdr) or sym.lower() in [h.strip() for h in hdr]:
                 pdos.append(str(f.relative_to(DB)))
         except Exception:
@@ -987,7 +1186,7 @@ def element_db_anchors(sym: str) -> dict:
     xps = []
     for f in sorted((DB / "properties").glob("*xps*.csv")):
         try:
-            if re.search(rf"(^|[^A-Za-z]){re.escape(sym)}([^A-Za-z]|$)", f.read_text(errors="ignore")):
+            if re.search(rf"(^|[^A-Za-z]){re.escape(sym)}([^A-Za-z]|$)", f.read_text(encoding="utf-8", errors="ignore")):
                 xps.append(str(f.relative_to(DB)))
         except Exception:
             pass
@@ -1024,7 +1223,7 @@ def element_briefing(syms: list) -> dict:
             parts = set(re.split(r"[-–]", bond))
             if len(parts) == 2 and parts <= sset:
                 pair.append({"system": system, "bond": bond,
-                             "icohp": v.get("ICOHP_total_eV_per_bond"), "d": v.get("d_mean_A")})
+                             "icohp": _icohp_val(v), "d": v.get("d_mean_A")})
         papers = {}
         for e in elems:
             for p in e["anchors"]["papers"]:
@@ -1110,7 +1309,9 @@ def dashboard_highlights() -> list:
         hi.append({"t": "Band gap", "v": f"{L.get(g[0][1], g[0][1])} {g[0][0]} eV",
                    "n": "+O(LPSOCl)가 전자 절연 최강 · fixed-occ eigenvalue (comp2 잠정)"})
     hi.append({"t": "P–S 골격 vs Li–X 이온", "v": "ICOHP −6.0 ≫ −2.1 eV",
-               "n": "강한 공유 골격 + 약한 이온결합 · Li–Br(−1.93) < Li–Cl(−2.11) → Br이 comp2 연성↑"})
+               "n": "강한 공유 골격 + 약한 이온결합 · comp2 Li–Br(−1.93)이 Li–Cl(−2.11)보다 약해 "
+                    "격자 연화(E_VRH 22.06→20.03, B_VRH −18.2%) — 단 Pugh B/G는 3.14→2.79로 오히려 "
+                    "감소라 '연성 이득'은 아님"})
     e = sorted((v, cid) for cid, v in C["MD_Ea_eV"].items() if v is not None)
     if e:
         hi.append({"t": "이온 전도 Ea (UMA)", "v": f"{L.get(e[0][1], e[0][1])} {e[0][0]} eV 최저",
@@ -1124,8 +1325,12 @@ def dashboard_highlights() -> list:
     if top:
         hi.append({"t": "도핑 스크리닝 챔피언", "v": f"{top['dopant']} (UMA #1)",
                    "n": "코팅 후보 상위 · Nd₂O₃·B₂O₃는 DFT 검증됨 (절대값은 상대비교만)"})
-    hi.append({"t": "VGCF/hBN Li 확산 (CI-NEB)", "v": "hBN 0.007 · graphene(1L) 0.273 · gallery 2L2L 0.147 eV (대표)",
-               "n": "barrier 층수 민감 −209 meV 반증 → 혼합층 2건·graphene 2L NEB 진행중"})
+    # ⚠ hBN은 db가 수치 인용을 금지한 값 — 경로 전체 폭 7 meV < 이미지당 힘오차 46 meV/Å
+    #   (vgcf_hbn_neb.json: "Report as '< 0.01 eV, effectively barrierless'"). 2L2L은 층수 미수렴 상한.
+    hi.append({"t": "VGCF/hBN Li 확산 (CI-NEB)",
+               "v": "hBN <0.01(사실상 무장벽) · graphene(1L) 0.273 · gallery 2L2L 0.147 eV (대표)",
+               "n": "hBN은 수치 분해능 이하 · 2L2L은 층수 미수렴=상한 · barrier 층수 민감 −209 meV 반증 "
+                    "→ 혼합층 2건·graphene 2L NEB 진행중"})
     # comp2 disorder ensemble — ⚠ 단일 config Ea/σ 수치 인용 금지(멀티 config 판정 전, 데이터 규율)
     hi.append({"t": "comp2 disorder ensemble", "v": "d=0.50 anneal+relax 파이프라인 가동",
                "n": "cfg0 3온도 완료 · 멀티 config 판정 대기"})

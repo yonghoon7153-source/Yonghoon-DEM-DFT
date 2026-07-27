@@ -27,7 +27,9 @@
   <div class="stat"><div class="num">{{ COMPS|length }}</div><div class="lbl">조성 / 프로젝트</div></div>
   <div class="stat"><div class="num">{{ b.properties|length }}</div><div class="lbl">post-processing 파일</div></div>
   <div class="stat"><div class="num">{{ b.literature_count }}</div><div class="lbl">litdb 문헌</div></div>
-  <div class="stat"><div class="num accent">{{ covstat.pct }}%</div><div class="lbl">커버리지 · {{ covstat.done }}/{{ covstat.total }} (계산된 물성)</div></div>
+  <div class="stat" title="해당 없음(N/A) 칸은 분모에서 제외 — 성립하지 않거나 규율상 금지된 조합">
+    <div class="num accent">{{ covstat.pct }}%</div>
+    <div class="lbl">커버리지 · {{ covstat.done }}/{{ covstat.total }} (해당되는 물성 기준{% if covstat.na %} · N/A {{ covstat.na }}칸 제외{% endif %})</div></div>
 </div>
 
 <div class="section-title">Pipeline</div>
@@ -39,7 +41,7 @@
   <div class="flow-box"><div class="fb-t">PROPERTIES</div><div class="fb-b">canonical db → 이 사이트 (자동 동기화)</div></div>
 </div>
 
-<div class="section-title">Coverage Matrix <span class="muted">— 옅은 칸 = TODO (미계산)</span></div>
+<div class="section-title">Coverage Matrix <span class="muted">— ✓ 데이터 있음 · · = TODO(미계산) · — = N/A(성립 안 함/규율상 금지)</span></div>
 <div class="card" style="overflow-x:auto;padding:14px 16px">
 <table class="matrix">
 <thead><tr><th style="text-align:left">Composition</th>
@@ -49,8 +51,10 @@
 <tr>
   <td class="rowh"><a href="/composition/{{ cid }}"><span class="dot" style="background:{{ comp.color }}"></span>{{ comp.label }}</a></td>
   {% for c in CATS %}
+    {% set na = NA.get(cid ~ '|' ~ c.id) %}
     {% if cov[cid][c.id] %}<td><span class="cell done" title="{{ comp.label }} · {{ c.label }} 데이터 있음">✓</span></td>
-    {% else %}<td><span class="cell todo" title="{{ comp.label }} · {{ c.label }} 미계산">·</span></td>{% endif %}
+    {% elif na %}<td><span class="cell todo" style="opacity:.45" title="{{ comp.label }} · {{ c.label }} — N/A: {{ na }}">—</span></td>
+    {% else %}<td><span class="cell todo" title="{{ comp.label }} · {{ c.label }} 미계산 (TODO)">·</span></td>{% endif %}
   {% endfor %}
 </tr>
 {% endfor %}

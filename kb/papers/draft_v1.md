@@ -2,6 +2,13 @@
 
 **Yonghoon Ahn, BML Lab, Hanyang University**
 
+> ⚠️ **DRAFT — 2026-07-27 수치 정정 진행중.** §3.4 의 밴드갭은 legacy/k-mesh 세대 값(comp1 2.28 /
+> Model C 1.65)이었다. **1.65 는 k-mesh 아티팩트로 판정됐고**(수렴 k-mesh 에서 재현 안 됨,
+> `kb/results/report_mechanical_electronic_2026_06_21.md:137`), 2.28 은 DOS-threshold 계열이다.
+> 정본은 fixed-occ nscf 고유값 — comp1 **2.066** / Model C **2.099** / +B₂O₃ 1.9671 / LPSOCl 2.2309 eV
+> (`db/properties/electronic.json`, 단일 출처 `kb/concepts/bandgap.md`).
+> 본문 다른 절의 수치도 정본 대조 전까지 인용 금지.
+
 ---
 
 ## Abstract
@@ -109,7 +116,7 @@ Analysis of two energy basins in comp5 (the highest-Br composition) reveals extr
 
 ### 3.4 Electronic Structure and Bonding
 
-Band gaps range from 1.65 eV (Model C) to 2.28 eV (comp1), with Br 4p states contributing to the valence band maximum in all Br-containing compositions. The PS₄ framework remains invariant across compositions, as evidenced by constant P-S bond lengths (2.06 ± 0.01 Å) and P/S Bader charges. Li-Br bonds (2.71 Å) are systematically longer than Li-Cl bonds (2.51 Å), and Bader analysis confirms |q(Cl)| > |q(Br)|, indicating stronger ionic character for Cl⁻. These observations establish that the mechanical softening upon Br substitution originates from weakened ionic (Li-X) interactions, not from changes in the covalent PS₄ backbone.
+Band gaps range from 1.97 eV (+B₂O₃) to 2.23 eV (LPSOCl), with comp1 at 2.066 eV and Model C at 2.099 eV, with Br 4p states contributing to the valence band maximum in all Br-containing compositions. The PS₄ framework remains invariant across compositions, as evidenced by constant P-S bond lengths (2.06 ± 0.01 Å) and P/S Bader charges. Li-Br bonds (2.71 Å) are systematically longer than Li-Cl bonds (2.51 Å), and Bader analysis confirms |q(Cl)| > |q(Br)|, indicating stronger ionic character for Cl⁻. These observations establish that the mechanical softening upon Br substitution originates from weakened ionic (Li-X) interactions, not from changes in the covalent PS₄ backbone.
 
 ### 3.5 Interfacial Adhesion
 

@@ -25,8 +25,11 @@
   "800": 7.624799999999999e-06,
   "1000": 2.0315999999999997e-05
  },
- "Ea_eV_SEMweighted": 0.27545975626296304,
- "Ea_eV_err": 0.032743452205980024,
+ "Ea_eV_perseed_mean": 0.27545975626296304,
+ "Ea_eV_perseed_std": 0.032743452205980024,
+ "Ea_eV_SEMweighted_fit": 0.2836114428553832,
+ "Ea_eV_OLS_on_mean_D": 0.2800654175759395,
+ "_Ea_definitions": "Ea_eV / Ea_eV_perseed_mean = mean of the three per-seed Arrhenius slopes (err = population std, ddof=0) -- this is the headline. Ea_eV_SEMweighted_fit = a genuine SEM-weighted 3-pt fit of the per-T seed means (different estimator, listed for transparency). Ea_eV_OLS_on_mean_D = unweighted fit of the per-T mean D.",
  "Ea_per_seed": [
   0.3119593832146635,
   0.232531340358329,
@@ -34,7 +37,7 @@
  ],
  "Ea_eV": "0.275 +/- 0.033",
  "data_quality_flag": "800K per-seed scatter large (s3 800K 2.15e-6 < its 600K 2.44e-6 = non-physical; s4 800K high). Mean is monotonic; 800K under-sampled at 200ps. 1000K tight.",
- "anchors_CANONICAL_3seed": {
+ "anchors_deck_single_seed": {
   "comp1_LPSCl_Ea": 0.2532391187582002,
   "modelc_LPSCl1.6_Ea": 0.22334512161270018,
   "comp1_D": [
@@ -47,7 +50,11 @@
    2.05e-05,
    4.55e-05
   ],
-  "_note": "comp1/modelc = CANONICAL 3-seed (deck slide 5 = DB/littable): comp1 Ea 0.253/D0 4.11e-4/sig300 3.4; modelc Ea 0.224/D0 5.8e-4/sig300 14. kgy build_final modelc 0.200 was b2o3-campaign reseed (run_modelc_600K_reseed.sh 'for b2o3-vs-LPSCl1.6 symmetric bar') -> NOT canonical, disregarded."
+  "_protocol": "SINGLE-SEED (one trajectory per T; no per-seed arrays, no error bars). Source: li_transport.json comp1_v3_4fu_natural / modelc_v3. Deck-validated (slide 5 = DB/littable).",
+  "_note": "CANONICAL PAIRING RULE (2026-07-27): compare Ea only within the same seed protocol. comp1 has NO multiseed ladder, so the comp1<->modelc pair uses these single-seed anchors (0.253 vs 0.224). modelc ALSO has a fully symmetric 3-seed x 3-T ladder, Ea 0.197+/-0.032 (b2o3_vs_lpscl16_conductivity.csv FINAL 2026-07-07) -- that is the value to use against b2o3 (0.199+/-0.034) and LPSOCl (0.287+/-0.024). The earlier 'kgy build_final modelc 0.200 -> NOT canonical, disregarded' wording is withdrawn: that reseed IS the multiseed ladder, it simply belongs to the other pairing.",
+  "modelc_Ea_multiseed_3seed": 0.197,
+  "modelc_Ea_multiseed_err": 0.032,
+  "_comp2_pairing_caveat": "comp2 here is 3-seed while comp1/modelc anchors are single-seed -- a MIXED pair. The comp2-vs-comp1 ratio below is therefore protocol-mismatched as well as seed-scatter-limited; treat as indicative only."
  },
  "sigma_300K_NE_mS_cm_INTERNAL": {
   "_note": "Nernst-Einstein Haven=1, n_Li/V0; INTERNAL ONLY (discipline: absolute sigma not cited). Method validated: comp1 3.4 & modelc 14 == deck.",
@@ -72,7 +79,7 @@
   ],
   "modelc_over_comp1": 4.16
  },
- "physics_verdict": "VACANCY is the robust conductivity lever: modelc (Li5.4, vacancy) sigma300 ~4x comp1 (survives all uncertainty). Br isovalent Cl->Br (comp2, Li6 no-vacancy) shows NO clear boost: central sigma300 0.41x comp1 (worse), but 800K seed scatter makes Ea 0.276+/-0.033 -> sigma300 ratio 0.12-1.48x = INCONCLUSIVE. In the measured 600-1000K range comp2 D ~ comp1, but the steeper/uncertain Ea makes the 300K extrapolation unreliable. Experimental Br benefit (Kraft 2018) is driven by anion site disorder (Br/S2- mixing) NOT sampled by our single champion config. comp1/modelc anchors 3-seed.",
+ "physics_verdict": "VACANCY is the robust conductivity lever: modelc (Li5.4, vacancy) sigma300 ~4x comp1 (survives all uncertainty). Br isovalent Cl->Br (comp2, Li6 no-vacancy) shows NO clear boost: central sigma300 0.41x comp1 (worse), but 800K seed scatter makes Ea 0.275+/-0.033 -> sigma300 ratio 0.12-1.48x = INCONCLUSIVE. In the measured 600-1000K range comp2 D ~ comp1, but the steeper/uncertain Ea makes the 300K extrapolation unreliable. Experimental Br benefit (Kraft 2018) is driven by anion site disorder (Br/S2- mixing) NOT sampled by our single champion config. comp1/modelc anchors are SINGLE-SEED deck ladders (not 3-seed) -- see anchors_deck_single_seed.",
  "recommendation": "For a paper-grade Br-vs-Cl sigma claim: reseed comp2 800K (s5/s6) to tighten Ea. Consider anion-disorder ensemble to capture the experimental Br mechanism.",
- "discipline": "absolute sigma INTERNAL only; comp1/modelc/comp2 all 3-seed; comp2 800K scatter = ratio inconclusive."
+ "discipline": "absolute sigma INTERNAL only. comp2 = 3-seed; comp1/modelc anchors = SINGLE-SEED deck (mixed-protocol comparison). comp2 800K scatter = ratio inconclusive."
 }

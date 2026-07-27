@@ -47,9 +47,12 @@ var E2C={{ e2c|tojson }}, COMPS={{ COMPS|tojson }}, MO_DB=window.MO_DB, selected
 var CATKR={"alkali metal":"알칼리 금속","alkaline earth":"알칼리토금속","transition metal":"전이금속",
   "post-transition metal":"전이후 금속","metalloid":"준금속","nonmetal":"비금속","halogen":"할로겐",
   "noble gas":"비활성 기체","lanthanide":"란타넘족","actinide":"악티늄족","other":"기타"};
-var CATCOL={"alkali metal":"#c026d3","alkaline earth":"#d97706","transition metal":"#2563eb",
-  "post-transition metal":"#0891b2","metalloid":"#0d9488","nonmetal":"#16a34a","halogen":"#65a30d",
-  "noble gas":"#6b7280","lanthanide":"#7c3aed","actinide":"#be123c","other":"#6b7280"};
+// 색은 style.css 의 --el-* 토큰 (라이트/다크 각각 대비 맞춘 값) — JS 리터럴 하드코딩 금지.
+var CATCOL={"alkali metal":"var(--el-alkali)","alkaline earth":"var(--el-alkaline)",
+  "transition metal":"var(--el-tm)","post-transition metal":"var(--el-ptm)",
+  "metalloid":"var(--el-metalloid)","nonmetal":"var(--el-nonmetal)","halogen":"var(--el-halogen)",
+  "noble gas":"var(--el-noble)","lanthanide":"var(--el-lanthanide)","actinide":"var(--el-actinide)",
+  "other":"var(--el-other)"};
 // _esc·moKey·moSVG·moText·openMO 는 static/js/mo.js (공용 MO 렌더러)에서 로드됨
 function compLink(cid){var c=COMPS[cid]||{};return '<a class="anchor-comp" href="/composition/'+cid+'"><span class="dot" style="background:'+(c.color||'#888')+'"></span>'+(c.label||cid)+'</a>';}
 function paperChip(p){return '<a class="gpaper-chip tb-'+p.track+'" href="/literature?open='+p.id+'" title="'+_esc(p.title)+'">'+_esc(p.id.split('_')[0])+'</a>';}
@@ -106,7 +109,7 @@ function rtable(rows){
 }
 function elCard(e){
   var k=e.kb, a=e.anchors, inf=e.info||{}, sym=e.symbol;
-  var cat=inf.category||'other', col=CATCOL[cat]||'#6b7280';
+  var cat=inf.category||'other', col=CATCOL[cat]||'var(--el-other)';
   var h='<div class="card el-card">';
   // 헤더
   h+='<div class="el-head"><span class="el-sym" style="background:'+col+'">'+sym+'</span>'+

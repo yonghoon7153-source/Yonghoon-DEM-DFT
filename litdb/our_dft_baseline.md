@@ -1,15 +1,20 @@
 # 🎯 우리 DFT 기준값 (comp1 / modelc) — 모든 문헌 비교의 기준점
 
 > 출처: Excel "DFT 관련" 시트 [본 연구] 0-1 / 0-2 + 세션 결과. 문헌 digest의 §7은 항상 이 표와 대조.
+>
+> ⚠ **방법 라벨 주의 (2026-07-27 정정)**: 우리 Ea·D 는 **AIMD 가 아니라 MLIP-MD**(UMA-s-1p1, omat)다.
+> 진짜 AIMD 논문과 대조할 땐 '둘 다 AIMD라 직접 비교' 식으로 쓰지 말 것 — 힘 계산 축이 다르다.
+> gap 2.099 는 fixed-occ nscf 고유값(canonical). 2.098 은 lobster_nscf 교차검증값이라 헤드라인에 쓰지 않는다.
+> 그리고 comp1/modelc Ea 는 **온도당 단일 궤적**이다 — 멀티시드 비교엔 modelc 3-seed 0.197±0.032 를 쓴다.
 
 | 물성 | **comp1 = Li₆PS₅Cl** | **modelc = Li₅.₄PS₄.₄Cl₁.₆** | 방법 |
 |---|---|---|---|
-| Band gap | 2.066 eV | 2.098 eV | DFT (PBE) |
+| Band gap | 2.066 eV | **2.099** eV | DFT PBE · **fixed-occ nscf VBM/CBM 고유값** (DOS-threshold 금지) |
 | E_F / VBM / CBM | 3.724 / 2.128 / 4.194 eV | 3.487 / 2.445 / 4.544 eV | DFT |
 | E_VRH (relaxed-ion) | 22.06 GPa | **27.66 GPa** | DFT elastic (C_ij) |
 | B₀ | **26.23 GPa** | 21.71 GPa | EOS BM3 (V0 254.16 / 243.29 Å³·fu⁻¹) |
-| Ea (활성화에너지) | 0.253 eV | **0.224 eV** | AIMD Arrhenius |
-| D(600 K) | 3.09×10⁻⁶ cm²/s | **7.90×10⁻⁶ cm²/s** | AIMD |
+| Ea (활성화에너지) | 0.253 eV | **0.224 eV** | **MLIP-MD** (UMA-s-1p1) Arrhenius · ⚠단일 궤적(오차막대 없음) |
+| D(600 K) | 3.09×10⁻⁶ cm²/s | **7.90×10⁻⁶ cm²/s** | **MLIP-MD** (UMA-s-1p1), MSD 2–50 ps |
 | ICOHP(Li–Cl) | −1.86 | −2.10 | LOBSTER |
 | 산화 onset (grand-potential) | **2.256 V** (LiS4 포함 시 2.14) | **2.256 V** (LiS4 포함 시 2.14) | get_element_profile, LiS4/SCl3/Li5PS4Cl2 제외 = GG set |
 | 환원 한계 / OCV | 1.242 V / 1.717 V | 1.242 V / 1.717 V | grand-potential |

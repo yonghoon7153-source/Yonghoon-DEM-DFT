@@ -9,7 +9,7 @@
       "system": "Li adatom on h-BN monolayer",
       "nat": 33,
       "Ea_forward_eV": 0.007357,
-      "Ea_backward_eV": -0.000000,
+      "Ea_backward_eV": -0.0,
       "neb_iterations": 11,
       "converged": true,
       "note": "Barrier is below our numerical resolution: the whole path spans 7 meV while the per-image force errors reach 46 meV/A (path_thr 0.05). Report as '< 0.01 eV, effectively barrierless', NOT as agreement with Shi2017 (0.10 eV) — we are 13x lower. Internally consistent with our own weak binding (E_bind -0.264 eV) and the large adsorption height (Li sits 2.79 A above the topmost B/N)."
@@ -18,7 +18,7 @@
       "id": "Li_on_graphene_1L",
       "system": "Li adatom on graphene monolayer",
       "nat": 33,
-      "Ea_forward_eV": 0.272950,
+      "Ea_forward_eV": 0.27295,
       "Ea_backward_eV": 0.272018,
       "neb_iterations": 14,
       "converged": true,
@@ -56,25 +56,47 @@
   "geometry_diagnostic": {
     "note": "From the endpoint-A relaxed geometries (Begin final coordinates). z in A; 'dimple' = max(z)-min(z) within one sheet; layers clustered at 0.8 A.",
     "gallery_width_ruled_out": {
-      "sheet_center_to_center_A": {"gallery_1L1L": 3.584, "gallery_2L2L": 3.599},
-      "Li_above_C_plane_A": {"gallery_1L1L": 1.677, "gallery_2L2L": 1.688},
-      "Li_below_BN_plane_A": {"gallery_1L1L": 1.907, "gallery_2L2L": 1.911},
+      "sheet_center_to_center_A": {
+        "gallery_1L1L": 3.584,
+        "gallery_2L2L": 3.599
+      },
+      "Li_above_C_plane_A": {
+        "gallery_1L1L": 1.677,
+        "gallery_2L2L": 1.688
+      },
+      "Li_below_BN_plane_A": {
+        "gallery_1L1L": 1.907,
+        "gallery_2L2L": 1.911
+      },
       "verdict": "The gallery geometry is identical to within 0.015 A. The -209 meV barrier shift is NOT a gallery-width effect."
     },
     "sheet_dimple_A": {
-      "C_sheet_facing_Li": {"gallery_1L1L": 0.109, "gallery_2L2L": 0.051},
-      "BN_sheet_facing_Li": {"gallery_1L1L": 0.272, "gallery_2L2L": 0.373},
-      "reference_surface_cases": {"graphene_1L_with_Li": 0.025, "hBN_1L_with_Li": 0.283},
+      "C_sheet_facing_Li": {
+        "gallery_1L1L": 0.109,
+        "gallery_2L2L": 0.051
+      },
+      "BN_sheet_facing_Li": {
+        "gallery_1L1L": 0.272,
+        "gallery_2L2L": 0.373
+      },
+      "reference_surface_cases": {
+        "graphene_1L_with_Li": 0.025,
+        "hBN_1L_with_Li": 0.283
+      },
       "verdict": "The carbon side stiffens as expected when a second layer is added (0.109 -> 0.051, halved), but the BN side does the opposite (0.272 -> 0.373). A pure 'free 1L sheet over-corrugates' story therefore explains only half the effect."
     },
-    "interlayer_A": {"graphite_2L": 3.389, "hBN_2L": 3.370},
+    "interlayer_A": {
+      "graphite_2L": 3.389,
+      "hBN_2L": 3.37
+    },
     "flag_hbn_corrugation": "h-BN sheets show 0.27-0.37 A out-of-plane spread in EVERY cell, vs 0.02-0.11 A for graphene. A relaxed free-standing h-BN monolayer should be planar to <0.01 A. Unresolved: real Li-induced pucker, a ripple of the 4x4 cell, or incomplete relaxation. Check before the h-BN numbers are used quantitatively."
   },
   "recommended_next": "Run the two mixed-layer gallery NEBs (2L|1L and 1L|2L, ~97 atoms each). Their slabs and binding energies already exist in the 2x2 binding matrix (gallery_2L1L -1.580, gallery_1L2L -1.592 eV), so this produces a 2x2 BARRIER matrix that mirrors the existing 2x2 binding matrix: it decomposes which side drives the -209 meV (C stiffening vs BN registry) and shows whether the trend saturates at 2L. That converts the main reviewer objection into a figure panel.",
   "figure": "docs/figures/vgcf_hbn/vgcf_hbn_neb.png (tools/figures/fig_vgcf_hbn_neb.py)",
   "origin_csv": [
     "db/properties/vgcf_hbn_neb_origin.csv",
-    "db/properties/vgcf_hbn_neb_images_origin.csv"
+    "db/properties/vgcf_hbn_neb_images_origin.csv",
+    "db/properties/vgcf_hbn_neb_barriers_origin.csv"
   ],
   "raw": "esp-Z590:~/work/vgcf_hbn/neb/<case>/{neb.out,*.dat,*.int}"
 }

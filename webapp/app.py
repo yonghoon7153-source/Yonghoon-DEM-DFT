@@ -19,6 +19,31 @@ except Exception:
     _md = None
 
 
+def md_html(text: str, extensions=("tables", "fenced_code")) -> str:
+    """마크다운 → HTML. **raw HTML 통과는 끈다.**
+
+    렌더 결과가 innerHTML(literature.html·log.html) 과 |safe(doc/concept) 로 들어가는데,
+    Python-Markdown 은 기본적으로 raw HTML 을 그대로 흘려보낸다(safe_mode 폐지됨).
+    litdb digest 는 논문 에이전트가 외부 PDF 를 요약해 쓰는 파일이라 입력이 100% 신뢰
+    대상은 아니므로, 태그를 통째로 이스케이프하는 대신 파서 단계에서 raw HTML 만 끈다
+    (표·코드블록 등 정상 마크다운 렌더는 그대로 유지된다).
+    """
+    if _md is None:
+        return "<pre>" + (text or "") + "</pre>"
+    md = _md.Markdown(extensions=list(extensions))
+    for name in ("html_block",):
+        try:
+            md.preprocessors.deregister(name)
+        except (KeyError, ValueError):
+            pass
+    for name in ("html", "raw_html"):
+        try:
+            md.inlinePatterns.deregister(name)
+        except (KeyError, ValueError):
+            pass
+    return md.convert(text or "")
+
+
 def _css_ver():
     """style.css + static/js/*.js 최신 mtime 기반 캐시버스팅 키 (요청마다 계산 → 수정 즉시 반영)."""
     try:
@@ -51,7 +76,9 @@ def _inject():
 def index():
     b = D.build_matrix()
     cov = D.build_coverage(b["properties"], b["prop_category"], b["index_metrics"])
-    return render_template("index.html", active="home", b=b, cov=cov,
+    # N/A(성립 안 함/규율상 금지) 칸은 TODO 와 구분해서 렌더 — 튜플 키는 Jinja 에서 못 쓰니 평탄화
+    na = {f"{c}|{k}": r for (c, k), r in D.NOT_APPLICABLE.items()}
+    return render_template("index.html", active="home", b=b, cov=cov, NA=na,
                            covstat=D.coverage_stats(cov), highlights=D.dashboard_highlights())
 
 
@@ -60,26 +87,28 @@ def composition(cid):
     if cid not in D.COMPOSITIONS:
         abort(404)
     b = D.build_matrix()
-    cov = D.build_coverage(b["properties"], b["prop_category"], b["index_metrics"])
     dop = D.CASCADE_DOPANT.get(cid)
     return render_template(
         "composition.html", active="", cid=cid, cid_active=cid,
-        comp=D.COMPOSITIONS[cid], b=b,
-        cov=cov.get(cid, {}), structures=D.structures_for(cid),
+        comp=D.COMPOSITIONS[cid], structures=D.structures_for(cid),
+        index_built=b.get("built"),   # Raw 탭 스냅샷 배너 (전체 b 번들은 템플릿에 불필요)
         datafiles=D.datafiles_for(cid), metrics=b["index_metrics"].get(cid, []),
         rollup=b["comp_data"].get(cid), icohp=D.icohp_for(cid),
-        cascade_dopant=dop,
+        cascade_dopant=dop, cascade_meta=D.CASCADE_META,
         cascade_rows=D.cascade_rows_for(dop) if dop else None,
-        canonical={k: v.get(cid) for k, v in D.CANONICAL.items()},
+        canonical=D.canonical_values(cid),
         canonical_meta=D.CANONICAL_META,
-        canonical_provisional={k: r for (k, c), r in D.CANONICAL_PROVISIONAL.items() if c == cid})
+        canonical_provisional={k: r for (k, c), r in D.CANONICAL_PROVISIONAL.items() if c == cid},
+        canonical_na={k: r for (k, c), r in D.CANONICAL_NA.items() if c == cid})
 
 
 @app.route("/compare")
 def compare():
     b = D.build_matrix()
-    cov = D.build_coverage(b["properties"], b["prop_category"], b["index_metrics"])
-    return render_template("compare.html", active="compare", b=b, cov=cov)
+    # ⚠ CANONICAL_PROVISIONAL 은 (key, cid) 튜플 키라 |tojson 이 TypeError 를 낸다 → 문자열로 평탄화.
+    prov = {f"{k}|{c}": r for (k, c), r in D.CANONICAL_PROVISIONAL.items()}
+    return render_template("compare.html", active="compare", b=b,
+                           canonical=D.canonical_table(), canonical_provisional=prov)
 
 
 @app.route("/cascade")
@@ -112,12 +141,10 @@ def elements():
 
 @app.route("/explorer")
 def explorer():
-    b = D.build_matrix()
-    cov = D.build_coverage(b["properties"], b["prop_category"], b["index_metrics"])
     return render_template("explorer.html", active="explorer",
-                           canonical=D.CANONICAL, canonical_meta=D.CANONICAL_META,
+                           canonical=D.canonical_table(), canonical_meta=D.CANONICAL_META,
                            canonical_provisional=D.CANONICAL_PROVISIONAL,
-                           comp_elements=D.COMP_ELEMENTS, cov=cov,
+                           comp_elements=D.COMP_ELEMENTS,
                            categories=D.CATEGORIES)
 
 
@@ -150,7 +177,7 @@ def api_element():
 @app.route("/methods")
 def methods():
     md = D.load_canonical_methods()
-    html = _md.markdown(md, extensions=["tables", "fenced_code", "toc"]) if _md else "<pre>" + md + "</pre>"
+    html = md_html(md, ("tables", "fenced_code", "toc"))
     return render_template("doc.html", active="methods",
                            title="계산 방법 Canonical (단일 기준)", content=html)
 
@@ -190,7 +217,7 @@ def api_paper(pid):
     p = D.LITDB / "papers" / f"{pid}.md"
     if not p.exists():
         abort(404)
-    html = _md.markdown(p.read_text(errors="ignore"), extensions=["tables", "fenced_code"]) if _md else p.read_text()
+    html = md_html(p.read_text(encoding="utf-8", errors="ignore"))
     return jsonify({"id": pid, "html": html})
 
 
@@ -215,7 +242,7 @@ def concept(cid):
         siblings = [g for g in G.GLOSSARY
                     if g["cat"] == term["cat"] and g["id"] != cid and g["id"] in have]
     # 서버 렌더 fallback — marked.js CDN 미로드시에도 raw dump 대신 서식 유지
-    fallback = _md.markdown(md, extensions=["tables", "fenced_code"]) if _md else "<pre>" + md + "</pre>"
+    fallback = md_html(md)
     return render_template("concept.html", active="glossary", cid=cid,
                            term=term, raw_md=md, siblings=siblings, fallback_html=fallback,
                            papers=D.glossary_papers(cid))
@@ -236,7 +263,7 @@ JOURNAL = D.ROOT / "webapp" / "journal.jsonl"
 def _load_journal():
     entries = []
     if JOURNAL.exists():
-        for line in JOURNAL.read_text(errors="ignore").splitlines():
+        for line in JOURNAL.read_text(encoding="utf-8", errors="ignore").splitlines():
             try:
                 entries.append(json.loads(line))
             except Exception:
@@ -262,13 +289,23 @@ def log():
 @app.route("/api/log", methods=["POST"])
 def api_log():
     from flask import request
-    d = request.get_json(force=True) or {}
+    d = request.get_json(force=True, silent=True)
+    if not isinstance(d, dict):          # 본문이 list/str/int 여도 500 대신 400
+        return jsonify({"ok": False, "err": "body must be a JSON object"}), 400
+
+    def _s(v, default=""):
+        return v if isinstance(v, str) else default
+
+    kind = _s(d.get("kind"), "note") or "note"
+    comp = _s(d.get("comp"))
+    if comp and comp not in D.COMPOSITIONS:   # 빈 문자열(=조성 미지정)은 허용
+        return jsonify({"ok": False, "err": f"unknown comp '{comp[:40]}'"}), 400
     rec = {"ts": _dt.now().isoformat(timespec="minutes"),
-           "kind": d.get("kind", "note"), "comp": d.get("comp", ""),
-           "text": (d.get("text") or "").strip()}
+           "kind": kind[:40], "comp": comp,
+           "text": _s(d.get("text")).strip()}
     if not rec["text"]:
         return jsonify({"ok": False, "err": "empty"}), 400
-    with open(JOURNAL, "a") as f:
+    with open(JOURNAL, "a", encoding="utf-8") as f:
         f.write(json.dumps(rec, ensure_ascii=False) + "\n")
     return jsonify({"ok": True, "entry": rec})
 
@@ -278,7 +315,7 @@ def api_handoff(hid):
     f = D.KB / "results" / f"{hid}.md"
     if not f.exists():
         abort(404)
-    html = _md.markdown(f.read_text(errors="ignore"), extensions=["tables", "fenced_code"]) if _md else f.read_text()
+    html = md_html(f.read_text(encoding="utf-8", errors="ignore"))
     return jsonify({"id": hid, "html": html})
 
 

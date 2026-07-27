@@ -14,7 +14,7 @@
   </div>
   <div style="overflow-x:auto"><table class="data-table" id="cmp"></table></div>
 </div>
-<div class="grid" style="grid-template-columns:1fr 1fr;gap:16px;margin-top:16px">
+<div class="grid grid-2" style="margin-top:16px">
   <div class="card">
     <h3>Property 별 비교 <span class="muted" style="font-weight:400;font-size:.8rem">— 절대값 (막대)</span></h3>
     <div class="chip-bar" id="pkeys"></div>
@@ -30,18 +30,25 @@
 <script>
 const CANON={{ b.canonical|tojson }};
 const META={{ b.canonical_meta|tojson }};
+// ⚠ 튜플 키는 tojson 불가 → 라우트에서 'key|cid' 문자열로 평탄화해 넘긴다.
+const PROV={{ canonical_provisional|tojson }};
 const COMPS={{ COMPS|tojson }};
 const KEYS=Object.keys(CANON);
 const KLAB={gap_eV:'Band gap (eV)',B0_GPa:'EOS B0 (GPa)',E_VRH_GPa:'E_VRH (GPa)',MD_Ea_eV:'MD Ea (eV)',ICOHP_PS:'ICOHP P–S (eV)'};
 const KSHORT={gap_eV:'gap',B0_GPa:'B₀',E_VRH_GPa:'E_VRH',MD_Ea_eV:'MD Ea',ICOHP_PS:'ICOHP'};
 let activeKey='E_VRH_GPa';
+function _cmpEsc(s){return (s+'').replace(/[&<>"']/g,function(m){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];});}
 function ids(){return [...document.querySelectorAll('.card input[type=checkbox]:checked')].map(x=>x.value);}
 function upd(){
   let sel=ids();
   let t='<thead><tr><th>Property</th>';sel.forEach(id=>t+='<th>'+COMPS[id].label+'</th>');t+='</tr></thead><tbody>';
   KEYS.forEach(k=>{
-    t+='<tr><td title="'+(META[k]||'')+'"><b>'+(KLAB[k]||k)+'</b><div class="mm muted" style="font-size:.68rem">'+(META[k]||'')+'</div></td>';
-    sel.forEach(id=>{let v=CANON[k][id];t+='<td class="num">'+(v!==undefined&&v!==null?v:'<span class="muted">TODO</span>')+'</td>';});
+    t+='<tr><td title="'+_cmpEsc(META[k]||'')+'"><b>'+_cmpEsc(KLAB[k]||k)+'</b><div class="mm muted" style="font-size:.68rem">'+_cmpEsc(META[k]||'')+'</div></td>';
+    sel.forEach(id=>{
+      let v=CANON[k][id], pr=PROV[k+'|'+id];
+      let cell=(v!==undefined&&v!==null)?_cmpEsc(''+v):'<span class="muted">TODO</span>';
+      if(v!==undefined&&v!==null&&pr)cell+=' <span class="badge b-prov" title="'+_cmpEsc(pr)+'">잠정</span>';
+      t+='<td class="num">'+cell+'</td>';});
     t+='</tr>';
   });
   document.getElementById('cmp').innerHTML=t+'</tbody>';
@@ -56,7 +63,7 @@ function drawChart(){
   let y=sel.map(id=>CANON[activeKey][id]??null);
   let colors=sel.map(id=>COMPS[id].color);
   document.getElementById('cmp-caveat').textContent =
-    (activeKey==='MD_Ea_eV') ? '⚠ MD Ea 절대값은 인용 주의 — UMA 멀티시드 판정만(CLAUDE.md). 조성 간 순서 비교로만 사용.'
+    (activeKey==='MD_Ea_eV') ? '⚠ MD Ea 절대값 인용 금지 (UMA, 멀티시드 판정만 — CLAUDE.md). 게다가 시드 프로토콜이 조성마다 다름: comp1/modelc=단일 궤적, lpsocl=4-seed, comp2=3-seed(잠정) → 같은 프로토콜끼리만 비교.'
     : (activeKey==='gap_eV') ? 'comp2 2.04는 잠정(legacy, eigenvalue 재확인중). 절대값은 PBE-level.'
     : (META[activeKey]||'');
   Plotly.newPlot('cmpchart',[{x:x,y:y,type:'bar',marker:{color:colors}}],

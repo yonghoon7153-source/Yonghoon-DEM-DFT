@@ -1,61 +1,68 @@
 {
- "property": "b2o3 ICOHP (LOBSTER)",
- "system": "b2o3 = B2O3-doped LPSCl1.6 (Li58P8S41Cl16B2O3, 128 atoms)",
- "date": "2026-07-03",
- "method": "LOBSTER 5.1.1 on QE all-PAW SCF+NSCF(nbnd960). EXTENDED basis (Li 1s2s2p; P/S/Cl 3s3p; B/O 2s2p). Li-X now comparable to modelc.",
- "charge_spilling_pct": 1.19,
- "raw": "KISTI:/scratch/x3430a02/kgy/b2o3_eos/ICOHPLIST.lobster",
- "bonds": {
-  "P-O": {
-   "N": 3,
-   "ICOHP_eV": -8.551
+  "property": "b2o3 ICOHP (LOBSTER)",
+  "system": "b2o3 = B2O3-doped LPSCl1.6 (Li58P8S41Cl16B2O3, 128 atoms)",
+  "date": "2026-07-03",
+  "method": "LOBSTER 5.1.1 on QE all-PAW SCF+NSCF(nbnd960). EXTENDED basis (Li 1s2s2p; P/S/Cl 3s3p; B/O 2s2p). Li-X now comparable to modelc.",
+  "charge_spilling_pct": 1.19,
+  "raw": "KISTI:/scratch/x3430a02/kgy/b2o3_eos/ICOHPLIST.lobster",
+  "bonds": {
+    "P-O": {
+      "N": 3,
+      "ICOHP_eV": -8.551,
+      "ICOHP_total_eV_per_bond": -8.551
+    },
+    "B-S": {
+      "N": 6,
+      "ICOHP_eV": -7.792,
+      "ICOHP_total_eV_per_bond": -7.792
+    },
+    "P-S": {
+      "N": 29,
+      "ICOHP_eV": -6.023,
+      "ICOHP_total_eV_per_bond": -6.023
+    },
+    "Li-Cl": {
+      "N": 86,
+      "ICOHP_eV": -2.076,
+      "ICOHP_total_eV_per_bond": -2.076
+    },
+    "Li-S": {
+      "N": 234,
+      "ICOHP_eV": -1.68,
+      "ICOHP_total_eV_per_bond": -1.68
+    },
+    "S-S": {
+      "N": 95,
+      "ICOHP_eV": -0.116,
+      "ICOHP_total_eV_per_bond": -0.116
+    }
   },
-  "B-S": {
-   "N": 6,
-   "ICOHP_eV": -7.792
+  "comparison_vs_modelc": {
+    "P-S": {
+      "b2o3": -6.023,
+      "modelc": -6.0,
+      "note": "host intact"
+    },
+    "Li-Cl": {
+      "b2o3": -2.076,
+      "modelc": -2.103,
+      "note": "host intact (now comparable, extended Li basis)"
+    },
+    "Li-S": {
+      "b2o3": -1.68,
+      "modelc": -1.717,
+      "note": "host intact (now comparable, extended Li basis)"
+    },
+    "S-S": {
+      "b2o3": -0.116,
+      "modelc": -0.11,
+      "note": "host intact"
+    }
   },
-  "P-S": {
-   "N": 29,
-   "ICOHP_eV": -6.023
+  "headline": {
+    "host_unchanged": "ALL host bonds match modelc within ~5% (P-S -6.02, Li-S -1.68, Li-Cl -2.08, S-S -0.12) -> B2O3 leaves the host bonding network intact",
+    "new_bonds": "B-S -7.79 (thioborate, stronger than P-S) + P-O -8.55 (phosphate) added by doping",
+    "basis_note": "minimal-basis Li-X (-0.8) was an artifact; extended Li 2p restores agreement with modelc"
   },
-  "Li-Cl": {
-   "N": 86,
-   "ICOHP_eV": -2.076
-  },
-  "Li-S": {
-   "N": 234,
-   "ICOHP_eV": -1.68
-  },
-  "S-S": {
-   "N": 95,
-   "ICOHP_eV": -0.116
-  }
- },
- "comparison_vs_modelc": {
-  "P-S": {
-   "b2o3": -6.023,
-   "modelc": -6.0,
-   "note": "host intact"
-  },
-  "Li-Cl": {
-   "b2o3": -2.076,
-   "modelc": -2.103,
-   "note": "host intact (now comparable, extended Li basis)"
-  },
-  "Li-S": {
-   "b2o3": -1.68,
-   "modelc": -1.717,
-   "note": "host intact (now comparable, extended Li basis)"
-  },
-  "S-S": {
-   "b2o3": -0.116,
-   "modelc": -0.11,
-   "note": "host intact"
-  }
- },
- "headline": {
-  "host_unchanged": "ALL host bonds match modelc within ~5% (P-S -6.02, Li-S -1.68, Li-Cl -2.08, S-S -0.12) -> B2O3 leaves the host bonding network intact",
-  "new_bonds": "B-S -7.79 (thioborate, stronger than P-S) + P-O -8.55 (phosphate) added by doping",
-  "basis_note": "minimal-basis Li-X (-0.8) was an artifact; extended Li 2p restores agreement with modelc"
- }
+  "_schema_note": "bonds[*].ICOHP_total_eV_per_bond 가 공통 스키마 키다 (ICOHP_eV 는 같은 값의 구 별칭 — 기존 tools 호환용으로 유지). d_mean_A 는 이 계산에 원자료가 없어 비어 있다(LOBSTER 재파싱 전까지 표에서 '—'가 정상)."
 }

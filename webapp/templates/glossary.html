@@ -6,7 +6,11 @@
     <div class="sub">각 용어를 <b>무엇 / 어떻게(계산·판독) / 우리 계산</b>으로 — 클릭해서 펼치기</div></div>
 </div>
 <input class="search" placeholder="용어 검색 (DFT · ELF · DOS · ICOHP · NEB · BVSE ...)" oninput="filt(this.value)">
+<div class="muted card" id="gl-empty" style="display:none;text-align:center;padding:32px;line-height:1.7">
+  검색 결과 없음.<br><span style="font-size:.85em">검색어를 지우면 전체 용어가 다시 보여요.</span>
+</div>
 {% for cat in cat_order %}{% if cats[cat] %}
+<section class="gsec">
 <div class="section-title">{{ cat }}</div>
 <div class="grid grid-3">
 {% for g in cats[cat] %}
@@ -34,6 +38,7 @@
 </div>
 {% endfor %}
 </div>
+</section>
 {% endif %}{% endfor %}
 <style>
 .gterm{align-self:start}
@@ -47,8 +52,14 @@
 .gd.ours .gd-l{color:var(--navy)}
 </style>
 <script>
-function filt(q){q=q.toLowerCase();document.querySelectorAll('.gterm').forEach(c=>{
-  let m=c.dataset.t.includes(q);c.style.display=m?'':'none';
-  if(q&&m)c.classList.add('open');else if(!q)c.classList.remove('open');});}
+function filt(q){q=q.toLowerCase();let n=0;
+  document.querySelectorAll('.gterm').forEach(c=>{
+    let m=c.dataset.t.includes(q);c.style.display=m?'':'none';if(m)n++;
+    if(q&&m)c.classList.add('open');else if(!q)c.classList.remove('open');});
+  // 카드가 전부 숨겨진 카테고리는 헤더까지 통째로 숨긴다 (제목만 줄줄이 남는 빈 페이지 방지)
+  document.querySelectorAll('.gsec').forEach(s=>{
+    let vis=[...s.querySelectorAll('.gterm')].some(c=>c.style.display!=='none');
+    s.style.display=vis?'':'none';});
+  let e=document.getElementById('gl-empty'); if(e)e.style.display=n?'none':'';}
 </script>
 {% endblock %}

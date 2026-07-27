@@ -6,6 +6,19 @@
 > 추가될 때마다 이 파일에 append + commit.
 >
 > 마지막 업데이트: 2026-06-12 (v1.35 — Slide 2 연구실 템플릿 bullet 형식 + 제목 확정)
+>
+> ---
+> ### ⚠️ SUPERSEDED 수치 경고 (2026-07-27 추가) — 재사용 전 반드시 읽을 것
+> 이 문서(및 같은 폴더의 `lpscl_vs_lpscl16_seminar_v1.pptx`)는 **2026-06-12 발표 당시의 기록**이다.
+> pptx 는 전달이 끝난 발표의 아카이브이므로 고치지 않는다 — 대신 **여기 수치를 그대로 재사용 금지**.
+>
+> | 문서 안 수치 | 상태 | 정본 |
+> |---|---|---|
+> | 밴드갭 1.76 / 1.82 eV | **폐기** — DOS-threshold 판독(~0.3 eV 과소 아티팩트) | fixed-occ nscf 고유값 **comp1 2.066 / modelc 2.099** |
+> | AIMD Ea comp1 **0.172** eV | **폐기** — 5 f.u. cubic supercell 이 인위적 구조라 artifact 판정 (`li_transport.json` `comp1_v3_5fu_SUPERSEDED`) | **0.2532** eV (comp1_v3_4fu_natural, 2–50 ps) |
+> | modelc Ea 0.224 / D 7.90e-6 | 조건부 유효 — **단일 궤적** deck 앵커 (시드 오차막대 없음) | 멀티시드 비교엔 3-seed×3-T **0.197±0.032** |
+>
+> 단일 출처: `kb/concepts/bandgap.md` (gap) · `kb/methodology/md_conductivity_protocol.md` (수송).
 
 ---
 

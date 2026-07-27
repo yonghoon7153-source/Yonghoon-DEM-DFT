@@ -1,4 +1,13 @@
-quantity,b2o3,LPSCl1.6,ratio_b2o3/LPSCl1.6,log_share_pct_of_sigma_gain
+# ===== SUPERSEDED (2026-07-09, SEMIFINAL) - SINGLE-SEED. DO NOT QUOTE. =====
+# The 1.33x sigma ratio this table decomposes was RETRACTED: the fully symmetric
+#   3-seed x 3-T reseed gives per-T sigma ratios 1.08+/-0.18 / 0.82+/-0.15 / 1.15+/-0.12
+#   = scatter AROUND 1.0 = statistically EQUIVALENT transport (no b2o3 gain to decompose).
+# The D0 premise is inverted too: reseeded D0 = 4.625e-04 (b2o3) vs 4.791e-04 (LPSCl1.6)
+#   = 0.965x, i.e. b2o3 D0 is slightly LOWER, not 1.236x higher.
+# CANONICAL: db/properties/b2o3_vs_lpscl16_conductivity.csv (FINAL 2026-07-07).
+# Column names carry the _SUPERSEDED tag because leading '#' comments are skipped by the
+#   site CSV reader (webapp/data.py::read_csv) and would not reach a viewer.
+quantity_SUPERSEDED,b2o3_SUPERSEDED,LPSCl1.6_SUPERSEDED,ratio_SUPERSEDED_retracted_1p33x,log_share_pct_SUPERSEDED
 D0_prefactor_cm2_s,7.112e-04,5.753e-04,1.236,74.2
 n_Li_carriers_cm3,2.381e+22,2.220e+22,1.072,24.5
 Ea_barrier_eV,0.2234,0.2235,1.0039(=exp(-dEa/kT@300)),1.4

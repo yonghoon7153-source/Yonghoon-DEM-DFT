@@ -18,7 +18,7 @@
 </head>
 <body>
 <a class="skip-link" href="#main">본문으로 건너뛰기</a>
-<button class="menu-toggle" onclick="document.body.classList.toggle('nav-open')" aria-label="메뉴 열기/닫기" aria-expanded="false">☰</button>
+<button class="menu-toggle" onclick="var o=document.body.classList.toggle('nav-open');this.setAttribute('aria-expanded',o)" aria-label="메뉴 열기/닫기" aria-expanded="false">☰</button>
 <nav class="sidebar" aria-label="주 메뉴">
   <div class="sidebar-header">
     <a href="/" class="brand" aria-label="DFT Infrastructure 홈">DFT<span class="brand-accent">·Infra</span></a>
@@ -61,7 +61,8 @@
 <div class="cmdk" id="cmdk" role="dialog" aria-modal="true" aria-label="전역 검색" hidden>
   <div class="cmdk-box" role="document">
     <input id="cmdk-input" class="cmdk-input" type="text" placeholder="조성 · 물성 · 용어 · 논문 · 개념 · 페이지 검색…"
-           aria-label="검색어" aria-controls="cmdk-results" aria-expanded="true" autocomplete="off" spellcheck="false">
+           role="combobox" aria-label="검색어" aria-controls="cmdk-results" aria-expanded="false"
+           aria-autocomplete="list" autocomplete="off" spellcheck="false">
     <div class="cmdk-results" id="cmdk-results" role="listbox" aria-label="검색 결과"></div>
     <div class="cmdk-foot"><span><kbd>↑</kbd><kbd>↓</kbd> 이동</span><span><kbd>↵</kbd> 열기</span><span><kbd>esc</kbd> 닫기</span></div>
   </div>
@@ -73,7 +74,12 @@ function showToast(m){var t=document.getElementById('toast');if(!t)return;t.text
 function copyText(s){navigator.clipboard.writeText(s).then(function(){showToast('클립보드에 복사됨');});}
 // 클릭 가능한 div의 키보드 활성화 (Enter/Space) — 접근성
 function _kbd(e,el){if(e.key==='Enter'||e.key===' '){e.preventDefault();(el||e.currentTarget).click();}}
-document.addEventListener('keydown',function(e){if(e.key==='Escape'){document.body.classList.remove('nav-open');closeCmdk();}});
+document.addEventListener('keydown',function(e){if(e.key!=='Escape')return;
+  document.body.classList.remove('nav-open');
+  // 모달이 열려 있으면 그것만 닫고 조기 반환 — Esc 한 번에 모달+팔레트가 같이 닫히지 않게.
+  var m=document.querySelector('.modal.open');
+  if(m){m.classList.remove('open');if(m._opener&&m._opener.focus)m._opener.focus();return;}
+  closeCmdk();});
 
 // ── theme toggle ──
 function _effTheme(){var e=document.documentElement.getAttribute('data-theme');if(e)return e;
@@ -92,10 +98,14 @@ function plotlyBG(){return {paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0
 // ── ⌘K command palette ──
 var _cx={items:null,shown:[],sel:0};
 function openCmdk(){var m=document.getElementById('cmdk');m.hidden=false;requestAnimationFrame(function(){m.classList.add('open');});
+  document.getElementById('cmdk-input').setAttribute('aria-expanded','true');
   var inp=document.getElementById('cmdk-input');inp.value='';inp.focus();
   if(_cx.items===null){fetch('/api/search').then(function(r){return r.json();}).then(function(d){_cx.items=d.items||[];renderCmdk('');});}
   else renderCmdk('');}
-function closeCmdk(){var m=document.getElementById('cmdk');if(!m||m.hidden)return;m.classList.remove('open');setTimeout(function(){m.hidden=true;},150);}
+function closeCmdk(){var m=document.getElementById('cmdk');if(!m||m.hidden)return;
+  var ci=document.getElementById('cmdk-input');
+  if(ci){ci.setAttribute('aria-expanded','false');ci.removeAttribute('aria-activedescendant');}
+  m.classList.remove('open');setTimeout(function(){m.hidden=true;},150);}
 function renderCmdk(q){
   q=(q||'').toLowerCase().trim();var items=_cx.items||[];
   var res=!q?items.slice(0,12):items.map(function(it){
@@ -104,16 +114,26 @@ function renderCmdk(q){
     }).filter(Boolean).sort(function(a,b){return a.score-b.score;}).slice(0,20).map(function(x){return x.it;});
   _cx.shown=res;_cx.sel=0;
   var box=document.getElementById('cmdk-results');
-  if(!res.length){box.innerHTML='<div class="cmdk-empty">결과 없음</div>';return;}
-  box.innerHTML=res.map(function(it,i){return '<a class="cmdk-item'+(i===0?' sel':'')+'" role="option" href="'+it.url+'" data-i="'+i+'">'+
+  var _ci=document.getElementById('cmdk-input');
+  if(!res.length){box.innerHTML='<div class="cmdk-empty">결과 없음</div>';
+    if(_ci)_ci.removeAttribute('aria-activedescendant');return;}
+  box.innerHTML=res.map(function(it,i){return '<a class="cmdk-item'+(i===0?' sel':'')+'" role="option" id="cmdk-opt-'+i+'" aria-selected="'+(i===0?'true':'false')+'" href="'+_esc(it.url)+'" data-i="'+i+'">'+
     '<span class="ci-t">'+it.t+'</span><span class="ci-l">'+_esc(it.label)+'</span>'+
     (it.sub?'<span class="ci-s">'+_esc(it.sub)+'</span>':'')+'</a>';}).join('');
   box.querySelectorAll('.cmdk-item').forEach(function(el){el.addEventListener('mouseenter',function(){_setSel(+el.dataset.i);});});
+  if(_ci&&res.length)_ci.setAttribute('aria-activedescendant','cmdk-opt-0');
 }
-function _esc(s){return (s+'').replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+// 정본 정의는 static/js/mo.js — mo.js 를 안 싣는 페이지용 동일 구현(문자집합 반드시 일치).
+// 속성값 조립에도 쓰이므로 따옴표까지 막는다.
+function _esc(s){return (s+'').replace(/[&<>"']/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function _setSel(i){var els=document.querySelectorAll('.cmdk-item');if(!els.length)return;
-  els[_cx.sel]&&els[_cx.sel].classList.remove('sel');_cx.sel=(i+els.length)%els.length;
-  els[_cx.sel].classList.add('sel');els[_cx.sel].scrollIntoView({block:'nearest'});}
+  if(els[_cx.sel]){els[_cx.sel].classList.remove('sel');els[_cx.sel].setAttribute('aria-selected','false');}
+  _cx.sel=(i+els.length)%els.length;
+  var el=els[_cx.sel];
+  el.classList.add('sel');el.setAttribute('aria-selected','true');el.scrollIntoView({block:'nearest'});
+  // ↑↓ 선택 이동을 스크린리더에 전달 (없으면 시각 채널 하나뿐)
+  var inp=document.getElementById('cmdk-input');if(inp&&el.id)inp.setAttribute('aria-activedescendant',el.id);}
 document.addEventListener('keydown',function(e){
   var open=!document.getElementById('cmdk').hidden;
   if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();open?closeCmdk():openCmdk();return;}

@@ -15,7 +15,7 @@
    "icon": "🛡️",
    "question": "고전압 양극 계면에서 SE 산화를 막을 도펀트는?",
    "metric": "ox_V (V vs Li) ↑ · window>0.05 게이트",
-   "caveat": "ox_V 축퇴(19개가 2.14, 호스트 pin) — 축퇴군 내 순위 무의미. F 화학 유리.",
+   "caveat": "ox_V 축퇴(19개가 2.14, 호스트 pin) — 축퇴군 내 순위 무의미. F 화학 유리.  ⚠ 10위 값 동점 19종 중 15종이 표시에서 잘림 — 동점군 내 순위는 무의미(2차 키는 cascade score).",
    "key": "oxidative_stability",
    "metric_key": "ox_V",
    "direction": "+",
@@ -30,7 +30,11 @@
     "Al2O3",
     "CrO3",
     "MoO3"
-   ]
+   ],
+   "tied_at_cut": 19,
+   "dropped_by_tie": 15,
+   "cut_value": 0.6541,
+   "tie_break": "cascade score 순 (ranked.csv 행 순서, 안정 정렬)"
   },
   "reduction_anode": {
    "label": "음극(환원) 호환",
@@ -52,7 +56,11 @@
     "MgF2",
     "Al2O3",
     "AlF3"
-   ]
+   ],
+   "tied_at_cut": 2,
+   "dropped_by_tie": 0,
+   "cut_value": 0.8539,
+   "tie_break": "cascade score 순 (ranked.csv 행 순서, 안정 정렬)"
   },
   "electronic_insulation": {
    "label": "전자 절연",
@@ -74,7 +82,11 @@
     "SiO2",
     "NdF3",
     "ZrF4"
-   ]
+   ],
+   "tied_at_cut": 3,
+   "dropped_by_tie": 0,
+   "cut_value": 0.6063,
+   "tie_break": "cascade score 순 (ranked.csv 행 순서, 안정 정렬)"
   },
   "ionic_transport": {
    "label": "Li 수송 유지",
@@ -96,7 +108,11 @@
     "LaF3",
     "CaF2",
     "SrO"
-   ]
+   ],
+   "tied_at_cut": 1,
+   "dropped_by_tie": 0,
+   "cut_value": 0.5559,
+   "tie_break": "cascade score 순 (ranked.csv 행 순서, 안정 정렬)"
   },
   "disorder_promotion": {
    "label": "무질서 유도",
@@ -118,7 +134,11 @@
     "Y2O3",
     "CrO3",
     "LaF3"
-   ]
+   ],
+   "tied_at_cut": 1,
+   "dropped_by_tie": 0,
+   "cut_value": 0.7861,
+   "tie_break": "cascade score 순 (ranked.csv 행 순서, 안정 정렬)"
   },
   "dose_robustness": {
    "label": "농도 강건성",
@@ -140,7 +160,11 @@
     "B2O3",
     "YF3",
     "GeO2"
-   ]
+   ],
+   "tied_at_cut": 1,
+   "dropped_by_tie": 0,
+   "cut_value": 0.8306,
+   "tie_break": "cascade score 순 (ranked.csv 행 순서, 안정 정렬)"
   },
   "lightweight": {
    "label": "경량 원소",
@@ -162,7 +186,11 @@
     "SiO2",
     "MgF2",
     "Sc2O3"
-   ]
+   ],
+   "tied_at_cut": 1,
+   "dropped_by_tie": 0,
+   "cut_value": 0.751,
+   "tie_break": "cascade score 순 (ranked.csv 행 순서, 안정 정렬)"
   },
   "low_cost": {
    "label": "저비용",
@@ -184,7 +212,11 @@
     "MgF2",
     "AlF3",
     "CaF2"
-   ]
+   ],
+   "tied_at_cut": 3,
+   "dropped_by_tie": 0,
+   "cut_value": 0.8889,
+   "tie_break": "cascade score 순 (ranked.csv 행 순서, 안정 정렬)"
   },
   "mechanical_soft": {
    "label": "연질 (저강성)",
@@ -206,51 +238,63 @@
     "In2O3",
     "ZrF4",
     "Al2O3"
-   ]
+   ],
+   "tied_at_cut": 1,
+   "dropped_by_tie": 0,
+   "cut_value": 0.6886,
+   "tie_break": "cascade score 순 (ranked.csv 행 순서, 안정 정렬)"
   },
   "ductility": {
    "label": "연성 (Pugh)",
    "icon": "🥨",
    "question": "취성 파괴 대신 소성 변형으로 버틸 도펀트는?",
-   "metric": "Pugh B/G ↑",
-   "caveat": "B/G>1.75 연성 경험칙 — UMA 상대.",
+   "metric": "G/B ↓ (= Pugh B/G ↑)",
+   "caveat": "열 이름은 pugh 지만 값은 **G/B**(champions csv elastic_pugh_GoverB)라 낮을수록 연성. 실제 B/G = 1/pugh 이고 로스터 범위가 0.98–1.59 라 **47종 어느 것도 B/G>1.75 연성 경험칙을 못 넘는다**. 동점 다수 — tie_count_at_cut 참조. UMA 상대.",
    "key": "ductility",
    "metric_key": "pugh",
-   "direction": "+",
+   "direction": "-",
    "top": [
-    "CaF2",
-    "TiF4",
-    "Ga2O3",
-    "Li2O",
-    "Cu2O",
-    "ScF3",
-    "Ag2O",
-    "BaO",
-    "NiO",
-    "MoO3"
-   ]
+    "Ta2O5",
+    "Sc2O3",
+    "LaF3",
+    "MnO",
+    "Nb2O5",
+    "Sm2O3",
+    "Cr2O3",
+    "Sb2O5",
+    "Y2O3",
+    "In2O3"
+   ],
+   "tied_at_cut": 1,
+   "dropped_by_tie": 0,
+   "cut_value": 0.7692,
+   "tie_break": "cascade score 순 (ranked.csv 행 순서, 안정 정렬)"
   },
   "air_stability": {
    "label": "공기/수분 내성",
    "icon": "🌫️",
    "question": "H₂S 발생·가수분해를 억제할 도펀트는?",
    "metric": "HSAB soft-S 친화 등급 + F 보너스 ↑ — 큐레이션",
-   "caveat": "soft acid(Cu·Ag)가 S 보호(taklu2021·li2025) but 전자절연과 정면 상충 — co-doping 동기. zhu2020 설계원칙 앵커.",
+   "caveat": "soft acid(Cu·Ag)가 S 보호(taklu2021·li2025) but 전자절연과 정면 상충 — co-doping 동기. zhu2020 설계원칙 앵커.  ⚠ 10위 값 동점 10종 중 5종이 표시에서 잘림 — 동점군 내 순위는 무의미(2차 키는 cascade score).",
    "key": "air_stability",
    "metric_key": "air_hsab",
    "direction": "+",
    "top": [
     "Ag2O",
     "Cu2O",
-    "In2O3",
-    "Sb2O5",
     "ZnO",
-    "SnO2",
     "CoO",
     "NiO",
     "ScF3",
-    "MgF2"
-   ]
+    "MgF2",
+    "AlF3",
+    "LaF3",
+    "YF3"
+   ],
+   "tied_at_cut": 10,
+   "dropped_by_tie": 5,
+   "cut_value": 0.45,
+   "tie_break": "cascade score 순 (ranked.csv 행 순서, 안정 정렬)"
   },
   "structure_stability": {
    "label": "도핑 구조 안정",
@@ -272,7 +316,11 @@
     "Cr2O3",
     "La2O3",
     "Sm2O3"
-   ]
+   ],
+   "tied_at_cut": 1,
+   "dropped_by_tie": 0,
+   "cut_value": 0.5332,
+   "tie_break": "cascade score 순 (ranked.csv 행 순서, 안정 정렬)"
   },
   "balanced": {
    "label": "종합 균형 (기존 score)",
@@ -294,7 +342,11 @@
     "Ga2O3",
     "Al2O3",
     "Nb2O5"
-   ]
+   ],
+   "tied_at_cut": 1,
+   "dropped_by_tie": 0,
+   "cut_value": 0.627,
+   "tie_break": "cascade score 순 (ranked.csv 행 순서, 안정 정렬)"
   }
  },
  "dopants": [
@@ -324,7 +376,7 @@
    "de": -0.945,
    "norm": {
     "oxidative_stability": 1.0,
-    "reduction_anode": 0.8202,
+    "reduction_anode": 0.8382,
     "electronic_insulation": 0.3701,
     "ionic_transport": 0.05,
     "disorder_promotion": 0.8996,
@@ -332,8 +384,8 @@
     "lightweight": 0.751,
     "low_cost": 0.1111,
     "mechanical_soft": 0.5965,
-    "ductility": 0.0256,
-    "air_stability": 0.0,
+    "ductility": 0.9744,
+    "air_stability": 0.2,
     "structure_stability": 0.5935,
     "balanced": 1.0
    }
@@ -364,7 +416,7 @@
    "de": -0.912,
    "norm": {
     "oxidative_stability": 1.0,
-    "reduction_anode": 0.3995,
+    "reduction_anode": 0.4596,
     "electronic_insulation": 0.1654,
     "ionic_transport": 0.05,
     "disorder_promotion": 0.7324,
@@ -372,8 +424,8 @@
     "lightweight": 0.7185,
     "low_cost": 0.7778,
     "mechanical_soft": 0.9079,
-    "ductility": 0.1538,
-    "air_stability": 0.0,
+    "ductility": 0.8462,
+    "air_stability": 0.2,
     "structure_stability": 0.5521,
     "balanced": 0.9968
    }
@@ -403,8 +455,8 @@
    "pugh": 0.77,
    "de": -1.269,
    "norm": {
-    "oxidative_stability": 0.5765,
-    "reduction_anode": 0.8052,
+    "oxidative_stability": 0.6189,
+    "reduction_anode": 0.8247,
     "electronic_insulation": 0.3228,
     "ionic_transport": 0.05,
     "disorder_promotion": 1.0,
@@ -412,8 +464,8 @@
     "lightweight": 0.2332,
     "low_cost": 0.1111,
     "mechanical_soft": 0.7281,
-    "ductility": 0.359,
-    "air_stability": 0.0,
+    "ductility": 0.641,
+    "air_stability": 0.2,
     "structure_stability": 1.0,
     "balanced": 0.8857
    }
@@ -438,13 +490,13 @@
    "disorder_std": 0.3466730644501317,
    "mass_per_cation": 138.82,
    "cost_tier": 5.0,
-   "air_hsab": 0.6,
+   "air_hsab": 0.2,
    "E_GPa": 41.9,
    "pugh": 0.72,
    "de": -0.665,
    "norm": {
     "oxidative_stability": 1.0,
-    "reduction_anode": 0.5968,
+    "reduction_anode": 0.6371,
     "electronic_insulation": 0.126,
     "ionic_transport": 0.05,
     "disorder_promotion": 0.9434,
@@ -452,8 +504,8 @@
     "lightweight": 0.4289,
     "low_cost": 0.1111,
     "mechanical_soft": 0.7149,
-    "ductility": 0.2308,
-    "air_stability": 0.5,
+    "ductility": 0.7692,
+    "air_stability": 0.2,
     "structure_stability": 0.2422,
     "balanced": 0.8254
    }
@@ -483,8 +535,8 @@
    "pugh": 0.71,
    "de": -0.938,
    "norm": {
-    "oxidative_stability": 0.8683,
-    "reduction_anode": 0.814,
+    "oxidative_stability": 0.8815,
+    "reduction_anode": 0.8326,
     "electronic_insulation": 0.3386,
     "ionic_transport": 0.05,
     "disorder_promotion": 0.8202,
@@ -492,8 +544,8 @@
     "lightweight": 0.5484,
     "low_cost": 0.3333,
     "mechanical_soft": 0.2237,
-    "ductility": 0.2051,
-    "air_stability": 0.0,
+    "ductility": 0.7949,
+    "air_stability": 0.2,
     "structure_stability": 0.5847,
     "balanced": 0.7619
    }
@@ -523,17 +575,17 @@
    "pugh": 0.74,
    "de": -0.769,
    "norm": {
-    "oxidative_stability": 0.9306,
-    "reduction_anode": 0.0,
+    "oxidative_stability": 0.9375,
+    "reduction_anode": 0.1,
     "electronic_insulation": 0.3858,
-    "ionic_transport": 0.0,
+    "ionic_transport": 0.1,
     "disorder_promotion": 0.4184,
     "dose_robustness": 0.9052,
     "lightweight": 0.9084,
     "low_cost": 0.7778,
     "mechanical_soft": 0.7456,
-    "ductility": 0.2821,
-    "air_stability": 0.0,
+    "ductility": 0.7179,
+    "air_stability": 0.2,
     "structure_stability": 0.3726,
     "balanced": 0.754
    }
@@ -563,17 +615,17 @@
    "pugh": 0.76,
    "de": -0.86,
    "norm": {
-    "oxidative_stability": 0.6157,
-    "reduction_anode": 0.407,
+    "oxidative_stability": 0.6541,
+    "reduction_anode": 0.4663,
     "electronic_insulation": 0.1102,
-    "ionic_transport": 0.4528,
+    "ionic_transport": 0.5075,
     "disorder_promotion": 0.8509,
     "dose_robustness": 0.5614,
     "lightweight": 0.0,
     "low_cost": 0.3333,
     "mechanical_soft": 0.8596,
-    "ductility": 0.3333,
-    "air_stability": 0.0,
+    "ductility": 0.6667,
+    "air_stability": 0.2,
     "structure_stability": 0.4868,
     "balanced": 0.6968
    }
@@ -597,23 +649,23 @@
    "blocking": 0.6111111111111112,
    "disorder_std": 0.2671958554931813,
    "mass_per_cation": 93.72,
-   "cost_tier": 3.0,
+   "cost_tier": 4.0,
    "air_hsab": 0.2,
    "E_GPa": 41.4,
    "pugh": 0.92,
    "de": -0.593,
    "norm": {
     "oxidative_stability": 1.0,
-    "reduction_anode": 0.5805,
+    "reduction_anode": 0.6225,
     "electronic_insulation": 0.2756,
     "ionic_transport": 0.05,
     "disorder_promotion": 0.6675,
     "dose_robustness": 0.5018,
     "lightweight": 0.6368,
-    "low_cost": 0.5556,
+    "low_cost": 0.3333,
     "mechanical_soft": 0.7368,
-    "ductility": 0.7436,
-    "air_stability": 0.0,
+    "ductility": 0.2564,
+    "air_stability": 0.2,
     "structure_stability": 0.1518,
     "balanced": 0.6667
    }
@@ -643,8 +695,8 @@
    "pugh": 0.77,
    "de": -0.799,
    "norm": {
-    "oxidative_stability": 0.6157,
-    "reduction_anode": 0.8377,
+    "oxidative_stability": 0.6541,
+    "reduction_anode": 0.8539,
     "electronic_insulation": 0.5906,
     "ionic_transport": 0.05,
     "disorder_promotion": 0.7593,
@@ -652,8 +704,8 @@
     "lightweight": 0.8338,
     "low_cost": 1.0,
     "mechanical_soft": 0.6886,
-    "ductility": 0.359,
-    "air_stability": 0.0,
+    "ductility": 0.641,
+    "air_stability": 0.2,
     "structure_stability": 0.4103,
     "balanced": 0.6635
    }
@@ -683,8 +735,8 @@
    "pugh": 0.67,
    "de": -0.987,
    "norm": {
-    "oxidative_stability": 0.4751,
-    "reduction_anode": 0.3808,
+    "oxidative_stability": 0.5276,
+    "reduction_anode": 0.4427,
     "electronic_insulation": 0.1654,
     "ionic_transport": 0.05,
     "disorder_promotion": 0.3619,
@@ -692,8 +744,8 @@
     "lightweight": 0.4562,
     "low_cost": 0.3333,
     "mechanical_soft": 0.5351,
-    "ductility": 0.1026,
-    "air_stability": 0.0,
+    "ductility": 0.8974,
+    "air_stability": 0.2,
     "structure_stability": 0.6462,
     "balanced": 0.627
    }
@@ -723,8 +775,8 @@
    "pugh": 0.63,
    "de": -1.041,
    "norm": {
-    "oxidative_stability": 0.4146,
-    "reduction_anode": 0.407,
+    "oxidative_stability": 0.4731,
+    "reduction_anode": 0.4663,
     "electronic_insulation": 0.2126,
     "ionic_transport": 0.05,
     "disorder_promotion": 0.6508,
@@ -732,8 +784,8 @@
     "lightweight": 0.0502,
     "low_cost": 0.1111,
     "mechanical_soft": 0.3947,
-    "ductility": 0.0,
-    "air_stability": 0.0,
+    "ductility": 1.0,
+    "air_stability": 0.2,
     "structure_stability": 0.7139,
     "balanced": 0.6032
    }
@@ -763,8 +815,8 @@
    "pugh": 0.75,
    "de": -0.761,
    "norm": {
-    "oxidative_stability": 0.6157,
-    "reduction_anode": 0.392,
+    "oxidative_stability": 0.6541,
+    "reduction_anode": 0.4528,
     "electronic_insulation": 0.0551,
     "ionic_transport": 0.05,
     "disorder_promotion": 0.7979,
@@ -772,8 +824,8 @@
     "lightweight": 0.6079,
     "low_cost": 0.7778,
     "mechanical_soft": 0.6491,
-    "ductility": 0.3077,
-    "air_stability": 0.0,
+    "ductility": 0.6923,
+    "air_stability": 0.2,
     "structure_stability": 0.3626,
     "balanced": 0.5889
    }
@@ -803,17 +855,17 @@
    "pugh": 0.84,
    "de": -0.826,
    "norm": {
-    "oxidative_stability": 0.6157,
-    "reduction_anode": 0.3958,
+    "oxidative_stability": 0.6541,
+    "reduction_anode": 0.4562,
     "electronic_insulation": 0.1339,
-    "ionic_transport": 0.207,
+    "ionic_transport": 0.2863,
     "disorder_promotion": 0.2243,
     "dose_robustness": 0.7387,
     "lightweight": 0.4052,
     "low_cost": 0.5556,
     "mechanical_soft": 0.6798,
-    "ductility": 0.5385,
-    "air_stability": 0.0,
+    "ductility": 0.4615,
+    "air_stability": 0.2,
     "structure_stability": 0.4442,
     "balanced": 0.573
    }
@@ -843,8 +895,8 @@
    "pugh": 0.68,
    "de": -0.897,
    "norm": {
-    "oxidative_stability": 0.347,
-    "reduction_anode": 0.6929,
+    "oxidative_stability": 0.4123,
+    "reduction_anode": 0.7236,
     "electronic_insulation": 0.2598,
     "ionic_transport": 0.05,
     "disorder_promotion": 0.1333,
@@ -852,8 +904,8 @@
     "lightweight": 0.265,
     "low_cost": 0.3333,
     "mechanical_soft": 0.6053,
-    "ductility": 0.1282,
-    "air_stability": 0.0,
+    "ductility": 0.8718,
+    "air_stability": 0.2,
     "structure_stability": 0.5332,
     "balanced": 0.5698
    }
@@ -883,8 +935,8 @@
    "pugh": 0.88,
    "de": -0.725,
    "norm": {
-    "oxidative_stability": 0.6157,
-    "reduction_anode": 0.9201,
+    "oxidative_stability": 0.6541,
+    "reduction_anode": 0.9281,
     "electronic_insulation": 0.685,
     "ionic_transport": 0.05,
     "disorder_promotion": 0.6531,
@@ -892,8 +944,8 @@
     "lightweight": 0.5988,
     "low_cost": 0.0,
     "mechanical_soft": 0.5132,
-    "ductility": 0.641,
-    "air_stability": 0.3125,
+    "ductility": 0.359,
+    "air_stability": 0.45,
     "structure_stability": 0.3174,
     "balanced": 0.5159
    }
@@ -923,17 +975,17 @@
    "pugh": 0.83,
    "de": -0.546,
    "norm": {
-    "oxidative_stability": 0.6157,
-    "reduction_anode": 0.8739,
+    "oxidative_stability": 0.6541,
+    "reduction_anode": 0.8865,
     "electronic_insulation": 0.8425,
-    "ionic_transport": 0.4704,
+    "ionic_transport": 0.5233,
     "disorder_promotion": 0.3153,
     "dose_robustness": 0.1802,
     "lightweight": 0.7817,
     "low_cost": 0.8889,
     "mechanical_soft": 0.6711,
-    "ductility": 0.5128,
-    "air_stability": 0.3125,
+    "ductility": 0.4872,
+    "air_stability": 0.45,
     "structure_stability": 0.0928,
     "balanced": 0.5
    }
@@ -963,7 +1015,7 @@
    "pugh": 0.83,
    "de": -0.565,
    "norm": {
-    "oxidative_stability": 0.6157,
+    "oxidative_stability": 0.6541,
     "reduction_anode": 1.0,
     "electronic_insulation": 0.4488,
     "ionic_transport": 1.0,
@@ -972,8 +1024,8 @@
     "lightweight": 0.8103,
     "low_cost": 1.0,
     "mechanical_soft": 0.5702,
-    "ductility": 0.5128,
-    "air_stability": 0.0,
+    "ductility": 0.4872,
+    "air_stability": 0.2,
     "structure_stability": 0.1167,
     "balanced": 0.4984
    }
@@ -998,13 +1050,13 @@
    "disorder_std": 0.19025693090373963,
    "mass_per_cation": 161.76,
    "cost_tier": 3.0,
-   "air_hsab": 0.6,
+   "air_hsab": 0.2,
    "E_GPa": 51.5,
    "pugh": 0.69,
    "de": -0.721,
    "norm": {
-    "oxidative_stability": 0.6157,
-    "reduction_anode": 0.3321,
+    "oxidative_stability": 0.6541,
+    "reduction_anode": 0.3989,
     "electronic_insulation": 0.1339,
     "ionic_transport": 0.05,
     "disorder_promotion": 0.4004,
@@ -1012,8 +1064,8 @@
     "lightweight": 0.3231,
     "low_cost": 0.5556,
     "mechanical_soft": 0.2939,
-    "ductility": 0.1538,
-    "air_stability": 0.5,
+    "ductility": 0.8462,
+    "air_stability": 0.2,
     "structure_stability": 0.3124,
     "balanced": 0.4794
    }
@@ -1043,8 +1095,8 @@
    "pugh": 0.84,
    "de": -0.641,
    "norm": {
-    "oxidative_stability": 0.6157,
-    "reduction_anode": 0.8377,
+    "oxidative_stability": 0.6541,
+    "reduction_anode": 0.8539,
     "electronic_insulation": 0.7638,
     "ionic_transport": 0.05,
     "disorder_promotion": 0.7091,
@@ -1052,8 +1104,8 @@
     "lightweight": 0.6817,
     "low_cost": 0.8889,
     "mechanical_soft": 0.4649,
-    "ductility": 0.5385,
-    "air_stability": 0.3125,
+    "ductility": 0.4615,
+    "air_stability": 0.45,
     "structure_stability": 0.212,
     "balanced": 0.4714
    }
@@ -1083,17 +1135,17 @@
    "pugh": 0.64,
    "de": -0.727,
    "norm": {
-    "oxidative_stability": 0.1762,
-    "reduction_anode": 0.7091,
+    "oxidative_stability": 0.2585,
+    "reduction_anode": 0.7382,
     "electronic_insulation": 0.685,
-    "ionic_transport": 0.5508,
+    "ionic_transport": 0.5957,
     "disorder_promotion": 0.7861,
     "dose_robustness": 0.3518,
     "lightweight": 0.1657,
     "low_cost": 0.4444,
     "mechanical_soft": 0.7763,
-    "ductility": 0.0256,
-    "air_stability": 0.3125,
+    "ductility": 0.9744,
+    "air_stability": 0.45,
     "structure_stability": 0.3199,
     "balanced": 0.4698
    }
@@ -1123,8 +1175,8 @@
    "pugh": 0.84,
    "de": -0.713,
    "norm": {
-    "oxidative_stability": 0.6157,
-    "reduction_anode": 0.9376,
+    "oxidative_stability": 0.6541,
+    "reduction_anode": 0.9438,
     "electronic_insulation": 0.685,
     "ionic_transport": 0.05,
     "disorder_promotion": 0.2389,
@@ -1132,8 +1184,8 @@
     "lightweight": 0.3962,
     "low_cost": 0.2222,
     "mechanical_soft": 0.2895,
-    "ductility": 0.5385,
-    "air_stability": 0.3125,
+    "ductility": 0.4615,
+    "air_stability": 0.45,
     "structure_stability": 0.3024,
     "balanced": 0.4635
    }
@@ -1163,17 +1215,17 @@
    "pugh": 0.81,
    "de": -0.81,
    "norm": {
-    "oxidative_stability": 0.3594,
+    "oxidative_stability": 0.4235,
     "reduction_anode": 1.0,
     "electronic_insulation": 0.3465,
-    "ionic_transport": 0.3746,
+    "ionic_transport": 0.4372,
     "disorder_promotion": 0.4766,
     "dose_robustness": 0.9426,
     "lightweight": 0.0984,
     "low_cost": 0.1111,
     "mechanical_soft": 0.4956,
-    "ductility": 0.4615,
-    "air_stability": 0.0,
+    "ductility": 0.5385,
+    "air_stability": 0.2,
     "structure_stability": 0.4241,
     "balanced": 0.4603
    }
@@ -1203,8 +1255,8 @@
    "pugh": 0.76,
    "de": -0.927,
    "norm": {
-    "oxidative_stability": 0.4413,
-    "reduction_anode": 0.3833,
+    "oxidative_stability": 0.4972,
+    "reduction_anode": 0.4449,
     "electronic_insulation": 0.0787,
     "ionic_transport": 0.05,
     "disorder_promotion": 0.3408,
@@ -1212,8 +1264,8 @@
     "lightweight": 0.6496,
     "low_cost": 0.5556,
     "mechanical_soft": 0.25,
-    "ductility": 0.3333,
-    "air_stability": 0.0,
+    "ductility": 0.6667,
+    "air_stability": 0.2,
     "structure_stability": 0.5709,
     "balanced": 0.4333
    }
@@ -1243,8 +1295,8 @@
    "pugh": 0.75,
    "de": -0.915,
    "norm": {
-    "oxidative_stability": 0.2242,
-    "reduction_anode": 0.6554,
+    "oxidative_stability": 0.3018,
+    "reduction_anode": 0.6899,
     "electronic_insulation": 0.2677,
     "ionic_transport": 0.05,
     "disorder_promotion": 0.7022,
@@ -1252,8 +1304,8 @@
     "lightweight": 0.2932,
     "low_cost": 0.3333,
     "mechanical_soft": 0.4868,
-    "ductility": 0.3077,
-    "air_stability": 0.0,
+    "ductility": 0.6923,
+    "air_stability": 0.2,
     "structure_stability": 0.5558,
     "balanced": 0.427
    }
@@ -1283,17 +1335,17 @@
    "pugh": 0.78,
    "de": -0.59,
    "norm": {
-    "oxidative_stability": 0.6157,
-    "reduction_anode": 0.7853,
+    "oxidative_stability": 0.6541,
+    "reduction_anode": 0.8067,
     "electronic_insulation": 0.6063,
-    "ionic_transport": 0.4568,
+    "ionic_transport": 0.5111,
     "disorder_promotion": 0.5911,
     "dose_robustness": 0.2771,
     "lightweight": 0.7919,
     "low_cost": 1.0,
     "mechanical_soft": 0.2061,
-    "ductility": 0.3846,
-    "air_stability": 0.0,
+    "ductility": 0.6154,
+    "air_stability": 0.2,
     "structure_stability": 0.1481,
     "balanced": 0.3952
    }
@@ -1323,17 +1375,17 @@
    "pugh": 0.89,
    "de": -0.503,
    "norm": {
-    "oxidative_stability": 0.6157,
+    "oxidative_stability": 0.6541,
     "reduction_anode": 1.0,
     "electronic_insulation": 0.4488,
-    "ionic_transport": 0.5924,
+    "ionic_transport": 0.6331,
     "disorder_promotion": 0.2872,
     "dose_robustness": 0.5212,
     "lightweight": 1.0,
     "low_cost": 0.7778,
     "mechanical_soft": 0.4211,
-    "ductility": 0.6667,
-    "air_stability": 0.0,
+    "ductility": 0.3333,
+    "air_stability": 0.2,
     "structure_stability": 0.0389,
     "balanced": 0.3825
    }
@@ -1363,17 +1415,17 @@
    "pugh": 1.02,
    "de": -0.586,
    "norm": {
-    "oxidative_stability": 0.6157,
+    "oxidative_stability": 0.6541,
     "reduction_anode": 1.0,
     "electronic_insulation": 0.8425,
-    "ionic_transport": 0.5411,
+    "ionic_transport": 0.587,
     "disorder_promotion": 0.747,
     "dose_robustness": 1.0,
     "lightweight": 0.7089,
     "low_cost": 0.8889,
     "mechanical_soft": 0.5132,
-    "ductility": 1.0,
-    "air_stability": 0.3125,
+    "ductility": 0.0,
+    "air_stability": 0.45,
     "structure_stability": 0.143,
     "balanced": 0.3698
    }
@@ -1403,8 +1455,8 @@
    "pugh": 0.74,
    "de": -0.703,
    "norm": {
-    "oxidative_stability": 0.2242,
-    "reduction_anode": 0.6554,
+    "oxidative_stability": 0.3018,
+    "reduction_anode": 0.6899,
     "electronic_insulation": 0.6063,
     "ionic_transport": 0.05,
     "disorder_promotion": 0.7539,
@@ -1412,8 +1464,8 @@
     "lightweight": 0.1411,
     "low_cost": 0.2222,
     "mechanical_soft": 0.6272,
-    "ductility": 0.2821,
-    "air_stability": 0.3125,
+    "ductility": 0.7179,
+    "air_stability": 0.45,
     "structure_stability": 0.2898,
     "balanced": 0.3683
    }
@@ -1443,17 +1495,17 @@
    "pugh": 0.76,
    "de": -0.48,
    "norm": {
-    "oxidative_stability": 0.6157,
-    "reduction_anode": 0.5968,
+    "oxidative_stability": 0.6541,
+    "reduction_anode": 0.6371,
     "electronic_insulation": 0.1575,
-    "ionic_transport": 0.4083,
+    "ionic_transport": 0.4674,
     "disorder_promotion": 0.8895,
     "dose_robustness": 0.3934,
     "lightweight": 0.6937,
     "low_cost": 0.7778,
     "mechanical_soft": 0.3158,
-    "ductility": 0.3333,
-    "air_stability": 0.5,
+    "ductility": 0.6667,
+    "air_stability": 0.6,
     "structure_stability": 0.01,
     "balanced": 0.3619
    }
@@ -1478,22 +1530,22 @@
    "disorder_std": 0.22549233260254598,
    "mass_per_cation": 150.71,
    "cost_tier": 3.0,
-   "air_hsab": 0.6,
+   "air_hsab": 0.2,
    "E_GPa": 48.1,
    "pugh": 0.8,
    "de": -0.5,
    "norm": {
-    "oxidative_stability": 0.6157,
-    "reduction_anode": 0.407,
+    "oxidative_stability": 0.6541,
+    "reduction_anode": 0.4663,
     "electronic_insulation": 0.1811,
-    "ionic_transport": 0.8278,
+    "ionic_transport": 0.845,
     "disorder_promotion": 0.5227,
     "dose_robustness": 0.295,
     "lightweight": 0.374,
     "low_cost": 0.5556,
     "mechanical_soft": 0.443,
-    "ductility": 0.4359,
-    "air_stability": 0.5,
+    "ductility": 0.5641,
+    "air_stability": 0.2,
     "structure_stability": 0.0351,
     "balanced": 0.3603
    }
@@ -1523,17 +1575,17 @@
    "pugh": 0.73,
    "de": -0.519,
    "norm": {
-    "oxidative_stability": 0.6157,
+    "oxidative_stability": 0.6541,
     "reduction_anode": 1.0,
     "electronic_insulation": 1.0,
-    "ionic_transport": 0.6492,
+    "ionic_transport": 0.6842,
     "disorder_promotion": 0.0,
     "dose_robustness": 0.6561,
     "lightweight": 0.9493,
     "low_cost": 0.6667,
     "mechanical_soft": 0.0,
-    "ductility": 0.2564,
-    "air_stability": 0.3125,
+    "ductility": 0.7436,
+    "air_stability": 0.45,
     "structure_stability": 0.059,
     "balanced": 0.354
    }
@@ -1563,8 +1615,8 @@
    "pugh": 0.73,
    "de": -0.758,
    "norm": {
-    "oxidative_stability": 0.1495,
-    "reduction_anode": 0.412,
+    "oxidative_stability": 0.2345,
+    "reduction_anode": 0.4708,
     "electronic_insulation": 0.6063,
     "ionic_transport": 0.05,
     "disorder_promotion": 0.3426,
@@ -1572,8 +1624,8 @@
     "lightweight": 0.2979,
     "low_cost": 0.6667,
     "mechanical_soft": 0.7018,
-    "ductility": 0.2564,
-    "air_stability": 0.3125,
+    "ductility": 0.7436,
+    "air_stability": 0.45,
     "structure_stability": 0.3588,
     "balanced": 0.3492
    }
@@ -1603,17 +1655,17 @@
    "pugh": 0.66,
    "de": -0.651,
    "norm": {
-    "oxidative_stability": 0.0,
+    "oxidative_stability": 0.05,
     "reduction_anode": 0.05,
     "electronic_insulation": 0.2047,
-    "ionic_transport": 0.316,
+    "ionic_transport": 0.3844,
     "disorder_promotion": 0.5259,
     "dose_robustness": 0.3632,
     "lightweight": 0.7418,
     "low_cost": 1.0,
     "mechanical_soft": 1.0,
-    "ductility": 0.0769,
-    "air_stability": 0.0,
+    "ductility": 0.9231,
+    "air_stability": 0.2,
     "structure_stability": 0.2246,
     "balanced": 0.3429
    }
@@ -1643,17 +1695,17 @@
    "pugh": 0.77,
    "de": -0.898,
    "norm": {
-    "oxidative_stability": 0.1762,
-    "reduction_anode": 0.6492,
+    "oxidative_stability": 0.2585,
+    "reduction_anode": 0.6843,
     "electronic_insulation": 0.3307,
-    "ionic_transport": 0.497,
+    "ionic_transport": 0.5473,
     "disorder_promotion": 0.3912,
     "dose_robustness": 0.9131,
     "lightweight": 0.3178,
     "low_cost": 0.5556,
     "mechanical_soft": 0.3553,
-    "ductility": 0.359,
-    "air_stability": 0.0,
+    "ductility": 0.641,
+    "air_stability": 0.2,
     "structure_stability": 0.5345,
     "balanced": 0.3317
    }
@@ -1683,16 +1735,16 @@
    "pugh": 0.86,
    "de": -0.474,
    "norm": {
-    "oxidative_stability": 0.6157,
-    "reduction_anode": 0.3995,
+    "oxidative_stability": 0.6541,
+    "reduction_anode": 0.4596,
     "electronic_insulation": 0.0,
-    "ionic_transport": 0.4656,
+    "ionic_transport": 0.519,
     "disorder_promotion": 0.9026,
     "dose_robustness": 0.4178,
     "lightweight": 0.5347,
     "low_cost": 0.3333,
     "mechanical_soft": 0.4737,
-    "ductility": 0.5897,
+    "ductility": 0.4103,
     "air_stability": 1.0,
     "structure_stability": 0.0025,
     "balanced": 0.3222
@@ -1723,17 +1775,17 @@
    "pugh": 0.75,
    "de": -0.523,
    "norm": {
-    "oxidative_stability": 0.6157,
-    "reduction_anode": 0.5256,
+    "oxidative_stability": 0.6541,
+    "reduction_anode": 0.573,
     "electronic_insulation": 0.252,
-    "ionic_transport": 0.0919,
+    "ionic_transport": 0.1827,
     "disorder_promotion": 0.6794,
     "dose_robustness": 0.8306,
     "lightweight": 0.5865,
     "low_cost": 0.3333,
     "mechanical_soft": 0.0877,
-    "ductility": 0.3077,
-    "air_stability": 0.0,
+    "ductility": 0.6923,
+    "air_stability": 0.2,
     "structure_stability": 0.064,
     "balanced": 0.3063
    }
@@ -1763,17 +1815,17 @@
    "pugh": 0.79,
    "de": -0.555,
    "norm": {
-    "oxidative_stability": 0.4733,
-    "reduction_anode": 0.407,
+    "oxidative_stability": 0.526,
+    "reduction_anode": 0.4663,
     "electronic_insulation": 0.3701,
-    "ionic_transport": 0.5066,
+    "ionic_transport": 0.5559,
     "disorder_promotion": 0.204,
     "dose_robustness": 0.7222,
     "lightweight": 0.5911,
     "low_cost": 0.7778,
     "mechanical_soft": 0.3947,
-    "ductility": 0.4103,
-    "air_stability": 0.0,
+    "ductility": 0.5897,
+    "air_stability": 0.2,
     "structure_stability": 0.1041,
     "balanced": 0.3016
    }
@@ -1803,8 +1855,8 @@
    "pugh": 0.85,
    "de": -0.564,
    "norm": {
-    "oxidative_stability": 0.4929,
-    "reduction_anode": 0.407,
+    "oxidative_stability": 0.5436,
+    "reduction_anode": 0.4663,
     "electronic_insulation": 0.2126,
     "ionic_transport": 0.05,
     "disorder_promotion": 0.6459,
@@ -1812,8 +1864,8 @@
     "lightweight": 0.362,
     "low_cost": 0.7778,
     "mechanical_soft": 0.4386,
-    "ductility": 0.5641,
-    "air_stability": 0.0,
+    "ductility": 0.4359,
+    "air_stability": 0.2,
     "structure_stability": 0.1154,
     "balanced": 0.2937
    }
@@ -1843,8 +1895,8 @@
    "pugh": 0.96,
    "de": -0.705,
    "norm": {
-    "oxidative_stability": 0.4093,
-    "reduction_anode": 0.407,
+    "oxidative_stability": 0.4683,
+    "reduction_anode": 0.4663,
     "electronic_insulation": 0.4488,
     "ionic_transport": 0.05,
     "disorder_promotion": 0.3173,
@@ -1852,8 +1904,8 @@
     "lightweight": 0.4978,
     "low_cost": 0.6667,
     "mechanical_soft": 0.5263,
-    "ductility": 0.8462,
-    "air_stability": 0.3125,
+    "ductility": 0.1538,
+    "air_stability": 0.45,
     "structure_stability": 0.2923,
     "balanced": 0.2778
    }
@@ -1883,17 +1935,17 @@
    "pugh": 0.84,
    "de": -0.543,
    "norm": {
-    "oxidative_stability": 0.6157,
-    "reduction_anode": 0.7965,
+    "oxidative_stability": 0.6541,
+    "reduction_anode": 0.8169,
     "electronic_insulation": 0.5118,
-    "ionic_transport": 0.8593,
+    "ionic_transport": 0.8734,
     "disorder_promotion": 0.5227,
     "dose_robustness": 0.5585,
     "lightweight": 0.8831,
     "low_cost": 1.0,
     "mechanical_soft": 0.0132,
-    "ductility": 0.5385,
-    "air_stability": 0.0,
+    "ductility": 0.4615,
+    "air_stability": 0.2,
     "structure_stability": 0.0891,
     "balanced": 0.2762
    }
@@ -1923,17 +1975,17 @@
    "pugh": 0.78,
    "de": -0.632,
    "norm": {
-    "oxidative_stability": 0.4093,
-    "reduction_anode": 0.407,
+    "oxidative_stability": 0.4683,
+    "reduction_anode": 0.4663,
     "electronic_insulation": 0.1496,
-    "ionic_transport": 0.4164,
+    "ionic_transport": 0.4748,
     "disorder_promotion": 0.7604,
     "dose_robustness": 0.5772,
     "lightweight": 0.7007,
     "low_cost": 0.7778,
     "mechanical_soft": 0.2675,
-    "ductility": 0.3846,
-    "air_stability": 0.0,
+    "ductility": 0.6154,
+    "air_stability": 0.2,
     "structure_stability": 0.2008,
     "balanced": 0.2667
    }
@@ -1963,17 +2015,17 @@
    "pugh": 0.82,
    "de": -0.472,
    "norm": {
-    "oxidative_stability": 0.4733,
-    "reduction_anode": 0.407,
+    "oxidative_stability": 0.526,
+    "reduction_anode": 0.4663,
     "electronic_insulation": 0.2913,
-    "ionic_transport": 0.4,
+    "ionic_transport": 0.46,
     "disorder_promotion": 0.2633,
     "dose_robustness": 0.6023,
     "lightweight": 0.926,
     "low_cost": 1.0,
     "mechanical_soft": 0.3772,
-    "ductility": 0.4872,
-    "air_stability": 0.0,
+    "ductility": 0.5128,
+    "air_stability": 0.2,
     "structure_stability": 0.0,
     "balanced": 0.2317
    }
@@ -2003,7 +2055,7 @@
    "pugh": 0.78,
    "de": -0.801,
    "norm": {
-    "oxidative_stability": 0.0249,
+    "oxidative_stability": 0.05,
     "reduction_anode": 0.05,
     "electronic_insulation": 0.0709,
     "ionic_transport": 0.05,
@@ -2012,8 +2064,8 @@
     "lightweight": 0.7008,
     "low_cost": 1.0,
     "mechanical_soft": 0.5395,
-    "ductility": 0.3846,
-    "air_stability": 0.0,
+    "ductility": 0.6154,
+    "air_stability": 0.2,
     "structure_stability": 0.4128,
     "balanced": 0.2032
    }
@@ -2043,17 +2095,17 @@
    "pugh": 0.78,
    "de": -0.719,
    "norm": {
-    "oxidative_stability": 0.1495,
-    "reduction_anode": 0.412,
+    "oxidative_stability": 0.2345,
+    "reduction_anode": 0.4708,
     "electronic_insulation": 0.3307,
-    "ionic_transport": 0.9035,
+    "ionic_transport": 0.9132,
     "disorder_promotion": 0.4333,
     "dose_robustness": 0.4817,
     "lightweight": 0.5008,
     "low_cost": 0.7778,
     "mechanical_soft": 0.3772,
-    "ductility": 0.3846,
-    "air_stability": 0.0,
+    "ductility": 0.6154,
+    "air_stability": 0.2,
     "structure_stability": 0.3099,
     "balanced": 0.2
    }
@@ -2092,8 +2144,8 @@
     "lightweight": 0.7234,
     "low_cost": 0.5556,
     "mechanical_soft": 0.4518,
-    "ductility": 0.4872,
-    "air_stability": 0.5,
+    "ductility": 0.5128,
+    "air_stability": 0.6,
     "structure_stability": 0.1242,
     "balanced": 0.0952
    }
@@ -2126,14 +2178,14 @@
     "oxidative_stability": 0.05,
     "reduction_anode": 0.05,
     "electronic_insulation": 0.2126,
-    "ionic_transport": 0.8628,
+    "ionic_transport": 0.8765,
     "disorder_promotion": 0.3966,
     "dose_robustness": 0.3496,
     "lightweight": 0.7245,
     "low_cost": 0.5556,
     "mechanical_soft": 0.5395,
-    "ductility": 0.5641,
-    "air_stability": 0.5,
+    "ductility": 0.4359,
+    "air_stability": 0.6,
     "structure_stability": 0.0778,
     "balanced": 0.0556
    }
@@ -2163,8 +2215,8 @@
    "pugh": 0.89,
    "de": -0.537,
    "norm": {
-    "oxidative_stability": 0.1246,
-    "reduction_anode": 0.3645,
+    "oxidative_stability": 0.2121,
+    "reduction_anode": 0.4281,
     "electronic_insulation": 0.063,
     "ionic_transport": 0.05,
     "disorder_promotion": 0.2847,
@@ -2172,7 +2224,7 @@
     "lightweight": 0.739,
     "low_cost": 0.7778,
     "mechanical_soft": 0.3158,
-    "ductility": 0.6667,
+    "ductility": 0.3333,
     "air_stability": 1.0,
     "structure_stability": 0.0816,
     "balanced": 0.0

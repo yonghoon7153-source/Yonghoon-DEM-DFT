@@ -164,7 +164,7 @@ graph TD
 ## 우리 캠페인 적용
 - Canonical gap (fixed-occ nscf 고유값, db/properties/electronic.json): comp1 2.066 (52at ordered 정형셀) / modelc 2.099 (62at) / +B₂O₃ 1.9671 (128at) / LPSOCl 2.2309 eV (62at) — comp1 외 셋은 배치 확정 단일-config 셀, 레시피 동일 (doping_family_2026_07_16)
 - Disordered ensemble: d = 0.5/1.0 × cfg0/1/2, UMA anneal+relax 후 MD — v1 un-relaxed swap은 artifact로 폐기 (tools/ionic/run_comp2_disorder.sh)
-- 무질서 → 수송 인과의 자체 증거: $F^*$ 0.191 → 0.078 eV가 $E_a$ 0.253 → 0.224 eV를 BVSE와 독립 재현 (tools/ionic/li_percolation.py)
+- 무질서 → 수송 **부호 일치** 증거: $F^*$ 0.191 → 0.078 eV가 $E_a$ 0.253 → 0.224 eV와 같은 방향으로 움직이며, 이건 **BVSE와 독립**이다 (tools/ionic/li_percolation.py). ⚠ **인과 주장은 아직 보류** — (a) 표본이 comp1↔modelc **n = 2**이고 두 계는 Cl 함량·Li 공공·S 함량·셀(cubic-52 vs rhombo-62)이 **동시에** 다른 비통제 쌍이며, (b) $F^*$는 $E_a$를 준 바로 그 600 K MD 궤적의 Li 밀도에서 나온 2차 통계라 MD와는 독립이 아니고, (c) 크기도 대응하지 않는다($\Delta F^*$ 0.113 vs $\Delta E_a$ 0.029 eV — PMF 침수 문턱과 Arrhenius 기울기는 애초에 같은 양이 아니다). db 자체는 같은 관측치의 주된 원인을 **공공(vacancy)** 으로 지목한다(comp2_md_arrhenius.json: "VACANCY is the robust conductivity lever"). → **조성 고정 disorder-% 스캔**이 나오기 전엔 인과로 쓰지 않는다.
 - 자기비판 유지: 우리 A = 1.14 ≈ Torii 1.09는 공유 편향(둘 다 ordered)일 수 있음 — Deng SQS 0.92 vs Torii 1.09처럼 A ≈ 1 미세 지표가 무질서 처리·D3 등 방법차로 흔들리는 사례를 항상 옆에 둔다
 
 **litdb 출처** (수치는 모두 digest 소환값 — 우리 db 절대값과 방법 병기 없이 섞지 말 것):

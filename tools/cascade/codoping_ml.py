@@ -210,6 +210,10 @@ def main():
             "cost_tier": max(A["cost_tier"], B["cost_tier"]),
             "gap_lit_eV": min(A["gap_lit_eV"], B["gap_lit_eV"]),    # 전자누설 약한 고리
             "air_hsab": max(A["air_hsab"], B["air_hsab"]),          # 하나면 보호
+            # ml-3: 합동창이 단일 도펀트 창보다 실제로 얼마나 넓어졌나. 0 이면 '상보' 가정이
+            #   발동하지 않고 더 나은 한쪽 창을 그대로 물려받은 것 (전체 쌍의 ~70%).
+            "window_gain": (ox_join - red_join) - max(A["ox_V"] - A["red_V"],
+                                                      B["ox_V"] - B["red_V"]),
         }
 
     P = np.array([[agg(a, b)[k] for k in SINGLE_FEATS] for a, b in pairs])
@@ -349,18 +353,42 @@ def main():
                  "sum(v_j*inter_j); uncertainty = internal LOOCV-residual propagation only.\n")
         fo.write("# columns: gap_min = min(gap_lit_eV) 문헌 큐레이션 값(우리 계산 갭 아님); "
                  "air_max = HSAB 정성등급 큐레이션; transport_min = min(bvs_x005) BVS proxy(절대 σ 아님); "
-                 "joint_window_V = max(ox)-min(red) 상보 가정.\n")
+                 "joint_window_V = max(ox)-min(red) 상보 가정; "
+                 "window_gain = joint_window_V - max(단일 도펀트 창) — 0 이면 상보가 발동하지 않고 "
+                 "더 나은 한쪽 창을 그대로 물려받은 것(전체 1081쌍의 ~70%가 정확히 0).\n")
         w = csv.writer(fo)
         w.writerow(["rank", "pairA", "pairB", "ml_score", "uncertainty",
-                    "joint_window_V", "transport_min", "gap_min", "air_max",
+                    "joint_window_V", "window_gain", "transport_min", "gap_min", "air_max",
                     "top_interaction", "tags"])
         for rk, i in enumerate(order, 1):
             a, b = pairs[i]
             f = agg(a, b)
             w.writerow([rk, a, b, f"{ml_score[i]:.4f}", f"{unc[i]:.3f}",
-                        f"{f['window_V']:.3f}", f"{f['bvs_x005']:.4f}",
+                        f"{f['window_V']:.3f}", f"{f['window_gain']:.3f}", f"{f['bvs_x005']:.4f}",
                         f"{f['gap_lit_eV']:.1f}", f"{f['air_hsab']:.2f}",
                         top_inter[i], tags_for(i)])
+
+    # ---------- 진단 (ml-2 / ml-4) ----------
+    _li = listed
+    def _rank_corr(x, y):
+        rx, ry = x.argsort().argsort().astype(float), y.argsort().argsort().astype(float)
+        return float(np.corrcoef(rx, ry)[0, 1])
+
+    if _li.sum() >= 3:
+        _obs = t[_li]                              # 실측 v1 synergy (원 스케일)
+        _stage3 = (Xi_z @ w3)[_li]                 # 증류 모델의 예측(교호작용 항만)
+        _full = ml_score[_li]                      # base_z + inter_sum (배포 점수)
+        # ⚠ 스케일이 다른 두 양(원 synergy vs z-단위 점수)의 R² 는 의미가 없다 —
+        #   스케일 불변인 상관/순위상관만 보고한다.
+        _r_listed = float(np.corrcoef(_stage3, _obs)[0, 1])
+        _sp_listed = _rank_corr(_stage3, _obs)
+        _r_full = float(np.corrcoef(_full, _obs)[0, 1])
+        _sp_full = _rank_corr(_full, _obs)
+    else:
+        _r_listed = _sp_listed = _r_full = _sp_full = float("nan")
+    from collections import Counter as _C
+    _cnt10 = dict(_C([d for i in order[:10] for d in pairs[i]]).most_common())
+    _cnt50 = dict(_C([d for i in order[:50] for d in pairs[i]]).most_common())
 
     # ---------- 출력 meta JSON ----------
     meta = {
@@ -397,6 +425,29 @@ def main():
             "interaction_coefficients": {nm: round(float(c), 4)
                                          for nm, c in zip(inter_names, w3)},
             "interaction_rationale": {nm: why for nm, _, why in INTERACTIONS},
+            # ml-2: weighted_loocv_r2 는 1041개 downweighted 0-근사가 지배하는 값이라
+            #   '실제 synergy 설명분산'이 아니다. 40개 실측 라벨에만 걸어보면 아래와 같다.
+            "diagnostics_on_listed_labels": {
+                "n_listed": int(_li.sum()),
+                "stage3_pearson_r": round(float(_r_listed), 4),
+                "stage3_spearman_r": round(float(_sp_listed), 4),
+                "full_score_pearson_r": round(float(_r_full), 4),
+                "full_score_spearman_r": round(float(_sp_full), 4),
+                "note": "weighted_loocv_r2(위)를 '실제 synergy 설명분산'으로 읽으면 안 된다 — "
+                        "가중치의 ~72%(1041×0.1)가 v1 미수록 쌍의 0-근사에 실려 있어서, 그 값은 "
+                        "주로 '0 을 0 으로 맞추는' 성능이다. 실측 라벨에 대한 신호는 여기 "
+                        "상관/순위상관으로만 판단할 것 (원 synergy 와 z-단위 점수는 스케일이 달라 "
+                        "R² 자체가 정의상 무의미하므로 싣지 않는다). 상태: HYPOTHESIS GENERATOR.",
+            },
+            # ml-4: top10/top50 이 특정 도펀트에 몰리는지 (base_z 상속분 포함)
+            "dopant_concentration": {
+                "top10_counts": _cnt10, "top50_counts": _cnt50,
+                "distinct_in_top10": len(_cnt10),
+                "note": "편중의 출처는 교호작용이 아니라 base_z(단일도펀트 cascade score)다 — "
+                        "base_z 단독 랭킹도 top10 중 7개를 그대로 재현하고 "
+                        "corr(base_z, ml_score)≈0.86. 다양성이 필요하면 '도펀트당 최상위 쌍' "
+                        "목록을 따로 뽑을 것.",
+            },
         },
         "vs_v1": {
             "spearman_on_v1_top40_pairs": round(rho40, 3),

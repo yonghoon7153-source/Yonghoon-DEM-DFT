@@ -1,4 +1,8 @@
 # h-BN@VGCF Li migration - CI-NEB activation barriers (panel b). Forward = TS - first image, backward = TS - last image. meV. kT(300 K) = 25.69 meV.
+# NOTE Li_on_hbn_1L: whole path spans 7 meV while per-image force errors reach 46 meV/A -> BELOW numerical resolution. Report as '< 0.01 eV, effectively barrierless', NOT as agreement with Shi2017 (100 meV). See vgcf_hbn_neb.json.
+# NOTE Li_in_gallery_2L2L is the representative gallery value but 2L convergence is OPEN (layer_sensitivity) -> treat as an upper bound.
 case,Ea_forward_meV,Ea_backward_meV,literature_meV
 Li_on_graphene_1L,272.95,272.02,300
+Li_on_hbn_1L,7.36,-0.00,100
+Li_in_gallery_1L1L,356.72,349.19,
 Li_in_gallery_2L2L,147.31,145.78,

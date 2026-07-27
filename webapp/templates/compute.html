@@ -15,9 +15,11 @@
   </div>
   <div class="cmp-row">
     <span class="cmp-lab">계산 타입</span>
-    <div class="seg" role="tablist" aria-label="계산 타입">
+{# 패널 전환이 아니라 파라미터 선택이고 #cmp-out 은 aria-live 라, tab 이 아니라 radio 가 맞다. #}
+    <div class="seg" role="radiogroup" aria-label="계산 타입">
       {% for c in calcs %}
-      <button class="seg-btn {% if loop.first %}active{% endif %}" role="tab" data-calc="{{ c.id }}"
+      <button class="seg-btn {% if loop.first %}active{% endif %}" role="radio" data-calc="{{ c.id }}"
+              aria-checked="{{ 'true' if loop.first else 'false' }}"
               onclick="pickCalc(this)">{{ c.label }}</button>
       {% endfor %}
     </div>
@@ -34,7 +36,9 @@
 
 <script>
 var curCalc='scf';
-function pickCalc(b){curCalc=b.dataset.calc;document.querySelectorAll('.seg-btn').forEach(function(x){x.classList.remove('active')});b.classList.add('active');genCompute();}
+function pickCalc(b){curCalc=b.dataset.calc;
+  document.querySelectorAll('.seg-btn').forEach(function(x){x.classList.remove('active');x.setAttribute('aria-checked','false');});
+  b.classList.add('active');b.setAttribute('aria-checked','true');genCompute();}
 function panel(title,name,body,lang){
   return '<div class="code-card"><div class="code-head"><span class="code-name">'+name+'</span>'+
     '<button class="btn sm" onclick="copyText(this.closest(\'.code-card\').querySelector(\'code\').textContent)">📋 복사</button></div>'+

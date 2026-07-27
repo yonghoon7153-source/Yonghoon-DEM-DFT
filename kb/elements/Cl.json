@@ -1,71 +1,71 @@
 {
- "symbol": "Cl",
- "name": "Chlorine",
- "Z": 17,
- "role": "argyrodite X-site 할라이드 — Cl/S 자리무질서(site-disorder)가 Li⁺ 전도 촉진; 표준 comp1(Li6PS5Cl)",
- "oxidation_states": [
-  "-1"
- ],
- "electronegativity": 3.16,
- "ionic_radius_A": {
-  "Cl-": 1.81
- },
- "representative_compounds": [
-  {
-   "formula": "LiCl",
-   "context": "음극 SEI",
-   "battery_role": "무기 SEI 성분",
-   "note": "Cl 2p ~198.5 eV; Cl-rich 계면은 산화 onset↑"
+  "symbol": "Cl",
+  "name": "Chlorine",
+  "Z": 17,
+  "role": "argyrodite X-site 할라이드 — Cl/S 자리무질서(site-disorder)가 Li⁺ 전도 촉진; 표준 comp1(Li6PS5Cl)",
+  "oxidation_states": [
+    "-1"
+  ],
+  "electronegativity": 3.16,
+  "ionic_radius_A": {
+    "Cl-": 1.81
   },
-  {
-   "formula": "Li6PS5Cl",
-   "context": "우리 comp1",
-   "battery_role": "argyrodite 모체",
-   "note": "Li-Cl ICOHP -2.11 eV (우리 db)"
-  }
- ],
- "sei_relevance": "argyrodite의 Cl은 Li 음극 SEI에서 LiCl로 석출(무기 성분, 이온전도 보조). Cl-rich 조성/버퍼는 grand-potential 산화 onset을 올림(우리 캐스케이드 ESW의 clrich_ox와 정합).",
- "xps": [
-  {
-   "core": "Cl 2p3/2",
-   "BE_eV": 198.5,
-   "assignment": "LiCl / metal chloride",
-   "ref": "NIST XPS DB"
+  "representative_compounds": [
+    {
+      "formula": "LiCl",
+      "context": "음극 SEI",
+      "battery_role": "무기 SEI 성분",
+      "note": "Cl 2p ~198.5 eV; Cl-rich 계면은 산화 onset↑"
+    },
+    {
+      "formula": "Li6PS5Cl",
+      "context": "우리 comp1",
+      "battery_role": "argyrodite 모체",
+      "note": "Li-Cl ICOHP -1.861 eV (comp1, per_bond_json/bonds_comp1_k444.json). ⚠ -2.111 은 comp2(Li6PS5Cl0.5Br0.5) 값이지 comp1 값이 아니다"
+    }
+  ],
+  "sei_relevance": "argyrodite의 Cl은 Li 음극 SEI에서 LiCl로 석출(무기 성분, 이온전도 보조). Cl-rich 조성/버퍼는 grand-potential 산화 onset을 올림(우리 캐스케이드 ESW의 clrich_ox와 정합).",
+  "xps": [
+    {
+      "core": "Cl 2p3/2",
+      "BE_eV": 198.5,
+      "assignment": "LiCl / metal chloride",
+      "ref": "NIST XPS DB"
+    },
+    {
+      "core": "Cl 2p3/2",
+      "BE_eV": 200.2,
+      "assignment": "C-Cl / organochlorine",
+      "ref": "NIST"
+    }
+  ],
+  "raman": [
+    {
+      "cm1": 420,
+      "assignment": "Cl 자리무질서가 PS4 모드 폭·위치에 영향",
+      "ref": "Dietrich 2017"
+    }
+  ],
+  "dos_character": "Cl 3p는 VBM 아래에 기여(밴드엣지 근처 소량). 이온성 Li-Cl.",
+  "key_references": [
+    "Gil-González 2022 — Cl constricted ESW",
+    "Zuo 2022 — chlorination 양극계면",
+    "Liu 2022 — Cl 결정화 계면"
+  ],
+  "litdb_slugs": [
+    "gilgonzalez2022_synergistic_cl_constricted_esw",
+    "zuo2022_chlorination_cathode_interface",
+    "liu2022_cl_crystallization_interface_argyrodite",
+    "taklu2021_cucl_dualdoping_air_stability_argyrodite",
+    "torii2025_lpscl_mechanical_anisotropy_dft",
+    "kraft2017_lattice_polarizability_argyrodite_Li6PS5X"
+  ],
+  "orbital": {
+    "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁵",
+    "electron_config": "[Ne] 3s² 3p⁵",
+    "valence_orbitals": "3s² 3p⁵ — 3p⁵ lone pair, 이온화해 Cl⁻(3p⁶)",
+    "band_character": "우리 comp1_v3 PDOS: VBM에 Cl 3p ~1%로 소량만(밴드엣지 바로 아래 Cl 3p lone pair 밴드), CBM 기여 거의 없음 — Cl은 이온성이라 밴드엣지를 거의 안 건드림(electronic.json)",
+    "bonding": "이온성 Li–Cl(4a 자리 Cl⁻), 우리 db Li–Cl ICOHP -2.11 eV; 3p⁶ 닫힌껍질 lone pair, 공유 거의 없음"
   },
-  {
-   "core": "Cl 2p3/2",
-   "BE_eV": 200.2,
-   "assignment": "C-Cl / organochlorine",
-   "ref": "NIST"
-  }
- ],
- "raman": [
-  {
-   "cm1": 420,
-   "assignment": "Cl 자리무질서가 PS4 모드 폭·위치에 영향",
-   "ref": "Dietrich 2017"
-  }
- ],
- "dos_character": "Cl 3p는 VBM 아래에 기여(밴드엣지 근처 소량). 이온성 Li-Cl.",
- "key_references": [
-  "Gil-González 2022 — Cl constricted ESW",
-  "Zuo 2022 — chlorination 양극계면",
-  "Liu 2022 — Cl 결정화 계면"
- ],
- "litdb_slugs": [
-  "gilgonzalez2022_synergistic_cl_constricted_esw",
-  "zuo2022_chlorination_cathode_interface",
-  "liu2022_cl_crystallization_interface_argyrodite",
-  "taklu2021_cucl_dualdoping_air_stability_argyrodite",
-  "torii2025_lpscl_mechanical_anisotropy_dft",
-  "kraft2017_lattice_polarizability_argyrodite_Li6PS5X"
- ],
- "orbital": {
-  "electron_config_full": "1s² 2s² 2p⁶ 3s² 3p⁵",
-  "electron_config": "[Ne] 3s² 3p⁵",
-  "valence_orbitals": "3s² 3p⁵ — 3p⁵ lone pair, 이온화해 Cl⁻(3p⁶)",
-  "band_character": "우리 comp1_v3 PDOS: VBM에 Cl 3p ~1%로 소량만(밴드엣지 바로 아래 Cl 3p lone pair 밴드), CBM 기여 거의 없음 — Cl은 이온성이라 밴드엣지를 거의 안 건드림(electronic.json)",
-  "bonding": "이온성 Li–Cl(4a 자리 Cl⁻), 우리 db Li–Cl ICOHP -2.11 eV; 3p⁶ 닫힌껍질 lone pair, 공유 거의 없음"
- },
- "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
+  "_provenance": "literature/handbook reference values (소환값: NIST XPS DB · consensus SSB-SEI lit · Shannon radii); 우리 db 절대값과 분리"
 }

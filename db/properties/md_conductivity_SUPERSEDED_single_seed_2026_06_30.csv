@@ -1,0 +1,18 @@
+# ===== SUPERSEDED (2026-07-07) - SINGLE-SEED. DO NOT QUOTE. =====
+# Renamed from md_conductivity_FINAL_2026_06_30.csv: the 'FINAL' name was wrong.
+# These D/Ea are one trajectory per temperature. The sigma ratio they reconstruct
+#   (18.51/13.94 = 1.33x) was RETRACTED by the fully symmetric 3-seed x 3-T reseed
+#   (SEMIFINAL 2026-07-09) -> per-T sigma ratio 1.08+/-0.18 / 0.82+/-0.15 / 1.15+/-0.12
+#   = statistically EQUIVALENT transport. The old 1.33x rested on the single-seed 800 K
+#   pair (b2o3 3.009 high-outlier vs modelc 2.054 low-outlier); reseeded means 2.163 vs 2.845.
+# CANONICAL replacement: db/properties/b2o3_vs_lpscl16_conductivity.csv (FINAL 2026-07-07).
+# CLAUDE.md discipline: the sigma_300K/sigma_273K columns are Nernst-Einstein (Haven=1)
+#   ABSOLUTE values -> quoting them is forbidden regardless of seed count; RT extrapolation
+#   is not reportable (Ea error is amplified ~5x at 300 K). Kept for raw-data traceability only.
+system,window_ps,T_K,1000_over_T,D_cm2_s,Ea_eV,D0_cm2_s,sigma_300K_mS_cm,sigma_273K_mS_cm
+modelc_LPSCl1.6,2-50,600,1.6667,7.9009e-06,0.2235,5.7530e-04,13.94,6.52
+modelc_LPSCl1.6,2-50,800,1.25,2.0541e-05,0.2235,5.7530e-04,13.94,6.52
+modelc_LPSCl1.6,2-50,1000,1.0,4.5537e-05,0.2235,5.7530e-04,13.94,6.52
+b2o3_doped,2-50,600,1.6667,9.1741e-06,0.2234,7.1123e-04,18.51,8.65
+b2o3_doped,2-50,800,1.25,3.0087e-05,0.2234,7.1123e-04,18.51,8.65
+b2o3_doped,2-50,1000,1.0,5.0673e-05,0.2234,7.1123e-04,18.51,8.65

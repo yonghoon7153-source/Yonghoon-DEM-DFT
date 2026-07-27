@@ -47,7 +47,14 @@ $$\boxed{\text{BVSE}(\mathbf{r}) = \big(\text{BVS}(\mathbf{r}) - V_{\text{ideal}
 이 값을 결정 공간의 조밀한 격자(**약 0.25 Å voxel**)마다 계산하면 3D 에너지 지형이 나온다. Li⁺는 BVSE가 낮은 골짜기를 따라 흐른다.
 
 ### softBV은 인력+반발을 함께 본다
-순수 bond-valence는 인력 경향만 담아 Li가 음이온에 무한정 가까워지려 한다. **softBV** 파라미터화는 여기에 Coulomb 반발과 Morse형 척력을 더해 우물이 **유한 깊이**를 갖게 만든다. 덕분에 BVSE 최솟값이 실제 Li 자리에, 안장점이 실제 병목에 대응한다. 다만 이건 경험 근사라 전자 편극·공유성·격자 이완은 빠져 있다 — 절대 장벽은 반드시 DFT로 검증한다.
+순수 bond-valence는 인력 경향만 담아 Li가 음이온에 무한정 가까워지려 한다. 문헌 **softBV** 파라미터화는 여기에 Coulomb 반발과 Morse형 척력을 더해 우물이 **유한 깊이(eV)** 를 갖게 만든다.
+
+> ⚠️ **우리 구현은 그 softBV가 아니다 (2026-07-27 정정).** `tools/comp1_v3/bvse_faithful_cubic.py`는
+> Brown–Altermatt BVS 합(`bvs += exp((R0−d)/b)`, b=0.37)을 구해 **불일치 제곱 `(BVS−1)²`** 만 낸다 —
+> Coulomb·Morse 항이 코드에 없다. 그래서 **단위가 valence²(무차원)이지 eV가 아니고**(cube 헤더도
+> `BVSE aboveMin (valence^2)` 로 직접 그렇게 적는다), 최소점↔Li 자리·안장점↔병목 대응은
+> 이론적 귀결이 아니라 **경험적 관찰**이다. rao2011처럼 eV 단위 BVSE(Morse형)를 쓰는 문헌값과
+> 같은 축에 놓고 비교하면 안 된다. 절대 장벽은 반드시 DFT로 검증한다.
 
 ---
 ## 4. Li⁺ 이동 퍼텐셜 지도
@@ -55,7 +62,7 @@ $$\boxed{\text{BVSE}(\mathbf{r}) = \big(\text{BVS}(\mathbf{r}) - V_{\text{ideal}
 
 $$E_{\text{barrier}} \approx \text{BVSE}_{\text{saddle}} - \text{BVSE}_{\text{min}}$$
 
-우물 사이를 잇는 **안장점(saddle)**의 BVSE가 곧 이동 장벽의 대용치. softBV 파라미터로 계산하면 argyrodite의 Li cage 간 도약 경로가 시각적으로 나온다.
+우물 사이를 잇는 **안장점(saddle)**의 BVSE가 곧 이동 장벽의 대용치 — **단위는 valence²(무차원), eV 아님. 계 간 상대 병목 지표로만 쓴다.** softBV 파라미터로 계산하면 argyrodite의 Li cage 간 도약 경로가 시각적으로 나온다.
 
 > [!tip] aboveMin 관례
 > 지도를 배포할 때 맵 최솟값을 빼서(aboveMin) "우물 바닥=0"으로 맞춘다. VESTA용 .cube는 이 관례로 내보내고 .vesta와 쌍으로 배포 (ASCII+CRLF 규칙 준수).

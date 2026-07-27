@@ -1,5 +1,12 @@
 # Probe 언어 레퍼런스 — 각 계산이 무엇이고, 어떻게 구하고, 논문/figure에 어떻게 쓰는가
 
+> ⚠️ **2026-07-27 정정** — 이 문서의 band gap 수치는 폐기값이었다. **정본은 fixed-occupation
+> nscf 의 VBM/CBM 고유값**: comp1(LPSCl) **2.066** / modelc(LPSCl₁.₆) **2.099** /
+> +B₂O₃ 1.9671 / LPSOCl(+O) 2.2309 eV (`db/properties/electronic.json`
+> `eigenvalue_gaps_v100_2026_06_16`, 단일 출처 = `kb/concepts/bandgap.md`).
+> **DOS-threshold 판독(1.76 / 1.82)은 broadening 꼬리 때문에 ~0.3 eV 과소평가하는
+> 아티팩트라 문서·그림·논문 어디에도 쓰지 않는다** (CLAUDE.md 규율).
+>
 > 목적: 발표·논문·Q&A에서 각 probe를 **field 표준 언어**로 정확히 말하고 쓰기 위함.
 > 각 항목: ① 무엇(정의) ② 어떻게 계산(workflow) ③ 논문 Methods 문장(영어) ④ Figure caption(영어) ⑤ in-text 표현 ⑥ 우리 값.
 > 수치 출처는 `db/literature/argyrodite_dft_littable.csv` 참조.
@@ -24,9 +31,10 @@
 > "**Figure X.** Total and projected density of states (DOS/PDOS) of (a) Li₆PS₅Cl and (b) Li₅.₄PS₄.₄Cl₁.₆. The Fermi level is set to zero (dashed line); the band gap is shaded. Element-projected contributions are shown as filled curves."
 
 **⑤ in-text 표현:**
-> "The valence-band maximum (VBM) is dominated by S 3p / Cl 3p character, whereas the conduction-band minimum (CBM) comprises … . The computed band gap of 1.8 eV indicates electronically insulating behavior, consistent with low electronic leakage."
+> "The valence-band maximum (VBM) is dominated by S 3p / Cl 3p character, whereas the conduction-band minimum (CBM) comprises … . The computed band gap of 2.07 eV indicates electronically insulating behavior, consistent with low electronic leakage."
 
-**⑥ 우리 값:** gap 1.76 (LPSCl) / 1.82 eV (LPSCl₁.₆); VBM = S 3p 우세.
+**⑥ 우리 값:** gap **2.066** (LPSCl) / **2.099** eV (LPSCl₁.₆) — fixed-occ nscf VBM/CBM 고유값; VBM = S 3p 우세.
+~~(폐기: DOS-threshold 1.76 / 1.82 — ~0.3 eV 과소 아티팩트, 인용 금지)~~
 
 ---
 
@@ -34,12 +42,17 @@
 
 **① 무엇:** VBM(가전자대 꼭대기)과 CBM(전도대 바닥) 사이 에너지 간격. 전자전도의 1차 척도(클수록 절연성).
 
-**② 계산:** DOS에서 점유/비점유 경계로 읽음(고유값 차 또는 DOS-threshold). ⚠ PBE는 gap을 ~1 eV 과소평가 → 정확값엔 hybrid(HSE06)/mBJ 필요.
+**② 계산:** **fixed-occupation nscf 의 VBM/CBM 고유값 차이만 인정**한다.
+> ⚠ **DOS-threshold 판독은 금지.** DOS 곡선의 문턱은 Gaussian broadening 꼬리가 gap 안쪽으로
+> 새어 들어와 gap을 **~0.3 eV 과소평가**한다 — 우리 실측 사례가 정확히 그것이다(comp1:
+> DOS-thr 1.76 vs 고유값 2.066). 그래서 "고유값 차 또는 DOS-threshold" 같은 선택지가 아니라
+> 고유값 하나뿐이다. (별개로 PBE 자체가 gap을 ~1 eV 과소평가 → 절대값엔 hybrid(HSE06)/mBJ 필요.)
 
 **③ 표현:**
 > "PBE systematically underestimates the gap; our value is therefore a lower bound, and the **comparison** between compositions (Δgap) is the robust quantity rather than the absolute value."
 
-**⑥ 우리 1.76/1.82 vs 문헌 PBE 2.45, HSE06 3.30 (CSV C1) — method offset ~0.7 eV.**
+**⑥ 우리 2.066/2.099 (fixed-occ eigenvalue) vs 문헌 PBE 2.45, HSE06 3.30 (CSV C1) — PBE 대비 offset ~0.4 eV.**
+~~(폐기 비교: 1.76/1.82 vs PBE 2.45 → offset ~0.7 eV — DOS-threshold 아티팩트가 섞인 수치)~~
 
 ---
 

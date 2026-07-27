@@ -6,39 +6,45 @@
       "id": "comp1",
       "gap_eV": 2.28,
       "vbm": "S 3p",
-      "cbm": "Li 2s, P 3s"
+      "cbm": "Li 2s, P 3s",
+      "_DEPRECATED": "legacy DOS-threshold 판독. canonical = fixed-occ eigenvalue gap (comp1 2.066 / modelc 2.099). CLAUDE.md: DOS-threshold 판독 금지. comp2~comp5 는 eigenvalue 재계산 미완 — 이 값은 계열 경향용이며 canonical 아님."
     },
     {
       "id": "comp2",
       "gap_eV": 2.04,
       "vbm": "S 3p + Br 4p",
-      "cbm": "Li 2s, P 3s"
+      "cbm": "Li 2s, P 3s",
+      "_DEPRECATED": "legacy DOS-threshold 판독. canonical = fixed-occ eigenvalue gap (comp1 2.066 / modelc 2.099). CLAUDE.md: DOS-threshold 판독 금지. comp2~comp5 는 eigenvalue 재계산 미완 — 이 값은 계열 경향용이며 canonical 아님."
     },
     {
       "id": "comp3",
       "gap_eV": 2.1,
       "vbm": "S 3p + I 5p",
-      "cbm": "Li 2s, P 3s"
+      "cbm": "Li 2s, P 3s",
+      "_DEPRECATED": "legacy DOS-threshold 판독. canonical = fixed-occ eigenvalue gap (comp1 2.066 / modelc 2.099). CLAUDE.md: DOS-threshold 판독 금지. comp2~comp5 는 eigenvalue 재계산 미완 — 이 값은 계열 경향용이며 canonical 아님."
     },
     {
       "id": "comp4",
       "gap_eV": 1.96,
       "vbm": "S 3p + Br 4p",
-      "cbm": "Li 2s, P 3s"
+      "cbm": "Li 2s, P 3s",
+      "_DEPRECATED": "legacy DOS-threshold 판독. canonical = fixed-occ eigenvalue gap (comp1 2.066 / modelc 2.099). CLAUDE.md: DOS-threshold 판독 금지. comp2~comp5 는 eigenvalue 재계산 미완 — 이 값은 계열 경향용이며 canonical 아님."
     },
     {
       "id": "comp5",
       "gap_eV": 2.06,
       "vbm": "S 3p + I 5p",
       "cbm": "Li 2s, P 3s",
-      "basin": "B"
+      "basin": "B",
+      "_DEPRECATED": "legacy DOS-threshold 판독. canonical = fixed-occ eigenvalue gap (comp1 2.066 / modelc 2.099). CLAUDE.md: DOS-threshold 판독 금지. comp2~comp5 는 eigenvalue 재계산 미완 — 이 값은 계열 경향용이며 canonical 아님."
     },
     {
       "id": "comp5_A",
       "gap_eV": 1.77,
       "vbm": "S(93%)>Li(5%)>Br(1%)",
       "cbm": "S(44%)+P(36%)+Li(19%)",
-      "basin": "A"
+      "basin": "A",
+      "_DEPRECATED": "legacy DOS-threshold 판독. canonical = fixed-occ eigenvalue gap (comp1 2.066 / modelc 2.099). CLAUDE.md: DOS-threshold 판독 금지. comp2~comp5 는 eigenvalue 재계산 미완 — 이 값은 계열 경향용이며 canonical 아님."
     },
     {
       "id": "comp1_v3",
@@ -85,10 +91,12 @@
     "structural_difference_real": "The genuine comp1-vs-modelc difference is STRUCTURAL not electronic: comp1 (LPSCl) is ordered (all Cl on 4a, single Li environment); modelc (LPSCl1.6) is disordered (Cl on 4a+4d anti-sites, Li vacancies). See bonds.json / structural_analysis."
   },
   "trends": {
-    "gap_range": "1.77-2.28 eV",
     "Br_effect": "Br 4p contributes to VBM -> slight gap reduction",
     "PS4_framework": "Invariant across compositions (P-S covalent bonds unchanged)",
-    "notes": "Mechanical property changes are ionic in origin, not covalent."
+    "notes": "Mechanical property changes are ionic in origin, not covalent.",
+    "gap_range_SUPERSEDED_DOS_threshold": "1.77-2.28 eV",
+    "gap_range": "legacy DOS-threshold 1.77–2.28 eV (폐기). eigenvalue_gap_range 키 참조 — 두 계열을 섞지 말 것.",
+    "eigenvalue_gap_range": "fixed-occ nscf 고유값 (canonical, 2026-06-16 doping family): comp1 2.066 / modelc 2.099 / +B2O3 1.9671 / LPSOCl 2.2309 eV. comp2~comp5 는 이 레시피로 아직 계산 안 됨."
   },
   "bader": {
     "key_finding": "|Cl charge| > |Br charge| -> Cl more ionic",
@@ -309,6 +317,6 @@
     "electron_conductivity_implication": "RECONCILED 2026-06-17 (interpretation; not a direct GB calc). EXPERIMENT (PI): electronic conductivity by DC POLARIZATION (= TOTAL/EFFECTIVE, percolation through grain interiors + grain boundaries + interphase, NOT pure grain-interior) DECREASES with Nd2O3 doping; cycle performance IMPROVES. DFT: all clean (N(EF)=0); bulk gap NARROWS 0.55 eV (2.184->1.632, Nd 5d) -> grain-INTERIOR intrinsic e- conduction would if anything INCREASE. NO conflict: DC-polarization is PERCOLATION-limited, so the O-derived wide-gap phosphate/oxide phases (Li3PO4 5.73 / NdPO4 5.55 / Li2O 5.24 eV; grand-potential run_nd_sei.sh; form ONLY with O) at grain boundaries/interfaces interrupt the electronic network -> effective sigma_e DOWN. The measured drop is therefore an INTERPHASE/microstructure effect, NOT a bulk-gap effect (the bulk gap goes the other way -> a naive 'wider gap lowers e-conduction' reading is WRONG here). Cycle improvement follows: lower electronic leakage (dendrite/self-discharge suppression, Han 2019) + stable phosphate/oxide interphase (cathode passivation + Li2O anode SEI). CAVEATS: interphase mechanism inferred from SEI products + the bulk-goes-wrong-way logic (direct GB electronic conductivity NOT computed); bulk-gap-narrowing absolute is 4f-U sensitive (trend robust). This is the paper's central mechanistic result.",
     "work_function": "Slab WF (V100 (100)/(001) slabs) ABANDONED: asymmetric slabs -> net dipole -> vacuum potential ramps (no flat plateau) -> spurious WF 6.5-7.2 eV. For absolute band-edge alignment use literature WF (Braga 2026, argyrodite (100) = 3.40 eV) + our bulk edges (comp1~modelc edges ~identical).",
     "figures": "docs/figures/dos_compare_3.png (comp1/modelc/Nd); docs/figures/nd_dos/nd_dos_pdos_v2.png; data: comp1_pdos_compact.csv, modelc_pdos_compact.csv, nd_dos/nd_pdos_compact.csv; tools: tools/figures/plot_3dos.py, plot_nd_dos_v2.py",
-    "doping_family_2026_07_16": "Same eigenvalue recipe across the family: comp1 2.066 | modelc 2.099 | +B2O3 1.9671 (-0.132 vs modelc, slight NARROWING; VBM still S-3p 89.5%, B 2p sparse/buried, free-S shallowest mean-3p -1.18) | +O LPSOCl 2.2309 (+0.132 vs modelc, WIDENING; O 2p buried, S-3p VBM). Both dopants keep clean insulators with host-like band edges; opposite ~0.13 eV shifts. Cells/k differ (b2o3 128at/25irr, LPSOCl 62at/68irr) but method identical; comp1 lobster cross-check puts method scatter ~0.01-0.03 eV."
+    "doping_family_2026_07_16": "Same eigenvalue recipe across the family: comp1 2.066 | modelc 2.099 | +B2O3 1.9671 (-0.132 vs modelc, slight NARROWING; VBM still S-3p 89.5%, B 2p sparse/buried, free-S shallowest mean-3p -1.14 (-8..0 eV window = the figure window; the -1.18 quoted earlier was the superseded June full-projwfc-range value)) | +O LPSOCl 2.2309 (+0.132 vs modelc, WIDENING; O 2p buried, S-3p VBM). Both dopants keep clean insulators with host-like band edges; opposite ~0.13 eV shifts. Cells/k differ (b2o3 128at/25irr, LPSOCl 62at/68irr) but method identical; comp1 lobster cross-check puts method scatter ~0.01-0.03 eV."
   }
 }

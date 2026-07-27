@@ -7,10 +7,11 @@ Right axis = Arrhenius Ea [eV] (2-50 ps, 600/800/1000 K).
 
 HONEST framing: the Li VACANCY (modelc) is the robust conductivity lever (~4x,
 survives all noise). Br isovalent Cl->Br (comp2, Li6 no-vacancy) shows no clear
-boost and its 300 K sigma is UNDETERMINED (Ea 0.276+/-0.033 from 800 K seed
+boost and its 300 K sigma is UNDETERMINED (Ea 0.275+/-0.033 from 800 K seed
 scatter -> sigma300 spans 0.39-4.98 mS/cm). comp2 carries that error bar.
-comp1/modelc = canonical 3-seed anchors (deck slide 5). Method validated:
-comp1 sigma300 3.4 & modelc 14 mS/cm == deck.
+comp1/modelc = deck SINGLE-SEED anchors (slide 5), one trajectory per T with no
+seed error bar -- so comp2 (3-seed) vs comp1/modelc is a MIXED-protocol pair.
+Method validated: comp1 sigma300 3.4 & modelc 14 mS/cm == deck.
 
 Outputs docs/figures/comp2/comp2_conductivity.png
       + db/properties/comp2_conductivity_origin.csv
@@ -36,7 +37,7 @@ C2COL = "#c2410c"; SIGCOL = "#0f766e"; EACOL = "#b45309"
 
 NLI = {"comp1": 24 / (1016.62e-24), "comp2": 24 / (1037.55e-24), "modelc": 27 / (1216.44e-24)}
 
-# D per T (cm2/s): comp1/modelc = CANONICAL 3-seed (deck slide 5 = DB/littable),
+# D per T (cm2/s): comp1/modelc = deck SINGLE-SEED (slide 5 = DB/littable),
 # comp2 = gabia 3-seed mean. Reproduces deck: comp1 sig300 3.4, modelc 14 mS/cm.
 D = {"comp1": np.array([3.09e-6, 1.03e-5, 2.20e-5]),    # LPSCl, Ea 0.253
      "modelc": np.array([7.90e-6, 2.05e-5, 4.55e-5]),   # LPSCl1.6, Ea 0.224
@@ -103,7 +104,7 @@ axL.set_title("Conductivity lever: vacancy (modelC), not isovalent Br", fontsize
 axL.legend(loc="upper left", fontsize=9, frameon=False)
 axR.legend(loc="upper center", fontsize=9, frameon=False)
 fig.text(0.5, -0.06,
-         "NE Haven=1, 2-50 ps, 600/800/1000 K.  comp1/modelC = canonical 3-seed (deck).  modelC vacancy "
+         "NE Haven=1, 2-50 ps, 600/800/1000 K.  comp1/modelC = deck single-seed anchors.  modelC vacancy "
          "$\\sigma$300 ~4x comp1 (robust lever).\ncomp2 (isovalent Cl->Br, 3-seed) central 0.41x comp1 but "
          "error bar spans 0.12-1.5x = INCONCLUSIVE (comp2 800 K seed scatter).  absolute $\\sigma$ INTERNAL "
          "(validated: comp1 3.4 & modelC 14 == deck).  Experimental Br gain needs anion-disorder sampling.",

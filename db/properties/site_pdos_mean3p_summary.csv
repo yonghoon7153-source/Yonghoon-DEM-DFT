@@ -1,11 +1,18 @@
 site,b2o3_mean3p_eV,LPSCl16_mean3p_eV,role
 free_S,-1.14,-0.90,shallowest = most oxidation-prone (BOTH systems; sets oxidation onset site)
 B_S_BS3,-2.15,,new bond from doping; deeper than free-S = oxidation-stable
-PS4_S,-2.23,-2.25,HOST PRESERVED (matches ICOHP P-S -6.11 vs -6.00 invariance)
+PS4_S,-2.23,-2.25,HOST PRESERVED (matches ICOHP P-S -6.02 vs -6.00 invariance)
 Cl,-2.99,-2.83,deep; does not participate in oxidation
 O,-3.64,,new from doping; DEEPEST = hardest to oxidize
-# mean3p = intensity-weighted centroid of per-atom p-PDOS over occupied states (E<0, E-VBM aligned)
-# b2o3 from db/properties/b2o3_pdos_site_smooth.csv ; LPSCl1.6 from slide-23 site study (KISTI lpscl16_site_pref)
+# mean3p = intensity-weighted centroid of per-atom p-PDOS over the -8..0 eV valence window
+#   (E-VBM aligned).  NOTE: for these files E<0 and -8..0 are the SAME integral -- the source
+#   PDOS csv starts at exactly -8.00 eV -- so the values were always window-consistent.
+# CORRECTION 2026-07-27: the PS4_S row cited ICOHP P-S -6.11, which is the superseded
+#   MINIMAL-basis value (kb/results/b2o3_champion_status_2026_07_03.md).  The extended-basis
+#   final is -6.023 (b2o3_icohp.json).  Conclusion HOST PRESERVED is unchanged (-6.02 vs -6.00).
+# b2o3 from db/properties/b2o3_pdos_site_smooth.csv ; LPSCl1.6 from slide-23 site study
+#   (KISTI lpscl16_site_pref) -- the LPSCl1.6 SITE-resolved PDOS csv is not yet registered in
+#   db/properties (only element-resolved), so its window cannot be re-verified in-repo. TODO: register it.
 # CORRECTION 2026-07-07: b2o3 slide's "PS4-S -5.37" was an error (likely O deep-peak -5.44 mislabel).
 #   True PS4-S -2.23 ~= modelc -2.25 -> consistent with ICOHP host preservation.
 # order (shallow->deep): free-S > B-S ~= PS4-S > Cl > O

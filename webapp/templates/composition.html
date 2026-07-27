@@ -26,7 +26,15 @@
   <div class="metric" title="{{ canonical_meta[key] }}{% if prov %}&#10;⚠ {{ prov }}{% endif %}">
     <div class="mv">{{ val }}<span style="font-size:.55em;color:var(--dim)"> {{ units[key] }}</span></div>
     <div class="ml">{{ labels[key] }}{% if prov %} <span class="badge b-prov" title="{{ prov }}">잠정</span>{% endif %}</div>
-    <div class="mm">{{ canonical_meta[key][:40] }}</div>
+    <div class="mm" title="{{ canonical_meta[key] }}">{{ canonical_meta[key] }}</div>
+    {%- if prov %}<div class="mm mm-prov" title="{{ prov }}">⚠ {{ prov }}</div>{% endif %}
+  </div>
+  {% elif canonical_na.get(key) %}
+  {# '하면 안 되거나 정의되지 않는' 축은 TODO 로 광고하면 안 된다 (예: li3n × UMA MD) #}
+  <div class="metric todo" title="{{ canonical_na.get(key) }}">
+    <div class="mv" style="font-size:.95rem">N/A</div>
+    <div class="ml">{{ labels[key] }}</div>
+    <div class="mm">{{ canonical_na.get(key) }}</div>
   </div>
   {% else %}
   <div class="metric todo"><div class="mv">TODO</div><div class="ml">{{ labels[key] }}</div></div>
@@ -47,7 +55,9 @@
       <span class="cb-s"><em>E (UMA)</em> {{ cr.E_GPa }} GPa</span>
       <span class="cb-s"><em>Pugh</em> {{ cr.pugh }}</span>
       {% if cr.group %}<span class="cb-s"><em>group</em> {{ cr.group }}</span>{% endif %}
+      <span class="cb-s cb-warn" title="{{ cascade_meta.caveat if cascade_meta else '' }}">⚠ UMA 상대값 — 절대값 인용 금지</span>
     </div>
+    <div class="cb-cav muted">{{ cascade_meta.caveat if cascade_meta else '' }}</div>
   </div>
   <a class="btn primary" href="/cascade#{{ cascade_dopant }}">캐스케이드 리더보드 →</a>
 </div>
@@ -66,13 +76,19 @@
   {% if structures %}
   <div class="card">
     <h3>3D 구조 <span class="muted" style="font-weight:400">— 드래그 회전 / 스크롤 확대 (VESTA 대체)</span></h3>
+    {% set sv = (structures|selectattr('viewable')|list|first) %}
     <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
       {% for s in structures %}
-      <button class="btn sm {% if loop.first %}primary{% endif %}" onclick="loadStruct('{{ s.name }}','{{ s.ext }}',this)">{{ s.name }}</button>
+      <button class="btn sm {% if sv and s.name == sv.name %}primary{% endif %}"
+              onclick="loadStruct('{{ s.name }}','{{ s.fmt }}',this)"
+              {% if not s.fmt %}title="3D 파서 없음 — 다운로드해서 VESTA로 보세요"{% endif %}>{{ s.name }}</button>
       {% endfor %}
     </div>
     <div class="viewer3d" id="viewer"></div>
-    <div class="muted" style="font-size:.74rem;margin-top:8px">cif = 단위셀 표시 · xyz = 원자만 · vesta/cube는 다운로드용</div>
+    <div class="struct-dl muted" style="font-size:.74rem;margin-top:8px">
+      cif = 단위셀 표시 · xyz = 원자만 · vasp(POSCAR)는 시도 후 실패 시 다운로드 · vesta는 다운로드 전용
+      &nbsp;·&nbsp; <a id="dl-struct" href="#" download>⬇ 현재 파일 다운로드</a>
+    </div>
   </div>
   {% else %}<div class="card"><span class="muted">구조 파일 없음 <span class="badge b-todo">TODO</span></span></div>{% endif %}
 </div>
@@ -86,6 +102,7 @@
   <div class="card">
     <div class="chart-ctrls" id="chart-ctrls"></div>
     <div class="chart" id="chart"></div>
+    <div class="muted" id="chart-summary" style="font-size:.72rem;margin-top:8px;line-height:1.6"></div>
     <div class="muted" id="chart-src" style="font-size:.74rem;margin-top:6px"></div>
   </div>
   {% else %}<div class="card"><span class="muted">CSV 데이터 없음 <span class="badge b-todo">TODO</span></span></div>{% endif %}
@@ -95,8 +112,13 @@
 <div class="tab-panel" id="tab-raw">
   {% if metrics %}
   <div class="card" style="overflow-x:auto">
+    <div class="muted" style="font-size:.76rem;margin-bottom:10px;line-height:1.6">
+      ⚠ 출처 = <span class="mono">db/_index.json</span> 스냅샷{% if index_built %} (<b>{{ index_built[:10] }}</b> 생성){% endif %} —
+      <b>canonical 아님</b>. 페이지 상단 metric 카드가 정본이에요. 폐기값엔 <span class="badge b-todo">폐기</span> 배지가 붙어요.
+    </div>
     <table class="data-table"><thead><tr><th>path</th><th>value</th></tr></thead><tbody>
-    {% for m in metrics %}<tr><td class="mono">{{ m.path }}</td><td class="num">{{ m.value }}</td></tr>{% endfor %}
+    {% for m in metrics %}<tr><td class="mono">{{ m.path }}{% if m.stale %} <span class="badge b-todo" title="{{ m.stale }}">폐기</span>{% endif %}</td>
+      <td class="num"{% if m.stale %} style="text-decoration:line-through;opacity:.65" title="{{ m.stale }}"{% endif %}>{{ m.value }}</td></tr>{% endfor %}
     </tbody></table>
   </div>
   {% else %}<div class="card"><span class="muted">인덱스 메트릭 없음 <span class="badge b-todo">TODO</span></span></div>{% endif %}
@@ -119,13 +141,23 @@
     <tr><td><b>{{ bond }}</b></td>
       <td class="num">{{ v.N if v.N is defined else '—' }}</td>
       <td class="num">{{ '%.3f'|format(v.d_mean_A) if v.d_mean_A is defined else '—' }}</td>
-      <td class="num" style="font-weight:600">{{ '%.3f'|format(v.ICOHP_total_eV_per_bond) if v.ICOHP_total_eV_per_bond is defined else '—' }}</td>
+      {% set icv = v.ICOHP_total_eV_per_bond if v.ICOHP_total_eV_per_bond is defined else (v.ICOHP_eV if v.ICOHP_eV is defined else none) %}
+      <td class="num" style="font-weight:600">{{ '%.3f'|format(icv) if icv is not none else '—' }}</td>
       <td class="num muted" style="font-size:.76rem">{% if v.ICOHP_min is defined %}{{ '%.2f'|format(v.ICOHP_min) }} … {{ '%.2f'|format(v.ICOHP_max) }}{% endif %}</td></tr>
     {% endfor %}
     </tbody></table>
     </div>
-    {% if icohp.headline_CORRECTED or icohp.headline %}
-    <div class="muted" style="font-size:.82rem;margin-top:10px;line-height:1.6">{{ icohp.headline_CORRECTED or icohp.headline }}</div>{% endif %}
+    {% set hl = icohp.headline_CORRECTED or icohp.headline %}
+    {% if hl %}
+    <div class="muted" style="font-size:.82rem;margin-top:10px;line-height:1.6">
+      {%- if hl is mapping -%}
+        <ul style="margin:0;padding-left:18px">
+        {%- for hk, hv in hl.items() %}<li><b>{{ hk.replace('_',' ') }}</b> — {{ hv }}</li>{% endfor -%}
+        </ul>
+      {%- else -%}{{ hl }}{%- endif -%}
+    </div>{% endif %}
+    {% if icohp.bonds.values()|selectattr('d_mean_A','defined')|list|length == 0 %}
+    <div class="muted" style="font-size:.72rem;margin-top:6px">※ d̄ 열은 이 계산에 원자료가 없어 비어 있어요 (LOBSTER 재파싱 대기).</div>{% endif %}
     <div class="muted mono" style="font-size:.68rem;margin-top:6px">{{ icohp.method }}</div>
   </div>
 </div>
@@ -150,28 +182,44 @@ document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{
   if(b.dataset.tab==='charts'&&window._firstCsv){window._firstCsv();window._firstCsv=null;}
 });
 let viewer;
-function loadStruct(name,ext,btn){
+function _dlNote(name,msg){
+  var v=document.getElementById('viewer');
+  if(v)v.innerHTML='<div class="muted" style="padding:28px;line-height:1.7">'+msg+
+    '<br><a class="btn sm" style="margin-top:10px" href="/api/structure/'+encodeURIComponent(name)+'" download>⬇ '+_cesc(name)+' 다운로드</a></div>';
+}
+function loadStruct(name,fmt,btn){
   document.querySelectorAll('#tab-structure .btn').forEach(x=>x.classList.remove('primary'));
   if(btn)btn.classList.add('primary');
-  if(typeof $3Dmol==='undefined'){var v=document.getElementById('viewer');if(v)v.innerHTML='<div class="muted" style="padding:28px">3D 뷰어(3Dmol)를 불러오지 못했어요 — 네트워크/CDN 확인. cif/xyz는 다운로드로 VESTA에서 볼 수 있어요.</div>';return;}
+  var dl=document.getElementById('dl-struct');
+  if(dl){dl.href='/api/structure/'+encodeURIComponent(name);dl.setAttribute('download',name);}
+  if(!fmt){_dlNote(name,'이 형식(.'+_cesc(name.split('.').pop())+')은 3D 파서가 없어요 — 다운로드해서 VESTA로 보세요.');return;}
+  if(typeof $3Dmol==='undefined'){_dlNote(name,'3D 뷰어(3Dmol)를 불러오지 못했어요 — 네트워크/CDN 확인.');return;}
   fetch('/api/structure/'+encodeURIComponent(name)).then(r=>r.text()).then(txt=>{
     if(!viewer)viewer=$3Dmol.createViewer('viewer',{backgroundColor:'white'});
     viewer.clear();
-    viewer.addModel(txt, ext==='cif'?'cif':'xyz');
+    try{
+      viewer.addModel(txt, fmt);              // ⚠ 확장자별 실제 파서 (POSCAR를 xyz로 넘기던 버그 수정)
+      if(!viewer.getModel()||!viewer.selectedAtoms({}).length)throw new Error('no atoms parsed');
+    }catch(e){
+      _dlNote(name,'이 파일을 3D로 파싱하지 못했어요 (형식 '+_cesc(fmt)+'). 다운로드해서 VESTA로 보세요.');
+      return;
+    }
     viewer.setStyle({},{stick:{radius:.13},sphere:{scale:.27}});
-    if(ext==='cif'){try{viewer.addUnitCell();}catch(e){}}
+    if(fmt==='cif'||fmt==='vasp'){try{viewer.addUnitCell();}catch(e){}}
     viewer.zoomTo();viewer.render();
   }).catch(()=>showToast('구조 로드 실패'));
 }
-{% if structures %}loadStruct('{{ structures[0].name }}','{{ structures[0].ext }}');{% endif %}
+{% set sv0 = (structures|selectattr('viewable')|list|first) %}
+{% if sv0 %}loadStruct('{{ sv0.name }}','{{ sv0.fmt }}');{% endif %}
 function plotCsv(rel,kind,btn){
   document.querySelectorAll('#tab-charts .chip').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');
   document.getElementById('chart-src').textContent='db/'+rel;
   fetch('/api/csv/'+encodeURIComponent(rel)).then(r=>r.json()).then(d=>{
     var box=document.getElementById('chart'), ctr=document.getElementById('chart-ctrls');
     if(!d.data||!d.data.length){box.innerHTML='<span class="muted">빈 데이터</span>';ctr.innerHTML='';return;}
-    var cols=d.columns;
-    // 열 분류: 값의 60%+ 가 숫자면 numeric
+    var cols=d.columns.slice();
+    // ── 열 타입 → 그룹 → x → y 를 한 덩어리로 결정 (이 순서가 서로를 바꾸므로 분리 패치 금지) ──
+    // 요약행(ratio_… 등)은 서버(read_csv)에서 d.summary 로 분리돼 나오므로 타입 판정을 오염시키지 않는다.
     function isNum(c){var n=0,t=0;d.data.forEach(function(r){var v=r[c];if(v!==''&&v!=null){t++;if(typeof v==='number')n++;}});return t>0&&n/t>=0.85;}
     var numeric=cols.filter(isNum), cat=cols.filter(function(c){return numeric.indexOf(c)<0;});
     // 그룹 열(계열별 여러 곡선) 감지
@@ -180,11 +228,31 @@ function plotCsv(rel,kind,btn){
     // 자연 x 후보 — energy는 보통 종속변수(y)라 제외; 그룹열도 x 후보에서 제외
     var XPREF=/(e_minus|e_vbm|e_ef|1000_?over_?t|inv_?t|invt|volume|\bvol\b|x_scale|x_ang|\bxi\b|freq|frequenc|omega|distance|\bdist|t_ps|\btime\b|r_ang)/i;
     var xcands=numeric.filter(function(c){return c!==group;});
-    var xdef=xcands.filter(function(c){return XPREF.test(c);})[0] || cat.filter(function(c){return c!==group;})[0] || xcands[0] || numeric[0];
-    // y 기본: 노이즈(절대에너지·불확도·개수) 제외
-    var NOISE=/(_pm$|_std$|^t_k$|_ry$|^n_li|_bohr|count|^rank$|^index$|vperfu)/i;
-    var ydef=numeric.filter(function(c){return c!==xdef && !NOISE.test(c);}); if(!ydef.length)ydef=numeric.filter(function(c){return c!==xdef;});
+    var catx=cat.filter(function(c){return c!==group;});
+    // ⚠ 마지막 폴백에서 group 제외를 푼다 — 안 그러면 ['Site','DeltaE_eV'] 같은 표에서 값 열이
+    //    x로 소비되고 y가 빈 배열이 되어 '죽은 차트'가 된다.
+    var xdef=xcands.filter(function(c){return XPREF.test(c);})[0] || catx[0] || cat[0] || xcands[0];
+    // 숫자열이 하나뿐이면 진짜 인덱스 열을 만들어 x로 쓴다 (없는 열 이름을 쓰면 축이 전부 undefined).
+    if(xdef===undefined || (numeric.length===1 && xdef===numeric[0])){
+      d.data.forEach(function(r,i){r.__i=i;});
+      if(cols.indexOf('__i')<0)cols.push('__i');
+      xdef='__i';
+    }
+    // y 기본: 노이즈(절대에너지·불확도·개수) 제외.
+    //  ^sig  = MLIP-MD Nernst-Einstein 절대 σ 및 그 오차(sig600_mScm·sigma_300K_mS_cm·sigma_err_*)
+    //          — CLAUDE.md '절대값 인용 금지'라 기본 시리즈에서 빼고
+    //           사용자가 체크박스로 명시 선택할 때만 그린다 (열 자체는 남겨 opt-in 가능).
+    var NOISE=/(_pm$|_std$|_err$|^t_k$|_ry$|^n_li|_bohr|count|^rank$|^index$|vperfu|^sig)/i;
+    var ydef=numeric.filter(function(c){return c!==xdef && !NOISE.test(c);});
+    if(!ydef.length)ydef=numeric.filter(function(c){return c!==xdef;});
     window._CH={rel:rel,kind:kind,d:d,cols:cols,numeric:numeric,cat:cat,x:xdef,y:ydef,grp:group,useGrp:!!group,logy:false};
+    // 요약/파생 행은 차트에서 빼고 각주로 (열 타입 판정 오염 방지 + 정보 손실 방지)
+    var sm=document.getElementById('chart-summary');
+    if(sm&&d.summary&&d.summary.length){
+      sm.innerHTML='<b>요약 행 (차트 제외)</b><br>'+d.summary.map(function(r){
+        return cols.filter(function(c){return r[c]!==''&&r[c]!=null;})
+                   .map(function(c){return _cesc(c)+'='+_cesc(''+r[c]);}).join(' · ');}).join('<br>');
+    }
     _buildCtrls(); _renderChart();
   }).catch(function(){document.getElementById('chart').innerHTML='<span class="muted">차트 로드 실패</span>';document.getElementById('chart-ctrls').innerHTML='';});
 }
@@ -194,7 +262,7 @@ function _buildCtrls(){
   h+='<label>x <select onchange="_CH.x=this.value;_renderChart()">'+c.cols.map(function(col){return '<option'+(col===c.x?' selected':'')+'>'+_cesc(col)+'</option>';}).join('')+'</select></label>';
   if(c.grp)h+='<label class="cc-chk"><input type="checkbox"'+(c.useGrp?' checked':'')+' onchange="_CH.useGrp=this.checked;_renderChart()"> '+_cesc(c.grp)+'별</label>';
   h+='<label class="cc-chk"><input type="checkbox" onchange="_CH.logy=this.checked;_renderChart()"> log y</label>';
-  h+='<span class="cc-y">y</span>'+c.numeric.filter(function(col){return col!==c.x;}).map(function(col){
+  h+='<span class="cc-y">y</span>'+c.numeric.filter(function(col){return col!==c.x&&col!=='__i';}).map(function(col){
     return '<label class="cc-chk"><input type="checkbox" data-y="'+_cesc(col)+'"'+(c.y.indexOf(col)>=0?' checked':'')+' onchange="_toggleY()"> '+_cesc(col)+'</label>';}).join('');
   document.getElementById('chart-ctrls').innerHTML=h;
 }
@@ -226,9 +294,14 @@ function _renderChart(){
 }
 window.addEventListener('themechange',function(){if(window._CH&&window._CH.d)_renderChart();});
 {% if datafiles %}window._firstCsv=function(){plotCsv('{{ datafiles[0].rel }}','{{ datafiles[0].kind }}',document.querySelector('#tab-charts .chip'));};{% endif %}
+// 값이 사이트 맥락 밖으로 나가는 유일한 경로 — explorer 의 citeVal 과 같은 포맷으로 통일해서
+// method provenance 와 잠정 사유를 함께 싣는다 (CLAUDE.md: MD Ea 등은 절대값 인용 금지 대상).
 function copyComp(){
   let t="{{ comp.label }} ({{ comp.formula }})\n";
-  {% for k,v in canonical.items() %}{% if v is not none %}t+="{{ labels.get(k,k) }}: {{ v }} {{ units.get(k,'') }}\n";{% endif %}{% endfor %}
+  {% for k,v in canonical.items() %}{% if v is not none %}
+  t+="{{ labels.get(k,k) }}: {{ v }} {{ units.get(k,'') }}  [{{ canonical_meta.get(k,'')|replace('"','\'') }}]{% if canonical_provisional.get(k) %}  ⚠ 잠정 — {{ canonical_provisional.get(k)|replace('"','\'') }}{% endif %}\n";
+  {% endif %}{% endfor %}
+  t+="— 출처: {{ request.host_url if request else '' }}composition/{{ cid }} (canonical, 방법 표기 포함)\n";
   copyText(t);
 }
 </script>

@@ -1,7 +1,9 @@
 # MD 이온전도(σ/Ea) 계산의 구조 세팅 관행 서베이 — halogen-rich 중심 (2026-07)
 
 > type `survey` · 작성 2026-07-27 · 근거: litdb/papers/ digest 전수 + 웹 보강(⚠ PDF 미보유 딱지) ·
-> 목적: **comp2(Li5.4PS4.4Cl1.6)·disorder ensemble 셀 제작의 기준 문서**
+> 목적: **comp2(Li₆PS₅Cl₀.₅Br₀.₅, 혼합 할라이드)·disorder ensemble 셀 제작의 기준 문서**
+> ⚠ 2026-07-27 정정: 이 문서는 comp2 조성식을 Li5.4PS4.4Cl1.6 으로 3곳에서 오기했었다.
+>   Li5.4PS4.4Cl1.6 은 **modelc**다. comp2 는 Li₆PS₅Cl₀.₅Br₀.₅ (Li6, 공공 없음, Cl→Br 등가 치환).
 >
 > 규율: 이 문서의 모든 문헌 수치는 **소환값**이다. 방법 명시 없이 우리 db(db/properties/) 절대값과
 > 혼용하지 않는다. 웹 보강 항목은 원문 PDF 미보유 — 인용 전 원문 확인 필수. INDEX.md는 갱신하지 않음
@@ -137,8 +139,11 @@ SQS 귀속의 2차 출처는 torii2025 본문(ref10 대비, 보유 PDF; digest L
 - **탄성 이방성 부호 반전**: torii2025(ordered) Zener A=1.09>1 vs ⚠ Deng 2016(무질서 처리 상이) A=0.92<1
   (torii2025 digest L28 소환) — 무질서 처리 선택이 부호를 뒤집음 ([torii2025](../papers/torii2025_lpscl_mechanical_anisotropy_dft.md)).
 - **σ 두 자릿수**: ⚠ Ou 2024 — 질서 vs 50% 무질서에서 300 K D가 1.2×10⁻⁹ → 2.2×10⁻⁷ cm²/s.
-- **Ea 자릿수** (우리 내부 사례, dyre2004 digest 인용 — 우리 db 값 소환 주의): 거의-ordered comp1은
-  600–800 K에서 얼어붙어 Ea 1.17 eV로 인위 폭발, 현실적 Cl/S anti-site 도입 시 0.177 eV
+- **Ea 자릿수** (우리 내부 사례, dyre2004 digest 인용 — 우리 db 값 소환 주의): ⚠ **여기서 'ordered'는
+  d = 0.00 완전질서 *구성셀***(n_configs 1, li_transport.json `disorder_ensemble_2026_06_09`)이고,
+  **canonical 자연 4 f.u. comp1 셀과 다른 대상**이다 — canonical comp1은 같은 프로토콜에서 Ea **0.253 eV**로
+  정상이다(즉 1.17은 '질서의 귀결'이 아니라 그 특정 셀의 저온 undersampling 아티팩트).
+  그 d = 0.00 셀은 600–800 K에서 얼어붙어 Ea 1.17 eV로 인위 폭발, 현실적 Cl/S anti-site 도입 시 0.177 eV
   ([dyre2004](../papers/dyre2004_hopping_models_ion_conduction_noncrystals.md) L166-167).
 - **안정성 판정**: lu2025 — 4a/4d Cl 배치에 따라 −192.1 eV(최안정) ↔ +15.2 eV(metastable).
 - **공간군 재해석**: liang2025 — 50% 배치가 F-43m→P2mm 준층상을 만들고 P2mm/P222₁ 선택이 σ 결론 좌우.
@@ -166,7 +171,12 @@ equilib 5 ps / prod 200 ps, **MSD 창 2–50 ps 고정**, Arrhenius **600/800/10
 
 ## 4. 우리 위치 — comp2 ordered baseline + d=0.50 ensemble
 
-**조성**: comp2 = Li5.4PS4.4Cl1.6은 문헌 halogen-rich 스윗스팟 한가운데다 — gilgonzalez2022 Ea 최저는
+**조성**: ⚠ **축 주의** — 아래 '스윗스팟' 논거는 전부 **Cl 함량 축**(Li6PS5Cl → Li5.4PS4.4Cl1.6)이라
+**modelc** 에 적용되는 이야기이고, **comp2(Li₆PS₅Cl₀.₅Br₀.₅)는 할라이드 *종류* 축**(Cl→Br 등가 치환,
+Li6 공공 없음)이라 그대로 이식되지 않는다. 소환 문헌(gilgonzalez2022 LPSCl1.5 · Feng x=0.7 ·
+⚠Adeli Cl1.5 · ⚠Nazar Cl1.7)이 모두 Cl 함량 축이다. comp2 무질서 목표치는 Cl 기준 ~62%가 아니라
+**Br 기준 ~22%(kraft2017)** 로 잡아야 하고, 현 d=0.50 앙상블 설정이 Cl 62%에서 왔다면 재검토 대상.
+modelc = Li5.4PS4.4Cl1.6은 문헌 halogen-rich 스윗스팟 한가운데다 — gilgonzalez2022 Ea 최저는
 LPSCl1.5(0.230 eV), bai2020이 소환한 Feng의 Ea 최저는 x=0.7(Li5.3PS4.3Cl1.7), ⚠ Adeli(Cl1.5)·⚠ Nazar
 2024(Cl1.7) 실험 계보 사이. 비교 대상 실험 원전(⚠ Adeli σ 9.4–12.0 mS/cm, ⚠ Nazar 11.4 mS/cm)과
 decorate 실례(⚠ Zhou 2025)가 모두 확보돼 있다(전부 소환값).
@@ -174,8 +184,11 @@ decorate 실례(⚠ Zhou 2025)가 모두 확보돼 있다(전부 소환값).
 **지형상 위치**:
 
 1. **ordered baseline** — torii2025·choi2026 부류의 대조군 관행과 같은 역할. 단 ordered 셀로 수송을
-   판정하면 안 된다는 것이 우리 내부 사례(ordered comp1 Ea 1.17 eV 인위 폭발 → disorder 도입 시
-   0.177 eV, §2.4)와 ⚠ Ou 2024(두 자릿수 차이)·⚠ Morgan(경로 단절)의 일치된 교훈. baseline은
+   판정하면 안 된다는 것이 우리 내부 사례(**d = 0.00 완전질서 *구성셀*** Ea 1.17 eV 인위 폭발 →
+   disorder 도입 시 0.177 eV, §2.4)와 ⚠ Ou 2024(두 자릿수 차이)·⚠ Morgan(경로 단절)의 일치된 교훈.
+   ⚠ 여기서 'ordered'는 **d = 0.00 구성셀**이지 canonical 자연 4 f.u. comp1 셀이 아니다 — 후자는
+   같은 프로토콜에서 Ea **0.253 eV**로 정상이라, 정확한 교훈은 "질서가 수송을 죽인다"가 아니라
+   "**완전질서 극한은 동역학적으로 접근 불가라 그 셀의 수송값은 못 믿는다**"이다. baseline은
    "disorder 효과의 분모"로만 쓴다.
 2. **d=0.50** — 문헌이 가장 자주 찍는 대표 무질서점(liang2025 50% 채택, ⚠ Morgan 50%, ⚠ Ou 50%)과
    정렬. 관행적으로 방어 가능. 단 ⚠ Lee 2024는 σ 최대가 4c 25%(50% 아님)라고 보고 — d=0.50이
@@ -203,7 +216,7 @@ decorate 실례(⚠ Zhou 2025)가 모두 확보돼 있다(전부 소환값).
 
 ## 5. 실무 권고 박스 — 다음 halogen-rich 셀 제작 체크리스트
 
-> comp2(Li5.4PS4.4Cl1.6) 및 후속 disorder ensemble 셀에 적용. 각 항목은 셀 메타데이터
+> comp2(Li₆PS₅Cl₀.₅Br₀.₅) 및 후속 disorder ensemble 셀에 적용. 각 항목은 셀 메타데이터
 > (db/structures/ 등록 시)에 기록한다.
 
 - [ ] **표기 규약 선언**: free-S 자리는 우리 관례대로 **4d**로 표기. 문헌 인용 시 원문이 4c면 병기

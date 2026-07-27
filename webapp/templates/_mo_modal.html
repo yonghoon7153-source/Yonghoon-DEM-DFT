@@ -1,6 +1,6 @@
 <!-- 분자오비탈(MO) 공용 모달 — static/js/mo.js(openMO)와 쌍으로 사용.
      사용법: ① window.MO_DB = {{ mo_db|tojson }} 주입 ② 이 파일 include ③ mo.js 로드 ④ openMO(key) -->
-<div class="modal" id="mo-modal" onclick="if(event.target===this)this.classList.remove('open')">
+<div class="modal" id="mo-modal" role="dialog" aria-modal="true" aria-labelledby="mo-title" onclick="if(event.target===this)this.classList.remove('open')">
   <div class="modal-body" style="max-width:680px;width:100%">
     <div class="modal-head"><h3 id="mo-title" style="font-size:.92rem">⚛ 분자오비탈</h3>
       <button class="btn sm" onclick="document.getElementById('mo-modal').classList.remove('open')">✕ 닫기</button></div>

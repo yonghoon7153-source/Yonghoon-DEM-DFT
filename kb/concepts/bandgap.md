@@ -99,7 +99,23 @@ $$E_g^{\text{true}} = E_g^{\text{KS}} + \Delta_{xc}$$
 
 $$\sigma_{\text{electronic}} \propto \exp\!\left(-\frac{E_g}{2k_BT}\right)$$
 
-gap이 클수록 전자 전도도가 지수적으로 떨어진다 → 좋은 SE. 우리 데이터에서 **+O 도핑이 gap을 올리는(2.066 → 2.2309 eV)** 게 전자 절연 강화 방향이라 반가운 신호다.
+gap이 클수록 **bulk intrinsic** 전자 전도도가 지수적으로 떨어진다 → 좋은 SE. 우리 데이터에서 **+O 도핑이 gap을 올린다(modelc 2.099 → LPSOCl 2.2309 eV, +0.132)** — 전자 절연 강화 방향이라 반가운 신호다.
+
+> ⚠️ **두 가지 한정 (2026-07-27 추가)**
+>
+> **① baseline은 같은 호스트끼리.** LPSOCl은 modelc(Li₅.₄PS₄.₄Cl₁.₆)의 S→O 치환체다(Li₂₇P₅S₂₁OCl₈).
+> comp1 2.066을 before로 쓰면 **Cl 증량(1.0→1.6) 효과와 O 치환 효과가 한 델타에 섞인다.**
+> canonical 델타는 electronic.json `doping_family_2026_07_16` 기준 **modelc 대비 +0.132**
+> (같은 표에서 +B₂O₃는 modelc 대비 −0.132로 반대 방향).
+>
+> **② 이 공식은 bulk intrinsic 캐리어에만 맞다.** 실측 σ_e 는 계면/미세구조가 지배한다 —
+> 우리 캠페인의 대표 반례가 Nd 도핑이다: **bulk gap이 0.55 eV 좁아지는데(2.184→1.632, Nd 5d)
+> 실측 σ_e 는 오히려 떨어졌다.** electronic.json 이 이를 두고 *"a naive 'wider gap lowers
+> e-conduction' reading is WRONG here"* 라고 못박는다(그 필드가 논문의 중심 메커니즘 결과).
+> 즉 gap 은 **bulk 절연성의 필요조건 지표**일 뿐 실측 전자전도도의 예측자가 아니다.
+> 전기화학 안정성(분해 onset)은 더더욱 아니다 — VBM ≠ onset(반응 자유에너지가 결정),
+> band-edge는 분해창을 2–3× 과대평가한다(Schwietert 2020; 우리 직접 증거 = comp1/modelc VBM이
+> 0.32 eV 다른데 onset은 동일). → `kb/concepts/esw` 계열 문서 참조.
 
 ```mermaid
 graph TD

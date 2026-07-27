@@ -55,7 +55,7 @@
 - **수렴**: 에너지 **10⁻⁵ eV**, 힘 **0.015 eV/Å**
 - **vacuum**: **15 Å** (slab/monolayer 표면 상호작용 차단)
 - **slab/계면 모델**: 3종 — **Li(100)/LPSCl(2 2 0)**, **LiCl(0 0 1)/LPSCl(2 2 0)**, **Li(100)/LiCl(1 1 1)**. 격자 mismatch **0.98 % / 4.11 % / 4.7 %**. (결정면 선택 근거 = SI Note 1)
-- **E_above_hull**: 자리(4a/4d) Cl 점유에 따른 안정성. **양쪽 자리 Cl = −192.1 eV(최안정)**, 4a 100 %만 = −8.4 eV, **4d 완전점유 = +15.2 eV(metastable, 분해 구동력)** (Fig S7).
+- **자리 점유 상대 안정성 (Fig S7)** — ⚠ **단위·기준상태 원문 재확인 필요, 수치 인용 보류**: 순서는 **양쪽 자리 Cl(최안정, −192.1) > 4a 100 %만(−8.4) > 4d 완전점유(+15.2, metastable = 분해 구동력)**. 이 digest 초판이 이 값을 `E_above_hull`(:118·:178 에선 `E_hull`)로 라벨했는데 **그럴 수 없다** — E_above_hull 은 convex hull 까지의 거리라 정의상 **≥ 0** 이고 관례 단위가 meV/atom 이다. 음수 −192.1 eV 는 어떤 hull 거리로도 해석 불가고, 세 배열 간 격차 207 eV 는 52원자 셀 기준 ~4 eV/atom 이라 물리적으로 hull 값이 아니다. **부호·순서만 인용**하고 수치는 원문(Fig S7 축 라벨) 확인 후에 쓸 것.
 - **무질서 처리**: 명시적 SQS/enumerate 아님 — **실험 NPD 점유율(4a 56 %, 4d 90 %)을 반영한 단일 배열** 수준으로 추정 + 계면 slab.
 
 > 방법 한계(정직): **Γ-only k + PBE + slab** → band gap 절대값은 우리(2.066) 대비 낮게(1.88) — **model scatter**이지 물리적 차이 아님. interface energy/Bader는 우리가 안 하는 **계면 slab 계산**.
@@ -115,7 +115,7 @@
 - **³¹P NMR(5f,g)**: cycled서 **PCl₄ 41→36 %↓, PS₂Cl₂ 17→24 %↑** → **4d 자리에서 Cl이 방출**되어 LiCl interphase로 감 (자기분해의 직접 분광 증거).
 
 ### 6.5 DFT: 왜 LiCl interphase가 좋은가 (Fig 6)
-- **E_hull(Fig S7)**: 4d 완전 Cl점유 = **+15.2 eV(metastable)** → **LiCl로 분해할 열역학 구동력**. 분해식:
+- **자리 안정성(Fig S7)** ⚠ 라벨 미확정(E_hull 아님, :58 참조): 4d 완전 Cl점유 = **+15.2(metastable)** → **LiCl로 분해할 열역학 구동력**. 분해식:
   - **Eq1: Li₅.₅PS₄.₅Cl₁.₅ → Li₃PS₄ + 1.5 LiCl + 0.5 Li₂S**
   - **Eq2: Li₆PS₅Cl → Li₃PS₄ + LiCl + Li₂S**
   - → Cl15가 **LiCl을 더 많이(1.5 vs 1.0)** 내놓음 → 표면 LiCl enrich → 전자 차폐 → 추가 분해 억제.
@@ -175,7 +175,7 @@ Fig1(Cl이 4d 점유→σ↑·구조) → Fig2(음극 대칭/풀셀 우수) → 
 |---|---|---|---|
 | 대상 | LPSCl1.5 (조성-평균) | **Cl15=LPSCl1.5 (4d 90 %)** | **같은 조성, 다른 자리설계** |
 | 주장 | 과안정 → self-limiting ✗ → moderate Cl(1.0) 유리 | 4d-Cl 자기분해 → LiCl passivation → Cl-rich 유리 | — |
-| 안정성 진단 | LPSCl1.5 "너무 안정" | high-4d-Cl **metastable(E_hull +15.2)** | **자리 분해능**이 GG의 평균관점이 놓친 불안정성 드러냄 |
+| 안정성 진단 | LPSCl1.5 "너무 안정" | high-4d-Cl **metastable(Fig S7 +15.2 ⚠라벨 미확정)** | **자리 분해능**이 GG의 평균관점이 놓친 불안정성 드러냄 |
 | 공통 합의 | **전자절연 passivation 형성 = dendrite 억제 관건** | 동일(LiCl이 그 passivation) | ✅ **둘 다 "passivation이 관건"엔 동의** |
 | 성능 | 0.25 mA cm²서 short | **CCD 0.96** | 자리설계·압력·공정 차이로 Lu가 우수 |
 | **우리 결론** | "음극엔 Cl-rich 무조건 좋다 ✗" | "**4d-Cl로 LiCl passivation 되면** 좋다 ✓" | **조건부**: 전자절연 interphase(LiCl) 형성 여부가 핵심, 그건 **Cl 자리(4d)** 가 좌우 |

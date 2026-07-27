@@ -6,12 +6,13 @@
 {% macro sf(v, nd=3) %}{% if v is number %}{{ ('%.'~nd~'f')|format(v) }}{% else %}{{ v if v is not none else '' }}{% endif %}{% endmacro %}
 {% macro gtable(t, cols, mo_col=None, modb={}) %}
 <div class="tbl-scroll"><table class="data-table sortable"><thead><tr>
-{% for c in cols %}<th onclick="sortT(this,{{ loop.index0 }})">{{ c }}</th>{% endfor %}</tr></thead><tbody>
+{% for c in cols %}<th onclick="sortT(this,{{ loop.index0 }})" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">{{ c }}</th>{% endfor %}</tr></thead><tbody>
 {% for row in (t.data or []) %}<tr>{% for c in cols %}<td class="{% if row[c] is number %}num{% endif %}">{% if mo_col and c == mo_col and row[c] in modb %}<span class="mo-click" role="button" tabindex="0" title="클릭 → 분자오비탈" onclick="openMO('{{ row[c] }}')" onkeydown="_kbd(event)">{{ row[c] }}</span>{% else %}{{ num(row[c]) }}{% endif %}</td>{% endfor %}</tr>{% endfor %}
 </tbody></table></div>{% endmacro %}
 
 {% block content %}
-{% set gcol = {'TM':'#2563eb','lanthanide':'#7c3aed','main-group':'#0d9488','alk.earth':'#c05621','alkali':'#d97706'} %}
+{# 색은 style.css 의 --grp-* 토큰 (테마 따라감) — JS 리터럴 하드코딩 금지 #}
+{% set gcol = {'TM':'var(--grp-tm)','lanthanide':'var(--grp-lanthanide)','main-group':'var(--grp-main)','alk.earth':'var(--grp-alkearth)','alkali':'var(--grp-alkali)'} %}
 <div class="page-header">
   <div><h1>🤖 Cascade / ML — Doping Screening</h1>
     <div class="sub">{{ casc.meta.scope }}</div></div>
@@ -51,7 +52,7 @@
   <div class="card">
     <h3>설계공간 — Young's modulus vs 산화 onset <span class="muted" style="font-weight:400;font-size:.8rem">색=score · Pareto는 링</span></h3>
     <div class="chart" id="scatter"></div>
-    <div class="muted" style="font-size:.74rem;margin-top:4px">낮은 E(연질) + 높은 ox_V(넓은 창)이 코팅에 유리. UMA 상대값.</div>
+    <div class="muted" style="font-size:.74rem;margin-top:4px">낮은 E(연질) + 높은 ox_V(넓은 창)이 <b>설계 목표축</b>. ⚠ 단조 규칙은 아니다 — bucci2017은 compliant SE(E≈15 GPa)가 오히려 micro-cracking에 <b>취약</b>하다고 보고(비선형 운동학 효과). UMA 상대값.</div>
   </div>
   <div class="card">
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
@@ -62,19 +63,19 @@
     <div class="callout cal-warning" style="margin:0 0 12px">
       <div class="cal-b" style="font-size:.8rem">⚠ 스크리닝 순위는 <b>UMA 상대 프록시</b>야 — 절대 E(GPa)·ox_V는 실험 대비 부풀어 있고(상대비교만), 점수 가중치는 수작업이고,
       <b>ox_V는 47개 중 19개가 2.14로 축퇴</b>(호스트가 pin)라 변별력이 약해. <b>score 차 ~0.02 이내는 사실상 동점</b>.
-      실제 신뢰는 <b>✓검증</b> 행(Nd2O3·B2O3)의 조성 페이지 DFT값만.</div>
+      실제 신뢰는 <b>✓검증</b> 행(Nd2O3·B2O3)의 조성 페이지 DFT값만.<br>또 score 의 soft+ductile 가중 0.35 는 <b>'연질일수록 좋다'는 단조 가정</b>인데, bucci2017은 compliant SE(E≈15 GPa)가 micro-cracking에 더 취약하다고 반증한다 — 순위를 물성 최적점으로 읽지 말 것.</div>
     </div>
     <div class="tbl-scroll"><table class="data-table sortable" id="board-tbl"><thead><tr>
-      <th onclick="sortT(this,0)">rank</th><th onclick="sortT(this,1)">dopant</th>
-      <th onclick="sortT(this,2)">group</th><th onclick="sortT(this,3)">score</th>
-      <th onclick="sortT(this,4)">Δe</th><th onclick="sortT(this,5)">ox_V</th>
-      <th onclick="sortT(this,6)">red_V</th><th onclick="sortT(this,7)">E (GPa)</th>
-      <th onclick="sortT(this,8)">Pugh B/G</th><th onclick="sortT(this,9)">Pareto</th></tr></thead><tbody>
+      <th onclick="sortT(this,0)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">rank</th><th onclick="sortT(this,1)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">dopant</th>
+      <th onclick="sortT(this,2)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">group</th><th onclick="sortT(this,3)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">score</th>
+      <th onclick="sortT(this,4)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">Δe</th><th onclick="sortT(this,5)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">ox_V</th>
+      <th onclick="sortT(this,6)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">red_V</th><th onclick="sortT(this,7)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">E (GPa)</th>
+      <th onclick="sortT(this,8)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">Pugh B/G</th><th onclick="sortT(this,9)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">Pareto</th></tr></thead><tbody>
     {% for r in (casc.ranked.data or []) %}
     <tr>
       <td class="num">{{ r.rank|int }}</td>
       <td>{% if deep_map.get(r.dopant) %}<a href="/composition/{{ deep_map[r.dopant] }}" class="deep">{{ r.dopant }}</a> <span class="pareto-y" style="font-size:.66rem">✓검증</span>{% if r.dopant in mo_db %} <span class="mo-badge mo-click" role="button" tabindex="0" title="클릭 → 분자오비탈" onclick="openMO('{{ r.dopant }}')" onkeydown="_kbd(event)">⚛ MO</span>{% endif %}{% elif r.dopant in mo_db %}<span class="mo-click" role="button" tabindex="0" title="클릭 → 분자오비탈" onclick="openMO('{{ r.dopant }}')" onkeydown="_kbd(event)">{{ r.dopant }}</span>{% else %}{{ r.dopant }}{% endif %}</td>
-      <td><span class="grp-pill" style="background:{{ gcol.get(r.group,'#6b7280') }}">{{ r.group }}</span></td>
+      <td><span class="grp-pill" style="--_g:{{ gcol.get(r.group,'var(--muted)') }}">{{ r.group }}</span></td>
       <td class="num" style="font-weight:700">{{ sf(r.score,3) }}</td>
       <td class="num">{{ sf(r.de,3) }}</td>
       <td class="num">{{ sf(r.ox_V,3) }}</td>
@@ -136,7 +137,7 @@
     </div>
     <div class="tbl-scroll"><table class="data-table sortable" id="champ-tbl"><thead><tr>
       {% set cc = ['dopant','concentration','rerank_de_post_anneal','anneal_dV_pct','eos_B0_GPa','elastic_E_young_GPa','elastic_B_hill_GPa','elastic_G_hill_GPa','elastic_pugh_GoverB','combined_score'] %}
-      {% for c in cc %}<th onclick="sortT(this,{{ loop.index0 }})">{{ c.replace('elastic_','').replace('_GPa','').replace('rerank_','') }}</th>{% endfor %}
+      {% for c in cc %}<th onclick="sortT(this,{{ loop.index0 }})" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">{{ c.replace('elastic_','').replace('_GPa','').replace('rerank_','') }}</th>{% endfor %}
     </tr></thead><tbody>
     {% for row in (casc.champions.data or []) %}<tr>{% for c in cc %}<td class="{% if row[c] is number %}num{% endif %}">{{ num(row[c]) }}</td>{% endfor %}</tr>{% endfor %}
     </tbody></table></div>
@@ -158,7 +159,7 @@
   <div class="card">
     <h3>Grand-potential 전기화학 안정성창(ESW) <span class="muted" style="font-weight:400;font-size:.8rem">도펀트명 클릭 = 분자오비탈</span></h3>
     {{ gtable(casc.oxidation, ['dopant','anion','valence','group','ox_V','red_V','ocv_V','window_V','clrich_ox_V','note'], mo_col='dopant', modb=mo_db) }}
-    <div class="muted" style="font-size:.74rem;margin-top:6px">MP-hull(GGA/GGA+U) 기반 → elastic/EOS 재계산과 무관. collapse(window&lt;0.05V)=후기전이금속 회피. Cl-rich buffer가 산화 onset↑.</div>
+    <div class="muted" style="font-size:.74rem;margin-top:6px">MP-hull(GGA/GGA+U) 기반 → elastic/EOS 재계산과 무관. collapse(window&lt;0.05V)=후기전이금속 회피. <b>clrich_ox_V</b> = Cl-rich <b>변형 조성</b>의 grand-potential onset(3종만 산출) — 우리 canonical 호스트 축(comp1 Cl1.0 vs modelc Cl1.6)에서는 onset이 2.14 V로 <b>동일</b>하다(S²⁻-pin, oxidation_stability.json). 축을 명시하지 않고 'Cl-rich가 더/덜 산화안정'이라고 쓰지 말 것.</div>
   </div>
 </div>
 
@@ -233,15 +234,23 @@ document.querySelectorAll('#tabs button').forEach(function(b){b.onclick=function
      xaxis:{title:"Young's modulus E (GPa, UMA)"},yaxis:{title:'oxidation onset (V vs Li)'},
      legend:{orientation:'h',y:-0.22},hovermode:'closest'},plotlyBG()),
     {responsive:true,displaylogo:false});}
-  drawScatter();
-  window.addEventListener('themechange',drawScatter);
+  // ⚠ 가드 필수 — 여기서 ReferenceError 가 나면 이 <script> 블록이 통째로 중단돼
+  //   아래 THEMES/TDOP/selThemes 가 미할당으로 남고 🎯 테마 탭 + #딥링크가 전부 죽는다.
+  //   (같은 파일 213·214·288행은 이미 window.Plotly 가드를 쓴다 — 여기만 빠져 있었음)
+  if(window.Plotly){
+    drawScatter();
+    window.addEventListener('themechange',drawScatter);
+  }else{
+    var _sc=document.getElementById('scatter');
+    if(_sc)_sc.innerHTML='<span class="muted" style="padding:24px;display:block">Plotly 로드 실패 — 표는 정상 동작해요. tools/vendor_libs.sh 로 로컬화 가능.</span>';
+  }
 })();
 
 function sortT(th, idx){
   var tb=th.closest('table'), rows=Array.prototype.slice.call(tb.tBodies[0].rows);
   var asc=!(th._asc); th._asc=asc;
-  tb.querySelectorAll('th').forEach(function(x){x.removeAttribute('data-sort');});
-  th.setAttribute('data-sort',asc?'▲':'▼');
+  tb.querySelectorAll('th').forEach(function(x){x.removeAttribute('data-sort');x.setAttribute('aria-sort','none');});
+  th.setAttribute('data-sort',asc?'▲':'▼');th.setAttribute('aria-sort',asc?'ascending':'descending');
   rows.sort(function(a,b){
     var x=a.cells[idx].innerText.trim(), y=b.cells[idx].innerText.trim();
     var nx=parseFloat(x), ny=parseFloat(y);
@@ -250,9 +259,14 @@ function sortT(th, idx){
   });
   rows.forEach(function(r){tb.tBodies[0].appendChild(r);});
 }
-function filtRows(tid,q){q=q.toLowerCase();
+function filtRows(tid,q){q=q.toLowerCase();var n=0;
   document.querySelectorAll('#'+tid+' tbody tr').forEach(function(r){
-    r.style.display=r.innerText.toLowerCase().indexOf(q)>=0?'':'none';});
+    var show=r.innerText.toLowerCase().indexOf(q)>=0;r.style.display=show?'':'none';if(show)n++;});
+  var tb=document.getElementById(tid);
+  if(tb){var e=tb.parentNode.querySelector('.filt-empty');
+    if(!e){e=document.createElement('div');e.className='filt-empty muted';
+      e.style.cssText='padding:22px;text-align:center';tb.parentNode.appendChild(e);}
+    e.textContent=n?'':'검색 결과 없음 — 검색어를 지워보세요.';e.style.display=n?'none':'';}
 }
 // 딥링크(#Nd2O3) 도착 시 해당 행 하이라이트
 if(location.hash){var d=decodeURIComponent(location.hash.slice(1)).toLowerCase();
@@ -287,14 +301,14 @@ function renderCombine(){
   var rows=combineRows();
   if(selThemes.length===2&&window.Plotly){sc.hidden=false;drawThemeScatter(rows);}
   else{sc.hidden=true;_tsDrawn=false;}
-  var head='<th onclick="sortT(this,0)">#</th><th onclick="sortT(this,1)">dopant</th>'+
-    '<th onclick="sortT(this,2)">group</th><th onclick="sortT(this,3)">combined</th>'+
+  var head='<th onclick="sortT(this,0)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">#</th><th onclick="sortT(this,1)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">dopant</th>'+
+    '<th onclick="sortT(this,2)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">group</th><th onclick="sortT(this,3)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">combined</th>'+
     selThemes.map(function(t,i){return '<th onclick="sortT(this,'+(4+i)+')" title="'+_esc(THEMES[t].metric)+'">'+_esc(THEMES[t].icon+' '+THEMES[t].label)+'</th>';}).join('');
   var body=rows.map(function(r,i){var d=r.d;
     var name=(window.MO_DB&&window.MO_DB[d.dopant])?
       '<span class="mo-click" role="button" tabindex="0" title="클릭 → 분자오비탈" onclick="openMO(\''+d.dopant+'\')" onkeydown="_kbd(event)">'+_esc(d.dopant)+'</span>':_esc(d.dopant);
     return '<tr><td class="num">'+(i+1)+'</td><td>'+name+(d.pareto==='Y'?' <span class="pareto-y" style="font-size:.66rem">◆</span>':'')+'</td>'+
-      '<td><span class="grp-pill" style="background:'+(GCOL[d.group]||'#6b7280')+'">'+_esc(d.group)+'</span></td>'+
+      '<td><span class="grp-pill" style="--_g:'+(GCOL[d.group]||'var(--muted)')+'">'+_esc(d.group)+'</span></td>'+
       '<td class="num" style="font-weight:700">'+_fmt(r.combined)+'</td>'+
       selThemes.map(function(t){var raw=d[THEMES[t].metric_key];
         return '<td class="num" title="원값 '+_esc(THEMES[t].metric_key)+' = '+_fmt(raw)+'">'+_fmt(d.norm?d.norm[t]:null)+'</td>';}).join('')+'</tr>';

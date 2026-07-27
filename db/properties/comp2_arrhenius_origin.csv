@@ -14,6 +14,6 @@ comp2_s4,1.0000,1000,2.1017e-05,individual seed
 comp1_LPSCl,1.6667,600,3.0900e-06,ref (single seed)
 comp1_LPSCl,1.2500,800,1.0300e-05,ref (single seed)
 comp1_LPSCl,1.0000,1000,2.2000e-05,ref (single seed)
-modelC_LPSCl1.6,1.6667,600,7.9000e-06,anchor
-modelC_LPSCl1.6,1.2500,800,2.0500e-05,anchor
-modelC_LPSCl1.6,1.0000,1000,4.5500e-05,anchor
+modelC_LPSCl1.6,1.6667,600,7.9000e-06,anchor (single seed)
+modelC_LPSCl1.6,1.2500,800,2.0500e-05,anchor (single seed)
+modelC_LPSCl1.6,1.0000,1000,4.5500e-05,anchor (single seed)

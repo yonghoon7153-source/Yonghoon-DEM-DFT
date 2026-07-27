@@ -140,6 +140,8 @@ for k in ORDER:
 ax.annotate("flat-topped saddle\n(2 maxima 3 meV apart,\ndip 16 meV < $k_\\mathrm{B}T_{300}$)",
             xy=(0.49, 133.0), xytext=(0.215, 215.0), fontsize=9.5, color=ELEM["Li"],
             ha="center", va="center",
+            # 1L|1L(주황)·graphene(검정) 곡선이 이 위치를 지나 글자를 관통한다 → 배경 박스
+            bbox=dict(fc="white", ec="none", alpha=0.85, pad=2),
             arrowprops=dict(arrowstyle="->", color=ELEM["Li"], lw=1.2, alpha=0.85,
                             connectionstyle="arc3,rad=-0.15"))
 ax.annotate("sharp single saddle", xy=(0.50, 356.4), xytext=(0.72, 330.0),
@@ -219,15 +221,26 @@ with open(PROP / "vgcf_hbn_neb_images_origin.csv", "w") as f:
         f.write(",".join(f"{DAT[k][i][0]:.6f},{DAT[k][i][1]*1000:.4f}" for k in CSV_CASES) + "\n")
 print(f"[csv] {PROP / 'vgcf_hbn_neb_images_origin.csv'}")
 
-# panel (b) source: forward / backward activation barriers
-LIT_MEV = {"graphene": 300.0, "g2L2L": None}   # gallery barrier is a new number
+# panel (b) source: forward / backward activation barriers.
+# ⚠ 이 CSV만 4개 케이스 전부를 담는다 — 패널 (b)는 막대 4쌍을 그리고, 그 콜아웃
+#   "-209 meV with layer count" = EA[g2L2L] - EA[g1L1L] 이라 g1L1L 없이는 재구성 불가.
+#   (MEP 두 CSV의 2-케이스 범위는 문서화된 의도적 결정이라 그대로 둔다.)
+BAR_CASES = ["graphene", "hbn", "g1L1L", "g2L2L"]
+BAR_COLS = {"graphene": "Li_on_graphene_1L", "hbn": "Li_on_hbn_1L",
+            "g1L1L": "Li_in_gallery_1L1L", "g2L2L": "Li_in_gallery_2L2L"}
+LIT_MEV = {"graphene": 300.0, "hbn": 100.0, "g1L1L": None, "g2L2L": None}
 with open(PROP / "vgcf_hbn_neb_barriers_origin.csv", "w") as f:
     f.write("# h-BN@VGCF Li migration - CI-NEB activation barriers (panel b). "
             "Forward = TS - first image, backward = TS - last image. meV. "
             "kT(300 K) = 25.69 meV.\n")
+    f.write("# NOTE Li_on_hbn_1L: whole path spans 7 meV while per-image force errors reach "
+            "46 meV/A -> BELOW numerical resolution. Report as '< 0.01 eV, effectively "
+            "barrierless', NOT as agreement with Shi2017 (100 meV). See vgcf_hbn_neb.json.\n")
+    f.write("# NOTE Li_in_gallery_2L2L is the representative gallery value but 2L convergence "
+            "is OPEN (layer_sensitivity) -> treat as an upper bound.\n")
     f.write("case,Ea_forward_meV,Ea_backward_meV,literature_meV\n")
-    for k in CSV_CASES:
+    for k in BAR_CASES:
         lit = LIT_MEV[k]
-        f.write(f"{CSV_COLS[k]},{EA[k][0]*1000:.2f},{EA[k][1]*1000:.2f},"
+        f.write(f"{BAR_COLS[k]},{EA[k][0]*1000:.2f},{EA[k][1]*1000:.2f},"
                 f"{'' if lit is None else f'{lit:.0f}'}\n")
 print(f"[csv] {PROP / 'vgcf_hbn_neb_barriers_origin.csv'}")

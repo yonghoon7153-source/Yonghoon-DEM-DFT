@@ -1,4 +1,5 @@
 {
+  "_CONFLICT_UNRESOLVED_2026_07_27": "⚠ doping_cascade_verified.json 과 Sc2O3_x002 · Al2O3_x005 두 행에서 E/B0 값이 충돌한다(각각 42.1 vs 18.7, 47.0 vs 29.32). 같은 파일쌍의 Al2O3 x002·x010 은 일치하므로 국소 값 충돌이다. gabia FINAL_RANKING.json 재확인 전까지 두 행은 확정 인용 금지. 또 description 의 '이 서브셋은 verified.json 에 없었다'는 Sc2O3 에 한해 사실이 아니다 — Sc2O3 는 양쪽에 있다.",
   "property": "doping_cascade_trivalent_M3plus",
   "description": "Trivalent (M3+) oxide coating-dopant series from the v23 cascade (Li5.4PS4.4Cl1.6 host). Systematic ionic-radius sweep of M2O3 dopants (group-13 + Sc/Y + lanthanides), each run through the full cascade (screen -> anneal -> BVSE -> rerank -> EOS -> elastic -> e-hull -> ESW). Champion = rows[0] of each FINAL_RANKING.json (top combined score). This subset was NOT in doping_cascade_verified.json (which held the mono/divalent + Al batch); pulled from gabia 2026-06-15 to close the repo<->gabia sync gap.",
   "_source": "kserver116-27:/data/work/runs/multi_category_2026_05_26_v23/<M2O3>_<x>/FINAL_RANKING.json (rows[0]). UMA-s-1p1 task=omat. git_branch=claude/configure-spawn-halogen-lithium-TjDCB (git_dirty). Run 2026-06-07..2026-06-15. Values transcribed from the 2026-06-15 extraction table (rounded as printed); authoritative raw stays in the gabia FINAL_RANKING.json files.",
@@ -13,49 +14,302 @@
   },
   "site_rule": "ALL 26 trivalent champions sit on Li_24g (donor M3+ -> Li site) with O on S_16e (PS4 corner). 0 on Li_48h, 0 on P_4b. Robust M3+ site rule; consistent with Nd2O3 (Paper#2) and Y2O3 cross-validation.",
   "ionic_radii_Shannon_6coord_A": {
-    "Al3+": 0.535, "Ga3+": 0.620, "Sc3+": 0.745, "In3+": 0.800,
-    "Y3+": 0.900, "Gd3+": 0.938, "Sm3+": 0.958, "Nd3+": 0.983, "La3+": 1.032
+    "Al3+": 0.535,
+    "Ga3+": 0.62,
+    "Sc3+": 0.745,
+    "In3+": 0.8,
+    "Y3+": 0.9,
+    "Gd3+": 0.938,
+    "Sm3+": 0.958,
+    "Nd3+": 0.983,
+    "La3+": 1.032
   },
   "champions": {
-    "Al2O3": {"r_A": 0.535, "site_all_x": "Li_24g",
-      "x002": {"de_post_anneal_eV_atom": -0.769, "E_young_GPa": 39.8, "B0_GPa": 11.5, "G_hill_GPa": 16.4, "poisson_nu": 0.21, "bvs_li_proxy": 0.90, "score_combined": 0.71},
-      "x005": {"de_post_anneal_eV_atom": -0.809, "E_young_GPa": 47.0, "B0_GPa": 16.2, "G_hill_GPa": 19.8, "poisson_nu": 0.19, "bvs_li_proxy": 0.88, "score_combined": 0.85},
-      "x010": {"de_post_anneal_eV_atom": -0.818, "E_young_GPa": 40.8, "B0_GPa": 16.5, "G_hill_GPa": 17.2, "poisson_nu": 0.18, "bvs_li_proxy": 0.88, "score_combined": 0.85}},
-    "Ga2O3": {"r_A": 0.620, "site_all_x": "Li_24g",
-      "x002": {"de_post_anneal_eV_atom": -0.590, "E_young_GPa": 41.0, "B0_GPa": 14.1, "G_hill_GPa": 17.3, "poisson_nu": 0.19, "bvs_li_proxy": 0.87, "score_combined": 0.55},
-      "x005": {"de_post_anneal_eV_atom": -0.592, "E_young_GPa": 35.8, "B0_GPa": 16.4, "G_hill_GPa": 16.8, "poisson_nu": 0.07, "bvs_li_proxy": 0.86, "score_combined": 0.56, "_note": "nu=0.07 low, check"},
-      "x010": {"de_post_anneal_eV_atom": -0.597, "E_young_GPa": 47.5, "B0_GPa": 13.4, "G_hill_GPa": 19.9, "poisson_nu": 0.19, "bvs_li_proxy": 0.86, "score_combined": 0.56}},
-    "Sc2O3": {"r_A": 0.745, "site_all_x": "Li_24g",
-      "x002": {"de_post_anneal_eV_atom": -0.934, "E_young_GPa": 42.1, "B0_GPa": 23.2, "G_hill_GPa": 16.3, "poisson_nu": 0.29, "bvs_li_proxy": 0.89, "score_combined": 0.65},
-      "x005": {"de_post_anneal_eV_atom": -0.945, "E_young_GPa": 44.7, "B0_GPa": 17.9, "G_hill_GPa": 18.5, "poisson_nu": 0.21, "bvs_li_proxy": 0.87, "score_combined": 0.74},
-      "x010": {"de_post_anneal_eV_atom": -0.954, "E_young_GPa": 47.0, "B0_GPa": 16.2, "G_hill_GPa": 19.5, "poisson_nu": 0.21, "bvs_li_proxy": 0.91, "score_combined": 0.80},
-      "_note": "verified_json earlier listed Sc2O3 x002 de=-0.974 (Jun-9 snapshot); FINAL_RANKING now -0.934. x005/x010 since computed."},
-    "In2O3": {"r_A": 0.800, "site_all_x": "Li_24g",
-      "x002": {"de_post_anneal_eV_atom": -0.668, "E_young_GPa": 45.4, "B0_GPa": 14.3, "G_hill_GPa": 18.9, "poisson_nu": 0.20, "bvs_li_proxy": 0.90, "score_combined": 0.55},
-      "x005": {"de_post_anneal_eV_atom": -0.706, "E_young_GPa": 37.3, "B0_GPa": 17.4, "G_hill_GPa": 15.3, "poisson_nu": 0.22, "bvs_li_proxy": 0.89, "score_combined": 0.85},
-      "x010": {"de_post_anneal_eV_atom": -0.620, "E_young_GPa": 43.0, "B0_GPa": 16.7, "G_hill_GPa": 17.8, "poisson_nu": 0.21, "bvs_li_proxy": 0.81, "score_combined": 0.71, "_note": "completed 2026-06-16; G_hill est from E/nu (isotropic), others direct from FINAL_RANKING. In2O3 series now complete: avg dE -0.665 (weakest of rare-earth/Sc/Y; group-13)."}},
-    "Y2O3": {"r_A": 0.900, "site_all_x": "Li_24g",
-      "x002": {"de_post_anneal_eV_atom": -0.915, "E_young_GPa": 57.5, "B0_GPa": 23.4, "G_hill_GPa": 23.4, "poisson_nu": 0.23, "bvs_li_proxy": 0.85, "score_combined": 0.69},
-      "x005": {"de_post_anneal_eV_atom": -0.992, "E_young_GPa": 49.0, "B0_GPa": 19.3, "G_hill_GPa": 20.3, "poisson_nu": 0.21, "bvs_li_proxy": 0.91, "score_combined": 0.74},
-      "x010": {"de_post_anneal_eV_atom": -0.906, "E_young_GPa": 52.7, "B0_GPa": 20.6, "G_hill_GPa": 21.9, "poisson_nu": 0.20, "bvs_li_proxy": 0.87, "score_combined": 0.74}},
-    "Gd2O3": {"r_A": 0.938, "site_all_x": "Li_24g",
-      "x002": {"de_post_anneal_eV_atom": -1.288, "E_young_GPa": 45.3, "B0_GPa": 18.6, "G_hill_GPa": 18.8, "poisson_nu": 0.21, "bvs_li_proxy": 0.85, "score_combined": 0.79},
-      "x005": {"de_post_anneal_eV_atom": -1.254, "E_young_GPa": 45.6, "B0_GPa": 17.4, "G_hill_GPa": 19.2, "poisson_nu": 0.19, "bvs_li_proxy": 0.86, "score_combined": 0.62},
-      "x010": {"de_post_anneal_eV_atom": -1.267, "E_young_GPa": 34.0, "B0_GPa": 25.9, "G_hill_GPa": 14.3, "poisson_nu": 0.19, "bvs_li_proxy": 0.87, "score_combined": 0.68},
-      "_note": "STRONGEST formation of the whole M3+ series (-1.27 avg), all 3 x consistent. x010 also softest E (34.0). Top DFT-validation candidate."},
-    "Sm2O3": {"r_A": 0.958, "site_all_x": "Li_24g",
-      "x002": {"de_post_anneal_eV_atom": -0.915, "E_young_GPa": 43.5, "B0_GPa": 16.2, "G_hill_GPa": 18.3, "poisson_nu": 0.19, "bvs_li_proxy": 0.83, "score_combined": 0.77},
-      "x005": {"de_post_anneal_eV_atom": -0.888, "E_young_GPa": 48.1, "B0_GPa": 17.9, "G_hill_GPa": 19.7, "poisson_nu": 0.22, "bvs_li_proxy": 0.88, "score_combined": 0.62},
-      "x010": {"de_post_anneal_eV_atom": -0.889, "E_young_GPa": 41.5, "B0_GPa": 17.6, "G_hill_GPa": 16.5, "poisson_nu": 0.26, "bvs_li_proxy": 0.88, "score_combined": 0.60}},
-    "Nd2O3": {"r_A": 0.983, "site_all_x": "Li_24g",
-      "x002": {"de_post_anneal_eV_atom": -0.881, "E_young_GPa": 110.9, "B0_GPa": 18.1, "G_hill_GPa": 61.9, "poisson_nu": -0.10, "bvs_li_proxy": 0.83, "score_combined": 0.75, "_FLAG": "ELASTIC FIT FAILED — E=110.9, G=61.9, nu=-0.10 (negative) unphysical. EXCLUDE; refit elastic."},
-      "x005": {"de_post_anneal_eV_atom": -0.926, "E_young_GPa": 44.8, "B0_GPa": 20.3, "G_hill_GPa": 18.5, "poisson_nu": 0.21, "bvs_li_proxy": 0.92, "score_combined": 0.74},
-      "x010": {"de_post_anneal_eV_atom": -0.913, "E_young_GPa": 49.3, "B0_GPa": 23.0, "G_hill_GPa": 20.9, "poisson_nu": 0.18, "bvs_li_proxy": 0.87, "score_combined": 0.84},
-      "_note": "This is the v23 cascade QUICK-SCREEN Nd2O3 (20 structures). The Paper#2 Nd2O3 is the separate DEEP tier (tier_2026_05_16_v456_Nd2O3_6base, 5250 enum -> cfg141, DFT+U). Different pipelines; cross-compare. bvs_li_proxy 0.92 (top of series) corroborates Paper#2 'Nd preserves Li/ionic mobility; its effect is electronic'."},
-    "La2O3": {"r_A": 1.032, "site_all_x": "Li_24g",
-      "x002": {"de_post_anneal_eV_atom": -0.928, "E_young_GPa": 49.9, "B0_GPa": 22.3, "G_hill_GPa": 20.8, "poisson_nu": 0.20, "bvs_li_proxy": 0.88, "score_combined": 0.79},
-      "x005": {"de_post_anneal_eV_atom": -0.881, "E_young_GPa": 46.9, "B0_GPa": 16.9, "G_hill_GPa": 19.7, "poisson_nu": 0.19, "bvs_li_proxy": 0.87, "score_combined": 0.61},
-      "x010": {"de_post_anneal_eV_atom": -0.885, "E_young_GPa": 53.3, "B0_GPa": 17.0, "G_hill_GPa": 22.5, "poisson_nu": 0.18, "bvs_li_proxy": 0.92, "score_combined": 0.64}}
+    "Al2O3": {
+      "r_A": 0.535,
+      "site_all_x": "Li_24g",
+      "x002": {
+        "de_post_anneal_eV_atom": -0.769,
+        "E_young_GPa": 39.8,
+        "B0_GPa": 11.5,
+        "G_hill_GPa": 16.4,
+        "poisson_nu": 0.21,
+        "bvs_li_proxy": 0.9,
+        "score_combined": 0.71
+      },
+      "x005": {
+        "de_post_anneal_eV_atom": -0.809,
+        "E_young_GPa": 47.0,
+        "B0_GPa": 16.2,
+        "G_hill_GPa": 19.8,
+        "poisson_nu": 0.19,
+        "bvs_li_proxy": 0.88,
+        "score_combined": 0.85
+      },
+      "x010": {
+        "de_post_anneal_eV_atom": -0.818,
+        "E_young_GPa": 40.8,
+        "B0_GPa": 16.5,
+        "G_hill_GPa": 17.2,
+        "poisson_nu": 0.18,
+        "bvs_li_proxy": 0.88,
+        "score_combined": 0.85
+      }
+    },
+    "Ga2O3": {
+      "r_A": 0.62,
+      "site_all_x": "Li_24g",
+      "x002": {
+        "de_post_anneal_eV_atom": -0.59,
+        "E_young_GPa": 41.0,
+        "B0_GPa": 14.1,
+        "G_hill_GPa": 17.3,
+        "poisson_nu": 0.19,
+        "bvs_li_proxy": 0.87,
+        "score_combined": 0.55
+      },
+      "x005": {
+        "de_post_anneal_eV_atom": -0.592,
+        "E_young_GPa": 35.8,
+        "B0_GPa": 16.4,
+        "G_hill_GPa": 16.8,
+        "poisson_nu": 0.07,
+        "bvs_li_proxy": 0.86,
+        "score_combined": 0.56,
+        "_note": "nu=0.07 low, check"
+      },
+      "x010": {
+        "de_post_anneal_eV_atom": -0.597,
+        "E_young_GPa": 47.5,
+        "B0_GPa": 13.4,
+        "G_hill_GPa": 19.9,
+        "poisson_nu": 0.19,
+        "bvs_li_proxy": 0.86,
+        "score_combined": 0.56
+      }
+    },
+    "Sc2O3": {
+      "r_A": 0.745,
+      "site_all_x": "Li_24g",
+      "x002": {
+        "de_post_anneal_eV_atom": -0.934,
+        "E_young_GPa": 42.1,
+        "B0_GPa": 23.2,
+        "G_hill_GPa": 16.3,
+        "poisson_nu": 0.29,
+        "bvs_li_proxy": 0.89,
+        "score_combined": 0.65
+      },
+      "x005": {
+        "de_post_anneal_eV_atom": -0.945,
+        "E_young_GPa": 44.7,
+        "B0_GPa": 17.9,
+        "G_hill_GPa": 18.5,
+        "poisson_nu": 0.21,
+        "bvs_li_proxy": 0.87,
+        "score_combined": 0.74
+      },
+      "x010": {
+        "de_post_anneal_eV_atom": -0.954,
+        "E_young_GPa": 47.0,
+        "B0_GPa": 16.2,
+        "G_hill_GPa": 19.5,
+        "poisson_nu": 0.21,
+        "bvs_li_proxy": 0.91,
+        "score_combined": 0.8
+      },
+      "_note": "verified_json earlier listed Sc2O3 x002 de=-0.974 (Jun-9 snapshot); FINAL_RANKING now -0.934. x005/x010 since computed."
+    },
+    "In2O3": {
+      "r_A": 0.8,
+      "site_all_x": "Li_24g",
+      "x002": {
+        "de_post_anneal_eV_atom": -0.668,
+        "E_young_GPa": 45.4,
+        "B0_GPa": 14.3,
+        "G_hill_GPa": 18.9,
+        "poisson_nu": 0.2,
+        "bvs_li_proxy": 0.9,
+        "score_combined": 0.55
+      },
+      "x005": {
+        "de_post_anneal_eV_atom": -0.706,
+        "E_young_GPa": 37.3,
+        "B0_GPa": 17.4,
+        "G_hill_GPa": 15.3,
+        "poisson_nu": 0.22,
+        "bvs_li_proxy": 0.89,
+        "score_combined": 0.85
+      },
+      "x010": {
+        "de_post_anneal_eV_atom": -0.62,
+        "E_young_GPa": 43.0,
+        "B0_GPa": 16.7,
+        "G_hill_GPa": 17.8,
+        "poisson_nu": 0.21,
+        "bvs_li_proxy": 0.81,
+        "score_combined": 0.71,
+        "_note": "completed 2026-06-16; G_hill est from E/nu (isotropic), others direct from FINAL_RANKING. In2O3 series now complete: avg dE -0.665 (weakest of rare-earth/Sc/Y; group-13)."
+      }
+    },
+    "Y2O3": {
+      "r_A": 0.9,
+      "site_all_x": "Li_24g",
+      "x002": {
+        "de_post_anneal_eV_atom": -0.915,
+        "E_young_GPa": 57.5,
+        "B0_GPa": 23.4,
+        "G_hill_GPa": 23.4,
+        "poisson_nu": 0.23,
+        "bvs_li_proxy": 0.85,
+        "score_combined": 0.69
+      },
+      "x005": {
+        "de_post_anneal_eV_atom": -0.992,
+        "E_young_GPa": 49.0,
+        "B0_GPa": 19.3,
+        "G_hill_GPa": 20.3,
+        "poisson_nu": 0.21,
+        "bvs_li_proxy": 0.91,
+        "score_combined": 0.74
+      },
+      "x010": {
+        "de_post_anneal_eV_atom": -0.906,
+        "E_young_GPa": 52.7,
+        "B0_GPa": 20.6,
+        "G_hill_GPa": 21.9,
+        "poisson_nu": 0.2,
+        "bvs_li_proxy": 0.87,
+        "score_combined": 0.74
+      }
+    },
+    "Gd2O3": {
+      "r_A": 0.938,
+      "site_all_x": "Li_24g",
+      "x002": {
+        "de_post_anneal_eV_atom": -1.288,
+        "E_young_GPa": 45.3,
+        "B0_GPa": 18.6,
+        "G_hill_GPa": 18.8,
+        "poisson_nu": 0.21,
+        "bvs_li_proxy": 0.85,
+        "score_combined": 0.79
+      },
+      "x005": {
+        "de_post_anneal_eV_atom": -1.254,
+        "E_young_GPa": 45.6,
+        "B0_GPa": 17.4,
+        "G_hill_GPa": 19.2,
+        "poisson_nu": 0.19,
+        "bvs_li_proxy": 0.86,
+        "score_combined": 0.62
+      },
+      "x010": {
+        "de_post_anneal_eV_atom": -1.267,
+        "E_young_GPa": 34.0,
+        "B0_GPa": 25.9,
+        "G_hill_GPa": 14.3,
+        "poisson_nu": 0.19,
+        "bvs_li_proxy": 0.87,
+        "score_combined": 0.68
+      },
+      "_note": "STRONGEST formation of the whole M3+ series (-1.27 avg), all 3 x consistent. x010 also softest E (34.0). Top DFT-validation candidate."
+    },
+    "Sm2O3": {
+      "r_A": 0.958,
+      "site_all_x": "Li_24g",
+      "x002": {
+        "de_post_anneal_eV_atom": -0.915,
+        "E_young_GPa": 43.5,
+        "B0_GPa": 16.2,
+        "G_hill_GPa": 18.3,
+        "poisson_nu": 0.19,
+        "bvs_li_proxy": 0.83,
+        "score_combined": 0.77
+      },
+      "x005": {
+        "de_post_anneal_eV_atom": -0.888,
+        "E_young_GPa": 48.1,
+        "B0_GPa": 17.9,
+        "G_hill_GPa": 19.7,
+        "poisson_nu": 0.22,
+        "bvs_li_proxy": 0.88,
+        "score_combined": 0.62
+      },
+      "x010": {
+        "de_post_anneal_eV_atom": -0.889,
+        "E_young_GPa": 41.5,
+        "B0_GPa": 17.6,
+        "G_hill_GPa": 16.5,
+        "poisson_nu": 0.26,
+        "bvs_li_proxy": 0.88,
+        "score_combined": 0.6
+      }
+    },
+    "Nd2O3": {
+      "r_A": 0.983,
+      "site_all_x": "Li_24g",
+      "x002": {
+        "de_post_anneal_eV_atom": -0.881,
+        "E_young_GPa": 110.9,
+        "B0_GPa": 18.1,
+        "G_hill_GPa": 61.9,
+        "poisson_nu": -0.1,
+        "bvs_li_proxy": 0.83,
+        "score_combined": 0.75,
+        "_FLAG": "ELASTIC FIT FAILED — E=110.9, G=61.9, nu=-0.10 (negative) unphysical. EXCLUDE; refit elastic."
+      },
+      "x005": {
+        "de_post_anneal_eV_atom": -0.926,
+        "E_young_GPa": 44.8,
+        "B0_GPa": 20.3,
+        "G_hill_GPa": 18.5,
+        "poisson_nu": 0.21,
+        "bvs_li_proxy": 0.92,
+        "score_combined": 0.74
+      },
+      "x010": {
+        "de_post_anneal_eV_atom": -0.913,
+        "E_young_GPa": 49.3,
+        "B0_GPa": 23.0,
+        "G_hill_GPa": 20.9,
+        "poisson_nu": 0.18,
+        "bvs_li_proxy": 0.87,
+        "score_combined": 0.84
+      },
+      "_note": "This is the v23 cascade QUICK-SCREEN Nd2O3 (20 structures). The Paper#2 Nd2O3 is the separate DEEP tier (tier_2026_05_16_v456_Nd2O3_6base, 5250 enum -> cfg141, DFT+U). Different pipelines; cross-compare. bvs_li_proxy 0.92 (top of series) corroborates Paper#2 'Nd preserves Li/ionic mobility; its effect is electronic'."
+    },
+    "La2O3": {
+      "r_A": 1.032,
+      "site_all_x": "Li_24g",
+      "x002": {
+        "de_post_anneal_eV_atom": -0.928,
+        "E_young_GPa": 49.9,
+        "B0_GPa": 22.3,
+        "G_hill_GPa": 20.8,
+        "poisson_nu": 0.2,
+        "bvs_li_proxy": 0.88,
+        "score_combined": 0.79
+      },
+      "x005": {
+        "de_post_anneal_eV_atom": -0.881,
+        "E_young_GPa": 46.9,
+        "B0_GPa": 16.9,
+        "G_hill_GPa": 19.7,
+        "poisson_nu": 0.19,
+        "bvs_li_proxy": 0.87,
+        "score_combined": 0.61
+      },
+      "x010": {
+        "de_post_anneal_eV_atom": -0.885,
+        "E_young_GPa": 53.3,
+        "B0_GPa": 17.0,
+        "G_hill_GPa": 22.5,
+        "poisson_nu": 0.18,
+        "bvs_li_proxy": 0.92,
+        "score_combined": 0.64
+      }
+    }
   },
   "findings": {
     "stability_ranking_avg_de_eV_atom": "Gd2O3 -1.27 >> Sc2O3 -0.94 ~ Y2O3 -0.94 > Nd2O3 -0.91 ~ La2O3 -0.90 ~ Sm2O3 -0.90 > Al2O3 -0.80 > In2O3 -0.69 > Ga2O3 -0.59",

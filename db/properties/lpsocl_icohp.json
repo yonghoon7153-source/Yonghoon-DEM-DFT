@@ -6,31 +6,112 @@
   "charge_spilling_pct": 1.15,
   "raw": "gabia:/data/work/runs/lpsocl_dft/{lobster_ext/ICOHPLIST.lobster, ACF.dat, bonds_lpsocl_v0.json}",
   "bonds": {
-    "P-O":  {"N": 1,   "ICOHP_eV": -8.413, "note": "POS3 unit P30-O50 (top bond of the whole lattice)"},
-    "P-S":  {"N": 19,  "ICOHP_eV": -6.040},
-    "Li-Cl": {"N": 42, "ICOHP_eV": -2.107},
-    "Li-S": {"N": 106, "ICOHP_eV": -1.767},
-    "Li-O": {"N": 5,   "ICOHP_eV": -1.155, "note": "FIRST Li-O measurement in the family; per-bond covalency MODEST (< Li-S/Li-Cl)"},
-    "S-S":  {"N": 54,  "ICOHP_eV": -0.111}
+    "P-O": {
+      "N": 1,
+      "ICOHP_eV": -8.413,
+      "ICOHP_total_eV_per_bond": -8.413,
+      "note": "POS3 unit P30-O50 (top bond of the whole lattice)"
+    },
+    "P-S": {
+      "N": 19,
+      "ICOHP_eV": -6.04,
+      "ICOHP_total_eV_per_bond": -6.04
+    },
+    "Li-Cl": {
+      "N": 42,
+      "ICOHP_eV": -2.107,
+      "ICOHP_total_eV_per_bond": -2.107
+    },
+    "Li-S": {
+      "N": 106,
+      "ICOHP_eV": -1.767,
+      "ICOHP_total_eV_per_bond": -1.767
+    },
+    "Li-O": {
+      "N": 5,
+      "ICOHP_eV": -1.155,
+      "ICOHP_total_eV_per_bond": -1.155,
+      "note": "FIRST Li-O measurement in the family; per-bond covalency MODEST (< Li-S/Li-Cl)"
+    },
+    "S-S": {
+      "N": 54,
+      "ICOHP_eV": -0.111,
+      "ICOHP_total_eV_per_bond": -0.111
+    }
   },
   "per_site": {
-    "Li-S_PS4": {"ICOHP_eV": -1.672, "std": 1.197, "n": 94},
-    "Li-S_4d_freeS": {"ICOHP_eV": -2.510, "std": 0.073, "n": 12, "note": "free-S grips Li ~1.5x stronger per bond than PS4-S"},
-    "Li-Cl_4a": {"ICOHP_eV": -1.996, "std": 0.582, "n": 33},
-    "Li-Cl_4d": {"ICOHP_eV": -2.512, "std": 0.840, "n": 9}
+    "Li-S_PS4": {
+      "ICOHP_eV": -1.672,
+      "std": 1.197,
+      "n": 94
+    },
+    "Li-S_4d_freeS": {
+      "ICOHP_eV": -2.51,
+      "std": 0.073,
+      "n": 12,
+      "note": "free-S grips Li ~1.5x stronger per bond than PS4-S"
+    },
+    "Li-Cl_4a": {
+      "ICOHP_eV": -1.996,
+      "std": 0.582,
+      "n": 33
+    },
+    "Li-Cl_4d": {
+      "ICOHP_eV": -2.512,
+      "std": 0.84,
+      "n": 9
+    }
   },
   "bader": {
-    "Li": 0.8825, "P": 4.4372, "P_std": 0.3736, "S": -1.7516, "O": -1.9261, "Cl": -0.9131,
+    "Li": 0.8825,
+    "P": 4.4372,
+    "P_std": 0.3736,
+    "S": -1.7516,
+    "O": -1.9261,
+    "Cl": -0.9131,
     "n_electrons_recovered": 294.001
   },
   "comparison_vs_family": {
-    "P-O": {"lpsocl": -8.413, "b2o3": -8.551, "note": "SAME POS3 motif, same strength within 1.6% -> transferable O-anchor"},
-    "P-S": {"lpsocl": -6.040, "modelc": -6.000, "b2o3": -6.023, "note": "host intact"},
-    "Li-Cl": {"lpsocl": -2.107, "modelc": -2.103, "b2o3": -2.076, "note": "host intact"},
-    "Li-S": {"lpsocl": -1.767, "modelc": -1.717, "b2o3": -1.680, "note": "host intact (~3% spread)"},
-    "S-S": {"lpsocl": -0.111, "modelc": -0.110, "b2o3": -0.116, "note": "host intact"},
-    "bader_Li": {"lpsocl": 0.882, "modelc": 0.882, "b2o3": 0.881, "note": "Li+ carrier state UNCHANGED by O doping (same as B2O3 verdict)"},
-    "bader_O": {"lpsocl": -1.926, "b2o3": -1.918, "note": "near O2- in both"},
+    "P-O": {
+      "lpsocl": -8.413,
+      "b2o3": -8.551,
+      "note": "SAME POS3 motif, same strength within 1.6% -> transferable O-anchor"
+    },
+    "P-S": {
+      "lpsocl": -6.04,
+      "modelc": -6.0,
+      "b2o3": -6.023,
+      "note": "host intact"
+    },
+    "Li-Cl": {
+      "lpsocl": -2.107,
+      "modelc": -2.103,
+      "b2o3": -2.076,
+      "note": "host intact"
+    },
+    "Li-S": {
+      "lpsocl": -1.767,
+      "modelc": -1.717,
+      "b2o3": -1.68,
+      "note": "host intact (~3% spread)"
+    },
+    "S-S": {
+      "lpsocl": -0.111,
+      "modelc": -0.11,
+      "b2o3": -0.116,
+      "note": "host intact"
+    },
+    "bader_Li": {
+      "lpsocl": 0.882,
+      "modelc": 0.882,
+      "b2o3": 0.881,
+      "note": "Li+ carrier state UNCHANGED by O doping (same as B2O3 verdict)"
+    },
+    "bader_O": {
+      "lpsocl": -1.926,
+      "b2o3": -1.918,
+      "note": "near O2- in both"
+    },
     "_comp1_caveat": "comp1_v3 bonds json (P +3.27, S -1.52) sits off the modelc/b2o3/lpsocl family (P +4.34-4.69) -> likely different Bader density source in that older run; do NOT mix comp1 Bader absolutes into this table without re-deriving."
   },
   "headline": {
@@ -38,5 +119,6 @@
     "pos3_anchor": "P-O -8.41 eV = strongest bond in the lattice, identical to b2o3's POS3 (-8.55) -> the O anchor is motif-transferable",
     "li_trapping_mechanism": "Li-O covalency is MODEST (-1.15/bond) while O carries the deepest charge (-1.93) -> the wang2022-style Li+ trapping near POS3 is ELECTROSTATIC (deep Coulomb well), not covalent gripping",
     "freeS": "free-S (4d) binds Li at -2.51/bond vs PS4-S -1.67 -> per-bond the free-S sites are the strongest Li anchors among S"
-  }
+  },
+  "_schema_note": "bonds[*].ICOHP_total_eV_per_bond 가 공통 스키마 키다 (ICOHP_eV 는 같은 값의 구 별칭 — 기존 tools 호환용으로 유지). d_mean_A 는 이 계산에 원자료가 없어 비어 있다(LOBSTER 재파싱 전까지 표에서 '—'가 정상)."
 }

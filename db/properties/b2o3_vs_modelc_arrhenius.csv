@@ -1,4 +1,14 @@
-system,T_K,1000_over_T,D_Li_cm2_s,log10_D,Ea_eV,D0_cm2_s
+# ===== SUPERSEDED - WRONG MSD WINDOW (5-40 ps). DO NOT QUOTE. =====
+# These are the earlier (5,40) ps extraction. The canonical window is (2,50) ps
+#   (kb/methodology/md_conductivity_protocol.md S2: "(5,40) must not be used").
+# The (5,40) window inflated modelc Ea to 0.2259 and thereby FAKED a b2o3 Ea advantage
+#   (0.207) -- b2o3_vs_modelc_md.json honesty.fitting_sensitivity says so verbatim.
+# CANONICAL: db/properties/b2o3_vs_lpscl16_conductivity.csv (FINAL 2026-07-07,
+#   3-seed x 3-T): Ea b2o3 0.199+/-0.034 vs LPSCl1.6 0.197+/-0.032 = EQUAL.
+# Not regenerated at (2,50): the (2,50) single-seed numbers are themselves the retracted
+#   single-seed deck, so re-emitting them would create a fourth copy of a retracted ladder.
+# Column names carry _SUPERSEDED because the site CSV reader skips leading '#' comments.
+system_SUPERSEDED,T_K,1000_over_T,D_Li_cm2_s_win5_40,log10_D_win5_40,Ea_eV_SUPERSEDED_win5_40,D0_cm2_s_SUPERSEDED
 modelc,600,1.6667,7.5200e-06,-5.1238,0.2259,5.5153e-04
 modelc,800,1.25,1.7110e-05,-4.7667,0.2259,5.5153e-04
 modelc,1000,1.0,4.5340e-05,-4.3435,0.2259,5.5153e-04

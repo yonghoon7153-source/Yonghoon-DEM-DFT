@@ -21,15 +21,18 @@
   <label class="cc-chk" style="font-size:.82rem"><input type="checkbox" id="exp-hasval" checked onchange="expApply()"> 값 있는 조성만</label>
 </div>
 
+<div class="muted card" id="exp-empty" style="display:none;text-align:center;padding:34px;line-height:1.7">
+  조건에 맞는 조성이 없어요.<br><span style="font-size:.85em">검색어를 지우거나 family 필터를 '전체'로, 또는 '값 있는 조성만'을 꺼보세요.</span>
+</div>
 <div class="card" style="padding:0;overflow:hidden">
 <div class="tbl-scroll">
 <table class="data-table exp-table" id="exp-table">
   <thead>
     <tr>
-      <th onclick="expSort(0)" class="sortable-h">조성</th>
-      <th onclick="expSort(1)" class="sortable-h">family</th>
+      <th onclick="expSort(0)" class="sortable-h" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">조성</th>
+      <th onclick="expSort(1)" class="sortable-h" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">family</th>
       {% for key,label,unit in props %}
-      <th onclick="expSort({{ loop.index+1 }})" class="sortable-h num" title="{{ canonical_meta.get(key,'') }}">
+      <th onclick="expSort({{ loop.index+1 }})" class="sortable-h num" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none" title="{{ canonical_meta.get(key,'') }}">
         {{ label }} <span class="th-unit">{{ unit }}</span>
         <span class="th-prov" aria-hidden="true">ⓘ</span>
       </th>
@@ -93,8 +96,8 @@ function expApply(){var hv=document.getElementById('exp-hasval').checked;var n=0
 function expSort(idx){
   var tb=document.getElementById('exp-table'),rows=Array.prototype.slice.call(tb.tBodies[0].rows);
   var th=tb.tHead.rows[0].cells[idx];var asc=!(th._asc);
-  tb.querySelectorAll('th').forEach(function(x){x.removeAttribute('data-sort');x._asc=false;});
-  th._asc=asc;th.setAttribute('data-sort',asc?'▲':'▼');
+  tb.querySelectorAll('th').forEach(function(x){x.removeAttribute('data-sort');x._asc=false;x.setAttribute('aria-sort','none');});
+  th._asc=asc;th.setAttribute('data-sort',asc?'▲':'▼');th.setAttribute('aria-sort',asc?'ascending':'descending');
   rows.sort(function(a,b){
     var x=a.cells[idx].innerText.trim().replace('TODO','');
     var y=b.cells[idx].innerText.trim().replace('TODO','');
