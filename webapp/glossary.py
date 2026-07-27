@@ -106,7 +106,7 @@ GLOSSARY = [
 {"id":"arrhenius","term":"Arrhenius / Ea","full":"활성화에너지 · 전도도","cat":"이온 수송",
  "what":"확산이 온도에 지수적으로 의존: D=D₀·exp(−Ea/kT). log D vs 1/T 직선의 기울기 = <b>활성화에너지 Ea</b>(낮을수록 빠른 전도). σ는 Nernst–Einstein으로 D에서 환산.",
  "how":"3온도(600/800/1000K) D를 log-1/T에 피팅. 저온(400/500K)은 통계부족으로 제외 판정. Ea 오차막대는 시드 분산.",
- "ours":"comp1 0.253 / modelc 0.224 / lpsocl 0.271 eV. comp2 계산중(s2 단일 0.312 — 3-seed 완성 전 판정 보류)."},
+ "ours":"comp1 0.253 / modelc 0.224 / lpsocl 0.271 / comp2 0.275±0.033 eV(3-seed 완료, comp2_md_arrhenius.json). 단 comp2는 800K 시드 산포가 커서 300K 외삽 σ 비율은 판정 보류(0.12–1.48×, inconclusive)."},
 
 # ── 계면·안정성 ───────────────────────────────────────
 {"id":"phonon","term":"Phonon","full":"격자 진동 · 동역학 안정성","cat":"계면·안정성",
@@ -137,9 +137,9 @@ GLOSSARY = [
 
 # ── 방법론·모델링 ─────────────────────────────────────
 {"id":"ordered_vs_disordered","term":"Ordered vs Disordered","full":"질서/무질서 구조 선택 — 어떤 LPSCl 셀로 계산하나","cat":"방법론·모델링",
- "what":"'질서셀 vs 무질서셀 누가 맞냐'는 잘못된 질문 — 진짜 질문은 <b>어떤 양을 계산하느냐</b>. 0 K DFT는 에너지 E를, 합성온도(500–550°C)의 실험 무질서 구조는 F = E − TS_config를 산다. 무질서는 metastable이 아니라 <b>합성 T의 진짜 자유에너지 최소</b>를 급랭으로 얼려둔 것. Rietveld 점유율(예 48h occ 0.5)은 시공간 평균 확률이지 스냅샷이 아니다.",
- "how":"<b>0 K 미분·에너지(phonon·gap·formation/hull·elastic) → relaxed ordered 셀 / 유한온도 수송(σ·Ea) → 무질서 유지 + 다중 배열 앙상블 평균</b>. 무질서(48h 빈자리·anti-site)가 전도의 원인 그 자체라 질서화 = 원인 삭제 = Ea 과대. 경고 사례: Deng SQS A=0.92 vs Torii ordered A=1.09 — 무질서 처리만으로 결론 부호 반전.",
- "ours":"canonical gap 4개 = ordered 52-atom 정형셀. 수송은 d=0.5/1.0 × cfg0/1/2 disorder ensemble(UMA anneal+relax; v1 un-relaxed swap은 artifact 폐기). 단일 config 판정 금지(단일시드 1.33× 철회 교훈). 우리 A=1.14 ≈ Torii 1.09는 공유 편향(둘 다 ordered) 가능성 자기비판 유지."},
+ "what":"'질서셀 vs 무질서셀 누가 맞냐'는 잘못된 질문 — 진짜 질문은 <b>어떤 양을 계산하느냐</b>. 0 K DFT는 에너지 E를, 합성온도의 실험 무질서 구조는 F = E − TS_config를 산다. 무질서는 실패한 결정화가 아니라 <b>합성 T의 진짜 자유에너지 최소(부분 무질서 x*(T), 예: Kraft Cl 4d 62%)</b>를 급랭으로 실온에 동결한 것. Rietveld 점유율(예 48h occ 0.5)은 시공간 평균 확률이지 스냅샷이 아니다.",
+ "how":"<b>0 K 미분·에너지(phonon·gap·formation/hull·elastic) → relaxed ordered 셀 / 유한온도 수송(σ·Ea) → 무질서 유지 + 다중 배열 앙상블 평균</b>. 무질서(48h 빈자리·anti-site)는 전도의 필요조건이 아니라 핵심 증강 레버 — 질서화하면 Ea 계통 과대(+0.03 eV, σ 1/4; comp1 vs modelc). 경고 사례: Deng SQS A=0.92 vs Torii ordered A=1.09 — 둘 다 A≈1(거의 등방)이지만 무질서 처리·D3 등 방법차만으로 A−1 부호가 흔들리는 미세 지표.",
+ "ours":"canonical gap: comp1만 52at ordered 정형셀, modelc(62at)·+B₂O₃(128at)·LPSOCl(62at)은 배치 확정 단일-config 셀에서 동일 fixed-occ 레시피(electronic.json doping_family_2026_07_16). 수송은 d=0.5/1.0 × cfg0/1/2 disorder ensemble(UMA anneal+relax; v1 un-relaxed swap은 artifact 폐기). 단일 config 판정 금지(단일시드 1.33× 철회 교훈). 우리 A=1.14 ≈ Torii 1.09는 공유 편향(둘 다 ordered) 가능성 자기비판 유지."},
 ]
 
 def by_category():
