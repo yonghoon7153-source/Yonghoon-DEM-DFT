@@ -313,6 +313,7 @@
                 <button type="button" onclick="addSchedStep('c')" style="padding:3px 9px;cursor:pointer">+ 충전</button>
                 <button type="button" onclick="addSchedStep('d')" style="padding:3px 9px;cursor:pointer">+ 방전</button>
                 <button type="button" onclick="addSchedStep('r')" style="padding:3px 9px;cursor:pointer">+ Rest</button>
+                <button type="button" onclick="addSchedStep('l')" style="padding:3px 9px;cursor:pointer;color:#7dd3fc" title="이 지점에서 지정 스텝으로 되돌아가 그 블록을 총 N회 반복 (Zive 'Go to step N, cycle').  cyc 번호는 자동 부여.">+ ↻ Loop</button>
                 <button type="button" onclick="loadSchedPreset()" style="padding:3px 9px;cursor:pointer">기본(formation+rest+rate)</button>
                 <button type="button" onclick="clearSched()" style="padding:3px 9px;cursor:pointer">비우기</button>
                 <button type="button" onclick="saveSchedPreset()" style="padding:3px 9px;cursor:pointer" title="현재 스케줄을 이름 붙여 브라우저에 저장">&#x1F4BE; 저장</button>
@@ -323,7 +324,10 @@
                 <span style="flex:1"></span>
                 <button type="button" onclick="applySched()" style="padding:4px 14px;background:#1d4ed8;color:white;border:none;border-radius:5px;cursor:pointer">적용</button>
               </div>
-              <div style="margin-top:10px;color:#6b7280;font-size:0.92em">cyc = R_int(N) 태그(수명 열화는 R_int(N) 문헌투영 — 실제 N-사이클 sim 아님).  per-step 컷오프: 충전 ≤v_max·CV종지 |I|, 방전 ≥v_min.</div>
+              <div style="margin-top:10px;color:#6b7280;font-size:0.92em">
+                <b style="color:#7dd3fc">↻ Loop</b> = 지정 스텝으로 되돌아가 그 블록을 총 N회 반복(Zive "Go to step") — cyc 번호 자동 부여(1..N), 킷 생성 시 평면 전개.
+                per-step 컷오프 달성(충전 ≤v_max·CV종지 |I| / 방전 ≥v_min) = 다음 스텝 진행.
+                cyc = R_int(N) 태그(수명 열화는 R_int(N) 문헌투영 — v1 각 런 독립 초기상태, 상태-체이닝 사이클 아님 = v2 chaining 예정).</div>
             </div>
           </div>
           <span style="display:inline-flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:0.82em">
@@ -672,7 +676,11 @@ function openSchedModal() {
   const m = document.getElementById('sched-modal'); if (m) m.style.display = 'flex';
 }
 function closeSchedModal() { const m = document.getElementById('sched-modal'); if (m) m.style.display = 'none'; }
-function addSchedStep(k) { _schedSteps.push(k === 'c' ? { k: 'c', r: 0.2, v: 4.5, i: 0.05, n: 1 } : k === 'r' ? { k: 'r', t: 1, n: 1 } : { k: 'd', r: 0.2, v: 3.0, n: 1 }); renderSched(); }
+function addSchedStep(k) { _schedSteps.push(
+  k === 'c' ? { k: 'c', r: 0.2, v: 4.5, i: 0.05, n: 1 }
+  : k === 'r' ? { k: 'r', t: 1, n: 1 }
+  : k === 'l' ? { k: 'l', to: 1, n: 5 }                    // ★Loop: 스텝 to로 이동 × 총 n회 (Zive "Go to step")
+  : { k: 'd', r: 0.2, v: 3.0, n: 1 }); renderSched(); }
 function delSchedStep(i) { _schedSteps.splice(i, 1); renderSched(); }
 function moveSchedStep(i, d) { const j = i + d; if (j < 0 || j >= _schedSteps.length) return; const t = _schedSteps[i]; _schedSteps[i] = _schedSteps[j]; _schedSteps[j] = t; renderSched(); }
 function loadSchedPreset() { _schedSteps = _defSched(); renderSched(); }
@@ -713,12 +721,14 @@ function delSavedSched() {
 function _schedSet(i, f, v) {
   if (f === 'k') {
     _schedSteps[i].k = v;
+    if (v === 'l') { if (_schedSteps[i].to == null) _schedSteps[i].to = 1; if (!(_schedSteps[i].n >= 2)) _schedSteps[i].n = 5; }
     if (v === 'r' && _schedSteps[i].t == null) _schedSteps[i].t = 1;
-    if (v !== 'r' && _schedSteps[i].r == null) _schedSteps[i].r = 0.2;
-    if (v !== 'r' && _schedSteps[i].v == null) _schedSteps[i].v = (v === 'c' ? 4.5 : 3.0);
+    if ((v === 'c' || v === 'd') && _schedSteps[i].r == null) _schedSteps[i].r = 0.2;
+    if ((v === 'c' || v === 'd') && _schedSteps[i].v == null) _schedSteps[i].v = (v === 'c' ? 4.5 : 3.0);
     if (v === 'c' && _schedSteps[i].i == null) _schedSteps[i].i = 0.05;
   }
-  else if (f === 'n') _schedSteps[i].n = Math.max(1, parseInt(v) || 1);
+  else if (f === 'to') _schedSteps[i].to = Math.max(1, parseInt(v) || 1);
+  else if (f === 'n') _schedSteps[i].n = Math.max(_schedSteps[i].k === 'l' ? 2 : 1, parseInt(v) || 1);
   else _schedSteps[i][f] = parseFloat(v);
   renderSched();
 }
@@ -726,9 +736,13 @@ function renderSched() {
   const tb = document.getElementById('sched-rows'); if (!tb) return;
   const gray = '<span style="color:#6b7280">—</span>';
   tb.innerHTML = _schedSteps.map((s, i) => {
-    const kind = `<select onchange="_schedSet(${i},'k',this.value)"><option value="c"${s.k === 'c' ? ' selected' : ''}>충전CC-CV</option><option value="d"${s.k === 'd' ? ' selected' : ''}>방전CC</option><option value="r"${s.k === 'r' ? ' selected' : ''}>Rest</option></select>`;
+    const kind = `<select onchange="_schedSet(${i},'k',this.value)"><option value="c"${s.k === 'c' ? ' selected' : ''}>충전CC-CV</option><option value="d"${s.k === 'd' ? ' selected' : ''}>방전CC</option><option value="r"${s.k === 'r' ? ' selected' : ''}>Rest</option><option value="l"${s.k === 'l' ? ' selected' : ''}>↻ Loop</option></select>`;
     let rate, cut, cyc;
-    if (s.k === 'r') {
+    if (s.k === 'l') {                                   // ★Loop 행: 스텝 to로 이동 × 총 n회 (블록 [to..직전] 반복)
+      rate = `<span style="color:#7dd3fc">스텝 <input type="number" value="${s.to != null ? s.to : 1}" step="1" min="1" max="${i}" style="width:44px" onchange="_schedSet(${i},'to',this.value)"> 로 이동</span>`;
+      cut = `<span style="color:#7dd3fc">× 총 <input type="number" value="${s.n != null ? s.n : 5}" step="1" min="2" style="width:48px" onchange="_schedSet(${i},'n',this.value)"> 회 반복</span> <span style="color:#6b7280">(cyc 자동 1..N)</span>`;
+      cyc = gray;
+    } else if (s.k === 'r') {
       rate = gray;
       cut = `시간<input type="number" value="${s.t != null ? s.t : 1}" step="1" min="0" style="width:56px" onchange="_schedSet(${i},'t',this.value)">min`;
       cyc = gray;
@@ -745,12 +759,24 @@ function renderSched() {
 function applySched() {
   const hf = document.getElementById('s4-sched-json'); const sum = document.getElementById('sched-summary');
   if (!_schedSteps.length) { if (hf) hf.value = ''; if (sum) sum.textContent = ''; closeSchedModal(); updateAdditiveGpuCmds(); return; }
+  // ★Loop 사전 검증 (생성기와 동일 규칙: 자기 앞으로만, 중첩 금지, 블록에 충/방 필수)
+  for (let i = 0; i < _schedSteps.length; i++) {
+    const s = _schedSteps[i];
+    if (s.k !== 'l') continue;
+    if (!(s.to >= 1 && s.to <= i)) { alert(`스텝 ${i + 1} Loop: 이동 대상은 1~${i} (자기 앞)이어야 해요`); return; }
+    const blk = _schedSteps.slice(s.to - 1, i);
+    if (blk.some(b => b.k === 'l')) { alert(`스텝 ${i + 1} Loop: 중첩 Loop는 v1 미지원`); return; }
+    if (!blk.some(b => b.k === 'c' || b.k === 'd')) { alert(`스텝 ${i + 1} Loop: 반복 블록에 충전/방전 스텝이 없어요`); return; }
+  }
   const j = _schedSteps.map(s => {
+    if (s.k === 'l') return { k: 'l', to: s.to, n: Math.max(2, s.n || 2) };
     if (s.k === 'r') return { k: 'r', t: s.t != null ? s.t : 1, n: s.n || 1 };
     const o = { k: s.k, r: s.r, v: s.v, n: s.n }; if (s.k === 'c') o.i = s.i; return o;
   });
   if (hf) hf.value = JSON.stringify(j);
-  if (sum) sum.textContent = '스케줄: ' + _schedSteps.map(s => s.k === 'r' ? `휴${s.t != null ? s.t : 1}m` : (s.k === 'c' ? '충' : '방') + s.r + 'C').join(' → ');
+  if (sum) sum.textContent = '스케줄: ' + _schedSteps.map(s =>
+    s.k === 'l' ? `[↻스텝${s.to} ×${s.n}회]` :
+    s.k === 'r' ? `휴${s.t != null ? s.t : 1}m` : (s.k === 'c' ? '충' : '방') + s.r + 'C').join(' → ');
   closeSchedModal(); updateAdditiveGpuCmds();
 }
 // STEP4 R_int 힌트 — 선택된 collector+전극(SDCP→DBE)의 시나리오 값을 정본 CSV(/rint-anchors)에서
