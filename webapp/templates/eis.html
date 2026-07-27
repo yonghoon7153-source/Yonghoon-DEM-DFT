@@ -41,7 +41,10 @@
     <span style="color:#a07c1f">⚠ .mpr 파싱엔 galvani 필요(WSL) — 클라우드선 .csv 즉시 fit / .mpr 은 파싱대기</span>.
   </div>
   <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px">
-    <input id="xe-file" type="file" multiple accept=".mpr,.mps,.csv" class="e-in" style="flex:1 1 300px;padding:5px" title="파일을 선택하면 자동으로 업로드 · fit 진행">
+    <label style="display:flex;align-items:center;gap:5px;font-size:.76rem;color:var(--dim);white-space:nowrap">두께 L(µm)
+      <input id="xe-th" type="number" step="0.5" min="0.5" max="300" value="45" class="e-in" style="width:70px;padding:5px"
+             title="합제(cathode) 두께 µm — 파일 선택 전에 입력하면 이 배치의 모든 측정에 기록되어 대칭셀 σ_e=L/R1 이 바로 이 두께로 fit 됨.  셀별로 다르면 업로드 후 표의 L(µm) 칸에서 개별 수정."></label>
+    <input id="xe-file" type="file" multiple accept=".mpr,.mps,.csv" class="e-in" style="flex:1 1 300px;padding:5px" title="파일을 선택하면 왼쪽 두께와 함께 자동으로 업로드 · fit 진행">
     <button id="xe-refresh" class="btn btn-sm btn-secondary">↻ 목록</button>
   </div>
   <div id="xe-status" style="font-size:.74rem;color:var(--dim);margin-bottom:8px"></div>
@@ -414,8 +417,10 @@ const EIS = {
     const inp=this.el('xe-file');
     if(!inp.files||!inp.files.length) return;
     const fd=new FormData(); for(const f of inp.files) fd.append('files', f);
+    const th=this.el('xe-th')?this.el('xe-th').value:'';       // 배치 두께 → 서버가 fit 전에 override 기록
+    if(th) fd.append('thickness_um', th);
     const fnames = Array.from(inp.files).map(f=>f.name).join(', ');
-    this.el('xe-status').innerHTML=`<span style="color:#2a5db0">⏳ ${fnames} 업로드·추출·fit 중… (수 초~수십 초)</span>`;
+    this.el('xe-status').innerHTML=`<span style="color:#2a5db0">⏳ ${fnames} 업로드·추출·fit 중…${th?` (L=${th}µm 적용)`:''} (수 초~수십 초)</span>`;
     let d; try { d=await (await fetch('/api/eis_exp_upload',{method:'POST',body:fd})).json(); }
     catch(e){ this.el('xe-status').innerHTML='<span style="color:#c0392b">🔥 업로드 실패: '+e+'</span>'; return; }
     if(d.error){ this.el('xe-status').innerHTML='<span style="color:#c0392b">🔥 실패: '+d.error+'</span>'; }
@@ -440,7 +445,11 @@ const EIS = {
         `<td style="text-align:right">${f(r.R_s_ohmcm2)}</td><td style="text-align:right"><b>${f(r.R_int_ohmcm2)}</b></td>`+
         `<td style="text-align:right">${f(r.R_w_ohmcm2)}</td><td style="text-align:right">${f(r.C_dl_uF_cm2,1)}</td>`+
         `<td style="text-align:right">${f(r.sigma_e_mScm,4)}</td>`+
-        `<td style="text-align:right;color:var(--dim)">${f(r.L_composite_um,1)}</td>`+
+        `<td style="text-align:right"><input type="number" step="0.5" min="0.5" max="300" `+
+        `value="${r.L_composite_um!=null?r.L_composite_um:''}" placeholder="45" `+
+        `onchange="EIS.setThick('${r.filename}',this.value)" `+
+        `style="width:52px;border:1px solid var(--border);background:none;color:inherit;font-size:.74rem;text-align:right;padding:1px 3px;border-radius:3px" `+
+        `title="이 측정의 합제 두께 µm — 수정하면 σ_e=L/R1 즉시 재계산 (대칭셀만 유효)"></td>`+
         `<td style="text-align:right;color:${r.rmse_pct>10?'#c0392b':'var(--dim)'}">${f(r.rmse_pct,1)}</td>`+
         `<td style="text-align:center"><input type="checkbox" class="xe-sel" value="${r.filename}" `+
         `onchange="EIS.onSelChange()" title="체크 → 아래 Nyquist '🔬 실험 겹치기' 로 이 측정만 겹침"></td>`+
@@ -455,6 +464,17 @@ const EIS = {
       `<span style="color:var(--dim)">→ 🔬실험앵커 토글로 physics-EIS 에 적용</span>` : '';
     const allb=this.el('xe-all'); if(allb) allb.checked=false;   // 재렌더 → 전체선택 리셋
     this.onSelChange();                                          // 켜져있으면 오버레이 갱신(선택 비면 힌트)
+  },
+  async setThick(filename, v){   // 표의 L(µm) 칸 수정 → override 저장 + σ_e=L/R1 즉시 재계산 (재fit 없음)
+    const t=parseFloat(v);
+    if(!isFinite(t)||t<0.5||t>300){ this.el('xe-status').innerHTML='<span style="color:#c0392b">두께 0.5~300µm 범위로</span>'; return; }
+    this.el('xe-status').innerHTML='<span style="color:#2a5db0">⏳ L='+t+'µm 반영 중…</span>';
+    let d; try { d=await (await fetch('/api/eis_exp_thickness',{method:'POST',
+      headers:{'Content-Type':'application/json'}, body:JSON.stringify({filename, thickness_um:t})})).json(); }
+    catch(e){ this.el('xe-status').innerHTML='<span style="color:#c0392b">두께 반영 실패: '+e+'</span>'; return; }
+    if(d.error){ this.el('xe-status').innerHTML='<span style="color:#c0392b">두께 반영 실패: '+d.error+'</span>'; }
+    else { this.el('xe-status').innerHTML='<span style="color:#1e8f5e">✓ '+filename+' → L='+t+'µm, σ_e 재계산됨</span>'; }
+    this.renderExpTable(d);
   },
   async deleteExp(filename){
     if(!confirm(`"${filename}" 을(를) 정말 삭제할까요?`)) return;

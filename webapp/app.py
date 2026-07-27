@@ -4223,6 +4223,29 @@ def api_eis_exp_upload():
             saved.append(base)
     if not saved:
         return jsonify({'error': '저장된 파일 없음', 'notes': notes, **_eis_exp_table()}), 200
+    # 업로드 시 두께 지정(선택) → fit 실행 전에 thickness_overrides.json 기록 (stem 키 = eis_fit 규약)
+    # ⇒ 같은 pass 의 CNLS fit 이 바로 이 L 로 σ_e=L/R1 계산 (사후 /api/eis_exp_thickness 재계산 불필요)
+    import json as _json
+    try:
+        _th = float(request.form.get('thickness_um') or '')
+    except (TypeError, ValueError):
+        _th = None
+    if _th is not None and 0.5 <= _th <= 300:
+        ov_path = os.path.join(P['archive'], 'thickness_overrides.json')
+        try:
+            ov = _json.load(open(ov_path)) if os.path.isfile(ov_path) else {}
+        except Exception:
+            ov = {}
+        for b in saved:
+            ov[os.path.splitext(b)[0]] = round(_th, 2)
+        try:
+            with open(ov_path, 'w') as fh:
+                _json.dump(ov, fh, ensure_ascii=False, indent=1)
+            notes.append(f'L={_th:g}µm 지정 → 대칭셀 σ_e=L/R1 이 이 두께로 즉시 계산됨')
+        except Exception as e:
+            notes.append(f'두께 저장 실패: {e}')
+    elif _th is not None:
+        notes.append(f'두께 {_th}µm 범위 밖(0.5~300) — 기본 45µm 로 fit')
     # 추출(.mpr, galvani 있으면) + 카탈로그 재생성
     py = os.environ.get('PYTHON', 'python3')
     arch_msg = ''
