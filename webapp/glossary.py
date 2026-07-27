@@ -5,7 +5,7 @@ glossary.py — 용어 설명집 데이터.
 "카테고리 → 용어 → 세부(무엇/어떻게/우리것)"로 보면 분야가 다 잡히게.
 """
 
-CATS_G = ["기초 이론", "전자 구조", "화학 결합", "기계 물성", "이온 수송", "계면·안정성", "MLIP·자동화"]
+CATS_G = ["기초 이론", "전자 구조", "화학 결합", "기계 물성", "이온 수송", "계면·안정성", "MLIP·자동화", "방법론·모델링"]
 
 GLOSSARY = [
 # ── 기초 이론 ─────────────────────────────────────────
@@ -134,6 +134,12 @@ GLOSSARY = [
  "what":"DFT 데이터로 학습해 <b>원자간 힘을 DFT 정확도로 즉시</b> 내주는 신경망 퍼텐셜. MD·대규모·다샘플에 필수(DFT는 너무 비쌈). UMA는 foundation model(범용 학습).",
  "how":"구조→에너지/힘을 학습. pseudopotential·k-point 개념 없음. 검증(우리 조성에 편향 없나)이 중요.",
  "ours":"UMA-s-1p1로 MD·phonon·MLIP-EOS. LPSCl 계열엔 검증된 표준, Li₃N엔 금지."},
+
+# ── 방법론·모델링 ─────────────────────────────────────
+{"id":"ordered_vs_disordered","term":"Ordered vs Disordered","full":"질서/무질서 구조 선택 — 어떤 LPSCl 셀로 계산하나","cat":"방법론·모델링",
+ "what":"'질서셀 vs 무질서셀 누가 맞냐'는 잘못된 질문 — 진짜 질문은 <b>어떤 양을 계산하느냐</b>. 0 K DFT는 에너지 E를, 합성온도(500–550°C)의 실험 무질서 구조는 F = E − TS_config를 산다. 무질서는 metastable이 아니라 <b>합성 T의 진짜 자유에너지 최소</b>를 급랭으로 얼려둔 것. Rietveld 점유율(예 48h occ 0.5)은 시공간 평균 확률이지 스냅샷이 아니다.",
+ "how":"<b>0 K 미분·에너지(phonon·gap·formation/hull·elastic) → relaxed ordered 셀 / 유한온도 수송(σ·Ea) → 무질서 유지 + 다중 배열 앙상블 평균</b>. 무질서(48h 빈자리·anti-site)가 전도의 원인 그 자체라 질서화 = 원인 삭제 = Ea 과대. 경고 사례: Deng SQS A=0.92 vs Torii ordered A=1.09 — 무질서 처리만으로 결론 부호 반전.",
+ "ours":"canonical gap 4개 = ordered 52-atom 정형셀. 수송은 d=0.5/1.0 × cfg0/1/2 disorder ensemble(UMA anneal+relax; v1 un-relaxed swap은 artifact 폐기). 단일 config 판정 금지(단일시드 1.33× 철회 교훈). 우리 A=1.14 ≈ Torii 1.09는 공유 편향(둘 다 ordered) 가능성 자기비판 유지."},
 ]
 
 def by_category():
