@@ -48,6 +48,7 @@ Li₆₋ₓPS₅₋ₓCl₁₊ₓ (x≤0.5) 고용체를 만들고 중성자 Rie
 - **총 Cl = 0.615+0.834 = 1.449/f.u.** → 정련 조성 Cl 1.45.
 - **Fig 2 비교 (vs Li₆PS₅Cl, ref 23 = Kraft 2017)**: 4a: Cl 0.385→**0.615** / 4c: Cl 0.615→**0.834**. 추가 Cl은 두 자리에 고루 분배되되 **4c(S²⁻ 자리)를 더 채움**. 저자 정의 "site disorder = S²⁻ 자리의 Cl 점유율" = **61 %(x=0) → 83 %(x=0.5)**.
 - **자리 라벨 매핑 주의**: 이 논문의 **4c(¼,¼,¼) = Kraft/de Klerk 계열 문헌의 4d**(설정 차이). Adeli가 인용한 Li₆PS₅Cl 4c-Cl 0.615는 우리 kraft2017 digest의 "4d 무질서 ~62 %"와 **정확히 일치** → 두 digest 교차검증 통과. (Liu2022의 자체 Rietveld는 같은 LPSCl인데 4d 무질서 13.3 % — **무질서 자체가 합성 의존 변수**라는 우리 논지의 실례.)
+- **[deklerk2016]과의 분배 대조** (같은 날 digest, `deklerk2016_diffusion_site_disorder_argyrodite.md`): de Klerk AIMD의 Li₆PS₅Cl 최적 Cl 분배 = 4a:4c=1:3(총 Cl의 75 %가 4c). **실측**: x=0(Kraft) 총 Cl의 61.5 %가 4c / x=0.5(Adeli) 57.6 %(=0.834/1.449)가 4c — 실측 분배는 50:50과 이론 최적(75 %) 사이. 즉 실험 합성물은 de Klerk 최적점에 미달인 채로도 9.4 mS/cm — 분배 튜닝 여지가 남아 있다는 독해 가능(단 75 %는 Cl1.0·450 K·단일배열 조건부 값).
 - **Li 가시성**: 중성자는 x=0.5 **한 조성만**. 나머지 시리즈(x=0.25/0.375/0.55/0.6)는 **랩 XRD(Cu Kα, 모세관)** — 격자상수·상순도만, **Li/SOF 정보 없음**(X-ray는 Li 사실상 비가시).
 - Rietveld 제약(SI): S1/Cl1(및 S2/Cl2) 좌표·ADP 동일 고정, Occ(S)+Occ(Cl)=1, 4b·16e occ=1, **Li 48h occ·ADP는 무제약 자유 정련**, 이후 전 파라미터 동시 정련. GSAS II. 시작 모형 = Rayavarapu Li₆PS₅Cl.
 
