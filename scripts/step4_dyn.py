@@ -2592,8 +2592,11 @@ def main():
             # ★ 수렴품질 (저율 완화-수용 투명화, 2026-07-22): worst_resid = 스텝 최대 잔차(전류수지
             #   상대오차, 0.0014=0.14%), rate_relax = 저율 완화배수(0.2C=5·0.1C=10).  뷰어가 배지로
             #   표시 → 완화-수용 곡선의 신뢰도를 사용자가 바로 판단 (0.5%↓ 良 / 1%↓ 주의 / 그이상=하드페일).
-            'conv': {'worst_resid': round(float(max(out['newton_resid'])) if out['newton_resid'] else 0.0, 6),
-                     'worst_kcl': round(float(max(out['kcl_rel'])) if out['kcl_rel'] else 0.0, 6),
+            # ⚠ .size 필수 — out[*] 는 이 시점 ndarray 라 `if arr` 는 원소 2개 이상서 ValueError
+            #   (2026-07-22 77fa751 이후 잠복: 스텝 ≥2 인 모든 런이 npz 저장 직후 viz 단계서 죽어
+            #    뷰어 JSON 이 안 생기고 킷 로그엔 FAILED 로 찍힘 — 2026-07-28 킷 e2e 에서 검출)
+            'conv': {'worst_resid': round(float(max(out['newton_resid'])) if out['newton_resid'].size else 0.0, 6),
+                     'worst_kcl': round(float(max(out['kcl_rel'])) if out['kcl_rel'].size else 0.0, 6),
                      'rate_relax': round(float(getattr(sysm, '_rate_relax', 1.0)), 2)},
             # ★ 전체 방전곡선 시계열 (뷰어 '📈 방전곡선' 버튼용 — 체크포인트 아닌 전 스텝; 스칼라라 가벼움)
             'curve': {'t_s': [round(float(v), 1) for v in out['t']],
