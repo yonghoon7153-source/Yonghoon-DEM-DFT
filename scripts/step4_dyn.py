@@ -1461,7 +1461,9 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
                              dict(mode='per_particle', min=float(i0_p.min()), max=float(i0_p.max()))),
                          alpha_a=kin.aa, alpha_c=kin.ac,
                          asr_film=kin.asr, temp_k=kin.T, nr=nr, v_min=v_min, v_max=v_max,
-                         cv_hold=bool(cv_hold), r_int_ohm_cm2=r_int_ohm_cm2,
+                         cv_hold=bool(cv_hold), i_cut_frac=i_cut_frac,   # ← 운전조건이므로 기록
+                         charge=bool(charge), dx_max=dx_max, dt_max=dt_max,
+                         r_int_ohm_cm2=r_int_ohm_cm2,
                          c_max=ocp.c_max, x0=ocp.x0, x100=ocp.x100, x_init=x_ini,
                          chained=bool(x_field is not None),
                          ocp_provenance=ocp.provenance, test_only=ocp.test_only)
