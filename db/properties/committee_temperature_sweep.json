@@ -1,0 +1,50 @@
+{
+  "property": "mlip_committee_temperature_sweep",
+  "system": "modelc (LPSCl1.6) UMA-s-1p1 궤적 스냅샷 200프레임 × 5온도",
+  "date": "2026-07-29",
+  "engines": ["mace (MACE-MP-0 medium)", "sevennet (7net-0)", "uma (UMA-s-1p1 omat)"],
+  "base_T": 600,
+  "fixed_threshold_eV_per_A": 0.3669,
+  "_provenance": "gabia 실행(tools/ionic/committee_sweep_verdict.py) 출력에서 전사. 수치는 동봉 CSV(committee_temperature_sweep_origin.csv)와 동일 — 그 CSV 가 원본이다. 도구가 함께 쓰는 JSON 의 dir/engines 세부는 전사 대상이 아니라 여기 옮기지 않았다.",
+  "by_T": {
+    "400":  {"n_frames": 200, "force_scale_eV_per_A": 0.59058, "median_abs": 0.26528, "median_relative": 0.44920, "n_above_fixed": 0,   "n_above_scaled": 34, "scaled_threshold": 0.29472},
+    "500":  {"n_frames": 200, "force_scale_eV_per_A": 0.66822, "median_abs": 0.29564, "median_relative": 0.44243, "n_above_fixed": 1,   "n_above_scaled": 19, "scaled_threshold": 0.33346},
+    "600":  {"n_frames": 200, "force_scale_eV_per_A": 0.73518, "median_abs": 0.31748, "median_relative": 0.43184, "n_above_fixed": 10,  "n_above_scaled": 10, "scaled_threshold": 0.36688, "note": "교정 기준선 — 초과 10/200 = 정의상 5%, 결과가 아니다"},
+    "800":  {"n_frames": 200, "force_scale_eV_per_A": 0.86429, "median_abs": 0.34241, "median_relative": 0.39618, "n_above_fixed": 59,  "n_above_scaled": 8,  "scaled_threshold": 0.43131},
+    "1000": {"n_frames": 200, "force_scale_eV_per_A": 0.97340, "median_abs": 0.38045, "median_relative": 0.39085, "n_above_fixed": 118, "n_above_scaled": 4,  "scaled_threshold": 0.48576}
+  },
+  "force_model": {
+    "linear": {"intercept_eV_per_A": 0.1017, "slope": 0.2852, "R2": 0.9862},
+    "power":  {"exponent": 0.687, "R2": 0.9877},
+    "proportional_a0_R2": 0.753,
+    "floor_share_at_600K": 0.32,
+    "note": "불일치 D 를 평균 힘 F 로 설명하는 모형. 비례(a=0)는 R² 0.753 으로 확실히 나쁘고, 절편 a=+0.102 eV/Å 가 실재한다."
+  },
+  "by_element_relative": {
+    "P":  {"600K": 0.33311, "trend_400_to_1000_pct": -13.9},
+    "S":  {"600K": 0.27668, "trend_400_to_1000_pct": -10.1},
+    "Li": {"600K": 0.23467, "trend_400_to_1000_pct": -8.3},
+    "Cl": {"600K": 0.18168, "trend_400_to_1000_pct": -0.1},
+    "note": "relative = 원소별 힘 RMS 불일치 ÷ 그 원소의 평균 힘. 순위 P > S > Li > Cl 이 모든 온도에서 안정."
+  },
+  "verdict": {
+    "headline": "외삽 신호 없음 — 절대 불일치 증가는 열적 힘 스케일링이다",
+    "evidence": [
+      "측정 힘 크기 400→1000 K 가 ×1.324, 조화 예측 √(T/600)=1.291 — 2.6% 초과(가벼운 비조화)에 그친다.",
+      "600 K 절대 문턱을 힘 크기에 비례해 옮겨 다시 세면 T800 8/200 · T1000 4/200 로 기준선 10/200 보다 오히려 적다. 고정문턱 판독(118/200)과 방향이 반대다.",
+      "상대 불일치 표류 -8.3% (증가 아님)."
+    ],
+    "consequence": "600/800/1000 K 3점 아레니우스는 이 지표로 막히지 않는다 → open_items #1(comp1 멀티시드 보강) 계획 유지."
+  },
+  "retraction": {
+    "what": "watch_all.py 가 T800 59/200 · T1000 118/200 을 '⚠⚠ 급증'으로 경보한 것",
+    "why_wrong": "문턱이 600 K 표본의 **절대** p95 인데 조화 고체의 RMS 힘은 √T 로 커진다. 모델 간 상대 오차가 완전히 같아도 고정 절대 문턱 초과는 늘어난다. mlip_committee.py 가 이미 경고해 둔 '같은 표본 백분위' 순환성이 온도 축에서 재발한 형태.",
+    "fixed_at": "2026-07-29 — watch 는 '(정규화 전)' 표시만 하고 경보하지 않는다. 판정은 committee_sweep_verdict.py."
+  },
+  "caveats": [
+    "⛔ 이 지표는 **절대 정확도를 말하지 않는다.** UMA(OMat24)·MACE-MP-0(MPtrj)·SevenNet-0 이 전부 PBE 계열이라 계통오차를 공유한다. 세 모델이 일치해도 절대 σ 인용 금지 규율은 그대로다.",
+    "⚠ '상대 불일치가 온도와 함께 준다'를 '고온이 더 안전하다'로 읽으면 안 된다. 온도무관 바닥 a 가 있으면 D/F = a/F + b 라 F 가 커질수록 자동으로 준다. 600 K 불일치의 32%가 그 바닥이다. 옳은 문장은 '어느 온도에서도 외삽 신호가 없다'.",
+    "⚠ 절편 a = 0.102 eV/Å 는 별개의 발견이다 — 열운동이 0 이어도 남는 모델 간 불일치, 즉 **평형 구조 PES 자체의 불일치**다. 외삽 문제가 아니므로 스냅샷 선별로는 줄지 않는다.",
+    "⚠ 위원회 불일치는 γ(MTP maxvol)와 **같은 양이 아니다** — 논리 구조(선별/중단 문턱 분리)만 공유한다."
+  ]
+}

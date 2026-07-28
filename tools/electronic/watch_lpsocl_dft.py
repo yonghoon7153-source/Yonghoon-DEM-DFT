@@ -123,13 +123,32 @@ print("=" * 72)
 print(f"LPSOCl ELF + Bader   {NOW:%m-%d %H:%M:%S}")
 print("=" * 72)
 la = open("/proc/loadavg").read().split()[:3] if os.path.exists("/proc/loadavg") else []
-print(f"CPU {sh('nproc').strip()} cores · load {' '.join(la)}")
+ncpu = int(sh("nproc").strip() or 1)
+load1 = float(la[0]) if la else 0.0
+print(f"CPU {ncpu} cores · load {' '.join(la)}")
+# ⚠ **과다구독 탐지.** OMP_NUM_THREADS 를 안 걸면 MPI 랭크마다 코어 수만큼 스레드를 띄운다.
+#   실측(2026-07-29): 20코어에 -np 10 → 200 스레드, load 154, SCF 반복 1회 3시간+.
+#   반복이 느릴 때 k-mesh 부터 의심하면 엉뚱한 데를 고치게 된다 — 여기부터 본다.
+if load1 > 1.5 * ncpu:
+    print(f"  ⛔ **과다구독: load {load1:.0f} / {ncpu} cores = {load1/ncpu:.1f}배.** "
+          f"스레드가 서로 밟는 중 — 이게 느림의 1순위 원인이다.")
+    print("     원인 1순위: OMP_NUM_THREADS 미설정 (랭크당 코어 수만큼 스레드). "
+          "OMP_NUM_THREADS=1 로 묶고 -nk 로 k 병렬을 써야 한다.")
 cpu_qe = procs(r"qe-7\.4\.1-cpu/bin/(pw|pp)\.x")
 gpu_qe = procs(r"qe-.*-gpu/bin/(pw|pp)\.x")
 print(f"  CPU QE {len(cpu_qe)} rank · GPU QE {len(gpu_qe)} proc "
       f"(GPU 쪽은 우리 체인과 무관 — Bader 대기 조건에서 제외됨)")
-for l in ps_info(cpu_qe[:1] + gpu_qe[:1]):
+# ⚠ mpirun 런처는 pcpu 0.0 이라 '멈춘 것처럼' 보인다. 실제 계산 랭크를 골라 보여준다.
+ranks = [l for l in ps_info(cpu_qe) if "/pw.x" in l or "/pp.x" in l]
+for l in ranks[:2] + ps_info(gpu_qe)[:1]:
     print("   " + l[:118])
+if ranks:
+    try:
+        pcpu = [float(l.split()[2]) for l in ranks]
+        print(f"   CPU QE 랭크 %CPU: 중앙 {sorted(pcpu)[len(pcpu)//2]:.0f}% "
+              f"({len(pcpu)}랭크) — 0 이면 멈춘 것, 100 근처면 정상 계산 중")
+    except (ValueError, IndexError):
+        pass
 gpu = sh("nvidia-smi --query-gpu=memory.used,memory.total --format=csv,noheader,nounits").strip()
 if gpu:
     print(f"  VRAM {gpu} MiB  ⚠ pw.x(GPU) 와 UMA 동시 실행은 CLAUDE.md 금지 조합")

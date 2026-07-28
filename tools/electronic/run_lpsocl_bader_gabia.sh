@@ -28,6 +28,14 @@ PHYS=$(lscpu -p=Core,Socket 2>/dev/null | grep -v '^#' | sort -u | wc -l)
 [ "${PHYS:-0}" -ge 1 ] || PHYS=$(nproc 2>/dev/null || echo 4)
 NP=${NP:-$(( PHYS < 16 ? PHYS : 16 ))}
 MPIFLAGS="--oversubscribe"
+# ⚠ ELF 런에서 겪은 그대로 — OMP 를 안 묶으면 랭크당 코어 수만큼 스레드가 떠서
+#   20코어에 200스레드(load 154)가 되고 SCF 반복 1회가 3시간을 넘는다. MPI 만 쓴다.
+export OMP_NUM_THREADS=${OMP_NUM_THREADS:-1}
+export MKL_NUM_THREADS=$OMP_NUM_THREADS OPENBLAS_NUM_THREADS=$OMP_NUM_THREADS
+# ⚠ k-mesh 는 **바꾸지 않는다** (k444). 기존 Bader 표와 같은 방법이어야 비교가 성립한다.
+#   느리면 pool 로 푼다 — pool 은 결과를 바꾸지 않는다.
+NPOOL=${NPOOL:-$(( NP % 5 == 0 ? 5 : (NP % 4 == 0 ? 4 : (NP % 2 == 0 ? 2 : 1)) ))}
+echo "[mpi] OMP_NUM_THREADS=$OMP_NUM_THREADS · -nk $NPOOL"
 ts() { date '+%H:%M:%S'; }
 
 [ -x "$CPU/pw.x" ] && [ -x "$CPU/pp.x" ] || { echo "ERROR: CPU 빌드 없음 ($CPU)"; exit 1; }
@@ -114,7 +122,7 @@ PYC
 # ---- 3) SCF ---------------------------------------------------------------
 if [ ! -s scf_paw.out ] || ! grep -qa "convergence has been achieved" scf_paw.out; then
   echo "[$(ts)] pw.x scf_paw.in (CPU -np $NP)"
-  "$MPIRUN" $MPIFLAGS -np "$NP" "$CPU/pw.x" -in scf_paw.in > scf_paw.out 2>&1
+  "$MPIRUN" $MPIFLAGS -np "$NP" "$CPU/pw.x" -nk "$NPOOL" -in scf_paw.in > scf_paw.out 2>&1
 fi
 # ⚠ 가짜 수렴 검사 — electron_maxstep 도달 시 QE 도 'achieved' 를 찍는 설정이 있다
 NIT=$(grep -ao "convergence has been achieved in *[0-9]*" scf_paw.out | tail -1 | grep -o '[0-9]*$')

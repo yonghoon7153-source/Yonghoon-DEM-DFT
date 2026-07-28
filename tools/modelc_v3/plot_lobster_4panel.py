@@ -142,6 +142,11 @@ def parse_cohpcar(path: Path):
         # (negative = bonding), read at E_F from the integral column.
         bonds_meta[b]["pcohp"] = -np.array(cohp[b])
         bonds_meta[b]["icohp"] = icohp[b][i0] if icohp[b] else 0.0
+        # ⚠ COHPCAR 의 IpCOHP 열은 -infinity 부터의 누적이라, 격자 **첫 점에서 이미 0이 아니다**.
+        #   즉 파일에 실린 곡선만 적분하면 창 밖(deep) 결합 기여가 통째로 빠진다.
+        #   실측(LPSOCl, 창 -15.03..8.02 eV): P-O 는 ICOHP 의 30% 만 창 안에 있었다.
+        #   창 안 몫 = (I(E_F) - I(E_min)) / I(E_F) 로 재려면 이 값이 있어야 한다.
+        bonds_meta[b]["icohp_at_emin"] = icohp[b][0] if icohp[b] else 0.0
     return E, bonds_meta
 
 
@@ -166,6 +171,16 @@ def parse_icohplist(path: Path):
     return recs
 
 
+def match_bonds(bonds_meta, match_keys, exclude=None, dmax=None):
+    """원소쌍 매칭 술어 — aggregate_bond_pair 와 extract_cohp_curves 가 **같이 쓴다**.
+    복제해 두면 한쪽만 고쳐져 곡선과 커버리지가 다른 결합 집합을 가리키게 된다."""
+    exclude = set(exclude or [])
+    target = set(match_keys)
+    return [bm for bm in bonds_meta
+            if {bm["a"], bm["b"]} == target and not (exclude & {bm["a"], bm["b"]})
+            and (dmax is None or bm["distance"] <= dmax)]
+
+
 def aggregate_bond_pair(E, bonds_meta, match_keys, exclude=None, dmax=None):
     """Sum -pCOHP curve + mean ICOHP across bonds matching the element pair.
     ICOHP box read from COHPCAR's own integral column at E_F (self-consistent
@@ -173,14 +188,7 @@ def aggregate_bond_pair(E, bonds_meta, match_keys, exclude=None, dmax=None):
     contacts within the generator cutoff (e.g. P-S >2.6 A = the 2 long contacts)
     so curve and box reflect the tetrahedral bond.
     Returns (cohp_summed, icohp_box_mean, n_matched)."""
-    exclude = set(exclude or [])
-    target = set(match_keys)
-
-    def ok(bm):
-        return ({bm["a"], bm["b"]} == target and not (exclude & {bm["a"], bm["b"]})
-                and (dmax is None or bm["distance"] <= dmax))
-
-    matched = [bm for bm in bonds_meta if ok(bm)]
+    matched = match_bonds(bonds_meta, match_keys, exclude, dmax)
     if not matched:
         return np.zeros_like(E), 0.0, 0
     summed = np.sum([bm["pcohp"] for bm in matched], axis=0)

@@ -15,9 +15,15 @@
   plot_lobster_4panel.py 는 매칭된 결합의 -pCOHP 를 **합(sum)** 하고 ICOHP 상자는
   **결합당 평균**을 찍는다. 그러면 곡선의 적분 ≠ 상자 값이고, N 이 크게 다른 패널끼리
   (P-O N=1 vs Li-S N=106) 높이 비교가 무의미해진다.
-  여기서는 곡선도 **결합당 평균**으로 낸다 → ∫(-pCOHP)dE|_{E_F} = -ICOHP_per_bond 로
-  상자와 곡선이 자기일관적이고, 패널 간 높이가 곧 결합당 세기다.
-  참고용으로 sum 곡선도 같은 CSV 에 함께 낸다(_sum 접미사).
+  여기서는 곡선도 **결합당 평균**으로 낸다 → 패널 간 높이가 곧 결합당 세기다.
+  참고용으로 sum 곡선도 같은 CSV 에 함께 낸다(_sum 접미사; --no_sum 으로 뺄 수 있다).
+
+⚠ **곡선 적분 ≠ ICOHP** 인 경우가 있다 — 창 잘림.
+  COHPCAR 의 에너지 격자는 -infinity 에서 시작하지 않는다(LPSOCl 실측 E_min = -15.03 eV).
+  IpCOHP 열은 누적값이라 첫 점에서 이미 0 이 아니고, 그 아래(deep) 결합 기여는 곡선에 없다.
+  실측: P-O 는 ICOHP 의 **30% 만** 창 안에 있었다 (O 2s 가 -15 eV 아래).
+  → 각 쌍마다 window_coverage 를 함께 낸다. 1 보다 작으면 그 패널의 곡선 면적으로
+     ICOHP 를 주장하면 안 된다. 곡선은 '어느 에너지에서 결합/반결합인가' 만 말한다.
 
   python3 tools/figures/extract_cohp_curves.py \
       --lobster_dir /data/work/runs/lpsocl_dft/lobster_ext \
@@ -97,6 +103,8 @@ def main():
                     help="회수(base64 붙여넣기) 크기 상한용. sigma 0.10 eV 평활 뒤라 "
                          "0.03 eV 격자면 충분하다 — 이보다 촘촘한 건 정보가 아니라 무게다")
     ap.add_argument("--decimals", type=int, default=4)
+    ap.add_argument("--no_sum", action="store_true",
+                    help="sum_ 열을 빼서 전송량을 반으로 (그림은 mean_ 만 쓴다)")
     ap.add_argument("--label", default="", help="CSV 머리말에 넣을 계 이름")
     args = ap.parse_args()
 
@@ -121,14 +129,26 @@ def main():
         s_mean = s_sum / nb
         sum_curves[lab] = s_sum
         mean_curves[lab] = s_mean
-        # 자기일관 검사: 평균 곡선을 E_F 까지 적분하면 −ICOHP(결합당) 이 나와야 한다.
+        # ⚠ 자기일관 검사의 올바른 기준은 **총 ICOHP 가 아니라 창 안 몫**이다.
+        #   COHPCAR 격자는 -infinity 에서 시작하지 않으므로(LPSOCl: E_min = -15.03 eV),
+        #   창 밖의 deep 결합 기여가 곡선에 없다. 총 ICOHP 와 비교하면 멀쩡한 파일도
+        #   "안 맞는다"고 나오고(P-O 30%), 반대로 진짜 파싱 오류를 놓친다.
+        matched = P.match_bonds(bonds_meta, keys, exc, dmax)
+        i_ef = float(np.mean([b["icohp"] for b in matched]))
+        i_lo = float(np.mean([b.get("icohp_at_emin", 0.0) for b in matched]))
+        in_window = i_ef - i_lo                     # 창 안에서 쌓인 ICOHP (음수)
+        cov = in_window / i_ef if abs(i_ef) > 1e-9 else float("nan")
         m = E <= 0.0
         integ = float(_trapz(s_mean[m], E[m]))
+        resid = abs(integ + in_window) / max(abs(in_window), 1e-9)
+        ok = "정상" if resid < 0.05 else f"⚠ 불일치 {resid*100:.0f}%"
         meta[lab] = {"N": nb, "ICOHP_per_bond_eV": round(ibox, 4),
+                     "ICOHP_in_window_eV": round(in_window, 4),
+                     "window_coverage": round(cov, 4),
                      "integral_to_EF_eV": round(integ, 4),
                      "dmax_A": dmax, "exclude": exc}
         print(f"  · {lab:6s} N={nb:3d}  ICOHP/bond {ibox:+.3f} eV  "
-              f"∫(-pCOHP)dE|EF {integ:+.3f}  (부호 반대·크기 유사면 정상)")
+              f"창 안 {in_window:+.3f} ({cov*100:5.1f}%)  ∫곡선 {-integ:+.3f}  [{ok}]")
 
     if not mean_curves:
         raise SystemExit("매칭된 결합쌍이 하나도 없다 — --pairs 원소기호 확인")
@@ -153,14 +173,20 @@ def main():
         f.write("# mean_ = per-bond average (integral to E_F == -ICOHP/bond); "
                 "sum_ = family convention (plot_lobster_4panel.py)\n")
         f.write("# " + json.dumps(meta, ensure_ascii=False) + "\n")
+        f.write("# ⚠ window_coverage: 이 창 안에 담긴 ICOHP 비율. 1 보다 작으면 "
+                "창 아래(deep) 결합 기여가 곡선에 없다 — 곡선 적분으로 ICOHP 를 재현할 수 없다.\n")
         w = csv.writer(f)
-        w.writerow(["E_minus_EF_eV"] + [f"mean_pCOHP_{k}" for k in labs]
-                   + [f"sum_pCOHP_{k}" for k in labs])
+        cols = [f"mean_pCOHP_{k}" for k in labs]
+        if not args.no_sum:
+            cols += [f"sum_pCOHP_{k}" for k in labs]
+        w.writerow(["E_minus_EF_eV"] + cols)
         for i in idx:
-            w.writerow([f"{E[i]:.4f}"] + [fmt % mean_curves[k][i] for k in labs]
-                       + [fmt % sum_curves[k][i] for k in labs])
+            row = [f"{E[i]:.4f}"] + [fmt % mean_curves[k][i] for k in labs]
+            if not args.no_sum:
+                row += [fmt % sum_curves[k][i] for k in labs]
+            w.writerow(row)
     kb = outp.stat().st_size / 1024
-    print(f"\n→ {outp}   {len(idx)} rows × {1 + 2*len(labs)} cols   {kb:.1f} KB")
+    print(f"\n→ {outp}   {len(idx)} rows × {1 + (1 if args.no_sum else 2)*len(labs)} cols   {kb:.1f} KB")
     sidecar = outp.with_suffix(".meta.json")
     sidecar.write_text(json.dumps(
         {"source": str(cohp_path), "smooth_eV": args.smooth,

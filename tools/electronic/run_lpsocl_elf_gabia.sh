@@ -23,6 +23,15 @@ PHYS=$(lscpu -p=Core,Socket 2>/dev/null | grep -v '^#' | sort -u | wc -l)
 [ "${PHYS:-0}" -ge 1 ] || PHYS=$(nproc 2>/dev/null || echo 4)
 NP=${NP:-$(( PHYS < 16 ? PHYS : 16 ))}
 MPIFLAGS="--oversubscribe"
+# ⚠ **OMP_NUM_THREADS 를 안 걸면 랭크마다 코어 수만큼 스레드를 띄운다.**
+#   실측(2026-07-29 gabia): 20코어에 -np 10 → 10×20 = 200 스레드, load average 154.
+#   스레드가 서로 밟아 SCF 반복 1회가 3시간을 넘겼다. MPI 병렬만 쓰는 게 정답이다.
+export OMP_NUM_THREADS=${OMP_NUM_THREADS:-1}
+export MKL_NUM_THREADS=$OMP_NUM_THREADS OPENBLAS_NUM_THREADS=$OMP_NUM_THREADS
+# k-point 병렬(pool). k444 는 36 k-point 라 pool 이 거의 선형으로 는다.
+# NP 가 NPOOL 로 나눠떨어져야 한다 — 안 나눠떨어지면 QE 가 거부한다.
+NPOOL=${NPOOL:-$(( NP % 5 == 0 ? 5 : (NP % 4 == 0 ? 4 : (NP % 2 == 0 ? 2 : 1)) ))}
+echo "[mpi] OMP_NUM_THREADS=$OMP_NUM_THREADS · -nk $NPOOL"
 echo "[mpi] $MPIRUN, physical=$PHYS -> np=$NP"
 [ -x "$CPU/pw.x" ] && [ -x "$CPU/pp.x" ] || { echo "ERROR: CPU 빌드 pw.x/pp.x 없음 ($CPU) — ls /data/apps 붙여줘"; exit 1; }
 [ -f "$V0" ] || { echo "ERROR: $V0 없음 — git pull"; exit 1; }
@@ -102,7 +111,7 @@ cd "$OUT"
 run_pw() {  # $1=in $2=out
   grep -aq "JOB DONE" "$2" 2>/dev/null && { echo "[$1] done skip"; return 0; }
   echo "[$(date +%H:%M:%S)] pw.x $1 (CPU -np $NP)"
-  "$MPIRUN" $MPIFLAGS -np "$NP" "$CPU/pw.x" -in "$1" > "$2" 2>&1
+  "$MPIRUN" $MPIFLAGS -np "$NP" "$CPU/pw.x" -nk "$NPOOL" -in "$1" > "$2" 2>&1
   grep -aq "JOB DONE" "$2" || { echo "[$1] FAIL — tail:"; tail -12 "$2"; return 1; }
   echo "[$1] OK  E=$(grep -a '^!' "$2" | tail -1 | awk '{print $(NF-1)}') Ry"
 }
