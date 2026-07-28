@@ -35,6 +35,19 @@ LAYOUT = [
         ("db/properties/bvse_cubic_approx/bvse_orig_vs_cubic.json", "동 JSON"),
         ("db/properties/bvse_cubic_approx/box_variance_16origins.json",
          "큐빅 박스 원점 16개 표본 편차 (±1.3%p)"),
+        ("docs/figures/bvse_cubic/bvse_channel_original_cells.png",
+         "원본 주기셀 채널 그림 (**정량 인용은 이 쪽**)"),
+        ("docs/figures/bvse_b2o3/bvse_channel_modelc_vs_b2o3.png", "modelc vs B2O3 채널 비교"),
+        # ── 3계 비교용 볼륨 데이터 (VESTA 로 열 것) ─────────────────────────
+        # ⚠ **LPSOCl 것만 repo 에 없다** — 아래 GAPS.md 참조.
+        ("db/properties/bvse_modelc/modelc_bvse.cube", "modelc BVSE 볼륨 (비교군)"),
+        ("db/properties/bvse_modelc/modelc_bvse_summary.json", "modelc BVSE 요약"),
+        ("db/properties/bvse_b2o3/b2o3_paper3_bvse_boundary.cube", "B2O3 BVSE 볼륨 (boundary)"),
+        ("db/properties/bvse_b2o3/b2o3_paper3_bvse_boundary.vesta", "B2O3 VESTA 세션"),
+        ("db/properties/bvse_b2o3/b2o3_paper3_bvse_Bcentered.cube", "B2O3 BVSE 볼륨 (B 중심)"),
+        ("db/properties/bvse_b2o3/b2o3_paper3_bvse_Bcentered.vesta", "B2O3 VESTA 세션 (B 중심)"),
+        ("db/properties/bvse_b2o3/b2o3_bvse_percolation.csv", "B2O3 퍼콜레이션"),
+        ("db/properties/bvse_b2o3/b2o3_bvse_percolation.json", "동 JSON"),
     ], None),
 
     ("1-2. 이온전도도", [
@@ -141,6 +154,45 @@ def canonical_block():
     return out
 
 
+GAPS = """# ⚠ repo 에 **없는** LPSOCl 산출물 (사용자 PC 에만 있음)
+
+git 이력 전체를 확인했다 — 아래 파일들은 **한 번도 커밋된 적이 없다.**
+전에 임시 디렉터리(`bvse_out/`)에서 만들어 파일로만 전달하고 repo 에 넣지 않은 것이다.
+**repo 가 정본이어야 하는데 산출물이 로컬에만 남은 상태**라 별도로 남긴다.
+
+| 파일 | 상태 | 조치 |
+|---|---|---|
+| `lpsocl_paper3_bvse.cube` (~753 KB) | ⛔ **git 이력에 없음** | ✅ **재생성 가능** — 아래 명령 |
+| `lpsocl_paper3_bvse.vesta` | 없음 (사용자 제작) | ✅ 스크립트가 .vesta 도 같이 뱉는다 |
+| `lpsocl_dos_total.png` / `lpsocl_pdos_elements(_peratom).png` | 없음 (로컬 생성) | ✅ CSV 는 repo 에 있다 → `fig_lpsocl_dos.py` |
+
+## 재생성 (BVSE 볼륨 + VESTA 세션)
+
+```bash
+cd ~/Yonghoon-DEM-DFT
+mkdir -p ~/work/bvse_regen && cd ~/work/bvse_regen
+python3 ~/Yonghoon-DEM-DFT/tools/comp1_v3/bvse_faithful_cubic.py
+ls -la bvse_out/lpsocl*
+```
+생성기: `tools/comp1_v3/bvse_faithful_cubic.py` (라인 312 에서 `lpsocl` 계가 이미 정의돼 있고
+`db/structures/lpsocl_v0.vasp` 를 읽는다). 산출물 이름은
+`lpsocl_orig_bvse_aboveMin.cube` / `lpsocl_cubicapprox_bvse_aboveMin.cube` + 각각의 `.vesta`.
+사용자 폴더의 `lpsocl_paper3_bvse.cube` 는 그중 하나를 **이름만 바꾼 것**이다.
+
+⚠ **`_orig` 를 쓸 것.** `_cubicapprox` 는 표시용이고 정량·순위 인용 금지
+(원점 16개 표본에서 ±1.3%p 편차).
+
+## 대조군은 repo 에 있다
+`b2o3_paper3_bvse_{boundary,Bcentered}.cube/.vesta`, `modelc_bvse.cube`.
+즉 3계(undoped / +O / +B2O3) 중 **LPSOCl 볼륨만** 빠져 있고,
+채널% 수치(`bvse_3system_channel_origin.csv`)는 **3계 모두 있으므로 정량은 지장 없다.**
+빠진 것은 VESTA 시각화용 볼륨뿐이다.
+
+⚠ .vesta 는 ASCII 전용 + CRLF (em-dash 등 비ASCII 가 IMPORT_DENSITY 파싱을 깨뜨린 사례).
+⚠ 볼륨 cube 는 aboveMin 관례(맵 최소 빼기). `.vesta` + `.cube` 를 **같은 폴더에 쌍으로** 배포.
+"""
+
+
 DISCIPLINE = """# ⚠ 인용 규율 (이 폴더 전체에 적용)
 
 이 데이터는 **Yonghoon-DEM-DFT** repo 에서 자동 추출한 것이다. 원본이 정본이고 이 사본은 스냅샷이다.
@@ -219,6 +271,7 @@ def main():
         print(f"  {CANDIDATE_DIR:42s} {k}개")
 
     (out / "00_인용규율_READ_FIRST.md").write_text(DISCIPLINE, encoding="utf-8")
+    (out / "00_GAPS_repo에없는것.md").write_text(GAPS, encoding="utf-8")
     (out / "00_canonical_values.json").write_text(
         json.dumps(canonical_block(), ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     with open(out / "00_manifest.csv", "w", newline="", encoding="utf-8-sig") as f:
