@@ -50,6 +50,30 @@ GATE_MEV = 100.0          # Xiao F4: |dE_rxt| < 100 meV/atom
 DEFAULT_V = [3.0, 3.9, 4.3]   # 반충~만충 구간 (LCO 3.9 V 라인 = Xiao 본문 기준선)
 
 
+# ── MP API 키 탐색 ─────────────────────────────────────────────
+def _find_api_key():
+    """env → ~/.pmgrc.yaml → ~/.config/.pmgrc.yaml 순. pymatgen이 키를 쓰는 표준 위치까지 훑는다."""
+    for v in ("MP_API_KEY", "PMG_MAPI_KEY"):
+        k = os.environ.get(v)
+        if k and len(k.strip()) >= 15:
+            print(f"[key] 환경변수 {v} 사용")
+            return k.strip()
+    import re as _re
+    for p in (Path.home() / ".pmgrc.yaml", Path.home() / ".config" / ".pmgrc.yaml"):
+        if not p.exists():
+            continue
+        m = _re.search(r"PMG_MAPI_KEY\s*:\s*['\"]?([A-Za-z0-9]{15,})", p.read_text())
+        if m:
+            print(f"[key] {p} 에서 발견")
+            return m.group(1)
+    sys.exit(
+        "MP API 키를 못 찾음. 아래 중 하나로 지정하세요:\n"
+        "  export MP_API_KEY=<32자 키>\n"
+        "  또는  pmg config --add PMG_MAPI_KEY <32자 키>   (~/.pmgrc.yaml 에 저장)\n"
+        "키 위치 탐색:  grep -rl 'MP_API_KEY\\|PMG_MAPI_KEY' ~/.bashrc ~/.profile ~/.pmgrc.yaml "
+        "~/work ~/*.sh 2>/dev/null")
+
+
 # ── MP 엔트리 (캐시) ────────────────────────────────────────────
 def get_entries(elements, cache_dir):
     key = "-".join(sorted(elements))
@@ -59,9 +83,7 @@ def get_entries(elements, cache_dir):
         entries = json.loads(cp.read_text(), cls=MontyDecoder)
         print(f"[cache] {len(entries):5d} entries  {key}")
         return entries
-    api = os.environ.get("MP_API_KEY") or os.environ.get("PMG_MAPI_KEY")
-    if not api:
-        sys.exit("MP_API_KEY(또는 PMG_MAPI_KEY) 환경변수가 없습니다.")
+    api = _find_api_key()
     from mp_api.client import MPRester
     with MPRester(api) as mpr:
         entries = mpr.get_entries_in_chemsys(
