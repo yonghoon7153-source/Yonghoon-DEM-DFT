@@ -225,6 +225,8 @@ def main():
             ap.error('--step4-sched는 비어있지 않은 리스트여야 함')
         s4_sched = []
         for i, st in enumerate(_sc):
+            if not isinstance(st, dict):                    # 감사 M12: [1] 같은 입력이 500+트레이스백
+                ap.error(f'step {i}: 각 스텝은 객체(dict)여야 함 — got {type(st).__name__}')
             k = str(st.get('k', '')).lower()
             if k not in ('c', 'd', 'r', 'l'):
                 ap.error(f'step {i}: k는 "c"(충전CCCV)/"d"(방전)/"r"(rest)/"l"(Loop) — got {st.get("k")!r}')
@@ -237,6 +239,8 @@ def main():
                     ap.error(f'step {i}: Loop to={_to} 는 1..{i}(자기 앞) 이어야 함')
                 if _ln < 2:
                     ap.error(f'step {i}: Loop n≥2 (1회면 Loop 불필요)')
+                if _ln > 200:                               # 감사 M9: 상한 없어 n=20000 → 19.5MB 스크립트
+                    ap.error(f'step {i}: Loop n≤200 (got {_ln} — 그 이상은 스크립트/런 수가 비현실)')
                 if any(e['k'] == 'l' for e in s4_sched[_to - 1:i]):
                     ap.error(f'step {i}: 중첩 Loop 미지원 (v1)')
                 if not any(e['k'] in ('c', 'd') for e in s4_sched[_to - 1:i]):
@@ -250,8 +254,19 @@ def main():
                 r = float(st['r'])
             except Exception:
                 ap.error(f'step {i}: r(C-rate) 필요')
-            if not (r > 0):
-                ap.error(f'step {i}: rate>0 필요 (got {r})')
+            # ★체크박스 경로와 **같은** 범위 검증 (감사 M11: 스케줄만 r>0 이라 1e9C·99V·-5V 가
+            #   그대로 통과해 킷이 생성됐다).  webapp _cut/화이트리스트와 정합.
+            if not (0.02 <= r <= 5.0):
+                ap.error(f'step {i}: C-rate 는 0.02~5.0 (got {r})')
+            _v = float(st.get('v', a.step4_vmax if k == 'c' else a.step4_vmin))
+            if k == 'c' and not (3.5 <= _v <= 4.8):
+                ap.error(f'step {i}: 충전 컷오프 v 는 3.5~4.8 V (got {_v})')
+            if k == 'd' and not (1.5 <= _v <= 4.0):
+                ap.error(f'step {i}: 방전 컷오프 v 는 1.5~4.0 V (got {_v})')
+            if k == 'c':
+                _ic = float(st.get('i', a.step4_icut))
+                if not (0.01 <= _ic <= 2.0):
+                    ap.error(f'step {i}: CV 종지 |I| 는 0.01~2.0 C (got {_ic})')
             entry = {'k': k, 'r': r,
                      'v': float(st.get('v', a.step4_vmax if k == 'c' else a.step4_vmin)),
                      'n': int(st.get('n', 1))}

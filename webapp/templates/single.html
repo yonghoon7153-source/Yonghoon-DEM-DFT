@@ -687,8 +687,28 @@ function addSchedStep(k) { _schedSteps.push(
   : k === 'r' ? { k: 'r', t: 1, n: 1 }
   : k === 'l' ? { k: 'l', to: 1, n: 5 }                    // ★Loop: 스텝 to로 이동 × 총 n회 (Zive "Go to step")
   : { k: 'd', r: 0.2, v: 3.0, n: 1 }); renderSched(); }
-function delSchedStep(i) { _schedSteps.splice(i, 1); renderSched(); }
-function moveSchedStep(i, d) { const j = i + d; if (j < 0 || j >= _schedSteps.length) return; const t = _schedSteps[i]; _schedSteps[i] = _schedSteps[j]; _schedSteps[j] = t; renderSched(); }
+// ★Loop 의 to 는 **스텝 번호**라 삭제·이동 시 재매핑해야 한다 — 안 하면 사용자가 스텝 하나만
+//   지웠는데 반복 블록이 조용히 달라지고 검증도 통과한다 (감사 M7: 충+휴+방 ×3 → 휴+방 ×3).
+function _remapLoops(mapOldToNew) {
+  _schedSteps.forEach(st => {
+    if (st.k !== 'l') return;
+    const nt = mapOldToNew(st.to - 1);          // 0-base 로 다뤄 1-base 로 복귀
+    st.to = (nt == null) ? 1 : nt + 1;
+  });
+}
+function delSchedStep(i) {
+  const wasLoopTarget = _schedSteps.some(st => st.k === 'l' && st.to - 1 === i);
+  if (wasLoopTarget && !confirm(`스텝 ${i + 1} 은 Loop 의 시작 지점입니다.\n지우면 반복 블록이 줄어듭니다. 계속?`)) return;
+  _schedSteps.splice(i, 1);
+  _remapLoops(o => (o === i ? Math.min(i, _schedSteps.length - 1) : (o > i ? o - 1 : o)));
+  renderSched();
+}
+function moveSchedStep(i, d) {
+  const j = i + d; if (j < 0 || j >= _schedSteps.length) return;
+  const t = _schedSteps[i]; _schedSteps[i] = _schedSteps[j]; _schedSteps[j] = t;
+  _remapLoops(o => (o === i ? j : (o === j ? i : o)));   // 스왑된 두 인덱스를 추적
+  renderSched();
+}
 function loadSchedPreset() { _schedSteps = _defSched(); renderSched(); }
 function clearSched() { _schedSteps = []; renderSched(); }
 // ── 스케줄 저장/불러오기 (localStorage, 브라우저 영속 — 서버 불필요) ──
@@ -738,6 +758,9 @@ function _schedSet(i, f, v) {
   else _schedSteps[i][f] = parseFloat(v);
   renderSched();
 }
+function _inLoopBlock(i) {   // 스텝 i 가 어떤 Loop 의 반복 블록 [to..직전] 에 드는가
+  return _schedSteps.some((st, j) => st.k === 'l' && i >= st.to - 1 && i < j);
+}
 function renderSched() {
   const tb = document.getElementById('sched-rows'); if (!tb) return;
   const gray = '<span style="color:#6b7280">—</span>';
@@ -757,7 +780,11 @@ function renderSched() {
       cut = s.k === 'c'
         ? `≤<input type="number" value="${s.v}" step="0.05" style="width:46px" onchange="_schedSet(${i},'v',this.value)">V, CV|I|<input type="number" value="${s.i}" step="0.01" style="width:44px" onchange="_schedSet(${i},'i',this.value)">C`
         : `≥<input type="number" value="${s.v}" step="0.05" style="width:46px" onchange="_schedSet(${i},'v',this.value)">V`;
-      cyc = `<input type="number" value="${s.n}" step="1" min="1" style="width:52px" onchange="_schedSet(${i},'n',this.value)">`;
+      // ★Loop 블록 안 스텝의 cyc 는 루프 회차(1..N)로 자동 부여 — 편집칸을 그리면 사용자가
+      //   고쳐도 조용히 무시된다(생성기 경고는 서버 로그로만 나가 UI 에 안 보임; 감사 M8).
+      cyc = _inLoopBlock(i)
+        ? `<span style="color:#6b7280" title="이 스텝은 Loop 블록 안 — cyc 는 회차(1..N)로 자동">자동</span>`
+        : `<input type="number" value="${s.n}" step="1" min="1" style="width:52px" onchange="_schedSet(${i},'n',this.value)">`;
     }
     return `<tr style="border-top:1px solid #1e293b"><td>${i + 1}</td><td>${kind}</td><td>${rate}</td><td>${cut}</td><td>${cyc}</td><td style="white-space:nowrap"><button type="button" onclick="moveSchedStep(${i},-1)">↑</button><button type="button" onclick="moveSchedStep(${i},1)">↓</button><button type="button" onclick="delSchedStep(${i})">✕</button></td></tr>`;
   }).join('') || '<tr><td colspan="6" style="color:#6b7280;padding:6px">스텝 없음 — [+ 충전]/[+ 방전]/[+ Rest]로 추가하세요.</td></tr>';
@@ -853,18 +880,21 @@ function _addRecipeStr(vg, sp, pt, sd = 0) {
 }
 // variant tag (_VGCF-PTFE_1-1_ballmill) + the MPM-lab variant name (caseName + tag).
 function _addTag() {
-  const { vg, sp, pt, sd, mix, vox, s4, s4chg, s4pp, s4sched } = _addVals();
+  const { vg, sp, pt, sd, mix, vox, s4, s4chg, s4pp, s4sched, s4cap } = _addVals();
   // [A-Za-z0-9._]만 사용하는 자기서술 쌍 형식 (서버 미러) — ':'/'-' 는 다운로드 새니타이즈로
   // 삭제돼 예측명↔실제 파일명이 어긋났음 (VGCFPTFESDCP_2.970.4950.495 사건, 2026-07-17)
   const pairs = [['VGCF', vg], ['SuperP', sp], ['PTFE', pt], ['SDCP', sd]]
     .filter(p => p[1] > 0).map(p => p[0] + p[1]).join('_');
   if (!pairs) return '';
   const vt = (vox && vox !== '0.4') ? '_vox' + vox : '';   // finer STEP3 vox → carried into the name
-  // ⚠ 스케줄은 파일명 태그에 안 넣음 — 서버 download_name(app.py)이 &s4sched를 파일명에 반영 안 하므로,
-  //   여기서 넣으면 카드가 참조하는 zip명 ↔ 실제 다운로드명이 어긋남 (VGCFPTFESDCP 사건 재발).
-  const st = (s4 ? '_s4' + s4.split(',').map(r => r + 'C').join('_') : '')
-           + (s4chg ? '_s4chg' + s4chg.split(',').map(r => r + 'C').join('_') : '')
-           + (s4pp ? '_ppds' : '');                        // poly/SC D_s 프리셋 킷 구별
+  // ★서버(app.py download_name)와 **정확히** 미러해야 한다 (VGCFPTFESDCP 사건 교훈).
+  //   서버 규약: 스케줄 지정 시 체크박스 rate 는 태그서 제외하고 '_sched' 를 붙이며,
+  //   솔버 cap 은 '_cap<값>' (σ_eff 를 바꾸는 노브라 같은 이름의 두 킷 방지).
+  const st = (s4sched ? '_sched'
+              : (s4 ? '_s4' + s4.split(',').map(r => r + 'C').join('_') : '')
+                + (s4chg ? '_s4chg' + s4chg.split(',').map(r => r + 'C').join('_') : ''))
+           + (s4pp ? '_ppds' : '')                         // poly/SC D_s 프리셋 킷 구별
+           + (s4cap ? '_cap' + s4cap : '');
   return '_' + pairs + '_' + mix + vt + st;
 }
 function _addVariantName() { const t = _addTag(); return t ? `{{ case.name }}${t}` : ''; }

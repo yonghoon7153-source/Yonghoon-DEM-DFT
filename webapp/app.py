@@ -6335,10 +6335,19 @@ def mpm_input_package(case_id):
            if recipe else '')
     if recipe and _vox != '0.4':                        # finer STEP3 vox → carried into the zip/name
         tag += '_vox' + _vox
+    # ★스케줄 지정 시 체크박스 rate 는 킷에 안 들어가므로(위 게이트) 태그에서도 뺀다 —
+    #   안 그러면 zip 이름은 '_s40.2C' 인데 내용은 스케줄이라 서로 어긋난다 (감사 L10).
+    if _s4sched:
+        _s4_clean = _s4chg_clean = []
     if _s4_clean:                                       # STEP4 선택 → zip 이름에 rate 표기
         tag += '_s4' + '_'.join(f'{v:g}C' for v in _s4_clean)
     if _s4chg_clean:
         tag += '_s4chg' + '_'.join(f'{v:g}C' for v in _s4chg_clean)
+    if _s4sched:
+        tag += '_sched'
+    # ★솔버 cap 은 σ_eff 를 −7.8% 바꾸는 노브 → 같은 이름의 두 킷이 생기지 않게 태그 (감사 M10)
+    if _s4cap in ('200', '1000', '2000'):
+        tag += '_cap' + _s4cap
     # ★poly/SC 크기-분리 프리셋 → run_mpm.sh 가 달라짐(σ_e 재료분류+D_s) → 파일명도 구별.
     #   클라이언트 _addTag 의 '_ppds' 와 반드시 일치 (예전 _sched7step/VGCFPTFESDCP 어긋남 교훈).
     if recipe and request.args.get('s4pp', '') in ('1', 'true', 'on'):
