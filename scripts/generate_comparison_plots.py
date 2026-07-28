@@ -23,6 +23,11 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
+_THIS_DIR = os.path.dirname(os.path.abspath(__file__))
+if _THIS_DIR not in sys.path:
+    sys.path.insert(0, _THIS_DIR)
+import se_material  # single source of truth for σ_grain (SE_SG) + its temperature convention
+
 
 def _register_cjk_fallback():
     """Register a Korean-capable font so Hangul in titles/labels renders instead
@@ -4246,12 +4251,64 @@ def _cov_frac(d, physics=True):
 # Validated by nested CV (scripts/nested_cv_sat.py): unbiased SAT 0.949→0.953
 # (+0.0045, ~2.8× noise SE); × Cronau then adds Δ=+0.0043 at frozen φc/δ
 # (literature factor, no DoF, deterministic).
-SE_SG = 3.0
+# ★ σ_grain now comes from se_material (repo-wide single definition, declared at T_ref = 25 °C).
+# The VALUE IS UNCHANGED (3.0 mS/cm, bitwise) — `_sat_baselog` below is byte-for-byte the same
+# expression it has always been.  Temperature is applied ONLY by set_se_temperature() (opt-in,
+# CLI --temp-c), which rebinds this module global; with no flag the production form is untouched.
+SE_SG = se_material.SIGMA_GRAIN_MS_CM_25C
 SE_PHI_C_P = 0.200   # P-heavy (10:0) percolation threshold
 SE_PHI_C_S = 0.195   # S-heavy (0:10) percolation threshold
 SE_SAT_DELTA = 0.040 # near-threshold rounding (gated to 0:10 via g_010)
 SE_K_PS = 10.0; SE_P_C = 0.5
 SE_CN_EXP = 2.0; SE_COV_EXP = 0.5
+
+# ── σ_grain temperature (opt-in, --temp-c) ────────────────────────────────────
+# Provenance of the number this module's PRODUCTION σ_ionic form was evaluated at.
+SE_TEMP_PROVENANCE = se_material.provenance()   # T_dependence = NOT_MODELLED by default
+
+
+def set_se_temperature(temp_c=None, ea_ion_ev=None, printer=print):
+    """Rebind SE_SG (the σ_grain prefactor of the production σ_ionic form) to σ_grain(T).
+
+    temp_c=None (the default everywhere) → SE_SG stays the bare 3.0 literal and `_sat_baselog`
+    is bitwise unchanged, so the LOOCV-0.975 production path is untouched.
+
+    ★★ HONEST WARNING — READ BEFORE USING THIS ON THE SCALING-LAW PATH ★★
+    A GLOBAL multiplicative factor on σ_grain is EXACTLY DEGENERATE with the live-fit
+    intercept `a` of C_blend(τ).  `_cblend_fit_score` regresses (log σ_act − base_log) on a
+    design matrix whose first column is np.ones(n) — so adding the constant log(factor) to
+    base_log simply moves the fitted `a` by −log(factor) and leaves EVERY prediction, R², and
+    LOOCV numerically identical.  In other words: on THIS path `--temp-c` changes only the
+    LABEL (which temperature the prefactor is declared at), not the numbers.
+
+    The honest way to make the scaling law temperature-aware is to move the TARGETS —
+    re-solve the corpus σ_act at T (network_conductivity.py --temp-c) and re-fit — not to
+    scale the form's prefactor.  This function exists so that (a) SE_SG has ONE definition
+    shared with the solvers, and (b) a T-labelled run says so in its provenance instead of
+    silently claiming 25 °C.  See docs/temp_pressure_capability.md §3-4 / T1-b.
+    """
+    global SE_SG, SE_TEMP_PROVENANCE
+    SE_SG = se_material.sigma_grain_mS_cm(temp_c, ea_ion_ev)
+    SE_TEMP_PROVENANCE = se_material.provenance(temp_c, ea_ion_ev)
+    if temp_c is not None:
+        printer(f"  [T] SE_SG (σ_grain) = {SE_SG:.4f} mS/cm @ {temp_c:.1f} °C "
+                f"(T_ref={se_material.T_REF_C:.0f} °C, Ea={SE_TEMP_PROVENANCE['Ea_ion_eV']} eV, "
+                f"σ·T Kraft2017)")
+        se_material.warn_band(temp_c, ea_ion_ev, printer=printer)
+        printer('  [T] ⚠ SCALING-LAW PATH: this prefactor factor is EXACTLY absorbed by the '
+                'live-fit C_blend(τ) intercept → σ_ionic form predictions / R² / LOOCV are '
+                'UNCHANGED.  It relabels, it does not re-predict.  To make the form actually '
+                'temperature-aware, re-solve the corpus targets at T '
+                '(network_conductivity.py --temp-c) and re-fit.')
+        # Honesty: only the PRODUCTION form reads SE_SG.  The legacy/diagnostic plot helpers
+        # (plot_ionic_phic_scan_stage_e, the Bruggeman previews, the old FORM-X overlays) each
+        # keep a LOCAL `SG = 3.0` / `SIGMA_BULK = 3.0` literal and therefore stay at 25 °C.
+        # They are diagnostics, not the production form — but say so rather than let a
+        # T-labelled figure quietly mix two temperature conventions.
+        printer('  [T] ⚠ legacy/diagnostic plot helpers keep a local σ_grain=3.0 (25 °C) literal '
+                '→ in a --temp-c run those overlays are 25 °C while the production form is '
+                'T-labelled.  Do not mix them in one figure.')
+    return SE_SG
 
 
 def _sat_g010(p):
@@ -7040,7 +7097,15 @@ def main():
     parser.add_argument("--focus-cases", default="")  # \\t-separated saved names → "1-1" focus parity
     parser.add_argument("--focus-label", default="")  # group name(s) shown on the 1-1 plot
     parser.add_argument("--fit-corpus-inputs", nargs="*", default=[])  # full corpus for global fit stats
+    se_material.temperature_argparse(parser)   # --temp-c / --ea-ion-ev (both default None)
     args = parser.parse_args()
+
+    # σ_grain(T) for the PRODUCTION σ_ionic form.  Unset (the default, and what the webapp
+    # always passes) → SE_SG stays the bare 3.0 literal → _sat_baselog bitwise unchanged.
+    # ⚠ see set_se_temperature(): on this path the factor is absorbed by the live-fit
+    # intercept, so it is a LABEL, not a numeric change.  Verified in --selftest-temp.
+    if args.temp_c is not None or args.ea_ion_ev is not None:
+        set_se_temperature(args.temp_c, args.ea_ion_ev)
 
     # σ_e endpoint override (user-set σ_S/σ_P from UI) — applies to Stage 22
     # locked form.  If both blank → use the corpus-fit defaults (10, 5).
@@ -7386,5 +7451,75 @@ def main():
     print(f"\nTotal: {len(plot_info)} plots")
 
 
+def _selftest_temp():
+    """σ_grain(T) wiring on the PRODUCTION σ_ionic path.
+
+    Two things must hold and BOTH are checked here:
+      (1) with no --temp-c, SE_SG and _sat_baselog are BITWISE what they always were;
+      (2) with --temp-c the prefactor factor is EXACTLY absorbed by the live-fit
+          C_blend(τ) intercept, i.e. the form's predictions/R²/LOOCV do not move.
+          (2) is the reason set_se_temperature() prints a warning instead of pretending
+          the scaling law became temperature-aware.
+    """
+    global SE_SG
+    ok = True
+
+    def chk(name, cond, extra=''):
+        nonlocal ok
+        ok &= bool(cond)
+        print(f"  {'PASS' if cond else 'FAIL'}  {name}{(' — ' + extra) if extra else ''}")
+
+    grid = [(phi, cn, cov, fp, p, rse)
+            for phi in (0.22, 0.30, 0.41) for cn in (2.7, 4.1, 6.3)
+            for cov in (0.05, 0.31) for fp in (0.4, 0.95)
+            for p in (0.0, 0.5, 1.0) for rse in (None, 0.25, 0.5, 1.5)]
+
+    def base(rs=None):
+        return [float(_sat_baselog(*g, 2.5, 5.5)).hex() for g in grid]
+
+    chk('SE_SG is bitwise 3.0 at import (production default)',
+        float(SE_SG).hex() == (3.0).hex(), float(SE_SG).hex())
+    b0 = base()
+    set_se_temperature(None)
+    chk('set_se_temperature(None) leaves SE_SG bitwise 3.0', float(SE_SG).hex() == (3.0).hex())
+    chk(f'_sat_baselog bitwise unchanged over {len(grid)} input combos', base() == b0)
+
+    # temperature ON: SE_SG scales, base_log shifts by exactly log(factor)
+    set_se_temperature(60.0, printer=lambda *a, **k: None)
+    fac = se_material.arrhenius_sigma_factor(60.0)
+    chk('SE_SG(60 °C) = 3.0 x4.785', abs(SE_SG / 3.0 - fac) < 1e-12 and abs(fac - 4.785) < 1e-3,
+        f'SE_SG={SE_SG:.4f}')
+    d = [float(_sat_baselog(*g, 2.5, 5.5)) - float.fromhex(h) for g, h in zip(grid, b0)]
+    chk('base_log shift is EXACTLY log(factor) for every case',
+        max(abs(x - np.log(fac)) for x in d) < 1e-12)
+
+    # ★ the degeneracy proof: same corpus, base_log vs base_log+Δ → same fit output
+    rng = np.random.default_rng(3)
+    n = 40
+    bl = rng.normal(-1.0, 0.5, n)
+    taus = rng.uniform(1.1, 4.0, n)
+    ex = [rng.normal(0, 1, n), rng.normal(0, 1, n)]
+    ls = bl + 0.3 + 0.2 * np.log(taus) - 0.05 * np.log(taus) ** 2 + rng.normal(0, 0.05, n)
+    r2a, looa, _, _, pa, ba, _ = _cblend_fit_score(bl, ls, taus, extras=ex)
+    dlt = float(np.log(fac))
+    r2b, loob, _, _, pb, bb, _ = _cblend_fit_score(bl + dlt, ls, taus, extras=ex)
+    chk('sigma_grain(T) is absorbed by the fit intercept: predictions identical',
+        np.allclose(pa, pb, rtol=0, atol=1e-12))
+    chk('… R² and LOOCV identical', abs(r2a - r2b) < 1e-12 and abs(looa - loob) < 1e-12,
+        f'R² {r2a:.6f}/{r2b:.6f}  LOOCV {looa:.6f}/{loob:.6f}')
+    chk('… only the intercept moves, by -log(factor)', abs((bb[0] - ba[0]) + dlt) < 1e-12
+        and np.allclose(ba[1:], bb[1:], rtol=0, atol=1e-12),
+        f'Δa = {bb[0]-ba[0]:.6f} vs -log(f) = {-dlt:.6f}')
+    chk('provenance recorded ARRHENIUS', SE_TEMP_PROVENANCE['T_dependence'] == 'ARRHENIUS')
+
+    set_se_temperature(None)   # restore production state
+    chk('restored: SE_SG bitwise 3.0 + NOT_MODELLED', float(SE_SG).hex() == (3.0).hex()
+        and SE_TEMP_PROVENANCE['T_dependence'] == 'NOT_MODELLED')
+    print('SE_SG TEMP SELFTEST', 'PASS' if ok else 'FAIL')
+    return 0 if ok else 1
+
+
 if __name__ == "__main__":
+    if '--selftest-temp' in sys.argv:
+        sys.exit(_selftest_temp())
     main()

@@ -237,7 +237,10 @@
     결과 <code>mpm_payload.json</code> 업로드(③) → 위 "MPM" 3D 버튼 + 비교표 활성화.
   </p>
   <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
-    <a class="btn btn-primary" href="/results/{{ case.id }}/mpm-input">① MPM input 변환 (zip)</a>
+    <a class="btn btn-primary" href="/results/{{ case.id }}/mpm-input"
+       title="기본 킷 — 25 °C 규약 · 제작압(압밀)만. 운전 온도/구동 스택압을 지정하려면 아래 '⚡ 첨가제 적용 + 🌡 운전조건' 패널의 ② 버튼을 쓰세요.">① MPM input 변환 (zip)</a>
+    <span style="color:#64748b;font-size:0.82em">기본 = 25 °C 규약 · 제작압만 —
+      운전 온도/구동압은 아래 <b>⚡…🌡 운전조건</b> 패널 ②</span>
     <form style="display:inline-flex; gap:6px; align-items:center" onsubmit="return uploadMpm(event)">
       <input type="file" id="mpm-payload-file" accept=".json" required>
       <button class="btn btn-secondary" type="submit">③ 결과 업로드</button>
@@ -247,7 +250,7 @@
 
   <!-- ⚡ 첨가제 적용: PTFE/VGCF/Super P 선택 → recipe-baked zip 생성. σ/porosity 상세 분석은 GPU run 후 MPM 뷰어. -->
   <details style="margin-top:14px">
-    <summary style="cursor:pointer;color:#94a3b8;font-size:0.92em;font-weight:600">⚡ 첨가제 적용 (PTFE / VGCF / Super P / SDCP) — recipe zip 생성</summary>
+    <summary style="cursor:pointer;color:#94a3b8;font-size:0.92em;font-weight:600">⚡ 첨가제 적용 (PTFE / VGCF / Super P / SDCP) + 🌡 운전조건(온도 · 구동 스택압) — recipe zip 생성</summary>
     <div style="margin-top:10px; padding:12px 14px; background:#0f172a; border:1px solid #334155; border-radius:8px">
       <div style="display:flex; gap:14px; align-items:flex-end; flex-wrap:wrap; font-size:0.85em; color:#cbd5e1">
         <label>VGCF wt%<br><input id="add-vgcf" type="number" min="0" max="10" step="0.1" value="0" style="width:64px" oninput="updateAdditiveGpuCmds()"></label>
@@ -267,6 +270,32 @@
           <option value="ballmill">ball-mill (고전단)</option>
           <option value="thinky" selected>thinky (고전단 · SuperP=dry-coat)</option>
           <option value="handmix">hand-mix (저전단)</option></select></label>
+        <!-- ★ 운전조건 축 (docs/temp_pressure_capability.md) — 둘 다 비우면 현행(25 °C 규약 · 제작압만) 그대로 -->
+        <div style="flex-basis:100%;margin-top:6px;padding:8px 10px;background:#111c2e;border:1px solid #24405f;border-radius:7px">
+          <div style="display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap">
+            <label title="셀 운전 온도 [°C].  비우면 = 미지정 = 현행(모든 σ가 25 °C 규약값, T_dependence=NOT_MODELLED) → 킷 방출물이 예전과 바이트 동일합니다.  값을 주면 킷의 STEP3 σ 솔브에 --temp-c 가 구워져 σ_ion(SE)만 Kraft-2017 σ·T Arrhenius(T_ref=25 °C)로 스케일됩니다.  ⚠ i0/R_ct·D_s·OCP dU/dT·σ_e·κ·SE 경도는 앵커가 없어 25 °C 상수 그대로 → 전-물리 온도 스윕이 아닙니다 (오른쪽 경고 참조).">🌡 운전 온도<br>
+              <input id="kit-tempc" type="number" min="-20" max="200" step="1" placeholder="미지정(25°C)" style="width:104px" oninput="updateAdditiveGpuCmds()"> °C</label>
+            <span style="display:inline-flex;gap:4px;align-items:center;font-size:0.92em">
+              <button type="button" onclick="_setTemp(30)" style="padding:2px 8px;cursor:pointer">30</button>
+              <button type="button" onclick="_setTemp(45)" style="padding:2px 8px;cursor:pointer">45</button>
+              <button type="button" onclick="_setTemp(60)" style="padding:2px 8px;cursor:pointer">60</button>
+              <button type="button" onclick="_setTemp('')" style="padding:2px 8px;cursor:pointer" title="미지정으로 되돌림 = 현행 25 °C 규약 (킷 바이트 동일)">지움</button>
+            </span>
+            <label title="이온 활성화에너지 Eₐ [eV].  ★단일값 보고 금지 — 밴드가 1.8× 넓습니다(0.29 Ma2024 / 0.41 Reisacher2023 STATED·375MPa 냉간압밀 / 0.46 Kraft2017).  30→60 °C 배수가 ×2.47~×4.44로 갈리므로 세 값을 모두 돌려 브래킷으로 보고하세요.  온도를 지정해야 의미가 있습니다.">Eₐ(이온)<br>
+              <select id="kit-eaion" style="padding:3px" onchange="updateAdditiveGpuCmds()">
+                <option value="" selected>기본 0.41 eV (Reisacher)</option>
+                <option value="0.29">0.29 eV (Ma 2024 · 하한)</option>
+                <option value="0.46">0.46 eV (Kraft 2017 · 상한)</option></select></label>
+            <label title="구동(작동) 스택압 [MPa] — ★제작압과 다른 물리입니다.  비우면 = 미지정 = 현행(A-1 사이클 앵커를 제작압으로 재압축).  값을 주면 A-1 앵커 스크립트가 2단이 됩니다: ① 제작압 압밀 + --save-state(소성이력 저장) → ② --load-state 로 그 이력을 이어받아 이 구동압에서 재평형 + 사이클 부피변화.  지그 강성을 모르므로 servo(정응력=부드러운 스프링, 하한)와 hold(정적변위=강체 지그, 상한) 두 팔을 모두 방출 → 실제 셀은 그 브래킷 안.  ⚠ 본 압밀(run_mpm.sh)과 porosity/두께는 제작압 값 그대로입니다 (Doux 2020 §8: 370 MPa 로 냉간압밀된 펠릿은 5–75 MPa 스택압에 더 압밀되지 않음 — 조건 P_fab ≫ P_op).">🗜 구동 스택압<br>
+              <input id="kit-pop" type="number" min="0.1" max="2000" step="1" placeholder="미지정(제작압만)" style="width:126px" oninput="updateAdditiveGpuCmds()"> MPa</label>
+            <span style="display:inline-flex;gap:4px;align-items:center;font-size:0.92em">
+              <button type="button" onclick="_setPop(90)" style="padding:2px 8px;cursor:pointer" title="사용자 셀 운전 스택압">90</button>
+              <button type="button" onclick="_setPop('')" style="padding:2px 8px;cursor:pointer" title="미지정으로 되돌림 = 현행 (킷 바이트 동일)">지움</button>
+            </span>
+          </div>
+          <div id="kit-op-warn" style="display:none;margin-top:8px;padding:7px 10px;border-radius:6px;
+               font-size:0.84em;line-height:1.55;background:#3a1d00;color:#ffd9a8;border:1px solid #7a4a10"></div>
+        </div>
         <div title="STEP4-v2 충방전 시간전개 (복셀-DFN 방전곡선 + 뷰어 SOC/반응전류 애니메이션 데이터) — 체크한 C-rate를 압밀→σ망 뒤에 순차 자동 실행. 미선택 = step4_grid.npz export까지만 (나중에 step4_only.sh로 재개 가능). ⏱ rate당 V100 수 시간~1일. GPU 박스에 OCP 앵커(anchor_params/) 1회 필요: python3 scripts/step4_pybamm_anchor.py --export-params (없으면 STEP4는 안내 후 SKIP — 압밀/σ는 정상 완료)">STEP4 충방전 <span style="color:#94a3b8;font-weight:400;font-size:0.85em">(복셀-DFN 곡선 · 체크박스 또는 스케줄)</span><br>
           <span style="display:inline-flex;gap:8px;align-items:center;height:24px;flex-wrap:wrap;font-size:0.82em" title="컷오프: 방전은 v_min까지, 충전 CC는 v_max까지 → CV 홀드 후 |I|/I_1C가 I-cut 아래로 떨어지면 종지.  ⚠스케줄 사용 시 여기 값은 per-step 미지정 컷오프의 기본값.">
             <span style="color:#94a3b8">컷오프</span>
@@ -454,6 +483,9 @@ scp v100:~/Yonghoon-DEM-DFT/latest_run/mpm_payload.json v100:~/Yonghoon-DEM-DFT/
             <th>SE tris</th><td data-mk="se_surface_tris" data-fmt="int">—</td></tr>
       </tbody>
     </table>
+    <div id="mpm-prov-badge" style="display:none; margin-top:9px; padding:7px 10px; border-radius:6px;
+         font-size:0.82em; line-height:1.55; background:#111c2e; color:#cbd5e1; border:1px solid #24405f"
+         title="이 MPM/STEP3 결과가 어떤 온도·압력 규약으로 계산됐는지 (하류가 오독하지 않도록 명시)"></div>
     <div id="mpm-regime-note" style="display:none; margin-top:9px; padding:7px 10px;
          border-radius:6px; font-size:0.84em; line-height:1.5"></div>
   </div>
@@ -589,6 +621,37 @@ function fillMpmTable(m) {
     }
   }
   box.style.display = 'block';
+  // ★ 운전조건 provenance 배지 — "이 런이 몇 °C · 몇 MPa 규약으로 계산됐나" (docs/temp_pressure_capability.md T1-a/P1-a).
+  //   온도: payload 최상위 temperature_provenance(업로드 라우트가 사이드카에 승계) 또는 step3 하위.
+  //   압력: mpm3d 의 state_provenance(2단 restart 런) 우선, 없으면 target_GPa = 제작압 1단.
+  {
+    const _pb = document.getElementById('mpm-prov-badge');
+    if (_pb) {
+      const tp = m.temperature_provenance || (m.step3 || {}).temperature_provenance || null;
+      const sv = m.state_provenance || null;
+      const gp = +m.target_GPa;
+      let t = '';
+      if (tp && tp.T_dependence === 'ARRHENIUS')
+        t = `🌡 <b>${(+tp.T_C).toFixed(1)} °C</b> · σ_ion ×${(+tp.sigma_ion_T_factor).toFixed(3)} `
+          + `(Eₐ ${tp.Ea_ion_eV} eV · T_ref ${tp.T_ref_C} °C · σ·T Kraft2017) — <b>σ_ion만</b>; `
+          + `σ_e/κ/i0/D_s/OCP 는 25 °C 상수 (§F1)`;
+      else if (tp)
+        t = `🌡 <b>T-무관 (NOT_MODELLED)</b> — 모든 σ 가 T_ref ${tp.T_ref_C} °C 규약값. `
+          + `셀이 그보다 뜨거우면 σ_ion 과소 = 이온 옴강하 과대.`;
+      else
+        t = `🌡 <b>온도 규약 미기록</b> — 2026-07-28 이전 payload (= 25 °C 규약값으로 읽으세요).`;
+      let p = sv
+        ? `🗜 <b>${sv.P_this_stage_MPa} MPa</b> (${sv.P_this_stage_role || '?'}) · 제작 ${sv.P_fab_MPa} MPa `
+          + `· 체인 ${(sv.pressure_chain_GPa || []).join('→')} GPa · protocol ${sv.protocol_this_stage || m.protocol || '?'} `
+          + `· 소성이력 ${sv.plastic_history_restored ? '복원됨' : '미복원'}`
+        : (isFinite(gp)
+            ? `🗜 <b>${(gp * 1000).toFixed(0)} MPa = 제작압(압밀) 1단</b> · protocol ${m.protocol || '?'} — `
+              + `구동 스택압은 <b>미모델</b> (제하 단계 없음; porosity/두께는 Doux 2020 §8 로 제작압 값 사용이 정당, 접촉면적·coverage·σ 는 과대 방향)`
+            : `🗜 압력 규약 미기록`);
+      _pb.innerHTML = t + '<br>' + p;
+      _pb.style.display = 'block';
+    }
+  }
   // regime flag — DEM↔MPM porosity gap → which value to trust (mirrors the dashboard badge + §16/§17)
   const _note = document.getElementById('mpm-regime-note');
   if (_note) {
@@ -667,7 +730,79 @@ function _addVals() {
     s4sched: (document.getElementById('s4-sched-json') || {}).value || '',
     s4chain: (document.getElementById('s4-chain') || {}).checked ? '1' : '',
     s4grid: (document.getElementById('s4-gridonly') || {}).checked ? '1' : '',
+    // ★운전조건 (미지정 = '' = 현행): 온도 [°C] · Eₐ(이온) [eV] · 구동 스택압 [MPa]
+    tempc: _numOrEmpty('kit-tempc', -20, 200),
+    eaion: ((document.getElementById('kit-eaion') || {}).value || ''),
+    pop: _numOrEmpty('kit-pop', 0.1, 2000),
   };
+}
+// python '%g' 미러 — 클라이언트가 보낸 문자열을 서버가 float→'%g'로 다시 찍으므로, 같은 수를
+// 같은 문자열로 만들어야 예측 zip 이름과 실제 파일명이 어긋나지 않는다 (VGCFPTFESDCP 사건 교훈).
+function _g(v) {
+  const n = +v;
+  if (!isFinite(n)) return '';
+  let s = n.toPrecision(6);
+  if (s.indexOf('e') < 0 && s.indexOf('.') >= 0) s = s.replace(/0+$/, '').replace(/\.$/, '');
+  return s;
+}
+function _numOrEmpty(id, lo, hi) {          // 서버 _opnum 미러 (빈칸/범위밖/비수치 = 미지정)
+  const el = document.getElementById(id);
+  const raw = ((el || {}).value || '').trim();
+  if (!raw) return '';
+  const n = +raw;
+  if (!isFinite(n) || n < lo || n > hi) return '';
+  return _g(n);
+}
+function _setTemp(v) { const el = document.getElementById('kit-tempc'); if (el) { el.value = v; updateAdditiveGpuCmds(); } }
+function _setPop(v) { const el = document.getElementById('kit-pop'); if (el) { el.value = v; updateAdditiveGpuCmds(); } }
+// σ(T)/σ(T_ref) — scripts/se_material.arrhenius_sigma_factor 미러 (σ·T Kraft 2017 eq 5).
+const _KB_EV = 8.617333262e-5, _T_REF_C = 25.0;
+function _arrhF(tC, ea) {
+  const T = +tC + 273.15, Tr = _T_REF_C + 273.15;
+  return (Tr / T) * Math.exp(-(ea / _KB_EV) * (1 / T - 1 / Tr));
+}
+// ★운전조건 경고 — "무엇이 반영되고 무엇이 안 되는지"를 화면에 명시 (감사 §3: 조용히 틀리는 지점).
+function _rawOp(id) { return (((document.getElementById(id) || {}).value) || '').trim(); }
+// 범위밖/비수치 입력이 조용히 무시되면 "온도를 넣었는데 반영 안 된 킷"이 나온다 → 화면에 빨간 경고 + 다운로드 차단.
+function _opFieldBad() {
+  const bad = [];
+  if (_rawOp('kit-tempc') && !_numOrEmpty('kit-tempc', -20, 200)) bad.push('운전 온도 (-20~200 °C)');
+  if (_rawOp('kit-pop') && !_numOrEmpty('kit-pop', 0.1, 2000)) bad.push('구동 스택압 (0.1~2000 MPa)');
+  return bad;
+}
+function updateOpWarn() {
+  const el = document.getElementById('kit-op-warn'); if (!el) return;
+  const { tempc, eaion, pop } = _addVals();
+  const bad = _opFieldBad();
+  if (bad.length) {
+    el.innerHTML = `⛔ <b>입력 범위 밖 — 킷에 반영되지 않습니다</b>: ${bad.join(' · ')}.  값을 고치거나 [지움]으로 비우세요.`;
+    el.style.display = 'block'; return;
+  }
+  if (!tempc && !pop) { el.style.display = 'none'; return; }
+  let h = '';
+  if (tempc) {
+    const ea = eaion ? +eaion : 0.41;
+    const f = _arrhF(+tempc, ea), lo = _arrhF(+tempc, 0.29), hi = _arrhF(+tempc, 0.46);
+    h += `<b>🌡 ${tempc} °C — 부분 반영입니다 (전-물리 온도 스윕 아님).</b><br>`
+       + `✅ <b>반영</b>: σ_ion(SE) <b>×${f.toFixed(3)}</b> (Eₐ ${ea} eV · σ·T Kraft 2017 · T_ref 25 °C 규약) → `
+       + `STEP3 이온망 + step4_grid σ 테이블.  <span style="color:#fbbf24">Eₐ 밴드 ×${lo.toFixed(3)}–×${hi.toFixed(3)} — 단일값 보고 금지, 0.29/0.41/0.46 세 번 돌려 브래킷으로.</span><br>`
+       + `❌ <b>미반영(앵커 없음 §F1)</b>: i0/R_ct · D_s · OCP dU/dT · σ_e · κ · SE 경도 H/σ_y · 분해율 — 전부 25 °C 상수.<br>`
+       + `★ <b>그래서 생기는 오류</b>: 반응 과전압 η_ct 가 온도를 올릴수록 <b>커지는</b> 답이 나옵니다. 실측 R_ct 는 30→60 °C 에 <b>×0.234(4.28배 감소)</b> — `
+       + `<b>부호가 반대</b>입니다. 절대 과전압·용량, 그리고 <b>온도를 축으로 한 비교(30 vs 45 vs 60)</b>는 이 킷으로 결론내지 마세요. `
+       + `같은 온도 안의 상대비교(SBE↔DBE, 조성 트렌드)는 σ_grain 이 양쪽에 같은 배수로 곱해져 <b>상쇄되므로 안전</b>합니다. `
+       + `(※ STEP4 <code>--temp-k</code>는 일부러 굽지 않습니다 — f=F/RT 만 움직여 위 부호역전을 키웁니다.)`;
+  }
+  if (pop) {
+    if (h) h += '<hr style="border:none;border-top:1px solid #7a4a10;margin:6px 0">';
+    h += `<b>🗜 구동 스택압 ${pop} MPa — 제작압(압밀)과 다른 물리입니다.</b><br>`
+       + `✅ <b>반영</b>: A-1 사이클 앵커(<code>run_a1_anchors.sh</code>)가 2단이 됩니다 — ① 제작압 압밀 + <code>--save-state</code>(소성이력 저장) → `
+       + `② <code>--load-state</code> 로 이력을 이어받아 ${pop} MPa 에서 재평형하고 사이클 부피변화를 그 압력에 <b>제약</b>. `
+       + `지그 강성 미상 → <b>servo(정응력·하한) / hold(정적변위·상한) 두 팔 브래킷</b>을 모두 방출합니다.<br>`
+       + `❌ <b>미반영</b>: 본 압밀(<code>run_mpm.sh</code>)·porosity·두께·STEP3 σ 는 <b>제작압 값 그대로</b>입니다. `
+       + `(Doux 2020 §8 — 370 MPa 냉간압밀 펠릿은 5–75 MPa 스택압에 더 압밀되지 않음; 조건 P_fab ≫ P_op. 접촉면적/coverage/σ 는 여전히 제작압 상태 = 과대 추정 방향.)<br>`
+       + `❌ 크리프/시간의존(60 °C × 장시간)은 rate-independent J2 라 <b>구조적으로 표현 불가</b>.`;
+  }
+  el.innerHTML = h; el.style.display = 'block';
 }
 // ★Zive식 충방전 스케줄 빌더 (팝업) — 스텝 리스트를 JSON으로 직렬화해 hidden #s4-sched-json에 저장.
 //   지정 시 kit이 crates/charge 대신 순서대로 실행 (charge-first, per-step 컷오프).  각 스텝 = STEP4 1런.
@@ -849,8 +984,14 @@ function _addExclusiveOK() {
 // (recalcAdditives removed — this panel is recipe-zip-only; σ/porosity analysis lives in the MPM viewer
 //  after the GPU run. The analytic /whatif-additives route is kept server-side but no longer called here.)
 function dlAdditiveZip() {
-  const { vg, sp, pt, sd, mix, coll, vox, s4, s4chg, s4vmin, s4vmax, s4icut, s4rint, s4cap, s4pp, s4sched, s4chain, s4grid } = _addVals();
-  if (vg <= 0 && sp <= 0 && pt <= 0 && sd <= 0) { alert('첨가제를 하나 이상 입력하세요 (wt%).'); return false; }
+  const { vg, sp, pt, sd, mix, coll, vox, s4, s4chg, s4vmin, s4vmax, s4icut, s4rint, s4cap, s4pp, s4sched, s4chain, s4grid,
+          tempc, eaion, pop } = _addVals();
+  // 첨가제 없이 **운전조건만**(온도/구동압) 바꾼 킷도 유효 — 둘 다 비어 있을 때만 거부.
+  if (vg <= 0 && sp <= 0 && pt <= 0 && sd <= 0 && !tempc && !pop) {
+    alert('첨가제(wt%) 또는 운전조건(운전 온도 / 구동 스택압)을 하나 이상 지정하세요.'); return false; }
+  const _bad = _opFieldBad();   // 범위밖 입력이 조용히 빠진 킷을 받는 사고 차단
+  if (_bad.length) { alert('⛔ 입력 범위 밖이라 킷에 반영되지 않습니다:\n  ' + _bad.join('\n  ')
+    + '\n\n값을 고치거나 [지움]으로 비운 뒤 다시 받으세요.'); return false; }
   if (!_addExclusiveOK()) return false;
   // pristine/cycled는 집전체로 시나리오를 해석하므로 집전체 필요; 숫자(문헌/직접값)는 불필요.
   if ((s4rint === 'pristine' || s4rint === 'cycled') && (coll === 'ideal' || !coll)) {
@@ -872,8 +1013,11 @@ function dlAdditiveZip() {
   const _pq = new URLSearchParams(location.search);
   const _pp = ['s4dsp', 's4dss', 's4i0p', 's4i0s', 's4split']
     .filter(k => _pq.get(k)).map(k => `&${k}=${encodeURIComponent(_pq.get(k))}`).join('');
+  // ★운전조건 (미지정이면 파라미터 자체를 안 붙임 = 서버 경로도 안 탐 = 킷 바이트 동일)
+  const _tp = (tempc ? `&tempc=${tempc}` + (eaion ? `&eaion=${_g(eaion)}` : '') : '')
+            + (pop ? `&pop=${pop}` : '');
   updateAdditiveGpuCmds();   // ★ pressing download generates the gabia upload/run/fetch command card
-  window.location = `/results/${encodeURIComponent('{{ case.id }}')}/mpm-input?vgcf=${vg}&superp=${sp}&ptfe=${pt}&sdcp=${sd}&mixing=${mix}&collector=${coll}&vox=${vox}&step4=${s4}&step4chg=${s4chg}${_cut}${_ri}${_cap}${_sched}${_chain}${_ppc}${_sg}${_pp}`;
+  window.location = `/results/${encodeURIComponent('{{ case.id }}')}/mpm-input?vgcf=${vg}&superp=${sp}&ptfe=${pt}&sdcp=${sd}&mixing=${mix}&collector=${coll}&vox=${vox}&step4=${s4}&step4chg=${s4chg}${_cut}${_ri}${_cap}${_sched}${_chain}${_ppc}${_sg}${_pp}${_tp}`;
   return false;
 }
 // recipe string (mirror of backend _add_recipe_str) → zip filename (mirror of the download_name tag)
@@ -882,40 +1026,51 @@ function _addRecipeStr(vg, sp, pt, sd = 0) {
   return parts.length ? parts.map(p => p[0]).join(':') + '=' + parts.map(p => '' + p[1]).join(':') : '';
 }
 // variant tag (_VGCF-PTFE_1-1_ballmill) + the MPM-lab variant name (caseName + tag).
+// 운전조건 태그 — 서버(app.py download_name 끝) 순서와 동일: _T…C → _Ea… → _op…MPa
+function _tpTag(v) {
+  const { tempc, eaion, pop } = (v || _addVals());
+  return (tempc ? '_T' + tempc + 'C' + (eaion ? '_Ea' + _g(eaion) : '') : '')
+       + (pop ? '_op' + pop + 'MPa' : '');
+}
 function _addTag() {
-  const { vg, sp, pt, sd, mix, vox, s4, s4chg, s4pp, s4sched, s4cap, s4chain, s4grid } = _addVals();
+  const v = _addVals();
+  const { vg, sp, pt, sd, mix, vox, s4, s4chg, s4pp, s4sched, s4cap, s4chain, s4grid } = v;
   // [A-Za-z0-9._]만 사용하는 자기서술 쌍 형식 (서버 미러) — ':'/'-' 는 다운로드 새니타이즈로
   // 삭제돼 예측명↔실제 파일명이 어긋났음 (VGCFPTFESDCP_2.970.4950.495 사건, 2026-07-17)
   const pairs = [['VGCF', vg], ['SuperP', sp], ['PTFE', pt], ['SDCP', sd]]
     .filter(p => p[1] > 0).map(p => p[0] + p[1]).join('_');
-  if (!pairs) return '';
-  const vt = (vox && vox !== '0.4') ? '_vox' + vox : '';   // finer STEP3 vox → carried into the name
+  const vt = (pairs && vox && vox !== '0.4') ? '_vox' + vox : '';   // finer STEP3 vox → carried into the name
   // ★서버(app.py download_name)와 **정확히** 미러해야 한다 (VGCFPTFESDCP 사건 교훈).
   //   서버 규약: 스케줄 지정 시 체크박스 rate 는 태그서 제외하고 '_sched' 를 붙이며,
   //   솔버 cap 은 '_cap<값>' (σ_eff 를 바꾸는 노브라 같은 이름의 두 킷 방지).
-  //   서버 순서 = _sched(_chain) → _cap → _ppds — ★2026-07-28 정정: 옛 클라이언트는 _ppds 를
-  //   _cap 앞에 붙여 cap+ppds 동시 킷의 예측명이 실파일명과 어긋났음 (자동 등록훅 매칭 실패 원인).
+  //   서버 순서 = _sched(_chain) → _cap → _ppds → _T/_Ea/_op — ★2026-07-28 정정: 옛 클라이언트는
+  //   _ppds 를 _cap 앞에 붙여 cap+ppds 동시 킷의 예측명이 실파일명과 어긋났음 (자동 등록훅 매칭 실패 원인).
   //   ★s4grid(그리드까지만)는 서버가 sched/rate/cap 태그를 전부 떨굼 → 예측도 동일 (리뷰 chain#9).
+  //   ★_vox/_ppds 는 서버에서 **recipe 게이트**가 걸려 있다 → 첨가제 없는(운전조건만) 킷에서도
+  //   미러가 깨지지 않도록 여기서도 pairs 로 게이트한다 (2026-07-28: 운전조건-단독 킷 허용).
   const hasS4 = !s4grid && (s4sched || s4 || s4chg);
   const st = (!hasS4 ? ''
               : s4sched ? '_sched' + (s4chain ? '_chain' : '')
               : (s4 ? '_s4' + s4.split(',').map(r => r + 'C').join('_') : '')
                 + (s4chg ? '_s4chg' + s4chg.split(',').map(r => r + 'C').join('_') : ''))
            + ((hasS4 && s4cap) ? '_cap' + s4cap : '')
-           + (s4pp ? '_ppds' : '');                        // poly/SC D_s 프리셋 킷 구별
-  return '_' + pairs + '_' + mix + vt + st;
+           + ((pairs && s4pp) ? '_ppds' : '');             // poly/SC D_s 프리셋 킷 구별
+  return (pairs ? '_' + pairs + '_' + mix : '') + vt + st + _tpTag(v);
 }
 function _addVariantName() { const t = _addTag(); return t ? `{{ case.name }}${t}` : ''; }
 // Show the GPU scp/run commands for the (dynamically-named) additive zip, mirroring the ① card.
 function updateAdditiveGpuCmds() {
   const el = document.getElementById('add-gpu-cmds'); if (!el) return;
-  const { vg, sp, pt, sd, mix, vox, s4, s4chg, s4vmin, s4vmax, s4icut, s4cap, s4sched, s4chain, s4grid } = _addVals();
+  const { vg, sp, pt, sd, mix, vox, s4, s4chg, s4vmin, s4vmax, s4icut, s4cap, s4sched, s4chain, s4grid,
+          tempc, eaion, pop } = _addVals();
+  updateOpWarn();                     // ★운전조건(온도/구동압) 반영·미반영 경고를 항상 최신으로
   // ★솔버 cap: 킷에 기본값으로 구워지지만(=&s4cap), 명령줄에도 명시해 로그·재현성을 남긴다.
   const capEnv = s4cap ? `MPM_S4_CONTRAST_CAP=${s4cap} ` : '';
   const capTxt = s4cap ? `솔버 cap ${s4cap}× (near-null 정체 완화 · CG iter↓; ⚠σ-메트릭 보고는 cap OFF 런으로)` : '';
   const vn = document.getElementById('add-variant-name');
   if (vn) vn.textContent = _addVariantName() || '…';
-  if ((vg <= 0 && sp <= 0 && pt <= 0 && sd <= 0) || (vg > 0 && sp > 0)) { el.innerHTML = ''; return; }
+  // 첨가제 없이 운전조건만 지정한 킷도 명령 카드를 보여준다 (zip 이름이 _T…C/_op…MPa 로 달라지므로).
+  if ((vg <= 0 && sp <= 0 && pt <= 0 && sd <= 0 && !tempc && !pop) || (vg > 0 && sp > 0)) { el.innerHTML = ''; return; }
   const recipe = _addRecipeStr(vg, sp, pt, sd);
   const tag = _addTag();
   const zip = `mpm_input_${'{{ case.id }}'}${tag}.zip`;
@@ -946,13 +1101,18 @@ function updateAdditiveGpuCmds() {
               : ((s4 ? '방전 ' + s4.split(',').join('/') + 'C' : '')
               + (s4chg ? (s4 ? ' + ' : '') + '충전CCCV ' + s4chg.split(',').join('/') + 'C' : ''))
               + ((s4 || s4chg) ? ` [${s4vmin}–${s4vmax}V${s4chg ? ', CV종지 ' + s4icut + 'C' : ''}]` : '');
-  let html = `<div style="margin-top:4px;color:#94a3b8;font-size:0.82em;font-weight:600">② 첨가제 zip GPU 실행 명령어 — recipe <code>${esc(recipe)}</code> · mixing ${mix}${vox !== '0.4' ? ' · STEP3 vox ' + vox + 'µm' : ''}${s4txt ? ' · <b style="color:#4ade80">STEP4 ' + s4txt + ' 자동 연속</b>' : ' · STEP4 미선택(그리드 export까지)'} · 산출물은 <code>run_*/</code> 런 전용 폴더(latest_run 심링크)</div>`;
+  // ★운전조건은 킷 내용을 바꾸는 노브라 명령 카드 헤더에도 명시 (어느 zip이 몇 °C/몇 MPa인지 즉시 식별)
+  const opTxt = (tempc ? ` · <b style="color:#fbbf24">🌡 ${tempc} °C (σ_ion만, Eₐ ${eaion || '0.41'} eV)</b>` : '')
+              + (pop ? ` · <b style="color:#fbbf24">🗜 구동 ${pop} MPa (A-1 앵커 servo/hold 브래킷)</b>` : '');
+  let html = `<div style="margin-top:4px;color:#94a3b8;font-size:0.82em;font-weight:600">② ${recipe ? '첨가제' : '운전조건'} zip GPU 실행 명령어 — ${recipe ? 'recipe <code>' + esc(recipe) + '</code> · mixing ' + mix : '첨가제 없음(기본 레시피)'}${vox !== '0.4' ? ' · STEP3 vox ' + vox + 'µm' : ''}${opTxt}${s4txt ? ' · <b style="color:#4ade80">STEP4 ' + s4txt + ' 자동 연속</b>' : ' · STEP4 미선택(그리드 export까지)'} · 산출물은 <code>run_*/</code> 런 전용 폴더(latest_run 심링크)</div>`;
   for (const s of SERVERS) {
     const H = s.ssh, wk = s.wk;
     html += `<div style="margin-top:8px;color:#a5b4fc;font-size:0.82em;font-weight:700">▸ ${s.name} (${esc(s.ssh)})</div>`
       + (s.setup ? blk(s.lbl0 || `# ⓪ ${s.name} 최초 1회 (한 번만)`, s.setup) : '')
       + blk(`# 1) 업로드 (② 버튼으로 zip 받은 뒤)`, `scp "${DL}/${zip}" ${H}:${wk}/`)
-      + blk(`# 2) 실행 — 복사=바로 실행 (detached → SSH 끊겨도 서버 런 계속)${capTxt ? '\n#    ' + capTxt : ''}`,
+      + blk(`# 2) 실행 — 복사=바로 실행 (detached → SSH 끊겨도 서버 런 계속)${capTxt ? '\n#    ' + capTxt : ''}`
+            + (tempc ? `\n#    🌡 ${tempc} °C 는 run_mpm.sh STEP3 σ 호출에 --temp-c 로 구워져 있음 (σ_ion만; i0/D_s/OCP/σ_e/κ 는 25 °C)` : '')
+            + (pop ? `\n#    🗜 구동 ${pop} MPa 2단(제작→제하→구동)은 A-1 앵커 스크립트에 있음 → 별도 실행: bash run_a1_anchors.sh (servo/hold 두 팔 브래킷)` : ''),
             `ssh ${H} 'cd ${wk} && git pull origin ${BR} && unzip -o ${zip} && ${capEnv}bash run_mpm.sh'`)
       + blk('# 3) 완료 후 받기 → WSL (latest_run/ — run 끝나고 실행; 진행중이면 아직 없음)', `scp ${H}:${wk}/latest_run/mpm_payload.json ${H}:${wk}/latest_run/mpm_metrics.json ${DL}/`
             + (hasS4run ? `\nscp ${H}:${wk}/latest_run/step4_viz_*.json ${H}:${wk}/latest_run/step4_*.npz ${DL}/   # STEP4 곡선+뷰어` : ''))
@@ -972,8 +1132,9 @@ function updateAdditiveGpuCmds() {
 })();
 // ③ upload the additive run's mpm_payload.json as a NAMED variant in the MPM lab, then jump to the viewer.
 async function uploadAdditiveResult() {
-  const { vg, sp, pt, sd } = _addVals();
-  if (vg <= 0 && sp <= 0 && pt <= 0 && sd <= 0) { alert('첨가제 조건(wt%)을 먼저 그대로 두세요 — 변종 이름에 들어갑니다.'); return; }
+  const { vg, sp, pt, sd, tempc, pop } = _addVals();
+  if (vg <= 0 && sp <= 0 && pt <= 0 && sd <= 0 && !tempc && !pop) {
+    alert('킷을 받을 때의 조건(첨가제 wt% 또는 운전 온도/구동압)을 그대로 두세요 — 변종 이름에 들어갑니다.'); return; }
   if (!_addExclusiveOK()) return;
   const file = document.getElementById('add-payload-file').files[0];
   if (!file) { alert('업로드할 mpm_payload.json을 선택하세요.'); return; }

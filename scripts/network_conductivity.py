@@ -39,9 +39,15 @@ try:
 except Exception:
     _film_area = None  # graceful fallback if numpy/import issue
 
+import se_material  # single source of truth for σ_grain + its temperature convention
+
 
 # LPSCl argyrodite grain interior conductivity (NOT pellet value)
-SIGMA_BULK_DEFAULT = 3.0e-3  # S/cm (grain interior, ionic)
+# ★ 2026-07-28: value now comes from se_material (one definition for the whole repo —
+# it used to be duplicated as a bare 3.0/3.0e-3 literal in ≳12 files, so "add T-dependence"
+# could not be a one-line edit; docs/temp_pressure_capability.md §3-4 / T1-b).  The number
+# is UNCHANGED (3.0e-3 S/cm, bitwise) and is declared at se_material.T_REF_C = 25 °C.
+SIGMA_BULK_DEFAULT = se_material.SIGMA_GRAIN_S_CM_25C  # S/cm (grain interior, ionic, @25 °C)
 
 # NCM electronic conductivity (typical, SOC-dependent)
 SIGMA_AM_ELECTRONIC = 0.05  # S/cm (50 mS/cm, NCM811 grain interior, discharged)
@@ -1038,7 +1044,8 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
 
 def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
                        scale, plate_z, box_x, box_y, output_dir,
-                       contact_mode='hertzian', dump_raw_dir=None):
+                       contact_mode='hertzian', dump_raw_dir=None,
+                       temp_c=None, ea_ion_ev=None):
     """Run ionic + electronic + thermal decomposition under a fixed contact_mode.
     Returns the merged ionic-centric results dict.
     """
@@ -1046,11 +1053,18 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
     tag_el    = f"{contact_mode}_electronic"
     tag_th    = f"{contact_mode}_thermal"
 
+    # σ_grain(T).  temp_c is None (default) → returns the bare 3.0e-3 literal, bitwise —
+    # every legacy run is byte-for-byte unchanged.  σ_e / κ stay T-independent: for σ_e that
+    # is the literature-consistent choice (Reisacher: ohmic regime T-independent), for κ
+    # there is no anchor (§F1).  See se_material for the σ·T (Kraft 2017) convention.
+    sigma_bulk_ion = se_material.sigma_grain_S_cm(temp_c, ea_ion_ev)
+
     print("\n" + "="*60)
     print(f"IONIC CONDUCTIVITY (SE-SE network) — contact_mode={contact_mode}")
     print("="*60)
+    se_material.warn_band(temp_c, ea_ion_ev)
     results = run_decomposition(atoms_raw, contacts_raw, target_types, scale,
-                                plate_z, box_x, box_y, sigma_bulk=SIGMA_BULK_DEFAULT,
+                                plate_z, box_x, box_y, sigma_bulk=sigma_bulk_ion,
                                 results_dir=output_dir, type_map=type_map,
                                 contact_mode=contact_mode,
                                 dump_raw_dir=dump_raw_dir, dump_tag=tag_ionic)
@@ -1087,6 +1101,12 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
 
     # Merge electronic + thermal into ionic-centric dict (matches legacy schema)
     if results:
+        # ★ provenance (docs/temp_pressure_capability.md T1-a): downstream MUST be able to
+        # tell WHICH temperature convention produced this σ without reading the code.  Emitted
+        # unconditionally — on a legacy run it reads T_dependence=NOT_MODELLED, which is the
+        # honest statement that σ is the 25 °C value regardless of the real cell temperature.
+        results['temperature_provenance'] = se_material.provenance(temp_c, ea_ion_ev)
+        results['sigma_grain_S_cm'] = sigma_bulk_ion
         if results_el:
             results['electronic_sigma_full']      = results_el.get('sigma_full')
             results['electronic_sigma_full_mScm'] = results_el.get('sigma_full_mScm')
@@ -1104,8 +1124,50 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
     return results
 
 
+def _selftest_temp():
+    """σ_grain(T) wiring — the DEM Kirchhoff solver's ionic prefactor.
+
+    Key invariants: (a) SIGMA_BULK_DEFAULT is bitwise the old 3.0e-3 literal, (b) σ_e and κ
+    prefactors are untouched, (c) σ_full (the dimensionless network answer) is T-INDEPENDENT
+    by construction — temperature is a pure multiplicative prefactor on the mS/cm readout, so
+    same-temperature relative comparisons (SBE vs DBE, composition trends) cancel it exactly.
+    """
+    ok = True
+
+    def chk(name, cond, extra=''):
+        nonlocal ok
+        ok &= bool(cond)
+        print(f"  {'PASS' if cond else 'FAIL'}  {name}{(' — ' + extra) if extra else ''}")
+
+    chk('SIGMA_BULK_DEFAULT is bitwise 3.0e-3 (= the pre-2026-07-28 literal)',
+        float(SIGMA_BULK_DEFAULT).hex() == (3.0e-3).hex(), float(SIGMA_BULK_DEFAULT).hex())
+    chk('… and it IS the shared se_material constant',
+        SIGMA_BULK_DEFAULT is se_material.SIGMA_GRAIN_S_CM_25C)
+    chk('σ_e prefactor untouched (Reisacher: ohmic regime T-independent)',
+        SIGMA_AM_ELECTRONIC == 0.05)
+    chk('thermal prefactor untouched (no κ(T) anchor, §F1)', K_SE_THERMAL == 0.7e-2)
+    chk('σ_grain_S_cm(None) is bitwise the default',
+        float(se_material.sigma_grain_S_cm(None)).hex() == float(SIGMA_BULK_DEFAULT).hex())
+    for t_c, want in ((30.0, 1.28), (45.0, 2.56), (60.0, 4.79)):
+        f = se_material.sigma_grain_S_cm(t_c) / SIGMA_BULK_DEFAULT
+        chk(f'--temp-c {t_c:.0f} → σ_grain x{want}', abs(round(f, 2) - want) < 5e-3, f'x{f:.4f}')
+    # σ_full is dimensionless (σ/σ_bulk) → the reported mS/cm is exactly σ_full·σ_bulk·1000,
+    # i.e. linear in the prefactor.  Same-T ratios cancel it.
+    sf = 0.184341
+    chk('mS/cm readout is exactly linear in σ_grain (same-T ratios cancel T)',
+        abs((sf * se_material.sigma_grain_S_cm(60.0) * 1000)
+            / (sf * SIGMA_BULK_DEFAULT * 1000) - se_material.arrhenius_sigma_factor(60.0)) < 1e-12)
+    p_off, p_on = se_material.provenance(), se_material.provenance(60.0)
+    chk('provenance OFF/ON contract', p_off['T_dependence'] == 'NOT_MODELLED'
+        and p_on['T_dependence'] == 'ARRHENIUS' and p_on['T_ref_C'] == 25.0)
+    print('NETWORK TEMP SELFTEST', 'PASS' if ok else 'FAIL')
+    return 0 if ok else 1
+
+
 if __name__ == '__main__':
     import argparse
+    if '--selftest-temp' in sys.argv:
+        sys.exit(_selftest_temp())
     sys.path.insert(0, os.path.dirname(__file__))
     from analyze_contacts import load_atoms_raw, load_contacts_raw
 
@@ -1122,6 +1184,7 @@ if __name__ == '__main__':
                              "'both' (run each and emit *_hertzian/*_physics + dual JSON)")
     parser.add_argument('--dump-raw-dir', type=str, default=None,
                         help='If set, write per-edge/per-node raw CSV + solution JSON here')
+    se_material.temperature_argparse(parser)   # --temp-c / --ea-ion-ev (both default None)
     args = parser.parse_args()
 
     # Parse type map
@@ -1166,7 +1229,8 @@ if __name__ == '__main__':
         res = _run_all_networks(atoms_raw, contacts_raw, target_types, am_types,
                                  type_map, args.scale, plate_z, box_x, box_y,
                                  args.output, contact_mode=cm,
-                                 dump_raw_dir=args.dump_raw_dir)
+                                 dump_raw_dir=args.dump_raw_dir,
+                                 temp_c=args.temp_c, ea_ion_ev=args.ea_ion_ev)
         per_mode_results[cm] = res
         if res:
             out_path = os.path.join(args.output, f'network_conductivity_{cm}.json')

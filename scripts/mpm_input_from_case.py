@@ -167,7 +167,16 @@ def main():
                          'Trevisanello 밴드 기하중앙; i0는 분리값 문헌 부재 확정 → 공유 유지).  '
                          'SDCP-150 계열 원장 방식 — 값이 갱신되면 CSV만 고치면 전 경로 반영.  '
                          '--step4-ds-poly 명시값과 동시 지정은 모호 → 거부')
+    ap.add_argument('--op-pressure-mpa', type=float, default=None,
+                    help='★ A-1 앵커 구동압 [MPa].  기본 None = 현행 유지(모든 앵커를 제작압으로 재압축 — '
+                         '실제 셀보다 3.3배 응력으로 debond 과잉치유, docs/temp_pressure_capability.md §P1-g). '
+                         '값을 주면 run_a1_anchors.sh 가 2단 스크립트로 바뀐다: ① 제작압 압밀 + '
+                         '--save-state → ② --load-state + --cycle-deform 을 이 구동압에서 재평형. '
+                         '지그 강성을 모르므로 servo(정응력=부드러운 스프링) 와 hold(정적변위=강체 지그) '
+                         '두 팔을 모두 방출 → 실제 셀은 그 브래킷 안에 있다.  예: --op-pressure-mpa 90')
     a = ap.parse_args()
+    if a.op_pressure_mpa is not None and not (a.op_pressure_mpa > 0):
+        ap.error('--op-pressure-mpa 는 양수여야 한다 (MPa; 예 90)')
     if a.step4_sc_poly_preset:
         if a.step4_ds_poly is not None or a.step4_i0_poly is not None:
             ap.error('--step4-sc-poly-preset과 명시 --step4-ds-poly/--step4-i0-poly 동시 지정 불가 '
@@ -517,6 +526,18 @@ def main():
                       'am_split_um': a.step4_am_split_um}),
             # 재료 크기-분류 경로: split 요청 시 절대 문턱, 아니면 SDCP 관례(mono→AM_P).
             'am_material_class_mode': ('size_absolute' if _es_split_req else 'sdcp_mono_amp')}
+    if a.op_pressure_mpa is not None:
+        # ★ 압력 provenance (docs/temp_pressure_capability.md §P1-a): 제작압 ≠ 구동압.  이 키는 플래그를
+        #   준 경우에만 추가 → 기존 mpm_input.json 스키마는 그대로(바이트 동일).  하류가 "이 킷의 A-1
+        #   앵커는 구동압에서 재평형된 것" 임을 알 수 있어야 한다.
+        prov['a1_pressure_provenance'] = {
+            'P_fab_MPa': round(press_gpa * 1000.0, 3),
+            'P_operating_MPa': float(a.op_pressure_mpa),
+            'mode': 'two_stage_save_load_state',
+            'arms': ['servo', 'hold'],   # 정응력(하한) ~ 정적변위(상한) 브래킷
+            'plastic_history_restored': True,
+            'rate_dependence': 'NOT_MODELLED_rate_independent_J2',
+            'T_C': None, 'T_dependence': 'NOT_MODELLED'}
     json.dump(prov, open(os.path.join(a.out, 'mpm_input.json'), 'w'), indent=2)
 
     # Stage-1 carbon: append the additive flags to the compaction step if a recipe was given,
@@ -959,9 +980,77 @@ echo "          (오래된 run_* 폴더는 디스크 차면 지워도 됨 — �
                'echo "=== 기하 debond/void (pristine 대비) ==="\n'
                'python3 "$SCR/cycle_geom_debond.py" "$OUT/m_N0.json" "$OUT/m_charged.json" "$OUT/m_charged_deep.json" --csv "$OUT/a1_debond.csv"\n'
                'echo "완료 → $OUT/ (m_*.json 앵커, a1_debond.csv 기하 debond/void).  ⚠ 충전상태(가역); ledger가 비가역 판정."\n')
-    a1 = (a1_tmpl.replace('__BOX__', f'{box_x}').replace('__NG__', f'{n_grid_mpm}')
-          .replace('__ESE__', f'{e_se_mpm}').replace('__NUSE__', f'{nu_se_mpm}')
-          .replace('__PRESS__', f'{press_gpa}'))
+    # ── ★ 2단(제작압 → 제하 → 구동압) 변형 — --op-pressure-mpa 를 준 경우에만 이 템플릿으로 교체.
+    #    기존(1단, 모든 앵커를 제작압으로 재압축)은 기본값이며 위 a1_tmpl 그대로 = 방출물 불변.
+    #    왜: 실제 셀은 제작 후 제하되어 구동 스택압에서 사이클한다.  1단 스크립트는 사이클 부피변화를
+    #    제작압(예 300 MPa)으로 다시 눌러 debond 를 과잉치유 → 접촉손실·R_ct 성장을 과소예측
+    #    (docs/temp_pressure_capability.md §P1-g, §P1.5).  2단은 ① 제작압 압밀 + --save-state 로 소성이력을
+    #    보존하고 ② --load-state 로 그 이력을 이어받아 구동압에서 재평형 + 사이클 호흡을 시킨다.
+    #    지그 강성(실제 셀이 정응력이냐 정변위냐)은 알 수 없으므로 servo/hold 두 팔을 모두 방출 =
+    #    브래킷 (doc §P1.5 표: servo=부드러운 스프링/압력제어, hold=강체 지그/고정 갭). ────────────────
+    a1_2stage = ('#!/usr/bin/env bash\n'
+                 'set -uo pipefail\n'
+                 '# A-1 MPM 사이클 열화 앵커 (★2단: 제작압 __PRESSMPA__ MPa 압밀 → 제하 → 구동압 __OPMPA__ MPa 유지)\n'
+                 '#   ① 제작압 압밀(hold) + --save-state 로 소성이력(F) 저장\n'
+                 '#   ② --load-state 로 그 이력을 이어받아 구동압에서 재평형 + --cycle-deform 사이클 호흡\n'
+                 '#      두 팔 = servo(정응력, 부드러운 스프링/압력제어) · hold(정적변위, 강체 지그/고정 갭)\n'
+                 '#      지그 강성을 모르므로 실제 셀은 두 팔 사이 = 정직한 브래킷.\n'
+                 '#   ⚠ 충전-상태(가역 SOC breathing) 스냅샷 = 영구 fade 아님; 비가역화 판정은 ledger(A-3).\n'
+                 '#   ⚠ rate-independent J2 = 크리프/유지시간 없음 → "90 MPa 로 수백 시간" 은 표현 안 됨.\n'
+                 'KIT="$(cd "$(dirname "$0")" && pwd)"\n'
+                 'SCR=""; for c in "$KIT/scripts" "$KIT/../scripts"; do [ -d "$c" ] && SCR="$(cd "$c" && pwd)" && break; done\n'
+                 '[ -z "$SCR" ] && { echo "scripts/ 못 찾음 — 레포 루트에 킷을 푸세요"; exit 1; }\n'
+                 'if [ -z "${MPM_NO_PULL:-}" ] && [ -d "$SCR/../.git" ]; then ( cd "$SCR/.." && git pull --ff-only ) || echo "  ⚠ git pull 스킵"; fi\n'
+                 'OUT="$KIT/a1_anchors"; mkdir -p "$OUT"\n'
+                 'if [ -z "${A1_DETACHED:-}" ]; then\n'
+                 '  export A1_DETACHED=1\n'
+                 '  log="$OUT/a1_run_$(date +%Y%m%d_%H%M%S).log"\n'
+                 '  echo "→ detached — log: $log"\n'
+                 '  setsid nohup bash "$0" "$@" >"$log" 2>&1 </dev/null &\n'
+                 '  echo "   PID $!     follow: tail -f $log"\n'
+                 '  exit 0\n'
+                 'fi\n'
+                 'COMMON=(--am-scaffold "$KIT/am_scaffold.csv" --se-dump "$KIT/se_scaffold.csv" --periodic\n'
+                 '        --lateral-box __BOX__ --n-grid __NG__ --arch cuda --gpu-mem 28 --frames 150\n'
+                 '        --e-se __ESE__ --nu-se __NUSE__)\n'
+                 'STATE="$OUT/fab_state.npz"\n'
+                 '# ── ① 제작 (fabrication) — 제작압 __PRESS__ GPa, LIGGGHTS 변위-정지 규약(hold) ──\n'
+                 'echo "=== A-1 ① 제작압 압밀 __PRESSMPA__ MPa → 소성이력 저장 ==="\n'
+                 'if [ -f "$STATE" ] && [ "${A1_REUSE_STATE:-1}" = "1" ]; then\n'
+                 '  echo "  (기존 $STATE 재사용 — 새로 만들려면 A1_REUSE_STATE=0)"\n'
+                 'else\n'
+                 '  python3 "$SCR/mpm3d_compaction.py" "${COMMON[@]}" --protocol hold --target-gpa __PRESS__ '
+                 '--save-state "$STATE" --save-metrics "$OUT/m_fab.json" || { echo "FAIL fab"; exit 1; }\n'
+                 'fi\n'
+                 '# ── ② 구동 (operation) — 소성이력을 이어받아 구동압 __OPGPA__ GPa 에서 재평형 ──\n'
+                 'run_op() { local arm="$1"; local lab="$2"; shift 2; echo "=== A-1 ② [$arm] $lab @ __OPMPA__ MPa ==="; '
+                 'python3 "$SCR/mpm3d_compaction.py" "${COMMON[@]}" --load-state "$STATE" --protocol "$arm" '
+                 '--target-gpa __OPGPA__ "$@" --save-metrics "$OUT/m_${lab}_${arm}.json" '
+                 '|| { echo "FAIL $lab/$arm — 위 트레이스"; exit 1; }; }\n'
+                 'for ARM in servo hold; do\n'
+                 '  run_op "$ARM" N0\n'
+                 '  run_op "$ARM" charged --cycle-deform --cycle-n 1 --cycle-dv-sc -0.051 --cycle-dv-poly 0.059 --dv-pct-poly 0.30\n'
+                 '  run_op "$ARM" charged_deep --cycle-deform --cycle-n 2 --cycle-dv-sc -0.059 --cycle-dv-poly 0.059 --dv-pct-poly 0.30\n'
+                 '  echo "=== 기하 debond/void [$ARM] (그 팔의 N0 대비) ==="\n'
+                 '  python3 "$SCR/cycle_geom_debond.py" "$OUT/m_N0_${ARM}.json" "$OUT/m_charged_${ARM}.json" '
+                 '"$OUT/m_charged_deep_${ARM}.json" --csv "$OUT/a1_debond_${ARM}.csv"\n'
+                 'done\n'
+                 'echo "완료 → $OUT/  (m_fab.json = 제작압 앵커, m_*_servo/hold.json = 구동압 __OPMPA__ MPa 앵커,"\n'
+                 'echo "        a1_debond_servo.csv / a1_debond_hold.csv = 두 지그 극한 브래킷)"\n'
+                 'echo "⚠ servo=정응력(두께가 변함) · hold=정적변위(압력이 변함).  실제 지그는 둘 사이."\n')
+    if a.op_pressure_mpa is None:
+        a1 = (a1_tmpl.replace('__BOX__', f'{box_x}').replace('__NG__', f'{n_grid_mpm}')
+              .replace('__ESE__', f'{e_se_mpm}').replace('__NUSE__', f'{nu_se_mpm}')
+              .replace('__PRESS__', f'{press_gpa}'))
+    else:
+        _op_gpa = round(float(a.op_pressure_mpa) / 1000.0, 5)
+        if _op_gpa >= press_gpa:
+            print(f'  ⚠ [A-1] --op-pressure-mpa {a.op_pressure_mpa:g} ≥ 제작압 {press_gpa*1000:g} MPa — '
+                  f'제하가 아니라 추가 압밀이 된다 (의도한 값인지 확인).')
+        a1 = (a1_2stage.replace('__BOX__', f'{box_x}').replace('__NG__', f'{n_grid_mpm}')
+              .replace('__ESE__', f'{e_se_mpm}').replace('__NUSE__', f'{nu_se_mpm}')
+              .replace('__PRESSMPA__', f'{press_gpa * 1000:g}').replace('__PRESS__', f'{press_gpa}')
+              .replace('__OPMPA__', f'{a.op_pressure_mpa:g}').replace('__OPGPA__', f'{_op_gpa}'))
     ap1 = os.path.join(a.out, 'run_a1_anchors.sh')
     open(ap1, 'w').write(a1); os.chmod(ap1, 0o755)
     print(f'MPM input for case "{case}" → {a.out}/')
@@ -980,7 +1069,10 @@ echo "          (오래된 run_* 폴더는 디스크 차면 지워도 됨 — �
              if (s4_rates or s4_chg) else
              ('  [★STEP4 grid까지만 (v2 스킵 — step4_grid.npz 만 생성)]' if a.step4_grid_only
               else '  [STEP4 미선택 — 그리드 export까지]'))
-          + '  run_a1_anchors.sh  [A-1 사이클 열화 앵커: pristine+충전+ΔV심화 → 기하 debond/void]')
+          + ('  run_a1_anchors.sh  [A-1 사이클 열화 앵커: pristine+충전+ΔV심화 → 기하 debond/void]'
+             if a.op_pressure_mpa is None else
+             f'  run_a1_anchors.sh  [★2단 A-1 앵커: 제작 {press_gpa*1000:g} MPa 압밀(--save-state) → '
+             f'구동 {a.op_pressure_mpa:g} MPa 재평형(--load-state) × servo/hold 두 팔 브래킷]'))
 
 
 if __name__ == '__main__':

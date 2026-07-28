@@ -110,6 +110,123 @@ def _am_surface_pts(centres, radii, n, rng, box_hi, per=6):
     return pts[idx].astype(np.float32)
 
 
+# ─────────────────────────────────────────────────────────────────────────────────────────────
+#  PLASTIC-HISTORY RESTART  (--save-state / --load-state)   [docs/temp_pressure_capability.md §6-B P1.5]
+#
+#  WHY.  A real cell is FABRICATED at ~300 MPa, then UNLOADED, then cycled while a ~90 MPa
+#  operating stack pressure is held.  Every run of this script used to re-seed PRISTINE SE and
+#  reset the plastic history (F[p]=I in `load`), so `--target-gpa 0.09` produced a VIRGIN electrode
+#  compacted at 90 MPa — NOT a 300-MPa-fabricated electrode re-equilibrated at 90 MPa.  Saving and
+#  restoring the deformation gradient F (which carries BOTH the elastic stress state and the
+#  accumulated plastic shape change) makes the 2-stage protocol expressible:
+#      ① --protocol hold --target-gpa 0.30  --save-state s.npz          (fabrication)
+#      ② --load-state s.npz --protocol servo --target-gpa 0.09 --cycle-deform   (operation)
+#
+#  v AND C ARE SAVED BUT ZEROED ON LOAD — deliberate.  The restart is QUASI-STATIC: stage ① ends
+#  with the bed relaxed under the platen, so the physical state is "stress stored in F, motion ≈ 0".
+#  Re-injecting a stale velocity/affine field would inject spurious kinetic energy across a protocol
+#  change (the platen BC and the target stress differ between the two stages), and MPM's APIC C is a
+#  per-step reconstruction, not a state variable.  They are written to the npz for auditability only.
+#  This choice is recorded in the npz meta as `restart_velocity_convention`.
+STATE_SCHEMA = 'mpm3d_state_v1'
+
+# arrays that MUST be present and finite in a state file (per-point, len == n_pts)
+_STATE_REQUIRED = ('x', 'F', 'mu_p', 'la_p', 'yld_p', 'pvol_p', 'coh_p', 'dg_acc', 'eps_acc')
+# meta keys that MUST match bit-for-bit between the saved run and the restarting run
+_STATE_HARD_META = ('n_grid', 'nz', 'lateral_box', 'periodic')
+
+
+def state_fingerprint(am_pos, am_r_pristine):
+    """Stable short fingerprint of the FROZEN AM scaffold GEOMETRY in BOX-frame coordinates.
+
+    Uses the PRISTINE radii (the raw CSV radii × scl, captured before --cycle-deform /
+    --fracture-scaffold rescale them) precisely so that a cycle-breathing restart — which is the
+    whole point of this feature — does NOT trip the guard: the AM radii are SUPPOSED to change
+    between stages, the AM CENTRES and COUNT are not.  A different electrode / a different
+    --lateral-box / a different --dilate-z all move the centres → different fingerprint → refused."""
+    import hashlib
+    h = hashlib.sha256()
+    p = np.ascontiguousarray(np.asarray(am_pos, np.float64).reshape(-1, 3))
+    r = np.ascontiguousarray(np.asarray(am_r_pristine, np.float64).ravel())
+    h.update(np.int64(len(r)).tobytes()); h.update(p.tobytes()); h.update(r.tobytes())
+    return h.hexdigest()[:16]
+
+
+def state_guard_errors(saved_meta, cur_meta, saved_am_pos, saved_am_r0,
+                       cur_am_pos, cur_am_r0, atol=1e-9):
+    """Pure-numpy compatibility check for --load-state.  Returns a list of human-readable errors
+    (empty = compatible).  HARD: schema version · n_grid · nz · lateral_box · periodic · AM count ·
+    AM centres · AM PRISTINE radii.  DELIBERATELY NOT CHECKED: the APPLIED (deformed) AM radii —
+    --cycle-deform / --fracture-scaffold change them by design."""
+    errs = []
+    sv = str(saved_meta.get('schema', ''))
+    if sv != STATE_SCHEMA:
+        errs.append(f"schema mismatch: state file is '{sv}', this build expects '{STATE_SCHEMA}'")
+    for k in _STATE_HARD_META:
+        a, b = saved_meta.get(k), cur_meta.get(k)
+        if isinstance(a, float) or isinstance(b, float):
+            same = (a is not None and b is not None and abs(float(a) - float(b)) <= 1e-12)
+        else:
+            same = (a == b)
+        if not same:
+            errs.append(f"{k} mismatch: state={a!r} run={b!r}")
+    sp = np.asarray(saved_am_pos, np.float64).reshape(-1, 3)
+    cp = np.asarray(cur_am_pos, np.float64).reshape(-1, 3)
+    sr = np.asarray(saved_am_r0, np.float64).ravel()
+    cr = np.asarray(cur_am_r0, np.float64).ravel()
+    if len(sp) != len(cp):
+        errs.append(f"AM scaffold COUNT mismatch: state={len(sp)} run={len(cp)}")
+    else:
+        if len(sp) and not np.allclose(sp, cp, rtol=0.0, atol=atol):
+            nbad = int((np.abs(sp - cp).max(1) > atol).sum())
+            errs.append(f"AM scaffold CENTRES differ in {nbad}/{len(sp)} spheres "
+                        f"(max |Δ|={float(np.abs(sp - cp).max()):.3e} box) — different electrode/geometry")
+        if len(sr) == len(cr) and len(sr) and not np.allclose(sr, cr, rtol=0.0, atol=atol):
+            nbad = int((np.abs(sr - cr) > atol).sum())
+            errs.append(f"AM scaffold PRISTINE radii differ in {nbad}/{len(sr)} spheres — different "
+                        f"scaffold CSV (note: --cycle-deform/--fracture-scaffold radii are NOT compared)")
+    return errs
+
+
+def state_finite_errors(arrays):
+    """Reject a corrupt / diverged state file: any non-finite (NaN/Inf) entry is fatal."""
+    errs = []
+    for k, a in arrays.items():
+        a = np.asarray(a)
+        if a.dtype.kind in 'fc' and not np.isfinite(a).all():
+            errs.append(f"array '{k}' has {int((~np.isfinite(a)).sum())} non-finite (NaN/Inf) entries")
+    return errs
+
+
+def write_state_npz(path, arrays, meta, compress=None, compress_max_bytes=1_500_000_000):
+    """Write the restart state.  `meta` is JSON-serialised into a 0-d array so the npz stays a
+    single self-describing file (np.savez cannot store dicts).
+
+    compress=None → AUTO: deflate below `compress_max_bytes`, store uncompressed above it.  A
+    production bed is tens of millions of material points (x+F+v+C+7 scalars ≈ 125 B/pt → multi-GB);
+    those arrays are float noise that deflate barely shrinks, so paying minutes of zlib on them is a
+    bad trade.  Both forms are read identically by np.load.  Returns (path, n_bytes, compressed)."""
+    import json as _json
+    out = {k: np.asarray(v) for k, v in arrays.items()}
+    nbytes = int(sum(a.nbytes for a in out.values()))
+    if compress is None:
+        compress = nbytes <= compress_max_bytes
+    out['meta_json'] = np.array(_json.dumps(meta, sort_keys=True))
+    (np.savez_compressed if compress else np.savez)(path, **out)
+    return path, nbytes, bool(compress)
+
+
+def read_state_npz(path):
+    """Read a state npz → (arrays dict, meta dict).  Raises on a missing/undecodable meta."""
+    import json as _json
+    z = np.load(path, allow_pickle=False)
+    if 'meta_json' not in z.files:
+        raise SystemExit(f"[load-state] {path}: no meta_json — not an mpm3d state file")
+    meta = _json.loads(str(z['meta_json']))
+    arrays = {k: z[k] for k in z.files if k != 'meta_json'}
+    return arrays, meta
+
+
 def parse_args(argv):
     ap = argparse.ArgumentParser(description="3D MPM compaction (servo to target σzz).")
     ap.add_argument('--arch', default='cpu', choices=['cpu', 'gpu', 'cuda', 'vulkan'])
@@ -421,11 +538,131 @@ def parse_args(argv):
                          'SE가 균열공간 채움).  --dv-pct-poly와 같은 스윕-축 성격(문헌앵커 대기).')
     ap.add_argument('--fracture-void-pulv', type=float, default=0.35,
                     help='pulverization AM의 crack-void 부피분율 (ASSUMED-FORM; 분쇄 = 더 큰 열린 부피).')
+    # ── 소성이력 restart (P1.5: 제작압 압밀 → 제하 → 구동압 유지) ────────────────────────────
+    ap.add_argument('--save-state', default='',
+                    help='런 종료 시 충실한 재시작 상태를 npz 로 저장: per-point x·F(변형구배=탄성응력+소성형상 '
+                         '이력)·mu/la/yld/pvol/coh·Σdg·ε + phase/fibre/Ø/se_id + AM 스캐폴드 지문 + meta '
+                         '(n_grid/nz/lateral_box/periodic/wall_z/target/protocol/E·ν·σ_y).  v(속도)·C(affine)도 '
+                         '기록하지만 --load-state 는 0 으로 둔다(준정적 재시작).  기본 미지정 = 기존 동작 불변.')
+    ap.add_argument('--load-state', default='',
+                    help='--save-state 로 만든 npz 에서 SE 를 복원 — 시딩을 건너뛰고 소성이력(F)을 그대로 이어받는다. '
+                         '★ 이것이 "300 MPa 로 제작된 전극을 90 MPa 구동압에서 재평형" 을 가능하게 하는 조각: '
+                         '--load-state s.npz --protocol servo --target-gpa 0.09 [--cycle-deform].  AM 반경은 이 런의 '
+                         '--cycle-deform/--fracture-scaffold 가 정한 대로 재구성되며(지문은 위치·개수·PRISTINE 반경만 '
+                         '비교 → 사이클 호흡 허용), 스키마/n_grid/nz/lateral-box/periodic/AM 위치가 다르면 중단한다.')
+    ap.add_argument('--selftest', action='store_true',
+                    help='restart-state 계층 자체검증 (numpy 전용, taichi/GPU 불필요) 후 종료')
     return ap.parse_args(argv)
+
+
+def _selftest():
+    """--selftest: pure-numpy checks of the restart state layer (no taichi / no GPU needed)."""
+    import json as _json
+    import tempfile, os as _os
+    ok = 0; fail = []
+
+    def chk(name, cond):
+        nonlocal ok
+        if cond:
+            ok += 1
+        else:
+            fail.append(name)
+
+    rng = np.random.default_rng(0)
+    n_am = 7
+    am_pos = rng.uniform(0.1, 0.9, (n_am, 3))
+    am_r0 = rng.uniform(0.01, 0.03, n_am)
+    meta = {'schema': STATE_SCHEMA, 'n_grid': 64, 'nz': 64, 'lateral_box': 0.05, 'periodic': False}
+
+    # 1. fingerprint: deterministic, and sensitive to geometry / count
+    fp = state_fingerprint(am_pos, am_r0)
+    chk('fingerprint deterministic', fp == state_fingerprint(am_pos.copy(), am_r0.copy()))
+    _p2 = am_pos.copy(); _p2[3, 1] += 1e-6
+    chk('fingerprint sees a moved AM', fp != state_fingerprint(_p2, am_r0))
+    chk('fingerprint sees a dropped AM', fp != state_fingerprint(am_pos[:-1], am_r0[:-1]))
+    chk('fingerprint sees a resized AM', fp != state_fingerprint(am_pos, am_r0 * 1.001))
+
+    # 2. guards — the compatible case must be clean
+    chk('compatible state passes', state_guard_errors(meta, dict(meta), am_pos, am_r0, am_pos, am_r0) == [])
+    # each hard field individually caught
+    for k, bad in (('schema', 'mpm3d_state_v0'), ('n_grid', 96), ('nz', 80),
+                   ('lateral_box', 0.03), ('periodic', True)):
+        m2 = dict(meta); m2[k] = bad
+        errs = state_guard_errors(m2, dict(meta), am_pos, am_r0, am_pos, am_r0)
+        chk(f'guard catches {k}', any(k.split("_")[0] in e or 'schema' in e for e in errs) and errs != [])
+    chk('guard catches AM count',
+        any('COUNT' in e for e in state_guard_errors(meta, dict(meta), am_pos, am_r0,
+                                                     am_pos[:-1], am_r0[:-1])))
+    chk('guard catches moved AM',
+        any('CENTRES' in e for e in state_guard_errors(meta, dict(meta), am_pos, am_r0, _p2, am_r0)))
+    chk('guard catches different pristine radii',
+        any('PRISTINE' in e for e in state_guard_errors(meta, dict(meta), am_pos, am_r0,
+                                                        am_pos, am_r0 * 1.02)))
+    # ★ THE POINT OF THE FEATURE: a --cycle-deform run rescales the APPLIED radii; the guard must NOT
+    #   fire, because only the PRISTINE radii (unchanged) are compared.
+    am_r_deformed = am_r0 * (1.0 + (-0.051)) ** (1.0 / 3.0)
+    chk('cycle-deform (applied radii change) does NOT trip the guard',
+        state_guard_errors(meta, dict(meta), am_pos, am_r0, am_pos, am_r0) == []
+        and not np.allclose(am_r_deformed, am_r0))
+
+    # 3. non-finite rejection
+    good = {'x': np.zeros((5, 3), np.float32), 'F': np.zeros((5, 3, 3), np.float32)}
+    chk('finite arrays accepted', state_finite_errors(good) == [])
+    badf = {k: v.copy() for k, v in good.items()}; badf['F'][2, 1, 1] = np.nan
+    chk('NaN rejected', any('non-finite' in e for e in state_finite_errors(badf)))
+    badi = {k: v.copy() for k, v in good.items()}; badi['x'][0, 0] = np.inf
+    chk('Inf rejected', any('non-finite' in e for e in state_finite_errors(badi)))
+
+    # 4. npz round-trip is bit-exact and carries the meta (incl. the v/C convention)
+    npts = 11
+    arrs = {'x': rng.random((npts, 3)).astype(np.float32),
+            'F': rng.random((npts, 3, 3)).astype(np.float32),
+            'v': rng.random((npts, 3)).astype(np.float32),
+            'C': rng.random((npts, 3, 3)).astype(np.float32),
+            'mu_p': rng.random(npts).astype(np.float32),
+            'la_p': rng.random(npts).astype(np.float32),
+            'yld_p': rng.random(npts).astype(np.float32),
+            'pvol_p': rng.random(npts).astype(np.float32),
+            'coh_p': rng.random(npts).astype(np.float32),
+            'dg_acc': rng.random(npts).astype(np.float32),
+            'eps_acc': rng.random(npts).astype(np.float32),
+            'phase': np.ones(npts, np.int8),
+            'am_pos': am_pos, 'am_r_pristine': am_r0, 'am_r_applied': am_r_deformed}
+    m = dict(meta); m.update({'n_pts': npts, 'wall_z': 0.6157, 'target_gpa': 0.30,
+                              'protocol': 'hold', 'am_fingerprint': fp, 'n_am': n_am,
+                              'restart_velocity_convention': 'v_and_C_zeroed_on_load'})
+    with tempfile.TemporaryDirectory() as td:
+        for _cmp in (True, False):                       # both the deflate and the store path
+            p = _os.path.join(td, f's{int(_cmp)}.npz')
+            _, _nb, _got = write_state_npz(p, arrs, m, compress=_cmp)
+            a2, m2 = read_state_npz(p)
+            chk(f'round-trip all arrays present (compress={_cmp})', set(a2) == set(arrs))
+            chk(f'round-trip bit-exact (compress={_cmp})',
+                all(np.array_equal(a2[k], arrs[k]) for k in arrs))
+            chk(f'round-trip meta (compress={_cmp})', m2 == _json.loads(_json.dumps(m, sort_keys=True)))
+            chk(f'compress flag honoured ({_cmp})', _got is _cmp)
+        chk('meta records the v/C zeroing convention',
+            m2.get('restart_velocity_convention') == 'v_and_C_zeroed_on_load')
+        chk('required arrays all present in a written state',
+            all(k in a2 for k in _STATE_REQUIRED))
+        # AUTO size rule: small state → deflate, oversized budget → store
+        p = _os.path.join(td, 'auto.npz')
+        chk('auto picks deflate under budget', write_state_npz(p, arrs, m)[2] is True)
+        chk('auto picks store over budget',
+            write_state_npz(p, arrs, m, compress_max_bytes=1)[2] is False)
+
+    print(f"selftest: {ok}/{ok + len(fail)} PASS" + (f"   FAILED: {fail}" if fail else ""))
+    return 1 if fail else 0
 
 
 def main(argv):
     args = parse_args(argv)
+    if args.selftest:                                          # numpy-only; must run without taichi
+        raise SystemExit(_selftest())
+    if args.load_state and not args.save_state and args.protocol == 'servo' and args.target_gpa >= 0.25:
+        print(f"  [load-state] note: --protocol servo --target-gpa {args.target_gpa} ≈ the usual FABRICATION "
+              f"pressure.  For the '제작 → 제하 → 구동압' protocol pass the OPERATING stack pressure "
+              f"(e.g. --target-gpa 0.09).")
     if args.fracture_scaffold and not args.am_scaffold:       # ★L1(리뷰): crack-void는 스캐폴드 경로 전용
         raise SystemExit('[fracture] --fracture-scaffold 는 --am-scaffold 필요 (crack-void는 '
                          'DEM→MPM 스캐폴드 경로에서만 동작 — 다른 경로에선 무시되므로 침묵 no-op 차단).')
@@ -494,7 +731,8 @@ def main(argv):
     # ── build material points: place spheres (two-tier RSA: big AM brute + small SE
     #    fine-grid, like the DEM — a uniform brute is O(N²) and stalls) ───────────
     rng = np.random.default_rng(args.seed)
-    am_c = None; am_r = None; AM_vol = 0.0; am_top = 0.0; um_box = 0.0; am_jam_z = 0.0   # fixed-AM scaffold bookkeeping
+    am_c = None; am_r = None; am_r_pristine = None                                       # (pristine radii = restart fingerprint)
+    AM_vol = 0.0; am_top = 0.0; um_box = 0.0; am_jam_z = 0.0   # fixed-AM scaffold bookkeeping
     if args.am_scaffold:
         # DEM→MPM scaffold: real AM are FIXED (loaded from the LIGGGHTS dump) and become a grid
         # obstacle; only SE is the MPM material, RSA-packed into the interstices to a target volume
@@ -710,7 +948,101 @@ def main(argv):
 
     se_id_base = None                                       # per-base-point SE particle id (set under --se-dump)
     _cyc_evict_pct = None                                    # A-1 cycle-deform SE eviction % (honesty; None = off)
-    if args.am_scaffold:
+    _state_in = None                                         # restored restart state (--load-state); None = seed fresh
+    _state_meta = {}                                         # its meta (fabrication provenance for the outputs)
+    if args.load_state:
+        # ── PLASTIC-HISTORY RESTART: skip SE seeding entirely and restore the saved material points
+        #    (positions + F + the per-point material/history arrays).  The AM scaffold above was
+        #    rebuilt normally, so --cycle-deform / --fracture-scaffold radii for THIS stage are already
+        #    applied to am_r / pin_np — that is exactly the intent: SE keeps its 300-MPa memory while
+        #    the AM breathes.  The guard therefore compares centres/count/PRISTINE radii only. ────────
+        _sa, _sm = read_state_npz(args.load_state)
+        _cur_meta = {'n_grid': int(n_grid), 'nz': int(nz),
+                     'lateral_box': float(args.lateral_box), 'periodic': bool(PERIODIC)}
+        _cur_pos = am_c if am_c is not None else np.zeros((0, 3))
+        _cur_r0 = am_r_pristine if am_r_pristine is not None else np.zeros(0)
+        _errs = state_guard_errors(_sm, _cur_meta, _sa.get('am_pos', np.zeros((0, 3))),
+                                   _sa.get('am_r_pristine', np.zeros(0)), _cur_pos, _cur_r0)
+        _miss = [k for k in _STATE_REQUIRED if k not in _sa]
+        if _miss:
+            _errs.append(f"state file is missing required arrays: {_miss}")
+        else:
+            _npts = len(_sa['x'])
+            _bad = [k for k in _STATE_REQUIRED if len(_sa[k]) != _npts]
+            if _bad:
+                _errs.append(f"per-point arrays disagree on length (x has {_npts}): {_bad}")
+            _errs += state_finite_errors({k: _sa[k] for k in _STATE_REQUIRED})
+        if _errs:
+            raise SystemExit("[load-state] INCOMPATIBLE state file '" + args.load_state + "':\n  - "
+                             + "\n  - ".join(_errs)
+                             + "\n  A restart must reuse the SAME grid + the SAME AM scaffold geometry "
+                               "(only the AM RADII may change, via --cycle-deform/--fracture-scaffold).")
+        _state_in = _sa; _state_meta = _sm
+        n = len(_sa['x'])
+        xs = np.ascontiguousarray(_sa['x'], np.float32)
+        mus = np.ascontiguousarray(_sa['mu_p'], np.float32)
+        las = np.ascontiguousarray(_sa['la_p'], np.float32)
+        ylds = np.ascontiguousarray(_sa['yld_p'], np.float32)
+        pvs = np.ascontiguousarray(_sa['pvol_p'], np.float32)
+        coh_np = np.ascontiguousarray(_sa['coh_p'], np.float32)
+        phase_np = (np.ascontiguousarray(_sa['phase'], np.int8) if 'phase' in _sa
+                    else np.where(ylds < 100.0, 1, 0).astype(np.int8))
+        fibre_np = np.ascontiguousarray(_sa['fibre'], np.int32) if 'fibre' in _sa else None
+        dia_np = np.ascontiguousarray(_sa['fibre_dia'], np.float32) if 'fibre_dia' in _sa else None
+        se_id_base = np.ascontiguousarray(_sa['se_id'], np.int32) if 'se_id' in _sa else None
+        if am_c is not None and am_r_pristine is not None:   # fingerprint = human-readable scaffold identity
+            _fp_now = state_fingerprint(am_c, am_r_pristine)   # (the AUTHORITATIVE check is the array compare
+            print(f"  [load-state] AM scaffold fingerprint {_fp_now} "  # in state_guard_errors above)
+                  f"(state {_sm.get('am_fingerprint')}) · {len(am_r)} AM"
+                  + (f" · radii re-deformed this stage (cycle-deform/fracture) — excluded from the guard "
+                     f"by design" if (args.cycle_deform or args.fracture_scaffold) else ""))
+        if args.am_scaffold:                                 # seed-density bookkeeping (metrics parity)
+            se_solid = float(pvs.sum())
+            am_solid = float((pin_np > 0).sum()) * dx ** 3
+            bed_vol = WIDTH * WIDTH * (am_top - FLOOR)
+            f_am = 100.0 * am_solid / bed_vol; f_se = 100.0 * se_solid / bed_vol
+            bulk_rho = (am_solid * 4800.0 + se_solid * 2000.0) / bed_vol / 1000.0
+        print(f"  [load-state] restored {n:,} material points from {args.load_state}  "
+              f"(fab target={_sm.get('target_gpa')} GPa protocol={_sm.get('protocol')} "
+              f"wall_z={_sm.get('wall_z')} · plastic history F/Σdg/ε KEPT · v,C zeroed = quasi-static restart)")
+        print(f"  [load-state] Σdg(saved) mean={float(np.mean(_sa['dg_acc'])):.4f} "
+              f"max={float(np.max(_sa['dg_acc'])):.4f}   ‖F−I‖ mean="
+              f"{float(np.mean(np.linalg.norm(_sa['F'].reshape(-1, 3, 3) - np.eye(3), axis=(1, 2)))):.5f} "
+              f"(0 ⇒ pristine/no memory)")
+        if args.se_dump or args.add_recipe:
+            print("  [load-state] note: --se-dump / --se-frac / --add-recipe are IGNORED here — the SE (and any "
+                  "additive) points come from the state file.  They still matter for stage ①.")
+        # ★ SILENT-WRONGNESS GUARD: the per-point µ/λ/σ_y/cohesion are RESTORED FROM THE STATE, so a
+        #   --e-se / --nu-se / --sigma-y / --coh given on the restart command line does NOT reach the
+        #   material.  Without this warning a "temperature-softened σ_y" restart would run at the ORIGINAL
+        #   σ_y and look like it worked.  (Changing the material mid-restart is not supported: the per-point
+        #   values also carry the additive phases, which have their own moduli.)
+        _mat_mismatch = [f"{k}: state={_sm.get(k)} cmdline={c}"
+                         for k, c in (('e_se', float(args.e_se)), ('nu_se', float(args.nu_se)),
+                                      ('sigma_y', float(args.sigma_y)), ('coh', float(COH)))
+                         if _sm.get(k) is not None and abs(float(_sm[k]) - c) > 1e-9]
+        if _mat_mismatch:
+            print("  [load-state] ⚠ MATERIAL ARGS IGNORED — per-point µ/λ/σ_y/coh come from the state file, "
+                  "not from this command line:\n      " + "\n      ".join(_mat_mismatch)
+                  + "\n      → to change the SE material you must re-run stage ① (fabrication) with the new "
+                    "values.  This run continues with the SAVED material.")
+        if args.am_scaffold:
+            # HONESTY: the seeding path filters SE out of AM cells ONCE, at seed time.  On a restart there is
+            # no re-seed, so points that the (possibly EXPANDED) AM mask now covers are NOT evicted — they are
+            # pinned by am_mask instead.  We deliberately do NOT delete them: deletion would (a) destroy the
+            # plastic history this feature exists to preserve and (b) break the no-change round-trip, and the
+            # pristine path has the same overlap anyway once points advect during compaction (it only filters
+            # at seed time).  Instead the overlap is MEASURED and reported — it is the part of solid_vol that
+            # is counted both as SE (Σpvol) and as AM (AM_vol), i.e. a small porosity under-estimate.
+            _ii = np.clip((xs[:, 0] * n_grid).astype(np.int64), 0, n_grid - 1)
+            _jj = np.clip((xs[:, 1] * n_grid).astype(np.int64), 0, n_grid - 1)
+            _kk = np.clip((xs[:, 2] * n_grid).astype(np.int64), 0, nz - 1)
+            _in_am = pin_np[_ii, _jj, _kk] > 0
+            _se_in_am_pct = round(100.0 * float(_in_am.sum()) / max(n, 1), 3)
+            print(f"  [load-state] {int(_in_am.sum()):,}/{n:,} restored points ({_se_in_am_pct:.2f}%) lie inside "
+                  f"the CURRENT AM mask → pinned, NOT evicted (plastic history preserved; that volume is "
+                  f"double-counted in solid_vol ⇒ porosity biased low by ≲ this share of the SE volume).")
+    elif args.am_scaffold:
         spc = dx * 0.5
         i0 = LO_m if PERIODIC else int(SW[0] * n_grid) + 1   # no wall inset when periodic
         i1 = LO_m + WC_m if PERIODIC else int(SW[1] * n_grid)
@@ -832,11 +1164,17 @@ def main(argv):
     #    recipe wt% → object counts (additives.py) → seed fibre/blob points (avoiding the fixed
     #    AM) → append with per-additive (µ,λ,σ_y).  Kernel uses only per-point material → no
     #    P2G/G2P change.  phase code: 1 SE · 2 VGCF · 3 SuperP · 4 PTFE (0 AM = scaffold mask).
-    phase_np = np.where(ylds < 100.0, 1, 0).astype(np.int8)    # base points: 1 SE / 0 AM(mat, mix mode)
-    coh_np = np.full(len(xs), COH, np.float32)                 # per-point cohesion: SE = COH (PTFE ≫ below)
-    fibre_np = None                                            # set in the additive block if fibres seeded
-    dia_np = None                                              # per-point relative fibre Ø (PTFE draw d∝√(V/L))
-    if args.add_recipe:
+    if _state_in is None:                                      # (--load-state restored these already)
+        phase_np = np.where(ylds < 100.0, 1, 0).astype(np.int8)  # base points: 1 SE / 0 AM(mat, mix mode)
+        coh_np = np.full(len(xs), COH, np.float32)             # per-point cohesion: SE = COH (PTFE ≫ below)
+        fibre_np = None                                        # set in the additive block if fibres seeded
+        dia_np = None                                          # per-point relative fibre Ø (PTFE draw d∝√(V/L))
+    if args.add_recipe and _state_in is not None:
+        # the saved state ALREADY contains the seeded additive points (with their own µ/λ/σ_y/coh/phase) —
+        # re-seeding them here would DOUBLE the additive loading and desync phase/fibre bookkeeping.
+        print("  [additives] --add-recipe IGNORED under --load-state: the restored state already carries "
+              "its additive points (re-seeding would double the loading).  Re-run stage ① to change the recipe.")
+    elif args.add_recipe:
         if not args.am_scaffold:
             print("  [additives] --add-recipe needs --am-scaffold; skipped")
         else:
@@ -1372,6 +1710,25 @@ def main(argv):
     target = args.target_gpa
     vmax = 0.008 * (WALL0 - FLOOR)                           # platen speed (slow = quasi-static)
     wall_z[None] = WALL0
+    _state_wall_z = None
+    if _state_in is not None:
+        # ── restore the PLASTIC + ELASTIC history.  `load` has just set F=I / v=0 / C=0; F, Σdg and ε are
+        #    overwritten from the state file.  v and C are LEFT AT ZERO on purpose (see the STATE_SCHEMA
+        #    note at the top): stage ① ends relaxed under the platen, and re-injecting a stale velocity /
+        #    APIC-affine field across a protocol + target-stress change would add spurious kinetic energy.
+        #    All of the stress that matters is already encoded in F. ─────────────────────────────────────
+        F.from_numpy(np.ascontiguousarray(_state_in['F'], np.float32).reshape(n, 3, 3))
+        dg_acc.from_numpy(np.ascontiguousarray(_state_in['dg_acc'], np.float32))
+        eps_acc.from_numpy(np.ascontiguousarray(_state_in['eps_acc'], np.float32))
+        _sm_wall = _state_meta.get('wall_z')
+        if _sm_wall is not None:
+            # continue from the SAVED platen height, not WALL0 — otherwise the platen would be lifted back
+            # to the loose-bed start and the run would re-compact from scratch (= the very thing this
+            # feature exists to avoid).  Clamped into this run's legal travel.
+            _state_wall_z = float(min(WALL0, max(WALL_MIN, float(_sm_wall))))
+            wall_z[None] = _state_wall_z
+            print(f"  [load-state] platen resumed at wall_z={_state_wall_z:.4f} "
+                  f"(saved {float(_sm_wall):.4f}; travel [{WALL_MIN:.3f}, {WALL0:.3f}])")
     comp = (f"scaffold ({len(am_r)} fixed AM + SE "
             + ("se_dump REAL positions)" if args.se_dump else f"se_frac={args.se_frac})") if args.am_scaffold
             else "real14 (3-comp 12:4:1, AM:SE 73:27)" if args.preset == 'real14'
@@ -1593,7 +1950,44 @@ def main(argv):
                 'SE_of_solid_pct': round(100.0 * se_solid / max(am_solid + se_solid, 1e-12), 2),
                 'bulk_density_g_cm3': round(float(bulk_rho), 3), 'n_AM': int(len(am_r)),
             })
+        if args.load_state or args.save_state:
+            # ── PRESSURE / PLASTIC-HISTORY PROVENANCE (docs/temp_pressure_capability.md §P1-a, §P1.5).
+            #    Downstream (payload → STEP3 σ → STEP5 ledger) must be able to tell a 300-MPa press-peak
+            #    geometry from a 300-MPa-fabricated bed re-equilibrated at the OPERATING stack pressure.
+            #    Key added ONLY when a restart flag is used → the pristine production JSON schema is
+            #    byte-identical (same convention as the `cycle_deform` key above). ─────────────────────
+            _chain = list(_state_meta.get('fab_chain') or ([_state_meta['target_gpa']]
+                                                          if 'target_gpa' in _state_meta else []))
+            _fab = (_chain[0] if _chain else float(target))   # ORIGINAL fabrication pressure of the chain
+            m['state_provenance'] = {
+                'schema': STATE_SCHEMA,
+                'pressure_chain_GPa': _chain + [float(target)] if args.load_state else [float(target)],
+                'plastic_history_restored': bool(args.load_state),
+                'P_fab_MPa': (round(float(_fab) * 1000.0, 3) if _fab is not None else None),
+                'P_this_stage_MPa': round(float(target) * 1000.0, 3),
+                'P_this_stage_role': ('operating_stack_pressure' if args.load_state else 'fabrication_pressure'),
+                'protocol_this_stage': args.protocol,
+                'fab_protocol': (_state_meta.get('protocol') if args.load_state else args.protocol),
+                'fab_wall_z': (_state_meta.get('wall_z') if args.load_state else None),
+                'wall_z_resumed': (round(float(_state_wall_z), 4) if _state_wall_z is not None else None),
+                'restart_velocity_convention': 'v_and_C_zeroed_on_load',
+                'loaded_from': (args.load_state or None), 'saved_to': (args.save_state or None),
+                # share of restored points sitting inside the CURRENT (possibly cycle-deformed) AM mask:
+                # pinned rather than evicted, so that volume is counted in BOTH Σpvol and AM_vol
+                'se_points_inside_AM_pct': locals().get('_se_in_am_pct'),
+                'se_evicted_on_load': False,   # restart NEVER deletes points (seed-time eviction only)
+                # per-point material (µ/λ/σ_y/coh) comes from the state, NOT from this run's --e-se etc.
+                'material_from_state': bool(args.load_state),
+                'material_args_ignored': (locals().get('_mat_mismatch') or None),
+                # honest limits: the constitutive model has NO rate/creep term, so a "held at 90 MPa for
+                # hundreds of hours" state is NOT represented — only the stress-equilibrated geometry is.
+                'rate_dependence': 'NOT_MODELLED_rate_independent_J2',
+                'T_C': None, 'T_dependence': 'NOT_MODELLED',   # this solver has no temperature axis at all
+            }
         _add_meta = locals().get('_add_meta') or {}          # per-additive recipe+physics (if additives seeded)
+        if not _add_meta and _state_in is not None and _state_meta.get('additives'):
+            _add_meta = dict(_state_meta['additives'])       # inherited through --load-state (points travel in
+            m['additives_inherited_from_state'] = True       # the arrays; the recipe meta travels in the meta)
         if _add_meta:
             m['additives'] = _add_meta                       # {VGCF:{wt_pct,vol%,n_obj,n_pts,E,σ_y,curl}, …} → 요약
             m['fibre_rod'] = bool(FIBRE_ROD)                 # Tier-2 emergent buckling on?
@@ -1638,6 +2032,83 @@ def main(argv):
         np.save(args.save_se_id, se_id_full)
         _nid = len(np.unique(se_id_full[se_id_full >= 0]))
         print(f"  saved SE particle ids → {args.save_se_id} ({n} pts, {_nid} SE particles)")
+    if args.save_state:
+        # ── FULL restart state (see the STATE_SCHEMA note at the top of this file).  Everything the
+        #    next stage needs to continue THIS bed instead of re-seeding a virgin one: positions,
+        #    the deformation gradient F (elastic stress + plastic shape memory), the per-point material
+        #    constants, the two accumulated-strain histories, the additive bookkeeping arrays, and the
+        #    AM-scaffold fingerprint that the loader validates against. ────────────────────────────────
+        _arr = {'x': x.to_numpy(), 'F': F.to_numpy(),
+                'v': v.to_numpy(), 'C': C.to_numpy(),      # written for auditability; ZEROED on load
+                'mu_p': mu_p.to_numpy(), 'la_p': la_p.to_numpy(), 'yld_p': yld_p.to_numpy(),
+                'pvol_p': pvol_p.to_numpy(), 'coh_p': coh_p.to_numpy(),
+                'dg_acc': dg_acc.to_numpy(), 'eps_acc': eps_acc.to_numpy(),
+                'phase': np.asarray(phase_np, np.int8),
+                'am_pos': (np.asarray(am_c, np.float64) if am_c is not None else np.zeros((0, 3))),
+                'am_r_pristine': (np.asarray(am_r_pristine, np.float64) if am_r_pristine is not None
+                                  else np.zeros(0)),
+                'am_r_applied': (np.asarray(am_r, np.float64) if am_r is not None else np.zeros(0))}
+        if fibre_np is not None:
+            _arr['fibre'] = np.asarray(fibre_np, np.int32)
+        if dia_np is not None:
+            _arr['fibre_dia'] = np.asarray(dia_np, np.float32)
+        if se_id_base is not None:
+            _sid = np.full(n, -1, np.int32); _sid[:len(se_id_base)] = se_id_base
+            _arr['se_id'] = _sid
+        _bad = state_finite_errors({k: _arr[k] for k in _STATE_REQUIRED})
+        if _bad:
+            raise SystemExit("[save-state] refusing to write a diverged state:\n  - " + "\n  - ".join(_bad))
+        _state_add_meta = locals().get('_add_meta') or (_state_meta.get('additives') if _state_in else None)
+        try:                                                 # never let un-serialisable recipe meta kill the save
+            import json as _js0; _js0.dumps(_state_add_meta)
+        except Exception as _e:
+            print(f"  [save-state] additive meta not JSON-serialisable ({_e}) → omitted from the state")
+            _state_add_meta = None
+        _meta = {
+            'schema': STATE_SCHEMA, 'n_pts': int(n),
+            'n_grid': int(n_grid), 'nz': int(nz), 'lateral_box': float(args.lateral_box),
+            'periodic': bool(PERIODIC),
+            'wall_z': float(wall_z[None]),   # FULL precision — a rounded platen height would make the
+            #                                  no-change round-trip start at a slightly different porosity
+            'FLOOR': float(FLOOR), 'WALL0': float(WALL0),
+            'WALL_MIN': float(WALL_MIN), 'um_box_um': (float(um_box) if um_box > 0 else None),
+            'target_gpa': float(target), 'protocol': args.protocol, 'readout': args.readout,
+            'final_stress_GPa': round(float(p_end), 6),
+            'porosity_settled_pct': round(float(por_end), 4),
+            'thickness_um': (round(float((wall_z[None] - FLOOR) * um_box), 4) if um_box > 0 else None),
+            'e_se': float(args.e_se), 'nu_se': float(args.nu_se), 'sigma_y': float(args.sigma_y),
+            'coh': float(COH), 'am_scaffold': bool(args.am_scaffold), 'se_dump': bool(args.se_dump),
+            'se_frac': float(args.se_frac), 'dilate_z': float(args.dilate_z),
+            'n_am': int(len(am_r)) if am_r is not None else 0,
+            'am_fingerprint': (state_fingerprint(am_c, am_r_pristine)
+                               if (am_c is not None and am_r_pristine is not None) else None),
+            'am_radii_deformed': bool(args.cycle_deform or args.fracture_scaffold),
+            # carry the additive RECIPE provenance through the restart: the additive POINTS travel in the
+            # arrays, but `_add_meta` is only built by the seeder, so without this a stage-② metrics JSON
+            # would silently lose "this bed is 1 wt% VGCF + 1 wt% PTFE" (which STEP3/the payload read).
+            'additives': _state_add_meta,
+            'cycle_deform': ({'N': int(args.cycle_n), 'dv_sc': float(args.cycle_dv_sc),
+                              'dv_poly': float(args.cycle_dv_poly),
+                              'dv_pct_poly': float(args.dv_pct_poly)} if args.cycle_deform else None),
+            'loaded_from': (args.load_state or None),
+            # full pressure chain across an N-stage restart chain (fab → op → op' → …), so a 3rd-stage
+            # state still knows the ORIGINAL fabrication pressure
+            'fab_chain': list(_state_meta.get('fab_chain') or []) + [float(target)],
+            # ★ the deliberate restart convention — the loader ZEROES v and C (quasi-static restart from
+            #   the relaxed state); all stress that matters lives in F.  Recorded so a reader of this file
+            #   never has to guess whether the velocities were meaningful.
+            'restart_velocity_convention': 'v_and_C_zeroed_on_load',
+            'rate_dependence': 'NOT_MODELLED_rate_independent_J2',
+            'T_C': None, 'T_dependence': 'NOT_MODELLED',
+        }
+        _, _nb, _cz = write_state_npz(args.save_state, _arr, _meta)
+        _dgv = _arr['dg_acc']
+        print(f"  saved restart state → {args.save_state}  ({n:,} pts, {len(_arr)} arrays, "
+              f"{_nb / 1e9:.2f} GB raw, {'deflate' if _cz else 'store'}; "
+              f"wall_z={_meta['wall_z']} target={_meta['target_gpa']} GPa protocol={args.protocol}; "
+              f"Σdg mean={float(_dgv.mean()):.4f}; AM fp={_meta['am_fingerprint']})")
+        print(f"  → resume with:  --load-state {args.save_state} --protocol servo --target-gpa <operating> "
+              f"[--cycle-deform ...]   (v,C are zeroed = quasi-static restart)")
 
 
 if __name__ == '__main__':

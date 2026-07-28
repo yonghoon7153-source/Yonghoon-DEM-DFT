@@ -33,9 +33,33 @@ Analytic self-tests (python3 scripts/step3_sigma.py --selftest):
 import argparse
 import sys
 
+import os as _os
 import numpy as np
 from scipy import ndimage, sparse
 from scipy.sparse.linalg import cg
+
+_THIS_DIR = _os.path.dirname(_os.path.abspath(__file__))
+if _THIS_DIR not in sys.path:
+    sys.path.insert(0, _THIS_DIR)
+import se_material  # single source of truth for σ_ion(SE) + its temperature convention
+
+# ── SE ionic σ (S/cm) — the ONE definition, declared at se_material.T_REF_C = 25 °C ──
+# STEP3 itself never hard-coded an SE ionic σ: the sig_i table is built by the caller
+# (mpm_webapp_payload --sigma-ion-se).  Re-export it here so every STEP3 consumer reads the
+# same number/convention instead of a fresh 0.003 literal, and so the temperature helpers are
+# importable from the module that owns the solve.  docs/temp_pressure_capability.md T1-b.
+SIGMA_ION_SE_S_CM_25C = se_material.SIGMA_GRAIN_S_CM_25C   # 3.0e-3 S/cm = 3.0 mS/cm (Cronau)
+
+
+def sigma_ion_se_S_cm(T_C=None, ea_ev=None):
+    """SE ionic σ in S/cm.  T_C None (default) → the bare 3.0e-3 literal, bitwise."""
+    return se_material.sigma_grain_S_cm(T_C, ea_ev)
+
+
+def temperature_provenance(T_C=None, ea_ev=None):
+    """Provenance block for STEP3 σ outputs (T_C / T_ref_C / Ea_ion_eV / T_dependence)."""
+    return se_material.provenance(T_C, ea_ev)
+
 
 # σ defaults (S/cm) — see module docstring for anchor status
 # SDCP 250 = USER-provided anchor UPDATE (2026-07-16; supersedes interim 150 of 2026-07-10,
@@ -1053,6 +1077,56 @@ def _selftest_pnm():
     return 0 if ok else 1
 
 
+def _selftest_temp():
+    """σ_ion(T) 규약 — STEP3 표면에서 se_material 위임이 실제로 성립하는지 (bitwise + 배수표)."""
+    ok = True
+
+    def chk(name, cond, extra=''):
+        nonlocal ok
+        ok &= bool(cond)
+        print(f"  {'PASS' if cond else 'FAIL'}  {name}{(' — ' + extra) if extra else ''}")
+
+    chk('SIGMA_ION_SE_S_CM_25C is bitwise 3.0e-3 (= the old bare 0.003 literal)',
+        float(SIGMA_ION_SE_S_CM_25C).hex() == (0.003).hex(), float(SIGMA_ION_SE_S_CM_25C).hex())
+    chk('sigma_ion_se_S_cm() with no T is bitwise 3.0e-3',
+        float(sigma_ion_se_S_cm()).hex() == (0.003).hex())
+    chk('sigma_ion_se_S_cm(25) is bitwise 3.0e-3 (T_ref identity)',
+        float(sigma_ion_se_S_cm(25.0)).hex() == (0.003).hex())
+    for t_c, want in ((30.0, 1.28), (45.0, 2.56), (60.0, 4.79)):   # docs table, T_ref 25, Ea 0.41
+        r = sigma_ion_se_S_cm(t_c) / SIGMA_ION_SE_S_CM_25C
+        chk(f'{t_c:.0f} °C → x{want} (docs/temp_pressure_capability.md T1-b)',
+            abs(round(r, 2) - want) < 5e-3, f'got x{r:.4f}')
+    p_off, p_on = temperature_provenance(), temperature_provenance(60.0)
+    chk('provenance OFF = NOT_MODELLED', p_off['T_dependence'] == 'NOT_MODELLED'
+        and p_off['T_C'] is None and p_off['T_ref_C'] == 25.0)
+    chk('provenance ON = ARRHENIUS + Ea 0.41', p_on['T_dependence'] == 'ARRHENIUS'
+        and p_on['Ea_ion_eV'] == 0.41)
+    chk('σ_e stays T-independent (Reisacher ohmic; solver convention)',
+        p_on['sigma_e_T_dependence'] == 'NOT_MODELLED')
+    # the electronic/thermal tables must NOT have moved
+    chk('SIGMA_DEFAULT electronic table untouched',
+        SIGMA_DEFAULT == {'AM_S': 0.010, 'AM_P': 0.005, 'VGCF': 100.0, 'SuperP': 10.0,
+                          'SDCP': 250.0, 'SWCNT': 100.0})
+    chk('thermal k table untouched', (K_AM_THERMAL, K_SE_THERMAL) == (4.0e-2, 0.7e-2))
+
+    # ── the σ_ion solve is LINEAR in the SE phase σ, so σ_eff(T)/σ_eff(T_ref) == the
+    #    Arrhenius factor exactly.  This is what mpm_webapp_payload's --temp-c actually does
+    #    (it scales the sig_i table entry for SE before solve_sigma_z).
+    sid = np.zeros((4, 4, 6), np.int8); sid[:] = 6          # all-SE block (sid 6 = SE)
+    def _sig_i(T=None):
+        t = np.zeros(9); t[6] = sigma_ion_se_S_cm(T); return t
+    r_ref = solve_sigma_z(sid, _sig_i(), 0.4, z_top_um=6 * 0.4, z_bot_um=0.0)['sigma_eff']
+    r_60 = solve_sigma_z(sid, _sig_i(60.0), 0.4, z_top_um=6 * 0.4, z_bot_um=0.0)['sigma_eff']
+    chk('σ_eff is exactly linear in σ_SE → σ_eff(60 °C)/σ_eff(25 °C) == x4.785',
+        abs(r_60 / r_ref - se_material.arrhenius_sigma_factor(60.0)) < 1e-9,
+        f'{r_ref:.6g} → {r_60:.6g}  (x{r_60/r_ref:.4f})')
+    chk('σ_eff(no T) == σ_eff(25 °C) bitwise',
+        float(r_ref).hex() == float(solve_sigma_z(sid, _sig_i(25.0), 0.4, z_top_um=6 * 0.4,
+                                                  z_bot_um=0.0)['sigma_eff']).hex())
+    print('TEMP SELFTEST', 'PASS' if ok else 'FAIL')
+    return 0 if ok else 1
+
+
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--selftest', action='store_true', help='run the analytic laminate/percolation checks')
@@ -1067,7 +1141,19 @@ if __name__ == '__main__':
     ap.add_argument('--integration', action='store_true',
                     help='run the committed real14 integration probe (AM-only vs +300 synthetic VGCF, '
                          'seed 0, vox 0.4) — reproduces the review-anchored numbers + monotonicity')
+    ap.add_argument('--selftest-temp', action='store_true',
+                    help='σ_ion(T) 규약 검증 (se_material 위임: T=None bitwise / 25 °C / 문서 배수표)')
+    se_material.temperature_argparse(ap)   # --temp-c / --ea-ion-ev (both default None)
     a = ap.parse_args()
+    if a.selftest_temp:
+        sys.exit(_selftest_temp())
+    if a.temp_c is not None:               # resolve + report the SE ionic σ this run would use
+        _p = temperature_provenance(a.temp_c, a.ea_ion_ev)
+        print(f"σ_ion(SE) @ {a.temp_c:.1f} °C = {sigma_ion_se_S_cm(a.temp_c, a.ea_ion_ev):.6g} S/cm "
+              f"(T_ref={_p['T_ref_C']:.0f} °C, Ea={_p['Ea_ion_eV']} eV, {_p['convention']})")
+        se_material.warn_band(a.temp_c, a.ea_ion_ev)
+        print('  ⇒ pass the same --temp-c to mpm_webapp_payload (which builds the sig_i table).')
+        sys.exit(0)
     if a.selftest:
         sys.exit(_selftest())
     if a.selftest_rxn:

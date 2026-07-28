@@ -12,15 +12,54 @@ v2.0 Changes (ML Lecture-based improvements):
 """
 import json
 import os
+import sys
 import warnings
 import numpy as np
 from pathlib import Path
 
 warnings.filterwarnings('ignore')
 
+# single source of truth for σ_grain + the σ_ion temperature convention (scripts/se_material.py)
+_SCRIPTS_DIR = str(Path(__file__).resolve().parent.parent / 'scripts')
+if _SCRIPTS_DIR not in sys.path:
+    sys.path.insert(0, _SCRIPTS_DIR)
+import se_material
+
 # ═══ Physical Constants ═══
-SIGMA_GRAIN = 3.0       # mS/cm (SE grain interior)
+# ★ 2026-07-28: σ_grain now shared with the solvers via se_material (value unchanged, 3.0 mS/cm,
+# declared at T_ref = 25 °C).  docs/temp_pressure_capability.md §3-4 / T1-b / T1-e.
+SIGMA_GRAIN = se_material.SIGMA_GRAIN_MS_CM_25C   # mS/cm (SE grain interior, @25 °C)
 SIGMA_AM = 50.0         # mS/cm (NCM811)
+
+# ═══ Temperature convention — UNIFIED WITH THE SOLVER (audit T1-e, 2026-07-28) ═══
+# BEFORE: this file used σ(T)=σ(298)·exp(−Ea/k_B·(1/T−1/298)) (the "σ form") with
+#   Ea_SE = 0.30 eV and Ea_AM = 0.50 eV — the latter carrying the literal comment "rough".
+#   That Ea_AM was an UNANCHORED number (§F1) and it was applied to σ_e, which
+#   (a) contradicts the literature qualitative finding (Reisacher 2023: in the OHMIC regime the
+#       electronic response is T-INDEPENDENT — CM-4 33.50 Ω @25 °C vs 43.89 @65 °C, uncorrelated,
+#       CM-3 even opposite in sign), and
+#   (b) contradicts the DEM/voxel solvers, which do not scale σ_e with T at all.
+#   Same T, two code paths, two different answers — see docs/temp_pressure_capability.md §2 ②.
+# NOW:
+#   σ_ion → se_material (σ·T Kraft-2017 form, T_ref = 25 °C, Ea band 0.29/0.41/0.46, default 0.41)
+#   σ_e   → T-INDEPENDENT BY DEFAULT (literature- AND solver-consistent).  The legacy Ea_AM
+#           behaviour is still reachable EXACTLY via sigma_e_t_model='legacy_arrhenius', and every
+#           response labels which model was used (`sigma_e_T_model`, `temperature_provenance`,
+#           `temperature_notes`) so nothing changes silently.
+# ⚠ At the UI default (298 K) BOTH models give factor 1.0 → the numbers a user has seen at the
+#   default slider position are bitwise unchanged.
+SIGMA_E_T_MODELS = ('none', 'legacy_arrhenius')
+EA_AM_EV_LEGACY = 0.50   # ⚠ UNANCHORED ('rough' in the pre-2026-07-28 code) — legacy replay only
+# The UI slider is in KELVIN and LABELS 298 as "25 °C" (webapp/templates/predictor.html:91).
+# Honour that label: slider 298 IS the reference position → maps to exactly se_material.T_REF_C,
+# so the reference run keeps factor == 1.0 and 303/318/333 land on exactly 30/45/60 °C.
+_UI_T_REF_K = 298.0
+
+
+def _ui_kelvin_to_celsius(temperature_k):
+    """UI slider Kelvin → °C on the convention that the slider's 298 == T_ref (25 °C)."""
+    return se_material.T_REF_C + (float(temperature_k) - _UI_T_REF_K)
+
 
 # ═══ Ionic scaling law — v12-clean v3 (FINAL PRODUCTION MODEL, 2026-04-18) ═══
 # σ_ionic = C_blend(τ) × σ_grain × √(φ−φc) × CN^(3/2) × cov^(2/5) × f_p³
@@ -584,8 +623,17 @@ def get_data_count(results_folder, archive_folder):
     return _training_data_count
 
 
-def predict(d_se, d_am, am_pct, ps_frac, loading, rve, temperature=298, additive='none', ptfe=False):
-    """Run prediction using cached models."""
+def predict(d_se, d_am, am_pct, ps_frac, loading, rve, temperature=298, additive='none', ptfe=False,
+            sigma_e_t_model='none', ea_ion_ev=None):
+    """Run prediction using cached models.
+
+    temperature      : UI slider value in KELVIN; 298 == the T_ref position (see _UI_T_REF_K).
+    sigma_e_t_model  : 'none' (DEFAULT — σ_e is T-independent: Reisacher ohmic + matches the
+                       DEM/voxel solvers) or 'legacy_arrhenius' (exact replay of the
+                       pre-2026-07-28 Ea_AM = 0.50 eV 'rough' behaviour; ⚠ UNANCHORED §F1).
+    ea_ion_ev        : σ_ion activation energy override; None → se_material default 0.41 eV.
+                       ★ Never report a single value — sweep 0.29 / 0.41 / 0.46.
+    """
     if _cached_models is None:
         return {'error': 'Models not trained. Click "Train Models" first.'}
 
@@ -700,17 +748,25 @@ def predict(d_se, d_am, am_pct, ps_frac, loading, rve, temperature=298, additive
     else:
         sigma_ionic_final = sigma_gpr
 
-    # ── Temperature correction (Arrhenius) ──
-    # σ(T) = σ(298) × exp(-Ea/R × (1/T - 1/298))
-    # Ea_SE ≈ 0.30 eV (LPSCl argyrodite, Kraft 2017)
-    # Ea_AM ≈ 0.50 eV (NCM811 electronic, rough)
-    Ea_SE_eV = 0.30
-    Ea_AM_eV = 0.50
-    k_B = 8.617e-5  # eV/K
-    sigma_ionic_298 = sigma_ionic_final  # save 298K value for thermal formula
-    if temperature != 298 and temperature > 0:
-        arrhenius_SE = np.exp(-Ea_SE_eV / k_B * (1/temperature - 1/298))
-        arrhenius_AM = np.exp(-Ea_AM_eV / k_B * (1/temperature - 1/298))
+    # ── Temperature correction — UNIFIED WITH THE SOLVER (T1-e) ──────────────────
+    # σ_ion: se_material convention  σ·T = σ₀·exp(−Ea/k_B T)  [Kraft 2017 eq 5],
+    #        T_ref = 25 °C, Ea = 0.41 eV (Reisacher 2023 STATED, 375 MPa cold-press).
+    #        The old code here used the σ form with Ea 0.30 eV and an undeclared T_ref — the
+    #        two forms differ by ~10 % in the 30→60 °C multiplier, so the convention is pinned.
+    # σ_e:   T-INDEPENDENT by default (Reisacher: ohmic regime T-independent; and the DEM/voxel
+    #        solvers do not scale σ_e) — the legacy Ea_AM = 0.50 eV was self-labelled 'rough'
+    #        (unanchored, §F1).  Exact legacy replay: sigma_e_t_model='legacy_arrhenius'.
+    sigma_e_t_model = sigma_e_t_model if sigma_e_t_model in SIGMA_E_T_MODELS else 'none'
+    temp_c = _ui_kelvin_to_celsius(temperature)
+    sigma_ionic_ref = sigma_ionic_final   # T_ref (25 °C) value — feeds the σ_thermal formula,
+    #                                       which has no temperature anchor of its own (§F1)
+    sigma_ionic_298 = sigma_ionic_ref     # legacy alias (used further below)
+    at_ref = (float(temperature) == _UI_T_REF_K)
+    if not at_ref and temperature > 0:
+        arrhenius_SE = se_material.arrhenius_sigma_factor(temp_c, ea_ion_ev)
+        # legacy σ form + unanchored Ea_AM, reproduced BIT-EXACTLY for replay only
+        arrhenius_AM = (np.exp(-EA_AM_EV_LEGACY / 8.617e-5 * (1 / temperature - 1 / 298))
+                        if sigma_e_t_model == 'legacy_arrhenius' else 1.0)
         sigma_ionic_final *= arrhenius_SE
     else:
         arrhenius_SE = 1.0
@@ -731,7 +787,9 @@ def predict(d_se, d_am, am_pct, ps_frac, loading, rve, temperature=298, additive
             el_perc = micro.get('fm_electronic_percolating_fraction', {}).get('value', 0.9) if isinstance(micro.get('fm_electronic_percolating_fraction'), dict) else 0.9
             phi_se_val = max(phi_se, 0.01)
             sigma_electronic = 5.0 * SIGMA_AM * am_hop**0.25 * am_cn**0.4 * am_delta**0.2 * el_perc**0.15 / (phi_se_val**0.85 * ratio**0.5)
-        sigma_electronic *= arrhenius_AM  # temperature correction
+        # arrhenius_AM == 1.0 unless sigma_e_t_model='legacy_arrhenius' (see the T1-e block above):
+        # σ_e is T-independent by default — Reisacher (ohmic) + the DEM/voxel solvers agree.
+        sigma_electronic *= arrhenius_AM
 
     # ── Electronic Active AM (Dead AM estimation) ──
     # Ref: Minnmann 2021, Clausnitzer 2023, Bielefeld 2023
@@ -896,6 +954,29 @@ def predict(d_se, d_am, am_pct, ps_frac, loading, rve, temperature=298, additive
         'rate_limiting': rate_limiting,
         'temperature': temperature,
         'arrhenius_factor_SE': round(arrhenius_SE, 4),
+        # ── T1-a/T1-e provenance + labels (never change a number without labelling it) ──
+        'temperature_C': round(temp_c, 2),
+        'temperature_provenance': se_material.provenance(
+            None if at_ref else temp_c, ea_ion_ev,
+            sigma_e_modelled=(sigma_e_t_model == 'legacy_arrhenius')),
+        'sigma_ion_T_model': ('ARRHENIUS_sigmaT_Kraft2017' if not at_ref else 'NOT_MODELLED'),
+        'sigma_e_T_model': sigma_e_t_model,
+        'arrhenius_factor_AM': round(arrhenius_AM, 4),
+        'sigma_ionic_at_T_ref': round(sigma_ionic_ref, 4),
+        'temperature_notes': (
+            'sigma_ion: sigma*T Arrhenius (Kraft 2017 eq 5), T_ref=25 °C, Ea='
+            f'{se_material.EA_ION_EV_DEFAULT if ea_ion_ev is None else ea_ion_ev} eV — '
+            'REPORT THE BAND 0.29/0.41/0.46, never one value.  '
+            + ('sigma_e: T-INDEPENDENT (default) — matches Reisacher (ohmic regime T-independent) '
+               'AND the DEM/voxel solvers.  CHANGED 2026-07-28: the previous Ea_AM=0.50 eV was '
+               'unanchored (code comment said "rough") and disagreed with both; pass '
+               "sigma_e_t_model='legacy_arrhenius' to reproduce the old numbers exactly."
+               if sigma_e_t_model == 'none' else
+               'sigma_e: LEGACY Ea_AM=0.50 eV Arrhenius — ⚠ UNANCHORED (§F1) and inconsistent '
+               'with both the literature (Reisacher: ohmic regime T-independent) and the '
+               'DEM/voxel solvers (which do not scale sigma_e).  Replay/comparison only.')
+            + '  Not scaled at all: i0 / D_s / OCP dU/dT / kappa (no anchors, §F1) — this is NOT '
+              'a full-physics temperature sweep.'),
         'input': input_dict,
     }
 
@@ -1350,3 +1431,68 @@ def sweep_optimal(top_n=5, fixed_params=None, sweep_keys=None, defaults=None):
     # Sort by performance score (σ × util@1C) — realistic optimum
     results.sort(key=lambda x: x.get('perf_score', x['sigma_ionic']), reverse=True)
     return results[:top_n]
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+def _selftest_temp():
+    """Temperature-convention selftest for the predictor surrogate (T1-e).
+
+    Runs WITHOUT sklearn / trained models: it exercises the temperature helpers and the
+    exact arithmetic `predict()` applies, which is where the solver↔surrogate divergence lived.
+    """
+    ok = True
+
+    def chk(name, cond, extra=''):
+        nonlocal ok
+        ok &= bool(cond)
+        print(f"  {'PASS' if cond else 'FAIL'}  {name}{(' — ' + extra) if extra else ''}")
+
+    chk('SIGMA_GRAIN is bitwise 3.0 and shared with the solvers (se_material)',
+        float(SIGMA_GRAIN).hex() == (3.0).hex()
+        and SIGMA_GRAIN is se_material.SIGMA_GRAIN_MS_CM_25C, float(SIGMA_GRAIN).hex())
+
+    # UI slider mapping: 298 K is the reference position (the UI labels it "25 °C")
+    chk('slider 298 K → exactly T_ref 25.0 °C', _ui_kelvin_to_celsius(298) == 25.0)
+    for k, c in ((303, 30.0), (318, 45.0), (333, 60.0)):
+        chk(f'slider {k} K → {c} °C (on the step-5 grid)',
+            abs(_ui_kelvin_to_celsius(k) - c) < 1e-12)
+
+    # at the UI default the σ_ion factor is EXACTLY 1.0 → what the user has already seen
+    # at the default slider position is bitwise unchanged
+    chk('σ_ion factor at the default slider (298 K) is exactly 1.0',
+        se_material.arrhenius_sigma_factor(_ui_kelvin_to_celsius(298)) == 1.0)
+
+    # σ_ion now uses the SOLVER convention (σ·T Kraft 2017), matching the docs table
+    for k, want in ((303, 1.28), (318, 2.56), (333, 4.79)):
+        f = se_material.arrhenius_sigma_factor(_ui_kelvin_to_celsius(k))
+        chk(f'σ_ion @ {k} K → x{want} (same number network_conductivity --temp-c gives)',
+            abs(round(f, 2) - want) < 5e-3, f'got x{f:.4f}')
+
+    # the OLD surrogate convention (σ form, Ea 0.30, T_ref 298 K) was materially different
+    old = np.exp(-0.30 / 8.617e-5 * (1 / 333 - 1 / 298))
+    new = se_material.arrhenius_sigma_factor(_ui_kelvin_to_celsius(333))
+    chk('old σ_ion convention differed materially (documented, not silent)',
+        abs(old / new - 1.0) > 0.10, f'old x{old:.3f} vs new x{new:.3f} ({100*(old/new-1):+.1f} %)')
+
+    # σ_e default = T-independent (Reisacher ohmic + solver-consistent); legacy is replayable
+    chk("sigma_e_t_model default is 'none' in predict()'s signature",
+        __import__('inspect').signature(predict).parameters['sigma_e_t_model'].default == 'none')
+    legacy = np.exp(-EA_AM_EV_LEGACY / 8.617e-5 * (1 / 333 - 1 / 298))
+    chk('legacy σ_e Arrhenius inflated σ_e ~7.7x at 60 °C (why it is off by default)',
+        abs(legacy - 7.741) < 0.01, f'x{legacy:.3f}')
+    chk('se_material declares the σ_e policy as NOT_MODELLED',
+        se_material.SIGMA_E_T_DEPENDENCE == 'NOT_MODELLED'
+        and se_material.provenance()['sigma_e_T_dependence'] == 'NOT_MODELLED')
+    chk('legacy replay is still selectable and labelled',
+        SIGMA_E_T_MODELS == ('none', 'legacy_arrhenius')
+        and se_material.provenance(60.0, sigma_e_modelled=True)['sigma_e_T_dependence'] == 'ARRHENIUS')
+
+    print('PREDICTOR TEMP SELFTEST', 'PASS' if ok else 'FAIL')
+    return 0 if ok else 1
+
+
+if __name__ == '__main__':
+    import sys as _s
+    if '--selftest-temp' in _s.argv:
+        _s.exit(_selftest_temp())
+    print(__doc__)

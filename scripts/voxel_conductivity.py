@@ -20,9 +20,16 @@ VGCF/SuperP phases from additives.py natively.
   python3 scripts/voxel_conductivity.py            # self-test (slab / series / parallel)
 """
 from __future__ import annotations
+import os as _os
+import sys as _sys
 import numpy as np
 from scipy.sparse import csr_matrix
 from scipy.sparse.linalg import cg
+
+_THIS_DIR = _os.path.dirname(_os.path.abspath(__file__))
+if _THIS_DIR not in _sys.path:
+    _sys.path.insert(0, _THIS_DIR)
+import se_material  # single source of truth for σ_grain(T) — see docs/temp_pressure_capability.md T1-b
 
 _USE_GPU = False   # set by --gpu: run the CG on the GPU (CuPy) when available — big speedup for the
 #                    thick-electrode grids (256×256×700+ ≈ 46M cells); falls back to CPU automatically.
@@ -95,8 +102,10 @@ def _cg_solve(A, b, tol=1e-6, label=''):
 #   전자 σ 자릿수 hook 이 정본과 다름: 여기 VGCF 5.0e5/SuperP 1.0e5 mS/cm(=500/100 S/cm) vs
 #   step3_sigma.SIGMA_DEFAULT VGCF 100/SuperP 10 S/cm.  둘 다 "문헌 자릿수 hook" 라벨이나 미정합 —
 #   ★생산 값은 step3_sigma 를 쓸 것(이 파일 값 인용/복사 금지).  contrast 는 200×AM 로 clamp(:139).
+# ★ SE ionic 3.0 mS/cm now comes from se_material (repo-wide single definition, declared at
+# T_ref = 25 °C).  Value UNCHANGED — `--temp-c` rescales it in _main(); default None = bitwise legacy.
 PHASE_SIGMA = {  # per channel; void always 0.  ionic/electronic mS/cm, thermal W/m·K
-    'ionic':      {'SE': 3.0, 'AM': 0.0, 'VGCF': 0.0, 'SuperP': 0.0, 'PTFE': 0.0},
+    'ionic':      {'SE': se_material.SIGMA_GRAIN_MS_CM_25C, 'AM': 0.0, 'VGCF': 0.0, 'SuperP': 0.0, 'PTFE': 0.0},
     'electronic': {'SE': 0.0, 'AM': 50.0, 'VGCF': 5.0e5, 'SuperP': 1.0e5, 'PTFE': 0.0},
     'thermal':    {'SE': 0.7, 'AM': 4.0, 'VGCF': 20.0, 'SuperP': 5.0, 'PTFE': 0.25},  # all solid conducts
 }
@@ -286,7 +295,8 @@ def voxelize_phase(se_pts, phase, scaffold, n_vox, top=None, porosity=None, se_c
     return pres, h
 
 
-def se_contact_network(se_pts, se_id, n_vox, thickness_um, sigma_grain=3.0, top=None):
+def se_contact_network(se_pts, se_id, n_vox, thickness_um,
+                       sigma_grain=se_material.SIGMA_GRAIN_MS_CM_25C, top=None):
     """MPM SE-SE PLASTIC contact-network σ_ionic — the per-particle (NOT fused) ionic solve that
     recovers the constriction the merged-voxel FV misses (which read σ_contact-free).
 
@@ -458,9 +468,20 @@ def _main():
                          'make AM a NON-conducting obstacle so CARBON is the SOLE e-path → isolates the '
                          'carbon-only percolation (the literature 1D-VGCF vs 0D-SuperP regime: which carbon '
                          'morphology percolates at a given loading when the AM is not the conductor).')
+    se_material.temperature_argparse(ap)      # --temp-c / --ea-ion-ev (both default None)
     a = ap.parse_args()
     global _USE_GPU; _USE_GPU = a.gpu
     global _SIGMA_AM_E; _SIGMA_AM_E = a.sigma_am_e
+    # σ_ion(T): default (--temp-c unset) leaves PHASE_SIGMA['ionic']['SE'] at the bare 3.0
+    # literal → bitwise-identical legacy run.  Only the IONIC channel scales: σ_e is
+    # T-independent per Reisacher (ohmic regime), κ has no anchor (§F1).
+    if a.temp_c is not None:
+        PHASE_SIGMA['ionic']['SE'] = se_material.sigma_grain_mS_cm(a.temp_c, a.ea_ion_ev)
+    _tprov = se_material.provenance(a.temp_c, a.ea_ion_ev)
+    print(f"  [T] σ_ion(SE) = {PHASE_SIGMA['ionic']['SE']:.4f} mS/cm  "
+          f"(T_C={_tprov['T_C']}, T_ref={_tprov['T_ref_C']:.0f} °C, Ea={_tprov['Ea_ion_eV']}, "
+          f"{_tprov['T_dependence']})")
+    se_material.warn_band(a.temp_c, a.ea_ion_ev)
     if a.se_id:                                                      # ── SE plastic contact-network mode ──
         if a.thickness_um is None:
             raise SystemExit('--se-id needs --thickness-um (electrode thickness, e.g. 170.4)')
@@ -521,6 +542,38 @@ def _main():
     print('    (that also captures the SE/AM packing rearrangement a σ-toggle never could).')
 
 
+def _selftest_temp():
+    """σ_ion(T) wiring — the ionic SE entry must be the shared se_material value and must be
+    bitwise 3.0 unless --temp-c is given (σ_e / thermal tables must not move at all)."""
+    ok = True
+
+    def chk(name, cond, extra=''):
+        nonlocal ok
+        ok &= bool(cond)
+        print(f"  {'PASS' if cond else 'FAIL'}  {name}{(' — ' + extra) if extra else ''}")
+
+    chk('PHASE_SIGMA ionic SE is bitwise 3.0 (module default = legacy literal)',
+        float(PHASE_SIGMA['ionic']['SE']).hex() == (3.0).hex(),
+        float(PHASE_SIGMA['ionic']['SE']).hex())
+    chk('… and it IS the shared se_material constant',
+        PHASE_SIGMA['ionic']['SE'] is se_material.SIGMA_GRAIN_MS_CM_25C)
+    chk('electronic table untouched',
+        PHASE_SIGMA['electronic'] == {'SE': 0.0, 'AM': 50.0, 'VGCF': 5.0e5,
+                                      'SuperP': 1.0e5, 'PTFE': 0.0})
+    chk('thermal table untouched',
+        PHASE_SIGMA['thermal'] == {'SE': 0.7, 'AM': 4.0, 'VGCF': 20.0,
+                                   'SuperP': 5.0, 'PTFE': 0.25})
+    chk('se_contact_network default σ_grain is bitwise 3.0',
+        float(se_contact_network.__defaults__[0]).hex() == (3.0).hex())
+    for t_c, want in ((30.0, 1.28), (45.0, 2.56), (60.0, 4.79)):
+        f = se_material.sigma_grain_mS_cm(t_c) / 3.0
+        chk(f'--temp-c {t_c:.0f} would give x{want}', abs(round(f, 2) - want) < 5e-3, f'x{f:.4f}')
+    print('VOXEL TEMP SELFTEST', 'PASS' if ok else 'FAIL')
+    return 0 if ok else 1
+
+
 if __name__ == '__main__':
     import sys
+    if '--selftest-temp' in sys.argv:
+        sys.exit(_selftest_temp())
     (_main() if '--se' in sys.argv else _selftest())

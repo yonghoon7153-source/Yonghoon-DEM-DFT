@@ -6196,6 +6196,65 @@ def rint_anchors():
                     for k in ('sbe', 'dbe', 'csus', 'sus')})
 
 
+# ── ★ 운전조건 축 (온도 · 구동 스택압) — docs/temp_pressure_capability.md ──────────────────
+#    두 축 모두 "미지정 = 현행" 이 절대 규약이다: &tempc=/&pop= 를 안 주면 킷 방출물은 예전과
+#    **바이트 동일**하고, 이 블록은 코드 경로에 들어오지도 않는다.
+#    ⚠ 온도는 σ_ion(SE) 하나만 움직인다 (Kraft 2017 σ·T Arrhenius, T_ref=25 °C 규약).
+#      i0/R_ct · D_s · OCP dU/dT · σ_e · κ · SE 경도 H/σ_y 는 앵커가 없어(§F1) 25 °C 상수로
+#      남는다 → **전-물리 온도 스윕이 아니다**.  UI 경고( #kit-op-warn )가 이 사실을 화면에 적는다.
+def _se_material():
+    """scripts/se_material.py (σ_grain + 온도 규약 단일 출처) 지연 임포트."""
+    import sys as _s
+    _sd = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'scripts')
+    if _sd not in _s.path:
+        _s.path.insert(0, _sd)
+    import se_material
+    return se_material
+
+
+# 킷 run_mpm.sh 안의 STEP3(σ) 호출 = 온도를 주입할 유일한 지점.  생성기(scripts/mpm_input_from_case.py)
+# 는 다른 에이전트 담당이라 --temp-c 인자를 갖지 않으므로, webapp 이 생성 직후 이 한 줄에 플래그를
+# 덧붙인다.  마커가 정확히 1회가 아니면 **조용히 무시하지 않고 500 으로 실패**한다 (침묵 no-op 금지).
+_KIT_STEP3_CALL = 'python3 "$SCR/mpm_webapp_payload.py" \\\n'
+
+
+def _kit_apply_temperature(tmp, t_c, ea_ev):
+    """킷에 운전 온도를 굽는다 — run_mpm.sh 의 STEP3 σ 호출에 --temp-c/--ea-ion-ev 를 주입하고
+    mpm_input.json 에 temperature_provenance 를 남긴다.  실패 시 RuntimeError (호출부가 500)."""
+    se_material = _se_material()
+    rp = os.path.join(tmp, 'run_mpm.sh')
+    if not os.path.exists(rp):
+        raise RuntimeError('run_mpm.sh 없음 — 킷 생성기 산출물 구조가 바뀜')
+    src = open(rp).read()
+    if src.count(_KIT_STEP3_CALL) != 1:
+        raise RuntimeError('run_mpm.sh 의 STEP3(payload) 호출 마커를 찾지 못함 — 생성기가 바뀌었으니 '
+                           'webapp/app.py _KIT_STEP3_CALL 을 갱신해야 한다 (온도 주입 침묵실패 방지)')
+    flags = f' --temp-c {t_c:g}' + (f' --ea-ion-ev {ea_ev:g}' if ea_ev is not None else '')
+    note = (f'# ★ 운전 온도 {t_c:g} °C (webapp &tempc=) — σ_ion(SE)만 Kraft-2017 σ·T Arrhenius 로 스케일.\n'
+            f'#   i0/D_s/OCP/σ_e/κ/SE-경도는 앵커 없어 25 °C 상수 유지 → 전-물리 온도 스윕 아님 '
+            f'(docs/temp_pressure_capability.md §3).  Eₐ 는 밴드 0.29/0.41/0.46 eV 를 쓸어 보고할 것.\n')
+    open(rp, 'w').write(src.replace(
+        _KIT_STEP3_CALL, note + _KIT_STEP3_CALL.replace(' \\\n', flags + ' \\\n')))
+    pj = os.path.join(tmp, 'mpm_input.json')
+    if not os.path.exists(pj):
+        raise RuntimeError('mpm_input.json 없음 — provenance 를 남길 수 없음')
+    prov = json.load(open(pj))
+    tp = se_material.provenance(t_c, ea_ev)
+    tp['applied_to'] = ['run_mpm.sh: mpm_webapp_payload.py --temp-c '
+                        '(STEP3 σ_ion 복셀 솔브 + step4_grid.npz σ 테이블)']
+    tp['not_applied_to'] = {
+        'STEP1/2 MPM 압밀': 'SE 경도 H(T)/σ_y(T) 앵커 없음 (§F1) → 형상은 25 °C 값',
+        'STEP4 kinetics': 'i0 / D_s / OCP dU/dT 앵커 없음 (§F1) — --temp-k 는 굽지 않는다 '
+                          '(f=F/RT 만 움직여 반응 과전압 부호가 실험과 반대로 나옴, §3-3①)',
+        'σ_e / κ': 'ohmic 은 T-무관 (Reisacher, 정성) — 상수가 오히려 정합',
+        'STEP5 열화율': 'Arrhenius 앵커 0건 (§F1) — Joule v2 는 Eₐ-free 유지',
+    }
+    tp['injected_by'] = 'webapp/app.py mpm_input_package (&tempc=)'
+    prov['temperature_provenance'] = tp
+    json.dump(prov, open(pj, 'w'), indent=2)
+    return tp
+
+
 @app.route('/results/<case_id>/mpm-input')
 def mpm_input_package(case_id):
     """[MPM input 변환]: build the per-case MPM input (am/se scaffolds + run_mpm.sh +
@@ -6276,6 +6335,32 @@ def mpm_input_package(case_id):
     if _vox not in ('0.4', '0.25', '0.2'):
         _vox = '0.4'
     cmd += ['--step3-vox', _vox]
+    # ── ★ 운전조건 (미지정 = 현행, 방출물 바이트 동일) ─────────────────────────────────────
+    #   &tempc= 운전 온도 [°C]  → 킷 STEP3 σ 호출에 --temp-c 주입 (아래 subprocess 성공 후)
+    #   &eaion= 이온 Eₐ [eV]    → 밴드 스윕용 (0.29/0.41/0.46); 온도 없이 단독 지정은 무의미 → 400
+    #   &pop=   구동 스택압 [MPa] → 생성기 --op-pressure-mpa (A-1 앵커를 2단 제작→구동으로)
+    def _opnum(name, lo, hi, unit):
+        _raw = (request.args.get(name, '') or '').strip()
+        if not _raw:
+            return None, None
+        try:
+            _v = float(_raw)
+        except (ValueError, TypeError):
+            return None, f'&{name}= 값이 숫자가 아님: {_raw!r}'
+        if not (lo <= _v <= hi):
+            return None, f'&{name}= 는 {lo:g}~{hi:g} {unit} 범위여야 함 (got {_v:g})'
+        return _v, None
+    _tempc, _te1 = _opnum('tempc', -20.0, 200.0, '°C')
+    _eaion, _te2 = _opnum('eaion', 0.10, 1.00, 'eV')
+    _oppress, _te3 = _opnum('pop', 0.1, 2000.0, 'MPa')
+    _terr = next((e for e in (_te1, _te2, _te3) if e), None)
+    if _terr is None and _eaion is not None and _tempc is None:
+        _terr = '&eaion= (이온 Eₐ) 는 &tempc= 와 함께만 의미가 있음 — 온도를 먼저 지정하세요'
+    if _terr:
+        shutil.rmtree(tmp, ignore_errors=True)
+        return jsonify({'error': _terr}), 400
+    if _oppress is not None:
+        cmd += ['--op-pressure-mpa', f'{_oppress:g}']
     # STEP4 체크박스 (중복 선택 가능): &step4=0.5,1 → run_mpm.sh가 payload 후 각 rate를
     # 순차 자동 실행 (미선택 = step4_grid.npz export까지만 — 나중에 step4_only.sh로 재개).
     def _rates_of(name):
@@ -6405,6 +6490,12 @@ def mpm_input_package(case_id):
     except subprocess.CalledProcessError as e:
         shutil.rmtree(tmp, ignore_errors=True)
         return jsonify({'error': 'generation failed', 'detail': (e.stderr or '')[-500:]}), 500
+    if _tempc is not None:                              # 생성 직후 온도 주입 (미지정이면 이 줄도 안 탄다)
+        try:
+            _kit_apply_temperature(tmp, _tempc, _eaion)
+        except Exception as e:                          # 침묵 no-op 금지 — 온도가 안 구워졌으면 킷을 주지 않는다
+            shutil.rmtree(tmp, ignore_errors=True)
+            return jsonify({'error': f'온도 배선 실패 — 킷을 만들지 않았습니다: {e}'}), 500
     buf = io.BytesIO()
     with zipfile.ZipFile(buf, 'w', zipfile.ZIP_DEFLATED) as z:
         for fn in sorted(os.listdir(tmp)):
@@ -6442,6 +6533,12 @@ def mpm_input_package(case_id):
     #   클라이언트 _addTag 의 '_ppds' 와 반드시 일치 (예전 _sched7step/VGCFPTFESDCP 어긋남 교훈).
     if recipe and request.args.get('s4pp', '') in ('1', 'true', 'on'):
         tag += '_ppds'
+    # ★운전조건 태그 — 온도/구동압은 킷 내용을 바꾸는 노브라 같은 이름의 두 킷이 생기면 안 된다.
+    #   클라이언트 _tpTag() 와 **정확히** 미러 (순서: _T…C → _Ea… → _op…MPa; VGCFPTFESDCP 사건 교훈).
+    if _tempc is not None:
+        tag += f'_T{_tempc:g}C' + (f'_Ea{_eaion:g}' if _eaion is not None else '')
+    if _oppress is not None:
+        tag += f'_op{_oppress:g}MPa'
     return send_file(buf, mimetype='application/zip', as_attachment=True,
                      download_name=f'mpm_input_{case_id}{tag}.zip')
 
@@ -6463,6 +6560,11 @@ def mpm_upload(case_id):
     with open(os.path.join(results_dir, 'mpm_payload.json'), 'w') as out:
         json.dump(data, out)
     m = data.get('mpm_metrics', {}) or {}
+    # ★provenance 승계 — payload 최상위의 temperature_provenance(= se_material.provenance, T1-a)는
+    #   mpm_metrics 안에 없다(payload 가 step3 하위와 최상위에만 적는다).  사이드카에 함께 실어야
+    #   케이스 페이지 배지가 "이 런이 몇 °C 규약으로 풀렸는지"를 말할 수 있다 (없으면 조용히 25 °C 가정).
+    if isinstance(data.get('temperature_provenance'), dict):
+        m.setdefault('temperature_provenance', data['temperature_provenance'])
     # compact sidecar → the case page's MPM result table reads this, not the 16 MB payload
     with open(os.path.join(results_dir, 'mpm_metrics.json'), 'w') as mf:
         json.dump(m, mf)
@@ -9746,6 +9848,12 @@ def predictor_predict():
             temperature=float(data.get('temperature', 298)),
             additive=data.get('additive', 'none'),
             ptfe=bool(data.get('ptfe', False)),
+            # ★온도 규약 (docs/temp_pressure_capability.md T1-c/T1-e): σ_e 는 기본 T-무관
+            #   ('none' = 문헌 Reisacher + 솔버 정합).  'legacy_arrhenius' 는 2026-07-28 이전
+            #   Ea_AM=0.50 eV('rough', 미앵커 §F1) 재현용.  ea_ion_ev 는 밴드 스윕(0.29/0.41/0.46)용
+            #   — 미지정이면 엔진 기본(0.41) → 요청에 안 실으면 동작 불변.
+            sigma_e_t_model=str(data.get('sigma_e_t_model', 'none')),
+            ea_ion_ev=(float(data['ea_ion_ev']) if data.get('ea_ion_ev') not in (None, '') else None),
         )
         return jsonify(result)
     except Exception as e:

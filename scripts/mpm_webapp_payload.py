@@ -21,7 +21,14 @@ matching how the DEM viewer scales atoms.csv.
 import argparse
 import json
 import importlib.util
+import os as _os
+import sys as _sys
 import numpy as np
+
+_THIS_DIR = _os.path.dirname(_os.path.abspath(__file__))
+if _THIS_DIR not in _sys.path:
+    _sys.path.insert(0, _THIS_DIR)
+import se_material  # single source of truth for σ_ion(SE) + its temperature convention
 
 _VC = None
 
@@ -306,8 +313,10 @@ def main():
                     help='A14 상한 시나리오 opt-in: sheath 복셀 σ_i=0 (이온 dof·BV면 소멸) = ion-blocking '
                          'skin 가정의 기하 상한을 수송모델로 구현.  기본 OFF = SE-투명(σ_i=σ_ion_se): '
                          '실제 skin 2-10nm sub-voxel이라 1-voxel 차단은 40-200× 과대표현(이중계상).')
-    ap.add_argument('--sigma-ion-se', type=float, default=0.003,
-                    help='σ_ion SE (S/cm) = 3.0 mS/cm LPSCl grain (Cronau — production σ_grain anchor)')
+    ap.add_argument('--sigma-ion-se', type=float, default=se_material.SIGMA_GRAIN_S_CM_25C,
+                    help='σ_ion SE (S/cm) = 3.0 mS/cm LPSCl grain (Cronau — production σ_grain anchor). '
+                         f'★ declared AT T_ref = {se_material.T_REF_C:.0f} °C (se_material convention); '
+                         '--temp-c multiplies THIS value by the Arrhenius factor.')
     ap.add_argument('--collector-rint', type=float, default=-1.0,
                     help='SELECTED collector R_int (Ω·cm², manuscript Fig6e cycled anchors: bare-Al SBE '
                          '110 / DBE 46 / C-SUS primer 30; 0 = ideal).  <0 = no selection (presets still '
@@ -346,7 +355,29 @@ def main():
     ap.add_argument('--save-step4-grid', default='',
                     help='STEP4-v2(시간전개) 입력 격자 npz 저장: sid/pid/σ_e·σ_i테이블/vox/z_top/AM반경 '
                          '— scripts/step4_dyn.py --grid 로 로드 (payload 재실행 없이 rate 스윕)')
+    se_material.temperature_argparse(ap)   # --temp-c / --ea-ion-ev (both default None)
     a = ap.parse_args()
+    # ── σ_ion(T) ────────────────────────────────────────────────────────────────
+    # --temp-c unset (default) → scale_sigma_ion is the identity, so --sigma-ion-se keeps its
+    # bare 0.003 value and EVERY legacy run is bitwise unchanged.  When set, the Kraft-2017
+    # σ·T Arrhenius factor multiplies the (T_ref = 25 °C) SE ionic σ — including a user-supplied
+    # --sigma-ion-se override, which is likewise declared at T_ref.  σ_e / κ / i0 stay
+    # T-independent: for σ_e that is the literature-consistent choice (Reisacher — ohmic regime
+    # is T-independent) AND matches the DEM solver; for κ / i0 / D_s there is no anchor (§F1).
+    # ⚠ SDCP (σ_ion_sdcp) is deliberately NOT scaled: it is a Li-hopping POLYMER, its Eₐ is not
+    # LPSCl's 0.41 eV and no SDCP Eₐ anchor exists (§F1).  Applying the SE band to it would be
+    # fabrication, so it stays at its T_ref value and the provenance says so.
+    a._sigma_ion_se_ref = a.sigma_ion_se
+    a.sigma_ion_se = se_material.scale_sigma_ion(a.sigma_ion_se, a.temp_c, a.ea_ion_ev)
+    _temp_prov = se_material.provenance(a.temp_c, a.ea_ion_ev)
+    _temp_prov['scaled_phases'] = ['SE']
+    _temp_prov['unscaled_phases'] = {
+        'SDCP': 'no Ea anchor for the Li-hopping polymer (§F1) — held at T_ref',
+        'AM/carbon (sigma_e)': 'ohmic regime is T-independent (Reisacher, qualitative)',
+        'thermal k': 'no anchor (§F1)',
+        'i0 / D_s / OCP dU/dT': 'no anchor (§F1) — STEP4 kinetics are NOT temperature-scaled',
+    }
+    se_material.warn_band(a.temp_c, a.ea_ion_ev)
     # ★A8 CAM 프리셋 → σ_e(AM) 기본값 해석 (명시 --sigma-am-s/-p가 항상 우선; nmc811 기본은
     #   기존 10/5와 byte-동일 = 하위호환).  근거·캐비엇: docs/nca_material_preset.md
     if a.sigma_am_s is None:
@@ -889,6 +920,9 @@ def main():
                     step3['ion_dissipation_share'] = {_s3.SID_NAME.get(k, str(k)): round(v, 4)
                                                       for k, v in _sharei.items()}
                     step3['sigma_ion_table_S_cm'] = {'SE': a.sigma_ion_se, 'SDCP': a.sigma_ion_sdcp}
+                    # T1-a provenance: which temperature convention produced this σ_ion?
+                    step3['temperature_provenance'] = dict(_temp_prov)
+                    step3['sigma_ion_se_at_T_ref_S_cm'] = a._sigma_ion_se_ref
                     step3['ion_resid'] = float(f"{_res3i['resid']:.2g}")
                     print(f"  STEP3 σ_ion_eff = {step3['sigma_ion_eff_S_cm']:.4g} S/cm  "
                           f"({_res3i['n_dof']:,} dof, resid {_res3i['resid']:.1e}, {_time.time()-_t1:.0f}s)  "
@@ -1021,7 +1055,11 @@ def main():
                                         pid=pid3.astype(np.int32), vox_um=a.step3_vox,
                                         z_top_um=_ztop, sig_e_S_cm=_sig3, sig_i_S_cm=_sig3i,
                                         am_r_um=np.asarray(r, np.float64) * UM,
-                                        periodic_xy=np.array(bool(getattr(a, 'periodic', False))))
+                                        periodic_xy=np.array(bool(getattr(a, 'periodic', False))),
+                                        # ★ T1-a: STEP4-v2 reads sig_i from THIS npz, so the grid must
+                                        # carry the temperature convention its σ were built under.
+                                        # Plain unicode array → loads fine under allow_pickle=False.
+                                        temperature_provenance=np.array(json.dumps(_temp_prov)))
                     a._s4grid_saved = True           # end-of-main 알림용 (stale 파일 오탐 방지, 리뷰 R2#6)
                     print(f'  STEP4-v2 grid → {a.save_step4_grid}  (sid {sid3.shape}, '
                           f'n_am {len(r)}, vox {a.step3_vox}µm)')
@@ -1244,6 +1282,10 @@ def main():
         'box': {'x_min': 0.0, 'x_max': round(lat, 2), 'y_min': 0.0, 'y_max': round(lat, 2),
                 'z_min': 0.0, 'z_max': round(thick, 2)},
         'atoms_only': False,
+        # ★ T1-a — top-level so ANY consumer of this payload (viewer, kit zip, STEP4 grid,
+        # ML feature builder) can tell what temperature convention the σ inside were solved at.
+        # On a legacy run this reads T_dependence=NOT_MODELLED, i.e. "σ is the 25 °C value".
+        'temperature_provenance': dict(_temp_prov),
         'mpm_metrics': mpm_metrics,
         'mpm_source': {'se': a.se or 'proxy', 'scaffold': a.scaffold, 'metrics_json': a.metrics_json,
                        'target_porosity': a.target_porosity, 'target_coverage': a.target_coverage,
