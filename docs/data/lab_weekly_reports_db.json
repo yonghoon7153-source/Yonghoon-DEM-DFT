@@ -88,16 +88,17 @@
           "topic": "★Bimodal COMSOL 시뮬레이션 (P:S 스윕)",
           "facts": {
             "geometry": {"P:S": ["0:10", "3:7", "5:5", "7:3", "10:0"], "areal": "8 mAh/cm²", "AM:SE": "80:18 wt%",
-                          "porosity_pct": [22.80, 18.64, 17.30, 15.50, 19.03], "thickness_um": [167.1, 158.6, 156.0, 152.7, 159.3]},
+                          "porosity_pct": [22.80, 18.64, 17.30, 15.50, 19.03], "thickness_um": [167.1, 158.6, 156.0, 152.7, 159.3],
+                          "porosity_provenance": "⚠정정(사용자 확인 2026-07-28): porosity 는 우리 면용량 6 mAh/cm² MPM 데이터 제공값 — COMSOL 측 독립 산출 아님"},
             "voltage_1C_2C_충전": "10:0 이 과전압 최대(조기 4.3V 도달), 0:10/3:7 낮음 — 바이모달·소립 유리",
             "Li_concentration": "separator 쪽부터 탈리튬 진행(충전), 색범위 16000–46000 mol/m³",
             "current_density": "AM 입자별, top(separator측) 집중, 1C 스케일 0–3 / 2C 0–5, 10:0 상단 hot",
             "다음주": "Top/Bottom 위치별 전류분포 + Ni 함량별 물성"
           },
           "applicability": {
-            "verdict": "CROSS-VALIDATES(우리 DEM/STEP4 와 정합 확인됨)",
-            "ours": "① porosity-vs-P:S 시그니처 일치: 그들 0:10 최고(22.8)→7:3 최소(15.50)→10:0 반등(19.03) vs 우리 DEM corpus 중앙값 0:10 17.6→7:3 15.1→10:0 16.8 — 7:3 최소·양끝 반등 동일, 7:3 절대값도 15.50 vs 15.1 근접(frame[4] 독립 교차검증; 0:10 절대차는 기하 생성 방식 차이). ② 10:0 과전압 최대·top 전류 집중 = 우리 mono-large σ↓·je z-프로파일(집전체/분리막 쏠림)과 방향 일치. ③ 두께 152–167µm @8mAh 는 우리 8mAh 시리즈와 동급.",
-            "action": "그들 1C/2C V-프로파일 수치(디지타이즈) 확보 시 STEP4 동일-P:S 대조 런 → frame[4] 문서화.",
+            "verdict": "INPUT-SHARED(기하 porosity=우리 6mAh MPM 제공값 — 외부검증 아님; 유효 축=전기화학 same-input 솔버 패리티)",
+            "ours": "① [정정 2026-07-28] 초판의 'porosity-vs-P:S 시그니처 일치=frame[4] 독립 교차검증' 은 순환이라 철회 — 그들 표(22.8→15.50→19.03)는 우리 6 mAh/cm² MPM 제공값이고, 비교열(17.6→15.1→16.8)도 porosity_production_final.csv @AM80wt source=MPM → 우리 MPM 내부 정합성 점검일 뿐. ② 살아남는 축: 10:0 과전압 최대·top 전류 집중 = 우리 mono-large σ↓·je z-프로파일(집전체/분리막 쏠림)과 방향 일치 — 같은 미세구조 입력을 받은 COMSOL vs STEP4 의 수치 패리티(PyBaMM #5 부류, frame[4] 아님). ③ 두께 152–167µm @8mAh 는 우리 8mAh 시리즈와 동급. ④ 이 파트의 진짜 frame[4] 는 이종기술 실셀 실측(율특성 등) 토픽이 담당.",
+            "action": "그들 1C/2C V-프로파일·Top/Bottom 전류분포 수치(디지타이즈) 확보 시 STEP4 동일-P:S same-input 패리티 런 → 패리티 문서화(frame[4] 라벨 금지 — 기하 공유).",
             "priority": "MED"
           }
         },
