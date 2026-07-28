@@ -8,8 +8,10 @@ function _esc(s){return (s+'').replace(/[&<>"']/g,function(c){
   return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 // formula 표기(아래첨자·괄호·전하) → MO_DB 키 정규화
 function moKey(f){var sub={'₀':'0','₁':'1','₂':'2','₃':'3','₄':'4','₅':'5','₆':'6','₇':'7','₈':'8','₉':'9'};
-  return (f+'').replace(/[₀-₉]/g,function(c){return sub[c];})
-    .replace(/\([^)]*\)/g,'').replace(/[¹²³⁴⁵⁶⁷⁸⁹⁰⁺⁻]/g,'').replace(/\s*\d*[+\-]\s*$/,'').replace(/[\s·–—\-]/g,'');}
+  return (f+'').split('/')[0]   // 복합 칩("NiS / Ni3S2")은 첫 상으로 조회
+    .replace(/[₀-₉]/g,function(c){return sub[c];})
+    .replace(/\([^)]*\)/g,'').replace(/[¹²³⁴⁵⁶⁷⁸⁹⁰⁺⁻]/g,'').replace(/\s*\d*[+\-]\s*$/,'')
+    .replace(/[\s·–—\-]/g,'');}   // "h-BN (…)"→"hBN", "PS4 3-"→"PS4" 는 이 일반 규칙으로 처리됨
 function moHas(key){return !!(window.MO_DB&&window.MO_DB[key]);}
 // 테마 토큰 읽기 — SVG는 CSS 상속을 안 받는 속성(stroke/fill)을 쓰므로 값으로 주입한다.
 function _tok(name,fb){try{var v=getComputedStyle(document.documentElement).getPropertyValue(name).trim();

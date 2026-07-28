@@ -1877,5 +1877,1902 @@
   ],
   "dos_link": "d⁰ CB가 불화물 중 낮은 편 — Ti 환원 가능성",
   "source": "curated 2026-07-27 (부류 규칙 + 산화물 전자구조 일반론)"
+ },
+ "hBN": {
+  "name": "h-BN (육방 질화붕소)",
+  "summary": "B–N sp² 평면 σ망 + 층간 vdW. 갭 ~6 eV 절연체 — 우리 VGCF 코팅 캠페인의 주인공. π/π*가 갭을 정의하나 이온성(B→N) 탓에 graphene과 달리 갭이 크게 열림.",
+  "ao_left": [
+   "B 2s2p (sp²)",
+   "B 2p_z"
+  ],
+  "ao_right": [
+   "N 2p (sp²)",
+   "N 2p_z",
+   "N 2s (deep)"
+  ],
+  "levels": [
+   {
+    "label": "B–N σ (sp²)",
+    "type": "bonding",
+    "character": "면내 골격 — 기계적 강성 원천",
+    "dos": "VB 깊이 −10~−4 eV"
+   },
+   {
+    "label": "π (N 2p_z 우세)",
+    "type": "bonding",
+    "character": "이온성 π — N 쪽으로 치우침 (graphene 대칭 π와 대비)",
+    "dos": "VBM"
+   },
+   {
+    "label": "π* (B 2p_z 우세)",
+    "type": "antibonding",
+    "character": "B 쪽 π* — 큰 π–π* 갭 ~6 eV",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "Li 흡착 시 π계와 약결합(E_bind −0.264 eV, 우리 binding matrix) — surface barrier ~0(<0.01 eV) 관측과 정합",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "LiC6": {
+  "name": "LiC₆ (stage-1 흑연 삽입상)",
+  "summary": "graphene π밴드에 Li 2s 전자가 전달된 금속상 — 음극 만충전 상태. 우리 NEB LiC6(0001) 기준계.",
+  "ao_left": [
+   "Li 2s (이온화)"
+  ],
+  "ao_right": [
+   "C 2p_z (π/π*)",
+   "C sp² σ (deep)"
+  ],
+  "levels": [
+   {
+    "label": "C sp² σ",
+    "type": "bonding",
+    "character": "흑연 골격",
+    "dos": "VB 깊이"
+   },
+   {
+    "label": "π (채워짐+Li 전자)",
+    "type": "bonding",
+    "character": "Li→π* 전자전달로 π* 일부 점유 = 금속성",
+    "dos": "E_F 관통"
+   },
+   {
+    "label": "π* (부분 점유)",
+    "type": "antibonding",
+    "character": "금속상 — 갭 없음",
+    "dos": "E_F 위"
+   }
+  ],
+  "dos_link": "우리 diffusion.json lic6_0001 DFT-SCF 프로파일 0.287 eV의 호스트",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "Li3N": {
+  "name": "Li₃N (α, 층상)",
+  "summary": "N³⁻ 2p VB + Li 이온성 골격. 초이온 Li⁺ 전도체(면내) — interphase 후보. ⚠ UMA 금지 물질(우리 규율).",
+  "ao_left": [
+   "Li 2s (이온화)"
+  ],
+  "ao_right": [
+   "N 2p ×3",
+   "N 2s (deep)"
+  ],
+  "levels": [
+   {
+    "label": "Li–N (이온성)",
+    "type": "bonding",
+    "character": "혼성 미미 — 마델룽 안정화",
+    "dos": "VB 바닥"
+   },
+   {
+    "label": "N 2p lone pair",
+    "type": "nonbonding",
+    "character": "N³⁻ 2p — 갭 ~2 eV로 좁음(질화물 전형)",
+    "dos": "VBM"
+   },
+   {
+    "label": "Li 2s σ*",
+    "type": "antibonding",
+    "character": "Li 2s CB",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "우리 Li3N(001) 슬랩 NEB/drag 캠페인 기재 — MD는 UMA 금지(2026-06 판정), DFT만",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "Li3P": {
+  "name": "Li₃P (육방)",
+  "summary": "P³⁻ 3p VB — Li₃N의 인화물 사촌. Li|SE 계면 환원 산물(SEI 성분)로 중요.",
+  "ao_left": [
+   "Li 2s (이온화)"
+  ],
+  "ao_right": [
+   "P 3p ×3",
+   "P 3s (deep)"
+  ],
+  "levels": [
+   {
+    "label": "Li–P (이온성)",
+    "type": "bonding",
+    "character": "P 3p 기반 — N보다 무른 음이온",
+    "dos": "VB 바닥"
+   },
+   {
+    "label": "P 3p lone pair",
+    "type": "nonbonding",
+    "character": "P³⁻ 3p — 갭 ~1 eV급으로 더 좁음",
+    "dos": "VBM"
+   },
+   {
+    "label": "Li 2s σ*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "LPSCl vs Li 환원 분해 산물 (Li₂S·LiCl과 함께) — 갭 좁아 SEI 전자누설 논쟁의 핵심상",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "Li3PS4": {
+  "name": "Li₃PS₄ (β, thio-LISICON)",
+  "summary": "고립 PS₄³⁻ 사면체 + Li⁺ — argyrodite의 모상 격자. MO는 PS₄³⁻ 항목과 동일 골격.",
+  "ao_left": [
+   "P 3s3p"
+  ],
+  "ao_right": [
+   "S 3p ×4",
+   "S 3s (deep)"
+  ],
+  "levels": [
+   {
+    "label": "P–S σ (sp³)",
+    "type": "bonding",
+    "character": "PS₄ 내부 결합",
+    "dos": "VB −6~−4 eV"
+   },
+   {
+    "label": "S 3p lone pair",
+    "type": "nonbonding",
+    "character": "VBM — argyrodite와 같은 S 3p 상단",
+    "dos": "VBM"
+   },
+   {
+    "label": "P–S σ*",
+    "type": "antibonding",
+    "character": "CBM",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "우리 PS4 항목 참조 — free S²⁻가 없는 만큼 VBM이 argyrodite보다 살짝 깊음",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "Li3PO4": {
+  "name": "Li₃PO₄ (γ)",
+  "summary": "PO₄³⁻ 사면체 — PS₄의 산화물 짝. O 2p가 S 3p보다 깊어 갭 훨씬 큼(~8 eV) = 산화 안정 코팅 고전.",
+  "ao_left": [
+   "P 3s3p"
+  ],
+  "ao_right": [
+   "O 2p ×4",
+   "O 2s (deep)"
+  ],
+  "levels": [
+   {
+    "label": "P–O σ",
+    "type": "bonding",
+    "character": "강한 공유 — PS₄보다 짧고 단단",
+    "dos": "VB −8~−5 eV"
+   },
+   {
+    "label": "O 2p lone pair",
+    "type": "nonbonding",
+    "character": "깊은 VBM = 높은 산화 onset",
+    "dos": "VBM"
+   },
+   {
+    "label": "P–O σ*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "우리 PO4 항목과 동일 모티프 — LPSOCl의 P–O 화학(gap 2.2309 eV로 상승)의 극한 참조",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "Li2CO3": {
+  "name": "Li₂CO₃ (SEI 표준상)",
+  "summary": "CO₃²⁻ 평면 sp² 음이온 + Li⁺. 공기 노출/전해액 분해의 보편 SEI 성분 — 갭 큼, Li⁺ 전도 낮음.",
+  "ao_left": [
+   "C 2s2p (sp²)"
+  ],
+  "ao_right": [
+   "O 2p ×3",
+   "O 2s (deep)"
+  ],
+  "levels": [
+   {
+    "label": "C–O σ+π (sp²)",
+    "type": "bonding",
+    "character": "카보네이트 공명",
+    "dos": "VB −7~−4 eV"
+   },
+   {
+    "label": "O 2p lone pair",
+    "type": "nonbonding",
+    "character": "VBM",
+    "dos": "VBM"
+   },
+   {
+    "label": "C–O π*",
+    "type": "antibonding",
+    "character": "CO₃ π* — 카보네이트 특유의 낮은 π*",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "황화물 SE의 공기 열화 사슬(H₂S·Li₂CO₃)에서 최종상 — air_stability 테마와 연결",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "LiOH": {
+  "name": "LiOH (층상)",
+  "summary": "OH⁻ 분자 음이온 + Li⁺. 수분 흡착 첫 단계 산물.",
+  "ao_left": [
+   "Li 2s (이온화)"
+  ],
+  "ao_right": [
+   "O 2p (OH σ/π)",
+   "H 1s"
+  ],
+  "levels": [
+   {
+    "label": "O–H σ",
+    "type": "bonding",
+    "character": "분자 내 결합 (deep)",
+    "dos": "VB 깊이 −8 eV 아래"
+   },
+   {
+    "label": "O 2p lone pair (π)",
+    "type": "nonbonding",
+    "character": "OH⁻ 비결합쌍 — VBM",
+    "dos": "VBM"
+   },
+   {
+    "label": "Li 2s / O–H σ*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "H₂O 가수분해 경로 (LPSCl + H₂O → LiOH·H₂S…)의 중간상 — zhu2020 계열 논의",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "LiH": {
+  "name": "LiH (암염)",
+  "summary": "H⁻ 1s VB — 가장 단순한 이온성 수소화물. 건식 공정/수분 부반응 논의의 참조상.",
+  "ao_left": [
+   "Li 2s (이온화)"
+  ],
+  "ao_right": [
+   "H 1s (H⁻)"
+  ],
+  "levels": [
+   {
+    "label": "Li–H (이온성)",
+    "type": "bonding",
+    "character": "H⁻ 1s 안정화",
+    "dos": "VB"
+   },
+   {
+    "label": "H 1s (H⁻)",
+    "type": "nonbonding",
+    "character": "VBM — 갭 ~5 eV",
+    "dos": "VBM"
+   },
+   {
+    "label": "Li 2s σ*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "LiNiO2": {
+  "name": "LiNiO₂ (층상 R-3m)",
+  "summary": "Ni³⁺(t₂g⁶e_g¹, Jahn-Teller) 층상 산화물 — NCM/NCA의 모상이자 우리 SDCP 결합 기판.",
+  "ao_left": [
+   "Ni 3d (t₂g/e_g)",
+   "Ni 4s"
+  ],
+  "ao_right": [
+   "O 2p ×3",
+   "O 2s (deep)"
+  ],
+  "levels": [
+   {
+    "label": "Ni 3d–O 2p σ/π",
+    "type": "bonding",
+    "character": "공유 혼성 강함 — 층상 골격",
+    "dos": "VB −7~−2 eV"
+   },
+   {
+    "label": "Ni t₂g + O 2p",
+    "type": "nonbonding",
+    "character": "VB 상단 — 충전 시 O 산화환원 개입 논쟁 영역",
+    "dos": "VBM"
+   },
+   {
+    "label": "Ni e_g* (σ*)",
+    "type": "antibonding",
+    "character": "부분 점유 e_g* — JT 왜곡·작은 갭(~0.5 eV급)",
+    "dos": "CBM/E_F 근처"
+   }
+  ],
+  "dos_link": "우리 SDCP phaseB 기판 (PBE+U U_Ni 6.2, AFM) — complex relax가 이 위에서 진행 중",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "Li6PS5Cl0.5Br0.5": {
+  "name": "Li₆PS₅Cl₀.₅Br₀.₅ (comp2)",
+  "summary": "혼합 할라이드 argyrodite — 우리 comp2. 전자구조는 LPSCl과 동형(PS₄ 골격 + 할라이드/S 이온 자리), Br 4p가 VBM 부근에 얕은 준위 추가.",
+  "ao_left": [
+   "P 3s3p",
+   "Li 2s"
+  ],
+  "ao_right": [
+   "S 3p",
+   "Cl 3p",
+   "Br 4p (얕음)"
+  ],
+  "levels": [
+   {
+    "label": "P–S σ",
+    "type": "bonding",
+    "character": "PS₄ backbone (ICOHP ~−6 eV)",
+    "dos": "VB 깊이"
+   },
+   {
+    "label": "S 3p + Br 4p lone pair",
+    "type": "nonbonding",
+    "character": "Br 4p가 S 3p VBM에 근접 — gap 소폭 축소 방향",
+    "dos": "VBM"
+   },
+   {
+    "label": "P–S σ* (+Li)",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "canonical gap 2.04 eV(잠정, fixed-occ) — Li6PS5Cl(2.066)보다 소폭 좁음이 Br 4p 얕은 준위와 정합",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "Li6PS5I": {
+  "name": "Li₆PS₅I (요오드 argyrodite)",
+  "summary": "I⁻가 4a에만 앉는 무질서-0 극한 (I 반경 큼) — Kraft 계열의 낮은 σ 끝점. I 5p가 VBM을 크게 끌어올림.",
+  "ao_left": [
+   "P 3s3p",
+   "Li 2s"
+  ],
+  "ao_right": [
+   "S 3p",
+   "I 5p (VBM 상향)"
+  ],
+  "levels": [
+   {
+    "label": "P–S σ",
+    "type": "bonding",
+    "character": "",
+    "dos": "VB 깊이"
+   },
+   {
+    "label": "I 5p lone pair",
+    "type": "nonbonding",
+    "character": "S 3p 위로 올라온 I 5p — gap 최소·산화 onset 하락",
+    "dos": "VBM"
+   },
+   {
+    "label": "P–S σ*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "rao2025 (I 갭 2.19<Br–Cl 2.32, PBE)와 방향 일치 — I는 전도 채널이 아니라 상안정·계면 역할",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "Li10GeP2S12": {
+  "name": "Li₁₀GeP₂S₁₂ (LGPS)",
+  "summary": "GeS₄+PS₄ 혼합 사면체 골격의 1D 초이온 전도체 — 12 mS/cm급 벤치마크 계열.",
+  "ao_left": [
+   "P 3s3p",
+   "Ge 4s4p"
+  ],
+  "ao_right": [
+   "S 3p ×4",
+   "S 3s (deep)"
+  ],
+  "levels": [
+   {
+    "label": "(P/Ge)–S σ",
+    "type": "bonding",
+    "character": "혼합 사면체 backbone",
+    "dos": "VB 깊이"
+   },
+   {
+    "label": "S 3p lone pair",
+    "type": "nonbonding",
+    "character": "VBM — 황화물 공통",
+    "dos": "VBM"
+   },
+   {
+    "label": "(P/Ge)–S σ*",
+    "type": "antibonding",
+    "character": "Ge 성분이 CBM 소폭 하강 — 환원 내성 argyrodite보다 약함",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "Na3PS4": {
+  "name": "Na₃PS₄ (큐빅/정방)",
+  "summary": "Na 아날로그 thio-phosphate — Na-SSB 표준 SE. 전자구조는 Li₃PS₄와 동형.",
+  "ao_left": [
+   "P 3s3p",
+   "Na 3s"
+  ],
+  "ao_right": [
+   "S 3p ×4"
+  ],
+  "levels": [
+   {
+    "label": "P–S σ",
+    "type": "bonding",
+    "character": "",
+    "dos": "VB 깊이"
+   },
+   {
+    "label": "S 3p lone pair",
+    "type": "nonbonding",
+    "character": "",
+    "dos": "VBM"
+   },
+   {
+    "label": "P–S σ* (+Na 3s)",
+    "type": "antibonding",
+    "character": "Na 3s가 CBM에 더 크게 개입 (Li 2p보다 낮음)",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "Li2Se": {
+  "name": "Li₂Se (역형석)",
+  "summary": "Se²⁻ 4p VB — Li₂S의 셀레늄 짝. VBM 상승 → 갭 축소·연성↑ (셀레노 argyrodite 논거).",
+  "ao_left": [
+   "Li 2s (이온화)"
+  ],
+  "ao_right": [
+   "Se 4p ×3",
+   "Se 4s (deep)"
+  ],
+  "levels": [
+   {
+    "label": "Li–Se (이온성)",
+    "type": "bonding",
+    "character": "",
+    "dos": "VB 바닥"
+   },
+   {
+    "label": "Se 4p lone pair",
+    "type": "nonbonding",
+    "character": "S 3p보다 얕음 — 갭↓·분극률↑",
+    "dos": "VBM"
+   },
+   {
+    "label": "Li 2s σ*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "Li2Te": {
+  "name": "Li₂Te (역형석)",
+  "summary": "Te²⁻ 5p VB — 칼코겐 계열의 끝. 갭 최소·최연질.",
+  "ao_left": [
+   "Li 2s (이온화)"
+  ],
+  "ao_right": [
+   "Te 5p ×3"
+  ],
+  "levels": [
+   {
+    "label": "Li–Te (이온성)",
+    "type": "bonding",
+    "character": "",
+    "dos": "VB 바닥"
+   },
+   {
+    "label": "Te 5p lone pair",
+    "type": "nonbonding",
+    "character": "계열상 가장 얕은 VBM",
+    "dos": "VBM"
+   },
+   {
+    "label": "Li 2s σ*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "MgS": {
+  "name": "MgS (암염 황화물)",
+  "summary": "MgO의 황화물 짝 — S 3p VBM이 O 2p보다 얕아 갭 ~4.5 eV로 축소, 공유성↑. 황화물 골격에 Mg가 들어갈 때의 참고상.",
+  "ao_left": [
+   "Mg 바깥 s/d"
+  ],
+  "ao_right": [
+   "S 3p ×3",
+   "S 3s (deep)"
+  ],
+  "levels": [
+   {
+    "label": "Mg–S σ (이온성↓)",
+    "type": "bonding",
+    "character": "산화물보다 혼성 큼",
+    "dos": "VB 바닥"
+   },
+   {
+    "label": "S 3p lone pair",
+    "type": "nonbonding",
+    "character": "얕은 VBM = 산화 onset 하락 (황화물 숙명)",
+    "dos": "VBM"
+   },
+   {
+    "label": "Mg s/d σ*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "산화물 MgO 항목과 대비해서 읽기 — 같은 양이온, VBM만 S 3p로 상승",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "CaS": {
+  "name": "CaS (암염 황화물)",
+  "summary": "CaO의 황화물 짝 — S 3p VBM이 O 2p보다 얕아 갭 ~4.5 eV로 축소, 공유성↑. 황화물 골격에 Ca가 들어갈 때의 참고상.",
+  "ao_left": [
+   "Ca 바깥 s/d"
+  ],
+  "ao_right": [
+   "S 3p ×3",
+   "S 3s (deep)"
+  ],
+  "levels": [
+   {
+    "label": "Ca–S σ (이온성↓)",
+    "type": "bonding",
+    "character": "산화물보다 혼성 큼",
+    "dos": "VB 바닥"
+   },
+   {
+    "label": "S 3p lone pair",
+    "type": "nonbonding",
+    "character": "얕은 VBM = 산화 onset 하락 (황화물 숙명)",
+    "dos": "VBM"
+   },
+   {
+    "label": "Ca s/d σ*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "산화물 CaO 항목과 대비해서 읽기 — 같은 양이온, VBM만 S 3p로 상승",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "SrS": {
+  "name": "rS (암염 황화물)",
+  "summary": "rO의 황화물 짝 — S 3p VBM이 O 2p보다 얕아 갭 ~4.3 eV로 축소, 공유성↑. 황화물 골격에 r가 들어갈 때의 참고상.",
+  "ao_left": [
+   "r 바깥 s/d"
+  ],
+  "ao_right": [
+   "S 3p ×3",
+   "S 3s (deep)"
+  ],
+  "levels": [
+   {
+    "label": "r–S σ (이온성↓)",
+    "type": "bonding",
+    "character": "산화물보다 혼성 큼",
+    "dos": "VB 바닥"
+   },
+   {
+    "label": "S 3p lone pair",
+    "type": "nonbonding",
+    "character": "얕은 VBM = 산화 onset 하락 (황화물 숙명)",
+    "dos": "VBM"
+   },
+   {
+    "label": "r s/d σ*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "산화물 rO 항목과 대비해서 읽기 — 같은 양이온, VBM만 S 3p로 상승",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "BaS": {
+  "name": "BaS (암염 황화물)",
+  "summary": "BaO의 황화물 짝 — S 3p VBM이 O 2p보다 얕아 갭 ~3.9 eV로 축소, 공유성↑. 황화물 골격에 Ba가 들어갈 때의 참고상.",
+  "ao_left": [
+   "Ba 바깥 s/d"
+  ],
+  "ao_right": [
+   "S 3p ×3",
+   "S 3s (deep)"
+  ],
+  "levels": [
+   {
+    "label": "Ba–S σ (이온성↓)",
+    "type": "bonding",
+    "character": "산화물보다 혼성 큼",
+    "dos": "VB 바닥"
+   },
+   {
+    "label": "S 3p lone pair",
+    "type": "nonbonding",
+    "character": "얕은 VBM = 산화 onset 하락 (황화물 숙명)",
+    "dos": "VBM"
+   },
+   {
+    "label": "Ba s/d σ*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "산화물 BaO 항목과 대비해서 읽기 — 같은 양이온, VBM만 S 3p로 상승",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "MnS": {
+  "name": "MnS (암염 황화물)",
+  "summary": "MnO의 황화물 짝 — S 3p VBM이 O 2p보다 얕아 갭 ~3 eV (AFM d⁵)로 축소, 공유성↑. 황화물 골격에 Mn가 들어갈 때의 참고상.",
+  "ao_left": [
+   "Mn 바깥 s/d"
+  ],
+  "ao_right": [
+   "S 3p ×3",
+   "S 3s (deep)"
+  ],
+  "levels": [
+   {
+    "label": "Mn–S σ (이온성↓)",
+    "type": "bonding",
+    "character": "산화물보다 혼성 큼",
+    "dos": "VB 바닥"
+   },
+   {
+    "label": "S 3p lone pair",
+    "type": "nonbonding",
+    "character": "얕은 VBM = 산화 onset 하락 (황화물 숙명)",
+    "dos": "VBM"
+   },
+   {
+    "label": "Mn s/d σ*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "산화물 MnO 항목과 대비해서 읽기 — 같은 양이온, VBM만 S 3p로 상승",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "Sc2S3": {
+  "name": "Sc₂S₃ (황화 Sc³⁺)",
+  "summary": "Sc₂O₃의 황화물 짝 — d⁰ 세스퀴설파이드. S 3p VB + Sc 3d CB, 갭 산화물(~6 eV)에서 ~2.8 eV로 급감.",
+  "ao_left": [
+   "Sc 3d (d⁰)",
+   "Sc 4s"
+  ],
+  "ao_right": [
+   "S 3p ×3",
+   "S 3s (deep)"
+  ],
+  "levels": [
+   {
+    "label": "Sc–S σ/π",
+    "type": "bonding",
+    "character": "산화물보다 공유성↑ (이온성 약함 — 칩 설명 그대로)",
+    "dos": "VB −5~−2 eV"
+   },
+   {
+    "label": "S 3p lone pair",
+    "type": "nonbonding",
+    "character": "얕은 VBM",
+    "dos": "VBM"
+   },
+   {
+    "label": "Sc 3d σ*",
+    "type": "antibonding",
+    "character": "d⁰ CB",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "황화물 골격(argyrodite S 자리)에 Sc³⁺가 앉을 때의 전자구조 참조 — cascade Sc2O3 항목과 쌍",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "Cr2S3": {
+  "name": "Cr₂S₃ (자성 황화물)",
+  "summary": "Cr³⁺ d³ 세스퀴설파이드 — Cr₂O₃의 짝. 갭 좁고(≲1 eV) 자성.",
+  "ao_left": [
+   "Cr 3d (t₂g³)"
+  ],
+  "ao_right": [
+   "S 3p ×3"
+  ],
+  "levels": [
+   {
+    "label": "Cr 3d–S 3p",
+    "type": "bonding",
+    "character": "혼성 강함",
+    "dos": "VB"
+   },
+   {
+    "label": "S 3p + Cr t₂g",
+    "type": "nonbonding",
+    "character": "좁은 갭 — 반도체성",
+    "dos": "VBM"
+   },
+   {
+    "label": "Cr 3d (빈 스핀채널)",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "Ag2S": {
+  "name": "Ag₂S (휘은석)",
+  "summary": "Ag 4d¹⁰+S 3p 혼성 VB, 갭 ~1 eV — 초이온 Ag⁺ 전도체의 고전. Ag₂O보다도 좁음.",
+  "ao_left": [
+   "Ag 4d¹⁰",
+   "Ag 5s"
+  ],
+  "ao_right": [
+   "S 3p ×3"
+  ],
+  "levels": [
+   {
+    "label": "Ag 4d–S 3p",
+    "type": "bonding",
+    "character": "d–p 혼성 큼",
+    "dos": "VB"
+   },
+   {
+    "label": "Ag 4d + S 3p",
+    "type": "nonbonding",
+    "character": "좁은 갭 — 전자절연 부적합",
+    "dos": "VBM"
+   },
+   {
+    "label": "Ag 5s σ*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "ZnS": {
+  "name": "ZnS (섬아연광)",
+  "summary": "d¹⁰ 폐각 + sp³ 공유 골격 — 갭 3.7 eV 반도체 표준. ZnO(3.3)와 달리 S 3p VBM.",
+  "ao_left": [
+   "Zn 4s4p",
+   "Zn 3d¹⁰ (deep)"
+  ],
+  "ao_right": [
+   "S 3p ×3"
+  ],
+  "levels": [
+   {
+    "label": "Zn–S σ (sp³)",
+    "type": "bonding",
+    "character": "사면체 공유",
+    "dos": "VB −5~−2 eV"
+   },
+   {
+    "label": "S 3p (+Zn 3d 반발)",
+    "type": "nonbonding",
+    "character": "d–p 반발이 VBM 소폭 상향",
+    "dos": "VBM"
+   },
+   {
+    "label": "Zn 4s σ*",
+    "type": "antibonding",
+    "character": "분산 큰 CB",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "CdS": {
+  "name": "CdS (섬아연광/우르츠광)",
+  "summary": "ZnS 동형 — 갭 2.4 eV. 광촉매/QD 고전.",
+  "ao_left": [
+   "Cd 5s5p",
+   "Cd 4d¹⁰ (deep)"
+  ],
+  "ao_right": [
+   "S 3p ×3"
+  ],
+  "levels": [
+   {
+    "label": "Cd–S σ",
+    "type": "bonding",
+    "character": "",
+    "dos": "VB"
+   },
+   {
+    "label": "S 3p lone pair",
+    "type": "nonbonding",
+    "character": "",
+    "dos": "VBM"
+   },
+   {
+    "label": "Cd 5s σ*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "FeS2": {
+  "name": "FeS₂ (황철석)",
+  "summary": "저스핀 Fe²⁺ t₂g⁶ + S₂²⁻ 이합체 — 갭 ~0.95 eV. S–S 결합이 있는 특이 황화물 (전환형 양극 후보).",
+  "ao_left": [
+   "Fe 3d (t₂g⁶ LS)"
+  ],
+  "ao_right": [
+   "S₂²⁻ σ/π (이합체)",
+   "S 3p"
+  ],
+  "levels": [
+   {
+    "label": "S–S σ (이합체)",
+    "type": "bonding",
+    "character": "persulfide 결합",
+    "dos": "VB 깊이"
+   },
+   {
+    "label": "Fe t₂g (LS)",
+    "type": "nonbonding",
+    "character": "채워진 t₂g가 VBM",
+    "dos": "VBM"
+   },
+   {
+    "label": "Fe e_g* / S–S σ*",
+    "type": "antibonding",
+    "character": "좁은 갭",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "li2025 FeS₂ 전셀 788.9 mAh/g 문맥 — 전환 반응 양극",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "In2S3": {
+  "name": "In₂S₃ (defect spinel)",
+  "summary": "In₂O₃의 황화물 짝 — 갭 ~2 eV, 광전소자 버퍼층 고전.",
+  "ao_left": [
+   "In 5s5p"
+  ],
+  "ao_right": [
+   "S 3p ×3"
+  ],
+  "levels": [
+   {
+    "label": "In–S σ",
+    "type": "bonding",
+    "character": "",
+    "dos": "VB"
+   },
+   {
+    "label": "S 3p lone pair",
+    "type": "nonbonding",
+    "character": "",
+    "dos": "VBM"
+   },
+   {
+    "label": "In 5s σ*",
+    "type": "antibonding",
+    "character": "분산 큰 5s CB — TCO 성향 잔존",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "SiS2": {
+  "name": "SiS₂ (edge-sharing 사면체 사슬)",
+  "summary": "SiO₂의 황화물 짝 — 유리질 황화물 SE의 망형성제(Li₂S–SiS₂ 유리 고전).",
+  "ao_left": [
+   "Si 3s3p (sp³)"
+  ],
+  "ao_right": [
+   "S 3p ×3"
+  ],
+  "levels": [
+   {
+    "label": "Si–S σ",
+    "type": "bonding",
+    "character": "사면체 사슬 골격",
+    "dos": "VB 깊이"
+   },
+   {
+    "label": "S 3p lone pair",
+    "type": "nonbonding",
+    "character": "가교/말단 S",
+    "dos": "VBM"
+   },
+   {
+    "label": "Si–S σ*",
+    "type": "antibonding",
+    "character": "갭 ~3.5 eV",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "thio-LISICON 이전 세대 유리 SE(Li₂S–SiS₂)의 골격 — 우리 argyrodite 이전사",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "GeS2": {
+  "name": "GeS₂ (사면체 망)",
+  "summary": "SiS₂ 동족 — Ge 4s 성분으로 갭 소폭↓(~3 eV). 칼코게나이드 유리 성분.",
+  "ao_left": [
+   "Ge 4s4p"
+  ],
+  "ao_right": [
+   "S 3p ×3"
+  ],
+  "levels": [
+   {
+    "label": "Ge–S σ",
+    "type": "bonding",
+    "character": "",
+    "dos": "VB"
+   },
+   {
+    "label": "S 3p lone pair",
+    "type": "nonbonding",
+    "character": "",
+    "dos": "VBM"
+   },
+   {
+    "label": "Ge–S σ*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "HfS2": {
+  "name": "HfS₂ (1T 층상)",
+  "summary": "d⁰ 층상 이황화물 — HfO₂(5.7 eV)와 대조적으로 갭 ~2 eV. S 3p VBM+Hf 5d CBM.",
+  "ao_left": [
+   "Hf 5d (d⁰)"
+  ],
+  "ao_right": [
+   "S 3p ×3"
+  ],
+  "levels": [
+   {
+    "label": "Hf–S σ/π",
+    "type": "bonding",
+    "character": "",
+    "dos": "VB"
+   },
+   {
+    "label": "S 3p lone pair",
+    "type": "nonbonding",
+    "character": "",
+    "dos": "VBM"
+   },
+   {
+    "label": "Hf 5d t₂g",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "TiS2": {
+  "name": "TiS2 (1T/2H 층상)",
+  "summary": "층상 이칼코게나이드 — d⁰ 계열, 반금속~0.2 eV. Li 삽입 화학의 원조 격 재료.",
+  "ao_left": [
+   "Ti d"
+  ],
+  "ao_right": [
+   "S 3p ×3"
+  ],
+  "levels": [
+   {
+    "label": "Ti–S σ/π",
+    "type": "bonding",
+    "character": "",
+    "dos": "VB"
+   },
+   {
+    "label": "S 3p + Ti d",
+    "type": "nonbonding",
+    "character": "반금속~0.2 eV",
+    "dos": "VBM/E_F"
+   },
+   {
+    "label": "Ti d*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "VS2": {
+  "name": "VS2 (1T/2H 층상)",
+  "summary": "층상 이칼코게나이드 — d¹ 계열, 금속성. Li 삽입 화학의 원조 격 재료.",
+  "ao_left": [
+   "V d"
+  ],
+  "ao_right": [
+   "S 3p ×3"
+  ],
+  "levels": [
+   {
+    "label": "V–S σ/π",
+    "type": "bonding",
+    "character": "",
+    "dos": "VB"
+   },
+   {
+    "label": "S 3p + V d",
+    "type": "nonbonding",
+    "character": "금속성",
+    "dos": "VBM/E_F"
+   },
+   {
+    "label": "V d*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "TaS2": {
+  "name": "TaS2 (1T/2H 층상)",
+  "summary": "층상 이칼코게나이드 — d¹ 계열, 금속성(CDW). Li 삽입 화학의 원조 격 재료.",
+  "ao_left": [
+   "Ta d"
+  ],
+  "ao_right": [
+   "S 3p ×3"
+  ],
+  "levels": [
+   {
+    "label": "Ta–S σ/π",
+    "type": "bonding",
+    "character": "",
+    "dos": "VB"
+   },
+   {
+    "label": "S 3p + Ta d",
+    "type": "nonbonding",
+    "character": "금속성(CDW)",
+    "dos": "VBM/E_F"
+   },
+   {
+    "label": "Ta d*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "MoS2": {
+  "name": "MoS2 (2H 층상)",
+  "summary": "d² 삼각프리즘 배위 — 층상 반도체 ~1.9 eV(단층 직접). 고체 윤활/촉매/TMD 반도체 표준.",
+  "ao_left": [
+   "Mo d (d_z², d_xy…)"
+  ],
+  "ao_right": [
+   "S 3p ×3"
+  ],
+  "levels": [
+   {
+    "label": "Mo–S σ",
+    "type": "bonding",
+    "character": "",
+    "dos": "VB 깊이"
+   },
+   {
+    "label": "Mo d_z² (채워짐)",
+    "type": "nonbonding",
+    "character": "VBM — d-d 갭 성격",
+    "dos": "VBM"
+   },
+   {
+    "label": "Mo d* ",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "WS2": {
+  "name": "WS2 (2H 층상)",
+  "summary": "d² 삼각프리즘 배위 — 층상 반도체 ~2.0 eV(단층). 고체 윤활/촉매/TMD 반도체 표준.",
+  "ao_left": [
+   "W d (d_z², d_xy…)"
+  ],
+  "ao_right": [
+   "S 3p ×3"
+  ],
+  "levels": [
+   {
+    "label": "W–S σ",
+    "type": "bonding",
+    "character": "",
+    "dos": "VB 깊이"
+   },
+   {
+    "label": "W d_z² (채워짐)",
+    "type": "nonbonding",
+    "character": "VBM — d-d 갭 성격",
+    "dos": "VBM"
+   },
+   {
+    "label": "W d* ",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "NiS": {
+  "name": "NiS (millerite/NiAs형)",
+  "summary": "금속성~반금속 황화물 — NiO(4 eV CT 절연체)와 극명 대조. 황화물에서 d 밴드가 열림.",
+  "ao_left": [
+   "Ni 3d⁸"
+  ],
+  "ao_right": [
+   "S 3p ×3"
+  ],
+  "levels": [
+   {
+    "label": "Ni 3d–S 3p",
+    "type": "bonding",
+    "character": "넓은 혼성 밴드",
+    "dos": "VB"
+   },
+   {
+    "label": "d–p 혼성 (금속성)",
+    "type": "nonbonding",
+    "character": "갭 없음/미소 — 전자절연 부적합",
+    "dos": "E_F"
+   },
+   {
+    "label": "Ni 3d*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "E_F 위"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "Sb2O3": {
+  "name": "Sb₂O₃ (Sb³⁺ lone pair)",
+  "summary": "Sb³⁺ 5s² 고립쌍 산화물 — Sb₂O₅(5s⁰)와 산화수 짝. 5s² lone pair가 VBM에 개입 (stereochemically active).",
+  "ao_left": [
+   "Sb 5s² (lone pair)",
+   "Sb 5p"
+  ],
+  "ao_right": [
+   "O 2p ×3"
+  ],
+  "levels": [
+   {
+    "label": "Sb–O σ",
+    "type": "bonding",
+    "character": "",
+    "dos": "VB 깊이"
+   },
+   {
+    "label": "Sb 5s²–O 2p 반결합 (lone pair)",
+    "type": "nonbonding",
+    "character": "VBM 상향 — Sb³⁺ 특유",
+    "dos": "VBM"
+   },
+   {
+    "label": "Sb 5p σ*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "Sb₂O₅ 항목과 쌍 — 산화수에 따라 VBM 성격이 바뀌는 사례 (HSAB 산화수-키 논리와 동일)",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "Co3O4": {
+  "name": "Co₃O₄ (스피넬)",
+  "summary": "Co²⁺(A)/Co³⁺(B) 혼합 원자가 스피넬 — 갭 ~1.6 eV, p형 산화물 촉매 고전.",
+  "ao_left": [
+   "Co 3d (2+/3+)"
+  ],
+  "ao_right": [
+   "O 2p ×3"
+  ],
+  "levels": [
+   {
+    "label": "Co 3d–O 2p",
+    "type": "bonding",
+    "character": "",
+    "dos": "VB"
+   },
+   {
+    "label": "Co²⁺ t₂g/e (A자리)",
+    "type": "nonbonding",
+    "character": "갭 내 d 준위",
+    "dos": "VBM"
+   },
+   {
+    "label": "Co³⁺ e_g*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "LiCoO2": {
+  "name": "LiCoO₂ (층상 R-3m)",
+  "summary": "저스핀 Co³⁺ t₂g⁶ — 층상 양극의 원조. t₂g⁶(가득)–e_g⁰(빔) 갭 ~2.7 eV.",
+  "ao_left": [
+   "Co 3d (t₂g⁶ LS)"
+  ],
+  "ao_right": [
+   "O 2p ×3"
+  ],
+  "levels": [
+   {
+    "label": "Co 3d–O 2p σ",
+    "type": "bonding",
+    "character": "",
+    "dos": "VB 깊이"
+   },
+   {
+    "label": "Co t₂g (가득)",
+    "type": "nonbonding",
+    "character": "VBM — 충전 시 t₂g에서 산화",
+    "dos": "VBM"
+   },
+   {
+    "label": "Co e_g* (σ*)",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "LiMn2O4": {
+  "name": "LiMn₂O₄ (스피넬)",
+  "summary": "Mn³⁺/Mn⁴⁺ 혼합 스피넬 — JT 활성 Mn³⁺가 구조 열화의 근원.",
+  "ao_left": [
+   "Mn 3d (3+/4+)"
+  ],
+  "ao_right": [
+   "O 2p ×3"
+  ],
+  "levels": [
+   {
+    "label": "Mn 3d–O 2p",
+    "type": "bonding",
+    "character": "",
+    "dos": "VB"
+   },
+   {
+    "label": "Mn³⁺ e_g¹ (JT)",
+    "type": "nonbonding",
+    "character": "E_F 근처 — 불균화(2Mn³⁺→Mn²⁺+Mn⁴⁺) 유발",
+    "dos": "VBM 근처"
+   },
+   {
+    "label": "Mn e_g*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "LiFePO4": {
+  "name": "LiFePO₄ (올리빈)",
+  "summary": "PO₄ 골격 + Fe²⁺ d⁶ — 폴리음이온 양극 표준. PO₄ σ*가 CBM을 높여 안정.",
+  "ao_left": [
+   "Fe 3d (HS d⁶)",
+   "P 3s3p"
+  ],
+  "ao_right": [
+   "O 2p ×4"
+  ],
+  "levels": [
+   {
+    "label": "P–O σ (PO₄)",
+    "type": "bonding",
+    "character": "폴리음이온 골격 — 산화 안정 원천",
+    "dos": "VB 깊이"
+   },
+   {
+    "label": "Fe t₂g/e_g (HS)",
+    "type": "nonbonding",
+    "character": "갭 내 d — Fe²⁺/Fe³⁺ 산화환원 준위",
+    "dos": "VBM"
+   },
+   {
+    "label": "Fe d* / P–O σ*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "LiNbO3": {
+  "name": "LiNbO₃ (일메나이트 유사)",
+  "summary": "d⁰ Nb⁵⁺ 강유전체 — NCM 표면 코팅의 최고전(電) 고전. 갭 ~3.8 eV + 리튬 전도성 비정질상.",
+  "ao_left": [
+   "Nb 4d (d⁰)"
+  ],
+  "ao_right": [
+   "O 2p ×3"
+  ],
+  "levels": [
+   {
+    "label": "Nb–O σ",
+    "type": "bonding",
+    "character": "",
+    "dos": "VB"
+   },
+   {
+    "label": "O 2p lone pair",
+    "type": "nonbonding",
+    "character": "",
+    "dos": "VBM"
+   },
+   {
+    "label": "Nb 4d t₂g",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "코팅 벤치마크 — 우리 cascade 도펀트들과 같은 역할군 (Nb2O5 항목과 쌍)",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "Li4Ti5O12": {
+  "name": "Li₄Ti₅O₁₂ (스피넬 LTO)",
+  "summary": "d⁰ Ti⁴⁺ 스피넬 — zero-strain 음극. 1.55 V 평탄전위 = Ti⁴⁺/Ti³⁺.",
+  "ao_left": [
+   "Ti 3d (d⁰)"
+  ],
+  "ao_right": [
+   "O 2p ×3"
+  ],
+  "levels": [
+   {
+    "label": "Ti–O σ",
+    "type": "bonding",
+    "character": "",
+    "dos": "VB"
+   },
+   {
+    "label": "O 2p lone pair",
+    "type": "nonbonding",
+    "character": "",
+    "dos": "VBM"
+   },
+   {
+    "label": "Ti 3d t₂g",
+    "type": "antibonding",
+    "character": "삽입 시 t₂g에 전자 (Ti³⁺ 폴라론)",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "LiAlO2": {
+  "name": "LiAlO₂ (α/γ)",
+  "summary": "폐각 Al³⁺ — 넓은 갭 리튬 알루미네이트, 코팅/LLZO 소결조제.",
+  "ao_left": [
+   "Al 3s3p"
+  ],
+  "ao_right": [
+   "O 2p ×3"
+  ],
+  "levels": [
+   {
+    "label": "Al–O σ",
+    "type": "bonding",
+    "character": "",
+    "dos": "VB"
+   },
+   {
+    "label": "O 2p lone pair",
+    "type": "nonbonding",
+    "character": "갭 ~6 eV급",
+    "dos": "VBM"
+   },
+   {
+    "label": "Al 3s σ*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "Li3BO3": {
+  "name": "Li₃BO₃ (오르토보레이트)",
+  "summary": "고립 BO₃³⁻ 평면 삼각 — B₂O₃ 유리망의 해중합 극한. 저융점 소결조제.",
+  "ao_left": [
+   "B 2s2p (sp²)"
+  ],
+  "ao_right": [
+   "O 2p ×3"
+  ],
+  "levels": [
+   {
+    "label": "B–O σ (sp²)",
+    "type": "bonding",
+    "character": "고립 BO₃ 유닛",
+    "dos": "VB 깊이"
+   },
+   {
+    "label": "O 2p lone pair",
+    "type": "nonbonding",
+    "character": "말단 O 비중↑ — B₂O₃보다 VBM 얕음",
+    "dos": "VBM"
+   },
+   {
+    "label": "B 2p π*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "우리 +B₂O₃ 도핑 화학의 사촌 — B 배위(BO₃/BO₄) 논의 참조",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "LiBO2": {
+  "name": "LiBO₂ (메타보레이트)",
+  "summary": "BO₃ 사슬형 메타보레이트 — Li₃BO₃와 B₂O₃ 사이 중간 해중합도.",
+  "ao_left": [
+   "B 2s2p"
+  ],
+  "ao_right": [
+   "O 2p ×3"
+  ],
+  "levels": [
+   {
+    "label": "B–O σ",
+    "type": "bonding",
+    "character": "사슬 가교",
+    "dos": "VB 깊이"
+   },
+   {
+    "label": "O 2p lone pair",
+    "type": "nonbonding",
+    "character": "",
+    "dos": "VBM"
+   },
+   {
+    "label": "B–O π*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "Li2ZrO3": {
+  "name": "Li₂ZrO₃ (층상 록솔트)",
+  "summary": "d⁰ Zr⁴⁺ — NCM 코팅·CO₂ 흡수제. ZrO₂+Li₂O 화학의 결정상.",
+  "ao_left": [
+   "Zr 4d (d⁰)"
+  ],
+  "ao_right": [
+   "O 2p ×3"
+  ],
+  "levels": [
+   {
+    "label": "Zr–O σ",
+    "type": "bonding",
+    "character": "",
+    "dos": "VB"
+   },
+   {
+    "label": "O 2p lone pair",
+    "type": "nonbonding",
+    "character": "갭 ~4.5 eV",
+    "dos": "VBM"
+   },
+   {
+    "label": "Zr 4d σ*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (원소 브리핑 참고상 확장 — 부류 규칙)"
+ },
+ "C": {
+  "name": "C (graphite/VGCF)",
+  "summary": "sp² π 반금속 — π/π*가 K점에서 맞닿음(갭 0). VGCF 도전재의 전자구조 원형.",
+  "ao_left": [
+   "C 2s2p (sp²)",
+   "C 2p_z"
+  ],
+  "ao_right": [
+   "(동일 — 단원소)"
+  ],
+  "levels": [
+   {
+    "label": "C sp² σ",
+    "type": "bonding",
+    "character": "면내 골격 — 최고 강성",
+    "dos": "VB 깊이"
+   },
+   {
+    "label": "π (결합)",
+    "type": "bonding",
+    "character": "E_F 아래 절반",
+    "dos": "VBM=E_F"
+   },
+   {
+    "label": "π* (반결합)",
+    "type": "antibonding",
+    "character": "E_F 위 절반 — 반금속",
+    "dos": "CBM=E_F"
+   }
+  ],
+  "dos_link": "graphene NEB 기준계·LiC6 모상 — hBN(갭 6 eV)과 등구조 대비가 핵심 교훈",
+  "source": "curated 2026-07-28 (3차 — 이산 화합물 마감)"
+ },
+ "Li": {
+  "name": "Li (metal)",
+  "summary": "2s¹ 반충만 자유전자 금속 — 음극의 끝점이자 모든 전위의 기준(0 V vs Li/Li⁺).",
+  "ao_left": [
+   "Li 2s¹"
+  ],
+  "ao_right": [
+   "(동일 — 단원소 금속)"
+  ],
+  "levels": [
+   {
+    "label": "2s 밴드 (하부)",
+    "type": "bonding",
+    "character": "자유전자성",
+    "dos": "E_F 아래"
+   },
+   {
+    "label": "E_F",
+    "type": "nonbonding",
+    "character": "반충만 — 금속",
+    "dos": "E_F"
+   },
+   {
+    "label": "2s/2p 밴드 (상부)",
+    "type": "antibonding",
+    "character": "",
+    "dos": "E_F 위"
+   }
+  ],
+  "dos_link": "Li|SE 계면 캠페인의 왼쪽 전극 — SE CBM이 Li E_F보다 높아야 환원 안정",
+  "source": "curated 2026-07-28 (3차 — 이산 화합물 마감)"
+ },
+ "Li7La3Zr2O12": {
+  "name": "Li₇La₃Zr₂O₁₂ (LLZO, 가넷)",
+  "summary": "산화물 SE 대표 — d⁰ Zr⁴⁺+La³⁺ 가넷 골격, 갭 ~5-6 eV. 황화물(우리)과 산화물 진영의 기준상.",
+  "ao_left": [
+   "Zr 4d (d⁰)",
+   "La 5d"
+  ],
+  "ao_right": [
+   "O 2p ×3",
+   "O 2s (deep)"
+  ],
+  "levels": [
+   {
+    "label": "Zr/La–O σ",
+    "type": "bonding",
+    "character": "단단한 가넷 골격 — E ~150 GPa(황화물의 ~7배)",
+    "dos": "VB 깊이"
+   },
+   {
+    "label": "O 2p lone pair",
+    "type": "nonbonding",
+    "character": "깊은 VBM = 넓은 산화창",
+    "dos": "VBM"
+   },
+   {
+    "label": "Zr 4d σ*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "우리 황화물 대비: 창은 넓고 σ는 낮고 단단(계면 접촉 불리) — 트레이드오프의 반대극",
+  "source": "curated 2026-07-28 (3차 — 이산 화합물 마감)"
+ },
+ "Li10SiP2S12": {
+  "name": "Li₁₀SiP₂S₁₂ (Si-LGPS)",
+  "summary": "LGPS의 Si 치환판 — SiS₄+PS₄ 골격. Ge보다 저가·경량, 갭 소폭↑.",
+  "ao_left": [
+   "Si 3s3p",
+   "P 3s3p"
+  ],
+  "ao_right": [
+   "S 3p ×4"
+  ],
+  "levels": [
+   {
+    "label": "(Si/P)–S σ",
+    "type": "bonding",
+    "character": "",
+    "dos": "VB 깊이"
+   },
+   {
+    "label": "S 3p lone pair",
+    "type": "nonbonding",
+    "character": "",
+    "dos": "VBM"
+   },
+   {
+    "label": "(Si/P)–S σ*",
+    "type": "antibonding",
+    "character": "Si 판이 Ge판보다 CBM 소폭 상승",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (3차 — 이산 화합물 마감)"
+ },
+ "Li10SnP2S12": {
+  "name": "Li₁₀SnP₂S₁₂ (Sn-LGPS)",
+  "summary": "LGPS의 Sn 치환판 — 저가지만 Sn 5s CBM이 낮아 vs Li 환원(합금화)에 가장 약함.",
+  "ao_left": [
+   "Sn 5s5p",
+   "P 3s3p"
+  ],
+  "ao_right": [
+   "S 3p ×4"
+  ],
+  "levels": [
+   {
+    "label": "(Sn/P)–S σ",
+    "type": "bonding",
+    "character": "",
+    "dos": "VB 깊이"
+   },
+   {
+    "label": "S 3p lone pair",
+    "type": "nonbonding",
+    "character": "",
+    "dos": "VBM"
+   },
+   {
+    "label": "Sn 5s σ*",
+    "type": "antibonding",
+    "character": "낮은 CBM = 계열 중 환원 최약",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (3차 — 이산 화합물 마감)"
+ },
+ "Li3SbS4": {
+  "name": "Li₃SbS₄ (thio-antimonate)",
+  "summary": "SbS₄³⁻ 사면체 — PS₄의 Sb 치환 모티프 (ma2024 Sb 도핑 문맥의 끝점 상).",
+  "ao_left": [
+   "Sb 5s5p"
+  ],
+  "ao_right": [
+   "S 3p ×4"
+  ],
+  "levels": [
+   {
+    "label": "Sb–S σ",
+    "type": "bonding",
+    "character": "P–S보다 길고 무름",
+    "dos": "VB 깊이"
+   },
+   {
+    "label": "S 3p lone pair",
+    "type": "nonbonding",
+    "character": "",
+    "dos": "VBM"
+   },
+   {
+    "label": "Sb 5s/σ*",
+    "type": "antibonding",
+    "character": "Sb 5s 성분으로 CBM 하강 — 환원 내성↓",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (3차 — 이산 화합물 마감)"
+ },
+ "CaCl2": {
+  "name": "CaCl₂ (변형 rutile)",
+  "summary": "폐각 이온성 염화물 — Cl 3p VB, 갭 ~7 eV. 흡습성 강한 건조제 화학.",
+  "ao_left": [
+   "Ca 4s/3d"
+  ],
+  "ao_right": [
+   "Cl 3p ×3"
+  ],
+  "levels": [
+   {
+    "label": "Ca–Cl (이온성)",
+    "type": "bonding",
+    "character": "",
+    "dos": "VB 바닥"
+   },
+   {
+    "label": "Cl 3p lone pair",
+    "type": "nonbonding",
+    "character": "",
+    "dos": "VBM"
+   },
+   {
+    "label": "Ca 4s/3d σ*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (3차 — 이산 화합물 마감)"
+ },
+ "CuCl": {
+  "name": "CuCl (섬아연광)",
+  "summary": "d¹⁰ Cu⁺ 염화물 — Cu 3d가 VBM에 개입(LiCl과 대조), 갭 ~3.4 eV. taklu2021 CuCl 도핑 원료.",
+  "ao_left": [
+   "Cu 3d¹⁰",
+   "Cu 4s"
+  ],
+  "ao_right": [
+   "Cl 3p ×3"
+  ],
+  "levels": [
+   {
+    "label": "Cu–Cl σ",
+    "type": "bonding",
+    "character": "d–p 혼성",
+    "dos": "VB"
+   },
+   {
+    "label": "Cu 3d + Cl 3p",
+    "type": "nonbonding",
+    "character": "d¹⁰ VBM 상향 — LiCl(순수 Cl 3p)과 다름",
+    "dos": "VBM"
+   },
+   {
+    "label": "Cu 4s σ*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (3차 — 이산 화합물 마감)"
+ },
+ "BaSnF4": {
+  "name": "BaSnF₄ (층상 불화물 F⁻ 전도체)",
+  "summary": "Sn²⁺ 5s² lone pair 층상 구조 — F⁻ 초이온 전도체 (음이온 전도의 대표).",
+  "ao_left": [
+   "Sn 5s² (lone pair)",
+   "Ba 6s"
+  ],
+  "ao_right": [
+   "F 2p ×3 (deep)"
+  ],
+  "levels": [
+   {
+    "label": "(Ba/Sn)–F 이온성",
+    "type": "bonding",
+    "character": "",
+    "dos": "VB 바닥"
+   },
+   {
+    "label": "Sn 5s² lone pair",
+    "type": "nonbonding",
+    "character": "F 2p 위 — 불화물치고 갭 좁음",
+    "dos": "VBM"
+   },
+   {
+    "label": "Sn 5p σ*",
+    "type": "antibonding",
+    "character": "",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (3차 — 이산 화합물 마감)"
+ },
+ "Li2WO4": {
+  "name": "Li₂WO₄ (텅스텐산 리튬)",
+  "summary": "d⁰ W⁶⁺ WO₄ 사면체 — W 코팅 화학의 결정상. WO₃보다 갭 넓음(~4 eV).",
+  "ao_left": [
+   "W 5d (d⁰)"
+  ],
+  "ao_right": [
+   "O 2p ×4"
+  ],
+  "levels": [
+   {
+    "label": "W–O σ",
+    "type": "bonding",
+    "character": "WO₄ 사면체",
+    "dos": "VB 깊이"
+   },
+   {
+    "label": "O 2p lone pair",
+    "type": "nonbonding",
+    "character": "",
+    "dos": "VBM"
+   },
+   {
+    "label": "W 5d σ*",
+    "type": "antibonding",
+    "character": "WO₃(연속 골격)보다 CBM 상승",
+    "dos": "CBM"
+   }
+  ],
+  "dos_link": "",
+  "source": "curated 2026-07-28 (3차 — 이산 화합물 마감)"
  }
 }
