@@ -33,7 +33,8 @@
       "confidence_high": 0,
       "confidence_low": 0,
       "len_chars": 14256,
-      "system_class": "sulfide_Li"
+      "system_class": "sulfide_Li",
+      "digest": "litdb/papers/zhou2026_high_entropy_lgps_multicationic.md"
     },
     {
       "id": "053",
