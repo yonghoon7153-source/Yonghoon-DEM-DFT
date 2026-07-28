@@ -65,7 +65,7 @@
       "_800K_rerun_note": "Original T800 D was anomalously low (3.41e-6, broke Arrhenius). Re-ran T800 with fresh MaxwellBoltzmann seed, same 110ps/2fs protocol → D=5.91e-6 (monotonic). R² jumped 0.77→0.999.",
       "arrhenius_fit": {
         "_DEPRECATED_5fu_artifact": {"Ea_eV": 0.172, "R2": 0.9986, "window_ps": [2, 50],
-          "note": "ARTIFACT of artificial 5 f.u. supercell construction. Natural 4 f.u. cubic gives Ea=0.253 (실험 LPSCl Ea 범위 0.29-0.46 eV 내 — 구 "Schlem 2020 match"는 귀속 오류 판명 2026-07-28: DOI 10.1002/aenm.201903719는 Li3MCl6 논문 — LPSCl 0.25/0.22의 원전 미상(별도 확보 필요)). See comp1_v3_4fu_natural."},
+          "note": "ARTIFACT of artificial 5 f.u. supercell construction. Natural 4 f.u. cubic gives Ea=0.253 (실험 LPSCl Ea 범위 0.29-0.46 eV 내 — 구 'Schlem 2020 match'는 귀속 오류 판명 2026-07-28: DOI 10.1002/aenm.201903719는 Li3MCl6 논문 — LPSCl 0.25/0.22의 원전 미상(별도 확보 필요)). See comp1_v3_4fu_natural."},
         "fit_2_50ps_FINAL_SUPERSEDED": {"Ea_eV": 0.172, "R2": 0.9986,
           "D_600": 2.677e-06, "D_800": 5.907e-06, "D_1000": 1.019e-05},
         "T_fit_K": [600, 800, 1000]
@@ -99,7 +99,7 @@
           "D_300K_extrapolated_cm2_per_s": 2.292e-08,
           "sigma_NE_300K_mScm_estimate": 3.35,
           "sigma_NE_300K_note": "Nernst-Einstein sigma = n_Li q^2 D /(kB T), H_R=1. n_Li = 2.361e22 cm^-3 (24 Li / 1016.62 A^3). tools/modelc_v3/nernst_einstein_300K.py. Same convention as modelc (~14 mS/cm).",
-          "note": "★ HIGH-QUALITY 3-pt fit (R²=0.9998). 실험 LPSCl Ea는 방법·시료 의존 0.29-0.46 eV(Adeli EIS=PFG 0.29-0.35 / Kraft total ~0.46) — 구 "Schlem 0.25 EXACT MATCH" 문구는 귀속 오류 판명 2026-07-28: DOI 10.1002/aenm.201903719는 Li3MCl6 논문 — LPSCl 0.25/0.22의 원전 미상(별도 확보 필요)."
+          "note": "★ HIGH-QUALITY 3-pt fit (R²=0.9998). 실험 LPSCl Ea는 방법·시료 의존 0.29-0.46 eV(Adeli EIS=PFG 0.29-0.35 / Kraft total ~0.46) — 구 'Schlem 0.25 EXACT MATCH' 문구는 귀속 오류 판명 2026-07-28: DOI 10.1002/aenm.201903719는 Li3MCl6 논문 — LPSCl 0.25/0.22의 원전 미상(별도 확보 필요)."
         }
       },
       "experimental_match": {
