@@ -61,7 +61,7 @@
 | # | 서지 | DOI | 왜 |
 |---|---|---|---|
 | S1 | Xiao, Wang, Ceder et al., *Joule* 3, 1252 (2019) "Computational screening of cathode coatings" | 10.1016/j.joule.2019.02.006 | **cascade의 직계 조상** — 양극 코팅 HT 스크리닝의 표준 프레임 (안정성+ESW+수송 게이트) |
-| S2 | Zhu, He, Mo, *ACS Appl. Mater. Interfaces* 7, 23685 (2015) | 10.1021/acsami.5b01004 | **grand-potential ESW 방법 원전** — 우리 oxidation CSV가 쓰는 바로 그 방법 |
+| S2 | Zhu, He, Mo, *ACS Appl. Mater. Interfaces* 7, 23685 (2015) | 10.1021/acsami.5b07517 (구기재 5b01004는 오기 — PDF 실물 확인) | **grand-potential ESW 방법 원전** — 우리 oxidation CSV가 쓰는 바로 그 방법 |
 | S3 | Richards, Ong, Ceder et al., *Chem. Mater.* 28, 266 (2016) "Interface stability" | 10.1021/acs.chemmater.5b04082 | pseudo-binary 계면 반응성 — MLIP 캠페인 ①(Li\|SE)의 열역학 짝 |
 | S4 | Sendek et al., *Energy Environ. Sci.* 10, 306 (2017) "12k candidates" | 10.1039/C6EE02697D | **ML 스크리닝 대표작** — TabPFN 노선의 선행, 발표 인용 앵커 |
 | S5 | Kahle, Marcolongo, Marzari, *EES* 13, 928 (2020) HT-AIMD 스크리닝 | 10.1039/C9EE02457C | AIMD 기반 HT의 방법 규율 (수렴·통계) — 우리 MD 규율과 대조 |
