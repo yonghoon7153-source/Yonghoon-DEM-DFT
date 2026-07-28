@@ -1,6 +1,6 @@
 # Highly reliable and large-scale simulations of promising argyrodite solid-state electrolytes using a machine-learned moment tensor potential — Kim et al. (Nano Energy 2024)
 
-> slug `kim2024_mtp_argyrodite_disorder_gb` · DOI `10.1016/j.nanoen.2024.109436` · type `MLIP(MTP)-MD + DFT/AIMD` · PDF 본문 `82ea256b/9a0b0c9b-35._Highlyential.pdf` + SI `82ea256b/cacf7ea8-35._Sup_Hiential.pdf` (**inbox #35 쌍**, 본문 10 pp + SI 28 pp 전부 정독) · digested `2026-07-28` · status ✅
+> slug `kim2024_mtp_argyrodite_disorder_gb` · DOI `10.1016/j.nanoen.2024.109436` · type `MLIP(MTP)-MD + DFT/AIMD` · PDF 본문 실물 `litdb/inbox/35. Highly reliable and large-scale simulations….pdf` (**inbox #35, 사용자 분류 `DFT` 태그**; 최초 digest는 업로드 쌍 `82ea256b/9a0b0c9b` 본문 + `82ea256b/cacf7ea8` SI 28 pp) · digested `2026-07-28` · **본문 실물 감사 `2026-07-28`** (10 pp 전문 대조: Table 1 6배열×4방법 전값·Table 2·GB 격자상수(학습 10.2795/22.9857/45.9713·프로덕션 30/68/135 Å)·D_GB 5.4e-8 vs bulk 1.8e-7·PS₄ 고정 −50 %/−18 %·Table S3 소환값 3.4e-7→1.6e-7·E:F:S 100:1:0.01·Fig 2 캡션 350–700 K 불일치까지 **digest와 전값 일치**; 추가 발견 = 본문 §2.5 자체에 힘 MAE "**0.1 meV/Å**" 단위 오기(Fig S2/S3 축 오기의 본문판); **SI 실물은 inbox 미보유** — 업로드본 정독 기록 유지) · status ✅
 > elements: Li, P, S, Cl, Br, I
 > methods: DFT, AIMD, MD, MLIP
 > **저자**: Ji Hoon Kim (성균관대 화공), Byeongsun Jun·Yong Jun Jang·Sun Ho Choi·Seong Hyeon Choi·Sung Man Cho·Yong-Gu Kim (**현대자동차**), **Byung-Hyun Kim (한양대 ERICA 안산, 응용화학)**, **Sang Uck Lee*** (성균관대) — Nano Energy 124 (2024) 109436 (2023-09-29 접수, 2024-03-02 온라인). ⚠ 한양대 공저자가 있으나 **[우리 그룹] 아님**(ERICA 응용화학·이상억 그룹 라인).
@@ -180,7 +180,7 @@ optB88-vdw로 학습한 MTP만이 AIMD·실험의 site-disorder 의존성(ordere
 ## 12. 주의/한계 (critical)
 - **P_i(σ)∝exp(−Δσ/kT)**: 전도도를 Boltzmann 인자에 넣는 차원 무의미 heuristic — σbulk 가중은 "그럴듯한 내삽"이지 통계역학 아님. σ80%도 경험 회귀(χ^7.14). **수치 이식 금지, 개념만**.
 - **P_i(E)도 meV/atom을 kT와 직접 비교**(셀 크기 임의성) — 열역학 가중의 근거 약함. 그 결과 random 셀의 4c-Cl 평균 점유 **42.6% vs 실험 70%**(Rayavarapu) 불일치를 논문이 점검하지 않음(Br만 우연히 근접).
-- **힘 정확도 표기 혼란**: 본문 "MAE <10 meV/atom·<0.02 eV/Å" vs Fig S3 실측 0.066–0.075 (축 라벨은 meV/Å 오기) — 실제 힘 MAE는 0.07 eV/Å급으로 봐야 함(그래도 MLIP 통상 수준). Fig S2 축도 동일 오기. GB 가중치도 본문 0.01 vs Fig 4 0.001 불일치.
+- **힘 정확도 표기 혼란**: 본문 "MAE <10 meV/atom·<0.02 eV/Å" vs Fig S3 실측 0.066–0.075 (축 라벨은 meV/Å 오기) — 실제 힘 MAE는 0.07 eV/Å급으로 봐야 함(그래도 MLIP 통상 수준). Fig S2 축도 동일 오기. **본문 §2.5 하이퍼파라미터 문장도 "3 meV/atom and 0.1 meV/Å"로 같은 meV/Å 단위 오기**(2026-07-28 실물 감사 확인 — 이 논문의 힘 단위 표기는 세 군데 모두 신뢰 불가, Fig S3 산점도의 eV/Å 해석만 유효). GB 가중치도 본문 0.01 vs Fig 4 0.001 불일치.
 - **Table S1 I조성 Ea 복제 의심**: AIMD와 MTP의 Ea가 6배열 전부 동일 — 편집 오류 가능성. I의 MTP Ea는 인용하지 말 것.
 - **온도창 표기 불일치**: §2.6 "350–500 K 7점×2회" vs Fig 2 캡션 "350–700 K". MSD 피팅창·NPT barostat 파라미터 미명시.
 - **AIMD 레퍼런스 셀 미명시**(선행 [36] 의존) + AIMD는 600–1200 K 고온 외삽 — AIMD_PBE σRT 절대값도 외삽 부담.
