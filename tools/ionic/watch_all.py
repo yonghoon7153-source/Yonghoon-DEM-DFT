@@ -186,6 +186,38 @@ print("   ⚠ '교정'의 초과는 정의상 5% — **'탐지' 값만 정보다
 print("     1000 K 급증이면 Arrhenius 상단(600/800/1000 K)이 신뢰 밖 → open_items #1 이 시드로 안 풀림")
 print(BAR)
 
+# ═══ ⑤ LPSOCl ELF (CPU — GPU 안 건드림) ═════════════════════════════════
+print("⑤ LPSOCl ELF (CPU pw.x/pp.x — GPU 작업과 동시 실행 안전)")
+E = "/data/work/runs/lpsocl_elf"
+elog = os.path.join(E, "run.log")
+if os.path.isfile(elog):
+    t = open(elog, errors="ignore").read()
+    stage = "?"
+    for k, name in (("pp.x elf", "pp.x ELF"), ("scf_atomic", "atomic ρ scf"),
+                    ("pw.x scf.in", "scf"), ("[pseudo] OK", "pseudo 수집")):
+        if k in t:
+            stage = name
+            break
+    # ⚠ scf_must_converge 함정 — 반복수가 electron_maxstep 과 같으면 가짜 수렴
+    conv = [l.strip() for l in t.splitlines() if "convergence has been achieved" in l]
+    it = [l.strip() for l in t.splitlines()
+          if re.search(r"iteration #|estimated scf accuracy|total energy\s+=", l)]
+    print(f"  단계: {stage} · pw.x {alive('pw.x', exact=True)} · pp.x {alive('pp.x', exact=True)}")
+    if conv:
+        print("  " + conv[-1] + "   ⚠ maxstep 과 같으면 가짜 수렴")
+    for l in it[-2:]:
+        print("    " + l)
+    err = [l.strip() for l in t.splitlines() if "Error" in l or "%%%%" in l]
+    if err:
+        print("  ⛔ " + err[-1][:100])
+    cubes = glob.glob(os.path.join(E, "*.cube"))
+    print(f"  산출 cube: {len(cubes)}개" + (" — " + ", ".join(os.path.basename(c) for c in cubes[:3])
+                                          if cubes else " (아직)"))
+else:
+    print("  (미가동 — tmux new -s lpsoclelf -d 'bash tools/electronic/run_lpsocl_elf_gabia.sh "
+          "> /data/work/runs/lpsocl_elf/run.log 2>&1')")
+print(BAR)
+
 # ═══ ④ 체인 ══════════════════════════════════════════════════════════════
 print("④ 후속 체인 (GPU 해방 대기 → QE 단일점 + Li 슬랩)")
 cl = os.path.join(H, "logs", "chain2.log")
