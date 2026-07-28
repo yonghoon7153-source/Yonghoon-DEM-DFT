@@ -103,17 +103,61 @@
   데이터로 입증 — Kahle Fig S3 양식) ② Ea에 Bayesian 오차 전파(현행 시드 std 보완).
   근거: kahle2020 digest §3 — per-material 자동 수렴판정·블록 분산 SE의 원전.
 
-### M6. cascade에 양극 반응성 게이트 추가 (Xiao 2019 공백 보강)
-- **트리거**: 없음 (pymatgen GrandPotentialInterfacialReactivity 재사용 — 반나절).
-- 내용: 도펀트별 ΔE_rxt(vs 만충/반충 NCM·LCO) 열을 cascade CSV에 추가 —
-  Xiao 2019의 F4 게이트(|ΔE|<100 meV/atom) 이식. **정답지 = LPSCl/LCO
-  −339(만충)/−493(반충) meV/atom 재현부터** (xiao2019 digest 소환값).
-  완성 시 Ceder 3부작 계보에서 우리가 안 하던 마지막 축이 닫힘.
+### ~~M6~~. ✅ cascade 양극 반응성 게이트 (2026-07-28 완료 — 결과 회수 대기)
+- **검증 통과**: 닫힌계 pseudo-binary ΔE_rxt로 LPSCl/LCO **만충 −322.7 (Xiao −339, 0.95×) /
+  반충 −454.9 (−493, 0.92×)**, 리튬화 순서(반충이 더 발열)까지 재현.
+  반응식도 `Li₂S + Li₃PO₄ + Co₉S₈` 로 물리적으로 타당.
+- **교훈(기록용)**: 초판을 개방계 `GrandPotentialInterfacialReactivity` + 전위 스캔으로 짰다가
+  −810~−1544 meV/atom 이 나왔고, V=4.30 반응식이 `Li6PS5Cl -> 6 Li + SCl + 0.5 P2S7 + 0.5 S` 로
+  **양극이 아예 빠진 자체분해**였다. Li 저장소를 열면 코팅 탈리튬 분해가 상호반응을 압도한다.
+  xiao2019 digest 227번 줄이 ΔE_rxt를 "**닫힌계**"로, 222번 줄이 만충/반충을 **조성 축**으로
+  명시하고 있었다. → **개방계는 Li 음극 쪽 도구, 양극 F4 게이트는 닫힌계**.
+- **전수 완주**: 47 코팅 × {LiCoO₂, Li₀.₅CoO₂} = **94쌍** (gabia, 2026-07-28).
+- **남은 것**: gabia의 `db/properties/cathode_reactivity_cascade.csv` 를 repo로 회수 →
+  cascade 깔때기에 **G6 계면 반응성** 게이트로 조인. 판정 기준은 "몇 종이 100 meV를 통과했나"가
+  아니라 **"host LPSCl(−323)보다 계면 반응성이 완화되는 코팅이 있는가"** (S1 성공조건 ②).
+  ⚠ 컷 근처 ±20 meV 순위 주장 금지 (Xiao 100 meV는 관례컷 + Sundar 2025의 "분해산물 전자전도도
+  미고려" 비판을 그대로 받음).
 
 ### M5. P2D 물성 export 인터페이스 (랩 P2D 데이터셋과 동기화)
 - **트리거**: 랩 후막 전고체 P2D 데이터셋 스키마 확정 (다음주 랩 계획).
 - 내용: db/properties(σ·E·ESW)를 P2D 입력 파라미터 포맷으로 내보내는 export —
   DFT(우리)→P2D(랩)→TabPFN 멀티스케일 연결. ⚠ σ는 MLIP 상한임을 명시 필수.
+
+## 🎤 심포지엄 대응 (2026-07-28 신설 — T1–T8)
+
+전지기술 심포지엄 2026 기술세션 3-3(이상욱, 성균관대) · 3-4(문장혁, 중앙대) 덱 분석에서 나온 실행 항목.
+전체 근거·좌표는 **`kb/projects/symposium_2026_competitive_analysis.md`**,
+digest는 `litdb/talks/`, 벤치마크 수치는 `db/properties/external_benchmarks_symposium_2026.json`.
+
+| ID | 항목 | 왜 (우리 약점/기회) | 비용 | 우선 |
+|---|---|---|---|---|
+| **T1** | **UMA 외삽 등급 대리지표** | 우리 MLIP-MD는 **스냅샷 수준 외삽 판정이 전무**하다. 이상욱 랩은 γ_select/γ_break 로 "Accurate region"을 관리한다 — 우리 최대 방법론 구멍 | 중 | **1** |
+| **T7** | **3계층 스킬 로딩** (Level 1 YAML 메타 ~100토큰 신설) | 우리는 Level 2만 있다(CLAUDE.md + tools/). 매 세션 전체를 훑는 구조적 이유 | 소 | **1** |
+| **T2** | **ICOHP 기반 P–S 약화 기술자** | `air_hsab` 정성 tier를 정량으로. 그들은 양성자화 시 ICOHP −6.43 → −4.69 eV (27% 약화) | 중 | 2 |
+| **T4** | **반응좌표 기반 검증셋** | pre-mixing→reactants→TS→products 단계별 UMA vs DFT 단일점. 학습이 아니라 **검증**으로 전용 | 소 | 2 |
+| **T5** | **영역분해 MSD** | 계면/벌크 구획 마스크로 D 분리. 기존 파이프라인 확장만 | 소 | 2 |
+| **T3** | **Li\|LPSCl 반응 MD (UMA)** | 완전 공백 축. 벤치마크 확보: interphase ~11 nm @50 ns · Li₂S 결정화 · D비 ≈0.36 | 대 | 3 |
+| **T8** | **P2D 파라미터 export** (=M5) | 문장혁 랩 발표로 **소비자가 특정됨**. 우리가 파라미터 생산, 그들이 셀 스케일 소비 | 중 | 3 |
+| **T6** | **litdb 그래프층** | 멀티홉 가설 생성 부재. digest **위에** 얹기(대체 아님) — 방법 맥락·인용금지 규칙 보존이 조건 | 중 | 4 |
+
+**하지 않기로 한 것**: CSP(문제설정 다름) · 자체 MLIP 학습(UMA 횡단 속도가 우리 강점) ·
+셀 스케일 FEM(상하류 관계 유지).
+
+### 이상욱 랩 논문 확보 위시리스트 (사용자가 탐색·제공 예정)
+| 순위 | 논문 | 왜 |
+|---|---|---|
+| 1 | **Nano Convergence 2026, 13, 27** — 코팅 스크리닝 (17,233 Li-P-S-O) | 우리 cascade/M6의 **직접 대조군**. S6 감사가 대기 |
+| 2 | **Adv. Funct. Mater.** (revision) — argyrodite 가수분해 SevenNet | T2 방법 원본 |
+| 3 | **Chem. Eng. J.** (under review) — Li\|argyrodite 계면 MTP | T3 프로토콜 원본 |
+| 4 | JACS 2025, 147, 47381 — 준안정 3기술자 | metastable 고찰 보강 |
+| 5 | **Adv. Energy Mater.** (revision) — Dynamic properties 후속 | **Q5: config-variance 오차막대 추가됐나** — 우리 신규성 주장의 유효범위가 걸림 |
+| 6 | Rare Metals 2025, 44, 2366 | CSP 보조 |
+| 7 | arXiv:2601.04746 — BEARS 스킬 3계층 | T7 실측치 |
+
+### ⏳ 발표 구술 txt 대기
+두 발표 모두 구술 내용 txt를 받기로 함. 받으면 각 digest `§99` 를 채우고
+미해결 질문(lee Q1–Q6 / moon Q1–Q6)을 닫는다. **이 항목은 닫지 말 것.**
 
 ## ✅ 닫힌 항목
 - (여기로 이동)

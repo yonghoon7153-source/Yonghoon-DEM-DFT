@@ -219,7 +219,7 @@ def literature():
               "dft": sum(1 for p in papers if p["track"] == "dft"),
               "dem": sum(1 for p in papers if p["track"] == "dem")}
     return render_template("literature.html", active="lit", papers=papers,
-                           count=len(papers), counts=counts)
+                           count=len(papers), counts=counts, talks=D.list_talks())
 
 
 # ── API (구조뷰 / 차트 / 원본) ──────────────────────────
@@ -244,7 +244,10 @@ def api_property(name):
 
 @app.route("/api/paper/<pid>")
 def api_paper(pid):
+    # papers/ 우선, 없으면 talks/ (발표 덱). 같은 모달 JS 를 그대로 쓰기 위한 폴백.
     p = D.LITDB / "papers" / f"{pid}.md"
+    if not p.exists():
+        p = D.LITDB / "talks" / f"{pid}.md"
     if not p.exists():
         abort(404)
     html = md_html(p.read_text(encoding="utf-8", errors="ignore"))

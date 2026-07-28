@@ -784,6 +784,46 @@ def literature_track(slug: str, type_str: str = "", title: str = "") -> str:
     return "dft"
 
 
+def list_talks() -> list:
+    """litdb/talks/*.md → [{id, title, speaker, session, digested}].
+
+    발표 덱은 peer-review를 거치지 않아 papers/ 와 **분리 보관**한다
+    (litdb/talks/README.md 의 인용 규율). 목록도 따로 낸다 — 논문 수에 합산하면
+    소환값 등급이 섞인다.
+    """
+    out = []
+    td = LITDB / "talks"
+    if not td.exists():
+        return out
+    for f in sorted(td.glob("*.md")):
+        if f.stem.startswith("_") or f.stem.upper() == "README":
+            continue
+        title, speaker, session, digested = f.stem.replace("_", " "), "", "", ""
+        got_title = False
+        try:
+            head = f.read_text(encoding="utf-8", errors="ignore").splitlines()[:14]
+        except Exception:
+            head = []
+        for line in head:
+            if not got_title and line.startswith("#"):
+                raw = line.lstrip("# ").strip()
+                # "제목 — 발표자 (소속)" 형태에서 뒤쪽을 발표자로 분리
+                if "—" in raw:
+                    title, _, speaker = (s.strip() for s in raw.partition("—"))
+                else:
+                    title = raw
+                got_title = True
+            m = re.search(r"발표 (\d{4}-\d{2}-\d{2}) \(([^)]+)\)", line)
+            if m and not session:
+                session, digested = m.group(2), digested or ""
+            md = re.search(r"digested `?(\d{4}-\d{2}-\d{2})`?", line)
+            if md and not digested:
+                digested = md.group(1)
+        out.append({"id": f.stem, "title": title, "speaker": speaker,
+                    "session": session, "digested": digested})
+    return out
+
+
 def list_papers() -> list:
     """litdb/papers/*.md → [{id, title, type, track}] (DEM/DFT 분류 포함)."""
     out = []

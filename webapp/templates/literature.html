@@ -34,6 +34,31 @@
 </div>
 <div class="muted" id="nores" style="display:none;margin-top:20px">검색 결과 없음</div>
 
+{% if talks %}
+<h2 style="margin-top:34px;font-size:1rem">🎤 학회 발표자료 <span class="muted" style="font-weight:400;font-size:.8rem">({{ talks|length }}건)</span></h2>
+<div class="callout cal-warn" style="margin-top:8px">
+  <b>발표 덱은 위 논문 수({{ count }}편)에 합산하지 않는다.</b> peer-review를 거치지 않았고 방법 명세가
+  슬라이드 수준이라 <b>소환값보다 한 단계 낮은 신뢰 등급</b>이다 — 덱 수치를 우리 db 절대값과 같은 표에 넣지 말 것.
+  덱은 <b>부재의 증거가 아니므로</b> "저 그룹은 ~을 안 한다"는 서술은 논문 실물에서만 나온다.
+  (규율 전문: <span class="mono">litdb/talks/README.md</span>)
+</div>
+<div class="grid grid-3" style="margin-top:12px">
+{% for t in talks %}
+<div class="card paper" onclick="openPaper('{{ t.id }}')" onkeydown="_kbd(event)"
+     tabindex="0" role="button" style="cursor:pointer;padding:16px 18px">
+  <div class="paper-top"><span class="tbadge" style="background:#fef9c3;color:#854d0e">TALK</span>
+    {% if t.session %}<span class="ptype">{{ t.session[:44] }}</span>{% endif %}</div>
+  <div style="font-weight:600;font-size:.9rem;line-height:1.4;margin-top:7px">{{ t.title }}</div>
+  {% if t.speaker %}<div class="muted" style="font-size:.76rem;margin-top:4px">{{ t.speaker }}</div>{% endif %}
+  <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:6px;gap:8px">
+    <span class="mono muted" style="font-size:.7rem">{{ t.id }}</span>
+    {% if t.digested %}<span class="muted" style="font-size:.68rem;white-space:nowrap">📅 {{ t.digested }}</span>{% endif %}
+  </div>
+</div>
+{% endfor %}
+</div>
+{% endif %}
+
 <div class="modal" id="pmodal" role="dialog" aria-modal="true" aria-labelledby="ptitle" onclick="if(event.target===this)this.classList.remove('open')">
   <div class="modal-body" style="max-width:840px;width:100%">
     <div class="modal-head"><h3 id="ptitle" class="mono" style="font-size:.85rem"></h3>
