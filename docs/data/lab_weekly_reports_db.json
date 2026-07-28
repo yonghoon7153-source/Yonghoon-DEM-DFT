@@ -1,0 +1,126 @@
+{
+  "_meta": {
+    "purpose": "랩 주간보고 기계-판독 DB — 각 항목의 사실(facts)과 우리 파이프라인 적용성(applicability)을 구조화. 사람용 digest = docs/lab_weekly_20260727_digest.md. 논문 카드는 litdb(정본 브랜치) 소관이며 주간보고는 여기.",
+    "updated": "2026-07-28",
+    "schema": "report → items[] → {topic, facts, applicability{verdict, ours, action, priority}}"
+  },
+
+  "reports": [
+    {
+      "author": "양수영",
+      "date": "2026-07-27",
+      "theme": "배터리 시뮬레이션 (L&F 방사형 양극재 + 한계돌파 ML)",
+      "items": [
+        {
+          "topic": "방사형 양극재 미세구조 COMSOL 자동화",
+          "facts": {
+            "구조_파라미터": ["D50(예 9µm)", "SeedRatio(중심부 직경비, 예 0.40)", "Seed 평균 grain(예 0.45µm)",
+                              "Radial 종횡비(예 5.0)", "Radial 단축 길이(예 0.18µm)", "내부 기공 위치",
+                              "1차입자 배향", "a-/c-axis 격자 수축"],
+            "파생": "D_seed 3.6µm · 방사형 두께 2.7µm 자동 계산",
+            "성능지표": ["활물질 농도차(전체/seed/radial) mol/m³", "CC용량 mAh/g",
+                         "스트레스(전체/seed/radial) GPa", "데미지(전체/seed/radial)"],
+            "자동화": "RandomSeed 후보 생성 → COMSOL 자동계산. 315개 모델 확보, case당 ~6.2분, 예: 139시도/123성공/16재시도, 18h",
+            "가시화": "D50 × AspectRatio × ShortAxis 3D 산점도 (stress_total_GPa · echem_cutoff_capacity_mAh_g)"
+          },
+          "applicability": {
+            "verdict": "COMPLEMENTARY(입자-내부 스케일 = 우리 밖)",
+            "ours": "우리 DEM/MPM/STEP3-4 는 입자를 균질 구/연속체로 취급 — 입자 내부(방사형 grain·seed·내부기공)는 미모델. 우리 per-particle D_s/i0·취성(fracture_scaffold)이 그 결과를 받는 자리.",
+            "action": "업스케일 훅: 그들 (D50, AR, 단축)→(stress·damage·capacity) 결과가 쌓이면 우리 per-particle D_s_eff·i0_eff·취성 파라미터의 입자-내부 근거로 사용 (A8/poly-SC 프리셋 promotion_path).",
+            "priority": "LOW(대기 — 그들 데이터 축적 후)"
+          }
+        },
+        {
+          "topic": "★ML — TabPFN 기반 교호작용 평가 (한계돌파)",
+          "facts": {
+            "모델": "TabPFN (Nature 2025, 637, 319–326) — 합성 태스크 사전학습 tabular foundation model, 소규모 데이터 특화, sklearn 식 API, TabPFNRegressor(device='cuda')",
+            "데이터": "구조체 P2D ~1300개 (합성 시뮬레이션 데이터)",
+            "타깃": "구조체 내 리튬 전착량 (내부/외부)",
+            "features": ["기공도", "이온전도도", "교환전류밀도"],
+            "Group-CV_성적": {
+              "TabPFN":   {"R2": 0.9996, "RMSE": 0.00476, "MAE": 0.00253, "용도": "Group-CV 비교"},
+              "XGBoost":  {"R2": 0.9883, "RMSE": 0.02480, "MAE": 0.01726, "용도": "Group-CV 비교"},
+              "ExtraTrees": {"R2": 0.9865, "RMSE": 0.02802, "MAE": 0.01125},
+              "Ensemble_ET+GB": {"R2": 0.9855, "RMSE": 0.02915, "MAE": 0.01360, "용도": "최종 후보 예측·최적화"},
+              "GradientBoosting": {"R2": 0.9803, "RMSE": 0.03296, "MAE": 0.01912},
+              "RandomForest": {"R2": 0.9775, "RMSE": 0.03673, "MAE": 0.01649},
+              "Ridge_선형기준": {"R2": 0.8204, "RMSE": 0.09665, "MAE": 0.07382}
+            },
+            "최적화": "TabPFN 으로 데이터 확장 생성(모든 점=ML 생성) → 내부 전착량↑·외부 전착량↓ 목표, 기준선 대비 목표치 근처 후보 발굴"
+          },
+          "applicability": {
+            "verdict": "ADOPT-AS-PROBE(즉시) + CANDIDATE(step6 위원회, WSL)",
+            "ours": "우리 규율과 정합: Group-CV=우리 LOCO/LOOCV, Ridge 선형기준 병기=우리 관례. 차이: 우리는 physics-locked 폼이 제품(σ_ionic LOOCV 0.975 · σ_e 0.953 · κ 0.90, n=88-100 = TabPFN 적정 구간), 그들은 블랙박스 최고성능. ⚠그들 R² 0.9996 은 3-feature·1300pt 매끈한 P2D 함수라 가능 — 우리 corpus(고차원·per-seed 노이즈)에 그대로 이식될 숫자 아님. ⚠'ML 생성 데이터로 최적화'는 앵커 검증 없으면 외삽 함정 — 우리 step6 σ-gate/ANCHOR 규율이 그 보완(우리가 앞선 부분).",
+            "action": "① ceiling-probe: WSL 에서 TabPFN 을 우리 σ_ionic/σ_e/κ corpus 에 돌려 physics-폼 LOOCV 와 비교 — 크게 이기면 놓친 물리 신호, 비슷하면 '폼=정보한계' 근거 보강. ② step6 SkCommittee 대안/멤버로 TabPFNRegressor (예측분포 내장 = UQ 자연스러움; torch+GPU 의존이라 WSL/V100 opt-in). ③ webapp predictor(GPR/RF) 후보 추가. env_db optional 에 tabpfn 등록.",
+            "priority": "MED(①은 WSL sklearn 세션에서 반나절)"
+          }
+        }
+      ]
+    },
+
+    {
+      "author": "윤태영",
+      "date": "2026-07-27",
+      "theme": "전고체 모델링 (이종기술 실험 + Bimodal COMSOL)",
+      "items": [
+        {
+          "topic": "이종기술 실험 — roll-press·셀 제작",
+          "facts": {
+            "roll_press": "hand-roll 후 OHP 2장 사이 두께 측정, 감축 30→20→10→5µm/pass, OHP 포함 260–270µm(게이지 150–155µm) = 0.0240g → 3 mAh/cm², 최종 ~7×7cm·전극 ~50µm, φ13mm 8개, 질량 편차 ±0.001g",
+            "셀_데이터_0p1C_1st": {
+              "No.2_only_0.0213g(2.8)": {"충전": 242.38, "방전": 218.67, "CE_pct": 90.28, "cyc": "76 구동중"},
+              "No.2_only_0.0266g(3.5)": {"충전": 242.67, "방전": 219.85, "cyc": "43 구동중"},
+              "No.1_only_0.0250g(3.0)": {"충전": 228.16, "방전": 201.36, "CE_pct": 88.25, "cyc": "19 구동중"},
+              "No.1_5:5_0.0259g(3.2)": {"충전": 223.83, "방전": 202.04, "CE_pct": 90.26, "cyc": "29 구동중"},
+              "No.2_55_0.0277g(3.4)": {"충전": 230.35, "방전": 203.67, "OCV_V": 2.18},
+              "Poly_only_0.0183g(3타겟)": {"OCV_V": 2.29, "비고": "용훈 — 260723_Poly_only_sym .mpr 이 우리 EIS 아카이브에 들어온 그 계열"}
+            },
+            "율특성_No.1_only_0.0248g": "0.1C formation 후 0.33C≈190 → 0.5C≈175 → 1C≈145 → 2C≈100 → 0.33C 회복≈165 mAh/g (각 3cyc) — 2C/0.33C ≈ 53%"
+          },
+          "applicability": {
+            "verdict": "ANCHOR-FEED(그대로 우리 검증 축)",
+            "ours": "이 셀들이 우리 EIS 패널·rint_eis_anchors·STEP4 rate-capability 의 실측 짝. 율특성 곡선(0.33→2C)은 STEP4 SBE/DBE rate 비교의 frame[4] 대조 후보. 3 mAh/cm²·~50µm 규격은 우리 3.18 mAh 캠페인과 정합.",
+            "action": "사이클 완료 후 dQ/dV·용량유지 CSV 확보 → cycling_data_ingest(§F1 sulfide=ABSOLUTE 게이트) + STEP4 2C 완주 결과와 rate-capability 대조.",
+            "priority": "MED(데이터 나오는 대로)"
+          }
+        },
+        {
+          "topic": "★Bimodal COMSOL 시뮬레이션 (P:S 스윕)",
+          "facts": {
+            "geometry": {"P:S": ["0:10", "3:7", "5:5", "7:3", "10:0"], "areal": "8 mAh/cm²", "AM:SE": "80:18 wt%",
+                          "porosity_pct": [22.80, 18.64, 17.30, 15.50, 19.03], "thickness_um": [167.1, 158.6, 156.0, 152.7, 159.3]},
+            "voltage_1C_2C_충전": "10:0 이 과전압 최대(조기 4.3V 도달), 0:10/3:7 낮음 — 바이모달·소립 유리",
+            "Li_concentration": "separator 쪽부터 탈리튬 진행(충전), 색범위 16000–46000 mol/m³",
+            "current_density": "AM 입자별, top(separator측) 집중, 1C 스케일 0–3 / 2C 0–5, 10:0 상단 hot",
+            "다음주": "Top/Bottom 위치별 전류분포 + Ni 함량별 물성"
+          },
+          "applicability": {
+            "verdict": "CROSS-VALIDATES(우리 DEM/STEP4 와 정합 확인됨)",
+            "ours": "① porosity-vs-P:S 시그니처 일치: 그들 0:10 최고(22.8)→7:3 최소(15.50)→10:0 반등(19.03) vs 우리 DEM corpus 중앙값 0:10 17.6→7:3 15.1→10:0 16.8 — 7:3 최소·양끝 반등 동일, 7:3 절대값도 15.50 vs 15.1 근접(frame[4] 독립 교차검증; 0:10 절대차는 기하 생성 방식 차이). ② 10:0 과전압 최대·top 전류 집중 = 우리 mono-large σ↓·je z-프로파일(집전체/분리막 쏠림)과 방향 일치. ③ 두께 152–167µm @8mAh 는 우리 8mAh 시리즈와 동급.",
+            "action": "그들 1C/2C V-프로파일 수치(디지타이즈) 확보 시 STEP4 동일-P:S 대조 런 → frame[4] 문서화.",
+            "priority": "MED"
+          }
+        },
+        {
+          "topic": "★PC vs SC 파라미터 정리 (바이모달 논문 공부)",
+          "facts": {
+            "벌크_D": "PC>SC 는 재료 고유 kinetics 차이가 아니라 PC 크랙이 만드는 추가 수송경로(액체 침투) 기인 — 고유 kinetics 는 SC=PC 동일. 액체보다 고체전해질에서 D 작음. Brick-layer 식 GB 유효확산 균질화 or GB geometry 구현 후 물성 적용",
+            "i0": "SC 는 i0 크기 무관 = 진짜 표면 물성. PC 겉보기 i0 크기의존은 액체 침투 아티팩트 → 고체계에서는 PC 도 SC 와 같은 진짜 i0 를 써야 함",
+            "이방성": "PC 랜덤 배향 grain / SC 단일 grain → PC 는 lithiation 시 표면 Li-rich·코어 Li-poor",
+            "SOC_의존_D": "SOC 후반부 Li 확산계수 급락",
+            "기계물성": "양쪽 같은 값",
+            "활성표면적": "고체전해질에서는 사이클 후 PC 표면적 증가 없음(SE 침투 불가)",
+            "기타": ["입자 크기", "Cohesive zone"]
+          },
+          "applicability": {
+            "verdict": "MATCHES(핵심 4/7 우리 구현과 일치) + GAP 2건 확인",
+            "ours": "일치 ①i0: 우리 sc_poly_preset i0_split=none(부재 확정, 공유 --i0) = 그들 '진짜 i0 동일' 결론과 독립 경로로 합치. ②액체 아티팩트: 우리 앵커문서 'PC 1오더 빠름=균열-전해액 침투, ASSB 이식 금지' = 동일 인식. ③유효 시정수 방향: 우리 τ=r²/D 로 poly (6µm)²/4e-15=9000s vs SC (2µm)²/3e-15=1333s → poly 6.8× 느림 = 그들 프레임(GB 로 poly 유효 느림)과 방향 일치 — D 절대값(poly 4e-15>SC 3e-15)은 반경 규약 차이일 뿐임을 우리 문서가 명기. ④사이클 후 PC 표면적 불변: 우리 A10 ledger poly-mode expand-void 정정(poly=입계 내부 void·계면 유지, 2026-07-22)과 정확히 일치. ⑤기계물성 동일: 우리 AM 단일 E 규약과 동일. ⑥CZM: 우리 A10 Bucci CZM 보유.",
+            "gaps": "①SOC-의존 D_s: 우리 STEP4 는 상수 D(Chen2020 도 상수 규약) — 후반부 급락 미반영(문서화된 한계; O'Regan 2022 D(sto) 가 preset promotion_path 에 이미 있음). ②입자 내부 이방성(PC 표면 Li-rich/코어 Li-poor): 우리 radial diffusion 은 등방 구형 — x_surf↔x_mean 갭이 표면-코어 SOC 차는 포착하나 grain 이방성은 밖.",
+            "action": "훅 2건 백로그: (a) poly D_eff = brick-layer(D_intrinsic, GB) 균질화 항 — sc_poly_preset promotion_path 에 추가, (b) D_s(SOC) 테이블 지원(--d-s-table) — STEP4 v2.1. 지금 값 변경은 없음(그들 정리가 우리 기본값을 바꾸라는 근거가 아님 — 서로 확인).",
+            "priority": "LOW-MED(훅만; 값 불변)"
+          }
+        }
+      ]
+    }
+  ]
+}

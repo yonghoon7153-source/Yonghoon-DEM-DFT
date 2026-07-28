@@ -69,3 +69,10 @@
 - **porosity 관계식 도출** (E_SE-강성+조성 항, Heckel; ~20%=rigid floor, Varkey 교차검증) — ★사용자 명시목표
 - D1 real E_SE=24 + Thornton-Ning p_y 캡으로 18× softening 제거 (dem3d_plastic.py 테스트베드, V100 캠페인)
 - B4 multi-contact(Varkey) vs 18× softening 비교 · B6 operating-P σ-degradation 시간축
+- ★ 주간보고 훅 (2026-07-28, docs/lab_weekly_20260727_digest.md 정본): **TabPFN ceiling-probe**
+  (WSL 반나절 — 우리 σ_ionic/σ_e/κ corpus 에 TabPFN vs physics-폼 LOOCV 대조; 크게 이기면 놓친
+  물리, 비슷하면 폼=정보한계 보강.  env_db optional 등록됨) · step6 위원회 TabPFN 멤버(opt-in) ·
+  poly D_eff brick-layer GB 균질화 항(sc_poly promotion_path) · D_s(SOC) 테이블 `--d-s-table`
+  (O'Regan 2022) · 윤태영 bimodal P:S V-프로파일 디지타이즈 → STEP4 동일조건 frame[4] 대조 런.
+  바이모달 대조 결론: i0 공유·expand-void·τ 방향·CZM·기계물성 **일치 확인**(값 변경 불필요),
+  GAP=SOC-의존 D·grain 이방성(입자-내부 스케일).

@@ -115,6 +115,12 @@
     "import": "galvani",
     "why": ".mpr(BioLogic) 파싱 — 없으면 raw 저장+파싱대기",
     "where": "WSL"
+   },
+   {
+    "pip": "tabpfn",
+    "import": "tabpfn",
+    "why": "TabPFN(Nature 2025) — 소규모 tabular foundation model. ceiling-probe(physics-폼 vs 천장 대조)·step6 위원회 후보. torch+GPU 필요",
+    "where": "WSL/V100 opt-in"
    }
   ]
  },
