@@ -215,7 +215,7 @@ Cl↑ → (as-milled σ 2×) → annealing 시리즈 XRD/Rietveld(LPSCl 결정�
 - full cell 전압 = Li⁺/Li(Li 음극) 또는 Li-In — 본문 표기 따라 음극 명시.
 - Cl-rich "음극 유리"는 [Lu]와 동맹이나 [GG]와 충돌 → 단일 결론 금지, 축(LiCl SEI 형성 여부) 명명.
 - 합성 "ball milling 1 h" vs Exp "150 rpm 1 min" 표기 불일치(그룹 선행공정 인용 탓) — 공정 세부는 ref38 원전.
-- **Klerk 재인용 원문 대조 (2026-07-28, `deklerk2016_diffusion_site_disorder_argyrodite.md` §13)**: §2의 "Klerk … 75% 무질서 시 최고" — **핵심은 정확**(de Klerk 원문: 4d(=Klerk 표기 4c, cage-center) **Cl 점유 75 %=4a:4c 1:3에서 limiting jump rate 최대, 50:50 대비 2×** — 단 **Li₆PS₅Cl(Cl 1.0)·450 K·분포당 단일 배열·jump-rate 지표** 조건부 예측). 두 가지 주의: ① "무질서↔σ 양의 관계"는 **비단조**(0 %·100 % 모두 저전도 — all-4c는 doublet 붕괴로 σ 급락)를 단조로 축약한 표현; ② Klerk 최적은 Cl 1.0 기준이라 LPSCl₁.₅(실측 61.7 %)에 그대로 적용은 원문도 경고한 외삽(X·조성별 최적 상이 명시). 2024 MTP-MLIP 대규모 재검(INDEX 계산#8)은 25 % 피크 보고=최적 % 자체가 방법 의존.
+- **Klerk 재인용 원문 대조 (2026-07-28, `deklerk2016_diffusion_site_disorder_argyrodite.md` §13)**: §2의 "Klerk … 75% 무질서 시 최고" — **핵심은 정확**(de Klerk 원문: 4d(=Klerk 표기 4c, cage-center) **Cl 점유 75 %=4a:4c 1:3에서 limiting jump rate 최대, 50:50 대비 2×** — SI Table S2 정밀값 6.20/3.12×10¹⁰ s⁻¹=1.99×, σ_J 기준 300–600 K 일관; 단 **Li₆PS₅Cl(Cl 1.0)·분포당 단일 배열·σ_J(limiting-rate) 지표** 조건부 예측이고 σ*_MSD 기준으론 600 K 역전). 두 가지 주의: ① "무질서↔σ 양의 관계"는 **비단조**(0 %·100 % 모두 저전도 — all-4c는 doublet 붕괴로 σ 급락)를 단조로 축약한 표현; ② Klerk 최적은 Cl 1.0 기준이라 LPSCl₁.₅(실측 61.7 %)에 그대로 적용은 원문도 경고한 외삽(X·조성별 최적 상이 명시). 2024 MTP-MLIP 대규모 재검(INDEX 계산#8)은 25 % 피크 보고=최적 % 자체가 방법 의존.
 
 ## 15. 기법 용어 미니사전
 - **annealing(소결)**: ball-milled glass-ceramic을 가열해 결정화. 결정화도(peak/bg 비)·불순물·격자상수 제어.
