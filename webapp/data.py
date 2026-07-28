@@ -125,12 +125,12 @@ COMPOSITIONS = {
     "comp3":       {"formula": "Li₆PS₅Cl₀.₅I₀.₅",      "label": "LPSClI",    "family": "argyrodite", "cell": "rhombo-62", "color": "#7c3aed"},
     "comp4":       {"formula": "Li₆PS₅Br",             "label": "LPSBr",     "family": "argyrodite", "cell": "rhombo-62", "color": "#c05621"},
     "comp5":       {"formula": "Li₆PS₅I",              "label": "LPSI",      "family": "argyrodite", "cell": "rhombo-62", "color": "#be123c"},
-    "modelc":      {"formula": "Li₅.₄PS₄.₄Cl₁.₆",      "label": "LPSCl1.6",  "family": "argyrodite", "cell": "rhombo-62", "color": "#0284c7"},
-    "modelc_v3":   {"formula": "Li₅.₄PS₄.₄Cl₁.₆ (v3)", "label": "LPSCl1.6 v3","family": "argyrodite","cell": "rhombo-62", "color": "#0369a1"},
+    "modelc":      {"formula": "Li₅.₄PS₄.₄Cl₁.₆",      "label": "Cl-rich LPSCl1.6",  "family": "argyrodite", "cell": "rhombo-62", "color": "#0284c7"},
+    "modelc_v3":   {"formula": "Li₅.₄PS₄.₄Cl₁.₆ (v3)", "label": "Cl-rich LPSCl1.6 v3","family": "argyrodite","cell": "rhombo-62", "color": "#0369a1"},
     # 표기 규칙: label/formula = 아래첨자(표시용), 키·앵커(#Nd2O3)·db 파일명 = ASCII.
     #   'NdO' 는 화학식마저 틀렸었다(실제 도펀트 Nd₂O₃) — B₂O₃-LPSCl 과 규칙을 맞춘다.
     "modelc_nd_doped": {"formula": "Nd₂O₃-doped LPSCl1.6", "label": "Nd₂O₃-LPSCl", "family": "doped", "cell": "rhombo-62", "color": "#65a30d"},
-    "lpsocl":      {"formula": "Li₂₇P₅S₂₁OCl₈",        "label": "LPSOCl (+O)","family": "doped",     "cell": "rhombo-62", "color": "#be123c"},
+    "lpsocl":      {"formula": "Li₂₇P₅S₂₁OCl₈",        "label": "O-doped LPSCl (LPSOCl)","family": "doped",     "cell": "rhombo-62", "color": "#be123c"},
     "b2o3":        {"formula": "B₂O₃-doped LPSCl1.6",  "label": "B₂O₃-LPSCl","family": "doped",      "cell": "128-SC",    "color": "#0284c7"},
     "vgcf_hbn":    {"formula": "VGCF / h-BN + Li",     "label": "VGCF-hBN",  "family": "anode",      "cell": "slab",      "color": "#6b7280"},
     "li3n":        {"formula": "Li₃N",                 "label": "Li₃N interphase", "family": "interphase", "cell": "—",   "color": "#7c3aed"},
@@ -151,7 +151,7 @@ CATEGORIES = [
     {"id": "ionic",      "label": "Ionic",       "icon": "🔋", "keys": ["diffusion", "li_transport", "md_arrhenius", "bvse", "msd", "dualx", "neb", "barrier", "drag", "conductivity"]},
     {"id": "interface",  "label": "Interface",   "icon": "🧩", "keys": ["adhesion", "oxidation", "sei", "interface", "esw", "anode", "binding", "adsorption"]},
     {"id": "structural", "label": "Structural",  "icon": "🧊", "keys": ["phonon", "voronoi", "coordination", "bond_lengths", "eos_dft"]},
-    {"id": "cascade",    "label": "Cascade/ML",  "icon": "🤖", "keys": ["cascade", "doping", "alpha_sensitivity"]},
+    {"id": "cascade",    "label": "Screening·ML",  "icon": "🤖", "keys": ["cascade", "doping", "alpha_sensitivity"]},
 ]
 # 참고: 'literature' 열은 제거함 — 조성별 문헌 유무는 원소 기반이라 항상 True(vanity)였음.
 # 문헌은 Literature 페이지 + 원소/용어 논문칩으로 충분히 노출.
@@ -310,9 +310,9 @@ CANONICAL_PROVISIONAL = {
     ("gap_eV", "comp2"): "잠정 — legacy band_gaps, fixed-occ nscf 재확인중 (eigenvalue canonical 아님)",
     # ⚠ MD Ea는 조성별로 시드 프로토콜이 달라, 값마다 그 사실을 달고 다녀야 비교 오독을 막는다.
     ("MD_Ea_eV", "comp1"):
-        "단일 궤적(온도당 1개, 시드 오차막대 없음) — deck 앵커. modelc(단일시드 0.224)와만 짝지어 비교",
+        "단일 궤적(온도당 1개, 시드 오차막대 없음) — legacy 단일시드 기준값. modelc(단일시드 0.224)와만 짝지어 비교",
     ("MD_Ea_eV", "modelc"):
-        "단일 궤적 deck 앵커. modelc는 3-seed×3-T 값(0.197±0.032)도 있음 — "
+        "단일 궤적 legacy 기준값. modelc는 3-seed×3-T 값(0.197±0.032)도 있음 — "
         "b2o3(0.199±0.034)·LPSOCl(0.287±0.024)과 비교할 땐 그쪽을 써야 함(같은 시드 프로토콜끼리만)",
     ("MD_Ea_eV", "comp2"):
         "잠정 — 3-seed지만 800 K 시드 산포가 비물리(s3 800K 2.15e-6 < 자기 600K 2.44e-6). "
@@ -826,7 +826,7 @@ def search_index() -> list:
         ("페이지", "Property Explorer", "정렬·필터 물성 표 + provenance", "/explorer"),
         ("페이지", "Periodic Table", "원소별 조성 탐색", "/elements"),
         ("페이지", "Comparison", "조성 간 비교 + 레이더", "/compare"),
-        ("페이지", "Cascade/ML", "UMA 도핑 스크리닝", "/cascade"),
+        ("페이지", "Screening·ML", "AI 계산 도핑 스크리닝 (cascade)", "/cascade"),
         ("페이지", "Compute", "원클릭 계산 입력 생성", "/compute"),
         ("페이지", "Methods", "계산 방법 canonical", "/methods"),
         ("페이지", "Literature", "DEM/DFT 문헌", "/literature"),
