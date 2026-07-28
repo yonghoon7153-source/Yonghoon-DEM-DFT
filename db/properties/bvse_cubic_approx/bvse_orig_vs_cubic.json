@@ -9,7 +9,7 @@
   "b2o3_box_bulk": 6.2,
   "b2o3_box_at_dopant": 23.83
  },
- "_lpsocl_first_bvse": "NEW: LPSOCl first BVSE - channel volume 4.74% at iso 0.5 (vs modelc 3.32, b2o3 6.73): O-doping also opens Li channels, halfway to the B2O3 champion (+43% vs undoped). perc onsets a/b/c = 0.55/0.35/2.05 val^2.",
+ "_lpsocl_first_bvse": "NEW: LPSOCl first BVSE - channel volume 4.74% at iso 0.5 (vs modelc 3.32, b2o3 6.73): O-doping also opens Li channels, halfway to the B2O3 champion (+43% vs undoped). perc onsets a/b/c = 0.55/0.35/2.05 val^2 (canonical fixed grid, step 0.05) vs modelc 0.40/0.35/1.40 -> a +3 steps, b SAME, c +13 steps. The c-axis gap is far beyond quantization, so it is quotable: **LPSOCl opens MORE channel volume (4.74 vs 3.32 %) yet its c-axis percolation onset is HIGHER** = more free space but not an easier connected path along c. Same family as the existing static-channel paradox. a/b differences <= 3 steps: treat as indicative only. (2026-07-29 audit: modelc_bvse_summary.json's 0.55/0.55/1.65 came from a data-dependent grid and is superseded.)",
  "_b2o3_locality": "Dopant-centered box 23.8% vs bulk box 6.2% at iso 0.5 -> channel opening is CONCENTRATED around the B2O3 unit (~4x bulk) but the dopant-free bulk box (S16 Li23 P3 Cl7) still shows 6.2% ~ doped-cell average >> undoped modelc 3.3% -> lattice-wide opening on top of the local effect. Consistent with July b2o3_bvse_channel note (in-plane open, c-axis dopant bottleneck).",
  "modelc": {
   "natoms_orig": 62,

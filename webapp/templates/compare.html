@@ -57,7 +57,12 @@ function upd(){
   drawAll();
 }
 function setKey(k){activeKey=k;upd();}
+// ⚠ cascade.html 은 이 가드를 갖고 있는데 여기만 없어서, Plotly 미로드 시
+//   drawAll() 이 중단되고 drawRadar() 가 영영 안 돌아 레이더 칸이 안내 문구도 없이 빈다.
+function _noPlotly(id){var e=document.getElementById(id);
+  if(e)e.innerHTML='<span class="muted">차트 라이브러리(Plotly)를 불러오지 못했어요.</span>';}
 function drawChart(){
+  if(typeof Plotly==='undefined'){_noPlotly('chart');return;}
   let sel=ids();
   let x=sel.map(id=>COMPS[id].label);
   let y=sel.map(id=>CANON[activeKey][id]??null);
@@ -96,4 +101,62 @@ function drawAll(){drawChart();drawRadar();}
 window.addEventListener('themechange',function(){upd();});
 upd();
 </script>
+
+{# ── BVSE 3계 공유 카드 (2026-07-29 신설) ─────────────────────────────────
+   조성 prefix 매칭으로는 안 잡히던 자료다 — 파일명이 bvse_ 로 시작하고, 애초에
+   "어느 한 조성의 값"이 아니라 **3계 비교표**라 조성 페이지로 쪼개면 성격이 깨진다. #}
+{% if bvse and (bvse.tables or bvse.onset) %}
+<div class="card" style="margin-top:18px">
+  <h3>BVSE Li 채널 <span class="muted" style="font-weight:400;font-size:.8rem">— 3계 공유 (조성별 페이지엔 없다)</span></h3>
+  {% if bvse.onset %}
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0">
+    <span class="badge b-canon">modelc onset a {{ bvse.onset.perc_onset_val2.a }} · b {{ bvse.onset.perc_onset_val2.b }} · c {{ bvse.onset.perc_onset_val2.c }} val²</span>
+    <span class="badge b-fam mono" style="font-size:.68rem">{{ bvse.onset.convention.level_grid }}</span>
+  </div>
+  <div class="callout cal-warn" style="font-size:.79rem">
+    <b>onset 차이는 격자 칸 수로 판정한다</b> (1칸 = ±0.05 val²). ≤1칸이면 동등 — 인용 금지, ≥3칸이면 인용 가능.
+    같은 맵에서 0.55/0.55/1.65 · 0.40/0.35/1.40 · 0.65/0.40/1.40 세 값이 나온 적이 있고,
+    원인은 물리가 아니라 <b>레벨 격자</b>였다(2026-07-29 감사 → 고정 격자로 통일).
+    <br>적용: modelc 0.40/0.35/1.40 vs LPSOCl 0.55/0.35/2.05 → a +3칸 · b 0칸 · <b>c +13칸</b>.
+    즉 <b>LPSOCl 은 채널 부피가 더 열리는데(4.74 vs 3.32 %) c축 침투 문턱은 더 높다</b> —
+    빈 공간과 연결된 길이 따로 논다(static-channel paradox 계열).
+  </div>
+  {% endif %}
+  <div class="callout cal-danger" style="font-size:.79rem;margin-top:8px">
+    ⛔ <b>정량·순위는 원본 주기셀 값만.</b> 큐빅 근사는 <b>표시용</b>이고 b2o3 에서 6.73 → 23.83 %로
+    3.5배 벌어진다 — 아래 대조표가 그 실증이다.
+  </div>
+  <div class="chip-bar" style="margin-top:10px">
+    {% for x in bvse.tables %}<button class="chip {% if loop.first %}active{% endif %}"
+      onclick="plotBvse('{{ x.rel }}',this)" title="{{ x.note }}">{{ x.title }}</button>{% endfor %}
+  </div>
+  <div class="chart" id="bvse-chart" style="min-height:340px"></div>
+  <div class="muted" id="bvse-note" style="font-size:.78rem;margin-top:6px"></div>
+  <div class="muted mono" id="bvse-src" style="font-size:.7rem;margin-top:4px"></div>
+  <script>
+  var BVSE_NOTES = { {% for x in bvse.tables %}"{{ x.rel }}": {{ x.note|tojson }}{% if not loop.last %},{% endif %}{% endfor %} };
+  function plotBvse(rel, btn){
+    document.querySelectorAll('#bvse-chart').length;
+    document.querySelectorAll('.chip').forEach(function(c){ if(c.getAttribute('onclick')&&c.getAttribute('onclick').indexOf('plotBvse')>=0) c.classList.remove('active');});
+    if(btn) btn.classList.add('active');
+    document.getElementById('bvse-note').innerHTML = BVSE_NOTES[rel]||'';
+    document.getElementById('bvse-src').textContent = 'db/'+rel;
+    var box = document.getElementById('bvse-chart');
+    if(typeof Plotly==='undefined'){box.innerHTML='<span class="muted">차트 라이브러리(Plotly)를 불러오지 못했어요.</span>';return;}
+    fetch('/api/csv/'+encodeURIComponent(rel)).then(function(r){return r.json();}).then(function(d){
+      if(d.error||!d.columns){box.innerHTML='<span class="muted">CSV 로드 실패</span>';return;}
+      var x = d.columns[0], ys = d.columns.slice(1).filter(function(c){return typeof d.data[0][c]==='number';});
+      var tr = ys.map(function(c){return {x:d.data.map(function(r){return r[x];}),
+                                          y:d.data.map(function(r){return r[c];}),
+                                          mode:'lines+markers', name:c};});
+      Plotly.newPlot('bvse-chart', tr, {margin:{l:56,r:16,t:14,b:44},
+        xaxis:{title:{text:x}}, yaxis:{title:{text:'channel volume (%)'}},
+        legend:{orientation:'h',y:-0.22}}, {responsive:true,displaylogo:false});
+    }).catch(function(){box.innerHTML='<span class="muted">차트 로드 실패</span>';});
+  }
+  {% if bvse.tables %}plotBvse({{ bvse.tables[0].rel|tojson }}, document.querySelector('.chip[onclick*=plotBvse]'));{% endif %}
+  </script>
+</div>
+{% endif %}
+
 {% endblock %}

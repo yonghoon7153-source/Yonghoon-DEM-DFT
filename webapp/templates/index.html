@@ -88,12 +88,17 @@
   </div>
   <div class="cc-formula">{{ comp.formula }}</div>
   <div class="cov-strip">
-    {% set nt = namespace(todo=0) %}
+    {# ⚠ N/A(성립 안 함·규율상 금지) 칸을 TODO 로 세면 안 된다 — NOT_APPLICABLE 을 도입한
+       이유가 "금지된 계산을 TODO 로 광고하지 않기" 인데 이 카드가 정면으로 어겼다.
+       실측(2026-07-29): SDCP +5 TODO 중 실제 TODO 1 · N/A 4, LPSCl +1 이 통째로 N/A. #}
+    {% set nt = namespace(todo=0, na=0) %}
     {% for c in CATS %}
       {% if cov[cid][c.id] %}<span class="cov-chip done">{{ c.label }}</span>
+      {% elif NA.get(cid ~ '|' ~ c.id) %}{% set nt.na = nt.na + 1 %}
       {% else %}{% set nt.todo = nt.todo + 1 %}{% endif %}
     {% endfor %}
     {% if nt.todo %}<span class="cov-chip todo">+{{ nt.todo }} TODO</span>{% endif %}
+    {% if nt.na %}<span class="cov-chip" style="opacity:.6" title="성립하지 않거나 규율상 하지 않는 축">+{{ nt.na }} N/A</span>{% endif %}
   </div>
 </a>
 {% endfor %}

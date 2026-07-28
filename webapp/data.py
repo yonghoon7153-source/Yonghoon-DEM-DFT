@@ -263,9 +263,11 @@ def _datafiles_for_c(cid: str, _sig_prop, _sig_spec) -> tuple:
 
 def _csv_kind(name: str) -> str:
     n = name.lower()
-    for k, tag in [("pdos", "PDOS"), ("dos", "DOS"), ("arrhenius", "Arrhenius"),
+    # ⚠ phonon 을 dos 보다 **먼저** 봐야 한다 — b2o3_phonon_dos.csv 가 전자 DOS 로 라벨됐다.
+    #   icohp/cohp 순서 함정과 같은 계열이다 (아래 주석 참조).
+    for k, tag in [("phonon", "Phonon"), ("pdos", "PDOS"), ("dos", "DOS"), ("arrhenius", "Arrhenius"),
                    ("conductivity", "Conductivity"), ("msd", "MSD"), ("eos", "EOS"),
-                   ("phonon", "Phonon"), ("bvse", "BVSE"), ("elf", "ELF"),
+                   ("bvse", "BVSE"), ("elf", "ELF"),
                    ("charge", "Charge"), ("bader", "Bader"), ("xps", "XPS"),
                    ("voronoi", "Voronoi"), ("neb", "NEB"), ("barrier", "Barrier"),
                    ("drag", "Drag"), ("diffusion", "Diffusion"), ("binding", "Binding"),
@@ -600,8 +602,18 @@ def icohp_for(cid: str):
                                         and not k.startswith("bader")}
                     d["_comparison_bader"] = {k[6:]: v for k, v in cmpv.items()
                                               if k.startswith("bader_") and isinstance(v, dict)}
-                    d["_comparison_note"] = next((v for k, v in cmpv.items()
-                                                  if k.startswith("_") and isinstance(v, str)), None)
+                    # ⚠ 비교블록 안의 _ 주석만 보면 **최상위 caveat 을 놓친다**.
+                    #   nd_icohp.json 은 "Absolute Li-X differs (PAW vs USPP basis);
+                    #   trust WITHIN-nd comparisons" 를 최상위에 뒀는데, 절대값 비교표는
+                    #   그대로 렌더되면서 그 경고만 사라졌다 (2026-07-29 감사).
+                    notes = [v for k, v in cmpv.items()
+                             if k.startswith("_") and isinstance(v, str)]
+                    for k in ("caveat", "_caveat"):
+                        if isinstance(d.get(k), str):
+                            notes.append(d[k])
+                    notes += [v for k, v in d.items()
+                              if k.startswith("_CORRECTION") and isinstance(v, str)]
+                    d["_comparison_note"] = " · ".join(notes) if notes else None
                     d["_comparison_key"] = ck
                     # 열 = 비교에 등장하는 모든 계 (note 제외), 등장 순서 유지
                     cols = []
@@ -613,6 +625,29 @@ def icohp_for(cid: str):
                 d["_curves"] = cohp_curves_for(cid)
                 return d
     return None
+
+
+# 3계 공유 BVSE 자료 — 어느 한 조성의 것이 아니라 **비교표**라서 조성 prefix 로는
+# 안 잡힌다(파일명이 bvse_ 로 시작). 실제로 CLAUDE.md 가 canonical 이라 부르는
+# 3계 채널% 표가 사이트 어디에도 안 떴다 (2026-07-29 감사).
+BVSE_SHARED = [
+    ("bvse_3system_channel_origin.csv", "3계 채널 부피 % (원본 주기셀, canonical)",
+     "modelc → LPSOCl(+O) → +B₂O₃. **정량·순위는 이 표만** — 큐빅 근사 인용 금지."),
+    ("bvse_channel_volume.csv", "채널 부피 iso 사다리", "2026-07-27 보정 이력 포함"),
+    ("bvse_cubic_approx/bvse_orig_vs_cubic.csv", "원본 vs 큐빅 근사 대조",
+     "⛔ 큐빅은 **표시용**이다 — b2o3 가 6.73 vs 23.83 으로 3.5배 벌어진다. 인용 금지의 실증."),
+]
+
+
+def bvse_shared() -> list:
+    """3계 공유 BVSE 표 + 정본 onset. 조성 페이지가 아니라 공용 카드에 붙는다."""
+    out = []
+    for rel, title, note in BVSE_SHARED:
+        f = DB / "properties" / rel
+        if f.exists():
+            out.append({"rel": f"properties/{rel}", "title": title, "note": note})
+    onset = _load_json(DB / "properties" / "bvse_onset_canonical_modelc.json")
+    return {"tables": out, "onset": onset}
 
 
 def cohp_curves_for(cid: str):
@@ -1455,11 +1490,16 @@ def read_csv(rel: str) -> dict:
         return {"error": "not found"}
     rows = list(csv.reader(p.open(encoding="utf-8")))
     # 헤더 = 선행 주석(#)·빈 줄을 건너뛴 첫 실질 행
+    # ⚠ 주석줄을 **버리지 않고 모은다.** CSV 가 자기 안에 적어 둔 규율 캐비앳
+    #   (예: "absolute sigma = MLIP Nernst-Einstein upper bound; RT extrapolation NOT reportable")
+    #   이 UI 에 도달하지 못해 절대 σ 가 무경고로 그려질 수 있었다 (2026-07-29 감사).
+    notes = [",".join(r).lstrip("# ").strip()
+             for r in rows if r and r[0].lstrip().startswith("#")]
     i = 0
     while i < len(rows) and (_is_blank(rows[i]) or rows[i][0].lstrip().startswith("#")):
         i += 1
     if i >= len(rows):
-        return {"columns": [], "data": []}
+        return {"columns": [], "data": [], "notes": notes}
     header = rows[i]
     data, summary = [], []
     for r in rows[i + 1:]:
@@ -1477,7 +1517,8 @@ def read_csv(rel: str) -> dict:
             except (ValueError, TypeError):
                 rec[h] = v
         (summary if _SUMMARY_ROW.match(str(r[0])) else data).append(rec)
-    return {"columns": header, "data": data, "n": len(data), "summary": summary}
+    return {"columns": header, "data": data, "n": len(data),
+            "summary": summary, "notes": notes}
 
 
 # ═════════════════════════════════════════════════════════════
@@ -1585,13 +1626,13 @@ PSEUDO_LIB = {
 }
 # 조성별 canonical 계산 설정 (methods 문서와 정합)
 COMPUTE_SETTINGS = {
-    "comp1":  {"ecutwfc": 52, "ecutrho": 520, "k": [4, 4, 4], "struct": "comp1_V0_relaxed.cif",  "server": "kgy (RTX3090, QE-GPU)"},
+    "comp1":  {"ecutwfc": 52, "ecutrho": 520, "k": [4, 4, 4], "struct": "comp1_V0_k444.cif",  "server": "kgy (RTX3090, QE-GPU)"},
     "comp2":  {"ecutwfc": 52, "ecutrho": 520, "k": [4, 4, 4], "struct": "comp2_V0_v3_candidate.xyz", "server": "gabia (A6000, QE-GPU)"},
-    "modelc": {"ecutwfc": 60, "ecutrho": 480, "k": [2, 2, 1], "struct": "modelc_V0_k663.cif",     "server": "kgy (RTX3090, QE-GPU)"},
+    "modelc": {"ecutwfc": 60, "ecutrho": 480, "k": [2, 2, 1], "struct": "modelC_DFT_EOS_V0.cif",     "server": "kgy (RTX3090, QE-GPU)"},
     "modelc_v3": {"ecutwfc": 60, "ecutrho": 480, "k": [2, 2, 1], "struct": "modelc_v3_62atom_V0.cif", "server": "kgy (RTX3090, QE-GPU)"},
     "modelc_nd_doped": {"ecutwfc": 60, "ecutrho": 480, "k": [6, 6, 1], "struct": "modelc_nd_doped_DFTrelax.cif", "server": "KISTI neuron", "dftu": True},
-    "lpsocl": {"ecutwfc": 60, "ecutrho": 480, "k": [2, 2, 1], "struct": "lpsocl_candidates",      "server": "KISTI neuron"},
-    "b2o3":   {"ecutwfc": 60, "ecutrho": 480, "k": [1, 1, 1], "struct": "b2o3 128-SC",            "server": "KISTI neuron"},
+    "lpsocl": {"ecutwfc": 60, "ecutrho": 480, "k": [2, 2, 1], "struct": "lpsocl_v0.cif",      "server": "KISTI neuron"},
+    "b2o3":   {"ecutwfc": 60, "ecutrho": 480, "k": [1, 1, 1], "struct": "b2o3_relaxV0.cif",            "server": "KISTI neuron"},
 }
 COMPUTE_CALCS = [
     {"id": "scf",     "label": "SCF (총에너지)",       "engine": "QE pw.x"},

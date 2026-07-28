@@ -859,3 +859,7 @@ tr.row-dim{opacity:.62}
 /* ⚠ 인라인 background:#fef2f2 였다 — 다크모드에서 밝은 글자 위 흰 배경이라
    대비 1.09 로 M6 판정 근거 2줄이 사실상 안 보였다(2026-07-29 감사). */
 .row-warn{background:color-mix(in srgb,var(--red) 10%,var(--card))}
+
+/* ⚠ 긴 slug(378px)가 space-between flex 행에서 안 접혀 /literature 만 가로 스크롤이
+   생겼다(데스크톱 1480 > 1400, 모바일 488 > 420). 2026-07-29 감사. */
+.lit-row .mono,.lit-item .mono{overflow-wrap:anywhere;min-width:0}

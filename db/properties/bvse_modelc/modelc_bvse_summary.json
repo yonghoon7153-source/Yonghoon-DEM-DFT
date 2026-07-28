@@ -18,5 +18,6 @@
     "2.0": 17.85
   },
   "Li_site_BVS_mean": 1.722,
-  "Li_site_BVS_std": 0.169
+  "Li_site_BVS_std": 0.169,
+  "_SUPERSEDED_perc_onset_2026_07_29": "⛔ 여기 perc_onset_val2 (0.55/0.55/1.65) 는 **데이터 의존 레벨 격자**(linspace(min, p60, 60)) 산물이다. 정본은 고정 격자 arange(0.05,3.00,0.05) 로 계산한 **0.40/0.35/1.40** — db/properties/bvse_onset_canonical_modelc.json. 채널 부피 %(1.23/3.32/8.36/17.85)는 이 파일 값이 맞다(격자 무관)."
 }

@@ -87,6 +87,17 @@
   </div>
 </div>
 
+{# ⚠ verified 서브셋 최상위에 _CONFLICT_UNRESOLVED_* 가 있는데 화면 어디에도 안 떴다.
+   모든 verdict 가 "⚠ 잠정(값 충돌 미해소)" 로 시작하는데 대시보드는 그 도펀트를 1위로
+   올린다 — 충돌을 띄우지 않으면 사이트가 스스로 모순된다 (2026-07-29 감사). #}
+{% set _conf = [] %}{% for k, v in (casc.verified or {}).items() if k.startswith('_CONFLICT') %}{% set _ = _conf.append(v) %}{% endfor %}
+{% if _conf %}
+<div class="callout cal-danger" style="margin:10px 0;font-size:.82rem">
+  <b>⚠ verified 서브셋에 미해소 값 충돌이 있다</b>
+  <ul style="margin:6px 0 0;padding-left:18px">{% for c in _conf %}<li>{{ c|bold }}</li>{% endfor %}</ul>
+  <div class="muted" style="margin-top:6px;font-size:.94em">그래서 이 서브셋의 verdict 는 전부 <b>잠정</b>이다 — 순위를 확정으로 읽지 말 것.</div>
+</div>
+{% endif %}
 <div class="tabs" id="tabs">
   <button class="active" data-tab="board">🏆 Leaderboard</button>
   {% if casc.funnel %}<button data-tab="funnel">🔻 깔때기</button>{% endif %}
@@ -446,7 +457,6 @@
       <div style="font-size:.82rem;margin-top:6px">탈락 <b>{{ S.T10_hull_synthesizability.n_fail }}종</b> ·
         최대값: {% for v, c in S.T10_hull_synthesizability.max %}{{ c }} {{ '%.0f'|format(v) }}{% if not loop.last %}, {% endif %}{% endfor %} meV</div>
       <div class="callout cal-warn" style="margin-top:10px;font-size:.79rem">{{ S.T10_hull_synthesizability['⚠_negative_result']|bold }}</div>
-      <div class="callout" style="margin-top:8px;font-size:.78rem">{{ S.T10_hull_synthesizability['⚠_negative_result'] and '' }}{{ S.T10_hull_synthesizability.get('caveat','') }}</div>
     </div>
   </div>
 

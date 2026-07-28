@@ -2,7 +2,9 @@
 {% block title %}{{ title }} · DFT{% endblock %}
 {% block content %}
 <div class="page-header">
-  <div><h1>{{ title }}</h1><div class="sub">kb/methodology/computational_methods_canonical.md · 값 인용 전 단일 기준</div></div>
+  {# ⚠ 부제를 하드코딩해서 /todo 가 /methods 의 출처를 자기 것처럼 표시했다(2026-07-29 감사).
+     라우트가 subtitle 을 넘기고, 없으면 비운다. #}
+  <div><h1>{{ title }}</h1>{% if subtitle %}<div class="sub">{{ subtitle }}</div>{% endif %}</div>
   <div class="page-actions"><a class="btn" href="/">▦ Dashboard</a></div>
 </div>
 <div class="doc">{{ content|safe }}</div>

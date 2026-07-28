@@ -104,6 +104,9 @@
     <div class="chart" id="chart"></div>
     <div class="muted" id="chart-summary" style="font-size:.72rem;margin-top:8px;line-height:1.6"></div>
     <div class="muted" id="chart-src" style="font-size:.74rem;margin-top:6px"></div>
+    {# ⚠ CSV 가 자기 안에 적어 둔 규율 캐비앳(# 머리말)을 여기 띄운다.
+       예전엔 read_csv 가 통째로 버려서 절대 σ 가 무경고로 그려질 수 있었다. #}
+    <div class="callout cal-warn" id="chart-notes" style="display:none;font-size:.76rem;margin-top:8px"></div>
   </div>
   {% else %}<div class="card"><span class="muted">CSV 데이터 없음 <span class="badge b-todo">TODO</span></span></div>{% endif %}
 </div>
@@ -248,7 +251,10 @@
     {% for bond, row in icohp._comparison.items() %}
     <tr><td><b>{{ bond }}</b></td>
       {% for c in icohp._comparison_cols %}
-      <td class="num">{% if row[c] is defined and row[c] not in (none,'') %}{{ '%.3f'|format(row[c]|float) }}{% else %}—{% endif %}</td>
+      {# ⚠ pct 열을 eV 서식(%.3f)으로 찍어서 0.4 %가 0.400 eV 처럼 보였다 (2026-07-29 감사) #}
+      <td class="num">{% if row[c] is defined and row[c] not in (none,'') %}
+        {%- if 'pct' in c or '%' in c %}{{ '%.1f'|format(row[c]|float) }} %{% else %}{{ '%.3f'|format(row[c]|float) }}{% endif -%}
+      {% else %}—{% endif %}</td>
       {% endfor %}
       <td class="muted" style="font-size:.78rem">{{ row.note or '' }}</td></tr>
     {% endfor %}
@@ -398,6 +404,7 @@ function loadStruct(name,fmt,btn){
 function plotCsv(rel,kind,btn){
   document.querySelectorAll('#tab-charts .chip').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');
   document.getElementById('chart-src').textContent='db/'+rel;
+  var _cn=document.getElementById('chart-notes'); if(_cn){_cn.style.display='none';_cn.innerHTML='';}
   fetch('/api/csv/'+encodeURIComponent(rel)).then(r=>r.json()).then(d=>{
     var box=document.getElementById('chart'), ctr=document.getElementById('chart-ctrls');
     if(!d.data||!d.data.length){box.innerHTML='<span class="muted">빈 데이터</span>';ctr.innerHTML='';return;}
@@ -431,6 +438,13 @@ function plotCsv(rel,kind,btn){
     if(!ydef.length)ydef=numeric.filter(function(c){return c!==xdef;});
     window._CH={rel:rel,kind:kind,d:d,cols:cols,numeric:numeric,cat:cat,x:xdef,y:ydef,grp:group,useGrp:!!group,logy:false};
     // 요약/파생 행은 차트에서 빼고 각주로 (열 타입 판정 오염 방지 + 정보 손실 방지)
+    // CSV 머리말(# 캐비앳)을 규율 상자로 승격
+    var cn=document.getElementById('chart-notes');
+    if(cn && d.notes && d.notes.length){
+      cn.innerHTML='<b>이 표가 스스로 붙여 둔 캐비앳</b><ul style="margin:6px 0 0;padding-left:18px">'
+        +d.notes.map(function(n){return '<li>'+n.replace(/[<>&]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;'}[c];})+'</li>';}).join('')+'</ul>';
+      cn.style.display='';
+    }
     var sm=document.getElementById('chart-summary');
     if(sm&&d.summary&&d.summary.length){
       sm.innerHTML='<b>요약 행 (차트 제외)</b><br>'+d.summary.map(function(r){

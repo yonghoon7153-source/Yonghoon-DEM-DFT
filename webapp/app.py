@@ -125,9 +125,10 @@ def composition(cid):
 @app.route("/compare")
 def compare():
     b = D.build_matrix()
+    bvse = D.bvse_shared()          # 3계 공유 BVSE (조성 prefix 로 안 잡히던 자료)
     # ⚠ CANONICAL_PROVISIONAL 은 (key, cid) 튜플 키라 |tojson 이 TypeError 를 낸다 → 문자열로 평탄화.
     prov = {f"{k}|{c}": r for (k, c), r in D.CANONICAL_PROVISIONAL.items()}
-    return render_template("compare.html", active="compare", b=b,
+    return render_template("compare.html", bvse=bvse, active="compare", b=b,
                            canonical=D.canonical_table(), canonical_provisional=prov)
 
 
@@ -202,7 +203,8 @@ def methods():
     md = D.load_canonical_methods()
     html = md_html(md, ("tables", "fenced_code", "toc"))
     return render_template("doc.html", active="methods",
-                           title="계산 방법 Canonical (단일 기준)", content=html)
+                           title="계산 방법 Canonical (단일 기준)", content=html,
+                           subtitle="kb/methodology/computational_methods_canonical.md · 값 인용 전 단일 기준")
 
 
 @app.route("/todo")
@@ -210,8 +212,9 @@ def todo():
     md = D.load_open_items_md()
     html = md_html(md, ("tables", "fenced_code", "toc"))
     return render_template("doc.html", active="todo",
-                           title="📋 미결 리스트 (Open Items) — kb/open_items.md",
-                           content=html)
+                           title="📋 미결 리스트 (Open Items)",
+                           content=html,
+                           subtitle="kb/open_items.md · 판정 대기 · PDF 확보 대기 · ML 후속 · 심포지엄 대응")
 
 
 @app.route("/nd-survey")
