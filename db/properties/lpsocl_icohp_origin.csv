@@ -1,0 +1,13 @@
+﻿# LPSOCl (Li27P5S21OCl8, 62at) ICOHP per bond — Origin-ready
+# LOBSTER 5.1.1 on QE all-PAW scf+nscf (ext basis Li 1s2s2p / P,S,Cl 3s3p3d / O 2s2p; nbnd 500; ecut 70/560; k 2 2 1), gabia A6000. Bader: bader -p all_
+# charge spilling 1.15% (<2% 권장 범위)
+# ⚠ ICOHP 는 **적분값**이다. bonding/antibonding 곡선은 COHPCAR.lobster 필요.
+# ⚠ 부호 규약: ICOHP 가 음수일수록 결합성이 강하다. minus_ICOHP 는 막대용 양수 변환.
+# ⚠ comp1 Bader 절대값은 이 표에 섞지 말 것 (다른 밀도 소스 — _comp1_caveat 참조).
+bond,N_bonds,ICOHP_eV_per_bond,minus_ICOHP_eV,modelc,b2o3,note
+P-O,1,-8.413,8.413,,-8.551,POS3 unit P30-O50 (top bond of the whole lattice)
+P-S,19,-6.04,6.04,-6.0,-6.023,host intact
+Li-Cl,42,-2.107,2.107,-2.103,-2.076,host intact
+Li-S,106,-1.767,1.767,-1.717,-1.68,host intact (~3% spread)
+Li-O,5,-1.155,1.155,,,FIRST Li-O measurement in the family; per-bond covalency MODEST (< Li-S/Li-Cl)
+S-S,54,-0.111,0.111,-0.11,-0.116,host intact

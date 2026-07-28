@@ -1,0 +1,7 @@
+﻿# LPSOCl 자리별 ICOHP (Li 앵커 세기) — Origin-ready
+# free-S(4d)가 PS4-S 보다 Li 를 약 1.5배 강하게 붙든다.
+site,ICOHP_eV_per_bond,std,n,note
+Li-S_PS4,-1.672,1.197,94,
+Li-S_4d_freeS,-2.51,0.073,12,free-S grips Li ~1.5x stronger per bond than PS4-S
+Li-Cl_4a,-1.996,0.582,33,
+Li-Cl_4d,-2.512,0.84,9,
