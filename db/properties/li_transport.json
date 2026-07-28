@@ -65,7 +65,7 @@
       "_800K_rerun_note": "Original T800 D was anomalously low (3.41e-6, broke Arrhenius). Re-ran T800 with fresh MaxwellBoltzmann seed, same 110ps/2fs protocol → D=5.91e-6 (monotonic). R² jumped 0.77→0.999.",
       "arrhenius_fit": {
         "_DEPRECATED_5fu_artifact": {"Ea_eV": 0.172, "R2": 0.9986, "window_ps": [2, 50],
-          "note": "ARTIFACT of artificial 5 f.u. supercell construction. Natural 4 f.u. cubic gives Ea=0.253 (Schlem 2020 LPSCl ordered match). See comp1_v3_4fu_natural."},
+          "note": "ARTIFACT of artificial 5 f.u. supercell construction. Natural 4 f.u. cubic gives Ea=0.253 (실험 LPSCl Ea 범위 0.29-0.46 eV 내 — 구 "Schlem 2020 match"는 귀속 오류 판명 2026-07-28: DOI 10.1002/aenm.201903719는 Li3MCl6 논문 — LPSCl 0.25/0.22의 원전 미상(별도 확보 필요)). See comp1_v3_4fu_natural."},
         "fit_2_50ps_FINAL_SUPERSEDED": {"Ea_eV": 0.172, "R2": 0.9986,
           "D_600": 2.677e-06, "D_800": 5.907e-06, "D_1000": 1.019e-05},
         "T_fit_K": [600, 800, 1000]
@@ -99,11 +99,11 @@
           "D_300K_extrapolated_cm2_per_s": 2.292e-08,
           "sigma_NE_300K_mScm_estimate": 3.35,
           "sigma_NE_300K_note": "Nernst-Einstein sigma = n_Li q^2 D /(kB T), H_R=1. n_Li = 2.361e22 cm^-3 (24 Li / 1016.62 A^3). tools/modelc_v3/nernst_einstein_300K.py. Same convention as modelc (~14 mS/cm).",
-          "note": "★ HIGH-QUALITY 3-pt fit (R²=0.9998). Ea matches Schlem 2020 LPSCl ordered ~0.25 eV EXACTLY."
+          "note": "★ HIGH-QUALITY 3-pt fit (R²=0.9998). 실험 LPSCl Ea는 방법·시료 의존 0.29-0.46 eV(Adeli EIS=PFG 0.29-0.35 / Kraft total ~0.46) — 구 "Schlem 0.25 EXACT MATCH" 문구는 귀속 오류 판명 2026-07-28: DOI 10.1002/aenm.201903719는 Li3MCl6 논문 — LPSCl 0.25/0.22의 원전 미상(별도 확보 필요)."
         }
       },
       "experimental_match": {
-        "Schlem_2020_LPSCl_ordered": "Ea = 0.25 eV — our 0.2532 within 0.003 eV ★ EXACT MATCH",
+        "_RETRACTED_Schlem_2020_anchor_2026_07_28": "구 앵커(0.25 EXACT MATCH) 철회 — 귀속 오류 판명 2026-07-28: DOI 10.1002/aenm.201903719는 Li3MCl6 논문 — LPSCl 0.25/0.22의 원전 미상(별도 확보 필요). 대체 앵커: Adeli2019 EIS=PFG 0.29-0.35(bulk-지배 트렌드) / Kraft2017 total ~0.46(GB 포함)",
         "experimental_LPSCl_bulk_range": "0.16 - 0.30 eV (synthesis dependent). Our value in mid-range."
       },
       "_change_from_5fu": {
@@ -153,7 +153,7 @@
       "sigma_NE_300K_ratio_note": "sigma(LPSCl1.6)/sigma(LPSCl) @300K = 4.2x (D ratio 4.4x); widens from 2.5x@600K because Ea differs (0.224 vs 0.253). Absolute sigma ~1.5-2x above measured pellet (expt LPSCl ~1-3.2 [sintered 3.15], Cl-rich ~7-9.9 mS/cm [Zuo 7.0/Adeli 9.4/Kim 9.9]) due to MLIP D-overshoot + bulk-vs-pellet resistance; H_R=1 is CONSERVATIVE (real H_R<1 -> intrinsic even higher, opposite sign). Robust = Ea (0.25/0.22 matches expt) + ratio."
     },
     "robust_findings_v2_2026_06_11": {
-      "Ea_direction_CORRECTED": "comp1 4fu Ea=0.2532 > modelc Ea=0.2235 (Δ=0.030 eV). Cl-rich Ea LOWER than ordered LPSCl — CONSISTENT with Minafra/Kraft 'disorder lowers Ea' narrative and Schlem 2020 experimental values (LPSCl ordered ~0.25, Cl-rich ~0.22).",
+      "Ea_direction_CORRECTED": "comp1 4fu Ea=0.2532 > modelc Ea=0.2235 (Δ=0.030 eV). Cl-rich Ea LOWER than ordered LPSCl — CONSISTENT with Minafra/Kraft 'disorder lowers Ea' narrative and the disorder-lowers-Ea direction (Minafra/Kraft; Adeli Cl-rich EIS=PFG 0.34→0.29). 구 Schlem 0.25/0.22 수치는 귀속 오류 판명 2026-07-28: DOI 10.1002/aenm.201903719는 Li3MCl6 논문 — LPSCl 0.25/0.22의 원전 미상(별도 확보 필요).",
       "D_sigma_ratio": "modelc ~2.5x faster than comp1 at 600-1000 K. Matches experimental sigma(LPSCl1.6) > sigma(LPSCl) ~3x (Zuo 2023 2.9 vs 7.0 mS/cm).",
       "mechanism_dual": "σ gain decomposes into TWO contributions: (1) Ea effect — exp((0.253-0.224)/kT) = 1.75× at 600K from Cl-rich barrier reduction; (2) D0 effect — 5.8e-4/4.11e-4 = 1.41× from modelc vacancy carrier density. Roughly EQUAL contributions, both positive (lit consistent direction).",
       "framework": "both Li-only conductors (framework D ~1/40-1/60 of Li)."

@@ -43,7 +43,7 @@
 | 논문 | 조성 | 무질서/decorate | supercell/nat·시간 | σ/Ea 추출 | 출처 |
 |---|---|---|---|---|---|
 | ✅ de Klerk 2016 (Chem. Mater. 28, 7955) — **digest 확보 2026-07-28** | Li6PS5X (X=Cl/Br/I) | Cl 4c(=우리 4d) 점유 **0/25/50/75/100% 5단계, 각 %당 배열 1개**(복수 배열·선택기준 언급 전무); Li는 48h 쌍당 1개 제거(24 Li), 공공 배치 규칙 없음 | **1×1×1 (52원자)**, velocity-rescale NVT, dt 2 fs, 총 100 ps(equil 2.5 ps), T 300/450/600 K, VASP PBE 280 eV | 75% 최적 = **450 K 단일점·Cl1.0 전용·min-jump-rate 지표**(σ 직접 아님); **비단조**(0%·100% 모두 저전도 — 100%는 doublet 붕괴로 새 율속) | [digest](../papers/deklerk2016_diffusion_site_disorder_argyrodite.md) |
-| ⚠ Deng 2016 (JES 163, A67) | 23종 SICE 탄성 | **"SQS 아지로다이트"로 지목 — 웹 확인 실패, torii2025 2차 귀속만 확보**(보유 PDF [torii2025](../papers/torii2025_lpscl_mechanical_anisotropy_dft.md) digest L28 'ref10 Deng 2016, SQS'·L109 '그들이 명시적으로 대비'); Ong 그룹 관행은 enumerate+Ewald 최저 배열 — 단 Deng 원문 직접 확인은 여전히 필요 | — | 탄성텐서(σ/Ea 아님) | [IOP](https://iopscience.iop.org/article/10.1149/2.0061602jes) |
+| ✅ Deng 2016 (JES 163, A67) — **digest 확보 2026-07-28, SQS 오귀속 정정** | 23종 SICE 탄성 | **ordered** — Li@24g 전점유, 음이온 무질서 미언급, 원문에 SQS 단어 자체가 없음 (torii2025 2차 귀속이 틀렸거나 Torii 원문의 오인용 — Torii PDF 재확인 필요) | PBEsol·strain-stress | 탄성텐서(σ/Ea 아님); halide 경향(Cl→I 경화)은 실험과 정반대 — 경향 인용 금지 | [digest](../papers/deng2016_elastic_superionic_electrolytes_dft.md) |
 | ⚠ Deng 2017 (Chem. Mater. 29, 281) | Li6PS5Cl | 열거 후 최저에너지 배열 선택으로 서술 | 세부 미인용(웹 요약 혼입 위험) | 상안정성+ESW+AIMD σ 워크플로 | [ACS](https://pubs.acs.org/doi/10.1021/acs.chemmater.6b02648) |
 | ⚠ Stamminger 2019 (Chem. Mater. 31, 8673) | Li6PS5X(X=Br,Cl,I) | 질서형 vs 무질서형 구조유형별 AIMD — 결론: **확산도는 할로겐 종이 아니라 무질서 정도가 지배** | 웹 미확인 | AIMD 확산도; antisite 결함 형성E로 설명 | [ACS](https://pubs.acs.org/doi/10.1021/acs.chemmater.9b02047) |
 | ⚠ Morgan 2021 (Chem. Mater. 33, 2004) | Li6PS5I(+Cl) | **S/X site-inversion 0/50/100% 명시 스캔** | production 70 ps, PBEsol | 무질서 배열 = percolating 3D + string-like 협동; 질서 = 경로 단절 | [chemrxiv](https://chemrxiv.org/engage/chemrxiv/article-details/60c7556c702a9ba9f218c6e0) |
@@ -128,7 +128,7 @@ argyrodite 문헌의 무질서 처리 분포(종합 패턴, [_TEMPLATE.md](../pa
 6. **미명시(n/a)**: sundar2025, banik2022, ma2024, li2025, taklu2021(DFT측) — 단일 배열 추정,
    **절대값 비교 금지**가 digest 공통 규율.
 
-**SQS는 이 표본에서 Deng 2016 귀속 하나뿐인데, 그마저 웹 확인 실패, torii2025 2차 귀속만 확보** —
+**[2026-07-28 확정] SQS는 이 표본에서 결국 0건** — 유일 후보였던 Deng 2016이 원문 확인 결과 ordered(Li@24g 전점유)로 판명. 계산 진영 전원이 ordered/enumerate 계열 —
 SQS 귀속의 2차 출처는 torii2025 본문(ref10 대비, 보유 PDF; digest L28·L109) — 단 Deng 원문 직접 확인은
 여전히 필요 (⚠).
 즉 "argyrodite 무질서 = SQS"는 문헌 실태가 아니다 — 실태는 enumerate-Ewald 단일 배열이 다수,

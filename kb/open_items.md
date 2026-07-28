@@ -50,7 +50,7 @@
 | 2 | Adeli et al., Angew. Chem. Int. Ed. 58, 8681 (2019) | 10.1002/anie.201814222 | Li5.5PS4.5Cl1.5 실험 원전 (9.4 mS/cm) — modelc Cl-rich Rietveld 점유율 ground truth |
 | 3 | Deng, Wang, Chu, Luo, Ong, J. Electrochem. Soc. 163, A67 (2016) | 10.1149/2.0061602jes | SQS 반례 원전 (A=0.92) — ordered_vs_disordered 문서 '경계 사례' 논증의 원본 |
 | ~~4~~ | ✅ **확보·다이제스트 완료 (2026-07-28)** Kim et al., Nano Energy 124, 109436 | 10.1016/j.nanoen.2024.109436 | **신규성 판정 완료**: enumerate 6 특성배열+단일 random supercell, config-분산 오차막대 **없음** → 우리 다중 config×멀티시드 산포 보고는 신규 기여로 원고 기재 가능 (digest: kim2024_mtp_argyrodite_disorder_gb.md) |
-| 5 | Schlem et al., Adv. Energy Mater. 10, 1903719 (2020) | 10.1002/aenm.201903719 | ordered Ea 0.25 eV — li_transport.json 비교 기준의 원전 |
+| ~~5~~ | ✅ **확보·다이제스트 완료 (2026-07-28) — 단 귀속 오류 판명** Schlem et al. AEM 1903719 | 10.1002/aenm.201903719 | 실물 = **Li3MCl6(Y,Er) 기계화학 논문, LPSCl 데이터 0건** → 'ordered 0.25' 앵커 철회, li_transport 정정 완료. '무질서=공정변수'의 최정밀 외부 실증(Er 무질서 88→2.5% 연속 조절)으로 가치 전환. **신규 미결: LPSCl 0.25/0.22의 진짜 원전 추적** (후보: Schlem 2019 계열 argyrodite 논문 — 서지 확인 필요) |
 | (6) | Kim rapid-thermal (10.2 mS/cm, liu2022 재인용) | liu2022 참고문헌에서 확인 | 공정–무질서 관계 보강 (우선순위 낮음) |
 
 확보 시 "논문 에이전트"(litdb-curator)로 다이제스트 → 서베이 ⚠딱지 승격.

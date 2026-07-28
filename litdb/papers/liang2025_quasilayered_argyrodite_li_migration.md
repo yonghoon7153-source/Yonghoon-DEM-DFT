@@ -185,7 +185,7 @@
 | **무질서 처리** | disorder 0→100% *연속 스캔* + 50%서 P2mm/P222₁ 명시배열 | 우리 = 단일 배열(또는 SQS), Cl 1.0↔1.6 조성 손잡이 | △ *철학 같음*(disorder가 변수), but Liang은 *site-disorder %*, 우리는 *Cl 화학량* 손잡이 |
 | **band gap / 산화 onset** | **미보고**(전자구조는 DOS/PDOS 정성, gap 수치 없음) | gap 2.07/2.10(PBE)·onset 2.256 V(S-limited) | ✗ Liang 범위 밖 — 비교 불가(n/a). Liang은 *이동*만, 산화/gap 안 봄 |
 | **기계물성** | 미보고 (n/a) | E_VRH 22/27.7·B₀ 26/21.7 | ✗ Liang 범위 밖 (n/a) |
-| **방법(NEB→Ea)** | **NEB(평균 퍼텐셜) = SSE Ea 직접계산 제안** | 우리 = **AIMD-MSD→D→Arrhenius Ea**(NEB 미사용) | ○ **상보적** — Liang NEB가 우리 AIMD Ea(0.253, Schlem 실험 0.25와 0.003 일치)의 *단일경로 cross-check* 가능; 우리는 AIMD로 correlated motion까지 포착(더 엄밀) |
+| **방법(NEB→Ea)** | **NEB(평균 퍼텐셜) = SSE Ea 직접계산 제안** | 우리 = **AIMD-MSD→D→Arrhenius Ea**(NEB 미사용) | ○ **상보적** — Liang NEB가 우리 MLIP-MD Ea(0.253; 구 'Schlem 0.25 일치' 앵커는 철회 — 귀속 오류 판명 2026-07-28: DOI 10.1002/aenm.201903719는 Li3MCl6 논문 — LPSCl 0.25/0.22의 원전 미상(별도 확보 필요))의 *단일경로 cross-check* 가능; 우리는 AIMD로 correlated motion까지 포착(더 엄밀) |
 
 ## 8. 적용 인사이트 (내 연구에 어떻게)
 1. **anion-site 메커니즘의 외부·이론 평행본**: Liang의 **"4a-S 고이동 / 4c-halide 약결합(Cl ≤0.5×S Mayer)"** 은 우리 "S/Cl이 어느 자리에 앉느냐가 σ·Ea를 지배"의 *결합차수 정량판*. deck에서 우리 anion-site 서사 옆에 "외부 그룹(CityU Huang)이 *결합차수*로 같은 결론" 으로 배치 가능. ⚠ 단 *구조 분지가 다름*(준층상 vs 입방) 반드시 병기.

@@ -106,4 +106,4 @@ more carriers). AIMD sees the vacancies; BVSE does not. The two are complementar
 - Gil-González et al., *Energy Storage Mater.* **45**, 484 (2022) — Cl-substitution synergy (σ + stability), Li-density channel maps.
 - Ma et al., *J. Mater. Chem. A* **12**, 27011 (2024) — intra/inter-cage NEB barriers.
 - Taklu et al., *Nano Energy* **90**, 106542 (2021) — doublet/intra/inter-cage geometric descriptors.
-- Schlem 2020 / Minafra / Kraft — disorder-lowers-Ea narrative; LPSCl Ea ~0.25, Cl-rich ~0.22.
+- 구-Schlem2020[귀속오류·철회 2026-07-28→실험범위 0.29-0.46으로 대체] / Minafra / Kraft — disorder-lowers-Ea narrative; LPSCl Ea ~0.25, Cl-rich ~0.22.

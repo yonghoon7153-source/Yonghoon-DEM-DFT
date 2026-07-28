@@ -308,7 +308,7 @@ window** (comp1 800K fluke는 fresh seed로 재실행 해결, R² 0.77→0.999).
 
 ### II.5.2 실험 대조 & caveat
 
-- modelc Ea 0.224 = Schlem 2020 Cl-rich 0.22 정확 일치. comp1 0.172도 LPSCl bulk 범위(0.16-0.25).
+- modelc Ea 0.224 = 구-Schlem2020[귀속오류·철회 2026-07-28→실험범위 0.29-0.46으로 대체] Cl-rich 0.22 정확 일치. comp1 0.172도 LPSCl bulk 범위(0.16-0.25).
 - framework 정지: D(Cl,P,S) ~ D(Li)의 1/40-1/60 → Li-only 전도체 (둘 다).
 - 절대 σ는 UMA가 3-5× overshoot + Haven ratio=1 가정 → 비(ratio)만 robust. 300K 외삽
   (3 T점)은 over-interpret 금지.
@@ -488,4 +488,4 @@ B0(등방 hydrostatic, full relax)와 B_VRH(clamped-ion Cij 유도)는 물리적
   - [Adeli 2019 Angew — LPSCl1.5 charge-compensated](https://onlinelibrary.wiley.com/doi/10.1002/anie.201814222)
   - [Devil in the Defects, Chem Mater 2021 — LPSCl n-type](https://pubs.acs.org/doi/10.1021/acs.chemmater.1c02345)
   - [arXiv:2503.13142 — LPSCl1.5 disorder](https://arxiv.org/pdf/2503.13142)
-  - Schlem 2020 — Cl-rich argyrodite Ea 0.22 eV.
+  - 구-Schlem2020[귀속오류·철회 2026-07-28→실험범위 0.29-0.46으로 대체] — Cl-rich argyrodite Ea 0.22 eV.

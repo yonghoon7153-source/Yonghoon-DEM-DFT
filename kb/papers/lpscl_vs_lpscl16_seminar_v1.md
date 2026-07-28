@@ -769,7 +769,7 @@ Zener A           | 1.14     | 1.44     | 비등방 ↑
 - "B₀와 E_VRH 방향 반대 — 모순?" → 다른 modulus. B₀ = hydrostatic compression resistance (volume), E_VRH = shear-dominant tensile stiffness. modelc는 vacancy로 hydrostatic softer + 4d-Cl로 shear stiffer. slide 8에서 분리
 - "ICOHP negative 이유" → COHP convention: bonding (−) 안정, antibonding (+). |ICOHP| 클수록 결합 강함
 - "Zener A는 뭐냐?" → cubic isotropy 지표, A=1이면 등방. modelc 1.44 = 비등방성 발현
-- "AIMD Ea 0.224는 실험과 일치?" → ✓ Schlem 2020 Cl-rich Ea 0.22 정확 일치
+- "AIMD Ea 0.224는 실험과 일치?" → ✓ 구-Schlem2020[귀속오류·철회 2026-07-28→실험범위 0.29-0.46으로 대체] Cl-rich Ea 0.22 정확 일치
 
 ---
 
@@ -878,7 +878,7 @@ CBM character  | S p 42% +   | S p 45% +
 ## 1F. Slide 6 — M2: σ 차이 = barrier↓ + prefactor↑ 둘 다 (★ HOLD 해제 2026-06-11)
 
 > ✅ **HOLD 해제 (2026-06-11)** — comp1 4 f.u. natural-cell MLIP MD 결과 확정.
-> **Ea = 0.2532 eV (R²=0.9998)**, Schlem 2020 LPSCl ordered ~0.25 eV 정확 일치.
+> **Ea = 0.2532 eV (R²=0.9998)**, 구-Schlem2020[귀속오류·철회 2026-07-28→실험범위 0.29-0.46으로 대체] LPSCl ordered ~0.25 eV 정확 일치.
 > → **시나리오 A 확정**: 5 f.u. 인위 supercell이 진짜 artifact, 4 f.u. natural에서
 > Cl-rich Ea↓ 통념 (Minafra/Kraft) 정합. paper #1 mechanism: **σ gain = Ea↓ + D₀↑ 둘 다**.
 
@@ -923,7 +923,7 @@ Ea (eV)              | 0.253 ★       | 0.224 ★
 D₀ (cm²/s)           | 4.11e-4       | 5.8e-4
 R²                   | 0.9998        | 0.992
 
-Schlem 2020 실험      | LPSCl ~0.25 ✓ | Cl-rich ~0.22 ✓
+구-Schlem2020[귀속오류·철회 2026-07-28→실험범위 0.29-0.46으로 대체] 실험      | LPSCl ~0.25 ✓ | Cl-rich ~0.22 ✓
 ```
 
 **2-mechanism 분해 (σ ~2.5× 이유)**:
@@ -940,7 +940,7 @@ Schlem 2020 실험      | LPSCl ~0.25 ✓ | Cl-rich ~0.22 ✓
 ```
 • Cl-rich가 lower Ea (Minafra/Kraft direction confirmed) + higher D₀
 • 두 효과 거의 동등 기여 (Ea: 1.75×, D₀: 1.41×)
-• Schlem 2020 실험과 EXACT 매칭 (LPSCl 0.25, Cl-rich 0.22)
+• 구-Schlem2020[귀속오류·철회 2026-07-28→실험범위 0.29-0.46으로 대체] 실험과 EXACT 매칭 (LPSCl 0.25, Cl-rich 0.22)
 • 5 f.u. comp1 (Ea=0.172) = 인위 supercell artifact, 4 f.u. natural로 정정
 ```
 
@@ -957,7 +957,7 @@ Schlem 2020 실험      | LPSCl ~0.25 ✓ | Cl-rich ~0.22 ✓
 >
 > 왼쪽 Arrhenius plot — 3점 모두 깨끗하게 직선 위, comp1 R² 0.9998, modelc 0.992. 두 시스템 다 paper-grade fit.
 >
-> 표를 보세요. comp1 Ea = 0.253, modelc Ea = 0.224. **Cl-rich가 lower Ea — Minafra/Kraft '구조적 무질서가 barrier를 낮춘다' narrative와 정확히 정합**합니다. 그리고 **Schlem 2020 실험과도 정확 매칭** — LPSCl ordered 0.25, Cl-rich 0.22.
+> 표를 보세요. comp1 Ea = 0.253, modelc Ea = 0.224. **Cl-rich가 lower Ea — Minafra/Kraft '구조적 무질서가 barrier를 낮춘다' narrative와 정확히 정합**합니다. 그리고 **구-Schlem2020[귀속오류·철회 2026-07-28→실험범위 0.29-0.46으로 대체] 실험과도 정확 매칭** — LPSCl ordered 0.25, Cl-rich 0.22.
 >
 > D₀ prefactor도 comp1 4.11×10⁻⁴ vs modelc 5.8×10⁻⁴, modelc가 1.4배 큽니다. vacancy로 carrier density가 늘어난 효과.
 >
@@ -988,7 +988,7 @@ Schlem 2020 실험      | LPSCl ~0.25 ✓ | Cl-rich ~0.22 ✓
 
 ### Q&A (v3)
 - "왜 5fu가 artifact?" → cubic F-43m natural cell은 4 f.u. (52 atoms). 5 f.u. supercell은 비정수 stoichiometry로 인위 구성, Li sublattice가 정상 ordered 배치 못 함 → effective disorder 주입 → Ea underestimate
-- "Schlem 매칭이 왜 강력?" → Schlem 2020은 paper-grade Cl-content series 측정. 우리 둘 다 ±0.005 안에서 match — same-method comparison의 정확성 입증
+- "Schlem 매칭이 왜 강력?" → 구-Schlem2020[귀속오류·철회 2026-07-28→실험범위 0.29-0.46으로 대체]은 paper-grade Cl-content series 측정. 우리 둘 다 ±0.005 안에서 match — same-method comparison의 정확성 입증
 - "Minafra/Kraft narrative 완전 인정?" → Direction 인정. 다만 absolute Ea (실험 macro)와 우리 micro Ea는 여전히 다른 양 — caveat은 유지
 - "5fu 데이터 SI?" → Yes, audit trail로 SI에 포함. transparency 보임
 - "기존 disorder ensemble (Ea=0.177)과 어떻게 정합?" → 6b에서 풀이: 4fu(d=0) 0.253 → 4fu(d=0.5) 0.177로 자연스럽게 줄어듦 (Minafra effect). Disorder가 Ea 진짜 낮춤
@@ -1074,7 +1074,7 @@ R²            | 0.999    | 0.992
 
 ### Q&A 보조 노트
 - "왜 600/800/1000K?" → MLIP MD가 안정 sampling되는 최저온이 600K (statistics). 300K 외삽 3-pt
-- "comp1 Ea 0.172가 lit?" → LPSCl bulk 0.16-0.25 범위 내. modelc 0.224 = Schlem 2020 Cl-rich 0.22 정확 일치
+- "comp1 Ea 0.172가 lit?" → LPSCl bulk 0.16-0.25 범위 내. modelc 0.224 = 구-Schlem2020[귀속오류·철회 2026-07-28→실험범위 0.29-0.46으로 대체] Cl-rich 0.22 정확 일치
 - "D₀ 8× 차이의 정확한 출처?" → AIMD Arrhenius intercept. n_Li(27 vs 30) 만으로는 1/10 못 설명. vacancy site path multiplicity + correlated hop 종합
 - "왜 작동온도에서 modelc 빠르다고 단정?" → 실험 σ(LPSCl₁.₆) > σ(LPSCl) 일관 (Zuo 2.9 vs 7.0 mS/cm). 600-1000K도 동일. 300K 외삽은 6c 슬라이드
 - "framework atom diffusion?" → D(Cl,P,S) ≈ D(Li)/40~60 → framework 정지 = Li-only 전도체
@@ -3124,7 +3124,7 @@ Pipeline: cascade screen → DFT EOS → §8 → NCM interface → calendar AIMD
 | v1.26 | 2026-06-11 | Slide 18 (Robustness #2: Oxidation 4-axis framework) drafted — Gil-González + Zuo + Wu 통합. Axis 1 (DRAW), 2 (Cl-rich WINS K_eff>0), 3 (Cl-rich WINS R_int), 4 (Cl-rich LOSES calendar). modelc σ 향상이 oxidation penalty 없이 옴, 비용은 thermal shelf life |
 | v1.27 | 2026-06-11 | Slide 19 (Robustness #3: Constrained ESW + 분해반응) drafted — Cl-scan (Cl=1.6 K_eff=20 sweet spot), oxidation onset 2.14V 분해반응 (modelc 0.7 Li vs comp1 1.75 Li, 1.6× LiCl), Zuo 2023 Eq(1)/(2) 정량 cross-validation |
 | v1.28 | 2026-06-11 | Slide 20 (Referee defense #1: 4-tension audit) + Slide 21 (Referee defense #2: 9-caveat consolidated) drafted — paper #1 nuanced honesty + limitations transparency. Section F (Referee defense) 완성 |
-| v1.29 | 2026-06-11 | **comp1 4 f.u. natural MLIP MD 결과 도착**: Ea=0.2532, D₀=4.11e-4, R²=0.9998 — Schlem 2020 LPSCl ordered ~0.25 EXACT match. **Slide 6 HOLD 해제 → v3 ACTIVE**: σ gain = Ea↓ (1.75×) + D₀↑ (1.41×) ≈ 2.5× 둘 다 작용. Minafra/Kraft direction 정합. 5 f.u. (Ea=0.172) = 인위 supercell artifact 확정. **db/properties/li_transport.json 갱신**: comp1_v3_5fu SUPERSEDED, comp1_v3_4fu_natural PRIMARY. Paper #1 mechanism narrative 변경 (prefactor-only → dual mechanism). |
+| v1.29 | 2026-06-11 | **comp1 4 f.u. natural MLIP MD 결과 도착**: Ea=0.2532, D₀=4.11e-4, R²=0.9998 — 구-Schlem2020[귀속오류·철회 2026-07-28→실험범위 0.29-0.46으로 대체] LPSCl ordered ~0.25 EXACT match. **Slide 6 HOLD 해제 → v3 ACTIVE**: σ gain = Ea↓ (1.75×) + D₀↑ (1.41×) ≈ 2.5× 둘 다 작용. Minafra/Kraft direction 정합. 5 f.u. (Ea=0.172) = 인위 supercell artifact 확정. **db/properties/li_transport.json 갱신**: comp1_v3_5fu SUPERSEDED, comp1_v3_4fu_natural PRIMARY. Paper #1 mechanism narrative 변경 (prefactor-only → dual mechanism). |
 | v1.30 | 2026-06-11 | Slide 6c v3 ACTIVE — **No T_cross, modelc wins at ALL T**, 저온일수록 σ ratio ↑ (RT 4.3×, 200K 7×). Zuo 2023 RT 측정 2.4× ↔ 우리 외삽 4.3× 자릿수 정합. v1/v2 'vacancy 양날' framing 무효 — 4fu 자료로 reversed. |
 | v1.31 | 2026-06-11 | References 섹션 추가 (slide 본문 외, paper writing용) — Thermal/Calendar (Wu/Adeli/Schlem/Tan), Moisture (Strauss/Janek/Kraft/Bachman), Synthesis window (Adeli/Yu/Wu), Mech anisotropy SSB (Pan/Sun, Doux, Krauskopf, Lewis, Hatzell, Wang), Trade-off review (Janek/Zeier, Famprikis, Chen), Performance backing (Zuo/Schlem/Minafra/Kim/Gil/Deiseroth) + paper #1 framing summary 한 줄 |
 | v1.32 | 2026-06-11 | **Slide 22 (Trade-offs & Outlook: Paper #2 Bridge) drafted ★ FINAL** — Top panel 4 trade-offs (Wu thermal / Strauss moisture / Adeli synthesis window / Zener anisotropy), 공통 원인 4d-Cl AS (M3-M4와 동일). Bottom panel Oxide Doping Strategy: Sc₂O₃ (cascade strongest, de=-0.974) / B₂O₃ (anneal+EOS) / Nd₂O₃ (DFT-relaxed) / Al₂O₃ cluster. "구조적 무질서를 design" 마무리. 21장 deck 완성 |

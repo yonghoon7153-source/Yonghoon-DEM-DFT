@@ -60,7 +60,7 @@ $\Omega$는 부분점유 사이트에 원자를 배열하는 경우의 수. 0 K�
 
 ---
 ## 4. Disordered가 정답인 양 — σ와 Ea
-이온 수송은 반대다. 단, 과장하면 안 된다: **무질서는 전도의 필요조건이 아니라 핵심 증강 레버다.** ordered comp1도 $E_a$ 0.253 eV(li_transport.json, Schlem 2020 ordered 0.25와 일치)로 이미 초이온 전도체 거동을 보인다 — 질서 배열 하나로도 전도는 살아있다(liu2022의 무질서 13.3 % LPSCl도 mS/cm급). 무질서(4d anti-site·공공)의 실측 효과는 $E_a$ 0.253 → 0.224 eV(−0.03 eV)·σ ×4(comp1 → modelc, 3-seed 비율)의 **증강**이고, 질서화는 이 평탄화를 지워 $E_a$를 계통적으로 과대평가하게 만든다.
+이온 수송은 반대다. 단, 과장하면 안 된다: **무질서는 전도의 필요조건이 아니라 핵심 증강 레버다.** ordered comp1도 $E_a$ 0.253 eV(li_transport.json; 실험 LPSCl 범위 0.29–0.46 eV 하단 — 구 'Schlem 0.25 일치' 앵커는 귀속 오류로 철회, 2026-07-28)로 이미 초이온 전도체 거동을 보인다 — 질서 배열 하나로도 전도는 살아있다(liu2022의 무질서 13.3 % LPSCl도 mS/cm급). 무질서(4d anti-site·공공)의 실측 효과는 $E_a$ 0.253 → 0.224 eV(−0.03 eV)·σ ×4(comp1 → modelc, 3-seed 비율)의 **증강**이고, 질서화는 이 평탄화를 지워 $E_a$를 계통적으로 과대평가하게 만든다.
 
 - 48h 부분점유(occ 0.50, kraft2017)는 곧 **빈자리** — Li가 hop할 목적지
 - 4d S²⁻/Cl⁻ anti-site 섞임이 cage 사이 병목을 평탄화
@@ -98,14 +98,14 @@ litdb 전수 조사 결과. 실험은 무질서를 '재기만' 하고, 계산은
 | kraft2017 | 실험 (중성자 Rietveld) | SQS·enumeration 없음 — 4a/4d 점유율 정련 | 4d 무질서 Cl 62 % → Br 22 % → I 0 % |
 | liu2022 | 실험 (Rietveld) | 점유율 정련 | 13.3 % (LPSCl-550) vs 61.7 % (LPSCl₁.₅-450) |
 | torii2025 | 계산 (DFT) | **single-config ordered** (명시적 SQS/enumerate 없음) | Zener A = 1.09 |
-| Deng 2016 (torii2025 digest ref10) | 계산 (DFT) | **SQS** (소수파) | Zener A = 0.92 |
+| Deng 2016 (원전 digest 2026-07-28) | 계산 (DFT) | **ordered** (Li@24g 전점유·음이온 무질서 미언급 — 원문에 SQS 단어 자체가 없음) | A 미보고 (Cij로 유도 시 0.93) |
 | rao2025 | 계산 (DFT) | rigorous **enumeration** | E_hull LPSCl 24 meV/atom |
 | ishikawa2025 | 계산 (격자 모델) | **단일 무작위** 배열 — N = 24³ = 13824로 정당화 | — |
 | li2025 | 계산 (DFT) | **n/a** — 미공개 ("여러 도핑 모델 비교" 서술뿐) | — |
 | ma2024 | 계산 (DFT) | **n/a** — decorate 방식 미공개 | — |
 
 > [!warning] 경계 사례 — 1 근처의 미세 지표가 방법에 따라 뒤집힌다
-> 같은 물질, 같은 물성인데 Deng SQS **A = 0.92** vs Torii ordered **A = 1.09** (torii2025 digest). 단, 둘 다 A ≈ 1(거의 등방 — digest 자체 판정)이라 $A-1$의 부호는 미세량이고, SQS/ordered 차이 외에 **D3 유무**(Torii PBE-D3 vs Deng PBE)만으로도 뒤집힐 수 있는 크기다 — D3만으로 C₄₄ +30 %·C₁₂ +39 % 이동(torii digest §7.3)인데 $A = 2C_{44}/(C_{11}-C_{12})$이기 때문. 그럼에도 "무질서 처리가 이 미세 지표를 흔들 수 있다"는 자기비판은 유지한다: 우리 relaxed-ion comp1 A = 1.14가 Torii 1.09와 가까운 건 독립 검증이 아니라 **둘 다 ordered라는 같은 편향을 공유**한 탓일 수 있다.
+> [2026-07-28 원전 확인으로 재작성] 이 박스는 원래 "Deng SQS 0.92 vs Torii ordered 1.09 = 무질서 처리가 부호를 가른 사례"였으나, **Deng 원문에 SQS가 없음이 확정**됐다(Li@24g 전점유 ordered; A도 미보고 — Cij 유도값 0.93). 즉 **두 계산 모두 ordered**이고, A−1 부호 차이의 후보는 무질서 처리가 아니라 **functional(PBEsol vs PBE-D3)·Li 배치(24g 전점유 vs 48h계)·유도값 절사**다. 교훈은 오히려 강해졌다: (a) 문헌의 계산 진영은 이 표본에서 **전원 ordered** — 무질서 탄성 계산은 공백이고, 우리 modelc(disorder, A=1.44)가 그 공백을 채우는 고유 기여다. (b) 우리 comp1 A=1.14 ≈ Torii 1.09의 근접은 여전히 독립 검증이 아니라 **셋 다 ordered라는 공유 편향**일 수 있다. (c) 2차 인용("SQS였다더라")은 원문 확인 전까지 믿지 말 것 — 이 박스 자체가 그 실패 사례였다.
 
 ---
 ## 7. 무질서는 물질 상수가 아니라 공정 변수
@@ -165,7 +165,7 @@ graph TD
 - Canonical gap (fixed-occ nscf 고유값, db/properties/electronic.json): comp1 2.066 (52at ordered 정형셀) / modelc 2.099 (62at) / +B₂O₃ 1.9671 (128at) / LPSOCl 2.2309 eV (62at) — comp1 외 셋은 배치 확정 단일-config 셀, 레시피 동일 (doping_family_2026_07_16)
 - Disordered ensemble: d = 0.5/1.0 × cfg0/1/2, UMA anneal+relax 후 MD — v1 un-relaxed swap은 artifact로 폐기 (tools/ionic/run_comp2_disorder.sh)
 - 무질서 → 수송 **부호 일치** 증거: $F^*$ 0.191 → 0.078 eV가 $E_a$ 0.253 → 0.224 eV와 같은 방향으로 움직이며, 이건 **BVSE와 독립**이다 (tools/ionic/li_percolation.py). ⚠ **인과 주장은 아직 보류** — (a) 표본이 comp1↔modelc **n = 2**이고 두 계는 Cl 함량·Li 공공·S 함량·셀(cubic-52 vs rhombo-62)이 **동시에** 다른 비통제 쌍이며, (b) $F^*$는 $E_a$를 준 바로 그 600 K MD 궤적의 Li 밀도에서 나온 2차 통계라 MD와는 독립이 아니고, (c) 크기도 대응하지 않는다($\Delta F^*$ 0.113 vs $\Delta E_a$ 0.029 eV — PMF 침수 문턱과 Arrhenius 기울기는 애초에 같은 양이 아니다). db 자체는 같은 관측치의 주된 원인을 **공공(vacancy)** 으로 지목한다(comp2_md_arrhenius.json: "VACANCY is the robust conductivity lever"). → **조성 고정 disorder-% 스캔**이 나오기 전엔 인과로 쓰지 않는다.
-- 자기비판 유지: 우리 A = 1.14 ≈ Torii 1.09는 공유 편향(둘 다 ordered)일 수 있음 — Deng SQS 0.92 vs Torii 1.09처럼 A ≈ 1 미세 지표가 무질서 처리·D3 등 방법차로 흔들리는 사례를 항상 옆에 둔다
+- 자기비판 유지·강화: 우리 A = 1.14 ≈ Torii 1.09 ≈ Deng(유도 0.93) — **문헌 계산 셋 다 ordered**라 근접은 공유 편향일 수 있음. A ≈ 1 미세 지표는 functional·Li 배치·유도 절사만으로 흔들린다(Deng 'SQS' 오귀속 정정 사례를 항상 옆에 둔다)
 
 **litdb 출처** (수치는 모두 digest 소환값 — 우리 db 절대값과 방법 병기 없이 섞지 말 것):
 kraft2017_lattice_polarizability_argyrodite_Li6PS5X.md · liu2022_cl_crystallization_interface_argyrodite.md · torii2025_lpscl_mechanical_anisotropy_dft.md · ishikawa2025_site_percolation_cooperative_ion_conduction.md · rao2025_iodide_argyrodite.md · li2025_cubr2_dualdoping_argyrodite.md · ma2024_sb_doping_lpsc_conductivity.md

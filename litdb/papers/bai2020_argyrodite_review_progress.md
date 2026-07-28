@@ -259,7 +259,7 @@ Li-argyrodite Li₆PS₅X(X=Cl/Br/I) SE 한 패밀리를 **결정구조·구조�
 |---|---|---|---|
 | **σ (Li₆PS₅Cl)** | ~10⁻³ S/cm (고상; 용액 0.014–1.1) | (우리 DFT는 절대 σ 미보고; AIMD D만) | △ 우리 UMA σ는 3–5× 과대라 *절대 비교 금지*; Ea·ratio만 |
 | **σ (Cl-rich)** | **Li₅.₅PS₄.₅Cl₁.₅ ~10 mS/cm**(ref 30) | modelc D(600K) 7.90 ≫ comp1 3.09 e-6(2.6×) | **✓ 방향 일치** (Cl-rich 빠름·disorder); 절대 σ는 미대조 |
-| **Ea** | Cl-rich x=0.7서 최저(ref 76)·~0.2–0.3 eV대 | comp1 **0.253** / modelc **0.224 eV** | **✓ Cl-rich Ea↓ 방향 일치**; comp1 0.253=Schlem 실험 0.25와 정합(리뷰 ref 49 polarizability 계열) |
+| **Ea** | Cl-rich x=0.7서 최저(ref 76)·~0.2–0.3 eV대 | comp1 **0.253** / modelc **0.224 eV** | **✓ Cl-rich Ea↓ 방향 일치**; comp1 0.253은 실험 범위(0.29–0.46, 방법 의존) 하단 — 구 'Schlem 0.25 정합' 철회(귀속 오류 판명 2026-07-28: DOI 10.1002/aenm.201903719는 Li3MCl6 논문 — LPSCl 0.25/0.22의 원전 미상(별도 확보 필요)) |
 | **halide trend** | **σ Br≈Cl≫I(10⁻⁷)**; I는 반경 過大로 disorder 소멸 | (우리는 Cl만; [Rao11]/[Rao]가 Cl/Br/I) | **✓ 리뷰 trend = [Rao11](Cl1.9/Br6.8/I 4.6e-7)·[Rao]와 일치**; 우리 comp1=Cl 줄 |
 | **anion disorder→σ** | **inter-cage jump 율속 + disorder가 장벽↓→superionic**(p.25664) | AIMD inter-cage 율속·Cl-rich disorder D↑ | **✓✓ 메커니즘 정확 일치**(리뷰=교과서 진술; [Perc]/[Dyre]/[Rao11] 백본) |
 | **E (Young)** | **LPSX 22.1–30.0 GPa**(Table 1, ref 70) | E_VRH **relaxed 22.06**→27.66 (clamped 52.31) | **✓ relaxed-ion이 리뷰 줄**; clamped는 ×2 벗어남 = vacancy paradox(리뷰는 relaxed/clamped 미구분) |

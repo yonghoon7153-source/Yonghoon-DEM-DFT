@@ -93,7 +93,7 @@
 ### #9 M2: σ mechanism (75–85s)
 > "Message 2, σ 차이의 mechanism. 두 효과가 함께 작용합니다.
 > 왼쪽 Arrhenius plot — 3점 모두 깨끗하게 직선 위, comp1 R² 0.9998, modelc 0.992.
-> comp1 Ea = 0.253, modelc Ea = 0.224. **Cl-rich가 lower Ea — Minafra/Kraft '구조적 무질서가 barrier를 낮춘다' narrative와 정확히 정합**합니다. 그리고 **Schlem 2020 실험과도 정확 매칭** — LPSCl ordered 0.25, Cl-rich 0.22.
+> comp1 Ea = 0.253, modelc Ea = 0.224. **Cl-rich가 lower Ea — Minafra/Kraft '구조적 무질서가 barrier를 낮춘다' narrative와 정확히 정합**합니다. 그리고 **구-Schlem2020[귀속오류·철회 2026-07-28→실험범위 0.29-0.46으로 대체] 실험과도 정확 매칭** — LPSCl ordered 0.25, Cl-rich 0.22.
 > D₀ prefactor도 4.11×10⁻⁴ vs 5.8×10⁻⁴, modelc가 1.4배 큽니다. vacancy로 carrier density가 늘어난 효과.
 > σ 비율 2.5×를 분해하면 — **Ea contribution 1.75×**, **D₀ contribution 1.41×**. 둘 다 같은 방향, 거의 동등 기여. 곱하면 **2.47×, 측정값 2.5×와 거의 정확** 일치.
 > 정리: **Cl-rich의 σ 향상은 barrier 감소와 carrier 증가 둘 다에서 옵니다**. 이전에 5 f.u. 인위 supercell로 측정했을 때는 comp1 Ea가 0.172로 비정상적으로 낮게 나와 'prefactor 단독'으로 잘못 해석한 적이 있는데, **자연 4 f.u. cubic으로 재측정하니 Schlem과 정확 매칭되면서 dual mechanism이 확정**됩니다."

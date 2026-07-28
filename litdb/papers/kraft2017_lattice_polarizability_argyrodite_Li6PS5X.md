@@ -205,7 +205,7 @@ Li₆PS₅X에서 Cl→Br→I 치환은 전도 경로·carrier 농도·결함형
 2. **"softer ≠ better"·prefactor 지배 = 우리 Nd 분석의 앵커**: Kraft가 σ₀ 4자릿수 변동으로 σ를 지배함을 실측 → 우리 **Nd σ-drop이 Ea 아니라 D0 prefactor(0.65×)로 설명**되는 것과 정확히 같은 물리(Meyer–Neldel/보상). deck: "문헌(Kraft)이 argyrodite에서 prefactor가 σ를 지배함을 실측, 우리 Nd 결과가 그 계열."
 3. **comp2가 σ 최적점이라는 외부 예측**: Kraft가 Cl₀.₅Br₀.₅=우리 comp2를 σ 최대(~2 mS/cm)로 지목 → 우리 comp2 계산이 *어디 있어야 하는지*의 기대치. comp2 ε∞(3.80, Br로 분극성↑)·elastic(소폭 연화 예상)의 물리 스토리 확정.
 4. **가설 정직화**: "할라이드가 modulus에 둔감" 강한 주장은 **금지**(Kraft가 −24 % 실측). 대신 "**P–S 골격이 baseline 강성, 할라이드는 ~15~24 % 2차 변조; 우리 comp1→comp2(50 % Br)는 ~6~8 %**"로 서술.
-5. **E_A 절대값 교차검증의 방법 함정**: Kraft E_A(Cl)~0.46(=total 임피던스, GB 포함) vs 우리 MD 0.253(bulk) vs Schlem 0.25(bulk) vs Rao2011 0.38(임피던스) — **방법마다 갈림**. bai2020이 comp1 0.253≈Schlem 0.25로 정합 언급한 것과 Kraft 0.46은 *다른 측정층*(total vs bulk). **우리 MD는 bulk 값이라 Kraft total과 직접 비교 금지, 방향만.**
+5. **E_A 절대값 교차검증의 방법 함정**: Kraft E_A(Cl)~0.46(=total 임피던스, GB 포함) vs 우리 MD 0.253(bulk) vs 구'Schlem 0.25'(⚠ 귀속 오류 판명 2026-07-28: DOI 10.1002/aenm.201903719는 Li3MCl6 논문 — LPSCl 0.25/0.22의 원전 미상(별도 확보 필요)) vs Rao2011 0.38(임피던스) — **방법마다 갈림**. bai2020이 comp1 0.253≈Schlem 0.25로 정합 언급한 것과 Kraft 0.46은 *다른 측정층*(total vs bulk). **우리 MD는 bulk 값이라 Kraft total과 직접 비교 금지, 방향만.**
 6. **I는 전도 레버가 아님**: I 저전도 원인 = 격자 무름이 아니라 **무질서 소멸 + prefactor 붕괴**. Rao2025(I=상안정/계면 레버, 전도 아님)·Rao2011과 3중 정합.
 7. **무질서 실측 ground truth**: Kraft의 Rietveld 점유율(Cl 62 %)이 우리 modelc SQS/enumerate 무질서 배열의 실험 검증 기준.
 
