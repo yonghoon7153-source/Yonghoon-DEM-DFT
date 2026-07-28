@@ -78,6 +78,8 @@
 - 내용: champions Δe_post_anneal · litransport bvs proxy를 조성 특징에서 TabPFN으로
   예측, 현행 numpy ridge와 LOOCV 성능표 비교 → 사이트 ML 탭에 병기.
   근거: litdb hollmann2025 (≤10k행/500특징 스윗스팟, 튜닝 0).
+  + [Sendek17 선례 이식] X-randomization(랜덤 대비 농축배수로 보고) + cR²_p
+  유의성 — 소표본(그들 40 ≈ 우리 47) 정직성 지표의 인용 선례 확보.
 
 ### M2. pair CV를 leave-one-dopant-out으로 (codoping_ml v2.1)
 - **트리거**: 없음 (코드 수정만).
@@ -87,7 +89,8 @@
 ### M3. TabPFN 역설계 루프 1회전 → 첫 실측 라벨
 - **트리거**: M1 완료 + gabia GPU 여유 (comp1 seeds 종료 후).
 - 내용: 가상 후보(1081쌍 × 농도축) TabPFN 스코어링 → 불확실성 페널티로 상위 5쌍
-  선별(winner's curse 완화) → UMA 공동치환 슈퍼셀 검증 = codoping 첫 라벨.
+  선별(winner's curse 완화 — [Sendek17]의 적용영역 d/ε/A 3지표가 기성 구현체,
+  P_LR vs d 그림 양식 그대로 이식) → UMA 공동치환 슈퍼셀 검증 = codoping 첫 라벨.
   mlip_next_campaigns ①(Li|SE 계면)과 후보 공유.
 
 ### M4. disorder 서러게이트 (active learning)
