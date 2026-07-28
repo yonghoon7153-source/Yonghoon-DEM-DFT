@@ -20,6 +20,7 @@
 """
 import csv
 import hashlib
+import itertools
 import json
 import statistics
 from pathlib import Path
@@ -42,6 +43,10 @@ GATE_FLOOR, GATE_EPS = 0.05, 0.05
 TRANSPORT_CUT = 0.30
 
 
+CONC_KEYS = ["002", "005", "010"]
+CONC_LABEL = {"002": "x=0.02", "005": "x=0.05", "010": "x=0.10"}
+
+
 def read_csv_rows(path):
     with open(path) as fh:
         return list(csv.DictReader(l for l in fh if not l.startswith("#")))
@@ -52,6 +57,26 @@ def fnum(v):
         return float(v)
     except (TypeError, ValueError):
         return None
+
+
+# ── 농도별 챔피언 원자료 (G1·G5 가 평균한 3점을 되돌려 보기 위함) ──────────────
+def load_champion_by_x():
+    """champions.csv → {dopant: {"002": {...}, "005": {...}, "010": {...}}}.
+
+    ⚠ ranked.csv 의 de / E_GPa / pugh 는 **이 3점의 산술평균**이다(전 47종 검증됨).
+    G1·G5 는 그 평균값에 컷을 걸므로, 농도별 원값을 함께 보여주지 않으면
+    '이 도펀트가 모든 농도에서 통과한다'는 오독을 만든다.
+    """
+    out = {}
+    for r in read_csv_rows(PROP / "cascade_v23_champions.csv"):
+        d, _, x = r["_dir"].rpartition("_x")
+        out.setdefault(d, {})[x] = {
+            "champion_label": (r.get("dopant") or "").strip(),
+            "de": fnum(r.get("rerank_de_post_anneal")),
+            "E_GPa": fnum(r.get("elastic_E_young_GPa")),
+            "GoverB": fnum(r.get("elastic_pugh_GoverB")),
+        }
+    return out
 
 
 # ── 데이터 로드 + ionic_transport norm 재계산 ────────────────────────────────
@@ -111,19 +136,48 @@ def load_pool():
     return rows
 
 
+def transport_gaps(rows, top=3):
+    """G4 통과자(=blocking 게이트를 넘은 종) 분포의 최대 공백 top-N.
+
+    반환 (gap, below_value, above_value, below_name, above_name) — 산문에 박아 넣던 숫자를
+    전부 여기서 뽑는다(입력이 바뀌면 문장도 같이 바뀌게).
+    """
+    ps = sorted([r for r in rows if (r["transport_norm"] or 0.0) > GATE_FLOOR],
+                key=lambda r: (-r["transport_norm"], r["dopant"]))
+    return sorted(((round(ps[i]["transport_norm"] - ps[i + 1]["transport_norm"], 4),
+                    ps[i + 1]["transport_norm"], ps[i]["transport_norm"],
+                    ps[i + 1]["dopant"], ps[i]["dopant"])
+                   for i in range(len(ps) - 1)), reverse=True)[:top]
+
+
 # ── 게이트 정의 ──────────────────────────────────────────────────────────────
 def build_gates(rows):
     e_med = statistics.median([r["E_GPa"] for r in rows if r["E_GPa"] is not None])
     gb_med = statistics.median([r["GoverB"] for r in rows if r["GoverB"] is not None])
+
+    # G4 선택압 분해 — blocking 상수가 죽인 것 vs bvs 컷이 죽인 것 (문자열 하드코딩 금지)
+    _g4_fail = [r for r in rows if not ((r["transport_norm"] or 0.0) > TRANSPORT_CUT)]
+    _g4_blocking_kill = [r["dopant"] for r in _g4_fail
+                         if (r["blocking"] if r["blocking"] is not None else 1.0) >= BLOCKING_GATE]
+    _g4_bvs_only_kill = sorted(r["dopant"] for r in _g4_fail
+                               if r["dopant"] not in set(_g4_blocking_kill))
+    _gaps = transport_gaps(rows)
+    _g1, _g2, _g3 = _gaps[0], _gaps[1], _gaps[2]
 
     return {
         "G1": {
             "id": "G1",
             "name": "structural_stability",
             "label": "구조 안정 (도핑 형성 favorability)",
-            "metric": "de = E(doped champion) − E(host), UMA 상대 (eV, cascade_v23_ranked.csv)",
-            "threshold": "de < 0",
+            "metric": ("de = E(doped champion) − E(host), UMA 상대 (eV). "
+                       "⚠ cascade_v23_ranked.csv 의 de 는 단일 챔피언 값이 아니라 "
+                       "**x∈{0.02, 0.05, 0.10} 챔피언 3점의 산술평균**이다(47/47 검증). "
+                       "일부 도펀트는 plain·Cl-rich 조성족이 섞인 3점이며(B2O3 는 +Clrich 만 존재) "
+                       "→ concentration_convention 블록 참조."),
+            "threshold": "mean_x(de) < 0",
             "predicate": lambda r: r["de"] is not None and r["de"] < 0.0,
+            "missing": lambda r: r["de"] is None,
+            "concentration_convention": "3점 평균 (x=0.02/0.05/0.10)",
             "threshold_basis": (
                 "0 은 임의 컷이 아니라 **host 자신**(Δe = doped − undoped baseline)이다 — "
                 "'host보다 안정한가'라는 이분 질문의 물리적 기준점. 273-cascade 전체가 같은 "
@@ -141,13 +195,18 @@ def build_gates(rows):
             "name": "electrochemical_window",
             "label": "전기화학 창 붕괴 회피",
             "metric": "window_V = ox_V − red_V (grand-potential ESW, MP GGA/GGA+U hull)",
-            "threshold": f"window_V > {COLLAPSE_WINDOW_V} V",
-            "predicate": lambda r: (r["window_V"] or 0.0) > COLLAPSE_WINDOW_V,
+            "threshold": f"window_V ≥ {COLLAPSE_WINDOW_V} V",
+            "predicate": lambda r: r["window_V"] is not None and r["window_V"] >= COLLAPSE_WINDOW_V - 1e-12,
+            "missing": lambda r: r["window_V"] is None,
+            "concentration_convention": "champion composition 단일 (농도 평균 아님)",
             "threshold_basis": (
                 f"0.05 V 는 oxidation_stability_cascade.csv 가 이미 명문화한 **collapse 규약**"
                 "('window<0.05 V = collapse, avoid, late-TM Fe/Co/Ni/Mn')이며 "
                 "build_cascade_themes.py 의 oxidative/reduction 테마 게이트와 동일 상수다. "
-                "이 빌더가 새로 만든 숫자가 아니라 기존 db 규약의 승계."),
+                "이 빌더가 새로 만든 숫자가 아니라 기존 db 규약의 승계 — "
+                "규약이 'collapse = window<0.05' 이므로 경계값(정확히 0.05)은 **통과**시킨다(≥). "
+                "현재 데이터에는 경계값이 없어 판정은 동일(collapse 4종 최대 MnO 0.039, "
+                "비-collapse 최소 Cu2O 0.113)."),
             "literature_analog": {
                 "papers": ["zhu2015_esw_grand_potential_origin (방법 원전)",
                            "xiao2019_cathode_coating_screening (Filter 3)"],
@@ -164,6 +223,8 @@ def build_gates(rows):
             "metric": "ox_V (V vs Li, grand-potential onset)",
             "threshold": f"ox_V ≥ {HOST_OX_V} V (undoped host onset)",
             "predicate": lambda r: r["ox_V"] is not None and r["ox_V"] >= HOST_OX_V - 1e-9,
+            "missing": lambda r: r["ox_V"] is None,
+            "concentration_convention": "champion composition 단일 (농도 평균 아님)",
             "threshold_basis": (
                 f"{HOST_OX_V} V = undoped comp1/modelc 의 grand-potential 산화 onset "
                 "(oxidation_stability_cascade.csv 헤더에 명시된 ref). 즉 '도펀트를 넣어서 "
@@ -187,15 +248,24 @@ def build_gates(rows):
             "metric": ("ionic_transport norm ∈[0,1] = min-max(bvs_li_proxy_score @x=0.05) "
                        f"with blocking<{BLOCKING_GATE} 게이트, 탈락자 {GATE_FLOOR} 평탄화"),
             "threshold": f"transport_norm > {TRANSPORT_CUT}",
-            "predicate": lambda r: (r["transport_norm"] or 0.0) > TRANSPORT_CUT,
+            "predicate": lambda r: r["transport_norm"] is not None and r["transport_norm"] > TRANSPORT_CUT,
+            "missing": lambda r: r["transport_norm"] is None,
+            "concentration_convention": "x=0.05 단일 (litransport *_x005 — 농도 평균 아님)",
             "threshold_basis": (
-                "두 겹. ① blocking<0.60 은 build_cascade_themes.py 가 이미 쓰는 db 규약(승계). "
-                "② 0.30 컷은 통과자 분포 **하위 꼬리의 공백 구간**(MoO3 0.2863 ↔ MnO 0.3844, 폭 0.098) "
-                "안에 놓았다. ⚠ 정확히 말하면 이건 분포 전체의 최대 공백이 아니다"
-                "(최대는 0.6842↔0.845 = 0.161, 그 다음이 0.1827↔0.2863 = 0.104, 이게 3번째). "
-                "즉 '하위 꼬리를 자르는 자연스러운 위치 중 하나'이지 유일해가 아니다. "
-                "host 앵커가 없는 축이라 G1–G3 만큼 강한 유도가 아님 → "
-                "threshold_sensitivity.G4 스윕(코어 기준)을 반드시 함께 볼 것."),
+                f"두 겹이고, **선택압의 거의 전부가 첫 겹에서 나온다**. "
+                f"① blocking<{BLOCKING_GATE} 은 build_cascade_themes.py 가 이미 쓰는 db 규약(승계)이지만 "
+                f"host 앵커도 문헌 대응도 없는 **상속 상수**다 — G4 단독 탈락 {len(_g4_fail)}종 중 "
+                f"{len(_g4_blocking_kill)}종이 이 상수에 죽고, bvs 컷({TRANSPORT_CUT}) 단독 기여는 "
+                f"{len(_g4_bvs_only_kill)}종({', '.join(_g4_bvs_only_kill)})뿐이다. "
+                f"② {TRANSPORT_CUT} 컷은 통과자 분포 **하위 꼬리의 공백 구간**"
+                f"({_g3[3]} {_g3[1]:.4g} ↔ {_g3[4]} {_g3[2]:.4g}, 폭 {_g3[0]:.4g}) 안에 놓았다. "
+                f"⚠ 정확히 말하면 이건 분포 전체의 최대 공백이 아니다"
+                f"(최대는 {_g1[1]:.4g}↔{_g1[2]:.4g} = {_g1[0]:.4g}, "
+                f"그 다음이 {_g2[1]:.4g}↔{_g2[2]:.4g} = {_g2[0]:.4g}, 이게 3번째). "
+                f"즉 '하위 꼬리를 자르는 자연스러운 위치 중 하나'이지 유일해가 아니다. "
+                f"→ threshold_sensitivity 의 G4_li_transport(bvs 컷) **와 G4_blocking(상속 상수) 스윕을 "
+                f"반드시 함께 볼 것** — 코어 생존자 수는 blocking 컷만 흔들어도 6↔21 로 움직인다."),
+            "arbitrariness_flag": True,
             "literature_analog": {
                 "papers": ["xiao2019_cathode_coating_screening (Filter 6, CI-NEB E_m)",
                            "kahle2020_ht_aimd_screening (pinball D(1000 K) 상위 200 → FPMD 132)"],
@@ -212,15 +282,26 @@ def build_gates(rows):
             "id": "G5",
             "name": "mechanical",
             "label": "기계 (연질 + 연성) — 우리 고유 축",
-            "metric": "E_young (GPa, UMA) ↓ AND G/B ↓ (champions csv elastic_pugh_GoverB)",
-            "threshold": f"E_GPa ≤ {e_med:.4g} (roster median) AND G/B ≤ {gb_med:.4g} (roster median)",
+            "metric": ("E_young (GPa, UMA) ↓ AND G/B ↓. "
+                       "⚠ cascade_v23_ranked.csv 의 E_GPa·pugh(=G/B) 는 단일 챔피언 값이 아니라 "
+                       "**x∈{0.02, 0.05, 0.10} 챔피언 3점의 산술평균**이다(47/47 검증, "
+                       "champions csv elastic_E_young_GPa · elastic_pugh_GoverB 유래). "
+                       "일부 도펀트는 plain·Cl-rich 조성족이 섞인 3점(B2O3 는 +Clrich 만 존재) "
+                       "→ concentration_convention 블록 참조."),
+            "threshold": (f"mean_x(E_GPa) ≤ {e_med:.4g} (roster median) AND "
+                          f"mean_x(G/B) ≤ {gb_med:.4g} (roster median)"),
             "predicate": (lambda r: (r["E_GPa"] is not None and r["GoverB"] is not None
                                      and r["E_GPa"] <= e_med + 1e-9 and r["GoverB"] <= gb_med + 1e-9)),
+            "missing": lambda r: r["E_GPa"] is None or r["GoverB"] is None,
+            "concentration_convention": "3점 평균 (x=0.02/0.05/0.10)",
             "threshold_basis": (
                 "⚠ **G1–G4 와 달리 host 앵커가 없다.** UMA 탄성값은 절대 인용 금지 규율 대상이고, "
                 "같은 방법(UMA)으로 계산된 undoped host 의 E/(G/B) 항목이 cascade 산출물에 없다 "
                 "(elastic.json 의 host 값은 DFT — 교차 인용 불가). 따라서 median split = "
-                "**로스터 내부 상대 컷**이며 이 게이트만 자의성이 남는다(arbitrariness_flag). "
+                "**로스터 내부 상대 컷**이다(arbitrariness_flag). "
+                "게다가 컷이 걸리는 값 자체가 3농도 평균이라 **농도 산포가 게이트 폭과 맞먹는다** "
+                "(E_young 농도 산포: NdF3 17.8 · WO3 17.0 · MgF2 16.8 GPa) → "
+                "threshold_sensitivity.per_concentration_application 을 반드시 함께 볼 것. "
                 "문헌 절대 기준(Pugh B/G > 1.75)을 걸면 생존자 0 — literature_absolute_variants 참조."),
             "literature_analog": {
                 "papers": [],
@@ -251,13 +332,36 @@ PERMUTATIONS = [
 ]
 
 
-def run_sequence(rows, gates, order):
+# vacuous 는 한 종류가 아니다 — 어떤 뜻의 0-kill 인지 라벨을 나눈다.
+#   pool_curated       💤 : 이 게이트를 전체 풀에 걸어도 아무도 안 죽는다 = 풀이 이미 그 조건으로 큐레이션됨
+#   subsumed_by_upstream ⊂ : 죽일 대상은 있었는데 상류 게이트가 먼저 가져갔다 (순서의 산물)
+#   pool_exhausted      ∅ : 들어온 게 없다
+VACUOUS_KIND_LABEL = {
+    "pool_curated": "💤 풀 큐레이션 — 전체 풀에 단독 적용해도 0종 탈락",
+    "subsumed_by_upstream": "⊂ 상류 게이트에 포섭 — 이 게이트가 죽일 종을 앞 게이트가 먼저 잡아감",
+    "pool_exhausted": "∅ 풀 소진 — 들어온 종이 0",
+}
+
+
+def run_sequence(rows, gates, order, standalone_kill=None):
     alive = list(rows)
     steps = []
+    seen = []
     for gid in order:
         g = gates[gid]
         passed = [r for r in alive if g["predicate"](r)]
         failed = [r for r in alive if not g["predicate"](r)]
+        missing = sorted(r["dopant"] for r in alive if g.get("missing", lambda _r: False)(r))
+        vac = len(failed) == 0
+        kind = None
+        if vac:
+            sk = (standalone_kill or {}).get(gid)
+            if not alive:
+                kind = "pool_exhausted"
+            elif sk == 0:
+                kind = "pool_curated"
+            else:
+                kind = "subsumed_by_upstream"
         steps.append({
             "gate": gid,
             "gate_name": g["name"],
@@ -265,8 +369,14 @@ def run_sequence(rows, gates, order):
             "n_pass": len(passed),
             "n_fail": len(failed),
             "failed_here": sorted(r["dopant"] for r in failed),
-            "vacuous": len(failed) == 0,
+            # ⚠ 판정 불가(입력 결측)는 '탈락'과 다르다 — attrition_is_not_screening 규율을 게이트 층에도 적용
+            "n_missing": len(missing),
+            "missing": missing,
+            "vacuous": vac,
+            "vacuous_kind": kind,
+            "upstream_gates": list(seen),
         })
+        seen.append(gid)
         alive = passed
     return steps, sorted(r["dopant"] for r in alive)
 
@@ -278,7 +388,9 @@ def main():
     by_name = {r["dopant"]: r for r in rows}
 
     # ── 게이트별 블록 (대표 순서 기준 + standalone) ──────────────────────────
-    steps, survivors = run_sequence(rows, gates, REPRESENTATIVE_ORDER)
+    standalone_kill_n = {gid: sum(1 for r in rows if not gates[gid]["predicate"](r))
+                         for gid in REPRESENTATIVE_ORDER}
+    steps, survivors = run_sequence(rows, gates, REPRESENTATIVE_ORDER, standalone_kill_n)
     step_by_gid = {s["gate"]: s for s in steps}
 
     gate_blocks = []
@@ -286,22 +398,30 @@ def main():
         g = gates[gid]
         s = step_by_gid[gid]
         standalone_fail = sorted(r["dopant"] for r in rows if not g["predicate"](r))
+        standalone_missing = sorted(r["dopant"] for r in rows
+                                    if g.get("missing", lambda _r: False)(r))
         vac_interp = None
-        if s["vacuous"]:
+        if s["vacuous_kind"] == "pool_curated":
             vac_interp = (
-                f"⚠ VACUOUS — 대표 순서에서 이 게이트에 들어온 {s['n_in']}종이 전원 통과했다. "
-                "이는 '우리가 이 조건으로 걸렀다'가 아니라 **우리 풀이 이미 그 조건을 만족하도록 "
-                "큐레이션돼 있었다**는 뜻이다. 문헌 깔때기에서는 같은 게이트가 수천~수만 종을 "
+                f"💤 VACUOUS (풀 큐레이션) — 이 게이트를 **전체 {len(rows)}종에 단독으로** 걸어도 "
+                "0종이 떨어진다. 즉 '우리가 이 조건으로 걸렀다'가 아니라 **우리 풀이 이미 그 조건을 "
+                "만족하도록 큐레이션돼 있었다**는 뜻이다. 문헌 깔때기에서는 같은 게이트가 수천~수만 종을 "
                 "떨어뜨린다(Xiao F2: 62,437→1,600 = 97.4% 제거; Sendek E_hull=0: 12,831→1,472 = 88.5% 제거). "
                 "발견력의 증거로 인용하면 과장이다.")
-        elif len(standalone_fail) == 0:
-            vac_interp = "standalone 으로도 전원 통과 — 사실상 무효 게이트."
+        elif s["vacuous_kind"] == "subsumed_by_upstream":
+            vac_interp = (
+                f"⊂ VACUOUS (상류 포섭) — 이 게이트는 단독으로는 {len(standalone_fail)}종을 떨어뜨리지만, "
+                f"대표 순서에서는 앞 게이트({' · '.join(s['upstream_gates']) or '—'})가 그 종을 이미 "
+                "가져가서 0-kill 이 됐다. **풀 큐레이션의 증거가 아니라 순서의 산물**이다.")
+        elif s["vacuous_kind"] == "pool_exhausted":
+            vac_interp = "∅ VACUOUS (풀 소진) — 이 게이트에 들어온 종이 0. 판정 자체가 없다."
         gate_blocks.append({
             "id": gid,
             "name": g["name"],
             "label": g["label"],
             "metric": g["metric"],
             "threshold": g["threshold"],
+            "concentration_convention": g.get("concentration_convention"),
             "threshold_basis": g["threshold_basis"],
             "literature_analog": g["literature_analog"],
             "engine": g["engine"],
@@ -309,13 +429,18 @@ def main():
             "in_representative_order": {
                 "n_in": s["n_in"], "n_pass": s["n_pass"], "n_fail": s["n_fail"],
                 "eliminated_here": s["failed_here"],
+                "n_missing": s["n_missing"], "missing": s["missing"],
             },
             "standalone": {
                 "n_pass": len(rows) - len(standalone_fail),
                 "n_fail": len(standalone_fail),
                 "eliminated": standalone_fail,
+                # 결측 = '떨어뜨린 것'이 아니라 '판정하지 못한 것' (지금은 0 이지만 규율상 항상 노출)
+                "n_missing": len(standalone_missing),
+                "missing": standalone_missing,
             },
             "vacuous": s["vacuous"],
+            "vacuous_kind": s["vacuous_kind"],
             "vacuous_interpretation": vac_interp,
         })
 
@@ -340,40 +465,107 @@ def main():
         })
 
     # ── 순서 민감도 ──────────────────────────────────────────────────────────
+    # 서사용 4개(P0–P3)는 UI 카드로 보여주고, 교집합/합집합 주장은 **120 순열 전수**로 증명한다.
+    # (표본 4개로 뽑은 교집합은 '확인'이지 '증명'이 아니다 — 비용이 사실상 0 이라 전수로 간다.)
+    exhaustive = []
+    for order in itertools.permutations(REPRESENTATIVE_ORDER):
+        st, surv = run_sequence(rows, gates, list(order), standalone_kill_n)
+        exhaustive.append({"order": list(order),
+                           "waterfall": [len(rows)] + [s["n_pass"] for s in st],
+                           "final_survivors": surv})
+    ex_sets = [set(e["final_survivors"]) for e in exhaustive]
+    identical = all(s == ex_sets[0] for s in ex_sets)
+    inter = sorted(set.intersection(*ex_sets))
+    union = sorted(set.union(*ex_sets))
+    distinct_waterfalls = sorted({tuple(e["waterfall"]) for e in exhaustive})
+
     perms = []
     for p in PERMUTATIONS:
-        st, surv = run_sequence(rows, gates, p["order"])
+        st, surv = run_sequence(rows, gates, p["order"], standalone_kill_n)
         perms.append({
             "key": p["key"], "order": p["order"], "rationale": p["rationale"],
             "waterfall": [len(rows)] + [s["n_pass"] for s in st],
             "steps": [{"gate": s["gate"], "n_in": s["n_in"], "n_pass": s["n_pass"],
-                       "n_fail": s["n_fail"], "vacuous": s["vacuous"]} for s in st],
+                       "n_fail": s["n_fail"], "n_missing": s["n_missing"],
+                       "vacuous": s["vacuous"], "vacuous_kind": s["vacuous_kind"],
+                       "vacuous_label": VACUOUS_KIND_LABEL.get(s["vacuous_kind"]),
+                       "upstream_gates": s["upstream_gates"]} for s in st],
             "final_survivors": surv,
         })
-    all_sets = [set(p["final_survivors"]) for p in perms]
-    identical = all(s == all_sets[0] for s in all_sets)
-    inter = sorted(set.intersection(*all_sets))
-    union = sorted(set.union(*all_sets))
+
+    # ── G4 선택압 분해: 상속 상수(blocking) vs BVSE 컷, 어느 쪽이 죽였나 ──────────
+    # transport_norm 규약상 blocking >= BLOCKING_GATE 인 종은 GATE_FLOOR(0.05)로 눌려
+    # TRANSPORT_CUT(0.30)을 자동 실패한다. 따라서 G4 탈락을 두 원인으로 완전 분할할 수 있다.
+    _g4_fail_rows = [r for r in rows if r["dopant"] in fail_sets["G4"]]
+    _g4_blocking_kill = sorted(r["dopant"] for r in _g4_fail_rows
+                               if (r["blocking"] if r["blocking"] is not None else 1.0)
+                               >= BLOCKING_GATE)
+    g4_blocking_kill_n = len(_g4_blocking_kill)
+    g4_bvs_only_names = sorted(r["dopant"] for r in _g4_fail_rows
+                               if r["dopant"] not in set(_g4_blocking_kill))
+    g4_bvs_only_n = len(g4_bvs_only_names)
+    assert g4_blocking_kill_n + g4_bvs_only_n == len(fail_sets["G4"]), \
+        "G4 탈락 분할이 전체를 덮지 않음 — blocking/bvs 분해 규약 확인"
+
+    _bvs_vals = [r["bvs_x005"] for r in rows if r["bvs_x005"] is not None]
+    lo_bvs = min(_bvs_vals)
+    span_bvs = (max(_bvs_vals) - lo_bvs) or 1.0
+
+    def _core_survivors_at_blocking(cut):
+        """blocking 컷만 바꿔 transport_norm 을 재계산하고 코어(G1–G4) 생존자 수를 센다.
+        load_pool() 의 norm 규약을 그대로 복제한다 — 규약이 갈라지면 여기부터 틀어진다."""
+        n = 0
+        for r in rows:
+            if r["bvs_x005"] is None:
+                continue
+            t = (r["bvs_x005"] - lo_bvs) / span_bvs
+            blk = r["blocking"] if r["blocking"] is not None else 1.0
+            t = (GATE_FLOOR + GATE_EPS + t * (1.0 - GATE_FLOOR - GATE_EPS)) if blk < cut \
+                else GATE_FLOOR
+            if (gates["G1"]["predicate"](r) and gates["G2"]["predicate"](r)
+                    and gates["G3"]["predicate"](r) and round(t, 4) > TRANSPORT_CUT):
+                n += 1
+        return n
+
+    g4_blocking_sweep = [{"blocking_cut": c, "n_core_G1_G4": _core_survivors_at_blocking(c)}
+                         for c in (0.50, 0.55, 0.60, 0.65, 0.70, 0.80, 1.00)]
 
     order_sensitivity = {
+        "n_permutations_tested": len(exhaustive),
+        "exhaustive": True,
+        "narrative_permutations": perms,
+        # 하위호환: 기존 소비자(webapp 템플릿)가 읽는 키 — 서사용 4개를 그대로 노출
         "permutations": perms,
         "final_sets_identical": identical,
         "intersection": inter,
         "union": union,
         "symmetric_difference": sorted(set(union) - set(inter)),
-        "why": ("게이트가 전부 **정적·per-dopant boolean 술어**라 최종 생존자는 집합 교집합이고 "
-                "순서에 불변이다. 순서가 바꾸는 것은 (a) 중간 단계 숫자(깔때기 그림의 모양)와 "
-                "(b) 어느 게이트에 탈락의 '공'이 돌아가는가(marginal kill)뿐 — "
-                "이 불변성은 주장이 아니라 위 4개 순열에서 실제로 계산해 확인했다."),
+        "n_distinct_waterfalls": len(distinct_waterfalls),
+        "distinct_waterfalls": [list(w) for w in distinct_waterfalls],
+        "why": (f"게이트가 전부 **정적·per-dopant boolean 술어**라 최종 생존자는 집합 교집합이고 "
+                f"순서에 불변이다. 순서가 바꾸는 것은 (a) 중간 단계 숫자(깔때기 그림의 모양)와 "
+                f"(b) 어느 게이트에 탈락의 '공'이 돌아가는가(marginal kill)뿐. "
+                f"이 불변성은 표본 확인이 아니라 **{len(exhaustive)} 순열 전수 계산**으로 증명했다 "
+                f"— 최종 집합은 {len(exhaustive)}/{len(exhaustive)} 전부 동일하고 "
+                f"깔때기 모양(waterfall)만 {len(distinct_waterfalls)}가지로 갈린다. "
+                f"⚠ 단, '술어'라는 전제는 게이트마다 **농도 규약이 다르다**는 사실을 덮는다 "
+                f"— concentration_convention 블록을 함께 읽을 것."),
         "sendek_analog_verdict": (
             "Sendek 2017 은 '전제조건(안정·gap·ESW)이 전도도 모델보다 세게 거른다'고 결론했다"
-            "(전제조건 12,831→317 vs LR 모델 단독 12,831→1,408). **우리 풀에서는 정반대다**: "
+            "(전제조건 12,831→317 vs LR 모델 단독 12,831→1,408). **우리 풀에서는 순위가 뒤집힌다**: "
             f"standalone 제거 수 = G1 {len(fail_sets['G1'])} · G2 {len(fail_sets['G2'])} · "
-            f"G3 {len(fail_sets['G3'])} · G4 {len(fail_sets['G4'])} · G5 {len(fail_sets['G5'])} "
-            "→ 수송(G4)이 최강 단일 필터이고 안정성(G1)은 아무도 못 떨어뜨린다. "
-            "이 역전은 우리 풀의 성질에서 온다 — 47종은 애초에 '넣을 만한' 도펀트로 큐레이션돼 "
-            "안정성·ESW 전제조건을 이미 통과한 상태로 시작하므로, 남은 구속조건이 수송으로 옮겨간다. "
-            "즉 Sendek 명제의 반증이 아니라 **'전제조건이 이미 소진된 풀에서는 축이 이동한다'는 따름정리**다."),
+            f"G3 {len(fail_sets['G3'])} · G4 {len(fail_sets['G4'])} · G5 {len(fail_sets['G5'])}. "
+            "⚠ 다만 정확히 말하면 **'수송축이 최강'이 아니라 '수송축 안의 blocking 상수가 최강'**이다 — "
+            f"G4 단독 탈락 {len(fail_sets['G4'])}종 중 {g4_blocking_kill_n}종은 상속 상수 "
+            f"blocking<{BLOCKING_GATE} 이 죽인 것이고, BVSE 컷({TRANSPORT_CUT}) 자체의 단독 기여는 "
+            f"{g4_bvs_only_n}종({', '.join(g4_bvs_only_names)})뿐이다. "
+            "즉 축(axis)의 선택압이 아니라 **상수(constant)의 선택압**이며, 그 상수는 host 앵커도 "
+            "문헌 대응도 없다(threshold_sensitivity.G4_blocking 스윕: 0.50→0.55→0.60→0.65→0.70→0.80→1.00 "
+            f"에서 코어 생존자 {'/'.join(str(x['n_core_G1_G4']) for x in g4_blocking_sweep)}종). "
+            "그리고 안정성(G1)이 아무도 못 떨어뜨리는 것은 큐레이션 풀의 성질이다 — 47종은 애초에 "
+            "'넣을 만한' 도펀트로 골라져 안정성·ESW 전제조건을 통과한 상태로 시작한다. "
+            "따라서 Sendek 명제의 반증이 아니라 **'전제조건이 이미 소진된 풀에서는 남은 구속이 "
+            "가장 임의적인 상수로 옮겨간다'는 따름정리**로 읽어야 한다."),
     }
 
     # ── 임계값 민감도 스윕 ───────────────────────────────────────────────────
@@ -441,6 +633,22 @@ def main():
                                      "0.50 에서 10종, 0.60 에서 5종. 즉 컷을 **올리는** 쪽으로는 둔감하고 "
                                      "**내리는** 쪽으로 민감하다 — 0.30 은 공백 상단이라 그렇다. "
                                      "'자의적이지만 국소적으로 안정'이 정확한 표현이고, 비대칭이라는 점까지 붙여야 정직하다.")},
+        "G4_blocking": {"sweep": g4_blocking_sweep,
+                        "inherited_constant": BLOCKING_GATE,
+                        "kill_decomposition": {
+                            "g4_total_standalone_kill": len(fail_sets["G4"]),
+                            "killed_by_blocking_constant": g4_blocking_kill_n,
+                            "killed_by_bvse_cut_only": g4_bvs_only_n,
+                            "bvse_only_names": g4_bvs_only_names,
+                        },
+                        "note": ("**G4 의 실제 선택압은 BVSE 컷이 아니라 상속 상수 blocking<0.60 이다** — "
+                                 f"단독 탈락 {len(fail_sets['G4'])}종 중 {g4_blocking_kill_n}종이 blocking 에, "
+                                 f"{g4_bvs_only_n}종({', '.join(g4_bvs_only_names)})만 BVSE 컷에 죽는다. "
+                                 "transport_norm 규약상 blocking≥컷 인 종은 GATE_FLOOR(0.05)로 눌려 "
+                                 "TRANSPORT_CUT(0.30)을 자동 실패하므로 두 원인은 완전 분할된다. "
+                                 "이 상수는 build_cascade_themes.py 에서 승계한 것이고 host 앵커도 문헌 대응도 "
+                                 "없다 — 코어 생존자가 0.50→1.00 에서 6→21종으로 3.5배 움직이므로 "
+                                 "**G4 통과 수를 결론으로 인용할 때는 반드시 이 상수를 함께 밝힐 것**.")},
         "G5_mechanical": {"sweep": g5_sweep,
                           "note": ("percentile 1.00 = 게이트 무효화 → G1–G4 코어 생존자 11종과 동일. "
                                    "0.25→1.00 사이에서 최종 생존자가 0→11 로 전 구간을 훑는다 = "

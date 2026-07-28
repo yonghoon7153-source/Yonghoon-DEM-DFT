@@ -64,8 +64,9 @@
    "id": "G1",
    "name": "structural_stability",
    "label": "구조 안정 (도핑 형성 favorability)",
-   "metric": "de = E(doped champion) − E(host), UMA 상대 (eV, cascade_v23_ranked.csv)",
-   "threshold": "de < 0",
+   "metric": "de = E(doped champion) − E(host), UMA 상대 (eV). ⚠ cascade_v23_ranked.csv 의 de 는 단일 챔피언 값이 아니라 **x∈{0.02, 0.05, 0.10} 챔피언 3점의 산술평균**이다(47/47 검증). 일부 도펀트는 plain·Cl-rich 조성족이 섞인 3점이며(B2O3 는 +Clrich 만 존재) → concentration_convention 블록 참조.",
+   "threshold": "mean_x(de) < 0",
+   "concentration_convention": "3점 평균 (x=0.02/0.05/0.10)",
    "threshold_basis": "0 은 임의 컷이 아니라 **host 자신**(Δe = doped − undoped baseline)이다 — 'host보다 안정한가'라는 이분 질문의 물리적 기준점. 273-cascade 전체가 같은 undoped 정형셀 기준으로 계산돼 랭킹이 성립한다(kb/projects/cascade_v23_review_2026_07_11.md §1).",
    "literature_analog": {
     "papers": [
@@ -81,23 +82,29 @@
     "n_in": 47,
     "n_pass": 47,
     "n_fail": 0,
-    "eliminated_here": []
+    "eliminated_here": [],
+    "n_missing": 0,
+    "missing": []
    },
    "standalone": {
     "n_pass": 47,
     "n_fail": 0,
-    "eliminated": []
+    "eliminated": [],
+    "n_missing": 0,
+    "missing": []
    },
    "vacuous": true,
-   "vacuous_interpretation": "⚠ VACUOUS — 대표 순서에서 이 게이트에 들어온 47종이 전원 통과했다. 이는 '우리가 이 조건으로 걸렀다'가 아니라 **우리 풀이 이미 그 조건을 만족하도록 큐레이션돼 있었다**는 뜻이다. 문헌 깔때기에서는 같은 게이트가 수천~수만 종을 떨어뜨린다(Xiao F2: 62,437→1,600 = 97.4% 제거; Sendek E_hull=0: 12,831→1,472 = 88.5% 제거). 발견력의 증거로 인용하면 과장이다."
+   "vacuous_kind": "pool_curated",
+   "vacuous_interpretation": "💤 VACUOUS (풀 큐레이션) — 이 게이트를 **전체 47종에 단독으로** 걸어도 0종이 떨어진다. 즉 '우리가 이 조건으로 걸렀다'가 아니라 **우리 풀이 이미 그 조건을 만족하도록 큐레이션돼 있었다**는 뜻이다. 문헌 깔때기에서는 같은 게이트가 수천~수만 종을 떨어뜨린다(Xiao F2: 62,437→1,600 = 97.4% 제거; Sendek E_hull=0: 12,831→1,472 = 88.5% 제거). 발견력의 증거로 인용하면 과장이다."
   },
   {
    "id": "G2",
    "name": "electrochemical_window",
    "label": "전기화학 창 붕괴 회피",
    "metric": "window_V = ox_V − red_V (grand-potential ESW, MP GGA/GGA+U hull)",
-   "threshold": "window_V > 0.05 V",
-   "threshold_basis": "0.05 V 는 oxidation_stability_cascade.csv 가 이미 명문화한 **collapse 규약**('window<0.05 V = collapse, avoid, late-TM Fe/Co/Ni/Mn')이며 build_cascade_themes.py 의 oxidative/reduction 테마 게이트와 동일 상수다. 이 빌더가 새로 만든 숫자가 아니라 기존 db 규약의 승계.",
+   "threshold": "window_V ≥ 0.05 V",
+   "concentration_convention": "champion composition 단일 (농도 평균 아님)",
+   "threshold_basis": "0.05 V 는 oxidation_stability_cascade.csv 가 이미 명문화한 **collapse 규약**('window<0.05 V = collapse, avoid, late-TM Fe/Co/Ni/Mn')이며 build_cascade_themes.py 의 oxidative/reduction 테마 게이트와 동일 상수다. 이 빌더가 새로 만든 숫자가 아니라 기존 db 규약의 승계 — 규약이 'collapse = window<0.05' 이므로 경계값(정확히 0.05)은 **통과**시킨다(≥). 현재 데이터에는 경계값이 없어 판정은 동일(collapse 4종 최대 MnO 0.039, 비-collapse 최소 Cu2O 0.113).",
    "literature_analog": {
     "papers": [
      "zhu2015_esw_grand_potential_origin (방법 원전)",
@@ -117,7 +124,9 @@
      "Fe2O3",
      "MnO",
      "NiO"
-    ]
+    ],
+    "n_missing": 0,
+    "missing": []
    },
    "standalone": {
     "n_pass": 43,
@@ -127,9 +136,12 @@
      "Fe2O3",
      "MnO",
      "NiO"
-    ]
+    ],
+    "n_missing": 0,
+    "missing": []
    },
    "vacuous": false,
+   "vacuous_kind": null,
    "vacuous_interpretation": null
   },
   {
@@ -138,6 +150,7 @@
    "label": "산화 onset 비열화 (host 이상)",
    "metric": "ox_V (V vs Li, grand-potential onset)",
    "threshold": "ox_V ≥ 2.14 V (undoped host onset)",
+   "concentration_convention": "champion composition 단일 (농도 평균 아님)",
    "threshold_basis": "2.14 V = undoped comp1/modelc 의 grand-potential 산화 onset (oxidation_stability_cascade.csv 헤더에 명시된 ref). 즉 '도펀트를 넣어서 host보다 나빠지지 않는가'라는 상대 기준 — 임의 전압이 아니다. 주의: 19종이 정확히 2.14 V에 pin 돼 있다(S²⁻-limited onset 축퇴) → 이 게이트는 '초과'가 아니라 '비열화' 판정이며 축퇴군 내 순위는 무의미.",
    "literature_analog": {
     "papers": [
@@ -172,7 +185,9 @@
      "V2O5",
      "ZrF4",
      "ZrO2"
-    ]
+    ],
+    "n_missing": 0,
+    "missing": []
    },
    "standalone": {
     "n_pass": 25,
@@ -200,9 +215,12 @@
      "V2O5",
      "ZrF4",
      "ZrO2"
-    ]
+    ],
+    "n_missing": 0,
+    "missing": []
    },
    "vacuous": false,
+   "vacuous_kind": null,
    "vacuous_interpretation": null
   },
   {
@@ -211,7 +229,8 @@
    "label": "Li 수송 유지 (채널 미폐색)",
    "metric": "ionic_transport norm ∈[0,1] = min-max(bvs_li_proxy_score @x=0.05) with blocking<0.6 게이트, 탈락자 0.05 평탄화",
    "threshold": "transport_norm > 0.3",
-   "threshold_basis": "두 겹. ① blocking<0.60 은 build_cascade_themes.py 가 이미 쓰는 db 규약(승계). ② 0.30 컷은 통과자 분포 **하위 꼬리의 공백 구간**(MoO3 0.2863 ↔ MnO 0.3844, 폭 0.098) 안에 놓았다. ⚠ 정확히 말하면 이건 분포 전체의 최대 공백이 아니다(최대는 0.6842↔0.845 = 0.161, 그 다음이 0.1827↔0.2863 = 0.104, 이게 3번째). 즉 '하위 꼬리를 자르는 자연스러운 위치 중 하나'이지 유일해가 아니다. host 앵커가 없는 축이라 G1–G3 만큼 강한 유도가 아님 → threshold_sensitivity.G4 스윕(코어 기준)을 반드시 함께 볼 것.",
+   "concentration_convention": "x=0.05 단일 (litransport *_x005 — 농도 평균 아님)",
+   "threshold_basis": "두 겹이고, **선택압의 거의 전부가 첫 겹에서 나온다**. ① blocking<0.6 은 build_cascade_themes.py 가 이미 쓰는 db 규약(승계)이지만 host 앵커도 문헌 대응도 없는 **상속 상수**다 — G4 단독 탈락 27종 중 24종이 이 상수에 죽고, bvs 컷(0.3) 단독 기여는 3종(B2O3, GeO2, MoO3)뿐이다. ② 0.3 컷은 통과자 분포 **하위 꼬리의 공백 구간**(MoO3 0.2863 ↔ MnO 0.3844, 폭 0.0981) 안에 놓았다. ⚠ 정확히 말하면 이건 분포 전체의 최대 공백이 아니다(최대는 0.6842↔0.845 = 0.1608, 그 다음이 0.1827↔0.2863 = 0.1036, 이게 3번째). 즉 '하위 꼬리를 자르는 자연스러운 위치 중 하나'이지 유일해가 아니다. → threshold_sensitivity 의 G4_li_transport(bvs 컷) **와 G4_blocking(상속 상수) 스윕을 반드시 함께 볼 것** — 코어 생존자 수는 blocking 컷만 흔들어도 6↔21 로 움직인다.",
    "literature_analog": {
     "papers": [
      "xiao2019_cathode_coating_screening (Filter 6, CI-NEB E_m)",
@@ -221,7 +240,7 @@
     "mapping": "문헌도 이 축만은 절대 문턱을 못 세우고 랭킹/선별로 처리했다 — 우리 natural-break 컷도 같은 성격(랭킹 컷)이다. Kahle 자신의 교훈: surrogate(pinball)는 랭킹 분류기로만 유효하고 정량 D 재현엔 실패 → 우리 BVSE 프록시도 동일 지위, 절대 σ 로 읽지 말 것."
    },
    "engine": "BVSE·기하 정적 프록시 (MD 아님). 챔피언만 MLIP-MD 로 별도 검증.",
-   "arbitrariness_flag": false,
+   "arbitrariness_flag": true,
    "in_representative_order": {
     "n_in": 25,
     "n_pass": 11,
@@ -241,7 +260,9 @@
      "ScF3",
      "Y2O3",
      "YF3"
-    ]
+    ],
+    "n_missing": 0,
+    "missing": []
    },
    "standalone": {
     "n_pass": 20,
@@ -274,18 +295,22 @@
      "Y2O3",
      "YF3",
      "ZrF4"
-    ]
+    ],
+    "n_missing": 0,
+    "missing": []
    },
    "vacuous": false,
+   "vacuous_kind": null,
    "vacuous_interpretation": null
   },
   {
    "id": "G5",
    "name": "mechanical",
    "label": "기계 (연질 + 연성) — 우리 고유 축",
-   "metric": "E_young (GPa, UMA) ↓ AND G/B ↓ (champions csv elastic_pugh_GoverB)",
-   "threshold": "E_GPa ≤ 46.9 (roster median) AND G/B ≤ 0.78 (roster median)",
-   "threshold_basis": "⚠ **G1–G4 와 달리 host 앵커가 없다.** UMA 탄성값은 절대 인용 금지 규율 대상이고, 같은 방법(UMA)으로 계산된 undoped host 의 E/(G/B) 항목이 cascade 산출물에 없다 (elastic.json 의 host 값은 DFT — 교차 인용 불가). 따라서 median split = **로스터 내부 상대 컷**이며 이 게이트만 자의성이 남는다(arbitrariness_flag). 문헌 절대 기준(Pugh B/G > 1.75)을 걸면 생존자 0 — literature_absolute_variants 참조.",
+   "metric": "E_young (GPa, UMA) ↓ AND G/B ↓. ⚠ cascade_v23_ranked.csv 의 E_GPa·pugh(=G/B) 는 단일 챔피언 값이 아니라 **x∈{0.02, 0.05, 0.10} 챔피언 3점의 산술평균**이다(47/47 검증, champions csv elastic_E_young_GPa · elastic_pugh_GoverB 유래). 일부 도펀트는 plain·Cl-rich 조성족이 섞인 3점(B2O3 는 +Clrich 만 존재) → concentration_convention 블록 참조.",
+   "threshold": "mean_x(E_GPa) ≤ 46.9 (roster median) AND mean_x(G/B) ≤ 0.78 (roster median)",
+   "concentration_convention": "3점 평균 (x=0.02/0.05/0.10)",
+   "threshold_basis": "⚠ **G1–G4 와 달리 host 앵커가 없다.** UMA 탄성값은 절대 인용 금지 규율 대상이고, 같은 방법(UMA)으로 계산된 undoped host 의 E/(G/B) 항목이 cascade 산출물에 없다 (elastic.json 의 host 값은 DFT — 교차 인용 불가). 따라서 median split = **로스터 내부 상대 컷**이다(arbitrariness_flag). 게다가 컷이 걸리는 값 자체가 3농도 평균이라 **농도 산포가 게이트 폭과 맞먹는다** (E_young 농도 산포: NdF3 17.8 · WO3 17.0 · MgF2 16.8 GPa) → threshold_sensitivity.per_concentration_application 을 반드시 함께 볼 것. 문헌 절대 기준(Pugh B/G > 1.75)을 걸면 생존자 0 — literature_absolute_variants 참조.",
    "literature_analog": {
     "papers": [],
     "their_threshold": null,
@@ -308,7 +333,9 @@
      "SiO2",
      "SnO2",
      "ZnO"
-    ]
+    ],
+    "n_missing": 0,
+    "missing": []
    },
    "standalone": {
     "n_pass": 15,
@@ -346,9 +373,12 @@
      "YF3",
      "ZnO",
      "ZrO2"
-    ]
+    ],
+    "n_missing": 0,
+    "missing": []
    },
    "vacuous": false,
+   "vacuous_kind": null,
    "vacuous_interpretation": null
   }
  ],
@@ -518,7 +548,9 @@
   "reading": "standalone_kill = 그 게이트만 47종에 걸었을 때 탈락 수 (그 축의 선택압). marginal_kill_in_P0 = 대표 순서에서 실제로 그 게이트가 떨어뜨린 수(앞 게이트에 이미 잡힌 것 제외). unique_kill = 그 게이트가 없으면 최종 생존자로 살아 돌아올 종 수 → 0 이면 다른 게이트에 완전히 포섭된 **중복 게이트**."
  },
  "order_sensitivity": {
-  "permutations": [
+  "n_permutations_tested": 120,
+  "exhaustive": true,
+  "narrative_permutations": [
    {
     "key": "P0_literature_order",
     "order": [
@@ -543,35 +575,69 @@
       "n_in": 47,
       "n_pass": 47,
       "n_fail": 0,
-      "vacuous": true
+      "n_missing": 0,
+      "vacuous": true,
+      "vacuous_kind": "pool_curated",
+      "vacuous_label": "💤 풀 큐레이션 — 전체 풀에 단독 적용해도 0종 탈락",
+      "upstream_gates": []
      },
      {
       "gate": "G2",
       "n_in": 47,
       "n_pass": 43,
       "n_fail": 4,
-      "vacuous": false
+      "n_missing": 0,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
+      "upstream_gates": [
+       "G1"
+      ]
      },
      {
       "gate": "G3",
       "n_in": 43,
       "n_pass": 25,
       "n_fail": 18,
-      "vacuous": false
+      "n_missing": 0,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
+      "upstream_gates": [
+       "G1",
+       "G2"
+      ]
      },
      {
       "gate": "G4",
       "n_in": 25,
       "n_pass": 11,
       "n_fail": 14,
-      "vacuous": false
+      "n_missing": 0,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
+      "upstream_gates": [
+       "G1",
+       "G2",
+       "G3"
+      ]
      },
      {
       "gate": "G5",
       "n_in": 11,
       "n_pass": 1,
       "n_fail": 10,
-      "vacuous": false
+      "n_missing": 0,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
+      "upstream_gates": [
+       "G1",
+       "G2",
+       "G3",
+       "G4"
+      ]
      }
     ],
     "final_survivors": [
@@ -602,35 +668,69 @@
       "n_in": 47,
       "n_pass": 47,
       "n_fail": 0,
-      "vacuous": true
+      "n_missing": 0,
+      "vacuous": true,
+      "vacuous_kind": "pool_curated",
+      "vacuous_label": "💤 풀 큐레이션 — 전체 풀에 단독 적용해도 0종 탈락",
+      "upstream_gates": []
      },
      {
       "gate": "G3",
       "n_in": 47,
       "n_pass": 25,
       "n_fail": 22,
-      "vacuous": false
+      "n_missing": 0,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
+      "upstream_gates": [
+       "G1"
+      ]
      },
      {
       "gate": "G2",
       "n_in": 25,
       "n_pass": 25,
       "n_fail": 0,
-      "vacuous": true
+      "n_missing": 0,
+      "vacuous": true,
+      "vacuous_kind": "subsumed_by_upstream",
+      "vacuous_label": "⊂ 상류 게이트에 포섭 — 이 게이트가 죽일 종을 앞 게이트가 먼저 잡아감",
+      "upstream_gates": [
+       "G1",
+       "G3"
+      ]
      },
      {
       "gate": "G5",
       "n_in": 25,
       "n_pass": 7,
       "n_fail": 18,
-      "vacuous": false
+      "n_missing": 0,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
+      "upstream_gates": [
+       "G1",
+       "G3",
+       "G2"
+      ]
      },
      {
       "gate": "G4",
       "n_in": 7,
       "n_pass": 1,
       "n_fail": 6,
-      "vacuous": false
+      "n_missing": 0,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
+      "upstream_gates": [
+       "G1",
+       "G3",
+       "G2",
+       "G5"
+      ]
      }
     ],
     "final_survivors": [
@@ -661,35 +761,69 @@
       "n_in": 47,
       "n_pass": 20,
       "n_fail": 27,
-      "vacuous": false
+      "n_missing": 0,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
+      "upstream_gates": []
      },
      {
       "gate": "G1",
       "n_in": 20,
       "n_pass": 20,
       "n_fail": 0,
-      "vacuous": true
+      "n_missing": 0,
+      "vacuous": true,
+      "vacuous_kind": "pool_curated",
+      "vacuous_label": "💤 풀 큐레이션 — 전체 풀에 단독 적용해도 0종 탈락",
+      "upstream_gates": [
+       "G4"
+      ]
      },
      {
       "gate": "G2",
       "n_in": 20,
       "n_pass": 18,
       "n_fail": 2,
-      "vacuous": false
+      "n_missing": 0,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
+      "upstream_gates": [
+       "G4",
+       "G1"
+      ]
      },
      {
       "gate": "G3",
       "n_in": 18,
       "n_pass": 11,
       "n_fail": 7,
-      "vacuous": false
+      "n_missing": 0,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
+      "upstream_gates": [
+       "G4",
+       "G1",
+       "G2"
+      ]
      },
      {
       "gate": "G5",
       "n_in": 11,
       "n_pass": 1,
       "n_fail": 10,
-      "vacuous": false
+      "n_missing": 0,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
+      "upstream_gates": [
+       "G4",
+       "G1",
+       "G2",
+       "G3"
+      ]
      }
     ],
     "final_survivors": [
@@ -720,35 +854,443 @@
       "n_in": 47,
       "n_pass": 15,
       "n_fail": 32,
-      "vacuous": false
+      "n_missing": 0,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
+      "upstream_gates": []
      },
      {
       "gate": "G4",
       "n_in": 15,
       "n_pass": 3,
       "n_fail": 12,
-      "vacuous": false
+      "n_missing": 0,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
+      "upstream_gates": [
+       "G5"
+      ]
      },
      {
       "gate": "G3",
       "n_in": 3,
       "n_pass": 1,
       "n_fail": 2,
-      "vacuous": false
+      "n_missing": 0,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
+      "upstream_gates": [
+       "G5",
+       "G4"
+      ]
      },
      {
       "gate": "G2",
       "n_in": 1,
       "n_pass": 1,
       "n_fail": 0,
-      "vacuous": true
+      "n_missing": 0,
+      "vacuous": true,
+      "vacuous_kind": "subsumed_by_upstream",
+      "vacuous_label": "⊂ 상류 게이트에 포섭 — 이 게이트가 죽일 종을 앞 게이트가 먼저 잡아감",
+      "upstream_gates": [
+       "G5",
+       "G4",
+       "G3"
+      ]
      },
      {
       "gate": "G1",
       "n_in": 1,
       "n_pass": 1,
       "n_fail": 0,
-      "vacuous": true
+      "n_missing": 0,
+      "vacuous": true,
+      "vacuous_kind": "pool_curated",
+      "vacuous_label": "💤 풀 큐레이션 — 전체 풀에 단독 적용해도 0종 탈락",
+      "upstream_gates": [
+       "G5",
+       "G4",
+       "G3",
+       "G2"
+      ]
+     }
+    ],
+    "final_survivors": [
+     "WO3"
+    ]
+   }
+  ],
+  "permutations": [
+   {
+    "key": "P0_literature_order",
+    "order": [
+     "G1",
+     "G2",
+     "G3",
+     "G4",
+     "G5"
+    ],
+    "rationale": "대표 순서 — Xiao F2→F3→F6 의 열역학→전기화학→수송 순서에 우리 기계 축을 뒤에 붙임.",
+    "waterfall": [
+     47,
+     47,
+     43,
+     25,
+     11,
+     1
+    ],
+    "steps": [
+     {
+      "gate": "G1",
+      "n_in": 47,
+      "n_pass": 47,
+      "n_fail": 0,
+      "n_missing": 0,
+      "vacuous": true,
+      "vacuous_kind": "pool_curated",
+      "vacuous_label": "💤 풀 큐레이션 — 전체 풀에 단독 적용해도 0종 탈락",
+      "upstream_gates": []
+     },
+     {
+      "gate": "G2",
+      "n_in": 47,
+      "n_pass": 43,
+      "n_fail": 4,
+      "n_missing": 0,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
+      "upstream_gates": [
+       "G1"
+      ]
+     },
+     {
+      "gate": "G3",
+      "n_in": 43,
+      "n_pass": 25,
+      "n_fail": 18,
+      "n_missing": 0,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
+      "upstream_gates": [
+       "G1",
+       "G2"
+      ]
+     },
+     {
+      "gate": "G4",
+      "n_in": 25,
+      "n_pass": 11,
+      "n_fail": 14,
+      "n_missing": 0,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
+      "upstream_gates": [
+       "G1",
+       "G2",
+       "G3"
+      ]
+     },
+     {
+      "gate": "G5",
+      "n_in": 11,
+      "n_pass": 1,
+      "n_fail": 10,
+      "n_missing": 0,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
+      "upstream_gates": [
+       "G1",
+       "G2",
+       "G3",
+       "G4"
+      ]
+     }
+    ],
+    "final_survivors": [
+     "WO3"
+    ]
+   },
+   {
+    "key": "P1_sendek_preconditions_first",
+    "order": [
+     "G1",
+     "G3",
+     "G2",
+     "G5",
+     "G4"
+    ],
+    "rationale": "Sendek 2017: '전제조건(안정·gap·ESW)을 먼저, 전도도 모델을 마지막' — 수송을 맨 뒤로.",
+    "waterfall": [
+     47,
+     47,
+     25,
+     25,
+     7,
+     1
+    ],
+    "steps": [
+     {
+      "gate": "G1",
+      "n_in": 47,
+      "n_pass": 47,
+      "n_fail": 0,
+      "n_missing": 0,
+      "vacuous": true,
+      "vacuous_kind": "pool_curated",
+      "vacuous_label": "💤 풀 큐레이션 — 전체 풀에 단독 적용해도 0종 탈락",
+      "upstream_gates": []
+     },
+     {
+      "gate": "G3",
+      "n_in": 47,
+      "n_pass": 25,
+      "n_fail": 22,
+      "n_missing": 0,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
+      "upstream_gates": [
+       "G1"
+      ]
+     },
+     {
+      "gate": "G2",
+      "n_in": 25,
+      "n_pass": 25,
+      "n_fail": 0,
+      "n_missing": 0,
+      "vacuous": true,
+      "vacuous_kind": "subsumed_by_upstream",
+      "vacuous_label": "⊂ 상류 게이트에 포섭 — 이 게이트가 죽일 종을 앞 게이트가 먼저 잡아감",
+      "upstream_gates": [
+       "G1",
+       "G3"
+      ]
+     },
+     {
+      "gate": "G5",
+      "n_in": 25,
+      "n_pass": 7,
+      "n_fail": 18,
+      "n_missing": 0,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
+      "upstream_gates": [
+       "G1",
+       "G3",
+       "G2"
+      ]
+     },
+     {
+      "gate": "G4",
+      "n_in": 7,
+      "n_pass": 1,
+      "n_fail": 6,
+      "n_missing": 0,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
+      "upstream_gates": [
+       "G1",
+       "G3",
+       "G2",
+       "G5"
+      ]
+     }
+    ],
+    "final_survivors": [
+     "WO3"
+    ]
+   },
+   {
+    "key": "P2_kahle_transport_first",
+    "order": [
+     "G4",
+     "G1",
+     "G2",
+     "G3",
+     "G5"
+    ],
+    "rationale": "Kahle 2020: 확산(동역학) 자체를 1차 스크리닝 변수로 — 수송을 맨 앞으로.",
+    "waterfall": [
+     47,
+     20,
+     20,
+     18,
+     11,
+     1
+    ],
+    "steps": [
+     {
+      "gate": "G4",
+      "n_in": 47,
+      "n_pass": 20,
+      "n_fail": 27,
+      "n_missing": 0,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
+      "upstream_gates": []
+     },
+     {
+      "gate": "G1",
+      "n_in": 20,
+      "n_pass": 20,
+      "n_fail": 0,
+      "n_missing": 0,
+      "vacuous": true,
+      "vacuous_kind": "pool_curated",
+      "vacuous_label": "💤 풀 큐레이션 — 전체 풀에 단독 적용해도 0종 탈락",
+      "upstream_gates": [
+       "G4"
+      ]
+     },
+     {
+      "gate": "G2",
+      "n_in": 20,
+      "n_pass": 18,
+      "n_fail": 2,
+      "n_missing": 0,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
+      "upstream_gates": [
+       "G4",
+       "G1"
+      ]
+     },
+     {
+      "gate": "G3",
+      "n_in": 18,
+      "n_pass": 11,
+      "n_fail": 7,
+      "n_missing": 0,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
+      "upstream_gates": [
+       "G4",
+       "G1",
+       "G2"
+      ]
+     },
+     {
+      "gate": "G5",
+      "n_in": 11,
+      "n_pass": 1,
+      "n_fail": 10,
+      "n_missing": 0,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
+      "upstream_gates": [
+       "G4",
+       "G1",
+       "G2",
+       "G3"
+      ]
+     }
+    ],
+    "final_survivors": [
+     "WO3"
+    ]
+   },
+   {
+    "key": "P3_our_mechanics_first",
+    "order": [
+     "G5",
+     "G4",
+     "G3",
+     "G2",
+     "G1"
+    ],
+    "rationale": "우리 고유 축(기계) 우선 — 저탄성 soft-contact 코팅이 1차 목표였던 v23 2차 목적 순서.",
+    "waterfall": [
+     47,
+     15,
+     3,
+     1,
+     1,
+     1
+    ],
+    "steps": [
+     {
+      "gate": "G5",
+      "n_in": 47,
+      "n_pass": 15,
+      "n_fail": 32,
+      "n_missing": 0,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
+      "upstream_gates": []
+     },
+     {
+      "gate": "G4",
+      "n_in": 15,
+      "n_pass": 3,
+      "n_fail": 12,
+      "n_missing": 0,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
+      "upstream_gates": [
+       "G5"
+      ]
+     },
+     {
+      "gate": "G3",
+      "n_in": 3,
+      "n_pass": 1,
+      "n_fail": 2,
+      "n_missing": 0,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
+      "upstream_gates": [
+       "G5",
+       "G4"
+      ]
+     },
+     {
+      "gate": "G2",
+      "n_in": 1,
+      "n_pass": 1,
+      "n_fail": 0,
+      "n_missing": 0,
+      "vacuous": true,
+      "vacuous_kind": "subsumed_by_upstream",
+      "vacuous_label": "⊂ 상류 게이트에 포섭 — 이 게이트가 죽일 종을 앞 게이트가 먼저 잡아감",
+      "upstream_gates": [
+       "G5",
+       "G4",
+       "G3"
+      ]
+     },
+     {
+      "gate": "G1",
+      "n_in": 1,
+      "n_pass": 1,
+      "n_fail": 0,
+      "n_missing": 0,
+      "vacuous": true,
+      "vacuous_kind": "pool_curated",
+      "vacuous_label": "💤 풀 큐레이션 — 전체 풀에 단독 적용해도 0종 탈락",
+      "upstream_gates": [
+       "G5",
+       "G4",
+       "G3",
+       "G2"
+      ]
      }
     ],
     "final_survivors": [
@@ -764,8 +1306,811 @@
    "WO3"
   ],
   "symmetric_difference": [],
-  "why": "게이트가 전부 **정적·per-dopant boolean 술어**라 최종 생존자는 집합 교집합이고 순서에 불변이다. 순서가 바꾸는 것은 (a) 중간 단계 숫자(깔때기 그림의 모양)와 (b) 어느 게이트에 탈락의 '공'이 돌아가는가(marginal kill)뿐 — 이 불변성은 주장이 아니라 위 4개 순열에서 실제로 계산해 확인했다.",
-  "sendek_analog_verdict": "Sendek 2017 은 '전제조건(안정·gap·ESW)이 전도도 모델보다 세게 거른다'고 결론했다(전제조건 12,831→317 vs LR 모델 단독 12,831→1,408). **우리 풀에서는 정반대다**: standalone 제거 수 = G1 0 · G2 4 · G3 22 · G4 27 · G5 32 → 수송(G4)이 최강 단일 필터이고 안정성(G1)은 아무도 못 떨어뜨린다. 이 역전은 우리 풀의 성질에서 온다 — 47종은 애초에 '넣을 만한' 도펀트로 큐레이션돼 안정성·ESW 전제조건을 이미 통과한 상태로 시작하므로, 남은 구속조건이 수송으로 옮겨간다. 즉 Sendek 명제의 반증이 아니라 **'전제조건이 이미 소진된 풀에서는 축이 이동한다'는 따름정리**다."
+  "n_distinct_waterfalls": 100,
+  "distinct_waterfalls": [
+   [
+    47,
+    15,
+    3,
+    1,
+    1,
+    1
+   ],
+   [
+    47,
+    15,
+    3,
+    2,
+    1,
+    1
+   ],
+   [
+    47,
+    15,
+    3,
+    2,
+    2,
+    1
+   ],
+   [
+    47,
+    15,
+    3,
+    3,
+    1,
+    1
+   ],
+   [
+    47,
+    15,
+    3,
+    3,
+    2,
+    1
+   ],
+   [
+    47,
+    15,
+    7,
+    1,
+    1,
+    1
+   ],
+   [
+    47,
+    15,
+    7,
+    7,
+    1,
+    1
+   ],
+   [
+    47,
+    15,
+    7,
+    7,
+    7,
+    1
+   ],
+   [
+    47,
+    15,
+    13,
+    2,
+    1,
+    1
+   ],
+   [
+    47,
+    15,
+    13,
+    2,
+    2,
+    1
+   ],
+   [
+    47,
+    15,
+    13,
+    7,
+    1,
+    1
+   ],
+   [
+    47,
+    15,
+    13,
+    7,
+    7,
+    1
+   ],
+   [
+    47,
+    15,
+    13,
+    13,
+    2,
+    1
+   ],
+   [
+    47,
+    15,
+    13,
+    13,
+    7,
+    1
+   ],
+   [
+    47,
+    15,
+    15,
+    3,
+    1,
+    1
+   ],
+   [
+    47,
+    15,
+    15,
+    3,
+    2,
+    1
+   ],
+   [
+    47,
+    15,
+    15,
+    7,
+    1,
+    1
+   ],
+   [
+    47,
+    15,
+    15,
+    7,
+    7,
+    1
+   ],
+   [
+    47,
+    15,
+    15,
+    13,
+    2,
+    1
+   ],
+   [
+    47,
+    15,
+    15,
+    13,
+    7,
+    1
+   ],
+   [
+    47,
+    20,
+    3,
+    1,
+    1,
+    1
+   ],
+   [
+    47,
+    20,
+    3,
+    2,
+    1,
+    1
+   ],
+   [
+    47,
+    20,
+    3,
+    2,
+    2,
+    1
+   ],
+   [
+    47,
+    20,
+    3,
+    3,
+    1,
+    1
+   ],
+   [
+    47,
+    20,
+    3,
+    3,
+    2,
+    1
+   ],
+   [
+    47,
+    20,
+    11,
+    1,
+    1,
+    1
+   ],
+   [
+    47,
+    20,
+    11,
+    11,
+    1,
+    1
+   ],
+   [
+    47,
+    20,
+    11,
+    11,
+    11,
+    1
+   ],
+   [
+    47,
+    20,
+    18,
+    2,
+    1,
+    1
+   ],
+   [
+    47,
+    20,
+    18,
+    2,
+    2,
+    1
+   ],
+   [
+    47,
+    20,
+    18,
+    11,
+    1,
+    1
+   ],
+   [
+    47,
+    20,
+    18,
+    11,
+    11,
+    1
+   ],
+   [
+    47,
+    20,
+    18,
+    18,
+    2,
+    1
+   ],
+   [
+    47,
+    20,
+    18,
+    18,
+    11,
+    1
+   ],
+   [
+    47,
+    20,
+    20,
+    3,
+    1,
+    1
+   ],
+   [
+    47,
+    20,
+    20,
+    3,
+    2,
+    1
+   ],
+   [
+    47,
+    20,
+    20,
+    11,
+    1,
+    1
+   ],
+   [
+    47,
+    20,
+    20,
+    11,
+    11,
+    1
+   ],
+   [
+    47,
+    20,
+    20,
+    18,
+    2,
+    1
+   ],
+   [
+    47,
+    20,
+    20,
+    18,
+    11,
+    1
+   ],
+   [
+    47,
+    25,
+    7,
+    1,
+    1,
+    1
+   ],
+   [
+    47,
+    25,
+    7,
+    7,
+    1,
+    1
+   ],
+   [
+    47,
+    25,
+    7,
+    7,
+    7,
+    1
+   ],
+   [
+    47,
+    25,
+    11,
+    1,
+    1,
+    1
+   ],
+   [
+    47,
+    25,
+    11,
+    11,
+    1,
+    1
+   ],
+   [
+    47,
+    25,
+    11,
+    11,
+    11,
+    1
+   ],
+   [
+    47,
+    25,
+    25,
+    7,
+    1,
+    1
+   ],
+   [
+    47,
+    25,
+    25,
+    7,
+    7,
+    1
+   ],
+   [
+    47,
+    25,
+    25,
+    11,
+    1,
+    1
+   ],
+   [
+    47,
+    25,
+    25,
+    11,
+    11,
+    1
+   ],
+   [
+    47,
+    25,
+    25,
+    25,
+    7,
+    1
+   ],
+   [
+    47,
+    25,
+    25,
+    25,
+    11,
+    1
+   ],
+   [
+    47,
+    43,
+    13,
+    2,
+    1,
+    1
+   ],
+   [
+    47,
+    43,
+    13,
+    2,
+    2,
+    1
+   ],
+   [
+    47,
+    43,
+    13,
+    7,
+    1,
+    1
+   ],
+   [
+    47,
+    43,
+    13,
+    7,
+    7,
+    1
+   ],
+   [
+    47,
+    43,
+    13,
+    13,
+    2,
+    1
+   ],
+   [
+    47,
+    43,
+    13,
+    13,
+    7,
+    1
+   ],
+   [
+    47,
+    43,
+    18,
+    2,
+    1,
+    1
+   ],
+   [
+    47,
+    43,
+    18,
+    2,
+    2,
+    1
+   ],
+   [
+    47,
+    43,
+    18,
+    11,
+    1,
+    1
+   ],
+   [
+    47,
+    43,
+    18,
+    11,
+    11,
+    1
+   ],
+   [
+    47,
+    43,
+    18,
+    18,
+    2,
+    1
+   ],
+   [
+    47,
+    43,
+    18,
+    18,
+    11,
+    1
+   ],
+   [
+    47,
+    43,
+    25,
+    7,
+    1,
+    1
+   ],
+   [
+    47,
+    43,
+    25,
+    7,
+    7,
+    1
+   ],
+   [
+    47,
+    43,
+    25,
+    11,
+    1,
+    1
+   ],
+   [
+    47,
+    43,
+    25,
+    11,
+    11,
+    1
+   ],
+   [
+    47,
+    43,
+    25,
+    25,
+    7,
+    1
+   ],
+   [
+    47,
+    43,
+    25,
+    25,
+    11,
+    1
+   ],
+   [
+    47,
+    43,
+    43,
+    13,
+    2,
+    1
+   ],
+   [
+    47,
+    43,
+    43,
+    13,
+    7,
+    1
+   ],
+   [
+    47,
+    43,
+    43,
+    18,
+    2,
+    1
+   ],
+   [
+    47,
+    43,
+    43,
+    18,
+    11,
+    1
+   ],
+   [
+    47,
+    43,
+    43,
+    25,
+    7,
+    1
+   ],
+   [
+    47,
+    43,
+    43,
+    25,
+    11,
+    1
+   ],
+   [
+    47,
+    47,
+    15,
+    3,
+    1,
+    1
+   ],
+   [
+    47,
+    47,
+    15,
+    3,
+    2,
+    1
+   ],
+   [
+    47,
+    47,
+    15,
+    7,
+    1,
+    1
+   ],
+   [
+    47,
+    47,
+    15,
+    7,
+    7,
+    1
+   ],
+   [
+    47,
+    47,
+    15,
+    13,
+    2,
+    1
+   ],
+   [
+    47,
+    47,
+    15,
+    13,
+    7,
+    1
+   ],
+   [
+    47,
+    47,
+    20,
+    3,
+    1,
+    1
+   ],
+   [
+    47,
+    47,
+    20,
+    3,
+    2,
+    1
+   ],
+   [
+    47,
+    47,
+    20,
+    11,
+    1,
+    1
+   ],
+   [
+    47,
+    47,
+    20,
+    11,
+    11,
+    1
+   ],
+   [
+    47,
+    47,
+    20,
+    18,
+    2,
+    1
+   ],
+   [
+    47,
+    47,
+    20,
+    18,
+    11,
+    1
+   ],
+   [
+    47,
+    47,
+    25,
+    7,
+    1,
+    1
+   ],
+   [
+    47,
+    47,
+    25,
+    7,
+    7,
+    1
+   ],
+   [
+    47,
+    47,
+    25,
+    11,
+    1,
+    1
+   ],
+   [
+    47,
+    47,
+    25,
+    11,
+    11,
+    1
+   ],
+   [
+    47,
+    47,
+    25,
+    25,
+    7,
+    1
+   ],
+   [
+    47,
+    47,
+    25,
+    25,
+    11,
+    1
+   ],
+   [
+    47,
+    47,
+    43,
+    13,
+    2,
+    1
+   ],
+   [
+    47,
+    47,
+    43,
+    13,
+    7,
+    1
+   ],
+   [
+    47,
+    47,
+    43,
+    18,
+    2,
+    1
+   ],
+   [
+    47,
+    47,
+    43,
+    18,
+    11,
+    1
+   ],
+   [
+    47,
+    47,
+    43,
+    25,
+    7,
+    1
+   ],
+   [
+    47,
+    47,
+    43,
+    25,
+    11,
+    1
+   ]
+  ],
+  "why": "게이트가 전부 **정적·per-dopant boolean 술어**라 최종 생존자는 집합 교집합이고 순서에 불변이다. 순서가 바꾸는 것은 (a) 중간 단계 숫자(깔때기 그림의 모양)와 (b) 어느 게이트에 탈락의 '공'이 돌아가는가(marginal kill)뿐. 이 불변성은 표본 확인이 아니라 **120 순열 전수 계산**으로 증명했다 — 최종 집합은 120/120 전부 동일하고 깔때기 모양(waterfall)만 100가지로 갈린다. ⚠ 단, '술어'라는 전제는 게이트마다 **농도 규약이 다르다**는 사실을 덮는다 — concentration_convention 블록을 함께 읽을 것.",
+  "sendek_analog_verdict": "Sendek 2017 은 '전제조건(안정·gap·ESW)이 전도도 모델보다 세게 거른다'고 결론했다(전제조건 12,831→317 vs LR 모델 단독 12,831→1,408). **우리 풀에서는 순위가 뒤집힌다**: standalone 제거 수 = G1 0 · G2 4 · G3 22 · G4 27 · G5 32. ⚠ 다만 정확히 말하면 **'수송축이 최강'이 아니라 '수송축 안의 blocking 상수가 최강'**이다 — G4 단독 탈락 27종 중 24종은 상속 상수 blocking<0.6 이 죽인 것이고, BVSE 컷(0.3) 자체의 단독 기여는 3종(B2O3, GeO2, MoO3)뿐이다. 즉 축(axis)의 선택압이 아니라 **상수(constant)의 선택압**이며, 그 상수는 host 앵커도 문헌 대응도 없다(threshold_sensitivity.G4_blocking 스윕: 0.50→0.55→0.60→0.65→0.70→0.80→1.00 에서 코어 생존자 6/10/11/12/13/15/21종). 그리고 안정성(G1)이 아무도 못 떨어뜨리는 것은 큐레이션 풀의 성질이다 — 47종은 애초에 '넣을 만한' 도펀트로 골라져 안정성·ESW 전제조건을 통과한 상태로 시작한다. 따라서 Sendek 명제의 반증이 아니라 **'전제조건이 이미 소진된 풀에서는 남은 구속이 가장 임의적인 상수로 옮겨간다'는 따름정리**로 읽어야 한다."
  },
  "threshold_sensitivity": {
   "how_to_read": "G3·G4 스윕은 **n_core_G1_G4**(문헌 대응 코어)를 보라. G5 를 함께 걸면 median 컷이 결과를 지배해 다른 축의 민감도가 전부 가려진다 (n_full_with_G5 열이 그 붕괴를 보여준다).",
@@ -1053,6 +2398,50 @@
     }
    ],
    "note": "코어 생존자는 0.30–0.40 구간에서 11종 불변, 0.25 로 내리면 MoO3 가 복귀해 12종, 0.50 에서 10종, 0.60 에서 5종. 즉 컷을 **올리는** 쪽으로는 둔감하고 **내리는** 쪽으로 민감하다 — 0.30 은 공백 상단이라 그렇다. '자의적이지만 국소적으로 안정'이 정확한 표현이고, 비대칭이라는 점까지 붙여야 정직하다."
+  },
+  "G4_blocking": {
+   "sweep": [
+    {
+     "blocking_cut": 0.5,
+     "n_core_G1_G4": 6
+    },
+    {
+     "blocking_cut": 0.55,
+     "n_core_G1_G4": 10
+    },
+    {
+     "blocking_cut": 0.6,
+     "n_core_G1_G4": 11
+    },
+    {
+     "blocking_cut": 0.65,
+     "n_core_G1_G4": 12
+    },
+    {
+     "blocking_cut": 0.7,
+     "n_core_G1_G4": 13
+    },
+    {
+     "blocking_cut": 0.8,
+     "n_core_G1_G4": 15
+    },
+    {
+     "blocking_cut": 1.0,
+     "n_core_G1_G4": 21
+    }
+   ],
+   "inherited_constant": 0.6,
+   "kill_decomposition": {
+    "g4_total_standalone_kill": 27,
+    "killed_by_blocking_constant": 24,
+    "killed_by_bvse_cut_only": 3,
+    "bvse_only_names": [
+     "B2O3",
+     "GeO2",
+     "MoO3"
+    ]
+   },
+   "note": "**G4 의 실제 선택압은 BVSE 컷이 아니라 상속 상수 blocking<0.60 이다** — 단독 탈락 27종 중 24종이 blocking 에, 3종(B2O3, GeO2, MoO3)만 BVSE 컷에 죽는다. transport_norm 규약상 blocking≥컷 인 종은 GATE_FLOOR(0.05)로 눌려 TRANSPORT_CUT(0.30)을 자동 실패하므로 두 원인은 완전 분할된다. 이 상수는 build_cascade_themes.py 에서 승계한 것이고 host 앵커도 문헌 대응도 없다 — 코어 생존자가 0.50→1.00 에서 6→21종으로 3.5배 움직이므로 **G4 통과 수를 결론으로 인용할 때는 반드시 이 상수를 함께 밝힐 것**."
   },
   "G5_mechanical": {
    "sweep": [
