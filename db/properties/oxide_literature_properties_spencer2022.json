@@ -503,6 +503,247 @@
         "defects": "O vacancy = **double donor**, In vacancy = **triple acceptor**(n-type 보상중심). In vacancy 형성에너지가 높아 p-type In2O3 는 사실상 불가. O vacancy 가 deep 인지 shallow 인지는 결론 미정 — 어느 쪽이든 산소공공만으로 p-type 은 안 된다. (p.49-50, review_ref 528 Reunchan)",
         "positron_annihilation": "Korhonen(506): UID bulk 가 전 시료 중 vacancy 농도 최저. 박막은 vacancy 형성에 유리한 성장 kinetics, bulk 는 vacancy 거의 검출 안 됨. Sn 도핑 박막(ITO)에서는 **침입형 산소가 보상 acceptor** 이며 In vacancy 가 아니다. (p.50)"
       }
+    },
+
+    "Ga2O3": {
+      "our_cascade_rank": 8,
+      "our_gap_lit_eV": 4.8,
+      "review_section": "II (pp. 4-29); Tables I, X, XI, XII; Figs 2, 8, 10-15; 이방성 gap 은 Table LV",
+      "review_framing": "리뷰의 **주인공**(100 pp 중 26 pp). UWBG power electronics 후보. 단사정 beta 상이 열역학적 안정상이며 **이방성이 물성 전반을 지배**.",
+      "crystal": {
+        "stable_phase": {"value": "beta-Ga2O3", "kind": "ref", "src": "Table XI", "review_ref": "265"},
+        "space_group": {"value": "C2/m (No. 12), monoclinic", "src": "Table XI", "review_ref": "32"},
+        "lattice_sets": [
+          {"a": 12.214, "b": 3.037, "c": 5.998, "beta_deg": 103.83, "unit": "A", "kind": "expt", "src": "Table I/XI", "review_ref": "32"},
+          {"a": 12.23, "b": 3.03, "c": 5.80, "beta_deg": 103.7, "unit": "A", "kind": "expt", "src": "Table I", "review_ref": "33"},
+          {"a": 12.27, "b": 3.04, "c": 5.80, "beta_deg": 103.7, "unit": "A", "kind": "expt", "src": "Table XI", "review_ref": "33"}
+        ],
+        "site_description": "Ga(I) = 사면체 배위, Ga(II) = 팔면체 배위. 산소는 O(I),O(II),O(III) 세 자리로 'distorted cubic' 충전. 단사각 beta ~103 도가 이방성의 근원.",
+        "metastable_polymorphs": [
+          {"phase": "alpha", "structure": "Trigonal/rhombohedral (corundum)", "space_group": "R-3c (No. 167)", "sets": [{"a": 4.97, "c": 13.437}, {"a": 4.975, "c": 13.457}, {"a": 4.983, "c": 13.433}], "unit": "A", "kind": "expt", "src": "Table I", "review_ref": "27,29,31", "note": "Al2O3 의 안정상(corundum)과 동형 -> AlGaO 합금의 alpha 쪽 종점"},
+          {"phase": "alpha (구 보고)", "a": 5.31, "structure": "hexagonal, 1 파라미터만 보고", "kind": "expt", "src": "p.21", "review_ref": "15,193", "note": "현재 통설과 불일치"},
+          {"phase": "gamma", "structure": "Cubic (defective spinel)", "space_group": "Fd-3m (No. 227)", "a": [8.35, 8.237, 8.22], "unit": "A", "kind": "expt", "src": "Table I", "review_ref": "15,26,28,34"},
+          {"phase": "delta", "structure": "Body-centered cubic", "space_group": "Ia-3 (No. 206)", "a": [9.52, 10.00], "unit": "A", "kind": "predicted/expt", "src": "Table I", "review_ref": "15,26,28", "note": "9.52 는 예측, 10.0 은 보고. C-type rare earth 로 간주 — **Sc2O3/In2O3 와 같은 bixbyite 계열**"},
+          {"phase": "epsilon", "structure": "Hexagonal", "space_group": "P6_3mc (No. 186)", "a": 2.907, "c": 9.255, "unit": "A", "kind": "expt", "src": "Table I", "review_ref": "26,29", "note": "압전성 예측(반전대칭 깨짐)"},
+          {"phase": "kappa", "structure": "Orthorhombic", "space_group": "Pna2_1 (No. 33)", "sets": [{"a": 5.0463, "b": 8.7020, "c": 9.2833}, {"a": 5.066, "b": 8.700, "c": 9.261}], "unit": "A", "kind": "expt", "src": "Table I", "review_ref": "16,17", "note": "epsilon 상의 subgroup"}
+        ],
+        "polymorph_gap_trend": "alpha/epsilon/kappa 는 beta 보다 gap 이 약간 크다 -> bandgap engineering 여지. delta 와 gamma 는 시료 확보 곤란으로 연구 미비. **delta 상 gap 보고 없음, gamma 상 실험 gap 보고 없음** (Fig 10 캡션)."
+      },
+      "band_gap": {
+        "gap_type": {"value": "Direct", "kind": "ref", "src": "Table XI/XII", "review_ref": "66"},
+        "bulk_expt_by_polarization_eV": {
+          "E_parallel_c": {"value": "5.04-5.15", "src": "Table XII", "review_ref": "86,94"},
+          "E_parallel_a": {"value": "5.37-5.40", "src": "Table XII", "review_ref": "86,94"},
+          "E_parallel_b": {"value": "5.64-5.68", "src": "Table XII", "review_ref": "86,94"}
+        },
+        "average_expt_by_method_eV": {
+          "SE": {"E||c": 5.095, "E||a": 5.385, "E||b": 5.66, "src": "Table LV", "review_ref": "86,94"},
+          "Absorption_onset": {"E||c": 4.50, "E||a": 4.57, "E||b": 4.73, "src": "Table LV", "review_ref": "59,95,96"},
+          "review_verdict": "**리뷰의 명시적 판정(p.12)**: 'Reported values from absorption measurements fail to include excitonic effects, effectively shifting the reported bandgap down by the neglected binding energy value. Ellipsometry investigations were able to fully account for anisotropy, excitonic effects, and dipole orientations thus we conclude that to date these values best represent the true fundamental bandgap values of beta-Ga2O3.' -> **SE(5.1-5.7) 가 진짜 fundamental gap, absorption(4.5-4.7) 은 계통적 과소.** b > a > c 순서는 방법 무관하게 성립."
+        },
+        "bulk_calc_eV": [
+          {"value": "2.19-2.36", "method": "DFT (GGA/LDA 수준, gap 과소)", "src": "Table XII", "review_ref": "82,83"},
+          {"value": "4.37-5.04", "method": "hybrid/보정 계산 (direct+indirect 포함)", "src": "Table XII", "review_ref": "19,33,66,85,86"},
+          {"value": 5.341, "direction": "E||c", "method": "bulk calc", "src": "Table XII", "review_ref": "94"},
+          {"value": "4.969-5.581", "direction": "E||a", "method": "bulk calc", "src": "Table XII", "review_ref": "86,94"},
+          {"value": "5.35-5.911", "direction": "E||b", "method": "bulk calc", "src": "Table XII", "review_ref": "86,94"}
+        ],
+        "film_expt_eV": {"value": "4.72-5.40", "src": "Table XII", "review_ref": "77,97-99,101,102"},
+        "commonly_quoted": {"value": "4.8-4.9", "src": "p.25 (AlGaO 절)", "note": "리뷰가 AlGaO 합금 설명에서 쓴 관행값. Al2O3 8.8 과 짝지어 alloy 범위 5~7.9 eV 를 유도할 때 사용."},
+        "temperature_dependence": {
+          "model": "Bose-Einstein: E_g(T) = E_g(0) - 2a_B / (exp(theta_B/T) - 1); 고온에서 gamma = dEg/dT ~ -2a_B/theta_B",
+          "gamma_meV_per_K": [
+            {"value": -0.769, "method": "PL excitation + absorbance, [-201] 박막, 77-298 K (4.82->4.65 eV)", "kind": "expt", "review_ref": "109"},
+            {"value": -0.98, "direction": "E||c", "method": "편광 흡수/반사, 77 K & 300 K 2점", "kind": "expt", "review_ref": "44"},
+            {"value": -0.18, "direction": "E||b", "method": "동상", "kind": "expt", "review_ref": "44"},
+            {"value": -0.83, "direction": "a축 근처 최저전이", "method": "고온 SE (RT-550 C)", "kind": "expt", "review_ref": "110"},
+            {"value": -1.03, "direction": "c축 근처 2번째 전이", "method": "고온 SE", "kind": "expt", "review_ref": "110"},
+            {"value": -0.60, "direction": "b축 근처 3번째 전이", "method": "고온 SE", "kind": "expt", "review_ref": "110"},
+            {"value": -0.90, "direction": "a축 근처 최저전이", "method": "저온 SE (10-300 K)", "kind": "expt", "review_ref": "111"},
+            {"value": -0.90, "direction": "c축 근처", "method": "저온 SE", "kind": "expt", "review_ref": "111"},
+            {"value": -0.47, "direction": "b축 근처", "method": "저온 SE", "kind": "expt", "review_ref": "111"}
+          ],
+          "zero_T_gap_eV": {"E||a": 5.069, "E||c": 5.41, "E||b": 5.7, "kind": "expt(SE fit)", "src": "p.12", "review_ref": "111"},
+          "phonon_bath_temperature": {"theta_B_eV": 0.067, "theta_B_cm-1": 537.7, "note": "전 전이 파라미터 shift 로부터. 대칭독립 광학포논 산술평균 507.5 cm-1 과 일치 -> Bose-Einstein 가정 타당성 확인", "src": "p.12", "review_ref": "44"},
+          "consistency": "저온(Sturm)과 고온(Mock) 영역의 온도 shift 가 '탁월하게 일치' -> effective phonon bath 근사가 beta-Ga2O3 에 유효."
+        },
+        "doping_dependence_of_gap": {
+          "burstein_moss": {"value": "4.69 -> 4.716 eV", "condition": "n = 1e16 -> 2.52e18 cm-3", "mechanism": "Burstein-Moss band filling", "src": "p.20", "review_ref": "109"},
+          "mott_narrowing": {"value": "4.7 -> 4.68 eV", "condition": "n = 6.23e18 -> 3.05e19 cm-3", "mechanism": "Mott semiconductor-metal transition (이론상 4e18 cm-3 근처) + 불순물 분포에 의한 정전 퍼텐셜 요동 band narrowing", "src": "p.20", "review_ref": "109,180"},
+          "re_widening": {"condition": "n > 7.23e19 cm-3", "mechanism": "Burstein-Moss 가 bandgap renormalization 을 다시 압도", "src": "p.20", "review_ref": "109"},
+          "our_lesson": "**같은 물질의 gap 이 캐리어 농도에 따라 올랐다 내렸다 다시 오른다.** 단일 gap_lit_eV 를 물질상수처럼 쓰면 안 되는 문헌 근거."
+        }
+      },
+      "dielectric": {
+        "static_eps0": [
+          {"value": 10.9, "component": "eps_a", "kind": "expt", "src": "Table XII", "review_ref": "54"},
+          {"value": 10.8, "component": "eps_a*", "kind": "expt", "src": "Table XII", "review_ref": "54"},
+          {"value": 11.2, "component": "eps_b", "kind": "expt", "src": "Table XII", "review_ref": "54"},
+          {"value": 12.6, "component": "eps_c", "kind": "expt", "src": "Table XII", "review_ref": "54"},
+          {"value": 12.7, "component": "eps_c*", "kind": "expt", "src": "Table XII", "review_ref": "54"},
+          {"value": 10.19, "component": "eps_a", "kind": "expt", "src": "Table XII", "review_ref": "244"},
+          {"value": 10.05, "component": "eps_a*", "kind": "expt", "src": "Table XII", "review_ref": "244"},
+          {"value": 10.6, "component": "eps_b", "kind": "expt", "src": "Table XII", "review_ref": "244"},
+          {"value": 12.4, "component": "eps_c", "kind": "expt", "src": "Table XII", "review_ref": "244"},
+          {"value": 12.27, "component": "eps_c*", "kind": "expt", "src": "Table XII", "review_ref": "244"}
+        ],
+        "high_frequency_eps_inf": [
+          {"value": 3.89, "component": "eps_a", "kind": "expt", "src": "Table XII", "review_ref": "54"},
+          {"value": 3.87, "component": "eps_b", "kind": "expt", "src": "Table XII", "review_ref": "54"},
+          {"value": 2.9, "component": "eps_c*", "kind": "expt", "src": "Table XII", "review_ref": "54"},
+          {"value": 3.85, "component": "eps_a", "kind": "calc", "src": "Table XII", "review_ref": "132"},
+          {"value": 3.81, "component": "eps_b", "kind": "calc", "src": "Table XII", "review_ref": "132"},
+          {"value": 4.08, "component": "eps_c", "kind": "calc", "src": "Table XII", "review_ref": "132"}
+        ],
+        "anisotropy_comment": "§XI(p.100): Ga2O3 는 **이론 이방성이 실험 이방성보다 훨씬 작다**. 고주파 유전상수의 이방성은 정적 대비 뚜렷하게 작다."
+      },
+      "refractive_index": {"value": null, "reason": "리뷰 미제시 (eps_inf 만)"},
+      "effective_mass": {
+        "electron": {
+          "expt": [{"value": 0.288, "component": "m*_a"}, {"value": 0.283, "component": "m*_b"}, {"value": 0.286, "component": "m*_c"}],
+          "expt_method": "광학/SE (review_ref 42) — 거의 등방",
+          "calc": [{"value": "0.224-0.41", "component": "m*_a"}, {"value": "0.301-0.41", "component": "m*_b"}, {"value": "0.291-0.37", "component": "m*_c"}],
+          "calc_ref": "42,86",
+          "src": "Table XII"
+        },
+        "hole": [{"value": 1.769, "component": "m*_a", "kind": "calc", "review_ref": "86"}, {"value": 0.409, "component": "m*_c", "kind": "calc", "review_ref": "86"}],
+        "note": "단사정임에도 **전자 유효질량은 거의 등방**(0.283-0.288). 정공은 강한 이방성. §XI: Ga2O3 와 SnO2 의 전자 유효질량에 이방성이 보인다고 기술."
+      },
+      "carrier_mobility": {
+        "electron_calc": {"value": "220-300", "unit": "cm2/(V s)", "kind": "calc", "src": "Table XII", "review_ref": "147,155"},
+        "electron_expt": {"value": "112-176", "unit": "cm2/(V s)", "kind": "expt", "src": "Table XII", "review_ref": "57,76,95,267"},
+        "detail": ["(-201) 표면 44 cm2/(V s) @ n=6e18 (42)", "(010) 표면 42-45 @ n=4.1e18 (42)", "Schottky barrier on (-201): RT 153, 85 K 최대 886 (176)", "a-cut float zone 단결정 Hall: RT ~110 (120)", "(100) cleavage plane 다수 CZ 결정: 110-150 (54)"],
+        "scattering": "T > 200 K 광학포논 산란, T < 100 K 이온화불순물 산란 지배. 큰 이방성은 **내재적 성질이 아니라 twin boundary 등 확장결함** 때문(Kang et al.). HSE hybrid 로 계산한 mobility 는 방향 간 30% 미만 차이 = 사실상 등방."
+      },
+      "electrical_breakdown_field_MV_per_cm": {"value": 8.0, "kind": "pred", "method": "Higashiwaki gap-vs-field plot", "src": "Table XII", "review_ref": "147", "note": "이 8 MV/cm 이 리뷰 전체의 breakdown 예측 기준점이며, 다른 8종의 예측값도 같은 plot 에서 나왔다."},
+      "electron_affinity_eV": {"value": "4.00 +/- 0.05", "kind": "expt", "src": "Table XII", "review_ref": "236"},
+      "phonon": {
+        "ir_active": {"value": "4A_u + 8B_u", "src": "Table XII", "review_ref": "44"},
+        "raman_active": {"value": "10A_g + 5B_g", "src": "Table XII", "review_ref": "112,135"},
+        "average_optical_phonon_cm-1": {"value": 507.5, "note": "대칭독립 광학포논 산술평균", "src": "p.12", "review_ref": "44"},
+        "doping_effect": "자유캐리어가 생기면 **LO-phonon plasmon coupled mode** 의 주파수와 편광방향이 이동 (review_ref 140). Sn/Fe 도핑 시 포논산란 증가로 열전도도 감소."
+      },
+      "thermal": {
+        "debye_temperature_K": {"expt": {"value": 738, "src": "Table XI", "review_ref": "55"}, "calc": {"value": 872, "src": "Table XI", "review_ref": "33"}},
+        "specific_heat_J_gK": {"value": "0.47-0.56", "kind": "expt", "src": "Table XI", "review_ref": "41,55,115,117"},
+        "thermal_conductivity_W_mK": {
+          "principal": [{"value": 15, "direction": "a*"}, {"value": 28, "direction": "b"}, {"value": 18, "direction": "c*"}],
+          "crystallographic": [{"value": "10.9-13.6", "direction": "[100]"}, {"value": 22.8, "direction": "[010]"}, {"value": 14.7, "direction": "[001]"}, {"value": 13.3, "direction": "[-201]"}, {"value": 27.0, "direction": "[110]"}],
+          "kind": "expt", "src": "Table XI", "review_ref": "39,41,115",
+          "review_comment": "**b축(=[010])이 최대, a*/[100] 이 최소로 약 2배 이방성.** 리뷰는 Ga2O3 의 낮은 열전도도를 소자 패키징의 핵심 난제로 지목."
+        },
+        "thermal_diffusivity_mm2_s": {"values": [{"value": 5.23, "direction": "a*"}, {"value": 9.76, "direction": "b"}, {"value": 6.26, "direction": "c*"}, {"value": 5.3, "direction": "[100]"}, {"value": 8.9, "direction": "[010]"}], "kind": "expt", "src": "Table XI", "review_ref": "41,125"},
+        "CTE_1e-6_per_K": {"expt": [{"value": "4.7-5.3", "direction": "[100]"}, {"value": "5.45-8.9", "direction": "[010]"}, {"value": "5.35-8.2", "direction": "[001]"}], "calc": [{"value": 1.54, "direction": "[100]"}, {"value": 3.37, "direction": "[010]"}, {"value": 3.15, "direction": "[100]"}], "kind": "expt/calc", "src": "Table XI", "review_ref": "41,45,115", "note": "calc 목록의 세 번째 방향 라벨이 표에 [100] 으로 두 번 인쇄됨(원표 오타 또는 판독 문제) -> 방향 귀속은 신뢰하지 말 것. §XI: **[100] 방향 CTE 가 9종 전체 최저** 이며 리뷰도 이를 outlier 로 의심."}
+      },
+      "mechanical": {
+        "density_g_cm3": {"value": "5.88-5.95", "kind": "expt", "src": "Table XI", "review_ref": "115,266"},
+        "bulk_modulus_GPa": {"calc": {"value": 174, "src": "Table XI", "review_ref": "19"}, "expt": {"value": "184-255", "src": "Table XI", "review_ref": "112,113"}, "review_comment": "**같은 물질 안에서 65 GPa 넘게 갈리는 것이 bulk modulus 의 실상**(§XI). 원인 = 서로 다른 EOS, 실험법, 시료 품질. 리뷰는 'bulk modulus 는 부피변화/압력이라 벡터·텐서량이 아니므로 이방성일 수 없다'고 명시."},
+        "vickers_hardness": {"value": "656.5-1029.6", "unit": "kg/mm2", "kind": "expt", "note": "방향 의존(이방성)", "src": "p.12", "review_ref": "41"},
+        "melting_point_C": {"summary": {"value": "1725-1795", "kind": "expt", "src": "Table XI", "review_ref": "115,117"}, "detail": [1725, "1740 +/- 15", 1795, 1806], "review_ref": "114-118"}
+      },
+      "doping_and_defects": {
+        "n_type": "치환형 shallow donor 로 **1e13 ~ 1e20 cm-3** 범위 제어 가능 — 이것이 beta-Ga2O3 를 UWBG 중 독보적으로 만드는 성질. 상한 1e20 cm-3 (Sn 도핑 박막).",
+        "group_IV_donors": "Si, Ge, Sn. **Si·Ge 는 사면체 Ga(I) 자리, Sn 은 팔면체 Ga(II) 자리.** 원자반경 mismatch: Si -40%, Ge -16%, Sn +14% -> **Ge/Sn 이 Ga 양이온 자리에 공간적으로 잘 맞는다.** (p.20, review_ref 66,120)",
+        "group_VII_donors": "Cl, F -> 3배위 O(I) 자리",
+        "oxygen_vacancy_verdict": "**산소공공은 도너지만 준위가 너무 깊어 전도에 기여하지 못한다**(Varley 66). 즉 언도프 n-type 은 성장 중 유입된 불순물(주로 Si) 탓. Ga vacancy 는 산소 dangling bond 3개 -> **triple acceptor** 로 도너를 보상.",
+        "annealing": "O2 어닐 -> 자유전자 감소; N2/H2 어닐 -> n-type 전도 증가 (review_ref 24,179)",
+        "p_type_impossible": "정공이 산소 자리 주변에 강하게 국재화 -> 전기장을 걸어도 drift 불가 -> 정공 mobility 사실상 0. **치환형 p-type 도핑은 거의 불가능**(review_ref 181,182).",
+        "codoping_workarounds": [
+          {"scheme": "metal-nitrogen co-doping", "detail": "Mg 또는 Zn 을 도너, N 을 acceptor 로 **동시 도핑**하면 N 의 준위가 각각 0.16 / 0.01 eV 로 크게 낮아진다 (DFT). 전자결핍 금속을 co-doping 하면 보상 vacancy 결함 생성도 억제.", "kind": "calc", "review_ref": "183 (Yan), 184 (Cai)"},
+          {"scheme": "Bi alloying", "detail": "(Bi_xGa_{1-x})2O3 희박합금이 **중간 valence band** 를 형성해 acceptor 에너지를 낮춘다", "kind": "calc", "review_ref": "184"}
+        ],
+        "deep_acceptors": "Fe 도핑 -> deep acceptor 이지만 결정은 여전히 약한 n-type; **Fe acceptor 준위 = 전도대 기준 860 meV**(review_ref 186). Peelaers(185) 제1원리: beta-Ga2O3 의 도판트는 **VBM 위 1.3 eV 이상의 deep acceptor** 가 되는 일이 잦다. 리뷰의 반전: '**deep acceptors are beneficial for creating highly insulating layers within devices**'.",
+        "seebeck": {"value": -341, "unit": "uV/K", "T": "RT", "kind": "calc", "note": "전자 유효질량이 커서 DOS 가 높은 탓에 다른 반도체보다 큼", "review_ref": "189"},
+        "OH_defect": "지배적 O-H 센터 = Ga(1) vacancy-2H [V_Ga(1)]-2D center (review_ref 188)"
+      }
+    },
+
+    "ZnO": {
+      "our_cascade_rank": 29,
+      "our_gap_lit_eV": 3.3,
+      "review_section": "V (pp. 50-59); Tables XXVI, XXVIII, XXIX, XXX; Figs 21, 24",
+      "review_framing": "가장 잘 연구된 반도체 산화물. **직접 gap, n-type, 압전성**. GaN 급 재료 품질. p-type 이 안 되는 것이 최대 한계(O 2p VBM 때문).",
+      "crystal": {
+        "stable_phase": {"value": "Wurtzite (zincite)", "kind": "ref", "src": "Table XXX", "review_ref": "542"},
+        "space_group": {"value": "P6_3mc (No. 186), hexagonal", "src": "Table XXX", "review_ref": "542"},
+        "lattice_ang": [
+          {"a": "3.2459-3.2501", "c": "5.2069-5.2075", "kind": "expt", "src": "Table XXX", "review_ref": "543,544,549"},
+          {"a": 3.286, "c": 5.241, "kind": "calc(Hartree-Fock ab initio)", "src": "Table XXX", "review_ref": "545"},
+          {"a": 3.2475, "c": 5.2075, "kind": "calc(XRD 대비 약간 큼)", "src": "p.50", "review_ref": "544"}
+        ],
+        "c_over_a": {"value": "1.595-1.604", "ideal": 1.633, "note": "이상 wurtzite 보다 약간 작다 — ZnO 결정의 이온성과 격자 안정성 탓. 격자상수 편차 원인 = 산소공공·Zn antisite·threading dislocation. **자유전하가 전도대 minimum 의 deformation potential 을 통해 격자를 팽창시킨다.**", "src": "p.51"},
+        "metastable_polymorphs": [
+          {"phase": "Zinc blende", "space_group": "F-43m (No. 216)", "a": "4.463-4.619", "unit": "A", "kind": "expt/calc", "src": "Table XXX, p.50", "review_ref": "542,545-547"},
+          {"phase": "Rocksalt (고압)", "space_group": "Fm-3m (No. 225)", "a": "4.271-4.30", "unit": "A", "kind": "expt/calc", "src": "Table XXX, p.50-51", "review_ref": "542,547"}
+        ],
+        "polymorph_bulk_modulus_GPa": {"zinc_blende": {"value": "135.3-161.7", "kind": "calc(LDA/GGA/HF)", "note": "wurtzite 와 거의 차이 없음"}, "rocksalt": {"calc": [203.3, 205], "expt": 228, "note": "**rocksalt 가 wurtzite/zinc blende 보다 뚜렷하게 단단**"}, "src": "p.57", "review_ref": "547,548,599"}
+      },
+      "band_gap": {
+        "gap_type": {"value": "Direct", "kind": "ref", "src": "Table XXX", "review_ref": "591"},
+        "bulk_expt_SE_eV": [
+          {"E_perp": 3.372, "E_para": 3.405, "Exb_perp_meV": 56, "Exb_para_meV": 50, "method": "SE", "review_ref": "584"},
+          {"E_perp": 3.373, "E_para": 3.407, "Exb_perp_meV": 55.3, "Exb_para_meV": 51.3, "method": "SE", "review_ref": "585"},
+          {"E_perp": 3.406, "E_para": 3.445, "Exb_perp_meV": 72, "Exb_para_meV": 73, "method": "SE", "review_ref": "586"},
+          {"E_perp": 3.407, "E_para": 3.4889, "Exb_perp_meV": 90, "Exb_para_meV": 78, "method": "SE", "review_ref": "586"},
+          {"E_perp": 3.448, "E_para": 3.492, "Exb_perp_meV": 66, "Exb_para_meV": 66, "method": "Transmission", "review_ref": "587"},
+          {"E_perp": 3.45, "E_para": 3.45, "Exb_perp_meV": 59, "Exb_para_meV": 59, "method": "SE", "review_ref": "588"}
+        ],
+        "average_bulk_expt_eV": {"E_perp": 3.409, "E_para": 3.447, "src": "p.54"},
+        "film_expt_eV": [
+          {"value": 3.366, "method": "SE (band-to-band transition, 흡수 onset 아님)", "review_ref": "590"},
+          {"value": "3.08-3.37", "method": "Trans./Abs., 전구체 농도 0.05->0.1 M 에서 증가", "review_ref": "591"},
+          {"value": "3.27-3.31", "method": "Abs., 기판온도 의존 (최대 3.31 @ 200 C)", "review_ref": "592"},
+          {"value": 3.28, "method": "Abs.", "review_ref": "594"},
+          {"value": 3.29, "method": "Abs.", "review_ref": "594"},
+          {"value": 3.3, "method": "Trans./Abs. (이방성 미고려)", "review_ref": "595"}
+        ],
+        "calc_eV": [{"value": 2.97, "method": "screened-exchange approx.", "review_ref": "580"}, {"value": 2.99, "method": "FLAPW", "review_ref": "581"}, {"value": 3.03, "method": "PBE0", "review_ref": "580"}, {"value": 3.20, "method": "GW", "review_ref": "582"}, {"value": 3.39, "method": "pseudopotential", "review_ref": "569"}, {"value": 3.4, "method": "LDA+GW", "review_ref": "596"}, {"value": 3.5, "method": "calc", "review_ref": "568"}, {"value": 3.6, "method": "LDA+U+GW", "review_ref": "596"}, {"value": 3.77, "method": "SIC-PP", "review_ref": "567"}],
+        "summary_ranges": {"bulk_calc": "2.97-3.77", "bulk_expt_perp": "3.372-3.45", "bulk_expt_para": "3.405-3.45", "film_expt": "3.08-3.37 (이방성 미고려)", "src": "Table XXX"},
+        "anisotropy": "E_perp 와 E_para 차이는 대개 100 meV 미만이고 **E_para >= E_perp** 가 일관. exciton 결합에너지 이방성은 최대 12 meV.",
+        "exciton_binding_meV": {"value": "50-90", "note": "GaN 의 약 3배. RT 에서도 exciton 발광이 뚜렷.", "src": "Table XXVI"},
+        "polymorph_gaps": {
+          "zinc_blende": {"expt": {"value": 3.27, "method": "photoluminescence", "review_ref": "546"}, "calc": {"value": "0.79-3.27", "detail": "LDA 0.79 / LDA+GW 1.00 / LDA+GW(semicore) 1.36 / LDA-PP 1.77 / SIC-PP 3.27", "note": "**LDA 가 0.79-1.36 eV 로 극심하게 과소평가**; SIC-PP 만 실험과 일치"}, "src": "Table XXVIII"},
+          "rocksalt": {"expt": {"value": [2.45, 4.5], "method": "avg absorption edge (indirect) / absorption edge, film", "review_ref": "660,659"}, "calc": {"value": "1.16-6.54", "detail": "LDA 1.16(indirect)/2.54/3.08 · LDA+GW 3.72 · GW 4.51(indirect)/4.74 · HF 5.54(indirect)/6.54", "note": "**HF 는 과대, LDA 는 과소** — 같은 상에서 5 eV 넘게 갈린다"}, "src": "Table XXVIII"},
+          "rocksalt_indirect_origin": "rocksalt(점군 O_h)는 반전중심이 있어 p 음이온·d 양이온 상태가 섞이지 못한다 -> valence band 가 분산되며 VBM 이 Gamma 에서 벗어남 -> **indirect**. 반면 zinc blende(T_d)는 반전중심이 없어 혼합이 일어나고 direct 유지."
+        },
+        "temperature_dependence": {"value": null, "reason": "리뷰 §V C 2 (pp. 54-55) 에 서술되나 본 digest 에서는 A-exciton 온도의존 서술까지만 확인, 계수(gamma) 를 판독하지 못했다. 미기록.", "partial": "언도프 bulk ZnO 에서 gap 보다 ~0.11 eV 낮은 3.26 eV 근처의 UV edge emission 이 흔함 (p.54)"}
+      },
+      "dielectric": {
+        "static_eps0": [{"value": 7.61, "direction": "perp c", "kind": "calc", "review_ref": "588"}, {"value": 8.50, "direction": "parallel c", "kind": "calc", "review_ref": "588"}, {"value": "8.59-8.91", "direction": "parallel c", "kind": "expt", "review_ref": "617"}, {"value": "7.46-7.77", "direction": "perp c", "kind": "expt", "review_ref": "617"}],
+        "high_frequency_eps_inf": [{"value": "3.61-3.70", "direction": "perp c", "kind": "calc", "review_ref": "617"}, {"value": "3.76-3.78", "direction": "parallel c", "kind": "calc", "review_ref": "617"}],
+        "src": "Table XXX",
+        "review_comment": "§XI(p.100): **정적 유전상수 최저가 ZnO**(최고는 CdO)."
+      },
+      "refractive_index": {"value": null, "reason": "리뷰 미제시"},
+      "effective_mass": {"electron": {"value": "0.23-0.34", "unit": "m_e", "kind": "calc", "src": "Table XXX", "review_ref": "625-628"}, "hole": {"value": 0.79, "unit": "m_h", "kind": "calc", "src": "Table XXX", "review_ref": "630"}},
+      "carrier_mobility": {"electron_calc": {"value": "260-300", "unit": "cm2/(V s)", "review_ref": "631"}, "electron_expt": {"value": "120-440", "unit": "cm2/(V s)", "review_ref": "557,562,563,633,636"}, "src": "Table XXX"},
+      "electrical_breakdown_field_MV_per_cm": {"value": "2-3", "kind": "pred", "method": "Higashiwaki gap-vs-field plot", "src": "Table XXX", "review_ref": "147"},
+      "electron_affinity_eV": [{"value": 4.1, "kind": "expt", "review_ref": "541"}, {"value": 4.5, "kind": "expt", "review_ref": "622"}],
+      "phonon": {"ir_active": {"value": "A_1, E_1", "src": "Table XXX", "review_ref": "618"}, "raman_active": {"value": "A_1, E_1, 2E_2", "src": "Table XXX", "review_ref": "618"}},
+      "piezoelectric": {
+        "spontaneous_polarization_C_m2": [{"value": -0.032, "kind": "calc", "review_ref": "639"}, {"value": -0.05, "kind": "calc", "review_ref": "640"}, {"value": -0.057, "kind": "calc", "review_ref": "641"}, {"value": "-0.07 +/- 0.015", "kind": "expt(second harmonic generation)", "review_ref": "642"}, {"value": "-0.041 ~ -0.004", "kind": "expt(capacitance, ZnO/BaTiO3 다이오드)", "review_ref": "216"}],
+        "note": "wurtzite 대칭 때문에 압전 + 자발분극. 압전전하는 c축 평행 변형에서 발생하고 **인장/압축에 따라 부호가 바뀐다.**",
+        "src": "p.57"
+      },
+      "thermal": {
+        "debye_temperature_K": {"calc": "305-416", "expt": "370-700", "src": "Table XXX", "review_ref": "597,602,603,606", "review_comment": "**리뷰 9종 중 Debye 온도 산포 최대(거의 500 K 폭)**"},
+        "specific_heat_J_gK": [{"value": 0.495, "review_ref": "549"}, {"value": 0.504, "review_ref": "610"}],
+        "thermal_conductivity_W_mK": {"Zn_face": "102-116", "O_face": "98-110", "range": "46-147", "kind": "expt", "src": "Table XXX", "review_ref": "611,612", "review_comment": "**시료 간 최대 101 W/(mK) 차이** — 9종 중 산포 최대"},
+        "thermal_diffusivity": {"value": null, "reason": "Table LII 'Not reported'"},
+        "CTE_1e-6_per_K": {"a_axis": "4.31-4.75", "c_axis": "2.49-4.9", "kind": "expt", "src": "Table XXX", "review_ref": "542,608"}
+      },
+      "mechanical": {
+        "density_g_cm3": {"value": 5.605, "kind": "expt", "src": "Table XXX", "review_ref": "549"},
+        "bulk_modulus_GPa": {"calc": "154.4-173", "expt": "140-183", "src": "Table XXX", "review_ref": "547,548,599,600,601"},
+        "melting_point_C": {"value": 1975, "kind": "expt", "src": "Table XXX", "review_ref": "118"}
+      },
+      "doping_and_defects": {
+        "donors": "Al, In, Ga, Zr (563). **Ga, Al, In, Sc 는 Zn2+ 를 치환하는 shallow donor** (647,648). 그 외 Zn interstitial(649), H interstitial(650), Zn 자리의 P(651).",
+        "sc_note": "리뷰가 **Sc 를 ZnO 의 shallow donor** 로 명시 — Sc 화학 정보가 리뷰 안에서 Sc2O3 절 바깥에도 존재하는 유일한 사례.",
+        "acceptors": "Li, Na 를 Zn 자리에; N(643), As(644), P(645), Ga-N(646) complex 를 O 자리에. **p-type ZnO 는 O 2p VBM 때문에 여전히 어렵다.**",
+        "hydrogen": "많은 재료에서 H 는 amphoteric(n-type 에선 H-, p-type 에선 H+)이라 전도 원천이 못 되지만, **ZnO 에서는 shallow donor 로 행동**(Van de Walle 650) -> 의도치 않은 n-type 의 원인. 성장법(hydrothermal, MOCVD, VPT) 대부분에 H 존재.",
+        "defects": "Zn-on-O antisite, O vacancy, Zn interstitial 이 자연 n-type 의 원인. Zn-rich 조건에서는 O vacancy 불안정; O-rich 조건에서 Fermi 가 gap 상반부면 Zn vacancy 지배, 하반부면 dumbbell split O interstitial 지배(Erhart 653). **결함 이동도 순서: Zn interstitial > O interstitial > Zn vacancy > O vacancy**; n-type ZnO 의 자기확산은 vacancy 매개(654)."
+      }
     }
   }
 }
