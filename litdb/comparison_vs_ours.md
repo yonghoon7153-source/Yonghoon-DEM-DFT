@@ -184,6 +184,7 @@
 > - **deck 결론**: "전도도 이득이 산화창 손해 없이(B①–③ 중립~유리), 비용은 shelf-life(B④). **양극 계면은 별도 레버로 관리** — 4 V급은 코팅·도핑([Cha]할라이드 dual-compat / [Kang25]SE코팅 균일화 / 우리 cascade SE도핑), **5 V급은 산화안정 차폐 SE 물질군 교체([Son] 불소계 LiCl–4LTF)**. 황화물 intrinsic 산화창은 어느 경우도 못 늘림(우리 2.256 V·Banik S-pin·Son <2.5 V)." 축·레버·전압대 명명 필수.
 > - **⚠ "넓은 ESW" 문헌 over-claim 주의 (carbon-composite kinetic ≠ thermodynamic)**: **[Taklu]** "**8 V ultra-wide ESW**"(CuCl 도핑, Fig 3b)는 **(a) In/InLi 기준**·**(b) carbon-composite CV의 *kinetic/접근성*** 측정 — 황화물 *intrinsic* 산화 onset이 아님. Cu가 bridging-S를 *kinetically* 안정화(분해전류 160×↓)하는 건 사실이나, **thermodynamic 산화창은 여전히 S²⁻-limited ~2.3 V**([Banik] VBM=S 3p·우리 grand-potential 2.256 V). → **"CuCl/도핑이 산화창을 N V로 넓혔다"는 인용 금지** — "carbon-composite 셀 kinetic 분해전류 감소"로만. (Dewald ref49 "planar는 분해 과소평가"를 저자도 인용하나 composite 8 V도 동일 함정.)
 > - **LiS4 단서**: 우리 onset 2.14 vs [GG] 2.40 차이 = LiS4(mp-995393) 포함 탓 → 제외 시 2.26 (정합↑).
+> - **🧬 계보 note [Xiao19] — 게이트 1:1 벤치마크 (우리 cascade 발표용; 풀 표는 digest §7c)**: 대상부터 다름 주의 — Xiao=**코팅 물질 발굴**(104,082 풀), 우리=**host 도판트 스크리닝**(47종×x, modelc) → 수치 이식 금지, *게이트 설계*만 대비. **계승 3축**: 상안정(그들 E_hull<5 meV/atom 절대-hull boolean ↔ 우리 stable 0.25 가중·UMA-상대 de_post_anneal) · grand-potential ESW(그들 V_ox≥4.0/V_red≤2.7 절대 문턱 ↔ 우리 ox 0.30 가중+**window>0.05 V collapse 게이트**(late-TM 회피) — S-limited host라 절대 문턱 대신 미세이동·창붕괴 좌표계) · 이온전도 프록시(그들 CI-NEB 6/66종만·LiPO₃ 0.40 vs exp 1.40 eV 실패 자기보고 ↔ 우리 BVS proxy 47종 전수→챔피언 MLIP-MD 2단 검증). **우리 추가 3축**: 기계 soft 0.20+ductile 0.15(=가중 35 %, Xiao 전무) · 테마 12+1 조합+co-doping 교호작용 ML · UMA-상대 엔진(그들 "HT에 ab initio 전도는 과비용" 자인 공백의 해법). **우리 공백 2축**: **양극(NCM/LCO) 반응성 게이트**(&#124;ΔE_rxt&#124;<0.1 eV/atom·만충/반충 — §H 보강책) · 10⁵ 후보 풀. **스코어링 철학 차**: 순차 boolean 깔때기(경계 정보 소실; LiCoPO₄류 일괄 탈락) vs 가중 score=0.30 ox+0.25 stable+0.20 soft+0.15 ductile+0.10 window(순위·trade-off 보존; 대신 가중치 자의성 리스크). 발표 1-liner: "우리 cascade는 Xiao 2019 깔때기의 게이트 축(상안정·ESW·전도 프록시)을 계승하되, boolean을 가중 score로 바꾸고 기계·조합·ML 축을 추가했다 — 양극 반응성 게이트와 10⁵ 풀은 그들 고유."
 
 ## C. 기계적 물성 — *값이 functional·정의 의존*
 | 주장 | 출처 | 우리 | 비고 |
@@ -273,6 +274,7 @@
 | **Li₃PO₄ buffer: CAM 산소방출 억제 + 기계약한 sulfate 형성 방지 + 고전압 parasitic↓** | **[Kang]** §5.1(c) Fig13e (ref128) | Nd cascade: Li₃PO₄가 bulk-GB·cathode passivation으로 persist(0.69–3.06 V) | **✓ 동일 역할** (우리 직접 hull staircase가 실증) |
 | **BH₄⁻ 도핑: CCD 2.6→7.3 mA/cm², 얇은 tri-layer SEI(Li₃P/LiBH₄/Li₂S) 기계순응·전자절연** | **[Kang]** §5.1(a) Fig13a,b (ref127) | (우리 미계산) — doping cascade 47종 스크리닝의 동기 | 우리 cascade가 "어떤 도판트가 전자절연 SEI를 주나" 예측하는 방향성 동기 |
 | **"한 변수 고치면 다른 변수 바뀐다 → 통합 설계 필요"** (도핑이 σ·기계·ECW·SEI 동시 변경) | **[Kang]** §6 트렌드3 | 우리 **cascade v23**: stability↔Li-mobility blocking trade-off, 기계+안정성 동시 스크리닝(47 dopant) | **🔑 방법 일치** — 우리 cascade의 trade-off 설계가 곧 리뷰 "modifying one parameter alters others"의 계산 구현 |
+| **HT 게이트 스크리닝 방법 원전 + "V_ox↔Li 함량" trade-off 정량**: 깔때기(104,082→184→3종)·게이트 임계값(Eg 0.5/E_hull 5 meV/V_ox 4.0·V_red 2.7/ΔE_rxt 100 meV)·**Li분율↑⇔V_ox↓**(V_ox≥5 V→Li분율≤0.20, Fig 7)·O-공유결합 위계(meta>pyro>ortho·B–O 806 kJ/mol) | **[Xiao19]** ⭐ (코팅 *물질* 스크리닝 — 도핑 아님) | **우리 cascade의 게이트 골격 원전**(§B 🧬 note·digest §7c 1:1 표): 계승=상안정·grand-potential ESW·전도 프록시 / 우리 추가=기계 35 %·테마 조합·co-doping ML·UMA-상대 / 우리 공백=양극 반응성 게이트·10⁵ 풀. **그들 "V_ox↔Li분율" trade-off = 우리 stability↔blocking trade-off의 동형 구조**(레버만: 조성 Li분율 vs 도판트 blocking). ⚠ [Sundar]와 같은 규율 — 코팅≠도핑, 랭킹/수치 force-fit 금지; **붕산염 3축 분리**(산화·계면 화학안정↑[Xiao·우리 B₂O₃ +0.18 V] / Li 이동성↓ 위험[Xiao LiBa(B₃O₅)₃ E_m 1.96 eV] / 가수분해 최악급[Zhu20]) 없이 "B가 좋다" 금지 |
 
 ## G. ✅ 우리 계산이 문헌을 *검증*하는 지점 (강점)
 | 우리 결과 | = 문헌 | 출처 |
@@ -315,6 +317,7 @@
 | defect/σ_e 정량 | slide25 틀 | Freysoldt defect calc |
 | slab IP / absolute VBM | UPS 절대 기준 | slab+vacuum |
 | **Zr 포함 hull (할라이드 코팅 LIC/LYC/LZC dual-compatibility 정량)** | **[Cha]** ⭐ (LZC=Li₂ZrCl₆ vs NCM/LPSCl 6계면) | Zr 추가 chemsys(Cl-Li-Zr-…)로 `GrandPotentialInterfacialReactivity` voltage-resolved — 왜 Zr⁴⁺만 견디고 In/Y는 분해하나 in-silico 재현 |
+| **양극(NCM/LCO) 반응성 게이트 — cascade에 ΔE_rxt(vs 양극) 열 없음** (만충/반충 SOC-resolved 포함) | **[Xiao19]** Filter 4(&#124;ΔE_rxt&#124;<0.1 eV/atom vs LPS+만충 NCM)·Table S2/S3, **[Rich16]** eq 2/4, [Cha] dual-compat | pymatgen InterfaceReactions로 cascade CSV에 **ΔE_rxt(vs LCO) 열 추가**(우리 hull 내 즉시 가능; 정답지=Xiao LPSCl/LCO **−339/−493 meV/atom** 재현) → 이후 Ni/Co/Mn chemsys 확장으로 NCM·만충/반충까지 — 도핑이 양극 반응성을 개선/악화하는지 cascade 축으로 편입 |
 
 ---
 

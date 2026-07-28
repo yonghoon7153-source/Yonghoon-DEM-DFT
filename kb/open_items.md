@@ -94,6 +94,13 @@
 - **트리거**: disorder ensemble d×cfg 표본 ≥ 9 (현재 3). ~~Kim 2024 PDF~~ ✅ 확보 완료(2026-07-28) — 기술자 설계 시 그들 E_rel·Boltzmann 가중 방식 참조 가능.
 - 내용: 배열 기술자(anti-site 분포·Ewald·BVS 채널%) → D 예측, 다음 cfg 선택에 사용.
 
+### M6. cascade에 양극 반응성 게이트 추가 (Xiao 2019 공백 보강)
+- **트리거**: 없음 (pymatgen GrandPotentialInterfacialReactivity 재사용 — 반나절).
+- 내용: 도펀트별 ΔE_rxt(vs 만충/반충 NCM·LCO) 열을 cascade CSV에 추가 —
+  Xiao 2019의 F4 게이트(|ΔE|<100 meV/atom) 이식. **정답지 = LPSCl/LCO
+  −339(만충)/−493(반충) meV/atom 재현부터** (xiao2019 digest 소환값).
+  완성 시 Ceder 3부작 계보에서 우리가 안 하던 마지막 축이 닫힘.
+
 ### M5. P2D 물성 export 인터페이스 (랩 P2D 데이터셋과 동기화)
 - **트리거**: 랩 후막 전고체 P2D 데이터셋 스키마 확정 (다음주 랩 계획).
 - 내용: db/properties(σ·E·ESW)를 P2D 입력 파라미터 포맷으로 내보내는 export —
