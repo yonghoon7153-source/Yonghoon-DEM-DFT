@@ -1,31 +1,31 @@
-anchor_id,scenario_key,quantity,value,unit,cathode,SE,cell,collector,cycle_n,temp_C,precision,source,note
-kim2025_bare_rct_62,,R_ct,453.4,Ohm_cm2,NCM811_uncoated,LPSCl,3electrode_full,,post-formation,30,pdf_verified,kim2025 Electrochim.Acta 542 147413 TableS6,bare 62wt% CAM
-kim2025_bare_rct_72,,R_ct,289.9,Ohm_cm2,NCM811_uncoated,LPSCl,3electrode_full,,post-formation,30,pdf_verified,kim2025 TableS6,bare 72wt%
-kim2025_bare_rct_82,,R_ct,382.4,Ohm_cm2,NCM811_uncoated,LPSCl,3electrode_full,,post-formation,30,pdf_verified,kim2025 TableS6,bare 82wt% (비단조=화학분해항 지배)
-kim2025_lno_rct_62,,R_ct,22.4,Ohm_cm2,NCM811_LNO,LPSCl,3electrode_full,,post-formation,30,pdf_verified,kim2025 TableS4,LNO-coated 62wt% (~20x lower)
-kim2025_lno_rct_72,,R_ct,18.2,Ohm_cm2,NCM811_LNO,LPSCl,3electrode_full,,post-formation,30,pdf_verified,kim2025 TableS4,LNO 72wt%
-kim2025_lno_rct_82,,R_ct,17.2,Ohm_cm2,NCM811_LNO,LPSCl,3electrode_full,,post-formation,30,pdf_verified,kim2025 TableS4,LNO 82wt% (CAM면적↑→최저 = R_ct∝1/반응면적 지지)
-kim2025_bare_rct_T45,,R_ct,139.6,Ohm_cm2,NCM811_uncoated,LPSCl,3electrode_full,,post-formation,45,pdf_verified,kim2025 TableS6,T-sweep 72wt% (Arrhenius 큰 E_a)
-kim2025_bare_rct_T60,,R_ct,67.8,Ohm_cm2,NCM811_uncoated,LPSCl,3electrode_full,,post-formation,60,pdf_verified,kim2025 TableS6,T-sweep 72wt%
-scnmc_pristine_floor,,R_int,40,Ohm_cm2,NMC83_SC,LPSCl,full,,pristine,30,confirmed_snippet,acsami.1c07952,비대칭압 2.5/0.2MPa; SC 좋은-계면 바닥
-lipon_benchmark,,R_int,7.6,Ohm_cm2,,LiPON,model_interface,,pristine,,confirmed_snippet,review EnergyMaterAdv 0163,모델계면 하한 참조(비교용 only)
-llzo_contact_loss,,R_growth,100to300,Ohm,,LPSCl+LLZO,dual_layer,,contact-loss,,confirmed_snippet,acsaem.5c02435,⚠분리막 계면(양극 아님) 2차 참조
-pritzl_collector_growth,,R_contact,10to30,Ohm_cm2,LNMO,liquid,full,carbon_coated_Al,0to50,,confirmed_snippet,10.1149/2.0451904jes,액체 아날로그; 첫사이클 step+~선형 shape 앵커
-collector_bare_pristine,,R_contact,10to18.5,Ohm_cm2,,,,bare_Al,pristine,,confirmed_snippet,mixed(3agent survey 2026-07-20),황화물-native 단독값 없음(§4C gap)
-collector_coated_pristine,,R_contact,3.5to10,Ohm_cm2,,,,carbon_coated,pristine,,confirmed_snippet,mixed(~5x bare; sulfide 5-10x),
-lab_sbe_pristine,sbe_pristine,R_int,18,Ohm_cm2,NCM811,LPSCl,full,bare_Al,0,,panel_e_approx,user-lab Fig6e,⚠근사(정밀 digitize 대기) — BOL과 시간-일관
-lab_sbe_cycled,sbe_cycled,R_int,110,Ohm_cm2,NCM811,LPSCl,full,bare_Al,1000@2C,,user_lab,user-lab Fig6e,aged; fresh 전극과 짝지으면 민감도 시나리오 라벨
-lab_dbe_pristine,dbe_pristine,R_int,12,Ohm_cm2,NCM811,LPSCl,full,bare_Al,0,,panel_e_approx,user-lab Fig6e,⚠근사
-lab_dbe_cycled,dbe_cycled,R_int,46,Ohm_cm2,NCM811,LPSCl,full,bare_Al,1000@2C,,user_lab,user-lab Fig6e,
-lab_csus_pristine,csus_pristine,R_int,10,Ohm_cm2,NCM811,LPSCl,full,C-SUS_primer,0,,panel_e_approx,user-lab Fig6e,⚠근사 — 2026-07-21 rint10 런의 값
-lab_csus_cycled,csus_cycled,R_int,30,Ohm_cm2,NCM811,LPSCl,full,C-SUS_primer,1000@2C,,user_lab,user-lab Fig6e,
-lab_sus_pristine,sus_pristine,R_int,50,Ohm_cm2,NCM811_SC,LPSCl,full,SUS,0,,measured,이종기술 EIS 4셀 SOC100 평균,실측 풀셀 평균 49.8 (fits/summary_means.csv 자동갱신); 이종기술 SUS 집전체
-lab_sus_cycled,sus_cycled,R_int,150,Ohm_cm2,NCM811_SC,LPSCl,full,SUS,1000@0.2C,,projected_literature,SC √N + primer-collector ~3× 앵커,⚠문헌투영(assumed-form) — R0×~3 (Pritzl 10→30·C-SUS 10→30 primer 앵커); SC라 √N gentle; Conforto SC 계수 확정 전 라벨유지
-bielefeld_sigma_ion,,sigma_ion,1.6,mS_cm,,LPSCl,pellet,,,25,confirmed_snippet,Bielefeld JES abf8d7,수송 참조(계면 아님)
-bielefeld_sigma_e,,sigma_e,<1e-6,S_cm,,LPSCl,pellet,,,25,confirmed_snippet,Bielefeld JES abf8d7,
-park2023_coated_shape,,R_interphase_shape,sqrt_t_linear_slope_25.73,Ohm_h^-0.5,NMC_additiveCEI,sulfide,full,,cycling,,text_stated_search,Park 2023 AEM 10.1002/aenm.202203861,★코팅/첨가제=선형-√t(확산제한 Wagner film); bare=파라볼릭(super-√t=화학+접촉손실 얹힘) → √N shape 문헌앵커
-park2023_bare_shape,,R_interphase_shape,parabolic_super_sqrt_t,dimensionless,NMC_bare,sulfide,full,,cycling,,text_stated_search,Park 2023 AEM 10.1002/aenm.202203861,bare=가속(접촉손실이 화학 √t 위에 더해짐) = 우리 접촉+화학 분해 일치
-yun2023_rct_growth,,R_ct,341.7to982.3,Ohm_cm2,SC_NMC811_uncoated,LPSCl,full,,~100,,table_verified_litdb,Yun 2023 EnSM 10.1016/j.ensm.2023.102787 TableS1,★2.87× R_ct 성장(bare SC-NMC LPSCl 100cyc); 화학 채널 크기 앵커
-yun2023_rion_growth,,R_ion,126to156,Ohm_cm2,SC_NMC811_uncoated,LPSCl,full,,~100,,table_verified_litdb,Yun 2023 EnSM TableS1,1.24× R_ion(전송) 성장 — R_ct보다 훨씬 작음(접촉/전송은 열화 덜)
-payandeh_coated_retention,,capacity_retention,93,pct,SC_NMC_Ni83_LNO,thiophosphate,full,,200,,text_stated_search,Payandeh 2023 AdvMatInterf 10.1002/admi.202201806,코팅 SC-NMC 93%@200cyc vs 비코팅 ~79% — 코팅=modest fade(good 양극재)
-nature2025_ni85_detach,,mechanism,CAM_SE_detachment_dominant,qualitative,SC_NMC_Ni85plus,sulfide,full,,cycling,,text_stated_search,Nature Energy 2025 10.1038/s41560-025-01726-8,Ni≥85=입자내부 고립+CAM/SE 이탈(접촉손실) 지배; Ni80=표면/CEI 지배 — OTHER 채널 정체
+anchor_id,scenario_key,quantity,value,unit,cathode,SE,cell,collector,cycle_n,T_cycle_C,T_meas_C,T_basis,precision,source,note
+kim2025_bare_rct_62,,R_ct,453.4,Ohm_cm2,NCM811_uncoated,LPSCl,3electrode_full,,post-formation,,30,meas_stated,pdf_verified,kim2025 Electrochim.Acta 542 147413 TableS6,bare 62wt% CAM
+kim2025_bare_rct_72,,R_ct,289.9,Ohm_cm2,NCM811_uncoated,LPSCl,3electrode_full,,post-formation,,30,meas_stated,pdf_verified,kim2025 TableS6,bare 72wt%
+kim2025_bare_rct_82,,R_ct,382.4,Ohm_cm2,NCM811_uncoated,LPSCl,3electrode_full,,post-formation,,30,meas_stated,pdf_verified,kim2025 TableS6,bare 82wt% (비단조=화학분해항 지배)
+kim2025_lno_rct_62,,R_ct,22.4,Ohm_cm2,NCM811_LNO,LPSCl,3electrode_full,,post-formation,,30,meas_stated,pdf_verified,kim2025 TableS4,LNO-coated 62wt% (~20x lower)
+kim2025_lno_rct_72,,R_ct,18.2,Ohm_cm2,NCM811_LNO,LPSCl,3electrode_full,,post-formation,,30,meas_stated,pdf_verified,kim2025 TableS4,LNO 72wt%
+kim2025_lno_rct_82,,R_ct,17.2,Ohm_cm2,NCM811_LNO,LPSCl,3electrode_full,,post-formation,,30,meas_stated,pdf_verified,kim2025 TableS4,LNO 82wt% (CAM면적↑→최저 = R_ct∝1/반응면적 지지)
+kim2025_bare_rct_T45,,R_ct,139.6,Ohm_cm2,NCM811_uncoated,LPSCl,3electrode_full,,post-formation,,45,meas_arrhenius_sweep,pdf_verified,kim2025 TableS6,T-sweep 72wt% (Arrhenius 큰 E_a) — 같은 셀 측정온도 스윕
+kim2025_bare_rct_T60,,R_ct,67.8,Ohm_cm2,NCM811_uncoated,LPSCl,3electrode_full,,post-formation,,60,meas_arrhenius_sweep,pdf_verified,kim2025 TableS6,T-sweep 72wt% — 같은 셀 측정온도 스윕
+scnmc_pristine_floor,,R_int,40,Ohm_cm2,NMC83_SC,LPSCl,full,,pristine,,30,meas_stated,confirmed_snippet,acsami.1c07952,비대칭압 2.5/0.2MPa; SC 좋은-계면 바닥
+lipon_benchmark,,R_int,7.6,Ohm_cm2,,LiPON,model_interface,,pristine,,,,confirmed_snippet,review EnergyMaterAdv 0163,모델계면 하한 참조(비교용 only)
+llzo_contact_loss,,R_growth,100to300,Ohm,,LPSCl+LLZO,dual_layer,,contact-loss,,,,confirmed_snippet,acsaem.5c02435,⚠분리막 계면(양극 아님) 2차 참조
+pritzl_collector_growth,,R_contact,10to30,Ohm_cm2,LNMO,liquid,full,carbon_coated_Al,0to50,,,,confirmed_snippet,10.1149/2.0451904jes,액체 아날로그; 첫사이클 step+~선형 shape 앵커
+collector_bare_pristine,,R_contact,10to18.5,Ohm_cm2,,,,bare_Al,pristine,,,,confirmed_snippet,mixed(3agent survey 2026-07-20),황화물-native 단독값 없음(§4C gap)
+collector_coated_pristine,,R_contact,3.5to10,Ohm_cm2,,,,carbon_coated,pristine,,,,confirmed_snippet,mixed(~5x bare; sulfide 5-10x),
+lab_sbe_pristine,sbe_pristine,R_int,18,Ohm_cm2,NCM811,LPSCl,full,bare_Al,0,,25,user_protocol,panel_e_approx,user-lab Fig6e,⚠근사(정밀 digitize 대기) — BOL과 시간-일관; pristine=0cyc라 T_cycle n/a
+lab_sbe_cycled,sbe_cycled,R_int,110,Ohm_cm2,NCM811,LPSCl,full,bare_Al,1000@2C,,25,user_protocol,user_lab,user-lab Fig6e,aged; fresh 전극과 짝지으면 민감도 시나리오 라벨.  ⚠T_cycle 미지정(랩 30/45/60 중 어느 것인지 미확인)
+lab_dbe_pristine,dbe_pristine,R_int,12,Ohm_cm2,NCM811,LPSCl,full,bare_Al,0,,25,user_protocol,panel_e_approx,user-lab Fig6e,⚠근사; pristine=0cyc라 T_cycle n/a
+lab_dbe_cycled,dbe_cycled,R_int,46,Ohm_cm2,NCM811,LPSCl,full,bare_Al,1000@2C,,25,user_protocol,user_lab,user-lab Fig6e,⚠T_cycle 미지정(랩 30/45/60 중)
+lab_csus_pristine,csus_pristine,R_int,10,Ohm_cm2,NCM811,LPSCl,full,C-SUS_primer,0,,25,user_protocol,panel_e_approx,user-lab Fig6e,⚠근사 — 2026-07-21 rint10 런의 값; pristine=0cyc라 T_cycle n/a
+lab_csus_cycled,csus_cycled,R_int,30,Ohm_cm2,NCM811,LPSCl,full,C-SUS_primer,1000@2C,,25,user_protocol,user_lab,user-lab Fig6e,⚠T_cycle 미지정(랩 30/45/60 중)
+lab_sus_pristine,sus_pristine,R_int,50,Ohm_cm2,NCM811_SC,LPSCl,full,SUS,0,,25,user_protocol,measured,이종기술 EIS 4셀 SOC100 평균,실측 풀셀 평균 49.8 (fits/summary_means.csv 자동갱신); 이종기술 SUS 집전체; pristine=0cyc라 T_cycle n/a
+lab_sus_cycled,sus_cycled,R_int,150,Ohm_cm2,NCM811_SC,LPSCl,full,SUS,1000@0.2C,60,25,user_protocol,projected_literature,SC √N + primer-collector ~3× 앵커,⚠문헌투영(assumed-form) — R0×~3 (Pritzl 10→30·C-SUS 10→30 primer 앵커); SC라 √N gentle; Conforto SC 계수 확정 전 라벨유지.  이종기술=60 ℃ 사이클
+bielefeld_sigma_ion,,sigma_ion,1.6,mS_cm,,LPSCl,pellet,,,,25,meas_stated,confirmed_snippet,Bielefeld JES abf8d7,수송 참조(계면 아님)
+bielefeld_sigma_e,,sigma_e,<1e-6,S_cm,,LPSCl,pellet,,,,25,meas_stated,confirmed_snippet,Bielefeld JES abf8d7,
+park2023_coated_shape,,R_interphase_shape,sqrt_t_linear_slope_25.73,Ohm_h^-0.5,NMC_additiveCEI,sulfide,full,,cycling,,,,text_stated_search,Park 2023 AEM 10.1002/aenm.202203861,★코팅/첨가제=선형-√t(확산제한 Wagner film); bare=파라볼릭(super-√t=화학+접촉손실 얹힘) → √N shape 문헌앵커
+park2023_bare_shape,,R_interphase_shape,parabolic_super_sqrt_t,dimensionless,NMC_bare,sulfide,full,,cycling,,,,text_stated_search,Park 2023 AEM 10.1002/aenm.202203861,bare=가속(접촉손실이 화학 √t 위에 더해짐) = 우리 접촉+화학 분해 일치
+yun2023_rct_growth,,R_ct,341.7to982.3,Ohm_cm2,SC_NMC811_uncoated,LPSCl,full,,~100,,,,table_verified_litdb,Yun 2023 EnSM 10.1016/j.ensm.2023.102787 TableS1,★2.87× R_ct 성장(bare SC-NMC LPSCl 100cyc); 화학 채널 크기 앵커
+yun2023_rion_growth,,R_ion,126to156,Ohm_cm2,SC_NMC811_uncoated,LPSCl,full,,~100,,,,table_verified_litdb,Yun 2023 EnSM TableS1,1.24× R_ion(전송) 성장 — R_ct보다 훨씬 작음(접촉/전송은 열화 덜)
+payandeh_coated_retention,,capacity_retention,93,pct,SC_NMC_Ni83_LNO,thiophosphate,full,,200,,,,text_stated_search,Payandeh 2023 AdvMatInterf 10.1002/admi.202201806,코팅 SC-NMC 93%@200cyc vs 비코팅 ~79% — 코팅=modest fade(good 양극재)
+nature2025_ni85_detach,,mechanism,CAM_SE_detachment_dominant,qualitative,SC_NMC_Ni85plus,sulfide,full,,cycling,,,,text_stated_search,Nature Energy 2025 10.1038/s41560-025-01726-8,Ni≥85=입자내부 고립+CAM/SE 이탈(접촉손실) 지배; Ni80=표면/CEI 지배 — OTHER 채널 정체

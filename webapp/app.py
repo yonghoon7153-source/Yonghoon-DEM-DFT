@@ -52,7 +52,14 @@ _ASSET_VERSION = str(int(datetime.now().timestamp()))
 
 @app.context_processor
 def _inject_asset_version():
-    return {'asset_version': _ASSET_VERSION}
+    # ★ sigma_grain / sigma_grain_note 는 **함수**로 주입한다 (값이 아니라).  값을 route 마다
+    #   render_template(..., sigma_grain=...) 로 넘기는 방식이면 새 route 가 하나 생길 때
+    #   조용히 빠지고 템플릿은 그대로 옛 bare 3.0 을 쓰게 된다 — 실제로 single.html 이
+    #   그 상태였다(2026-07-28 재검증 HIGH-e: app.py 는 깨끗한데 템플릿에 3.0 이 살아있음).
+    #   전역 함수면 어떤 route 로 렌더되든 템플릿이 스스로 정본을 호출한다.
+    return {'asset_version': _ASSET_VERSION,
+            'sigma_grain': lambda m=None: _sigma_grain_context(m)[0],
+            'sigma_grain_note': lambda m=None: _sigma_grain_context(m)[1]}
 
 
 # ── Trust-card self-report (validation_flags → 5 LED dots) ────────────
@@ -6231,21 +6238,65 @@ def _sigma_grain_mS_cm(metrics=None):
     이므로 `3.0 * 1.0` → bitwise 3.0.  `sigma_grain_S_cm` 폴백도 3.0e-3 이면 곱셈을 아예 하지 않고
     상수를 돌려준다(0.003*1000 = 3.0000000000000004 라 bitwise 가 깨지기 때문).
     """
+    return _sigma_grain_context(metrics)[0]
+
+
+def _sigma_grain_context(metrics=None):
+    """(σ_grain [mS/cm], mixed_T_note|None) — 값과 "왜 이 값인가" 를 함께 돌려준다.
+
+    ★ 2026-07-28 재검증(HIGH, e-follow-on) 수정: 위 C-1 중앙화가 두 provenance 키를
+      **같은 것처럼** 취급했는데, 둘은 스케일한 σ 가 다르다.
+
+        temperature_provenance          — network_conductivity.py / mpm_webapp_payload.py.
+                                          `sigma_full_mScm` **자체**가 Arrhenius 로 스케일됨.
+        stage_e_temperature_provenance  — run_network_full_corrections.py --temp-c.
+                                          `sigma_full_mScm_stage_e` 만 스케일하고
+                                          **베이스라인 `sigma_full_mScm` 은 25 °C 로 남긴다**
+                                          (그 스크립트 selftest 가 "T 런도 베이스라인은 25 °C
+                                          그대로" 를 명시적으로 검증한다).
+
+      그런데 이 헬퍼의 **모든** 소비자(app.py:2402/2419/2536/2551/5311/8004)는 σ_grain 을
+      `metrics['sigma_full_mScm']`(= 베이스라인)와 짝지어 나눈다:
+          σ_brug/σ_ionic = σ_grain·ratio / σ_full        τ_Lap_eff = √(φ_SE·σ_grain/σ_full)
+      따라서 Stage-E 키를 따라 분자만 ×4.44(60 °C) 하면 분모는 25 °C 그대로라 비율이 ×4.44,
+      τ 가 ×2.1 로 **조용히 틀린다** — 이 함수가 막으려던 바로 그 오류를 반대 방향으로
+      새로 만든 셈이다.  ⇒ 짝이 맞는 `temperature_provenance` 만 따르고, Stage-E-only 런은
+      25 °C 상수를 쓴 뒤(= 25 °C 베이스라인과 정확히 짝이 맞음) 혼합상태를 note 로 노출한다.
+
+    ★ 기본값 불변: 온도 키가 없는 런(=현존 전 코퍼스)은 bitwise 3.0, note=None.
+    """
     base = _se_material().SIGMA_GRAIN_MS_CM_25C
     if not isinstance(metrics, dict):
-        return base
-    for _k in ('temperature_provenance', 'stage_e_temperature_provenance'):
-        prov = metrics.get(_k)
+        return base, None
+
+    def _fac(key):
+        prov = metrics.get(key)
         if isinstance(prov, dict):
             f = prov.get('sigma_ion_T_factor')
             if isinstance(f, (int, float)) and not isinstance(f, bool) and f > 0:
-                return base * float(f)     # T 미적용 런은 f == 1.0 → bitwise 3.0
+                return float(f)
+        return None
+
+    f_paired = _fac('temperature_provenance')          # σ_full 이 같이 움직인 경우만
+    if f_paired is not None:
+        return base * f_paired, None                   # T 미적용 런은 f == 1.0 → bitwise 3.0
+
+    f_stage_e = _fac('stage_e_temperature_provenance')
+    if f_stage_e is not None and abs(f_stage_e - 1.0) > 1e-12:
+        prov = metrics['stage_e_temperature_provenance']
+        t_c = prov.get('T_C', prov.get('temp_C'))
+        return base, (
+            f'⚠ 혼합 온도: 이 런은 Stage-E σ_ion 만 {t_c if t_c is not None else "?"} °C 로 '
+            f'스케일(×{f_stage_e:.3g})했고 베이스라인 σ_full 은 25 °C 입니다.  σ_brug·τ_Laplace 는 '
+            f'그 25 °C 베이스라인과 짝을 맞추려고 σ_grain = {base:g} mS/cm(25 °C)를 씁니다 — '
+            f'Stage-E 값과 직접 비교하지 마세요.')
+
     s_cm = metrics.get('sigma_grain_S_cm')
     if isinstance(s_cm, (int, float)) and not isinstance(s_cm, bool) and s_cm > 0:
         if float(s_cm) == _se_material().SIGMA_GRAIN_S_CM_25C:
-            return base                    # bitwise-safe (0.003*1000 ≠ 3.0)
-        return float(s_cm) * 1000.0
-    return base
+            return base, None              # bitwise-safe (0.003*1000 ≠ 3.0)
+        return float(s_cm) * 1000.0, None
+    return base, None
 
 
 # 킷 run_mpm.sh 안의 STEP3(σ) 호출 = 온도를 주입할 유일한 지점.  생성기(scripts/mpm_input_from_case.py)

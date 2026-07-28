@@ -119,10 +119,33 @@ def test_sigma_grain_helper():
         chk(f'[C-1] T={t_c:.0f} °C provenance → σ_grain = 3.0 × {want}',
             abs(got / 3.0 - se_material.arrhenius_sigma_factor(t_c)) < 1e-15
             and abs(round(got / 3.0, 2) - want) < 5e-3, f'{got:.4f} mS/cm')
-    # Stage-E 가 쓰는 키 이름으로도 잡힌다 (run_network_full_corrections --temp-c 산출물)
-    chk('[C-1] stage_e_temperature_provenance 키도 인식',
-        abs(f({'stage_e_temperature_provenance': se_material.provenance(60.0)}) / 3.0
-            - se_material.arrhenius_sigma_factor(60.0)) < 1e-15)
+    # ★ 2026-07-28 정정 (재검증 HIGH, e-follow-on): 예전 이 테스트는 Stage-E 키도 인수분해
+    #   대상으로 "인식" 하는 것을 PASS 로 못박아서 **버그를 고정하고 있었다**.
+    #   run_network_full_corrections.py --temp-c 는 Stage-E σ 만 스케일하고 베이스라인
+    #   sigma_full_mScm 은 25 °C 로 남긴다 (그 스크립트 selftest 가 명시 검증).  이 헬퍼의
+    #   소비자는 전부 σ_grain 을 그 **베이스라인**과 나누므로, Stage-E 배수를 따르면 분자만
+    #   ×4.79 되어 σ_brug/σ_ionic·τ_Lap 이 조용히 틀린다 → 25 °C 상수를 유지해야 짝이 맞는다.
+    chk('[C-1] Stage-E-only provenance → 25 °C 베이스라인과 짝맞춰 bitwise 3.0 (배수 적용 안 함)',
+        f({'stage_e_temperature_provenance': se_material.provenance(60.0)}).hex() == (3.0).hex())
+    _v, _note = app._sigma_grain_context(
+        {'stage_e_temperature_provenance': se_material.provenance(60.0)})
+    chk('[C-1] Stage-E-only 런은 혼합-온도 경고를 노출한다',
+        _v.hex() == (3.0).hex() and isinstance(_note, str) and '혼합 온도' in _note
+        and '60' in _note, repr(_note))
+    chk('[C-1] Stage-E factor 1.0(=T 미적용)은 경고 없음',
+        app._sigma_grain_context(
+            {'stage_e_temperature_provenance': se_material.provenance()})[1] is None)
+    chk('[C-1] 짝이 맞는 temperature_provenance 는 그대로 배수 적용 + 경고 없음',
+        abs(app._sigma_grain_context(
+            {'temperature_provenance': se_material.provenance(60.0)})[0] / 3.0
+            - se_material.arrhenius_sigma_factor(60.0)) < 1e-15
+        and app._sigma_grain_context(
+            {'temperature_provenance': se_material.provenance(60.0)})[1] is None)
+    # 둘 다 있으면 짝이 맞는 쪽(temperature_provenance)이 이긴다
+    chk('[C-1] 두 키 공존 시 σ_full 과 짝이 맞는 temperature_provenance 우선',
+        abs(f({'temperature_provenance': se_material.provenance(45.0),
+               'stage_e_temperature_provenance': se_material.provenance(60.0)}) / 3.0
+            - se_material.arrhenius_sigma_factor(45.0)) < 1e-15)
     # 망가진/거짓 provenance 는 무시하고 기본값 (조용한 오답 방지)
     for bad in ({'sigma_ion_T_factor': None}, {'sigma_ion_T_factor': 0}, {'sigma_ion_T_factor': True}):
         chk(f'[C-1] 이상한 provenance({bad}) → 기본 3.0 로 폴백',
@@ -286,10 +309,60 @@ def test_doc_sync():
         not bad, ' | '.join(bad))
 
 
+# ══════════════════════════════════════════════════════════════════════════════
+# [7] ★ 템플릿(서버렌더) 경로에 bare σ_grain 이 남아있지 않은가
+#     — 2026-07-28 재검증 HIGH-e: app.py 는 깨끗한데 single.html 이 Jinja 로
+#       `metrics.sigma_ratio * 3.0` 을 직접 계산하고 있었다.  app.py 만 보는 [1] 검사로는
+#       절대 안 잡힌다 → 템플릿 소스 자체를 본다.
+# ══════════════════════════════════════════════════════════════════════════════
+def test_no_bare_sigma_grain_in_templates(app):
+    import re
+    tdir = os.path.join(HERE, 'templates')
+    # 계산 슬롯: 산술식 안의 3.0, 또는 "= 3.0 ×" 처럼 값을 인쇄하는 자리
+    calc_pat = re.compile(r'(sigma_ratio\s*\*\s*3\.0|\*\s*3\.0\s*/|=\s*3\.0\s*×)')
+    bad = []
+    for fn in sorted(os.listdir(tdir)):
+        if not fn.endswith('.html'):
+            continue
+        for i, ln in enumerate(open(os.path.join(tdir, fn), encoding='utf-8'), 1):
+            if calc_pat.search(ln):
+                bad.append(f'{fn}:{i}')
+    chk('[C-1t] 템플릿에 σ_grain 산술 하드코딩 0개', not bad, ' | '.join(bad))
+
+    # single.html 은 헬퍼 전역을 실제로 쓴다
+    src = open(os.path.join(tdir, 'single.html'), encoding='utf-8').read()
+    chk('[C-1t] single.html 이 sigma_grain() 전역을 쓴다',
+        src.count('sigma_grain(metrics)') >= 6, str(src.count('sigma_grain(metrics)')))
+
+    # 전역이 컨텍스트 프로세서로 주입된다 = 어떤 route 로 렌더돼도 따라온다
+    with app.app.app_context():
+        ctx = {}
+        for f in app.app.template_context_processors[None]:
+            ctx.update(f())
+        chk('[C-1t] sigma_grain/sigma_grain_note 가 전역 주입됨',
+            callable(ctx.get('sigma_grain')) and callable(ctx.get('sigma_grain_note')))
+        # 렌더 결과: legacy 런은 옛 "3.0" 문자열 그대로, T 런은 스케일된 값
+        t = app.app.jinja_env.from_string(
+            '{{ "%.1f"|format(sigma_grain(metrics)) }}')
+        leg = t.render(metrics={'phi_se': 0.35}, **ctx)
+        chk('[C-1t] legacy 렌더 문자열이 옛 "3.0" 과 동일', leg == '3.0', leg)
+        hot = t.render(metrics={'temperature_provenance': se_material.provenance(60.0)}, **ctx)
+        chk('[C-1t] 짝맞는 T 런은 스케일된 값을 렌더', hot == '14.4', hot)
+        mix = t.render(
+            metrics={'stage_e_temperature_provenance': se_material.provenance(60.0)}, **ctx)
+        chk('[C-1t] Stage-E-only 런은 25 °C 값을 렌더(베이스라인과 짝)', mix == '3.0', mix)
+    # 템플릿 전체가 파싱된다 (Jinja 문법 깨짐 방지)
+    with app.app.app_context():
+        for tpl in ('single.html', 'group.html'):
+            app.app.jinja_env.get_template(tpl)
+        chk('[C-1t] single/group 템플릿 파싱 OK', True)
+
+
 def main():
     print('σ_grain 단일출처 + 예측기 온도-UI 회귀시험')
     test_no_bare_sigma_grain_in_app()
     app = test_sigma_grain_helper()
+    test_no_bare_sigma_grain_in_templates(app)
     test_derived_quantities_bitwise(app)
     test_predictor_ui()
     test_routes(app)

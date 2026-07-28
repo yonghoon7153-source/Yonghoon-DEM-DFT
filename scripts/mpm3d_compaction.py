@@ -202,17 +202,43 @@ def state_finite_errors(arrays):
 #  RESTART PLATEN LOGIC — pure helpers (no taichi), so the unload/guard/provenance rules that the
 #  2026-07-28 review found broken are covered by --selftest instead of only by a GPU run.
 # ─────────────────────────────────────────────────────────────────────────────────────────────
-def restart_unload_needed(p_settle, target):
+def restart_unload_needed(p_settle, target, band=0.10):
     """Decide, from the settle-window readings, whether the restart must UNLOAD (platen rises).
 
     Uses the MAX of the window on purpose: the reaction rebuilds from F over the window (v and C were
     zeroed), and the two possible mistakes are not symmetric — an unnecessary RISE is elastic and the
     servo band undoes it, an unnecessary DESCENT is plastic and irreversible.  An EMPTY window returns
     False (no unload); that case must never be reachable in a real run, which is why main() refuses
-    --restart-settle < 1 rather than silently taking the frame-0 reading."""
+    --restart-settle < 1 rather than silently taking the frame-0 reading.
+
+    ★ 2026-07-28: the trigger is the SAME band the acceptance test uses, not a bare `> target`.  A bed
+    whose settled reading is already inside the band is AT the requested pressure — there is nothing
+    to unload, and disturbing it only injects the transient the search then has to fight.  Observed
+    directly: a restart that settled at 0.0947 GPa against a 0.0900 target (5 % over = in band) was
+    sent unloading by the old bare comparison, rose 0.022 box, and ended at 0.0607 GPa having gained
+    3.6 %p of porosity — strictly worse than doing nothing."""
     if not p_settle:
         return False
-    return bool(max(p_settle) > target)
+    return bool(max(p_settle) > (1.0 + float(band)) * float(target))
+
+
+def settle_is_quasistatic(p_window, rel_tol=0.15, abs_floor=1e-4):
+    """Is a frozen-platen window actually AT REST, or still ringing?
+
+    The unload search assumes the probe reading is the quasi-static contact stress.  It is not, if the
+    window is too short: v and C are zeroed on --load-state, so the reaction has to rebuild from F, and
+    a 3-frame window on a stiff bed returns numbers that swing by more than the signal — a real trace
+    read 0.1371 → 0.1785 → 0.2642 → 0.3028 GPa while the platen was RISING (p should fall), and other
+    frames read NEGATIVE.  Bisecting on that cannot converge, and the failure looks like a search bug
+    rather than what it is: the reading was never a pressure.
+
+    Returns (ok, spread_rel).  Needs ≥3 samples; compares the last two against the window mean."""
+    if p_window is None or len(p_window) < 3:
+        return True, 0.0                       # too short to judge — the CLI guard handles < 1
+    tail = [float(v) for v in p_window[-3:]]
+    scale = max(abs(sum(tail) / len(tail)), float(abs_floor))
+    spread = (max(tail) - min(tail)) / scale
+    return bool(spread <= float(rel_tol)), float(spread)
 
 
 def arm_guard_active(por, por0, is_restart):
@@ -252,13 +278,68 @@ def pick_rod_rest(state_arrays, n, rl_derived, b0_derived):
     return rl_derived, b0_derived, 'REDERIVED_from_compressed_positions'
 
 
-def stage_pressure_role(is_restart, p_achieved, target, tol=1.25):
-    """Provenance role string.  P_this_stage_MPa is the REQUEST; if the platen never brought the bed down
-    to it (silent no-op, out of travel, …) the role must say so, because the webapp badge renders the
-    requested number next to this string."""
+def unload_verdict(p, target, band=0.10):
+    """TWO-SIDED acceptance for the restart unload: 'above' | 'in_band' | 'below'.
+
+    ★ 2026-07-28 (re-verify HIGH-a).  The previous test was one-sided — `p <= 1.02*target` — so a
+    platen that rose clear of the bed and read p ≈ 0 PASSED it.  Combined with the coarse rise step
+    (full vmax for as long as p > 1.5*target, i.e. the whole way down from ~1.2 GPa to 0.135 GPa)
+    the platen routinely blew past the target in a single step and then "converged" on an
+    out-of-contact state: porosity inflated, reaction ≈ 0, and the run still labelled itself
+    `operating_stack_pressure`.  Unloading has a target, not a ceiling — under-shooting it by 100 %
+    is exactly as wrong as over-shooting it, and the accept test has to say so."""
+    t = float(target)
+    if float(p) > (1.0 + float(band)) * t:
+        return 'above'
+    if float(p) < (1.0 - float(band)) * t:
+        return 'below'
+    return 'in_band'
+
+
+def unload_next_z(z_now, z_lo, z_hi, wall0, step, floor_z=None):
+    """Next platen height for the unload search, and the move kind.  Returns (z_next, kind).
+
+    z_lo = highest height known to read ABOVE the band (still too compressed; starts at the restart
+    height).  z_hi = lowest height known to read BELOW the band (overshot), or None while the target
+    is not yet bracketed.
+
+      • not yet bracketed → RISE by `step`, capped at wall0 (out of travel).      kind='rise'
+      • bracketed         → BISECT the interval.                                  kind='bisect'
+
+    ★ Why descending inside the bracket is legitimate here, even though the initial unload-vs-compact
+      decision is deliberately biased against descending (see restart_unload_needed): that asymmetry
+      is about NEW plastic compaction beyond the fabrication state.  Inside the bracket the platen
+      only ever returns toward a stress ≤ (1+band)·target, which for an operating-pressure restart
+      (90 MPa vs a 300 MPa fabrication) is far inside the yield surface the bed already carries — so
+      it is elastic re-loading along the path it just came up, and it adds no plastic strain.  The
+      `floor_z` guard makes that explicit: the search may never go below the height the restart
+      started at, which is the height that carries the fabrication pressure."""
+    if z_hi is None:
+        return min(float(wall0), float(z_now) + float(step)), 'rise'
+    mid = 0.5 * (float(z_lo) + float(z_hi))
+    if floor_z is not None:
+        mid = max(float(floor_z), mid)
+    return mid, 'bisect'
+
+
+def stage_pressure_role(is_restart, p_achieved, target, tol=1.25, tol_lo=0.75):
+    """Provenance role string.  P_this_stage_MPa is the REQUEST; if the platen never brought the bed to
+    it (silent no-op, out of travel, runaway unload, …) the role must say so, because the webapp badge
+    renders the requested number next to this string.
+
+    ★ 2026-07-28 (re-verify HIGH-a-provenance): the check used to be one-sided (`> tol*target`), which
+    is precisely blind to the failure the unload fix is about.  A runaway unload lands at p ≈ 0, i.e.
+    FAR BELOW target — and the old audit trail stamped that `operating_stack_pressure`, certifying the
+    runaway as a good operating-pressure geometry.  Both directions are now tagged, with distinct
+    suffixes so the JSON says which way it failed."""
     role = 'operating_stack_pressure' if is_restart else 'fabrication_pressure'
-    if is_restart and target > 0 and float(p_achieved) > float(tol) * float(target):
-        return role + '_NOT_REACHED'
+    if not (is_restart and target > 0):
+        return role
+    r = float(p_achieved) / float(target)
+    if r > float(tol):
+        return role + '_NOT_REACHED'          # still compressed — platen never unloaded
+    if r < float(tol_lo):
+        return role + '_OVER_UNLOADED'        # platen went past the target (often clear of the bed)
     return role
 
 
@@ -621,6 +702,18 @@ def parse_args(argv):
                          '가깝다 — 그 값으로 판정하면 이미 제작된 베드를 아래로 밀어버린다(수치 파라미터, '
                          '물리 앵커 아님).  판정은 창 안 p 의 MAX 로 한다(제하 쪽으로 편향 = 불필요한 상승은 '
                          '탄성이라 servo 밴드가 되돌리지만, 불필요한 하강은 소성=비가역).')
+    ap.add_argument('--unload-band', type=float, default=0.10,
+                    help='--load-state 제하 전용: 목표압 수용 밴드 (기본 ±10%%).  ★ 2026-07-28 이전에는 '
+                         '수용조건이 한쪽(p ≤ 1.02·target)뿐이라 플래튼이 베드에서 완전히 떨어져 p≈0 이 된 '
+                         '상태도 "제하 완료" 로 통과했다(=과제하 폭주).  제하는 천장이 아니라 목표이므로 '
+                         '양쪽으로 판정한다 (수치 파라미터, 물리 앵커 아님).')
+    ap.add_argument('--unload-max-probes', type=int, default=40,
+                    help='--load-state 제하 전용: 정지-프로브 최대 횟수.  소진되면 값을 내놓지 않고 '
+                         'not_converged 로 **중단**한다 (--allow-unconverged-unload 로만 완화).')
+    ap.add_argument('--allow-unconverged-unload', action='store_true',
+                    help='제하가 밴드 안에 수렴하지 못했을 때도 계속 진행 (기본=중단).  ★ 실험/디버그 전용 — '
+                         '수렴하지 않은 제하의 porosity·두께·coverage 는 프로덕션 숫자가 아니며, 산출물은 '
+                         'state_provenance.unload_status 와 P_this_stage_role 에 그 사실이 박힌다.')
     ap.add_argument('--selftest', action='store_true',
                     help='restart-state 계층 자체검증 (numpy 전용, taichi/GPU 불필요) 후 종료')
     return ap.parse_args(argv)
@@ -771,10 +864,105 @@ def _selftest():
         stage_pressure_role(True, 0.4169, 0.09) == 'operating_stack_pressure_NOT_REACHED')
     chk('provenance: a genuine unload keeps the plain role',
         stage_pressure_role(True, 0.088, 0.09) == 'operating_stack_pressure')
-    chk('provenance: relaxed BELOW target (hold arm) is not a failure',
-        stage_pressure_role(True, 0.054, 0.09) == 'operating_stack_pressure')
+    # ★ 2026-07-28 정정: 이 자리에 있던 "0.054 vs 0.09(=60 %) 도 정상" 단언이 바로 과제하 폭주를
+    #   승인하던 사각지대였다.  runaway 는 p→0, 즉 목표를 한참 밑도는 쪽으로 실패한다 —
+    #   위쪽만 보던 tol 은 그것을 절대 못 잡고 'operating_stack_pressure' 도장을 찍어줬다.
+    chk('provenance: mild relaxation below target (hold arm) is still fine',
+        stage_pressure_role(True, 0.085, 0.09) == 'operating_stack_pressure')
+    chk('provenance: a RUNAWAY unload (platen off the bed, p≈0) is tagged OVER_UNLOADED',
+        stage_pressure_role(True, 0.001, 0.09) == 'operating_stack_pressure_OVER_UNLOADED'
+        and stage_pressure_role(True, 0.054, 0.09) == 'operating_stack_pressure_OVER_UNLOADED')
     chk('provenance: fabrication runs are never tagged',
-        stage_pressure_role(False, 0.31, 0.30) == 'fabrication_pressure')
+        stage_pressure_role(False, 0.31, 0.30) == 'fabrication_pressure'
+        and stage_pressure_role(False, 0.001, 0.30) == 'fabrication_pressure')
+
+    #    E2. UNLOAD acceptance is TWO-SIDED and the search can recover from an overshoot.
+    chk('unload: p far ABOVE target → keep unloading',
+        unload_verdict(1.18, 0.09) == 'above')
+    chk('unload: p inside ±10 % → accept',
+        unload_verdict(0.09, 0.09) == 'in_band' and unload_verdict(0.0955, 0.09) == 'in_band'
+        and unload_verdict(0.0845, 0.09) == 'in_band')
+    chk('unload: ★ platen clear of the bed (p≈0) is REJECTED (the old test accepted it)',
+        unload_verdict(0.0, 0.09) == 'below' and unload_verdict(0.001, 0.09) == 'below')
+    chk('unload: the old one-sided rule would have accepted p=0 — regression pin',
+        (0.0 <= 1.02 * 0.09) and unload_verdict(0.0, 0.09) != 'in_band')
+    chk('unload: band is configurable', unload_verdict(0.08, 0.09, band=0.30) == 'in_band')
+    # search geometry: rise while unbracketed, bisect once bracketed, never below the restart height
+    _zn, _k = unload_next_z(0.60, 0.60, None, 0.90, 0.01)
+    chk('unload: unbracketed → rise by the step', _k == 'rise' and abs(_zn - 0.61) < 1e-12)
+    chk('unload: rise is capped at WALL0 (out of travel)',
+        unload_next_z(0.895, 0.60, None, 0.90, 0.01)[0] == 0.90)
+    _zn2, _k2 = unload_next_z(0.70, 0.60, 0.70, 0.90, 0.01)
+    chk('unload: bracketed → BISECT back DOWN toward the target (old loop could only rise)',
+        _k2 == 'bisect' and abs(_zn2 - 0.65) < 1e-12 and _zn2 < 0.70)
+    chk('unload: bisection never descends below the restart height (no new plastic compaction)',
+        unload_next_z(0.62, 0.60, 0.62, 0.90, 0.01, floor_z=0.615)[0] == 0.615)
+    # ── STIFFNESS SWEEP: the real defect only appears when the elastic unload branch is stiff
+    #    relative to the platen step, which is exactly the production geometry (fabrication 1.2 GPa,
+    #    operating 0.09 GPa, vmax-sized steps).  p(z) = p_fab·exp(−k·Δz) with k from gentle to stiff.
+    #    NEW search must stay in band at EVERY stiffness; the OLD rise-only loop must fall apart as k
+    #    grows — that divergence IS the bug, so it is pinned rather than described.
+    _TGT, _VMAX, _Z0 = 0.09, 0.002, 0.600
+
+    def _mk_branch(k):
+        return lambda z: max(0.0, 1.20 * float(np.exp(-k * (z - _Z0))))
+
+    def _run_new(pz):
+        lo, hi, z = _Z0, None, _Z0
+        for i in range(40):
+            z, _ = unload_next_z(z, lo, hi, 0.90, 0.05 * _VMAX * (1.6 ** min(i, 8)), floor_z=_Z0)
+            v = unload_verdict(pz(z), _TGT)
+            if v == 'in_band':
+                return pz(z)
+            if v == 'above':
+                lo = max(lo, z)
+            else:
+                hi = z if hi is None else min(hi, z)
+        return None
+
+    def _run_old(pz):                       # the pre-2026-07-28 loop, verbatim in behaviour
+        z = _Z0
+        for _ in range(40):
+            p = pz(z)
+            if p <= 1.02 * _TGT:            # one-sided accept: fires wherever it happens to land
+                return p
+            z += _VMAX if p > 1.5 * _TGT else 0.12 * _VMAX
+        return None
+
+    _new_ok, _old_worst = True, 1.0
+    for _k in (260.0, 800.0, 2000.0, 4000.0):
+        _pz = _mk_branch(_k)
+        _pn = _run_new(_pz)
+        _new_ok &= (_pn is not None and unload_verdict(_pn, _TGT) == 'in_band')
+        _po = _run_old(_pz)
+        _old_worst = min(_old_worst, (_po / _TGT) if _po is not None else 1.0)
+    chk('unload: bracketing search stays in band across the whole stiffness sweep (k=260…4000)',
+        _new_ok)
+    chk('unload: ★ the OLD rise-only loop collapses to <5 % of target on a stiff branch '
+        '(platen clear of the bed) — the documented runaway',
+        _old_worst < 0.05)
+
+    #    E3. the unload TRIGGER uses the same band as the acceptance test.
+    chk('unload trigger: a bed already inside the band is left alone (nothing to unload)',
+        restart_unload_needed([0.0947], 0.09) is False          # 5 % over = in band  ← real trace
+        and restart_unload_needed([0.099], 0.09) is False)
+    chk('unload trigger: genuinely over-pressure still unloads',
+        restart_unload_needed([0.30], 0.09) is True
+        and restart_unload_needed([0.101], 0.09) is True)       # >10 % over
+    chk('unload trigger: ★ the old bare `> target` disturbed an in-band bed — regression pin',
+        (0.0947 > 0.09) and restart_unload_needed([0.0947], 0.09) is False)
+
+    #    E4. a settle window that is still ringing must be REFUSED, not searched.
+    chk('settle: a flat at-rest window is quasi-static',
+        settle_is_quasistatic([0.0900, 0.0902, 0.0899])[0] is True)
+    chk('settle: ★ the real ringing trace is caught (p ROSE while the platen rose)',
+        settle_is_quasistatic([0.1371, 0.1785, 0.2642, 0.3028])[0] is False)
+    chk('settle: a sign-flipping (negative reaction) window is caught',
+        settle_is_quasistatic([0.1960, -0.0541, 0.1037])[0] is False)
+    chk('settle: too few samples to judge → not a failure (CLI guard owns <1)',
+        settle_is_quasistatic([0.09])[0] is True and settle_is_quasistatic([])[0] is True)
+    chk('settle: near-zero windows use the absolute floor, not a blown-up relative spread',
+        settle_is_quasistatic([1e-9, 2e-9, 1.5e-9])[0] is True)
 
     #    F. CLI guard: --restart-settle < 1 with --load-state must be refused, not clamped.
     for _bad_settle in (0, -1):
@@ -1958,8 +2146,18 @@ def main(argv):
                       else ('disabled_by_compact_to' if args.compact_to > 0 else 'pending'))
     _p_settle = []; _p_tail = []
     _probe_left = 0; _unload_cnt = 0
-    UNLOAD_HOLD = 3          # at-rest probes below target required to call the unload done (cf. STOP_HOLD)
+    UNLOAD_HOLD = 3          # at-rest probes IN BAND required to call the unload done (cf. STOP_HOLD)
     _wall_z_start = float(wall_z[None])
+    # ── unload bracketing search state (2026-07-28 HIGH-a) ────────────────────────────────────
+    # z_lo = highest platen height that still read ABOVE the band (starts at the restart height,
+    # which by construction carries the fabrication pressure); z_hi = lowest height that read BELOW
+    # it (None until the target is bracketed).  The old loop kept neither and could only rise.
+    _z_lo = float(wall_z[None]); _z_hi = None
+    _settle_quasistatic = None; _settle_spread_rel = None
+    _unload_probes = 0
+    _UNLOAD_GROW = 1.6                       # geometric rise growth while hunting for the bracket
+    _UNLOAD_DZ_MIN = 0.02 / max(n_grid, 1)   # bracket narrower than 1/50 cell → refining is meaningless
+    _unload_step0 = 0.05 * vmax              # START SMALL — the elastic unload branch is stiff
     for frame in range(args.frames):
         sacc = 0.0; wacc = 0.0
         for _ in range(args.sub):
@@ -1996,13 +2194,32 @@ def main(argv):
                 # purpose: an unnecessary rise is elastic and the servo band puts it back, an unnecessary
                 # descent is PLASTIC and irreversible (that asymmetry is the whole bug being fixed).
                 _p0 = max(_p_settle) if _p_settle else p
-                _unload = restart_unload_needed(_p_settle or [p], target)
-                _unload_status = 'unloading' if _unload else 'not_needed_p_below_target'
+                _unload = restart_unload_needed(_p_settle or [p], target, args.unload_band)
+                _unload_status = 'unloading' if _unload else 'not_needed_p_within_band'
+                # ★ Is the window actually at rest?  If not, EVERY later probe reading is transient
+                #   too, so the search is bisecting on noise — refuse up front and name the real cause
+                #   instead of failing 15 probes later as "bracket collapsed".
+                _qs_ok, _qs_spread = settle_is_quasistatic(_p_settle)
+                _settle_quasistatic = bool(_qs_ok)
+                _settle_spread_rel = float(_qs_spread)
                 if not args.quiet:
-                    print(f"  [restart] settle({_settle} frames): p={_p0:.4f} GPa vs target={target:.4f} → "
-                          + ("UNLOAD (제하): platen RISES until the reaction drops to the target"
+                    print(f"  [restart] settle({_settle} frames): p={_p0:.4f} GPa vs target={target:.4f} "
+                          f"(band ±{args.unload_band:.0%}), tail spread {_qs_spread * 100:.0f}% → "
+                          + ("UNLOAD (제하): platen RISES until the reaction drops into the band"
                              if _unload else
-                             "no unload needed (already at/below target) → normal descend logic"))
+                             "no unload needed (already inside the band) → normal descend logic"))
+                if _unload and not _qs_ok and not args.allow_unconverged_unload:
+                    raise SystemExit(
+                        f"\n[restart] SETTLE WINDOW IS NOT QUASI-STATIC — 제하를 시작하지 않고 중단합니다.\n"
+                        f"  --restart-settle {args.restart_settle} 프레임 창의 마지막 3점이 "
+                        f"{_qs_spread * 100:.0f}% 로 흔들립니다 (허용 15%).  최근 값: "
+                        f"{', '.join(f'{v:.4f}' for v in _p_settle[-5:])} GPa\n"
+                        f"  --load-state 는 v·C 를 0 으로 두므로 응력이 F 로부터 재구축돼야 하는데, 창이 "
+                        f"짧으면 그 값은 접촉응력이 아니라 **탄성파 과도응답**입니다.\n"
+                        f"  그 위에서 제하 탐색을 돌리면 p(z) 가 단조롭지 않아(플래튼이 올라가는데 p 가 "
+                        f"커지는 구간이 생김) 어떤 알고리즘도 수렴할 수 없습니다.\n"
+                        f"  → --restart-settle 을 크게(예: 20–50) 주어 창이 정지 상태에 도달하게 하세요.\n"
+                        f"  → 의도적인 실험이면 --allow-unconverged-unload 로 강행할 수 있습니다.")
             if _unload:
                 # ── UNLOAD = rise · PROBE · rise · PROBE …  The stop test MUST be read on a frozen
                 #    platen: wallf = Σ m·(v_grid − v_wall), so while the platen rises the v_wall term
@@ -2013,33 +2230,65 @@ def main(argv):
                 #    UNLOAD_HOLD consecutive at-rest probes below the target are required (mirror of the
                 #    descend side's STOP_HOLD sustained criterion, which exists for the same noise reason).
                 if _probe_left > 0:
-                    # PROBE window: platen frozen for --restart-settle frames so the post-rise rebound
+                    # PROBE window: platen frozen for --restart-settle frames so the post-move rebound
                     # transient decays; the LAST frame of the window is the reading (same convention as
                     # the initial settle decision).  One frozen frame is not enough — the material still
-                    # carries the velocity it picked up from the rise.
+                    # carries the velocity it picked up from the move.
                     wall_vel[None] = 0.0
                     _probe_left -= 1
                     descend = None                                       # platen stays put during the probe
                     if _probe_left == 0:                                 # window closed → this frame is THE reading
-                        _unload_cnt = _unload_cnt + 1 if p <= 1.02 * target else 0
+                        _verdict = unload_verdict(p, target, args.unload_band)
+                        _unload_probes += 1
+                        # BRACKET update.  z_lo = highest height still reading ABOVE the band;
+                        # z_hi = lowest height reading BELOW it.  Once both exist the target height is
+                        # bracketed and the search bisects instead of only rising (the old loop could
+                        # only rise, so a single overshoot was unrecoverable and it "converged" there).
+                        if _verdict == 'above':
+                            _z_lo = max(_z_lo, float(wall_z[None])); _unload_cnt = 0
+                        elif _verdict == 'below':
+                            _z_hi = (float(wall_z[None]) if _z_hi is None
+                                     else min(_z_hi, float(wall_z[None]))); _unload_cnt = 0
+                        else:
+                            _unload_cnt += 1
+                        if not args.quiet:
+                            print(f"    [unload probe {_unload_probes}/{args.unload_max_probes}] "
+                                  f"wall_z={wall_z[None]:.5f} {args.readout}={p:.4f} vs {target:.4f} GPa "
+                                  f"→ {_verdict}  bracket=[{_z_lo:.5f},"
+                                  f"{'None' if _z_hi is None else f'{_z_hi:.5f}'}]  in_band×{_unload_cnt}")
                         if _unload_cnt >= UNLOAD_HOLD:
                             _unload_status = 'completed'; descend = False   # tail below sets reached=True
                             if not args.quiet:
                                 print(f"  ✓ [restart] unloaded: {UNLOAD_HOLD} consecutive at-rest probes "
-                                      f"(each after {_settle} frozen frames), {args.readout}={p:.4f} ≤ target "
-                                      f"{target:.4f} GPa, wall_z={wall_z[None]:.4f} (from {_wall_z_start:.4f}), "
+                                      f"(each after {_settle} frozen frames) inside ±{args.unload_band:.0%} "
+                                      f"of target, {args.readout}={p:.4f} vs {target:.4f} GPa, "
+                                      f"wall_z={wall_z[None]:.4f} (from {_wall_z_start:.4f}), "
                                       f"porosity={por:.2f}%")
-                elif wall_z[None] >= WALL0 - 1e-9:
+                        elif _unload_probes >= args.unload_max_probes:
+                            _unload_status = 'not_converged_probe_budget'; descend = False
+                        elif _z_hi is not None and (_z_hi - _z_lo) <= _UNLOAD_DZ_MIN:
+                            # The bracket collapsed without ever landing in the band → p(wall_z) steps
+                            # across the band discontinuously at this resolution.  Refining further is
+                            # meaningless; say so rather than accepting whichever side we are on.
+                            _unload_status = 'not_converged_bracket_collapsed'; descend = False
+                elif wall_z[None] >= WALL0 - 1e-9 and _z_hi is None:
                     _unload_status = 'out_of_travel'; descend = False
                     print(f"  ⚠ [restart] unload ran out of platen travel at WALL0={WALL0:.4f} with "
                           f"{args.readout}={p:.4f} GPa still above target {target:.4f} — the bed did NOT "
                           f"reach the requested pressure (recorded in state_provenance.unload_status).")
                 else:
-                    up = vmax if p > 1.5 * target else 0.12 * vmax       # coarse far away, fine near target
-                    wall_z[None] = min(WALL0, wall_z[None] + up)
-                    wall_vel[None] = up / (args.sub * dt)
+                    # RISE (not yet bracketed) or BISECT (bracketed).  The rise step is now geometric and
+                    # starts SMALL: the unload branch is elastic and therefore stiff, so the old
+                    # `vmax while p > 1.5*target` took the bed from the fabrication pressure to zero
+                    # contact in one move and never saw the target on the way past.
+                    _step = _unload_step0 * (_UNLOAD_GROW ** min(_unload_probes, 8))
+                    _z_next, _kind = unload_next_z(float(wall_z[None]), _z_lo, _z_hi, WALL0, _step,
+                                                   floor_z=_wall_z_start)
+                    _dz = _z_next - float(wall_z[None])
+                    wall_z[None] = _z_next
+                    wall_vel[None] = _dz / (args.sub * dt)
                     _probe_left = max(1, _settle)                        # then freeze and read it at rest
-                    descend = None                                       # platen already moved (upward)
+                    descend = None                                       # platen already moved
             elif args.compact_to > 0:                        # displacement-driven → descend to a target porosity
                 descend = por > args.compact_to
                 if por < args.compact_to + 5.0:              # slow near the target → less overshoot
@@ -2166,6 +2415,33 @@ def main(argv):
             print(f"  ⚠ [restart] the bed is STILL at {_p_ach*1000:.1f} MPa, not the requested "
                   f"{target*1000:.1f} MPa — this geometry is NOT an operating-pressure geometry.  "
                   f"state_provenance.P_this_stage_role is tagged NOT_REACHED.")
+        # ★ 2026-07-28 HIGH-a GATE.  A non-converged / runaway unload must not leak a porosity,
+        #   thickness or coverage number into the pipeline.  The failure mode this closes is not
+        #   "the run crashed" but "the run finished and the numbers look plausible" — the platen ends
+        #   up clear of the bed, porosity is inflated by the gap, and every downstream consumer reads
+        #   it as an operating-pressure geometry.  Refuse by default; the override exists for
+        #   deliberate experiments and stamps itself into the provenance.
+        # 'unloading' still set at the end = the frame budget ran out MID-SEARCH.  That is a
+        # non-convergence too, and it is the easiest one to miss: the loop simply stops, the last
+        # probe's geometry is whatever it happened to be, and nothing else in the run says so.
+        if _unload_status == 'unloading':
+            _unload_status = 'not_converged_frame_budget'
+        _bad_unload = _unload_status.startswith('not_converged') or _unload_status == 'out_of_travel'
+        _over_unloaded = target > 0 and _p_ach < 0.75 * target and _unload
+        if (_bad_unload or _over_unloaded) and not args.allow_unconverged_unload:
+            raise SystemExit(
+                f"\n[restart] UNLOAD DID NOT CONVERGE — 결과를 내보내지 않고 중단합니다.\n"
+                f"  unload_status = {_unload_status}\n"
+                f"  {args.readout}_achieved = {_p_ach:.4f} GPa  vs  requested {target:.4f} GPa "
+                f"({(_p_ach/target if target > 0 else float('nan')):.2f}×)\n"
+                f"  platen wall_z {_wall_z_start:.5f} → {_wall_z_end:.5f} (Δ={_dz_box:+.5f} box), "
+                f"porosity {por_end:.2f}%\n"
+                f"  이 상태의 porosity/두께/coverage 는 구동압 형상이 아닙니다 — 플래튼이 베드에서 "
+                f"떨어졌거나 목표압을 지나쳤습니다.\n"
+                f"  → --unload-band 를 넓히거나(현재 ±{args.unload_band:.0%}), --unload-max-probes 를 "
+                f"늘리거나(현재 {args.unload_max_probes}), --restart-settle 을 키워 프로브를 안정화하세요.\n"
+                f"  → 의도적인 실험이면 --allow-unconverged-unload 로 진행할 수 있습니다 "
+                f"(산출물에 not_converged 가 박힙니다).")
     cov_out = {}
     if args.am_scaffold:
         # COVERAGE: fraction of each AM-type surface (AM↔non-AM voxel interfaces) that faces SE
@@ -2297,6 +2573,19 @@ def main(argv):
                 # what the platen actually did this stage (box units + µm) — the audit trail for the above
                 'unload_status': _unload_status,
                 'unload_probe_hold_frames': int(UNLOAD_HOLD),
+                # ★ 2026-07-28 HIGH-a: 제하 탐색이 실제로 어떤 조건에서 멈췄는지 — 밴드·프로브 예산·
+                #   사용한 프로브 수·최종 브래킷.  "완료" 라는 한 단어 대신 수렴 근거를 남긴다.
+                'unload_band': float(args.unload_band),
+                'unload_probes_used': int(_unload_probes),
+                'unload_max_probes': int(args.unload_max_probes),
+                'unload_bracket_box': [round(float(_z_lo), 6),
+                                       (round(float(_z_hi), 6) if _z_hi is not None else None)],
+                'unload_unconverged_override': bool(args.allow_unconverged_unload),
+                'settle_quasistatic': _settle_quasistatic,
+                'settle_tail_spread_rel': (round(float(_settle_spread_rel), 4)
+                                          if _settle_spread_rel is not None else None),
+                'unload_search': 'bracket_then_bisect (rise until p<band, then bisect; floor = restart '
+                                 'height so the search never adds plastic compaction)',
                 'wall_z_start': round(float(_wall_z_start), 6),
                 'wall_z_end': round(float(_wall_z_end), 6),
                 'platen_delta_box': round(float(_dz_box), 6),

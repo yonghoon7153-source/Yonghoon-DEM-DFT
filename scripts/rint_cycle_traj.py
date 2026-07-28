@@ -35,13 +35,57 @@ SHAPES = ('sqrt', 'linear')
 JUMPS = (0.3, 0.5, 0.7)          # 첫-사이클 점프 비율 스윕 (미확정 → 밴드)
 
 
+# ── 온도 축 (2026-07-28) ─────────────────────────────────────────────────────
+# 옛 `temp_C` 한 컬럼은 두 개의 물리적으로 다른 온도를 뭉개고 있었다:
+#   • 셀이 **사이클된** 온도  → 열화 속도를 지배 (R_int(N) 성장의 Arrhenius)
+#   • EIS 를 **측정한** 온도  → 측정된 R/σ 값 자체를 지배
+# 사용자 랩 프로토콜(2026-07-28 확인)은 이 둘이 **다르다**: 60 ℃ 에서 사이클을
+# 돌리다가 **상온에서 EIS 를 찍는다**.  한 컬럼으로는 표현이 불가능하므로 분리.
+#   T_cycle_C — 사이클 온도.  비어 있으면 미지정(pristine=0 cyc 는 애초에 n/a).
+#   T_meas_C  — EIS/전도도 측정 온도.  우리 모델은 se_material.T_REF_C(=25 ℃)에서
+#               계산하므로, **T_meas_C ≠ 25 인 앵커를 우리 숫자와 직접 비교하면
+#               틀린다** (kim2025 R_ct 30→60 ℃ 는 ×0.234 = 6.7배 차이).
+#   T_basis   — 이 온도가 어디서 왔는지.  meas_stated / meas_arrhenius_sweep /
+#               user_protocol / (빈칸=미상).  "25 라고 적혀 있으니 측정값"이라는
+#               오독을 막으려고 존재한다 — user_protocol 은 사용자 진술이지
+#               논문에 인쇄된 값이 아니다.
+ANCHOR_T_COLS = ('T_cycle_C', 'T_meas_C', 'T_basis')
+T_BASIS_VOCAB = frozenset({'', 'meas_stated', 'meas_arrhenius_sweep', 'user_protocol'})
+
+
+def _anchor_rows():
+    """CSV 전체 행 + 스키마 검증.  컬럼이 사라지면 조용히 빈칸으로 읽히는 대신 죽는다."""
+    with open(ANCHOR_CSV) as f:
+        rd = csv.DictReader(f)
+        missing = [c for c in ANCHOR_T_COLS if c not in (rd.fieldnames or [])]
+        if missing:
+            raise SystemExit(f'{ANCHOR_CSV}: 온도 컬럼 {missing} 없음 — '
+                             f'temp_C 단일컬럼 시절 파일인가?  (있는 컬럼: {rd.fieldnames})')
+        return list(rd)
+
+
+def scenario_temperatures(name: str):
+    """{name}_pristine/_cycled 의 (T_cycle_C, T_meas_C, T_basis).  값 없으면 None.
+
+    ★ load_scenario 의 반환 arity 를 건드리지 않으려고 별도 함수로 둔다
+      (webapp/app.py·mpm_webapp_payload.py 가 4-튜플로 언패킹 중)."""
+    rows = {r['scenario_key']: r for r in _anchor_rows() if r.get('scenario_key')}
+    out = {}
+    for suf in ('pristine', 'cycled'):
+        r = rows.get(f'{name}_{suf}')
+        if r is None:
+            continue
+        out[suf] = {k: ((float(r[k]) if k != 'T_basis' else r[k]) if str(r.get(k, '')).strip()
+                        else None) for k in ANCHOR_T_COLS}
+    return out
+
+
 def load_scenario(name: str):
     """anchors CSV의 scenario_key {name}_pristine / {name}_cycled → (R0, Rc, N_total)."""
     rows = {}
-    with open(ANCHOR_CSV) as f:
-        for r in csv.DictReader(f):
-            if r.get('scenario_key'):
-                rows[r['scenario_key']] = r
+    for r in _anchor_rows():
+        if r.get('scenario_key'):
+            rows[r['scenario_key']] = r
     kp, kc = f'{name}_pristine', f'{name}_cycled'
     if kp not in rows or kc not in rows:
         raise SystemExit(f'scenario {name}: {kp}/{kc} 키가 {ANCHOR_CSV}에 없음 '
@@ -116,6 +160,31 @@ def _selftest():
     except SystemExit as ex:
         ok = False
         print(f'  csus anchors: FAIL ({ex})')
+    # ── 온도 컬럼 스키마 + 어휘 + 모델기준온도 정합 ────────────────────────────
+    try:
+        rows = _anchor_rows()
+        bad = sorted({r['T_basis'] for r in rows if r['T_basis'] not in T_BASIS_VOCAB})
+        ok &= not bad
+        print(f"  T_basis 어휘: {'OK' if not bad else f'FAIL (미등록 {bad})'}")
+        # T_basis 가 비었는데 온도가 적혀 있으면 출처 없는 숫자 = §F1 위반
+        orphan = [r['anchor_id'] for r in rows
+                  if not r['T_basis'].strip()
+                  and (r['T_cycle_C'].strip() or r['T_meas_C'].strip())]
+        ok &= not orphan
+        print(f"  T_basis 출처누락: {'OK (없음)' if not orphan else f'FAIL {orphan}'}")
+        # ★ 우리 모델은 se_material.T_REF_C 에서 계산한다.  T_meas 가 그와 다른 앵커를
+        #   우리 숫자와 그냥 비교하면 틀린다 — FAIL 이 아니라 명시적 경고로 남긴다
+        #   (앵커를 지울 수는 없고, 비교할 때 보정이 필요하다는 사실이 요점).
+        import sys as _s
+        _s.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        from se_material import T_REF_C
+        off = [(r['anchor_id'], float(r['T_meas_C'])) for r in rows
+               if r['T_meas_C'].strip() and abs(float(r['T_meas_C']) - T_REF_C) > 0.05]
+        print(f'  T_meas ≠ 모델기준 {T_REF_C:g} ℃ 인 앵커: {len(off)}건'
+              + (f' → 직접비교 금지, 온도보정 필요: {[a for a, _ in off]}' if off else ''))
+    except (SystemExit, Exception) as ex:      # noqa: B014 — SystemExit 은 Exception 이 아님
+        ok = False
+        print(f'  온도 컬럼 검증: FAIL ({ex})')
     print('RINT-TRAJ SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
 
