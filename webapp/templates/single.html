@@ -808,7 +808,10 @@ function updateOpWarn() {
        + `★ <b>그래서 생기는 오류</b>: 반응 과전압 η_ct 가 온도를 올릴수록 <b>커지는</b> 답이 나옵니다. 실측 R_ct 는 30→60 °C 에 <b>×0.234(4.28배 감소)</b> — `
        + `<b>부호가 반대</b>입니다. 절대 과전압·용량, 그리고 <b>온도를 축으로 한 비교(30 vs 45 vs 60)</b>는 이 킷으로 결론내지 마세요. `
        + `같은 온도 안의 상대비교(SBE↔DBE, 조성 트렌드)는 σ_grain 이 양쪽에 같은 배수로 곱해져 <b>상쇄되므로 안전</b>합니다. `
-       + `(※ STEP4 <code>--temp-k</code>는 일부러 굽지 않습니다 — f=F/RT 만 움직여 위 부호역전을 키웁니다.)`;
+       + `(※ STEP4 <code>--temp-k</code>는 일부러 굽지 않습니다 — f=F/RT 만 움직여 위 부호역전을 키웁니다.)<br>`
+       + `⚙ <b>실행 배선</b>: STEP4 에는 <code>--allow-grid-t-mismatch</code> 만 들어갑니다 — 그리드는 ${tempc} °C σ_ion, `
+       + `kinetics 는 25 °C 라는 <b>혼합 상태를 명시 승인</b>하는 플래그입니다(없으면 T1-d 가드가 첫 스텝에서 중단). `
+       + `산출물 상태는 <code>MIXED_TEMPERATURE (sigma_ion@${tempc}C, kinetics@25C)</code> 로 박힙니다.`;
   }
   if (pop) {
     if (h) h += '<hr style="border:none;border-top:1px solid #7a4a10;margin:6px 0">';
@@ -818,7 +821,10 @@ function updateOpWarn() {
        + `지그 강성 미상 → <b>servo(정응력·하한) / hold(정적변위·상한) 두 팔 브래킷</b>을 모두 방출합니다.<br>`
        + `❌ <b>미반영</b>: 본 압밀(<code>run_mpm.sh</code>)·porosity·두께·STEP3 σ 는 <b>제작압 값 그대로</b>입니다. `
        + `(Doux 2020 §8 — 370 MPa 냉간압밀 펠릿은 5–75 MPa 스택압에 더 압밀되지 않음; 조건 P_fab ≫ P_op. 접촉면적/coverage/σ 는 여전히 제작압 상태 = 과대 추정 방향.)<br>`
-       + `❌ 크리프/시간의존(60 °C × 장시간)은 rate-independent J2 라 <b>구조적으로 표현 불가</b>.`;
+       + `❌ 크리프/시간의존(60 °C × 장시간)은 rate-independent J2 라 <b>구조적으로 표현 불가</b>.<br>`
+       + `⚙ <b>실행 시</b>: <code>run_mpm.sh</code> 가 시작할 때 "이 스크립트는 제작압 형상만 산출한다"는 `
+       + `스코프 배너를 찍습니다 — zip 이름의 <code>_op${pop}MPa</code> 를 보고 본 파이프라인도 구동압인 줄 `
+       + `오해하는 것을 막기 위해서입니다(§3-3③ㄱ 축 혼동).`;
   }
   el.innerHTML = h; el.style.display = 'block';
 }

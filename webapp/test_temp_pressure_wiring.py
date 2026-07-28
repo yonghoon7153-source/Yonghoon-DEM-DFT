@@ -206,7 +206,27 @@ def main():
         chk('run_mpm.sh STEP3 호출에 --temp-c 45 --ea-ion-ev 0.29',
             'python3 "$SCR/mpm_webapp_payload.py" --temp-c 45 --ea-ion-ev 0.29 \\' in sh)
         chk('run_mpm.sh 에 --temp-c 는 1회만 (중복주입 없음)', sh.count('--temp-c') == 1)
-        chk('STEP4 --temp-k 는 굽지 않는다 (부호역전 방지, §3-3①)', '--temp-k' not in sh)
+        # ★ 이 단언은 유지된다 (2026-07-29 재확인) — --temp-k 는 Kinetics.T = BV 지수의 f=F/(RT)
+        #   를 바꾸는데 i0 는 앵커가 없어 25 °C 그대로라, T 를 올리면 η_ct 가 **커진다**.  실제
+        #   R_ct 는 30→60 °C 에 4.28× 감소한다 → 정확히 반대(§3-3①).
+        _tk = re.compile(r'--temp-k\s+[0-9]')     # 설명 문구가 아니라 **값이 붙은 실제 인자**만
+        chk('STEP4 --temp-k 는 굽지 않는다 (부호역전 방지, §3-3①)', not _tk.search(sh))
+        # ★ 그러나 온도 그리드를 만든 킷은 STEP4 가 T1-d 가드(GRID_T_MISMATCH)에 걸려 죽었다.
+        #   kinetics 는 25 °C 로 두되 그 불일치를 **명시 승인**해야 실행된다 → MIXED_TEMPERATURE.
+        #   (STEP4 호출이 실제로 있는 킷으로 확인 — 위 rt 는 rate 미선택이라 STEP4 블록이 없다)
+        rt_s4 = c.get(base + '?step4=0.2&s4vmin=3.0&s4vmax=4.5&s4icut=0.05&tempc=45')
+        sh4 = member_text(rt_s4, 'run_mpm.sh')
+        _n_call = sh4.count('python3 "$SCR/step4_dyn.py" --grid step4_grid.npz')
+        chk('STEP4 에 --allow-grid-t-mismatch 주입 (T1-d 가드 통과 + 혼합상태 명시)',
+            _n_call >= 1 and sh4.count('--allow-grid-t-mismatch') == _n_call,
+            f'STEP4 호출 {_n_call}개 / 플래그 {sh4.count("--allow-grid-t-mismatch")}개')
+        chk('STEP4 에도 --temp-k 인자는 여전히 없다 (부호역전 방지)', not _tk.search(sh4))
+        chk('다만 왜 안 넣었는지는 킷에 적혀 있다 (미래의 나를 위한 근거)',
+            '부호역전' in sh4 and '§3-3' in sh4)
+        chk('그 사실이 로그 배너에 적힌다', 'MIXED_TEMPERATURE' in sh4)
+        chk('온도 미지정 킷에는 이 플래그가 안 붙는다 (기본 불변)',
+            '--allow-grid-t-mismatch' not in member_text(
+                c.get(base + '?step4=0.2&s4vmin=3.0&s4vmax=4.5&s4icut=0.05'), 'run_mpm.sh'))
         tp = json.loads(member_text(rt, 'mpm_input.json'))['temperature_provenance']
         ref = se_material.provenance(45.0, 0.29)
         chk('provenance = se_material 규약 (T_C/T_ref/Ea/factor/convention)',
@@ -220,6 +240,20 @@ def main():
             and json.loads(member_text(rt2, 'mpm_input.json'))
                     ['temperature_provenance']['Ea_ion_eV'] == se_material.EA_ION_EV_DEFAULT)
 
+        print('[2b] venv 자동탐지 (V100 ModuleNotFoundError 재발 방지)')
+        #   실사고: run_mpm.sh 로는 되는데 같은 명령을 새 SSH 셸에서 직접 치면 numpy 가 없다.
+        #   레포 안 venv 를 새 세션이 자동으로 타지 않기 때문 → 스크립트가 스스로 찾게 한다.
+        rv = c.get(base + '?step4=0.2&s4vmin=3.0&s4vmax=4.5&s4icut=0.05')
+        _zn = zipfile.ZipFile(io.BytesIO(rv.data)).namelist()
+        for _nm in ('run_mpm.sh', 'step4_only.sh', 'run_a1_anchors.sh'):
+            if _nm not in _zn:
+                continue
+            _t = member_text(rv, _nm)
+            chk(f'{_nm}: venv 자동탐지 + numpy 확인',
+                'bin/activate' in _t and 'import numpy' in _t and 'MPM_NO_VENV' in _t)
+            chk(f'{_nm}: venv 탐지가 SCR 확정 뒤에 온다 (경로 의존)',
+                _t.index('SCR=""') < _t.index('bin/activate'))
+
         print('[3] 구동 스택압 (&pop=)')
         rp = c.get(base + '?pop=90')
         chk('200', rp.status_code == 200, str(rp.status_code))
@@ -230,6 +264,13 @@ def main():
         chk('a1_pressure_provenance P_fab/P_operating 분리',
             pv['P_operating_MPa'] == 90.0 and pv['P_fab_MPa'] == 300.0, json.dumps(pv))
         chk('본 압밀(run_mpm.sh)은 제작압 그대로', '--target-gpa 0.3' in member_text(rp, 'run_mpm.sh'))
+        # ★ 2026-07-29: zip 이름에 _op90MPa 가 붙는데 run_mpm.sh 는 제작압 형상만 낸다 →
+        #   그 스코프를 실행 중 화면에 명시한다 (§3-3③ㄱ '축 혼동').
+        _shp = member_text(rp, 'run_mpm.sh')
+        chk('run_mpm.sh 가 구동압 스코프를 명시한다 (제작압 형상임을 화면에 적음)',
+            '구동압 스코프' in _shp and 'run_a1_anchors.sh' in _shp and '§3-3' in _shp)
+        chk('구동압 미지정이면 그 배너가 없다 (기본 불변)',
+            '구동압 스코프' not in member_text(c.get(base), 'run_mpm.sh'))
 
         print('[4] 입력 검증 (침묵 무시 금지)')
         for q, why in (('?tempc=abc', '비수치 온도'), ('?tempc=900', '범위밖 온도'),

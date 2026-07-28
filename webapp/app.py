@@ -6331,15 +6331,43 @@ def _kit_apply_temperature(tmp, t_c, ea_ev):
     note = (f'# ★ 운전 온도 {t_c:g} °C (webapp &tempc=) — σ_ion(SE)만 Kraft-2017 σ·T Arrhenius 로 스케일.\n'
             f'#   i0/D_s/OCP/σ_e/κ/SE-경도는 앵커 없어 25 °C 상수 유지 → 전-물리 온도 스윕 아님 '
             f'(docs/temp_pressure_capability.md §3).  Eₐ 는 밴드 0.29/0.41/0.46 eV 를 쓸어 보고할 것.\n')
-    open(rp, 'w').write(src.replace(
-        _KIT_STEP3_CALL, note + _KIT_STEP3_CALL.replace(' \\\n', flags + ' \\\n')))
+    src = src.replace(
+        _KIT_STEP3_CALL, note + _KIT_STEP3_CALL.replace(' \\\n', flags + ' \\\n'))
+    # ── ★ 2026-07-29: STEP4 에도 온도를 굽는다 ──────────────────────────────────────────────
+    #   이전에는 STEP3(σ 그리드)에만 --temp-c 를 넣었다.  그러면 그리드는 60 °C σ_ion 인데
+    #   step4_dyn 은 기본 --temp-k 298.15 로 돌아가고, T1-d 가드가 GRID_T_MISMATCH 로
+    #   **첫 STEP4 스텝에서 hard-fail** 한다 (실제 킷으로 재현 확인).  가드는 옳다 — 60 °C σ 위에서
+    #   25 °C 반응속도를 돌리면 조용히 틀리니까.  틀린 건 킷이 그 짝을 안 맞춰준 것이었다.
+    #   ⚠ --allow-unscaled-t 를 함께 굽는다: i0/D_s/OCP 는 앵커가 없어(§F1) 25 °C 상수로 남으므로
+    #     이 런은 **"σ_ion 만 60 °C" 인 혼합 상태**다.  플래그는 그 사실을 승인하는 것이고,
+    #     산출물에는 PARTIAL_sigma_ion_only@<T>C 로 박힌다 — 전-물리 온도 스윕이 아니다.
+    _S4_CALL = 'python3 "$SCR/step4_dyn.py" --grid step4_grid.npz \\\n'
+    _n_s4 = src.count(_S4_CALL)
+    if _n_s4:
+        # ★★ --temp-k 는 **굽지 않는다** (§3-3① 부호역전).  Kinetics.T 는 BV 지수의 f=F/(RT) 를
+        #    바꾸는데 i0 는 앵커가 없어 25 °C 그대로다 → T 를 올리면 f 가 작아져 같은 전류에
+        #    **η_ct 가 커진다**.  실제 R_ct 는 30→60 °C 에 4.28× **감소**한다(kim2025, 우리 소재계
+        #    실측) → 정확히 반대.  "온도를 반영했다는 인상을 주면서 반대 답을 내는 것"이 가장 나쁘다.
+        #    ⇒ kinetics 는 25 °C 로 두고, 그리드가 60 °C σ 라는 **불일치를 명시적으로 승인**만 한다.
+        #    그 결과 상태는 MIXED_TEMPERATURE (sigma_ion@{T}C, kinetics@25C) 로 산출물에 박힌다.
+        src = src.replace(_S4_CALL, _S4_CALL + '    --allow-grid-t-mismatch \\\n')
+        src = src.replace('echo "[run_mpm] STEP4 솔버:',
+                          f'echo "[run_mpm] ★ STEP4 = MIXED_TEMPERATURE: σ_ion 은 그리드의 {t_c:g} °C, '
+                          f'kinetics(i0/D_s/OCP)는 25 °C 상수. --temp-k 는 의도적으로 미주입 '
+                          f'(부호역전 방지, docs/temp_pressure_capability.md §3-3①)"\n'
+                          f'echo "[run_mpm] STEP4 솔버:', 1)
+    open(rp, 'w').write(src)
     pj = os.path.join(tmp, 'mpm_input.json')
     if not os.path.exists(pj):
         raise RuntimeError('mpm_input.json 없음 — provenance 를 남길 수 없음')
     prov = json.load(open(pj))
     tp = se_material.provenance(t_c, ea_ev)
     tp['applied_to'] = ['run_mpm.sh: mpm_webapp_payload.py --temp-c '
-                        '(STEP3 σ_ion 복셀 솔브 + step4_grid.npz σ 테이블)']
+                        '(STEP3 σ_ion 복셀 솔브 + step4_grid.npz σ 테이블)',
+                        f'run_mpm.sh: step4_dyn.py --allow-grid-t-mismatch ({_n_s4} 개 STEP4 호출) '
+                        f'— σ_ion 은 그리드의 {t_c:g} °C 값을 쓰고 kinetics 는 25 °C 상수 '
+                        f'= MIXED_TEMPERATURE.  ★--temp-k 는 의도적으로 미주입: i0 앵커가 없어 '
+                        f'T 만 올리면 η_ct 가 반대 방향(증가)으로 움직인다 (§3-3①)']
     tp['not_applied_to'] = {
         'STEP1/2 MPM 압밀': 'SE 경도 H(T)/σ_y(T) 앵커 없음 (§F1) → 형상은 25 °C 값',
         'STEP4 kinetics': 'i0 / D_s / OCP dU/dT 앵커 없음 (§F1) — --temp-k 는 굽지 않는다 '
