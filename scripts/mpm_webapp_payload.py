@@ -282,7 +282,7 @@ def main():
                          'nmc811: S/P = 10/5 mS/cm (A1 corpus-fit).  nca: S=P = 10 mS/cm 단일값 — '
                          'Amin/Chiang JES 2015 소결펠릿 "충전-상태 상단"(리튬화는 1e-4 S/cm, SOC 2자리 스윙; '
                          'NCA 단결정/다결정 분리 데이터 부재라 S=P).  ⚠ E_AM은 프리셋이 안 바꿈 — '
-                         'Kang의 175 GPa는 assumed(Koerver umbrella 인용)라 140 유지(가짜 25% 대비 차단).')
+                         'Kang의 175 GPa는 assumed(Koerver umbrella 인용)라 140 유지(가짜 25%% 대비 차단).')
     ap.add_argument('--sigma-am-s', type=float, default=None,
                     help='σ_e AM_S (S/cm) — 미지정 시 --cam 프리셋 (nmc811: 0.010 / nca: 0.010)')
     ap.add_argument('--sigma-am-p', type=float, default=None,
@@ -1120,7 +1120,7 @@ def main():
     # cross-phase axis: "매트릭스가 네트워크에서 얼마나 먼가").  Pure geometry on the FULL-res
     # point cloud; §F1 — relative comparisons between our runs only, no SSRM absolute claimed.
     additive_dispersion = None
-    if phase is not None and np.isin(phase, (2, 3, 4, 5)).any():
+    if phase is not None and np.isin(phase, (2, 3, 4, 5, 6)).any():
         try:
             from additives import dispersion_metrics as _dm
             _offd = np.array([SW[0], SW[0], FLOOR])
@@ -1131,11 +1131,13 @@ def main():
             _mx = (se[_mse] - _offd) * UM
             _amck = {'am_c_um': (c - _offd) * UM, 'am_r_um': r * UM}   # review M2/M3: AM-masked D
             additive_dispersion = {}                                   # cells + matrix-volume nn ref
-            for _ph, _nm in ((2, 'VGCF'), (3, 'SuperP'), (4, 'PTFE'), (5, 'SDCP')):
+            for _ph, _nm in ((2, 'VGCF'), (3, 'SuperP'), (4, 'PTFE'), (5, 'SDCP'), (6, 'SWCNT')):
                 if (phase == _ph).any():
                     additive_dispersion[_nm] = _dm((se[phase == _ph] - _offd) * UM, (lat, lat),
                                                    _ztd, matrix_pts_um=_mx, **_amck)
-            _mc = np.isin(phase, (2, 3, 5))                  # conductive network union (PTFE 제외)
+            # ★SWCNT(6) 포함 — σ_e 100 S/cm(VGCF급) 도체다 (A14 sheath).  PTFE(4)만 절연으로 제외.
+            #   2026-07-27 감사: 6 이 빠져 SWCNT 베드의 conductive_all 이 과소계상됐음.
+            _mc = np.isin(phase, (2, 3, 5, 6))               # conductive network union (PTFE 제외)
             if _mc.any():
                 additive_dispersion['conductive_all'] = _dm((se[_mc] - _offd) * UM, (lat, lat),
                                                             _ztd, matrix_pts_um=_mx, **_amck)

@@ -82,8 +82,12 @@ python -m pip install -q "cupy-cuda12x[ctk]" \
   nvidia-cublas-cu12 nvidia-cusparse-cu12 nvidia-cusolver-cu12 \
   nvidia-nvjitlink-cu12 nvidia-cuda-runtime-cu12 nvidia-cuda-nvrtc-cu12 || {
     echo "  ⚠ cupy/CUDA 설치 일부 실패 — GPU 없이도 CPU fallback으로 파이프라인은 돕니다(느릴 뿐)."; }
-NVLIB="$(ls -d "$DIR"/venv/lib/python*/site-packages/nvidia/*/lib 2>/dev/null | tr '\n' ':')"
-export LD_LIBRARY_PATH="${NVLIB}${LD_LIBRARY_PATH:-}"
+# ★nvidia CUDA 라이브러리 경로 — activate_dem.sh 와 **같은 방식**(현재 파이썬의 site-packages 조회)
+#   으로 통일.  옛 `ls -d "$DIR"/venv/...` 는 (a) conda 모드(kgy)엔 venv 가 없어 glob 미매치 →
+#   `set -euo pipefail` 에서 exit 2 로 **무음 사망**(OCP 앵커·검증·alias 전부 스킵), (b) venv 경로를
+#   하드코딩해 두 스크립트가 서로 다른 곳을 봤다.  `|| true` 로 실패해도 셋업은 계속.
+NVLIB="$(python -c "import site,glob,os; ps=list(site.getsitepackages())+[site.getusersitepackages()]; print(':'.join(sorted(set(sum([glob.glob(os.path.join(p,'nvidia','*','lib')) for p in ps],[])))))" 2>/dev/null || true)"
+export LD_LIBRARY_PATH="${NVLIB:+$NVLIB:}${LD_LIBRARY_PATH:-}"
 
 echo "══ [6/7] OCP 앵커 생성 (없으면 STEP4가 SKIP됨 — 이번 세션 실화) ══"
 python3 scripts/step4_pybamm_anchor.py --export-params anchor_params

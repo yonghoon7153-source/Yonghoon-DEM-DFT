@@ -129,7 +129,7 @@ def main():
     ap.add_argument('--step4-solver-cap', type=float, default=0.0,
                     help='STEP4 e-망 σ-대비 상한(MPM_S4_CONTRAST_CAP 기본값, 0=OFF).  near-null 수렴정체 '
                          '완화용: 200 → CG iter ×5.2 실측(docs/step4_bottleneck_analysis_20260727.md) 이나 '
-                         'σ_eff −7.8% → σ-메트릭 보고는 uncapped 런으로.  런타임 env 가 이 기본값을 override.')
+                         'σ_eff −7.8%% → σ-메트릭 보고는 uncapped 런으로.  런타임 env 가 이 기본값을 override.')
     ap.add_argument('--step4-x0', type=float, default=None,
                     help='STEP4 방전창 시작 stoich(충전끝/저리튬) 오버라이드 — 기본 None=params_json(0.2638).')
     ap.add_argument('--step4-x100', type=float, default=0.9084,
@@ -641,7 +641,10 @@ def main():
             _es += (f' --i0-poly "${{MPM_S4_I0_POLY:-{a.step4_i0_poly:g}}}"'
                     f' --i0-sc "${{MPM_S4_I0_SC:-{a.step4_i0_sc:g}}}"')
             _estag += f'_i0P${{MPM_S4_I0_POLY:-{a.step4_i0_poly:g}}}S${{MPM_S4_I0_SC:-{a.step4_i0_sc:g}}}'
-        if a.step4_ds_poly is not None and _ds_scalar is None:
+        # ★문턱은 D_s 분리든 i0 분리든 **둘 중 하나라도** 있으면 반드시 넘긴다 (2026-07-27 감사 CONFIRMED):
+        #   i0-only 분리 시 이게 빠지면 킷은 사용자 문턱으로 AM 을 재라벨해 STEP3 σ_e 를 나누는데
+        #   step4_dyn 은 기본 3.5µm 로 분류 → 같은 입자가 σ_e 는 SC, 동역학은 poly 로 어긋난다.
+        if (a.step4_ds_poly is not None or a.step4_i0_poly is not None) and _ds_scalar is None:
             _es += f' --am-split-um {a.step4_am_split_um:g}'
             _eslab = f' · ★poly/SC 분리(split r≥{a.step4_am_split_um:g}µm)'
         _dis_loop = f'''  for CR in {_dis}; do
@@ -713,12 +716,12 @@ def main():
 # ★STEP4 솔버 노브 (2026-07-27 near-null 대수술; docs/step4_bottleneck_analysis_20260727.md)
 #   기본값 = 권장값.  런타임 env 로 override 가능 (예: MPM_S4_CONTRAST_CAP=200 bash step4_only.sh).
 #   prune_float: 집전체·AM 무접촉 부유 e-클러스터 제거 = 정확특이 블록 소거(해-불변, GPU-CG 회생)
-#   ew        : Eisenstat-Walker inexact Newton (초기 반복 느슨 → 총 CG 일량 절감; 최종 수렴판정 동일)
+#   ew        : Eisenstat-Walker inexact Newton (기본 OFF — 측정 2건서 일량 증가, 이득 미입증)
 #   gpu_amg   : AMG apply 를 GPU V-cycle 미러로 (빌드는 CPU 1회; cupy 없으면 자동 CPU 폴백)
 #   contrast_cap: e-망 σ대비 상한 (0=OFF).  200 → CG iter ×5.2 실측이나 σ_eff −7.8% →
 #                 ★수렴 정체 시에만, 그리고 σ-메트릭 보고는 uncapped 런으로 (npz meta 에 태그됨)
 export MPM_S4_PRUNE_FLOAT="${{MPM_S4_PRUNE_FLOAT:-1}}"
-export MPM_S4_EW="${{MPM_S4_EW:-1}}"
+export MPM_S4_EW="${{MPM_S4_EW:-0}}"
 export MPM_S4_GPU_AMG="${{MPM_S4_GPU_AMG:-1}}"
 export MPM_S4_CONTRAST_CAP="${{MPM_S4_CONTRAST_CAP:-{a.step4_solver_cap:g}}}"
 echo "[run_mpm] STEP4 솔버: prune=$MPM_S4_PRUNE_FLOAT ew=$MPM_S4_EW gpu_amg=$MPM_S4_GPU_AMG cap=$MPM_S4_CONTRAST_CAP"

@@ -4070,7 +4070,12 @@ def _eis_exp_table():
     """실험 EIS 측정 목록 = eis_catalog.csv(메타) ⋈ eis_fit_results.csv(도출값) by filename.
     반환 {rows:[...], n, fitted, summary}.  파일 없으면 빈 리스트 (graceful)."""
     import csv as _csv
+    import json as _json
     P = _eis_archive_paths()
+    try:                                                  # 사용자가 L 을 명시 지정한 stem 집합
+        _ovr = set(_json.load(open(os.path.join(P['archive'], 'thickness_overrides.json'))))
+    except Exception:
+        _ovr = set()
     cat = {}
     if os.path.isfile(P['catalog']):
         try:
@@ -4102,6 +4107,9 @@ def _eis_exp_table():
             # 파일명이 알려주는 두께(예 '70um') — ⚠집전체(SUS/c-SUS ~15-20µm) 포함 총두께라 σ_e 에
             # 그대로 쓰면 안 됨(eis_fit.py:32-36).  σ_e 용 L 은 합제만(기본 45).  표에 병기해 오입력 방지.
             'filename_thickness_um': _num(c, 'thickness_um'),
+            # L 이 사용자 지정인지(override JSON 에 키 존재) — ⚠경고는 '지정했을 때만' 띄워야 한다.
+            # 기본 45 와 파일명 45um 이 우연히 같아도 경고가 뜨던 오탐 차단 (감사 L1).
+            'L_is_user_set': fn in _ovr,
             'R_s_ohmcm2': _num(f, 'R_s_ohmcm2'), 'R_int_ohmcm2': _num(f, 'R1_ohmcm2'),
             'R_w_ohmcm2': _num(f, 'R_w_ohmcm2'), 'C_dl_uF_cm2': _num(f, 'C_dl_uF_cm2'),
             'sigma_e_mScm': _num(f, 'sigma_e_mScm'), 'L_composite_um': _num(f, 'L_composite_um'),
@@ -4150,6 +4158,16 @@ def api_eis_exp_thickness():
         return jsonify({'error': '두께 숫자 아님'}), 200
     if not (0.5 <= thick <= 300):
         return jsonify({'error': f'두께 범위 벗어남 ({thick} — 0.5~300µm)'}), 200
+    # ★대상 검증 (2026-07-27 감사 M3/M4): 예전엔 존재하지 않는 filename 도, σ_e 에 두께를 안 쓰는
+    #   full-cell 도 무조건 ok:true 를 돌려줘 UI 가 "✓ σ_e 재계산됨" 초록 메시지를 띄웠다 —
+    #   실제론 아무것도 안 바뀌고 override JSON 만 오염.  존재·셀타입을 먼저 확인한다.
+    _rows = {r['filename']: r for r in (_eis_exp_table().get('rows') or [])}
+    _row = _rows.get(fn)
+    if _row is None:
+        return jsonify({'error': f'그런 측정 없음: {fn}'}), 200
+    if (_row.get('cell_type') or '') != 'symmetric':
+        return jsonify({'error': f'{fn} 은 {_row.get("cell_type") or "미상"} 셀 — σ_e=L/R1 은 '
+                                 f'대칭셀(SUS 블로킹) 전용이라 두께가 쓰이지 않음'}), 200
     ov_path = os.path.join(P['archive'], 'thickness_overrides.json')
     try:                                                      # override JSON 갱신
         ov = _json.load(open(ov_path)) if os.path.isfile(ov_path) else {}
@@ -4206,6 +4224,9 @@ def api_eis_exp_upload():
             continue
         base = os.path.basename(raw_name).replace('\\', '_').replace('/', '_')
         stem, ext = os.path.splitext(base); ext = ext.lower()
+        base = stem + ext          # ★확장자 소문자로 정규화 (감사 L2): 대문자 .CSV 는 저장은 되지만
+        #                            eis_archive/eis_fit 의 endswith('.csv')(대소문자 구분)에 안 걸려
+        #                            표에 영영 안 나타나는데 업로드 응답은 성공을 알렸다.
         if ext not in ('.mpr', '.mps', '.csv'):
             notes.append(f'{base}: 확장자 미지원 (.mpr/.mps/.csv)'); continue
         # 셀타입 미상시 파일명으로 추정 (sym/full) — 없으면 사용자 접두어 권장
@@ -4248,7 +4269,16 @@ def api_eis_exp_upload():
         except Exception as e:
             notes.append(f'두께 저장 실패: {e}')
     elif _th is not None:
-        notes.append(f'두께 {_th}µm 범위 밖(0.5~300) — 기본 45µm 로 fit')
+        # ★기존 override 가 있으면 45 가 아니라 그게 쓰인다 — "기본 45µm 로 fit" 은 거짓이었음 (감사 M6)
+        try:
+            _ov0 = _json.load(open(os.path.join(P['archive'], 'thickness_overrides.json')))
+        except Exception:
+            _ov0 = {}
+        _kept = {os.path.splitext(b)[0]: _ov0[os.path.splitext(b)[0]]
+                 for b in saved if os.path.splitext(b)[0] in _ov0}
+        notes.append(f'두께 {_th}µm 범위 밖(0.5~300) — 무시.  '
+                     + (f'기존 지정 L={"/".join(f"{v:g}" for v in _kept.values())}µm 유지'
+                        if _kept else '기본 45µm 로 fit'))
     # 추출(.mpr, galvani 있으면) + 카탈로그 재생성
     py = os.environ.get('PYTHON', 'python3')
     arch_msg = ''
@@ -4300,6 +4330,19 @@ def api_eis_exp_delete():
                 deleted.append(folder)
             except Exception:
                 pass
+    # 1-b) 두께 override 도 제거 (2026-07-27 감사 M5): 안 지우면 같은 셀을 다시 재서 업로드할 때
+    #      옛 L 을 조용히 상속해 σ_e=L/R1 이 틀린 두께로 산출된다 (재측정 워크플로에서 실제로 발생).
+    import json as _json
+    _ovp = os.path.join(P['archive'], 'thickness_overrides.json')
+    if os.path.isfile(_ovp):
+        try:
+            _ov = _json.load(open(_ovp))
+            if _ov.pop(os.path.splitext(fn)[0], None) is not None:
+                with open(_ovp, 'w') as _fh:
+                    _json.dump(_ov, _fh, ensure_ascii=False, indent=1)
+                deleted.append('thickness_override')
+        except Exception:
+            pass
     # 2) fit 기록에서 행 제거
     fits = P['fits']
     if os.path.isfile(fits):

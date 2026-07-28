@@ -109,7 +109,7 @@ def main(argv):
     ap = argparse.ArgumentParser(description='reflow 갭 분해 (지표 vs 재유동 반증)')
     ap.add_argument('--am-scaffold', required=True)
     ap.add_argument('--se-scaffold', required=True)
-    ap.add_argument('--mpm-loss', type=float, required=True, help='MPM voxel-coverage SC 손실 % (앵커 실측)')
+    ap.add_argument('--mpm-loss', type=float, required=True, help='MPM voxel-coverage SC 손실 %% (앵커 실측)')
     ap.add_argument('--sc-dv', type=float, default=0.051, help='SC 부피 ΔV (기본 0.051 = Kondrakov)')
     ap.add_argument('--n-grid', type=int, default=256, help='voxel 격자 (384=MPM와 동일, 256=빠름)')
     a = ap.parse_args(argv)

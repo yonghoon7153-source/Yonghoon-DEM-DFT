@@ -2943,17 +2943,17 @@ function applyViewMode(state, mode) {
     // within (r_AM + 0.3µm) of the AM surface, from the payload's subsampled additive_points via a
     // spatial hash (995 AM × ~120k pts → fast).  SUBSAMPLED counts → RELATIVE wiring only: percentile-
     // normalised p5–p95 → indigo(약) → cyan → cream(강).  Isolated stays red.  Carbon 없으면 binary 폴백.
-    const carbonPts = ((state.data && state.data.additive_points) || []).filter(p => p[3] === 2 || p[3] === 3 || p[3] === 5);
+    const carbonPts = ((state.data && state.data.additive_points) || []).filter(p => p[3] === 2 || p[3] === 3 || p[3] === 5 || p[3] === 6);
     const BAND = 0.3;
     // 서브샘플 가중 보정 — additive_points는 phase별 서브샘플이라 raw count는 payload마다 밀도가
     // 다름.  metrics.additive_counts(전체 seeded)로 w=total/shown을 곱해 "환산 접점수"를 만들면
     // SBE↔DBE 케이스 간 수치·색 비교가 유효해짐 (uniform random subsample → unbiased estimate).
     const _PHN = { 2: 'VGCF', 3: 'SuperP', 5: 'SDCP', 6: 'SWCNT' };
-    const _shown = { 2: 0, 3: 0, 5: 0 };
+    const _shown = { 2: 0, 3: 0, 5: 0, 6: 0 };   // ★6=SWCNT (σ_e 100 S/cm 도체) — 2026-07-27
     carbonPts.forEach(p => { _shown[p[3]]++; });
     const _acnt = mm.additive_counts || {};
     const wPh = {};
-    [2, 3, 5].forEach(ph => {
+    [2, 3, 5, 6].forEach(ph => {
       const tot = Number(((_acnt[_PHN[ph]] || {}).n_points != null ? _acnt[_PHN[ph]].n_points : _acnt[_PHN[ph]]) || 0);
       wPh[ph] = (tot > 0 && _shown[ph] > 0) ? tot / _shown[ph] : 1;
     });
@@ -5376,17 +5376,17 @@ function showMPMAnalysisSummary(state) {
  * 색칠 → 색 차이 = 실제 배선 차이 (사이드패널의 per-payload 자동 스케일은 비교 무효).
  * 전류밀도 필드는 export 시 payload별 자기 p99.8 정규화라 패턴 비교용 (legend에 명시). */
 function _wiringCounts(particles, addPts, addCounts, boxLx, boxLy) {
-  let carbon = (addPts || []).filter(p => p[3] === 2 || p[3] === 3 || p[3] === 5);
+  let carbon = (addPts || []).filter(p => p[3] === 2 || p[3] === 3 || p[3] === 5 || p[3] === 6);
   const counts = new Float64Array((particles || []).length);
   const hits = new Array((particles || []).length);         // per-AM touching carbon pts (패치 렌더용)
   if (!carbon.length || !counts.length) return { counts, median: 0, hits };
   // 가중치는 반드시 ghost 복제 BEFORE 계산 — shown에 ghost가 들어가면 w=total/shown이 희석돼
   // 환산 접점이 축소됨 (버그였음: 중앙값 348→290 하락의 원인).
   const PHN = { 2: 'VGCF', 3: 'SuperP', 5: 'SDCP', 6: 'SWCNT' };
-  const shown = { 2: 0, 3: 0, 5: 0 };
+  const shown = { 2: 0, 3: 0, 5: 0, 6: 0 };   // ★6=SWCNT 포함 (미포함 시 shown[6] undefined → NaN)
   carbon.forEach(p => { shown[p[3]]++; });
   const w = {};
-  [2, 3, 5].forEach(ph => {
+  [2, 3, 5, 6].forEach(ph => {
     const tot = Number((addCounts || {})[PHN[ph]] || 0);
     w[ph] = (tot > 0 && shown[ph] > 0) ? tot / shown[ph] : 1;   // 서브샘플 가중 → 환산 접점
   });

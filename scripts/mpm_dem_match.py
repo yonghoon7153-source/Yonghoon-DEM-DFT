@@ -624,7 +624,7 @@ def main():
                          "servo to wall reaction = p_read); absP=legacy mean-prs (resolution-BIASED)")
     ap.add_argument('--plot', action='store_true', help='parity scatter (DEM vs MPM)')
     ap.add_argument('--group-plot', action='store_true',
-                    help='trend: porosity vs AM wt% per SE radius, DEM vs MPM')
+                    help='trend: porosity vs AM wt%% per SE radius, DEM vs MPM')
     # ── constitutive model (champion vs cap) ──────────────────────────────
     ap.add_argument('--model', choices=['vonmises', 'dpc', 'jam'], default='vonmises',
                     help="SE plasticity: 'vonmises' (champion J2, no cap) | 'dpc' "

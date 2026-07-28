@@ -330,7 +330,7 @@ def parse_args(argv):
                          'tunable hook, NOT anchored (backlog §F1).')
     ap.add_argument('--coh-sdcp', type=float, default=0.10,
                     help='SDCP binder cohesion (GPa, Cauchy) among SDCP/SE points — BULK film integrity, '
-                         'variant-independent + FLAT in wt% (no PTFE-style binder_cap arc: anchoring has no '
+                         'variant-independent + FLAT in wt%% (no PTFE-style binder_cap arc: anchoring has no '
                          'fibrillation/over-crosslink peak mechanism).  The AM-interface anchoring '
                          '(γ ⚠INVALID: wrong-monomer 2026-07-10, DFT recompute pending — do NOT cite 0.93/0.42 J/m² '
                          'or −4.8/−3.0 eV, direction only) is represented STRUCTURALLY (film seeded ON the AM, seed_coat) — a '
@@ -369,8 +369,8 @@ def parse_args(argv):
                          'factor before compaction — the prop-open thickness response a frozen-AM MPM cannot '
                          'produce emergently (skeleton rearrangement = granular force-chain physics = DEM-class). '
                          'The VALUE is derived upstream (mpm_input_from_case) from λ_dz = (1+φ_VGCF)·(1−ε_DEM)/'
-                         '(1−ε_real), ε_real = ε_DEM + 0.5pp/wt%(VGCF) — ONE empirical number (Cho 2024 LPSCl+VGCF '
-                         'slope); Philipse rod-jamming φ_c≈5.4/(L/D)≈8vol% bounds the regime (our strut onset '
+                         '(1−ε_real), ε_real = ε_DEM + 0.5pp/wt%%(VGCF) — ONE empirical number (Cho 2024 LPSCl+VGCF '
+                         'slope); Philipse rod-jamming φ_c≈5.4/(L/D)≈8vol%% bounds the regime (our strut onset '
                          'reproduces it).  Thickness/porosity respond BY CONSTRUCTION; coverage/network/strain '
                          'respond EMERGENTLY on the dilated bed.  z-only affine = die-press global mode (lateral '
                          'fixed); local non-affine rearrangement stays DEM territory.  1.0 = off (soft additives: '

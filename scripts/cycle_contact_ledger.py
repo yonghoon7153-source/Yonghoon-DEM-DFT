@@ -616,7 +616,7 @@ def main():
     ap.add_argument('--reflow-recover', type=float, default=0.0,
                     help='⚠경험적 metric/law 정합 계수 [0,1] (★재유동 아님 — 적대리뷰 2026-07-22 철회).  개구(SC '
                          '수축, 양수 이동) 손실을 (1−R)배로 축소.  초판은 "SE plastic 재유동 회복"이라 했으나 '
-                         'metric_split_check.py 실측: real_14 30%(ledger Hertz-area)→19%(MPM voxel) 갭은 대부분 '
+                         'metric_split_check.py 실측: real_14 30%%(ledger Hertz-area)→19%%(MPM voxel) 갭은 대부분 '
                          '지표차(+13.2%%p) + elastic πRδ 과대이지 재유동(−2.6%%p) 아님.  같은 voxel 지표선 ledger '
                          '강체 16.8%% ≈ MPM 19.4%% (정합 불필요).  기본 0.0 = 순수기하(byte 불변) = 권장.  0.34는 '
                          '물리상수 아님(production 미전파); nonzero는 임의 metric 브리징일 뿐.  docs/a3_reflow_calibration.md.')

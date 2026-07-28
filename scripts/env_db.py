@@ -16,6 +16,7 @@ import argparse
 import importlib
 import json
 import os
+import re
 import subprocess
 import sys
 
@@ -175,11 +176,21 @@ def show_machine(db, name):
     print('  주의:')
     for q in m.get('quirks', []):
         print(f'    - {q}')
+    # ★머신별 치환 — 전역 recipes 를 그대로 찍으면 kgy 인데 v100 에서 긁어오라고 하거나(fetch),
+    #   conda 머신에 'conda activate mpm' 없는 activate 를 준다 (2026-07-27 감사 M14).
+    ssh = m.get('ssh_alias', name)
+    wd = m.get('workdir', '~/Yonghoon-DEM-DFT')
+    pre = m.get('activate_prefix', '')
     print('\n  명령:')
     for k in ('setup', 'activate', 'doctor', 'run_full', 'run_step4_only', 'run_step4_capped',
-              'fetch', 'fetch_step4', 'kill_stuck'):
-        if db['recipes'].get(k):
-            print(f'    {k:18s} {db["recipes"][k]}')
+              'fetch', 'fetch_step4', 'partial_curve', 'kill_stuck'):
+        cmd = db['recipes'].get(k)
+        if not cmd:
+            continue
+        cmd = cmd.replace('{ssh}', ssh).replace('{wd}', wd)
+        if k == 'activate' and pre:
+            cmd = pre + cmd
+        print(f'    {k:18s} {cmd}')
 
 
 def show_pitfalls(db):
@@ -230,15 +241,28 @@ def _selftest(db):
     miss = need_recipes - set(db['recipes'])
     if miss:
         print(f'  {NO} recipes 누락: {miss}'); ok = False
-    # 코드↔DB 정합: solver_env 키가 step4_dyn 에 실제로 존재하는지
+    # 코드↔DB 정합 — ★양방향 (한 방향만 보면 "코드가 DB 보다 앞선" 경우를 놓쳐 '정본' 주장이 깨진다)
+    _KIT_ENV = ('MPM_S4_RINT', 'MPM_S4_DS', 'MPM_NO_PULL')     # 킷/러너 쪽 env — step4_dyn 소스엔 없음
     s4 = os.path.join(ROOT, 'scripts', 'step4_dyn.py')
     if os.path.isfile(s4):
         src = open(s4, encoding='utf-8').read()
-        for k in db['solver_env']:
-            if k.startswith('_') or k in ('MPM_S4_RINT', 'MPM_S4_DS', 'MPM_NO_PULL'):
-                continue                                   # 킷/러너 쪽 env — step4_dyn 소스엔 없음
+        for k in db['solver_env']:                             # ① DB → 코드 (DB 가 낡음)
+            if k.startswith('_') or k in _KIT_ENV:
+                continue
             if k not in src:
                 print(f'  {NO} solver_env.{k} 가 step4_dyn.py 에 없음 (DB 낡음)'); ok = False
+        code_keys = set(re.findall(r'MPM_S4_[A-Z0-9_]+', src))  # ② 코드 → DB (코드가 앞섬)
+        miss = sorted(code_keys - set(db['solver_env']) - set(_KIT_ENV))
+        if miss:
+            print(f'  {NO} step4_dyn.py 에 있으나 DB 에 없는 노브: {miss} (DB 보강 필요)'); ok = False
+    # 브랜치 문자열이 여러 곳에 하드코딩 — DB 정본과 어긋나면 doctor 가 틀린 checkout 을 지시한다
+    br = db['_meta'].get('branch', '')
+    for rel in ('scripts/setup_gpu_server.sh', 'webapp/templates/single.html'):
+        p = os.path.join(ROOT, rel)
+        if os.path.isfile(p) and br and br not in open(p, encoding='utf-8', errors='replace').read():
+            print(f'  {NO} _meta.branch({br}) 가 {rel} 에 없음 (브랜치 표기 불일치)'); ok = False
+    if br and br not in db['recipes'].get('setup', ''):
+        print(f'  {NO} _meta.branch 가 recipes.setup URL 과 불일치'); ok = False
     # 앵커 생성 명령이 실제 스크립트를 가리키는지
     for rel, meta in db['anchors'].items():
         g = meta.get('generate', '')

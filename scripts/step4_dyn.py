@@ -193,31 +193,54 @@ def _mirror_levels(ml, xp, dtype=np.float64):
 
         def _vec(v):
             return xp.asarray(v, dtype)
+    # ★레벨별 ω = (2/3)/ρ(D⁻¹A) — pyamg 의 setup_jacobi(withrho=True) 기본과 동일 정규화.
+    #   생짜 ω=2/3 은 (a) pyamg 계층과 **다른 연산자**(rel-diff 0.6 실측)라 CPU 폴백·자가강등과
+    #   불일치하고, (b) ρ>3 인 레벨에서 전처리가 **부정부호**가 되어 CG 전제가 깨진다
+    #   (near-null-B 계층 실측 ρ=2.98 = 한계 3 의 99.3%).  2026-07-27 적대검증 H1/H2.
+    from pyamg.relaxation.smoothing import rho_D_inv_A as _rho
     levels = []
     for lv in ml.levels[:-1]:
         A = lv.A.tocsr()
         d = A.diagonal()
+        try:                                                  # ★lv.A 원본에 물어야 pyamg 가 setup 때
+            _om = (2.0 / 3.0) / float(_rho(lv.A))             #   캐시한 ρ(A.rho_D_inv)를 그대로 재사용
+        except Exception:                                     #   (사본에 물으면 근사 재추정 → 미세 불일치)
+            _om = (2.0 / 3.0) / 2.0                           # 보수적 폴백(ρ≈2 가정 → SPD 안전측)
         levels.append({'A': _csr(A), 'P': _csr(lv.P.tocsr()), 'R': _csr(lv.P.T.tocsr()),
-                       'Dinv': _vec(1.0 / np.where(d != 0, d, 1.0))})
-    lu_pair = lu_factor(np.asarray(ml.levels[-1].A.todense(), np.float64))
-    return levels, lu_pair
+                       # 대각 0 행은 Dinv=0 (pyamg jacobi 커널이 그 행을 건너뛰는 것과 정합; L2)
+                       'Dinv': _vec(np.where(d != 0, 1.0 / np.where(d != 0, d, 1.0), 0.0)),
+                       'omega': float(_om)})
+    # ★coarsest: (i) 크기 가드 — B-주입(near-null) 계층은 coarsening 이 정체해 coarsest 가 fine 의
+    #   114% 까지 커진 실측이 있다 → todense() 가 OOM 재발 경로.  (ii) pinv 사용 — 정확-특이 블록
+    #   (i-망 부유 171성분 등)에서 LU 는 NaN 을 내는데 예외가 아니라 자가강등도 안 걸린다.  H3/H4.
+    Ac = ml.levels[-1].A.tocsr()
+    n_c = Ac.shape[0]
+    _NMAX = int(os.environ.get('MPM_S4_GPU_AMG_COARSE_MAX', '4000'))
+    if n_c > _NMAX:
+        raise RuntimeError(f'coarsest {n_c:,} > {_NMAX:,} (dense 해 비현실) — CPU 전처리 폴백')
+    # ★pyamg 가 쓰는 그 coarse_solver 객체를 그대로 재사용 = 수학적으로 동일 + 특이 블록 안전
+    #   (기본 'pinv'.  직접 pinv/LU 를 만들면 미세 불일치(1e-5)가 생기고 LU 는 NaN 위험)
+    coarse = (ml.coarse_solver, Ac)
+    return levels, coarse
 
 
-def _vcycle_matvec(levels, lu_pair, b, xp, omega=2.0 / 3.0, lvl=0):
+def _vcycle_matvec(levels, lu_pair, b, xp, omega=None, lvl=0):
     """대칭 V(1,1): pre ω-Jacobi(x0=0 → x=ωD⁻¹b) → r=b−Ax → R·r 재귀 → x+=P·xc →
     post ω-Jacobi(x += ωD⁻¹(b−Ax)).  R=Pᵀ(SA 대칭) + pre/post 동일 스무더 ⇒ M 대칭
     SPD-호환(CG 요건 — pyamg 기본 GS는 순차라 GPU 부적합, ω-Jacobi로 통일).
-    xp-디스패치 단일 구현 = CPU/GPU 동수학 (클라우드 selftest는 xp=numpy로 수식 검증)."""
-    if lvl == len(levels):                                    # coarsest: CPU dense LU (1회 캐시)
-        from scipy.linalg import lu_solve
+    ω는 레벨별 (2/3)/ρ(D⁻¹A) (= pyamg withrho=True 기본) — _mirror_levels 가 구워둔 값을 쓴다.
+    coarsest 는 pinv (특이 블록 안전).  xp-디스패치 단일 구현 = CPU/GPU 동수학."""
+    if lvl == len(levels):                                    # coarsest: pyamg coarse_solver (CPU)
         bc = b if xp is np else xp.asnumpy(b)
-        xc = lu_solve(lu_pair, np.asarray(bc, np.float64))
+        _cs, _Ac = lu_pair
+        xc = np.asarray(_cs(_Ac, np.asarray(bc, np.float64)), np.float64)
         return xc.astype(b.dtype) if xp is np else xp.asarray(xc, b.dtype)
     lv = levels[lvl]
-    x = omega * lv['Dinv'] * b                                # pre ω-Jacobi (x0=0)
+    om = lv.get('omega', 2.0 / 3.0) if omega is None else omega
+    x = om * lv['Dinv'] * b                                   # pre ω-Jacobi (x0=0)
     r = b - lv['A'] @ x
     x = x + lv['P'] @ _vcycle_matvec(levels, lu_pair, lv['R'] @ r, xp, omega, lvl + 1)
-    return x + omega * lv['Dinv'] * (b - lv['A'] @ x)         # post ω-Jacobi
+    return x + om * lv['Dinv'] * (b - lv['A'] @ x)            # post ω-Jacobi
 
 
 def _gpu_vcycle_wrap(ml, s=None):
@@ -247,7 +270,10 @@ def _gpu_vcycle_wrap(ml, s=None):
                 zg = _vcycle_matvec(levels, lu_pair, rg, cp)
                 if sg is not None:
                     zg = sg * zg
-                return cp.asnumpy(zg).astype(np.float64, copy=False)
+                z_out = cp.asnumpy(zg).astype(np.float64, copy=False)
+                if not np.isfinite(z_out).all():              # NaN/Inf 는 예외가 아니라 자가강등을
+                    raise FloatingPointError('V-cycle 결과 비유한')   # 못 타므로 명시적으로 올린다
+                return z_out
             except Exception as e:
                 print(f'    (GPU V-cycle apply 예외: {type(e).__name__} → CPU 전처리 자가 강등)',
                       flush=True)
@@ -648,6 +674,11 @@ class CellSystem:
         #   셀-V ≤2.5µV@2C → 시간전개 안전.  ⚠σ_e-류 수송 메트릭 보고는 uncapped 런으로 (meta 라벨).
         _cap = float(os.environ.get('MPM_S4_CONTRAST_CAP', '0') or 0.0)
         self.contrast_cap = _cap
+        # ★판(집전체/분리막) 링크는 **uncapped** σ 로 — cap 은 벌크 face 컨덕턴스의 조건수 완화가
+        #   목적이고, A2 오차예산(σ_eff −7.8%, 셀-V ≤2.5µV)도 벌크 측정이다.  in-place cap 이
+        #   sig_e 를 깎으면 gB(집전체 접촉)까지 ×1/50 되어 **직렬 접촉저항 ×50** 이라는 담보 없는
+        #   물리 변경이 생긴다 (2026-07-27 적대검증 M1: Σg_B 3.6e-1 → 7.2e-3 실측).
+        sig_e_plate, sig_i_plate = sig_e.copy(), sig_i.copy()
         # ★cap은 e-망 전용 (리뷰 V1 medium): near-null 병리·A2 셀-V≤2.5µV 근거 모두 e-망 실측 —
         #   i-망은 이온 옴강하가 지배 분극(2C 84-90mV)이라 cap 시 0.5mV급 왜곡 재현됨(코팅 프리셋
         #   LZO/LNO 저-σ_i 층이 200× 초과 가능).  i-망 고대비는 cap 없이 경고만.
@@ -744,13 +775,13 @@ class CellSystem:
         ii, jj = np.where(bot_e); kk = k_first[bot_e]
         Ae = idx_e[ii, jj, kk]; m = Ae >= 0
         dist = np.maximum(np.abs(zc[kk[m]] - z_b), 0.5 * vox_um) * 1e-6
-        self.gB = sig_e[ii[m], jj[m], kk[m]] * vox_m * vox_m / dist
+        self.gB = sig_e_plate[ii[m], jj[m], kk[m]] * vox_m * vox_m / dist   # uncapped (M1)
         self.aB = Ae[m]
         np.add.at(diag0, self.aB, self.gB)
         ii, jj = np.where(top_i); kk = k_last[top_i]
         Ai = idx_i[ii, jj, kk]; m = Ai >= 0
         dist = np.maximum(np.abs(z_p - zc[kk[m]]), 0.5 * vox_um) * 1e-6
-        self.gT = sig_i[ii[m], jj[m], kk[m]] * vox_m * vox_m / dist
+        self.gT = sig_i_plate[ii[m], jj[m], kk[m]] * vox_m * vox_m / dist   # uncapped (M1)
         self.aT = Ai[m] + self.n_e
         np.add.at(diag0, self.aT, self.gT)                  # 접지(φ=0): diag-only
         # BV 면 목록 (+면 중점 µm 좌표 — 뷰어 표면-반응 필드용; 격자 프레임 = payload µm 프레임)
@@ -855,7 +886,11 @@ class CellSystem:
         수렴 = max(노드별 잔차 ∞-norm, e-망 집계잔차 |Σ_e F| = |I_in−ΣI_f|) / i_scale."""
         Fv, I_f, eta_s = self.residual(phi, U_f, i0_f, kin, V_app)
         scale = max(abs(i_scale), 1e-12)
-        self._ew_f2_prev = None; self._ew_eta_prev = None    # ★EW inexact-Newton 상태 (콜마다 초기화)
+        # ★EW 이력은 **콜 사이에 보존** — newton() 은 정전류 시컨트(Illinois) V-평가마다 불리므로
+        #   콜마다 리셋하면 거의 수렴한 계도 매번 η=0.1 부터 다시 조여 총 CG 일량이 오히려 늘었다
+        #   (토이 실측 +33% iteration; 2026-07-27 적대검증 M2).  인스턴스 속성으로 유지.
+        if not hasattr(self, '_ew_f2_prev'):
+            self._ew_f2_prev = None; self._ew_eta_prev = None
 
         def _err(F, phi_ref):
             # 집계 노이즈 바닥: 공식(ε·Σ|entries|)은 코히런트 상한이라 실전에서 ~10³× 후함
@@ -891,19 +926,29 @@ class CellSystem:
             else:
                 stall = 0
             best = min(best, r)
-            # ★EW inexact-Newton (choice-2 γ=0.9,α=2; MPM_S4_EW=0 → 구식 고정 rtol=1e-5).
+            # ★EW inexact-Newton (choice-2 γ=0.9,α=2).  ⚠2026-07-27 기본 ON→OFF 로 강등:
+            #   측정 2건 모두 **일량이 늘었다** (독립 적대검증 총 CG it +33%, 자체 토이 +7% it /
+            #   콜 +50%; 해는 불변 |ΔV|~6e-10).  기전: 깊은 보정해의 목표는 atol_cg(절대바닥)가
+            #   정하므로 tgt=max(η‖F‖, atol)에서 후기엔 atol 이 이겨 **EW 가 비싼 솔브를 못 느슨하게
+            #   한다**; 대신 느슨한 초기 스텝이 Armijo 에 거부돼 tight 재솔브를 부른다.  이득 근거가
+            #   생기기 전(V100 A/B)까지 opt-in: MPM_S4_EW=1 로 켠다.
             #   η_min=1e-5=구식 → 느슨화 전용(솔브당 CG 일량 ≤ 현행).  atol_cg 불변 → tgt=max(η‖F‖,atol):
             #   교정-바닥/심층(deep)/stall/Armijo 로직 전부 무수정.  해 논거: 최종 수렴판정은 매 반복
             #   '정확 재계산' F 기준(tol_rel 동일) — EW는 중간 보정해 정밀도만 조절.
             f2_cur = float(np.linalg.norm(Fv))
-            _ew = os.environ.get('MPM_S4_EW', '1') != '0'
+            _ew = os.environ.get('MPM_S4_EW', '0') == '1'   # ★기본 OFF (근거: 아래 주석)
             if _ew:
-                eta = 0.1 if self._ew_f2_prev is None else 0.9 * (f2_cur / self._ew_f2_prev) ** 2
+                _ratio = f2_cur / self._ew_f2_prev if self._ew_f2_prev else None
+                #   ratio 폭주(F 가 커진 스텝) 시 ratio² 가 float 범위를 넘길 수 있어 먼저 clip
+                eta = 0.1 if _ratio is None else 0.9 * float(np.clip(_ratio, 0.0, 1e3)) ** 2
                 if self._ew_eta_prev is not None and 0.9 * self._ew_eta_prev ** 2 > 0.1:
                     eta = max(eta, 0.9 * self._ew_eta_prev ** 2)          # 급조임 진동 safeguard
                 eta = max(eta, min(0.1, 0.5 * tol_rel * scale / max(f2_cur, 1e-300)))   # over-solve 방지
-                _eta_raw = eta                               # ★클립 前 η 저장 (리뷰 V1: 클립 후 저장은
-                rtol_cg = float(np.clip(eta, 1e-5, 0.1))     #   0.9·0.1²=0.009<0.1이라 safeguard 영구 dead)
+                rtol_cg = float(np.clip(eta, 1e-5, 0.1))
+                # ★safeguard 비교는 **클립된** η 로 (Kelley 표준).  클립-전 raw η 저장은 (a) 표준 이탈
+                #   이고 (b) 이력이 콜 사이에 보존되면 raw² 가 오버플로한다(실측).  η_max=0.1 이라
+                #   0.9·0.1²=0.009<0.1 → safeguard 는 현 상한에선 비활성 = 무해한 dead branch.
+                _eta_raw = rtol_cg
             else:
                 _eta_raw = None
                 rtol_cg = 1e-5
@@ -1767,7 +1812,7 @@ def _selftest_solver():
         # ---- S3: EW inexact-Newton on/off 최종해 동등 + η 범위 + tight-재솔브 분기 ----
         sid3, pid3, vox3 = _build_sandwich(nxy=4, nz=8)
         se3 = np.array([0., 1., 0., 0., 0., 0., 0.])
-        _env('MPM_S4_EW', None)                              # 기본 ON
+        _env('MPM_S4_EW', '1')                               # ★기본은 OFF(opt-in) → 테스트는 명시 ON
         sysE = CellSystem(sid3, se3, sig_i, pid3, 1, vox3, z_top_um=8 * 0.5, z_bot_um=0.0)
         outE = simulate(sysE, ocp, r_p, 1e-13, kin, c_rate=0.2, nr=15, v_min=2.8, t_max=400.0,
                         dx_max=0.03, dt_init=2.0, dt_max=300.0, verbose=False)
@@ -1798,6 +1843,7 @@ def _selftest_solver():
                 return np.random.default_rng(1).standard_normal(L.shape[0]) * 1e3, 0
             return real_cg(L, b, **kw)
 
+        _env('MPM_S4_EW', '1')                               # tight-재솔브는 EW 경로 전용 분기
         sysT = CellSystem(sid3, se3, sig_i, pid3, 1, vox3, z_top_um=8 * 0.5, z_bot_um=0.0)
         U0 = float(ocp.U(ocp.x0))
         U_fT = np.full(sysT.n_bv, U0)
@@ -1848,10 +1894,18 @@ def _selftest_solver():
             xv, iv = _cg_run(LinearOperator((N4, N4), matvec=lambda r: _vcycle_matvec(lv4, lu4, r, np)))
             xj, ij = _cg_run(sparse.diags(1.0 / A4.diagonal()))
             rel = float(np.linalg.norm(xv - xj) / np.linalg.norm(xj))   # (iii) 전처리 해-불변
-            s4a = sym < 1e-10 and red < 0.9 and iv == 0 and ij == 0 and rel < 1e-8
+            # (iv) ★pyamg 대조 — 미러가 CPU 폴백/자가강등과 **같은 연산자**인지 (2026-07-27 H1:
+            #      ω/ρ 정규화를 빠뜨려 rel-diff 0.6 이던 회귀를 이 assert 가 잡는다)
+            _zp = ml4.aspreconditioner(cycle='V').matvec(b4)
+            d_py = float(np.linalg.norm(x1 - _zp) / max(np.linalg.norm(_zp), 1e-30))
+            # (v) SPD — ω>2/ρ 면 전처리가 부정부호가 되어 CG 전제가 깨진다 (H2)
+            _Mf = np.column_stack([_vcycle_matvec(lv4, lu4, e, np) for e in np.eye(N4)])
+            _emin = float(np.linalg.eigvalsh((_Mf + _Mf.T) / 2).min())
+            s4a = (sym < 1e-10 and red < 0.9 and iv == 0 and ij == 0 and rel < 1e-8
+                   and d_py < 1e-10 and _emin > 0)
             ok &= s4a
-            print(f'solver S4a V-cycle 동수학 (대칭 {sym:.1e}, 1-apply resid {red:.2f}, '
-                  f'CG해 Δ {rel:.1e}): {"OK" if s4a else "FAIL"}')
+            print(f'solver S4a V-cycle 동수학 (대칭 {sym:.1e}, pyamg Δ {d_py:.1e}, SPD λmin {_emin:.1e}, '
+                  f'1-apply resid {red:.2f}, CG해 Δ {rel:.1e}): {"OK" if s4a else "FAIL"}')
         try:                                                 # (iv) GPU 게이트: cupy 부재 → False 무해
             import cupy                                      # noqa: F401
             _has_cupy = True
