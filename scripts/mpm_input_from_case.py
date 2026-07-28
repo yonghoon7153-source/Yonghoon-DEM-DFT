@@ -118,8 +118,9 @@ def main():
     ap.add_argument('--step4-sched', default='',
                     help='★Zive-style 충방전 스케줄 (JSON) — 지정 시 crates/charge 대신 순서대로 실행. '
                          '형식 [{"k":"c|d","r":rate,"v":vlim,"i":icut,"n":cyc}]: k=c충전CCCV/d방전, '
-                         'r=C-rate, v=컷오프(충전 v_max/방전 v_min), i=CV종지(충전만), n=사이클번호(R_int(N) 태그·메타). '
-                         'charge-first, per-step 컷오프.  각 스텝=독립 STEP4 1런 (v1: chaining 없음).')
+                         'r=C-rate, v=컷오프(충전 v_max/방전 v_min), i=CV종지(충전은 기본, 방전은 지정 시 '
+                         '방전-CCCV), t=시간제한[분](--t-max, GITT 펄스), n=사이클번호(R_int(N) 태그·메타). '
+                         'charge-first, per-step 컷오프.  기본 = v1 독립런; --step4-chain 로 연속 사이클(상태 전달).')
     ap.add_argument('--step4-vmin', type=float, default=3.0,
                     help='STEP4 방전 컷오프 전압 [V vs Li] (기본 3.0; 실험 2.5~4.25면 2.5).')
     ap.add_argument('--step4-vmax', type=float, default=4.5,
@@ -130,6 +131,10 @@ def main():
                     help='STEP4 e-망 σ-대비 상한(MPM_S4_CONTRAST_CAP 기본값, 0=OFF).  near-null 수렴정체 '
                          '완화용: 200 → CG iter ×5.2 실측(docs/step4_bottleneck_analysis_20260727.md) 이나 '
                          'σ_eff −7.8%% → σ-메트릭 보고는 uncapped 런으로.  런타임 env 가 이 기본값을 override.')
+    ap.add_argument('--step4-chain', action='store_true',
+                    help='★v2 chaining: 스케줄을 연속 사이클로 실행 — 각 스텝이 직전 스텝 끝 셸-SOC '
+                         '상태(--init-state/--save-state)에서 시작하고 Rest 는 실제 I=0 완화 런'
+                         '(REST-LOCAL).  미지정 = 기존 v1 독립런 (bitwise 불변).  --step4-sched 전용.')
     ap.add_argument('--step4-x0', type=float, default=None,
                     help='STEP4 방전창 시작 stoich(충전끝/저리튬) 오버라이드 — 기본 None=params_json(0.2638).')
     ap.add_argument('--step4-x100', type=float, default=0.9084,
@@ -247,8 +252,11 @@ def main():
                     ap.error(f'step {i}: Loop 블록 [{_to}..{i}]에 충전/방전 스텝 없음')
                 s4_sched.append({'k': 'l', 'to': _to, 'n': _ln})
                 continue
-            if k == 'r':                                    # rest(완화 I=0) — v1 독립런서 무동작(프로토콜 표시만)
-                s4_sched.append({'k': 'r', 't': float(st.get('t', 1.0)), 'n': int(st.get('n', 1))})
+            if k == 'r':                                    # rest(완화 I=0) — 체인 모드면 실제 I=0 확산 완화 런
+                _tr = float(st.get('t', 1.0))
+                if not (0.05 <= _tr <= 1440):
+                    ap.error(f'step {i}: rest t(분)는 0.05~1440 (got {_tr})')
+                s4_sched.append({'k': 'r', 't': _tr, 'n': int(st.get('n', 1))})
                 continue
             try:
                 r = float(st['r'])
@@ -272,6 +280,16 @@ def main():
                      'n': int(st.get('n', 1))}
             if k == 'c':
                 entry['i'] = float(st.get('i', a.step4_icut))
+            elif 'i' in st:                                 # ★방전 CV 홀드 (Zive 방전-CV): d + i → CC-CV@v_min
+                _ic = float(st['i'])
+                if not (0.01 <= _ic <= 2.0):
+                    ap.error(f'step {i}: CV 종지 |I| 는 0.01~2.0 C (got {_ic})')
+                entry['i'] = _ic
+            if 't' in st:                                   # ★스텝 시간제한 [분] → --t-max (GITT 펄스 등)
+                _tm = float(st['t'])
+                if not (0.05 <= _tm <= 1440):
+                    ap.error(f'step {i}: t(분)는 0.05~1440 (got {_tm})')
+                entry['t'] = _tm
             s4_sched.append(entry)
 
     atoms = os.path.join(a.results, 'atoms.csv')
@@ -476,6 +494,7 @@ def main():
             'press_gpa': press_gpa, 'target_porosity': tgt,
             'lateral_box': box_x, 'mpm_n_grid': n_grid_mpm, 'mpm_est_points': est_pts,
             'step4_crates': s4_rates, 'step4_charge_crates': s4_chg,
+            'step4_chain': bool(a.step4_chain),
             'step4_r_int_ohm_cm2': a.step4_r_int,
             'step4_am_electro_split': (
                 None if a.step4_ds_poly is None and a.step4_i0_poly is None
@@ -688,36 +707,76 @@ def main():
         #   → 프로토콜 반복이지 상태-체이닝 열화 사이클 아님(그건 v2 chaining/R_int(N) 문헌투영 몫) —
         #   cyc 태그는 R_int(N) 축 라벨.  per-step 컷오프(V/CV-I) 달성 = 다음 스텝 = "조건 달성시 next".
         _sched_loop = ''
+        if a.step4_chain and not s4_sched:
+            raise SystemExit('--step4-chain 은 --step4-sched 전용 (crates/charge 목록은 독립 '
+                             'rate-스크리닝 규약 — 체인할 순서가 없음)')
         s4_sched_flat = expand_sched(s4_sched) if s4_sched else []
         if s4_sched:
+            # ★v2 chaining (--step4-chain): 각 스텝이 직전 스텝의 --save-state 셸-SOC 를 --init-state 로
+            #   받아 연속 사이클이 됨 (Loop cyc2 도 cyc1 끝 상태에서 = 진짜 반복 사이클).  Rest 는 실제
+            #   I=0 완화 런(REST-LOCAL, step4_dyn --rest).  스텝 실패 → save-state 미생성 → 다음 체인
+            #   스텝은 존재가드로 SKIP(침묵 평형-재시작 오염 금지; step4_only.sh 로 재개).
+            #   미지정(기본) = 기존 v1 독립런 방출 bitwise 불변.
             _sl = []
+            _prev_sv = ''
             for _i, _cyc, _st in s4_sched_flat:
-                if _st['k'] == 'r':                          # rest = 프로토콜 표시 (v1 독립런 → 모델 무동작)
-                    _sl.append(f'  echo "[run_mpm] STEP4 스케줄[{_i}]cyc{_cyc} Rest {_st["t"]:g}min '
-                               f'— v1 독립런: 모델 무동작(프로토콜 표시; 완화 모델은 v2 chaining)"')
+                _sv = f's4state_{_i:02d}n{_cyc}.npz'
+                _ci = f' --init-state "{_prev_sv}"' if (a.step4_chain and _prev_sv) else ''
+                _co = f' --save-state "{_sv}"' if a.step4_chain else ''
+                _gp = (f'  if [ ! -f "{_prev_sv}" ]; then echo "[run_mpm] 스케줄[{_i}]cyc{_cyc} SKIP '
+                       f'— 체인 끊김({_prev_sv} 없음; step4_only.sh 로 재개)"; else\n'
+                       if (a.step4_chain and _prev_sv) else '')
+                _gs = '\n  fi' if (a.step4_chain and _prev_sv) else ''
+                if _st['k'] == 'r':
+                    if a.step4_chain and _prev_sv:           # 실제 I=0 완화 (망솔브 없음 — 수 초, CPU)
+                        _sl.append(
+                            f'  echo "[run_mpm] STEP4 스케줄[{_i}]cyc{_cyc} Rest {_st["t"]:g}min '
+                            f'(I=0 완화 REST-LOCAL, 체인) $(date)"\n'
+                            + _gp
+                            + f'  python3 "$SCR/step4_dyn.py" --grid step4_grid.npz \\\n'
+                              f'    --ocp-csv "$AP/ocp_nmc811_chen2020.csv" --params-json "$AP/params_nmc811_chen2020.json" \\\n'
+                              f'    --rest --t-rest-min {_st["t"]:g}{_win}{_es}{_ci}{_co} \\\n'
+                              f'    --out "step4_sched{_i:02d}n{_cyc}_rest.npz" \\\n'
+                              f'    || echo "[run_mpm] 스케줄[{_i}]cyc{_cyc} Rest FAILED — 다음 스텝 계속"'
+                            + _gs)
+                        _prev_sv = _sv
+                    else:                                    # 체인 OFF(v1) 또는 체인 시작 전 rest = 평형이라 무동작
+                        _sl.append(f'  echo "[run_mpm] STEP4 스케줄[{_i}]cyc{_cyc} Rest {_st["t"]:g}min '
+                                   + ('— 체인 시작 전(평형 상태) = 무동작(표시)"' if a.step4_chain else
+                                      '— v1 독립런: 모델 무동작(프로토콜 표시; 완화 모델은 v2 chaining)"'))
                     continue
                 _cr = f"{_st['r']:g}"
                 _o = f"step4_sched{_i:02d}n{_cyc}"
+                _tmx = f' --t-max {_st["t"] * 60:g}' if 't' in _st else ''
+                _tlab = f' t≤{_st["t"]:g}m' if 't' in _st else ''
                 if _st['k'] == 'c':
                     _pc = f"--v-min {a.step4_vmin:g} --v-max {_st['v']:g}{_win}"
                     _sl.append(
                         f'  echo "[run_mpm] STEP4 스케줄[{_i}] 충전 {_cr}C '
-                        f'(CV@{_st["v"]:g}V I<{_st["i"]:g}C cyc{_cyc}{_rlab}{_eslab}) $(date)"\n'
-                        f'  python3 "$SCR/step4_dyn.py" --grid step4_grid.npz \\\n'
-                        f'    --ocp-csv "$AP/ocp_nmc811_chen2020.csv" --params-json "$AP/params_nmc811_chen2020.json" \\\n'
-                        f'    --c-rate {_cr} --charge --cv-hold {_pc} --i-cut-frac {_st["i"]:g}{_rint}{_es} --gpu \\\n'
-                        f'    --out "{_o}_chg_c{_cr}{_rtag}{_estag}.npz" --viz-out "{_o}_viz_chg_c{_cr}{_rtag}{_estag}.json" \\\n'
-                        f'    || echo "[run_mpm] 스케줄[{_i}]cyc{_cyc} 충전 {_cr}C FAILED — 다음 스텝 계속"')
+                        f'(CV@{_st["v"]:g}V I<{_st["i"]:g}C cyc{_cyc}{_tlab}{_rlab}{_eslab}) $(date)"\n'
+                        + _gp
+                        + f'  python3 "$SCR/step4_dyn.py" --grid step4_grid.npz \\\n'
+                          f'    --ocp-csv "$AP/ocp_nmc811_chen2020.csv" --params-json "$AP/params_nmc811_chen2020.json" \\\n'
+                          f'    --c-rate {_cr} --charge --cv-hold {_pc} --i-cut-frac {_st["i"]:g}{_tmx}{_rint}{_es}{_ci}{_co} --gpu \\\n'
+                          f'    --out "{_o}_chg_c{_cr}{_rtag}{_estag}.npz" --viz-out "{_o}_viz_chg_c{_cr}{_rtag}{_estag}.json" \\\n'
+                          f'    || echo "[run_mpm] 스케줄[{_i}]cyc{_cyc} 충전 {_cr}C FAILED — 다음 스텝 계속"'
+                        + _gs)
                 else:
                     _pc = f"--v-min {_st['v']:g} --v-max {a.step4_vmax:g}{_win}"
+                    _dcv = f' --cv-hold --i-cut-frac {_st["i"]:g}' if 'i' in _st else ''
+                    _dclab = f' CV@{_st["v"]:g}V I<{_st["i"]:g}C' if 'i' in _st else ''
                     _sl.append(
                         f'  echo "[run_mpm] STEP4 스케줄[{_i}] 방전 {_cr}C '
-                        f'(>={_st["v"]:g}V cyc{_cyc}{_rlab}{_eslab}) $(date)"\n'
-                        f'  python3 "$SCR/step4_dyn.py" --grid step4_grid.npz \\\n'
-                        f'    --ocp-csv "$AP/ocp_nmc811_chen2020.csv" --params-json "$AP/params_nmc811_chen2020.json" \\\n'
-                        f'    --c-rate {_cr} {_pc}{_rint}{_es} --gpu \\\n'
-                        f'    --out "{_o}_c{_cr}{_rtag}{_estag}.npz" --viz-out "{_o}_viz_c{_cr}{_rtag}{_estag}.json" \\\n'
-                        f'    || echo "[run_mpm] 스케줄[{_i}]cyc{_cyc} 방전 {_cr}C FAILED — 다음 스텝 계속"')
+                        f'(>={_st["v"]:g}V{_dclab} cyc{_cyc}{_tlab}{_rlab}{_eslab}) $(date)"\n'
+                        + _gp
+                        + f'  python3 "$SCR/step4_dyn.py" --grid step4_grid.npz \\\n'
+                          f'    --ocp-csv "$AP/ocp_nmc811_chen2020.csv" --params-json "$AP/params_nmc811_chen2020.json" \\\n'
+                          f'    --c-rate {_cr} {_pc}{_dcv}{_tmx}{_rint}{_es}{_ci}{_co} --gpu \\\n'
+                          f'    --out "{_o}_c{_cr}{_rtag}{_estag}.npz" --viz-out "{_o}_viz_c{_cr}{_rtag}{_estag}.json" \\\n'
+                          f'    || echo "[run_mpm] 스케줄[{_i}]cyc{_cyc} 방전 {_cr}C FAILED — 다음 스텝 계속"'
+                        + _gs)
+                if a.step4_chain:
+                    _prev_sv = _sv
             _sched_loop = '\n'.join(_sl) + '\n'
         _run_loops = _sched_loop if s4_sched else (_dis_loop + _chg_loop)
         _n_base = sum(1 for s in (s4_sched or []) if s['k'] != 'l')
@@ -726,8 +785,12 @@ def main():
                     + " 순차 (charge-first, per-step 컷오프).")
                    if s4_sched else
                    f"# 3) STEP4-v2 시간전개 — 방전({_dis or '없음'}) → 충전 CCCV({_chg or '없음'}) 순차.")
+        _indep_note = ('★v2 chaining ON: 각 스텝 = 직전 스텝 끝 셸-SOC에서 시작(연속 사이클, Loop 반복도 '
+                       '상태 누적); Rest = 실제 I=0 완화(REST-LOCAL); 실패 뒤 체인 스텝은 SKIP'
+                       if a.step4_chain else
+                       '각 런은 독립 초기상태 (방전 = x0 충전상태에서, 충전 = x100 방전상태에서 시작)')
         s4_body = f'''{_s4head}
-#    각 런은 독립 초기상태 (방전 = x0 충전상태에서, 충전 = x100 방전상태에서 시작).  그리드는 STEP 2가 export.
+#    {_indep_note}.  그리드는 STEP 2가 export.
 # ★STEP4 솔버 노브 (2026-07-27 near-null 대수술; docs/step4_bottleneck_analysis_20260727.md)
 #   기본값 = 권장값.  런타임 env 로 override 가능 (예: MPM_S4_CONTRAST_CAP=200 bash step4_only.sh).
 #   prune_float: 집전체·AM 무접촉 부유 e-클러스터 제거 = 정확특이 블록 소거(해-불변, GPU-CG 회생)
@@ -897,7 +960,7 @@ echo "          (오래된 run_* 폴더는 디스크 차면 지워도 됨 — �
         print('  [취성]' + _frac_note)
     print(f'  am_scaffold.csv ({len(am_rows)} AM)  se_scaffold.csv ({len(se_rows)} SE)  '
           f'run_mpm.sh  mpm_input.json  (target_porosity={tgt})'
-          + (f'  step4_only.sh  [★Zive 스케줄 {len(s4_sched)}스텝: '
+          + (f'  step4_only.sh  [★Zive 스케줄{"·⛓연속체인" if a.step4_chain else ""} {len(s4_sched)}스텝: '
              + ' → '.join(('휴%gm' % s['t']) if s['k'] == 'r'
                           else ('↻스텝%d ×%d회' % (s['to'], s['n'])) if s['k'] == 'l'
                           else (('충' if s['k'] == 'c' else '방') + ('%gC' % s['r']))

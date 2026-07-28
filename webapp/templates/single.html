@@ -296,6 +296,7 @@
           </span><br>
           <span style="display:inline-flex;gap:8px;align-items:center;height:26px;flex-wrap:wrap;font-size:0.82em" title="Zive 스마트인터페이스식 스텝 스케줄 — 충전/방전 스텝을 순서대로(charge-first) 정의, per-step rate·컷오프.  지정 시 위 체크박스 대신 스케줄대로 순차 실행.  각 스텝=STEP4 1런.">
             <button type="button" onclick="openSchedModal()" style="padding:2px 10px;background:#1e3a5f;color:#93c5fd;border:1px solid #3b6ea5;border-radius:5px;cursor:pointer">⚙ 스케줄 편집 (Zive식)…</button>
+            <label style="font-weight:400;color:#7dd3fc" title="★v2 chaining — 각 스텝이 직전 스텝 끝 셸-SOC 상태에서 시작하는 진짜 연속 사이클: 충전 CV가 실제 도달한 상태가 다음 방전으로 이어지고, Loop 반복(cyc2..)도 상태가 누적되며, Rest 는 실제 I=0 확산 완화 런(REST-LOCAL)이 됩니다.  체크 해제 = v1 독립런(각 스텝이 평형에서 새로 시작 — rate-스크리닝/완전이완 규약; Loop 반복은 동일 결과 복제).  스케줄 지정 시에만 적용 · zip 에 _chain 태그."><input type="checkbox" id="s4-chain" checked onchange="updateAdditiveGpuCmds()"> ⛓ 연속 사이클(v2)</label>
             <span id="sched-summary" style="color:#7dd3fc"></span>
             <input type="hidden" id="s4-sched-json" value="">
           </span><br>
@@ -327,7 +328,7 @@
               <div style="margin-top:10px;color:#6b7280;font-size:0.92em">
                 <b style="color:#7dd3fc">↻ Loop</b> = 지정 스텝으로 되돌아가 그 블록을 총 N회 반복(Zive "Go to step") — cyc 번호 자동 부여(1..N), 킷 생성 시 평면 전개.
                 per-step 컷오프 달성(충전 ≤v_max·CV종지 |I| / 방전 ≥v_min) = 다음 스텝 진행.
-                cyc = R_int(N) 태그(수명 열화는 R_int(N) 문헌투영 — v1 각 런 독립 초기상태, 상태-체이닝 사이클 아님 = v2 chaining 예정).</div>
+                cyc = R_int(N) 태그.  <b style="color:#7dd3fc">⛓ 연속 사이클(v2)</b> 체크 시 각 스텝이 직전 스텝 끝 셸-SOC에서 시작(상태-체이닝: CV 부분충전·Loop 반복 누적·Rest 실완화 반영); 해제 = v1 독립런(각 스텝 평형 시작, Loop 반복=동일 복제).  방전 스텝에 CV종지(i) 넣으면 방전-CCCV, 스텝에 t(분) 넣으면 시간제한(GITT 펄스) — JSON 편집으로 가능.</div>
             </div>
           </div>
           <span style="display:inline-flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:0.82em">
@@ -664,6 +665,7 @@ function _addVals() {
     s4cap: (document.getElementById('s4-cap') || {}).value || '',
     s4pp: (document.getElementById('s4-pp') || {}).checked ? '1' : '',
     s4sched: (document.getElementById('s4-sched-json') || {}).value || '',
+    s4chain: (document.getElementById('s4-chain') || {}).checked ? '1' : '',
     s4grid: (document.getElementById('s4-gridonly') || {}).checked ? '1' : '',
   };
 }
@@ -847,7 +849,7 @@ function _addExclusiveOK() {
 // (recalcAdditives removed — this panel is recipe-zip-only; σ/porosity analysis lives in the MPM viewer
 //  after the GPU run. The analytic /whatif-additives route is kept server-side but no longer called here.)
 function dlAdditiveZip() {
-  const { vg, sp, pt, sd, mix, coll, vox, s4, s4chg, s4vmin, s4vmax, s4icut, s4rint, s4cap, s4pp, s4sched, s4grid } = _addVals();
+  const { vg, sp, pt, sd, mix, coll, vox, s4, s4chg, s4vmin, s4vmax, s4icut, s4rint, s4cap, s4pp, s4sched, s4chain, s4grid } = _addVals();
   if (vg <= 0 && sp <= 0 && pt <= 0 && sd <= 0) { alert('첨가제를 하나 이상 입력하세요 (wt%).'); return false; }
   if (!_addExclusiveOK()) return false;
   // pristine/cycled는 집전체로 시나리오를 해석하므로 집전체 필요; 숫자(문헌/직접값)는 불필요.
@@ -859,6 +861,7 @@ function dlAdditiveZip() {
   const _ri = s4rint ? `&s4rint=${s4rint}` : '';
   const _cap = s4cap ? `&s4cap=${s4cap}` : '';   // ★STEP4 솔버 σ-대비 cap (near-null 정체 완화)
   const _sched = s4sched ? `&s4sched=${encodeURIComponent(s4sched)}` : '';   // ★Zive 스케줄 (지정 시 체크박스 대신)
+  const _chain = (s4sched && s4chain) ? '&s4chain=1' : '';   // ★v2 chaining — 연속 사이클 (스케줄 전용)
   // ★poly/SC 크기-분리는 STEP4 없어도 유효: STEP3 σ_e 재료(AM_S=10/AM_P=5 mS/cm)를 크기로
   //   분류함 (D_s 분리는 STEP4 실행 시에만 추가로 적용).  → 차단하지 않음 (2026-07-22).
   const _ppc = s4pp ? '&s4pp=1' : '';
@@ -870,7 +873,7 @@ function dlAdditiveZip() {
   const _pp = ['s4dsp', 's4dss', 's4i0p', 's4i0s', 's4split']
     .filter(k => _pq.get(k)).map(k => `&${k}=${encodeURIComponent(_pq.get(k))}`).join('');
   updateAdditiveGpuCmds();   // ★ pressing download generates the gabia upload/run/fetch command card
-  window.location = `/results/${encodeURIComponent('{{ case.id }}')}/mpm-input?vgcf=${vg}&superp=${sp}&ptfe=${pt}&sdcp=${sd}&mixing=${mix}&collector=${coll}&vox=${vox}&step4=${s4}&step4chg=${s4chg}${_cut}${_ri}${_cap}${_sched}${_ppc}${_sg}${_pp}`;
+  window.location = `/results/${encodeURIComponent('{{ case.id }}')}/mpm-input?vgcf=${vg}&superp=${sp}&ptfe=${pt}&sdcp=${sd}&mixing=${mix}&collector=${coll}&vox=${vox}&step4=${s4}&step4chg=${s4chg}${_cut}${_ri}${_cap}${_sched}${_chain}${_ppc}${_sg}${_pp}`;
   return false;
 }
 // recipe string (mirror of backend _add_recipe_str) → zip filename (mirror of the download_name tag)
@@ -880,7 +883,7 @@ function _addRecipeStr(vg, sp, pt, sd = 0) {
 }
 // variant tag (_VGCF-PTFE_1-1_ballmill) + the MPM-lab variant name (caseName + tag).
 function _addTag() {
-  const { vg, sp, pt, sd, mix, vox, s4, s4chg, s4pp, s4sched, s4cap } = _addVals();
+  const { vg, sp, pt, sd, mix, vox, s4, s4chg, s4pp, s4sched, s4cap, s4chain } = _addVals();
   // [A-Za-z0-9._]만 사용하는 자기서술 쌍 형식 (서버 미러) — ':'/'-' 는 다운로드 새니타이즈로
   // 삭제돼 예측명↔실제 파일명이 어긋났음 (VGCFPTFESDCP_2.970.4950.495 사건, 2026-07-17)
   const pairs = [['VGCF', vg], ['SuperP', sp], ['PTFE', pt], ['SDCP', sd]]
@@ -890,11 +893,13 @@ function _addTag() {
   // ★서버(app.py download_name)와 **정확히** 미러해야 한다 (VGCFPTFESDCP 사건 교훈).
   //   서버 규약: 스케줄 지정 시 체크박스 rate 는 태그서 제외하고 '_sched' 를 붙이며,
   //   솔버 cap 은 '_cap<값>' (σ_eff 를 바꾸는 노브라 같은 이름의 두 킷 방지).
-  const st = (s4sched ? '_sched'
+  //   서버 순서 = _sched(_chain) → _cap → _ppds — ★2026-07-28 정정: 옛 클라이언트는 _ppds 를
+  //   _cap 앞에 붙여 cap+ppds 동시 킷의 예측명이 실파일명과 어긋났음 (자동 등록훅 매칭 실패 원인).
+  const st = (s4sched ? '_sched' + (s4chain ? '_chain' : '')
               : (s4 ? '_s4' + s4.split(',').map(r => r + 'C').join('_') : '')
                 + (s4chg ? '_s4chg' + s4chg.split(',').map(r => r + 'C').join('_') : ''))
-           + (s4pp ? '_ppds' : '')                         // poly/SC D_s 프리셋 킷 구별
-           + (s4cap ? '_cap' + s4cap : '');
+           + (s4cap ? '_cap' + s4cap : '')
+           + (s4pp ? '_ppds' : '');                        // poly/SC D_s 프리셋 킷 구별
   return '_' + pairs + '_' + mix + vt + st;
 }
 function _addVariantName() { const t = _addTag(); return t ? `{{ case.name }}${t}` : ''; }

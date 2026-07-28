@@ -76,3 +76,41 @@ t⁺≈1 — 물리적으로 부재) · 이중층 C_dl 없음(시간상수 ms �
 off) · D_s(c) 농도의존 없음(Chen2020 양극도 상수) · 입자균열 진행 없음(Auerbach는 압밀
 스냅샷) · 입자 표면 SOC는 입자당 1D(면별 국소 SOC 없음 — 부분피복은 전면적 균질화).
 v2는 **transport→kinetics→diffusion** 3층까지.
+
+## 7. v2 chaining — 연속 사이클 (2026-07-28)
+
+스케줄(--step4-sched)의 v1 실행은 각 스텝 독립 초기상태(= 모든 Rest 가 사실상 ∞ 극한, Loop
+반복 = 동일 복제)였다.  v2 chaining 은 **셸-SOC 상태 rad.x [n_am, nr] 를 런 사이로 전달**해
+스케줄을 진짜 연속 사이클로 실행한다.
+
+- CLI: `--save-state s.npz`(런 끝 저장; newton_fail 도 저장하되 로더가 거부) /
+  `--init-state s.npz`(같은 베드·같은 --nr·같은 c_max 강제, 입자반경 allclose 대조,
+  newton_fail 상태 거부 — 강제 MPM_S4_CHAIN_FORCE=1) / `--rest --t-rest-min M`(Rest 실물리).
+- 상태 = 농도장뿐.  rad.J 리셋(런 전환 = 전류 불연속 — 새 프로토콜의 첫 솔브가 새 J 결정),
+  φ 재초기화(U0 = U(x̄_loaded) 균일; Newton 2-3회 수렴).  체인 시작 시 노이즈바닥 자가교정은
+  **균일-x̄ 참조평형**으로 잰다 (로드 필드는 비평형 → 진짜 BV 전류가 잔차에 실려 바닥이
+  과대교정되고 경고선·목표가 물러지는 것 방지).
+- Rest = **REST-LOCAL v2.0**: 입자별 zero-flux CN 확산 완화 (질량 정확 보존 — drift 검산 출력).
+  입자간 전하 재분배(I_tot=0 망솔브 = 혼합전위 평활)는 미모델 — **v2.1 훅**.  mono-물성
+  베드에선 입자 상태가 근사 동일해 재분배 ≈ 0.  V 트레이스 = 용량가중 평균 OCP(x_surf)
+  (I=0 표식용 근사, meta 에 명기 §F1).
+- 부기: x_ini = 로드 필드의 부피가중 x̄ → delivered % 는 "전체 창 대비, 실제 시작 기준".
+  run npz 에 x_shell_final [n_am,nr] 상시 포함(감사 + 수동 체인).  meta.chain =
+  {init_state, prev_end, save_state}; viz JSON 에 x_init/chained.
+- 킷(`--step4-chain`, 스케줄 전용, 기본 OFF = v1 방출 **bitwise 불변** 검증): 스텝별
+  s4state_XXnY.npz 체인, Rest 는 실제 --rest 런, 실패 스텝 뒤는 존재가드 SKIP(침묵
+  평형-재시작 오염 금지 — step4_only.sh 로 재개).  **Loop 경계를 넘어 상태 누적** →
+  cyc2 는 cyc1 끝에서 시작 = 진짜 반복 사이클.
+- webapp: 스케줄 옆 "⛓ 연속 사이클(v2)" 체크(기본 ON) → &s4chain=1 → zip `_chain` 태그.
+  (같이 정정: 클라이언트 _addTag 의 _ppds/_cap 순서가 서버와 어긋나던 기존 버그 —
+  cap+ppds 동시 킷의 자동 등록훅 예측명 불일치 원인 — 서버 순서 _sched[_chain]_cap_ppds 로 미러.)
+- 문법 확장: 방전 스텝에 i → 방전-CCCV(CV@v_min, |I|<i·1C 종지) · 스텝에 t(분) → --t-max
+  (GITT 펄스열 구성 가능해짐: 짧은 펄스 + rest 반복 — chaining 이 전제).
+- 검증: selftest chain(1-4)=rest 보존·평탄화 / save-load bitwise+가드 3종 / simulate 연속성 /
+  x_field=None bitwise · CLI e2e(충전 19.8% 전달 → rest ΔV_ocp −21 mV·surf-mean gap
+  0.031→0.009·drift 9e-16 → 방전이 충전끝 x̄ 0.731 에서 시작) · 킷 chain-OFF = 구세대
+  byte-identical · chain-ON bash -n · env_db selftest.
+- v1 독립런의 자리(폐기 아님): rate-capability 스크리닝(각 율 완전이완 시작 규약)은 여전히
+  v1 이 정본 — chaining 은 연속 사이클/프로토콜 충실 재현용.  비교 시 실행규약(_chain 태그)
+  병기 필수.  잔여 훅: v2.1 rest 입자간 재분배(I_tot=0 망솔브) · 조건-루프(용량<X% until —
+  in-run 열화 모델 필요) · B-1 per-cycle 자동배선(N→배수 법칙 앵커 대기).

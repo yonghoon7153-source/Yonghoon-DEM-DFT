@@ -1187,7 +1187,7 @@ class CellSystem:
 def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
              dx_max=0.02, dt_init=1.0, dt_max=120.0, t_max=None, charge=False,
              cv_hold=False, i_cut_frac=0.05, r_int_ohm_cm2=0.0, x_init=None,
-             dudt=None, i0_p=None, n_chk=12, verbose=True):
+             dudt=None, i0_p=None, n_chk=12, x_field=None, verbose=True):
     """CC 방전(기본)/충전 (+cv_hold=True → V-리밋 도달 후 CV 홀드 = CCCV).
     r_int_ohm_cm2: 집전체 실측 R_int 직렬(시나리오 부하, STEP3 규약) — 터미널 V·컷오프에 반영.
     dudt: (x_tab, dUdT_tab) 있으면 Q_rev = Σ I_f·T·dU/dT(x_f) 출력 (관례: I_f = 탈리튬 +).
@@ -1198,12 +1198,21 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
     x_ini = float(x_init) if x_init is not None else (ocp.x0 if not charge else ocp.x100)
     x_end = ocp.x100 if not charge else ocp.x0
     rad = RadialDiffusion(n_am, nr, r_p_m, d_s, ocp.c_max, x_ini)
+    if x_field is not None:                                  # ★v2 chaining: 이전 런 끝 셸-SOC 필드로 시작
+        _xf = np.asarray(x_field, np.float64)
+        if _xf.shape != (n_am, nr):
+            raise ValueError(f'x_field {_xf.shape} ≠ ({n_am}, {nr}) — 같은 베드·같은 nr 로만 체인 가능')
+        if float(_xf.min()) < -1e-6 or float(_xf.max()) > 1.0 + 1e-6:
+            raise ValueError('x_field out of [0,1] — 손상/오염 상태')
+        rad.x[:] = np.clip(_xf, 1e-6, 1.0 - 1e-6)
     if i0_p is not None:
         i0_p = np.asarray(i0_p, np.float64)
         if i0_p.shape != (n_am,) or not np.all(i0_p > 0):
             raise ValueError(f'i0_p must be [{n_am}] > 0 (got shape {i0_p.shape})')
     _i0s = None if i0_p is None else i0_p / kin.i0_ref      # 입자별 진폭 스케일 (균일=1.0 → ×1.0 bitwise 불변)
     V_p = 4.0 / 3.0 * np.pi * np.asarray(r_p_m) ** 3        # [m³] 물리 구부피 (용량 기준)
+    if x_field is not None:                                  # 부기 기준 = 실제 시작 x̄ (체인: 창 끝이 아님)
+        x_ini = float((rad.mean_x() * V_p).sum() / V_p.sum())
     cap_As = F_CONST * ocp.c_max * abs(ocp.x100 - ocp.x0) * V_p.sum()
     I_1C = cap_As / 3600.0
     I_cc = c_rate * I_1C * (1.0 if not charge else -1.0)    # 방전 +(인출)
@@ -1242,7 +1251,9 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
     phi[sys_.iso_idx] = 0.0                                  # 고립 placeholder는 0 고정 (가짜 잔차 방지)
     V_prev = U0                                              # V_app warm start (평형 = OCV)
     # float64 노이즈 바닥 자가교정 (초기상태 = 정확한 평형 → 측정치 = 순수 반올림)
-    _x_s0 = rad.surf_x()
+    # 체인 시작상태는 비평형(입자별 U 상이 → 진짜 BV 전류가 잔차에 실림) — 바닥이 과대교정돼
+    # Newton 경고선/목표가 물러진다.  균일 x̄ 참조평형으로 순수 float64 반올림 바닥만 잰다.
+    _x_s0 = rad.surf_x() if x_field is None else np.full(n_am, x_ini)
     _fp0 = np.clip(sys_.f_pid, 0, n_am - 1)
     _i0v0 = kin.i0(_x_s0) if _i0s is None else kin.i0(_x_s0) * _i0s
     _agg0, _inf0 = sys_.calibrate_floor(phi, ocp.U(_x_s0)[_fp0], _i0v0[_fp0], kin, U0)
@@ -1413,6 +1424,7 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
     else:
         out['q_frac_at_cutoff'] = float(abs(out['x_mean'][-1] - x_ini) / abs(ocp.x100 - ocp.x0))
     out['x_final_per_particle'] = rad.mean_x()
+    out['x_shell_final'] = rad.x.copy()                      # [n_am, nr] float64 — v2 chaining 상태
     out['dead_particle'] = ~has_face
     out['I_1C_A'] = I_1C
     out['end_reason'] = reason
@@ -1428,8 +1440,77 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
                          asr_film=kin.asr, temp_k=kin.T, nr=nr, v_min=v_min, v_max=v_max,
                          cv_hold=bool(cv_hold), r_int_ohm_cm2=r_int_ohm_cm2,
                          c_max=ocp.c_max, x0=ocp.x0, x100=ocp.x100, x_init=x_ini,
+                         chained=bool(x_field is not None),
                          ocp_provenance=ocp.provenance, test_only=ocp.test_only)
     return out
+
+
+# ---------------------------------------------------------------- v2 chaining (런 간 상태 전달)
+_CHAIN_STATE_VER = 'step4-chain-v1'
+
+
+def save_chain_state(path, x_shell, r_p_um, ocp, end_reason, t_end=0.0, note=''):
+    """런 끝 셸-SOC 필드 [n_am, nr] 를 다음 런의 초기상태로 저장 (v2 chaining).
+    상태 = 농도장뿐 — rad.J 는 전달 안 함: 런 전환은 전류 불연속(새 프로토콜의 첫 솔브가 새 J 를
+    정함; rest 는 J=0 시작이 정확).  φ 도 전달 안 함 (Newton 이 2-3회에 수렴 — warm start 불요)."""
+    np.savez_compressed(path, ver=np.bytes_(_CHAIN_STATE_VER),
+                        x_r=np.asarray(x_shell, np.float64),
+                        r_p_um=np.asarray(r_p_um, np.float64),
+                        c_max=float(ocp.c_max), x0=float(ocp.x0), x100=float(ocp.x100),
+                        end_reason=np.bytes_(str(end_reason)), t_end=float(t_end),
+                        note=np.bytes_(str(note)))
+
+
+def load_chain_state(path, n_am, nr, r_p_um, ocp):
+    """체인 상태 로드 + 베드/규약 가드 — 다른 베드·다른 nr·오염 상태의 침묵 체인 금지."""
+    g = np.load(path, allow_pickle=False)
+    ver = bytes(np.asarray(g['ver']).ravel()[0]).decode() if 'ver' in g.files else '?'
+    if ver != _CHAIN_STATE_VER:
+        raise SystemExit(f'--init-state {path}: 상태버전 {ver!r} ≠ {_CHAIN_STATE_VER}')
+    x = np.asarray(g['x_r'], np.float64)
+    if x.shape != (int(n_am), int(nr)):
+        raise SystemExit(f'--init-state {path}: x_r {x.shape} ≠ (n_am={n_am}, nr={nr}) — '
+                         '같은 베드(step4_grid)·같은 --nr 로만 체인 가능')
+    r_s = np.asarray(g['r_p_um'], np.float64)
+    if r_s.shape != x[:, 0].shape or not np.allclose(r_s, np.asarray(r_p_um, np.float64),
+                                                     rtol=1e-6, atol=1e-9):
+        raise SystemExit(f'--init-state {path}: 입자 반경 불일치 — 다른 베드의 상태 (체인 금지)')
+    if abs(float(g['c_max']) - ocp.c_max) > 1e-6 * max(ocp.c_max, 1.0):
+        raise SystemExit(f'--init-state {path}: c_max 불일치 ({float(g["c_max"]):g} vs {ocp.c_max:g})')
+    reason = bytes(np.asarray(g['end_reason']).ravel()[0]).decode()
+    if reason == 'newton_fail' and os.environ.get('MPM_S4_CHAIN_FORCE', '0') != '1':
+        raise SystemExit(f'--init-state {path}: 이전 런이 newton_fail — 오염 상태 체인 거부 '
+                         '(강제: MPM_S4_CHAIN_FORCE=1)')
+    if abs(float(g['x0']) - ocp.x0) > 1e-9 or abs(float(g['x100']) - ocp.x100) > 1e-9:
+        print(f'    ⚠ --init-state: 저장측 창(x0={float(g["x0"]):g}, x100={float(g["x100"]):g}) ≠ '
+              f'현재 창({ocp.x0:g}, {ocp.x100:g}) — 용량 %-축 해석 주의', flush=True)
+    return x, reason
+
+
+def run_rest(rad, ocp, V_p, t_rest_s, dt_s=5.0):
+    """★Rest 실물리 v2.0 (REST-LOCAL): I=0 완화 — 입자별 zero-flux 방사확산만 전개.
+    입자 간 전하 재분배(혼합전위 평활 = I_tot=0 망솔브)는 미모델 [v2.1 훅] — mono-물성 베드에선
+    입자 상태가 근사 동일해 재분배 ≈ 0.  V 트레이스 = 용량가중 평균 OCP(x_surf), 전류 0 표식용
+    근사(§F1: 근사임을 meta 에 명기).  CN 스킴은 J=0 에서 질량 정확 보존 → drift 로 검산."""
+    rad.J[:] = 0.0
+    n = max(int(np.ceil(t_rest_s / max(dt_s, 1e-9))), 1)
+    dt = t_rest_s / n
+    wv = V_p / V_p.sum()
+    xs0 = rad.surf_x()
+    tot0 = float((rad.mean_x() * wv).sum())
+    out = {'t': [0.0], 'V': [float((ocp.U(xs0) * wv).sum())], 'x_mean': [tot0],
+           'x_surf_p50': [float(np.percentile(xs0, 50))],
+           'surf_mean_gap': [float(np.mean(np.abs(xs0 - rad.mean_x())))]}
+    for k in range(n):
+        rad.step(dt)
+        xs = rad.surf_x()
+        out['t'].append((k + 1) * dt)
+        out['V'].append(float((ocp.U(xs) * wv).sum()))
+        out['x_mean'].append(float((rad.mean_x() * wv).sum()))
+        out['x_surf_p50'].append(float(np.percentile(xs, 50)))
+        out['surf_mean_gap'].append(float(np.mean(np.abs(xs - rad.mean_x()))))
+    drift = abs(out['x_mean'][-1] - tot0)
+    return {k: np.asarray(v) for k, v in out.items()}, drift
 
 
 # ---------------------------------------------------------------- selftests
@@ -2019,6 +2100,75 @@ def _selftest_b1():
     return ok
 
 
+def _selftest_chain():
+    """v2 chaining: rest 보존·평탄화 / 상태 save-load 가드 / simulate x_field 연속성 / 미지정=bitwise."""
+    import tempfile
+    ok = True
+    ocp = OCP.synthetic_test()
+    # (1) rest: 질량 보존(CN, J=0) + 표면-평균 gap 감소 + V 트레이스 유한
+    r_um = np.array([2.0, 5.0])
+    rad = RadialDiffusion(2, 15, r_um * 1e-6, 3e-15, ocp.c_max, 0.5)
+    rad.x[0, :] = np.linspace(0.30, 0.70, 15)                # 인위 구배 (충전 직후 흉내)
+    rad.x[1, :] = np.linspace(0.60, 0.40, 15)
+    V_p = 4.0 / 3.0 * np.pi * (r_um * 1e-6) ** 3
+    ro, drift = run_rest(rad, ocp, V_p, 600.0, dt_s=2.0)
+    ok1 = (drift < 1e-12 and ro['surf_mean_gap'][-1] < 0.7 * ro['surf_mean_gap'][0]
+           and np.all(np.isfinite(ro['V'])))
+    ok &= ok1
+    print(f'  chain (1) rest: drift {drift:.1e}, surf-mean gap {ro["surf_mean_gap"][0]:.4f}→'
+          f'{ro["surf_mean_gap"][-1]:.4f}  {"OK" if ok1 else "FAIL"}')
+    with tempfile.TemporaryDirectory() as td:
+        # (2) save→load 라운드트립 bitwise + 가드 3종 (nr / 반경=다른 베드 / newton_fail 오염)
+        sp = os.path.join(td, 's.npz')
+        save_chain_state(sp, rad.x, r_um, ocp, 'soc_end', t_end=600.0)
+        xb, rsn = load_chain_state(sp, 2, 15, r_um, ocp)
+        ok2 = bool(np.array_equal(xb, rad.x) and rsn == 'soc_end')
+        for bad_args in ((2, 20, r_um), (2, 15, r_um * 1.5)):
+            try:
+                load_chain_state(sp, *bad_args, ocp); ok2 = False
+            except SystemExit:
+                pass
+        sp2 = os.path.join(td, 'bad.npz')
+        save_chain_state(sp2, rad.x, r_um, ocp, 'newton_fail')
+        try:
+            load_chain_state(sp2, 2, 15, r_um, ocp); ok2 = False
+        except SystemExit:
+            pass
+        ok &= ok2
+        print(f'  chain (2) 상태 save/load bitwise + 가드(nr·타베드·newton_fail): {"OK" if ok2 else "FAIL"}')
+    # (3) simulate 연속성: 부분충전 끝 셸필드 → 방전이 그 x̄에서 시작 (독립런=x0 시작과 구별)
+    sid, pid, vox = _build_sandwich(nxy=4, nz=8)
+    sig_e = np.array([0., 1., 0., 0., 0., 0., 0.])
+    sig_i = np.array([0., 0., 0., 0., 0., 0., 2.])
+    r_p = np.array([10.0e-6])
+    kin = Kinetics(5.0)
+    sysm_a = CellSystem(sid, sig_e, sig_i, pid, 1, vox, z_top_um=8 * 0.5, z_bot_um=0.0)
+    out_c = simulate(sysm_a, ocp, r_p, 1e-13, kin, c_rate=1.0, nr=15, v_min=2.8, v_max=3.9,
+                     charge=True, t_max=300.0, dx_max=0.03, dt_init=2.0, dt_max=60.0, verbose=False)
+    sysm_b = CellSystem(sid, sig_e, sig_i, pid, 1, vox, z_top_um=8 * 0.5, z_bot_um=0.0)
+    out_d = simulate(sysm_b, ocp, r_p, 1e-13, kin, c_rate=0.5, nr=15, v_min=2.8, t_max=100.0,
+                     x_field=out_c['x_shell_final'], dx_max=0.03, dt_init=2.0, dt_max=60.0,
+                     verbose=False)
+    x_start, x_chg_end = float(out_d['x_mean'][0]), float(out_c['x_mean'][-1])
+    ok3 = abs(x_start - x_chg_end) < 1e-9 and abs(x_start - ocp.x0) > 0.02
+    ok &= ok3
+    print(f'  chain (3) 연속성: 충전끝 x̄={x_chg_end:.4f} → 방전시작 x̄={x_start:.4f} '
+          f'(독립이면 {ocp.x0:g})  {"OK" if ok3 else "FAIL"}')
+    # (4) x_field 미지정 = 기존 경로 bitwise (회귀 가드)
+    sysm_c = CellSystem(sid, sig_e, sig_i, pid, 1, vox, z_top_um=8 * 0.5, z_bot_um=0.0)
+    sysm_d = CellSystem(sid, sig_e, sig_i, pid, 1, vox, z_top_um=8 * 0.5, z_bot_um=0.0)
+    o_ref = simulate(sysm_c, ocp, r_p, 1e-13, kin, c_rate=0.5, nr=15, v_min=2.8, t_max=100.0,
+                     dx_max=0.03, dt_init=2.0, dt_max=60.0, verbose=False)
+    o_non = simulate(sysm_d, ocp, r_p, 1e-13, kin, c_rate=0.5, nr=15, v_min=2.8, t_max=100.0,
+                     x_field=None, dx_max=0.03, dt_init=2.0, dt_max=60.0, verbose=False)
+    ok4 = bool(np.array_equal(o_ref['V'], o_non['V'])
+               and np.array_equal(o_ref['x_mean'], o_non['x_mean']))
+    ok &= ok4
+    print(f'  chain (4) x_field=None ≡ 기존 경로 bitwise: {"OK" if ok4 else "FAIL"}')
+    print(f'  chain selftest: {"PASS" if ok else "FAIL"}')
+    return ok
+
+
 # ---------------------------------------------------------------- CLI
 def main():
     ap = argparse.ArgumentParser(description='STEP4-v2 galvanostatic/CV voxel-DFN (SSB)')
@@ -2082,6 +2232,16 @@ def main():
                     help='집전체 실측 R_int 직렬 [Ω·cm²] (STEP3 시나리오 규약; 46=DBE)')
     ap.add_argument('--temp-k', type=float, default=298.15)
     ap.add_argument('--x-init', type=float, default=None, help='초기 stoich (기본: 창 끝)')
+    ap.add_argument('--init-state', default='',
+                    help='★v2 chaining: 이전 런의 --save-state npz 셸-SOC 로 시작 (같은 베드·같은 '
+                         '--nr 강제, newton_fail 상태 거부).  충·방·rest 공통.  미지정 = 기존 독립 '
+                         '초기상태 (bitwise 불변).  --x-init 과 동시 지정 불가.')
+    ap.add_argument('--save-state', default='',
+                    help='★v2 chaining: 런 끝 셸-SOC 상태 npz 저장 → 다음 스텝의 --init-state.')
+    ap.add_argument('--rest', action='store_true',
+                    help='★Rest 스텝 (I=0 완화, v2 chaining): 망솔브 없이 zero-flux 방사확산만 전개 '
+                         '(REST-LOCAL — 입자간 재분배는 미모델, meta 명기).  --init-state 필수.')
+    ap.add_argument('--t-rest-min', type=float, default=1.0, help='Rest 시간 [분] (기본 1)')
     ap.add_argument('--x0', type=float, default=None,
                     help='방전창 시작 stoich(저리튬/충전끝) 오버라이드 — 기본 None=params_json.')
     ap.add_argument('--x100', type=float, default=None,
@@ -2121,6 +2281,12 @@ def main():
             ap.error(f'{_nm} must be > 0')
     if a.am_split_um <= 0:
         ap.error('--am-split-um must be > 0 (µm 반경 문턱)')
+    if a.rest and not a.init_state:
+        ap.error('--rest 는 --init-state 필수 (이전 스텝 상태를 완화하는 것)')
+    if a.init_state and a.x_init is not None:
+        ap.error('--init-state 와 --x-init 동시 지정 불가 (시작상태 이중 정의)')
+    if a.t_rest_min <= 0:
+        ap.error('--t-rest-min must be > 0')
     if a.i0_poly is not None and a.i0 <= 0:
         # _i0s = i0_p/i0_ref 정규화 분모 — 0이면 0·inf=NaN이 AMG 빌드 후 newton_fail로 오진됨
         # (리뷰 #8 재현: '--i0 0 --i0-poly ...' → 그리드 로드·전처리 다 하고 죽음)
@@ -2131,6 +2297,7 @@ def main():
         ok &= _selftest_discharge()
         ok &= _selftest_solver()
         ok &= _selftest_b1()
+        ok &= _selftest_chain()
         print('STEP4-V2 SELFTEST', 'PASS' if ok else 'FAIL')
         sys.exit(0 if ok else 1)
     if not a.grid:
@@ -2189,6 +2356,43 @@ def main():
         _ovr = '  [x0/x100 CLI override]' if (a.x0 is not None or a.x100 is not None) else ''
         print(f'  OCP: {ocp.provenance}  c_max={ocp.c_max:g}  x0={ocp.x0}  x100={ocp.x100}{_ovr}', flush=True)
     dudt = _load_xy_csv(a.dudt_csv) if a.dudt_csv else None
+    # ── ★Rest 스텝 (v2 chaining): 망/BV 솔브 없음 — CellSystem 빌드 전에 처리 (수 초) ──
+    if a.rest:
+        n_am_r = len(r_um)
+        xf, _prev_end = load_chain_state(a.init_state, n_am_r, a.nr, r_um, ocp)
+        rad = RadialDiffusion(n_am_r, a.nr, r_um * 1e-6, ds_arg, ocp.c_max, 0.5)
+        rad.x[:] = np.clip(xf, 1e-6, 1.0 - 1e-6)
+        V_p_r = 4.0 / 3.0 * np.pi * (r_um * 1e-6) ** 3
+        t_s = a.t_rest_min * 60.0
+        print(f'  ★Rest {a.t_rest_min:g}min (REST-LOCAL I=0 완화; 입자간 재분배 미모델=v2.1 훅) '
+              f'← {a.init_state} (전런 end={_prev_end})', flush=True)
+        ro, drift = run_rest(rad, ocp, V_p_r, t_s)
+        if drift > 1e-9:
+            print(f'  ⚠ rest 질량 드리프트 {drift:.2e} — CN 보존 위반, 점검 필요', flush=True)
+        meta = dict(mode='rest', t_rest_min=a.t_rest_min, nr=a.nr, c_max=ocp.c_max,
+                    x0=ocp.x0, x100=ocp.x100, ocp_provenance=ocp.provenance,
+                    test_only=ocp.test_only, mass_drift=float(drift),
+                    chain={'init_state': a.init_state, 'prev_end': _prev_end,
+                           'save_state': a.save_state or None},
+                    rest_model='REST-LOCAL: per-particle zero-flux radial relaxation; '
+                               'inter-particle redistribution NOT modeled (v2.1 hook)',
+                    v_trace='capacity-weighted mean OCP(x_surf) — I=0 표식용 근사',
+                    d_s=(float(rad.D[0]) if rad.D.max() == rad.D.min() else
+                         dict(mode='per_particle', min=float(rad.D.min()), max=float(rad.D.max()))))
+        np.savez_compressed(a.out, **ro, x_shell_final=rad.x.copy(),
+                            params_json=json.dumps(meta))
+        if a.save_state:
+            save_chain_state(a.save_state, rad.x, r_um, ocp, 'rest_end', t_end=t_s)
+            print(f'  chain state → {a.save_state}', flush=True)
+        print(f'saved {a.out}  (rest {a.t_rest_min:g}min, ΔV_ocp '
+              f'{(ro["V"][-1] - ro["V"][0]) * 1e3:+.2f} mV, surf-mean gap '
+              f'{ro["surf_mean_gap"][0]:.4f}→{ro["surf_mean_gap"][-1]:.4f}, drift {drift:.1e})')
+        sys.exit(0)
+    # ── ★v2 chaining 초기상태 (전 런의 --save-state) ──
+    x_field_cli, _prev_end = None, ''
+    if a.init_state:
+        x_field_cli, _prev_end = load_chain_state(a.init_state, len(r_um), a.nr, r_um, ocp)
+        print(f'  ★v2 chaining: --init-state ← {a.init_state} (전런 end={_prev_end})', flush=True)
     # ── B-1 사이클 계면상 성장 (i0(N)↓ = R_ct 채널 / asr-film += 필름옴성; 비-이중계산 리뷰 N1-F9).
     #    i0_p 설정 시 실제 진폭=i0_p(kin.i0_ref 상쇄, L789) → i0_p만 스케일; 스칼라면 a.i0만 (이중 방지).
     _i0_use, _asr_use = a.i0, a.asr_film
@@ -2211,7 +2415,8 @@ def main():
                    v_min=a.v_min, v_max=a.v_max, t_max=a.t_max, charge=a.charge,
                    cv_hold=a.cv_hold, i_cut_frac=a.i_cut_frac,
                    r_int_ohm_cm2=a.r_int_ohm_cm2, x_init=a.x_init, dudt=dudt,
-                   i0_p=i0_p, dx_max=a.dx_max, dt_max=a.dt_max, n_chk=a.n_chk)
+                   i0_p=i0_p, dx_max=a.dx_max, dt_max=a.dt_max, n_chk=a.n_chk,
+                   x_field=x_field_cli)
     meta = out.pop('params')
     # C5: 솔버 env 감사 기록 (>0 contrast_cap = capped 런 → σ-메트릭 보고 금지 라벨)
     meta['solver_env'] = {
@@ -2224,6 +2429,9 @@ def main():
     }
     reason = out.pop('end_reason')
     meta['end_reason'] = reason
+    if a.init_state or a.save_state:                         # v2 chaining 감사 기록
+        meta['chain'] = {'init_state': a.init_state or None, 'prev_end': _prev_end or None,
+                         'save_state': a.save_state or None}
     if split_meta is not None:
         meta['am_electro_split'] = split_meta                # poly/SC 분리 감사 기록 (값+문턱+개수)
     if _b1_on:                                               # B-1 사이클 계면상 감사 기록 (ASSUMED-FORM)
@@ -2231,6 +2439,10 @@ def main():
                                     'asr_film_cycle_ohm_cm2': a.asr_film_cycle_ohm_cm2,
                                     'provenance': 'ASSUMED-FORM: mult=kim2025 R_ct(N) anchor; N→mult law pending fit (§6 N1)'}
     np.savez_compressed(a.out, **out, params_json=json.dumps(meta))
+    if a.save_state:                                         # newton_fail 도 저장 — 로더가 명시 거부
+        save_chain_state(a.save_state, out['x_shell_final'], r_um, ocp, reason,
+                         t_end=float(out['t'][-1]) if len(out['t']) else 0.0)
+        print(f'  chain state → {a.save_state}  (end={reason})', flush=True)
     print(f'saved {a.out}  (steps {len(out["t"])}, end={reason}, '
           f'V_term {out["V_terminal"][0]:.3f}→{out["V_terminal"][-1]:.3f}, '
           f'delivered {out["q_frac_at_cutoff"] * 100:.1f}%, '
@@ -2253,6 +2465,7 @@ def main():
                                                             # 뷰어 고정슬롯(st4_viz.json)에서 파일명
                                                             # 태그가 떨어져도 런 구별 가능해야 (rint 교훈)
             'x0': ocp.x0, 'x100': ocp.x100, 'nr': a.nr, 'vox_um': vox_um,
+            'x_init': float(meta['x_init']), 'chained': bool(meta.get('chained', False)),
             'c_max_mol_m3': ocp.c_max,
             'i_1c_a': float(out['I_1C_A']), 'i_mean_abs_a': [float(f'{v:.4g}') for v in m_abs],
             'end_reason': reason, 'test_only': bool(ocp.test_only), 'provenance': ocp.provenance,

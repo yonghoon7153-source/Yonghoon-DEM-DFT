@@ -1,318 +1,324 @@
 {
- "_meta": {
-  "purpose": "임시 GPU 인스턴스(껐다 켜면 증발)를 매번 즉시 복원하기 위한 기계-판독 정본. 사람용 서술은 docs/server_bootstrap_runbook.md, 자동 실행은 scripts/setup_gpu_server.sh, 진단은 scripts/env_db.py --doctor.",
-  "updated": "2026-07-27",
-  "branch": "claude/stoic-knuth-NObVQ",
-  "repo": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT.git"
- },
- "packages": {
-  "core": [
-   {
-    "pip": "numpy",
-    "import": "numpy",
-    "why": "전 파이프라인 기반"
-   },
-   {
-    "pip": "scipy",
-    "import": "scipy",
-    "why": "sparse/CG/ndimage — STEP3·STEP4 솔버"
-   },
-   {
-    "pip": "matplotlib",
-    "import": "matplotlib",
-    "why": "그림 export (Agg)"
-   },
-   {
-    "pip": "pandas",
-    "import": "pandas",
-    "why": "코퍼스/표 처리"
-   },
-   {
-    "pip": "networkx",
-    "import": "networkx",
-    "why": "접촉망·퍼콜레이션 분석"
-   },
-   {
-    "pip": "scikit-image",
-    "import": "skimage",
-    "why": "복셀 morphology·watershed(A13)"
-   }
+  "_meta": {
+    "purpose": "임시 GPU 인스턴스(껐다 켜면 증발)를 매번 즉시 복원하기 위한 기계-판독 정본. 사람용 서술은 docs/server_bootstrap_runbook.md, 자동 실행은 scripts/setup_gpu_server.sh, 진단은 scripts/env_db.py --doctor.",
+    "updated": "2026-07-27",
+    "branch": "claude/stoic-knuth-NObVQ",
+    "repo": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT.git"
+  },
+  "packages": {
+    "core": [
+      {
+        "pip": "numpy",
+        "import": "numpy",
+        "why": "전 파이프라인 기반"
+      },
+      {
+        "pip": "scipy",
+        "import": "scipy",
+        "why": "sparse/CG/ndimage — STEP3·STEP4 솔버"
+      },
+      {
+        "pip": "matplotlib",
+        "import": "matplotlib",
+        "why": "그림 export (Agg)"
+      },
+      {
+        "pip": "pandas",
+        "import": "pandas",
+        "why": "코퍼스/표 처리"
+      },
+      {
+        "pip": "networkx",
+        "import": "networkx",
+        "why": "접촉망·퍼콜레이션 분석"
+      },
+      {
+        "pip": "scikit-image",
+        "import": "skimage",
+        "why": "복셀 morphology·watershed(A13)"
+      }
+    ],
+    "mpm": [
+      {
+        "pip": "taichi==1.7.4",
+        "import": "taichi",
+        "why": "MPM GPU 엔진",
+        "fallback": "taichi==1.6.0",
+        "note": "1.7.4=glibc≥2.32 · 1.6.0=glibc2.27이나 py≤3.11 wheel만 → 구 glibc 서버는 python 3.11 필요"
+      }
+    ],
+    "step4": [
+      {
+        "pip": "pyamg",
+        "import": "pyamg",
+        "why": "AMG 전처리 — near-null 계 수렴의 핵심"
+      },
+      {
+        "pip": "pybamm",
+        "import": "pybamm",
+        "why": "OCP 앵커 생성(--export-params) + PyBaMM 패리티"
+      }
+    ],
+    "gpu": [
+      {
+        "pip": "cupy-cuda12x[ctk]",
+        "import": "cupy",
+        "why": "STEP3/STEP4 GPU sparse CG. ★[ctk]=CUDA 헤더 — 없으면 'Failed to find CUDA headers'로 커널 JIT 실패",
+        "note": "드라이버가 CUDA 13이어도 cuda12x wheel backward-compat (V100 실검증 2026-07-27)"
+      },
+      {
+        "pip": "nvidia-cublas-cu12",
+        "import": null,
+        "why": "libcublasLt.so — 없으면 cupy import 시 ImportError"
+      },
+      {
+        "pip": "nvidia-cusparse-cu12",
+        "import": null,
+        "why": "sparse matvec"
+      },
+      {
+        "pip": "nvidia-cusolver-cu12",
+        "import": null,
+        "why": "coarse 직접해"
+      },
+      {
+        "pip": "nvidia-nvjitlink-cu12",
+        "import": null,
+        "why": "cusparse/cusolver 링크"
+      },
+      {
+        "pip": "nvidia-cuda-runtime-cu12",
+        "import": null,
+        "why": "런타임"
+      },
+      {
+        "pip": "nvidia-cuda-nvrtc-cu12",
+        "import": null,
+        "why": "커널 JIT"
+      }
+    ],
+    "optional": [
+      {
+        "pip": "scikit-learn",
+        "import": "sklearn",
+        "why": "predictor 학습 · step6 SkCommittee (없으면 numpy 폴백)",
+        "where": "WSL"
+      },
+      {
+        "pip": "impedance",
+        "import": "impedance",
+        "why": "EIS CNLS fit (eis_fit.py)",
+        "where": "WSL"
+      },
+      {
+        "pip": "galvani",
+        "import": "galvani",
+        "why": ".mpr(BioLogic) 파싱 — 없으면 raw 저장+파싱대기",
+        "where": "WSL"
+      },
+      {
+        "pip": "tabpfn",
+        "import": "tabpfn",
+        "why": "TabPFN(Nature 2025) — 소규모 tabular foundation model. ceiling-probe(physics-폼 vs 천장 대조)·step6 위원회 후보. torch+GPU 필요",
+        "where": "WSL/V100 opt-in"
+      }
+    ]
+  },
+  "apt": [
+    "python3",
+    "python3-venv",
+    "python3-pip",
+    "build-essential",
+    "git",
+    "curl",
+    "unzip",
+    "tmux"
   ],
-  "mpm": [
-   {
-    "pip": "taichi==1.7.4",
-    "import": "taichi",
-    "why": "MPM GPU 엔진",
-    "fallback": "taichi==1.6.0",
-    "note": "1.7.4=glibc≥2.32 · 1.6.0=glibc2.27이나 py≤3.11 wheel만 → 구 glibc 서버는 python 3.11 필요"
-   }
-  ],
-  "step4": [
-   {
-    "pip": "pyamg",
-    "import": "pyamg",
-    "why": "AMG 전처리 — near-null 계 수렴의 핵심"
-   },
-   {
-    "pip": "pybamm",
-    "import": "pybamm",
-    "why": "OCP 앵커 생성(--export-params) + PyBaMM 패리티"
-   }
-  ],
-  "gpu": [
-   {
-    "pip": "cupy-cuda12x[ctk]",
-    "import": "cupy",
-    "why": "STEP3/STEP4 GPU sparse CG. ★[ctk]=CUDA 헤더 — 없으면 'Failed to find CUDA headers'로 커널 JIT 실패",
-    "note": "드라이버가 CUDA 13이어도 cuda12x wheel backward-compat (V100 실검증 2026-07-27)"
-   },
-   {
-    "pip": "nvidia-cublas-cu12",
-    "import": null,
-    "why": "libcublasLt.so — 없으면 cupy import 시 ImportError"
-   },
-   {
-    "pip": "nvidia-cusparse-cu12",
-    "import": null,
-    "why": "sparse matvec"
-   },
-   {
-    "pip": "nvidia-cusolver-cu12",
-    "import": null,
-    "why": "coarse 직접해"
-   },
-   {
-    "pip": "nvidia-nvjitlink-cu12",
-    "import": null,
-    "why": "cusparse/cusolver 링크"
-   },
-   {
-    "pip": "nvidia-cuda-runtime-cu12",
-    "import": null,
-    "why": "런타임"
-   },
-   {
-    "pip": "nvidia-cuda-nvrtc-cu12",
-    "import": null,
-    "why": "커널 JIT"
-   }
-  ],
-  "optional": [
-   {
-    "pip": "scikit-learn",
-    "import": "sklearn",
-    "why": "predictor 학습 · step6 SkCommittee (없으면 numpy 폴백)",
-    "where": "WSL"
-   },
-   {
-    "pip": "impedance",
-    "import": "impedance",
-    "why": "EIS CNLS fit (eis_fit.py)",
-    "where": "WSL"
-   },
-   {
-    "pip": "galvani",
-    "import": "galvani",
-    "why": ".mpr(BioLogic) 파싱 — 없으면 raw 저장+파싱대기",
-    "where": "WSL"
-   },
-   {
-    "pip": "tabpfn",
-    "import": "tabpfn",
-    "why": "TabPFN(Nature 2025) — 소규모 tabular foundation model. ceiling-probe(physics-폼 vs 천장 대조)·step6 위원회 후보. torch+GPU 필요",
-    "where": "WSL/V100 opt-in"
-   }
+  "machines": {
+    "v100": {
+      "role": "MPM+STEP3+STEP4 GPU 런 (runyour.ai 대여 — 인스턴스마다 host/pem 교체)",
+      "ssh_alias": "v100",
+      "workdir": "~/Yonghoon-DEM-DFT",
+      "python": "venv (시스템 python3)",
+      "gpu": "Tesla V100-PCIE-32GB",
+      "quirks": [
+        "대여마다 HostName/Port/IdentityFile 3줄 교체 (~/.ssh/config 의 Host v100 블록; 중복 블록 금지)",
+        "ServerAliveInterval 60 필수 — 없으면 SSH 끊김이 포그라운드 런을 SIGHUP 으로 죽임",
+        "드라이버 CUDA 13 — cupy 는 cuda12x wheel 로 설치(backward-compat)"
+      ],
+      "activate_prefix": ""
+    },
+    "kgy": {
+      "role": "보조 GPU 런",
+      "ssh_alias": "kgy",
+      "workdir": "~/Yonghoon-DEM-DFT",
+      "python": "conda env 'mpm' (python 3.11) — base 는 3.13이라 taichi 불가",
+      "quirks": [
+        "glibc < 2.32 → taichi 1.7.4 import 실패(GLIBC_2.32); 1.6.0 은 py≤3.11 wheel만 → conda py3.11 필수",
+        "먼저: conda create -y -n mpm python=3.11 && conda activate mpm → 그 다음 setup 스크립트"
+      ],
+      "activate_prefix": "conda activate mpm && "
+    },
+    "wsl": {
+      "role": "webapp(dem-web:5002) · 데이터 보관 · 결과 회수",
+      "workdir": "/home/yonghoon/dem-web",
+      "venv": "/home/yonghoon/Yonghoon-DEM-DFT/venv",
+      "downloads": "/mnt/c/Users/안용훈/Downloads",
+      "quirks": [
+        "webapp 코드=dem-web worktree, 데이터=~/Yonghoon-DEM-DFT/webapp/* → WEBAPP_*_FOLDER 로 연결",
+        "alias dem5002 = cd /home/yonghoon/dem-web && source venv/bin/activate"
+      ],
+      "activate_prefix": ""
+    }
+  },
+  "solver_env": {
+    "_doc": "STEP4-v2 솔버 노브 (2026-07-27 near-null 대수술). 킷 run_mpm.sh/step4_only.sh 가 이 기본값을 export 하고, 런타임 env 가 override. 근거·실측: docs/step4_bottleneck_analysis_20260727.md",
+    "MPM_S4_PRUNE_FLOAT": {
+      "default": "1",
+      "meaning": "집전체·AM 무접촉 부유 e-클러스터 제거(정확특이 블록 소거)",
+      "solution_invariant": true,
+      "off_when": "옛 런과 bitwise 대조할 때만 0"
+    },
+    "MPM_S4_EW": {
+      "default": "0",
+      "meaning": "Eisenstat-Walker inexact Newton (기본 OFF — 이득 미입증)",
+      "solution_invariant": true,
+      "on_when": "V100 A/B 로 총 CG iteration 감소가 확인되면 1.  현재 측정 2건은 오히려 +7~33% 증가 (깊은 솔브 목표는 atol 절대바닥이라 η 로 못 느슨하게 하고, 느슨한 초기 스텝이 Armijo 거부→재솔브)"
+    },
+    "MPM_S4_GPU_AMG": {
+      "default": "1",
+      "meaning": "AMG apply 를 GPU V-cycle 미러로 (빌드는 CPU 1회)",
+      "solution_invariant": true,
+      "off_when": "cupy 없으면 자동 폴백 — 강제 CPU 는 0"
+    },
+    "MPM_S4_CONTRAST_CAP": {
+      "default": "0",
+      "meaning": "e-망 σ-대비 상한(0=OFF). 200 → CG iter ×5.2 실측",
+      "solution_invariant": false,
+      "cost": "σ_eff −7.8%(이 기하) · 셀전압 왜곡 ≤2.5µV@2C",
+      "on_when": "near-null 수렴정체 시. ⚠σ-메트릭 보고는 반드시 cap OFF 런으로 (npz meta.solver_env 에 태그됨)"
+    },
+    "MPM_S4_ATOL_FLOOR_FRAC": {
+      "default": "0.05",
+      "meaning": "CG 절대목표 = 이 값 × 노이즈바닥. 0.05=현행 bitwise",
+      "solution_invariant": false,
+      "on_when": "심층 목표(2.7e-14급)가 Jacobi 자기바닥 아래라 nnAMG 를 매번 부르는 경우 0.5 로 올려 회피 (코드 주석 권장 회피책; 잔차 허용을 노이즈바닥의 절반까지 완화 = 물리적으로는 여전히 바닥 아래)"
+    },
+    "MPM_S4_NN_ACCEPT_RTOL": {
+      "default": "1e-7",
+      "meaning": "near-null escalate 판정의 '물리-충분' 상대잔차 바닥",
+      "solution_invariant": true,
+      "note": "현행 콜사이트(rtol=1e-5)에선 대수적으로 무력 — 외부 호출자용으로 유지. 0 → 옛 rtol-only 게이트"
+    },
+    "MPM_S4_NN_ACCEPT_ABS_FRAC": {
+      "default": "0",
+      "meaning": "escalate 판정에 절대바닥(×노이즈바닥) 결합 — ‖b‖-상대 게이트가 후기 Newton 서 무력해지는 것 보완",
+      "solution_invariant": true
+    },
+    "MPM_S4_GPU_AMG_F32": {
+      "default": "0",
+      "meaning": "GPU V-cycle 미러를 float32 로 (전처리 정밀도만; CG 는 f64 → 해 불변)",
+      "solution_invariant": true,
+      "on_when": "GPU 메모리 부족 시"
+    },
+    "MPM_S4_DUMP_FAIL": {
+      "default": "",
+      "meaning": "1 = CG 발산 시 실패 선형계를 npz 로 1회 덤프 (진단용)",
+      "solution_invariant": true
+    },
+    "MPM_S4_RINT": {
+      "default": "(킷 생성값)",
+      "meaning": "집전체 계면저항 Ω·cm² override"
+    },
+    "MPM_S4_DS": {
+      "default": "(킷 생성값)",
+      "meaning": "AM 고상확산 D_s [m²/s] override"
+    },
+    "MPM_NO_PULL": {
+      "default": "",
+      "meaning": "1 = 킷 실행 시 scripts 자동 git pull 끄기(로컬 수정 보존)"
+    },
+    "MPM_S4_GPU_AMG_COARSE_MAX": {
+      "default": "4000",
+      "meaning": "GPU V-cycle 미러의 coarsest 크기 상한 — 초과 시 미러 포기하고 CPU 전처리 폴백",
+      "solution_invariant": true,
+      "note": "near-null B-주입 계층은 coarsening 이 정체해 coarsest 가 fine 의 114% 까지 커진 실측이 있다 → dense 해가 OOM 재발 경로.  이 가드가 그걸 막는다 (2026-07-27 적대검증 H4)"
+    },
+    "MPM_S4_CHAIN_FORCE": {
+      "default": "0",
+      "meaning": "v2 chaining: 이전 런이 newton_fail 로 끝난 오염 상태를 --init-state 로 강제 허용 (기본 = 명시 거부 + 체인 끊김 SKIP)",
+      "solution_invariant": false,
+      "on_when": "디버그 전용 — 오염 상태인 걸 알면서 이어야 할 때만 1 (결과 신뢰 라벨 필수; 정상 재개는 step4_only.sh 재실행)"
+    }
+  },
+  "anchors": {
+    "anchor_params/ocp_nmc811_chen2020.csv": {
+      "generate": "python3 scripts/step4_pybamm_anchor.py --export-params anchor_params",
+      "why": "없으면 STEP4 가 통째로 SKIP (git 미포함 — 새 인스턴스마다 1회 생성)",
+      "needs": "pybamm"
+    },
+    "anchor_params/params_nmc811_chen2020.json": {
+      "generate": "(위 명령이 함께 생성)",
+      "why": "c_max·x0/x100 등"
+    }
+  },
+  "recipes": {
+    "setup": "curl -fsSL https://raw.githubusercontent.com/yonghoon7153-source/Yonghoon-DEM-DFT/claude/stoic-knuth-NObVQ/scripts/setup_gpu_server.sh | bash",
+    "activate": "source {wd}/scripts/activate_dem.sh    # 또는 alias: dem",
+    "doctor": "python3 scripts/env_db.py --doctor",
+    "run_full": "bash run_mpm.sh",
+    "run_step4_only": "bash step4_only.sh [런폴더]",
+    "run_step4_capped": "MPM_S4_CONTRAST_CAP=200 bash step4_only.sh",
+    "fetch": "scp {ssh}:{wd}/latest_run/mpm_metrics.json {ssh}:{wd}/latest_run/mpm_payload.json .",
+    "fetch_step4": "scp {ssh}:{wd}/latest_run/step4_*.npz {ssh}:{wd}/latest_run/*viz*.json .",
+    "partial_curve": "python3 scripts/step4_curve_from_log.py mpm_run.log:라벨 --out 부분곡선",
+    "kill_stuck": "pkill -9 -f 'run_mpm.sh|step4_only|mpm3d_compaction|mpm_webapp_payload|step4_dyn'"
+  },
+  "pitfalls": [
+    {
+      "symptom": "STEP1 즉사: ModuleNotFoundError: numpy",
+      "cause": "venv 안 켠 셸에서 run — detached 자식이 시스템 python3 사용",
+      "fix": "source scripts/activate_dem.sh (또는 dem) 한 셸에서 실행"
+    },
+    {
+      "symptom": "ImportError: libcublasLt.so",
+      "cause": "cupy 본체만 설치",
+      "fix": "pip install nvidia-cublas-cu12 nvidia-cusparse-cu12 nvidia-cusolver-cu12 nvidia-nvjitlink-cu12"
+    },
+    {
+      "symptom": "RuntimeError: Failed to find CUDA headers",
+      "cause": "CUDA toolkit 헤더 없음",
+      "fix": "pip install 'cupy-cuda12x[ctk]'"
+    },
+    {
+      "symptom": "taichi ImportError GLIBC_2.32 not found",
+      "cause": "구 glibc + py3.13",
+      "fix": "conda create -y -n mpm python=3.11 && conda activate mpm → setup 재실행"
+    },
+    {
+      "symptom": "STEP4 SKIP — OCP 앵커 없음",
+      "cause": "anchor_params 미생성(git 미포함)",
+      "fix": "python3 scripts/step4_pybamm_anchor.py --export-params anchor_params"
+    },
+    {
+      "symptom": "3일 돌아도 창 2% (0.2C/2C 크롤)",
+      "cause": "near-null 구조(부유 carbon 조각) → CPU AMG 11s/iter",
+      "fix": "git pull 로 pruning+EW+GPU V-cycle 수술 반영; 정체 지속 시 MPM_S4_CONTRAST_CAP=200"
+    },
+    {
+      "symptom": "git checkout 했는데 옛 코드로 계속 돎",
+      "cause": "파이썬은 시작 시점 로드 — 실행 중 프로세스엔 반영 안 됨",
+      "fix": "kill 후 재시작 (recipes.kill_stuck)"
+    },
+    {
+      "symptom": "tail ^C 했더니 런이 죽은 줄 앎",
+      "cause": "런은 detached — ^C는 tail만 멈춤",
+      "fix": "pgrep -af 'step4_dyn|mpm3d_compaction' 로 확인"
+    },
+    {
+      "symptom": "SSH 끊기면 런 사망",
+      "cause": "포그라운드 실행 + keepalive 없음",
+      "fix": "~/.ssh/config 에 ServerAliveInterval 60; 킷 스크립트는 이미 detached"
+    }
   ]
- },
- "apt": [
-  "python3",
-  "python3-venv",
-  "python3-pip",
-  "build-essential",
-  "git",
-  "curl",
-  "unzip",
-  "tmux"
- ],
- "machines": {
-  "v100": {
-   "role": "MPM+STEP3+STEP4 GPU 런 (runyour.ai 대여 — 인스턴스마다 host/pem 교체)",
-   "ssh_alias": "v100",
-   "workdir": "~/Yonghoon-DEM-DFT",
-   "python": "venv (시스템 python3)",
-   "gpu": "Tesla V100-PCIE-32GB",
-   "quirks": [
-    "대여마다 HostName/Port/IdentityFile 3줄 교체 (~/.ssh/config 의 Host v100 블록; 중복 블록 금지)",
-    "ServerAliveInterval 60 필수 — 없으면 SSH 끊김이 포그라운드 런을 SIGHUP 으로 죽임",
-    "드라이버 CUDA 13 — cupy 는 cuda12x wheel 로 설치(backward-compat)"
-   ],
-   "activate_prefix": ""
-  },
-  "kgy": {
-   "role": "보조 GPU 런",
-   "ssh_alias": "kgy",
-   "workdir": "~/Yonghoon-DEM-DFT",
-   "python": "conda env 'mpm' (python 3.11) — base 는 3.13이라 taichi 불가",
-   "quirks": [
-    "glibc < 2.32 → taichi 1.7.4 import 실패(GLIBC_2.32); 1.6.0 은 py≤3.11 wheel만 → conda py3.11 필수",
-    "먼저: conda create -y -n mpm python=3.11 && conda activate mpm → 그 다음 setup 스크립트"
-   ],
-   "activate_prefix": "conda activate mpm && "
-  },
-  "wsl": {
-   "role": "webapp(dem-web:5002) · 데이터 보관 · 결과 회수",
-   "workdir": "/home/yonghoon/dem-web",
-   "venv": "/home/yonghoon/Yonghoon-DEM-DFT/venv",
-   "downloads": "/mnt/c/Users/안용훈/Downloads",
-   "quirks": [
-    "webapp 코드=dem-web worktree, 데이터=~/Yonghoon-DEM-DFT/webapp/* → WEBAPP_*_FOLDER 로 연결",
-    "alias dem5002 = cd /home/yonghoon/dem-web && source venv/bin/activate"
-   ],
-   "activate_prefix": ""
-  }
- },
- "solver_env": {
-  "_doc": "STEP4-v2 솔버 노브 (2026-07-27 near-null 대수술). 킷 run_mpm.sh/step4_only.sh 가 이 기본값을 export 하고, 런타임 env 가 override. 근거·실측: docs/step4_bottleneck_analysis_20260727.md",
-  "MPM_S4_PRUNE_FLOAT": {
-   "default": "1",
-   "meaning": "집전체·AM 무접촉 부유 e-클러스터 제거(정확특이 블록 소거)",
-   "solution_invariant": true,
-   "off_when": "옛 런과 bitwise 대조할 때만 0"
-  },
-  "MPM_S4_EW": {
-   "default": "0",
-   "meaning": "Eisenstat-Walker inexact Newton (기본 OFF — 이득 미입증)",
-   "solution_invariant": true,
-   "on_when": "V100 A/B 로 총 CG iteration 감소가 확인되면 1.  현재 측정 2건은 오히려 +7~33% 증가 (깊은 솔브 목표는 atol 절대바닥이라 η 로 못 느슨하게 하고, 느슨한 초기 스텝이 Armijo 거부→재솔브)"
-  },
-  "MPM_S4_GPU_AMG": {
-   "default": "1",
-   "meaning": "AMG apply 를 GPU V-cycle 미러로 (빌드는 CPU 1회)",
-   "solution_invariant": true,
-   "off_when": "cupy 없으면 자동 폴백 — 강제 CPU 는 0"
-  },
-  "MPM_S4_CONTRAST_CAP": {
-   "default": "0",
-   "meaning": "e-망 σ-대비 상한(0=OFF). 200 → CG iter ×5.2 실측",
-   "solution_invariant": false,
-   "cost": "σ_eff −7.8%(이 기하) · 셀전압 왜곡 ≤2.5µV@2C",
-   "on_when": "near-null 수렴정체 시. ⚠σ-메트릭 보고는 반드시 cap OFF 런으로 (npz meta.solver_env 에 태그됨)"
-  },
-  "MPM_S4_ATOL_FLOOR_FRAC": {
-   "default": "0.05",
-   "meaning": "CG 절대목표 = 이 값 × 노이즈바닥. 0.05=현행 bitwise",
-   "solution_invariant": false,
-   "on_when": "심층 목표(2.7e-14급)가 Jacobi 자기바닥 아래라 nnAMG 를 매번 부르는 경우 0.5 로 올려 회피 (코드 주석 권장 회피책; 잔차 허용을 노이즈바닥의 절반까지 완화 = 물리적으로는 여전히 바닥 아래)"
-  },
-  "MPM_S4_NN_ACCEPT_RTOL": {
-   "default": "1e-7",
-   "meaning": "near-null escalate 판정의 '물리-충분' 상대잔차 바닥",
-   "solution_invariant": true,
-   "note": "현행 콜사이트(rtol=1e-5)에선 대수적으로 무력 — 외부 호출자용으로 유지. 0 → 옛 rtol-only 게이트"
-  },
-  "MPM_S4_NN_ACCEPT_ABS_FRAC": {
-   "default": "0",
-   "meaning": "escalate 판정에 절대바닥(×노이즈바닥) 결합 — ‖b‖-상대 게이트가 후기 Newton 서 무력해지는 것 보완",
-   "solution_invariant": true
-  },
-  "MPM_S4_GPU_AMG_F32": {
-   "default": "0",
-   "meaning": "GPU V-cycle 미러를 float32 로 (전처리 정밀도만; CG 는 f64 → 해 불변)",
-   "solution_invariant": true,
-   "on_when": "GPU 메모리 부족 시"
-  },
-  "MPM_S4_DUMP_FAIL": {
-   "default": "",
-   "meaning": "1 = CG 발산 시 실패 선형계를 npz 로 1회 덤프 (진단용)",
-   "solution_invariant": true
-  },
-  "MPM_S4_RINT": {
-   "default": "(킷 생성값)",
-   "meaning": "집전체 계면저항 Ω·cm² override"
-  },
-  "MPM_S4_DS": {
-   "default": "(킷 생성값)",
-   "meaning": "AM 고상확산 D_s [m²/s] override"
-  },
-  "MPM_NO_PULL": {
-   "default": "",
-   "meaning": "1 = 킷 실행 시 scripts 자동 git pull 끄기(로컬 수정 보존)"
-  },
-  "MPM_S4_GPU_AMG_COARSE_MAX": {
-   "default": "4000",
-   "meaning": "GPU V-cycle 미러의 coarsest 크기 상한 — 초과 시 미러 포기하고 CPU 전처리 폴백",
-   "solution_invariant": true,
-   "note": "near-null B-주입 계층은 coarsening 이 정체해 coarsest 가 fine 의 114% 까지 커진 실측이 있다 → dense 해가 OOM 재발 경로.  이 가드가 그걸 막는다 (2026-07-27 적대검증 H4)"
-  }
- },
- "anchors": {
-  "anchor_params/ocp_nmc811_chen2020.csv": {
-   "generate": "python3 scripts/step4_pybamm_anchor.py --export-params anchor_params",
-   "why": "없으면 STEP4 가 통째로 SKIP (git 미포함 — 새 인스턴스마다 1회 생성)",
-   "needs": "pybamm"
-  },
-  "anchor_params/params_nmc811_chen2020.json": {
-   "generate": "(위 명령이 함께 생성)",
-   "why": "c_max·x0/x100 등"
-  }
- },
- "recipes": {
-  "setup": "curl -fsSL https://raw.githubusercontent.com/yonghoon7153-source/Yonghoon-DEM-DFT/claude/stoic-knuth-NObVQ/scripts/setup_gpu_server.sh | bash",
-  "activate": "source {wd}/scripts/activate_dem.sh    # 또는 alias: dem",
-  "doctor": "python3 scripts/env_db.py --doctor",
-  "run_full": "bash run_mpm.sh",
-  "run_step4_only": "bash step4_only.sh [런폴더]",
-  "run_step4_capped": "MPM_S4_CONTRAST_CAP=200 bash step4_only.sh",
-  "fetch": "scp {ssh}:{wd}/latest_run/mpm_metrics.json {ssh}:{wd}/latest_run/mpm_payload.json .",
-  "fetch_step4": "scp {ssh}:{wd}/latest_run/step4_*.npz {ssh}:{wd}/latest_run/*viz*.json .",
-  "partial_curve": "python3 scripts/step4_curve_from_log.py mpm_run.log:라벨 --out 부분곡선",
-  "kill_stuck": "pkill -9 -f 'run_mpm.sh|step4_only|mpm3d_compaction|mpm_webapp_payload|step4_dyn'"
- },
- "pitfalls": [
-  {
-   "symptom": "STEP1 즉사: ModuleNotFoundError: numpy",
-   "cause": "venv 안 켠 셸에서 run — detached 자식이 시스템 python3 사용",
-   "fix": "source scripts/activate_dem.sh (또는 dem) 한 셸에서 실행"
-  },
-  {
-   "symptom": "ImportError: libcublasLt.so",
-   "cause": "cupy 본체만 설치",
-   "fix": "pip install nvidia-cublas-cu12 nvidia-cusparse-cu12 nvidia-cusolver-cu12 nvidia-nvjitlink-cu12"
-  },
-  {
-   "symptom": "RuntimeError: Failed to find CUDA headers",
-   "cause": "CUDA toolkit 헤더 없음",
-   "fix": "pip install 'cupy-cuda12x[ctk]'"
-  },
-  {
-   "symptom": "taichi ImportError GLIBC_2.32 not found",
-   "cause": "구 glibc + py3.13",
-   "fix": "conda create -y -n mpm python=3.11 && conda activate mpm → setup 재실행"
-  },
-  {
-   "symptom": "STEP4 SKIP — OCP 앵커 없음",
-   "cause": "anchor_params 미생성(git 미포함)",
-   "fix": "python3 scripts/step4_pybamm_anchor.py --export-params anchor_params"
-  },
-  {
-   "symptom": "3일 돌아도 창 2% (0.2C/2C 크롤)",
-   "cause": "near-null 구조(부유 carbon 조각) → CPU AMG 11s/iter",
-   "fix": "git pull 로 pruning+EW+GPU V-cycle 수술 반영; 정체 지속 시 MPM_S4_CONTRAST_CAP=200"
-  },
-  {
-   "symptom": "git checkout 했는데 옛 코드로 계속 돎",
-   "cause": "파이썬은 시작 시점 로드 — 실행 중 프로세스엔 반영 안 됨",
-   "fix": "kill 후 재시작 (recipes.kill_stuck)"
-  },
-  {
-   "symptom": "tail ^C 했더니 런이 죽은 줄 앎",
-   "cause": "런은 detached — ^C는 tail만 멈춤",
-   "fix": "pgrep -af 'step4_dyn|mpm3d_compaction' 로 확인"
-  },
-  {
-   "symptom": "SSH 끊기면 런 사망",
-   "cause": "포그라운드 실행 + keepalive 없음",
-   "fix": "~/.ssh/config 에 ServerAliveInterval 60; 킷 스크립트는 이미 detached"
-  }
- ]
 }

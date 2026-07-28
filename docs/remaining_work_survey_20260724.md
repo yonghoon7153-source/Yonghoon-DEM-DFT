@@ -1,6 +1,11 @@
 # 남은 작업 종합 서베이 (2026-07-24, 5-스캐너 워크플로 wf_17cb6734)
 
 ## ★ 진행상태 & 다음 픽 (2026-07-24, "나중에 하자" 재개점) ★
+- **2026-07-28: STEP4 v2 chaining 구현 완료** (docs/step4_v2_design.md §7) — 스케줄 연속
+  사이클(셸-SOC 상태 전달, Loop 누적, Rest 실물리 REST-LOCAL, 체인 끊김 SKIP 가드) + 킷
+  `--step4-chain`/webapp ⛓(&s4chain, `_chain` 태그) + 문법 확장(방전-CV i·스텝 t분 = GITT
+  가능) + _addTag cap/ppds 순서 버그 정정.  잔여 훅: v2.1 rest 입자간 재분배(I_tot=0 망솔브) ·
+  조건-루프(in-run 열화 필요) · B-1 per-cycle 자동배선(N→배수 법칙 앵커 대기).
 - **A-1 완료 4건** (커밋됨): ① network_conductivity dead-code 삭제 ② Predictor /train
   graceful 500 ③ ionic 라벨 "FORM X"→v12-clean v3(=v29/v32) 통일+식정정 ④ Predictor
   d_AM_S 슬라이더 오해방지 ⚠툴팁.

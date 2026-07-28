@@ -6277,6 +6277,10 @@ def mpm_input_package(case_id):
         _s4cap = request.args.get('s4cap', '')
         if _s4cap in ('200', '1000', '2000'):
             cmd += ['--step4-solver-cap', _s4cap]
+        # ★v2 chaining (&s4chain=1, 스케줄 전용) — 각 스텝이 직전 스텝 끝 셸-SOC에서 시작(연속
+        #   사이클, Loop 반복도 상태 누적) + Rest 는 실제 I=0 완화 런.  미지정 = v1 독립런.
+        if _s4sched and request.args.get('s4chain', '') in ('1', 'true', 'on'):
+            cmd += ['--step4-chain']
         # ★bimodal poly/SC 전기화학 분리 (파워유저 URL, s4x100 문법): &s4dsp=&s4dss= (D_s [m²/s])
         #   &s4i0p=&s4i0s= (i0 [A/m²]) &s4split= (반경 문턱 µm, 기본 3.5).  반쪽 지정은 400으로
         #   명시 거부(생성기 ap.error를 500 stderr로 흘리지 않고 앞단에서 — 침묵/불명확 실패 금지).
@@ -6345,6 +6349,9 @@ def mpm_input_package(case_id):
         tag += '_s4chg' + '_'.join(f'{v:g}C' for v in _s4chg_clean)
     if _s4sched:
         tag += '_sched'
+        # ★체인 킷은 실행 의미가 다름(연속 사이클) → 독립런 킷과 파일명 구별 (cap 태그와 같은 규약)
+        if request.args.get('s4chain', '') in ('1', 'true', 'on'):
+            tag += '_chain'
     # ★솔버 cap 은 σ_eff 를 −7.8% 바꾸는 노브 → 같은 이름의 두 킷이 생기지 않게 태그 (감사 M10)
     if _s4cap in ('200', '1000', '2000'):
         tag += '_cap' + _s4cap
