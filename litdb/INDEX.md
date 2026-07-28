@@ -241,6 +241,38 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 
 ---
 
+## 📥 작업 브랜치에서 회수 (정본 승격 2026-07-28, 2차)
+
+> 논문 에이전트가 작성했으나 **작업 브랜치 `docs/lit_*.md` 에 갇혀 있던** 카드들. DFT webapp 은
+> 정본 `litdb/papers/` 만 읽으므로 그동안 목록에 없었다. 재발 방지 = `scripts/litdb_promote.py`
+> (커레이터가 정본 워크트리에 직접 쓰고 정본성 검사 후 푸시).
+
+| slug | 논문 | type |
+|---|---|---|
+| `papers/bak2024_binder_distribution_multilayer.md` | Bak 2024 (Chemical Engineering Journal 483, 148913) — 바인더 z-분포 제어 다층 모델전극 + Digital-Twin | MPM |
+| `papers/bielefeld2020_effective_ionic_conductivity_binder.md` | Bielefeld 2020 (ACS Appl. Mater. Interfaces 12, 12821−12833) — 유효 이온전도도 + 바인더 영향 모델링 (Janek 그룹, GeoDict — ★ Bi | FEM·digital-twin |
+| `papers/cho2026_eipc_zn_anode_azib.md` | Cho 2026 (Energy Storage Materials 89 (2026) 105186, DOI 10.1016/j.ensm.2026.105186) — 전자-이온 폴리머 복합막(EIPC=GO+P | DEM |
+| `papers/choi2026_elastomeric_li_metal_anode.md` | Choi 2026 (Advanced Energy Materials, DOI 10.1002/aenm.71104) — 친리튬(lithiophilic) 단분자층 + 나노-크럼플/마이크로-오목 탄성 Li  | DEM |
+| `papers/cronau2021_stack_pressure_ionic_conductivity.md` | Cronau 2021 (ACS Energy Lett. 6, 3072−3077) — Stack-pressure 딜레마: 미세결정 황화물 SE의 "신뢰할 수 있는" σ_ion 측정법 | experiment |
+| `papers/doux2020_stack_pressure_assb.md` | Doux 2020 (Adv. Energy Mater. 10, 1903253) — Stack Pressure: 작동압력(operating) vs 제조압력(fabrication)의 정전적(canonic | DEM |
+| `papers/hong2026_cbd_viscoelasticity_springback.md` | Hong 2026 (Energy Storage Materials, ENSM 105321) — CBD 점탄성이 단결정 cathode의 시간의존 Spring-Back을 억제 | FEM·digital-twin |
+| `papers/hong2026_sulfide_cathode_binder_digitaltwin.md` | Hong 2026 (Energy Storage Materials 86, 104930) — 황화물 복합양극 열화 메커니즘 (디지털트윈): Dry(PTFE) vs Wet(NBR) 바인더 ★우리 소재계( | FEM·digital-twin |
+| `papers/kim2026_a3d_air_electrode_microstructure_transport.md` | Kim 2026 (Journal of Power Sources 686, 240471) — 디지털트윈 미세구조(GeoDict) → 유효물성 → 1D 전기화학(COMSOL)으로 A3D 공기극 수송 설계 | FEM·digital-twin |
+| `papers/kim2026_charge_engineered_cnf_binder.md` | Kim 2026 (Nature Communications, DOI 10.1038/s41467-026-73909-0) — 전하조작(charge-engineered) 셀룰로오스 나노피브릴 바인더로 PF | experiment |
+| `papers/koo2025_cnt_wrapped_sc_nca_dry_cathode.md` | Koo 2025 (Energy Storage Materials 78, 104270) — anti-solvent로 MWCNT 감싼 단결정 SC-NCA dry 양극 (99.6 wt%, 4.0 g/cm³ | FEM·digital-twin |
+| `papers/koo2026_swcnt_sheath_thick_electrode.md` | Koo 2026 (Joule 10, 102392) — 연속 SWCNT sheath가 두꺼운 dry 전극에서 초고에너지밀도 + 급속충전 (★ 우리 CBD SuperP-vs-VGCF 발견의 실험적 증명 | FEM·digital-twin |
+| `papers/lee2023_sicspe_digitaltwin_assb.md` | Lee 2023 (Battery Energy 2, 20220061) — 디지털트윈 기반 SIC-SPE vs LPSCl 복합양극 구조·전기화학 분석 ★ DTBL 디지털트윈 계보의 가장 이른 논문(20 | DEM |
+| `papers/minnmann2021_jes_charge_transport_bottlenecks.md` | Minnmann 2021 JES — 복합 양극 전하수송 병목 정량화 (EIS-TLM) ★ 우리 porosity/σ_ion/τ_ion 앵커의 진짜 출처 | DEM |
+| `papers/minnmann2022_designing_cathodes_solidstate.md` | Minnmann 2022 (Adv. Energy Mater. 12, 2201425) — "Designing Cathodes and Cathode Active Materials for Solid-St | DEM |
+| `papers/nam2026_dpe_microstructure_review.md` | Nam 2026 (Materials Horizons REVIEW, 13, 3149-3177) — 건식전극(DPE) 미세구조 엔지니어링 리뷰 ★ 우리 DEM+MPM 프로젝트의 FRAMEWORK/POS | DEM |
+| `papers/oh2026_bimodal_composite_cathode.md` | Oh 2026 (ACS Energy Letters 11, 2103-2114) — Bimodal 복합양극: 큰 다결정 + 작은 단결정 CAM → packing·porosity·tortuosity 최적 | experiment |
+| `papers/oh2026_carbon_coating_siox_ion_electron_balance.md` | Oh 2026 (Journal of Power Sources 689, 240698) — SiOx 탄소코팅 두께가 이온/전자 수송 BALANCE + 균일분산을 결정 | FEM·digital-twin |
+| `papers/park2026_ceramic_pp_separator.md` | Park 2026 (Chemical Engineering Journal 532 (2026) 174523, DOI 10.1016/j.cej.2026.174523) — 초박막 세라믹(Al₂O₃ 스퍼터) | DEM |
+| `papers/park2026_thiolene_sbr_binder_assb.md` | Park 2026 (Adv. Funct. Mater. 36, e16017) — Thiol-Ene Click으로 SBR 바인더 다면 개질(접착 grafting + 가교 cross-linking), 저 | MPM |
+| `papers/sakuda2013_sulfide_mechanical_property.md` | 황화물 SE의 "유리한 기계적 물성" — 상온 가압소결·Young's modulus·이온전도도 — Sakuda (Sci. Rep. 2013) | DEM |
+| `papers/trevisanello2021_sc_pc_ncm_cracking_diffusion.md` | Trevisanello 2021 (Adv. Energy Mater. 11, 2003400) — 다결정 vs 단결정 NCM: 입자 균열·활성표면적·Li 확산 | experiment |
+| `papers/yoo2026_porosity_gradient_dry_electrode.md` | Yoo 2026 (Energy Storage Materials, ENSM 105331) — Porosity-구배 건식 흑연 전극 + 변형성 Primer Layer | MPM |
+
 ## 🏛️ 디지털트윈 전극 계보 — 연세대 DTBL(이용민) 라인 (정본 승격 2026-07-28)
 
 > 우리 DEM+MPM 과 **같은 목표·같은 소재계**(NCM+LPSCl)로 전극 미세구조 디지털트윈을 하는 그룹.
