@@ -1,0 +1,68 @@
+{
+  "property": "mlip_committee_baseline",
+  "date": "2026-07-28",
+  "purpose": "T1 — UMA 외삽 대리지표의 **기준선(교정)**. 이후 다른 표본(특히 Li‖LPSCl 반응 계면)을 `--baseline` 으로 이 값에 걸어 초과를 세면, 그 초과가 비로소 정보다.",
+  "source": {
+    "traj": "/data/work/b2o3md/modelc_full/d0.00_cfg0/T600/traj.xyz",
+    "system": "modelc (Li5.4PS4.4Cl1.6) rhombo-62, 62 atoms",
+    "T_K": 600,
+    "n_frames_total": 2000,
+    "n_sampled": 200,
+    "sampling": "균등(시간 치우침 방지)",
+    "device": "cpu"
+  },
+  "engines": [
+    "uma-s-1p1(omat)",
+    "mace-mp-0(medium)",
+    "sevennet-0(7net-0)"
+  ],
+  "honesty_header": [
+    "⛔ **이 지표는 절대 정확도를 말하지 않는다.** 세 모델이 전부 PBE 계열이다. kim2024 는 argyrodite 에서 sigma 를 8배 가르는 것이 아키텍처가 아니라 **훈련 functional** 임을 보였고, lee2024 는 PBE 계열이 오히려 틀리는 쪽(optB88 이 실험과 맞음)임을 보였다 → **일치해도 절대 sigma 인용 금지 규율은 그대로다.**",
+    "⚠ **위원회의 독립성이 보이는 것보다 낮다.** 쌍별 불일치를 보면 mace|sevennet 0.202 < sevennet|uma 0.215 < mace|uma 0.317 인데, **가장 잘 맞는 쌍(MACE-MP-0 + SevenNet-0)이 훈련셋을 공유한다(MPtrj)**. UMA 만 OMat24 다. 즉 불일치를 지배하는 것은 아키텍처가 아니라 **훈련 데이터**이고, 실질적으로 **3명이 아니라 2진영**(MPtrj 계열 vs OMat24)이다. 프레임 단위 위원회 값은 쌍별 최대이므로 사실상 mace|uma 하나다.",
+    "⚠ 문턱은 **이 표본의 분포에서 유도**한 것이지 물리적 절대 기준이 아니다. 계·온도가 바뀌면 다시 뽑아야 한다.",
+    "⛔ gamma(MTP) 와 **같은 양이 아니다.** gamma 는 선형 기저 위 maxvol/D-optimality 이고 이건 모델 간 분산이다 — kim2026 에서 이식한 것은 **논리 구조(선별/중단 문턱 분리)** 뿐이다."
+  ],
+  "frame_level_baseline_eV_per_A": {
+    "definition": "프레임별 원자당 힘 RMS 불일치의 **쌍별 최대값**",
+    "median": 0.3175,
+    "p95": 0.3669,
+    "max": 0.4662,
+    "threshold_select": 0.635,
+    "threshold_break": 0.3669,
+    "note": "교정 모드 산출. 초과 개수(10/200 = 5%)는 정의상 자명하므로 결과가 아니다."
+  },
+  "pairwise_median_eV_per_A": {
+    "mace|sevennet": 0.2022,
+    "sevennet|uma": 0.2152,
+    "mace|uma": 0.3175,
+    "reading": "훈련셋을 공유하는 쌍이 가장 잘 맞는다(MPtrj: MACE-MP-0 + SevenNet-0). SevenNet 이 중간에 앉고 MACE 와 UMA 가 양 극단이다."
+  },
+  "by_element_relative": {
+    "definition": "abs(힘 RMS 불일치) / typical(그 원소 평균 힘 크기) — **정규화된 값만 해석한다**",
+    "P": 0.333,
+    "S": 0.277,
+    "Li": 0.235,
+    "Cl": 0.182,
+    "raw_abs_eV_per_A": {
+      "P": 0.4833,
+      "S": 0.2502,
+      "Li": 0.1179,
+      "Cl": 0.1104
+    },
+    "typical_force_eV_per_A": {
+      "P": 1.4507,
+      "S": 0.9044,
+      "Li": 0.5025,
+      "Cl": 0.6078
+    },
+    "⚠_why_normalize": "원시 절대값으로는 P/Cl = **5.9배**였는데 정규화하면 **1.8배**로 압축된다. 즉 원시 순위의 대부분은 **힘 크기**였다 — P 는 PS4 사면체 중심이라 힘이 크고 Li 는 느슨해 작다. 정규화 없이 순위를 해석하면 '결합이 센 원소가 불확실하다'는 동어반복이 된다.",
+    "residual_signal": "정규화 후에도 **순서(P > S > Li > Cl)는 살아남는다.** 모델들이 **PS4 골격에서 가장 덜 합의**하고 이동 이온(Li)·할로겐에서 더 잘 맞는다. 상대 0.333 은 작지 않다."
+  },
+  "implication_for_T3": "🔑 **T3(Li‖LPSCl 반응 MD)의 1순위 관측량이 '잔존 PS4 층수'인데, 위원회가 가장 덜 합의하는 것이 바로 그 PS4 골격이다.** 즉 우리가 재려는 양에서 모델 간 신뢰가 가장 낮다. → T3 착수 전 게이트를 **벌크가 아니라 Li 계면 구조에서** 다시 잡아야 하고, 본 계산과 병행해 QE 단일점 대조가 필요하다(대리지표는 DFT 를 대체하지 않는다).",
+  "next": [
+    "Li‖LPSCl 계면 슬랩 스냅샷으로 **탐지 모드** 실행 — `--baseline` 에 이 값을 걸어 초과를 센다",
+    "정적 구조(comp1 V0) 기준선도 추가 — 평형 구조에서의 하한을 알아야 600 K 값을 해석한다",
+    "훈련셋이 다른 4번째 엔진 검토 — 현 위원회는 실질 2진영이라 독립성이 부족하다",
+    "QE 단일점 대조(스냅샷 ~20개) — 위원회 불일치와 실제 DFT 오차의 관계를 한 번은 봐야 한다"
+  ]
+}

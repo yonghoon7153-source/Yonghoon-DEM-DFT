@@ -160,6 +160,72 @@
 </details>
 {% endfor %}
 
+<!-- ── T1 모델 위원회 결과 ──────────────────────────────── -->
+{% if committee %}
+{% set C = committee %}
+<h2 style="margin-top:34px;font-size:1rem">🧪 T1 — MLIP 모델 위원회 <span class="muted"
+  style="font-weight:400;font-size:.8rem">(γ를 못 쓰는 대신 만든 외삽 대리지표 · <b>기준선 교정 완료</b>)</span></h2>
+<div class="callout cal-danger" style="margin-top:8px">
+  {% for x in C.honesty_header %}<div style="margin-top:{{ 0 if loop.first else 6 }}px">{{ x|bold }}</div>{% endfor %}
+</div>
+
+<div class="grid grid-2" style="margin-top:12px">
+  <div class="card" style="padding:14px 18px">
+    <div style="font-weight:600;font-size:.88rem">프레임 단위 기준선 <span class="muted"
+      style="font-weight:400;font-size:.74rem">eV/Å</span></div>
+    <div class="muted" style="font-size:.76rem;margin-top:3px">{{ C.frame_level_baseline_eV_per_A.definition }}</div>
+    <div style="display:flex;gap:18px;margin-top:8px">
+      {% for k in ['median','p95','max'] %}
+      <div><div class="muted" style="font-size:.7rem">{{ k }}</div>
+        <div class="mono" style="font-size:1.05rem;font-weight:600">{{ C.frame_level_baseline_eV_per_A[k] }}</div></div>
+      {% endfor %}
+    </div>
+    <div class="callout cal-warn" style="margin-top:10px;font-size:.76rem">{{ C.frame_level_baseline_eV_per_A.note|bold }}</div>
+  </div>
+
+  <div class="card" style="padding:14px 18px;border-left:3px solid #f59e0b">
+    <div style="font-weight:600;font-size:.88rem">쌍별 불일치 — <b>독립성이 낮다</b></div>
+    <table class="tbl" style="margin-top:8px"><tbody>
+      {% for k, v in C.pairwise_median_eV_per_A.items() if k != 'reading' %}
+      <tr><td class="mono" style="font-size:.78rem">{{ k }}</td>
+        <td class="mono" style="font-weight:{{ 700 if k=='mace|uma' else 400 }}">{{ v }}</td></tr>
+      {% endfor %}
+    </tbody></table>
+    <div class="callout cal-warn" style="margin-top:8px;font-size:.77rem">{{ C.pairwise_median_eV_per_A.reading|bold }}</div>
+  </div>
+</div>
+
+<div class="card" style="margin-top:12px;padding:14px 18px">
+  <div style="font-weight:600;font-size:.88rem">원소별 — <b>정규화한 값만 해석한다</b></div>
+  <div style="overflow-x:auto;margin-top:8px">
+  <table class="tbl">
+    <thead><tr><th>원소</th><th>abs (eV/Å)</th><th>평균 힘 (eV/Å)</th><th><b>상대</b></th></tr></thead>
+    <tbody>
+    {% for el in ['P','S','Li','Cl'] %}
+      <tr><td class="mono">{{ el }}</td>
+        <td class="mono muted">{{ C.by_element_relative.raw_abs_eV_per_A[el] }}</td>
+        <td class="mono muted">{{ C.by_element_relative.typical_force_eV_per_A[el] }}</td>
+        <td class="mono" style="font-weight:700">{{ C.by_element_relative[el] }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  <div class="callout cal-warn" style="margin-top:10px;font-size:.79rem">{{ C.by_element_relative['⚠_why_normalize']|bold }}</div>
+  <div class="callout" style="margin-top:8px;font-size:.79rem">{{ C.by_element_relative.residual_signal|bold }}</div>
+</div>
+
+<div class="callout cal-danger" style="margin-top:12px">{{ C.implication_for_T3|bold }}</div>
+
+<div style="margin-top:10px">
+  <div class="muted" style="font-size:.78rem;font-weight:600">다음</div>
+  <ul style="margin-top:4px">{% for n in C.next %}<li style="font-size:.82rem">{{ n|bold }}</li>{% endfor %}</ul>
+</div>
+<div class="muted mono" style="font-size:.71rem;margin-top:8px">
+  {{ C.source.system }} · {{ C.source.T_K }} K · {{ C.source.n_sampled }}/{{ C.source.n_frames_total }} 프레임 ·
+  엔진 {{ C.engines|join(' · ') }} · db/properties/mlip_committee_baseline.json
+</div>
+{% endif %}
+
 <!-- ── 방법론 참조 ──────────────────────────────────────── -->
 <h2 style="margin-top:34px;font-size:1rem">🔧 방법론 참조 <span class="muted"
   style="font-weight:400;font-size:.8rem">(수치가 아니라 방법 — T1–T12의 출처)</span></h2>

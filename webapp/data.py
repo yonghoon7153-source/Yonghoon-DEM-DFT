@@ -1140,6 +1140,11 @@ def paper_pis(slug: str) -> list:
     return list(_paper_pis_c(slug, _mtime_ns(f) if f.exists() else 0))
 
 
+def mlip_committee() -> dict:
+    """T1 모델 위원회 기준선. /benchmarks 의 방법론 축에 붙는다 (물성이 아니라 방법)."""
+    return _load_json(DB / "properties" / "mlip_committee_baseline.json")
+
+
 def nd_survey() -> dict:
     """db/properties/nd_substitution_survey_index.json — 원소 치환 문헌 54편 색인.
 
