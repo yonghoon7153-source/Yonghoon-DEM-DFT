@@ -46,7 +46,7 @@
 
 | # | 서지 | DOI | 왜 필요한가 |
 |---|---|---|---|
-| 1 | de Klerk & Wagemaker, Chem. Mater. 28, 7955 (2016) | 10.1021/acs.chemmater.6b03630 | 무질서%–σ 원전 (75% 최적). AIMD 4a/4d decorate 방법 — disorder ensemble 직접 앵커 |
+| ~~1~~ | ✅ **확보·다이제스트 완료 (2026-07-28)** de Klerk et al. | 10.1021/acs.chemmater.6b03630 | digest: deklerk2016_diffusion_site_disorder_argyrodite.md — 75%는 min-rate 지표·비단조·단일 배열이었음이 판명. ⚠ SI(Tables S1-S3) 미포함 — 점프율 전표 필요 시 SI 별도 확보 |
 | 2 | Adeli et al., Angew. Chem. Int. Ed. 58, 8681 (2019) | 10.1002/anie.201814222 | Li5.5PS4.5Cl1.5 실험 원전 (9.4 mS/cm) — modelc Cl-rich Rietveld 점유율 ground truth |
 | 3 | Deng, Wang, Chu, Luo, Ong, J. Electrochem. Soc. 163, A67 (2016) | 10.1149/2.0061602jes | SQS 반례 원전 (A=0.92) — ordered_vs_disordered 문서 '경계 사례' 논증의 원본 |
 | 4 | Kim et al., Nano Energy 124, 109436 (2024) | (SD 링크는 서베이 §1c) | **config-앙상블 신규성 주장의 선행조건** — 6-config 표본화가 분산을 오차막대로 보고했는지 확인 전까지 원고에 신규성 기재 금지 (서베이 §4-3, §5) |

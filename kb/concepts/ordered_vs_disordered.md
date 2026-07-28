@@ -64,7 +64,7 @@ $\Omega$는 부분점유 사이트에 원자를 배열하는 경우의 수. 0 K�
 
 - 48h 부분점유(occ 0.50, kraft2017)는 곧 **빈자리** — Li가 hop할 목적지
 - 4d S²⁻/Cl⁻ anti-site 섞임이 cage 사이 병목을 평탄화
-- de Klerk 인용(liu2022): 4d 무질서 ↔ σ 양의 관계, **75 % 무질서에서 σ 최고**
+- de Klerk 2016 (원전 digest 확보 2026-07-28): Cl 4c(=4d) 무질서와 전도는 **비단조** — 0%(all-4a)는 inter-cage 점프 0, 100%는 doublet 붕괴로 새 율속, **75%에서 limiting jump rate 최대**(450 K, Cl1.0, min-rate 지표 — σ 직접 아님). ⚠ 2024 MLIP 연구는 25% 피크 보고 — '최적 %' 숫자는 방법 의존, 확실한 건 '양 끝이 나쁘다'뿐
 
 우리 자체 증거가 li_percolation.py에 있다. Li site free-energy 지형의 퍼콜레이션 문턱 $F^*$:
 

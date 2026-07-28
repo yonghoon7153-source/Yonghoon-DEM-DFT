@@ -42,7 +42,7 @@
 
 | 논문 | 조성 | 무질서/decorate | supercell/nat·시간 | σ/Ea 추출 | 출처 |
 |---|---|---|---|---|---|
-| ⚠ de Klerk 2016 (Chem. Mater. 28, 7955) | Li6PS5X | Cl/Br/I를 **4a/4c 두 자리에 분포시켜 배열별 MD**; Cl 4a:4c=1:3이 최적 → 현행 합성재 대비 σ ~2배 예측; Li 공공도 중요 | 1 unit cell(4 f.u.), NVT 100 ps, 2 fs, VASP PAW-PBE 280 eV | DFT-MD; T값은 웹 요약 미확인 | [ACS](https://pubs.acs.org/doi/10.1021/acs.chemmater.6b03630) |
+| ✅ de Klerk 2016 (Chem. Mater. 28, 7955) — **digest 확보 2026-07-28** | Li6PS5X (X=Cl/Br/I) | Cl 4c(=우리 4d) 점유 **0/25/50/75/100% 5단계, 각 %당 배열 1개**(복수 배열·선택기준 언급 전무); Li는 48h 쌍당 1개 제거(24 Li), 공공 배치 규칙 없음 | **1×1×1 (52원자)**, velocity-rescale NVT, dt 2 fs, 총 100 ps(equil 2.5 ps), T 300/450/600 K, VASP PBE 280 eV | 75% 최적 = **450 K 단일점·Cl1.0 전용·min-jump-rate 지표**(σ 직접 아님); **비단조**(0%·100% 모두 저전도 — 100%는 doublet 붕괴로 새 율속) | [digest](../papers/deklerk2016_diffusion_site_disorder_argyrodite.md) |
 | ⚠ Deng 2016 (JES 163, A67) | 23종 SICE 탄성 | **"SQS 아지로다이트"로 지목 — 웹 확인 실패, torii2025 2차 귀속만 확보**(보유 PDF [torii2025](../papers/torii2025_lpscl_mechanical_anisotropy_dft.md) digest L28 'ref10 Deng 2016, SQS'·L109 '그들이 명시적으로 대비'); Ong 그룹 관행은 enumerate+Ewald 최저 배열 — 단 Deng 원문 직접 확인은 여전히 필요 | — | 탄성텐서(σ/Ea 아님) | [IOP](https://iopscience.iop.org/article/10.1149/2.0061602jes) |
 | ⚠ Deng 2017 (Chem. Mater. 29, 281) | Li6PS5Cl | 열거 후 최저에너지 배열 선택으로 서술 | 세부 미인용(웹 요약 혼입 위험) | 상안정성+ESW+AIMD σ 워크플로 | [ACS](https://pubs.acs.org/doi/10.1021/acs.chemmater.6b02648) |
 | ⚠ Stamminger 2019 (Chem. Mater. 31, 8673) | Li6PS5X(X=Br,Cl,I) | 질서형 vs 무질서형 구조유형별 AIMD — 결론: **확산도는 할로겐 종이 아니라 무질서 정도가 지배** | 웹 미확인 | AIMD 확산도; antisite 결함 형성E로 설명 | [ACS](https://pubs.acs.org/doi/10.1021/acs.chemmater.9b02047) |
@@ -90,7 +90,7 @@
 | [liu2022](../papers/liu2022_cl_crystallization_interface_argyrodite.md) | Cl은 4a·4d **양쪽 부분점유**(도식 4a 90/4d 60%), Cl-rich에서 양쪽↑ | 실험 XRD Rietveld |
 | [taklu2021](../papers/taklu2021_cucl_dualdoping_air_stability_argyrodite.md) | 초과 Cl → **4a+4c** | 싱크로트론 Rietveld(자리귀속 완전 확정은 어려움 — digest 주의) |
 | ⚠ Zhou 2025 (계산 decorate) | **4a 전부 Cl + 4d 혼합** — 실험 SOF와 다른 이상화임을 유의 | 웹 소환값 |
-| ⚠ de Klerk 2016 (계산) | Li6PS5Cl은 **Cl 4a:4c=1:3** 분포가 최적(σ ~2배 예측) | 웹 소환값 |
+| ✅ de Klerk 2016 (계산, digest) | Li6PS5Cl은 Cl 4c(=4d) 75%에서 **limiting jump rate 2×**(50:50 대비, 450 K) — σ 직접 계산 아님, 비단조 | digest 확보. ⚠ 2024 MTP-MLIP(INDEX 계산#8, 미digest)는 **25% 피크** 보고 — '최적 %'는 방법 의존, 안전 인용은 '양 끝 나쁨·중간 최적'까지 |
 | [rao2025](../papers/rao2025_iodide_argyrodite.md) (계산) | 할라이드 본질 선호는 **4a**(Br ΔE 0.14 / I 0.35 eV/atom) — 단 disorder 자체를 회피한 단순화 | DFT 단일배열 |
 
 에너지 지형 근거로는 lu2025의 DFT가 결정적이다: **4a+4d 분산 점유가 최안정(−192.1 eV), 4d 완전점유는
