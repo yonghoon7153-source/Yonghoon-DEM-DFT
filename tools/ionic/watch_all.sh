@@ -34,21 +34,44 @@ for r in roots:
     for c in cfgs:
         line, n = f"    {os.path.basename(c)} :", 0
         for T in (600, 800, 1000):
-            # 온도 디렉터리 아래 어떤 이름이든 sigma 를 담은 json 을 찾는다
-            hit = None
-            for f in glob.glob(os.path.join(c, f"T{T}", "*.json")):
+            # ⚠ 키 이름을 **가정하지 않는다** — 실제 파일이 msd.json 이었고 키도 달랐다.
+            #   json 안을 재귀로 훑어 'sigma' 를 포함한 스칼라 키를 찾는다.
+            #   sigma 가 없으면 D(확산계수)라도 잡아 진행 여부만 표시한다.
+            def find(o, want):
+                if isinstance(o, dict):
+                    for k, v in o.items():
+                        if want in k.lower() and isinstance(v, (int, float)):
+                            return v
+                    for v in o.values():
+                        r = find(v, want)
+                        if r is not None:
+                            return r
+                elif isinstance(o, list):
+                    for v in o[:20]:
+                        r = find(v, want)
+                        if r is not None:
+                            return r
+                return None
+            hit, kind = None, ""
+            for f in sorted(glob.glob(os.path.join(c, f"T{T}", "*.json"))):
                 try:
                     d = json.load(open(f))
                 except Exception:
                     continue
-                s = d.get("sigma_NE_Scm_Li")
-                if s is not None:
-                    hit = s
-                    break
+                hit = find(d, "sigma")
+                if hit is not None:
+                    kind = "σ"; break
+                hit = find(d, "d_cm2")
+                if hit is None:
+                    hit = find(d, "diffus")
+                if hit is not None:
+                    kind = "D"; break
             if hit is not None:
-                line += f" {T}K✓({hit:.3e})"; n += 1
+                line += f" {T}K✓({kind}{hit:.2e})"; n += 1
             else:
-                line += f" {T}K·"
+                # json 은 없어도 궤적이 있으면 진행 중
+                run = glob.glob(os.path.join(c, f"T{T}", "traj*"))
+                line += f" {T}K{'~' if run else '·'}"
         print(f"{line}  [{n}/3]")
 PYC
 echo "  ordered baseline: comp2 Ea 0.276±0.033 / comp1 0.253  (disorder가 낮추면 가설 확증)"
