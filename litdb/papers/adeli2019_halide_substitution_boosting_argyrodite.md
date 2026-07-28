@@ -1,6 +1,6 @@
 # Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution — Adeli et al. (Angew. Chem. Int. Ed. 2019)
 
-> slug `adeli2019_halide_substitution_boosting_argyrodite` · DOI `10.1002/anie.201814222` (German edn 10.1002/ange.201814222) · type `exp (중성자 Rietveld + EIS + ⁷Li PFG/MAS NMR; 자체 DFT/MD 0)` · PDF 본문 = 업로드 `82ea256b/68956c35`(6 pp, inbox #33) + **SI = `82ea256b/7c048d8a`(12 pp, inbox #33 Sup) — 본문·SI 전문 정독** · digested `2026-07-28` · status ✅
+> slug `adeli2019_halide_substitution_boosting_argyrodite` · DOI `10.1002/anie.201814222` (German edn 10.1002/ange.201814222) · type `exp (중성자 Rietveld + EIS + ⁷Li PFG/MAS NMR; 자체 DFT/MD 0 — ⚠ 사용자 분류 폴더는 'DFT'이나 본문 계산 없음)` · PDF 본문 = 업로드 `82ea256b/68956c35`(6 pp, inbox #33, 사용자 분류 `DFT`) + **SI = `82ea256b/7c048d8a`(12 pp, inbox #33 Sup) — 본문·SI 전문 정독** · digested `2026-07-28` · status ✅
 > elements: Li, P, S, Cl, Br
 > methods: impedance-spectroscopy, neutron-diffraction, Rietveld, PFG-NMR, MAS-NMR, Haven-ratio, EDX, CV
 > **저자**: Parvin Adeli⁺, J. David Bazak⁺(공동 1저자), Kern Ho Park, Ivan Kochetkov, Ashfia Huq, **Gillian R. Goward***, **Linda F. Nazar*** (Univ. Waterloo Chemistry/WIN · McMaster Univ. · ORNL SNS Neutron Scattering Division) · Angew. Chem. Int. Ed. **2019**, 58, 8681–8686. Received 2018-12-14 / accepted 2019-04-30 / online 2019-05-23. 지원: BASF Battery Network·NSERC·CRC(Nazar); SNS(DOE). **[외부]** (Waterloo Nazar 그룹).
