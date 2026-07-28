@@ -5,8 +5,9 @@ app.py — DFT 지식 인프라 Flask 앱.
 동기화: db 파일을 요청마다 읽으므로 계산 등록 즉시 사이트 반영.
 """
 from flask import Flask, render_template, jsonify, send_from_directory, abort, request
+from markupsafe import Markup, escape
 from datetime import datetime
-import json, os
+import json, os, re
 from datetime import datetime as _dt
 import data as D
 import glossary as G
@@ -42,6 +43,22 @@ def md_html(text: str, extensions=("tables", "fenced_code")) -> str:
         except (KeyError, ValueError):
             pass
     return md.convert(text or "")
+
+
+_BOLD_RE = re.compile(r"\*\*(.+?)\*\*", re.S)
+
+
+@app.template_filter("bold")
+def _bold(s):
+    """db JSON 문자열의 '**강조**' 만 <b> 로 승격. 나머지는 전부 이스케이프.
+
+    깔때기·계보 JSON 은 마크다운 강조를 섞어 쓰는데(정직성 문구가 대부분 거기 걸려 있다)
+    그대로 렌더하면 별표가 노출된다. escape() 를 먼저 걸어 raw HTML 주입은 차단하고,
+    살아남은 ** 쌍만 태그로 바꾼다 — 내부 텍스트는 이미 이스케이프된 상태.
+    """
+    if s is None:
+        return Markup("")
+    return Markup(_BOLD_RE.sub(r"<b>\1</b>", str(escape(str(s)))))
 
 
 def _css_ver():

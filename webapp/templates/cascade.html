@@ -4,6 +4,10 @@
 
 {% macro num(v) %}{% if v is number %}{% if v == v|round(0) %}{{ v|int }}{% else %}{{ '%.3f'|format(v) }}{% endif %}{% else %}{{ v }}{% endif %}{% endmacro %}
 {% macro sf(v, nd=3) %}{% if v is number %}{{ ('%.'~nd~'f')|format(v) }}{% else %}{{ v if v is not none else '' }}{% endif %}{% endmacro %}
+{# litdb digest 링크 — raw 는 'slug' 또는 'slug (역할메모)' 둘 다 허용. digest 없는 slug 는 링크를 죽인다. #}
+{% macro plink(raw, label=None) %}{% set s = (raw|string).split(' ')[0] %}{% set extra = (raw|string)[s|length:]|trim %}{%
+  if s in (lit_have or []) %}<a class="lit-chip" href="/literature?open={{ s }}" title="{{ s }}{{ ' ' ~ extra if extra }}" onclick="return openPaperM('{{ s }}',event)">📄 {{ label or s }}</a>{%
+  else %}<span class="lit-chip off" title="litdb digest 없음">{{ label or s }}</span>{% endif %}{% endmacro %}
 {% macro gtable(t, cols, mo_col=None, modb={}) %}
 <div class="tbl-scroll"><table class="data-table sortable"><thead><tr>
 {% for c in cols %}<th onclick="sortT(this,{{ loop.index0 }})" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">{{ c }}</th>{% endfor %}</tr></thead><tbody>
@@ -27,6 +31,51 @@
   </div>
 </div>
 
+{# ── 📜 방법 계보 — 스크리닝 문헌 → 우리 cascade. 각 항목은 litdb digest 링크 ── #}
+{% if lineage %}
+<details class="card lineage-card" id="lineage">
+  <summary><span class="ln-tag">📜 방법 계보</span>
+    Ong 2013 → Zhu 2015 → Richards 2016 → Xiao 2019 → 우리 cascade
+    <span class="muted" style="font-weight:400">· ML 3세대 · MD 규율 — 클릭해서 펼치기</span></summary>
+  <div class="ln-note">{{ lineage.note|bold }}</div>
+  {% for ch in lineage.chains %}
+  <div class="ln-chain">
+    <div class="ln-title">{{ ch.icon }} {{ ch.title }}</div>
+    <ol class="ln-steps">
+      {% for s in ch.steps %}
+      <li class="ln-step{% if '⛔' in s.ours %} ln-gap{% endif %}">
+        <div class="ln-who">{{ plink(s.paper, s.who ~ ' ' ~ s.year) }}</div>
+        <div class="ln-what">{{ s.what|bold }}</div>
+        <div class="ln-ours"><span class="ln-l">우리</span>{{ s.ours|bold }}</div>
+      </li>
+      {% endfor %}
+      <li class="ln-step ln-end">
+        <div class="ln-who"><span class="ln-badge-ours">여기</span></div>
+        <div class="ln-what"><b>{{ ch.end.title }}</b></div>
+        <div class="ln-ours">{{ ch.end.what|bold }}</div>
+      </li>
+    </ol>
+  </div>
+  {% endfor %}
+  <div class="ln-axes">
+    <div>
+      <h4>➕ 우리가 <b>추가</b>한 축 <span class="muted" style="font-weight:400;font-size:.74rem">문헌 재현이 아니라 확장</span></h4>
+      {% for a in lineage.axes_added %}
+      <div class="ln-ax ln-ax-add"><b>{{ a.axis }}</b><div class="muted">{{ a.why }}</div>
+        <div class="ln-ax-cav">⚠ {{ a.caveat }}</div></div>
+      {% endfor %}
+    </div>
+    <div>
+      <h4>⛔ 문헌에 있고 우리에겐 <b>없는</b> 축 <span class="muted" style="font-weight:400;font-size:.74rem">'전부 재현했다'고 쓰면 틀린다</span></h4>
+      {% for a in lineage.axes_missing %}
+      <div class="ln-ax ln-ax-miss"><b>{{ a.axis }}</b><div class="muted">문헌: {{ a.lit }}</div>
+        <div class="ln-ax-cav">{{ a.status }}</div></div>
+      {% endfor %}
+    </div>
+  </div>
+</details>
+{% endif %}
+
 <div class="stat-tiles">
   <div class="st"><div class="st-v">{{ stats.dopants }}</div><div class="st-l">랭킹된 도펀트</div></div>
   <div class="st"><div class="st-v">{{ stats.pareto }}</div><div class="st-l">Pareto-optimal</div></div>
@@ -40,6 +89,7 @@
 
 <div class="tabs" id="tabs">
   <button class="active" data-tab="board">🏆 Leaderboard</button>
+  {% if casc.funnel %}<button data-tab="funnel">🔻 깔때기</button>{% endif %}
   {% if casc.themes %}<button data-tab="theme">🎯 테마</button>{% endif %}
   <button data-tab="champ">⚙️ Champions</button>
   <button data-tab="ion">🔋 Li transport</button>
@@ -88,6 +138,263 @@
   </div>
 </div>
 
+<!-- 🔻 깔때기 — 문헌 표준 게이트로 재표현한 뷰 (발견 깔때기 아님) -->
+{% if casc.funnel %}
+{% set F = casc.funnel %}
+{% set PV = F.pool_provenance or {} %}
+{% set POOL = PV.pool_size or (F.pool_names|length) or 47 %}
+{% set GM = {} %}{% for g in (F.gates or []) %}{% set _ = GM.update({g.id: g}) %}{% endfor %}
+{% set PERMS = (F.order_sensitivity or {}).permutations or [] %}
+{% set P0 = (PERMS|selectattr('key','equalto','P0_literature_order')|list|first) or (PERMS|first) %}
+{% macro fwidth(n) %}{{ [ (n / POOL * 100), 16 ]|max|round(1) }}{% endmacro %}
+<div class="tab-panel" id="tab-funnel">
+
+  <!-- ❗ 최상단 정직성 callout — 이 탭의 필수 요건 -->
+  <div class="callout cal-danger" style="margin:0 0 16px">
+    <div class="cal-t">❗ 이건 <b>발견 깔때기가 아니다</b> — 큐레이션된 {{ POOL }}종의 재표현 뷰</div>
+    <div class="cal-b" style="font-size:.84rem;line-height:1.65">
+      {{ (F.honesty_header or PV.not_a_discovery_funnel)|bold }}
+      {% if PV.what_it_is %}<div style="margin-top:8px">{{ PV.what_it_is|bold }}</div>{% endif %}
+      {% if PV.literature_pool_comparison %}
+      {% set LP = PV.literature_pool_comparison %}
+      <div class="pool-cmp">
+        <div class="pc-col pc-not">
+          <div class="pc-h">우리가 <b>아닌</b> 것 — 발견 깔때기</div>
+          {% for k, v in (LP.discovery_funnels_we_are_NOT or {}).items() %}
+          <div class="pc-row">{{ plink(k) }} <span>{{ v }}</span></div>{% endfor %}
+        </div>
+        <div class="pc-col pc-like">
+          <div class="pc-h">우리와 <b>같은</b> 체급 — 조성족 스캔</div>
+          {% for k, v in (LP.family_scans_we_ARE_LIKE or {}).items() %}
+          <div class="pc-row">{{ plink(k) }} <span>{{ v }}</span></div>{% endfor %}
+          <div class="pc-row pc-us"><span class="lit-chip us">우리</span> <span>{{ POOL }} (큐레이션 도펀트 후보군)</span></div>
+        </div>
+      </div>
+      {% if LP.verdict %}<div class="pc-verdict">{{ LP.verdict|bold }}</div>{% endif %}
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>풀 출처 <span class="muted" style="font-weight:400;font-size:.8rem">{{ POOL }}종이 어떻게 이 목록이 됐나</span></h3>
+    <ol class="prov-hist">{% for h in (PV.selection_history or []) %}<li>{{ h|bold }}</li>{% endfor %}</ol>
+    {% if PV.attrition_is_not_screening %}
+    <div class="callout cal-warning" style="margin:12px 0 0"><div class="cal-b" style="font-size:.8rem">{{ PV.attrition_is_not_screening|bold }}</div></div>
+    {% endif %}
+    {% if PV.related_but_different_funnel %}
+    <div class="muted" style="font-size:.74rem;margin-top:8px">{{ PV.related_but_different_funnel|bold }}</div>{% endif %}
+  </div>
+
+  <!-- 세로 깔때기 -->
+  <div class="card">
+    <h3>게이트 깔때기 <span class="muted" style="font-weight:400;font-size:.8rem">대표 순서 {{ (F.representative_order or [])|join(' → ') }} · 회색 점선 = vacuous</span></h3>
+    <div class="funnel">
+      <div class="fn-node fn-pool" style="width:100%">
+        <span class="fn-n">{{ POOL }}</span><span class="fn-nl">pool — 큐레이션 후보군 (걸러서 남은 수가 아님)</span>
+      </div>
+      {% for st in (P0.steps or []) %}
+      {% set g = GM.get(st.gate, {}) %}
+      {% set la = g.literature_analog or {} %}
+      <div class="fn-gate{% if st.vacuous %} vac{% endif %}{% if g.arbitrariness_flag %} arb{% endif %}">
+        <div class="fn-g-head">
+          <span class="fn-g-id">{{ g.id or st.gate }}</span>
+          <b>{{ g.label or g.name }}</b>
+          {% if st.vacuous %}<span class="fn-badge b-vac" title="우리 풀이 이미 이 조건으로 큐레이션됨 — 우리가 걸러낸 게 아니다">💤 vacuous ({{ st.n_pass }}/{{ st.n_in }})</span>{% endif %}
+          {% if g.arbitrariness_flag %}<span class="fn-badge b-arb" title="host 앵커가 없는 로스터 내부 상대 컷 — 유일하게 자의적인 게이트">🎲 자의적 컷</span>{% endif %}
+          {% if la.papers %}{% for p in la.papers %}{{ plink(p) }}{% endfor %}
+          {% else %}<span class="fn-badge b-noan" title="{{ la.mapping|replace('**','') }}">📚 문헌 대응 없음 (우리 추가 축)</span>{% endif %}
+          <span class="fn-g-cnt">{{ st.n_in }} → <b>{{ st.n_pass }}</b>{% if st.n_fail %} <span class="fn-drop">−{{ st.n_fail }}</span>{% endif %}</span>
+        </div>
+        <div class="fn-g-body">
+          <div><span class="fn-l">지표</span><span class="mono">{{ g.metric }}</span></div>
+          <div><span class="fn-l">임계값</span><code>{{ g.threshold }}</code></div>
+          <div><span class="fn-l">근거</span>{{ g.threshold_basis|bold }}</div>
+          {% if g.engine %}<div><span class="fn-l">엔진</span>{{ g.engine|bold }}</div>{% endif %}
+          {% if la.their_threshold %}<div><span class="fn-l">문헌 문턱</span>{{ la.their_threshold|bold }}</div>{% endif %}
+          {% if la.mapping %}<div><span class="fn-l">대응</span>{{ la.mapping|bold }}</div>{% endif %}
+          {% if st.vacuous and g.vacuous_interpretation %}
+          <div class="fn-vac-note">{{ g.vacuous_interpretation|bold }}</div>{% endif %}
+          {% set elim = (g.in_representative_order or {}).eliminated_here or [] %}
+          {% if elim %}
+          <details class="fn-elim"><summary>여기서 탈락 {{ elim|length }}종 — 펼치기</summary>
+            <div class="fn-chips">{% for d in elim %}<a class="fn-chip" href="/cascade#{{ d }}" title="리더보드에서 보기">{{ d }}</a>{% endfor %}</div>
+          </details>
+          {% endif %}
+          {% set sa = g.standalone or {} %}
+          {% if sa.n_fail is not none %}
+          <div class="muted" style="font-size:.72rem;margin-top:6px">단독 적용 시(순서 무관): {{ POOL }} → {{ sa.n_pass }} (−{{ sa.n_fail }})</div>{% endif %}
+        </div>
+      </div>
+      <div class="fn-node{% if st.vacuous %} vac{% endif %}" style="width:{{ fwidth(st.n_pass) }}%">
+        <span class="fn-n">{{ st.n_pass }}</span><span class="fn-nl">{{ st.gate }} 통과</span>
+      </div>
+      {% endfor %}
+    </div>
+
+    {% if F.literature_comparable_endpoint %}
+    {% set LE = F.literature_comparable_endpoint %}
+    <div class="callout cal-important" style="margin:16px 0 0">
+      <div class="cal-t">📏 문헌과 나란히 인용할 수 있는 지점 = {{ LE.gate }} ({{ LE.n }}종)</div>
+      <div class="cal-b" style="font-size:.82rem">{{ LE.why|bold }}
+        <div class="fn-chips" style="margin-top:8px">{% for d in LE.survivors %}<span class="fn-chip ok">{{ d }}</span>{% endfor %}</div>
+      </div>
+    </div>
+    {% endif %}
+    {% if F.final_survivors_warning %}
+    <div class="callout cal-warning" style="margin:12px 0 0">
+      <div class="cal-t">⚠ 최종 생존자 {{ (F.final_survivors or [])|join('·') }} 를 "정답"으로 읽지 말 것</div>
+      <div class="cal-b" style="font-size:.82rem">{{ F.final_survivors_warning|bold }}</div>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- 게이트 선택압 -->
+  {% if F.gate_power %}
+  <div class="card">
+    <h3>게이트 선택압 <span class="muted" style="font-weight:400;font-size:.8rem">unique_kill = 0 이면 다른 게이트에 완전히 포섭된 중복 게이트</span></h3>
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>gate</th><th>name</th><th>단독 제거</th><th>대표순서 한계 제거</th><th>unique kill</th><th>없으면 살아 돌아오는 종</th><th>판정</th>
+    </tr></thead><tbody>
+      {% for r in F.gate_power.rows %}
+      <tr class="{% if r.redundant_given_others %}row-dim{% endif %}">
+        <td><b>{{ r.gate }}</b></td><td class="mono" style="font-size:.74rem">{{ r.name }}</td>
+        <td class="num">{{ r.standalone_kill }}</td><td class="num">{{ r.marginal_kill_in_P0 }}</td>
+        <td class="num"><b>{{ r.unique_kill }}</b></td>
+        <td style="font-size:.74rem">{{ (r.unique_kill_list or [])|join(', ') or '—' }}</td>
+        <td>{% if r.redundant_given_others %}<span class="fn-badge b-vac">중복</span>{% else %}<span class="fn-badge b-ok">고유</span>{% endif %}</td>
+      </tr>{% endfor %}
+    </tbody></table></div>
+    <div class="muted" style="font-size:.74rem;margin-top:6px">{{ F.gate_power.reading|bold }}</div>
+  </div>
+  {% endif %}
+
+  <!-- 순서 민감도 -->
+  {% if F.order_sensitivity %}
+  {% set OS = F.order_sensitivity %}
+  <div class="card">
+    <h3>순서 민감도 <span class="muted" style="font-weight:400;font-size:.8rem">게이트 순서를 바꾸면 그림이 바뀌는가</span></h3>
+    <div class="callout {{ 'cal-tip' if OS.final_sets_identical else 'cal-warning' }}" style="margin:0 0 14px">
+      <div class="cal-t">{{ '✅ 최종 생존자 집합은 순서 불변' if OS.final_sets_identical else '⚠ 순서에 따라 최종 집합이 달라짐' }}
+        — 교집합 {{ (OS.intersection or [])|join('·') }}{% if OS.symmetric_difference %} · 차집합 {{ OS.symmetric_difference|join('·') }}{% endif %}</div>
+      <div class="cal-b" style="font-size:.82rem">{{ OS.why|bold }}</div>
+    </div>
+    <div class="perm-grid">
+      {% for p in PERMS %}
+      <div class="perm{% if p.key == P0.key %} perm-p0{% endif %}">
+        <div class="perm-h">{{ p.key }}{% if p.key == P0.key %} <span class="fn-badge b-ok">대표</span>{% endif %}</div>
+        <div class="perm-o mono">{{ (p.order or [])|join(' → ') }}</div>
+        <div class="perm-r">{{ p.rationale }}</div>
+        <div class="perm-wf">
+          {% for st in (p.steps or []) %}
+          <div class="pw-row">
+            <span class="pw-g">{{ st.gate }}</span>
+            <span class="pw-bar{% if st.vacuous %} vac{% endif %}" style="width:{{ fwidth(st.n_pass) }}%">{{ st.n_pass }}</span>
+            {% if st.vacuous %}<span class="pw-vac" title="우리 풀이 이미 이 조건으로 큐레이션됨">💤</span>{% endif %}
+          </div>
+          {% endfor %}
+        </div>
+        <div class="perm-f">최종 {{ (p.final_survivors or [])|join('·') }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    {% if OS.sendek_analog_verdict %}
+    <div class="callout cal-note" style="margin:14px 0 0">
+      <div class="cal-t">{{ plink('sendek2017_ml_screening_12k_conductors','Sendek 2017') }} 명제와의 대조</div>
+      <div class="cal-b" style="font-size:.82rem">{{ OS.sendek_analog_verdict|bold }}</div>
+    </div>{% endif %}
+  </div>
+  {% endif %}
+
+  <!-- 임계값 민감도 -->
+  {% if F.threshold_sensitivity %}
+  {% set TS = F.threshold_sensitivity %}
+  <div class="card">
+    <h3>임계값 민감도 <span class="muted" style="font-weight:400;font-size:.8rem">컷을 흔들면 생존자가 어떻게 움직이나</span></h3>
+    <div class="muted" style="font-size:.78rem;margin-bottom:10px">{{ TS.how_to_read|bold }}</div>
+    {% for key, sw in [('G3_oxidation_onset', TS.G3_oxidation_onset), ('G4_li_transport', TS.G4_li_transport), ('G5_mechanical', TS.G5_mechanical)] %}
+    {% if sw %}
+    <div class="sw-block">
+      <div class="sw-h">{{ key }}</div>
+      <div class="tbl-scroll"><table class="data-table"><thead><tr>
+        {% for c in (sw.sweep[0].keys()|list) %}{% if c != 'core_survivors' and c != 'survivors' %}<th>{{ c }}</th>{% endif %}{% endfor %}<th>생존자</th>
+      </tr></thead><tbody>
+        {% for r in sw.sweep %}
+        <tr>{% for c in (sw.sweep[0].keys()|list) %}{% if c != 'core_survivors' and c != 'survivors' %}<td class="num">{{ r[c] }}</td>{% endif %}{% endfor %}
+          <td style="font-size:.72rem">{{ (r.core_survivors if r.core_survivors is defined else r.survivors)|join(', ') or '— (empty)' }}</td></tr>
+        {% endfor %}
+      </tbody></table></div>
+      {% if sw.note %}<div class="muted" style="font-size:.74rem;margin-top:6px">{{ sw.note|bold }}</div>{% endif %}
+    </div>
+    {% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- 문헌 절대 문턱 이식 실험 -->
+  {% if F.literature_absolute_variants %}
+  <div class="card">
+    <h3>문헌 절대 문턱을 그대로 이식하면? <span class="muted" style="font-weight:400;font-size:.8rem">우리가 상대 좌표를 쓰는 이유의 정량 근거</span></h3>
+    {% for v in F.literature_absolute_variants %}
+    <div class="lav{% if v.n_pass_standalone == 0 %} lav-empty{% endif %}">
+      <div class="lav-h"><span class="fn-g-id">{{ v.gate }}</span><span class="mono">{{ v.variant }}</span>
+        <span class="lav-n">{{ '생존 ' ~ v.n_pass_standalone ~ '종' if v.n_pass_standalone is not none else '계산 불가' }}</span></div>
+      <div class="lav-t"><code>{{ v.threshold }}</code></div>
+      <div class="lav-v">{{ v.verdict|bold }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- 문헌 대비표 -->
+  {% if F.literature_comparison_table %}
+  <div class="card">
+    <h3>문헌 대비표 <span class="muted" style="font-weight:400;font-size:.8rem">축별로 무엇이 같고 무엇이 다른가</span></h3>
+    <div class="tbl-scroll"><table class="data-table lit-cmp"><thead><tr>
+      <th style="width:14%">축</th><th style="width:30%">문헌</th><th style="width:22%">우리</th><th>차이의 이유</th>
+    </tr></thead><tbody>
+      {% for r in F.literature_comparison_table %}
+      <tr><td><b>{{ r.axis }}</b></td><td>{{ r.literature|bold }}</td><td>{{ r.ours|bold }}</td><td>{{ r.difference_reason|bold }}</td></tr>
+      {% endfor %}
+    </tbody></table></div>
+  </div>
+  {% endif %}
+
+  <!-- 전자 절연 진단 (게이트 아님) -->
+  {% if F.electronic_insulation_diagnostic %}
+  {% set EI = F.electronic_insulation_diagnostic %}
+  <div class="card">
+    <h3>전자 절연 — <span class="fn-badge b-diag">진단만, 게이트 아님</span></h3>
+    <div class="muted" style="font-size:.8rem">{{ EI.why_not_a_gate|bold }}</div>
+    <div class="fn-chips" style="margin-top:10px">
+      {% for r in (EI.core_survivors_gap_lit_eV or []) %}
+      <span class="fn-chip {{ 'warn' if r.gap_lit_eV < 3 else 'ok' }}" title="문헌 큐레이션 gap (우리 계산값 아님)">{{ r.dopant }} · {{ r.gap_lit_eV }} eV</span>
+      {% endfor %}
+    </div>
+    {% if EI.if_applied %}<div class="callout cal-warning" style="margin:12px 0 0"><div class="cal-b" style="font-size:.8rem">{{ EI.if_applied.verdict|bold }}</div></div>{% endif %}
+  </div>
+  {% endif %}
+
+  <!-- 핵심 발견 + 주의 -->
+  <div class="grid grid-2 fn-final">
+    {% if F.key_findings %}
+    <div class="card"><h3>🔑 핵심 발견</h3>
+      <ul class="fn-ul">{% for k in F.key_findings %}<li>{{ k|bold }}</li>{% endfor %}</ul></div>
+    {% endif %}
+    {% if F.caveats %}
+    <div class="card insight-card" style="border-left-color:var(--amber);background:color-mix(in srgb,var(--amber) 9%,var(--card))">
+      <div class="ic-tag" style="color:var(--amber)">⚠ 주의 — 인용 전에 반드시</div>
+      <ul class="fn-ul">{% for c in F.caveats %}<li>{{ c|bold }}</li>{% endfor %}</ul></div>
+    {% endif %}
+  </div>
+
+  <div class="muted" style="font-size:.72rem;margin-top:10px">
+    소스: {% for s in (F.source_files or []) %}<span class="mono">{{ s }}</span>{{ ' · ' if not loop.last }}{% endfor %}
+    · 문헌: {% for s in (F.literature_sources or []) %}{{ plink(s.split('/')[-1].replace('.md','')) }}{% endfor %}
+    {% if F.date %}· 생성 {{ F.date }}{% endif %}
+  </div>
+</div>
+{% endif %}
+
 <!-- 🎯 테마 — 테마별 재구성 + 조합(기하평균) UI -->
 {% if casc.themes %}
 <div class="tab-panel" id="tab-theme">
@@ -114,7 +421,7 @@
           {% else %}<span class="th-chip">{{ dp }}</span>{% endif %}
         {% endfor %}
       </div>
-      <div class="tc-caveat">⚠ {{ th.caveat }}</div>
+      <div class="tc-caveat">⚠ {{ th.caveat|bold }}</div>
     </div>
   {% endfor %}
   </div>
@@ -180,11 +487,83 @@
     {% set m = casc.codoping_v2_meta %}
     {% set s1 = m.stage1_single_dopant_ridge or {} %}
     {% set v1c = m.vs_v1 or {} %}
-    <div class="cm-grid" style="margin-bottom:10px">
-      {% if m.status %}<div class="cm-warn"><span class="cm-l">상태</span>{{ m.status }}</div>{% endif %}
-      {% if s1.loocv_r2 is defined %}<div><span class="cm-l">LOOCV R²</span>{{ s1.loocv_r2 }} <span class="muted">(단일도펀트 ridge{% if s1.n is defined %}, n={{ s1.n }}{% endif %} — 타깃이 합성지표라 높게 나옴)</span></div>{% endif %}
-      {% if v1c.spearman_on_v1_top40_pairs is defined %}<div><span class="cm-l">v1 상관</span>Spearman {{ v1c.spearman_on_v1_top40_pairs }} (v1 top40 기준){% if v1c.top10_overlap_count is defined %} · top10 겹침 {{ v1c.top10_overlap_count }}/10{% endif %}</div>{% endif %}
+    {% set SD = m.sendek2017_small_sample_defenses or {} %}
+    {% if m.status %}<div class="cm-grid" style="margin-bottom:10px"><div class="cm-warn"><span class="cm-l">상태</span>{{ m.status }}</div></div>{% endif %}
+
+    {# 🤖 소표본 ML 방어 — Sendek 화법: 'R² 몇' 이 아니라 'base rate 대비 N배 농축' 이 대표 지표 #}
+    {% if SD %}
+    {% set HL = SD.headline or {} %}
+    {% set S3 = SD.stage3_interaction_distillation or {} %}
+    <div class="ml-def">
+      <div class="ml-def-h">🛡️ 소표본 ML 방어 절차 — {{ plink('sendek2017_ml_screening_12k_conductors','Sendek 2017') }} §4d 계승
+        <span class="muted" style="font-weight:400;font-size:.74rem">절차만 이식 · 수치·특징 이식 금지</span></div>
+      <div class="ml-tiles">
+        <div class="mlt mlt-good">
+          <div class="mlt-v">{{ HL.stage3_ordering_enrichment_x }}×</div>
+          <div class="mlt-l"><b>순서</b> 농축 — 이미 알려진 40쌍 안에서의 순위<br>
+            <span class="muted">랜덤(라벨셔플) 대비{% if S3.label_shuffle_p_value_spearman is defined %} · p={{ '%.3f'|format(S3.label_shuffle_p_value_spearman) }}{% endif %}</span></div>
+        </div>
+        <div class="mlt mlt-bad">
+          <div class="mlt-v">{{ HL.stage3_discovery_enrichment_x }}×</div>
+          <div class="mlt-l"><b>발굴</b> 농축 — 1081쌍에서 그 40쌍을 top-40 으로<br>
+            <span class="muted">랜덤과 <b>구별 불가</b>{% if S3.label_shuffle_p_value_precision is defined %} · p={{ '%.2f'|format(S3.label_shuffle_p_value_precision) }}{% endif %}</span></div>
+        </div>
+        <div class="mlt mlt-bad">
+          <div class="mlt-v">{{ HL.stage3_cRp2 }}</div>
+          <div class="mlt-l">cR²_p — QSAR 관례 문턱 <b>0.5 미달</b><br><span class="muted">Sendek 최적모델 0.59</span></div>
+        </div>
+        <div class="mlt mlt-bad">
+          <div class="mlt-v">+{{ HL.pairCV_minus_L2DO_weighted_r2 }}</div>
+          <div class="mlt-l">pair-CV 낙관 편의 (ΔR² vs L2DO)<br><span class="muted">독립 폴드에선 R² &lt; 0</span></div>
+        </div>
+        <div class="mlt">
+          <div class="mlt-v">{{ HL.n_pairs_outside_applicability_domain }}<span style="font-size:.5em">/{{ (m.stage3_interaction_distillation or {}).n_pairs or 1081 }}</span></div>
+          <div class="mlt-l">적용영역(AD) 밖 = 외삽<br><span class="muted">top-40 안에는 {{ (SD.applicability_domain or {}).n_outside_in_top40 }}개</span></div>
+        </div>
+      </div>
+      {% if HL.one_line %}<div class="ml-oneline">{{ HL.one_line|bold }}</div>{% endif %}
+      {% if SD.honesty_framing %}
+      <ul class="fn-ul ml-honest">{% for h in SD.honesty_framing %}<li>{{ h|bold }}</li>{% endfor %}</ul>
+      {% endif %}
+
+      {% set LK = SD.cv_leakage_leave_one_dopant_out or {} %}
+      {% if LK.pair_LOOCV %}
+      <details class="ml-det"><summary>🔬 LODO — 도펀트 누수 교차검증 (pair-CV 수치 단독 인용 금지)</summary>
+        <div class="tbl-scroll"><table class="data-table"><thead><tr>
+          <th>폴드 구성</th><th>가중 R²</th><th>Spearman (v1 수록 40쌍)</th></tr></thead><tbody>
+          <tr><td>pair-LOOCV <span class="muted">(누수 있음)</span></td><td class="num">{{ LK.pair_LOOCV.weighted_r2 }}</td><td class="num">{{ LK.pair_LOOCV.spearman_on_listed }}</td></tr>
+          <tr><td>leave-one-dopant-out</td><td class="num">{{ LK.leave_one_dopant_out.weighted_r2 }}</td><td class="num">{{ LK.leave_one_dopant_out.spearman_on_listed }}</td></tr>
+          <tr><td>leave-both-dopants-out</td><td class="num">{{ LK.leave_both_dopants_out.weighted_r2 }}</td><td class="num">{{ LK.leave_both_dopants_out.spearman_on_listed }}</td></tr>
+        </tbody></table></div>
+        <div class="muted" style="font-size:.78rem;margin-top:8px">{{ LK.verdict|bold }}</div>
+        {% if LK.lambda_leak_note %}<div class="muted" style="font-size:.72rem;margin-top:6px">{{ LK.lambda_leak_note|bold }}</div>{% endif %}
+      </details>
+      {% endif %}
+
+      {% set AD = SD.applicability_domain or {} %}
+      {% if AD.definition %}
+      <details class="ml-det"><summary>📐 적용영역(AD) — 표의 <span class="mono">ad_d</span>/<span class="mono">ad_eps</span>/<span class="mono">ad_A</span> 열 읽는 법</summary>
+        <div style="font-size:.8rem;line-height:1.6">{{ AD.definition|bold }}</div>
+        <div class="cm-grid" style="margin-top:10px">
+          <div><span class="cm-l">문턱</span>d ≤ {{ AD.d_threshold }} 이면 내삽(ad_A=1)</div>
+          <div><span class="cm-l">외삽</span>{{ AD.n_outside_domain }}/{{ AD.n_pairs }}쌍 ({{ (AD.frac_outside_domain*100)|round(1) }}%) · top-40 안 {{ AD.n_outside_in_top40 }}개 · top-10 안 {{ AD.n_outside_in_top10 }}개</div>
+        </div>
+        {% if AD.finding %}<div class="muted" style="font-size:.78rem;margin-top:8px">{{ AD.finding|bold }}</div>{% endif %}
+        {% if AD.use %}<div class="callout cal-warning" style="margin:10px 0 0"><div class="cal-b" style="font-size:.78rem">{{ AD.use|bold }}</div></div>{% endif %}
+      </details>
+      {% endif %}
+
+      {% if SD.determinism %}<div class="muted" style="font-size:.72rem;margin-top:8px">결정론: seed {{ SD.determinism.seed }} · 순열 {{ SD.determinism.n_permutations }}회 — {{ SD.determinism.note }}</div>{% endif %}
     </div>
+    {% endif %}
+
+    <details class="ml-det" style="margin-bottom:10px"><summary>내부 일관성 지표 (검증 아님) — LOOCV R² · v1 상관</summary>
+      <div class="cm-grid">
+        {% if s1.loocv_r2 is defined %}<div><span class="cm-l">LOOCV R²</span>{{ s1.loocv_r2 }} <span class="muted">(단일도펀트 ridge{% if s1.n is defined %}, n={{ s1.n }}{% endif %} — 타깃이 특징의 선형합성이라 '항등식 복원'이지 예측력이 아님)</span></div>{% endif %}
+        {% if v1c.spearman_on_v1_top40_pairs is defined %}<div><span class="cm-l">v1 상관</span>Spearman {{ v1c.spearman_on_v1_top40_pairs }} (v1 top40 기준){% if v1c.top10_overlap_count is defined %} · top10 겹침 {{ v1c.top10_overlap_count }}/10{% endif %}</div>{% endif %}
+        {% if (SD.stage1_score_regression or {}).interpretation %}<div class="cm-warn"><span class="cm-l">⚠ 읽는 법</span>{{ SD.stage1_score_regression.interpretation|bold }}</div>{% endif %}
+      </div>
+    </details>
     {% endif %}
     {{ gtable({'data': casc.codoping_v2.data[:40]}, casc.codoping_v2.columns) }}
     <div class="muted" style="font-size:.74rem;margin-top:6px">상위 40쌍만 표시 (전체 {{ casc.codoping_v2.n }}쌍 → <a href="/api/csv/properties/codoping_ml_v2.csv">CSV 원본</a>) ·
@@ -202,11 +581,36 @@
 
 {% include "_mo_modal.html" %}
 
+<!-- 📄 litdb digest 뷰어 — /api/paper/<slug> 재사용 (literature.html 과 같은 API). JS 없으면 링크가 /literature?open= 로 폴백 -->
+<div class="modal" id="litmodal" role="dialog" aria-modal="true" aria-labelledby="littitle"
+     onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal-body" style="max-width:840px;width:100%">
+    <div class="modal-head"><h3 id="littitle" class="mono" style="font-size:.85rem"></h3>
+      <button class="btn sm" onclick="document.getElementById('litmodal').classList.remove('open')">✕ 닫기</button></div>
+    <div class="doc" id="litbody" style="border:none;box-shadow:none;border-radius:0"></div>
+  </div>
+</div>
+
 <script>window.MO_DB={{ mo_db|tojson }};</script>
 <script src="{{ url_for('static', filename='js/mo.js') }}?v={{ asset_version }}"></script>
 <script>
 var RANKED = {{ (casc.ranked.data or [])|tojson }};
 var GCOL = {{ gcol|tojson }};
+
+// 📄 litdb digest 모달 — 실패하면 false 를 안 돌려서 <a href="/literature?open=..."> 폴백이 살아난다
+function openPaperM(slug, ev){
+  if(!/^[a-z0-9_]+$/i.test(slug)) return true;
+  var mo=document.getElementById('litmodal'), bd=document.getElementById('litbody');
+  if(!mo||!bd||!window.fetch) return true;
+  if(ev) ev.preventDefault();
+  document.getElementById('littitle').textContent=slug;
+  bd.innerHTML='<span class="muted">로딩...</span>';
+  mo.classList.add('open');
+  fetch('/api/paper/'+encodeURIComponent(slug)).then(function(r){return r.json();})
+    .then(function(d){bd.innerHTML=d.html||'<span class="muted">본문 없음</span>';})
+    .catch(function(){bd.innerHTML='<span class="muted">digest 로드 실패 — <a href="/literature?open='+slug+'">문헌 페이지에서 열기</a></span>';});
+  return false;
+}
 document.querySelectorAll('#tabs button').forEach(function(b){b.onclick=function(){
   document.querySelectorAll('#tabs button').forEach(function(x){x.classList.remove('active')});
   document.querySelectorAll('.tab-panel').forEach(function(x){x.classList.remove('active')});
