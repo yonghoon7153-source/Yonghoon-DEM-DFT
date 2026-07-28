@@ -90,6 +90,7 @@
 <div class="tabs" id="tabs">
   <button class="active" data-tab="board">🏆 Leaderboard</button>
   {% if casc.funnel %}<button data-tab="funnel">🔻 깔때기</button>{% endif %}
+  {% if casc.stability %}<button data-tab="stab">🛡 안정성 3축</button>{% endif %}
   {% if casc.themes %}<button data-tab="theme">🎯 테마</button>{% endif %}
   <button data-tab="champ">⚙️ Champions</button>
   <button data-tab="ion">🔋 Li transport</button>
@@ -392,6 +393,75 @@
     · 문헌: {% for s in (F.literature_sources or []) %}{{ plink(s.split('/')[-1].replace('.md','')) }}{% endfor %}
     {% if F.date %}· 생성 {{ F.date }}{% endif %}
   </div>
+</div>
+{% endif %}
+
+
+<!-- 🛡 T9-T11 안정성 3축 — M6 의 vacuous 판정을 뒤집은 데이터 -->
+{% if casc.stability %}
+{% set S = casc.stability %}
+<div class="tab-panel" id="tab-stab">
+  <div class="callout cal-danger">
+    <b>이 탭의 데이터가 우리 자신의 판정 하나를 뒤집었다.</b>
+    2026-07-28 M6 에서 <b>양극 상대만</b> 계산하고 "89/94 통과, unique_kill 0 → vacuous 게이트"라고
+    판정했는데, SE·Li 축을 추가하니 정반대였다. 전말은
+    <a href="/benchmarks">Benchmarks → 판정 정정 이력 V1</a>.
+    {% for h in S.honesty_header %}<div style="margin-top:6px">{{ h|bold }}</div>{% endfor %}
+  </div>
+
+  <h3 style="margin-top:22px;font-size:.95rem">축별 위력 — 같은 컷(100 meV)인데 결과가 극단적으로 다르다</h3>
+  <div class="tbl-scroll" style="margin-top:8px"><table class="data-table">
+    <thead><tr><th>축</th><th>통과</th><th>탈락</th><th>중앙값 (meV/atom)</th><th>최악</th><th>코어 11종 중 킬</th></tr></thead>
+    <tbody>
+    {% for k, g in S.T9_interface_axes.gates.items() %}
+      <tr {% if k in ('SE_LPSCl','Li_anode') %}style="background:#fef2f2"{% endif %}>
+        <td class="mono">{{ k }}</td>
+        <td>{{ g.pass }}/{{ g.n }}</td>
+        <td {% if g.kill > 10 %}style="font-weight:700;color:#dc2626"{% endif %}>{{ g.kill }}</td>
+        <td class="mono">{{ g.median }}</td><td class="mono muted">{{ g.worst }}</td>
+        <td style="font-size:.76rem">{{ g.unique_kill_vs_core|join(', ') or '—' }}</td></tr>
+    {% endfor %}
+    </tbody></table></div>
+
+  <div class="callout" style="margin-top:12px">{{ S.T9_interface_axes.verdict_overturns_M6|bold }}</div>
+
+  <div class="grid grid-2" style="margin-top:14px">
+    <div class="card" style="padding:14px 18px">
+      <div style="font-weight:600;font-size:.88rem">코어 생존자 변화</div>
+      <div style="font-size:.82rem;margin-top:8px">
+        <div><span class="muted">G1–G4 통과 (기존)</span> —
+          <span class="mono">{{ S.T9_interface_axes.core_survivors_before|join(' · ') }}</span></div>
+        <div style="margin-top:6px;color:#dc2626"><b>SE·Li 축에서 탈락</b> —
+          <span class="mono">{{ S.T9_interface_axes.core_killed_by_SE_or_Li|join(' · ') }}</span></div>
+        <div style="margin-top:6px;color:#047857"><b>전 축 통과</b> —
+          <span class="mono" style="font-size:1rem">{{ S.T9_interface_axes.core_survivors_after|join(' · ') }}</span></div>
+      </div>
+      <div class="callout cal-warn" style="margin-top:10px;font-size:.78rem">{{ S.T9_interface_axes.note_survivors|bold }}</div>
+    </div>
+
+    <div class="card" style="padding:14px 18px;border-left:3px solid #f59e0b">
+      <div style="font-weight:600;font-size:.88rem">T10 — 예측이 빗나간 기록 <span class="tbadge"
+        style="background:#fef3c7;color:#92400e;margin-left:4px">음성 결과</span></div>
+      <div style="font-size:.8rem;margin-top:6px" class="mono">{{ S.T10_hull_synthesizability.gate }}</div>
+      <div style="font-size:.82rem;margin-top:6px">탈락 <b>{{ S.T10_hull_synthesizability.n_fail }}종</b> ·
+        최대값: {% for v, c in S.T10_hull_synthesizability.max %}{{ c }} {{ '%.0f'|format(v) }}{% if not loop.last %}, {% endif %}{% endfor %} meV</div>
+      <div class="callout cal-warn" style="margin-top:10px;font-size:.79rem">{{ S.T10_hull_synthesizability['⚠_negative_result']|bold }}</div>
+      <div class="callout" style="margin-top:8px;font-size:.78rem">{{ S.T10_hull_synthesizability['⚠_negative_result'] and '' }}{{ S.T10_hull_synthesizability.get('caveat','') }}</div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:22px;font-size:.95rem">T11 — 가수분해 열역학 구동력</h3>
+  <div class="muted" style="font-size:.8rem;margin-top:4px">{{ S.T11_hydrolysis.gate }}</div>
+  <div class="tbl-scroll" style="margin-top:8px"><table class="data-table">
+    <thead><tr><th>코팅</th><th>ΔE<sub>H₂S</sub> (meV/atom)</th></tr></thead>
+    <tbody>{% for r in S.T11_hydrolysis.worst_10 %}
+      <tr><td class="mono">{{ r.coating }}</td><td class="mono">{{ r.dE_H2S_meV }}</td></tr>{% endfor %}</tbody></table></div>
+  <div class="callout" style="margin-top:10px">{{ S.T11_hydrolysis.chemistry|bold }}<br>{{ S.T11_hydrolysis.cross_axis|bold }}</div>
+  <div class="callout cal-warn" style="margin-top:8px">{{ S.T11_hydrolysis['⚠_missing']|bold }}<br>{{ S.T11_hydrolysis['⚠_not_the_same_as']|bold }}</div>
+
+  <h3 style="margin-top:22px;font-size:.95rem">다음</h3>
+  <ul style="margin-top:6px">{% for n in S.next %}<li style="font-size:.83rem">{{ n|bold }}</li>{% endfor %}</ul>
+  <div class="muted mono" style="font-size:.72rem;margin-top:12px">{{ S.method }}<br>{{ S.source_csv }}</div>
 </div>
 {% endif %}
 

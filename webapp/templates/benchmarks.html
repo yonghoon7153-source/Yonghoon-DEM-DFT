@@ -47,6 +47,59 @@
 </table>
 </div>
 
+<!-- ── 판정 정정 이력 (우리 쪽) ─────────────────────────── -->
+<h2 style="margin-top:34px;font-size:1rem">🔁 판정 정정 이력 <span class="muted"
+  style="font-weight:400;font-size:.8rem">({{ revisions|length }}건 — <b>우리가 냈다가 뒤집은 판정</b>)</span></h2>
+<div class="callout cal-danger" style="margin-top:8px">
+  위의 <b>덱 정정 원장</b>이 "외부 자료가 틀렸다"라면 이건 <b>"우리가 틀렸다"</b>다.
+  <b>둘을 나란히 두는 것이 핵심이다</b> — 한쪽만 있으면 정직성이 아니라 남 탓이 된다.
+  각 항목은 <span class="mono">무엇을 주장했나 → 무엇이 틀렸나 → 어떻게 알았나 → 지금 무엇을 아나</span> 순서로 쓴다.
+</div>
+
+{% for v in revisions %}
+<details class="card" style="margin-top:12px;padding:16px 20px;border-left:3px solid #dc2626">
+  <summary style="cursor:pointer;font-weight:600;font-size:.94rem">
+    <span class="mono" style="color:#dc2626">{{ v.id }}</span> {{ v.title }}
+    <span class="muted" style="font-weight:400;font-size:.74rem">· {{ v.date }}</span>
+  </summary>
+
+  <div style="margin-top:12px">
+    <div style="font-size:.78rem;font-weight:600;color:#6b7280;letter-spacing:.03em">① 우리가 주장했던 것</div>
+    <div style="font-size:.84rem;margin-top:4px">{{ v.claimed|bold }}</div>
+  </div>
+  <div style="margin-top:12px">
+    <div style="font-size:.78rem;font-weight:600;color:#dc2626;letter-spacing:.03em">② 무엇이 틀렸나</div>
+    <div style="font-size:.84rem;margin-top:4px">{{ v.wrong|bold }}</div>
+  </div>
+  <div style="margin-top:12px">
+    <div style="font-size:.78rem;font-weight:600;color:#6b7280;letter-spacing:.03em">③ 어떻게 알았나</div>
+    <div style="font-size:.84rem;margin-top:4px">{{ v.how_found|bold }}</div>
+  </div>
+
+  {% if v.table %}
+  <div style="overflow-x:auto;margin-top:12px">
+    <table class="tbl">
+      <thead><tr>{% for c in v.table.cols %}<th>{{ c|bold }}</th>{% endfor %}</tr></thead>
+      <tbody>{% for row in v.table.rows %}<tr>{% for cell in row %}<td style="font-size:.82rem">{{ cell|bold }}</td>{% endfor %}</tr>{% endfor %}</tbody>
+    </table>
+  </div>
+  {% endif %}
+
+  <div style="margin-top:12px">
+    <div style="font-size:.78rem;font-weight:600;color:#047857;letter-spacing:.03em">④ 지금 무엇을 아나</div>
+    <div style="font-size:.84rem;margin-top:4px">{{ v.now_known|bold }}</div>
+  </div>
+
+  {% if v.caveat %}<div class="callout cal-warn" style="margin-top:12px;font-size:.8rem">{{ v.caveat|bold }}</div>{% endif %}
+  {% if v.lesson %}<div class="callout" style="margin-top:8px;font-size:.82rem">📌 {{ v.lesson|bold }}</div>{% endif %}
+
+  <div style="margin-top:10px;display:flex;gap:14px;flex-wrap:wrap;font-size:.74rem">
+    {% if v.papers %}<div><b>근거 논문</b>: {% for pid in v.papers %}{{ plink(pid) }}{% if not loop.last %} · {% endif %}{% endfor %}</div>{% endif %}
+    {% if v.artifacts %}<div class="muted"><b>산출물</b>: {% for a in v.artifacts %}<span class="mono">{{ a }}</span>{% if not loop.last %} · {% endif %}{% endfor %}</div>{% endif %}
+  </div>
+</details>
+{% endfor %}
+
 <!-- ── 재현 표적 ────────────────────────────────────────── -->
 <h2 style="margin-top:34px;font-size:1rem">🎯 재현 표적 <span class="muted"
   style="font-weight:400;font-size:.8rem">(우리가 그 계산을 돌렸을 때 "맞았다"고 볼 기준)</span></h2>

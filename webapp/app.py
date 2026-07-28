@@ -220,6 +220,7 @@ def benchmarks():
         abort(404)
     return render_template("benchmarks.html", active="bench", b=b,
                            ledger=D.deck_correction_ledger(),
+                           revisions=D.verdict_revisions(),
                            lit_have={p["id"] for p in D.list_papers()},
                            talks_have={t["id"] for t in D.list_talks()})
 

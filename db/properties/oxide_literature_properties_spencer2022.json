@@ -1,0 +1,508 @@
+{
+  "property": "oxide_literature_properties_spencer2022",
+  "date": "2026-07-28",
+  "description": "Spencer et al., Appl. Phys. Rev. 9, 011315 (2022), DOI 10.1063/5.0078037 리뷰에서 우리 cascade 도펀트 로스터와 겹치는 산화물 8종(Sc2O3, Al2O3, In2O3, Ga2O3, ZnO, SnO2, NiO, CuO/Cu2O)의 물성을 소환(literature-summoned)한 표. CdO는 우리 로스터 밖이라 최소만 기록.",
+
+  "honesty_header": {
+    "1_summoned_values_only": "이 파일의 모든 수치는 **문헌 소환값**이다. 우리 UMA-MLIP / QE 계산값(db/properties/eos.json, elastic.json, electronic.json, doping_cascade_verified.json, cascade_v23_ranked.csv)과 **같은 표·같은 플롯에 섞지 않는다**. 방법 명시 없이 이식 금지 (CLAUDE.md litdb 규율).",
+    "2_gap_lit_disagreement_policy": "우리 db 의 `gap_lit_eV`(cascade_v23_themes.json / cascade_screening_funnel.json)와 값이 다르면 `discrepancies_vs_our_db` 에 **다르다고만 기록**한다. 어느 쪽이 옳다고 단정하지 않는다 — 우리 `gap_lit_eV` 의 출처를 모르는 상태이고, 리뷰 자체가 '같은 물질도 정의(fundamental vs optical)·시료(bulk vs film)·방법(SE vs absorption vs DFT)에 따라 1~2 eV 갈린다'고 명시한다.",
+    "3_wrong_context": "이 리뷰는 **투명전도/반도체 소자(power electronics, TCO, gate dielectric)** 문맥이다. 전고체전지 코팅/도판트 문맥이 아니다. **전기화학 안정성(ESW/산화 onset), Li 수송(sigma, Ea), SE/양극 계면 반응성에 대해 리뷰는 단 한 줄도 말하지 않는다.** 따라서 이 파일은 우리 cascade 의 산화안정 축·수송 축을 **대체하지 못하며 보조도 못한다**. 오직 '전자절연 진단 축'과 '역학(bulk modulus) 참고 축'에만 닿는다.",
+    "4_bulk_oxide_not_doped_host": "여기의 탄성/밀도/융점은 **순수 산화물 벌크**의 값이다. 우리 cascade 의 E_VRH/B0(예: Sc2O3 x=0.02 E_VRH 18.7 GPa)은 **도핑된 LPSCl 호스트**의 값이라 물리적 대상이 다르다. 두 숫자를 나란히 놓는 것은 오독이다.",
+    "5_review_is_secondary": "리뷰는 **재인용(secondary)** 이다. 원논문 번호(리뷰 내 Ref 번호)를 `review_ref` 로 병기했으나, 실제 인용 시에는 원논문 PDF 확보 후 인용할 것 (우리 규율: 링크가 아니라 로컬 PDF/원전 기준).",
+    "6_image_read_caveat": "PDF 가 스캔/이미지라 **이미지 판독**으로 뽑았다. 확신 없는 값은 기록하지 않고 `unreadable_or_uncertain` 에 남겼다. 추정·보간은 하지 않았다."
+  },
+
+  "source": {
+    "title": "A review of band structure and material properties of transparent conducting and semiconducting oxides: Ga2O3, Al2O3, In2O3, ZnO, SnO2, CdO, NiO, CuO, and Sc2O3",
+    "authors": "Joseph A. Spencer, Alyssa L. Mock, Alan G. Jacobs, Mathias Schubert, Yuhao Zhang, Marko J. Tadjer",
+    "affiliations": "Virginia Tech (CPES) / U.S. Naval Research Laboratory / NRC Research Associateship / Weber State Univ / Univ. Nebraska-Lincoln / Linkoping Univ (IFM)",
+    "journal": "Applied Physics Reviews 9, 011315 (2022)",
+    "doi": "10.1063/5.0078037",
+    "published": "2022-03-04",
+    "type": "review (자체 실험/계산 0; 문헌 메타집계 + VESTA 구조 시각화만)",
+    "length": "본문 100 pp (011315-1 ~ -100) + Appendix A/B + refs",
+    "n_oxides": 9,
+    "pdf_split": {
+      "note": "업로드는 5분할. article page = (file1 PDF page) - 1; file2 = article 25-49; file3 = article 50-74; file4 = article 75-99; file5 = article 100-126.",
+      "file1": "b4d89393-1_A_review_Sc2O3.pdf (25 pp) -> article 1-24",
+      "file2": "4f8681ba-2_A_review_Sc2O3.pdf (25 pp) -> article 25-49",
+      "file3": "e92d9cf6-3_A_review_Sc2O3.pdf (25 pp) -> article 50-74",
+      "file4": "665907c1-4_A_review_Sc2O3.pdf (25 pp) -> article 75-99",
+      "file5": "925cc792-5_A_review_Sc2O3.pdf (27 pp) -> article 100-126"
+    },
+    "digest": "litdb/papers/spencer2022_review_tco_band_structure_oxides.md"
+  },
+
+  "how_to_read": {
+    "kind": "expt = 실험 / calc = 계산 / pred = 다른 물성으로부터의 예측(주로 Higashiwaki Ref147 gap-vs-breakdown plot) / est = 추정 / ref = 리뷰가 출처만 달고 방법 미표기",
+    "src": "리뷰 내 표·그림·본문 위치 (Table 번호 = 리뷰 원표, p.NN = article page)",
+    "review_ref": "리뷰가 인용한 원논문 번호 (리뷰 참고문헌 번호이며 DOI 아님)",
+    "null": "리뷰에 없음 = null + reason 필드"
+  },
+
+  "oxides": {
+
+    "Sc2O3": {
+      "our_cascade_rank": 1,
+      "our_gap_lit_eV": 6.0,
+      "review_section": "X (pp. 86-92); Tables XLIX, L; Figs 35-38",
+      "common_names": ["scandium oxide", "scandium sesquioxide", "scandia"],
+      "review_framing": "리뷰 9종 중 **가장 데이터가 없는 물질**. 저자들이 명시: 'Sc2O3 has the fewest reported material properties throughout literature' / 'thermal data are essentially nonexistent'. 용도 문맥 = 고굴절률 반사방지 코팅, 광학소자, superluminescent LED 코팅, MOSFET **게이트 유전체**(high-k; Ta2O5/ZrO2/HfO2 계열과 나란히 비교, HfO2보다 gap 큼).",
+
+      "crystal": {
+        "stable_phase": {"value": "Bixbyite (C-type), cubic", "kind": "ref", "src": "Table L", "review_ref": "1052"},
+        "space_group": {"value": "Ia-3 (No. 206)", "kind": "expt+calc", "src": "Table XLIX / Table L", "review_ref": "1044,1045,1052"},
+        "lattice_a_ang_expt": [
+          {"value": 9.8459, "kind": "expt", "src": "Table XLIX", "review_ref": "1045"},
+          {"value": 9.810, "kind": "expt", "src": "Table XLIX", "review_ref": "1046"},
+          {"value": 9.845, "kind": "expt", "src": "Table XLIX", "review_ref": "1030"},
+          {"value": 9.848, "kind": "expt", "src": "Table XLIX", "review_ref": "1053"}
+        ],
+        "lattice_a_ang_calc": [
+          {"value": 9.708, "kind": "calc", "method": "LDA/GGA (Richard et al.)", "src": "Table XLIX", "review_ref": "1044"},
+          {"value": 9.90, "kind": "calc", "method": "LDA/GGA (Richard et al.)", "src": "Table XLIX", "review_ref": "1044"}
+        ],
+        "lattice_a_summary_range_ang": {"value": "9.708-9.90", "kind": "mixed(calc+expt)", "src": "Table L", "note": "요약표 range 가 이론(9.708/9.90)과 실험(9.81-9.85)을 섞었다 — 실험만 쓰면 9.810-9.8459."},
+        "text_statement": "계산 격자상수 9.7-9.9 A, XRD 실험 ~9.84 A (p.88)",
+        "metastable_polymorphs": [
+          {"phase": "Monoclinic (B-type)", "space_group": "C2/m (No. 12), assumed", "a": 13.173, "b": 3.194, "c": 7.976, "beta_deg": 100.40, "unit": "A", "kind": "expt", "condition": "1000 C + 13 GPa 에서 cubic->monoclinic 전이; 3-8 GPa 는 무변화, 11 GPa 는 매우 나쁜 B-type 결정화. Sc 의 2/3 가 6배위->7배위.", "src": "Table XLIX, p.88", "review_ref": "1051"},
+          {"phase": "Monoclinic (calcination-induced)", "condition": "1273 K + 13 GPa 하소 시 monoclinic 으로 이동", "kind": "expt", "src": "p.88", "review_ref": "1047"},
+          {"phase": "Hexagonal (A-type)", "kind": "potential", "src": "Table L", "review_ref": "1044"},
+          {"phase": "Hexagonal (H-type)", "kind": "potential", "note": "고온형", "src": "Table L", "review_ref": "1044"},
+          {"phase": "Cubic (X-type)", "kind": "potential", "note": "고온형", "src": "Table L", "review_ref": "1044"}
+        ],
+        "monoclinic_metastability": "리뷰: monoclinic 이 stable 인지 metastable 인지 명시되지 않았으나, 밀도 변화와 요구 압력으로 보아 **상온상압에서는 metastable** 로 시사됨 (p.88).",
+        "bixbyite_site_description": "양이온이 거의 FCC 격자를 이루고, 8개 사면체 자리 중 6개를 산소가 점유. 비등가 양이온 자리 2종(C site, D site) 모두 O(6) 배위. C site = C2 대칭 왜곡 큐브, 면대각선 위 두 자유 코너. D site = 축대칭, 한 대각선 위 두 자유 코너. (p.88)"
+      },
+
+      "band_gap": {
+        "gap_type": {"value": "Indirect", "kind": "ref", "src": "Table L", "review_ref": "1030"},
+        "summary_table_value_eV": {"value": "5.7-5.84", "kind": "expt", "sample": "thin film", "src": "Table L", "review_ref": "1030,1050"},
+        "indirect_expt_eV": [
+          {"value": 5.7, "kind": "expt", "method": "pulsed DC magnetron sputtering film", "src": "p.88", "review_ref": "1043"},
+          {"value": 5.8, "kind": "expt", "method": "ion beam sputtered film", "src": "p.88-89", "review_ref": "1035"},
+          {"value": 5.84, "kind": "expt", "method": "electron beam evaporation film", "src": "p.89", "review_ref": "1030,1056"},
+          {"value": "5.75-5.84", "kind": "expt", "method": "e-beam evaporation, substrate T 50-350 C sweep", "src": "p.90, Fig 38", "review_ref": "1030"}
+        ],
+        "direct_expt_eV": [
+          {"value": 6.1, "kind": "expt", "method": "pulsed DC magnetron sputtering film", "src": "p.88", "review_ref": "1043"},
+          {"value": 6.04, "kind": "expt", "method": "electron beam evaporation film", "src": "p.89", "review_ref": "1030,1056"},
+          {"value": "6.02-6.05", "kind": "expt", "method": "e-beam evaporation, substrate T sweep", "src": "p.90", "review_ref": "1030"}
+        ],
+        "single_crystal_expt_eV": [
+          {"value": 6.0, "kind": "expt", "T": "room temperature", "method": "optical (Tippins 1966)", "src": "p.89", "review_ref": "1052"},
+          {"value": 6.2, "kind": "expt", "T": "80 K", "method": "optical (Tippins 1966)", "src": "p.89", "review_ref": "1052"}
+        ],
+        "other_reported_eV": [
+          {"value": 6.3, "kind": "unspecified", "method": "no method given in review", "src": "p.89", "review_ref": "1032", "note": "Herrero et al.; 같은 문헌이 dielectric constant 14 도 보고(정적/고주파 미구분)"},
+          {"value": 5.4, "kind": "calc", "method": "1960s 예측 (Companion et al.), 인접 3d TM 산화물 trend 기반", "src": "p.89", "review_ref": "1057"},
+          {"value": "5.7-6.0", "kind": "expt", "method": "2000년대 초 indirect gap 보고", "src": "p.89", "review_ref": "1030,1050,1056"}
+        ],
+        "dft_calc_eV": {"value": 4.0, "kind": "calc", "method": "LDA & GGA (Richard et al. 2010, PRB 82, 035206)", "location": "Gamma point", "src": "p.89, Fig 36", "review_ref": "1044", "note": "리뷰: DFT 가 gap 을 과소평가; 실험 5.7 eV 대비 4.0 eV"},
+        "temperature_dependence": {
+          "thin_film_coefficient_eV_per_K": {"value": -3.0e-4, "kind": "expt", "method": "e-beam evaporation film, substrate T 50-350 C", "src": "p.90", "review_ref": "1030"},
+          "thin_film_relation": {"value": "E0(T) = 5.9369 - 3e-4 * T(K)", "kind": "expt", "src": "p.90", "review_ref": "1030"},
+          "single_crystal_coefficient_eV_per_K": {"value": -9.6e-4, "kind": "expt", "src": "p.90", "review_ref": "1052", "note": "Tippins; 박막값보다 3배 이상 크다. 리뷰는 결정 품질 차이를 원인으로 추정."},
+          "absorption_edge_shift": "indirect 흡수단 212->215 nm, direct 흡수단 205->206 nm (기판 50->350 C). 둘 다 redshift. (p.90)",
+          "mechanism": "부피 변화 + 전자-포논 상호작용 (p.90, review_ref 1062,1063)"
+        },
+        "band_character": {
+          "VBM": "O 2p 주도 (-4.5 eV ~ E_F 밴드), Sc 3d 소량 혼성",
+          "CBM": "빈 Sc 3d (Sc3+ = 3d0 배치); 3d 파동함수 겹침으로 생긴 전도대. 결정장으로 sub-band 분열, bixbyite 두 자리(C/D)에서 분열 양상이 다름.",
+          "deep_bands": "Sc 3p 좁은 밴드 @ -26 eV; O 2s 다수 @ -15 eV (희미한 기여는 -26 eV 에도)",
+          "bonding": "Sc-O 는 이온성 + 일부 공유성 (상태 혼합이 근거)",
+          "src": "p.89-90, Figs 36-37", "review_ref": "1044,1052,1059,1060"
+        }
+      },
+
+      "dielectric": {
+        "static_eps0": {"value": null, "reason": "리뷰: 'The static and high frequency dielectric constants for Sc2O3 as well as the effective carrier mass were also not found in the literature' (p.91). §XI 도 '고주파 유전상수는 Sc2O3 를 제외한 모든 산화물에서 보고됨'이라 명시(p.100)."},
+        "high_frequency_eps_inf": {"value": null, "reason": "동일 — 리뷰 9종 중 유일하게 미보고"},
+        "ambiguous_single_report": {"value": 14, "kind": "unspecified", "src": "p.89", "review_ref": "1032", "note": "Herrero et al. 이 'dielectric constant of 14' 라 했으나 **정적인지 고주파인지 리뷰도 특정하지 못함**. 그대로 쓰면 안 됨."}
+      },
+
+      "refractive_index": {
+        "at_355nm": [
+          {"value": "2.07-2.08", "kind": "expt", "method": "pulsed DC magnetron sputtering", "src": "p.88", "review_ref": "1043"},
+          {"value": 2.07, "kind": "expt", "method": "ion beam sputtering", "src": "p.88-89", "review_ref": "1035"},
+          {"value": "1.82-1.92", "kind": "expt", "method": "electron beam evaporation (기판 50->350 C 에서 증가)", "src": "p.89, Fig 38", "review_ref": "1030,1056"}
+        ],
+        "trend": "기판온도 상승 -> 굴절률 증가 & bandgap 감소 (Fig 38). Herve et al.(1061) 도 'n 증가 <-> gap 감소' 확인. 금속-rich 일수록 n 증가 (HfO2 와 공유하는 성질).",
+        "note": "리뷰 9종 중 굴절률을 절 안에서 명시적으로 다루는 것은 사실상 Sc2O3 뿐. 나머지는 eps_inf 만 제시."
+      },
+
+      "effective_mass": {
+        "electron": {"value": null, "reason": "리뷰: 'no known values of effective mass reported' (Pachecka et al., review_ref 1070). Table LIII 도 'Not Reported'."},
+        "hole": {"value": null, "reason": "동일"}
+      },
+
+      "carrier_mobility": {
+        "electron": {"value": null, "reason": "리뷰: 'Values for mobility ... were also not found in the literature for both bulk crystal and thin film Sc2O3' (p.91). Table LIII 'Not Reported'."},
+        "hole": {"value": null, "reason": "동일"}
+      },
+
+      "electrical_breakdown_field_MV_per_cm": {
+        "experimental": {"value": 3.5, "kind": "expt", "method": "ALD thick films, 평균 절연파괴 강도", "src": "Table L, p.91", "review_ref": "1055"},
+        "predicted": {"value": 11, "kind": "pred", "method": "Higashiwaki 의 bandgap-vs-breakdown field plot 에 평균 bandgap 대입", "src": "Table L, p.91", "review_ref": "147 (plot); 1030,1050 (gap)"},
+        "review_comment": "리뷰 본문: 예측 11 vs 실험 3.5 = 'a stark difference'. **gap 으로 breakdown 을 예측하는 관행이 Sc2O3 에서 3배 넘게 틀린다**는 자백."
+      },
+
+      "electron_affinity_eV": {"value": 0.85, "kind": "pred", "method": "일함수 4 eV 로부터 추정", "src": "Table L, p.91", "review_ref": "1069"},
+
+      "phonon": {
+        "irreducible_optical": {"value": "Gamma_op = 4A_g + 4E_g + 14F_g + 5A_2u + 5E_u + 16F_u", "kind": "calc", "src": "p.91", "review_ref": "1048"},
+        "irreducible_acoustic": {"value": "Gamma_ac = F_u", "kind": "calc", "src": "p.91", "review_ref": "1048"},
+        "raman_active": {"value": "22 lines = 4A_g + 4E_g + 14F_g", "kind": "pred(calc)", "src": "Table L, p.91", "review_ref": "1048"},
+        "ir_active": {"value": "16 modes = 16F_u", "kind": "pred(calc)", "src": "Table L, p.91", "review_ref": "1048"},
+        "silent": {"value": "10 modes = 5A_2u + 5E_u", "kind": "calc", "src": "p.91", "review_ref": "1048"},
+        "most_intense_raman_cm-1": {"value": 420, "kind": "calc", "assignment": "A_g + F_g 조합", "src": "p.91", "review_ref": "1048", "note": "리뷰: 'around 420 cm-1'. 개별 모드 주파수는 Sc2O3 에 대해 **표로 제시되지 않음**."},
+        "individual_mode_frequencies": {"value": null, "reason": "리뷰: 'The individual phonon mode frequencies are not detailed for Sc2O3'"},
+        "structural_note": "BCC 라 primitive cell 이 unit cell 안에 2번 등장 -> 진동모드 결정에 8개 이론 단위식 필요. Y2O3 (같은 C-type sesquioxide) 의 진동분광(review_ref 1068)을 참조해 계산."
+      },
+
+      "thermal": {
+        "specific_heat": {"value": 94.2, "unit": "J/(mol K)", "kind": "ref", "src": "Table L, p.91", "review_ref": "118", "converted": {"value": 0.683, "unit": "J/(g K)", "note": "리뷰가 몰질량 137.91 g/mol 로 직접 환산해 제시"}},
+        "melting_point": {
+          "K": {"value": "2753-2823", "kind": "expt", "src": "p.90-91", "review_ref": "1049,1050,1065"},
+          "C_table": [
+            {"value": 2479.85, "src": "Table L", "review_ref": "1050"},
+            {"value": 2485, "src": "Table L", "review_ref": "118"},
+            {"value": 2549.85, "src": "Table L", "review_ref": "1049,1065"}
+          ],
+          "review_comment": "**리뷰 9종 중 최고 융점** (§XI, p.92)."
+        },
+        "debye_temperature": {"value": null, "reason": "리뷰: 'were not readily found in the literature' (p.91); Table LII 'Not reported'"},
+        "thermal_conductivity": {"value": null, "reason": "동일 — Table LII 'Not reported'"},
+        "thermal_diffusivity": {"value": null, "reason": "동일 — Table LII 'Not reported'"},
+        "CTE": {"value": null, "reason": "동일 — Table LII 'Not reported'"}
+      },
+
+      "mechanical": {
+        "density_g_cm3": {
+          "expt_range": {"value": "3.79-4.1", "kind": "expt", "src": "Table L", "review_ref": "1038,1043,1051,1064"},
+          "calc": {"value": 4.16, "kind": "calc", "src": "Table L", "review_ref": "1047"},
+          "cubic_vs_monoclinic": {"cubic": 3.838, "monoclinic": 4.16, "kind": "expt", "src": "p.88", "review_ref": "1051", "note": "13 GPa 상전이 시 밀도 증가"},
+          "film_vs_bulk": {"values": [3.9, 4.1], "kind": "expt", "src": "p.90", "review_ref": "1038", "note": "리뷰 문장이 모호('thin film samples was slightly higher than bulk, 3.9 and 4.1 g/cm3, respectively')하여 **어느 쪽이 박막인지 확정 불가** -> 값만 기록"}
+        },
+        "bulk_modulus_GPa": {"value": 168, "kind": "calc", "method": "Materials Project + LBNL", "src": "Table L, p.91", "review_ref": "1067", "review_comment": "리뷰: 'The bulk modulus was not found in the literature' — 즉 **실험 B 는 없다**. 168 은 MP 계산값."},
+        "poisson_ratio": {"value": 0.30, "kind": "calc", "method": "Materials Project (bulk modulus와 함께 보고)", "src": "p.91", "review_ref": "1067"},
+        "youngs_modulus_GPa": {
+          "expt": {"value": "214.3-227.6", "kind": "expt", "src": "p.91", "review_ref": "1066 (Dole et al.)"},
+          "calc": {"values": [218, 251], "kind": "calc", "src": "p.91", "review_ref": "1064 (Gogotsi)", "note": "두 값 차이의 이유는 리뷰에 명시 없음"},
+          "derived_bulk_modulus": {"value": "178.6-189.7", "unit": "GPa", "kind": "derived", "method": "Dole 의 E(214.3-227.6) + MP 의 nu=0.30 으로 B = E/(3(1-2nu)) 유도 (리뷰가 직접 수행)", "src": "p.91", "note": "MP 의 168 GPa 와 '상당히 잘 일치' 라고 리뷰가 평가"}
+        },
+        "other_mechanical_out_of_scope": "Gogotsi(1064)는 Sc2O3 세라믹의 brittleness measure, modulus of rupture, bending strength, static modulus of elasticity, ultimate strain 도 보고했으나 **리뷰 범위 밖이라 수치 미제시**. -> 우리가 Sc2O3 역학을 더 파려면 이 원논문이 다음 표적.",
+        "elastic_constants_Cij": {"value": null, "reason": "리뷰에 **어떤 산화물도 Cij 전체 탄성텐서를 제시하지 않는다**. bulk modulus(전 9종) + Young/Poisson(Sc2O3 만) 이 전부."}
+      },
+
+      "doping_and_defects": {
+        "dopants": "리뷰: 'Dopants for Sc2O3 are not readily seen throughout literature. However, Sc was seen as the dopant for many materials' (p.91). 즉 **Sc2O3 를 도핑한 연구는 거의 없고, Sc 를 남에게 넣는 연구만 많다.** (review_ref 1071-1075, 상세는 리뷰 범위 밖)",
+        "defects": [
+          {"type": "oxygen interstitial", "host": "amorphous Sc2O3 thin film (ion beam sputtering)", "finding": "산소 침입형 밀도 증가 -> 박막 흡수 증가; 흡수는 **bandgap 내 trap state** 때문", "src": "p.91", "review_ref": "1035 (Langston)"},
+          {"type": "oxygen defect", "host": "Sc2O3 thin film, O2 flow rate 변화", "finding": "O2 flow = 0 sccm 이면 산소결함 다량 -> 박막에 **큰 변형(strain)**. flow rate 제어·제한이 결함 감소에 필수", "src": "p.91", "review_ref": "1076 (Kong)"}
+        ],
+        "review_verdict": "'Much more research is needed on the defects of Sc2O3 and their origins, as well as how other deposition methods beside ion beam sputtering play a role.'"
+      },
+
+      "growth": {
+        "single_crystal": "전기화학(전해) 법으로 **1223 K** 에서 성장 — 통상법의 >2800 K 대비 극적 저온. 결정 크기는 전해 수율로 조절 (p.88, review_ref 1049).",
+        "thin_film": ["MOCVD(1037)", "ion beam sputtering(1035)", "solution process(1054)", "MBE(1034)", "ALD(1055)", "electron beam evaporation(1030,1056)", "reactive magnetron sputtering / reactive evaporation(1029,1043)", "water-inducement -> IZO/ScOx TFT(1033)"],
+        "crystallinity_vs_T": "e-beam 증착 기판온도 >150 C -> 다결정(굴절률↑, 밀도↑); 50 C -> 비정질 (p.88).",
+        "note": "Belosludtsev(1043): 격자상수가 **격자 내 산소량에 따라 증가**."
+      }
+    },
+
+    "Al2O3": {
+      "our_cascade_rank": 9,
+      "our_gap_lit_eV": 8.8,
+      "review_section": "III (pp. 30-39); Tables XIII-XVII; Figs 16-18",
+      "review_framing": "UWBG 절연체. **반도체 산화물로 취급되지 않으며**, 리뷰는 'baseline comparison' 및 Ga2O3 와의 합금(AlGaO) 파트너로서 다룬다. 게이트 산화물(주로 비정질 ALD)·세라믹 용도.",
+      "crystal": {
+        "stable_phase": {"value": "alpha-Al2O3 (corundum)", "kind": "ref", "src": "Table XVII", "review_ref": "265"},
+        "space_group": {"value": "R-3c (No. 167)", "note": "trigonal 대칭 + rhombohedral Bravais centering; unit cell 10 atoms", "src": "Table XVII, p.30", "review_ref": "265,285"},
+        "lattice_trigonal_hexparam_ang": {"a": 4.75, "c": 12.97, "kind": "expt", "src": "Table XVII", "review_ref": "265,276"},
+        "lattice_hexagonal_ang": {"a": 4.762, "c": 12.896, "kind": "expt", "T": "room temperature", "src": "Table XVII, p.30", "review_ref": "277,284"},
+        "trigonal_cell_param_ang": {"a": 5.128, "kind": "expt", "note": "육방격자 안의 삼방 단위셀 파라미터; 2000 C 에서 1.35% 증가", "src": "Table XVII", "review_ref": "277,284"},
+        "thermal_expansion_of_lattice": "2000 C 로 올리면 a 는 1.83%, c 는 1.86% 증가 (p.31, review_ref 284,286)",
+        "metastable_polymorphs": [
+          {"phase": "gamma", "structure": "Cubic", "space_group": "Fd-3m (No. 227)", "a": "~7.9", "unit": "A", "kind": "expt", "src": "Table XIII", "review_ref": "265"},
+          {"phase": "eta", "structure": "Cubic", "space_group": "Fd-3m (No. 227)", "a": ["~7.9", 7.94], "unit": "A", "kind": "expt", "src": "Table XIII", "review_ref": "265,280"},
+          {"phase": "delta", "structure": "Tetragonal", "space_group": "P-4m2 (No. 115)", "a": 5.599, "c": 23.657, "unit": "A", "kind": "expt", "src": "Table XIII", "review_ref": "278"},
+          {"phase": "delta", "structure": "Orthorhombic", "space_group": "P2_12_12_1 (No. 19)", "a": 16.4, "b": 12.2, "c": 8.2, "unit": "A", "kind": "expt", "src": "Table XIII", "review_ref": "279", "note": "P2_12_12 (No.18) 도 후보; 결정구조 미해결"},
+          {"phase": "kappa", "structure": "Orthorhombic", "space_group": "Pna2_1 (No. 33)", "a": 4.6, "b": 8.18, "c": 8.87, "unit": "A", "kind": "expt", "src": "Table XIII", "review_ref": "265,281"},
+          {"phase": "chi", "structure": "Hexagonal", "space_group": "P6_3/mcm (No. 193)", "sets": [{"a": 5.56, "c": 13.44, "review_ref": "265"}, {"a": 5.57, "c": 8.64, "review_ref": "282"}], "unit": "A", "kind": "expt", "src": "Table XIII"},
+          {"phase": "chi", "structure": "Cubic (non-spinel)", "a": 7.94, "unit": "A", "kind": "expt", "src": "Table XIII", "review_ref": "280"},
+          {"phase": "theta", "structure": "Monoclinic", "space_group": "C2/m (No. 12)", "sets": [{"a": 11.813, "b": 2.906, "c": 5.625, "beta_deg": 104.1, "review_ref": "283"}, {"a": 11.795, "b": 2.91, "c": 5.6212, "beta_deg": 103.79, "review_ref": "278"}], "unit": "A", "kind": "expt", "src": "Table XIII"}
+        ],
+        "polymorph_note": "gamma/eta/theta/delta 는 FCC 산소 배열, kappa/chi/alpha 는 hexagonal 산소 배열. theta', theta'', lambda 존재 근거도 있음(review_ref 265). gamma 와 eta 는 파라미터가 사실상 동일하나 fcc 음이온 구조 내 **양이온 배열 화학질서** 차이로 별개 상 취급."
+      },
+      "band_gap": {
+        "gap_type": {"value": "Direct", "kind": "ref", "src": "Table XVII", "review_ref": "271", "note": "VBM/CBM 모두 Gamma (review_ref 285). 단 Ching(284) OLCAO 는 direct 6.31 / **true minimum 은 indirect 6.29** 로, 차이가 작아 '검출 불가' 수준이라 direct 로 간주."},
+        "bulk_expt_eV": {"value": "8.8-9.9", "src": "Table XVII", "review_ref": "271,319,324,402"},
+        "bulk_expt_detail": [
+          {"value": 8.8, "method": "VUV transmission, E||c", "kind": "expt", "sample": "bulk", "src": "Table XIV", "review_ref": "271"},
+          {"value": 9, "method": "reflectance, E||c", "kind": "expt", "sample": "bulk", "src": "Table XIV", "review_ref": "271"},
+          {"value": 9.2, "method": "VUV-reflectance, E||c (Kramers-Kronig 모델 분석)", "kind": "expt", "sample": "bulk", "src": "Table XIV", "review_ref": "326"},
+          {"value": 9.25, "method": "VUV-reflectance, E⊥c (Kramers-Kronig 모델 분석)", "kind": "expt", "sample": "bulk", "src": "Table XIV", "review_ref": "326"},
+          {"value": 9.9, "method": "polarized reflectance/transmittance", "kind": "expt", "sample": "bulk", "src": "Table XIV", "review_ref": "319"}
+        ],
+        "film_expt_eV": [
+          {"value": 6.2, "method": "photoconductivity", "kind": "expt", "sample": "film", "src": "Table XIV", "review_ref": "320"},
+          {"value": 6.52, "method": "energy loss spectra", "kind": "expt", "sample": "film", "src": "Table XIV", "review_ref": "321"},
+          {"value": 6.7, "method": "XPS", "kind": "expt", "sample": "film", "src": "Table XIV", "review_ref": "322"},
+          {"value": 6.7, "method": "X-ray absorption", "kind": "expt", "sample": "film", "src": "Table XIV", "review_ref": "323"},
+          {"value": 6.8, "method": "XPS (ALD 250 C, plasma-enhanced), 6.8 +/- 0.2", "kind": "expt", "sample": "film", "src": "Table XIV, p.35", "review_ref": "307"},
+          {"value": 6.7, "method": "ALD, 막두께 의존성 거의 없음 (6.7 +/- 0.2)", "kind": "expt", "sample": "film", "src": "p.35", "review_ref": "322"}
+        ],
+        "calc_eV": [
+          {"value": 6.29, "method": "OLCAO", "kind": "calc", "src": "Table XIV", "review_ref": "318"},
+          {"value": 6.3, "method": "HSE03", "kind": "calc", "src": "Table XIV", "review_ref": "324"},
+          {"value": 8.0, "method": "HSE03", "kind": "calc", "src": "Table XIV", "review_ref": "324"}
+        ],
+        "summary_ranges": {"bulk_calc": "6.3-8.8", "bulk_expt": "8.8-9.9", "film_calc": "4.0-6.8", "src": "Table XVII"},
+        "bulk_vs_film_gap": "리뷰 핵심 관찰: **bulk/단결정 = 8-9 eV, 비정질 박막 = 6.2-6.8 eV** 로 계통적 차이. 시료 형태를 명시하지 않은 gap 인용은 무의미.",
+        "temperature_dependence": {
+          "gamma_meV_per_K": {"value": -1.1, "kind": "expt", "range": "300-1573 K, 흡수단 선형 감소", "src": "p.36", "review_ref": "271"},
+          "exciton_peak_shift": {"value": -1.0, "unit": "meV/K", "note": "RT ~9 eV 첫 exciton peak", "src": "p.36", "review_ref": "271"},
+          "second_peak_shift": {"value": -0.7, "unit": "meV/K", "note": "12-13 eV peak", "src": "p.36"},
+          "total_optical_gap_drop": {"value": "8.8 -> 7.2 eV (RT -> 1763 K), 즉 1.6 eV 감소", "src": "p.36", "review_ref": "271"},
+          "decomposition": {"thermal_expansion": -0.31, "phonon_modes": -0.62, "calculated_total": -0.93, "unit": "meV/K", "note": "계산 -0.93 vs 실험 -1.1", "src": "p.36", "review_ref": "336,531"},
+          "comparison": "공유결합 반도체 Si(-0.22), Ge(-0.44 meV/K) 대비 **훨씬 큰 감소** — 이온-전자 혼합 성격 때문."
+        },
+        "band_character": "VB 최상단 = O 2p(x,y,z) 거의 단독; CBM = Al 3s; 상위 CB = Al 3p 반결합. **강한 이온성** -> valence band 가 깊이 끌려가지 않음(alpha-quartz 의 공유결합 대비). VBM 은 Gamma-A 방향 빼면 분산이 거의 없어 **정공 유효질량 이방성 극대**; CB 는 Gamma 에서 포물선 -> 전자 유효질량 등방. (p.34, review_ref 271,284,285,316,318)"
+      },
+      "dielectric": {
+        "static_eps0": [
+          {"value": 9.385, "direction": "perp c", "kind": "calc", "method": "LST relation from IR ellipsometry", "src": "Table XVII, p.38", "review_ref": "351"},
+          {"value": 11.614, "direction": "parallel c", "kind": "calc", "method": "LST relation from IR ellipsometry", "src": "Table XVII, p.38", "review_ref": "351"},
+          {"value": "8.9-9.385", "direction": "perp c", "kind": "calc", "src": "Table XVII", "review_ref": "326,351"},
+          {"value": 9.395, "direction": "perp c", "kind": "expt", "src": "Table XVII", "review_ref": "357"}
+        ],
+        "high_frequency_eps_inf": [
+          {"value": 3.077, "direction": "perp c", "kind": "calc/expt(IR)", "src": "p.38", "review_ref": "351"},
+          {"value": 3.072, "direction": "parallel c", "kind": "calc/expt(IR)", "src": "p.38", "review_ref": "351"},
+          {"value": "3.038-3.077", "direction": "perp c", "kind": "calc", "src": "Table XVII", "review_ref": "326,351,357"},
+          {"value": "3.065-3.072", "direction": "parallel c", "kind": "calc", "src": "Table XVII", "review_ref": "351,357"}
+        ],
+        "anisotropy": "정적 유전상수는 단축 이방성으로 뚜렷(9.4 vs 11.6)하나 **고주파 유전상수는 이방성이 거의 없다(3.077 vs 3.072)**. (p.38)"
+      },
+      "refractive_index": {"value": null, "reason": "리뷰가 Al2O3 굴절률을 표/본문에 명시하지 않음 (eps_inf 만 제시)"},
+      "effective_mass": {
+        "electron": [
+          {"value": "0.38-0.40", "unit": "m_e", "kind": "calc", "src": "Table XVII", "review_ref": "284,318,328"},
+          {"value": 0.40, "direction": "perp c", "kind": "est", "src": "Table XVII", "review_ref": "363"},
+          {"value": 0.40, "direction": "parallel c", "kind": "est", "src": "Table XVII", "review_ref": "363"},
+          {"value": 0.35, "unit": "m_e", "kind": "calc", "note": "BZ 4방향 평균 (Xu)", "src": "p.38", "review_ref": "318"},
+          {"value": "0.05-0.42", "unit": "m_e", "kind": "expt", "method": "터널링 유효질량", "src": "p.38", "review_ref": "364-366"}
+        ],
+        "hole": [
+          {"value": 6.3, "unit": "m_h", "direction": "perp c (Gamma-M, Gamma-K heavy hole 6.2 / 6.4)", "kind": "est", "src": "Table XVII, p.38", "review_ref": "363"},
+          {"value": 0.36, "unit": "m_h", "direction": "parallel c (Gamma-A light hole)", "kind": "est", "src": "Table XVII, p.38", "review_ref": "363"}
+        ],
+        "review_comment": "**리뷰 9종 중 정공 유효질량 최대(예측값)**. 전자에는 이방성 없음, 정공에만 극심한 이방성 (§XI, p.99)."
+      },
+      "carrier_mobility": {
+        "electron": [
+          {"value": 0.8, "unit": "cm2/(V s)", "kind": "expt", "src": "Table XVII", "review_ref": "368"},
+          {"value": "0.8-100", "unit": "cm2/(V s)", "kind": "expt", "note": "넓은 온도범위 Hall", "src": "p.38", "review_ref": "368-370"},
+          {"value": 24, "unit": "cm2/(V s)", "direction": "parallel c", "T": "900 C", "kind": "calc", "src": "p.38", "review_ref": "367"},
+          {"value": 7.3, "unit": "cm2/(V s)", "direction": "perp c", "T": "900 C", "kind": "calc", "src": "p.38", "review_ref": "367"}
+        ],
+        "mechanism": "c축 방향은 원자충전이 상대적으로 성기어(sapphire 구조) 산란중심이 적고 mobility 가 높다."
+      },
+      "electrical_breakdown_field_MV_per_cm": {
+        "expt": {"value": "5.2-7", "kind": "expt", "src": "Table XVII", "review_ref": "304,362", "note": "Groner(304): 12 nm ALD 비정질에서 5.2 MV/cm 파괴"},
+        "expt_range_text": {"value": "5.2-8", "src": "p.38", "review_ref": "304,361,362"},
+        "pred": {"value": ">20", "kind": "pred", "method": "Higashiwaki gap-vs-field plot", "src": "Table XVII", "review_ref": "147", "detail": "gap 9.5 eV 가정 시 25 MV/cm 까지; gap 6.2 eV(비정질) 가정 시 15 MV/cm; 6.7 eV 박막이면 ~17 MV/cm"},
+        "review_comment": "**리뷰의 결정적 캐비앳**: 'Al2O3 has a bandgap of almost double beta-Ga2O3, but that value does not correlate to a superior electrical breakdown field.' -> **gap 이 크다고 절연내압이 크지 않다.**"
+      },
+      "electron_affinity_eV": {"value": 1.58, "kind": "expt(derived)", "method": "current density vs voltage 로부터 추출 (Pollack)", "src": "Table XVII, p.38", "review_ref": "358", "range_text": {"value": "1-2.58", "src": "p.38", "review_ref": "328,358-360"}},
+      "phonon": {
+        "irreducible": {"value": "Gamma = 2A_1g + 2A_1u + 3A_2g + 2A_2u + 5E_g + 4E_u", "note": "corundum unit cell 10 atoms(4 Al + 6 O) -> 30 Gamma 모드 = 3 acoustic + 27 optical", "src": "p.37", "review_ref": "349,350"},
+        "raman_active": {"value": "2A_1g + 5E_g", "kind": "expt", "src": "Table XVII", "review_ref": "350"},
+        "ir_active": {"value": "2A_2u + 4E_u", "kind": "expt", "src": "Table XVII", "review_ref": "350"},
+        "silent": "2A_1u + 3A_2g",
+        "selection_rule": "corundum 은 반전중심이 있어 IR-활성 모드는 Raman 금지, Raman-활성 모드는 IR 금지 (상호배타).",
+        "raman_frequencies_cm-1": {"A_1g(1)": 417.4, "A_1g(2)": 644.6, "E_g(1)": 378.7, "E_g(2)": 430.2, "E_g(3)": 448.7, "E_g(4)": 576.7, "E_g(5)": 750.0, "kind": "expt", "src": "Table XV", "review_ref": "350"},
+        "ir_frequencies_cm-1": {
+          "A_2u(1)": {"TO": 397.52, "LO": 510.87}, "A_2u(2)": {"TO": 582.41, "LO": 881.10},
+          "E_u(1)": {"TO": 384.99, "LO": 387.60}, "E_u(2)": {"TO": 439.10, "LO": 481.68},
+          "E_u(3)": {"TO": 569.00, "LO": 629.50}, "E_u(4)": {"TO": 633.63, "LO": 906.60},
+          "kind": "expt(IR ellipsometry)", "src": "Table XV", "review_ref": "351"
+        },
+        "phonon_deformation_potentials": {
+          "note": "Zhu et al.(355) 단결정/다결정 alpha-Al2O3 굽힘 캘리브레이션. 단위 1e3 cm-2.",
+          "A_1g": {"K1": "-396 +/- 19", "K2": "-406 +/- 6", "K3": "-777 +/- 18", "K4": null},
+          "E_g": {"K1": "-293 +/- 22", "K2": "-227 +/- 24", "K3": "-3.2 +/- 0.5", "K4": "-8.5 +/- 1"},
+          "src": "Table XVI", "review_ref": "355"
+        }
+      },
+      "thermal": {
+        "debye_temperature_K": {"calc": {"value": 1045, "kind": "calc", "src": "Table XVII", "review_ref": "339"}, "expt": {"value": "965-1044", "kind": "expt", "sample": "polycrystalline", "src": "Table XVII", "review_ref": "341"}, "detail": "4.2-1300 K 에서 1044 +/- 3 -> 965 K 로 감소; 298 K·1 bar->10 kbar 에서 1034.9 -> 1039.9 K 로 소폭 증가. Slack(335) 음향 Debye theta_0 = 478 K, theta_inf = 390 K.", "review_comment": "**리뷰 9종 중 Debye 온도 최고** (§XI)."},
+        "specific_heat_J_gK": {"value": "0.750-0.785", "T": "~RT", "kind": "expt", "src": "Table XVII", "review_ref": "332-334", "detail": "소결체는 20->1500 C 에서 0.755 -> 1.33 J/(gK) 로 증가"},
+        "thermal_conductivity_W_mK": {"value": [30, 33, "30-40"], "kind": "expt", "src": "Table XVII", "review_ref": "332-334", "detail": "박막 0.25-0.8 (e-beam 1건 33); 단결정 35-54; 소결체 20->1500 C 에서 33 -> 6.23; 최소 열전도도 2.93 @ 융점 2345 K"},
+        "thermal_diffusivity": {"value": "~1.0-1.1e-5 m2/s @ RT -> ~0.2e-5 @ 1000 K", "kind": "expt", "src": "p.37", "review_ref": "347", "table_LII": "Not reported"},
+        "CTE_1e-6_per_K": {"value": "4.5-5.5", "T": "RT", "kind": "expt", "src": "Table XVII", "review_ref": "332-334", "detail": "1000-1600 C 평균 선팽창계수 7.5 +/- 0.4; 20 C 기준 4.6 (review_ref 334). Al 함량 80-99.6% 시료에서 4.5-5.4e-6/K, 낮은 Al% 일수록 CTE 큼."}
+      },
+      "mechanical": {
+        "density_g_cm3": {"value": "3.92-3.984", "kind": "expt", "src": "Table XVII", "review_ref": "334,347", "detail": "99.8% Al2O3 는 3.97-3.99; 세라믹 80->86% Al 이면 3.30->3.60"},
+        "bulk_modulus_GPa": {"expt": {"value": "257 (20 C)", "kind": "expt", "src": "Table XVII", "review_ref": "334"}, "calc": {"value": "225-252", "kind": "calc", "src": "Table XVII", "review_ref": "397-399"}, "temperature": "300 -> 1500 C 에서 257 -> 227 GPa 로 감소 (온도·기공률 의존)"},
+        "vickers_hardness_GPa": {"RT": 15, "at_1500C": 2.5, "kind": "expt", "src": "p.36", "review_ref": "334"},
+        "melting_point_C": {"value": "2050-2071.85", "kind": "expt", "src": "Table XVII", "review_ref": "334,335,400", "text": "2323-2344 K"}
+      },
+      "doping_and_defects": {
+        "dopants": "Ti, Co, Fe, Mg, Y, Cr, Ca, Si, V. Ti 는 Al 자리를 3가/4가 상태로 점유; Ti 고용도는 다결정 > 단결정. Ti4+ 는 전하보상 위해 native defect 생성 -> **이온결함 증가로 전도도 상승**. Mg 는 acceptor(Al 치환) -> native 이온결함 증가, 정공은 소수. Y 도핑은 입계 확산을 억제해 고온 creep 제어 (Y 도핑 시 입계 확산도 10배 감소).",
+        "defects": "산소공공이 지배적. **Al 이온이 5가지 원자가 상태(2+ ~ 2-)** 를 가질 수 있게 하며, 이 vacancy state 들이 **Poole-Frenkel hopping** 전도를 만든다 -> '이렇게 gap 이 큰데도 때때로 반도체성 산화물처럼 행동'. Al vacancy = deep acceptor, O vacancy = deep acceptor, Al interstitial = deep donor.",
+        "band_alignment": "alpha-/theta-Al2O3 의 +/0 vacancy level 이 HfO2 보다 gap 안쪽 **아래에** 위치하고, Fermi level 을 올려도 안정 형태를 유지 -> HfO2 대체 게이트 유전체 가능성 (p.39, review_ref 384,321,389-392).",
+        "src": "pp. 38-39"
+      }
+    },
+
+    "In2O3": {
+      "our_cascade_rank": 4,
+      "our_gap_lit_eV": 2.9,
+      "review_section": "IV (pp. 39-50); Tables XVIII-XXIV; Figs 19-20",
+      "review_framing": "대표 TCO. n-type. Sn 도핑 = ITO. 리뷰는 ITO 를 별도 리뷰 주제로 넘기고 비교만 한다.",
+      "crystal": {
+        "stable_phase": {"value": "bcc-In2O3 (bixbyite / C-type rare-earth sesquioxide)", "kind": "ref", "src": "Table XXIII", "review_ref": "422"},
+        "space_group": {"value": "Ia-3 (No. 206)", "src": "Table XXIII", "review_ref": "420"},
+        "lattice_a_ang": [
+          {"value": 10.118, "kind": "expt", "src": "Table XVIII/XXIII", "review_ref": "420"},
+          {"value": 10.117, "kind": "expt", "src": "Table XVIII/XXIII", "review_ref": "421,423"}
+        ],
+        "unit_cell": "80 atoms: In 32개(24 는 d site, 8 은 b site) + O 48개. In-O 결합 2.12-2.21 A, In-In 3.35-3.36 A. b site 는 축대칭, d site 는 배위 비대칭. (p.40, review_ref 421,424,425)",
+        "metastable_polymorphs": [
+          {"phase": "bcc-In2O3-I", "structure": "Cubic", "space_group": "I2_13 (No. 199)", "a": 10.120, "unit": "A", "kind": "calc(theoretical)", "src": "Table XVIII", "review_ref": "427", "note": "Fuchs(428) 준입자 계산은 이 다형이 **불안정**하다고 보고"},
+          {"phase": "rh-In2O3", "structure": "Rhombohedral(=hexagonal cell)", "space_group": "R-3c (No. 167)", "a": 5.478, "c": 14.51, "unit": "A", "kind": "expt", "src": "Table XVIII", "review_ref": "420,430", "note": "고압에서 안정화. 육방셀당 6 f.u.; f.u.당 부피 62.85 A^3 (bcc 는 64.72 A^3) -> 더 조밀"},
+          {"phase": "o'-In2O3", "structure": "Orthorhombic", "space_group": "Pbcn (No. 60)", "sets": [{"a": 7.929, "b": 5.482, "c": 5.589, "condition": "9 GPa recovery, 600 C", "kind": "expt"}, {"a": 7.92, "b": 5.488, "c": 5.597, "condition": "8 GPa recovery, 1100 C", "kind": "expt"}, {"a": 8.072, "b": 5.588, "c": 5.678, "kind": "calc"}], "unit": "A", "src": "Table XVIII", "review_ref": "430"},
+          {"phase": "alpha-Gd2S3 type", "structure": "Orthorhombic", "space_group": "Pnma (No. 62) / Pn2_1a (No. 33)", "a": 5.473, "b": 3.003, "c": 11.618, "unit": "A", "kind": "modeled", "src": "Table XVIII", "review_ref": "431"}
+        ]
+      },
+      "band_gap": {
+        "gap_type": {"value": "Debated", "kind": "ref", "src": "Table XXIV", "review_ref": "454", "explanation": "bcc(bixbyite) 는 VBM/CBM 모두 Gamma -> **direct**. 그러나 **VBM->CBM 광학전이가 dipole 금지**라, 흡수는 fundamental gap 보다 0.5-1.0 eV 높은 곳에서야 크게 증가. rh 상은 CBM Gamma / VBM L -> **indirect**."},
+        "fundamental_vs_optical_eV": {
+          "cubic_theory": {"fundamental": 3.10, "optical": 3.72, "kind": "calc", "src": "p.43", "review_ref": "455 (King et al.)"},
+          "cubic_expt": {"fundamental": 2.93, "optical": 3.55, "kind": "expt", "src": "p.43", "review_ref": "455 (King et al.)"},
+          "review_comment": "**이 한 쌍이 In2O3 gap 혼란의 핵심.** 문헌에 도는 '3.6-3.7 eV' 는 optical gap, '2.6-2.9 eV' 는 fundamental(dipole-forbidden) gap."
+        },
+        "bulk_expt_eV": [
+          {"value": 2.72, "method": "transmission spectroscopy", "src": "Table XIX", "review_ref": "458"},
+          {"value": 2.93, "method": "optical absorption", "src": "Table XIX", "review_ref": "455"},
+          {"value": 3.10, "method": "optical measurements", "src": "Table XIX", "review_ref": "434"},
+          {"value": 3.55, "method": "optical absorption", "src": "Table XIX", "review_ref": "455"}
+        ],
+        "film_expt_eV": [
+          {"value": 2.619, "method": "absorption data (indirect)", "src": "Table XIX", "review_ref": "237"},
+          {"value": 2.63, "method": "ARPES (indirect)", "src": "Table XIX", "review_ref": "87"},
+          {"value": 3.71, "method": "ARPES", "src": "Table XIX", "review_ref": "87"},
+          {"value": 3.75, "method": "absorption data", "src": "Table XIX", "review_ref": "237"}
+        ],
+        "calc_eV_bcc": [
+          {"value": "1.11-1.21", "method": "LDA", "src": "Table XIX", "review_ref": "428,454"},
+          {"value": 1.82, "method": "GGA+U", "src": "Table XIX", "review_ref": "454"},
+          {"value": "2.18-2.21", "method": "LDA+U", "src": "Table XIX", "review_ref": "454"},
+          {"value": 2.20, "method": "HSE03", "src": "Table XIX", "review_ref": "459"},
+          {"value": "2.44-2.45", "method": "HSE03", "src": "Table XIX", "review_ref": "428"},
+          {"value": 3.10, "method": "HSE03+G0W0/Delta", "src": "Table XIX", "review_ref": "428"},
+          {"value": 3.72, "method": "calc", "src": "Table XIX", "review_ref": "455"}
+        ],
+        "calc_eV_rh": [
+          {"value": "1.23-1.27", "method": "LDA", "src": "Table XIX", "review_ref": "428"},
+          {"value": "2.57-2.61", "method": "HSE03", "src": "Table XIX", "review_ref": "428"},
+          {"value": 3.26, "method": "HSE03+G0W0/Delta", "src": "Table XIX", "review_ref": "428"},
+          {"value": "3.26-3.40", "method": "calc", "src": "Table XIX", "review_ref": "455"}
+        ],
+        "rh_expt_eV": [{"value": 3.02, "method": "optical absorption", "src": "Table XIX", "review_ref": "455"}, {"value": 3.16, "method": "optical absorption", "src": "Table XIX", "review_ref": "455"}],
+        "summary_ranges": {"bulk_calc": "1.11-3.72 (direct+indirect 혼합)", "bulk_expt": "2.72-3.55", "film_indirect_expt": "2.619-2.63", "film_direct_expt": "3.71-3.75", "src": "Table XXIV"},
+        "cubic_vs_rh": "Wang(429): cubic 3.7 eV > rhombohedral 3.0 eV. 반면 King(455): rh 가 fundamental gap 은 더 크고 optical gap 은 더 작다 -> **문헌 간 부호가 갈린다.**",
+        "thickness_dependence": "420 -> 35 nm 박막에서 optical gap 3.57 -> 3.49 eV 감소 (p.43)",
+        "temperature_dependence": {
+          "indirect_gap_300K": {"value": 2.76, "kind": "expt", "src": "p.44", "review_ref": "458"},
+          "indirect_gap_9K": {"value": 2.94, "kind": "expt", "src": "p.44", "review_ref": "458"},
+          "zero_T_gap": {"value": 2.884, "kind": "calc(fit)", "src": "p.44", "review_ref": "458"},
+          "gap_at_1200K": {"value": "~1.5", "unit": "eV", "note": "저온 대비 **절반으로 감소** — 다른 반도체 대비 매우 강함", "src": "p.44", "review_ref": "458"},
+          "electron_phonon_coupling": {"RT": 6.73, "high_T": 8.24, "note": "무차원 결합강도; 온도 상승에 따라 증가", "src": "p.44", "review_ref": "458"},
+          "gamma_eV_per_K": [{"value": -1.1e-3, "review_ref": "438"}, {"value": -1.0e-3, "review_ref": "237"}, {"value": -0.001, "note": "Bose-Einstein 모델, indirect transition", "review_ref": "460"}],
+          "bose_einstein_params": {"alpha_B_meV": 16, "theta_meV": 30.1, "src": "p.44", "review_ref": "460"}
+        },
+        "deformation_potential_eV": {"value": "-4.2 ~ -3.66", "kind": "calc", "note": "ZnO 보다 크고 GaAs/GaN 보다 작음. VB deformation potential 4a 는 양수이며 전체 부피 deformation potential 을 결정.", "src": "p.43"}
+      },
+      "dielectric": {
+        "static_eps0": {"calc": {"value": "9.0-10.74", "src": "Table XXIV", "review_ref": "457,463,484"}, "expt": {"value": 8.9, "src": "Table XXIV", "review_ref": "406"}, "LST": {"value": "10.55 +/- 0.07", "kind": "expt(LST from IR-SE)", "note": "DFT 예측 10.74 와 일치", "src": "p.48", "review_ref": "484"}, "note": "9.5 라는 값이 관행적으로 계산에 쓰였으나 근거 불명 (Hamberg 406)"},
+        "high_frequency_eps_inf": {"calc": {"value": "3.82-4.128", "src": "Table XXIV", "review_ref": "428,457,463,484,487"}, "expt": {"value": "4.0-4.05", "note": "4.05 +/- 0.05 (파장별 분석)", "src": "Table XXIV, p.48", "review_ref": "406,484"}},
+        "anisotropy": "Walsh(463): cubic bixbyite 는 이방성 **없음**, rhombohedral 도 정적·고주파 모두 이방성 거의 없음."
+      },
+      "refractive_index": {"value": null, "reason": "리뷰 미제시 (eps_inf 만)"},
+      "effective_mass": {
+        "electron": {
+          "expt": [
+            {"value": 0.14, "method": "Hall-Seebeck", "src": "Table XXII", "review_ref": "500"},
+            {"value": 0.18, "method": "plasma frequency", "src": "Table XXII", "review_ref": "487"},
+            {"value": 0.208, "method": "optical Hall effect (0.208 +/- 0.006)", "src": "Table XXII, p.48", "review_ref": "484"},
+            {"value": 0.30, "method": "Hall-Seebeck (0.30 +/- 0.03)", "src": "Table XXII", "review_ref": "470"},
+            {"value": 0.40, "method": "plasma frequency", "src": "Table XXII", "review_ref": "487"},
+            {"value": 0.55, "method": "Hall-thermoelectric power", "src": "Table XXII", "review_ref": "434"}
+          ],
+          "calc": [
+            {"value": 0.16, "method": "LDA", "src": "Table XXII", "review_ref": "452"},
+            {"value": 0.18, "method": "LDA", "src": "Table XXII", "review_ref": "428"},
+            {"value": 0.22, "method": "HSE03", "src": "Table XXII", "review_ref": "428"}
+          ],
+          "carrier_dependence": "**비포물선 전도대** 때문에 캐리어 농도가 올라가면 유효질량이 커진다. n = 5e19 cm-3 이하에서 0.18 -> n = 1e21 cm-3 에서 0.40 m_e. 1e20 cm-3 근처에서 0.30 m_e. -> 'In2O3 유효질량' 은 단일 숫자가 아니다. (p.48, review_ref 487)",
+          "anisotropy": "bcc 는 등방(m_x = m_y = m_z). rh 는 이방성 무시 가능(0.18/0.22 LDA/HSE03; 0.23 HSE03 in 2nd direction)."
+        },
+        "hole": {"value": "0.27-0.28", "unit": "m_VB", "kind": "calc", "src": "Table XXIV", "review_ref": "531"}
+      },
+      "carrier_mobility": {
+        "electron_calc_limit": {"value": [270, 274], "unit": "cm2/(V s)", "src": "Table XXIV, p.49", "review_ref": "470,501"},
+        "electron_expt": {"value": "7.81-190 (표), 최고 226", "unit": "cm2/(V s)", "src": "Table XXIV, p.49", "review_ref": "434,440,455,500-502",
+          "detail": ["undoped film 최저 7.81 (502)", "bulk 180 (440), 190 (464)", "bulk RT 최대 226 (501)", "이전 bulk 최대 160 (434)", "UID film (111) 110 (503) vs (001) 55 (504) — 배향 의존", "ITO film (222) 22.3-30.0 / (400) 43.97-80.54 (505)", "100 K 로 냉각 시 1290 까지 상승 (501)"]},
+        "scattering": "RT 근처는 **polar optical phonon scattering** 지배(전도대가 In 5s 라 광학 deformation potential 이 사라짐, ADP = -4.31 eV), 100 K 이하는 dislocation/impurity scattering. 캐리어 2.0e18 -> 2.0e19 구간에서 mobility 감소 후, 더 높은 농도에서는 LO-phonon plasmon coupling 으로 다시 증가."
+      },
+      "electrical_breakdown_field_MV_per_cm": {"value": "3-4", "kind": "pred", "method": "Higashiwaki gap-vs-field plot", "src": "Table XXIV", "review_ref": "147", "note": "리뷰: In2O3 절연파괴장은 '관심 파라미터가 아니어서 문헌에서 찾기 어렵다'. 예측만 존재. GaN/4H-SiC 급."},
+      "electron_affinity_eV": [
+        {"value": 3.3, "kind": "calc", "src": "Table XXIV", "review_ref": "492", "note": "리뷰 9종 중 인용된 최저 electron affinity"},
+        {"value": 3.7, "kind": "expt(derived)", "method": "일함수 4.3 eV + gap + Fermi level 로부터", "src": "Table XXIV", "review_ref": "496"},
+        {"value": 4.3, "kind": "ref", "src": "Table XXIV", "review_ref": "494"},
+        {"value": 4.45, "kind": "expt", "src": "Table XXIV", "review_ref": "495"}
+      ],
+      "phonon": {
+        "irreducible_optical": {"value": "Gamma_opt = 4A_g + 5A_u + 4E_g + 5E_u + 14T_g + 16T_u", "note": "primitive cell 40 atoms -> 117 optical modes", "src": "p.46", "review_ref": "484"},
+        "raman_active": {"value": "4A_g + 4E_g + 14T_g (=14F_g 표기)", "src": "Table XXIV", "review_ref": "484,485,532"},
+        "ir_active": {"value": "16T_u (=16F_u 표기)", "src": "Table XXIV", "review_ref": "484,486,532"},
+        "silent": "A_u + E_u",
+        "note": "16개 IR 모드 중 실험적으로 검출된 것은 오래도록 11개뿐이었고, T_u(12)-T_u(16) 은 세기가 약해 Stokey et al.(484)이 처음 관측·결정.",
+        "representative_TO_LO_cm-1": {
+          "T_u(1)": {"TO_calc": 588.61, "TO_expt": 594.9, "LO_calc": 611.35, "LO_expt": 624},
+          "T_u(16)": {"TO_calc": 100.86, "TO_expt": 99.0, "LO_calc": 100.86, "LO_expt": 99.1},
+          "src": "Table XX", "review_ref": "484-487", "note": "전 16모드 표는 리뷰 Table XX 참조(여기엔 양 끝만 기록)"
+        },
+        "representative_raman_cm-1": {"lowest_F_2g(1)": {"calc": 106, "expt": [108, 109, 112]}, "highest_F_2g(14)": {"calc": 600, "expt": [628, 636, 633]}, "src": "Table XXI", "review_ref": "485,488"},
+        "rh_phase_irreducible": {"value": "2A_1g + 2A_1u + 3A_2g + 2A_2u + 5E_g + 4E_u", "note": "30 Gamma 모드; A_1g/E_g Raman, A_2u/E_u IR, acoustic = 1A_2u + 1A_u", "src": "p.47", "review_ref": "420,491"}
+      },
+      "thermal": {
+        "debye_temperature_K": {"calc": {"value": "700-811", "src": "Table XXIII", "review_ref": "469,470"}, "expt": {"value": "420 +/- 20", "method": "heat capacity 로부터", "src": "Table XXIII", "review_ref": "469", "note": "순수/Sn 도핑 여부 미명시"}, "note": "Preissler(470)는 온도의존 mobility 로부터 유효 Debye 700 K, 오차분석 650-811 K"},
+        "specific_heat_J_gK": {"calc_from_molar": {"value": 0.356, "note": "Cordfunke 몰비열 99.040 J/(mol K) @ 300 K / M=277.64 g/mol", "src": "Table XXIII", "review_ref": "471"}, "converted": {"value": 0.837, "note": "Wheeler 의 0.2 cal/(g K) 가정을 환산 — **가정값이지 측정값 아님**", "src": "Table XXIII", "review_ref": "461"}, "review_comment": "리뷰: In2O3 비열은 '가장 덜 연구된 열물성 중 하나'. Wheeler 는 인용값 대신 가정값을 썼다."},
+        "thermal_conductivity_W_mK": {"summary": {"value": "10-15.0", "kind": "expt", "src": "Table XXIII", "review_ref": "436,480,495"},
+          "detail": ["bulk 단결정 RT ~15 (465)", "bulk RT 13.09 -> 800 C 2.89 (436)", "다른 연구 RT 7-10 -> 1200 K 2-3 (480)", "어닐링 후 (111) 20 K 피크 **5000** (465) — 다이아몬드/Si 급, 20 K 에서 Al2O3 보다 약간 낮은 수준", "ITO 박막 RT 는 bulk 의 1/3", "ITO 전자 열전도 기여 1.0-1.4 (막두께 27-62 nm), diffusivity 유래 4.00-5.86"],
+          "thermoelectric": "Ge 도핑 시 3 -> 0.6 W/(mK) (In1.8Ge0.2O3), ZT 0.1 -> 0.45 (review_ref 483)"},
+        "thermal_diffusivity_mm2_s": {"ITO_film": {"value": 1.2, "kind": "expt", "src": "Table XXIII", "review_ref": "472"}, "bulk_calc": {"value": 7.0, "kind": "calc", "src": "Table XXIII", "review_ref": "465"}, "film_range": "1.2e-6 ~ 2.27e-6 m2/s, O2 flow rate 의존 (100% Ar 2.24e-6, 피크 2.27e-6, O2 증가 시 1.53e-6)", "review_comment": "**리뷰 9종 중 열확산도 최고**(§XI); 반대로 SnO2 가 최저."},
+        "CTE_1e-6_per_K": {"value": "6.15-10.2", "kind": "expt", "src": "Table XXIII", "review_ref": "436,466-468", "detail": "powder 7.20 +/- 0.06 /C (466); 단결정 6.15 +/- 0.11 /C (467); ITO 박막(기판용) 10.2 /C = 유리와 유사 (468)"}
+      },
+      "mechanical": {
+        "density_g_cm3": {"expt": {"value": 7.12, "src": "Table XXIII", "review_ref": "406"}, "calc": {"value": 7.2, "src": "Table XXIII", "review_ref": "424"}, "outlier": {"value": 6.3, "src": "p.45", "review_ref": "461", "note": "Wheeler; 리뷰가 '훨씬 낮다'고 명시"}, "common": "7.1-7.2"},
+        "bulk_modulus_GPa": {"expt": {"value": 194.24, "src": "Table XXIII", "review_ref": "462"}, "calc": {"value": "174-192.66", "src": "Table XXIII", "review_ref": "428,459"}, "note": "압력 증가 시 B 증가; **rhombohedral 이 모든 압력에서 cubic 보다 B 가 크다**(review_ref 463)"},
+        "melting_point_C": {"value": "1949-1950", "kind": "expt", "src": "Table XXIII", "review_ref": "458,464,465"}
+      },
+      "doping_and_defects": {
+        "n_type": "언도프에서도 near-perfect 화학량론이면 wide-bandgap 절연체처럼 행동; 도판트가 들어가면 n-type TCO.",
+        "Sn_ITO": "Sn 은 In 을 치환하는 양이온 도판트로 전하중성 유지하며 n-type. 이론적 최대 캐리어밀도가 Sn 농도에 의존하나 **실제로는 그 수준에 도달 못함** — Sn 일부가 전기적으로 비활성. Sn 1 wt% 에서 Hall mobility·저항 급락, n = 5e20 cm-3. undoped 최고 mobility 160-170 vs Sn 도핑은 그보다 낮음(자유캐리어 산란 증가). (p.49, review_ref 509,510)",
+        "Ti": "PLD Ti 도핑: 표면거칠기 2 nm (Sn 도핑의 절반), 기판온도 상승과 함께 mobility 증가 피크 **154 cm2/(V s)**, 저항 감소. 상용 TCO 대비 우수. (review_ref 511)",
+        "Mo": "Mo(4d) 가 In(5s) 와 거의 혼성하지 않아 **도너를 전도대에서 분리** -> 이온화 불순물 산란 감소, mobility 증가(65.3 / 80-130 cm2/(V s)). 동일 농도 Sn 대비 산란 훨씬 적음. 또한 rhombohedral 상 형성을 억제. (review_ref 407,517-519)",
+        "others": ["hydrogen(520)", "tungsten(521)", "iron(522,523)", "zinc(434,524,525)", "tantalum(515)"],
+        "defects": "O vacancy = **double donor**, In vacancy = **triple acceptor**(n-type 보상중심). In vacancy 형성에너지가 높아 p-type In2O3 는 사실상 불가. O vacancy 가 deep 인지 shallow 인지는 결론 미정 — 어느 쪽이든 산소공공만으로 p-type 은 안 된다. (p.49-50, review_ref 528 Reunchan)",
+        "positron_annihilation": "Korhonen(506): UID bulk 가 전 시료 중 vacancy 농도 최저. 박막은 vacancy 형성에 유리한 성장 kinetics, bulk 는 vacancy 거의 검출 안 됨. Sn 도핑 박막(ITO)에서는 **침입형 산소가 보상 acceptor** 이며 In vacancy 가 아니다. (p.50)"
+      }
+    }
+  }
+}

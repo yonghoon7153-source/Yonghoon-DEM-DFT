@@ -403,6 +403,8 @@ def load_cascade() -> dict:
     out["codoping_v2_meta"] = _load_json(DB / "properties" / "codoping_ml_v2_meta.json")
     # 🔻 문헌 표준 게이트 깔때기 (재표현 뷰) — 빌더가 아직 안 돌았을 수 있음 → 없으면 None (탭 숨김)
     out["funnel"] = _load_json(DB / "properties" / "cascade_screening_funnel.json")
+    # T9-T11 안정성 3축 — 깔때기 G6/G7 후보. M6 의 vacuous 판정을 뒤집은 데이터.
+    out["stability"] = _load_json(DB / "properties" / "cascade_stability_axes_verdict.json")
     return out
 
 
@@ -836,6 +838,146 @@ def deck_correction_ledger() -> list:
          "what": "**방법 계열 자체가 다름**",
          "paper": "kim2025_li3ycl6_new_crystal_structure",
          "impact": "랩이 CSP 파이프라인을 최소 2개 운영 — '그들은 CSP 에도 MTP 를 쓴다'를 전제로 삼으면 안 됨"},
+    ]
+
+
+def verdict_revisions() -> list:
+    """**우리가 냈다가 뒤집은 판정** 이력.
+
+    덱 정정 원장이 '외부 자료가 틀렸다'면 이건 '우리가 틀렸다'다. 둘을 나란히 두는 것이
+    핵심이다 — 한쪽만 있으면 정직성이 아니라 남 탓이 된다.
+    각 항목은 (무엇을 주장했나 / 무엇이 틀렸나 / 어떻게 알았나 / 지금 무엇을 아나)로 쓴다.
+    """
+    return [
+        {
+            "id": "V1",
+            "date": "2026-07-28",
+            "title": "M6 계면 반응성 게이트를 'vacuous'라고 판정했다가 철회",
+            "claimed": (
+                "47 코팅 × 양극(만충 LiCoO₂ / 반충 Li₀.₅CoO₂) 94쌍을 돌려 **89/94가 통과**하고, "
+                "탈락 5종(BaO·MnO·Na₂O·Sb₂O₅·TiF₄)이 전부 이미 G1–G4에서 죽어 있어 "
+                "**unique_kill = 0 → 완전 중복 게이트**라고 판정했다. "
+                "'황화물 SE ↔ 산화물 양극은 큰 구동력이지만 산화물 코팅 ↔ 산화물 양극은 거의 0이라 "
+                "47종 안에서 줄 세우는 데는 못 쓴다'고 썼다."),
+            "wrong": (
+                "**게이트의 성질이 아니라 우리가 가장 쉬운 상대만 계산한 결과였다.** "
+                "코팅이 실제로 마주하는 상대는 양극만이 아니다 — SE(LPSCl)와 Li 금속 음극이 있고, "
+                "그쪽이 훨씬 가혹하다."),
+            "how_found": (
+                "Kim 2026 (Nano Convergence 13, 27) **Table S1** — 88 후보의 ΔE_rxn을 "
+                "NCM523과 LPSCl **양쪽**에 대해 싣는데, 다수가 양극과는 0인데 LPSCl과는 −50~−99 meV였다 "
+                "(Li₂TiO₃ 0/−60 · Li₃NbO₄ 0/−96 · Li₂SO₄ 0/−99 · LiSrBO₃ 0/−96). "
+                "본문도 *\"many materials exhibited stable interfaces with the NCM523, "
+                "a substantial fraction fail to maintain stability against LPSC\"*라고 명시한다."),
+            "now_known": (
+                "축을 5상대로 확장해 47종을 다시 돌린 결과 **위력이 축마다 극단적으로 다르다**: "
+                "양극 만충 2종 탈락 · 양극 반충 3종 · **SE(LPSCl) 29종** · **Li 음극 35종** · LNO 대조 4종. "
+                "코어 생존자 11종이 **3종(CaF₂·LiF·MgO)으로 줄었다** — SE·Li 축이 8종을 새로 죽인다. "
+                "즉 이 게이트는 vacuous의 반대이고, 그것을 우리 데이터로 확정했다."),
+            "table": {
+                "cols": ["축", "통과", "탈락", "중앙값 (meV/atom)"],
+                "rows": [["양극 만충 (LiCoO₂)", "45/47", "2", "−0.0"],
+                         ["양극 반충 (Li₀.₅CoO₂)", "44/47", "3", "0.0"],
+                         ["**SE (Li₆PS₅Cl)**", "**18/47**", "**29**", "**−163.4**"],
+                         ["**Li 금속 음극**", "**12/47**", "**35**", "**−447.1**"],
+                         ["LiNbO₃ (상용 코팅 대조)", "43/47", "4", "−13.7"]]},
+            "caveat": (
+                "⚠ **Li 음극 축의 적용 조건**: 도펀트가 SE 벌크에 분산돼 Li 금속과 접촉하는 구성에서만 "
+                "유효하다. 양극 표면에만 있는 코팅이면 Li와 만나지 않으므로 과도하게 엄격하다. "
+                "우리 cascade는 'LPSCl 도펀트' 구도라 성립하지만 인용 시 전제를 밝힐 것. "
+                "⚠ 생존 3종이라는 **숫자 자체도 결론으로 쓰지 말 것** — 100 meV 컷 하나에 지배된다."),
+            "lesson": "**축을 하나만 계산하고 '게이트가 무력하다'고 말하지 말 것.** "
+                      "무력해 보이면 먼저 '내가 쉬운 쪽만 봤나'를 의심한다.",
+            "papers": ["kim2026_hts_li3sc2po43_coating_midni_ncm"],
+            "artifacts": ["db/properties/cascade_stability_axes_verdict.json",
+                          "db/properties/cascade_stability_axes.csv"],
+        },
+        {
+            "id": "V2",
+            "date": "2026-07-28",
+            "title": "T10(E_hull 합성가능성 필터)이 G1의 vacuous를 고칠 거라 예측했다가 빗나감",
+            "claimed": (
+                "깔때기의 G1(구조 안정)이 unique_kill 0으로 아무도 못 떨어뜨리는 이유를 "
+                "**'우리 G1이 convex hull이 아니라 host 상대 Δe를 쓰기 때문'**이라고 진단하고, "
+                "Lee 2024(JMCA 12, 7272)의 `E_hull < 50 meV/atom` 합성가능성 기술자를 도입하면 "
+                "실제로 걸러질 거라고 예측했다 (T10, 우선순위 1)."),
+            "wrong": "**hull로 바꿔도 탈락이 0종이다.** 최대가 CrO₃ 46 meV이고 나머지는 사실상 0.",
+            "how_found": "T9·T11과 함께 47종 전수 계산(`tools/cascade/stability_axes.py`)을 돌려 직접 확인.",
+            "now_known": (
+                "**원인은 기준이 아니라 풀이다.** 우리 47종은 애초에 안정한 흔한 이성분 산화물·불화물로 "
+                "큐레이션돼 있어 **어떤 열역학 안정성 기준을 걸어도 통과한다**. "
+                "→ **T10은 접는다.** 대신 이 음성 결과 자체를 `cascade_screening_funnel.json`의 "
+                "`pool_provenance` 논증에 **정량 근거**로 전환한다: "
+                "'우리 풀에서 안정성 축이 무력한 것은 게이트 설계 문제가 아니라 큐레이션의 성질이다.'"),
+            "caveat": "⚠ 이건 '안정성이 중요하지 않다'는 뜻이 **아니다**. "
+                      "Xiao(104,082)·Sendek(12,831)·Kahle(15,855) 같은 **발견 깔때기**에서는 "
+                      "안정성이 압도적으로 센 게이트다(Kim 2026도 ECW에서 94.3% 제거). "
+                      "우리 풀은 그 단계를 **이미 통과한 상태에서 시작**할 뿐이다.",
+            "lesson": "**음성 결과도 결과다.** 예측이 빗나간 것을 지우지 않고 논증으로 전환한다.",
+            "papers": ["lee2024_multicomponent_argyrodite_mixed_oxidation_mtp"],
+            "artifacts": ["db/properties/cascade_stability_axes_verdict.json"],
+        },
+        {
+            "id": "V3",
+            "date": "2026-07-28",
+            "title": "'MLIP σ 절대값 인용 금지'의 근거를 재정의 (규율은 유지, 이유가 바뀜)",
+            "claimed": (
+                "규율의 근거를 `kim2024` 하나로 세웠다 — **같은 MTP 프레임에서 훈련 functional만 바꿔도 "
+                "σ₈₀%가 8배 갈린다**(PBE 4.19 / PBE-D3 0.55 / optB88 2.46 mS/cm). "
+                "'경쟁 그룹의 데이터가 우리 규율을 증명한다'고 썼다."),
+            "wrong": (
+                "**절반만 맞았다.** `lee2024` ESI Table S1이 반대 방향의 데이터를 준다 — "
+                "optB88로 학습한 MTP는 **8개 계에서 실험과 잘 맞고**, 크게 틀리는 쪽은 **AIMD**다."),
+            "how_found": "lee2024 (JMCA 12, 7272) ESI Table S1 실물 대조.",
+            "table": {
+                "cols": ["조성", "AIMD", "MTP_optB88", "실험", "AIMD 오차"],
+                "rows": [["Li₆PS₅I", "0.84", "**0.001**", "**0.001**", "**840×**"],
+                         ["Li₆PS₅Cl", "4.6", "**2.46**", "**2.3–2.5**", "1.9×"],
+                         ["Li₃YCl₆", "14", "**0.56**", "**0.51**", "**27×**"],
+                         ["Li₇P₃S₁₁", "57", "6.5", "4–17", "~5×"]]},
+            "now_known": (
+                "정확한 명제는 이것이다 — **\"MLIP σ 절대값은 (a) 훈련 functional이 그 계에 맞고 "
+                "(b) 같은 물질군에서 실험 검증을 거친 경우에만 신뢰할 수 있다.\"** "
+                "**우리 UMA는 둘 다 미충족**이다: OMat24는 PBE 계열이라 optB88이 아니고, "
+                "우리 계에 대한 실험 대조 검증을 한 적이 없다. "
+                "→ **인용 금지 규율은 그대로 유지된다. 다만 이유가 '멀립은 원래 못 믿는다'가 아니라 "
+                "'우리 특정 설정이 검증되지 않았다'로 바뀐다.**"),
+            "caveat": "⚠ 이 재정의는 규율을 **약화시키지 않는다. 정확하게 만든다.** "
+                      "그리고 T1(UMA 외삽·검증 대리지표)의 필요성을 한층 강하게 만든다 — "
+                      "'검증이 없다'가 문제라면 검증을 만들면 되기 때문이다.",
+            "lesson": "**우리에게 유리한 문헌만 근거로 삼지 말 것.** "
+                      "같은 랩의 다른 논문이 반대 방향을 가리키면 명제를 다시 써야 한다.",
+            "papers": ["kim2024_mtp_argyrodite_disorder_gb",
+                       "lee2024_multicomponent_argyrodite_mixed_oxidation_mtp"],
+            "artifacts": ["kb/open_items.md"],
+        },
+        {
+            "id": "V4",
+            "date": "2026-07-28",
+            "title": "T1(외삽 등급)을 'γ 확보'로 세웠다가 'UMA용 대리지표 설계'로 재정의",
+            "claimed": (
+                "이상욱 랩이 MTP-MD 스냅샷마다 관리하는 **extrapolation grade γ**를 우리도 확보하면 "
+                "T1(우리 최대 방법론 구멍)이 닫힌다고 봤다. 논문에서 실제 값도 찾았다 — "
+                "γ_select = 2, γ_break = 10 → 5 → 2."),
+            "wrong": (
+                "**γ는 UMA에 이식할 수 없다.** γ는 MTP의 **선형 기저 위 maxvol / D-optimality**로 "
+                "정의되는데, UMA는 비선형 등변 GNN이라 **정의 자체가 존재하지 않는다**. "
+                "숫자를 구해도 쓸 데가 없다."),
+            "how_found": "kim2026 SEI 논문(SSRN) 실물에서 γ 정의를 확인.",
+            "now_known": (
+                "이식할 수 있는 것은 **논리 구조**뿐이다 — ①대리지표를 하나 정한다 "
+                "②**선별 문턱과 중단 문턱을 분리**한다 ③중단 문턱을 조여 수렴을 판정한다. "
+                "채택한 대리지표는 **모델 위원회 불일치**(UMA + MACE-MP-0 + SevenNet-0의 힘 예측 분산). "
+                "기존 궤적 후처리라 새 MD가 필요 없다."),
+            "caveat": (
+                "⚠ 위원회는 **절대 정확도를 말하지 않는다.** 세 모델이 전부 PBE 계열이라 "
+                "V3의 functional 각인 문제를 풀지 못한다 — **일치해도 절대 σ 인용 금지는 그대로**. "
+                "이 지표가 재는 것은 '이 배열이 훈련 분포에서 이상한가'뿐이고, "
+                "**그 목적에는 같은 functional 계열인 것이 오히려 무해하다**."),
+            "lesson": "**남의 지표를 그대로 가져오기 전에 그것이 우리 도구에서 정의되는지 먼저 확인할 것.**",
+            "papers": ["kim2026_li_argyrodite_sei_reactive_md"],
+            "artifacts": ["tools/ionic/mlip_committee.py", "kb/open_items.md"],
+        },
     ]
 
 
