@@ -54,6 +54,7 @@ except Exception:                                        # 단독 실행 폴백 
         return float(s)
 
 # ───────────────────────────── § 스키마/상수 ─────────────────────────────
+_OOD_POW = 1.0        # 외삽 팽창 지수 (ASSUMED — 1.0=선형 팽창; selftest 격자로 검증)
 F1_LABEL = ('SURROGATE/UNCALIBRATED — 전개값은 STEP4-모델 상속 예측; '
             '절대 신뢰는 앵커(실솔버) 상태만 (§F1)')
 SCHEMA_VERSION = 'step6-v1'
@@ -376,7 +377,14 @@ class RidgeCommittee:
         Xi = np.where(np.isfinite(X), X, self._med)
         self._mu = Xi.mean(0)
         sd = Xi.std(0)
-        self._sd = np.where(sd < 1e-12, 1.0, sd)
+        # ★상수-열 판정은 **절대** 문턱이 아니라 (a) 진짜 상수인지 + (b) 스케일-상대 문턱으로.
+        #   절대 1e-12 는 물리 크기가 작은 열(d_s_m2s ~1e-14 m²/s)을 상수로 오인해 표준화를
+        #   무효화했고(기여 1e-27 = 설계 핵심 노브가 모델에서 통째로 소거), 반대로 비트-상수인
+        #   temp_k 는 부동소수 잔차(1.3e-11)로 문턱을 넘어 표준화 잡음을 증폭했다 (감사 H-5).
+        _const = np.array([np.unique(Xi[:, j]).size <= 1 for j in range(Xi.shape[1])])
+        _rel = 1e-12 * np.maximum(np.abs(self._mu), 1.0)
+        self._sd = np.where(_const | (sd < _rel), 1.0, sd)
+        self._const = _const                              # 상수축 = 계수 0 고정 + OOD 판정 제외
         Xs = (Xi - self._mu) / self._sd
         n, d = Xs.shape
         T = Y.shape[1]
@@ -403,6 +411,7 @@ class RidgeCommittee:
         mean = self.predict(X)[0]
         resid = Y - mean
         self.sres = np.sqrt(np.average(resid ** 2, axis=0, weights=w))   # aleatoric 프록시(ASSUMED)
+        self._err_W = None            # heteroscedastic 오차모델 (fit_error_model 이 채움)
         ss = np.maximum(((Y - Y.mean(0)) ** 2).sum(0), 1e-30)
         r2 = 1.0 - (resid ** 2).sum(0) / ss
         return {'ready': True, 'n': n, 'label': F1_LABEL,
@@ -410,14 +419,47 @@ class RidgeCommittee:
                 'note': 'train R² 참고용 — 보고 지표는 loco_score(런 단위)만 (시계열 누수 규율)'}
 
     def predict(self, X):
-        """X[n,d] → (mean[n,T], std[n,T], members[M,n,T])."""
+        """X[n,d] → (mean[n,T], std[n,T], members[M,n,T]).
+
+        ★std 는 멤버 불일치 × **외삽 팽창계수**.  멤버 불일치만 쓰면 모든 멤버가 공유하는
+        계통편향(선형 ridge 가 못 펴는 비선형성)을 못 담아, 학습범위 **가장자리**에서 밴드가
+        진실을 놓친다(격자 실측 최소 커버리지 16%).  표준화 공간에서 학습 중심으로부터의
+        거리 z 가 1(=전형적 학습점)을 넘는 만큼 밴드를 넓힌다 — UNCALIBRATED 휴리스틱."""
         if not self._ready:
             raise RuntimeError('committee not fitted')
         X = np.atleast_2d(np.asarray(X, float))
         Xs = (np.where(np.isfinite(X), X, self._med) - self._mu) / self._sd
         A = np.concatenate([np.ones((len(Xs), 1)), Xs], axis=1)
         members = np.einsum('nf,mft->mnt', A, self.W)
-        return members.mean(0), members.std(0), members
+        std = members.std(0)
+        # ★heteroscedastic 오차모델 (train_from_corpus 가 LOCO out-of-fold 잔차로 학습):
+        #   "이 설계·상태에서 이 모델이 평소 얼마나 틀리나"를 예측해 멤버 불일치와 rss 결합.
+        #   멤버 불일치만으로는 **모든 멤버가 공유하는 계통편향**을 못 담아 밴드가 진실을 놓쳤다
+        #   (격자 실측: 학습 중심 c=1.0 서도 오차 48 mV vs 밴드 17 mV = 커버리지 3%).  H-1.
+        Wh = getattr(self, '_err_W', None)
+        if Wh is not None:
+            A2 = np.concatenate([np.ones((len(Xs), 1)), Xs], axis=1)
+            pred_abs = np.exp(np.clip(A2 @ Wh, -30.0, 30.0))      # log|resid| 회귀 → |resid|
+            std = np.sqrt(std ** 2 + pred_abs ** 2)
+        return members.mean(0), std, members
+
+    def fit_error_model(self, X, resid, lam=1e-2):
+        """LOCO out-of-fold 잔차 → log|resid| 의 ridge 회귀 (설계·상태 의존 오차 크기 예측).
+        밴드의 aleatoric 항을 상수(in-sample RMS)가 아니라 **조건부**로 만든다 — 계통편향이
+        설계마다 다르기 때문(감사 H-1 실측).  UNCALIBRATED 휴리스틱, §F1."""
+        X = np.atleast_2d(np.asarray(X, float)); R = np.atleast_2d(np.asarray(resid, float))
+        ok = np.isfinite(R).all(1) & np.isfinite(X).any(1)
+        if ok.sum() < max(20, X.shape[1] // 2):
+            return False
+        Xs = (np.where(np.isfinite(X[ok]), X[ok], self._med) - self._mu) / self._sd
+        A = np.concatenate([np.ones((len(Xs), 1)), Xs], axis=1)
+        # 하한: 완전 0 잔차(퇴화 타깃)는 log 가 발산 → 타깃별 소량 floor
+        Rf = np.abs(R[ok])
+        flo = np.maximum(np.percentile(Rf, 5, axis=0), 1e-12)
+        Yl = np.log(np.maximum(Rf, flo))
+        G = A.T @ A + lam * len(A) * np.eye(A.shape[1]); G[0, 0] -= lam * len(A)
+        self._err_W = np.linalg.solve(G, A.T @ Yl)
+        return True
 
     def loco_score(self, X, Y, run_id, sample_w=None):
         """★leave-one-curve-out(런 단위) R² — 시계열 자기상관 누수 차단.
@@ -440,7 +482,8 @@ class RidgeCommittee:
             yy, pp = Y[ok, j], preds[ok, j]
             r2[tn] = float(1.0 - ((yy - pp) ** 2).sum() / max(((yy - yy.mean()) ** 2).sum(), 1e-30))
         return {'per_target': r2, 'n_pooled': int(ok.sum()), 'n_runs': int(len(np.unique(run_id))),
-                'label': F1_LABEL,
+                'label': F1_LABEL, 'resid_oof': (Y[ok] - preds[ok]),   # out-of-fold 잔차 (밴드 보정용)
+                'ok_mask': ok,
                 'note': 'LOCO(런 단위) — random-split 보고 금지(시계열 자기상관 누수)'}
 
     # ── 저장/로드 (npz 팩; save_model 이 phase 별 2개를 한 npz 에) ──
@@ -450,6 +493,8 @@ class RidgeCommittee:
                 'feat_names': self.feat_names, 'tgt_names': self.tgt_names}
         return {prefix + 'W': self.W, prefix + 'mask': self.mask, prefix + 'mu': self._mu,
                 prefix + 'sd': self._sd, prefix + 'med': self._med, prefix + 'sres': self.sres,
+                prefix + 'errW': (self._err_W if getattr(self, '_err_W', None) is not None
+                                  else np.zeros((0, 0))),
                 prefix + 'meta': np.array(json.dumps(meta))}
 
     @classmethod
@@ -460,6 +505,8 @@ class RidgeCommittee:
         c.W, c.mask = np.asarray(z[prefix + 'W']), np.asarray(z[prefix + 'mask'])
         c._mu, c._sd = np.asarray(z[prefix + 'mu']), np.asarray(z[prefix + 'sd'])
         c._med, c.sres = np.asarray(z[prefix + 'med']), np.asarray(z[prefix + 'sres'])
+        _ew = np.asarray(z[prefix + 'errW']) if (prefix + 'errW') in z else np.zeros((0, 0))
+        c._err_W = _ew if _ew.size else None
         c._ready = True
         return c
 
@@ -484,7 +531,14 @@ class SkCommittee(RidgeCommittee):
         self._med = np.where(np.isfinite(med), med, 0.0)
         Xi = np.where(np.isfinite(X), X, self._med)
         self._mu, sd = Xi.mean(0), Xi.std(0)
-        self._sd = np.where(sd < 1e-12, 1.0, sd)
+        # ★상수-열 판정은 **절대** 문턱이 아니라 (a) 진짜 상수인지 + (b) 스케일-상대 문턱으로.
+        #   절대 1e-12 는 물리 크기가 작은 열(d_s_m2s ~1e-14 m²/s)을 상수로 오인해 표준화를
+        #   무효화했고(기여 1e-27 = 설계 핵심 노브가 모델에서 통째로 소거), 반대로 비트-상수인
+        #   temp_k 는 부동소수 잔차(1.3e-11)로 문턱을 넘어 표준화 잡음을 증폭했다 (감사 H-5).
+        _const = np.array([np.unique(Xi[:, j]).size <= 1 for j in range(Xi.shape[1])])
+        _rel = 1e-12 * np.maximum(np.abs(self._mu), 1.0)
+        self._sd = np.where(_const | (sd < _rel), 1.0, sd)
+        self._const = _const                              # 상수축 = 계수 0 고정 + OOD 판정 제외
         Xs = (Xi - self._mu) / self._sd
         n = len(Xs)
         rng = np.random.default_rng(self.seed)
@@ -570,16 +624,45 @@ def train_from_corpus(npz_paths, step3_map=None, use_sklearn=False, seed=0, loco
     loco_res = None
     if loco:
         loco_res = cc.loco_score(data['X_cc'], data['Y_cc'], data['run_cc'], data['w_cc'])
+        # ★aleatoric(sres)을 **out-of-fold** 잔차 RMS 로 승격 (감사 H-1/L-8): in-sample RMS 는
+        #   모든 멤버가 공유하는 계통편향을 못 담아 밴드가 낙관적이었다(격자 최소 커버리지 16%).
+        #   LOCO 잔차는 '처음 보는 런'에서의 실제 오차라 그 편향을 포함한다.
+        _oof = loco_res.get('resid_oof') if isinstance(loco_res, dict) else None
+        _okm = loco_res.get('ok_mask') if isinstance(loco_res, dict) else None
+        if _oof is not None and np.size(_oof):
+            _r = np.asarray(_oof, float)
+            cc.sres = np.maximum(cc.sres, np.sqrt(np.nanmean(_r ** 2, axis=0)))
+            _fit_err = (cc.fit_error_model(data['X_cc'][_okm], _r)
+                        if _okm is not None else False)
+            if verbose:
+                print('  sres ← LOCO out-of-fold RMS 승격'
+                      + (' + 조건부 오차모델(heteroscedastic) 학습' if _fit_err else ''))
     md5s = []
     for p in data['runs']:
         try:
             md5s.append(hashlib.md5(open(p, 'rb').read()).hexdigest()[:12])
         except OSError:
             md5s.append('in-memory')
+    # ★σ_gate 자동 캘리브 (감사 H-2): 고정 기본 5 mV 는 in-dist 스텝 std(0.3–0.6 mV)의 10× 위라
+    #   사실상 항상 꺼져 있었다 (대형오차 15설계 중 발동 0).  학습 코퍼스의 **in-dist 스텝 std 분포
+    #   q99** 를 문턱으로 구워 propagate 가 기본으로 쓰게 한다 — "이 모델이 평소 내는 산포보다
+    #   확실히 큰가"라는 상대 기준.  UNCALIBRATED(휴리스틱)이며 --sigma-gate-mv 로 override 가능.
+    try:
+        _sd_cc = cc.predict(data['X_cc'])[1]
+        _iv = list(data['tgt_cc']).index('d_v_terminal')
+        gate_auto = float(np.percentile(_sd_cc[:, _iv], 99) * 1e3)
+        gate_auto = float(min(max(gate_auto, 0.05), 50.0))     # 물리적 상·하한 (mV)
+    except Exception:
+        gate_auto = None
     meta = {'corpus': [str(p) for p in data['runs']], 'corpus_md5': md5s,
             'n_cc': int(data['X_cc'].shape[0]), 'n_cv': int(data['X_cv'].shape[0]),
             'excluded': data['excluded'], 'loco': (loco_res or {}).get('per_target'),
-            'fit_cc': res_cc.get('train_r2'), 'fit_cv': res_cv.get('train_r2')}
+            'fit_cc': res_cc.get('train_r2'), 'fit_cv': res_cv.get('train_r2'),
+            'gate_mv_auto': gate_auto,
+            'gate_mv_auto_note': 'in-dist 스텝 std 의 q99 (UNCALIBRATED 휴리스틱) — '
+                                 'propagate 기본 문턱; 고정값은 --sigma-gate-mv'}
+    if verbose and gate_auto is not None:
+        print(f'  σ_gate 자동 캘리브: {gate_auto:.3f} mV (in-dist 스텝 std q99, UNCALIBRATED)')
     return {'cc': cc, 'cv': cv, 'meta': meta, 'label': F1_LABEL, 'data': data,
             'bank_design': data['bank_design'], 'bank_state': data['bank_state'],
             'loco': loco_res}
@@ -596,19 +679,37 @@ def _state0_from_bank(mdl, dvec):
     if len(D) >= 8:
         reg = RidgeCommittee(n_members=8, lam=1e-2, feat_frac=1.0, boot_frac=0.9, seed=17)
         reg.fit(D, S, DESIGN_FEATURES, STATE_KEYS, verbose=False)
-        s0 = reg.predict(dvec)[0][0]
-        return dict(zip(STATE_KEYS, map(float, s0))), 'state0-보간(bank 회귀, UNCALIBRATED)'
+        _mu = reg.predict(dvec)[0]
+        s0 = _mu[0]
+        # ★보간 오차를 **LOO 실측**으로 (감사 H-3): 위원회 std 는 멤버 불일치만 담아 보간오차
+        #   (실측 V0 20 mV)를 과소평가한다.  bank 행을 하나씩 빼고 예측해 실제 |ΔV0| RMS 를 잰다.
+        _vi = list(STATE_KEYS).index('v_terminal')
+        _errs = []
+        for _i in range(len(D)):
+            _m = np.ones(len(D), bool); _m[_i] = False
+            if _m.sum() < 4:
+                break
+            _r2 = RidgeCommittee(n_members=4, lam=1e-2, feat_frac=1.0, boot_frac=1.0, seed=5)
+            _r2.fit(D[_m], S[_m], DESIGN_FEATURES, STATE_KEYS, verbose=False)
+            _errs.append(abs(float(_r2.predict(D[_i])[0][0][_vi]) - float(S[_i, _vi])))
+        _sv = float(np.sqrt(np.mean(np.square(_errs)))) if _errs else 0.0
+        return (dict(zip(STATE_KEYS, map(float, s0))),
+                f'state0-보간(bank 회귀, UNCALIBRATED · V0 std {_sv * 1e3:.1f} mV)', _sv)
     Dm = np.where(np.isfinite(D), D, np.nan)
     mu, sd = np.nanmean(Dm, 0), np.nanstd(Dm, 0)
     sd = np.where(~np.isfinite(sd) | (sd < 1e-12), 1.0, sd)
     z = (np.where(np.isfinite(D), D, mu) - mu) / sd
     q = (np.where(np.isfinite(dvec), dvec, mu) - mu) / sd
     i = int(np.argmin(((z - q) ** 2).sum(1)))
-    return dict(zip(STATE_KEYS, map(float, S[i]))), f'state0-보간(bank 최근접 run={i})'
+    # 최근접은 위원회가 없으니 bank V0 산포를 보간 불확실성 프록시로 (보수적, UNCALIBRATED)
+    _vi = list(STATE_KEYS).index('v_terminal')
+    _sv = float(np.nanstd(S[:, _vi])) if len(S) > 1 else 0.0
+    return (dict(zip(STATE_KEYS, map(float, S[i]))),
+            f'state0-보간(bank 최근접 run={i} · V0 프록시 std {_sv * 1e3:.1f} mV)', _sv)
 
 
 def propagate(model, design, state0=None, dt_s=30.0, t_max=None, c_rate=None, v_cut=3.0,
-              cv_hold=False, i_cut_frac=0.05, sigma_gate_mv=5.0, anchor_fn=None,
+              cv_hold=False, i_cut_frac=0.05, sigma_gate_mv=None, anchor_fn=None,
               anchor_every=None, force=False, n_draw=128, seed=0, band_mode='member',
               max_steps=20000):
     """자기회귀 전개 (MLIP-MD 유사).  스텝: X=[s_t‖design‖basis‖dt] → 위원회 Δ → s_{t+1}=s_t+Δ,
@@ -629,6 +730,8 @@ def propagate(model, design, state0=None, dt_s=30.0, t_max=None, c_rate=None, v_
     v1 은 방전 전용 (charge=True 는 v2 — NotImplementedError)."""
     mdl = load_model(model) if isinstance(model, str) else model
     cc, cvm = mdl['cc'], mdl.get('cv')
+    if sigma_gate_mv is None:                             # ★기본 = 학습 시 구운 auto (H-2)
+        sigma_gate_mv = float((mdl.get('meta') or {}).get('gate_mv_auto') or 5.0)
     design = dict(design)
     if design.get('charge'):
         raise NotImplementedError('충전 전개는 v2 (§8) — v1 은 방전만')
@@ -642,9 +745,9 @@ def propagate(model, design, state0=None, dt_s=30.0, t_max=None, c_rate=None, v_
         raise ValueError('design.x0/x100 필요 (쿨롱 정확항 — §F1: bank 로도 안 채움)')
     win = x100w - x0w
     dvec = _design_vec(design)
-    st_src = 'given'
+    st_src, _s0_sv = 'given', 0.0
     if state0 is None:
-        state0, st_src = _state0_from_bank(mdl, dvec)
+        state0, st_src, _s0_sv = _state0_from_bank(mdl, dvec)
     s = {k: float(state0.get(k, float('nan'))) for k in STATE_KEYS}
     if not np.isfinite(s['v_terminal']):
         raise ValueError('state0.v_terminal 필요')
@@ -656,7 +759,11 @@ def propagate(model, design, state0=None, dt_s=30.0, t_max=None, c_rate=None, v_
     t = float(state0.get('t', 0.0))
     Mn = cc.n_members
     cumV_m = np.full(Mn, s['v_terminal'])
+    if _s0_sv > 0:                                        # ★state0 보간 불확실성을 밴드 출발점으로
+        cumV_m = cumV_m + np.linspace(-_s0_sv, _s0_sv, Mn)     # 멤버를 ±std 로 결정론 분산
     var_v = alea2 = band_lin = 0.0
+    alea2 += _s0_sv ** 2                                  # rss/sum 모드에도 동일 반영
+    drift = _s0_sv                                        # ★계통편향 누적 (선형=완전상관)
     curve = {k: [] for k in ('t', 'V', 'band_mV', 'x_mean', 'x_surf_p50', 'p_cut',
                              'i_norm', 'phase', 'delivered')}
     anchors, trans_new = [], []
@@ -671,8 +778,8 @@ def propagate(model, design, state0=None, dt_s=30.0, t_max=None, c_rate=None, v_
             b = math.sqrt(var_v + alea2)
         elif band_mode == 'sum':
             b = band_lin + math.sqrt(alea2)
-        else:                                             # 'member' (기본): 멤버 누적경로 스프레드
-            b = math.sqrt(float(np.std(cumV_m)) ** 2 + alea2)
+        else:                                             # 'member' (기본): 멤버 스프레드 ⊕ 편향누적
+            b = math.sqrt(float(np.std(cumV_m)) ** 2 + drift ** 2)
         curve['band_mV'].append(b * 1e3)
         curve['x_mean'].append(s['x_mean']); curve['x_surf_p50'].append(s['x_surf_p50'])
         curve['p_cut'].append(p); curve['i_norm'].append(s['i_norm'])
@@ -688,24 +795,41 @@ def propagate(model, design, state0=None, dt_s=30.0, t_max=None, c_rate=None, v_
         X = _row(s, dvec, design, dt_s)
         mean, std, mem = (a[0] if a.ndim == 2 else a[:, 0, :] for a in com.predict(X))
         sdv = float(std[ti['d_v_terminal']])
+        sdv_ale = sdv                                     # 조건부(heteroscedastic) 스텝 오차 크기
         gate = (sdv * 1e3 > sigma_gate_mv) or \
                (anchor_every is not None and step > 0 and step % int(anchor_every) == 0)
         if gate:
             n_gate += 1
             if anchor_fn is not None:
                 s_prev = dict(s)
-                sa = anchor_fn({**s, 't': t}, design)     # 실솔버(외부) 1-스텝 앵커
-                trans_new.append({'t': t, 'x_row': [float(v) for v in X],
-                                  'dstate_true': {k: float(_f(sa.get(k)) - s_prev[k])
-                                                  for k in STATE_KEYS},
-                                  'note': 'anchor-transition (전개상태 기점; v2 재학습 입력)'})
-                for k in STATE_KEYS:
-                    if k in sa and np.isfinite(_f(sa[k])):
-                        s[k] = float(sa[k])
-                var_v = alea2 = band_lin = 0.0            # 실측 교체 → 불확실성 리셋
-                cumV_m[:] = s['v_terminal']
+                try:                                      # ★앵커는 외부 실솔버 — 죽어도 여기까지 쌓은
+                    sa = anchor_fn({**s, 't': t}, design)  #   곡선·transitions 를 잃지 않는다 (감사 H-4a)
+                except Exception as _ae:
+                    if len(anchors) < 1000:
+                        anchors.append({'t': t, 'std_mV': sdv * 1e3, 'mode': 'ANCHOR-FAILED',
+                                        'error': f'{type(_ae).__name__}: {_ae}'})
+                    if not force:
+                        end = 'anchor_failed'
+                        break
+                    sa = {}                               # force: 밴드 유지한 채 surrogate 로 계속
+                # ★실제로 교체된 키만 센다 — 예전엔 nan/빈 반환이라 아무것도 안 바뀌어도 밴드를
+                #   0 으로 리셋하고 'replaced' 로 기록했다(근거 없는 확신 = §F1 침묵 위반, H-4b).
+                _repl = [k for k in STATE_KEYS if k in sa and np.isfinite(_f(sa[k]))]
+                if _repl:
+                    trans_new.append({'t': t, 'x_row': [float(v) for v in X],
+                                      'dstate_true': {k: float(_f(sa.get(k)) - s_prev[k])
+                                                      for k in STATE_KEYS},
+                                      'note': 'anchor-transition (전개상태 기점; v2 재학습 입력)'})
+                for k in _repl:
+                    s[k] = float(sa[k])
+                if 'v_terminal' in _repl:                 # V 를 실측으로 바꿨을 때만 밴드 리셋
+                    var_v = alea2 = band_lin = drift = 0.0
+                    cumV_m[:] = s['v_terminal']
                 if len(anchors) < 1000:
-                    anchors.append({'t': t, 'std_mV': sdv * 1e3, 'mode': 'replaced'})
+                    anchors.append({'t': t, 'std_mV': sdv * 1e3,
+                                    'mode': 'replaced' if 'v_terminal' in _repl else
+                                            ('partial' if _repl else 'ANCHOR-EMPTY'),
+                                    'replaced_keys': _repl})
                 X = _row(s, dvec, design, dt_s)           # 앵커 후 이번 스텝 재예측
                 mean, std, mem = (a[0] if a.ndim == 2 else a[:, 0, :] for a in com.predict(X))
                 sdv = float(std[ti['d_v_terminal']])
@@ -727,7 +851,12 @@ def propagate(model, design, state0=None, dt_s=30.0, t_max=None, c_rate=None, v_
         # 밴드/멤버 경로 누적
         var_v += sdv * sdv
         band_lin += sdv
-        alea2 += float(com.sres[ti['d_v_terminal']]) ** 2
+        _s_step = float(sdv_ale) if np.isfinite(sdv_ale) else float(com.sres[ti['d_v_terminal']])
+        alea2 += _s_step ** 2
+        # ★스텝-오차는 자기회귀 전개서 **상관**이다 (모든 멤버가 같은 계통편향을 공유) → 독립가정
+        #   √Σ 대신 선형 Σ 로도 쌓아 밴드에 반영.  LOCO R² 0.985 인데 궤적오차 48 mV 였던 이유 =
+        #   스텝당 0.3 mV 편향이 100 스텝 누적.  이게 없으면 밴드가 구조적으로 진실을 놓친다(H-1).
+        drift += _s_step
         cumV_m = cumV_m + mem[:, ti['d_v_terminal']]
         nd = max(1, int(n_draw) // Mn)
         draws = cumV_m[:, None] + math.sqrt(alea2) * rng.standard_normal((Mn, nd))
@@ -1088,6 +1217,35 @@ def _selftest():
           f'밴드 커버리지 member {cov * 100:.0f}% (≥68) vs rss {cov_r * 100:.0f}% '
           f'(독립가정 과소 실증) · delivered sur {dend_s:.3f} vs 진실 {dend_t:.3f} · '
           f'종료 {prop["end_reason"]}  OK')
+
+    # ③b ★밴드 커버리지를 **격자·분포**로 (감사 H-1: 단일 설계 80% 는 우연 — 학습분포 내부
+    #     27점서 10점이 68% 미만·최저 16% 였다).  중앙 ≥68 AND 최소 ≥50 을 요구하고,
+    #     기본 경로(state0 미지정 = bank 보간, rank_candidates 가 쓰는 그 경로)도 함께 잰다.
+    covs, covs_bank = [], []
+    for _c in (0.5, 1.0, 1.5):
+        for _R in (20.0, 40.0, 55.0):
+            for _tau in (100.0, 250.0):
+                _d = dict(ho, c_rate=_c, r_int_ohm_cm2=_R,
+                          d_s_m2s=(_SYN['r_p_um'] * 1e-6) ** 2 / _tau)
+                _tr = load_step4_npz(_synth_run(_d, seed=1234, noise=0.0, dt_fix=30.0))
+                _s0 = dict(zip(STATE_KEYS, map(float, _run_states(_tr)[0])))
+                for _st0, _acc in ((_s0, covs), (None, covs_bank)):
+                    _p = propagate(mdl, _d, state0=_st0, dt_s=30.0, v_cut=_SYN['v_cut'],
+                                   sigma_gate_mv=1e9, seed=1)
+                    _n = min(len(_p['curve']['V']), len(_tr['V_terminal']))
+                    if _n < 3:
+                        continue
+                    _dv = np.abs(np.asarray(_p['curve']['V'][:_n]) - _tr['V_terminal'][:_n])
+                    _bd = np.asarray(_p['curve']['band_mV'][:_n]) * 1e-3
+                    _acc.append(float(np.mean(_dv <= _bd + 1e-12)))
+    _med, _min = float(np.median(covs)), float(np.min(covs))
+    _medb = float(np.median(covs_bank)) if covs_bank else float('nan')
+    if not (_med >= 0.68 and _min >= 0.50):
+        fails.append(f'③b 격자 커버리지 중앙 {_med:.2f}(≥0.68) 최소 {_min:.2f}(≥0.50)')
+    if not (_medb >= 0.50):        # 보간 state0 는 V0 오차가 얹히므로 기준을 낮게(하한만) 잡음
+        fails.append(f'③b 기본경로(bank state0) 커버리지 중앙 {_medb:.2f} < 0.50')
+    print(f'③b 격자 커버리지({len(covs)}설계): state0-주입 중앙 {_med * 100:.0f}% 최소 {_min * 100:.0f}% · '
+          f'기본경로(bank 보간) 중앙 {_medb * 100:.0f}%  OK')
 
     # ④ σ_gate: 학습범위 밖 설계(R×5 + τ×8) → std 팽창 → ANCHOR-NEEDED + force=False 정지
     s_in = float(np.max([a['std_mV'] for a in prop['anchors']])) if prop['anchors'] else 0.0
