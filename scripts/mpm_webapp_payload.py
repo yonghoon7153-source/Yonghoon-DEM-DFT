@@ -1014,10 +1014,14 @@ def main():
                     jrxn_am = None
                     print(f'  ⚠ STEP4 rxn failed ({type(_e4).__name__}: {_e4}) — STEP3 결과는 유지')
                 if a.save_step4_grid:                        # STEP4-v2 동역학 입력 (step4_dyn.py --grid)
+                    # ★periodic_xy 를 계약에 포함 (2026-07-27 감사 C1): STEP3 는 --periodic 시
+                    #   x,y wrap 을 전도·BV 에 함께 걸지만 STEP4-v2 는 npz 에 이 정보가 없어
+                    #   **항상 절연벽**으로 풀었다 (실격자서 i-망 wrap 면 30,895 · seam BV 11,543 누락).
                     np.savez_compressed(a.save_step4_grid, sid=sid3.astype(np.int8),
                                         pid=pid3.astype(np.int32), vox_um=a.step3_vox,
                                         z_top_um=_ztop, sig_e_S_cm=_sig3, sig_i_S_cm=_sig3i,
-                                        am_r_um=np.asarray(r, np.float64) * UM)
+                                        am_r_um=np.asarray(r, np.float64) * UM,
+                                        periodic_xy=np.array(bool(getattr(a, 'periodic', False))))
                     a._s4grid_saved = True           # end-of-main 알림용 (stale 파일 오탐 방지, 리뷰 R2#6)
                     print(f'  STEP4-v2 grid → {a.save_step4_grid}  (sid {sid3.shape}, '
                           f'n_am {len(r)}, vox {a.step3_vox}µm)')

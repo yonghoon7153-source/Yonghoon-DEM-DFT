@@ -664,7 +664,7 @@ class CellSystem:
     _cap_hinted = False                                      # σ대비 권고 로그 프로세스-1회 (C1)
 
     def __init__(self, sid, sig_e_tab_S_cm, sig_i_tab_S_cm, pid, n_am, vox_um,
-                 z_top_um=None, z_bot_um=0.0):
+                 z_top_um=None, z_bot_um=0.0, periodic_xy=False):
         vox_m = vox_um * 1e-6
         self.vox_m = vox_m
         sig_e = np.asarray(sig_e_tab_S_cm, np.float64)[sid] * 100.0   # S/m
@@ -761,9 +761,22 @@ class CellSystem:
             rows.append(b2); cols.append(a2); vals.append(-g)
             np.add.at(diag0, a2, g); np.add.at(diag0, b2, g)
 
-        SL = ((np.s_[:-1, :, :], np.s_[1:, :, :]), (np.s_[:, :-1, :], np.s_[:, 1:, :]),
-              (np.s_[:, :, :-1], np.s_[:, :, 1:]))
-        for sl_a, sl_b in SL:
+        # ★x,y 주기 wrap (2026-07-27 감사 C1): STEP3 v1(solve_reaction_current)은 --periodic 시
+        #   wrap 을 _dirs 에 넣어 **전도와 BV 계면이 함께** 주기가 되게 한다.  v2 는 그 정보를 못
+        #   받아 항상 절연벽이었다(실격자 i-망 wrap 면 30,895 · seam BV 11,543 누락).  여기서도
+        #   SL 을 전도·BV 가 공유하므로 append 만으로 v1 과 같은 규약이 된다.  nx/ny=1 자기결합 가드.
+        self.periodic_xy = bool(periodic_xy)
+        # (축, sl_a, sl_b) — ★축을 명시로 싣는다: wrap 을 붙이면 SL 순번≠축이 되는데 BV 좌표가
+        #   순번을 축으로 쓰면 IndexError/좌표오염이 난다 (S1d 가 즉시 잡은 회귀).
+        SL = [(0, np.s_[:-1, :, :], np.s_[1:, :, :]), (1, np.s_[:, :-1, :], np.s_[:, 1:, :]),
+              (2, np.s_[:, :, :-1], np.s_[:, :, 1:])]
+        if self.periodic_xy:                              # z(plate)는 비주기 유지
+            if sid.shape[0] > 1:
+                SL.append((0, np.s_[-1:, :, :], np.s_[:1, :, :]))     # x: nx-1 ↔ 0
+            if sid.shape[1] > 1:
+                SL.append((1, np.s_[:, -1:, :], np.s_[:, :1, :]))     # y: ny-1 ↔ 0
+        SL = tuple(SL)
+        for _ax, sl_a, sl_b in SL:
             _couple(idx_e, sig_e, 0, sl_a, sl_b)
             _couple(idx_i, sig_i, self.n_e, sl_a, sl_b)
         # plates — v1(solve_reaction_current)과 동일한 **Dirichlet diag-add 구조** (검증된 수렴성):
@@ -793,7 +806,7 @@ class CellSystem:
         #   게이트는 idx_i≥0(=cond_i=σ_i>0)이 담당 → --swcnt-ion-block(σ_i[8]=0)이면 자동 제외 = 솔브와 일관.
         ion_m = (sid == 5) | (sid == 6) | (sid == 8)
         fe, fi, fp, fpos = [], [], [], []
-        for d, (sl_a, sl_b) in enumerate(SL):
+        for d, sl_a, sl_b in SL:
             for am_first in (True, False):
                 slA, slB = (sl_a, sl_b) if am_first else (sl_b, sl_a)
                 m = am_m[slA] & ion_m[slB]
@@ -802,8 +815,11 @@ class CellSystem:
                 if not m.any():
                     continue
                 fe.append(Ae2[m]); fi.append(Bi2[m] + self.n_e); fp.append(pid[slA][m])
-                pos = np.argwhere(m).astype(np.float32) + 0.5     # 하부 셀 중심 (sliced=하부 인덱스)
-                pos[:, d] += 0.5                                  # 축 방향 면 중점
+                # slA 가 잘린 구간이면 argwhere 인덱스는 **부분배열 기준** → 전체격자 원점을 더한다
+                # (wrap 슬라이스 [-1:] 는 원점이 n-1; 옛 코드는 항상 0 가정이라 wrap 좌표가 틀렸다)
+                _org = np.array([slA[k].indices(sid.shape[k])[0] for k in range(3)], np.float32)
+                pos = np.argwhere(m).astype(np.float32) + _org + 0.5   # 하부 셀 중심
+                pos[:, d] += 0.5                                  # 축 방향 면 중점 (d=진짜 축)
                 fpos.append(pos * vox_um)
         if not fe:
             raise RuntimeError('no BV interface')
@@ -1774,6 +1790,22 @@ def _selftest_solver():
         ok &= s1c
         print(f'solver S1c SWCNT(sid8) BV 계면 (투명 {_n_on if _cand else "—"} = SE기준 '
               f'{_base if _cand else "—"}, ion-block {_n_off if _cand else "—"}): {"OK" if s1c else "FAIL"}')
+        # ---- S1d: x,y 주기 BC (STEP3 규약 정합) — wrap 이 전도·BV 계면에 함께 걸리는지 ----
+        sidP = _build_sandwich(nxy=4, nz=8)[0].copy()
+        _amz = int(np.argwhere(sidP == 1)[:, 2].max())
+        sidP[0, :, _amz + 1] = 1                             # x=0 열에 AM 을 한 층 올려
+        sidP[3, :, _amz + 1] = 6                             # x=nx-1 열은 SE → seam 에서만 AM|SE 접촉
+        pidP = np.where(sidP == 1, 0, -1).astype(np.int32)
+        sigP = np.array([0., 1., 0., 0., 0., 0., 0.])
+        _w = CellSystem(sidP, sigP, sig_i, pidP, 1, 0.5, z_top_um=4.0, z_bot_um=0.0,
+                        periodic_xy=False)
+        _p = CellSystem(sidP, sigP, sig_i, pidP, 1, 0.5, z_top_um=4.0, z_bot_um=0.0,
+                        periodic_xy=True)
+        s1d = (_p.J.nnz > _w.J.nnz and _p.n_bv > _w.n_bv and _p.N == _w.N
+               and _p.periodic_xy and not _w.periodic_xy)
+        ok &= s1d
+        print(f'solver S1d 주기 BC (nnz {_w.J.nnz}→{_p.J.nnz}, BV면 {_w.n_bv}→{_p.n_bv}, '
+              f'dof 불변 {_p.N}): {"OK" if s1d else "FAIL"}')
         # ---- S2: σ-contrast cap (합성 고대비 0.01/100 = 1e4; AM-접촉 VGCF → pruning 비대상) ----
         sid2 = _build_sandwich(nxy=4, nz=8)[0].copy()
         sid2[1, 1, 4] = 3; sid2[1, 2, 4] = 3                 # AM 슬래브(z=3) 위 접촉 → e-망 잔존
@@ -2063,6 +2095,10 @@ def main():
     ap.add_argument('--dx-max', type=float, default=0.02)
     ap.add_argument('--dt-max', type=float, default=120.0)
     ap.add_argument('--gpu', action='store_true')
+    ap.add_argument('--periodic-xy', dest='periodic_xy', action='store_true', default=None,
+                    help='x,y 주기 BC 강제 (기본: 그리드 npz 의 periodic_xy 계약을 따름; 옛 그리드는 절연벽)')
+    ap.add_argument('--no-periodic-xy', dest='periodic_xy', action='store_false',
+                    help='x,y 절연벽 강제 (옛 corpus 와 비교할 때)')
     ap.add_argument('--out', default='step4_dyn_out.npz')
     ap.add_argument('--n-chk', type=int, default=12, help='뷰어 체크포인트 수 (SOC-진행 균등)')
     ap.add_argument('--viz-out', default='',
@@ -2102,6 +2138,19 @@ def main():
     g = np.load(a.grid, allow_pickle=False)
     sid = g['sid']; pid = g['pid']
     vox_um = float(g['vox_um']); z_top = float(g['z_top_um'])
+    # ★x,y 주기 BC — payload 가 npz 에 구운 계약(없으면 옛 그리드 = 절연벽, 하위호환).
+    #   --periodic-xy/--no-periodic-xy 로 override (재해석·비교런용).
+    _per_grid = bool(np.asarray(g['periodic_xy']).ravel()[0]) if 'periodic_xy' in g.files else None
+    if a.periodic_xy is not None:
+        _per = a.periodic_xy
+    elif _per_grid is None:
+        _per = False
+        print('    ℹ 그리드에 periodic_xy 없음(옛 payload) → 절연벽 가정 '
+              '(STEP3 를 --periodic 로 돌렸다면 --periodic-xy 로 맞출 것)', flush=True)
+    else:
+        _per = _per_grid
+    if _per:
+        print('    ★x,y 주기 BC (STEP3 규약 정합 — 전도·BV 계면 함께 wrap)', flush=True)
     sig_e = g['sig_e_S_cm']; sig_i = g['sig_i_S_cm']
     r_um = g['am_r_um']
     # ── poly/SC 전기화학 분리: 반경 문턱으로 [n_am] 물성 벡터 구성 (미지정 = 기존 스칼라 경로;
@@ -2156,7 +2205,8 @@ def main():
               f'+{a.asr_film_cycle_ohm_cm2:g} Ω·cm² (→ASR {_asr_use:g} Ω·m²)  '
               f'[ASSUMED-FORM: 배수=kim2025 R_ct(N) 앵커; N→배수 법칙-fit 후속 §6 N1]', flush=True)
     kin = Kinetics(_i0_use, a.alpha_a, a.alpha_c, _asr_use, a.temp_k)
-    sysm = CellSystem(sid, sig_e, sig_i, pid, len(r_um), vox_um, z_top_um=z_top, z_bot_um=0.0)
+    sysm = CellSystem(sid, sig_e, sig_i, pid, len(r_um), vox_um, z_top_um=z_top, z_bot_um=0.0,
+                      periodic_xy=_per)
     out = simulate(sysm, ocp, r_um * 1e-6, ds_arg, kin, a.c_rate, nr=a.nr,
                    v_min=a.v_min, v_max=a.v_max, t_max=a.t_max, charge=a.charge,
                    cv_hold=a.cv_hold, i_cut_frac=a.i_cut_frac,
