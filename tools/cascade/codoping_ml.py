@@ -26,10 +26,28 @@ v1(cascade_v23_synergy_pairs.csv, 휴리스틱)과 같은 지위 — 실험/계�
          수치상 **stage3 사영이 지배**(stage1 성분 ~0.02 수준 — 무시 가능).
          이 ±는 **모델 내부 적합 노이즈만** 반영 — 물리적 타당성 불확실성 아님(라벨 부재).
 
+  5단계  **소표본 방어 지표** (2026-07-28 추가 — [Sendek17] EES 10,306 §3.2.2/§3.4 이식,
+         litdb/papers/sendek2017_ml_screening_12k_conductors.md §4d):
+         (a) 라벨셔플 100회 + X-randomization 100회 → **농축배수**(랜덤 대비 몇 배)와
+             permutation p-value, cR²_p(QSAR 문턱 0.5)를 stage1·stage3 양쪽에.
+         (b) **적용영역 d/ε/A** — d=훈련(47 도펀트) PCA-분산 정규화 중심거리(훈련 평균=1),
+             ε=leave-one-dopant-out 47 재적합 예측의 표준편차, A=(d≤2). CSV 열 3종 추가.
+             M3 역설계 winner's-curse 완화용 신뢰주석.
+         (c) **leave-one-dopant-out / leave-both-dopants-out CV**(open_items M2) — 같은 도펀트를
+             공유하는 쌍은 비독립. 현행 pair-LOOCV 대비 누수 크기를 λ 고정 조건에서 직접 정량.
+         ⚠ 결과: stage3 은 '알려진 40쌍의 순서'엔 신호가 있으나(3.4x, p=0.01) '1081쌍에서
+         발굴'엔 랜덤과 구별 불가(1.2x, p=0.43)이고 cR²_p 0.14 < 0.5; pair-CV 는 R² 를 +0.34
+         과대평가(독립 폴드 R²<0). = 산출물 지위 'HYPOTHESIS GENERATOR' 를 데이터로 재확인.
+         ⚠ 우리 47 도펀트는 **큐레이션 후보군**이지 대규모 발견 깔때기가 아니다
+         (Sendek 12,831 / Xiao 104,082 / Kahle 15,855 과 등치 금지).
+
 입력:  db/properties/cascade_v23_ranked.csv, oxidation_stability_cascade.csv,
        cascade_v23_litransport.csv, cascade_v23_themes.json, cascade_v23_synergy_pairs.csv
-출력:  db/properties/codoping_ml_v2.csv  (1081쌍 랭킹, 헤더에 NOT-validated 명시)
-       db/properties/codoping_ml_v2_meta.json  (계수·λ·LOOCV R²·v1 대비·가정·한계)
+출력:  db/properties/codoping_ml_v2.csv  (1081쌍 랭킹, 헤더에 NOT-validated 명시,
+       + ad_d/ad_eps/ad_A 3열 — 기존 12열은 값·순서 그대로 = 하위호환)
+       db/properties/codoping_ml_v2_meta.json  (계수·λ·LOOCV R²·v1 대비·가정·한계
+       + sendek2017_small_sample_defenses 절: 농축배수·cR²_p·적용영역·CV 누수)
+결정론: 순열 시드 고정(PERM_SEED) — 2회 실행 산출물 md5 동일.
 """
 import csv
 import json
@@ -418,6 +436,7 @@ def main():
     # ---------- 5a. X-randomization / 라벨셔플 → 농축배수 (stage1) ----------
     # stage1 은 표본이 47행뿐 — Sendek 훈련셋 40 과 같은 체급이라 이 절차가 그대로 선례.
     n1 = ridge_loocv_fast(Z1, yc, None, "1se")       # 본편 ridge_loocv 와 수학적으로 동일
+    assert abs(n1[1] - lam1) < 1e-12 and abs(n1[3] - r2_1) < 1e-9, "fast/slow ridge 불일치"
     r2fit1 = n1[4]
     null1_y = perm_null(Z1, yc, np.ones(n), rng, "1se", "y")
     null1_X = perm_null(Z1, yc, np.ones(n), rng, "1se", "X")
@@ -517,6 +536,7 @@ def main():
     # Sendek ε: LOO 재훈련 예측의 표준편차 = 모델 불안정성 (여기선 leave-one-DOPANT-out 47 replicate)
     ad_eps = ml_jack.std(axis=0, ddof=1)
 
+    assert (s3_lodo_cnt == 2).all(), "각 쌍은 정확히 2개 도펀트 폴드에서 held-out 되어야 함"
     s3_lodo = s3_lodo_sum / s3_lodo_cnt     # 각 쌍은 정확히 2 폴드에서 held-out → 평균
     ml_lodo = ml_lodo_sum / ml_lodo_cnt
 
