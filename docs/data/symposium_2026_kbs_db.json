@@ -1,0 +1,326 @@
+{
+  "_schema": "symposium-db-v1",
+  "_doc": "전지기술 심포지엄/학회 발표 자료의 기계-판독 정본. 사람용 서술은 docs/symposium_2026_kbs_digest.md. 새 발표는 talks[] 에 append (id 규칙: <성씨소문자><연도>_<주제슬러그>). 각 talk 의 raw_notes[] 는 나중에 받을 발표 내용(txt/녹취)을 그대로 붙이는 슬롯 — 비어 있어도 유효.",
+  "_conventions": {
+    "verdict": "APPLY(우리가 가져올 것) / OURS-AHEAD(우리 우위) / THEIRS-AHEAD(그들 우위·격차) / BENCHMARK(직접 대조 가능) / CONTEXT(배경지식)",
+    "provenance": "발표 슬라이드에서 직접 읽은 값만 기록. 슬라이드에 없는 수치는 null + note 로 명시 (§F1 날조 금지)",
+    "open": "true 면 후속 자료(발표 txt·논문 PDF) 수신 대기 상태 — 닫지 말 것"
+  },
+  "event": {
+    "name": "2026년도 전지기술 심포지엄 (2026 Korean Battery Symposium)",
+    "theme": "AI 전환기에서의 K-Battery 산업: 기회와 도전",
+    "host": "한국전기화학회 (The Korean Electrochemical Society)",
+    "date": "2026-08-21",
+    "captured": "2026-07-28",
+    "open": true
+  },
+  "talks": [
+    {
+      "id": "lee2026_digital_twin_electrode_ai",
+      "open": true,
+      "speaker": {
+        "name_ko": "이용민",
+        "name_en": "Yong Min Lee",
+        "affiliation": "Yonsei University — Digital Twin Battery Laboratory (DTBL), Dept. of Chemical and Biomolecular Engineering / Dept. of Battery Engineering (Graduate)",
+        "prev_affiliation": "DGIST Energy Science & Engineering",
+        "contact": "yongmin@yonsei.ac.kr",
+        "lab_url": "http://batterylab.yonsei.ac.kr"
+      },
+      "title": "AI를 활용한 전극 미세구조 디지털화 기술과 물리 기반 배터리 시뮬레이션",
+      "slides": 44,
+      "pages_in_proceedings": "259-278",
+      "outline": [
+        "1. Why Digital Twin Technology is Essential for Batteries",
+        "2. Structure Formation (3D Reconstruction): Structural Characterization",
+        "3. Structure Formation (Generation) and Validation",
+        "4. Digital Twin Manufacturing Process Simulations",
+        "5. Challenges of Digital Twin Battery Simulations"
+      ],
+      "relation_to_us": "★최근접 경쟁/동종 — 같은 목표(전극 미세구조 디지털 트윈 + 물리 시뮬), 같은 재료계(NCM+LPSCl ASSE)까지 겹침. 다른 것은 '구조를 어떻게 얻느냐'와 '무엇을 검증했느냐'.",
+      "facts": {
+        "framework": {
+          "dt_triad": ["Parameter (material property)", "Governing Equation (physics)", "Geometry (microstructure)"],
+          "scale_chain": {
+            "particle_nm_um": "Adv. Energy Mater. 13 (2023) 2204328",
+            "electrode_separator_um_mm": "Small 21 (2025) 2410485 · Nat. Commun. 15 (2024) 10134",
+            "cell_mm_m": "J. Energy Chem. 105 (2025) 87-95",
+            "module_pack_m": "eTransportation 22 (2024) 100370",
+            "manufacturing_chain": "Adv. Energy Mater. 12 (2022) 2102696"
+          },
+          "motivation_gap": {
+            "blinded_scale": "meso/micro (전극) 스케일 — 원자 스케일과 셀 스케일 사이가 비어 있음",
+            "blinded_parameters": "D_s, 활성표면적 a, 굴곡도 τ, 유효 전달 파라미터 X_eff (D_eff, σ_Li+,eff, σ_e,eff)",
+            "example_ion_conductivity": {"material_S_cm": 5.4e-3, "in_cell_S_cm": 7.9e-4, "source": "Nano Energy 79 (2021) 105451 (슬라이드 표기 10545)"}
+          },
+          "review": "Suhwan Kim†, Hyobin Lee†, Jaejin Lim†, Joonam Park, Yong Min Lee*, 'Digital Twin Battery Modeling and Simulations: A New Analysis and Design Tool for Rechargeable Batteries', ACS Energy Lett. 9 (2024) 5225-5239 (Supplementary Cover)"
+        },
+        "reconstruction_topdown": {
+          "modalities": ["X-ray CT", "Nano X-ray CT", "FIB tomography", "Transmission Electron Tomography", "Atom Probe Tomography"],
+          "fib_sem": {"pros": "고해상도", "cons": "작은 도메인, 열손상 구조왜곡", "practice": "100회 반복 적층, voxel 100 nm", "ref": "J. Song, Y. M. Lee et al., Adv. Energy Mater. 2204328 (2023)"},
+          "xct": {"pros": "비파괴, 큰 도메인", "cons": "저해상도 → 세그멘테이션 오류", "ref": "S. Ihiela et al., Sci. Rep. 6 (2016) 30109"},
+          "segmentation_problem": {
+            "modes": ["BSE-based(배경입자 검출)", "SE-based(표면 디테일, 조성 민감도 없음)", "watershed(여전히 오분할)", "ground truth=수동(오라벨 가능)"],
+            "ref": "J. Li, X. Yu et al., Appl. Phys. Lett. 125 (2024) 173902",
+            "cost": "시간·인력 다대, 구조별 적용성 제한"
+          },
+          "ai_assist": {
+            "segmentation_cnn": "S. J. Cooper et al., ACS Energy Lett. 7 (2022) 4368-4378",
+            "super_resolution": "M. Kodama et al., Energy and AI 14 (2023) 100305",
+            "gan_2d_to_3d": "S. J. Cooper et al., Nat. Mach. Intell. 3 (2021) 299-305"
+          }
+        },
+        "generation_asse": {
+          "★note": "이 항목이 우리와 직접 대조 가능한 유일한 정량 벤치마크",
+          "materials": {
+            "AM": {"name": "LiNi0.7Co0.1Mn0.1O2 (NCM711)", "density_g_cm3": 4.44},
+            "SE": {"name": "Li6PS5Cl (LPSCl)", "density_g_cm3": 2.07},
+            "BD": {"name": "Nitrile butadiene rubber (NBR)", "density_g_cm3": 1.00}
+          },
+          "compositions_wt_pct": [[60, 38, 2], [70, 28, 2], [80, 18, 2]],
+          "loading_mg_cm2": 10,
+          "porosity_pct": [12.0, 19.3, 28.2],
+          "am_internal_porosity_pct": 32.7,
+          "temperature_C": 30,
+          "shape_rules": {
+            "NCM711_secondary": "sphere (PSA 데이터 기반)",
+            "NCM711_primary": "convex polyhedron 0.5~1.5 µm (SEM 참조)",
+            "LPSCl": "sphere (PSA 데이터 기반)",
+            "NBR": "'Add Binder Function' (contact angle 0, binder anisotropy factor 1)",
+            "boundary": "periodicity",
+            "seeds": "random seed 1~5"
+          },
+          "tool": "GeoDict (Math2Market)",
+          "ref": "J. Park, Y. M. Lee et al., Adv. Energy Mater. 10 (2020) 2001563",
+          "validation": {
+            "axis": "capacity vs C-rate (0.1 / 0.5 / 1C), simulation vs experiment",
+            "outcome": "시뮬 용량이 실측과 근접; C-rate 증가 시 NCM 양극의 비균일 충전상태를 가시화",
+            "note_for_us": "슬라이드 그래프의 정확한 수치는 미디지타이즈 — 필요 시 Park 2020 논문 본문에서 추출"
+          },
+          "compute_cost": {
+            "voxel_sizes_nm": [30, 75, 150, 300, 600],
+            "domain_sizes_um": [15, 30, 60, 90],
+            "at_250M_voxels": {"memory_GB": "~50", "time_days": "~2", "source": "Math2Market 제공"},
+            "production_example": {"domain_um": "50×50×50", "voxel_um": 0.5, "n_voxel": 1000000}
+          }
+        },
+        "limitations_stated_by_speaker": {
+          "I_imaging_distortion": {
+            "air_sensitive": "황화물 SE — 습윤 대기 부반응으로 구조 왜곡 (G. Wang et al., Chem. Eng. J. 522 (2025) 167791)",
+            "thermal_sensitive": "고분자 분리막 — 열손상 (Y. Shin, S. Kim, W-K. Kim, Y. M. Lee et al., Adv. Energy Mater. 10 (2026) e05319; porosity 35% vs 48% 시료 대조)",
+            "consequence": "무산소/저온 조건 필요 → 시간·비용 다대, 얻는 정보는 제한적"
+          },
+          "II_microscale_parameters": {
+            "open_electrolyte_system": "용매 증발 → 염 농도 변화(반응속도·열역학 변화) + 타 성분 오염",
+            "single_particle_microelectrode": "Au filament ⌀10 µm, 펨토초 레이저 가공 (Y. M. Lee, J. Zhu et al., Energy Environ. Sci. 18 (2025) 3129-3147; Adv. Energy Mater. 13 (2023) 2204328)",
+            "contact_instability": "입자 부피변화에 의한 접촉 불량·이탈 (Electrochemistry 84 (2016) 759-765)"
+          },
+          "III_feedback_loop": "물리↔디지털 양방향 실시간 통신이 계산부하로 저속 (Renew. Sustain. Energy Rev. 179 (2023) 113280)"
+        },
+        "manufacturing_dt": {
+          "chain": ["mixing", "coating", "drying", "pressing/calendering", "electrolyte infiltration", "formation"],
+          "mixing": "wet/dry 혼합기 (KOZO KEIKAKU Eng., 64th Battery Symposium in Japan 2023) + DEM 기반 슬러리 혼합",
+          "coating": "Chemical Eng. Sci. 222 (2020) 115716 · M. Ouyang et al., J. Power Sources 610 (2024) 234717",
+          "drying": "A. A. Franco et al., Energy Storage Mater. 43 (2021) 337",
+          "pressing": "A. A. Franco et al., J. Power Sources 580 (2023) 233427 — ε_dry 35% → ε_cal 15%, 46 µm → 23 µm",
+          "infiltration": "A. A. Franco et al., J. Power Sources 511 (2021) 230384",
+          "cbd_migration": {
+            "phenomenon": "용매 증발 시 바인더·도전재가 상부로 이동 → 비균일 분포",
+            "ref_mechanism": "Adv. Energy Mater. 12 (2022) 2102233",
+            "solution": "2차 용매(bulk 용매와 비혼화)가 입자 사이 모세관 구조 형성 → CBD 이동 억제 (Y. M. Lee, S-Y. Lee et al., ACS Energy Lett. 10 (2025) 6223-6235)",
+            "method": "OWRK (Owens-Wendt-Rabel-Kaelble) 식으로 부착일/계면에너지 산출; NCM/CB/PVDF 표면자유에너지 측정"
+          }
+        },
+        "calendering_validation": {
+          "★note": "그들의 가장 강한 검증 사례 — virtual vs actual 다축 대조",
+          "ref": "J. Lim, J. Song, J. Park, Y. M. Lee et al., Small 21 (2025) 2410485",
+          "axes_compared": ["porosity", "effective electronic conductivity", "ionic tortuosity", "NCM|pore specific surface area", "NCM|CBD specific contact area"],
+          "sweep": "electrode density 2.3 ~ 4.0 g/cm³",
+          "spot_check": "density 3.6 g/cm³ 에서 virtual ≈ actual(reconstructed)",
+          "structural_analysis": {
+            "PNM": "pore equivalent radius 분포 + pore coordination number (3.4/3.6/3.8 g/cm³)",
+            "stress": "von Mises 응력 분포 (2.8~4.0 g/cm³), 100 MPa / 150 MPa 초과 부피분율 = crackable volume %"
+          }
+        },
+        "ai_direction": {
+          "physics_embedded_ai": "물리모델을 ML 최적화 루프에 임베딩 (M. Bordi et al., Comms. Eng. 3 (2024) 134; Z. Sun et al., J. Energy Storage 56 (2022) 105992)",
+          "comparison_table": {
+            "physics_based": {"accuracy": "Medium", "computation_cost": "High", "interpretation": "High", "extrapolation": "Medium", "data_requirement": "Low"},
+            "machine_learning": {"accuracy": "Medium", "computation_cost": "Low", "interpretation": "Low", "extrapolation": "Low", "data_requirement": "High"}
+          },
+          "artistic_project": "A. A. Franco et al., Batteries Supercaps 8 (2025) e202400385 — Bayesian optimizer + surrogate 로 제조 역설계 (CGMD/DEM/LBM/FEM 사슬)"
+        },
+        "final_challenges": [
+          "Computational Acceleration — 슈퍼컴에서도 2~3일; 실시간 제조제어엔 빠른 근사/AI 필요",
+          "Multiscale/Multiphysics Coupling — 단계별 모델 간 정보전달·경계조건 정합이 어려움",
+          "Experiment-Model Integration — 파라미터화·검증용 데이터셋 부족, 자동 취득 필요",
+          "Data Standardization — 제조 데이터 접근성·표준화 부족"
+        ]
+      },
+      "raw_notes": [],
+      "our_analysis_ref": "docs/symposium_2026_kbs_digest.md §2"
+    },
+    {
+      "id": "moon2026_ai_agent_electrode_modeling",
+      "open": true,
+      "speaker": {
+        "name_ko": "문장혁",
+        "name_en": "Janghyuk Moon",
+        "affiliation": "Chung-Ang University, Department of Energy Systems Engineering"
+      },
+      "title": "AI 기반 배터리 연구 자동화: LLM 기반 연구 분석에서 AI-Agent 전극 모델링까지",
+      "session": "기술세션 3-4",
+      "pages_in_proceedings": "297-318",
+      "outline": [
+        "01. AI for Battery Research and Development",
+        "02. LLM and Knowledge Intelligence for Battery Research",
+        "03. Agentic AI for Battery Research Automation",
+        "04. AI-Agent-Based Electrode Modeling Automation (BEARS)"
+      ],
+      "relation_to_us": "★우리가 '이미 쓰고 있는 방식'의 학술적 정식화 — 우리는 Claude Code 에이전트+skills 로 사실상 같은 걸 굴리는데, 그들은 그것을 배터리 전극 모델링 전용 프레임워크(BEARS)로 체계화했다. 특히 §02 Graph RAG 는 우리 litdb 의 다음 단계 청사진.",
+      "facts": {
+        "s01_ai_for_battery": {
+          "monitoring_tasks": ["state estimation (SOC/SOH/RUL/impedance/SOP/SOT)", "fault diagnosis (과충방전·단락·열이상·센서고장)"],
+          "methods": ["model-based (물리·전기화학 모델)", "data-driven (측정 데이터 패턴)", "hybrid (모델+데이터)"],
+          "model_progression": ["Empirical models", "Equivalent circuit models", "Physics-based models", "Data-driven ML"],
+          "industry_example": {
+            "name": "SK온 AI 연구원 (AI R&D 플랫폼)",
+            "since": "2025-07",
+            "claims": {"개발기간": "기존 대비 1/3", "원가산출": "2시간 → 10초 (700배)", "절감": "완성차 프로젝트당 수백억원 예상"}
+          },
+          "molecular_design": "Ask → Search → Formulate → Design → Predict (SES 플랫폼 예시)",
+          "cell_design": "STEER (SLAC/Stanford) — cell properties ↔ analysis dashboard"
+        },
+        "s02_llm_knowledge": {
+          "★note": "우리 litdb 의 직접적 벤치마크",
+          "why_llm": "기존 한계 = scalability / data standardization / real-world deployment; LLM = 대규모 사전학습+파인튜닝 + self-attention 으로 이종 데이터 연결",
+          "llm_assisted_ml_workflow": "SOH 예측 ML 파이프라인 전체(전처리·feature selection·모델선택·코드생성·HP 튜닝·평가)를 LLM이 설계·자동화 (Lee et al., Energy Reports 2023 계열)",
+          "ontology_to_graphrag": {
+            "flow": "Ontology(개념·관계·속성 정의) → Data mapping → Knowledge Graph DB(neo4j) → Graph RAG",
+            "pipeline": "User spec/System prompt/Markdown text → LLM Node-Edge Extraction → DB(neo4j) → Embedding → Retrieval → Top-k → Query → Response (GPT-5.1 API)",
+            "advantages": ["Structured Retrieval (고립 텍스트 청크가 아니라 그래프-연결 근거)", "Multi-hop Reasoning (숨은 링크 추론)", "Traceable Answers (근거 경로 표시)"]
+          },
+          "assb_literature_kg": {
+            "★note": "황화물 ASSB 문헌 → 소재·공정·계면·성능·열화 관계를 KG 로 구조화",
+            "scale": {"nodes": 5199, "relationships": 6449},
+            "node_types": ["Cell", "Cathode", "Component", "CureData", "DeriveFeature", "Experiment", "Material", "Mechanism", "Metric", "Micro/Nano", "Process", "TestCondition", "TestRun", "Sample", "..."],
+            "relationship_types": ["AFFECTS", "CONCLUDES", "DERIVED_FROM", "EXPLAINED_BY", "FOR_SAMPLE", "HAS_COMPONENT", "HAS_CURVE", "HAS_PROCESSING", "MAX_COMPONENT", "PRODUCES", "REPORTS", "SHOWN_IN", "SUPPORTS", "TESTED_IN", "..."],
+            "kg_rag_example": "'스택 압력이 황화물 ASSB 성능에 미치는 영향' → 근거 문헌 경로와 함께 답변 (3-20/100 MPa 창, 과압 시 Li 침투·균열·계면열화)",
+            "gnn_prediction": {
+              "case1_unseen_but_correct": "Soft acid cation doping in sulfide SE → Low ionic conductivity 로 예측 (RESOLVED)",
+              "case2_literature_consistent": "Halide LiAlPSCl electrolyte → Interfacial degradation 예측 (RESOLVED)"
+            }
+          },
+          "literature_analytics": {
+            "li_air": "5,680편 → 1,000 highly-cited → PDF 다운로드 → GPT 데이터 추출 → 에너지밀도 질량기준 자동 정규화·비교가능성 분석",
+            "assb": "임베딩·클러스터링으로 전해질 계열별(sulfide/halide/oxide/polymer/garnet…) 운전조건 분포 탐색 + T·P 변화에 따른 I_c 예측면"
+          }
+        },
+        "s03_agentic_ai": {
+          "definition": "문제 해결 절차를 계획하고 외부 도구·모델과 상호작용해 작업을 수행하는 목표 지향 AI (추론·계획·도구활용·피드백)",
+          "components": ["Orchestrator LLM", "Memory", "Tools", "Planning", "Feedback", "Multi-agent protocol (Google ADK)"],
+          "mcp": "Model Context Protocol — LLM이 로컬 데이터·파일·API·CAD·시뮬레이터를 표준 방식으로 호출 (FreeCAD 로 LG 21700 M50 셀 3D 모델 자동 생성 시연)",
+          "llm_orchestrated_simulation": "자연어 → 설계조건 추출 → CAD 생성 → 해석모델 설정 → 시뮬 실행 → 결과 분석 (젤리롤 온도/전류밀도/전위/Li 농도 필드)",
+          "battery_sim_agent": {
+            "purpose": "전기화학·열화 모델 파라미터 추정 및 모델 피팅 자동화",
+            "loop": "Perception(expert/exploration knowledge + dynamic memory) → Scenario(first-cycle calibration / long-horizon degradation) → Structured Information → Reasoning(feedback analysis, physics-informed hypothesis, mechanism-aware update proposal) → Battery Simulator → multi-modal feedback(curve/capacity/step-by-step loss/degradation)",
+            "reported_metrics": {"total_duration_s": 8965.8, "final_RMSE": 0.5513, "final_MAPE": 2.4258},
+            "status": "*Battery-Sim-Agent, ICLR 2026, under review"
+          }
+        },
+        "s04_bears": {
+          "★note": "핵심 산출물 — 전극 모델링 전용 멀티에이전트 프레임워크",
+          "name": "BEARS (Battery Electrode Agent Research System)",
+          "motivation": {
+            "manual_bottleneck": ["geometry preparation", "simulation setup", "solver execution", "result analysis"],
+            "reconstruction_cost": "top-down FIB-SEM/XCT = 1 스캔당 $5k 초과, 수 주, 전문성 필요",
+            "microstructure_need": "τ = ε^(-α); Bruggeman α=0.5 vs 실제 NMC/graphite α≈1.9 → 균질화 가정이 깨짐"
+          },
+          "agents": {
+            "Main Agent": "오케스트레이션",
+            "Analyzer Agent": "SEM 이미지 분석 & 3D 재구성 (단일 이미지 → 3D 형상, 형태 분석)",
+            "Generator Agent": "전극 구조 생성 (packing algorithm, 구형/맞춤형/바이모달)",
+            "Fabricator Agent": "3D 시각화 & export (다포맷, watertight repair, FEM-최적 geometry)",
+            "Validator Agent": "구조 분석 & 검증 (porosity, tortuosity, PSD, surface area, connectivity, spatial statistics)",
+            "Simulator Agent": "FEM 전기화학 시뮬레이션 (half/full cell, mechanical stress, impedance, calendering)"
+          },
+          "closed_loop": ["1 Parameter Identification", "2 Geometry", "3 Materials", "4 Physics", "5 Meshing", "6 Simulation/Solver", "7 Validation", "8 Analysis", "+ Debug & Review (Failure→Diagnose→Fix→Rerun)", "+ Memory & Knowledge Bank"],
+          "skills": {
+            "count": "40+",
+            "categories": ["Image analysis", "Geometry", "Visualization & export", "Mesh processing", "Validation", "Simulation", "Debugging & Analysis", "Utility"],
+            "hierarchy": {
+              "L1": "Metadata (YAML) — 항상 로드, ~100 tokens",
+              "L2": "Body (Markdown) — skill 트리거 시 로드, <5k",
+              "L3": "Bundled files (scripts, data) — 필요 시 로드"
+            },
+            "rationale": "복잡한 추론/코드생성 없이 특정 작업을 수행 → 낮은 토큰 사용량 + 신뢰도 높은 출력",
+            "ref": "arXiv:2601.04746 (Hierarchical/Flat/Cognitive-overload 곡선)"
+          },
+          "particle_library": {
+            "pipeline": "단일 SEM 이미지 → U-Net + SAM 2 분할 → multi-view diffusion + LRM(Large Reconstruction Model) → FEM-ready mesh → clustering → 재사용 particle library",
+            "demonstrated_on": ["graphite", "NMC811 (FIB-SEM 재구성)"]
+          },
+          "demo_campaign": {
+            "material": "graphite",
+            "footprint_um": "30 × 38",
+            "loading_mg_cm2": 8,
+            "composition_wt": "95:3:2",
+            "variable_knobs": ["PSD / D50", "architecture (single / binary / gradient)"],
+            "generated": 80,
+            "simulated": 5,
+            "structures": ["SPH010 sphere", "HC01 single", "HC06 binary", "HC05 binary", "GRD01 gradient"],
+            "c_rate_sweep": ["0.5C", "1C", "2C", "3C"],
+            "headline": "3C 에서 binary 구조가 single 대비 약 3배 높은 용량 유지 (막히지 않은 전해질 경로)"
+          },
+          "reference_work": "Ying Shirley Meng @ U Chicago — stochastic electrode generation + ML surrogate (ACS Energy Lett. 2024, 9; Random Forest 로 입자별 SOD 예측)",
+          "timeline": {
+            "1990s-2010s": "porous electrode models (Doyle/Fuller/Newman 1993)",
+            "2010-2020": "3D imaging & image-based modeling",
+            "2020-2025": "generative AI for microstructures",
+            "2023-2026": "tool-using LLM agents",
+            "2026": "BEARS automated electrode modeling workflow"
+          }
+        }
+      },
+      "raw_notes": [],
+      "our_analysis_ref": "docs/symposium_2026_kbs_digest.md §3"
+    }
+  ],
+  "cross_cutting": {
+    "shared_message": "두 발표 모두 '미세구조-해상 물리 시뮬 + AI'가 방향이라고 말한다. 이용민=구조를 어떻게 얻고 검증하나, 문장혁=그 워크플로를 누가 자동으로 굴리나. 우리는 그 사이에 있다 — 구조를 물리(DEM/MPM)로 만들고, 자동화는 이미 에이전트로 하고 있으나 지식층(litdb)이 죽어 있다.",
+    "our_position": {
+      "unique_to_us": [
+        "구조가 압축 물리의 결과로 창발 (DEM 접촉역학 + MPM 소성) — 양쪽 모두 기하 배치(GeoDict/packing algorithm)",
+        "σ 삼중(이온·전자·열) + 접촉망 Kirchhoff (FEM 대비 32-98× — Bazzoun 2026 독립 입증)",
+        "STEP5 사이클 열화의 기전 분해 (접촉 ~2% + 화학 CEI ~98% + OTHER)",
+        "9-상 첨가제 해상 (VGCF/SuperP/SWCNT/SDCP/PTFE 개별)",
+        "provenance 라벨 규약 (measured/assumed/ASSUMED-FORM/literature-anchored) + 매스텝 보존 감사"
+      ],
+      "gaps_vs_them": [
+        "실험 3D 재구성 전무 (FIB-SEM/XCT) — 우리 구조는 100% 생성",
+        "제조공정 사슬 중 압축 한 스텝만 (mixing/coating/drying/infiltration 없음)",
+        "단일입자·마이크로전극 실측 없음 → i0·D_s 앵커 부재의 근원",
+        "지식층 미구축: litdb 118장이 md 파일로만 존재, 검색·그래프·webapp 연결 전무",
+        "구조 생성 자동화(DOE 80구조 일괄) 없음 — 킷 수동"
+      ]
+    }
+  },
+  "litdb_status_snapshot": {
+    "checked": "2026-07-28",
+    "canonical_branch": "origin/claude/friendly-meitner-lldvar",
+    "files_total": 128,
+    "paper_cards": 118,
+    "yong_min_lee_coverage": {
+      "cards_mentioning": 3,
+      "cards": ["kim2025_conductive_agent_se_coating_cathode.md", "kim2026_iccf_molten_salt_sei_lpscl_sheet.md", "son2025_fivevolt_assb.md"],
+      "nature": "전부 실험·공정 논문에 공저자로 등장. 디지털 트윈 계보(Park 2020 AEM 2001563 / Kim 2024 ACS EL 리뷰 / Lim 2025 Small 2410485 / Song 2023 AEM 2204328 / EES 2025 3129-3147)는 **0장**",
+      "verdict": "이용민 그룹의 DT 방법론은 litdb 에 없음 — 이번 심포지엄이 그 공백을 드러냄"
+    },
+    "webapp_connection": {
+      "routes_referencing_litdb": 0,
+      "app_py_mentions": 0,
+      "scripts_mentions": ["coating_presets.py (주석)", "ml_design_loop.py (주석)"],
+      "only_bridge": "docs/litdb_application_table.md — 수동 분석 문서(정적)",
+      "verdict": "❌ 연결 안 됨. litdb 는 다른 브랜치의 마크다운 더미로 존재하며, webapp·파이프라인에서 조회·검색·인용 불가"
+    }
+  }
+}
