@@ -1,0 +1,98 @@
+# cascade 코팅 후보 x 양극 계면 반응성 (open_items M6). 닫힌계 pseudo-binary InterfacialReactivity (Richards/Ong 2016 eq 2), norm=True, use_hull_energy=True, MP GGA_GGA+U.
+# 축은 전위가 아니라 양극 리튬화 상태 (full=LiCoO2 / half=Li0.5CoO2). Xiao 2019 F4 와 동일 정의.
+# 게이트: |dE_rxt| < 100 meV/atom (Xiao 2019 F4). 더 음수 = 더 반응성 = 코팅으로 부적합. Xiao 소환값(LPSCl/LCO -339 full / -493 half)은 문헌값 — 우리 값과 혼합 금지.
+coating,cathode,lithiation,cathode_composition,dE_rxt_meV_per_atom,gate_pass_100meV,reaction
+Sc2O3,LCO,full,LiCoO2,0.0,Y,Sc2O3 -> Sc2O3
+Sc2O3,LCO,half,Li0.5CoO2,-0.0,Y,Sc2O3 -> Sc2O3
+Cr2O3,LCO,full,LiCoO2,-23.5,Y,0.5714 Cr2O3 + 0.4286 LiCoO2 -> 0.4286 Cr2CoO4 + 0.1429 LiCrO2 + 0.1429 Li2CrO4
+Cr2O3,LCO,half,Li0.5CoO2,-15.1,Y,0.6 Cr2O3 + 0.4 Li0.5Co1O2 -> 0.3 CrO2 + 0.4 Cr2CoO4 + 0.1 Li2CrO4
+Gd2O3,LCO,full,LiCoO2,-0.0,Y,Gd2O3 -> Gd2O3
+Gd2O3,LCO,half,Li0.5CoO2,-0.0,Y,Gd2O3 -> Gd2O3
+In2O3,LCO,full,LiCoO2,0.0,Y,In2O3 -> In2O3
+In2O3,LCO,half,Li0.5CoO2,0.0,Y,In2O3 -> In2O3
+Y2O3,LCO,full,LiCoO2,-0.0,Y,Y2O3 -> Y2O3
+Y2O3,LCO,half,Li0.5CoO2,0.0,Y,Y2O3 -> Y2O3
+B2O3,LCO,full,LiCoO2,-91.0,Y,0.4128 LiCoO2 + 0.5872 B2O3 -> 0.02752 LiO8 + 0.1284 Li3B7O12 + 0.1376 Co3(BO3)2
+B2O3,LCO,half,Li0.5CoO2,-72.5,Y,0.5217 Li0.5Co1O2 + 0.4783 B2O3 -> 0.08696 Li3B7O12 + 0.1739 Co3(BO3)2 + 0.1957 O2
+WO3,LCO,full,LiCoO2,-2.5,Y,0.7143 LiCoO2 + 0.2857 WO3 -> 0.2857 Li2WO4 + 0.1429 Li(CoO2)2 + 0.1429 Co3O4
+WO3,LCO,half,Li0.5CoO2,0.0,Y,Li0.5Co1O2 -> 0.5 Li(CoO2)2
+Ga2O3,LCO,full,LiCoO2,-10.8,Y,0.3333 LiCoO2 + 0.6667 Ga2O3 -> 0.2222 LiGa5O8 + 0.1111 Ga2CoO4 + 0.1111 Li(CoO2)2
+Ga2O3,LCO,half,Li0.5CoO2,-0.0,Y,Ga2O3 -> Ga2O3
+Al2O3,LCO,full,LiCoO2,-19.4,Y,0.3333 LiCoO2 + 0.6667 Al2O3 -> 0.2222 LiAl5O8 + 0.1111 Li(CoO2)2 + 0.1111 Al2CoO4
+Al2O3,LCO,half,Li0.5CoO2,-0.0,Y,Al2O3 -> Al2O3
+Nb2O5,LCO,full,LiCoO2,-5.2,Y,0.2857 Nb2O5 + 0.7143 LiCoO2 -> 0.1429 Co3O4 + 0.5714 LiNbO3 + 0.1429 Li(CoO2)2
+Nb2O5,LCO,half,Li0.5CoO2,-0.0,Y,Nb2O5 -> Nb2O5
+Ta2O5,LCO,full,LiCoO2,-15.0,Y,0.2857 Ta2O5 + 0.7143 LiCoO2 -> 0.1429 Co3O4 + 0.1429 Li(CoO2)2 + 0.5714 LiTaO3
+Ta2O5,LCO,half,Li0.5CoO2,0.0,Y,Ta2O5 -> Ta2O5
+CrO3,LCO,full,LiCoO2,-60.9,Y,0.3333 CrO3 + 0.6667 LiCoO2 -> 0.1667 CrO2 + 0.3333 Li(CoO2)2 + 0.1667 Li2CrO4
+CrO3,LCO,half,Li0.5CoO2,-7.2,Y,0.4 CrO3 + 0.6 Li0.5Co1O2 -> 0.1 LiCr3O8 + 0.6 CoO2 + 0.1 Li2CrO4
+MoO3,LCO,full,LiCoO2,-39.0,Y,0.2857 MoO3 + 0.7143 LiCoO2 -> 0.1429 Li(CoO2)2 + 0.2857 Li2MoO4 + 0.1429 Co3O4
+MoO3,LCO,half,Li0.5CoO2,0.0,Y,Li0.5Co1O2 -> 0.5 Li(CoO2)2
+Sm2O3,LCO,full,LiCoO2,-0.0,Y,Sm2O3 -> Sm2O3
+Sm2O3,LCO,half,Li0.5CoO2,0.0,Y,Sm2O3 -> Sm2O3
+ScF3,LCO,full,LiCoO2,-13.0,Y,0.2857 ScF3 + 0.7143 LiCoO2 -> 0.1429 Co3O4 + 0.1429 Li(CoO2)2 + 0.2857 ScOF + 0.5714 LiF
+ScF3,LCO,half,Li0.5CoO2,0.0,Y,Li0.5Co1O2 -> 0.5 Li(CoO2)2
+MgF2,LCO,full,LiCoO2,-8.0,Y,0.6667 LiCoO2 + 0.3333 MgF2 -> 0.3333 Mg(CoO2)2 + 0.6667 LiF
+MgF2,LCO,half,Li0.5CoO2,0.0,Y,Li0.5Co1O2 -> 0.5 Li(CoO2)2
+CaO,LCO,full,LiCoO2,0.0,Y,CaO -> CaO
+CaO,LCO,half,Li0.5CoO2,-3.9,Y,0.75 Li0.5Co1O2 + 0.25 CaO -> 0.375 LiCoO2 + 0.125 Ca2Co3O8
+Sb2O5,LCO,full,LiCoO2,-107.3,N,0.6 Sb2O5 + 0.4 LiCoO2 -> 0.4 Co(SbO3)2 + 0.4 LiSbO3 + 0.1 O2
+Sb2O5,LCO,half,Li0.5CoO2,-87.4,Y,0.6364 Sb2O5 + 0.3636 Li0.5Co1O2 -> 0.3636 Co(SbO3)2 + 0.1818 LiSb3O8 + 0.1364 O2
+AlF3,LCO,full,LiCoO2,-45.6,Y,0.3415 AlF3 + 0.6585 LiCoO2 -> 0.0122 Co23O32 + 0.1463 Li(CoO2)2 + 0.08537 Al2CoO4 + 0.1707 Li3AlF6
+AlF3,LCO,half,Li0.5CoO2,0.0,Y,Li0.5Co1O2 -> 0.5 Li(CoO2)2
+LaF3,LCO,full,LiCoO2,0.0,Y,LaF3 -> LaF3
+LaF3,LCO,half,Li0.5CoO2,-0.0,Y,LaF3 -> LaF3
+YF3,LCO,full,LiCoO2,-16.6,Y,0.4545 LiCoO2 + 0.5455 YF3 -> 0.09091 Li(CoO2)2 + 0.3636 LiYF4 + 0.1818 YOF + 0.09091 Co3O4
+YF3,LCO,half,Li0.5CoO2,0.0,Y,Li0.5Co1O2 -> 0.5 Li(CoO2)2
+HfO2,LCO,full,LiCoO2,0.0,Y,HfO2 -> HfO2
+HfO2,LCO,half,Li0.5CoO2,0.0,Y,Li0.5Co1O2 -> 0.5 Li(CoO2)2
+V2O5,LCO,full,LiCoO2,-35.5,Y,0.6 LiCoO2 + 0.4 V2O5 -> 0.2 V2CoO6 + 0.4 LiVO3 + 0.2 Li(CoO2)2
+V2O5,LCO,half,Li0.5CoO2,0.0,Y,V2O5 -> V2O5
+Nd2O3,LCO,full,LiCoO2,0.0,Y,Nd2O3 -> Nd2O3
+Nd2O3,LCO,half,Li0.5CoO2,-0.0,Y,Nd2O3 -> Nd2O3
+SiO2,LCO,full,LiCoO2,0.0,Y,SiO2 -> SiO2
+SiO2,LCO,half,Li0.5CoO2,0.0,Y,SiO2 -> SiO2
+Li2O,LCO,full,LiCoO2,-0.0,Y,Li2O -> Li2O
+Li2O,LCO,half,Li0.5CoO2,-91.5,Y,0.6667 Li0.5Co1O2 + 0.3333 Li2O -> 0.3333 Li2CoO3 + 0.3333 LiCoO2
+CaF2,LCO,full,LiCoO2,0.0,Y,LiCoO2 -> LiCoO2
+CaF2,LCO,half,Li0.5CoO2,0.0,Y,CaF2 -> CaF2
+NdF3,LCO,full,LiCoO2,0.0,Y,NdF3 -> NdF3
+NdF3,LCO,half,Li0.5CoO2,-0.0,Y,NdF3 -> NdF3
+ZnO,LCO,full,LiCoO2,-0.0,Y,ZnO -> ZnO
+ZnO,LCO,half,Li0.5CoO2,-0.0,Y,ZnO -> ZnO
+SnO2,LCO,full,LiCoO2,0.0,Y,SnO2 -> SnO2
+SnO2,LCO,half,Li0.5CoO2,-0.0,Y,SnO2 -> SnO2
+LiF,LCO,full,LiCoO2,0.0,Y,LiCoO2 -> LiCoO2
+LiF,LCO,half,Li0.5CoO2,0.0,Y,LiF -> LiF
+ZrF4,LCO,full,LiCoO2,-67.3,Y,0.3889 ZrF4 + 0.6111 LiCoO2 -> 0.01852 Co23O32 + 0.09259 Li(CoO2)2 + 0.2593 Li2ZrF6 + 0.1296 ZrO2
+ZrF4,LCO,half,Li0.5CoO2,-15.1,Y,0.2727 ZrF4 + 0.7273 Li0.5Co1O2 -> 0.01299 Co23O32 + 0.4286 CoO2 + 0.1818 Li2ZrF6 + 0.09091 ZrO2
+MnO,LCO,full,LiCoO2,-40.4,Y,0.5 MnO + 0.5 LiCoO2 -> 0.5 LiMnO2 + 0.5 CoO
+MnO,LCO,half,Li0.5CoO2,-126.1,N,0.5 MnO + 0.5 Li0.5Co1O2 -> 0.25 Mn2CoO4 + 0.25 LiCoO2
+La2O3,LCO,full,LiCoO2,-0.0,Y,La2O3 -> La2O3
+La2O3,LCO,half,Li0.5CoO2,0.0,Y,La2O3 -> La2O3
+Ag2O,LCO,full,LiCoO2,0.0,Y,Ag2O -> Ag2O
+Ag2O,LCO,half,Li0.5CoO2,-39.8,Y,0.3333 Ag2O + 0.6667 Li0.5Co1O2 -> 0.3333 LiCoO2 + 0.3333 CoAgO2 + 0.3333 AgO
+GeO2,LCO,full,LiCoO2,-18.1,Y,0.5 GeO2 + 0.5 LiCoO2 -> 0.1667 Li2CoGe3O8 + 0.1667 Li(CoO2)2
+GeO2,LCO,half,Li0.5CoO2,-0.0,Y,GeO2 -> GeO2
+SrO,LCO,full,LiCoO2,0.0,Y,SrO -> SrO
+SrO,LCO,half,Li0.5CoO2,-55.2,Y,0.5714 Li0.5Co1O2 + 0.4286 SrO -> 0.1429 LiCoO2 + 0.07143 Sr6(CoO3)5 + 0.07143 Li2CoO3
+BaO,LCO,full,LiCoO2,0.0,Y,BaO -> BaO
+BaO,LCO,half,Li0.5CoO2,-131.4,N,0.5 Li0.5Co1O2 + 0.5 BaO -> 0.25 LiCoO2 + 0.25 Ba2CoO4
+TiF4,LCO,full,LiCoO2,-100.7,N,0.4286 TiF4 + 0.5714 LiCoO2 -> 0.102 CoO2 + 0.02041 Co23O32 + 0.2857 Li2TiF6 + 0.1429 TiO2
+TiF4,LCO,half,Li0.5CoO2,-41.7,Y,0.3333 TiF4 + 0.6667 Li0.5Co1O2 -> 0.5 CoO2 + 0.1667 Li2TiF6 + 0.1667 CoF2 + 0.1667 TiO2
+MgO,LCO,full,LiCoO2,-0.0,Y,MgO -> MgO
+MgO,LCO,half,Li0.5CoO2,0.0,Y,MgO -> MgO
+TiO2,LCO,full,LiCoO2,-0.0,Y,TiO2 -> TiO2
+TiO2,LCO,half,Li0.5CoO2,-0.0,Y,TiO2 -> TiO2
+Na2O,LCO,full,LiCoO2,-74.4,Y,0.4 LiCoO2 + 0.6 Na2O -> 0.4 Na3CoO3 + 0.2 Li2O
+Na2O,LCO,half,Li0.5CoO2,-131.8,N,0.5 Li0.5Co1O2 + 0.5 Na2O -> 0.25 Na3CoO3 + 0.125 Na2CoO3 + 0.125 Li2CoO3
+Fe2O3,LCO,full,LiCoO2,-0.0,Y,Fe2O3 -> Fe2O3
+Fe2O3,LCO,half,Li0.5CoO2,-0.0,Y,Fe2O3 -> Fe2O3
+ZrO2,LCO,full,LiCoO2,0.0,Y,ZrO2 -> ZrO2
+ZrO2,LCO,half,Li0.5CoO2,-0.0,Y,ZrO2 -> ZrO2
+CoO,LCO,full,LiCoO2,0.0,Y,CoO -> CoO
+CoO,LCO,half,Li0.5CoO2,-34.8,Y,0.5 CoO + 0.5 Li0.5Co1O2 -> 0.25 LiCoO2 + 0.25 Co3O4
+NiO,LCO,full,LiCoO2,0.0,Y,NiO -> NiO
+NiO,LCO,half,Li0.5CoO2,0.0,Y,NiO -> NiO
+Cu2O,LCO,full,LiCoO2,0.0,Y,Cu2O -> Cu2O
+Cu2O,LCO,half,Li0.5CoO2,-84.4,Y,0.7636 Li0.5Co1O2 + 0.2364 Cu2O -> 0.01818 Co21Cu3O32 + 0.3818 LiCoO2 + 0.4182 CuO
