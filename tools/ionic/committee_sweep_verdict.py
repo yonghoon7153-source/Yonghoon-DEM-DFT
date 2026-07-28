@@ -96,6 +96,31 @@ def main():
               f"{fixed:6d}/{r['n_frames']:<5d} {scaled:8d}/{r['n_frames']:<5d}{tag}")
 
     print("-" * 78)
+    # ── 불일치를 힘으로 설명하는 모형 ────────────────────────────────────
+    # ⚠ 왜 이걸 봐야 하나: 상대(=D/F)가 온도와 함께 **줄면** 언뜻 "고온이 더 안전"으로
+    #   읽히지만, 불일치에 온도무관 바닥 a 가 있으면 D/F = a/F + b 라서 F 가 커질수록
+    #   자동으로 준다. 즉 감소 자체는 결론이 아니다. a 를 실제로 재서 분리한다.
+    Ts = sorted(rows)
+    Fv = np.array([rows[T]["force_scale_eV_per_A"] for T in Ts])
+    Dv = np.array([rows[T]["median"] for T in Ts])
+    fit = {}
+    if len(Ts) >= 3:
+        (b_, a_), *_ = np.linalg.lstsq(np.vstack([Fv, np.ones_like(Fv)]).T, Dv, rcond=None)
+        r2 = 1 - ((Dv - (a_ + b_ * Fv)) ** 2).sum() / ((Dv - Dv.mean()) ** 2).sum()
+        (n_, c_), *_ = np.linalg.lstsq(
+            np.vstack([np.log(Fv), np.ones_like(Fv)]).T, np.log(Dv), rcond=None)
+        r2p = 1 - ((np.log(Dv) - (c_ + n_ * np.log(Fv))) ** 2).sum() / \
+            ((np.log(Dv) - np.log(Dv).mean()) ** 2).sum()
+        floor_share = float(a_ / rows[bT]["median"])
+        fit = {"linear_intercept_eV_per_A": float(a_), "linear_slope": float(b_),
+               "linear_R2": float(r2), "power_exponent": float(n_), "power_R2": float(r2p),
+               "floor_share_at_base_T": floor_share}
+        print(f"D = a + b·F :  a = {a_:+.4f} eV/Å (온도무관 바닥) · b = {b_:.4f} · R² = {r2:.4f}")
+        print(f"D = c·F^n   :  n = {n_:.3f} · R² = {r2p:.4f}   (n<1 = 힘보다 느리게 증가)")
+        print(f"→ T{bT} 불일치의 {floor_share*100:.0f}% 가 **열운동과 무관한 바닥**이다. "
+              f"상대값 감소는 그만큼 자동이므로 '고온이 더 안전'으로 읽지 말 것.")
+        print("-" * 78)
+
     # ── 판정 ────────────────────────────────────────────────────────────
     rel = {T: rows[T]["relative_median"] for T in rows}
     hi = [T for T in rel if T > bT]

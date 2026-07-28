@@ -213,13 +213,23 @@ if not src:
     # ⚠ pw.x 의 stdout 이 파일이 아니라 **tmux 페인(/dev/pts/N)** 인 경우가 있다 — 실제로 그랬다.
     #   .out 파일이 아예 없으므로 페인 스크롤백에서 읽는다. 전 세션·전 페인을 훑는다.
     #   ⚠ 재부팅 뒤엔 페인 자체가 없다 → 여기서 못 찾는 게 정상이고, 그건 '죽음'의 증거다.
-    want = os.environ.get("SDCP_TMUX", "")
+    # ⚠ 먼저 **파일**을 찾는다. 페인 스크롤백은 4000줄 밖으로 밀리면 못 읽고, 실제로
+    #   sdcp_cd 페인에서 아무것도 못 건진 반면 relax.out 은 디스크에 멀쩡히 있었다.
+    for g in ("/data/work/runs/sdcp*/**/relax.out", "/data/work/runs/sdcp*/**/*.out",
+              os.path.join(W, "runs", "sdcp*", "**", "relax.out")):
+        cands = sorted(glob.glob(os.path.expanduser(g), recursive=True),
+                       key=lambda f: os.path.getmtime(f), reverse=True)
+        if cands:
+            src, via = open(cands[0], errors="ignore").read(), f"파일 {cands[0]} (자동탐색)"
+            break
+if not src:
+    want = os.environ.get("SDCP_TMUX", "sdcp_cd")
     panes = [p for p in sh("tmux list-panes -a -F '#{session_name}:#{window_index}.#{pane_index}'"
                            ).split() if p]
     if want:
         panes = [p for p in panes if p.startswith(want + ":")] + panes
     for p in panes:
-        cap = sh(f"tmux capture-pane -p -t '{p}' -S -4000")
+        cap = sh(f"tmux capture-pane -p -t '{p}' -S -20000")
         if re.search(r"iteration #|convergence has been achieved", cap):
             src, via = cap, f"tmux {p}"
             break
@@ -348,11 +358,26 @@ print(BAR)
 # ═══ ④ 체인 ══════════════════════════════════════════════════════════════
 print("④ 후속 체인 (GPU 해방 대기 → QE 단일점 + Li 슬랩)")
 cl = os.path.join(H, "logs", "chain2.log")
+# ⚠ 여기서 pgrep -f 를 쓰지 않는다. 패턴이 호출한 셸의 명령줄에 들어 있으면 자기 자신을
+#   물어 늘 '살아있음' 이 된다(실제로 개발 중 그렇게 오탐했다). tmux 세션 + 로그 신선도로 본다.
+_clm = mtime(os.path.join(H, "logs", "chain2.log"))
+live = ("chain2" in TMUX
+        or (_clm is not None and (NOW - _clm).total_seconds() < 900))
 if os.path.isfile(cl):
     ls = [l for l in open(cl, errors="ignore").read().splitlines() if l.strip()]
-    print("  " + (ls[-1] if ls else "(빈 로그)"))
+    print(f"  세션 {'살아있음' if live else '없음'} · 로그 {len(ls)}줄")
+    for l in ls[-2:]:
+        print("    " + l[:110])
+    if not live:
+        print("  ⛔ 로그는 있는데 프로세스가 없다 — 끝났거나 죽었다. 마지막 줄로 판별.")
+elif live:
+    print("  ▶ 세션은 있는데 ~/logs/chain2.log 가 없다 — 로그 경로가 다르다")
 else:
-    print("  (chain2 미가동 — ~/logs 가 없으면 먼저 mkdir -p ~/logs)")
+    # ⚠ 실제 사고: `tmux new -d -s chain2 '... > ~/logs/chain2.log 2>&1'` 인데 ~/logs 가
+    #   없어서 리다이렉트 실패 → 셸 즉사 → 세션도 로그도 안 남았다. "안 걸렸네"로 오해하기 쉽다.
+    print("  ⛔ 미가동 (세션도 로그도 없음). ~/logs 부재로 즉사했을 가능성이 크다.")
+    print("     재기동: tmux new -d -s chain2 'bash tools/ionic/chain_gpu_release.sh'")
+    print("     (그 스크립트가 로그 디렉터리를 직접 만들고, CPU 빌드 QE 는 대기 조건에서 뺀다)")
 print(BAR)
 
 # ═══ 재기동 안내 ═════════════════════════════════════════════════════════

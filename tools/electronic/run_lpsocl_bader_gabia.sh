@@ -35,9 +35,16 @@ ts() { date '+%H:%M:%S'; }
 cd "$OUT"
 
 # ---- 0) ELF 런이 끝날 때까지 대기 (CPU 경합 회피) --------------------------
+# ⚠ `pgrep -x pw.x` 로 기다리면 **무관한 GPU pw.x 까지 문다**. 실제로 gabia 에서
+#   SDCP relax(QE-GPU, /data/apps/qe-7.4.1-gpu, 1.5일 실행 중)가 잡혀서 이 체인이
+#   영원히 대기할 뻔했다. CPU 빌드 경로로 좁힌다 — 우리가 피하려는 경합은 CPU 경합이다.
+CPUPAT=${CPUPAT:-qe-7.4.1-cpu}
+cpu_qe_running() { pgrep -f "$CPUPAT/(pw|pp)\.x" >/dev/null; }
 if [ "${WAIT_ELF:-1}" = "1" ]; then
-  while pgrep -x pw.x >/dev/null || pgrep -x pp.x >/dev/null; do
-    echo "[$(ts)] ELF(pw.x/pp.x) 진행 중 — 3분 뒤 재확인"; sleep 180
+  while cpu_qe_running; do
+    echo "[$(ts)] CPU QE($CPUPAT) 진행 중 — 3분 뒤 재확인 "\
+"(GPU pw.x 는 무시: $(pgrep -f 'qe-.*-gpu/bin/pw\.x' | tr '\n' ' '))"
+    sleep 180
   done
   echo "[$(ts)] CPU 해방 — Bader SCF 착수"
 fi
