@@ -212,6 +212,15 @@ def todo():
                            content=html)
 
 
+@app.route("/nd-survey")
+def nd_survey_page():
+    """Nd 치환 문헌 54편 — 우리 화학과의 거리를 앞세워 보여준다."""
+    d = D.nd_survey()
+    if not d:
+        abort(404)
+    return render_template("nd_survey.html", active="nd", d=d, LAB=D.SYSCLASS_LABEL)
+
+
 @app.route("/benchmarks")
 def benchmarks():
     """외부 재현 표적 + 덱 정정 원장. 우리 값과 **섞이지 않게** 별도 페이지로 분리한다."""

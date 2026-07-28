@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}Nd 치환 서베이 · 54편{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>🧬 원소 치환 서베이 — Nd 중심 54편</h1>
+    <div class="sub">{{ d.description }} ·
+      원문 <span class="mono">{{ d.source_md }}</span></div></div>
+</div>
+
+<div class="callout cal-danger">
+  {% for h in d.honesty_header %}<div style="margin-top:{{ 0 if loop.first else 6 }}px">{{ h|bold }}</div>{% endfor %}
+</div>
+
+<!-- 우리 화학과의 거리 -->
+<h2 style="margin-top:26px;font-size:1rem">우리 화학과의 거리</h2>
+<div class="muted" style="font-size:.8rem;margin-top:4px">{{ d.our_chemistry_first }}</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+{% for cls, lab in LAB.items() %}
+  {% set n = d.counts_by_system_class.get(cls, 0) %}
+  {% if n %}
+  <div class="card" style="padding:10px 14px;border-left:3px solid {{ lab[1] }};min-width:170px">
+    <div style="font-weight:600;font-size:.84rem;color:{{ lab[1] }}">{{ lab[0] }}
+      <span class="mono" style="font-size:1rem;margin-left:4px">{{ n }}</span></div>
+    <div class="muted" style="font-size:.72rem;margin-top:3px">{{ lab[2] }}</div>
+  </div>
+  {% endif %}
+{% endfor %}
+</div>
+
+<div class="callout cal-warn" style="margin-top:14px">
+  <b>가장 큰 덩어리(양성자·산화물이온 {{ d.counts_by_system_class.get('proton_or_oxide_ion', 0) }}편)가
+  우리와 가장 먼 계열이다.</b> Nd 치환의 일반 논리(격자 팽창 · 결함 생성 · 소결성)는 옮길 수 있어도
+  <b>수치는 옮길 수 없다</b> — 운반체(H⁺/O²⁻ vs Li⁺)도, 온도역(500–700 °C vs 실온)도 다르다.
+  {% if d.classification_note %}<div style="margin-top:6px">{{ d.classification_note|bold }}</div>{% endif %}
+</div>
+
+<!-- 우리 db 접점 -->
+<h2 style="margin-top:30px;font-size:1rem">우리 db 접점</h2>
+<div class="grid grid-3" style="margin-top:10px">
+  <div class="card" style="padding:14px 18px">
+    <div style="font-weight:600;font-size:.86rem">조성 <a href="/composition/modelc_nd_doped" class="mono">modelc_nd_doped</a></div>
+    <div style="font-size:.8rem;margin-top:5px">Nd₂O₃-doped LPSCl1.6 — 우리가 실제로 계산한 Nd 도핑 조성.
+      이 서베이의 <b>전이 가설</b>이 향하는 대상이다.</div>
+  </div>
+  <div class="card" style="padding:14px 18px">
+    <div style="font-weight:600;font-size:.86rem">cascade 로스터의 Nd 화합물</div>
+    <div style="font-size:.8rem;margin-top:5px"><span class="mono">Nd₂O₃</span>(24위) ·
+      <span class="mono">NdF₃</span>(28위). <a href="/cascade">Screening·ML</a> 에서 전 축 확인.</div>
+  </div>
+  <div class="card" style="padding:14px 18px">
+    <div style="font-weight:600;font-size:.86rem">깔때기 방법론</div>
+    <div style="font-size:.8rem;margin-top:5px"><span class="mono">kb/methodology/dopant_screening_funnel_2026_06_13.md</span>
+      — Nd₂O₃ 342 config 깔때기. <b>층이 다르므로 이 서베이 숫자와 합산 금지.</b></div>
+  </div>
+</div>
+
+<!-- 논문 표 -->
+<h2 style="margin-top:30px;font-size:1rem">논문 {{ d.papers|length }}편
+  <span class="muted" style="font-weight:400;font-size:.8rem">(우리 화학에 가까운 순)</span></h2>
+<input class="search" placeholder="검색 (제목·물질·저널·DOI)..." oninput="ndfilt(this.value)" style="margin-top:8px">
+<div style="overflow-x:auto;margin-top:10px">
+<table class="tbl" id="ndtbl">
+  <thead><tr><th>#</th><th>계열</th><th>연도</th><th>제목</th><th>물질</th>
+    <th title="원문이 'Not discussed.' 로 표시한 범주 수 — 클수록 다루는 축이 좁다">미기술</th></tr></thead>
+  <tbody>
+  {% for r in d.papers %}
+  {% set lab = LAB.get(r.system_class, ('기타','#9ca3af','')) %}
+  <tr data-q="{{ (r.title ~ ' ' ~ (r.material or '') ~ ' ' ~ (r.journal or '') ~ ' ' ~ (r.doi or ''))|lower }}">
+    <td class="mono">{{ r.id }}</td>
+    <td><span style="background:{{ lab[1] }}18;color:{{ lab[1] }};border-radius:99px;padding:1px 8px;font-size:.7rem;font-weight:600">{{ lab[0] }}</span>
+      {% if r._reclassified %}<span title="{{ r._reclassified }}" class="muted" style="font-size:.68rem">⚠</span>{% endif %}</td>
+    <td class="mono">{{ r.year }}</td>
+    <td style="font-size:.8rem;max-width:380px">{{ r.title }}
+      <div class="muted mono" style="font-size:.68rem">{{ r.journal or '' }}{% if r.doi %} · {{ r.doi }}{% endif %}</div></td>
+    <td style="font-size:.75rem;max-width:300px" class="muted">{{ (r.material or '')[:130] }}</td>
+    <td class="mono" style="text-align:center">{{ r.n_not_discussed }}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+<div class="muted" id="ndnores" style="display:none;margin-top:14px">검색 결과 없음</div>
+
+<div class="callout" style="margin-top:20px">
+  <b>원문 전문</b>은 <span class="mono">{{ d.source_md }}</span> 에 있다 — 각 논문마다
+  이온전도 · 전자전도 · 결정학 · 계면 · 안정성 · 전기화학 6범주를
+  <b>직접 근거 / 전이 가설 / Not discussed.</b> 로 분리해 기록돼 있다.
+  <b>그 구분을 인용할 때 반드시 승계할 것</b> — 우리 규율과 같은 문법이다.
+</div>
+
+<script>
+function ndfilt(q){
+  q=(q||'').toLowerCase().trim(); var n=0;
+  document.querySelectorAll('#ndtbl tbody tr').forEach(function(r){
+    var ok=!q||(r.dataset.q||'').indexOf(q)>=0; r.style.display=ok?'':'none'; if(ok)n++;
+  });
+  document.getElementById('ndnores').style.display=n?'none':'';
+}
+</script>
+{% endblock %}

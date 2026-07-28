@@ -1140,6 +1140,27 @@ def paper_pis(slug: str) -> list:
     return list(_paper_pis_c(slug, _mtime_ns(f) if f.exists() else 0))
 
 
+def nd_survey() -> dict:
+    """db/properties/nd_substitution_survey_index.json — 원소 치환 문헌 54편 색인.
+
+    ⚠ 대부분이 **우리 화학(황화물 Li)이 아니다** — 양성자·산화물이온·불화물이온 전도체가 다수다.
+    그래서 페이지에서 `system_class` 를 앞세우고 우리 화학 순으로 정렬해 보여준다.
+    """
+    return _load_json(DB / "properties" / "nd_substitution_survey_index.json")
+
+
+SYSCLASS_LABEL = {
+    "sulfide_Li":         ("황화물 Li", "#c05621", "우리 화학 — 직접 이식 검토 가능"),
+    "halide_Li":          ("할라이드 Li", "#7c3aed", "인접 — 음이온 화학이 다름"),
+    "garnet_Li":          ("가넷 (LLZO)", "#2563eb", "Li 전도체지만 산화물 골격"),
+    "perovskite_Li":      ("페로브스카이트 Li", "#0284c7", "Li 전도체, 산화물"),
+    "Li_cathode_or_cell": ("Li 양극·셀", "#be123c", "전해질이 아님 — 다른 층"),
+    "other_ion_carrier":  ("타 이온 운반체", "#65a30d", "Na⁺·F⁻ 등 — 운반체가 다름"),
+    "proton_or_oxide_ion": ("양성자·산화물이온", "#6b7280", "⛔ 운반체·온도역이 완전히 다름"),
+    "other":              ("기타", "#9ca3af", "분류 보류"),
+}
+
+
 def list_talks() -> list:
     """litdb/talks/*.md → [{id, title, speaker, session, digested}].
 
