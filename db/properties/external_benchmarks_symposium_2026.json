@@ -187,37 +187,95 @@
     "csp_metastable_conductivity": {
       "source": "lee2026_skku",
       "slide": "28-29 (PDF p.16-17)",
-      "status_of_underlying_work": "JACS 2025, 147, 47381 / Rare Metals 2025, 44, 2366",
+      "status_of_underlying_work": "JACS 2025, 147, 51, 47381-47391 (출판). 정본 digest: litdb/papers/kim2025_csp_metastable_edge_sharing_sse.md — 본문 11pp + SI 24pp 전수 정독 2026-07-28",
       "engine": "USPEX GA + MTP + active learning",
       "targets": [
         {
-          "quantity": "Li2SiS3 corner-sharing sigma",
-          "value": 0.0001,
-          "unit": "mS/cm",
-          "condition": "안정상(실험 보고 구조)",
-          "confidence": "⛔ 절대값 인용 금지"
-        },
-        {
-          "quantity": "Li2SiS3 edge-sharing sigma",
-          "value": 2.4,
-          "unit": "mS/cm",
-          "condition": "준안정상",
-          "confidence": "⛔ 절대값 인용 금지"
-        },
-        {
-          "quantity": "연결방식 전환에 의한 sigma 상승",
-          "value": 4,
+          "quantity": "D_600K 상승 (corner → edge)",
+          "value": ">=2",
           "unit": "orders of magnitude",
-          "condition": "corner -> edge, 동일 조성",
-          "confidence": "**이 비율만 인용 가능**"
+          "condition": "**확산계수 기준**, 600 K 단일 온도, 시드 1, 오차막대 없음",
+          "confidence": "논문 본문 서술. ⚠ 살아남는 것은 'corner ≈ 0 / edge = 유한' 이분법뿐 — edge 구조 간 순위(rank 3 D=1.75 vs rank 4 D=1.15)는 통계적으로 무의미할 공산"
+        },
+        {
+          "quantity": "packing ratio α (corner vs edge)",
+          "value": "0.084-0.100 vs 0.0765-0.0805",
+          "unit": null,
+          "condition": "Li2SiS3. 4조성 모두 edge 가 낮다",
+          "confidence": "**세 기술자 중 가장 깨끗한 분리**"
+        },
+        {
+          "quantity": "dead volume (corner → edge)",
+          "value": "-0.69",
+          "unit": "A^3",
+          "condition": "Li2SiS3 5.67→4.98 · Li4SiGeS6 6.05→5.36 (양쪽 다 정확히 -0.69, -11~12%)",
+          "confidence": "⚠ 두 조성에서 Δ가 정확히 같은 것이 우연인지 산출 인공물인지 판단 불가"
+        },
+        {
+          "quantity": "E_hull 전 40구조",
+          "value": [
+            0,
+            42
+          ],
+          "unit": "meV/atom",
+          "condition": "50 meV 컷 전원 통과",
+          "confidence": "Table S2 실측"
         }
       ],
-      "descriptors_for_metastable_superionic": [
-        "dead volume (양이온 중심 S4가 Li 경로를 막는 부피)",
-        "distance of cation (d_corner > d_edge)",
-        "Li-S4 distortion"
-      ],
-      "our_status": "무관 — 문제설정 다름(host 고정 개질). 단 'metastable이 더 좋을 수 있다'는 명제는 kb/concepts/ordered_vs_disordered.md 와 공명"
+      "descriptors_for_metastable_superionic": {
+        "⚠_deck_list_was_wrong": "덱 슬 29 에 적힌 3 기술자(dead volume / distance of cation / Li-S4 distortion)는 **논문 결론부와 다르다**. 덱의 ①②는 기술자가 아니라 **기구**이고, `d_c > d_e` 는 정의식도 수치표도 없는 기하 논증(Fig 4e)이다.",
+        "actual_three": [
+          {
+            "name": "packing ratio α",
+            "eq": "SI eq 9",
+            "our_verdict": "❌ **재구현 금지** — V_dead 에 알고리즘 정의가 없다(컷오프·이온반경 규약·voxel 여부 전부 미기재). 새로 발명하면 그들 값과 비교 불가",
+            "our_substitute": "✅ **BVSE 채널 % 를 이미 갖고 있고 더 낫다** (tools/comp1_v3/, above-min ≤ iso). 같은 목적을 정전 퍼텐셜에서 잰다"
+          },
+          {
+            "name": "Li-S4 부격자 부피",
+            "eq": "본문",
+            "our_verdict": "✅ **가능(변형)** — 우리 host 는 Li 1차 배위가 S/Cl 혼합이라 **Li-(S,Cl)4** 로 정의. 기존 UMA-MD 600 K 궤적 후처리(pymatgen CrystalNN + ConvexHull). 새 시뮬 0"
+          },
+          {
+            "name": "CSM (continuous symmetry measure)",
+            "eq": "SI eq 10-11",
+            "our_verdict": "✅ **가능** — pymatgen chemenv 에 기계 있음. 같은 궤적에 얹으면 끝",
+            "caveat": "⚠ Fig 5b(Li4SiGeS6)에서는 분리가 무너진다(edge rank5 가 오히려 CSM 낮음). 평균±sd·상관계수·회귀 **전부 없음 = 육안 주장**. 'predictive indicator' 는 과하다"
+          }
+        ],
+        "not_applicable_to_us": "**corner/edge 자동분류 자체가 우리 host 에 정의되지 않는다** — argyrodite 의 PS4 는 고립 사면체라 P-S-P 다리가 없다. 그 축이 존재하지 않는다.",
+        "new_descriptor_candidate_T13": "🆕 대신 **도펀트-PS4 공유 S 개수**(0=고립 / 1=corner / 2=edge)는 우리에게만 가능하고 문헌 선례가 없다 — 도펀트 양이온 다면체가 PS4 와 S 를 몇 개 공유하는가."
+      },
+      "our_status": "무관 — 문제설정 다름(host 고정 개질). 단 'metastable이 더 좋을 수 있다'는 명제는 kb/concepts/ordered_vs_disordered.md 와 공명",
+      "⛔_RETRACTED_2026_07_28": {
+        "what": "이 블록에 등록돼 있던 σ 값 3개를 **철회한다** — 논문 실물에 존재하지 않는다.",
+        "retracted_values": [
+          {
+            "was": "Li2SiS3 corner-sharing sigma = 1e-4 mS/cm",
+            "status": "**논문에 없음**"
+          },
+          {
+            "was": "Li2SiS3 edge-sharing sigma = 2.4 mS/cm",
+            "status": "**논문에 없음**"
+          },
+          {
+            "was": "sigma 상승 = 4 orders of magnitude",
+            "status": "**논문에 없음** — 2도 3도 아니다"
+          }
+        ],
+        "what_the_paper_actually_says": [
+          "계산: 'at least **2 orders of magnitude** higher' — **σ 가 아니라 D_600K 기준**",
+          "실험: 'over **3 orders of magnitude** in ionic conductivity' — 이것도 자기 측정이 아니라 **ref 36 = Huang et al., JACS 2022, 144, 4989 (Kanno 그룹) 소환값**"
+        ],
+        "why_no_sigma": "논문은 σ 를 어떤 조성·어떤 상에도 보고하지 않는다. SI eq 7(Arrhenius)·eq 8(NE)은 방법 서술만 있고 **결과에 한 번도 쓰이지 않은 보일러플레이트**다 — 단일 온도(600 K)만 돌려서 Arrhenius 자체가 불가능하다.",
+        "provenance_guess": "0.0001 / 2.4 mS/cm 는 Huang 2022 원문 값일 가능성이 높으나 **우리는 그 PDF 가 없다 → 판독 불가. 확보 전까지 인용 금지.**",
+        "worse_than_kim2026": "kim2026_hts 는 최소한 신뢰구간(0.2 [0.01, 2.4] mS/cm)이라도 있었다. 여기는 **D 조차 단일 궤적·60 ps·단일 온도·시드 1·오차막대 전무**다."
+      },
+      "⚠_cross_composition_warning": "그들 세 기술자는 **같은 조성 안의 폴리모프 10개 줄 세우기**로만 검증됐다. **조성이 다른 47종을 가로질러 쓴 적이 없다.** 특히 α 는 MS4 부피 자체가 화학 따라 변해 조성 간 비교가 무의미하다 — 쓴다면 **조성별 상대 지표로만**.",
+      "method_dependence_red_flag": "🔴 **PBE 단독인데 SCAN 이 PBE 를 흔든다.** 검증 14종 중 SCAN 을 돌린 5건에서 **3건 부호 반전**(Li3PS4 −26→+8 · Na3PS4 −8→+23 · LiAlCl4 −12→+1.5 meV/atom). 그런데 **본론 4조성엔 SCAN 을 아예 안 돌렸다.** corner vs edge 의 E_rel 차가 3–42 meV/atom 인데 functional 하나로 그 크기의 역전이 관측됐다 → 우리 언어로 **real difference 가 아니라 method-dependent claim**.",
+      "contradicts": "**Jun 2022 (Nat. Mater. 21, 924, Ceder) 와 정면 충돌**: 그쪽은 corner-sharing framework 가 초이온전도에 유리하다고 본다. 이 논문은 충돌을 인정만 하고 미해소 — 가장 자연스러운 화해(그쪽 산화물 / 이쪽 황화물)조차 명시하지 않는다. → **'edge 가 좋다'를 일반 명제로 인용 금지**, '황화물 4조성에서' 단서 필수.",
+      "supports_our_no_csp_decision": "논문 스스로 **>80 atom 셀에서 저에너지 영역 정확도가 붕괴**한다고 자백한다(LiGa(SeO3)2 MAE_f 114 meV/atom). 우리 modelc 62 at · B2O3 128 at 규모면 **이미 신뢰구간 밖** → symposium 분석의 'CSP 안 하기로' 판정에 외부 근거 확보.",
+      "lab_internal_inconsistency": "같은 랩 안에서 MLIP 전략이 갈린다 — 이 논문은 graph-uMLIP 을 'fine-tune 이 필수'라고 깎고 MTP 를 새로 학습하는데, kim2026_hts 는 **SevenNet 7net-0 을 fine-tune 없이 그대로** 쓴다. **우리 UMA 사전학습 사용을 방어하는 데 이 불일치가 쓸 만하다.**"
     },
     "coating_screening_scale": {
       "source": "lee2026_skku",

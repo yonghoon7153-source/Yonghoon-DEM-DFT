@@ -815,6 +815,22 @@ def deck_correction_ledger() -> list:
          "what": "**'25 vs 80 °C' 는 논문 어디에도 없음** → 판독 불가로 격하",
          "paper": "kim2026_li_argyrodite_sei_reactive_md",
          "impact": "서지(ACS Energy Lett. 2022, 7, 3064)는 정확했으나 조건이 창작됨"},
+        {"case": 5, "deck": "Li₂SiS₃ σ = 1e-4 (corner) → **2.4 mS/cm** (edge) = **4자릿수 상승**",
+         "actual": "**논문에 σ 가 아예 없다.** 어떤 조성·어떤 상에도 보고 안 함. "
+                   "본문이 말하는 건 'D_600K 가 최소 **2자릿수** 높다' 뿐이고, "
+                   "'3자릿수'는 자기 측정이 아니라 Huang JACS 2022(Kanno) **소환값**",
+         "what": "🔴 **존재하지 않는 수치** — 2도 3도 아닌 '4자릿수'는 어디서도 안 나온다. "
+                 "SI 의 Arrhenius·NE 식은 결과에 한 번도 안 쓰인 보일러플레이트(단일 온도 600 K라 "
+                 "Arrhenius 자체가 불가능)",
+         "paper": "kim2025_csp_metastable_edge_sharing_sse",
+         "impact": "**우리 db 에 등록돼 있던 값 3개를 철회.** 등급이 다른 오류 — 앞의 1~4는 "
+                   "'틀린 값'이고 이건 '없는 값'이다"},
+        {"case": 6, "deck": "준안정 고전도 3 기술자 = dead volume / distance of cation / Li–S₄ distortion",
+         "actual": "논문 결론부 + SI eq 9–11 은 **packing ratio α / Li–S₄ 부격자 부피 / CSM**",
+         "what": "**세 개 중 두 개가 다르다.** 덱의 ①②는 기술자가 아니라 **기구**이고, "
+                 "`d_c > d_e` 는 정의식도 수치표도 없는 기하 논증",
+         "paper": "kim2025_csp_metastable_edge_sharing_sse",
+         "impact": "덱 목록을 그대로 썼으면 **논문에 없는 기술자 2개를 만들어내 47종에 계산할 뻔**"},
         {"case": 4, "deck": "Li₃YCl₆ 논문 = MTP · CSP(USPEX + GA + active learning)",
          "actual": "**CALYPSO + PSO + 직접 DFT** (50세대 × 100개체). MTP·USPEX·GA 한 글자도 없음",
          "what": "**방법 계열 자체가 다름**",
