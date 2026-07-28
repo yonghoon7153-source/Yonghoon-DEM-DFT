@@ -401,7 +401,91 @@ def load_cascade() -> dict:
     else:
         out["codoping_v2"] = None
     out["codoping_v2_meta"] = _load_json(DB / "properties" / "codoping_ml_v2_meta.json")
+    # 🔻 문헌 표준 게이트 깔때기 (재표현 뷰) — 빌더가 아직 안 돌았을 수 있음 → 없으면 None (탭 숨김)
+    out["funnel"] = _load_json(DB / "properties" / "cascade_screening_funnel.json")
     return out
+
+
+# ── 방법 계보 (스크리닝 문헌 → 우리 cascade) ────────────────────────
+#  각 항목의 paper 는 litdb/papers/<slug>.md — /api/paper/<slug> 로 뷰어 재사용.
+#  ⚠ 정직성: "우리가 이 문헌을 재현했다"가 아니라 "어느 축을 물려받고 어느 축을 바꿨나"를 적는다.
+METHOD_LINEAGE = {
+    "note": ("문헌 방법의 **계보**이지 성능 비교가 아니다. 우리 cascade 는 이들 중 "
+             "**게이트 정의 방식**(Zhu 의 grand-potential 창, Xiao 의 순차 필터 배치)을 물려받았고, "
+             "풀 크기·발견 성격은 물려받지 않았다."),
+    "chains": [
+        {
+            "id": "gates",
+            "icon": "🧪",
+            "title": "게이트 계보 — 조성족 스캔 → grand-potential ESW → 계면 → HT 깔때기",
+            "steps": [
+                {"paper": "ong2013_lgps_family_substitution", "year": "2013", "who": "Ong",
+                 "what": "LGPS 골격 M×X 치환 11 조성 — 조성족 스캔의 원형",
+                 "ours": "우리 47종 도펀트 로스터가 정확히 이 체급·이 성격(발견 깔때기 아님)"},
+                {"paper": "zhu2015_esw_grand_potential_origin", "year": "2015", "who": "Zhu",
+                 "what": "μ_Li(φ) grand-potential 전기화학 창 — ESW 계산의 원전",
+                 "ours": "우리 ESW(ox_V·red_V·window_V)의 직계 조상 — 방법 그대로, 좌표계만 host 상대"},
+                {"paper": "richards2016_interface_stability_pseudobinary", "year": "2016", "who": "Richards",
+                 "what": "pseudo-binary ΔE_rxt 계면 반응성",
+                 "ours": "⛔ **우리 게이트에 없음** — 47종 전수 ΔE_rxt 미보유 (추가 1순위)"},
+                {"paper": "xiao2019_cathode_coating_screening", "year": "2019", "who": "Xiao",
+                 "what": "104,082 → 3종 HT 코팅 깔때기 (F1 gap → F2 hull → F3 ESW → F4 반응성 → F6 NEB)",
+                 "ours": "게이트 **순서**를 물려받아 우리 G1–G4 를 배치. 풀 크기·발견 성격은 물려받지 않음"},
+            ],
+            "end": {"title": "우리 cascade v23 (G1–G5)",
+                    "what": "47종 큐레이션 로스터 · UMA 상대 Δe/탄성 + MP grand-potential ESW + BVSE proxy"},
+        },
+        {
+            "id": "ml",
+            "icon": "🤖",
+            "title": "ML 3세대 — 기술자 설계 → 대규모 분류 → 표형 파운데이션 모델",
+            "steps": [
+                {"paper": "fujimura2013_ml_conductivity_origin", "year": "2013", "who": "Fujimura",
+                 "what": "γ-LISICON 92 조성 · 실험 σ 95점, 손수 설계한 기술자 + SVR",
+                 "ours": "특징을 사람이 고른다는 점에서 우리 ridge 특징셋(Δe·ox·window·E·G/B·BVS)과 동세대"},
+                {"paper": "sendek2017_ml_screening_12k_conductors", "year": "2017", "who": "Sendek",
+                 "what": "12,831 → 21종. 훈련셋 40종 소표본 방어 절차(농축배수·라벨셔플·적용영역)",
+                 "ours": "**절차만** 계승 — 농축배수/AD/라벨셔플을 codoping ML v2 에 이식. 수치·특징은 이식 금지"},
+                {"paper": "hollmann2025_tabpfn_tabular_foundation_model", "year": "2025", "who": "Hollmann",
+                 "what": "표형 데이터 파운데이션 모델 (소표본 in-context 학습)",
+                 "ours": "🔜 미적용 — 후보 방향으로만 등록 (co-doping 라벨 자체가 없어 아직 무의미)"},
+            ],
+            "end": {"title": "우리 co-doping ML v2",
+                    "what": "ridge(47 단일도펀트) 계수 이식 + 8개 물리 교호작용 항 — **HYPOTHESIS GENERATOR, 미검증**"},
+        },
+        {
+            "id": "md",
+            "icon": "🌡️",
+            "title": "MD 통계 규율",
+            "steps": [
+                {"paper": "kahle2020_ht_aimd_screening", "year": "2020", "who": "Kahle",
+                 "what": "15,855 → FPMD 132 → 5종. pinball 대리모델은 랭킹용, 값은 상위 이론으로",
+                 "ours": "이 자기검증 원칙이 우리 BVSE proxy(랭킹만)·UMA-MD(절대값 인용 금지) 규율의 근거"},
+            ],
+            "end": {"title": "우리 MLIP-MD 규율",
+                    "what": "MSD 창 2–50 ps 고정 · 600/800/1000 K 아레니우스 · 멀티시드 판정 · σ 절대값 인용 금지"},
+        },
+    ],
+    # 우리가 문헌 대비 추가한 축 / 아직 없는 축 — 과장 방지의 핵심 표
+    "axes_added": [
+        {"axis": "기계 (E·Pugh G/B)", "why": "Xiao·Sendek 은 축 자체가 없고 Kahle 2020 은 명시 배제(p930).",
+         "caveat": "host 앵커가 없어 로스터 median 컷 — 우리 게이트 중 유일하게 자의적."},
+        {"axis": "테마 조합 (13 테마 기하평균)", "why": "문헌은 순차 hard gate 만 — 경계값 정보가 소실된다.",
+         "caveat": "가중치·테마 정의는 수작업 설계."},
+        {"axis": "co-doping 교호작용 ML", "why": "문헌 스크리닝은 전부 단일 조성 단위.",
+         "caveat": "라벨이 없어 검증 불가 — 가설 생성기."},
+        {"axis": "UMA(MLIP) 전수 릴랙스", "why": "2013–2020 문헌엔 없던 도구 — 273 cascade 실행을 가능케 함.",
+         "caveat": "절대값 인용 금지, 상대 순위만."},
+    ],
+    "axes_missing": [
+        {"axis": "양극 반응성 게이트 (ΔE_rxt)", "lit": "Richards 2016 · Xiao F4 (|ΔE_rxt| < 100 meV/atom)",
+         "status": "우리 interface_reactivity 는 vs LCO 만 — 47종 전수 없음. 추가 1순위."},
+        {"axis": "전자 절연 게이트 (band gap)", "lit": "Xiao F1 (>0.5 eV) · Sendek (≥1 eV)",
+         "status": "canonical gap 은 fixed-occ nscf 로 host/챔피언 소수만. 진단으로만 표기, 게이트 미채택."},
+        {"axis": "대규모 발견 풀", "lit": "Xiao 104,082 · Sendek 12,831 · Kahle 15,855",
+         "status": "우리는 큐레이션 47종. 체급이 다른 물건이며 앞으로도 이 repo 범위 밖."},
+    ],
+}
 
 
 def cascade_rows_for(dopant: str) -> dict:

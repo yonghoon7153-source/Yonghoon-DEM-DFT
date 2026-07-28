@@ -900,12 +900,23 @@ def main():
                               "units": "배포 ml_score 와 같은 z 단위 — 같은 열의 uncertainty 와는 "
                                        "다른 양이다(uncertainty = stage1 LOOCV 잔차 전파 + stage3 계수 "
                                        "공분산 사영, ad_eps = 도펀트 제거 재적합 jackknife 산포)."},
+                "outside_domain_dopant_counts": dict(_C(
+                    [d for i in np.flatnonzero(ad_A == 0) for d in pairs[i]]).most_common()),
+                "sanity_check": "외삽 플래그가 걸린 쌍의 구성원은 47종 중 소수 화학(Ag2O·AlF3·CaF2·Cu2O)에 "
+                                "집중된다 — d 가 '훈련 분포에서 먼 화학'을 실제로 짚고 있다는 확인. "
+                                "특정 상위 후보를 깎으려고 만든 지표가 아님.",
+                "eps_winners_curse_signal": (
+                    f"⚠ **상위 40쌍의 ε 중앙값({np.median(ad_eps[order[:40]]):.3f})이 전체 중앙값"
+                    f"({np.median(ad_eps):.3f})의 {np.median(ad_eps[order[:40]])/np.median(ad_eps):.1f}배**다 — "
+                    f"높은 점수를 받은 쌍일수록 도펀트 하나를 빼면 점수가 더 크게 흔들린다. "
+                    f"이것이 정확히 winner's curse 의 서명이며, M3 역설계에서 top 후보를 고를 때 "
+                    f"ml_score 단독이 아니라 ml_score − k·ad_eps 같은 벌점 형태를 쓸 근거."),
                 "finding": (
                     f"pair 특징은 단일도펀트 특징의 min/max/avg 집계라 대부분 훈련 분포 **내부**에 "
                     f"떨어진다 — 외삽 판정은 {int((ad_A == 0).sum())}/{len(pairs)}쌍뿐이고 "
                     f"top40 에는 {int((ad_A[order[:40]] == 0).sum())}개. 즉 우리 경우 winner's curse 의 "
-                    f"주 위험은 '외삽'이 아니라 '적합 노이즈·도펀트 누수'(위 cv_leakage 절)다. "
-                    f"AD 는 그래도 배포 표에 병기해 Sendek 식 신뢰주석을 유지한다."),
+                    f"주 위험은 '외삽(d)'이 아니라 '모델 불안정(ε)·도펀트 누수(cv_leakage 절)'다. "
+                    f"d 는 그래도 배포 표에 병기해 Sendek 식 신뢰주석을 유지한다."),
                 "use": "M3 역설계 winner's curse 완화의 기성 구현체 — 후보 제시 시 ml_score 옆에 "
                        "ad_d/ad_eps/ad_A 를 반드시 병기하고, ad_A=0 은 '외삽·저신뢰'로 라벨링할 것. "
                        "Sendek Table 3 의 P_LR=1.000 4종이 전부 d=3.2–6.9 인공물이었던 사례가 근거.",
@@ -981,7 +992,9 @@ def main():
     print(f"  적용영역  d 중앙값 {np.median(ad_d):.2f} (훈련 평균=1, 최대 {ad_d.max():.2f}) · "
           f"외삽(A=0) {int((ad_A == 0).sum())}/{len(pairs)}쌍 "
           f"({100*float((ad_A == 0).mean()):.1f}%) · top40 중 {int((ad_A[order[:40]] == 0).sum())} · "
-          f"top10 중 {int((ad_A[order[:10]] == 0).sum())} · ε 중앙값 {np.median(ad_eps):.3f}")
+          f"top10 중 {int((ad_A[order[:10]] == 0).sum())}")
+    print(f"        ε 중앙값 전체 {np.median(ad_eps):.3f} vs top40 {np.median(ad_eps[order[:40]]):.3f} "
+          f"({np.median(ad_eps[order[:40]])/np.median(ad_eps):.1f}x) ← winner's curse 서명")
     print(f"  CV 누수(stage3, λ={lam3:.4g} 고정)  "
           f"pair-CV wR²={cv_cmp['pair_LOOCV']['weighted_r2']:+.4f} → "
           f"LODO {cv_cmp['leave_one_dopant_out']['weighted_r2']:+.4f} → "

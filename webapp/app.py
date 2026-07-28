@@ -125,8 +125,11 @@ def cascade_page():
         "verified": (len(comp) if isinstance(comp, (list, dict)) else None),
     }
     deep_map = {v: k for k, v in D.CASCADE_DOPANT.items()}
+    # 계보 패널의 논문 링크는 실제 digest 가 있는 것만 — 없는 slug 는 링크를 죽인다
+    have = {p["id"] for p in D.list_papers()}
     return render_template("cascade.html", active="cascade", casc=casc,
                            stats=stats, deep_map=deep_map,
+                           lineage=D.METHOD_LINEAGE, lit_have=have,
                            mo_db=D.load_molecular_orbitals())
 
 
