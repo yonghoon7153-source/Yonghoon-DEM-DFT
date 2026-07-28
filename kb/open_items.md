@@ -97,6 +97,12 @@
 - **트리거**: disorder ensemble d×cfg 표본 ≥ 9 (현재 3). ~~Kim 2024 PDF~~ ✅ 확보 완료(2026-07-28) — 기술자 설계 시 그들 E_rel·Boltzmann 가중 방식 참조 가능.
 - 내용: 배열 기술자(anti-site 분포·Ewald·BVS 채널%) → D 예측, 다음 cfg 선택에 사용.
 
+### M7. MD 프로토콜 업그레이드 2건 (Kahle 2020 이식)
+- **트리거**: comp1 멀티시드 수확 시 함께 적용 (코드 반나절).
+- 내용: ① MSD 피팅창 t'-스캔 1회 검증(우리 2-50 ps 고정창이 창 길이에 둔감함을
+  데이터로 입증 — Kahle Fig S3 양식) ② Ea에 Bayesian 오차 전파(현행 시드 std 보완).
+  근거: kahle2020 digest §3 — per-material 자동 수렴판정·블록 분산 SE의 원전.
+
 ### M6. cascade에 양극 반응성 게이트 추가 (Xiao 2019 공백 보강)
 - **트리거**: 없음 (pymatgen GrandPotentialInterfacialReactivity 재사용 — 반나절).
 - 내용: 도펀트별 ΔE_rxt(vs 만충/반충 NCM·LCO) 열을 cascade CSV에 추가 —

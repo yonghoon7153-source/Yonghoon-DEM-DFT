@@ -167,6 +167,8 @@ equilib 5 ps / prod 200 ps, **MSD 창 2–50 ps 고정**, Arrhenius **600/800/10
 | 셀 크기·시뮬 길이 | AIMD: 1 unit cell급(rao2025 ~52원자, ⚠ de Klerk 4 f.u.) + 50–200 ps. MLIP: **수렴 명시가 표준화 중** — ⚠ Lee 5×5×5·6500원자·25 ns(σ 오차 10%), ⚠ Jang 4×4×4·3328원자, ⚠ Ou >16,000원자·5 ns | prod 200 ps(MLIP-MD) — 셀 크기 수렴 기준은 우리 표준 문서에 별도 명시 없음 | **우리가 느슨할 수 있는 지점** — MLIP를 쓰면서 AIMD급 셀에 머물면 300 K 직접 계산 문헌 대비 약점. comp2 캠페인에서 셀-크기 체크 1회 기록 권고(§5) |
 | 저온 직접 계산 | ⚠ Lee 2024·Ou 2024는 300 K 직접(외삽 회피, >400 K non-Arrhenius 보고) | 600 K 이상만, 300 K 외삽·절대값 자체를 안 함 | 방향이 다름 — 우리는 외삽 오류를 "절대값 비인용"으로 차단, 문헌 최전선은 "저온 직접 계산"으로 해소. 장기적으로 후자가 상위 호환 |
 
+> **(2026-07-28 추가) HT-FPMD 규율 원전 1행 — `papers/kahle2020_ht_aimd_screening.md` (Kahle/Marcolongo/Marzari, EES 2020; pinball 7.6 μs + FPMD 45 ns)**: 위 표의 거의 모든 항목에 "문헌 최상급" 기준점을 제공한다. **MSD 창** = pinball 8–10 ps / FPMD ≥20 ps — 단 **창 자체를 데이터로 검증**(t'=5/10/20/30 vs 40 ps 스캔, 5 ps=ballistic 과대→10 ps 최적; ESI Fig S3 — 우리 2–50 ps 창에 이식할 QC). **D 정의** = 총MSD/6t가 아니라 **기울기**(eq 2; 진동 오염 회피, Fig S2). **오차** = 독립 블록 분산 → mean±SE + **워크플로 자동 수렴**(err(D)<1×10⁻⁸ cm²/s or <5% of mean까지 연장; pinball 물질·온도당 NVE 8-분기 1.5–18.4 ns). **온도** = 1000 K 게이트 → 750/600/500 K(1/T 등간격 4점), **Ea는 500 K 해상 시에만** Arrhenius + **Bayesian 오차 전파**. **비전도 판정** = D<1e-8 cm²/s 수렴불가 floor + "100 ps로는 LLZO 500 K(D 2e-7)도 못 본다" 명문(= "고온만 확산 ≠ 저온 비전도"). **σ** = 환산 자체를 안 함(D_tr만 보고) — 우리 "절대값 비인용"의 상위 극단. **판정**: 창 고정·멀티시드·무질서 ensemble은 우리가 위 / per-material 자동 수렴·창 검증 절차·Bayesian Ea는 그들이 위(이식 후보 2건). ⚠ 부분점유 입구 제외라 argyrodite(LPSCl/Br)는 이 규율의 *적용 대상조차 아니었음* — §2 셀 제작 관행과는 접점 없음(질서 실험 배열 단일).
+
 ---
 
 ## 4. 우리 위치 — comp2 ordered baseline + d=0.50 ensemble
