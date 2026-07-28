@@ -212,6 +212,18 @@ def todo():
                            content=html)
 
 
+@app.route("/benchmarks")
+def benchmarks():
+    """외부 재현 표적 + 덱 정정 원장. 우리 값과 **섞이지 않게** 별도 페이지로 분리한다."""
+    b = D.external_benchmarks()
+    if not b:
+        abort(404)
+    return render_template("benchmarks.html", active="bench", b=b,
+                           ledger=D.deck_correction_ledger(),
+                           lit_have={p["id"] for p in D.list_papers()},
+                           talks_have={t["id"] for t in D.list_talks()})
+
+
 @app.route("/literature")
 def literature():
     papers = D.list_papers()

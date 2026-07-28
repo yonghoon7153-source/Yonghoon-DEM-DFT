@@ -784,6 +784,45 @@ def literature_track(slug: str, type_str: str = "", title: str = "") -> str:
     return "dft"
 
 
+def external_benchmarks() -> dict:
+    """db/properties/external_benchmarks_symposium_2026.json → 재현 표적 + 덱 정정 원장.
+
+    ⚠ 이 파일의 수치는 **외부 소환값**이다 — 우리 db 절대값과 같은 표에 넣지 않는다.
+    페이지에서도 그 경고를 최상단에 띄운다(honesty_header).
+    """
+    return _load_json(DB / "properties" / "external_benchmarks_symposium_2026.json")
+
+
+def deck_correction_ledger() -> list:
+    """발표 덱 값이 논문 실물과 어긋난 사례를 모아 한 표로.
+
+    '덱을 정본으로 쓰지 않는다'는 규율이 **추상적 원칙이 아니라 실측된 오류율**임을
+    보이는 것이 목적이다. 근거는 각 digest 안에 이미 있고, 여기서는 모으기만 한다.
+    """
+    return [
+        {"case": 1, "deck": "코팅 스크리닝 입구 풀 = 17,233 **Li·P·S·O**",
+         "actual": "17,230 **Li·O**",
+         "what": "개수(3 차이)와 **원소집합** 둘 다 오기",
+         "paper": "kim2026_hts_li3sc2po43_coating_midni_ncm",
+         "impact": "우리 cascade 대조군의 체급·화학 범위를 잘못 잡을 뻔"},
+        {"case": 2, "deck": "Li|LPSCl 계면 D = 0.4e-6 / 1.1e-6 cm²/s",
+         "actual": "0.4e-7 / 1.1e-7 cm²/s",
+         "what": "**자릿수 10배 오기** (두 값 모두)",
+         "paper": "kim2026_li_argyrodite_sei_reactive_md",
+         "impact": "**우리 db 에 이미 들어가 있던 값** — 정정 완료"},
+        {"case": 3, "deck": "계면 MD 실험 대조 = TEM, 25 °C vs 80 °C",
+         "actual": "본문은 '~12 nm Li₂S interphase, cryo-TEM' 한 문장뿐",
+         "what": "**'25 vs 80 °C' 는 논문 어디에도 없음** → 판독 불가로 격하",
+         "paper": "kim2026_li_argyrodite_sei_reactive_md",
+         "impact": "서지(ACS Energy Lett. 2022, 7, 3064)는 정확했으나 조건이 창작됨"},
+        {"case": 4, "deck": "Li₃YCl₆ 논문 = MTP · CSP(USPEX + GA + active learning)",
+         "actual": "**CALYPSO + PSO + 직접 DFT** (50세대 × 100개체). MTP·USPEX·GA 한 글자도 없음",
+         "what": "**방법 계열 자체가 다름**",
+         "paper": "kim2025_li3ycl6_new_crystal_structure",
+         "impact": "랩이 CSP 파이프라인을 최소 2개 운영 — '그들은 CSP 에도 MTP 를 쓴다'를 전제로 삼으면 안 됨"},
+    ]
+
+
 def list_talks() -> list:
     """litdb/talks/*.md → [{id, title, speaker, session, digested}].
 

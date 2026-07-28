@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+{% block title %}Benchmarks · 외부 재현 표적{% endblock %}
+{% macro plink(slug, label) -%}
+  {%- if slug in lit_have or slug in talks_have -%}
+    <a href="/literature?open={{ slug }}" onclick="return openPaperM('{{ slug }}')"
+       class="mono" style="font-size:.72rem">{{ label or slug }}</a>
+  {%- else -%}<span class="mono muted" style="font-size:.72rem">{{ label or slug }}</span>{%- endif -%}
+{%- endmacro %}
+{% block content %}
+<div class="page-header">
+  <div><h1>🎯 Benchmarks</h1>
+    <div class="sub">외부 재현 표적 · 방법론 참조 · <b>덱 정정 원장</b> —
+      <span class="mono">db/properties/external_benchmarks_symposium_2026.json</span></div></div>
+</div>
+
+<div class="callout cal-danger">
+  <b>이 페이지의 모든 수치는 외부 소환값이다.</b> 우리 db 절대값과 같은 표·플롯에 넣지 않는다.
+  용도는 두 가지뿐 — <b>(1) 우리가 새 계산을 돌릴 때의 재현 표적</b>, <b>(2) 방법론 항목의 출처</b>.
+  {% for h in b.honesty_header %}<div style="margin-top:6px">{{ h|bold }}</div>{% endfor %}
+</div>
+
+<!-- ── 덱 정정 원장 ─────────────────────────────────────── -->
+<h2 style="margin-top:30px;font-size:1rem">📋 덱 정정 원장 <span class="muted"
+  style="font-weight:400;font-size:.8rem">({{ ledger|length }}건 — 발표 덱 ↔ 논문 실물 불일치)</span></h2>
+<div class="callout cal-warn" style="margin-top:8px">
+  <b>"발표 덱을 정본으로 쓰지 않는다"는 규율은 추상적 원칙이 아니라 실측된 오류율이다.</b>
+  아래는 우리가 덱에서 읽어 db에 넣었다가 논문 실물로 정정한 사례 전부다.
+  케이스 2는 <b>이미 우리 db에 들어가 있던 값</b>이었다.
+  <div style="margin-top:6px">→ 규율: <b>덱에서 안전한 것은 비율과 정성 서술</b>이고,
+    절대값·조건·방법 계열은 논문 실물로만 확정한다.</div>
+</div>
+<div style="overflow-x:auto;margin-top:10px">
+<table class="tbl">
+  <thead><tr><th>#</th><th>덱 표기</th><th>논문 실물</th><th>오류 성격</th><th>영향</th><th>정본</th></tr></thead>
+  <tbody>
+  {% for c in ledger %}
+    <tr>
+      <td class="mono">{{ c.case }}</td>
+      <td style="font-size:.8rem">{{ c.deck|bold }}</td>
+      <td style="font-size:.8rem">{{ c.actual|bold }}</td>
+      <td style="font-size:.8rem">{{ c.what|bold }}</td>
+      <td style="font-size:.78rem" class="muted">{{ c.impact|bold }}</td>
+      <td>{{ plink(c.paper) }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+
+<!-- ── 재현 표적 ────────────────────────────────────────── -->
+<h2 style="margin-top:34px;font-size:1rem">🎯 재현 표적 <span class="muted"
+  style="font-weight:400;font-size:.8rem">(우리가 그 계산을 돌렸을 때 "맞았다"고 볼 기준)</span></h2>
+<div class="muted" style="font-size:.8rem;margin-top:4px">
+  {{ b.reproduction_targets._note }}
+</div>
+
+{% for key, t in b.reproduction_targets.items() if key != '_note' %}
+<details class="card" style="margin-top:12px;padding:14px 18px">
+  <summary style="cursor:pointer;font-weight:600;font-size:.92rem">
+    {{ key }}
+    <span class="muted" style="font-weight:400;font-size:.76rem">
+      · {{ t.engine or '—' }} · {{ t.status_of_underlying_work or '' }}</span>
+    {% if t.our_status %}<span class="tbadge" style="background:#fef2f2;color:#991b1b;margin-left:6px">{{ t.our_status }}</span>{% endif %}
+  </summary>
+
+  {% if t._deck_corrections_2026_07_28 %}
+  <div class="callout cal-warn" style="margin-top:10px">
+    <b>⚠ 덱 정정 이력</b> — {{ t._deck_corrections_2026_07_28.note|bold }}
+    <ul style="margin:6px 0 0 16px">
+    {% for c in t._deck_corrections_2026_07_28.corrected %}
+      <li style="font-size:.8rem"><b>{{ c.item }}</b>: 덱 <span class="mono">{{ c.deck }}</span>
+        → 실물 <span class="mono">{{ c.actual }}</span> <i>({{ c.error|bold }})</i></li>
+    {% endfor %}
+    </ul>
+    <div style="margin-top:6px;font-size:.8rem">살아남은 것:
+      {{ t._deck_corrections_2026_07_28.survived|join(' · ') }}</div>
+  </div>
+  {% endif %}
+
+  {% if t.system %}<div class="muted" style="font-size:.8rem;margin-top:8px"><b>계</b>: {{ t.system }}</div>{% endif %}
+
+  <div style="overflow-x:auto;margin-top:10px">
+  <table class="tbl">
+    <thead><tr><th>물리량</th><th>값</th><th>단위</th><th>조건</th><th>신뢰도</th></tr></thead>
+    <tbody>
+    {% for q in t.targets %}
+      <tr><td style="font-size:.82rem">{{ q.quantity }}</td>
+        <td class="mono">{{ q.value }}</td>
+        <td class="mono muted">{{ q.unit or '—' }}</td>
+        <td style="font-size:.78rem">{{ q.condition or '—' }}</td>
+        <td style="font-size:.76rem" class="muted">{{ q.confidence|bold }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+
+  {% if t.msd_window_trap %}<div class="callout cal-warn" style="margin-top:10px">{{ t.msd_window_trap|bold }}</div>{% endif %}
+  {% if t.mechanism %}<div style="margin-top:8px;font-size:.82rem"><b>기구</b>: {{ t.mechanism }}</div>{% endif %}
+  {% if t.how_to_use %}<div class="callout" style="margin-top:8px">{{ t.how_to_use|bold }}</div>{% endif %}
+  {% if t.triangulation_note %}<div class="callout" style="margin-top:8px">{{ t.triangulation_note|bold }}</div>{% endif %}
+  {% if t.our_comparable %}
+    <div style="margin-top:8px;font-size:.82rem"><b>우리 대비</b>:
+      {% if t.our_comparable is mapping %}{{ t.our_comparable.note|bold }}
+        {% if t.our_comparable.action %}<div class="muted" style="margin-top:4px">→ {{ t.our_comparable.action }}</div>{% endif %}
+      {% else %}{{ t.our_comparable|bold }}{% endif %}</div>
+  {% endif %}
+</details>
+{% endfor %}
+
+<!-- ── 방법론 참조 ──────────────────────────────────────── -->
+<h2 style="margin-top:34px;font-size:1rem">🔧 방법론 참조 <span class="muted"
+  style="font-weight:400;font-size:.8rem">(수치가 아니라 방법 — T1–T12의 출처)</span></h2>
+<div class="grid grid-2" style="margin-top:12px">
+{% for key, m in b.methodology_references.items() if key != '_note' %}
+  <div class="card" style="padding:14px 18px">
+    <div style="font-weight:600;font-size:.88rem">{{ key }}
+      {% if m.priority %}<span class="tbadge" style="background:#eff6ff;color:#1e40af;margin-left:6px">우선 {{ m.priority }}</span>{% endif %}</div>
+    <div style="font-size:.8rem;margin-top:6px">{{ m.what }}</div>
+    {% if m.actual_values_from_paper %}
+      <div class="mono" style="font-size:.74rem;margin-top:6px;background:var(--bg-alt);padding:6px 8px;border-radius:4px">
+        {% for k, v in m.actual_values_from_paper.items() %}{{ k }}: {{ v }}<br>{% endfor %}
+      </div>
+    {% endif %}
+    {% if m['⛔_not_transferable'] %}
+      <div class="callout cal-danger" style="margin-top:8px;font-size:.78rem">{{ m['⛔_not_transferable']|bold }}</div>
+    {% endif %}
+    {% if m.our_gap %}<div class="muted" style="font-size:.78rem;margin-top:6px"><b>우리 공백</b>: {{ m.our_gap }}</div>{% endif %}
+    {% if m.outcome_in_their_paper %}<div class="muted" style="font-size:.78rem;margin-top:6px">{{ m.outcome_in_their_paper }}</div>{% endif %}
+    {% if m.why_it_matters_to_us %}<div style="font-size:.78rem;margin-top:6px">{{ m.why_it_matters_to_us|bold }}</div>{% endif %}
+    {% if m.our_action %}<div style="font-size:.78rem;margin-top:6px">→ <b>{{ m.our_action }}</b></div>{% endif %}
+  </div>
+{% endfor %}
+</div>
+
+<!-- ── 서지 ─────────────────────────────────────────────── -->
+{% if b.lee_lab_bibliography %}
+<h2 style="margin-top:34px;font-size:1rem">📚 이상욱 랩 서지</h2>
+<div class="muted" style="font-size:.8rem;margin-top:4px">{{ b.lee_lab_bibliography._note }}</div>
+<div style="overflow-x:auto;margin-top:10px">
+<table class="tbl">
+  <thead><tr><th>순위</th><th>서지</th><th>제목</th><th>왜</th><th>상태</th></tr></thead>
+  <tbody>
+  {% for r in b.lee_lab_bibliography.confirmed %}
+    <tr><td class="mono">{{ r.rank }}</td>
+      <td class="mono" style="font-size:.74rem">{{ r.cite }}<br><span class="muted">{{ r.doi }}</span></td>
+      <td style="font-size:.8rem">{{ r.title }}</td>
+      <td style="font-size:.76rem" class="muted">{{ r.why|bold }}</td>
+      <td style="font-size:.76rem">{{ r.status }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+<div class="callout cal-warn" style="margin-top:10px">
+  <b>미출판이라 확보 불가</b>:
+  {% for n in b.lee_lab_bibliography.not_found_still_unpublished %}
+    <div style="margin-top:4px;font-size:.8rem">· <b>{{ n.cite }}</b> — {{ n.topic }} <i>({{ n.note }})</i></div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- ── 미해결 질문 ──────────────────────────────────────── -->
+<h2 style="margin-top:34px;font-size:1rem">❓ 미해결 질문</h2>
+<div style="overflow-x:auto;margin-top:10px">
+<table class="tbl">
+  <thead><tr><th>#</th><th>질문</th><th>닫는 방법</th><th>막고 있는 것</th></tr></thead>
+  <tbody>
+  {% for q in b.open_questions %}
+    <tr><td class="mono">{{ q.id }}</td><td style="font-size:.82rem">{{ q.q }}</td>
+      <td style="font-size:.78rem" class="muted">{{ q.close_by }}</td>
+      <td style="font-size:.78rem">{{ q.blocks }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+
+<div class="callout" style="margin-top:20px">
+  <b>상태</b>: {{ b.status }}
+</div>
+
+<div class="modal" id="pmodal" role="dialog" aria-modal="true" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal-body" style="max-width:840px;width:100%">
+    <div class="modal-head"><h3 id="ptitle" class="mono" style="font-size:.85rem"></h3>
+      <button class="btn sm" onclick="document.getElementById('pmodal').classList.remove('open')">✕ 닫기</button></div>
+    <div id="pbody" class="md"></div>
+  </div>
+</div>
+<script>
+function openPaperM(id){
+  var m=document.getElementById('pmodal'); if(!m) return true;
+  fetch('/api/paper/'+id).then(function(r){ if(!r.ok) throw 0; return r.json(); })
+    .then(function(j){ document.getElementById('ptitle').textContent=j.id;
+      document.getElementById('pbody').innerHTML=j.html; m.classList.add('open'); })
+    .catch(function(){ location.href='/literature'; });
+  return false;
+}
+</script>
+{% endblock %}
