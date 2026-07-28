@@ -54,6 +54,19 @@
 | (6) | Kim rapid-thermal (10.2 mS/cm, liu2022 재인용) | liu2022 참고문헌에서 확인 | 공정–무질서 관계 보강 (우선순위 낮음) |
 
 확보 시 "논문 에이전트"(litdb-curator)로 다이제스트 → 서베이 ⚠딱지 승격.
+진행: #1 de Klerk·#2 Adeli·#3 Deng·#35쌍·#36쌍(Schlem 추정) — 2026-07-28 큐레이터 5기 가동.
+
+### 스크리닝 방법론 논문 위시리스트 (지도 피드백 "co-doping screening develop" 지원)
+
+| # | 서지 | DOI | 왜 |
+|---|---|---|---|
+| S1 | Xiao, Wang, Ceder et al., *Joule* 3, 1252 (2019) "Computational screening of cathode coatings" | 10.1016/j.joule.2019.02.006 | **cascade의 직계 조상** — 양극 코팅 HT 스크리닝의 표준 프레임 (안정성+ESW+수송 게이트) |
+| S2 | Zhu, He, Mo, *ACS Appl. Mater. Interfaces* 7, 23685 (2015) | 10.1021/acsami.5b01004 | **grand-potential ESW 방법 원전** — 우리 oxidation CSV가 쓰는 바로 그 방법 |
+| S3 | Richards, Ong, Ceder et al., *Chem. Mater.* 28, 266 (2016) "Interface stability" | 10.1021/acs.chemmater.5b04082 | pseudo-binary 계면 반응성 — MLIP 캠페인 ①(Li\|SE)의 열역학 짝 |
+| S4 | Sendek et al., *Energy Environ. Sci.* 10, 306 (2017) "12k candidates" | 10.1039/C6EE02697D | **ML 스크리닝 대표작** — TabPFN 노선의 선행, 발표 인용 앵커 |
+| S5 | Kahle, Marcolongo, Marzari, *EES* 13, 928 (2020) HT-AIMD 스크리닝 | 10.1039/C9EE02457C | AIMD 기반 HT의 방법 규율 (수렴·통계) — 우리 MD 규율과 대조 |
+| S6 | Fujimura et al., *Adv. Energy Mater.* 3, 980 (2013) | 10.1002/aenm.201300060 | ML×전도도 예측의 원조 — 역사 앵커 |
+| S7 | Ong et al., *EES* 6, 148 (2013) Li₁₀±₁MP₂X₁₂ family | 10.1039/C2EE23355J | 조성족 치환 스크리닝 원형 (LGPS M/X 스캔) |
 
 ## 🧠 ML 후속 (트리거 대기 — 데이터 나오면 전체 진행)
 

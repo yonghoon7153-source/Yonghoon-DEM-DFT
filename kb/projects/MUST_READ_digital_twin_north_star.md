@@ -1,4 +1,9 @@
-# 🚨🚨🚨 MUST READ — Digital Twin Platform North Star
+# 🚨🚨🚨 MUST READ — AI 계산 스크리닝 플랫폼 North Star (구: Digital Twin)
+
+> [!important] 용어 전환 (2026-07-28, 지도 피드백)
+> 대외 자료에서 **"디지털 트윈" → "AI 계산 기반 스크리닝(AI-driven computation)"** 으로 표기한다.
+> 근거: 우리 파이프라인의 실체는 MLIP(UMA)·DFT·ML을 잇는 AI 계산 캠페인이지 실물-동기화
+> twin이 아직 아님 — AI 계산 측면을 전면에. 파일명·과거 기록은 검색성 위해 유지.
 
 > **새 session / 압축 후 첫 5분 안에 무조건 읽기**.
 > 이 문서를 안 읽으면 Claude가 **반드시 Nd2O3 paper narrative로 drift함** —

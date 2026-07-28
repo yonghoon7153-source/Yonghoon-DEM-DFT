@@ -345,7 +345,7 @@ CANONICAL_META = {
 }
 
 # ─────────────────────────────────────────────────────────────
-# Cascade / ML 도핑 스크리닝 (디지털 트윈) — UMA 상대 스크리닝 번들
+# Cascade / ML 도핑 스크리닝 (AI 계산 기반) — UMA 상대 스크리닝 번들
 # ─────────────────────────────────────────────────────────────
 def canonical_values(cid: str) -> dict:
     """조성 하나의 canonical 값 — 잠정값(CANONICAL_PROVISIONAL_VALUES)도 채워 넣는다.
@@ -373,7 +373,7 @@ CASCADE_FILES = {
     "oxidation":   "oxidation_stability_cascade.csv",  # grand-potential ESW
 }
 CASCADE_META = {
-    "title": "Doping Cascade — UMA 스크리닝 디지털 트윈",
+    "title": "Doping Cascade — AI 계산 기반 도핑 스크리닝 (UMA)",
     "scope": "Model C (Li₅.₄PS₄.₄Cl₁.₆) 기반 산화물/불화물 도펀트 스크리닝, x=0.25",
     "engine": "UMA-s-1p1 (task=omat) · anneal→champion→EOS/elastic/ESW/Li-proxy 캐스케이드",
     "score_formula": "score = 0.30·ox + 0.25·stable + 0.20·soft + 0.15·ductile + 0.10·window (min–max 정규화)",
@@ -857,7 +857,7 @@ def search_index() -> list:
     return idx
 
 
-# ── Compute: 계산 입력 자동생성 (디지털 트윈 원클릭 스캐폴드) ──
+# ── Compute: 계산 입력 자동생성 (AI 계산 원클릭 스캐폴드) ──
 PSEUDO_LIB = {
     "Li": "li_pbe_v1.4.uspp.F.UPF", "P": "P.pbe-n-rrkjus_psl.1.0.0.UPF",
     "S": "s_pbe_v1.4.uspp.F.UPF", "Cl": "cl_pbe_v1.4.uspp.F.UPF",
