@@ -2423,7 +2423,10 @@ def transform_network_summary_4col(tables, metrics, meta):
             sig_full = metrics.get('sigma_full_mScm')
             sig_bulk = metrics.get('sigma_bulk_net_mScm')
             tau_dij = metrics.get('tortuosity_mean')
-            SIGMA_GRAIN_MS = _sigma_grain_mS_cm(metrics)  # LPSCl grain [mS/cm] @ 이 런의 T
+            SIGMA_GRAIN_MS, _sg_note = _sigma_grain_context(metrics)  # [mS/cm] @ 이 런의 T + 혼합경고
+            if _sg_note:                                  # ★ S-8: 경고가 표에도 도달해야 한다
+                net_rows.append(_dual_row('⚠ σ_grain 온도 정합', _sg_note, _sg_note,
+                                          fmt=lambda x: x))
             if phi_se and sig_full and sig_full > 0:
                 # τ_Lap_eff = √(φ_SE × σ_grain / σ_full) ← COMSOL input (GB 포함)
                 # σ_full IS mode-dependent, so τ_Lap_eff shifts in Physics mode.
@@ -6277,12 +6280,20 @@ def _sigma_grain_context(metrics=None):
                 return float(f)
         return None
 
+    # ★ S-4 (2026-07-29 적대리뷰 CONFIRMED): `is not None` 은 **존재**를 짝맞음으로 오판한다.
+    #   network_conductivity.py:1106 은 `temperature_provenance` 를 factor 1.0 이어도 **무조건**
+    #   발행하므로, 실제 프로덕션 산출물은 거의 항상 {1.0 인 paired 키} + {60 °C 인 Stage-E 키}
+    #   형태다.  옛 코드는 그 조합에서 paired 를 "있다"고 보고 `(3.0, None)` 을 돌려줘 → 아래
+    #   혼합-온도 경고 분기가 **실재하는 유일한 조합에서 절대 실행되지 않았다**.  값(3.0)은 25 °C
+    #   베이스라인과 짝이 맞아 옳으므로 어떤 수치 검증에도 안 걸렸다 — 잃는 건 경고뿐이었다.
+    #   ⇒ 판정을 "존재" 가 아니라 **배수가 실제로 1 이 아닌가** 로 바꾼다.
     f_paired = _fac('temperature_provenance')          # σ_full 이 같이 움직인 경우만
-    if f_paired is not None:
-        return base * f_paired, None                   # T 미적용 런은 f == 1.0 → bitwise 3.0
+    if f_paired is not None and abs(f_paired - 1.0) > 1e-12:
+        return base * f_paired, None                   # 짝맞는 T 런 → 그대로 스케일
 
     f_stage_e = _fac('stage_e_temperature_provenance')
     if f_stage_e is not None and abs(f_stage_e - 1.0) > 1e-12:
+        # (paired 키가 1.0 으로 함께 있어도 여기 도달한다 — S-4 수정의 요점)
         prov = metrics['stage_e_temperature_provenance']
         t_c = prov.get('T_C', prov.get('temp_C'))
         return base, (
@@ -8052,7 +8063,9 @@ def serve_report(case_id):
     # ── Physics derivations (formula-level detail beyond the tables) ──
     L.append(f'## {section}. Physics Derivations\n')
     sigma_ratio = metrics.get('sigma_ratio')
-    _sg_mS = _sigma_grain_mS_cm(metrics)          # se_material 단일 출처 (+ 런 T provenance)
+    _sg_mS, _sg_note_md = _sigma_grain_context(metrics)   # 단일 출처 + 혼합-온도 경고 (S-8)
+    if _sg_note_md:
+        L.append(f'> {_sg_note_md}\n')
     sigma_brug = sigma_ratio * _sg_mS if sigma_ratio else None
     sigma_net = metrics.get('sigma_full_mScm')
 

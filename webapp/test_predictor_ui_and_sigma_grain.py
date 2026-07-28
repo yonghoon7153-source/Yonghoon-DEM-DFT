@@ -85,9 +85,12 @@ def test_no_bare_sigma_grain_in_app():
                 hits.append(f'{label}: {ln.strip()[:70]}')
     chk('[C-1] app.py 에 bare σ_grain 리터럴 0개 (전부 _sigma_grain_mS_cm 경유)',
         not hits, '; '.join(hits))
-    chk('[C-1] app.py 가 _sigma_grain_mS_cm 를 정의하고 쓴다',
-        'def _sigma_grain_mS_cm(' in src and src.count('_sigma_grain_mS_cm(') >= 6,
-        f"호출 {src.count('_sigma_grain_mS_cm(')}회")
+    # ★ S-8 (2026-07-29): 일부 콜사이트가 경고까지 받으려고 `_sigma_grain_context` 로 바뀌었다.
+    #   둘 다 같은 정본을 통하므로 합산해서 센다 (경유 자체가 요점이지 함수 이름이 아니다).
+    _n_via = src.count('_sigma_grain_mS_cm(') + src.count('_sigma_grain_context(')
+    chk('[C-1] app.py 가 σ_grain 정본 헬퍼를 정의하고 쓴다',
+        'def _sigma_grain_mS_cm(' in src and 'def _sigma_grain_context(' in src and _n_via >= 8,
+        f'경유 호출 {_n_via}회 (_mS_cm {src.count("_sigma_grain_mS_cm(")} + _context {src.count("_sigma_grain_context(")})')
     # predictor_engine 은 이미 se_material 경유 — 같이 지킨다
     pe = open(os.path.join(HERE, 'predictor_engine.py'), encoding='utf-8').read()
     chk('[C-1] predictor_engine 도 se_material 경유 유지',
@@ -146,6 +149,19 @@ def test_sigma_grain_helper():
         abs(f({'temperature_provenance': se_material.provenance(45.0),
                'stage_e_temperature_provenance': se_material.provenance(60.0)}) / 3.0
             - se_material.arrhenius_sigma_factor(45.0)) < 1e-15)
+    # ★ S-4 (2026-07-29 적대리뷰): **실제 프로덕션 산출 형태**.  network_conductivity.py:1106 이
+    #   temperature_provenance 를 factor 1.0 이어도 무조건 발행하므로 현실의 조합은 (1.0 + 60) 이다.
+    #   옛 코드는 paired 키의 **존재**를 짝맞음으로 오판해 이 조합에서 경고를 통째로 삼켰다.
+    #   기존 테스트가 (Stage-E 단독)·(45+60) 만 보고 이 형태를 안 봐서 못 잡았다.
+    _real = {'temperature_provenance': se_material.provenance(),          # factor 1.0 — 항상 발행됨
+             'stage_e_temperature_provenance': se_material.provenance(60.0)}
+    _v_r, _n_r = app._sigma_grain_context(_real)
+    chk('[C-1] ★실제 산출형 (paired factor 1.0 + Stage-E 60 °C) 에서 혼합-온도 경고가 나온다',
+        _v_r.hex() == (3.0).hex() and isinstance(_n_r, str) and '혼합 온도' in _n_r, repr(_n_r))
+    chk('[C-1] 둘 다 1.0(=완전 T-미적용) 이면 경고 없음 + bitwise 3.0',
+        app._sigma_grain_context(
+            {'temperature_provenance': se_material.provenance(),
+             'stage_e_temperature_provenance': se_material.provenance()}) == (3.0, None))
     # 망가진/거짓 provenance 는 무시하고 기본값 (조용한 오답 방지)
     for bad in ({'sigma_ion_T_factor': None}, {'sigma_ion_T_factor': 0}, {'sigma_ion_T_factor': True}):
         chk(f'[C-1] 이상한 provenance({bad}) → 기본 3.0 로 폴백',

@@ -232,13 +232,29 @@ def settle_is_quasistatic(p_window, rel_tol=0.15, abs_floor=1e-4):
     frames read NEGATIVE.  Bisecting on that cannot converge, and the failure looks like a search bug
     rather than what it is: the reading was never a pressure.
 
-    Returns (ok, spread_rel).  Needs ≥3 samples; compares the last two against the window mean."""
+    ★ 2026-07-29 적대리뷰 수정 3건 (S-3 · S-5):
+      (a) 샘플 < 3 은 이제 **정지 미증명**(False, inf)이다.  옛 코드는 (True, 0.0) 을 돌려줘
+          `--restart-settle 1|2` 면 적응형 정착 전체가 no-op 이 되면서 provenance 에
+          `settle_quasistatic: true, spread 0.0` = **측정한 적 없는 사실을 검증했다고 기록**했다.
+          실제로 `settle_is_quasistatic([0.1371, 0.3028])` (121% 튀는 창)이 통과했다.
+      (b) 창 **전체**의 max−min 을 본다.  옛 코드는 창을 아무리 늘려도 마지막 3점만 봐서,
+          주기적 링잉이 **마루 위상**에서 통과했다(1.899/2.000/1.899 → spread 0.052 인데
+          실제 진폭은 ±100%).  이것이 "p 를 2× 과소독"(0.0947 vs 실제 0.1781)의 직접 기전이다.
+      (c) **추세 항** 추가.  [0.100, 0.093, 0.087] 처럼 단조 붕괴 중인 창이 스프레드만으로는
+          통과했다(0.93^i 로 1.0→0.113 붕괴하는 창도 통과).  잔여 드리프트가 밴드를 넘으면 거부.
+    rel_tol 기본은 호출부가 수용 밴드의 1/3 이하로 넘기는 것을 권장한다 (±15% 판독으로 ±10%
+    밴드를 판정하던 비대칭이 S-5 지적사항이었다).
+
+    Returns (ok, spread_rel).  ≥3 샘플 필요; 창 전체 진폭 + 꼬리 추세를 함께 본다."""
     if p_window is None or len(p_window) < 3:
-        return True, 0.0                       # too short to judge — the CLI guard handles < 1
-    tail = [float(v) for v in p_window[-3:]]
-    scale = max(abs(sum(tail) / len(tail)), float(abs_floor))
-    spread = (max(tail) - min(tail)) / scale
-    return bool(spread <= float(rel_tol)), float(spread)
+        return False, float('inf')             # 정지를 **증명하지 못했다** (조용한 통과 금지)
+    w = [float(v) for v in p_window]
+    scale = max(abs(sum(w) / len(w)), float(abs_floor))
+    spread = (max(w) - min(w)) / scale          # ★ 창 전체 (마지막 3점 아님)
+    # 추세: 마지막 3점의 평균 기울기가 남은 창만큼 더 가면 얼마나 움직이나
+    slope = (w[-1] - w[-3]) / 2.0
+    drift = abs(slope * 3.0) / scale            # 3프레임 앞 외삽
+    return bool(spread <= float(rel_tol) and drift <= float(rel_tol)), float(max(spread, drift))
 
 
 def arm_guard_active(por, por0, is_restart):
@@ -709,6 +725,18 @@ def parse_args(argv):
                          'p 가 커짐), p 가 2× 과소독(0.0947 vs 실제 0.1781); 30 프레임 → 스프레드 4%%, '
                          'p(z) 단조 0.1364→0.0830.  정착시간은 파동 통과시간(∝ n_grid)에 비례하므로 고정 '
                          '프레임 수는 해상도마다 틀린다 — 숫자가 아니라 **조건**을 기다린다.')
+    ap.add_argument('--servo-band', type=float, default=0.02,
+                    help='servo 평형 수용 밴드 (기본 ±2%% = 옛 데드밴드와 동일).  ★2026-07-29 S-1: '
+                         'servo 는 이제 **정지 상태에서만** 판독한다 (이동→동결→판독).  옛 동작은 '
+                         '움직이는 플래튼에서 읽어 limit cycle 로 발진했다 — 실측 685프레임 무감쇠 '
+                         '(목표 0.09 에 −0.019↔+0.206).  --servo-legacy 로 옛 동작 복원 가능.')
+    ap.add_argument('--servo-legacy', action='store_true',
+                    help='옛 servo(움직이는 플래튼에서 판독) 복원 — **옛 코퍼스 바이트 재현 전용**. '
+                         '이 경로는 limit cycle 로 발진하며 final_stress_GPa 와 provenance 도장이 '
+                         '--frames 절단 위상에 좌우된다는 것이 확인된 상태다(적대리뷰 S-1).')
+    ap.add_argument('--allow-unconverged-servo', action='store_true',
+                    help='servo 가 밴드 안에서 수렴하지 못해도 계속 진행 (기본=중단).  실험 전용 — '
+                         '산출물 state_provenance.servo_status 에 not_converged 가 박힌다.')
     ap.add_argument('--unload-band', type=float, default=0.10,
                     help='--load-state 제하 전용: 목표압 수용 밴드 (기본 ±10%%).  ★ 2026-07-28 이전에는 '
                          '수용조건이 한쪽(p ≤ 1.02·target)뿐이라 플래튼이 베드에서 완전히 떨어져 p≈0 이 된 '
@@ -966,8 +994,17 @@ def _selftest():
         settle_is_quasistatic([0.1371, 0.1785, 0.2642, 0.3028])[0] is False)
     chk('settle: a sign-flipping (negative reaction) window is caught',
         settle_is_quasistatic([0.1960, -0.0541, 0.1037])[0] is False)
-    chk('settle: too few samples to judge → not a failure (CLI guard owns <1)',
-        settle_is_quasistatic([0.09])[0] is True and settle_is_quasistatic([])[0] is True)
+    # ★ 2026-07-29 정정: 이 자리의 옛 단언("샘플 부족 → 실패 아님, CLI 가드가 <1 담당")이
+    #   바로 S-3 구멍을 못박고 있었다 — --restart-settle 1|2 면 창 길이가 2 라 적응형 정착
+    #   전체가 no-op 인데 provenance 는 'settle_quasistatic: true, spread 0.0' 을 적었다.
+    chk('settle: ★ 샘플 부족은 "정지 미증명"이다 (옛 단언이 이 구멍을 고정하고 있었다)',
+        settle_is_quasistatic([0.09])[0] is False and settle_is_quasistatic([])[0] is False
+        and settle_is_quasistatic([0.1371, 0.3028])[0] is False)   # 121% 튀는 2점 창
+    chk('settle: 창 전체 진폭을 본다 — 링잉의 마루 위상이 통과하지 못한다',
+        settle_is_quasistatic([1.0, 2.0, 1.0, 2.0, 1.899, 2.000, 1.899])[0] is False)
+    chk('settle: 단조 붕괴 중인 창은 스프레드가 작아도 거부 (추세 항)',
+        settle_is_quasistatic([0.100, 0.093, 0.087])[0] is False
+        and settle_is_quasistatic([1.0 * 0.93 ** i for i in range(30)])[0] is False)
     chk('settle: near-zero windows use the absolute floor, not a blown-up relative spread',
         settle_is_quasistatic([1e-9, 2e-9, 1.5e-9])[0] is True)
 
@@ -990,15 +1027,18 @@ def main(argv):
     args = parse_args(argv)
     if args.selftest:                                          # numpy-only; must run without taichi
         raise SystemExit(_selftest())
-    if args.load_state and args.restart_settle < 1:
+    if args.load_state and args.restart_settle < 3:
         # Hard refusal, not a clamp: with no settle window the unload/compact decision is taken on frame 0,
         # where v and C have just been zeroed and the platen reaction still reads ≈0 — so an UNLOAD request
         # would be read as "not in contact yet" and the platen would be driven DOWN into an already-
         # fabricated bed (plastic, irreversible).  That is precisely the failure this window removes.
-        raise SystemExit('[load-state] --restart-settle must be ≥ 1 (given '
+        raise SystemExit('[load-state] --restart-settle must be ≥ 3 (given '
                          f'{args.restart_settle}).  The restart zeroes v/C, so the platen reaction needs a '
                          'few frozen frames to rebuild from F; deciding "unload or compact?" on frame 0 '
-                         'silently compacts an already-fabricated bed.')
+                         'silently compacts an already-fabricated bed.  ★2026-07-29 (S-3): the floor is '
+                         'now 3, not 1 — settle_is_quasistatic needs ≥3 samples to judge at-rest, so a '
+                         'window of 1-2 made the whole adaptive-settle layer a no-op while still writing '
+                         '"settle_quasistatic: true, spread 0.0" into the provenance.')
     if args.load_state and args.compact_to <= 0:
         # ★ FRAME BUDGET.  Each unload probe costs a full frozen settle window plus the move frame, so
         #   the search needs roughly settle × probes frames.  A real run hit exactly this: --frames 400
@@ -2154,6 +2194,11 @@ def main(argv):
               + (f"am_load_frac={args.am_load_frac:.3f}" + (f" floor_porosity={args.floor_porosity:.1f}% (engage {args.floor_engage:.1f}%)" if args.floor_porosity > 0 else f" → SE_target={target*(1.0-args.am_load_frac):.4f} GPa") + "  " if args.am_load_frac > 0 else "")
               + f"xy={'periodic' if PERIODIC else 'walls'}")
     reached = False; conv = 0; por_end = 0.0; p_end = 0.0; por_at_target = -1.0; por0 = 100.0; relax = 0
+    # ★ conv 의 **단위**가 servo 경로에 따라 다르다 (2026-07-29 S-1 후속):
+    #   legacy = 프레임당 1 (밴드 안 프레임 12개) / 정지-판독 = **프로브당 1** (각 프로브가
+    #   최소 --restart-settle 프레임 + 이동을 먹는다).  같은 12 를 쓰면 프레임 기준으로 4배
+    #   이상 엄격해져 멀쩡히 수렴한 런이 예산 초과로 죽는다 — 임계값을 단위에 맞춘다.
+    SERVO_HOLD = 3                     # 정지-판독 경로: 밴드 안 프로브 3연속 (UNLOAD_HOLD 와 대칭)
     reach_cnt = 0; STOP_HOLD = 3            # loose→dense mix: need target SUSTAINED this many frames to stop
     # ── RESTART UNLOAD (제하) — the missing half of "fabricate at 300 MPa → unload → cycle at 90 MPa".
     #    Before this, a --load-state run at a LOWER target could only ever push the platen DOWN:
@@ -2185,6 +2230,11 @@ def main(argv):
     _z_lo = float(wall_z[None]); _z_hi = None
     _settle_quasistatic = None; _settle_spread_rel = None
     _probe_win = []; _probe_extended = False; _probe_win_max = 0
+    _restart_floor_hit = False
+    # ── S-1 servo 정지-판독 상태 (제하 프로브와 같은 구조) ──────────────────────────────
+    _srv_left = 0; _srv_win = []; _srv_probes = 0; _srv_spread = None
+    _srv_settle = max(1, int(args.restart_settle))       # 최소 창 = 제하와 같은 노브
+    _settle_max_srv = max(int(args.restart_settle_max), _srv_settle)
     # --restart-settle is the MINIMUM window; _settle_max caps the adaptive extension so a bed that
     # never settles fails loudly instead of burning the whole frame budget in one probe.
     _settle_max = max(int(args.restart_settle_max), int(args.restart_settle)) if _RESTART else 0
@@ -2233,7 +2283,7 @@ def main(argv):
                 # ★ Is the window actually at rest?  If not, EVERY later probe reading is transient
                 #   too, so the search is bisecting on noise — refuse up front and name the real cause
                 #   instead of failing 15 probes later as "bracket collapsed".
-                _qs_ok, _qs_spread = settle_is_quasistatic(_p_settle)
+                _qs_ok, _qs_spread = settle_is_quasistatic(_p_settle, rel_tol=args.unload_band / 3.0)
                 _settle_quasistatic = bool(_qs_ok)
                 _settle_spread_rel = float(_qs_spread)
                 if not args.quiet:
@@ -2282,7 +2332,7 @@ def main(argv):
                     _probe_win.append(float(p))
                     descend = None                                       # platen stays put during the probe
                     if _probe_left == 0:
-                        _qs_ok, _qs_spread = settle_is_quasistatic(_probe_win)
+                        _qs_ok, _qs_spread = settle_is_quasistatic(_probe_win, rel_tol=args.unload_band / 3.0)
                         if not _qs_ok and len(_probe_win) < _settle_max:
                             _probe_left = max(1, _settle // 2)           # not at rest yet → keep waiting
                             _probe_extended = True
@@ -2392,8 +2442,25 @@ def main(argv):
             if descend is None:
                 pass                                         # --load-state unload: platen already moved UP
             elif descend:
-                wall_vel[None] = -step / (args.sub * dt)
-                wall_z[None] = max(WALL_MIN, wall_z[None] - step)
+                # ★ S-2 (2026-07-29 적대리뷰 CONFIRMED — 이번 라운드가 만든 회귀): 밴드 확대가
+                #   (1.00, 1.10]×target 구간을 제하(상승)에서 **이 하강 분기로** 옮겼다.  정착값이
+                #   0.0947 vs 목표 0.0900(=+5%, 밴드 안)이면 restart_unload_needed 는 이제 False 를
+                #   주고, non-scaffold 런은 여기로 떨어져 `reach_cnt` 램프 동안 2프레임을 **하강**한다
+                #   (0.016 box — 실측 제하 총 스트로크 0.0091 보다 크다).  이미 제작된 베드에 붙는
+                #   **신규 소성 압축**이고, 산출은 'descended_compacted' + 깨끗한 도장이 된다.
+                #   restart_unload_needed docstring 자신이 경계한 바로 그 방향이다.
+                #   → 재시작에서는 제작 높이(_wall_z_start) 아래로 내려가지 못하게 바닥을 건다.
+                _floor_z = max(WALL_MIN, _wall_z_start) if _RESTART else WALL_MIN
+                _z_next = max(_floor_z, wall_z[None] - step)
+                if _z_next >= wall_z[None] - 1e-12 and _RESTART:
+                    reached = True; wall_vel[None] = 0.0      # 이미 바닥 = 더 압축할 수 없음
+                    if not _restart_floor_hit:
+                        _restart_floor_hit = True
+                        print(f'  ℹ [restart] 하강 요청이 제작 높이 바닥({_wall_z_start:.5f})에 막힘 — '
+                              f'재시작은 제작 상태보다 더 압축하지 않는다 (S-2 가드)', flush=True)
+                else:
+                    wall_vel[None] = -step / (args.sub * dt)
+                    wall_z[None] = _z_next
             else:
                 reached = True; wall_vel[None] = 0.0
         elif args.protocol == 'hold' or args.compact_to > 0:
@@ -2404,7 +2471,9 @@ def main(argv):
                 if not args.quiet:
                     print("  ✓ held at target, relaxed (LIGGGHTS protocol)")
                 break
-        else:
+        elif args.servo_legacy:
+            # ── LEGACY servo (S-1 이전 동작) — 옛 코퍼스를 바이트 재현할 때만.  ⚠ 아래 결함을
+            #    알고도 쓰는 경로다: 움직이는 플래튼에서 반력을 읽어 limit cycle 로 발진한다.
             step = 0.12 * vmax                                   # bidirectional: equilibrate AT target
             if p > 1.02 * target:
                 wall_z[None] = min(WALL0, wall_z[None] + step); wall_vel[None] = step / (args.sub * dt)
@@ -2413,10 +2482,62 @@ def main(argv):
             else:
                 wall_vel[None] = 0.0
             conv = conv + 1 if abs(p - target) < 0.03 * target else 0
+        else:
+            # ── ★ S-1 (2026-07-29 적대리뷰, 3렌즈 동시 CONFIRMED) — servo 를 정지-판독으로 ────────
+            #    결함: 반력은 wallf += grid_m·(grid_v[2] − wall_vel) 로 적분된다(:2056).  옛 servo 는
+            #    **자기가 방금 움직인 플래튼 위에서** p 를 읽었고, 그 편향의 부호가 제어동작과 같아
+            #    **양의 되먹임**이 된다 → 상승하면 음(−) 판독 → 하강 → 양(+) 판독 → 상승 … 무한.
+            #    실측: 목표 0.09 인데 −0.019 ↔ +0.206 을 685 프레임 무감쇠 왕복(진폭 감소 7%).
+            #    독립 재현은 제하 경로 없이도 됨(pristine `--material SE --n-grid 32 --target-gpa 0.05`
+            #    → −0.37 ↔ +0.72) ⇒ 이 결함은 369e9d5d(2026-06-16) 부터의 **기존 결함**이다.
+            #    영향: porosity 는 인접 두 위치만 왕복해 진폭 0.04–0.08 %p 로 작지만,
+            #    final_stress_GPa 와 **provenance 도장**은 --frames 절단 위상이 결정한다
+            #    (3음2양 → 0.80× = 깨끗한 operating_stack_pressure / 2음3양 → 1.30× = _NOT_REACHED).
+            #    코드는 이 편향을 이미 알고 있었다 — 제하 프로브가 wall_vel=0 으로 동결하고 읽는
+            #    이유가 그것이고("mid-rise frame read −0.23 on a bed really at +0.19"), servo 팔에만
+            #    그 처리가 빠져 있었다.  → 같은 구조(이동 → 동결 → 판독)를 그대로 쓴다.
+            if _srv_left > 0:                                    # PROBE: 플래튼 동결, 과도응답 감쇠
+                wall_vel[None] = 0.0
+                _srv_left -= 1
+                _srv_win.append(float(p))
+                if _srv_left == 0:
+                    _qs, _sp = settle_is_quasistatic(_srv_win, rel_tol=args.servo_band / 3.0)
+                    # ★ 판정-안정성 (2026-07-29, 첫 실검증에서 발견): "완전 정지"를 요구하면
+                    #   **이완 중인 베드에서는 영영 충족되지 않는다** — 실측에서 servo 가 150프레임
+                    #   동안 프로브 0회로 아무 결정도 못 했다(wall_z 고정).  하지만 목표의 3배 위에
+                    #   있다는 걸 알기 위해 정지까지 기다릴 필요는 없다.  드리프트를 외삽해도
+                    #   **판정이 안 바뀌면** 그 판독은 행동하기에 충분하다.  반대로 "밴드 안"이라는
+                    #   주장은 수렴 선언이므로 진짜 정지를 요구한다.
+                    _v_now = unload_verdict(p, target, args.servo_band)
+                    _slope = (_srv_win[-1] - _srv_win[-3]) / 2.0 if len(_srv_win) >= 3 else 0.0
+                    _v_ext = unload_verdict(p + 3.0 * _slope, target, args.servo_band)
+                    _stable = (_v_now == _v_ext) and _v_now != 'in_band'
+                    if not (_qs or _stable) and len(_srv_win) < _settle_max_srv:
+                        _srv_left = 1                            # 아직 울림 → 더 기다린다
+                    else:                                        # ★ 이 프레임이 THE 판독
+                        _srv_spread = float(_sp)
+                        _srv_probes += 1
+                        _v = unload_verdict(p, target, args.servo_band)
+                        if _v == 'in_band':
+                            conv += 1
+                        else:
+                            conv = 0
+                            step = 0.12 * vmax
+                            _fl = max(WALL_MIN, _wall_z_start) if _RESTART else WALL_MIN
+                            if _v == 'above':
+                                wall_z[None] = min(WALL0, wall_z[None] + step)
+                            else:
+                                wall_z[None] = max(_fl, wall_z[None] - step)   # S-2 바닥 공유
+                            _srv_left = max(1, _srv_settle)      # 이동 후 다시 동결·판독
+                        _srv_win = []
+            else:
+                _srv_left = max(1, _srv_settle)                  # 첫 진입 → 바로 프로브 창
+                wall_vel[None] = 0.0
         por_end = por; p_end = p
         if reached and por_at_target < 0:
             por_at_target = por                              # porosity when target stress was FIRST reached
-        if not args.quiet and (frame % args.print_every == 0 or conv >= 12):
+        _conv_need = 12 if args.servo_legacy else SERVO_HOLD
+        if not args.quiet and (frame % args.print_every == 0 or conv >= _conv_need):
             thick = f"  thickness={height*um_box:5.2f}µm" if um_box > 0 else ""
             # phase label — 'settle'/'unload' only ever appear on a --load-state run, so a production
             # (no-restart) log line is byte-identical to before.
@@ -2426,7 +2547,7 @@ def main(argv):
             print(f"  frame {frame:3d} [{_phase}]  "
                   f"{args.readout}={p:7.4f} GPa (wallP={wallp:.4f} σzz_vol={sig_mean:.4f})  "
                   f"porosity={por:6.2f}%  wall_z={wall_z[None]:.3f}{thick}", flush=True)
-        if conv >= 12 and frame > 20:
+        if conv >= _conv_need and frame > 20:
             if not args.quiet:
                 print("  ✓ converged: σzz equilibrated at target")
             break
@@ -2498,6 +2619,28 @@ def main(argv):
                 f"늘리거나(현재 {args.unload_max_probes}), --restart-settle 을 키워 프로브를 안정화하세요.\n"
                 f"  → 의도적인 실험이면 --allow-unconverged-unload 로 진행할 수 있습니다 "
                 f"(산출물에 not_converged 가 박힙니다).")
+    # ── ★ S-1 게이트: servo 가 밴드 안에서 수렴했는가 ────────────────────────────────────
+    #    ⚠ 제하 게이트는 `if args.load_state:` 안이라 **pristine 런에는 존재조차 않았다**(적대리뷰
+    #    지적).  servo 발진은 제하와 무관하게 일어나므로(독립 재현 확인) 이 게이트는 밖에 둔다.
+    if args.protocol == 'servo' and args.compact_to <= 0 and not args.servo_legacy:
+        _srv_ok = (conv >= SERVO_HOLD
+                   or unload_verdict(p_end, target, args.servo_band) == 'in_band')
+        _servo_status = ('converged' if _srv_ok else
+                         ('not_converged_probe_not_at_rest'
+                          if (_srv_spread is not None and _srv_spread > 0.15)
+                          else 'not_converged_frame_budget'))
+        if not _srv_ok and not args.allow_unconverged_servo:
+            raise SystemExit(
+                f"\n[servo] 평형이 밴드 안에서 수렴하지 않았습니다 — 결과를 내보내지 않고 중단합니다.\n"
+                f"  servo_status = {_servo_status}   프로브 {_srv_probes}회, "
+                f"마지막 창 스프레드 {('%.0f%%' % (_srv_spread*100)) if _srv_spread is not None else 'n/a'}\n"
+                f"  {args.readout}_end = {p_end:.4f} GPa vs 목표 {target:.4f} "
+                f"(밴드 ±{args.servo_band:.0%}), conv={conv}/12\n"
+                f"  이 상태의 final_stress_GPa · porosity · provenance 도장은 수렴한 값이 아닙니다.\n"
+                f"  → --frames 를 늘리거나 --servo-band 를 넓히세요 (현재 ±{args.servo_band:.0%}).\n"
+                f"  → 의도적 실험이면 --allow-unconverged-servo 로 진행할 수 있습니다.")
+    else:
+        _servo_status = ('legacy_moving_platen_readout' if args.servo_legacy else 'n/a_not_servo')
     cov_out = {}
     if args.am_scaffold:
         # COVERAGE: fraction of each AM-type surface (AM↔non-AM voxel interfaces) that faces SE
@@ -2648,6 +2791,15 @@ def main(argv):
                 'settle_quasistatic': _settle_quasistatic,
                 'settle_tail_spread_rel': (round(float(_settle_spread_rel), 4)
                                           if _settle_spread_rel is not None else None),
+                # ★ S-1: servo 평형이 수렴했는지 — 옛 산출물에는 이 정보가 **한 필드도** 없어서
+                #   limit cycle 위상이 그대로 도장이 됐다 (적대리뷰 3렌즈 CONFIRMED).
+                'servo_status': _servo_status,
+                'servo_band': float(args.servo_band),
+                'servo_probes': int(_srv_probes),
+                'servo_tail_spread_rel': (round(float(_srv_spread), 4)
+                                          if _srv_spread is not None else None),
+                'servo_readout': ('legacy_moving_platen (limit-cycle prone)' if args.servo_legacy
+                                  else 'at_rest_probe (move → freeze → read)'),
                 'unload_search': 'bracket_then_bisect (rise until p<band, then bisect; floor = restart '
                                  'height so the search never adds plastic compaction)',
                 'wall_z_start': round(float(_wall_z_start), 6),

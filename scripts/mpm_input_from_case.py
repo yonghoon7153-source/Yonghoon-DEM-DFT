@@ -1066,7 +1066,7 @@ echo "          (오래된 run_* 폴더는 디스크 차면 지워도 됨 — �
                  '    print("  %-28s unload=%-14s P_req=%s MPa  P_achieved=%s MPa  platen %s (%s um)  role=%s"\n'
                  '          % (os.path.basename(f), sv.get("unload_status"), sv.get("P_this_stage_MPa"),\n'
                  '             sv.get("P_achieved_MPa"), sv.get("platen_direction"), sv.get("platen_delta_um"), role))\n'
-                 '    if str(role).endswith("_NOT_REACHED") or sv.get("unload_status") not in ("completed", "not_needed_p_below_target"):\n'
+                 '    if str(role).endswith("_NOT_REACHED") or sv.get("unload_status") not in ("completed", "not_needed_p_within_band"):\n'
                  '        bad.append(os.path.basename(f))\n'
                  'if bad:\n'
                  '    print("  ⚠ 구동압에 도달하지 못한 런: " + ", ".join(bad)\n'

@@ -641,9 +641,27 @@ function fillMpmTable(m) {
       else
         t = `🌡 <b>온도 규약 미기록</b> — 2026-07-28 이전 payload (= 25 °C 규약값으로 읽으세요).`;
       let p = sv
-        ? `🗜 <b>${sv.P_this_stage_MPa} MPa</b> (${sv.P_this_stage_role || '?'}) · 제작 ${sv.P_fab_MPa} MPa `
-          + `· 체인 ${(sv.pressure_chain_GPa || []).join('→')} GPa · protocol ${sv.protocol_this_stage || m.protocol || '?'} `
-          + `· 소성이력 ${sv.plastic_history_restored ? '복원됨' : '미복원'}`
+        ? (() => {
+            // ★ S-7 (2026-07-29 적대리뷰): 배지가 P_this_stage_role 만 보고 unload_status /
+            //   servo_status / override 를 안 봐서, --allow-unconverged-* 로 진행한 런도
+            //   _p_ach 가 우연히 밴드 안이면 깨끗한 `90 MPa (operating_stack_pressure)` 로 찍혔다.
+            //   role docstring 은 이 문자열을 "배지의 가드"라고 선언했는데 실제로는 아니었다.
+            const bad = [];
+            if (sv.unload_status && /not_converged|out_of_travel/.test(sv.unload_status))
+              bad.push(`제하 ${sv.unload_status}`);
+            if (sv.servo_status && /not_converged/.test(sv.servo_status))
+              bad.push(`servo ${sv.servo_status}`);
+            if (sv.unload_unconverged_override) bad.push('비수렴 강행(override)');
+            if (sv.servo_readout && /legacy/.test(sv.servo_readout)) bad.push('legacy servo 판독');
+            const warn = bad.length
+              ? ` · <b style="color:#c0392b">⚠ 미수렴: ${bad.join(' · ')} — 이 압력·porosity·두께는 `
+                + `수렴한 값이 아닙니다</b>` : '';
+            const ach = (sv.P_achieved_MPa != null)
+              ? ` · 실측 ${sv.P_achieved_MPa} MPa` : '';
+            return `🗜 <b>${sv.P_this_stage_MPa} MPa</b> (${sv.P_this_stage_role || '?'})${ach} · 제작 ${sv.P_fab_MPa} MPa `
+              + `· 체인 ${(sv.pressure_chain_GPa || []).join('→')} GPa · protocol ${sv.protocol_this_stage || m.protocol || '?'} `
+              + `· 소성이력 ${sv.plastic_history_restored ? '복원됨' : '미복원'}` + warn;
+          })()
         : (isFinite(gp)
             ? `🗜 <b>${(gp * 1000).toFixed(0)} MPa = 제작압(압밀) 1단</b> · protocol ${m.protocol || '?'} — `
               + `구동 스택압은 <b>미모델</b> (제하 단계 없음; porosity/두께는 Doux 2020 §8 로 제작압 값 사용이 정당, 접촉면적·coverage·σ 는 과대 방향)`
@@ -2020,7 +2038,7 @@ const METRIC_TIPS = {
       'σ_Bruggeman = σ_grain × φ_SE × f_perc / τ²\n'
       + '= {{ "%.1f"|format(sigma_grain(metrics)) }} × {{ "%.3f"|format(metrics.phi_se) }} × {{ "%.3f"|format(metrics.percolation_pct / 100 if metrics.percolation_pct is defined else 1.0) }} / {{ "%.2f"|format(metrics.tortuosity_recommended if metrics.tortuosity_recommended is defined else (metrics.tortuosity_mean if metrics.tortuosity_mean is defined else 1.0)) }}²\n'
       + '= {{ "%.4f"|format(metrics.sigma_ratio * sigma_grain(metrics)) }} mS/cm\n\n'
-      + 'σ_grain = {{ "%.1f"|format(sigma_grain(metrics)) }} mS/cm (LPSCl grain interior){% if sigma_grain_note(metrics) %}\\n{{ sigma_grain_note(metrics) }}{% endif %}\n'
+      + 'σ_grain = {{ "%.1f"|format(sigma_grain(metrics)) }} mS/cm (LPSCl grain interior){% if sigma_grain_note(metrics) %}\n{{ sigma_grain_note(metrics) }}{% endif %}\n'
       + 'φ_SE = {{ "%.3f"|format(metrics.phi_se) }}\n'
       + 'f_perc = {{ "%.1f"|format(metrics.percolation_pct if metrics.percolation_pct is defined else 100) }}%\n'
       + 'τ = {{ "%.2f"|format(metrics.tortuosity_recommended if metrics.tortuosity_recommended is defined else (metrics.tortuosity_mean if metrics.tortuosity_mean is defined else 0)) }}'
