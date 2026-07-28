@@ -57,7 +57,7 @@ except Exception:                                        # 단독 실행 폴백 
 _OOD_POW = 1.0        # 외삽 팽창 지수 (ASSUMED — 1.0=선형 팽창; selftest 격자로 검증)
 F1_LABEL = ('SURROGATE/UNCALIBRATED — 전개값은 STEP4-모델 상속 예측; '
             '절대 신뢰는 앵커(실솔버) 상태만 (§F1)')
-SCHEMA_VERSION = 'step6-v1'
+SCHEMA_VERSION = 'step6-v2'   # v2: DESIGN_FEATURES 에 charge(방향) 추가 (2026-07-28 M-2)
 
 # 설계특징 (params_json + npz + 선택적 STEP3 join; 결측=nan, 날조 금지 — ml_cycle_surrogate 규약)
 DESIGN_FEATURES = [
@@ -66,7 +66,7 @@ DESIGN_FEATURES = [
     'i0_A_m2', 'asr_film', 'temp_k',     # params
     'areal_mAh_cm2', 'i_1c_A',           # params(area 필요) · npz I_1C_A
     'bv_face_per_cm2',                   # viz_I_face.shape[1]/면적 (면적 없으면 nan)
-    'x0', 'x100', 'cv_hold',             # params (창·프로토콜)
+    'x0', 'x100', 'cv_hold', 'charge',   # params (창·프로토콜·방향; charge 1=충전 0=방전)
     'sigma_e_eff', 'sigma_ion_eff',      # ★STEP3 join (mpm_payload.json; 없으면 nan)
     'log_tau_w',                         # eis_drt_ica: log(r_p²/D_s) (r_p join 없으면 nan)
 ]
@@ -171,7 +171,15 @@ def design_from_run(run, step3=None):
     ltw = float('nan')
     if np.isfinite(r_p) and r_p > 0 and np.isfinite(d_s) and d_s > 0:
         ltw = math.log((r_p * 1e-6) ** 2 / d_s)           # eis_drt_ica: τ_w = r_p²/D_s
-    return {'c_rate': _f(p.get('c_rate')), 'thickness_um': thick,
+    # ★충·방전 방향 (감사 M-2): 지금까지 추출기가 쿨롱 검산용으로만 sgn 을 쓰고 **데이터에
+    #   남기지 않아** (i) 혼합 코퍼스가 같은 feature 행에 반대부호 타깃을 넣고 (ii) propagate 의
+    #   'charge' 가드가 영구 no-op 이었다.  params 의 charge 를 우선, 없으면 x_mean 궤적 부호로.
+    _chg = p.get('charge')
+    if _chg is None:
+        _xm = np.asarray(run.get('x_mean', []), float)
+        _chg = bool(_xm[-1] < _xm[0]) if _xm.size >= 2 else False   # 충전 = 리튬 빠짐(x↓)
+    return {'charge': float(bool(_chg)),
+            'c_rate': _f(p.get('c_rate')), 'thickness_um': thick,
             'r_int_ohm_cm2': _f(p.get('r_int_ohm_cm2')), 'd_s_m2s': d_s, 'i0_A_m2': i0,
             'asr_film': _f(p.get('asr_film')), 'temp_k': _f(p.get('temp_k')),
             'areal_mAh_cm2': areal, 'i_1c_A': i1c, 'bv_face_per_cm2': bv,
@@ -593,6 +601,18 @@ def load_model(path):
         out = {'cc': RidgeCommittee.from_arrays(z, 'cc_'),
                'cv': RidgeCommittee.from_arrays(z, 'cv_') if meta.get('has_cv') else None,
                'meta': meta, 'label': F1_LABEL}
+        # ★feature 이름·순서 대조 (감사 M-3): 스키마 문자열만 보면 FEAT_NAMES 순서를 한 줄
+        #   바꾸고 SCHEMA_VERSION 을 안 올렸을 때 **예외 없이 조용히 틀린 예측**을 한다
+        #   (길이만 맞으면 numpy 가 브로드캐스트해버림; 실측 max|ΔV| 1.16 mV).
+        for _nm, _c in (('cc', out['cc']), ('cv', out['cv'])):
+            if _c is None:
+                continue
+            if list(_c.feat_names) != list(FEAT_NAMES):
+                _d = [(i, a, b) for i, (a, b) in
+                      enumerate(zip(list(_c.feat_names) + [None] * len(FEAT_NAMES), FEAT_NAMES))
+                      if a != b][:3]
+                raise ValueError(f'{_nm} 모델의 feature 규약이 현재 코드와 다름 (재학습 필요) — '
+                                 f'첫 불일치 {_d}')
         for k in ('bank_design', 'bank_state'):
             out[k] = np.asarray(z[k]) if k in z.files else None
     return out
@@ -713,7 +733,8 @@ def propagate(model, design, state0=None, dt_s=30.0, t_max=None, c_rate=None, v_
               anchor_every=None, force=False, n_draw=128, seed=0, band_mode='member',
               max_steps=20000):
     """자기회귀 전개 (MLIP-MD 유사).  스텝: X=[s_t‖design‖basis‖dt] → 위원회 Δ → s_{t+1}=s_t+Δ,
-    단 Δx̄ = 쿨롱계수 정확항(학습 안 함 — 질량보존 부기).
+    단 Δx̄ = 쿨롱계수 항(학습 안 함 — 질량보존 부기).
+    ⚠ 쿨롱 '정확'은 **CC 구간 한정** — CV 는 i_norm 이 학습 상태라 그 오차를 상속한다(M-1).
     · 밴드 3모드 (전부 UNCALIBRATED — 휴리스틱 라벨):
         'member'(기본) = √(std(멤버 누적 V경로)² + Σs_res²) — 멤버별 스텝-편향이 경로를 따라
           지속 누적되는 걸 그대로 반영(독립가정 없음; MLIP 위원회-궤적 스프레드) ★selftest 로
@@ -733,8 +754,9 @@ def propagate(model, design, state0=None, dt_s=30.0, t_max=None, c_rate=None, v_
     if sigma_gate_mv is None:                             # ★기본 = 학습 시 구운 auto (H-2)
         sigma_gate_mv = float((mdl.get('meta') or {}).get('gate_mv_auto') or 5.0)
     design = dict(design)
-    if design.get('charge'):
-        raise NotImplementedError('충전 전개는 v2 (§8) — v1 은 방전만')
+    _is_chg = bool(float(design.get('charge', 0.0) or 0.0))
+    if _is_chg:
+        raise NotImplementedError('충전 전개는 v2 (§8) — v1 은 방전만 (design.charge=1 감지)')
     if c_rate is not None:
         design['c_rate'] = float(c_rate)
     c_rate = _f(design.get('c_rate'))
@@ -772,6 +794,7 @@ def propagate(model, design, state0=None, dt_s=30.0, t_max=None, c_rate=None, v_
     end = 't_max'
     p = 0.0
 
+    _xlo, _xhi = (min(x0w, x100w), max(x0w, x100w))
     def _rec():
         curve['t'].append(t); curve['V'].append(s['v_terminal'])
         if band_mode == 'rss':
@@ -845,7 +868,13 @@ def propagate(model, design, state0=None, dt_s=30.0, t_max=None, c_rate=None, v_
             sk = _D2S.get(tn)
             if sk:
                 s[sk] += float(mean[j])
-        s['x_mean'] += i_before * dt_s / 3600.0 * win     # ★쿨롱 정확항 (학습 안 함)
+        # ★쿨롱 정확항 (학습 안 함).  ⚠정직 (감사 M-1): CC 에서는 i_before 가 정확 상수라
+        #   Δx̄ 가 float eps(3e-16) 수준으로 정확하지만, **CV 에서는 i_norm 자체가 학습된 상태**
+        #   (d_i_norm ∈ CV 타깃)라 그 오차가 쿨롱 항에 그대로 상속된다 = CV 구간의 delivered 는
+        #   "정확 물리"가 아니라 surrogate 정확도에 종속.  설계서·docstring 도 그렇게 정정.
+        s['x_mean'] += i_before * dt_s / 3600.0 * win
+        # 창 밖으로 나가는 건 물리적으로 불가 → clamp (실측 0.90999 > x100=0.9084 이 있었다)
+        s['x_mean'] = float(np.clip(s['x_mean'], _xlo, _xhi))
         if not in_cc:
             s['v_terminal'] = v_cut                       # CV 정의: V 고정 (d_v≈0 학습치 대신 핀)
         # 밴드/멤버 경로 누적
