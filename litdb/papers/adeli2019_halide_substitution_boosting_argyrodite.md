@@ -1,6 +1,6 @@
 # Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution — Adeli et al. (Angew. Chem. Int. Ed. 2019)
 
-> slug `adeli2019_halide_substitution_boosting_argyrodite` · DOI `10.1002/anie.201814222` (German edn 10.1002/ange.201814222) · type `exp (중성자 Rietveld + EIS + ⁷Li PFG/MAS NMR; 자체 DFT/MD 0 — ⚠ 사용자 분류 폴더는 'DFT'이나 본문 계산 없음)` · PDF 본문 = 업로드 `82ea256b/68956c35`(6 pp, inbox #33, 사용자 분류 `DFT`) + **SI = `82ea256b/7c048d8a`(12 pp, inbox #33 Sup) — 본문·SI 전문 정독** · digested `2026-07-28` · status ✅
+> slug `adeli2019_halide_substitution_boosting_argyrodite` · DOI `10.1002/anie.201814222` (German edn 10.1002/ange.201814222) · type `exp (중성자 Rietveld + EIS + ⁷Li PFG/MAS NMR; 자체 DFT/MD 0 — ⚠ 사용자 분류 폴더는 'DFT'이나 본문 계산 없음)` · PDF 본문 = 업로드 `82ea256b/68956c35`(6 pp, inbox #33, 사용자 분류 `DFT`) + **SI = `82ea256b/7c048d8a` ≡ `inbox/33. Sup)…pdf`(파일 14 pp = 내부 번호 1–12 + Wiley 표지·기여 2 pp) — 본문·SI 전문 정독 + SI 실물 감사 2026-07-28 완료(§3f: Table S1–S3 전값 일치, 사용자 분류 `DFT`)** · digested `2026-07-28` · status ✅
 > elements: Li, P, S, Cl, Br
 > methods: impedance-spectroscopy, neutron-diffraction, Rietveld, PFG-NMR, MAS-NMR, Haven-ratio, EDX, CV
 > **저자**: Parvin Adeli⁺, J. David Bazak⁺(공동 1저자), Kern Ho Park, Ivan Kochetkov, Ashfia Huq, **Gillian R. Goward***, **Linda F. Nazar*** (Univ. Waterloo Chemistry/WIN · McMaster Univ. · ORNL SNS Neutron Scattering Division) · Angew. Chem. Int. Ed. **2019**, 58, 8681–8686. Received 2018-12-14 / accepted 2019-04-30 / online 2019-05-23. 지원: BASF Battery Network·NSERC·CRC(Nazar); SNS(DOE). **[외부]** (Waterloo Nazar 그룹).
@@ -72,7 +72,7 @@ Li₆₋ₓPS₅₋ₓCl₁₊ₓ (x≤0.5) 고용체를 만들고 중성자 Rie
 - x=0 기준값 2.5 mS/cm는 문헌 범위(1.1–3.15)와 정합 → 시리즈 신뢰. σ는 x에 대해 "거의 지수적" 증가.
 - **소결 12.0±0.2** = 펠릿을 550 °C 10 min 재소성 → **입계(GB) 전도 최적화** 효과로 해석.
 - **195 K EIS**(x=0.5): 완전 반원 관측, R1/Q1+Q2 피팅 (R1 5233 Ω, Q1 1.487 nF·s^(a−1), α1 0.8825, Q2 29.26 µF, α2 0.5937, r=0.45 cm). apex 1.11×10⁵ Hz → C 1.7×10⁻⁹ F, α≈0.9 → 저자는 "이상적 CPE·해당 정전용량 = bulk 수송"으로 읽고 **Ea 트렌드는 GB에 크게 오염 안 됨**이라 주장(§14 비판).
-- Ea는 σ와 역상관(Fig 3d), **최대 하락 구간 = x 0.375→0.5**. VT-EIS: 0.5 t 정압 셀, MTZ-35, 35 MHz–0.1 Hz, 298–338 K 5 K 간격·각 2 h 평형.
+- Ea는 σ와 역상관(Fig 3d), **최대 하락 구간 = x 0.375→0.5**. VT-EIS: 0.5 t 정압 셀, MTZ-35, 35 MHz–0.1 Hz, 298–338 K 5 K 간격·각 2 h 평형. 저온점(**286 K**·195 K)은 밀폐 EIS 셀을 냉각조에 침지해 별도 측정(SI 실물 확인 — 286 K 존재는 SI에만 언급).
 - **전자전도도 σ_e ≈ 3×10⁻⁹ S/cm**(DC 분극, SS 블로킹, Fig S3) → **transference number ≈ 1**.
 - 벤치마크: cold-press 9.4 = **준안정 Li₇P₃S₁₁급**; 소결 12.0 = 당시 최고 수준 근접.
 
@@ -108,6 +108,15 @@ Li₆₋ₓPS₅₋ₓCl₁₊ₓ (x≤0.5) 고용체를 만들고 중성자 Rie
 | INDEX DFT시트 #3 행 | "냉간가압 σ=9.4 (Li₆PS₅Cl의 약 4배)" | **✓ 정확** |
 | survey `md_structure_setup…` L52 | "4a/4c SOF 비교·9.4/12.0·D=1.01e-11·Vegard" | **✓ 정확** (PGSE→PFG(BPP-STE) 표기만 정밀화; ⚠→PDF 확보로 승격) |
 | kraft2017 digest와의 정합 | Adeli Fig 2의 Li₆PS₅Cl SOF(4c-Cl 0.615) ↔ kraft2017 "4d 무질서 ~62 %" | **✓ 일치** (자리 라벨 4c↔4d 설정 차이만) |
+
+### 3f. ★ SI 실물 감사 (2026-07-28, `inbox/33. Sup)…pdf` 전문 텍스트 추출 대조 — kraft2017 #31 Sup 감사와 동일 프로토콜)
+**판정: SI 유래 수치 전값 일치 — digest 수정 사항 0.** 파일은 14 pp(내부 번호 1–12 + Wiley 표지·Author Contributions 2 pp; 종전 "12 pp" 표기는 내부 번호 기준).
+- **Table S2 (σ 반복 시료) 전값 일치**: x=0.5 시리즈 A–D σ 9.4/9.3/9.5/9.4 → 9.4±0.1; 두께 0.630–1.03 mm·R 10–51.3 Ω·⌀1.0 cm. **정밀화**: 4계열 전부 측정된 건 x=0.5뿐 — x=0은 A–C(2.6/2.4/2.6→2.5), x=0.25는 A–C(4.2/4.0/4.4→4.2), x=0.375는 B–D(5.5/5.9/5.5→5.6). 표준편차는 √(Σ(x−x̄)²/n).
+- **Table S3 (195 K 등가회로) 전값 일치**: R1 5233 Ω·Q1 1.487×10⁻⁹ F·s^(α−1)·α1 0.8825·Q2 29.26×10⁻⁶·α2 0.5937·r_electrode 0.45 cm.
+- **Table S1 (EDX) 전값 일치**: Cl/P 평균 0.99/1.25/1.51 — 개별 측정 M1/M2 = 1.04/0.94·1.26/1.24·1.50/1.52 (시료당 2회).
+- **신규 디테일(SI에만)**: ① PFG — π/2 8.1 µs@40 W·5 mm Shigemi 관(시료 깊이 3–4 mm)·최대 구배 2725 G/cm = **프로브 용량의 99 %**·T₂는 CPMG(에코 0.5 ms)·recycle 3.5 s(>5T₁이나 구배코일 duty cycle 제약)·구배 전후 1 ms 링다운 지연 + LED 5 ms·z-저장 중 spoiler 143 G/cm·2 ms·16스캔/스텝·표적 268.2–343.2 K; ② MAS — π/2 3.5 µs@110 W·명목 기준 = 밀봉 모세관 1 M LiCl(aq)(내부 기준 LiCl 불순물은 드리프트 보정용); ③ Haven c 규약 원문 — "엄밀히는 24 Li/cell 전부 가동적(6/f.u.×Z=4)이나 장거리 수송을 지배하는 것은 4케이지 간 48h–48h intercage 점프 → c = Li 화학량론×4케이지×1/6 ≈ 4/cell"을 **명시적 하한**으로 채택(Frank–Kasper 다면체의 인접 Li도 변위로 참여); H_R 온도 무관성은 x=0.375에서 가장 뚜렷(Fig S6); ④ 중성자 캔 = 바나듐 캔 + **구리 개스킷·알루미늄 뚜껑** 밀봉; ⑤ 저자 기여 — 합성·전기화학·중성자 해석 P.Adeli, **CV는 K.H.Park**, NMR 전담 J.D.Bazak, 중성자 측정 A.Huq.
+- **부재 확정(figure-read 캐비앗 유지)**: **D*(T)·Ea 수치표 없음**(D*는 Fig S5의 300 K 1점 1.01×10⁻¹¹ m²/s만 캡션 명기, 나머지는 Fig 4 figure-read); 중간 조성 SOF 없음(중성자는 x=0.5뿐 재확인); Fig S2 불순물 동정(LiCl/Li₃PS₄/Li₃PO₄)은 그림 내 라벨 — 텍스트 추출로 검증 불가, figure-read 유지.
+- SI 초록도 "9.4±0.1 mS/cm **at 300 K**" — 본문 298 K와의 온도 표기 혼재 재확인(§14).
 
 ## 4. 재료 & 방법 (실험) ★
 - **합성**: Li₂S(99.98 %)+P₂S₅(99 %)+LiCl(99 %, 전부 Sigma) 화학량론, 총 ~1 g. Ar 글러브박스(H₂O·O₂<1.5 ppm) 유발 혼합 10 min → **지르코니아 133볼·밀폐 지르코니아 자, Fritsch PULVERISETTE 7 Premium, 380 rpm·17 h 볼밀** → 회수·재혼합 → **2 t 펠릿화**(⌀10 또는 9 mm) → glassy carbon 뚜껑 도가니 + 진공 석영관(사전 100 °C·2일 진공 베이킹) → **550 °C·5–7 h 열처리, 승·강온 0.5 °C/min**. ⇒ **볼밀(기계화학) + 저속 어닐**의 2단 공정 — 무질서·상순도가 이 공정 변수의 함수(cf. Liu2022는 450 °C 5 h가 최적).
