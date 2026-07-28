@@ -1,6 +1,6 @@
 # Elastic Properties of Alkali Superionic Conductor Electrolytes from First Principles Calculations — Deng et al. (J. Electrochem. Soc. 2016)
 
-> slug `deng2016_elastic_superionic_electrolytes_dft` · DOI `10.1149/2.0061602jes` · type `DFT (elastic full tensor, 23 SICEs)` · PDF `82ea256b/c8187fe7-35._Elastic_Properties…` (inbox #35) · digested `2026-07-28` · status ✅ · **[외부]**
+> slug `deng2016_elastic_superionic_electrolytes_dft` · DOI `10.1149/2.0061602jes` · type `DFT (elastic full tensor, 23 SICEs)` · PDF `litdb/inbox/34. Elastic Properties….pdf` (**inbox #34, 사용자 분류 `DFT`**; 최초 digest는 업로드본 "35." 명명 — 동일 논문) · digested `2026-07-28` · **실물 감사 `2026-07-28`** (본문 9 pp = IOP 표지+A67–A74; Table I–III·methods·observations·discussion 전값 digest 일치 — 논문 자체의 LLTO E 262.4(Table II)/262.5(Table III) 반올림 불일치까지 표별 정확; §4.5 인용문 1건 교정 "two neighboring 48h"; **SI(PBE/optB88 전체값) 여전히 미보유 확정**) · status ✅ · **[외부]**
 > elements: Li, Na, P, S, Cl, Br, I, O, Si, Ge, Sn, Ti, Zr, Nb, Ta, La
 > methods: DFT, elastic
 > **저자**: Zhi Deng, Zhenbin Wang, Iek-Heng Chu, Jian Luo, **Shyue Ping Ong*** — **UC San Diego NanoEngineering** (Ong 그룹 = pymatgen/Materials Project 계열; *우리 한양/J-W Lee/Y.M.Lee 아님 → [외부]*). J. Electrochem. Soc. **163**(2) A67–A74 (2016). Submitted 2015-08-31 / revised 2015-10-12 / published 2015-11-05. NSF DMREF 1436976 · XSEDE.
@@ -149,7 +149,7 @@ VASP/**PBEsol**(PBE·optB88-vdW 벤치 후 선택)로 **23종 세라믹 알칼�
 → **판정: 사실상 relaxed-ion (총 탄성).** 단 "논문 명시 아님"을 항상 병기할 것.
 
 ### 4.5 ★★ 무질서 처리 — SQS 아님, 전 조성 "질서 모델" 전략 (이 digest의 존재 이유)
-> **논문 원문 근거 문장 (argyrodite)**: "In the argyrodite structures, Li-ions are randomly distributed in two types of sites. One of the sites (Wyckoff symbol: **24g**) is located at the center of a S₃ triangle with occupancy of 0.26, with three neighboring **48h** sites with occupancy of 0.37. **For this work, we assume that only the 24g sites are occupied.**"
+> **논문 원문 근거 문장 (argyrodite)**: "In the argyrodite structures, Li-ions are randomly distributed in two types of sites. One of the sites (Wycoff symbol: **24g**) is located at the center of a S₃ triangle with occupancy of 0.26, with **two** neighboring **48h** sites with occupancy of 0.37. **For this work, we assume that only the 24g sites are occupied.**" *(2026-07-28 실물 감사로 교정: 초판 digest가 "three"로 오기 → 원문은 "two"(24g 양옆 48h 쌍 = doublet과 정합); "Wycoff"는 논문 원문 철자 그대로)*
 
 | 물질군 | 실제 무질서 | Deng의 처리 | 비고 |
 |---|---|---|---|
