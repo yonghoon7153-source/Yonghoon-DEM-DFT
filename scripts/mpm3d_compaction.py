@@ -702,6 +702,13 @@ def parse_args(argv):
                          '가깝다 — 그 값으로 판정하면 이미 제작된 베드를 아래로 밀어버린다(수치 파라미터, '
                          '물리 앵커 아님).  판정은 창 안 p 의 MAX 로 한다(제하 쪽으로 편향 = 불필요한 상승은 '
                          '탄성이라 servo 밴드가 되돌리지만, 불필요한 하강은 소성=비가역).')
+    ap.add_argument('--restart-settle-max', type=int, default=200,
+                    help='--load-state 제하 전용: 정지-프로브 창의 **최대** 프레임 (--restart-settle 은 이제 '
+                         '최소값).  창이 닫힐 때 정지 여부를 실제로 재고, 아직 울리면 최대치까지 더 기다린다. '
+                         '★ 실측(n_grid 64): 3 프레임 → 꼬리 스프레드 ~100%%, p(z) 비단조(플래튼이 올라가는데 '
+                         'p 가 커짐), p 가 2× 과소독(0.0947 vs 실제 0.1781); 30 프레임 → 스프레드 4%%, '
+                         'p(z) 단조 0.1364→0.0830.  정착시간은 파동 통과시간(∝ n_grid)에 비례하므로 고정 '
+                         '프레임 수는 해상도마다 틀린다 — 숫자가 아니라 **조건**을 기다린다.')
     ap.add_argument('--unload-band', type=float, default=0.10,
                     help='--load-state 제하 전용: 목표압 수용 밴드 (기본 ±10%%).  ★ 2026-07-28 이전에는 '
                          '수용조건이 한쪽(p ≤ 1.02·target)뿐이라 플래튼이 베드에서 완전히 떨어져 p≈0 이 된 '
@@ -992,6 +999,19 @@ def main(argv):
                          f'{args.restart_settle}).  The restart zeroes v/C, so the platen reaction needs a '
                          'few frozen frames to rebuild from F; deciding "unload or compact?" on frame 0 '
                          'silently compacts an already-fabricated bed.')
+    if args.load_state and args.compact_to <= 0:
+        # ★ FRAME BUDGET.  Each unload probe costs a full frozen settle window plus the move frame, so
+        #   the search needs roughly settle × probes frames.  A real run hit exactly this: --frames 400
+        #   with --restart-settle 30 bought only 11 of the 40 probes, and the search — which was
+        #   converging cleanly (0.1364→0.0830 monotone, final 1.01× target) — ran out of frames rather
+        #   than out of ideas.  That is now a not_converged failure, so warn BEFORE spending the run.
+        _need = (args.restart_settle + 1) * max(1, args.unload_max_probes) + args.restart_settle
+        if args.frames < _need:
+            print(f"  ⚠ [load-state] --frames {args.frames} is likely too small for this search: "
+                  f"{args.unload_max_probes} probes × ({args.restart_settle} settle + 1 move) + "
+                  f"{args.restart_settle} initial ≈ {_need} frames.  The unload can run out of FRAMES "
+                  f"while still converging — that ends the run as not_converged_frame_budget (no numbers "
+                  f"emitted).  Raise --frames to ≳{_need}, or lower --unload-max-probes/--restart-settle.")
     if args.load_state and args.protocol == 'hold' and args.compact_to <= 0:
         print("  [load-state] --protocol hold on a restart = RIGID-FIXTURE arm: the platen first UNLOADS to "
               "--target-gpa, then is FIXED and the stress relaxes below it (constant gap).  --protocol servo "
@@ -2154,6 +2174,10 @@ def main(argv):
     # it (None until the target is bracketed).  The old loop kept neither and could only rise.
     _z_lo = float(wall_z[None]); _z_hi = None
     _settle_quasistatic = None; _settle_spread_rel = None
+    _probe_win = []; _probe_extended = False
+    # --restart-settle is the MINIMUM window; _settle_max caps the adaptive extension so a bed that
+    # never settles fails loudly instead of burning the whole frame budget in one probe.
+    _settle_max = max(int(args.restart_settle_max), int(args.restart_settle)) if _RESTART else 0
     _unload_probes = 0
     _UNLOAD_GROW = 1.6                       # geometric rise growth while hunting for the bracket
     _UNLOAD_DZ_MIN = 0.02 / max(n_grid, 1)   # bracket narrower than 1/50 cell → refining is meaningless
@@ -2230,14 +2254,35 @@ def main(argv):
                 #    UNLOAD_HOLD consecutive at-rest probes below the target are required (mirror of the
                 #    descend side's STOP_HOLD sustained criterion, which exists for the same noise reason).
                 if _probe_left > 0:
-                    # PROBE window: platen frozen for --restart-settle frames so the post-move rebound
-                    # transient decays; the LAST frame of the window is the reading (same convention as
-                    # the initial settle decision).  One frozen frame is not enough — the material still
-                    # carries the velocity it picked up from the move.
+                    # PROBE window: platen frozen so the post-move rebound transient decays; the LAST
+                    # frame of the window is the reading (same convention as the initial settle
+                    # decision).  One frozen frame is not enough — the material still carries the
+                    # velocity it picked up from the move.
+                    #
+                    # ★ ADAPTIVE (2026-07-28).  --restart-settle is now a MINIMUM, not the whole window:
+                    #   when it closes we ask settle_is_quasistatic() whether the bed is actually at rest
+                    #   and keep waiting if it is not, up to --restart-settle-max.  Measured at n_grid=64:
+                    #   3 frames → tail spread ~100 %, p(z) NON-monotone (the reaction rose while the
+                    #   platen rose) and p under-read by ~2× (0.0947 vs the true 0.1781); 30 frames →
+                    #   spread 4 % and p(z) cleanly monotone 0.1364→0.0830.  A fixed frame count cannot
+                    #   be right for both, because the settling time scales with the wave transit time
+                    #   (∝ n_grid) — so we wait for the CONDITION, not a guessed count.
                     wall_vel[None] = 0.0
                     _probe_left -= 1
+                    _probe_win.append(float(p))
                     descend = None                                       # platen stays put during the probe
-                    if _probe_left == 0:                                 # window closed → this frame is THE reading
+                    if _probe_left == 0:
+                        _qs_ok, _qs_spread = settle_is_quasistatic(_probe_win)
+                        if not _qs_ok and len(_probe_win) < _settle_max:
+                            _probe_left = max(1, _settle // 2)           # not at rest yet → keep waiting
+                            _probe_extended = True
+                        elif not _qs_ok:
+                            _unload_status = 'not_converged_probe_not_at_rest'
+                            _settle_quasistatic = False
+                            _settle_spread_rel = float(_qs_spread)
+                            descend = False
+                    if _probe_left == 0 and _unload_status == 'unloading':  # window closed AND at rest
+                        _probe_win = []
                         _verdict = unload_verdict(p, target, args.unload_band)
                         _unload_probes += 1
                         # BRACKET update.  z_lo = highest height still reading ABOVE the band;
