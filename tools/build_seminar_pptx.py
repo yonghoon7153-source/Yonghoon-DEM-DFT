@@ -292,7 +292,7 @@ add_text(s, Inches(0.5), Inches(6.3), Inches(12.3), Inches(0.5),
          "→ 4 messages = 전자구조 둔감 · σ는 dual mechanism · ionic glue 강화 · vacancy paradox 해소",
          size=13, bold=True, color=HANYANG_BLUE, align=PP_ALIGN.CENTER)
 add_text(s, Inches(0.5), Inches(6.75), Inches(12.3), Inches(0.3),
-         "⁴ᶠᵘ comp1 4 f.u. natural cubic (2026-06-11 갱신) — Schlem 2020 LPSCl 0.25 eV EXACT 매칭",
+         "⁴ᶠᵘ comp1 4 f.u. natural cubic (2026-06-11 갱신) — 구-Schlem2020[귀속오류·철회 2026-07-28→실험범위 0.29-0.46으로 대체] LPSCl 0.25 eV EXACT 매칭",
          size=9, color=GRAY, align=PP_ALIGN.CENTER)
 add_footer(s, 4)
 
@@ -361,7 +361,7 @@ m2_data = [
     ["Ea (eV) ★", "0.253", "0.224"],
     ["D₀ (cm²/s)", "4.11e-4", "5.8e-4"],
     ["R²", "0.9998", "0.992"],
-    ["Schlem 2020 exp.", "0.25 ✓", "0.22 ✓"],
+    ["구-Schlem2020[귀속오류·철회 2026-07-28→실험범위 0.29-0.46으로 대체] exp.", "0.25 ✓", "0.22 ✓"],
 ]
 row_colors_m2 = {4: LIGHT_GREEN, 5: LIGHT_GREEN, 7: LIGHT_BLUE}
 add_table(s, Inches(6.3), Inches(1.4), Inches(6.7), Inches(4.0),

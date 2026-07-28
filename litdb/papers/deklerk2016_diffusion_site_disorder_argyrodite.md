@@ -157,7 +157,7 @@ HT F-43m: PS₄는 4b, free S는 4a+4c, Li는 4c를 둘러싼 48h(≈50 % 점유
 Li₇PS₆·Li₆PS₅Cl·Li₆PS₅I 밀도맵 — 전 조성 4c 둘레 케이지 4개 구조. **I: 48h쌍 고밀도만**(doublet, XRD·NMR과 정합) → 쌍간 경로 없음 = 국소 진동만. **PS₆: 케이지 내 국소화 강함**(큰 maxima). **Cl: maxima 작고 퍼짐** = 케이지 내 고속 순환 + 케이지 연결 시작. [GG]/[Liu]의 확률밀도 그림들의 원형.
 
 ### 5.4 점프 통계·Ea (Fig 4)
-450 K 점프 그래프(선 굵기=점프율): PS₆=doublet+intracage 위주(intercage 소수), **Cl=3종 모두 + intercage 다수(빨강 망)**, I=doublet뿐. MD Ea(ν₀=10¹³): 단거리 0.10–0.14 / **intercage 0.20–0.25 eV** — NMR(0.08–0.09/0.20–0.29)·BV(0.10–0.20/0.30–0.35)와 정합, 임피던스(0.16–0.56)는 합성 의존 산포. **"intercage rate가 전 조성에서 ≥5× 낮음 → σ 올리려면 intercage부터"** — 설계 지침의 근거 문장.
+450 K 점프 그래프(선 굵기=점프율): PS₆=doublet+intracage 위주(intercage 소수), **Cl=3종 모두 + intercage 다수(빨강 망)**, I=doublet뿐. MD Ea(ν₀=10¹³): 단거리 0.10–0.14 / **intercage 0.20–0.25 eV**(본문 요약 — SI 정밀값은 온도별: Cl intercage 0.18/0.27/0.25 @300/450/600 K, §3) — NMR(0.08–0.09/0.20–0.29)·BV(0.10–0.20/0.30–0.35)와 정합, 임피던스(0.16–0.56)는 합성 의존 산포. **"intercage rate가 전 조성에서 ≥5× 낮음 → σ 올리려면 intercage부터"** — 설계 지침의 근거 문장.
 
 ### 5.5 vacancy vs halogen 분리 (Fig 5) — 가상 조성 실험
 "Cl→S 치환의 σ↑가 단지 전하보상 Li-vacancy 때문인가?" 검증: **Li₆PS₆**(vacancy만)과 **Li₇PS₅Cl**(Cl만) 모두 케이지+intercage 연결이 나타나고 **rate-limiting intercage 점프율은 실제 Li₆PS₅Cl과 유사**(doublet/intracage는 서로 크게 다름). → **vacancy와 Cl 치환 둘 다 유의하게 작용, σ↑는 둘의 합작** — "vacancy가 전부"라는 단순론 기각. (우리 dual_mechanism 기록 — barrier와 prefactor/carrier 반반 — 과 같은 결의 2016년 판.)
@@ -210,6 +210,7 @@ Li₇PS₆·Li₆PS₅Cl·Li₆PS₅I 밀도맵 — 전 조성 4c 둘레 케이�
 - **site-visit jump statistics**(자리 반경 0.9 Å) → 점프유형별 τ → Ea(eq 2)·D_J(eq 3) — **NEB 없이 유한온도 점프율로 장벽 서열화**. 도구 자작(ref 24 방법).
 - **MSD → D\*** + **f=D*/D_J** 상관 진단(Haven 대신).
 - **σ_J**: intercage rate + a=7.0 Å(케이지 중심간) — "intercage만이 실변위" 가정의 명시적 구현.
+  - **SI 표 역산으로 드러난 규칙(우리 관찰, 원문 미서술)**: σ_J는 엄밀히는 **limiting-rate 기반** — 100 % Cl@4c처럼 doublet이 율속이 되면 σ_J를 intercage(14.36)가 아니라 **doublet rate(0.21→σ_J 0.18 @450 K; 1.32→0.82 @600 K)** 로 환산하고, 300 K처럼 doublet=0이면 σ_J 자체를 "−" 처리(intercage 5.34가 있어도). 본문 "intercage 거리 사용" 서술의 예외 처리 — "intercage가 국소 운동으로 전락"의 수치 구현.
 - **Li 밀도맵·점프 그래프**(선굵기=rate) 시각화, **원소별 RDF**(Li around 4c-Cl/S).
 - **10-블록 오차**: 시계열 블록 분할 표준편차.
 > 우리 적용: (1) **min-of-three-rates 지표** — 우리 MD에서도 doublet/intracage/intercage를 분리 집계하면 "무엇이 율속인가"를 d-level별로 말할 수 있음(현재 우리는 총 MSD만). (2) **f=D*/D_J** — 우리 Haven 논의와 등가지만 점프율 기반이라 저렴. (3) 케이지 중심간 7.0 Å 환산은 우리 F*(PMF percolation) 지표와 상보 — 같은 "inter-cage 병목"을 각각 rate와 free-energy로 잼.
@@ -227,7 +228,7 @@ Li₇PS₆·Li₆PS₅Cl·Li₆PS₅I 밀도맵 — 전 조성 4c 둘레 케이�
 | **σ 절대값** | σ_J(300 K)≈1 S/cm — 실측 대비 수 자릿수 과대(GB 부재·상한 해석) | UMA σ 3–5× 과대 인지 → 비율만 | ✓ 같은 캐비앳 계보 — "MD σ=bulk 상한" 문장 인용 가능 |
 | **vacancy vs halogen 분리** | 가상 Li₆PS₆·Li₇PS₅Cl — 둘 다 필요 | 우리 dual_mechanism(장벽↓+prefactor/carrier↑ 합작) | **✓ 결론 동형** — 2016 AIMD가 우리 반반 서사의 선행 |
 | **격자 크기 무관론** | Br/Se 팽창해도 intercage 불변 | Kraft(무름·prefactor)와 별개 축; 우리 EOS(modelc 수축)·comp2 진행 | △ 주의: de Klerk는 "크기 무관", Kraft는 "무름이 Ea·σ₀ 지배" — 둘은 모순 아님(크기≠강성) but 인용 시 축 구분 |
-| **75 % 최적의 강건성** | 450 K·단일 배열·jump-rate 지표 | (우리 미검증) INDEX 계산값 #8(2024 MTP-MLIP, 대규모)은 **"σ 피크 = 4c-Cl 25 %"** 보고 — 원문과 상충 | **⚠ 방법 의존 플래그** — "최적 %" 숫자는 셀 크기·배열 수·지표(rate vs MSD)·MLIP에 민감. 안전 인용은 "중간 무질서에 최적 존재(양 끝 나쁨)"까지 |
+| **75 % 최적의 강건성** | σ_J 기준 3온도 일관(75/50 비 1.79/2.00/1.59×, Tables S1–S3)·단일 배열·**σ*_MSD 기준은 편차**(600 K 역전 0.91<1.01) | (우리 미검증) INDEX 계산값 #8(2024 MTP-MLIP, 대규모)은 **"σ 피크 = 4c-Cl 25 %"** 보고 — 원문과 상충 | **⚠ 방법 의존 플래그** — "최적 %" 숫자는 셀 크기·배열 수·**지표(limiting-rate σ_J vs MSD)**·MLIP에 민감(σ* 600 K 역전이 그 민감성의 내부 증거). 안전 인용은 "중간 무질서에 최적 존재(양 끝 나쁨)"까지 |
 | **할로겐-rich** | Li₅PS₄X₂ σ 동급 + 안정 추정 | modelc(Cl1.6) D 2.6×·[GG]/[Zuo]/[Liu] Cl-rich 계열 | ✓ 우리 modelc 노선의 최초 계산 선례(단 그들 X₂=완전치환, 우리 1.6) |
 
 ## 11. 적용 인사이트 (깊게)
@@ -239,17 +240,18 @@ Li₇PS₆·Li₆PS₅Cl·Li₆PS₅I 밀도맵 — 전 조성 4c 둘레 케이�
 
 ## 12. 인용 가능 문장 (deck/paper용)
 - "de Klerk et al. (AIMD, 2016) showed that macroscopic diffusion in Li₆PS₅X requires all three jump types — doublet, intracage, and the rate-limiting intercage — and that halogen site disorder over 4a/4c is what switches the intercage jumps on: with all halides on 4a (as in Li₆PS₅I) no intercage jump occurs at any simulated temperature."
-- "Their predicted optimum, 75 % of the cage-center (4c/4d) sites occupied by Cl (a 1:3 4a:4c distribution), maximizes the *minimum* jump rate at 450 K — twice that of the even distribution; note this is a single-configuration, single-cell, jump-rate-based prediction, and a 2024 large-scale MLIP study instead reports a 25 % optimum."
+- "Their predicted optimum, 75 % of the cage-center (4c/4d) sites occupied by Cl (a 1:3 4a:4c distribution), maximizes the *minimum* jump rate — 6.20 vs 3.12 ×10¹⁰ s⁻¹ at 450 K (1.99×, SI Table S2), consistent at 300–600 K in the jump-rate conductivity but not in the MSD-based one; note this is a single-configuration, single-cell prediction, and a 2024 large-scale MLIP study instead reports a 25 % optimum."
 - "On average only five Li surround a 4c-Cl cage versus seven around a 4c-S cage: the charge-compensating vacancies condense next to the halide, so an empty 48h doublet is always available to receive an intercage jump — the microscopic origin of disorder-enhanced conduction."
 - "Artificial compositions Li₆PS₆ (vacancies only) and Li₇PS₅Cl (Cl only) both reproduce the rate-limiting intercage jump rate of Li₆PS₅Cl — vacancies and halogen substitution are jointly, not singly, responsible."
 - "Our percolation threshold F* (0.191→0.078 eV, comp1→modelc) is the free-energy analogue of de Klerk's min-jump-rate criterion: both measure the same inter-cage bottleneck that anion disorder flattens."
 
 ## 13. 주의/한계 (over-claim 방지) + 재인용 판정
-- **75 % 주장의 조건 4중 축약 금지**: Li₆PS₅Cl 전용(Br/I 상이 명시)·450 K 단일점·jump-rate 지표(σ 직접 아님)·분포당 단일 배열. "argyrodite는 75 % 무질서가 최적" 일반화는 원문 초과.
+- **75 % 주장의 조건 4중 축약 금지**: Li₆PS₅Cl 전용(Br/I 상이 명시)·**σ_J(limiting-rate) 지표**(σ 직접 아님)·분포당 단일 배열·단위셀. "argyrodite는 75 % 무질서가 최적" 일반화는 원문 초과. SI 확보로 정밀화: σ_J 기준 75 % 최고는 **3온도 일관**(비 1.79/2.00/1.59×)이나, **σ*_MSD 기준은 편차**(600 K 75 % 0.91 < 50 % 1.01 역전) — 지표(σ_J vs MSD)에 따라 결론 강도가 달라짐을 명시하고 인용할 것.
 - **[Liu] digest 재인용 판정 (요청 항목)**: liu2022 digest의 "Klerk … 75% 무질서 시 최고" — **핵심은 정확**(4d(=Klerk 4c) Cl 점유 75 %=1:3에서 limiting rate 최대). 단 ① 같은 행의 "무질서↔σ 양의 관계"는 **비단조**(0 %·100 % 모두 저전도, doublet↔intercage 교차)를 단조로 축약, ② Klerk 최적은 **Cl 1.0** 기준이라 Liu의 LPSCl₁.₅(61.7 %)에 그대로 씌우는 건 원문도 경고한 외삽. → liu2022 §14에 정정 각주 추가(2026-07-28).
 - **후속 상충**: INDEX 계산값 #8(2024, MTP-MLIP 대규모·비-아레니우스)은 **σ 피크 = 4c 25 %** — 최적 위치는 방법 의존. 안전한 합의는 "양 끝(0/100 %)이 나쁘고 중간에 최적 존재"까지.
 - **Excel 메모 오류 정정**: INDEX 계산값 #6의 "LPSCl Ea ~0.38 eV"는 **이 논문 값이 아님**(본문 MD Ea = 단거리 0.10–0.14/intercage 0.20–0.25 eV; 0.38은 Rao2011 임피던스 계열 값과 혼입 추정) → INDEX 행 교정함.
-- **SI 미보유**: 조성·T별 점프율/σ/Ea 전표(Tables S1–S3)·Br/PSe₆ 그림(S1·S2)·4a-RDF(S3) 없음 — 본 digest의 σ·Fig 8 수치는 **figure-read(≈)**.
+- ~~SI 미보유~~ → **SI 확보(2026-07-28, 인박스 #32 Sup)**: Tables S1–S3 전문 §3b 수록, figure-read 전면 교체(교정 이력 §3 상단). 남는 캐비앗: ① **300 K는 오차>값**(예: Cl σ_J 0.89±1.29, intercage 0.73±1.05) — 300 K 정량 인용 부적합이 표준편차로 정량 확인됨; ② SI Ea는 **온도별 값**(eq 2의 T-의존 환산)이라 단일 "Ea" 인용 시 온도 명시 필수(Cl intercage 0.18/0.27/0.25 @300/450/600 K); ③ 본문 Ea 요약(0.10–0.14/0.20–0.25)은 SI 표 대비 **대략치**.
+- **무질서 배열 좌표·Li 공공 배치 규칙·점프 카운팅 추가 세부는 SI에도 없음(확정)** — "단일 배열·기준 미명시" 판정 유지(§4.2).
 - **셋업 연대적 한계**: ecut 280 eV·Γ-only MD·velocity-rescale NVT·100 ps·단위셀 52원자·10-블록 오차(점프 비상관 가정) — 2016 기준 표준이나 현대 기준 soft. 절대 Ea·σ는 이 조건값으로만 소환.
 - **Ea는 아레니우스 기울기가 아님**: eq 2(τ와 ν₀=10¹³ 가정의 로그 변환) — 우리·실험 아레니우스 Ea와 정의가 다름. 직접 등치 금지(방향·서열만).
 - **가상 조성(Li₆PS₆·Li₇PS₅Cl)의 전하 처리 미명시** — 결과는 시사적, 정량 인용 비권장.
