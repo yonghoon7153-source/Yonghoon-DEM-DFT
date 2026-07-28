@@ -79,22 +79,38 @@ echo "----------------------------------------------------------------------"
 
 # ── ② SDCP relax ──────────────────────────────────────────────────────
 echo "② SDCP complex_doped_v2 relax (k 2×2×1)"
-# 실행 중인 pw.x 의 열린 파일에서 .out 을 역추적 — 경로를 추측하지 않는다
-SO=$(for p in $(pgrep -x pw.x); do
-       ls -l /proc/$p/fd 2>/dev/null | grep -o '/[^ ]*\.out$'
-     done | head -1)
-[ -z "$SO" ] && SO=$(ls -t $(find "$HOME" /data -maxdepth 5 -name "*.out" -newermt '-2 days' \
-                    -path '*sdcp*' 2>/dev/null) 2>/dev/null | head -1)
-if [ -n "$SO" ] && [ -f "$SO" ]; then
-  echo "  out: $SO"
-  grep -a "number of k points" "$SO" | tail -1 | sed 's/^/  /'
-  echo "  완료 step별 반복수 (maxstep과 같으면 **가짜 수렴**):"
-  grep -a "convergence has been achieved in" "$SO" | tail -3 | sed 's/^/    /'
-  grep -a "iteration #\|estimated scf accuracy" "$SO" | tail -2 | sed 's/^/    /'
+# ⚠ pw.x 의 stdout 이 **파일이 아니라 tmux 페인(/dev/pts/N)** 인 경우가 있다 — 실제로 그랬다.
+#   그러면 .out 파일이 아예 없고 출력은 페인 스크롤백에만 산다. 세 경로로 찾는다:
+#     ① SDCP_OUT 환경변수(수동)  ② tmux 페인 캡처  ③ .out 파일 검색
+SRC=""; VIA=""
+if [ -n "$SDCP_OUT" ] && [ -f "$SDCP_OUT" ]; then
+  SRC=$(cat "$SDCP_OUT"); VIA="파일 $SDCP_OUT"
 else
-  echo "  (out 못 찾음. 수동 지정: export SDCP_OUT=/경로/파일.out)"
-  [ -n "$SDCP_OUT" ] && [ -f "$SDCP_OUT" ] && \
-    grep -a "iteration #\|estimated scf accuracy" "$SDCP_OUT" | tail -2 | sed 's/^/    /'
+  for S in ${SDCP_TMUX:-sdcp_cd sdcp p0}; do
+    if tmux has-session -t "$S" 2>/dev/null; then
+      CAP=$(tmux capture-pane -p -t "$S" -S -4000 2>/dev/null)
+      if echo "$CAP" | grep -qa "iteration #\|convergence has been achieved"; then
+        SRC="$CAP"; VIA="tmux:$S"; break
+      fi
+    fi
+  done
+  if [ -z "$SRC" ]; then
+    F=$(ls -t $(find "$HOME" /data -maxdepth 5 -name "*.out" -newermt '-2 days' \
+        -path '*sdcp*' 2>/dev/null) 2>/dev/null | head -1)
+    [ -n "$F" ] && { SRC=$(cat "$F"); VIA="파일 $F"; }
+  fi
+fi
+
+if [ -n "$SRC" ]; then
+  echo "  source: $VIA"
+  echo "$SRC" | grep -a "number of k points" | tail -1 | sed 's/^/  /'
+  # ⚠ scf_must_converge=.false. + maxstep 도달 = **가짜 수렴**. 반복수가 maxstep 과 같은지 본다.
+  echo "  완료 step별 반복수 (maxstep과 같으면 **가짜 수렴**):"
+  echo "$SRC" | grep -a "convergence has been achieved in" | tail -3 | sed 's/^/    /'
+  echo "  현재:"
+  echo "$SRC" | grep -a "iteration #\|estimated scf accuracy" | tail -2 | sed 's/^/    /'
+else
+  echo "  (못 찾음. export SDCP_OUT=/경로/파일.out  또는  export SDCP_TMUX=세션명)"
 fi
 echo "----------------------------------------------------------------------"
 
