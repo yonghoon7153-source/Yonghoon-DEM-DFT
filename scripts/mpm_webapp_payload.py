@@ -32,6 +32,47 @@ import se_material  # single source of truth for σ_ion(SE) + its temperature co
 
 _VC = None
 
+# ── T1-e ─ 이온상 혼합-온도 판정 (SE 만 스케일하면 상 분율이 왜곡된다) ─────────────
+# --temp-c 는 σ_ion(SE) 하나만 Kraft-2017 Arrhenius 로 올린다.  이온을 나르는 상이 SE 뿐이면
+# 그것으로 충분하지만, SDCP(σ_ion>0, Li-hopping 폴리머)가 베드에 있으면 그 σ 는 T_ref 에 남아
+# **σ_SDCP/σ_SE 비율 자체가 T-인자만큼 뒤틀린다** (45 °C → ÷2.56).  SDCP 에 LPSCl 의 Eₐ 를
+# 이식하는 것은 §F1 날조이고, 그대로 두는 것은 왜곡 → 기본은 **차단**, 해제는 명시 플래그.
+_T1E_SCALED_IONIC = ('SE (sid6)',
+                     'SWCNT sheath (sid8 — SE-투명 규약이므로 SE 와 같은 σ·같은 T)')
+
+
+def mixed_ionic_verdict(temp_c, sdcp_present, sigma_ion_sdcp, allow_mixed, ea_ev=None):
+    """SE-만-스케일이 이온상 분율을 왜곡하는지 판정한다.
+
+    반환 ``(blocked, note)``:
+      blocked — True 면 호출부가 하드 차단해야 한다 (조용한 왜곡 금지, §F1).
+      note    — provenance 에 실을 기록.  temp_c=None(기본) 이면 None → 기존 JSON 바이트 불변.
+    """
+    if temp_c is None:
+        return False, None                                   # 기능 OFF = 기존 경로 그대로
+    f = se_material.arrhenius_sigma_factor(temp_c, ea_ev)
+    if not (sdcp_present and float(sigma_ion_sdcp) > 0.0):
+        return False, {
+            'status': 'CLEAN',
+            'reason': ('이 런에서 σ_ion>0 로 이온망에 참여하는 상이 SE 계열뿐이다 (SDCP 미스탬프 / '
+                       '--sigma-ion-sdcp 0 / 이온 솔브 미실행 중 하나) → 모든 이온상이 같은 T 에 있다'),
+            'scaled_at_T': list(_T1E_SCALED_IONIC),
+            'held_at_T_ref': [],
+            'sigma_ion_T_factor': float(f),
+        }
+    return (not allow_mixed), {
+        'status': 'DISTORTED',
+        'reason': ('SE 만 Arrhenius 스케일되고 SDCP σ_ion 은 T_ref 에 남음 — SDCP 는 Li-hopping '
+                   '폴리머라 LPSCl Eₐ 를 이식할 앵커가 없다 (§F1).  같이 올리면 날조, 안 올리면 왜곡.'),
+        'scaled_at_T': list(_T1E_SCALED_IONIC),
+        'held_at_T_ref': ['SDCP (sid5)'],
+        'sigma_ion_T_factor': float(f),
+        'sigma_sdcp_over_se_ratio_distortion_x': float(1.0 / f),
+        'consequence': ('σ_ion_eff · ion_dissipation_share · STEP4 이온망이 전부 이 왜곡된 비율 위에서 '
+                        '풀린다 — SDCP 원고(σ_SDCP 스윕)와 직접 비교 금지'),
+        'released_by': '--allow-mixed-t-ionic (사용자 명시)' if allow_mixed else None,
+    }
+
 
 def _vc():
     global _VC
@@ -216,6 +257,75 @@ def geometric_coverage(am_csv, se_csv, n_samp=2000, bands_um=(0.13, 0.26)):
     return out
 
 
+def _selftest_temperature():
+    """T1-e (혼합-온도 이온상) + T1-a (npz 온도 계약) 회귀 테스트.
+
+      python3 scripts/mpm_webapp_payload.py --selftest-temperature
+    """
+    ok = True
+
+    def chk(name, cond, extra=''):
+        nonlocal ok
+        ok &= bool(cond)
+        print(f"  {'PASS' if cond else 'FAIL'}  {name}{(' — ' + extra) if extra else ''}")
+
+    # 1. 기본(--temp-c 미지정) = 판정 자체가 없음 → provenance 바이트 불변
+    for _sd in (False, True):
+        b, n = mixed_ionic_verdict(None, _sd, 0.001, False)
+        chk(f'temp_c=None (sdcp={_sd}) → 차단 없음 + note None', (not b) and n is None)
+
+    # 2. SDCP 가 없으면(또는 σ_ion_sdcp=0) 온도를 켜도 왜곡 없음 = CLEAN
+    b, n = mixed_ionic_verdict(45.0, False, 0.001, False)
+    chk('45 °C + SDCP 미스탬프 → CLEAN, 통과', (not b) and n['status'] == 'CLEAN')
+    b, n = mixed_ionic_verdict(45.0, True, 0.0, False)
+    chk('45 °C + SDCP 있으나 σ_ion_sdcp=0 → CLEAN, 통과', (not b) and n['status'] == 'CLEAN')
+
+    # 3. ★핵심: SDCP 가 이온 전도상으로 있으면 기본 차단
+    b, n = mixed_ionic_verdict(45.0, True, 0.001, False)
+    chk('45 °C + SDCP 이온상 → 기본 BLOCKED', b and n['status'] == 'DISTORTED')
+    f45 = se_material.arrhenius_sigma_factor(45.0)
+    chk('왜곡 배수 = 1/f (SE 만 올라간 만큼 비율이 내려감)',
+        abs(n['sigma_sdcp_over_se_ratio_distortion_x'] - 1.0 / f45) < 1e-12,
+        f"1/f={1.0 / f45:.4f}")
+    chk('차단 사유가 §F1 앵커 부재를 명시', 'F1' in n['reason'])
+
+    # 4. 명시 해제 → 통과하되 DISTORTED 가 provenance 에 남는다 (라벨만 붙이는 것 아님)
+    b, n = mixed_ionic_verdict(45.0, True, 0.001, True)
+    chk('--allow-mixed-t-ionic → 통과 + DISTORTED 기록',
+        (not b) and n['status'] == 'DISTORTED' and n['released_by'])
+
+    # 5. Eₐ 밴드가 판정에 반영된다 (단일값 고정 아님)
+    _, n_lo = mixed_ionic_verdict(45.0, True, 0.001, True, se_material.EA_ION_EV_MIN)
+    _, n_hi = mixed_ionic_verdict(45.0, True, 0.001, True, se_material.EA_ION_EV_MAX)
+    chk('Eₐ 밴드로 왜곡 배수가 달라짐 (0.29 < 0.41 < 0.46)',
+        n_lo['sigma_ion_T_factor'] < f45 < n_hi['sigma_ion_T_factor'],
+        f"x{n_lo['sigma_ion_T_factor']:.3f} < x{f45:.3f} < x{n_hi['sigma_ion_T_factor']:.3f}")
+
+    # 6. npz 온도 계약 왕복 — payload 가 쓰는 형식 그대로 굽고 step4_dyn 이 읽는다
+    import tempfile
+    import step4_dyn as _s4
+    with tempfile.TemporaryDirectory() as td:
+        for t_c in (None, 45.0):
+            p = _os.path.join(td, f'g_{t_c}.npz')
+            prov = se_material.provenance(t_c)
+            _tkw = {} if t_c is None else {'grid_temp_c': np.float64(t_c)}   # 실제 writer 와 동일
+            np.savez_compressed(
+                p, sid=np.zeros((2, 2, 2), np.int8),
+                temperature_provenance=np.array(json.dumps(prov)), **_tkw)
+            gt = _s4._grid_temperature(p)
+            chk(f'npz 왕복 T_C={t_c} → step4_dyn 이 동일하게 읽음',
+                gt['present'] and gt['T_C'] == t_c, str(gt['T_C']))
+            chk(f'  └ T_C={t_c} 기본키 집합 유지 (grid_temp_c 는 온도 선언시에만)',
+                ('grid_temp_c' in np.load(p, allow_pickle=False).files) == (t_c is not None))
+        p0 = _os.path.join(td, 'legacy.npz')                 # 옛 그리드 = provenance 없음
+        np.savez_compressed(p0, sid=np.zeros((2, 2, 2), np.int8))
+        chk('옛 그리드(계약 없음) → present=False (조용한 25 °C 단정 금지 신호)',
+            _s4._grid_temperature(p0)['present'] is False)
+
+    print('PAYLOAD TEMPERATURE SELFTEST', 'PASS' if ok else 'FAIL')
+    return 0 if ok else 1
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--scaffold', default='', help='AM scaffold CSV (type,x,y,z,r); omit for an SE-only '
@@ -356,7 +466,17 @@ def main():
                     help='STEP4-v2(시간전개) 입력 격자 npz 저장: sid/pid/σ_e·σ_i테이블/vox/z_top/AM반경 '
                          '— scripts/step4_dyn.py --grid 로 로드 (payload 재실행 없이 rate 스윕)')
     se_material.temperature_argparse(ap)   # --temp-c / --ea-ion-ev (both default None)
+    ap.add_argument('--allow-mixed-t-ionic', action='store_true',
+                    help='T1-e 해제: --temp-c 가 SE 이온 σ만 올리고 SDCP σ_ion 은 T_ref 에 남는 '
+                         '**혼합-온도 이온상**을 명시 허용한다.  기본은 차단 — SDCP 는 Li-hopping '
+                         '폴리머라 LPSCl Eₐ 를 이식할 앵커가 없고(§F1) 그대로 두면 σ_SDCP/σ_SE 비율이 '
+                         'T-인자만큼 왜곡된다.  허용 시 provenance 에 mixed_ionic_temperature='
+                         'DISTORTED 가 기록된다.')
+    ap.add_argument('--selftest-temperature', action='store_true',
+                    help='T1-e/T1-a 온도 계약 회귀 테스트만 실행하고 종료 (입력 파일 불필요)')
     a = ap.parse_args()
+    if a.selftest_temperature:
+        _sys.exit(_selftest_temperature())
     # ── σ_ion(T) ────────────────────────────────────────────────────────────────
     # --temp-c unset (default) → scale_sigma_ion is the identity, so --sigma-ion-se keeps its
     # bare 0.003 value and EVERY legacy run is bitwise unchanged.  When set, the Kraft-2017
@@ -427,6 +547,32 @@ def main():
             print(f'  ⚠ phase length {len(phase)} != SE {len(se)} — ignoring --phase')
             phase = None
     se_se = se[phase == 1] if phase is not None else se        # true SE for continuum mesh + coverage
+
+    # ── T1-e 혼합-온도 이온상 차단 (SDCP 가 실제로 베드에 있을 때만 발화) ─────────────
+    #    여기가 SDCP(phase 5) 존재를 아는 가장 이른 지점 = STEP3 수 분 태우기 전에 fail-fast.
+    _sdcp_here = bool(phase is not None and (phase == 5).any())
+    _t1e_blocked, _t1e_note = mixed_ionic_verdict(
+        a.temp_c, _sdcp_here and not a.no_step3, a.sigma_ion_sdcp, a.allow_mixed_t_ionic, a.ea_ion_ev)
+    if _t1e_note is not None:                       # --temp-c 미지정이면 None → JSON 바이트 불변
+        _temp_prov['mixed_ionic_temperature'] = _t1e_note
+        if _t1e_note['status'] == 'DISTORTED':
+            _temp_prov['unscaled_phases']['SDCP'] += (
+                '  ⚠ 이 런은 SDCP 가 실제로 스탬프돼 있어 σ_SDCP/σ_SE 비율이 '
+                f"÷{_t1e_note['sigma_ion_T_factor']:.3f} 왜곡됨 (--allow-mixed-t-ionic)")
+    if _t1e_blocked:
+        _f = _t1e_note['sigma_ion_T_factor']
+        print(f'\n⛔ T1-e 차단: --temp-c {a.temp_c:g} °C 는 σ_ion(SE) 만 ×{_f:.3f} 올리는데, 이 베드에는\n'
+              f'   SDCP 이온상(phase 5, {int((phase == 5).sum()):,} pts, --sigma-ion-sdcp '
+              f'{a.sigma_ion_sdcp:g} S/cm)이 스탬프돼 있고 그 σ_ion 은 T_ref '
+              f'{se_material.T_REF_C:.0f} °C 에 그대로 남습니다.\n'
+              f'   → σ_SDCP/σ_SE 비율이 ÷{_f:.3f} 왜곡된 채 STEP3 이온 솔브·STEP4 격자가 만들어집니다.\n'
+              '   SDCP 는 Li-hopping 폴리머라 LPSCl 의 Eₐ 를 이식할 앵커가 없습니다 (§F1):\n'
+              '   같이 올리면 날조, 안 올리면 왜곡 → 조용히 통과시키지 않고 **차단**합니다.\n'
+              '   ▶ SDCP 레시피의 정본 경로: --temp-c 를 빼고 25 °C 로 돌린다\n'
+              '   ▶ 온도축만 보고 싶다면: --sigma-ion-sdcp 0 (SDCP 를 이온 절연으로 명시)\n'
+              '   ▶ 왜곡을 알고 감수: --allow-mixed-t-ionic (provenance 에 DISTORTED 기록)\n'
+              '   ▶ 상세: docs/temp_pressure_capability.md §3 / se_material.py 헤더\n', flush=True)
+        _sys.exit(2)
 
     am_p, am_s, se_mask, h = vc.voxelize(se_se, t, c, r, a.n_vox, top, a.se_min_count,
                                          a.denoise, a.target_porosity, a.target_coverage)
@@ -1048,6 +1194,10 @@ def main():
                     jrxn_am = None
                     print(f'  ⚠ STEP4 rxn failed ({type(_e4).__name__}: {_e4}) — STEP3 결과는 유지')
                 if a.save_step4_grid:                        # STEP4-v2 동역학 입력 (step4_dyn.py --grid)
+                    # ★ T1-a CONTRACT 기계 필드 — **온도를 선언한 런에만** 실어 기본 그리드의 키
+                    #   집합을 이전과 동일하게 유지한다 (없으면 소비자가 provenance.T_C 로 폴백).
+                    _tkw = ({} if a.temp_c is None
+                            else {'grid_temp_c': np.float64(float(a.temp_c))})
                     # ★periodic_xy 를 계약에 포함 (2026-07-27 감사 C1): STEP3 는 --periodic 시
                     #   x,y wrap 을 전도·BV 에 함께 걸지만 STEP4-v2 는 npz 에 이 정보가 없어
                     #   **항상 절연벽**으로 풀었다 (실격자서 i-망 wrap 면 30,895 · seam BV 11,543 누락).
@@ -1056,10 +1206,18 @@ def main():
                                         z_top_um=_ztop, sig_e_S_cm=_sig3, sig_i_S_cm=_sig3i,
                                         am_r_um=np.asarray(r, np.float64) * UM,
                                         periodic_xy=np.array(bool(getattr(a, 'periodic', False))),
-                                        # ★ T1-a: STEP4-v2 reads sig_i from THIS npz, so the grid must
-                                        # carry the temperature convention its σ were built under.
-                                        # Plain unicode array → loads fine under allow_pickle=False.
-                                        temperature_provenance=np.array(json.dumps(_temp_prov)))
+                                        # ★ T1-a CONTRACT: STEP4-v2 reads sig_i from THIS npz, so the
+                                        # grid MUST carry the temperature its σ were built at.
+                                        #   temperature_provenance = the full se_material record (JSON;
+                                        #     plain unicode array → allow_pickle=False safe).  ALWAYS
+                                        #     written; T_C=None ⇒ σ_ion is the T_ref 25 °C value.
+                                        #   grid_temp_c (**_tkw) = redundant machine field, present only
+                                        #     when --temp-c was given (keeps the default key set intact).
+                                        # step4_dyn CROSS-CHECKS this against its own --temp-k and
+                                        # hard-blocks a mixed-temperature run (T1-d/G-1) — dropping this
+                                        # provenance is what let σ@45 °C meet kinetics@25 °C silently.
+                                        temperature_provenance=np.array(json.dumps(_temp_prov)),
+                                        **_tkw)
                     a._s4grid_saved = True           # end-of-main 알림용 (stale 파일 오탐 방지, 리뷰 R2#6)
                     print(f'  STEP4-v2 grid → {a.save_step4_grid}  (sid {sid3.shape}, '
                           f'n_am {len(r)}, vox {a.step3_vox}µm)')

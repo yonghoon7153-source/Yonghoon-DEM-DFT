@@ -65,6 +65,12 @@ SCRIPTS  = ROOT / 'scripts'
 WEBAPP   = ROOT / 'webapp'
 NET_PY   = SCRIPTS / 'network_conductivity.py'
 
+# σ_grain + 온도 규약 단일 출처.  이 파일은 network_conductivity 를 **서브프로세스**로 부르므로
+# import 만으로는 온도가 전달되지 않는다 — 아래 _run_solver 가 CLI 플래그로 명시 전달한다.
+if str(SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS))
+import se_material  # noqa: E402
+
 # Mirror app.py: load webapp/.env then honor WEBAPP_*_FOLDER so this CLI finds
 # the SAME data the webapp serves — e.g. a worktree runner whose results live in
 # a shared dir (env, no symlink).  Without this, WEBAPP/results is hardcoded and
@@ -446,8 +452,22 @@ def apply_corrections(atoms_df: pd.DataFrame, contacts_df: pd.DataFrame,
     return df_ionic, df_e, df_kappa, factors_summary
 
 
+def _solver_temp_flags(temp_c=None, ea_ion_ev=None) -> list:
+    """network_conductivity 서브프로세스에 붙일 온도 플래그.
+
+    ★ 미지정(temp_c None) → **빈 리스트** → cmd 가 예전과 문자 단위로 동일하다.  Stage-E 를
+    지금까지 돌린 모든 런은 이 경로이므로 bitwise 불변이 보장된다.
+    """
+    if temp_c is None:
+        return []
+    flags = ['--temp-c', f'{float(temp_c):g}']
+    if ea_ion_ev is not None:
+        flags += ['--ea-ion-ev', f'{float(ea_ion_ev):g}']
+    return flags
+
+
 def _run_solver(case_dir: Path, contacts_modified: pd.DataFrame, type_map_str: str,
-                  scale: float) -> dict | None:
+                  scale: float, temp_c=None, ea_ion_ev=None) -> dict | None:
     with tempfile.TemporaryDirectory(prefix='nfse_') as tmpd:
         tmp = Path(tmpd)
         shutil.copy2(case_dir / 'atoms.csv', tmp / 'atoms.csv')
@@ -469,6 +489,11 @@ def _run_solver(case_dir: Path, contacts_modified: pd.DataFrame, type_map_str: s
                str(tmp / 'atoms.csv'), str(tmp / 'contacts.csv'),
                '-o', str(tmp), '-t', type_map_str, '-s', str(int(scale)),
                '--contact-mode', 'both']
+        # ★ 온도 전달 (2026-07-28 적대검증 C-2).  이 파일은 솔버를 **서브프로세스**로 부르기 때문에
+        #   se_material 을 import 해봐야 자식 프로세스에는 아무 영향이 없었다 — 그래서 DEM 프로덕션
+        #   σ 경로(Stage E)에는 온도 루트가 아예 없었다.  플래그로 명시 전달한다.
+        #   미지정이면 리스트가 비어 cmd 가 예전과 동일 (bitwise 불변).
+        cmd += _solver_temp_flags(temp_c, ea_ion_ev)
         try:
             cp = subprocess.run(cmd, check=False, capture_output=True,
                                   text=True, timeout=1800)
@@ -592,7 +617,7 @@ def _compute_validation_flags(fm: dict, factors: dict,
     return flags
 
 
-def run_one(case_dir: Path) -> tuple[str, bool, str]:
+def run_one(case_dir: Path, temp_c=None, ea_ion_ev=None) -> tuple[str, bool, str]:
     meta = _read_meta(case_dir)
     type_map = parse_type_map(meta.get('type_map', '1:AM_P,2:AM_S,3:SE'))
     if not type_map:
@@ -639,6 +664,24 @@ def run_one(case_dir: Path) -> tuple[str, bool, str]:
     except Exception as e:
         return (case_dir.name, False, f'fm read failed: {e}')
 
+    # ── ★ 운전온도 (2026-07-28 C-2) ────────────────────────────────────────────────
+    # σ_grain 은 이온 채널의 **순수 곱셈 prefactor** 이므로 (network_conductivity 가 σ_bulk 에 완전
+    # 선형), σ_ionic 계열 전량이 t_fac 에 선형이다.  그래서 두 경로가 자동으로 정합한다:
+    #   · 솔버를 다시 돌리는 채널 → 자식이 --temp-c 로 σ_grain(T) 를 써서 이미 T 값
+    #   · 보정계수가 1.0 이라 재솔브를 건너뛰고 **기존 25 °C 베이스라인을 재사용**하는 채널
+    #     → 여기서 t_fac 을 곱해 준다.  ⚠ 이 곱셈이 없으면 T 런에서 stage_e(=T) 와 baseline(=25 °C)
+    #       이 한 파일 안에 섞여 (a) loss% 가 −379 % 같은 값이 되고 (b) `v > 1.1·base` fallback
+    #       가드가 항상 발동해 정답을 25 °C 값으로 **덮어써 버린다**.  둘 다 조용한 오답이다.
+    # temp_c 미지정 → t_fac 은 **정확히 1.0** → _at_T 는 입력을 그대로 반환(곱셈조차 안 함) →
+    # 기존 전 코퍼스 bitwise 불변.
+    t_fac = se_material.arrhenius_sigma_factor(temp_c, ea_ion_ev)
+
+    def _at_T(v):
+        """T_ref(25 °C) 이온 σ 를 운전 T 로 옮긴다.  t_fac==1.0 이면 bitwise 그대로."""
+        if v is None or t_fac == 1.0:
+            return v
+        return v * t_fac
+
     skip_ionic = _factor_is_unity('ionic')
     skip_e     = _factor_is_unity('e')
     # Thermal uses ALL contacts (AM-AM ∪ AM-SE ∪ SE-SE), so it MUST percolate
@@ -650,14 +693,18 @@ def run_one(case_dir: Path) -> tuple[str, bool, str]:
                   and (fm.get('thermal_sigma_full_mScm') or 0) > 0)
 
     # Run solver only for channels that need it (a correction OR a broken baseline)
-    res_ionic = None if skip_ionic else _run_solver(case_dir, df_ionic, type_map_str, scale)
-    res_e     = None if skip_e     else _run_solver(case_dir, df_e,     type_map_str, scale)
-    res_kappa = None if skip_kappa else _run_solver(case_dir, df_kappa, type_map_str, scale)
+    res_ionic = None if skip_ionic else _run_solver(case_dir, df_ionic, type_map_str, scale,
+                                                    temp_c, ea_ion_ev)
+    res_e     = None if skip_e     else _run_solver(case_dir, df_e,     type_map_str, scale,
+                                                    temp_c, ea_ion_ev)
+    res_kappa = None if skip_kappa else _run_solver(case_dir, df_kappa, type_map_str, scale,
+                                                    temp_c, ea_ion_ev)
 
     # When solver was skipped (factor ≡ 1.0), reuse baseline values from
     # the pre-existing full_metrics.json (= the network solver baseline).
     # When solver ran, take its output.
-    sigma_ionic_e = (fm.get('sigma_full_mScm') if skip_ionic else
+    #   ⚠ 재사용 분기는 _at_T 로 운전 T 에 맞춘다 (solver 분기는 자식이 이미 T 로 풀었다).
+    sigma_ionic_e = (_at_T(fm.get('sigma_full_mScm')) if skip_ionic else
                      (res_ionic.get('sigma_full_mScm') if res_ionic else None))
     sigma_e_e     = (fm.get('electronic_sigma_full_mScm') if skip_e else
                      (res_e.get('electronic_sigma_full_mScm') if res_e else None))
@@ -671,7 +718,7 @@ def run_one(case_dir: Path) -> tuple[str, bool, str]:
     # variants here lets the UI display Stage E for Hertzian AND Physics
     # baselines side-by-side (mirrors the existing Network Solver section
     # 4-column format: Hertzian | Physics | Δ%).
-    sigma_ionic_e_p = (fm.get('sigma_full_mScm_physics') if skip_ionic else
+    sigma_ionic_e_p = (_at_T(fm.get('sigma_full_mScm_physics')) if skip_ionic else
                        (res_ionic.get('sigma_full_mScm_physics') if res_ionic else None))
     sigma_e_e_p     = (fm.get('electronic_sigma_full_mScm_physics') if skip_e else
                        (res_e.get('electronic_sigma_full_mScm_physics') if res_e else None))
@@ -704,11 +751,13 @@ def run_one(case_dir: Path) -> tuple[str, bool, str]:
         if base and v > base * 1.1: return f'solver result {v:.3f} > 1.1·baseline {base:.3f}'
         return ''
 
-    base_ionic = fm.get('sigma_full_mScm')
+    # ⚠ 이온 베이스라인만 _at_T (저장된 값은 25 °C).  σ_e/κ 는 솔버가 T 로 스케일하지 않으므로
+    #   (Reisacher: ohmic T-무관 / κ 앵커 없음 §F1) 그대로 두는 것이 정합이다.
+    base_ionic = _at_T(fm.get('sigma_full_mScm'))
     base_e_solver = fm.get('electronic_sigma_full_mScm')
     base_th_solver = fm.get('thermal_sigma_full_mScm')
     # Physics baselines for the parallel Stage E pass
-    base_ionic_p   = fm.get('sigma_full_mScm_physics')
+    base_ionic_p   = _at_T(fm.get('sigma_full_mScm_physics'))
     base_e_p       = fm.get('electronic_sigma_full_mScm_physics')
     base_th_p      = fm.get('thermal_sigma_full_mScm_physics')
 
@@ -795,7 +844,10 @@ def run_one(case_dir: Path) -> tuple[str, bool, str]:
             fm['thermal_sigma_full_mScm_physics'] = round(sigma_th_e_p / _fk, 6)
 
     # Loss percentages (vs baseline σ_e_full / σ_th_full)
-    base_ionic = fm.get('sigma_full_mScm')
+    # ⚠ 이온은 _at_T 로 **같은 온도**의 베이스라인과 비교해야 한다.  Stage-E 손실은 Cronau 입도
+    # 보정 몫이지 온도 몫이 아니므로, t_fac 은 분자·분모에서 정확히 상쇄되어 loss% 는 T 와 무관하다
+    # (= 이 값이 T 를 켰다고 달라지면 그게 버그다).
+    base_ionic = _at_T(fm.get('sigma_full_mScm'))
     base_e     = fm.get('electronic_sigma_full_mScm')
     base_th    = fm.get('thermal_sigma_full_mScm')
     if base_ionic and base_ionic > 0 and sigma_ionic_e is not None:
@@ -812,6 +864,31 @@ def run_one(case_dir: Path) -> tuple[str, bool, str]:
     # purpose — when a value is missing the flag stays False.
     fm['validation_flags'] = _compute_validation_flags(
         fm, factors, sigma_ionic_e, sigma_e_e, sigma_th_e)
+
+    # ── ★ 온도 provenance (T1-a) — T 를 준 런에서만 기록한다 ───────────────────────────
+    # 미지정 런에는 이 키가 아예 생기지 않으므로 기존 full_metrics.json 은 키 집합까지 동일하다.
+    # 기록하는 이유: 이 파일은 *_stage_e 키만 덮어쓰므로, T 런이면 **한 파일 안에 두 온도가 공존**한다
+    #   (stage_e = 운전 T,  베이스라인 sigma_full_mScm = 25 °C).  하류가 이걸 모르면 조용히 섞는다.
+    if temp_c is not None:
+        _prov = se_material.provenance(temp_c, ea_ion_ev)
+        _prov['applied_to'] = [
+            'sigma_full_mScm_stage_e', 'sigma_full_mScm_stage_e_physics',
+            '(+ 이들에서 파생되는 validation_flags.asr_ionic_Ohm_cm2)',
+        ]
+        _prov['NOT_applied_to'] = {
+            'sigma_full_mScm / _physics (베이스라인)':
+                '이 스크립트는 *_stage_e 만 갱신한다 → 베이스라인은 25 °C 값 그대로. '
+                '같은 파일 안에서 두 온도가 섞이므로 비교 전 반드시 이 필드를 볼 것.',
+            'electronic_* / thermal_*':
+                'σ_e 는 ohmic T-무관(Reisacher, 정성) · κ 는 앵커 없음(§F1) → 솔버가 스케일하지 않는다.',
+            'porosity / coverage / 접촉면적':
+                'SE 경도 H(T)/σ_y(T) 앵커 없음(§F1) — 형상은 25 °C 압밀 결과 그대로.',
+        }
+        _prov['loss_pct_is_T_invariant'] = (
+            'sigma_ionic_loss_pct_stage_e 는 분자·분모 모두 T 로 스케일되어 t_fac 이 상쇄된다 '
+            '(= Stage-E 손실은 Cronau 입도 몫이지 온도 몫이 아니다).')
+        _prov['injected_by'] = 'scripts/run_network_full_corrections.py --temp-c'
+        fm['stage_e_temperature_provenance'] = _prov
 
     # atomic write: dump to a temp file in the SAME dir, then os.replace (atomic
     # rename) → a kill mid-write can never leave a truncated/corrupt full_metrics.json
@@ -844,6 +921,165 @@ def run_one(case_dir: Path) -> tuple[str, bool, str]:
     return (case_dir.name, True, msg)
 
 
+# ══════════════════════════════════════════════════════════════════════════════
+def _selftest_temp() -> int:
+    """--temp-c 배선 회귀시험 (2026-07-28 적대검증 C-2).
+
+      python3 scripts/run_network_full_corrections.py --selftest-temp
+
+    검사:
+      [1] ★기본값 bitwise 불변 — --temp-c 를 안 주면 (a) 서브프로세스 cmd 가 문자 단위로 예전과
+          같고 (b) full_metrics.json 이 **바이트 동일**하며 (c) 새 키가 하나도 안 생긴다.
+      [2] 온도 전달 — 주면 cmd 에 --temp-c/--ea-ion-ev 가 붙고 자식이 실제로 σ_grain(T) 를 쓴다.
+      [3] ★재사용 분기 누출 차단 — Cronau 계수가 1.0 이라 솔버를 건너뛰고 25 °C 베이스라인을
+          재사용하는 경로에서도 σ_stage_e 가 T 로 스케일된다 (안 하면 solver 분기와 T 가 어긋난다).
+      [4] ★fallback 가드 오발 차단 — `v > 1.1·base` 비교가 같은 온도끼리 이뤄져,
+          T 를 켰다고 stage_e 가 25 °C 폴백값으로 덮이지 않는다.
+      [5] loss% 는 T 불변 (Stage-E 손실 = Cronau 입도 몫, 온도 몫 아님).
+      [6] σ_e / κ 는 T 에 안 움직인다 (Reisacher ohmic / κ 앵커 없음 §F1).
+      [7] provenance 가 "베이스라인은 25 °C 로 남는다"를 명시한다.
+    """
+    import copy
+    ok = True
+
+    def chk(name, cond, extra=''):
+        nonlocal ok
+        ok &= bool(cond)
+        print(f"  {'PASS' if cond else 'FAIL'}  {name}{(' — ' + extra) if extra else ''}")
+
+    # ── [1]/[2] cmd 문자열 ────────────────────────────────────────────────────
+    chk('temp 미지정 → 솔버 플래그 0개 (cmd 문자 단위 동일)', _solver_temp_flags() == [])
+    chk('temp 지정 → --temp-c 전달', _solver_temp_flags(60.0) == ['--temp-c', '60'])
+    chk('Eₐ 동반 지정 → --ea-ion-ev 도 전달',
+        _solver_temp_flags(60.0, 0.29) == ['--temp-c', '60', '--ea-ion-ev', '0.29'])
+    _base_cmd = ['py', 'net', 'a', 'c', '-o', 'x', '-t', 'm', '-s', '1000',
+                 '--contact-mode', 'both']
+    chk('cmd + 미지정플래그 == cmd (append 가 no-op)',
+        _base_cmd + _solver_temp_flags(None) == _base_cmd)
+
+    # ── 합성 케이스 (DEM 런 불필요) ───────────────────────────────────────────
+    BASE_ION, BASE_ION_P = 0.1234, 0.1500
+    BASE_E, BASE_TH = 5.6789, 7.7000
+
+    def make_case(root, r_se_sim):
+        d = Path(root); d.mkdir(parents=True, exist_ok=True)
+        rows = [(1, 1, 0.003), (2, 1, 0.003), (3, 2, 0.001), (4, 2, 0.001),
+                (5, 3, r_se_sim), (6, 3, r_se_sim), (7, 3, r_se_sim)]
+        pd.DataFrame(rows, columns=['id', 'type', 'radius']).to_csv(d / 'atoms.csv', index=False)
+        con = [(1, 2, 1e-9, 1e-7, 1e-4), (3, 4, 1e-9, 1e-7, 1e-4),
+               (5, 6, 1e-9, 1e-7, 1e-4), (6, 7, 1e-9, 1e-7, 1e-4),
+               (1, 5, 1e-9, 1e-7, 1e-4)]
+        pd.DataFrame(con, columns=['id1', 'id2', 'contact_area', 'delta', 'fn']
+                     ).to_csv(d / 'contacts.csv', index=False)
+        json.dump({'type_map': '1:AM_P,2:AM_S,3:SE', 'scale': 1000, 'name': 'selftest'},
+                  open(d / 'meta.json', 'w'))
+        json.dump({'sigma_full_mScm': BASE_ION, 'sigma_full_mScm_physics': BASE_ION_P,
+                   'electronic_sigma_full_mScm': BASE_E,
+                   'thermal_sigma_full_mScm': BASE_TH,
+                   'phi_se': 0.35, 'porosity': 15.6}, open(d / 'full_metrics.json', 'w'))
+        return d
+
+    # 자식 솔버 모킹: 실제 network_conductivity 는 σ_bulk 에 **완전 선형**이므로
+    # (σ_full_mScm = σ_full · σ_bulk · 1000), --temp-c 는 정확히 Arrhenius 배수로 나타난다.
+    real_run_solver = globals()['_run_solver']
+    seen_flags = []
+
+    def fake_run_solver(case_dir, contacts_modified, type_map_str, scale,
+                        temp_c=None, ea_ion_ev=None):
+        seen_flags.append(_solver_temp_flags(temp_c, ea_ion_ev))
+        f = se_material.arrhenius_sigma_factor(temp_c, ea_ion_ev)
+        wf = 0.70    # Cronau 0.5 µm 계수 (계수<1 분기에서만 호출된다)
+        return {'sigma_full_mScm': BASE_ION * wf * f,
+                'sigma_full_mScm_physics': BASE_ION_P * wf * f,
+                'electronic_sigma_full_mScm': BASE_E * 0.9,
+                'electronic_sigma_full_mScm_physics': BASE_E * 0.9,
+                'thermal_sigma_full_mScm': BASE_TH * 0.9,
+                'thermal_sigma_full_mScm_physics': BASE_TH * 0.9}
+
+    T_C = 60.0
+    FAC = se_material.arrhenius_sigma_factor(T_C)     # ×4.7851 (Eₐ 0.41, T_ref 25)
+    with tempfile.TemporaryDirectory(prefix='nfse_selftest_') as td:
+        globals()['_run_solver'] = fake_run_solver
+        try:
+            # r_SE = 1.5 µm → Cronau 계수 1.0 → skip_ionic(재사용 분기)
+            # r_SE = 0.5 µm 은 표상 1.00 이라 0.25 µm 를 써서 계수<1(solver 분기)를 만든다
+            for tag, r_se_sim, path in (('reuse', 1.5e-3, 'skip'), ('solver', 0.25e-3, 'run')):
+                d_off = make_case(Path(td) / f'{tag}_off', r_se_sim)
+                d_off2 = make_case(Path(td) / f'{tag}_off2', r_se_sim)
+                d_on = make_case(Path(td) / f'{tag}_on', r_se_sim)
+                fm0 = copy.deepcopy(json.load(open(d_off / 'full_metrics.json')))
+                run_one(d_off)                                   # 기본 (T 미지정)
+                run_one(d_off2)                                  # 재현성
+                run_one(d_on, temp_c=T_C)                        # T 적용
+                a = (d_off / 'full_metrics.json').read_bytes()
+                b = (d_off2 / 'full_metrics.json').read_bytes()
+                fa = json.loads(a)
+                fb_on = json.load(open(d_on / 'full_metrics.json'))
+
+                chk(f'[{tag}] 기본 런은 결정적(byte-identical)', a == b)
+                chk(f'[{tag}] 기본 런에 온도 키가 생기지 않음',
+                    'stage_e_temperature_provenance' not in fa)
+                chk(f'[{tag}] 기본 런 σ_i_stage_e 가 T 무관 경로와 정확히 같은 값',
+                    fa['sigma_full_mScm_stage_e'] == (BASE_ION if path == 'skip'
+                                                      else BASE_ION * 0.70),
+                    f"{fa['sigma_full_mScm_stage_e']!r}")
+                chk(f'[{tag}] 기본 런이 베이스라인을 건드리지 않음',
+                    fa['sigma_full_mScm'] == fm0['sigma_full_mScm'])
+
+                # T 적용 = 기본값 × Arrhenius (재사용/솔버 두 분기 모두)
+                want = fa['sigma_full_mScm_stage_e'] * FAC
+                chk(f'[{tag}] --temp-c 60 → σ_i_stage_e = 기본 × {FAC:.4f}',
+                    abs(fb_on['sigma_full_mScm_stage_e'] / want - 1.0) < 1e-12,
+                    f"{fb_on['sigma_full_mScm_stage_e']:.6f} vs {want:.6f}")
+                chk(f'[{tag}] physics 분기도 동일 배수',
+                    abs(fb_on['sigma_full_mScm_stage_e_physics']
+                        / (fa['sigma_full_mScm_stage_e_physics'] * FAC) - 1.0) < 1e-12)
+                # ★ fallback 가드 오발 차단: 25 °C 폴백값(baseline×wf)으로 덮이지 않았다
+                chk(f'[{tag}] fallback 가드가 T 런을 25 °C 값으로 덮지 않음',
+                    fb_on['stage_e_source']['sigma_ionic'] != 'fallback_weighted_factor'
+                    and fb_on['sigma_full_mScm_stage_e'] > fa['sigma_full_mScm_stage_e'] * 4.0)
+                # loss% 는 T 불변
+                chk(f'[{tag}] loss% 는 T 불변',
+                    (fa.get('sigma_ionic_loss_pct_stage_e')
+                     == fb_on.get('sigma_ionic_loss_pct_stage_e')),
+                    f"{fa.get('sigma_ionic_loss_pct_stage_e')} vs "
+                    f"{fb_on.get('sigma_ionic_loss_pct_stage_e')}")
+                # σ_e / κ 는 T 에 안 움직인다
+                chk(f'[{tag}] σ_e stage_e 는 T 무관',
+                    fa['electronic_sigma_full_mScm_stage_e']
+                    == fb_on['electronic_sigma_full_mScm_stage_e'])
+                chk(f'[{tag}] κ stage_e 는 T 무관',
+                    fa['thermal_sigma_full_mScm_stage_e']
+                    == fb_on['thermal_sigma_full_mScm_stage_e'])
+                # 베이스라인은 25 °C 로 남고, provenance 가 그 사실을 적는다
+                chk(f'[{tag}] T 런도 베이스라인은 25 °C 값 그대로',
+                    fb_on['sigma_full_mScm'] == fm0['sigma_full_mScm'])
+                prov = fb_on.get('stage_e_temperature_provenance') or {}
+                chk(f'[{tag}] provenance: ARRHENIUS + T_ref 25 + Eₐ 0.41 + 배수',
+                    prov.get('T_dependence') == 'ARRHENIUS' and prov.get('T_ref_C') == 25.0
+                    and prov.get('Ea_ion_eV') == 0.41
+                    and abs((prov.get('sigma_ion_T_factor') or 0) - FAC) < 1e-12)
+                chk(f'[{tag}] provenance 가 "베이스라인은 25 °C" 를 명시',
+                    any('베이스라인' in k for k in (prov.get('NOT_applied_to') or {})))
+                # 서브프로세스 분기에서만 플래그가 실제로 전달돼야 한다
+                if path == 'run':
+                    chk(f'[{tag}] solver 분기에서 --temp-c 가 자식에게 전달됨',
+                        ['--temp-c', '60'] in seen_flags)
+                # ★ 반사실(counterfactual): _at_T 없이 25 °C 베이스라인과 비교했다면 어떻게
+                #   틀렸는지 — 이 시험이 지키는 것이 무엇인지 스스로 증명한다.
+                _b25 = fm0['sigma_full_mScm']
+                _cf_loss = (1.0 - fb_on['sigma_full_mScm_stage_e'] / _b25) * 100
+                _cf_guard = fb_on['sigma_full_mScm_stage_e'] > _b25 * 1.1
+                chk(f'[{tag}] (반사실) 25 °C 베이스라인과 비교했다면 loss%={_cf_loss:.1f} % 이고 '
+                    f'fallback 가드가 {"발동" if _cf_guard else "미발동"} → 실제로 오답이 된다',
+                    _cf_loss < -100.0 and _cf_guard)
+        finally:
+            globals()['_run_solver'] = real_run_solver
+
+    print('STAGE-E TEMP WIRING SELFTEST', 'PASS' if ok else 'FAIL')
+    return 0 if ok else 1
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
                                   description=__doc__)
@@ -855,7 +1091,14 @@ def main() -> None:
     ap.add_argument('--missing-only', action='store_true',
                     help='Only cases whose full_metrics.json lacks *_stage_e keys — fast '
                          'backfill of cases that show Stage E "—" (skips already-done cases)')
+    # ★ --temp-c / --ea-ion-ev (둘 다 기본 None = 현행, 서브프로세스 cmd 문자열까지 동일).
+    #   이 배선 전에는 DEM 프로덕션 σ 경로(Stage E)에 온도 루트가 **아예 없었다** — 이 파일이
+    #   network_conductivity 를 서브프로세스로 부르므로 import 만으로는 온도가 넘어가지 않는다.
+    se_material.temperature_argparse(ap)
     args = ap.parse_args()
+    if args.ea_ion_ev is not None and args.temp_c is None:
+        ap.error('--ea-ion-ev 는 --temp-c 와 함께만 의미가 있다 (온도 없이 Eₐ 만 주면 no-op) '
+                 '— 조용히 무시하지 않고 여기서 멈춘다.')
 
     all_cases = discover_case_dirs()
     if args.cases:
@@ -896,11 +1139,16 @@ def main() -> None:
     print('  Channel 1 (σ_ionic) : SE size-dependent σ_grain (Cronau 2022)')
     print('  Channel 2 (σ_e)     : fracture stagewise × AM crystal (Trevisanello 2021)')
     print('  Channel 3 (κ)       : AM crystal grain (Wang 2022, SE size-invariant)\n')
+    if args.temp_c is not None:
+        se_material.warn_band(args.temp_c, args.ea_ion_ev)
+        print('  [T] ⚠ σ_ionic(+stage_e) 만 T 로 스케일된다. 같은 full_metrics.json 안의 '
+              'baseline sigma_full_mScm 은 25 °C 값 그대로 남는다 '
+              '→ stage_e_temperature_provenance 를 반드시 확인할 것.\n', flush=True)
 
     n_ok = n_fail = 0
     for i, d in enumerate(cases, 1):
         try:
-            cid, ok, msg = run_one(d)
+            cid, ok, msg = run_one(d, temp_c=args.temp_c, ea_ion_ev=args.ea_ion_ev)
         except Exception as e:
             cid, ok, msg = (d.name, False, f'EXC: {type(e).__name__}: {e}')
         tag = '✓' if ok else '✗'
@@ -914,4 +1162,6 @@ def main() -> None:
 
 
 if __name__ == '__main__':
+    if '--selftest-temp' in sys.argv:
+        sys.exit(_selftest_temp())
     main()

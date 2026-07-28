@@ -535,6 +535,13 @@ def main():
             'P_operating_MPa': float(a.op_pressure_mpa),
             'mode': 'two_stage_save_load_state',
             'arms': ['servo', 'hold'],   # 정응력(하한) ~ 정적변위(상한) 브래킷
+            # ★ 두 팔 모두 실제로 제하한다 (2026-07-28 수정 전에는 hold 팔이 침묵 no-op — 플래튼이 제작
+            #   높이에 그대로 멈춰 제작 형상을 "구동압" 라벨로 내보냈다).  이제 hold 도 먼저 구동압까지
+            #   플래튼을 올린 뒤 고정하고 응력이 그 아래로 이완한다(강체 지그) — servo 는 정응력 유지.
+            'unload_implemented': 'platen_rises_to_target_then_protocol',
+            'verify': ('각 ②단 metrics JSON 의 state_provenance.unload_status 와 P_achieved_MPa 를 확인할 것 — '
+                       'P_this_stage_role 이 *_NOT_REACHED 로 끝나면 그 런은 구동압에 도달하지 못한 것 '
+                       '(제작압 형상이므로 앵커로 쓰면 안 됨)'),
             'plastic_history_restored': True,
             'rate_dependence': 'NOT_MODELLED_rate_independent_J2',
             'T_C': None, 'T_dependence': 'NOT_MODELLED'}
@@ -994,7 +1001,11 @@ echo "          (오래된 run_* 폴더는 디스크 차면 지워도 됨 — �
                  '#   ① 제작압 압밀(hold) + --save-state 로 소성이력(F) 저장\n'
                  '#   ② --load-state 로 그 이력을 이어받아 구동압에서 재평형 + --cycle-deform 사이클 호흡\n'
                  '#      두 팔 = servo(정응력, 부드러운 스프링/압력제어) · hold(정적변위, 강체 지그/고정 갭)\n'
-                 '#      지그 강성을 모르므로 실제 셀은 두 팔 사이 = 정직한 브래킷.\n'
+                 '#      ★ 두 팔 모두 먼저 실제로 제하한다(플래튼 상승 → 구동압).  servo 는 그 응력을 계속\n'
+                 '#        유지하고(두께가 자유변수), hold 는 그 높이에서 플래튼을 고정해 응력이 아래로\n'
+                 '#        이완한다(갭이 고정변수).  지그 강성을 모르므로 실제 셀은 두 팔 사이 = 브래킷.\n'
+                 '#      ⚠ 2026-07-28 이전 버전에서는 hold 팔이 침묵 no-op 이었다(플래튼이 제작 높이에 그대로\n'
+                 '#        멈춰 제작 형상을 구동압 라벨로 출력).  아래 검증 스텝이 그 재발을 막는다.\n'
                  '#   ⚠ 충전-상태(가역 SOC breathing) 스냅샷 = 영구 fade 아님; 비가역화 판정은 ledger(A-3).\n'
                  '#   ⚠ rate-independent J2 = 크리프/유지시간 없음 → "90 MPa 로 수백 시간" 은 표현 안 됨.\n'
                  'KIT="$(cd "$(dirname "$0")" && pwd)"\n'
@@ -1035,6 +1046,26 @@ echo "          (오래된 run_* 폴더는 디스크 차면 지워도 됨 — �
                  '  python3 "$SCR/cycle_geom_debond.py" "$OUT/m_N0_${ARM}.json" "$OUT/m_charged_${ARM}.json" '
                  '"$OUT/m_charged_deep_${ARM}.json" --csv "$OUT/a1_debond_${ARM}.csv"\n'
                  'done\n'
+                 '# ── ③ 제하 검증 — "구동압 앵커" 라벨이 실제 달성값인지 확인 (라벨만 붙는 것 차단) ──\n'
+                 'echo "=== 제하 검증 (unload_status · 달성압 · 플래튼 이동) ==="\n'
+                 'python3 - "$OUT" <<\'PYEOF\'\n'
+                 'import glob, json, os, sys\n'
+                 'bad = []\n'
+                 'for f in sorted(glob.glob(os.path.join(sys.argv[1], "m_*.json"))):\n'
+                 '    sv = (json.load(open(f)) or {}).get("state_provenance") or {}\n'
+                 '    if not sv.get("plastic_history_restored"):\n'
+                 '        continue                      # 제작(①) 런 — 제하 대상 아님\n'
+                 '    role = sv.get("P_this_stage_role", "?")\n'
+                 '    print("  %-28s unload=%-14s P_req=%s MPa  P_achieved=%s MPa  platen %s (%s um)  role=%s"\n'
+                 '          % (os.path.basename(f), sv.get("unload_status"), sv.get("P_this_stage_MPa"),\n'
+                 '             sv.get("P_achieved_MPa"), sv.get("platen_direction"), sv.get("platen_delta_um"), role))\n'
+                 '    if str(role).endswith("_NOT_REACHED") or sv.get("unload_status") not in ("completed", "not_needed_p_below_target"):\n'
+                 '        bad.append(os.path.basename(f))\n'
+                 'if bad:\n'
+                 '    print("  ⚠ 구동압에 도달하지 못한 런: " + ", ".join(bad)\n'
+                 '          + "  → 이 형상은 제작압 형상이므로 구동압 앵커로 쓰지 마세요 "\n'
+                 '            "(--frames 를 늘리거나 --target-gpa 를 확인).")\n'
+                 'PYEOF\n'
                  'echo "완료 → $OUT/  (m_fab.json = 제작압 앵커, m_*_servo/hold.json = 구동압 __OPMPA__ MPa 앵커,"\n'
                  'echo "        a1_debond_servo.csv / a1_debond_hold.csv = 두 지그 극한 브래킷)"\n'
                  'echo "⚠ servo=정응력(두께가 변함) · hold=정적변위(압력이 변함).  실제 지그는 둘 사이."\n')

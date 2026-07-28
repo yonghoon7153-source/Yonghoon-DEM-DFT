@@ -2399,7 +2399,7 @@ def transform_network_summary_4col(tables, metrics, meta):
                                           cstr_h, cstr_p,
                                           fmt=lambda x: round(x, 1)))
             if metrics.get('sigma_ratio') and metrics.get('sigma_full_mScm'):
-                sig_brug = 3.0 * metrics['sigma_ratio']
+                sig_brug = _sigma_grain_mS_cm(metrics) * metrics['sigma_ratio']
                 sig_ion_h = metrics.get('sigma_full_mScm')
                 sig_ion_p = metrics.get('sigma_full_mScm_physics') or sig_ion_h
                 ratio_h = sig_brug / sig_ion_h if sig_ion_h > 0 else 0
@@ -2409,13 +2409,14 @@ def transform_network_summary_4col(tables, metrics, meta):
                                           fmt=lambda x: f"{x:.1f}×"))
 
             # ── τ 3종 비교 (Dijkstra vs Laplace geom vs Laplace eff) ──
-            # Derivation only, no re-analysis needed; uses σ_grain = 3.0 mS/cm (LPSCl bulk).
+            # Derivation only, no re-analysis needed; σ_grain 은 se_material 단일 출처 +
+            # 이 런의 온도 provenance 를 따른다 (σ_full 과 같은 T 여야 τ 가 옳다 — _sigma_grain_mS_cm 참조).
             import math as _math
             phi_se = metrics.get('phi_se')
             sig_full = metrics.get('sigma_full_mScm')
             sig_bulk = metrics.get('sigma_bulk_net_mScm')
             tau_dij = metrics.get('tortuosity_mean')
-            SIGMA_GRAIN_MS = 3.0  # bulk LPSCl [mS/cm]
+            SIGMA_GRAIN_MS = _sigma_grain_mS_cm(metrics)  # LPSCl grain [mS/cm] @ 이 런의 T
             if phi_se and sig_full and sig_full > 0:
                 # τ_Lap_eff = √(φ_SE × σ_grain / σ_full) ← COMSOL input (GB 포함)
                 # σ_full IS mode-dependent, so τ_Lap_eff shifts in Physics mode.
@@ -2532,7 +2533,7 @@ def transform_network_summary_4col(tables, metrics, meta):
         # σ_brug / σ_ionic
         if (not _has_label('σ_brug / σ_ionic')
                 and metrics.get('sigma_ratio') and metrics.get('sigma_full_mScm')):
-            sig_brug = 3.0 * metrics['sigma_ratio']
+            sig_brug = _sigma_grain_mS_cm(metrics) * metrics['sigma_ratio']
             sig_ion_h = metrics.get('sigma_full_mScm')
             sig_ion_p = metrics.get('sigma_full_mScm_physics') or sig_ion_h
             ratio_h = sig_brug / sig_ion_h if sig_ion_h > 0 else 0
@@ -2547,7 +2548,7 @@ def transform_network_summary_4col(tables, metrics, meta):
         sig_full = metrics.get('sigma_full_mScm')
         sig_bulk = metrics.get('sigma_bulk_net_mScm')
         tau_dij  = metrics.get('tortuosity_mean')
-        SIGMA_GRAIN_MS = 3.0
+        SIGMA_GRAIN_MS = _sigma_grain_mS_cm(metrics)   # se_material 단일 출처 + 런의 T provenance
         tau_section_label = '── τ 비교 (Dijkstra vs Laplace, COMSOL input = τ_Lap_eff) ──'
         if (not _has_label(tau_section_label)
                 and phi_se and sig_full and sig_full > 0):
@@ -5307,7 +5308,7 @@ def _load_case_tables(results_dir, meta):
         has_brug_abs = any(str(row[0]) == 'σ_Bruggeman (mS/cm)'
                            for row in tables['network_summary']['data'])
         if not has_brug_abs and metrics.get('sigma_ratio'):
-            sigma_brug_mScm = round(3.0 * metrics['sigma_ratio'], 4)
+            sigma_brug_mScm = round(_sigma_grain_mS_cm(metrics) * metrics['sigma_ratio'], 4)
             for idx, row in enumerate(tables['network_summary']['data']):
                 if 'σ_brug/σ_grain' in str(row[0]):
                     tables['network_summary']['data'].insert(
@@ -6210,6 +6211,41 @@ def _se_material():
         _s.path.insert(0, _sd)
     import se_material
     return se_material
+
+
+def _sigma_grain_mS_cm(metrics=None):
+    """σ_grain [mS/cm] — 이 파일에서 파생량(σ_Bruggeman, τ_Laplace)을 만들 때 쓰는 단 하나의 값.
+
+    ★ 2026-07-28 적대검증(담당 C-1) 수정: 이 파일에는 bare `3.0` 이 7곳 박혀 있었다
+    (`σ_brug = 3.0 × sigma_ratio` ×3, `SIGMA_GRAIN_MS = 3.0` ×2, MD 리포트 ×2 — 검증이 지목한
+    `:2418`/`:2550` 은 그중 둘이고, **7곳 전부가 살아있는 Flask 요청 경로**다).  즉
+    `se_material.py` 가 자기 헤더에서 주장하는 "SINGLE SOURCE OF TRUTH" 가 webapp 에서는
+    성립하지 않았다.  이제 전부 이 함수를 통한다 (잔존 범위는 docs §9-2 인벤토리 참조).
+
+    ★ 온도 정합이 핵심이다.  τ_Lap_eff = √(φ_SE·σ_grain/σ_full) 은 σ_grain 과 σ_full 이 **같은
+    온도**일 때만 옳다.  런이 `--temp-c` 로 풀렸다면 σ_full 은 Arrhenius 로 커져 있는데 여기서
+    25 °C 상수 3.0 을 쓰면 τ 가 √factor 배 (60 °C 면 ×0.46) 만큼 **조용히 틀린다.**  그래서 런이
+    남긴 provenance(= se_material.provenance) 의 `sigma_ion_T_factor` 를 그대로 따라간다.
+
+    ★ 기본값 불변: T 를 안 준 런(=현존 전 코퍼스)은 provenance 가 없거나 factor 가 **정확히 1.0**
+    이므로 `3.0 * 1.0` → bitwise 3.0.  `sigma_grain_S_cm` 폴백도 3.0e-3 이면 곱셈을 아예 하지 않고
+    상수를 돌려준다(0.003*1000 = 3.0000000000000004 라 bitwise 가 깨지기 때문).
+    """
+    base = _se_material().SIGMA_GRAIN_MS_CM_25C
+    if not isinstance(metrics, dict):
+        return base
+    for _k in ('temperature_provenance', 'stage_e_temperature_provenance'):
+        prov = metrics.get(_k)
+        if isinstance(prov, dict):
+            f = prov.get('sigma_ion_T_factor')
+            if isinstance(f, (int, float)) and not isinstance(f, bool) and f > 0:
+                return base * float(f)     # T 미적용 런은 f == 1.0 → bitwise 3.0
+    s_cm = metrics.get('sigma_grain_S_cm')
+    if isinstance(s_cm, (int, float)) and not isinstance(s_cm, bool) and s_cm > 0:
+        if float(s_cm) == _se_material().SIGMA_GRAIN_S_CM_25C:
+            return base                    # bitwise-safe (0.003*1000 ≠ 3.0)
+        return float(s_cm) * 1000.0
+    return base
 
 
 # 킷 run_mpm.sh 안의 STEP3(σ) 호출 = 온도를 주입할 유일한 지점.  생성기(scripts/mpm_input_from_case.py)
@@ -7965,7 +8001,8 @@ def serve_report(case_id):
     # ── Physics derivations (formula-level detail beyond the tables) ──
     L.append(f'## {section}. Physics Derivations\n')
     sigma_ratio = metrics.get('sigma_ratio')
-    sigma_brug = sigma_ratio * 3.0 if sigma_ratio else None
+    _sg_mS = _sigma_grain_mS_cm(metrics)          # se_material 단일 출처 (+ 런 T provenance)
+    sigma_brug = sigma_ratio * _sg_mS if sigma_ratio else None
     sigma_net = metrics.get('sigma_full_mScm')
 
     L.append('### Ionic Conductivity — Bruggeman vs Network Solver\n')
@@ -7974,7 +8011,7 @@ def serve_report(case_id):
     if sigma_ratio and metrics.get('phi_se') and metrics.get('tortuosity_mean'):
         tau = metrics.get('tortuosity_recommended', metrics.get('tortuosity_mean', 1))
         f_perc = metrics.get('percolation_pct', 100) / 100
-        L.append(f'            = 3.0 × {metrics["phi_se"]:.3f} × {f_perc:.3f} / {tau:.2f}²')
+        L.append(f'            = {_sg_mS:.1f} × {metrics["phi_se"]:.3f} × {f_perc:.3f} / {tau:.2f}²')
         L.append(f'            = {sigma_brug:.4f} mS/cm')
     if sigma_net:
         L.append('')
@@ -8021,6 +8058,13 @@ def serve_report(case_id):
              'σ_grain=3.0 mS/cm, φc=0.20; the τ dependence is carried by the '
              'sigmoid-blended prefactor C_blend(τ). See '
              'docs/ionic_scaling_law_experiments.md.')
+    # 온도가 적용된 런에서만 한 줄 더 (미적용 = 전 코퍼스 = 이 줄 없음 → 리포트 바이트 동일).
+    # 스케일링-법칙의 3.0 은 T_ref=25 °C 규약값이므로, T-스케일된 σ 와 나란히 두면 오독된다.
+    if abs(_sg_mS - _se_material().SIGMA_GRAIN_MS_CM_25C) > 1e-12:
+        L.append(f'>\n> ⚠ 이 런은 운전온도가 적용되어 σ_grain = {_sg_mS:.4f} mS/cm '
+                 f'(= 25 °C 규약값 3.0 × Arrhenius)로 풀렸다. 위 스케일링-법칙 표의 3.0 은 '
+                 f'**25 °C 규약값**이며 그 회귀(LOOCV 0.979)는 25 °C 코퍼스에서 적합된 것이다 '
+                 f'— 온도축 비교에 그대로 쓰지 말 것 (docs/temp_pressure_capability.md §3-4).')
     L.append('')
     section += 1
 

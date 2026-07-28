@@ -198,6 +198,70 @@ def state_finite_errors(arrays):
     return errs
 
 
+# ─────────────────────────────────────────────────────────────────────────────────────────────
+#  RESTART PLATEN LOGIC — pure helpers (no taichi), so the unload/guard/provenance rules that the
+#  2026-07-28 review found broken are covered by --selftest instead of only by a GPU run.
+# ─────────────────────────────────────────────────────────────────────────────────────────────
+def restart_unload_needed(p_settle, target):
+    """Decide, from the settle-window readings, whether the restart must UNLOAD (platen rises).
+
+    Uses the MAX of the window on purpose: the reaction rebuilds from F over the window (v and C were
+    zeroed), and the two possible mistakes are not symmetric — an unnecessary RISE is elastic and the
+    servo band undoes it, an unnecessary DESCENT is plastic and irreversible.  An EMPTY window returns
+    False (no unload); that case must never be reachable in a real run, which is why main() refuses
+    --restart-settle < 1 rather than silently taking the frame-0 reading."""
+    if not p_settle:
+        return False
+    return bool(max(p_settle) > target)
+
+
+def arm_guard_active(por, por0, is_restart):
+    """arm-after-compaction guard for the non-scaffold descend branch.
+
+    por0 is the FRAME-0 porosity.  On a fresh loose bed that is the loose packing, and the guard
+    ('refuse to stop until the bed has compacted 5 %p') protects against a first-contact wallP spike.
+    On a --load-state restart por0 is the ALREADY-COMPACTED porosity, so the same rule mandates another
+    5 %p of plastic compaction with no stress justification — including when the restart target is
+    LOWER (an unload request).  Hence: never active on a restart."""
+    return bool(por > por0 - 5.0) and not bool(is_restart)
+
+
+def rearm_cohesion(coh_cmdline, coh_state_max):
+    """--load-state cohesion gate.  substep()'s cohesion term is behind a compile-time ti.static(COH>0)
+    built from THIS run's --coh, while the per-point coh_p comes from the state → a restart without
+    --coh silently drops the restored binder/cold-weld.  Returns (COH_effective, rearmed_value|None)."""
+    coh = float(coh_cmdline)
+    if float(coh_state_max) > 0.0 and coh <= 0.0:
+        return float(coh_state_max), float(coh_state_max)
+    return coh, None
+
+
+def pick_rod_rest(state_arrays, n, rl_derived, b0_derived):
+    """Rod rest length/curvature for a restart.  build_rod_topology derives them from the positions it is
+    handed; on a restart those are the COMPRESSED positions, so a fibre that buckled under the press would
+    take its buckled shape as stress-free.  Prefer the arrays saved by stage ①.
+    Returns (rl, b0, source)."""
+    if state_arrays is None:
+        return rl_derived, b0_derived, 'seeded_this_run'
+    ok = ('rod_rl' in state_arrays and 'rod_b0' in state_arrays
+          and len(state_arrays['rod_rl']) == n and len(state_arrays['rod_b0']) == n)
+    if ok:
+        return (np.ascontiguousarray(state_arrays['rod_rl'], np.float32),
+                np.ascontiguousarray(state_arrays['rod_b0'], np.float32).reshape(n, 3),
+                'restored_from_state')
+    return rl_derived, b0_derived, 'REDERIVED_from_compressed_positions'
+
+
+def stage_pressure_role(is_restart, p_achieved, target, tol=1.25):
+    """Provenance role string.  P_this_stage_MPa is the REQUEST; if the platen never brought the bed down
+    to it (silent no-op, out of travel, …) the role must say so, because the webapp badge renders the
+    requested number next to this string."""
+    role = 'operating_stack_pressure' if is_restart else 'fabrication_pressure'
+    if is_restart and target > 0 and float(p_achieved) > float(tol) * float(target):
+        return role + '_NOT_REACHED'
+    return role
+
+
 def write_state_npz(path, arrays, meta, compress=None, compress_max_bytes=1_500_000_000):
     """Write the restart state.  `meta` is JSON-serialised into a 0-d array so the npz stays a
     single self-describing file (np.savez cannot store dicts).
@@ -550,6 +614,13 @@ def parse_args(argv):
                          '--load-state s.npz --protocol servo --target-gpa 0.09 [--cycle-deform].  AM 반경은 이 런의 '
                          '--cycle-deform/--fracture-scaffold 가 정한 대로 재구성되며(지문은 위치·개수·PRISTINE 반경만 '
                          '비교 → 사이클 호흡 허용), 스키마/n_grid/nz/lateral-box/periodic/AM 위치가 다르면 중단한다.')
+    ap.add_argument('--restart-settle', type=int, default=3,
+                    help='--load-state 전용 (다른 런에서는 완전 무시): 재시작 직후 플래튼을 이 프레임 수만큼 '
+                         'FREEZE 하고 응력이 F 로부터 재구축되기를 기다린 뒤 "제하(platen 상승)냐 추가 압밀'
+                         '(하강)이냐" 를 판정한다.  v·C 가 0 으로 초기화되므로 frame 0 의 wallP 는 아직 0 에 '
+                         '가깝다 — 그 값으로 판정하면 이미 제작된 베드를 아래로 밀어버린다(수치 파라미터, '
+                         '물리 앵커 아님).  판정은 창 안 p 의 MAX 로 한다(제하 쪽으로 편향 = 불필요한 상승은 '
+                         '탄성이라 servo 밴드가 되돌리지만, 불필요한 하강은 소성=비가역).')
     ap.add_argument('--selftest', action='store_true',
                     help='restart-state 계층 자체검증 (numpy 전용, taichi/GPU 불필요) 후 종료')
     return ap.parse_args(argv)
@@ -651,6 +722,71 @@ def _selftest():
         chk('auto picks store over budget',
             write_state_npz(p, arrs, m, compress_max_bytes=1)[2] is False)
 
+    # ── 5. RESTART PLATEN LOGIC (2026-07-28 review: the unload arm was a silent no-op) ───────────
+    #    A. UNLOAD decision.  The bug: a restart at a LOWER target could only push the platen DOWN.
+    chk('unload: settled reaction ABOVE the new target → unload',
+        restart_unload_needed([0.28, 0.30, 0.31], 0.09) is True)
+    chk('unload: restart at a HIGHER target → no unload, normal descend',
+        restart_unload_needed([0.05, 0.07, 0.08], 0.30) is False)
+    chk('unload: frame-0 transient must NOT veto the unload (window MAX, not last/first)',
+        restart_unload_needed([0.00, 0.02, 0.19], 0.09) is True
+        and restart_unload_needed([0.19, 0.02, 0.00], 0.09) is True)
+    chk('unload: empty settle window is refused (never silently "no unload")',
+        restart_unload_needed([], 0.09) is False)     # main() raises on --restart-settle < 1
+
+    #    B. arm-after-compaction guard must not re-arm on the restart porosity (forced 5 %p descent).
+    chk('guard: fresh loose bed still guarded (unchanged behaviour)',
+        arm_guard_active(75.0, 75.0, False) is True and arm_guard_active(69.0, 75.0, False) is False)
+    chk('guard: DISABLED on a restart (would have forced 5 %p of extra plastic compaction)',
+        arm_guard_active(17.6, 17.6, True) is False and arm_guard_active(68.3, 68.3, True) is False)
+
+    #    C. cohesion gate re-armed from the state (else the restored binder is compiled out).
+    chk('coh: restart without --coh re-arms the gate from the state',
+        rearm_cohesion(0.0, 0.02) == (0.02, 0.02))
+    chk('coh: explicit --coh wins and is not overwritten',
+        rearm_cohesion(0.05, 0.02) == (0.05, None))
+    chk('coh: cohesion-free state stays cohesion-free (no invented cohesion)',
+        rearm_cohesion(0.0, 0.0) == (0.0, None))
+
+    #    D. rod rest state: restored, or honestly reported as re-derived from the compressed bed.
+    _n5 = 4
+    _rl_d = np.array([0.9, 0.8, 0.7, 0.0], np.float32)          # derived from the COMPRESSED positions
+    _b0_d = np.zeros((_n5, 3), np.float32)
+    _rl_s = np.array([1.0, 1.0, 1.0, 0.0], np.float32)          # the true as-seeded rest length
+    _b0_s = np.ones((_n5, 3), np.float32) * 0.01
+    _rl_o, _b0_o, _src = pick_rod_rest({'rod_rl': _rl_s, 'rod_b0': _b0_s}, _n5, _rl_d, _b0_d)
+    chk('rod: rest length/curvature restored from the state (buckled shape NOT taken as stress-free)',
+        _src == 'restored_from_state' and np.array_equal(_rl_o, _rl_s) and np.array_equal(_b0_o, _b0_s))
+    _rl_o2, _, _src2 = pick_rod_rest({}, _n5, _rl_d, _b0_d)
+    chk('rod: state without rod arrays → re-derived AND flagged (not silently wrong)',
+        _src2 == 'REDERIVED_from_compressed_positions' and np.array_equal(_rl_o2, _rl_d))
+    chk('rod: length mismatch also falls back to the flagged path',
+        pick_rod_rest({'rod_rl': _rl_s[:2], 'rod_b0': _b0_s[:2]}, _n5, _rl_d, _b0_d)[2]
+        == 'REDERIVED_from_compressed_positions')
+    chk('rod: a pristine (non-restart) run reports the seeded source',
+        pick_rod_rest(None, _n5, _rl_d, _b0_d)[2] == 'seeded_this_run')
+
+    #    E. provenance role must not claim an operating pressure the platen never reached.
+    chk('provenance: a no-op restart (still at the fabrication pressure) is tagged NOT_REACHED',
+        stage_pressure_role(True, 0.4169, 0.09) == 'operating_stack_pressure_NOT_REACHED')
+    chk('provenance: a genuine unload keeps the plain role',
+        stage_pressure_role(True, 0.088, 0.09) == 'operating_stack_pressure')
+    chk('provenance: relaxed BELOW target (hold arm) is not a failure',
+        stage_pressure_role(True, 0.054, 0.09) == 'operating_stack_pressure')
+    chk('provenance: fabrication runs are never tagged',
+        stage_pressure_role(False, 0.31, 0.30) == 'fabrication_pressure')
+
+    #    F. CLI guard: --restart-settle < 1 with --load-state must be refused, not clamped.
+    for _bad_settle in (0, -1):
+        try:
+            main(['--load-state', 'x.npz', '--restart-settle', str(_bad_settle)])
+            _ok = False
+        except SystemExit as _e:
+            _ok = 'restart-settle' in str(_e)
+        except Exception:
+            _ok = False
+        chk(f'--restart-settle {_bad_settle} with --load-state is refused', _ok)
+
     print(f"selftest: {ok}/{ok + len(fail)} PASS" + (f"   FAILED: {fail}" if fail else ""))
     return 1 if fail else 0
 
@@ -659,6 +795,19 @@ def main(argv):
     args = parse_args(argv)
     if args.selftest:                                          # numpy-only; must run without taichi
         raise SystemExit(_selftest())
+    if args.load_state and args.restart_settle < 1:
+        # Hard refusal, not a clamp: with no settle window the unload/compact decision is taken on frame 0,
+        # where v and C have just been zeroed and the platen reaction still reads ≈0 — so an UNLOAD request
+        # would be read as "not in contact yet" and the platen would be driven DOWN into an already-
+        # fabricated bed (plastic, irreversible).  That is precisely the failure this window removes.
+        raise SystemExit('[load-state] --restart-settle must be ≥ 1 (given '
+                         f'{args.restart_settle}).  The restart zeroes v/C, so the platen reaction needs a '
+                         'few frozen frames to rebuild from F; deciding "unload or compact?" on frame 0 '
+                         'silently compacts an already-fabricated bed.')
+    if args.load_state and args.protocol == 'hold' and args.compact_to <= 0:
+        print("  [load-state] --protocol hold on a restart = RIGID-FIXTURE arm: the platen first UNLOADS to "
+              "--target-gpa, then is FIXED and the stress relaxes below it (constant gap).  --protocol servo "
+              "= COMPLIANT-FIXTURE arm (constant stress, thickness free).  The two bracket the real jig.")
     if args.load_state and not args.save_state and args.protocol == 'servo' and args.target_gpa >= 0.25:
         print(f"  [load-state] note: --protocol servo --target-gpa {args.target_gpa} ≈ the usual FABRICATION "
               f"pressure.  For the '제작 → 제하 → 구동압' protocol pass the OPERATING stack pressure "
@@ -1026,6 +1175,32 @@ def main(argv):
                   "not from this command line:\n      " + "\n      ".join(_mat_mismatch)
                   + "\n      → to change the SE material you must re-run stage ① (fabrication) with the new "
                     "values.  This run continues with the SAVED material.")
+        # ★ CFL RE-CHECK against the RESTORED material.  dt was capped from the command-line --e-se/--nu-se
+        #   (they are what this run's `lame()` saw), but the per-point µ/λ come from the state.  A state
+        #   stiffer than this run's args ⇒ the P-wave speed exceeds what dt was sized for ⇒ silent blow-up.
+        #   Only ever SHRINKS dt (never relaxes it), so a matching restart is bit-identical.
+        _M_state = float(np.max(np.asarray(las, np.float64) + 2.0 * np.asarray(mus, np.float64))) if n else 0.0
+        if _M_state > 0.0:
+            _dt_state = 0.4 * dx / (_M_state ** 0.5)
+            if _dt_state < dt:
+                print(f"  [load-state] dt tightened for CFL: {dt:.3e} → {_dt_state:.3e} s — the restored "
+                      f"per-point material (max λ+2µ = {_M_state:.2f} GPa) is stiffer than this run's "
+                      f"--e-se/--nu-se implied.  (dt is sized from the args, the material comes from the "
+                      f"state; without this the run can go unstable.)")
+                dt = _dt_state
+        # ★ COHESION RE-ARM (review A-4 — silent loss).  The cohesion term inside `substep` sits behind a
+        #   COMPILE-TIME `ti.static(COH > 0.0)` gate built from THIS run's --coh.  coh_p IS restored from the
+        #   state, but a restart that does not repeat --coh (COH=0) compiles the whole branch OUT, so a bed
+        #   fabricated WITH cold-weld / PTFE-binder cohesion silently runs stage ② with NO cohesion at all —
+        #   and nothing in the output says so.  Re-arm the gate from the state's own per-point values (the
+        #   per-point magnitudes are unchanged; only the compile-time gate is opened).
+        _coh_state_max = float(np.max(coh_np)) if len(coh_np) else 0.0
+        COH, _coh_rearmed = rearm_cohesion(COH, _coh_state_max)
+        if _coh_rearmed is not None:
+            _coh_rearmed = round(_coh_rearmed, 6)
+            print(f"  [load-state] cohesion RE-ARMED from the state (max coh_p = {_coh_state_max:.4f} GPa). "
+                  f"This run passed no --coh, which would have compiled the cohesion term OUT and silently "
+                  f"dropped the restored binder/cold-weld.")
         if args.am_scaffold:
             # HONESTY: the seeding path filters SE out of AM cells ONCE, at seed time.  On a restart there is
             # no re-seed, so points that the (possibly EXPANDED) AM mask now covers are NOT evicted — they are
@@ -1583,9 +1758,29 @@ def main(argv):
     rod_rl = ti.field(ti.f32, _rn); rod_kfac = ti.field(ti.f32, _rn); rod_is = ti.field(ti.i32, _rn)
     rod_b0 = ti.Vector.field(3, ti.f32, _rn); rod_dx = ti.Vector.field(3, ti.f32, _rn)
     x_pre = ti.Vector.field(3, ti.f32, _rn)                       # fibre position at substep start (for v)
+    _rod_rest_source = None
     if FIBRE_ROD:
         _pv, _nx, _rl, _b0, _isr = build_rod_topology(fibre_np, phase_np, xs)
         _kf = np.where(phase_np == 2, 1.0, np.where(phase_np == 4, 0.2, 0.0)).astype(np.float32)  # VGCF stiff, PTFE 0.2×
+        _rod_rest_source = 'seeded_this_run'
+        if _state_in is not None:
+            # ★ ROD REST-STATE (review A-7).  build_rod_topology derives the rest length rl and the rest
+            #   curvature b0 FROM THE POSITIONS IT IS GIVEN.  On a restart `xs` is the COMPRESSED bed, so a
+            #   fibre that buckled during fabrication would adopt its buckled shape as its stress-free rest
+            #   shape — the elastic energy stored by the press would be erased and the rod would never push
+            #   back.  The state carries the ORIGINAL (as-seeded) rest arrays; restore them.  Topology
+            #   (prev/next/is_rod) is index-based and the points are restored in the same order, so the
+            #   rebuilt connectivity is identical — only rl/b0 must come from the state.
+            _rl, _b0, _rod_rest_source = pick_rod_rest(_state_in, n, _rl, _b0)
+            if _rod_rest_source == 'restored_from_state':
+                print('  [fibre-rod] rest length/curvature RESTORED from the state (not re-derived from the '
+                      'compressed positions) — the fabrication buckling stays elastic, not stress-free.')
+            else:
+                print('  ⚠ [fibre-rod] the state file carries NO rod rest arrays (written by an older run, or '
+                      'stage ① ran without --fibre-rod): rest length/curvature are RE-DERIVED from the '
+                      'COMPRESSED positions, i.e. the buckled shape becomes the stress-free shape and the '
+                      'stored bending energy is LOST.  Re-run stage ① with --fibre-rod to fix; recorded as '
+                      'rod_rest_source in the metrics.')
         rod_prev.from_numpy(_pv); rod_next.from_numpy(_nx); rod_rl.from_numpy(_rl)
         rod_b0.from_numpy(_b0); rod_is.from_numpy(_isr); rod_kfac.from_numpy(_kf)
         print(f'  [fibre-rod] ON: {int(_isr.sum())} rod points (VGCF+PTFE) buckle emergently '
@@ -1742,6 +1937,29 @@ def main(argv):
               + f"xy={'periodic' if PERIODIC else 'walls'}")
     reached = False; conv = 0; por_end = 0.0; p_end = 0.0; por_at_target = -1.0; por0 = 100.0; relax = 0
     reach_cnt = 0; STOP_HOLD = 3            # loose→dense mix: need target SUSTAINED this many frames to stop
+    # ── RESTART UNLOAD (제하) — the missing half of "fabricate at 300 MPa → unload → cycle at 90 MPa".
+    #    Before this, a --load-state run at a LOWER target could only ever push the platen DOWN:
+    #      • scaffold path   : descend=(p+am_skel<target) is False on frame 0 → 'reached' immediately at the
+    #                          FABRICATION height → --protocol hold then froze the platen there and reported
+    #                          the fabrication geometry under an "operating pressure" label (silent no-op);
+    #      • non-scaffold    : the arm-after-compaction guard (por>por0−5) is re-armed on the RESTART
+    #                          porosity, so it forced a further 5 %p descent regardless of the stress —
+    #                          an UNLOAD request produced EXTRA plastic compaction.
+    #    Now a restart first freezes the platen for --restart-settle frames (v,C are zeroed on load, so the
+    #    platen reaction has to rebuild from F; frame 0 reads ≈0 and would be mistaken for "not yet in
+    #    contact"), then decides ONCE: p_settle > target → UNLOAD (platen rises until the reaction drops to
+    #    the target); otherwise the normal descend logic runs.  servo then equilibrates AT the target
+    #    (compliant fixture: constant stress, thickness free); hold FIXES the platen at the unloaded height
+    #    and lets the stress relax (rigid fixture: constant gap, stress free) — the two-arm bracket.
+    _RESTART = bool(args.load_state) and args.compact_to <= 0    # --compact-to is displacement-driven by design
+    _settle = max(0, int(args.restart_settle)) if _RESTART else 0
+    _unload = False
+    _unload_status = ('not_a_restart' if not args.load_state
+                      else ('disabled_by_compact_to' if args.compact_to > 0 else 'pending'))
+    _p_settle = []; _p_tail = []
+    _probe_left = 0; _unload_cnt = 0
+    UNLOAD_HOLD = 3          # at-rest probes below target required to call the unload done (cf. STOP_HOLD)
+    _wall_z_start = float(wall_z[None])
     for frame in range(args.frames):
         sacc = 0.0; wacc = 0.0
         for _ in range(args.sub):
@@ -1759,15 +1977,70 @@ def main(argv):
         por = max(0.0, 1.0 - solid_vol / (area * height)) * 100.0
         if frame == 0:
             por0 = por
+        _p_tail.append(p)
+        if len(_p_tail) > 5:
+            _p_tail.pop(0)
         # servo platen to target σzz (descend until target, then fine bidirectional).
         # arm-after-compaction guard: a big rigid AM (preset/mix, AM = MATERIAL) hitting the
         # platen on first contact spikes wallP transiently → refuse to stop until the bed has
         # actually compacted (por ≤ por0 − 5 %p).  The scaffold (AM = fixed grid mask) has NO
         # such transient, and the guard there forces a 5 %p over-descent regardless of stress,
         # which OVER-COMPRESSES dense (high se_frac) beds → disable it for the scaffold.
-        if not reached:
+        if _RESTART and frame < _settle:
+            # restart settle window: platen FROZEN while the stress rebuilds from F (v,C were zeroed).
+            _p_settle.append(p); wall_vel[None] = 0.0
+        elif not reached:
             step = vmax
-            if args.compact_to > 0:                          # displacement-driven → descend to a target porosity
+            if _RESTART and _unload_status == 'pending':
+                # ONE-TIME decision, taken on the MAX of the settle window.  Biased toward unloading on
+                # purpose: an unnecessary rise is elastic and the servo band puts it back, an unnecessary
+                # descent is PLASTIC and irreversible (that asymmetry is the whole bug being fixed).
+                _p0 = max(_p_settle) if _p_settle else p
+                _unload = restart_unload_needed(_p_settle or [p], target)
+                _unload_status = 'unloading' if _unload else 'not_needed_p_below_target'
+                if not args.quiet:
+                    print(f"  [restart] settle({_settle} frames): p={_p0:.4f} GPa vs target={target:.4f} → "
+                          + ("UNLOAD (제하): platen RISES until the reaction drops to the target"
+                             if _unload else
+                             "no unload needed (already at/below target) → normal descend logic"))
+            if _unload:
+                # ── UNLOAD = rise · PROBE · rise · PROBE …  The stop test MUST be read on a frozen
+                #    platen: wallf = Σ m·(v_grid − v_wall), so while the platen rises the v_wall term
+                #    biases the reaction LOW by ~the same order as the signal (measured: a mid-rise frame
+                #    read −0.23 GPa on a bed that was really at +0.19).  Testing on a moving frame ends
+                #    the unload after a single step and leaves the bed at the fabrication pressure with
+                #    an "unloaded" label — the exact class of silent no-op this fix exists to remove.
+                #    UNLOAD_HOLD consecutive at-rest probes below the target are required (mirror of the
+                #    descend side's STOP_HOLD sustained criterion, which exists for the same noise reason).
+                if _probe_left > 0:
+                    # PROBE window: platen frozen for --restart-settle frames so the post-rise rebound
+                    # transient decays; the LAST frame of the window is the reading (same convention as
+                    # the initial settle decision).  One frozen frame is not enough — the material still
+                    # carries the velocity it picked up from the rise.
+                    wall_vel[None] = 0.0
+                    _probe_left -= 1
+                    descend = None                                       # platen stays put during the probe
+                    if _probe_left == 0:                                 # window closed → this frame is THE reading
+                        _unload_cnt = _unload_cnt + 1 if p <= 1.02 * target else 0
+                        if _unload_cnt >= UNLOAD_HOLD:
+                            _unload_status = 'completed'; descend = False   # tail below sets reached=True
+                            if not args.quiet:
+                                print(f"  ✓ [restart] unloaded: {UNLOAD_HOLD} consecutive at-rest probes "
+                                      f"(each after {_settle} frozen frames), {args.readout}={p:.4f} ≤ target "
+                                      f"{target:.4f} GPa, wall_z={wall_z[None]:.4f} (from {_wall_z_start:.4f}), "
+                                      f"porosity={por:.2f}%")
+                elif wall_z[None] >= WALL0 - 1e-9:
+                    _unload_status = 'out_of_travel'; descend = False
+                    print(f"  ⚠ [restart] unload ran out of platen travel at WALL0={WALL0:.4f} with "
+                          f"{args.readout}={p:.4f} GPa still above target {target:.4f} — the bed did NOT "
+                          f"reach the requested pressure (recorded in state_provenance.unload_status).")
+                else:
+                    up = vmax if p > 1.5 * target else 0.12 * vmax       # coarse far away, fine near target
+                    wall_z[None] = min(WALL0, wall_z[None] + up)
+                    wall_vel[None] = up / (args.sub * dt)
+                    _probe_left = max(1, _settle)                        # then freeze and read it at rest
+                    descend = None                                       # platen already moved (upward)
+            elif args.compact_to > 0:                        # displacement-driven → descend to a target porosity
                 descend = por > args.compact_to
                 if por < args.compact_to + 5.0:              # slow near the target → less overshoot
                     step = vmax * 0.25
@@ -1804,10 +2077,16 @@ def main(argv):
                 # at full vmax until the bed SUSTAINS ≥ target for STOP_HOLD frames (after por≤por0−5);
                 # if it never sustains, the continuum SE is over-flowing (no granular jam) and it
                 # descends to WALL_MIN — itself an informative result (porosity→~0 = over-compaction).
-                guard = (por > por0 - 5.0)
+                # ★ NOT on a restart (review A-2/A-3): por0 is then the ALREADY-COMPACTED porosity, so the
+                #   guard would demand another 5 %p of descent with no stress justification — turning an
+                #   unload request into extra plastic compaction.  A restarted bed is in contact with the
+                #   platen from frame 0 and has no loose-bed first-contact transient to guard against.
+                guard = arm_guard_active(por, por0, args.load_state)
                 reach_cnt = reach_cnt + 1 if (p >= target and not guard) else 0
                 descend = reach_cnt < STOP_HOLD
-            if descend:
+            if descend is None:
+                pass                                         # --load-state unload: platen already moved UP
+            elif descend:
                 wall_vel[None] = -step / (args.sub * dt)
                 wall_z[None] = max(WALL_MIN, wall_z[None] - step)
             else:
@@ -1834,7 +2113,12 @@ def main(argv):
             por_at_target = por                              # porosity when target stress was FIRST reached
         if not args.quiet and (frame % args.print_every == 0 or conv >= 12):
             thick = f"  thickness={height*um_box:5.2f}µm" if um_box > 0 else ""
-            print(f"  frame {frame:3d} [{'descend' if not reached else 'servo'}]  "
+            # phase label — 'settle'/'unload' only ever appear on a --load-state run, so a production
+            # (no-restart) log line is byte-identical to before.
+            _phase = ('settle' if (_RESTART and frame < _settle)
+                      else 'unload' if (_unload and not reached)
+                      else 'descend' if not reached else 'servo')
+            print(f"  frame {frame:3d} [{_phase}]  "
                   f"{args.readout}={p:7.4f} GPa (wallP={wallp:.4f} σzz_vol={sig_mean:.4f})  "
                   f"porosity={por:6.2f}%  wall_z={wall_z[None]:.3f}{thick}", flush=True)
         if conv >= 12 and frame > 20:
@@ -1850,6 +2134,38 @@ def main(argv):
           f"[MPM, {comp.split()[0]}, {scaf}, n_grid={n_grid}, pts={n}, "
           f"E_SE={args.e_se} ν_SE={args.nu_se} K_SE={K_SE:.1f}GPa, readout={args.readout}, "
           f"xy={'periodic' if PERIODIC else 'walls'}]")
+    # ── MATERIAL SOURCE (review A-6).  Under --load-state the per-point µ/λ/σ_y come from the STATE, not
+    #    from --e-se/--nu-se/--sigma-y, so printing/reporting the args described a material the run never
+    #    used.  Report the state's values when the state governs, and always say which.  Pristine runs take
+    #    the 'args' branch → identical values, byte-identical JSON, unchanged FINAL line.
+    _mat_src = 'state_file' if (args.load_state and _state_meta.get('e_se') is not None) else 'args'
+    _E_rep = float(_state_meta['e_se']) if _mat_src == 'state_file' else float(args.e_se)
+    _nu_rep = float(_state_meta.get('nu_se', args.nu_se)) if _mat_src == 'state_file' else float(args.nu_se)
+    _sy_rep = float(_state_meta.get('sigma_y', args.sigma_y)) if _mat_src == 'state_file' else float(args.sigma_y)
+    _mu_rep, _la_rep = lame(_E_rep, _nu_rep)
+    _K_rep = round(_la_rep + 2.0 * _mu_rep / 3.0, 3) if _mat_src == 'state_file' else round(float(K_SE), 3)
+    if _mat_src == 'state_file':
+        print(f"MATERIAL  from the STATE FILE (not this command line): E_SE={_E_rep} ν_SE={_nu_rep} "
+              f"σ_y={_sy_rep} K_SE={_K_rep} GPa  [the FINAL line above prints this run's --e-se/--nu-se, "
+              f"which the restart does NOT apply — metrics JSON reports these state values]")
+    # ── ACHIEVED (not requested) end-state — review A-5.  `target` is what was ASKED for; the platen may
+    #    have run out of travel, jammed, or (protocol hold) relaxed below it.  Everything the provenance
+    #    reports as "this stage's pressure" is derived from these measured numbers.
+    _p_ach = float(sum(_p_tail) / len(_p_tail)) if _p_tail else float(p_end)   # mean of the last ≤5 frames
+    _wall_z_end = float(wall_z[None])
+    _dz_box = _wall_z_end - _wall_z_start
+    if args.load_state:
+        _dir = 'ROSE (제하)' if _dz_box > 1e-9 else ('DESCENDED (further compaction)' if _dz_box < -1e-9
+                                                    else 'DID NOT MOVE')
+        print(f"RESTART  unload_status={_unload_status}  platen {_dir}  "
+              f"wall_z {_wall_z_start:.4f} → {_wall_z_end:.4f} (Δ={_dz_box:+.4f} box"
+              + (f" = {_dz_box * um_box:+.3f} µm" if um_box > 0 else "") + ")  "
+              f"{args.readout}_achieved(last≤5 mean)={_p_ach:.4f} GPa vs requested {target:.4f}  "
+              f"porosity {float(_state_meta.get('porosity_settled_pct') or float('nan')):.2f}% → {por_end:.2f}%")
+        if _p_ach > 1.25 * target:
+            print(f"  ⚠ [restart] the bed is STILL at {_p_ach*1000:.1f} MPa, not the requested "
+                  f"{target*1000:.1f} MPa — this geometry is NOT an operating-pressure geometry.  "
+                  f"state_provenance.P_this_stage_role is tagged NOT_REACHED.")
     cov_out = {}
     if args.am_scaffold:
         # COVERAGE: fraction of each AM-type surface (AM↔non-AM voxel interfaces) that faces SE
@@ -1925,8 +2241,8 @@ def main(argv):
             # None for carbon-free runs.  SE keys are now SE-ONLY (were SE+additive conflated pre-2026-07-03).
             'coverage_AM_P_add_pct': cov_out.get('AM_P_add'), 'coverage_AM_S_add_pct': cov_out.get('AM_S_add'),
             'n_grid': int(n_grid), 'nz': int(nz), 'n_pts': int(n),
-            'E_SE_GPa': float(args.e_se), 'nu_SE': float(args.nu_se),
-            'sigma_y_GPa': float(args.sigma_y), 'K_SE_GPa': round(float(K_SE), 3),
+            'E_SE_GPa': _E_rep, 'nu_SE': _nu_rep,
+            'sigma_y_GPa': _sy_rep, 'K_SE_GPa': _K_rep,
             'protocol': args.protocol, 'readout': args.readout,
             'se_dump': bool(args.se_dump), 'se_frac': float(args.se_frac),
             'periodic': bool(PERIODIC),
@@ -1959,14 +2275,47 @@ def main(argv):
             _chain = list(_state_meta.get('fab_chain') or ([_state_meta['target_gpa']]
                                                           if 'target_gpa' in _state_meta else []))
             _fab = (_chain[0] if _chain else float(target))   # ORIGINAL fabrication pressure of the chain
+            # ★ ACHIEVED vs REQUESTED (review A-5).  P_this_stage_MPa is the REQUEST; the badge that renders
+            #   it must not be able to claim "90 MPa" for a bed the platen never unloaded.  The role string
+            #   (rendered next to it in webapp/templates/single.html) is tagged NOT_REACHED whenever the
+            #   measured end-state stress is still >25 % above the request, and the measured numbers are
+            #   published alongside so a reader can check the claim instead of trusting the label.
+            _p_ach_mpa = round(float(_p_ach) * 1000.0, 3)
+            _role = stage_pressure_role(bool(args.load_state), _p_ach, target)
+            _not_reached = _role.endswith('_NOT_REACHED')
             m['state_provenance'] = {
                 'schema': STATE_SCHEMA,
                 'pressure_chain_GPa': _chain + [float(target)] if args.load_state else [float(target)],
                 'plastic_history_restored': bool(args.load_state),
                 'P_fab_MPa': (round(float(_fab) * 1000.0, 3) if _fab is not None else None),
                 'P_this_stage_MPa': round(float(target) * 1000.0, 3),
-                'P_this_stage_role': ('operating_stack_pressure' if args.load_state else 'fabrication_pressure'),
+                'P_this_stage_is': 'REQUESTED_target',                      # ← not the achieved value
+                'P_achieved_MPa': _p_ach_mpa,                               # measured, mean of the last ≤5 frames
+                'P_achieved_readout': args.readout,
+                'P_achieved_over_requested': (round(float(_p_ach) / float(target), 4) if target > 0 else None),
+                'P_this_stage_role': _role,
+                # what the platen actually did this stage (box units + µm) — the audit trail for the above
+                'unload_status': _unload_status,
+                'unload_probe_hold_frames': int(UNLOAD_HOLD),
+                'wall_z_start': round(float(_wall_z_start), 6),
+                'wall_z_end': round(float(_wall_z_end), 6),
+                'platen_delta_box': round(float(_dz_box), 6),
+                'platen_delta_um': (round(float(_dz_box) * um_box, 4) if um_box > 0 else None),
+                'platen_direction': ('rose_unloaded' if _dz_box > 1e-9 else
+                                     'descended_compacted' if _dz_box < -1e-9 else 'did_not_move'),
+                'porosity_fab_pct': _state_meta.get('porosity_settled_pct'),
+                'porosity_end_pct': round(float(por_end), 3),
+                'thickness_fab_um': _state_meta.get('thickness_um'),
+                'restart_settle_frames': int(_settle),
                 'protocol_this_stage': args.protocol,
+                # what `protocol` MEANS for a restart, so the two-arm bracket is not read as one number:
+                #   servo = compliant fixture (stress held AT the target, thickness free to creep)
+                #   hold  = rigid fixture (platen FIXED after the unload, stress free to relax below it)
+                'protocol_semantics': (('servo = constant-stress fixture (unload to target, then hold that '
+                                        'stress; thickness is the free variable)') if args.protocol == 'servo'
+                                       else ('hold = constant-gap fixture (unload to target, then FIX the '
+                                             'platen; stress relaxes below the target — that relaxation is '
+                                             'the rigid-jig arm, not a failure)')) if args.load_state else None,
                 'fab_protocol': (_state_meta.get('protocol') if args.load_state else args.protocol),
                 'fab_wall_z': (_state_meta.get('wall_z') if args.load_state else None),
                 'wall_z_resumed': (round(float(_state_wall_z), 4) if _state_wall_z is not None else None),
@@ -1979,6 +2328,15 @@ def main(argv):
                 # per-point material (µ/λ/σ_y/coh) comes from the state, NOT from this run's --e-se etc.
                 'material_from_state': bool(args.load_state),
                 'material_args_ignored': (locals().get('_mat_mismatch') or None),
+                # which numbers the E_SE_GPa / nu_SE / sigma_y_GPa / K_SE_GPa fields above describe
+                'material_source': _mat_src,
+                # cohesion: the compile-time gate is re-armed from the state when the restart omits --coh
+                # (otherwise the restored binder/cold-weld would be silently compiled out)
+                'coh_GPa_effective': round(float(COH), 6),
+                'coh_rearmed_from_state_GPa': locals().get('_coh_rearmed'),
+                # fibre rods: were the rest length/curvature restored, or re-derived from the COMPRESSED
+                # positions (= the buckled shape becomes stress-free and the stored bending energy is lost)?
+                'rod_rest_source': locals().get('_rod_rest_source'),
                 # honest limits: the constitutive model has NO rate/creep term, so a "held at 90 MPa for
                 # hundreds of hours" state is NOT represented — only the stress-equilibrated geometry is.
                 'rate_dependence': 'NOT_MODELLED_rate_independent_J2',
@@ -2055,6 +2413,13 @@ def main(argv):
         if se_id_base is not None:
             _sid = np.full(n, -1, np.int32); _sid[:len(se_id_base)] = se_id_base
             _arr['se_id'] = _sid
+        if FIBRE_ROD:
+            # ★ rod REST state (review A-7): rl/b0 are the stress-free length/curvature the XPBD rod
+            #   restores toward.  build_rod_topology derives them from whatever positions it is handed, so
+            #   a restart that re-derived them from the COMPRESSED bed would make the buckled shape the new
+            #   rest shape (fabrication bending energy erased).  Carry the originals in the state instead.
+            _arr['rod_rl'] = rod_rl.to_numpy().astype(np.float32)
+            _arr['rod_b0'] = rod_b0.to_numpy().astype(np.float32)
         _bad = state_finite_errors({k: _arr[k] for k in _STATE_REQUIRED})
         if _bad:
             raise SystemExit("[save-state] refusing to write a diverged state:\n  - " + "\n  - ".join(_bad))
@@ -2074,6 +2439,12 @@ def main(argv):
             'WALL_MIN': float(WALL_MIN), 'um_box_um': (float(um_box) if um_box > 0 else None),
             'target_gpa': float(target), 'protocol': args.protocol, 'readout': args.readout,
             'final_stress_GPa': round(float(p_end), 6),
+            # achieved (measured) end-state, so a 3rd stage restarting from THIS file knows what pressure
+            # the geometry is really at — `target_gpa` above is only what was requested.
+            'p_achieved_GPa': round(float(_p_ach), 6),
+            'unload_status': _unload_status,
+            'platen_delta_box': round(float(_dz_box), 6),
+            'rod_rest_source': locals().get('_rod_rest_source'),
             'porosity_settled_pct': round(float(por_end), 4),
             'thickness_um': (round(float((wall_z[None] - FLOOR) * um_box), 4) if um_box > 0 else None),
             'e_se': float(args.e_se), 'nu_se': float(args.nu_se), 'sigma_y': float(args.sigma_y),

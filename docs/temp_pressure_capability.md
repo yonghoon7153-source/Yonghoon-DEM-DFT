@@ -25,20 +25,30 @@
 
 ## 2. 한 줄 답
 
+> ⚠ **읽는 순서 (2026-07-28 개정).** §1–§8 은 **감사 시점(구현 전)의 진단**이며 원문을 보존한다.
+> 그중 일부는 커밋 `d66fd144` 로 **이미 구현됐고**, 적대검증이 그 구현에서 다시 결함을 찾았다.
+> **지금 코드가 무엇을 하는지 알고 싶으면 §9 "구현 상태" 부터 보라.** 아래 진단문 중 이미
+> 바뀐 항목에는 `[→ §9 구현됨]` 표시를 달았다.
+
 > **온도 — 입력구가 둘인데 서로 어긋난다(둘 다 위험).**
 > ① **솔버 경로** `scripts/step4_dyn.py:2328 --temp-k` — 바꾸는 물리량은 `self.f = F/(R·T)`
 >   (`:624-625`) **단 하나**. σ_ion·σ_e·κ·D_s·i0·OCP·열화율은 전부 상온 상수 → **거의 축퇴**되고
 >   60 °C 에서는 반응 과전압의 **부호가 반대로** 나온다(§3).
 > ② ★ **예측기 경로** `webapp/predictor_engine.py:587 temperature` — **UI 슬라이더로 노출돼 있다**
->   (`webapp/templates/predictor.html:88-91`, 233–373 K → `app.py:9746`). 여기서는 반대로
->   **미앵커 Arrhenius 가 과잉 적용**된다: `:707-708` `Ea_SE=0.30 eV` / `Ea_AM=0.50 eV`
->   (**코드 주석에 'rough' 라고 적혀 있다**) → `:712-714` σ_ion 에 곱, `:734` **σ_e 에도 곱**.
+>   (`webapp/templates/predictor.html`, 233–373 K → `app.py /predictor/predict`).
+>   **[감사 시점 = 2026-07-28 이전, 지금은 아님 → §9]** 여기서는 반대로 **미앵커 Arrhenius 가 과잉
+>   적용**됐다: `Ea_SE=0.30 eV` / **legacy** `Ea_AM=0.50 eV`(**코드 주석에 'rough'**) → σ_ion 에 곱,
+>   **σ_e 에도 곱**.
 >   문제 셋 — (ㄱ) Ea_SE 0.30 은 본 문서 권고 밴드(0.29–0.46, 중앙 0.41) 안이지만 **규약(σ 형/σT 형)이
 >   미정의**, (ㄴ) **σ_e 에 Arrhenius 를 거는 것 자체가 문헌 정성과 어긋난다**(Reisacher: ohmic 영역
 >   T-무관 — 단 이 근거도 소재 불일치가 있어 §6-A T3-d 참조), (ㄷ) **솔버는 σ 를 안 바꾸는데 예측기는
 >   크게 바꾼다** → 같은 온도에서 두 경로가 **다른 답**을 낸다.
-> ⇒ 30/45/60 스윕은 **솔버에서는 축퇴, 웹앱 예측기에서는 미앵커 과잉반응**. 가장 위험한 것은
->   ②가 **유일하게 최종 사용자 손에 닿는 온도 노브**라는 점이다.
+>   **[→ §9 구현됨]** 셋 다 처리됐다: σ_ion 은 se_material 의 σ·T(Kraft) 규약·Eₐ 0.41 밴드로
+>   솔버와 통일, **σ_e 는 기본 T-무관**(옛 동작은 `sigma_e_t_model='legacy_arrhenius'` 로만 재현),
+>   그리고 **UI 가 무엇이 스케일되고 무엇이 안 되는지 화면에 적는다**(2026-07-28 적대검증 C-3 —
+>   그 전까지 슬라이더는 그대로인데 σ_e 기본 동작만 바뀌어 사용자가 알 길이 없었다).
+> ⇒ 30/45/60 스윕은 **솔버에서는 (STEP4 kinetics 가) 여전히 축퇴**, 예측기·STEP3·Stage-E 에서는
+>   **σ_ion 만 정상 스케일**. 여전히 **전-물리 온도 스윕이 아니다**(§9-3).
 
 > **압력 — 압밀압만 PARTIAL, 구동압은 NONE.** 압밀 목표압은 바꿀 수 있다
 > (`dem_scripts/thin9_seed.liggghts:18 target_press`, `scripts/mpm3d_compaction.py:171 --target-gpa`).
@@ -72,11 +82,11 @@ Eₐ(이온) 밴드 = **0.29–0.46 eV** (중앙 0.41 eV, Reisacher 2023 STATED,
 |---|---|---|---|---|---|---|
 | ① | **f = F/RT** (BV Tafel 기울기) | `step4_dyn.py:624-625` — 솔버에서 **유일하게 T 를 따름** | **f ×0.9099** (38.280→34.828 V⁻¹, **30→60 °C**) | 맞음 (그 자체는 정확) | — | RT/F **26.12→28.71 mV** |
 | ② | **η_ct (반응 과전압)** | ①만 움직임 → η_ct ∝ 1/f | **×1.099 (+9.9 % 증가)** | R_ct 289.9→67.8 Ω·cm² = **×0.234 (4.28배 감소)** | ★**부호 반대** | 코드가 **4.7× 과대**. 45 °C 에선 ~2.2× 과대 |
-| ③ | **σ_ion (LPSCl)** | `network_conductivity.py:44` 3.0e-3 S/cm **상수**, `:1003` 에서 선형 곱 | **×1.00** | ×2.47 (Eₐ 0.29) ~ **×3.74 (0.41)** ~ ×4.44 (0.46). kim2025 실측 R_ion 34.9→9.1 = ×3.84 | σ_ion **과소** | 이온 옴강하 **~3–4× 과대**. 2C 실측 84–90 mV → 진값 ≈22–32 mV → **약 55–65 mV 과대** |
+| ③ | **σ_ion (LPSCl)** | ~~`network_conductivity.py:44` 3.0e-3 S/cm **상수**~~ **[→ §9 구현됨]** `se_material.sigma_grain_S_cm(T)` 경유, `--temp-c` 로 스케일 (미지정 시 여전히 ×1.00 = 현행 전 코퍼스) | 기본 **×1.00** / `--temp-c` 시 밴드 배수 | ×2.47 (Eₐ 0.29) ~ **×3.74 (0.41)** ~ ×4.44 (0.46). kim2025 실측 R_ion 34.9→9.1 = ×3.84 | 기본값에서는 σ_ion **과소** (그대로) | 온도를 **주면** 해소, 안 주면 이온 옴강하 ~3–4× 과대 유지. **기본값을 바꾸는 것은 별도 결정** |
 | ④ | **i0 (교환전류밀도)** | `step4_dyn.py:627-629` — SOC 형상만, T 항 **없음** | ×1.00 | Eₐ(i0) ≈ 0.39 eV (R_ct 에서 유도, **ASSUMED/TREND-only**) | i0 과소 | ② 의 원인. 단독 앵커 없음(§F1) |
 | ⑤ | **D_s (고상확산)** | `step4_dyn.py:524` `--d-s` 상수 | ×1.00 | **앵커 없음(§F1)** — kim2025 T_w 가 비단조(2929→1208→2350 s)라 추출 불가 | η_diff 과대 | 확산 무릎이 실제보다 **일찍** 나타남 → 용량 과소 |
 | ⑥ | **OCP U(x)** | `step4_dyn.py:592-593` — Chen2020 25 °C 테이블 `np.interp`, dU/dT 미적용 | 0 mV | U(x,T)=U(x,T_ref)+(T−T_ref)·dU/dT | x-의존 오프셋 | **litdb dU/dT 앵커 0건(§F1)**. 감사 언급 order(0.05–0.4 mV/K)×35 K = 2–14 mV, 미앵커 |
-| ⑦ | **σ_e (전자)** | `network_conductivity.py:47` 0.05 S/cm 상수 | ×1.00 | Reisacher 정성: **ohmic 영역은 T-무관** (CM-4 33.50 Ω @25 °C vs 43.89 @65 °C, 무상관) | 사실상 **무해** | 2C 전자 옴 0.01–0.03 mV. ⚠단 `predictor_engine.py:711-714` 서로게이트는 Ea_AM=0.50 eV('rough')를 써서 **솔버와 불일치** |
+| ⑦ | **σ_e (전자)** | `network_conductivity.py:47` 0.05 S/cm 상수 | ×1.00 | Reisacher 정성: **ohmic 영역은 T-무관** (CM-4 33.50 Ω @25 °C vs 43.89 @65 °C, 무상관) | 사실상 **무해** | 2C 전자 옴 0.01–0.03 mV. ⚠ 서로게이트 불일치(**이전** `Ea_AM=0.50 eV`, 'rough')는 **[→ §9 구현됨]** — 예측기 기본이 T-무관으로 바뀌어 솔버와 일치. 옛 값은 `legacy_arrhenius` 로만 재현 |
 | ⑧ | **κ (열)** | `network_conductivity.py:84-85` 상수 | ×1.00 | 포논 = 약한 T 의존 | 최하위 | Joule hot-spot 맵 색만 약간 틀림 |
 | ⑨ | **SE 소성상수 H/σ_y** | `plastic_coverage.py:39 H_REAL_SE=0.85 GPa` 상수, `:280 A_tabor=F/H` | ×1.00 | 승온 → 연화 → H↓ → A↑ → porosity↓ | porosity **과대**, coverage **과소** | LPSCl H(T) **앵커 없음(§F1)**. 코드 자체 감도로 상한: MPM σ_y −17 % → porosity −1.0 %p, −33 % → −3.3 %p |
 | ⑩ | **크리프 / 시간축** | hooke/hysteresis 및 MPM J2 모두 **rate-independent** (`step2` return map `:1332-1337`) | 없음 | 60 °C × 90 MPa × 수백 시간 = 크리프 지배 구간 | 치밀화 **과소** | 구조적 부재 — 파라미터 문제가 아님 |
@@ -126,6 +136,12 @@ Eₐ(이온) 밴드 = **0.29–0.46 eV** (중앙 0.41 eV, Reisacher 2023 STATED,
   ⇒ 올바른 구현은 **단일 공유 모듈**(예 `scripts/se_material.py` 에 `SIGMA_GRAIN_MS_25C=3.0` +
   `sigma_grain(T)`)을 두고 위 사이트를 import 로 치환하는 것이다. 그래야 "기본값 미지정 시
   bitwise 불변" 규약을 **전 경로에서** 보장할 수 있다.
+  **[→ §9-2 부분 구현]** `se_material.py` 가 만들어졌고 **프로덕션 경로는 전부 치환됐다**
+  (network_conductivity · step3_sigma · voxel_conductivity · mpm_webapp_payload ·
+  generate_comparison_plots `SE_SG` · predictor_engine · **webapp/app.py 7곳**).
+  ⚠ 그러나 **오프라인 분석 스크립트에는 아직 bare 3.0 이 남아 있다** — 정확한 잔존 목록은
+  **§9-2 표**에 있다. `se_material.py` 헤더의 "SINGLE SOURCE OF TRUTH" 문구는 그 잔존분까지
+  포함해 읽으면 **아직 리포 전체에 대해서는 참이 아니다**(프로덕션 경로에 대해서는 참).
 - 무너지는 것은 (a) **절대 과전압/용량**, (b) **온도 자체를 축으로 한 비교(30 vs 45 vs 60)**,
   (c) 탄소(Eₐ≈0)와 SE/AM(Eₐ>0)이 **섞인 조성 간 비교** 세 가지다.
 - 압력도 마찬가지로 **Doux 2020 §8** 이 방어해준다: "펠릿은 이미 370 MPa 로 cold-press 되어 있으므로
@@ -138,12 +154,12 @@ Eₐ(이온) 밴드 = **0.29–0.46 eV** (중앙 0.41 eV, Reisacher 2023 STATED,
 
 | 계층 | 온도 | 압력 | 근거 (파일:라인) |
 |---|---|---|---|
-| **STEP1 DEM** | **NONE** — 온도 인자 0개. LIGGGHTS 입력 9개 전수 grep 에 thermostat/heat/temperature fix **없음**; 파이썬 DEM 13파일 `temperature\|kelvin\|arrhenius\|298.15` **0 hit** | **PARTIAL** (압밀만) — `target_press` 가 유일 노브, 배선은 온전 | `dem_scripts/thin9_seed.liggghts:18,59-60,147-160` · `network_conductivity.py:44,47,84-85,1003,1113-1123` · `plastic_coverage.py:34-39,280` |
+| **STEP1 DEM** | **NONE→PARTIAL [→ §9]** — DEM 자체(LIGGGHTS)는 여전히 온도 인자 0개. 다만 그 위의 σ 솔버는 `network_conductivity.py --temp-c`, 프로덕션 Stage-E 는 `run_network_full_corrections.py --temp-c` 로 σ_ion 만 스케일된다(미지정 = 현행). 감사 시점 원문: NONE — 온도 인자 0개. LIGGGHTS 입력 9개 전수 grep 에 thermostat/heat/temperature fix **없음**; 파이썬 DEM 13파일 `temperature\|kelvin\|arrhenius\|298.15` **0 hit** | **PARTIAL** (압밀만) — `target_press` 가 유일 노브, 배선은 온전 | `dem_scripts/thin9_seed.liggghts:18,59-60,147-160` · `network_conductivity.py:44,47,84-85,1003,1113-1123` · `plastic_coverage.py:34-39,280` |
 | **STEP2 MPM** | **NONE** — parse_args ~60 플래그 중 T 0개; metrics JSON 에 온도 필드 **없음**(⇒ 하류가 몇 °C 형상인지 알 수 없음) | **PARTIAL** (압밀만) — `--target-gpa` 1개 set-point. 제하·이력·restart **전부 없음** (`F[p]=I` 리셋) | `mpm3d_compaction.py:113-424,171,225,1260-1261,1332-1337,1458-1474,1556-1577` · `mpm_input_from_case.py:313-322,883,951-964` |
-| **STEP3 transport** | **NONE** — 3파일 T 인자 0개. σ_ion/σ_e/κ 전부 상수. 출력 JSON 에 T_ref 필드 없음 | **NONE** — 압력 인자 0개. 압력은 **동결된 형상(δ·contact_area)** 으로만 상속 | `network_conductivity.py:1112-1125,195-211,238-260,341-358` · `step3_sigma.py:44-45,155,354-357,448,704,1058-1068` · `voxel_conductivity.py:98-102` · `mpm_webapp_payload.py:309-310,891` |
+| **STEP3 transport** | **PARTIAL [→ §9]** — `step3_sigma` / `voxel_conductivity` / `mpm_webapp_payload` 가 se_material 경유 + `--temp-c`, 출력에 `temperature_provenance`(T_ref/Eₐ/배수/규약) 기록. **σ_ion 만** — σ_e/κ 는 여전히 상수. 감사 시점 원문: NONE — 3파일 T 인자 0개 | **NONE** — 압력 인자 0개. 압력은 **동결된 형상(δ·contact_area)** 으로만 상속 | `network_conductivity.py:1112-1125,195-211,238-260,341-358` · `step3_sigma.py:44-45,155,354-357,448,704,1058-1068` · `voxel_conductivity.py:98-102` · `mpm_webapp_payload.py:309-310,891` |
 | **STEP4 echem** | **PARTIAL (거의 장식)** — `--temp-k` 존재하나 `f=F/RT` 와 Q_rev 앞인자에만. kit/webapp 노출 **안 됨** → 코퍼스 전체에서 temp_k 는 **비트-상수** | **NONE** — press/stack/MPa grep 전부 false positive. 구조 입력은 동결 복셀 | `step4_dyn.py:2328,621-636,592-593,524,1357,1463,2412-2419,2306,2318,2327` · `step6_surrogate.py:391` · `build_metrics_db.py:77,146,156` |
 | **STEP5 degradation** | **NONE** — 4파일 T 인자 0개, 출력에 T 필드 0개(구별 불가). ★리포가 `rint_eis_anchors.csv` 에 **temp_C 컬럼을 이미 갖고 있는데** scripts/webapp 전체 `temp_C` grep **0 hit** | **NONE** — MPa 입력 0개. `--recontact/--rewet-frac` 은 무차원 프록시이며, **실측상 partial ≡ forbid** (아래 참조) | `cycle_contact_ledger.py:204,232,292-307,339-350,599-668,624-632` · `b1_chem_fade.py:24-37,71,74,278-298,313-315` · `rint_cycle_traj.py:38-54,123-132` · `joule_redistribute.py:5-20` |
-| ★ **STEP6 predictor / 서로게이트** | **PARTIAL — 그러나 방향이 반대로 위험**. 유일하게 **UI 슬라이더로 노출**된 온도 노브. σ_ion 에 `Ea_SE=0.30 eV`, **σ_e 에 `Ea_AM=0.50 eV`('rough' 주석)** 를 곱한다. 솔버(σ 불변)와 **정면 불일치** | **NONE** — 압력은 설계 피처로만(`ml_cycle_surrogate.py:26 press_MPa`), 물리 경로 없음. ⚠ 그 피처가 받는 값은 **압밀압**인데 이름이 `stack_pressure_MPa`(`build_metrics_db.py:146,156`) | `webapp/templates/predictor.html:88-91,529` · `webapp/app.py:9746` · `webapp/predictor_engine.py:587,599,705-714,734,897` · `webapp/pybamm_predictor.py:20` · `scripts/ml_cycle_surrogate.py:26` |
+| ★ **STEP6 predictor / 서로게이트** | **PARTIAL — 규약 통일됨 [→ §9]**. σ_ion = se_material σ·T(Kraft) · T_ref 25 °C · Eₐ 0.41 밴드(솔버와 동일). **σ_e 는 기본 T-무관**(솔버·Reisacher 정합); **이전** 동작인 `Ea_AM=0.50 eV`('rough' 주석)는 `sigma_e_t_model='legacy_arrhenius'` 로만 재현된다. UI 가 스코프를 고지(2026-07-28 C-3). ⚠ **잔존**: `sweep_optimal`(Find Optimal Design)은 predict() 에 temperature 를 넘기지 않아 **항상 298 K** — UI 에 명시함 | **NONE** — 압력은 설계 피처로만(`ml_cycle_surrogate.py:26 press_MPa`), 물리 경로 없음. ⚠ 그 피처가 받는 값은 **압밀압**인데 이름이 `stack_pressure_MPa`(`build_metrics_db.py:146,156`) | `webapp/templates/predictor.html:88-91,529` · `webapp/app.py:9746` · `webapp/predictor_engine.py:587,599,705-714,734,897` · `webapp/pybamm_predictor.py:20` · `scripts/ml_cycle_surrogate.py:26` |
 
 ### 4-1. STEP5 압력 프록시가 실제로 작동하지 않는다 (실런 확인됨)
 
@@ -206,7 +222,7 @@ flowchart TD
     OCP["OCP 엔트로피 U(x,T)<br/>= U(x,T_ref) + ΔT·dU/dT"] -.-> CUT4["step4_dyn.py:592-593<br/>Chen2020 25 °C 테이블 interp<br/>dudt 는 :2453 에 로드되나 Q_rev 로만<br/>litdb dU/dT 앵커 0건 §F1"]
     HSE["SE 경도 H(T) / σ_y(T)<br/>승온 → 연화 → 접촉면적↑"] -.-> CUT5["plastic_coverage.py:39 H 상수<br/>mpm3d --sigma-y 상수<br/>LPSCl H(T) 앵커 없음 §F1"]
     DEG["SE 분해율 (60 °C 가속)"] -.-> CUT6["STEP5 T 인자 0개<br/>216 카드 전수 확인 = 앵커 없음 §F1<br/>⇒ Joule v2 는 Eₐ-free 유지가 정답"]
-    SIGE["σ_e (전자, ohmic)"] -.-> OKISH["Reisacher 정성: ohmic 은 T-무관<br/>상수로 두는 것이 오히려 정합<br/>⚠단 predictor_engine.py:711-714 은<br/>Ea_AM 0.50 eV 를 써서 솔버와 불일치"]
+    SIGE["σ_e (전자, ohmic)"] -.-> OKISH["Reisacher 정성: ohmic 은 T-무관<br/>상수로 두는 것이 오히려 정합<br/>✔ 2026-07-28: 예측기 기본도 T-무관으로 통일<br/>(옛 Ea_AM 0.50 eV 는 legacy 옵션에만 남음)"]
 
     BAD --> SUM["★ 60 °C 순 결과<br/>①이온옴 3–4× 과대 ②반응 과전압 부호 반대<br/>③확산 무릎 조기 ④OCP 오프셋 누락<br/>= 전부 같은 방향으로 누적<br/>(과분극 · 용량 과소)"]
     CUT1 --> SUM
@@ -244,11 +260,11 @@ flowchart TD
 
 | ID | 내용 | 앵커 | 난이도 |
 |---|---|---|---|
-| **T1-a** | **T_ref 규약 명문화 + provenance 필드.** 모든 σ 테이블/metrics JSON 에 `T_ref_C: 25`, `T_C: <운전T 또는 null>`, `T_dependence: NOT_MODELLED\|ARRHENIUS`, `Ea_ion_eV` 를 찍는다. STEP2 metrics(`:1556-1577`), STEP3 σ 테이블(`mpm_webapp_payload.py:891`), STEP5 anchors dict(`cycle_contact_ledger.py:339-350`), b1_chem_fade(현재 JSON 자체를 안 씀) 전부. | 불필요 (정직화) | 낮음 |
-| **T1-b** | **σ_ion Arrhenius 배선.** 단일 CLI `--temp-c <℃>` (기본 `None` = 현행 그대로). 규약 = **σ·T = σ₀·exp(−Eₐ/k_BT)** (Kraft 2017 eq 5 — σ 형과 30→60 배수가 ~10 % 다르므로 규약 고정이 필수). ⚠ **적용점은 한 곳이 아니다** — σ_grain=3.0 이 리포 전역에 중복 하드코딩(§3-4 목록). 특히 PRODUCTION σ_ionic 스케일링 법칙 경로(`generate_comparison_plots.py:4249 SE_SG`)는 `network_conductivity` 를 참조조차 안 한다. **올바른 구현 = 단일 공유 모듈**(`scripts/se_material.py` 에 `SIGMA_GRAIN_MS_25C` + `sigma_grain(T)`) 도입 후 전 사이트 import 치환. | **Reisacher 2023 Eₐ=0.41 eV (STATED)**, 375 MPa 냉간압밀 = 우리 300 MPa 체제 → 전이 정당 | **중** (사이트 수 때문) |
-| **T1-c** | **Eₐ 밴드 스윕 인자** `--ea-ion-ev` (기본 0.41, 권장 스윕 0.29 / 0.46). **단일값 사용 금지 규약**을 help 에 명시. | Reisacher 0.41 / Ma 2024 0.29 / Kraft 0.44–0.46 | 낮음 |
+| **T1-a** ✔**구현(부분)** | **T_ref 규약 명문화 + provenance 필드.** 모든 σ 테이블/metrics JSON 에 `T_ref_C: 25`, `T_C: <운전T 또는 null>`, `T_dependence: NOT_MODELLED\|ARRHENIUS`, `Ea_ion_eV` 를 찍는다. STEP2 metrics(`:1556-1577`), STEP3 σ 테이블(`mpm_webapp_payload.py:891`), STEP5 anchors dict(`cycle_contact_ledger.py:339-350`), b1_chem_fade(현재 JSON 자체를 안 씀) 전부. | 불필요 (정직화) | 낮음 |
+| **T1-b** ✔**구현** | **σ_ion Arrhenius 배선.** 단일 CLI `--temp-c <℃>` (기본 `None` = 현행 그대로). 규약 = **σ·T = σ₀·exp(−Eₐ/k_BT)** (Kraft 2017 eq 5 — σ 형과 30→60 배수가 ~10 % 다르므로 규약 고정이 필수). ⚠ **적용점은 한 곳이 아니다** — σ_grain=3.0 이 리포 전역에 중복 하드코딩(§3-4 목록). 특히 PRODUCTION σ_ionic 스케일링 법칙 경로(`generate_comparison_plots.py:4249 SE_SG`)는 `network_conductivity` 를 참조조차 안 한다. **올바른 구현 = 단일 공유 모듈**(`scripts/se_material.py` 에 `SIGMA_GRAIN_MS_25C` + `sigma_grain(T)`) 도입 후 전 사이트 import 치환. | **Reisacher 2023 Eₐ=0.41 eV (STATED)**, 375 MPa 냉간압밀 = 우리 300 MPa 체제 → 전이 정당 | **중** (사이트 수 때문) |
+| **T1-c** ✔**구현** | **Eₐ 밴드 스윕 인자** `--ea-ion-ev` (기본 0.41, 권장 스윕 0.29 / 0.46). **단일값 사용 금지 규약**을 help 에 명시. | Reisacher 0.41 / Ma 2024 0.29 / Kraft 0.44–0.46 | 낮음 |
 | **T1-d** | ★ **부호-역전 가드.** `--temp-k` 가 T_ref 에서 벗어났는데 i0/D_s Arrhenius 가 꺼져 있으면 **hard warning + meta 플래그**(`kinetics_T_scaling: NONE`), 옵션으로 실행 차단(`--allow-unscaled-T`). 이것만으로도 §3-3 ①번 위험이 사라진다. | 불필요 (정직화) | 낮음 |
-| **T1-e** | **서로게이트↔솔버 규약 통일.** `predictor_engine.py:711-714` 의 Ea_SE 0.30 / Ea_AM 0.50('rough')를 솔버 규약(σ_ion 0.41 밴드, σ_e = T-무관)으로 교체. 현재 두 경로가 온도에서 서로 어긋난다. | 위와 동일 | 낮음 |
+| **T1-e** ✔**구현** | **서로게이트↔솔버 규약 통일.** `predictor_engine.py` 의 **이전** Ea_SE 0.30 / Ea_AM 0.50('rough')를 솔버 규약(σ_ion 0.41 밴드, σ_e = T-무관)으로 교체 — **완료**. 옛 동작은 `sigma_e_t_model='legacy_arrhenius'` 로 재현 가능하고 응답 JSON 이 어느 모델을 썼는지 항상 기록한다. UI 고지는 2026-07-28 C-3 에서 추가. | 위와 동일 | 낮음 |
 
 **T1-b 의 σ 배수 (T_ref 를 어디에 두느냐에 따라 — 그대로 쓸 수 있는 숫자)**
 
@@ -447,6 +463,107 @@ P1-a 명명 · P1-b/c/d 문서 명문화 · P1-e 하드코딩 제거 · P1-f σ 
 10. **온도×압력 교차항은 이 문서 전체에서 미검증 가정이다(T3-f).** 60 °C × 90 MPa × 장시간 = 크리프
     지배 구간인데, rate-independent 접촉모델·J2 에는 **시간축 자체가 없다**. 이것은 파라미터 문제가
     아니라 **구조적 부재**이므로, 스윕으로도 접근할 수 없다.
+
+---
+
+---
+
+## 9. ★ 구현 상태 (커밋 `d66fd144` + 2026-07-28 적대검증 후속) — **코드가 지금 실제로 하는 것**
+
+§1–§8 은 **구현 전 진단**이다. 이 절만이 **출하된 코드의 현재 상태**를 말한다.
+두 문서가 어긋나면 **이 절이 정본**이다.
+
+> **절대 규약 (전 항목 공통, 실제로 검증됨)**: 새 인자를 **주지 않으면 기존 동작과 bitwise 동일**.
+> `--temp-c` 미지정 → σ_grain 은 정확히 `3.0` mS/cm(= 옛 리터럴의 IEEE-754 비트 그대로),
+> Arrhenius 배수는 정확히 `1.0`, 서브프로세스 명령줄은 문자 단위로 동일, 산출 JSON 은 키 집합까지 동일.
+
+### 9-1. 구현 / 미구현 표
+
+| 항목 | 상태 | 켜는 법 | 미지정 시 동작 | 회귀시험 |
+|---|---|---|---|---|
+| σ_ion 온도 규약 단일 모듈 (`scripts/se_material.py`) — σ·T (Kraft 2017 eq 5), T_ref = **25 °C 규약**, Eₐ 기본 0.41 eV + 밴드 0.29/0.46 | ✅ **구현** | 라이브러리 | — | `se_material.py --selftest` |
+| DEM 솔버 σ_ion(T) (`network_conductivity.py`) | ✅ **구현** | `--temp-c` (+`--ea-ion-ev`) | σ 상수 3.0e-3 S/cm | `network_conductivity.py --selftest-temp` |
+| ★ **프로덕션 Stage-E** (`run_network_full_corrections.py`) | ✅ **구현 (2026-07-28 C-2)** | `--temp-c` (+`--ea-ion-ev`) | 플래그 자체가 안 붙음 → 명령줄 동일 | `run_network_full_corrections.py --selftest-temp` |
+| STEP3 복셀 σ (`step3_sigma` / `voxel_conductivity` / `mpm_webapp_payload`) | ✅ **구현** | `--temp-c` | 25 °C 상수 | `step3_sigma.py --selftest` |
+| 웹앱 킷(zip) 온도 굽기 | ✅ **구현** | `/results/<id>/mpm-input?tempc=…&eaion=…` | 킷 방출물 바이트 동일 | `webapp/test_temp_pressure_wiring.py` |
+| 예측기 σ_ion — 솔버와 **같은** 규약(σ·T, T_ref 25 °C, Eₐ 밴드) | ✅ **구현** | 슬라이더 + Eₐ 셀렉터 | 298 K 에서 배수 = 정확히 1.0 | `predictor_engine.py --selftest-temp` |
+| 예측기 σ_e — **기본 T-무관** (Reisacher ohmic + 솔버 정합). **이전**의 미앵커 `Ea_AM=0.50 eV`('rough')는 `sigma_e_t_model='legacy_arrhenius'` 로만 재현 | ✅ **구현** | UI 셀렉터 / API `sigma_e_t_model` | `none` (T-무관) | `predictor_engine.py --selftest-temp` |
+| ★ **예측기 UI 고지** — 무엇이 스케일되고 무엇이 안 되는지 + legacy 선택지 + Eₐ 밴드 선택지 + 결과 provenance 박스 | ✅ **구현 (2026-07-28 C-3)** | 화면에 상시 표시 | 요청 payload 는 기본과 동일 | `webapp/test_predictor_ui_and_sigma_grain.py` |
+| ★ **webapp σ_grain 단일출처** — `σ_Bruggeman`·`τ_Lap_eff`·`τ_Lap_geom`·MD 리포트가 런의 온도 provenance 를 따른다 | ✅ **구현 (2026-07-28 C-1)** | 자동(런의 provenance) | bitwise 3.0 | 위와 동일 |
+| provenance 필드 (T1-a) | 🔶 **부분** — STEP3 payload · 킷 `mpm_input.json` · Stage-E `stage_e_temperature_provenance` · 예측기 응답에는 있음. **STEP2 MPM metrics · STEP5 원장에는 아직 없음** | — | — | — |
+| **T1-d 부호-역전 가드** (`step4_dyn --temp-k` 를 T_ref 밖으로 주면서 i0/D_s Arrhenius 가 꺼져 있으면 hard warning) | ⛔ **미구현** | — | 경고 없음 (§3-3 ① 위험 그대로) | — |
+| i0(T) / R_ct(T) · D_s(T) · OCP dU/dT | ⛔ **미구현** | — | 25 °C 상수 | — (앵커 문제, §6-A T2-a·T3-a·T3-b) |
+| κ(T) · SE 경도 H(T)/σ_y(T) · STEP5 분해율 Eₐ | ⛔ **미구현** | — | 상수 | — (§F1 앵커 0건) |
+| **Find Optimal Design(예측기 스윕)의 온도** | ⛔ **미구현 — 대신 명시적으로 차단 (2026-07-28 C-3)** — `predictor_engine.sweep_optimal` 이 `predict()` 에 `temperature` 를 넘기지 않아 **항상 298 K**, 게다가 스윕 레인지 표에 `temperature` 가 없어 **1점으로 축퇴**한다(= 돌아가는 척하는 no-op). → 온도 체크를 풀면 **실행을 거부**하고 이유를 말하며, 스윕 결과 화면 상단에 **"298 K 고정" 배너**를 붙인다 | — | 298 K 고정 (+ 화면 고지) | `test_predictor_ui_and_sigma_grain.py` |
+| 구동 스택압(제작 300 → 운전 90 MPa) 2단 프로토콜 | 🔶 **부분** — MPM `--save-state/--load-state` + servo/hold 브래킷이 들어왔으나, **적대검증이 브래킷 한 팔의 결함을 지적**했다 → §9-4 | — | — | 담당 A/B |
+| 온도 적용 후 **코퍼스 재-run** | ⛔ **미실시** — 현존 전 케이스는 25 °C 산출물이다 | — | — | — |
+
+### 9-2. σ_grain "SINGLE SOURCE OF TRUTH" 의 **실제** 범위 (정직한 인벤토리)
+
+`se_material.py` 헤더는 자신을 단일 출처라고 선언한다. **프로덕션 경로에 대해서는 참이고,
+리포 전체에 대해서는 아직 아니다.**
+
+**se_material 경유 (프로덕션 σ 경로 — 전부 치환 완료)**
+`network_conductivity.py` · `step3_sigma.py` · `voxel_conductivity.py` ·
+`mpm_webapp_payload.py` · `generate_comparison_plots.py` `SE_SG`(= LOOCV 0.975 스케일링 법칙) ·
+`webapp/predictor_engine.py` · **`webapp/app.py` (7곳, 2026-07-28 C-1 에서 치환)**
+
+**아직 bare `3.0` 이 남아 있는 곳 (오프라인 분석·일회성 피팅 스크립트 — 프로덕션 σ 산출 경로 아님)**
+
+| 파일 | 위치 | 성격 |
+|---|---|---|
+| `scripts/physics_surface_contact_fit.py` | `:41 SIGMA_GRAIN` | 형상 탐색 피팅 |
+| `scripts/triage_cases.py` | `:35 SIGMA_GRAIN_MS` | 케이스 선별 CLI |
+| `scripts/verify_case.py` | `:32 SIGMA_GRAIN_MS` | 단건 점검 CLI |
+| `scripts/build_tau_regime_db.py` | `:28 SIGMA_GRAIN_MS` | τ 레짐 DB 빌더 |
+| `scripts/export_comsol_2d.py` | `:48 SIGMA_GRAIN_MS` | COMSOL export |
+| `scripts/fit_constrained.py` | `:45 SIGMA_GRAIN` | 제약 피팅 |
+| `scripts/screening_ionic_thin_focus.py` | `:23 SG` | 스크리닝 |
+| `scripts/analyze_network_results.py` | `:166,185` | τ_eff2 계산 |
+| `scripts/generate_comparison_plots.py` | `:1128,1178,1792,1875` 지역 `SIGMA_BULK` | 플롯 내부 상수 (모듈 `SE_SG` 는 치환됨) |
+| `scripts/physics_fit_v59_tau_3way.py` 외 v-계열 | 각 파일 상단 | 과거 실험용 피팅 스크립트 |
+
+⇒ **읽는 법**: 온도를 켠 런의 결과를 위 스크립트에 통과시키면 σ_grain 이 25 °C 로 되돌아가
+**τ/σ_brug 가 조용히 틀린다.** 온도 스윕 결과는 프로덕션 경로(webapp/Stage-E/STEP3)에서만 읽을 것.
+⚠ `se_material.py` 헤더 문구 자체를 사실에 맞게 낮추는 수정은 **이번 라운드에서 하지 못했다**
+(동시 작업 중인 다른 담당의 파일이라 편집 경계를 넘지 않음) — **다음 라운드 TODO**.
+회귀 가드는 걸어 두었다: `webapp/test_predictor_ui_and_sigma_grain.py` 가 `app.py` 에 bare
+리터럴이 되살아나면 실패한다.
+
+### 9-3. 온도를 켜도 **여전히 아닌 것** (오독 방지 — 가장 중요)
+
+1. **σ_ion 하나만 움직인다.** i0/R_ct · D_s · OCP dU/dT · σ_e · κ · SE 경도 · 분해율은 25 °C 그대로다.
+   ⇒ `--temp-c 60` 은 **"60 °C 전극"이 아니라 "σ_ion 만 60 °C 인 25 °C 전극"** 이다.
+2. **STEP4 kinetics 의 부호 역전(§3-3 ①)은 그대로다.** `step4_dyn --temp-k` 는 여전히 `f=F/RT` 만
+   움직여 반응 과전압을 **실험과 반대 방향**으로 낸다. `--temp-c`(σ) 와 `--temp-k`(kinetics) 를 함께
+   쓰면 **일부만 맞은 온도**가 되어 오히려 해석이 어려워진다 — 킷은 그래서 `--temp-k` 를 굽지 않는다.
+3. **Eₐ 는 밴드다.** 0.29 / 0.41 / 0.46 eV (30→60 °C 에서 ×2.47 ~ ×4.44). **단일값 보고 금지** —
+   세 값을 모두 돌려 밴드로 제시할 것. UI/CLI help/ provenance 모두 이 문구를 달고 있다.
+4. **같은 온도 안에서의 상대비교는 원래 안전하다** (σ_grain 이 양쪽에 같은 배수로 곱해져 상쇄).
+   SBE↔DBE 헤드라인은 온도 배선 전후로 **바뀌지 않는다.** 온도가 필요한 것은 **절대값**과
+   **온도축 비교**다 (§3-4 3분류 그대로).
+5. **Stage-E 를 `--temp-c` 로 돌리면 한 파일 안에 두 온도가 공존한다** — `*_stage_e` 는 운전 T,
+   베이스라인 `sigma_full_mScm` 은 25 °C. 그래서 `stage_e_temperature_provenance` 를 반드시 확인해야
+   한다(그 필드가 `NOT_applied_to` 로 이 사실을 적는다). 손실률 `sigma_ionic_loss_pct_stage_e` 는
+   분자·분모가 같은 온도라 **T 불변**이며, 이것이 깨지면 버그다(회귀시험이 그 반사실까지 검사한다).
+6. **현존 코퍼스는 전부 25 °C 산출물이다.** 온도 축 비교를 하려면 재-run 범위를 먼저 정해야 한다.
+
+### 9-4. 2026-07-28 적대검증이 찾은 잔존 결함 (사용자가 알아야 할 것)
+
+이 커밋은 "리뷰 진행 중" 상태로 먼저 들어갔고, 3렌즈 적대검증이 결함을 찾았다. 담당별로 수정 중이며
+**아래 두 건은 이 문서 작성 시점에 결과를 확인하지 못했으므로 수치는 적지 않는다.**
+
+| # | 결함 | 상태 |
+|---|---|---|
+| A | **제하(unload) 브래킷의 한 팔이 실제로는 no-op** — "servo(정응력) ~ hold(정변위)" 두 팔로 지그 강성을 브래킷한다고 했는데, 그중 한 팔이 실제로는 아무 일도 하지 않는다는 지적. 브래킷이 한 팔뿐이면 그것은 브래킷이 아니다 | **검증에서 발견됨 / 별도 수정 중** (담당 A/B). 작동시키거나 **명시적으로 차단**하는 방향 |
+| B | **온도 누출(temperature leak)** — 온도를 켠 산출물과 25 °C 산출물이 한 파이프라인 안에서 라벨 없이 섞일 수 있는 경로가 남아 있다는 지적 | **검증에서 발견됨 / 별도 수정 중** (담당 A/B) |
+| C-1 | webapp `app.py` 에 bare σ_grain `3.0` 7곳 (σ_brug ×3 · `SIGMA_GRAIN_MS` ×2 · MD 리포트 ×2) — 온도를 켠 런에서 τ_Lap 이 √배수만큼 틀린다 | ✅ **수정 완료** (§9-2) + 회귀시험 |
+| C-2 | 프로덕션 Stage-E 가 솔버를 **서브프로세스**로 부르면서 `--temp-c` 를 안 넘겨 **DEM 프로덕션 σ 경로에 온도 루트가 없었다**. 게다가 단순 배선만 하면 (ㄱ) 손실률이 −379 % 가 되고 (ㄴ) `v > 1.1·base` fallback 가드가 오발해 정답을 25 °C 값으로 **덮어쓴다** | ✅ **수정 완료** — 배선 + 재사용 분기 T 정합 + provenance. 반사실까지 회귀시험에 넣음 |
+| C-3 | 예측기 UI 미고지 — 슬라이더는 그대로인데 σ_e 기본이 T-무관으로 바뀌어 사용자가 알 길이 없었음. 추가로 **Find Optimal Design 이 온도를 아예 무시**(+ 온도 스윕은 1점 축퇴 no-op)한다는 사실도 미고지였음 | ✅ **고지 + 차단 완료** — 스코프 박스 · legacy σ_e 셀렉터 · Eₐ 밴드 셀렉터 · 결과 provenance 박스 · **온도 스윕 실행 거부** · 스윕 결과 "298 K 고정" 배너. 스윕 엔진 자체의 온도 반영은 여전히 **미구현**(§9-1) |
+| C-4 | 이 문서가 출하 코드와 5곳에서 모순 | ✅ **수정 완료** — 본 §9 및 §2·§3-2·§3-4·§4·§5·§6-A 에 `[→ §9]` 표시 |
+
+**남은 TODO (다음 라운드)**: `se_material.py` 헤더 문구 정정 · 오프라인 스크립트 σ_grain 치환 ·
+T1-d 부호역전 가드 · STEP2/STEP5 provenance · `sweep_optimal` 온도 전달 · 코퍼스 재-run 범위 결정.
 
 ---
 

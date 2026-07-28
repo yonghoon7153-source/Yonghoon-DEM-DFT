@@ -574,6 +574,124 @@ class RadialDiffusion:
         self.x = xn
 
 
+# ---------------------------------------------------------------- 온도 계약 (T1-a/T1-d/G-1)
+# step4_grid.npz 안의 σ_i 는 payload 가 **어떤 온도에서** 구운 값이다 (--temp-c → SE σ_ion 에
+# Kraft-2017 Arrhenius).  이 파일은 그 σ 를 그대로 읽어 쓰므로, grid 의 온도와 --temp-k 가
+# 어긋나면 **혼합-온도 셀**(σ_ion@45 °C × f=F/RT@25 °C × i0/D_s/OCP@25 °C)이 조용히 나간다.
+# 그 상태를 만드는 것이 정확히 킷 사슬(payload --temp-c 45 → step4_dyn --grid, --temp-k 미지정)
+# 이었다.  → 계약을 읽고, 어긋나면 T1-d 와 같은 급으로 차단한다.
+_T_REF_K = 298.15
+_T_REF_C = 25.0
+
+
+def _grid_temperature(path):
+    """step4_grid.npz 의 온도 계약을 읽는다 (payload --save-step4-grid 가 굽는 두 필드).
+
+    반환 dict:
+      present  — 계약이 실려 있나 (False = 옛 그리드; 온도를 **단정하지 않는다**)
+      T_C      — σ_ion 이 실제로 놓인 °C.  None = T_dependence NOT_MODELLED (= T_ref 25 °C 값)
+      factor   — σ_ion 에 곱해진 Arrhenius 배수 (1.0 = 미스케일)
+      prov     — se_material.provenance 원본 (meta 에 통째로 승계)
+    계약이 있는데 깨져 있으면 **조용히 무시하지 않고** RuntimeError (침묵 25 °C 단정 금지).
+    """
+    off = {'present': False, 'T_C': None, 'factor': 1.0, 'prov': None}
+    try:
+        g = np.load(path, allow_pickle=False)
+    except Exception:
+        return off                                    # 파일 자체 문제는 뒤의 정규 로드가 보고
+    try:
+        files = set(g.files)
+        if not ({'grid_temp_c', 'temperature_provenance'} & files):
+            return off                                # 옛 payload 산출 그리드
+        prov = None
+        if 'temperature_provenance' in files:
+            try:
+                prov = json.loads(str(np.asarray(g['temperature_provenance']).ravel()[0]))
+            except Exception as e:
+                raise RuntimeError(
+                    f'{path}: temperature_provenance 를 읽을 수 없습니다 ({type(e).__name__}: {e}). '
+                    '온도 계약이 깨진 그리드를 25 °C 로 단정하면 혼합-온도 런이 조용히 나갑니다 — '
+                    'payload(--save-step4-grid)를 다시 돌려 그리드를 재생성하세요.')
+        t_c = None
+        if 'grid_temp_c' in files:
+            v = float(np.asarray(g['grid_temp_c']).ravel()[0])
+            t_c = None if not np.isfinite(v) else v
+        elif prov is not None:
+            t_c = prov.get('T_C')
+            t_c = None if t_c is None else float(t_c)
+        if prov is not None and 'grid_temp_c' in files:    # 두 필드 교차검증 (계약 무결성)
+            p_t = prov.get('T_C')
+            p_t = None if p_t is None else float(p_t)
+            if (p_t is None) != (t_c is None) or (p_t is not None and abs(p_t - t_c) > 1e-9):
+                raise RuntimeError(
+                    f'{path}: 온도 계약 불일치 — grid_temp_c={t_c} vs provenance.T_C={p_t}. '
+                    '어느 쪽이 σ 를 만든 온도인지 알 수 없으므로 진행하지 않습니다.')
+        f = 1.0
+        if prov is not None and prov.get('sigma_ion_T_factor') is not None:
+            f = float(prov['sigma_ion_T_factor'])
+        return {'present': True, 'T_C': t_c, 'factor': f, 'prov': prov}
+    finally:
+        try:
+            g.close()
+        except Exception:
+            pass
+
+
+def temperature_verdict(temp_k, grid, allow_unscaled_t, allow_grid_t_mismatch):
+    """--temp-k 와 grid 의 σ_ion 온도를 대조한다 (순수함수 — selftest 가 직접 호출).
+
+    반환 ``(errors, meta)``.
+      errors — 차단 사유 코드 리스트 (빈 리스트 = 통과).  'GRID_T_MISMATCH' / 'KINETICS_UNSCALED'
+      meta   — 감사 기록 dict, 또는 **자명한 기본**(모든 것이 25 °C·플래그 없음)이면 None
+               → 기본 런의 npz meta 는 바이트 불변.
+    """
+    grid = grid or {'present': False, 'T_C': None, 'factor': 1.0, 'prov': None}
+    t_kin_c = float(temp_k) - 273.15
+    sig_t_c = grid['T_C']                              # None = σ_ion 이 T_ref 25 °C 값
+    sig_eff_c = _T_REF_C if sig_t_c is None else sig_t_c
+    errors = []
+    if abs(sig_eff_c - t_kin_c) > 0.05:
+        # σ 가 놓인 온도 ≠ 동역학이 도는 온도 = 혼합-온도 셀.
+        # grid 가 명시적으로 다른 T 를 들고 있으면 G-1(그리드 불일치), 아니면 기존 T1-d.
+        errors.append('GRID_T_MISMATCH' if sig_t_c is not None else 'KINETICS_UNSCALED')
+    if abs(t_kin_c - _T_REF_C) > 0.05 and 'KINETICS_UNSCALED' not in errors:
+        errors.append('KINETICS_UNSCALED')             # i0/D_s/OCP 는 어떤 경우에도 25 °C 상수
+    released = []
+    if 'GRID_T_MISMATCH' in errors and allow_grid_t_mismatch:
+        errors.remove('GRID_T_MISMATCH'); released.append('GRID_T_MISMATCH:--allow-grid-t-mismatch')
+    if 'KINETICS_UNSCALED' in errors and allow_unscaled_t:
+        errors.remove('KINETICS_UNSCALED'); released.append('KINETICS_UNSCALED:--allow-unscaled-t')
+    mixed = abs(sig_eff_c - t_kin_c) > 0.05
+    if abs(sig_eff_c - _T_REF_C) <= 0.05 and abs(t_kin_c - _T_REF_C) <= 0.05:
+        state = 'ISOTHERMAL_25C'
+    elif mixed:
+        state = f'MIXED_TEMPERATURE (sigma_ion@{sig_eff_c:g}C, kinetics@{t_kin_c:g}C)'
+    else:
+        state = f'PARTIAL_sigma_ion_only@{sig_eff_c:g}C'
+    # meta 는 **온도가 실제로 개입한 런에만** 붙인다: 그리드가 25 °C 규약값이고 --temp-k 도 기본이며
+    # 해제 플래그도 없으면 역사적 기본과 완전히 동일 → 기록할 것이 없고 npz 는 바이트 불변.
+    trivial = (sig_t_c is None and abs(t_kin_c - _T_REF_C) <= 0.05
+               and not allow_unscaled_t and not allow_grid_t_mismatch)
+    meta = None if trivial else {
+        'temp_k': float(temp_k), 'temp_c_kinetics': t_kin_c,
+        'sigma_ion_T_C': sig_eff_c,
+        'sigma_ion_T_scaling': ('UNKNOWN_LEGACY_GRID' if not grid['present']
+                                else ('ARRHENIUS' if sig_t_c is not None else 'NOT_MODELLED')),
+        'sigma_ion_T_factor': float(grid['factor']),
+        'kinetics_T_scaling': 'NONE',                  # i0 / D_s / OCP dU/dT — 앵커 없음 (§F1)
+        'state': state,
+        'grid_contract_present': bool(grid['present']),
+        'grid_temperature_provenance': grid['prov'],
+        'released_guards': released,
+        'trust': ('f=F/RT 만 --temp-k 를 따른다.  i0/D_s/OCP/σ_e/κ 는 25 °C 상수 (§F1 앵커 없음) → '
+                  '전-물리 온도 스윕 아님'
+                  + ('' if not mixed else
+                     '.  ★혼합-온도: σ_ion 과 동역학이 서로 다른 온도에 있다 — 절대 용량/과전압 '
+                     '해석 금지, 명시 해제된 진단 런')),
+    }
+    return errors, meta
+
+
 # ---------------------------------------------------------------- OCP / kinetics
 def _load_xy_csv(path):
     tab = np.loadtxt(path, delimiter=',', skiprows=1)
@@ -2264,6 +2382,84 @@ def _selftest_chain():
     return ok
 
 
+def _selftest_temperature():
+    """온도 계약 회귀 (T1-a npz 왕복 · T1-d 부호역전 · G-1 혼합-온도 차단)."""
+    ok = True
+
+    def chk(name, cond, extra=''):
+        nonlocal ok
+        ok &= bool(cond)
+        print(f'  temp {"OK  " if cond else "FAIL"} {name}{(" — " + extra) if extra else ""}')
+
+    G_OFF = {'present': True, 'T_C': None, 'factor': 1.0, 'prov': {'T_dependence': 'NOT_MODELLED'}}
+    G_45 = {'present': True, 'T_C': 45.0, 'factor': 2.5599, 'prov': {'T_dependence': 'ARRHENIUS'}}
+
+    # (1) ★기본 경로 — 옛 그리드(계약 없음) + --temp-k 기본 → 오류 0 · meta None (바이트 불변)
+    e, m = temperature_verdict(298.15, None, False, False)
+    chk('(1) 계약없는 그리드 + 기본 T → 통과, meta None (기존 npz 바이트 불변)', e == [] and m is None)
+    e, m = temperature_verdict(298.15, G_OFF, False, False)
+    chk('(1b) 계약 있으나 T_dependence=NOT_MODELLED + 기본 T → 통과, meta None (바이트 불변)',
+        e == [] and m is None)
+    e, m = temperature_verdict(298.15, dict(G_OFF, T_C=25.0), False, False)
+    chk('(1c) 그리드가 명시적으로 25 °C → 통과하되 meta 는 기록 (온도가 선언된 런)',
+        e == [] and m is not None and m['state'] == 'ISOTHERMAL_25C'
+        and m['sigma_ion_T_scaling'] == 'ARRHENIUS')
+
+    # (2) ★핵심 회귀 — 45 °C 로 구운 그리드를 --temp-k 기본(25 °C)으로 태우면 **차단**
+    e, m = temperature_verdict(298.15, G_45, False, False)
+    chk('(2) 그리드 45 °C + --temp-k 기본 25 °C → GRID_T_MISMATCH 차단 (버그 재발 방지)',
+        e == ['GRID_T_MISMATCH'], str(e))
+    chk('(2b) --allow-unscaled-t 로는 안 풀린다 (다른 결함)',
+        temperature_verdict(298.15, G_45, True, False)[0] == ['GRID_T_MISMATCH'])
+    e, m = temperature_verdict(298.15, G_45, False, True)
+    chk('(2c) --allow-grid-t-mismatch → 통과 + MIXED_TEMPERATURE 기록',
+        e == [] and m['state'].startswith('MIXED_TEMPERATURE')
+        and m['released_guards'] == ['GRID_T_MISMATCH:--allow-grid-t-mismatch'], m['state'])
+
+    # (3) 온도를 맞춰도 동역학 Arrhenius 부재는 남는다 (T1-d 유지)
+    e, m = temperature_verdict(318.15, G_45, False, False)
+    chk('(3) 그리드 45 °C + --temp-k 318.15 → KINETICS_UNSCALED 만 남음',
+        e == ['KINETICS_UNSCALED'], str(e))
+    e, m = temperature_verdict(318.15, G_45, True, False)
+    chk('(3b) + --allow-unscaled-t → 통과, state=PARTIAL, kinetics_T_scaling=NONE',
+        e == [] and m['state'].startswith('PARTIAL') and m['kinetics_T_scaling'] == 'NONE',
+        m['state'])
+
+    # (4) 계약 없는 옛 그리드 + T≠25 → 기존 T1-d 그대로
+    e, _ = temperature_verdict(318.15, None, False, False)
+    chk('(4) 옛 그리드 + T≠25 → KINETICS_UNSCALED (기존 T1-d 보존)', e == ['KINETICS_UNSCALED'])
+
+    # (5) npz 계약 왕복 + 무결성 (payload 가 쓰는 형식 그대로)
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        p = os.path.join(td, 'g45.npz')
+        np.savez_compressed(p, sid=np.zeros((2, 2, 2), np.int8), grid_temp_c=np.float64(45.0),
+                            temperature_provenance=np.array(json.dumps(
+                                {'T_C': 45.0, 'sigma_ion_T_factor': 2.5599,
+                                 'T_dependence': 'ARRHENIUS'})))
+        gt = _grid_temperature(p)
+        chk('(5) npz 왕복: T_C=45 · factor 승계', gt['present'] and gt['T_C'] == 45.0
+            and abs(gt['factor'] - 2.5599) < 1e-9)
+        p2 = os.path.join(td, 'bad.npz')                 # 두 필드가 서로 다른 온도 = 계약 파손
+        np.savez_compressed(p2, sid=np.zeros((2, 2, 2), np.int8), grid_temp_c=np.float64(45.0),
+                            temperature_provenance=np.array(json.dumps({'T_C': 25.0})))
+        try:
+            _grid_temperature(p2)
+            chk('(5b) 계약 불일치 npz → RuntimeError', False)
+        except RuntimeError:
+            chk('(5b) 계약 불일치 npz → RuntimeError (조용한 단정 금지)', True)
+        p3 = os.path.join(td, 'broken.npz')              # JSON 깨짐 = 조용히 25 °C 로 넘기지 않음
+        np.savez_compressed(p3, sid=np.zeros((2, 2, 2), np.int8),
+                            temperature_provenance=np.array('{not json'))
+        try:
+            _grid_temperature(p3)
+            chk('(5c) 깨진 provenance → RuntimeError', False)
+        except RuntimeError:
+            chk('(5c) 깨진 provenance → RuntimeError', True)
+    print(f'  temperature selftest: {"PASS" if ok else "FAIL"}')
+    return ok
+
+
 # ---------------------------------------------------------------- CLI
 def main():
     ap = argparse.ArgumentParser(description='STEP4-v2 galvanostatic/CV voxel-DFN (SSB)')
@@ -2326,15 +2522,24 @@ def main():
     ap.add_argument('--r-int-ohm-cm2', type=float, default=0.0,
                     help='집전체 실측 R_int 직렬 [Ω·cm²] (STEP3 시나리오 규약; 46=DBE)')
     ap.add_argument('--temp-k', type=float, default=298.15,
-                    help='운전 온도 [K].  ⚠ 이 값이 바꾸는 것은 BV 열전압 f=F/RT **하나뿐**이다 — '
-                         'σ_ion·σ_e·κ·D_s·i0·OCP·열화율은 전부 25°C 상수라 T 를 안 따른다.  '
+                    help='운전 온도 [K].  ⚠ 이 값이 이 스크립트 안에서 바꾸는 것은 BV 열전압 f=F/RT '
+                         '**하나뿐**이다 — D_s·i0·OCP·σ_e·κ·열화율은 전부 25°C 상수라 T 를 안 따른다.  '
                          '그래서 T 를 올리면 반응 과전압이 **커지는데(실험은 R_ct 가 4.28× 감소)** '
-                         '부호가 반대다.  T≠298.15 로 돌리려면 --allow-unscaled-t 를 함께 줘야 하며, '
-                         '결과는 "온도 반영됨" 이 아니라 "BV 기울기만 반영됨" 으로 읽을 것 '
-                         '(docs/temp_pressure_capability.md §3).')
+                         '부호가 반대다.  T≠298.15 로 돌리려면 --allow-unscaled-t 가 필요하다.  '
+                         '★σ_ion 만은 예외 — 그 값은 여기서 정하는 게 아니라 --grid(step4_grid.npz) 에 '
+                         '**payload 가 --temp-c 로 구워 넣은 온도**로 이미 고정돼 있다.  그래서 이 값이 '
+                         '그리드의 온도와 다르면 혼합-온도 셀이 되어 별도로 차단된다 '
+                         '(--allow-grid-t-mismatch).  (docs/temp_pressure_capability.md §3)')
     ap.add_argument('--allow-unscaled-t', action='store_true',
-                    help='T≠298.15 K 인데 물성 Arrhenius 가 없는 상태로 실행하는 것을 명시 허용 '
-                         '(부호-역전 가드 해제).  npz meta 에 kinetics_T_scaling=NONE 이 기록된다.')
+                    help='T≠298.15 K 인데 동역학 물성(i0/D_s/OCP) Arrhenius 가 없는 상태로 실행하는 것을 '
+                         '명시 허용 (부호-역전 가드 해제).  npz meta 의 temperature.kinetics_T_scaling='
+                         'NONE 으로 기록된다.  ★그리드 σ_ion 온도 불일치는 이 플래그로 안 풀린다 '
+                         '(다른 결함 — --allow-grid-t-mismatch).')
+    ap.add_argument('--allow-grid-t-mismatch', action='store_true',
+                    help='★G-1 해제: --grid 안 σ_ion 이 구워진 온도와 --temp-k 가 어긋난 **혼합-온도** '
+                         '실행을 명시 허용한다 (예: payload --temp-c 45 로 구운 그리드를 --temp-k 298.15 '
+                         '로 돌리기).  기본은 차단 — 이 조합은 σ_ion@45 °C × 동역학@25 °C 라 어느 온도의 '
+                         '셀도 아니다.  허용 시 meta.temperature.state=MIXED_TEMPERATURE 가 기록된다.')
     ap.add_argument('--x-init', type=float, default=None, help='초기 stoich (기본: 창 끝)')
     ap.add_argument('--init-state', default='',
                     help='★v2 chaining: 이전 런의 --save-state npz 셸-SOC 로 시작 (같은 베드·같은 '
@@ -2391,25 +2596,47 @@ def main():
         ap.error('--init-state 와 --x-init 동시 지정 불가 (시작상태 이중 정의)')
     if a.t_rest_min <= 0:
         ap.error('--t-rest-min must be > 0')
-    # ★ 부호-역전 가드 (T1-d, docs/temp_pressure_capability.md §3-3).  --temp-k 는 f=F/RT 만 바꾼다:
-    #   T↑ → f↓ → η_ct ∝ 1/f 가 **커진다**.  실제로는 R_ct 가 30→60°C 에 4.28× **감소**(kim2025)해야
-    #   하므로 부호가 반대다.  σ_ion(Arrhenius)·D_s·i0·OCP 도 전부 25°C 상수라 함께 틀린다.
-    #   ⇒ 조용히 틀린 곡선이 나가는 것을 막는다 — 의도적이면 --allow-unscaled-t 로 명시.
-    _T_REF_K = 298.15
-    _dT = abs(float(a.temp_k) - _T_REF_K)
-    if _dT > 0.05 and not a.allow_unscaled_t:
-        ap.error(
-            f'--temp-k {a.temp_k:g} K ({a.temp_k - 273.15:.1f}°C) 는 기준 {_T_REF_K:g} K (25°C) 에서 '
-            f'{_dT:.1f} K 벗어났는데, 물성 온도의존이 배선돼 있지 않습니다.\n'
-            '  이 상태로 돌리면 BV 열전압 f=F/RT 만 T 를 따르고 σ_ion·σ_e·D_s·i0·OCP 는 25°C 값이라,\n'
-            '  반응 과전압이 온도에 따라 **증가**합니다 — 실험(R_ct 30→60°C 4.28× 감소)과 부호가 반대입니다.\n'
-            '  ▶ 온도 비교가 목적이면: 지금은 불가 (σ_ion Arrhenius 배선 = docs/temp_pressure_capability.md §6-A T1-b)\n'
-            '  ▶ BV 기울기만 보려는 의도면: --allow-unscaled-t 를 추가하세요 (meta 에 NONE 기록)\n'
-            '  ▶ 상세: docs/temp_pressure_capability.md §3')
-    if _dT > 0.05:
-        print(f'  ⚠ T={a.temp_k:g} K ({a.temp_k - 273.15:.1f}°C) 이지만 물성 Arrhenius 없음 '
-              f'(--allow-unscaled-t).  f=F/RT 만 T 반영 — η_ct 부호가 실험과 반대일 수 있음. '
-              f'σ-메트릭·용량 절대값 신뢰 금지.', flush=True)
+    # ★ 온도 가드 (T1-d 부호역전 + G-1 그리드 불일치, docs/temp_pressure_capability.md §3-3).
+    #   ① T1-d: --temp-k 는 이 스크립트 안에선 f=F/RT 만 바꾼다.  T↑ → f↓ → η_ct ∝ 1/f 가
+    #      **커진다**.  실제로는 R_ct 가 30→60°C 에 4.28× **감소**(kim2025) → 부호가 반대.
+    #   ② G-1: σ_ion 은 여기서 정하는 게 아니라 --grid 에 payload 가 --temp-c 로 **구워** 넣는다.
+    #      그 온도를 읽지 않고 25 °C 로 단정하면 σ_ion@45 °C × 동역학@25 °C 라는 혼합-온도 셀이
+    #      조용히 나간다 (킷 사슬 payload --temp-c 45 → step4_dyn 이 정확히 그 경로였다).
+    #   ⇒ 그리드 계약을 읽어 대조하고, 어긋나면 같은 급으로 차단.  해제는 각각 명시 플래그.
+    _gt = _grid_temperature(a.grid) if (a.grid and not a.selftest) else None
+    _terr, _tmeta = temperature_verdict(a.temp_k, _gt, a.allow_unscaled_t, a.allow_grid_t_mismatch)
+    if _terr:
+        _sig_c = (_tmeta or {}).get('sigma_ion_T_C', _T_REF_C)
+        _msg = [f'온도 상태가 일관되지 않습니다 — 차단 ({", ".join(_terr)}).',
+                f'  · --grid σ_ion 이 놓인 온도 : {_sig_c:g} °C'
+                + ('  (그리드에 온도 계약 없음 → 옛 payload = 25 °C 규약값)'
+                   if not (_gt or {}).get('present') else
+                   ('  (payload --temp-c 로 Arrhenius 스케일됨, '
+                    f"×{(_gt or {}).get('factor', 1.0):.3f})" if (_gt or {}).get('T_C') is not None
+                    else '  (T_dependence=NOT_MODELLED = T_ref 규약값)')),
+                f'  · --temp-k 동역학 온도      : {a.temp_k - 273.15:g} °C '
+                f'(기준 {_T_REF_K:g} K; f=F/RT 만 이 T 를 따름)']
+        if 'GRID_T_MISMATCH' in _terr:
+            _msg += [
+                '  ⛔ G-1 혼합-온도: σ_ion 과 BV/확산/OCP 가 **서로 다른 온도**에 있습니다 — 어느 온도의',
+                '     셀도 아닙니다.  (STEP3 σ_ion_eff·이온 옴강하가 한 온도, 반응·확산이 다른 온도)',
+                f'     ▶ 그리드에 맞추려면: --temp-k {_sig_c + 273.15:g} --allow-unscaled-t',
+                '     ▶ 25 °C 로 돌리려면 : payload 를 --temp-c 없이 다시 돌려 그리드를 재생성',
+                '     ▶ 알고 감수(진단용) : --allow-grid-t-mismatch (meta 에 MIXED_TEMPERATURE 기록)']
+        if 'KINETICS_UNSCALED' in _terr:
+            _msg += [
+                '  ⛔ T1-d 부호역전: i0/D_s/OCP 는 25 °C 상수라 T 를 안 따릅니다.  이 상태로 돌리면',
+                '     반응 과전압이 온도에 따라 **증가**합니다 — 실험(R_ct 30→60 °C 4.28× 감소)과 반대.',
+                '     ▶ BV 기울기만 보려는 의도면: --allow-unscaled-t (meta 에 kinetics_T_scaling=NONE)']
+        _msg.append('  ▶ 상세: docs/temp_pressure_capability.md §3')
+        ap.error('\n'.join(_msg))
+    if _tmeta and _tmeta['state'] != 'ISOTHERMAL_25C':
+        print(f"  ⚠ 온도 상태 {_tmeta['state']} — σ_ion {_tmeta['sigma_ion_T_C']:g}°C "
+              f"(×{_tmeta['sigma_ion_T_factor']:.3f}) vs 동역학 {_tmeta['temp_c_kinetics']:g}°C; "
+              f"i0/D_s/OCP/σ_e/κ 는 25°C 상수 (kinetics_T_scaling=NONE). "
+              f"σ-메트릭·용량 절대값 신뢰 금지"
+              + (f"  [해제: {', '.join(_tmeta['released_guards'])}]"
+                 if _tmeta['released_guards'] else ''), flush=True)
     if a.i0_poly is not None and a.i0 <= 0:
         # _i0s = i0_p/i0_ref 정규화 분모 — 0이면 0·inf=NaN이 AMG 빌드 후 newton_fail로 오진됨
         # (리뷰 #8 재현: '--i0 0 --i0-poly ...' → 그리드 로드·전처리 다 하고 죽음)
@@ -2421,6 +2648,7 @@ def main():
         ok &= _selftest_solver()
         ok &= _selftest_b1()
         ok &= _selftest_chain()
+        ok &= _selftest_temperature()
         print('STEP4-V2 SELFTEST', 'PASS' if ok else 'FAIL')
         sys.exit(0 if ok else 1)
     if not a.grid:
@@ -2517,6 +2745,8 @@ def main():
                             'particles excluded — I=0 표식용 근사 (전기화학 리뷰 chain#3)',
                     d_s=(float(rad.D[0]) if rad.D.max() == rad.D.min() else
                          dict(mode='per_particle', min=float(rad.D.min()), max=float(rad.D.max()))))
+        if _tmeta is not None:                           # 자명한 25 °C 기본이면 None → meta 불변
+            meta['temperature'] = _tmeta
         np.savez_compressed(a.out, **ro, x_shell_final=rad.x.copy(),
                             params_json=json.dumps(meta))
         if a.save_state:
@@ -2579,6 +2809,8 @@ def main():
     if a.init_state or a.save_state:                         # v2 chaining 감사 기록
         meta['chain'] = {'init_state': a.init_state or None, 'prev_end': _prev_end or None,
                          'save_state': a.save_state or None}
+    if _tmeta is not None:                                   # ★온도 계약 감사 (T1-a/T1-d/G-1).
+        meta['temperature'] = _tmeta                         #   자명한 25 °C 기본이면 None → meta 불변
     if split_meta is not None:
         meta['am_electro_split'] = split_meta                # poly/SC 분리 감사 기록 (값+문턱+개수)
     if _b1_on:                                               # B-1 사이클 계면상 감사 기록 (ASSUMED-FORM)
@@ -2661,6 +2893,8 @@ def main():
                       'pid': sysm.f_pid[idx].astype(int).tolist(),
                       'i_rel': np.round(i_rel, 3).tolist()},
         }
+        if _tmeta is not None:                          # 뷰어가 혼합-온도 런을 배지로 구분할 수 있게
+            viz['temperature'] = _tmeta                 # (자명한 25 °C 기본이면 키 자체가 없음)
         with open(a.viz_out, 'w') as fh:
             json.dump(viz, fh, separators=(',', ':'))
         import os as _os

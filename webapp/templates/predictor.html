@@ -90,6 +90,47 @@
           <input type="range" id="temperature" min="233" max="373" step="5" value="298">
           <span class="slider-val" id="temperature_val">298 K (25&deg;C)</span>
         </div>
+
+        <!-- ★ 2026-07-28 적대검증 C-3: 이 슬라이더가 무엇을 스케일하고 무엇을 안 하는지 화면에
+             적는다.  이전에는 σ_e 에 미앵커 Ea_AM=0.50 eV Arrhenius 가 걸려 있다가 조용히 제거됐고
+             (기본 T-무관), UI 는 그대로여서 사용자가 알 방법이 없었다.
+             근거/한계: docs/temp_pressure_capability.md §3-2 · T1-c/T1-e -->
+        <div class="t-scope" id="temp-scope-note">
+          <div class="t-scope-h">이 슬라이더가 실제로 바꾸는 것 <span class="t-scope-tag">읽고 쓰세요</span></div>
+          <div><b class="t-yes">스케일됨</b> &nbsp;&sigma;<sub>ionic</sub>(SE) &mdash; Kraft 2017
+            <span class="t-mono">&sigma;&middot;T = &sigma;<sub>0</sub>e<sup>&minus;E<sub>a</sub>/k<sub>B</sub>T</sup></span>,
+            T<sub>ref</sub> = 25 &deg;C(298 K) 규약, E<sub>a</sub> 기본 0.41 eV (Reisacher 2023).</div>
+          <div><b class="t-no">스케일 안 됨</b> &nbsp;&sigma;<sub>electronic</sub>(기본) &middot;
+            &sigma;<sub>thermal</sub> &middot; i<sub>0</sub>/R<sub>ct</sub> &middot; D<sub>s</sub> &middot;
+            OCP dU/dT &middot; 미세구조(&phi;, &tau;, CN, porosity) &mdash; 정량 앵커가 없다(&sect;F1).
+            <b>&rArr; 전-물리 온도 스윕이 아니다.</b> 60 &deg;C 에서 실제로는 반응 과전압이 크게
+            줄지만(kim2025 R<sub>ct</sub> 30&rarr;60 &deg;C &times;0.23) 여기엔 그 물리가 없다.</div>
+          <div><b class="t-no">무시됨</b> &nbsp;<b>Find Optimal Design</b> 스윕은 온도를 전혀 반영하지
+            않고 항상 298 K 로 계산한다 (predictor_engine.sweep_optimal 이 predict() 에 temperature 를
+            넘기지 않음). 온도 효과는 <b>Predict Properties</b> 에서만 나온다.</div>
+          <div><b class="t-warn">E<sub>a</sub> 는 밴드</b> &nbsp;0.29 / 0.41 / 0.46 eV (1.8&times; 폭 =
+            30&rarr;60 &deg;C 에서 &times;2.47 ~ &times;4.44). <b>단일값 보고 금지</b> &mdash; 아래에서
+            세 값을 각각 돌려 밴드로 보고할 것.</div>
+        </div>
+
+        <label style="margin-top:8px">&sigma;<sub>e</sub> 온도 모델</label>
+        <select id="sigma_e_t_model" class="t-sel">
+          <option value="none">T-무관 (기본 · 권장) — 솔버와 동일, Reisacher: ohmic 영역 T-무관</option>
+          <option value="legacy_arrhenius">legacy_arrhenius — 2026-07-28 이전 Ea_AM=0.50 eV 재현 (⚠ 미앵커 §F1)</option>
+        </select>
+        <div class="t-sub">기본값은 2026-07-28 에 <b>Arrhenius 적용 &rarr; 미적용</b>으로 바뀌었다.
+          옛 숫자를 재현해야 하면 legacy 를 고르면 되고, 응답 JSON 의
+          <span class="t-mono">sigma_e_T_model</span> 에 어느 쪽을 썼는지 항상 기록된다.</div>
+
+        <label style="margin-top:8px">&sigma;<sub>ion</sub> E<sub>a</sub> (밴드 스윕)</label>
+        <select id="ea_ion_ev" class="t-sel">
+          <option value="">기본 0.41 eV — Reisacher 2023 (375 MPa 냉간압밀 = 우리 압력체제)</option>
+          <option value="0.29">0.29 eV — Ma 2024 (밴드 하한)</option>
+          <option value="0.41">0.41 eV — Reisacher 2023 (명시값)</option>
+          <option value="0.46">0.46 eV — Kraft 2017 (밴드 상한)</option>
+        </select>
+        <div class="t-sub">298 K 에서는 어느 값을 골라도 배수가 정확히 1.0 이라 결과가 같다
+          (T<sub>ref</sub> 위치).</div>
       </div>
 
       <div class="input-group">
@@ -304,6 +345,35 @@
     font-family: var(--mono); font-size: 0.9rem; font-weight: 600;
     color: var(--accent);
   }
+
+  /* ── 온도 축 고지 (적대검증 C-3) ── */
+  .t-scope {
+    margin-top: 8px; padding: 8px 10px; border-radius: 6px;
+    background: rgba(201,162,75,0.08); border: 1px solid rgba(201,162,75,0.35);
+    font-size: 0.76rem; line-height: 1.5; color: var(--text);
+  }
+  .t-scope > div + div { margin-top: 4px; }
+  .t-scope-h { font-weight: 700; color: #c9a24b; }
+  .t-scope-tag {
+    font-weight: 500; font-size: 0.68rem; color: var(--dim);
+    border: 1px solid var(--border); border-radius: 4px; padding: 0 5px; margin-left: 6px;
+  }
+  .t-yes  { color: var(--green, #34d399); }
+  .t-no   { color: #e0736a; }
+  .t-warn { color: #c9a24b; }
+  .t-mono { font-family: var(--mono); font-size: 0.72rem; }
+  .t-sel {
+    width: 100%; padding: 6px; margin-top: 4px; border-radius: 4px;
+    background: var(--bg); color: var(--text); border: 1px solid var(--border);
+    font-size: 0.78rem;
+  }
+  .t-sub { margin-top: 4px; font-size: 0.72rem; color: var(--dim); line-height: 1.45; }
+  .t-prov {
+    margin-top: 12px; padding: 10px 12px; border-radius: 8px;
+    background: var(--card); border: 1px solid var(--border);
+    font-size: 0.76rem; line-height: 1.5; color: var(--dim);
+  }
+  .t-prov b { color: var(--text); }
 
   .btn-row { margin-top: 20px; display: flex; gap: 12px; }
   .btn {
@@ -529,6 +599,12 @@ function getParams() {
     temperature: parseFloat(document.getElementById('temperature').value),
     additive: document.getElementById('additive').value,
     ptfe: document.getElementById('ptfe_on').checked,
+    // ★온도 규약 (적대검증 C-3).  기본값은 서버 기본과 동일하게 보낸다:
+    //   sigma_e_t_model 'none'  = /predictor/predict 라우트 기본 (σ_e T-무관)
+    //   ea_ion_ev ''            = 엔진 기본 0.41 eV (라우트가 '' → None 으로 해석)
+    //   ⇒ 아무것도 안 건드리면 이 두 키가 있든 없든 응답이 동일하다.
+    sigma_e_t_model: document.getElementById('sigma_e_t_model').value,
+    ea_ion_ev: document.getElementById('ea_ion_ev').value,
   };
 }
 
@@ -643,6 +719,43 @@ function renderResults(data) {
     utilHtml += '</div>';
     rateBox.insertAdjacentHTML('afterend', utilHtml);
   }
+
+  // ── ★ 온도 provenance (적대검증 C-3): 이번 예측이 어떤 온도 규약으로 나왔는지 화면에 적는다.
+  //    엔진이 temperature_provenance / sigma_ion_T_model / sigma_e_T_model / temperature_notes 를
+  //    항상 실어 보내므로, 사용자가 JSON 을 안 열어도 "무엇이 스케일됐나"를 알 수 있다.
+  const oldProv = document.getElementById('t-prov-box');
+  if (oldProv) oldProv.remove();
+  const prov = data.temperature_provenance || {};
+  const fIon = (prov.sigma_ion_T_factor !== undefined && prov.sigma_ion_T_factor !== null)
+    ? prov.sigma_ion_T_factor : (data.arrhenius_factor_SE !== undefined ? data.arrhenius_factor_SE : 1);
+  const fAM = (data.arrhenius_factor_AM !== undefined) ? data.arrhenius_factor_AM : 1;
+  const tC = (data.temperature_C !== undefined) ? data.temperature_C : null;
+  const eaTxt = (prov.Ea_ion_eV === null || prov.Ea_ion_eV === undefined)
+    ? '— (T_ref, Arrhenius 미적용)' : prov.Ea_ion_eV + ' eV';
+  let provHtml = `<div class="t-prov" id="t-prov-box">
+    <div><b>온도 규약 (이 예측에 실제로 적용된 것)</b></div>
+    <div>T = <b>${data.temperature} K</b>${tC !== null ? ` (${tC} °C)` : ''} ·
+      T<sub>ref</sub> = ${prov.T_ref_C !== undefined ? prov.T_ref_C : 25} °C ·
+      E<sub>a</sub>(ion) = ${eaTxt}</div>
+    <div>σ<sub>ionic</sub> × <b>${Number(fIon).toFixed(4)}</b>
+      (${data.sigma_ion_T_model || 'NOT_MODELLED'}) &nbsp;|&nbsp;
+      σ<sub>electronic</sub> × <b>${Number(fAM).toFixed(4)}</b>
+      (sigma_e_T_model = <span class="t-mono">${data.sigma_e_T_model || 'none'}</span>)</div>
+    <div>σ<sub>thermal</sub> / D<sub>s</sub> / i<sub>0</sub> / OCP / 미세구조 = <b>25 °C 그대로</b>
+      (앵커 없음 §F1). Find Optimal Design 스윕은 온도를 무시한다.</div>`;
+  if (Number(fIon) !== 1) {
+    provHtml += `<div class="t-warn">⚠ E<sub>a</sub> 밴드로 다시 돌려 보고할 것 —
+      0.29 / 0.41 / 0.46 eV 를 각각 선택해 세 값을 함께 제시 (단일값 보고 금지).</div>`;
+  }
+  if ((data.sigma_e_T_model || 'none') === 'legacy_arrhenius') {
+    provHtml += `<div class="t-no">⚠ legacy σ<sub>e</sub> Arrhenius (E<sub>a,AM</sub>=0.50 eV)
+      — 미앵커(§F1)이고 솔버·문헌과 불일치. 옛 숫자 재현 전용.` +
+      (Number(fAM) === 1 ? ' <b>지금은 T = T<sub>ref</sub> 라 배수가 1.0 이어서 기본 모델과 결과가 같다</b>'
+        + ' — 차이를 보려면 온도를 298 K 에서 옮기세요.' : '') + `</div>`;
+  }
+  provHtml += '</div>';
+  (document.getElementById('conductivity-results') || rateBox)
+    .insertAdjacentHTML('afterend', provHtml);
 }
 
 function findOptimal() {
@@ -661,6 +774,16 @@ function findOptimal() {
   const sweepKeys = Object.keys(sweepParams);
   if (sweepKeys.length === 0) {
     showToast('체크 해제된 파라미터가 없습니다! sweep할 파라미터의 체크를 풀어주세요.');
+    return;
+  }
+  // ★ 2026-07-28 적대검증 C-3: 온도 스윕은 **조용한 no-op** 이었다 —
+  //   predictor_engine.sweep_optimal 에는 temperature 스윕 레인지가 없어 1점으로 축퇴하고,
+  //   그나마도 predict() 에 temperature 를 넘기지 않아 항상 298 K 로 계산된다.
+  //   "돌아가는 척하고 같은 답을 주는" 것보다 **명시적으로 막는** 편이 정직하다.
+  if (sweepKeys.includes('temperature')) {
+    showToast('온도는 아직 스윕할 수 없습니다 — 예측기 스윕 엔진(sweep_optimal)이 온도를 '
+      + 'predict() 에 넘기지 않아 결과가 전부 298 K 로 나옵니다(1점 축퇴 = 무의미한 스윕). '
+      + 'Temperature 체크를 다시 켜고, 온도 효과는 "Predict Properties" 에서 한 점씩 비교하세요.');
     return;
   }
   showLoading(`Sweeping ${sweepKeys.join(' × ')} (${sweepKeys.length}D)...`);
@@ -683,6 +806,16 @@ function findOptimal() {
 
 function renderOptimal(results) {
   document.getElementById('optimal-section').style.display = 'block';
+
+  // ★ C-3 고지: 스윕 결과는 온도 슬라이더와 무관하게 항상 298 K 다 (sweep_optimal 이
+  //   predict() 에 temperature 를 넘기지 않음).  체크되어 있어도 반영되지 않는다.
+  const oldNote = document.getElementById('opt-temp-note');
+  if (oldNote) oldNote.remove();
+  document.getElementById('optimal-section').insertAdjacentHTML('afterbegin',
+    '<div class="t-prov" id="opt-temp-note" style="margin-top:0;margin-bottom:10px">'
+    + '<b>⚠ 이 스윕은 298 K (25 °C) 고정입니다.</b> 온도 슬라이더 값은 반영되지 않습니다 '
+    + '(predictor_engine.sweep_optimal 이 predict() 에 temperature 를 전달하지 않음). '
+    + '온도 효과는 <b>Predict Properties</b> 로 한 점씩 비교하세요.</div>');
 
   // Detect which param columns exist in results
   const paramKeys = ['d_se', 'd_am_p', 'd_am_s', 'am_pct', 'ps_frac', 'loading', 'rve'];
