@@ -89,6 +89,30 @@ def mtime(p):
         return None
 
 
+def elf_stage(d):
+    """ELF 단계는 **로그 문자열이 아니라 산출 파일**로 판정한다.
+
+    ⚠ run.log 에 `[scf.in] ... -> scf.in (+scf_atomic.in)` 이라는 **입력 생성** 메시지가
+      있어서, 'scf_atomic' 문자열 검색은 1단계부터 참이 된다. 실제로 그렇게 오보했다
+      (본 scf 중인데 '③ scf_atomic' 으로 표시). 파일은 거짓말하지 않는다.
+    """
+    import os
+    j = lambda f: os.path.join(d, f)
+    if os.path.exists(j("lpsocl_rho_atomic.cube")):
+        return "⑥ 완료 (rho_atomic 까지)"
+    if os.path.exists(j("lpsocl_rho_scf.cube")):
+        return "⑤ pp.x rho_atomic 중"
+    if os.path.exists(j("lpsocl_elf.cube")):
+        return "④ pp.x rho_scf 중"
+    if os.path.exists(j("scf_atomic.out")):
+        return "③ scf_atomic (본 scf 완료)"
+    if os.path.exists(j("scf.out")):
+        return "② scf (본 계산)"
+    if os.path.isdir(j("pseudo")) and os.listdir(j("pseudo")):
+        return "① pseudo 확보"
+    return "· 기동 직후"
+
+
 def find_scalar(o, key, depth=0):
     """json 안을 재귀로 훑어 키에 `want` 가 든 **스칼라**를 찾는다.
     ⚠ 키 이름을 하드코딩하면 파이프라인이 바뀔 때 조용히 0/3 으로 보인다 — 실제로 그랬다."""
@@ -343,13 +367,7 @@ E = "/data/work/runs/lpsocl_elf"
 elog = os.path.join(E, "run.log")
 if os.path.isfile(elog):
     t = open(elog, errors="ignore").read()
-    stage = "?"
-    for k, name in (("pp_rho_at.in", "pp.x rho_atomic"), ("pp_rho.in", "pp.x rho_scf"),
-                    ("pp.x elf", "pp.x ELF"), ("scf_atomic", "atomic ρ scf"),
-                    ("pw.x scf.in", "scf"), ("[pseudo] OK", "pseudo 수집")):
-        if k in t:
-            stage = name
-            break
+    stage = elf_stage(E)
     # ⚠ scf_must_converge 함정 — 반복수가 electron_maxstep 과 같으면 가짜 수렴
     conv = [l.strip() for l in t.splitlines() if "convergence has been achieved" in l]
     it = [l.strip() for l in t.splitlines()

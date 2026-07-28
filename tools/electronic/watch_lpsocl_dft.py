@@ -64,6 +64,30 @@ def mtime(p):
         return None
 
 
+def elf_stage(d):
+    """ELF 단계는 **로그 문자열이 아니라 산출 파일**로 판정한다.
+
+    ⚠ run.log 에 `[scf.in] ... -> scf.in (+scf_atomic.in)` 이라는 **입력 생성** 메시지가
+      있어서, 'scf_atomic' 문자열 검색은 1단계부터 참이 된다. 실제로 그렇게 오보했다
+      (본 scf 중인데 '③ scf_atomic' 으로 표시). 파일은 거짓말하지 않는다.
+    """
+    import os
+    j = lambda f: os.path.join(d, f)
+    if os.path.exists(j("lpsocl_rho_atomic.cube")):
+        return "⑥ 완료 (rho_atomic 까지)"
+    if os.path.exists(j("lpsocl_rho_scf.cube")):
+        return "⑤ pp.x rho_atomic 중"
+    if os.path.exists(j("lpsocl_elf.cube")):
+        return "④ pp.x rho_scf 중"
+    if os.path.exists(j("scf_atomic.out")):
+        return "③ scf_atomic (본 scf 완료)"
+    if os.path.exists(j("scf.out")):
+        return "② scf (본 계산)"
+    if os.path.isdir(j("pseudo")) and os.listdir(j("pseudo")):
+        return "① pseudo 확보"
+    return "· 기동 직후"
+
+
 def scf_speed(out_path, maxstep=200):
     """QE 출력 → (반복수, 초/반복, 최근 accuracy, 예상 남은 시간 문자열)."""
     t = read(out_path)
@@ -159,12 +183,7 @@ print("① ELF (+CDD)  " + ELF)
 elog = os.path.join(ELF, "run.log")
 if os.path.isfile(elog):
     t = read(elog)
-    for k, name in (("pp_rho_at.in", "⑥ pp.x rho_atomic"), ("pp_rho.in", "⑤ pp.x rho_scf"),
-                    ("pp.x elf", "④ pp.x ELF"), ("scf_atomic", "③ scf_atomic"),
-                    ("pw.x scf.in", "② scf"), ("[pseudo] OK", "① pseudo")):
-        if k.lower() in t.lower():
-            print(f"  단계: {name}")
-            break
+    print(f"  단계: {elf_stage(ELF)}")
     show_scf("scf.out", os.path.join(ELF, "scf.out"))
     if os.path.exists(os.path.join(ELF, "scf_atomic.out")):
         show_scf("scf_atomic.out", os.path.join(ELF, "scf_atomic.out"), maxstep=1)
