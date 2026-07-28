@@ -28,6 +28,14 @@ grand-potential 전위 축이 아니다.
      (MP hull 세대 차 때문). 불일치 시 원인 후보를 출력하고 **생산 실행을 막는다**(--force 우회).
   2) (검증 통과 후) --run : 47 코팅 후보 전수 → db/properties/cathode_reactivity_cascade.csv
 
+⚠⚠ 2026-07-28 축 추가: 초판은 **양극만** 계산했다. Kim 2026 (Nano Convergence 13, 27,
+`litdb/papers/kim2026_hts_li3sc2po43_coating_midni_ncm.md`) Table S1 이 88 후보에 대해
+NCM523 과 LPSCl **양쪽** dE_rxn 을 싣는데, 다수가 양극과는 0 인데 LPSCl 과는 -50~-99 meV
+(Li2TiO3 0/-60 · Li3NbO4 0/-96 · Li2SO4 0/-99 · LiSrBO3 0/-96). 본문도 "many materials
+exhibited stable interfaces with the NCM523, a substantial fraction fail to maintain
+stability against LPSC" 라고 명시한다. **구속은 SE 쪽이 건다.**
+양극만 보고 "게이트가 vacuous 하다"고 낸 우리 초판 판정은 **쉬운 쪽만 본 결과**였다.
+
 비용 주의
 --------
 코팅마다 chemsys 가 달라 MP 쿼리가 코팅당 1회. LCO(=Li-Co-O + 코팅원소)는 4~5원소라 가볍고,
@@ -55,8 +63,13 @@ XIAO_ANCHOR = {
     ("LPSCl", "NCM"): {"full": -330, "half": -471},
 }
 GATE_MEV = 100.0          # Xiao F4: |dE_rxt| < 100 meV/atom
-# 기본 양극 = 완전리튬화 / 반리튬화 쌍 (comp:label:state)
-DEFAULT_CATHODES = ["LiCoO2:LCO:full", "Li0.5CoO2:LCO:half"]
+# 기본 상대 = 양극(완전/반리튬화) + **SE(LPSCl)**.
+# ⚠ SE 축은 나중에 추가됐다 — Kim 2026 (Nano Convergence 13, 27) Table S1 이
+# "많은 산화물이 NCM523 과는 안정하지만 상당수가 LPSCl 에 대해 실패한다"를 보였고
+# (Li2TiO3 0 vs -60 / Li3NbO4 0 vs -96 / Li2SO4 0 vs -99 meV/atom),
+# 양극만 계산한 우리 초판이 **쉬운 쪽만 보고 게이트가 vacuous 하다고 오판**했다.
+# 구속을 거는 쪽은 양극이 아니라 SE 다.
+DEFAULT_CATHODES = ["LiCoO2:LCO:full", "Li0.5CoO2:LCO:half", "Li6PS5Cl:LPSCl:se"]
 # 검증 허용대: |our| 가 |anchor| 의 이 배율 범위 안이면 "자릿수 OK"
 BAND_LO, BAND_HI = 0.5, 2.0
 
@@ -163,6 +176,10 @@ def validate(cathodes, cache_dir):
     ok = True
     got = {}                                # (label, state) -> meV
     for cstr, clab, cstate in cathodes:
+        if cstate == "se":
+            print(f"\n## LPSCl | {clab}/se  ({cstr})  → 자기 자신이므로 검증 생략 "
+                  f"(dE_rxt = 0 자명). 생산 실행에서만 의미 있음")
+            continue
         mev, rxn = scan("Li6PS5Cl", cstr, cache_dir)
         tag = f"{clab}/{cstate}" if cstate else clab
         print(f"\n## LPSCl | {tag}  ({cstr})")
@@ -278,8 +295,8 @@ def parse_cathodes(specs):
         comp = parts[0]
         lab = parts[1] if len(parts) > 1 and parts[1] else comp
         state = parts[2] if len(parts) > 2 else ""
-        if state and state not in ("full", "half"):
-            sys.exit(f"--cathodes 상태는 full/half 만 허용: {c!r}")
+        if state and state not in ("full", "half", "se"):
+            sys.exit(f"--cathodes 상태는 full/half/se 만 허용: {c!r}")
         out.append((comp, lab, state))
     return out
 
@@ -290,8 +307,9 @@ def main():
     ap.add_argument("--run", action="store_true", help="47 코팅 후보 전수 (검증 통과 후)")
     ap.add_argument("--force", action="store_true", help="검증 실패해도 강행")
     ap.add_argument("--cathodes", nargs="+", default=DEFAULT_CATHODES,
-                    help='comp:label:state (state=full|half). NCM은 원소 수가 많아 비쌈 — '
-                         '예 "LiNi0.8Co0.1Mn0.1O2:NCM:full"')
+                    help='comp:label:state (state=full|half|se). se = 고체전해질 쪽 계면 '
+                         '(Kim 2026: 구속을 거는 쪽은 양극이 아니라 SE 다). '
+                         'NCM은 원소 수가 많아 비쌈 — 예 "LiNi0.8Co0.1Mn0.1O2:NCM:full"')
     ap.add_argument("--cache", default=str(Path.home() / ".cache" / "mp_entries"))
     ap.add_argument("--out", default=str(PROP / "cathode_reactivity_cascade.csv"))
     a = ap.parse_args()

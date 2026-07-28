@@ -1,0 +1,247 @@
+# High-throughput discovery of Li₃Sc₂(PO₄)₃ as a protective coating for stabilizing mid-Ni NCM interfaces in all-solid-state batteries — Ji Hoon Kim (Nano Convergence 2026)
+
+> slug `kim2026_hts_li3sc2po43_coating_midni_ncm` · DOI `10.1186/s40580-026-00555-z` · type `DFT + AIMD + MLIP(SevenNet) HT-screening` ·
+> **Open Access** (CC BY-NC-ND 4.0) · 본문 13 pp + SI 21 pp · digested 2026-07-28 · status ✅ (본문+SI 전문 정독)
+>
+> **저자** Ji Hoon Kim¹, Seunghyun Lee²'³'⁴*, **Sang Uck Lee**¹* — ¹성균관대 화학공학 · ²'³'⁴한양대 ERICA
+> 투고 2026-04-17 · 수리 2026-05-18 · 온라인 2026-06-05 · 과제 MOTIE P0022336
+> 원자료: `10.6084/m9.figshare.30816767.v2`
+>
+> 🔑 **위시리스트 1순위였던 바로 그 논문.** 심포지엄 덱(`litdb/talks/lee2026_skku_mlip_materials_design.md`)
+> 슬라이드 13 "Cathode interface RXN — Screening Coating Materials" 의 정본.
+> **우리 cascade + M6 의 직접 대조군**이고, 아래 §9에서 **우리 M6 판정을 뒤집는다**.
+
+---
+
+## 1. 한 줄 요약
+
+MP에서 **Li·O 함유 산화물 17,230종**을 받아 ECW → **계면 반응성(양극·SE 양쪽)** → band gap →
+**Li–Li 네트워크(≤3.5 Å)** 순으로 걸러 88 → 8종으로 좁히고, AIMD로 최종 **Li₃Sc₂(PO₄)₃**(γ-phase,
+σ_RT ~0.2 mS/cm)를 mid-Ni NCM523 코팅으로 지목한 뒤, **SevenNet uMLIP 500 ps 계면 MD**로
+NCM523‖LPSCl 직접 접촉이 PS₄를 분해시키는 것과 Li₃Sc₂(PO₄)₃ 삽입이 그것을 막는 것을 원자 수준에서 보인다.
+
+---
+
+## 2. 스크리닝 깔때기 (Fig 1) ★ — 우리 깔때기의 직접 대조군
+
+MP 버전 **2025.02.12**.
+
+| 단계 | 기준 | 통과 | 제거 |
+|---|---|---:|---:|
+| 0 | **Li·O 함유 결정구조 @ MP** | 17,230 | — |
+| 1 | 방사성 원소 제외 · 동일 조성 중복 제거(최저 형성E만) · **3·4원소 조성만** | **4,634** | 12,596 (73.1%) |
+| 2 | **Wide ECW**: V_ox ≥ 3.5 V **and** V_red ≤ 2 V | **265** | 4,369 (94.3%) |
+| 3 | **계면 안정성**: ΔE_rxn ≥ **−100 meV/atom** (NCM523 **and** LPSCl 양쪽) | **154** | 111 (41.9%) |
+| 4 | **Band gap** E_g ≥ 2 eV | **150** | 4 (2.6%) |
+| 5 | **Li–Li 네트워크** ≤ 3.5 Å 연결 존재 | **88** | 62 (41.3%) |
+| 6 | **엄격 기준**: V_ox ≥ 4 V **and** ΔE_rxn ≥ −50 meV/atom | **8** | 80 (90.9%) |
+| 7 | AIMD 200 ps @1000 K → 확장 AIMD 800–1200 K | **Li₃Sc₂(PO₄)₃** | 7 |
+
+> ⚠ **덱 수치 정정**: 심포지엄 덱은 "17,233 **Li, P, S, O** crystal structure"라고 적혀 있었는데
+> 실물은 **17,230 Li·O** 다. 개수도 원소집합도 덱이 틀렸다. `db/properties/external_benchmarks_symposium_2026.json`
+> 정정 완료. → **덱을 정본으로 쓰면 안 된다는 우리 규율의 실증 사례.**
+
+**게이트별 위력(우리 언어로)**: ECW가 압도적(94.3% 제거) → 계면 41.9% → Li 네트워크 41.3% →
+band gap **2.6%(사실상 vacuous)**. 논문도 이를 자인한다: *"most of materials previously screened
+for electrochemical and interfacial stability also possess desirable electronic insulation properties"*.
+
+---
+
+## 3. 방법 (SI eq 1–8 전수 확인)
+
+- **DFT**: VASP 5.4.4, PAW, **PBE**(GGA). 잔여력 **< 0.04 eV/Å**. 3d TM 포함 계는 spin-polarized.
+- **AIMD**: NVT **Nosé–Hoover**, **20 ps @1000 K** (1차) → **800–1200 K, 100 K 간격**(σ_RT 외삽용).
+  Γ-centered **1×1×1 k**, **Δt 2 fs**. 셀 크기·스핀·온도 파라미터는 자기 선행연구 승계.
+- **ECW** (SI eq 5–7): **grand potential** Φ[c,μ_Li] = E[c] − n_Li[c]·μ_Li, 0 K, μ_Li 0 ~ −5 eV
+  (= 0–7 V vs Li/Li⁺). hull 위에 남는 구간의 상·하한이 (μ_ox, μ_red) → V = (μ⁰_Li − μ)/e.
+  > 🔑 **우리 `tools/oxidation/` 파이프라인과 형식적으로 동일**(Zhu 2015 계보). 이미 `zhu2015` digest로 확인된 것.
+- **계면 반응성** (SI eq 8): **ΔE_mix = min_{x∈[0,1]} { E_pd[x c_A + (1−x) c_B] − x E[c_A] − (1−x) E[c_B] }**
+  > 🔑🔑 **우리 M6 `min_rxn_closed()` 와 문자 그대로 같은 식**(Richards/Ong 2016 eq 2, 닫힌계
+  > pseudo-binary). 우리가 개방계로 갔다가 되돌린 그 지점이 여기 명시돼 있다.
+- **MLIP MD**: **SevenNet `7net-0` 사전학습 그대로**(fine-tune 언급 없음) + LAMMPS.
+  계면 중심 20 Å는 **NVE**, 주변 벌크는 **298 K NVT**. 각 계면 모델 **1,000+ 원자**, **500 ps**.
+- **Li–Li 네트워크 기술자**: 결정구조에서 Li–Li 거리 **≤ 3.5 Å** 연결의 개수/최대 연결 Li 수.
+  LPSCl·LLZO·LGPS에서 광범위 네트워크가 확인됨을 근거로 채택(Fig S2).
+
+---
+
+## 4. 최종 8종 (Table S2·S3) ★ 우리 47종과 대조 가능
+
+| 조성 | mp-ID | [V_red, V_ox] | ECW (V) | ΔE_rxn **NCM523** | ΔE_rxn **LPSCl** | E_g (eV) | Li net |
+|---|---|---|---:|---:|---:|---:|---:|
+| **Li₃Sc₂(PO₄)₃** | mp-6565 | [1.86, **4.19**] | 2.33 | **−37.30** | **−24.69** | 4.76 | 2 |
+| LiCaPO₄ | mp-16804 | [1.17, 4.08] | 2.91 | **0** | −28.06 | 5.18 | 2 |
+| LiMgPO₄ | mp-9625 | [1.58, 4.18] | 2.61 | −20.62 | **0** | 5.43 | 2 |
+| LiH₂ClO | mp-760502 | [1.54, 4.07] | 2.53 | **0** | −22.15 | 5.31 | 1 |
+| **Li₃PO₄** | mp-13725 | [0.69, 4.19] | **3.51** | **0** | **0** | 5.82 | 1 |
+| LiB₃O₅ | mp-3660 | [1.93, 4.22] | 2.29 | −21.15 | **0** | 6.48 | 2 |
+| Li₃B₇O₁₂ | mp-16828 | [1.30, 4.22] | 2.92 | −11.70 | **0** | 5.70 | 2 |
+| Li₃B₁₁O₁₈ | mp-1020014 | [1.93, **4.41**] | 2.48 | −28.29 | **0** | 5.68 | 2 |
+
+**반응 생성물 (Table S3)** — 우리 M6 반응식과 같은 문법:
+
+| | vs NCM523 | vs LPSCl |
+|---|---|---|
+| Li₃Sc₂(PO₄)₃ | Mn(Ni₃O₄)₂, Ni₃O₄, Li₄MnCo₅O₁₂, Li₂Mn₃NiO₈, **Li₃PO₄**, **Sc₂O₃** | **LiScS₂**, Li₃PS₄, Li₃PO₄, LiCl |
+| LiCaPO₄ | **Stable** | Li₃PS₄, Li₃PO₄, CaS, LiCl |
+| LiMgPO₄ | Li₂MgMn₃O₈, Ni₃O₄, … , Li₃PO₄ | **Stable** |
+| Li₃PO₄ | **Stable** | **Stable** |
+| LiB₃O₅ / Li₃B₇O₁₂ / Li₃B₁₁O₁₈ | LiO₈, Li₄MnCo₅O₁₂, Li₂Mn₃NiO₈, **Ni₃BO₅**, LiBO₂ | **Stable** |
+
+> 🔑 **Li₃PO₄가 양쪽 다 0 인데 최종 선택은 Li₃Sc₂(PO₄)₃ 다.** 이유는 §5 — Li 전도도.
+> 즉 이 논문의 결론은 "계면 반응성만으로는 못 고른다"는 것이기도 하다.
+
+---
+
+## 5. Li₃Sc₂(PO₄)₃ — α vs γ 상 (Fig 4, Table S4)
+
+Bykov 1990에서 α·β·γ 3상이 보고됨. **γ는 α를 573 K 열처리해 얻는다.** Ti/Zr 부분치환으로 상온 안정화 가능.
+
+| | α-phase | γ-phase |
+|---|---:|---:|
+| E/atom (eV) | −7.205 | **−7.565** |
+| a / b / c (Å) | 8.8483 / 12.2737 / 8.7959 | 8.8290 / 8.7980 / 15.0495 |
+| γ (°) | 90 | 125.6 |
+| 공간군 | P2₁/c | P2₁/c |
+| Li–Li 경로 | **불연속** (Fig 4c, ✕ 표시) | **연결된 네트워크 2개** (Fig 4d) |
+| MSD 200 ps @900 K | 억제 (~50 Å²) | **상승 (~130 Å²)** |
+| **σ_RT (외삽)** | **0.006 mS/cm** [0.0008, 0.4] | **0.2 mS/cm** [0.01, 2.4] |
+
+> ⛔ **σ 절대값 인용 금지 근거가 논문 안에 있다** — 신뢰구간이 **0.01~2.4 mS/cm** 로 **2자릿수 반**이다
+> (800–1200 K Arrhenius 외삽). 본문·초록은 "~0.2 mS/cm"만 쓰고 이 구간은 Fig 4f 캡션에만 있다.
+> **우리가 인용할 때는 반드시 구간을 병기하거나, "α 대비 γ가 30배" 라는 비율만 쓸 것.**
+
+**선행연구 비판 포인트**: *"Although previous HTS studies have identified Li₃Sc₂(PO₄)₃ as a promising
+candidate, they primarily relied on the γ-phases, often overlooking the structural distinctiveness of
+the experimentally synthesized α-phase."* → **같은 조성이라도 어느 상을 골랐느냐로 σ가 30배 갈린다**는
+것이 이 논문의 방법론적 기여다. 우리 `kb/concepts/ordered_vs_disordered.md` 의 "구조 선택이 물성을
+결정한다" 명제와 같은 계열.
+
+---
+
+## 6. 계면 MD (Fig 5) — SevenNet 500 ps, 1,000+ 원자
+
+3개 이종계면, 표면은 **NCM523(104)**(가장 안정), **LPSCl(100)**(자체 표면안정성 계산), **Li₃Sc₂(PO₄)₃(101)**(격자 부정합 최소).
+
+| 계면 | 결과 |
+|---|---|
+| **(a) NCM523(104) ‖ LPSCl(100)** (3.7 + 3.5 nm, 4 nm) | **PS₄ 분해**. NCM의 **Ni가 전해질로 이동**해 PS₄의 S와 반응 → NiS_x, NiPS_x, PS₃. 분해된 PS₄와 단일-S(**4a/4c 위치**)가 NCM 격자 O와 결합해 **SO_x** 형성. **NiO_x dissolution**. P–O 결합 생성 |
+| **(b) NCM523(104) ‖ Li₃Sc₂(PO₄)₃(101)** | **양쪽 다 구조 보존**. PO₄ 사면체·ScO₆ 팔면체 안정 |
+| **(c) Li₃Sc₂(PO₄)₃(101) ‖ LPSCl(100)** | **PS₄ 보존**. 계면에서 **Sc–S 결합** 형성이 LPSCl 골격 분해를 억제 |
+
+> 🔑 (a)가 실험 보고(Ni dissolution at NCM/SSE 계면)와 일치한다고 주장. **우리 M6가 계산으로만
+> 보던 "황화물 SE ↔ 산화물 양극 반응"의 동역학 판**이다.
+> 🔑 (c)의 **Sc–S 결합**이 억제 기구 — 이상욱 랩 가수분해 논문의 **Sn–H 유인** 기구와 같은 문법
+> (특정 원소가 반응성 종을 붙잡아 골격을 보호).
+
+---
+
+## 7. 기타 확인 사항
+
+- **265종 ECW 통과군**에 널리 쓰이는 코팅(Li₃PO₄, LiNbO₃, LiAlO₂)과 함께 **LiRb₂AsO₄**(최대 6.5 V)
+  같은 고전압 후보가 들어옴. **Li₂SO₄**(알려진 SEI 생성물)도 포함 → "SEI가 자발 형성되는 것은
+  그 자체의 전기화학 안정성 때문"이라는 해석 지지.
+- **LiNbO₃가 LPSCl 계면 안정성 문턱을 근소하게 초과(=탈락)** — 널리 쓰이는 코팅이 그들 컷에 걸린다.
+  논문은 이를 "우리 컷이 보수적"이라고 해석.
+- **조성 다양성 유지**(Fig S3): M 67→49→21, S 11→10→8, N 6→6→6, M+S 85→53→32, M+N 83→25→15,
+  S+N 13→11→6. 어느 범주도 몰살되지 않음.
+- **LiH₂ClO는 AIMD에서 제외** — H₂O의 H가 떨어져 나가는 열적 불안정.
+- 88종 중 **Mn-인산염 계열이 다수**인데 ΔE_rxn이 양쪽 다 크게 음수(LiMn₄(PO₄)₃ −76.6/−74.5 등)라
+  6단계 엄격 기준에서 전멸.
+
+---
+
+## 8. 우리 대비
+
+| 항목 | 이 논문 | 우리 | 판정 |
+|---|---|---|---|
+| 풀 | 17,230 → 4,634 (실질 입구) | **47** (큐레이션 후보군) | 체급 다름 — `pool_provenance` 규율대로 등치 금지 |
+| ECW 방법 | grand potential Φ = E − n_Li μ_Li, 0–7 V | **동일** (`tools/oxidation/`) | ✓ 형식 동일 |
+| ECW 컷 | V_ox ≥ 3.5 V **절대 문턱** | host onset 2.14 V **상대 기준** | 우리 풀에 그들 문턱을 이식하면 **전멸**(황화물 계열은 구조적으로 2.0–2.5 V) — 이미 `literature_absolute_variants`에 기록 |
+| 계면 반응성 | ΔE_mix 닫힌계 pseudo-binary, **양극 AND SE 양쪽** | **양극만** (M6) | ⚠ **§9 — 우리 축이 절반이었다** |
+| 계면 컷 | −100 meV(1차) → −50 meV(엄격) | −100 meV | ✓ 동일 문턱 |
+| 수송 대리지표 | **Li–Li 네트워크 ≤ 3.5 Å** (구조 기반) | **BVSE Li proxy** (전위장 기반) | 같은 목적·다른 물리. 둘 다 AIMD 회피용 |
+| 전자절연 | band gap ≥ 2 eV (MP 값) | 우리 47종 전수 gap 부재 → 진단만 | 그들도 **2.6%만 제거 = 사실상 vacuous** — 우리 판정과 일치 |
+| 기계 물성 | **없음** | E, G/B, 전 C_ij | **우리 우위** (그들 깔때기에 역학 축 자체가 없다) |
+| 무질서 처리 | 없음(결정 구조 그대로) | disorder ensemble | 문제설정 다름 |
+| MLIP | SevenNet 7net-0 **사전학습 그대로** | UMA **사전학습 그대로** | ✓ 같은 전략 — **"자체학습만 한다"는 인상은 틀렸다** |
+| σ 절대값 취급 | 초록에 "~0.2 mS/cm" 단언, 구간은 캡션에만 | 인용 금지 규율 | **우리 우위** (§5 참조) |
+
+---
+
+## 9. ⚠ 이 논문이 우리 M6를 뒤집는다 ★★★
+
+오늘(2026-07-28) 우리는 M6에서 **코팅 47종 × 양극(LiCoO₂/Li₀.₅CoO₂)** 만 계산하고
+"89/94 통과, unique_kill 0 → **vacuous 게이트**"라고 판정했다.
+
+**Table S1이 그 판정을 무효화한다.** 88종의 두 ΔE_rxn 열을 보면:
+
+| 조성 | ΔE_rxn **NCM523** | ΔE_rxn **LPSCl** |
+|---|---:|---:|
+| Li₂TiO₃ | **0** | **−60.12** |
+| Li₃TaO₄ | **0** | **−47.80** |
+| Li₃NbO₄ | **0** | **−96.12** |
+| Li₂SO₄ | **0** | **−99.22** |
+| LiSrBO₃ | **0** | **−95.69** |
+| Li₂CO₃ | **0** | **−83.80** |
+| Li₃Na₅Ti₅O₁₄ | **0** | **−96.10** |
+
+본문도 명시한다: *"while many materials exhibited stable interfaces with the NCM523, **a substantial
+fraction fail to maintain stability against LPSC**"* — 황(S)의 높은 반응성 때문.
+
+즉 **구속을 거는 쪽은 양극이 아니라 SE(LPSCl)다.** 우리 M6는 **쉬운 쪽만 계산하고 "게이트가
+변별력 없다"고 결론냈다.** 이건 게이트의 성질이 아니라 **우리 축이 절반이었던 것**이다.
+
+**→ M6 판정 보류. `coating vs Li₆PS₅Cl` 축을 추가해 재판정한다** (`tools/cascade/cathode_reactivity.py`
+에 `--se` 모드 추가, `kb/open_items.md` T9).
+
+부수적으로, 우리가 별도로 발견한 **Li 흡수 축**(MgF₂→LiF, WO₃→Li₂WO₄ 등이 게이트를 통과하면서
+양극 Li를 빼앗음)은 이 논문에도 대응물이 없다 — **그건 유지된다.**
+
+---
+
+## 10. 인사이트 / 채택 항목
+
+1. **[즉시] SE 쪽 계면 반응성 축 추가** — §9. 최우선.
+2. **[검토] Li–Li 네트워크 기술자** — 우리 BVSE proxy와 **독립적인 두 번째 수송 대리지표**.
+   두 지표가 어긋나는 도펀트를 찾으면 그 자체가 결과다(우리 G4 상속 상수 문제의 우회로도 됨).
+3. **[인용] 컷 계층화** — 그들은 −100 meV(1차) / −50 meV(엄격) 2단계를 쓴다. 우리 깔때기의
+   "컷 하나가 지배" 문제에 대한 문헌 선례.
+4. **[인용] band gap 게이트가 그들 풀에서도 2.6%만 제거** = 우리 vacuous 판정의 외부 지지.
+5. **[방법] SevenNet 7net-0 사전학습 그대로 + NVE(계면)/NVT(벌크) 혼합 앙상블** —
+   우리 T3(Li‖LPSCl MD) 설계 시 참고. **fine-tune 없이도 500 ps 계면 MD를 한다**는 선례가
+   우리 UMA 사용을 방어해 준다.
+6. **[수렴] Sc** — 그들 최종 후보 Li₃Sc₂(PO₄)₃, 우리 cascade 1위 **Sc₂O₃**.
+   조성은 다르지만(인산염 vs 산화물) **원소가 같다.** 서로 다른 풀(17,230 vs 47)·다른 축에서
+   같은 원소가 최상위. ⚠ 단 우리 Sc₂O₃ 점수는 산화안정·역학 가중 합성점수이고 그들은 Li 전도도가
+   결정타였다 — **"같은 이유로 뽑힌 것이 아니다."** 원소 일치까지만 말할 것.
+7. **[수렴] 붕산염** — 그들 최종 8종 중 3종이 리튬 붕산염(LiB₃O₅, Li₃B₇O₁₂, Li₃B₁₁O₁₈).
+   우리 cascade 6위가 **B₂O₃**이고 우리 db에 `+B2O3` 계열 계산이 이미 있다(gap 1.9671 eV).
+
+---
+
+## 11. 주의 / 한계 (over-claim 방지)
+
+1. **σ_RT 신뢰구간이 2자릿수 반**(γ 0.2 [0.01, 2.4] mS/cm). 초록의 "~0.2 mS/cm, exceeding most
+   oxide-type SSEs"는 **하한 0.01을 쓰면 성립하지 않는다.** 비율(γ/α ≈ 30배)만 인용할 것.
+2. **AIMD 20 ps(1차 스크리닝)** 는 논문 스스로 *"insufficient simulation timescale"* 이라 인정
+   (8종 중 대부분에서 Li 확산을 못 봄). 최종 판정은 200 ps 확장분.
+3. **NCM523을 LiNi₀.₅Co₀.₂Mn₀.₃O₂ 단일 조성·(104) 단일 표면**으로 대리. 표면 다양성·결함 없음.
+4. **계면 MD 500 ps** 는 SEI 성숙 시간(그들 자신의 Li 계면 논문은 50 ns)에 비해 짧다.
+   "분해가 시작되는가"는 보이지만 "최종 상태"는 아니다.
+5. **PBE band gap**을 MP에서 그대로 가져와 2 eV 컷 — 과소평가 보정 없음(논문도 "conservative"라 자인).
+6. **ΔE_rxn 0** 이 다수인데, 이는 "반응 없음"이지 측정값이 아니다. 우리 M6의 항등반응 0.0과 같은 성질.
+7. **Li₃Sc₂(PO₄)₃ γ상은 573 K 열처리로 얻는 준안정상**이고 상온 안정화에 Ti/Zr 치환이 필요하다.
+   "바로 쓸 수 있는 코팅"이 아니다.
+8. **Sc는 비싸다.** 논문에 비용 논의가 전혀 없다 — 우리 cascade의 `cost_tier` 축이 그들에게 없는 것.
+
+---
+
+## 12. 인용 가능 문장
+
+- "산화물 코팅 후보의 계면 안정성은 양극보다 **황화물 전해질 쪽에서 먼저 깨진다** — 많은 물질이
+  NCM523과는 안정하지만 상당수가 LPSCl에 대해 실패한다[Kim 2026]." (§9)
+- "동일 조성 Li₃Sc₂(PO₄)₃도 α상과 γ상의 Li–Li 경로 연결성 차이로 실온 전도도가 30배 갈린다[Kim 2026]."
+  (⚠ 절대값 대신 비율)
+- "HT 스크리닝에서 band gap ≥ 2 eV 게이트는 앞선 전기화학·계면 게이트와 거의 완전히 중복된다
+  (150/154 통과)[Kim 2026]." — 우리 vacuous 판정의 외부 지지
