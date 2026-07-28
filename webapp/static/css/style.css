@@ -315,8 +315,8 @@ textarea:focus-visible,[tabindex]:focus-visible,.tabs button:focus-visible{
 .cal-note .cal-t,.cal-info .cal-t{color:var(--navy)}
 .cal-tip,.cal-success,.cal-hint{border-left-color:var(--green);background:color-mix(in srgb,var(--green) 13%,var(--card))}
 .cal-tip .cal-t,.cal-success .cal-t,.cal-hint .cal-t{color:var(--green)}
-.cal-important,.cal-warning,.cal-caution{border-left-color:var(--amber);background:color-mix(in srgb,var(--amber) 14%,var(--card))}
-.cal-important .cal-t,.cal-warning .cal-t,.cal-caution .cal-t{color:var(--amber)}
+.cal-important,.cal-warning,.cal-warn,.cal-caution{border-left-color:var(--amber);background:color-mix(in srgb,var(--amber) 14%,var(--card))}
+.cal-important .cal-t,.cal-warning .cal-t,.cal-warn .cal-t,.cal-caution .cal-t{color:var(--amber)}
 .cal-danger,.cal-error,.cal-bug{border-left-color:var(--red);background:color-mix(in srgb,var(--red) 13%,var(--card))}
 .cal-danger .cal-t,.cal-error .cal-t,.cal-bug .cal-t{color:var(--red)}
 .cal-example,.cal-quote,.cal-abstract{border-left-color:var(--violet);background:color-mix(in srgb,var(--violet) 13%,var(--card))}
@@ -848,3 +848,14 @@ tr.row-dim{opacity:.62}
   padding:9px 12px;background:var(--card)}
 .ml-det>summary{cursor:pointer;font-size:.79rem;font-weight:600;color:var(--accent)}
 .ml-det[open]>summary{margin-bottom:9px;border-bottom:1px solid var(--border2);padding-bottom:7px}
+
+/* ⚠ 템플릿이 class="tbl" 을 22곳에서 쓰는데 규칙이 없어 테두리·헤더배경 없이
+   뭉개져 있었다(2026-07-29 감사). .data-table 과 같은 취급으로 별칭 처리한다. */
+.tbl{width:100%;border-collapse:collapse;font-size:.84rem}
+.tbl th,.tbl td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.tbl th{background:var(--bg-alt);font-weight:600;font-size:.78rem;color:var(--dim)}
+.tbl td.num,.tbl th.num{text-align:right;font-variant-numeric:tabular-nums}
+
+/* ⚠ 인라인 background:#fef2f2 였다 — 다크모드에서 밝은 글자 위 흰 배경이라
+   대비 1.09 로 M6 판정 근거 2줄이 사실상 안 보였다(2026-07-29 감사). */
+.row-warn{background:color-mix(in srgb,var(--red) 10%,var(--card))}

@@ -197,11 +197,19 @@ def structures_for(cid: str) -> list[dict]:
     sd = DB / "structures"
     out = []
     if sd.exists():
-        for f in sorted(sd.iterdir()):
+        # ⚠ iterdir() 은 **하위 디렉터리를 안 들어간다**. 실측(2026-07-29): vgcf_hbn 페이지에
+        #   VGCF/hBN 구조가 하나도 안 뜨고 Li₃N 것만 떴다 — 진짜 구조는
+        #   db/structures/vgcf_hbn/ 안에 있었고 /api/structure 로는 200 으로 서빙되는데
+        #   목록에만 없었다. db/structures/lpsocl_candidates/ 도 같은 이유로 통째로 숨었다.
+        #   rglob 으로 바꾸고, 이름은 sd 기준 상대경로로 준다(라우트가 path 를 받는다).
+        for f in sorted(sd.rglob("*")):
             if f.is_file() and f.suffix.lower() in (".cif", ".xyz", ".vasp", ".vesta", ".cube"):
-                if _prefix_starts(f.name, pref):
+                rel = f.relative_to(sd).as_posix()
+                # 하위 폴더면 폴더명도 prefix 매칭 대상 (vgcf_hbn/Li_on_graphene… 처럼
+                # 파일명 자체엔 조성 토큰이 없는 경우가 있다)
+                if _prefix_starts(f.name, pref) or _prefix_starts(rel.replace("/", "_"), pref):
                     sfx = f.suffix.lower()
-                    out.append({"name": f.name, "ext": f.suffix.lstrip("."),
+                    out.append({"name": rel, "ext": f.suffix.lstrip("."),
                                 "fmt": _VIEWER_FMT.get(sfx, ""),
                                 # 자동로드/기본 선택은 파서가 확실한 cif/xyz 만 (vasp 는 클릭 시 시도)
                                 "viewable": sfx in (".cif", ".xyz")})
@@ -306,6 +314,9 @@ CANONICAL = {
     #   comp1/modelc = 단일 궤적 deck 앵커 / lpsocl = 4-seed×3-T / comp2 = 3-seed(잠정).
     "MD_Ea_eV":   {"comp1": 0.253, "modelc": 0.224, "lpsocl": 0.287},
     "ICOHP_PS":   {"comp1": -5.938, "comp2": -5.913, "modelc": -6.000, "lpsocl": -6.04,
+                  # b2o3 는 db/properties/b2o3_icohp.json 에 값이 있는데 여기 없어서
+                  # metric 카드가 TODO 로 떴다(2026-07-29 감사). 같은 LOBSTER ext-basis 계열.
+                  "b2o3": -6.023,
                    "modelc_nd_doped": -5.976},  # per_bond_json/lobster
 }
 # 잠정/시드-프로토콜 표시 — (property, comp) : 사유. composition/explorer/compare 에서 '잠정' 배지·툴팁.
@@ -517,6 +528,44 @@ def cascade_rows_for(dopant: str) -> dict:
     }
 
 
+def _adapt_per_bond(d: dict):
+    """per_bond_json/bonds_*.json → icohp_for 공통 스키마.
+
+    ⚠ 키 이름만 옮긴다. **값을 바꾸거나 합치지 않는다** — 그쪽 파일이 원자료(Raw)이고
+      bonds.json 쪽이 파생본이라, 둘이 어긋나면 원자료를 보여주는 게 맞다.
+    """
+    pb = next((v for k, v in d.items()
+               if "per_bond" in k.lower() and isinstance(v, dict)), None)
+    if not isinstance(pb, dict):
+        return d
+    bonds = {}
+    for k, v in pb.items():
+        if isinstance(v, dict):
+            bonds[k] = v
+        elif isinstance(v, (int, float)):
+            bonds[k] = {"ICOHP_total_eV_per_bond": v}
+    if not bonds:
+        return d
+    out = dict(d)
+    out["bonds"] = bonds
+    bd = next((v for k, v in d.items()
+               if "bader" in k.lower() and isinstance(v, dict)), None)
+    if bd:
+        flat = {}
+        for k, v in bd.items():
+            if isinstance(v, (int, float)):
+                flat[k] = v
+            elif isinstance(v, dict):        # {"Li": {"mean": ...}} 같은 중첩 한 겹
+                m = v.get("mean", v.get("net", v.get("charge")))
+                if isinstance(m, (int, float)):
+                    flat[k] = m
+        if flat:
+            out.setdefault("bader", flat)
+    out.setdefault("system", d.get("system") or d.get("_provenance", "")[:80])
+    out.setdefault("method", d.get("_provenance", ""))
+    return out
+
+
 def icohp_for(cid: str):
     """조성별 LOBSTER ICOHP JSON (있으면) — bonds 테이블 렌더용. 공통 스키마.
 
@@ -527,10 +576,18 @@ def icohp_for(cid: str):
       per_site / bader 도 lpsocl 에만 있어서 렌더가 아예 안 되고 있었다.
     """
     pref = _PREFIX.get(cid, [cid])
-    for f in sorted((DB / "properties").glob("*_icohp.json")):
+    # ⚠ ICOHP 가 db 에 **세 가지 형태**로 있다: *_icohp.json / per_bond_json/bonds_*.json /
+    #   comp2_icohp_origin.csv. 예전엔 첫 형태만 봐서 **comp1 은 Bonding 탭 자체가 없었고**
+    #   canonical ICOHP_PS 의 출처(comp1 -5.938 / modelc -6.000)가 화면 어디에도 없었다.
+    #   (2026-07-29 감사) → per_bond 스키마를 공통 스키마로 변환해 받는다.
+    cands = list(sorted((DB / "properties").glob("*_icohp.json")))
+    cands += list(sorted((DB / "properties" / "per_bond_json").glob("bonds_*.json")))
+    for f in cands:
         stem = f.stem.lower()
         if any(p.lower() in stem for p in pref):
             d = _load_json(f)
+            if d and not isinstance(d.get("bonds"), dict):
+                d = _adapt_per_bond(d)          # per_bond_json 스키마 → 공통 스키마
             if d and isinstance(d.get("bonds"), dict):
                 d = dict(d)
                 ck = next((k for k in d if k.startswith("comparison_vs_")), None)
@@ -1473,6 +1530,10 @@ def campaign_elements() -> set:
 def search_index() -> list:
     import glossary as G
     idx = []
+    # ⚠ 발표덱(litdb/talks)이 검색 인덱스에 통째로 빠져 있었다 — 논문 156편은 들어가는데
+    #   덱 2편은 안 들어갔다. 인용 규율이 다르므로 track 을 '발표'로 구분해 넣는다.
+    talks = [("발표", t_["title"], f"{t_.get('speaker','')} · {t_.get('session','')}",
+              f"/literature#{t_['id']}") for t_ in list_talks()]
     pages = [
         ("페이지", "Dashboard", "커버리지 매트릭스·조성 요약", "/"),
         ("페이지", "Property Explorer", "정렬·필터 물성 표 + provenance", "/explorer"),
@@ -1480,12 +1541,16 @@ def search_index() -> list:
         ("페이지", "Comparison", "조성 간 비교 + 레이더", "/compare"),
         ("페이지", "Screening·ML", "AI 계산 도핑 스크리닝 (cascade)", "/cascade"),
         ("페이지", "Compute", "원클릭 계산 입력 생성", "/compute"),
+        # ⚠ 사이드바엔 있는데 검색으론 못 찾던 3개 (2026-07-29 감사)
+        ("페이지", "Benchmarks", "외부 재현 표적 · 덱 정정 원장 · 판정 이력 · 위원회 온도 스윕", "/benchmarks"),
+        ("페이지", "Nd 치환 서베이", "원소 치환 문헌 54편 색인", "/nd-survey"),
+        ("페이지", "미결 리스트 (Open Items)", "판정 대기 · PDF 확보 대기 · ML 후속 · 심포지엄 대응", "/todo"),
         ("페이지", "Methods", "계산 방법 canonical", "/methods"),
         ("페이지", "Literature", "DEM/DFT 문헌", "/literature"),
         ("페이지", "Glossary", "용어 설명집", "/glossary"),
         ("페이지", "Work Log", "작업 기록", "/log"),
     ]
-    for t, label, sub, url in pages:
+    for t, label, sub, url in pages + talks:
         idx.append({"t": t, "label": label, "sub": sub, "url": url, "kw": label})
     for cid, c in COMPOSITIONS.items():
         # 아래첨자 표기와 ASCII 표기를 둘 다 kw 에 (Nd₂O₃ ↔ Nd2O3, B₂O₃ ↔ B2O3 …)

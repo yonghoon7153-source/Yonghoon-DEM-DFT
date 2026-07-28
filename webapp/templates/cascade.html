@@ -414,7 +414,7 @@
     <thead><tr><th>축</th><th>통과</th><th>탈락</th><th>중앙값 (meV/atom)</th><th>최악</th><th>코어 11종 중 킬</th></tr></thead>
     <tbody>
     {% for k, g in S.T9_interface_axes.gates.items() %}
-      <tr {% if k in ('SE_LPSCl','Li_anode') %}style="background:#fef2f2"{% endif %}>
+      <tr {% if k in ('SE_LPSCl','Li_anode') %}class="row-warn"{% endif %}>
         <td class="mono">{{ k }}</td>
         <td>{{ g.pass }}/{{ g.n }}</td>
         <td {% if g.kill > 10 %}style="font-weight:700;color:#dc2626"{% endif %}>{{ g.kill }}</td>

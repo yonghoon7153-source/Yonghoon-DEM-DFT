@@ -132,7 +132,9 @@
   {% if icohp %}<div class="card">
     <h3>결합 강도 — LOBSTER ICOHP <span class="muted" style="font-weight:400;font-size:.8rem">음수 클수록 강한 결합</span></h3>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 12px">
-      {% set spill = icohp.spilling_pct if icohp.spilling_pct is defined else icohp.charge_spilling_pct %}
+      {# ⚠ per_bond_json 스키마엔 spilling 키가 **둘 다 없다** — `is defined` 사슬만으로는
+   두 번째에서 UndefinedError 가 난다(실제로 comp1/modelc 가 500). .get() 으로 방어. #}
+      {% set spill = icohp.get('spilling_pct', icohp.get('charge_spilling_pct')) %}
       {% if spill is not none %}<span class="badge {% if spill < 5 %}b-canon{% else %}b-todo{% endif %}">charge spilling {{ spill }}%</span>{% endif %}
       <span class="badge b-fam mono" style="font-size:.68rem">{{ icohp.system }}</span>
     </div>
