@@ -6230,6 +6230,9 @@ def mpm_input_package(case_id):
     if _s4grid:
         cmd.append('--step4-grid-only')
         _s4_clean, _s4chg_clean, _s4sched = [], [], ''       # 아래 컷오프/R_int 주입 게이트도 함께 끔
+    # ★s4cap 은 게이트 밖에서 먼저 읽는다 — 옛 구조는 STEP4 미선택 + cap 셀렉트 조합에서 태그 블록의
+    #   _s4cap 참조가 NameError 500 (코드리뷰 chain#10, 기존 버그).  cmd 주입은 여전히 게이트 안.
+    _s4cap = request.args.get('s4cap', '')
     if _s4_clean and not _s4sched:
         cmd += ['--step4-crates', ','.join(f'{v:g}' for v in _s4_clean)]
     if _s4chg_clean and not _s4sched:
@@ -6274,7 +6277,6 @@ def mpm_input_package(case_id):
         # ★STEP4 솔버 σ-대비 cap (&s4cap=) — near-null 수렴정체 완화 (docs/step4_bottleneck_analysis_20260727).
         #   화이트리스트만 허용(임의값 금지): 0=OFF 기본 · 200 권장(CG ×5.2, σ_eff −7.8%) · 1000/2000=보수적.
         #   킷은 이 값을 MPM_S4_CONTRAST_CAP 기본값으로 굽고, 런타임 env 가 다시 override 가능.
-        _s4cap = request.args.get('s4cap', '')
         if _s4cap in ('200', '1000', '2000'):
             cmd += ['--step4-solver-cap', _s4cap]
         # ★v2 chaining (&s4chain=1, 스케줄 전용) — 각 스텝이 직전 스텝 끝 셸-SOC에서 시작(연속
@@ -6353,7 +6355,8 @@ def mpm_input_package(case_id):
         if request.args.get('s4chain', '') in ('1', 'true', 'on'):
             tag += '_chain'
     # ★솔버 cap 은 σ_eff 를 −7.8% 바꾸는 노브 → 같은 이름의 두 킷이 생기지 않게 태그 (감사 M10)
-    if _s4cap in ('200', '1000', '2000'):
+    #   STEP4 솔브가 실제로 있을 때만 (grid-only/미선택 킷엔 cap 이 안 구워짐 → 태그도 없음)
+    if _s4cap in ('200', '1000', '2000') and (_s4_clean or _s4chg_clean or _s4sched):
         tag += '_cap' + _s4cap
     # ★poly/SC 크기-분리 프리셋 → run_mpm.sh 가 달라짐(σ_e 재료분류+D_s) → 파일명도 구별.
     #   클라이언트 _addTag 의 '_ppds' 와 반드시 일치 (예전 _sched7step/VGCFPTFESDCP 어긋남 교훈).

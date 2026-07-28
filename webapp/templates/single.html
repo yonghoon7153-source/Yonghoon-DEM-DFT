@@ -883,7 +883,7 @@ function _addRecipeStr(vg, sp, pt, sd = 0) {
 }
 // variant tag (_VGCF-PTFE_1-1_ballmill) + the MPM-lab variant name (caseName + tag).
 function _addTag() {
-  const { vg, sp, pt, sd, mix, vox, s4, s4chg, s4pp, s4sched, s4cap, s4chain } = _addVals();
+  const { vg, sp, pt, sd, mix, vox, s4, s4chg, s4pp, s4sched, s4cap, s4chain, s4grid } = _addVals();
   // [A-Za-z0-9._]만 사용하는 자기서술 쌍 형식 (서버 미러) — ':'/'-' 는 다운로드 새니타이즈로
   // 삭제돼 예측명↔실제 파일명이 어긋났음 (VGCFPTFESDCP_2.970.4950.495 사건, 2026-07-17)
   const pairs = [['VGCF', vg], ['SuperP', sp], ['PTFE', pt], ['SDCP', sd]]
@@ -895,10 +895,13 @@ function _addTag() {
   //   솔버 cap 은 '_cap<값>' (σ_eff 를 바꾸는 노브라 같은 이름의 두 킷 방지).
   //   서버 순서 = _sched(_chain) → _cap → _ppds — ★2026-07-28 정정: 옛 클라이언트는 _ppds 를
   //   _cap 앞에 붙여 cap+ppds 동시 킷의 예측명이 실파일명과 어긋났음 (자동 등록훅 매칭 실패 원인).
-  const st = (s4sched ? '_sched' + (s4chain ? '_chain' : '')
+  //   ★s4grid(그리드까지만)는 서버가 sched/rate/cap 태그를 전부 떨굼 → 예측도 동일 (리뷰 chain#9).
+  const hasS4 = !s4grid && (s4sched || s4 || s4chg);
+  const st = (!hasS4 ? ''
+              : s4sched ? '_sched' + (s4chain ? '_chain' : '')
               : (s4 ? '_s4' + s4.split(',').map(r => r + 'C').join('_') : '')
                 + (s4chg ? '_s4chg' + s4chg.split(',').map(r => r + 'C').join('_') : ''))
-           + (s4cap ? '_cap' + s4cap : '')
+           + ((hasS4 && s4cap) ? '_cap' + s4cap : '')
            + (s4pp ? '_ppds' : '');                        // poly/SC D_s 프리셋 킷 구별
   return '_' + pairs + '_' + mix + vt + st;
 }
@@ -906,7 +909,7 @@ function _addVariantName() { const t = _addTag(); return t ? `{{ case.name }}${t
 // Show the GPU scp/run commands for the (dynamically-named) additive zip, mirroring the ① card.
 function updateAdditiveGpuCmds() {
   const el = document.getElementById('add-gpu-cmds'); if (!el) return;
-  const { vg, sp, pt, sd, mix, vox, s4, s4chg, s4vmin, s4vmax, s4icut, s4cap } = _addVals();
+  const { vg, sp, pt, sd, mix, vox, s4, s4chg, s4vmin, s4vmax, s4icut, s4cap, s4sched, s4chain, s4grid } = _addVals();
   // ★솔버 cap: 킷에 기본값으로 구워지지만(=&s4cap), 명령줄에도 명시해 로그·재현성을 남긴다.
   const capEnv = s4cap ? `MPM_S4_CONTRAST_CAP=${s4cap} ` : '';
   const capTxt = s4cap ? `솔버 cap ${s4cap}× (near-null 정체 완화 · CG iter↓; ⚠σ-메트릭 보고는 cap OFF 런으로)` : '';
@@ -935,7 +938,12 @@ function updateAdditiveGpuCmds() {
   ];
   const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
   const blk = (lbl, body) => `<div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre>${esc(lbl)}\n${esc(body)}</pre></div>`;
-  const s4txt = ((s4 ? '방전 ' + s4.split(',').join('/') + 'C' : '')
+  // ★스케줄/체인/그리드-온리 반영 (리뷰 chain#8: 옛 카드는 스케줄 킷에 "STEP4 미선택" 표기 + fetch 누락)
+  let schedN = 0; try { schedN = s4sched ? (JSON.parse(s4sched) || []).length : 0; } catch (e) {}
+  const hasS4run = !s4grid && (schedN > 0 || s4 || s4chg);
+  const s4txt = s4grid ? ''
+              : schedN > 0 ? `Zive 스케줄 ${schedN}스텝${s4chain ? ' ⛓연속체인' : ''}`
+              : ((s4 ? '방전 ' + s4.split(',').join('/') + 'C' : '')
               + (s4chg ? (s4 ? ' + ' : '') + '충전CCCV ' + s4chg.split(',').join('/') + 'C' : ''))
               + ((s4 || s4chg) ? ` [${s4vmin}–${s4vmax}V${s4chg ? ', CV종지 ' + s4icut + 'C' : ''}]` : '');
   let html = `<div style="margin-top:4px;color:#94a3b8;font-size:0.82em;font-weight:600">② 첨가제 zip GPU 실행 명령어 — recipe <code>${esc(recipe)}</code> · mixing ${mix}${vox !== '0.4' ? ' · STEP3 vox ' + vox + 'µm' : ''}${s4txt ? ' · <b style="color:#4ade80">STEP4 ' + s4txt + ' 자동 연속</b>' : ' · STEP4 미선택(그리드 export까지)'} · 산출물은 <code>run_*/</code> 런 전용 폴더(latest_run 심링크)</div>`;
@@ -947,9 +955,9 @@ function updateAdditiveGpuCmds() {
       + blk(`# 2) 실행 — 복사=바로 실행 (detached → SSH 끊겨도 서버 런 계속)${capTxt ? '\n#    ' + capTxt : ''}`,
             `ssh ${H} 'cd ${wk} && git pull origin ${BR} && unzip -o ${zip} && ${capEnv}bash run_mpm.sh'`)
       + blk('# 3) 완료 후 받기 → WSL (latest_run/ — run 끝나고 실행; 진행중이면 아직 없음)', `scp ${H}:${wk}/latest_run/mpm_payload.json ${H}:${wk}/latest_run/mpm_metrics.json ${DL}/`
-            + ((s4 || s4chg) ? `\nscp ${H}:${wk}/latest_run/step4_viz_*.json ${H}:${wk}/latest_run/step4_*.npz ${DL}/   # STEP4 곡선+뷰어` : ''))
+            + (hasS4run ? `\nscp ${H}:${wk}/latest_run/step4_viz_*.json ${H}:${wk}/latest_run/step4_*.npz ${DL}/   # STEP4 곡선+뷰어` : ''))
       + blk('# 4) webapp 반영', `# 구조·metrics·3D뷰어: ③ 버튼으로 mpm_payload.json 업로드`
-            + ((s4 || s4chg) ? `\n# ★STEP4 곡선/애니: 뷰어 → View Mode STEP4-v2 → 📂 교체 → ${DL}/step4_viz_*.json 선택` : ''));
+            + (hasS4run ? `\n# ★STEP4 곡선/애니: 뷰어 → View Mode STEP4-v2 → 📂 교체 → ${DL}/step4_viz_*.json 선택` : ''));
   }
   el.innerHTML = html;
 }

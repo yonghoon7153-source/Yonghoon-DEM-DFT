@@ -254,8 +254,8 @@ def main():
                 continue
             if k == 'r':                                    # rest(완화 I=0) — 체인 모드면 실제 I=0 확산 완화 런
                 _tr = float(st.get('t', 1.0))
-                if not (0.05 <= _tr <= 1440):
-                    ap.error(f'step {i}: rest t(분)는 0.05~1440 (got {_tr})')
+                if not (0.05 <= _tr <= 10080):              # ≤7일 (v1 은 표시 전용이라 관대 상한 — 하위호환)
+                    ap.error(f'step {i}: rest t(분)는 0.05~10080 (got {_tr})')
                 s4_sched.append({'k': 'r', 't': _tr, 'n': int(st.get('n', 1))})
                 continue
             try:
@@ -291,6 +291,13 @@ def main():
                     ap.error(f'step {i}: t(분)는 0.05~1440 (got {_tm})')
                 entry['t'] = _tm
             s4_sched.append(entry)
+
+    # ★chain 가드는 파싱 직후(어떤 파일도 쓰기 전) — prov(mpm_input.json)가 스케줄 없는 킷에
+    #   step4_chain=true 를 기록하거나, SystemExit 전에 부분 산출물이 남는 것 방지 (리뷰 chain#5).
+    #   grid-only 는 sched 를 의도적으로 떨구는 모드라 예외(무시 — prov 는 false 로 기록).
+    if a.step4_chain and not s4_sched and not a.step4_grid_only:
+        raise SystemExit('--step4-chain 은 --step4-sched 전용 (crates/charge 목록은 독립 '
+                         'rate-스크리닝 규약 — 체인할 순서가 없음)')
 
     atoms = os.path.join(a.results, 'atoms.csv')
     if not os.path.exists(atoms):
@@ -494,7 +501,9 @@ def main():
             'press_gpa': press_gpa, 'target_porosity': tgt,
             'lateral_box': box_x, 'mpm_n_grid': n_grid_mpm, 'mpm_est_points': est_pts,
             'step4_crates': s4_rates, 'step4_charge_crates': s4_chg,
-            'step4_chain': bool(a.step4_chain),
+            # ★sched 실재 + grid-only 아님일 때만 true — prov 는 널링(아래 643) 이전에 쓰이므로
+            #   grid_only 를 명시 반영해야 정확 (리뷰 chain#5 후속: 첫 수정은 순서 때문에 무효였음)
+            'step4_chain': bool(a.step4_chain and s4_sched and not a.step4_grid_only),
             'step4_r_int_ohm_cm2': a.step4_r_int,
             'step4_am_electro_split': (
                 None if a.step4_ds_poly is None and a.step4_i0_poly is None
@@ -707,9 +716,6 @@ def main():
         #   → 프로토콜 반복이지 상태-체이닝 열화 사이클 아님(그건 v2 chaining/R_int(N) 문헌투영 몫) —
         #   cyc 태그는 R_int(N) 축 라벨.  per-step 컷오프(V/CV-I) 달성 = 다음 스텝 = "조건 달성시 next".
         _sched_loop = ''
-        if a.step4_chain and not s4_sched:
-            raise SystemExit('--step4-chain 은 --step4-sched 전용 (crates/charge 목록은 독립 '
-                             'rate-스크리닝 규약 — 체인할 순서가 없음)')
         s4_sched_flat = expand_sched(s4_sched) if s4_sched else []
         if s4_sched:
             # ★v2 chaining (--step4-chain): 각 스텝이 직전 스텝의 --save-state 셸-SOC 를 --init-state 로
@@ -719,6 +725,9 @@ def main():
             #   미지정(기본) = 기존 v1 독립런 방출 bitwise 불변.
             _sl = []
             _prev_sv = ''
+            if a.step4_chain:                                # ★stale 상태 초기화 (코드리뷰 chain#3):
+                _sl.append('  rm -f s4state_*.npz   # 이전 시도 잔재가 SKIP 가드를 무력화(설정 혼합·'
+                           'stale 체인)하는 것 방지 — step4_only.sh 재실행은 체인을 처음부터 다시 돎')
             for _i, _cyc, _st in s4_sched_flat:
                 _sv = f's4state_{_i:02d}n{_cyc}.npz'
                 _ci = f' --init-state "{_prev_sv}"' if (a.step4_chain and _prev_sv) else ''

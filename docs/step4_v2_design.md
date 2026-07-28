@@ -114,3 +114,33 @@ v2는 **transport→kinetics→diffusion** 3층까지.
   v1 이 정본 — chaining 은 연속 사이클/프로토콜 충실 재현용.  비교 시 실행규약(_chain 태그)
   병기 필수.  잔여 훅: v2.1 rest 입자간 재분배(I_tot=0 망솔브) · 조건-루프(용량<X% until —
   in-run 열화 모델 필요) · B-1 per-cycle 자동배선(N→배수 법칙 앵커 대기).
+
+### §7-리뷰 반영 (2026-07-28, 3렌즈 적대 리뷰 — 코드/전기화학/수치물리 에이전트)
+- **[MED·수정] V_cutoff 상태-부기 정합**: 저장 체인 상태를 컷오프 보간 교차점으로 롤백 — 매
+  V_cutoff 사이클마다 다음 충전이 보고 q 보다 마지막-dt 만큼 깊게 시작하던 dt-의존 전량장부
+  오프셋(dx_max=0.02 서 창의 ~0.3-1%/사이클) 제거.  selftest chain(5): 상태 q ≡ 보고 q (Δ=0.0).
+- **[MED·수정] 로더 가드 통일(세탁 봉쇄)**: isfinite(NaN 은 min/max 비교 침묵통과) + 솔버밴드
+  [-0.01, 1.01] 범위 + `soc_overrun` 종료 거부 — rest 경로가 오염 상태를 클립-세탁해 'rest_end'
+  로 재발급하던 구멍 폐쇄.  rest 는 클립-포함 총드리프트 감사 + NaN-안전 부정형 경고.
+- **[MED·수정] simulate x_field 수용밴드**를 솔버 자체밴드로 확장 — 정상 종료한 심방전 상태
+  (셸 x∈(1,1.01] 합법)를 "손상"으로 오인 거부하던 비대칭 제거 + 클립 이동 감사 출력.
+- **[MED·수정] J(표면유속) 상태 탑재** — 표면농도 연속성: 체인 첫 U_f 재구성과 rest t=0 점에만
+  사용(첫 전진에서 새 J 로 대체).  미탑재시 한 점이 OCP 쪽으로 U′·Δx_surf 편향 (D_s=4e-15 poly
+  에서 수십 mV; GITT 순간강하 과대).  e2e 재실측: rest ΔV_ocp −21.5→−27.6 mV (첫 점 정확화).
+- **[MED·수정] rest V-트레이스 가중**: 부피(R³)→ **i0(x_surf)·R² 혼합전위 선형화** (부피가중은
+  Σi0·A·sinh=0 의 해가 아니라 바이모달·i0-분리서 수십 mV 편향) + **dead 입자 상태 탑재·제외**.
+- **[MED·수정] 킷 체인블록 시작 `rm -f s4state_*.npz`** — step4_only.sh 재실행 시 이전 시도
+  잔재가 SKIP 가드를 무력화하고 env-override 바뀐 설정을 침묵 혼합하던 구멍 폐쇄.
+- **[수정]** Rannacher 스타트업(BE 반스텝×2, θ-스킴 일반화 — CN 기본 bitwise) = 급경사 초기장
+  CN 링잉 제거 · newton_fail exit 3 (킷 FAILED 로그 한-스텝 지연 제거) · 체크포인트 세그먼트
+  페이싱(부분 세그먼트 viz 희소화 해소) · dx_mean_signed/q_frac_segment 병기(전체-창 q 와 혼동
+  방지) · chain 가드 파싱직후 이동 + prov step4_chain 정확화(grid-only=false) · rest t≤7일 ·
+  webapp: **s4cap 단독 선택 다운로드 500(기존버그)** / grid-only 태그 미러(기존) / 명령카드
+  스케줄·체인 표시+STEP4 fetch 라인(기존) / **_addTag _cap·_ppds 순서(기존버그 — cap+ppds 킷
+  자동등록 예측명 불일치)**.
+- **[검증 확인]** 체인 첫 Newton 강건(U_f 스프레드 446 mV 도 2 it, 프레시런과 동일) · 질량장부
+  float64 정합(충→rest→방 체인 총오차 정확 0) · 균일-참조 노이즈바닥 = 필수이자 정확(로드-필드
+  참조는 9.4e5× 부풂=가비지 수용) · 로드 클립 실무 불활성(현행 창서 headroom 0.15+) · v1
+  bitwise 불변 3중 재확인(selftest chain4 + 킷 구세대 byte-diff + 전기화학 렌즈).
+- **[잔여 훅 확정]** v2.1 rest I_tot=0 망솔브 — bimodal D_s/i0 분리 베드를 rest 로 체인할 때
+  1차항(2.5C 충전끝 U_f 스프레드 157 mV 실측) → 그 조합 사용 전 우선 구현 대상.
