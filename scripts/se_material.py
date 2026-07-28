@@ -1,14 +1,32 @@
 #!/usr/bin/env python3
-"""se_material — SINGLE SOURCE OF TRUTH for the solid-electrolyte (LPSCl) material
-constants that the transport pipeline shares, and for their TEMPERATURE convention.
+"""se_material — the single source of truth for the solid-electrolyte (LPSCl) material
+constants **on the PRODUCTION transport path**, and for their TEMPERATURE convention.
+
+★ SCOPE — read this before trusting the phrase "single source of truth" ★
+─────────────────────────────────────────────────────────────────────────
+TRUE for the production σ path, and ONLY that path:
+    network_conductivity.py · step3_sigma.py · voxel_conductivity.py ·
+    mpm_webapp_payload.py · generate_comparison_plots.SE_SG (the LOOCV-0.975 σ_ionic
+    scaling law) · webapp/predictor_engine.py · webapp/app.py · webapp templates
+    (via the `sigma_grain()` Jinja global)
+
+NOT YET TRUE repo-wide.  ~10 offline analysis / one-shot fitting scripts still carry a
+bare 3.0 (physics_surface_contact_fit.py, triage_cases.py, verify_case.py,
+build_tau_regime_db.py, export_comsol_2d.py, fit_constrained.py,
+screening_ionic_thin_focus.py, analyze_network_results.py, the v-series fit scripts, and
+some plot-local SIGMA_BULK constants inside generate_comparison_plots.py).  The current
+inventory lives in docs/temp_pressure_capability.md §9-2.
+
+⇒ CONSEQUENCE: push a temperature-enabled run's output through one of those scripts and
+σ_grain silently reverts to 25 °C, so τ / σ_brug come out wrong.  Read temperature-swept
+results on the production path only.  This header used to claim repo-wide truth flatly;
+it is scoped now because the overclaim is itself the kind of silent-wrongness this module
+exists to prevent (2026-07-28).
 
 Why this module exists
 ──────────────────────
-σ_grain = 3.0 mS/cm was duplicated as a bare literal across ≳12 files
-(network_conductivity.py:44, voxel_conductivity.py PHASE_SIGMA, mpm_webapp_payload.py
---sigma-ion-se, generate_comparison_plots.py SE_SG = the PRODUCTION σ_ionic scaling-law
-path, physics_surface_contact_fit.py, triage_cases.py, verify_case.py, …).  None of
-them carried a temperature, and none of them referenced each other — so "add T-dependence"
+σ_grain = 3.0 mS/cm was duplicated as a bare literal across ≳12 files.  None of them
+carried a temperature, and none of them referenced each other — so "add T-dependence"
 could not be a one-line edit anywhere.  See docs/temp_pressure_capability.md §3-4 / T1-b.
 
 ★ CONVENTION (FIXED — do not use any other form) ★
