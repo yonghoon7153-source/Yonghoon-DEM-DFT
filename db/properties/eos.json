@@ -54,9 +54,9 @@
 
   "trends": {
     "Li6_family": "comp1(26.2) > comp2(25.8) -> Br up, B0 down",
-    "Li5.4_family": "modelc(21.7) > comp5(22.9) > comp3(20.8) = comp4(20.8)",
+    "Li5.4_family": "comp5(22.9) > modelc(21.7) > comp3(20.8) = comp4(20.8)",
     "cross_family": "Li6(~26) > Li5.4(~21) -> vacancy + S reduction -> B0 down by ~5 GPa",
-    "Br_effect": "Br increase -> B0 decrease (consistent within each family)"
+    "Br_effect": "Br increase -> B0 decrease (⚠ Li6 계열에서만 성립. Li5.4 계열은 Br 3->4->5 에서 20.8->20.8->22.9 로 마지막 구간이 증가한다 — 2026-07-29 정정)"
   },
 
   "v1_vs_v2_comparison": {

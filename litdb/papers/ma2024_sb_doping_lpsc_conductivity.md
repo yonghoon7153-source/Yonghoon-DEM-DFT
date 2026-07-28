@@ -198,7 +198,7 @@ LSSSI를 nucleating agent+도펀트로 LPSC에 통합(XRD/Raman/XPS 확인, x≤
 | **Li 장벽 (NEB-유사)** | intra 0.873→0.496·inter 0.976→0.592 eV | 우리 = AIMD MSD Arrhenius(0.253/0.224); 정적 NEB 미보고 | **△ 방법 다름** — Ma=정적 단일경로 장벽(σ 환산 안 함), 우리=AIMD 다경로 평균. **Ma 절대장벽(0.5–1.0 eV) ≫ 우리 AIMD Ea(0.22–0.25)** — 정적 단일경로는 항상 과대(우리 disorder_ensemble: ordered NEB→frozen) |
 | **inter > intra hop** | inter 0.592 > intra 0.496 (둘 다) | 우리 AIMD = inter-cage 율속(framework immobile) | **✓ 정성 일치** (percolation: inter-cage 병목) |
 | **격자팽창 (도핑)** | a 9.851→9.967 Å (Sn/Sb/I 큰 이온) | EOS V0 comp1 254.16 → modelc 243.29 Å³/fu (Cl-rich는 *수축*) | **✗ 방향 반대** — Ma=큰 이온 치환→팽창, 우리 Cl-rich(작은 Cl↑)→수축. 도펀트 종류차 |
-| **band gap** | LPSC-0.05 *별도 미보고* (li2025 자매=1.82→2.41) | comp1 2.066 / modelc 2.098 eV (PBE) | n/a (Ma 본문 gap 미보고) |
+| **band gap** | LPSC-0.05 *별도 미보고* (li2025 자매=1.82→2.41) | comp1 2.066 / modelc 2.099 eV (PBE) | n/a (Ma 본문 gap 미보고) |
 | **산화 onset / ESW** | CV(carbon, kinetic)만 — thermodynamic ESW·grand-potential **없음** | grand-potential 2.256 V (S²⁻-limited, 양 조성 동일) | **△ Ma는 산화창 미계산** — Banik/우리 S²⁻-limited 예상서 도핑 무관 |
 | **계면 분해산물 (Li/SE)** | XPS: Li₂S·LiCl·Li-Sn/Sb 합금·LiI (LPSC-0.05) | interface_reactivity: Li₃P·Li₂S·LiCl (vs Li metal) | **✓ Li₂S·LiCl 공통**; Ma 추가 = Sn/Sb 합금·LiI (우리 hull엔 Sn/Sb/I 부재 → 전이 0) |
 

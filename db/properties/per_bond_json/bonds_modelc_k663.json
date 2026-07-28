@@ -1,6 +1,6 @@
 {
   "system": "modelc_v3",
-  "_provenance": "k444 (paper-grade): LOBSTER ext-basis 70/560 + Bader AE plot_num=17, one-shot via analyze_per_bond_icohp.py",
+  "_provenance": "k663 (paper-grade; ⚠ 구 문자열 'k444' 는 analyze_per_bond_icohp.py 의 템플릿 텍스트였다 — 2026-07-29 정정): LOBSTER ext-basis 70/560 + Bader AE plot_num=17, one-shot via analyze_per_bond_icohp.py",
   "bader_charges": {
     "Li": {
       "q_e": 0.8817,

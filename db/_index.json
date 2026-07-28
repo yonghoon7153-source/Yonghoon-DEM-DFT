@@ -126,8 +126,11 @@
     "li_adatom_diffusion_barrier": {
       "n_results": 7,
       "has_trends": true,
-      "headline_DFT_SCF_ratio_LiC6_over_Li3N": 5.86,
-      "headline_rate_ratio_300K": 9700,
+      "_RETRACTED_headline_DFT_SCF_ratio_LiC6_over_Li3N": 5.86,
+        "_retraction_note": "5.86 / 9700 은 thin 4-layer 슬랩 인공물 — diffusion.json:269 에서 철회됨. 정본은 2.4x / ~660x (6층 243-atom).",
+        "headline_DFT_SCF_ratio_LiC6_over_Li3N": 2.4,
+      "_RETRACTED_headline_rate_ratio_300K": 9700,
+        "headline_rate_ratio_300K": 660,
       "see": "db/properties/diffusion.json"
     },
     "li_ion_transport": {

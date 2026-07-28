@@ -93,7 +93,7 @@ Li argyrodite(Li₅.₅PS₄.₅Cl₁.₅)에 **CuBr₂를 도핑**(Cu가 P 자�
   4. **ELF** (Fig 5c,d): Li/LPSC-P vs Li/LPSC-CB 계면 전자국재 → LPSC-P는 P·S 주위 국재(P–S 공유), **LPSC-CB는 Cu/Br EN 차로 전자가 Cl/Br 주위 재분포** → S 원자로 전자이동 차단 → LiCl@LiBr 층 생성. (s-p 혼성으로 Cl/Br 주위 전자 풍부 = [Liu23]/[Ke] 류 논리)
   5. **물 흡착 ΔE** (Fig 6e): PS₄(CuS₄) 사면체 + H₂O → PS₃O(CuS₃O) + H₂S 반응의 ΔE = U(PS₃O/CuS₃O)+U(O atom)−U(PS₃O/CuS₃O 생성)−U(S atom). **LPSC-P 0.29 / LPSC-CB 2.42 eV** → Cu–S 결합이 P–S보다 강해 가수분해 저항.
 
-> 우리 대비: PDOS·ELF·계면 슬랩·산물 밴드갭은 **우리 전자구조 도구와 동급 분석**이나, **파라미터 미명시**라 절대값(특히 gap)의 직접 정량 비교는 부적절. 우리 PBE gap(comp1 2.066/modelc 2.098)과 이들 LPSC-P 1.82·LPSC-CB 2.41은 **둘 다 PBE류 과소평가 영역의 "wide-gap insulator"** 수준으로만 정렬 (functional·k·무질서 미상 → §10).
+> 우리 대비: PDOS·ELF·계면 슬랩·산물 밴드갭은 **우리 전자구조 도구와 동급 분석**이나, **파라미터 미명시**라 절대값(특히 gap)의 직접 정량 비교는 부적절. 우리 PBE gap(comp1 2.066/modelc 2.099)과 이들 LPSC-P 1.82·LPSC-CB 2.41은 **둘 다 PBE류 과소평가 영역의 "wide-gap insulator"** 수준으로만 정렬 (functional·k·무질서 미상 → §10).
 
 ## 6. Figure set ★
 | Fig | 내용 (무엇을 보여주나) | 우리가 참고할 점 |
@@ -151,7 +151,7 @@ Li argyrodite(Li₅.₅PS₄.₅Cl₁.₅)에 **CuBr₂를 도핑**(Cu가 P 자�
 |---|---|---|---|
 | **σ Cl-rich/도핑 빠름** | LPSC-P 5.3 → LPSC-CB 10.3 mS/cm | D(600K) 3.09→7.90e-6, Ea 0.253→0.224 | **✓ trend 일치** (도핑이 σ↑) — 단 이들 변수=Cu+Br(양/음 동시), 우리=Cl만. **메커니즘 동일 결**(무질서·vacancy↑) |
 | **Ea↓** | 0.295 → 0.239 eV | 0.253 → **0.224 eV** | **✓ 일치**(도핑 시 Ea↓). 절대값 LPSC-P 0.295 vs 우리 comp1 0.253 = 실험 EIS vs AIMD 방법차 |
-| **밴드갭 (PBE류)** | LPSC-P **1.82** → LPSC-CB **2.41 eV** | comp1 2.066 / modelc 2.098 (PBE) | △ **"wide-gap"수준만 정렬** — 이들 LPSC-P 1.82 < 우리 2.066이나 functional·k·무질서 미상 → **절대 gap 비교 금지**. 단 **도핑이 gap을 *넓힘*** 은 공통 방향 |
+| **밴드갭 (PBE류)** | LPSC-P **1.82** → LPSC-CB **2.41 eV** | comp1 2.066 / modelc 2.099 (PBE) | △ **"wide-gap"수준만 정렬** — 이들 LPSC-P 1.82 < 우리 2.066이나 functional·k·무질서 미상 → **절대 gap 비교 금지**. 단 **도핑이 gap을 *넓힘*** 은 공통 방향 |
 | **σ_e 절대값** | LPSC-P 1.02×10⁻⁸ / LPSC-CB 3.35×10⁻⁹ S/cm | 우리 **미측정** (gap=wide insulator로만 추론) | ✗ 우리 못 봄 → **이들이 실측 anchor 제공**(slide25 σ_e 논의 보강) |
 | **계면 절연산물 gap** | LiCl 6.13 / LiBr 5.07 / Li₂S 3.04 eV | sei_products.json: LiCl 6.65 / Li₂S 3.90 (LiBr 없음) | **✓✓ 독립 검증** — 둘 다 LiCl≫Li₂S, "wide-gap halide가 절연 SEI" 일치. LiBr(5.07)은 우리 db에 추가 가치 |
 | **환원 산물** | LPSC-P→Li₂S+Li₃P (XPS 160.2·Li₃P) | comp1/modelc 0V→Li₃P+Li₂S+LiCl | **✓ 동일 chemistry** (Li₂S+Li₃P). 도핑하면 LiCl/LiBr이 이 분해를 절연층으로 덮음 |

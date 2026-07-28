@@ -152,7 +152,7 @@ h-BN B–N 1.45 Å. 4 site 중 최적화하면 Li는 **hollow(−0.56 eV)** 또�
 | Li 확산 barrier(면내, h-BN) | **0.10 eV** | (AIMD Ea comp1 0.253 / modelc 0.224 eV, 다른 시스템) | 비교불가(시스템·방법 다름) — **값 이식 금지** |
 | 전자차단/절연 서사 | 2층 h-BN 터널barrier **1.33/1.65 eV**(PBE, 하한) | SEI 산물 gap(sei_products.json: LiCl 6.22 / Li₂O 5.24 등) = **전자절연 passivation=dendrite 억제** | **✓ 동일 *철학*** (전자절연막이 dendrite 막는다) — 값은 무관 |
 | dendrite 레버 | 전자차단 + 강성 + under-cover 균일흡착 | §E/§F: 전자절연 SEI(LiCl/LiF/Li₃N) | **개념 평행** (우리 kim2026 LiF-SEI, Li₃N 연구와 같은 결) |
-| band gap | h-BN 4.3 eV (PBE, 실험 ~6) | comp1 2.066 / modelc 2.098 eV (PBE, 과소·무질서민감) | 둘 다 **"wide-gap insulator"** 수준만; 절대 gap 비교 금지 |
+| band gap | h-BN 4.3 eV (PBE, 실험 ~6) | comp1 2.066 / modelc 2.099 eV (PBE, 과소·무질서민감) | 둘 다 **"wide-gap insulator"** 수준만; 절대 gap 비교 금지 |
 > **결론**: 이 논문은 우리 LPSCl 물성표를 검증/반박하는 논문이 **아니다**. **(a) 신규 h-BN@VGCF/Li-anode 프로젝트의 흡착·확산 DFT 절차 표준** + **(b) "전자절연 계면막이 dendrite를 막는다"는 우리 음극(§E/§F) 서사의 2D-재료 판** 으로만 쓴다.
 
 ## 8. 적용 인사이트 (ORCA 복제 + 신규 프로젝트) ★

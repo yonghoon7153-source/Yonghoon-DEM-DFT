@@ -203,7 +203,7 @@ Supp1(저압서 PVDF 급락) → Fig1(가설 도식+합성) → Fig2(공중합 �
 | 항목 | 이 논문 | 우리 | 비고 |
 |---|---|---|---|
 | LPSCl σ | **4.2 mS/cm @30 °C** (상용 POSCO JK, Ti\|SE\|Ti AC) | comp1 AIMD RT 외삽 ~3.35 mS/cm (동일 조성) | ✓ 같은 10⁻³ 차수 — comp1 조성 상용분말의 외부 anchor 1건 (문헌 2.9~4.9 범위 내) |
-| SE = 절연 매트릭스 가정 | "electronically insulating SEs"를 바인더 σ_e 측정 매트릭스로 사용 | comp1/modelc PBE gap 2.066/2.098 eV = **wide-gap 절연체** 프레임 | ✓ 정성 일치 (절대 gap 비교 금지 규율 유지) |
+| SE = 절연 매트릭스 가정 | "electronically insulating SEs"를 바인더 σ_e 측정 매트릭스로 사용 | comp1/modelc PBE gap 2.066/2.099 eV = **wide-gap 절연체** 프레임 | ✓ 정성 일치 (절대 gap 비교 금지 규율 유지) |
 | SE 환원 안정성 @Si 전위 | **미논의** — 0.01–1.0 V에서 SE셀 CV 전류를 바인더 거동으로만 해석 | grand-potential 환원한계 **1.242 V** → 0.01–1.0 V에선 LPSCl 자체도 열역학적 환원 영역 (자기제한 SEI로 kinetic 안정화가 통설) | ⚠ **우리 관점의 비판점**: SE셀 CV 전류·"5th cycle 후 안정화"에는 바인더 반응 + **SE 환원(SEI 형성)** 이 섞여 있을 가능성 — 논문은 분리 안 함 (우리 추론, 논문 주장 아님) |
 | 산화 onset/기계/전자구조 | n/a (음극 논문·SE 미분석) | axis ①–④·elastic·gap | 비교 불가 — comparison 4축 표에 수치로 넣지 않음 |
 

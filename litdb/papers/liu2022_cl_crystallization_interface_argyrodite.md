@@ -190,7 +190,7 @@ Cl↑ → (as-milled σ 2×) → annealing 시리즈 XRD/Rietveld(LPSCl 결정�
 | 격자 수축(Cl-rich) | a 9.85→9.81 Å | 우리 EOS V0 254.16→**243.29 Å³/fu**(modelc 더 작음) | **✓✓ 일치** — Cl-rich 셀 수축 |
 | 산화 onset(intrinsic) | (직접 ESW 계산 없음) | comp1=modelc **2.256 V**(S²⁻-limited) | n/a — Liu는 intrinsic ESW 안 봄(annealing·계면만) |
 | 기계(E/B/G) | n/a (측정·계산 없음) | E_VRH 22.06→27.66 | n/a |
-| 전자구조(gap) | n/a | comp1 2.066 / modelc 2.098 (PBE) | n/a |
+| 전자구조(gap) | n/a | comp1 2.066 / modelc 2.099 (PBE) | n/a |
 
 ## 12. 적용 인사이트 (깊게)
 1. **inter-cage 멘탈모델의 *문헌 시각 증거*** (가장 큰 수확): Fig 2e–g가 "LPSCl=intra-cage trap / Cl-rich=inter-cage 활성화"를 Li 확률밀도로 직접 그린다. 우리 percolation/inter-cage 서사(comp1→modelc D↑·Ea↓)의 **그림 레퍼런스**로 deck에 인용 가능 — 그리고 우리 cascade의 **`migration_volume_fraction`(bottleneck/inter-cage 창)** 개념과 정확히 맞물림(Liu13 hydrate analogy의 "window→trap/cross"를 *실제 argyrodite Li*로 본 셈).

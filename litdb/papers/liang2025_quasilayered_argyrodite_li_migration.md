@@ -191,7 +191,7 @@
 1. **anion-site 메커니즘의 외부·이론 평행본**: Liang의 **"4a-S 고이동 / 4c-halide 약결합(Cl ≤0.5×S Mayer)"** 은 우리 "S/Cl이 어느 자리에 앉느냐가 σ·Ea를 지배"의 *결합차수 정량판*. deck에서 우리 anion-site 서사 옆에 "외부 그룹(CityU Huang)이 *결합차수*로 같은 결론" 으로 배치 가능. ⚠ 단 *구조 분지가 다름*(준층상 vs 입방) 반드시 병기.
 2. **inter-cage → inter-layer 율속의 3중 정합**: Liang(inter-cage=거시 σ 율속, NEB 0.12)이 **[Rao11] BVSE(inter-cage dc 율속 0.27–0.35 eV) + [Perc] site-percolation(망 연결 = σ 결정) + [Dyre] hopping(percolation 병목 = dc Ea)** 와 *같은 율속 단계*를 가리킴. 우리 cascade `dopant_blocking_fraction`(망 site 제거)·`migration_volume_fraction`(침투 저장벽 부피)에 **"층간/cage간 연결이 끊기면 σ 비등방·붕괴"** 의 *AIMD 궤적 증거*를 더함. → deck "율속 단계 통일" 슬라이드에 4번째 근거(Liang 궤적+NEB).
 3. **dual-x 사고 + uniformity 디스크립터**: Liang은 *2축*(halide × cage-cation)을 동시에 돌려 **Mayer bond order *균일성*** 을 σ 디스크립터로 제안 — 우리 dual-x(Sc₂O₃ 0.75@x0.25 → 0.25@x0.0625)·cascade 디스크립터 탐색과 *방법론 거울*. "결합차수 균일성↑ → 매끄러운 지형 → σ↑"는 우리 `migration_volume_fraction`/percolation 언어로 재서술 가능.
-4. **NEB cross-check 옵션**: Liang의 NEB(평균 퍼텐셜) 아이디어는 우리 AIMD Ea(0.253, Schlem 0.25 일치)를 *단일 경로*로 교차검증하는 *값싼* 보조 도구 후보. 단 우리 AIMD가 correlated/concerted motion까지 잡아 *더 엄밀*임을 정직히 유지([He19] "AIMD가 D·σ까지", NEB는 단경로).
+4. **NEB cross-check 옵션**: Liang의 NEB(평균 퍼텐셜) 아이디어는 우리 MLIP-MD Ea(0.253; ⚠ Schlem 귀속 철회 2026-07-28)를 *단일 경로*로 교차검증하는 *값싼* 보조 도구 후보. 단 우리 AIMD가 correlated/concerted motion까지 잡아 *더 엄밀*임을 정직히 유지([He19] "AIMD가 D·σ까지", NEB는 단경로).
 5. **halide 종류 = 채널 조형 손잡이**: Liang "Cl=빠른 1D/2D 채널 / I=층간 억제" → 우리 Cl-rich(modelc) σ↑ 결론과 *방향 일치*(Cl이 빠르다). ⚠ Liang은 *준층상 비등방* 맥락이라 우리 *입방 등방*에 직접 못 옮김 — "Cl이 약결합으로 Li를 잘 놓는다"는 *결합 단위 기전*만 차용.
 
 ## 9. 인용 가능 문장 (deck/paper용)

@@ -217,7 +217,7 @@ Li₆PS₅Cl에 **CuCl을 이원 도핑**(Cu²⁺→P⁵⁺ 4b자리 → Li⁺ �
 | **σ_e 절대값** | LPSC-P **8.75×10⁻⁹** / LPSC-1 **1.49×10⁻⁹ S/cm** | 우리 **미측정** (gap=wide insulator로만 추론) | ✗ 우리 못 봄 → **세 번째 실측 anchor 제공**(li2025 1.02e-8→3.35e-9·Liu23 8.16e-9과 같은 줄). **σ_e↔CCD 역상관(Fig 4b)** = dendrite 레버 직접증거 |
 | **환원 산물 (음극)** | LPSC-P→**Li₂S(160.9)+Li₃P+P₂Sₙ**(XPS, 심한 분해)·LiCl | comp1/modelc 0V→**Li₃P+Li₂S+LiCl** | **✓ 동일 chemistry**(Li₂S+Li₃P+LiCl). LPSC-1은 (P/Cu)S₄ rigid화로 이 분해 *억제* |
 | **산화 분해 (CV)** | S²⁻→S⁰/Sₓ·P³⁺→P⁵⁺(~0.62 V vs In/InLi); LPSC-P 강·LPSC-1 160× 작음 | grand-potential onset 2.256 V → P₂S₇+S | **△ 산물 일치(S²⁻ 산화)**. 단 이 논문 "8 V ESW(vs In/InLi)"는 *kinetic*(carbon 접근성) — 우리 thermo onset 2.256 V·Banik과 **충돌하는 over-claim**(§10) |
-| **밴드갭** | **n/a** (미계산·미측정) | comp1 2.066 / modelc 2.098 (PBE) | ✗ 비교 불가 — 이 논문 gap 안 봄 |
+| **밴드갭** | **n/a** (미계산·미측정) | comp1 2.066 / modelc 2.099 (PBE) | ✗ 비교 불가 — 이 논문 gap 안 봄 |
 | **기계 E/B/G** | **n/a** | E_VRH comp1 22.06 / modelc 27.66; B₀ 26.23/21.71 | ✗ 비교 불가 — 이 논문 탄성 안 봄 |
 | **대기안정 (H₂S)** | H₂S 1.07→**0.49 cm³/g**; Cu₃PS₄ 형성·oxophilicity↓ | 우리 **범위 밖**(0K closed hull·기체 X) | ✗ 우리 못 봄 → 정성 인용. 단 우리 oxophilicity descriptor·"강결합→안정"(ICOHP) 논리와 결이 같음 |
 

@@ -1214,17 +1214,31 @@ def _paper_pis(slug: str) -> list:
     if not f.exists():
         return []
     try:
-        lines = f.read_text(encoding="utf-8", errors="ignore").splitlines()[:25]
+        lines = f.read_text(encoding="utf-8", errors="ignore").splitlines()[:35]
     except Exception:
         return []
     # 부정 표지 — 줄을 통째로 버리지 않고 **이 지점에서 자른다**.
     #   실측 사례: taklu2021 은 `소속: NTUST ... · 외부 그룹 (≠ 우리 한양/Jong-Won Lee/...)`.
     #   줄 앞부분(진짜 소속)은 살려야 하고 `≠` 뒤(비교용 나열)만 버려야 한다.
     #   ("우리 그룹" 만 걸러서는 "우리 한양" 을 놓친다 — 실제로 놓쳤다.)
-    NEG = ("≠", "아님", "외부 그룹", "소속 판정", "우리 그룹", "우리 연구실", "우리 한양")
-    INCLUDE = ("저자", "발표자", "author", "Author", "corr.", "@")
+    #   추가 실측(2026-07-29): oh2026_bimodal 은 `"Yoon Seok Jung 공저"라 적혀 있었으나 **오류** —
+    #   실제 저자에 Yoon Seok Jung은 **없고**...` 라 적혀 있는데 그 줄에서 정윤석 태그가 붙었다.
+    #   "오류"/"없고" 도 부정 표지다.
+    #   ⚠ NEG(잘라내기)로는 **이름이 부정어보다 앞에 오는 경우**를 못 잡는다.
+    #   실측: `TIER 리스트 초안에 "Yoon Seok Jung 공저"라 적혀 있었으나 **오류** — 실제 저자에
+    #   Yoon Seok Jung은 **없고**...` → 앞부분만 남겨도 이름이 그대로 살아 태그가 붙었다.
+    #   **정정 문장은 줄 전체를 버린다** (그 줄의 존재 이유가 "그 이름이 틀렸다"이므로).
+    DROP = ("저자 정정", "오류 —", "**오류**", "잘못 적", "라 적혀 있었으나")
+    NEG = ("≠", "아님", "외부 그룹", "소속 판정",
+           "우리 그룹", "우리 연구실", "우리 한양")
+    #   INCLUDE 가 좁아서 서지 블록(`**인용:**`)과 `우리 랩(Hanyang, **Jong-Won Lee** 그룹)`
+    #   형식을 통째로 버렸다 — 실측 15편에서 실제 공저 PI 를 놓쳤다.
+    #   ⚠ "우리 랩" 은 NEG 가 아니라 INCLUDE 다. 뒤에 진짜 PI 이름이 온다.
+    INCLUDE = ("저자", "발표자", "author", "Author", "corr.", "@", "인용:", "우리 랩")
     cand = []
     for ln in lines:
+        if any(d in ln for d in DROP):
+            continue
         for tok in NEG:
             i = ln.find(tok)
             if i >= 0:

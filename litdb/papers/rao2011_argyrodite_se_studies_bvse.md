@@ -113,12 +113,12 @@ Li₆PO₅X(O가 S 자리)는 **O2 위치가 S2와 달라** cage·long-range 경
 |---|---|---|---|
 | **조성 comp1 직접 대응** | **Li₆PS₅Cl** (화학량론, 동일!) | **comp1 = Li₆PS₅Cl** | ✓ *조성 정확 일치* — comp1의 외부 실험·경로 좌표 |
 | **dc σ (LPSCl, RT)** | **1.9 × 10⁻³ S/cm** (어닐 결정질) | AIMD 600K 외삽 RT ~**3.35 mS/cm**(comp1 4fu) — 3–5× 과대 | **✓ 같은 차수(10⁻³)** — 우리 UMA 과대(MLIP overshoot+bulk vs pellet)는 알려진 한계. Rao 1.9 mS/cm = 실측 anchor |
-| **Ea (LPSCl)** | **0.38 eV**(임피던스, ball-milled) / **0.35 eV**(BV inter-cage dc) | **0.2532 eV**(AIMD Arrhenius, 4fu natural, PAPER_GRADE) | △ **우리가 낮음** — (a) Rao 임피던스 0.38=ball-milled(결함·입계 포함, 결정질은 더 낮을 수 있음) (b) BV 0.35=relaxation 무시(과대 경향) (c) 우리 AIMD=relaxation+correlated motion(낮춤). **방법 차이로 0.1 eV gap은 예상 범위** — Schlem 2020 ordered LPSCl(우리 0.253 match)과 정합. *절대 등치 금지* |
+| **Ea (LPSCl)** | **0.38 eV**(임피던스, ball-milled) / **0.35 eV**(BV inter-cage dc) | **0.2532 eV**(AIMD Arrhenius, 4fu natural, PAPER_GRADE) | △ **우리가 낮음** — (a) Rao 임피던스 0.38=ball-milled(결함·입계 포함, 결정질은 더 낮을 수 있음) (b) BV 0.35=relaxation 무시(과대 경향) (c) 우리 AIMD=relaxation+correlated motion(낮춤). **방법 차이로 0.1 eV gap은 예상 범위** — ⚠ 구 문장 'Schlem 2020 ordered LPSCl 0.25 match' 는 **철회**(2026-07-28, 귀속 오류) — 실험 LPSCl Ea 0.29–0.46 eV 범위 안이라는 정도만 말할 수 있다. *절대 등치 금지* |
 | **σ↑·Ea↓ 레버** | **anion disorder(S²⁻/X⁻) + interstitial 가용성**이 inter-cage 연결을 켬 | Cl-rich(modelc)서 disorder↑ → D 2.6×↑·Ea 0.253→0.224 | **✓✓ 같은 기전** — Rao는 X종류로(Cl/Br/I), 우리는 Cl *증량*으로 같은 "disorder→inter-cage 연결→σ↑" 레버. 우리 modelc는 Rao 틀의 *Cl축 연장* |
 | **inter-cage = dc 율속** | BV 4행: cage 간 연결(0.27–0.35 eV)이 long-range σ 지배, intra-cage(0.09–0.18) 빠름·non-limiting | 우리 inter-cage 서사·`migration_volume_fraction`(BVSE 병목 부피)·percolation 멘탈모델 | **✓✓ 우리 inter-cage 서사의 *2011 1차 출처·structural 대응물*** — [GG]/[Liu] Li 확률밀도와 같은 그림을 *BV 경로*로 |
 | **할라이드 trend (Cl/Br/I)** | 결정질 σ: Br 6.8 > Cl 1.9 ≫ I 4.6e-7 (10⁻³ vs 10⁻⁷); Ea(BV dc) Br 0.27 < I 0.33 < Cl 0.35 | 우리 Cl계만(comp1/modelc); [Rao2025]가 Cl–I AIMD로 보완 | **✓ 외부 trend 좌표** — 우리 Cl계를 "Cl≈Br ≫ I" 위계에 위치. [Rao2025] AIMD(I=전도 아니라 상안정/계면 레버)와 결론 결: I는 dc σ 약함 |
 | **방법 위계** | BVSE = 0 K 경험적 force-field(relaxation 무시, isosurface) | AIMD = BO-MD relaxation + correlated motion (Haven<1) | **우리가 더 엄밀** — BVSE는 *싼 경로 스크리너*(NEB/AIMD의 사촌). 우리 AIMD가 relaxation·협동운동을 잡음(BV는 못 잡음). 정직한 위계 명시 |
-| **band gap / 산화 onset** | n/a (논문에 없음) | gap 2.066/2.098 eV(PBE); onset 2.256 V | — Rao는 전자구조·산화 미다룸. 비교 불가 |
+| **band gap / 산화 onset** | n/a (논문에 없음) | gap 2.066/2.099 eV(PBE); onset 2.256 V | — Rao는 전자구조·산화 미다룸. 비교 불가 |
 | **기계적** | n/a | E_VRH 22.06/27.66 GPa | — Rao는 elastic 미다룸 |
 
 ## 8. Figure / Table set ★

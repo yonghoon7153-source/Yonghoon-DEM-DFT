@@ -305,7 +305,7 @@ comp1(LPSCl) 2.256 V와 **동일 방법·동일 GGA_GGA+U 훌** → 절대 비�
 | **환원 한계·산물** | Li₆PS₅X **1.7 V → Li₃P+Li₂S+LiX**(Table 3) | 1.24 V → **Li₃P+Li₂S+LiCl** | **✓ 동일 chemistry** (전위 절대값은 방법차) |
 | **기계 — 연성** | 황화물 **B/G 1.25–2.5(연성)**, E~10–37 GPa | B/G·연성 결론 동일; E_VRH 22–28 | **✓ 연성 결론 robust** |
 | **기계 — argyrodite E절대값** | SI Table 1 argyrodite **E=92–100, G=38–43 GPa** | E_VRH 22.06/27.66 | **✗ 리뷰 표 outlier** — 직접 비교 금지(§13) |
-| **전자구조 gap** | "wide-band-gap"(구체 LPSCl gap 본문 없음; LiI 6.4·LiI buffer 언급) | comp1 2.066 / modelc 2.098 (PBE) | 리뷰는 gap 절대값 안 줌 → "wide-gap insulator" 수준만 일치 |
+| **전자구조 gap** | "wide-band-gap"(구체 LPSCl gap 본문 없음; LiI 6.4·LiI buffer 언급) | comp1 2.066 / modelc 2.099 (PBE) | 리뷰는 gap 절대값 안 줌 → "wide-gap insulator" 수준만 일치 |
 | **전자전도 interphase** | interphase는 **전자절연**이어야 self-limiting(Fig 13, LPO로 LLZO σ_e 10⁻⁸→10⁻⁹) | (우리 σ_e 미측정; [Liu23] 8.16e-9 인용) | 우리 σ_e 논의의 *개념* frame |
 | **dendrite·CCD** | Monroe-Newman G>2G_Li(~6.8–8.5 GPa); 실제론 K_IC·grain·σ_e가 변수 | 우리 G_VRH·B/G·E | **우리 elastic→dendrite 다리** (단 단일기준 불충분) |
 
@@ -323,7 +323,7 @@ comp1(LPSCl) 2.256 V와 **동일 방법·동일 GGA_GGA+U 훌** → 절대 비�
 
 - **2021 리뷰(2020 문헌 기준)** → **dated**: 이후 발전(Cl-rich argyrodite ESW 정밀화 [GG]2022, MgClO/MgF₂ 음극 도핑 [Ke][Liu23], halide SE Li₃MX₆의 고전압 양극 활약, NMC811 quasi-zero-strain 실증 등)이 빠져 있음. 특히 **Cl-rich(LPSCl1.5/1.6) 자체를 별도로 다루지 않음** — argyrodite를 Li₆PS₅X 일반으로만 취급. 우리 LPSCl vs LPSCl1.6 *비교*는 이 리뷰에 직접 없음(우리만의 기여 여지).
 - **⚠ SI Table 1 argyrodite mechanical(E 92–100, G 38–43 GPa)는 신뢰 낮음**: 같은 표의 glass(13–28)·LGPS(37)와도, 우리/[Kaur]/[JPCC]/[GG] LPSCl DFT(20–30)와도 크게 어긋남. 단일 ref(Deng/Ong)에서 온 값으로, **outlier로 보고 인용하지 말 것**. 연성(B/G) 결론만 차용.
-- **gap 절대값 없음**: 리뷰는 LPSCl band gap을 명시 안 함("wide-gap"만). 우리 2.066/2.098(PBE)을 리뷰와 절대비교 불가 — 애초에 비교대상이 없음.
+- **gap 절대값 없음**: 리뷰는 LPSCl band gap을 명시 안 함("wide-gap"만). 우리 2.066/2.099(PBE)을 리뷰와 절대비교 불가 — 애초에 비교대상이 없음.
 - **ESW 방법 혼재**: 표의 "Calc 환원/산화"는 grand-potential과 stoichiometry가 섞여 있고(ref 14/15 vs 59), 같은 SE도 source에 따라 다름(LATP 2.2/4.21 vs 0.66/3.13). → **단일 숫자로 인용 말고 "2.0–2.2 V band"처럼 범위로**.
 - **자체 검증 없음**: 종합 리뷰라 모든 수치가 2차 인용. 원전(Zhu/He/Mo, Schwietert 등)을 직접 확인하는 게 안전(우리 [GG]·Nat.Mater. digest와 cross-check).
 - **Monroe-Newman 한계 명시는 좋으나**, 리뷰조차 "어떤 단일 기계 기준이 dendrite를 지배하는가"는 미해결로 남김 — 우리가 elastic을 dendrite로 연결할 때 **G 하나로 결론내지 말 것**(K_IC·grain·σ_e 동반 필요).

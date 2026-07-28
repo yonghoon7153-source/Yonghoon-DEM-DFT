@@ -214,7 +214,7 @@
 | **SEI 형성 경향 계산** | 분자 **HOMO/LUMO(B3LYP/6-311++G)** — LUMO 최저=먼저 환원 | 우리 grand-potential ESW(주기적 결정, get_element_profile) | **방법 상이:** 그들=분자 cluster frontier orbital(첨가제 우선 분해 판정), 우리=고체 chemical-potential decomposition(어떤 고체상으로 분해). 둘 다 "무엇이 먼저/무엇으로 분해"를 다른 각도로 |
 | **산화/CEI** | 양극 안정화는 부수(주로 음극 SEI) | 우리 B③ cathode 계면(Zuo Eq1/Eq2) | 약한 연결 — 이 논문은 음극 중심 |
 | **무질서/도핑** | 없음(액체 충진) | comp1/modelc(Cl 무질서), Nd 도핑, 47-도판트 cascade | **직교 전략:** 격자 도핑(우리) ⟂ 액체 cavity-filler(이들). 같은 목표·다른 레버 |
-| **band gap / 전자구조** | 없음(분자 HOMO/LUMO만) | comp1 2.066 / modelc 2.098 eV (PBE) | 비교 대상 없음 |
+| **band gap / 전자구조** | 없음(분자 HOMO/LUMO만) | comp1 2.066 / modelc 2.099 eV (PBE) | 비교 대상 없음 |
 
 ---
 

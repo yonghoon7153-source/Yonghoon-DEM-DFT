@@ -163,7 +163,7 @@ MgO·ZrO₂·ZnO를 ALD 증착(~1 nm, conformal). XPS(S 2p·P 2p + Mg 2p/Zr 3d/Z
 
 | 항목 | Sundar 2025 | 우리 (comp1/modelc) | 일치/차이 + 이유 |
 |---|---|---|---|
-| **LPSCl band gap** | **3.92 eV (HSE06, mix 0.32)** | comp1 **2.066** / modelc **2.098 eV (PBE)** | △ **방법차 (PBE vs HSE06)** — 우리 PBE가 ~1.85 eV 과소. [Semi]의 PBE 2.45/HSE06 3.30과 같은 ~1 eV gap. **절대 비교 금지, "wide-gap insulator"만.** Sundar 3.92는 mix 0.32(>표준 0.25)라 [Semi] 3.30보다도 높음 → mixing 의존성 노출 |
+| **LPSCl band gap** | **3.92 eV (HSE06, mix 0.32)** | comp1 **2.066** / modelc **2.099 eV (PBE)** | △ **방법차 (PBE vs HSE06)** — 우리 PBE가 ~1.85 eV 과소. [Semi]의 PBE 2.45/HSE06 3.30과 같은 ~1 eV gap. **절대 비교 금지, "wide-gap insulator"만.** Sundar 3.92는 mix 0.32(>표준 0.25)라 [Semi] 3.30보다도 높음 → mixing 의존성 노출 |
 | **계면 분해 방법** | MP `InterfaceReactions` (2상, 0 V, PBE ΔE) | 우리 `interface_reactivity` / `GrandPotentialInterfacialReactivity` (voltage-resolved) | **✓✓ 동일 알고리즘(pymatgen)** — 우리는 grand-potential로 *전압별*까지 확장, 이들은 0 V 2상. **방법 거울** |
 | **LPSCl 분해 1차산물 (계면)** | Li₃PO₄·Li₂S·LiCl·Li₃PS₄ (산화물과) | comp1 환원 0 V → Li₃P+Li₂S+**LiCl**; 산화 → Li₃PS₄+LiCl+S | **✓ 같은 산물 패밀리** (Li₂S·LiCl·Li₃PS₄·Li₃PO₄ 공통). 단 *상대(oxide) 다름* — 우리는 LPSCl 자체분해, 이들은 oxide와 반응 |
 | **분해산물 band gap(σ_e 지표)** | Li₃PO₄·Li₃PS₄·Li₂S·LiCl·LiAlS₂·MgS = LPSCl보다 큰 gap (HSE06) | sei_products.json: **LiCl 6.65 / Li₂S 3.90** (MP) | **✓✓ 같은 논리** — "wide-gap 분해산물 = σ_e 억제 = 좋은 interphase". [Li25] LiCl 6.13/Li₂S 3.04, [Lu] LiCl 6.22와 한 줄. **단 우리 LiAlS₂/MgS 없음**(Al/Mg 우리 hull 밖) |

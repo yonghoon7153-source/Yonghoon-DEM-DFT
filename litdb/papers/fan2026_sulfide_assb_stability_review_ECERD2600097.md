@@ -264,7 +264,7 @@
 | **26** | LiF/gradient: (a) LiFSI-DME 전처리 LiF-rich SEI (b) PHI@Li (c) 요오드 증기 LiI층 (d) LiₓMg/LiF/폴리머 lithiophilic-lithiophobic gradient (e) (de)solvation vs adsorption 합금보호 (f) LiF/LiAl gradient 3D 원소분포 | 231, 233–237 | LiF-rich = [KimICCF] LiF-SEI·우리 wide-gap 절연 SEI 패밀리의 문헌 본진 |
 
 ## 11. 우리 DFT/캠페인 대비 (comp1 / modelc(LPSCl1.6) / +B₂O₃ / LPSOCl) → `../our_dft_baseline.md`
-> 우리 캠페인 값: **eigenvalue gap** comp1 2.066 / modelc 2.099 / +B₂O₃ 1.967 / LPSOCl(+O) 2.231 eV · **BVSE Li-채널 부피(iso0.5)** 3.32/4.74/6.73 %(comp1→modelc→+B₂O₃) · **UMA-MD σ300 비** b2o3/modelc **동등**(멀티시드 1.08/0.82/1.15, 단일시드 1.33× 철회 — SEMIFINAL 07-09; Ea 0.199±0.034 vs 0.197±0.032) · **free-S site-PDOS ⟨3p⟩ −1.1 eV**(최천층=산화 취약) → **B–S 결합 시 −2.15 eV**(안정화) · O-doping = gap 확장+O 2p 매몰(깨끗한 밴드엣지) · 음극 계면/SEI: `db/properties/anode_interface_b2o3.json`·`db/properties/b2o3_sei_gaps.json`.
+> 우리 캠페인 값: **eigenvalue gap** comp1 2.066 / modelc 2.099 / +B₂O₃ 1.967 / LPSOCl(+O) 2.231 eV · **BVSE Li-채널 부피(iso0.5)** 3.32/4.74/6.73 %(modelc→LPSOCl(+O)→+B₂O₃) · **UMA-MD σ300 비** b2o3/modelc **동등**(멀티시드 1.08/0.82/1.15, 단일시드 1.33× 철회 — SEMIFINAL 07-09; Ea 0.199±0.034 vs 0.197±0.032) · **free-S site-PDOS ⟨3p⟩ −1.1 eV**(최천층=산화 취약) → **B–S 결합 시 −2.15 eV**(안정화) · O-doping = gap 확장+O 2p 매몰(깨끗한 밴드엣지) · 음극 계면/SEI: `db/properties/anode_interface_b2o3.json`·`db/properties/b2o3_sei_gaps.json`.
 
 | 리뷰의 칸 | 리뷰 내용 | 우리 결과 | 판정 |
 |---|---|---|---|
@@ -274,7 +274,7 @@
 | §5.2.2 SE 개질 → in-situ 전자절연 SEI (Fig 24a–b = [Liu23]/[Li25]) | 할로겐/F/LiI 도핑 → Li-halide/불화물 SEI(전자절연·이온전도) | `anode_interface_b2o3.json`·`b2o3_sei_gaps.json` = **B₂O₃ 유래 SEI 산물의 gap(전자차단성) 정량 서열** | **✓✓ 정중앙 적중** — 리뷰 §5.2.2의 설계 rubric(전자절연 SEI)을 우리는 *산물별 gap 수치*로 구현; Fig 24a/b가 우리 digest 2편의 그림이라 계보 직접 연결 |
 | §5.2.3 이상 SEI 4조건(나노두께·저장벽 Li⁺·**전자절연**·기계 적응) | 정성 rubric | b2o3_sei_gaps = 조건③의 정량 지표; 조건①②④는 우리 미계산 | **○ 부분** — 조건③만 커버; 두께/기계(①④)는 H-리스트 |
 | §5.1.1–5.1.2 덴드라이트 = 분해산물 **좁은 gap→전자침투→dead Li**; ionization-level 서술자(Fig 17a) | MD(ref 178)·서술자(ref 180) | 우리 SEI-gap 지표와 **형제 서술자** — wide-gap 산물(LiCl·Li₂O류)=차단, narrow-gap=위험 | **✓ 개념 일치** — ref 180 ionization level vs 우리 gap 지표의 정식 비교가 유망한 후속 과제 |
-| A축(σ): 할로겐 도핑 σ↑·플럭스 균질화; 고엔트로피 ΔS_conf↔σ(Fig 24c) | 정성+σ 산포 | BVSE 채널부피 **3.32→4.74→6.73 %**(comp1→modelc→B₂O₃)·UMA σ300 **b2o3/modelc 동등(멀티시드; 1.33× 철회)** — **B₂O₃는 σ를 깎지 않는(보존) 안정화 도핑** | **✓ trend 재현+반례 보유** — [Yang25] La-O(σ 0.65×)와 달리 우리 B₂O₃는 σ·안정 동시 개선 → 리뷰 미래방향①("intrinsic stability, 반응 구동력 축소")의 구체 실현 후보 |
+| A축(σ): 할로겐 도핑 σ↑·플럭스 균질화; 고엔트로피 ΔS_conf↔σ(Fig 24c) | 정성+σ 산포 | BVSE 채널부피 **3.32→4.74→6.73 %**(modelc→LPSOCl(+O)→B₂O₃)·UMA σ300 **b2o3/modelc 동등(멀티시드; 1.33× 철회)** — **B₂O₃는 σ를 깎지 않는(보존) 안정화 도핑** | **✓ trend 재현+반례 보유** — [Yang25] La-O(σ 0.65×)와 달리 우리 B₂O₃는 σ·안정 동시 개선 → 리뷰 미래방향①("intrinsic stability, 반응 구동력 축소")의 구체 실현 후보 |
 | §3.5 기계: E 10–30 GPa·K_IC 0.2–0.4·>3 µm 파쇄 | 범위 서술 | comp1 E_VRH 22.06 / modelc **27.66 GPa**(relaxed-ion) — 리뷰 범위 내 | **✓ 정합** — 단 K_IC·입경 효과는 우리 밖(H-리스트); relaxed vs clamped 구분은 리뷰에 없음(우리 vacancy-paradox가 더 세밀) |
 | §3.4 계면 3유형(안정/MCI/passivated) | Wenzel 분류 | interface_reactivity + SEI gap으로 우리 산물들을 ②vs③으로 분류 가능 | **✓ 분류 어휘 이식** — 우리 json 산물 라벨링에 "MCI vs passivating" 열 추가 가치 |
 | §3.3 열: Th₀/Th′ 서술자·계면 40–50 % 발열↓ | ref 109 서술자 | **미보유 축** — 우리 열안정 계산 없음 | **✗ 공백(H-리스트)** — Th′를 B₂O₃/O 조성에 계산하는 것이 저비용 확장 |

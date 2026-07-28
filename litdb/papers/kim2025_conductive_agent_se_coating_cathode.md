@@ -202,7 +202,7 @@ LiNbO₃-coated NCM711(D50 7 µm) 위에 Li₆PS₅Cl(LPSCl, D50 1 µm)를 plane
 | **SE 베이스** | **Li₆PS₅Cl** (POSCO JK, D50 1 µm) | **comp1 = Li₆PS₅Cl** | **= 동일 베이스 조성** (우리 comp1의 실험 카운터파트). modelc(Cl 1.6)는 **다룸 없음** |
 | **연구 차원** | **device-level 복합양극 미세구조·전자전도 경로** (코팅 형상·CA 분포) | **bulk 단결정 결정구조·전자/이온/기계 물성** | **직교(orthogonal)** — 같은 재료(LPSCl)의 완전히 다른 스케일. 직접 수치 비교 대상 없음 |
 | **성능 레버** | **코팅층 형상 + 전자전도 경로**(CA 차원·mixing) — bulk 재료 동일해도 성능 갈림 | bulk σ(inter-cage Li jump), gap, ESW, elastic | **🔑 개념 일치**: ASSB 성능은 bulk 결정만으로 안 정해짐. 우리 "lever = interphase/microstructure, not bulk lattice" 결론과 **평행** |
-| **σ_e (전자전도)** | 코팅층 **σ_e가 형상으로 3,000배 변동**(3.3×10⁻²↔1.0×10⁻⁵ S/cm) — 양극측 device σ_e | 우리 σ_e 미측정 (bulk gap 2.066/2.098 eV PBE = wide-gap insulator) | **개념 평행, 수치 무관**: 우리 σ_e 논의는 SE 자체 전자절연(passivation), 이 논문 σ_e는 복합양극 도전망. **같은 단어 다른 대상** — 직접 비교 금지 |
+| **σ_e (전자전도)** | 코팅층 **σ_e가 형상으로 3,000배 변동**(3.3×10⁻²↔1.0×10⁻⁵ S/cm) — 양극측 device σ_e | 우리 σ_e 미측정 (bulk gap 2.066/2.099 eV PBE = wide-gap insulator) | **개념 평행, 수치 무관**: 우리 σ_e 논의는 SE 자체 전자절연(passivation), 이 논문 σ_e는 복합양극 도전망. **같은 단어 다른 대상** — 직접 비교 금지 |
 | **활성표면적/계면** | GITT로 상대 활성표면적(1.00↔0.51 S) | 우리 계면 slab 미계산(gap H) | 우리가 못 보는 device 계면 면적을 실험이 정량 |
 | **이온전도 σ_i** | 복합양극 σ_i ~0.9–1.6×10⁻⁴ S/cm (형상 영향 작음) | D(600K) 3.09e-6 cm²/s, Ea 0.253 eV (bulk AIMD) | △ **직접 비교 불가** — 복합전극 σ_i(SE+CAM+CA+공극) ≠ bulk 단결정 σ. [KimICCF] σ 논의(device≠bulk)와 같은 맥락 |
 | **무질서/도핑/밴드/ESW/elastic** | 없음 | comp1/modelc, Nd, 47-도판트 cascade | **비교 대상 자체 없음** (계산 0) |

@@ -142,7 +142,7 @@ Fig1(Cl이 4d 점유→σ↑·구조) → Fig2(음극 대칭/풀셀 우수) → 
 ## 9. 우리 DFT 대비 (comp1 / modelc) → `../our_dft_baseline.md`
 | 항목 | Lu 2025 | 우리 | 차이 / 이유 |
 |---|---|---|---|
-| **band gap (PBE)** | LPSCl **1.88 eV** | comp1 2.066 / modelc 2.098 | 무질서·**Γ-only k**·slab → ~0.2 eV scatter. **σ_e와 무관** |
+| **band gap (PBE)** | LPSCl **1.88 eV** | comp1 2.066 / modelc 2.099 | 무질서·**Γ-only k**·slab → ~0.2 eV scatter. **σ_e와 무관** |
 | LiCl gap | **6.22 eV** | (우리 미계산) | 전자절연 interphase 기준값 — 차용 가능 |
 | **0V 환원 산물** | Eq1/Eq2 → Li₃PS₄+**LiCl**+Li₂S (표면 자기분해) | modelc 0V → **Li₃P+Li₂S+LiCl** | 우리 건 *완전*환원(Li₃P), Lu Eq1은 *부분*(Li₃PS₄ 잔존). **LiCl 생성은 공통** |
 | 계면에너지 | Li/LPSCl −2.68 등 (slab) | 미계산(우리 bulk만) | 우리가 **못 하는 계면 slab** — gap H |
