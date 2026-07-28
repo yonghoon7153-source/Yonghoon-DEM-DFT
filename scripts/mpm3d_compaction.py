@@ -1005,13 +1005,23 @@ def main(argv):
         #   with --restart-settle 30 bought only 11 of the 40 probes, and the search — which was
         #   converging cleanly (0.1364→0.0830 monotone, final 1.01× target) — ran out of frames rather
         #   than out of ideas.  That is now a not_converged failure, so warn BEFORE spending the run.
-        _need = (args.restart_settle + 1) * max(1, args.unload_max_probes) + args.restart_settle
-        if args.frames < _need:
-            print(f"  ⚠ [load-state] --frames {args.frames} is likely too small for this search: "
-                  f"{args.unload_max_probes} probes × ({args.restart_settle} settle + 1 move) + "
-                  f"{args.restart_settle} initial ≈ {_need} frames.  The unload can run out of FRAMES "
-                  f"while still converging — that ends the run as not_converged_frame_budget (no numbers "
-                  f"emitted).  Raise --frames to ≳{_need}, or lower --unload-max-probes/--restart-settle.")
+        _np = max(1, args.unload_max_probes)
+        _need = (args.restart_settle + 1) * _np + args.restart_settle          # every probe settles in the MINIMUM
+        _need_max = (max(args.restart_settle_max, args.restart_settle) + 1) * _np + args.restart_settle
+        if args.frames < _need_max:
+            # Report the WORST case, not just the best.  --restart-settle is a minimum and the probe
+            # window extends adaptively until the bed is at rest, so quoting only the minimum-window
+            # figure would give false comfort: a bed that needs the full --restart-settle-max per probe
+            # costs ~{_need_max} frames, and the run then dies as not_converged_frame_budget with no
+            # numbers emitted.  (Observed: --frames 400 / settle 30 bought 11 of 40 probes.)
+            _verdict = ('too small' if args.frames < _need else 'enough only if every probe settles '
+                        'in the MINIMUM window')
+            print(f"  ⚠ [load-state] --frames {args.frames} is {_verdict} for this search: "
+                  f"{_np} probes × (settle + 1 move) + {args.restart_settle} initial = "
+                  f"{_need} frames at the {args.restart_settle}-frame minimum, up to {_need_max} if the "
+                  f"probe window extends to --restart-settle-max {args.restart_settle_max}.  Running out "
+                  f"of FRAMES mid-search ends the run as not_converged_frame_budget (no numbers emitted). "
+                  f"Raise --frames toward {_need_max}, or lower --unload-max-probes.")
     if args.load_state and args.protocol == 'hold' and args.compact_to <= 0:
         print("  [load-state] --protocol hold on a restart = RIGID-FIXTURE arm: the platen first UNLOADS to "
               "--target-gpa, then is FIXED and the stress relaxes below it (constant gap).  --protocol servo "
@@ -2174,7 +2184,7 @@ def main(argv):
     # it (None until the target is bracketed).  The old loop kept neither and could only rise.
     _z_lo = float(wall_z[None]); _z_hi = None
     _settle_quasistatic = None; _settle_spread_rel = None
-    _probe_win = []; _probe_extended = False
+    _probe_win = []; _probe_extended = False; _probe_win_max = 0
     # --restart-settle is the MINIMUM window; _settle_max caps the adaptive extension so a bed that
     # never settles fails loudly instead of burning the whole frame budget in one probe.
     _settle_max = max(int(args.restart_settle_max), int(args.restart_settle)) if _RESTART else 0
@@ -2282,6 +2292,7 @@ def main(argv):
                             _settle_spread_rel = float(_qs_spread)
                             descend = False
                     if _probe_left == 0 and _unload_status == 'unloading':  # window closed AND at rest
+                        _probe_win_max = max(_probe_win_max, len(_probe_win))
                         _probe_win = []
                         _verdict = unload_verdict(p, target, args.unload_band)
                         _unload_probes += 1
@@ -2626,6 +2637,14 @@ def main(argv):
                 'unload_bracket_box': [round(float(_z_lo), 6),
                                        (round(float(_z_hi), 6) if _z_hi is not None else None)],
                 'unload_unconverged_override': bool(args.allow_unconverged_unload),
+                # ★ the ACTIONABLE number: how many frozen frames a probe actually needed at this
+                #   resolution before the bed was at rest.  --restart-settle is only the minimum, so
+                #   this is what a future run at the same n_grid should budget for (settling time
+                #   scales with the wave transit time, so it is resolution-specific by nature).
+                'probe_window_frames_max': int(_probe_win_max),
+                'probe_window_extended': bool(_probe_extended),
+                'restart_settle_min': int(args.restart_settle),
+                'restart_settle_max': int(args.restart_settle_max),
                 'settle_quasistatic': _settle_quasistatic,
                 'settle_tail_spread_rel': (round(float(_settle_spread_rel), 4)
                                           if _settle_spread_rel is not None else None),
