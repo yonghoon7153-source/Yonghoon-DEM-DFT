@@ -13,17 +13,41 @@
   <button class="tt" id="sortbtn" onclick="toggleSort()" style="margin-left:auto" title="digest 등록일 최신순 ↔ 기본순">📅 최신 digest순</button>
 </div>
 
+{% if pis %}
+<div class="pi-bar" style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+  <span class="muted" style="font-size:.76rem;margin-right:2px">연구책임자</span>
+  <button class="pi-chip active" data-pi="" onclick="setPI(this)"
+          style="border:1px solid var(--line);background:var(--bg);border-radius:99px;padding:3px 10px;font-size:.74rem;cursor:pointer">전체</button>
+  {% for p in pis %}
+  <button class="pi-chip" data-pi="{{ p.key }}" onclick="setPI(this)"
+          title="{{ p.en }} · {{ p.aff }}{% if p.our %} · 우리 연구실 계보{% endif %}"
+          style="border:1px solid {{ p.color }}44;background:{{ p.color }}12;color:{{ p.color }};border-radius:99px;padding:3px 10px;font-size:.74rem;cursor:pointer">
+    {% if p.our %}★ {% endif %}{{ p.ko if p.ko != '—' else p.en }}<span class="muted" style="margin-left:4px">{{ p.n }}</span>
+  </button>
+  {% endfor %}
+</div>
+<div class="muted" style="font-size:.72rem;margin-top:5px">
+  ★ = 우리 연구실 계보 · 태그는 digest <b>머리말의 저자·소속 줄</b>만 스캔한다
+  (본문 인용·부정문에서 이름을 줍지 않도록 <span class="mono">≠ / 아님 / 외부 그룹</span> 이후를 잘라냄).
+</div>
+{% endif %}
+
 <input class="search" placeholder="검색 (제목·id·type)..." oninput="filt(this.value)">
 <div class="grid grid-3" id="plist" style="margin-top:16px">
 {% for p in papers %}
-<div class="card paper track-{{ p.track }}" data-track="{{ p.track }}"
-     data-t="{{ p.title|lower }} {{ p.id|lower }} {{ p.type|lower }} {{ p.digested }}"
+<div class="card paper track-{{ p.track }}" data-track="{{ p.track }}" data-pi="{{ p.pis|join(',') }}"
+     data-t="{{ p.title|lower }} {{ p.id|lower }} {{ p.type|lower }} {{ p.digested }} {% for k in p.pis %}{{ PI[k].ko }} {{ PI[k].en|lower }} {% endfor %}"
      data-digested="{{ p.digested }}"
      onclick="openPaper('{{ p.id }}')" onkeydown="_kbd(event)" tabindex="0" role="button" style="cursor:pointer;padding:16px 18px">
   <div class="paper-top">
     <span class="tbadge tb-{{ p.track }}">{{ 'DFT' if p.track=='dft' else 'DEM' }}</span>
     {% if p.type %}<span class="ptype">{{ p.type[:38] }}</span>{% endif %}
   </div>
+  {% if p.pis %}<div style="margin-top:6px;display:flex;gap:4px;flex-wrap:wrap">
+    {% for k in p.pis %}<span title="{{ PI[k].en }} · {{ PI[k].aff }}"
+      style="background:{{ PI[k].color }}18;color:{{ PI[k].color }};border-radius:99px;padding:1px 7px;font-size:.68rem;font-weight:600">
+      {% if PI[k].our %}★{% endif %}{{ PI[k].ko if PI[k].ko != '—' else PI[k].en }}</span>{% endfor %}
+  </div>{% endif %}
   <div style="font-weight:600;font-size:.9rem;line-height:1.4;margin-top:7px">{{ p.title }}</div>
   <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:6px;gap:8px">
     <span class="mono muted" style="font-size:.7rem">{{ p.id }}</span>
@@ -44,12 +68,18 @@
 </div>
 <div class="grid grid-3" style="margin-top:12px">
 {% for t in talks %}
-<div class="card paper" onclick="openPaper('{{ t.id }}')" onkeydown="_kbd(event)"
+<div class="card paper" data-track="talk" data-pi="{{ t.pis|join(',') }}"
+     data-t="{{ t.title|lower }} {{ t.id|lower }} talk 발표 {{ t.speaker|lower }} {% for k in t.pis %}{{ PI[k].ko }} {{ PI[k].en|lower }} {% endfor %}"
+     data-digested="{{ t.digested }}"
+     onclick="openPaper('{{ t.id }}')" onkeydown="_kbd(event)"
      tabindex="0" role="button" style="cursor:pointer;padding:16px 18px">
   <div class="paper-top"><span class="tbadge" style="background:#fef9c3;color:#854d0e">TALK</span>
     {% if t.session %}<span class="ptype">{{ t.session[:44] }}</span>{% endif %}</div>
   <div style="font-weight:600;font-size:.9rem;line-height:1.4;margin-top:7px">{{ t.title }}</div>
   {% if t.speaker %}<div class="muted" style="font-size:.76rem;margin-top:4px">{{ t.speaker }}</div>{% endif %}
+  {% if t.pis %}<div style="margin-top:5px">{% for k in t.pis %}<span title="{{ PI[k].en }} · {{ PI[k].aff }}"
+    style="background:{{ PI[k].color }}18;color:{{ PI[k].color }};border-radius:99px;padding:1px 7px;font-size:.68rem;font-weight:600">
+    {% if PI[k].our %}★{% endif %}{{ PI[k].ko if PI[k].ko != '—' else PI[k].en }}</span>{% endfor %}</div>{% endif %}
   <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:6px;gap:8px">
     <span class="mono muted" style="font-size:.7rem">{{ t.id }}</span>
     {% if t.digested %}<span class="muted" style="font-size:.68rem;white-space:nowrap">📅 {{ t.digested }}</span>{% endif %}
@@ -67,7 +97,7 @@
   </div>
 </div>
 <script>
-var curTrack='all', curQ='', sortMode=false, origOrder=null;
+var curTrack='all', curQ='', curPI='', sortMode=false, origOrder=null;
 function toggleSort(){
   var plist=document.getElementById('plist');
   var cards=[].slice.call(plist.querySelectorAll('.paper'));
@@ -83,11 +113,16 @@ function apply(){
   var n=0;
   document.querySelectorAll('.paper').forEach(function(c){
     var okT = curTrack==='all' || c.dataset.track===curTrack;
-    var okQ = !curQ || c.dataset.t.indexOf(curQ)>=0;
-    var show = okT && okQ; c.style.display=show?'':'none'; if(show)n++;
+    var okP = !curPI || (c.dataset.pi||'').split(',').indexOf(curPI)>=0;
+    var okQ = !curQ || (c.dataset.t||'').indexOf(curQ)>=0;
+    var show = okT && okP && okQ; c.style.display=show?'':'none'; if(show)n++;
   });
   document.getElementById('nores').style.display=n?'none':'';
 }
+function setPI(b){curPI=b.dataset.pi;
+  document.querySelectorAll('.pi-chip').forEach(function(x){x.classList.remove('active');x.style.outline=''});
+  b.classList.add('active'); b.style.outline='2px solid currentColor';
+  apply();}
 function setTrack(b){curTrack=b.dataset.track;
   document.querySelectorAll('.track-tabs .tt').forEach(function(x){x.classList.remove('active')});
   b.classList.add('active'); apply();}

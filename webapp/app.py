@@ -231,8 +231,15 @@ def literature():
     counts = {"all": len(papers),
               "dft": sum(1 for p in papers if p["track"] == "dft"),
               "dem": sum(1 for p in papers if p["track"] == "dem")}
+    pi_counts = {}
+    for it in papers + D.list_talks():
+        for k in it.get("pis", []):
+            pi_counts[k] = pi_counts.get(k, 0) + 1
+    pis = [dict(p, n=pi_counts.get(p["key"], 0)) for p in D.PI_REGISTRY if pi_counts.get(p["key"])]
+    pis.sort(key=lambda x: (not x["our"], -x["n"]))
     return render_template("literature.html", active="lit", papers=papers,
-                           count=len(papers), counts=counts, talks=D.list_talks())
+                           count=len(papers), counts=counts, talks=D.list_talks(),
+                           pis=pis, PI=D.PI_BY_KEY)
 
 
 # ── API (구조뷰 / 차트 / 원본) ──────────────────────────

@@ -981,6 +981,90 @@ def verdict_revisions() -> list:
     ]
 
 
+# ── PI(교수) 레지스트리 ──────────────────────────────────────
+# digest 헤더의 저자/소속 줄에서 이 이름들을 찾아 논문에 태그를 붙인다.
+# `our` = 우리 연구실 계보. ⚠ 같은 학교라도 그룹이 다르면 our=False (정윤석 ≠ 이용민).
+PI_REGISTRY = [
+    {"key": "ymlee",  "ko": "이용민", "en": "Yong Min Lee",  "aff": "연세대 화공·배터리공학 / DGIST",
+     "our": True,  "color": "#0d9488",
+     "alias": ["Yong Min Lee", "Yong-Min Lee", "yongmin@yonsei", "이용민"]},
+    {"key": "kycho",  "ko": "조국영", "en": "Kuk Young Cho", "aff": "한양대 (ERICA·안산)",
+     "our": True,  "color": "#7c3aed",
+     "alias": ["Kuk Young Cho", "Kuk-Young Cho", "조국영"]},
+    {"key": "jwlee",  "ko": "이종원", "en": "Jong-Won Lee",  "aff": "한양대",
+     "our": True,  "color": "#c05621",
+     "alias": ["Jong-Won Lee", "Jong Won Lee", "J-W Lee", "이종원"]},
+    {"key": "sulee",  "ko": "이상욱", "en": "Sang Uck Lee",  "aff": "성균관대 화공 (CMS Lab)",
+     "our": False, "color": "#be123c",
+     "alias": ["Sang Uck Lee", "Sang-Uck Lee", "suleechem@skku", "이상욱"]},
+    {"key": "jhmoon", "ko": "문장혁", "en": "Janghyuk Moon", "aff": "중앙대 에너지시스템공학",
+     "our": False, "color": "#0284c7",
+     "alias": ["Janghyuk Moon", "Jang-hyuk Moon", "문장혁"]},
+    {"key": "ysjung", "ko": "정윤석", "en": "Yoon Seok Jung", "aff": "연세대 (⚠ 이용민 랩 아님)",
+     "our": False, "color": "#65a30d",
+     "alias": ["Yoon Seok Jung", "Yoon-Seok Jung", "정윤석"]},
+    {"key": "ceder",  "ko": "—",     "en": "Gerbrand Ceder", "aff": "UC Berkeley / LBNL",
+     "our": False, "color": "#6b7280", "alias": ["Ceder"]},
+    {"key": "ong",    "ko": "—",     "en": "Shyue Ping Ong", "aff": "UC San Diego",
+     "our": False, "color": "#6b7280", "alias": ["Shyue Ping Ong", "S. P. Ong"]},
+    {"key": "zeier",  "ko": "—",     "en": "Wolfgang Zeier", "aff": "Münster",
+     "our": False, "color": "#6b7280", "alias": ["Zeier"]},
+]
+PI_BY_KEY = {p["key"]: p for p in PI_REGISTRY}
+
+
+def _paper_pis(slug: str) -> list:
+    """digest 앞부분(저자·소속 블록)에서 PI 이름을 찾는다.
+
+    ⚠ 두 가지 오탐을 막아야 한다.
+      ① 본문 전체를 스캔하면 **참고문헌으로 인용된 사람**이 저자로 잡힌다 → 머리말 25줄만.
+      ② 머리말에도 **소속 판정 문장**이 있어 부정문 안의 이름이 잡힌다 —
+         실제 사례: son2025 digest 의 `[외부] ... 우리 그룹(... Yong Min Lee ...) **아님**`.
+         이름 문자열만 보면 이용민 교수님 논문으로 오분류된다.
+         → **저자/발표자 줄만** 보고, 판정·부정 문장이 든 줄은 제외한다.
+    """
+    f = LITDB / "papers" / f"{slug}.md"
+    if not f.exists():
+        f = LITDB / "talks" / f"{slug}.md"
+    if not f.exists():
+        return []
+    try:
+        lines = f.read_text(encoding="utf-8", errors="ignore").splitlines()[:25]
+    except Exception:
+        return []
+    # 부정 표지 — 줄을 통째로 버리지 않고 **이 지점에서 자른다**.
+    #   실측 사례: taklu2021 은 `소속: NTUST ... · 외부 그룹 (≠ 우리 한양/Jong-Won Lee/...)`.
+    #   줄 앞부분(진짜 소속)은 살려야 하고 `≠` 뒤(비교용 나열)만 버려야 한다.
+    #   ("우리 그룹" 만 걸러서는 "우리 한양" 을 놓친다 — 실제로 놓쳤다.)
+    NEG = ("≠", "아님", "외부 그룹", "소속 판정", "우리 그룹", "우리 연구실", "우리 한양")
+    INCLUDE = ("저자", "발표자", "author", "Author", "corr.", "@")
+    cand = []
+    for ln in lines:
+        for tok in NEG:
+            i = ln.find(tok)
+            if i >= 0:
+                ln = ln[:i]
+        if not ln.strip():
+            continue
+        # 제목 줄(#) 과 저자·소속 줄(>)만. 저자 표지가 있거나 소속이 명시된 줄.
+        if ln.startswith("#") or any(x in ln for x in INCLUDE) or "University" in ln or "대학" in ln:
+            cand.append(ln)
+    head = "\n".join(cand)
+    return [pi["key"] for pi in PI_REGISTRY if any(a in head for a in pi["alias"])]
+
+
+@lru_cache(maxsize=512)
+def _paper_pis_c(slug, _mt):
+    return tuple(_paper_pis(slug))
+
+
+def paper_pis(slug: str) -> list:
+    f = LITDB / "papers" / f"{slug}.md"
+    if not f.exists():
+        f = LITDB / "talks" / f"{slug}.md"
+    return list(_paper_pis_c(slug, _mtime_ns(f) if f.exists() else 0))
+
+
 def list_talks() -> list:
     """litdb/talks/*.md → [{id, title, speaker, session, digested}].
 
@@ -1017,7 +1101,7 @@ def list_talks() -> list:
             if md and not digested:
                 digested = md.group(1)
         out.append({"id": f.stem, "title": title, "speaker": speaker,
-                    "session": session, "digested": digested})
+                    "session": session, "digested": digested, "pis": paper_pis(f.stem)})
     return out
 
 
@@ -1048,7 +1132,7 @@ def list_papers() -> list:
                 digested = md.group(1)
         out.append({"id": f.stem, "title": title, "type": type_str,
                     "track": literature_track(f.stem, type_str, title),
-                    "digested": digested})
+                    "digested": digested, "pis": paper_pis(f.stem)})
     return out
 
 

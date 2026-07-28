@@ -81,8 +81,24 @@ def get_calc(engine, device):
         from mace.calculators import mace_mp
         return mace_mp(model="medium", device=device, default_dtype="float64")
     if engine == "sevennet":
+        # torch>=2.6 은 torch.load 의 weights_only 기본값을 True 로 바꿨고, sevenn 체크포인트가
+        # slice 객체를 담고 있어 로드가 깨진다. 신뢰 가능한 공식 체크포인트이므로 allowlist 한다.
+        import torch
+        try:
+            torch.serialization.add_safe_globals([slice])
+        except Exception:
+            pass
         from sevenn.calculator import SevenNetCalculator
-        return SevenNetCalculator(model="7net-0", device=device)
+        try:
+            return SevenNetCalculator(model="7net-0", device=device)
+        except Exception:
+            # allowlist 로도 안 되면 weights_only=False 로 강제 (공식 배포본 한정)
+            _orig = torch.load
+            torch.load = lambda *a, **k: _orig(*a, **{**k, "weights_only": False})
+            try:
+                return SevenNetCalculator(model="7net-0", device=device)
+            finally:
+                torch.load = _orig
     sys.exit(f"모르는 엔진: {engine}")
 
 
@@ -126,12 +142,24 @@ def cmd_analyze(a):
             per_pair[f"{x}|{y}"] = rms
             per_frame = np.maximum(per_frame, rms)
 
-    # ⚠ 문턱은 **분포에서 유도**한다 — 임의 상수를 새로 만들지 않는다.
-    #    선별(select) = 중앙값의 2배 · 중단(break) = 95 백분위. 두 문턱 분리는
-    #    kim2026 의 gamma_select/gamma_break 논리를 그대로 가져온 것.
+    # ── 문턱 ────────────────────────────────────────────────────────────
+    # ⚠ **같은 표본에서 뽑은 백분위를 그 표본에 적용하면 정보가 0이다** (p95 초과는 정의상 5%).
+    #    그래서 이 도구는 두 모드로 동작한다:
+    #      (a) --baseline 없음 → **교정 모드**. 이 표본의 분포를 기준선으로 *저장*만 하고
+    #          "초과 몇 개" 를 결과로 주장하지 않는다.
+    #      (b) --baseline <json> → **탐지 모드**. 다른(평형 벌크) 표본에서 잡은 기준선을
+    #          이 표본에 적용해 초과를 센다. 이때의 초과가 비로소 정보다.
+    #    문턱 정의는 kim2026 의 gamma_select/gamma_break 논리(선별/중단 분리)만 차용.
     med = float(np.median(per_frame))
-    sel = 2.0 * med
-    brk = float(np.percentile(per_frame, 95))
+    if a.baseline:
+        base = json.loads(Path(a.baseline).read_text())
+        bd = base["committee_frame_disagreement"]
+        sel, brk = bd["threshold_select"], bd["threshold_break"]
+        mode = f"탐지 (기준선: {Path(a.baseline).name})"
+    else:
+        sel = 2.0 * med
+        brk = float(np.percentile(per_frame, 95))
+        mode = "교정 (이 표본이 기준선 — 초과 개수는 정의상 자명하므로 결과로 주장하지 않음)"
 
     # 원소별 불일치 — 어느 화학이 합의 밖인지
     syms = [str(s) for s in preds[names[0]]["symbols"]]
@@ -143,7 +171,12 @@ def cmd_analyze(a):
             for y in names[i + 1:]:
                 dF = (F[x] - F[y])[:, m, :]
                 vals.append(np.sqrt((dF ** 2).sum(axis=2)).mean())
-        by_el[el] = float(np.mean(vals))
+        # ⚠ 절대 RMS 는 **힘 크기를 따라간다** — P 는 PS4 중심이라 힘이 크고 Li 는 느슨해 작다.
+        #    정규화 없이 원소 순위를 해석하면 "결합이 센 원소가 불확실하다" 는 동어반복이 된다.
+        mag = float(np.mean([np.sqrt((F[k][:, m, :] ** 2).sum(axis=2)).mean() for k in names]))
+        by_el[el] = {"abs_eV_per_A": float(np.mean(vals)),
+                     "typical_force_eV_per_A": mag,
+                     "relative": float(np.mean(vals) / mag) if mag > 1e-9 else None}
 
     out = {
         "property": "mlip_committee_disagreement", "engines": names,
@@ -159,8 +192,15 @@ def cmd_analyze(a):
             "n_above_select": int((per_frame > sel).sum()),
             "n_above_break": int((per_frame > brk).sum()),
             "frames_above_break": [int(i) for i in np.where(per_frame > brk)[0]],
+            "⚠_circularity": (None if a.baseline else
+                "**교정 모드에서는 초과 개수가 정보가 아니다** — break=p95 이므로 초과는 "
+                "정의상 표본의 5%다. 이 값들은 다른 표본에 적용할 **기준선**으로만 쓴다."),
         },
-        "by_element_mean_force_disagreement_eV_per_A": by_el,
+        "mode": mode,
+        "by_element": by_el,
+        "by_element_note": ("abs = 힘 RMS 불일치(eV/Å) · typical = 그 원소의 평균 힘 크기 · "
+                            "**relative = abs/typical 이 해석해야 할 값**이다. 절대값만 보면 "
+                            "결합이 센 원소가 항상 위로 와서 동어반복이 된다."),
         "honesty": [
             "⛔ **이 지표는 절대 정확도를 말하지 않는다.** UMA(OMat24)·MACE-MP-0(MPtrj)·"
             "SevenNet-0 은 전부 PBE 계열이다. kim2024 는 argyrodite 에서 sigma 를 8배 가르는 것이 "
@@ -173,10 +213,14 @@ def cmd_analyze(a):
             "⚠ gamma(MTP) 와 **같은 양이 아니다.** gamma 는 선형 기저 위 maxvol 이고 이건 "
             "모델 간 분산이다 — 논리 구조만 공유한다.",
         ],
-        "verdict": ("합의 영역 밖 프레임 없음 — 궤적이 위원회 합의 안에 있다."
-                    if (per_frame > brk).sum() == 0 else
-                    f"{int((per_frame > brk).sum())}개 프레임이 중단 문턱 초과 — "
-                    "해당 구간의 결과는 신뢰구간 밖으로 표시할 것."),
+        "verdict": (
+            (f"**교정 완료** — 이 표본(중앙 {med:.4f} eV/Å)을 기준선으로 저장했다. "
+             f"이후 다른 표본을 `--baseline` 으로 이 파일을 걸어 평가하라.")
+            if not a.baseline else
+            ("합의 영역 밖 프레임 없음 — 기준선 대비 이상 없음."
+             if (per_frame > brk).sum() == 0 else
+             f"**{int((per_frame > brk).sum())}/{nf} 프레임이 기준선 중단 문턱 초과** — "
+             "해당 구간 결과는 신뢰구간 밖으로 표시할 것.")),
     }
     (d / "committee_verdict.json").write_text(json.dumps(out, ensure_ascii=False, indent=2) + "\n")
 
@@ -185,11 +229,15 @@ def cmd_analyze(a):
     for k, v in out["per_pair_force_rms_eV_per_A"].items():
         print(f"  {k:22s} 중앙 {v['median']:.4f}  p95 {v['p95']:.4f}  max {v['max']:.4f} eV/Å")
     c = out["committee_frame_disagreement"]
-    print(f"\n  위원회 불일치: 중앙 {c['median']:.4f} · p95 {c['p95']:.4f} · max {c['max']:.4f}")
+    print(f"\n  모드: {mode}")
+    print(f"  위원회 불일치: 중앙 {c['median']:.4f} · p95 {c['p95']:.4f} · max {c['max']:.4f}")
     print(f"  select({sel:.4f}) 초과 {c['n_above_select']} · break({brk:.4f}) 초과 {c['n_above_break']}")
-    print("\n  원소별 평균 불일치 (eV/Å):")
-    for el, v in sorted(by_el.items(), key=lambda kv: -kv[1]):
-        print(f"    {el:3s} {v:.4f}")
+    if not a.baseline:
+        print("  ⚠ 교정 모드 — 위 초과 개수는 정의상 자명하므로 결과가 아니다")
+    print("\n  원소별 (abs / 평균힘 / **상대**):")
+    for el, v in sorted(by_el.items(), key=lambda kv: -(kv[1]["relative"] or 0)):
+        r = f"{v['relative']:.3f}" if v["relative"] is not None else "—"
+        print(f"    {el:3s} {v['abs_eV_per_A']:.4f} / {v['typical_force_eV_per_A']:.4f} / **{r}**")
     print("=" * 70)
     print(f"→ {d/'committee_verdict.json'}")
 
@@ -204,6 +252,8 @@ def main():
     p.add_argument("--engine", required=True, choices=["uma", "mace", "sevennet"])
     p.add_argument("--device", default="cuda"); p.set_defaults(fn=cmd_predict)
     n = sub.add_parser("analyze"); n.add_argument("--dir", required=True)
+    n.add_argument("--baseline", default=None,
+                   help="다른 표본에서 잡은 committee_verdict.json — 주면 **탐지 모드**")
     n.set_defaults(fn=cmd_analyze)
     a = ap.parse_args()
     a.fn(a)
