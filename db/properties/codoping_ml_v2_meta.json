@@ -264,6 +264,116 @@
    }
   ]
  },
+ "sendek2017_small_sample_defenses": {
+  "source": "litdb/papers/sendek2017_ml_screening_12k_conductors.md §4d (Sendek et al., Energy Environ. Sci. 2017, 10, 306 — DOI 10.1039/c6ee02697d)",
+  "why": "그들 훈련셋 40종 ≈ 우리 47 도펀트로 체급이 동일 — 소표본 ML의 방어 절차를 **절차만** 계승한다. 그들은 cross-material 이진분류(실측 σ), 우리는 within-host 회귀(휴리스틱 타깃) — 수치·특징 이식 금지.",
+  "determinism": {
+   "seed": 20260728,
+   "n_permutations": 100,
+   "note": "np.random.default_rng(고정 시드) — 2회 실행 산출물 md5 동일"
+  },
+  "honesty_framing": [
+   "우리 47 도펀트는 **큐레이션된 후보군**이지 대규모 발견 깔때기가 아니다 (Xiao 104,082 / Sendek 12,831 / Kahle 15,855 과 근본적으로 다름). 따라서 아래 농축배수는 '우리가 N만 개를 걸렀다'가 아니라 '이미 선별된 1081쌍 안에서 모델 랭킹이 랜덤 대비 얼마나 앞서나'다.",
+   "stage3 의 '양성 라벨'은 v1 휴리스틱 top40 — **실측/계산 라벨이 아니다.** 그러므로 precision@40·농축배수는 '휴리스틱 재현력'이지 물성 적중률이 아니다.",
+   "Sendek 화법 그대로: '정확도 XX%'가 아니라 'base rate 명시 + 랜덤 대비 N배 농축'."
+  ],
+  "stage1_score_regression": {
+   "label_shuffle_error_enrichment": 79.29,
+   "x_randomization_error_enrichment": 79.28,
+   "label_shuffle_r2_loo_mean": 0.0005,
+   "x_randomization_r2_loo_mean": 0.0007,
+   "label_shuffle_p_value": 0.009900990099009901,
+   "x_randomization_p_value": 0.009900990099009901,
+   "cRp2_vs_label_shuffle": 0.9812,
+   "cRp2_vs_x_randomization": 0.9807,
+   "r2_fit_true": 0.9999,
+   "interpretation": "stage1 타깃(cascade score)은 특징의 거의 정확한 선형합성이라 R²_loo=0.9998 이 나온다 — 이 수치는 '예측력'이 아니라 '항등식 복원'이다. 라벨셔플/X-rand 대비 오차 농축배수가 그 구조를 정직하게 드러낸다: 랜덤 타깃/랜덤 특징에선 σ_loo 가 수백~수천 배 커진다.",
+   "cRp2_threshold_note": "QSAR 관례 문턱 0.5 (Sendek 최적모델 0.59). cR²_p = R·√(R²−R²_rand), R²는 적합 R² (LOOCV 아님)."
+  },
+  "stage3_interaction_distillation": {
+   "positive_base_rate": 0.037,
+   "n_listed_positives": 40,
+   "stage3_precision_at_40": 0.1,
+   "stage3_rank_enrichment_vs_base_rate": 2.7,
+   "stage3_rank_enrichment_vs_label_shuffle": 1.22,
+   "deployed_ml_score_precision_at_40": 0.125,
+   "deployed_ml_score_rank_enrichment_vs_base_rate": 3.38,
+   "label_shuffle_precision_at_40_mean": 0.0823,
+   "x_randomization_precision_at_40_mean": 0.0845,
+   "stage3_spearman_on_listed": 0.4985,
+   "label_shuffle_spearman_abs_mean": 0.1489,
+   "spearman_enrichment_vs_label_shuffle": 3.35,
+   "label_shuffle_p_value_precision": 0.42574257425742573,
+   "label_shuffle_p_value_spearman": 0.009900990099009901,
+   "x_randomization_p_value_precision": 0.43564356435643564,
+   "label_shuffle_weighted_r2_loo_mean": 0.0001,
+   "cRp2_vs_label_shuffle": 0.1419,
+   "cRp2_vs_x_randomization": 0.1407,
+   "r2_fit_true": 0.15,
+   "interpretation": "stage3 의 weighted_loocv_r2(0.089)는 1041개 0-근사가 지배해 해석 불가. 정직한 지표는 랭킹 농축배수 — 'top-40 안에 v1 수록쌍이 몇 개' 를 base rate(40/1081 = 3.70%) 및 라벨셔플 귀무분포와 비교한 값이다.",
+   "caveat": "양성 라벨 = v1 휴리스틱 수록 여부이므로 이 농축은 **v1 재현 농축**이다. 물성 검증이 아니다."
+  },
+  "applicability_domain": {
+   "definition": "Sendek §3.4. d = 훈련셋(47 도펀트) PCA-분산 정규화 중심거리를 훈련 평균으로 재정규화(훈련 점 평균 d=1); ε = leave-one-dopant-out 47 재적합 예측의 표준편차; A = (d <= 2).",
+   "space": "pair 를 단일도펀트 스케일러로 옮긴 이식 좌표 (Pz_s + PGz_s, 20차원)",
+   "pca_components_retained": 19,
+   "degenerate_direction_handling": "훈련셋 정확 공선(window=ox−red, bvs_slope=x010−x002)으로 고유값 0 방향 존재. pair 특징은 min/max 집계라 그 공선을 깨뜨려 0-분산 방향에 실제 성분이 생긴다 → 임의 ridge κ 대신 **잔존 최소 고유값을 분산 하한**으로 사용(튜닝 없음, 보수적).",
+   "d_threshold": 2.0,
+   "n_pairs": 1081,
+   "n_outside_domain": 806,
+   "frac_outside_domain": 0.7456,
+   "n_outside_in_top40": 29,
+   "n_outside_in_top10": 5,
+   "d_stats": {
+    "min": 0.581,
+    "median": 128.883,
+    "max": 837.317,
+    "train_mean_by_construction": 1.0,
+    "train_max": 1.263
+   },
+   "eps_stats": {
+    "min": 0.035,
+    "median": 0.105,
+    "max": 0.347
+   },
+   "use": "M3 역설계 winner's curse 완화의 기성 구현체 — 후보 제시 시 ml_score 옆에 ad_d/ad_eps/ad_A 를 반드시 병기하고, ad_A=0 은 '외삽·저신뢰'로 라벨링할 것. Sendek Table 3 의 P_LR=1.000 4종이 전부 d=3.2–6.9 인공물이었던 사례가 근거.",
+   "columns_added_to_csv": [
+    "ad_d",
+    "ad_eps",
+    "ad_A"
+   ]
+  },
+  "cv_leakage_leave_one_dopant_out": {
+   "lambda_fixed": 39.81071705534978,
+   "note": "세 방식 모두 λ=λ3 고정·동일 가중(sw)·동일 평가집합(1081쌍) — 차이는 오직 훈련폴드 구성. stage1 은 행=도펀트라 LOOCV 가 이미 LODO 이며 pair 단위 적합이 없으므로(계수 이식) 누수 비교는 stage3 에만 정의된다.",
+   "pair_LOOCV": {
+    "weighted_r2": 0.0892,
+    "spearman_on_listed": 0.4441
+   },
+   "leave_one_dopant_out": {
+    "weighted_r2": -0.1805,
+    "spearman_on_listed": 0.3405
+   },
+   "leave_both_dopants_out": {
+    "weighted_r2": -0.2548,
+    "spearman_on_listed": 0.1141
+   },
+   "leakage_delta_weighted_r2": {
+    "pairCV_minus_LODO": 0.2697,
+    "pairCV_minus_L2DO": 0.344
+   },
+   "leakage_delta_spearman_listed": {
+    "pairCV_minus_LODO": 0.1036,
+    "pairCV_minus_L2DO": 0.33
+   },
+   "deployed_score_LODO": {
+    "spearman_on_listed_out_of_fold": 0.6482,
+    "spearman_on_listed_in_sample": 0.6718,
+    "top40_set_overlap_vs_in_sample": 36,
+    "note": "ml_lodo = stage1(46 도펀트 재적합)+stage3(해당 도펀트 포함쌍 제외) 로 만든 완전 out-of-fold 배포점수. 각 쌍은 2 폴드에서 held-out → 평균."
+   }
+  }
+ },
  "assumptions": [
   "co-doping 상호작용은 단일도펀트 특징의 집계(min/max/avg)+2차 곱항으로 근사 가능",
   "합동 ESW = max(ox) - min(red): 두 상이 각각 양극측/음극측을 커버한다는 상보 가정 (실제 계면상 형성/혼상 반응 미반영)",
@@ -276,6 +386,8 @@
   "타깃(cascade score, v1 synergy) 자체가 휴리스틱 합성 지표 — 이 모델은 그 휴리스틱의 해부+확장이지 물성 예측이 아님",
   "co-doping 시 도펀트간 화학 상호작용(공석 보상, 상분리, 계면상)은 특징에 없음",
   "검증 경로: top 후보 소수를 UMA cascade(공동 치환 슈퍼셀)로 직접 계산해 라벨 확보 후 재학습",
-  "ml_score 절대값은 무의미(z 단위 합성) — 순위와 ±만 사용"
+  "ml_score 절대값은 무의미(z 단위 합성) — 순위와 ±만 사용",
+  "농축배수(sendek2017_small_sample_defenses)는 **v1 휴리스틱 라벨 재현 농축**이지 물성 적중률이 아니다. 우리 47 도펀트는 큐레이션 후보군 — 대규모 발견 깔때기(Sendek 12,831 등)와 직접 비교 금지",
+  "pair-CV(현행) 대비 leave-one-dopant-out/leave-both-dopants-out 성능차 = 같은 도펀트를 공유하는 쌍의 비독립성이 만든 낙관 편의 — 배포 순위 신뢰도는 LODO/L2DO 값을 기준으로 볼 것"
  ]
 }
