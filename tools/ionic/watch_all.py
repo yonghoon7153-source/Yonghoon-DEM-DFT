@@ -91,8 +91,9 @@ for r in roots:
                     d = json.load(open(f))
                 except Exception:
                     continue
+                # 실제 키가 `D_Li_cm2_s` 였다 — 'd_cm2' 로는 안 잡힌다. 부분 문자열을 넓게.
                 for want, tag in (("sigma", "σ"), ("cond", "σ"),
-                                  ("d_cm2", "D"), ("diffus", "D"), ("slope", "s")):
+                                  ("cm2", "D"), ("diffus", "D"), ("d_li", "D")):
                     hit = find_scalar(d, want)
                     if hit is not None:
                         kind = tag
