@@ -241,6 +241,22 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 
 ---
 
+## 🏛️ 디지털트윈 전극 계보 — 연세대 DTBL(이용민) 라인 (정본 승격 2026-07-28)
+
+> 우리 DEM+MPM 과 **같은 목표·같은 소재계**(NCM+LPSCl)로 전극 미세구조 디지털트윈을 하는 그룹.
+> 원본은 작업 브랜치 `claude/solid-state-cathode-improvement-hevry0` 의 `docs/lit_*.md` 에서 논문
+> 에이전트가 작성했고, 2026 전지기술 심포지엄(이용민 발표) 계기로 **단일-서랍 규칙에 따라 이관**했다.
+> 포지셔닝 종합은 `positioning_vs_geodict.md` + `yonsei_dtbl_lab_triage_2026.md`(연구실 27편 트리아지),
+> 그리고 stoic-knuth 브랜치의 `docs/positioning_in_dt_lineage.md`.
+
+| slug | 논문 | 왜 중요한가 |
+|---|---|---|
+| `papers/park2020_digitaltwin_assb_foundational.md` | **Park 2020** (Adv. Energy Mater. 10, 2001563) — Digital-Twin-Driven ASSB | ★**이 계보의 시조**. NCM711+LPSCl+NBR 60:38:2/70:28:2/80:18:2, 로딩 10 mg/cm², porosity 12.0/19.3/28.2 % = **우리와 직접 대조 가능한 유일한 정량 벤치마크**. ⚠ 시조조차 **압축을 시뮬 안 하고 규칙배치**(GeoDict GrainGeo) — 우리 공정-물리 bottom-up 의 상향식 근거 |
+| `papers/kim2024_digital_twin_acsenergyletters.md` | **Kim 2024** (ACS Energy Lett. 9, 5225) — DT 모델링·시뮬 리뷰 | top-down/bottom-up **taxonomy 의 peer-reviewed 인용원**. "수십 µm 도메인에선 나노 물성을 effective property 로 뭉갠다"를 한계로 자인 |
+| `papers/lim2025_virtual_calendering_framework.md` | **Lim 2025** (Small 21, 2410485) — 가상 캘린더링 검증 | 우리 압축의 **방법론적 형제**(reconstruct-then-compress vs 우리 predict-from-powder). virtual↔actual 을 porosity·σ_e·τ·비표면적·접촉면적 **5축**으로 대조 + PNM + 응력/균열 부피% |
+| `papers/song2025_electrochemo_mechanical_microelectrode_ees.md` | **Song 2025** (EES 18, 3129) — 미세전극 electrochemo-mech DT | **단일입자·마이크로전극 실측**(Au ⌀10 µm) — 우리 최대 급소인 i0·D_s 앵커의 직접 해법. 바인더 점탄성(Perzyna+Ludwick) 정식 공개 |
+| `papers/choi2024_digital_twin_review_echem.md` | **Choi 2024** (E.Chem 매거진 총설) | positioning 용어 네이밍. ⚠ **비동료심사 매거진** — 논문 인용원으로 쓰지 말 것(peer-reviewed 는 Kim 2024) |
+
 ## 🔀 DEM/제조 축 (stoic-knuth 브랜치에서 통합, 2026-07-16)
 
 - DEM·제조·역학 문헌 digest **63편**을 `claude/stoic-knuth-NObVQ` 브랜치에서 가져와 이 litdb를 **단일 정본**으로 통합.
