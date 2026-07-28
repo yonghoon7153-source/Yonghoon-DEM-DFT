@@ -1,0 +1,20 @@
+# Park 2020 (Adv. Energy Mater. 10, 2001563) ASSE 디지털트윈 벤치마크 — 우리 DEM/MPM 대조용 정본
+# 출처: litdb digest `park2020_digitaltwin_assb_foundational` (483줄, hevry0 브랜치 docs/lit_*.md)
+#       + 2026 KBS 심포지엄 슬라이드(porosity 값).  litdb_sync 로 조회: --show park2020_digitaltwin_assb_foundational
+# 재료: NCM711(4.44 g/cm3, 입자내부 porosity 32.7%) + Li6PS5Cl(2.07) + NBR(1.00), 로딩 10 mg/cm2, 두께 ~39 um, 30 C
+# 구조생성: GeoDict, voxel 0.5 um, seed 1-5, periodicity.  NCM 2차입자=PSA구→다면체화(1차입자 565nm-1.55um), LPSCl=PSA구
+# ★ 대조 시 반드시 볼 것 (apples-to-apples 아님):
+#   (1) 그들 LPSCl 은 2차입자 ~8-10 um 구 = NCM(8-10 um)과 거의 같은 크기 -> 사실상 등크기 혼합
+#       우리 SE 는 D50 0.5-1.5 um = AM(2-6 um) 대비 강한 bimodal -> 작은 SE 가 AM 간극을 채워 더 조밀
+#       => 우리 porosity 가 더 낮게 나오는 것이 물리적으로 정상 (Furnas packing).  '불일치'로 읽지 말 것.
+#   (2) 그들 porosity 는 생성 시 목표로 지정된 입력값, 우리 porosity 는 압축 시뮬의 출력값
+#   (3) 그들 sigma_eff = eps*sigma_intrinsic/tau (부피분율x굴곡도 가중) — 접촉망 추론이 아님
+#       우리 = Kirchhoff+Holm 접촉망 -> 접촉면적 효과를 그들 방법은 원리적으로 못 봄
+#   (4) 그들 intrinsic 입력: NCM 전자 8.5e-4 S/cm / LPSCl 이온 = -4.45e-3*eps_s + 4.64e-3 S/cm
+#       우리 sigma_AM(e)=50 mS/cm(=5e-2 S/cm) 계열과 출처가 달라 절대 대조 금지, 방향만 대조
+# provenance: measured=논문 본문/표에서 직접, digitized=그림에서 읽음, slide=심포지엄 슬라이드, derived=계산
+ncm_wt_pct,lpscl_wt_pct,nbr_wt_pct,porosity_pct,porosity_provenance,dead_lpscl_pct_seed1,dead_lpscl_pct_seed2,dead_lpscl_pct_seed3,dead_lpscl_pct_seed4,dead_lpscl_pct_seed5,dead_trend,sigma_eff_e_trend,sigma_eff_ion_trend,ion_percolation,note
+60,38,2,12.0,slide,0.00,0.02,0.00,0.00,0.00,~0%,low,high,OK,"최적창 하한 — dead particle 거의 0"
+70,28,2,19.3,slide,0.00,0.00,0.00,0.00,0.06,<0.1%,mid,mid,OK,"최적창 중앙"
+80,18,2,28.2,slide,0.28,0.28,0.41,0.28,0.41,<=0.5%,high,low,OK,"최적창 상한 — 0.1C 에서도 60wt% 대비 최대 20 mAh/g(15%) 손실(비접촉면적 감소)"
+90,8,2,,,19.82,7.65,9.56,6.16,6.20,6-20% 급증,highest,N/A,FAIL,"★ LPSCl 퍼콜레이션 실패 — 유효 이온전도도 계산 불가(Fig S10). 우리 SE-no-perc degenerate 케이스와 1:1"
