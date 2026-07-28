@@ -316,10 +316,35 @@ def _cg(L, b, x0=None, rtol=1e-9, atol=0.0, pc_cache=None, deep=False, floor_abs
     #     J·v≈0 라 잔차 norm 에 작게 실림)이 다른 얼굴로 나타난 것.
     #   해법: 예산(초)을 주면 GPU Jacobi 가 그보다 오래 걸린 순간 **다음 솔브 한 번만** 사다리로
     #   내려보내 시간을 재고, 빠른 쪽을 래치한다.  추가 솔브 0회(연속 두 솔브를 A/B 로 씀).
-    #   ★ 해 불변: 전처리기는 CG 의 해를 바꾸지 않는다(같은 Jx=b, 같은 rtol).  기본 0 = OFF →
-    #     기존 런은 바이트 불변.
+    #
+    #   ★★ 실측 결과 (2026-07-29 V100, 이 가설은 **기각됨**) ★★
+    #     dof 4,424,695 · 0.2C · cap200 에서:  GPU Jacobi 43.5 s  vs  AMG 사다리 440.9 s
+    #     = **Jacobi 가 10.1× 빠름**.  사다리 내역: AMG 구축 100 s(levels 4) + CG 341 s(900+ it,
+    #     GPU V-cycle apply).  ⇒ near-null-B AMG 는 이 규모에서 답이 아니다.  이 노브는 그
+    #     사실을 **측정으로** 확인하라고 남겨둔 것이지, 켜면 빨라지는 스위치가 아니다.
+    #     같은 가설을 다시 세우기 전에 docs/step4_bottleneck_analysis_20260727.md §11 을 읽을 것.
+    #
+    #   ⚠ 정정 (커밋 32a57f2c 메시지의 과잉주장): "cannot change any result" 는 **너무 강했다**.
+    #     수렴한 Newton 근은 안 바뀌는 게 맞다(수렴 판정은 정확 재계산 F, tol_rel=1e-8).  그러나
+    #     사다리 팔은 목표 2.90e-13 까지 훨씬 더 조여서 반환했다 → 중간 iterate 가 달라지고
+    #     → Newton 궤적이 달라지고 → 이후 선형계가 달라진다.  실제로 프로브 직후 GPU 가
+    #     maxiter(20000)를 소진해 gpu_dead 가 걸렸다(그 인과는 **미확정** — 배제할 수 없다는
+    #     것이 요점).  ⇒ 프로브는 궤적-중립이 아니다.  프로덕션 런에 켜지 말 것.
     import time as _tm
     _budget = float(os.environ.get('MPM_S4_CG_BUDGET_S', '0') or 0)
+    # ★ dof 상한 가드: 위 실측대로 대형계에서는 AMG 구축(100 s)만으로도 이미 지므로 프로브를
+    #   아예 막는다.  ⚠ 이 값은 **측정된 교차점이 아니다** — 우리가 가진 점은 "4.4M 에서 10.1×
+    #   진다" 하나뿐이고, AMG 가 이기기 시작하는 dof 는 미측정이다.  즉 무지의 안전변이지
+    #   물리/수치적 문턱이 아니며, 필요하면 env 로 올려서 직접 재보라는 뜻이다.
+    _probe_max_dof = int(float(os.environ.get('MPM_S4_CG_PROBE_MAX_DOF', '1000000') or 0))
+    if _budget > 0 and _probe_max_dof > 0 and L.shape[0] > _probe_max_dof:
+        if not cache.get('probe_dof_skipped'):
+            cache['probe_dof_skipped'] = True
+            cache['cg_winner'] = 'gpu_jacobi'                 # 프로브 없이 현행 확정
+            print(f'    ℹ 비용-프로브 생략: dof {L.shape[0]:,} > 상한 {_probe_max_dof:,} — '
+                  f'이 규모에선 AMG 가 진다고 실측됨(4.4M: 43.5s vs 440.9s = 10.1×).  '
+                  f'다시 재려면 MPM_S4_CG_PROBE_MAX_DOF 를 올릴 것', flush=True)
+        _budget = 0.0                                         # 이하 계측·전환 전부 비활성
     _try_ladder = _budget > 0 and cache.get('cg_winner') == 'ladder'
     _probe_ladder = _budget > 0 and cache.get('cg_probe_pending') and cache.get('cg_winner') is None
     _t_enter = _tm.time()
@@ -2068,6 +2093,11 @@ def _selftest_solver():
     _c6b = (float(os.environ.get('MPM_S4_CG_BUDGET_S', '0') or 0) == 0.0)
     print(f'  {"OK  " if _c6b else "FAIL"} C6 기본 OFF (MPM_S4_CG_BUDGET_S 미지정 → 예산 0 = 경로 불변)')
     ok &= _c6b
+    # ★ dof 상한 가드 — 실측(4.4M: Jacobi 43.5s vs AMG 440.9s = 10.1×) 이후 그 규모에선 프로브 자체를 막는다.
+    #   기본 1e6.  ⚠ 교차점이 아니라 무지의 안전변 (AMG 가 이기는 dof 는 미측정).
+    _c6c = int(float(os.environ.get('MPM_S4_CG_PROBE_MAX_DOF', '1000000') or 0)) == 1000000
+    print(f'  {"OK  " if _c6c else "FAIL"} C6 프로브 dof 상한 기본 1,000,000 (4.4M 실측 기각 반영)')
+    ok &= _c6c
 
     def _env(k, v):
         if v is None:
