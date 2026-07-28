@@ -22,6 +22,7 @@
 import glob
 import json
 import os
+import pathlib
 import re
 import subprocess
 from datetime import datetime
@@ -30,6 +31,20 @@ H = os.path.expanduser("~")
 W = os.path.join(H, "work")
 BAR = "-" * 70
 NOW = datetime.now()
+
+# ⚠ watch(1) 은 스크롤이 안 된다. 끝난 항목까지 다 찍으면 화면 밖으로 밀려서
+#   **정작 봐야 할 진행 중 항목이 안 보인다**. 기본을 compact 로 두고,
+#   끝난 것은 한 줄로 접는다. 전체는 --full, 한 섹션만은 --only <키>.
+import argparse as _ap
+_p = _ap.ArgumentParser(add_help=False)
+_p.add_argument("--full", action="store_true", help="끝난 항목까지 전부 펼친다")
+_p.add_argument("--only", default="", help="disorder|sdcp|committee|elf|bader|chain 중 하나만")
+ARGS, _ = _p.parse_known_args()
+FULL, ONLY = ARGS.full, ARGS.only.lower()
+
+
+def want(key):
+    return (not ONLY) or ONLY == key
 
 
 def sh(cmd):
@@ -74,22 +89,22 @@ def mtime(p):
         return None
 
 
-def find_scalar(o, want, depth=0):
+def find_scalar(o, key, depth=0):
     """json 안을 재귀로 훑어 키에 `want` 가 든 **스칼라**를 찾는다.
     ⚠ 키 이름을 하드코딩하면 파이프라인이 바뀔 때 조용히 0/3 으로 보인다 — 실제로 그랬다."""
     if depth > 6:
         return None
     if isinstance(o, dict):
         for k, v in o.items():
-            if want in str(k).lower() and isinstance(v, (int, float)):
+            if key in str(k).lower() and isinstance(v, (int, float)):
                 return v
         for v in o.values():
-            r = find_scalar(v, want, depth + 1)
+            r = find_scalar(v, key, depth + 1)
             if r is not None:
                 return r
     elif isinstance(o, list):
         for v in o[:20]:
-            r = find_scalar(v, want, depth + 1)
+            r = find_scalar(v, key, depth + 1)
             if r is not None:
                 return r
     return None
@@ -160,16 +175,18 @@ for j in JOBS:
 print(BAR)
 
 # ═══ ① comp2 disorder ════════════════════════════════════════════════════
-print("① comp2 DISORDER ensemble")
-roots = sorted(glob.glob(os.path.join(W, "runs", "comp2_disorder*")))
-if not roots:
+if want("disorder"):
+  print("① comp2 DISORDER ensemble")
+  roots = sorted(glob.glob(os.path.join(W, "runs", "comp2_disorder*")))
+  if not roots:
     print("  (comp2_disorder* 없음)")
-for r in roots:
+  for r in roots:
     print(f"  [{os.path.basename(r)}]")
     cfgs = sorted(glob.glob(os.path.join(r, "d*_cfg*")))
     if not cfgs:
         print("    (cfg 없음)")
     unknown_keys = None
+    done_cfgs = []
     for c in cfgs:
         line, n = f"    {os.path.basename(c)} :", 0
         for T in (600, 800, 1000):
@@ -180,9 +197,11 @@ for r in roots:
                 except Exception:
                     continue
                 # 실제 키가 `D_Li_cm2_s` 였다 — 'd_cm2' 로는 안 잡힌다. 부분 문자열을 넓게.
-                for want, tag in (("sigma", "σ"), ("cond", "σ"),
+                # ⚠ 반복변수 이름을 want 로 두면 모듈 수준 want() 를 덮어써서
+                #   뒤 섹션이 TypeError 로 죽는다 (실제로 겪음).
+                for wkey, tag in (("sigma", "σ"), ("cond", "σ"),
                                   ("cm2", "D"), ("diffus", "D"), ("d_li", "D")):
-                    hit = find_scalar(d, want)
+                    hit = find_scalar(d, wkey)
                     if hit is not None:
                         kind = tag
                         break
@@ -196,12 +215,17 @@ for r in roots:
             else:
                 run = glob.glob(os.path.join(c, f"T{T}", "traj*"))
                 line += f" {T}K{'~' if run else '·'}"
-        print(f"{line}  [{n}/3]")
+        if n == 3 and not FULL:
+            done_cfgs.append(os.path.basename(c))     # 완료는 접는다
+        else:
+            print(f"{line}  [{n}/3]")
+    if done_cfgs:
+        print(f"    ✅ 3/3 완료: {', '.join(done_cfgs)}   (--full 로 값 펼침)")
     if unknown_keys:
         # 자기 진단: 값을 못 찾았으면 **어떤 키가 있었는지** 알려준다
         print(f"    ⚠ 값 미검출 — {unknown_keys[0]} 최상위 키: {unknown_keys[1]}")
-print("  ordered baseline: comp2 Ea 0.276±0.033 / comp1 0.253  (disorder가 낮추면 가설 확증)")
-print(BAR)
+  print("  ordered baseline: comp2 Ea 0.276±0.033 / comp1 0.253  (disorder가 낮추면 가설 확증)")
+  print(BAR)
 
 # ═══ ② SDCP relax ════════════════════════════════════════════════════════
 print("② SDCP complex_doped_v2 relax (k 2×2×1)")
@@ -223,11 +247,11 @@ if not src:
             src, via = open(cands[0], errors="ignore").read(), f"파일 {cands[0]} (자동탐색)"
             break
 if not src:
-    want = os.environ.get("SDCP_TMUX", "sdcp_cd")
+    sess = os.environ.get("SDCP_TMUX", "sdcp_cd")   # ⚠ want() 를 덮지 않게 이름을 분리
     panes = [p for p in sh("tmux list-panes -a -F '#{session_name}:#{window_index}.#{pane_index}'"
                            ).split() if p]
-    if want:
-        panes = [p for p in panes if p.startswith(want + ":")] + panes
+    if sess:
+        panes = [p for p in panes if p.startswith(sess + ":")] + panes
     for p in panes:
         cap = sh(f"tmux capture-pane -p -t '{p}' -S -20000")
         if re.search(r"iteration #|convergence has been achieved", cap):
@@ -254,23 +278,44 @@ else:
 print(BAR)
 
 # ═══ ③ MLIP 위원회 온도 스윕 (T1) ════════════════════════════════════════
-print("③ MLIP 위원회 온도 스윕 — T1 외삽 대리지표")
-print("   기준선(600 K 교정): 프레임 중앙 0.3175 · p95 0.3669 eV/Å")
-ds = sorted(glob.glob(os.path.join(W, "committee_modelc_T*")),
-            key=lambda p: int(p.rsplit("_T", 1)[1]))
-if not ds:
+# 판정 파일이 있으면 스윕은 **끝난 일**이다 — 한 줄로 접고 결론만 남긴다.
+# ⚠ repo 경로를 $HOME 로 조립하지 않는다 — 서버마다 위치가 다르고(HOME/work/HOME) 조용히
+#   "판정 없음"으로 보인다. 스크립트 자기 위치에서 올라간다.
+_SWEEP = str(pathlib.Path(__file__).resolve().parents[2] / "db" / "properties"
+             / "committee_temperature_sweep.json")
+_sw = None
+if os.path.isfile(_SWEEP):
+    try:
+        _sw = json.load(open(_SWEEP))
+    except Exception:
+        _sw = None
+if _sw and not FULL and want("committee"):
+    v = _sw.get("verdict", {})
+    fm = _sw.get("force_model", {})
+    print(f"③ MLIP 위원회 온도 스윕 — ✅ 판정 완료 ({_sw.get('date','?')})")
+    print(f"   {v.get('headline','?')}")
+    print(f"   온도무관 바닥 a={fm.get('linear',{}).get('intercept_eV_per_A','?')} eV/Å "
+          f"({fm.get('floor_share_at_600K','?')} 몫) · 지수 n={fm.get('power',{}).get('exponent','?')}")
+    print("   (--full 로 온도별 표 · db/properties/committee_temperature_sweep.json)")
+    print(BAR)
+elif want("committee"):
+  print("③ MLIP 위원회 온도 스윕 — T1 외삽 대리지표")
+  print("   기준선(600 K 교정): 프레임 중앙 0.3175 · p95 0.3669 eV/Å")
+  ds = sorted(glob.glob(os.path.join(W, "committee_modelc_T*")),
+              key=lambda p: int(p.rsplit("_T", 1)[1]))
+  if not ds:
     print("  (아직 없음)")
-for d in ds:
+  for d in ds:
     T = d.rsplit("_T", 1)[1]
     n = len(glob.glob(os.path.join(d, "pred_*.npz")))
-    v = os.path.join(d, "committee_verdict.json")
-    if not os.path.exists(v):
+    vf = os.path.join(d, "committee_verdict.json")
+    if not os.path.exists(vf):
         lm = mtime(d)
         stale = "  ⛔ 재부팅 전 흔적" if (BOOT and lm and lm < BOOT) else ""
         print(f"  T{T}: 엔진 {n}/3 · 판정 대기{stale}")
         continue
     try:
-        j = json.load(open(v))
+        j = json.load(open(vf))
     except Exception:
         print(f"  T{T}: 엔진 {n}/3 · JSON 파싱 실패")
         continue
@@ -280,17 +325,17 @@ for d in ds:
     tag = "탐지" if mode.startswith("탐지") else ("교정" if mode.startswith("교정") else "?")
     med, ab, nf = c.get("median"), c.get("n_above_break"), j.get("n_frames")
     ms = "?" if med is None else f"{med:.4f}"
+    _ = None
     # ⚠ 여기서 초과 수에 경보를 달지 않는다. 문턱은 600 K 절대값인데 조화 고체의 RMS 힘은
     #   √T 로 커지므로, 상대 정확도가 똑같아도 고온 초과는 는다. 예전엔 이 자리에
     #   '⚠⚠ 급증'을 찍었고 그건 열적 스케일링을 외삽으로 오독한 경보였다.
     #   판정은 힘 크기로 정규화하는 committee_sweep_verdict.py 가 한다.
     print(f"  T{T}: 엔진 {n}/3 · 프레임중앙 {ms} · 고정문턱초과 {ab}/{nf} · [{tag}] (정규화 전)")
-print("   ⚠ '교정'의 초과는 정의상 5% — 기준선 표본의 초과 수는 결과가 아니다.")
-print("   ⚠ 고온의 고정문턱 초과도 **그 자체로는 판정이 아니다** (힘이 √T 로 커짐).")
-print("     판정: python3 tools/ionic/committee_sweep_verdict.py \\")
-print("             --out_json db/properties/committee_temperature_sweep.json \\")
-print("             --out_csv  db/properties/committee_temperature_sweep_origin.csv")
-print(BAR)
+  print("   ⚠ 고정문턱 초과는 **그 자체로는 판정이 아니다** (힘이 √T 로 커짐).")
+  print("     판정: python3 tools/ionic/committee_sweep_verdict.py \\")
+  print("             --out_json db/properties/committee_temperature_sweep.json \\")
+  print("             --out_csv  db/properties/committee_temperature_sweep_origin.csv")
+  print(BAR)
 
 # ═══ ⑤ LPSOCl ELF (CPU — GPU 안 건드림) ═════════════════════════════════
 print("⑤ LPSOCl ELF (CPU pw.x/pp.x — GPU 작업과 동시 실행 안전)")

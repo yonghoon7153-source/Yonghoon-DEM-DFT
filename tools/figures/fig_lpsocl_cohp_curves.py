@@ -62,7 +62,7 @@ def read_csv(path):
     return E, curves, meta
 
 
-def panel(ax, E, y, color, label, icohp, n, xlim, ylim, dashed=False):
+def panel(ax, E, y, color, label, icohp, n, xlim, ylim, dashed=False, cov=None):
     ax.fill_betweenx(E, 0, np.where(y > 0, y, 0), color=color, alpha=0.5, lw=0)
     ax.fill_betweenx(E, 0, np.where(y < 0, y, 0), color=color, alpha=0.5, lw=0)
     ax.plot(y, E, color=color, lw=1.1, ls="--" if dashed else "-")
@@ -81,10 +81,17 @@ def panel(ax, E, y, color, label, icohp, n, xlim, ylim, dashed=False):
             fontsize=11.5, fontweight="bold", ha="right", va="top", color=INK,
             bbox=dict(facecolor=color, alpha=0.18, edgecolor="none",
                       boxstyle="round,pad=0.3"))
-    ax.text(0, ylim[0] + dy * 0.035, f"ICOHP = {icohp:.2f} eV/bond",
+    # ⚠ 상자의 ICOHP 는 LOBSTER 의 **전 에너지** 적분이다. COHPCAR 격자가 -inf 에서
+    #   시작하지 않아 깊은 결합 기여가 그림 밖에 있는 경우가 있다 (LPSOCl P-O 는 30%만 창 안).
+    #   그때 "상자 값 = 보이는 면적" 으로 읽히면 안 되므로 커버리지를 같이 적는다.
+    txt = f"ICOHP = {icohp:.2f} eV/bond"
+    if cov is not None and cov < 0.95:
+        txt += f"\n({cov*100:.0f}% inside window)"
+    ax.text(0, ylim[0] + dy * 0.035, txt,
             ha="center", va="bottom", fontsize=9.5, fontweight="bold", color=INK,
             bbox=dict(boxstyle="round,pad=0.35", facecolor="white",
-                      edgecolor=MUT, lw=0.8))
+                      edgecolor=("#b91c1c" if (cov is not None and cov < 0.6) else MUT),
+                      lw=(1.3 if (cov is not None and cov < 0.6) else 0.8)))
     apply_axes(ax, xlabel=r"$-$pCOHP per bond")
 
 
@@ -122,7 +129,8 @@ def main():
             m = pairs.get(lab, {})
             panel(ax, E, curves[lab], PANEL_COLOR.get(lab, MUT), lab,
                   float(m.get("ICOHP_per_bond_eV", 0.0)), int(m.get("N", 0)),
-                  (-xmax, xmax), ylim, dashed=lab in DASH_ON)
+                  (-xmax, xmax), ylim, dashed=lab in DASH_ON,
+                  cov=(float(m["window_coverage"]) if m.get("window_coverage") is not None else None))
             if ci == 0:
                 ax.set_ylabel(r"$E - E_F$  (eV)", fontsize=12, color=INK)
             else:
@@ -134,9 +142,15 @@ def main():
                  f"x-scale row {ri+1}: $\\pm${xmax:.2f}", rotation=90, va="center",
                  ha="left", fontsize=8.5, color=MUT)
 
+    covs = [pairs.get(l, {}).get("window_coverage") for r in rows for l in r]
+    covs = [c for c in covs if c is not None]
+    # ⚠ suptitle 을 한 줄로 길게 쓰면 bbox_inches='tight' 가 그림 폭을 늘려버린다
+    #   (2857 → 3636 px). 두 줄로 접는다.
+    sub = ("\nboxed % = ICOHP fraction inside the plotted window"
+           if covs and min(covs) < 0.95 else "")
     fig.suptitle("LPSOCl (Li$_{27}$P$_5$S$_{21}$OCl$_8$) COHP — LOBSTER 5.1.1, "
-                 "per-bond average;  rows have independent x-scales",
-                 fontsize=11, color=MUT, y=0.995)
+                 "per-bond average;  rows have independent x-scales" + sub,
+                 fontsize=11, color=MUT, y=1.0)
     outp = Path(args.out)
     outp.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(outp, dpi=300, bbox_inches="tight", facecolor="white")

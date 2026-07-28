@@ -11,6 +11,33 @@ echo "  실행중: ${run:-없음}  | GPU ${gpu} (used,free,util%)"
 sess=$(tmux ls 2>/dev/null | grep -oE 'vgcf(qe|2L|neb)' | tr '\n' ' ')
 echo "  세션: ${sess:-없음}"
 
+# ── 생존 판정 (2026-07-29 추가) ─────────────────────────────────────────
+# ⚠ neb.out 은 **iteration 경계에서만** 갱신되므로 "정체 = 죽음"이 아니다.
+#   반대로 재부팅하면 tmux 도 프로세스도 통째로 사라져 아래가 전부 빈다.
+#   그 둘을 가르는 근거는 (a) 프로세스 나이 (b) 로그 mtime vs 부팅시각 (c) GPU 사용률.
+BOOT=$(uptime -s 2>/dev/null); BOOTS=$(date -d "$BOOT" +%s 2>/dev/null || echo 0)
+# ⚠ 브래킷 회피: 패턴이 호출한 셸의 명령줄에 그대로 있으면 pgrep 이 자기 부모를 문다
+#   (실제로 neb.x 가 없는데 ALIVE 로 찍혔다). [n]eb 는 "neb" 를 매치하되 자기 자신엔 안 걸린다.
+NPID=$(pgrep -f '[n]eb\.x' | head -1)
+echo "  부팅 ${BOOT:-?} ($(uptime -p 2>/dev/null))"
+if [ -n "$NPID" ]; then
+  echo "  ✔ neb.x ALIVE  pid $NPID  $(ps -o etime= -p "$NPID" | tr -d ' ') 경과"
+else
+  LAST=$(find "$N" -name 'neb.out' -printf '%T@ %p\n' 2>/dev/null | sort -n | tail -1)
+  LT=${LAST%% *}; LP=${LAST#* }
+  if [ -n "$LT" ]; then
+    AGE=$(( $(date +%s) - ${LT%.*} ))
+    if [ "${LT%.*}" -lt "$BOOTS" ] 2>/dev/null; then
+      echo "  ⛔ **재부팅으로 죽음** — 마지막 neb.out 이 부팅보다 이르다 ($LP)"
+    else
+      echo "  ⛔ neb.x 없음 — 마지막 neb.out $((AGE/60))분 전 ($LP). 끝났거나 죽었다."
+    fi
+    echo "     재기동: tmux new -d -s vgcfneb 'bash tools/vgcf_hbn/run_neb_kgy.sh'"
+  else
+    echo "  · neb.x 없음 · neb.out 도 없음 — 아직 시작 전"
+  fi
+fi
+
 echo "── 케이스 요약 (Pass1 endpoint / Pass2 CI-NEB) ──"
 for c in Li_on_hbn Li_on_graphene Li_in_gallery Li_in_gallery_2L2L Li_in_gallery_gr2L Li_in_gallery_2L Li_on_graphene_2L; do
   bo=$N/${c}_nebB.out; no=$N/$c/neb.out
