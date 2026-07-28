@@ -31,3 +31,4 @@ docs/db/
 이종기술/eis/eis_catalog.csv
 이종기술/eis/fits/
 이종기술/eis/thickness_overrides.json
+litdb_cache/

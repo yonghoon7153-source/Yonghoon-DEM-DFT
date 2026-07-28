@@ -3589,6 +3589,86 @@ def api_step5_fade():
     return jsonify(out)
 
 
+# ─────────────────────────── litdb (논문 에이전트 digest) ───────────────────────────
+# 2026-07-28: digest 가 세 서랍(정본 브랜치 litdb/papers · 작업 브랜치 docs/lit_* · 이 브랜치 동결
+#   스냅샷)에 흩어져 "이용민 논문이 없다"는 오진을 낳았다.  litdb_sync 가 git plumbing 으로 전
+#   브랜치를 체크아웃 없이 읽어 캐시+인덱스를 만들고, 여기서 그걸 서빙한다 (읽기 전용 — 정본은
+#   여전히 각 브랜치의 원본; 캐시는 재생성 가능하므로 gitignore).
+def _litdb_mod():
+    import importlib
+    import sys as _sys
+    _sp = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'scripts')
+    if _sp not in _sys.path:
+        _sys.path.insert(0, _sp)
+    return importlib.import_module('litdb_sync')
+
+
+@app.route('/litdb')
+def litdb_page():
+    """논문 digest 통합 검색 — 전 브랜치의 litdb 카드 + 작업노트를 한 화면에서."""
+    return render_template('litdb.html')
+
+
+@app.route('/api/litdb/index')
+def api_litdb_index():
+    """인덱스 메타 + 서랍별 통계 (본문 제외 — 가벼움)."""
+    try:
+        m = _litdb_mod()
+        idx = m.load_index()
+    except SystemExit as e:
+        return jsonify({'ok': False, 'error': str(e),
+                        'hint': 'python3 scripts/litdb_sync.py --sync 를 먼저 실행'}), 200
+    except Exception as e:
+        return jsonify({'ok': False, 'error': f'{type(e).__name__}: {e}'}), 200
+    by = {}
+    for rec in idx['entries']:
+        by[rec['drawer']] = by.get(rec['drawer'], 0) + 1
+        for a in rec['also_in']:
+            by[a['drawer']] = by.get(a['drawer'], 0) + 1
+    return jsonify({'ok': True, 'n_slugs': idx['n_slugs'], 'n_files': idx['n_files'],
+                    'drawers': idx['drawers'], 'by_drawer': by,
+                    'context_docs': idx['context_docs'],
+                    'missing_branches': idx.get('missing_branches', []),
+                    'entries': [{k: r[k] for k in ('slug', 'title', 'drawer', 'branch', 'lines')}
+                                | {'also_in': [a['drawer'] for a in r['also_in']]}
+                                for r in idx['entries']]})
+
+
+@app.route('/api/litdb/search')
+def api_litdb_search():
+    """전문 검색 (토큰 AND).  &q= · &limit="""
+    q = (request.args.get('q', '') or '').strip()
+    if not q:
+        return jsonify({'ok': True, 'q': '', 'results': []})
+    try:
+        limit = max(1, min(int(request.args.get('limit', 20)), 100))
+    except (TypeError, ValueError):
+        limit = 20
+    try:
+        m = _litdb_mod()
+        res = m.search(q, limit=limit)
+    except SystemExit as e:
+        return jsonify({'ok': False, 'error': str(e)}), 200
+    except Exception as e:
+        return jsonify({'ok': False, 'error': f'{type(e).__name__}: {e}'}), 200
+    return jsonify({'ok': True, 'q': q, 'n': len(res), 'results': res})
+
+
+@app.route('/api/litdb/card/<slug>')
+def api_litdb_card(slug):
+    """카드 본문 (마크다운 원문).  &drawer= 로 특정 서랍 판본 선택."""
+    try:
+        m = _litdb_mod()
+        c = m.get_card(slug, drawer=(request.args.get('drawer') or None))
+    except SystemExit as e:
+        return jsonify({'ok': False, 'error': str(e)}), 200
+    except Exception as e:
+        return jsonify({'ok': False, 'error': f'{type(e).__name__}: {e}'}), 200
+    if not c:
+        return jsonify({'ok': False, 'error': f'슬러그 없음: {slug}'}), 404
+    return jsonify({'ok': True, 'card': {k: v for k, v in c.items() if k != 'rank'}})
+
+
 @app.route('/eis')
 def eis_page():
     """v3-1 EIS/DRT 인터랙티브 패널 — 물리-기반 Randles(우리 σ·i0·D_s 유도) Nyquist + DRT.

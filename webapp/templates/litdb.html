@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% set active = "litdb" %}
+{% block title %}논문 litdb — DEM/MPM Analyzer{% endblock %}
+
+{% block content %}
+<h1>&#x1F4DA; 논문 litdb — 통합 검색</h1>
+<p style="color:var(--dim);max-width:900px;margin:-4px 0 14px">
+  논문 에이전트가 만든 digest 를 <b>브랜치 구분 없이</b> 한 곳에서 검색한다.  digest 는 원래 세
+  서랍에 흩어져 있었다 — <b>정본</b>(litdb/papers, 정본 브랜치) · <b>작업노트</b>(docs/lit_*, 건식후막
+  브랜치) · <b>동결</b>(이 브랜치 2026-07-16 스냅샷).  그래서 "찾았는데 없다"는 오진이 났었다.
+  여기서는 셋 다 보인다 (읽기 전용 · 정본은 각 브랜치 원본).
+</p>
+
+<div class="card" id="litdb-status" style="border-left:3px solid var(--accent)">
+  <div style="color:var(--dim)">인덱스 읽는 중…</div>
+</div>
+
+<div class="card">
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+    <input id="q" placeholder="검색어 (토큰 AND — 예: digital twin / LPSCl 압력 / calendering)"
+           style="flex:1;min-width:280px;padding:8px 10px;font-size:.95rem"
+           onkeydown="if(event.key==='Enter')doSearch()">
+    <button class="btn" onclick="doSearch()">검색</button>
+    <span style="color:var(--dim);font-size:.85rem">빠른:</span>
+    <button class="btn btn-sm" onclick="quick('digital twin')">digital twin</button>
+    <button class="btn btn-sm" onclick="quick('이용민')">이용민</button>
+    <button class="btn btn-sm" onclick="quick('calendering')">calendering</button>
+    <button class="btn btn-sm" onclick="quick('GeoDict')">GeoDict</button>
+    <button class="btn btn-sm" onclick="quick('bimodal')">bimodal</button>
+    <button class="btn btn-sm" onclick="quick('stack pressure')">stack pressure</button>
+  </div>
+  <div id="hint" style="color:var(--dim);font-size:.82rem;margin-top:7px">
+    검색은 제목·슬러그·본문 전체를 본다.  모든 토큰이 있어야 매치(AND).
+  </div>
+</div>
+
+<div id="results"></div>
+
+<div class="card" id="viewer" style="display:none">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+    <b id="v-title" style="font-size:1.02rem"></b>
+    <button class="btn btn-sm" onclick="document.getElementById('viewer').style.display='none'">✕ 닫기</button>
+  </div>
+  <div id="v-meta" style="color:var(--dim);font-size:.83rem;margin-bottom:8px"></div>
+  <pre id="v-body" style="white-space:pre-wrap;word-break:break-word;max-height:70vh;overflow:auto;
+       background:rgba(0,0,0,.20);padding:12px;border-radius:8px;font-size:.86rem;line-height:1.5"></pre>
+</div>
+
+<script>
+const esc = s => String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const DCOLOR = {canonical:'#4ade80', worknotes:'#fbbf24', frozen:'#94a3b8'};
+const DLABEL = {canonical:'정본', worknotes:'작업노트', frozen:'동결'};
+function chip(d){ const c = DCOLOR[d] || '#94a3b8';
+  return `<span style="background:${c}22;color:${c};border:1px solid ${c}55;border-radius:4px;
+          padding:1px 6px;font-size:.76rem;font-weight:600">${DLABEL[d]||d}</span>`; }
+
+async function loadIndex(){
+  const el = document.getElementById('litdb-status');
+  try{
+    const j = await (await fetch('/api/litdb/index')).json();
+    if(!j.ok){ el.innerHTML = `<div style="color:#f87171">⚠ ${esc(j.error)}</div>`
+        + `<div style="color:var(--dim);font-size:.85rem;margin-top:6px">${esc(j.hint||'')}</div>`
+        + `<div style="margin-top:8px"><code>python3 scripts/litdb_sync.py --sync</code></div>`; return; }
+    const rows = j.drawers.map(d=>{
+      const n = j.by_drawer[d.name]||0;
+      return `<div style="display:flex;gap:9px;align-items:baseline;margin:3px 0">
+        ${chip(d.name)}<b>${n}장</b>
+        <span style="color:var(--dim);font-size:.83rem">${esc(d.note)} — <code>${esc(d.branch)}</code></span></div>`;
+    }).join('');
+    const ctx = (j.context_docs||[]).map(c=>`<code style="font-size:.78rem">${esc(c.path.split('/').pop())}</code>`).join(' · ');
+    el.innerHTML = `<div style="display:flex;gap:16px;flex-wrap:wrap;align-items:baseline;margin-bottom:6px">
+        <b style="font-size:1.05rem">슬러그 ${j.n_slugs}개</b>
+        <span style="color:var(--dim)">파일 ${j.n_files}개 (중복 판본 포함)</span></div>${rows}
+      <div style="color:var(--dim);font-size:.82rem;margin-top:8px">맥락 문서: ${ctx||'—'}</div>
+      ${(j.missing_branches||[]).length ? `<div style="color:#fbbf24;font-size:.82rem;margin-top:6px">
+        ⚠ 접근 못한 브랜치: ${esc(j.missing_branches.join(', '))} — <code>git fetch --all</code> 후 재-sync</div>`:''}`;
+  }catch(e){ el.innerHTML = `<div style="color:#f87171">⚠ ${esc(e.message)}</div>`; }
+}
+
+function quick(q){ document.getElementById('q').value = q; doSearch(); }
+
+async function doSearch(){
+  const q = document.getElementById('q').value.trim();
+  const box = document.getElementById('results');
+  if(!q){ box.innerHTML=''; return; }
+  box.innerHTML = '<div class="card" style="color:var(--dim)">검색 중…</div>';
+  try{
+    const j = await (await fetch('/api/litdb/search?q='+encodeURIComponent(q)+'&limit=30')).json();
+    if(!j.ok){ box.innerHTML = `<div class="card" style="color:#f87171">⚠ ${esc(j.error)}</div>`; return; }
+    if(!j.n){ box.innerHTML = `<div class="card" style="color:var(--dim)">"${esc(q)}" 결과 없음 —
+        토큰을 줄여보세요 (모든 토큰이 있어야 매치).</div>`; return; }
+    box.innerHTML = `<div style="color:var(--dim);margin:10px 2px 6px">"${esc(q)}" → <b>${j.n}건</b></div>`
+      + j.results.map(r=>`
+      <div class="card" style="padding:11px 13px;cursor:pointer" onclick="openCard('${esc(r.slug)}','${esc(r.drawer)}')">
+        <div style="display:flex;gap:8px;align-items:baseline;flex-wrap:wrap">
+          ${chip(r.drawer)}${(r.also_in||[]).map(a=>chip(a.drawer)).join('')}
+          <b style="font-size:.95rem">${esc(r.slug)}</b>
+          <span style="color:var(--dim);font-size:.8rem">${r.lines}줄 · score ${r.score}</span>
+        </div>
+        <div style="margin:5px 0 4px;font-size:.9rem">${esc(r.title).slice(0,180)}</div>
+        <div style="color:var(--dim);font-size:.82rem">… ${esc(r.snippet)}</div>
+      </div>`).join('');
+  }catch(e){ box.innerHTML = `<div class="card" style="color:#f87171">⚠ ${esc(e.message)}</div>`; }
+}
+
+async function openCard(slug, drawer){
+  const v = document.getElementById('viewer');
+  v.style.display='block';
+  document.getElementById('v-title').textContent = slug;
+  document.getElementById('v-body').textContent = '불러오는 중…';
+  v.scrollIntoView({behavior:'smooth', block:'start'});
+  try{
+    const j = await (await fetch(`/api/litdb/card/${encodeURIComponent(slug)}?drawer=${encodeURIComponent(drawer||'')}`)).json();
+    if(!j.ok){ document.getElementById('v-body').textContent = '⚠ ' + j.error; return; }
+    const c = j.card;
+    document.getElementById('v-title').textContent = c.title || c.slug;
+    document.getElementById('v-meta').innerHTML =
+      `${chip(c.drawer)} <code>${esc(c.branch)}</code> : <code>${esc(c.path)}</code> · ${c.lines}줄`
+      + ((c.also_in||[]).length ? ` · 다른 판본: ` + c.also_in.map(a=>
+          `<a href="#" onclick="openCard('${esc(c.slug)}','${esc(a.drawer)}');return false">${DLABEL[a.drawer]||a.drawer}(${a.lines}줄)</a>`).join(', ') : '');
+    document.getElementById('v-body').textContent = c.body || '(본문 없음)';
+  }catch(e){ document.getElementById('v-body').textContent = '⚠ ' + e.message; }
+}
+loadIndex();
+</script>
+{% endblock %}

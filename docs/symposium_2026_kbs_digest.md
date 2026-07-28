@@ -189,35 +189,70 @@ flowchart TB
 
 ---
 
-## 4. ★ litdb 실태 점검 (사용자 질문에 대한 직접 답)
+## 4. ★ litdb 실태 — 두 질문 최종 답 (2026-07-28 확정)
 
-### 4-1. 이용민 교수님 논문이 litdb에 들어가 있나 → **거의 없다**
+> **⚠ 정정.** 이 문서 초판(같은 날 오전)은 "이용민 교수님 논문이 litdb에 거의 없다"고 적었다.
+> **틀렸다.** 논문 에이전트는 이미 그 논문들을 **깊이 digest 했고**, 다만 산출물이 `litdb/papers/`가
+> 아니라 **다른 브랜치의 `docs/lit_*.md`** 에 있어서, `litdb/` 디렉터리만 본 내 점검에 안 잡혔다.
+> 아래가 전수 확인 후의 확정 답이다.
 
-- litdb 정본(`origin/claude/friendly-meitner-lldvar`): **128 파일 / 논문 카드 118장**
-- **Yong Min Lee 언급 카드 = 3장뿐**, 그것도 전부 **실험·공정** 논문에 공저자로 등장:
-  `kim2025_conductive_agent_se_coating_cathode` · `kim2026_iccf_molten_salt_sei_lpscl_sheet` ·
-  `son2025_fivevolt_assb`
-- **디지털 트윈 계보는 0장**: Park 2020 AEM 2001563(ASSE 생성) · Kim 2024 ACS EL 리뷰 ·
-  Lim 2025 Small 2410485(캘린더링 검증) · Song 2023 AEM 2204328(FIB-SEM) · EES 2025
-  3129-3147(단일입자) — **전부 미적재**
-- 대신 경쟁 진영은 알고 있음: Ngandjong/Franco 10파일 언급, GeoDict 16파일 언급
+### 4-1. 이용민 교수님 논문이 들어가 있나 → **들어가 있다. 그것도 아주 깊이.**
 
-> **판정**: 이용민 그룹은 "실험 논문 저자"로만 litdb에 있고, **우리와 가장 직접 경쟁하는 그들의
-> DT 방법론 라인은 통째로 비어 있다.** 이번 심포지엄이 그 공백을 드러냈다.
+`claude/solid-state-cathode-improvement-hevry0` 브랜치 `docs/` 에 **풀 digest 29편**이 있고, 그중
+DTBL 계보 4편이 우리가 찾던 바로 그 논문들이다:
 
-### 4-2. 논문 에이전트 산출물이 webapp과 연결돼 있나 → **연결 안 돼 있다**
+| digest | 논문 | 분량 |
+|---|---|---|
+| `lit_park2020_digitaltwin_assb_foundational.md` | **Park 2020, AEM 10, 2001563** — Digital-Twin-Driven ASSB (이 계보의 **시조**) | **483줄** |
+| `lit_kim2024_digital_twin_acsenergyletters.md` | **Kim 2024, ACS Energy Lett. 9, 5225-5239** — DT 리뷰(peer-reviewed) | **628줄** |
+| `lit_lim2025_virtual_calendering_framework.md` | **Lim 2025, Small 21, 2410485** — 가상 캘린더링 검증 | **416줄** |
+| `lit_song2025_electrochemo_mechanical_microelectrode_ees.md` | **Song 2025, EES 18, 3129-3147** — 미세전극 electrochemo-mech DT | **512줄** |
 
-| 확인 항목 | 결과 |
-|---|---|
-| `webapp/app.py` 의 litdb 라우트 | **0개** |
-| `webapp/app.py` 의 litdb 언급 | **0회** |
-| scripts 에서의 참조 | `coating_presets.py`·`ml_design_loop.py` **주석에만** |
-| 유일한 다리 | `docs/litdb_application_table.md` — 사람이 쓴 **정적 분석 문서** |
+게다가 **맥락 문서 2건**까지 이미 만들어져 있었다:
+- `docs/literature_yonsei_dtbl_2026.md` — **그 연구실 27편(#260-286) 전수 트리아지** + 각 논문이
+  우리 로드맵 어디에 꽂히는지 매핑
+- `docs/positioning_vs_geodict.md` — **top-down/reconstruction vs bottom-up/formation** 포지셔닝
 
-즉 litdb는 **다른 브랜치의 마크다운 더미**로 존재하며, webapp에서 조회·검색·인용이 **불가능**하다.
-논문 에이전트가 만든 118장의 지식이 파이프라인과 **단절**돼 있고, 활용은 전적으로 "사람이 읽고
-docs에 옮겨 적기"에 의존한다. 문장혁 교수님의 KG(5,199노드 + Graph RAG)와 비교하면 이게 우리
-**가장 큰 구조적 격차**다.
+즉 **§2-5의 대차대조표를 이미 예견하고 정리해 둔 자료가 우리 저장소 안에 있었다.** 못 찾은 이유는
+하나 — **서랍이 셋인데 한 서랍만 봤다.**
+
+### 4-2. 논문 에이전트 산출물이 webapp과 연결돼 있나 → **없었다. 오늘 만들었다.**
+
+**문제(오늘 오전 실측)**: `webapp/app.py`에 litdb 라우트 0개·언급 0회. digest 는 세 서랍에 흩어져
+있고(정본 117 + 작업노트 29 + 동결 64 = 파일 210, 고유 슬러그 **147**), 어느 브랜치를 봐야 하는지
+사람이 기억해야 했다. 이 파편화가 §4-1의 오진을 **직접 유발**했다.
+
+**해결(오늘 구축)**: 브랜치 연동은 어렵지 않다 — **체크아웃도 worktree도 필요 없다.** git plumbing
+(`git ls-tree` / `git show`)으로 어떤 브랜치의 파일이든 그냥 읽으면 된다.
+
+```mermaid
+flowchart LR
+    B1["정본 브랜치<br/>litdb/papers/*.md<br/>117장"] --> S
+    B2["작업 브랜치 hevry0<br/>docs/lit_*.md<br/>29장 ← 이용민 DT 4편"] --> S
+    B3["이 브랜치 동결<br/>litdb/papers/*.md<br/>64장"] --> S
+    S["<b>scripts/litdb_sync.py</b><br/>git plumbing 으로 읽기<br/>(체크아웃·worktree 불필요)"] --> C["litdb_cache/<br/>본문 + index.json<br/>(gitignore · 재생성 가능)"]
+    C --> W["<b>webapp /litdb</b><br/>통합 검색 · 서랍 배지<br/>카드 뷰 · 판본 비교"]
+    C --> A["<b>API</b><br/>/api/litdb/search<br/>/api/litdb/card/&lt;slug&gt;"]
+```
+
+- **정본 규칙은 그대로**: 캐시는 읽기 전용 사본이고, 원본은 여전히 각 브랜치에 있다. CLAUDE.md의
+  "litdb 정본 = 단일 서랍" 규칙과 충돌하지 않는다 — 오히려 **어느 서랍에 뭐가 있는지 드러낸다**.
+- **중복 판본도 보존**: 같은 슬러그가 여러 서랍에 있으면 대표는 정본 우선(rank), 나머지는
+  `also_in` 으로 남아 UI에서 판본 비교가 된다. 실측 중복 **63건**.
+- **한 서랍에만 있는 것**: 정본 전용 54장 · **작업노트 전용 29장**(= 여태 안 보이던 것) · 동결 전용 1장.
+
+**사용법**
+```bash
+python3 scripts/litdb_sync.py --sync                 # 전 브랜치 재스캔 (새 digest 추가 후)
+python3 scripts/litdb_sync.py --search "digital twin"
+python3 scripts/litdb_sync.py --show park2020_digitaltwin_assb_foundational
+python3 scripts/litdb_sync.py --stats                # 서랍별 통계 + 중복 진단
+```
+웹앱은 좌측 네비 **📚 논문 litdb** → 검색·카드 열람.
+
+> **판정**: ① 논문은 있었다(내 초판이 오진) · ② 연결은 없었으나 **오늘 만들었다**. 남은 것은
+> 문장혁 교수님 수준의 **그래프화**(노드-관계 추출 → Graph RAG)인데, 그건 이제 인덱스가 있으니
+> 그 위에 얹으면 된다(§5 A1-2).
 
 ---
 

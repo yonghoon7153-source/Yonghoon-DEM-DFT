@@ -306,21 +306,42 @@
   },
   "litdb_status_snapshot": {
     "checked": "2026-07-28",
-    "canonical_branch": "origin/claude/friendly-meitner-lldvar",
-    "files_total": 128,
-    "paper_cards": 118,
+    "_correction": "초판(같은 날 오전)은 'litdb/ 디렉터리'만 조사해 '이용민 논문 거의 없음'으로 오판했다. 전 브랜치 전수 조사 결과 풀 digest 가 다른 서랍(hevry0 브랜치 docs/lit_*.md)에 존재했다. 아래는 정정된 확정 상태.",
+    "drawers": [
+      {"name": "canonical", "branch": "claude/friendly-meitner-lldvar", "path": "litdb/papers/*.md", "cards": 117, "note": "정본 서랍 (CLAUDE.md 단일-서랍 규칙)"},
+      {"name": "worknotes", "branch": "claude/solid-state-cathode-improvement-hevry0", "path": "docs/lit_*.md", "cards": 29, "note": "건식후막 작업 브랜치 풀 digest — 정본 미승격, 여기에 이용민 DT 계보가 있었다"},
+      {"name": "frozen", "branch": "claude/stoic-knuth-NObVQ", "path": "litdb/papers/*.md", "cards": 64, "note": "이 브랜치 2026-07-16 동결 스냅샷 (참조 전용)"}
+    ],
+    "unified": {"unique_slugs": 147, "files": 210, "duplicate_slugs": 63,
+                "only_in_canonical": 54, "only_in_worknotes": 29, "only_in_frozen": 1},
     "yong_min_lee_coverage": {
-      "cards_mentioning": 3,
-      "cards": ["kim2025_conductive_agent_se_coating_cathode.md", "kim2026_iccf_molten_salt_sei_lpscl_sheet.md", "son2025_fivevolt_assb.md"],
-      "nature": "전부 실험·공정 논문에 공저자로 등장. 디지털 트윈 계보(Park 2020 AEM 2001563 / Kim 2024 ACS EL 리뷰 / Lim 2025 Small 2410485 / Song 2023 AEM 2204328 / EES 2025 3129-3147)는 **0장**",
-      "verdict": "이용민 그룹의 DT 방법론은 litdb 에 없음 — 이번 심포지엄이 그 공백을 드러냄"
+      "verdict": "✅ 있음 — 그것도 풀 digest. 다만 정본이 아닌 작업 브랜치(hevry0) docs/lit_*.md 에 있었음",
+      "dtbl_lineage_digests": [
+        {"slug": "park2020_digitaltwin_assb_foundational", "paper": "Park 2020, Adv. Energy Mater. 10, 2001563 — Digital-Twin-Driven ASSB (계보 시조)", "lines": 483, "drawer": "worknotes"},
+        {"slug": "kim2024_digital_twin_acsenergyletters", "paper": "Kim 2024, ACS Energy Lett. 9, 5225-5239 — DT 리뷰(peer-reviewed)", "lines": 628, "drawer": "worknotes"},
+        {"slug": "lim2025_virtual_calendering_framework", "paper": "Lim 2025, Small 21, 2410485 — 가상 캘린더링 검증", "lines": 416, "drawer": "worknotes"},
+        {"slug": "song2025_electrochemo_mechanical_microelectrode_ees", "paper": "Song 2025, EES 18, 3129-3147 — 미세전극 electrochemo-mech DT", "lines": 512, "drawer": "worknotes"},
+        {"slug": "choi2024_digital_twin_review_echem", "paper": "Choi 2024, E.Chem 매거진 총설 — DT positioning 네이밍", "lines": 562, "drawer": "worknotes"}
+      ],
+      "context_docs": [
+        {"path": "docs/literature_yonsei_dtbl_2026.md", "branch": "hevry0", "note": "연구실 27편(#260-286) 전수 트리아지 + 우리 로드맵 매핑"},
+        {"path": "docs/positioning_vs_geodict.md", "branch": "hevry0", "note": "top-down/reconstruction vs bottom-up/formation 포지셔닝"}
+      ],
+      "canonical_mentions": {"cards": 3, "nature": "실험·공정 논문에 공저자로 등장 (kim2025 conductive agent · kim2026 ICCF · son2025 5V)"},
+      "remaining_gap": "정본 승격 미완 — DTBL 5편 + 맥락 2건이 아직 litdb/papers/ 로 이관되지 않음 (CLAUDE.md 단일-서랍 규칙 관점의 잔여 작업)"
     },
     "webapp_connection": {
-      "routes_referencing_litdb": 0,
-      "app_py_mentions": 0,
-      "scripts_mentions": ["coating_presets.py (주석)", "ml_design_loop.py (주석)"],
-      "only_bridge": "docs/litdb_application_table.md — 수동 분석 문서(정적)",
-      "verdict": "❌ 연결 안 됨. litdb 는 다른 브랜치의 마크다운 더미로 존재하며, webapp·파이프라인에서 조회·검색·인용 불가"
+      "before": {"routes": 0, "app_py_mentions": 0, "only_bridge": "docs/litdb_application_table.md (정적 문서)",
+                 "consequence": "파편화가 위 오진을 직접 유발"},
+      "after": {
+        "built": "2026-07-28",
+        "tool": "scripts/litdb_sync.py — git plumbing(ls-tree/show)으로 전 브랜치 스캔, 체크아웃·worktree 불필요",
+        "cache": "litdb_cache/ (gitignore · 재생성 가능 · 정본은 각 브랜치 원본 유지)",
+        "routes": ["/litdb (통합 검색 UI)", "/api/litdb/index", "/api/litdb/search?q=", "/api/litdb/card/<slug>?drawer="],
+        "features": ["서랍 배지(정본/작업노트/동결)", "중복 판본 also_in 비교", "토큰 AND 전문검색 + 스니펫", "맥락 문서 노출"],
+        "verdict": "✅ 연결됨 — webapp 좌측 네비 '📚 논문 litdb'"
+      },
+      "next": "노드-관계 추출 → Graph RAG (문장혁 §02 수준). 인덱스가 생겼으므로 그 위에 얹으면 됨"
     }
   }
 }
