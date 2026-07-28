@@ -978,6 +978,81 @@ def verdict_revisions() -> list:
             "papers": ["kim2026_li_argyrodite_sei_reactive_md"],
             "artifacts": ["tools/ionic/mlip_committee.py", "kb/open_items.md"],
         },
+        {
+            "id": "V5",
+            "date": "2026-07-28",
+            "title": "`gap_lit_eV` 스칼라 자체가 부실했다 — 라벨 없는 밴드갭은 값이 아니다",
+            "claimed": (
+                "47 도펀트의 밴드갭을 `gap_lit_eV` **단일 스칼라**로 들고 있었다. "
+                "깔때기에서 전자절연 축을 '게이트가 아니라 진단'으로 둔 것은 "
+                "'gap_lit_eV가 큐레이션 값이라 신뢰도가 낮아서'라는 정도의 이유였다."),
+            "wrong": (
+                "**이유가 그것보다 훨씬 깊다.** 밴드갭은 (a) **정의**(fundamental / optical / "
+                "absorption / spectroscopic ellipsometry)와 (b) **시료**(단결정 벌크 / 박막 / "
+                "비정질)를 명시하지 않으면 **값 자체가 성립하지 않는다**. "
+                "게다가 도핑된 실물질에서는 **캐리어 농도에 따라 비단조로 변한다**."),
+            "how_found": (
+                "Spencer et al., *Appl. Phys. Rev.* **9**, 011315 (2022) 127쪽 전수 판독. "
+                "이 리뷰가 다루는 9종 중 **8종이 우리 cascade 로스터**다 "
+                "(Sc₂O₃·Al₂O₃·In₂O₃·Ga₂O₃·ZnO·SnO₂·NiO·CuO)."),
+            "table": {
+                "cols": ["도펀트", "우리 gap_lit_eV", "리뷰", "판정"],
+                "rows": [
+                    ["**Ga₂O₃**", "4.8", "SE **5.10 / 5.39 / 5.66** (b>a>c), absorption 4.50–4.73",
+                     "**진짜 불일치.** 리뷰가 'absorption은 exciton 결합에너지를 놓쳐 계통적으로 낮고 SE가 진짜 fundamental'이라고 **명시 판정**. 방향별로 0.5 eV 이상 갈려 **스칼라 자체가 불완전**"],
+                    ["**Cu₂O**", "2.1", "**없음 — 리뷰 주역은 CuO**",
+                     "**대조 불가.** gap type부터 다르다(Cu₂O direct / CuO indirect). 우리 2.1의 출처를 따로 확인해야 한다"],
+                    ["Al₂O₃", "8.8", "bulk 8.8–9.9 / **비정질 박막 6.2–6.8**",
+                     "bulk 기준 정확 일치. 그러나 우리 문맥의 Al₂O₃는 대개 **비정질 ALD** → 절연성 **2 eV 과대평가** 위험"],
+                    ["In₂O₃", "2.9", "fundamental **2.93** / optical 3.55",
+                     "**일치.** 문헌 다수가 쓰는 3.6–3.7은 optical(VBM→CBM이 **dipole 금지**라 구조적으로 갈림) — 라벨이 없으면 In₂O₃만 부당하게 낮게 평가된다"],
+                    ["SnO₂", "3.6", "3.614", "정확 일치 (8종 중 최고)"],
+                    ["Sc₂O₃", "6.0", "박막 5.7–5.84",
+                     "값 차이가 아니라 **시료 차이** — 우리 6.0은 단결정 RT(Tippins 1966)와 일치"]]},
+            "now_known": (
+                "**β-Ga₂O₃의 gap은 캐리어 농도에 따라 4.69 → 4.716 → 4.68 → 다시 증가로 비단조 변한다** "
+                "(Burstein–Moss ↔ Mott 전이 ↔ band-gap renormalization). SnO₂·In₂O₃도 Burstein–Moss를 보인다. "
+                "→ **단일 스칼라 gap은 도핑된 실물질에서 성립하지 않는다.** "
+                "우리가 전자절연을 게이트로 안 쓰고 진단으로만 둔 판단이 **결과적으로 옳았고, 이제 근거가 생겼다**. "
+                "다음 작업: `gap_lit_eV`에 `definition`(fundamental/optical/absorption/SE) + "
+                "`sample`(단결정/박막/비정질) 두 필드 추가 — **계산 불필요, 라벨링만**."),
+            "caveat": (
+                "⚠ 이 리뷰에는 **전기화학이 통째로 없다.** ESW·산화 onset·Li 수송·계면 반응성을 한 줄도 "
+                "말하지 않는다 — 우리 cascade의 산화안정 축을 **대체하지도 보조하지도 못한다**. "
+                "⚠ 리뷰의 '코팅'은 반사방지막·MOSFET 게이트 유전체이지 **전기화학 보호막이 아니다**. "
+                "⚠ Sc₂O₃ 순수 벌크 E 214–228 GPa를 우리 도핑 호스트 `E_VRH` 18.7 GPa와 같은 표에 놓으면 오독 "
+                "— **물리적 대상이 다르다**. "
+                "⚠ 재인용이고 리뷰 자체에 내부 불일치가 있다(ZnO gap 본문 3.54 vs 표 3.45 등)."),
+            "lesson": "**단위가 맞다고 값이 맞는 게 아니다.** 밴드갭처럼 '한 숫자'로 보이는 물성일수록 "
+                      "정의와 시료 라벨이 값의 일부다.",
+            "papers": ["spencer2022_review_tco_band_structure_oxides"],
+            "artifacts": ["db/properties/oxide_literature_properties_spencer2022.json"],
+        },
+        {
+            "id": "V6",
+            "date": "2026-07-28",
+            "title": "NiO 탈락 사유가 하나 더 있었다 — Li 도핑되면 p-type 전도체가 된다",
+            "claimed": ("cascade에서 NiO가 46위인 근거는 **산화안정성과 역학** 축이었다. "
+                        "전자절연 축은 진단으로만 두고 순위에 반영하지 않았다."),
+            "wrong": "틀린 게 아니라 **불완전했다** — 더 결정적인 사유를 놓치고 있었다.",
+            "how_found": (
+                "Spencer 2022 p.78: *\"**Lithium is a very common dopant of NiO** and acts as a "
+                "substitute for the nickel ions... often the lithium doped samples will exhibit "
+                "higher conductivity values.\"*"),
+            "now_known": (
+                "Li⁺는 NiO에서 **acceptor**이고 Li_xNi₁₋ₓO는 **p-type 전도체**다. "
+                "즉 **Li-rich 계에 NiO를 넣으면 정공 전도 경로가 생길 수 있다** — "
+                "고체전해질에서 가장 피해야 할 것(전자 전도)이 도핑 자체로 유도된다. "
+                "이건 산화안정·역학과 **독립된 별개 사유**이고, 순위가 아니라 **탈락 근거**에 가깝다."),
+            "caveat": ("⚠ **이건 리뷰의 주장이 아니라 리뷰 서술을 우리 문맥으로 옮긴 해석이다.** "
+                       "Spencer 2022는 전고체전지를 다루지 않는다. 인용할 때 반드시 '리뷰가 보고한 "
+                       "Li-doped NiO의 p-type 거동으로부터 우리가 추론한 것'으로 쓸 것. "
+                       "⚠ 실제 검증은 Li 화학퍼텐셜 하에서의 NiO 전자구조 계산이 필요하다."),
+            "lesson": "**같은 물질이 다른 문맥에서 다른 이유로 탈락할 수 있다.** "
+                      "물성 리뷰는 우리 축에 없는 탈락 사유를 준다.",
+            "papers": ["spencer2022_review_tco_band_structure_oxides"],
+            "artifacts": ["db/properties/oxide_literature_properties_spencer2022.json"],
+        },
     ]
 
 
