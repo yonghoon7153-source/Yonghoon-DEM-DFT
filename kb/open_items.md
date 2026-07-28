@@ -49,7 +49,7 @@
 | ~~1~~ | ✅ **확보·다이제스트 완료 (2026-07-28)** de Klerk et al. | 10.1021/acs.chemmater.6b03630 | digest: deklerk2016_diffusion_site_disorder_argyrodite.md — 75%는 min-rate 지표·비단조·단일 배열이었음이 판명. ⚠ SI(Tables S1-S3) 미포함 — 점프율 전표 필요 시 SI 별도 확보 |
 | 2 | Adeli et al., Angew. Chem. Int. Ed. 58, 8681 (2019) | 10.1002/anie.201814222 | Li5.5PS4.5Cl1.5 실험 원전 (9.4 mS/cm) — modelc Cl-rich Rietveld 점유율 ground truth |
 | 3 | Deng, Wang, Chu, Luo, Ong, J. Electrochem. Soc. 163, A67 (2016) | 10.1149/2.0061602jes | SQS 반례 원전 (A=0.92) — ordered_vs_disordered 문서 '경계 사례' 논증의 원본 |
-| 4 | Kim et al., Nano Energy 124, 109436 (2024) | (SD 링크는 서베이 §1c) | **config-앙상블 신규성 주장의 선행조건** — 6-config 표본화가 분산을 오차막대로 보고했는지 확인 전까지 원고에 신규성 기재 금지 (서베이 §4-3, §5) |
+| ~~4~~ | ✅ **확보·다이제스트 완료 (2026-07-28)** Kim et al., Nano Energy 124, 109436 | 10.1016/j.nanoen.2024.109436 | **신규성 판정 완료**: enumerate 6 특성배열+단일 random supercell, config-분산 오차막대 **없음** → 우리 다중 config×멀티시드 산포 보고는 신규 기여로 원고 기재 가능 (digest: kim2024_mtp_argyrodite_disorder_gb.md) |
 | 5 | Schlem et al., Adv. Energy Mater. 10, 1903719 (2020) | 10.1002/aenm.201903719 | ordered Ea 0.25 eV — li_transport.json 비교 기준의 원전 |
 | (6) | Kim rapid-thermal (10.2 mS/cm, liu2022 재인용) | liu2022 참고문헌에서 확인 | 공정–무질서 관계 보강 (우선순위 낮음) |
 
@@ -91,7 +91,7 @@
   mlip_next_campaigns ①(Li|SE 계면)과 후보 공유.
 
 ### M4. disorder 서러게이트 (active learning)
-- **트리거**: disorder ensemble d×cfg 표본 ≥ 9 (현재 3) + Kim 2024 PDF 확보.
+- **트리거**: disorder ensemble d×cfg 표본 ≥ 9 (현재 3). ~~Kim 2024 PDF~~ ✅ 확보 완료(2026-07-28) — 기술자 설계 시 그들 E_rel·Boltzmann 가중 방식 참조 가능.
 - 내용: 배열 기술자(anti-site 분포·Ewald·BVS 채널%) → D 예측, 다음 cfg 선택에 사용.
 
 ### M5. P2D 물성 export 인터페이스 (랩 P2D 데이터셋과 동기화)

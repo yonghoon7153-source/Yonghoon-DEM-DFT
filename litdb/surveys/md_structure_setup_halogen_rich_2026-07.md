@@ -53,7 +53,7 @@
 | ⚠ Zhou 2025 (JMCC, D5TC00529A) | Li5.5PS4.5Cl1.5(-I) | **Adeli 조성을 계산 셀로 옮긴 decorate 실례**: MP Li6PS5Cl에서 출발, 4a는 전부 Cl·4d는 S/Cl 혼합 — 실험 SOF(4a/4d 부분점유)와 다른 이상화 | VASP PAW-PBE 520 eV | AIMD σ=18.86 mS/cm(Cl1.5), 최댓값 23.5(Cl0.75I0.75) | [RSC](https://pubs.rsc.org/en/content/articlehtml/2025/tc/d5tc00529a) |
 | ⚠ Lee 2024 (ACS AMI 16, 46442) | Li6PS5Cl | MLP로 disorder-% 스캔 — **σ 최대는 Cl이 4c의 25%일 때**(50%가 아님) | σ 수렴(오차 10% 이내)에 **5×5×5 supercell(6500원자)·25 ns** | 300 K 직접 계산; >400 K non-Arrhenius | [ACS](https://pubs.acs.org/doi/10.1021/acsami.4c08865) |
 | ⚠ Jang 2025 (JMCA 13, 16547) | Li6PS5Cl | 사전학습 SevenNet-021 fine-tune(PES softening 해소); high-entropy 음이온 무질서 → site-energy 균일화 → inter-cage jump 촉진 | 300 K MSD가 **4×4×4(3328원자)에서 수렴** | MLIP-MD | [RSC](https://pubs.rsc.org/en/content/articlelanding/2025/ta/d5ta02205c) |
-| ⚠ Kim 2024 (Nano Energy 124, 109436) | Li6PS5X(X=Cl,Br,I)+GB | MTP; site disorder를 3×3×3(>1000원자)에 **무작위 배열 6개 configuration으로 표본화** | 3×3×3 supercell | GB에서 Li 축적으로 σ 지연 | [SD](https://www.sciencedirect.com/science/article/abs/pii/S2211285524001848) |
+| ✅ Kim 2024 (Nano Energy 124, 109436) — **digest 확보 2026-07-28, 웹노트 정정** | Li6PS5X(X=Cl,Br,I)+GB | MTP(optB88-vdw 학습); 무질서 = **enumerate 6 특성배열**(0/25/50×2/75/100% X@4c, enumlib fully-occupied) + **Boltzmann-가중 random supercell 1개**(3×3×3=1404원자, 27셀에 배열 개수 할당) — '무작위 6 config 표본화' 아님 | 3×3×3 1404원자, NPT 10 ns, 350–500 K 7점 | 배열별 Ea/σ 표 보고 — **config-분산 오차막대 없음**. GB(>13,860원자) Li 정전 축적 D 0.3× | [digest](../papers/kim2024_mtp_argyrodite_disorder_gb.md) |
 | ⚠ Ou 2024 (PRM 8, 115407) | Li6PS5Cl | MTP+active learning; **anion-ordered vs 50% Cl/S disordered 벌크 정량 비교** | >16,000원자·5 ns | 300 K D: 질서 1.2×10⁻⁹(σ~0.2 mS/cm) vs 50% 무질서 2.2×10⁻⁷ cm²/s(~29.8 mS/cm) — **decorate가 σ 두 자릿수를 좌우** | [arXiv](https://arxiv.org/html/2407.04126v2) |
 | ⚠ Nazar group 2024 (Cell Rep. Phys. Sci. 5) | **Li5.3PS4.3Cl1.7**(halide-rich 한계) | (실험→계산) NPD로 Li의 T4(16e) interstitial 점유 확인; DFT-MD 해석: 4a/4d 무질서 유지 + Cl/S 비 증가가 기작 | — | σ_RT=11.4±0.7 mS/cm; 국소 장벽 0.08 eV(3-site Li 분포) | [Cell](https://www.cell.com/cell-reports-physical-science/fulltext/S2666-3864(24)00628-3) |
 | ⚠ Energies 2022 리뷰(15, 7288) | argyrodite 분자모델링 총람 | de Klerk/Stamminger/Baktash 등 셋업 비교의 진입점(오픈액세스); 저자명 웹 미확정 | — | — | [MDPI](https://www.mdpi.com/1996-1073/15/19/7288) |
@@ -90,7 +90,7 @@
 | [liu2022](../papers/liu2022_cl_crystallization_interface_argyrodite.md) | Cl은 4a·4d **양쪽 부분점유**(도식 4a 90/4d 60%), Cl-rich에서 양쪽↑ | 실험 XRD Rietveld |
 | [taklu2021](../papers/taklu2021_cucl_dualdoping_air_stability_argyrodite.md) | 초과 Cl → **4a+4c** | 싱크로트론 Rietveld(자리귀속 완전 확정은 어려움 — digest 주의) |
 | ⚠ Zhou 2025 (계산 decorate) | **4a 전부 Cl + 4d 혼합** — 실험 SOF와 다른 이상화임을 유의 | 웹 소환값 |
-| ✅ de Klerk 2016 (계산, digest) | Li6PS5Cl은 Cl 4c(=4d) 75%에서 **limiting jump rate 2×**(50:50 대비, 450 K) — σ 직접 계산 아님, 비단조 | digest 확보. ⚠ 2024 MTP-MLIP(INDEX 계산#8, 미digest)는 **25% 피크** 보고 — '최적 %'는 방법 의존, 안전 인용은 '양 끝 나쁨·중간 최적'까지 |
+| ✅ de Klerk 2016 (계산, digest) | Li6PS5Cl은 Cl 4c(=4d) 75%에서 **limiting jump rate 2×**(50:50 대비, 450 K) — σ 직접 계산 아님, 비단조 | digest 확보. ✅ Kim 2024(digest)는 **같은 논문 안에서 방법별로 피크가 갈림**(optB88-MTP 25%=19.2 vs AIMD-PBE 50%=37.1 mS/cm) — '최적 %'는 방법 의존, 안전 인용은 '양 끝 나쁨·중간 최적'까지 |
 | [rao2025](../papers/rao2025_iodide_argyrodite.md) (계산) | 할라이드 본질 선호는 **4a**(Br ΔE 0.14 / I 0.35 eV/atom) — 단 disorder 자체를 회피한 단순화 | DFT 단일배열 |
 
 에너지 지형 근거로는 lu2025의 DFT가 결정적이다: **4a+4d 분산 점유가 최안정(−192.1 eV), 4d 완전점유는

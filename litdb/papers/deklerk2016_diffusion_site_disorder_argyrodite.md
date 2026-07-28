@@ -1,6 +1,6 @@
 # Diffusion Mechanism of Li Argyrodite Solid Electrolytes for Li-Ion Batteries and Prediction of Optimized Halogen Doping: The Effect of Li Vacancies, Halogens, and Halogen Disorder — de Klerk, Rosłoń & Wagemaker (Chem. Mater. 2016)
 
-> slug `deklerk2016_diffusion_site_disorder_argyrodite` · DOI `10.1021/acs.chemmater.6b03630` · type `DFT-AIMD (순수 계산, 실험 0)` · PDF `82ea256b/f8e6711f-32._Diffussorder.pdf` (inbox #32, 본문 9 pp 7955–7963 — **SI 미포함**: Tables S1–S3·Figs S1–S3 없음) · digested `2026-07-28` · status ✅
+> slug `deklerk2016_diffusion_site_disorder_argyrodite` · DOI `10.1021/acs.chemmater.6b03630` · type `DFT-AIMD (순수 계산, 실험 0)` · PDF `82ea256b/f8e6711f-32._Diffussorder.pdf` (inbox #32, 본문 9 pp 7955–7963) + **SI 확보(2026-07-28, 인박스 #32 Sup = `82ea256b/428d530d-32._Sup_Disorder.pdf`, 6 pp: Tables S1–S3 전표(300/450/600 K σ·점프율·Ea) + Fig S1(PSe₆/Br 밀도)·S2(PSe₆/Br 점프그래프)·S3(4a-RDF))** · digested `2026-07-28` (동일자 SI 반영 갱신) · status ✅
 > elements: Li, P, S, Se, Cl, Br, I
 > methods: DFT, AIMD
 > **저자**: Niek J. J. de Klerk, Irek Rosłoń, **Marnix Wagemaker*** — Department of Radiation Science and Technology, **TU Delft** (네덜란드). Chem. Mater. 2016, 28, 7955−7963. Received 2016-08-29 / Revised 09-29 / Published **2016-10-14**. **[외부]** (ADEM 네덜란드 + ERC FP7 307161 지원).
