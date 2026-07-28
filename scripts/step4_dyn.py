@@ -2325,7 +2325,16 @@ def main():
                          '자동 ×1e-4 → Ω·m²).  전하이동(R_ct)은 여기 넣지 말 것 — 그건 --i0-cycle-mult (비-이중계산, 리뷰 N1-F9).')
     ap.add_argument('--r-int-ohm-cm2', type=float, default=0.0,
                     help='집전체 실측 R_int 직렬 [Ω·cm²] (STEP3 시나리오 규약; 46=DBE)')
-    ap.add_argument('--temp-k', type=float, default=298.15)
+    ap.add_argument('--temp-k', type=float, default=298.15,
+                    help='운전 온도 [K].  ⚠ 이 값이 바꾸는 것은 BV 열전압 f=F/RT **하나뿐**이다 — '
+                         'σ_ion·σ_e·κ·D_s·i0·OCP·열화율은 전부 25°C 상수라 T 를 안 따른다.  '
+                         '그래서 T 를 올리면 반응 과전압이 **커지는데(실험은 R_ct 가 4.28× 감소)** '
+                         '부호가 반대다.  T≠298.15 로 돌리려면 --allow-unscaled-t 를 함께 줘야 하며, '
+                         '결과는 "온도 반영됨" 이 아니라 "BV 기울기만 반영됨" 으로 읽을 것 '
+                         '(docs/temp_pressure_capability.md §3).')
+    ap.add_argument('--allow-unscaled-t', action='store_true',
+                    help='T≠298.15 K 인데 물성 Arrhenius 가 없는 상태로 실행하는 것을 명시 허용 '
+                         '(부호-역전 가드 해제).  npz meta 에 kinetics_T_scaling=NONE 이 기록된다.')
     ap.add_argument('--x-init', type=float, default=None, help='초기 stoich (기본: 창 끝)')
     ap.add_argument('--init-state', default='',
                     help='★v2 chaining: 이전 런의 --save-state npz 셸-SOC 로 시작 (같은 베드·같은 '
@@ -2382,6 +2391,25 @@ def main():
         ap.error('--init-state 와 --x-init 동시 지정 불가 (시작상태 이중 정의)')
     if a.t_rest_min <= 0:
         ap.error('--t-rest-min must be > 0')
+    # ★ 부호-역전 가드 (T1-d, docs/temp_pressure_capability.md §3-3).  --temp-k 는 f=F/RT 만 바꾼다:
+    #   T↑ → f↓ → η_ct ∝ 1/f 가 **커진다**.  실제로는 R_ct 가 30→60°C 에 4.28× **감소**(kim2025)해야
+    #   하므로 부호가 반대다.  σ_ion(Arrhenius)·D_s·i0·OCP 도 전부 25°C 상수라 함께 틀린다.
+    #   ⇒ 조용히 틀린 곡선이 나가는 것을 막는다 — 의도적이면 --allow-unscaled-t 로 명시.
+    _T_REF_K = 298.15
+    _dT = abs(float(a.temp_k) - _T_REF_K)
+    if _dT > 0.05 and not a.allow_unscaled_t:
+        ap.error(
+            f'--temp-k {a.temp_k:g} K ({a.temp_k - 273.15:.1f}°C) 는 기준 {_T_REF_K:g} K (25°C) 에서 '
+            f'{_dT:.1f} K 벗어났는데, 물성 온도의존이 배선돼 있지 않습니다.\n'
+            '  이 상태로 돌리면 BV 열전압 f=F/RT 만 T 를 따르고 σ_ion·σ_e·D_s·i0·OCP 는 25°C 값이라,\n'
+            '  반응 과전압이 온도에 따라 **증가**합니다 — 실험(R_ct 30→60°C 4.28× 감소)과 부호가 반대입니다.\n'
+            '  ▶ 온도 비교가 목적이면: 지금은 불가 (σ_ion Arrhenius 배선 = docs/temp_pressure_capability.md §6-A T1-b)\n'
+            '  ▶ BV 기울기만 보려는 의도면: --allow-unscaled-t 를 추가하세요 (meta 에 NONE 기록)\n'
+            '  ▶ 상세: docs/temp_pressure_capability.md §3')
+    if _dT > 0.05:
+        print(f'  ⚠ T={a.temp_k:g} K ({a.temp_k - 273.15:.1f}°C) 이지만 물성 Arrhenius 없음 '
+              f'(--allow-unscaled-t).  f=F/RT 만 T 반영 — η_ct 부호가 실험과 반대일 수 있음. '
+              f'σ-메트릭·용량 절대값 신뢰 금지.', flush=True)
     if a.i0_poly is not None and a.i0 <= 0:
         # _i0s = i0_p/i0_ref 정규화 분모 — 0이면 0·inf=NaN이 AMG 빌드 후 newton_fail로 오진됨
         # (리뷰 #8 재현: '--i0 0 --i0-poly ...' → 그리드 로드·전처리 다 하고 죽음)
