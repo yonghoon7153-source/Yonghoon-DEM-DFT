@@ -79,6 +79,7 @@ def index():
     # N/A(성립 안 함/규율상 금지) 칸은 TODO 와 구분해서 렌더 — 튜플 키는 Jinja 에서 못 쓰니 평탄화
     na = {f"{c}|{k}": r for (c, k), r in D.NOT_APPLICABLE.items()}
     return render_template("index.html", active="home", b=b, cov=cov, NA=na,
+                           oi=D.open_items_summary(),
                            covstat=D.coverage_stats(cov), highlights=D.dashboard_highlights())
 
 
@@ -180,6 +181,15 @@ def methods():
     html = md_html(md, ("tables", "fenced_code", "toc"))
     return render_template("doc.html", active="methods",
                            title="계산 방법 Canonical (단일 기준)", content=html)
+
+
+@app.route("/todo")
+def todo():
+    md = D.load_open_items_md()
+    html = md_html(md, ("tables", "fenced_code", "toc"))
+    return render_template("doc.html", active="todo",
+                           title="📋 미결 리스트 (Open Items) — kb/open_items.md",
+                           content=html)
 
 
 @app.route("/literature")

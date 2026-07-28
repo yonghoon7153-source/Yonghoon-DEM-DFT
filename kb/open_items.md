@@ -55,5 +55,36 @@
 
 확보 시 "논문 에이전트"(litdb-curator)로 다이제스트 → 서베이 ⚠딱지 승격.
 
+## 🧠 ML 후속 (트리거 대기 — 데이터 나오면 전체 진행)
+
+> 랩 PPT(TabPFN) 판독에서 나온 계획: kb/projects/ml_opportunities_from_lab_ppt_2026_07.md.
+> 각 항목은 **트리거 조건**이 충족되면 착수한다.
+
+### M1. TabPFN 벤치 — codoping 비선형 타깃
+- **트리거**: 없음 (지금 가능 — 로컬 WSL/kgy GPU 반나절).
+- 내용: champions Δe_post_anneal · litransport bvs proxy를 조성 특징에서 TabPFN으로
+  예측, 현행 numpy ridge와 LOOCV 성능표 비교 → 사이트 ML 탭에 병기.
+  근거: litdb hollmann2025 (≤10k행/500특징 스윗스팟, 튜닝 0).
+
+### M2. pair CV를 leave-one-dopant-out으로 (codoping_ml v2.1)
+- **트리거**: 없음 (코드 수정만).
+- 내용: 같은 도펀트를 공유하는 쌍(A–B, A–C)은 비독립 — pair 단위 CV는 누수.
+  랩 PPT의 Group-CV 관행 대조에서 발견한 우리 구멍.
+
+### M3. TabPFN 역설계 루프 1회전 → 첫 실측 라벨
+- **트리거**: M1 완료 + gabia GPU 여유 (comp1 seeds 종료 후).
+- 내용: 가상 후보(1081쌍 × 농도축) TabPFN 스코어링 → 불확실성 페널티로 상위 5쌍
+  선별(winner's curse 완화) → UMA 공동치환 슈퍼셀 검증 = codoping 첫 라벨.
+  mlip_next_campaigns ①(Li|SE 계면)과 후보 공유.
+
+### M4. disorder 서러게이트 (active learning)
+- **트리거**: disorder ensemble d×cfg 표본 ≥ 9 (현재 3) + Kim 2024 PDF 확보.
+- 내용: 배열 기술자(anti-site 분포·Ewald·BVS 채널%) → D 예측, 다음 cfg 선택에 사용.
+
+### M5. P2D 물성 export 인터페이스 (랩 P2D 데이터셋과 동기화)
+- **트리거**: 랩 후막 전고체 P2D 데이터셋 스키마 확정 (다음주 랩 계획).
+- 내용: db/properties(σ·E·ESW)를 P2D 입력 파라미터 포맷으로 내보내는 export —
+  DFT(우리)→P2D(랩)→TabPFN 멀티스케일 연결. ⚠ σ는 MLIP 상한임을 명시 필수.
+
 ## ✅ 닫힌 항목
 - (여기로 이동)

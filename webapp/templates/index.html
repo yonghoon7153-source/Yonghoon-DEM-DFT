@@ -23,6 +23,18 @@
 {% endfor %}
 </div>
 
+{% if oi and oi.total %}
+<div class="section-title">📋 미결 리스트 <span class="muted">— 판정·트리거 대기 {{ oi.total }}건 · <a href="/todo">전체 보기</a></span></div>
+<div class="grid grid-3">
+{% for s in oi.sections %}
+<div class="card find-card">
+  <div class="fc-t">{{ s.title }}</div>
+  {% for it in s["items"] %}<div class="fc-n" style="margin-top:4px">· {{ it }}</div>{% endfor %}
+</div>
+{% endfor %}
+</div>
+{% endif %}
+
 <div class="stat-grid" style="margin-top:20px">
   <div class="stat"><div class="num">{{ COMPS|length }}</div><div class="lbl">조성 / 프로젝트</div></div>
   <div class="stat"><div class="num">{{ b.properties|length }}</div><div class="lbl">post-processing 파일</div></div>

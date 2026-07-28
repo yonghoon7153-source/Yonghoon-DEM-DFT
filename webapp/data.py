@@ -87,6 +87,35 @@ def load_canonical_methods() -> str:
     p = KB / "methodology" / "computational_methods_canonical.md"
     return p.read_text(encoding="utf-8") if p.exists() else ""
 
+
+OPEN_ITEMS_MD = KB / "open_items.md"
+
+
+def load_open_items_md() -> str:
+    return OPEN_ITEMS_MD.read_text(encoding="utf-8") if OPEN_ITEMS_MD.exists() else ""
+
+
+def open_items_summary() -> dict:
+    """kb/open_items.md → 대시보드 카드용 요약. mtime 캐시(실시간 동기)."""
+    return _open_items_c(_mtime_ns(OPEN_ITEMS_MD))
+
+
+@lru_cache(maxsize=4)
+def _open_items_c(_mt) -> dict:
+    txt = load_open_items_md()
+    secs, cur = [], None
+    for line in txt.splitlines():
+        if line.startswith("## "):
+            title = line[3:].strip()
+            cur = None
+            if not title.startswith("✅"):          # 닫힌 항목은 카드에서 제외
+                cur = {"title": title, "items": []}
+                secs.append(cur)
+        elif line.startswith("### ") and cur is not None:
+            cur["items"].append(line[4:].strip())
+    secs = [s for s in secs if s["items"]]
+    return {"sections": secs, "total": sum(len(s["items"]) for s in secs)}
+
 # ─────────────────────────────────────────────────────────────
 # 조성 노드 정의 (표시 메타)
 # ─────────────────────────────────────────────────────────────
