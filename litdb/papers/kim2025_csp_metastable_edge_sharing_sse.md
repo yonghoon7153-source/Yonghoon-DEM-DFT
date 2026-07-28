@@ -645,8 +645,16 @@ Li₂GeS₃는 논문 스스로 **"보고된 구조가 전부 corner-sharing"** 
 ### 9. **AIMD 셀 크기·스핀·time step이 본문에 없다**
 *"Based on our previous studies, we used the same computational guidelines … including cell size, spin, time
 step, and simulation temperature"* (refs 46–49). **refs 47 = Jun, B.; Lee, S. U., JMCA 2022, 10, 7888**
-(argyrodite in-cage size 기술자 논문 — 우리에게도 직접 관련) 을 봐야 실제 셀이 나온다. **미보유.**
-→ **AIMD 파라미터는 이 논문만으로는 재현 불가.**
+(argyrodite in-cage size 기술자 논문 — 우리에게도 직접 관련) 을 봐야 실제 셀이 나온다.
+
+> ✅ **[2026-07-28 해소 — ref 47 digest 완료]** → `papers/jun2022_argyrodite_ion_cage_size_descriptor.md` §3.
+> 원전이 주는 값: **VASP 5.4.1 / PAW / PBE(vdW 無·U 無) / 500 eV / 완화 3×3×3·힘 < 0.02 eV/Å;
+> AIMD = Γ-only · NVT Nosé–Hoover · dt 2 fs · 600–1200 K 5~6점 · 단위셀 ~52원자(24 Li 전부 24g 완전점유) ·
+> 배열×온도당 ≥3 시드 앙상블평균 · 자동종료 RSD(σ)<0.25 & 유효 hop>250(He/Mo 2018) ·
+> 무질서 ~100 ps vs 질서 ≥500 ps @800 K · pymatgen-diffusion 후처리.**
+> ⚠ **스핀만은 ref 47 원전에도 없다** → 4항목 중 **3/4 해소, spin 은 여전히 미확정**.
+> 또한 이 JACS 2025 의 AIMD 는 **60 ps 단일 온도(600 K)** 로, 원전이 정한 자동종료 기준(RSD<0.25 & hops>250)을
+> 만족했는지 **명시하지 않는다** — 원전 기준으로도 짧을 수 있다.
 
 ### 10. **자유에너지 교차온도가 본문과 그림에서 어긋난다**
 SI 본문: *"for Li₂SiS₃ and Li₂GeS₃, the edge-sharing phase becomes thermodynamically favored above ~480 K"*

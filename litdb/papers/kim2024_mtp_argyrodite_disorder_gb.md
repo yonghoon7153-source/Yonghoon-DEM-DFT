@@ -19,7 +19,7 @@ optB88-vdw로 학습한 MTP만이 AIMD·실험의 site-disorder 의존성(ordere
 |---|---|
 | 시스템 | Li₆PS₅X (X = Cl, Br, I) — 6가지 4a/4c site-disorder 배열 + random supercell + Σ5[100](021) GB |
 | 질문 | ① AIMD의 한계(≈10 Å·100 ps·고온)를 MTP로 넘을 수 있나 ② 어떤 functional 학습이 맞나 ③ 무질서 전수 대신 random 대형셀 하나로 되나 ④ GB가 σ를 왜 깎나 |
-| 선행(같은 그룹) | ref [36] Jun & S.U. Lee JMCA 2022: 6배열 + 열역학·동역학 가중 σbulk 방법 + ion-cage size descriptor (AIMD 기반) — 이 논문은 그 방법의 **MTP 가속판** |
+| 선행(같은 그룹) | ref [36] Jun & S.U. Lee JMCA 2022: 6배열 + 열역학·동역학 가중 σbulk 방법 + ion-cage size descriptor (AIMD 기반) — 이 논문은 그 방법의 **MTP 가속판**. **✅ digest 완료 2026-07-28 → `papers/jun2022_argyrodite_ion_cage_size_descriptor.md`**: 이 논문의 **Eq S8–S11(P_i(E)·P_i(σ)·σ_bulk·χc^7.14)이 전부 ref [36] Eq 6–8 + ESI Section B 의 그대로**이고, 본문 §4.1/Table S1 의 **AIMD_PBE 열 24행이 ref [36] Table 1 과 전값 일치**(재계산이 아니라 **소환**). 또한 **ref [36] Table 1 의 I 50 %(P2mm) Ea 인쇄 오식 "ᵇ27"의 정정값 227 meV 가 이 논문 Table S1 에 있다** — "I조성 Ea 열 AIMD=MTP 복제 의심"(§12)은 **AIMD 열이 ref [36] 소환이라는 사실과 합치면, 복제된 쪽은 MTP 열**임이 확정된다 |
 | 방법 계보 | MTP 자체는 Shapeev 2016 + MLIP 패키지; "simulated vs experimental σ gap" 프레임은 Ong 그룹 [37] Qi 2021 Mater. Today Phys. |
 | 도구 스택 | VASP 5.4.4 + LAMMPS + MLIP/MAML + pymatgen(+GrainBoundaryGenerator) + enumlib + OVITO + **CCpy**(github.com/91bsjun/CCpy, 공저자 Jun의 자동화) |
 

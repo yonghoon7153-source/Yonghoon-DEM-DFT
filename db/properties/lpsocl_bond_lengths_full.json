@@ -1,0 +1,48 @@
+{
+  "bonds_cation_anion": {
+    "P-S": null,
+    "P-O": null,
+    "B-S": null,
+    "B-O": null,
+    "Li-S": null,
+    "Li-Cl": null,
+    "Li-O": null
+  },
+  "anion_anion": {
+    "S-S(cage)": null,
+    "S-Cl": null,
+    "Cl-Cl": null
+  },
+  "framework": {
+    "P-P": null,
+    "Li-Li": null
+  },
+  "P_environments": {},
+  "S_classification": {
+    "free-S": {
+      "n_S": 0,
+      "Li-S_mean": null,
+      "Li-S_std": null,
+      "n_LiS": 0
+    },
+    "B-S": {
+      "n_S": 0,
+      "Li-S_mean": null,
+      "Li-S_std": null,
+      "n_LiS": 0
+    },
+    "P-S(bridge)": {
+      "n_S": 0,
+      "Li-S_mean": null,
+      "Li-S_std": null,
+      "n_LiS": 0
+    }
+  },
+  "Cl_sites": {
+    "n_4a": 0,
+    "n_4d": 0,
+    "Li-Cl_4a": null,
+    "Li-Cl_4d": null,
+    "Li-Cl_all": null
+  }
+}
