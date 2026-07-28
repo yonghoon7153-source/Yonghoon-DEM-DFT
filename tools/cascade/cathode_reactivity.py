@@ -125,15 +125,27 @@ def min_rxn_closed(c_coat, c_cath, pd):
     return best_e * 1000.0, best_rxn      # eV/atom → meV/atom
 
 
+_PD_MEMO = {}                 # chemsys key → PhaseDiagram
+
+
+def _phase_diagram(elem_syms, cache_dir):
+    """chemsys 별 PhaseDiagram 메모. 만충/반충은 원소집합이 같아 PD 를 공유한다
+    (PD 구성이 이 스크립트의 지배 비용이라 47종 × 2상태에서 절반이 그냥 사라진다)."""
+    key = "-".join(sorted(elem_syms))
+    if key not in _PD_MEMO:
+        from pymatgen.analysis.phase_diagram import PhaseDiagram
+        _PD_MEMO[key] = PhaseDiagram(get_entries(sorted(elem_syms), cache_dir))
+        print(f"[pd] PhaseDiagram 구성  {key}")
+    return _PD_MEMO[key]
+
+
 def scan(coat_str, cath_str, cache_dir):
     """한 (코팅, 양극조성) 쌍의 닫힌계 pseudo-binary 반응. 반환 (meV, rxn).
     실패 시 (None, 'ERR ...')."""
     from pymatgen.core import Composition, Element
-    from pymatgen.analysis.phase_diagram import PhaseDiagram
     elems = set(Composition(coat_str).elements) | set(Composition(cath_str).elements)
     elems.add(Element("Li"))
-    entries = get_entries([e.symbol for e in elems], cache_dir)
-    pd = PhaseDiagram(entries)
+    pd = _phase_diagram([e.symbol for e in elems], cache_dir)
     try:
         return min_rxn_closed(Composition(coat_str), Composition(cath_str), pd)
     except Exception as ex:
