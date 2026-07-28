@@ -1,6 +1,6 @@
 # Highly reliable and large-scale simulations of promising argyrodite solid-state electrolytes using a machine-learned moment tensor potential — Kim et al. (Nano Energy 2024)
 
-> slug `kim2024_mtp_argyrodite_disorder_gb` · DOI `10.1016/j.nanoen.2024.109436` · type `MLIP(MTP)-MD + DFT/AIMD` · PDF 본문 실물 `litdb/inbox/35. Highly reliable and large-scale simulations….pdf` (**inbox #35, 사용자 분류 `DFT` 태그**; 최초 digest는 업로드 쌍 `82ea256b/9a0b0c9b` 본문 + `82ea256b/cacf7ea8` SI 28 pp) · digested `2026-07-28` · **본문 실물 감사 `2026-07-28`** (10 pp 전문 대조: Table 1 6배열×4방법 전값·Table 2·GB 격자상수(학습 10.2795/22.9857/45.9713·프로덕션 30/68/135 Å)·D_GB 5.4e-8 vs bulk 1.8e-7·PS₄ 고정 −50 %/−18 %·Table S3 소환값 3.4e-7→1.6e-7·E:F:S 100:1:0.01·Fig 2 캡션 350–700 K 불일치까지 **digest와 전값 일치**; 추가 발견 = 본문 §2.5 자체에 힘 MAE "**0.1 meV/Å**" 단위 오기(Fig S2/S3 축 오기의 본문판); **SI 실물은 inbox 미보유** — 업로드본 정독 기록 유지) · status ✅
+> slug `kim2024_mtp_argyrodite_disorder_gb` · DOI `10.1016/j.nanoen.2024.109436` · type `MLIP(MTP)-MD + DFT/AIMD` · PDF 본문 실물 `litdb/inbox/35. Highly reliable and large-scale simulations….pdf` (**inbox #35, 사용자 분류 `DFT` 태그**; 최초 digest는 업로드 쌍 `82ea256b/9a0b0c9b` 본문 + `82ea256b/cacf7ea8` SI 28 pp) · digested `2026-07-28` · **본문 실물 감사 `2026-07-28`** (10 pp 전문 대조: Table 1 6배열×4방법 전값·Table 2·GB 격자상수(학습 10.2795/22.9857/45.9713·프로덕션 30/68/135 Å)·D_GB 5.4e-8 vs bulk 1.8e-7·PS₄ 고정 −50 %/−18 %·Table S3 소환값 3.4e-7→1.6e-7·E:F:S 100:1:0.01·Fig 2 캡션 350–700 K 불일치까지 **digest와 전값 일치**; 추가 발견 = 본문 §2.5 자체에 힘 MAE "**0.1 meV/Å**" 단위 오기(Fig S2/S3 축 오기의 본문판)) · **SI 실물 감사 `2026-07-28`** (SI 실물 = `litdb/inbox/35. Sup) Highly reliable and large-scale simulations….pdf`, **inbox #35 Sup, 사용자 분류 `DFT`**, **28 pp** — 업로드본(cacf7ea8, 28 pp)과 동일 판본; Table S1–S3·Fig S1–S13·Eq S1–S12 **전값 일치**, Fig S2/S3 힘 단위 오기 실물 재확인(S2=축 라벨, S3=inset), I조성 Ea 복제 실물에서도 동일, [새] SI 내부 상호참조 오류 2건(Note S4→"Table S3" 오지칭·Note S3→"Eqn. S8" 오지칭) — §3a 감사 노트) · status ✅
 > elements: Li, P, S, Cl, Br, I
 > methods: DFT, AIMD, MD, MLIP
 > **저자**: Ji Hoon Kim (성균관대 화공), Byeongsun Jun·Yong Jun Jang·Sun Ho Choi·Seong Hyeon Choi·Sung Man Cho·Yong-Gu Kim (**현대자동차**), **Byung-Hyun Kim (한양대 ERICA 안산, 응용화학)**, **Sang Uck Lee*** (성균관대) — Nano Energy 124 (2024) 109436 (2023-09-29 접수, 2024-03-02 온라인). ⚠ 한양대 공저자가 있으나 **[우리 그룹] 아님**(ERICA 응용화학·이상억 그룹 라인).
@@ -32,6 +32,28 @@ optB88-vdw로 학습한 MTP만이 AIMD·실험의 site-disorder 의존성(ordere
 - **E_rel** (meV/atom, DFT-PBE): Cl 23/4/**0**/11/13/**206** · Br 23/**0**/11/39/33/**251** · I **0**/22/37/47/49/**284** — **100%(전부 4c)는 세 조성 모두 극도로 불안정**; I만 0%(전부 4a)가 최안정 = [Rao] 2025의 "I 4a 강선호"와 정합.
 - **supercell·nat**: 단위셀 52원자(Li₂₄P₄S₂₀X₄) → MD용 3×3×3 = **1404원자**(본문 표기 ">1000 s atoms"는 오타, thousands). GB 학습모델 ~500원자(a 10.2795/b 22.9857/c 45.9713 Å), GB 프로덕션 **>13,860원자**(a 30/b 68/c 135 Å).
 - Fig S1 구조 서술: PS₄=4b, Li=48h+24g cage("Li fully occupies 24g and partially 48h"라 쓰였는데 통상 서술(48h 주점유)과 뒤집힌 표현 — 원문 그대로 기록), 단일음이온=4a/4c.
+
+### 3a. SI 실물 감사 노트 (2026-07-28, `inbox/35. Sup)…pdf` 28 pp 전문 대조)
+
+> **✅ 판본**: 28 pp — 표지 + Note S1–S4(Eq S1–S12, pp 1–7) + Fig S1–S13(pp 8–20) + Table S1–S3(pp 21–24) + refs [1–20](pp 25–27). 최초 digest의 업로드본(`82ea256b/cacf7ea8`, 28 pp) 기록과 구성·페이지 수 동일 = **같은 판본**. 텍스트 전문 추출 + Fig S1/S2/S3/S4/S8/S9는 페이지 렌더링으로 그림 내부 값까지 눈으로 대조.
+>
+> **전값 대조 (digest 소환값 전부 일치, 불일치 0건)**:
+> - **Table S1** (Br/I 6배열 × AIMD_PBE/MTP_optB88, E_rel/Ea/σRT 24행 + σ80% 4개): §4.2 표와 **전값 일치**(Br AIMD 23/557/9.8e-5 … I MTP 284/531/0.001, σ80% 3.12/1.59/0.84/0.85). ⚠ **I조성 Ea 6값(695/255/202/227/221/531)이 AIMD·MTP 블록에서 완전 동일함을 실물 재확인** — §12의 복제 의심은 실물 표 자체의 문제(업로드본 아티팩트 가능성 배제), MTP-I Ea 인용 금지 유지.
+> - **Table S2** (열역학 가중 셀 할당): Cl 3/7/7/5/5/0 · Br 4/11/7/2/3/0 · I 14/6/3/2/2/0 **일치**. [새] Pi(E) 원값 열이 표에 있음: Cl 0.41/0.88/**1.00**/0.65/0.61/0.00 · Br 0.41/**1.00**/0.65/0.22/0.28/0.00 · I **1.00**/0.42/0.24/0.16/0.15/0.00 (100% 배열은 세 조성 모두 0.00 = random 셀에서 완전 배제).
+> - **Table S3** (GB셀 bulk 영역 D, 350 K): 100 ps **3.4×10⁻⁷** → 10 ns **1.6×10⁻⁷** cm²/s **일치**.
+> - **Eq S1–S12**: MTP 형식(S1–S4; lev M = 2+4μ+ν는 S3)·MSD→D(S5)·Arrhenius(S6)·NE(S7, Haven 보정 없음)·Pi(E)/Pi(σ)/σbulk(S8–S10)·**χc^7.14(S11)**·random 할당(S12 + "합이 27 아니면 최안정 배열 ±1" 반올림 보정) 모두 digest 기록과 **일치**. [뉘앙스] S9의 Δσ는 "**최저 σ 대비**" 상대값 — SI가 "σbulk는 최고가 아니라 **최저 σRT가 율속(rate-determining step)**"이라는 논리로 kinetic 가중을 정당화(차원 무의미 비판은 §12 유지).
+> - **Note S1/Fig S1**: "Li fully occupies 24g and partially occupies 48h" 문구·Rayavarapu 4a:4c = **Cl 3:7 / Br 6:4 / I 1:0** [SI ref 1] 실물 확인. Fig S1a 범례 4b(PS₄)/48h·24g(Li)/4a·4c(S²⁻ or X⁻) + 6배열 도해(초록 원 = 4c의 X⁻).
+> - **Fig S2** (하이퍼파라미터): 오른쪽 축 라벨 "**MAE_forces (meV/Å)**" — **단위 오기 실물 재확인**(값 0.03–0.08은 eV/Å 스케일). x축 **lev 8 (1 days) / 12 (3.5 days) / 16 (9 days)** 비용 수치 실물 확인. [새] figure-read: lev 12 ≈ E 1.95 meV/atom·F 0.057, lev 16 ≈ **1.3·0.044** (오기 하 단위, 실제 eV/Å); cutoff 스캔은 lev 8에서 **4.5–6.5 Å**, 힘 MAE 최저는 6.0 Å이고 6.5 Å에서 되레 상승(본문 "6 Å 최고정확"의 그림 근거).
+> - **Fig S3** (회귀): inset **Cl E 2.88 meV/atom·F 0.073 / Br 2.92·0.075 / I 2.51·0.066** 전값 일치. [정밀화] 오기의 위치 = **inset의 "MAE = 0.073 meV/Å" 단위 표기**; 산점도 축은 F(eV/Å)로 정상(범위 ±6–8 eV/Å) → 값의 eV/Å 해석 확정.
+> - **Fig S4** (MSD 350 K): caged 포화 ~18–20 Å² vs free 선형 ~200 Å²@10 ns **일치**. [새] S4의 "fully ordered"는 **100% Cl@4c 배열**(0% 아님; Fig S7의 "fully ordered"는 0%) — SI 안에서 같은 용어가 두 배열을 가리킴(둘 다 ordered 극한이라 결론은 불변, 인용 시 배열 명시할 것).
+> - **Fig S5 캡션**: Br/I Arrhenius **"350 K to 700 K"** 명시 — §12 온도창 표기 불일치(본문 §2.6 "350–500 K" vs Fig 2 캡션 "350–700 K")에서 **SI는 350–700 K 쪽**.
+> - **Fig S7/S8** (PS₄): 0% ordered / 50% disordered·600 K·10 ns·3×3×3 캡션 일치; S8 막대값 **2.1→1.8 (−18%) / 7.7→3.9 (−50%)** (D₆₀₀ₖ×10⁶ cm²/s) **전값 일치**.
+> - **Fig S9** (γ_GB): figure-read 값·순서(**(1) tilt Σ5[100](021) ≈1.35 "Selected!"** / (2) twist Σ5[100](100) ≈2.0 / (3) tilt Σ3[110](1-11) ≈1.5 / (4) twist Σ3[111](111) ≈3.1 / (5) tilt Σ5[010](001) ≈1.45 / (6) twist Σ3[110](110) ≈1.4)·γ 정의식 실물 확인 — **수치 표는 SI에도 없음**(figure-read 유지). [비판] 캡션의 "tilt가 twist보다 안정" 일반화와 달리 **(6) twist ≈1.4는 tilt (3)(5)와 동급** — 최저가 tilt인 건 맞지만 유형 일반화는 과함.
+> - **Fig S10–S13**: 캡션 digest 기록과 일치(S12: "GB 영역의 다중 S 궤적은 불안정 계면 탓, PS₄·단일음이온 구조 특징은 유지"; S13: Li–Li RDF 100 ps vs 10 ns, 350 K). [주의] **S10 캡션에 진공 15 Å 없음** — 15 Å는 본문 출처.
+>
+> **[새] SI 내부 편집 오류 2건** (digest에 없던 발견): ① Note S4(random 모델링)가 셀 할당 표를 "**listed in Table S3**"라 지칭 — 실제는 **Table S2**(Table S3는 GB D 표). ② Note S3(결정화도)의 "**From Eqn. (S8)**, we approximate σexpt" — S8은 Pi(E)식, 실제 지칭은 **S11**. 본문의 힘 단위 오기·GB 가중치 불일치와 같은 결의 교정 부실 — **이 논문의 SI 상호참조는 번호가 아니라 내용으로 읽어야 함**.
+>
+> **SI에 없는 것(본문 전용임을 확인)**: E:F(:S) 가중(100:1(:0.01)), active learning γ_select/γ_break, NPT barostat 세부, slab 진공 15 Å, AIMD 레퍼런스 셀 크기. SI에는 RDF/EOS 검증·phonon 등 추가 벤치마크 **없음**(검증은 Fig S2–S3 회귀 + σ 재현이 전부).
 
 ## 4. 핵심 수치 (전량)
 
@@ -94,7 +116,7 @@ optB88-vdw로 학습한 MTP만이 AIMD·실험의 site-disorder 의존성(ordere
 - **functional**: 구조최적화 **PBE**; 학습 single-point는 **PBE vs PBE-D3(BJ) vs optB88-vdw 3종 비교** → optB88-vdw 채택.
 - **k/ecut/수렴**: MP **2×2×2**(단위셀), ecut **500 eV**, 힘수렴 **0.04 eV/Å**(격자+내부 full relax; 다소 느슨).
 - **훈련셋 구축**(Fig 1): ① 6배열 PBE 최적화 → ② ±5% 격자 strain(3구조) → ③ 각 배열·각 strain에 **AIMD NVT(Nosé-Hoover) 300/600/900/1200 K × 10 ps(2 fs)**, 궤적당 100 스냅샷 → 배열당 1200개, **총 7200 스냅샷** → ④ 3 functional로 single-point E/F.
-- **MTP**: R_cut **5 Å**, lev_max **8** (최고정확은 6 Å/16이지만 **10× 비용**; lev 8=1일, 12=3.5일, 16=9일), 가중 E:F=**100:1**, train:valid=9:1. 최종 MAE(Fig S3): **Cl E 2.88 meV/atom·F 0.073 eV/Å**, Br 2.92/0.075, I 2.51/0.066 (그림 축 "meV/Å"는 eV/Å 오기; 본문 "0.02 eV/Å 미만" 주장과 불일치 — §12). 같은 조성이면 어떤 배열에도 동일 MTP 적용 가능.
+- **MTP**: R_cut **5 Å**, lev_max **8** (최고정확은 6 Å/16이지만 **10× 비용**; lev 8=1일, 12=3.5일, 16=9일), 가중 E:F=**100:1**, train:valid=9:1. 최종 MAE(Fig S3): **Cl E 2.88 meV/atom·F 0.073 eV/Å**, Br 2.92/0.075, I 2.51/0.066 (Fig S3 **inset 단위 "meV/Å"는 eV/Å 오기** — 산점도 축은 eV/Å로 정상, 2026-07-28 SI 실물 확인; 본문 "0.02 eV/Å 미만" 주장과 불일치 — §12). 같은 조성이면 어떤 배열에도 동일 MTP 적용 가능.
 - **MTP-MD(σ)**: 3×3×3(1404원자). **NVT 승온 100 ps(10 K 스텝) → NPT 10 ns** at 목표 T. **350–500 K, 25 K 간격 7개 온도 × 2회 반복**(ensemble avg; Fig 2 캡션은 350–700 K 표기 — §12). MSD→D(식 S5, 피팅창 미명시)→Arrhenius(식 S6)→**Nernst–Einstein(식 S7, Haven 보정 없음)** 으로 σRT(300 K 외삽).
 - **AIMD 레퍼런스**: 600–1200 K(Fig 2a), 셀 크기 미명시(선행 [36] 프로토콜; ~10 Å·~100 ps 규모라고 서론에서 자인).
 - **GB MTP(active learning)**: passive(위 7200, optB88) + **(021) surface 2구조(0%·50%)·±5% strain·AIMD 900/1200 K 10 ps → 1200 스냅샷** 추가 → active learning: **NPT 300/500/700/900 K, γ_select=5, γ_break=20**, 불확실 구조 선별→optB88 single-point→재학습 반복; E:F:S 가중 **100:1:0.01(본문) vs 100:1:0.001(Fig 4)** 표기 불일치. slab 진공 15 Å(Fig S10).
@@ -132,7 +154,7 @@ optB88-vdw로 학습한 MTP만이 AIMD·실험의 site-disorder 의존성(ordere
 | S1 | 구조 + 6배열 도해 | 4a/4c(=우리 4a/4d) 배열 시각화 |
 | S2 | 하이퍼파라미터(R_cut·lev_max vs MAE·비용) | MLIP 비용-정확도 트레이드오프 수치(1일/3.5일/9일) |
 | S3 | MTP vs DFT E/F 회귀(조성별 MAE) | MAE 보고 관례(에너지 meV/atom·힘 eV/Å) — 축 라벨 오기 반면교사 |
-| S4 | MSD 350 K: ordered 포화("caged") vs disordered 선형("free") | **우리 disorder_ensemble의 'ordered frozen' 관측과 동일 그림** |
+| S4 | MSD 350 K: ordered(=100% 배열) 포화("caged") vs disordered(50%) 선형("free") | **우리 disorder_ensemble의 'ordered frozen' 관측과 동일 그림** |
 | S5–S6 | Br·I Arrhenius + 궤적 | 할라이드 일반화 |
 | S7–S8 | S 궤적(PS₄ 회전) + PS₄ 고정 D 비교 | **paddle-wheel류 분석의 간단 구현**(궤적+구속 MD) — 우리 UMA 궤적에 그대로 적용 가능 |
 | S9 | GB 6종 γ_GB (tilt vs twist) | GB 모델 선정 근거; γ 정의식 |
@@ -180,9 +202,10 @@ optB88-vdw로 학습한 MTP만이 AIMD·실험의 site-disorder 의존성(ordere
 ## 12. 주의/한계 (critical)
 - **P_i(σ)∝exp(−Δσ/kT)**: 전도도를 Boltzmann 인자에 넣는 차원 무의미 heuristic — σbulk 가중은 "그럴듯한 내삽"이지 통계역학 아님. σ80%도 경험 회귀(χ^7.14). **수치 이식 금지, 개념만**.
 - **P_i(E)도 meV/atom을 kT와 직접 비교**(셀 크기 임의성) — 열역학 가중의 근거 약함. 그 결과 random 셀의 4c-Cl 평균 점유 **42.6% vs 실험 70%**(Rayavarapu) 불일치를 논문이 점검하지 않음(Br만 우연히 근접).
-- **힘 정확도 표기 혼란**: 본문 "MAE <10 meV/atom·<0.02 eV/Å" vs Fig S3 실측 0.066–0.075 (축 라벨은 meV/Å 오기) — 실제 힘 MAE는 0.07 eV/Å급으로 봐야 함(그래도 MLIP 통상 수준). Fig S2 축도 동일 오기. **본문 §2.5 하이퍼파라미터 문장도 "3 meV/atom and 0.1 meV/Å"로 같은 meV/Å 단위 오기**(2026-07-28 실물 감사 확인 — 이 논문의 힘 단위 표기는 세 군데 모두 신뢰 불가, Fig S3 산점도의 eV/Å 해석만 유효). GB 가중치도 본문 0.01 vs Fig 4 0.001 불일치.
-- **Table S1 I조성 Ea 복제 의심**: AIMD와 MTP의 Ea가 6배열 전부 동일 — 편집 오류 가능성. I의 MTP Ea는 인용하지 말 것.
-- **온도창 표기 불일치**: §2.6 "350–500 K 7점×2회" vs Fig 2 캡션 "350–700 K". MSD 피팅창·NPT barostat 파라미터 미명시.
+- **힘 정확도 표기 혼란**: 본문 "MAE <10 meV/atom·<0.02 eV/Å" vs Fig S3 실측 0.066–0.075 — 실제 힘 MAE는 0.07 eV/Å급으로 봐야 함(그래도 MLIP 통상 수준). **2026-07-28 SI 실물 감사로 오기 위치 정밀화**: Fig S2는 **오른쪽 축 라벨 자체**가 "meV/Å" 오기, Fig S3는 **inset MAE 단위**가 "meV/Å" 오기(산점도 축은 eV/Å 정상 = 유일하게 신뢰 가능한 단위 표기). **본문 §2.5 하이퍼파라미터 문장도 "3 meV/atom and 0.1 meV/Å"로 같은 meV/Å 단위 오기**(본문 실물 감사 확인 — 이 논문의 힘 단위 표기는 세 군데 모두 신뢰 불가, Fig S3 산점도의 eV/Å 해석만 유효). GB 가중치도 본문 0.01 vs Fig 4 0.001 불일치.
+- **Table S1 I조성 Ea 복제 의심**: AIMD와 MTP의 Ea가 6배열 전부 동일 — 편집 오류 가능성. **2026-07-28 SI 실물 감사: 실물 표에서도 동일함을 재확인**(업로드본 아티팩트 아님 — 원본 표 자체의 문제). I의 MTP Ea는 인용하지 말 것.
+- **온도창 표기 불일치**: §2.6 "350–500 K 7점×2회" vs Fig 2 캡션 "350–700 K" — **Fig S5 캡션도 "350 K to 700 K"**(2026-07-28 SI 실물 확인, SI는 350–700 K 편). MSD 피팅창·NPT barostat 파라미터 미명시.
+- **SI 내부 상호참조 오류 2건**(2026-07-28 실물 감사 발견): Note S4가 셀 할당 표를 "Table S3"라 오지칭(실제 Table S2), Note S3가 결정화도 식을 "Eqn. (S8)"이라 오지칭(실제 S11) — 단위 오기·가중치 불일치와 함께 교정 부실 패턴, SI 참조는 내용 기준으로 읽을 것.
 - **AIMD 레퍼런스 셀 미명시**(선행 [36] 의존) + AIMD는 600–1200 K 고온 외삽 — AIMD_PBE σRT 절대값도 외삽 부담.
 - **Haven=1** 암묵(우리와 동일하나 명시 없음); NE σ는 tracer-D 기반.
 - **힘수렴 0.04 eV/Å**의 느슨한 relax; E_rel(meV/atom)은 그 위에서의 값.
