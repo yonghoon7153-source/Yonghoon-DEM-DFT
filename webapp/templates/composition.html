@@ -66,7 +66,7 @@
 <div class="tabs" id="tabs">
   <button class="active" data-tab="structure">🧊 Structure ({{ structures|length }})</button>
   <button data-tab="charts">📊 Charts ({{ datafiles|length }})</button>
-  {% if icohp %}<button data-tab="bonding">🔗 Bonding</button>{% endif %}
+  {% if icohp or cohp_curves %}<button data-tab="bonding">🔗 Bonding</button>{% endif %}
   <button data-tab="raw">🗂 Raw ({{ metrics|length }})</button>
   {% if rollup %}<button data-tab="record">📄 Record</button>{% endif %}
 </div>
@@ -124,10 +124,12 @@
   {% else %}<div class="card"><span class="muted">인덱스 메트릭 없음 <span class="badge b-todo">TODO</span></span></div>{% endif %}
 </div>
 
-<!-- Bonding (LOBSTER ICOHP) -->
-{% if icohp %}
+<!-- Bonding (LOBSTER ICOHP + COHP 곡선) -->
+{# ⚠ 두 자료는 따로 존재할 수 있다 — comp2 는 곡선 CSV 만 있고 ICOHP JSON 이 없어서
+   `if icohp` 하나로 묶어 두면 탭이 통째로 사라진다(실제로 그랬다). 조건을 분리한다. #}
+{% if icohp or cohp_curves %}
 <div class="tab-panel" id="tab-bonding">
-  <div class="card">
+  {% if icohp %}<div class="card">
     <h3>결합 강도 — LOBSTER ICOHP <span class="muted" style="font-weight:400;font-size:.8rem">음수 클수록 강한 결합</span></h3>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 12px">
       {% set spill = icohp.spilling_pct if icohp.spilling_pct is defined else icohp.charge_spilling_pct %}
@@ -159,7 +161,124 @@
     {% if icohp.bonds.values()|selectattr('d_mean_A','defined')|list|length == 0 %}
     <div class="muted" style="font-size:.72rem;margin-top:6px">※ d̄ 열은 이 계산에 원자료가 없어 비어 있어요 (LOBSTER 재파싱 대기).</div>{% endif %}
     <div class="muted mono" style="font-size:.68rem;margin-top:6px">{{ icohp.method }}</div>
+  </div>{% endif %}
+
+  {# ── COHP 곡선 (bonding / antibonding) ───────────────────────────────
+     ICOHP 는 **적분값**이라 "어느 에너지에서 결합/반결합인지"를 못 본다.
+     그 정보는 COHPCAR.lobster 에만 있고, 없으면 왜 없는지를 그대로 띄운다. #}
+  <div class="card">
+    <h3>COHP 곡선 — bonding / antibonding
+      <span class="muted" style="font-weight:400;font-size:.8rem">−pCOHP &gt; 0 = 결합성, &lt; 0 = 반결합성</span></h3>
+    {% if cohp_curves %}
+    <div class="muted" style="font-size:.78rem;line-height:1.6;margin-bottom:8px">
+      ICOHP 는 이 곡선을 <b>E<sub>F</sub> 까지 적분한 값</b>이에요 — 표는 "얼마나 센가"만,
+      곡선은 <b>어느 에너지에서 결합/반결합인가</b>를 보여줘요.
+      {% if cohp_curves.legacy %}
+      <br><span class="badge b-todo">구형 CSV</span> 이 계의 곡선은 예전 규약이라
+      매칭된 결합의 <b>합(sum)</b>이에요. 결합 수 N 이 다른 패널끼리 높이를 비교하면 안 되고
+      (합이라 N 에 비례), 곡선 적분도 ICOHP 표시값과 일치하지 않아요.
+      <span class="mono">tools/figures/extract_cohp_curves.py</span> 로 다시 뽑으면 결합당 평균이 됩니다.
+      {% else %}
+      곡선은 <b>결합당 평균</b>으로 정규화해서, 패널 높이가 곧 결합 하나의 세기예요
+      (N 이 1인 P–O 와 100 넘는 Li–S 를 같은 눈금에서 비교할 수 있게 —
+      ∫(−pCOHP)dE|<sub>E<sub>F</sub></sub> = −ICOHP/bond 로 상자와 자기일관).
+      {% endif %}
+      <br><b>x 눈금은 패널마다 달라요</b> — P 계(−6~−8 eV)와 Li 계(−1~−2 eV)를 한 눈금에 두면
+      Li 패널이 뭉개져서요. 높이 비교는 눈금이 같은 패널끼리만 하세요.
+    </div>
+    <div class="chart" id="cohp-chart" style="min-height:520px"></div>
+    <div class="muted mono" style="font-size:.68rem;margin-top:6px">
+      {% if not cohp_curves.legacy %}db/{% endif %}{{ cohp_curves.rel }}
+      {%- if cohp_curves.smooth_eV %} · Gaussian σ {{ cohp_curves.smooth_eV }} eV{% endif %}
+      {%- if cohp_curves.window_eV %} · window {{ cohp_curves.window_eV[0] }} … {{ cohp_curves.window_eV[1] }} eV{% endif %}</div>
+    <script>window._COHP={rel:{{ cohp_curves.rel|tojson }},pairs:{{ cohp_curves.pairs|tojson }}};</script>
+    {% else %}
+    <div class="muted" style="font-size:.82rem;line-height:1.7">
+      아직 없어요. 곡선은 <span class="mono">COHPCAR.lobster</span> 원자료가 있어야 그려지는데,
+      그 파일은 계산 서버(gabia <span class="mono">{{ icohp.raw.split(':')[-1] if icohp.raw else '…' }}</span>)에만 있고
+      수십 MB라 repo 로 통째로 못 가져와요.<br>
+      회수 절차: 서버에서 <span class="mono">tools/figures/extract_cohp_curves.py</span> 로 패널 곡선만
+      압축 CSV(<span class="mono">db/properties/{{ cid }}_cohp_curves_origin.csv</span>)로 뽑아 옮기면
+      이 자리에 바로 그려지고, <span class="mono">tools/figures/fig_lpsocl_cohp_curves.py</span> 가
+      논문용 PNG 를 냅니다.
+    </div>
+    {% endif %}
   </div>
+
+  {# ── 자리별 Li 앵커 세기 (같은 원소쌍이라도 자리가 다르면 세기가 다르다) ── #}
+  {% if icohp.per_site %}
+  <div class="card">
+    <h3>자리별 결합 세기 <span class="muted" style="font-weight:400;font-size:.8rem">— 같은 원소쌍도 자리에 따라 다르다</span></h3>
+    <div style="overflow-x:auto">
+    <table class="data-table"><thead><tr>
+      <th>Site</th><th class="num">ICOHP (eV/bond)</th><th class="num">std</th><th class="num">n</th><th>note</th></tr></thead><tbody>
+    {% for s, v in icohp.per_site.items() %}
+    <tr><td class="mono">{{ s }}</td>
+      <td class="num" style="font-weight:600">{{ '%.3f'|format(v.ICOHP_eV) }}</td>
+      <td class="num muted">{{ '%.3f'|format(v.std) if v.std is defined else '—' }}</td>
+      <td class="num muted">{{ v.n if v.n is defined else '—' }}</td>
+      <td class="muted" style="font-size:.78rem">{{ v.note or '' }}</td></tr>
+    {% endfor %}
+    </tbody></table></div>
+    <div class="muted" style="font-size:.75rem;margin-top:8px">
+      ※ std 가 큰 자리(예: PS<sub>4</sub>-S)는 <b>평균 하나로 말하면 안 되는</b> 자리예요 —
+      분포가 넓다는 뜻이라 대표값보다 범위를 인용하세요.
+    </div>
+  </div>
+  {% endif %}
+
+  {# ── 계 간 비교 (도핑이 host 를 건드렸나) ───────────────────────────── #}
+  {% if icohp._comparison %}
+  <div class="card">
+    <h3>계 간 비교 <span class="muted" style="font-weight:400;font-size:.8rem">— 도핑이 host 결합을 바꿨나</span></h3>
+    <div style="overflow-x:auto">
+    <table class="data-table"><thead><tr><th>Bond</th>
+      {% for c in icohp._comparison_cols %}<th class="num">{{ c }}</th>{% endfor %}
+      <th>note</th></tr></thead><tbody>
+    {% for bond, row in icohp._comparison.items() %}
+    <tr><td><b>{{ bond }}</b></td>
+      {% for c in icohp._comparison_cols %}
+      <td class="num">{% if row[c] is defined and row[c] not in (none,'') %}{{ '%.3f'|format(row[c]|float) }}{% else %}—{% endif %}</td>
+      {% endfor %}
+      <td class="muted" style="font-size:.78rem">{{ row.note or '' }}</td></tr>
+    {% endfor %}
+    </tbody></table></div>
+    <div class="muted mono" style="font-size:.68rem;margin-top:6px">db 키: {{ icohp._comparison_key }}</div>
+    {% if icohp._comparison_note %}
+    <div class="muted" style="font-size:.75rem;margin-top:6px;line-height:1.6">⚠ {{ icohp._comparison_note }}</div>{% endif %}
+  </div>
+  {% endif %}
+
+  {# ── Bader 전하 (ICOHP 와 짝: 공유결합성 vs 이온성) ─────────────────── #}
+  {% if icohp.bader %}
+  <div class="card">
+    <h3>Bader 전하 <span class="muted" style="font-weight:400;font-size:.8rem">— ICOHP(공유성)와 짝이 되는 이온성 축</span></h3>
+    <div style="overflow-x:auto">
+    <table class="data-table"><thead><tr><th>Element</th><th class="num">net charge (e)</th>
+      {% if icohp._comparison_bader %}{% for c in icohp._comparison_cols %}<th class="num">{{ c }}</th>{% endfor %}{% endif %}
+      <th>note</th></tr></thead><tbody>
+    {% for el, v in icohp.bader.items() %}{% if v is number and not el.endswith('_std') and not el.startswith('n_') %}
+    <tr><td><b>{{ el }}</b></td>
+      <td class="num" style="font-weight:600">{{ '%+.3f'|format(v) }}</td>
+      {% if icohp._comparison_bader %}{% set cb = icohp._comparison_bader.get(el) %}
+      {% for c in icohp._comparison_cols %}
+      <td class="num">{% if cb and cb[c] is defined %}{{ '%+.3f'|format(cb[c]|float) }}{% else %}—{% endif %}</td>
+      {% endfor %}{% endif %}
+      <td class="muted" style="font-size:.78rem">
+        {%- if icohp._comparison_bader.get(el) %}{{ icohp._comparison_bader[el].note or '' }}{% endif -%}
+        {%- if icohp.bader[el ~ '_std'] is defined %} <span class="mono">std {{ '%.3f'|format(icohp.bader[el ~ '_std']) }}</span>{% endif -%}
+      </td></tr>
+    {% endif %}{% endfor %}
+    </tbody></table></div>
+    {% if icohp.bader.n_electrons_recovered %}
+    <div class="muted" style="font-size:.72rem;margin-top:6px">
+      적분 회수 전자수 {{ icohp.bader.n_electrons_recovered }} — 정수에서 멀면 격자/컷오프 부족 신호예요.</div>{% endif %}
+    <div class="muted" style="font-size:.75rem;margin-top:6px;line-height:1.6">
+      ⚠ Bader 절대값은 <b>밀도 소스(AE plot_num=17 + PAW vs 가전자 plot_num=0 + NC)</b>에 따라 통째로 달라져요.
+      방법이 다른 계끼리 같은 표에 놓지 마세요.
+    </div>
+  </div>
+  {% endif %}
 </div>
 {% endif %}
 
@@ -180,7 +299,62 @@ document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{
   b.classList.add('active');document.getElementById('tab-'+b.dataset.tab).classList.add('active');
   if(b.dataset.tab==='structure'&&viewer)setTimeout(()=>{viewer.resize();viewer.render();},50);
   if(b.dataset.tab==='charts'&&window._firstCsv){window._firstCsv();window._firstCsv=null;}
+  if(b.dataset.tab==='bonding'&&window._COHP&&!window._COHP._done){window._COHP._done=1;drawCohp();}
 });
+
+// ── COHP 곡선 패널 (bonding/antibonding) ───────────────────────────────
+// ⚠ 패널마다 x 눈금을 따로 준다. 공유하면 Li 계(−1~−2 eV)가 P 계(−6~−8) 옆에서
+//   납작해져 "Li–O 공유성이 modest 하다"는 판정 근거가 그림에서 사라진다.
+var _COHP_COLOR={'P-S':'#7c3aed','P-O':'#be123c','Li-S':'#c05621','Li-Cl':'#65a30d',
+                 'Li-O':'#be123c','S-S':'#6b7280','B-S':'#0284c7','Nd-S':'#7d5ba6'};
+function drawCohp(){
+  var box=document.getElementById('cohp-chart');if(!box)return;
+  if(typeof Plotly==='undefined'){box.innerHTML='<span class="muted">차트 라이브러리(Plotly)를 불러오지 못했어요.</span>';return;}
+  fetch('/api/csv/'+encodeURIComponent(window._COHP.rel)).then(r=>r.json()).then(function(d){
+    if(d.error||!d.columns){box.innerHTML='<span class="muted">CSV 로드 실패: '+(d.error||'?')+'</span>';return;}
+    var xk=d.columns[0];
+    // 열 이름 규약이 세 세대 있다: mean_pCOHP_*(현행, 결합당 평균) / sum_pCOHP_*(합) /
+    // '-pCOHP_*'(구형 docs 산출, 합). 우선순위대로 집는다.
+    var cols=d.columns.filter(function(c){return c.indexOf('mean_pCOHP_')===0;}),perBond=true;
+    if(!cols.length){cols=d.columns.filter(function(c){return c.indexOf('sum_pCOHP_')===0;});perBond=false;}
+    if(!cols.length){cols=d.columns.filter(function(c){return c.indexOf('-pCOHP_')===0;});perBond=false;}
+    // ⚠ 축 라벨은 정규화 규약을 따라가야 한다. sum 곡선에 'per bond' 라고 쓰면
+    //   N 배 큰 값을 결합 하나의 세기로 읽게 만든다 (Li-S N=125 → 100배 넘는 착시).
+    var xlab=perBond?'−pCOHP/bond':'−pCOHP (sum of N bonds)';
+    if(!cols.length){box.innerHTML='<span class="muted">곡선 열(*pCOHP_*)이 없어요 — 열: '+
+      d.columns.join(', ')+'</span>';return;}
+    var E=d.data.map(function(r){return r[xk];});
+    var n=cols.length, ncol=Math.min(3,n), nrow=Math.ceil(n/ncol);
+    var traces=[],shapes=[],anns=[],layout={grid:{rows:nrow,columns:ncol,pattern:'independent'}};
+    cols.forEach(function(c,i){
+      var lab=c.replace(/^(mean_|sum_|-)pCOHP_/,'').replace(/\u2013/g,'-'),
+          y=d.data.map(function(r){return r[c];});
+      var mx=Math.max.apply(null,y.map(Math.abs))*1.18||1, ax=(i?String(i+1):'');
+      traces.push({x:y,y:E,type:'scatter',mode:'lines',name:lab,fill:'tozerox',
+        line:{color:_COHP_COLOR[lab]||'#6b7280',width:1.4},
+        fillcolor:(_COHP_COLOR[lab]||'#6b7280')+'55',hovertemplate:lab+'<br>E−E_F %{y:.2f} eV<br>−pCOHP %{x:.3f}<extra></extra>',
+        xaxis:'x'+(i+1),yaxis:'y'+(i+1)});
+      layout['xaxis'+(i+1)]={title:{text:xlab,font:{size:11}},range:[-mx,mx],
+        zeroline:true,zerolinecolor:'#9ca3af',tickfont:{size:9}};
+      layout['yaxis'+(i+1)]={title:{text:i%ncol===0?'E − E_F (eV)':'',font:{size:11}},
+        range:[-12,6],tickfont:{size:9},showticklabels:i%ncol===0};
+      shapes.push({type:'line',xref:'x'+(i+1),yref:'y'+(i+1),x0:-mx,x1:mx,y0:0,y1:0,
+        line:{color:'#6b7280',width:1,dash:'dash'}});
+      var p=(window._COHP.pairs||{})[lab]||{};
+      anns.push({xref:'x'+(i+1),yref:'y'+(i+1),x:0,y:5.2,text:'<b>'+lab+'</b>'+(p.N?' (N='+p.N+')':''),
+        showarrow:false,font:{size:12}});
+      if(p.ICOHP_per_bond_eV!=null)anns.push({xref:'x'+(i+1),yref:'y'+(i+1),x:0,y:-11,
+        text:'ICOHP '+Number(p.ICOHP_per_bond_eV).toFixed(2)+' eV/bond',showarrow:false,font:{size:10,color:'#374151'}});
+      anns.push({xref:'x'+(i+1),yref:'y'+(i+1),x:-mx*0.94,y:3.6,text:'<i>Anti</i>',showarrow:false,
+        font:{size:9,color:'#9ca3af'},xanchor:'left'});
+      anns.push({xref:'x'+(i+1),yref:'y'+(i+1),x:mx*0.94,y:3.6,text:'<i>Bonding</i>',showarrow:false,
+        font:{size:9,color:'#9ca3af'},xanchor:'right'});
+    });
+    layout.shapes=shapes;layout.annotations=anns;layout.showlegend=false;
+    layout.height=Math.max(420,300*nrow);layout.margin={l:56,r:16,t:18,b:44};
+    Plotly.newPlot('cohp-chart',traces,layout,{responsive:true,displaylogo:false});
+  }).catch(function(e){box.innerHTML='<span class="muted">차트 로드 실패</span>';});
+}
 let viewer;
 function _dlNote(name,msg){
   var v=document.getElementById('viewer');

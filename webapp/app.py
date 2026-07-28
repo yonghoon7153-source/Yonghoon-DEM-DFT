@@ -112,6 +112,8 @@ def composition(cid):
         index_built=b.get("built"),   # Raw 탭 스냅샷 배너 (전체 b 번들은 템플릿에 불필요)
         datafiles=D.datafiles_for(cid), metrics=b["index_metrics"].get(cid, []),
         rollup=b["comp_data"].get(cid), icohp=D.icohp_for(cid),
+        # ⚠ ICOHP JSON 과 COHP 곡선 CSV 는 독립이다 (comp2 는 곡선만 있다) — 따로 넘긴다
+        cohp_curves=D.cohp_curves_for(cid),
         cascade_dopant=dop, cascade_meta=D.CASCADE_META,
         cascade_rows=D.cascade_rows_for(dop) if dop else None,
         canonical=D.canonical_values(cid),

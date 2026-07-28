@@ -42,6 +42,22 @@
 - 자유 h-BN 단층은 <0.01 Å 평면이어야 정상. Li-유도 pucker인지 4×4 셀 리플인지
   relax 미완인지 미해결 — h-BN 표면 수치(7 meV) 정량 인용 전 확인.
 
+### 6. LPSOCl COHP 곡선 원자료 회수 (2026-07-28 등록)
+- **상태**: 막대(ICOHP 적분값)는 완료 — `docs/figures/icohp/lpsocl_icohp_bars.png`
+  + `db/properties/lpsocl_icohp_origin.csv` / `_persite_origin.csv`.
+  **곡선(−pCOHP vs E)은 미완** — `COHPCAR.lobster` 가 gabia
+  `/data/work/runs/lpsocl_dft/lobster_ext/` 에만 있고 수십 MB라 repo 로 못 옮긴다.
+- **회수 경로**: gabia 에서 `tools/figures/extract_cohp_curves.py` 로 패널 곡선만
+  압축 CSV(~20 KB)로 뽑아 gzip+base64 전송 → `db/properties/lpsocl_cohp_curves_origin.csv`.
+  그러면 webapp Bonding 탭이 자동으로 그리고,
+  `tools/figures/fig_lpsocl_cohp_curves.py` 가 논문용 PNG 를 낸다.
+- **⚠ 정규화 규약 주의**: 신규 추출기는 **결합당 평균**(∫|E_F = −ICOHP/bond, 자기일관),
+  구형 `docs/figures/icohp/*_COHP_curves.csv`(modelc·nd·b2o3)는 **합(sum)** 이다.
+  둘을 같은 그림/표에서 높이 비교하면 안 된다 (사이트는 '구형 CSV' 배지로 구분 표시).
+- **회수 후 확인**: 추출기가 찍는 N 이 `lpsocl_icohp.json` 의 N(P-S 19 · Li-S 106 ·
+  Li-Cl 42 · Li-O 5 · S-S 54 · P-O 1)과 일치해야 한다. 어긋나면 P–S dmax(기본 2.6 Å)를
+  조정해야 하는 신호다.
+
 ## 📄 PDF 확보 대기 (원전 미보유 — 웹/재인용 딱지 상태)
 
 | # | 서지 | DOI | 왜 필요한가 |

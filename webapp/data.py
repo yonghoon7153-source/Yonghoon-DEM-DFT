@@ -261,6 +261,9 @@ def _csv_kind(name: str) -> str:
                    ("charge", "Charge"), ("bader", "Bader"), ("xps", "XPS"),
                    ("voronoi", "Voronoi"), ("neb", "NEB"), ("barrier", "Barrier"),
                    ("drag", "Drag"), ("diffusion", "Diffusion"), ("binding", "Binding"),
+                   # ⚠ icohp 를 cohp 보다 **먼저** 봐야 한다 — 'icohp' 안에 'cohp' 가 들어 있어서
+                   #   순서가 뒤집히면 ICOHP 표가 COHP 칩으로 잘못 붙는다.
+                   ("icohp", "ICOHP"), ("cohp", "COHP"),
                    ("_ir", "IR")]:  # "_ir"로 "pairs" 오탐 방지
         if k in n:
             return tag
@@ -515,14 +518,89 @@ def cascade_rows_for(dopant: str) -> dict:
 
 
 def icohp_for(cid: str):
-    """조성별 LOBSTER ICOHP JSON (있으면) — bonds 테이블 렌더용. 공통 스키마."""
+    """조성별 LOBSTER ICOHP JSON (있으면) — bonds 테이블 렌더용. 공통 스키마.
+
+    ⚠ 계마다 비교표 키 이름이 다르다 (b2o3 comparison_vs_modelc /
+      lpsocl comparison_vs_family / nd comparison_vs_modelc_comp1_PAW_4.0A).
+      템플릿에 키를 하드코딩하면 한 계만 보이고 나머지는 조용히 사라지므로
+      여기서 `comparison_vs_` 접두로 찾아 `_comparison` 으로 정규화해 넘긴다.
+      per_site / bader 도 lpsocl 에만 있어서 렌더가 아예 안 되고 있었다.
+    """
     pref = _PREFIX.get(cid, [cid])
     for f in sorted((DB / "properties").glob("*_icohp.json")):
         stem = f.stem.lower()
         if any(p.lower() in stem for p in pref):
             d = _load_json(f)
             if d and isinstance(d.get("bonds"), dict):
+                d = dict(d)
+                ck = next((k for k in d if k.startswith("comparison_vs_")), None)
+                if ck:
+                    # 비교표는 결합행만 남긴다 — bader_* 나 _comp1_caveat 같은 주석행이
+                    # 같은 dict 에 섞여 있어서 그대로 그리면 표가 깨진다.
+                    cmpv = d[ck]
+                    d["_comparison"] = {k: v for k, v in cmpv.items()
+                                        if isinstance(v, dict) and not k.startswith("_")
+                                        and not k.startswith("bader")}
+                    d["_comparison_bader"] = {k[6:]: v for k, v in cmpv.items()
+                                              if k.startswith("bader_") and isinstance(v, dict)}
+                    d["_comparison_note"] = next((v for k, v in cmpv.items()
+                                                  if k.startswith("_") and isinstance(v, str)), None)
+                    d["_comparison_key"] = ck
+                    # 열 = 비교에 등장하는 모든 계 (note 제외), 등장 순서 유지
+                    cols = []
+                    for row in d["_comparison"].values():
+                        for k in row:
+                            if k != "note" and k not in cols:
+                                cols.append(k)
+                    d["_comparison_cols"] = cols
+                d["_curves"] = cohp_curves_for(cid)
                 return d
+    return None
+
+
+def cohp_curves_for(cid: str):
+    """에너지 분해 COHP 곡선 CSV (tools/figures/extract_cohp_curves.py 산출) + 메타.
+
+    없으면 None — gabia 에서 COHPCAR.lobster 를 회수해야 생긴다. 그 상태를
+    템플릿이 그대로 알려 주게 한다(빈 탭 대신 '왜 없는지'를 띄운다).
+    """
+    pref = _PREFIX.get(cid, [cid])
+    # db/properties 가 정본. docs/figures/icohp 는 예전 그림 스크립트가 CSV 를 거기 두던
+    # 시절의 산출물(modelc/nd/b2o3)이라 **후순위로만** 본다 — 정규화 규약이 sum 이고
+    # 열 이름도 '-pCOHP_*' 로 달라서, 같은 계에 db 판이 생기면 그쪽이 이긴다.
+    cands = [(f, str(f.relative_to(DB)))
+             for f in sorted((DB / "properties").glob("*cohp_curves*.csv"))]
+    docs = DB.parent / "docs" / "figures" / "icohp"
+    if docs.exists():
+        cands += [(f, "docs/figures/icohp/" + f.name)
+                  for f in sorted(docs.glob("*COHP*.csv"))]
+    for f, rel in cands:
+        if not _prefix_starts(f.name, pref):
+            continue
+        meta = _load_json(f.with_suffix(".meta.json")) or {}
+        if not meta:                       # 사이드카가 없으면 CSV 머리말에서 긁는다
+            head = f.read_text(encoding="utf-8", errors="ignore").splitlines()[:8]
+            for ln in head:
+                s = ln.lstrip("# ").strip()
+                if s.startswith("{"):
+                    try:
+                        meta = {"pairs": json.loads(s)}
+                    except json.JSONDecodeError:
+                        pass
+                    break
+            if not meta:                   # 구형 머리말: "ICOHP(eV/bond): P–S -6.000, …"
+                m = re.search(r"ICOHP\s*\(eV/bond\)\s*:\s*(.+)", " ".join(head))
+                if m:
+                    pairs = {}
+                    for tok in m.group(1).rstrip('"').split(","):
+                        mm = re.match(r"\s*([A-Za-z]+)[–-]([A-Za-z]+)\s+(-?[\d.]+)", tok)
+                        if mm:
+                            pairs[f"{mm.group(1)}-{mm.group(2)}"] = {
+                                "ICOHP_per_bond_eV": float(mm.group(3))}
+                    meta = {"pairs": pairs, "smooth_eV": 0.10}
+        return {"rel": rel, "name": f.name, "legacy": rel.startswith("docs/"),
+                "pairs": meta.get("pairs", {}), "smooth_eV": meta.get("smooth_eV"),
+                "window_eV": meta.get("window_eV")}
     return None
 
 
@@ -1247,8 +1325,18 @@ def _is_blank(r):
 _SUMMARY_ROW = re.compile(r"^\s*(=>|ratio[_/]|delta[_ ]|Δ|d?Ea\s*=)", re.I)
 
 def read_csv(rel: str) -> dict:
-    p = (DB / rel).resolve()
-    if not p.is_relative_to(DB.resolve()) or not p.exists():
+    """rel 은 db/ 기준 경로. 예외로 'docs/figures/' 접두는 그림 산출 CSV 트리를 읽는다.
+
+    ⚠ 루트를 넓히는 게 아니라 **두 개만** 허용한다 — 임의 경로 탈출을 막는
+      is_relative_to 검사는 양쪽 다 유지한다. db/ 안엔 docs 디렉터리가 없어서
+      기존 호출(properties/…, spectra/…)과 충돌하지 않는다.
+    """
+    if rel.startswith("docs/figures/"):
+        root = (DB.parent / "docs" / "figures").resolve()
+        p = (DB.parent / rel).resolve()
+    else:
+        root, p = DB.resolve(), (DB / rel).resolve()
+    if not p.is_relative_to(root) or not p.exists():
         return {"error": "not found"}
     rows = list(csv.reader(p.open(encoding="utf-8")))
     # 헤더 = 선행 주석(#)·빈 줄을 건너뛴 첫 실질 행
