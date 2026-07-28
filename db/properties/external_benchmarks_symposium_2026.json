@@ -2,7 +2,6 @@
   "property": "external_benchmarks_symposium_2026",
   "date": "2026-07-28",
   "description": "2026년도 전지기술 심포지엄(한국전기화학회, 8/21) 기술세션 3-3(이상욱, 성균관대) · 3-4(문장혁, 중앙대) 발표 덱에서 추출한 외부 벤치마크. 우리 계산의 재현 표적(target)과 방법론 참조점으로만 쓴다.",
-
   "honesty_header": [
     "⛔ 이 파일의 모든 수치는 **발표 소환값**이다 — peer-review 논문값보다도 한 단계 낮은 신뢰 등급(슬라이드 축약·반올림·문맥 소실).",
     "⛔ 우리 db 절대값과 **같은 표·같은 플롯에 넣지 말 것**. 우리 값과의 대조는 반드시 '재현 표적 vs 우리 결과' 형식으로, 출처를 병기해서.",
@@ -10,7 +9,6 @@
     "⛔ MLIP σ 절대값은 훈련 functional의 각인을 받는다(같은 물질에서 8배 갈림, kim2024). 아래 σ·D 값은 **비율·자릿수로만** 인용하고 절대값 대조 금지.",
     "✅ 이 파일의 용도는 두 가지뿐: (1) 우리가 새 계산을 돌릴 때의 재현 표적, (2) 방법론 항목의 출처."
   ],
-
   "sources": [
     {
       "id": "lee2026_skku",
@@ -34,10 +32,8 @@
       "relation_to_us": "직교 — 상하류 관계. 우리가 원자 스케일 파라미터를 만들고 그들이 셀 스케일에서 소비"
     }
   ],
-
   "reproduction_targets": {
     "_note": "우리가 해당 계산을 돌렸을 때 '맞았다'고 볼 표적. 정량 일치를 요구하지 않는다 — 엔진(UMA 사전학습 vs MTP 자체학습)과 프로토콜이 다르다.",
-
     "li_argyrodite_interface_md": {
       "source": "lee2026_skku",
       "slide": "18-19 (PDF p.11-12)",
@@ -45,59 +41,162 @@
       "engine": "MTP (자체 학습, 5400 dataset, passive+active learning)",
       "system": "Li6PS5Cl(100) | Li(100), 생산 MD > 6000 atoms",
       "targets": [
-        {"quantity": "interphase 두께", "value": 11, "unit": "nm", "condition": "50 ns", "confidence": "덱 도해 기준, 오차 미명시"},
-        {"quantity": "interphase 결정상", "value": "Li2S", "unit": null, "condition": "g(r)가 Li2S 기준곡선과 일치, (100)/(010)/(001)", "confidence": "정성"},
-        {"quantity": "D_Li (interphase 결정영역)", "value": 0.4e-6, "unit": "cm^2/s", "condition": "11 ns", "confidence": "덱 플롯 판독"},
-        {"quantity": "D_Li (잔여 벌크)", "value": 1.1e-6, "unit": "cm^2/s", "condition": "11 ns", "confidence": "덱 플롯 판독"},
-        {"quantity": "D 비 (interphase/bulk)", "value": 0.36, "unit": null, "condition": "위 두 값의 비", "confidence": "파생 — **이 비율이 절대값보다 인용 안전**"}
+        {
+          "quantity": "interphase 두께",
+          "value": 11,
+          "unit": "nm",
+          "condition": "50 ns",
+          "confidence": "덱 도해 기준, 오차 미명시"
+        },
+        {
+          "quantity": "interphase 결정상",
+          "value": "Li2S",
+          "unit": null,
+          "condition": "g(r)가 Li2S 기준곡선과 일치, (100)/(010)/(001)",
+          "confidence": "정성"
+        },
+        {
+          "quantity": "D_Li (interphase 결정영역)",
+          "value": 4e-07,
+          "unit": "cm^2/s",
+          "condition": "11 ns",
+          "confidence": "덱 플롯 판독"
+        },
+        {
+          "quantity": "D_Li (잔여 벌크)",
+          "value": 1.1e-06,
+          "unit": "cm^2/s",
+          "condition": "11 ns",
+          "confidence": "덱 플롯 판독"
+        },
+        {
+          "quantity": "D 비 (interphase/bulk)",
+          "value": 0.36,
+          "unit": null,
+          "condition": "위 두 값의 비",
+          "confidence": "파생 — **이 비율이 절대값보다 인용 안전**"
+        }
       ],
       "experimental_anchor_cited_by_them": "ACS Energy Lett. 2022, 7, 3064-3071 (TEM interphase layer, 25 degC vs 80 degC) — 정성 대조",
       "our_status": "공백 (T3)",
       "how_to_use": "우리 T3(UMA Li|LPSCl 반응 MD) 성공 판정 = interphase가 형성되고 · Li2S가 잡히고 · D비가 1보다 확실히 작다. 11 nm 정량 일치는 요구하지 않는다."
     },
-
     "argyrodite_hydrolysis": {
       "source": "lee2026_skku",
       "slide": "21-24 (PDF p.13-14)",
       "status_of_underlying_work": "Adv. Funct. Mater. revision (2026-07 기준)",
       "engine": "SevenNet (fine-tuned uMLIP)",
-      "mlip_accuracy_reported": {"energy_meV_per_atom": 8.8, "force_eV_per_A": 0.57, "stress_kbar": 0.35},
+      "mlip_accuracy_reported": {
+        "energy_meV_per_atom": 8.8,
+        "force_eV_per_A": 0.57,
+        "stress_kbar": 0.35
+      },
       "system": "Li6PS5Cl(100) 4 nm + 용액 2.5 nm, 3x3 nm, 32 H3O+ / 32 OH- / 200 H2O, 500 ps",
       "targets": [
-        {"quantity": "ICOHP(P-S)", "value": -6.43, "unit": "eV", "condition": "결합거리 2.04 A", "confidence": "덱 명시값"},
-        {"quantity": "ICOHP(P-S(H))", "value": -4.69, "unit": "eV", "condition": "양성자화, 결합거리 2.18 A", "confidence": "덱 명시값"},
-        {"quantity": "양성자화에 의한 P-S 약화율", "value": 0.27, "unit": "fraction", "condition": "(6.43-4.69)/6.43", "confidence": "파생 — **T2의 핵심 표적**"},
-        {"quantity": "Sn 치환 상대 E_a (SnS4-H -> PS4-H)", "value": 0.28, "unit": "eV", "condition": "Li6.25P0.75Sn0.25S5Cl", "confidence": "덱 명시값"},
-        {"quantity": "SnS4-H 정규화 신호", "value": [0.6, 0.8], "unit": null, "condition": "0-500 ps 유지, PS4-H 는 ~0", "confidence": "덱 히트맵 판독"}
+        {
+          "quantity": "ICOHP(P-S)",
+          "value": -6.43,
+          "unit": "eV",
+          "condition": "결합거리 2.04 A",
+          "confidence": "덱 명시값"
+        },
+        {
+          "quantity": "ICOHP(P-S(H))",
+          "value": -4.69,
+          "unit": "eV",
+          "condition": "양성자화, 결합거리 2.18 A",
+          "confidence": "덱 명시값"
+        },
+        {
+          "quantity": "양성자화에 의한 P-S 약화율",
+          "value": 0.27,
+          "unit": "fraction",
+          "condition": "(6.43-4.69)/6.43",
+          "confidence": "파생 — **T2의 핵심 표적**"
+        },
+        {
+          "quantity": "Sn 치환 상대 E_a (SnS4-H -> PS4-H)",
+          "value": 0.28,
+          "unit": "eV",
+          "condition": "Li6.25P0.75Sn0.25S5Cl",
+          "confidence": "덱 명시값"
+        },
+        {
+          "quantity": "SnS4-H 정규화 신호",
+          "value": [
+            0.6,
+            0.8
+          ],
+          "unit": null,
+          "condition": "0-500 ps 유지, PS4-H 는 ~0",
+          "confidence": "덱 히트맵 판독"
+        }
       ],
       "mechanism": "H3O+/OH- 존재 시 PS4 분해 -> H2S 발생 -> 표면 붕괴. polyhedron-sulfur -> single-sulfur. Sn 치환은 H를 SnS4 쪽으로 유인해 PS4를 보호",
       "our_status": "air_hsab 정성 tier만 보유 (T2)",
       "our_experimental_anchor": "litdb/papers/taklu2021_cucl_dualdoping_air_stability_argyrodite.md — CuCl 이원도핑, H2S 1.07 -> 0.49 cm3/g (Cu3PS4 형성, HSAB soft-acid)",
       "triangulation_note": "실험(Taklu, Cu) + 기구(Lee, Sn) + 문헌KG 예측(Moon Case 1, Sn/Sb/As) + 우리 스크리닝(air_hsab)이 **모두 HSAB soft-acid 명제로 수렴**한다. 독립 경로 4개의 일치 — 단 '우리가 그들을 검증했다'는 인과 주장 금지"
     },
-
     "csp_metastable_conductivity": {
       "source": "lee2026_skku",
       "slide": "28-29 (PDF p.16-17)",
       "status_of_underlying_work": "JACS 2025, 147, 47381 / Rare Metals 2025, 44, 2366",
       "engine": "USPEX GA + MTP + active learning",
       "targets": [
-        {"quantity": "Li2SiS3 corner-sharing sigma", "value": 1e-4, "unit": "mS/cm", "condition": "안정상(실험 보고 구조)", "confidence": "⛔ 절대값 인용 금지"},
-        {"quantity": "Li2SiS3 edge-sharing sigma", "value": 2.4, "unit": "mS/cm", "condition": "준안정상", "confidence": "⛔ 절대값 인용 금지"},
-        {"quantity": "연결방식 전환에 의한 sigma 상승", "value": 4, "unit": "orders of magnitude", "condition": "corner -> edge, 동일 조성", "confidence": "**이 비율만 인용 가능**"}
+        {
+          "quantity": "Li2SiS3 corner-sharing sigma",
+          "value": 0.0001,
+          "unit": "mS/cm",
+          "condition": "안정상(실험 보고 구조)",
+          "confidence": "⛔ 절대값 인용 금지"
+        },
+        {
+          "quantity": "Li2SiS3 edge-sharing sigma",
+          "value": 2.4,
+          "unit": "mS/cm",
+          "condition": "준안정상",
+          "confidence": "⛔ 절대값 인용 금지"
+        },
+        {
+          "quantity": "연결방식 전환에 의한 sigma 상승",
+          "value": 4,
+          "unit": "orders of magnitude",
+          "condition": "corner -> edge, 동일 조성",
+          "confidence": "**이 비율만 인용 가능**"
+        }
       ],
-      "descriptors_for_metastable_superionic": ["dead volume (양이온 중심 S4가 Li 경로를 막는 부피)", "distance of cation (d_corner > d_edge)", "Li-S4 distortion"],
+      "descriptors_for_metastable_superionic": [
+        "dead volume (양이온 중심 S4가 Li 경로를 막는 부피)",
+        "distance of cation (d_corner > d_edge)",
+        "Li-S4 distortion"
+      ],
       "our_status": "무관 — 문제설정 다름(host 고정 개질). 단 'metastable이 더 좋을 수 있다'는 명제는 kb/concepts/ordered_vs_disordered.md 와 공명"
     },
-
     "coating_screening_scale": {
       "source": "lee2026_skku",
       "slide": "13 (PDF p.9)",
       "status_of_underlying_work": "Nano Convergence 2026, 13, 27 (출판됨)",
       "engine": "SevenNet",
       "targets": [
-        {"quantity": "초기 풀", "value": 17233, "unit": "structures", "condition": "Li-P-S-O crystal structures @ Materials Project", "confidence": "덱 명시값"},
-        {"quantity": "스크리닝 축", "value": ["electrochemical stability", "mechanical stability", "electronic stability", "Li-ion conductivity"], "unit": null, "condition": null, "confidence": "덱 도해"}
+        {
+          "quantity": "초기 풀",
+          "value": 17233,
+          "unit": "structures",
+          "condition": "Li-P-S-O crystal structures @ Materials Project",
+          "confidence": "덱 명시값"
+        },
+        {
+          "quantity": "스크리닝 축",
+          "value": [
+            "electrochemical stability",
+            "mechanical stability",
+            "electronic stability",
+            "Li-ion conductivity"
+          ],
+          "unit": null,
+          "condition": null,
+          "confidence": "덱 도해"
+        }
       ],
       "our_comparable": {
         "pool": 47,
@@ -105,65 +204,102 @@
         "action": "PDF 확보 최우선 (kb/projects/symposium_2026_competitive_analysis.md §7 위시리스트 1순위). S6 후보나열 감사의 직접 대조군"
       }
     },
-
     "electrode_microstructure_rate": {
       "source": "moon2026_cau",
       "slide": "37-38 (PDF p.20-21)",
       "status_of_underlying_work": "BEARS (arXiv, peer-review 미통과)",
       "system": "그래파이트, footprint 30x38 um, 로딩 8 mg/cm2, wt% 95:3:2",
       "targets": [
-        {"quantity": "생성 전극 수", "value": 80, "unit": "structures", "condition": "single/binary/gradient, DOE 기반", "confidence": "덱 명시값"},
-        {"quantity": "전기화학 검증 수", "value": 5, "unit": "structures", "condition": "SPH10/HC01/HC06/HC05/GRD01", "confidence": "⚠ 80개 전부 시뮬레이션한 것이 아니다"},
-        {"quantity": "3C 용량 유지 (binary vs single)", "value": 3, "unit": "x", "condition": "HC06(binary) vs HC01(single)", "confidence": "덱 서술 '약 3배'"}
+        {
+          "quantity": "생성 전극 수",
+          "value": 80,
+          "unit": "structures",
+          "condition": "single/binary/gradient, DOE 기반",
+          "confidence": "덱 명시값"
+        },
+        {
+          "quantity": "전기화학 검증 수",
+          "value": 5,
+          "unit": "structures",
+          "condition": "SPH10/HC01/HC06/HC05/GRD01",
+          "confidence": "⚠ 80개 전부 시뮬레이션한 것이 아니다"
+        },
+        {
+          "quantity": "3C 용량 유지 (binary vs single)",
+          "value": 3,
+          "unit": "x",
+          "condition": "HC06(binary) vs HC01(single)",
+          "confidence": "덱 서술 '약 3배'"
+        }
       ],
       "our_comparable": "DEM 트랙(bimodal AM 시스템 — AM_P + AM_S + SE). 같은 물리 명제(bimodal 입도가 수송 경로를 여는가)를 다른 도구(DEM 접촉·응력·percolation vs FEM 전기화학)로 본다. 상보적",
       "bruggeman_note": "슬 29: tau = eps^(-alpha), NMC alpha=0.5 vs Graphite alpha=1.9 — 같은 관계식에서 지수가 4배 다름"
     },
-
     "agent_model_fitting": {
       "source": "moon2026_cau",
       "slide": "23 (PDF p.14)",
       "status_of_underlying_work": "Battery-Sim-Agent, ICLR 2026 under review",
       "targets": [
-        {"quantity": "Total duration", "value": 8965.8, "unit": "s", "condition": "약 70 라운드", "confidence": "덱 명시값"},
-        {"quantity": "Final RMSE", "value": 0.5513, "unit": null, "condition": null, "confidence": "덱 명시값"},
-        {"quantity": "Final MAPE", "value": 2.4258, "unit": null, "condition": null, "confidence": "덱 명시값"}
+        {
+          "quantity": "Total duration",
+          "value": 8965.8,
+          "unit": "s",
+          "condition": "약 70 라운드",
+          "confidence": "덱 명시값"
+        },
+        {
+          "quantity": "Final RMSE",
+          "value": 0.5513,
+          "unit": null,
+          "condition": null,
+          "confidence": "덱 명시값"
+        },
+        {
+          "quantity": "Final MAPE",
+          "value": 2.4258,
+          "unit": null,
+          "condition": null,
+          "confidence": "덱 명시값"
+        }
       ],
       "caveat": "베이스라인(수동 피팅) 비교치가 덱에 없다 — 절대 성능 판단 불가"
     }
   },
-
   "methodology_references": {
     "_note": "수치가 아니라 방법. 우리 실행 항목 T1-T8 의 출처.",
-
     "extrapolation_grade_control": {
-      "source": "lee2026_skku", "slide": "16 (PDF p.10)",
+      "source": "lee2026_skku",
+      "slide": "16 (PDF p.10)",
       "what": "MTP-MD 스냅샷마다 extrapolation grade gamma 를 계산, gamma_select ~ gamma_break 사이를 'Accurate region'으로 정의. 벗어난 구조는 DFT 재계산 후 재훈련(active learning)",
       "our_gap": "우리 UMA MD는 스냅샷 수준 외삽 판정이 전무하다. 검증을 물질 수준에서만 했다",
       "our_action": "T1 — 사전학습 모델이라 gamma 를 그대로 못 만들지만 대리지표(궤적 스냅샷 UMA vs DFT 단일점 오차 분포)는 가능",
       "priority": 1
     },
     "reaction_coordinate_training_set": {
-      "source": "lee2026_skku", "slide": "21 (PDF p.13)",
+      "source": "lee2026_skku",
+      "slide": "21 (PDF p.13)",
       "what": "훈련셋을 반응 진행 단계로 층화: pre-mixing -> material prepared -> reactants -> transition state -> products. 하위셋에 Guided MD(D_S-H, D_O-H 좌표 유도) 포함",
       "our_action": "T4 — 우리는 학습을 안 하므로 **검증셋**으로 전용. 단계별 UMA vs DFT 단일점 비교",
       "priority": 2
     },
     "functional_parallel_training": {
-      "source": "lee2026_skku", "slide": "14 (PDF p.9)",
+      "source": "lee2026_skku",
+      "slide": "14 (PDF p.9)",
       "what": "단일점 DFT를 functional 3종(PBE / optB88 / PBE+D3damp)으로 병렬 계산해 각각 MLIP 학습, 어느 것이 물리를 재현하는지 판정",
       "outcome_in_their_paper": "optB88-vdW만 site-disorder 의존성 재현. PBE·PBE-D3는 100%-ordered를 3.7 mS/cm로 오판. sigma_80% 가 4.19 / 0.55 / 2.46 으로 **8배 갈림** (kim2024)",
       "why_it_matters_to_us": "**우리 'MLIP 절대값 인용 금지' 규율의 외부 정면 증거**. 경쟁 그룹 데이터로 우리 방법론을 정당화할 수 있다",
       "priority": "인용 자산 (실행 아님)"
     },
     "region_resolved_msd": {
-      "source": "lee2026_skku", "slide": "18 (PDF p.11)",
+      "source": "lee2026_skku",
+      "slide": "18 (PDF p.11)",
       "what": "계면/벌크 구획별로 MSD를 분리해 D를 따로 산출",
       "our_action": "T5 — 기존 MSD 파이프라인에 구획 마스크만 추가하면 됨",
       "priority": 2
     },
     "skill_three_level_loading": {
-      "source": "moon2026_cau", "slide": "35 (PDF p.19)",
+      "source": "moon2026_cau",
+      "slide": "35 (PDF p.19)",
       "what": "Level 1 Metadata(YAML, 항상 로드, ~100 토큰) / Level 2 Body(Markdown, 트리거시, <5k) / Level 3 Bundled files(scripts·data, 필요시). 40+ modular skills, 8 범주",
       "claimed_benefit": "낮은 토큰 사용량 + 신뢰도 높은 출력 (⚠ 측정치는 덱에 없음)",
       "our_gap": "우리는 Level 2만 있다 — CLAUDE.md(항상 로드지만 100 토큰 아님) + tools/*.py(Level 3). 중간 메타데이터 층 부재",
@@ -171,23 +307,25 @@
       "priority": 1
     },
     "knowledge_graph_link_prediction": {
-      "source": "moon2026_cau", "slide": "16 (PDF p.10)",
+      "source": "moon2026_cau",
+      "slide": "16 (PDF p.10)",
       "what": "황화물 ASSB 문헌에서 소재-공정-계면-성능-열화 관계를 neo4j KG로 추출. Graph RAG는 근거검색, GNN은 미연결 잠재관계 예측",
       "convergent_finding": "Case 1 (Unseen but Correct): 'Soft-acid cation doping (HSAB: Sn/Sb/As) in sulfide SE' -> 'Low ionic conductivity' RESOLVES. **우리 cascade air_hsab 축과 같은 명제를 완전히 다른 경로로 도출**",
       "our_action": "T6 — digest를 대체하지 말고 위에 얹기. 방법 맥락과 인용금지 규칙 보존이 조건",
       "priority": 4
     },
     "literature_reporting_bias_metaanalysis": {
-      "source": "moon2026_cau", "slide": "17 (PDF p.10)",
+      "source": "moon2026_cau",
+      "slide": "17 (PDF p.10)",
       "what": "Li-air 5,680편 -> 4,183편 -> 피인용 상위 1,000편 PDF에서 에너지밀도와 **질량 기준**을 GPT로 추출",
       "finding": "전셀 질량 기준 에너지밀도는 대체로 500 Wh/kg 미만. 그 이상 보고는 활물질·탄소·전극 등 **가벼운 질량 기준** 때문이며, 500 초과 3편은 주로 전해질 무게를 줄여 달성",
       "why_it_matters_to_us": "문헌 보고 관행이 수치를 부풀린다는 메타분석이 **학회 발표 본론에 들어간 전례**. 우리 정직성 장치(vacuous gate·컷 지배 경고·상속 상수 폭로)도 부록이 아니라 본론으로 낼 근거",
       "priority": "서사 자산"
     }
   },
-
   "industry_context": {
-    "source": "moon2026_cau", "slide": "8 (PDF p.6)",
+    "source": "moon2026_cau",
+    "slide": "8 (PDF p.6)",
     "_caveat": "SNE리서치 단월(1월) 기준. 연간으로 오독 금지. 발표 덱 재인용이므로 원 출처 확인 후 사용",
     "sk_on_ai_platform": {
       "introduced": "2025-07",
@@ -196,22 +334,138 @@
       "claimed_saving": "완성차 프로젝트당 수백억 예상"
     },
     "k_battery_market_jan": {
-      "LG에너지솔루션": {"GWh": 4.7, "yoy_pct": -14.9, "share_pct": 6.6},
-      "SK온": {"GWh": 2.3, "yoy_pct": -21.3, "share_pct": 3.2},
-      "삼성SDI": {"GWh": 1.6, "yoy_pct": -24.4, "share_pct": 2.2},
-      "3사_합계": {"GWh": 8.6, "yoy_pct": -17.3, "share_pct": 12}
+      "LG에너지솔루션": {
+        "GWh": 4.7,
+        "yoy_pct": -14.9,
+        "share_pct": 6.6
+      },
+      "SK온": {
+        "GWh": 2.3,
+        "yoy_pct": -21.3,
+        "share_pct": 3.2
+      },
+      "삼성SDI": {
+        "GWh": 1.6,
+        "yoy_pct": -24.4,
+        "share_pct": 2.2
+      },
+      "3사_합계": {
+        "GWh": 8.6,
+        "yoy_pct": -17.3,
+        "share_pct": 12
+      }
     },
     "use": "원고/발표 도입부 서사 — 시장 역성장 국면에서 AI 계산이 개발 속도·원가로 활로를 낸다"
   },
-
   "open_questions": [
-    {"id": "Q1", "q": "이상욱 랩 코팅 스크리닝 17,233 -> 최종 후보의 실체", "close_by": "Nano Convergence 2026, 13, 27 PDF", "blocks": "S6 감사"},
-    {"id": "Q2", "q": "Li|LPSCl 계면 MD가 어느 무질서 배열을 썼나", "close_by": "Chem. Eng. J. / 구술 txt", "blocks": "T3 프로토콜"},
-    {"id": "Q3", "q": "gamma_select / gamma_break 수치 기준", "close_by": "논문 SI / 구술 txt", "blocks": "T1 설계"},
-    {"id": "Q4", "q": "가수분해 H2S 발생량 정량 (Taklu 실험값과 대조 가능한가)", "close_by": "Adv. Funct. Mater. revision", "blocks": "T2 검증"},
-    {"id": "Q5", "q": "Adv. Energy Mater. revision 이 config-variance 오차막대를 추가했는가", "close_by": "논문", "blocks": "우리 우위 주장 3-2의 유효 범위"},
-    {"id": "Q6", "q": "그들 P2D 입력 스키마 (우리 sigma/Ea를 넣으려면 어떤 형식)", "close_by": "구술 txt / 접촉", "blocks": "T8(=M5)"}
+    {
+      "id": "Q1",
+      "q": "이상욱 랩 코팅 스크리닝 17,233 -> 최종 후보의 실체",
+      "close_by": "Nano Convergence 2026, 13, 27 PDF",
+      "blocks": "S6 감사"
+    },
+    {
+      "id": "Q2",
+      "q": "Li|LPSCl 계면 MD가 어느 무질서 배열을 썼나",
+      "close_by": "Chem. Eng. J. / 구술 txt",
+      "blocks": "T3 프로토콜"
+    },
+    {
+      "id": "Q3",
+      "q": "gamma_select / gamma_break 수치 기준",
+      "close_by": "논문 SI / 구술 txt",
+      "blocks": "T1 설계"
+    },
+    {
+      "id": "Q4",
+      "q": "가수분해 H2S 발생량 정량 (Taklu 실험값과 대조 가능한가)",
+      "close_by": "Adv. Funct. Mater. revision",
+      "blocks": "T2 검증"
+    },
+    {
+      "id": "Q5",
+      "q": "Adv. Energy Mater. revision 이 config-variance 오차막대를 추가했는가",
+      "close_by": "논문",
+      "blocks": "우리 우위 주장 3-2의 유효 범위"
+    },
+    {
+      "id": "Q6",
+      "q": "그들 P2D 입력 스키마 (우리 sigma/Ea를 넣으려면 어떤 형식)",
+      "close_by": "구술 txt / 접촉",
+      "blocks": "T8(=M5)"
+    }
   ],
-
-  "status": "OPEN — 발표 구술 txt 및 이상욱 랩 논문 추가 입수 예정 (사용자, 2026-07-28). 닫지 말 것."
+  "status": "OPEN — 발표 구술 txt 및 이상욱 랩 논문 추가 입수 예정 (사용자, 2026-07-28). 닫지 말 것.",
+  "lee_lab_bibliography": {
+    "_note": "2026-07-28 웹 검색으로 서지 확정. 덱에는 저널·권·페이지만 있고 제목이 없었다 — 아래 제목은 검색으로 확인한 것이며 PDF 실물 확보 전까지 '서지 확인됨, 본문 미확인' 상태다.",
+    "confirmed": [
+      {
+        "rank": 1,
+        "cite": "Nano Convergence 2026, 13, 27",
+        "title": "High-throughput discovery of Li3Sc2(PO4)3 as a protective coating for stabilizing mid-Ni NCM interfaces in all-solid-state batteries",
+        "authors": "J. H. Kim, S. Lee, S. U. Lee",
+        "doi": "10.1186/s40580-026-00555-z",
+        "access": "open access (Springer)",
+        "why": "우리 cascade/M6 의 직접 대조군. 덱 슬 13 의 '17,233 Li-P-S-O @ MP' 스크리닝. **최종 후보가 Li3Sc2(PO4)3 = Sc 계** — 우리 cascade_v23_ranked 1위가 Sc2O3 인 것과 수렴(단 조성은 인산염 vs 산화물로 다름)",
+        "status": "⏳ PDF 확보 대기"
+      },
+      {
+        "rank": 3,
+        "cite": "SSRN preprint (Chem. Eng. J. 투고본으로 추정)",
+        "title": "Deciphering Li2S-like SEI Formation Mechanism at Li/Argyrodite Anodic Interfaces via Large-Scale Machine-Learned Reactive Dynamics",
+        "authors": "Ji Seon Kim, Ji Hoon Kim, Sang Uck Lee",
+        "doi": "SSRN abstract_id=6772406",
+        "access": "preprint (즉시 입수 가능)",
+        "why": "T3(Li|LPSCl 반응 MD) 프로토콜 원본. 덱 슬 18-19 의 정본. **초록에 기구가 명시**: Li 삽입이 PS4 사면체를 불안정화 → 무질서 S-rich 비정질층이 전해질로 침투 → 결정 도메인 핵생성·성장, Li2S 특유의 short-to-medium range order",
+        "status": "⏳ 프리프린트 — 최우선 입수(공개돼 있음)"
+      },
+      {
+        "rank": 4,
+        "cite": "JACS 2025, 147, 51, 47381-47391",
+        "title": "Machine Learning-Assisted Crystal Structure Prediction of Solid-State Electrolytes Reveals Superior Ionic Conductivity in Metastable Edge-Sharing Phases",
+        "authors": "(Lee group)",
+        "doi": "10.1021/jacs.5c15665",
+        "access": "ACS",
+        "why": "덱 슬 28-29 정본. 준안정 edge-sharing 이 안정 corner-sharing 보다 Li 이동도 우수. SSE 후보 4종에 적용(Li2SiS3 포함)",
+        "status": "⏳"
+      },
+      {
+        "rank": 6,
+        "cite": "Rare Metals 2025, 44, 2366",
+        "title": "New crystal structure of Li3YCl6: structural relationship and ionic conductivity for solid-state electrolytes",
+        "authors": "Ji Hoon Kim, Byeongsun Jun, Yong Jun Jang, Chi Ho Lee, Sang Uck Lee",
+        "doi": "10.1007/s12598-024-03069-x",
+        "access": "Wiley",
+        "why": "CSP 보조. **할라이드계(Li3YCl6)** 라 우리 황화물 축과는 다름 — 우선순위 낮음",
+        "status": "⏳ 낮은 우선순위"
+      },
+      {
+        "rank": "NEW",
+        "cite": "J. Mater. Chem. A 2024, 12, 12, 7272",
+        "title": "Design of multicomponent argyrodite based on a mixed oxidation state as promising solid-state electrolyte using moment tensor potentials",
+        "authors": "(Lee group)",
+        "doi": "10.1039/d4ta00361f",
+        "access": "RSC",
+        "why": "**검색 중 새로 발견 — 덱에 없던 논문**. '다중성분 argyrodite + 혼합 산화수' = **우리 co-doping 캠페인과 정면으로 같은 문제설정**. kim2024(무질서) 의 자매편으로 보이며, 우리 codoping_ml 1081쌍의 직접 선행연구일 가능성. **우선순위 2위로 승격**",
+        "status": "⏳ 신규 — 사용자에게 요청"
+      }
+    ],
+    "not_found_still_unpublished": [
+      {
+        "cite": "Adv. Funct. Mater. (revision)",
+        "topic": "argyrodite 가수분해 SevenNet + Sn 억제 (덱 슬 21-24)",
+        "note": "미출판이라 검색 불가. T2(ICOHP 기술자) 방법 원본 — 구술 txt 나 출판 후 확보"
+      },
+      {
+        "cite": "Adv. Energy Mater. (revision)",
+        "topic": "Dynamic properties 후속 (덱 슬 13)",
+        "note": "미출판. **Q5(config-variance 오차막대 추가 여부) 가 여기 걸려 있다** — 우리 신규성 주장의 유효범위"
+      },
+      {
+        "cite": "arXiv:2601.04746",
+        "topic": "BEARS 스킬 3계층 (문장혁 랩, 덱 슬 35)",
+        "note": "덱 표기 판독 신뢰도 낮음 — 번호 확인 필요"
+      }
+    ]
+  }
 }
