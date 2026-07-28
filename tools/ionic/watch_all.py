@@ -269,14 +269,17 @@ for d in ds:
     mode = j.get("mode") or ""
     tag = "탐지" if mode.startswith("탐지") else ("교정" if mode.startswith("교정") else "?")
     med, ab, nf = c.get("median"), c.get("n_above_break"), j.get("n_frames")
-    mark = ""
-    if tag == "탐지" and isinstance(ab, int) and isinstance(nf, int) and nf:
-        r = ab / nf
-        mark = "  ⚠⚠ 급증" if r > 0.25 else ("  ⚠ 증가" if r > 0.10 else "  ok")
     ms = "?" if med is None else f"{med:.4f}"
-    print(f"  T{T}: 엔진 {n}/3 · 프레임중앙 {ms} · break초과 {ab}/{nf} · [{tag}]{mark}")
-print("   ⚠ '교정'의 초과는 정의상 5% — **'탐지' 값만 정보다.**")
-print("     1000 K 급증이면 Arrhenius 상단(600/800/1000 K)이 신뢰 밖 → open_items #1 이 시드로 안 풀림")
+    # ⚠ 여기서 초과 수에 경보를 달지 않는다. 문턱은 600 K 절대값인데 조화 고체의 RMS 힘은
+    #   √T 로 커지므로, 상대 정확도가 똑같아도 고온 초과는 는다. 예전엔 이 자리에
+    #   '⚠⚠ 급증'을 찍었고 그건 열적 스케일링을 외삽으로 오독한 경보였다.
+    #   판정은 힘 크기로 정규화하는 committee_sweep_verdict.py 가 한다.
+    print(f"  T{T}: 엔진 {n}/3 · 프레임중앙 {ms} · 고정문턱초과 {ab}/{nf} · [{tag}] (정규화 전)")
+print("   ⚠ '교정'의 초과는 정의상 5% — 기준선 표본의 초과 수는 결과가 아니다.")
+print("   ⚠ 고온의 고정문턱 초과도 **그 자체로는 판정이 아니다** (힘이 √T 로 커짐).")
+print("     판정: python3 tools/ionic/committee_sweep_verdict.py \\")
+print("             --out_json db/properties/committee_temperature_sweep.json \\")
+print("             --out_csv  db/properties/committee_temperature_sweep_origin.csv")
 print(BAR)
 
 # ═══ ⑤ LPSOCl ELF (CPU — GPU 안 건드림) ═════════════════════════════════

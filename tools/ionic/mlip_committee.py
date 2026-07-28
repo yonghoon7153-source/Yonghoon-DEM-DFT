@@ -122,18 +122,20 @@ def cmd_predict(a):
 
 
 # ── 3) 합의 분석 ────────────────────────────────────────────────────────────
-def cmd_analyze(a):
-    d = Path(a.dir)
-    preds = {}
-    for p in sorted(d.glob("pred_*.npz")):
-        preds[p.stem[5:]] = np.load(p, allow_pickle=True)
+def load_preds(d):
+    """<dir>/pred_*.npz → {engine: npz}. 최소 2개 아니면 종료."""
+    d = Path(d)
+    preds = {p.stem[5:]: np.load(p, allow_pickle=True) for p in sorted(d.glob("pred_*.npz"))}
     if len(preds) < 2:
-        sys.exit(f"엔진이 {len(preds)}개뿐 — 위원회는 최소 2개 필요")
-    names = sorted(preds)
-    F = {k: preds[k]["forces"] for k in names}           # (nframe, natom, 3)
-    nf = F[names[0]].shape[0]
+        sys.exit(f"{d}: 엔진이 {len(preds)}개뿐 — 위원회는 최소 2개 필요")
+    return preds
 
-    # 프레임별 **원자당 힘 RMS 불일치** — 쌍별 최대값을 그 프레임의 불일치로
+
+def frame_disagreement(F, names):
+    """프레임별 **원자당 힘 RMS 불일치** — 쌍별 최대값을 그 프레임의 불일치로.
+    ⚠ 온도 스윕 도구(committee_sweep_verdict.py)와 **같은 함수를 써야** 한다.
+      복제해 두면 한쪽만 고쳐져 두 판정이 조용히 갈린다."""
+    nf = F[names[0]].shape[0]
     per_frame, per_pair = np.zeros(nf), {}
     for i, x in enumerate(names):
         for y in names[i + 1:]:
@@ -141,6 +143,26 @@ def cmd_analyze(a):
             rms = np.sqrt((dF ** 2).sum(axis=2).mean(axis=1))   # (nframe,)
             per_pair[f"{x}|{y}"] = rms
             per_frame = np.maximum(per_frame, rms)
+    return per_frame, per_pair
+
+
+def force_scale(F, names, mask=None):
+    """이 표본의 **평균 힘 크기**(eV/Å). 절대 불일치를 이걸로 나눠야 온도 간 비교가 된다.
+    조화 고체에서 RMS 힘 ∝ √T 라 정규화 없이는 고온이 항상 더 나빠 보인다."""
+    out = []
+    for k in names:
+        f = F[k] if mask is None else F[k][:, mask, :]
+        out.append(float(np.sqrt((f ** 2).sum(axis=2)).mean()))
+    return float(np.mean(out))
+
+
+def cmd_analyze(a):
+    d = Path(a.dir)
+    preds = load_preds(d)
+    names = sorted(preds)
+    F = {k: preds[k]["forces"] for k in names}           # (nframe, natom, 3)
+    nf = F[names[0]].shape[0]
+    per_frame, per_pair = frame_disagreement(F, names)
 
     # ── 문턱 ────────────────────────────────────────────────────────────
     # ⚠ **같은 표본에서 뽑은 백분위를 그 표본에 적용하면 정보가 0이다** (p95 초과는 정의상 5%).
@@ -173,7 +195,7 @@ def cmd_analyze(a):
                 vals.append(np.sqrt((dF ** 2).sum(axis=2)).mean())
         # ⚠ 절대 RMS 는 **힘 크기를 따라간다** — P 는 PS4 중심이라 힘이 크고 Li 는 느슨해 작다.
         #    정규화 없이 원소 순위를 해석하면 "결합이 센 원소가 불확실하다" 는 동어반복이 된다.
-        mag = float(np.mean([np.sqrt((F[k][:, m, :] ** 2).sum(axis=2)).mean() for k in names]))
+        mag = force_scale(F, names, m)
         by_el[el] = {"abs_eV_per_A": float(np.mean(vals)),
                      "typical_force_eV_per_A": mag,
                      "relative": float(np.mean(vals) / mag) if mag > 1e-9 else None}
