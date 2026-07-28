@@ -42,10 +42,22 @@
 - 자유 h-BN 단층은 <0.01 Å 평면이어야 정상. Li-유도 pucker인지 4×4 셀 리플인지
   relax 미완인지 미해결 — h-BN 표면 수치(7 meV) 정량 인용 전 확인.
 
-### 6. LPSOCl COHP 곡선 원자료 회수 (2026-07-28 등록)
-- **상태**: 막대(ICOHP 적분값)는 완료 — `docs/figures/icohp/lpsocl_icohp_bars.png`
-  + `db/properties/lpsocl_icohp_origin.csv` / `_persite_origin.csv`.
-  **곡선(−pCOHP vs E)은 미완** — `COHPCAR.lobster` 가 gabia
+### 6. ~~LPSOCl COHP 곡선 원자료 회수~~ → ✅ **완료 (2026-07-29)**
+- 회수 성공(md5 대조 일치). N 이 `lpsocl_icohp.json` 과 정확히 일치:
+  P-S 19 · P-O 1 · Li-S 106 · Li-Cl 42 · Li-O 5 · S-S 54.
+  산출: `db/properties/lpsocl_cohp_curves_origin.csv` ·
+  `docs/figures/icohp/lpsocl_COHP_curves.png` · webapp Bonding 탭 실시간 렌더.
+- **읽을 때 남는 제약(⚠ 인용 전 필독)**: COHPCAR 격자가 −15.03 eV 에서 시작해서
+  **곡선 면적 ≠ ICOHP** 다. 창 안 비율 — P-O **30%** · Li-Cl 45% · Li-O 47% ·
+  P-S 81% · Li-S 89%. 곡선은 "어느 에너지에서 결합/반결합인가"만 말하고,
+  세기는 ICOHP 표(적분값)에서 인용한다. 그림·사이트 모두 이 커버리지를 표기한다.
+  더 넓은 창이 필요하면 **LOBSTER 재실행**(COHPstartEnergy 확대)이 필요하다.
+- 물리 판독: 모든 패널에서 반결합 상태가 E_F 위(비점유) — host 결합이 깨끗하다.
+  P-O σ* 는 +3.5 eV. Li-Cl 은 −4.3 eV 한 봉우리에 몰려 있고 Li-S 는 −2~−9 eV 에
+  넓게 퍼진다(같은 세기대, 다른 성격).
+
+### 6b. ⏳ 예전 항목 원문 (참고용 — 회수 절차)
+- `COHPCAR.lobster` 가 gabia
   `/data/work/runs/lpsocl_dft/lobster_ext/` 에만 있고 수십 MB라 repo 로 못 옮긴다.
 - **회수 경로**: gabia 에서 `tools/figures/extract_cohp_curves.py` 로 패널 곡선만
   압축 CSV(~20 KB)로 뽑아 gzip+base64 전송 → `db/properties/lpsocl_cohp_curves_origin.csv`.
@@ -57,6 +69,22 @@
 - **회수 후 확인**: 추출기가 찍는 N 이 `lpsocl_icohp.json` 의 N(P-S 19 · Li-S 106 ·
   Li-Cl 42 · Li-O 5 · S-S 54 · P-O 1)과 일치해야 한다. 어긋나면 P–S dmax(기본 2.6 Å)를
   조정해야 하는 신호다.
+
+### 7. litdb 인덱스 정합 — digest 156편 중 **67편이 INDEX 어디에도 없다** (2026-07-29 감사)
+- **사이트·db 는 멀쩡하다.** webapp `list_papers()` 는 디렉터리를 직접 읽어 156편 전부 잡는다
+  (파일 수 = 사이트 수 = 156). 문제는 **마크다운 인덱스 두 개만** 뒤처져 있다는 것.
+- `litdb/INDEX.md` (갱신 2026-06-23 표기, 파일 mtime 07-28): **67편 미등재**.
+  `litdb/INDEX_DEM_snapshot_2026-07-16.md` 도 그 67편을 담지 않는다.
+- `litdb/comparison_vs_ours.md`: **98편 미언급** (우리 값 대비가 없는 digest).
+- 미등재 67편의 대부분(≈63)은 **DEM·기계·건식전극 클러스터** — SE 캠페인과 축이 달라
+  argyrodite 전용 INDEX 에 안 들어간 것이 설계상 자연스럽다. 다만 **SE 축 4편은 진짜 누락**:
+  `huang2022_li2sis3_anomalous_conductivity_bvse` ·
+  `lee2024_multicomponent_argyrodite_mixed_oxidation_mtp` ·
+  `kim2026_hts_li3sc2po43_coating_midni_ncm` · `yun2023_deciphering_degradation_halide_vs_sulfide`
+  — 앞 3편은 2026-07-28 캠페인에서 우리가 직접 먹인 것들이다.
+- **판정**: 급하지 않다(사이트가 정본). 다만 논문 에이전트가 digest 를 쓸 때
+  **INDEX 갱신을 같이 하도록 되어 있는데 그게 최근 3건에서 안 됐다** — 에이전트 지침 점검 필요.
+  DEM 클러스터는 별도 인덱스로 분리 유지가 맞다(축이 다름).
 
 ## 📄 PDF 확보 대기 (원전 미보유 — 웹/재인용 딱지 상태)
 
