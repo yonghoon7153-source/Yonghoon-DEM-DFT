@@ -185,6 +185,14 @@
       {% endif %}
       <br><b>x 눈금은 패널마다 달라요</b> — P 계(−6~−8 eV)와 Li 계(−1~−2 eV)를 한 눈금에 두면
       Li 패널이 뭉개져서요. 높이 비교는 눈금이 같은 패널끼리만 하세요.
+      {% set lowcov = cohp_curves.pairs.values()|selectattr('window_coverage','defined')
+                        |rejectattr('window_coverage','ge',0.95)|list %}
+      {% if lowcov %}
+      <br><b style="color:#b91c1c">⚠ 상자의 ICOHP ≠ 그림에 보이는 면적</b> — LOBSTER 의 ICOHP 는
+      전 에너지 적분인데 COHPCAR 격자가 −∞ 에서 시작하지 않아서, 깊은 결합 기여가 창 밖에 있어요.
+      커버리지가 95% 미만인 패널엔 <b>(N% in window)</b> 를 붙였습니다 — 그 패널의 면적으로
+      ICOHP 를 주장하면 안 되고, 곡선은 <b>“어느 에너지에서 결합/반결합인가”만</b> 말해요.
+      {% endif %}
     </div>
     <div class="chart" id="cohp-chart" style="min-height:520px"></div>
     <div class="muted mono" style="font-size:.68rem;margin-top:6px">

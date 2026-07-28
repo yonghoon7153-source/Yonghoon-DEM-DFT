@@ -1131,6 +1131,38 @@ def verdict_revisions() -> list:
             "papers": ["spencer2022_review_tco_band_structure_oxides"],
             "artifacts": ["db/properties/oxide_literature_properties_spencer2022.json"],
         },
+        {
+            "id": "V7",
+            "date": "2026-07-29",
+            "title": "위원회 불일치 온도 스윕을 '⚠⚠ 급증'으로 경보했다가 철회",
+            "claimed": ("watch_all.py 가 800 K 59/200 · 1000 K 118/200 프레임이 문턱을 넘었다며 "
+                        "'급증' 경보를 냈다. 읽히기로는 '고온 배열이 UMA 훈련 분포 밖' = "
+                        "600/800/1000 K 3점 아레니우스의 상단 두 점이 신뢰 불가."),
+            "wrong": ("문턱이 **600 K 표본의 절대 p95**(0.3669 eV/Å)인데, 조화 고체의 RMS 힘은 "
+                      "√T 로 커진다. 모델 간 **상대** 오차가 완전히 같아도 고정 절대 문턱을 넘는 "
+                      "프레임은 온도와 함께 늘어난다. 즉 열적 스케일링을 외삽으로 오독했다."),
+            "how_found": (
+                "mlip_committee.py 가 이미 '같은 표본에서 뽑은 백분위를 그 표본에 적용하면 정보가 0' "
+                "이라는 순환성을 주석으로 못 박아 뒀는데, **같은 함정이 온도 축에서 재발**한 것이다. "
+                "npz 에서 힘 크기를 직접 재서 확인: 400→1000 K 실측 ×1.324 vs 조화 예측 √(T/600)=1.291 "
+                "(2.6% 초과 = 가벼운 비조화). 문턱을 힘 크기에 비례해 옮겨 다시 세면 "
+                "**T800 8/200 · T1000 4/200 로 기준선 10/200 보다 오히려 적다** — 고정문턱 판독과 방향이 반대."),
+            "now_known": (
+                "**어느 온도에서도 외삽 신호가 없다.** 600/800/1000 K 3점 아레니우스는 이 지표로 "
+                "막히지 않는다. 다만 '상대 불일치가 −8.3% 로 준다'를 '고온이 더 안전하다'로 읽으면 "
+                "**또 틀린다** — D = a + b·F 적합에서 온도무관 절편 a = +0.102 eV/Å 이고 이것이 "
+                "600 K 불일치의 **32%** 다. 바닥이 있으면 D/F = a/F + b 라서 F 가 커질수록 자동으로 준다. "
+                "그 바닥은 별개 발견이다: 열운동이 0 이어도 남는 모델 간 불일치 = **평형 구조 PES 자체의 불일치**."),
+            "caveat": ("⚠ 절대 σ 인용 금지 규율은 그대로다 — 세 엔진(UMA/MACE-MP-0/SevenNet-0)이 "
+                       "전부 PBE 계열이라 계통오차를 공유한다. 일치는 '훈련 분포 안'만 말한다."),
+            "lesson": "**분포의 스케일이 변하는 축(온도)에 고정 절대 문턱을 그대로 쓰면 안 된다.** "
+                      "watch 는 이제 초과 수를 '(정규화 전)' 으로만 표시하고 경보하지 않는다 — "
+                      "판정은 힘 크기로 정규화하는 committee_sweep_verdict.py 가 한다.",
+            "papers": ["kim2026_li_argyrodite_sei_reactive_md"],
+            "artifacts": ["db/properties/committee_temperature_sweep.json",
+                          "db/properties/committee_temperature_sweep_origin.csv",
+                          "tools/ionic/committee_sweep_verdict.py"],
+        },
     ]
 
 
@@ -1219,8 +1251,20 @@ def paper_pis(slug: str) -> list:
 
 
 def mlip_committee() -> dict:
-    """T1 모델 위원회 기준선. /benchmarks 의 방법론 축에 붙는다 (물성이 아니라 방법)."""
-    return _load_json(DB / "properties" / "mlip_committee_baseline.json")
+    """T1 모델 위원회 기준선. /benchmarks 의 방법론 축에 붙는다 (물성이 아니라 방법).
+
+    온도 스윕 판정(committee_temperature_sweep.json)이 있으면 `_sweep` 으로 얹는다.
+    ⚠ 기준선(600 K 단일 표본)만 보여주면 '고정 문턱 초과 = 나쁨' 오독이 그대로 남는다 —
+      그 오독을 우리가 실제로 했고(판정이력 V7), 스윕이 그걸 뒤집은 자료다. 같이 보여야 한다.
+    """
+    d = _load_json(DB / "properties" / "mlip_committee_baseline.json")
+    if not d:
+        return d
+    sw = _load_json(DB / "properties" / "committee_temperature_sweep.json")
+    if sw:
+        d = dict(d)
+        d["_sweep"] = sw
+    return d
 
 
 def nd_survey() -> dict:
