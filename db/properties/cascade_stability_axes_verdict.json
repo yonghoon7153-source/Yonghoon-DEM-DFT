@@ -1,0 +1,267 @@
+{
+  "property": "cascade_stability_axes_verdict",
+  "date": "2026-07-28",
+  "source_csv": "db/properties/cascade_stability_axes.csv",
+  "method": "닫힌계 pseudo-binary dE_rxt (Richards/Ong 2016 eq 2), MP GGA_GGA+U. 게이트 |dE|<100 meV (Xiao 2019 F4).",
+  "honesty_header": [
+    "⛔ 게이트 통과 수를 성과로 인용하지 말 것 — 아래 축별 위력이 극단적으로 다르다.",
+    "⛔ **Li 음극 축의 적용 조건**: 이 축은 도펀트가 SE 벌크에 분산돼 Li 금속 음극과 접촉하는 구성에서만 유효하다. 양극 표면에만 있는 코팅이면 Li 금속과 만나지 않으므로 **과도하게 엄격하다**. 우리 cascade 는 'LPSCl 도펀트' 구도라 SE 벌크 = Li 접촉이 성립하지만, 결과를 인용할 때 이 전제를 반드시 밝힐 것.",
+    "⛔ 컷 근처 ±20 meV 순위 주장 금지 (Xiao 100 meV 는 관례컷 + Sundar 2025 의 분해산물 전자전도도 미고려 비판).",
+    "⚠ dE_H2S 는 열역학 구동력이지 반응 속도가 아니다."
+  ],
+  "T9_interface_axes": {
+    "gates": {
+      "cathode_full": {
+        "n": 47,
+        "pass": 45,
+        "kill": 2,
+        "median": -0.0,
+        "worst": -107.3,
+        "unique_kill_vs_core": [],
+        "killed": [
+          "Sb2O5",
+          "TiF4"
+        ]
+      },
+      "cathode_half": {
+        "n": 47,
+        "pass": 44,
+        "kill": 3,
+        "median": 0.0,
+        "worst": -131.8,
+        "unique_kill_vs_core": [],
+        "killed": [
+          "BaO",
+          "MnO",
+          "Na2O"
+        ]
+      },
+      "SE_LPSCl": {
+        "n": 47,
+        "pass": 18,
+        "kill": 29,
+        "median": -163.4,
+        "worst": -767.0,
+        "unique_kill_vs_core": [
+          "Ag2O",
+          "CaO",
+          "Li2O",
+          "SnO2",
+          "WO3",
+          "ZnO"
+        ],
+        "killed": [
+          "Ag2O",
+          "BaO",
+          "CaO",
+          "CoO",
+          "Cr2O3",
+          "CrO3",
+          "Cu2O",
+          "Fe2O3",
+          "Ga2O3",
+          "Gd2O3",
+          "GeO2",
+          "In2O3",
+          "La2O3",
+          "Li2O",
+          "MnO",
+          "MoO3",
+          "Na2O",
+          "Nb2O5",
+          "Nd2O3",
+          "NiO",
+          "Sb2O5",
+          "Sm2O3",
+          "SnO2",
+          "SrO",
+          "TiF4",
+          "V2O5",
+          "WO3",
+          "Y2O3",
+          "ZnO"
+        ]
+      },
+      "Li_anode": {
+        "n": 47,
+        "pass": 12,
+        "kill": 35,
+        "median": -447.1,
+        "worst": -1370.0,
+        "unique_kill_vs_core": [
+          "Ag2O",
+          "MgF2",
+          "SiO2",
+          "SnO2",
+          "WO3",
+          "ZnO"
+        ],
+        "killed": [
+          "Ag2O",
+          "Al2O3",
+          "AlF3",
+          "B2O3",
+          "BaO",
+          "CoO",
+          "Cr2O3",
+          "CrO3",
+          "Cu2O",
+          "Fe2O3",
+          "Ga2O3",
+          "GeO2",
+          "HfO2",
+          "In2O3",
+          "LaF3",
+          "MgF2",
+          "MnO",
+          "MoO3",
+          "Na2O",
+          "Nb2O5",
+          "NdF3",
+          "NiO",
+          "Sb2O5",
+          "ScF3",
+          "SiO2",
+          "SnO2",
+          "Ta2O5",
+          "TiF4",
+          "TiO2",
+          "V2O5",
+          "WO3",
+          "YF3",
+          "ZnO",
+          "ZrF4",
+          "ZrO2"
+        ]
+      },
+      "LNO_control": {
+        "n": 47,
+        "pass": 43,
+        "kill": 4,
+        "median": -13.7,
+        "worst": -234.0,
+        "unique_kill_vs_core": [
+          "Li2O"
+        ],
+        "killed": [
+          "BaO",
+          "Li2O",
+          "Na2O",
+          "SrO"
+        ]
+      }
+    },
+    "verdict_overturns_M6": "**2026-07-28 M6 의 'vacuous 게이트' 판정을 우리 데이터로 확정 반증한다.** 양극 축은 2-3종만 죽이는데 SE 축은 29종, Li 음극 축은 35종을 죽인다. M6 초판이 vacuous 하게 보인 것은 게이트의 성질이 아니라 **우리가 가장 쉬운 상대만 계산했기 때문**이다. Kim 2026 (Nano Convergence 13, 27) 본문 'many materials exhibited stable interfaces with the NCM523, a substantial fraction fail to maintain stability against LPSC' 가 우리 풀에서 그대로 재현됐다.",
+    "core_survivors_before": [
+      "Ag2O",
+      "CaF2",
+      "CaO",
+      "Li2O",
+      "LiF",
+      "MgF2",
+      "MgO",
+      "SiO2",
+      "SnO2",
+      "WO3",
+      "ZnO"
+    ],
+    "core_killed_by_SE_or_Li": [
+      "Ag2O",
+      "CaO",
+      "Li2O",
+      "MgF2",
+      "SiO2",
+      "SnO2",
+      "WO3",
+      "ZnO"
+    ],
+    "core_survivors_after": [
+      "CaF2",
+      "LiF",
+      "MgO"
+    ],
+    "note_survivors": "CaF2 · LiF · MgO 만 전 축을 통과한다. LiF 와 MgO 는 실제 코팅/첨가제로 보고된 물질이라 화학적으로 말이 된다. ⚠ 단 3종이라는 **숫자 자체를 결론으로 쓰지 말 것** — 100 meV 컷 하나에 지배된다."
+  },
+  "T10_hull_synthesizability": {
+    "gate": "E_above_hull < 50 meV/atom (Lee 2024 JMCA 12, 7272 Table 1)",
+    "n_fail": 0,
+    "max": [
+      [
+        46.2,
+        "CrO3"
+      ],
+      [
+        0.0,
+        "ZrO2"
+      ],
+      [
+        0.0,
+        "ZrF4"
+      ],
+      [
+        0.0,
+        "ZnO"
+      ],
+      [
+        0.0,
+        "YF3"
+      ]
+    ],
+    "⚠_negative_result": "**예측이 빗나갔다.** 'G1(구조안정)이 vacuous 한 근본 원인은 hull 이 아니라 host 상대 Δe 를 쓰기 때문' 이라고 가정하고 T10 을 세웠는데, **hull 로 바꿔도 탈락이 0종**이다(최대 CrO3 46 meV, 나머지 사실상 0). 원인은 기준이 아니라 **풀**이다 — 우리 47종은 애초에 안정한 흔한 이성분 산화물·불화물로 큐레이션돼 있어 어떤 열역학 안정성 기준을 걸어도 통과한다. → **T10 은 접는다.** 대신 이 결과 자체를 `cascade_screening_funnel.json` 의 pool_provenance 논증에 **정량 근거**로 넣는다: '우리 풀에서 안정성 축이 무력한 것은 게이트 설계 문제가 아니라 큐레이션의 성질이다'."
+  },
+  "T11_hydrolysis": {
+    "gate": "pseudo-binary 화합물 + H2O (Lee 2024 ESI eq S9-S10)",
+    "worst_10": [
+      {
+        "coating": "Na2O",
+        "dE_H2S_meV": -191.7
+      },
+      {
+        "coating": "BaO",
+        "dE_H2S_meV": -159.8
+      },
+      {
+        "coating": "SrO",
+        "dE_H2S_meV": -116.4
+      },
+      {
+        "coating": "Li2O",
+        "dE_H2S_meV": -108.1
+      },
+      {
+        "coating": "CaO",
+        "dE_H2S_meV": -74.3
+      },
+      {
+        "coating": "Nd2O3",
+        "dE_H2S_meV": -45.9
+      },
+      {
+        "coating": "La2O3",
+        "dE_H2S_meV": -44.5
+      },
+      {
+        "coating": "Sm2O3",
+        "dE_H2S_meV": -36.4
+      },
+      {
+        "coating": "B2O3",
+        "dE_H2S_meV": -32.0
+      },
+      {
+        "coating": "Cr2O3",
+        "dE_H2S_meV": -26.9
+      }
+    ],
+    "chemistry": "최악군이 전부 **알칼리·알칼리토 산화물**(Na2O -192 · BaO -160 · SrO -116 · Li2O -108 · CaO -74)이다 — 염기성·흡습성 산화물이라 화학적으로 타당하다. 불화물은 전부 0 근처.",
+    "cross_axis": "Li2O·CaO 는 SE 축에서도 탈락한다 = 두 축이 같은 화학(강염기성)을 다른 각도에서 본다.",
+    "⚠_missing": "host LPSCl 자체의 dE_H2S 를 아직 안 쟀다 — 기준선이 없으면 '개선인지'를 말할 수 없다. 후속 필수.",
+    "⚠_not_the_same_as": "이상욱 랩의 반응 MD(SevenNet 500 ps, ICOHP, Sn 유인 기구)와 **같은 것이 아니다**. 이건 0 K 열역학 구동력이고 그쪽은 동역학이다."
+  },
+  "next": [
+    "cascade 깔때기에 G6(SE 계면)·G7(Li 계면) 편입 — 양극 축은 vacuous 배지 유지",
+    "host LPSCl 의 dE_H2S 기준선 계산 (T11 완성 조건)",
+    "T10 접기 → pool_provenance 논증으로 전환",
+    "CaF2·LiF·MgO 3종은 컷 민감도 스윕 후에만 인용"
+  ]
+}
