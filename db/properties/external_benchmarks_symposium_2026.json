@@ -220,6 +220,13 @@
           "unit": "meV/atom",
           "condition": "50 meV 컷 전원 통과",
           "confidence": "Table S2 실측"
+        },
+        {
+          "quantity": "n-Li2SiS3 sigma_RT (실험)",
+          "value": 2.4,
+          "unit": "mS/cm",
+          "condition": "298 K, EIS 228-383 K, 펠릿 상대밀도 85%",
+          "confidence": "**Huang 2022 실험값 — 복원됨.** 조성 Li1.82SiP0.036S3"
         }
       ],
       "descriptors_for_metastable_superionic": {
@@ -269,7 +276,31 @@
         ],
         "why_no_sigma": "논문은 σ 를 어떤 조성·어떤 상에도 보고하지 않는다. SI eq 7(Arrhenius)·eq 8(NE)은 방법 서술만 있고 **결과에 한 번도 쓰이지 않은 보일러플레이트**다 — 단일 온도(600 K)만 돌려서 Arrhenius 자체가 불가능하다.",
         "provenance_guess": "0.0001 / 2.4 mS/cm 는 Huang 2022 원문 값일 가능성이 높으나 **우리는 그 PDF 가 없다 → 판독 불가. 확보 전까지 인용 금지.**",
-        "worse_than_kim2026": "kim2026_hts 는 최소한 신뢰구간(0.2 [0.01, 2.4] mS/cm)이라도 있었다. 여기는 **D 조차 단일 궤적·60 ps·단일 온도·시드 1·오차막대 전무**다."
+        "worse_than_kim2026": "kim2026_hts 는 최소한 신뢰구간(0.2 [0.01, 2.4] mS/cm)이라도 있었다. 여기는 **D 조차 단일 궤적·60 ps·단일 온도·시드 1·오차막대 전무**다.",
+        "resolution_2026_07_28_huang_pdf": {
+          "status": "**부분 복원.** Huang et al., JACS 2022, 144, 4989 (DOI 10.1021/jacs.1c13178) 실물 확보 — JACS 2025 CSP 논문의 ref 36 이자 덱 수치의 진짜 출처.",
+          "restored": [
+            {
+              "value": "2.4 mS/cm @ 298 K",
+              "what": "n-Li2SiS3 (정방정 P4(2)2(1)2, 고립 edge-shared (Si/P)2S6 이량체). Ea 0.28 eV",
+              "provenance": "**Huang 2022 실험값** — JACS 2025 계산값이 아니다. 인용 시 반드시 병기.",
+              "caveat": "실조성은 순수 Li2SiS3 가 아니라 **Li1.82SiP0.036S3** (Si/P = 0.97:0.03)"
+            }
+          ],
+          "still_retracted": [
+            {
+              "was": "corner-sharing 1e-4 mS/cm",
+              "why": "Huang 은 e-Li2SiS3 의 sigma 를 수치로 주지 않는다. '3 orders lower' 로 역산하면 **약 2.4e-3 mS/cm** 로 약 24배 차이"
+            },
+            {
+              "was": "4 orders of magnitude",
+              "why": "초록·본문·그래픽초록 모두 **3 orders / 1000 times**"
+            }
+          ],
+          "extra_caveat": "Huang 의 '3자릿수' 비교 대상도 **자기 측정이 아니라 ref 16(Ahn & Huggins 1990) 소환값**이다.",
+          "direction_conflict": "⚠ Huang 에서 edge-sharing(n-Li2SiS3)은 **저온상**이고 승온하면 n→m→e 로 corner 사슬이 된다. JACS 2025 CSP 의 '준안정 edge-sharing' 서사와 방향이 다르니 두 논문을 같이 인용할 때 뭉개지 말 것.",
+          "canonical_digest": "litdb/papers/huang2022_li2sis3_anomalous_conductivity_bvse.md"
+        }
       },
       "⚠_cross_composition_warning": "그들 세 기술자는 **같은 조성 안의 폴리모프 10개 줄 세우기**로만 검증됐다. **조성이 다른 47종을 가로질러 쓴 적이 없다.** 특히 α 는 MS4 부피 자체가 화학 따라 변해 조성 간 비교가 무의미하다 — 쓴다면 **조성별 상대 지표로만**.",
       "method_dependence_red_flag": "🔴 **PBE 단독인데 SCAN 이 PBE 를 흔든다.** 검증 14종 중 SCAN 을 돌린 5건에서 **3건 부호 반전**(Li3PS4 −26→+8 · Na3PS4 −8→+23 · LiAlCl4 −12→+1.5 meV/atom). 그런데 **본론 4조성엔 SCAN 을 아예 안 돌렸다.** corner vs edge 의 E_rel 차가 3–42 meV/atom 인데 functional 하나로 그 크기의 역전이 관측됐다 → 우리 언어로 **real difference 가 아니라 method-dependent claim**.",
