@@ -159,9 +159,9 @@
       "framework": "both Li-only conductors (framework D ~1/40-1/60 of Li)."
     },
     "mechanism_interpretation_v2_2026_06_11": {
-      "dual_mechanism": "Cl-rich LPSCl1.6 is faster than ordered LPSCl due to BOTH lower per-hop barrier (Schlem disorder effect, Minafra/Kraft narrative) AND larger prefactor (vacancy carrier density). Both effects in same direction, both literature-supported. Roughly equal contributions to ~3x σ enhancement.",
+      "dual_mechanism": "Cl-rich LPSCl1.6 is faster than ordered LPSCl due to BOTH lower per-hop barrier (disorder effect — Minafra/Kraft narrative; 구 Schlem 앵커 귀속오류 철회 2026-07-28 (해당 DOI=Li3MCl6 논문)) AND larger prefactor (vacancy carrier density). Both effects in same direction, both literature-supported. Roughly equal contributions to ~3x σ enhancement.",
       "paper_message": "σ(LPSCl1.6) > σ(LPSCl) is NOT 'prefactor only' (our earlier 5fu-based reading) NOR 'barrier only' (Minafra simplification). It's BOTH — Cl-rich/vacancy structure simultaneously flattens the Li hopping landscape (Ea↓ via 4d-Cl AS distorting cage) AND increases mobile carrier concentration (vacancy + Cl-substituted sites).",
-      "5fu_to_4fu_correction_2026_06_11": "Earlier comp1 5fu Ea=0.172 was an artifact of artificial 5 f.u. cubic supercell (natural F-43m is 4 f.u.). 4fu natural rerun gives Ea=0.2532 (matches Schlem 2020 LPSCl exactly). modelc 5fu Ea=0.224 unchanged (rhombohedral 5fu is natural). Paper #1 narrative thus reversed from 'prefactor dominant, barrier counter-direction' to 'barrier + prefactor both contribute in literature direction'.",
+      "5fu_to_4fu_correction_2026_06_11": "Earlier comp1 5fu Ea=0.172 was an artifact of artificial 5 f.u. cubic supercell (natural F-43m is 4 f.u.). 4fu natural rerun gives Ea=0.2532 (실험 LPSCl 범위 0.29-0.46 하단; 구 Schlem 앵커 귀속오류 철회 2026-07-28 (해당 DOI=Li3MCl6 논문)). modelc 5fu Ea=0.224 unchanged (rhombohedral 5fu is natural). Paper #1 narrative thus reversed from 'prefactor dominant, barrier counter-direction' to 'barrier + prefactor both contribute in literature direction'.",
       "RT_caveat": "3-point Arrhenius extrapolation to 300K still uncertain; quote 600-1000K values."
     }
   },
