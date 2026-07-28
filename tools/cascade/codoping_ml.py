@@ -563,7 +563,23 @@ def main():
             "note": "ml_lodo = stage1(46 도펀트 재적합)+stage3(해당 도펀트 포함쌍 제외) 로 만든 "
                     "완전 out-of-fold 배포점수. 각 쌍은 2 폴드에서 held-out → 평균.",
         },
+        "lambda_leak_note": "세 방식 모두 λ3(전표본 선택)를 고정 사용 — λ 재선택까지 폴드 안으로 넣으면 "
+                            "LODO/L2DO 는 **더 나빠지므로** 아래 누수 크기는 하한이다.",
+        "verdict": None,   # 아래에서 채움
     }
+    cv_cmp["verdict"] = (
+        f"⚠ **현행 pair-CV 는 낙관 편의가 크다.** 같은 도펀트를 공유하는 쌍은 비독립인데 "
+        f"pair-LOOCV 는 그걸 무시한다: 가중 R² {cv_cmp['pair_LOOCV']['weighted_r2']:+.4f} → "
+        f"LODO {cv_cmp['leave_one_dopant_out']['weighted_r2']:+.4f} → "
+        f"L2DO {cv_cmp['leave_both_dopants_out']['weighted_r2']:+.4f} "
+        f"(Δ_pairCV−L2DO = {cv_cmp['leakage_delta_weighted_r2']['pairCV_minus_L2DO']:+.4f}). "
+        f"**독립 폴드에서는 R² < 0**, 즉 가중 평균 예측보다도 못하다. "
+        f"실측 라벨 40개에 대한 Spearman 도 {cv_cmp['pair_LOOCV']['spearman_on_listed']:+.3f} → "
+        f"{cv_cmp['leave_one_dopant_out']['spearman_on_listed']:+.3f} → "
+        f"{cv_cmp['leave_both_dopants_out']['spearman_on_listed']:+.3f} 로 무너진다. "
+        f"→ **stage3 교호작용 계수는 도펀트 정체성에 상당히 얽혀 있고, 새 도펀트로의 일반화 근거는 없다.** "
+        f"랩 PPT Group-CV 관행이 지적한 구멍이 실제로 이 크기(ΔR² 0.34, Δρ 0.33)로 존재함. "
+        f"보고 시 pair-CV 수치 단독 인용 금지 — LODO/L2DO 병기.")
 
     # ---------- v1 대비 진단 ----------
     v1_keys = list(v1)
@@ -757,6 +773,26 @@ def main():
                    "회귀(휴리스틱 타깃) — 수치·특징 이식 금지.",
             "determinism": {"seed": PERM_SEED, "n_permutations": N_PERM,
                             "note": "np.random.default_rng(고정 시드) — 2회 실행 산출물 md5 동일"},
+            "headline": {
+                "stage1_enrichment_x": s1_enrich["label_shuffle_error_enrichment"],
+                "stage3_ordering_enrichment_x": s3_enrich["spearman_enrichment_vs_label_shuffle"],
+                "stage3_discovery_enrichment_x": s3_enrich["stage3_rank_enrichment_vs_label_shuffle"],
+                "stage3_cRp2": s3_enrich["cRp2_vs_label_shuffle"],
+                "pairCV_minus_L2DO_weighted_r2": cv_cmp["leakage_delta_weighted_r2"]["pairCV_minus_L2DO"],
+                "n_pairs_outside_applicability_domain": int((ad_A == 0).sum()),
+                "one_line": (
+                    f"stage1 은 랜덤 대비 {s1_enrich['label_shuffle_error_enrichment']:.0f}배 정확하지만 "
+                    f"그건 타깃이 특징의 선형합성이라서다(항등식 복원). stage3 은 이미 알려진 40쌍의 "
+                    f"**순서**는 랜덤 대비 {s3_enrich['spearman_enrichment_vs_label_shuffle']:.1f}배 "
+                    f"맞히지만(p={s3_enrich['label_shuffle_p_value_spearman']:.3f}), 1081쌍에서 그 40쌍을 "
+                    f"**발굴**하는 능력은 랜덤과 구별 불가"
+                    f"({s3_enrich['stage3_rank_enrichment_vs_label_shuffle']:.2f}배, "
+                    f"p={s3_enrich['label_shuffle_p_value_precision']:.2f}) 이고 "
+                    f"cR²_p={s3_enrich['cRp2_vs_label_shuffle']:.2f} 로 QSAR 문턱 0.5 미달. "
+                    f"게다가 pair-CV 는 도펀트 누수로 R² 를 "
+                    f"{cv_cmp['leakage_delta_weighted_r2']['pairCV_minus_L2DO']:+.2f} 과대평가한다 "
+                    f"(독립 폴드에선 R²<0). → 산출물 지위는 'HYPOTHESIS GENERATOR' 그대로가 맞다."),
+            },
             "honesty_framing": [
                 "우리 47 도펀트는 **큐레이션된 후보군**이지 대규모 발견 깔때기가 아니다 "
                 "(Xiao 104,082 / Sendek 12,831 / Kahle 15,855 과 근본적으로 다름). "
@@ -768,10 +804,15 @@ def main():
             ],
             "stage1_score_regression": {
                 **s1_enrich,
+                "cRp2_passes_qsar_threshold": bool(s1_enrich["cRp2_vs_label_shuffle"] >= 0.5),
                 "interpretation": "stage1 타깃(cascade score)은 특징의 거의 정확한 선형합성이라 "
                                   "R²_loo=0.9998 이 나온다 — 이 수치는 '예측력'이 아니라 '항등식 복원'이다. "
-                                  "라벨셔플/X-rand 대비 오차 농축배수가 그 구조를 정직하게 드러낸다: "
-                                  "랜덤 타깃/랜덤 특징에선 σ_loo 가 수백~수천 배 커진다.",
+                                  "라벨셔플/X-rand 대비 오차가 ~79배로 벌어지는 것은 그 항등식이 실재함을 "
+                                  "확인해줄 뿐, 물성 예측력의 증거가 아니다.",
+                "why_two_nulls_coincide": "라벨셔플 79.3x 와 X-randomization 79.3x 가 거의 동일한 것은 "
+                                          "버그가 아니다 — 두 귀무모형 모두 신호를 완전히 파괴해 ridge 가 "
+                                          "절편-only 로 수축하므로 σ_loo → std(y) 로 같은 값에 수렴한다. "
+                                          "즉 이 농축배수는 std(y)/σ_loo,true 의 다른 표현.",
                 "cRp2_threshold_note": "QSAR 관례 문턱 0.5 (Sendek 최적모델 0.59). "
                                        "cR²_p = R·√(R²−R²_rand), R²는 적합 R² (LOOCV 아님).",
             },
@@ -780,8 +821,24 @@ def main():
                 "interpretation": "stage3 의 weighted_loocv_r2(0.089)는 1041개 0-근사가 지배해 해석 불가. "
                                   "정직한 지표는 랭킹 농축배수 — 'top-40 안에 v1 수록쌍이 몇 개' 를 "
                                   "base rate(40/1081 = 3.70%) 및 라벨셔플 귀무분포와 비교한 값이다.",
+                "cRp2_passes_qsar_threshold": bool(s3_enrich["cRp2_vs_label_shuffle"] >= 0.5),
                 "caveat": "양성 라벨 = v1 휴리스틱 수록 여부이므로 이 농축은 **v1 재현 농축**이다. "
                           "물성 검증이 아니다.",
+                "verdict": "⚠ 두 지표가 갈린다 — 정직하게 둘 다 보고할 것. "
+                           "(a) **순서**: 이미 v1 이 수록한 40쌍 **안에서의 순위**는 랜덤 대비 유의하게 "
+                           f"낫다 (Spearman {s3_enrich['stage3_spearman_on_listed']:.3f} vs 셔플 "
+                           f"{s3_enrich['label_shuffle_spearman_abs_mean']:.3f}, "
+                           f"{s3_enrich['spearman_enrichment_vs_label_shuffle']:.1f}x, "
+                           f"p={s3_enrich['label_shuffle_p_value_spearman']:.4f}). "
+                           "(b) **발굴**: 1081쌍 전체에서 그 40쌍을 top-40 으로 끌어올리는 능력은 "
+                           f"랜덤과 구별되지 않는다 (precision@40 {s3_enrich['stage3_precision_at_40']:.3f} "
+                           f"vs 셔플 {s3_enrich['label_shuffle_precision_at_40_mean']:.4f}, "
+                           f"{s3_enrich['stage3_rank_enrichment_vs_label_shuffle']:.2f}x, "
+                           f"p={s3_enrich['label_shuffle_p_value_precision']:.3f} — 유의하지 않음). "
+                           f"(c) **cR²_p = {s3_enrich['cRp2_vs_label_shuffle']:.3f} < 0.5** = QSAR 관례 문턱 "
+                           "**미달**(Sendek 최적모델 0.59 대비). 결론: stage3 교호작용 증류는 "
+                           "'가설 순서 매기기' 용도로는 신호가 있으나 '새 쌍 발굴기'로 주장할 근거는 없다 — "
+                           "산출물 지위(HYPOTHESIS GENERATOR)와 정합.",
             },
             "applicability_domain": {
                 "definition": "Sendek §3.4. d = 훈련셋(47 도펀트) PCA-분산 정규화 중심거리를 "
@@ -815,9 +872,20 @@ def main():
                             "max": round(float(ad_d.max()), 3),
                             "train_mean_by_construction": 1.0,
                             "train_max": round(float(ad_d_train.max()), 3)},
+                "d_median_top40": round(float(np.median(ad_d[order[:40]])), 3),
                 "eps_stats": {"min": round(float(ad_eps.min()), 3),
                               "median": round(float(np.median(ad_eps)), 3),
-                              "max": round(float(ad_eps.max()), 3)},
+                              "max": round(float(ad_eps.max()), 3),
+                              "median_top40": round(float(np.median(ad_eps[order[:40]])), 3),
+                              "units": "배포 ml_score 와 같은 z 단위 — 같은 열의 uncertainty 와는 "
+                                       "다른 양이다(uncertainty = stage1 LOOCV 잔차 전파 + stage3 계수 "
+                                       "공분산 사영, ad_eps = 도펀트 제거 재적합 jackknife 산포)."},
+                "finding": (
+                    f"pair 특징은 단일도펀트 특징의 min/max/avg 집계라 대부분 훈련 분포 **내부**에 "
+                    f"떨어진다 — 외삽 판정은 {int((ad_A == 0).sum())}/{len(pairs)}쌍뿐이고 "
+                    f"top40 에는 {int((ad_A[order[:40]] == 0).sum())}개. 즉 우리 경우 winner's curse 의 "
+                    f"주 위험은 '외삽'이 아니라 '적합 노이즈·도펀트 누수'(위 cv_leakage 절)다. "
+                    f"AD 는 그래도 배포 표에 병기해 Sendek 식 신뢰주석을 유지한다."),
                 "use": "M3 역설계 winner's curse 완화의 기성 구현체 — 후보 제시 시 ml_score 옆에 "
                        "ad_d/ad_eps/ad_A 를 반드시 병기하고, ad_A=0 은 '외삽·저신뢰'로 라벨링할 것. "
                        "Sendek Table 3 의 P_LR=1.000 4종이 전부 d=3.2–6.9 인공물이었던 사례가 근거.",

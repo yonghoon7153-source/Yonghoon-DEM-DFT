@@ -428,14 +428,19 @@ def main():
                         "median 컷이 결과를 지배해 다른 축의 민감도가 전부 가려진다 "
                         "(n_full_with_G5 열이 그 붕괴를 보여준다)."),
         "G3_oxidation_onset": {"sweep": g3_sweep,
-                               "note": ("host 2.14 V 앵커에서 ±0.2 V 이동. onset 축퇴(19종 @2.14 V) 때문에 "
-                                        "+0.05 V 만 올려도 코어 생존자가 급감하는 **계단 함수** — "
-                                        "'host 이상'이라는 판정 자체는 견고하지만 '얼마나 이상'은 해상도가 없다.")},
+                               "note": ("host 2.14 V 앵커에서 ±0.2 V 이동. onset 축퇴(19종이 정확히 2.14 V) 탓에 "
+                                        "**완전한 계단 함수**다 — 컷을 2.19 V 로 0.05 V 만 올리면 코어 생존자가 "
+                                        "11 → **0**. 즉 '도펀트가 host onset 을 유지하는가'는 견고한 이분 판정이지만 "
+                                        "'얼마나 개선하는가'에는 해상도가 사실상 없다(S²⁻-limited). "
+                                        "예외적으로 onset 을 올리는 소수(B2O3 2.317·Cr2O3/Ga2O3/In2O3/Sc2O3 2.356·"
+                                        "Y2O3 2.282)는 G4 에서 탈락해 코어에 남지 않는다 = 산화안정과 수송의 정면 trade-off.")},
         "G4_li_transport": {"sweep": g4_sweep,
                             "largest_gaps_in_passer_distribution":
                                 [{"gap": g, "below": lo, "above": hi} for g, lo, hi in gaps],
-                            "note": ("0.30 컷은 0.2863–0.3844 공백 안에 있어 ±0.05 이동에 코어 생존자 집합이 "
-                                     "불변이다(0.25 로 내리면 MoO3 가 복귀). 자의적이지만 국소적으로 안정.")},
+                            "note": ("코어 생존자는 0.30–0.40 구간에서 11종 불변, 0.25 로 내리면 MoO3 가 복귀해 12종, "
+                                     "0.50 에서 10종, 0.60 에서 5종. 즉 컷을 **올리는** 쪽으로는 둔감하고 "
+                                     "**내리는** 쪽으로 민감하다 — 0.30 은 공백 상단이라 그렇다. "
+                                     "'자의적이지만 국소적으로 안정'이 정확한 표현이고, 비대칭이라는 점까지 붙여야 정직하다.")},
         "G5_mechanical": {"sweep": g5_sweep,
                           "note": ("percentile 1.00 = 게이트 무효화 → G1–G4 코어 생존자 11종과 동일. "
                                    "0.25→1.00 사이에서 최종 생존자가 0→11 로 전 구간을 훑는다 = "
@@ -640,6 +645,25 @@ def main():
         "threshold_sensitivity": threshold_sensitivity,
         "literature_absolute_variants": lit_variants,
         "literature_comparison_table": lit_table,
+        "key_findings": [
+            "G1(Δe<0)은 47/47 vacuous — 우리 풀이 이미 그 조건으로 큐레이션됐다는 증거이지 "
+            "우리 스크린의 발견력이 아니다.",
+            "G2(window collapse)는 unique_kill=0 = **완전 중복 게이트**. 창이 붕괴한 4종"
+            "(Fe2O3·CoO·NiO·MnO)이 전부 late-TM 이라 G3(ox onset)에도 걸린다 → "
+            "우리 풀에서 '창 붕괴'와 '낮은 onset'은 같은 화학(후기 TM d-band)의 두 얼굴이다.",
+            "Sendek 2017 의 '전제조건 > 전도도' 순위가 우리 풀에서는 역전된다 "
+            "(standalone kill: 안정 0 · 창 4 · onset 22 · 수송 27 · 기계 32) — "
+            "전제조건이 이미 소진된 큐레이션 풀에서는 구속조건이 수송/기계로 이동한다.",
+            "게이트가 전부 정적 boolean 이라 최종 생존자 집합은 순서 불변(4개 순열에서 실측 확인). "
+            "순서가 바꾸는 것은 중간 숫자와 '탈락의 공' 배분뿐 — 깔때기 그림의 모양은 서사 선택이지 결과가 아니다.",
+            "host onset(2.14 V)을 **올리는** 6종(B2O3·Cr2O3·Ga2O3·In2O3·Sc2O3·Y2O3)이 전부 "
+            "G4(수송)에서 탈락한다 = 산화 안정과 Li 수송의 정면 trade-off. "
+            "Xiao 2019 의 'V_ox ↔ Li 함량 내재 trade-off'(Fig 7)의 우리판 대응.",
+            "문헌 절대 문턱을 그대로 이식하면 두 개가 empty gate 가 된다: V_ox≥4.0 V(Xiao) → 0종, "
+            "Pugh B/G>1.75 → 0종. 우리가 host 상대·로스터 상대 좌표를 쓰는 이유의 정량 근거.",
+            "문헌에 있고 우리 게이트엔 없는 축 2개: 계면 화학 반응성(Richards pseudo-binary ΔE_rxt)과 "
+            "전자 절연(우리 계산 gap 전수 부재). 전자는 추가 1순위, 후자는 진단으로만 붙였다.",
+        ],
         "caveats": [
             "게이트 통과 수는 발견 성능이 아니다 (pool_provenance 참조).",
             "G1 은 vacuous(47/47) — 우리 풀이 그 조건으로 이미 큐레이션됐다는 뜻.",

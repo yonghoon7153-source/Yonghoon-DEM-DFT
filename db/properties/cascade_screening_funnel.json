@@ -211,7 +211,7 @@
    "label": "Li 수송 유지 (채널 미폐색)",
    "metric": "ionic_transport norm ∈[0,1] = min-max(bvs_li_proxy_score @x=0.05) with blocking<0.6 게이트, 탈락자 0.05 평탄화",
    "threshold": "transport_norm > 0.3",
-   "threshold_basis": "두 겹. ① blocking<0.60 은 build_cascade_themes.py 가 이미 쓰는 db 규약(승계). ② 0.30 컷은 통과자 분포의 **최대 공백(natural break)** 에서 취했다 — MoO3 0.2863 과 MnO 0.3844 사이 0.098 (그 아래 0.1827·0.10 까지 계속 성긴 꼬리). ⚠ host 앵커가 없는 축이라 G1–G3 만큼 강한 유도는 아니다 → threshold_sensitivity.G4 스윕을 반드시 함께 볼 것.",
+   "threshold_basis": "두 겹. ① blocking<0.60 은 build_cascade_themes.py 가 이미 쓰는 db 규약(승계). ② 0.30 컷은 통과자 분포 **하위 꼬리의 공백 구간**(MoO3 0.2863 ↔ MnO 0.3844, 폭 0.098) 안에 놓았다. ⚠ 정확히 말하면 이건 분포 전체의 최대 공백이 아니다(최대는 0.6842↔0.845 = 0.161, 그 다음이 0.1827↔0.2863 = 0.104, 이게 3번째). 즉 '하위 꼬리를 자르는 자연스러운 위치 중 하나'이지 유일해가 아니다. host 앵커가 없는 축이라 G1–G3 만큼 강한 유도가 아님 → threshold_sensitivity.G4 스윕(코어 기준)을 반드시 함께 볼 것.",
    "literature_analog": {
     "papers": [
      "xiao2019_cathode_coating_screening (Filter 6, CI-NEB E_m)",
@@ -352,9 +352,83 @@
    "vacuous_interpretation": null
   }
  ],
+ "literature_comparable_endpoint": {
+  "gate": "G4",
+  "n": 11,
+  "survivors": [
+   "Ag2O",
+   "CaF2",
+   "CaO",
+   "Li2O",
+   "LiF",
+   "MgF2",
+   "MgO",
+   "SiO2",
+   "SnO2",
+   "WO3",
+   "ZnO"
+  ],
+  "why": "G1–G4 만이 문헌(Xiao/Sendek/Kahle) 게이트에 대응한다. 문헌과 나란히 인용할 숫자는 **여기까지**(47 → 43 → 25 → 11)다. G5 는 우리가 추가한 축이라 문헌 대비에 넣으면 사과와 오렌지가 된다."
+ },
  "final_survivors": [
   "WO3"
  ],
+ "final_survivors_warning": "G5 까지 걸면 1종(WO3)만 남지만 이는 **결론이 아니다**. G5 의 median 컷은 host 앵커가 없는 자의적 컷이고, percentile 을 0.25→1.00 으로 훑으면 최종 생존자가 0→11 로 전 구간을 움직인다(threshold_sensitivity.G5_mechanical). '우리 깔때기의 최종 승자'로 인용하지 말 것 — 인용할 숫자는 literature_comparable_endpoint(11종)이고, G5 는 그 11종을 기계 축으로 정렬한 부가 정보다.",
+ "electronic_insulation_diagnostic": {
+  "status": "DIAGNOSTIC_ONLY — 게이트 아님",
+  "why_not_a_gate": "① 47종 전수의 우리 계산 gap 이 없다(canonical gap 은 fixed-occ nscf 로 host/챔피언 소수만). ② themes.json 의 gap_lit_eV 는 문헌 전형값 ±0.5 eV 큐레이션 — 게이트로 쓰면 큐레이션 값이 스크리닝 결과를 만든 것처럼 보인다.",
+  "core_survivors_gap_lit_eV": [
+   {
+    "dopant": "Ag2O",
+    "gap_lit_eV": 1.3
+   },
+   {
+    "dopant": "WO3",
+    "gap_lit_eV": 2.7
+   },
+   {
+    "dopant": "ZnO",
+    "gap_lit_eV": 3.3
+   },
+   {
+    "dopant": "SnO2",
+    "gap_lit_eV": 3.6
+   },
+   {
+    "dopant": "CaO",
+    "gap_lit_eV": 7
+   },
+   {
+    "dopant": "Li2O",
+    "gap_lit_eV": 7
+   },
+   {
+    "dopant": "MgO",
+    "gap_lit_eV": 7.8
+   },
+   {
+    "dopant": "SiO2",
+    "gap_lit_eV": 9
+   },
+   {
+    "dopant": "CaF2",
+    "gap_lit_eV": 12
+   },
+   {
+    "dopant": "MgF2",
+    "gap_lit_eV": 12
+   },
+   {
+    "dopant": "LiF",
+    "gap_lit_eV": 14
+   }
+  ],
+  "if_applied": {
+   "xiao_F1_gap_gt_0.5eV": 11,
+   "sendek_gap_ge_1eV": 11,
+   "verdict": "코어 생존자 전원이 두 문헌 문턱을 통과 → 이 축을 넣어도 **또 하나의 vacuous 게이트**가 될 뿐이다. 다만 절대 수준은 갈린다(불화물 10–14 eV vs Ag₂O 1.3 · WO₃ 2.7 eV) — '통과'와 '안심'은 다르며, 후기 TM/d⁰ 산화물 생존자는 전자 누설 관점에서 별도 검토 대상."
+  }
+ },
  "survivors_before_G5": [
   "Ag2O",
   "CaF2",
@@ -694,118 +768,271 @@
   "sendek_analog_verdict": "Sendek 2017 은 '전제조건(안정·gap·ESW)이 전도도 모델보다 세게 거른다'고 결론했다(전제조건 12,831→317 vs LR 모델 단독 12,831→1,408). **우리 풀에서는 정반대다**: standalone 제거 수 = G1 0 · G2 4 · G3 22 · G4 27 · G5 32 → 수송(G4)이 최강 단일 필터이고 안정성(G1)은 아무도 못 떨어뜨린다. 이 역전은 우리 풀의 성질에서 온다 — 47종은 애초에 '넣을 만한' 도펀트로 큐레이션돼 안정성·ESW 전제조건을 이미 통과한 상태로 시작하므로, 남은 구속조건이 수송으로 옮겨간다. 즉 Sendek 명제의 반증이 아니라 **'전제조건이 이미 소진된 풀에서는 축이 이동한다'는 따름정리**다."
  },
  "threshold_sensitivity": {
+  "how_to_read": "G3·G4 스윕은 **n_core_G1_G4**(문헌 대응 코어)를 보라. G5 를 함께 걸면 median 컷이 결과를 지배해 다른 축의 민감도가 전부 가려진다 (n_full_with_G5 열이 그 붕괴를 보여준다).",
   "G3_oxidation_onset": {
    "sweep": [
     {
      "offset_vs_host_V": -0.2,
      "ox_cut_V": 1.94,
-     "n_final": 1,
-     "survivors": [
-      "WO3"
-     ]
+     "n_core_G1_G4": 15,
+     "core_survivors": [
+      "Ag2O",
+      "CaF2",
+      "CaO",
+      "HfO2",
+      "Li2O",
+      "LiF",
+      "MgF2",
+      "MgO",
+      "Na2O",
+      "SiO2",
+      "SnO2",
+      "SrO",
+      "TiO2",
+      "WO3",
+      "ZnO"
+     ],
+     "n_full_with_G5": 1
     },
     {
      "offset_vs_host_V": -0.1,
      "ox_cut_V": 2.04,
-     "n_final": 1,
-     "survivors": [
-      "WO3"
-     ]
+     "n_core_G1_G4": 13,
+     "core_survivors": [
+      "Ag2O",
+      "CaF2",
+      "CaO",
+      "Li2O",
+      "LiF",
+      "MgF2",
+      "MgO",
+      "Na2O",
+      "SiO2",
+      "SnO2",
+      "SrO",
+      "WO3",
+      "ZnO"
+     ],
+     "n_full_with_G5": 1
     },
     {
      "offset_vs_host_V": -0.05,
      "ox_cut_V": 2.09,
-     "n_final": 1,
-     "survivors": [
-      "WO3"
-     ]
+     "n_core_G1_G4": 11,
+     "core_survivors": [
+      "Ag2O",
+      "CaF2",
+      "CaO",
+      "Li2O",
+      "LiF",
+      "MgF2",
+      "MgO",
+      "SiO2",
+      "SnO2",
+      "WO3",
+      "ZnO"
+     ],
+     "n_full_with_G5": 1
     },
     {
      "offset_vs_host_V": 0.0,
      "ox_cut_V": 2.14,
-     "n_final": 1,
-     "survivors": [
-      "WO3"
-     ]
+     "n_core_G1_G4": 11,
+     "core_survivors": [
+      "Ag2O",
+      "CaF2",
+      "CaO",
+      "Li2O",
+      "LiF",
+      "MgF2",
+      "MgO",
+      "SiO2",
+      "SnO2",
+      "WO3",
+      "ZnO"
+     ],
+     "n_full_with_G5": 1
     },
     {
      "offset_vs_host_V": 0.05,
      "ox_cut_V": 2.19,
-     "n_final": 0,
-     "survivors": []
+     "n_core_G1_G4": 0,
+     "core_survivors": [],
+     "n_full_with_G5": 0
     },
     {
      "offset_vs_host_V": 0.1,
      "ox_cut_V": 2.24,
-     "n_final": 0,
-     "survivors": []
+     "n_core_G1_G4": 0,
+     "core_survivors": [],
+     "n_full_with_G5": 0
     }
    ],
-   "note": "host 2.14 V 앵커에서 ±0.2 V 이동. onset 축퇴(19종 @2.14) 때문에 0 → −0.05 V 구간에서 계단식으로 크게 뛴다."
+   "note": "host 2.14 V 앵커에서 ±0.2 V 이동. onset 축퇴(19종이 정확히 2.14 V) 탓에 **완전한 계단 함수**다 — 컷을 2.19 V 로 0.05 V 만 올리면 코어 생존자가 11 → **0**. 즉 '도펀트가 host onset 을 유지하는가'는 견고한 이분 판정이지만 '얼마나 개선하는가'에는 해상도가 사실상 없다(S²⁻-limited). 예외적으로 onset 을 올리는 소수(B2O3 2.317·Cr2O3/Ga2O3/In2O3/Sc2O3 2.356·Y2O3 2.282)는 G4 에서 탈락해 코어에 남지 않는다 = 산화안정과 수송의 정면 trade-off."
   },
   "G4_li_transport": {
    "sweep": [
     {
      "cut": 0.05,
-     "n_final": 2,
-     "survivors": [
+     "n_core_G1_G4": 14,
+     "core_survivors": [
+      "Ag2O",
       "B2O3",
-      "WO3"
-     ]
+      "CaF2",
+      "CaO",
+      "GeO2",
+      "Li2O",
+      "LiF",
+      "MgF2",
+      "MgO",
+      "MoO3",
+      "SiO2",
+      "SnO2",
+      "WO3",
+      "ZnO"
+     ],
+     "n_full_with_G5": 2
     },
     {
      "cut": 0.1,
-     "n_final": 1,
-     "survivors": [
-      "WO3"
-     ]
+     "n_core_G1_G4": 13,
+     "core_survivors": [
+      "Ag2O",
+      "CaF2",
+      "CaO",
+      "GeO2",
+      "Li2O",
+      "LiF",
+      "MgF2",
+      "MgO",
+      "MoO3",
+      "SiO2",
+      "SnO2",
+      "WO3",
+      "ZnO"
+     ],
+     "n_full_with_G5": 1
     },
     {
      "cut": 0.2,
-     "n_final": 1,
-     "survivors": [
-      "WO3"
-     ]
+     "n_core_G1_G4": 12,
+     "core_survivors": [
+      "Ag2O",
+      "CaF2",
+      "CaO",
+      "Li2O",
+      "LiF",
+      "MgF2",
+      "MgO",
+      "MoO3",
+      "SiO2",
+      "SnO2",
+      "WO3",
+      "ZnO"
+     ],
+     "n_full_with_G5": 1
     },
     {
      "cut": 0.25,
-     "n_final": 1,
-     "survivors": [
-      "WO3"
-     ]
+     "n_core_G1_G4": 12,
+     "core_survivors": [
+      "Ag2O",
+      "CaF2",
+      "CaO",
+      "Li2O",
+      "LiF",
+      "MgF2",
+      "MgO",
+      "MoO3",
+      "SiO2",
+      "SnO2",
+      "WO3",
+      "ZnO"
+     ],
+     "n_full_with_G5": 1
     },
     {
      "cut": 0.3,
-     "n_final": 1,
-     "survivors": [
-      "WO3"
-     ]
+     "n_core_G1_G4": 11,
+     "core_survivors": [
+      "Ag2O",
+      "CaF2",
+      "CaO",
+      "Li2O",
+      "LiF",
+      "MgF2",
+      "MgO",
+      "SiO2",
+      "SnO2",
+      "WO3",
+      "ZnO"
+     ],
+     "n_full_with_G5": 1
     },
     {
      "cut": 0.35,
-     "n_final": 1,
-     "survivors": [
-      "WO3"
-     ]
+     "n_core_G1_G4": 11,
+     "core_survivors": [
+      "Ag2O",
+      "CaF2",
+      "CaO",
+      "Li2O",
+      "LiF",
+      "MgF2",
+      "MgO",
+      "SiO2",
+      "SnO2",
+      "WO3",
+      "ZnO"
+     ],
+     "n_full_with_G5": 1
     },
     {
      "cut": 0.4,
-     "n_final": 1,
-     "survivors": [
-      "WO3"
-     ]
+     "n_core_G1_G4": 11,
+     "core_survivors": [
+      "Ag2O",
+      "CaF2",
+      "CaO",
+      "Li2O",
+      "LiF",
+      "MgF2",
+      "MgO",
+      "SiO2",
+      "SnO2",
+      "WO3",
+      "ZnO"
+     ],
+     "n_full_with_G5": 1
     },
     {
      "cut": 0.5,
-     "n_final": 1,
-     "survivors": [
+     "n_core_G1_G4": 10,
+     "core_survivors": [
+      "Ag2O",
+      "CaF2",
+      "CaO",
+      "Li2O",
+      "LiF",
+      "MgF2",
+      "MgO",
+      "SiO2",
+      "SnO2",
       "WO3"
-     ]
+     ],
+     "n_full_with_G5": 1
     },
     {
      "cut": 0.6,
-     "n_final": 0,
-     "survivors": []
+     "n_core_G1_G4": 5,
+     "core_survivors": [
+      "CaO",
+      "Li2O",
+      "LiF",
+      "MgO",
+      "SnO2"
+     ],
+     "n_full_with_G5": 0
     }
    ],
    "largest_gaps_in_passer_distribution": [
@@ -825,7 +1052,7 @@
      "above": 0.3844
     }
    ],
-   "note": "0.30 컷은 최대 공백 구간(0.2863–0.3844) 안에 있어 ±0.05 이동에 생존자가 불변 — 이 축의 컷은 자의적이지만 **불안정하지는 않다**."
+   "note": "코어 생존자는 0.30–0.40 구간에서 11종 불변, 0.25 로 내리면 MoO3 가 복귀해 12종, 0.50 에서 10종, 0.60 에서 5종. 즉 컷을 **올리는** 쪽으로는 둔감하고 **내리는** 쪽으로 민감하다 — 0.30 은 공백 상단이라 그렇다. '자의적이지만 국소적으로 안정'이 정확한 표현이고, 비대칭이라는 점까지 붙여야 정직하다."
   },
   "G5_mechanical": {
    "sweep": [
@@ -896,7 +1123,7 @@
      ]
     }
    ],
-   "note": "percentile 1.00 = 게이트 무효화(전원 통과) → G1–G4 만의 생존자와 같다. median(0.50)이 대표값."
+   "note": "percentile 1.00 = 게이트 무효화 → G1–G4 코어 생존자 11종과 동일. 0.25→1.00 사이에서 최종 생존자가 0→11 로 전 구간을 훑는다 = **최종 숫자가 이 컷 하나에 지배됨**. G5 결과를 결론처럼 인용하지 말 것."
   }
  },
  "literature_absolute_variants": [
@@ -972,13 +1199,23 @@
    "difference_reason": "우리 1차 산출물은 랭킹이고 깔때기는 문헌 대조를 위한 사후 재표현이다. 깔때기 숫자를 우리 방법론의 정의처럼 인용하면 안 된다."
   }
  ],
+ "key_findings": [
+  "G1(Δe<0)은 47/47 vacuous — 우리 풀이 이미 그 조건으로 큐레이션됐다는 증거이지 우리 스크린의 발견력이 아니다.",
+  "G2(window collapse)는 unique_kill=0 = **완전 중복 게이트**. 창이 붕괴한 4종(Fe2O3·CoO·NiO·MnO)이 전부 late-TM 이라 G3(ox onset)에도 걸린다 → 우리 풀에서 '창 붕괴'와 '낮은 onset'은 같은 화학(후기 TM d-band)의 두 얼굴이다.",
+  "Sendek 2017 의 '전제조건 > 전도도' 순위가 우리 풀에서는 역전된다 (standalone kill: 안정 0 · 창 4 · onset 22 · 수송 27 · 기계 32) — 전제조건이 이미 소진된 큐레이션 풀에서는 구속조건이 수송/기계로 이동한다.",
+  "게이트가 전부 정적 boolean 이라 최종 생존자 집합은 순서 불변(4개 순열에서 실측 확인). 순서가 바꾸는 것은 중간 숫자와 '탈락의 공' 배분뿐 — 깔때기 그림의 모양은 서사 선택이지 결과가 아니다.",
+  "host onset(2.14 V)을 **올리는** 6종(B2O3·Cr2O3·Ga2O3·In2O3·Sc2O3·Y2O3)이 전부 G4(수송)에서 탈락한다 = 산화 안정과 Li 수송의 정면 trade-off. Xiao 2019 의 'V_ox ↔ Li 함량 내재 trade-off'(Fig 7)의 우리판 대응.",
+  "문헌 절대 문턱을 그대로 이식하면 두 개가 empty gate 가 된다: V_ox≥4.0 V(Xiao) → 0종, Pugh B/G>1.75 → 0종. 우리가 host 상대·로스터 상대 좌표를 쓰는 이유의 정량 근거.",
+  "문헌에 있고 우리 게이트엔 없는 축 2개: 계면 화학 반응성(Richards pseudo-binary ΔE_rxt)과 전자 절연(우리 계산 gap 전수 부재). 전자는 추가 1순위, 후자는 진단으로만 붙였다."
+ ],
  "caveats": [
   "게이트 통과 수는 발견 성능이 아니다 (pool_provenance 참조).",
   "G1 은 vacuous(47/47) — 우리 풀이 그 조건으로 이미 큐레이션됐다는 뜻.",
   "G2 는 unique_kill 을 확인할 것 — 우리 풀에서 window collapse 4종이 전부 late-TM 이라 G3(ox onset)에 완전히 포섭된다.",
   "G3 의 ox_V 는 19종이 2.14 V 에 축퇴(S²⁻-limited) — 통과/탈락 판정만 유효, 축퇴군 내 순위 무의미.",
   "G4 의 BVSE proxy 는 정적 기하 프록시다. 절대 σ·D 로 읽지 말 것; MLIP-MD 절대값 인용 금지 규율 유지.",
-  "G5 의 E·G/B 는 UMA 상대값 — 절대 인용 금지. 로스터 median 컷이라 유일하게 자의적(arbitrariness_flag).",
+  "G5 의 E·G/B 는 UMA 상대값 — 절대 인용 금지. 로스터 median 컷이라 유일하게 자의적(arbitrariness_flag). 게다가 이 컷 하나가 최종 숫자를 지배한다 → 문헌 대비 인용은 G4 까지(11종)로 끊을 것.",
+  "전자절연·계면 반응성 두 축은 문헌에 있고 우리 게이트엔 없다 — '문헌 게이트를 전부 재현했다'고 쓰면 틀린다(electronic_insulation_diagnostic · literature_comparison_table 참조).",
   "문헌 수치(104,082 / 12,831 / 15,855 등)는 소환값이며 우리 db 값과 섞어 계산하지 않았다."
  ],
  "source_files": [
