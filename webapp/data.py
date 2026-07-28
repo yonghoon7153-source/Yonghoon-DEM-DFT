@@ -378,7 +378,7 @@ CASCADE_META = {
     "engine": "UMA-s-1p1 (task=omat) · anneal→champion→EOS/elastic/ESW/Li-proxy 캐스케이드",
     "score_formula": "score = 0.30·ox + 0.25·stable + 0.20·soft + 0.15·ductile + 0.10·window (min–max 정규화)",
     "caveat": "절대 탄성값은 실험(AFM/UPE 12–22 GPa) 대비 높게 나옴 — 캐스케이드 내부(UMA-vs-UMA) 순위·상대비교만. EOS B0 ≠ elastic B_VRH.",
-    "verified": "doping_cascade_verified.json 은 UMA-내부(EOS·elastic·anneal) 수렴 감사 서브셋 (41 챔피언 all-converged, DFT 검증 아님) — DFT 심층검증은 Nd₂O₃·B₂O₃ 2건뿐.",
+    "verified": "doping_cascade_verified.json 은 UMA-내부(EOS·elastic·anneal) 수렴 감사 서브셋 (상위 후보 41종 all-converged, DFT 검증 아님) — DFT 심층검증은 Nd₂O₃·B₂O₃ 2건뿐.",
 }
 # 조성 노드 ↔ 캐스케이드 도펀트 (스크리닝 히트의 DFT 심층검증)
 CASCADE_DOPANT = {"modelc_nd_doped": "Nd2O3", "b2o3": "B2O3"}
@@ -1352,7 +1352,7 @@ def dashboard_highlights() -> list:
             if r.get("rank") == 1:
                 top = r
     if top:
-        hi.append({"t": "도핑 스크리닝 챔피언", "v": f"{top['dopant']} (UMA #1)",
+        hi.append({"t": "도핑 스크리닝 1위 후보", "v": f"{top['dopant']} (UMA #1)",
                    "n": "코팅 후보 상위 · Nd₂O₃·B₂O₃는 DFT 검증됨 (절대값은 상대비교만)"})
     # ⚠ hBN은 db가 수치 인용을 금지한 값 — 경로 전체 폭 7 meV < 이미지당 힘오차 46 meV/Å
     #   (vgcf_hbn_neb.json: "Report as '< 0.01 eV, effectively barrierless'"). 2L2L은 층수 미수렴 상한.
