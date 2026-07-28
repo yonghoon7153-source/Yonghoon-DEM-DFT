@@ -1,31 +1,39 @@
 #!/usr/bin/env python3
-"""cathode_reactivity.py — cascade 도펀트 × 양극 계면 반응성 게이트 (open_items M6).
+"""cathode_reactivity.py — cascade 코팅 후보 × 양극 계면 반응성 게이트 (open_items M6).
 
 문헌 근거
 ---------
-Richards/Ong 2016 (Chem. Mater. 28, 266) pseudo-binary: 두 상의 혼합 분율 x에 대해
-반응에너지를 최소화. 전위 하에서는 grand potential(Li 저장소 개방), mu_Li = mu_Li(metal) - V.
-Xiao/Ceder 2019 (Joule 3, 1252) F4 게이트: |dE_rxt| < 100 meV/atom (vs Li3PS4 및 만충 양극)을
-통과해야 코팅 후보. 우리 cascade에 없던 마지막 축(litdb/papers/xiao2019_cathode_coating_screening.md).
+Richards/Ong 2016 (Chem. Mater. 28, 266) pseudo-binary eq 2 (**닫힌계**): 두 상을 x:(1-x)로
+섞어 convex hull 로 떨어뜨렸을 때의 최악(가장 음수) 반응에너지를 x 에 대해 최소화.
+Xiao/Ceder 2019 (Joule 3, 1252) F4 게이트: |dE_rxt| < 100 meV/atom 을 통과해야 코팅 후보.
+litdb/papers/xiao2019_cathode_coating_screening.md 227번 줄:
+  "pseudo-binary dE_rxt: 두 상을 x:(1-x)로 섞어 hull로 떨어지는 최악 반응에너지(Eq 4)
+   — 계면 반응성 프록시(**닫힌계**)"
 
-기계는 tools/oxidation/interface_reactivity_v2.py 와 동일(GrandPotentialInterfacialReactivity,
-use_hull_energy=True, MP GGA_GGA+U). 이 스크립트는 그것을 **47 도펀트 × 양극**으로 돌리는 래퍼 +
-문헌 정답지 검증 게이트다.
+⚠ 축은 전위가 아니라 **양극 리튬화 상태**다. digest 222번 줄이
+  "bare Li6PS5Cl reacts with LiCoO2 at -339 meV/atom (fully lithiated; -493 half-lithiated)"
+라고 명시한다. 즉 만충/반충은 LiCoO2 / Li0.5CoO2 라는 **조성 축**이지 mu_Li 를 여는
+grand-potential 전위 축이 아니다.
+  (초판에서 GrandPotentialInterfacialReactivity + 전위 스캔으로 돌렸다가 -810~-1544 meV/atom
+   이 나왔고, V=4.30 반응식이 "Li6PS5Cl -> 6 Li + SCl + 0.5 P2S7 + 0.5 S" 로 **양극이 아예
+   빠진 자체분해**였다. Li 저장소를 열면 코팅의 탈리튬 분해가 상호반응을 압도한다.
+   tools/oxidation/interface_reactivity_v2.py 의 개방계는 Li 음극 쪽 문제에 맞는 도구이고,
+   양극 쪽 F4 게이트는 이 닫힌계가 맞다.)
 
 2단 구조
 --------
   1) --validate : LPSCl(우리 host) vs 양극만 먼저 계산 → Xiao 소환값과 대조.
-     기대 앵커(xiao2019 digest): LPSCl/LCO -339(만충)/-493(반충), LPSCl/NCM -330/-471 meV/atom.
-     ⚠ Xiao의 "만충/반충"이 어느 전위에 대응하는지는 digest에 명시가 없다. 따라서 이 단계의 판정은
-     "자릿수·부호·순서(반충이 더 발열)가 재현되는가"이지 소수점 일치가 아니다. 불일치 시 원인
-     후보를 출력하고 **생산 실행을 막는다**(--force 로만 우회).
-  2) (검증 통과 후) --run : 47 도펀트 전수 → db/properties/cathode_reactivity_cascade.csv
+     기대 앵커: LPSCl/LCO -339(만충)/-493(반충), LPSCl/NCM -330(만충)/-471(반충) meV/atom.
+     판정: 부호(음수) · 자릿수(앵커의 0.5~2.0배) · 순서(반충이 더 발열). 소수점 일치는 요구 안 함
+     (MP hull 세대 차 때문). 불일치 시 원인 후보를 출력하고 **생산 실행을 막는다**(--force 우회).
+  2) (검증 통과 후) --run : 47 코팅 후보 전수 → db/properties/cathode_reactivity_cascade.csv
 
 비용 주의
 --------
-도펀트마다 chemsys가 달라 MP 쿼리가 도펀트당 1회. LCO(=Li-Co-O + 도펀트원소)는 4~5원소라 가볍고,
-NCM811(Li-Ni-Co-Mn-O + 도펀트)은 6~7원소라 PhaseDiagram 구성이 급격히 비싸진다. 기본은 LCO,
-NCM은 --cathodes 로 명시할 때만. 엔트리는 --cache 디렉터리에 저장되어 재실행 시 재사용된다.
+코팅마다 chemsys 가 달라 MP 쿼리가 코팅당 1회. LCO(=Li-Co-O + 코팅원소)는 4~5원소라 가볍고,
+NCM811(Li-Ni-Co-Mn-O + 코팅)은 6~7원소라 PhaseDiagram 구성이 급격히 비싸진다. 기본은 LCO,
+NCM 은 --cathodes 로 명시할 때만. 엔트리는 --cache 디렉터리에 저장되어 재실행 시 재사용된다.
+같은 원소집합이면 만충/반충이 캐시를 공유하므로 쌍으로 도는 비용은 1회분이다.
 
 실행 (gabia/kgy, MP_API_KEY 설정된 셸)
   python3 tools/cascade/cathode_reactivity.py --validate
@@ -41,13 +49,16 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 PROP = ROOT / "db" / "properties"
 
-# Xiao 2019 소환값 (meV/atom) — 우리 계산값과 절대 혼합 금지, 검증 대조용
+# Xiao 2019 소환값 (meV/atom) — 우리 계산값과 절대 혼합 금지, 검증 대조용.
 XIAO_ANCHOR = {
-    ("LPSCl", "LCO"): {"charged": -339, "half": -493},
-    ("LPSCl", "NCM"): {"charged": -330, "half": -471},
+    ("LPSCl", "LCO"): {"full": -339, "half": -493},
+    ("LPSCl", "NCM"): {"full": -330, "half": -471},
 }
 GATE_MEV = 100.0          # Xiao F4: |dE_rxt| < 100 meV/atom
-DEFAULT_V = [3.0, 3.9, 4.3]   # 반충~만충 구간 (LCO 3.9 V 라인 = Xiao 본문 기준선)
+# 기본 양극 = 완전리튬화 / 반리튬화 쌍 (comp:label:state)
+DEFAULT_CATHODES = ["LiCoO2:LCO:full", "Li0.5CoO2:LCO:half"]
+# 검증 허용대: |our| 가 |anchor| 의 이 배율 범위 안이면 "자릿수 OK"
+BAND_LO, BAND_HI = 0.5, 2.0
 
 
 # ── MP API 키 탐색 ─────────────────────────────────────────────
@@ -95,91 +106,95 @@ def get_entries(elements, cache_dir):
     return entries
 
 
-def li_metal_mu(entries):
-    es = [e.energy_per_atom for e in entries
-          if e.composition.reduced_formula == "Li"]
-    if not es:
-        sys.exit("Li metal 엔트리를 못 찾음 — chemsys에 Li가 빠졌나 확인")
-    return min(es)
-
-
-def min_rxn(c_coat, c_cath, gpd, pd):
-    """Richards eq 3-4: 혼합 분율 x 최소화. 반환 (meV/atom, 반응식)."""
-    from pymatgen.analysis.interface_reactions import GrandPotentialInterfacialReactivity
-    gir = GrandPotentialInterfacialReactivity(
-        c_coat, c_cath, gpd, pd_non_grand=pd,
-        include_no_mixing_energy=True, use_hull_energy=True)
+def min_rxn_closed(c_coat, c_cath, pd):
+    """Richards eq 2 (닫힌계) pseudo-binary: 혼합 분율 x 최소화.
+    Xiao F4가 쓰는 바로 그 양이다 — Li 저장소를 열지 않으므로 코팅 자체분해가
+    섞이지 않고 **상호 반응**만 남는다. 반환 (meV/atom, 반응식)."""
+    from pymatgen.analysis.interface_reactions import InterfacialReactivity
+    try:
+        ir = InterfacialReactivity(c_coat, c_cath, pd, norm=True, use_hull_energy=True)
+    except TypeError:                       # pymatgen 버전차 방어
+        ir = InterfacialReactivity(c_coat, c_cath, pd)
     best_e, best_rxn = 1e9, None
-    for k in gir.get_kinks():
+    for k in ir.get_kinks():
         e = float(k[2])
         if e < best_e:
             best_e, best_rxn = e, str(k[3])
+    if best_rxn is None:
+        raise RuntimeError("get_kinks()가 비었음 — PhaseDiagram/조성 확인")
     return best_e * 1000.0, best_rxn      # eV/atom → meV/atom
 
 
-def scan(coat_str, cath_str, voltages, cache_dir):
-    """한 (코팅, 양극) 쌍을 전위 스캔. 반환 {V: (meV, rxn)}."""
+def scan(coat_str, cath_str, cache_dir):
+    """한 (코팅, 양극조성) 쌍의 닫힌계 pseudo-binary 반응. 반환 (meV, rxn).
+    실패 시 (None, 'ERR ...')."""
     from pymatgen.core import Composition, Element
-    from pymatgen.analysis.phase_diagram import PhaseDiagram, GrandPotentialPhaseDiagram
+    from pymatgen.analysis.phase_diagram import PhaseDiagram
     elems = set(Composition(coat_str).elements) | set(Composition(cath_str).elements)
     elems.add(Element("Li"))
     entries = get_entries([e.symbol for e in elems], cache_dir)
     pd = PhaseDiagram(entries)
-    mu0 = li_metal_mu(entries)
-    c1, c2 = Composition(coat_str), Composition(cath_str)
-    out = {}
-    for V in voltages:
-        gpd = GrandPotentialPhaseDiagram(entries, {Element("Li"): mu0 - V})
-        try:
-            out[V] = min_rxn(c1, c2, gpd, pd)
-        except Exception as ex:
-            out[V] = (None, f"ERR {type(ex).__name__}: {ex}")
-    return out
+    try:
+        return min_rxn_closed(Composition(coat_str), Composition(cath_str), pd)
+    except Exception as ex:
+        return (None, f"ERR {type(ex).__name__}: {ex}")
 
 
 # ── 1단계: 문헌 정답지 검증 ────────────────────────────────────
-def validate(cathodes, voltages, cache_dir):
+def validate(cathodes, cache_dir):
+    """LPSCl 를 코팅 자리에 놓고 Xiao 소환값과 대조. 반환 True/False."""
     print("=" * 72)
-    print("검증: LPSCl vs 양극 — Xiao 2019 소환값과 대조")
-    print("  ⚠ 판정 기준은 '자릿수·부호·순서'이지 소수점 일치가 아님 (digest에 SOC↔전위 대응 미명시)")
+    print("검증: LPSCl vs 양극 (닫힌계 pseudo-binary) — Xiao 2019 소환값과 대조")
+    print("  판정 = 부호 · 자릿수(앵커의 %.1f~%.1f배) · 순서(반충 > 만충 발열). 소수점 일치 아님"
+          % (BAND_LO, BAND_HI))
     print("=" * 72)
     ok = True
-    for cstr, clab in cathodes:
-        res = scan("Li6PS5Cl", cstr, voltages, cache_dir)
-        anchor = XIAO_ANCHOR.get(("LPSCl", clab))
-        print(f"\n## LPSCl | {clab} ({cstr})")
-        vals = []
-        for V in voltages:
-            mev, rxn = res[V]
-            if mev is None:
-                print(f"  V={V:.2f}  실패: {rxn}"); ok = False; continue
-            vals.append(mev)
-            print(f"  V={V:.2f}  {mev:9.1f} meV/atom   {rxn[:78]}")
-        if anchor:
-            print(f"  [Xiao 소환값] 만충 {anchor['charged']} / 반충 {anchor['half']} meV/atom")
-            if vals:
-                lo, hi = min(vals), max(vals)
-                band = (-700 <= lo <= -150)
-                mono = vals == sorted(vals, reverse=True)  # V↑ → 더 발열(더 음수)
-                print(f"  → 우리 범위 [{lo:.0f}, {hi:.0f}]  "
-                      f"자릿수대 {'OK' if band else '⚠ 벗어남'} · "
-                      f"전위 단조성 {'OK' if mono else '⚠ 비단조'}")
-                if not band:
-                    ok = False
-        else:
-            print("  (이 양극은 소환 앵커 없음 — 참고 출력만)")
+    got = {}                                # (label, state) -> meV
+    for cstr, clab, cstate in cathodes:
+        mev, rxn = scan("Li6PS5Cl", cstr, cache_dir)
+        tag = f"{clab}/{cstate}" if cstate else clab
+        print(f"\n## LPSCl | {tag}  ({cstr})")
+        if mev is None:
+            print(f"  실패: {rxn}")
+            ok = False
+            continue
+        print(f"  {mev:9.1f} meV/atom   {rxn[:80]}")
+        got[(clab, cstate)] = mev
+        anchor = XIAO_ANCHOR.get(("LPSCl", clab), {}).get(cstate)
+        if anchor is None:
+            print("  (이 양극/상태는 소환 앵커 없음 — 참고 출력만)")
+            continue
+        ratio = abs(mev) / abs(anchor)
+        band = (mev < 0) and (BAND_LO <= ratio <= BAND_HI)
+        print(f"  [Xiao 소환값] {anchor} meV/atom  ·  우리/문헌 = {ratio:.2f}배  "
+              f"{'OK' if band else '⚠ 벗어남'}")
+        if not band:
+            ok = False
+
+    # 순서 검사: 같은 양극에서 반충이 만충보다 더 발열이어야 한다 (탈리튬 = 더 산화적)
+    for clab in sorted({c[1] for c in cathodes}):
+        f, h = got.get((clab, "full")), got.get((clab, "half"))
+        if f is None or h is None:
+            continue
+        mono = h < f
+        print(f"\n## {clab} 리튬화 순서: 만충 {f:.0f} → 반충 {h:.0f} meV/atom  "
+              f"{'OK (반충이 더 발열)' if mono else '⚠ 역전'}")
+        if not mono:
+            ok = False
+
     print("\n" + "=" * 72)
     print("검증 " + ("통과 — --run 진행 가능" if ok else "실패 — 원인 확인 전 --run 금지"))
     if not ok:
-        print("  원인 후보: (a) MP hull 세대 차 (Xiao 2019 당시 DB vs 현재)")
-        print("             (b) SOC↔전위 대응 가정 불일치 (Xiao는 조성 기반일 수 있음)")
+        print("  원인 후보: (a) MP hull 세대 차 (Xiao 2019 당시 DB vs 현재 GGA_GGA+U)")
+        print("             (b) 반충 대리조성 Li0.5CoO2 가 Xiao 의 SOC 정의와 다름")
         print("             (c) NCM 대리조성(LiNi0.8Co0.1Mn0.1O2) 차이")
-        print("             (d) use_hull_energy/include_no_mixing_energy 옵션 차")
+        print("             (d) use_hull_energy / norm 옵션 차 (pymatgen 버전)")
+        print("             (e) 개방계(GrandPotential)로 돌아가 있지 않은지 — 이 파일은 닫힌계여야 함")
     print("=" * 72)
     return ok
 
 
-# ── 2단계: 47 도펀트 전수 ──────────────────────────────────────
+# ── 2단계: 47 코팅 후보 전수 ───────────────────────────────────
 def load_dopants():
     p = PROP / "cascade_v23_ranked.csv"
     with open(p) as f:
@@ -187,84 +202,97 @@ def load_dopants():
     return [r["dopant"] for r in rows]
 
 
-def run_all(cathodes, voltages, cache_dir, out_csv):
+def run_all(cathodes, cache_dir, out_csv):
     dopants = load_dopants()
-    print(f"도펀트 {len(dopants)}종 × 양극 {len(cathodes)}종 × 전위 {len(voltages)}점")
-    done = {}
+    print(f"코팅 후보 {len(dopants)}종 × 양극 {len(cathodes)}조성 "
+          f"= {len(dopants) * len(cathodes)}쌍 (닫힌계)")
+    done = set()
     if Path(out_csv).exists():          # resume-safe
         with open(out_csv) as f:
             for r in csv.DictReader(l for l in f if not l.startswith("#")):
-                done[(r["dopant"], r["cathode"], r["V_vs_Li"])] = True
+                done.add((r["coating"], r["cathode"], r["lithiation"]))
         print(f"  기존 {len(done)}행 — 완료분 skip")
-    newrows = []
-    for i, d in enumerate(dopants, 1):
-        for cstr, clab in cathodes:
-            if all((d, clab, f"{V:.2f}") in done for V in voltages):
-                print(f"[{i}/{len(dopants)}] {d} | {clab}: skip"); continue
-            print(f"[{i}/{len(dopants)}] {d} | {clab}")
-            try:
-                res = scan(d, cstr, voltages, cache_dir)
-            except Exception as ex:
-                print(f"    ERR {type(ex).__name__}: {ex}"); continue
-            for V in voltages:
-                mev, rxn = res[V]
-                newrows.append({
-                    "dopant": d, "cathode": clab, "cathode_composition": cstr,
-                    "V_vs_Li": f"{V:.2f}",
+    cols = ["coating", "cathode", "lithiation", "cathode_composition",
+            "dE_rxt_meV_per_atom", "gate_pass_100meV", "reaction"]
+    exists = Path(out_csv).exists()
+    n_new = 0
+    with open(out_csv, "a" if exists else "w") as f:
+        if not exists:
+            f.write("# cascade 코팅 후보 x 양극 계면 반응성 (open_items M6). "
+                    "닫힌계 pseudo-binary InterfacialReactivity (Richards/Ong 2016 eq 2), "
+                    "norm=True, use_hull_energy=True, MP GGA_GGA+U.\n")
+            f.write("# 축은 전위가 아니라 양극 리튬화 상태 (full=LiCoO2 / half=Li0.5CoO2). "
+                    "Xiao 2019 F4 와 동일 정의.\n")
+            f.write(f"# 게이트: |dE_rxt| < {GATE_MEV:.0f} meV/atom (Xiao 2019 F4). "
+                    "더 음수 = 더 반응성 = 코팅으로 부적합. "
+                    "Xiao 소환값(LPSCl/LCO -339 full / -493 half)은 문헌값 — 우리 값과 혼합 금지.\n")
+        w = csv.DictWriter(f, fieldnames=cols)
+        if not exists:
+            w.writeheader()
+        for i, d in enumerate(dopants, 1):
+            for cstr, clab, cstate in cathodes:
+                if (d, clab, cstate) in done:
+                    print(f"[{i}/{len(dopants)}] {d} | {clab}/{cstate}: skip")
+                    continue
+                print(f"[{i}/{len(dopants)}] {d} | {clab}/{cstate}")
+                try:
+                    mev, rxn = scan(d, cstr, cache_dir)
+                except Exception as ex:
+                    print(f"    ERR {type(ex).__name__}: {ex}")
+                    continue
+                w.writerow({
+                    "coating": d, "cathode": clab, "lithiation": cstate,
+                    "cathode_composition": cstr,
                     "dE_rxt_meV_per_atom": ("" if mev is None else f"{mev:.1f}"),
                     "gate_pass_100meV": ("" if mev is None else
                                          ("Y" if abs(mev) < GATE_MEV else "N")),
                     "reaction": (rxn or "")[:200],
                 })
-                if mev is not None:
-                    print(f"    V={V:.2f}  {mev:9.1f} meV/atom  "
+                f.flush()               # 중간에 죽어도 재개 가능
+                n_new += 1
+                if mev is None:
+                    print(f"    실패: {rxn}")
+                else:
+                    print(f"    {mev:9.1f} meV/atom  "
                           f"{'PASS' if abs(mev) < GATE_MEV else 'fail'}")
-    if not newrows:
-        print("새로 계산된 행 없음"); return
-    cols = ["dopant", "cathode", "cathode_composition", "V_vs_Li",
-            "dE_rxt_meV_per_atom", "gate_pass_100meV", "reaction"]
-    exists = Path(out_csv).exists()
-    with open(out_csv, "a" if exists else "w") as f:
-        if not exists:
-            f.write("# cascade 도펀트 x 양극 계면 반응성 (open_items M6). "
-                    "GrandPotentialInterfacialReactivity (Richards/Ong 2016), "
-                    "mu_Li = mu_Li(metal) - V, use_hull_energy=True, MP GGA_GGA+U.\n")
-            f.write(f"# 게이트: |dE_rxt| < {GATE_MEV:.0f} meV/atom (Xiao 2019 F4). "
-                    "더 음수 = 더 반응성 = 코팅으로 부적합. "
-                    "Xiao 소환값(LPSCl/LCO -339/-493)은 문헌값 — 우리 값과 혼합 금지.\n")
-        w = csv.DictWriter(f, fieldnames=cols)
-        if not exists:
-            w.writeheader()
-        w.writerows(newrows)
-    print(f"\n→ {out_csv}  (+{len(newrows)}행)")
+    print(f"\n→ {out_csv}  (+{n_new}행)")
+
+
+def parse_cathodes(specs):
+    """'comp:label:state' 파싱. label 생략 시 comp, state 생략 시 '' (앵커 대조 없음)."""
+    out = []
+    for c in specs:
+        parts = c.split(":")
+        comp = parts[0]
+        lab = parts[1] if len(parts) > 1 and parts[1] else comp
+        state = parts[2] if len(parts) > 2 else ""
+        if state and state not in ("full", "half"):
+            sys.exit(f"--cathodes 상태는 full/half 만 허용: {c!r}")
+        out.append((comp, lab, state))
+    return out
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--validate", action="store_true", help="LPSCl 정답지 검증만")
-    ap.add_argument("--run", action="store_true", help="47 도펀트 전수 (검증 통과 후)")
+    ap.add_argument("--run", action="store_true", help="47 코팅 후보 전수 (검증 통과 후)")
     ap.add_argument("--force", action="store_true", help="검증 실패해도 강행")
-    ap.add_argument("--cathodes", nargs="+", default=["LiCoO2:LCO"],
-                    help='comp:label. NCM은 원소 수가 많아 비쌈 — 예 "LiNi0.8Co0.1Mn0.1O2:NCM"')
-    ap.add_argument("--voltages", nargs="+", type=float, default=DEFAULT_V)
+    ap.add_argument("--cathodes", nargs="+", default=DEFAULT_CATHODES,
+                    help='comp:label:state (state=full|half). NCM은 원소 수가 많아 비쌈 — '
+                         '예 "LiNi0.8Co0.1Mn0.1O2:NCM:full"')
     ap.add_argument("--cache", default=str(Path.home() / ".cache" / "mp_entries"))
     ap.add_argument("--out", default=str(PROP / "cathode_reactivity_cascade.csv"))
     a = ap.parse_args()
 
-    cathodes = []
-    for c in a.cathodes:
-        cs, _, cl = c.partition(":")
-        cathodes.append((cs, cl or cs))
-
     if not (a.validate or a.run):
         ap.error("--validate 또는 --run 중 하나는 필요")
-    ok = True
-    if a.validate or a.run:
-        ok = validate(cathodes, a.voltages, a.cache)
+    cathodes = parse_cathodes(a.cathodes)
+
+    ok = validate(cathodes, a.cache)
     if a.run:
         if not ok and not a.force:
             sys.exit("\n검증 실패 — --force 없이는 전수 실행하지 않습니다.")
-        run_all(cathodes, a.voltages, a.cache, a.out)
+        run_all(cathodes, a.cache, a.out)
 
 
 if __name__ == "__main__":
