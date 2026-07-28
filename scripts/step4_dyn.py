@@ -284,6 +284,19 @@ def _gpu_vcycle_wrap(ml, s=None):
     return LinearOperator(ml.levels[0].A.shape, matvec=_mv)
 
 
+def cg_ab_verdict(t_ladder, t_jacobi, info, margin=0.9):
+    """비용 A/B 판정 (순수 함수 — selftest 대상).  반환 ('gpu_jacobi'|'ladder', 사유).
+
+    두 팔은 같은 rtol 로 같은 Jx=b 를 푼다 → 해가 같으므로 비교 기준은 **벽시계뿐**이다.
+    전환에 10 % 마진을 두는 이유: 연속한 두 Newton 반복은 같은 계가 아니라 조건수가 조금
+    다르므로, 측정 노이즈로 왕복 전환(chatter)이 나면 안 된다.  판단이 안 서면 현행 유지."""
+    if t_jacobi is None or info != 0:
+        return 'gpu_jacobi', 'no_comparison_or_ladder_not_converged'
+    if float(t_ladder) < float(margin) * float(t_jacobi):
+        return 'ladder', 'ladder_faster'
+    return 'gpu_jacobi', 'jacobi_not_beaten'
+
+
 def _cg(L, b, x0=None, rtol=1e-9, atol=0.0, pc_cache=None, deep=False, floor_abs=0.0):
     """3단 솔브: GPU Jacobi-CG → (실패시) CPU AMG-CG(pyamg) → CPU Jacobi-CG.
     실전 격자(VGCF 100 S/cm ↔ BV면 1e-11 S, ~9자릿수 대비)에서 Jacobi 단독은 정체할 수
@@ -293,7 +306,24 @@ def _cg(L, b, x0=None, rtol=1e-9, atol=0.0, pc_cache=None, deep=False, floor_abs
     pc_cache: 'gpu_dead'=실솔브 GPU 무능(sticky) · 'deep_weak'=심층권 무용 · 'amg'=계층 재사용."""
     diag = L.diagonal()
     cache = pc_cache if pc_cache is not None else {}
-    if GPU and not cache.get('gpu_dead'):
+    # ── ★ 비용-기반 승급 (2026-07-29, opt-in) ────────────────────────────────────────────────
+    #   문제: 이 사다리는 **실패로만** 승급한다.  GPU Jacobi-CG 가 성공하면 바로 아래 return 이
+    #   걸려 CPU AMG · near-null-B AMG · 승자 래치가 **전부 도달 불가**가 된다.  그래서
+    #   19,999번째 반복에서 61초 만에 수렴한 솔브와 50번에 끝난 솔브가 똑같이 취급된다.
+    #   실측(V100 0.2C, cap200 적용 후): 61 s/CG × Newton 4회 = 244 s/step → step 하나에 2~3일.
+    #   ★ 이 레짐이 바로 near-null-B AMG 를 만든 이유(작업 #20/#27)인데, CG 가 "느리게 성공"
+    #     하는 바람에 후보로조차 오르지 못했다.  #27 의 hard-fail 과 같은 기전(near-null 오차는
+    #     J·v≈0 라 잔차 norm 에 작게 실림)이 다른 얼굴로 나타난 것.
+    #   해법: 예산(초)을 주면 GPU Jacobi 가 그보다 오래 걸린 순간 **다음 솔브 한 번만** 사다리로
+    #   내려보내 시간을 재고, 빠른 쪽을 래치한다.  추가 솔브 0회(연속 두 솔브를 A/B 로 씀).
+    #   ★ 해 불변: 전처리기는 CG 의 해를 바꾸지 않는다(같은 Jx=b, 같은 rtol).  기본 0 = OFF →
+    #     기존 런은 바이트 불변.
+    import time as _tm
+    _budget = float(os.environ.get('MPM_S4_CG_BUDGET_S', '0') or 0)
+    _try_ladder = _budget > 0 and cache.get('cg_winner') == 'ladder'
+    _probe_ladder = _budget > 0 and cache.get('cg_probe_pending') and cache.get('cg_winner') is None
+    _t_enter = _tm.time()
+    if GPU and not cache.get('gpu_dead') and not _try_ladder and not _probe_ladder:
         try:
             import cupy as cp
             import cupyx.scipy.sparse as cxs
@@ -310,6 +340,18 @@ def _cg(L, b, x0=None, rtol=1e-9, atol=0.0, pc_cache=None, deep=False, floor_abs
             except TypeError:
                 xg, info = cg_gpu(Lg, bg, x0=x0g, rtol=rtol, atol=atol, maxiter=20000, M=Mg)
             if int(info) == 0:
+                # ★ 비용 계측: 성공했더라도 예산을 넘겼으면 다음 솔브 한 번을 사다리로 보내 A/B.
+                #   (이 솔브의 해는 그대로 반환 — 계측이 값을 바꾸지 않는다.)
+                _el = _tm.time() - _t_enter
+                if _budget > 0 and cache.get('cg_winner') is None and L.shape[0] >= 50000:
+                    cache['t_gpu_jacobi'] = _el
+                    if _el > _budget and not cache.get('cg_probe_pending'):
+                        cache['cg_probe_pending'] = True
+                        print(f'    ⏱ GPU Jacobi-CG {_el:.1f}s > 예산 {_budget:g}s — 다음 솔브 1회를 '
+                              f'AMG 사다리로 보내 A/B 후 빠른 쪽 래치 (해 불변: 전처리기는 CG 해를 '
+                              f'바꾸지 않음)', flush=True)
+                    elif _el <= _budget:
+                        cache['cg_winner'] = 'gpu_jacobi'     # 예산 내 = 현행 유지, 더 재지 않음
                 return cp.asnumpy(xg), 0
             if deep:                                         # 심층권 실패 = 부동소수 한계, GPU 탓 아님
                 cache['deep_weak'] = True                    #   → GPU 살려두고 CPU 낭비도 생략
@@ -500,9 +542,26 @@ def _cg(L, b, x0=None, rtol=1e-9, atol=0.0, pc_cache=None, deep=False, floor_abs
                 print(f'    (덤프 실패: {type(_e).__name__})', flush=True)
         x = x0 if x0 is not None else np.zeros_like(b)
         info = 1
+    # ★ 비용 A/B 마무리 (2026-07-29): 이 솔브가 프로브(사다리 팔)였으면 시간을 재서 승자를 확정.
+    #   GPU Jacobi 팔의 시간은 직전 솔브에서 cache['t_gpu_jacobi'] 에 기록돼 있다.  둘 다 같은
+    #   rtol 로 수렴하므로 비교 대상은 오직 **벽시계**다 (해는 어느 쪽이든 같다).
+    if _probe_ladder:
+        _t_ladder = _tm.time() - _t_enter
+        _t_jac = cache.get('t_gpu_jacobi')
+        cache['cg_probe_pending'] = False
+        cache['t_ladder'] = _t_ladder
+        _win, _why = cg_ab_verdict(_t_ladder, _t_jac, info)
+        cache['cg_winner'] = _win
+        if _win == 'ladder':
+            print(f'    ★ A/B 승자 = AMG 사다리: {_t_ladder:.1f}s vs GPU Jacobi {_t_jac:.1f}s '
+                  f'({_t_jac / max(_t_ladder, 1e-9):.2f}× 빠름) → 이후 사다리 직행 (해 불변)', flush=True)
+        else:
+            print(f'    ⏱ A/B 승자 = GPU Jacobi ({_why}): 사다리 {_t_ladder:.1f}s vs '
+                  f'{_t_jac if _t_jac is not None else float("nan"):.1f}s → 현행 유지', flush=True)
     if big:                                                   # 경로 감사 로그 (C5): 전처리 종류·잔차·목표
         print(f'      [cg] pc={_pc_kind}{"→nnamg" if (cache.get("nnamg_direct") and _pc_kind != "nnamg") else ""}'
-              f' resid {_rr(x):.2e} tgt {_tgt:.2e} info {info}', flush=True)
+              f' resid {_rr(x):.2e} tgt {_tgt:.2e} info {info}'
+              + (f' {_tm.time() - _t_enter:.1f}s' if _budget > 0 else ''), flush=True)
     return x, info
 
 
@@ -1987,8 +2046,28 @@ def _selftest_solver():
     import io
     ok = True
     _ENV = ('MPM_S4_PRUNE_FLOAT', 'MPM_S4_CONTRAST_CAP', 'MPM_S4_EW', 'MPM_S4_GPU_AMG',
-            'MPM_S4_GPU_AMG_F32', 'MPM_S4_ATOL_FLOOR_FRAC', 'MPM_S4_NN_ACCEPT_ABS_FRAC')
+            'MPM_S4_GPU_AMG_F32', 'MPM_S4_ATOL_FLOOR_FRAC', 'MPM_S4_NN_ACCEPT_ABS_FRAC',
+            'MPM_S4_CG_BUDGET_S')
     _saved = {k: os.environ.get(k) for k in _ENV}
+
+    # ── C6 비용-기반 승급 A/B 판정 (2026-07-29) ──────────────────────────────────────────
+    #   이 사다리는 **실패로만** 승급했다 — GPU Jacobi-CG 가 성공하면 즉시 return 이라
+    #   near-null-B AMG(작업 #20/#27 이 저율용으로 만든 것)가 후보로조차 못 올랐다.
+    #   실측 V100 0.2C: 61 s/CG × Newton 4 = 244 s/step → step 하나에 2~3일.
+    _c6 = True
+    _c6 &= cg_ab_verdict(10.0, 100.0, 0)[0] == 'ladder'          # 10× 빠름 → 전환
+    _c6 &= cg_ab_verdict(100.0, 10.0, 0)[0] == 'gpu_jacobi'      # 느림 → 현행 유지
+    _c6 &= cg_ab_verdict(95.0, 100.0, 0)[0] == 'gpu_jacobi'      # 5% 이득 = 노이즈 → 유지(chatter 방지)
+    _c6 &= cg_ab_verdict(89.0, 100.0, 0)[0] == 'ladder'          # 11% = 마진 초과 → 전환
+    _c6 &= cg_ab_verdict(1.0, 100.0, 1)[0] == 'gpu_jacobi'       # 사다리 미수렴 → 빨라도 기각
+    _c6 &= cg_ab_verdict(1.0, None, 0)[0] == 'gpu_jacobi'        # 비교 대상 없음 → 유지
+    _c6 &= cg_ab_verdict(1.0, None, 0)[1] == 'no_comparison_or_ladder_not_converged'
+    print(f'  {"OK  " if _c6 else "FAIL"} C6 비용 A/B 판정 (마진 10%·미수렴 기각·비교불가 유지)')
+    ok &= _c6
+    # 기본값 OFF 계약: 예산 미지정이면 계측·전환 코드가 아예 안 켜진다 (기존 런 바이트 불변)
+    _c6b = (float(os.environ.get('MPM_S4_CG_BUDGET_S', '0') or 0) == 0.0)
+    print(f'  {"OK  " if _c6b else "FAIL"} C6 기본 OFF (MPM_S4_CG_BUDGET_S 미지정 → 예산 0 = 경로 불변)')
+    ok &= _c6b
 
     def _env(k, v):
         if v is None:

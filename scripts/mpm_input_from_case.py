@@ -839,7 +839,11 @@ export MPM_S4_PRUNE_FLOAT="${{MPM_S4_PRUNE_FLOAT:-1}}"
 export MPM_S4_EW="${{MPM_S4_EW:-0}}"
 export MPM_S4_GPU_AMG="${{MPM_S4_GPU_AMG:-1}}"
 export MPM_S4_CONTRAST_CAP="${{MPM_S4_CONTRAST_CAP:-{a.step4_solver_cap:g}}}"
-echo "[run_mpm] STEP4 솔버: prune=$MPM_S4_PRUNE_FLOAT ew=$MPM_S4_EW gpu_amg=$MPM_S4_GPU_AMG cap=$MPM_S4_CONTRAST_CAP"
+# ★비용-기반 승급 (2026-07-29, 기본 OFF=0): GPU Jacobi-CG 가 이 초를 넘겨 "느리게 성공" 하면
+#   다음 솔브 1회를 AMG 사다리로 보내 A/B 후 빠른 쪽 래치.  실패로만 승급하던 사다리가
+#   near-null-B AMG(저율 전용)를 후보로조차 못 올리던 문제.  예: MPM_S4_CG_BUDGET_S=20
+export MPM_S4_CG_BUDGET_S="${{MPM_S4_CG_BUDGET_S:-0}}"
+echo "[run_mpm] STEP4 솔버: prune=$MPM_S4_PRUNE_FLOAT ew=$MPM_S4_EW gpu_amg=$MPM_S4_GPU_AMG cap=$MPM_S4_CONTRAST_CAP cg_budget=$MPM_S4_CG_BUDGET_S"
 AP=""
 for d in "$KIT/anchor_params" "$KIT/../anchor_params"; do [ -f "$d/ocp_nmc811_chen2020.csv" ] && AP="$d" && break; done
 if [ -z "$AP" ]; then
