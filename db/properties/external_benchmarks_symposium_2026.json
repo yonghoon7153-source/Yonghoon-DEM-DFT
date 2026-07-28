@@ -37,7 +37,7 @@
     "li_argyrodite_interface_md": {
       "source": "lee2026_skku",
       "slide": "18-19 (PDF p.11-12)",
-      "status_of_underlying_work": "Chem. Eng. J. under review (2026-07 기준)",
+      "status_of_underlying_work": "SSRN 프리프린트 (peer-review 미통과). 정본 digest: litdb/papers/kim2026_li_argyrodite_sei_reactive_md.md — 2026-07-28 실물 정독 완료",
       "engine": "MTP (자체 학습, 5400 dataset, passive+active learning)",
       "system": "Li6PS5Cl(100) | Li(100), 생산 MD > 6000 atoms",
       "targets": [
@@ -45,41 +45,88 @@
           "quantity": "interphase 두께",
           "value": 11,
           "unit": "nm",
-          "condition": "50 ns",
-          "confidence": "덱 도해 기준, 오차 미명시"
+          "condition": "소형 모델, 핵생성 개시 ~11 ns",
+          "confidence": "논문 실물 확인. ⚠ 본문 내부 모순(추가분해 억제 vs 계속분해)이 있어 **하한**으로 읽을 것"
         },
         {
           "quantity": "interphase 결정상",
           "value": "Li2S",
           "unit": null,
-          "condition": "g(r)가 Li2S 기준곡선과 일치, (100)/(010)/(001)",
+          "condition": "RDF 피크 위치 일치. ⚠ Li3P·LiCl 은 결정화하지 않고 비정질/고립 클러스터로 남는다",
           "confidence": "정성"
         },
         {
           "quantity": "D_Li (interphase 결정영역)",
-          "value": 4e-07,
+          "value": 4e-08,
           "unit": "cm^2/s",
-          "condition": "11 ns",
-          "confidence": "덱 플롯 판독"
+          "condition": "**350 K**, MSD 창 11-20 ns",
+          "confidence": "논문값. 덱 대비 10배 정정됨"
         },
         {
           "quantity": "D_Li (잔여 벌크)",
-          "value": 1.1e-06,
+          "value": 1.1e-07,
           "unit": "cm^2/s",
-          "condition": "11 ns",
-          "confidence": "덱 플롯 판독"
+          "condition": "**350 K**, MSD 창 0-20 ns 전구간",
+          "confidence": "논문값. 덱 대비 10배 정정됨"
+        },
+        {
+          "quantity": "D_Li (pristine 참조)",
+          "value": 1.6e-07,
+          "unit": "cm^2/s",
+          "condition": "350 K, kim2024 소환값",
+          "confidence": "3번째 기준값 — 덱에 없었음"
         },
         {
           "quantity": "D 비 (interphase/bulk)",
           "value": 0.36,
           "unit": null,
-          "condition": "위 두 값의 비",
-          "confidence": "파생 — **이 비율이 절대값보다 인용 안전**"
+          "condition": "파생",
+          "confidence": "**절대값보다 이 비율만 인용 안전**"
+        },
+        {
+          "quantity": "핵생성 개시 시각",
+          "value": [
+            11,
+            30
+          ],
+          "unit": "ns",
+          "condition": "소형 모델 11 ns / 대형 모델 ~30 ns — **계 크기 의존**",
+          "confidence": "⚠ 시드 1개라 확률과정의 산포를 알 수 없다"
         }
       ],
       "experimental_anchor_cited_by_them": "ACS Energy Lett. 2022, 7, 3064-3071 (TEM interphase layer, 25 degC vs 80 degC) — 정성 대조",
       "our_status": "공백 (T3)",
-      "how_to_use": "우리 T3(UMA Li|LPSCl 반응 MD) 성공 판정 = interphase가 형성되고 · Li2S가 잡히고 · D비가 1보다 확실히 작다. 11 nm 정량 일치는 요구하지 않는다."
+      "how_to_use": "T3 성공 판정 = interphase 형성 · Li2S 결정화 · D비 < 1. ⚠ **1순위 관측량은 D 가 아니라 잔존 PS4 층수 vs 시간**(z-bin + P-S 거리컷). 우리 표준 200 ps 로는 핵생성(11 ns)을 못 본다 — 최소 20 ns 필요. 비용 초과 시 [두께 절반 + 20 ns] > [두께 유지 + 2 ns].",
+      "_deck_corrections_2026_07_28": {
+        "note": "논문 실물 확인 결과 **덱 값 3건이 틀렸다**. 아래는 정정 이력 — 덱을 정본으로 쓰지 않는다는 규율의 두 번째 실증 사례(첫 번째: kim2026_hts 의 17,233→17,230).",
+        "corrected": [
+          {
+            "item": "D_Li (interphase 결정영역)",
+            "deck": "0.4e-6 cm^2/s",
+            "actual": "0.4e-7 cm^2/s",
+            "error": "자릿수 10배 오기"
+          },
+          {
+            "item": "D_Li (잔여 벌크)",
+            "deck": "1.1e-6 cm^2/s",
+            "actual": "1.1e-7 cm^2/s",
+            "error": "자릿수 10배 오기"
+          },
+          {
+            "item": "실험 대조 조건",
+            "deck": "TEM interphase layer, 25 degC vs 80 degC",
+            "actual": "본문에는 '~12 nm Li2S interphase, cryo-TEM' 한 문장뿐. '25 vs 80 degC'는 논문 어디에도 없다",
+            "error": "**출처 불명 — 판독 불가로 격하**. 서지(ACS Energy Lett. 2022, 7, 3064)는 ref [49]로 정확"
+          }
+        ],
+        "survived": [
+          "interphase 두께 ~11 nm",
+          "Li2S 결정상 동정",
+          "D 비 0.36"
+        ],
+        "lesson": "덱에서 안전한 것은 **비율과 정성 서술**이고, 절대값·조건은 논문 실물로만."
+      },
+      "msd_window_trap": "⚠ 영역분해 D 의 시간창이 구획마다 다르다 — 벌크 0-20 ns 전구간, 결정영역 11-20 ns. **0-11 ns 창을 쓰면 'SEI 가 벌크보다 3배 빠르다'는 반대 결론이 나온다.** T5(영역분해 MSD) 설계 시 창을 반드시 명시하고 상전이 전/후를 분리할 것."
     },
     "argyrodite_hydrolysis": {
       "source": "lee2026_skku",
@@ -272,8 +319,15 @@
       "slide": "16 (PDF p.10)",
       "what": "MTP-MD 스냅샷마다 extrapolation grade gamma 를 계산, gamma_select ~ gamma_break 사이를 'Accurate region'으로 정의. 벗어난 구조는 DFT 재계산 후 재훈련(active learning)",
       "our_gap": "우리 UMA MD는 스냅샷 수준 외삽 판정이 전무하다. 검증을 물질 수준에서만 했다",
-      "our_action": "T1 — 사전학습 모델이라 gamma 를 그대로 못 만들지만 대리지표(궤적 스냅샷 UMA vs DFT 단일점 오차 분포)는 가능",
-      "priority": 1
+      "our_action": "T1 재정의 — '감마 확보'가 아니라 **'UMA 용 외삽 대리지표 설계'**. 후보: 궤적 스냅샷의 UMA vs DFT 단일점 오차 분포 / 앙상블 분산 / 힘 예측 불확실도",
+      "priority": 1,
+      "actual_values_from_paper": {
+        "gamma_select": 2,
+        "gamma_break": "10 -> 5 -> 2 (단계적으로 조임)",
+        "kim2024_comparison": "5 / 20 — 이 논문이 최대 10배 엄격",
+        "key_idea": "최종 단계에서 gamma_break = gamma_select = 2 로 맞춰 '프로덕션 궤적 전체가 gamma<=2 안' 을 **수렴 판정 지표로 전용**"
+      },
+      "⛔_not_transferable": "**gamma 숫자는 UMA 에 이식 불가.** gamma 는 MTP 의 선형 기저 위 maxvol/D-optimality 로 정의되는데 UMA 는 비선형 등변 GNN 이라 **정의 자체가 없다**. 이식할 것은 논리 구조뿐: ①대리지표 하나 정한다 ②**선별 문턱과 중단 문턱을 분리**한다 ③중단 문턱을 조여 수렴을 판정한다."
     },
     "reaction_coordinate_training_set": {
       "source": "lee2026_skku",
