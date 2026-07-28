@@ -316,20 +316,27 @@
   "applicability_domain": {
    "definition": "Sendek §3.4. d = 훈련셋(47 도펀트) PCA-분산 정규화 중심거리를 훈련 평균으로 재정규화(훈련 점 평균 d=1); ε = leave-one-dopant-out 47 재적합 예측의 표준편차; A = (d <= 2).",
    "space": "pair 를 단일도펀트 스케일러로 옮긴 이식 좌표 (Pz_s + PGz_s, 20차원)",
-   "pca_components_retained": 19,
-   "degenerate_direction_handling": "훈련셋 정확 공선(window=ox−red, bvs_slope=x010−x002)으로 고유값 0 방향 존재. pair 특징은 min/max 집계라 그 공선을 깨뜨려 0-분산 방향에 실제 성분이 생긴다 → 임의 ridge κ 대신 **잔존 최소 고유값을 분산 하한**으로 사용(튜닝 없음, 보수적).",
+   "pca_components_retained": 18,
+   "pca_eigenvalue_tolerance": 0.0001,
+   "degenerate_direction_handling": "훈련셋 정확 공선(window=ox−red, bvs_slope=x010−x002)으로 고유값 0 방향 2개 존재 (스펙트럼 4.10 … 7.83e-2 | 2.57e-7, 2.95e-16 — 8자릿수 간극이라 문턱 민감도 없음). pair 특징은 min/max 집계라 그 공선을 깨뜨려(min(slope) ≠ min(x010)−min(x002)) 0-분산 방향에 실제 성분이 생긴다 → 임의 ridge κ 대신 **잔존 최소 고유값(실측된 가장 좁은 분산)을 그 방향의 분산 하한**으로 사용(튜닝 없음, 보수적). 1e-8 문턱으로 수치 영공간(2.57e-7)을 '유효 성분'으로 잘못 남기면 d 가 중앙값 129·최대 837 로 폭발한다 — 채택 문턱은 필수 (2026-07-28 구현 노트).",
+   "offsubspace_residual_sigma_units": {
+    "train_max": 0.00128,
+    "pair_median": 0.283,
+    "pair_max": 1.838,
+    "note": "훈련셋은 정의상 ~0(공선 정확), pair 는 집계 때문에 유한 — 이 성분이 곧 'pair 이식의 진짜 외삽분'이며 위 floor 로 d 에 반영됨."
+   },
    "d_threshold": 2.0,
    "n_pairs": 1081,
-   "n_outside_domain": 806,
-   "frac_outside_domain": 0.7456,
-   "n_outside_in_top40": 29,
-   "n_outside_in_top10": 5,
+   "n_outside_domain": 18,
+   "frac_outside_domain": 0.0167,
+   "n_outside_in_top40": 0,
+   "n_outside_in_top10": 0,
    "d_stats": {
-    "min": 0.581,
-    "median": 128.883,
-    "max": 837.317,
+    "min": 0.572,
+    "median": 1.152,
+    "max": 2.386,
     "train_mean_by_construction": 1.0,
-    "train_max": 1.263
+    "train_max": 1.293
    },
    "eps_stats": {
     "min": 0.035,

@@ -190,10 +190,12 @@ def build_gates(rows):
             "predicate": lambda r: (r["transport_norm"] or 0.0) > TRANSPORT_CUT,
             "threshold_basis": (
                 "두 겹. ① blocking<0.60 은 build_cascade_themes.py 가 이미 쓰는 db 규약(승계). "
-                "② 0.30 컷은 통과자 분포의 **최대 공백(natural break)** 에서 취했다 — "
-                "MoO3 0.2863 과 MnO 0.3844 사이 0.098 (그 아래 0.1827·0.10 까지 계속 성긴 꼬리). "
-                "⚠ host 앵커가 없는 축이라 G1–G3 만큼 강한 유도는 아니다 → "
-                "threshold_sensitivity.G4 스윕을 반드시 함께 볼 것."),
+                "② 0.30 컷은 통과자 분포 **하위 꼬리의 공백 구간**(MoO3 0.2863 ↔ MnO 0.3844, 폭 0.098) "
+                "안에 놓았다. ⚠ 정확히 말하면 이건 분포 전체의 최대 공백이 아니다"
+                "(최대는 0.6842↔0.845 = 0.161, 그 다음이 0.1827↔0.2863 = 0.104, 이게 3번째). "
+                "즉 '하위 꼬리를 자르는 자연스러운 위치 중 하나'이지 유일해가 아니다. "
+                "host 앵커가 없는 축이라 G1–G3 만큼 강한 유도가 아님 → "
+                "threshold_sensitivity.G4 스윕(코어 기준)을 반드시 함께 볼 것."),
             "literature_analog": {
                 "papers": ["xiao2019_cathode_coating_screening (Filter 6, CI-NEB E_m)",
                            "kahle2020_ht_aimd_screening (pinball D(1000 K) 상위 200 → FPMD 132)"],
@@ -375,16 +377,20 @@ def main():
     }
 
     # ── 임계값 민감도 스윕 ───────────────────────────────────────────────────
-    def survivors_with(overrides):
-        preds = []
-        for gid in REPRESENTATIVE_ORDER:
-            preds.append(overrides.get(gid, gates[gid]["predicate"]))
+    # ⚠ 스윕은 **코어(G1–G4)** 기준으로 읽는다. G5 를 함께 걸면 median 컷이 결과를 지배해
+    #   다른 게이트의 민감도가 전부 가려진다(실제로 전 스윕이 WO3 하나로 붕괴). 두 값을 병기한다.
+    CORE = ["G1", "G2", "G3", "G4"]
+
+    def survivors_with(overrides, order=REPRESENTATIVE_ORDER):
+        preds = [overrides.get(gid, gates[gid]["predicate"]) for gid in order]
         return sorted(r["dopant"] for r in rows if all(p(r) for p in preds))
 
     g4_sweep = []
     for cut in [0.05, 0.10, 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60]:
-        s = survivors_with({"G4": (lambda r, c=cut: (r["transport_norm"] or 0.0) > c)})
-        g4_sweep.append({"cut": cut, "n_final": len(s), "survivors": s})
+        ov = {"G4": (lambda r, c=cut: (r["transport_norm"] or 0.0) > c)}
+        core = survivors_with(ov, CORE)
+        g4_sweep.append({"cut": cut, "n_core_G1_G4": len(core), "core_survivors": core,
+                         "n_full_with_G5": len(survivors_with(ov))})
 
     e_sorted = sorted(r["E_GPa"] for r in rows if r["E_GPa"] is not None)
     gb_sorted = sorted(r["GoverB"] for r in rows if r["GoverB"] is not None)
@@ -405,9 +411,11 @@ def main():
     g3_sweep = []
     for off in [-0.20, -0.10, -0.05, 0.0, 0.05, 0.10]:
         cut = HOST_OX_V + off
-        s = survivors_with({"G3": (lambda r, c=cut: r["ox_V"] is not None and r["ox_V"] >= c - 1e-9)})
+        ov = {"G3": (lambda r, c=cut: r["ox_V"] is not None and r["ox_V"] >= c - 1e-9)}
+        core = survivors_with(ov, CORE)
         g3_sweep.append({"offset_vs_host_V": off, "ox_cut_V": round(cut, 4),
-                         "n_final": len(s), "survivors": s})
+                         "n_core_G1_G4": len(core), "core_survivors": core,
+                         "n_full_with_G5": len(survivors_with(ov))})
 
     # 통과자 분포의 natural break 근거 (G4)
     passers = sorted([r["transport_norm"] for r in rows
@@ -416,17 +424,22 @@ def main():
                    for i in range(len(passers) - 1)), reverse=True)[:3]
 
     threshold_sensitivity = {
+        "how_to_read": ("G3·G4 스윕은 **n_core_G1_G4**(문헌 대응 코어)를 보라. G5 를 함께 걸면 "
+                        "median 컷이 결과를 지배해 다른 축의 민감도가 전부 가려진다 "
+                        "(n_full_with_G5 열이 그 붕괴를 보여준다)."),
         "G3_oxidation_onset": {"sweep": g3_sweep,
-                               "note": "host 2.14 V 앵커에서 ±0.2 V 이동. onset 축퇴(19종 @2.14) 때문에 "
-                                       "0 → −0.05 V 구간에서 계단식으로 크게 뛴다."},
+                               "note": ("host 2.14 V 앵커에서 ±0.2 V 이동. onset 축퇴(19종 @2.14 V) 때문에 "
+                                        "+0.05 V 만 올려도 코어 생존자가 급감하는 **계단 함수** — "
+                                        "'host 이상'이라는 판정 자체는 견고하지만 '얼마나 이상'은 해상도가 없다.")},
         "G4_li_transport": {"sweep": g4_sweep,
                             "largest_gaps_in_passer_distribution":
                                 [{"gap": g, "below": lo, "above": hi} for g, lo, hi in gaps],
-                            "note": "0.30 컷은 최대 공백 구간(0.2863–0.3844) 안에 있어 ±0.05 이동에 "
-                                    "생존자가 불변 — 이 축의 컷은 자의적이지만 **불안정하지는 않다**."},
+                            "note": ("0.30 컷은 0.2863–0.3844 공백 안에 있어 ±0.05 이동에 코어 생존자 집합이 "
+                                     "불변이다(0.25 로 내리면 MoO3 가 복귀). 자의적이지만 국소적으로 안정.")},
         "G5_mechanical": {"sweep": g5_sweep,
-                          "note": "percentile 1.00 = 게이트 무효화(전원 통과) → G1–G4 만의 생존자와 같다. "
-                                  "median(0.50)이 대표값."},
+                          "note": ("percentile 1.00 = 게이트 무효화 → G1–G4 코어 생존자 11종과 동일. "
+                                   "0.25→1.00 사이에서 최종 생존자가 0→11 로 전 구간을 훑는다 = "
+                                   "**최종 숫자가 이 컷 하나에 지배됨**. G5 결과를 결론처럼 인용하지 말 것.")},
     }
 
     # ── 문헌 절대 임계값을 그대로 걸어본 변형 (정직성 진단) ──────────────────
@@ -452,6 +465,35 @@ def main():
                      "(UMA 상대 Δe 만 존재; e-hull 은 Nd₂O₃/B₂O₃ 등 승격 후보에만). "
                      "'우리가 문헌 게이트를 재현했다'가 아니라 '대응 축을 상대 좌표로 대체했다'가 정확한 서술.")},
     ]
+
+    # ── 전자절연 진단 (게이트 아님) ──────────────────────────────────────────
+    # Xiao F1(Eg>0.5 eV)·Sendek(Eg≥1 eV)에 대응하는 축을 우리는 게이트로 쓰지 않는다
+    # (47종 전수의 우리 계산 gap 이 없고, themes.json 의 gap_lit_eV 는 문헌 전형값 큐레이션이라
+    #  게이트로 쓰면 "우리 계산으로 걸렀다"는 오독을 만든다). 대신 **사후 진단**으로만 붙인다.
+    core_names = sorted(r["dopant"] for r in rows
+                        if all(gates[g]["predicate"](r) for g in ["G1", "G2", "G3", "G4"]))
+    gap_lit = {}
+    tpath = PROP / "cascade_v23_themes.json"
+    if tpath.exists():
+        gap_lit = {t["dopant"]: t.get("gap_lit_eV") for t in json.load(open(tpath))["dopants"]}
+    diag_rows = sorted(({"dopant": n, "gap_lit_eV": gap_lit.get(n)} for n in core_names),
+                       key=lambda d: (d["gap_lit_eV"] is None, d["gap_lit_eV"], d["dopant"]))
+    ei_diagnostic = {
+        "status": "DIAGNOSTIC_ONLY — 게이트 아님",
+        "why_not_a_gate": ("① 47종 전수의 우리 계산 gap 이 없다(canonical gap 은 fixed-occ nscf 로 "
+                           "host/챔피언 소수만). ② themes.json 의 gap_lit_eV 는 문헌 전형값 ±0.5 eV 큐레이션 "
+                           "— 게이트로 쓰면 큐레이션 값이 스크리닝 결과를 만든 것처럼 보인다."),
+        "core_survivors_gap_lit_eV": diag_rows,
+        "if_applied": {
+            "xiao_F1_gap_gt_0.5eV": sum(1 for d in diag_rows
+                                        if d["gap_lit_eV"] is not None and d["gap_lit_eV"] > 0.5),
+            "sendek_gap_ge_1eV": sum(1 for d in diag_rows
+                                     if d["gap_lit_eV"] is not None and d["gap_lit_eV"] >= 1.0),
+            "verdict": ("코어 생존자 전원이 두 문헌 문턱을 통과 → 이 축을 넣어도 **또 하나의 vacuous 게이트**가 "
+                        "될 뿐이다. 다만 절대 수준은 갈린다(불화물 10–14 eV vs Ag₂O 1.3 · WO₃ 2.7 eV) — "
+                        "'통과'와 '안심'은 다르며, 후기 TM/d⁰ 산화물 생존자는 전자 누설 관점에서 별도 검토 대상."),
+        },
+    }
 
     # ── 문헌 대비표 ──────────────────────────────────────────────────────────
     lit_table = [
@@ -570,10 +612,23 @@ def main():
             "labels": ["pool(curated 47)"] + [f"{s['gate']} {gates[s['gate']]['name']}" for s in steps],
         },
         "gates": gate_blocks,
+        "literature_comparable_endpoint": {
+            "gate": "G4",
+            "n": len(core_names),
+            "survivors": core_names,
+            "why": ("G1–G4 만이 문헌(Xiao/Sendek/Kahle) 게이트에 대응한다. 문헌과 나란히 인용할 숫자는 "
+                    "**여기까지**(47 → 43 → 25 → 11)다. G5 는 우리가 추가한 축이라 문헌 대비에 넣으면 "
+                    "사과와 오렌지가 된다."),
+        },
         "final_survivors": survivors,
-        "survivors_before_G5": sorted(
-            r["dopant"] for r in rows
-            if all(gates[g]["predicate"](r) for g in ["G1", "G2", "G3", "G4"])),
+        "final_survivors_warning": (
+            f"G5 까지 걸면 {len(survivors)}종({', '.join(survivors)})만 남지만 이는 **결론이 아니다**. "
+            "G5 의 median 컷은 host 앵커가 없는 자의적 컷이고, percentile 을 0.25→1.00 으로 훑으면 "
+            "최종 생존자가 0→11 로 전 구간을 움직인다(threshold_sensitivity.G5_mechanical). "
+            "'우리 깔때기의 최종 승자'로 인용하지 말 것 — 인용할 숫자는 "
+            "literature_comparable_endpoint(11종)이고, G5 는 그 11종을 기계 축으로 정렬한 부가 정보다."),
+        "electronic_insulation_diagnostic": ei_diagnostic,
+        "survivors_before_G5": core_names,
         "gate_power": {
             "rows": power,
             "reading": ("standalone_kill = 그 게이트만 47종에 걸었을 때 탈락 수 (그 축의 선택압). "
@@ -592,7 +647,10 @@ def main():
             "G3(ox onset)에 완전히 포섭된다.",
             "G3 의 ox_V 는 19종이 2.14 V 에 축퇴(S²⁻-limited) — 통과/탈락 판정만 유효, 축퇴군 내 순위 무의미.",
             "G4 의 BVSE proxy 는 정적 기하 프록시다. 절대 σ·D 로 읽지 말 것; MLIP-MD 절대값 인용 금지 규율 유지.",
-            "G5 의 E·G/B 는 UMA 상대값 — 절대 인용 금지. 로스터 median 컷이라 유일하게 자의적(arbitrariness_flag).",
+            "G5 의 E·G/B 는 UMA 상대값 — 절대 인용 금지. 로스터 median 컷이라 유일하게 자의적(arbitrariness_flag). "
+            "게다가 이 컷 하나가 최종 숫자를 지배한다 → 문헌 대비 인용은 G4 까지(11종)로 끊을 것.",
+            "전자절연·계면 반응성 두 축은 문헌에 있고 우리 게이트엔 없다 — '문헌 게이트를 전부 재현했다'고 "
+            "쓰면 틀린다(electronic_insulation_diagnostic · literature_comparison_table 참조).",
             "문헌 수치(104,082 / 12,831 / 15,855 등)는 소환값이며 우리 db 값과 섞어 계산하지 않았다.",
         ],
         "source_files": ["db/properties/cascade_v23_ranked.csv",
@@ -631,9 +689,9 @@ def main():
         print(f"    power {p['gate']}: standalone {p['standalone_kill']:>2} · "
               f"marginal {p['marginal_kill_in_P0']:>2} · unique {p['unique_kill']:>2} "
               f"{'(REDUNDANT)' if p['redundant_given_others'] else ''}")
-    print(f"  survivors before G5 ({len(out['survivors_before_G5'])}): "
-          f"{', '.join(out['survivors_before_G5'])}")
-    print(f"  final survivors ({len(survivors)}): {', '.join(survivors)}")
+    print(f"  ★ literature-comparable endpoint = G4 ({len(core_names)}): {', '.join(core_names)}")
+    print(f"  final after G5 ({len(survivors)}): {', '.join(survivors)}  "
+          f"[⚠ G5 median 컷이 지배 — 결론으로 인용 금지]")
     print(f"  order sensitivity: final sets identical = {identical}; "
           f"waterfalls = " + " | ".join(f"{p['key']}:{p['waterfall']}" for p in perms))
 

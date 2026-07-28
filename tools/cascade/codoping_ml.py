@@ -160,6 +160,10 @@ def spearman(a, b):
 PERM_SEED = 20260728      # 결정론 고정 시드 (2회 실행 md5 동일 요건)
 N_PERM = 100              # Sendek §3.2.2 권고 100회 (그들 전체절차 랜덤화는 3회뿐 — 우리는 100회 전량)
 AD_D_THRESHOLD = 2.0      # Sendek §3.4: 정규화 거리 d>2 = 외삽 = A(applicable)=0
+AD_EV_TOL = 1e-4          # 주성분 채택 문턱(λ_k > tol·λ_max). 47×20 공분산의 고유값 스펙트럼은
+                          # 4.10 … 7.83e-2 | 2.57e-7, 2.95e-16 로 **8자릿수 간극**이 명확 —
+                          # 뒤 2개는 정확 공선(window=ox−red, bvs_slope=x010−x002)이 만든 수치 영공간.
+                          # tol 1e-3~1e-4 어디서든 동일하게 18개 채택(문턱 민감도 없음).
 
 
 def _wls_ridge(Z, yc, lam, sw):
@@ -254,14 +258,14 @@ def applicability_domain(Ztrain, Zq):
     ⚠ 우리 훈련셋(47 도펀트)엔 **정확 공선**(window=ox−red, bvs_slope=x010−x002)이 있어
     고유값 0 방향이 존재하고, pair 특징은 min/max 집계 때문에 그 공선을 **깨뜨린다**
     (min(slope) ≠ min(x010)−min(x002)) → 0-분산 방향에 실제 성분이 생긴다.
-    임의의 ridge κ 를 넣는 대신 **잔존 최소 고유값을 분산 하한(floor)** 으로 써서 그 성분에
-    유한하고 보수적인 벌점을 준다 (경계 있고 문서화된 선택 — κ 튜닝 없음).
-    반환: d_query, d_train, n_kept(유효 주성분 수), ref(훈련 평균 원거리)."""
+    임의의 ridge κ 를 넣는 대신 **잔존 최소 고유값(= 실측된 가장 좁은 분산)을 그 방향의 분산
+    하한(floor)** 으로 써서 유한하고 보수적인 벌점을 준다 (경계 있고 문서화된 선택 — κ 튜닝 없음).
+    반환: d_query, d_train, n_kept, ref, resid_query, resid_train (영공간 성분 노름, σ 단위)."""
     mu = Ztrain.mean(axis=0)
     C = np.cov((Ztrain - mu).T, bias=True)
     ev, U = np.linalg.eigh(C)
     ev, U = ev[::-1], U[:, ::-1]
-    keep = ev > 1e-8 * float(ev.max())
+    keep = ev > AD_EV_TOL * float(ev.max())
     var = np.maximum(ev, float(ev[keep].min()))
 
     def dist(Z):
@@ -269,7 +273,10 @@ def applicability_domain(Ztrain, Zq):
 
     dtr = dist(Ztrain)
     ref = float(dtr.mean())
-    return dist(Zq) / ref, dtr / ref, int(keep.sum()), ref
+    def resid(Z):
+        return np.linalg.norm(((Z - mu) @ U)[:, ~keep], axis=1)
+
+    return dist(Zq) / ref, dtr / ref, int(keep.sum()), ref, resid(Zq), resid(Ztrain)
 
 # ---------------------------------------------------------------- 특징 정의
 
@@ -475,7 +482,7 @@ def main():
 
     # ---------- 5c. 적용영역 d (Sendek §3.4) ----------
     Zq = np.hstack([Pz_s, PGz_s])          # pair 를 **단일도펀트 스케일러**로 옮긴 좌표 = 이식 공간
-    ad_d, ad_d_train, ad_kept, ad_ref = applicability_domain(Z1, Zq)
+    ad_d, ad_d_train, ad_kept, ad_ref, ad_resid, ad_resid_train = applicability_domain(Z1, Zq)
     ad_A = (ad_d <= AD_D_THRESHOLD).astype(int)
 
     # ---------- 5d. leave-one-dopant-out (open_items M2) + ε ----------
@@ -782,10 +789,22 @@ def main():
                               "47 재적합 예측의 표준편차; A = (d <= 2).",
                 "space": "pair 를 단일도펀트 스케일러로 옮긴 이식 좌표 (Pz_s + PGz_s, 20차원)",
                 "pca_components_retained": ad_kept,
+                "pca_eigenvalue_tolerance": AD_EV_TOL,
                 "degenerate_direction_handling":
-                    "훈련셋 정확 공선(window=ox−red, bvs_slope=x010−x002)으로 고유값 0 방향 존재. "
-                    "pair 특징은 min/max 집계라 그 공선을 깨뜨려 0-분산 방향에 실제 성분이 생긴다 → "
-                    "임의 ridge κ 대신 **잔존 최소 고유값을 분산 하한**으로 사용(튜닝 없음, 보수적).",
+                    "훈련셋 정확 공선(window=ox−red, bvs_slope=x010−x002)으로 고유값 0 방향 2개 존재 "
+                    "(스펙트럼 4.10 … 7.83e-2 | 2.57e-7, 2.95e-16 — 8자릿수 간극이라 문턱 민감도 없음). "
+                    "pair 특징은 min/max 집계라 그 공선을 깨뜨려(min(slope) ≠ min(x010)−min(x002)) "
+                    "0-분산 방향에 실제 성분이 생긴다 → 임의 ridge κ 대신 **잔존 최소 고유값(실측된 "
+                    "가장 좁은 분산)을 그 방향의 분산 하한**으로 사용(튜닝 없음, 보수적). "
+                    "1e-8 문턱으로 수치 영공간(2.57e-7)을 '유효 성분'으로 잘못 남기면 d 가 "
+                    "중앙값 129·최대 837 로 폭발한다 — 채택 문턱은 필수 (2026-07-28 구현 노트).",
+                "offsubspace_residual_sigma_units": {
+                    "train_max": float(f"{ad_resid_train.max():.2e}"),
+                    "pair_median": round(float(np.median(ad_resid)), 3),
+                    "pair_max": round(float(ad_resid.max()), 3),
+                    "note": "훈련셋은 정의상 ~0(공선 정확), pair 는 집계 때문에 유한 — "
+                            "이 성분이 곧 'pair 이식의 진짜 외삽분'이며 위 floor 로 d 에 반영됨.",
+                },
                 "d_threshold": AD_D_THRESHOLD,
                 "n_pairs": len(pairs),
                 "n_outside_domain": int((ad_A == 0).sum()),
