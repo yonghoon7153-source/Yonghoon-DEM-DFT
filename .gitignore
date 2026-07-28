@@ -23,3 +23,11 @@ mpm2d_real9.png
 mpm2d_furnas*.png
 webapp.log
 docs/db/
+
+# ── EIS 자동 재생성 산출물 (2026-07-28) ─────────────────────────────────────
+# eis_archive/eis_fit 이 webapp 업로드마다 다시 쓰는 파일들 — tracked 로 두면
+# WSL dem-web 이 항상 dirty 가 되어 run_dem5002.sh 의 git pull 이 매번 실패한다
+# (원본 데이터 raw/*.mpr·extracted/*.csv 는 계속 추적 = 측정 기록 보존).
+이종기술/eis/eis_catalog.csv
+이종기술/eis/fits/
+이종기술/eis/thickness_overrides.json
