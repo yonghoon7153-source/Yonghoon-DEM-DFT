@@ -62,7 +62,8 @@
       "confidence_high": 0,
       "confidence_low": 0,
       "len_chars": 13540,
-      "system_class": "garnet_Li"
+      "system_class": "garnet_Li",
+      "digest": "litdb/papers/anderson2024_llzo_comprehensive_dopant_screening.md"
     },
     {
       "id": "054",

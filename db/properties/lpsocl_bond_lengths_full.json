@@ -1,29 +1,94 @@
 {
   "bonds_cation_anion": {
-    "P-S": null,
-    "P-O": null,
+    "P-S": {
+      "mean": 2.063,
+      "std": 0.011,
+      "min": 2.04,
+      "max": 2.08,
+      "n": 19
+    },
+    "P-O": {
+      "mean": 1.559,
+      "std": 0.0,
+      "min": 1.559,
+      "max": 1.559,
+      "n": 1
+    },
     "B-S": null,
     "B-O": null,
-    "Li-S": null,
-    "Li-Cl": null,
-    "Li-O": null
+    "Li-S": {
+      "mean": 2.486,
+      "std": 0.105,
+      "min": 2.337,
+      "max": 2.84,
+      "n": 69
+    },
+    "Li-Cl": {
+      "mean": 2.54,
+      "std": 0.17,
+      "min": 2.3,
+      "max": 3.219,
+      "n": 40
+    },
+    "Li-O": {
+      "mean": 1.964,
+      "std": 0.01,
+      "min": 1.954,
+      "max": 1.973,
+      "n": 2
+    }
   },
   "anion_anion": {
-    "S-S(cage)": null,
-    "S-Cl": null,
-    "Cl-Cl": null
+    "S-S(cage)": {
+      "mean": 3.416,
+      "std": 0.111,
+      "min": 3.288,
+      "max": 3.695,
+      "n": 35
+    },
+    "S-Cl": {
+      "mean": 3.917,
+      "std": 0.141,
+      "min": 3.634,
+      "max": 4.174,
+      "n": 46
+    },
+    "Cl-Cl": {
+      "mean": 4.143,
+      "std": 0.164,
+      "min": 3.925,
+      "max": 4.427,
+      "n": 5
+    }
   },
   "framework": {
     "P-P": null,
-    "Li-Li": null
+    "Li-Li": {
+      "mean": 2.947,
+      "std": 0.193,
+      "min": 2.683,
+      "max": 3.176,
+      "n": 9
+    }
   },
-  "P_environments": {},
+  "P_environments": {
+    "PS4": {
+      "n_P": 4,
+      "P-S_mean": 2.063,
+      "P-O_mean": null
+    },
+    "PS3O1": {
+      "n_P": 1,
+      "P-S_mean": 2.063,
+      "P-O_mean": 1.559
+    }
+  },
   "S_classification": {
     "free-S": {
-      "n_S": 0,
-      "Li-S_mean": null,
-      "Li-S_std": null,
-      "n_LiS": 0
+      "n_S": 2,
+      "Li-S_mean": 2.364,
+      "Li-S_std": 0.016,
+      "n_LiS": 12
     },
     "B-S": {
       "n_S": 0,
@@ -32,17 +97,35 @@
       "n_LiS": 0
     },
     "P-S(bridge)": {
-      "n_S": 0,
-      "Li-S_mean": null,
-      "Li-S_std": null,
-      "n_LiS": 0
+      "n_S": 19,
+      "Li-S_mean": 2.511,
+      "Li-S_std": 0.098,
+      "n_LiS": 57
     }
   },
   "Cl_sites": {
-    "n_4a": 0,
-    "n_4d": 0,
-    "Li-Cl_4a": null,
-    "Li-Cl_4d": null,
-    "Li-Cl_all": null
+    "n_4a": 6,
+    "n_4d": 2,
+    "Li-Cl_4a": {
+      "mean": 2.584,
+      "std": 0.163,
+      "min": 2.344,
+      "max": 3.219,
+      "n": 32
+    },
+    "Li-Cl_4d": {
+      "mean": 2.366,
+      "std": 0.04,
+      "min": 2.3,
+      "max": 2.436,
+      "n": 8
+    },
+    "Li-Cl_all": {
+      "mean": 2.54,
+      "std": 0.17,
+      "min": 2.3,
+      "max": 3.219,
+      "n": 40
+    }
   }
 }
