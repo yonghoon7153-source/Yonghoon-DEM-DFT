@@ -36,6 +36,20 @@ cpu = sh("nproc").strip()
 la = open("/proc/loadavg").read().split()[:3] if os.path.exists("/proc/loadavg") else []
 print(f"CPU {cpu} cores · load {' '.join(la)}   (CPU 빌드 — GPU 작업과 무관)")
 print(f"  pw.x {alive('pw.x')} · pp.x {alive('pp.x')}")
+# ⚠ 재부팅하면 tmux 가 통째로 날아가고 pgrep 도 전부 '-' 가 된다. 그 상태를 "진행 중"과
+#   구분하려면 **로그 마지막 기록이 부팅보다 이른가**를 봐야 한다 — 그거면 확실히 죽음이다.
+BOOT = sh("uptime -s").strip()
+try:
+    BOOTDT = datetime.strptime(BOOT, "%Y-%m-%d %H:%M:%S")
+except ValueError:
+    BOOTDT = None
+print(f"  부팅 {BOOT or '?'} ({sh('uptime -p').strip()})")
+if BOOTDT and os.path.isfile(LOG):
+    lm = datetime.fromtimestamp(os.path.getmtime(LOG))
+    if lm < BOOTDT:
+        print(f"  ⛔ **재부팅으로 죽음** — run.log 마지막 기록 {lm:%m-%d %H:%M} < 부팅")
+        print("     재기동: tmux new -s lpsoclelf -d 'bash tools/electronic/run_lpsocl_elf_gabia.sh \\")
+        print(f"       > {LOG} 2>&1'")
 print(BAR)
 
 if not os.path.isfile(LOG):
