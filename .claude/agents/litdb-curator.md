@@ -33,7 +33,36 @@ mechanics/morphology). Your job: turn a literature PDF into a clean, standardize
      porosity convention / Tabor / Stage-E area / EIS-TLM …), tools, how numericalized/plotted.
    - **Numbers** ★: porosity@P, σ_ionic/e/thermal, E_SE, σ_y, coverage %, coordination Z, P_y/knee,
      PSD, composition. Mark digitized-from-figure vs stated-in-text.
-3. **Write** `litdb/papers/<slug>.md` — **COMPREHENSIVE / paper-level standalone** (length is NOT a
+3. ★★ **FIRST open the canonical drawer, then write into it.**
+
+   ```bash
+   WT=$(python3 scripts/litdb_promote.py --open | tail -1)   # → 정본 브랜치 워크트리 경로
+   ```
+   **Write every litdb file inside `$WT`**, not in the current worktree:
+   `$WT/litdb/papers/<slug>.md`, `$WT/litdb/INDEX.md`, `$WT/litdb/comparison_vs_ours.md`.
+
+   *Why this is mandatory (2026-07-28 failure, 28 cards lost):* the litdb you see in the
+   current branch is a **frozen snapshot** — CLAUDE.md forbids adding to it — and the DFT webapp's
+   `/literature` page lists **only** the canonical branch's `litdb/papers/`. Cards written anywhere
+   else are invisible: 5 Yong Min Lee digital-twin digests and 23 more (Doux/Cronau stack pressure,
+   Minnmann, Trevisanello, Oh bimodal …) sat unreachable for months because of exactly this. Do not
+   write a card into the current worktree "for now" — that is how they were lost.
+
+   The card **must** carry the metadata line right after the `#` title, or `list_papers()` cannot
+   parse it and the webapp will not show it:
+   ```
+   > slug `<slug>` · DOI `<doi>` · type `<TYPE>` · PDF `<file.pdf>` · digested `YYYY-MM-DD` · status ✅
+   ```
+
+   When finished, publish (this validates format with the webapp's own loader, requires an INDEX row,
+   commits, pushes, and cleans up — rebasing automatically if another session pushed first):
+   ```bash
+   python3 scripts/litdb_promote.py --close --message "litdb: add <slug> — <one line>"
+   ```
+   `--check` inspects without pushing; `--cleanup` discards the worktree. Committing/pushing litdb to
+   the canonical branch is **standing-approved** (CLAUDE.md 2026-07-16) — you do not need to ask.
+
+4. **Card content** — **COMPREHENSIVE / paper-level standalone** (length is NOT a
    concern; goal: reading the MD ≈ reading the paper). Use `papers/_TEMPLATE.md` sections but expand
    to full depth: section-by-section results with ALL numbers, every important figure explained, full
    mechanism/argument flow, a technique mini-glossary. **Depth reference =
