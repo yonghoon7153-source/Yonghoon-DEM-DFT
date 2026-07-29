@@ -223,10 +223,13 @@ def render(captured: str) -> str:
         lines = []
         for l in body.splitlines():
             if "✅" in l and "⛔" not in l and "▶" not in l:
+                # ⚠ 섹션 제목을 안 붙이면 굴러간 조각이 정체불명이 된다
+                #   (실측: "완료 — cube 3개" 만 남아 어느 작업인지 알 수 없었다).
                 t = " ".join(l.replace("✅", " ").split())     # 공백 정규화
-                t = t.split("(")[0].strip(" :·")
+                t = t.split("(")[0].strip(" :·—")
                 if t:
-                    done.append(t[:56])
+                    _sh = title.split(" (")[0].split(" — ")[0].strip()
+                    done.append((f"{_sh}: {t}" if _sh else t)[:64])
                 continue
             lines.append(l)
         # 하위줄이 전부 접힌 그룹 머리(`  [comp2_disorder_relaxed]`)는 같이 지운다
@@ -542,9 +545,19 @@ if os.path.isfile(elog):
     conv = [l.strip() for l in t.splitlines() if "convergence has been achieved" in l]
     it = [l.strip() for l in t.splitlines()
           if re.search(r"iteration #|estimated scf accuracy|total energy\s+=", l)]
-    if alive("pw.x", exact=True) == "ALIVE" or alive("pp.x", exact=True) == "ALIVE":
+    # ⚠⚠ **전역 pw.x 생존으로 판정하면 안 된다.** SDCP 의 GPU pw.x 가 켜지자마자
+    #   이미 끝난 ELF 가 '진행 중' 으로 되살아났다 (2026-07-30 실측: 화면에
+    #   "단계: ⑥ 완료 (rho_atomic 까지) · pw.x ALIVE" 가 살아있는 섹션으로 떴다).
+    #   pw.x 는 이 서버에서 여러 작업이 공유하는 이름이라 소유자를 못 가린다.
+    #   **이 작업의 로그 신선도**로 본다.
+    _elm = mtime(elog)
+    _eage = (NOW - _elm).total_seconds() / 60 if _elm else 1e9
+    _efresh = _eage < 15
+    if _efresh:
         live()
-    print(f"  단계: {stage} · pw.x {alive('pw.x', exact=True)} · pp.x {alive('pp.x', exact=True)}")
+    print(f"  단계: {stage} · 로그 "
+          + (f"{_eage:.0f}분 전" if _elm else "없음")
+          + (" (진행 중)" if _efresh else " (정지)"))
     if conv:
         print("  " + conv[-1] + "   ⚠ maxstep(200) 과 같으면 가짜 수렴")
     for l in it[-2:]:
