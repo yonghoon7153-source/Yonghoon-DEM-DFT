@@ -136,7 +136,7 @@ def show_scf(tag, out_path, maxstep=200):
         #   **accuracy 궤적**이 정한다. 실측 두 번(2026-07-28 ELF, 07-29 Bader) 다
         #   "반복당 1h+ = 사실상 안 끝난다" 로 오경보했는데, 각각 15회·17회 만에 끝났다.
         #   도구가 계속 틀린 신호를 주면 언젠가 진짜로 죽이게 된다.
-        need, eta = None, None
+        need, eta, stalled = None, None, False
         try:
             hist = [float(x) for x in (s["acc_hist"] or [])][-4:]
             target = float(s["conv_thr"]) if s["conv_thr"] else 1e-8
@@ -147,6 +147,10 @@ def show_scf(tag, out_path, maxstep=200):
                 if rate > 0.05:
                     need = math.ceil(math.log10(hist[-1] / target) / rate)
                     eta = need * h
+                elif len(hist) >= 3:
+                    # ⚠ 감소율이 거의 0 인 건 "궤적 부족"이 아니라 **정체 그 자체**다.
+                    #   이걸 미상으로 처리하면 SDCP 형 발산(246회 0.51 Ry)을 놓친다.
+                    stalled = rate
         except (ValueError, ZeroDivisionError, TypeError):
             pass
         line = f"     반복 1회 ≈ {h:.2f} h · 경과 {s['elapsed_s']/3600:.1f} h"
@@ -155,7 +159,11 @@ def show_scf(tag, out_path, maxstep=200):
         else:
             line += f" · maxstep 최악값 {h*max(0, s['maxstep']-s['it']):.0f} h (예상값 아님)"
         print(line)
-        if need is not None and eta > 48:
+        if stalled is not False:
+            print(f"     ⛔ **정체 — 반복당 자릿수 감소 {stalled:.3f} (거의 0).** "
+                  f"accuracy {s['acc']} 가 목표 {s['conv_thr']} 로 갈 기미가 없다. "
+                  f"반복을 더 돌리는 건 낭비다 — 믹싱/스미어링/스핀 설정을 손대야 한다.")
+        elif need is not None and eta > 48:
             print(f"     ⛔ **궤적으로도 {eta:.0f} h 남는다 = 재설계 필요.** "
                   f"k-mesh/컷오프/믹싱을 손대야 한다.")
         elif need is None and h > 1.0:
