@@ -110,4 +110,7 @@ if [ -n "$ACT" ]; then
   fi
 fi
 echo "  기준: hBN 표면 Shi2017=0.10 / graphene 문헌~0.3 / gallery 2L2L=0.1473(대표값). 수렴 전 Ea는 추정치."
-echo "  2x2 gallery 행렬: 1L1L 0.3567 · 2L2L 0.1473 완료 / gr2L(2L|1L) · 2L(1L|2L) 진행 — 209 meV 층수효과 분해용."
+echo "  2x2 gallery 행렬 ✅완성(2026-07-30): 1L|1L 0.3567 · 2L|1L 0.1495 · 1L|2L 0.3802 · 2L|2L 0.1473 eV"
+echo "    → 209 meV 는 거의 전부 VGCF 쪽: VGCF만 2층 -207.2 meV(98.9%) · h-BN만 2층 +23.5 meV(악화)"
+echo "  ⚠ 남은 판정 = 기전: Li_on_graphene(1L) 0.2730 vs Li_on_graphene_2L(진행중)"
+echo "    차이 크면 substrate(스크리닝·분극, 일반화 가능) / 차이 ~0 이면 gallery 전용 confinement"
