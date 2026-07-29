@@ -78,6 +78,17 @@ else
   say "rho_scf/rho_atomic 둘 다 있어야 CDD — 건너뜀"
 fi
 
+# ── 2b) Bader 요약 재생성 (ZVAL 규약) — 버그 판본이 남아 있으면 덮어쓴다 ─────────
+if [ -s "$B/ACF.dat" ] && [ -f "$REPO/tools/electronic/bader_summary_zval.py" ]; then
+  # ⚠ 옛 요약은 net = Z - N_bader 라 Cl +9.086 같은 값이 박혀 있다. ACF.dat 재해석만이라 싸다.
+  if ! grep -q "ZVAL - N_bader" "$B/lpsocl_bader_summary.json" 2>/dev/null; then
+    say "Bader 요약 재생성 (ZVAL 규약 — 옛 판본 Z 규약 덮어씀)"
+    $PY "$REPO/tools/electronic/bader_summary_zval.py" \
+        --acf "$B/ACF.dat" --struct "$REPO/db/structures/lpsocl_relaxV0.xyz" \
+        --out "$B/lpsocl_bader_summary.json" 2>&1 | tail -12
+  fi
+fi
+
 # ── 3) Bader 요약 (기존 표와 같은 방법인지 대조) ────────────────────────────
 if ok "$B/lpsocl_bader_summary.json"; then
   say "Bader 요약:"

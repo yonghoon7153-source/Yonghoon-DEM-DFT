@@ -53,6 +53,8 @@ def main():
     ap.add_argument("--pairs", type=int, nargs="+", default=None,
                     help="flat list of 1-based atom index pairs A B A B ...")
     ap.add_argument("--n", type=int, default=200)
+    # ⚠ 그림만 내면 원고에서 다시 못 쓴다 — 곡선 자체를 Origin-ready CSV 로 같이 낸다.
+    ap.add_argument("--csv", default=None, help="결합별 ELF 프로파일 CSV")
     args = ap.parse_args()
 
     data, origin, cell, gn, atoms = read_cube(args.cube)
@@ -121,6 +123,7 @@ def main():
            "P-O": "#be123c", "O-Li": "#be123c", "Li-O": "#be123c", "B-S": "#0284c7"}
     fig, ax = plt.subplots(figsize=(7.6, 5.4))
     t = np.linspace(0, 1, args.n)
+    curves = {}          # {bond: (length_A, profile)} — CSV 용
     print(f"[{args.label}] ELF bond profiles:")
     for la, ia, lb, ib in bonds:
         A = pos[ia]; B = A + mic(pos[ib] - A)
@@ -131,6 +134,7 @@ def main():
         imax = np.argmax(prof[interior]); tmax = t[interior][imax]; vmax = prof[interior][imax]
         imin = np.argmin(prof[interior]); vmin = prof[interior][imin]
         key = f"{la}-{lb}"
+        curves[key] = (L, prof)
         c = COL.get(key, COL.get(f"{lb}-{la}", "#666"))
         ionic = vmin < 0.18
         kind = "ionic (deep moat)" if ionic else "covalent (bond maintained)"
