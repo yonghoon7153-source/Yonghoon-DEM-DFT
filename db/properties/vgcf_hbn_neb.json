@@ -98,5 +98,31 @@
     "db/properties/vgcf_hbn_neb_images_origin.csv",
     "db/properties/vgcf_hbn_neb_barriers_origin.csv"
   ],
-  "raw": "esp-Z590:~/work/vgcf_hbn/neb/<case>/{neb.out,*.dat,*.int}"
+  "raw": "esp-Z590:~/work/vgcf_hbn/neb/<case>/{neb.out,*.dat,*.int}",
+  "layer_effect_2x2_matrix_COMPLETE_2026_07_30": {
+    "_what": "209 meV 층수효과를 VGCF 쪽 몫 / h-BN 쪽 몫으로 분해. 네 칸 모두 CI-NEB 수렴 완료.",
+    "Ea_eV": {
+      "1L|1L": 0.356724,
+      "2L|1L_VGCF2L": 0.149536,
+      "1L|2L_hBN2L": 0.380182,
+      "2L|2L": 0.147314
+    },
+    "delta_vs_1L1L_meV": {
+      "1L|1L": 0.0,
+      "2L|1L_VGCF2L": -207.2,
+      "1L|2L_hBN2L": 23.5,
+      "2L|2L": -209.4
+    },
+    "verdict": "**209 meV 는 거의 전부 VGCF(graphene) 쪽이다.** VGCF 만 2층으로 하면 -207.2 meV = 전체(-209.4)의 98.9%. h-BN 만 2층으로 하면 +23.5 meV 로 **오히려 약간 나빠진다**.",
+    "non_additivity_meV": -25.7,
+    "_non_additivity_reading": "개별 합 -183.7 vs 실제 전체 -209.4 → 잔차 -25.7 meV. 두 벽 효과가 완전히 독립은 아니지만, 잔차가 VGCF 단독 몫(-207)의 12% 라 'VGCF 지배' 결론은 잔차에 흔들리지 않는다.",
+    "_iterations": {
+      "1L|1L": 29,
+      "2L|1L": 43,
+      "1L|2L": 19,
+      "2L|2L": 52
+    },
+    "⚠_still_open": "**기전이 confinement 인지 substrate 인지는 아직 미정.** 갤러리 케이스는 전부 두 벽 사이라 '그래핀 층수' 와 '가둠 기하'가 섞여 있다. 가르는 실험은 **표면 대조군**이다: Li_on_graphene(1L) = 0.272950 eV 는 있고 Li_on_graphene_2L 이 없다. 그 둘의 차이가 크면 substrate 효과(스크리닝·분극, 일반화 가능), 거의 0 이면 갤러리 전용 confinement 효과(VGCF 다발 구조 특화). **논문 문장이 갈린다.**",
+    "_next": "Li_on_graphene_2L CI-NEB (kgy, endpoint-B 대기 상태에서 세션 종료됨 — 재기동 필요)"
+  }
 }

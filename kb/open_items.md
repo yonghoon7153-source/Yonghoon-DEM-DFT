@@ -28,10 +28,22 @@
   600→1000 K에서 D 2.0×(0.276 eV라면 8.5× 기대)라 케이지 잔류 의심.
 - cfg1/cfg2 완료 후 config 산포로 판정 (단일 config 판정 금지 규율).
 
-### 3. VGCF 2×2 barrier 행렬 — kgy NEB 체인
-- Li_in_gallery_gr2L(2L|1L) → Li_in_gallery_2L(1L|2L) → Li_on_graphene_2L 진행 중.
-- 완료 시: 209 meV 층수 효과의 VGCF/h-BN 몫 분해 + 2L 수렴 판정 + 기준선 층수 정합.
-  결과에 따라 "gallery가 표면보다 ~2× 빠름" 문구의 배수 재계산.
+### 3. 🔶 VGCF 2×2 barrier 행렬 — **분해 완료 (2026-07-30), 기전 판정만 남음**
+- **네 칸 전부 CI-NEB 수렴**: 1L|1L 0.3567 · 2L|1L(VGCF 2층) 0.1495 ·
+  1L|2L(h-BN 2층) 0.3802 · 2L|2L 0.1473 eV.
+- **판정: 209 meV 는 거의 전부 VGCF(graphene) 쪽이다.** VGCF 만 두껍게 = **−207.2 meV
+  (전체의 98.9%)**, h-BN 만 두껍게 = **+23.5 meV(오히려 악화)**. 비가법 잔차 −25.7 meV
+  (VGCF 단독 몫의 12% → 'VGCF 지배' 결론은 잔차에 안 흔들림).
+- **⚠ 남은 것 하나 — 기전이 confinement 인지 substrate 인지.** 갤러리 4칸은 전부 두 벽
+  사이라 '그래핀 층수'와 '가둠 기하'가 섞여 있다. 가르는 건 **표면 대조군**:
+  `Li_on_graphene`(1L) = **0.2730 eV** 는 있고 `Li_on_graphene_2L` 이 없다.
+    · 둘 차이가 **크면** → substrate 효과(스크리닝·분극). 갤러리든 표면이든 성립 =
+      **일반화 가능한 설계 원리**
+    · 둘 차이가 **≈0 이면** → 갤러리 전용 **confinement** 효과 = VGCF 다발 구조 특화
+  **논문 문장이 이 한 점에서 갈린다.**
+- **상태**: kgy 세션 종료됨(`실행중: 없음`), `Li_on_graphene_2L` 이 endpoint-B 대기로 남음.
+  GPU 24 GB 여유 · util 0 → **재기동만 하면 된다.**
+- 등록: `db/properties/vgcf_hbn_neb.json` `layer_effect_2x2_matrix_COMPLETE_2026_07_30`
 
 ### 4. SDCP complex_doped_v2 DFT relax — k 2×2×1 재실행 수렴 여부
 - k 1×1×1 정체(150 iter, 0.0837 Ry) → 2×2×1로 재시작. accuracy가 0.08을 뚫고

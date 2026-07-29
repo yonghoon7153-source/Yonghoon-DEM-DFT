@@ -1,0 +1,73 @@
+{
+  "property": "LPSOCl AE Bader net charge (kjpaw + plot_num=17)",
+  "system": "lpsocl = O-doped LPSCl1.6 V0 (Li27P5S21OCl8, 62 atoms)",
+  "date": "2026-07-30",
+  "method": "QE pw.x kjpaw_psl PAW, ecut 70/560, k 4x4x4, fixed-occ, SCF converged 19 iterations (maxstep 200 — 가짜 수렴 아님). pp.x plot_num=17 -> bader -p all_atom. net = ZVAL - N_bader.",
+  "⚠_bug_fixed_2026_07_30": "최초 산출은 net = **Z**(총 원자번호) - N_bader 로 계산돼 Cl +9.086 · S +8.227 · P +14.524 같은 물리적으로 불가능한 값이 나왔다. 원인: QE 의 plot_num=17 은 all-electron **valence** charge density(PAW 증강 복원)이지 frozen core 까지 복원하는 게 아니다 — basin 에 들어오는 건 **ZVAL** 이다. basin 전자수를 역산해 ZVAL 로 다시 빼니 아래 값이 되고, 기존 표와 정확히 앉았다. Li 만 우연히 안 틀렸다(Li.pbe-sl-kjpaw 는 semicore 포함이라 ZVAL=3=Z).",
+  "zval_used": {
+    "Li": 3,
+    "P": 5,
+    "S": 6,
+    "Cl": 7,
+    "O": 6
+  },
+  "net_charge_e": {
+    "Li": 0.883,
+    "P": 4.524,
+    "S": -1.773,
+    "Cl": -0.914,
+    "O": -1.922
+  },
+  "comparison_same_method": {
+    "_note": "전부 AE plot_num=17 + kjpaw — **같은 방법이라 비교 가능**하다.",
+    "Li": {
+      "comp1_LPSCl16": 0.883,
+      "lpsocl": 0.883,
+      "b2o3": 0.881,
+      "verdict": "Li⁺ 운반체 상태는 O·B₂O₃ 도핑에 **불변** (3계 소수 셋째 자리 일치)"
+    },
+    "Cl": {
+      "comp1_LPSCl16": -0.918,
+      "lpsocl": -0.914,
+      "b2o3": -0.914,
+      "verdict": "불변"
+    },
+    "P": {
+      "comp1_LPSCl16": 4.34,
+      "lpsocl": 4.524,
+      "b2o3": 4.691,
+      "verdict": "**단조 증가** — O 개수를 따라간다(0 → 1 → 3). O 가 P 에서 전하를 끌어 phosphate 성격을 준다. LPSOCl 이 정확히 중간에 앉는다."
+    },
+    "S": {
+      "comp1_LPSCl16": -1.736,
+      "lpsocl": -1.773,
+      "b2o3": -1.8,
+      "verdict": "같은 방향으로 단조 — P 가 산화된 만큼 S 가 받는다"
+    },
+    "O": {
+      "lpsocl": -1.922,
+      "b2o3": -1.918,
+      "verdict": "두 계 모두 O²⁻ 근처"
+    }
+  },
+  "cross_check_uspp": {
+    "_note": "db/properties/lpsocl_icohp.json 의 Bader 는 **다른 방법**(USPP 가전자 plot_num=0)인데 LPSOCl 에서는 두 방법이 잘 맞는다 — 이 계에서는 방법 의존성이 작다는 뜻.",
+    "USPP_valence": {
+      "Li": 0.8825,
+      "P": 4.4372,
+      "S": -1.7516,
+      "O": -1.9261,
+      "Cl": -0.9131
+    },
+    "AE_PAW_this": {
+      "Li": 0.883,
+      "P": 4.524,
+      "S": -1.773,
+      "O": -1.922,
+      "Cl": -0.914
+    },
+    "max_diff": "P 0.087 e · S 0.021 · 나머지 <0.01",
+    "⚠": "comp1 의 옛 Bader(P +3.27)는 여전히 이 family 밖이다 — 그 런의 밀도 소스가 다른 것으로 남아 있고 재유도 전까지 같은 표에 넣지 않는다."
+  },
+  "raw": "gabia:/data/work/runs/lpsocl_bader/{lpsocl_bader_summary.json, ACF.dat, lpsocl_rho_ae.cube}"
+}

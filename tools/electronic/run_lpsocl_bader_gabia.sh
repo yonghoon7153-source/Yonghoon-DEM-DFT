@@ -165,14 +165,21 @@ from collections import defaultdict
 out, v0 = sys.argv[1], sys.argv[2]
 L = open(v0).read().splitlines(); nat = int(L[0].split()[0])
 sym = [ln.split()[0] for ln in L[2:2+nat]]
-# ZVAL: kjpaw 세트의 가전자 수 (AE plot_num=17 은 core 를 복원하므로 총 Z 를 쓴다)
-Z = {"Li":3,"P":15,"S":16,"Cl":17,"O":8}
+# ⚠⚠ **버그 정정 (2026-07-30).** 앞선 주석은 "plot_num=17 이 core 를 복원하므로 총 Z 를
+#   쓴다" 였는데 **틀렸다.** QE 의 plot_num=17 은 *all-electron **valence** charge density*
+#   (PAW 증강만 복원)라 basin 에 들어오는 건 **ZVAL** 이지 Z 가 아니다.
+#   실측 결과가 그대로 증거였다: Cl +9.086 · S +8.227 · P +14.524 (물리적으로 불가능).
+#   basin 전자수를 역산해 ZVAL 로 다시 빼니 Cl -0.914 · S -1.773 · P +4.524 · O -1.922 로
+#   기존 표(modelc Cl -0.918 / b2o3 Cl -0.914)와 USPP 판(-0.913)에 정확히 앉았다.
+#   Li 만 우연히 안 틀렸다 — Li.pbe-sl-kjpaw 는 semicore 포함이라 ZVAL=3=Z 다.
+#   ⚠ 이 표는 **pseudo 파일에 박혀 있는 값**이다. pseudo 를 바꾸면 여기도 바꿔야 한다.
+Z = {"Li":3,"P":5,"S":6,"Cl":7,"O":6}   # ZVAL of the kjpaw set above
 rows = [l.split() for l in open(os.path.join(out,"ACF.dat"))
         if re.match(r"^\s*\d+\s", l)]
 per = defaultdict(list)
 for s, r in zip(sym, rows):
     per[s].append(Z[s] - float(r[4]))          # net = Z - Bader charge
-res = {"method": "AE density plot_num=17, PAW kjpaw_psl, ecut 70/560, k444, fixed-occ",
+res = {"method": "AE **valence** density plot_num=17, PAW kjpaw_psl, ecut 70/560, k444, fixed-occ. net = ZVAL - N_bader (NOT Z - N_bader: plot_num=17 restores the PAW augmentation, not the frozen core).",
        "note": "기존 bader_b2o3_vs_lpscl16.csv 와 **같은 방법** — 비교 가능",
        "per_species": {k: {"n": len(v), "mean": round(sum(v)/len(v), 3),
                            "min": round(min(v), 3), "max": round(max(v), 3)}
