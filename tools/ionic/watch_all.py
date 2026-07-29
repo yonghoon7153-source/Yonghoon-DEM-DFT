@@ -387,10 +387,17 @@ if want("sdcp") and os.path.isdir(_SF):
         for l in (it + ac):
             print(f"        {l[:88]}")
     if not _running:
+        # ⚠ 기본 힌트는 **slab 단계만**이다. MLIP-MD(UMA)가 GPU 에 있을 때
+        #   131원자 복합체를 같이 올리면 VRAM 이 부딪힌다(47/48 GB 전례).
+        #   96원자 슬랩은 단일-k 라 공존 가능하고, 2단계는 MD 가 끝난 뒤 잇는다.
+        _stage = "slab" if alive("aimd_mlip|disorder_ensemble_diffusion") == "ALIVE" else "all"
         print("   ⛔ 도는 게 없다 — 재기동:")
-        print("      tmux new -s pbslab -d 'bash ~/Yonghoon-DEM-DFT/tools/sdcp/"
-              "run_phaseB_slabfirst_gabia.sh 2>&1 | tee -a "
+        print(f"      tmux new -s pbslab -d 'bash ~/Yonghoon-DEM-DFT/tools/sdcp/"
+              f"run_phaseB_slabfirst_gabia.sh {_stage} 2>&1 | tee -a "
               "/data/work/runs/sdcp_linio2_binding/pbslabfirst.log'")
+        if _stage == "slab":
+            print("      (MLIP-MD 가 GPU 에 있어 1단계만 — 시드 나오면 complexes 로 잇는다)")
+        print("   로그: tail -30 /data/work/runs/sdcp_linio2_binding/pbslabfirst.log")
     print(BAR)
     src = None                       # 아래 예전 블록을 건너뛴다
 else:

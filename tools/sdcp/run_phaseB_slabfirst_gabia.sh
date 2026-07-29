@@ -46,10 +46,18 @@ MAGJSON=$OUT/slab_mag.json
 mkdir -p "$OUT"
 ts(){ echo "[$(date +%m-%d\ %H:%M:%S)] $*"; }
 
-# ── 중복 실행 가드 (관례) ────────────────────────────────────────────────────
-SELF=$(basename "$0")
-if [ "$(pgrep -fc "[b]ash.*$SELF" || echo 1)" -gt 1 ]; then
-  ts "⛔ $SELF 가 이미 돈다 — 중복 실행 중단"; exit 1
+# ── 중복 실행 가드 ──────────────────────────────────────────────────────────
+# ⚠⚠ **pgrep 로 세면 안 된다.** `pgrep -fc "[b]ash.*$SELF"` 는 자기 자신뿐 아니라
+#   tmux 가 끼워 넣는 래퍼(`sh -c 'bash ... | tee ...'`)까지 센다 — 실측 count=4.
+#   그래서 `-gt 1` 이 항상 참이 되어 **스크립트가 시작하자마자 죽었다** (2026-07-30,
+#   tmux 세션이 목록에 아예 안 뜨는 걸로 발각). 대괄호 트릭도 이건 못 막는다.
+#   flock 은 PID 를 안 세고 커널이 배타를 보장하므로 이 함정 자체가 없다.
+LOCK=${LOCK:-/tmp/pbslabfirst.lock}
+exec 9>"$LOCK" || { ts "⛔ 락 파일을 못 연다: $LOCK"; exit 1; }
+if command -v flock >/dev/null 2>&1; then
+  flock -n 9 || { ts "⛔ 이미 돈다 (flock $LOCK) — 중복 실행 중단"; exit 1; }
+else
+  ts "⚠ flock 없음 — 중복 실행 가드 없이 진행한다"
 fi
 
 # ── env ─────────────────────────────────────────────────────────────────────
@@ -96,7 +104,7 @@ gen(){   # $1 = "slab" | "complexes"
     --afm_mode inplane --mol_vacuum 8 --pseudo_dir /data/work/pseudo \
     --no_fsm --degauss "$DEGAUSS" --scf_must_converge .true. \
     --electron_maxstep 300 --seed_radical S:0.5 \
-    "${extra[@]}" --out "$OUT" || return 1
+    ${extra[@]+"${extra[@]}"} --out "$OUT" || return 1
   # OOM 대책은 refine 판과 동일: 단일-k + david_ndim 2
   for j in slab complex_doped complex_neutral; do
     grep -aq diago_david_ndim "$OUT/$j/scf.in" || \
