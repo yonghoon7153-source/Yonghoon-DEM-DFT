@@ -281,8 +281,26 @@ if not src:
         if re.search(r"iteration #|convergence has been achieved", cap):
             src, via = cap, f"tmux {p}"
             break
+# ⚠ **파일이 있다 ≠ 돌고 있다.** relax.out 은 죽어도 그대로 남아서, 이 섹션이
+#   2026-07-29 에 SIGKILL 로 죽은 런(iteration #246, accuracy 0.51 Ry)을 이틀 내내
+#   "현재:" 로 보여줬다. GPU pw.x 생존과 파일 신선도로 죽음을 못 박는다.
+_gpu_pw = subprocess.run(["pgrep", "-f", r"qe-.*-gpu/bin/pw\.x"],
+                         capture_output=True, text=True).stdout.strip()
+_sdcp_dead = None
+if src:
+    if "signal 9" in src or "Killed" in src or "MPI_ABORT" in src:
+        _sdcp_dead = "⛔ **죽었다 — 출력에 kill/abort 흔적**"
+    elif not _gpu_pw:
+        _sdcp_dead = "⛔ **죽었다 — GPU pw.x 프로세스 없음** (파일만 남은 것)"
 if src:
     print(f"  source: {via}")
+    if _sdcp_dead:
+        print(f"  {_sdcp_dead}")
+        _tail = [l.strip() for l in src.splitlines()
+                 if "signal" in l or "exit code" in l or "Error" in l][-2:]
+        for l in _tail:
+            print("    " + l[:110])
+        print("    아래 '현재:' 는 **마지막 순간의 스냅샷**이지 진행 상황이 아니다.")
 
     def tail(pat, k):
         ls = [l for l in src.splitlines() if re.search(pat, l)]
