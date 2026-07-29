@@ -4,8 +4,13 @@
 ⚠ **읽어야 할 양은 ELF_central_min 이다.**
    ELF_midpoint 는 짧은 결합에서 상대 원자의 lone-pair 영역에 걸려 높게 읽힌다 —
    Li–O 가 중점 0.784(중간)인데 central_min 0.163(최저)인 것이 그 실증이다.
-   문헌 관례도 bond-path 의 **최솟값**으로 공유/이온을 가른다(>0.7 공유 · <0.3 이온).
-   그래서 두 값을 나란히 그리되 central_min 을 주패널로 둔다.
+   판정선은 문헌 관례를 따른다(>0.7 공유 · <0.3 이온).
+
+⚠⚠ **central_min = frac [0.40, 0.60] 구간의 최솟값이다 — 곡선 전체의 최솟값이 아니다.**
+   (정의: tools/figures/sample_elf_bonds.py:103) 창을 넓히면 Li 결합에서 frac 0.65~0.70 의
+   **Li 1s|2s 코어 노드**(0.03~0.08)를 집게 되는데, 그건 원자 성질이지 결합 성질이 아니다.
+   그 노드로 줄을 세우면 Li–Cl 0.034 < Li–O 0.066 < Li–S 0.077 로 **순서가 뒤집힌다.**
+   곡선 실물은 docs/figures/icohp/lpsocl_elf_profiles.png 참고.
 
   python3 tools/figures/fig_elf_bonds_3sys.py
 """
@@ -71,8 +76,8 @@ def main():
              color="#be123c", ha="right")
     ax1.set_xticks(x); ax1.set_xticklabels(bonds, fontsize=10)
     ax1.set_ylim(0, 1.05)
-    apply_axes(ax1, ylabel="ELF central minimum (bond path)",
-               title="(a) ELF central min — the discriminating quantity")
+    apply_axes(ax1, ylabel="ELF minimum over central 40–60% of bond path",
+               title="(a) ELF central min [0.40, 0.60] — the discriminating quantity")
     ax1.legend(frameon=False, fontsize=8.5, loc="lower left")
 
     # (b) midpoint — 왜 이걸로 판정하면 안 되는지
@@ -101,6 +106,7 @@ def main():
     with open(CSVOUT, "w", newline="", encoding="utf-8-sig") as f:
         f.write("# ELF bond descriptors, 3 systems — Origin-ready\n")
         f.write("# ⚠ ELF_central_min 이 판별력 있는 양. midpoint 는 짧은 결합에서 lone-pair 에 걸려 높다.\n")
+        f.write("# ⚠ central_min = frac [0.40,0.60] 최솟값. 곡선 전체 최솟값이 아니다 — 넓히면 Li 1s|2s 코어 노드를 집는다.\n")
         f.write("# 방법: QE pp.x plot_num=8 on NC ONCV scf. comp1/modelc 는 기존 산출, lpsocl 은 2026-07-29.\n")
         w_ = csv.writer(f)
         w_.writerow(["system", "bond", "n_bonds", "mean_dist_A", "ELF_midpoint",

@@ -1,5 +1,6 @@
 ﻿# ELF bond descriptors, 3 systems — Origin-ready
 # ⚠ ELF_central_min 이 판별력 있는 양. midpoint 는 짧은 결합에서 lone-pair 에 걸려 높다.
+# ⚠ central_min = frac [0.40,0.60] 최솟값. 곡선 전체 최솟값이 아니다 — 넓히면 Li 1s|2s 코어 노드를 집는다.
 # 방법: QE pp.x plot_num=8 on NC ONCV scf. comp1/modelc 는 기존 산출, lpsocl 은 2026-07-29.
 system,bond,n_bonds,mean_dist_A,ELF_midpoint,ELF_mid_std,ELF_central_min
 comp1,P-S,16,2.072,0.944,0.002,0.924

@@ -66,7 +66,7 @@
 <div class="tabs" id="tabs">
   <button class="active" data-tab="structure">🧊 Structure ({{ structures|length }})</button>
   <button data-tab="charts">📊 Charts ({{ datafiles|length }})</button>
-  {% if icohp or cohp_curves %}<button data-tab="bonding">🔗 Bonding</button>{% endif %}
+  {% if icohp or cohp_curves or elf_curves %}<button data-tab="bonding">🔗 Bonding</button>{% endif %}
   <button data-tab="raw">🗂 Raw ({{ metrics|length }})</button>
   {% if rollup %}<button data-tab="record">📄 Record</button>{% endif %}
 </div>
@@ -128,9 +128,9 @@
 </div>
 
 <!-- Bonding (LOBSTER ICOHP + COHP 곡선) -->
-{# ⚠ 두 자료는 따로 존재할 수 있다 — comp2 는 곡선 CSV 만 있고 ICOHP JSON 이 없어서
+{# ⚠ 세 자료는 따로 존재할 수 있다 — comp2 는 곡선 CSV 만 있고 ICOHP JSON 이 없어서
    `if icohp` 하나로 묶어 두면 탭이 통째로 사라진다(실제로 그랬다). 조건을 분리한다. #}
-{% if icohp or cohp_curves %}
+{% if icohp or cohp_curves or elf_curves %}
 <div class="tab-panel" id="tab-bonding">
   {% if icohp %}<div class="card">
     <h3>결합 강도 — LOBSTER ICOHP <span class="muted" style="font-weight:400;font-size:.8rem">음수 클수록 강한 결합</span></h3>
@@ -170,7 +170,10 @@
 
   {# ── COHP 곡선 (bonding / antibonding) ───────────────────────────────
      ICOHP 는 **적분값**이라 "어느 에너지에서 결합/반결합인지"를 못 본다.
-     그 정보는 COHPCAR.lobster 에만 있고, 없으면 왜 없는지를 그대로 띄운다. #}
+     그 정보는 COHPCAR.lobster 에만 있고, 없으면 왜 없는지를 그대로 띄운다.
+     ⚠ ELF 만 있는 계에서는 카드째 숨긴다 — LOBSTER 를 안 돌린 계에 '회수 절차'만
+       띄우면 할 일 목록처럼 보인다. #}
+  {% if icohp or cohp_curves %}
   <div class="card">
     <h3>COHP 곡선 — bonding / antibonding
       <span class="muted" style="font-weight:400;font-size:.8rem">−pCOHP &gt; 0 = 결합성, &lt; 0 = 반결합성</span></h3>
@@ -217,6 +220,58 @@
     </div>
     {% endif %}
   </div>
+  {% endif %}
+
+  {# ── ELF 결합 프로파일 (ICOHP=공유성 · Bader=전하 와 함께 세 번째 축) ──────
+     ⚠ 판정값은 [0.40,0.60] 최솟값. 곡선 전체 최솟값을 쓰면 Li 1s|2s 코어 노드를
+       집어 Li–Cl < Li–O < Li–S 로 순서가 뒤집힌다 (data.py ELF_WIN 참조). #}
+  {% if elf_curves %}
+  <div class="card">
+    <h3>ELF 결합 프로파일
+      <span class="muted" style="font-weight:400;font-size:.8rem">— 결합 경로를 따라간 전자 국재화</span></h3>
+    <div class="muted" style="font-size:.78rem;line-height:1.6;margin-bottom:8px">
+      ICOHP 가 "얼마나 센가", Bader 가 "전하가 어디로 갔나"라면 ELF 는
+      <b>결합 사이에 전자가 모여 있나(공유) 비어 있나(이온)</b>를 말해요.
+      판정은 결합 경로의 <b>가운데 구간 [{{ elf_curves.window[0] }}, {{ elf_curves.window[1] }}] 최솟값</b>으로 하고
+      (&gt; {{ elf_curves.cov }} 공유 · &lt; {{ elf_curves.ion }} 이온),
+      노란 띠가 그 구간이에요.
+      <br><b style="color:#b91c1c">⚠ 곡선 전체의 최솟값으로 읽으면 안 돼요.</b>
+      Li 결합은 frac 0.65 근처에서 ELF 가 0.03~0.08 까지 떨어지는데, 이건 결합이 아니라
+      <b>Li 의 1s|2s 코어 노드</b>예요 (쓰는 유사퍼텐셜에서 Li 1s 가 가전자라 Li 핵에서 ELF→1).
+      원자 성질이라 그 골로 줄을 세우면 순서가 뒤집혀요.
+      <br>표의 <b>mean</b> 열이 <b>인용 표준</b>(n개 결합 평균)이고, 곡선은 결합종마다
+      <b>대표 1개</b>라서 소수 셋째 자리가 다를 수 있어요.
+    </div>
+    <div class="chart" id="elf-chart" style="min-height:460px"></div>
+    <div style="overflow-x:auto;margin-top:10px">
+    <table class="data-table"><thead><tr>
+      <th>Bond</th><th class="num">d (Å)</th><th class="num">n</th>
+      <th class="num">central min (mean)</th><th class="num">midpoint (mean)</th>
+      <th>판정</th><th class="num">Li core node</th></tr></thead><tbody>
+    {% for c, v in elf_curves.bonds.items() %}
+    <tr><td><b>{{ v.label }}</b></td>
+      <td class="num muted">{{ '%.2f'|format(v.dist_A) }}</td>
+      <td class="num muted">{{ v.n_bonds if v.n_bonds else '—' }}</td>
+      <td class="num" style="font-weight:600">
+        {{ '%.3f'|format(v.mean_central_min) if v.mean_central_min is not none
+           else ('%.3f'|format(v.central_min) ~ ' *') }}</td>
+      <td class="num muted">{{ '%.3f'|format(v.mean_midpoint) if v.mean_midpoint is not none else '—' }}</td>
+      <td><span class="badge {{ 'b-ok' if v.verdict == 'covalent' else ('b-todo' if v.verdict == 'ionic' else '') }}">{{ v.verdict }}</span></td>
+      <td class="num muted" style="font-size:.78rem">
+        {% if v.core_node is not none %}{{ '%.3f'|format(v.core_node) }} <span style="font-size:.7rem">(원자)</span>{% else %}—{% endif %}</td></tr>
+    {% endfor %}
+    </tbody></table></div>
+    <div class="muted" style="font-size:.74rem;margin-top:6px;line-height:1.6">
+      ※ <b>midpoint</b> 는 참고용이에요 — 짧은 결합에서는 중점이 상대 원자의 lone-pair 안에
+      들어가 실제보다 높게 읽혀요 (Li–O 가 중점 0.784 인데 central min 0.163).
+      {% if elf_curves.bonds.values()|selectattr('mean_central_min','none')|list %}
+      <br>* 표시는 중점 CSV 에 해당 결합이 없어 <b>대표 1결합 값</b>을 쓴 항목이에요.{% endif %}
+    </div>
+    <div class="muted mono" style="font-size:.68rem;margin-top:6px">db/{{ elf_curves.rel }}
+      {%- if elf_curves.mid_rel %} · db/{{ elf_curves.mid_rel }}{% endif %}</div>
+    <script>window._ELF={{ elf_curves|tojson }};</script>
+  </div>
+  {% endif %}
 
   {# ── 자리별 Li 앵커 세기 (같은 원소쌍이라도 자리가 다르면 세기가 다르다) ── #}
   {% if icohp.per_site %}
@@ -316,6 +371,7 @@ document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{
   if(b.dataset.tab==='structure'&&viewer)setTimeout(()=>{viewer.resize();viewer.render();},50);
   if(b.dataset.tab==='charts'&&window._firstCsv){window._firstCsv();window._firstCsv=null;}
   if(b.dataset.tab==='bonding'&&window._COHP&&!window._COHP._done){window._COHP._done=1;drawCohp();}
+  if(b.dataset.tab==='bonding'&&window._ELF&&!window._ELF._done){window._ELF._done=1;drawElf();}
 });
 
 // ── COHP 곡선 패널 (bonding/antibonding) ───────────────────────────────
@@ -369,6 +425,59 @@ function drawCohp(){
     layout.shapes=shapes;layout.annotations=anns;layout.showlegend=false;
     layout.height=Math.max(420,300*nrow);layout.margin={l:56,r:16,t:18,b:44};
     Plotly.newPlot('cohp-chart',traces,layout,{responsive:true,displaylogo:false});
+  }).catch(function(e){box.innerHTML='<span class="muted">차트 로드 실패</span>';});
+}
+// ── ELF 결합 프로파일 패널 ─────────────────────────────────────────────
+// ⚠ 판정 마커는 **[0.40,0.60] 안의 최솟값**에만 찍는다. 곡선 전체 최솟값에 찍으면
+//   Li 결합에서 1s|2s 코어 노드(원자 성질)를 결합 세기처럼 보여 주게 된다.
+var _ELF_COLOR={'P–S':'#7c3aed','P–O':'#be123c','S(free)–Li':'#c05621','Li–S':'#c05621',
+                'Cl–Li':'#65a30d','Li–Cl':'#65a30d','O–Li':'#be123c','Li–O':'#be123c',
+                'B–S':'#0284c7','S–S':'#6b7280'};
+function drawElf(){
+  var box=document.getElementById('elf-chart');if(!box)return;
+  if(typeof Plotly==='undefined'){box.innerHTML='<span class="muted">차트 라이브러리(Plotly)를 불러오지 못했어요.</span>';return;}
+  var E=window._ELF;
+  fetch('/api/csv/'+encodeURIComponent(E.rel)).then(r=>r.json()).then(function(d){
+    if(d.error||!d.columns){box.innerHTML='<span class="muted">CSV 로드 실패: '+(d.error||'?')+'</span>';return;}
+    var xk=d.columns[0], X=d.data.map(function(r){return r[xk];});
+    var cols=d.columns.slice(1).filter(function(c){return E.bonds[c];});
+    if(!cols.length){box.innerHTML='<span class="muted">ELF 열을 못 찾았어요 — 열: '+d.columns.join(', ')+'</span>';return;}
+    var n=cols.length, ncol=Math.min(3,n), nrow=Math.ceil(n/ncol);
+    var traces=[],shapes=[],anns=[],layout={grid:{rows:nrow,columns:ncol,pattern:'independent'}};
+    cols.forEach(function(c,i){
+      var b=E.bonds[c], col=_ELF_COLOR[b.label]||'#6b7280',
+          Y=d.data.map(function(r){return r[c];}), ax=(i+1);
+      traces.push({x:X,y:Y,type:'scatter',mode:'lines',name:b.label,
+        line:{color:col,width:2},
+        hovertemplate:b.label+'<br>frac %{x:.3f}<br>ELF %{y:.3f}<extra></extra>',
+        xaxis:'x'+ax,yaxis:'y'+ax});
+      // 판정 마커 — 창 안 최솟값 위치를 곡선에서 다시 찾는다 (표의 대표값과 같은 정의)
+      var bi=-1,bv=2;
+      X.forEach(function(x,k){if(x>=E.window[0]-1e-9&&x<=E.window[1]+1e-9&&Y[k]<bv){bv=Y[k];bi=k;}});
+      if(bi>=0)traces.push({x:[X[bi]],y:[Y[bi]],type:'scatter',mode:'markers',
+        marker:{size:9,color:'#fff',line:{color:col,width:2.2}},hoverinfo:'skip',
+        showlegend:false,xaxis:'x'+ax,yaxis:'y'+ax});
+      layout['xaxis'+ax]={title:{text:'fraction along bond',font:{size:10}},range:[0,1],tickfont:{size:9}};
+      layout['yaxis'+ax]={title:{text:i%ncol===0?'ELF':'',font:{size:11}},range:[0,1.30],
+        tickvals:[0,.2,.4,.6,.8,1],tickfont:{size:9},showticklabels:i%ncol===0};
+      shapes.push({type:'rect',xref:'x'+ax,yref:'y'+ax,x0:E.window[0],x1:E.window[1],y0:0,y1:1.30,
+        fillcolor:'#fef9c3',line:{width:0},layer:'below'});
+      [[E.cov,'#0d9488'],[E.ion,'#be123c']].forEach(function(t){
+        shapes.push({type:'line',xref:'x'+ax,yref:'y'+ax,x0:0,x1:1,y0:t[0],y1:t[0],
+          line:{color:t[1],width:1,dash:'dot'}});});
+      var mv=(b.mean_central_min!=null?b.mean_central_min:b.central_min);
+      anns.push({xref:'x'+ax,yref:'y'+ax,x:0.5,y:1.24,showarrow:false,font:{size:11,color:col},
+        text:'<b>'+b.label+'</b>  '+b.dist_A.toFixed(2)+' Å'});
+      anns.push({xref:'x'+ax,yref:'y'+ax,x:0.5,y:1.10,showarrow:false,
+        font:{size:10,color:b.verdict==='covalent'?'#0d9488':(b.verdict==='ionic'?'#be123c':'#6b7280')},
+        text:'central min '+(mv!=null?mv.toFixed(3):'?')+' · '+(b.verdict||'')});
+      if(b.core_node!=null)anns.push({xref:'x'+ax,yref:'y'+ax,x:0.98,y:0.20,showarrow:false,
+        xanchor:'right',font:{size:8,color:'#6b7280'},
+        text:'Li 1s|2s node '+b.core_node.toFixed(3)+'<br>atomic — not the bond'});
+    });
+    layout.shapes=shapes;layout.annotations=anns;layout.showlegend=false;
+    layout.height=Math.max(380,300*nrow);layout.margin={l:52,r:16,t:14,b:44};
+    Plotly.newPlot('elf-chart',traces,layout,{responsive:true,displaylogo:false});
   }).catch(function(e){box.innerHTML='<span class="muted">차트 로드 실패</span>';});
 }
 let viewer;

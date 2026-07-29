@@ -696,6 +696,86 @@ def cohp_curves_for(cid: str):
     return None
 
 
+# ELF 프로파일 판정 창 — tools/figures/sample_elf_bonds.py:103 과 **같아야** 한다.
+#   창을 넓히면 Li 결합의 1s|2s 코어 노드(0.03~0.08)를 집어 순위가 뒤집힌다.
+ELF_WIN = (0.40, 0.60)
+ELF_COV, ELF_ION = 0.70, 0.30
+# 프로파일 CSV 열 이름 → 중점 CSV 의 bond 키. 열 이름은 sample 쪽 표기와 순서가 달라서
+# (예: 열 'S(free)-Li' ↔ 중점 'Li-S') 원소집합으로 맞춘다.
+_ELF_COL = re.compile(r"^ELF_(.+?)_([\d.]+)A$")
+
+
+def _elf_bond_key(label: str) -> frozenset:
+    """'S(free)-Li' → {'S','Li'} — 자리 수식어와 방향을 지운 원소쌍."""
+    return frozenset(re.sub(r"\(.*?\)", "", p).strip() for p in label.split("-"))
+
+
+def elf_curves_for(cid: str):
+    """결합별 ELF 프로파일 CSV + 중점 CSV 의 평균값(인용 표준)을 묶어 준다.
+
+    ⚠ 곡선에서 읽는 값은 **[0.40,0.60] 최솟값**이지 곡선 전체 최솟값이 아니다.
+      Li 결합은 frac 0.65 부근에 Li 1s|2s 코어 노드가 있어서(Li 1s 가 valence)
+      전체 최솟값으로 줄을 세우면 Li–Cl < Li–O < Li–S 로 **순서가 뒤집힌다.**
+      그림·표 어디서도 그 골을 결합 세기로 쓰지 않게 여기서 창을 고정한다.
+    """
+    pref = _PREFIX.get(cid, [cid])
+    prof = next((f for f in sorted((DB / "properties").glob("*elf_profiles*.csv"))
+                 if _prefix_starts(f.name, pref)), None)
+    if prof is None:
+        return None
+    # 중점 CSV (n개 평균 = 인용 표준). 없으면 곡선만 그린다.
+    mids = {}
+    mid_f = next((f for f in sorted((DB / "properties").glob("*elf_bond_midpoint*.csv"))
+                  if _prefix_starts(f.name, pref)), None)
+    if mid_f:
+        for r in csv.DictReader(mid_f.open(encoding="utf-8-sig")):
+            mids[_elf_bond_key(r["bond"])] = r
+
+    lines = [l for l in prof.read_text(encoding="utf-8-sig").splitlines()
+             if not l.lstrip("﻿").startswith("#")]
+    rdr = csv.DictReader(lines)
+    cols = rdr.fieldnames or []
+    rows = list(rdr)
+    if len(cols) < 2 or not rows:
+        return None
+    xk = cols[0]
+    frac = [float(r[xk]) for r in rows]
+
+    bonds = {}
+    for c in cols[1:]:
+        m = _ELF_COL.match(c)
+        if not m:
+            continue
+        label, dist = m.group(1), float(m.group(2))
+        vals = [float(r[c]) for r in rows]
+        win = [v for x, v in zip(frac, vals) if ELF_WIN[0] - 1e-9 <= x <= ELF_WIN[1] + 1e-9]
+        cmin = min(win) if win else None
+        # Li 쪽 코어 노드 — **표시만** 하고 순위엔 안 쓴다.
+        # ⚠ Li 가 없는 결합(P–S/P–O)의 같은 구간은 코어 노드가 아니라 그냥 상대 핵으로
+        #   내려가는 꼬리다 (P–S 0.015). 라벨을 붙이면 오독하므로 Li 결합만 계산한다.
+        has_li = "Li" in _elf_bond_key(label)
+        node = ([v for x, v in zip(frac, vals) if 0.60 <= x <= 0.90] if has_li else [])
+        mid = mids.get(_elf_bond_key(label), {})
+        bonds[c] = {
+            "label": label.replace("-", "–"), "dist_A": dist,
+            "central_min": round(cmin, 3) if cmin is not None else None,
+            "core_node": round(min(node), 3) if node else None,
+            "has_li": has_li,
+            "n_bonds": int(mid["n_bonds"]) if mid.get("n_bonds") else None,
+            "mean_central_min": float(mid["ELF_central_min"]) if mid.get("ELF_central_min") else None,
+            "mean_midpoint": float(mid["ELF_midpoint"]) if mid.get("ELF_midpoint") else None,
+            "verdict": (None if cmin is None else
+                        "covalent" if cmin > ELF_COV else
+                        "ionic" if cmin < ELF_ION else "polar / intermediate"),
+        }
+    if not bonds:
+        return None
+    return {"rel": str(prof.relative_to(DB)), "name": prof.name, "xk": xk,
+            "window": list(ELF_WIN), "cov": ELF_COV, "ion": ELF_ION,
+            "mid_rel": str(mid_f.relative_to(DB)) if mid_f else None,
+            "bonds": bonds}
+
+
 def build_matrix() -> dict:
     """사이트 전역 데이터 번들."""
     idx = load_index()
@@ -1488,7 +1568,10 @@ def read_csv(rel: str) -> dict:
         root, p = DB.resolve(), (DB / rel).resolve()
     if not p.is_relative_to(root) or not p.exists():
         return {"error": "not found"}
-    rows = list(csv.reader(p.open(encoding="utf-8")))
+    # ⚠ utf-8-**sig**. 하우스 스타일 CSV 는 Origin 호환을 위해 BOM 을 붙여 쓰는데,
+    #   'utf-8' 로 열면 첫 셀이 '﻿# …' 이 되어 lstrip('# ') 검사에 안 걸린다.
+    #   그러면 **첫 줄 주석이 헤더로 잡혀** 표가 통째로 1열짜리가 된다 (2026-07-30 발견).
+    rows = list(csv.reader(p.open(encoding="utf-8-sig")))
     # 헤더 = 선행 주석(#)·빈 줄을 건너뛴 첫 실질 행
     # ⚠ 주석줄을 **버리지 않고 모은다.** CSV 가 자기 안에 적어 둔 규율 캐비앳
     #   (예: "absolute sigma = MLIP Nernst-Einstein upper bound; RT extrapolation NOT reportable")
