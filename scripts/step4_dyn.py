@@ -721,7 +721,8 @@ def _grid_temperature(path):
             pass
 
 
-def temperature_verdict(temp_k, grid, allow_unscaled_t, allow_grid_t_mismatch):
+def temperature_verdict(temp_k, grid, allow_unscaled_t, allow_grid_t_mismatch,
+                        i0_t_scaled=False):
     """--temp-k 와 grid 의 σ_ion 온도를 대조한다 (순수함수 — selftest 가 직접 호출).
 
     반환 ``(errors, meta)``.
@@ -738,8 +739,13 @@ def temperature_verdict(temp_k, grid, allow_unscaled_t, allow_grid_t_mismatch):
         # σ 가 놓인 온도 ≠ 동역학이 도는 온도 = 혼합-온도 셀.
         # grid 가 명시적으로 다른 T 를 들고 있으면 G-1(그리드 불일치), 아니면 기존 T1-d.
         errors.append('GRID_T_MISMATCH' if sig_t_c is not None else 'KINETICS_UNSCALED')
-    if abs(t_kin_c - _T_REF_C) > 0.05 and 'KINETICS_UNSCALED' not in errors:
-        errors.append('KINETICS_UNSCALED')             # i0/D_s/OCP 는 어떤 경우에도 25 °C 상수
+    if abs(t_kin_c - _T_REF_C) > 0.05 and 'KINETICS_UNSCALED' not in errors and not i0_t_scaled:
+        errors.append('KINETICS_UNSCALED')             # i0/D_s/OCP 가 전부 25 °C 상수일 때만
+    # ★ 2026-07-29 (A): --i0-temp-scale 이면 i0 는 kim2025 R_ct(T) 앵커를 따른다 → **부호역전이
+    #   사라진다** (§3-3① 의 핵심 결함).  그래서 KINETICS_UNSCALED 를 올리지 않는다.  단 D_s·OCP
+    #   dU/dT 는 여전히 미앵커이므로 '전부 스케일됨' 이 아니라 아래 state 에 부분성이 남는다.
+    if i0_t_scaled and abs(t_kin_c - _T_REF_C) > 0.05:
+        errors = [e for e in errors if e != 'KINETICS_UNSCALED']
     released = []
     if 'GRID_T_MISMATCH' in errors and allow_grid_t_mismatch:
         errors.remove('GRID_T_MISMATCH'); released.append('GRID_T_MISMATCH:--allow-grid-t-mismatch')
@@ -751,18 +757,22 @@ def temperature_verdict(temp_k, grid, allow_unscaled_t, allow_grid_t_mismatch):
     elif mixed:
         state = f'MIXED_TEMPERATURE (sigma_ion@{sig_eff_c:g}C, kinetics@{t_kin_c:g}C)'
     else:
-        state = f'PARTIAL_sigma_ion_only@{sig_eff_c:g}C'
+        state = (f'PARTIAL_sigma_ion+i0@{sig_eff_c:g}C' if i0_t_scaled
+                 else f'PARTIAL_sigma_ion_only@{sig_eff_c:g}C')
     # meta 는 **온도가 실제로 개입한 런에만** 붙인다: 그리드가 25 °C 규약값이고 --temp-k 도 기본이며
     # 해제 플래그도 없으면 역사적 기본과 완전히 동일 → 기록할 것이 없고 npz 는 바이트 불변.
     trivial = (sig_t_c is None and abs(t_kin_c - _T_REF_C) <= 0.05
-               and not allow_unscaled_t and not allow_grid_t_mismatch)
+               and not allow_unscaled_t and not allow_grid_t_mismatch and not i0_t_scaled)
     meta = None if trivial else {
         'temp_k': float(temp_k), 'temp_c_kinetics': t_kin_c,
         'sigma_ion_T_C': sig_eff_c,
         'sigma_ion_T_scaling': ('UNKNOWN_LEGACY_GRID' if not grid['present']
                                 else ('ARRHENIUS' if sig_t_c is not None else 'NOT_MODELLED')),
         'sigma_ion_T_factor': float(grid['factor']),
-        'kinetics_T_scaling': 'NONE',                  # i0 / D_s / OCP dU/dT — 앵커 없음 (§F1)
+        # ★ i0 만 앵커가 있다 (kim2025 R_ct 30/45/60 °C, Eₐ=0.4212 eV, R²=0.99943).
+        #   D_s(T) · OCP dU/dT 는 여전히 미앵커 → 'I0_ARRHENIUS' 는 "일부" 라는 뜻이다.
+        'kinetics_T_scaling': ('I0_ARRHENIUS_kim2025' if i0_t_scaled else 'NONE'),
+        'i0_T_factor': None,                           # 아래 main() 이 실제 배수로 채운다
         'state': state,
         'grid_contract_present': bool(grid['present']),
         'grid_temperature_provenance': grid['prov'],
@@ -2565,6 +2575,40 @@ def _selftest_temperature():
             chk('(5c) 깨진 provenance → RuntimeError', False)
         except RuntimeError:
             chk('(5c) 깨진 provenance → RuntimeError', True)
+    # ── A (2026-07-29): i0(T) 앵커 배선 — §3-3① 부호역전 해소 ────────────────────────────
+    import cam_kinetics as _ck
+    _g60 = {'present': True, 'T_C': 60.0, 'factor': 4.7851, 'prov': {'T_C': 60.0}}
+    _e_off, _m_off = temperature_verdict(333.15, _g60, False, True, False)
+    _e_on, _m_on = temperature_verdict(333.15, _g60, False, True, True)
+    chk('(A1) i0 미스케일: KINETICS_UNSCALED 로 차단 (기존 동작 보존)',
+        'KINETICS_UNSCALED' in _e_off, str(_e_off))
+    chk('(A2) --i0-temp-scale: 해제 + 상태가 부분성을 남긴다',
+        _e_on == [] and 'sigma_ion+i0' in _m_on['state'], f"{_e_on} / {_m_on['state']}")
+    chk('(A3) kinetics_T_scaling 이 앵커를 이름으로 밝힌다',
+        _m_on['kinetics_T_scaling'] == 'I0_ARRHENIUS_kim2025'
+        and _m_off['kinetics_T_scaling'] == 'NONE')
+    # ★ 부호: i0 를 스케일하면 같은 전류에 필요한 η_ct 가 **작아져야** 한다 (실측 R_ct 4.28× 감소)
+    _I, _A, _xh = 3.0e-8, 2.5e-9, 0.5
+
+    def _eta_of(k):
+        lo, hi = 0.0, 1.0
+        for _ in range(200):                      # 이분법 (scipy 불요)
+            mid = 0.5 * (lo + hi)
+            if k._ct(mid, k.i0(_xh) * _A)[0] < _I:
+                lo = mid
+            else:
+                hi = mid
+        return 0.5 * (lo + hi)
+    _e25 = _eta_of(Kinetics(2.0, temp_k=298.15))
+    _ebad = _eta_of(Kinetics(2.0, temp_k=333.15))                                  # 옛 동작
+    _eok = _eta_of(Kinetics(2.0 * _ck.i0_temperature_factor(60.0), temp_k=333.15))  # A 배선
+    chk('(A4) ★옛 동작은 T↑에 η_ct 가 커진다 (부호역전 재현)', _ebad > _e25,
+        f'25 °C {_e25 * 1e3:.4f} mV → 60 °C {_ebad * 1e3:.4f} mV')
+    chk('(A5) ★i0(T) 배선하면 η_ct 가 작아진다 (실측 방향)', _eok < _e25,
+        f'25 °C {_e25 * 1e3:.4f} mV → 60 °C {_eok * 1e3:.4f} mV')
+    chk('(A6) 기본 OFF: 배수가 정확히 1.0 (기본 런 bitwise 불변)',
+        _ck.i0_temperature_factor().hex() == (1.0).hex())
+    chk('(A7) 25 °C 에서는 켜도 무해', abs(_ck.i0_temperature_factor(25.0) - 1.0) < 1e-12)
     print(f'  temperature selftest: {"PASS" if ok else "FAIL"}')
     return ok
 
@@ -2630,6 +2674,17 @@ def main():
                          '자동 ×1e-4 → Ω·m²).  전하이동(R_ct)은 여기 넣지 말 것 — 그건 --i0-cycle-mult (비-이중계산, 리뷰 N1-F9).')
     ap.add_argument('--r-int-ohm-cm2', type=float, default=0.0,
                     help='집전체 실측 R_int 직렬 [Ω·cm²] (STEP3 시나리오 규약; 46=DBE)')
+    ap.add_argument('--i0-temp-scale', action='store_true',
+                    help='★i0 를 --temp-k 에 따라 kim2025 R_ct(T) 앵커로 스케일 (기본 OFF).  '
+                         'kim2025(우리와 같은 NCM811+LPSCl) 이 같은 셀을 30/45/60 °C 에서 측정 — '
+                         'R_ct 289.9/139.6/67.8 Ω·cm² → Eₐ=0.4212 eV (R²=0.99943).  R_ct∝1/i0 이라 '
+                         '이것이 i0 의 온도 앵커다: 60 °C 에서 i0 ×5.60.  ★이 플래그가 §3-3① '
+                         '**부호역전을 없앤다** — 없으면 T 를 올릴 때 η_ct 가 커져(실측은 4.28× 감소) '
+                         '반대 답이 난다.  ⚠D_s(T)·OCP dU/dT 는 여전히 미앵커라 상태는 '
+                         'PARTIAL_sigma_ion+i0 다 (전-물리 스윕 아님).  전말: scripts/cam_kinetics.py')
+    ap.add_argument('--i0-temp-ea-ev', type=float, default=None,
+                    help='위 스케일의 Eₐ override [eV] (기본 0.4212 = 3점 적합).  구간별 값 '
+                         '0.4049/0.4398 을 쓸어 **밴드로 보고**할 때 사용 — 단일값 보고 금지.')
     ap.add_argument('--temp-k', type=float, default=298.15,
                     help='운전 온도 [K].  ⚠ 이 값이 이 스크립트 안에서 바꾸는 것은 BV 열전압 f=F/RT '
                          '**하나뿐**이다 — D_s·i0·OCP·σ_e·κ·열화율은 전부 25°C 상수라 T 를 안 따른다.  '
@@ -2713,7 +2768,23 @@ def main():
     #      조용히 나간다 (킷 사슬 payload --temp-c 45 → step4_dyn 이 정확히 그 경로였다).
     #   ⇒ 그리드 계약을 읽어 대조하고, 어긋나면 같은 급으로 차단.  해제는 각각 명시 플래그.
     _gt = _grid_temperature(a.grid) if (a.grid and not a.selftest) else None
-    _terr, _tmeta = temperature_verdict(a.temp_k, _gt, a.allow_unscaled_t, a.allow_grid_t_mismatch)
+    # ★ A (2026-07-29): i0(T) — kim2025 R_ct(T) 앵커.  --i0-temp-scale 없으면 배수는 정확히 1.0
+    #   이고 아래 어떤 값도 안 바뀐다 (기본 런 bitwise 불변).
+    _i0_tf = 1.0
+    _i0_tprov = None
+    if a.i0_temp_scale:
+        import cam_kinetics as _ck
+        _i0_tf = _ck.i0_temperature_factor(a.temp_k - 273.15, a.i0_temp_ea_ev)
+        _i0_tprov = _ck.provenance(a.temp_k - 273.15, a.i0_temp_ea_ev)
+        print(f'  ★i0(T) 스케일: {a.temp_k - 273.15:g} °C → i0 ×{_i0_tf:.4f} '
+              f'(kim2025 R_ct 앵커 Eₐ={_i0_tprov["Ea_Rct_eV"]:.4f} eV, 밴드 '
+              f'×{_i0_tprov["i0_T_factor_band"][0]:.3f}–{_i0_tprov["i0_T_factor_band"][1]:.3f}) '
+              f'— 부호역전 해소, 단 D_s·OCP 는 여전히 25 °C', flush=True)
+    _terr, _tmeta = temperature_verdict(a.temp_k, _gt, a.allow_unscaled_t,
+                                        a.allow_grid_t_mismatch, a.i0_temp_scale)
+    if _tmeta is not None:
+        _tmeta['i0_T_factor'] = float(_i0_tf)
+        _tmeta['i0_T_provenance'] = _i0_tprov
     if _terr:
         _sig_c = (_tmeta or {}).get('sigma_ion_T_C', _T_REF_C)
         _msg = [f'온도 상태가 일관되지 않습니다 — 차단 ({", ".join(_terr)}).',
@@ -2888,7 +2959,9 @@ def main():
         print(f'  ★B-1 계면상(N={a.cycle_n}): R_ct 채널 i0×{a.i0_cycle_mult:g} · 필름옴성 '
               f'+{a.asr_film_cycle_ohm_cm2:g} Ω·cm² (→ASR {_asr_use:g} Ω·m²)  '
               f'[ASSUMED-FORM: 배수=kim2025 R_ct(N) 앵커; N→배수 법칙-fit 후속 §6 N1]', flush=True)
-    kin = Kinetics(_i0_use, a.alpha_a, a.alpha_c, _asr_use, a.temp_k)
+    # ★ i0(T): i0_ref 에 곱한다 — i0(x) 의 x-형상(√(4x(1-x)))은 그대로, **진폭만** T 를 따른다.
+    #   (poly/SC 분리 --i0-poly/--i0-sc 와도 곱셈으로 합성 — 그쪽은 형상 공유·진폭만 다름과 동일 규약)
+    kin = Kinetics(_i0_use * _i0_tf, a.alpha_a, a.alpha_c, _asr_use, a.temp_k)
     sysm = CellSystem(sid, sig_e, sig_i, pid, len(r_um), vox_um, z_top_um=z_top, z_bot_um=0.0,
                       periodic_xy=_per)
     out = simulate(sysm, ocp, r_um * 1e-6, ds_arg, kin, a.c_rate, nr=a.nr,
