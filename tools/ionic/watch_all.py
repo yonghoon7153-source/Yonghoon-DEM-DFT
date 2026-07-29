@@ -20,11 +20,13 @@
   SDCP_TMUX  pw.x 가 도는 tmux 세션명 (기본: 전 세션을 훑어 pw.x 출력을 가진 페인을 찾는다)
 """
 import glob
+import io
 import json
 import os
 import pathlib
 import re
 import subprocess
+import sys
 from datetime import datetime
 
 H = os.path.expanduser("~")
@@ -172,18 +174,98 @@ def verdict(j):
     return f"⛔ 멈춤 — 프로세스·tmux 없음, 로그 {age:.0f}분 전이 마지막", bool(j["start"])
 
 
+# ═══ compact 렌더러 ══════════════════════════════════════════════════════
+# ⚠ watch(1) 은 스크롤이 안 된다. 끝난 섹션까지 전부 찍으면 **정작 봐야 할 진행 중
+#   항목이 화면 밖으로 밀린다** (실측 2026-07-30: 완료 3섹션 + 완료 하위줄이 화면의
+#   절반을 먹고, 정작 재기동이 필요한 SDCP 는 중간에 파묻혔다).
+#   그래서 출력을 버퍼에 모았다가 **조치(⛔)·진행(▶) 이 없는 섹션은 접는다.**
+#   --full 이면 전부 편다.
+_CAP = io.StringIO()
+_REAL_STDOUT = sys.stdout
+if not FULL:
+    sys.stdout = _CAP
+
+
+_LIVE = "\x00LIVE"
+
+
+def live():
+    """이 섹션은 **지금 볼 것**이다 — compact 에서도 접지 않는다.
+
+    ⚠ 이모지(▶/⛔)만 보고 접으면 틀린다. 실측: disorder 의 진행 중 cfg 는
+      `600K✓ 800K· 1000K· [1/3]` 이라 ▶ 가 없고, chain 은 '세션 살아있음' 이라
+      역시 없다 — 둘 다 조용히 접혔다. 그래서 **섹션이 스스로 선언**하게 한다.
+    """
+    print(_LIVE)
+
+
+def render(captured: str) -> str:
+    """섹션 단위로 접기. 반환값이 실제 화면."""
+    parts = captured.split(BAR + "\n")
+    head, secs = parts[0], parts[1:]
+    keep, done, idle, n_act = [head.rstrip()], [], [], 0
+    for sec in secs:
+        body = sec.rstrip("\n")
+        if not body.strip():
+            continue
+        is_live = (_LIVE in body) or ("⛔" in body)
+        n_act += body.count("⛔")
+        body = "\n".join(l for l in body.splitlines() if _LIVE not in l)
+        title = body.splitlines()[0].strip() if body.strip() else ""
+        if not is_live:
+            # 접히는 섹션 — 제목만 굴린다. 제목의 '— …' 뒤 부연은 버린다.
+            # ⚠ **"완료" 와 "자료 없음" 을 같은 줄에 묶으면 안 된다.** 아직 시작도 안 한
+            #   섹션이 ✅ 로 굴러가면 다 끝난 것처럼 보인다(로컬 테스트에서 실제로 그랬다).
+            (done if "✅" in body else idle).append(
+                title.split(" — ")[0].split("(")[0].strip())
+            continue
+        # 살아 있는 섹션 안에서도 **완료된 하위 줄**은 접는다
+        lines = []
+        for l in body.splitlines():
+            if "✅" in l and "⛔" not in l and "▶" not in l:
+                t = " ".join(l.replace("✅", " ").split())     # 공백 정규화
+                t = t.split("(")[0].strip(" :·")
+                if t:
+                    done.append(t[:56])
+                continue
+            lines.append(l)
+        # 하위줄이 전부 접힌 그룹 머리(`  [comp2_disorder_relaxed]`)는 같이 지운다
+        pruned = []
+        for k, l in enumerate(lines):
+            if re.match(r"^\s*\[.*\]\s*$", l):
+                nxt = next((x for x in lines[k + 1:] if x.strip()), "")
+                if not nxt or re.match(r"^\s*\[.*\]\s*$", nxt):
+                    continue
+            pruned.append(l)
+        keep.append("\n".join(pruned).rstrip())
+    out = [("\n" + BAR + "\n").join(keep)]
+    if done or idle:
+        out.append(BAR)
+        if done:
+            out.append("✅ 완료 — " + " · ".join(dict.fromkeys(done)))
+        if idle:
+            out.append("·  자료 없음 — " + " · ".join(dict.fromkeys(idle)))
+        out.append("   (--full 로 전부 펼침)")
+    return "\n".join(out)
+
+
 # ═══ 헤더 ════════════════════════════════════════════════════════════════
-print("=" * 70)
-print(f"gabia 전체 상황  {NOW:%m-%d %H:%M}")
-print("=" * 70)
 up = sh("uptime -p").strip() or "?"
-print(f"부팅: {BOOT:%m-%d %H:%M} ({up})" if BOOT else f"부팅 시각 조회 실패 ({up})")
-if BOOT and (NOW - BOOT).total_seconds() < 3600:
-    print("  ⚠ 1시간 안에 부팅됨 — tmux 세션은 재부팅으로 전부 사라진다. 아래 생존판정 확인.")
-print(f"tmux 세션: {' '.join(TMUX) if TMUX else '(없음)'}")
 gpu = sh("nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total "
          "--format=csv,noheader,nounits").strip() or "(조회 실패)"
-print(f"GPU: {gpu}   [util%, used MiB, total MiB]")
+if FULL:
+    print("=" * 70)
+    print(f"gabia 전체 상황  {NOW:%m-%d %H:%M}")
+    print("=" * 70)
+    print(f"부팅: {BOOT:%m-%d %H:%M} ({up})" if BOOT else f"부팅 시각 조회 실패 ({up})")
+    print(f"tmux 세션: {' '.join(TMUX) if TMUX else '(없음)'}")
+    print(f"GPU: {gpu}   [util%, used MiB, total MiB]")
+else:
+    # 한 줄로 — 14주 uptime 같은 건 매 30초 볼 정보가 아니다.
+    print(f"gabia {NOW:%m-%d %H:%M} · {up} · tmux {' '.join(TMUX) if TMUX else '없음'} "
+          f"· GPU {gpu}")
+if BOOT and (NOW - BOOT).total_seconds() < 3600:
+    print("  ⚠ 1시간 안에 부팅됨 — tmux 세션은 재부팅으로 전부 사라진다. 생존판정 확인.")
 print(f"  pw.x {alive('pw.x', exact=True)}  ·  pp.x {alive('pp.x', exact=True)}  ·  "
       f"MLIP-MD {alive('aimd_mlip|disorder_ensemble_diffusion')}")
 print(BAR)
@@ -193,6 +275,8 @@ print("⓪ 생존 판정")
 restart = []
 for j in JOBS:
     msg, need = verdict(j)
+    if "완료" not in msg:
+        live()
     print(f"  {j['key']:8s} {msg}")
     if need and j["start"]:
         restart.append(j)
@@ -242,13 +326,15 @@ if want("disorder"):
         if n == 3 and not FULL:
             done_cfgs.append(os.path.basename(c))     # 완료는 접는다
         else:
+            live()
             print(f"{line}  [{n}/3]")
     if done_cfgs:
         print(f"    ✅ 3/3 완료: {', '.join(done_cfgs)}   (--full 로 값 펼침)")
     if unknown_keys:
         # 자기 진단: 값을 못 찾았으면 **어떤 키가 있었는지** 알려준다
         print(f"    ⚠ 값 미검출 — {unknown_keys[0]} 최상위 키: {unknown_keys[1]}")
-  print("  ordered baseline: comp2 Ea 0.276±0.033 / comp1 0.253  (disorder가 낮추면 가설 확증)")
+  if FULL:
+      print("  ordered baseline: comp2 Ea 0.276±0.033 / comp1 0.253  (disorder가 낮추면 가설 확증)")
   print(BAR)
 
 # ═══ ② SDCP ══════════════════════════════════════════════════════════════
@@ -296,7 +382,7 @@ if want("sdcp") and os.path.isdir(_SF):
         elif age > 1800:
             mark = f"⚠ {age/60:.0f}분째 출력 없음"
         else:
-            mark = "▶ 진행"; _running = True
+            mark = "▶ 진행"; _running = True; live()
         print(f"   {mark}  {j}")
         for l in (it + ac):
             print(f"        {l[:88]}")
@@ -449,6 +535,8 @@ if os.path.isfile(elog):
     conv = [l.strip() for l in t.splitlines() if "convergence has been achieved" in l]
     it = [l.strip() for l in t.splitlines()
           if re.search(r"iteration #|estimated scf accuracy|total energy\s+=", l)]
+    if alive("pw.x", exact=True) == "ALIVE" or alive("pp.x", exact=True) == "ALIVE":
+        live()
     print(f"  단계: {stage} · pw.x {alive('pw.x', exact=True)} · pp.x {alive('pp.x', exact=True)}")
     if conv:
         print("  " + conv[-1] + "   ⚠ maxstep(200) 과 같으면 가짜 수렴")
@@ -485,6 +573,8 @@ if os.path.isfile(blog):
     if err:
         print("  ⛔ " + err[-1][:100])
     s = os.path.join(B, "lpsocl_bader_summary.json")
+    if not os.path.exists(s):
+        live()
     if os.path.exists(s):
         try:
             d = json.load(open(s))["per_species"]
@@ -501,16 +591,19 @@ cl = os.path.join(H, "logs", "chain2.log")
 # ⚠ 여기서 pgrep -f 를 쓰지 않는다. 패턴이 호출한 셸의 명령줄에 들어 있으면 자기 자신을
 #   물어 늘 '살아있음' 이 된다(실제로 개발 중 그렇게 오탐했다). tmux 세션 + 로그 신선도로 본다.
 _clm = mtime(os.path.join(H, "logs", "chain2.log"))
-live = ("chain2" in TMUX
-        or (_clm is not None and (NOW - _clm).total_seconds() < 900))
+# ⚠ 지역변수 이름을 live 로 두면 모듈 함수 live() 를 가려서 TypeError 가 난다.
+live_chain = ("chain2" in TMUX
+              or (_clm is not None and (NOW - _clm).total_seconds() < 900))
 if os.path.isfile(cl):
     ls = [l for l in open(cl, errors="ignore").read().splitlines() if l.strip()]
-    print(f"  세션 {'살아있음' if live else '없음'} · 로그 {len(ls)}줄")
+    if live_chain:
+        live()
+    print(f"  세션 {'살아있음' if live_chain else '없음'} · 로그 {len(ls)}줄")
     for l in ls[-2:]:
         print("    " + l[:110])
-    if not live:
+    if not live_chain:
         print("  ⛔ 로그는 있는데 프로세스가 없다 — 끝났거나 죽었다. 마지막 줄로 판별.")
-elif live:
+elif live_chain:
     print("  ▶ 세션은 있는데 ~/logs/chain2.log 가 없다 — 로그 경로가 다르다")
 else:
     # ⚠ 실제 사고: `tmux new -d -s chain2 '... > ~/logs/chain2.log 2>&1'` 인데 ~/logs 가
@@ -521,10 +614,20 @@ else:
 print(BAR)
 
 # ═══ 재기동 안내 ═════════════════════════════════════════════════════════
+# ⚠ 예전 판은 JOBS 목록만 보고 "재기동 필요 없음" 을 찍었다. SDCP 섹션이 바로 위에서
+#   ⛔ 를 띄우고 있는데도 그랬다 — 서로 모순되는 화면이 나왔다(2026-07-30).
+#   이제 **출력 전체의 ⛔ 개수**로 판정한다.
 if restart:
     print("⛔ 재기동 필요 — 아래를 repo 루트에서 그대로 실행")
     for j in restart:
         print(f"  # {j['key']}")
         print(f"  {j['start']}")
-else:
-    print("재기동 필요 없음 (등록된 작업은 진행 중이거나 완료)")
+
+if not FULL:
+    sys.stdout = _REAL_STDOUT
+    _txt = _CAP.getvalue()
+    print(render(_txt))
+    _n = _txt.count("⛔")
+    print(BAR)
+    print(f"⛔ 조치 필요 {_n}건 — 위 ⛔ 줄의 명령을 그대로 실행" if _n
+          else "조치 필요 없음 (등록된 작업은 진행 중이거나 완료)")
