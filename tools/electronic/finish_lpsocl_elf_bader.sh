@@ -45,6 +45,16 @@ if ok "$E/lpsocl_elf.cube"; then
   else
     say "⚠ tools/figures/sample_elf_bonds.py 없음 — git pull"
   fi
+  # 결합별 ELF **프로파일** — 중앙 최솟값이 눈에 보이는 그림 + Origin CSV.
+  #   ⚠ PNG(수백 KB)는 base64 로 못 옮긴다. **CSV 만 회수**해서 로컬에서 하우스 스타일로 다시 그린다
+  #     (COHP 때와 같은 방식). PNG 는 gabia 에서 바로 보는 용도.
+  if [ -f "$REPO/tools/figures/plot_elf_profile.py" ]; then
+    say "ELF 결합별 프로파일"
+    $PY "$REPO/tools/figures/plot_elf_profile.py" \
+        --cube "$E/lpsocl_elf.cube" --label "LPSOCl (Li27P5S21OCl8)" \
+        --out "$OUT/lpsocl_ELF_profiles.png" \
+        --csv "$OUT/lpsocl_elf_profiles_origin.csv" 2>&1 | tail -12
+  fi
 else
   say "ELF cube 아직 — 결합 중점 건너뜀"
 fi
@@ -85,7 +95,10 @@ fi
 
 # ── 4) 회수 꾸러미 (작은 것만) ──────────────────────────────────────────────
 PK=$OUT/retrieve; mkdir -p "$PK"; rm -f "$PK"/*
-for f in "$OUT/lpsocl_elf_bond_midpoint.csv" "$OUT"/lpsocl_cdd_*.png \
+# ⚠ **PNG 는 꾸러미에 안 넣는다.** lpsocl_cdd_3d.png 354 KB + slice 137 KB 면 base64 가
+#   600 KB 를 넘어 붙여넣기가 잘린다(15 KB 짜리도 한 번 CRC 깨진 전례가 있다).
+#   그림은 gabia 에서 직접 보고, **회수는 CSV/JSON 만** — 로컬에서 하우스 스타일로 다시 그린다.
+for f in "$OUT/lpsocl_elf_bond_midpoint.csv" "$OUT/lpsocl_elf_profiles_origin.csv" \
          "$B/lpsocl_bader_summary.json"; do
   [ -s "$f" ] && cp "$f" "$PK/" 2>/dev/null
 done

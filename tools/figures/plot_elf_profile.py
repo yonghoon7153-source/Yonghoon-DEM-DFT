@@ -97,9 +97,28 @@ def main():
             iCl = Cl[len(Cl)//2]; iLi = nearest(iCl, "Li"); bonds.append(("Cl", iCl, "Li", iLi))
         if freeS:
             iFS = freeS[len(freeS)//2]; iLi2 = nearest(iFS, "Li"); bonds.append(("S(free)", iFS, "Li", iLi2))
+        # ⚠ O 결합이 기본 탐색에 없었다 — LPSOCl/b2o3 에서 **정작 보고 싶은 결합**이 빠졌다.
+        #   P-O 는 격자 최강(ICOHP -8.41), Li-O 는 최이온(ELF cmin 0.163)이라 둘 다 필요하다.
+        O = [k for k in range(len(atoms)) if syms[k] == "O"]
+        if O and P:
+            # P 에 결합한 O (POS3 단위) 를 고른다 — 없으면 그냥 첫 O
+            iO = next((k for k in O if min(np.linalg.norm(mic(pos[k] - pos[q]))
+                                           for q in P) < 1.9), O[0])
+            iPo = min(P, key=lambda q: np.linalg.norm(mic(pos[iO] - pos[q])))
+            bonds.append(("P", iPo, "O", iO))
+            iLiO = nearest(iO, "Li")
+            if iLiO is not None:
+                bonds.append(("O", iO, "Li", iLiO))
+        B = [k for k in range(len(atoms)) if syms[k] == "B"]
+        if B:                       # b2o3 계 — BS3 단위
+            iB = B[0]; iSb = nearest(iB, "S")
+            if iSb is not None:
+                bonds.append(("B", iB, "S", iSb))
 
-    COL = {"P-S": "#d73027", "Cl-Li": "#1a9850", "S(free)-Li": "#4575b4",
-           "Li-Cl": "#1a9850", "Li-S(free)": "#4575b4"}
+    # house_style 원소 팔레트와 맞춘다 (P 보라 · S 시에나 · Cl 라임 · O 크림슨 · B 스카이)
+    COL = {"P-S": "#7c3aed", "Cl-Li": "#65a30d", "S(free)-Li": "#c05621",
+           "Li-Cl": "#65a30d", "Li-S(free)": "#c05621",
+           "P-O": "#be123c", "O-Li": "#be123c", "Li-O": "#be123c", "B-S": "#0284c7"}
     fig, ax = plt.subplots(figsize=(7.6, 5.4))
     t = np.linspace(0, 1, args.n)
     print(f"[{args.label}] ELF bond profiles:")
@@ -131,6 +150,18 @@ def main():
     ax.set_title(f"ELF bond profiles — covalent P–S (hump between) vs ionic Li–Cl/Li–S\n{args.label}",
                  fontsize=11.5)
     ax.legend(fontsize=9, loc="lower center"); ax.grid(alpha=0.25)
+    if args.csv:
+        import csv as _csv
+        with open(args.csv, "w", newline="", encoding="utf-8-sig") as _f:
+            _f.write("# ELF profile along each bond path — Origin-ready\n")
+            _f.write("# frac = 0 at first atom, 1 at second. 결합 길이는 열 이름에 (Å).\n")
+            _f.write("# ⚠ 판정은 **내부 최솟값**(frac 0.18~0.82)으로 — 핵 근처 스파이크 제외.\n")
+            _w = _csv.writer(_f)
+            _ks = list(curves)
+            _w.writerow(["frac"] + [f"ELF_{k}_{curves[k][0]:.2f}A" for k in _ks])
+            for _i, _tt in enumerate(t):
+                _w.writerow([f"{_tt:.4f}"] + [f"{curves[k][1][_i]:.5f}" for k in _ks])
+        print(f"  -> CSV {args.csv}")
     plt.tight_layout(); plt.savefig(args.out, dpi=200, facecolor="white")
     print(f"-> {args.out}")
 
