@@ -546,8 +546,17 @@ if os.path.isfile(elog):
     if err:
         print("  ⛔ " + err[-1][:100])
     cubes = glob.glob(os.path.join(E, "*.cube"))
-    print(f"  산출 cube: {len(cubes)}개" + (" — " + ", ".join(os.path.basename(c) for c in cubes[:3])
-                                          if cubes else " (아직)"))
+    # ⚠ 이 섹션은 ✅ 를 한 번도 안 찍어서 compact 렌더러가 **끝난 ELF 를 '자료 없음'** 으로
+    #   굴렸다 (2026-07-30 실측: cube 3개가 멀쩡히 있는데 그렇게 나왔다).
+    #   "완료"와 "자료 없음"을 가르는 건 ✅ 유무이므로 여기서 명시적으로 찍는다.
+    _need = ["lpsocl_elf.cube", "lpsocl_rho_scf.cube", "lpsocl_rho_atomic.cube"]
+    _have = {os.path.basename(c) for c in cubes}
+    if set(_need) <= _have:
+        print(f"  ✅ 완료 — cube {len(cubes)}개 ({', '.join(sorted(_have))[:70]})")
+    else:
+        print(f"  산출 cube: {len(cubes)}개" +
+              (" — " + ", ".join(os.path.basename(c) for c in cubes[:3]) if cubes else " (아직)")
+              + f"   [남은 것: {', '.join(x for x in _need if x not in _have)}]")
 else:
     print("  (미가동)")
 print(BAR)
