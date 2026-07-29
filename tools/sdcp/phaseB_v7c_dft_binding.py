@@ -17,12 +17,28 @@ DFT+U (the arbiter). We emit 5 single-point SCF inputs:
   Verdict = sign & size of  E_bind(doped) - E_bind(neutral).
 
 Settings are cloned VERBATIM from reference_dft_v2/scf_u62.in — the converged
-LiNiO2(104) recipe — with ONE deliberate change (u62c plan): the FSM line
-`tot_magnetization = 0.0` is DROPPED for the slab/complexes so the adsorbed
-radical's spin is free to find its own ground state; only the Ni AFM guess
-(starting_magnetization +/-0.3) is kept. The Ni1/Ni2 sublattice split is
-inherited from scf_u62.in by nearest-position matching (both are the same
-96-atom (104) slab; relaxation drift << Ni-Ni spacing, so the map is 1:1).
+LiNiO2(104) recipe. The Ni1/Ni2 sublattice split is inherited from scf_u62.in
+by nearest-position matching (both are the same 96-atom (104) slab; relaxation
+drift << Ni-Ni spacing, so the map is 1:1).
+
+FSM (`tot_magnetization`) history — read before changing it:
+  · u62c plan dropped it so the radical spin could relax freely;
+  · 2026-07-11 it was RESTORED because free-spin AFM+U sloshed (slab stuck at
+    scf-iter 148 @ accuracy 1.6 Ry);
+  · 2026-07-30 `--no_fsm` was added for the **slab-first** path. FSM constrains
+    only the whole-cell N(up)-N(down); it cannot decide WHERE the unpaired
+    electron sits, while it does fight the Ni sublattice relaxation. Once a
+    converged 96-atom slab supplies Ni1/Ni2 seeds (--mag_json), the constraint
+    is no longer what is holding the SCF together — the seed is.
+  In this system the doped radical is a sulfonate: the neutral has S-O(98)-H
+  (O-H 0.99 A) and the doped lost that H, leaving three equal S-O at 1.48 A.
+  So --seed_radical S:0.5 places the hole on the right group.
+
+⚠ The 96-atom slab is byte-identical in the neutral and the doped complex
+  (Li24 Ni24 O48, same cell, all slab atoms fixed), so ONE slab diagnostic
+  settles the recipe for BOTH branches. What carries over is scalar seeds and
+  numerical settings, NOT a charge density — different nat/ntyp means QE
+  cannot restart one from the other.
 
 Single-point (calculation='scf'): the cross-check isolates the electronic/U
 effect at fixed UMA geometry — apples-to-apples with Phase-A.
@@ -60,6 +76,22 @@ U_NI = 6.2               # HUBBARD ortho-atomic, Ni1-3d / Ni2-3d
 AFM_MAG = 0.3            # starting_magnetization Ni1 +0.3 / Ni2 -0.3
 KPTS_SLAB = "2 2 1 0 0 0"
 MOL_VACUUM = 12.0        # A vacuum around gas-phase molecule box
+
+# ── 슬랩-우선(slab-first) 재시도용 런타임 오버라이드 (2026-07-30) ──────────────
+#   왜 필요한가: 131원자 복합체를 FSM(tot_magnetization)+AFM+U 로 바로 때리면
+#   전 셀 N↑−N↓ 구속이 Ni 부격자 이완과 싸워 sloshing 한다(slab scf-iter 148 @ acc 1.6 Ry
+#   전례). 순서를 뒤집어 **96원자 슬랩을 먼저 수렴시키고**, 거기서 나온 Ni1/Ni2
+#   수렴 모멘트를 starting_magnetization 시드로 승계한다.
+#   ⚠ "밀도 승계"가 아니다 — 원자 수·종이 달라 QE 는 charge density 를 못 이어받는다.
+#     넘어가는 건 **스칼라 시드값**뿐이고, 그게 SCF 초기조건을 결정적으로 좋게 만든다.
+OPT = {
+    "degauss": DEGAUSS,
+    "fsm": True,              # False = tot_magnetization 줄을 아예 안 쓴다(자유 스핀)
+    "electron_maxstep": 300,
+    "scf_must_converge": None,   # None = 줄 생략(QE 기본 .true.)
+    "seed_radical": None,     # "S:0.5" — doped 계에만 붙는 국소 스핀 시드
+    "mag_seed": {},           # {"Ni1": 1.62, "Ni2": -1.62} — 1단계 슬랩에서 승계
+}
 
 # PBE USPP/PAW pseudos (all confirmed present in /data/work/pseudo)
 PSEUDOS = {
@@ -284,19 +316,42 @@ def write_scf(path, atoms, labels, kind, kpts, pseudo_dir, prefix):
         f"    ecutrho         = {ECUTRHO}",
         "    occupations     = 'smearing'",
         "    smearing        = 'mv'",
-        f"    degauss         = {DEGAUSS}",
+        f"    degauss         = {OPT['degauss']}",
         "    nspin           = 2",
         "    nosym           = .true.",
     ]
     # spin setup
-    if has_ni:                                   # slab / complex: AFM Ni guess + FSM
-        sys_lines.append(f"    starting_magnetization(2) = +{AFM_MAG}   ! Ni1 up")
-        sys_lines.append(f"    starting_magnetization(3) = -{AFM_MAG}   ! Ni2 down (AFM)")
+    if has_ni:                                   # slab / complex: AFM Ni guess (+FSM)
+        # 1단계 슬랩에서 승계한 수렴 모멘트가 있으면 그걸, 없으면 관례 ±0.3.
+        # ⚠ starting_magnetization 은 **가전자당 분율 [-1,1]** 이지 μB 가 아니다.
+        #   μB 값(Ni ~1.6)을 그대로 넣으면 QE 가 범위 오류로 죽는다 — 여기서 한 번 더 막는다.
+        def _frac(v, dflt):
+            if abs(v) > 1.0:
+                print(f"    !! starting_magnetization {v:+.3f} 가 [-1,1] 밖 — "
+                      "μB 를 넣은 것 같다. 관례값으로 되돌린다.")
+                return dflt
+            return v
+        m1 = _frac(OPT["mag_seed"].get("Ni1", AFM_MAG), AFM_MAG)
+        m2 = _frac(OPT["mag_seed"].get("Ni2", -AFM_MAG), -AFM_MAG)
+        sys_lines.append(f"    starting_magnetization(2) = {m1:+.3f}   ! Ni1 up")
+        sys_lines.append(f"    starting_magnetization(3) = {m2:+.3f}   ! Ni2 down (AFM)")
         # FSM restored (2026-07-11): free-spin AFM+U sloshed (slab scf-iter 148 @ acc
         # 1.6 Ry); scf_u62's converged lineage used tot_magnetization. Slab/neutral
         # complex = 0.0 (AFM net-zero), doped complex = 1.0 (the radical electron).
-        tm = 1.0 if kind == "complex_doped" else 0.0
-        sys_lines.append(f"    tot_magnetization = {tm}")
+        # ⚠ --no_fsm (2026-07-30): FSM 은 전 셀 N↑−N↓ 만 묶을 뿐 **전자가 어디 앉을지는
+        #   못 정한다.** doped 의 홀전자는 sulfonate(–SO3•) 에 있어야 하는데 FSM 은 그걸
+        #   보장하지 못하면서 AFM 이완과는 싸운다. 슬랩-우선 경로에선 구속을 풀고
+        #   --seed_radical 로 자리를 직접 찍은 뒤, 수렴 후 총 자화를 검증한다.
+        if OPT["fsm"]:
+            tm = 1.0 if kind == "complex_doped" else 0.0
+            sys_lines.append(f"    tot_magnetization = {tm}")
+        if OPT["seed_radical"] and kind == "complex_doped":
+            sp, val = OPT["seed_radical"].split(":")
+            if sp in present:
+                sys_lines.append(f"    starting_magnetization({present.index(sp) + 1}) "
+                                 f"= {float(val):+.3f}   ! radical seed on {sp}")
+            else:
+                print(f"    !! --seed_radical {sp} 가 이 계에 없다 — 시드 생략")
     else:                                        # isolated molecule
         if doped_mol:
             sys_lines.append("    tot_magnetization = 1.0   ! [M-H] radical = doublet")
@@ -323,7 +378,9 @@ def write_scf(path, atoms, labels, kind, kpts, pseudo_dir, prefix):
     body.append(f"    mixing_beta     = {MIX_BETA}")
     body.append("    mixing_mode     = 'local-TF'")
     body.append(f"    mixing_ndim     = {MIX_NDIM}")
-    body.append("    electron_maxstep = 300")
+    body.append(f"    electron_maxstep = {OPT['electron_maxstep']}")
+    if OPT["scf_must_converge"] is not None:
+        body.append(f"    scf_must_converge = {OPT['scf_must_converge']}")
     body.append("    diagonalization = 'david'")
     body.append("/")
     body.append("")
@@ -409,8 +466,44 @@ def main():
                          "need >48 GB GPU (OOM'd alone on gabia); 8 A cuts the FFT ~3x "
                          "(~15-20 GB). Molecules are charge-neutral so image effects are "
                          "~meV and cancel in the doped-neutral difference.")
+    # ── 슬랩-우선 경로 노브 (2026-07-30) ──────────────────────────────────
+    ap.add_argument("--no_fsm", action="store_true",
+                    help="tot_magnetization 줄을 빼고 스핀을 자유이완시킨다. FSM 은 전 셀 "
+                         "N↑−N↓ 만 묶어서 AFM 부격자 이완과 싸운다(sloshing 원인). "
+                         "슬랩을 먼저 수렴시켜 시드를 확보한 뒤엔 구속이 필요 없다.")
+    ap.add_argument("--degauss", type=float, default=DEGAUSS,
+                    help=f"smearing 폭 (기본 {DEGAUSS}). 금속성 Ni 표면에서 너무 좁으면 "
+                         "점유수가 SCF 마다 튄다 — 넓히면 수렴이 부드러워지는 대신 "
+                         "E 를 degauss→0 로 외삽해야 하니 doped/neutral **양쪽 동일값**으로.")
+    ap.add_argument("--electron_maxstep", type=int, default=300)
+    ap.add_argument("--scf_must_converge", choices=[".true.", ".false."], default=None,
+                    help="'.true.' 로 두면 미수렴 시 종료 — plateau 값을 수렴값으로 "
+                         "오독하는 사고를 막는다.")
+    ap.add_argument("--seed_radical", default=None, metavar="SPEC:VAL",
+                    help="complex_doped 에만 붙이는 국소 스핀 시드. 예 'S:0.5'. "
+                         "이 계의 홀전자는 sulfonic acid 의 O–H 가 빠진 자리 = –SO3• 라 "
+                         "S 를 찍으면 SCF 중에 S–O 로 퍼진다 (doped 는 S–O 셋이 전부 "
+                         "1.48 Å 로 같아 이미 비편재).")
+    ap.add_argument("--mag_json", default=None,
+                    help="1단계 슬랩 scf.out 에서 뽑은 {'Ni1':m,'Ni2':m} — "
+                         "starting_magnetization 시드로 승계. "
+                         "tools/sdcp/slab_mag_from_scfout.py 산출.")
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
+
+    OPT["degauss"] = a.degauss
+    OPT["fsm"] = not a.no_fsm
+    OPT["electron_maxstep"] = a.electron_maxstep
+    OPT["scf_must_converge"] = a.scf_must_converge
+    OPT["seed_radical"] = a.seed_radical
+    if a.mag_json:
+        with open(a.mag_json) as f:
+            OPT["mag_seed"] = {k: float(v) for k, v in json.load(f).items()
+                               if k in ("Ni1", "Ni2")}
+        print(f"mag seed 승계: {OPT['mag_seed']}")
+    print(f"[opt] degauss {OPT['degauss']} · FSM {'on' if OPT['fsm'] else 'OFF (free spin)'}"
+          f" · maxstep {OPT['electron_maxstep']}"
+          + (f" · radical seed {OPT['seed_radical']}" if OPT["seed_radical"] else ""))
 
     slab_atoms = read(a.slab)
     Nslab = len(slab_atoms)
