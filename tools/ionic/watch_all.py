@@ -251,73 +251,132 @@ if want("disorder"):
   print("  ordered baseline: comp2 Ea 0.276±0.033 / comp1 0.253  (disorder가 낮추면 가설 확증)")
   print(BAR)
 
-# ═══ ② SDCP relax ════════════════════════════════════════════════════════
-print("② SDCP complex_doped_v2 relax (k 2×2×1)")
-src, via = "", ""
-env_out = os.environ.get("SDCP_OUT", "")
-if env_out and os.path.isfile(env_out):
-    src, via = open(env_out, errors="ignore").read(), f"파일 {env_out}"
-if not src:
-    # ⚠ pw.x 의 stdout 이 파일이 아니라 **tmux 페인(/dev/pts/N)** 인 경우가 있다 — 실제로 그랬다.
-    #   .out 파일이 아예 없으므로 페인 스크롤백에서 읽는다. 전 세션·전 페인을 훑는다.
-    #   ⚠ 재부팅 뒤엔 페인 자체가 없다 → 여기서 못 찾는 게 정상이고, 그건 '죽음'의 증거다.
-    # ⚠ 먼저 **파일**을 찾는다. 페인 스크롤백은 4000줄 밖으로 밀리면 못 읽고, 실제로
-    #   sdcp_cd 페인에서 아무것도 못 건진 반면 relax.out 은 디스크에 멀쩡히 있었다.
-    for g in ("/data/work/runs/sdcp*/**/relax.out", "/data/work/runs/sdcp*/**/*.out",
-              os.path.join(W, "runs", "sdcp*", "**", "relax.out")):
-        cands = sorted(glob.glob(os.path.expanduser(g), recursive=True),
-                       key=lambda f: os.path.getmtime(f), reverse=True)
-        if cands:
-            src, via = open(cands[0], errors="ignore").read(), f"파일 {cands[0]} (자동탐색)"
-            break
-if not src:
-    sess = os.environ.get("SDCP_TMUX", "sdcp_cd")   # ⚠ want() 를 덮지 않게 이름을 분리
-    panes = [p for p in sh("tmux list-panes -a -F '#{session_name}:#{window_index}.#{pane_index}'"
-                           ).split() if p]
-    if sess:
-        panes = [p for p in panes if p.startswith(sess + ":")] + panes
-    for p in panes:
-        cap = sh(f"tmux capture-pane -p -t '{p}' -S -20000")
-        if re.search(r"iteration #|convergence has been achieved", cap):
-            src, via = cap, f"tmux {p}"
-            break
-# ⚠ **파일이 있다 ≠ 돌고 있다.** relax.out 은 죽어도 그대로 남아서, 이 섹션이
-#   2026-07-29 에 SIGKILL 로 죽은 런(iteration #246, accuracy 0.51 Ry)을 이틀 내내
-#   "현재:" 로 보여줬다. GPU pw.x 생존과 파일 신선도로 죽음을 못 박는다.
-_gpu_pw = subprocess.run(["pgrep", "-f", r"qe-.*-gpu/bin/pw\.x"],
-                         capture_output=True, text=True).stdout.strip()
-_sdcp_dead = None
-if src:
-    if "signal 9" in src or "Killed" in src or "MPI_ABORT" in src:
-        _sdcp_dead = "⛔ **죽었다 — 출력에 kill/abort 흔적**"
-    elif not _gpu_pw:
-        _sdcp_dead = "⛔ **죽었다 — GPU pw.x 프로세스 없음** (파일만 남은 것)"
-if src:
-    print(f"  source: {via}")
-    if _sdcp_dead:
-        print(f"  {_sdcp_dead}")
-        _tail = [l.strip() for l in src.splitlines()
-                 if "signal" in l or "exit code" in l or "Error" in l][-2:]
-        for l in _tail:
-            print("    " + l[:110])
-        print("    아래 '현재:' 는 **마지막 순간의 스냅샷**이지 진행 상황이 아니다.")
-
-    def tail(pat, k):
-        ls = [l for l in src.splitlines() if re.search(pat, l)]
-        return ls[-k:] if ls else []
-    for l in tail(r"number of k points", 1):
-        print("  " + l.strip())
-    # ⚠ scf_must_converge=.false. + maxstep 도달 = **가짜 수렴**
-    print("  완료 step별 반복수 (maxstep과 같으면 **가짜 수렴**):")
-    done = tail(r"convergence has been achieved in", 3)
-    print("\n".join("    " + l.strip() for l in done) if done else "    (아직 없음)")
-    print("  현재:")
-    for l in tail(r"iteration #|estimated scf accuracy", 2):
-        print("    " + l.strip())
+# ═══ ② SDCP ══════════════════════════════════════════════════════════════
+# 2026-07-30: 경로가 **슬랩-우선 2단계**로 바뀌었다. 그 디렉터리가 있으면 단계별
+#   사다리를 보여 주고, 없으면 예전 relax 감시로 떨어진다.
+#   ⚠ 예전 섹션은 "relax.out 이 있다"만 보고 SIGKILL 로 죽은 런을 이틀 내내
+#     '현재:' 로 보여줬다. 여기서도 **GPU pw.x 생존**을 같이 확인한다.
+_SF = "/data/work/runs/sdcp_linio2_binding/phaseB_v7c_slabfirst"
+_sf_jobs = ["slab", "mol_neutral", "mol_doped", "complex_neutral", "complex_doped"]
+if want("sdcp") and os.path.isdir(_SF):
+    print("② SDCP 슬랩-우선 (1단계 슬랩 → 시드 승계 → 2단계 복합체)")
+    _gpu_pw0 = subprocess.run(["pgrep", "-f", r"qe-.*-gpu/bin/pw\.x"],
+                              capture_output=True, text=True).stdout.strip()
+    _seed = os.path.join(_SF, "slab_mag.json")
+    if os.path.isfile(_seed):
+        try:
+            _sd = json.load(open(_seed))
+            print(f"   시드 승계 ✓ Ni1 {_sd.get('Ni1'):+.3f} / Ni2 {_sd.get('Ni2'):+.3f} "
+                  f"(수렴 {_sd.get('Ni1_muB','?')} μB)")
+        except Exception:
+            print("   ⚠ slab_mag.json 을 못 읽었다")
+    else:
+        print("   시드 아직 — 1단계 슬랩이 끝나야 생긴다")
+    _running = False
+    for j in _sf_jobs:
+        o = os.path.join(_SF, j, "scf.out")
+        if not os.path.isfile(o):
+            if FULL:
+                print(f"   ·  {j:16s} (아직)")
+            continue
+        txt = open(o, errors="ignore").read()
+        age = (NOW - datetime.fromtimestamp(os.path.getmtime(o))).total_seconds()
+        if "convergence has been achieved" in txt:
+            e = [l for l in txt.splitlines() if l.startswith("!")]
+            print(f"   ✓  {j:16s} {e[-1].strip()[:64] if e else '수렴'}")
+            continue
+        # 미수렴 — 도는 중인가 죽었는가
+        it = [l.strip() for l in txt.splitlines() if "iteration #" in l][-1:]
+        ac = [l.strip() for l in txt.splitlines() if "estimated scf accuracy" in l][-1:]
+        dead = ("signal 9" in txt or "MPI_ABORT" in txt or "%%%%" in txt)
+        if dead:
+            mark = "⛔ 죽음(출력에 abort)"
+        elif not _gpu_pw0:
+            mark = "⛔ 죽음(GPU pw.x 없음)"
+        elif age > 1800:
+            mark = f"⚠ {age/60:.0f}분째 출력 없음"
+        else:
+            mark = "▶ 진행"; _running = True
+        print(f"   {mark}  {j}")
+        for l in (it + ac):
+            print(f"        {l[:88]}")
+    if not _running:
+        print("   ⛔ 도는 게 없다 — 재기동:")
+        print("      tmux new -s pbslab -d 'bash ~/Yonghoon-DEM-DFT/tools/sdcp/"
+              "run_phaseB_slabfirst_gabia.sh 2>&1 | tee -a "
+              "/data/work/runs/sdcp_linio2_binding/pbslabfirst.log'")
+    print(BAR)
+    src = None                       # 아래 예전 블록을 건너뛴다
 else:
-    print("  (못 찾음 — tmux 페인이 없다. 재부팅했다면 이게 정상이고 곧 재기동해야 한다.)")
-    print("   export SDCP_OUT=/경로.out  또는  export SDCP_TMUX=세션명")
-print(BAR)
+    src = ""
+
+if src is not None:
+  print("② SDCP complex_doped_v2 relax (k 2×2×1)")
+  src, via = "", ""
+  env_out = os.environ.get("SDCP_OUT", "")
+  if env_out and os.path.isfile(env_out):
+      src, via = open(env_out, errors="ignore").read(), f"파일 {env_out}"
+  if not src:
+      # ⚠ pw.x 의 stdout 이 파일이 아니라 **tmux 페인(/dev/pts/N)** 인 경우가 있다 — 실제로 그랬다.
+      #   .out 파일이 아예 없으므로 페인 스크롤백에서 읽는다. 전 세션·전 페인을 훑는다.
+      #   ⚠ 재부팅 뒤엔 페인 자체가 없다 → 여기서 못 찾는 게 정상이고, 그건 '죽음'의 증거다.
+      # ⚠ 먼저 **파일**을 찾는다. 페인 스크롤백은 4000줄 밖으로 밀리면 못 읽고, 실제로
+      #   sdcp_cd 페인에서 아무것도 못 건진 반면 relax.out 은 디스크에 멀쩡히 있었다.
+      for g in ("/data/work/runs/sdcp*/**/relax.out", "/data/work/runs/sdcp*/**/*.out",
+                os.path.join(W, "runs", "sdcp*", "**", "relax.out")):
+          cands = sorted(glob.glob(os.path.expanduser(g), recursive=True),
+                         key=lambda f: os.path.getmtime(f), reverse=True)
+          if cands:
+              src, via = open(cands[0], errors="ignore").read(), f"파일 {cands[0]} (자동탐색)"
+              break
+  if not src:
+      sess = os.environ.get("SDCP_TMUX", "sdcp_cd")   # ⚠ want() 를 덮지 않게 이름을 분리
+      panes = [p for p in sh("tmux list-panes -a -F '#{session_name}:#{window_index}.#{pane_index}'"
+                             ).split() if p]
+      if sess:
+          panes = [p for p in panes if p.startswith(sess + ":")] + panes
+      for p in panes:
+          cap = sh(f"tmux capture-pane -p -t '{p}' -S -20000")
+          if re.search(r"iteration #|convergence has been achieved", cap):
+              src, via = cap, f"tmux {p}"
+              break
+  # ⚠ **파일이 있다 ≠ 돌고 있다.** relax.out 은 죽어도 그대로 남아서, 이 섹션이
+  #   2026-07-29 에 SIGKILL 로 죽은 런(iteration #246, accuracy 0.51 Ry)을 이틀 내내
+  #   "현재:" 로 보여줬다. GPU pw.x 생존과 파일 신선도로 죽음을 못 박는다.
+  _gpu_pw = subprocess.run(["pgrep", "-f", r"qe-.*-gpu/bin/pw\.x"],
+                           capture_output=True, text=True).stdout.strip()
+  _sdcp_dead = None
+  if src:
+      if "signal 9" in src or "Killed" in src or "MPI_ABORT" in src:
+          _sdcp_dead = "⛔ **죽었다 — 출력에 kill/abort 흔적**"
+      elif not _gpu_pw:
+          _sdcp_dead = "⛔ **죽었다 — GPU pw.x 프로세스 없음** (파일만 남은 것)"
+  if src:
+      print(f"  source: {via}")
+      if _sdcp_dead:
+          print(f"  {_sdcp_dead}")
+          _tail = [l.strip() for l in src.splitlines()
+                   if "signal" in l or "exit code" in l or "Error" in l][-2:]
+          for l in _tail:
+              print("    " + l[:110])
+          print("    아래 '현재:' 는 **마지막 순간의 스냅샷**이지 진행 상황이 아니다.")
+
+      def tail(pat, k):
+          ls = [l for l in src.splitlines() if re.search(pat, l)]
+          return ls[-k:] if ls else []
+      for l in tail(r"number of k points", 1):
+          print("  " + l.strip())
+      # ⚠ scf_must_converge=.false. + maxstep 도달 = **가짜 수렴**
+      print("  완료 step별 반복수 (maxstep과 같으면 **가짜 수렴**):")
+      done = tail(r"convergence has been achieved in", 3)
+      print("\n".join("    " + l.strip() for l in done) if done else "    (아직 없음)")
+      print("  현재:")
+      for l in tail(r"iteration #|estimated scf accuracy", 2):
+          print("    " + l.strip())
+  else:
+      print("  (못 찾음 — tmux 페인이 없다. 재부팅했다면 이게 정상이고 곧 재기동해야 한다.)")
+      print("   export SDCP_OUT=/경로.out  또는  export SDCP_TMUX=세션명")
+  print(BAR)
 
 # ═══ ③ MLIP 위원회 온도 스윕 (T1) ════════════════════════════════════════
 # 판정 파일이 있으면 스윕은 **끝난 일**이다 — 한 줄로 접고 결론만 남긴다.
