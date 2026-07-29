@@ -1,0 +1,14 @@
+﻿# AE Bader net charge (e) — QE pp.x plot_num=17 (all-electron **valence** density) + PAW kjpaw_psl,
+#   Henkelman bader -p all_atom.  net = ZVAL - N_bader.
+# ⚠ plot_num=17 은 frozen core 를 복원하지 않는다 — Z 가 아니라 ZVAL 로 빼야 한다
+#   (2026-07-30 이 규약을 어겨 Cl +9.086 같은 값이 나온 사고가 있었다).
+# ⚠ **이 세 파일끼리만 비교 가능**하다. 다른 밀도 소스(USPP 가전자 plot_num=0, NC ONCV)로 낸
+#   Bader 와 같은 표에 놓지 말 것 — 도핑 효과가 아니라 방법 차이를 보게 된다.
+# system: lpsocl = O-doped LPSCl1.6 (Li27P5S21OCl8, 62at)  (O 1개 도핑)
+# source: gabia:/data/work/runs/lpsocl_bader/{ACF.dat, lpsocl_bader_summary.json} · 2026-07-30
+species_or_site,bader_net_e,note
+Li,+0.883,modelc 와 소수 셋째 자리 일치 = Li+ 상태 불변
+P,+4.524,modelc 4.340 < 이 값 < b2o3 4.691 — O 개수를 따라간다
+S_avg,-1.773,P 가 산화된 만큼 S 가 받는다
+Cl,-0.914,불변
+O,-1.922,NEW: O2- 근처. ICOHP Li-O -1.155(최약) + ELF cmin 0.163(최이온) 과 함께 읽을 것

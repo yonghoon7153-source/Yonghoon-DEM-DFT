@@ -1,0 +1,15 @@
+﻿# ELF bond descriptors, 3 systems — Origin-ready
+# ⚠ ELF_central_min 이 판별력 있는 양. midpoint 는 짧은 결합에서 lone-pair 에 걸려 높다.
+# 방법: QE pp.x plot_num=8 on NC ONCV scf. comp1/modelc 는 기존 산출, lpsocl 은 2026-07-29.
+system,bond,n_bonds,mean_dist_A,ELF_midpoint,ELF_mid_std,ELF_central_min
+comp1,P-S,16,2.072,0.944,0.002,0.924
+comp1,Li-S,72,2.461,0.933,0.012,0.591
+comp1,Cl-Li,24,2.607,0.851,0.031,0.343
+modelc,P-S,20,2.064,0.944,0.001,0.923
+modelc,Li-S,68,2.465,0.940,0.011,0.588
+modelc,Cl-Li,39,2.520,0.887,0.020,0.402
+lpsocl,P-S,19,2.063,0.945,0.001,0.924
+lpsocl,O-P,1,1.559,0.921,0.000,0.878
+lpsocl,Li-S,69,2.486,0.935,0.020,0.576
+lpsocl,Cl-Li,39,2.523,0.884,0.029,0.399
+lpsocl,Li-O,2,1.964,0.784,0.004,0.163
