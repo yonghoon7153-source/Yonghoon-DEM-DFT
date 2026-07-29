@@ -100,6 +100,7 @@ def scf_speed(out_path, maxstep=200):
     tcs = [float(x) for x in re.findall(r"total cpu time spent up to now is\s+([\d.]+)\s*secs", t)]
     acc = re.findall(r"estimated scf accuracy\s+<\s+([\d.E+-]+)", t)
     conv = re.search(r"convergence has been achieved in\s+(\d+)\s+iterations", t)
+    thr = re.search(r"conv_thr\s*=\s*([\d.eEdD+-]+)", t)
     per = None
     if len(tcs) >= 2:
         # 마지막 3구간 평균 — 첫 구간은 초기화가 섞여 과대평가된다
@@ -110,7 +111,9 @@ def scf_speed(out_path, maxstep=200):
             "it": int(its[-1]) if its else 0, "n_marks": len(tcs),
             "elapsed_s": tcs[-1] if tcs else None, "per_it_s": per,
             "acc": acc[-1] if acc else None,
-            "converged_in": int(conv.group(1)) if conv else None, "maxstep": maxstep}
+            "converged_in": int(conv.group(1)) if conv else None, "maxstep": maxstep,
+            "acc_hist": acc, "conv_thr": (thr.group(1).replace("d", "e").replace("D", "e")
+                                          if thr else None)}
 
 
 def show_scf(tag, out_path, maxstep=200):
@@ -129,12 +132,35 @@ def show_scf(tag, out_path, maxstep=200):
         return
     if s["per_it_s"]:
         h = s["per_it_s"] / 3600
-        left = max(0, s["maxstep"] - s["it"])
-        print(f"     반복 1회 ≈ {h:.2f} h · 경과 {s['elapsed_s']/3600:.1f} h"
-              f" · maxstep 까지 남으면 최대 {h*left:.0f} h")
-        if h > 1.0:
-            print(f"     ⛔ **반복당 {h:.1f} 시간 = 사실상 안 끝난다.** k-mesh 를 줄이거나"
-                  f" -npool 로 k 병렬을 걸어야 한다 (아래 '처방' 참조).")
+        # ⚠⚠ **반복 비용만 보고 경보하면 안 된다.** 남은 반복 수는 maxstep 이 아니라
+        #   **accuracy 궤적**이 정한다. 실측 두 번(2026-07-28 ELF, 07-29 Bader) 다
+        #   "반복당 1h+ = 사실상 안 끝난다" 로 오경보했는데, 각각 15회·17회 만에 끝났다.
+        #   도구가 계속 틀린 신호를 주면 언젠가 진짜로 죽이게 된다.
+        need, eta = None, None
+        try:
+            hist = [float(x) for x in (s["acc_hist"] or [])][-4:]
+            target = float(s["conv_thr"]) if s["conv_thr"] else 1e-8
+            if len(hist) >= 2 and hist[-1] > target > 0:
+                import math
+                drops = [math.log10(a / b) for a, b in zip(hist, hist[1:]) if b > 0 and a > b]
+                rate = sum(drops) / len(drops) if drops else 0.0   # 반복당 자릿수 감소
+                if rate > 0.05:
+                    need = math.ceil(math.log10(hist[-1] / target) / rate)
+                    eta = need * h
+        except (ValueError, ZeroDivisionError, TypeError):
+            pass
+        line = f"     반복 1회 ≈ {h:.2f} h · 경과 {s['elapsed_s']/3600:.1f} h"
+        if need is not None:
+            line += f" · **accuracy 궤적 기준 남은 {need}회 ≈ {eta:.0f} h**"
+        else:
+            line += f" · maxstep 최악값 {h*max(0, s['maxstep']-s['it']):.0f} h (예상값 아님)"
+        print(line)
+        if need is not None and eta > 48:
+            print(f"     ⛔ **궤적으로도 {eta:.0f} h 남는다 = 재설계 필요.** "
+                  f"k-mesh/컷오프/믹싱을 손대야 한다.")
+        elif need is None and h > 1.0:
+            print(f"     ⚠ 반복당 {h:.1f} h — 다만 accuracy 궤적이 아직 부족해 남은 시간은 미상. "
+                  f"자릿수가 떨어지고 있으면 그냥 두는 게 맞다.")
     elif s["n_marks"] <= 1:
         print(f"     ⚠ 시간 마크가 {s['n_marks']}개뿐 — **첫 반복도 아직 안 끝났다**"
               + (f" (출력 {stale:.0f}분 정체)" if stale is not None else ""))
@@ -233,7 +259,9 @@ else:
 print(BAR)
 
 # ── 처방 ───────────────────────────────────────────────────────────────
-print("처방 (ELF 가 느릴 때)")
+print("처방 (⚠ **ELF 전용** — Bader 엔 적용 금지)")
+print("  ⛔ Bader 의 k444 는 **바꾸면 안 된다** — 기존 bader_b2o3_vs_lpscl16.csv 와 같은")
+print("     방법이어야 비교가 성립한다. Bader 가 느리면 pool(-nk)만 늘린다.")
 print("  ELF 는 실공간 양이라 조밀한 k-mesh 가 필요 없다. gap 2.23 eV 절연체 62원자 셀이면")
 print("  k 2×2×2 로 충분하고 비용은 대략 1/8 이다. k 병렬(-npool)도 같이 건다:")
 print("    cd /data/work/runs/lpsocl_elf && sed -i 's/^  4 4 4 0 0 0/  2 2 2 0 0 0/' scf.in scf_atomic.in")
