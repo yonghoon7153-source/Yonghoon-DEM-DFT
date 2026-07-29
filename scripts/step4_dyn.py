@@ -2609,6 +2609,33 @@ def _selftest_temperature():
     chk('(A6) 기본 OFF: 배수가 정확히 1.0 (기본 런 bitwise 불변)',
         _ck.i0_temperature_factor().hex() == (1.0).hex())
     chk('(A7) 25 °C 에서는 켜도 무해', abs(_ck.i0_temperature_factor(25.0) - 1.0) < 1e-12)
+    # ★ (A8) 2026-07-29 자체검증에서 잡은 HIGH: i0(T) 를 i0_ref 에만 곱하면 bimodal
+    #   (--i0-poly/--i0-sc) 경로에서 _i0s = i0_p/i0_ref 가 배수를 **완전히 상쇄**한다.
+    #   두 경로 모두에서 **실효 i0_face** 가 T 를 따르는지 직접 확인한다 (i0_ref 가 아니라).
+    _tf60 = _ck.i0_temperature_factor(60.0)
+    _ip = np.array([2.0, 2.0])
+
+    def _i0_face(kin_i0, i0_p_arr):
+        _k = Kinetics(kin_i0)
+        _s = None if i0_p_arr is None else i0_p_arr / _k.i0_ref
+        return float(_k.i0(0.5) if _s is None else (_k.i0(0.5) * _s)[0])
+    # 스칼라 경로: i0_ref 에 곱하는 것이 맞다
+    chk('(A8a) 스칼라 경로: 실효 i0 가 T 배수만큼 커진다',
+        abs(_i0_face(2.0 * _tf60, None) / _i0_face(2.0, None) - _tf60) < 1e-12,
+        f'×{_i0_face(2.0 * _tf60, None) / _i0_face(2.0, None):.4f} (기대 ×{_tf60:.4f})')
+    # bimodal 경로: i0_ref 에 곱하면 상쇄된다 = 옛 결함 재현
+    chk('(A8b) ★i0_ref 에만 곱하면 bimodal 에서 상쇄된다 (옛 결함 — 회귀 핀)',
+        abs(_i0_face(2.0 * _tf60, _ip) / _i0_face(2.0, _ip) - 1.0) < 1e-12,
+        f'×{_i0_face(2.0 * _tf60, _ip) / _i0_face(2.0, _ip):.6f} = 배수 소실')
+    # 수정된 배선: i0_p 에 곱하면 반영된다
+    chk('(A8c) ★i0_p 에 곱하면 bimodal 에서도 T 를 따른다 (수정 확인)',
+        abs(_i0_face(2.0, _ip * _tf60) / _i0_face(2.0, _ip) - _tf60) < 1e-12,
+        f'×{_i0_face(2.0, _ip * _tf60) / _i0_face(2.0, _ip):.4f} (기대 ×{_tf60:.4f})')
+    # ⚠ 양쪽에 곱해도 tf 는 한 번만 적용된다 (i0_ref 가 상쇄되므로) — 첫 주석의 "또 상쇄된다"는
+    #   틀린 추론이었다.  이 단언이 그 사실을 못박아 같은 오해가 재발하지 않게 한다.
+    chk('(A8d) 양쪽에 곱해도 tf 는 정확히 한 번 (i0_ref 는 상쇄 — "이중적용" 오해 차단)',
+        abs(_i0_face(2.0 * _tf60, _ip * _tf60) / _i0_face(2.0, _ip) - _tf60) < 1e-12,
+        f'×{_i0_face(2.0 * _tf60, _ip * _tf60) / _i0_face(2.0, _ip):.4f} (기대 ×{_tf60:.4f})')
     print(f'  temperature selftest: {"PASS" if ok else "FAIL"}')
     return ok
 
@@ -2959,9 +2986,24 @@ def main():
         print(f'  ★B-1 계면상(N={a.cycle_n}): R_ct 채널 i0×{a.i0_cycle_mult:g} · 필름옴성 '
               f'+{a.asr_film_cycle_ohm_cm2:g} Ω·cm² (→ASR {_asr_use:g} Ω·m²)  '
               f'[ASSUMED-FORM: 배수=kim2025 R_ct(N) 앵커; N→배수 법칙-fit 후속 §6 N1]', flush=True)
-    # ★ i0(T): i0_ref 에 곱한다 — i0(x) 의 x-형상(√(4x(1-x)))은 그대로, **진폭만** T 를 따른다.
-    #   (poly/SC 분리 --i0-poly/--i0-sc 와도 곱셈으로 합성 — 그쪽은 형상 공유·진폭만 다름과 동일 규약)
-    kin = Kinetics(_i0_use * _i0_tf, a.alpha_a, a.alpha_c, _asr_use, a.temp_k)
+    # ★ i0(T) 를 **활성 경로 한 곳에만** 곱한다 (2026-07-29 자체검증 HIGH — 첫 배선이 틀렸다).
+    #   per-face i0 는 두 경로가 다르다:
+    #     i0_p 없음 : i0_f = kin.i0_ref · shape(x)                    → i0_ref 가 진폭
+    #     i0_p 있음 : _i0s = i0_p / kin.i0_ref  (:1435)
+    #                 i0_f = kin.i0_ref·shape(x)·i0_p/kin.i0_ref = shape(x)·i0_p
+    #                 ⇒ **i0_ref 가 완전히 상쇄된다** (정규화 분모일 뿐)
+    #   첫 배선은 i0_ref 에만 곱해서, --i0-poly/--i0-sc 를 쓰는 bimodal 런에서 온도 스케일이
+    #   **조용히 사라졌다** (실증: 배수 ×5.5974 를 걸어도 실효 i0_face 비율이 정확히 1.000000).
+    #   ⚠ 정정: "양쪽에 곱하면 또 상쇄된다" 는 **틀린 추론이었다**(첫 주석).  i0_ref 는 어차피
+    #     상쇄되므로 곱해도 무해하고, i0_p 에 곱한 tf 는 그대로 남는다 → 양쪽에 곱해도 tf 가
+    #     정확히 한 번 적용된다.  다만 아래 if/else 로 **활성 경로만** 곱하는 편이 의도가 분명해
+    #     그대로 둔다 (어느 쪽이 진폭인지 코드가 스스로 말한다).
+    if i0_p is not None:
+        i0_p = i0_p * _i0_tf                 # per-particle 진폭이 실효 i0 → 여기에 T 를 싣는다
+        _kin_i0 = _i0_use                    # i0_ref 는 건드리지 않는다 (상쇄되므로 무의미)
+    else:
+        _kin_i0 = _i0_use * _i0_tf           # 스칼라 경로: i0_ref 가 곧 진폭
+    kin = Kinetics(_kin_i0, a.alpha_a, a.alpha_c, _asr_use, a.temp_k)
     sysm = CellSystem(sid, sig_e, sig_i, pid, len(r_um), vox_um, z_top_um=z_top, z_bot_um=0.0,
                       periodic_xy=_per)
     out = simulate(sysm, ocp, r_um * 1e-6, ds_arg, kin, a.c_rate, nr=a.nr,
