@@ -209,7 +209,38 @@ if ranks:
         pass
 gpu = sh("nvidia-smi --query-gpu=memory.used,memory.total --format=csv,noheader,nounits").strip()
 if gpu:
-    print(f"  VRAM {gpu} MiB  ⚠ pw.x(GPU) 와 UMA 동시 실행은 CLAUDE.md 금지 조합")
+    # ⚠ 이 경고는 **조건부여야 한다.** 예전엔 GPU 조회만 되면 무조건 찍혀서,
+    #   GPU pw.x 가 하나도 없는 상태에서도 "금지 조합" 이라고 떠들었다.
+    #   늘 켜져 있는 경고는 읽히지 않는다 = 정작 진짜일 때 무시된다.
+    uma = procs(r"disorder_ensemble_diffusion|aimd_mlip")
+    both = bool(gpu_qe) and bool(uma)
+    tag = ("  ⛔ **pw.x(GPU) + UMA 동시 실행 — CLAUDE.md 금지 조합**" if both
+           else ("  (GPU pw.x 없음)" if uma else ""))
+    print(f"  VRAM {gpu} MiB{tag}")
+
+# ⚠⚠ **우리를 실제로 죽인 건 VRAM 이 아니라 host RAM 이었다.**
+#   2026-07-29 01:21 SDCP pw.x 가 OOM 킬(anon-rss 26.7 GB). 우리가 23분 전에 띄운
+#   CPU QE 20랭크(랭크당 ~1.4 GB)가 62 GB 를 넘겼다. CLAUDE.md 의 금지 규칙은
+#   VRAM 만 말하는데, CPU 빌드 QE 와 GPU 빌드 QE 는 **VRAM 은 안 겹쳐도 RAM 은 겹친다.**
+mem = sh("free -g").splitlines()
+if len(mem) > 1:
+    f = mem[1].split()
+    try:
+        tot, used, avail = int(f[1]), int(f[2]), int(f[-1])
+        # ⚠ 절대 임계값(예: <16 GB)은 기계 크기에 따라 오탐한다. **여유를 랭크 수로 환산**해
+        #   "지금 뭘 더 띄울 수 있나" 로 말한다 — 그게 실제로 필요한 판단이다.
+        PER_RANK = 1.4          # 2026-07-29 실측: CPU QE pw.x 랭크당 RSS ≈ 1.4 GB
+        fits = int(avail / PER_RANK)
+        warn = ("  ⛔ **OOM 위험 — 새 작업 금지**" if avail < max(4, 0.08 * tot) else
+                ("  ⚠ 빠듯함 — 새 작업 전 재확인" if avail < max(8, 0.2 * tot) else ""))
+        print(f"  RAM {used}/{tot} GB 사용 · 여유 {avail} GB "
+              f"(≈ CPU QE {fits} 랭크분){warn}")
+        if warn:
+            print("     ⚠ **우리를 죽인 건 VRAM 이 아니라 여기였다.** 2026-07-29 01:21 SDCP pw.x "
+                  "OOM 킬(anon-rss 26.7 GB) — 23분 전 우리가 띄운 CPU QE 20랭크가 62 GB 를 넘겼다. "
+                  "CPU 빌드와 GPU 빌드 QE 는 VRAM 은 안 겹쳐도 **host RAM 은 겹친다**.")
+    except (ValueError, IndexError):
+        pass
 print(BAR)
 
 # ── ELF ────────────────────────────────────────────────────────────────
