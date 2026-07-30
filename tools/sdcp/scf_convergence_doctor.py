@@ -83,17 +83,31 @@ def main():
 
     recent = acc[-min(a.window, n):]
     r = rate(recent)
+    r_early = rate(acc[:max(3, n // 3)])
+    # 감속비 — 초반엔 잘 가다가 어느 값 근처에서 갇히는 게 limit cycle 의 지문이다
+    decel = (r_early / r) if (r_early and r and r > 0) else None
     # 진동: 직전보다 커진 횟수 비율
     ups = sum(1 for i in range(1, len(recent)) if recent[i] > recent[i - 1])
     osc = ups / max(1, len(recent) - 1)
     print(f"\n최근 구간 진동률 {osc:.0%} (오른 횟수/전체) — 40% 넘으면 mixing 문제 신호")
+    if decel and decel > 3:
+        print(f"⚠ **감속 {decel:.0f}배** (초반 {r_early:.4f} → 최근 {r:.4f} 자릿수/iter). "
+              "초반엔 잘 내려가다 특정 값 근처에서 갇히는 건 limit cycle 의 지문이다.")
 
+    # ── 자화 안정성 — 처방을 가르는 두 번째 축 ────────────────────────────
+    mag_stable = None
     if tot:
         print(f"total magnetization  마지막 {tot[-1]:+.3f}  "
               f"[최근 10: {', '.join(f'{v:+.2f}' for v in tot[-10:])}]")
     if ab:
         print(f"absolute magnetization 마지막 {ab[-1]:.3f}  "
               f"[최근 10: {', '.join(f'{v:.2f}' for v in ab[-10:])}]")
+        tail = ab[-min(30, len(ab)):]
+        spread = (max(tail) - min(tail)) / max(1e-9, sum(tail) / len(tail))
+        mag_stable = spread < 0.01           # 최근 30회 상대폭 1% 미만
+        print(f"  최근 30회 absolute mag 상대폭 {spread:.2%} → "
+              + ("**스핀은 안정**. 원인에서 스핀 초기조건을 뺀다."
+                 if mag_stable else "**스핀이 흔들린다** — 이게 근본 원인일 수 있다."))
 
     # ── 처방 ────────────────────────────────────────────────────────────
     print("\n" + "=" * 66)
@@ -108,12 +122,21 @@ def main():
         print(f"   처방: electron_maxstep 을 {len(its) + est + 100} 이상으로 올리고 재시작.")
         print("   ⚠ 이때 mixing 을 건드리지 마라 — 잘 가고 있는 궤적을 흔든다.")
     elif osc > 0.40:
-        print("▶ **진동한다** — accuracy 가 오르내린다. mixing 이 원인이다.")
-        print("   처방(순서대로 하나씩):")
-        print("     1) mixing_beta 를 절반으로 (0.03 → 0.015)")
-        print("     2) mixing_ndim 을 늘린다 (20 → 12 로 **줄이는** 것도 시도 — 이력이 길면")
-        print("        오히려 옛 정보가 발목을 잡는다)")
-        print("     3) degauss 를 넓힌다 (0.02 → 0.03) — 금속 표면 점유수 요동 완화")
+        print("▶ **진동한다(limit cycle)** — accuracy 가 오르내리며 특정 값에 갇혔다.")
+        if mag_stable:
+            print("   자화가 안정적이므로 **스핀 문제가 아니다** — 전하/점유수 쪽이다.")
+            print("   처방(효과 순):")
+            print("     1) **degauss 를 넓힌다.** 금속성 표면에서 좁은 스미어링은 E_F 근처")
+            print("        점유수를 매 반복 바꿔 limit cycle 을 만든다. 검증된 값이 있으면")
+            print("        **그 값으로 되돌려라** — 좁힌다고 좋아지지 않는다.")
+            print("     2) mixing_ndim 을 **줄인다** (20 → 8). 긴 Broyden 이력이 진동을 고착시킨다.")
+            print("     3) mixing_beta 는 이미 낮다면 더 낮추지 마라 — 느려지기만 하고 진동은")
+            print("        안 잡힌다. beta 는 발산할 때 쓰는 노브지 진동용이 아니다.")
+        else:
+            print("   자화도 흔들린다 — 스핀과 전하가 같이 논다.")
+            print("   처방: 1) starting_magnetization 을 키워 밑그림을 굳힌다 (±0.3 → ±0.6)")
+            print("         2) degauss 를 넓힌다   3) mixing_ndim 을 줄인다")
+        print("   ⚠ 이전 charge density 가 있으면 **버리지 말고 startingpot='file' 로 승계**하라.")
     else:
         print("▶ **정체다** — 감소율이 사실상 0. 반복만 늘려도 안 붙는다.")
         print("   처방(원인 순):")
@@ -126,8 +149,10 @@ def main():
         print("     3) Hubbard U 를 켠 채로는 어렵다면 U=0 으로 먼저 수렴시키고 그 밀도를")
         print("        받아 U 를 켜는 단계 전략.")
     print("=" * 66)
-    print(f"\n재시작 가능 여부: outdir 에 charge-density 가 남아 있으면 restart_mode='restart' 로")
-    print(f"  {len(its)} 반복을 버리지 않고 이어받는다. 확인:")
+    # ⚠ restart_mode='restart' 라고 안내하면 안 된다 — 그건 wfc 까지 이어받는 중단 재개라
+    #   disk_io='low' 와 충돌한다. 밀도만 승계하는 건 startingpot='file' 이다.
+    print(f"\n밀도 승계: outdir 에 charge-density 가 있으면 **startingpot='file'** 로")
+    print(f"  {len(its)} 반복을 버리지 않고 이어받는다 (restart_mode='restart' 아님). 확인:")
     d = Path(a.scf_out).parent
     print(f"    ls -la {d}/tmp/*.save/charge-density* 2>/dev/null")
 

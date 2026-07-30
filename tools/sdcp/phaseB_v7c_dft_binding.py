@@ -90,7 +90,10 @@ OPT = {
     "electron_maxstep": 300,
     "scf_must_converge": None,   # None = 줄 생략(QE 기본 .true.)
     "seed_radical": None,     # "S:0.5" — doped 계에만 붙는 국소 스핀 시드
-    "mag_seed": {},           # {"Ni1": 1.62, "Ni2": -1.62} — 1단계 슬랩에서 승계
+    "mag_seed": {},           # {"Ni1": 0.3, "Ni2": -0.3} — 1단계 슬랩에서 승계(분율)
+    "mixing_ndim": MIX_NDIM,
+    "mixing_beta": MIX_BETA,
+    "startingpot": None,      # 'file' = 이전 charge density 승계 (밀도만, wfc 아님)
 }
 
 # PBE USPP/PAW pseudos (all confirmed present in /data/work/pseudo)
@@ -375,9 +378,14 @@ def write_scf(path, atoms, labels, kind, kpts, pseudo_dir, prefix):
     body.append("/")
     body.append("&ELECTRONS")
     body.append(f"    conv_thr        = {CONV_THR}")
-    body.append(f"    mixing_beta     = {MIX_BETA}")
+    body.append(f"    mixing_beta     = {OPT['mixing_beta']}")
     body.append("    mixing_mode     = 'local-TF'")
-    body.append(f"    mixing_ndim     = {MIX_NDIM}")
+    body.append(f"    mixing_ndim     = {OPT['mixing_ndim']}")
+    # ⚠⚠ 밀도 승계는 restart_mode='restart' 가 **아니라** startingpot='file' 이다.
+    #   restart_mode='restart' 는 파동함수까지 이어받는 '중단 재개'라 disk_io='low'
+    #   (wfc 를 디스크에 안 남김)와 충돌한다. 우리가 원하는 건 **밀도만** 승계다.
+    if OPT["startingpot"]:
+        body.append(f"    startingpot     = '{OPT['startingpot']}'")
     body.append(f"    electron_maxstep = {OPT['electron_maxstep']}")
     if OPT["scf_must_converge"] is not None:
         body.append(f"    scf_must_converge = {OPT['scf_must_converge']}")
@@ -476,6 +484,13 @@ def main():
                          "점유수가 SCF 마다 튄다 — 넓히면 수렴이 부드러워지는 대신 "
                          "E 를 degauss→0 로 외삽해야 하니 doped/neutral **양쪽 동일값**으로.")
     ap.add_argument("--electron_maxstep", type=int, default=300)
+    ap.add_argument("--mixing_ndim", type=int, default=MIX_NDIM,
+                    help=f"Broyden 이력 길이 (기본 {MIX_NDIM}). 진동(limit cycle)이 나면 "
+                         "**줄이는** 쪽이 듣는다 — 긴 이력이 진동을 고착시킨다.")
+    ap.add_argument("--mixing_beta", type=float, default=MIX_BETA)
+    ap.add_argument("--startingpot", choices=["atomic", "file"], default=None,
+                    help="'file' = outdir 의 charge-density 를 이어받는다(밀도만). "
+                         "restart_mode='restart' 와 달리 disk_io='low' 와 호환된다.")
     ap.add_argument("--scf_must_converge", choices=[".true.", ".false."], default=None,
                     help="'.true.' 로 두면 미수렴 시 종료 — plateau 값을 수렴값으로 "
                          "오독하는 사고를 막는다.")
@@ -496,6 +511,9 @@ def main():
     OPT["electron_maxstep"] = a.electron_maxstep
     OPT["scf_must_converge"] = a.scf_must_converge
     OPT["seed_radical"] = a.seed_radical
+    OPT["mixing_ndim"] = a.mixing_ndim
+    OPT["mixing_beta"] = a.mixing_beta
+    OPT["startingpot"] = a.startingpot
     if a.mag_json:
         with open(a.mag_json) as f:
             OPT["mag_seed"] = {k: float(v) for k, v in json.load(f).items()
@@ -503,6 +521,8 @@ def main():
         print(f"mag seed 승계: {OPT['mag_seed']}")
     print(f"[opt] degauss {OPT['degauss']} · FSM {'on' if OPT['fsm'] else 'OFF (free spin)'}"
           f" · maxstep {OPT['electron_maxstep']}"
+          f" · mixing beta {OPT['mixing_beta']}/ndim {OPT['mixing_ndim']}"
+          + (f" · startingpot {OPT['startingpot']}" if OPT["startingpot"] else "")
           + (f" · radical seed {OPT['seed_radical']}" if OPT["seed_radical"] else ""))
 
     slab_atoms = read(a.slab)

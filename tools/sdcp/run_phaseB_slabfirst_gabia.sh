@@ -90,14 +90,29 @@ guard(){
 # ── 입력 생성 ───────────────────────────────────────────────────────────────
 # ⚠ degauss 는 doped/neutral **양쪽 같은 값**이어야 한다. 다르면 E_bind 차분에
 #   smearing 항이 상쇄되지 않아 verdict 가 오염된다.
-DEGAUSS=${DEGAUSS:-0.02}
+# ⚠⚠ **degauss 를 0.02 로 좁힌 건 판단 착오였다 (2026-07-30 정정).**
+#   scf_u62.in 에서 클론한 검증된 값은 **0.03** 인데 "좁을수록 정확"이라는 생각으로
+#   0.02 로 낮췄다. 그런데 금속성 Ni 표면에서 좁은 스미어링은 E_F 근처 점유수를 매 반복
+#   바꿔 **limit cycle** 을 만든다. 실측: 슬랩이 초반 0.024 자릿수/iter 로 5자릿수를
+#   내려가다가 0.02 Ry 근처에서 감속(0.0012)하고 진동률 53% 로 갇혔다.
+#   자화는 그동안 완전히 안정(abs mag 110.36±0.05, total −0.08)이라 **스핀 문제가 아니다.**
+#   검증된 0.03 으로 되돌린다. doped/neutral 양쪽 같은 값이면 E_bind 차분에서 상쇄된다.
+DEGAUSS=${DEGAUSS:-0.03}
 MAXSTEP=${MAXSTEP:-300}
+# 진동(limit cycle)에는 Broyden 이력을 **줄이는** 쪽이 듣는다 — 긴 이력이 진동을 고착시킨다.
+MIXNDIM=${MIXNDIM:-8}
 # RESTART=1 이면 이전 charge density 를 이어받는다 — 300 반복을 버리지 않는다.
-#   ⚠ scf_must_converge 로 죽은 런도 outdir 에 .save 를 남기는 경우가 많다.
-#     **있을 때만** restart 로 바꾼다(없는데 restart 를 쓰면 QE 가 죽는다).
+#   ⚠⚠ **restart_mode='restart' 가 아니라 startingpot='file' 이다.** 전자는 파동함수까지
+#     이어받는 '중단 재개'라 disk_io='low'(wfc 를 디스크에 안 남김)와 충돌한다.
+#     우리가 원하는 건 **밀도만** 승계다.
 RESTART=${RESTART:-0}
 gen(){   # $1 = "slab" | "complexes"
   local extra=()
+  # 밀도 승계는 **이전 charge-density 가 실제로 있을 때만** 켠다.
+  local POT=()
+  if [ "$RESTART" = 1 ] && ls "$OUT"/*/tmp/*.save/charge-density* >/dev/null 2>&1; then
+    POT=(--startingpot file)
+  fi
   [ -s "$MAGJSON" ] && extra+=(--mag_json "$MAGJSON")
   "$UMA_PY" "$REPO/tools/sdcp/phaseB_v7c_dft_binding.py" \
     --slab "$OUT/slab_cshrink.vasp" \
@@ -108,7 +123,8 @@ gen(){   # $1 = "slab" | "complexes"
     --ref_scf     "$BASE/reference_dft_v2/scf_u62.in" \
     --afm_mode inplane --mol_vacuum 8 --pseudo_dir /data/work/pseudo \
     --no_fsm --degauss "$DEGAUSS" --scf_must_converge .true. \
-    --electron_maxstep "$MAXSTEP" --seed_radical S:0.5 \
+    --electron_maxstep "$MAXSTEP" --seed_radical S:0.5 --mixing_ndim "$MIXNDIM" \
+    ${POT[@]+"${POT[@]}"} \
     ${extra[@]+"${extra[@]}"} --out "$OUT" || return 1
   # OOM 대책은 refine 판과 동일: 단일-k + david_ndim 2
   for j in slab complex_doped complex_neutral; do
@@ -147,12 +163,12 @@ run_one(){   # $1 = job dir name, $2 = -nk pools
   if grep -aq "convergence has been achieved" "$OUT/$j/scf.out" 2>/dev/null; then
     ts "✓ $j 이미 수렴 — 건너뜀"; return 0
   fi
-  # ── 재시작: 이전 밀도가 있으면 이어받는다 ────────────────────────────
+  # ── 밀도 승계 확인 (실제 파일 유무로) ────────────────────────────────
   if [ "$RESTART" = 1 ]; then
     if ls "$OUT/$j"/tmp/*.save/charge-density* >/dev/null 2>&1; then
-      grep -aq "restart_mode" "$OUT/$j/scf.in" || \
-        sed -i "/&CONTROL/a\    restart_mode    = 'restart'" "$OUT/$j/scf.in"
-      ts "↻ $j 재시작 — 이전 charge density 이어받음 (maxstep $MAXSTEP)"
+      grep -aq "startingpot" "$OUT/$j/scf.in" \
+        && ts "↻ $j 밀도 승계 (startingpot='file', maxstep $MAXSTEP)" \
+        || ts "⚠ $j scf.in 에 startingpot 이 안 들어갔다 — 생성기 인자 확인"
     else
       ts "⚠ $j 이전 밀도 없음 — 처음부터 (RESTART 무시)"
     fi
