@@ -1,8 +1,15 @@
-# h-BN@VGCF Li migration - CI-NEB activation barriers (panel b). Forward = TS - first image, backward = TS - last image. meV. kT(300 K) = 25.69 meV.
-# NOTE Li_on_hbn_1L: whole path spans 7 meV while per-image force errors reach 46 meV/A -> BELOW numerical resolution. Report as '< 0.01 eV, effectively barrierless', NOT as agreement with Shi2017 (100 meV). See vgcf_hbn_neb.json.
-# NOTE Li_in_gallery_2L2L is the representative gallery value but 2L convergence is OPEN (layer_sensitivity) -> treat as an upper bound.
-case,Ea_forward_meV,Ea_backward_meV,literature_meV
-Li_on_graphene_1L,272.95,272.02,300
-Li_on_hbn_1L,7.36,-0.00,100
-Li_in_gallery_1L1L,356.72,349.19,
-Li_in_gallery_2L2L,147.31,145.78,
+﻿# h-BN@VGCF Li migration — CI-NEB activation barriers. Forward = TS - first image. meV. kT(300 K) = 25.69 meV.
+# 2026-07-30 완성: 갤러리 2x2 행렬 + 표면 대조군 Li_on_graphene_2L.
+# ⚠ Li_on_hbn_1L: 경로 전체가 7 meV 인데 이미지별 힘오차가 46 meV/A — **수치분해능 아래**.
+#   'Shi2017(100 meV)과 일치' 로 쓰면 안 되고 '< 0.01 eV, 사실상 무장벽' 으로만.
+# ⚠ 표면 1L→2L 의 +11.9 meV 는 **0 과 구별되지 않는다** (path_thr 0.05 eV/A × 이미지간격
+#   0.41 A → 에너지 불확도 ~20 meV). '약간 악화' 가 아니라 '효과 없음' 이다.
+# 기전 판정: 같은 그래핀 1L→2L 이 표면에선 ~0, 갤러리에선 -207 meV → **confinement**.
+case,Ea_forward_meV,Ea_backward_meV,literature_meV,geometry,layers,note
+Li_on_hbn_1L,7.36,-0.0,100,surface,1L,표면. 7 meV < 수치분해능 — barrierless 로만
+Li_on_graphene_1L,272.95,272.02,300,surface,1L,표면 기준선. 문헌 ~0.3 eV 와 일치 — 프로토콜 검증
+Li_on_graphene_2L,284.81,286.41,,surface,2L,표면 대조군. 1L 대비 +11.9 meV = 허용오차(~20) 안 → 0
+Li_in_gallery_1L1L,356.72,349.19,,gallery,1L|1L,갤러리 기준선
+Li_in_gallery_2L1L,149.54,156.39,,gallery,2L|1L,VGCF 벽만 2층 → -207.2 meV (전체의 98.9%)
+Li_in_gallery_1L2L,380.18,376.2,,gallery,1L|2L,"h-BN 벽만 2층 → +23.5 meV, 오히려 악화"
+Li_in_gallery_2L2L,147.31,145.78,,gallery,2L|2L,대표값. 양쪽 2층 → -209.4 meV

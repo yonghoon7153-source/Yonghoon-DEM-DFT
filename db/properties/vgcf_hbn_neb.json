@@ -1,128 +1,156 @@
 {
-  "property": "li_migration_barrier_hbn_at_vgcf",
-  "date": "2026-07-27",
-  "description": "Li hollow->hollow migration barriers in the h-BN@VGCF system: surface diffusion on each sheet vs in-gallery diffusion. Companion to vgcf_hbn_binding_matrix.json (same slabs, same DFT setup).",
-  "method": "QE 7.4.1-GPU neb.x (esp-Z590). 7 images, CI_scheme='auto', path_thr=0.05 eV/A, nstep_path=150. Hop = one hollow-lattice vector +a1 = 2.46 A along x. Endpoints pre-relaxed (endpoint-B = Li +2.46 A, substrate dimple re-formed) and held fixed by neb.x. PBE-D3BJ PAW 60/480 Ry, 4x4 supercell, k 3x3x1 — identical to the binding matrix.",
-  "results": [
-    {
-      "id": "Li_on_hbn_1L",
-      "system": "Li adatom on h-BN monolayer",
-      "nat": 33,
-      "Ea_forward_eV": 0.007357,
-      "Ea_backward_eV": -0.0,
-      "neb_iterations": 11,
-      "converged": true,
-      "note": "Barrier is below our numerical resolution: the whole path spans 7 meV while the per-image force errors reach 46 meV/A (path_thr 0.05). Report as '< 0.01 eV, effectively barrierless', NOT as agreement with Shi2017 (0.10 eV) — we are 13x lower. Internally consistent with our own weak binding (E_bind -0.264 eV) and the large adsorption height (Li sits 2.79 A above the topmost B/N)."
-    },
-    {
-      "id": "Li_on_graphene_1L",
-      "system": "Li adatom on graphene monolayer",
-      "nat": 33,
-      "Ea_forward_eV": 0.27295,
-      "Ea_backward_eV": 0.272018,
-      "neb_iterations": 14,
-      "converged": true,
-      "note": "Clean symmetric single saddle at xi=0.50. Matches the literature baseline (~0.3 eV) — this is the case that validates the NEB protocol."
-    },
-    {
-      "id": "Li_in_gallery_1L1L",
-      "system": "Li intercalated in the h-BN|Li|graphene gallery, 1L each side",
-      "nat": 65,
-      "Ea_forward_eV": 0.356724,
-      "Ea_backward_eV": 0.349193,
-      "neb_iterations": 29,
-      "converged": true,
-      "note": "Sharp single saddle at xi=0.51. NOT quoted for the paper — see layer_sensitivity below."
-    },
-    {
-      "id": "Li_in_gallery_2L2L",
-      "system": "Li intercalated in the h-BN|Li|graphene gallery, 2L each side",
-      "nat": 129,
-      "Ea_forward_eV": 0.147314,
-      "Ea_backward_eV": 0.145777,
-      "neb_iterations": 52,
-      "converged": true,
-      "representative": true,
-      "note": "Broad flat-topped saddle: two maxima (0.1439 eV at xi=0.34, 0.1473 eV at xi=0.64) separated by a 16 meV dip at xi=0.49 — the dip is below kT(300 K)=25.7 meV, so it is a plateau, not a trapping site. Quoted as the representative gallery barrier, matching vgcf_hbn_binding_matrix.json representative_for_paper = gallery_2L2L."
-    }
-  ],
-  "layer_sensitivity": {
-    "delta_1L1L_to_2L2L_meV": -209.4,
-    "compare_E_bind_spread_meV": 52,
-    "falsifies": "The barrier is 4x MORE layer-sensitive than E_bind. This falsifies (a) the 'layer effects cancel because a barrier is a site-energy difference on the same host' assumption in tools/vgcf_hbn/neb_build_kgy.py, and (b) the '1L 모델로 NEB 정당' clause in vgcf_hbn_binding_matrix.json headline.",
-    "conclusion_flips": "1L1L puts the gallery ABOVE graphene-surface diffusion (357 > 273 meV, gallery = slow channel); 2L2L puts it BELOW (147 < 273 meV, gallery = fast channel). The qualitative claim of the paper depends on layer count, so the layer trend must be shown, not assumed.",
-    "status": "OPEN — 2L convergence not yet demonstrated (no 3L, no mixed-layer barrier). Until then 0.147 eV is an upper bound if the 1L->2L trend continues."
+ "property": "li_migration_barrier_hbn_at_vgcf",
+ "date": "2026-07-27",
+ "description": "Li hollow->hollow migration barriers in the h-BN@VGCF system: surface diffusion on each sheet vs in-gallery diffusion. Companion to vgcf_hbn_binding_matrix.json (same slabs, same DFT setup).",
+ "method": "QE 7.4.1-GPU neb.x (esp-Z590). 7 images, CI_scheme='auto', path_thr=0.05 eV/A, nstep_path=150. Hop = one hollow-lattice vector +a1 = 2.46 A along x. Endpoints pre-relaxed (endpoint-B = Li +2.46 A, substrate dimple re-formed) and held fixed by neb.x. PBE-D3BJ PAW 60/480 Ry, 4x4 supercell, k 3x3x1 — identical to the binding matrix.",
+ "results": [
+  {
+   "id": "Li_on_hbn_1L",
+   "system": "Li adatom on h-BN monolayer",
+   "nat": 33,
+   "Ea_forward_eV": 0.007357,
+   "Ea_backward_eV": -0.0,
+   "neb_iterations": 11,
+   "converged": true,
+   "note": "Barrier is below our numerical resolution: the whole path spans 7 meV while the per-image force errors reach 46 meV/A (path_thr 0.05). Report as '< 0.01 eV, effectively barrierless', NOT as agreement with Shi2017 (0.10 eV) — we are 13x lower. Internally consistent with our own weak binding (E_bind -0.264 eV) and the large adsorption height (Li sits 2.79 A above the topmost B/N)."
   },
-  "geometry_diagnostic": {
-    "note": "From the endpoint-A relaxed geometries (Begin final coordinates). z in A; 'dimple' = max(z)-min(z) within one sheet; layers clustered at 0.8 A.",
-    "gallery_width_ruled_out": {
-      "sheet_center_to_center_A": {
-        "gallery_1L1L": 3.584,
-        "gallery_2L2L": 3.599
-      },
-      "Li_above_C_plane_A": {
-        "gallery_1L1L": 1.677,
-        "gallery_2L2L": 1.688
-      },
-      "Li_below_BN_plane_A": {
-        "gallery_1L1L": 1.907,
-        "gallery_2L2L": 1.911
-      },
-      "verdict": "The gallery geometry is identical to within 0.015 A. The -209 meV barrier shift is NOT a gallery-width effect."
-    },
-    "sheet_dimple_A": {
-      "C_sheet_facing_Li": {
-        "gallery_1L1L": 0.109,
-        "gallery_2L2L": 0.051
-      },
-      "BN_sheet_facing_Li": {
-        "gallery_1L1L": 0.272,
-        "gallery_2L2L": 0.373
-      },
-      "reference_surface_cases": {
-        "graphene_1L_with_Li": 0.025,
-        "hBN_1L_with_Li": 0.283
-      },
-      "verdict": "The carbon side stiffens as expected when a second layer is added (0.109 -> 0.051, halved), but the BN side does the opposite (0.272 -> 0.373). A pure 'free 1L sheet over-corrugates' story therefore explains only half the effect."
-    },
-    "interlayer_A": {
-      "graphite_2L": 3.389,
-      "hBN_2L": 3.37
-    },
-    "flag_hbn_corrugation": "h-BN sheets show 0.27-0.37 A out-of-plane spread in EVERY cell, vs 0.02-0.11 A for graphene. A relaxed free-standing h-BN monolayer should be planar to <0.01 A. Unresolved: real Li-induced pucker, a ripple of the 4x4 cell, or incomplete relaxation. Check before the h-BN numbers are used quantitatively."
+  {
+   "id": "Li_on_graphene_1L",
+   "system": "Li adatom on graphene monolayer",
+   "nat": 33,
+   "Ea_forward_eV": 0.27295,
+   "Ea_backward_eV": 0.272018,
+   "neb_iterations": 14,
+   "converged": true,
+   "note": "Clean symmetric single saddle at xi=0.50. Matches the literature baseline (~0.3 eV) — this is the case that validates the NEB protocol."
   },
-  "recommended_next": "Run the two mixed-layer gallery NEBs (2L|1L and 1L|2L, ~97 atoms each). Their slabs and binding energies already exist in the 2x2 binding matrix (gallery_2L1L -1.580, gallery_1L2L -1.592 eV), so this produces a 2x2 BARRIER matrix that mirrors the existing 2x2 binding matrix: it decomposes which side drives the -209 meV (C stiffening vs BN registry) and shows whether the trend saturates at 2L. That converts the main reviewer objection into a figure panel.",
-  "figure": "docs/figures/vgcf_hbn/vgcf_hbn_neb.png (tools/figures/fig_vgcf_hbn_neb.py)",
-  "origin_csv": [
-    "db/properties/vgcf_hbn_neb_origin.csv",
-    "db/properties/vgcf_hbn_neb_images_origin.csv",
-    "db/properties/vgcf_hbn_neb_barriers_origin.csv"
-  ],
-  "raw": "esp-Z590:~/work/vgcf_hbn/neb/<case>/{neb.out,*.dat,*.int}",
-  "layer_effect_2x2_matrix_COMPLETE_2026_07_30": {
-    "_what": "209 meV 층수효과를 VGCF 쪽 몫 / h-BN 쪽 몫으로 분해. 네 칸 모두 CI-NEB 수렴 완료.",
-    "Ea_eV": {
-      "1L|1L": 0.356724,
-      "2L|1L_VGCF2L": 0.149536,
-      "1L|2L_hBN2L": 0.380182,
-      "2L|2L": 0.147314
-    },
-    "delta_vs_1L1L_meV": {
-      "1L|1L": 0.0,
-      "2L|1L_VGCF2L": -207.2,
-      "1L|2L_hBN2L": 23.5,
-      "2L|2L": -209.4
-    },
-    "verdict": "**209 meV 는 거의 전부 VGCF(graphene) 쪽이다.** VGCF 만 2층으로 하면 -207.2 meV = 전체(-209.4)의 98.9%. h-BN 만 2층으로 하면 +23.5 meV 로 **오히려 약간 나빠진다**.",
-    "non_additivity_meV": -25.7,
-    "_non_additivity_reading": "개별 합 -183.7 vs 실제 전체 -209.4 → 잔차 -25.7 meV. 두 벽 효과가 완전히 독립은 아니지만, 잔차가 VGCF 단독 몫(-207)의 12% 라 'VGCF 지배' 결론은 잔차에 흔들리지 않는다.",
-    "_iterations": {
-      "1L|1L": 29,
-      "2L|1L": 43,
-      "1L|2L": 19,
-      "2L|2L": 52
-    },
-    "⚠_still_open": "**기전이 confinement 인지 substrate 인지는 아직 미정.** 갤러리 케이스는 전부 두 벽 사이라 '그래핀 층수' 와 '가둠 기하'가 섞여 있다. 가르는 실험은 **표면 대조군**이다: Li_on_graphene(1L) = 0.272950 eV 는 있고 Li_on_graphene_2L 이 없다. 그 둘의 차이가 크면 substrate 효과(스크리닝·분극, 일반화 가능), 거의 0 이면 갤러리 전용 confinement 효과(VGCF 다발 구조 특화). **논문 문장이 갈린다.**",
-    "_next": "Li_on_graphene_2L CI-NEB (kgy, endpoint-B 대기 상태에서 세션 종료됨 — 재기동 필요)"
+  {
+   "id": "Li_in_gallery_1L1L",
+   "system": "Li intercalated in the h-BN|Li|graphene gallery, 1L each side",
+   "nat": 65,
+   "Ea_forward_eV": 0.356724,
+   "Ea_backward_eV": 0.349193,
+   "neb_iterations": 29,
+   "converged": true,
+   "note": "Sharp single saddle at xi=0.51. NOT quoted for the paper — see layer_sensitivity below."
+  },
+  {
+   "id": "Li_in_gallery_2L2L",
+   "system": "Li intercalated in the h-BN|Li|graphene gallery, 2L each side",
+   "nat": 129,
+   "Ea_forward_eV": 0.147314,
+   "Ea_backward_eV": 0.145777,
+   "neb_iterations": 52,
+   "converged": true,
+   "representative": true,
+   "note": "Broad flat-topped saddle: two maxima (0.1439 eV at xi=0.34, 0.1473 eV at xi=0.64) separated by a 16 meV dip at xi=0.49 — the dip is below kT(300 K)=25.7 meV, so it is a plateau, not a trapping site. Quoted as the representative gallery barrier, matching vgcf_hbn_binding_matrix.json representative_for_paper = gallery_2L2L."
+  },
+  {
+   "id": "Li_on_graphene_2L",
+   "system": "Li adatom on graphene BILAYER (surface control for the mechanism test)",
+   "nat": 65,
+   "Ea_forward_eV": 0.284807,
+   "Ea_backward_eV": 0.286408,
+   "neb_iterations": 12,
+   "converged": true,
+   "note": "The control that decides confinement vs substrate. Same physical change as the gallery VGCF-wall thickening (graphene 1L -> 2L) but with Li on a FREE surface: +11.9 meV, i.e. nothing. Compare -207.2 meV for the same change inside the gallery."
   }
+ ],
+ "layer_sensitivity": {
+  "delta_1L1L_to_2L2L_meV": -209.4,
+  "compare_E_bind_spread_meV": 52,
+  "falsifies": "The barrier is 4x MORE layer-sensitive than E_bind. This falsifies (a) the 'layer effects cancel because a barrier is a site-energy difference on the same host' assumption in tools/vgcf_hbn/neb_build_kgy.py, and (b) the '1L 모델로 NEB 정당' clause in vgcf_hbn_binding_matrix.json headline.",
+  "conclusion_flips": "1L1L puts the gallery ABOVE graphene-surface diffusion (357 > 273 meV, gallery = slow channel); 2L2L puts it BELOW (147 < 273 meV, gallery = fast channel). The qualitative claim of the paper depends on layer count, so the layer trend must be shown, not assumed.",
+  "status": "RESOLVED (2026-07-30) — 2×2 행렬로 VGCF 지배(98.9%)를, 표면 대조군으로 confinement 기전을 확정. 3L 포화 여부는 여전히 미측정이므로 0.147 eV 는 **하한이 아니라 2L 값**으로만 인용한다."
+ },
+ "geometry_diagnostic": {
+  "note": "From the endpoint-A relaxed geometries (Begin final coordinates). z in A; 'dimple' = max(z)-min(z) within one sheet; layers clustered at 0.8 A.",
+  "gallery_width_ruled_out": {
+   "sheet_center_to_center_A": {
+    "gallery_1L1L": 3.584,
+    "gallery_2L2L": 3.599
+   },
+   "Li_above_C_plane_A": {
+    "gallery_1L1L": 1.677,
+    "gallery_2L2L": 1.688
+   },
+   "Li_below_BN_plane_A": {
+    "gallery_1L1L": 1.907,
+    "gallery_2L2L": 1.911
+   },
+   "verdict": "The gallery geometry is identical to within 0.015 A. The -209 meV barrier shift is NOT a gallery-width effect."
+  },
+  "sheet_dimple_A": {
+   "C_sheet_facing_Li": {
+    "gallery_1L1L": 0.109,
+    "gallery_2L2L": 0.051
+   },
+   "BN_sheet_facing_Li": {
+    "gallery_1L1L": 0.272,
+    "gallery_2L2L": 0.373
+   },
+   "reference_surface_cases": {
+    "graphene_1L_with_Li": 0.025,
+    "hBN_1L_with_Li": 0.283
+   },
+   "verdict": "The carbon side stiffens as expected when a second layer is added (0.109 -> 0.051, halved), but the BN side does the opposite (0.272 -> 0.373). A pure 'free 1L sheet over-corrugates' story therefore explains only half the effect."
+  },
+  "interlayer_A": {
+   "graphite_2L": 3.389,
+   "hBN_2L": 3.37
+  },
+  "flag_hbn_corrugation": "h-BN sheets show 0.27-0.37 A out-of-plane spread in EVERY cell, vs 0.02-0.11 A for graphene. A relaxed free-standing h-BN monolayer should be planar to <0.01 A. Unresolved: real Li-induced pucker, a ripple of the 4x4 cell, or incomplete relaxation. Check before the h-BN numbers are used quantitatively."
+ },
+ "recommended_next": "Run the two mixed-layer gallery NEBs (2L|1L and 1L|2L, ~97 atoms each). Their slabs and binding energies already exist in the 2x2 binding matrix (gallery_2L1L -1.580, gallery_1L2L -1.592 eV), so this produces a 2x2 BARRIER matrix that mirrors the existing 2x2 binding matrix: it decomposes which side drives the -209 meV (C stiffening vs BN registry) and shows whether the trend saturates at 2L. That converts the main reviewer objection into a figure panel.",
+ "figure": "docs/figures/vgcf_hbn/vgcf_hbn_neb.png (tools/figures/fig_vgcf_hbn_neb.py)",
+ "origin_csv": [
+  "db/properties/vgcf_hbn_neb_origin.csv",
+  "db/properties/vgcf_hbn_neb_images_origin.csv",
+  "db/properties/vgcf_hbn_neb_barriers_origin.csv"
+ ],
+ "raw": "esp-Z590:~/work/vgcf_hbn/neb/<case>/{neb.out,*.dat,*.int}",
+ "layer_effect_2x2_matrix_COMPLETE_2026_07_30": {
+  "_what": "209 meV 층수효과를 VGCF 쪽 몫 / h-BN 쪽 몫으로 분해. 네 칸 모두 CI-NEB 수렴 완료.",
+  "Ea_eV": {
+   "1L|1L": 0.356724,
+   "2L|1L_VGCF2L": 0.149536,
+   "1L|2L_hBN2L": 0.380182,
+   "2L|2L": 0.147314
+  },
+  "delta_vs_1L1L_meV": {
+   "1L|1L": 0.0,
+   "2L|1L_VGCF2L": -207.2,
+   "1L|2L_hBN2L": 23.5,
+   "2L|2L": -209.4
+  },
+  "verdict": "**209 meV 는 거의 전부 VGCF(graphene) 쪽이다.** VGCF 만 2층으로 하면 -207.2 meV = 전체(-209.4)의 98.9%. h-BN 만 2층으로 하면 +23.5 meV 로 **오히려 약간 나빠진다**.",
+  "non_additivity_meV": -25.7,
+  "_non_additivity_reading": "개별 합 -183.7 vs 실제 전체 -209.4 → 잔차 -25.7 meV. 두 벽 효과가 완전히 독립은 아니지만, 잔차가 VGCF 단독 몫(-207)의 12% 라 'VGCF 지배' 결론은 잔차에 흔들리지 않는다.",
+  "_iterations": {
+   "1L|1L": 29,
+   "2L|1L": 43,
+   "1L|2L": 19,
+   "2L|2L": 52
+  },
+  "_mechanism_resolved": "2026-07-30: Li_on_graphene_2L 로 판정 완료 → confinement. mechanism_verdict_2026_07_30 참조."
+ },
+ "mechanism_verdict_2026_07_30": {
+  "_question": "209 meV 가 (a) 그래핀을 두껍게 한 것 자체의 substrate 효과인지, (b) 갤러리에 가둔 상태에서만 나오는 confinement 효과인지.",
+  "_design": "같은 변화(그래핀 1L→2L)를 **두 배치**에 각각 가한다. 표면(Li 한쪽만 접촉) vs 갤러리(Li 양쪽 벽 사이). 두 배치의 반응이 같으면 substrate, 다르면 confinement.",
+  "surface_control_eV": {
+   "Li_on_graphene_1L": 0.27295,
+   "Li_on_graphene_2L": 0.284807
+  },
+  "delta_surface_meV": 11.9,
+  "delta_gallery_VGCF_wall_meV": -207.2,
+  "ratio_gallery_over_surface": 17.5,
+  "verdict": "**CONFINEMENT.** 자유 표면에서 그래핀을 2층으로 만들면 장벽이 +11.9 meV 움직인다 — 우리 NEB 수렴 허용오차 안이라 **사실상 0**이다. 같은 변화를 갤러리 안에서 하면 -207.2 meV. 즉 두 번째 층은 **Li 가 두 벽 사이에 갇혀 있을 때만** 작동한다.",
+  "⚠_resolution_caveat": "+11.9 meV 를 '살짝 나빠졌다'로 읽으면 안 된다. path_thr=0.05 eV/Å 에 이미지 간격 ~0.41 Å 이면 에너지 불확도가 ~20 meV 수준이라 **11.9 meV 는 0 과 구별되지 않는다.** 결론은 '표면 효과 없음'이지 '표면에서 약간 악화'가 아니다.",
+  "paper_sentence": "The bilayer wall lowers the migration barrier only under confinement: the same graphene 1L->2L change shifts the barrier by -207 meV inside the gallery but by +12 meV (within our NEB tolerance of ~20 meV, i.e. null) for Li on a free graphene surface.",
+  "_scope": "따라서 이건 일반화 가능한 'bilayer substrate 를 쓰면 좋다' 원리가 **아니라**, VGCF 다발처럼 **Li 가 갇히는 갤러리 구조**에 특화된 설계 원리다. 논문에서 그렇게 한정해서 써야 한다.",
+  "_iterations": {
+   "Li_on_graphene_1L": 14,
+   "Li_on_graphene_2L": 12
+  }
+ }
 }

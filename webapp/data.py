@@ -2197,10 +2197,11 @@ def dashboard_highlights() -> list:
                    "n": "코팅 후보 상위 · Nd₂O₃·B₂O₃는 DFT 검증됨 (절대값은 상대비교만)"})
     # ⚠ hBN은 db가 수치 인용을 금지한 값 — 경로 전체 폭 7 meV < 이미지당 힘오차 46 meV/Å
     #   (vgcf_hbn_neb.json: "Report as '< 0.01 eV, effectively barrierless'"). 2L2L은 층수 미수렴 상한.
-    hi.append({"t": "VGCF/hBN Li 확산 (CI-NEB)",
-               "v": "hBN <0.01(사실상 무장벽) · graphene(1L) 0.273 · gallery 2L2L 0.147 eV (대표)",
-               "n": "hBN은 수치 분해능 이하 · 2L2L은 층수 미수렴=상한 · barrier 층수 민감 −209 meV 반증 "
-                    "→ 혼합층 2건·graphene 2L NEB 진행중"})
+    hi.append({"t": "VGCF/hBN Li 확산 (CI-NEB) — 기전 판정 완료",
+               "v": "gallery 2L2L 0.147 eV · 209 meV 는 **confinement** (2026-07-30)",
+               "n": "같은 그래핀 1L→2L 이 자유 표면에선 +12 meV(허용오차 ~20 안 = 0), "
+                    "갤러리 안에선 −207 meV → 벽 두께는 **갇힌 Li 에만** 작동한다. "
+                    "hBN(<0.01)은 수치 분해능 이하 · 3L 미측정이라 0.147 은 '수렴값' 아닌 **2L 값**"})
     # comp2 disorder ensemble — ⚠ 단일 config Ea/σ 수치 인용 금지(멀티 config 판정 전, 데이터 규율)
     hi.append({"t": "comp2 disorder ensemble", "v": "d=0.50 anneal+relax 파이프라인 가동",
                "n": "cfg0 3온도 완료 · 멀티 config 판정 대기"})
