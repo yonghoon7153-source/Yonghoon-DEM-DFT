@@ -91,6 +91,11 @@ guard(){
 # ⚠ degauss 는 doped/neutral **양쪽 같은 값**이어야 한다. 다르면 E_bind 차분에
 #   smearing 항이 상쇄되지 않아 verdict 가 오염된다.
 DEGAUSS=${DEGAUSS:-0.02}
+MAXSTEP=${MAXSTEP:-300}
+# RESTART=1 이면 이전 charge density 를 이어받는다 — 300 반복을 버리지 않는다.
+#   ⚠ scf_must_converge 로 죽은 런도 outdir 에 .save 를 남기는 경우가 많다.
+#     **있을 때만** restart 로 바꾼다(없는데 restart 를 쓰면 QE 가 죽는다).
+RESTART=${RESTART:-0}
 gen(){   # $1 = "slab" | "complexes"
   local extra=()
   [ -s "$MAGJSON" ] && extra+=(--mag_json "$MAGJSON")
@@ -103,7 +108,7 @@ gen(){   # $1 = "slab" | "complexes"
     --ref_scf     "$BASE/reference_dft_v2/scf_u62.in" \
     --afm_mode inplane --mol_vacuum 8 --pseudo_dir /data/work/pseudo \
     --no_fsm --degauss "$DEGAUSS" --scf_must_converge .true. \
-    --electron_maxstep 300 --seed_radical S:0.5 \
+    --electron_maxstep "$MAXSTEP" --seed_radical S:0.5 \
     ${extra[@]+"${extra[@]}"} --out "$OUT" || return 1
   # OOM 대책은 refine 판과 동일: 단일-k + david_ndim 2
   for j in slab complex_doped complex_neutral; do
@@ -142,14 +147,27 @@ run_one(){   # $1 = job dir name, $2 = -nk pools
   if grep -aq "convergence has been achieved" "$OUT/$j/scf.out" 2>/dev/null; then
     ts "✓ $j 이미 수렴 — 건너뜀"; return 0
   fi
+  # ── 재시작: 이전 밀도가 있으면 이어받는다 ────────────────────────────
+  if [ "$RESTART" = 1 ]; then
+    if ls "$OUT/$j"/tmp/*.save/charge-density* >/dev/null 2>&1; then
+      grep -aq "restart_mode" "$OUT/$j/scf.in" || \
+        sed -i "/&CONTROL/a\    restart_mode    = 'restart'" "$OUT/$j/scf.in"
+      ts "↻ $j 재시작 — 이전 charge density 이어받음 (maxstep $MAXSTEP)"
+    else
+      ts "⚠ $j 이전 밀도 없음 — 처음부터 (RESTART 무시)"
+    fi
+  fi
   guard
+  # ⚠ 이전 scf.out 을 덮어쓰면 **accuracy 궤적이 사라진다.** 진단(doctor)이 그걸 먹고 산다.
+  [ -s "$OUT/$j/scf.out" ] && mv "$OUT/$j/scf.out" "$OUT/$j/scf.out.$(date +%m%d_%H%M)"
   ts "▶ $j 시작 (-nk $nk)"
   ( cd "$OUT/$j" && $MPIRUN -np 1 --oversubscribe "$QE" -nk "$nk" -in scf.in > scf.out 2>&1 )
   if grep -aq "convergence has been achieved" "$OUT/$j/scf.out"; then
     ts "✓ $j 수렴 — $(grep -a '!.*total energy' "$OUT/$j/scf.out" | tail -1)"
   else
-    ts "✗ $j 미수렴 — 마지막 accuracy:"
-    grep -a "estimated scf accuracy" "$OUT/$j/scf.out" | tail -3
+    ts "✗ $j 미수렴 — 진단:"
+    "$UMA_PY" "$REPO/tools/sdcp/scf_convergence_doctor.py" \
+        --scf_out "$OUT/$j/scf.out" --scf_in "$OUT/$j/scf.in" 2>&1 | tail -22
     return 1
   fi
 }

@@ -204,6 +204,7 @@ def render(captured: str) -> str:
     parts = captured.split(BAR + "\n")
     head, secs = parts[0], parts[1:]
     keep, done, idle, n_act = [head.rstrip()], [], [], 0
+    sub = {}          # 섹션 → 그 섹션에서 접힌 ✅ 항목들
     for sec in secs:
         body = sec.rstrip("\n")
         if not body.strip():
@@ -228,8 +229,10 @@ def render(captured: str) -> str:
                 t = " ".join(l.replace("✅", " ").split())     # 공백 정규화
                 t = t.split("(")[0].strip(" :·—")
                 if t:
+                    # ⚠ 항목마다 섹션 제목을 붙이면 "① …: 3/3 완료 · ① …: 3/3 완료" 처럼
+                    #   같은 제목이 반복돼 줄이 길어지고 뒤가 잘린다(실측). 섹션별로 묶는다.
                     _sh = title.split(" (")[0].split(" — ")[0].strip()
-                    done.append((f"{_sh}: {t}" if _sh else t)[:64])
+                    sub.setdefault(_sh, []).append(t)
                 continue
             lines.append(l)
         # 하위줄이 전부 접힌 그룹 머리(`  [comp2_disorder_relaxed]`)는 같이 지운다
@@ -242,6 +245,8 @@ def render(captured: str) -> str:
             pruned.append(l)
         keep.append("\n".join(pruned).rstrip())
     out = [("\n" + BAR + "\n").join(keep)]
+    for _sh, items in sub.items():
+        done.append(f"{_sh}[" + " · ".join(dict.fromkeys(items)) + "]")
     if done or idle:
         out.append(BAR)
         if done:
