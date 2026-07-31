@@ -21,17 +21,33 @@ Kim, Kang, Park, Lee — Electrochim. Acta 542 (2025) 147413, Table S6.
 세 점 Arrhenius 적합 → **Eₐ(R_ct) = 0.4212 eV, R² = 0.99943**
 (구간별 0.4049 / 0.4398 eV = 8 % 스프레드 — 완벽한 직선은 아니지만 3점으로 충분히 견고)
 
-`R_ct ∝ 1/i0` 이므로 이것이 곧 i0 의 온도 앵커다:
+★★ 정정 (2026-07-30 적대리뷰 HIGH-1) — `R_ct ∝ 1/i0` 은 **틀렸다** ★★
+선형화 BV (step4_dyn `Kinetics._ct`: `g = i0·A·f·(αa e⁺ + αc e⁻)`, `f = F/RT`) 에서
 
-    i0(T) / i0(T_ref) = R_ct(T_ref) / R_ct(T) = exp[ −(Eₐ/k_B)·(1/T − 1/T_ref) ]
+    R_ct = 1/(dI/dη)|_{η=0} = **RT / (F · i0 · A)**      ← T 가 **RT 에도** 있다
 
-    25 °C ×1.000 · 30 °C ×1.311 · 45 °C ×2.803 · 60 °C ×5.598
+따라서 `i0 ∝ T / R_ct` 이지 `1/R_ct` 가 아니다.  첫 배선은 `ln R_ct` 를 그대로 적합해 Eₐ
+전량을 i0 에 실었고 → i0 배수가 **10.5 % 과소**(60 °C: 5.5982 vs 정합 6.2554).
+리포 자체 규약과도 어긋났다 — `se_material.py` 의 σ·T (Kraft) 규약은 이미 `(T_ref/T)`
+전인자를 포함한다.  올바른 형태:
+
+    i0(T)/i0(T_ref) = (T/T_ref) · R_ct(T_ref)/R_ct(T)
+                    = (T/T_ref) · exp[ −(Eₐ_Rct/k_B)·(1/T − 1/T_ref) ]
+
+    25 °C ×1.000 · 30 °C ×1.333 · 45 °C ×2.947 · 60 °C ×6.255
 
 ★ 전이 가정 (라벨 필수) ★
 ─────────────────────────
 - 앵커는 **72 wt% NCM, uncoated, post-formation** 한 조성이다.  Eₐ 가 조성·코팅·사이클 상태에
-  무관하다고 **가정**한다.  같은 논문의 LNO 코팅 셀은 R_ct 가 ~20× 낮지만(22.4 vs 453.4 @62 wt%)
-  T-스윕은 uncoated 만 있어서 코팅계 Eₐ 는 미지다.
+  무관하다고 **가정**한다.
+  ★★ 정정 (2026-07-30 리뷰 HIGH-7) — 이 자리에 "코팅계 T-스윕은 논문에 없다" 고 적었던 것은
+  **거짓**이었다.  `docs/data/kim2025_tlm_kinetics_anchors.csv` (Table S4, LNO 62 wt%) 에
+  세 온도가 stated 로 있다:  **30 °C 22.4 · 45 °C 8.7 · 60 °C 7.6 Ω·cm²**.
+  그리고 그 데이터는 위 전이가정을 **반증**한다 — 구간별 Eₐ 가 0.524 / 0.082 eV 로 **6.4×**
+  갈라져 Arrhenius 가 아니고(3점 R² ≈ 0.86), 코팅계 i0(60) 배수는 uncoated 와 크게 다르다.
+  ⇒ **코팅 케이스에 이 모듈을 쓰면 uncoated Eₐ 를 조용히 상속한다.**  `--i0-temp-scale` 을
+  코팅 프리셋(coating_presets.py)과 함께 쓸 때는 그 사실을 결과에 적어야 한다.
+  (누락이 우리에게 유리한 방향으로 작동했다는 점이 이 정정의 요지다.)
 - Eₐ 자체는 우리가 세 점에서 적합한 값이다.  논문이 "0.42 eV" 를 인쇄한 것이 아니라
   `docs/data/rint_eis_anchors.csv` 의 stated R 값들에서 **우리가 유도**했다 → provenance는
   `derived_from_stated_anchors`.  아래 selftest 가 CSV 를 다시 읽어 이 상수를 재유도해 검증한다.
@@ -56,6 +72,11 @@ import os
 RCT_T_ANCHOR = ((30.0, 289.9), (45.0, 139.6), (60.0, 67.8))
 RCT_ANCHOR_SOURCE = ('kim2025 Electrochim.Acta 542 (2025) 147413 Table S6 — '
                      'NCM811+LPSCl 72wt% uncoated, R values STATED (pdf_verified)')
+
+# ★ LNO 코팅계 T-스윕 (Table S4, 62 wt%) — **비-Arrhenius**.  전이가정의 반증 증거로 보관한다
+#   (구간별 Eₐ 0.524 / 0.082 eV = 6.4× 스프레드).  기본 배선은 uncoated 를 쓰므로 코팅 케이스는
+#   이 값과 다르다 — selftest 가 그 차이를 못박는다.
+RCT_T_ANCHOR_LNO = ((30.0, 22.4), (45.0, 8.7), (60.0, 7.6))
 
 T_REF_C = 25.0                  # se_material.T_REF_C 와 같은 규약 (selftest 가 일치 확인)
 KB_EV = 8.617333262e-5          # eV/K
@@ -91,15 +112,39 @@ def i0_temperature_factor(T_C=None, ea_ev=None, t_ref_c=T_REF_C):
     if T_C is None:
         return 1.0
     ea = EA_RCT_EV if ea_ev is None else float(ea_ev)
+    # ⚠ HIGH-6: ea=0 이면 배수 1.0 인데 step4 가드는 해제돼 "스케일했다"고 주장하게 되고,
+    #   ea<0 이면 **부호역전이 완전히 복원**된다 (실측 60 °C: 93.44 → 201.82 mV).  둘 다 거부.
+    if not (ea > 0.0):
+        raise ValueError(f'i0_temperature_factor: Eₐ 는 양수여야 한다 (got {ea!r}) — '
+                         'ea=0 은 "스케일 안 함"을 "스케일함"으로 라벨하고, ea<0 은 부호역전을 '
+                         '복원한다 (2026-07-30 리뷰 HIGH-6)')
     t, tr = float(T_C) + 273.15, float(t_ref_c) + 273.15
-    if t <= 0.0:
+    if t <= 0.0 or tr <= 0.0:
         raise ValueError(f'i0_temperature_factor: T_C={T_C} 는 절대영도 이하')
-    return math.exp(-(ea / KB_EV) * (1.0 / t - 1.0 / tr))
+    # ★ (T/T_ref) 전인자 = R_ct = RT/(F i0 A) 의 RT (HIGH-1).  빠뜨리면 60 °C 에서 10.5% 과소.
+    return (t / tr) * math.exp(-(ea / KB_EV) * (1.0 / t - 1.0 / tr))
 
 
 def rct_temperature_factor(T_C=None, ea_ev=None, t_ref_c=T_REF_C):
-    """R_ct(T)/R_ct(T_ref) = 1 / i0 배수 (같은 앵커, 역수 — 보고용 편의)."""
-    return 1.0 / i0_temperature_factor(T_C, ea_ev, t_ref_c)
+    """R_ct(T)/R_ct(T_ref) — **측정된 양** 이므로 순수 Arrhenius (전인자 없음).
+
+    ★★ 이것은 `1/i0_temperature_factor` 가 **아니다** (2026-07-30 리뷰 HIGH-1 의 핵심).
+       R_ct = RT/(F·i0·A) 이므로
+           R_ct(T)/R_ct(T_ref) = (T/T_ref) · i0(T_ref)/i0(T)
+       이고, i0 배수에 이미 (T/T_ref) 가 들어 있어 역수를 취하면 전인자가 **한 번 더** 들어가
+       측정값과 어긋난다(60 °C 에서 0.2130 vs 실측 0.2339 = 9% 오차).  옛 코드가 역수로
+       정의해 두는 바람에, 그걸로 앵커를 대조하던 테스트가 자기순환이 됐다.
+       ⇒ 여기서는 적합된 Eₐ 로 **직접** 계산한다.
+    """
+    if T_C is None:
+        return 1.0
+    ea = EA_RCT_EV if ea_ev is None else float(ea_ev)
+    if not (ea > 0.0):
+        raise ValueError(f'rct_temperature_factor: Eₐ 는 양수여야 한다 (got {ea!r})')
+    t, tr = float(T_C) + 273.15, float(t_ref_c) + 273.15
+    if t <= 0.0 or tr <= 0.0:
+        raise ValueError(f'rct_temperature_factor: T_C={T_C} 는 절대영도 이하')
+    return math.exp((ea / KB_EV) * (1.0 / t - 1.0 / tr))
 
 
 def provenance(T_C=None, ea_ev=None):
@@ -107,13 +152,25 @@ def provenance(T_C=None, ea_ev=None):
     if T_C is None:
         return None
     ea = EA_RCT_EV if ea_ev is None else float(ea_ev)
-    lo = i0_temperature_factor(T_C, EA_RCT_EV_INTERVALS[0])
-    hi = i0_temperature_factor(T_C, EA_RCT_EV_INTERVALS[1])
+    # ★ HIGH-6: override 를 주면 밴드도 그 값 기준으로 재계산하고 provenance 를 USER_OVERRIDE 로
+    #   바꾼다.  옛 코드는 항상 정본 구간쌍으로 밴드를 계산해, override 값이 밴드 **밖**에 있는데도
+    #   kim2025 라벨이 붙었다.
+    if ea_ev is None:
+        lo = i0_temperature_factor(T_C, EA_RCT_EV_INTERVALS[0])
+        hi = i0_temperature_factor(T_C, EA_RCT_EV_INTERVALS[1])
+        _prov_lbl = EA_RCT_PROVENANCE
+    else:
+        _sp = 0.5 * (EA_RCT_EV_INTERVALS[1] - EA_RCT_EV_INTERVALS[0])   # 정본 스프레드 폭 유지
+        lo = i0_temperature_factor(T_C, max(1e-6, ea - _sp))
+        hi = i0_temperature_factor(T_C, ea + _sp)
+        _prov_lbl = (f'USER_OVERRIDE (Eₐ={ea:g} eV, 정본 kim2025 유도값 {EA_RCT_EV:g} 아님 — '
+                     f'이 런의 i0(T) 는 앵커가 아니라 사용자 지정이다)')
     return {
         'T_C': float(T_C),
         'T_ref_C': float(T_REF_C),
         'Ea_Rct_eV': ea,
-        'Ea_provenance': EA_RCT_PROVENANCE,
+        'Ea_provenance': _prov_lbl,
+        'Ea_is_user_override': ea_ev is not None,
         'i0_T_factor': i0_temperature_factor(T_C, ea),
         'i0_T_factor_band': [min(lo, hi), max(lo, hi)],
         'Ea_interval_spread_eV': list(EA_RCT_EV_INTERVALS),
@@ -176,21 +233,72 @@ def _selftest():
     # 4) 방향 — 이 모듈의 존재 이유
     f60 = i0_temperature_factor(60.0)
     chk('★ 60 °C 에서 i0 가 커진다 (η_ct 감소 = 실측 방향)', f60 > 1.0, f'i0 ×{f60:.3f}')
-    chk('★ R_ct 는 그만큼 작아진다 (kim2025 30→60 에 4.28× 감소와 정합)',
-        abs(rct_temperature_factor(60.0) * i0_temperature_factor(60.0) - 1.0) < 1e-12
-        and abs((rct_temperature_factor(60.0) / rct_temperature_factor(30.0)) - (67.8 / 289.9))
-        < 0.02, f'R_ct(60)/R_ct(30) 모델 '
-                f'{rct_temperature_factor(60.0) / rct_temperature_factor(30.0):.4f} vs 앵커 '
-                f'{67.8 / 289.9:.4f}')
+    # ★ R_ct 배수는 **순수 Arrhenius** = 측정 그대로.  i0 배수의 역수가 아니다(HIGH-1).
+    chk('★ R_ct(60)/R_ct(30) 이 앵커와 일치 (측정값 = 순수 Arrhenius)',
+        abs((rct_temperature_factor(60.0) / rct_temperature_factor(30.0)) - (67.8 / 289.9))
+        < 0.02, f'모델 {rct_temperature_factor(60.0) / rct_temperature_factor(30.0):.4f} vs '
+                f'앵커 {67.8 / 289.9:.4f}')
+    chk('★ R_ct 배수 ≠ 1/i0 배수 — 차이가 정확히 (T/T_ref) 전인자',
+        abs(rct_temperature_factor(60.0) * i0_temperature_factor(60.0)
+            - 333.15 / 298.15) < 1e-12,
+        f'곱 {rct_temperature_factor(60.0) * i0_temperature_factor(60.0):.5f} '
+        f'= T/T_ref {333.15 / 298.15:.5f}')
     chk('저온에서는 i0 가 작아진다', i0_temperature_factor(0.0) < 1.0,
         f'0 °C: ×{i0_temperature_factor(0.0):.4f}')
 
-    # 5) 앵커 3점을 실제로 재현하는가 (모델 ↔ 앵커 왕복)
-    r30 = 289.9
-    for t_c, r_meas in RCT_T_ANCHOR:
-        r_pred = r30 * rct_temperature_factor(t_c) / rct_temperature_factor(30.0)
-        chk(f'앵커 재현 {t_c:.0f} °C: R_ct {r_pred:.1f} vs 측정 {r_meas:.1f}',
-            abs(r_pred / r_meas - 1.0) < 0.03, f'{100 * (r_pred / r_meas - 1):+.1f}%')
+    # 5) ★ 비순환 앵커 재현 (2026-07-30 리뷰 HIGH-1) — 옛 테스트는 rct_factor = 1/i0_factor 의
+    #    비를 앵커 비와 대조하는 **자기순환**이라 RT 전인자 누락을 구조적으로 못 잡았다.
+    #    이제 **모델의 실제 R_ct = 1/(dI/dη)|₀** 를 step4_dyn.Kinetics 로 계산해 앵커와 대조한다.
+    try:
+        import sys as _s2
+        _s2.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        from step4_dyn import Kinetics as _K
+        _A = 1.0                                   # 면적은 비에서 상쇄 — 절대값이 아니라 비를 본다
+        _r30 = None
+        _errs = []
+        for t_c, r_meas in RCT_T_ANCHOR:
+            _k = _K(2.0 * i0_temperature_factor(t_c), temp_k=t_c + 273.15)
+            _, _g = _k._ct(0.0, _k.i0(0.5) * _A)   # dI/dη|₀
+            _rct = 1.0 / _g                        # = RT/(F i0 A)
+            if _r30 is None:
+                _r30, _rm30 = _rct, r_meas
+            _errs.append((t_c, _rct / _r30, r_meas / _rm30))
+        _ok5 = all(abs(m / a - 1.0) < 0.03 for _, m, a in _errs)
+        chk('★ 비순환: 모델의 1/(dI/dη)|₀ 비가 앵커 R_ct 비와 3% 이내',
+            _ok5, ' · '.join(f'{t:.0f}°C 모델 {m:.4f} vs 앵커 {a:.4f}' for t, m, a in _errs))
+    except Exception as e:
+        chk('★ 비순환 앵커 재현', False, f'{type(e).__name__}: {e}')
+
+    # 5b) ★ RT 전인자가 실제로 들어있는가 (HIGH-1 회귀 핀)
+    _f60 = i0_temperature_factor(60.0)
+    _f60_no_rt = math.exp(-(EA_RCT_EV / KB_EV) * (1.0 / 333.15 - 1.0 / 298.15))
+    chk('★ (T/T_ref) 전인자가 들어있다 (없으면 10.5% 과소 — 옛 결함)',
+        abs(_f60 / _f60_no_rt - 333.15 / 298.15) < 1e-12,
+        f'{_f60:.4f} (전인자 없으면 {_f60_no_rt:.4f})')
+
+    # 5c) ★ Eₐ 무결성 (HIGH-6)
+    for _bad in (0.0, -EA_RCT_EV, -1.0):
+        try:
+            i0_temperature_factor(60.0, _bad)
+            chk(f'Eₐ={_bad} 거부', False, '통과해버림')
+        except ValueError:
+            chk(f'Eₐ={_bad:g} 거부 (ea=0 은 거짓라벨, ea<0 은 부호역전 복원)', True)
+    _po = provenance(60.0, 0.9)
+    chk('override 는 USER_OVERRIDE 로 낙인 + 밴드도 그 값 기준',
+        _po['Ea_is_user_override'] and 'USER_OVERRIDE' in _po['Ea_provenance']
+        and _po['i0_T_factor_band'][0] < _po['i0_T_factor'] < _po['i0_T_factor_band'][1])
+
+    # 5d) ★ LNO 코팅계는 비-Arrhenius = 전이가정의 반증 (HIGH-7)
+    _ea_lno, _r2_lno = _fit_ea(RCT_T_ANCHOR_LNO)
+    _i1, _ = _fit_ea(RCT_T_ANCHOR_LNO[:2])
+    _i2, _ = _fit_ea(RCT_T_ANCHOR_LNO[1:])
+    chk('★ LNO 코팅 T-스윕이 존재하고 **비-Arrhenius** (전이가정 반증)',
+        _r2_lno < 0.95 and abs(_i1 / max(_i2, 1e-9)) > 3.0,
+        f'Eₐ={_ea_lno:.4f} R²={_r2_lno:.4f}, 구간 {_i1:.4f}/{_i2:.4f} eV = {_i1/_i2:.1f}×')
+    chk('★ 코팅계 i0(60) 배수가 uncoated 와 유의하게 다르다 (조용한 상속 위험)',
+        abs(i0_temperature_factor(60.0, _ea_lno) / i0_temperature_factor(60.0) - 1.0) > 0.2,
+        f'코팅 ×{i0_temperature_factor(60.0, _ea_lno):.3f} vs uncoated '
+        f'×{i0_temperature_factor(60.0):.3f}')
 
     # 6) 밴드 (구간 Eₐ 스프레드) — 단일값 보고 방지
     p = provenance(60.0)

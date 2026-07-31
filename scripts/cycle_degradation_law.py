@@ -28,9 +28,23 @@ STEP4 는 열화 **법칙**을 갖고 있지 않다.  `--cycle-n` 도움말이 �
 ★ 화학 몫 g_chem(N) 의 앵커 ★
 ─────────────────────────────
 크기 (끝점):
-  Yun 2023 EnSM 10.1016/j.ensm.2023.102787 TableS1 — bare SC-NMC811 + LPSCl,
+  Yun 2023 EnSM 10.1016/j.ensm.2023.102787 TableS1 — bare SC-NMC811 + LPSCl, **30 °C**, 0.33C,
   R_ct 341.7 → 982.3 Ω·cm² @ ~100 cyc = **2.87×**  (table_verified_litdb)
   · 같은 표의 R_ion 은 126 → 156 = 1.24× 로 훨씬 작다 → 열화는 **반응면(R_ct)** 에 몰린다.
+  ★★ 라벨 (2026-07-30 리뷰 HIGH-4): 이 2.87× 는 풀셀 TLM 피팅의 **측정 총 R_ct** 이지 순수
+  화학몫이 아니다 — 계면화학 × 전기활성면적손실이 곱해져 있다.  다만 Yun 은 CAM 균열을
+  배제하려고 **단결정 NCM 을 일부러 채택**했고(litdb:60), 우리 mono 원장 g_mech ≈ 1.05 이므로
+  내장 기계몫은 **≈5 %** 로 작다 → g_chem ≈ 2.87/1.05 ≈ **2.74**.
+  `--subtract-mech` 로 그 감산을 켤 수 있다 (기본 OFF = 총량 그대로, 라벨로 고지).
+★★ 채널 배분 경고 (2026-07-30 리뷰 HIGH-5) ★★
+shape √N 의 정당화는 Park 의 "확산제한 Wagner **필름**" 인데, 필름 저항은 **옴성**(η ∝ I)이고
+i0 감소는 **로그성**(η ∝ asinh)이다.  둘은 선형 극한에서만 일치한다.  전량을 `--i0-cycle-mult`
+로 내면 리포 실측 동작점(η_kin 17–64 mV)에서 사이클 셀 분극을 **1.2–3.1× 과소평가**하고,
+오차가 rate 와 함께 커져 fade-vs-rate 결론이 낙관 쪽으로 편향된다.
+⇒ `--film-frac F` 로 총 성장의 F 몫을 `--asr-film-cycle-ohm-cm2`(옴성 채널, step4 에 이미 있음)
+  로 돌릴 수 있다.  기본 0.0 = 전량 i0 = **고율 penalty 의 하한**이며, 출력에 그렇게 낙인한다.
+  ⚠ F 의 물리적 값은 앵커가 없다(§F1) — 스윕 전용이다.
+
 모양 (끝점 사이):
   Park 2023 AEM 10.1002/aenm.202203861 —
   · 코팅/첨가제 계면상: **선형-√t** (확산제한 Wagner film) → g_chem ∝ √N
@@ -42,9 +56,17 @@ STEP4 는 열화 **법칙**을 갖고 있지 않다.  `--cycle-n` 도움말이 �
 ⚠ **끝점 사이는 ASSUMED-FORM** 이다.  앵커는 N=0 과 N≈100 **두 점**뿐이고, 그 사이 모양은
   Park 의 정성적 shape 진술에서 가져왔다.  N>100 외삽은 앵커 밖이다 (경고를 찍는다).
 
-⚠ **온도 의존 없음.**  `docs/temp_pressure_capability.md` §13 — LPSCl 분해율 Eₐ 는 문헌에
-  존재하지 않고 우리 데이터(단일 노화온도 60 °C)로도 구할 수 없다.  이 모듈의 g_chem 은
-  **사용자 랩의 노화온도에서 관측된 것** 이며 다른 온도로 옮길 수 없다.
+⚠ **온도 의존 없음 — 그리고 앵커의 노화온도가 우리 셀과 다르다.**
+  `docs/temp_pressure_capability.md` §13: LPSCl 분해율 Eₐ 는 문헌에 없고 노화 Arrhenius 를
+  구할 수도 없다.  ★★ 정정 (2026-07-30 리뷰 HIGH-2): 여기 "사용자 랩의 노화온도에서 관측된 것"
+  이라고 적었던 것은 **거짓**이다.  Yun 2023 은 **30 °C 사이클**이다
+  (litdb `yun2023_deciphering_degradation_halide_vs_sulfide.md:106` — "갈바노 사이클
+  2.5–4.3 V vs Li/Li⁺, **30 °C**, formation 0.05C×2 → cycling **0.33C**").
+  사용자 랩은 **60 °C** 노화다(§13-2).  ⇒ 이 g_chem 을 60 °C 셀에 쓰는 것은 **30→60 °C
+  무라벨 이전**이고, 그것이 정확히 §13 이 "불가능"이라 선언한 바로 그 조작이다.
+  ⇒ 60 °C 셀에 대해서는 **2.87×@100cyc 을 하한(lower bound)으로만** 읽어야 한다
+  (더 뜨거우면 더 빨리 열화한다는 것은 방향만 알고 크기는 모른다).
+  rate 도 다르다 — Yun 0.33C vs 우리 0.2C/2C.
 
 Selftest:  python3 scripts/cycle_degradation_law.py --selftest
 사용:      python3 scripts/cycle_degradation_law.py --n 100 [--ledger ledger.json]
@@ -61,9 +83,14 @@ YUN_RCT_FROM, YUN_RCT_TO = 341.7, 982.3
 G_CHEM_AT_ANCHOR = YUN_RCT_TO / YUN_RCT_FROM        # 2.8748…
 YUN_RION_FROM, YUN_RION_TO = 126.0, 156.0
 G_ION_AT_ANCHOR = YUN_RION_TO / YUN_RION_FROM       # 1.238… (참고: 전송은 열화 적음)
+ANCHOR_T_CYCLE_C = 30.0            # ★ Yun 2023 노화온도 (litdb:106) — 사용자 랩 60 °C 와 다름
+ANCHOR_C_RATE = 0.33               # Yun cycling rate
+G_MECH_BUILTIN = 1.05              # 앵커에 내장된 기계몫 추정 (SC-NMC 단결정, mono 원장 실측)
 ANCHOR_SRC = ('Yun 2023 EnSM 10.1016/j.ensm.2023.102787 TableS1 (bare SC-NMC811+LPSCl, '
-              'R_ct 341.7→982.3 Ω·cm² @~100cyc = 2.87×, table_verified_litdb) · shape = '
-              'Park 2023 AEM 10.1002/aenm.202203861 (coated/additive interphase = linear-√t)')
+              '★30 °C · 0.33C, R_ct 341.7→982.3 Ω·cm² @~100cyc = 2.87× = **측정 총량**'
+              '(기계몫 ≈5% 내장), table_verified_litdb) · shape = Park 2023 AEM '
+              '10.1002/aenm.202203861 (coated/additive interphase = linear-√t).  '
+              '⚠ 사용자 랩은 60 °C 노화 → 이 크기는 **하한**으로만 읽을 것 (§13)')
 
 SHAPES = ('sqrt', 'linear', 'parabolic')
 
@@ -119,11 +146,17 @@ def read_ledger(path):
     return out
 
 
-def compose(n_list, shape='sqrt', ledger=None, merge_into_i0=False):
-    """N 목록 → 채널 분리 표.  ledger = {N: g_mech} 또는 None."""
+def compose(n_list, shape='sqrt', ledger=None, merge_into_i0=False, subtract_mech=False,
+            film_frac=0.0, r_ct0_ohm_cm2=YUN_RCT_FROM):
+    """N 목록 → 채널 분리 표.  ledger = {N: g_mech} 또는 None.
+
+    subtract_mech=True → 앵커의 내장 기계몫(G_MECH_BUILTIN)을 나눠 순수 화학몫으로 보정
+    (리뷰 HIGH-4).  기본 OFF = 측정 총량 그대로 쓰되 라벨로 고지.
+    """
+    _ga = G_CHEM_AT_ANCHOR / (G_MECH_BUILTIN if subtract_mech else 1.0)
     rows = []
     for n in n_list:
-        gc = g_chem(n, shape)
+        gc = g_chem(n, shape, g_anchor=_ga)
         gm = None
         if ledger:
             gm = ledger.get(int(n))
@@ -136,9 +169,22 @@ def compose(n_list, shape='sqrt', ledger=None, merge_into_i0=False):
             'g_chem': gc,
             'g_mech': gm,
             'g_total_Rct': tot,
-            'i0_cycle_mult': 1.0 / (tot if (merge_into_i0 and tot) else gc),
+            'i0_cycle_mult': 1.0 / (((tot if (merge_into_i0 and tot) else gc) - 1.0)
+                                    * (1.0 - float(film_frac)) + 1.0),
+            # ★ HIGH-9: merge 를 요청했는데 g_mech 가 없어 chem-only 로 떨어진 행을 **행별로** 표기.
+            #   옛 코드는 rows[0] 라벨 하나를 전체에 인쇄해, 복붙하는 두 줄이 서로 다른 규약인데
+            #   구별이 안 됐다.
             'i0_mult_channel': ('chem+mech (⚠ 이중계산 위험 — 원장 면적감소를 따로 보고하지 말 것)'
-                                if (merge_into_i0 and tot) else 'chem only (규약)'),
+                                if (merge_into_i0 and tot) else
+                                ('⚠ merge 요청됐으나 이 N 에 원장 체크포인트 없음 → chem only'
+                                 if merge_into_i0 else 'chem only (규약)')),
+            'merge_requested_but_chem_only': bool(merge_into_i0 and not tot),
+            # ★ HIGH-5: 성장의 film_frac 몫을 옴성 채널로.  ΔR = R_ct0·(g−1) 중 그 몫을 Ω·cm² 로.
+            'asr_film_cycle_ohm_cm2': (float(r_ct0_ohm_cm2) * (gc - 1.0) * float(film_frac)
+                                       if film_frac > 0 else 0.0),
+            'i0_is_lower_bound_penalty': film_frac <= 0.0,
+            'g_chem_is_measured_total': not subtract_mech,
+            'anchor_T_cycle_C': ANCHOR_T_CYCLE_C,
             'extrapolated': bool(n > YUN_RCT_N),
         })
     return rows
@@ -200,6 +246,35 @@ def _selftest():
             and vals.get('yun2023_rion_growth') == '126to156')
     except Exception as e:
         chk('정본 CSV 대조', False, f'{type(e).__name__}: {e}')
+    # ── 2026-07-30 적대리뷰 반영 회귀 ────────────────────────────────────────────────
+    # [HIGH-2] 앵커 노화온도가 사용자 랩과 다르다는 사실이 코드·출력에 있는가
+    chk('★[H2] 앵커 노화온도 30 °C 가 상수로 노출 (사용자 랩 60 °C 와 다름)',
+        abs(ANCHOR_T_CYCLE_C - 30.0) < 1e-9 and '30 °C' in ANCHOR_SRC and '하한' in ANCHOR_SRC)
+    # [HIGH-4] 끝점이 측정 총량임을 라벨 + 감산 옵션이 실제로 값을 바꾼다
+    _r_tot = compose([100])[0]
+    _r_sub = compose([100], subtract_mech=True)[0]
+    chk('★[H4] 기본은 "측정 총량" 으로 라벨', _r_tot['g_chem_is_measured_total'] is True)
+    chk('★[H4] --subtract-mech 가 내장 기계몫(≈5%)을 실제로 나눈다',
+        _r_sub['g_chem_is_measured_total'] is False
+        and abs(_r_sub['g_chem'] - G_CHEM_AT_ANCHOR / G_MECH_BUILTIN) < 1e-12,
+        f"{_r_tot['g_chem']:.4f} → {_r_sub['g_chem']:.4f}")
+    # [HIGH-5] film_frac 이 옴성 채널로 몫을 돌리고, 0 이면 하한이라고 낙인
+    _r_f0 = compose([100])[0]
+    _r_f5 = compose([100], film_frac=0.5)[0]
+    chk('★[H5] film_frac=0 은 "고율 penalty 하한" 으로 낙인 + asr 0',
+        _r_f0['i0_is_lower_bound_penalty'] is True and _r_f0['asr_film_cycle_ohm_cm2'] == 0.0)
+    chk('★[H5] film_frac=0.5 → 옴성 채널 값 산출 + i0 몫은 절반만',
+        _r_f5['asr_film_cycle_ohm_cm2'] > 0
+        and abs(1.0 / _r_f5['i0_cycle_mult'] - (1.0 + (G_CHEM_AT_ANCHOR - 1.0) * 0.5)) < 1e-12,
+        f"asr {_r_f5['asr_film_cycle_ohm_cm2']:.1f} Ω·cm² · i0mult "
+        f"{_r_f0['i0_cycle_mult']:.4f}→{_r_f5['i0_cycle_mult']:.4f}")
+    # [HIGH-9] merge 요청이 체크포인트 없는 행에서 조용히 강등되지 않고 **행별로** 표기된다
+    _rr = compose([37, 100], ledger={100: 1.51}, merge_into_i0=True)
+    chk('★[H9] merge 요청인데 체크포인트 없는 행이 행별로 표시된다',
+        _rr[0]['merge_requested_but_chem_only'] is True
+        and 'merge 요청됐으나' in _rr[0]['i0_mult_channel']
+        and _rr[1]['merge_requested_but_chem_only'] is False
+        and 'chem+mech' in _rr[1]['i0_mult_channel'])
     print('CYCLE-DEG-LAW SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
 
@@ -215,6 +290,13 @@ def main(argv=None):
     ap.add_argument('--merge-into-i0', action='store_true',
                     help='⚠ g_chem×g_mech 을 i0 배수에 합친다 — 원장 면적감소와 **이중계산** 위험. '
                          '원장을 따로 보고하지 않을 때만.')
+    ap.add_argument('--subtract-mech', action='store_true',
+                    help='앵커 끝점에 내장된 기계몫(≈5%%, SC-NMC 단결정)을 나눠 순수 화학몫으로 보정. '
+                         '기본 OFF = 측정 총량 그대로 (라벨로 고지).')
+    ap.add_argument('--film-frac', type=float, default=0.0,
+                    help='총 성장 중 **옴성 필름** 몫 [0-1] → --asr-film-cycle-ohm-cm2 로 산출. '
+                         '기본 0 = 전량 i0(로그성) = 고율 penalty **하한**.  ⚠ F 값은 앵커 없음(§F1) '
+                         '— 스윕 전용 (리뷰 HIGH-5: 전량 i0 는 분극을 1.2-3.1x 과소평가).')
     ap.add_argument('--out-json', default='')
     a = ap.parse_args(argv)
     if a.selftest:
@@ -224,7 +306,9 @@ def main(argv=None):
               'g_mech 를 따로 세면 이중계산이 됩니다 — 원장 없이 총량만 볼 때 쓰세요.', flush=True)
     ns = [int(float(x)) for x in a.n.split(',') if x.strip()]
     led = read_ledger(a.ledger) if a.ledger else None
-    rows = compose(ns, a.shape, led, a.merge_into_i0)
+    if not (0.0 <= a.film_frac <= 1.0):
+        raise SystemExit(f'--film-frac 는 0-1 (got {a.film_frac})')
+    rows = compose(ns, a.shape, led, a.merge_into_i0, a.subtract_mech, a.film_frac)
     print(f'\n사이클 열화 N축 — shape={a.shape} (ASSUMED-FORM), 앵커 N={YUN_RCT_N} g={G_CHEM_AT_ANCHOR:.4f}×')
     print(f'  {ANCHOR_SRC}\n')
     print(f"  {'N':>5s} {'g_chem':>8s} {'g_mech':>10s} {'R_ct 총':>9s} {'--i0-cycle-mult':>16s}  주")
@@ -235,13 +319,27 @@ def main(argv=None):
         note = ('⚠앵커밖 외삽' if r['extrapolated'] else '')
         print(f"  {r['N']:5d} {r['g_chem']:8.4f} {gm:>10s} {tot:>9s} "
               f"{r['i0_cycle_mult']:16.5f}  {note}")
-    print(f"\n  채널: {rows[0]['i0_mult_channel']}")
+    if any(r['merge_requested_but_chem_only'] for r in rows):
+        print('\n  ⚠ 일부 행은 merge 요청됐으나 원장 체크포인트가 없어 **chem only** 로 산출됐다 '
+              '— 위 표의 "채널" 열을 행별로 확인할 것 (복붙 시 규약이 섞인다).')
+    for r in rows:
+        print(f"  N={r['N']:<4d} 채널: {r['i0_mult_channel']}"
+              + (f"  · asr_film {r['asr_film_cycle_ohm_cm2']:.3g} Ω·cm²"
+                 if r['asr_film_cycle_ohm_cm2'] else ''))
+    if rows and rows[0]['i0_is_lower_bound_penalty']:
+        print('  ⚠ film_frac=0 → 전량 i0(로그성).  옴성 필름 몫이 빠져 **고율 분극의 하한**이다 '
+              '(리뷰 HIGH-5: 실측 동작점에서 1.2-3.1x 과소).')
+    print(f"  ⚠ 앵커 노화온도 {ANCHOR_T_CYCLE_C:g} °C · {ANCHOR_C_RATE:g}C "
+          f"(사용자 랩 60 °C 와 다름 → 크기는 **하한**으로 읽을 것)")
     print('  ⚠ 끝점 사이는 ASSUMED-FORM (앵커는 N=0/100 두 점) · 온도 의존 없음 '
           '(docs/temp_pressure_capability.md §13)')
     print('\nSTEP4 주입 예:')
     for r in rows:
         if r['N'] > 0:
-            print(f"  N={r['N']:<4d}  --cycle-n {r['N']} --i0-cycle-mult {r['i0_cycle_mult']:.5f}")
+            _af = (f" --asr-film-cycle-ohm-cm2 {r['asr_film_cycle_ohm_cm2']:.4g}"
+                   if r['asr_film_cycle_ohm_cm2'] else '')
+            print(f"  N={r['N']:<4d}  --cycle-n {r['N']} "
+                  f"--i0-cycle-mult {r['i0_cycle_mult']:.5f}{_af}")
     if a.out_json:
         json.dump({'shape': a.shape, 'anchor': ANCHOR_SRC,
                    'g_chem_at_anchor': G_CHEM_AT_ANCHOR, 'n_anchor': YUN_RCT_N,

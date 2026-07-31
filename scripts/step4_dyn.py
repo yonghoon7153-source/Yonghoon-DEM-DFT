@@ -744,8 +744,13 @@ def temperature_verdict(temp_k, grid, allow_unscaled_t, allow_grid_t_mismatch,
     # ★ 2026-07-29 (A): --i0-temp-scale 이면 i0 는 kim2025 R_ct(T) 앵커를 따른다 → **부호역전이
     #   사라진다** (§3-3① 의 핵심 결함).  그래서 KINETICS_UNSCALED 를 올리지 않는다.  단 D_s·OCP
     #   dU/dT 는 여전히 미앵커이므로 '전부 스케일됨' 이 아니라 아래 state 에 부분성이 남는다.
-    if i0_t_scaled and abs(t_kin_c - _T_REF_C) > 0.05:
-        errors = [e for e in errors if e != 'KINETICS_UNSCALED']
+    #   ⚠ 정정 (2026-07-30 리뷰 HIGH-3): 첫 배선은 여기서 KINETICS_UNSCALED 를 **무조건 strip**
+    #     했다.  그러면 σ 온도가 **미기재**인 그리드(= --temp-c 없이 만든 기존 그리드 전부 =
+    #     기본·지배 경로)에서 "σ_ion 25 °C + BV 60 °C" 혼합 셀이 released_guards **빈 채로**
+    #     통과했다.  명시적으로 25 °C 라고 적힌 그리드는 GRID_T_MISMATCH 로 차단되는데
+    #     미기재가 통과하는 비대칭 = 더 나쁜 쪽이 뚫린다.  ⇒ strip 삭제.
+    #     위 :742 의 `not i0_t_scaled` 조건만으로 **σ 와 동역학이 같은 T** 인 정상 경로는
+    #     그대로 통과한다 (혼합이 아니므로 애초에 이 분기를 안 탄다).
     released = []
     if 'GRID_T_MISMATCH' in errors and allow_grid_t_mismatch:
         errors.remove('GRID_T_MISMATCH'); released.append('GRID_T_MISMATCH:--allow-grid-t-mismatch')
@@ -763,6 +768,19 @@ def temperature_verdict(temp_k, grid, allow_unscaled_t, allow_grid_t_mismatch,
     # 해제 플래그도 없으면 역사적 기본과 완전히 동일 → 기록할 것이 없고 npz 는 바이트 불변.
     trivial = (sig_t_c is None and abs(t_kin_c - _T_REF_C) <= 0.05
                and not allow_unscaled_t and not allow_grid_t_mismatch and not i0_t_scaled)
+    # ★ HIGH-10 (2026-07-30): 이 문자열이 무조건 "i0 도 25 °C 상수" 라고 적어, 같은 dict 의
+    #   kinetics_T_scaling='I0_ARRHENIUS_kim2025' · i0_T_factor=6.25 와 **정면 모순**했다.
+    _mix_note = ('' if not mixed else
+                 '.  ★혼합-온도: σ_ion 과 동역학이 서로 다른 온도에 있다 — 절대 용량/과전압 '
+                 '해석 금지, 명시 해제된 진단 런')
+    _trust_str = (
+        ('f=F/RT 와 **i0** 가 --temp-k 를 따른다 (i0 = kim2025 R_ct(T) 앵커; '
+         'R_ct=RT/(F·i0·A) 의 RT 전인자 포함).  D_s/OCP dU/dT/σ_e/κ 는 여전히 25 °C 상수 '
+         '(§F1 앵커 없음) → 부분 반영이지 전-물리 온도 스윕 아님.  ⚠ 코팅계는 Eₐ 가 다르다 '
+         '(kim2025 LNO 는 비-Arrhenius) — 이 런은 uncoated Eₐ 를 상속하고 있다.' + _mix_note)
+        if i0_t_scaled else
+        ('f=F/RT 만 --temp-k 를 따른다.  i0/D_s/OCP/σ_e/κ 는 25 °C 상수 (§F1 앵커 없음) → '
+         '전-물리 온도 스윕 아님' + _mix_note))
     meta = None if trivial else {
         'temp_k': float(temp_k), 'temp_c_kinetics': t_kin_c,
         'sigma_ion_T_C': sig_eff_c,
@@ -777,11 +795,10 @@ def temperature_verdict(temp_k, grid, allow_unscaled_t, allow_grid_t_mismatch,
         'grid_contract_present': bool(grid['present']),
         'grid_temperature_provenance': grid['prov'],
         'released_guards': released,
-        'trust': ('f=F/RT 만 --temp-k 를 따른다.  i0/D_s/OCP/σ_e/κ 는 25 °C 상수 (§F1 앵커 없음) → '
-                  '전-물리 온도 스윕 아님'
-                  + ('' if not mixed else
-                     '.  ★혼합-온도: σ_ion 과 동역학이 서로 다른 온도에 있다 — 절대 용량/과전압 '
-                     '해석 금지, 명시 해제된 진단 런')),
+        # ★ HIGH-10 (2026-07-30): 이 문자열이 무조건 "i0 도 25 °C 상수" 라고 적어, 같은 dict 의
+        #   kinetics_T_scaling='I0_ARRHENIUS_kim2025' · i0_T_factor=6.25 와 **정면 모순**했다.
+        #   i0 스케일 여부에 따라 문장을 바꾼다.
+        'trust': _trust_str,
     }
     return errors, meta
 
