@@ -195,17 +195,18 @@ print(BAR)
 # ═══ ② VGCF NEB (완료 — 한 줄) ═══════════════════════════════════════════
 NEB = os.path.join(H, "work", "vgcf_hbn", "neb")
 if os.path.isdir(NEB):
-    cases = sorted(os.path.basename(p) for p in glob.glob(os.path.join(NEB, "*"))
-                   if os.path.isdir(p))
+    # ⚠ 하위 디렉터리를 다 세면 안 된다 — QE 의 outdir `tmp/` 가 끼어 7/8 로 보였다
+    #   (2026-07-31 실측). **neb.out 이 있는 것만** 케이스다.
+    cases = sorted(os.path.basename(os.path.dirname(o))
+                   for o in glob.glob(os.path.join(NEB, "*", "neb.out")))
     conv = 0
     for c in cases:
-        o = os.path.join(NEB, c, "neb.out")
-        if os.path.isfile(o):
-            try:
-                if "activation energy" in open(o, errors="ignore").read().lower():
-                    conv += 1
-            except Exception:
-                pass
+        try:
+            if "activation energy" in open(os.path.join(NEB, c, "neb.out"),
+                                           errors="ignore").read().lower():
+                conv += 1
+        except Exception:
+            pass
     print(f"② VGCF NEB — {conv}/{len(cases)} 수렴 · ✅ 기전 판정 완료(2026-07-30) "
           "= **CONFINEMENT**")
     print("   상세: bash tools/vgcf_hbn/watch_neb.sh · "
