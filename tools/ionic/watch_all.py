@@ -296,8 +296,21 @@ if want("disorder"):
   roots = sorted(glob.glob(os.path.join(W, "runs", "comp2_disorder*")))
   if not roots:
     print("  (comp2_disorder* 없음)")
+  # ⚠⚠ **comp2_disorder(v1)는 폐기본이다.** 라벨 스왑을 이완 없이 해서 sigma_300K ~70 mS/cm
+  #   아티팩트가 났고(2026-07-27), anneal+relax 하는 comp2_disorder_relaxed 로 대체됐다
+  #   (run_comp2_disorder.sh 머리말). 그런데 watch 가 v1 의 미완 cfg 를 그대로 띄우는 바람에
+  #   **하지 않아도 될 일이 할 일 목록에 남아** MLIP-MD 를 괜히 재기동할 뻔했다(2026-07-31).
+  #   후속본이 있으면 v1 은 접는다.
+  _sup = os.path.join(W, "runs", "comp2_disorder_relaxed")
+  _has_v2 = os.path.isdir(_sup)
   for r in roots:
-    print(f"  [{os.path.basename(r)}]")
+    _is_v1 = os.path.basename(r) == "comp2_disorder"
+    if _is_v1 and _has_v2 and not FULL:
+      print("  [comp2_disorder] ⊘ 폐기본(v1, 미이완 라벨스왑 → σ 아티팩트) — "
+            "comp2_disorder_relaxed 가 대체. 미완 cfg 는 **할 일이 아니다**.")
+      continue
+    print(f"  [{os.path.basename(r)}]"
+          + ("   ⊘ 폐기본 — 인용 금지" if _is_v1 and _has_v2 else ""))
     cfgs = sorted(glob.glob(os.path.join(r, "d*_cfg*")))
     if not cfgs:
         print("    (cfg 없음)")
