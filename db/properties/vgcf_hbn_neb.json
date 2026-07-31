@@ -132,7 +132,8 @@
    "1L|2L": 19,
    "2L|2L": 52
   },
-  "_mechanism_resolved": "2026-07-30: Li_on_graphene_2L 로 판정 완료 → confinement. mechanism_verdict_2026_07_30 참조."
+  "_mechanism_resolved": "2026-07-30: Li_on_graphene_2L 로 판정 완료 → confinement. mechanism_verdict_2026_07_30 참조.",
+  "_saturation_argument": "3L 은 미측정이지만 포화 신호는 있다: 지배하는 VGCF 벽을 2층으로 한 뒤 h-BN 벽까지 2층으로 더해도 0.1495 → 0.1473 eV, 즉 **2 meV** 밖에 안 움직인다(NEB 허용오차 ~20 meV 안). ⚠ 이건 **논거지 측정이 아니다** — 원고에서 그렇게 한정해 쓸 것. 0.147 eV 는 여전히 '수렴값'이 아니라 **2L 값**이다."
  },
  "mechanism_verdict_2026_07_30": {
   "_question": "209 meV 가 (a) 그래핀을 두껍게 한 것 자체의 substrate 효과인지, (b) 갤러리에 가둔 상태에서만 나오는 confinement 효과인지.",
