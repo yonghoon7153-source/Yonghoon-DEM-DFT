@@ -108,11 +108,10 @@ MIXNDIM=${MIXNDIM:-8}
 RESTART=${RESTART:-0}
 gen(){   # $1 = "slab" | "complexes"
   local extra=()
-  # 밀도 승계는 **이전 charge-density 가 실제로 있을 때만** 켠다.
-  local POT=()
-  if [ "$RESTART" = 1 ] && ls "$OUT"/*/tmp/*.save/charge-density* >/dev/null 2>&1; then
-    POT=(--startingpot file)
-  fi
+  # ⚠⚠ **startingpot 을 여기서(전 job 공통으로) 붙이면 안 된다.** gen 은 5개 입력을
+  #   한 번에 만드는데, 밀도가 있는 job 은 slab 뿐이고 complex_* / mol_* 은 없다.
+  #   공통으로 붙이면 2단계에서 QE 가 '없는 파일을 읽어라'로 죽는다.
+  #   → 승계는 **run_one 에서 그 job 의 tmp 를 직접 보고** 넣는다.
   [ -s "$MAGJSON" ] && extra+=(--mag_json "$MAGJSON")
   "$UMA_PY" "$REPO/tools/sdcp/phaseB_v7c_dft_binding.py" \
     --slab "$OUT/slab_cshrink.vasp" \
@@ -124,7 +123,6 @@ gen(){   # $1 = "slab" | "complexes"
     --afm_mode inplane --mol_vacuum 8 --pseudo_dir /data/work/pseudo \
     --no_fsm --degauss "$DEGAUSS" --scf_must_converge .true. \
     --electron_maxstep "$MAXSTEP" --seed_radical S:0.5 --mixing_ndim "$MIXNDIM" \
-    ${POT[@]+"${POT[@]}"} \
     ${extra[@]+"${extra[@]}"} --out "$OUT" || return 1
   # OOM 대책은 refine 판과 동일: 단일-k + david_ndim 2
   for j in slab complex_doped complex_neutral; do
@@ -163,14 +161,14 @@ run_one(){   # $1 = job dir name, $2 = -nk pools
   if grep -aq "convergence has been achieved" "$OUT/$j/scf.out" 2>/dev/null; then
     ts "✓ $j 이미 수렴 — 건너뜀"; return 0
   fi
-  # ── 밀도 승계 확인 (실제 파일 유무로) ────────────────────────────────
+  # ── 밀도 승계: **이 job 자신의** charge-density 가 있을 때만 주입 ─────
   if [ "$RESTART" = 1 ]; then
     if ls "$OUT/$j"/tmp/*.save/charge-density* >/dev/null 2>&1; then
-      grep -aq "startingpot" "$OUT/$j/scf.in" \
-        && ts "↻ $j 밀도 승계 (startingpot='file', maxstep $MAXSTEP)" \
-        || ts "⚠ $j scf.in 에 startingpot 이 안 들어갔다 — 생성기 인자 확인"
+      grep -aq "startingpot" "$OUT/$j/scf.in" || \
+        sed -i "/&ELECTRONS/a\    startingpot     = 'file'" "$OUT/$j/scf.in"
+      ts "↻ $j 밀도 승계 (startingpot='file', maxstep $MAXSTEP)"
     else
-      ts "⚠ $j 이전 밀도 없음 — 처음부터 (RESTART 무시)"
+      ts "· $j 이전 밀도 없음 — 처음부터 (정상: 이 job 은 처음 도는 것)"
     fi
   fi
   guard
