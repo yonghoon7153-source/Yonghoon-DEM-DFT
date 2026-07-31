@@ -45,6 +45,8 @@ UMA_PY=$(ls /data/apps/miniforge3/envs/uma/bin/python3 2>/dev/null || which pyth
 MAGJSON=$OUT/slab_mag.json
 mkdir -p "$OUT"
 ts(){ echo "[$(date +%m-%d\ %H:%M:%S)] $*"; }
+_banner(){ ts "설정: stage=$STAGE · degauss=$DEGAUSS · mixing_ndim=$MIXNDIM · maxstep=$MAXSTEP"
+           ts "      밀도승계 RESTART=$RESTART $([ "$RESTART" = 1 ] && echo '(켜짐 — 기본)' || echo '(꺼짐)')"; }
 
 # ── 중복 실행 가드 ──────────────────────────────────────────────────────────
 # ⚠⚠ **pgrep 로 세면 안 된다.** `pgrep -fc "[b]ash.*$SELF"` 는 자기 자신뿐 아니라
@@ -101,11 +103,18 @@ DEGAUSS=${DEGAUSS:-0.03}
 MAXSTEP=${MAXSTEP:-300}
 # 진동(limit cycle)에는 Broyden 이력을 **줄이는** 쪽이 듣는다 — 긴 이력이 진동을 고착시킨다.
 MIXNDIM=${MIXNDIM:-8}
-# RESTART=1 이면 이전 charge density 를 이어받는다 — 300 반복을 버리지 않는다.
-#   ⚠⚠ **restart_mode='restart' 가 아니라 startingpot='file' 이다.** 전자는 파동함수까지
-#     이어받는 '중단 재개'라 disk_io='low'(wfc 를 디스크에 안 남김)와 충돌한다.
-#     우리가 원하는 건 **밀도만** 승계다.
-RESTART=${RESTART:-0}
+# ⚠⚠ **기본값이 1 이다 (2026-07-31 변경).** 이전 charge density 가 있으면 쓰는 게
+#   언제나 이득인데, 기본을 0 으로 두었다가 두 번 연속 그냥 시작해서 각각 8시간을 버렸다.
+#   원인은 tmux 가 **서버-클라이언트 구조**라는 것: `RESTART=1 tmux new -d '...'` 로는
+#   변수가 새 세션 쉘에 안 넘어간다(tmux 서버의 환경을 쓴다). 넘기려면 따옴표 **안쪽**에
+#   넣거나 `tmux new -e RESTART=1` 을 써야 한다 — 실수하기 너무 쉬운 구조다.
+#   그래서 **기본을 켜 두고**, 정말 처음부터 돌고 싶을 때만 RESTART=0 을 준다.
+#   밀도가 없는 job 은 run_one 이 알아서 건너뛰므로 켜 두어 손해 볼 일이 없다.
+#   ⚠ restart_mode='restart' 가 아니라 startingpot='file' 이다 — 전자는 wfc 까지 이어받는
+#     '중단 재개'라 disk_io='low' 와 충돌한다. 우리가 원하는 건 **밀도만** 승계.
+RESTART=${RESTART:-1}
+_banner
+
 gen(){   # $1 = "slab" | "complexes"
   local extra=()
   # ⚠⚠ **startingpot 을 여기서(전 job 공통으로) 붙이면 안 된다.** gen 은 5개 입력을
