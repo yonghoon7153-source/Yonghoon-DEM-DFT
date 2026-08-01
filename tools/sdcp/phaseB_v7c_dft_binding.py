@@ -94,6 +94,7 @@ OPT = {
     "mixing_ndim": MIX_NDIM,
     "mixing_beta": MIX_BETA,
     "startingpot": None,      # 'file' = 이전 charge density 승계 (밀도만, wfc 아님)
+    "report": None,           # N = N 반복마다 per-site 자화 출력
 }
 
 # PBE USPP/PAW pseudos (all confirmed present in /data/work/pseudo)
@@ -323,6 +324,14 @@ def write_scf(path, atoms, labels, kind, kpts, pseudo_dir, prefix):
         "    nspin           = 2",
         "    nosym           = .true.",
     ]
+    # ⚠⚠ **report 를 안 켜면 미수렴 런에서 per-site 자화를 못 건진다.**
+    #   QE 의 'Magnetic moment per site' 블록은 기본적으로 **수렴 시점에만** 찍힌다
+    #   (total/absolute magnetization 은 매 반복 찍히지만 그건 셀 전체값이라 시드로 못 쓴다).
+    #   슬랩이 plateau 로 끝나면 블록이 아예 없어서 slab_mag_from_scfout.py 가
+    #   "'Magnetic moment per site' 블록이 없다" 로 죽는다 (2026-08-01 실측).
+    #   시드를 뽑는 게 이 계산의 목적이므로 Ni 계에는 report 를 반드시 켠다.
+    if OPT["report"] and has_ni:
+        sys_lines.append(f"    report          = {OPT['report']}")
     # spin setup
     if has_ni:                                   # slab / complex: AFM Ni guess (+FSM)
         # 1단계 슬랩에서 승계한 수렴 모멘트가 있으면 그걸, 없으면 관례 ±0.3.
@@ -488,6 +497,9 @@ def main():
                     help=f"Broyden 이력 길이 (기본 {MIX_NDIM}). 진동(limit cycle)이 나면 "
                          "**줄이는** 쪽이 듣는다 — 긴 이력이 진동을 고착시킨다.")
     ap.add_argument("--mixing_beta", type=float, default=MIX_BETA)
+    ap.add_argument("--report", type=int, default=None,
+                    help="N 반복마다 per-site 자화 출력 (Ni 계에만). 미수렴으로 끝나도 "
+                         "시드를 건지려면 필수 — 기본은 수렴 시점에만 찍힌다.")
     ap.add_argument("--startingpot", choices=["atomic", "file"], default=None,
                     help="'file' = outdir 의 charge-density 를 이어받는다(밀도만). "
                          "restart_mode='restart' 와 달리 disk_io='low' 와 호환된다.")
@@ -514,6 +526,7 @@ def main():
     OPT["mixing_ndim"] = a.mixing_ndim
     OPT["mixing_beta"] = a.mixing_beta
     OPT["startingpot"] = a.startingpot
+    OPT["report"] = a.report
     if a.mag_json:
         with open(a.mag_json) as f:
             OPT["mag_seed"] = {k: float(v) for k, v in json.load(f).items()

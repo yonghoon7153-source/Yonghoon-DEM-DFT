@@ -103,6 +103,15 @@ DEGAUSS=${DEGAUSS:-0.03}
 MAXSTEP=${MAXSTEP:-300}
 # 진동(limit cycle)에는 Broyden 이력을 **줄이는** 쪽이 듣는다 — 긴 이력이 진동을 고착시킨다.
 MIXNDIM=${MIXNDIM:-8}
+# per-site 자화를 매 반복 찍는다 — 미수렴으로 끝나도 시드를 건지기 위해 (필수)
+REPORT=${REPORT:-1}
+# ⚠⚠ **plateau 수용 (2026-08-01).** 이 슬랩은 특정 값 근처에서 limit cycle 로 갇힌다.
+#   degauss 0.05 판(옛 등록본) acc_end 6.2e-3 · degauss 0.03 판 5.0e-3 —
+#   **넓혀도 안 잡히고, 우리 값이 이미 선례보다 낫다.** 즉 plateau 는 이 계의 정상 거동이다.
+#   그리고 우리가 슬랩에서 원하는 건 에너지가 아니라 **Ni 시드**이고, verdict 에서는
+#   슬랩이 통째로 상쇄된다. 그래서 미수렴이어도 시드가 멀쩡하면 2단계로 간다.
+#   (db 에 이미 "Plateau convention" 선례가 있다 — sdcp_v7c_phaseB_energies.csv)
+PLATEAU_OK=${PLATEAU_OK:-1}
 # ⚠⚠ **기본값이 1 이다 (2026-07-31 변경).** 이전 charge density 가 있으면 쓰는 게
 #   언제나 이득인데, 기본을 0 으로 두었다가 두 번 연속 그냥 시작해서 각각 8시간을 버렸다.
 #   원인은 tmux 가 **서버-클라이언트 구조**라는 것: `RESTART=1 tmux new -d '...'` 로는
@@ -132,6 +141,7 @@ gen(){   # $1 = "slab" | "complexes"
     --afm_mode inplane --mol_vacuum 8 --pseudo_dir /data/work/pseudo \
     --no_fsm --degauss "$DEGAUSS" --scf_must_converge .true. \
     --electron_maxstep "$MAXSTEP" --seed_radical S:0.5 --mixing_ndim "$MIXNDIM" \
+    --report "$REPORT" \
     ${extra[@]+"${extra[@]}"} --out "$OUT" || return 1
   # OOM 대책은 refine 판과 동일: 단일-k + david_ndim 2
   for j in slab complex_doped complex_neutral; do
@@ -199,7 +209,15 @@ run_one(){   # $1 = job dir name, $2 = -nk pools
 if [ "$STAGE" = all ] || [ "$STAGE" = slab ]; then
   ts "═══ 1단계: 96원자 슬랩 (neutral·doped 공용) ═══"
   gen slab || { ts "입력 생성 실패"; exit 1; }
-  run_one slab 1 || { ts "슬랩이 안 수렴했다 — 여기서 멈춘다. 복합체로 가면 안 된다."; exit 1; }
+  if ! run_one slab 1; then
+    if [ "$PLATEAU_OK" = 1 ] && grep -aq "Magnetic moment per site" "$OUT/slab/scf.out"; then
+      ts "⚠ 슬랩 미수렴(plateau) — 그러나 per-site 자화가 있으므로 **시드만 뽑아 진행**한다."
+      ts "   acc_end: $(grep -a 'estimated scf accuracy' "$OUT/slab/scf.out" | tail -1)"
+      ts "   ⚠ 이 슬랩 **에너지**는 plateau 값이다 — 절대 E_bind 인용 시 오차막대 필수."
+    else
+      ts "슬랩이 안 수렴했고 시드도 못 건졌다 — 여기서 멈춘다."; exit 1
+    fi
+  fi
   "$UMA_PY" "$REPO/tools/sdcp/slab_mag_from_scfout.py" \
       --scf_out "$OUT/slab/scf.out" --scf_in "$OUT/slab/scf.in" --out "$MAGJSON" || exit 1
 fi

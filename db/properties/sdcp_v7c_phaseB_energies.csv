@@ -13,3 +13,4 @@ complex_neutral,-11083.07396953,DONE_PLATEAU,0.004,"131 atoms; U-direct recipe; 
 "# >>> neutral pose lies down (image gap 4.72 A) -> -2.213 eV stands. UMA champion selection additionally discredited (it optimized the sandwich)."
 "# v2 protocol: same-pose doped = neutral geometry minus acidic H (C11H15O6S2 = mol_doped stoichiometry, refs unchanged), molecule-only"
 "# gamma relax (nstep 30, conv 1e-5) then 221 rescore on relaxed geometries for both states. VERDICT pending v2."
+"# ⚠ SLAB PLATEAU 는 이 계의 정상 거동이다 (2026-08-01 확인). degauss 0.05/beta 0.10/ndim 8 판 acc_end 6.2e-3 Ry, degauss 0.03/beta 0.03/ndim 8 판 5.0e-3 Ry — 둘 다 특정 값 근처 limit cycle 로 갇힌다(진동률 47-53%, 자화는 안정). degauss 를 넓혀도 안 잡히고 0.03 판이 이미 더 낫다. 슬랩은 verdict 에서 상쇄되고 우리가 원하는 건 Ni 시드이므로 plateau 를 수용하고 2단계로 간다. 절대 E_bind 인용 시에만 오차막대를 붙인다."
