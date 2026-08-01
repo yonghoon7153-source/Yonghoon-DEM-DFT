@@ -49,6 +49,11 @@ def main():
     ap.add_argument("--glob", required=True, help="msd.json 글롭 (따옴표로 감쌀 것)")
     ap.add_argument("--window", type=float, nargs=2, default=[2.0, 50.0],
                     help="D 를 맞춘 창 (기본 2 50 — 캠페인 규약)")
+    ap.add_argument("--average", action="store_true",
+                    help="같은 온도의 파일들 **MSD 곡선을 먼저 평균**한 뒤 β 를 잰다. "
+                         "독립 시드/config 는 같은 계의 다른 초기속도라 MSD 앙상블 평균이 "
+                         "정당하다 — 홉이 적어 자기평균이 안 되는 궤적을 **재계산 없이** "
+                         "살리는 유일한 수단.")
     ap.add_argument("--scan", action="store_true",
                     help="여러 창에서 β 를 재서 **어디서부터 확산이 되는지** 찾는다. "
                          "케이지 판정이 나왔을 때 '재계산 없이 구제 가능한가'를 가른다.")
@@ -58,6 +63,32 @@ def main():
     if not files:
         raise SystemExit(f"파일 없음: {a.glob}")
     lo, hi = a.window
+
+    # ── 온도별 MSD 앙상블 평균 ────────────────────────────────────────────
+    if a.average:
+        # ⚠ 시간 격자가 같아야 평균이 의미 있다. 다르면 짧은 쪽에 맞춰 자른다.
+        byT = {}
+        for f in files:
+            d = json.load(open(f))
+            t, y = d.get("times_ps"), d.get("msd_Li_A2")
+            if not t or not y:
+                continue
+            byT.setdefault(int(d.get("T_K", 0)), []).append((t, y, f))
+        print(f"온도별 MSD 앙상블 평균 (창 {lo}–{hi} ps)")
+        print(f"{'T (K)':>7s} {'n_runs':>7s} {'beta':>6s} {'MSD@hi':>9s}  판정")
+        for T in sorted(byT):
+            runs = byT[T]
+            n = min(len(t) for t, _, _ in runs)
+            tt = runs[0][0][:n]
+            yy = [sum(r[1][i] for r in runs) / len(runs) for i in range(n)]
+            b = loglog_slope(tt, yy, lo, hi)
+            m = max((v for u, v in zip(tt, yy) if u <= hi), default=float("nan"))
+            ok = b is not None and BETA_OK[0] <= b <= BETA_OK[1] and m >= MSD_MIN_A2
+            print(f"{T:7d} {len(runs):7d} {b if b is None else round(b,2):>6} "
+                  f"{m:9.1f}  {'✓ 확산' if ok else '⛔ 여전히 비확산'}")
+        print("  ⚠ 평균이 살아나도 **개별 런은 여전히 못 쓴다** — config 산포를 평균 뒤에")
+        print("    다시 낼 수 없으므로, 오차막대는 다른 방법(블록 평균 등)으로 내야 한다.")
+        print()
     print(f"창 {lo}–{hi} ps · β=1 확산 · β<{BETA_OK[0]} 케이지 · "
           f"창끝 MSD < {MSD_MIN_A2} Å² 면 통계 부족")
     print(f"{'case':34s} {'D(cm2/s)':>10s} {'beta':>6s} {'MSD@hi':>8s}  판정")
