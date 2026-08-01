@@ -30,6 +30,13 @@ REPO="$(cd "$(dirname "$0")/../.." && pwd)"; cd "$REPO"
 unset LD_LIBRARY_PATH OPAL_PREFIX 2>/dev/null || true   # QE env 잔재가 torch 오염
 V0XYZ=${V0XYZ:-$REPO/db/structures/comp1_V0_k444.xyz}   # deck 궤적과 동일 구조 (52at, a=10.0551)
 OUTROOT=${OUTROOT:-$HOME/work/runs/comp1_seeds}
+# ⚠⚠ **확산영역 게이트 대응 (2026-08-01).** prod 200 ps 로는 저이동도 계에서 MSD 가
+#   확산 영역에 못 간다 — comp1 seeds 6/6 케이지(β 0.17–0.79), 창 변경·시드 평균 어느
+#   쪽으로도 구제 안 됨(kb/results/mlip_md_diffusive_gate_2026_08_01.md).
+#   PRODPS 로 시간을 늘려 재시도한다. ⚠ **OUTROOT 를 반드시 바꿔라** — 드라이버가
+#   resume-safe 라 기존 msd.json 이 있으면 **그냥 건너뛴다**(200 ps 결과가 남아버린다).
+PRODPS=${PRODPS:-200}
+SEEDS=${SEEDS:-"2 3"}
 DEVICE=${DEVICE:-cuda}
 PY=${PY:-python3}
 DRIVER=$REPO/tools/modelc_v3/disorder_ensemble_diffusion.py
@@ -50,7 +57,12 @@ while [ "${SKIP_WAIT:-0}" != 1 ]; do
   [ "$FREE" -ge 2000 ] && { echo "[$(date +%H:%M:%S)] VRAM free ${FREE} MiB — 시작"; break; }
   echo "[$(date +%H:%M:%S)] VRAM free ${FREE} MiB < 2000 — 5분 뒤 재확인 (pw.x 점유 중일 수 있음)"; sleep 300
 done
-echo "[$(date +%H:%M:%S)] chain 조건 충족 — comp1 seed 2/3 시작"
+echo "[$(date +%H:%M:%S)] chain 조건 충족 — comp1 seed(s) '$SEEDS' 시작 (prod ${PRODPS} ps)"
+echo "[$(date +%H:%M:%S)]   OUTROOT=$OUTROOT"
+if [ "$PRODPS" != 200 ] && [ "$OUTROOT" = "$HOME/work/runs/comp1_seeds" ]; then
+  echo "⛔ PRODPS 를 바꿨는데 OUTROOT 가 기본값이다 — 기존 msd.json 때문에 전부 skip 된다."
+  echo "   OUTROOT=$HOME/work/runs/comp1_seeds_p${PRODPS} 처럼 따로 줘라."; exit 1
+fi
 
 # 구조 sanity gate (2026-07-17 double-transform 사고 방지 관례)
 $PY - "$V0XYZ" <<'PYS'
@@ -73,7 +85,7 @@ mkdir -p "$OUTROOT"
 
 # ---- 2 seed x 3 T (resume-safe: 완료 seed는 json 있으면 skip) ----
 # deck 궤적(seed 1234)이 1번 시드 역할 — 여기선 2, 3만 돌린다.
-for S in 2 3; do
+for S in $SEEDS; do
   if [ -f "$OUTROOT/s${S}/ensemble_results.json" ]; then
     echo "[s${S}] ensemble_results.json 있음 — skip"; continue
   fi
@@ -83,7 +95,7 @@ for S in 2 3; do
     --out_root "$OUTROOT/s${S}" \
     --disorder_levels 0.0 --n_configs 1 \
     --temperatures 600 800 1000 \
-    --equilib_ps 5 --prod_ps 200 \
+    --equilib_ps 5 --prod_ps "$PRODPS" \
     --timestep_fs 2.0 --friction 0.02 \
     --save_fs 100 --fit_window_ps 2 50 \
     --seed ${S} \
