@@ -1,0 +1,39 @@
+{
+ "property": "li_diffusion_anion_disorder_comp2",
+ "date": "2026-08-01",
+ "system": "comp2 = Li6PS5Cl0.5Br0.5, 52-atom, anion-disorder ensemble (anneal+relax)",
+ "method": "UMA-s-1p1(omat) Langevin NVT, dt 2 fs, friction 0.02, equilib 5 ps, prod 200 ps, MSD 창 2-50 ps, 600/800/1000 K, config 3개/level. run_comp2_disorder.sh -> comp2_disorder_relaxed (v1 comp2_disorder 는 미이완 라벨스왑 폐기본).",
+ "⚠_gate": "확산영역 게이트 통과 여부가 level 마다 다르다 — 이게 이 데이터의 핵심 제약이다. tools/ionic/msd_diffusive_check.py · kb/results/mlip_md_diffusive_gate_2026_08_01.md",
+ "levels": {
+  "d0.50": {
+   "Ea_eV": 0.1512,
+   "Ea_sd_eV": 0.0676,
+   "Ea_per_config": [
+    0.0872,
+    0.1446,
+    0.2219
+   ],
+   "gate": "PASS — 개별 9/9 확산(β 0.81-1.12) + 온도별 평균 3/3(β 0.92/1.00/0.97)",
+   "citable": true,
+   "note": "인용 가능하지만 **config 산포 45%** 다. 'ordered(0.276) 보다 낮다' 까지만 말하고 값 자체를 정밀 인용하지 말 것."
+  },
+  "d1.00": {
+   "Ea_eV": 0.3775,
+   "Ea_sd_eV": 0.0472,
+   "Ea_per_config": [
+    0.4302,
+    0.3393,
+    0.363
+   ],
+   "gate": "FAIL — 개별 8/9 케이지(β 0.11-0.93), 평균도 0.27/0.46/0.78",
+   "citable": false,
+   "note": "이 Ea 는 케이지 진동을 맞춘 값이라 **의미가 없다**. 겉보기로는 'disorder 를 늘리면 Ea 가 다시 오른다'로 읽히지만 그 비단조성을 주장하면 안 된다 — d=1.0 쪽이 측정 자체가 안 된 상태다."
+  }
+ },
+ "ordered_baseline_eV": {
+  "comp2": "0.276±0.033",
+  "comp1": "0.253",
+  "⚠": "이 두 값도 게이트 미검사 — li_transport.json 의 경고 참조"
+ },
+ "raw": "gabia:~/work/runs/comp2_disorder_relaxed/d*_cfg*/T*/msd.json"
+}

@@ -81,5 +81,6 @@
  },
  "physics_verdict": "VACANCY is the robust conductivity lever: modelc (Li5.4, vacancy) sigma300 ~4x comp1 (survives all uncertainty). Br isovalent Cl->Br (comp2, Li6 no-vacancy) shows NO clear boost: central sigma300 0.41x comp1 (worse), but 800K seed scatter makes Ea 0.275+/-0.033 -> sigma300 ratio 0.12-1.48x = INCONCLUSIVE. In the measured 600-1000K range comp2 D ~ comp1, but the steeper/uncertain Ea makes the 300K extrapolation unreliable. Experimental Br benefit (Kraft 2018) is driven by anion site disorder (Br/S2- mixing) NOT sampled by our single champion config. comp1/modelc anchors are SINGLE-SEED deck ladders (not 3-seed) -- see anchors_deck_single_seed.",
  "recommendation": "For a paper-grade Br-vs-Cl sigma claim: reseed comp2 800K (s5/s6) to tighten Ea. Consider anion-disorder ensemble to capture the experimental Br mechanism.",
- "discipline": "absolute sigma INTERNAL only. comp2 = 3-seed; comp1/modelc anchors = SINGLE-SEED deck (mixed-protocol comparison). comp2 800K scatter = ratio inconclusive."
+ "discipline": "absolute sigma INTERNAL only. comp2 = 3-seed; comp1/modelc anchors = SINGLE-SEED deck (mixed-protocol comparison). comp2 800K scatter = ratio inconclusive.",
+ "⚠_DIFFUSIVE_GATE_2026_08_01": "⚠⚠ 확산영역 게이트 미통과/미검사 (2026-08-01). MSD 창 2-50 ps 의 log-log 기울기 β 가 0.8 미만이면 케이지 진동을 확산으로 오독한 것이다. comp1 seeds 6/6, comp2 d=1.0 8/9 가 케이지로 판정됐고 **창 변경·시드 평균 어느 쪽으로도 구제되지 않았다**(200 ps 부족). 같은 프로토콜로 낸 Ea 는 tools/ionic/msd_diffusive_check.py 게이트를 통과하기 전까지 **인용 보류**. 근거: kb/results/mlip_md_diffusive_gate_2026_08_01.md"
 }

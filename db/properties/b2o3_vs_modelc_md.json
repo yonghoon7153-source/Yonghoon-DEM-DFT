@@ -1,86 +1,87 @@
 {
-  "FINAL_method": "UMA-s-1p1 (omat) Langevin NVT MD; D from Li MSD = 6 D t on window 2-50 ps (msd_origin default); 3-pt Arrhenius (600/800/1000 K); Nernst-Einstein sigma = n q^2 D / (kB T), Haven ratio = 1. This window/pipeline reproduces the validated deck slide for modelc EXACTLY (D 7.90/2.05/4.55e-6, Ea 0.2235, sigma300 13.94 vs slide 14).",
-  "window_ps": [
-    2,
-    50
-  ],
-  "n_pts_arrhenius": 3,
-  "modelc_LPSCl1.6": {
-    "n_Li_cm3": 2.2197e+22,
-    "D_600": 7.901e-06,
-    "D_800": 2.054e-05,
-    "D_1000": 4.554e-05,
-    "Ea_eV": 0.2235,
-    "D0_cm2_s": 0.0005753,
-    "D_300K": 1.0135e-07,
-    "sigma_300K_mS_cm": 13.94,
-    "sigma_273K_mS_cm": 6.52,
-    "validated": "EXACT match to deck slide (msd_origin), Ea 0.2235, sigma300 13.94"
+ "FINAL_method": "UMA-s-1p1 (omat) Langevin NVT MD; D from Li MSD = 6 D t on window 2-50 ps (msd_origin default); 3-pt Arrhenius (600/800/1000 K); Nernst-Einstein sigma = n q^2 D / (kB T), Haven ratio = 1. This window/pipeline reproduces the validated deck slide for modelc EXACTLY (D 7.90/2.05/4.55e-6, Ea 0.2235, sigma300 13.94 vs slide 14).",
+ "window_ps": [
+  2,
+  50
+ ],
+ "n_pts_arrhenius": 3,
+ "modelc_LPSCl1.6": {
+  "n_Li_cm3": 2.2197e+22,
+  "D_600": 7.901e-06,
+  "D_800": 2.054e-05,
+  "D_1000": 4.554e-05,
+  "Ea_eV": 0.2235,
+  "D0_cm2_s": 0.0005753,
+  "D_300K": 1.0135e-07,
+  "sigma_300K_mS_cm": 13.94,
+  "sigma_273K_mS_cm": 6.52,
+  "validated": "EXACT match to deck slide (msd_origin), Ea 0.2235, sigma300 13.94"
+ },
+ "b2o3_doped": {
+  "n_Li_cm3": 2.3806e+22,
+  "D_600": 9.174e-06,
+  "D_800": 3.009e-05,
+  "D_1000": 5.067e-05,
+  "Ea_eV": 0.2234,
+  "D0_cm2_s": 0.0007112,
+  "D_300K": 1.2547e-07,
+  "sigma_300K_mS_cm": 18.51,
+  "sigma_273K_mS_cm": 8.65
+ },
+ "comparison": {
+  "_SUPERSEDED_2026_07_09": "이 블록 전체가 단일시드 산물이라 SUPERSEDED. 3-seed×3-T 재시드에서 σ비율은 1.08/0.82/1.15 (1.0 주변 산포 = 통계적 동등)이고 D0비도 0.965× (b2o3가 오히려 낮음)라, 아래 sigma300_ratio 1.33 · D0_ratio 1.24 · sigma_hierarchy · D0_decomposition 은 모두 철회됐다. Ea 동일(ΔEa +0.002±0.047)만 재시드에서 살아남았다. CANONICAL: db/properties/b2o3_vs_lpscl16_conductivity.csv (FINAL 2026-07-07). 필드는 traceability로 유지 — 값 인용 금지.",
+  "delta_Ea_meV": 0.0,
+  "Ea_verdict": "b2o3 and modelc have IDENTICAL Ea (0.223 eV) at the consistent 2-50 ps window. The transport gain is NOT a lower barrier.",
+  "D0_ratio_b2o3_over_modelc_SUPERSEDED": 1.24,
+  "sigma300_ratio_b2o3_over_modelc_SUPERSEDED": 1.33,
+  "verdict_SUPERSEDED": "B2O3 doping raises Li conductivity by ~1.33x vs LPSCl1.6 at RT, driven entirely by the prefactor D0 (more carriers / higher attempt rate), at the SAME activation energy. sigma300 18.5 vs 13.9 mS/cm; sigma273 8.7 vs 6.5 mS/cm.",
+  "verdict": "B2O3 PRESERVES Li conductivity vs LPSCl1.6 (3-seed×3-T: per-T σ ratio 1.08±0.18 / 0.82±0.15 / 1.15±0.12 = statistically equivalent), at the SAME activation energy (ΔEa +0.002±0.047 eV). The earlier '1.33x, D0-driven' reading was single-seed noise (retracted 2026-07-09). Robust b2o3 gains are mechanical (+13% bulk) and the covalent B–S network, not transport.",
+  "sigma_hierarchy_SUPERSEDED": "sigma_ratio 1.33 = D0(1.24) x n_Li(1.07) x barrier(1.00). log-share D0 74% / carriers 25% / barrier ~0.",
+  "D0_decomposition_SUPERSEDED": {
+   "_SUPERSEDED_2026_07_09": "전제 붕괴: 분해 대상인 D0_ratio 1.236 이 재시드에서 0.965× 로 뒤집혔다 (b2o3 4.625e-04 vs LPSCl1.6 4.791e-04). 설명할 이득이 없다.",
+   "note": "D0 = (1/6) z a^2 nu exp(S_m/kB). D0_ratio 1.24 split into structural geometry (from DFT-V0 CIFs) x dynamics (residual).",
+   "D0_ratio": 1.236,
+   "geometry_a2z": 1.09,
+   "a_hop_1stshell_A": {
+    "b2o3": 3.4,
+    "modelc": 3.49,
+    "a2_ratio": 0.95,
+    "meaning": "b2o3 hop slightly SHORTER"
+   },
+   "z_connectivity_lt4A": {
+    "b2o3": 4.1,
+    "modelc": 3.56,
+    "ratio": 1.15,
+    "meaning": "b2o3 Li network MORE connected"
+   },
+   "dynamics_nu_expSm": 1.13,
+   "interpretation": "D0 gain ~half MORE-connected Li network (z) + ~half faster/softer hop attempts (nu*entropy), at the SAME barrier and similar hop distance. Dynamics consistent with b2o3 soft Li-libration ~130 cm-1 (phonon); nu-vs-Sm split needs LPSCl1.6 phonon (TODO). z (local connectivity, D0) is distinct from n_Li (carrier density, sigma). a,z are 1st-shell estimates -> geometry/dynamics split approximate.",
+   "data": "db/properties/b2o3_vs_lpscl16_D0_decomposition.csv ; fig docs/figures/cascade/b2o3_vs_lpscl16_D0_decomposition.png"
   },
-  "b2o3_doped": {
-    "n_Li_cm3": 2.3806e+22,
-    "D_600": 9.174e-06,
-    "D_800": 3.009e-05,
-    "D_1000": 5.067e-05,
-    "Ea_eV": 0.2234,
-    "D0_cm2_s": 0.0007112,
-    "D_300K": 1.2547e-07,
-    "sigma_300K_mS_cm": 18.51,
-    "sigma_273K_mS_cm": 8.65
+  "lowT_400_500_EXCLUDED": "400/500 K MD points EXCLUDED from all quantitative results (2026-07-02): noise-dominated (window-sensitive 2-5x; b2o3 400K 7.5e-7 < modelc 400K 4.3e-6 UNPHYSICAL; segment Ea zig-zags). Explicit check found no curvature beyond noise -> equal-Ea/const-1.33x holds; RT/273K extrap safe. Fits use 600/800/1000 K only. See b2o3_vs_lpscl16_lowT.csv (diligence record)."
+ },
+ "honesty": {
+  "absolute_sigma": "UMA classical Nernst-Einstein (Haven=1) overestimates absolute sigma ~3-5x for the LPSCl family (deck note) -> quote Ea + ratio, not absolute sigma.",
+  "fitting_sensitivity": "D from MSD swings ~10-20% with the fit window; this amplifies in the RT extrapolation. The window MUST be held fixed across systems (here 2-50 ps). The earlier (5-40 ps) extraction made modelc 800 K anomalously low -> inflated modelc Ea to 0.226 and faked a b2o3 Ea advantage (0.207). Corrected here.",
+  "comp1_LPSCl_baseline": "comp1 columns in msd_comp1_modelc.csv are a DIFFERENT (slower) trajectory than the deck comp1 and do NOT reproduce the slide (D ~60% of slide). Use the deck-validated comp1 reference (D 3.09/1.03e-5/2.20e-5, Ea 0.2532, sigma300 3.35) for the LPSCl baseline."
+ },
+ "SUPERSEDED_5_40_window": {
+  "note": "earlier (5-40 ps) extraction, retained for traceability; NOT for paper",
+  "modelc": {
+   "D_600": 7.52e-06,
+   "D_800": 1.711e-05,
+   "D_1000": 4.534e-05,
+   "Ea_eV": 0.2259,
+   "sigma_300K": 12.17
   },
-  "comparison": {
-    "_SUPERSEDED_2026_07_09": "이 블록 전체가 단일시드 산물이라 SUPERSEDED. 3-seed×3-T 재시드에서 σ비율은 1.08/0.82/1.15 (1.0 주변 산포 = 통계적 동등)이고 D0비도 0.965× (b2o3가 오히려 낮음)라, 아래 sigma300_ratio 1.33 · D0_ratio 1.24 · sigma_hierarchy · D0_decomposition 은 모두 철회됐다. Ea 동일(ΔEa +0.002±0.047)만 재시드에서 살아남았다. CANONICAL: db/properties/b2o3_vs_lpscl16_conductivity.csv (FINAL 2026-07-07). 필드는 traceability로 유지 — 값 인용 금지.",
-    "delta_Ea_meV": 0.0,
-    "Ea_verdict": "b2o3 and modelc have IDENTICAL Ea (0.223 eV) at the consistent 2-50 ps window. The transport gain is NOT a lower barrier.",
-    "D0_ratio_b2o3_over_modelc_SUPERSEDED": 1.24,
-    "sigma300_ratio_b2o3_over_modelc_SUPERSEDED": 1.33,
-    "verdict_SUPERSEDED": "B2O3 doping raises Li conductivity by ~1.33x vs LPSCl1.6 at RT, driven entirely by the prefactor D0 (more carriers / higher attempt rate), at the SAME activation energy. sigma300 18.5 vs 13.9 mS/cm; sigma273 8.7 vs 6.5 mS/cm.",
-    "verdict": "B2O3 PRESERVES Li conductivity vs LPSCl1.6 (3-seed×3-T: per-T σ ratio 1.08±0.18 / 0.82±0.15 / 1.15±0.12 = statistically equivalent), at the SAME activation energy (ΔEa +0.002±0.047 eV). The earlier '1.33x, D0-driven' reading was single-seed noise (retracted 2026-07-09). Robust b2o3 gains are mechanical (+13% bulk) and the covalent B–S network, not transport.",
-    "sigma_hierarchy_SUPERSEDED": "sigma_ratio 1.33 = D0(1.24) x n_Li(1.07) x barrier(1.00). log-share D0 74% / carriers 25% / barrier ~0.",
-    "D0_decomposition_SUPERSEDED": {
-      "_SUPERSEDED_2026_07_09": "전제 붕괴: 분해 대상인 D0_ratio 1.236 이 재시드에서 0.965× 로 뒤집혔다 (b2o3 4.625e-04 vs LPSCl1.6 4.791e-04). 설명할 이득이 없다.",
-      "note": "D0 = (1/6) z a^2 nu exp(S_m/kB). D0_ratio 1.24 split into structural geometry (from DFT-V0 CIFs) x dynamics (residual).",
-      "D0_ratio": 1.236,
-      "geometry_a2z": 1.09,
-      "a_hop_1stshell_A": {
-        "b2o3": 3.4,
-        "modelc": 3.49,
-        "a2_ratio": 0.95,
-        "meaning": "b2o3 hop slightly SHORTER"
-      },
-      "z_connectivity_lt4A": {
-        "b2o3": 4.1,
-        "modelc": 3.56,
-        "ratio": 1.15,
-        "meaning": "b2o3 Li network MORE connected"
-      },
-      "dynamics_nu_expSm": 1.13,
-      "interpretation": "D0 gain ~half MORE-connected Li network (z) + ~half faster/softer hop attempts (nu*entropy), at the SAME barrier and similar hop distance. Dynamics consistent with b2o3 soft Li-libration ~130 cm-1 (phonon); nu-vs-Sm split needs LPSCl1.6 phonon (TODO). z (local connectivity, D0) is distinct from n_Li (carrier density, sigma). a,z are 1st-shell estimates -> geometry/dynamics split approximate.",
-      "data": "db/properties/b2o3_vs_lpscl16_D0_decomposition.csv ; fig docs/figures/cascade/b2o3_vs_lpscl16_D0_decomposition.png"
-    },
-    "lowT_400_500_EXCLUDED": "400/500 K MD points EXCLUDED from all quantitative results (2026-07-02): noise-dominated (window-sensitive 2-5x; b2o3 400K 7.5e-7 < modelc 400K 4.3e-6 UNPHYSICAL; segment Ea zig-zags). Explicit check found no curvature beyond noise -> equal-Ea/const-1.33x holds; RT/273K extrap safe. Fits use 600/800/1000 K only. See b2o3_vs_lpscl16_lowT.csv (diligence record)."
-  },
-  "honesty": {
-    "absolute_sigma": "UMA classical Nernst-Einstein (Haven=1) overestimates absolute sigma ~3-5x for the LPSCl family (deck note) -> quote Ea + ratio, not absolute sigma.",
-    "fitting_sensitivity": "D from MSD swings ~10-20% with the fit window; this amplifies in the RT extrapolation. The window MUST be held fixed across systems (here 2-50 ps). The earlier (5-40 ps) extraction made modelc 800 K anomalously low -> inflated modelc Ea to 0.226 and faked a b2o3 Ea advantage (0.207). Corrected here.",
-    "comp1_LPSCl_baseline": "comp1 columns in msd_comp1_modelc.csv are a DIFFERENT (slower) trajectory than the deck comp1 and do NOT reproduce the slide (D ~60% of slide). Use the deck-validated comp1 reference (D 3.09/1.03e-5/2.20e-5, Ea 0.2532, sigma300 3.35) for the LPSCl baseline."
-  },
-  "SUPERSEDED_5_40_window": {
-    "note": "earlier (5-40 ps) extraction, retained for traceability; NOT for paper",
-    "modelc": {
-      "D_600": 7.52e-06,
-      "D_800": 1.711e-05,
-      "D_1000": 4.534e-05,
-      "Ea_eV": 0.2259,
-      "sigma_300K": 12.17
-    },
-    "b2o3": {
-      "D_600": 9.973e-06,
-      "D_800": 3.095e-05,
-      "D_1000": 4.831e-05,
-      "Ea_eV": 0.207,
-      "sigma_300K": 27.82
-    }
-  },
-  "_SUPERSEDED_sigma_ratio_2026_07_09": "The 1.33x sigma300 ratio (and any 'b2o3 raises sigma' wording) is SUPERSEDED: 멀티시드(3-seed×3-T) σ비율 1.08/0.82/1.15 = 동등; 단일시드 1.33×는 시드 노이즈로 철회(SEMIFINAL 2026-07-09); Ea 0.199±0.034 vs 0.197±0.032 eV. Correct claim: B2O3 PRESERVES sigma (O Li-trap offset by +45% BVSE channel opening). Source: kb/results/b2o3_SEMIFINAL_report_2026_07_09.md. Ea/D values kept for traceability."
+  "b2o3": {
+   "D_600": 9.973e-06,
+   "D_800": 3.095e-05,
+   "D_1000": 4.831e-05,
+   "Ea_eV": 0.207,
+   "sigma_300K": 27.82
+  }
+ },
+ "_SUPERSEDED_sigma_ratio_2026_07_09": "The 1.33x sigma300 ratio (and any 'b2o3 raises sigma' wording) is SUPERSEDED: 멀티시드(3-seed×3-T) σ비율 1.08/0.82/1.15 = 동등; 단일시드 1.33×는 시드 노이즈로 철회(SEMIFINAL 2026-07-09); Ea 0.199±0.034 vs 0.197±0.032 eV. Correct claim: B2O3 PRESERVES sigma (O Li-trap offset by +45% BVSE channel opening). Source: kb/results/b2o3_SEMIFINAL_report_2026_07_09.md. Ea/D values kept for traceability.",
+ "⚠_DIFFUSIVE_GATE_2026_08_01": "⚠⚠ 확산영역 게이트 미통과/미검사 (2026-08-01). MSD 창 2-50 ps 의 log-log 기울기 β 가 0.8 미만이면 케이지 진동을 확산으로 오독한 것이다. comp1 seeds 6/6, comp2 d=1.0 8/9 가 케이지로 판정됐고 **창 변경·시드 평균 어느 쪽으로도 구제되지 않았다**(200 ps 부족). 같은 프로토콜로 낸 Ea 는 tools/ionic/msd_diffusive_check.py 게이트를 통과하기 전까지 **인용 보류**. 근거: kb/results/mlip_md_diffusive_gate_2026_08_01.md"
 }

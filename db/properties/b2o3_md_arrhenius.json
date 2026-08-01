@@ -1,79 +1,80 @@
 {
-  "FINAL_for_paper": {
-    "method": "UMA-s-1p1 (omat) Langevin NVT MD; D from Li MSD = 6 D t, fit window 2-50 ps (msd_origin default); 3-pt Arrhenius (600/800/1000 K); Nernst-Einstein sigma = n q^2 D / (kB T), Haven = 1. SAME pipeline reproduces the validated deck slide for modelc exactly.",
-    "window_ps": [
-      2,
-      50
-    ],
-    "n_Li_cm3": 2.3806298818304583e+22,
-    "D_per_T_cm2_s": {
-      "600": 9.174e-06,
-      "800": 3.009e-05,
-      "1000": 5.067e-05
-    },
-    "Ea_eV": 0.2234,
-    "D0_cm2_s": 0.0007112,
-    "D_300K_cm2_s": 1.2547e-07,
-    "D_273K_cm2_s": 5.337e-08,
-    "sigma_300K_mS_cm": 18.51,
-    "sigma_273K_mS_cm": 8.65,
-    "Ea_eV_PAPER_SUPERSEDED_600K_only": "0.206 (+0.038/-0.030)  [3-seed 600K error bar; single-seed 0.2234 is ONE draw inside it -> quote this]",
-    "Ea_eV_PAPER": "0.199 +/- 0.034  [FINAL: fully symmetric 3-seed x 3-T reseed, 2026-07-07 (b2o3_vs_lpscl16_conductivity.csv). Supersedes the 0.206 (+0.038/-0.030) 600K-only-error-bar figure and the single-seed 0.2234 -> quote this]",
-    "vs_modelc_SUPERSEDED": "Ea identical (modelc 0.2235); sigma 1.33x higher, D0-driven (1.24x). See b2o3_vs_modelc_md.json.",
-    "vs_modelc": "Ea EQUAL (b2o3 0.199+/-0.034 vs LPSCl1.6 0.197+/-0.032; dEa +0.002+/-0.047). sigma EQUIVALENT (per-T ratio 1.08+/-0.18 / 0.82+/-0.15 / 1.15+/-0.12). The earlier 'sigma 1.33x higher, D0-driven 1.24x' was single-seed noise, RETRACTED 2026-07-09. See b2o3_vs_lpscl16_conductivity.csv (FINAL)."
+ "FINAL_for_paper": {
+  "method": "UMA-s-1p1 (omat) Langevin NVT MD; D from Li MSD = 6 D t, fit window 2-50 ps (msd_origin default); 3-pt Arrhenius (600/800/1000 K); Nernst-Einstein sigma = n q^2 D / (kB T), Haven = 1. SAME pipeline reproduces the validated deck slide for modelc exactly.",
+  "window_ps": [
+   2,
+   50
+  ],
+  "n_Li_cm3": 2.3806298818304583e+22,
+  "D_per_T_cm2_s": {
+   "600": 9.174e-06,
+   "800": 3.009e-05,
+   "1000": 5.067e-05
   },
-  "supplementary_lowT_400_500": {
-    "note": "low-T MD for curvature check. D extracted at the MD script's own window (5-40 ps); NOT yet re-extracted at 2-50 ps, so do NOT mix into the FINAL 3-pt fit above. 400 K D has the largest statistical noise (slow diffusion, marginal MSD diffusive regime).",
-    "window_ps": [
-      5,
-      40
-    ],
-    "D_400K_cm2_s": 1.124e-06,
-    "D_500K_cm2_s": 5.517e-06,
-    "curvature_verdict": "segment Ea zig-zags (no clean super-Arrhenius). To fold into a consistent 5-pt fit, re-extract the 400/500 K MSD arrays (gabia) at 2-50 ps."
+  "Ea_eV": 0.2234,
+  "D0_cm2_s": 0.0007112,
+  "D_300K_cm2_s": 1.2547e-07,
+  "D_273K_cm2_s": 5.337e-08,
+  "sigma_300K_mS_cm": 18.51,
+  "sigma_273K_mS_cm": 8.65,
+  "Ea_eV_PAPER_SUPERSEDED_600K_only": "0.206 (+0.038/-0.030)  [3-seed 600K error bar; single-seed 0.2234 is ONE draw inside it -> quote this]",
+  "Ea_eV_PAPER": "0.199 +/- 0.034  [FINAL: fully symmetric 3-seed x 3-T reseed, 2026-07-07 (b2o3_vs_lpscl16_conductivity.csv). Supersedes the 0.206 (+0.038/-0.030) 600K-only-error-bar figure and the single-seed 0.2234 -> quote this]",
+  "vs_modelc_SUPERSEDED": "Ea identical (modelc 0.2235); sigma 1.33x higher, D0-driven (1.24x). See b2o3_vs_modelc_md.json.",
+  "vs_modelc": "Ea EQUAL (b2o3 0.199+/-0.034 vs LPSCl1.6 0.197+/-0.032; dEa +0.002+/-0.047). sigma EQUIVALENT (per-T ratio 1.08+/-0.18 / 0.82+/-0.15 / 1.15+/-0.12). The earlier 'sigma 1.33x higher, D0-driven 1.24x' was single-seed noise, RETRACTED 2026-07-09. See b2o3_vs_lpscl16_conductivity.csv (FINAL)."
+ },
+ "supplementary_lowT_400_500": {
+  "note": "low-T MD for curvature check. D extracted at the MD script's own window (5-40 ps); NOT yet re-extracted at 2-50 ps, so do NOT mix into the FINAL 3-pt fit above. 400 K D has the largest statistical noise (slow diffusion, marginal MSD diffusive regime).",
+  "window_ps": [
+   5,
+   40
+  ],
+  "D_400K_cm2_s": 1.124e-06,
+  "D_500K_cm2_s": 5.517e-06,
+  "curvature_verdict": "segment Ea zig-zags (no clean super-Arrhenius). To fold into a consistent 5-pt fit, re-extract the 400/500 K MSD arrays (gabia) at 2-50 ps."
+ },
+ "multiseed_600K_errorbar": {
+  "note": "600K is the dominant Ea-noise driver (leave-one-out); reseeded 3x (each 200 ps, 2-50 ps window, uma-s-1p1) to quantify. This is the honest paper value; the single-seed Ea 0.2234 above is one draw within this bar.",
+  "seeds_D_600_cm2_s": {
+   "s2": 7.981e-06,
+   "s3": 1.3043e-05,
+   "s4": 1.0211e-05
   },
-  "multiseed_600K_errorbar": {
-    "note": "600K is the dominant Ea-noise driver (leave-one-out); reseeded 3x (each 200 ps, 2-50 ps window, uma-s-1p1) to quantify. This is the honest paper value; the single-seed Ea 0.2234 above is one draw within this bar.",
-    "seeds_D_600_cm2_s": {
-      "s2": 7.981e-06,
-      "s3": 1.3043e-05,
-      "s4": 1.0211e-05
-    },
-    "D_600_mean_cm2_s": 1.041e-05,
-    "D_600_std_cm2_s": 2.537e-06,
-    "D_600_spread_pct": 24,
-    "high_T_anchor_cm2_s": {
-      "800": 3.009e-05,
-      "1000": 5.067e-05,
-      "note": "deck-validated but still single-seed -> a 2nd-order uncertainty on top of the 600K bar"
-    },
-    "Ea_eV": "0.206 (+0.038/-0.030)",
-    "Ea_per_seed_eV": {
-      "s2": 0.2425,
-      "s3": 0.1752,
-      "s4": 0.2087
-    },
-    "sigma_300K_mS_cm_per_seed": {
-      "s2": 11.27,
-      "s3": 64.81,
-      "s4": 27.11,
-      "mean": 29.05,
-      "caution": "sigma300 swings 11-65 with the 600K seed -> single-seed absolute sigma is NOT reportable; quote Ea+-err and the b2o3/modelc ratio only"
-    },
-    "resolves": "the earlier 0.223-vs-0.172 (51 meV) swing was entirely 600K seed variation, not a real difference. Confirms the leave-one-out diagnosis.",
-    "data": "db/properties/b2o3_600K_reseed_errorbar.csv ; fig docs/figures/cascade/b2o3_600K_reseed_errorbar.png"
+  "D_600_mean_cm2_s": 1.041e-05,
+  "D_600_std_cm2_s": 2.537e-06,
+  "D_600_spread_pct": 24,
+  "high_T_anchor_cm2_s": {
+   "800": 3.009e-05,
+   "1000": 5.067e-05,
+   "note": "deck-validated but still single-seed -> a 2nd-order uncertainty on top of the 600K bar"
   },
-  "caveat": "MLIP classical Nernst-Einstein (Haven=1) overestimates ABSOLUTE sigma ~3-5x for the LPSCl family. Robust quantities = Ea and the relative b2o3-vs-modelc ratio (same method/window). Absolute sigma is an upper bound.",
-  "SUPERSEDED": {
-    "note": "earlier (5-40 ps) fits, retained for traceability only; the (5-40) window faked a b2o3 Ea advantage via modelc's window-sensitive 800 K point.",
-    "highT_5_40": {
-      "Ea_eV": 0.207,
-      "sigma_300K_mS_cm": 27.82
-    },
-    "full5pt_5_40": {
-      "Ea_eV": 0.214,
-      "sigma_300K_mS_cm": 23.93
-    }
+  "Ea_eV": "0.206 (+0.038/-0.030)",
+  "Ea_per_seed_eV": {
+   "s2": 0.2425,
+   "s3": 0.1752,
+   "s4": 0.2087
   },
-  "_SUPERSEDED_sigma_ratio_2026_07_09": "The 1.33x sigma300 ratio (and any 'b2o3 raises sigma' wording) is SUPERSEDED: 멀티시드(3-seed×3-T) σ비율 1.08/0.82/1.15 = 동등; 단일시드 1.33×는 시드 노이즈로 철회(SEMIFINAL 2026-07-09); Ea 0.199±0.034 vs 0.197±0.032 eV. Correct claim: B2O3 PRESERVES sigma (O Li-trap offset by +45% BVSE channel opening). Source: kb/results/b2o3_SEMIFINAL_report_2026_07_09.md. Ea/D values kept for traceability."
+  "sigma_300K_mS_cm_per_seed": {
+   "s2": 11.27,
+   "s3": 64.81,
+   "s4": 27.11,
+   "mean": 29.05,
+   "caution": "sigma300 swings 11-65 with the 600K seed -> single-seed absolute sigma is NOT reportable; quote Ea+-err and the b2o3/modelc ratio only"
+  },
+  "resolves": "the earlier 0.223-vs-0.172 (51 meV) swing was entirely 600K seed variation, not a real difference. Confirms the leave-one-out diagnosis.",
+  "data": "db/properties/b2o3_600K_reseed_errorbar.csv ; fig docs/figures/cascade/b2o3_600K_reseed_errorbar.png"
+ },
+ "caveat": "MLIP classical Nernst-Einstein (Haven=1) overestimates ABSOLUTE sigma ~3-5x for the LPSCl family. Robust quantities = Ea and the relative b2o3-vs-modelc ratio (same method/window). Absolute sigma is an upper bound.",
+ "SUPERSEDED": {
+  "note": "earlier (5-40 ps) fits, retained for traceability only; the (5-40) window faked a b2o3 Ea advantage via modelc's window-sensitive 800 K point.",
+  "highT_5_40": {
+   "Ea_eV": 0.207,
+   "sigma_300K_mS_cm": 27.82
+  },
+  "full5pt_5_40": {
+   "Ea_eV": 0.214,
+   "sigma_300K_mS_cm": 23.93
+  }
+ },
+ "_SUPERSEDED_sigma_ratio_2026_07_09": "The 1.33x sigma300 ratio (and any 'b2o3 raises sigma' wording) is SUPERSEDED: 멀티시드(3-seed×3-T) σ비율 1.08/0.82/1.15 = 동등; 단일시드 1.33×는 시드 노이즈로 철회(SEMIFINAL 2026-07-09); Ea 0.199±0.034 vs 0.197±0.032 eV. Correct claim: B2O3 PRESERVES sigma (O Li-trap offset by +45% BVSE channel opening). Source: kb/results/b2o3_SEMIFINAL_report_2026_07_09.md. Ea/D values kept for traceability.",
+ "⚠_DIFFUSIVE_GATE_2026_08_01": "⚠⚠ 확산영역 게이트 미통과/미검사 (2026-08-01). MSD 창 2-50 ps 의 log-log 기울기 β 가 0.8 미만이면 케이지 진동을 확산으로 오독한 것이다. comp1 seeds 6/6, comp2 d=1.0 8/9 가 케이지로 판정됐고 **창 변경·시드 평균 어느 쪽으로도 구제되지 않았다**(200 ps 부족). 같은 프로토콜로 낸 Ea 는 tools/ionic/msd_diffusive_check.py 게이트를 통과하기 전까지 **인용 보류**. 근거: kb/results/mlip_md_diffusive_gate_2026_08_01.md"
 }

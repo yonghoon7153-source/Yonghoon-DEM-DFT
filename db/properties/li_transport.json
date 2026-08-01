@@ -1,180 +1,318 @@
 {
-  "property": "li_ion_transport",
-  "description": "Li ion diffusion coefficient D(T), activation energy Ea, and Nernst-Einstein conductivity σ from AIMD-MLIP at multiple temperatures.",
-  "method_notes": {
-    "aimd_mlip": "Born-Oppenheimer MD with foundation MLIP (UMA-s-1p1, task=omat) on DFT-relaxed V0 structure. Langevin NVT thermostat, 2 fs timestep, equilibrate 10 ps + production 100 ps per T. Trajectory saved every 100 fs.",
-    "msd_fit": "Linear regression MSD = 6 D t in the diffusive regime (2-50 ps).",
-    "arrhenius": "ln(D) = ln(D0) - Ea/(kB T) fit across all measured T.",
-    "nernst_einstein": "σ_NE = n_Li z² e² D* / (kB T) using the TRACER D* (from MSD), assuming Haven ratio H_R = D*/D_σ = 1 (uncorrelated hopping). True σ = n_Li z² e² D_σ/(kB T) = σ_NE / H_R; for SE H_R ≈ 0.3-0.7 (<1, concerted motion) so the TRUE intrinsic σ is HIGHER than the H_R=1 estimate. H_R=1 is therefore a conservative lower bound and does NOT explain why σ_NE sits above measured pellet values.",
-    "caveats": "Foundation MLIP (UMA-s-1p1) tends to overestimate Li transport by 3-5× vs experiment for LPSCl family. Ea is more robust than absolute σ. 300 K extrapolation from 600-1000 K Arrhenius has additional uncertainty if non-Arrhenius behavior exists near room T (rare for LPSCl)."
-  },
-  "results": [
+ "property": "li_ion_transport",
+ "description": "Li ion diffusion coefficient D(T), activation energy Ea, and Nernst-Einstein conductivity σ from AIMD-MLIP at multiple temperatures.",
+ "method_notes": {
+  "aimd_mlip": "Born-Oppenheimer MD with foundation MLIP (UMA-s-1p1, task=omat) on DFT-relaxed V0 structure. Langevin NVT thermostat, 2 fs timestep, equilibrate 10 ps + production 100 ps per T. Trajectory saved every 100 fs.",
+  "msd_fit": "Linear regression MSD = 6 D t in the diffusive regime (2-50 ps).",
+  "arrhenius": "ln(D) = ln(D0) - Ea/(kB T) fit across all measured T.",
+  "nernst_einstein": "σ_NE = n_Li z² e² D* / (kB T) using the TRACER D* (from MSD), assuming Haven ratio H_R = D*/D_σ = 1 (uncorrelated hopping). True σ = n_Li z² e² D_σ/(kB T) = σ_NE / H_R; for SE H_R ≈ 0.3-0.7 (<1, concerted motion) so the TRUE intrinsic σ is HIGHER than the H_R=1 estimate. H_R=1 is therefore a conservative lower bound and does NOT explain why σ_NE sits above measured pellet values.",
+  "caveats": "Foundation MLIP (UMA-s-1p1) tends to overestimate Li transport by 3-5× vs experiment for LPSCl family. Ea is more robust than absolute σ. 300 K extrapolation from 600-1000 K Arrhenius has additional uncertainty if non-Arrhenius behavior exists near room T (rare for LPSCl)."
+ },
+ "results": [
+  {
+   "id": "modelc_v3",
+   "composition": "Li5.4PS4.4Cl1.6",
+   "version": "v3",
+   "method": "UMA-s-1p1 (task=omat) AIMD, Langevin NVT 600/800/1000 K, 100 ps prod each",
+   "completed_date": "2026-06-02",
+   "data_path": "container:/home/ubuntu/work/runs/modelC_v3/aimd/",
+   "v0_source": "modelC_v3 V0_init.xyz (DFT-relaxed)",
+   "n_atoms": 62,
+   "n_Li": 27,
+   "diffusion_per_T": [
     {
-      "id": "modelc_v3",
-      "composition": "Li5.4PS4.4Cl1.6",
-      "version": "v3",
-      "method": "UMA-s-1p1 (task=omat) AIMD, Langevin NVT 600/800/1000 K, 100 ps prod each",
-      "completed_date": "2026-06-02",
-      "data_path": "container:/home/ubuntu/work/runs/modelC_v3/aimd/",
-      "v0_source": "modelC_v3 V0_init.xyz (DFT-relaxed)",
-      "n_atoms": 62, "n_Li": 27,
-      "diffusion_per_T": [
-        {"T_K": 600,  "D_Li_cm2_per_s": 7.90e-6, "frames": 1000},
-        {"T_K": 800,  "D_Li_cm2_per_s": null,    "frames": 1000, "_note": "value parsed in aimd/T800/aimd_results.json"},
-        {"T_K": 1000, "D_Li_cm2_per_s": null,    "frames": 1000, "sigma_NE_Scm": 1.879,
-         "framework_D_cm2_per_s": {"Cl": 6.89e-8, "P": 6.33e-8, "S": 5.91e-8},
-         "_note": "Cl/P/S diffusion ~ 5x lower than Li → framework immobile, Li-only conductor ✓"}
-      ],
-      "arrhenius_fit": {
-        "Ea_eV": 0.224,
-        "D0_cm2_per_s": 5.753e-4,
-        "D_300K_extrapolated_cm2_per_s": 1.014e-7,
-        "sigma_NE_300K_Scm_estimate": "~14e-3 (= 14 mS/cm) using n_Li ≈ 2.22e22 cm⁻³ from V0",
-        "T_fit_K": [600, 800, 1000]
-      },
-      "vs_experiment": {
-        "Ea_eV_expt_LPSCl": "0.22-0.30",
-        "Ea_match": "Within experimental range ✓",
-        "sigma_300K_expt_LPSCl_Scm": "2e-3 to 5e-3",
-        "sigma_300K_calc_Scm": "~14e-3 (3-5× higher than expt)",
-        "sigma_overestimate_attribution": "Dominated by (1) foundation MLIP overshoot of Li diffusivity D* (~2-5x, typical for UMA on LPSCl) and (2) bulk-vs-pellet: MD = perfect single-crystal bulk, experiment = cold-pressed pellet with grain-boundary/porosity resistance (lower). NOTE the H_R=1 assumption is the OPPOSITE sign: real H_R<1 gives true intrinsic σ = σ_NE/H_R HIGHER, so Haven does NOT account for the over-experiment overshoot."
-      }
+     "T_K": 600,
+     "D_Li_cm2_per_s": 7.9e-06,
+     "frames": 1000
     },
     {
-      "id": "comp1_v3_5fu_SUPERSEDED",
-      "_status": "SUPERSEDED 2026-06-11 by comp1_v3_4fu_natural — 5 f.u. cubic supercell is ARTIFICIAL (cubic F-43m natural cell is 4 f.u.), Ea=0.172 found to be artifact of artificial cell construction. Kept here for audit trail.",
-      "composition": "Li6PS5Cl",
-      "version": "v3",
-      "method": "UMA-s-1p1 (task=omat) AIMD, Langevin NVT 600/800/1000 K, equilib 10 ps + prod 100 ps each, timestep 2 fs, 1000 frames. EXACT same protocol as modelc_v3.",
-      "completed_date": "2026-06-04",
-      "data_path": "container:/home/ubuntu/work/runs/comp1_v3/aimd_5fu/",
-      "v0_source": "comp1_v3 V0_5fu.xyz (5 f.u. supercell, 65 atoms, 30 Li)",
-      "n_atoms": 65,
-      "n_Li": 30,
-      "V_A3": 1270.8,
-      "diffusion_per_T_fit_2_20ps": [
-        {"T_K": 600,  "D_Li_cm2_per_s": 3.732e-06, "sigma_NE_Scm": 0.273, "D_Cl": 5.88e-08, "D_P": 9.45e-08, "D_S": 8.37e-08},
-        {"T_K": 800,  "D_Li_cm2_per_s": 6.377e-06, "sigma_NE_Scm": 0.350},
-        {"T_K": 1000, "D_Li_cm2_per_s": 2.259e-05, "sigma_NE_Scm": 0.992}
-      ],
-      "diffusion_per_T_fit_2_50ps": [
-        {"T_K": 600,  "D_Li_cm2_per_s": 2.677e-06},
-        {"T_K": 800,  "D_Li_cm2_per_s": 5.907e-06, "_note": "800K rerun (fresh seed) — fixed earlier fluke (was 3.407e-6)"},
-        {"T_K": 1000, "D_Li_cm2_per_s": 1.019e-05}
-      ],
-      "_800K_rerun_note": "Original T800 D was anomalously low (3.41e-6, broke Arrhenius). Re-ran T800 with fresh MaxwellBoltzmann seed, same 110ps/2fs protocol → D=5.91e-6 (monotonic). R² jumped 0.77→0.999.",
-      "arrhenius_fit": {
-        "_DEPRECATED_5fu_artifact": {"Ea_eV": 0.172, "R2": 0.9986, "window_ps": [2, 50],
-          "note": "ARTIFACT of artificial 5 f.u. supercell construction. Natural 4 f.u. cubic gives Ea=0.253 (실험 LPSCl Ea 범위 0.29-0.46 eV 내 — 구 'Schlem 2020 match'는 귀속 오류 판명 2026-07-28: DOI 10.1002/aenm.201903719는 Li3MCl6 논문 — LPSCl 0.25/0.22의 원전 미상(별도 확보 필요)). See comp1_v3_4fu_natural."},
-        "fit_2_50ps_FINAL_SUPERSEDED": {"Ea_eV": 0.172, "R2": 0.9986,
-          "D_600": 2.677e-06, "D_800": 5.907e-06, "D_1000": 1.019e-05},
-        "T_fit_K": [600, 800, 1000]
-      },
-      "framework_immobile_check": "D(Cl,P,S) ~ 6-9e-8 cm²/s ≈ 1/40-1/60 of D(Li) → framework rigid, Li-only conductor ✓ (same as modelc)"
+     "T_K": 800,
+     "D_Li_cm2_per_s": null,
+     "frames": 1000,
+     "_note": "value parsed in aimd/T800/aimd_results.json"
     },
     {
-      "id": "comp1_v3_4fu_natural",
-      "_status": "★ PRIMARY paper-grade (2026-06-11) — natural F-43m cubic 4 f.u. conventional cell. Supersedes comp1_v3_5fu (artificial cell artifact).",
-      "composition": "Li6PS5Cl",
-      "version": "v3_4fu",
-      "method": "UMA-s-1p1 (task=omat) MLIP MD, Langevin NVT 600/800/1000 K, equilib 10 ps + prod 100 ps, dt 2 fs, friction 0.01/fs. Same protocol as 5fu but on natural F-43m cubic 4 f.u. cell.",
-      "completed_date": "2026-06-11",
-      "data_path": "gabia:/data/work/runs/mlmd_4fu_comp1/",
-      "v0_source": "db/structures/comp1_V0_k444.xyz (4 f.u. cubic, F-43m natural, paper-grade DFT V0)",
-      "n_atoms": 52,
-      "n_Li": 24,
-      "V_A3": 1016.62,
-      "diffusion_per_T_fit_2_50ps": [
-        {"T_K": 600,  "D_Li_cm2_per_s": 3.086e-06},
-        {"T_K": 800,  "D_Li_cm2_per_s": 1.026e-05},
-        {"T_K": 1000, "D_Li_cm2_per_s": 2.198e-05}
-      ],
-      "arrhenius_fit": {
-        "PAPER_GRADE": {
-          "Ea_eV": 0.2532,
-          "D0_cm2_per_s": 4.110e-04,
-          "R2": 0.9998,
-          "window_ps": [2, 50],
-          "T_fit_K": [600, 800, 1000],
-          "D_300K_extrapolated_cm2_per_s": 2.292e-08,
-          "sigma_NE_300K_mScm_estimate": 3.35,
-          "sigma_NE_300K_note": "Nernst-Einstein sigma = n_Li q^2 D /(kB T), H_R=1. n_Li = 2.361e22 cm^-3 (24 Li / 1016.62 A^3). tools/modelc_v3/nernst_einstein_300K.py. Same convention as modelc (~14 mS/cm).",
-          "note": "★ HIGH-QUALITY 3-pt fit (R²=0.9998). 실험 LPSCl Ea는 방법·시료 의존 0.29-0.46 eV(Adeli EIS=PFG 0.29-0.35 / Kraft total ~0.46) — 구 'Schlem 0.25 EXACT MATCH' 문구는 귀속 오류 판명 2026-07-28: DOI 10.1002/aenm.201903719는 Li3MCl6 논문 — LPSCl 0.25/0.22의 원전 미상(별도 확보 필요)."
-        }
-      },
-      "experimental_match": {
-        "_RETRACTED_Schlem_2020_anchor_2026_07_28": "구 앵커(0.25 EXACT MATCH) 철회 — 귀속 오류 판명 2026-07-28: DOI 10.1002/aenm.201903719는 Li3MCl6 논문 — LPSCl 0.25/0.22의 원전 미상(별도 확보 필요). 대체 앵커: Adeli2019 EIS=PFG 0.29-0.35(bulk-지배 트렌드) / Kraft2017 total ~0.46(GB 포함)",
-        "experimental_LPSCl_bulk_range": "0.16 - 0.30 eV (synthesis dependent). Our value in mid-range."
-      },
-      "_change_from_5fu": {
-        "Ea": "0.172 (5fu artifact) -> 0.2532 (4fu natural). Δ +0.081 eV.",
-        "D0": "7.5e-5 (5fu) -> 4.11e-4 (4fu). Δ +5.5×.",
-        "D(600K)": "2.68e-6 -> 3.09e-6 (~unchanged, since both Ea and D0 shifted up by similar factor)",
-        "_explanation": "Natural F-43m cubic cell properly captures ordered Li sublattice energetics. Artificial 5 f.u. cell introduces effective disorder (low energy spread 0.1 meV vs natural rough ~1162 meV), lowering effective barrier."
-      },
-      "framework_immobile_check": "PAPER-GRADE D(Li) >> framework D — Li-only conductor confirmed"
-    },
-    {
-      "id": "nd_pair01_Nd2O3_doped",
-      "_status": "★ Nd2O3-doped modelc transport (2026-06-17, V100 UMA-MLIP). CAVEAT: UMA Nd-4f transferability unverified → cite RATIO vs modelc + Ea direction, not absolute sigma.",
-      "composition": "Li4.8Nd0.2PS4.1O0.3Cl1.6 (Li48Nd2P10S41O3Cl16, cfg141, 2 Nd, O@PS4)",
-      "version": "nd_pair01_v0",
-      "method": "UMA-s-1p1 (task=omat) MLIP MD, Langevin NVT 600/800/1000 K, prod each. EXACT same protocol as comp1/modelc. V100.",
-      "completed_date": "2026-06-17",
-      "data_path": "v100:~/v100_stage/nd/nd_sigma_result.json",
-      "n_atoms": 120, "n_Li": 48, "V_A3": 2399.1, "n_Li_cm3": 2.001e22,
-      "diffusion_per_T_fit": [
-        {"T_K": 600,  "D_Li_cm2_per_s": 4.905e-06, "sigma_NE_Scm": 0.304, "msd_final_A2": 22.07},
-        {"T_K": 800,  "D_Li_cm2_per_s": 1.268e-05, "sigma_NE_Scm": 0.590, "msd_final_A2": 49.66},
-        {"T_K": 1000, "D_Li_cm2_per_s": 2.909e-05, "sigma_NE_Scm": 1.082, "msd_final_A2": 108.18}
-      ],
-      "arrhenius_fit": {
-        "Ea_eV": 0.2267, "D0_cm2_per_s": 3.778e-4, "R2": 0.9891,
-        "D_300K_extrapolated_cm2_per_s": 5.88e-8,
-        "sigma_NE_300K_mScm_estimate": 7.29,
-        "n_Li_cm3": 2.001e22, "T_fit_K": [600, 800, 1000]
-      },
-      "comparison_robust": {
-        "Ea_vs_modelc": "nd 0.227 ≈ modelc 0.224 (Δ+0.003) — barrier UNCHANGED by Nd+O. Both < comp1 0.253.",
-        "D_ratio_nd_over_modelc": "0.62 (600-1000K), 0.58 (300K extrap) — Nd+O lowers Li diffusivity to ~62% of modelc.",
-        "sigma300_ratio_nd_over_modelc": "0.52 (= D ratio 0.58 × n_Li ratio 0.90). nd 7.3 vs modelc 14 mS/cm; nd still > comp1 3.35.",
-        "mechanism": "σ300 ratio (nd/modelc) 0.52 DECOMPOSES into three multiplicative factors: D0 prefactor 0.65 (nd 3.78e-4 vs modelc 5.80e-4) × n_Li carriers 0.90 (2.00 vs 2.22e22) × Ea barrier factor 0.88 (exp[-(0.227-0.224)/kT@300]). 0.65×0.90×0.88=0.52 ✓. DOMINANT driver = D0 PREFACTOR reduction — Nd3+ + O@PS4 narrows Li pathways / lowers attempt frequency. Carrier reduction (Nd3+/O2- Li-vacancy compensation) secondary; barrier essentially UNCHANGED (negligible Ea factor).",
-        "D0_prefactor_3way_cm2_per_s": {"comp1_LPSCl": 4.11e-4, "modelc_LPSCl16": 5.80e-4, "nd_NdO": 3.78e-4, "_note": "nd D0 LOWEST — Nd+O reduces the attempt-frequency/pathway prefactor below even ordered LPSCl. modelc highest (vacancy-rich, more open pathways)."},
-        "experimental_validation": "Matches La+O co-doping (Electrochim. Acta 2025, doi 10.1016/j.electacta.2025.146619): exp sigma 9.58→6.23 mS/cm = 0.65× on La3+ + O. Our Nd3++O DFT-MLIP gives 0.52× — same direction, similar magnitude. Trivalent-lanthanide + O co-doping reduces sigma ~0.5-0.65×."
-      },
-      "caveat": "UMA Nd-4f transferability unverified (4f sparse in MLIP training). ROBUST claims: Ea direction + nd/modelc D & sigma ratio. Absolute sigma carries usual UMA 3-5× overshoot PLUS Nd-4f uncertainty — do NOT cite 7.29 mS/cm as absolute."
+     "T_K": 1000,
+     "D_Li_cm2_per_s": null,
+     "frames": 1000,
+     "sigma_NE_Scm": 1.879,
+     "framework_D_cm2_per_s": {
+      "Cl": 6.89e-08,
+      "P": 6.33e-08,
+      "S": 5.91e-08
+     },
+     "_note": "Cl/P/S diffusion ~ 5x lower than Li → framework immobile, Li-only conductor ✓"
     }
-  ],
-  "comp1_vs_modelc_comparison": {
-    "_status": "★ UPDATED 2026-06-11 with comp1 4fu natural cell. Previous 'prefactor-only' framing SUPERSEDED.",
-    "headline_PAPER_GRADE": {
-      "comp1_LPSCl_4fu_natural":  {"Ea_eV": 0.2532, "D0_cm2_per_s": 4.11e-4, "R2": 0.9998, "D600": 3.09e-6, "D800": 1.03e-5, "D1000": 2.20e-5, "D300_extrap": 2.29e-8, "sigma_NE_300K_mScm": 3.35},
-      "modelc_LPSCl16_5fu_natural": {"Ea_eV": 0.2235, "D0_cm2_per_s": 5.8e-4, "R2": 0.992,  "D600": 7.90e-6, "D800": 2.05e-5, "D1000": 4.55e-5, "D300_extrap": 1.02e-7, "sigma_NE_300K_mScm": 13.96},
-      "sigma_NE_300K_ratio_note": "sigma(LPSCl1.6)/sigma(LPSCl) @300K = 4.2x (D ratio 4.4x); widens from 2.5x@600K because Ea differs (0.224 vs 0.253). Absolute sigma ~1.5-2x above measured pellet (expt LPSCl ~1-3.2 [sintered 3.15], Cl-rich ~7-9.9 mS/cm [Zuo 7.0/Adeli 9.4/Kim 9.9]) due to MLIP D-overshoot + bulk-vs-pellet resistance; H_R=1 is CONSERVATIVE (real H_R<1 -> intrinsic even higher, opposite sign). **SINGLE-SEED (2026-07-29 audit)**: this file has one trajectory per temperature. Per CLAUDE.md, ratios are quotable ONLY from multi-seed protocols (the 1.33x single-seed claim was retracted, SEMIFINAL 2026-07-09). Recomputed: 600 K D-ratio here = 2.56x, but modelc 3-seed mean gives 3.36x -- this single draw sits 1.15 sigma low. Ea is the robust part; the RATIO here is NOT."
-    },
-    "robust_findings_v2_2026_06_11": {
-      "Ea_direction_CORRECTED": "comp1 4fu Ea=0.2532 > modelc Ea=0.2235 (Δ=0.030 eV). Cl-rich Ea LOWER than ordered LPSCl — CONSISTENT with Minafra/Kraft 'disorder lowers Ea' narrative and the disorder-lowers-Ea direction (Minafra/Kraft; Adeli Cl-rich EIS=PFG 0.34→0.29). 구 Schlem 0.25/0.22 수치는 귀속 오류 판명 2026-07-28: DOI 10.1002/aenm.201903719는 Li3MCl6 논문 — LPSCl 0.25/0.22의 원전 미상(별도 확보 필요).",
-      "D_sigma_ratio": "[SINGLE-SEED -- do not quote the multiple] modelc ~2.5x faster than comp1 at 600-1000 K (3-seed modelc would give ~3.4x). Matches experimental sigma(LPSCl1.6) > sigma(LPSCl) ~3x (Zuo 2023 2.9 vs 7.0 mS/cm).",
-      "mechanism_dual": "σ gain decomposes into TWO contributions: (1) Ea effect — exp((0.253-0.224)/kT) = 1.75× at 600K from Cl-rich barrier reduction; (2) D0 effect — 5.8e-4/4.11e-4 = 1.41× from modelc vacancy carrier density. Roughly EQUAL contributions, both positive (lit consistent direction).",
-      "framework": "both Li-only conductors (framework D ~1/40-1/60 of Li)."
-    },
-    "mechanism_interpretation_v2_2026_06_11": {
-      "dual_mechanism": "Cl-rich LPSCl1.6 is faster than ordered LPSCl due to BOTH lower per-hop barrier (disorder effect — Minafra/Kraft narrative; 구 Schlem 앵커 귀속오류 철회 2026-07-28 (해당 DOI=Li3MCl6 논문)) AND larger prefactor (vacancy carrier density). Both effects in same direction, both literature-supported. Roughly equal contributions to ~3x σ enhancement.",
-      "paper_message": "σ(LPSCl1.6) > σ(LPSCl) is NOT 'prefactor only' (our earlier 5fu-based reading) NOR 'barrier only' (Minafra simplification). It's BOTH — Cl-rich/vacancy structure simultaneously flattens the Li hopping landscape (Ea↓ via 4d-Cl AS distorting cage) AND increases mobile carrier concentration (vacancy + Cl-substituted sites).",
-      "5fu_to_4fu_correction_2026_06_11": "Earlier comp1 5fu Ea=0.172 was an artifact of artificial 5 f.u. cubic supercell (natural F-43m is 4 f.u.). 4fu natural rerun gives Ea=0.2532 (실험 LPSCl 범위 0.29-0.46 하단; 구 Schlem 앵커 귀속오류 철회 2026-07-28 (해당 DOI=Li3MCl6 논문)). modelc 5fu Ea=0.224 unchanged (rhombohedral 5fu is natural). Paper #1 narrative thus reversed from 'prefactor dominant, barrier counter-direction' to 'barrier + prefactor both contribute in literature direction'.",
-      "RT_caveat": "3-point Arrhenius extrapolation to 300K still uncertain; quote 600-1000K values."
-    }
+   ],
+   "arrhenius_fit": {
+    "Ea_eV": 0.224,
+    "D0_cm2_per_s": 0.0005753,
+    "D_300K_extrapolated_cm2_per_s": 1.014e-07,
+    "sigma_NE_300K_Scm_estimate": "~14e-3 (= 14 mS/cm) using n_Li ≈ 2.22e22 cm⁻³ from V0",
+    "T_fit_K": [
+     600,
+     800,
+     1000
+    ]
+   },
+   "vs_experiment": {
+    "Ea_eV_expt_LPSCl": "0.22-0.30",
+    "Ea_match": "Within experimental range ✓",
+    "sigma_300K_expt_LPSCl_Scm": "2e-3 to 5e-3",
+    "sigma_300K_calc_Scm": "~14e-3 (3-5× higher than expt)",
+    "sigma_overestimate_attribution": "Dominated by (1) foundation MLIP overshoot of Li diffusivity D* (~2-5x, typical for UMA on LPSCl) and (2) bulk-vs-pellet: MD = perfect single-crystal bulk, experiment = cold-pressed pellet with grain-boundary/porosity resistance (lower). NOTE the H_R=1 assumption is the OPPOSITE sign: real H_R<1 gives true intrinsic σ = σ_NE/H_R HIGHER, so Haven does NOT account for the over-experiment overshoot."
+   }
   },
-  "disorder_ensemble_2026_06_09": {
-    "_status": "TENSION #5 (Minafra/Kraft 'disorder lowers Ea' vs our prefactor narrative) RESOLVED — disorder DOES lower Ea when actually present in the cell. Our previous Ea=0.172/0.224 came from near-ORDERED comp1/modelc cells (anti-site Cl 12.5% only in modelc), which artifactually masked the disorder-Ea-lowering effect.",
-    "method": "UMA-s-1p1 ensemble: 3 anti-site disorder levels (target 0.0 = ordered, 0.5 = mid) x n configs x 3 temperatures (600/800/1000 K) Langevin MD, MSD->D, Arrhenius. tools/modelc_v3/disorder_ensemble_diffusion.py (v100, GPU). Results path: container:/home/ubuntu/work/runs/comp1_v3/disorder_diffusion/ensemble_results.json (and modelC_v3/...).",
-    "comp1_Ea_vs_disorder": {
-      "d_0.00_ordered": {"Ea_eV": 1.171, "n_configs": 1, "_warning": "Ordered Li6PS5Cl is essentially frozen at 600-800 K (D~1e-7) -> Arrhenius slope blows up. Number is an ARTIFACT of low-T undersampling, not the real ordered Ea. Demonstrates that the 'truly ordered' limit is kinetically inaccessible."},
-      "d_0.50_disordered": {"Ea_eV": 0.177, "Ea_std_eV": 0.027, "n_configs": 3, "_meaning": "Adding Cl/S anti-site + Li disorder gives Ea = 0.177 +/- 0.027 eV, MATCHING the experimental LPSCl bulk range 0.16-0.25 and our own earlier near-ordered comp1 Ea=0.172. Confirms disorder REDUCES the apparent barrier from a frozen/artifactual high value to the experimental value."}
+  {
+   "id": "comp1_v3_5fu_SUPERSEDED",
+   "_status": "SUPERSEDED 2026-06-11 by comp1_v3_4fu_natural — 5 f.u. cubic supercell is ARTIFICIAL (cubic F-43m natural cell is 4 f.u.), Ea=0.172 found to be artifact of artificial cell construction. Kept here for audit trail.",
+   "composition": "Li6PS5Cl",
+   "version": "v3",
+   "method": "UMA-s-1p1 (task=omat) AIMD, Langevin NVT 600/800/1000 K, equilib 10 ps + prod 100 ps each, timestep 2 fs, 1000 frames. EXACT same protocol as modelc_v3.",
+   "completed_date": "2026-06-04",
+   "data_path": "container:/home/ubuntu/work/runs/comp1_v3/aimd_5fu/",
+   "v0_source": "comp1_v3 V0_5fu.xyz (5 f.u. supercell, 65 atoms, 30 Li)",
+   "n_atoms": 65,
+   "n_Li": 30,
+   "V_A3": 1270.8,
+   "diffusion_per_T_fit_2_20ps": [
+    {
+     "T_K": 600,
+     "D_Li_cm2_per_s": 3.732e-06,
+     "sigma_NE_Scm": 0.273,
+     "D_Cl": 5.88e-08,
+     "D_P": 9.45e-08,
+     "D_S": 8.37e-08
     },
-    "modelc_Ea_vs_disorder": "RUNNING (modelC_v3/disorder_diffusion, 12/24 MDs complete at 2026-06-09 13:16). Will complete the symmetric test: at matched disorder level, does modelc Ea = 0.177 - delta (Cl-rich further lowers Ea per Minafra)?",
-    "resolves_audit_tension_5": "literature_tensions_audit #2 (Ea vs prefactor mechanism): the previous 'modelc Ea HIGHER than comp1 -> gain is prefactor, not barrier' framing was an UNDER-DISORDERED CELL artifact. With realistic Cl/S anti-site disorder, comp1 Ea drops to the Minafra/Kraft narrative value (~0.18 eV). modelc disorder run will confirm whether at matched disorder the Cl-rich phase shows the further Ea reduction Minafra/Kraft predict.",
-    "what_to_quote_in_paper": "(1) Robust observed fact: modelc D > comp1 D at 600-1000 K (matches experimental sigma). (2) Mechanism (preliminary, MLIP): at matched DISORDER level our comp1 reproduces literature Ea=0.18 eV (vs the artifactual 1.17 for the frozen ordered cell); the modelc disorder run determines whether the Cl-rich gain is Ea-down (Minafra/Kraft narrative) or prefactor-driven (our earlier reading) -> will update when modelc disorder finishes.",
-    "caveats": "(a) UMA absolute D overestimates ~3-5x vs experiment. (b) d=0.00 Ea=1.17 is an artifact (low-T statistics), NOT the physical ordered Ea. (c) Arrhenius from 600-1000 K extrapolated to 300 K has large uncertainty - quote the 600-1000 K values + Ea."
+    {
+     "T_K": 800,
+     "D_Li_cm2_per_s": 6.377e-06,
+     "sigma_NE_Scm": 0.35
+    },
+    {
+     "T_K": 1000,
+     "D_Li_cm2_per_s": 2.259e-05,
+     "sigma_NE_Scm": 0.992
+    }
+   ],
+   "diffusion_per_T_fit_2_50ps": [
+    {
+     "T_K": 600,
+     "D_Li_cm2_per_s": 2.677e-06
+    },
+    {
+     "T_K": 800,
+     "D_Li_cm2_per_s": 5.907e-06,
+     "_note": "800K rerun (fresh seed) — fixed earlier fluke (was 3.407e-6)"
+    },
+    {
+     "T_K": 1000,
+     "D_Li_cm2_per_s": 1.019e-05
+    }
+   ],
+   "_800K_rerun_note": "Original T800 D was anomalously low (3.41e-6, broke Arrhenius). Re-ran T800 with fresh MaxwellBoltzmann seed, same 110ps/2fs protocol → D=5.91e-6 (monotonic). R² jumped 0.77→0.999.",
+   "arrhenius_fit": {
+    "_DEPRECATED_5fu_artifact": {
+     "Ea_eV": 0.172,
+     "R2": 0.9986,
+     "window_ps": [
+      2,
+      50
+     ],
+     "note": "ARTIFACT of artificial 5 f.u. supercell construction. Natural 4 f.u. cubic gives Ea=0.253 (실험 LPSCl Ea 범위 0.29-0.46 eV 내 — 구 'Schlem 2020 match'는 귀속 오류 판명 2026-07-28: DOI 10.1002/aenm.201903719는 Li3MCl6 논문 — LPSCl 0.25/0.22의 원전 미상(별도 확보 필요)). See comp1_v3_4fu_natural."
+    },
+    "fit_2_50ps_FINAL_SUPERSEDED": {
+     "Ea_eV": 0.172,
+     "R2": 0.9986,
+     "D_600": 2.677e-06,
+     "D_800": 5.907e-06,
+     "D_1000": 1.019e-05
+    },
+    "T_fit_K": [
+     600,
+     800,
+     1000
+    ]
+   },
+   "framework_immobile_check": "D(Cl,P,S) ~ 6-9e-8 cm²/s ≈ 1/40-1/60 of D(Li) → framework rigid, Li-only conductor ✓ (same as modelc)"
+  },
+  {
+   "id": "comp1_v3_4fu_natural",
+   "_status": "★ PRIMARY paper-grade (2026-06-11) — natural F-43m cubic 4 f.u. conventional cell. Supersedes comp1_v3_5fu (artificial cell artifact).",
+   "composition": "Li6PS5Cl",
+   "version": "v3_4fu",
+   "method": "UMA-s-1p1 (task=omat) MLIP MD, Langevin NVT 600/800/1000 K, equilib 10 ps + prod 100 ps, dt 2 fs, friction 0.01/fs. Same protocol as 5fu but on natural F-43m cubic 4 f.u. cell.",
+   "completed_date": "2026-06-11",
+   "data_path": "gabia:/data/work/runs/mlmd_4fu_comp1/",
+   "v0_source": "db/structures/comp1_V0_k444.xyz (4 f.u. cubic, F-43m natural, paper-grade DFT V0)",
+   "n_atoms": 52,
+   "n_Li": 24,
+   "V_A3": 1016.62,
+   "diffusion_per_T_fit_2_50ps": [
+    {
+     "T_K": 600,
+     "D_Li_cm2_per_s": 3.086e-06
+    },
+    {
+     "T_K": 800,
+     "D_Li_cm2_per_s": 1.026e-05
+    },
+    {
+     "T_K": 1000,
+     "D_Li_cm2_per_s": 2.198e-05
+    }
+   ],
+   "arrhenius_fit": {
+    "PAPER_GRADE": {
+     "Ea_eV": 0.2532,
+     "D0_cm2_per_s": 0.000411,
+     "R2": 0.9998,
+     "window_ps": [
+      2,
+      50
+     ],
+     "T_fit_K": [
+      600,
+      800,
+      1000
+     ],
+     "D_300K_extrapolated_cm2_per_s": 2.292e-08,
+     "sigma_NE_300K_mScm_estimate": 3.35,
+     "sigma_NE_300K_note": "Nernst-Einstein sigma = n_Li q^2 D /(kB T), H_R=1. n_Li = 2.361e22 cm^-3 (24 Li / 1016.62 A^3). tools/modelc_v3/nernst_einstein_300K.py. Same convention as modelc (~14 mS/cm).",
+     "note": "★ HIGH-QUALITY 3-pt fit (R²=0.9998). 실험 LPSCl Ea는 방법·시료 의존 0.29-0.46 eV(Adeli EIS=PFG 0.29-0.35 / Kraft total ~0.46) — 구 'Schlem 0.25 EXACT MATCH' 문구는 귀속 오류 판명 2026-07-28: DOI 10.1002/aenm.201903719는 Li3MCl6 논문 — LPSCl 0.25/0.22의 원전 미상(별도 확보 필요)."
+    }
+   },
+   "experimental_match": {
+    "_RETRACTED_Schlem_2020_anchor_2026_07_28": "구 앵커(0.25 EXACT MATCH) 철회 — 귀속 오류 판명 2026-07-28: DOI 10.1002/aenm.201903719는 Li3MCl6 논문 — LPSCl 0.25/0.22의 원전 미상(별도 확보 필요). 대체 앵커: Adeli2019 EIS=PFG 0.29-0.35(bulk-지배 트렌드) / Kraft2017 total ~0.46(GB 포함)",
+    "experimental_LPSCl_bulk_range": "0.16 - 0.30 eV (synthesis dependent). Our value in mid-range."
+   },
+   "_change_from_5fu": {
+    "Ea": "0.172 (5fu artifact) -> 0.2532 (4fu natural). Δ +0.081 eV.",
+    "D0": "7.5e-5 (5fu) -> 4.11e-4 (4fu). Δ +5.5×.",
+    "D(600K)": "2.68e-6 -> 3.09e-6 (~unchanged, since both Ea and D0 shifted up by similar factor)",
+    "_explanation": "Natural F-43m cubic cell properly captures ordered Li sublattice energetics. Artificial 5 f.u. cell introduces effective disorder (low energy spread 0.1 meV vs natural rough ~1162 meV), lowering effective barrier."
+   },
+   "framework_immobile_check": "PAPER-GRADE D(Li) >> framework D — Li-only conductor confirmed"
+  },
+  {
+   "id": "nd_pair01_Nd2O3_doped",
+   "_status": "★ Nd2O3-doped modelc transport (2026-06-17, V100 UMA-MLIP). CAVEAT: UMA Nd-4f transferability unverified → cite RATIO vs modelc + Ea direction, not absolute sigma.",
+   "composition": "Li4.8Nd0.2PS4.1O0.3Cl1.6 (Li48Nd2P10S41O3Cl16, cfg141, 2 Nd, O@PS4)",
+   "version": "nd_pair01_v0",
+   "method": "UMA-s-1p1 (task=omat) MLIP MD, Langevin NVT 600/800/1000 K, prod each. EXACT same protocol as comp1/modelc. V100.",
+   "completed_date": "2026-06-17",
+   "data_path": "v100:~/v100_stage/nd/nd_sigma_result.json",
+   "n_atoms": 120,
+   "n_Li": 48,
+   "V_A3": 2399.1,
+   "n_Li_cm3": 2.001e+22,
+   "diffusion_per_T_fit": [
+    {
+     "T_K": 600,
+     "D_Li_cm2_per_s": 4.905e-06,
+     "sigma_NE_Scm": 0.304,
+     "msd_final_A2": 22.07
+    },
+    {
+     "T_K": 800,
+     "D_Li_cm2_per_s": 1.268e-05,
+     "sigma_NE_Scm": 0.59,
+     "msd_final_A2": 49.66
+    },
+    {
+     "T_K": 1000,
+     "D_Li_cm2_per_s": 2.909e-05,
+     "sigma_NE_Scm": 1.082,
+     "msd_final_A2": 108.18
+    }
+   ],
+   "arrhenius_fit": {
+    "Ea_eV": 0.2267,
+    "D0_cm2_per_s": 0.0003778,
+    "R2": 0.9891,
+    "D_300K_extrapolated_cm2_per_s": 5.88e-08,
+    "sigma_NE_300K_mScm_estimate": 7.29,
+    "n_Li_cm3": 2.001e+22,
+    "T_fit_K": [
+     600,
+     800,
+     1000
+    ]
+   },
+   "comparison_robust": {
+    "Ea_vs_modelc": "nd 0.227 ≈ modelc 0.224 (Δ+0.003) — barrier UNCHANGED by Nd+O. Both < comp1 0.253.",
+    "D_ratio_nd_over_modelc": "0.62 (600-1000K), 0.58 (300K extrap) — Nd+O lowers Li diffusivity to ~62% of modelc.",
+    "sigma300_ratio_nd_over_modelc": "0.52 (= D ratio 0.58 × n_Li ratio 0.90). nd 7.3 vs modelc 14 mS/cm; nd still > comp1 3.35.",
+    "mechanism": "σ300 ratio (nd/modelc) 0.52 DECOMPOSES into three multiplicative factors: D0 prefactor 0.65 (nd 3.78e-4 vs modelc 5.80e-4) × n_Li carriers 0.90 (2.00 vs 2.22e22) × Ea barrier factor 0.88 (exp[-(0.227-0.224)/kT@300]). 0.65×0.90×0.88=0.52 ✓. DOMINANT driver = D0 PREFACTOR reduction — Nd3+ + O@PS4 narrows Li pathways / lowers attempt frequency. Carrier reduction (Nd3+/O2- Li-vacancy compensation) secondary; barrier essentially UNCHANGED (negligible Ea factor).",
+    "D0_prefactor_3way_cm2_per_s": {
+     "comp1_LPSCl": 0.000411,
+     "modelc_LPSCl16": 0.00058,
+     "nd_NdO": 0.000378,
+     "_note": "nd D0 LOWEST — Nd+O reduces the attempt-frequency/pathway prefactor below even ordered LPSCl. modelc highest (vacancy-rich, more open pathways)."
+    },
+    "experimental_validation": "Matches La+O co-doping (Electrochim. Acta 2025, doi 10.1016/j.electacta.2025.146619): exp sigma 9.58→6.23 mS/cm = 0.65× on La3+ + O. Our Nd3++O DFT-MLIP gives 0.52× — same direction, similar magnitude. Trivalent-lanthanide + O co-doping reduces sigma ~0.5-0.65×."
+   },
+   "caveat": "UMA Nd-4f transferability unverified (4f sparse in MLIP training). ROBUST claims: Ea direction + nd/modelc D & sigma ratio. Absolute sigma carries usual UMA 3-5× overshoot PLUS Nd-4f uncertainty — do NOT cite 7.29 mS/cm as absolute."
   }
+ ],
+ "comp1_vs_modelc_comparison": {
+  "_status": "★ UPDATED 2026-06-11 with comp1 4fu natural cell. Previous 'prefactor-only' framing SUPERSEDED.",
+  "headline_PAPER_GRADE": {
+   "comp1_LPSCl_4fu_natural": {
+    "Ea_eV": 0.2532,
+    "D0_cm2_per_s": 0.000411,
+    "R2": 0.9998,
+    "D600": 3.09e-06,
+    "D800": 1.03e-05,
+    "D1000": 2.2e-05,
+    "D300_extrap": 2.29e-08,
+    "sigma_NE_300K_mScm": 3.35
+   },
+   "modelc_LPSCl16_5fu_natural": {
+    "Ea_eV": 0.2235,
+    "D0_cm2_per_s": 0.00058,
+    "R2": 0.992,
+    "D600": 7.9e-06,
+    "D800": 2.05e-05,
+    "D1000": 4.55e-05,
+    "D300_extrap": 1.02e-07,
+    "sigma_NE_300K_mScm": 13.96
+   },
+   "sigma_NE_300K_ratio_note": "sigma(LPSCl1.6)/sigma(LPSCl) @300K = 4.2x (D ratio 4.4x); widens from 2.5x@600K because Ea differs (0.224 vs 0.253). Absolute sigma ~1.5-2x above measured pellet (expt LPSCl ~1-3.2 [sintered 3.15], Cl-rich ~7-9.9 mS/cm [Zuo 7.0/Adeli 9.4/Kim 9.9]) due to MLIP D-overshoot + bulk-vs-pellet resistance; H_R=1 is CONSERVATIVE (real H_R<1 -> intrinsic even higher, opposite sign). **SINGLE-SEED (2026-07-29 audit)**: this file has one trajectory per temperature. Per CLAUDE.md, ratios are quotable ONLY from multi-seed protocols (the 1.33x single-seed claim was retracted, SEMIFINAL 2026-07-09). Recomputed: 600 K D-ratio here = 2.56x, but modelc 3-seed mean gives 3.36x -- this single draw sits 1.15 sigma low. Ea is the robust part; the RATIO here is NOT."
+  },
+  "robust_findings_v2_2026_06_11": {
+   "Ea_direction_CORRECTED": "comp1 4fu Ea=0.2532 > modelc Ea=0.2235 (Δ=0.030 eV). Cl-rich Ea LOWER than ordered LPSCl — CONSISTENT with Minafra/Kraft 'disorder lowers Ea' narrative and the disorder-lowers-Ea direction (Minafra/Kraft; Adeli Cl-rich EIS=PFG 0.34→0.29). 구 Schlem 0.25/0.22 수치는 귀속 오류 판명 2026-07-28: DOI 10.1002/aenm.201903719는 Li3MCl6 논문 — LPSCl 0.25/0.22의 원전 미상(별도 확보 필요).",
+   "D_sigma_ratio": "[SINGLE-SEED -- do not quote the multiple] modelc ~2.5x faster than comp1 at 600-1000 K (3-seed modelc would give ~3.4x). Matches experimental sigma(LPSCl1.6) > sigma(LPSCl) ~3x (Zuo 2023 2.9 vs 7.0 mS/cm).",
+   "mechanism_dual": "σ gain decomposes into TWO contributions: (1) Ea effect — exp((0.253-0.224)/kT) = 1.75× at 600K from Cl-rich barrier reduction; (2) D0 effect — 5.8e-4/4.11e-4 = 1.41× from modelc vacancy carrier density. Roughly EQUAL contributions, both positive (lit consistent direction).",
+   "framework": "both Li-only conductors (framework D ~1/40-1/60 of Li)."
+  },
+  "mechanism_interpretation_v2_2026_06_11": {
+   "dual_mechanism": "Cl-rich LPSCl1.6 is faster than ordered LPSCl due to BOTH lower per-hop barrier (disorder effect — Minafra/Kraft narrative; 구 Schlem 앵커 귀속오류 철회 2026-07-28 (해당 DOI=Li3MCl6 논문)) AND larger prefactor (vacancy carrier density). Both effects in same direction, both literature-supported. Roughly equal contributions to ~3x σ enhancement.",
+   "paper_message": "σ(LPSCl1.6) > σ(LPSCl) is NOT 'prefactor only' (our earlier 5fu-based reading) NOR 'barrier only' (Minafra simplification). It's BOTH — Cl-rich/vacancy structure simultaneously flattens the Li hopping landscape (Ea↓ via 4d-Cl AS distorting cage) AND increases mobile carrier concentration (vacancy + Cl-substituted sites).",
+   "5fu_to_4fu_correction_2026_06_11": "Earlier comp1 5fu Ea=0.172 was an artifact of artificial 5 f.u. cubic supercell (natural F-43m is 4 f.u.). 4fu natural rerun gives Ea=0.2532 (실험 LPSCl 범위 0.29-0.46 하단; 구 Schlem 앵커 귀속오류 철회 2026-07-28 (해당 DOI=Li3MCl6 논문)). modelc 5fu Ea=0.224 unchanged (rhombohedral 5fu is natural). Paper #1 narrative thus reversed from 'prefactor dominant, barrier counter-direction' to 'barrier + prefactor both contribute in literature direction'.",
+   "RT_caveat": "3-point Arrhenius extrapolation to 300K still uncertain; quote 600-1000K values."
+  }
+ },
+ "disorder_ensemble_2026_06_09": {
+  "_status": "TENSION #5 (Minafra/Kraft 'disorder lowers Ea' vs our prefactor narrative) RESOLVED — disorder DOES lower Ea when actually present in the cell. Our previous Ea=0.172/0.224 came from near-ORDERED comp1/modelc cells (anti-site Cl 12.5% only in modelc), which artifactually masked the disorder-Ea-lowering effect.",
+  "method": "UMA-s-1p1 ensemble: 3 anti-site disorder levels (target 0.0 = ordered, 0.5 = mid) x n configs x 3 temperatures (600/800/1000 K) Langevin MD, MSD->D, Arrhenius. tools/modelc_v3/disorder_ensemble_diffusion.py (v100, GPU). Results path: container:/home/ubuntu/work/runs/comp1_v3/disorder_diffusion/ensemble_results.json (and modelC_v3/...).",
+  "comp1_Ea_vs_disorder": {
+   "d_0.00_ordered": {
+    "Ea_eV": 1.171,
+    "n_configs": 1,
+    "_warning": "Ordered Li6PS5Cl is essentially frozen at 600-800 K (D~1e-7) -> Arrhenius slope blows up. Number is an ARTIFACT of low-T undersampling, not the real ordered Ea. Demonstrates that the 'truly ordered' limit is kinetically inaccessible."
+   },
+   "d_0.50_disordered": {
+    "Ea_eV": 0.177,
+    "Ea_std_eV": 0.027,
+    "n_configs": 3,
+    "_meaning": "Adding Cl/S anti-site + Li disorder gives Ea = 0.177 +/- 0.027 eV, MATCHING the experimental LPSCl bulk range 0.16-0.25 and our own earlier near-ordered comp1 Ea=0.172. Confirms disorder REDUCES the apparent barrier from a frozen/artifactual high value to the experimental value."
+   }
+  },
+  "modelc_Ea_vs_disorder": "RUNNING (modelC_v3/disorder_diffusion, 12/24 MDs complete at 2026-06-09 13:16). Will complete the symmetric test: at matched disorder level, does modelc Ea = 0.177 - delta (Cl-rich further lowers Ea per Minafra)?",
+  "resolves_audit_tension_5": "literature_tensions_audit #2 (Ea vs prefactor mechanism): the previous 'modelc Ea HIGHER than comp1 -> gain is prefactor, not barrier' framing was an UNDER-DISORDERED CELL artifact. With realistic Cl/S anti-site disorder, comp1 Ea drops to the Minafra/Kraft narrative value (~0.18 eV). modelc disorder run will confirm whether at matched disorder the Cl-rich phase shows the further Ea reduction Minafra/Kraft predict.",
+  "what_to_quote_in_paper": "(1) Robust observed fact: modelc D > comp1 D at 600-1000 K (matches experimental sigma). (2) Mechanism (preliminary, MLIP): at matched DISORDER level our comp1 reproduces literature Ea=0.18 eV (vs the artifactual 1.17 for the frozen ordered cell); the modelc disorder run determines whether the Cl-rich gain is Ea-down (Minafra/Kraft narrative) or prefactor-driven (our earlier reading) -> will update when modelc disorder finishes.",
+  "caveats": "(a) UMA absolute D overestimates ~3-5x vs experiment. (b) d=0.00 Ea=1.17 is an artifact (low-T statistics), NOT the physical ordered Ea. (c) Arrhenius from 600-1000 K extrapolated to 300 K has large uncertainty - quote the 600-1000 K values + Ea."
+ },
+ "⚠_DIFFUSIVE_GATE_2026_08_01": "⚠⚠ 확산영역 게이트 미통과/미검사 (2026-08-01). MSD 창 2-50 ps 의 log-log 기울기 β 가 0.8 미만이면 케이지 진동을 확산으로 오독한 것이다. comp1 seeds 6/6, comp2 d=1.0 8/9 가 케이지로 판정됐고 **창 변경·시드 평균 어느 쪽으로도 구제되지 않았다**(200 ps 부족). 같은 프로토콜로 낸 Ea 는 tools/ionic/msd_diffusive_check.py 게이트를 통과하기 전까지 **인용 보류**. 근거: kb/results/mlip_md_diffusive_gate_2026_08_01.md"
 }
