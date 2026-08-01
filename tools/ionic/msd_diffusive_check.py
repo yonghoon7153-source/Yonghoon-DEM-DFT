@@ -49,6 +49,9 @@ def main():
     ap.add_argument("--glob", required=True, help="msd.json 글롭 (따옴표로 감쌀 것)")
     ap.add_argument("--window", type=float, nargs=2, default=[2.0, 50.0],
                     help="D 를 맞춘 창 (기본 2 50 — 캠페인 규약)")
+    ap.add_argument("--scan", action="store_true",
+                    help="여러 창에서 β 를 재서 **어디서부터 확산이 되는지** 찾는다. "
+                         "케이지 판정이 나왔을 때 '재계산 없이 구제 가능한가'를 가른다.")
     a = ap.parse_args()
 
     files = sorted(_glob.glob(os.path.expanduser(a.glob)))
@@ -83,6 +86,29 @@ def main():
             bad.append((tag, verdict))
         print(f"{tag:34s} {D:10.3e} {b if b is None else round(b,2):>6} "
               f"{msd_hi:8.1f}  {verdict}")
+
+    # ── 창 스캔: 재계산 없이 구제 가능한가 ────────────────────────────────
+    if a.scan:
+        # ⚠ MSD 는 짧은 시간에서 원래 sub-diffusive 다(케이지 안 진동). 늦은 창에서
+        #   β 가 1 로 올라가면 **MD 를 다시 돌 필요 없이 창만 바꾸면 된다.**
+        #   끝까지 β<1 이면 그건 궤적이 짧은 것이라 prod 연장 말고는 답이 없다.
+        WINS = [(2, 50), (10, 50), (25, 100), (50, 150), (50, 200), (100, 200)]
+        print("\n창 스캔 — β 가 1 에 가까워지는 창이 있으면 재계산 없이 구제된다")
+        head = " ".join(f"{lo}-{hi}".rjust(8) for lo, hi in WINS)
+        print(f"{'case':34s} {head}   tmax")
+        for f in files:
+            d = json.load(open(f))
+            t, y = d.get("times_ps"), d.get("msd_Li_A2")
+            if not t or not y:
+                continue
+            tag = "/".join(f.split(os.sep)[-3:-1])
+            cells = []
+            for lo, hi in WINS:
+                b = loglog_slope(t, y, lo, hi)
+                cells.append("   —" .rjust(8) if b is None else f"{b:8.2f}")
+            print(f"{tag:34s} {' '.join(cells)}   {max(t):.0f}")
+        print("  ⚠ 창을 늦추면 통계 점수는 줄어든다 — β 가 1 이어도 창 안 데이터가")
+        print("    너무 적으면(점 3개 미만) '—' 로 나온다. tmax 가 창보다 작아도 마찬가지.")
 
     print()
     if bad:
