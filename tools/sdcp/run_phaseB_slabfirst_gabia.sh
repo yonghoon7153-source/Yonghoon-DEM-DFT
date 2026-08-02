@@ -45,7 +45,7 @@ UMA_PY=$(ls /data/apps/miniforge3/envs/uma/bin/python3 2>/dev/null || which pyth
 MAGJSON=$OUT/slab_mag.json
 mkdir -p "$OUT"
 ts(){ echo "[$(date +%m-%d\ %H:%M:%S)] $*"; }
-_banner(){ ts "설정: stage=$STAGE · degauss=$DEGAUSS · mixing_ndim=$MIXNDIM · maxstep=$MAXSTEP"
+_banner(){ ts "설정: stage=$STAGE · degauss=$DEGAUSS · mixing_ndim=$MIXNDIM · maxstep=$MAXSTEP · scf_must_converge=$SCF_MUST"
            ts "      밀도승계 RESTART=$RESTART $([ "$RESTART" = 1 ] && echo '(켜짐 — 기본)' || echo '(꺼짐)')"; }
 
 # ── 중복 실행 가드 ──────────────────────────────────────────────────────────
@@ -105,6 +105,15 @@ MAXSTEP=${MAXSTEP:-300}
 MIXNDIM=${MIXNDIM:-8}
 # per-site 자화를 매 반복 찍는다 — 미수렴으로 끝나도 시드를 건지기 위해 (필수)
 REPORT=${REPORT:-1}
+# ⚠⚠ **scf_must_converge 가 시드 수확을 막는다 (2026-08-02 실측).**
+#   .true. 면 미수렴 시 QE 가 **그 자리에서 abort** 해서 최종 출력에 도달하지 못한다.
+#   per-site 자화 블록은 그 최종 출력에 있으므로 report=1 을 켜도 안 나온다
+#   (실제로 안 나왔다 — "시드도 못 건졌다"). 반대로 .false. 면 "convergence NOT achieved"
+#   를 찍고도 **끝까지 진행해 자화 블록을 남긴다.**
+#   → 시드 수확 런에서는 .false. 로 둔다. 가짜 수렴 위험은 없다:
+#     우리는 이 런의 **에너지를 안 쓰고** 자화만 가져가며, plateau 는 이미 문서화돼 있다.
+#   ⚠ 본 계산(복합체)에서는 .true. 를 유지한다 — 거기선 에너지가 결과다.
+SCF_MUST=${SCF_MUST:-.true.}
 # ⚠⚠ **plateau 수용 (2026-08-01).** 이 슬랩은 특정 값 근처에서 limit cycle 로 갇힌다.
 #   degauss 0.05 판(옛 등록본) acc_end 6.2e-3 · degauss 0.03 판 5.0e-3 —
 #   **넓혀도 안 잡히고, 우리 값이 이미 선례보다 낫다.** 즉 plateau 는 이 계의 정상 거동이다.
@@ -139,7 +148,7 @@ gen(){   # $1 = "slab" | "complexes"
     --mol_neutral "$BASE/inputs/sdcp_v7c/sdcp_v7c_neutral.xyz" \
     --ref_scf     "$BASE/reference_dft_v2/scf_u62.in" \
     --afm_mode inplane --mol_vacuum 8 --pseudo_dir /data/work/pseudo \
-    --no_fsm --degauss "$DEGAUSS" --scf_must_converge .true. \
+    --no_fsm --degauss "$DEGAUSS" --scf_must_converge "$SCF_MUST" \
     --electron_maxstep "$MAXSTEP" --seed_radical S:0.5 --mixing_ndim "$MIXNDIM" \
     --report "$REPORT" \
     ${extra[@]+"${extra[@]}"} --out "$OUT" || return 1
@@ -215,7 +224,11 @@ if [ "$STAGE" = all ] || [ "$STAGE" = slab ]; then
       ts "   acc_end: $(grep -a 'estimated scf accuracy' "$OUT/slab/scf.out" | tail -1)"
       ts "   ⚠ 이 슬랩 **에너지**는 plateau 값이다 — 절대 E_bind 인용 시 오차막대 필수."
     else
-      ts "슬랩이 안 수렴했고 시드도 못 건졌다 — 여기서 멈춘다."; exit 1
+      ts "슬랩이 안 수렴했고 **시드도 못 건졌다** — 여기서 멈춘다."
+      ts "   → per-site 자화 블록이 없다. scf_must_converge=.true. 면 QE 가 미수렴 시"
+      ts "     abort 해서 최종 출력에 도달하지 못한다. 시드 수확은 이렇게:"
+      ts "     SCF_MUST=.false. MAXSTEP=30 bash tools/sdcp/run_phaseB_slabfirst_gabia.sh slab"
+      exit 1
     fi
   fi
   "$UMA_PY" "$REPO/tools/sdcp/slab_mag_from_scfout.py" \
