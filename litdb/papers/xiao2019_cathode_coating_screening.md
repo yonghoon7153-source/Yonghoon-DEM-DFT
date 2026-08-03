@@ -54,6 +54,16 @@ DFT 에너지 DB(ICSD+data-mined) 내 **Li 함유 104,082종**을 ① 전자절�
 | 선행 대비 | Zhu/He/Mo 2016(ref 32)은 소수 산화물 제안(Li₄TiO₄·Li₂TiO₃·Li₈SiO₆·Li₄SiO₄·**Li₅TaO₅**·Li₃TaO₄ — 2026-08-03 본문 재확인, 판독 확정), Aykol 2016(ref 46, Nat. Commun. 7, 13779)은 **액체 전해질용**(HF 포획) HT 스크린 — 본 논문이 처음으로 SSB용으로 **양극+SSE 양쪽 반응성과 이온전도까지** 게이트에 포함 |
 | 이온전도를 게이트에 넣은 동기 (본문 명시) | ① Sakuda 2008(ref 47): SiO₂-코팅 vs **Li₂O–SiO₂-코팅 LCO** — 후자의 rate 성능 우위를 "코팅의 Li 전도도"로 귀속 ② **Jung/Kang/정윤석 2018**(ref 44, Chem. Mater. 30, 8190): **Li₃BO₃–Li₂CO₃(LBCO)가 Li₃BO₃(LBO)보다 σ_Li 2 자릿수 높아** 셀 성능이 좋다 — "코팅 = 안정성만이 아니라 전도체" 명제의 실험 근거 |
 
+## 2.5 이 깔때기가 답하는 질문 3개
+
+코팅 후보를 고르는 일은 결국 세 질문이다. 파이프라인의 각 단이 그중 하나씩을 맡는다.
+1. **화학적으로 버티나** — 양극·전해질과 접촉해서 안 싸우나 (계면 반응 구동력)
+2. **전기화학적으로 버티나** — 작동 전압 범위에서 자기가 안 깨지나 (ESW)
+3. **Li 를 통과시키나** — 막아 놓고 Li 도 막으면 저항만 된다 (이동장벽)
+1·2 는 값이 싸서 대량으로 돌고, 3 은 비싸서 마지막에 소수만 돈다. **비용 순서가 곧 단 순서다.**
+
+---
+
 ## 3. 스크리닝 파이프라인 (Figure 1) — 깔때기 전체 ★★★
 ```
 DFT 에너지 DB (ICSD + data-mined 치환 신조성 [Hautier 2010])
@@ -191,6 +201,21 @@ Table S1 106종 전수에서 `|ΔE_rxt(반충 NCM)| > |ΔE_rxt(만충 NCM)|`인 
 - **LiFePO₄/LPSCl**: 만충 = FeS₂, Li₃PO₄, FePS₃, LiCl, **FeP** / 반충 = **FeP**, FePS₃, Li₄P₂O₇, LiCl, FeS₂. 같은 패턴이 LiFePO₄/LGPS(GeS₂, Li₃PO₄, FePS₃, **FeP**, FeS₂)·LiFePO₄/LPS(Li₄P₂O₇, **FeP**, FePS₃, FeS₂)에도.
 - 🔑 §6b가 "P의 인화물 환원이 PO₄³⁻ 형성보다 kinetically preferred일 수 있다(ref 33)"를 미결로 남겨 놨는데, **Xiao 자신의 0 K 열역학에서도 LFPO 상대 계면에서는 인화물이 평형 산물로 나온다** — 즉 인화물은 "kinetic 예외 주장"이 아니라 조건(상대 물질에 환원성 TM이 있을 때)에 따라 열역학적으로도 나온다. 우리 LPSCl 분해산물 서사에서 Li₃PO₄ 일변도로 쓰지 말 것.
 - 부수: **LiMn₂O₄/LPS 반충 산물에 SO₂(기체)** 등장 — 고SOC에서 황이 기체상 산화물까지 밀려나는 극단 사례.
+
+## 4.5 grand potential 이 뭔가 (이 절의 핵심 도구)
+
+보통 에너지는 "원자 개수가 정해진" 계를 다룬다. 그런데 전지에서는 **Li 가 드나든다** —
+충전하면 빠지고 방전하면 들어온다. 원자 수가 안 정해진 계다.
+
+그래서 Li 를 **저수지(reservoir)** 와 주고받는다고 보고, Li 의 화학퍼텐셜 μ_Li 를 변수로 삼는다.
+그 μ 아래에서의 유효 에너지가 **grand potential** 이다.
+- μ_Li 가 높다 = Li 가 풍부 = **방전 상태(저전압)**
+- μ_Li 가 낮다 = Li 가 부족 = **충전 상태(고전압)**
+즉 **전압을 μ_Li 로 번역**해서, "이 물질이 3.0 V 에서는 멀쩡한데 4.5 V 에서는 분해된다" 를
+계산으로 말할 수 있게 된다. **ESW(전기화학 안정성 창)가 바로 그 μ 구간의 폭**이다.
+방법의 원전은 [Zhu15](`zhu2015_esw_grand_potential_origin.md`).
+
+---
 
 ## 5. DFT/계산 방법 ★ (Experimental Procedures 전문 요약)
 - **code/셋업**: VASP + PAW. **GGA(PBE)/GGA+U 혼합 스킴**(rotationally invariant Hubbard; Jain 2011 혼합 보정) = MP 계열 표준. **ecut 520 eV**, k-grid **≥ 500/n_atom**. "Similar datasets available online as part of the Materials Project" — 즉 **자체(내부) DFT DB**(ICSD 구조 + data-mined 치환 신조성 [Hautier 2010])이며 MP 공개판과 동세대. MP 버전 번호는 명시 없음(2018년 무렵 세대).
