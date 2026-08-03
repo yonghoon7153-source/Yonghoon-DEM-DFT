@@ -118,7 +118,8 @@ def build(results_folder, archive_folder, mpm_lab=None, verbose=True):
     _root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     curated = _load_curated(_root)
     cov = {'n': len(rows), 'dem': len(rows), 'mpm': 0, 'step4': 0,
-           'reviewed': 0, 'use_dem': 0, 'use_mpm': 0}
+           'reviewed': 0, 'use_dem': 0, 'use_mpm': 0,
+           'compared': 0, 'curated_no_mpm': 0}
     for r in rows:
         r['has_dem'] = 1
         # ★ 원 DB 가 쓰는 판별 축 = SE/solid.  am_pct(wt%) 가 아니라 이것으로 봐야 문서와 대조된다.
@@ -162,17 +163,23 @@ def build(results_folder, archive_folder, mpm_lab=None, verbose=True):
                                    ('SE-rich(DEM-eps-artifact)' if _gap >= GATE_BAND_PP
                                     else 'cross-validated'))
                     cov['use_dem' if _dem_wins else 'use_mpm'] += 1
-                    # 큐레이션 DB 에 있으면 신뢰등급·근거를 **덧붙인다** (규칙이 못 만드는 정보)
-                    _cu = curated.get(r['name'])
-                    r['reviewed'] = int(bool(_cu))
-                    if _cu:
-                        cov['reviewed'] += 1
-                        r['trust_curated'] = _cu.get('trust')
-                        r['verdict_curated'] = (_cu.get('verdict') or '')[:300]
-                        r['se_of_solid_pct_curated'] = _cu.get('se_of_solid_pct')
-                        # 큐레이션 판정과 자동 규칙이 갈리면 **드러낸다** (조용한 덮어쓰기 금지)
-                        if _cu.get('use_source') and _cu['use_source'] != r['use_source']:
-                            r['use_source_disagrees_with_curated'] = _cu['use_source']
+        # ★ 큐레이션 조인은 **MPM 블록 밖**이다 (2026-08-03 정정): 처음엔 MPM 안에 넣어서,
+        #   MPM 산출물이 없는 케이스는 판정이 있어도 아예 조회되지 않았다 → 실코퍼스에서
+        #   **조인 0건**.  판정은 케이스의 속성이지 MPM 파일 유무의 함수가 아니다.
+        _cu = curated.get(r['name'])
+        r['reviewed'] = int(bool(_cu))
+        if _cu:
+            cov['reviewed'] += 1
+            r['trust_curated'] = _cu.get('trust')
+            r['verdict_curated'] = (_cu.get('verdict') or '')[:300]
+            r['se_of_solid_pct_curated'] = _cu.get('se_of_solid_pct')
+            r['use_source_curated'] = _cu.get('use_source')
+            if r.get('use_source'):                       # MPM 이 있어 자동판정이 난 경우만 대조
+                cov['compared'] += 1
+                if _cu.get('use_source') and _cu['use_source'] != r['use_source']:
+                    r['use_source_disagrees_with_curated'] = _cu['use_source']
+            else:                                          # 판정은 있는데 이 런엔 MPM 이 없다
+                cov['curated_no_mpm'] += 1
         sp = _find_layer(r['name'], roots, glob_pat='step4_*viz*.json')
         if sp:
             v = _load_json(sp) or {}
@@ -198,8 +205,18 @@ def build(results_folder, archive_folder, mpm_lab=None, verbose=True):
                   f"({nx / nb * 100:.0f}%)")
             _dis = sum(1 for r in rows if 'use_source_disagrees_with_curated' in r)
             print(f"  ★regime-gate: use MPM {cov['use_mpm']} / use DEM {cov['use_dem']}  "
-                  f"· 큐레이션 판정 보유 {cov['reviewed']}건 (나머지는 reviewed=0 자동판정)"
-                  + (f"  ⚠자동↔큐레이션 불일치 {_dis}건" if _dis else "  (불일치 0)"))
+                  f"· 큐레이션 판정 {cov['reviewed']}건 (나머지 reviewed=0 자동)")
+            # ★ "불일치 0" 은 **대조를 했을 때만** 의미가 있다.  조인 0건이면 공허하게 참이라
+            #   "규칙이 검증됐다" 로 오독된다 — 대조 건수를 항상 같이 인쇄한다.
+            if cov['compared']:
+                print(f"    자동↔큐레이션 대조 {cov['compared']}건 중 불일치 "
+                      f"{_dis}건 ({(cov['compared']-_dis)/cov['compared']*100:.0f}% 일치)")
+            else:
+                print("    ⚠ 자동↔큐레이션 **대조 0건** — 규칙이 이 코퍼스에서 검증되지 "
+                      "않았다 (일치/불일치 둘 다 주장 불가)")
+            if cov['curated_no_mpm']:
+                print(f"    · 큐레이션 판정은 있으나 이 런에 MPM 산출물이 없는 케이스 "
+                      f"{cov['curated_no_mpm']}건")
         if cov['step4'] == 0:
             print("  ⚠ STEP4 0건 — 성능 회귀 불가.  구조→성능은 "
                   "scripts/perf_reduced_order.py (적합 없는 물리) 로 간다.")
@@ -243,7 +260,8 @@ def _selftest():
     for _i, (nm, mpm, s4) in enumerate(
             (('caseA', True, True), ('caseB', True, False), ('caseC', False, False),
              ('caseD_same_metrics_as_A', False, False),
-             ('input_1mAh_100_14', True, False))):     # ★큐레이션 DB 에 실재 (use_source=DEM)
+             ('input_1mAh_100_14', True, False),       # ★큐레이션 DB 에 실재 (use_source=DEM)
+             ('input_2mAh_real_20', False, False))):   # ★큐레이션은 있는데 **MPM 없음**
         if nm.startswith('caseD'):
             _i = 0                                        # caseA 와 지표 동일하게 강제
         # ★ input_1mAh_100_14 는 큐레이션 DB 의 실제 값 (DEM 18.2 / MPM 11.4 → gap −6.8 = 게이트 발동)
@@ -284,7 +302,7 @@ def _selftest():
     rows, cov = build(res, os.path.join(td, 'archive'), lab, verbose=False)
     by = {r['name']: r for r in rows}
     chk('★dedup 이 이름-기준 — 지표가 같아도 다른 케이스는 남는다',
-        cov['n'] == 5 and 'caseD_same_metrics_as_A' in by, f"{cov['n']}건: {sorted(by)}")
+        cov['n'] == 6 and 'caseD_same_metrics_as_A' in by, f"{cov['n']}건: {sorted(by)}")
     chk('층 커버리지 정확 (MPM 3 · STEP4 1)', cov['mpm'] == 3 and cov['step4'] == 1)
     chk('★MPM 값이 mpm_ 접두사로 조인된다 (예측기가 0건 쓰던 층)',
         by['caseA'].get('mpm_porosity_mpm_pct') == 16.7
@@ -317,6 +335,17 @@ def _selftest():
         f"trust={_cur.get('trust_curated')}")
     chk('★큐레이션 없는 케이스는 reviewed=0 (자동판정임을 낙인)',
         by['caseA'].get('reviewed') == 0 and 'trust_curated' not in by['caseA'])
+    # ★ 조인이 MPM 유무와 무관해야 한다 — 옛 코드는 MPM 블록 안에 있어 실코퍼스서 **조인 0건**
+    _nm = by.get('input_2mAh_real_20', {})
+    chk('★MPM 산출물이 없어도 큐레이션 판정은 조인된다 (조인 0건 버그)',
+        _nm.get('reviewed') == 1 and _nm.get('use_source_curated') == 'DEM'
+        and _nm.get('has_mpm') == 0,
+        f"reviewed={_nm.get('reviewed')} curated={_nm.get('use_source_curated')}")
+    chk('★MPM 없으면 자동판정은 안 만든다 (대조 대상 아님)',
+        'use_source' not in _nm and cov['curated_no_mpm'] == 1)
+    chk('★대조 건수를 따로 센다 (불일치 0 이 공허하게 참이 되는 것 차단)',
+        cov['compared'] == 1 and cov['reviewed'] == 2,
+        f"대조 {cov['compared']} / 판정보유 {cov['reviewed']}")
     chk('★자동 규칙이 큐레이션 use_source 와 일치 (불일치 플래그 없음)',
         'use_source_disagrees_with_curated' not in _cur)
     # ★ SE/solid = 원 DB 의 판별 축 (am_pct 아님)
