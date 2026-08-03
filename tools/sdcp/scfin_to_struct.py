@@ -157,6 +157,129 @@ def write_poscar(path, cell, order, counts, pos, comment):
             f.write(f"  {p[0]:18.12f} {p[1]:18.12f} {p[2]:18.12f}\n")
 
 
+
+# ═══ VESTA 프리셋 ═══════════════════════════════════════════════════════════
+# 사용자의 기존 SDCP 분자 .vesta (ORCA 판) 양식을 그대로 승계한다 — C/S/O/H 의
+# 반지름·색이 같아야 분자 그림끼리 나란히 놓을 수 있다. 여기에 슬랩 원소만 더한다.
+#   (radius, R,G,B, R2,G2,B2)   뒤 3색은 VESTA 보조색
+VSTYLE = {
+    "C":  (0.35,  76,  76,  76, 128,  73,  41),
+    "S":  (0.48, 255, 250,   0, 255, 250,   0),
+    "O":  (0.38, 254,   3,   0, 254,   3,   0),
+    "H":  (0.20, 255, 255, 255, 255, 204, 204),
+    "Li": (0.40, 134, 224, 116, 134, 224, 116),
+    "Ni": (0.45,  58, 106, 184,  58, 106, 184),
+}
+# ⚠ scf.in 은 Ni1/Ni2 (AFM 부격자)를 라벨로 구분해 들고 있다. .vasp/.xyz 로 나갈 때는
+#   원소 Ni 로 뭉개지지만 **.vesta 는 site 단위 색을 쓰므로 부격자를 살릴 수 있다** —
+#   NiO6 팔면체가 파랑/회색으로 갈리면 반강자성 배치가 그림에서 바로 읽힌다.
+NI_SUB = {"Ni1": (58, 106, 184), "Ni2": (150, 152, 156)}
+# (A1, A2, max_len, show_polyhedra)
+VBONDS = [("Ni", "O", 2.40, 1),   # NiO6 팔면체 + 분자 O 와의 흡착결합(1.89 A)도 여기서 그려진다
+          ("Li", "O", 2.60, 0),
+          ("C", "C", 1.70, 0), ("C", "H", 1.15, 0), ("C", "O", 1.65, 0),
+          ("C", "S", 1.95, 0), ("S", "O", 1.80, 0), ("O", "H", 1.10, 0)]
+
+
+def write_vesta(path, cell, labels, elems, pos, title):
+    """CRYSTAL 형식 .vesta. 좌표는 **분율**이어야 한다 (MOLECULE 판은 Cartesian).
+
+    ⚠ CLAUDE.md: .vesta 는 **ASCII 전용 + CRLF**. 비ASCII 한 글자가 파싱을 깨뜨린 전례가
+      있으므로 이 함수가 쓰는 문자열에는 한글·em-dash 를 절대 넣지 않는다.
+    """
+    a, b, c = (np.linalg.norm(v) for v in cell)
+    ang = lambda u, v: np.degrees(np.arccos(np.dot(u, v) / (np.linalg.norm(u) * np.linalg.norm(v))))
+    al, be, ga = ang(cell[1], cell[2]), ang(cell[0], cell[2]), ang(cell[0], cell[1])
+    frac = pos @ np.linalg.inv(cell)
+
+    # 사이트 라벨: 참조 .vesta 와 같은 **영숫자만** 쓴다 (밑줄/비ASCII 는 파싱 위험).
+    #   AFM 부격자는 색으로도 갈리지만 라벨에도 남긴다 — NiA = spin up, NiB = spin down.
+    seen, site_lab = {}, []
+    for e, lb in zip(elems, labels):
+        stem = {"Ni1": "NiA", "Ni2": "NiB"}.get(lb, e)
+        seen[stem] = seen.get(stem, 0) + 1
+        site_lab.append(f"{stem}{seen[stem]}")
+
+    L = ["#VESTA_FORMAT_VERSION 3.5.4", "", "", "CRYSTAL", "", "TITLE",
+         title.encode("ascii", "replace").decode("ascii"), "", "GROUP", "1 1 P 1  ", "SYMOP",
+         " 0.000000  0.000000  0.000000  1  0  0   0  1  0   0  0  1   1",
+         " -1.0 -1.0 -1.0  0 0 0  0 0 0  0 0 0", "TRANM 0",
+         " 0.000000  0.000000  0.000000  1  0  0   0  1  0   0  0  1", "LTRANSL", " -1",
+         " 0.000000  0.000000  0.000000  0.000000  0.000000  0.000000", "LORIENT",
+         " -1   0   0   0   0",
+         " 1.000000  0.000000  0.000000  1.000000  0.000000  0.000000",
+         " 0.000000  0.000000  1.000000  0.000000  0.000000  1.000000", "LMATRIX",
+         " 1.000000  0.000000  0.000000  0.000000", " 0.000000  1.000000  0.000000  0.000000",
+         " 0.000000  0.000000  1.000000  0.000000", " 0.000000  0.000000  0.000000  1.000000",
+         " 0.000000  0.000000  0.000000", "CELLP",
+         f"  {a:9.6f}  {b:9.6f}  {c:9.6f}  {al:9.6f}  {be:9.6f}  {ga:9.6f}",
+         "  0.000000   0.000000   0.000000   0.000000   0.000000   0.000000", "STRUC"]
+    for i, (e, sl, f) in enumerate(zip(elems, site_lab, frac), 1):
+        L.append(f"  {i:3d}  {e:<2s}  {sl:>10s}  1.0000  {f[0]:10.6f} {f[1]:10.6f} "
+                 f"{f[2]:10.6f}    1        -")
+        L.append("                            0.000000   0.000000   0.000000  0.00")
+    L += ["  0 0 0 0 0 0 0", "THERI 1"]
+    for i, sl in enumerate(site_lab, 1):
+        L.append(f"  {i:3d} {sl:>10s} -0.000000")
+    L += ["  0 0 0", "SHAPE",
+          "  0       0       0       0   0.000000  0   192   192   192   192", "BOUND",
+          "       0        1         0        1         0        1", "  0   0   0   0  0",
+          "SBOND"]
+    present = set(elems)
+    n = 0
+    for a1, a2, mx, poly in VBONDS:
+        if a1 not in present or a2 not in present:
+            continue
+        n += 1
+        # 필드: search_mode boundary_mode show_polyhedra search_by_label style
+        # ⚠ boundary_mode=1 이어야 **셀 경계를 넘는 결합**이 그려진다. 이 계의 흡착결합이
+        #   실제로 shift (1,1,0) 이라, 0 이면 결합선이 안 보여 "떠 있는" 것처럼 보인다.
+        L.append(f"  {n}  {a1:>5s} {a2:>5s}    0.00000  {mx:9.5f}  0  1  {poly}  0  1  "
+                 f"0.110  0.000 127 127 127")
+    L += ["  0 0 0 0", "SITET"]
+    for i, (e, lb, sl) in enumerate(zip(elems, labels, site_lab), 1):
+        rad, r1, g1, b1, r2, g2, b2 = VSTYLE.get(e, (0.40, 160, 160, 160, 160, 160, 160))
+        if lb in NI_SUB:
+            r1, g1, b1 = NI_SUB[lb]; r2, g2, b2 = r1, g1, b1
+        L.append(f"  {i:3d} {sl:>10s}  {rad:.4f} {r1:3d} {g1:3d} {b1:3d} "
+                 f"{r2:3d} {g2:3d} {b2:3d}  50  0")
+    L += ["  0 0 0 0 0 0", "VECTR", " 0 0 0 0 0", "VECTT", " 0 0 0 0 0", "SPLAN",
+          "  0   0   0   0", "LBLAT", " -1", "LBLSP", " -1", "DLATM", " -1", "DLBND", " -1",
+          "DLPLY", " -1", "PLN2D", "  0   0   0   0", "ATOMT"]
+    for k, e in enumerate(sorted(present, key=lambda x: list(elems).index(x)), 1):
+        rad, r1, g1, b1, r2, g2, b2 = VSTYLE.get(e, (0.40, 160, 160, 160, 160, 160, 160))
+        L.append(f"  {k}  {e:>9s}  {rad:.4f} {r1:3d} {g1:3d} {b1:3d} {r2:3d} {g2:3d} {b2:3d}  50")
+    # SCENE: c 축을 화면 위로 세운 측면 시점 (슬랩은 위에서 보면 층이 안 보인다)
+    L += ["  0 0 0 0 0 0", "SCENE",
+          " 1.000000  0.000000  0.000000  0.000000", " 0.000000  0.000000  1.000000  0.000000",
+          " 0.000000 -1.000000  0.000000  0.000000", " 0.000000  0.000000  0.000000  1.000000",
+          "  0.000   0.000", "  0.000", "  1.000", "HBOND 0 2", "", "STYLE",
+          "DISPF 37749698", "MODEL   0  1  0", "SURFS   0  1  1", "SECTS  32  1",
+          "FORMS   0  1", "ATOMS   0  0  1", "BONDS   1", "POLYS   1", "VECTS 1.000000",
+          "FORMP", "  1  1.0   0   0   0", "ATOMP", " 24  24   0  50  2.0   0", "BONDP",
+          "  1  16  0.110  0.000 127 127 127", "POLYP", "  50 1  0.030 150 150 150",
+          "ISURF", "  0   0   0   0", "TEX3P", "  1         -INF         -INF", "SECTP",
+          "  1  5.00000E-01  5.00000E-01  0.00000E+00  0.00000E+00  0.00000E+00  0.00000E+00",
+          "CONTR", " 0.1 -1 1 1 10 -1 2 5", " 2 1 2 1", "   0   0   0", "   0   0   0",
+          "   0   0   0", "   0   0   0", "HKLPP", " 192 1  1.000 255   0 255", "UCOLP",
+          "   0   0  1.000   0   0   0", "COMPS 0", "LABEL 1    12  1.000 0", "PROJT 0  0.962",
+          "BKGRC", " 255 255 255", "DPTHQ 0 -0.5000  3.5000", "LIGHT0 1"]
+    ident = [" 1.000000  0.000000  0.000000  0.000000", " 0.000000  1.000000  0.000000  0.000000",
+             " 0.000000  0.000000  1.000000  0.000000", " 0.000000  0.000000  0.000000  1.000000",
+             " 0.000000  0.000000 20.000000  0.000000", " 0.000000  0.000000 -1.000000"]
+    L += ident + ["  26  26  26 255", " 179 179 179 255", " 255 255 255 255"]
+    for k in (1, 2, 3):
+        L += [f"LIGHT{k}"] + ident + ["   0   0   0   0"] * 3
+    L += ["SECCL 0", "", "TEXCL 0", "", "ATOMM", " 204 204 204 255", "  25.600", "BONDM",
+          " 255 255 255 255", " 128.000", "POLYM", " 255 255 255 255", " 128.000", "SURFM",
+          "   0   0   0 255", " 128.000", "FORMM", " 100 100 100 255", "  44.800", "HKLPM",
+          " 255 255 255 255", " 128.000", ""]
+    body = "\n".join(L)
+    assert body.isascii(), "non-ASCII leaked into .vesta"
+    with open(path, "w", encoding="ascii", newline="\r\n") as f:
+        f.write(body)
+
+
 def pair_min(cell, labels, pos, sel_a, sel_b, layer, same=False):
     """sel_a ↔ sel_b 최소 거리. `layer` 로 어떤 이미지를 볼지 고른다.
 
@@ -220,6 +343,9 @@ def main():
                    f"UNRELAXED single-point geometry from {os.path.abspath(path)}")
         write_xyz(os.path.join(a.out, f"{tag}.xyz"), elems, pos, comment)
         write_poscar(os.path.join(a.out, f"{tag}.vasp"), cell, order, counts, pos, comment)
+        write_vesta(os.path.join(a.out, f"{tag}.vesta"), cell, labels, elems, pos,
+                    f"{tag} (nat {len(elems)}) - unrelaxed single-point geometry, "
+                    f"NiO6 polyhedra + AFM sublattice colors (Ni1 blue / Ni2 gray)")
 
         print(f"\n══ {tag}  (nat {len(elems)}) ══")
         print(f"  cell  a {np.linalg.norm(cell[0]):.3f}  b {np.linalg.norm(cell[1]):.3f}"
@@ -229,7 +355,7 @@ def main():
         mol = split_molecule(elems, pos)
         if not (mol.any() and (~mol).any()):
             print("  (단일 조각 — 분자/슬랩 분할 없음)")
-            print(f"  → {a.out}/{tag}.xyz + {tag}.vasp")
+            print(f"  → {a.out}/{tag}.xyz + .vasp + .vesta")
             continue
 
         # ── ⓪ z 단면: 슬랩 위에 얹혀 있는 게 맞나 ───────────────────────────
@@ -271,7 +397,7 @@ def main():
               f"{'  ⚠ 3.5 A 미만 — 피복률이 너무 높다' if lat[0] < 3.5 else ''}")
         ss = pair_min(cell, labels, pos, ~mol, ~mol, "surface", same=True)
         print(f"     [참고] 슬랩 ↔ 옆 셀 슬랩 {ss[0]:.3f} A ({ss[1]}↔{ss[2]}) = 격자 결합, 정상")
-        print(f"  → {a.out}/{tag}.xyz + {tag}.vasp")
+        print(f"  → {a.out}/{tag}.xyz + .vasp + .vesta")
 
 
 if __name__ == "__main__":
