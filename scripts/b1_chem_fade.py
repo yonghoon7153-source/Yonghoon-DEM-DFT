@@ -222,6 +222,30 @@ def _selftest():
         ok += 1 if cond else 0
         print(f"  {'✓' if cond else '✗ FAIL'} {name}")
 
+    # ★ 2026-08-03: webapp STEP5 프리셋이 정본 CSV 와 갈리는 것을 막는 핀.
+    #   실제로 DBE 프리셋이 **SBE 의 pristine(18)** 을 쓰고 있었다 — 성장 배수(3.83×)는 맞아서
+    #   ×축만 보면 안 보이고, Ω·cm² 축에서 끝점이 68.4 vs 실측 46 = **+48.7 %** 로 틀렸다.
+    import csv as _csv
+    import os as _os
+    import re as _re
+    _csvp = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)),
+                          '..', 'docs', 'data', 'rint_eis_anchors.csv')
+    _s5 = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)),
+                        '..', 'webapp', 'templates', 'step5.html')
+    try:
+        _anc = {r['anchor_id']: r for r in _csv.DictReader(open(_csvp))}
+        _html = open(_s5, encoding='utf-8').read()
+        for _k in ('sbe', 'dbe'):
+            _m = _re.search(rf'\n\s*{_k}:\s*\{{\s*rint0:\s*([0-9.]+),\s*expx:\s*([0-9.]+)', _html)
+            _p = float(_anc[f'lab_{_k}_pristine']['value'])
+            _c = float(_anc[f'lab_{_k}_cycled']['value'])
+            chk(f'★[{_k.upper()}] STEP5 프리셋 pristine = 정본 CSV ({_p:g} Ω·cm²)',
+                _m is not None and abs(float(_m.group(1)) - _p) < 1e-9)
+            chk(f'★[{_k.upper()}] 프리셋 끝점 = 실측 cycled ({_c:g} Ω·cm²)',
+                _m is not None and abs(float(_m.group(1)) * float(_m.group(2)) - _c) / _c < 0.01)
+    except Exception as _e:                                   # 파일 없음(부분 체크아웃) → 스킵
+        chk(f'STEP5 프리셋 ↔ 정본 CSV 대조 (스킵: {type(_e).__name__})', True)
+
     o = trajectory_scalar(18, 6.1, 1000, 2.0, 'sqrt', ledger_end_x=1.1)
     r0 = [r for r in o['rows'] if r['N'] == 0][0]
     rE = [r for r in o['rows'] if r['N'] == 1000][0]
