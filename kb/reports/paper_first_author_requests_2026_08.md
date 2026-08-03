@@ -123,4 +123,58 @@ B₂O₃ 는 **400·500 K 를 이미 돌아 뒀다** (`b2o3_md_arrhenius.json`
 
 ---
 
-## 2. (다음 요청 자리)
+## 2. LPSOCl MSD plot 필요 (2026-08-03)
+
+**요청**: 기존 3계 MSD 그림(LPSCl / LPSCl1.6 / B₂O₃)에 **LPSOCl 을 추가**해 달라.
+
+### 2-1. 걸림돌 — MSD 시계열이 db 에 없었다
+
+`db/properties` 에는 D·Ea 만 있고 **MSD 곡선은 없다**. 곡선은 각 런 디렉토리의
+`msd.json` 안에만 있어서 그림을 그리려면 매번 서버를 뒤져야 했고, 기존 3계 CSV 는
+손으로 만든 것이라 계를 하나 붙일 수가 없었다.
+
+→ **수확기를 만들었다**: `tools/figures/harvest_msd_curves.py`
+   런 디렉토리에서 `msd.json` 을 찾아 공통 격자(0-49 ps @ 1 ps)로 보간하고,
+   기존 CSV 에 열로 병합한다. 시드가 여럿이면 **가장 작은 시드를 대표**로 고른다
+   (임의 선택 금지 — 재현 가능해야 한다).
+
+### 2-2. 실행 (LPSOCl 런이 있는 서버에서)
+
+```bash
+python3 tools/figures/harvest_msd_curves.py \
+    --run lpsocl=~/work/runs/lpsocl_md/ladder \
+    --merge db/properties/msd_LPSCl_LPSCl16_b2o3.csv \
+    --out   db/properties/msd_4sys_origin.csv
+python3 tools/figures/fig_msd_4sys.py       # → docs/figures/msd_4sys.png + Origin CSV
+```
+
+`msd_4sys_origin.csv` 가 없으면 그림 스크립트는 **기존 3계로 폴백**하고 그렇다고 알린다
+(조용히 3계만 그리지 않는다).
+
+### 2-3. 그림 설계
+
+| 계 | 색 | 마커 |
+|---|---|---|
+| LPSCl | 회색 #6b7280 | ○ |
+| LPSCl1.6 | 파랑 #2563eb | □ |
+| **LPSOCl** | **보라 #7c3aed** | ◇ |
+| B₂O₃-doped | 빨강 #c0392b | △ |
+
+⚠ `house_style.SYS` 는 lpsocl = #be123c(진홍)인데 **이 family 는 b2o3 가 이미 빨강**이라
+충돌한다. 이미 논문에 나간 3계 색을 유지하는 쪽이 우선이므로 LPSOCl 만 보라로 뺐다.
+다른 계열 그림에서는 SYS 를 그대로 따른다.
+
+### 2-4. 그림 안에 규율을 적었다
+
+곡선은 **단일 시드**다. 그림만 떼어 간 사람이 기울기를 읽어 D 라고 쓰지 않도록
+캡션 아래에 박아 두었다:
+
+> Single-seed trajectories — illustrative hierarchy only.
+> Quantitative D / Eₐ / σ come from the multiseed Arrhenius sets.
+
+점선은 **2–50 ps 창**의 선형 적합이다(캠페인 규약 창). 그 밖의 구간에서 기울기를 읽으면
+케이지 진동을 확산으로 오독한다.
+
+---
+
+## 3. (다음 요청 자리)
