@@ -11,7 +11,7 @@
 </div>
 {% for cat in cat_order %}{% if cats[cat] %}
 <section class="gsec">
-<div class="section-title">{{ cat }}</div>
+<div class="section-title" data-n="{{ cats[cat]|length }}개">{{ cat }}</div>
 <div class="grid grid-3">
 {% for g in cats[cat] %}
 <div class="card gterm" data-t="{{ g.term|lower }} {{ g.full|lower }} {{ g.id }} {{ g.what|striptags|lower }}">

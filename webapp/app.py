@@ -5,6 +5,7 @@ app.py — DFT 지식 인프라 Flask 앱.
 동기화: db 파일을 요청마다 읽으므로 계산 등록 즉시 사이트 반영.
 """
 from flask import Flask, render_template, jsonify, send_from_directory, abort, request
+import re
 from markupsafe import Markup, escape
 from datetime import datetime
 import json, os, re
@@ -13,6 +14,19 @@ import data as D
 import glossary as G
 
 app = Flask(__name__)
+
+# ⚠ 입문/설명 본문에 **굵게**·`코드` 를 쓰는데 템플릿이 그대로 찍어서 별표가 노출됐다.
+#   전체 마크다운 파서를 붙일 자리가 아니므로 **굵게·코드·이스케이프만** 처리한다.
+#   ⚠ escape 를 먼저 해야 XSS 가 안 생긴다 (본문은 우리가 쓰지만 규율은 지킨다).
+def _mdlite(text: str) -> Markup:
+    s = escape(text or "")
+    s = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", str(s))
+    s = re.sub(r"`([^`]+)`", r'<code class="mono">\1</code>', s)
+    return Markup(s)
+
+
+app.jinja_env.filters['mdlite'] = _mdlite
+
 
 try:
     import markdown as _md

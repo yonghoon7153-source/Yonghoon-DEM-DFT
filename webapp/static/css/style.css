@@ -863,3 +863,24 @@ tr.row-dim{opacity:.62}
 /* ⚠ 긴 slug(378px)가 space-between flex 행에서 안 접혀 /literature 만 가로 스크롤이
    생겼다(데스크톱 1480 > 1400, 모바일 488 > 420). 2026-07-29 감사. */
 .lit-row .mono,.lit-item .mono{overflow-wrap:anywhere;min-width:0}
+
+/* ── 용어사전 섹션 머리 ─────────────────────────────────────────────────
+   ⚠ 공용 .section-title 은 .72rem · uppercase · muted 라 **영문 라벨용**이다.
+     한글은 uppercase 가 아무 효과도 없어서, 카드 격자 사이에 끼면 그냥 작은
+     회색 글씨가 되어 "머리글"로 안 읽힌다(실측 제보). 용어사전은 카드가 촘촘해서
+     특히 심하다 → 전용 규칙으로 **크기·굵기·색을 올리고 위아래 여백과 밑줄**을 준다. */
+.gsec{margin-top:34px}
+.gsec:first-of-type{margin-top:10px}
+.gsec > .section-title{
+  font-size:1.02rem; text-transform:none; letter-spacing:-.01em;
+  color:var(--ink); font-weight:800;
+  margin:0 0 14px; padding-bottom:8px;
+  border-bottom:2px solid var(--border);
+  display:flex; align-items:baseline; gap:9px;
+}
+/* 항목 수를 머리글 오른쪽에 옅게 (템플릿에서 data-n 으로 넘긴다) */
+.gsec > .section-title::after{
+  content:attr(data-n); font-size:.72rem; font-weight:600;
+  color:var(--muted); letter-spacing:0;
+}
+@media (max-width:640px){ .gsec > .section-title{font-size:.94rem} }

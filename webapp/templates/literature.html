@@ -52,7 +52,7 @@
 {% if tprimer %}
 <details style="margin-top:8px;border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:var(--bg)">
   <summary style="cursor:pointer;font-size:.8rem;font-weight:600">📘 {{ tprimer.title }}</summary>
-  <div style="font-size:.78rem;line-height:1.65;margin-top:8px;white-space:pre-wrap">{{ tprimer.body|join('\n') }}</div>
+  <div style="font-size:.78rem;line-height:1.65;margin-top:8px;white-space:pre-wrap">{{ tprimer.body|join('\n')|mdlite }}</div>
 </details>
 {% endif %}
 <div class="muted" style="font-size:.72rem;margin-top:5px">
@@ -150,7 +150,9 @@ var curTrack='all', curQ='', curPI='', curTP='', sortMode=false, origOrder=null;
 //   litdb 는 여러 사람이 보는 화면이고, 남의 별이 내 화면에 뜨면 오히려 방해가 된다.
 var FAVK='litdb_fav_v1';
 function favSet(){try{return new Set(JSON.parse(localStorage.getItem(FAVK)||'[]'))}catch(e){return new Set()}}
-function favSave(s){try{localStorage.setItem(FAVK,JSON.stringify([].slice.call(s)))}catch(e){}}
+// ⚠ [].slice.call(Set) 은 [] 를 돌려준다 (Set 에 length 가 없다). 이것 때문에 저장이
+//   항상 빈 배열이 돼서 별이 안 눌리는 것처럼 보였다. Array.from 이 유일하게 맞다.
+function favSave(s){try{localStorage.setItem(FAVK,JSON.stringify(Array.from(s)))}catch(e){}}
 function paintFav(){
   var f=favSet();
   document.querySelectorAll('.favbtn').forEach(function(b){
@@ -164,6 +166,11 @@ function toggleFav(b){
   if(f.has(id))f.delete(id); else f.add(id);
   favSave(f); paintFav();
   if(curTP==='__fav')apply();          // 즐겨찾기 필터 중이면 즉시 반영
+  // ⚠ 별을 눌렀다고 **필터로 자동 전환하지 않는다** — 여러 개 별표하는 중에 목록이
+  //   사라져 버리기 때문. 대신 칩 카운트를 잠깐 강조해서 "담겼다"를 보여 준다.
+  var chip=document.getElementById('favchip');
+  if(chip){chip.style.transition='none';chip.style.transform='scale(1.12)';
+    setTimeout(function(){chip.style.transition='transform .25s';chip.style.transform='';},10);}
 }
 function toggleSort(){
   var plist=document.getElementById('plist');
