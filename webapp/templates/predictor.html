@@ -32,6 +32,7 @@
       <button class="btn btn-secondary" style="margin-left:auto" onclick="structPredict()">
         예측</button>
       <button class="btn btn-secondary" onclick="structToggleTable()">판정표</button>
+      <button class="btn btn-secondary" onclick="structToggleSurf()">교호작용 지도</button>
     </h3>
 
     <div id="struct-hint" style="display:none;padding:10px 12px;border-radius:6px;
@@ -44,6 +45,24 @@
     </div>
 
     <div id="struct-rows" style="display:grid;gap:6px"></div>
+
+    <!-- 교호작용 지도 (주간보고 8쪽 형식) -->
+    <div id="struct-surf" style="display:none;margin-top:14px">
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px">
+        <select id="surf-target" style="padding:4px 8px"></select>
+        <span style="color:#7a8794;font-size:12px">를</span>
+        <select id="surf-x" style="padding:4px 8px"></select>
+        <span style="color:#7a8794;font-size:12px">×</span>
+        <select id="surf-y" style="padding:4px 8px"></select>
+        <span style="color:#7a8794;font-size:12px">평면에서</span>
+        <button class="btn btn-secondary" onclick="structSurface()">그리기</button>
+        <label style="color:#9aa7b4;font-size:12px;margin-left:6px">
+          <input type="checkbox" id="surf-pts" checked> 실측 코퍼스 점 겹치기</label>
+      </div>
+      <canvas id="surf-canvas" width="720" height="420"
+              style="max-width:100%;background:#141a21;border-radius:6px"></canvas>
+      <div id="surf-legend" style="color:#7a8794;font-size:11px;margin-top:6px"></div>
+    </div>
 
     <div id="struct-table" style="display:none;margin-top:14px;overflow-x:auto">
       <table style="width:100%;border-collapse:collapse;font-size:12px">
@@ -611,7 +630,12 @@ function trainModels() {
           const keys = ['phi_se','tau','cn','porosity','sigma_ion','am_cn'];
           const cvParts = keys.filter(k => data.cv_scores[k] !== undefined)
                               .map(k => k + ':' + data.cv_scores[k]);
-          if (cvParts.length) cvMsg += '\nCV_R²: ' + cvParts.join(', ');
+          // ★ 이 CV_R² 는 위 "설계 → 구조 예측" 패널의 nested R² 와 **같은 척도가 아니다**.
+          //   커널 6 개 중 CV 를 최대화하는 걸 전체 데이터로 고른 뒤 그 최댓값을 보고하고
+          //   (max-of-6 = 낙관), scaler_X/scaler_y 를 폴드 나누기 **전에** 전체로 적합한다
+          //   (표준화 누수).  두 숫자를 나란히 놓고 크기 비교하면 안 된다.
+          if (cvParts.length) cvMsg += '\nCV_R² (커널선택 미중첩·스케일러 누수 → 낙관): '
+                                     + cvParts.join(', ');
         }
         showToast(cvMsg);
       } else {
@@ -1341,6 +1365,94 @@ document.addEventListener('DOMContentLoaded', function(){
     });
   });
 });
+
+// ═══ 교호작용 지도 — 2 인자 응답면 + 실측 산점 (주간보고 8 쪽 형식) ═════════════════
+const _KNOBS = [['d_se','d_SE (µm)'],['d_am','d_AM (µm)'],['am_pct','AM %'],
+                ['ps_frac','P:S'],['rve','RVE (µm)'],['loading','로딩 (mAh/cm²)']];
+function structToggleSurf(){
+  const t = document.getElementById('struct-surf');
+  const show = (t.style.display === 'none');
+  t.style.display = show ? 'block' : 'none';
+  if(show && _structStatus && _structStatus.ready){
+    const ts = document.getElementById('surf-target');
+    if(!ts.options.length){
+      // REJECT 는 애초에 status 에서 빠져 나오지만, 안전하게 한 번 더 거른다
+      (_structStatus.rows||[]).filter(r => r.verdict !== 'REJECT').forEach(r => {
+        ts.add(new Option(r.label + '  [' + r.verdict + ']', r.target)); });
+      _KNOBS.forEach(([k,l]) => { document.getElementById('surf-x').add(new Option(l,k));
+                                  document.getElementById('surf-y').add(new Option(l,k)); });
+      document.getElementById('surf-x').value = 'am_pct';
+      document.getElementById('surf-y').value = 'd_am';
+    }
+    structSurface();
+  }
+}
+function _viridis(t){  // 0..1 → rgb (근사 viridis — 주간보고 색과 같은 계열)
+  t = Math.max(0, Math.min(1, t));
+  const cs = [[68,1,84],[59,82,139],[33,145,140],[94,201,98],[253,231,37]];
+  const f = t*(cs.length-1), i = Math.min(Math.floor(f), cs.length-2), u = f-i;
+  const a = cs[i], b = cs[i+1];
+  return `rgb(${Math.round(a[0]+(b[0]-a[0])*u)},${Math.round(a[1]+(b[1]-a[1])*u)},`
+       + `${Math.round(a[2]+(b[2]-a[2])*u)})`;
+}
+async function structSurface(){
+  const cv = document.getElementById('surf-canvas'), lg = document.getElementById('surf-legend');
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0,0,cv.width,cv.height);
+  lg.textContent = '계산 중…';
+  const body = {target: document.getElementById('surf-target').value,
+                x_knob: document.getElementById('surf-x').value,
+                y_knob: document.getElementById('surf-y').value, n: 28};
+  if(body.x_knob === body.y_knob){ lg.textContent = '두 축이 같습니다 — 다른 축을 고르세요.'; return; }
+  try{
+    const r = await fetch('/predictor/structure/surface', {method:'POST',
+      headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)});
+    const d = await r.json();
+    if(d.error){ lg.textContent = d.error; return; }
+    const L=58, B=42, W=cv.width-L-90, H=cv.height-B-14;
+    const nx=d.x.length, ny=d.y.length, zmin=d.zmin, zmax=d.zmax, rng=(zmax-zmin)||1;
+    const px = v => L + (v - d.x[0])/((d.x[nx-1]-d.x[0])||1)*W;
+    const py = v => 14 + H - (v - d.y[0])/((d.y[ny-1]-d.y[0])||1)*H;
+    const cw = W/nx, ch = H/ny;
+    for(let j=0;j<ny;j++) for(let i=0;i<nx;i++){
+      const z = d.z[j][i];
+      // ★ null = 학습 볼록포 밖.  칠하지 않는다 — 채우면 데이터보다 넓어 보인다.
+      if(z===null){ ctx.fillStyle='#1a222b'; }
+      else ctx.fillStyle = _viridis((z-zmin)/rng);
+      ctx.fillRect(L + i*cw, 14 + H - (j+1)*ch, Math.ceil(cw)+1, Math.ceil(ch)+1);
+    }
+    if(document.getElementById('surf-pts').checked && (d.points||[]).length){
+      d.points.forEach(p => {
+        if(p.x<d.x[0]||p.x>d.x[nx-1]||p.y<d.y[0]||p.y>d.y[ny-1]) return;
+        ctx.beginPath(); ctx.arc(px(p.x), py(p.y), 3.0, 0, 6.2832);
+        ctx.fillStyle = _viridis((p.v-zmin)/rng); ctx.fill();
+        ctx.lineWidth=1; ctx.strokeStyle='rgba(255,255,255,.85)'; ctx.stroke();
+      });
+    }
+    ctx.strokeStyle='#3a4a5a'; ctx.strokeRect(L,14,W,H);
+    ctx.fillStyle='#9aa7b4'; ctx.font='11px sans-serif'; ctx.textAlign='center';
+    for(let i=0;i<5;i++){ const v=d.x[0]+(d.x[nx-1]-d.x[0])*i/4;
+      ctx.fillText(v.toFixed(v<10?2:0), L+W*i/4, 14+H+14); }
+    ctx.textAlign='right';
+    for(let i=0;i<5;i++){ const v=d.y[0]+(d.y[ny-1]-d.y[0])*i/4;
+      ctx.fillText(v.toFixed(v<10?2:0), L-6, 14+H-H*i/4+4); }
+    ctx.textAlign='center';
+    ctx.fillText(d.x_knob, L+W/2, 14+H+30);
+    ctx.save(); ctx.translate(14, 14+H/2); ctx.rotate(-Math.PI/2);
+    ctx.fillText(d.y_knob, 0, 0); ctx.restore();
+    for(let i=0;i<60;i++){ ctx.fillStyle=_viridis(i/59);
+      ctx.fillRect(L+W+18, 14+H-(i+1)*H/60, 16, H/60+1); }
+    ctx.textAlign='left';
+    ctx.fillText(zmax.toPrecision(3), L+W+16, 12);
+    ctx.fillText(zmin.toPrecision(3), L+W+16, 14+H+12);
+    lg.innerHTML = `면 = 모형 예측 (nested R² ${d.nested==null?'—':d.nested.toFixed(3)},
+      판정 ${d.verdict}) · 점 = <b>실측 코퍼스 ${(d.points||[]).length}건</b>(모형 아님) ·
+      어두운 칸 ${d.n_masked}/${d.n_grid} = 학습 볼록포 밖이라 <b>칠하지 않음</b>.<br>
+      나머지 노브는 코퍼스 중앙값 고정: ` +
+      Object.entries(d.fixed).filter(([k])=>k!==d.x_knob&&k!==d.y_knob)
+        .map(([k,v])=>`${k}=${(+v).toFixed(2)}`).join(', ');
+  }catch(e){ lg.textContent = String(e); }
+}
 </script>
 
 {% endblock %}

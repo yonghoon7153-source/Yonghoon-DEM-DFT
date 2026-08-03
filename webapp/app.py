@@ -10172,6 +10172,19 @@ def predictor_structure():
         return jsonify({'ready': False, 'error': f'{type(e).__name__}: {e}'}), 200
 
 
+@app.route('/predictor/structure/surface', methods=['POST'])
+def predictor_structure_surface():
+    """2 인자 응답면 (교호작용 지도) + 실제 코퍼스 산점."""
+    d = request.get_json() or {}
+    try:
+        return jsonify(structure_predictor.surface(
+            target=d.get('target', 'tau'), x_knob=d.get('x_knob', 'am_pct'),
+            y_knob=d.get('y_knob', 'd_am'), n=int(d.get('n', 25)),
+            fixed=d.get('fixed') or None))
+    except Exception as e:                                     # noqa: BLE001
+        return jsonify({'error': f'{type(e).__name__}: {e}'}), 200
+
+
 @app.route('/predictor/structure/suggest')
 def predictor_structure_suggest():
     """다음 DEM 배치 제안 (순차 D-최적)."""

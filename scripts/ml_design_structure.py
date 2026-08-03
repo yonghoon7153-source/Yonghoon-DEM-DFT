@@ -92,10 +92,20 @@ MONOTONE_PRIORS = [
 # ══════════════════════════════════════════════════════════════════════════════
 #  기저 · 적합 · 해석적 LOOCV
 # ══════════════════════════════════════════════════════════════════════════════
-def candidate_terms(d):
-    """항 후보: 절편 [] · 1차 [i] · 2차 [i,i] · 교호작용 [i,j].  JSON 직렬화 가능한 표현."""
-    terms = [[]] + [[i] for i in range(d)] + [[i, i] for i in range(d)]
-    terms += [[i, j] for i in range(d) for j in range(i + 1, d)]
+def candidate_terms(d, family='full'):
+    """항 후보: 절편 [] · 1차 [i] · 2차 [i,i] · 교호작용 [i,j].  JSON 직렬화 가능한 표현.
+
+    family 로 후보 풀을 **중첩되게** 좁힐 수 있다 — 교호작용이 실제로 기여하는지 재려면
+    같은 절차를 후보만 바꿔 돌려야 공정하다:
+      'linear'      1, x_i
+      'quadratic'   + x_i²          (곡률만, 교호작용 없음)
+      'full'        + x_i·x_j       (교호작용 포함)
+    """
+    terms = [[]] + [[i] for i in range(d)]
+    if family in ('quadratic', 'full'):
+        terms += [[i, i] for i in range(d)]
+    if family == 'full':
+        terms += [[i, j] for i in range(d) for j in range(i + 1, d)]
     return terms
 
 
@@ -158,14 +168,14 @@ def _gain_floor(n, m, r2_cur):
     return max(MIN_GAIN, MC_K * math.log(max(m, 2)) * max(1.0 - r2_cur, 0.02) / max(n, 1))
 
 
-def select_terms(X, y, max_terms=MAX_TERMS, lam=LAM_SELECT):
+def select_terms(X, y, max_terms=MAX_TERMS, lam=LAM_SELECT, family='full'):
     """탐욕 전방선택 — 항을 하나씩 넣고 다중비교-보정 문턱을 넘을 때만 채택.
 
     σ_th Stage T1 의 16-특징 그리디 · σ_e 22.5 의 절제 스크린과 같은 절차.  **n/k ≥
     MIN_N_OVER_K** 를 동시에 강제해 표본 대비 항 수가 넘지 않게 한다.
     """
     n, d = X.shape
-    cand = candidate_terms(d)
+    cand = candidate_terms(d, family)
     k_cap = int(min(max_terms, max(2, math.floor(n / MIN_N_OVER_K))))
     chosen, trace = [[]], []                          # 절편은 항상
     cur, _, _ = loocv(build(X, chosen), y, lam)
@@ -215,7 +225,8 @@ def fit_target(X, y, kind='lin', max_terms=MAX_TERMS):
             'pi90_coverage': cover, 'select_trace': [(a, round(b, 4)) for a, b in trace]}
 
 
-def nested_cv(X, y, kind='lin', folds=10, seed=0, max_terms=MAX_TERMS, return_pred=False):
+def nested_cv(X, y, kind='lin', folds=10, seed=0, max_terms=MAX_TERMS, return_pred=False,
+              family='full'):
     """중첩 CV — outer K-fold, inner 에서 **항선택과 λ 를 다시** 고른다.
 
     naive LOOCV 는 전체 데이터로 항을 고른 뒤 같은 데이터로 채점하므로 낙관 편향이 있다.
@@ -238,7 +249,7 @@ def nested_cv(X, y, kind='lin', folds=10, seed=0, max_terms=MAX_TERMS, return_pr
         mu, sd = X[tr].mean(0), X[tr].std(0)
         sd = np.where(sd == 0, 1.0, sd)
         Xtr, Xte = (X[tr] - mu) / sd, (X[te] - mu) / sd
-        terms, _, _ = select_terms(Xtr, yy[tr], max_terms=max_terms)
+        terms, _, _ = select_terms(Xtr, yy[tr], max_terms=max_terms, family=family)
         Ptr = build(Xtr, terms)
         _, lam = max(((loocv(Ptr, yy[tr], l)[0], l) for l in LAM_GRID), key=lambda t: t[0])
         pred[te] = build(Xte, terms) @ ridge(Ptr, yy[tr], lam)
@@ -556,6 +567,123 @@ def diagnose(csv_path, target, split_by='use_source', vs=None, folds=10):
         out['verdict'] += (f'  단, 단일-출처로 좁혀도 천장은 nested {_ceil:+.3f} — '
                            f'나머지 {1 - _ceil:.0%} 는 게이트와 무관한 잔여 불확실성이므로 '
                            '게이트를 고쳐도 ±PI 보고는 여전히 필요.')
+    return out
+
+
+def response_surface(bundle, X, target, x_knob, y_knob, n=25, fixed=None, rows=None):
+    """2 인자 응답면 — 주간보고 8 쪽의 (D50 × Dseed → 색) 과 같은 그림.
+
+    두 자유노브를 격자로 쓸고 나머지는 고정(기본 = 코퍼스 중앙값), 유도 7 특징은 매 격자점에서
+    **다시 유도**한다 (13 차원을 독립으로 흔들면 존재할 수 없는 설계가 된다).
+
+    ★ 볼록포 밖 격자점은 값 대신 null 로 마스킹한다.  격자를 채우려고 학습 범위 밖까지
+      칠하면 그림이 데이터보다 넓어 보인다 — 없는 근거를 색으로 만들어내는 셈이다.
+    ★ 실제 코퍼스 점도 같이 돌려준다.  주간보고 그림은 **실측 산점도**이고, 모형 면과
+      실측 점은 다른 물건이므로 겹쳐 보되 구분해서 봐야 한다.
+    """
+    m = bundle['models'].get(target)
+    if m is None:
+        return {'error': f'타깃 없음: {target}'}
+    if x_knob not in FREE_KNOBS or y_knob not in FREE_KNOBS:
+        return {'error': f'축은 자유노브여야 합니다 {FREE_KNOBS} (유도량은 축이 될 수 없음)'}
+    if x_knob == y_knob:
+        return {'error': '두 축이 같습니다'}
+    ji = {k: DESIGN_FEATURES.index(k) for k in FREE_KNOBS}
+    base = {k: float(np.median(X[:, ji[k]])) for k in FREE_KNOBS}
+    base.update({k: float(v) for k, v in (fixed or {}).items() if k in FREE_KNOBS})
+    xs = np.linspace(np.percentile(X[:, ji[x_knob]], 2), np.percentile(X[:, ji[x_knob]], 98), int(n))
+    ys_ = np.linspace(np.percentile(X[:, ji[y_knob]], 2), np.percentile(X[:, ji[y_knob]], 98), int(n))
+    lo13, hi13 = X.min(0), X.max(0)
+    span = np.where(hi13 - lo13 > 0, hi13 - lo13, 1.0)
+    Z, W, n_out = [], [], 0
+    for yv in ys_:
+        rowz, roww = [], []
+        for xv in xs:
+            kn = dict(base)
+            kn[x_knob], kn[y_knob] = float(xv), float(yv)
+            d = derive_features(*[kn[k] for k in FREE_KNOBS])
+            c = np.array([float(d[f]) for f in DESIGN_FEATURES])
+            if np.any(c < lo13 - 0.02 * span) or np.any(c > hi13 + 0.02 * span):
+                rowz.append(None)
+                roww.append(None)
+                n_out += 1
+                continue
+            p = predict(m, c)
+            if p['extrapolation']:
+                rowz.append(None)
+                roww.append(None)
+                n_out += 1
+                continue
+            rowz.append(float(p['value']))
+            roww.append(float(p['hi'] - p['lo']))
+        Z.append(rowz)
+        W.append(roww)
+    pts = []
+    if rows is not None:
+        for i, rr in enumerate(rows):
+            v = rr.get(target, '')
+            if v in ('', None):
+                continue
+            try:
+                pts.append({'x': float(X[i, ji[x_knob]]), 'y': float(X[i, ji[y_knob]]),
+                            'v': float(v), 'name': rr.get('name', '')})
+            except (ValueError, TypeError):
+                pass
+    fin = [v for r in Z for v in r if v is not None]
+    return {'error': None, 'target': target, 'x_knob': x_knob, 'y_knob': y_knob,
+            'x': [float(v) for v in xs], 'y': [float(v) for v in ys_], 'z': Z, 'pi_width': W,
+            'fixed': base, 'n_masked': n_out, 'n_grid': int(n) ** 2,
+            'zmin': (min(fin) if fin else None), 'zmax': (max(fin) if fin else None),
+            'points': pts, 'log_target': bool(m.get('log_target')),
+            'verdict': m.get('verdict'), 'nested': m.get('nested_cv_r2'),
+            'note': ('빈 칸 = 학습 볼록포 밖(마스킹).  점 = 실제 코퍼스 케이스(모형 아님) — '
+                     '주간보고 그림은 실측 산점도이고 면은 모형이므로 구분해서 볼 것.')}
+
+
+def interaction_screen(csv_path, folds=10, seed=0, targets=None):
+    """교호작용이 **실제로** 기여하는가 — 기저족을 중첩시켜 중첩 CV 로 잰다.
+
+    "여러 모델을 돌려보자" 의 정직한 판본.  블랙박스를 여러 개 얹는 대신, **같은 절차**로
+    후보 풀만 바꿔 돌린다 (선택·λ·폴드 전부 동일) — 그래야 차이가 기저족 탓임이 확정된다.
+
+        linear     1, x_i
+        quadratic  + x_i²        ← 곡률 (교호작용 아님)
+        full       + x_i·x_j     ← 교호작용
+
+      Δ_curv  = quadratic − linear     곡률의 몫
+      Δ_inter = full − quadratic       **순수 교호작용의 몫**  ← 주간보고가 묻는 그것
+
+    Δ_inter 가 잡음 수준이면 그 타깃엔 교호작용이 없는 것이고, 2 인자 지도를 그려도
+    두 축이 **더해질** 뿐 서로 꺾지 않는다 (색이 대각선으로만 변한다).  크면 진짜 상호작용이다.
+    선택된 x_i·x_j 항목록도 함께 돌려준다 — 어느 쌍인지가 곧 답이다.
+    """
+    X, ys, _names, _rows = load_corpus(csv_path)
+    out = {}
+    for t, kind in STRUCTURE_TARGETS:
+        if t not in ys or (targets and t not in targets):
+            continue
+        idx, y = ys[t]
+        r = {'n': int(len(y))}
+        for fam in ('linear', 'quadratic', 'full'):
+            r[fam] = nested_cv(X[idx], y, kind, folds=folds, seed=seed, family=fam)
+        r['d_curvature'] = r['quadratic'] - r['linear']
+        r['d_interaction'] = r['full'] - r['quadratic']
+        # 전체 데이터에서 실제로 선택된 교호작용 쌍 (해석용 — 판정은 위 nested 로 한다)
+        mu, sd = X[idx].mean(0), X[idx].std(0)
+        sd = np.where(sd == 0, 1.0, sd)
+        yy = np.log(np.clip(y, 1e-12, None)) if kind == 'log' else y
+        terms, _tr, _kc = select_terms((X[idx] - mu) / sd, yy, family='full')
+        r['pairs'] = [f'{DESIGN_FEATURES[a]} × {DESIGN_FEATURES[b]}'
+                      for a, b in (tt for tt in terms if len(tt) == 2 and tt[0] != tt[1])]
+        r['squares'] = [f'{DESIGN_FEATURES[a]}²'
+                        for a, b in (tt for tt in terms if len(tt) == 2 and tt[0] == tt[1])]
+        # 판정 — 문턱은 지어내지 않고 잡음 규모(≈1/n, 잔차분산 반영)에서 유도
+        noise = max(MIN_GAIN, 2.0 * max(1.0 - r['full'], 0.02) / max(len(y), 1))
+        r['noise_scale'] = noise
+        r['verdict'] = ('INTERACTING' if r['d_interaction'] > 3 * noise else
+                        'WEAKLY-INTERACTING' if r['d_interaction'] > noise else
+                        'ADDITIVE')
+        out[t] = r
     return out
 
 
@@ -1042,6 +1170,46 @@ def _selftest():                                                   # noqa: C901
     os.unlink(p_sw)
     os.unlink(p_in)
 
+    print(' [11] 교호작용 스크린 + 2 인자 응답면')
+    d_am_, am_ = X[:, 1], X[:, 2]
+    y_add = 2.0 * am_ + 5.0 * d_am_ + rng.normal(0, 3, n)                     # 순수 가법
+    y_int = y_add + 0.25 * (am_ - 70) * (d_am_ - 7)                           # + 강한 교호작용
+    with tempfile.NamedTemporaryFile('w', suffix='.csv', delete=False, newline='') as f5:
+        c5 = ['name'] + DESIGN_FEATURES + ['phi_se', 'cn']
+        w5 = _csv.DictWriter(f5, fieldnames=c5)
+        w5.writeheader()
+        for i in range(n):
+            r5 = {'name': f'i{i}'}
+            r5.update({f: X[i, j] for j, f in enumerate(DESIGN_FEATURES)})
+            r5.update({'phi_se': y_add[i], 'cn': y_int[i]})   # phi_se=가법 · cn=교호
+            w5.writerow(r5)
+        p_ix = f5.name
+    isc = interaction_screen(p_ix, folds=5, targets=['phi_se', 'cn'])
+    chk('★가법으로 만든 타깃을 ADDITIVE 로 판정 (없는 교호작용을 만들어내지 않음)',
+        isc['phi_se']['verdict'] == 'ADDITIVE',
+        f"d_inter {isc['phi_se']['d_interaction']:+.4f} vs noise {isc['phi_se']['noise_scale']:.4f}")
+    chk('★교호작용을 심은 타깃을 INTERACTING 로 판정',
+        isc['cn']['verdict'] == 'INTERACTING',
+        f"linear {isc['cn']['linear']:+.3f} -> full {isc['cn']['full']:+.3f} "
+        f"(d_inter {isc['cn']['d_interaction']:+.3f})")
+    chk('★어느 쌍인지 이름을 댄다 (심은 것은 d_am x am_pct)',
+        any('d_am' in q and 'am_pct' in q for q in isc['cn']['pairs']),
+        ', '.join(isc['cn']['pairs']) or '(none)')
+    chk('기저족이 중첩이라 full >= linear (같은 절차, 후보만 확장)',
+        isc['cn']['full'] >= isc['cn']['linear'] - 1e-9
+        and isc['phi_se']['full'] >= isc['phi_se']['linear'] - 0.02)
+    _b = train(p_ix, verbose=False, folds=5)
+    sf = response_surface(_b, X, 'phi_se', 'am_pct', 'd_am', n=12)
+    chk('응답면이 격자를 낸다', sf['error'] is None and len(sf['z']) == 12)
+    chk('★볼록포 밖 격자점은 칠하지 않고 null 로 마스킹 (없는 근거를 색으로 만들지 않음)',
+        any(v is None for row in sf['z'] for v in row)
+        and 0 < sf['n_masked'] < sf['n_grid'], f"{sf['n_masked']}/{sf['n_grid']}")
+    chk('★축은 자유노브만 — 유도량(d_ratio)은 거부',
+        response_surface(_b, X, 'phi_se', 'd_ratio', 'd_am').get('error') is not None)
+    chk('같은 축 두 개는 거부',
+        response_surface(_b, X, 'phi_se', 'am_pct', 'am_pct').get('error') is not None)
+    os.unlink(p_ix)
+
     print(f"ML-DESIGN-STRUCTURE SELFTEST {ok}/{tot} {'PASS' if ok == tot else 'FAIL'}")
     return 0 if ok == tot else 1
 
@@ -1072,6 +1240,8 @@ def main(argv=None):
                     help='순차 D-최적 갱신을 끈다 = 개별 h* 상위 N (평평해짐).  대조용')
     ap.add_argument('--suggest-cand', type=int, default=4000,
                     help='능동학습 후보 표본 수 (실현가능 필터를 통과할 만큼 넉넉히)')
+    ap.add_argument('--interactions', action='store_true',
+                    help='기저족(linear/quadratic/full)을 중첩 CV 로 비교 — 교호작용의 실제 몫')
     ap.add_argument('--closure', action='store_true',
                     help='porosity 를 직접 회귀 vs φ_SE·φ_AM 에서 유도 — 어느 쪽이 나은지')
     a = ap.parse_args(argv)
@@ -1080,6 +1250,24 @@ def main(argv=None):
     if not os.path.isfile(a.csv):
         print(f'CSV 없음: {a.csv}\n  먼저: python3 scripts/design_performance_dataset.py --out {a.csv}')
         return 1
+    if a.interactions:
+        print(f'교호작용 스크린 — 기저족 중첩 비교 ({a.csv})')
+        print(f"  {'타깃':32s} {'n':>4s} {'linear':>7s} {'+곡률':>7s} {'+교호':>7s} "
+              f"{'Δ곡률':>7s} {'Δ교호':>7s} {'잡음':>7s}  판정")
+        _res = interaction_screen(a.csv, folds=a.folds)
+        for t, r in _res.items():
+            print(f"  {t:32s} {r['n']:4d} {r['linear']:+7.3f} {r['quadratic']:+7.3f} "
+                  f"{r['full']:+7.3f} {r['d_curvature']:+7.3f} {r['d_interaction']:+7.3f} "
+                  f"{r['noise_scale']:7.4f}  {r['verdict']}")
+        print()
+        for t, r in _res.items():
+            if r['pairs']:
+                print(f"  {t}: 선택된 교호작용 → {', '.join(r['pairs'])}"
+                      + (f"   (제곱항 {', '.join(r['squares'])})" if r['squares'] else ''))
+        print('\n  ★ Δ교호 = full − quadratic = **순수 교호작용의 몫**.  ADDITIVE 면 두 인자가')
+        print('    더해질 뿐 서로 꺾지 않는다 (2 인자 지도의 색이 대각선으로만 변함).')
+        print('    문턱은 지어내지 않고 잔차분산/n 에서 유도한 잡음 규모의 1×/3× 를 쓴다.')
+        return 0
     if a.closure:
         print(f'닫힘 검사 — ε = 1 − φ_SE − φ_AM  ({a.csv})')
         for col, r in closure_test(a.csv, folds=a.folds).items():

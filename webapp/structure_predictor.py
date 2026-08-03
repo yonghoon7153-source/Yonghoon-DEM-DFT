@@ -192,6 +192,29 @@ def predict_structure(d_se, d_am, am_pct, ps_frac, rve, loading, include_weak=Tr
                      '스케일링법칙(.975/.953/.90) 소관.')}
 
 
+def surface(target='tau', x_knob='am_pct', y_knob='d_am', n=25, fixed=None, csv_path=None):
+    """2 인자 응답면 (주간보고 8 쪽 형식) + 실제 코퍼스 산점.  CSV 없으면 면만."""
+    import numpy as np
+
+    import ml_design_structure as M
+
+    b = load_bundle()
+    if b is None:
+        return {'error': '계수 JSON 이 없습니다 — 먼저 학습하세요.'}
+    if target in FORBIDDEN or (b.get('models', {}).get(target, {}).get('verdict') == 'REJECT'):
+        return {'error': f'{target} 은 판정 REJECT 이거나 금지 열입니다 — 면을 그리지 않습니다.'}
+    csv_path = csv_path or os.path.join(_ROOT, 'docs', 'data', 'design_performance_corpus.csv')
+    if os.path.isfile(csv_path):
+        X, _ys, _nm, rows = M.load_corpus(csv_path)
+    else:
+        # 코퍼스가 없으면 학습 때 저장해 둔 표준화 통계로 범위를 복원한다 (면만, 산점 없음)
+        m = b['models'].get(target) or next(iter(b['models'].values()))
+        mu, sd = np.asarray(m['mu']), np.asarray(m['sd'])
+        X, rows = np.vstack([mu - 2 * sd, mu + 2 * sd]), None
+    return M.response_surface(b, np.asarray(X, float), target, x_knob, y_knob,
+                              n=int(n), fixed=fixed, rows=rows)
+
+
 def suggest_batch(csv_path=None, n=10, target='tau', allow_weak=False):
     """다음 DEM 배치 (순차 D-최적).  코퍼스 CSV 가 있어야 후보 상자를 잡을 수 있다."""
     import numpy as np
