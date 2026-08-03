@@ -75,9 +75,12 @@ MP 버전 **2025.02.12**.
 | 6 | **엄격 기준**: V_ox ≥ 4 V **and** ΔE_rxn ≥ −50 meV/atom | **8** | 80 (90.9%) |
 | 7 | AIMD 200 ps @1000 K → 확장 AIMD 800–1200 K | **Li₃Sc₂(PO₄)₃** | 7 |
 
-> ⚠ **덱 수치 정정**: 심포지엄 덱은 "17,233 **Li, P, S, O** crystal structure"라고 적혀 있었는데
-> 실물은 **17,230 Li·O** 다. 개수도 원소집합도 덱이 틀렸다. `db/properties/external_benchmarks_symposium_2026.json`
-> 정정 완료. → **덱을 정본으로 쓰면 안 된다는 우리 규율의 실증 사례.**
+> ⛔ **정정의 정정 (2026-08-03)**: 여기 적혀 있던 *"심포지엄 덱은 `17,233 Li, P, S, O crystal structure`
+> 라고 적혀 있었다 → 덱이 틀렸다"* 는 **사실이 아니었다**. 덱 실물(슬 13 깔때기 최상단, 1100 dpi 판독)은
+> **`17,230 Li, O crystal structure @ MP`** 로 **이 논문과 개수·원소집합 모두 일치**한다.
+> 틀린 쪽은 2026-07-28 저해상도 판독으로 만든 **우리 전사**였다. 근거·경위는
+> `litdb/talks/lee2026_skku_mlip_materials_design.md` §15b. `db/properties/external_benchmarks_symposium_2026.json`
+> 도 함께 정정. → 규율은 유지("수치는 논문에서"), 다만 **"덱이 틀렸다"고 적기 전에 덱 실물을 원해상도로 볼 것**.
 
 **게이트별 위력(우리 언어로)**: ECW가 압도적(94.3% 제거) → 계면 41.9% → Li 네트워크 41.3% →
 band gap **2.6%(사실상 vacuous)**. 논문도 이를 자인한다: *"most of materials previously screened

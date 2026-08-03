@@ -4,6 +4,12 @@
 > 발표자 **Sang Uck Lee**, School of Chemical Engineering, Sungkyunkwan University (**CMS Lab** — Computational Materials Science) ·
 > PDF 18 pp (자료집 pp. 279–296), 슬라이드 31장 · digested 2026-07-28 · status ✅ (덱), ⏳ 구술 txt 대기
 >
+> 🔁 **덱 실물 독립 재판독 완료 2026-08-03** — 같은 PDF가 inbox에 재투입(`litdb/inbox/이상욱 교수님.pdf`,
+> **사용자 분류 `(미분류)`**)되어 **전 18 pp를 이미지로 다시 판독**(PDF는 텍스트 레이어 0 = 전 페이지 스캔;
+> 수치 영역은 embedded raster 원해상도까지 확대). 결과 **교정 14건(+캐비앳 2건) · 신규 8건 ·
+> 미해결질문 2건(Q1·Q3) 종결 · 우리 db 전역에 퍼진 오기 1건("덱이 17,233 Li-P-S-O라고 적었다") 철회**.
+> 전체 목록과 근거는 **§15**. 아래 본문은 재판독 값으로 이미 갱신돼 있다.
+>
 > ⚠ **덱 인용 규율**: `litdb/talks/README.md` 참조. 이 그룹의 **정본은 `papers/kim2024_mtp_argyrodite_disorder_gb.md`**
 > (Nano Energy 2024, 124, 109436 — 덱 슬라이드 13 "Dynamic properties" 가 바로 그 논문). 덱과 논문이 충돌하면 논문이 이긴다.
 > ⚠ 슬라이드 번호 표기가 `/31`, `/50`, `/24` 로 섞여 있다(마스터 덱 잔재). 아래는 **PDF 페이지 + 덱 표기** 병기.
@@ -68,7 +74,7 @@ DFT PES → uMLIP PES 로 갈 때 **softening**(평활화)이 일어나고, **fi
 | 갈래 | 엔진 | 내용 | 출판 상태 (덱 표기) |
 |---|---|---|---|
 | **Anode interface RXN** | MTP | Li \| SSE 계면 반응 | *Under review* at **Chem. Eng. J.** |
-| **Cathode interface RXN** | SevenNet | **17,230 Li·P·S·O 결정구조 @ MP** → electro-/mechanical-/electronic-stability → Li-ion conductivity → best candidates. **코팅 소재 스크리닝** | **Nano Converg. 2026, 13, 27** |
+| **Cathode interface RXN** | SevenNet | **"17,230 Li, O crystal structure @ MP"**(덱 원문 그대로 = Li·O 함유 산화물) → **Electro-, interfacial, electronic stability** → **Li–Li networks (≤ 3.5 Å)** → **Best candidate: Li₃Sc₂(PO₄)₃** (+ 계면 MD `NCM523(104) ‖ Li₃Sc₂(PO₄)₃(101)`, Arrhenius σ 패널). **코팅 소재 스크리닝** | **Nano Converg. 2026, 13, 27** (= `papers/kim2026_hts_li3sc2po43_coating_midni_ncm.md` 정본) |
 | **Dynamic properties** | MTP | Li-ion conductivity @ bulk & interface. **ordered anions → slow / disordered anions → superionic**; Li⁺–BH₄ 거리, B–H 각변위 | *Revision* in **Adv. Energy Mater.** / **Nano Energy 2024, 124, 109436** |
 | **Surface RXN** | SevenNet | 전기화학 물성 평가, fine-tuned universal MLIP, 반응물→전이상태→생성물, 대규모 MD, **RHS 가수분해 기구**, **Sn 도핑 억제** | *Revision* in **Adv. Funct. Mater.** |
 | **Designing novel materials** | MTP | **CSP** (USPEX + GA + active learning) | **JACS 2025, 147, 47381**; **Rare Metals 2025, 44, 2366** |
@@ -84,15 +90,27 @@ DFT PES → uMLIP PES 로 갈 때 **softening**(평활화)이 일어나고, **fi
 ### 5a. 일반 6단계 (슬 14) — "configuration space를 거의 전부 덮는다"
 
 ```
-(1) 6 characteristic configurations, DFT-최적화 @ PBE
-(2) Lattice strain = ±0.05%, 0                      ← 덱 표기 그대로 (아마 ±5%의 오기, §12 참조)
-(3) Short-time AIMD @ 300–1200 K, 0.1 ps 간격 스냅샷  → 7,200 structures
-(4) Single point DFT, functional 3종: ① PBE ② optB88 ③ PBE+D3damp
-(5) MTP 훈련 (R_cut = 5 Å, lev = 100:1 표기)
-(6) MTP로 MD: 100 ps NVT 승온 → 10 ns NPT → σ_ionic 획득
+(1) 6 characteristic configurations, DFT-optimization @ PBE
+(2) Lattice strain = ±0.05%, 0                      ← 박스 표기. 같은 슬라이드 도해 밴드는 "±5% Strain"
+                                                       = ±0.05%는 오기 확정 (§12-2 · §15)
+(3) Short-time AIMD @ 300K–1200K, 0.1 ps 간격 스냅샷  → (7,200 structures)
+(4) Single point DFT with different functional: 1) PBE  2) optB88  3) PBE + D3damp
+(5) MTP potential training (R_cut = 5 Å, **w_e : w_f = 100 : 1**)   ← 에너지:힘 가중치비 (lev 아님)
+(6) MD simulation with MTP: 100 ps NVT heating → 10 ns NPT → ionic conductivity(σ_RT)
 ```
-정확도 회귀 3패널: **MAE 2.09 meV/atom (에너지) · 0.073 meV/Å (힘)** — 힘 단위가 meV/Å로 적혀
-있는데 이는 `papers/kim2024_...` 감사에서 **이미 확인된 단위 오기**(실제 eV/Å)의 덱 재발이다.
+도해 밴드 3계층(훈련셋이 configuration space를 덮어가는 그림): **6 configurations("Untrained region"
+= 점 6개만) → ±5 % Strain(점이 원으로 확대) → AIMD snapshots(원들이 겹쳐 공간을 덮음)**.
+
+정확도 회귀는 **3조성 6패널**(덱 (a)/(b)/(c)):
+
+| 조성 | 에너지 MAE | 힘 MAE (덱 표기) |
+|---|---|---|
+| **Li₆PS₅Cl** | **2.88 meV/atom** | 0.073 meV/Å |
+| Li₆PS₅Br | 2.92 meV/atom | 0.075 meV/Å |
+| Li₆PS₅I | 2.51 meV/atom | 0.066 meV/Å |
+
+힘 단위가 meV/Å로 적혀 있는데 이는 `papers/kim2024_...` 감사에서 **이미 확인된 단위 오기**(실제 eV/Å)의
+덱 재발이다 — 3패널 전부 같은 오기.
 
 > 🔑 (4)의 **functional 3종 병렬 학습**이 그 그룹의 서명 기법이다. Kim 2024 논문에서
 > **optB88-vdW만 site-disorder 의존성을 재현**하고 PBE·PBE-D3는 100%-ordered를 3.7 mS/cm로
@@ -106,12 +124,20 @@ DFT PES → uMLIP PES 로 갈 때 **softening**(평활화)이 일어나고, **fi
 - **Slab**: LPSCl(100) / LPSCl 50%-disordered(100) / Li bcc(100)
 - **Interface**: LPSCl(100) ‖ LPSCl 50%-disordered(100) ‖ Li(100)
 
-**Passive learning**: DFT(PBE) 구조최적화 → Bulk AIMD 5 ps (300–1200 K, 200 K 간격, 0.1 ps 스냅샷)
-+ strain −5…+5 % (2.5 % 간격, 5 ps 간격 스냅샷) + Slab AIMD 10 ps → **DFT(optB88) 재계산**
-→ MTP 훈련·선별 (R_cut = 5, lev_max = 12)
+**Passive learning**: DFT(PBE) 구조최적화 → **Bulk AIMD 30 ps** (T = **300–1200 K + 2000 K, 300 K 간격**,
+**0.2 ps 간격 스냅샷**) + **3 ps 간격 스냅샷 → −10 ~ +10 % (2 % 간격) strain** + **Slab AIMD 10 ps**
+(Li(100) / Argyrodite(100)) → **DFT(optB88) 재계산** → MTP 훈련·선별 (**R_cut = 6, Lev_max = 12**)
 
-**Active learning**: MTP-MD @ 300/500/700/900 K → **γ_select / γ_break 로 구조 선별**
-→ DFT(optB88) → 재훈련 → 수렴 MTP (η = 0.91, **MAE_E ≈ 10 meV/atom**, MAE_F ≈ 0.5 eV/Å)
+**Active learning**: MTP-MD @ **300/500/700/900 K, strain −5 ~ +5 % (5 % 간격)** →
+**γ_select = 2, γ_break = 10 ↔ 5 ↔ 2** 로 구조 선별 → DFT(optB88) → MTP 재훈련
+(**w_e = 1, w_f = 0.01, w_s = 0.001**) → **수렴 판정 4조건: MD reliability = 100 % · No. structures
+selected < 50 · MAE_energies < 10 meV/atom · MAE_forces < 0.3 eV/Å** → Trained MTP →
+생산 **MD NVT, large interface models (>1,000 atoms), 20 ns, 350 K**
+
+> ✅ **§13 Q3("γ 수치 기준은?") 종결** — 덱 슬 16 좌하단 흐름도에 숫자가 그대로 있다. 그리고 이 값들은
+> `papers/kim2026_li_argyrodite_sei_reactive_md.md`(SSRN 정본)의 **γ_select = 2 / γ_break 10→5→2 ·
+> R_cut 6 Å · lev_max 16 · 5,400 스냅샷 · NVT 350 K · 20 ns** 와 정합한다(lev_max만 덱 12 ≠ 정본 16 —
+> 정본 우선). 이전 digest의 `η = 0.91` · `MAE_F ≈ 0.5 eV/Å` 는 **덱 어디에도 없다**(§15-8).
 
 **ΔE_MTP vs ΔE_DFT 산점도에 `γ_select`–`γ_break` 사이를 "Accurate region"으로 명시** ★★
 → **외삽 등급(extrapolation grade) 관리**. 이것이 이 덱에서 우리가 가져올 1순위 항목이다.
@@ -122,19 +148,22 @@ DFT PES → uMLIP PES 로 갈 때 **softening**(평활화)이 일어나고, **fi
 
 | 물질 | 유형 | 개수 |
 |---|---|---|
-| Li | Bulk (0.2 ps 간격) | 5 T × 150 = 750 |
-| | Bulk (2 ps 간격, ±10 % strain) | 5 T × 10 × 11 = 550 |
-| | Slab (100) (0.5 ps 간격) | 5 T × 100 = 500 |
-| LPSCl **0 % X@4a4c** | 위와 동일 3종 | 1,800 |
-| LPSCl **50 % X@4a4c** | 위와 동일 3종 | 1,800 |
-| **합계** | | **5,400** |
+| Li | Bulk (0.2 ps interval) | 5 temps × 150 = 750 |
+| | Bulk (**3 ps interval → ±10 % strain**) | 5 temps × 10 × 11 = 550 |
+| | Slab 100 (**0.1 ps interval**) | 5 temps × 100 = 500 |
+| LPSCl **0 % X⁻@4c** | 위와 동일 3종 | 1,800 |
+| LPSCl **50 % X⁻@4c** | 위와 동일 3종 | 1,800 |
+| **합계** | | 1800 + 1800 + 1800 = **5,400** |
 
 온도 5점 = 300 / 600 / 900 / 1200 / 2000 K.
-**정확도**: Li — 11 meV/atom · 0.063 eV/Å · LPSCl — **5 meV/atom · 0.111 eV/Å**.
+**정확도**: Li — **11 meV/atom · 0.083 eV/Å** · LPSCl — **5 meV/atom · 0.111 eV/Å**
+(이 두 패널만 단위가 제대로 eV/Å로 적혀 있다 — 슬 14의 meV/Å 오기와 대조).
 1 ns DFT-vs-MTP 에너지 궤적이 겹침(초기 0.2 ns 완화 구간 제외).
 
-무질서 배열 도해 6종 표기: `0 % X in 4a (P-43m)` / `25 % (R3m)` / `50 %` / `100 % (F-43m)` / `50 % (R3m)` …
-→ Kim 2024 논문의 6배열과 동일 세트.
+무질서 배열 도해 6종 (덱 표기 그대로, 전부 **X⁻ in 4c**):
+`0 % X⁻ in 4c (F4̄3m)` / `25 % (R3m)` / `50 % (P2₁22)` / `100 % (F4̄3m)` / `75 % (R3m)` / `50 % (P2mm)`
+범례 = `4c sites (S²⁻)` / `4c sites (X⁻)` / `4a sites (S²⁻)` / `4a sites (X⁻)`.
+→ Kim 2024 논문의 6배열과 동일 세트. ⚠ 표기 주의: **이 랩의 `4c` = Kraft/우리 `4d`(cage center)**.
 
 ---
 
@@ -144,13 +173,20 @@ DFT PES → uMLIP PES 로 갈 때 **softening**(평활화)이 일어나고, **fi
 
 - 셀: LPSCl 층 + Li 층, 3 nm × (10 nm 방향), **0 → 10 ns → 20 ns** 진화, SEI 영역 형성
 - **계면 결정영역이 Li₂S로 동정**: g(r)가 Li₂S 기준 곡선과 일치, (100)/(010)/(001) 면 도해
-- **영역분해 MSD** (11 ns 시점):
-  - **Li (결정영역) D ≈ 0.4 × 10⁻⁷ (⚠ 덱 표기 10⁻⁶ 은 자릿수 오기 — 논문 실물 10⁻⁷) cm²/s**
-  - **Li (잔여 벌크) D ≈ 1.1 × 10⁻⁶ cm²/s**
-  → 생성된 interphase가 **모체보다 느리다**(약 1/3)
-- **50 ns까지 확장** (슬 19): interphase 두께 **≈ 11 nm**
-- **실험 대조**: *ACS Energy Lett.* **2022, 7, 3064–3071** 의 TEM interphase layer 와 (⚠ 덱의 '25 °C vs 80 °C' 문구는 `papers/kim2026_li_argyrodite_sei_reactive_md.md` 실물 어디에도 없다 — 2026-07-29 철회)
-  "well agreement" 주장
+- **영역분해 MSD** (MSD(t) 0–20 ns, **11 ns 기점 표시**):
+  - **Li (crystalline region) D = 0.4 × 10⁻⁷ cm²/s**
+  - **Li (remaining bulk) D = 1.1 × 10⁻⁷ cm²/s**   ← **덱도 10⁻⁷ 로 적혀 있다**(2026-08-03 원해상도 확인)
+  → 생성된 interphase가 **모체보다 느리다**(비 **0.36**). 정본 `papers/kim2026_li_argyrodite_sei_reactive_md.md`
+  의 0.4e-7 / 1.1e-7 / pristine 1.6e-7 과 일치. ⛔ **D 절대값 인용 금지**(정본 규율) — 비율만.
+- **시계열**: 우측 소패널이 **1 ns / 7 ns / 10.5 ns / 11.5 ns / 20 ns** 로 끊어져 있다(정본의
+  "S가 먼저 골격 7 ns → Li 침투가 결정화 11 ns" 2단계 기구와 같은 시점들).
+- **상 동정**: g(r) 가 Li₂S 기준곡선과 겹침 + Li₂S **(100)/(010)/(001)** 면 도해.
+- **50 ns까지 확장** (슬 19): initial/10/20/30/40/50 ns 6단, 50 ns 프레임에 **≈ 11 nm** 화살표.
+- **실험 대조**: *ACS Energy Lett.* **2022, 7, 3064–3071**(Luo 2022) 의 cryo-TEM 두 장을 나란히 놓고
+  "well agreement" 주장. 두 패널 라벨은 **25 °C** (interphase layer **~12 nm**, Li₂S(111) ~0.33 nm
+  격자무늬, 20 nm 스케일바) 와 **60 °C** (Amorphous + Li₂S 회절점) — **80 °C 가 아니다**.
+  ⇒ 즉 **"계산 11 nm @50 ns vs 실험 ~12 nm"** 라는 정량 대조가 **덱 안에 실제로 있다**(§12-6 갱신).
+  단 이 두 온도 라벨은 **인용된 실험 그림의 것**이지 그들 MD 조건이 아니다(MD는 350 K 단일).
 
 > 🔑 **우리에게 직접적인 벤치마크 수치**가 여기 있다 — 우리가 Li|LPSCl 반응성 MD(M-계열 후보)를
 > 돌리면 **① interphase 두께 ~11 nm @ 50 ns ② Li₂S 결정화 ③ D(interphase)/D(bulk) ≈ 0.36**
@@ -168,16 +204,19 @@ DFT PES → uMLIP PES 로 갈 때 **softening**(평활화)이 일어나고, **fi
 Pre-mixing (Li₂S + LiCl + P₂S₅) → Material prepared (Li₆PS₅Cl) → Reactants (LPSCl + H₂O)
    → Transition state (H₂O → H₂S, E_a)  → Products
 ```
-하위 셋: `General purpose` / `LPSC(100)` / `LPSC(100)+H₂O` / **`Guided MD`** (D_S–H, D_O–H 좌표로 유도)
-/ `LPSC "S ↔ O"` (S–O 교환 경로)
+하위 셋: `General purpose`(Li·P·S·Cl·H·O 무작위 상자) / `LPSC (100)` / `LPSC (100) + H₂O` /
+**`Guided MD`** — 유도 좌표 **2개: D_S–H** (H가 골격 S로 접근) 와 **D_O–P** (H₂O의 O가 P로 접근) /
+`LPSC "S ↔ O"` (S–O 교환 경로)
 
 **엔진 정확도** (SevenNet, 슬 22): **8.8 meV/atom · 0.57 eV/Å · 0.35 kbar**. MD 500 스텝 에너지 궤적이 DFT와 일치.
 
 ### 7b. LPSCl vs H₃O⁺ + OH⁻ + H₂O (슬 23)
 
-- 계: **LPSC(100) 4 nm + 용액 2.5 nm**, 3 nm × 3 nm, **32 H₃O⁺ + 32 OH⁻ + 200 H₂O**, **500 ps**
+- 계: **LPSC(100) 4 nm + 용액 2.5 nm**, 3 nm × 3 nm, **32 H₃O⁺ + 32 OH⁻ + 299 H₂O**, **500 ps**
 - 결과: **PS₄ 분해 → H₂S 발생 → 표면 붕괴**. `polyhedron-sulfur → single-sulfur` 전환
-- **H 침투 지도**(z 0–40 Å × t 0–500 ps): hydration layer 형성 후 H가 벌크로 침투
+- **H 침투 지도**(**z 0–65 Å** × t 0–500 ps, colorbar `Number of H` 0–15): 표면(z ≈ 40–46 Å)과
+  용액 상단(z ≈ 58–65 Å)에 **hydration layer** 점선박스, 그 아래로 **H penetration** 화살표.
+  ⚠ z ≈ 0–4 Å 의 띠는 주기경계 반대편 표면(슬래브 바닥)이다 — 벌크 침투로 읽지 말 것.
 - **COHP 정량** ★:
   - **ICOHP(P–S) = −6.43 eV**, 결합 2.04 Å
   - **ICOHP(P–S(H)) = −4.69 eV**, 결합 **2.18 Å** ← 양성자화가 P–S를 **27 % 약화**
@@ -188,8 +227,9 @@ Pre-mixing (Li₂S + LiCl + P₂S₅) → Material prepared (Li₆PS₅Cl) → R
 
 - 조성: **Li₆.₂₅P₀.₇₅Sn₀.₂₅S₅Cl**
 - **SnS₄–H 결합이 PS₄–H 보다 강해 H를 SnS₄ 쪽으로 유인** → PS₄ 보호
-- 정량: `SnS₄–H` 정규화 신호 **0.6–0.8** 이 500 ps 내내 유지 vs `PS₄–H` **≈ 0**(억제)
-- 상대 활성화에너지: **SnS₄–H 0.0 → PS₄–H 0.28 eV** (선형)
+- 정량: `Normalized SnS₄–H (≤ 2 Å)` 신호 **0.6–0.8** 이 500 ps 내내 유지 vs `PS₄–H` **≈ 0**(억제)
+- **Relative E_H**: **SnS₄–H = 0.0 → PS₄–H ≈ 0.3 eV** (직선; y축 0.0/0.1/0.2/0.3 눈금의 최상단)
+  ⚠ figure-read — 이전 digest의 `0.28 eV` 는 과잉정밀이다. **"≈0.3 eV" 또는 "0.28–0.30 eV"** 로 쓸 것
 
 > 🔑 이것이 **HSAB 소프트-산 도핑이 대기안정성을 올린다**는 우리 cascade `air_hsab` 축의
 > **반응 동역학 수준 기구 설명**이다. 우리는 정성 tier만 갖고 있고, 그들은 궤적·COHP·E_a를 갖고 있다.
@@ -255,9 +295,9 @@ Pre-mixing (Li₂S + LiCl + P₂S₅) → Material prepared (Li₆PS₅Cl) → R
 |---|---|---|---|
 | **무질서 → σ** | 6배열 전수 MTP-MD, ordered Ea 339–529 meV vs disordered 151–256 meV | disorder_ensemble (disordered 0.177 ± 0.027 eV, ordered frozen) | **방향 완전 일치**. 우리 강점은 **배열 간 분산을 오차막대로 보고**하는 것 (`papers/kim2024_...` §감사: 그들 6배열엔 config-variance 오차막대 없음) |
 | **MLIP σ 절대값** | 훈련 functional에 따라 σ80% 가 8배 갈림 → optB88만 맞음 | **절대 σ 인용 금지** 규율 | **우리 규율이 그들 데이터로 정당화됨**. 그들은 σ_RT를 직접 인용 |
-| **음극 계면 반응** | Li₂S interphase, 11 nm @ 50 ns, D 0.4 vs 1.1 ×10⁻⁶ | **없음** | **완패 — 우리 공백**. 최우선 채택 후보 |
-| **표면 가수분해** | SevenNet 반응 MD + ICOHP + Sn 억제 E_a 0.28 eV | `air_hsab` **정성 tier** | **완패**. 단 우리는 47종 횡단, 그들은 2조성 |
-| **양극 코팅 스크리닝** | **17,230 Li-P-S-O @ MP** 4축 깔때기 (Nano Converg. 2026) | cascade 47종 × 6축 + 오늘 M6 계면반응성 추가 | **풀은 그들이 10²배, 축 밀도는 우리가 우위** — S6 감사의 직접 대조군 |
+| **음극 계면 반응** | Li₂S interphase, 11 nm @ 50 ns(실험 ~12 nm), D 0.4 vs 1.1 ×10⁻⁷ (비 0.36) | **없음** | **완패 — 우리 공백**. 최우선 채택 후보 |
+| **표면 가수분해** | SevenNet 반응 MD + ICOHP + Sn 억제 ΔE_H ≈ 0.3 eV | `air_hsab` **정성 tier** | **완패**. 단 우리는 47종 횡단, 그들은 2조성 |
+| **양극 코팅 스크리닝** | **17,230 Li·O 산화물 @ MP** 4축 깔때기 → **Li₃Sc₂(PO₄)₃** (Nano Converg. 2026) | cascade 47종 × 6축 + 오늘 M6 계면반응성 추가 | **풀은 그들이 10²배, 축 밀도는 우리가 우위** — S6 감사의 직접 대조군. 원소 수렴: 그들 최종 **Sc** ↔ 우리 cascade `Sc₂O₃` 1위(⚠ 이유 다름) |
 | **CSP / 신조성** | USPEX+MTP, Li₂SiS₃ 준안정 상 σ 상승(⛔ 덱의 '4자릿수' 철회 — 계산 2자릿수) | 없음 (host 고정 문제설정) | **문제설정이 다름** — 열위가 아니라 무관. 단 "준안정이 더 좋을 수 있다"는 명제는 우리 metastable 고찰과 공명 |
 | **MLIP 외삽 관리** | γ_select / γ_break "Accurate region" | **없음** | **완패 — 방법론 공백**. 우리 UMA는 외삽 등급 무관리 |
 | **엔진 전략** | 자체 학습 (MTP 5,400셋 / SevenNet fine-tune) | 사전학습 UMA 그대로 | 트레이드오프. 그들은 정확도·우리는 횡단 속도 |
@@ -291,19 +331,27 @@ Pre-mixing (Li₂S + LiCl + P₂S₅) → Material prepared (Li₆PS₅Cl) → R
 1. **덱은 부재의 증거가 아니다.** "그들은 config-variance 오차막대가 없다"는 서술은 **덱이 아니라
    `papers/kim2024_...` 논문 실물 감사**에서 나온 것이며, 그 범위(Nano Energy 2024) 안에서만 유효하다.
    *Revision in Adv. Energy Mater.* 로 표기된 후속에서 보완됐을 수 있다.
-2. **슬 14 단계 (2) "Lattice strain = ±0.05%"** — 슬 16의 계면 훈련셋은 `−5 ~ +5 %`,
-   슬 17 표는 `±10 % strain`. **세 값이 서로 다르다**. 덱 오기 가능성이 높고, 논문(kim2024)은
-   `±5 %`. **덱 수치를 그대로 인용하지 말 것**.
-3. **힘 MAE 단위** — 슬 14 "0.073 meV/Å"는 eV/Å의 오기. 논문 감사에서 이미 확인된 동일 오기의 재발.
-4. **슬 13 "Li₆xPO₄(?)"** — 코팅 스크리닝 최종 후보 조성이 저해상도로 판독 불가. **추정 금지**,
-   논문(Nano Converg. 2026)으로 확인할 것.
+2. **strain 값 4개가 덱 안에서 갈린다 — 2026-08-03 재판독으로 정리됨**:
+   - **벌크 σ 프로토콜(슬 14)**: 박스 `±0.05 %` **vs** 같은 슬라이드 도해 밴드 `±5 % Strain`
+     → **`±0.05 %` 가 오기**(논문 kim2024 도 `±5 %`). 이건 모순이 아니라 **오타 1건**으로 확정.
+   - **계면 훈련셋(슬 16·17)**: passive `−10 ~ +10 % (2 % 간격)` / active `−5 ~ +5 % (5 % 간격)`
+     → **서로 다른 단계의 서로 다른 설정**이라 모순 아님. 정본(`kim2026_li_argyrodite_sei…`)의
+     "±10 % 부피 strain 포함"과도 정합.
+   ⇒ 인용 시 **"벌크 ±5 % / 계면 passive ±10 %·active ±5 %"** 로 쓰고, `±0.05 %` 는 쓰지 말 것.
+3. **힘 MAE 단위** — 슬 14 "0.073 / 0.075 / 0.066 meV/Å"(Cl/Br/I 3패널 전부)는 eV/Å의 오기.
+   논문 감사에서 이미 확인된 동일 오기의 재발. 반면 **슬 17은 eV/Å 로 제대로** 적혀 있다(같은 덱 안 불일치).
+4. ✅ **해소(2026-08-03)** — 코팅 스크리닝 최종 후보는 **`Best candidate: Li₃Sc₂(PO₄)₃`** 로
+   덱에 명시돼 있다(원해상도 확대로 판독). 이전 "Li₆xPO₄(?) 판독 불가"는 저해상도 탓이었다.
+   정본 `papers/kim2026_hts_li3sc2po43_coating_midni_ncm.md`(17,230 → 88 → 8 → Li₃Sc₂(PO₄)₃ γ-phase)와 일치.
 5. **σ_RT 절대값 인용 금지** — 그들 파이프라인이 10 ns NPT MTP-MD에서 σ_RT를 직접 뽑지만,
    `papers/kim2024_...` 가 **같은 물질에서 functional에 따라 8배 갈린다**는 것을 보였다.
    ⛔ **그런데 그 비율 자체가 틀렸다** — `10⁻⁴ → 2.4 mS/cm` 의 "4자릿수" 는 논문에 없다
    (계산 2자릿수 / Huang 2022 실험 3자릿수). 절대값도 비율도 덱에서 가져오지 말고
    **논문 digest 에서 가져올 것**: `papers/kim2025_csp_metastable_edge_sharing_sse.md` §9-A.
-6. **"well agreement with experiment"(슬 19)** 는 TEM 이미지의 정성 대조다. 두께 11 nm가
-   실험과 몇 % 일치인지는 덱에 없다.
+6. **"well agreement with experiment"(슬 19)** — 재판독 결과 **정성 대조만은 아니다**: 인용된
+   cryo-TEM(ACS EL 2022, 25 °C) 패널에 **`~12 nm` 라벨**이 찍혀 있어 **계산 11 nm vs 실험 ~12 nm**
+   비교가 성립한다(정본 digest의 서술과 동일). 다만 **덱 본문에 "몇 % 일치" 문장은 없고**, 그림은
+   **단일 시야·단일 시료**이며 우리 쪽 인용은 **"자릿수·두께 스케일이 맞다"** 수준까지만.
 7. **LFP SOC(슬 30)** 는 학생 프로젝트 수준이고 우리 축과 무관. 인용 가치 없음.
 
 ---
@@ -312,9 +360,9 @@ Pre-mixing (Li₂S + LiCl + P₂S₅) → Material prepared (Li₆PS₅Cl) → R
 
 | # | 질문 | 닫는 방법 |
 |---|---|---|
-| Q1 | 코팅 스크리닝 17,230 풀의 **입구 필터와 최종 후보 조성**은? | Nano Converg. 2026, 13, 27 PDF |
-| Q2 | Li\|LPSCl 계면 MD에서 **어느 무질서 배열**을 썼나 (50 %만? 전수?) | Chem. Eng. J. under review / 구술 |
-| Q3 | γ_select / γ_break **수치 기준**은? | 논문 SI / 구술 |
+| ~~Q1~~ ✅ | 코팅 스크리닝 17,230 풀의 **입구 필터와 최종 후보 조성**은? | **종결** — 정본 `papers/kim2026_hts_li3sc2po43_coating_midni_ncm.md` 확보(MP의 **Li·O 함유 산화물 17,230종** → ECW → 계면반응성 → gap → **Li–Li ≤ 3.5 Å** → 88 → 8 → **Li₃Sc₂(PO₄)₃** γ-phase). 덱 슬 13에도 같은 4단 깔때기 + 후보명이 그대로 적혀 있다(2026-08-03 재판독) |
+| Q2 | Li\|LPSCl 계면 MD에서 **어느 무질서 배열**을 썼나 (50 %만? 전수?) | Chem. Eng. J. under review / 구술. ⚠ 정본(SSRN `kim2026_li_argyrodite_sei_reactive_md`)도 **프로덕션 무질서배열 미명시** — 덱 훈련셋은 0 %와 50 % 두 배열뿐(슬 17) |
+| ~~Q3~~ ✅ | γ_select / γ_break **수치 기준**은? | **종결(2026-08-03)** — 덱 슬 16 흐름도에 **γ_select = 2, γ_break = 10 ↔ 5 ↔ 2**, 수렴 4조건(reliability 100 % · selected < 50 · MAE_E < 10 meV/atom · MAE_F < 0.3 eV/Å), 손실 가중치 w_e = 1 / w_f = 0.01 / w_s = 0.001. 정본과 일치 |
 | Q4 | 가수분해 MD의 **H₂S 발생량 정량**(우리 db의 Taklu 1.07→0.49 cm³/g와 대조 가능한가) | Adv. Funct. Mater. revision |
 | Q5 | Adv. Energy Mater. revision(=Dynamic properties 후속)이 **BH₄ 계**인지 argyrodite인지 | 구술 |
 | Q6 | CSP의 준안정 구조가 **합성 가능성** 검증을 받았나 | JACS 2025, 147, 47381 |
@@ -330,6 +378,89 @@ Pre-mixing (Li₂S + LiCl + P₂S₅) → Material prepared (Li₆PS₅Cl) → R
 - ⛔ **인용 금지 (2026-07-29 철회)**: "corner→edge 로 확산 4자릿수" — 논문에 없는 수치다.
   대체 문장: "준안정 edge-sharing 상이 계산 D 기준 **2자릿수** 앞선다"
   (`papers/kim2025_csp_metastable_edge_sharing_sse.md`; 실험 대비는 Huang 2022 **3자릿수**)
+
+---
+
+## 15. 🔁 덱 실물 독립 재판독 로그 (2026-08-03)
+
+**계기**: 같은 PDF(`litdb/inbox/이상욱 교수님.pdf`, 13.9 MB, 18 pp, Microsoft Print-To-PDF,
+2026-07-28 14:40 생성)가 inbox에 **재투입**됨. 사용자 분류 **`(미분류)`**.
+**방법**: PDF에 **텍스트 레이어가 전혀 없다**(전 18 pp 스캔/이미지, 페이지당 raster 2–28장) →
+전 페이지를 이미지로 렌더링해 눈으로 판독하고, 숫자가 걸린 곳은 **embedded raster 원해상도**
+(≈267 dpi, strip 1737 px)까지 확대해 확인. 자료집 쪽번호 279–296, p.2(=자료집 280)는 백지.
+
+### 15a. 교정 14건
+
+| # | 항목 | 이전 digest | **덱 실물(재판독)** | 근거 |
+|---|---|---|---|---|
+| 1 | 코팅 풀 원소집합 | "17,230 **Li·P·S·O**" | **"17,230 Li, O crystal structure @ MP"** | p.9 슬 13 깔때기 최상단 밴드 (1100 dpi) |
+| 2 | 깔때기 2단 | "electro-/**mechanical**-/electronic-stability" | **"Electro-, interfacial, electronic stability"** | 동상 |
+| 3 | 코팅 최종 후보 | "판독 불가(Li₆xPO₄?)" | **"Best candidate: Li₃Sc₂(PO₄)₃"** + 계면 MD `NCM523(104)‖Li₃Sc₂(PO₄)₃(101)` | p.9 슬 13 (900 dpi) |
+| 4 | 슬 14 에너지 MAE | 2.09 meV/atom | **2.88 meV/atom** | p.9 embedded raster 원해상도 |
+| 5 | 슬 14 회귀 패널 수 | 1개(LPSCl) | **3개 — Cl 2.88/0.073 · Br 2.92/0.075 · I 2.51/0.066** | p.9 (a)(b)(c) |
+| 6 | 훈련 단계 (5) | "lev = 100:1" | **w_e : w_f = 100 : 1** (R_cut 5 Å) | p.9 슬 14 박스 |
+| 7 | passive learning | "Bulk AIMD 5 ps / 200 K 간격 / 0.1 ps / strain −5~+5 %(2.5 %) / R_cut 5" | **Bulk AIMD 30 ps · 300–1200 K + 2000 K(300 K 간격) · 0.2 ps 스냅샷 · 3 ps 간격 → −10~+10 %(2 % 간격) strain · R_cut = 6, Lev_max = 12** | p.10 슬 16 흐름도 |
+| 8 | active learning | "η = 0.91 · MAE_F ≈ 0.5 eV/Å" | **덱에 η 없음.** γ_select = 2 · γ_break = 10↔5↔2 · **MAE_F < 0.3 eV/Å** · MAE_E < 10 meV/atom · selected < 50 · reliability 100 % · w_e/w_f/w_s = 1/0.01/0.001 · 생산 MD >1,000 atoms·20 ns·**350 K** | p.10 슬 16 |
+| 9 | 무질서 6배열 표기 | "0 % X in **4a** (P-43m)" 등 | **전부 `X⁻ in 4c`**: 0 %(F4̄3m)·25 %(R3m)·**50 %(P2₁22)**·100 %(F4̄3m)·75 %(R3m)·**50 %(P2mm)** | p.11 슬 17 도해 |
+| 10 | 슬 17 표 간격 | "bulk 2 ps · slab 0.5 ps" | **bulk 3 ps interval → ±10 % strain · slab 100 = 0.1 ps interval** | p.11 슬 17 표 |
+| 11 | Li 힘 MAE | 0.063 eV/Å | **0.083 eV/Å** | p.11 슬 17 회귀 |
+| 12 | 영역분해 D | "잔여 벌크 1.1 × 10⁻**6**, 덱 자릿수 오기" | **덱도 `1.1 × 10⁻⁷`** (결정영역 0.4 × 10⁻⁷) → **"덱 자릿수 오기" 주석 철회**, 비 0.36 유지 | p.11 슬 18 MSD 패널 |
+| 13 | 가수분해 용액/지도 | "200 H₂O · z 0–40 Å" | **299 H₂O** (32 H₃O⁺ + 32 OH⁻) · **z 0–65 Å**, colorbar 0–15 H | p.14 슬 23 (900 dpi) |
+| 14 | Guided MD 좌표 | "D_S–H, D_O–**H**" | **D_S–H, D_O–P** | p.13 슬 21 (650 dpi) |
+
+**부가 교정 2건(캐비앳 성격)**: ① Sn 억제 `Relative E_H` 는 **≈0.3 eV**(y축 상단) — `0.28 eV` 는
+과잉정밀(§7c). ② 슬 19 실험 TEM 라벨은 **25 °C / 60 °C**(이전 기록의 "80 °C"는 오독)이고 왼쪽 패널에
+**~12 nm · Li₂S(111) 0.33 nm** 가 찍혀 있다 → **"계산 11 nm vs 실험 ~12 nm"** 대조가 덱 안에 존재(§12-6).
+
+### 15b. ⛔ 우리 기록의 오류 정정 — "덱이 `17,233 Li-P-S-O` 라고 적었다"는 **사실이 아니다**
+
+우리 db 여러 곳(`papers/kim2026_hts_li3sc2po43…` §2 · `papers/kim2025_csp_metastable…` §9-A ·
+`papers/kim2025_li3ycl6…` · `papers/kim2026_li_argyrodite_sei…` · `INDEX.md` ·
+`db/properties/external_benchmarks_symposium_2026.json`)에 **"덱: 17,233 Li-P-S-O → 논문 실물:
+17,230 Li·O = 덱 오류"** 라는 서술이 퍼져 있었다. **덱 슬 13 원문은 `17,230 Li, O crystal structure @ MP`**
+(위 교정 #1, 1100 dpi 판독)로 **논문과 완전히 일치**한다.
+
+⇒ **틀린 쪽은 덱이 아니라 2026-07-28 저해상도 판독으로 만든 우리 전사(轉寫)였다.**
+"덱-vs-실물 불일치" 사례는 **2건 → 1건**으로 줄어든다. 남는 진짜 1건은
+**Rare Metals 2025(Li₃YCl₆)의 CSP 엔진** — 덱 슬 13은 CSP 갈래를 `MTP + USPEX + GA + active learning`
+으로 묶었지만 그 논문 실물은 **CALYPSO/PSO + 직접 DFT**다(`papers/kim2025_li3ycl6_new_crystal_structure.md` §1).
+
+> 🔑 **교훈은 방향이 바뀐다**: "덱은 정본이 아니다"는 규율은 그대로 유효하되,
+> **"덱이 틀렸다"고 단정하기 전에 덱 실물을 원해상도로 다시 볼 것**. 스캔 PDF의 저해상도 판독은
+> 논문 digest와 같은 등급의 증거가 아니다. (이 로그가 그 절차의 첫 적용 사례다.)
+
+### 15c. 신규 8건 (이전 digest에 없던 내용)
+
+1. **슬 4 "DFT-based LIB Material Researches"** — 이 랩의 DFT 이력 4종이 한 장에: 전해액
+   **OP/RP(산화·환원 전위)** 꺾은선(용매 5–6종, OP 최대 ~7.3 V 급), **LiₓMn₂O₄ 2상/1상 영역** ΔE_f,
+   **전압곡선 시뮬 vs 실험**, **layered→spinel 반응경로**(TM_hm → 2O₂ gen → dumbbell → spinel, −3O₂)
+   + HRTEM. → **MLIP 이전에 이미 양극 상전이·전해액 산화 축을 갖고 있던 랩**.
+2. **슬 8 도구 지도** — DFT 코드 `VASP/GAUSSIAN/ORCA/SIESTA`, MLIP `MTP·SevenNET·MACE·CHGNET`,
+   그리고 **descriptor 기반 MTP vs GNN 기반 uMLIP(M3GNet/CHGNet/SevenNet/MACE)** 2계층 도해.
+3. **슬 12 ASSB 과제 지도의 인용 4축** — 저 σ(bulk, *Energy Sci. Eng.* 2022, 10, 1643) ·
+   GB(*JMCA* 2015, 3, 21343) · 대기안정(*JPS* 448 (2020) 227338 — LPSCl 대비 Sn 치환계 2종의
+   15 min 노출 H₂S 곡선. ⚠ 두 치환 조성 라벨은 저해상도로 **판독 불가, 추정 금지**) ·
+   ESW(*ACS AMI* 2015, 7, 23685).
+4. **슬 15(음극 섹션 표지)** — 음극 3계열 **Li metal / LiₓC₆ / LiₓSi** + 과제 4종
+   (Li dendrite · interfacial side reaction · interface contact stripping · **highly tortuous
+   ion/electronic transport path**).
+5. **슬 14 도해 3계층** — `6 configurations`("Untrained region" 명시) → `±5 % Strain` →
+   `AIMD snapshots`(공간 피복). **훈련셋 설계 철학을 한 장으로 보여주는 그림**.
+6. **슬 18 시계열 해상도** — interphase 진화 소패널이 **1 ns / 7 ns / 10.5 ns / 11.5 ns / 20 ns**
+   (700 dpi 판독). 정본의 "S가 먼저 골격(~7 ns) → Li 침투가 결정화(~11 ns)" 2단계와 같은 시점 배치.
+7. **슬 23 H 침투 지도 구조** — hydration layer가 **표면(z≈40–46 Å)과 용액 상단(z≈58–65 Å)** 두 곳,
+   슬래브 바닥(z≈0–4 Å)은 주기 반대면. **S 궤적 비교**(순수 H₂O = 거의 정지 vs RHS = 광범위 확산).
+8. **슬 31 총괄 4블록** — `Surface RXN` / `Interface RXN` / `Long-Time & Large-Scale` /
+   `High-throughput Screening` + "Bridge the gap between small-scale models and realistic device-scale"
+   (배경 그림 출처 *J. Mater. Inf.* 1, 10, 2021).
+
+### 15d. 재확인(변경 없음)
+
+슬 22 uMLIP 정확도 **8.8 meV/atom · 0.57 eV/Å · 0.35 kbar** · 슬 23 **ICOHP(P–S) −6.43 eV @2.04 Å →
+P–S(H) −4.69 eV @2.18 Å** · 슬 24 조성 **Li₆.₂₅P₀.₇₅Sn₀.₂₅S₅Cl** · 슬 17 총 **5,400** 구조 ·
+슬 17 정확도 **Li 11 meV/atom · LPSCl 5 meV/atom, 0.111 eV/Å** · 슬 16 **atoms < 200 → atoms > 6,000** ·
+슬 28 덱 표기 **10⁻⁴ → 2.4 mS/cm**(⛔ 인용 금지, §14 그대로) · 슬 13 출판정보 5건 ·
+슬라이드 번호 `/31`·`/50`·`/24` 혼재.
 
 ---
 
