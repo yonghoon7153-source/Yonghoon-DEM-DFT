@@ -151,6 +151,9 @@ JOBS = [
               "'bash tools/electronic/run_lpsocl_bader_gabia.sh "
               "> /data/work/runs/lpsocl_bader/run.log 2>&1'"},
     {"key": "chain2", "log": os.path.join(H, "logs", "chain2.log"),
+     # ⚠ 이 체인은 "GPU 해방 대기 → 알림" 이 전부고 READY_FOR_QE_AND_SLAB 가 **정상 종료**다.
+     #   done 을 비워 뒀더니 완주한 런이 ⛔ 죽음으로 분류됐다 (실측 08-03).
+     "done_marker": ("READY_FOR_QE_AND_SLAB", "GPU 해방 대기 완료 — 후속 ①② 는 수동 착수"),
      "done": [], "proc": (), "tmux": "chain2", "start": None},
 ]
 
@@ -159,6 +162,15 @@ def verdict(j):
     """→ (한 줄 상태, 재기동 필요?)"""
     done = bool(j["done"]) and all(os.path.exists(p) for p in j["done"])
     lm = mtime(j["log"])
+    # ⚠ 산출 **파일**이 아니라 로그의 한 줄이 종결인 작업도 있다 (chain2: GPU 해방을
+    #   기다렸다가 알리고 끝). done 을 파일로만 판정하면 완주한 런이 ⛔ 죽음이 된다(실측).
+    dm = j.get("done_marker")
+    if dm and lm and not done:
+        try:
+            if any(dm[0] in ln for ln in open(j["log"], errors="ignore")):
+                return f"✅ 완료 — {dm[1]}", False
+        except OSError:
+            pass
     running = any(alive(p, exact=True) == "ALIVE" for p in j["proc"]) or j["tmux"] in TMUX
     if done:
         return "✅ 완료", False
@@ -694,18 +706,30 @@ cl = os.path.join(H, "logs", "chain2.log")
 # ⚠ 여기서 pgrep -f 를 쓰지 않는다. 패턴이 호출한 셸의 명령줄에 들어 있으면 자기 자신을
 #   물어 늘 '살아있음' 이 된다(실제로 개발 중 그렇게 오탐했다). tmux 세션 + 로그 신선도로 본다.
 _clm = mtime(os.path.join(H, "logs", "chain2.log"))
+# ⚠⚠ **로그가 새것이라는 건 살아있다는 뜻이 아니다 (2026-08-03 실측).** 중복가드에 걸려
+#   즉사한 런이 방금 로그 두 줄을 남겨서, 15분 신선도 규칙이 "세션 살아있음"으로 오판했다.
+#   같은 화면의 ⓪ 은 "tmux 없음 → 멈춤"이라 **한 화면 안에서 두 판정이 모순**됐다.
+#   생존의 근거는 tmux 세션(또는 프로세스)뿐이고, 로그 신선도는 참고 표시로만 쓴다.
 # ⚠ 지역변수 이름을 live 로 두면 모듈 함수 live() 를 가려서 TypeError 가 난다.
-live_chain = ("chain2" in TMUX
-              or (_clm is not None and (NOW - _clm).total_seconds() < 900))
+live_chain = "chain2" in TMUX
+_fresh = _clm is not None and (NOW - _clm).total_seconds() < 900
 if os.path.isfile(cl):
     ls = [l for l in open(cl, errors="ignore").read().splitlines() if l.strip()]
     if live_chain:
         live()
-    print(f"  세션 {'살아있음' if live_chain else '없음'} · 로그 {len(ls)}줄")
+    _done = any("READY_FOR_QE_AND_SLAB" in l for l in ls)
+    print(f"  세션 {'살아있음' if live_chain else '없음'} · 로그 {len(ls)}줄"
+          + ("  (로그는 15분 내 갱신 — 그러나 세션이 없으므로 생존 근거가 아니다)"
+             if _fresh and not live_chain else ""))
     for l in ls[-2:]:
         print("    " + l[:110])
-    if not live_chain:
-        print("  ⛔ 로그는 있는데 프로세스가 없다 — 끝났거나 죽었다. 마지막 줄로 판별.")
+    if live_chain:
+        pass
+    elif _done:
+        print("  ✅ 완주 — GPU 해방까지가 이 체인의 일이고 그건 끝났다 (READY_FOR_QE_AND_SLAB).")
+        print("     남은 ①② 는 자동 실행되지 않는다: 필요할 때 손으로 착수.")
+    else:
+        print("  ⛔ 로그는 있는데 세션이 없다 — 완주 표시도 없으니 죽은 것이다.")
 elif live_chain:
     print("  ▶ 세션은 있는데 ~/logs/chain2.log 가 없다 — 로그 경로가 다르다")
 else:
@@ -732,5 +756,7 @@ if not FULL:
     print(render(_txt))
     _n = _txt.count("⛔")
     print(BAR)
-    print(f"⛔ 조치 필요 {_n}건 — 위 ⛔ 줄의 명령을 그대로 실행" if _n
+    # ⚠ ⛔ 중에는 **재기동 금지**(깨진 슬랩) 처럼 실행하면 안 되는 것도 섞인다.
+    #   "전부 그대로 실행"이라고 찍으면 그걸 밟는다.
+    print(f"⛔ 조치 필요 {_n}건 — 각 ⛔ 줄을 읽고 판단 (금지 표시가 있는 건 실행하지 말 것)" if _n
           else "조치 필요 없음 (등록된 작업은 진행 중이거나 완료)")
