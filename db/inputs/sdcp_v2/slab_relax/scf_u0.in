@@ -46,6 +46,10 @@ ATOMIC_SPECIES
   Ni2   58.690  ni_pbe_v1.4.uspp.F.UPF
   O     15.999  O.pbe-n-kjpaw_psl.0.1.UPF
 
+HUBBARD ortho-atomic
+U Ni1-3d 0.01
+U Ni2-3d 0.01
+
 CELL_PARAMETERS angstrom
      18.272444937665     0.000000000000     0.000000000000
      -0.906598326415     2.731476427601     0.000000000000

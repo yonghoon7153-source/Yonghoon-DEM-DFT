@@ -41,6 +41,9 @@ DEGAUSS = 0.03
 CONV_THR = 1.0e-6
 MIX_BETA, MIX_NDIM = 0.03, 20
 U_NI = 6.2
+# ⚠ 1단계용. 0 이 아니라 0.01 인 이유는 위 write_relax 의 HUBBARD 주석 참조 —
+#   물리적으로는 U=0 이지만 이 값이 있어야 ns 가 밀도 파일에 쓰인다.
+U_SEED = 0.01
 PSEUDOS = {
     'Li':  ('6.940',  'li_pbe_v1.4.uspp.F.UPF'),
     'Ni1': ('58.690', 'ni_pbe_v1.4.uspp.F.UPF'),
@@ -123,8 +126,12 @@ def write_relax(path, at, lab, fixed, kpts, prefix,
         m, pp = PSEUDOS[sp]
         L.append(f"  {sp:<3s} {m:>8s}  {pp}")
     L += [""]
-    if u and u > 0:
-        L += ["HUBBARD ortho-atomic", f"U Ni1-3d {u}", f"U Ni2-3d {u}", ""]
+    # ⚠⚠ **HUBBARD 블록을 빼면 안 된다 — U=0 단계에서도 넣는다 (2026-08-03 실측).**
+    #   블록을 빼면 lda_plus_u 가 꺼지고, 그러면 밀도 파일에 **Hubbard 점유행렬 ns 가 안 쓰인다.**
+    #   다음 단계가 startingpot='file' 로 그 파일을 읽으면 U 가 켜져 있으니 ns 를 찾다가
+    #   `Error in routine read_scf (1): Reading ldaU ns` 로 즉사한다.
+    #   → 1단계는 U 를 **아주 작게(0.01 eV)** 두어 물리적으로는 U=0 이면서 ns 는 쓰이게 한다.
+    L += ["HUBBARD ortho-atomic", f"U Ni1-3d {u}", f"U Ni2-3d {u}", ""]
     L += ["CELL_PARAMETERS angstrom"]
     for v in at.cell.array:
         L.append(f"  {v[0]:18.12f} {v[1]:18.12f} {v[2]:18.12f}")
@@ -178,7 +185,7 @@ def main():
     lab = afm_labels(small)
     # 1단계: U=0 scf (싸다, 이온 이완 없음) — 좋은 밀도를 만드는 것이 목적
     write_relax(os.path.join(a.out, "scf_u0.in"), small, lab, fixed, a.kpts, "lno_relax",
-                calc="scf", u=0.0, startingpot=None, fsm=True)
+                calc="scf", u=U_SEED, startingpot=None, fsm=True)
     # 2단계: U=6.2 relax, 1단계 밀도 승계
     write_relax(os.path.join(a.out, "relax.in"), small, lab, fixed, a.kpts, "lno_relax",
                 calc="relax", u=U_NI, startingpot="file", fsm=True)
