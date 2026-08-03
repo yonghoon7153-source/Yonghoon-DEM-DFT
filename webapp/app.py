@@ -35,6 +35,7 @@ from flask import (
 )
 import storage_sync
 import predictor_engine
+import structure_predictor
 import mpm_lab_register           # MPM payload 등록 훅과 meta 스키마 공유 (single source of truth)
 
 app = Flask(__name__)
@@ -10146,6 +10147,41 @@ def predictor_page():
     models_ready = predictor_engine._cached_models is not None
     return render_template('predictor.html', active='predictor',
                            data_count=data_count, models_ready=models_ready)
+
+
+@app.route('/predictor/structure/status')
+def predictor_structure_status():
+    """구조 예측기(sklearn 불요) 상태 + 타깃별 판정표."""
+    try:
+        return jsonify(structure_predictor.status())
+    except Exception as e:                                     # noqa: BLE001 — 항상 JSON
+        return jsonify({'ready': False, 'error': f'{type(e).__name__}: {e}'}), 200
+
+
+@app.route('/predictor/structure', methods=['POST'])
+def predictor_structure():
+    """설계 6 노브 → 구조 (판정·PI·외삽 게이트 포함).  REJECT 타깃은 안 내보낸다."""
+    d = request.get_json() or {}
+    try:
+        return jsonify(structure_predictor.predict_structure(
+            d_se=float(d.get('d_se', 1.0)), d_am=float(d.get('d_am', 5.0)),
+            am_pct=float(d.get('am_pct', 80.0)), ps_frac=float(d.get('ps_frac', 0.5)),
+            rve=float(d.get('rve', 50.0)), loading=float(d.get('loading', 6.0)),
+            include_weak=bool(d.get('include_weak', True))))
+    except Exception as e:                                     # noqa: BLE001
+        return jsonify({'ready': False, 'error': f'{type(e).__name__}: {e}'}), 200
+
+
+@app.route('/predictor/structure/suggest')
+def predictor_structure_suggest():
+    """다음 DEM 배치 제안 (순차 D-최적)."""
+    try:
+        return jsonify(structure_predictor.suggest_batch(
+            n=int(request.args.get('n', 10)),
+            target=request.args.get('target', 'tau'),
+            allow_weak=request.args.get('allow_weak', '') in ('1', 'true', 'yes')))
+    except Exception as e:                                     # noqa: BLE001
+        return jsonify({'error': f'{type(e).__name__}: {e}', 'rows': []}), 200
 
 
 @app.route('/predictor/train')

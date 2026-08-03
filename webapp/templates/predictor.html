@@ -22,6 +22,43 @@
     </button>
   </div>
 
+  <!-- ═══ 구조 예측기 (sklearn 불요) ═══════════════════════════════════════════════ -->
+  <div class="card" id="struct-card" style="border:1px solid #3a4a5a">
+    <h3 class="card-title" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <span>설계 → 구조 예측</span>
+      <span id="struct-badge" class="status-badge badge-yellow">확인 중…</span>
+      <span style="font-weight:400;font-size:12px;color:#9aa7b4">
+        nested-CV 검증 · ±90 % PI · 외삽 게이트 · sklearn 없이 동작</span>
+      <button class="btn btn-secondary" style="margin-left:auto" onclick="structPredict()">
+        예측</button>
+      <button class="btn btn-secondary" onclick="structToggleTable()">판정표</button>
+    </h3>
+
+    <div id="struct-hint" style="display:none;padding:10px 12px;border-radius:6px;
+         background:#2a2418;border:1px solid #6a5a2a;color:#d8c98a;font-size:13px"></div>
+
+    <div id="struct-extrap" style="display:none;padding:8px 12px;margin-bottom:10px;
+         border-radius:6px;background:#3a2020;border:1px solid #7a3a3a;color:#e8a8a8;font-size:13px">
+      ⚠ 이 설계는 학습 데이터의 볼록포 <b>밖</b>입니다 — 값은 나오지만 모형이 자기 오차를
+      제대로 재지 못하는 영역입니다.  PI 를 넓게 보고, 가능하면 실제로 돌려 확인하세요.
+    </div>
+
+    <div id="struct-rows" style="display:grid;gap:6px"></div>
+
+    <div id="struct-table" style="display:none;margin-top:14px;overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;font-size:12px">
+        <thead><tr style="text-align:left;color:#9aa7b4;border-bottom:1px solid #3a4a5a">
+          <th style="padding:5px 8px">타깃</th><th>n</th><th>k</th>
+          <th>naive</th><th>nested</th><th>선택편향</th><th>PI90 커버리지</th><th>판정</th>
+        </tr></thead><tbody id="struct-tbody"></tbody>
+      </table>
+      <p style="color:#7a8794;font-size:11px;margin:8px 0 0">
+        판정은 <b>nested</b> 기준 — naive 는 항을 고른 데이터로 다시 채점한 값이라 그만큼
+        낙관적이다.  REJECT 타깃은 위 예측에 <b>아예 나오지 않는다</b>.
+        σ 삼중항은 이 모델의 타깃이 아니다 (스케일링법칙 LOOCV .975/.953/.90 소관).</p>
+    </div>
+  </div>
+
   <!-- Input Section -->
   <div class="card">
     <h3 class="card-title">Design Parameters</h3>
@@ -1202,4 +1239,96 @@ function renderHeatmap(data) {
   grid.innerHTML = html;
 }
 </script>
+
+<script>
+// ═══ 구조 예측기 — 계수 JSON 추론 (sklearn 불요) ═══════════════════════════════
+function _sv(id, dflt){ const e = document.getElementById(id); return e ? parseFloat(e.value) : dflt; }
+function _structDesign(){
+  // d_am 은 단일 피처 규약 (predictor_engine.derive_features 와 같음) — 대립을 쓴다
+  return {d_se:_sv('d_se',1.0), d_am:_sv('d_am_p',5.0), am_pct:_sv('am_pct',80),
+          ps_frac:_sv('ps_frac',0.5), rve:_sv('rve',50), loading:_sv('loading',6)};
+}
+let _structStatus = null;
+function structToggleTable(){
+  const t = document.getElementById('struct-table');
+  t.style.display = (t.style.display === 'none') ? 'block' : 'none';
+}
+function _vBadge(v){
+  const c = {USABLE:'#2e7d4f', DERIVED:'#2c5f8a', WEAK:'#8a6a2c', REJECT:'#7a3a3a'}[v] || '#4a5a6a';
+  return `<span style="background:${c};color:#fff;border-radius:4px;padding:1px 7px;
+           font-size:11px;white-space:nowrap">${v}</span>`;
+}
+async function structLoadStatus(){
+  const badge = document.getElementById('struct-badge');
+  const hint  = document.getElementById('struct-hint');
+  try{
+    const r = await fetch('/predictor/structure/status');
+    const d = await r.json();
+    _structStatus = d;
+    if(!d.ready){
+      badge.textContent = '모델 없음'; badge.className = 'status-badge badge-yellow';
+      hint.style.display = 'block';
+      hint.textContent = d.hint || d.error || '계수 JSON 이 없습니다.';
+      return;
+    }
+    hint.style.display = 'none';
+    badge.textContent = `${d.n_cases} 케이스 · USABLE ${d.n_usable}` +
+                        (d.n_weak ? ` · WEAK ${d.n_weak}` : '');
+    badge.className = 'status-badge badge-green';
+    const tb = document.getElementById('struct-tbody');
+    tb.innerHTML = (d.rows||[]).map(r => `<tr style="border-bottom:1px solid #2a3540">
+        <td style="padding:5px 8px">${r.label}</td><td>${r.n??''}</td><td>${r.k??''}</td>
+        <td>${r.naive==null?'':r.naive.toFixed(3)}</td>
+        <td><b>${r.nested==null?'':r.nested.toFixed(3)}</b></td>
+        <td>${r.bias==null?'':(r.bias>=0?'+':'')+r.bias.toFixed(3)}</td>
+        <td>${r.pi90==null?'':(100*r.pi90).toFixed(1)+' %'}</td>
+        <td>${_vBadge(r.verdict)}</td></tr>`).join('');
+  }catch(e){
+    badge.textContent = '상태 조회 실패'; badge.className = 'status-badge badge-yellow';
+    hint.style.display = 'block'; hint.textContent = String(e);
+  }
+}
+async function structPredict(){
+  const box = document.getElementById('struct-rows');
+  box.innerHTML = '<div style="color:#9aa7b4;font-size:13px">계산 중…</div>';
+  try{
+    const r = await fetch('/predictor/structure', {method:'POST',
+      headers:{'Content-Type':'application/json'}, body: JSON.stringify(_structDesign())});
+    const d = await r.json();
+    if(!d.ready){
+      box.innerHTML = `<div style="color:#d8c98a;font-size:13px">${d.hint||d.error||'모델 없음'}</div>`;
+      return;
+    }
+    document.getElementById('struct-extrap').style.display = d.any_extrapolation ? 'block' : 'none';
+    box.innerHTML = (d.rows||[]).map(x => {
+      const half = (x.hi - x.lo) / 2;
+      const dig  = Math.abs(x.value) >= 100 ? 1 : (Math.abs(x.value) >= 1 ? 3 : 4);
+      return `<div style="display:flex;align-items:center;gap:10px;padding:7px 10px;
+                border-radius:6px;background:#1e2732;flex-wrap:wrap">
+        <span style="min-width:230px">${x.label}</span>
+        <span style="font-family:monospace;font-size:15px"><b>${x.value.toFixed(dig)}</b>
+          <span style="color:#9aa7b4">± ${half.toFixed(dig)}</span> ${x.unit||''}</span>
+        <span style="color:#7a8794;font-size:11px">[${x.lo.toFixed(dig)}, ${x.hi.toFixed(dig)}]
+          90 % PI${x.nested!=null?` · nested R² ${x.nested.toFixed(3)}`:''}</span>
+        ${x.extrapolation ? '<span style="color:#e8a8a8;font-size:11px">⚠ 외삽</span>' : ''}
+        <span style="margin-left:auto">${_vBadge(x.verdict)}</span>
+        ${x.caveat ? `<div style="flex-basis:100%;color:#7a8794;font-size:11px;
+             padding-top:3px">${x.caveat}</div>` : ''}
+      </div>`;
+    }).join('') + `<p style="color:#7a8794;font-size:11px;margin:6px 0 0">${d.note||''}</p>`;
+  }catch(e){
+    box.innerHTML = `<div style="color:#e8a8a8;font-size:13px">${e}</div>`;
+  }
+}
+document.addEventListener('DOMContentLoaded', function(){
+  structLoadStatus();
+  ['d_se','d_am_p','am_pct','ps_frac','loading','rve'].forEach(function(id){
+    const el = document.getElementById(id);
+    if(el) el.addEventListener('change', function(){
+      if(_structStatus && _structStatus.ready) structPredict();
+    });
+  });
+});
+</script>
+
 {% endblock %}

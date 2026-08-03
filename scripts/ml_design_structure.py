@@ -592,6 +592,10 @@ def closure_test(csv_path, folds=10, seed=0):
         der = 100.0 * (float(np.mean(clos)) - p_se - p_am)   # 닫힘 상수는 코퍼스에서 잰다
         ss = float(((po - po.mean()) ** 2).sum())
         r2_der = 1.0 - float(((po - der) ** 2).sum()) / ss if ss > 0 else float('nan')
+        # ★ 유도 porosity 의 오차띠는 **가정하지 않고 잰다**.  φ 두 예측의 오차를 독립으로
+        #   전파하면 상관(둘 다 am_pct 에서 나옴)을 무시해 어느 쪽으로 틀릴지 모른다.
+        #   폴드-밖 유도값의 실제 잔차 sd 가 그 자체로 정직한 띠다.
+        der_sd = float(np.std(po - der))
         # ── 닫힘 **일관성** — 잔차 sd 를 ε 자신의 sd 와 견준다 ────────────────────────────
         #   절대값이 1 에 가까운지가 아니라, 흔들림이 ε 의 변동에 비해 작은지가 관건이다.
         #   같은 행의 φ 와 ε 이 **다른 모델**에서 왔으면 여기서 드러난다 (게이트가 porosity
@@ -619,6 +623,9 @@ def closure_test(csv_path, folds=10, seed=0):
                     'closure_ratio_to_eps_sd': ratio, 'consistent': bool(ratio <= 0.25),
                     'direct_nested': r2_dir, 'derived_nested': r2_der, 'gain_derived': gain,
                     'eps_mean_pct': float(np.mean(po)), 'eps_sd_pct': float(np.std(po)),
+                    'closure_const': float(np.mean(clos)),
+                    'derived_resid_sd_pct': der_sd,
+                    'amplification': (float(np.mean(se + am)) / e_sd) if e_sd > 0 else None,
                     'verdict': vd}
     return out
 
@@ -678,6 +685,19 @@ def train(csv_path, out_path=None, verbose=True, folds=10, do_nested=True):
                        'perf_reduced_order(적합 0) 가 맡는다.  porosity 타깃은 regime-gated '
                        'use_porosity_pct (raw DEM/MPM 아님).'),
               'inference': 'predict() — numpy 만 있으면 된다 (sklearn 불요)'}
+    # ── 닫힘 블록 — 추론 때 porosity 를 φ 에서 계산하려면 상수와 **측정된** 띠가 필요하다 ──
+    try:
+        _cl = closure_test(csv_path, folds=folds) if do_nested else {}
+    except Exception as _e:                                        # noqa: BLE001
+        _cl = {}
+        if verbose:
+            print(f'  ⚠ 닫힘 블록 계산 실패 ({type(_e).__name__}) — porosity 유도는 비활성')
+    bundle['closure'] = {k: v for k, v in _cl.items() if not v.get('error')}
+    if verbose and bundle['closure'].get('porosity'):
+        _c = bundle['closure']['porosity']
+        print(f"  닫힘: ε = 1−φ_SE−φ_AM  상수 {_c['closure_const']:.4f} · 유도 nested "
+              f"{_c['derived_nested']:+.3f} · 측정 잔차 sd {_c['derived_resid_sd_pct']:.2f} %p"
+              f"  [{_c['verdict'].split('—')[0].strip()}]")
     bundle['physics_audit'] = physics_audit(bundle, X)
     if verbose:
         pa = bundle['physics_audit']['monotone']
