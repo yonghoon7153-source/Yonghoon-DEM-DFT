@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =============================================================================
-# run_arrhenius_6pt.sh — 500/700/900 K 를 **세 계 모두**에 추가해 6점 아레니우스로 통일
+# run_arrhenius_6pt.sh — 6점 아레니우스(500-1000 K)를 **세 계 전부 처음부터** 다시
 #
 # 왜 (1저자 요청 2026-08-03, kb/reports/paper_first_author_requests_2026_08.md §1)
 #   지금은 600/800/1000 3점이라 **직선인지 아닌지를 따질 수가 없다**. 6점이면 직선성
@@ -10,15 +10,23 @@
 #   Ea 비교(LPSOCl 이 modelc 보다 +90 meV 등)가 **다른 적합끼리의 비교**가 되어 깨진다.
 #   B2O3 실증: 고온 3점 Ea 0.207 vs 5점(400-1000) 0.214 — 적합 집합이 값을 바꾼다.
 #
-# ⚠ prod 길이를 온도·계별로 다르게 준다. 표준 200 ps 는 **500 K 의 LPSOCl 에 모자란다**
-#   (필요 242 ps). 근거 표는 tools/ionic/md_temperature_feasibility.py 가 계산한다.
-#   나머지 온도는 200 ps 로 충분하다.
+# ⚠⚠ **기존 점을 재사용하지 않고 전부 다시 돈다 (2026-08-03 결정).**
+#   modelc·b2o3 는 400/500 K 를 이미 갖고 있지만 **단일 시드**다. 그걸 3시드 점들과 섞으면
+#   오차막대가 점마다 달라져서, 6점 적합의 가중치를 정할 근거가 사라진다.
+#   → 6온도 x 3계 x 3시드 = **54 런**. 모든 점이 같은 3시드 오차막대를 갖는다.
+#
+# ⚠ 400 K 는 뺀다. 필요 prod 가 323-1279 ps 로(md_temperature_feasibility.py) 200 ps 표준을
+#   넘고, 계마다 필요량이 4배 차이 나서 프로토콜 통일이 깨진다. 6점(500-1000)이면 충분하다.
+#
+# ⚠ prod: 500 K 만 400 ps, 나머지 200 ps. 500 K 필요량이 modelc 103 / b2o3 104 /
+#   LPSOCl 242 ps 라 200 ps 로는 LPSOCl 이 모자란다. 계별로 다르게 주면 프로토콜이
+#   지저분해지므로 **온도 단위로** 통일한다.
 #
 #   cd ~/Yonghoon-DEM-DFT && git pull && conda activate uma
 #   tmux new -s arr6 -d 'bash tools/ionic/run_arrhenius_6pt.sh 2>&1 | tee -a ~/logs/arr6.log'
 #   bash tools/ionic/run_arrhenius_6pt.sh modelc      # 한 계만
 #
-# 비용(A6000): 계당 3온도 x 3시드 = 9 런. 200 ps 한 런 ~1.5-2 h → 계당 ~15 h, 전체 ~2일.
+# 비용(A6000): 54 런. 200 ps ~1.5-2 h, 500 K(400 ps) ~3-4 h → 전체 대략 **4일**.
 # =============================================================================
 set -euo pipefail; set +H
 REPO="$(cd "$(dirname "$0")/../.." && pwd)"; cd "$REPO"
@@ -42,11 +50,13 @@ command -v flock >/dev/null 2>&1 && { flock -n 9 || { echo "⛔ 이미 돈다 �
 #   modelc 103 / b2o3 104 → 200 ps 로 충분. LPSOCl 242 → 400 ps.
 sys_list() {
   cat <<'EOF'
-modelc|db/structures/modelc_V0_k663.xyz|200
-lpsocl|db/structures/lpsocl_relaxV0.xyz|400
-b2o3|db/structures/b2o3_relaxV0.xyz|200
+modelc|db/structures/modelc_V0_k663.xyz
+lpsocl|db/structures/lpsocl_relaxV0.xyz
+b2o3|db/structures/b2o3_relaxV0.xyz
 EOF
 }
+# 온도:prod(ps). 500 K 만 길다 — 위 주석 참조.
+TEMP_PROD="500:400 600:200 700:200 800:200 900:200 1000:200"
 
 ts(){ echo "[$(date +%m-%d\ %H:%M:%S)] $*"; }
 
@@ -69,17 +79,16 @@ print(f"   구조 게이트 OK (최단 {mind:.3f} A, nat {nat})")
 PY
 }
 
-ts "6점 아레니우스 보강 — 추가 온도 500/700/900 K · 시드 ${SEEDS}"
-ts "⚠ 기존 600/800/1000 은 재사용한다. 여기서는 **추가분만** 돈다."
+ts "6점 아레니우스 — 500/600/700/800/900/1000 K · 시드 ${SEEDS} · 3계 = 54 런"
+ts "⚠ 기존 점을 재사용하지 않는다. 전부 같은 3시드 오차막대를 갖게 처음부터 돈다."
 
-while IFS='|' read -r LABEL XYZ PROD500; do
+while IFS='|' read -r LABEL XYZ; do
   [ "$ONLY" = all ] || [ "$ONLY" = "$LABEL" ] || continue
   test -f "$REPO/$XYZ" || { ts "⛔ $LABEL: $XYZ 없음 — 건너뜀"; continue; }
   ts "═══ $LABEL ($XYZ) ═══"
   sanity "$REPO/$XYZ"
   for S in $SEEDS; do
-    # 500 K 만 계별 prod. 700/900 은 표준 200 ps 로 충분(필요 13-36 ps).
-    for TP in "500:$PROD500" "700:200" "900:200"; do
+    for TP in $TEMP_PROD; do
       T=${TP%%:*}; P=${TP##*:}
       OUT="$OUTROOT/$LABEL/T${T}_s${S}"
       if [ -s "$OUT/msd.json" ]; then ts "  ✓ $LABEL T${T} s${S} 이미 있음 — 건너뜀"; continue; fi

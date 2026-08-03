@@ -242,7 +242,7 @@ if os.path.isdir(LONG):
     if n_arr:
         done_sys = sorted({os.path.basename(os.path.dirname(os.path.dirname(g)))
                            for g in glob.glob(os.path.join(ARR, "*", "T*_s*"))})
-        print(f"  ↻ 6점 아레니우스(500/700/900 K x 3계 x 3시드): {n_arr}/27 완료"
+        print(f"  ↻ 6점 아레니우스(500-1000 K 6점 x 3계 x 3시드): {n_arr}/54 완료"
               f"{'  ▶ 진행' if chain_up else '  ⛔ 사슬 세션 없음'}")
     elif chain_up:
         print("  ⏳ 6점 아레니우스 대기 중 (arrchain) — 위 1600 ps 가 3/3 되면 자동 착수")
