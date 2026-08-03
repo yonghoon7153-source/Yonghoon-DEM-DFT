@@ -1,6 +1,6 @@
 # High-throughput computational screening for solid-state Li-ion conductors — Kahle/Marcolongo/Marzari (Energy Environ. Sci. 2020)
 
-> slug `kahle2020_ht_aimd_screening` · DOI `10.1039/c9ee02457c` · type `DFT + pinball-MD(HT surrogate) + FPMD(BOMD) 스크리닝 (자체 실험 0)` · PDF **본문 `litdb/inbox/41. High-throughput computational screening for solid-state Li-ion conductors.pdf`(21 pp — 2026-08-03 인박스 실물 확보)** + SI `8e473f28-41._Sup…pdf`(35 pp: §1–6·Fig S1–S121·Table S1–S5 — **업로드본만, 인박스 미보유**) (inbox #41→#46) · **사용자 분류 폴더 `DFT`** · digested `2026-07-28` · **본문 실물 독립 재검증 `2026-08-03`(§14 — 깔때기 21수치·Table 1 49셀·Fig 1/3/4/5/7/10/13/15/16/17 이미지 판독·Appendix A.1–A.9+B 실물 대조; 교정 9건·정밀화 12건·미결 3건)** · status ✅ **(본문 실물 대조 완료 · SI는 업로드본 기준 — 인박스 재확보 시 §14 미결 3건 종결)**
+> slug `kahle2020_ht_aimd_screening` · DOI `10.1039/c9ee02457c` · type `DFT + pinball-MD(HT surrogate) + FPMD(BOMD) 스크리닝 (자체 실험 0)` · PDF **본문 `litdb/inbox/41. High-throughput computational screening for solid-state Li-ion conductors.pdf`(21 pp)** + **SI `litdb/inbox/41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf`(35 pp: §1–6·Fig S1–S121·Table S1–S5 — 2026-08-03 인박스 실물 확보)** (inbox #41→#46) · **사용자 분류 폴더 `DFT`** · digested `2026-07-28` · **본문 실물 독립 재검증 `2026-08-03`(§14 — 깔때기 21수치·Table 1 49셀·Fig 1/3/4/5/7/10/13/15/16/17 이미지 판독·Appendix A.1–A.9+B; 교정 9건·정밀화 12건)** · **SI 실물 독립 검증 `2026-08-03`(§15 — Table S1–S5 883셀·Fig legend 704 D값·Fig S1/S2/S3 이미지 판독; 인용 대조 불일치 0, 미결 3건 전부 종결, 신규 적발 3건)** · status ✅ **(본문·SI 양쪽 실물 대조 완료 — 미결 없음)**
 > elements: Li, S, P, Cl, Br, I, F, O, N, Se, Ge, Ta, Ga, Cs, Re, Ti
 > methods: DFT, AIMD, MD
 > **저자**: Leonid Kahle*, Aris Marcolongo(‡현 IBM Research-Zurich), **Nicola Marzari** (EPFL THEOS·NCCR MARVEL) · EES 2020, **13**, 928–948 · Received 2019-07-31 / Accepted 2020-01-08 / Published 2020-01-10 · **첫 페이지 실물 확인 완료**(과제 메모 서지와 일치) · 데이터: Materials Cloud Archive **DOI 10.24435/materialscloud:2019.0077/v1** · 도구: AiiDA·SAMOS(github lekah/samos)·supercellor(github lekah/supercellor)
@@ -157,7 +157,10 @@ H_P = Σ_p ½ M_p Ṙ_p² + α₁·E_N^{P–P} + α₂·E_N^{H–P} + β₁·Σ_
 ### 5a. D 정의와 MSD 창 — 창을 데이터로 정당화 (ESI §2)
 - **tracer D** (eq 2): D_tr = lim 1/6 d⟨MSD(t)⟩/dt |_{t=t'} — **총 MSD/6t(eq 1)가 아니라 기울기**. 이유: eq 1은 열진동(주기적 원자운동) 기여가 섞여 **비확산계에서 D를 과대**(Fig S2: 매우 확산적인 계는 두 방법 일치, 비확산계는 eq 1이 플래토 ~1e-7에 걸림).
 - **창 수렴 검증(Fig S3)**: pinball 전 궤적(D>1e-8)에서 t'=5/10/20/30 ps 기울기를 40 ps 기울기와 비교 — **5 ps = ballistic/cage 운동이 남아 과대(위양성 다수) → 10 ps부터 위양성 급감 → "8–10 ps 창 = 통계 정확도(짧은 t일수록 표본↑)와 확산 영역 진입의 최적 절충"** 판정. → **pinball D = MSD 8–10 ps 선형회귀**.
-- **FPMD D = 물질별 "custom interval"**(본문 §2.6 원문: "We fit the slope of the MSD … **in custom intervals**") — 즉 **고정창이 아니라 물질마다 사람이 정한 구간**이다. 실제 값이 찍힌 곳은 Fig 5·7·10 캡션의 **20–30 ps**뿐. ⚠ 이전 digest의 "FPMD는 ≥20 ps 고정"은 **과잉 일반화 → 2026-08-03 교정**: 본문 근거는 "물질별 custom + 그림 예시 20–30 ps"까지다. (우리 2–50 ps **고정**창과 비교할 때 이 차이가 중요 — 그들은 창을 물질마다 손으로 골랐고, 대신 **pinball 쪽 창은 Fig S3로 검증**했다.)
+- **FPMD D = "at least 20 ps" 하한 + 물질별 custom interval** — 두 출처를 합쳐야 정확하다(2026-08-03 SI 실물로 확정):
+  - **SI §3 원문**: "The diffusion coefficient is extracted using Eq. (2), but with longer times than for the pinball simulations (**at least 20 ps**)." → **하한 20 ps가 명문으로 존재**한다.
+  - **본문 §2.6 원문**: "We fit the slope of the MSD … **in custom intervals**" → 그 하한 위에서 **구간은 물질마다 따로** 잡았다. 값이 찍힌 곳은 Fig 5·7·10 캡션의 20–30 ps.
+  - ⚠ 교정 이력: 2026-07-28 digest "≥20 ps 고정" → 2026-08-03 본문 재검증에서 "물질별 custom"으로 뒤집었다가, **SI 실물로 "≥20 ps 하한 + 그 위 custom"이 정답**임을 확인. 즉 원래 "≥20 ps"는 SI 근거가 있었고 틀린 건 "**고정**"이라는 말뿐이었다. (우리 2–50 ps **고정**창과의 차이는 여전히 유효 — 그들은 하한만 정하고 구간은 물질마다 손으로 골랐다. 대신 **pinball 쪽 창은 Fig S3로 데이터 검증**했다.)
 - Li 확률밀도(eq 3): 궤적을 Gaussian σ=0.3 Å·10 pts/Å 격자로 스무딩, 등가면 0.1/0.01/0.001 Å⁻³(보라/파랑/시안) — SAMOS.
 
 ### 5b. 오차 산정과 자동 수렴 (A.8·A.9·SI §3)
@@ -195,14 +198,30 @@ H_P = Σ_p ½ M_p Ṙ_p² + α₁·E_N^{P–P} + α₂·E_N^{H–P} + β₁·Σ_
 |---|---|---|---|---|---|---|---|---|
 | **Li₁₀GeP₂S₁₂**(LGPS, 레퍼런스) | — | Li₂₀Ge₂P₄S₂₄ | +4.8% | **0.14 ± 0.04** | **2.1e-5 ± 1.6e-6** ★ | 6.2e-6 ± 7.6e-7 | ✅ D_S = **−9.8e-10 ± 2.2e-9** (0과 정합=안정) ★ | 문헌 정합: Marcolongo-Marzari 0.18, Ong 0.21. c-축 1D 채널 우세(Fig 6) 재현 |
 | **Li₅Cl₃O** (Li-oxide chloride) | ICSD 419852 | Li₄₀Cl₂₄O₈ | 0.0% | **0.33 ± 0.04** | **(5.9 ± 1.2)e-6** ★ | 4.7e-7 ± 1.6e-7 | ⚠ 750 K D_Cl = **(4.4 ± 2.4)e-7** ★ (1000 K 8.8e-7) | 2-supercell 교차(아래 행)로 유한크기 점검. Reckeweg 구조, SSE 용도 실검증 없음. **합성에 원소 Li 필요 → 금속 부산상 리스크**(저자) |
-| Li₅Cl₃O (작은 셀) | ICSD 419852 | Li₂₀Cl₁₂O₄ | 0.0% | **0.27 ± 0.04** | **4.0e-6 ± 3.7e-7** ★ | 5.0e-7 ± 2.6e-7 | ✅ 750 K D_Cl = **(1.3 ± 2.5)e-8** ★ — **작은 셀에선 host 유동이 사실상 0**(큰 셀 대비 30×↓) | 두 셀 D 호환 → "큰 유한크기 효과 없음"; Ea 차이는 유한 통계 탓(저자). **host 유동 경고는 큰 셀에서만 뚜렷 = 유한크기/통계 아티팩트 가능성**(실물 판독으로 새로 드러난 점) |
+| Li₅Cl₃O (작은 셀) | ICSD 419852 | Li₂₀Cl₁₂O₄ | 0.0% | **0.27 ± 0.04** | **4.0e-6 ± 3.7e-7** ★ / 4.2e-6 ± 5.6e-7 [SI] | 5.0e-7 ± 2.6e-7 | ⚠ 750 K D_Cl = **(1.3 ± 2.5)e-8** ★ **본문** vs **(6.5 ± 5.3)e-8 SI** — 결론이 갈린다 | 두 셀 D 호환 → "큰 유한크기 효과 없음"; Ea 차이는 유한 통계 탓(저자). **"작은 셀에선 host 유동 사실상 0"은 본문 legend에서만 성립**(큰 셀 대비 34×↓); **SI legend로는 6×↓에 그치고 오차 안**(2026-08-03 SI 실물). → **"작은 셀은 host가 안정하다"는 인용 금지**, 두 셀 모두 D_Cl이 0과 구별되지 않는 수준이라고만 쓸 것 |
 | **Li₂CsI₃** | ICSD 245988 | Li₈Cs₄I₁₂ | **−13.1%** | **0.19 ± 0.04** | 3.1e-5 ± 5.7e-6 [SI] | 6.1e-6 ± 1.2e-6 | ⚠⚠ **전 온도서 Cs·I 확산**(500 K도 ~9e-7) | 1983 합성(단사정). host 불안정이 실재인지 시뮬 아티팩트인지 미해결(저자 자인) |
 | **LiGaI₄** | ICSD 60850 | Li₄Ga₄I₁₆ | **+19.5%** | **0.35 ± 0.06** | **(9.2 ± 2.9)e-5** ★ | 3.6e-6 ± 1.5e-6 | ⚠ 750 K D_I = **1.2e-6 ± 2.8e-7** ★ (500 K 3.5e-7) | vdW 부재로 +19.5% 팽창 — **Grimme-D3 넣으면 −1.03% 수축**(저자 재계산) → "FPMD 결과 신중 해석; 향후 스크리닝에 vdW 포함해야" |
 | **LiGaBr₃** | ICSD 61338 | Li₈Ga₈Br₂₄ | **+14.2%** | **0.26 ± 0.02** | **4.9e-5 ± 6.7e-6** ★ | 5.3e-6 ± 1.2e-6 | ⚠ 750 K D_Br = **(3.2 ± 1.2)e-6** ★; 1000 K서 host 사실상 융해(D_Ga 2.2e-5·D_Br 2.1e-5) | Hönle-Simon 합성, 층상 Li₂⁺[Ga₂Br₆]²⁻. Li₃InBr₆ 유사성 → Ga-도핑 브로마이드/아이오다이드 제안([Muy] 스크리닝과 교차) |
 | **Li₇TaO₆** | ICSD 74950 | Li₅₆Ta₈O₄₈ | +4.0% | **0.29 ± 0.02** | **1.9e-6 ± 3.1e-7** ★(SI와 완전 일치) | 2.3e-7 ± 4.7e-8 | ✅ **전 온도 host 완전 안정** — 750 K D_O = **1.1e-9 ± 2.5e-10** ★ | **가장 깨끗한 신규 후보**. 3D 단일 연결 성분(Fig 8). 실험 Ea 0.66–0.67 eV(Mühle/Nomura)와 불일치 — 단 실험도 저온(<50 °C)·고온(>400 °C) 저장벽 영역 보고. 알리오밸런트 Ta 치환 제안 |
-> ★ = **2026-08-03 본문 Fig 5·Fig 7 legend 실물 판독값으로 교체**(이전 값은 SI Fig S4–S10 legend 전사). 6종 중 Li₇TaO₆만 완전 일치했고 나머지는 **값 3–10%·오차 최대 3× 차이** — 같은 데이터인데 legend가 갈리는 이유는 SI 없이는 못 닫는다(§14 미결 ①). **인용은 본문 그림값(★)으로.** Li₂CsI₃는 본문 그림에 750 K 패널이 없어 SI값 유지 `[SI]`.
-> ★ **host MSD를 Li와 같은 패널에 그리는 관행의 실물 증거**: Fig 5·7 모두 legend에 D_Li와 D_host를 나란히 찍고, 안정한 계는 **음수 D±오차**(LGPS D_S = −9.8e-10 ± 2.2e-9)로 정직하게 보고한다.
-| (참고) 그룹 A의 나머지 온도 D | | | | | 1000 K: LGPS 3.8e-5 / LiGaI₄ 1.9e-4 / LiGaBr₃ 1.4e-4 / Li₂CsI₃ 4.8e-5 / Li₅Cl₃O 1.9e-5·1.2e-5 / Li₇TaO₆ 7.1e-6 | 600 K: 1.7e-5 / 1.3e-5 / 2.8e-5 / 9.9e-6 / 1.3e-6·1.4e-6 / 4.8e-7 | | SI Fig S4–S10 legend 전사 |
+> ★ = **2026-08-03 본문 Fig 5·Fig 7 legend 실물 판독값**(SI Fig S4–S10 legend와 다름). Li₂CsI₃는 본문 그림에 750 K 패널이 없어 SI값 `[SI]`.
+> ★ **host MSD를 Li와 같은 패널에 그리는 관행의 실물 증거**: Fig 5·7·10과 SI Fig S4–S121 전부 legend에 D_Li와 D_host를 나란히 찍고, 안정한 계는 **음수 D±오차**(LGPS D_S = −9.8e-10 ± 2.2e-9)로 정직하게 보고한다.
+>
+> **★★ 750 K 값이 본문 ↔ SI 에서 갈리는 문제 — 2026-08-03 SI 실물로 전모 확정(§14 미결 ① 종결)**
+> | 물질(supercell) | 750 K D_Li **본문 Fig 5/7/10** | 750 K D_Li **SI Fig S4–S13** | 750 K D_host 본문 | 750 K D_host SI |
+> |---|---|---|---|---|
+> | Li₂₀Ge₂P₄S₂₄ (LGPS) | 2.1e-5 ± 1.6e-6 | **1.9e-5 ± 4.6e-6** | D_S −9.8e-10 ± 2.2e-9 | D_S −7.2e-10 ± 3.1e-9 |
+> | Li₈Ga₈Br₂₄ | 4.9e-5 ± 6.7e-6 | 4.9e-5 ± **5.2e-6** | D_Br (3.2 ± 1.2)e-6 | D_Br **2.1e-6 ± 7.3e-7** |
+> | Li₄Ga₄I₁₆ | (9.2 ± 2.9)e-5 | **(9.1 ± 1.6)e-5** | D_I 1.2e-6 ± 2.8e-7 | D_I **1.9e-6 ± 3.9e-7** |
+> | Li₄₀Cl₂₄O₈ | (5.9 ± 1.2)e-6 | **5.7e-6 ± 3.1e-7** | D_Cl (4.4 ± 2.4)e-7 | D_Cl (4.0 ± 1.7)e-7 |
+> | Li₂₀Cl₁₂O₄ | 4.0e-6 ± 3.7e-7 | **4.2e-6 ± 5.6e-7** | D_Cl (1.3 ± 2.5)e-8 | D_Cl **(6.5 ± 5.3)e-8** |
+> | Li₅₆Ta₈O₄₈ | 1.9e-6 ± 3.1e-7 | 1.9e-6 ± 3.1e-7 **(완전 일치)** | D_O 1.1e-9 ± 2.5e-10 | D_O 1.1e-9 ± 2.5e-10 **(일치)** |
+> | Li₁₆Re₂₄S₄₄ (그룹 B) | 8.7e-6 ± 8.2e-7 | **1.1e-5 ± 1.2e-6** | D_S −8.8e-9 ± 4.1e-10 | D_S **(1.5 ± 1.6)e-8** |
+> | Li₁₆Ti₁₆P₁₆O₈₀ (그룹 B) | (4.4 ± 2.3)e-6 | **(5.9 ± 2.3)e-6** | D_O −7.1e-11 ± 3.9e-10 | D_O (−2.0 ± 5.1)e-10 |
+> - **패턴**: 갈리는 건 **750 K 패널뿐**이고, 1000/600/500 K는 본문에 패널이 없어 SI가 유일 출처다. **8종 중 Li₇TaO₆ 하나만 완전 일치**(본문 Fig 7의 그 패널은 SI Fig S10 750 K 패널과 렌더링까지 동일 — 괄호 없는 표기·D_Ta 누락까지 같다).
+> - **원인 진단(우리 판단)**: 같은 궤적을 **블록을 다르게 쪼개 다시 분석**한 결과로 보인다. 값은 3–25%, 오차막대는 최대 3× 흔들리는데 이는 블록 개수를 바꿀 때 mean±SE가 움직이는 폭과 정확히 같은 규모다. Li₇TaO₆만 일치하는 것은 그 그림만 재생성하지 않고 SI 것을 그대로 썼다는 뜻.
+> - **★ 우리에게 남는 교훈(이게 본체다)**: **"동일 궤적 + 동일 창 + 블록 분해만 다르게" 하면 D가 ~25%, 오차막대가 ~3× 움직인다**는 것을 이 논문이 자기도 모르게 실증했다. 우리 멀티시드 규율은 **시드 간** 분산을 잡지만 **블록 분해 임의성**은 안 잡는다 — `tools/ionic/` 에 블록 개수 감도(예: 4/8/16 블록) 1회 점검을 넣을 근거.
+> - **인용 규칙**: 750 K는 **본문값(★) 우선**(최종 조판본), 나머지 온도는 SI값. 어느 쪽이든 **유효숫자 2자리 이상으로 인용하지 말 것**.
+| (참고) 그룹 A의 나머지 온도 D | | | | | 1000 K: LGPS 3.8e-5 / LiGaI₄ 1.9e-4 / LiGaBr₃ 1.4e-4 / Li₂CsI₃ 4.8e-5 / Li₅Cl₃O 1.9e-5·1.2e-5 / Li₇TaO₆ 7.1e-6 | 600 K: 1.7e-5 / 1.3e-5 / 2.8e-5 / 9.9e-6 / 1.3e-6·1.4e-6 / 4.8e-7 | | SI Fig S4–S10 legend — **2026-08-03 SI 실물 재대조, 1000/600/500 K 21값 전부 불일치 0** |
 - 시뮬 시간(**Table 1 실물 49셀 전수 대조 완료**, ps; 500/600/750/1000 K): LiGaI₄ 726.4/726.4/552.1/218.1 · LiGaBr₃ 406.8/435.8/232.4/58.2 · Li₂CsI₃ 726.4/726.4/348.7/160.0 · LGPS 726.4/493.9/174.3/218.1 · Li₅Cl₃O(큰 셀) 726.4/726.4/232.4/261.8 및 (작은 셀) 726.4/726.4/726.4/218.1 · Li₇TaO₆ 552.1/639.2/203.4/72.7.
   - **⚠ 본문 서술 ↔ Table 1 불일치(실물 확인, 경미하지 않음)**: 본문 p.934는 Li₅Cl₃O **큰 셀**을 "500 K 581 ps·600 K 523 ps"라 적지만 **Table 1은 둘 다 726.4 ps** — 145/203 ps 차이. Li₇TaO₆·Li₂CsI₃ 서술은 Table 1과 일치. **Table 1을 기준으로 인용.**
 - **판정의 정직성**: 5종 중 3종(Li₂CsI₃·LiGaI₄·LiGaBr₃)에 host 불안정/vdW 경고를 스스로 달았고, Li₅Cl₃O엔 합성 리스크, Li₇TaO₆엔 실험 불일치를 명기 — "발견"을 팔지 않고 리스크를 전부 공개.
@@ -212,11 +231,11 @@ H_P = Σ_p ½ M_p Ṙ_p² + α₁·E_N^{P–P} + α₂·E_N^{H–P} + β₁·Σ_
 | 구조 | DB-id | supercell | Δvol | 거동 (D_Li, cm²/s) |
 |---|---|---|---|---|
 | **Li₄Re₆S₁₁** | COD 1008693 | Li₁₆Re₂₄S₄₄ | **+2.61%**(본문) | 전 T 확산 흔적(**750 K = 8.7e-6 ± 8.2e-7 ★ Fig 10 실물**; 500 K 3.2e-6 [SI]), host 안정(**D_S = −8.8e-9 ± 4.1e-10 ★**), 3D(Fig 9) — 단 시뮬 **500 K 87.1 / 600 K 174 / 750 K 87.2 / 1000 K 290.8 ps**(본문 실물)로 저온 미해상 → A 승급 보류 |
-| **Li₆PS₅I** ★ | ICSD 421083 | Li₄₈P₈S₄₀I₈ | +2.9% | **subdiffusive/caged MSD**(1000 K에도 MSD ~12 Å²/35 ps; 500 K 9.6e-7 명목치) — "확산 영역을 해상 못 함" → potential로만 분류. "나중에야 실험·시뮬 문헌(ref 180)을 인지"(정직 고백) |
+| **Li₆PS₅I** ★ | ICSD 421083 | Li₄₈P₈S₄₀I₈ | +2.9% | **subdiffusive/caged MSD**(1000 K 패널조차 MSD ~10 Å² / 30 ps 창; 시뮬 500/600/750 K 각 87.2 ps·1000 K 72.7 ps [Table S1]) — "확산 영역을 해상 못 함" → potential로만 분류. "나중에야 실험·시뮬 문헌(ref 180)을 인지"(정직 고백). **★★ SI 실물로 새로 드러난 결정적 증거**: D_Li가 **1000 K 5.8e-6 / 750 K 5.9e-6 / 600 K 3.3e-6 / 500 K 9.6e-7** — **1000 K와 750 K가 사실상 같다**(역전). 아레니우스가 성립하지 않는다는 뜻이고, 이건 "느린 전도체"가 아니라 **cage 내 rattling을 D로 오독한 것**의 교과서적 지문이다(우리 β=dlogMSD/dlogt 게이트가 잡아내는 바로 그 신호) |
 | Li₂B₂S₅ (perthioborate) | COD 1510745 | Li₈B₈S₂₀ | +5.4% | 1000 K 4.5e-5·750 K 1.1e-5 → **600 K서 급락(≈0)**. "perthioborate족 더 연구할 가치"; **[Sendek17]도 이 조성을 후보로 지목**(직접 교차 인용) |
 | LiTaGeO₅ | ICSD 280992 | Li₄Ta₄Ge₄O₂₀ | +3.5% | 1000 K 3.9e-5·600 K 2.7e-6, **500 K 사멸**(3.3e-9). 4온도 각 **"at least 145 ps"**(본문). 참조문헌 231 K 상전이(무질서상)는 미채택 — 질서상만 시뮬 |
 | Li₂S₂O₇ | ICSD 188009 | Li₁₆S₁₆O₅₆ | +5.4% | **1000 K만** 3.1e-5(host S·O도 ~2e-6 — 불안정 신호), 750 K↓ ≈0 |
-| LiIO₃ | ICSD 20032 | ⚠ **본문 Li₈I₈O₂₄ / 이전 digest(SI) Li₁₆I₁₆O₄₈** — 불일치, SI 재대조 필요(§14 미결 ②) | 본문 "**15%**" (SI 15.3%) | 1000 K 2.9e-5이나 **host 융해급**(D_O 7.4e-6·D_I 5.4e-6), 500 K ≈0. [Muy] 후보와 교차 |
+| LiIO₃ | ICSD 20032 | **Li₁₆I₁₆O₄₈ 확정** (Table S1 + Fig S19 캡션 둘 다 — **본문 "Li₈I₈O₂₄"가 오식**; §14 미결 ② 종결) | **15.3%**(Table S1; 본문 "15%"는 반올림) | 1000 K 2.9e-5 ± 6.6e-7, **host 융해급**(D_O (7.4 ± 1.7)e-6·D_I 5.4e-6 ± 7.2e-7 — SI 실물 확인), 750 K 1.0e-5·600 K 2.0e-6·500 K ≈0(−8.7e-9). 시뮬 145.3/726.4/523.0/72.7 ps. [Muy] 후보와 교차 |
 | LiAlSiO₄ (β-eucryptite) | COD 9000368 | Li₁₂Al₁₂Si₁₂O₄₈ | +3.6% | 1D(c-축) 수송 재현(실험 1980 정합), 1000 K 2.7e-5 → 600 K 무시(2.3e-7) |
 | **Li₅BS₄O₁₆**(본문 표기 확정) | ICSD 428002 | Li₂₀B₄S₁₆O₆₄ | +6.3% | 1000 K 2.7e-5·750 K 2.8e-6(3D 밀도는 **600 K**에서 그림, Fig 12), **500 K ≈0**(1.2e-7, MSD 평탄). 시뮬 **1000 K 218 ps·저온 610 ps**(본문) |
 | Li₂Mg₂(SO₄)₃ | COD 2020217 | Li₈Mg₈S₁₂O₄₈ | +4.1% | 1000 K 2.1e-5 → 600 K 2.8e-7 급락. Fe/V 도핑 유도체는 양극재로 연구됨 |
@@ -225,28 +244,78 @@ H_P = Σ_p ½ M_p Ṙ_p² + α₁·E_N^{P–P} + α₂·E_N^{H–P} + β₁·Σ_
 | Li₆Y(BO₃)₃ | COD 1510933 | Li₂₄Y₄B₁₂O₃₆ | +2.8% | 1000 K 9.8e-6·750 K 1.3e-6 → 600 K 이하 사멸; **in-plane 경로가 저온서 꺼짐**(Fig 13, 750 vs 500 K 밀도) — Lopez-Bermudez NEB와 정합 |
 | Li₂ZnSnSe₄ | COD 7035178 | Li₁₆Zn₈Sn₈Se₃₂ | +4.2% | 1000 K만 9.4e-6 |
 | Li₂Ti₃O₇ (ramsdellite) | ICSD 193803 | Li₈Ti₁₂O₂₈ | +2.6% | 1000 K만 7.2e-6 |
-| Li₇RbSi₂O₈ | ICSD 33864 | Rb₄Li₂₈Si₈O₃₂ (⚠ **본문은 "Rb₈Li₁₂B₄P₁₆O₅₆"이라 적었다 = 원문 오식** — B·P가 들어간 딴 조성. Li₇RbSi₂O₈×4 = Rb₄Li₂₈Si₈O₃₂ 가 화학적으로 옳고 SI값과도 맞음) | +2.8% | 1000 K만 6.2e-6 (Bernet-Hoppe "우연히 합성"된 orthosilicate) |
+| Li₇RbSi₂O₈ | ICSD 33864 | **Rb₄Li₂₈Si₈O₃₂ 확정**(Table S1 + Fig S24 캡션 — ⚠ **본문 "Rb₈Li₁₂B₄P₁₆O₅₆"은 원문 오식 확정**: B·P가 들어간 딴 조성이며, 이는 바로 아래 Li₉Ga₃P₈O₂₉ 행의 supercell "Li₁₈Ga₆P₁₆O₅₈"과 뒤섞인 조판 사고로 보인다) | +2.8% | 1000 K만 6.2e-6 (750 K 4.8e-7, 600 K 이하 0) (Bernet-Hoppe "우연히 합성"된 orthosilicate) |
 | Li₃GaF₆ | COD 8101456 | Li₁₈Ga₆F₃₆ | +4.8% | 1000 K만 6.2e-6 |
 | Li₂In₂GeS₆ | COD 4329224 | Li₁₆In₁₆Ge₈S₄₈ | +5.6% | 1000 K만 4.0e-6 (비선형광학 결정) |
 | LiMoAsO₆ | COD 2014117 | Li₈Mo₈As₈O₄₈ | +8.2% | 1000 K만 3.5e-6 |
 | Li₉Ga₃(P₂O₇)₃(PO₄)₂ | COD 2208797 | Li₁₈Ga₆P₁₆O₅₈ | +2.1% | 1000 K 2.8e-6·750 K 9.0e-7 → 600 K ≈0. V-유사체는 양극재 |
 - **✅ 19종 전수 확정(2026-08-03 본문 실물)**: 본문 §3.2가 4개 소그룹으로 19종을 빠짐없이 열거한다 — ①개별 서술 3종(Li₄Re₆S₁₁·LiTiPO₅·Li₆PS₅I) ②"고온+중온 확산, 500 K 무확산" 3종(Li₅BS₄O₁₆·LiTaGeO₅·LiIO₃) ③"고온 확산, 중온(600–750 K)서 급락" 6종(LiAlSiO₄·Li₂Mg₂S₃O₁₂·Li₂B₂S₅·Li₆Y(BO₃)₃·Li₃CsCl₄·Li₉Ga₃(P₂O₇)₃(PO₄)₂) ④"1000 K만" 7종(Li₇RbSi₂O₈·Li₂S₂O₇·Li₂In₂GeS₆·Li₂ZnSnSe₄·Li₃GaF₆·Li₂Ti₃O₇·LiMoAsO₆). **19 + 21 = 40 = 그룹 B** 산술 일치. 이전 digest의 19종 목록과 조성 100% 일치(표기만 다름).
 - 원문 오식 2건(실물 확인): ④ 열거 번호가 **(1)(2)(3)(4)(6)(7)(8) — (5) 결번** · Li₂B₂S₅ 설명의 층 음이온이 "**Be₂S₅²⁻**"(B₂S₅²⁻가 맞음).
+- **✅ Table S1 실물 전수 대조(2026-08-03 SI)**: 19행 × 9열(조성·DB·DB-id·supercell·**Figure**·Δvol·T_sim 4개) = **171셀 불일치 0**(LiIO₃ supercell·Li₇RbSi₂O₈ supercell은 위에서 종결). 위 표의 Δvol·D값 전부 SI와 일치.
+  - **시뮬 시간 전수(ps; 500/600/750/1000 K)**: Li₄Re₆S₁₁ 87.1/174.3/87.2/290.8 · Li₆PS₅I 87.2/87.2/87.2/72.7 · Li₂B₂S₅ 203.4/203.4/348.7/145.4 · LiTaGeO₅ 145.3/523.0/319.6/218.1 · Li₂S₂O₇ 232.4/145.3/174.3/203.6 · LiIO₃ 145.3/726.4/523.0/72.7 · LiAlSiO₄ 145.3/697.3/290.6/218.1 · Li₅BS₄O₁₆ 610.2/610.2/610.2/218.1 · Li₂Mg₂S₃O₁₂ 145.3/726.4/406.8/218.1 · LiTiPO₅ 232.4/232.4/261.5/218.1 · Li₃CsCl₄ 726.4/726.4/726.4/218.1 · Li₆Y(BO₃)₃ 145.3/145.3/726.4/218.1 · Li₂ZnSnSe₄·Li₂Ti₃O₇·Li₃GaF₆ 145.3/145.3/145.3/218.1 · Li₇RbSi₂O₈ 145.3/145.3/726.4/218.1 · Li₂In₂GeS₆ 145.3/261.5/145.3/218.1 · LiMoAsO₆ 610.2/145.3/174.3/218.1 · Li₉Ga₃P₈O₂₉ 145.3/145.3/261.5/218.1.
+  - ★ **B군 강등 사유가 시간표에 그대로 보인다**: A로 못 간 물질일수록 저온 궤적이 짧다 — Li₄Re₆S₁₁은 500 K를 **87.1 ps**밖에 안 돌렸는데, 이는 그룹 A 물질들의 500 K(552–726 ps)의 **1/8**이다. "저온 미해상"의 상당 부분이 물질 특성이 아니라 **투입 시간의 차이**라는 뜻 — 그룹 B를 "느린 물질"로 인용하면 안 되는 정량 근거(§13 분류 경계의 통계성).
 
 **(ii) 1000 K-only 21종 (Table S2; Fig S31–S51)** — "확산은 있으나 저온 계산 비용 대비 우선순위 낮음" 판정: LiGaCl₃(D_Li **1.1e-4**! COD 1530096, Δvol +17.0%) · LiGaBr₄(8.8e-5, **Δvol +30.8%**, host 유동) · Li₆MgBr₈(7.0e-5, Suzuki상) · Li₃P₇(4.1e-5) · Li₃AsS₃ · LiB(SO₃Cl)₄[LiBS₄Cl₄O₁₂] · LiSn₂P₃O₁₂(NASICON) · Li₄Ge₉O₂₀ · LiIO₄ · Rb₂LiTaS₄ · LiP₇ · Li₄P₂O₇ · Li₂Ge₄O₉ · LiAuF₄(ICSD 33953) · Li₂SeO₄ · LiAlSe₂ · LiInP₂O₇ · Li₄TiO₄ · Li₆Si₂O₇ · Li₂In₂SiSe₆ · LiB(SO₄)₂[LiBS₂O₈] (전체 Δvol·시뮬시간 Table S2).
 - **✅ 21종 전수 확정(2026-08-03 본문 실물)**: 본문이 21종을 모두 이름으로 열거하며 이전 digest 목록과 **조성 21/21 일치**. 원문 표기는 LiRb₂TaS₄(=Rb₂LiTaS₄)·LiBS₄Cl₄O₁₂·**Li₄G₉O₂₀(=Li₄Ge₉O₂₀ 오식)**·Li₄P₂O₇·LiBS₂O₈이며, Li₂SeO₄를 "phenakyte"로 부른다.
-- ⚠ 정량 주의: 21종의 D는 43.6–445 ps 단일 온도 — 랭킹·존재 판정용이지 물성값 아님.
+- **✅ Table S2 실물 전수 대조(2026-08-03 SI)**: 21행 × 7열 = **147셀 불일치 0**. **Li₄Ge₉O₂₀은 ICSD 34361로 SI에 정자 표기 → 본문 "Li₄G₉O₂₀"이 오식임 확정.** DB-id·Δvol·T_sim(1000 K) 전수:
+  | 물질 | DB-id | supercell | Δvol | T_sim | D_Li(1000 K) |
+  |---|---|---|---|---|---|
+  | LiGaCl₃ | COD 1530096 | Li₁₆Ga₁₆Cl₄₈ | 17.0% | 58.2 | 1.1e-4 ± 1.6e-5 |
+  | LiGaBr₄ | ICSD 61337 | Li₁₆Ga₁₆Br₆₄ | **30.8%** | 72.7 | (8.8 ± 1.3)e-5 |
+  | Li₆MgBr₈ | ICSD 73275 | Li₁₂Mg₂Br₁₆ | 2.0% | 72.7 | 7.0e-5 ± 3.6e-6 |
+  | Li₃P₇ | ICSD 60774 | Li₁₂P₂₈ | 2.1% | 174.5 | 4.1e-5 ± 3.6e-6 |
+  | Li₃AsS₃ | COD 2007413 | Li₁₂As₄S₁₂ | 2.9% | 189.1 | 2.6e-5 ± 3.7e-6 |
+  | LiB(SO₃Cl)₄ | COD 1004054 | Li₄B₄S₁₆Cl₁₆O₄₈ | 11.7% | 218.1 | 2.5e-5 ± 4.3e-6 |
+  | LiSn₂P₃O₁₂ | ICSD 83831 | Li₂Sn₄P₆O₂₄ | 4.1% | 87.3 | (2.0 ± 2.0)e-5 |
+  | Li₄Ge₉O₂₀ | ICSD 34361 | Li₄Ge₉O₂₀ | 5.4% | 58.2 | (8.5 ± 9.4)e-6 |
+  | LiIO₄ | COD 1536985 | Li₈I₈O₃₂ | 10.4% | 58.1 | (5.3 ± 2.5)e-6 |
+  | Rb₂LiTaS₄ | COD 1535645 | Rb₈Li₄Ta₄S₁₆ | 6.4% | 436.3 | (4.1 ± 2.1)e-6 |
+  | LiP₇ | ICSD 23621 | Li₈P₅₆ | 5.2% | 436.3 | (3.4 ± 1.1)e-6 |
+  | Li₄P₂O₇ | COD 2005920 | Li₁₆P₈O₂₈ | 4.0% | **43.6** | 2.9e-6 |
+  | Li₂Ge₄O₉ | COD 2019177 | Li₁₆Ge₃₂O₇₂ | 4.7% | 189.1 | 2.7e-6 ± 7.8e-7 |
+  | LiAuF₄ | **ICSD 33953** | Li₈Au₈F₃₂ | 11.9% | 58.2 | (2.1 ± 2.0)e-6 |
+  | Li₂SeO₄ | ICSD 67234 | Li₁₂Se₆O₂₄ | 5.3% | 116.3 | (1.7 ± 1.4)e-6 |
+  | LiAlSe₂ | COD 4321118 | Li₁₆Al₁₆Se₃₂ | 3.1% | 218.1 | (1.6 ± 1.1)e-6 |
+  | LiInP₂O₇ | ICSD 60935 | Li₄In₄P₈O₂₈ | 6.3% | 436.3 | 1.5e-6 ± 9.0e-7 |
+  | Li₄TiO₄ | ICSD 75164 | Li₂₄Ti₆O₂₄ | 1.4% | 436.3 | 1.4e-6 ± 2.4e-7 |
+  | Li₆Si₂O₇ | COD 1539516 | Li₂₄Si₈O₂₈ | 1.9% | **445.2** | 1.4e-6 ± 2.8e-7 |
+  | Li₂In₂SiSe₆ | COD 4329225 | Li₁₆In₁₆Si₈Se₄₈ | 5.5% | 218.1 | 1.3e-6 ± 5.2e-7 |
+  | LiB(SO₄)₂ | ICSD 425174 | Li₈B₈S₁₆O₆₄ | 6.9% | 218.1 | 1.2e-6 ± 7.6e-7 |
+- ⚠ 정량 주의: 21종의 D는 **43.6–445.2 ps 단일 온도**(SI 확정) — 랭킹·존재 판정용이지 물성값 아님. **오차가 값과 맞먹는 행이 6개**(LiSn₂P₃O₁₂·Li₄Ge₉O₂₀·LiAuF₄·Li₂SeO₄·LiAlSe₂·LiB(SO₄)₂ — 오차/값 ≥ 0.6) — 이 6종은 "1000 K에서 확산 있음"조차 통계적으로 약하다.
 
 ### 6d. 그룹 C — non-diffusive 70종 (Tables S3·S4; Fig S52–S121) — 정직한 음성 결과
 - 판정문(원문): "our simulations give evidence that this structure will also **not conduct in experiment, unless doped significantly**".
 - **가족별**: 질화물(Li₂CeN₂·Li₅ReN₄·Li₇PN₄·Li₃ScN₂·Li₇NbN₄·Li₃AlN₂·Li₆WN₄·Li₄TaN₃·옥시나이트라이드 Li₁₆Nb₂N₈O) / 할라이드(LiAuF₄[COD 1510140 — S2의 ICSD 33953 entry와 **다른 entry가 반대 판정**: 같은 조성도 구조 entry 따라 갈림]·LiNb₃InCl₉·Li₂Cs₃Br₅·KLiYF₅·Li₂Ta₂O₃F₆·Li–Zr–Be–F) / 붕산염 다수(Li₂AlB₅O₁₀·Li₃Sc(BO₃)₂·Li₃GaB₂O₆×2·Li₂AlBO₄·Li₈Be₅B₆O₁₈·Li₆Be₃B₄O₁₂·Li₃AlB₂O₆·LiBO₂·Li₃B₇O₁₂·Cs₂Li₃B₅O₁₀·NaLi₂BP₂O₈·Rb₂Li₃BP₄O₁₄·Li₂B₃PO₈) / 인산염(Li₂Cd(PO₃)₄·LiPO₃·Li₄Zn(PO₄)₂·**Li₉Mg₃(PO₄)₄F₃ — 실험 보고 전도도와 정면 모순, 저자 명시**) / 규산염(LiBSi₂O₆·Li₂Si₃O₇·LiYSiO₄·Li₃AlSiO₅·Li₂Si₂O₅×2·Li₂MgSiO₄·SrLi₂Si₂N₄) / 텔루르산염(Li₂TeO₃·Li₄TeO₅·Li₆TeO₆·Li₂TeWO₆) / 탄탈·니오브(Li₆Sr₃Ta₂O₁₁·SrLi₂Ta₂O₇·Li₃Ba₂TaN₄·Li₃Ba₂NbN₄·Li₄KNbO₅·**LiNbO₃**) / 아연·몰리브덴·비소(Li₆ZnO₄[Nb 도핑 없인 비전도 — 실험 정합]·LiKZnO₂·LiZnAsO₄·Li₂MoO₄·Li₂Mo₄O₁₃·LiYMo₃O₈·Li₃AlMo₂As₂O₁₄·Li₆Zn₆As₆O₂₄계) / 귀금속 산화물(**Li₃AuO₃ — Filsø의 전자밀도 서술자는 3D 전도체로 예측했으나 완전점유 FPMD는 무확산(서술자 반례)**·Li₂PdO₂·Li₈PtO₆·LiReO₄) / 기타(Li₄SrP₂·LiLa(CO₃)₂류·Li₄KAlO₄·Li₄Ge₅O₁₂·Li₂WO₄·Li₂W... 전량 Tables S3/S4).
 - 수치 스타일: 예) Li₂₄Al₈N₁₆ D_Li = (−2.0 ± 5.0)e-9 — **0과 정합한 음수 추정값도 그대로 보고**(MSD 평탄 + 블록 오차) = "no diffusion"의 통계적 정의. **본문 Fig 5/7/10 legend에서도 같은 스타일 확인**(LGPS D_S −9.8e-10 ± 2.2e-9 등).
-- **2026-08-03 본문 실물 대조 결과**: 본문 §3.3은 스스로 "**we only give a brief summary**"라 밝히고 **44종만 이름으로 열거**한다(70종 전체 목록은 SI Tables S3·S4). 위 목록 중 본문에 실재하는 항목은 전부 확인됐고, 본문에 없는 항목(Li₂TeWO₆·SrLi₂Si₂N₄·SrLi₂Ta₂O₇·Li₃Ba₂TaN₄/NbN₄·LiNbO₃·Li₂Mo₄O₁₃·LiYMo₃O₈·Li₂Ta₂O₃F₆·Li₂Cs₃Br₅·KLiYF₅·Li–Zr–Be–F·Li₃B₇O₁₂·Cs₂Li₃B₅O₁₀·Rb₂Li₃BP₄O₁₄·Li₂B₃PO₈·Li₂MgSiO₄·LiReO₄·Li₆Be₃B₄O₁₂·Li₃AlB₂O₆·LiBO₂ 등)은 **SI Table 유래로 표기 유지**(본문과 모순 없음, SI 재대조 대상 = §14 미결 ③).
-- 원문 표기 교정 2건: 텔루르산염은 본문 표기가 **Li₃TeO₃**(Li₂TeO₃가 화학적으로 정상 — 원문 오식으로 보이나 표기는 그대로 기록) · 붕인산염은 **Li₂NaBP₂O₈**, 카보네이트는 **LiLaC₂O₃**(원문 그대로).
+- **2026-08-03 본문 실물 대조 결과**: 본문 §3.3은 스스로 "**we only give a brief summary**"라 밝히고 **44종만 이름으로 열거**한다(70종 전체 목록은 SI Tables S3·S4).
+- **✅ 2026-08-03 SI 실물 전수 대조 — 70종 확정(§14 미결 ③ 종결)**: **Table S3 53행 + Table S4 17행 = 70행**, 각 7열(조성·DB·DB-id·supercell·Figure·Δvol·T_sim) = **490셀 판독 완료**. 위 가족별 목록의 항목은 **전부 Table S3/S4에 실재**(불일치 0). 다만 이전 digest가 **누락한 3종**을 보완한다: **Cs₂Li₂B₂P₄O₁₅**(ICSD 424281, Cs₈Li₈B₈P₁₆O₆₀, +5.9%, S107) · **Li₄Al₃Ge₃BrO₁₂**(ICSD 87991, Li₈Al₆Ge₆Br₂O₂₄, +2.5%, S109) · **LiInGeO₄**(ICSD 167518, Li₁₆In₁₆Ge₁₆O₆₄, **−0.1%**, S106).
+- **원문 표기 교정 3건 — SI가 본문 오식임을 확정**: ① 텔루르산염 본문 "Li₃TeO₃" → **SI Table S3 `Li2Te1O3` (ICSD 4317, Li₃₂Te₁₆O₄₈)** = **Li₂TeO₃가 정답, 본문이 오식** ② 카보네이트 본문 "LiLaC₂O₃" → **SI `Li1La1C2O6` (ICSD 174533, Li₄La₄C₈O₂₄)** = **LiLa(CO₃)₂ = LiLaC₂O₆가 정답, 본문이 오식** ③ 붕인산염 **Na₁Li₂B₁P₂O₈**(ICSD 291512) — 본문 "Li₂NaBP₂O₈"과 동일 조성, 오식 아님.
+- **★ 비전도 판정의 정량 경계(SI 실물로 처음 계산 — 인용 가치 높음)**: 그룹 C 70종의 1000 K D_Li를 전수 뽑으면 **최대가 3.9e-7 cm²/s**(LiNbO₃, Fig S121; 그 다음 Li₂CeN₂ 3.8e-7 · Li₆Sr₃Ta₂O₁₁ 3.5e-7 · Li₅ReN₄ 3.2e-7)이고 **70종 전부 1e-6 미만**이다. 한편 **그룹 B의 1000 K 최저는 1.2e-6**(LiB(SO₄)₂, Fig S51). → **B와 C 사이에 약 3배의 빈 구간이 실제로 존재한다**(3.9e-7 ↔ 1.2e-6). 저자는 이 갭을 논문 어디에도 쓰지 않았지만, **"B/C 경계가 임의의 커트라인이 아니라 데이터에 난 틈"**이라는 것은 이 스크리닝의 분류를 방어하는 가장 강한 수치다. (단 §13의 유보는 유효 — 갭이 있다는 것과 개별 물질의 소속이 옳다는 것은 다른 문제이고, T_sim이 43.6–436 ps로 8배 넘게 차이 난다.)
+- **오차 없이 보고된 패널 3건**(SI 실물): Fig S61 LiAuF₄ 2.2e-8 · S69 Li₂MoO₄ 7.1e-9 · S76 Li₃ScN₂ 1.1e-9 — 이 세 패널만 **±가 아예 없다**(블록이 1개 = 오차 산정 불가). 나머지 67종은 전부 mean±SE.
+- **Δvol이 음수인 그룹 C 6종**(vdW 없이도 수축한 드문 사례): Li₂Cs₃Br₅ **−12.5%**(전 그룹 통틀어 최대 수축) · SrLi₂Si₂N₄ −0.4% · Li₃ScN₂ −0.5% · Li₁₆Nb₂N₈O −1.7% · Li₇NbN₄ −0.7% · LiInGeO₄ −0.1%. **질화물이 5/6** — PBE 팽창 편향(Fig 3 +4%)이 질화물에서는 뒤집힌다는 뜻으로, 우리가 PBE 부피 편향을 인용할 때 "산화물·황화물 기준"이라 한정해야 할 근거.
 
-### 6e. 그룹 D — pinball만 확산, FPMD 실패 15종 (Table S5)
-SCF 반복 발산 등으로 FPMD 판정 불가. **본문 §3.4가 이름을 대는 것은 14종**(2026-08-03 실물 전수): Li₄Mo₃O₈ · LiTaSiO₅ · **Li₂P₂PdO₇**(원문 표기; =Li₂PdP₂O₇) · **Li₂NaPO₄**(nalipoite) · **Li₃BaNaB₆O₁₂** · **LiNaB₄O₇** · **Li₂NaBO₃** · LiAuS₄O₁₄(Δvol +22.1% [SI]) · **Li₁₀B₁₄Cl₂O₂₅(boracite형 — 실험적으로 수송 관찰 보고)** · LiAuI₄ · Li₃ScF₆ · LiNb₃Cl₈ · LiZr₂As₃O₁₂(NASICON 비소산염) · LiAlGeO₅[CPMD 선행연구는 무확산].
-- **⚠ 15번째가 안 맞는다(미결 ③)**: 이전 digest가 15번째로 적은 **Li₅La₃Nb₂O₁₂(가넷)은 본문 §3.4에 없다**. 더구나 같은 물질이 §3에서는 **"기지 전도체 39종"으로 FPMD에서 제외**됐다고 적혀 있다 — 한 물질이 두 바구니에 동시에 들어간 셈. Table S5 실물로만 닫을 수 있다. **그때까지 "그룹 D에 가넷이 있다"는 인용 금지.**
+### 6e. 그룹 D — pinball만 확산, FPMD 실패 15종 (Table S5) — **2026-08-03 SI 실물로 전수 확정**
+SCF 반복 발산 등으로 FPMD 판정 불가. Table S5는 다른 표와 달리 **Figure 열도 T_sim 열도 없다**(5열 = 조성·DB·DB-id·supercell·Δvol) — FPMD가 아예 안 돌았으니 보여줄 MSD가 없다는 뜻. **75셀 불일치 0**:
+| 물질 | DB | DB-id | supercell | Δvol |
+|---|---|---|---|---|
+| Li₄Mo₃O₈ | ICSD | 84602 | Li₂₄Mo₁₈O₄₈ | 5.8% |
+| LiTaSiO₅ | COD | 1534486 | Li₄Ta₄Si₄O₂₀ | 3.1% |
+| Li₂P₂PdO₇ | COD | 1000333 | Li₈P₈Pd₄O₂₈ | **14.9%** |
+| Li₂NaPO₄ (nalipoite) | COD | 9004248 | Na₈Li₁₆P₈O₃₂ | 3.9% |
+| Li₃BaNaB₆O₁₂ | ICSD | 423774 | Ba₂Na₂Li₆B₁₂O₂₄ | 2.9% |
+| LiNaB₄O₇ | ICSD | 416956 | Na₄Li₄B₁₆O₂₈ | 4.2% |
+| Li₂NaBO₃ | COD | 1511223 | Na₁₆Li₃₂B₁₆O₄₈ | 2.8% |
+| LiAuS₄O₁₄ | COD | 4326716 | Li₄Au₄S₁₆O₅₆ | **22.1%** |
+| Li₁₀B₁₄Cl₂O₂₅ (boracite형) | COD | 1530960 | **Li₁₀B₁₄Cl₂O₂₅** (=단위셀 그대로, 확장 없음) | 1.8% |
+| LiAuI₄ | COD | 1510187 | Li₈Au₈I₃₂ | 8.4% |
+| **Li₅La₃Nb₂O₁₂ (가넷)** | ICSD | **68251** | Li₂₀La₁₂Nb₈O₄₈ | 2.4% |
+| LiZr₂As₃O₁₂ | ICSD | 190656 | Li₂Zr₄As₆O₂₄ | 4.0% |
+| LiAlGeO₅ | COD | 1526845 | Li₈Al₈Ge₈O₄₀ | **−6.3%** |
+| Li₃ScF₆ | COD | 1535801 | Li₁₈Sc₆F₃₆ | 4.0% |
+| LiNb₃Cl₈ | ICSD | 50232 | Li₄Nb₁₂Cl₃₂ | 5.8% |
+- **✅ 15번째 종결(§14 미결 ③)**: 빠졌던 15번째는 **Li₅La₃Nb₂O₁₂(ICSD 68251)이 맞다** — Table S5 11행에 실재한다. 본문 §3.4가 14종만 이름을 댄 것이고(그래서 본문만 보면 안 보인다), **2026-07-28 digest의 원래 기재가 옳았다. "그룹 D에 가넷이 있다"는 인용 금지를 해제한다.**
+- **⚠ 다만 모순은 남는다(entry 단위로 읽으면 풀린다)**: 본문 §3은 가넷 Li₅La₃Nb₂O₁₂를 "기지 전도체 39종"에 넣어 **FPMD 대상에서 제외**했다고 적는데, Table S5의 가넷은 **ICSD 68251**이고 기지 전도체로 지목된 Ta 가넷은 **ICSD 68252**다(연번 entry). 즉 **Nb 가넷 entry는 실제로 FPMD가 시도됐다가 실패해 그룹 D로 갔고, 본문 서술은 조성 단위로 뭉뚱그린 것**. §13의 "조성 단위 인용 금지" 원칙이 여기서도 그대로 적용된다.
+- **Δvol 특이점**: LiAuS₄O₁₄ +22.1%·Li₂P₂PdO₇ +14.9%는 그룹 A의 LiGaI₄(+19.5%)급 팽창 — **vdW 부재로 셀이 크게 벌어진 구조들이 FPMD SCF에서도 잘 터졌다**는 상관이 보인다(저자 미언급, 우리 관찰). LiAlGeO₅는 −6.3%로 그룹 D 유일한 수축.
 
 ### 6f. §3.5 Context — 스코프의 정직한 한계와 다음 단계
 - **완전점유·화학량론 Li만 스크리닝** — "Li 자리만 부분점유(+타 원소 자리 완전점유)" 구조가 **추가 645개**(비-유니크) 존재 → 미탐색.
@@ -271,12 +340,13 @@ SCF 반복 발산 등으로 FPMD 판정 불가. **본문 §3.4가 이름을 대�
 | 15 | D_FPMD(x) vs D_PB(y) 산점, **대상 = 그룹 A·B·C만**(D 제외); 색 = 우세 음이온 **S/Se 파랑·N/P 주황·F/Cl/Br/I 초록·O 빨강**; **x=1e-8 세로선 = 검출하한**(그 이하는 전부 이 선 위에 쌓임, 가로 오차막대만 길게) | ★ surrogate 검증 그림의 표준 — 우리 UMA-vs-DFT 검증 그림(D 또는 힘)에 같은 문법. **"수렴 못 한 점을 하한선에 몰아 찍고 오차막대로 표시"**하는 처리가 특히 이식 가치 |
 | 16 | 클러스터별 node-hours 파이(**실물 판독: Bellatrix 69k·Fidis 34k·Daint-XC40 266k·Daint-XC50 140k = 총 509k**). 구성: Bellatrix Pinball 71%/Fitting 29% · **Fidis FPMD 100%** · XC40 FPMD 80%/VC-relax 10%/Pinball 7% · XC50 Pinball 92%/Fitting 6% | HT 예산 보고 관행 — 우리 KISTI/gabia/kgy 자원 보고에 참고. **머신별로 작업 종류를 분리 배치**(FPMD 전용 클러스터 vs pinball 전용)한 것이 우리 다중 서버 운용과 같은 그림 |
 | 17 | 이온 스텝당 node-time 히스토그램: pinball(파랑, ~1e-2–4 s·최빈 0.2–0.4 s) vs DFT(초록, ~20–2e4 s·최빈 1e2 s) — **~4자릿수 차, 두 분포가 완전히 분리** | "surrogate 절감분을 통계에 재투자" 논거의 정량 그림 |
-| S1 | 717종 gap(실험 부피) vs gap(vc-relax 부피) 상관(색=V_rel/V_exp) — 강상관; 무gap→유gap만 발생, 역은 없음 | **"실험 기하 1-shot gap으로 절연체 필터"의 방법 정당화** — 우리도 스크리닝 1차 필터에 차용 가능 |
-| S2 | D(총 MSD@50 ps) vs D(기울기 8–10 ps) — 비확산계서 전자가 과대 | MSD 처리의 고전 함정(진동 기여) 시각화 |
-| S3 | 기울기 t'=5/10/20/30 ps vs 40 ps 4패널 — 5 ps 과대·10 ps부터 수렴 | ★★ **"MSD 창을 데이터로 정당화"의 원본** — 우리 2–50 ps 창 검증 재현 template |
-| S4–S10 | 그룹 A 전 온도 MSD(전 종·블록·오차) | D 수치 전사원(§6b) |
-| S11–S51 | 그룹 B MSD(19종 4-T + 21종 1000 K) | 〃 (§6c) |
-| S52–S121 | 그룹 C 70종 MSD(평탄; 음수 D±오차 그대로) | "no diffusion"의 통계적 정의 시각화 |
+| S1 | **717종** gap(실험 부피 V_exp) vs gap(vc-relax 부피 V_rel) 상관 — 축 0–8 eV, 색=V_rel/V_exp(컬러바 1.0–3.5), 대각선에 바짝 붙은 강상관. 무gap→유gap만 발생, 역은 없음 → "절연체로 판정된 구조가 이완 후 금속이 되는 일은 없다" | **"실험 기하 1-shot gap으로 절연체 필터"의 방법 정당화** — 우리도 스크리닝 1차 필터에 차용 가능. **⚠⚠ 2026-08-03 SI 실물로 발견한 함정**: 이 717종은 **이 논문의 풀이 아니다**. 원문 명시 — "these structures are **not necessarily the same as in the manuscript** … we took the data from **another screening study** that uses the same protocols". 금속 구조는 이 스크리닝에서 이완을 안 했기에 비교가 불가능해서 **다른 연구의 데이터로 대신 정당화**한 것. → 인용 시 "동일 프로토콜의 별도 스크리닝 717종으로 검증"이라고 정확히 써야 하며, "자기 풀 971종으로 검증했다"고 쓰면 오독 |
+| S2 | y=D(총 MSD@50 ps) vs x=D(기울기 8–10 ps), **대상=본문의 전 pinball 시뮬**; 축 x 1e-10–1e-4 · y 1e-8–1e-4, 빨강 1:1선. **x>1e-6에서는 1:1에 붙고, x<1e-7이면 y가 ~5e-8–1e-7 플래토에 걸려 눕는다**(2026-08-03 이미지 판독으로 플래토 위치 확정) | MSD 처리의 고전 함정(진동 기여) 시각화. ★ **"eq 1을 쓰면 비확산계도 D≈1e-7이 나온다"**는 것이 이 그림의 핵심 — 우리가 MLIP-MD에서 총MSD/6t를 절대 안 쓰는 이유의 그림 근거. y축 라벨은 캡션과 달리 "D_Li from **max displacement**"로 찍혀 있다(사소한 라벨 불일치) |
+| S3 | 기울기 t'=5/10/20/30 ps vs 40 ps 4패널(전부 1e-8–1e-4, 빨강 1:1) — 5 ps는 **1:1선 위로 크게 흩어짐**(과대), 10 ps부터 붕괴하듯 선에 붙음 | ★★ **"MSD 창을 데이터로 정당화"의 원본** — 우리 2–50 ps 창 검증 재현 template. **⚠ 2026-08-03 이미지 판독 단서**: 10/20/30 ps 어느 패널에서도 **x < 1e-7 구간은 여전히 ~1자릿수 흩어진다**(선 아래로도 떨어짐). 즉 "10 ps면 수렴"은 **빠른 전도체(D≳1e-6)에서만** 참이고, 느린 계에서는 창을 늘려도 수렴하지 않는다 — §13의 "8–10 ps 창을 느린 계에 이식 금지"가 이 그림에 그대로 보인다 |
+| S4–S10 | 그룹 A **7 구조 × 4온도 = 28패널** MSD(전 종·블록 얇은선·피팅 점선·legend에 mean±SE) | D 수치 전사원(§6b). **2026-08-03 전수 재대조 완료** |
+| S11–S30 | 그룹 B multi-T **19종**(라벨은 20개) | 〃 (§6c). ⚠ **Fig S12는 Fig S13의 완전 중복**(둘 다 Li₁₆Ti₁₆P₁₆O₈₀, 4패널 D값·축범위 전부 동일)이고 **Table S1은 S12에 아무 구조도 배정하지 않는다** — 조판 사고. 그래서 라벨 20개 ↔ 구조 19종이 맞아떨어진다 |
+| S31–S51 | 그룹 B 1000 K-only **21종** | 〃 (§6c ii) |
+| S52–S121 | 그룹 C **70종** MSD(평탄; 음수 D±오차 그대로) | "no diffusion"의 통계적 정의 시각화. ⚠ **Fig S85 = Fig S93 완전 중복**(둘 다 Li₂₄Ga₈B₁₆O₄₈, D_Li −2.4e-10 ± 3.0e-8까지 동일). Table S3는 **Li₃GaB₂O₆ 두 entry(COD 1511740 Δvol 7.1% / COD 2242045 Δvol 2.2%)를 둘 다 "S93"으로 가리킨다** → 실제로는 **한 entry의 MSD 그림이 존재하지 않고** 다른 entry 것이 두 번 실렸다. 70종 중 1종은 그림 근거가 없는 셈 |
 
 ## 7.5 재현 수준 방법 절을 보는 요령
 
@@ -307,7 +377,8 @@ SCF 반복 발산 등으로 FPMD 판정 불가. **본문 §3.4가 이름을 대�
 | 규모 | SCF 2,503 · vc-relax 5,214 · **pinball-MD 171,370** · **FPMD 11,525**(재시작 포함) · 총 ~509k node-hours(4개 클러스터) |
 
 ## 9. Post-processing ★
-- **MSD/D**: SAMOS — 블록 분해·기울기 회귀(pinball 8–10 ps·FPMD ≥20 ps)·mean±SE. Ea = Arrhenius 선형 피팅 + **Bayesian 오차 전파**(Sivia).
+- **MSD/D**: SAMOS — 블록 분해·기울기 회귀(**pinball 8–10 ps 고정** / **FPMD "at least 20 ps" 하한 + 물질별 custom interval**, SI §3 + 본문 §2.6 — §5a)·mean±SE(블록 간 표준오차). Ea = Arrhenius 선형 피팅 + **Bayesian 오차 전파**(Sivia).
+- **블록 분해 자체가 결과를 흔든다(2026-08-03 SI 대조로 실증)**: 같은 궤적·같은 창인데 본문 그림과 SI 그림의 750 K D가 3–25%, 오차막대가 최대 3× 다르다(§6b 표) — 블록 개수가 자유 파라미터로 남아 있다는 뜻. 우리 파이프라인에 **블록 수 감도 점검** 1회를 넣을 근거.
 - **Li 확률밀도**(eq 3): Gaussian σ=0.3 Å·10 pts/Å 격자·등가면 0.1/0.01/0.001 Å⁻³ — 차원성(1D/2D/3D)·연결 성분 판정.
 - **host 안정성**: 전 종 MSD 동시 산출(D_host ≈ 0 여부) — fast-ion 판정의 필수 짝.
 - **없는 것**: σ 환산(Haven/NE) 없음 · ESW/hull 없음 · NEB 없음 · Bader/COHP/DOS-그림 없음(절연 판정은 점유수만) — 철저히 "확산계수 단일 물성" 논문.
@@ -318,8 +389,9 @@ SCF 반복 발산 등으로 FPMD 판정 불가. **본문 §3.4가 이름을 대�
 | 항목 | Kahle (pinball/FPMD) | 우리 (UMA MLIP-MD) | 판정 |
 |---|---|---|---|
 | 힘 계산 | pinball(3-param frozen-host surrogate) → FPMD(BOMD·PBE·Γ) 2단 | UMA-s-1p1(omat) 전 원자 MLIP 단일 | 축이 다름 — "둘 다 AIMD" 화법 금지(그들 FPMD만 진짜 AIMD) |
-| MSD 창 | pinball **8–10 ps 고정**(창 자체를 Fig S3로 검증) · FPMD **물질별 custom interval**(그림 예시 20–30 ps) | **2–50 ps 고정**(전 물질 동일) | 갈린다: **pinball 창 정당화 절차는 그들이 위**(S3 스캔), **FPMD 창의 일관성은 우리가 위**(그들은 물질마다 손으로 고름 — 2026-08-03 실물 확인). → 우리 2–50 ps 창의 S3식 t'-스캔 검증 1회 이식 권고는 유지 |
-| 오차 산정 | 궤적 독립 블록 분산 → mean±SE, **워크플로가 err<1e-8 cm²/s or <5%까지 자동 연장** | 멀티시드(600 K 3-시드) 분산; comp1/modelc Ea는 단일 궤적(오차막대 없음) | per-material 자동 수렴판정은 그들이 위; 시드-간(초기조건) 분산은 우리만 잡음 — **상보적**(블록=궤적 내·시드=궤적 간) |
+| MSD 창 | pinball **8–10 ps 고정**(창 자체를 Fig S3로 검증) · FPMD **"≥20 ps" 하한 + 물질별 custom interval**(SI §3 + 본문 §2.6; 그림 예시 20–30 ps) | **2–50 ps 고정**(전 물질 동일) | 갈린다: **pinball 창 정당화 절차는 그들이 위**(S3 스캔), **FPMD 창의 일관성은 우리가 위**(그들은 하한만 정하고 구간은 물질마다 손으로 고름 — 2026-08-03 본문·SI 실물 확인). → 우리 2–50 ps 창의 S3식 t'-스캔 검증 1회 이식 권고는 유지. **⚠ Fig S3 이미지 판독 단서**: 그들의 창 검증은 D≳1e-6에서만 수렴을 보이고 1e-7 이하에선 30 ps에서도 1자릿수 흩어진다 — 우리가 t'-스캔을 이식할 때 **검증 대상 D 영역을 명시**해야 한다 |
+| 오차 산정 | 궤적 독립 블록 분산 → mean±SE, **워크플로가 err<1e-8 cm²/s or <5%까지 자동 연장** | 멀티시드(600 K 3-시드) 분산; comp1/modelc Ea는 단일 궤적(오차막대 없음) | per-material 자동 수렴판정은 그들이 위; 시드-간(초기조건) 분산은 우리만 잡음 — **상보적**(블록=궤적 내·시드=궤적 간). **★ 2026-08-03 SI 대조로 드러난 제3의 축**: 본문 그림과 SI 그림이 같은 궤적을 **블록만 다르게 쪼개** D 3–25%·오차 3× 차이를 냈다(§6b) — **블록 분해 임의성은 양쪽 다 안 잡고 있다.** 우리 쪽 이식 항목 추가: 블록 수(4/8/16) 감도 1회 점검 |
+| 궤적 길이 배분 | **물질·온도마다 제각각**(FPMD 43.6–726.4 ps, 16배 차) — 수렴 기준 도달 시 종료라는 규칙은 있으나 결과적으로 **그룹 B 저온이 특히 짧다**(Li₄Re₆S₁₁ 500 K 87.1 ps = 그룹 A 500 K의 1/8) | 전 조성·전 온도 **동일 200 ps 생산** | **우리가 위(비교 가능성)**: 그들의 A/B 경계에는 "덜 돌린 것"이 섞여 있다(§6c Table S1 시간표). 대신 그들은 **필요한 만큼 늘리는 자동화**를 가졌다 — 정답은 "동일 하한 + 미수렴 시 자동 연장"의 합집합 |
 | 온도 | 1000 K 게이트 → 750/600/500 K(1/T 등간격 4점); Ea는 500 K 해상 시만 | 600/800/1000 K 3점(400/500 K 제외 판정) | 그들이 더 저온까지 시도하되 미해상 시 Ea 자체를 포기(정직); 우리는 저온 제외 사유를 명문화 — 정신 동일 |
 | Ea 오차 | **Bayesian error propagation** | 600 K 3-시드 오차막대 | 그들 방식이 문헌 표준화에 유리 — 이식 후보 |
 | 비전도 판정 | D<1e-8 cm²/s = 수렴 불가 floor 명문 + LLZO-100 ps 논증("고온만 확산≠비전도") | 400/500 K 제외 판정·frozen artifact 인지(disorder_ensemble d=0) | 동일 정신의 두 구현 — LLZO 논증은 인용 가치 높음 |
@@ -335,12 +407,16 @@ SCF 반복 발산 등으로 FPMD 판정 불가. **본문 §3.4가 이름을 대�
 ### 10c. Argyrodite 블라인드 스팟과 Li₆PS₅I 삼각검증 ★
 - 부분점유 제외 → **Li₆PS₅Cl/Br(우리 comp1·modelc 계열)은 이 깔때기에 입장 자체를 못 함**. 무질서가 σ의 필요조건인 물질군([Klerk]·[KimMTP])은 "완전점유·질서" 스크리닝의 구조적 사각지대 — 우리 disorder-ensemble 파이프라인의 존재 이유를 HT 원전이 반증 형태로 보여줌.
 - 살아남은 **Li₆PS₅I(질서 배열)는 FPMD에서 subdiffusive/caged MSD로 "해상 불가"** — 이는 ① [Klerk] all-4a(질서 I형) = intercage 점프 0 ② [Kraft] 실측 σ(I) ~1e-6 S/cm ③ 우리 comp5(Li₆PS₅I) frozen 계열 관찰과 **4자 삼각 정합**: 질서 argyrodite는 cage 내 rattling만 남는다. Kahle의 FPMD가 이를 (본인들은 모르는 채) 재확인한 셈.
+  - ★ **2026-08-03 SI 실물이 이 삼각정합에 결정적 증거를 하나 더 얹었다**: Fig S14의 D_Li가 **1000 K 5.8e-6 / 750 K 5.9e-6 / 600 K 3.3e-6 / 500 K 9.6e-7** — **1000 K와 750 K가 사실상 같다(역전)**. 아레니우스가 성립하지 않는다는 뜻이고, 진짜 확산이라면 절대 나올 수 없는 온도 의존성이다. 즉 저자가 "해상 불가"라 부른 것은 통계 부족이 아니라 **애초에 확산이 아닌 신호를 D로 환산한 것**이었다. 우리 β=dlogMSD/dlogt 게이트(`tools/ionic/msd_diffusive_check.py`)가 잡아내는 바로 그 상황이고, **"질서 argyrodite에는 확산이 없다"의 가장 깨끗한 외부 수치 증거**로 인용 가능(그들 스스로는 이 역전을 언급하지 않는다 — 우리 판독으로 귀속할 것).
 - Li₅PS₄Cl₂(Ong 2017 예측 조성)가 "기지 전도체"로 재발견됨 — [Klerk]의 Li₅PS₄X₂ 제안과 같은 halogen-rich end-member 계보.
 - 밴드갭: 그들은 gap 값을 아예 안 쓰고 **점유 기준 절연 판정**(PBE 과소평가의 단방향 안전 활용) — 우리 "fixed-occ nscf 고유값만 인정·DOS-threshold 금지" 규율과 **다른 문제를 푸는 다른 규율**(스크리닝 필터 vs 물성값). gap 수치 비교 대상 없음(n/a).
 - 이온전도 수치: LGPS Ea 0.14±0.04(FPMD)는 소환값 — 우리 argyrodite Ea(0.253/0.224)와 물질이 달라 직접 비교 없음. 유일한 접점은 **방법 규율**이며 그것이 이 digest의 존재 이유.
 
 ## 11. 적용 인사이트 (내 연구에 어떻게)
-- ① **방법 규율의 문헌 앵커**: 우리 SEMIFINAL 멀티시드·절대 σ 비인용·저온 제외 판정이 "우리만의 결벽"이 아니라 HT-MD 원전의 규율(블록 오차·자동 수렴·검출 하한·Ea 포기 규칙)과 같은 계보임을 인용으로 보일 수 있음. 특히 **Fig S3(창 수렴 검증)·Bayesian Ea 오차 전파** 두 절차는 우리 파이프라인에 1회씩 이식할 가치(2–50 ps 창의 t'-스캔 검증 + Ea 오차의 Bayesian 산출).
+- ① **방법 규율의 문헌 앵커**: 우리 SEMIFINAL 멀티시드·절대 σ 비인용·저온 제외 판정이 "우리만의 결벽"이 아니라 HT-MD 원전의 규율(블록 오차·자동 수렴·검출 하한·Ea 포기 규칙)과 같은 계보임을 인용으로 보일 수 있음. **이식 후보 3건**(2026-08-03 SI 검증으로 1건 추가):
+  - (a) **Fig S3식 t'-스캔**으로 우리 2–50 ps 창을 1회 검증 — 단 **검증이 유효한 D 영역을 명시**할 것(그들 그림도 D≳1e-6에서만 수렴).
+  - (b) **Ea 오차의 Bayesian 전파**(Sivia) — 문헌 표준화에 유리.
+  - (c) ★ **블록 분해 감도 점검**(블록 수 4/8/16) — 신규. 이 논문이 **같은 궤적·같은 창에서 블록만 바꿔 D 3–25%·오차막대 3× 차이**를 낸 것이 증거다(§6b 본문↔SI 대조표). 우리 멀티시드는 시드 간(궤적 간) 분산만 잡고 이 축은 비어 있다.
 - ② **"host-lattice MSD 동시 플롯" 관행 이식**: fast-ion 판정마다 D_host를 같은 패널에 — 우리 MD QC(특히 도핑 셀·고온 800/1000 K)에서 host 안정성 자동 판독. Kahle의 그룹 A 5종 중 3종이 host 유동 경고를 받은 것이 이 관행의 가치 증명.
 - ③ **깔때기 서사(3자 비교)**: [Sendek17] ML 분류기(12,831→317→21) / [Xiao2019] 열역학 게이트(104,082→…→184→3) / **[Kahle2020] 물리 MD(4,963→1,362→1,016→796→132→45)** — 우리 cascade 발표에서 "서술자·게이트·동역학 3축 계보 + 우리는 within-host 개질" 위치 선언에 사용. Kahle 스스로 Sendek 발생률(14%)과 자기 수확(84/796)의 정합을 계산한 것도 인용 포인트.
 - ④ **경고로서의 pinball**: "동결 근사 surrogate는 랭킹까지만"을 top 71%/바닥 21%로 정량화 — 우리 UMA 결과 발표 시 "왜 절대값을 안 파는가"의 외부 근거([KimMTP] functional 각인과 쌍).
@@ -348,9 +424,10 @@ SCF 반복 발산 등으로 FPMD 판정 불가. **본문 §3.4가 이름을 대�
 
 ## 12. 인용 가능 문장 (deck/paper용)
 - "Kahle, Marcolongo and Marzari (EES 2020) screened all experimentally reported Li-containing structures in ICSD and COD (4,963 unique) through insulating-state and diffusion filters — 7.6 μs of pinball-model MD on 796 structures followed by 45 ns of first-principles MD on 132 — identifying five new fast-ion conductors (Li₅Cl₃O, Li₂CsI₃, LiGaI₄, LiGaBr₃, Li₇TaO₆; Ea 0.19–0.35 eV) alongside 70 honestly reported non-conductors."
-- "In their protocol the diffusion coefficient is taken from the slope of the MSD (8–10 ps for the pinball model — a window itself validated against 40 ps fits — and custom, per-material intervals for FPMD, typically 20–30 ps), the uncertainty from the variance over independent trajectory blocks, and each workflow runs until the error of the mean falls below 1×10⁻⁸ cm² s⁻¹ or 5% — with activation energies extracted only when diffusion is resolved down to 500 K, and errors propagated Bayesianly."
+- "In their protocol the diffusion coefficient is taken from the slope of the MSD (8–10 ps for the pinball model — a window itself validated against 40 ps fits — and, for FPMD, at least 20 ps in custom per-material intervals, typically 20–30 ps), the uncertainty from the variance over independent trajectory blocks, and each workflow runs until the error of the mean falls below 1×10⁻⁸ cm² s⁻¹ or 5% — with activation energies extracted only when diffusion is resolved down to 500 K, and errors propagated Bayesianly."
+- "Across the 70 structures they report as non-diffusive, no Li diffusion coefficient at 1000 K exceeds 3.9×10⁻⁷ cm² s⁻¹, while the least mobile of their potential conductors reaches 1.2×10⁻⁶ cm² s⁻¹ — the classification boundary falls in a genuine gap of the distribution rather than at an arbitrary cut-off." (우리가 SI Fig S51–S121 전수 판독으로 계산한 값 — 논문 자체는 이 갭을 언급하지 않는다. 인용 시 "our reading of their SI"로 귀속할 것.)
 - "The frozen-host pinball surrogate fails to reproduce FPMD diffusion coefficients quantitatively, yet ranks candidates effectively: 71% of the top pinball quartile show D > 10⁻⁷ cm² s⁻¹ in FPMD versus 21% in the bottom quartile — a four-orders-of-magnitude-cheaper classifier, not a property predictor."
-- "Because the screening excludes partially occupied structures, disorder-stabilized conductors such as Li₆PS₅Cl are structurally invisible to it; the ordered Li₆PS₅I that survives shows only caged, sub-diffusive Li motion in FPMD — consistent with site-disorder being a prerequisite for macroscopic diffusion in argyrodites."
+- "Because the screening excludes partially occupied structures, disorder-stabilized conductors such as Li₆PS₅Cl are structurally invisible to it; the ordered Li₆PS₅I that survives shows only caged, sub-diffusive Li motion in FPMD — its apparent Li diffusivity is the same at 1000 K and 750 K (5.8 and 5.9×10⁻⁶ cm² s⁻¹), i.e. not Arrhenius at all — consistent with site-disorder being a prerequisite for macroscopic diffusion in argyrodites." (온도 역전은 SI Fig S14 legend 판독값 — 논문 본문은 언급하지 않으므로 "our reading of their SI"로 귀속.)
 
 ## 13. 주의/한계 (over-claim 방지 — 비판적으로)
 - **pinball 정량 실패는 저자 자인** — 이 논문을 "pinball이 D를 재현한다"로 인용하면 오독. 반대로 "스크리닝 무용"도 오독(랭킹 유효·54% 예측률·하한 논증까지가 사실).
@@ -360,9 +437,17 @@ SCF 반복 발산 등으로 FPMD 판정 불가. **본문 §3.4가 이름을 대�
 - **FPMD 셋업의 스크리닝 타협**: Γ-only·d_inner 6.5 Å(작은 셀)·PBE·열욕 SVR τ=100 dt·수십~수백 ps — 개별 물질 정밀 논문 대비 거친 설정. D 절대값은 ±수십 %급 흔들릴 수 있는 소환값.
 - **8–10 ps(pinball) 창**: fast-ion 전제에서 정당화된 창 — 느린 계에 이식하면 위양성(그들 스스로 Fig S3에서 보임). 우리 2–50 ps와 단순 비교 금지(대상 D 영역이 다름).
 - **단일 실험 배열·완전점유**: 무질서·공공 물질군 누락(argyrodite·큐빅 가넷) — "ICSD/COD 전수"라는 표제의 실효 커버리지는 질서 구조 부분집합.
-- **분류 경계의 통계성**: 그룹 B↔C 경계는 시뮬 길이에 의존(87 ps짜리 판정 다수) — 개별 물질 재분류 가능성 상존. C의 "실험 모순" 2건(Li₉Mg₃(PO₄)₄F₃·Li₃AuO₃)은 방법 차이(도핑·결함·서술자 한계)일 수 있음.
-- ~~**OCR 캐비앗**~~ → **2026-08-03 해소**: 인박스 실물(21 pp)로 §6a 39종·§6c 40종·§6d 44종·§6e 14종을 전수 재전사 완료. 남은 불확실은 SI 유래 항목뿐(§14 미결 3건).
-- **논문 자체의 내부 불일치 4종(실물 확인 — 인용 전 반드시 인지)**: ① FPMD 대상 수 **132(본문)/~130(초록)/115(결론)/130(그룹 합)** ② Li₅Cl₃O 큰 셀 시뮬 시간 **본문 581·523 ps vs Table 1 726.4 ps** ③ 같은 조성이 다른 entry로 **반대 판정**(Li₄ZnP₂O₈: 기지 전도체 ↔ 그룹 C / LiAuF₄: 그룹 B ↔ 그룹 C) ④ 조판 오식 다수(Li₇RbSi₂O₈ supercell "Rb₈Li₁₂B₄P₁₆O₅₆"·Fig 4 캡션 "Li₇Ga₈Br₂₄"·"Be₂S₅²⁻"·"Li₄G₉O₂₀"·"Li₃TeO₃"·그룹 B 열거 (5) 결번). **조성 단위로 "이 논문이 X를 전도체/비전도체로 판정했다"고 인용하지 말 것 — entry 단위로만 성립.**
+- **분류 경계의 통계성**: 그룹 B↔C 경계는 시뮬 길이에 의존 — **SI Table S1–S4 실물로 확인한 T_sim 범위는 43.6–726.4 ps로 16배 차**이고, 그룹 B의 저온이 특히 짧다(Li₄Re₆S₁₁ 500 K 87.1 ps). 개별 물질 재분류 가능성 상존. C의 "실험 모순" 2건(Li₉Mg₃(PO₄)₄F₃·Li₃AuO₃)은 방법 차이(도핑·결함·서술자 한계)일 수 있음. **단 유리한 반대 증거도 있다**: 1000 K D 분포에 **3.9e-7(C 최대) ↔ 1.2e-6(B 최저)의 실제 갭**이 존재한다(§6d) — 경계 자체는 데이터에 난 틈에 놓여 있다.
+- ~~**OCR 캐비앗**~~ → **2026-08-03 완전 해소**: 인박스 실물 본문(21 pp)으로 §6a 39종·§6c 40종·§6d 44종·§6e 14종 전수 재전사 + **SI 실물(35 pp)로 Table S1–S5 883셀·Fig legend 704 D값 전수 대조**. 미결 0.
+- **논문 자체의 내부 불일치 — 본문 4종 + SI 대조로 추가 3종 = 7종(인용 전 반드시 인지)**:
+  ① FPMD 대상 수 **132(본문 §3)/~130(초록)/115(결론)/130(그룹 합)**
+  ② Li₅Cl₃O 큰 셀 시뮬 시간 **본문 581·523 ps vs Table 1 726.4 ps**
+  ③ 같은 조성이 다른 entry로 **반대 판정** — Li₄ZnP₂O₈(기지 전도체 ref 145 ↔ 그룹 C **COD 1544389**) / LiAuF₄(그룹 B **ICSD 33953** ↔ 그룹 C **COD 1510140**) / **Li₅La₃Nb₂O₁₂ 가넷**(기지 전도체로 FPMD 제외 선언 ↔ 그룹 D **ICSD 68251** — SI Table S5로 신규 확인)
+  ④ 조판 오식 다수 — 본문 Li₇RbSi₂O₈ supercell "Rb₈Li₁₂B₄P₁₆O₅₆"(**SI: Rb₄Li₂₈Si₈O₃₂**) · Fig 4 캡션 "Li₇Ga₈Br₂₄" · "Be₂S₅²⁻" · "Li₄G₉O₂₀"(**SI: Li₄Ge₉O₂₀**) · "Li₃TeO₃"(**SI: Li₂TeO₃**) · "LiLaC₂O₃"(**SI: LiLaC₂O₆**) · LiIO₃ supercell "Li₈I₈O₂₄"(**SI: Li₁₆I₁₆O₄₈**) · 그룹 B 열거 (5) 결번
+  ⑤ **[SI 신규] 본문 그림 ↔ SI 그림의 750 K D 불일치 8종 중 7종** — 같은 궤적을 블록만 달리 분석한 결과로 보인다(§6b 표). 값 3–25%, 오차막대 최대 3×.
+  ⑥ **[SI 신규] Fig S12 = Fig S13 완전 중복**(Table S1이 S12에 배정한 구조가 없음 — 무해한 잉여 그림)
+  ⑦ **[SI 신규] Fig S85 = Fig S93 완전 중복 + Table S3가 Li₃GaB₂O₆ 두 entry를 둘 다 S93으로 지시** → **그룹 C 70종 중 1종은 MSD 그림 근거가 실제로 없다**(무해하지 않음)
+  → **조성 단위로 "이 논문이 X를 전도체/비전도체로 판정했다"고 인용하지 말 것 — entry(DB-id) 단위로만 성립.** DB-id는 §6c·§6d·§6e 표에 전수 기재해 뒀다.
 - **인프라 종속**: 결과 재현엔 AiiDA+자체 pinball 구현 필요 — 값 재현보다 **규율 이식**이 현실적 활용.
 
 ---
@@ -394,9 +479,55 @@ SCF 반복 발산 등으로 FPMD 판정 불가. **본문 §3.4가 이름을 대�
 8. **FPMD 창 "≥20 ps 고정" → "물질별 custom interval(그림 예시 20–30 ps)"** (§5a·§10a).
 9. **"2019 DB 스냅샷"** 근거 없음 → 삭제.
 
-**미결 3건 (SI 실물 확보 시 종결)**
-- ① 그룹 A D값의 본문 legend ↔ SI legend 5–10% 괴리 — 어느 쪽이 최종본인지 SI Fig S4–S10으로만 확인 가능. **현재는 본문값 우선.**
-- ② LiIO₃ supercell **본문 Li₈I₈O₂₄ vs SI(추정) Li₁₆I₁₆O₄₈** — Table S1 필요.
-- ③ 그룹 D 15번째(Li₅La₃Nb₂O₁₂?)와 그룹 C 70종 중 본문 미열거 26종 — Tables S3·S4·S5 필요.
+**미결 3건 → ✅ 2026-08-03 SI 실물로 전부 종결 (상세 §15)**
+- ① 그룹 A D값의 본문 legend ↔ SI legend 괴리 → **종결**: 둘 다 최종본이고 **논문 내부 불일치**다(750 K 패널만 갈림, 8종 중 7종). 원인은 블록 재분해로 판단. 인용은 750 K 본문값·나머지 온도 SI값 → §6b 대조표.
+- ② LiIO₃ supercell → **종결**: Table S1·Fig S19 둘 다 **Li₁₆I₁₆O₄₈**. 본문 "Li₈I₈O₂₄"가 오식.
+- ③ 그룹 D 15번째 + 그룹 C 미열거분 → **종결**: Table S5 11행이 **Li₅La₃Nb₂O₁₂(ICSD 68251)** — 2026-07-28 기재가 옳았다(인용 금지 해제). 그룹 C는 Table S3(53) + S4(17) = **70종 전수 확보**, 누락 3종 보완.
 
 **판정**: 이 digest의 **방법 규율(§4·§5·§8)·깔때기(§3)·Ea(§6b)·비교 서사(§10–§12)는 본문 실물로 전부 확인**됐다. 흔들린 것은 **SI 유래 D 절대값과 일부 supercell 표기**뿐이며, 어차피 우리 규율상 이 논문의 D는 소환값으로도 안 쓴다 — **인용 안전성에는 영향 없음.**
+
+---
+
+## 15. SI 실물 독립 검증 로그 (2026-08-03) ★
+
+**대상**: `litdb/inbox/41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf` (35 pp = ESI 전문: §1 Bandgaps · §2 Estimate of the diffusion coefficient · §3 group A · §4 group B · §5 group C · §6 group D; **Fig S1–S121 · Table S1–S5**).
+**방법**: 본문 재검증(§14)과 동일 원칙 — 기존 digest 서술을 참조하지 않고 PDF에서 표·legend를 독립 추출한 뒤 수치 단위로 역대조. Fig S1·S2·S3(방법론 3그림)은 **이미지로 직접 판독**. MSD 그림 118장은 **legend 텍스트 전수 추출**(수치 판독이 목적이고 곡선 형상은 legend가 요약하므로).
+
+**대조 범위와 결과**
+| 블록 | 검증량 | 결과 |
+|---|---|---|
+| Table S1 (그룹 B multi-T 19종) | 19행 × 9열 = **171셀** | **불일치 0** + 미결 ②③ 종결 |
+| Table S2 (그룹 B 1000 K-only 21종) | 21행 × 7열 = **147셀** | **불일치 0** (조성 21/21 일치) |
+| Table S3 (그룹 C 1/2) | 53행 × 7열 = **371셀** | **불일치 0** + 누락 3종 보완 |
+| Table S4 (그룹 C 2/2) | 17행 × 7열 = **119셀** | **불일치 0** |
+| Table S5 (그룹 D 15종) | 15행 × 5열 = **75셀** | **불일치 0** + 미결 ③ 종결 |
+| Fig S4–S121 legend | **200 패널 / D값 704개**(D_Li 200 + D_host 504) | 그룹 A·B 인용값 **불일치 0**; 본문 legend와의 괴리 8종은 §6b 표로 명시 |
+| Fig S1·S2·S3 | 이미지 판독(축·색·플래토·산포) | **불일치 0** + 캐비앗 2건 신규(S1 출처·S3 유효 영역) |
+| SI §1–§3 본문 | 방법 서술 ~15항목 | **불일치 0** + FPMD 창 "at least 20 ps" 확정 |
+| **합계** | **표 883셀 + D값 704개 + 그림 3장 판독** | **digest 인용 항목 불일치 0** |
+
+**종결 3건 (§14 미결)** — ① 본문↔SI legend 괴리 = 논문 내부 불일치로 확정(§6b 대조표 신설) · ② LiIO₃ = Li₁₆I₁₆O₄₈ · ③ 그룹 D 15번째 = Li₅La₃Nb₂O₁₂(ICSD 68251), 그룹 C 70종 전수 확보.
+
+**신규 적발 3건 (SI 자체의 결함)**
+1. **Fig S12 ≡ Fig S13** (Li₁₆Ti₁₆P₁₆O₈₀ 4패널 완전 중복) — Table S1이 S12에 배정한 구조 없음. **무해**(라벨 20개 ↔ 구조 19종의 산술이 이걸로 맞는다).
+2. **Fig S85 ≡ Fig S93** (Li₂₄Ga₈B₁₆O₄₈ 완전 중복) + Table S3가 **Li₃GaB₂O₆ 두 entry(COD 1511740 Δvol 7.1% / COD 2242045 Δvol 2.2%)를 둘 다 S93으로 지시** → **그룹 C 70종 중 1종은 MSD 그림이 실제로 없다.** 유해.
+3. **본문 그림 ↔ SI 그림의 750 K D 불일치**(8종 중 7종, 값 3–25%·오차 최대 3×) — Li₇TaO₆만 렌더링까지 동일.
+
+**본문 오식 4건을 SI가 확정** — Li₇RbSi₂O₈ supercell(→Rb₄Li₂₈Si₈O₃₂) · Li₄Ge₉O₂₀ · Li₂TeO₃ · LiLaC₂O₆ (+ LiIO₃ supercell). 모두 SI 쪽이 정자.
+
+**교정·정밀화 (digest 반영 완료)**
+1. **§5a·§9·§10a — FPMD 창**: "물질별 custom"(§14 교정 8) → **"SI 명문 '≥20 ps' 하한 + 그 위 물질별 custom"**으로 재교정. 원래 "≥20 ps"는 SI 근거가 있었고 틀린 건 "고정"이라는 말뿐이었다.
+2. **§6b — 750 K 본문/SI 대조표 신설**(8종 × D_Li·D_host) + 인용 규칙 명문화(유효숫자 2자리).
+3. **§6b — Li₅Cl₃O 작은 셀 "host 유동 사실상 0(30×↓)" 인용 철회**: 본문 legend로는 34×↓지만 **SI legend로는 6×↓이고 오차 안**. 두 셀 모두 "0과 구별 안 됨"까지만 인용.
+4. **§6c — Li₆PS₅I**: 1000 K(5.8e-6) ≈ 750 K(5.9e-6) **온도 역전**을 SI에서 발견 → "느린 전도체"가 아니라 **caged rattling**임의 결정적 지문. MSD 규모도 "~12 Å²/35 ps" → **~10 Å²/30 ps 창**으로 정정.
+5. **§6c — Table S1 시뮬 시간 19종 전수 수록** + "B군 강등에 투입 시간 차가 섞여 있다"(Li₄Re₆S₁₁ 500 K 87.1 ps = 그룹 A의 1/8) 지적 신설.
+6. **§6c(ii) — Table S2 21종 DB-id·supercell·Δvol·T_sim·D 전수 표 신설** + 오차/값 ≥0.6인 6종 경고.
+7. **§6d — 그룹 C 누락 3종 보완**(Cs₂Li₂B₂P₄O₁₅·Li₄Al₃Ge₃BrO₁₂·LiInGeO₄) + **비전도 판정의 정량 경계 신설**(C 최대 3.9e-7 ↔ B 최저 1.2e-6, 약 3배 갭) + 오차 없는 패널 3건 + **음수 Δvol 6종은 5/6이 질화물**(PBE 팽창 편향의 예외).
+8. **§6e — Table S5 15행 전수 표 신설**; 가넷 인용 금지 해제 + entry 단위 모순 해설.
+9. **§7 — Fig S1 캐비앗 신규(치명적)**: S1의 717종은 **이 논문의 풀이 아니라 "another screening study"의 데이터**. "자기 풀로 절연체 필터를 검증했다"는 인용은 오독.
+10. **§7 — Fig S2 플래토 위치(~5e-8–1e-7)·Fig S3 유효 영역(D≳1e-6에서만 수렴)** 이미지 판독으로 확정.
+11. **§13 — 내부 불일치 4종 → 7종**으로 확장(⑤⑥⑦ 신규), 조성 vs entry 인용 규칙 재강조.
+
+**우리 쪽에 새로 생긴 실행 항목 1건**: **블록 분해 감도 점검**(블록 수 4/8/16). 이 논문이 같은 궤적·같은 창에서 블록만 바꿔 D 25%·오차 3×를 낸 것이 증거다 — 우리 멀티시드는 **시드 간** 분산을 잡지만 이 축은 비어 있다. (기존 이식 후보 2건 — 2–50 ps 창의 t'-스캔 검증, Ea Bayesian 오차 — 과 함께 §11 ①에 묶임.)
+
+**판정**: **SI 유래 인용 항목은 전부 실물로 확인됐고 미결은 0이다.** 흔들린 것은 논문 자신의 내부 불일치(본문↔SI legend, 중복 그림)일 뿐 우리 digest의 서술이 아니다. 다만 **Fig S1 출처 캐비앗**과 **Li₅Cl₃O 작은 셀 host 안정성 철회** 두 건은 인용문에 직접 영향을 주므로 §12 인용 문장 사용 시 재확인할 것.
