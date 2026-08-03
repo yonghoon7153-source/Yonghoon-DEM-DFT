@@ -3,6 +3,14 @@
 > slug `kim2026_li_argyrodite_sei_reactive_md` · DOI `n/a` · **SSRN abstract 6020397** (`https://ssrn.com/abstract=6020397`) ·
 > type `MLIP(MTP) reactive MD + DFT/AIMD(훈련용)` · PDF 업로드 `82ea256b/ff478144` (`3._Deciphenamics.pdf`, **본문 26 pp**) ·
 > digested `2026-07-28` · status ✅ (본문 26 pp 전문 정독 + Fig 2–5 페이지 렌더링 판독; **SI 미확보**)
+>
+> 🔍 **본문 실물 독립 검증 `2026-08-04` — 교정 6 · 신규 14 (§21)**. 실물 =
+> `litdb/inbox/3. Deciphering Li₂S-like SEI Formation Mechanism at LiArgyrodite Anodic Interfaces via
+> Large-Scale Machine-Learned Reactive Dynamics.pdf` — **inbox #3 · 사용자 분류 폴더 `이상욱`**
+> (= 성균관대 이상욱 교수 랩 묶음; #1 = `kim2026_hts_li3sc2po43_coating_midni_ncm`, #2 = `lee2024_multicomponent_argyrodite_mixed_oxidation_mtp`).
+> 5.74 MB · **26 pp** · 네이티브 텍스트 레이어 보유 → 전문 재판독. 업로드본(`ff478144`)과 **동일 판본**.
+> **⚠ SI(Sup) 파일은 이번 투입분에도 없다** — §19 미해결 목록 그대로 유효 (게다가 프리프린트 자체의
+> "Supplementary data … can be found online at:" **링크가 공란**이다 → §21 N8).
 > elements: Li, P, S, Cl
 > methods: DFT, AIMD, MD, MLIP
 >
@@ -62,7 +70,8 @@ optB88-vdW로 라벨링한 **MTP(moment tensor potential)** 에 **active learnin
 | 방법 | MTP-MLIP reactive MD (LAMMPS) + 훈련용 DFT/AIMD (VASP) |
 | **직계 선행 (같은 그룹)** | **ref [35] = `papers/kim2024_mtp_argyrodite_disorder_gb.md`** (Nano Energy 2024, 124, 109436). optB88-vdW 선택 근거·R_cut/lev_max 최적값·벌크 D 1.6e-7 을 전부 여기서 상속 |
 | 경쟁 선행 (외부) | **ref [27] Ren 2024 EES** (DeepMD, Li‖**Li₃PS₄**, "비정질→Li₂S-rich 2단계") · **ref [28] Chaney 2024 ACS AMI** (MTP, Li‖LPSC, "비정질화 후 결정화 2단계") — **두 논문이 이미 같은 2단계 기구를 보고했다.** 이 논문의 자기 차별화 = *"prior works focused on spontaneous formation, offering limited insight into detailed atomic structure, formation pathway, or **strategies for interfacial control**"* → 차별점은 **기구 자체가 아니라 ③ 제어(S 코팅)** |
-| 인접 선행 | ref [25] Wang/Canepa 2022 JMCA (SEI 산물 Li₃P·Li₂S·LiCl 자체의 Li 수송) · ref [26] Ong 그룹 2022 JACS (S₈‖Li₃PS₄ 계면 열역학·동역학) · ref [13] Cheng/Goddard 2017 ACS EL (QM reactive dynamics, Li‖LPSCl) · ref [14][15] Golov & Carrasco (AIMD, bare/coated Li‖LPSCl) |
+| 인접 선행 | ref [25] Wang/Canepa 2022 JMCA (SEI 산물 Li₃P·Li₂S·LiCl 자체의 Li 수송) · **ref [26] = M.L. Holekevi Chandrappa, J. Qi, C. Chen, S. Banerjee, S.P. **Ong**, "Thermodynamics and Kinetics of the **Cathode–Electrolyte Interface** in All-Solid-State **Li–S** Batteries", JACS 144 (2022) 18009–18022** (2026-08-04 서지 확정 — 이전 표기 "S₈‖Li₃PS₄ 계면"은 우리 축약이었다) · ref [13] Cheng/Goddard 2017 ACS EL (QM reactive dynamics, Li‖LPSCl) · ref [14][15] Golov & Carrasco (AIMD, bare/coated Li‖LPSCl) |
+| **★ 방법 계보 (2026-08-04 정정)** | **passive + active 2단계 학습 전략 자체는 ref [26](Ong 그룹)에서 가져왔다** — §2 원문 *"We adopted a two-step learning strategy…[26]"* + *"further supporting their applicability to interfacial studies.[26]"*. **ref [35](kim2024)에서 상속한 것은 optB88-vdW 선택 근거와 하이퍼파라미터(R_cut 6 Å·lev_max 16)뿐**이다. 즉 이 논문 = **[35]의 물질·정확도 셋 + [26]의 계면 학습 전략** 합성 (§21 C2) |
 | 실험 대조 | **ref [49] Luo 2022 ACS Energy Lett. 7, 3064–3071** — "single Li dendrite ‖ sulfide electrolyte" **cryo-TEM interphase** (§9) |
 | 도구 스택 | VASP 5.4.4 + LAMMPS + MTP(MLIP 패키지 계열, 명시 없음) |
 | 자체 실험 | **없음** (순수 계산) |
@@ -78,7 +87,7 @@ optB88-vdW로 라벨링한 **MTP(moment tensor potential)** 에 **active learnin
 | code | **VASP 5.4.4** | MD는 LAMMPS |
 | 구조 최적화 functional | **PBE (GGA)** + **PAW** | 격자상수·내부좌표 full relax |
 | 힘 수렴 | **< 0.04 eV/Å** | kim2024와 동일(느슨한 편) |
-| k-points | **2 × 2 × 1 Monkhorst–Pack** | ⚠ kim2024는 2×2×2. 여기선 **슬랩/계면 기하 때문에 z 방향 1점** |
+| k-points | **2 × 2 × 1 Monkhorst–Pack** | ⚠ kim2024는 2×2×2. **⛔ 2026-08-04 정정**: 원문은 이 메시를 *"The **bulk and slab structures** used for generating the training set…"* 한 문장에 묶어 적용한다 → **벌크에도 2×2×1** 이다. "슬랩이라 z 1점"은 우리 추론이었고 **본문이 그렇게 말하지 않는다**. 입방 argyrodite 벌크를 비등방 메시로 최적화한 셈 (§21 C1) |
 | ecut | **520 eV** | kim2024는 500 eV |
 | 진공 | 슬랩 모델 **z 방향 15 Å** | |
 | **훈련 라벨 functional** | **optB88-vdW single-point** | ★ 핵심. §3.2 참조 |
@@ -109,6 +118,14 @@ calculations with the optB88-vdW functional."*
 > 📐 **우리 재구성**: 1,800 × **3 = 5,400**. 계 3종(**Li 금속 / ordered LPSC / disordered LPSC**)이면 정확히 맞는다.
 > 원문은 *"The detailed numbers for each system are summarized in **Table S1**"* 라고만 하고 계 목록을 열거하지 않는다.
 > **Table S1 미확보 → 3계 분해는 우리 산수이며 확정 아님**(다른 조합, 예컨대 슬랩을 별도 3종으로 세는 경우도 5,400이 된다).
+>
+> ✅ **2026-08-04 실물 재판독으로 신뢰도 상향(확정은 아님)**: §2.1 원문이 대상 벌크를
+> *"DFT-optimized **bulk structures of Li (Im3̄m) and ordered/disordered Argyrodite (LPSC)**, and slab models"*
+> 로 **정확히 3종 열거**한다 → "3계 × 1,800" 독법이 본문 문장 구조와 일치한다.
+> ⚠ 동시에 **논문 자체의 서술 결함**이 드러난다: 각 단계 수치를 *"a **total** of 750 structures"* ·
+> *"**In total**, this procedure generated 550"* · *"generating 500 structures"* 처럼 **총계로** 쓰는데
+> 그 합은 1,800 이고 §2.2의 5,400 과 **정확히 3배** 어긋난다. 즉 원문의 "total"은 실제로는 **계당 값**이다.
+> (Table S1 이 있어야 최종 확정 — §19-1 유지.)
 
 **2000 K 가 훈련셋에 있는 것이 특징이다.** kim2024는 300–1200 K였다. 반응성 계면(결합 절단·비정질)을
 다루려면 훨씬 고에너지 배위가 필요하다는 판단으로 읽힌다 — **우리 T4(반응좌표 검증셋) 설계에 직접 시사점**.
@@ -640,6 +657,16 @@ MTP는 **고전 퍼텐셜**이다. 전자도, 전하이동도, 밴드도, 전위
     이 논문의 신규성은 **기구가 아니라 제어 처방 + 스케일**이다. "이 논문이 Li₂S SEI 2단계 기구를 처음 밝혔다"고 쓰지 말 것.
 16. **⛔ 프리프린트.** peer review 미통과. 위 결함들(내부 모순·이중축·캡션 누락·"ta quantitatively compares" 같은
     편집 오타)은 심사 과정에서 교정될 수 있고, **수치가 바뀔 수도 있다.** 출판본이 나오면 재감사 필요.
+17. **⛔⛔ 초록이 본문·결론과 모순된다 (2026-08-04 신규).** 초록 마지막 문장은
+    *"**sulfur coating is demonstrated as a practical approach** for achieving stable, high-performance ASSLBs"* 인데,
+    §3.4 는 *"may pose challenges due to its **volatility and high reactivity**"*, 결론은
+    *"directly coating elemental sulfur onto Li metal is **not easily feasible**"* 라고 스스로 부인한다.
+    **초록만 읽고 인용하면 논문이 명시적으로 부정한 주장을 인용하게 된다.** §17의 인용 문장은 본문 판정을 따른다. (§21 N1)
+18. **⛔ 자기가 인용한 통계 규범을 자기 결과에 적용하지 않았다 (2026-08-04 신규).** 서론이 AIMD 한계의 근거로 드는
+    **ref [16] = X. He, Y. Zhu, A. Epstein, Y. Mo, "Statistical variances of diffusional properties from ab initio
+    molecular dynamics simulations", npj Comput. Mater. 4 (2018)** 은 **"확산 물성의 통계 분산이 커서 독립 시행이 여러 번
+    필요하다"**가 논지인 논문이다. 그런데 이 논문은 20 ns/50 ns 궤적과 Table 1 의 D 를 **단일 시드·오차막대 0**으로 보고한다.
+    → §16-3(가장 약한 지점)의 근거가 **외부 비판이 아니라 이 논문이 스스로 인용한 문헌**이 된다. 우리 3-시드 규율의 문헌 방패. (§21 N9)
 
 ---
 
@@ -687,7 +714,8 @@ MTP는 **고전 퍼텐셜**이다. 전자도, 전하이동도, 밴드도, 전위
 
 | # | 항목 | 어디에 | 우리 쪽 영향 |
 |---|---|---|---|
-| 1 | **훈련셋 계별 개수** (5,400의 실제 분해) | **Table S1** | §3.2의 "3계 × 1,800" 재구성 확정/폐기 |
+| 0 | **MTP 형식론 전체** (기저·γ 정의·손실함수) | **Supplementary Note 1** (본문 §2에서 지시 — 2026-08-04 신규 확인) | §18 용어사전·T1 대리지표 설계의 원식 |
+| 1 | **훈련셋 계별 개수** (5,400의 실제 분해) | **Table S1** | §3.2의 "3계 × 1,800" 재구성 확정/폐기 (2026-08-04 본문 열거로 신뢰도 상향) |
 | 2 | **프로덕션 계면의 4a/4c 무질서 배열** (우리 **Q2**) | **Fig S1b / Table S2** | 배열 의존성 평가·우리 disorder_ensemble 우위 주장의 유효범위 |
 | 3 | **DFT 계면에너지 표** (Li·LPSC 슬랩 조합별) | **Table S2** | 우리 T3의 계면 방위 선정 근거로 재사용 |
 | 4 | **MD Δt·thermostat·대형 모델 온도·원자 수** | 본문·SI 모두에 없을 가능성 | T3 재현 파라미터 |
@@ -709,3 +737,134 @@ MTP는 **고전 퍼텐셜**이다. 전자도, 전하이동도, 밴드도, 전위
 | **T4** | 검증 프로토콜 **템플릿 확정**: 1 ns MD @350 K → **20 ps 간격 스냅샷** → DFT single-point 대조 |
 | **T5** | 영역분해 MSD **설계 규칙 추가**: 시간분해 마스크 · 창 명시 · 상전이 전/후 분리 보고 (이 논문의 결함에서 도출) |
 | **신규 (제안)** | **비정질 Li₃P의 gap** — sei_products.json은 결정상 gap(0.70 eV)을 쓰는데, 이 논문은 Li₃P가 **비정질로만** 남는다고 보고. 절연 판정의 가정 노출 → 후속 계산 후보 |
+| **T3 (추가 2026-08-04)** | **핵생성 z 위치 확보** — 결정 Li₂S 핵은 초기 계면이 아니라 **LPSC 쪽으로 ~3 nm 안쪽**에서 시작한다(§21 N3). 우리 구획 마스크는 "계면 ±d" 가 아니라 **LPSC 쪽 0–5 nm 를 별도 bin** 으로 잡아야 핵생성을 놓치지 않는다. 또한 **PS₄ 층 간격 ≈ 0.5 nm**(=a/2) 로 검산됨 → 층수↔두께 환산 가능 |
+
+---
+
+## 21. 🔍 본문 실물 독립 검증 (2026-08-04) — 교정 6 · 신규 14
+
+> **원본**: `litdb/inbox/3. Deciphering Li₂S-like SEI Formation Mechanism at LiArgyrodite Anodic Interfaces
+> via Large-Scale Machine-Learned Reactive Dynamics.pdf` — **inbox #3 · 사용자 분류 폴더 `이상욱`**
+> (성균관대 이상욱 교수 랩 묶음: #1 `kim2026_hts…`, #2 `lee2024_multicomponent…`, **#3 = 이 논문**).
+> **방법**: 5.74 MB · 26 pp · 네이티브 텍스트 레이어 전문 추출 후 **초록·§1–§4·CRediT·데이터가용성·참고문헌 [1]–[52]+(53) 전량 재판독**.
+> 업로드본(`ff478144`)과 동일 판본이고, **Sup) 파일은 이번에도 없다.**
+> ⚠ 따라서 **Fig 2–5 의 그림 판독값(20층·~6 nm·~5 nm·MSD 220/130 Å²·41→34/40→18층 등)은 2026-07-28 판정을 유지**한다 —
+> 이번 검증은 **텍스트·표·캡션·서지** 층에 대한 것이다.
+
+### 21a. 교정 6건 (기존 digest 가 틀렸거나 조건이 빠졌던 것)
+
+| # | 위치 | 무엇이 틀렸나 | 실물 |
+|---|---|---|---|
+| **C1** | §3.1 k-points 행 | "슬랩/계면 기하 **때문에** z 방향 1점" 이라고 **이유를 붙였다** | 원문은 *"The **bulk and slab structures** used for generating the training set were fully optimized … 2×2×1 Monkhorst–Pack"* — **한 문장에 벌크와 슬랩을 묶어** 같은 메시를 쓴다. 즉 **입방 argyrodite 벌크도 2×2×1** 이다. 우리 이유 붙이기는 **본문에 없는 변호**였고, 실제로는 **비등방 메시를 벌크에 쓴 방법 결함**에 가깝다 |
+| **C2** | §2 계보 / §3 전체 | **프로토콜 전체를 ref [35](kim2024) 상속**으로 서술 | **2단계(passive+active) 학습 전략은 ref [26](Ong 그룹 JACS 2022) 인용**이다 — *"We adopted a two-step learning strategy to train MTP…[26]"*, *"further supporting their applicability to interfacial studies.[26]"*. [35] 에서 온 것은 **optB88-vdW 선택 근거 + R_cut 6 Å/lev_max 16** 뿐. → 이 논문 = **[35]의 정확도 셋 + [26]의 계면 학습 전략** |
+| **C3** | §2 인접 선행 행 | ref [26] 을 "Ong 그룹 2022 JACS (**S₈‖Li₃PS₄** 계면 열역학·동역학)" 로 축약 | 실제 서지: **M.L. Holekevi Chandrappa, J. Qi, C. Chen, S. Banerjee, S.P. Ong, "Thermodynamics and Kinetics of the *Cathode–Electrolyte Interface* in All-Solid-State *Li–S* Batteries", JACS 144 (2022) 18009–18022.** "S₈‖Li₃PS₄" 는 우리가 붙인 해석 — 인용 시 실제 제목을 쓸 것 |
+| **C4** | §3.2 산수 | "3계 분해는 우리 산수이며 **확정 아님**" | 신뢰도 **상향**: §2.1 이 벌크를 *"Li (Im3̄m) and **ordered/disordered** Argyrodite (LPSC)"* 로 **정확히 3종 열거**한다. 동시에 **논문 결함 발견** — 각 단계를 *"a **total** of 750"* · *"**In total** … 550"* 로 총계처럼 쓰는데 합이 1,800 이라 5,400 과 **정확히 3배** 어긋난다(실제로는 계당 값). Table S1 필요는 유지 |
+| **C5** | §3.3 MAE 행 · §3.5 | 힘/에너지 MAE 를 "**< 10** meV/atom" 하나로 기록 | **논문 내부 표현이 흔들린다**: §2.3 *"mean absolute errors (MAEs) of **less than** 10 meV/atom"* vs §2.5 *"mean absolute errors **on the order of** 10 meV/atom"*. 후자는 **10 이상일 수도** 있다는 뜻 → "kim2024(2.5–2.9) 대비 4배 나쁨" 판정은 유지하되 **하한 표기**로 읽을 것 |
+| **C6** | §19 SI 목록 | **Supplementary Note 1 누락** | §2 원문 *"A detailed description of the **MTP framework** is provided in **Supplementary Note 1**"*. MTP 기저·γ 정의 원식이 거기 있다 → §19 에 0번으로 추가 |
+
+### 21b. 신규 14건
+
+**① 논문 자체의 자기모순 — 인용할 때 직접 물리는 것 (N1·N2·N9·N12)**
+
+- **N1 ★★★ 초록이 본문·결론을 부인한다.**
+  초록: *"…and **sulfur coating is demonstrated as a practical approach** for achieving stable, high-performance ASSLBs
+  via controlled SEI growth."*
+  §3.4: *"the direct application of elemental sulfur as an interlayer in practical Li metal | LPSC systems
+  **may pose challenges due to its volatility and high reactivity**"*
+  결론: *"directly coating elemental sulfur onto Li metal is **not easily feasible** due to sulfur's high reactivity"*
+  → **초록만 인용하면 논문이 명시적으로 부정한 주장을 인용하게 된다.** 우리 §17 인용 문장은 본문 판정을 따르므로 그대로 유효.
+  (심포지엄 덱·리뷰어가 초록만 볼 가능성이 높은 지점 — 우리가 이 논문을 반박·보완 대상으로 쓸 때 **가장 먼저 짚을 문장**.)
+- **N2 결론에만 있는 두 가지 주장.** *"Crystalline domains **initially nucleate near the LPSC region and grow toward the
+  Li metal**, forming a **5–11 nm** thick interphase **depending on the system size**."*
+  ① **성장 방향** 서술은 §3.1–§3.4 어디에도 없다(결론 전용). ② **"5–11 nm"** 라는 범위 표기도 결론에서 처음 나온다
+  (소형 결정영역 5 nm + 대형 11 nm 를 한 범위로 묶은 것) → **"11 nm interphase"만 단독 인용하면 계 크기 의존성이 지워진다.**
+  단 ①은 N3 에서 **수치적으로 뒷받침됨**을 확인했다.
+- **N9 ★★ 자기 인용의 역설 — ref [16] 이 이 논문의 시드 1개를 반박한다.** (§16-18 로 승격)
+  서론이 AIMD 한계를 근거 짓는 ref [16] = **He·Zhu·Epstein·Mo, npj Comput. Mater. 4 (2018) "Statistical variances of
+  diffusional properties from AIMD"** 는 **"확산 물성은 통계 분산이 커서 독립 시행이 여러 번 필요"** 가 논지다.
+  → 우리 3-시드 규율을 방어할 때 **외부 논거가 아니라 이 논문이 스스로 인용한 문헌**을 쓸 수 있다.
+- **N12 초록의 기구 서술에서 Li 는 두 번 작용한다.** 초록: *"**Li insertion destabilizes PS₄ tetrahedra**, generating a
+  disordered, sulfur-rich amorphous layer"* → 그 다음이 (i) S 재조직 (ii) **Li infiltration**.
+  즉 **0단계(Li 삽입 = 분해 트리거) → 1단계(S 골격) → 2단계(Li 침투 결정화)** 다.
+  §8 의 "순서가 뒤집혀 있다(S가 먼저)" 는 **(1)/(2) 단계에 대해서만** 맞다 —
+  인용할 때 **"PS₄ 분해 이후"** 를 반드시 붙일 것.
+
+**② 우리가 T3 에 바로 쓰는 정량 소득 (N3·N4)**
+
+- **N3 ★★★ 핵생성 z 위치를 확정했다 (본문 3개 수치의 교차 역산).**
+  본문에 흩어진 세 z 값 — Fig 4 초기 계면 **z ≈ 105 Å**(§8.1 그림 판독) · Li–S 배위 급증 **z ≈ 75 Å @ ~11 ns**(§3.1 본문) ·
+  P 침투 **z > 125 Å**(§3.2 본문) — 을 모델 A 두께(Li 6 nm ‖ LPSC 10 nm)로 검산하면:
+  ```
+  LPSC  = z  0 – 105 Å  (= 10.5 nm ✓)        Li 금속 = z 105 – 165 Å  (= 6.0 nm ✓)
+  ⇒ z 축은 LPSC 가 저-z, Li 가 고-z. 세 수치가 모두 정합한다.
+  ```
+  ⇒ **결정 Li₂S 핵은 원래 계면이 아니라 LPSC 쪽으로 ~30 Å(≈3 nm) 안쪽(z≈75 Å)에서 시작**한다.
+  그리고 *"broader increase across z ≈ 100–125 Å"*(부분 비정질 Li₂S-유사)는 **계면을 넘어 Li 쪽 2 nm까지** 걸친다.
+  → **N2 ①(LPSC 쪽 핵생성 → Li 쪽 성장)이 실제로 뒷받침된다.**
+  📌 **T3 설계 반영**: 구획 마스크를 "계면 ±d" 로 잡으면 핵생성을 놓친다. **LPSC 쪽 0–5 nm 를 독립 bin** 으로.
+- **N4 ★ Fig 5e 캡션이 y축 정의를 흔든다 — 그런데 검산으로 결론이 난다.**
+  캡션 *"(e) Time evolution of the **number of intact PS₄ units**"* vs 본문 *"preserving approximately 34 **layers** of
+  PS₄ units"* / Fig 3a 축 라벨 "Argyrodite PS₄ **layer**".
+  📐 검산: 소형 LPSC **10 nm ↔ 20층** → **0.5 nm/층**; 대형 LPSC **20 nm ↔ ~40층** → **0.5 nm/층**. **두 그림이 동일 환산**이고
+  0.5 nm ≈ argyrodite a(≈9.86 Å)의 **절반** = PS₄ 층 간격으로 물리적으로 타당.
+  ⇒ **y축은 "층수"가 맞고 Fig 5e 캡션의 "units" 가 오기다.** 부수 소득: **잔존 18층 = 9 nm / 34층 = 17 nm** 로 환산 가능
+  (§10 에서 "인용하지 말 것"이라 한 Fig 5c/d 좌측 라벨 대신 **이 환산을 쓰면 된다**).
+
+**③ 서지·편집 결함 (N5·N6·N7·N8·N10)**
+
+- **N5 참고문헌 [33] 과 [34] 는 같은 논문이다.** 둘 다 Zuo et al., *J. Phys. Chem. A* **124** (2020) **731–745**,
+  DOI **10.1021/acs.jpca.9b08723**. 차이는 **제목 대소문자와 마지막 저자(S.P. Ong) 유무뿐**.
+  게다가 **서로 다른 문장에 인용**된다 — [32,33] = MTP 소개, [34] = "efficiency-accuracy 균형" 근거. 명백한 중복 등재.
+- **N6 ref [28] 제목 오식**: *"…Solid Electrolyte Interphase in **Argyrodyte**/Li-Metal Contacts"* — 원 제목은 **Argyrodite**.
+  (Chaney et al., ACS Appl. Mater. Interfaces **16** (2024) 24624–24630.)
+- **N7 마지막 참고문헌이 목록 체계 밖에 있다.** figshare 데이터셋이 **"(53)"** — 대괄호가 아닌 **소괄호**, 나머지 [1]–[52] 의
+  Elsevier 서식이 아닌 **ACS 서식**, 그리고 **본문에서 한 번도 인용되지 않는다**(데이터가용성 절에 URL 로만 등장).
+- **N8 SI 링크가 공란이다.** *"Supplementary material — Supplementary data to this article can be found online at:"* 뒤에
+  **아무것도 없다.** → **§19 의 SI 미확보는 우리 수집 실패가 아니라 프리프린트 자체의 결손**이다.
+  (raw data 는 figshare `10.6084/m9.figshare.30272386.v1` 에 있다 — SI 대신 **원자료로 §19 항목을 채우는 경로**가 남아 있다.)
+- **N10 γ 형식론이 무인용으로 도입된다.** §2.4 에서 γ_select/γ_break 를 정의하는 문단 전체에 **참고문헌이 하나도 없다.**
+  maxvol/D-optimality 기반 active learning 의 원전인 **[39] Gubaev et al., Comput. Mater. Sci. 156 (2019) 148–156** 은
+  §2 서두에서 *"alloy systems"* **응용 예로만** 인용된다.
+  📌 **우리 T1 문서에서 γ 정의를 인용할 때는 이 논문이 아니라 [32] Shapeev 2016 · [39] Gubaev 2019 원전을 직접 쓸 것.**
+
+**④ 인적·방법 계보 (N11·N13·N14)**
+
+- **N11 CRediT 가 방법 이식 경로를 확인해 준다.**
+  Ji Seon Kim(1저자) = Conceptualization·Investigation·Data curation·Formal analysis·Writing-original draft /
+  **Ji Hoon Kim = Methodology·Formal analysis** / Byeongsun Jun·Yong Jun Jang(현대) = **Validation·Writing-review 만** /
+  Sang Uck Lee = Supervision·Funding acquisition.
+  → **Ji Hoon Kim = ref [35] `kim2024_mtp_argyrodite_disorder_gb` 의 제1저자이자 `kim2026_hts_li3sc2po43…` 의 제1저자**.
+  이 논문의 MTP 방법이 kim2024 에서 **인적으로** 넘어왔다는 것이 CRediT 로 확인된다.
+  ⚠ 부수 확인: 현대 공저자 2인은 **kim2024 에서도 이미 현대 소속**이다 → 소속 이동이 아니라 **연속 협업**.
+- **N13 MLIP 후보 목록에 범용 사전학습 모델이 아예 없다.** §2 는 NNP[29]/GAP[30]/SNAP[31]/MTP[32,33] 넷만 비교 대상으로
+  놓고 [34](Zuo 벤치마크) **소환만으로** MTP 를 고른다 — **자체 비교는 하지 않는다.**
+  2025년 프리프린트인데 **SevenNet·MACE·UMA 류 foundation MLIP 가 후보에 없다.**
+  🔑 **같은 랩의 `kim2026_hts…` 는 SevenNet 7net-0 사전학습을 그대로 써서 500 ps 계면 MD 를 돌렸다** —
+  **한 랩 안에서 두 노선이 공존**한다. 우리 UMA 전략(사전학습 그대로)은 이 논문의 선택지 밖이지만 **같은 랩의 다른 논문에는 선례가 있다.**
+- **N14 초기 구조의 이완·평형화 절차가 없다.** §3.1 *"The initial configuration shows two well-aligned crystalline phases
+  in **direct contact**"* — 초기 접촉 거리·계면 간격·사전 이완(pre-equilibration) 서술이 **한 줄도 없고**, 수렴 근거는
+  Fig S4(퍼텐셜에너지 시간추이) 하나다. **"즉시 시작되는 PS₄ 분해"(§5)는 초기 배치가 얼마나 조밀했는지에 의존할 수 있다.**
+  📌 T3 에서는 **초기 계면 간격과 평형화 프로토콜을 명시**할 것.
+
+### 21c. 실물과 **전값 일치**한 항목 (재확인 — 판정 변경 없음)
+
+훈련셋 산수 750/550/500(=1,800) · 온도 5점 300–**2000 K** · 부피 strain **±10 %, 2 % 간격 11조건** ·
+optB88-vdW single-point **5,400** · R_cut **6 Å** / lev_max **16** / E:F **100:1** / train:valid **9:1** ·
+ecut **520 eV** · 힘수렴 **0.04 eV/Å** · 진공 **15 Å** · AL 스캔 **300/500/700/900 K × −5/0/+5 %** ·
+계면 후보 **<250원자·평균절대 strain ≤10 %** · **γ_select 2 / γ_break 10→5→2** ·
+검증 **1 ns @350 K → 20 ps 스냅샷 DFT 재평가** · 모델 A **~7,000원자·Li 6 nm‖LPSC 10 nm·NVT 350 K·20 ns** ·
+비정질 **~6 nm** · 핵생성 **~11 ns** · 결정 **~5 nm** · PS₄ **~6층 plateau** · RDF 첫 피크 **~2.5 Å** / Fig S5 **~2.45 Å** ·
+Fm3̄m · Li–S 배위 급증 **z≈75 Å**, 광역 증가 **z≈100–125 Å** · P **z>125 Å** 침투 / Cl **z≈100 Å** 소폭 ·
+**Table 1 = 0.4 / 1.1 / 1.6 ×10⁻⁷ cm²/s, 캡션에 온도 없음**(단 세 번째 행에 **[35] 인용은 캡션에 명시**돼 있음) ·
+대형 **Li 16 nm‖LPSC 20 nm·50 ns·개시 ~30 ns·~11 nm** · cryo-TEM **~12 nm** [49] Luo 2022 ACS EL 7, 3064–3071 ·
+S 코팅 **~3 nm** → SEI **~6 nm**, PS₄ **34 vs 18층 @~40 ns** · 편집 오타 *"Furthermore, **ta** quantitatively compares"* ·
+§3.3↔§3.4 **내부 모순**(suppressing further decomposition ↔ continued decomposition) ·
+**Δt·thermostat·대형모델 온도/원자수·프로덕션 4a/4c 배열 전부 미기재** ·
+자금 **MOTIE P0022336 · RS-2024-00437260 · Hyundai** · figshare **10.6084/m9.figshare.30272386.v1** ·
+매 페이지 *"This preprint research paper has not been peer reviewed."* + **저널명 부재**.
+
+> 🔑 **총평**: 이번 검증으로 **수치는 한 건도 바뀌지 않았다**(그림 판독값 포함 전부 유지).
+> 바뀐 것은 **방법 계보의 귀속(C2)**, **k-points 해석(C1)**, 그리고 **논문의 신뢰도 평가**다 —
+> 초록-본문 모순(N1) · 참고문헌 중복/오식/체계 이탈(N5·N6·N7) · SI 링크 공란(N8) · γ 무인용(N10) 은
+> 전부 **"프리프린트, 미심사"** 라는 §16-16 판정을 강화한다.
+> 반대로 **T3 에 쓸 실질 소득 두 개(N3 핵생성 z 위치 · N4 층↔nm 환산)** 를 얻었다.

@@ -196,7 +196,7 @@ digest는 `litdb/talks/`, 벤치마크 수치는 `db/properties/external_benchma
 | **T2** | **ICOHP 기반 P–S 약화 기술자** | `air_hsab` 정성 tier를 정량으로. 그들은 양성자화 시 ICOHP −6.43 → −4.69 eV (27% 약화) | 중 | 2 |
 | **T4** | **반응좌표 기반 검증셋** | pre-mixing→reactants→TS→products 단계별 UMA vs DFT 단일점. 학습이 아니라 **검증**으로 전용 | 소 | 2 |
 | **T5** | **영역분해 MSD** | 계면/벌크 구획 마스크로 D 분리. 기존 파이프라인 확장만 | 소 | 2 |
-| **T3** | **Li\|LPSCl 반응 MD (UMA)** — 프로토콜 확정 | 완전 공백 축. **셀** Li(100)‖LPSCl(100) 직접접촉, 횡단면 ~3 nm², Li 6 nm ‖ LPSCl 10 nm (~7,000원자), NVT **350 K**, **≥20 ns**. ⚠ **우리 표준 200 ps로는 결정 핵생성(11 ns)을 절대 못 본다 = 결과가 없다.** 비용 초과 시 [두께 절반 + 20 ns] > [두께 유지 + 2 ns]. **1순위 관측량은 D가 아니라 잔존 PS₄ 층수 vs 시간**(z-bin + P–S 거리컷). 착수 전 게이트: 1 ns UMA MD → 20 ps 스냅샷 → QE 단일점 대조 (UMA는 Li 금속‖황화물 반응 영역에서 검증된 적이 없다 — Li₃N 편향 전례). 벤치마크: interphase ~11 nm · Li₂S 결정화 · D비 0.36 | 대 | **2** |
+| **T3** | **Li\|LPSCl 반응 MD (UMA)** — 프로토콜 확정 | 완전 공백 축. **셀** Li(100)‖LPSCl(100) 직접접촉, 횡단면 ~3 nm², Li 6 nm ‖ LPSCl 10 nm (~7,000원자), NVT **350 K**, **≥20 ns**. ⚠ **우리 표준 200 ps로는 결정 핵생성(11 ns)을 절대 못 본다 = 결과가 없다.** 비용 초과 시 [두께 절반 + 20 ns] > [두께 유지 + 2 ns]. **1순위 관측량은 D가 아니라 잔존 PS₄ 층수 vs 시간**(z-bin + P–S 거리컷; **층 간격 ≈0.5 nm = a/2** 로 nm 환산 — 2026-08-04 검산). 착수 전 게이트: 1 ns UMA MD → 20 ps 스냅샷 → QE 단일점 대조 (UMA는 Li 금속‖황화물 반응 영역에서 검증된 적이 없다 — Li₃N 편향 전례). 벤치마크: interphase ~11 nm · Li₂S 결정화 · D비 0.36. **★ 2026-08-04 실물 검증 추가**: ① **구획 마스크를 "계면 ±d"로 잡지 말 것** — 결정 Li₂S 핵은 **계면에서 LPSC 쪽 ~3 nm 안쪽(z≈75 Å, 초기 계면 z≈105 Å)**에서 시작한다 → **LPSC 쪽 0–5 nm 를 독립 bin** ② **초기 접촉 간격·평형화 프로토콜을 명시**할 것 (원논문은 *"direct contact"* 한 마디뿐, 이완 절차 0줄 → "즉시 분해"가 초기 배치 의존일 수 있음) | 대 | **2** |
 | **T8** | **P2D 파라미터 export** (=M5) | 문장혁 랩 발표로 **소비자가 특정됨**. 우리가 파라미터 생산, 그들이 셀 스케일 소비 | 중 | 3 |
 | **T6** | **litdb 그래프층** | 멀티홉 가설 생성 부재. digest **위에** 얹기(대체 아님) — 방법 맥락·인용금지 규칙 보존이 조건 | 중 | 4 |
 
@@ -255,7 +255,7 @@ digest는 `litdb/talks/`, 벤치마크 수치는 `db/properties/external_benchma
 |---|---|---|
 | ~~1~~ ✅ | **Nano Convergence 2026, 13, 27** — 코팅 스크리닝 (**17,230 Li·O 산화물** → Li₃Sc₂(PO₄)₃) | **확보·정독 완료** (`litdb/papers/kim2026_hts_li3sc2po43_coating_midni_ncm.md`). ⚠ 종전 표기 '17,233 Li-P-S-O'는 덱 저해상도 전사 오류 — 2026-08-03 철회 |
 | 2 | **Adv. Funct. Mater.** (revision) — argyrodite 가수분해 SevenNet | T2 방법 원본 |
-| 3 | **Chem. Eng. J.** (under review) — Li\|argyrodite 계면 MTP | T3 프로토콜 원본 |
+| ~~3~~ ✅ | ~~**Chem. Eng. J.** (under review)~~ → 실물은 **SSRN preprint 6020397 (저널명 없음)** — Li\|argyrodite 계면 MTP | **확보·정독 완료** (`litdb/papers/kim2026_li_argyrodite_sei_reactive_md.md`; **본문 실물 독립 검증 2026-08-04**, inbox #3·폴더 `이상욱`). ⚠ "Chem. Eng. J. under review"는 **덱 표기일 뿐 논문에 근거 없음** — 인용 시 "[Kim, SSRN preprint 6020397, 미심사]" 병기. **⛔ SI 미확보 확정** (프리프린트의 SI 링크가 공란 → 대안은 figshare 원자료 `10.6084/m9.figshare.30272386.v1`) |
 | 4 | JACS 2025, 147, 47381 — 준안정 3기술자 | metastable 고찰 보강 |
 | 5 | **Adv. Energy Mater.** (revision) — Dynamic properties 후속 | **Q5: config-variance 오차막대 추가됐나** — 우리 신규성 주장의 유효범위가 걸림 |
 | 6 | Rare Metals 2025, 44, 2366 | CSP 보조 |
