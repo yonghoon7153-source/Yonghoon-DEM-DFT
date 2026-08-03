@@ -14,6 +14,7 @@ complex_neutral,-11083.07396953,DONE_PLATEAU,0.004,"131 atoms; U-direct recipe; 
 "# >>> neutral pose lies down (image gap 4.72 A) -> -2.213 eV stands. UMA champion selection additionally discredited (it optimized the sandwich)."
 "# v2 protocol: same-pose doped = neutral geometry minus acidic H (C11H15O6S2 = mol_doped stoichiometry, refs unchanged), molecule-only"
 "# gamma relax (nstep 30, conv 1e-5) then 221 rescore on relaxed geometries for both states. VERDICT pending v2."
+"# ★ 분자 기준값 독립 재현 (2026-08-03). 슬랩-우선 경로에서 새 레시피(degauss 0.03 · beta 0.03 · ndim 8 · tprnfor off)로 처음부터 다시 돌린 결과: mol_neutral -519.68310308 (원 -519.68310300, Δ 8e-8 Ry) · mol_doped -518.39271250 (원 -518.39271245, Δ 5e-8 Ry). **소수 8자리까지 일치** → 기체상 분자는 smearing/혼합 레시피에 무감하고, 원장의 분자 기준값은 그대로 쓸 수 있다. E_bind 재계산에서 바뀌는 항은 슬랩뿐이다."
 "# ★ PLATEAU 는 깨진다 (2026-08-03). 아래 2026-08-01 판정(=plateau 가 정상 거동)은 **부분 철회**한다: 같은 셀/기하에서 plateau 밀도를 startingpot='file' 로 물려 SCF 를 **다시 시작**하니 30 iteration 만에 수렴했다('!' 줄 확보). 즉 한계고리(limit cycle)의 원인은 계 자체가 아니라 **Broyden 혼합 이력**이고, 이력을 비우고 좋은 밀도에서 재출발하면 빠져나온다. 처방: degauss 를 넓히지 말고 '수렴시켜 → 죽여 → 밀도 물려 재시작'."
 "# ★ 갱신 슬랩값의 영향: -10563.23044425 vs plateau -10563.22819091 = -30.7 meV (기존 오차막대 +-102 meV 안쪽 → plateau 규약이 사후 검증됨). E_bind 절대값은 doped -1.4937 / neutral -2.1827 eV 로 각각 +30.7 meV 이동하지만, **차분 +0.6890 eV 는 한 자리도 안 변한다** — 슬랩 항이 두 갈래에서 똑같이 상쇄되기 때문."
 "# ⚠ tprnfor 를 끈다 (2026-08-03 실측): SCF 수렴 후 PAW+U 힘 항이 96원자에서 35분+ 100%%(총 elapsed 1h48m, JOB DONE 0). 전 job 단일점 scf 이고 E_bind 는 총에너지 차분이라 힘을 안 쓴다 → 기본 .false."
