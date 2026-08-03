@@ -164,7 +164,14 @@ python3 tools/figures/fig_msd_4sys.py       # → docs/figures/msd_4sys.png + Or
 충돌한다. 이미 논문에 나간 3계 색을 유지하는 쪽이 우선이므로 LPSOCl 만 보라로 뺐다.
 다른 계열 그림에서는 SYS 를 그대로 따른다.
 
-### 2-4. 그림 안에 규율을 적었다
+### 2-4. ⚠ 그림 파일은 repo 에 없다 — 서버에서 생성한다
+
+`docs/figures/msd_4sys.png` 와 `msd_4sys_plotted.csv` 는 **.gitignore 에 넣었다.**
+로컬에는 LPSOCl 곡선이 없어서 폴백(3계)으로만 그려지는데, 그걸 커밋하면
+**제목은 "four compositions" 인데 3계만 있는 그림**이 repo 에 남는다(실제로 한 번 그랬다).
+서버에서 실데이터로 그린 확정본이 나오면 그때 `git add -f` 로 명시적으로 넣는다.
+
+### 2-5. 그림 안에 규율을 적었다
 
 곡선은 **단일 시드**다. 그림만 떼어 간 사람이 기울기를 읽어 D 라고 쓰지 않도록
 캡션 아래에 박아 두었다:

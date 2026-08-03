@@ -13,3 +13,10 @@ litdb/.watcher_run.log
 __pycache__/
 *.pyc
 webapp/uploads/
+
+# ⚠ 4계 MSD 그림·plotted CSV 는 **서버에서 실데이터로 생성**하는 산출물이다.
+#   로컬에서 폴백(3계)으로 그린 것을 커밋하면 제목은 "four compositions" 인데
+#   3계만 있는 그림이 repo 에 남는다(실제로 한 번 그랬다). 생성물은 추적하지 않고,
+#   확정본이 나오면 그때 -f 로 명시적으로 추가한다.
+docs/figures/msd_4sys.png
+db/properties/msd_4sys_plotted.csv
