@@ -344,7 +344,8 @@ def derive_features(d_se, d_am, am_pct, ps_frac, rve, loading):
 FREE_KNOBS = ['d_se', 'd_am', 'am_pct', 'ps_frac', 'rve', 'loading']
 
 
-def suggest(bundle, X, target, n_out=10, n_cand=2000, seed=0, allow_weak=False):
+def suggest(bundle, X, target, n_out=10, n_cand=2000, seed=0, allow_weak=False,
+            diversity=1.0):
     """후보에서 (PI 폭 × 신규성) 상위 n_out.  active_learning_suggest.py 와 같은 논리.
 
     ★ 후보는 **자유노브 6 개만 뽑고 나머지 7 개는 유도**한다 — 그래야 나온 설계를
@@ -390,32 +391,50 @@ def suggest(bundle, X, target, n_out=10, n_cand=2000, seed=0, allow_weak=False):
         if p['extrapolation']:
             n_hull += 1
             continue                                  # 볼록포 밖 → 모형이 자기 무지도 못 잰다
-        nov = min(float(np.min(np.linalg.norm(Xs - (c - mu) / sd, axis=1))), nov_cap)
-        # ★ 순위는 **인식적 불확실성**으로 매긴다 (= s·√h*).  PI 폭 × novelty 는 축퇴했다:
-        #   PI 폭은 볼록포 안에서 거의 상수이고 novelty 는 상한에 붙어, 상위 후보가 전부
-        #   동점(0.073)이 됐다.  h* 는 "이 점의 함수값을 모형이 얼마나 모르나" 라 새 시뮬로
-        #   줄어드는 바로 그 양이고, 공간 전체에서 크게 변한다.  novelty 는 보고만 한다.
-        rows.append((p['sd_epistemic'], p, nov, knob))
+        cs = (c - mu) / sd
+        nov = min(float(np.min(np.linalg.norm(Xs - cs, axis=1))), nov_cap)
+        # ★ 순위 = **인식적 불확실성** s·√h* — 새 시뮬로 줄어드는 몫만.  전체 PI 폭
+        #   s·√(1+h*) 는 관측잡음 s 가 지배해 거의 상수라 "얼마나 모르나" 를 못 나타낸다.
+        #   ⚠ 정직하게: 이 변경은 **순서를 바꾸지 않았다**.  둘 다 h* 의 단조함수라
+        #   (novelty 는 상한에 붙어 상수로 빠짐) 같은 순서가 나온다.  바뀐 건 숫자의 의미다.
+        rows.append((p['sd_epistemic'], p, nov, knob, cs))
     rows.sort(key=lambda t: -t[0])
-    # 순위에 신호가 있나 — 전부 동점이면 그건 순위가 아니라 정렬 순서다
+    # ── 배치 다양성 — 상위만 자르면 같은 곳에 몰릴 수 있다 ────────────────────────────
+    #   h* 최대는 (외삽을 막았으므로) 볼록포 **경계**에서 달성된다.  선형/ridge 모형에선
+    #   경계가 실제로 정보가 많은 곳이 맞지만(G-최적), 그래서 상위가 평평해지고 10 개가
+    #   같은 지점에 뭉칠 수 있다.  한 번에 돌릴 배치라면 서로 떨어져 있어야 쓸모가 있다.
+    sep = float(diversity) * nov_cap
+    picked, n_div = [], 0
+    for r in rows:
+        if len(picked) >= n_out:
+            break
+        if any(float(np.linalg.norm(r[4] - q[4])) < sep for q in picked):
+            n_div += 1
+            continue
+        picked.append(r)
     _sc = [r[0] for r in rows]
-    _degen = bool(_sc) and (max(_sc) - min(_sc)) <= 1e-9 * max(abs(max(_sc)), 1e-12)
+    _top = [r[0] for r in picked]
+    # 순위에 신호가 있나 — 상위 배치가 전부 동점이면 그건 순위가 아니라 정렬 순서다
+    _degen = bool(_top) and (max(_top) - min(_top)) <= 1e-6 * max(abs(max(_top)), 1e-12)
     return {'error': (None if rows else
                       f'후보 {n_cand} 개가 전부 걸러짐 (상자밖 {n_box} · 볼록포밖 {n_hull}) — '
                       '--suggest-cand 를 늘리거나 코퍼스가 좁은지 확인'),
             'target': target, 'verdict': vd, 'novelty_cap': round(nov_cap, 3),
-            'score_is': 'epistemic sd = s*sqrt(h*)  (관측잡음 제외 — 새 시뮬로 줄어드는 몫)',
-            'degenerate': _degen,
+            'score_is': 'epistemic sd = s·√h*  (관측잡음 제외 — 새 시뮬로 줄어드는 몫)',
+            'degenerate': _degen, 'diversity_sep': round(sep, 3), 'n_rejected_div': n_div,
             'score_spread': (round(float(max(_sc) / min(_sc)), 2)
                              if _sc and min(_sc) > 0 else None),
+            'batch_spread': (round(float(max(_top) / min(_top)), 2)
+                             if _top and min(_top) > 0 else None),
             'n_cand': int(n_cand), 'n_rejected_box': n_box, 'n_rejected_hull': n_hull,
             'n_survived': len(rows),
-            'rows': [{'score': round(s, 4), 'pred': round(p['value'], 4),
+            'rows': [{'score': float(f'{s:.4g}'), 'leverage': float(f"{p['leverage']:.4g}"),
+                      'pred': round(p['value'], 4),
                       'pi90': [round(p['lo'], 4), round(p['hi'], 4)],
                       'novelty': round(nov, 3), 'novelty_capped': nov >= nov_cap - 1e-9,
                       'extrapolation': p['extrapolation'],
                       'design': {f: round(float(v), 4) for f, v in zip(FREE_KNOBS, k)}}
-                     for s, p, nov, k in rows[:n_out]]}
+                     for s, p, nov, k, _cs in picked]}
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -814,7 +833,7 @@ def _selftest():                                                   # noqa: C901
     chk('★감사에 판별력이 있다 — 부호 뒤집은 모형은 VIOLATION (돌연변이 검사)',
         any((not p['ok']) and p['target'] == 'phi_am' for p in fmono))
     sg = suggest(o, X, 'use_porosity_pct', n_out=5, n_cand=300)
-    chk('능동학습이 후보를 순위화 (PI 폭 × 신규성)',
+    chk('능동학습이 후보를 순위화 (인식적 불확실성)',
         sg['error'] is None and len(sg['rows']) == 5
         and sg['rows'][0]['score'] >= sg['rows'][-1]['score'],
         f"top score={sg['rows'][0]['score'] if sg['rows'] else 'n/a'}")
@@ -852,10 +871,32 @@ def _selftest():                                                   # noqa: C901
     chk('★순위에 신호가 있다 — 전부 동점이면 순위가 아니라 정렬 순서 (실런이 그랬다)',
         (not sg['degenerate']) and sg['score_spread'] is not None and sg['score_spread'] > 1.2,
         f"최고/최저 {sg['score_spread']}× · degenerate={sg['degenerate']}")
-    chk('★score 가 인식적 몫만 쓴다 (관측잡음 s² 제외 — 그게 포함되면 상수가 된다)',
-        's*sqrt(h*)' in sg['score_is']
-        and all(s2['score'] < predict(o['models']['use_porosity_pct'],
-                                      X[0])['sd'] * 10 for s2 in sg['rows']))
+    _mu2 = o['models']['use_porosity_pct']
+    chk('★score = s·√h* 를 실제로 만족 (관측잡음 s² 가 섞이면 여기서 어긋난다)',
+        all(abs(r['score'] - math.sqrt(_mu2['s2'] * r['leverage']))
+            < 1e-3 * max(r['score'], 1e-9) for r in sg['rows']),
+        f"score {sg['rows'][0]['score']:.4g} vs "
+        f"√(s²h*) {math.sqrt(_mu2['s2'] * sg['rows'][0]['leverage']):.4g}")
+    # 판별력: 전체 PI 폭(s·√(1+h*))을 썼다면 볼록포 안에서 거의 상수라 순위가 평평해진다
+    _tot = [math.sqrt(_mu2['s2'] * (1 + r['leverage'])) for r in sg['rows']]
+    # h* 가 0 근처면 √(h_max/h_min) > √((1+h_max)/(1+h_min)) 가 **항등적으로** 성립한다.
+    # 전체 PI 폭은 1 이 지배해 사실상 상수가 되고, 그래서 그걸로 순위를 매기면 평평해진다.
+    _se = (max(r['score'] for r in sg['rows']) / min(r['score'] for r in sg['rows']))
+    _st = max(_tot) / min(_tot)
+    chk('★전체 PI 폭은 배치 안에서 2% 도 안 벌어지고, 인식적 몫은 그보다 뚜렷이 벌어진다',
+        _st < 1.02 and _se > 1.05 * _st, f'인식 {_se:.3f}× vs 전체 {_st:.4f}×')
+    # 배치 다양성 — 뽑힌 것들이 실제로 떨어져 있나
+    _cs = [np.array([float(derive_features(*[r['design'][k] for k in FREE_KNOBS])[f])
+                     for f in DESIGN_FEATURES]) for r in sg['rows']]
+    _mu3, _sd3 = np.asarray(_mu2['mu']), np.asarray(_mu2['sd'])
+    _z = [(c - _mu3) / _sd3 for c in _cs]
+    _pair = min((float(np.linalg.norm(a - b)) for i, a in enumerate(_z)
+                 for b in _z[i + 1:]), default=np.inf)
+    chk('★배치가 서로 떨어져 있다 (같은 경계점 10 개를 주지 않는다)',
+        _pair >= sg['diversity_sep'] - 1e-9,
+        f"최소 쌍간거리 {_pair:.3f} ≥ 요구 {sg['diversity_sep']}")
+    chk('다양성 때문에 건너뛴 개수를 보고한다',
+        sg['n_rejected_div'] >= 0 and 'batch_spread' in sg)
     chk('잘라낸 후보 수를 보고한다 (조용한 절단 금지)',
         sg['n_cand'] == sg['n_survived'] + sg['n_rejected_box'] + sg['n_rejected_hull'],
         f"{sg['n_cand']} = {sg['n_survived']}+{sg['n_rejected_box']}+{sg['n_rejected_hull']}")
@@ -992,6 +1033,8 @@ def main(argv=None):
     ap.add_argument('--split-by', default='use_source', help='--diagnose 의 분할 열')
     ap.add_argument('--diagnose-vs', default='', metavar='COL',
                     help='--diagnose 와 비교할 단일-출처 원열 (예: porosity = raw DEM)')
+    ap.add_argument('--suggest-diversity', type=float, default=1.0,
+                    help='배치 내 최소간격 (코퍼스 최근접이웃 95pct 배수).  0 이면 다양성 강제 없음')
     ap.add_argument('--suggest-cand', type=int, default=4000,
                     help='능동학습 후보 표본 수 (실현가능 필터를 통과할 만큼 넉넉히)')
     ap.add_argument('--closure', action='store_true',
@@ -1038,26 +1081,27 @@ def main(argv=None):
     b = train(a.csv, a.out or None, folds=a.folds, do_nested=not a.no_nested)
     if a.suggest:
         X, _ys, _n, _r = load_corpus(a.csv)
-        res = suggest(b, X, a.suggest_target, n_out=a.suggest,
-                      n_cand=a.suggest_cand, allow_weak=a.allow_weak)
+        res = suggest(b, X, a.suggest_target, n_out=a.suggest, n_cand=a.suggest_cand,
+                      allow_weak=a.allow_weak, diversity=a.suggest_diversity)
         if res['error']:
             print(f"\n  능동학습 거부 — {res['error']}")
             _use = [t for t, m in b['models'].items() if m.get('verdict') == 'USABLE']
             print(f"    USABLE 타깃: {', '.join(_use) if _use else '(없음)'}")
             return 0
-        print(f"\n  능동학습 — 다음 DEM 후보 ({res['target']}, 판정 {res['verdict']}, "
-              'PI 폭 × 신규성):')
+        print(f"\n  능동학습 — 다음 DEM 후보 ({res['target']}, 판정 {res['verdict']}):")
         # 잘라낸 건 반드시 말한다 (조용한 절단은 "전부 훑었다" 로 읽힌다)
         print(f"    후보 {res['n_cand']} → 생존 {res['n_survived']}  "
               f"(실현불가 {res['n_rejected_box']} · 볼록포밖 {res['n_rejected_hull']})")
         print(f"    score = {res['score_is']}"
-              + (f"   최고/최저 {res['score_spread']}×" if res['score_spread'] else ''))
+              + (f"   생존 전체 {res['score_spread']}×" if res['score_spread'] else '')
+              + (f" · 배치 안 {res['batch_spread']}×" if res['batch_spread'] else ''))
+        print(f"    배치 다양성: 최소간격 {res['diversity_sep']} (코퍼스 최근접이웃 95pct 기준), "
+              f"근접 중복 {res['n_rejected_div']} 개 건너뜀")
         if res['degenerate']:
-            print('    ⚠ 전부 동점 — 이건 순위가 아니라 정렬 순서다.  참고하지 말 것.')
+            print('    ⚠ 배치 안이 전부 동점 — 순위가 아니라 정렬 순서다.  참고하지 말 것.')
         for i, s in enumerate(res['rows'], 1):
-            print(f"   {i:2d}. score={s['score']:8.3f}  pred={s['pred']:8.3f} "
-                  f"PI90={s['pi90']}  novelty={s['novelty']}"
-                  + ('(상한)' if s['novelty_capped'] else ''))
+            print(f"   {i:2d}. score={s['score']:<9.4g} h*={s['leverage']:<9.4g} "
+                  f"pred={s['pred']:8.3f} PI90={s['pi90']}")
             print('       ' + '  '.join(f'{k}={v}' for k, v in s['design'].items()))
         print('   ★ 위 6 개가 자유노브 전부다 — 나머지 7 특징은 여기서 유도된다.')
         print('   CAVEAT: 휴리스틱 플래너다 — 진짜 정보이득은 그 점을 실제로 돌려야 안다.')
