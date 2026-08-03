@@ -232,3 +232,47 @@ mono-large/SE-poor 코너 13개를 wallP 조건부(skeleton-spring, §6)로 재�
 ⇒ **단일 케이스의 porosity 신뢰도는 SE/solid 와 degeneracy 로 결정**:  SE≥25 % MPM·SE≈16 % DEM/anchor·
 degenerate 제외.  thin-DEM 의 "insufficient compaction(>25 %)" 경고는 *얇은 전극의 loose-packing artifact*
 일 수 있으니 같은-조성 고-면용량 형제로 교차확인할 것.  (나머지 9개 재실행 진행중 — 같은 표/규칙으로 누적.)
+
+---
+
+## ★ 1.6× 표본 재확인 — 169 케이스에서 80% (2026-08-03)
+
+위 신뢰성 수치(104 중 80개 = 76%)는 표본이 작아 "이 비율 자체가 우연 아니냐"가 열린 질문이었다.
+통합 데이터층(`scripts/design_performance_dataset.py`)이 코퍼스 전체를 한 번에 조인하면서
+**같은 판정을 169 케이스에서** 돌릴 수 있게 됐다:
+
+| | 표본 | \|gap\| ≤ 4 %p | 비율 |
+|---|---|---|---|
+| 원 기록 (2026-06-26) | 104 | 80 | **76 %** |
+| **재확인 (2026-08-03)** | **169** | **136** | **80 %** |
+
+⇒ 표본을 1.6× 로 늘려도 비율이 **유지·소폭 개선**된다.  76 % 는 소표본 아티팩트가 아니었고,
+DEM↔MPM 교차검증 밴드(±4 %p)는 코퍼스 규모에서 재현된다 (frame[4]).
+
+측정 경로 (재현):
+```bash
+D=~/Yonghoon-DEM-DFT/webapp
+python3 scripts/design_performance_dataset.py \
+    --results $D/results --archive $D/archive --mpm-lab $D/mpm_lab \
+    --out docs/data/design_performance_corpus.csv
+# → 케이스 291 · DEM 291 · MPM 169 · STEP4 0
+#   ★frame[4] porosity 교차검증: 136/169 가 |gap| ≤ 4 %p (80%)
+```
+
+⚠ **주의 (스키마)**: 코퍼스의 `mpm_metrics.json` 은 **webapp payload writer** 산출이라
+`mpm3d_compaction --save-metrics` 와 키가 다르다.  porosity 키는 `porosity_mpm_pct`
+(← `porosity_settled_pct` 아님), 두께는 `thickness_mpm_um`.  처음 배선이 이걸 틀려서
+gap 이 **한 건도 계산되지 않았고** 그 사실이 "MPM 169 조인됨" 뒤에 숨었다 — 조인 건수와
+**파생 지표 산출 건수를 따로 인쇄**해야 이런 침묵이 드러난다.
+
+⚠ **금지 키**: 같은 스키마에 `coverage_AM_*_mpm_pct`(복셀-인접, ~26 %)가 들어 있다.
+위 §"coverage PLASTIC vs RIGID" 가 **보고 금지**로 판정한 그 값이며, 이름이 그럴듯해
+자동수집에 섞이기 쉽다.  데이터층은 `MPM_FORBIDDEN` 으로 명시 차단하고 selftest 가 부재를
+확인한다 (ML feature 로 들어가면 격자 해상도를 물리로 학습하게 된다).
+
+### 남은 것 — 33건이 문서의 두 corner 에 들어맞는가
+실패 33건이 §"실패는 양 끝 두 corner 에 국한, 반대 방향" 예측대로
+(a) mono-large(10:0)+thin → MPM 과압축 / (b) SE-rich(SE/sol ≳ 50 %) → DEM ε_sphere 과압축
+에 떨어지는지는 **아직 안 봤다**.  gap 의 **부호**가 그 판별자다 (a 는 음, b 는 양).
+CSV 가 이미 `porosity_gap_pp` 를 담고 있으므로 한 번의 집계로 확인 가능 — 맞으면 regime map
+이 코퍼스 규모에서 입증되는 것이고, 안 맞으면 새 corner 를 찾은 것이다.
