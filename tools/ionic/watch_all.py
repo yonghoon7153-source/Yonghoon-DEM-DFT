@@ -358,6 +358,54 @@ if want("disorder"):
   print(BAR)
 
 # ═══ ② SDCP ══════════════════════════════════════════════════════════════
+# ⚠⚠ **슬랩 기하를 매번 직접 검사한다 (2026-08-03).** 이 감시자는 미가동일 때
+#   "재기동: tmux new -s pbslab ..." 명령을 찍는다. 그런데 2026-08-03 에 기준 슬랩이
+#   **구조적으로 깨져 있음**이 확인됐다 — Li24Ni24O48 산화물인데 2.5 A 미만 원자쌍이
+#   0개(Ni-O 최단 3.667 A, 있어야 할 원자의 1/3). 그 상태에서 재기동 안내를 그대로
+#   따르면 GPU 를 계속 태운다. 그래서 **재기동 안내 앞에 게이트를 둔다.**
+#   슬랩을 제대로 다시 지으면 이 게이트는 자동으로 통과하고 안내가 되살아난다.
+def _slab_broken():
+    """슬랩 scf.in 의 최단 원자간 거리로 판정. (True, 사유) 면 재기동 안내를 막는다."""
+    import itertools
+    f = os.path.join(_SF, "slab", "scf.in")
+    if not os.path.isfile(f):
+        return False, ""
+    try:
+        import numpy as np
+        L = open(f, errors="ignore").read().splitlines()
+        cell, pos, mode = [], [], None
+        for ln in L:
+            t = ln.split()
+            if not t:
+                continue
+            h = t[0].upper()
+            if h == "CELL_PARAMETERS":
+                mode = "c"; continue
+            if h == "ATOMIC_POSITIONS":
+                mode = "p"; continue
+            if h in ("K_POINTS", "ATOMIC_SPECIES", "HUBBARD") or ln.strip().startswith("&"):
+                mode = None; continue
+            if mode == "c" and len(t) == 3:
+                cell.append([float(x) for x in t])
+            elif mode == "p" and len(t) >= 4:
+                pos.append([float(x) for x in t[1:4]])
+        if len(cell) != 3 or not pos:
+            return False, ""
+        cell, pos = np.array(cell), np.array(pos)
+        best = 1e9
+        for sh in itertools.product((-1, 0, 1), repeat=3):
+            d = np.linalg.norm(pos[:, None, :] - (pos[None, :, :] + np.array(sh) @ cell), axis=-1)
+            if sh == (0, 0, 0):
+                np.fill_diagonal(d, 1e9)
+            best = min(best, float(d.min()))
+        # 산화물이면 양이온-음이온 결합이 반드시 1.8-2.2 A 에 있다. 2.5 A 를 넘으면 깨진 것.
+        if best > 2.5:
+            return True, f"최단 원자간 거리 {best:.3f} A — 결합이 하나도 없다(산화물 불가)"
+        return False, ""
+    except Exception as e:
+        return False, ""
+
+
 # 2026-07-30: 경로가 **슬랩-우선 2단계**로 바뀌었다. 그 디렉터리가 있으면 단계별
 #   사다리를 보여 주고, 없으면 예전 relax 감시로 떨어진다.
 #   ⚠ 예전 섹션은 "relax.out 이 있다"만 보고 SIGKILL 로 죽은 런을 이틀 내내
@@ -406,7 +454,16 @@ if want("sdcp") and os.path.isdir(_SF):
         print(f"   {mark}  {j}")
         for l in (it + ac):
             print(f"        {l[:88]}")
-    if not _running:
+    _brk, _why = _slab_broken()
+    if _brk:
+        print("   ⛔⛔ **이 슬랩은 깨져 있다 — 재기동 금지**")
+        print(f"      {_why}")
+        print("      2026-08-03 확인. Phase-A/Phase-B/표면 MD 전부 재검토 대상.")
+        print("      먼저 슬랩부터 다시 짓는다 (결합길이 게이트 통과해야 파일이 나온다):")
+        print("        python3 tools/sdcp/build_linio2_slab.py --layers 4 --supercell 1 2 \\")
+        print("            --vacuum 14 --out db/structures/linio2_104_rebuilt")
+        print("      근거: kb/reports/sdcp_preliminary_final_2026_08_03.md §6.4")
+    elif not _running:
         # ⚠ 기본 힌트는 **slab 단계만**이다. MLIP-MD(UMA)가 GPU 에 있을 때
         #   131원자 복합체를 같이 올리면 VRAM 이 부딪힌다(47/48 GB 전례).
         #   96원자 슬랩은 단일-k 라 공존 가능하고, 2단계는 MD 가 끝난 뒤 잇는다.
