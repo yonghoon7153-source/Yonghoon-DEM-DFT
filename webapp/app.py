@@ -4264,9 +4264,12 @@ def api_eis_exp_thickness():
     _row = _rows.get(fn)
     if _row is None:
         return jsonify({'error': f'그런 측정 없음: {fn}'}), 200
-    if (_row.get('cell_type') or '') != 'symmetric':
-        return jsonify({'error': f'{fn} 은 {_row.get("cell_type") or "미상"} 셀 — σ_e=L/R1 은 '
-                                 f'대칭셀(SUS 블로킹) 전용이라 두께가 쓰이지 않음'}), 200
+    # ★ 2026-08-03 정정: 예전엔 full 셀을 **거부**했다.  σ_e=L/R1 이 대칭셀 전용인 것은 맞지만,
+    #   "full 셀은 두께가 필요없다" 는 과한 진술이었다 — full 셀의 R_s(HF 절편)에는 이온 TL 저항
+    #   ∝ L/σ_ion 이 들어있고, R_int(Ω·cm²geo) 도 1/(a_spec·L) 로 스케일한다.  즉 **두께가 다른
+    #   full 셀끼리 R_int 를 비교하려면 L 이 필요**하고, physics-EIS 대조도 같은 L 에서만 의미가 있다.
+    #   ⇒ 거부하지 말고 **기록**한다.  단 σ_e 는 계산하지 않고 '—' 로 둔다 (정의되지 않으므로).
+    _is_sym = (_row.get('cell_type') or '') == 'symmetric'
     ov_path = os.path.join(P['archive'], 'thickness_overrides.json')
     try:                                                      # override JSON 갱신
         ov = _json.load(open(ov_path)) if os.path.isfile(ov_path) else {}
@@ -4285,7 +4288,11 @@ def api_eis_exp_thickness():
             with open(fits, newline='') as fh:
                 rd = _csv.DictReader(fh); cols = rd.fieldnames; rows = list(rd)
             for r in rows:
-                if r.get('filename') == fn and r.get('cell_type') == 'symmetric':
+                if r.get('filename') == fn and not _is_sym:
+                    r['L_composite_um'] = round(thick, 2)     # 메타데이터 (σ_e 엔 안 씀)
+                    r['note'] = ((r.get('note') or '') + f'  · L={thick:g}µm 기록(σ_e 미사용 — '
+                                 f'full 셀 R1=R_int 는 계면 ASR)').strip()
+                if r.get('filename') == fn and _is_sym:
                     try:
                         r1 = float(r.get('R1_ohmcm2', ''))
                         if r1 > 0:
@@ -4301,7 +4308,13 @@ def api_eis_exp_thickness():
                 w = _csv.DictWriter(fh, fieldnames=cols); w.writeheader(); w.writerows(rows)
         except Exception as e:
             return jsonify({'error': f'σ_e 재계산 실패: {e}', **_eis_exp_table()}), 200
-    return jsonify({'ok': True, 'filename': fn, 'thickness_um': round(thick, 2), **_eis_exp_table()})
+    return jsonify({'ok': True, 'filename': fn, 'thickness_um': round(thick, 2),
+                    'sigma_e_recomputed': _is_sym,
+                    'note': ('σ_e=L/R1 재계산됨' if _is_sym else
+                             'L 기록됨 — σ_e 는 full 셀에서 정의되지 않아 계산하지 않음 '
+                             '(R1=R_int 는 계면 ASR).  두께가 다른 full 셀 비교·physics-EIS '
+                             '대조에 쓰입니다'),
+                    **_eis_exp_table()})
 
 
 @app.route('/api/eis_exp_upload', methods=['POST'])

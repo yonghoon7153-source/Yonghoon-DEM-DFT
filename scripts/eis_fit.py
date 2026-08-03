@@ -191,7 +191,12 @@ def main():
                 row['note'] = ('SUS ion-blocking → R1=R_e; σ_e=L/R1 '
                                + (f'(L={thick:g}µm 지정)' if _meas else '(L=45µm 기본; 표서 두께 변경 가능)'))
             else:
+                # ★ full 셀도 두께를 **기록**한다 (σ_e 엔 안 씀 — R1=R_int 는 계면 ASR).
+                #   두께가 다른 full 셀끼리 R_int 를 비교하거나 physics-EIS 와 대조할 때 필요.
                 row['note'] = 'R1=R_int, Wo=R_w (primer-SUS full cell)'
+                if stem in _tov:
+                    row['L_composite_um'] = _tov[stem]
+                    row['note'] += f'  · L={_tov[stem]:g}µm 기록(σ_e 미사용)'
         rows.append(row)
         panels.append((stem, f, Z, Zf, area, row))
 

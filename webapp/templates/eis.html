@@ -538,22 +538,31 @@ const EIS = {
         //   짜리 **편집 가능한 칸**을 그려서, 70 을 넣고 ✓ 를 누르면 서버가 "full 셀은 두께를
         //   안 씀" 으로 거부하고 재렌더에서 빈칸으로 되돌아갔다 = "설정이 유지되지 않는다".
         //   ⇒ 죽은 입력칸을 없애고, 왜 안 쓰는지를 툴팁으로 말한다.
-        (r.cell_type !== 'symmetric'
-          ? `<td style="text-align:right;color:var(--dim)" title="full 셀은 두께를 안 쓴다 — σ_e=L/R1 은 대칭셀(SUS 이온블로킹)에서 R1=R_e 일 때만 성립하고, full 셀의 R1 은 R_int(계면)이라 L 로 나눠도 의미가 없다.">—</td>`
-          : `<td style="text-align:right;white-space:nowrap"><input type="number" step="0.5" min="0.5" max="300" `
+        // ★★ 2026-08-03 재정정: 처음엔 full 셀에서 입력칸을 **없앴다**(σ_e 를 못 구하므로).
+        //   그런데 "full 은 두께가 필요없나?" 라는 지적이 맞다 — σ_e 에 안 쓰일 뿐 물리적으로
+        //   무의미한 게 아니다: full 셀 R_s(HF 절편)에는 이온 TL 저항 ∝ L/σ_ion 이 들어있고,
+        //   R_int(Ω·cm²geo) 도 1/(a_spec·L) 로 스케일한다 ⇒ **두께가 다른 full 셀끼리 R_int 를
+        //   비교하려면 L 이 필요**하고 physics-EIS 대조도 같은 L 에서만 의미가 있다.
+        //   (실제로 이 표엔 No1_only_full 과 No2_55_70um_full 이 섞여 있다.)
+        //   ⇒ 입력은 받되 **기록 전용**임을 라벨로 못박고, σ_e 열은 계속 '—' 로 둔다.
+        `<td style="text-align:right;white-space:nowrap"><input type="number" step="0.5" min="0.5" max="300" `
             + `id="xe-L-${idx}" value="${r.L_composite_um!=null?r.L_composite_um:''}" placeholder="45" `
             + `oninput="EIS.thickDirty(${idx})" onkeydown="if(event.key==='Enter'){EIS.setThick('${r.filename}',this.value,${idx})}" `
             + `style="width:52px;border:1px solid var(--border);background:none;color:inherit;font-size:.74rem;text-align:right;padding:1px 3px;border-radius:3px" `
-            + `title="이 측정의 합제(cathode) 두께 µm — 옆 ✓ 를 눌러야 저장된다 (σ_e=L/R1 재계산).`
+            + `title="${r.cell_type==='symmetric'
+                ? '이 측정의 합제(cathode) 두께 µm — 옆 ✓ 를 눌러야 저장된다 (σ_e=L/R1 재계산).'
+                : 'full 셀 두께 µm — **기록 전용**이다.  σ_e=L/R1 은 대칭셀(R1=R_e)에서만 성립하고 full 셀 R1 은 R_int(계면 ASR)라 σ_e 는 계산하지 않는다.  두께가 다른 full 셀끼리 R_int 비교·physics-EIS 대조에 쓰인다.'}`
             + (r.filename_thickness_um!=null?` ⚠파일명은 ${r.filename_thickness_um}µm 이지만 그건 집전체(SUS ~15-20µm) 포함 총두께 → σ_e 엔 합제만(≈45) 쓸 것`:'')
             + `">`
             + `<button id="xe-Lok-${idx}" onclick="EIS.setThick('${r.filename}',this.previousElementSibling.value,${idx})" disabled `
             + `style="border:1px solid var(--border);background:none;color:var(--dim);cursor:pointer;`
             + `font-size:.78rem;padding:0 4px;margin-left:3px;border-radius:4px;opacity:.55" `
             + `title="입력한 두께 저장 — 값을 바꾸면 초록으로 활성화된다 (Enter 도 동일)">✓</button>`
+            + (r.cell_type!=='symmetric'
+               ? `<span style="color:var(--dim);font-size:.62rem;margin-left:2px" title="기록 전용 — σ_e 는 full 셀에서 정의되지 않음">기록</span>` : '')
             + (r.filename_thickness_um!=null&&r.L_composite_um!=null&&Math.abs(r.filename_thickness_um-r.L_composite_um)<0.51
                ?`<span style="color:#c0392b" title="파일명 총두께(집전체 포함)를 합제 L 로 입력한 듯 — σ_e 과대">⚠</span>`:'')
-            + `</td>`)+
+            + `</td>`+
         `<td style="text-align:right;color:${r.rmse_pct>10?'#c0392b':'var(--dim)'}">${f(r.rmse_pct,1)}</td>`+
         `<td style="text-align:center"><input type="checkbox" class="xe-sel" value="${r.filename}" `+
         `onchange="EIS.onSelChange()" title="체크 → 아래 Nyquist '🔬 실험 겹치기' 로 이 측정만 겹침"></td>`+
