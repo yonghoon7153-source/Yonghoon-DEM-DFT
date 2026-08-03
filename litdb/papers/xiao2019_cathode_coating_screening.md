@@ -1,6 +1,6 @@
 # Computational Screening of Cathode Coatings for Solid-State Batteries — Xiao/Miara/Wang/Ceder (Joule 2019)
 
-> slug `xiao2019_cathode_coating_screening` · DOI `10.1016/j.joule.2019.02.006` · type `DFT (HT-screening + NEB, 실험 0)` · PDF **`litdb/inbox/37. Computational Screening of Cathode Coatings for Solid-State Batteries.pdf`(본문 25 pp — 2026-08-03 재검증 시 실물)** + `7a473fcd-37._Sup1…pdf`(정식 SI 10 pp: Fig S1·Table S1–S6) + `d6b13bbd-37._Sup2…pdf`(35 pp = **본문+SI 합본, 신규 내용 없음** — 실물 대조 확인) (inbox #37) · **사용자 분류 폴더 `DFT`** · digested `2026-07-28` · **본문 독립 재검증 `2026-08-03`(§14)** · status ✅
+> slug `xiao2019_cathode_coating_screening` · DOI `10.1016/j.joule.2019.02.006` · type `DFT (HT-screening + NEB, 실험 0)` · PDF **`litdb/inbox/37. Computational Screening of Cathode Coatings for Solid-State Batteries.pdf`(본문 25 pp)** + `7a473fcd-37._Sup1…pdf`(정식 SI 10 pp: Fig S1·Table S1–S6) + **`litdb/inbox/37. Sup2) Computational Screening of Cathode Coatings for Solid-State Batteries.pdf`(35 pp = 본문 25 + SI 10 합본; 신규 내용 0 — 2026-08-03 페이지 단위 실물 대조)** (inbox #37) · **사용자 분류 폴더 `DFT`** · digested `2026-07-28` · **본문 독립 재검증 `2026-08-03`(§14)** · **SI(Table S1–S6) 독립 재검증 `2026-08-03`(§15)** · status ✅
 > elements: Li, P, S, Cl, O, F, H, B, Ti, Zr, Nb, Ta, La, Cs, Ba, Ge, Ni, Co, Mn, Fe
 > methods: DFT, NEB, ESW
 > **저자**: Yihan Xiao¹², Lincoln J. Miara³, Yan Wang³, **Gerbrand Ceder***¹²⁴ — ¹UC Berkeley MSE, ²LBNL Materials Sciences Division, ³**Advanced Materials Lab, Samsung Research America**(3 Van de Graaff Dr, Burlington MA 01803), ⁴Lead Contact · Joule 3, 1252–1275 (Received 2018-11-21 / Revised 2019-02-09 / Accepted 2019-02-19 / **Published 2019-03-21**, 호수 날짜 2019-05-15) · Open Access CC BY-NC-ND · **본문 전문 실물 확인 완료**
@@ -56,11 +56,13 @@ Filter 6  대표 6종 선별 (V_ox ≥ 4.5 V 군에서: ortho 2·meta 3·borate 
 
   - Filter 3 통과율: 폴리음이온 26.5 %(109/411) vs 비폴리 7.8 %(31/397); "기타"(황화물·질화물·인화물 등)는 사실상 전멸(1/439) — 산화한계가 음이온 화학으로 결정된다는 Richards 2016 명제의 대규모 재확인.
   - Filter 4 통과율: 폴리음이온 60.6 %(66/109) vs 비폴리 6.5 %(2/31). **LiCoPO₄·LiNiPO₄는 여기서 탈락**(LPS와 ~150 meV/atom: TM 황화물+인산리튬 형성) — "액체계 실적 ≠ 황화물 SSB 적합"의 상징 사례.
+  - **살아남은 "비폴리음이온 산화물 2종"의 정체 (Table S1 실물, 2026-08-03 확인)**: **Li₃V(H₄O₃)₄ (V_red 1.92 / V_ox 4.17 V)** 와 **LiAl₅O₈ (0.85 / 4.09 V)** — 둘 다 V_ox < 4.2 V로 대표 6종 문턱(≥4.5 V)에 못 미치고, 하나는 수화물이라 실용성이 낮다. 즉 **비폴리음이온 산화물 진영은 "2종 생존"이라기보다 사실상 전멸**이며, 이 2종의 정체를 알면 Table 1의 `2`가 얼마나 빈약한 생존인지가 드러난다(본문은 이름을 밝히지 않음).
   - 완전 무반응(0/0) 사례: **LiF·LiCl·LiRbCl₂·LiCsCl₂·LiRb₂Cl₃**(만충 NCM·LPS 양쪽 ΔE_rxt=0) — 할라이드가 안정성으로는 최상위군. F+Cl 합계는 filter 4 통과 184종의 **약 60 %**(79+31=110).
   - **Fig 3B의 정량 진술(본문, 302종 대상)** — "폴리음이온이 이긴다"의 숫자 근거:
     - 비폴리음이온 산화물은 **전부** NCM과 |ΔE_rxt| < **50** meV/atom(4.8 kJ/mol)로 온건하지만, **3/4 이상이 LPS와 ≥ 200** meV/atom(19.3 kJ/mol)로 반응 — *한쪽만 잘하는* 전형.
     - 폴리음이온 산화물은 **60 % 이상이 LPS·NCM 양쪽 모두 ≤ 100** meV/atom(9.6 kJ/mol) — *양쪽 동시* 통과. → 게이트를 "양쪽 AND"로 건 순간 비폴리음이온이 31→2로 붕괴한 이유가 이 한 문장에 있다.
-  - 폴리음이온 중 **NCM·LPS 양쪽 ΔE_rxt = 0**인 물질: **LiAlSiO₄(V_ox 4.09) · Li₃PO₄(4.22)** — 반응성은 LiBa(B₃O₅)₃급이나 산화한계가 조금 낮아 대표 6종에서 제외됨.
+  - 폴리음이온 중 **NCM·LPS 양쪽 ΔE_rxt = 0**인 물질: **LiAlSiO₄(V_ox 4.09) · Li₃PO₄(4.22)** — 반응성은 LiBa(B₃O₅)₃급이나 산화한계가 조금 낮아 대표 6종에서 제외됨. ⚠ **논문 내부 불일치(2026-08-03 SI 대조 발견)**: 본문 p.1265는 두 물질 모두 "zero chemical reactivity with NCM and LPS"라 쓰지만, **Table S1 실측은 LiAlSiO₄ = LPS 0.000 / 만충 NCM −0.009 / 반충 NCM 0.000** — 즉 *엄밀히 삼중 0인 것은 Li₃PO₄뿐*이고 LiAlSiO₄는 만충 NCM과 −9 meV/atom. 인용할 때 "≈0"으로 쓸 것. (Table S1 전수에서 **삼중 0**은 **LiF(6.39) · LiCs(B₃O₅)₂(4.52) · Li₃PO₄(4.22)** 3종뿐 — 붕산염 LiCs(B₃O₅)₂가 §6a borate 목록 중 유일한 완전무반응.)
+  - **⚠⚠ 기존 3원 산화물 코팅 3종(Li₂ZrO₃·LiNbO₃·LiTaO₃)은 Table S1에 없다 = 저자 자신의 filter 4를 통과하지 못한다** (2026-08-03 SI 대조 발견). LPS와 각각 **−115 / −164 / −139 meV/atom**로 |100| 컷을 초과하기 때문(§4b). 논문은 이들을 *게이트 통과 후보*가 아니라 **비교 baseline**으로만 쓰는데, 본문이 이 사실을 명시적으로 문장화하지 않아 오독하기 쉽다. 🔑 **인용 가치 최상**: "현행 산업 표준 코팅(LiNbO₃·LiTaO₃·Li₂ZrO₃)조차 황화물 SSE 기준 화학안정 게이트를 못 넘는다 — 그래서 폴리음이온으로 갈아타야 한다"가 이 논문의 *숨은* 가장 강한 논거.
 - **왜 최종은 폴리음이온 산화물인가** (Filter 5의 명분): 할라이드(F/Cl)는 안정성 우수하나 **이온전도 문헌이 없거나 낮음** — 염화물 최고 RT σ ~10⁻⁶ S/cm(스피넬계), 예외적으로 Li₃YCl₆ ~10⁻⁴(Asano 2018, ref 61)이 "잠재력" 언급; 무기 불화물 Li 전도체는 보고 자체가 없음. 반면 폴리음이온 산화물은 NASICON ~10⁻⁴·LISICON-phosphate ~10⁻⁴·LiPON ~10⁻⁶ S/cm로 **전도+합성/코팅 공정이 검증됨**. (⚠ 2019년 판단 — 할라이드 SE 붐 직전. §10.)
 
 ## 4. 핵심 물성 (수치) — 추천 후보 전량 (Table 2 + Table S1 + Table S6)
@@ -77,7 +79,22 @@ Filter 6  대표 6종 선별 (V_ox ≥ 4.5 V 군에서: ortho 2·meta 3·borate 
 
 ᵇ LiLa(PO₃)₄ 실험 Ea는 원저(Mounir)의 Arrhenius 그림과 본문값이 불일치해 **Xiao가 그림에서 재산출**한 값. 참조: LiPON E_m 0.56 eV(문헌).
 - **개별 hop 전량 (Table S6)**: Li₂ZrO₃ {0.48, 0.55, 0.58, 0.7, 0.8} / LiH₂PO₄ {0.33, 1.20, 1.24, 1.32, 1.42, 1.99} / LiTi₂(PO₄)₃ {0.42} / LiBa(B₃O₅)₃ {1.96} / LiPO₃ {0.1, 0.25, 0.26, 0.32, 0.36, 0.40, 0.50} / LiLa(PO₃)₄ {1.39, 1.65, 2.60} / LiCs(PO₃)₂ {0.43, 0.84, 1.27, 1.28, 1.54, 1.70}. Table 2의 E_m = **supercell을 관통(percolate)하는 경로의 최저 장벽**(경로는 Fig S1: 예 LiPO₃ 1→2→…→8→1).
-- **ESW (Table S1)**: LiCs(PO₃)₂ 2.15–**6.23** / LiLa(PO₃)₄ 2.51–5.03 / LiPO₃ 2.52–**5.01** / LiBa(B₃O₅)₃ 1.30–4.83 / LiTi₂(PO₄)₃ 2.37–**4.59** / LiH₂PO₄ 2.23–**4.58** V. 참조군: Li₃PO₄ 0.71–4.22 / LiAlSiO₄ 1.14–4.09 / LiZr₂(PO₄)₃ 2.06–4.52 / Li₄P₂O₇ 2.33–4.36 V.
+- **ESW (Table S1)**: LiCs(PO₃)₂ 2.15–**6.23** / LiLa(PO₃)₄ 2.51–5.03 / LiPO₃ 2.52–**5.01** / LiBa(B₃O₅)₃ 1.30–4.83 / LiTi₂(PO₄)₃ 2.37–**4.59** / LiH₂PO₄ 2.23–**4.58** V. 참조군: Li₃PO₄ 0.71–4.22 / LiAlSiO₄ 1.14–4.09 / LiZr₂(PO₄)₃ 2.06–4.52 / Li₄P₂O₇ 2.33–4.36 V. *(전 12값 2026-08-03 SI 실물 재확인 — §15)*
+
+#### 4a-2. Table S1 전수 구조 — filter-4 통과 **ICSD 106종**의 지도 (2026-08-03 SI 실물 집계) ★
+Table S1 정렬 규약 = **음이온군 클러스터 → 군 내부 V_ox 내림차순**, 별표(*) = 정밀연구 6종. 열 = [Type, V_red, V_ox, ΔE_rxt(LPS), ΔE_rxt(만충 NCM), ΔE_rxt(반충 NCM)].
+
+| 군 | n (ICSD 106) | V_ox 범위 (V) | 군 챔피언 |
+|---|---|---|---|
+| **F** 불화물 | **35** | 4.99 – **7.15** | **LiBF₄ 7.15** / LiCaGaF₆ 6.84 / LiHF₂ 6.81 |
+| **P** 폴리음이온 산화물 | **55** | 4.01 – **6.23** | **LiCs(PO₃)₂\* 6.23** / LiGd(PO₃)₄ 5.30 / LiSm(PO₃)₄ 5.19 |
+| **OF** 옥시불화물 | 4 | 4.04 – 4.77 | LiB₆O₉F 4.77 / LiKMg₂Si₄(O₅F)₂ 4.58 / LiCrPO₄F 4.52 |
+| **Cl** 염화물 | 10 | 4.25 – 4.51 | LiGaCl₄ 4.51 / LiCs₂YCl₆ 4.38 / LiCs₂LuCl₆ 4.36 |
+| **NP** 비폴리 산화물 | **2** | 4.09 – 4.17 | Li₃V(H₄O₃)₄ 4.17 / LiAl₅O₈ 4.09 (**전부**) |
+
+- **불화물이 산화한계로는 압도적 1위**(35종 전부 ≥4.99 V, 최고 7.15 V) — 폴리음이온 최고치(6.23)보다 높다. 논문이 이들을 버린 유일한 이유는 **Li 전도 문헌 부재**(§3 Filter 5 명분)이지 안정성이 아니다. ⚠ 이 사실은 본문 Table 1의 개수(F 79 > P 66)만 봐서는 안 보이고 **Table S1의 V_ox 분포를 봐야 드러난다** — "폴리음이온이 이겼다"는 서사의 가장 약한 고리.
+- **V_ox ≥ 5.00 V 폴리음이온 = 7종, 전부 meta-phosphate**: LiCs(PO₃)₂ 6.23 · LiGd(PO₃)₄ 5.30 · **LiSm(PO₃)₄ 5.19** · LiK(PO₃)₂ 5.09 · LiLa(PO₃)₄ 5.03 · LiPO₃ 5.01 · **LiAl(PO₃)₄ 5.01** — §6a "meta > pyro > ortho" 축합 위계의 ICSD 실물 확증(예외 0). Xiao가 Fig 7에서 "V_ox≥5 V ⇒ Li분율 ≤0.20"이라 한 것도 **meta-phosphate가 곧 저-Li 조성**이기 때문.
+- ⚠ Table S1은 **184종 중 ICSD 출신 106종만** — data-mined 78종은 미공개(§10).
 - **SSE·기존 코팅 ESW (Fig 4, figure-read)**: 황화물 3종(LPSCl·LGPS·LPS) 산화한계 **<2.5 V**(막대 ~1.7–2.5 V; LPSCl ≈1.7–2.0 V — [Zhu15] 1.71–2.01과 동일 세대 hull이라 정합), LLZO **2.9 V**(실험 겉보기 ~4.0 V = kinetics, ref 56), 3원 산화물 코팅 Li₂ZrO₃/LiNbO₃/LiTaO₃ **3.4–4.0 V**, 폴리음이온은 **≥4.5 V**, meta-phosphate 3종은 **5 V 이상**(LNMO 4.7 V와 페어링 가능).
 
 ### 4b. 화학 반응성 매트릭스 ΔE_rxt (meV/atom, Table S2 만충 / Table S3 반충 전량)
@@ -100,7 +117,7 @@ Filter 6  대표 6종 선별 (V_ox ≥ 4.5 V 군에서: ortho 2·meta 3·borate 
 (셀 = 만충 / 반충. 코팅 vs SSE 열은 만충 무관.) **읽는 법**: ① 황화물 SSE는 산화물 양극과 −330~−616 = 코팅 없이는 불가(LPS/NCM 422 meV/atom = 40.7 kJ/mol; **반충전이 더 악화**). LFPO만 ~−100로 온건(P가 이미 O와 결합). ② 기존 3원 산화물 코팅은 양극과는 0급이나 **황화물 SSE와 −88~−164로 나쁨**(S/O 교환→PO₄+TM 황화물). ③ 폴리음이온은 양쪽 다 |100| 미만; **반충전 시 코팅/양극 반응성은 오히려 감소**(Li₃PO₄-형성 반응이 양극의 Li를 필요로 하기 때문) — SSE와 정반대 거동. ④ **LiBa(B₃O₅)₃은 전 계면 −10~0**(반충 4양극 전부 0) = 화학안정 챔피언. ⑤ LLZO는 만충 NCM/LCO와 0급이나 반충·고온(973 K La₂CoO₄ 실험)서 반응 — 소결 공정엔 여전히 코팅 필요.
 
 ### 4c. 분해 산물 (Table S4·S5 발췌 — 우리 관심 계면)
-- **NCM/LPSCl (만충)**: Ni₃S₂, Li₂SO₄, Li₂S, **LiCl**, MnS, Co₉S₈, **Li₃PO₄** (반충: +Li₂O). **LCO/LPSCl**: Li₃PO₄, Li₂S, Co₉S₈, Li₂SO₄, LiCl — 우리 interface_reactivity(vs LCO) 산물과 대부분 겹침 (§7b).
+- **NCM/LPSCl**: 만충 = Ni₃S₂, Li₂SO₄, Li₂S, **LiCl**, MnS, Co₉S₈, **Li₃PO₄** / **반충 = MnS, Li₂SO₄, Ni₃S₂, Li₃PO₄, Li₂O, Co₉S₈, LiCl** — 즉 반충에서 **Li₂O가 등장하고 Li₂S가 사라진다**(2026-08-03 SI 실물 정정; 이전 판의 "반충: +Li₂O"는 Li₂S 소멸을 빠뜨림). 🔑 물리 의미: 양극이 탈리튬될수록 **황이 sulfide(Li₂S)에서 산화된 형태로 더 밀려나고 산소가 Li₂O로 떨어져 나온다** = SOC↑에서 계면이 더 산화적으로 열화한다는 산물 수준 증거. **LCO/LPSCl**: 만충 Li₃PO₄, Li₂S, Co₉S₈, Li₂SO₄, LiCl / 반충 Li₂SO₄, Li₃PO₄, **Li₂O**, Co₉S₈, LiCl — 같은 패턴(Li₂S→Li₂O 치환). 우리 interface_reactivity(vs LCO) 산물과 대부분 겹침 (§7b).
 - **LPSCl/LiPO₃**: Li₃PS₄, LiCl, Li₃PO₄ (경미 −52) / **LPSCl/LiH₂PO₄**: **H₂S**, Li₃PS₄, LiCl, Li₃PO₄ (기체 리스크) / **LPSCl/LiTi₂(PO₄)₃**: Li₃PO₄, Ti(PS₃)₂, TiS₃, LiCl, TiS₂ (**Ti 황화물 = 전자전도성 산물** → §6d) / LPSCl/LiBa(B₃O₅)₃: Ba(BS₂)₂ 등 (−5뿐).
 - **NCM/LiH₂PO₄ (만충)**: **HCoO₂**(H 삽입 CoO₂), Li₃PO₄, Li₂Mn₃NiO₈, Ni(HO)₂ — **양성자↔Li 교환** 부반응(구동력 ~60 meV/atom; LMO는 4 meV/atom, LFPO는 비자발).
 - **LLZO/phosphate 계열**: Li₃PO₄+ZrO₂+LaPO₄(−130~−218) → **phosphate 코팅은 LLZO와 비호환**(Fig 9에서 제외 근거).
@@ -229,6 +246,8 @@ Filter 6  대표 6종 선별 (V_ox ≥ 4.5 V 군에서: ortho 2·meta 3·borate 
 - "Their central design rule — covalent non-metal–oxygen bonding lowers the O 2p states and simultaneously raises the oxidation limit and suppresses O–S exchange — is the coating-side statement of the same physics we quantify inside the argyrodite lattice with ICOHP (P–O −8.43 vs P–S −5.98) and the B₂O₃-induced +0.18 V onset shift."
 - "Our cascade inherits the Xiao-2019 gate axes (phase stability, grand-potential ESW, ion-mobility proxy) but replaces the sequential boolean funnel with a weighted composite score and adds the axes Xiao lacked — mechanical softness/ductility, theme combinations, co-doping interaction ML — while their cathode-reactivity gate and 10⁵-scale pool remain our to-do."
 - (LPSCl 반응성 소환값) "In the same framework, bare Li₆PS₅Cl reacts with LiCoO₂ at −339 meV/atom (fully lithiated; −493 half-lithiated), producing Li₃PO₄, Li₂S/Li₂SO₄, Co₉S₈ and LiCl — the numbers behind 'sulfide SEs need cathode coatings'."
+- **(SI 대조로만 나오는 문장, 2026-08-03)** "Notably, the conventional ternary-oxide coatings themselves — Li₂ZrO₃, LiNbO₃ and LiTaO₃ — do not appear among the 106 ICSD compounds that pass Xiao's own chemical-stability filter, since their reaction energies against Li₃PS₄ (−115, −164 and −139 meV/atom) exceed the 100 meV/atom cut-off; the incumbent coatings fail the very gate that selects their replacements."
+- **(균형 문장 — 인용 시 함께 쓸 것)** "Fluorides, not polyanionic oxides, top the oxidation-limit ranking in Table S1 (all 35 ICSD fluorides ≥ 4.99 V, LiBF₄ at 7.15 V vs 6.23 V for the best phosphate); they were set aside solely for the lack of reported Li-ion conductivity in 2019, not for any stability deficit."
 
 ## 13. 기법 용어 미니사전
 - **funnel/tiered screening**: 순차 게이트로 후보를 줄이는 HT 설계 — 각 게이트는 싼 계산부터(속성 조회→hull→ESW→반응성→NEB).
@@ -262,5 +281,38 @@ Filter 6  대표 6종 선별 (V_ox ≥ 4.5 V 군에서: ortho 2·meta 3·borate 
 10. 62,437의 출처를 **Fig 1 판독**으로 명기(본문은 "more than 62,000"만) → §3.
 
 ### 14c. 이번 회차 스코프 밖 (재검증 안 됨)
-- **SI(Table S1–S6·Fig S1)는 이번 inbox 드롭에 없음** — §4a의 개별 hop 배열·§4a ESW 표·**§4b ΔE_rxt 매트릭스 전량**·§4c 분해산물은 2026-07-28 SI 실물 정독분이며 **이번에 재대조하지 않았다**. 본문이 명시적으로 언급하는 SI 유래 값(LPS/NCM 422·LiCoPO₄ 150·H⁺ 교환 60/4 meV/atom·Li₃PO₄ 4.22·LiAlSiO₄ 4.09)만 교차 확인되어 일치.
+- ~~**SI(Table S1–S6·Fig S1)는 이번 inbox 드롭에 없음**~~ → **2026-08-03 Sup2 드롭으로 해소됨. §15 참조.** (당시 기록: §4a 개별 hop 배열·§4a ESW 표·§4b ΔE_rxt 매트릭스 전량·§4c 분해산물은 2026-07-28 SI 정독분이며 재대조 안 됨. 본문이 언급하는 SI 유래 값(LPS/NCM 422·LiCoPO₄ 150·H⁺ 교환 60/4 meV/atom·Li₃PO₄ 4.22·LiAlSiO₄ 4.09)만 교차 확인되어 일치.)
 - Fig 1·2·3·5·7·8·9의 그래픽 세부(막대 눈금·색맵 경계)는 텍스트 추출로 재검증 불가 — 기존 figure-read 표기 유지(특히 **LPSCl ESW ~1.7–2.0 V**는 여전히 figure-read).
+
+## 15. SI 실물 독립 재검증 로그 (2026-08-03, Sup2 드롭) ★★
+**대상**: `litdb/inbox/37. Sup2) Computational Screening of Cathode Coatings for Solid-State Batteries.pdf` — **35 pp = 본문 p.1–25 + SI p.26–35**. 사용자 분류 폴더 `DFT`.
+**동일성 확인**: p.1–25가 본문(#37 25 pp)과 동일, p.26이 "JOUL, Volume 3 / Supplemental Information", p.27 Fig S1, p.28–30 Table S1, **p.31 Table S2**, **p.32 Table S3**, p.33–34 Table S4, p.34–35 Table S5, p.35 Table S6. → **INDEX의 기존 판정 "Sup2 = 본문+SI 합본, 신규 내용 0"이 페이지 단위로 재확인됨.** 다만 **이번 드롭의 실제 가치는 §14c가 남겨둔 SI 공백을 메운 것** — SI 유래 수치가 처음으로 *독립 재대조*됐다.
+**방법**: pdftotext 텍스트층은 Table S1·S4·S5에서 **열이 행 단위로 밀리는 정렬 붕괴**가 있어 좌표(word-bbox y-클러스터) 기반으로 행을 재구성; **Table S2·S3은 텍스트층이 없는 래스터 이미지**(p.31 1540×1200 px, p.32 1182×1430 px)라 260 dpi 렌더 후 육안 대조. ⚠ 후속 재검증자 주의: 이 두 표는 grep으로 검증 불가.
+
+### 15a. 판정 — **digest 대비 불일치 0건** (수치 오류 없음)
+| SI 항목 | 대조 범위 | 결과 |
+|---|---|---|
+| **Table S2** (만충 ΔE_rxt) | **전 76셀** (코팅 9종+SSE 4종 × 양극 4·SSE 4) | **전량 일치** — §4b 첫 번째 수 전부 |
+| **Table S3** (반충 ΔE_rxt) | **전 52셀** (13행 × 양극 4) | **전량 일치** — §4b 두 번째 수 전부 |
+| **Table S1** (ESW·반응성) | 대표 6종 + 참조 4종 = **12개 ESW 값** + 전 106행 집계 | **전량 일치** (LiCs(PO₃)₂ 2.15–6.23 / LiLa(PO₃)₄ 2.51–5.03 / LiPO₃ 2.52–5.01 / LiBa(B₃O₅)₃ 1.30–4.83 / LiTi₂(PO₄)₃ 2.37–4.59 / LiH₂PO₄ 2.23–4.58 / Li₃PO₄ 0.71–4.22 / LiAlSiO₄ 1.14–4.09 / LiZr₂(PO₄)₃ 2.06–4.52 / Li₄P₂O₇ 2.33–4.36; 추가 확인 LiGd(PO₃)₄ 5.30 · LiK(PO₃)₂ 5.09 · LiDy(PO₃)₄ 4.86) |
+| **Table S6** (NEB 전 hop) | **7물질 전 hop 배열** | **전량 일치** — §4a 목록과 문자 단위 동일 |
+| **Table S4/S5** (분해산물) | 우리 관심 계면 8종 | **전량 일치** (LPSCl/LiPO₃ · LPSCl/LiH₂PO₄ · LPSCl/LiTi₂(PO₄)₃ · LPSCl/LiBa(B₃O₅)₃ · LCO/LPSCl · NCM/LiH₂PO₄ · LLZO/LiPO₃ · LLZO/LiLa(PO₃)₄) — 단 NCM·LCO/LPSCl **반충** 산물 서술을 정밀화(§15b-1) |
+| **Fig S1** (경로 캡션) | 7물질 percolating 경로 | **일치** (LiPO₃ 1→2→…→8→1 등) |
+| **행수** | Table S1 = 106행 | **일치** (Cl 10 + F 35 + NP 2 + OF 4 + P 55 = 106; 캡션 "106 ICSD out of 184"와 정합) |
+
+→ 2026-07-28 SI 정독분은 **1년 가까이 지난 지금 재대조해도 수치 오류가 없다.** §4b 매트릭스(128셀)는 이제 **육안 이미지 대조로 확정**.
+
+### 15b. 이번에 **새로 반영·정정**한 것
+1. **[정정] NCM/LPSCl·LCO/LPSCl 반충 산물** — 기존 "(반충: +Li₂O)"는 불완전. 실제로는 **Li₂O 추가 + Li₂S 소멸**(만충 Li₂S ↔ 반충 Li₂O 치환)이며 두 양극 모두 같은 패턴 → §4c. *수치 오류가 아니라 서술 누락.*
+2. **[신규·최상급] 기존 3원 산화물 코팅 3종(Li₂ZrO₃·LiNbO₃·LiTaO₃)이 Table S1에 부재 = 저자 자신의 filter 4 탈락**(LPS와 −115/−164/−139 meV/atom) → §3. 본문이 문장화하지 않은 이 논문의 *숨은* 최강 논거.
+3. **[신규] 비폴리음이온 산화물 생존 2종의 정체** = **Li₃V(H₄O₃)₄(1.92–4.17 V) · LiAl₅O₈(0.85–4.09 V)** — 둘 다 V_ox<4.2, 하나는 수화물 → "2종 생존"은 사실상 전멸 → §3.
+4. **[신규] Table S1 전수 지도**(군별 n·V_ox 범위·챔피언) + **불화물이 산화한계 최강(35종 전부 ≥4.99 V, LiBF₄ 7.15 V > 폴리음이온 최고 6.23 V)** → §4a-2. **"폴리음이온이 이겼다" 서사의 가장 약한 고리** — 불화물을 버린 근거는 안정성이 아니라 σ 문헌 부재뿐.
+5. **[신규] V_ox ≥ 5.00 V 폴리음이온 = 7종 전부 meta-phosphate**(LiSm(PO₃)₄ 5.19·LiAl(PO₃)₄ 5.01 신규 수록) — §6a 축합 위계의 예외 0 확증 → §4a-2.
+6. **[신규] 삼중 0 반응성(LPS·만충NCM·반충NCM 모두 0.000) = LiF · LiCs(B₃O₅)₂(4.52) · Li₃PO₄(4.22)** 3종뿐 → §3.
+7. **[신규·논문 내부 불일치] 본문 p.1265 "LiAlSiO₄ and Li₃PO₄ … zero reactivity with NCM and LPS" vs Table S1 LiAlSiO₄ = 만충 NCM −0.009 eV/atom** — 엄밀 삼중 0은 Li₃PO₄뿐 → §3. *digest 오류가 아니라 논문 자체의 본문–SI 불일치.*
+8. **[신규] 완전 무반응 할라이드 5종 중 LiRb₂Cl₃는 Table S1에 없음** = data-mined 출신(비-ICSD) — 본문 p.1266 문장은 확인됨. 재현 가능한 것은 LiF·LiCl·LiRbCl₂·LiCsCl₂ 4종뿐 → §10 "미공개 78종" 한계의 구체 사례.
+
+### 15c. 이번 회차에도 스코프 밖
+- **Fig S1의 구조 그래픽**(다면체·vacancy 위치)은 이미지라 캡션만 대조 — 경로 번호열은 확인, 결정학적 세부는 미검증.
+- Table S1의 **나머지 94행 개별 수치**(우리가 인용하지 않는 조성)는 집계·정렬 규약만 확인하고 셀 단위 대조는 안 함.
+- 본문 Fig 1–9 그래픽 세부는 §14c와 동일하게 여전히 figure-read (**LPSCl ESW ~1.7–2.0 V** 포함).
