@@ -2,6 +2,8 @@
 
 > slug `kim2025_li3ycl6_new_crystal_structure` · DOI `10.1007/s12598-024-03069-x` · type `순수 DFT + AIMD + CSP(CALYPSO/PSO)` ·
 > *Rare Met.* 2025, **44**(4), 2366–2378 · 본문 13 pp + **SI(업로드 .docx = Supporting Information 실물)** · digested `2026-07-28` · status ✅ (본문 + SI Note S1–S3 + Table S1 전문 정독)
+> · **2026-08-04 본문(13 pp) 실물 독립 검증 완료 — §20** (자기정정 3건 · 신규 적발 15건 ·
+>   **Fig 4·5d MSD 8패널 픽셀 전수 판독**으로 σ 서열·antisite 하락이 600 K 데이터에 **없음**을 확인)
 > elements: Li, Y, Cl, Ge, P, S
 > methods: DFT, AIMD
 >
@@ -366,6 +368,10 @@ AIMD 궤적
 | ccp_1 | **전 방향 3.8 Å** | *"larger size complicates overcoming the activation barrier"* → ccp 최하위의 기하학적 원인 |
 | hcp_4 | **3.2 Å** | ccp_1보다 짧아 2D 확산 가속 |
 
+> ⚠ **2026-08-04 본문 실물 검증에서 이 서술자는 격하됐다 — §20c-N5.** 논문 자신의 표에서 **비단조**다
+> (hcp_4 3.2 Å > hcp_3 2.2 Å 인데 σ 는 2배; hcp_2 는 "전방향 짧음"인데 hcp_1 보다 낮음).
+> 같은 공간군 안(hcp_2↔hcp_3)에서만 작동하고 골격을 건너면 **차원성에 진다.**
+>
 > 🔑🔑 **같은 랩 `kim2026`의 "Li–Li 네트워크 ≤ 3.5 Å 연결" 게이트와 같은 서술자 가족이다.**
 > 두 논문 교차로 **랩 내부 문턱이 ~3.2–3.5 Å** 임이 확인된다(3.8 Å = 나쁨 / 2.2–3.2 Å = 좋음 / 게이트 3.5 Å).
 > `kim2026` digest §10-2에 이미 "채택 검토"로 등록한 항목의 **두 번째 독립 데이터점**이다.
@@ -395,7 +401,9 @@ hcp_1: 실험 **0.51 mS/cm** (Asano) vs 계산 **12.6**. 이 괴리는 P3̄m1 Li
 | **Li₃YCl₆ (hcp_1)** | **17.6** | antisite가 **쉽게 생긴다** |
 | **LGPS** | **32.2** | antisite가 **잘 안 생긴다** → 그래서 계산 12–13 ≈ 실험 12 |
 
-**Fig 5d — antisite를 실제로 넣고 AIMD (MSD 0–200 ps)**:
+**Fig 5d — antisite를 실제로 넣고 AIMD (MSD 0–200 ps)**
+(⚠ **2026-08-04 픽셀 판독으로 이 표의 해석이 크게 바뀐다 — §20c-N2·N3.**
+총 MSD 는 pristine 103 → 1-antisite **≈108**(하락 없음) → blocked-c **34**(= pristine 에서 c 만 삭제, a·b 가 자릿수까지 동일)):
 
 | 상태 | σ (mS/cm) | MSD 관찰 |
 |---|---:|---|
@@ -687,3 +695,129 @@ Kim 2025는 Schlem을 [34]·[53]으로 **인용은 하지만 이 충돌을 다�
 | Q5 | 같은 랩 `lee2024`가 Li₃YCl₆를 **MTP_optB88로 0.56**(≈실험)을 냈다면, 이 논문의 antisite 설명과 **어느 쪽이 랩의 현재 입장**인가 | `lee2024` 실물 + 후속 |
 | Q6 | Asano 2018의 "Y·Li disordering"이 **정말 Li 자리에 Y가 앉는 것**인지, Y의 1a/2d 분배·Li 부분점유를 말하는 것인지 | Asano Adv Mater 2018 원문 |
 | Q7 | van Hove 결과는 왜 실리지 않았나 (T12 참고 자료가 될 수 있음) | 저자 / 후속 |
+
+---
+
+## 20. 🔬 본문(13 pp) 실물 독립 검증 (2026-08-04, 폴더 이상욱 ⑤)
+
+**대상**: `litdb/inbox/5. New crystal structure of Li₃YCl₆ …pdf` = **본문 13 pp**(*Rare Met.* 2025, 44(4), 2366–2378).
+**방식**: digest 를 정답으로 놓지 않고 **PDF 를 원점으로 다시 읽었다** — 13 pp 텍스트 전수 재추출 +
+**Fig 1·2·3·4·5 원본 임베드 이미지 추출**(1803×2426 ~ 2035×1428) + **Fig 4 의 MSD 5패널 · Fig 5d 의 MSD 3패널을
+축 프레임 검출 후 곡선별 픽셀 좌표로 정량 판독**.
+
+> ⚠ **적용 범위**: 이번 회차 실물은 **본문뿐**이다. **SI(.docx)** 유래 서술(§8.1 eq 1–4 · §10.2 Note S3 ·
+> §11.1 Note S1 · Table S1 좌표 · Fig S1–S12)은 2026-07-28 회차를 승계하며, 이번 검증 대상이 아니다.
+>
+> 🔑 **결론 먼저**: 종전 digest 의 **인용문·수치 전사는 전수 통과**했다. 그런데 **그림을 정량으로 읽자
+> 논문의 두 축(σ 서열 · antisite)이 자기가 보여주는 데이터에 없다**는 것이 드러났다.
+> 이 회차가 바꾼 것은 §8.3·§10.4 비판의 **근거 등급**이다 — "오차막대가 없다"(부재 논증) 에서
+> **"제시된 그림이 제시된 결론과 어긋난다"**(모순 논증) 로 올라간다.
+
+### 20a. Fig 4 MSD 전수 정량 판독 (600 K, 0–200 ps) ★ 신규 데이터
+
+축 프레임(상=100, 하=0)을 검출하고 t = 198 ps 열에서 곡선 색을 분류해 읽었다.
+**검산**: hcp_3·ccp_1 은 검정 Overall 곡선이 눈금 안에 남아 있어 `a+b+c` 와 대조 가능 —
+98.5 vs 인쇄 98.6 / 92.3 vs 인쇄 92.2 로 **일치**. 즉 Overall = 세 성분의 합이고, 판독 정밀도는 **±1 Å²**.
+
+| 골격 | a | b | c | **총합(=Overall)** | 논문 σ₃₀₀ₖ (mS/cm) |
+|---|---:|---:|---:|---:|---:|
+| hcp_1 | 12.9 | 20.6 | **69.2** | **102.7** | 12.6 |
+| hcp_2 | 17.0 | **60.8** | 37.0 | **114.8** | 10.2 |
+| hcp_3 | 32.1 | **45.0** | 21.4 | **98.5** | 18.8 |
+| ccp_1 | 30.0 | 17.8 | **44.5** | **92.3** | 3.4 |
+| hcp_4 | **78.8** | 26.6 | **80.2** | **185.6** | 38.5 |
+
+**방향성 판정은 전부 본문과 정합**한다 — hcp_1 c 압도(1D) · hcp_2 b≫c>a · ccp_1 c>a>b ·
+hcp_4 a≈c≫b(2D) · hcp_3 만 막힌 방향이 없다. **§9.1 표는 살아남는다.**
+
+**그런데 총합은 다른 이야기를 한다:**
+
+| | hcp_1 | hcp_2 | hcp_3 | ccp_1 | hcp_4 |
+|---|---:|---:|---:|---:|---:|
+| MSD(600 K) 비 (hcp_1=1) | 1.00 | **1.12** | 0.96 | 0.90 | 1.81 |
+| σ(300 K) 비 | 1.00 | **0.81** | 1.49 | **0.27** | 3.06 |
+| **외삽이 만든 배율** | 1.00 | **0.72** | 1.55 | **0.30** | 1.69 |
+
+### 20b. 자기정정 3건 — 우리가 틀렸거나 덜 정확했던 것
+
+| # | 종전 서술 | 실물 | 조치 |
+|---|---|---|---|
+| **R1** | §16-6: 문제의 문장이 *"§3.4 말미"* 에 있다 | 실물은 **§3.3**, σ 서열 나열 **바로 다음 문장**이다: *"Furthermore, these findings are consistent with the experimental data on aliovalent substitution [33, 38], indicating that hcp_3 has the highest ionic conductivity among the structures tested, except for our proposed structure."* | **위치만 정정.** 내용 판정(Y-표준화 가상구조의 계산값을 Er/Zr 실측 경향에 맞춰 읽는 미끄럼)은 **유지** |
+| **R2** | §16-10: 1-antisite 의 c-MSD 가 *"~150 ps 부근"* 에서 꺾인다 | 픽셀 판독: 기울기가 **0.40 Å²/ps → 0.18 Å²/ps** 로 꺾이는 지점은 **t ≈ 115–120 ps**. 점선 외삽선은 200 ps 에서 **77**, 실선은 **57** | **수치 정정.** "비선형 구간을 선형 fit" 판정은 **유지·강화**(비선형 구간이 궤적의 **40 %** 를 차지) |
+| **R3** | §6.2: hcp_4 → hcp_2 변환 난이도 *"중간"* | Fig 3 실물의 연산 개수 — hcp_1 **2개**(Rotation + Shift) / hcp_3 **2개**(Tilt + Shift) / ccp_1 **4개**(Rotation + Shift + Down shift + **Lattice mutation**) / **hcp_4 2개**(Rotation + Down shift). hcp_4 는 ccp_1 의 절반이고 hcp_1 과 동수다 | **정정: "중간" → "가장 쉬운 축".** ⚠ 흥미롭게도 **본문이 자기 그림보다 보수적**이다 — 본문은 hcp_4 를 *"similar to the adjustments observed in ccp_1"* 이라 적는데, 그림은 그렇지 않다 |
+
+### 20c. 신규 적발 15건
+
+#### 🔴 큰 것 넷 — 논문의 두 기둥이 자기 그림 위에 서 있지 않다
+
+| # | 적발 | 위치 | 무게 |
+|---|---|---|---|
+| **N1** | 🔴🔴 **σ 서열이 600 K 데이터에 없다.** 기보고 4골격의 600 K 총 MSD 는 **92–115 Å² = ±12 % 안에 다 들어온다**. 그런데 300 K σ 는 **3.4–18.8 = 5.5×** 로 벌어진다. 특히 **hcp_2 는 600 K 에서 넷 중 가장 빠른데(115) 300 K 에선 밑에서 둘째(10.2)** 로 **순위가 뒤집힌다**. 즉 논문 제목 주장("hcp > ccp")·§3.3 서열은 전부 **600→300 K 외삽이 만든 것**이고, 그 외삽을 매개하는 **Ea 는 본문에 단 한 개도 인쇄돼 있지 않다**(Fig S5 Arrhenius 그림만). 더 나쁜 것은 본문이 **Fig 4 MSD 를 그 서열의 *설명*으로 제시한다**는 점이다 — *"the amount of Li-ion diffusion along the b- and c-directions in hcp_2 is lower than that in the 1D channel in hcp_1. **Thus**, the ionic conductivity of hcp_2 (10.2) is slightly lower than that of hcp_1 (12.6)"* — **성분별로는 맞지만 총합은 hcp_2 가 더 크다**. "Thus" 가 성립하지 않는다 | Fig 4 × Table 1 × p 2372 | **§8.3 격상 (부재 논증 → 모순 논증)** |
+| **N2** | 🔴🔴 **antisite 로 인한 σ 3.5× 하락이 Fig 5d 에 없다.** pristine 총 MSD **103**(13+21+69) vs 1-antisite **≈108**(25+26+57) — **오히려 약간 높다**. antisite 는 c 를 깎는 대신 a 를 **13→25**, b 를 **21→26** 으로 **거의 두 배 늘려** 총량을 보상한다. 논문이 σ 12.6→3.6 의 **유일한 증거로 제시한 그림**이 그 하락을 보여주지 않는다. 그림이 실제로 보여주는 것은 **c 성분 기울기가 115 ps 이후 절반이 된다**는 것뿐이고, 3.5× 는 다시 **보이지 않는 Ea** 가 진다 | Fig 5d 중간 패널 | **§10.4 격상.** antisite 서사의 증거 등급이 크게 내려간다 |
+| **N3** | 🔴 **"blocked c direction" 은 새 시뮬레이션이 아니라 사후처리다 — 픽셀로 확정.** 오른쪽 패널의 a = **13**, b = **21** 은 왼쪽 pristine 패널의 a = 13, b = 21 과 **자릿수까지 같고**, c 는 전 구간 **정확히 0**, 인쇄된 Overall = **34 = 21 + 13** 이다. 즉 **pristine 궤적에서 c 성분만 지운 것**이다(1-antisite 패널은 a·b 가 달라 별개 MD 가 맞다). 그런데 총 MSD 는 103→34 = **3.03×** 인데 보고 σ 는 12.6→0.6 = **21×** | Fig 5d 좌·우 패널 | **§10.4-2 를 추론에서 *확정*으로 승격.** *"실험 0.5 와 근접"* 은 검증이 아니다 |
+| **N4** | 🔴 **§3.5 의 결론 문장이 §3.5 의 전제를 부정한다.** 절 도입부: *"theoretical calculations suggest a much higher conductivity of 12.6 mS cm⁻¹, **indicating an overestimation** by theoretical models"*. 같은 절 마지막: *"In conclusion, although the ionic conductivity of hcp_1 **theoretically matched the experimental values**, the presence of various antisites … was a significant factor"* — **한 절 안에서 "과대평가한다"와 "일치했다"가 공존**한다 | p 2374 ↔ p 2375 | 조판/논리 품질 지표. 인용 시 **어느 문장을 인용하는지 반드시 명시** |
+
+#### ⚠ 나머지 11건
+
+| # | 적발 | 위치 |
+|---|---|---|
+| **N5** | ⚠ **채널크기 서술자가 자기 표와 비단조다.** 본문 마지막 문장: *"the differences in diffusivity and ionic conductivity between the hcp and ccp structures **can be attributed to these variations in channel size**"*. 그런데 hcp_2·hcp_3 는 *"considerably short in all directions"* 인데 hcp_2 σ(10.2) < hcp_1(12.6, 3.0/3.8 Å) 이고, **hcp_4 는 3.2 Å 로 hcp_3 의 2.2 Å 보다 *먼데* σ 는 2배**다. 서술자가 설명하는 것은 **ccp_1(3.8 Å) 이 최하위라는 것 하나뿐**이고, 나머지는 차원성이 지배한다 → **`comparison_vs_ours.md` §"Li–Li ≤3.5 Å 조건부 보류" 판정 보강** | p 2373 × Table 1 |
+| **N6** | ⚠ **Table 1 의 Energy/atom 열은 판별력이 0이다** — 네 골격이 **−4.32 로 전부 동일**, hcp_4 만 −4.31. 그런데 본문은 *"the energy results of the hcp_2, hcp_3, and ccp_1 structures … show a **trend consistent with the experimental results**"* 라 쓴다. **일치할 trend 자체가 없다** | p 2371 |
+| **N7** | ⚠ **범주 오류 + Ea 부재**: *"**From a thermodynamic perspective**, this metastable structure **reduces the activation barrier** for Li-ion diffusion"* — 활성화 장벽은 동역학량이다. 게다가 **본문 13 pp 어디에도 Ea 수치가 한 번도 등장하지 않는다**(N1 과 같은 뿌리). §5.3 의 "metastable = 공간군 번호 5라서" 비논리와 같은 계열 | p 2373 |
+| **N8** | ⚠ **자동 실행길이의 근거가 비논리이고, 데이터에 흔적이 없다.** *"we determined the simulation time automatically using our own convergence criteria … **owing to the complexity of electron interactions in the d orbitals of Y atoms**"* — He/Mo 2018 의 기준은 **확산 통계량**이지 d-오비탈과 무관하고, LGPS 에는 Y 가 없는데 같은 절차를 쓴다. 게다가 **MSD 8패널이 전부 정확히 0–200 ps** 라 "자동 결정"의 결과가 보이지 않는다(공통 창으로 자른 것으로 보임) | p 2372, Fig 4·5d |
+| **N9** | ⚠ **ccp_1 "완전 차단" 서술이 자기 그림과 어긋난다.** 본문: *"Li-ion diffusion is **entirely obstructed** … along the a- and b-directions"*. 실측 a = **30.0 Å²** — hcp_3 의 a(32.1) 와 동급이고 hcp_1 의 b(20.6)·a(12.9) 보다 **크다**. 차단된 것은 b(17.8) 쪽이다 | p 2373 × Fig 4d |
+| **N10** | ⚠ **그림 조판 2건**: (a) MSD y축 단위가 **8패널 전부 "MSD (Å)"** — Å² 여야 한다. (b) **Fig 4 와 Fig 5d 의 색 규약이 뒤바뀐다** — Fig 4 는 a=빨강·c=파랑, **Fig 5d 는 a=파랑·c=빨강**. 같은 hcp_1 데이터(13/21/69)를 두 그림이 **다른 색으로** 그린다 → 두 그림을 나란히 읽으면 오독하기 쉽다 | Fig 4, Fig 5d |
+| **N11** | ⚠ **실험 σ 하한 0.03 mS/cm 이 무출처다.** §3.1 의 0.51 은 Asano [29] 인데, §3.5·Table 2 의 *"0.03–0.5"* 는 본문·표 어디에도 인용이 없다. 우리 §8.3 의 "**25–420×** 과대"는 이 하한에 걸려 있다 → **"25× (Asano 실측 기준)" 을 주 표현으로, 420× 는 무출처 하한 병기 시에만** | Table 2, p 2374 |
+| **N12** | ⚠ **참고문헌 품질 3건**: **[54]** Bohnsack *Z. Anorg. Allg. Chem.* 연도가 **2004** 로 적혀 있으나 권(623)·DOI(`zaac.19976230710`) 는 **1997** — hcp_2 의 원출처다. **[75]** Muy et al. 저널명이 **"Science"** 로 적혀 있으나 DOI 는 `j.isci.2019.05.036` = **iScience**. **[36]** Park et al. *Chem. Eng. J.* 2021, 425, 130630 — **논문 제목이 통째로 누락**. 우리 §16(교정 품질) 근거에 추가 | p 2377–2378 |
+| **N13** | ⚠ **본문 ↔ SI 긴장 1건**: 본문 p 2370 *"we standardized the metal species and Li-ion occupancies across all structures to those of the LYC, **except for hcp_1 and hcp_4**"*. 그런데 우리 §11.1(SI Note S1 전사)은 **hcp_1 도 점유율 처리**(Y occ 0.229 제거 · 6h Li 절반 제거)를 했다고 적는다. 본문의 "except" 가 "금속종 치환이 불필요"만 뜻하는지, 점유율 처리까지 없었다는 뜻인지 **본문만으로는 확정 불가** — **SI 재검증 대상으로 이월**(Q8 신설) | p 2370 vs §11.1 |
+| **N14** | ⚠ **Fig 2a 의 Energy 축에 눈금·단위가 없다** → *"lowest enthalpy"* 선택이 **감사 불가**이고, hcp_4 가 다른 후보보다 얼마나 낮은지 말할 수 없다. 부수 관찰: 최저 초록("Stable") 밴드는 **gen ~25 부터 평평**한데 후보 추출 점선 박스는 **gen 35–50** 만 덮는다. 후보 갤러리 6종 · 우하단 초록 강조 1종(=hcp_4) 은 종전 §12 서술대로 확인 | Fig 2a |
+| **N15** | ⚠ **§3.1 이 자기가 뒤집을 명제를 헤지 없이 사실로 적는다**: *"Compared to the hcp anion sublattices, ccp-based structures **exhibit** higher ionic conductivity than hcp structures due to their more extensive diffusion pathways [29, 76]"*(p 2370). 3쪽 뒤 §3.3 은 같은 명제를 *"**Traditionally**, ccp structures **have been recognized** for …"* 로 헤지한다. 서술 일관성 결함 | p 2370 ↔ p 2372 |
+
+### 20d. 재확인 통과 — 종전 판독이 맞았던 것
+
+- **Table 1 20값 전수** ✓ (−4.32×4 / −4.31 · E_hull 24/23/17/21/27 · packing · σ 12.6/10.2/18.8/3.4/38.5)
+- **Table 2 6값 전수** ✓ (17.6 · 32.2 meV/atom · 0.03–0.5 · 12.6(0.6) · 12 · 12–13) — 괄호 표기 `12.6 (0.6)` 도 원문 그대로
+- **Fig 1 Wyckoff 라벨 전수** ✓ — hcp_1 Li(6h, 6g)·Y³⁺(1a, 2d)·Cl⁻(6i) / hcp_2 Li(8d)·Yb³⁺(4c)·Cl⁻(4c, 8d) /
+  hcp_3 Li(8d)·Er³⁺ or Zr⁴⁺(4c)·Cl⁻(4c, 8d) / ccp_1 Li(2d, 4g, 4h)·Sc³⁺(2a)·Cl⁻(4i, 8j) — **§4 표와 완전 일치**
+- **Fig 3 변환 지도 배정** ✓ (a hcp_1 / b hcp_3 / c ccp_1 / d hcp_4 → hcp_2), 색 규약(노랑·파랑 원 → 빨강·파랑 삼각형,
+  초록·주황 → 파랑·빨강, 보라 → 파랑) 전부 §6.2 대로. 연산 이름도 원문 그대로(Rotation · Tilt · Shift · Down shift · **Lattice mutation**)
+- **채널거리 5값** ✓ (hcp_1 3 Å / 타방향 3.8 · hcp_3 **2.2** · ccp_1 **3.8 전방향** · hcp_4 **3.2**)
+- **계산 파라미터 전수** ✓ VASP **5.4.4** · PAW + **PBE** · **"Monkhost 64 Å"** k 규약 · **500 eV** · 힘 **< 0.04 eV/Å** ·
+  격자+내부좌표 완전완화 · AIMD **Γ 1×1×1** · **2 fs** · **NVT Nosé–Hoover** · **600–1000 K, 100 K 간격 5점 → 300 K** ·
+  실행길이 **자동**(effective hops + moving SD, [67] He/Zhu/Epstein/Mo) · 셀 크기·스핀은 *"followed the guidelines of
+  other computational studies [11, 64–66]"* 로 **미보고** · **vdW 언급 없음** · CALYPSO **50세대 × 100개체**
+- **핵심 인용문 8개 원문 그대로** ✓ — *"these findings primarily reflect the characteristics of the synthesized material
+  rather than prove the inherent superiority of the ccp configuration over the hcp configuration"* · *"the structure that
+  exhibited the lowest enthalpy over 50 generations"* · *"considered metastable, attributed to its low space group number (5)"* ·
+  *"the feasibility of synthesizing the novel hcp_4 structure based on relatively minor modifications"* · *"wide bandgaps,
+  primarily attributed to chlorine's high standard reduction potential"* · *"we **hypothesized** that introducing antisites
+  would **intentionally reduce** the calculated ionic conductivity, **aligning it closer to the experimental results**"* ·
+  *"we **anticipate** that hcp_4 … should exhibit experimental ionic conductivities close to the calculated value of 38.5"* ·
+  Fig 2a 캡션 *"conducted up to 50 generations **with DFT calculation**"*
+- **본문 오타 "valence band minimum (VBM)"** ✓ 확인(§7 지적 유지) · **van Hove 를 §2 에 "determined" 라 적고 결과 미게재** ✓
+- **Fig 4 가 MSD 패널을 포함한다** ✓ — 3열 구성(구조 / Li 확률밀도 / **MSD**)이 맞고, Fig S6–S10 은 **방향별 확률밀도** 쪽이다
+  (§9.1·§12 서술 유지). Fig 4d 의 "Trapped" 라벨 붉은 원 2개 ✓, Fig 4e 만 단면이 파란 평면 ✓
+- **§9.1 방향성 판정 5행 전부** ✓ (20a 표가 수치로 뒷받침)
+
+### 20e. 이 회차가 우리 규율에 남기는 것
+
+1. **🔑🔑 우리도 정확히 같은 노출이 있다.** 우리 σ·Ea 도 **600/800/1000 K → 300 K 외삽**이다.
+   이 논문이 실증한 것은 "외삽이 부정확하다"가 아니라 **"시뮬레이션 온도의 D 서열과 외삽 후 σ 서열이 *뒤집힐 수 있다*"** 이고,
+   그때 독자에게는 그것을 검증할 수단이 없다는 것이다(hcp_1 ↔ hcp_2 가 실제로 뒤집혔다).
+   → **신규 규율 제안(T15, `kb/open_items.md`)**: 순위·비율 주장을 낼 때 **외삽 σ 와 함께 시뮬레이션 온도의 D 를 같이 보고**하고,
+   두 서열이 어긋나면 **그 불일치 자체를 결과로 다룬다.** 우리 Nd σ-drop 0.52×(Ea 0.224≈0.227 불변) 판정에 즉시 적용 대상.
+2. **방향분해 MSD 채택(§15.1-4)은 유지하되 조건을 붙인다** — 이 논문의 실패는 **방향별만 보고 총합을 보지 않은 것**이다.
+   축별 분해를 도입하면 **총합 MSD 를 같은 패널에 반드시 병기**한다(그들 Fig 4 는 병기했기에 우리가 검산할 수 있었다 — 그 점은 좋은 관행).
+3. **Li–Li 거리 서술자(§15.1-3)는 격하.** N5 로 **본문 실물에서 비단조**임이 확인됐다.
+   같은 공간군 안(hcp_2 ↔ hcp_3, 둘 다 Pnma)에서만 작동하고, 골격을 건너면 차원성에 진다.
+   → `comparison_vs_ours.md` 의 "**⛔ 조건부 보류**" 판정과 **같은 결론에 독립 경로로 도달**했다.
+4. **§15.2 ⛔ 이식 금지 목록은 그대로 유지되고, 근거만 더 단단해진다.** 특히 6번("antisite 가 이론–실험 괴리의 주원인")은
+   이제 **문헌 충돌(Schlem·lee2024)** 뿐 아니라 **논문 자신의 Fig 5d** 를 근거로도 미판정이다.
+
+### 20f. 미해결 질문 추가
+
+| # | 질문 | 어디서 |
+|---|---|---|
+| **Q8** 🆕 | 본문의 *"standardized … **except for hcp_1 and hcp_4**"* 와 SI Note S1 의 hcp_1 점유율 처리(Y occ 0.229 제거·6h Li 절반)가 **양립하는가** | SI 실물 재검증 |
+| **Q9** 🆕 | **Ea 5값**(Fig S5 Arrhenius 기울기) — N1 의 유일한 해소 경로. 이게 있어야 "서열이 외삽에서 나왔다"를 정량으로 닫는다 | Fig S5 원본 |
+| **Q10** 🆕 | 1-antisite·blocked-c 계도 **600–1000 K 5점을 다 돌렸는가**, 아니면 600 K 만 돌리고 pristine 의 Ea 를 재사용했는가 (N2·N3 의 3.5×·21× 가 어디서 오는지가 여기 달렸다) | 저자 문의 |
