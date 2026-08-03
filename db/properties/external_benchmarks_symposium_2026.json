@@ -290,14 +290,15 @@
           "still_retracted": [
             {
               "was": "corner-sharing 1e-4 mS/cm",
-              "why": "Huang 은 e-Li2SiS3 의 sigma 를 수치로 주지 않는다. '3 orders lower' 로 역산하면 **약 2.4e-3 mS/cm** 로 약 24배 차이"
+              "why": "**철회 유지, 근거 승격(2026-08-04 본문 실물 검증).** 종전 사유 '~~Huang 은 e-Li2SiS3 의 sigma 를 수치로 주지 않는다 → 역산 2.4e-3 mS/cm~~' 는 **우리 사실오인**이었다 — **Fig 4b 가 n·m·e 아레니우스 3계열을 직접 싣는다**. 픽셀 판독(교정 검증: red 기울기가 인쇄값 Ea 0.28 eV 를 0.2814 로 재현) → **e sigma(298 K) = 1.8e-6 S/cm = 1.8e-3 mS/cm, Ea 0.476 eV** → 덱 값은 **약 18배 낮다**. 부수 수확: **m-Li2SiS3 = 5.3e-5 S/cm, Ea 0.451 eV** (인쇄 '~0.5' 는 10 % 올림)"
             },
             {
               "was": "4 orders of magnitude",
-              "why": "초록·본문·그래픽초록 모두 **3 orders / 1000 times**"
+              "why": "초록·본문·결론 모두 **3 orders**, 그래픽초록 **1000 times**. **Fig 4b 실측 n/e = 1190배 = 3.08 자릿수 → 논문의 '3 orders' 는 자기 그림으로 검증 통과.** ⚠ 단 그래픽초록 막대비 자체는 **24배**로 그려져 있고 sigma 축에 눈금이 없다 → **그래픽초록에서 수치 이식 금지**"
             }
           ],
-          "extra_caveat": "Huang 의 '3자릿수' 비교 대상도 **자기 측정이 아니라 ref 16(Ahn & Huggins 1990) 소환값**이다.",
+          "extra_caveat": "Huang 의 '3자릿수' 비교 대상도 **자기 측정이 아니라 ref 16 소환값**이다 — sigma 뿐 아니라 **Ea 도** 그렇다(Fig 4b 캡션 위첨자 16). ⚠ ref 16 서지 정정: **Ahn & Huggins, Solid State Ionics 1991, 46, 237** (종전 기재 'Ahn & Huggins 1990' 은 우리 오기 — 1990 MRB 25, 381 은 ref 17, 1989 MRB 24, 889 는 ref 15). 논문 자신의 ref 16 저자명도 'Taeahn, B.' 로 깨져 있다.",
+          "verification_2026_08_04": "**Huang 2022 본문 6 pp 실물 독립 검증 완료** (digest §9; 자기정정 11 · 신규 16; ESI 12 pp 는 미재검). 이 항목에 직결되는 것: ① e/m sigma 를 역산이 아니라 **Fig 4b 실측**으로 확보 ② '3 orders' 검증 통과 ③ **BVSE 유효장벽 ↔ 실험 Ea 는 방향·서열만 일치**(0.228/0.367 vs 0.281/0.476 = 19~23 % 과소, 격차 재현율 71 %) — 종전 '방향·크기 모두 일치' 는 우리 과장이라 철회 ④ 🔴 **본문이 자기 Fig 5b4 를 오귀속** — '[100] blue 사슬이 0.367 eV' 라 쓰지만 그림에서 **blue = 0.274 eV**, 0.367 은 **green(bc 2D)** 이고 blue 는 셋 중 최저다 → **e 쪽에서는 차원 상승 서사가 성립하지 않는다** ⑤ Ea 0.28 eV 의 아레니우스 창은 **279~378 K** (Nyquist 창 228~375 K 와 다름) ⑥ **이 논문에 제1원리 계산 0** — DFT 벤치마크로 인용 금지 ⑦ 라이선스 **CC-BY-NC-ND** → 그림 재가공 금지.",
           "direction_conflict": "⚠ Huang 에서 edge-sharing(n-Li2SiS3)은 **저온상**이고 승온하면 n→m→e 로 corner 사슬이 된다. JACS 2025 CSP 의 '준안정 edge-sharing' 서사와 방향이 다르니 두 논문을 같이 인용할 때 뭉개지 말 것.",
           "canonical_digest": "litdb/papers/huang2022_li2sis3_anomalous_conductivity_bvse.md"
         }
