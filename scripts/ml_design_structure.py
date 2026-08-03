@@ -92,20 +92,28 @@ MONOTONE_PRIORS = [
 # ══════════════════════════════════════════════════════════════════════════════
 #  기저 · 적합 · 해석적 LOOCV
 # ══════════════════════════════════════════════════════════════════════════════
-def candidate_terms(d, family='full'):
-    """항 후보: 절편 [] · 1차 [i] · 2차 [i,i] · 교호작용 [i,j].  JSON 직렬화 가능한 표현.
+def candidate_terms(d, family='full', free_products=False):
+    """항 후보: 절편 [] / 1차 [i] / 2차 [i,i] / 교호작용 [i,j].  JSON 직렬화 가능한 표현.
 
-    family 로 후보 풀을 **중첩되게** 좁힐 수 있다 — 교호작용이 실제로 기여하는지 재려면
+    family 로 후보 풀을 **중첩되게** 좁힐 수 있다 - 교호작용이 실제로 기여하는지 재려면
     같은 절차를 후보만 바꿔 돌려야 공정하다:
       'linear'      1, x_i
-      'quadratic'   + x_i²          (곡률만, 교호작용 없음)
-      'full'        + x_i·x_j       (교호작용 포함)
+      'quadratic'   + x_i^2        (곡률만, 교호작용 없음)
+      'full'        + x_i*x_j      (교호작용 포함)
+
+    ★ free_products=True 면 **곱항을 자유노브끼리로만** 제한한다.
+      13 특징 중 7 개는 나머지 6 개의 대수적 함수라(예: se_density_proxy=(100-am_pct)/d_se),
+      유도량끼리의 곱은 자유노브의 **다항 재표현**일 뿐 물리적 교호작용이 아니다.  실런에서
+      선택된 쌍의 다수가 `am_pct x se_density_proxy` 같은 그런 것들이었다 - 주간보고의
+      `D50 x Dseed` 처럼 **독립 노브 쌍**을 묻는 거라면 이 제한을 켜야 답이 맞다.
+      (1차항은 전부 남긴다 - 유도량은 유용한 비선형 변환이고, 해석이 걸린 건 곱항이다.)
     """
+    prod = list(range(len(FREE_KNOBS))) if free_products else list(range(d))
     terms = [[]] + [[i] for i in range(d)]
     if family in ('quadratic', 'full'):
-        terms += [[i, i] for i in range(d)]
+        terms += [[i, i] for i in prod]
     if family == 'full':
-        terms += [[i, j] for i in range(d) for j in range(i + 1, d)]
+        terms += [[i, j] for i in prod for j in prod if i < j]
     return terms
 
 
@@ -168,14 +176,15 @@ def _gain_floor(n, m, r2_cur):
     return max(MIN_GAIN, MC_K * math.log(max(m, 2)) * max(1.0 - r2_cur, 0.02) / max(n, 1))
 
 
-def select_terms(X, y, max_terms=MAX_TERMS, lam=LAM_SELECT, family='full'):
+def select_terms(X, y, max_terms=MAX_TERMS, lam=LAM_SELECT, family='full',
+                 free_products=False):
     """탐욕 전방선택 — 항을 하나씩 넣고 다중비교-보정 문턱을 넘을 때만 채택.
 
     σ_th Stage T1 의 16-특징 그리디 · σ_e 22.5 의 절제 스크린과 같은 절차.  **n/k ≥
     MIN_N_OVER_K** 를 동시에 강제해 표본 대비 항 수가 넘지 않게 한다.
     """
     n, d = X.shape
-    cand = candidate_terms(d, family)
+    cand = candidate_terms(d, family, free_products)
     k_cap = int(min(max_terms, max(2, math.floor(n / MIN_N_OVER_K))))
     chosen, trace = [[]], []                          # 절편은 항상
     cur, _, _ = loocv(build(X, chosen), y, lam)
@@ -196,16 +205,25 @@ def select_terms(X, y, max_terms=MAX_TERMS, lam=LAM_SELECT, family='full'):
     return chosen, trace, k_cap
 
 
-def fit_target(X, y, kind='lin', max_terms=MAX_TERMS):
+def fit_target(X, y, kind='lin', max_terms=MAX_TERMS, family='auto', free_products=False):
     """한 타깃 적합 — 항선택 → λ 튜닝 → Laplace 사후.  반환 model dict (JSON 직렬화 가능)."""
     ylog = kind == 'log'
     yy = np.log(np.clip(y, 1e-12, None)) if ylog else np.asarray(y, float)
     mu, sd = X.mean(0), X.std(0)
     sd = np.where(sd == 0, 1.0, sd)
     Xs = (X - mu) / sd
-    terms, trace, k_cap = select_terms(Xs, yy, max_terms=max_terms)
+    _fams = FAMILIES if family == 'auto' else (family,)
+    _bst = (-np.inf, None, None, None, None)
+    for _fm in _fams:
+        _tm, _tr, _kc = select_terms(Xs, yy, max_terms=max_terms, family=_fm,
+                                     free_products=free_products)
+        _r2, _lm = max(((loocv(build(Xs, _tm), yy, l)[0], l) for l in LAM_GRID),
+                       key=lambda t: t[0])
+        if _r2 > _bst[0]:
+            _bst = (_r2, _tm, _lm, _tr, (_kc, _fm))
+    r2, terms, lam, trace = _bst[0], _bst[1], _bst[2], _bst[3]
+    k_cap, fam_pick = _bst[4]
     Phi = build(Xs, terms)
-    r2, lam = max(((loocv(Phi, yy, l)[0], l) for l in LAM_GRID), key=lambda t: t[0])
     _, e, h = loocv(Phi, yy, lam)
     beta = ridge(Phi, yy, lam)
     # ── Laplace 사후 (ridge = 가우시안 사전의 MAP) : β|y ~ N(β̂, s²A⁻¹) ──────────────
@@ -220,13 +238,17 @@ def fit_target(X, y, kind='lin', max_terms=MAX_TERMS):
     return {'target': None, 'terms': terms, 'coef': beta.tolist(),
             'loocv_r2_naive': r2, 'lam': lam, 'mu': mu.tolist(), 'sd': sd.tolist(),
             'log_target': ylog, 'n': int(len(yy)), 'k': len(terms),
-            'n_over_k': round(len(yy) / len(terms), 2), 'k_cap': k_cap,
+            'n_over_k': round(len(yy) / len(terms), 2), 'k_cap': k_cap, 'family': fam_pick,
+            'free_products': bool(free_products),
             's2': s2, 'Ainv': Ainv.tolist(), 'h_max_train': float(h.max()),
             'pi90_coverage': cover, 'select_trace': [(a, round(b, 4)) for a, b in trace]}
 
 
+FAMILIES = ('linear', 'quadratic', 'full')
+
+
 def nested_cv(X, y, kind='lin', folds=10, seed=0, max_terms=MAX_TERMS, return_pred=False,
-              family='full'):
+              family='full', free_products=False):
     """중첩 CV — outer K-fold, inner 에서 **항선택과 λ 를 다시** 고른다.
 
     naive LOOCV 는 전체 데이터로 항을 고른 뒤 같은 데이터로 채점하므로 낙관 편향이 있다.
@@ -249,9 +271,21 @@ def nested_cv(X, y, kind='lin', folds=10, seed=0, max_terms=MAX_TERMS, return_pr
         mu, sd = X[tr].mean(0), X[tr].std(0)
         sd = np.where(sd == 0, 1.0, sd)
         Xtr, Xte = (X[tr] - mu) / sd, (X[te] - mu) / sd
-        terms, _, _ = select_terms(Xtr, yy[tr], max_terms=max_terms, family=family)
+        # ★ family='auto' 면 기저족도 **폴드 안에서** 고른다.  실런에서 4 타깃은 교호작용
+        #   후보가 오히려 해로웠다(Δ교호 −0.169 까지) — 타깃마다 옳은 기저가 다르다는 뜻.
+        #   그렇다고 전체 데이터로 기저족을 고르고 그 값을 보고하면 max-of-3 편향이 새로
+        #   들어온다.  보류된 폴드는 기저족 선택에도 관여하지 않는다.
+        _fams = FAMILIES if family == 'auto' else (family,)
+        _best = (-np.inf, None, None)
+        for _fm in _fams:
+            _tm, _, _ = select_terms(Xtr, yy[tr], max_terms=max_terms, family=_fm,
+                                     free_products=free_products)
+            _P = build(Xtr, _tm)
+            _r2, _lm = max(((loocv(_P, yy[tr], l)[0], l) for l in LAM_GRID), key=lambda t: t[0])
+            if _r2 > _best[0]:
+                _best = (_r2, _tm, _lm)
+        terms, lam = _best[1], _best[2]
         Ptr = build(Xtr, terms)
-        _, lam = max(((loocv(Ptr, yy[tr], l)[0], l) for l in LAM_GRID), key=lambda t: t[0])
         pred[te] = build(Xte, terms) @ ridge(Ptr, yy[tr], lam)
     ss = float(((yy - yy.mean()) ** 2).sum())
     r2 = 1.0 - float(((yy - pred) ** 2).sum()) / ss if ss > 0 else float('nan')
@@ -640,7 +674,7 @@ def response_surface(bundle, X, target, x_knob, y_knob, n=25, fixed=None, rows=N
                      '주간보고 그림은 실측 산점도이고 면은 모형이므로 구분해서 볼 것.')}
 
 
-def interaction_screen(csv_path, folds=10, seed=0, targets=None):
+def interaction_screen(csv_path, folds=10, seed=0, targets=None, free_products=False):
     """교호작용이 **실제로** 기여하는가 — 기저족을 중첩시켜 중첩 CV 로 잰다.
 
     "여러 모델을 돌려보자" 의 정직한 판본.  블랙박스를 여러 개 얹는 대신, **같은 절차**로
@@ -664,15 +698,18 @@ def interaction_screen(csv_path, folds=10, seed=0, targets=None):
             continue
         idx, y = ys[t]
         r = {'n': int(len(y))}
-        for fam in ('linear', 'quadratic', 'full'):
-            r[fam] = nested_cv(X[idx], y, kind, folds=folds, seed=seed, family=fam)
+        for fam in FAMILIES:
+            r[fam] = nested_cv(X[idx], y, kind, folds=folds, seed=seed, family=fam,
+                               free_products=free_products)
+        r['free_products'] = bool(free_products)
         r['d_curvature'] = r['quadratic'] - r['linear']
         r['d_interaction'] = r['full'] - r['quadratic']
         # 전체 데이터에서 실제로 선택된 교호작용 쌍 (해석용 — 판정은 위 nested 로 한다)
         mu, sd = X[idx].mean(0), X[idx].std(0)
         sd = np.where(sd == 0, 1.0, sd)
         yy = np.log(np.clip(y, 1e-12, None)) if kind == 'log' else y
-        terms, _tr, _kc = select_terms((X[idx] - mu) / sd, yy, family='full')
+        terms, _tr, _kc = select_terms((X[idx] - mu) / sd, yy, family='full',
+                                       free_products=free_products)
         r['pairs'] = [f'{DESIGN_FEATURES[a]} × {DESIGN_FEATURES[b]}'
                       for a, b in (tt for tt in terms if len(tt) == 2 and tt[0] != tt[1])]
         r['squares'] = [f'{DESIGN_FEATURES[a]}²'
@@ -680,9 +717,15 @@ def interaction_screen(csv_path, folds=10, seed=0, targets=None):
         # 판정 — 문턱은 지어내지 않고 잡음 규모(≈1/n, 잔차분산 반영)에서 유도
         noise = max(MIN_GAIN, 2.0 * max(1.0 - r['full'], 0.02) / max(len(y), 1))
         r['noise_scale'] = noise
+        # ★ 음의 Δ교호 를 ADDITIVE 로 부르면 안 된다 — 기저족이 중첩이라 후보를 늘려
+        #   nested 가 **내려갔다**는 건 "교호작용이 없다" 가 아니라 "교호작용 후보가
+        #   적극적으로 해롭다"(탐욕이 일반화 안 되는 쌍을 집는다) 는 더 강한 진술이다.
+        #   실런에서 mpm_plastic_gain 이 −0.169 였는데 ADDITIVE 로 뭉개졌다.
         r['verdict'] = ('INTERACTING' if r['d_interaction'] > 3 * noise else
                         'WEAKLY-INTERACTING' if r['d_interaction'] > noise else
-                        'ADDITIVE')
+                        'ADDITIVE' if r['d_interaction'] >= -noise else
+                        'HARMFUL')
+        r['best_family'] = max(FAMILIES, key=lambda f: r[f])
         out[t] = r
     return out
 
@@ -769,12 +812,13 @@ def verdict(nested_r2, cover):
     return 'REJECT'
 
 
-def train(csv_path, out_path=None, verbose=True, folds=10, do_nested=True):
+def train(csv_path, out_path=None, verbose=True, folds=10, do_nested=True,
+          family='auto', free_products=False):
     X, ys, names, _rows = load_corpus(csv_path)
     if verbose:
         print(f'  설계행렬 {X.shape[0]} × {X.shape[1]}  ·  타깃 {len(ys)}개  '
               f'(n/k ≥ {MIN_N_OVER_K:.0f}:1 강제, 항 상한 {MAX_TERMS})')
-        print(f"  {'타깃':32s} {'n':>4s} {'k':>3s} {'n/k':>6s} "
+        print(f"  {'타깃':32s} {'n':>4s} {'k':>3s} {'n/k':>6s} {'기저':>9s} "
               f"{'naive':>7s} {'nested':>7s} {'편향':>6s} {'PI90':>6s}  판정")
     models, skipped = {}, []
     for t, kind in STRUCTURE_TARGETS:
@@ -782,9 +826,10 @@ def train(csv_path, out_path=None, verbose=True, folds=10, do_nested=True):
             skipped.append(t)
             continue
         idx, y = ys[t]
-        m = fit_target(X[idx], y, kind)
+        m = fit_target(X[idx], y, kind, family=family, free_products=free_products)
         m['target'] = t
-        m['nested_cv_r2'] = (nested_cv(X[idx], y, kind, folds=folds)
+        m['nested_cv_r2'] = (nested_cv(X[idx], y, kind, folds=folds, family=family,
+                                       free_products=free_products)
                              if do_nested else float('nan'))
         m['selection_bias'] = (m['loocv_r2_naive'] - m['nested_cv_r2']
                                if np.isfinite(m['nested_cv_r2']) else float('nan'))
@@ -792,7 +837,7 @@ def train(csv_path, out_path=None, verbose=True, folds=10, do_nested=True):
         models[t] = m
         if verbose:
             print(f"  {t:32s} {m['n']:4d} {m['k']:3d} {m['n_over_k']:6.1f} "
-                  f"{m['loocv_r2_naive']:+7.3f} {m['nested_cv_r2']:+7.3f} "
+                  f"{m.get('family', '?'):>9s} {m['loocv_r2_naive']:+7.3f} {m['nested_cv_r2']:+7.3f} "
                   f"{m['selection_bias']:+6.3f} {m['pi90_coverage']*100:5.1f}%  {m['verdict']}"
                   + ('  (log)' if m['log_target'] else ''))
     if verbose:
@@ -802,7 +847,10 @@ def train(csv_path, out_path=None, verbose=True, folds=10, do_nested=True):
         print('  ★ 판정은 **nested** 기준.  naive−nested = 선택 편향(그만큼 낙관적).')
     bundle = {'kind': 'design_to_structure', 'features': DESIGN_FEATURES,
               'models': models, 'skipped': skipped, 'n_cases': int(X.shape[0]),
+              'family_mode': family, 'free_products': bool(free_products),
               'method': {'loocv': 'analytic hat-matrix (intercept unpenalized)',
+                         'basis_family': ('per-target, re-chosen INSIDE each outer fold '
+                                          '(linear/quadratic/full) - no max-of-3 bias'),
                          'selection': (f'greedy forward, n/k>={MIN_N_OVER_K}, gain floor = '
                                        f'max({MIN_GAIN}, {MC_K}*ln(m)*(1-R2)/n)  '
                                        '[multiple-comparison corrected]'),
@@ -1208,6 +1256,35 @@ def _selftest():                                                   # noqa: C901
         response_surface(_b, X, 'phi_se', 'd_ratio', 'd_am').get('error') is not None)
     chk('같은 축 두 개는 거부',
         response_surface(_b, X, 'phi_se', 'am_pct', 'am_pct').get('error') is not None)
+    # ★ 음의 Δ교호 = HARMFUL (ADDITIVE 로 뭉개면 안 된다) — 실런 mpm_plastic_gain −0.169
+    _fake_r = {'d_interaction': -0.169, 'noise_scale': 0.008,
+               'linear': 0.43, 'quadratic': 0.503, 'full': 0.334}
+    _v = ('INTERACTING' if _fake_r['d_interaction'] > 3 * _fake_r['noise_scale'] else
+          'WEAKLY-INTERACTING' if _fake_r['d_interaction'] > _fake_r['noise_scale'] else
+          'ADDITIVE' if _fake_r['d_interaction'] >= -_fake_r['noise_scale'] else 'HARMFUL')
+    chk('★Δ교호 가 음수면 HARMFUL (교호작용 후보가 해롭다 — ADDITIVE 와 다른 진술)',
+        _v == 'HARMFUL', f"Δ{_fake_r['d_interaction']:+.3f} → {_v}")
+    chk('★해로운 경우 최선 기저가 full 이 아니다 (생산 학습이 피해가야 할 기저)',
+        max(FAMILIES, key=lambda f: _fake_r[f]) == 'quadratic')
+    # ★ 곱항 제한 — 유도량끼리의 곱이 후보에서 빠지는가
+    _p_all = [t for t in candidate_terms(len(DESIGN_FEATURES), 'full') if len(t) == 2]
+    _p_fr = [t for t in candidate_terms(len(DESIGN_FEATURES), 'full', free_products=True)
+             if len(t) == 2]
+    chk('★--free-knobs 가 곱항을 자유노브끼리로 제한 (유도량 곱 = 대수적 재표현)',
+        len(_p_fr) < len(_p_all)
+        and all(a < len(FREE_KNOBS) and b < len(FREE_KNOBS) for a, b in _p_fr),
+        f'{len(_p_all)} → {len(_p_fr)}')
+    chk('1차항은 13 개 그대로 남는다 (유도량은 유용한 비선형 변환)',
+        sum(1 for t in candidate_terms(len(DESIGN_FEATURES), 'full', True) if len(t) == 1)
+        == len(DESIGN_FEATURES))
+    # ★ family='auto' 가 폴드 안에서 골라 편향을 새로 안 들인다 — 잡음에서 확인
+    _auto_noise = nested_cv(X, y_noise, 'lin', folds=5, family='auto')
+    chk('★family=auto 도 잡음에선 nested ≤ 0.05 (기저족 선택이 편향을 새로 안 들인다)',
+        _auto_noise <= 0.05, f'auto nested {_auto_noise:+.4f}')
+    _auto_sig = nested_cv(X, y_lin, 'lin', folds=5, family='auto')
+    chk('신호에선 auto 가 고정 full 에 밀리지 않는다',
+        _auto_sig >= nested_cv(X, y_lin, 'lin', folds=5, family='full') - 0.02,
+        f'auto {_auto_sig:+.3f}')
     os.unlink(p_ix)
 
     print(f"ML-DESIGN-STRUCTURE SELFTEST {ok}/{tot} {'PASS' if ok == tot else 'FAIL'}")
@@ -1240,6 +1317,11 @@ def main(argv=None):
                     help='순차 D-최적 갱신을 끈다 = 개별 h* 상위 N (평평해짐).  대조용')
     ap.add_argument('--suggest-cand', type=int, default=4000,
                     help='능동학습 후보 표본 수 (실현가능 필터를 통과할 만큼 넉넉히)')
+    ap.add_argument('--free-knobs', action='store_true',
+                    help='곱항을 자유노브 6 개끼리로 제한 — 유도량끼리의 곱은 대수적 재표현이라 '
+                         '물리적 교호작용이 아니다 (주간보고의 D50 x Dseed 는 독립노브 쌍)')
+    ap.add_argument('--basis', default='auto', choices=['auto', 'linear', 'quadratic', 'full'],
+                    help='기저족.  auto = 폴드 **안에서** 타깃마다 재선택 (편향 없음)')
     ap.add_argument('--interactions', action='store_true',
                     help='기저족(linear/quadratic/full)을 중첩 CV 로 비교 — 교호작용의 실제 몫')
     ap.add_argument('--closure', action='store_true',
@@ -1251,22 +1333,28 @@ def main(argv=None):
         print(f'CSV 없음: {a.csv}\n  먼저: python3 scripts/design_performance_dataset.py --out {a.csv}')
         return 1
     if a.interactions:
-        print(f'교호작용 스크린 — 기저족 중첩 비교 ({a.csv})')
+        print(f'교호작용 스크린 — 기저족 중첩 비교 ({a.csv})'
+              + ('   [곱항 = 자유노브 6 개끼리만]' if a.free_knobs else
+                 '   ⚠ 곱항에 유도량끼리가 섞임 — 물리적 교호작용을 물으려면 --free-knobs'))
         print(f"  {'타깃':32s} {'n':>4s} {'linear':>7s} {'+곡률':>7s} {'+교호':>7s} "
               f"{'Δ곡률':>7s} {'Δ교호':>7s} {'잡음':>7s}  판정")
-        _res = interaction_screen(a.csv, folds=a.folds)
+        _res = interaction_screen(a.csv, folds=a.folds, free_products=a.free_knobs)
         for t, r in _res.items():
             print(f"  {t:32s} {r['n']:4d} {r['linear']:+7.3f} {r['quadratic']:+7.3f} "
                   f"{r['full']:+7.3f} {r['d_curvature']:+7.3f} {r['d_interaction']:+7.3f} "
-                  f"{r['noise_scale']:7.4f}  {r['verdict']}")
+                  f"{r['noise_scale']:7.4f}  {r['verdict']:18s} 최선기저={r['best_family']}")
         print()
         for t, r in _res.items():
             if r['pairs']:
                 print(f"  {t}: 선택된 교호작용 → {', '.join(r['pairs'])}"
                       + (f"   (제곱항 {', '.join(r['squares'])})" if r['squares'] else ''))
-        print('\n  ★ Δ교호 = full − quadratic = **순수 교호작용의 몫**.  ADDITIVE 면 두 인자가')
-        print('    더해질 뿐 서로 꺾지 않는다 (2 인자 지도의 색이 대각선으로만 변함).')
+        print('\n  ★ Δ교호 = full − quadratic = **순수 교호작용의 몫**.')
+        print('    ADDITIVE = 두 인자가 더해질 뿐 서로 꺾지 않는다 (지도 색이 대각선으로만 변함).')
+        print('    HARMFUL  = Δ교호가 **음수** — 교호작용 후보가 오히려 해롭다(탐욕이 일반화')
+        print('               안 되는 쌍을 집는다).  그 타깃은 그 기저로 학습하면 안 된다.')
         print('    문턱은 지어내지 않고 잔차분산/n 에서 유도한 잡음 규모의 1×/3× 를 쓴다.')
+        print('    ★ 학습(--out)은 이미 기저족을 **폴드 안에서** 타깃마다 고르므로(auto),')
+        print('      이 표는 진단용이고 생산 모델은 자동으로 최선 기저를 쓴다.')
         return 0
     if a.closure:
         print(f'닫힘 검사 — ε = 1 − φ_SE − φ_AM  ({a.csv})')
@@ -1301,7 +1389,8 @@ def main(argv=None):
         print(f"  ⇒ {d['verdict']}")
         return 0
     print(f'설계 → 구조 학습 — {a.csv}')
-    b = train(a.csv, a.out or None, folds=a.folds, do_nested=not a.no_nested)
+    b = train(a.csv, a.out or None, folds=a.folds, do_nested=not a.no_nested,
+              family=a.basis, free_products=a.free_knobs)
     if a.suggest:
         X, _ys, _n, _r = load_corpus(a.csv)
         res = suggest(b, X, a.suggest_target, n_out=a.suggest, n_cand=a.suggest_cand,
