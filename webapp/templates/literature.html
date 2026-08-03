@@ -84,16 +84,7 @@
       style="background:{{ tmeta[t].color }}18;color:{{ tmeta[t].color }};border-radius:5px;padding:1px 7px;font-size:.67rem;font-weight:700">
       {{ tmeta[t].label }}</span>{% endfor %}
   </div>{% endif %}
-  {% if p.gloss %}
-  {# ⚠ 카드 onclick 이 digest 를 여므로 여기서도 stopPropagation. 안 그러면 펼치려다 모달이 뜬다 #}
-  <details onclick="event.stopPropagation()" style="margin-top:8px">
-    <summary style="cursor:pointer;font-size:.72rem;color:var(--mut);font-weight:600">
-      💡 처음 보는 사람용 설명</summary>
-    <div style="font-size:.75rem;line-height:1.6;margin-top:5px">{{ p.gloss }}</div>
-    {% if p.caution %}<div style="font-size:.73rem;line-height:1.55;margin-top:5px;
-         border-left:3px solid #f59e0b;padding-left:7px;color:var(--mut)">
-      ⚠ {{ p.caution }}</div>{% endif %}
-  </details>{% endif %}
+
   {% if p.pis %}<div style="margin-top:6px;display:flex;gap:4px;flex-wrap:wrap">
     {% for k in p.pis %}<span title="{{ PI[k].en }} · {{ PI[k].aff }}"
       style="background:{{ PI[k].color }}18;color:{{ PI[k].color }};border-radius:99px;padding:1px 7px;font-size:.68rem;font-weight:600">
