@@ -3,6 +3,7 @@
 > slug `kim2025_csp_metastable_edge_sharing_sse` · DOI `10.1021/jacs.5c15665` · type `CSP(USPEX+MTP active learning) + DFT + AIMD` ·
 > *J. Am. Chem. Soc.* **2025, 147, 47381–47391** · 투고 2025-09-07 / 수정 2025-12-05 / 수리 2025-12-08 / 게재 2025-12-12 ·
 > 본문 11 pp + SI 24 pp · digested 2026-07-28 · status ✅ (본문 + SI 전수 정독, Fig 2/3/4/5·S1–S12·Table S1–S2 전부 판독)
+> · **2026-08-04 본문(11 pp) 실물 독립 검증 완료 — §19** (자기철회 2건 · 신규 적발 8건 · Q2 해소. ⚠ SI 실물은 이번 회차에 없음)
 >
 > elements: Li, Si, Ge, Sn, S, P, Cl, Br, O, Na, Y, Al
 > methods: DFT, AIMD, MD, MLIP, phonon
@@ -87,7 +88,7 @@ CSM(연속대칭척도, 왜곡도)** 세 기술자로 정량화한다.
 | **E_rel** (최안정 예측상 대비) | **0 ~ ~0.042 eV/atom** (Fig 3 축 상한 0.05) | 0 K DFT (PBE) | ⚠ 본문 서술 수치(<0.2 / ≥0.3 / ≤0.1 / ≤0.3 eV/atom)와 **10× 불일치** — §9-B |
 | **E_hull** | **0 ~ 42 meV/atom** (40 구조 전부) | Table S2 | 표준 합성가능성 컷(50 meV/atom) **전원 통과** |
 | corner↔edge 자유에너지 교차온도 | Li₂SiS₃ **360 K** · Li₂GeS₃ **480 K** · Li₄SiGeS₆ **280 K** · Li₄SiSnS₆ **교차 없음(~1000 K까지)** | phonopy 조화근사 G(T) | Fig S8. ⚠ SI 본문은 "Li₂SiS₃·Li₂GeS₃ 모두 ~480 K"라 적어 Fig S8a(360 K)와 어긋남 |
-| **packing ratio α** | Li₂SiS₃: corner **0.084–0.100** vs edge **0.0765–0.0805** <br> Li₄SiGeS₆: corner **0.090–0.100** vs edge **~0.083** | AIMD 600 K 60 ps 평균 | Fig 5. **네 조성 모두 edge가 낮음** |
+| **packing ratio α** | Li₂SiS₃: corner **0.0834–≥0.100** vs edge **0.0753–0.0796** <br> Li₄SiGeS₆: corner **0.088–≥0.100** vs edge **~0.082** | AIMD 600 K 60 ps 평균 | Fig 5. **네 조성 모두 edge가 낮음**. ⚠ 일부 막대가 축 상한 0.100에서 **클립** → 상단 판독 불가 (§19 N6·N7, 2026-08-04 재판독) |
 | **dead volume** | Li₂SiS₃ corner **5.67** → edge **4.98** Å³ <br> Li₄SiGeS₆ corner **6.05** → edge **5.36** Å³ | Fig 4f / S10 | 둘 다 **Δ≈0.69 Å³ (−11~12 %)** |
 | **MS₄ 다면체 부피** | Li₂SiS₃ SiS₄ corner **5.12** → edge **4.98** Å³ <br> Li₄SiGeS₆ GeS₄ corner **5.96** → edge **5.66**, SiS₄ **5.12→5.07** | Fig 4f / S10 | edge가 더 **압축**됨 |
 | **Li–S₄ 부격자 부피** | Li₂SiS₃ ~6.4–8.2 Å³ (edge, 넓게 분산) vs ~7.4–7.6 Å³ (corner, 좁게 집중) | AIMD 600 K | Fig 5a |
@@ -309,6 +310,11 @@ Li 가 지나다니는 **빈 공간의 모양과 넓이**가 이 연결방식으
 ⚠ **논문은 이 분류의 알고리즘을 제시하지 않는다.** 그림 스키마와 육안 분류만 있다. (공유 음이온 개수를 세면
 자동화는 자명하지만, 컷오프·주기경계 처리 등 실무 정의는 우리가 새로 정해야 한다.)
 
+> ⚠ **[2026-08-04 실물 검증] Fig 3 캡션의 마커 오기**: 캡션은 *"edge-sharing (orange **circles**)"* 라고 적지만,
+> 실제 Fig 3b–e 의 edge 마커는 **주황 사각형**이고 본문 산문(*"the metastable edge-sharing topology (**orange
+> square**)"*, p 47387)과 Fig 5 캡션(*"orange squares (edge-sharing)"*)도 사각형이라 적는다. **위 표의 "주황 사각"이
+> 맞고 Fig 3 캡션이 틀렸다.** 같은 캡션에 *"The **insects** depict representative crystal structures"*(insets 오타)도 있다.
+
 ### 7b. Fig 3b — Li₂SiS₃ (D_600K ×10⁻⁵ cm²/s, 도판 판독값)
 
 | rank | 연결방식 | D_600K | E_rel (판독) | E_hull (Table S2) | 비고 |
@@ -492,8 +498,8 @@ $$\mathrm{CSM}=\min\frac{\sum_{k=1}^{N}|Q_k-P_k|^2}{\sum_{k=1}^{N}|Q_k-Q_0|^2}\t
 
 | 조성 | corner α | **edge α** | mixed α | 분리 |
 |---|---|---|---|---|
-| **Li₂SiS₃** (Fig 5a) | 0.084–0.100 | **0.0765–0.0805** | — | ✅ **완전 분리** (corner 최저 0.0835 > edge 최고 0.0805) |
-| **Li₄SiGeS₆** (Fig 5b) | 0.090–0.100 | **~0.083** (1개) | **0.100** (최고!) | ✅ 분리 (단 edge 표본 1개) |
+| **Li₂SiS₃** (Fig 5a) | **0.0834–≥0.100** (rank 2 클립) | **0.0753–0.0796** | — | ✅ **완전 분리** (corner 최저 0.0834 > edge 최고 0.0796) |
+| **Li₄SiGeS₆** (Fig 5b) | **0.088–≥0.100** (rank 1 클립) | **~0.082** (1개) | **≥0.100** (rank 7, 클립) | ✅ 분리 (단 edge 표본 1개). ⚠ mixed 와 corner rank 1 이 **둘 다 클립**이라 "mixed 가 최고" 는 단정 불가 |
 | **Li₂GeS₃** (Fig S12a) | 대부분 ≥0.100 (축 상한 클립) | **~0.085 / ~0.082** | — | ✅ 분리 |
 | **Li₄SiSnS₆** (Fig S12b) | ~0.099–0.12 | **~0.093** 등 | — | ○ (축 범위 다름, 일부 판독 불가) |
 
@@ -549,6 +555,21 @@ $$\mathrm{CSM}=\min\frac{\sum_{k=1}^{N}|Q_k-P_k|^2}{\sum_{k=1}^{N}|Q_k-Q_0|^2}\t
 
 **Fig 3b–e의 E_rel 축 상한은 4개 패널 모두 0.05 eV/atom** 이고, Table S2의 E_hull은 **전 40구조 0–42 meV/atom**이다.
 → **그림·표는 자기들끼리 정합하고, 본문 산문만 10배 크다.** 본문 오타로 보이지만 논문에 정오표는 없다.
+
+> 🔧 **[2026-08-04 실물 검증 — 이 절의 정밀화]** 본문 4문장을 원문 그대로 대조하니 **성격이 서로 다르다**:
+>
+> | 조성 | 본문 원문 | 부등호 방향 | 판정 |
+> |---|---|---|---|
+> | Li₂SiS₃ | *"is **<0.2 eV/atom**"* | 상한 | 실측 0.017 → **형식상 참**(느슨할 뿐) |
+> | **Li₂GeS₃** | *"relatively high formation energies (E_rel **≥ 0.3 eV/atom**)"* | **하한** | 실측 0.031·0.042 → 🔴 **정면 모순, 10× 과대** |
+> | Li₄SiGeS₆ | *"relatively low E_rel (**≤0.1 eV/atom**)"* | 상한 | 실측 0.009 → **형식상 참** |
+> | Li₄SiSnS₆ | *"relatively low E_rel (**≤0.3 eV/atom**)"* | 상한 | 실측 0.011·0.022 → **형식상 참** |
+>
+> → **엄밀한 모순은 Li₂GeS₃ 1건뿐**이다. 나머지 3건은 상한 서술이라 논리적으로 틀리지 않았다.
+> **다만 4문장이 서로 비교되며**(*"significantly higher than those of Li₂SiS₃"*, *"suggesting higher experimental
+> feasibility compared with Li₂GeS₃"*) **0.1–0.3 eV/atom 스케일의 자기완결적 서사**를 만드는데, 그림·표의 실제 세계는
+> **0.003–0.044 eV/atom**이다. 한 자릿수 다른 두 서술이 한 논문 안에 공존한다.
+> ⚠ 종전 표현("본문 산문 전부가 10× 어긋난다")은 과했다 → **위 표로 대체.** 인용 규칙(그림·표 값만 쓴다)은 그대로.
 
 **우리 인용 규칙**: **Fig 3 / Table S2 값을 쓰고, 본문 산문 수치는 쓰지 않는다.**
 (공교롭게도 **정정하면 논문 주장이 더 강해진다** — "20 meV/atom 준안정"은 "200 meV/atom 준안정"보다
@@ -676,6 +697,16 @@ established as predictive indicators of high Li-ion diffusivity."*
 −12→+1.5). 즉 **"CSP가 실험보다 안정한 구조를 찾았다"는 PBE 결론이 SCAN에서 무효화**된다.
 그런데 **SI 본문은 *"the newly identified low-energy structures remained more stable than their reference
 counterparts"* 라고 적어 자기 Fig 2a와 모순된다.**
+
+> 🔴🔴 **[2026-08-04 실물 검증 — 이 항목의 격상] 모순은 SI가 아니라 본문에 있다.**
+> 본문 p 47384 원문: *"…four systems (Li₃PS₄, Na₃YBr₆, Na₃PS₄, and Na₃YCl₆) not only exhibited improved stability
+> but also reproduced experimental structures within PBE, as shown in Figure 2b. **Their potential validity was
+> confirmed through SCAN calculations, ruling out PBE-related artifacts.**"*
+> — 그런데 **바로 그 4건 중 2건이 SCAN에서 양수로 뒤집힌다**(Fig 2a 재판독: Li₃PS₄ **+8**, Na₃PS₄ **+23** meV/atom).
+> ΔE > 0 = 예측 구조가 참조보다 **덜** 안정. 즉 **SCAN은 "확인"한 게 아니라 절반을 반증했고, 본문은 그 반대로 적었다.**
+> → 이건 SI 문장 대 그림의 문제가 아니라 **본문 대 자기 그림(Fig 2a)의 정면 모순**이다. 항목 강도 상향.
+> ⚠ 인용 시: **"SCAN으로 검증됐다"는 이 논문의 주장은 인용 금지.** 인용 가능한 것은 *"SCAN 5건 중 3건에서 ΔE 부호
+> 반전"* 이라는 **우리 판독**뿐이다.
 🔴 **그리고 본론 4조성(Li₂SiS₃ 등)에는 SCAN을 아예 안 돌렸다.** corner vs edge의 E_rel 차이가 3–42 meV/atom
 인데 functional 하나로 그 크기의 역전이 관측됐으니, **"corner이 더 안정하다"는 순위 자체가 방법 의존일 수 있다.**
 → **우리 규율 언어로: 이건 real difference가 아니라 method-dependent claim이다.**
@@ -693,15 +724,41 @@ achieved moderate ionic conductivities below 1 mS/cm … **This observation cont
 by this study**, and further investigation is essential."*
 - ref 88 = **Jun, K. et al., "Lithium superionic conductors with corner-sharing frameworks", Nat. Mater. 2022, 21, 924**
   (Ceder 그룹) — **corner-sharing이 좋다**는 정반대 주장.
-- 이 논문은 충돌을 **인정만 하고 넘어간다**. 가장 자연스러운 화해(그쪽은 **산화물**, 이쪽은 **황화물**)조차
-  명시하지 않는다.
+- 이 논문은 충돌을 **인정만 하고 넘어간다**.
 → **"edge-sharing이 좋다"를 일반 명제로 인용하면 안 된다.** "황화물 4조성에서" 라는 단서 필수.
 
+> 🔧 **[2026-08-04 실물 검증 — 부분 자기철회]** 종전 이 항목은 *"가장 자연스러운 화해(그쪽은 산화물, 이쪽은
+> 황화물)조차 명시하지 않는다"* 라고 적었다. **틀렸다 — 논문은 그 문장 안에 "oxide"를 적어 놓았다**:
+> *"…revealed that corner-sharing **oxide** structures achieved moderate ionic conductivities below 1 mS/cm…"*
+> **남는 비판은 더 날카로운 형태로 바뀐다**: 화해의 열쇠(음이온 화학이 다르다)를 **자기 문장 안에 이미 써 놓고도**
+> 그것을 근거로 삼지 않고 *"further investigation is essential"* 로 덮는다.
+>
+> 🆕 **그리고 더 이상한 것**: 같은 **ref 88(Jun/Ceder)** 을 **두 쪽 뒤에서는 자기 기술자의 근거로 인용한다** —
+> p 47388 *"previous studies have indicated that significant polyhedral distortion reduces the activation energy…
+> as shown in Figure S11b.^**88,89**"* (ref 89 = **Di Stefano et al., "Superionic diffusion through frustrated
+> energy landscape", Chem 2019, 5, 2450**). **자기 결론을 반박하는 논문을 자기 기술자 ③(CSM)의 권위로 삼는 셈**이다.
+
 ### 6. **CSM 기술자의 분리가 조성에 따라 무너진다**
-Fig 5a(Li₂SiS₃)에서는 edge가 더 왜곡(밝은색)된 게 보이지만, **Fig 5b(Li₄SiGeS₆)에서는 edge(rank 5)가
-오히려 어두운색(CSM 2–3.5)** 이고 corner rank 2·3·4 쪽에 노란 점(CSM 5–5.5)이 많다.
+Fig 5a(Li₂SiS₃)에서는 edge가 더 왜곡(밝은색)된 게 보이지만, **Fig 5b(Li₄SiGeS₆)에서는 그 분리가 무너진다.**
 **요약 통계(평균±표준편차)도, 상관계수도, 회귀도 논문에 없다.** 세 기술자와 D의 관계는 **전부 육안 주장**이다.
 → "predictive indicators"라는 표현은 과하다. **상관 정도만 보였고 예측력은 시험하지 않았다.**
+
+> 🔧🆕 **[2026-08-04 실물 검증 — 판독 정정 + 훨씬 날카로운 형태]**
+> 종전 서술("edge rank 5가 오히려 어두운색 CSM 2–3.5, corner rank 2·3·4에 노란 점 5–5.5")은 **부정확했다.**
+> Fig 5b 고배율 재판독(700 dpi):
+> - **edge(rank 5) = 적/주황, CSM ≈ 3–4.5** (어두운색 아님)
+> - **가장 밝은 점(흰색, CSM ≈ 5.5–6.0)은 corner rank 8·9·10 에 몰려 있다**
+> - corner rank 1(최안정) = 검정 CSM ≈ 2.0–2.5 (본문의 *"exceptionally low CSM"* 주장은 여기서는 맞다)
+>
+> → 본문 주장 *"the edge-sharing phases in **both compositions** … their Li–S₄ sublattice volume and **CSM values
+> are relatively higher**"* 은 **Li₄SiGeS₆에서 CSM에 대해 성립하지 않는다.** (Li–S₄ 부피는 성립: edge 7.25–7.8로 최상위.)
+>
+> 🔑 **그런데 여기서 훨씬 흥미로운 게 나온다.** CSM이 가장 높은 corner rank **8·9·10** 은, Fig 3d에서
+> **corner 7개 중 D가 0이 아닌 유일한 셋**(D = 0.64 / 0.22 / 0.14 ×10⁻⁵ cm²/s)이다.
+> → **CSM은 D 와는 같이 가는데 연결방식과는 같이 가지 않는다.** 즉 이 논문의 인과사슬
+> `edge-sharing → 왜곡 ↑ → D ↑` 에서 **가운데 항만 독립적으로 작동**하고 첫 화살표는 Li₄SiGeS₆에서 끊긴다.
+> ⭐ **우리에게는 이게 더 좋은 소식이다** — §10c에서 CSM을 채택 후보로 올린 근거가 "연결방식의 부산물"이 아니라
+> **연결방식과 무관하게 D를 따라가는 독립 기술자**라는 쪽으로 강화된다. (우리 host엔 corner/edge 축이 없으니 §10b.)
 
 ### 7. **표본이 얇다**
 - edge-sharing 구조: Li₂SiS₃ 5개, Li₂GeS₃ 2개, Li₄SiGeS₆ **1개**, Li₄SiSnS₆ 2개. **총 10개.**
@@ -722,7 +779,12 @@ step, and simulation temperature"* (refs 46–49). **refs 47 = Jun, B.; Lee, S. 
 > AIMD = Γ-only · NVT Nosé–Hoover · dt 2 fs · 600–1200 K 5~6점 · 단위셀 ~52원자(24 Li 전부 24g 완전점유) ·
 > 배열×온도당 ≥3 시드 앙상블평균 · 자동종료 RSD(σ)<0.25 & 유효 hop>250(He/Mo 2018) ·
 > 무질서 ~100 ps vs 질서 ≥500 ps @800 K · pymatgen-diffusion 후처리.**
-> ⚠ **스핀만은 ref 47 원전에도 없다** → 4항목 중 **3/4 해소, spin 은 여전히 미확정**.
+> ⚠ ~~**스핀만은 ref 47 원전에도 없다** → 4항목 중 **3/4 해소, spin 은 여전히 미확정**.~~
+> ✅ **[2026-08-04 실물 검증 — spin 해소, 4/4 완결]** 본문 §2.1 에 규약이 있었다:
+> *"**Spin-polarized calculations were performed for systems containing 3d transition metals.**"*
+> → 표적 4조성(Li–Si/Ge/Sn–S)에는 **3d 전이금속이 없다 ⇒ 비스핀(non-spin-polarized)**. 검증 14종 중
+> **LiMn₂O₄만 스핀 계산 대상**. AIMD도 *"same computational guidelines … including cell size, **spin**, time step"* 이라
+> 했으므로 같은 규약이 승계된다. **Q2 완전 해소.**
 > 또한 이 JACS 2025 의 AIMD 는 **60 ps 단일 온도(600 K)** 로, 원전이 정한 자동종료 기준(RSD<0.25 & hops>250)을
 > 만족했는지 **명시하지 않는다** — 원전 기준으로도 짧을 수 있다.
 
@@ -732,10 +794,14 @@ Fig S8: Li₂SiS₃ = **360 K**, Li₂GeS₃ = **480 K**. → 그림 값을 쓸 
 또 **Li₄SiGeS₆는 280 K에서 방향이 반대**다(280 K **위에서 corner이 더 안정**해진다 — 영점에너지 효과).
 Li₄SiSnS₆는 1000 K까지 교차가 없다. **"고온에서 edge가 유리"는 4조성 중 2조성에만 해당한다.**
 
-### 11. **본문 내부 수치 불일치 2건**
-- "four candidate compositions exhibited negative ΔE" vs "in **five** cases where CSP discovered structures
-  with lower energy" — Fig 2a는 **5개**(Li₃PS₄, Na₃YBr₆, LiAlCl₄, Na₃PS₄, Na₃YCl₆).
-- Table S1에서 Li₃AuO₃와 Li₂BPt₃가 **같은 mp-7471**.
+### 11. ~~**본문 내부 수치 불일치 2건**~~ → **1건** (2026-08-04 정정)
+- ⛔ **[자기철회]** 종전 항목: *"'four candidate compositions exhibited negative ΔE' vs 'in five cases…' 로 어긋난다"*.
+  **본문 실물은 처음부터 'five'다** — *"Furthermore, **five** candidate compositions exhibited negative ΔE values"*.
+  뒤의 *"in five cases where CSP discovered structures with lower energy…, **four** systems (Li₃PS₄, Na₃YBr₆,
+  Na₃PS₄, and Na₃YCl₆) not only exhibited improved stability but also reproduced experimental structures"* 는
+  **그 5건의 부분집합(4건)을 말하는 다른 문장**이다. 빠진 1건 = **LiAlCl₄**(ΔE −12로 음수지만 예측 공간군
+  P2₁/m ≠ 참조 P2₁/c라 "구조 재현"에는 못 든다 — §5d와 정합). **모순이 아니었다. 우리 전사 오류.**
+- ✅ **유지**: Table S1에서 Li₃AuO₃와 Li₂BPt₃가 **같은 mp-7471** (SI 항목이라 이번 회차 미재검).
 
 ### 12. **비용·자원 축이 없다**
 Ge·Sn 기반 황화물의 원료비·독성·대기안정성(Li₂SiS₃류는 H₂S 발생 우려 대상) 논의가 전무하다.
@@ -844,6 +910,11 @@ Ge·Sn 기반 황화물의 원료비·독성·대기안정성(Li₂SiS₃류는 
 - "MLIP 기반 CSP는 단위셀 **80 원자·복잡 배위**를 넘으면 저에너지 영역 정확도가 무너진다
   (LiGa(SeO₃)₂에서 MAE_f 114 meV/atom)[Kim 2025 SI]." (⭐ 우리가 CSP를 안 하는 판단의 외부 근거)
 - ⛔ **인용 금지**: "Li₂SiS₃ 준안정상이 σ를 4자릿수 올린다" — **이 논문에 그런 수치가 없다**(§9-A).
+- ⛔ **인용 금지 (2026-08-04 추가)**: **"SCAN 계산으로 검증됐다"** — 논문 본문의 이 주장은 **자기 Fig 2a 가
+  반증한다**(§11-3, §19 N1). 쓰려면 우리 판독("SCAN 5건 중 3건 부호 반전")으로만.
+- ⚠ **용어 주의 (2026-08-04 추가)**: 초록·본문의 **"higher packing efficiency"** 를 그대로 옮기지 말 것.
+  이 논문의 α 는 **비전도 부피 분율**이고 준안정 edge 상은 α 가 **낮다** — 표준 결정학의 "채움률"과 정반대
+  방향이라 그대로 인용하면 뒤집힌다(§19 N2·N3). **"낮은 packing ratio α"** 로만 쓴다.
 - ⛔ **인용 금지**: 본문 산문의 E_rel 값(<0.2 / ≥0.3 / ≤0.1 / ≤0.3 eV/atom) — Fig 3·Table S2와 10× 어긋난다(§9-B).
 - ⚠ **단서 필수**: "edge-sharing이 좋다"는 **황화물 4조성**에 한정. 산화물에서는 Jun 2022(Nat. Mater.)가
   **corner-sharing이 좋다**고 하고, 이 논문은 그 충돌을 해소하지 않았다(§11-5).
@@ -882,8 +953,67 @@ Ge·Sn 기반 황화물의 원료비·독성·대기안정성(Li₂SiS₃류는 
 | # | 질문 | 닫는 방법 |
 |---|---|---|
 | Q1 | 덱의 `0.0001 / 2.4 mS/cm` 는 어디서 왔나 | **Huang et al., JACS 2022, 144, 4989** PDF 확보 (ref 36) |
-| Q2 | AIMD 셀 크기·time step·스핀은 정확히 무엇인가 | **Jun, B.; Lee, S. U., JMCA 2022, 10, 7888–7895** (ref 47) PDF 확보 — argyrodite in-cage size 기술자 논문이라 **우리에게 이중으로 필요** |
+| ~~Q2~~ ✅ | ~~AIMD 셀 크기·time step·스핀은 정확히 무엇인가~~ | **닫힘.** 셀·dt·온도는 ref 47 digest(`jun2022_…`)에서, **스핀은 본문 §2.1**("3d 전이금속 계만 스핀 분극")에서 확보 — §11-9 |
 | Q3 | $V_{\text{dead}}$ 의 실제 알고리즘 | figshare 원자료 `10.6084/m9.figshare.29468165.v4` 확인 |
 | Q4 | corner vs edge 순위가 SCAN에서도 유지되나 | 논문에 없음. **우리가 판정할 수 없음** — over-claim 경고로만 남김 |
 | Q5 | Jun 2022(Nat. Mater.) 의 corner-sharing 주장과의 관계 | ref 88 PDF 확보. **산화물 vs 황화물** 가설 검증 |
 | Q6 | DFT query 총 횟수 / 학습셋 크기 | 논문·SI 미보고. 저자 문의 외 방법 없음 |
+
+---
+
+## 19. 🔬 본문 실물 독립 검증 (2026-08-04, 폴더 이상욱 ④)
+
+**대상**: `litdb/inbox/4. Machine Learning-Assisted Crystal Structure Prediction…pdf` = **본문 11 pp**
+(JACS 2025, 147, 47381–47391). 텍스트 전수 재추출 + Fig 2a·3b–e·4f·5a·5b **500–800 dpi 재렌더 판독**.
+**방식**: digest 를 정답으로 놓지 않고 **PDF 를 원점으로 다시 읽어** 기존 서술과 대조.
+
+> ⚠ **적용 범위**: 이번 회차 실물은 **본문뿐**이다. **SI 24 pp(Table S1·S2, Fig S1–S12, eq 1–11)는 이번에
+> 재검증되지 않았다** — 2026-07-28 판독을 그대로 승계한다. SI 유래 수치(E_hull 0–42, MAE, 교차온도,
+> α·CSM 정의식, 공간군 표)는 **미재검** 표시로 읽을 것.
+
+### 19a. 자기철회 2건 — 우리가 틀렸던 것
+
+| # | 종전 서술 | 실물 | 조치 |
+|---|---|---|---|
+| **R1** | §11-11: *"본문이 'four candidate compositions exhibited negative ΔE' 라 적어 뒤의 'five cases' 와 어긋난다"* | 본문은 처음부터 *"**five** candidate compositions exhibited negative ΔE"*. 뒤의 *"four systems"* 는 **그 5건 중 실험 구조까지 재현한 부분집합**을 가리키는 별개 문장 (빠진 1건 = **LiAlCl₄**, SG P2₁/m ≠ P2₁/c) | **철회.** 모순 아님 — 우리 전사 오류 |
+| **R2** | §11-5: *"산화물 vs 황화물이라는 화해조차 명시하지 않는다"* | 본문에 *"corner-sharing **oxide** structures"* 로 **명시돼 있다** | **부분 철회.** 비판을 "써 놓고도 안 쓴다"로 재서술 |
+
+### 19b. 신규 적발 8건 — 본문 실물에서만 나오는 것
+
+| # | 적발 | 위치 | 무게 |
+|---|---|---|---|
+| **N1** | 🔴 **본문이 자기 Fig 2a 를 부인한다.** *"Their potential validity was confirmed through SCAN calculations, ruling out PBE-related artifacts"* 라는데, 그 4건 중 **Li₃PS₄(+8)·Na₃PS₄(+23)** 는 SCAN 에서 부호가 뒤집힌다 | p 47384 vs Fig 2a | **§11-3 격상 (SI↔그림 → 본문↔그림)** |
+| **N2** | ⚠ **초록의 용어가 기구와 반대.** 초록 *"The metastable phases feature **higher packing efficiency**"* — α 는 "비전도 부피 분율"이고 준안정 edge 상은 α 가 **더 낮다**. 본문 p 47388 도 *"edge-sharing topology with high packing efficiency"* | 초록 · p 47388 | **인용 시 "낮은 α"로만 쓸 것** |
+| **N3** | ⚠ **α 정의가 한 문단 안에서 자기모순.** *"quantifies proportion of the crystal volume occupied by structural features that **hinder** Li-ion mobility"* → 바로 다음 문장 *"This parameter represents the fraction of lattice space **available** for Li-ion transport"* (정반대). 세 번째 문장 *"lower α = larger effective migration space"* 는 첫 정의와 정합 | p 47388 | **§10c 의 "α 재구현 금지" 판정 보강** |
+| **N4** | ⚠ **Fig 3 캡션 마커 오기** — 캡션 *"edge-sharing (orange **circles**)"*, 실제 그림·본문·Fig 5 캡션은 **orange squares**. 같은 캡션에 *"The **insects** depict…"* 오타 | Fig 3 캡션 | 소 (교정 품질 지표) |
+| **N5** | 🔑 **CSM 은 D 를 따라가되 연결방식은 따라가지 않는다.** Fig 5b 재판독: 가장 왜곡된(흰색, CSM 5.5–6.0) 점들은 **corner rank 8·9·10** 이고, 이들은 Fig 3d 에서 **corner 중 유일하게 D≠0 인 셋**(0.64/0.22/0.14) | Fig 5b × Fig 3d | **§11-6 정정 + §10c CSM 채택 근거 강화** |
+| **N6** | ⚠ **α 막대가 축 상한에서 잘린다** — Fig 5a rank 2(corner), Fig 5b rank 1(corner)·rank 7(mixed) 의 초록 막대가 **0.100 에서 클립**. 그 값들은 **판독 불가(≥0.100)** | Fig 5a,b | 종전 "mixed 가 α 최고" 는 **단정 불가**(rank 1 corner 도 같이 클립) |
+| **N7** | 📐 **α 수치 정밀화** (700 dpi 재판독, Li₂SiS₃): **edge = 0.0753–0.0796**(최저는 rank 9) · **corner = 0.0834–≥0.100** | Fig 5a | 종전 0.0765–0.0805 / 0.084–0.100 → **분리 결론은 유지, 범위만 갱신** |
+| **N8** | ⚠ **Fig 4f 의 수치 우연이 하나 더 있다** — Li₂SiS₃ edge 의 **dead volume 4.98 = SiS₄ 다면체 부피 4.98** 로 완전히 같고, 두 조성의 **Δdead 가 둘 다 정확히 0.69 Å³**. 독립 산출량 3개가 같은 값에 떨어진다 | Fig 4f | **V_dead 알고리즘 미공개 + 재현 불가 판정 유지** |
+
+### 19c. 본문에만 있어 digest 에 없던 사실 4건 (추가)
+
+| 항목 | 값 |
+|---|---|
+| **USPEX 집단 크기** | *"a population size of **100 per generation**"* (§2.1). §4b 의 "초기 집단 400" 은 **학습셋용 단일점 DFT 집합**으로 별개 — 두 숫자는 충돌이 아니다 |
+| **spin 규약** | *"Spin-polarized calculations were performed for systems containing **3d transition metals**"* → 표적 4조성은 **비스핀**. **Q2 해소** (§11-9) |
+| **ref 35 = GNoME** | Merchant et al., *Nature* **2023, 624, 80** — *"Google recently applied this approach to screen over **2.2 million** hypothetical structures"*. MLIP-CSP 정당화의 외부 앵커 |
+| **ref 89** | Di Stefano et al., *"Superionic diffusion through frustrated energy landscape"*, **Chem 2019, 5, 2450** — 왜곡→평탄 지형 논거의 원전(refs 88,89). ⭐ **우리 SDCP 자리에너지 산포 언어와 같은 계열** |
+| **300 K 자유에너지 (본문 문장)** | *"the Gibbs free energies at 300 K confirm that the representative corner-sharing structures remain thermodynamically more stable than the edge-sharing structures **for all compositions**"* → §11-10(교차온도 280–480 K)과 **정합**. 상온에서는 4조성 전부 corner 우세 |
+
+### 19d. 재확인 통과 — 종전 판독이 맞았던 것
+
+- **Fig 2a 14점 전부**(PBE −26 … +42, SCAN 5점) ✓ · **Fig 3b–e 의 D 마커·E_rel 보라막대 전부** ✓
+  (Li₂SiS₃ rank 3/4/5/8/9 = 1.75/1.15/2.35/0.30/1.75; E_rel 0.003–0.018 등)
+- **Fig 4f 8값 전부** (5.12/4.98 · 5.67/4.98 · 5.96·5.12/5.66·5.07 · 6.05/5.36) ✓
+- **Fig 5a 연결방식 배정이 Fig 3b 와 완전 일치** (corner 1,2,6,7,10 / edge 3,4,5,8,9) ✓ — 두 그림 간 불일치 없음
+- **핵심 인용문 6개** (*"at least 2 orders of magnitude"* · *"over 3 orders of magnitude"* · dead volume 정의 ·
+  *"corner-sharing topologies act as bottlenecks"* · heteroelemental Si–Ge · *"most previous studies have
+  overlooked these regions"*) **원문 그대로 확인** ✓
+- **§9-A(σ 부재) 판정 유지** — 본문 11 pp 어디에도 σ 수치·단위(mS/cm, S/cm)가 **한 번도 등장하지 않는다** ✓
+- 계산 파라미터: VASP 5.4.4 · PBE/PAW · k 간격 0.05 Å⁻¹ · 500 eV · 힘 <0.04 eV/Å · MTP 100:1:0.1 ·
+  R_cut 5 Å · lev_max 20 · 세대 50→100→200→400 · melt-quench 4500 K 5 ps/2500 K 10 ps/200 K·ps⁻¹/500 K 4 ps ✓
+
+> **총평**: 2026-07-28 digest 는 **수치 판독 정확도가 높다**(Fig 2a·3·4f 전수 일치). 이번 회차가 바꾼 것은
+> **수치가 아니라 비판의 위치와 강도**다 — 모순 1건은 우리가 만든 것이었고(R1), 대신 **본문이 자기 그림을
+> 부인하는 더 큰 모순(N1)** 과 **기술자 인과사슬이 끊기는 지점(N5)** 이 새로 드러났다.

@@ -16,7 +16,7 @@
 ## 0. 세 줄 요약
 
 1. **이상욱 랩(SKKU)은 같은 물질(argyrodite)·같은 도구(MLIP)로 우리가 못 가는 축을 간다** —
-   음극계면 반응 MD(50 ns, 6000+원자), 표면 가수분해, 양극 코팅 17,233종 스크리닝, CSP.
+   음극계면 반응 MD(50 ns, 6000+원자), 표면 가수분해, 양극 코팅 **17,230종**(Li·O 산화물) 스크리닝, CSP.
    **정면 경쟁이자 벤치마크**. 그런데 그 랩의 대표 논문(Kim 2024)은 우리가 이미 SI까지 정독했고,
    **우리 규율(σ 절대값 인용 금지)을 정당화해 주는 데이터가 바로 거기 있다.**
 2. **문장혁 랩(중앙대)은 물리 축이 직교한다** — 전극 미세구조 ~ 셀 스케일 자동화(BEARS).
@@ -38,7 +38,7 @@
 | MLIP 외삽 등급 관리 | ✕ | — | γ_select/γ_break 부재 → **T1** |
 | 음극(Li) 계면 반응 MD | ✕ | — | 11 nm interphase @50 ns 벤치마크 확보 → **T3** |
 | 표면 가수분해 / 대기안정 | △ | — | 우리 `air_hsab` 정성 tier vs 그들 반응MD+ICOHP → **T4** |
-| 양극 코팅 스크리닝 | ○ | — | 풀 47 vs 17,233(그들 10²배) / 축 밀도는 우리 우위 + 오늘 M6 추가 |
+| 양극 코팅 스크리닝 | ○ | — | 풀 47 vs **17,230**(그들 10²배) / 축 밀도는 우리 우위 + 오늘 M6 추가 |
 | 계면 반응성 게이트(ΔE_rxt) | ◎ | — | **오늘 94쌍 완주**, Xiao 재현 0.92–0.95배 |
 | 도펀트 횡단 폭 | ◎ | — | 47종 × 6축 × 3농도 vs 그들 1–2조성 심층 |
 | co-doping 교호작용 | ◎ | — | 1081쌍 + LODO 누수 실측. 양쪽 덱에 없음 |
@@ -193,9 +193,9 @@ BEARS: Metadata(YAML ~100토큰, 항상) / Body(<5k, 트리거시) / Bundled fil
 
 | # | 질문 | 닫는 방법 | 상태 |
 |---|---|---|---|
-| Q1 | 이상욱 랩 코팅 스크리닝(17,233 → 최종 후보) 실체 | **Nano Converg. 2026, 13, 27 PDF** | ⏳ 위시리스트 1순위 |
+| ~~Q1~~ | 이상욱 랩 코팅 스크리닝(**17,230** → 최종 후보 **Li₃Sc₂(PO₄)₃**) 실체 | Nano Converg. 2026, 13, 27 정본 확보 + 덱 슬 13 원해상도 재판독 | ✅ **종결 2026-08-03** |
 | Q2 | Li\|LPSCl 계면 MD가 어느 무질서 배열을 썼나 | Chem. Eng. J. (under review) / 구술 | ⏳ |
-| Q3 | γ_select/γ_break 수치 기준 | 논문 SI / 구술 | ⏳ |
+| ~~Q3~~ | γ_select/γ_break 수치 기준 | 덱 슬 16 원해상도 재판독 = **γ_select 2 / γ_break 10↔5↔2** + 수렴 4조건(reliability 100 %·selected<50·MAE_E<10 meV/atom·MAE_F<0.3 eV/Å)·w_e:w_f:w_s=1:0.01:0.001 (정본 `kim2026_li_argyrodite_sei_reactive_md` 와 일치) | ✅ **종결 2026-08-03** |
 | Q4 | 가수분해 H₂S 발생량 정량 (Taklu 실험값과 대조 가능한가) | Adv. Funct. Mater. revision | ⏳ |
 | Q5 | *Adv. Energy Mater.* revision 이 **config-variance 오차막대를 추가했는가** | 논문 | ⏳ **3-2의 유효범위가 걸림** |
 | Q6 | 그들 P2D 입력 스키마 | 구술 / 접촉 | ⏳ |
@@ -210,12 +210,13 @@ BEARS: Metadata(YAML ~100토큰, 항상) / Body(<5k, 트리거시) / Bundled fil
 
 | 순위 | 논문 | 왜 |
 |---|---|---|
-| 1 | **Nano Convergence 2026, 13, 27** — 코팅 소재 스크리닝 (17,233 Li-P-S-O) | 우리 cascade/M6의 **직접 대조군**. S6 감사가 이걸 기다린다 |
+| ~~1~~ ✅ | **Nano Convergence 2026, 13, 27** — 코팅 소재 스크리닝 (**17,230 Li·O 산화물**) | **확보·정독 완료** (`litdb/papers/kim2026_hts_li3sc2po43_coating_midni_ncm.md`) — S6 감사 대조군 확보 |
 | 2 | **Adv. Funct. Mater.** (revision) — argyrodite 가수분해 SevenNet | T2(ICOHP 기술자)의 방법 원본 |
 | 3 | **Chem. Eng. J.** (under review) — Li\|argyrodite 계면 MTP | T3의 프로토콜 원본 |
 | 4 | **JACS 2025, 147, 47381** — 준안정 구조 3기술자 | metastable 고찰 보강 |
 | 5 | **Adv. Energy Mater.** (revision) — Dynamic properties 후속 | **Q5(오차막대) 판정** |
 | 6 | Rare Metals 2025, 44, 2366 | CSP 보조 |
-| 7 | arXiv:2601.04746 (BEARS 스킬 3계층) | T7 실측치 |
+| 7 | **arXiv:2601.04748** (BEARS 스킬 3계층) ⚠ 2026-08-03 덱 재판독 교정 — 종전 `...04746` 은 전사 오류 | T7 실측치 + Validator "8종 구조 검증 지표" 목록(Q7) + "40+ skills" vs 에이전트별 [3]/[5]/[6]/[8] 관계(Q8) |
+| 8 | **Chouchane, Yao, Cronk, Zhang, Meng**, *ACS Energy Lett.* **2024, 9, 4** — "Improved Rate Capability for Dry Thick Electrodes through FEM and Machine Learning Coupling" | **BEARS 의 직접 선행**(덱 슬 32 "Reference Work"). `Library of Real Particles → Stochastic Generation → FEM → 입자별 SOD → Random Forest`. Chouchane 은 ARTISTIC(Franco)→Meng 계보 = **우리 DEM 트랙 상류**. 2026-08-03 재판독으로 발견 |
 
 **발표 구술 txt** 도 받기로 함 — 각 digest §99에 채우고 §6의 Q들을 닫는다.
