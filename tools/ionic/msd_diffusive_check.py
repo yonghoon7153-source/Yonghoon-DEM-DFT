@@ -115,15 +115,35 @@ def main():
         verdict = " · ".join(marks) if marks else "✓ 확산"
         if marks:
             bad.append((tag, verdict))
-        print(f"{tag:34s} {D:10.3e} {b if b is None else round(b,2):>6} "
-              f"{msd_hi:8.1f}  {verdict}")
+        _f = lambda v, sp: "—".rjust(len(sp.format(0))) if v is None or v != v else sp.format(v)
+        print(f"{tag:34s} {_f(D, '{:10.3e}')} {_f(b, '{:6.2f}')} "
+              f"{_f(msd_hi, '{:8.1f}')}  {verdict}")
 
     # ── 창 스캔: 재계산 없이 구제 가능한가 ────────────────────────────────
     if a.scan:
         # ⚠ MSD 는 짧은 시간에서 원래 sub-diffusive 다(케이지 안 진동). 늦은 창에서
         #   β 가 1 로 올라가면 **MD 를 다시 돌 필요 없이 창만 바꾸면 된다.**
         #   끝까지 β<1 이면 그건 궤적이 짧은 것이라 prod 연장 말고는 답이 없다.
+        # ⚠⚠ **창 목록이 궤적 길이를 따라가야 한다 (2026-08-03).** 이 목록은 200 ps prod
+        #   기준으로 굳어 있어서 최대 창이 100-200 ps 였다. 1600 ps 런이 들어와도 뒤쪽
+        #   1400 ps 를 **아예 안 본다** — 연장한 이유가 늦은 창에서 확산 영역을 보려는
+        #   것인데 그 창이 목록에 없으면 3일치 GPU 가 그냥 버려진다.
+        #   → 궤적 tmax 에 맞춰 늦은 창을 자동으로 덧붙인다 (짧은 창은 대조용으로 유지).
+        tmax_all = 0.0
+        for f in files:
+            try:
+                tt = json.load(open(f)).get("times_ps") or []
+                tmax_all = max(tmax_all, max(tt) if tt else 0.0)
+            except Exception:
+                pass
         WINS = [(2, 50), (10, 50), (25, 100), (50, 150), (50, 200), (100, 200)]
+        for frac_lo, frac_hi in ((0.10, 0.50), (0.25, 0.75), (0.50, 1.00)):
+            lo, hi = round(tmax_all * frac_lo), round(tmax_all * frac_hi)
+            if hi > 200 and hi - lo >= 50 and (lo, hi) not in WINS:
+                WINS.append((lo, hi))
+        if tmax_all > 250:
+            print(f"(궤적 tmax {tmax_all:.0f} ps → 늦은 창 자동 추가: "
+                  f"{', '.join(f'{l}-{h}' for l, h in WINS[6:])})")
         print("\n창 스캔 — β 가 1 에 가까워지는 창이 있으면 재계산 없이 구제된다")
         head = " ".join(f"{lo}-{hi}".rjust(8) for lo, hi in WINS)
         print(f"{'case':34s} {head}   tmax")
