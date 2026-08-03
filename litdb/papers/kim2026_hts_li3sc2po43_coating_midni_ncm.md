@@ -2,6 +2,11 @@
 
 > slug `kim2026_hts_li3sc2po43_coating_midni_ncm` · DOI `10.1186/s40580-026-00555-z` · type `DFT + AIMD + MLIP(SevenNet) HT-screening` ·
 > **Open Access** (CC BY-NC-ND 4.0) · 본문 13 pp + SI 21 pp · digested 2026-07-28 · status ✅ (본문+SI 전문 정독)
+> **본문 실물 독립 검증 `2026-08-03`(§13)** — PDF `litdb/inbox/1. High-Throughput Discovery of Li3Sc2(PO4)3 as a Protective Coating…pdf`
+> (**inbox #1** · **사용자 분류 폴더 `이상욱`** · 네이티브 텍스트 레이어 보유 → 전문 재판독 + Fig 1–5 이미지 판독 + **Fig 3b 막대 기하 픽셀 측정 8종 전수**).
+> 결과: **교정 4건 · 신규 10건** (SI는 이번 드롭에 없음 — SI 소환값은 재검증 대상 아님, §13 머리말).
+> elements: Li, Sc, P, O, S, Cl, Ni, Co, Mn, B, Ca, Mg, H
+> methods: DFT, AIMD, MD, MLIP, ESW
 >
 > **저자** Ji Hoon Kim¹, Seunghyun Lee²'³'⁴*, **Sang Uck Lee**¹* — ¹성균관대 화학공학 · ²'³'⁴한양대 ERICA
 > 투고 2026-04-17 · 수리 2026-05-18 · 온라인 2026-06-05 · 과제 MOTIE P0022336
@@ -73,7 +78,7 @@ MP 버전 **2025.02.12**.
 | 4 | **Band gap** E_g ≥ 2 eV | **150** | 4 (2.6%) |
 | 5 | **Li–Li 네트워크** ≤ 3.5 Å 연결 존재 | **88** | 62 (41.3%) |
 | 6 | **엄격 기준**: V_ox ≥ 4 V **and** ΔE_rxn ≥ −50 meV/atom | **8** | 80 (90.9%) |
-| 7 | AIMD 200 ps @1000 K → 확장 AIMD 800–1200 K | **Li₃Sc₂(PO₄)₃** | 7 |
+| 7 | AIMD @1000 K (**⚠ 논문이 20 ps/200 ps 를 같은 문단에서 동시에 말함 → §13-C3**) → 확장 AIMD **800–1200 K**(방법절만 900–1200 → §13-C4) | **Li₃Sc₂(PO₄)₃** | 7 |
 
 > ⛔ **정정의 정정 (2026-08-03)**: 여기 적혀 있던 *"심포지엄 덱은 `17,233 Li, P, S, O crystal structure`
 > 라고 적혀 있었다 → 덱이 틀렸다"* 는 **사실이 아니었다**. 덱 실물(슬 13 깔때기 최상단, 1100 dpi 판독)은
@@ -91,7 +96,9 @@ for electrochemical and interfacial stability also possess desirable electronic 
 ## 3. 방법 (SI eq 1–8 전수 확인)
 
 - **DFT**: VASP 5.4.4, PAW, **PBE**(GGA). 잔여력 **< 0.04 eV/Å**. 3d TM 포함 계는 spin-polarized.
-- **AIMD**: NVT **Nosé–Hoover**, **20 ps @1000 K** (1차) → **800–1200 K, 100 K 간격**(σ_RT 외삽용).
+- **AIMD**: NVT **Nosé–Hoover**, **20 ps @1000 K** (1차; §3.2 본문은 같은 자리에서 "200 ps"라고도 씀 →
+  §13-C3) → 확장분 **100 K 간격**(σ_RT 외삽용) — **온도 구간이 본문 안에서 갈린다**: 방법절 **900–1200 K**,
+  §3.3 본문·Fig 4f 캡션 **800–1200 K** (§13-C4). α/γ 확률밀도·MSD 비교분은 **900 K · 200 ps**.
   Γ-centered **1×1×1 k**, **Δt 2 fs**. 셀 크기·스핀·온도 파라미터는 자기 선행연구 승계.
 - **ECW** (SI eq 5–7): **grand potential** Φ[c,μ_Li] = E[c] − n_Li[c]·μ_Li, 0 K, μ_Li 0 ~ −5 eV
   (= 0–7 V vs Li/Li⁺). hull 위에 남는 구간의 상·하한이 (μ_ox, μ_red) → V = (μ⁰_Li − μ)/e.
@@ -149,12 +156,22 @@ Bykov 1990에서 α·β·γ 3상이 보고됨. **γ는 α를 573 K 열처리해 
 | **σ_RT (외삽)** | **0.006 mS/cm** [0.0008, 0.4] | **0.2 mS/cm** [0.01, 2.4] |
 
 > ⛔ **σ 절대값 인용 금지 근거가 논문 안에 있다** — 신뢰구간이 **0.01~2.4 mS/cm** 로 **2자릿수 반**이다
-> (800–1200 K Arrhenius 외삽). 본문·초록은 "~0.2 mS/cm"만 쓰고 이 구간은 Fig 4f 캡션에만 있다.
-> **우리가 인용할 때는 반드시 구간을 병기하거나, "α 대비 γ가 30배" 라는 비율만 쓸 것.**
+> (800–1200 K Arrhenius 외삽). **⚠ 위치 교정(2026-08-03)**: 이 구간은 **본문 §3.3 (p.9 좌단)** 에 괄호로
+> 병기돼 있다 — `"(0.2 mS/cm [0.01, 2.4])"`, `"(0.006 mS/cm [0.0008, 0.4])"`. Fig 4f **캡션에는 수치가 없고**
+> (그림 안 주석만 "0.2 mS/cm"/"0.006 mS/cm"), **초록만** 구간 없이 "0.2 mS/cm"를 단언한다. → 문제는
+> "캡션에 숨김"이 아니라 **초록·결론에서 구간이 사라진 것**이다(§13-C2).
+> **우리가 인용할 때는 반드시 구간을 병기하거나, "α 대비 γ가 33배" 라는 비율만 쓸 것.**
 
-**선행연구 비판 포인트**: *"Although previous HTS studies have identified Li₃Sc₂(PO₄)₃ as a promising
-candidate, they primarily relied on the γ-phases, often overlooking the structural distinctiveness of
-the experimentally synthesized α-phase."* → **같은 조성이라도 어느 상을 골랐느냐로 σ가 30배 갈린다**는
+**선행연구 비판 포인트** (원문 그대로, 2026-08-03 실물 대조): *"Although previous HTS studies have identified
+Li₃Sc₂(PO₄)₃ as a promising candidate, they primarily relied on the γ-phases, often overlooking the
+structural distinctiveness of the experimentally synthesized phase."*
+> ⚠ **우리 전사가 원문에 없는 `α-`를 넣어 놨었다(§13-C1). 원문은 그냥 "the experimentally synthesized phase"**.
+> 그리고 **원문 문장 자체가 자기모순**이다 — 바로 앞에서 저자들은 (i) γ가 *자기들이* 스크리닝에서 잡은 상이고
+> (ii) γ는 α를 573 K 열처리해 얻으며 Ti/Zr 치환으로 상온 안정화된다(=실험적으로 접근 가능)고 말한다.
+> 그렇다면 "선행연구가 γ에 의존해서 실험적으로 합성된 상을 놓쳤다"는 성립하지 않는다(γ↔α 오식 의심).
+> **이 문장은 인용하지 말 것.** 살아남는 명제는 아래 한 줄뿐이다 →
+
+**같은 조성이라도 어느 상을 골랐느냐로 σ가 33배 갈린다**는
 것이 이 논문의 방법론적 기여다. 우리 `kb/concepts/ordered_vs_disordered.md` 의 "구조 선택이 물성을
 결정한다" 명제와 같은 계열.
 
@@ -293,7 +310,100 @@ fraction fail to maintain stability against LPSC**"* — 황(S)의 높은 반응
 
 - "산화물 코팅 후보의 계면 안정성은 양극보다 **황화물 전해질 쪽에서 먼저 깨진다** — 많은 물질이
   NCM523과는 안정하지만 상당수가 LPSCl에 대해 실패한다[Kim 2026]." (§9)
-- "동일 조성 Li₃Sc₂(PO₄)₃도 α상과 γ상의 Li–Li 경로 연결성 차이로 실온 전도도가 30배 갈린다[Kim 2026]."
-  (⚠ 절대값 대신 비율)
+- "동일 조성 Li₃Sc₂(PO₄)₃도 α상과 γ상의 Li–Li 경로 연결성 차이로 실온 전도도가 **33배**(0.2/0.006 mS/cm)
+  갈린다[Kim 2026]." (⚠ 절대값 대신 비율. 이전 판에 쓰던 "~30배"와 같은 값의 반올림 차이)
 - "HT 스크리닝에서 band gap ≥ 2 eV 게이트는 앞선 전기화학·계면 게이트와 거의 완전히 중복된다
   (150/154 통과)[Kim 2026]." — 우리 vacuous 판정의 외부 지지
+- **(2026-08-03 본문 실물 검증에서 나온 문장)** "코팅 후보 8종 중 최종 선택된 Li₃Sc₂(PO₄)₃는 **양극 계면
+  반응성에서는 8종 중 꼴찌**(ΔE_rxn = −37.3 meV/atom vs NCM523)이고, 양쪽 합산으로도 최악이다 — 즉 이
+  깔때기의 최종 결정타는 계면 열역학이 아니라 **Li 전도도**였다[Kim 2026, Fig 3c/Table S1]." (§13-N2)
+
+---
+
+## 13. 🔍 본문 실물 독립 검증 (2026-08-03)
+
+**대상 실물**: `litdb/inbox/1. High-Throughput Discovery of Li3Sc2(PO4)3 as a Protective Coating for
+Stabilizing Mid-Ni NCM Interfaces in All-Solid-State Batteries.pdf` — **inbox #1**, **사용자 분류 폴더 `이상욱`**
+(= 성균관대 이상욱 교수 랩 논문 묶음; 교신저자 Sang Uck Lee, 심포지엄 덱 `talks/lee2026_skku_mlip_materials_design.md`와 같은 랩).
+**13 pp, 네이티브 텍스트 레이어 보유**(스캔 아님) → 전문 재판독 + Fig 1–5 이미지 판독 + Fig 3b 막대 기하 픽셀 측정.
+⚠ **이번 드롭에 SI(21 pp)는 없다.** 아래에서 "Table S1/S2/S3/S4 소환값"은 **2026-07-28 SI 정독분 그대로**이며
+이번 검증 대상이 아니다 — 단, §4 표의 [V_red, V_ox] 는 **본문 Fig 3b 막대 기하로 독립 재현**됐다(N1).
+
+### 13a. 전량 일치 확인 (불일치 0)
+깔때기 수 **17,230 / 4,634 / 265 / 154 / 150 / 88 / 8** (Fig 1 + 본문 3.1–3.2 양쪽) · MP 버전 **2025.02.12** ·
+게이트 임계 **V_ox ≥ 3.5 & V_red ≤ 2 V**, **ΔE_rxn ≥ −100 meV/atom**, **E_g ≥ 2 eV**, **Li–Li ≤ 3.5 Å**,
+엄격단 **V_ox ≥ 4 V & ΔE_rxn ≥ −50 meV/atom** · VASP **5.4.4** · PAW · **PBE** · 잔여력 **< 0.04 eV/Å** ·
+3d TM spin-polarized · NVT **Nosé–Hoover** · Γ-centered **1×1×1** · **Δt 2 fs** · **LAMMPS** ·
+SevenNet **`7net-0` 사전학습**(fine-tune 언급 없음) · 계면 중심 **20 Å NVE** / 주변 **298 K NVT** ·
+**1,000+ 원자 · 500 ps** · 표면 **NCM523(104) / LPSCl(100) / Li₃Sc₂(PO₄)₃(101)** ·
+σ **γ 0.2 [0.01, 2.4] / α 0.006 [0.0008, 0.4] mS/cm** · **LiRb₂AsO₄ 6.5 V** · LiNbO₃ LPSCl 문턱 초과(탈락) ·
+조성 범주 추이 **67/85/83 → 21/32/15**, **11/6/13 → 8/6/6** · LiH₂ClO AIMD 제외(H 열불안정) ·
+Fig 5a 산물 **NiS_x·NiPS_x·PS₃·SO_x·NiO_x dissolution·P–O**, 단일 S **4a/4c** · 투고 **2026-04-17** /
+수리 **2026-05-18** · 과제 **MOTIE P0022336** · 원자료 **figshare 30816767.v2** · 저자 소속(SKKU 화공 / 한양대 ERICA ×3) ·
+Fig 4 MSD 200 ps @900 K(α ~50 / γ ~130–140 Å²) — **digest 기재와 전부 일치**.
+
+### 13b. 교정 4건 (우리 digest 쪽 오류)
+| # | 위치 | 우리가 적었던 것 | 실물 | 성격 |
+|---|---|---|---|---|
+| **C1** | §5 인용문 | "…the experimentally synthesized **α-**phase" | 원문에 **α 없음** — "the experimentally synthesized phase" | **원문에 없는 글자 삽입** = 인용 규율 위반. 게다가 원문 문장 자체가 자기모순(γ↔α 오식 의심) → **인용 금지 처리** |
+| **C2** | §5 주석 | "구간 [0.01, 2.4]은 **Fig 4f 캡션에만** 있다" | 구간은 **본문 §3.3 (p.9 좌단)** 괄호 병기. Fig 4f 캡션엔 수치 0개(그림 안 주석만) | 위치 오귀속. 비판의 실체는 **초록·결론에서 구간이 탈락**한 것 |
+| **C3** | §2 7단계 | "AIMD **200 ps** @1000 K" 단독 | 방법절 = **20 ps @1000 K**; §3.2 본문은 **같은 문단에서** "over 200 ps at 1000 K"와 "insufficient simulation timescale of **20 ps**"를 동시에 말함 | **논문 내부 모순**을 우리가 한쪽만 적어 감췄다 → 양쪽 병기로 수정 |
+| **C4** | §3 AIMD | "800–1200 K, 100 K 간격" | 방법절 = **900–1200 K**, §3.3 본문·Fig 4f 캡션 = **800–1200 K** | **논문 내부 불일치**(외삽 구간의 하한이 갈림 = σ_RT 외삽에 직접 영향) |
+
+### 13c. 신규 10건
+1. **★ Fig 3b 수치 라벨 2개가 서로 바뀌어 있다 (LiCaPO₄ ↔ LiMgPO₄).**
+   막대 기하를 픽셀로 측정해 8종 전수를 [V_red, V_ox]로 환산한 결과(원점·스케일은 Li₃Sc₂(PO₄)₃ 막대로 보정):
+
+   | 조성 | 막대 기하 V_red | Table S1 | 막대 기하 V_ox | Table S1 | 막대 폭 | **인쇄된 라벨** |
+   |---|---:|---:|---:|---:|---:|---:|
+   | Li₃Sc₂(PO₄)₃ | 1.86 | 1.86 | 4.19 | 4.19 | 2.33 | 2.33 ✓ |
+   | **LiCaPO₄** | 1.16 | 1.17 | 4.08 | 4.08 | **2.92** | **2.61** ✗ |
+   | **LiMgPO₄** | 1.58 | 1.58 | 4.18 | 4.18 | **2.60** | **2.91** ✗ |
+   | LiH₂ClO | 1.54 | 1.54 | 4.06 | 4.07 | 2.52 | 2.53 ✓ |
+   | Li₃PO₄ | 0.68 | 0.69 | 4.19 | 4.19 | 3.50 | 3.51 ✓ |
+   | LiB₃O₅ | 1.93 | 1.93 | 4.22 | 4.22 | 2.29 | 2.29 ✓ |
+   | Li₃B₇O₁₂ | 1.29 | 1.30 | 4.22 | 4.22 | 2.92 | 2.92 ✓ |
+   | Li₃B₁₁O₁₈ | 1.93 | 1.93 | 4.42 | 4.41 | 2.48 | 2.48 ✓ |
+
+   막대 기하는 **8종 모두 Table S1 을 ±0.01 V로 재현**한다 → **틀린 것은 막대가 아니라 LiCaPO₄·LiMgPO₄ 두 줄의 인쇄 라벨**이다.
+   Fig 3c(같은 그림·같은 행 순서)의 ΔE_rxn 색 서열은 Table S1과 일치하므로 **행 라벨 자체는 정상**, 결함은 3b 숫자에만 있다.
+   → **우리 §4 표(SI 기준)가 옳다.** Fig 3b 를 스크린샷으로 인용하면 두 값이 뒤바뀐 채 전파된다.
+2. **★ 최종 선택 물질이 8종 중 계면 반응성 꼴찌다.** Fig 3c + Table S1: Li₃Sc₂(PO₄)₃ = **−37.30**(NCM523, 8종 중 최악) /
+   **−24.69**(LPSCl, 2위로 나쁨), 합산 **−62.0 meV/atom = 8종 중 최악**. 반면 Li₃PO₄는 **0/0**.
+   → 이 깔때기의 최종 결정타는 계면 열역학이 **아니라** Li 전도도였다. 논문은 이 역설을 문장으로 쓰지 않는다.
+   (우리 §4 의 "🔑 Li₃PO₄가 양쪽 0인데 최종 선택은 Li₃Sc₂(PO₄)₃" 를 **정량 서열로 승격**한 것)
+3. **★ 열역학 게이트와 MLIP-MD 서사가 서로 충돌한다.** 같은 계면(Li₃Sc₂(PO₄)₃‖NCM523)에 대해
+   Table S3는 분해산물(Ni₃O₄, Mn(Ni₃O₄)₂, Li₄MnCo₅O₁₂, Li₂Mn₃NiO₈, Li₃PO₄, Sc₂O₃)을 **명시**하고 ΔE_rxn = −37.3 인데,
+   Fig 5b의 **298 K·500 ps** MD는 "negligible reactivity"라고 결론한다. **298 K·500 ps는 장벽을 넘기에 짧다** —
+   "MD에서 안 깨졌다"가 열역학 예측을 반증하지 않는다. 논문은 두 결과를 나란히 놓고 **정합성 논의를 하지 않는다.**
+   → 우리 M6/T3 설계 시 같은 함정: **닫힌계 ΔE_rxn 과 실온 MD 는 서로 다른 질문의 답**이다.
+4. **Fig 2c 의 축 범위 자체가 §9(SE 쪽이 구속) 의 그래픽 증거다.** y축 ΔE_rxn(NCM523) = **−100…0**, x축 ΔE_rxn(LPSCl) = **−400…0**;
+   265종의 점이 y ≈ 0 선에 몰려 있고 x 로만 길게 흩어진다. **LiNbO₃ 라벨 점은 −100 dashed line 의 왼쪽 바깥**(≈ x −105, y −7)
+   = 탈락 — 본문의 "slightly exceeds the interfacial stability threshold with the LPSC"와 그림이 일치(우리 §7 기재 확인).
+   Fig 2b 라벨 4종 위치도 확인: LiRb₂AsO₄ ≈ 6.7 V(최상단), Li₂SO₄ ≈ 4.8 V, Li₃PO₄ ≈ 4.4 V, LiAlO₂ ≈ 3.6 V.
+5. **Fig 5 계면 모델 치수 전량** (우리 digest엔 (a)만 있었다): (a) NCM523 **3.7 nm** ‖ LPSCl **3.5 nm**,
+   (b) NCM523 **3.7 nm** ‖ Li₃Sc₂(PO₄)₃ **2 nm**, (c) Li₃Sc₂(PO₄)₃ **2 nm** ‖ LPSCl **3.5 nm**; 모두 높이 **4 nm**.
+   → **코팅층이 2 nm 단일 두께**다. 실제 코팅(수 nm~수십 nm)·두께 의존성·불연속 피복은 전혀 다루지 않는다.
+6. **σ 비교 주장의 근거가 약하다.** "0.2 mS/cm, exceeding that of most oxide-type SSEs"의 비교군 [34–36]은
+   **LLZO(Murugan 2007)** · Li₄GeO₄–Li₃VO₄(Kuwano & West 1980) · Zhang 2020 인데, LLZO 실측 RT σ가 이미 0.2–0.4 mS/cm 급이다.
+   **외삽 중앙값 0.2 로도 "exceeding"이 아슬아슬**하고, 하한 0.01을 쓰면 성립하지 않는다. → §11-1 강화.
+7. **인용 오류 의심 [70].** "(104) surface of fully lithiated NCM523, previously identified as the most stable
+   configuration **[69, 70]**" 에서 [69] Garcia 2017(NCM 표면 구조·안정성)은 적절하나 **[70] = Liu et al.,
+   "Reaction behaviors and mechanisms of in-situ carbothermal reduction in spent lithium batteries",
+   Sep. Purif. Technol. 362, 131708 (2025)** 는 **폐배터리 탄소열환원** 논문 — 표면 안정성 근거로 부적절.
+8. **참고문헌 DOI/연도 불일치 2건.** [61] Wu et al., *Langmuir* **40**, 11755 (**2024**) ↔ DOI `acs.langmuir.**5c**01234`,
+   [62] Liu et al., *ACS Sustain. Chem. Eng.* **12**, 7598 (**2024**) ↔ DOI `acssuschemeng.**5c**02282`.
+   ACS DOI 접미사 `5c` = **2025년 접수분** → 권·연도 표기와 어긋난다(둘 중 하나가 오기).
+9. **[68] Matbench ≠ Matbench Discovery.** 본문은 SevenNet 을 "benchmarked on the **Matbench** platform [68]"이라며
+   **Dunn 2020**(Matbench test set / Automatminer, npj Comput. Mater. 6, 138)을 인용하는데,
+   uMLIP(SevenNet 포함)의 벤치마크는 **Matbench *Discovery***(별개 리더보드)다. 플랫폼 오인용.
+10. **α·γ 가 같은 공간군(P2₁/c)이다** (Fig 4 캡션 실물 확인). 즉 **공간군으로는 두 상을 구분할 수 없고**,
+    33배의 σ 차이는 **셀 metric(γ각 90° vs 125.6°)과 Li 부격자 연결성**에서 온다.
+    → 우리가 MP/ICSD에서 상을 고를 때 **"공간군이 같으니 같은 상"** 이라고 넘기면 안 되는 실증 사례.
+
+### 13d. 판정
+- **digest 본체의 물리·수치 서술은 유지**된다. 교정 4건 중 3건(C1·C2·C4)은 **출처·위치·범위 표기**,
+  1건(C3)은 **논문 내부 모순의 은폐**였다 — 결론을 바꾸는 수치 오류는 없었다.
+- **§9(우리 M6를 뒤집는다)는 그대로 유효**하며, 이번에 Fig 2c 축 비대칭(N4)이라는 **본문 그래픽 근거가 추가**됐다.
+- 신규 중 실무에 바로 걸리는 것: **N1(그림 라벨 오류 — 인용 시 SI 값을 쓸 것)**,
+  **N2(최종 후보가 계면 꼴찌 — "계면 안정 코팅"으로 인용하면 과장)**, **N3(ΔE_rxn ↔ 실온 MD 는 다른 질문)**.
