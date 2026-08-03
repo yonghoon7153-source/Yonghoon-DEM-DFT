@@ -1,6 +1,6 @@
 # Origin of Outstanding Stability in the Lithium Solid Electrolyte Materials: Insights from Thermodynamic Analyses Based on First-Principles Calculations — Zhu/He/Mo (ACS Appl. Mater. Interfaces 2015)
 
-> slug `zhu2015_esw_grand_potential_origin` · DOI `10.1021/acsami.5b07517` · type `DFT (MP-hull thermodynamics, 실험 0)` · PDF **`litdb/inbox/38. Origin of Outstanding Stability in the Lithium Solid Electrolyte Materials Insights from Thermodynamic Analyses Based on First-Principles Calculations.pdf`(본문 9 pp — 2026-08-03 실물 확보)** (= 1차 digest 때의 업로드본 `127e2023-38._Originations.pdf`와 동일 파일) + SI `db1e808d-38._Sup_Orations.pdf`(**⚠ inbox 미보유 — 이번 재검증 범위 밖**) (inbox #38) · **사용자 분류 폴더 `DFT`** · digested `2026-07-28` · **본문 독립 재검증 `2026-08-03`(§17 — 표 3종 전값 + 그림 4종 픽셀 정량 재독)** · status ✅
+> slug `zhu2015_esw_grand_potential_origin` · DOI `10.1021/acsami.5b07517` · type `DFT (MP-hull thermodynamics, 실험 0)` · PDF **본문 `litdb/inbox/38. Origin of Outstanding Stability … .pdf`(9 pp)** + **SI `litdb/inbox/38. Sup) Origin of Outstanding Stability … .pdf`(10 pp — 2026-08-03 실물 확보)** (inbox #38) · **사용자 분류 폴더 `DFT`** · digested `2026-07-28` · **본문 독립 재검증 `2026-08-03`(§17)** · **SI 실물 정독·전수 검증 `2026-08-03`(§18 — Table S1/S2 13종/S3 5종 전값)** · status ✅ **완결(본문+SI 모두 실물 대조 완료)**
 > elements: Li, P, S, Cl, O, Ge, I, N, F, Zr, La, Ti, Al, Si, Nb, Ta, Zn
 > methods: DFT, ESW
 > **저자**: Yizhou Zhu, Xingfeng He, **Yifei Mo*** (†UMD MSE, ‡UMD Energy Research Center, College Park MD 20742) · ACS AMI 2015, 7, 23685−23693 · Received 2015-08-13 / Accepted 2015-10-06 / Published 2015-10-06 · 교신 yfmo@umd.edu · refs 51
@@ -40,13 +40,14 @@
 - **code**: VASP, PAW, **PBE(GGA)**. cutoff·k-point 밀도는 **"Materials Project와 일관"**(수치 명시 없음 — MP 표준 520 eV·k-density 상속으로 읽음).
 - **에너지 보정**: 산화물·전이금속·기체 분자에 **MP 보정 스킴**(refs 18–19 = Wang 2006 GGA+U 산화에너지 + Jain 2011 GGA/GGA+U 혼합) 적용. ⚠ **2015년 세대 보정** — MP2020 음이온(S) 보정 이전 (→ §7 우리와의 onset 차이의 근원).
 - **데이터 소스**: 대부분 **MP 데이터베이스**(ref 20)에서 소환; MP에 없는 물질만 자체 DFT (실험 구조 기반).
-- **무질서 처리**: 무질서 점유 구조는 **50–60개 배열 샘플 → 최저에너지 배열을 GS로**(Mo 2012 LGPS 방법). LLTO는 실험구조(Fourquet)에서 ordering.
+- **무질서 처리**: 무질서 점유 구조는 **50–60개 배열 샘플 → 최저에너지 배열을 GS로**(Mo 2012 LGPS 방법 + He/Mo 2015 NBT 방법, SI refs 12–13). LLTO는 실험구조(Fourquet 1996)에서 ordering.
+- **(SI 실물 신규) Li₃PS₄ 다형 선택**: **Pmn2₁ γ-Li₃PS₄**(Homma 2011)가 다형 중 최저에너지로 판정되어 **Li–P–S 조성 상도에 명시적으로 추가**됨. → Li–P–S 계 전체(LGPS·Li₇P₃S₁₁·**LPSCl**·Li₇P₂S₈I)의 hull 경계가 이 γ 엔트리에 의존. 우리 MP-2026 hull은 Li₃PS₄ 다형 세트가 다르므로 **산화 onset 차이의 후보 원인 하나가 여기**(§18d).
 - **grand-potential phase diagram** (pymatgen, ref 22):
   - **eq 1**: `μ_Li(φ) = μ⁰_Li − eφ` — 전위 φ(vs Li/Li⁺)가 Li 저장고의 화학퍼텐셜을 내림. Li 금속 기준.
   - **eq 2**: `E_D(φ) = E(phase equilibria, φ) − E(SE) − Δn_Li·μ_Li(φ)` — 전위 φ에서의 분해 구동력. Δn_Li = 분해 시 SE 조성→평형조성 Li 개수 변화.
   - **PV·엔트로피 항 무시** (0 K; refs 11, 21과 동일 근사) — 명시적 자인.
 - **창 읽는 규약**: 각 φ에서 조성의 hull 평형(phase equilibria)을 구하고, **환원전위 = 최고전압 lithiation plateau(Δn_Li>0)**, **산화전위 = 최저전압 delithiation plateau(Δn_Li<0)**. 그 사이가 intrinsic ESW. SI Table S2가 물질별 전 계단(plateau 전압·Δn_Li·평형상) 명세.
-- **metastable SE 처리 (중요 규약)**: E_hull>0인 SE는 **"energy above hull을 0으로 낮춰서"** 평가 — Li/이온 무질서의 엔트로피 안정화(LGPS 선례)로 정당화. **Li₆PS₅Cl의 E_hull = 83 meV/atom**(Deiseroth 구조의 ordered 배열; 조성 평형 = Li₃PS₄+Li₂S+LiCl) → 0으로 규약. LGPS 21 / Li₇P₃S₁₁ 22 / LLZO 7 / LLTO 68 / LATP 29 / LISICON 34 meV/atom (Table S1).
+- **metastable SE 처리 (중요 규약)**: E_hull>0인 SE는 **"energy above hull을 0으로 낮춰서"** 평가 — Li/이온 무질서의 엔트로피 안정화(LGPS 선례)로 정당화. **Li₆PS₅Cl의 E_hull = 83 meV/atom**(Deiseroth 2008 구조의 ordered 배열; 조성 평형 = Li₃PS₄+Li₂S+LiCl) → 0으로 규약. LGPS 21 / Li₇P₃S₁₁ 22 / LLZO 7 / LLTO 68 / LATP 29 / LISICON 34 meV/atom. **→ 2026-08-03 SI 실물로 전값 확인 + Li₃PS₄ 0 · Li₄GeS₄ 0 · Li₂PO₂N 0 추가 확보 (전체 표 = §18a).**
 - **ICSD 구조 없는 조성**(Li₃.₂₅Ge₀.₂₅P₀.₇₅S₄, LAGP, Li₇P₂S₈I): 해당 조성의 phase equilibria 조합을 E_hull=0 entry로 구성.
 - **LiPON**: 실물은 amorphous·조성 범위 — 결정질 **Li₂PO₂N**(Senevirathne 2013)을 대표로.
 - **AIMD / MLIP / NEB / COHP / Bader / DOS**: 없음 (순수 hull 열역학).
@@ -109,7 +110,7 @@
 | Li₇P₃S₁₁ | S, P₂S₅ | −0.92 |
 | **Li₆PS₅Cl** | **P₂S₅, S, PCl₃** | **−1.33** |
 | Li₇P₂S₈I | P₂S₅, S, I₂ | −1.04 |
-| LiPON | **PNO**, P₂O₅, N₂ | −0.69 |
+| LiPON | **PON**, P₂O₅, N₂ (본문 Table 3 표기는 `PNO` — **SI S2h(3.63 V)는 `PON`**, 화학적으로도 PON이 정답 → 본문 오타) | −0.69 |
 | LLZO | O₂, La₂O₃, La₂Zr₂O₇ | −0.53 |
 | LLTO | O₂, TiO₂, La₂Ti₂O₇ | −0.15 |
 | LATP | O₂, TiP₂O₇, Ti₅P₄O₂₀, AlPO₄ | −0.065 |
@@ -134,7 +135,7 @@
 | LAGP | 2.70 | Ge, GeO₂, Li₄P₂O₇, AlPO₄ | 4.27 | O₂, Ge₅O(PO₄)₆, Li₄P₂O₇, AlPO₄ | 1.57 |
 | LISICON | 1.44 | Zn, Li₄GeO₄ | 3.39 | Li₂ZnGeO₄, Li₂GeO₃, O₂ | 1.95 |
 
-### SI Table S2(f) — Li₆PS₅Cl 전 계단 (plateau 전압 / Δn_Li per f.u. / 평형상)
+### SI Table S2(f) — Li₆PS₅Cl 전 계단 (plateau 전압 / Δn_Li per f.u. / 평형상) — **2026-08-03 SI 실물 전값 일치 ✓**
 | φ (V vs Li/Li⁺) | Δn_Li | 평형상 |
 |---|---|---|
 | 0.87 | +8 | Li₃P, Li₂S, LiCl |
@@ -151,7 +152,8 @@
 
 ## 8. 결과 IV — 코팅 = 인공 SEI (§3.3, Fig 3, SI Table S3)
 - 코팅 재료(Li₄Ti₅O₁₂, LiTaO₃, LiNbO₃, Li₂SiO₃, Li₃PO₄)의 창 = **환원 0.7–1.7 V ~ 산화 3.7–4.2 V** → 2–4 V(통상 사이클 범위) 안정 + **전자절연 → 인공 SEI로 SE를 passivation** (자발 interphase와 동일 메커니즘, §6).
-- 개별 창(SI Table S3): Li₄Ti₅O₁₂ 1.75–3.71 / LiNbO₃ 1.74–3.88(3.92 Nb₂O₅) / Li₂SiO₃ 0.76–3.74 / LiTaO₃ 1.18–3.95(4.12 Ta₂O₅) / **Li₃PO₄ 0.69–4.21**(4.33 LiPO₃·4.99 P₂O₅). Fig 3a의 3.9 V 수평선 = **LiCoO₂ 평형전압**.
+- 개별 창(SI Table S3, **2026-08-03 실물 전값 확인 ✓** — 전체 계단은 §18c): Li₄Ti₅O₁₂ 1.75–3.71 / LiNbO₃ **1.74**–3.88(3.92 Nb₂O₅) / Li₂SiO₃ 0.76–3.74(3.78 SiO₂) / LiTaO₃ 1.18–3.95(4.12 Ta₂O₅) / **Li₃PO₄ 0.69–4.21**(4.33 LiPO₃·4.99 P₂O₅). Fig 3a의 3.9 V 수평선 = **LiCoO₂ 평형전압**.
+- **(SI 신규) 코팅 환원산물의 성격** — Li₄Ti₅O₁₂→LiTiO₂/Li₂TiO₃/Ti-suboxide, LiNbO₃→**LiNbO₂/Nb 금속**, LiTaO₃→**Ta 금속**, Li₂SiO₃→Li–Si 합금+Li₄SiO₄, Li₃PO₄→**Li₃P+Li₂O(단 1계단, 0.69 V)**. → **Li₃PO₄만 환원산물이 전 구간 전자절연 Li-binary**이고 Nb·Ta·Ti·Si계는 저전압에서 금속/합금(=MCI 위험)으로 간다. 코팅을 **양극 쪽에만** 쓰는 게 정석인 이유가 SI 계단표에 그대로 드러남 — §9 설계원리 1(Ge·Ti 회피)의 코팅판.
 - **효과**: 황화물 SE의 anodic limit **~2–2.3 V → ~4 V** 확장; 코팅 자체의 산화 과전압으로 nominal은 그 이상. anode 쪽도 동일 전략(Polyplus의 LATP 보호, ref 46).
 - **코팅 > 자발 interphase인 이유**(§4 Discussion): 박막증착 코팅은 **수 nm**(자발 분해층은 ~100 nm; <10 nm이면 계면저항 유의미하게 낮음, refs 16·42) + **비-Li 원소 상호확산 차단**(LCO–황화물 계면의 Co/S 교환 억제, ref 16) + **space-charge 완화**(ref 40).
 
@@ -203,7 +205,8 @@
 | 3a | **막대 9개** = 비교용 SE 4(녹색: LGPS·Li₃.₅Ge₀.₂₅PS₄·Li₃PS₄·LLZO) + **코팅 5(노랑)** + LiCoO₂ 3.9 V 수평선 | 우리 코팅 서사([Cha]/[Sundar])의 원조 그림 문법. SI 없이도 **그림만으로 코팅 창 복원 가능**(§17c 검증) |
 | 3b | cathode 쪽 μ_Li 프로파일 (코팅=인공 SEI) | 〃 |
 | 4 | 통합: intrinsic 창 + interphase 확장 + 과전압 = nominal 창 | **"true vs 겉보기 창" 한 장 요약** — 우리 B① 프레임의 원전 도식 |
-| S2 표 | 물질별 전 계단 (φ/Δn/상) | 우리 key_breakpoints와 1:1 대조 포맷 (10b) |
+| S2 표 | 물질별 전 계단 (φ/μ_Li/Δn/상) — SE 13종 | 우리 key_breakpoints와 1:1 대조 포맷 (10b) — **SI 실물 전량 §18b** |
+| S1·S3 표 | 구조 출처·E_hull·조성평형(S1) / 코팅 5종 계단(S3) | **SI 실물 전량 §18a·§18c** — 코팅 환원산물 성격 판정(Li₃PO₄만 양방향 passivating) |
 
 ## 12. Post-processing ★
 - **무엇**: grand-potential phase diagram → (i) 전위별 phase equilibria, (ii) plateau 표(SI S2·S3), (iii) E_D(φ) 곡선(Fig 1), (iv) 창 막대(Fig 2a·3a).
@@ -230,7 +233,7 @@
 - **passivation 판정이 정성적**: "전자절연"을 산물 상식으로 판정 — σ_e·gap·두께·성장 kinetics 계산 없음. interphase의 Li⁺ 전도도 refs 소환 수준. (우리 sei_products gap 분류·[Sundar]식 산물-전도도 스크린이 정량 후속.)
 - **kinetic 과전압 >1 V는 metal–air OER 유추**(ref 37) — 황화물 고유 계산 아님.
 - **(2026-08-03) "실험과 좋은 일치"의 독립성 약함**: 계산 타당성의 주 근거로 반복 인용되는 LGPS CV/XPS(ref 12)는 **1저자 Zhu가 공저자인 같은 UMD 그룹 실험**이고, 사사에도 그 저자들(C. Wang·F. Han)이 등장. LLTO(refs 24–25)·LiPON(ref 13)·NASICON(ref 15)은 외부 문헌이라 괜찮지만, **"LGPS 1.71 V가 실험으로 확인됐다"를 독립 검증처럼 쓰지 말 것**.
-- **논문 내부 수치 불일치 3건**(LiPON 0.68/0.69, LAGP 4.27/4.28, Fig 2a LATP 막대 4.31 vs 표 4.21) — §17d. 인용 시 Table 1 기준 명시.
+- **논문 내부 표기/수치 불일치 5건** — §17d + §18e. SI가 3건을 **판정**해줌: LiPON 환원 **0.68**(Table 1 = SI S2h, 본문 0.69가 outlier)·LAGP 산화 **4.27**(Table 1 = SI S2l, 본문 4.28이 outlier)·LiPON 5 V 산물은 **PON**(SI S2h 3.63 V 계단; 본문 Table 3의 `PNO`가 오타 — 인산질화물 PON이 화학적 정답). 미판정 2건 = Fig 2a LATP 막대(4.31 vs 표 4.21)·Fig 2a/3a 축라벨 `Li₃.₅Ge₀.₂₅PS₄` 오기. **인용 시 Table 1 + SI Table S2 기준으로.**
 - **계면 화학 혼합(전극과의 상호반응) 미포함** — 전극-SE pseudo-binary는 2016 후속(Zhu/He/Mo JMCA)에서; 여기선 SE 단독 + Li 저장고만.
 - **LiPON = 결정 Li₂PO₂N 대표** (실물 amorphous·조성 범위), LLTO ordered 배열 — 대표성 한계.
 - **space-charge/결함 미포함** (자인) — interphase 전자축적 시 passivation 꺼질 수 있음.
@@ -260,7 +263,7 @@
 |---|---|---|
 | Table 1 (창 + 양끝 평형상) | 14 | digest §7 표와 **전 항목 일치** (전압·상 조성·순서까지) |
 | Table 2 (0 V 환원 E_D) | 14 | digest §5 표와 **전 항목 일치** (LPSCl −0.96 / LLZO −0.021 / LAGP −1.99 포함) |
-| Table 3 (5 V 산화 E_D) | 14 | **1건 표기 교정** — LiPON 5 V 산물이 원문은 **`PNO`**, 1차 digest는 `PON`이었음(§7 표 수정 완료). 나머지 13행 전값 일치 |
+| Table 3 (5 V 산화 E_D) | 14 | 표기 이슈 1건 — LiPON 5 V 산물이 본문 Table 3에는 **`PNO`**. **→ 2026-08-03 SI 실물 확인 결과 SI Table S2(h)의 3.63 V 계단은 `PON`이며, 인산질화물 PON이 화학적 정답 ⇒ 본문 Table 3 쪽이 오타**(§18e-3). 나머지 13행 전값 일치 |
 - 본문 서술 수치도 전수 일치: LGPS −1.25 eV/atom = −3014 kJ/mol, LLZO 0.021 eV/atom = 49 kJ/mol, 황화물 환원 ~1.6–1.7 V·산화 2–2.5 V, LLZO 0.004 V 2차 plateau, 코팅 창 "0.7–1.7 V ~ 3.7–4.2 V", Li₂O 2.9 V, NASICON 5 V E_D ~−0.06 eV/atom, LiPON 실험 onset ~2.6 V·6 V 기포.
 
 ### 17b. 신규 확보(1차 digest에 없던 것)
@@ -293,6 +296,110 @@
 4. (표기) **Fig 2a·3a 축라벨 `Li₃.₅Ge₀.₂₅PS₄`** — Table 1–3 및 Fig 1a legend는 `Li₃.₂₅Ge₀.₂₅P₀.₇₅S₄`. thio-LISICON Li₄₋ₓGe₁₋ₓPₓS₄(x=0.75) 기준으로 **표 쪽이 정확**, 축라벨이 오기.
 
 ### 17e. 재검증 결론
-- **1차 digest(2026-07-28)의 본문 유래 서술은 전부 유효** — 실질 오류 0, 표기 교정 1건(PON→PNO), 정밀화 1건(LiCl 4.21 V ≠ 2.88 V, §6).
-- **SI 유래 서술도 그림 대조로 간접 확증**(LPSCl 2.88/2.89 V, 코팅 창 5종) — 단 **E_hull 값(LPSCl 83 meV/atom 등)과 S2 계단의 Δn_Li는 여전히 SI 미확인**. SI PDF 확보 시 §4·§7 계단표를 마지막으로 닫으면 완결.
+- **1차 digest(2026-07-28)의 본문 유래 서술은 전부 유효** — 실질 오류 0, 표기 이슈 1건(PNO/PON — §18e에서 SI로 판정), 정밀화 1건(LiCl 4.21 V ≠ 2.88 V, §6).
+- **SI 유래 서술도 그림 대조로 간접 확증**(LPSCl 2.88/2.89 V, 코팅 창 5종). → **2026-08-03 SI 실물 확보로 직접 검증 완료(§18) — 간접 확증이 전부 맞았음이 확인됨.**
 - 우리 대비(§10) 판정 ①②③은 이번 패스에서 **바뀔 근거 없음** — Zhu red 1.71 ≡ 우리 ocv 1.717, 산화 onset만 hull 세대 민감이라는 결론 유지.
+
+---
+
+## 18. SI 실물 정독·전수 검증 (2026-08-03) ★ — **§17e가 남긴 마지막 구멍을 닫음**
+
+**대상**: `litdb/inbox/38. Sup) Origin of Outstanding Stability in the Lithium Solid Electrolyte Materials Insights from Thermodynamic Analyses Based on First-Principles Calculations.pdf` — **10 pp**(PDF meta: title `Mo-solid electrolyte stability-SI-Finalproof_151006`, author **Yifei Mo**, Word/Quartz, 작성 2015-10-14; HANYANG UNIV 다운로드 스탬프 2026-07-28). 사용자 분류 폴더 `DFT`.
+**구성**: §1 Materials systems(Table S1 + 방법 설명) · §2 Table S2 = SE 13종 계단표 (a)–(m) · §3 Table S3 = 코팅 5종 계단표 (a)–(e) · SI 자체 refs 13개.
+**방법**: 페이지 단위 텍스트 전수 추출 → digest의 SI-유래 서술(§4 E_hull, §7 S2f 표, §8 코팅 창) 및 §17c 픽셀 재독값과 1:1 대조.
+**총평**: **불일치 0. 픽셀 재독값도 전부 SI와 ±0.02 V 이내.** SI가 추가로 판정해준 것 = 원문 내부 불일치 3건(§18e).
+
+### 18a. Table S1 전량 — 구조 출처 · E_hull · 조성 평형상
+| 조성 | 약칭 | 사용 구조 (SI ref) | E_hull (meV/atom) | 조성에서의 평형상 |
+|---|---|---|---|---|
+| Li₁₀GeP₂S₁₂ | LGPS | **mp-696138** (Kamaya 2011) | 21 | Li₃PS₄, Li₄GeS₄ |
+| Li₃.₂₅Ge₀.₂₅P₀.₇₅S₄ | — | **없음**(ICSD 무 → 평형상 조합으로 entry 구성) | — | Li₃PS₄, Li₄GeS₄ |
+| Li₃PS₄ | — | **Pmn2₁ γ** (Homma 2011) | **0** | Li₃PS₄ (hull 위 = 안정) |
+| Li₄GeS₄ | — | **mp-30249** (Murayama 2002) | **0** | Li₄GeS₄ (안정) |
+| Li₇P₃S₁₁ | — | **mp-641703** (Yamane 2007) | 22 | Li₃PS₄, P₂S₅ |
+| **Li₆PS₅Cl** | — | **Deiseroth 2008**(MP-id 없음 = 자체 DFT) | **83** | **Li₃PS₄, Li₂S, LiCl** |
+| Li₇P₂S₈I | — | **없음**(ICSD 무) | — | Li₃PS₄, LiI |
+| Li₂PO₂N | LiPON | Senevirathne 2013 | **0** | Li₂PO₂N (안정) |
+| Li₇La₃Zr₂O₁₂ | LLZO | Awaka 2011 | 7 | Li₂O, La₂O₃, Li₆Zr₂O₇ |
+| Li₀.₃₃La₀.₅₆TiO₃ | LLTO | Fourquet 1996 (ordering) | 68 | TiO₂, Li₄Ti₅O₁₂, La₂Ti₂O₇ |
+| Li₁.₃Al₀.₃Ti₁.₇(PO₄)₃ | LATP | Dashjav 2014 | 29 | LiTi₂(PO₄)₃, Li₃PO₄, AlPO₄ |
+| Li₁.₅Al₀.₅Ge₁.₅(PO₄)₃ | LAGP | **없음**(ICSD 무) | — | AlPO₄, Ge₅O(PO₄)₆, GeO₂, Li₄P₂O₇ |
+| Li₃.₅Zn₀.₂₅GeO₄ | LISICON | Hong 1978 | 34 | Li₂ZnGeO₄, Li₄GeO₄ |
+
+- **🔑 우리에게 중요한 3줄**:
+  1. **LPSCl만 MP-id가 없다** = Deiseroth 실험 구조에 자체 DFT(무질서 S/Cl은 50–60배열 최저). E_hull 83 meV/atom은 **ordered single-config 값**이라 현대 문헌(예 [Rao] Cl₁.₅ 28 meV/atom)보다 크게 나오는 게 당연 — **83을 "LPSCl은 매우 metastable"의 근거로 인용하면 과장**(§15).
+  2. **Li₃PS₄·Li₄GeS₄·Li₂PO₂N은 E_hull=0** — 이 셋만 진짜 hull 위. 나머지 SE 전부(LPSCl 포함)는 **E_hull→0 규약의 수혜자**. 즉 논문의 "intrinsic window"는 *규약이 만든 창*이라는 점을 SI가 숫자로 드러냄.
+  3. **LPSCl 조성 평형 = Li₃PS₄ + Li₂S + LiCl** → 우리 `ocv_self_decomposition_rxn`과 **동일 조합**(§10b 판정 ③이 SI 실물로 확정).
+- **방법 신규**: **γ-Li₃PS₄(Pmn2₁)를 다형 중 최저로 판정해 Li–P–S 상도에 명시적으로 추가**했다고 SI가 밝힘 → Li–P–S 계 전체의 hull 경계가 이 엔트리에 종속(§4 반영).
+
+### 18b. Table S2 전량 — SE 13종 계단표 (φ / Δn_Li per f.u. / 평형상)
+> SI는 φ와 함께 **μ_Li = −eφ** 열을 같이 실어 eq 1을 수치로 확인시켜 준다(전 행 μ = −φ). Δn_Li>0 = lithiation(환원), <0 = delithiation(산화), 중간의 `0` 행이 SE 자신(E_hull→0 규약).
+
+**(a) LGPS / (b) Li₃.₂₅Ge₀.₂₅P₀.₇₅S₄ — 계단이 완전히 동일**
+| φ (V) | Δn_Li | 평형상 |
+|---|---|---|
+| 0.28 | +23.75 | Li₂S, **Li₁₅Ge₄**, Li₃P |
+| 0.45 | +22.25 | Li₉Ge₄, Li₂S, Li₃P |
+| 0.56 | +21 | Li₃P, Li₂S, LiGe |
+| 0.87 | +20 | Li₃P, Li₂S, Ge |
+| 0.93 | +16 | Li₂S, LiP, Ge |
+| 1.17 | +14.86 | Li₃P₇, Li₂S, Ge |
+| 1.30 | +14.29 | Ge, Li₂S, LiP₇ |
+| 1.62 | +14 | Li₂S, P, Ge |
+| **1.71** | +10 | **Li₄GeS₄, P, Li₂S** |
+| — | 0 | SE |
+| **2.14** | −4 | **GeS₂, Li₃PS₄, S** |
+| 2.31 | −10 | P₂S₅, GeS₂, S |
+- Δn_Li만 다르고(b는 f.u.가 작아 같은 값) 전압·상은 문자 그대로 동일 = Table 1의 "두 조성 창이 똑같다"의 근거.
+
+**(c) Li₃PS₄** — 0.87/+8 (Li₃P, Li₂S) · 0.93/+6 (LiP, Li₂S) · 1.17/+5.43 (Li₃P₇, Li₂S) · 1.30/+5.14 (LiP₇, Li₂S) · **1.71/+5 (P, Li₂S)** · [0] · **2.31/−3 (P₂S₅, S)**
+**(d) Li₄GeS₄** — 0.28/+7.75 (Li₂S, Li₁₅Ge₄) · 0.45/+6.25 · 0.56/+5 (LiGe) · **1.62/+4 (Li₂S, Ge)** · [0] · **2.14/−4 (GeS₂, S)**
+**(e) Li₇P₃S₁₁** — 0.87/+24 · 0.93/+18 · 1.17/+16.29 · 1.30/+15.43 · 1.71/+15 (P, Li₂S) · **2.03/+1.25 (Li₃PS₄, P)** · **2.15/+1.08 (Li₃PS₄, P₄S₃)** · **2.24/+0.67 (Li₃PS₄, P₄S₇)** · **2.28/+0.29 (Li₃PS₄, P₄S₉)** · [0] · **2.31/−7 (P₂S₅, S)**
+- 🔑 **최협 창 0.03 V의 정체**가 SI에서 보인다: Li₇P₃S₁₁은 2.03→2.28 V에 **P₄S₃→P₄S₇→P₄S₉로 이어지는 미세 lithiation 계단 4개**가 촘촘히 깔려 있고, 그 꼭대기(2.28)와 산화(2.31)가 맞닿는다. **0.03 V는 "두 큰 경계 사이"가 아니라 "촘촘한 계단열의 봉합선"** — hull 오차(수십 meV/atom)에 정면으로 취약. → 우리 cascade의 collapse(<0.05 V) 규율(§10c)이 원전에서도 똑같이 위험한 영역임을 SI가 재확인.
+
+**(f) Li₆PS₅Cl** — §7 표와 **전값 일치**(0.87/+8 · 0.93/+6 · 1.17/+5.43 · 1.30/+5.14 · **1.71/+5** · [0] · **2.01/−2** · 2.31/−5 · **2.88/−6**). ✓
+**(g) Li₇P₂S₈I** — 0.87/+16 · 0.93/+12 · 1.17/+10.86 · 1.30/+10.29 · **1.71/+10 (P, Li₂S, LiI)** · [0] · **2.31/−6 (P₂S₅, S, LiI)** · **2.47/−7 (P₂S₅, S, I)**
+- 🔑 **§17c 픽셀 재독 "Li₇P₂S₈I dashed 2.48"이 SI 2.47과 Δ0.01** → 그림 캘리브레이션(±0.02 V)의 **독립 검증 통과**. 마찬가지로 LPSCl dashed 2.89(픽셀) vs SI 2.88 = Δ0.01.
+- 할라이드 비교: **Cl은 2.88 V에서 PCl₃(기체·분자)로**, **I는 2.47 V에서 I₂로** 빠진다 → **I가 Cl보다 0.4 V 먼저 산화**. Fig 2a의 binary 서열(LiCl 4.21 > LiI 2.46)과 같은 방향 = **Cl-rich가 I-rich보다 양극측에서 유리**의 열역학 근거(우리 4축 B 인용 가능).
+
+**(h) LiPON(Li₂PO₂N)** — 0.01/+8 (**Li₃P, Li₃N, Li₂O**) · 0.61/+6 (Li₃P, Li₇PN₄, Li₂O) · **0.68/+4 (Li₃P, LiPN₂, Li₂O)** · [0] · **2.63/−0.86 (P₃N₅, Li₄P₂O₇, N₂)** · 2.75/−0.92 (P₄ON₆, Li₄P₂O₇, N₂) · 2.77/−1.36 (P₄ON₆, LiPO₃, N₂) · 3.05/−1.50 (**PON**, LiPO₃, N₂) · 3.63/−2 (**PON**, P₂O₅, N₂)
+- 환원 onset **0.68 V**(Table 1과 일치, 본문 0.69가 outlier) · 5 V 산물 **PON**(본문 Table 3 `PNO`가 오타) — §18e.
+**(i) LLZO** — **0.004/+8 (Zr, La₂O₃, Li₂O)** · **0.048/+6.67 (Zr₃O, La₂O₃, Li₂O)** · [0] · **2.91/−0.50 (Li₂O₂, La₂O₃, Li₆Zr₂O₇)** · 3.17/−3.50 (Li₂O₂, La₂O₃, La₂Zr₂O₇) · **3.30/−7 (O₂, La₂O₃, La₂Zr₂O₇)**
+- 본문의 "0.05 V 환원·0.004 V 2차 plateau·3.30 V부터 O₂"가 SI 계단으로 정확히 확인. (SI의 μ_Li 열은 첫 행만 `+0.004`로 부호가 뒤집혀 있음 = SI 오타, 다른 전 행은 μ=−φ.)
+**(j) LLTO** — 0.018/+3.67 (Ti₆O) · 0.12 (Ti₃O) · 0.29 · 0.37 (Ti₂O) · 0.46 (LiTiO₂) · 0.50 · 1.12 · 1.14 (LiTi₂O₄) · 1.63 · **1.749/+0.09** · **1.752/+0.01 (Li₇/₆Ti₁₁/₆O₄, La₂Ti₂O₇, Li₄Ti₅O₁₂)** · [0] · **3.71/−0.33 (O₂, La₂Ti₂O₇, TiO₂)**
+- 🔑 **1.749와 1.752 = 3 meV 간격의 두 plateau**를 별도 계단으로 인쇄 — **hull 계산의 수치 해상도가 물리적 유의성보다 훨씬 잘게 나온다**는 살아 있는 예. 우리 cascade의 key_breakpoints를 소수 3자리로 인용하면 안 되는 이유(§10c 규율의 보강 근거).
+**(k) LATP** — 계단 **17개**(전 SE 중 최다): 0.026 (Ti₃P, TiAl, Li₃P, Li₂O) → 0.082 → 0.088 → 0.23 → 0.69 → 0.75 → 0.79 → 0.86 (TiP) → 1.49 → 1.55 → 1.71 → 1.84 → 1.94 (TiP₂) → 1.98 (AlPO₄) → 2.12 → **2.17/+2.13 (LiTiPO₅, AlPO₄, P, Li₃PO₄)** · [0] · **4.21/−0.15 (LiTi₂(PO₄)₃, AlPO₄, Li₄P₂O₇, O₂)** · 4.33/−0.60 (TiP₂O₇) · 4.66/−1.30 (Ti₅P₄O₂₀)
+**(l) LAGP** — 0.06 (Li₁₅Ge₄, Li₉Al₄) → 0.28 → 0.45 → 0.56 → 0.69 → 0.75 → 0.87 → 0.93 → 1.17 → 1.30 → 1.49 → 1.94 → 2.64 → **2.70/+3.50 (Ge, GeO₂, Li₄P₂O₇, AlPO₄)** · [0] · **4.27/−0.10 (Ge₅O(PO₄)₆, O₂, Li₄P₂O₇, AlPO₄)** · **4.31/−1.50 (GeP₂O₇ 추가)**
+**(m) LISICON** — 0.18 (Li₁₅Ge₄, LiZn) → 0.28 → 0.42 → 0.45 (Li₂ZnGe) → 0.56 → 0.61 → 0.73 (LiZnGe) → 1.02 (Zn) → **1.44/+0.50 (Li₄GeO₄, Zn)** · [0] · **3.39/−1.50 (Li₂ZnGeO₄, Li₂GeO₃, O₂)** · 3.84 → 3.85 → 3.89 → 3.98 → **4.00/−3.50 (Zn₂GeO₄, GeO₂, O₂)**
+- Table 3의 5 V 산물(LATP Ti₅P₄O₂₀ 계열 / LAGP GeP₂O₇ 계열 / LISICON Zn₂GeO₄+GeO₂+O₂)이 각 표의 **마지막 계단**과 정확히 대응 ✓.
+
+### 18c. Table S3 전량 — 코팅 5종 계단표
+**(a) Li₄Ti₅O₁₂** — 0.018 (Ti₆O, Li₂O) · 0.12 (Ti₃O, Li₂O) · 0.29 (Ti₃O, Li₄TiO₄) · 0.37 (Ti₂O) · 0.50 (LiTiO₂, Li₄TiO₄) · 1.12 (LiTiO₂, Li₂TiO₃) · 1.63 (LiTi₂O₄, Li₂TiO₃) · **1.75/+1 (Li₇/₆Ti₁₁/₆O₄, Li₂TiO₃)** · [0] · **3.71/−4 (O₂, TiO₂)**
+**(b) LiNbO₃** — 0.55/+5 (**Nb**, Li₂O) · 0.62/+2 (LiNbO₂, Li₂O) · 0.94/+1.2 (LiNbO₂, Li₈Nb₂O₉) · **1.74/+1 (LiNbO₂, Li₃NbO₄)** · [0] · **3.88/−0.67 (LiNb₃O₈, O₂)** · 3.92/−1 (Nb₂O₅, O₂)
+**(c) Li₂SiO₃** — 0.10 (**Li₂₁Si₅**, Li₂O) · 0.23 (Li₁₃Si₄, Li₂O) · 0.26 (Li₁₃Si₄, Li₈SiO₆) · 0.26 (Li₁₃Si₄, Li₄SiO₄) · 0.37 (Li₁₂Si₇) · 0.39 (LiSi) · **0.76/+1 (Si, Li₄SiO₄)** · [0] · **3.74/−1 (Li₂Si₂O₅, O₂)** · 3.78/−2 (SiO₂, O₂)
+**(d) LiTaO₃** — 0.35/+5 (**Ta**, Li₂O) · 0.54/+2 (Ta, Li₅TaO₅) · **1.18/+1.25 (Ta, Li₃TaO₄)** · [0] · **3.95/−0.67 (LiTa₃O₈, O₂)** · 4.12/−1 (Ta₂O₅, O₂)
+**(e) Li₃PO₄** — **0.69/+8 (Li₃P, Li₂O) — 단 1계단** · [0] · **4.21/−1 (Li₄P₂O₇, O₂)** · 4.33/−2 (LiPO₃, O₂) · 4.99/−3 (P₂O₅, O₂)
+- **§8 인용값 5종 전부 실물 일치** → §17c의 "그림으로 간접 확증(±0.03 V)"이 옳았음이 확정.
+- 🔑 **Li₃PO₄의 특이성**: 환원 계단이 **단 하나**, 산물이 **Li₃P + Li₂O = 둘 다 전자절연 Li-binary**. 다른 4종은 저전압에서 **Nb·Ta·Si·Ti 금속/합금**으로 간다. → **Li₃PO₄만 양극·음극 양쪽에서 passivating 코팅**이고 나머지는 양극 전용. (우리 코팅/도판트 스크린에 그대로 쓸 판정 기준.)
+
+### 18d. 우리 파이프라인에 곧바로 쓸 것
+1. **S2f가 우리 `key_breakpoints`의 1:1 대조 표준** — 이제 SI 실물이 있으니 `oxidation_stability.json`의 LPSCl 계단과 **행 단위로 붙여 놓는 회귀 테스트**를 만들 수 있다(전압 Δ + 상 조합 일치 여부). 기존 판정(red 1.71≡ocv 1.717, ox 2.01→2.14/2.256)은 그대로.
+2. **γ-Li₃PS₄(Pmn2₁) 다형 명시** = 우리 hull과의 산화 onset 차이 원인 후보 리스트에 **"Li₃PS₄ 다형/엔트리 세트"**를 추가해야 한다(기존엔 MP2020 S-보정·LiS₄ entry 2개만 들었음).
+3. **Δn_Li 부호 규약 확정** — SI가 lithiation +, delithiation −로 f.u. 당 표기. 우리 CSV의 Δn과 부호·정규화(per f.u. vs per atom)를 맞춰 기재할 것.
+4. **미세 계단 경고의 원전 증거 2건 확보** — LLTO 1.749/1.752(3 meV) · Li₇P₃S₁₁ 2.28/2.31(0.03 V, 그 아래 4계단 촘촘). → **우리 collapse 플래그(<0.05 V)를 순위 비교에 쓰지 말라**는 규율(§10c)에 인용할 1차 근거.
+5. **할라이드 산화 서열의 계 내부 값**: LPSCl에서 Cl 이탈 2.88 V vs Li₇P₂S₈I에서 I 이탈 2.47 V → **같은 argyrodite 계열 프레임에서 Cl > I 0.41 V** (Fig 2a binary 서열 LiCl 4.21 > LiI 2.46과 같은 방향, 다른 크기). 인용 시 **"계 내부 값"과 "binary 단독 값"을 구분**할 것.
+
+### 18e. SI가 판정해준 원문 내부 불일치 (§17d 후속)
+| # | 항목 | 본문 | Table 1/3 | SI | 판정 |
+|---|---|---|---|---|---|
+| 1 | LiPON 환원전위 | 0.69 V | **0.68 V** | **0.68 V** (S2h) | **0.68 V** — 본문이 outlier (Fig 2a 막대 0.69는 작도 반올림) |
+| 2 | LAGP 산화전위 | 4.28 V | **4.27 V** | **4.27 V** (S2l) | **4.27 V** — 본문이 outlier |
+| 3 | LiPON 5 V 산물 | — | `PNO` (Table 3) | **`PON`** (S2h 3.63 V) | **PON** — Table 3이 오타 (PON = 인산질화물, 실재 상) |
+| 4 | Fig 2a LATP 막대 ~4.31 V | — | 4.21 V (onset) | 4.21 → **4.33** → 4.66 (S2k) | **미해결**. 다만 픽셀 4.31이 SI의 **2단계 4.33**과 Δ0.02 → "단순 작도 오차"보다 **막대를 onset이 아닌 2단계에 그렸을 가능성**이 더 그럴듯. 어느 쪽이든 **표 기준 서열 LATP 4.21 < LAGP 4.27 유지** |
+| 5 | Fig 2a/3a 축라벨 `Li₃.₅Ge₀.₂₅PS₄` | — | `Li₃.₂₅Ge₀.₂₅P₀.₇₅S₄` | `Li₃.₂₅Ge₀.₂₅P₀.₇₅S₄` (S1·S2b) | **축라벨 오기 확정** — SI도 표 쪽 표기 |
+
+### 18f. SI 검증 결론
+- **SI 유래 서술(§4 E_hull · §7 S2f 계단 · §8 코팅 창) 전부 실물 일치 — 불일치 0.** §17e가 남겨둔 "SI 미확인" 유보를 해제한다.
+- **§17c 픽셀 정량 재독의 신뢰도가 SI로 독립 검증됨**(LPSCl dashed 2.89 vs 2.88 · Li₇P₂S₈I 2.48 vs 2.47 · 코팅 5종 ±0.03 V) → **Fig 2a의 Li-binary 값(LiF 6.38 / LiCl 4.21 / Li₂O 2.90 / LiI 2.46 / Li₂S 2.00 / Li₃P 0.85 / Li₃N 0.45)은 SI에 표가 없지만 같은 캘리브레이션 산물이므로 ±0.02 V로 인용 가능**. 화학적 교차검증도 통과: 0 K DFT 분해전위 ≈ −ΔH_f/(n_Li·F) 이므로 LiF −616 kJ/mol → 6.39 V, LiCl −409 → 4.24 V (재독 6.38/4.21와 각각 0.01/0.03 V 차) — **LiCl-SEI 4.2 V 여유 주장(§13-7)의 근거가 두 갈래로 선다.**
+- **남은 미검증 = 없음.** 본문 9 pp + SI 10 pp 전문이 모두 실물 대조됨 → 이 digest는 **완결**.
+- 우리 대비(§10) 판정 ①②③ **불변**. 신규 액션 아이템은 §18d.
