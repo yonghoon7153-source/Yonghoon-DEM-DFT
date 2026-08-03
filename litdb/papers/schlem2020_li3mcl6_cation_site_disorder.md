@@ -1,7 +1,7 @@
 # Mechanochemical Synthesis: A Tool to Tune Cation Site Disorder and Ionic Transport Properties of Li₃MCl₆ (M = Y, Er) Superionic Conductors — Schlem et al. (Adv. Energy Mater. 2020)
 
-> slug `schlem2020_li3mcl6_cation_site_disorder` · DOI `10.1002/aenm.201903719` · type `exp + DFT 보조(정적 defect-model만)` · PDF `dbe52075-36._Mechanuctors.pdf` + SI `32a189c2-36._Sup_Meuctors.pdf` (inbox #36 본문 10 pp + SI 15 pp 전부 정독) · digested `2026-07-28` · status ✅
-> elements: Cl, Y, Er
+> slug `schlem2020_li3mcl6_cation_site_disorder` · DOI `10.1002/aenm.201903719` · type `exp + DFT 보조(정적 defect-model만)` · PDF 본문 실물 `litdb/inbox/36. Mechanochemical Synthesis….pdf` (**inbox #36, 사용자 분류 `DFT` 태그** — 자체 VASP-PBE 정적 DFT 보유라 분류 정합, 단 exp-dominant·DFT보조임에 유의; 최초 digest는 업로드 쌍 `dbe52075` 본문 + `32a189c2` SI 15 pp) · digested `2026-07-28` · **본문 실물 감사 `2026-07-28`** (10 pp 전문 + Fig 3–7 렌더 대조: σ 1.7(1)×10⁻⁵/3.1(5)×10⁻⁴·무질서 2.5(1)/9.9(2) %·**Fig 5 에너지 4값(−247.74/−247.67/−247.80/−246.21 eV)**·Fig 6d Ea 0.41→0.49·Fig 7a,b 상관·Fig 3b BM ~88 %·Fig 4b 면적 ~5.4–6.3 Å²·DFT 셋업(VASP·PBE·PAW·520 eV·3×3×3 k·1×1×2 셀·실험격자·힘<10⁻⁴)·합성/EIS/XRD/PDF 파라미터 **전값 digest와 일치**; [새] 본문 **Eq (1) mc1/mc2 라벨 뒤바뀜** + λ 본문 표기 0.5594 Å — §0 감사 노트) · **SI 실물 미보유**(inbox에 "36. Sup" 없음 — Table S1–S10·Fig S1–S13 수치는 업로드본(32a189c2) 정독값 유지) · status ✅
+> elements: Li, Y, Er, Cl
 > methods: DFT
 > **저자**: Roman Schlem, Sokseiha Muy, Nils Prinz, Ananya Banik, Yang Shao-Horn, Mirijam Zobel, **Wolfgang G. Zeier*** (JLU Giessen 물리화학·LaMa / MIT DMSE / Univ. Bayreuth) · *Adv. Energy Mater.* 2020, **10**, 1903719 · 접수 2019-11-12, online 2019-12-17 · **Open Access CC-BY**
 
@@ -11,6 +11,7 @@
 - **정체 실물 확정**: 본문 1쪽에서 제목·저자·DOI 확인 — **AEM 10, 1903719 = 할라이드 Li₃MCl₆(M=Y,Er) 논문**이다. **argyrodite(Li₆PS₅X) 논문이 아니다.** LPSCl 데이터·수치가 이 논문에는 **한 줄도 없다**.
 - **★특별 검증 결론 (요약)**: 우리 repo 전반(li_transport.json·세미나 원고·open_items #5)이 "Schlem 2020 AEM 10,1903719 = LPSCl ordered Ea 0.25 / Cl-rich 0.22 eV"로 인용해 왔으나, **그 수치는 이 DOI에 존재하지 않는다**(이 논문의 Ea는 Li₃ErCl₆ 0.41–0.49 / Li₃YCl₆ 0.45–0.49 eV). → **귀속 오류 확정. LPSCl 0.25/0.22의 원전은 별도 확보 필요.** 상세 §11b.
 - 그 판정과 별개로, 이 논문 자체는 우리 **'무질서 = 공정변수(합성으로 조절되는 변수)'** 논지의 **가장 깨끗한 외부 정량 실증**이다: 같은 조성에서 합성 경로(볼밀 vs 어닐 1 min/1 h vs 앰풀 1주)만 바꿔 **양이온 자리무질서 2.5→88 %**를 연속 조절하고, 그에 따라 **σ 18×·Ea −0.08 eV**가 움직임을 XRD+PDF 이중 프로브로 보였다.
+- **본문 실물 감사 노트 (2026-07-28, inbox #36 사용자 분류 `DFT`)**: 본문 10 pp 텍스트 전문 + 그림 페이지 렌더(Fig 3b·4b·5·6·7)로 digest를 재대조 — 위 metadata 라인 목록대로 **전값 일치**(Fig 5 DFT 에너지 4값·Fig 6d σ/Ea 4점·Fig 4b 면적 범위·병목 방향성 포함). **신규 발견 2건**: ① 본문 **Eq (1) 라벨 뒤바뀜** — 식은 `mc1·G(r)_ErCl₃ + mc2·G(r)_Li₃ErCl₆ = G(r)_total`인데 바로 아래 정의는 "mc1 = molar content **Li₃ErCl₆** / mc2 = molar content **ErCl₃**"로 서로 교차(논문 자체 오기; Table S1 몰비 1.92/1.43 인용 시 어느 상의 비인지 이 식만으로 확정 불가 — digest §3d는 "ErCl₃:Li₃ErCl₆ 몰비"로 SI 표 기준 유지). ② XRD 파장 본문 표기는 **0.5594 Å**(§8의 0.5594075는 Ag Kα₁ 표준값 보충 표기임을 명시). 접수 이력 보강: Received 2019-11-12 / **Revised 2019-12-02** / online 2019-12-17. **SI 실물은 inbox 미보유**("36. Sup" 없음) — SI 유래 수치(§3a Table S4·§3b Table S2·§3c S5–S10·Fig S13 등)는 업로드본(32a189c2, 15 pp) 정독값 그대로이며 실물 재감사는 불가.
 
 ## 1. 한 줄 요약
 Li₃ErCl₆/Li₃YCl₆(삼방 P3̄m1 할라이드 SE)에서 **합성 방법이 M2–M3 양이온 자리무질서를 결정**한다 — 볼밀(기계화학)은 거의 완전한 자리반전(~88–100 %), 후속 어닐은 시간에 따라 질서 회복(1 min 9.9 % → 1 h 7.6 %), 고전적 앰풀 합성은 최저(2.5 %) — 그리고 **무질서가 클수록 σ↑(1.7×10⁻⁵→3.1×10⁻⁴ S/cm)·Ea↓(0.49→0.41 eV)**. DFT(VASP, 정적)는 무질서 배열들이 질서 배열과 **에너지 등가(~1–2 meV/atom)**임을 보여 "무질서가 열역학이 아니라 **공정**으로 결정되는 변수"임을 뒷받침한다.
@@ -139,8 +140,8 @@ Er·Cl 위치만으로(Li 위치 미지 명시) 4종 점프의 **삼각 병목 �
 - **무질서 처리**: Li/Er 배열 열거 → **pymatgen Ewald summation으로 정전에너지 사전선별** → **대칭 다른 최저 정전에너지 구조 10개를 DFT 재계산** (SQS 아님; enumerate→lowest-Ewald 노선 — [Liu] AFM 2022와 동일 철학, 우리 cfg-enumeration과 같은 계열).
 - **범위**: 정적 total energy **만**. NEB 없음·AIMD 없음·DOS/gap 미보고·기계물성 없음 → "무질서가 σ를 올린다"는 **계산으로 증명된 바 없음**(열역학 접근성만 계산).
 - 임피던스: VMP300(Biologic), 7 MHz–100 mHz, 10 mV, −40..60 °C.
-- XRD: STOE STADI P, **Ag Kα₁ λ=0.5594075 Å**(Ge(111) 단색화), Mythen2 4K(Dectris 4×), Debye–Scherrer, 0.5 mm 유리 모세관 밀봉, Q 0.3–20.5 Å⁻¹, 결정질 6 h·비정질 22 h. Rietveld = **TOPAS**(Chebyshev 10항 배경, mod. Thomson–Cox–Hastings pseudo-Voigt).
-- PDF: **PDFgetX3**(S(Q) 푸리에; qdamp 0.011/qbroad 0.010 — LaB₆ 표준), fit = **PDFgui**(결정질)·**DiffPy-CMI**(BM 2상: mc1·G(r)_ErCl₃ + mc2·G(r)_Li₃ErCl₆ = G(r)_total, Eq 1).
+- XRD: STOE STADI P, **Ag Kα₁ λ=0.5594 Å**(본문 표기; 0.5594075는 표준값 — Ge(111) 단색화), Mythen2 4K(Dectris 4×), Debye–Scherrer, 0.5 mm 유리 모세관 밀봉, Q 0.3–20.5 Å⁻¹, 결정질 6 h·비정질 22 h. Rietveld = **TOPAS**(Chebyshev 10항 배경, mod. Thomson–Cox–Hastings pseudo-Voigt).
+- PDF: **PDFgetX3**(S(Q) 푸리에; qdamp 0.011/qbroad 0.010 — LaB₆ 표준), fit = **PDFgui**(결정질)·**DiffPy-CMI**(BM 2상: mc1·G(r)_ErCl₃ + mc2·G(r)_Li₃ErCl₆ = G(r)_total, Eq 1 — ⚠ **본문 Eq (1)의 mc1/mc2 정의 라벨이 식과 뒤바뀜**(정의문은 mc1=Li₃ErCl₆·mc2=ErCl₃ 몰함량, §0 감사 노트)).
 
 ## 9. Figure set ★
 | Fig | 내용 | 우리가 참고할 점 |
