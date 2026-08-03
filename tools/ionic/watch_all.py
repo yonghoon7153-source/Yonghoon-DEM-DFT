@@ -150,6 +150,19 @@ JOBS = [
      "start": "mkdir -p /data/work/runs/lpsocl_bader && tmux new -s lpsoclbader -d "
               "'bash tools/electronic/run_lpsocl_bader_gabia.sh "
               "> /data/work/runs/lpsocl_bader/run.log 2>&1'"},
+    {"key": "LNOrelax", "log": "/data/work/runs/sdcp_v2/slab_relax/relax.out",
+     # SDCP v2 1단계 — 깨끗한 (104) 슬랩 표면 이완 (48원자 1x1, 아래 2층 고정).
+     # 이게 끝나야 E_bind 의 기준점이 생긴다. 종결 = BFGS 수렴.
+     "done_marker": ("Final scf calculation at the relaxed structure",
+                     "표면 이완 완료 — --harvest 로 1x4 복제"),
+     "done": [], "proc": ("pw.x",), "tmux": "lnorelax",
+     "start": "tmux new -s lnorelax -d 'H=/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/"
+              "hpcx/hpcx-2.20/ompi; export PATH=$H/bin:$PATH OPAL_PREFIX=$H OMP_NUM_THREADS=1 "
+              "CUDA_VISIBLE_DEVICES=0 OMPI_ALLOW_RUN_AS_ROOT=1 OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1 "
+              "LD_LIBRARY_PATH=$H/lib:/data/apps/nvhpc/Linux_x86_64/24.11/compilers/lib:"
+              "/usr/local/cuda-12.6/lib64; cd /data/work/runs/sdcp_v2/slab_relax && "
+              "$H/bin/mpirun -np 1 --oversubscribe /data/apps/qe-7.4.1-gpu/bin/pw.x -nk 1 "
+              "-in relax.in > relax.out 2>&1'"},
     {"key": "chain2", "log": os.path.join(H, "logs", "chain2.log"),
      # ⚠ 이 체인은 "GPU 해방 대기 → 알림" 이 전부고 READY_FOR_QE_AND_SLAB 가 **정상 종료**다.
      #   done 을 비워 뒀더니 완주한 런이 ⛔ 죽음으로 분류됐다 (실측 08-03).
