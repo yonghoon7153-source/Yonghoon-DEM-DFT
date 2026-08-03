@@ -150,7 +150,12 @@ JOBS = [
      "start": "mkdir -p /data/work/runs/lpsocl_bader && tmux new -s lpsoclbader -d "
               "'bash tools/electronic/run_lpsocl_bader_gabia.sh "
               "> /data/work/runs/lpsocl_bader/run.log 2>&1'"},
-    {"key": "LNOrelax", "log": "/data/work/runs/sdcp_v2/slab_relax/relax.out",
+    # ⚠⚠ **2단계 런이라 로그가 둘이다 (2026-08-03 오탐).** 1단계는 scf_u0.out, 2단계는
+    #   relax.out 을 쓴다. relax.out 만 보게 해 뒀더니 1단계가 멀쩡히 도는데 "로그 없음"으로
+    #   ⛔ 재기동을 안내했고, 그 명령은 **도는 1단계를 죽이고 밀도 없이 2단계를 시작**한다.
+    #   → 존재하는 것 중 **가장 최근** 로그를 본다.
+    {"key": "LNOrelax", "log": _newest("/data/work/runs/sdcp_v2/slab_relax/relax.out",
+                                       "/data/work/runs/sdcp_v2/slab_relax/scf_u0.out"),
      # SDCP v2 1단계 — 깨끗한 (104) 슬랩 표면 이완 (48원자 1x1, 아래 2층 고정).
      # 이게 끝나야 E_bind 의 기준점이 생긴다. 종결 = BFGS 수렴.
      "done_marker": ("Final scf calculation at the relaxed structure",
@@ -162,6 +167,8 @@ JOBS = [
               "LD_LIBRARY_PATH=$H/lib:/data/apps/nvhpc/Linux_x86_64/24.11/compilers/lib:"
               "/usr/local/cuda-12.6/lib64; cd /data/work/runs/sdcp_v2/slab_relax && "
               "$H/bin/mpirun -np 1 --oversubscribe /data/apps/qe-7.4.1-gpu/bin/pw.x -nk 1 "
+              "-in scf_u0.in > scf_u0.out 2>&1 && "
+              "$H/bin/mpirun -np 1 --oversubscribe /data/apps/qe-7.4.1-gpu/bin/pw.x -nk 1 "
               "-in relax.in > relax.out 2>&1'"},
     {"key": "chain2", "log": os.path.join(H, "logs", "chain2.log"),
      # ⚠ 이 체인은 "GPU 해방 대기 → 알림" 이 전부고 READY_FOR_QE_AND_SLAB 가 **정상 종료**다.
@@ -169,6 +176,12 @@ JOBS = [
      "done_marker": ("READY_FOR_QE_AND_SLAB", "GPU 해방 대기 완료 — 후속 ①② 는 수동 착수"),
      "done": [], "proc": (), "tmux": "chain2", "start": None},
 ]
+
+
+def _newest(*paths):
+    """존재하는 파일 중 가장 최근 것. 없으면 첫 경로(=아직 시작 안 함 표시용)."""
+    got = [(os.path.getmtime(q), q) for q in paths if os.path.isfile(q)]
+    return max(got)[1] if got else paths[0]
 
 
 def verdict(j):
@@ -390,7 +403,12 @@ if want("disorder"):
 #   새 슬랩(db/structures/linio2_104_sym_1x4L4, 반전대칭 192/192, 게이트 통과)으로 다시 세웠다.
 #   여기서는 **지금 도는 v2 만** 자세히 본다. 옛 경로는 한 줄로만 남긴다.
 _V2 = "/data/work/runs/sdcp_v2"
-_RLX = os.path.join(_V2, "slab_relax", "relax.out")
+# ⚠ U-ramp 2단계다 — 1단계 scf_u0.out(U=0, 밀도 만들기) → 2단계 relax.out(U=6.2, 이완).
+#   어느 쪽을 보고 있는지 화면에 찍지 않으면 "이온스텝 0/80" 을 정체로 오해한다.
+_S1 = os.path.join(_V2, "slab_relax", "scf_u0.out")
+_S2 = os.path.join(_V2, "slab_relax", "relax.out")
+_RLX = _S2 if os.path.isfile(_S2) else _S1
+_STAGE = "2단계 U=6.2 relax" if os.path.isfile(_S2) else "1단계 U=0 scf (밀도 만들기)"
 if want("sdcp"):
     print("② SDCP v2 — LiNiO2(104) 표면 이완  (E_bind 기준점)")
     if not os.path.isfile(_RLX):
@@ -411,8 +429,11 @@ if want("sdcp"):
         cpu  = re.findall(r"total cpu time spent up to now is\s+([\d.]+) secs", txt)
         RY_EV = 13.605693
 
+        print(f"   단계  {_STAGE}"
+              + ("   (1단계엔 이온스텝이 없다 — 정상)" if "1단계" in _STAGE else ""))
         print(f"   상태  {'▶ 진행 중' if alive_j else ('✅ 완료' if done else '⛔ 프로세스 없음')}"
-              f" · 로그 {age/60:.0f}분 전 · 이온스텝 {len(etot)}/80")
+              f" · 로그 {age/60:.0f}분 전"
+              + (f" · 이온스텝 {len(etot)}/80" if "2단계" in _STAGE else ""))
         if etot:
             # ⚠ 수렴 판정선을 **같이** 찍는다. 숫자만 보면 다 온 건지 알 수 없다.
             print(f"   에너지  현재 {etot[-1]:.6f} Ry"
