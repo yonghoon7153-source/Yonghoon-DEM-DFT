@@ -4379,10 +4379,11 @@ def api_eis_exp_upload():
                      + (f'기존 지정 L={"/".join(f"{v:g}" for v in _kept.values())}µm 유지'
                         if _kept else '기본 45µm 로 fit'))
     # 추출(.mpr, galvani 있으면) + 카탈로그 재생성
-    py = os.environ.get('PYTHON', 'python3')
+    # 두 스크립트는 **다른 패키지**를 요구한다 (archive=galvani[.mpr 파싱], fit=impedance[CNLS])
+    # → 각자 그 패키지를 가진 인터프리터로 돌린다.  둘이 서로 다른 venv 에 있어도 동작.
     arch_msg = ''
     try:
-        r = _sp.run([py, os.path.join(P['root'], 'scripts', 'eis_archive.py')],
+        r = _sp.run([_eis_python('galvani'), os.path.join(P['root'], 'scripts', 'eis_archive.py')],
                     capture_output=True, text=True, timeout=180, cwd=P['root'])
         arch_msg = _subproc_msg(r, 'archive(추출)')
         arch_ok = (r.returncode == 0)
@@ -4391,7 +4392,7 @@ def api_eis_exp_upload():
     # CNLS fit (impedance 있으면) → 값도출
     fit_msg = ''
     try:
-        r = _sp.run([py, os.path.join(P['root'], 'scripts', 'eis_fit.py')],
+        r = _sp.run([_eis_python('impedance'), os.path.join(P['root'], 'scripts', 'eis_fit.py')],
                     capture_output=True, text=True, timeout=300, cwd=P['root'])
         fit_msg = _subproc_msg(r, 'fit(CNLS)')
         fit_ok = (r.returncode == 0)
@@ -4405,6 +4406,43 @@ def api_eis_exp_upload():
                     'archive': arch_msg, 'fit': fit_msg,
                     'stale_table': not fit_ok,       # True = 아래 표는 이번 업로드 반영 전 값
                     **tab})
+
+
+_EIS_PY_CACHE = {}
+
+
+def _eis_python(need_mod=None):
+    """EIS 하위 스크립트를 돌릴 인터프리터 — `need_mod` 를 **실제로 import 할 수 있는** 것을 고른다.
+
+    ★ 왜 (2026-08-03): 옛 코드는 `os.environ.get('PYTHON','python3')` 였다.  그런데 webapp 이
+      venv 로 뜨면 그 안의 python3 가 잡히는데, 사용자가 셸에서 `python3 scripts/eis_fit.py` 를
+      돌리면 **시스템 python3**(~/.local 사이트패키지 포함)가 잡힌다.  실제로 셸에서는 fit 15/15
+      로 성공하는데 webapp 에서는 `No module named 'impedance'` 로 죽는 상황이 나왔다 — 같은
+      기계, 같은 스크립트, 다른 인터프리터.  사람이 "어느 pip 이냐"를 추적하게 두지 않는다.
+
+    순서: $PYTHON → 이 프로세스(sys.executable) → PATH 의 python3 → 흔한 사용자 venv.
+    전부 실패하면 첫 후보를 돌려주고 (오류 메시지는 _subproc_msg 가 설치법까지 안내한다).
+    """
+    key = need_mod or ''
+    if key in _EIS_PY_CACHE:
+        return _EIS_PY_CACHE[key]
+    import subprocess as _sp
+    cands = [os.environ.get('PYTHON'), sys.executable, 'python3',
+             os.path.expanduser('~/.venv/bin/python3'),
+             os.path.expanduser('~/venv/bin/python3')]
+    cands = [c for i, c in enumerate(cands) if c and c not in cands[:i]]
+    chosen = cands[0]
+    if need_mod:
+        for c in cands:
+            try:
+                if _sp.run([c, '-c', f'import {need_mod}'], capture_output=True,
+                           timeout=25).returncode == 0:
+                    chosen = c
+                    break
+            except Exception:                                 # 없는 실행파일·타임아웃 → 다음 후보
+                continue
+    _EIS_PY_CACHE[key] = chosen
+    return chosen
 
 
 def _subproc_msg(r, label):
