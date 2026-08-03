@@ -43,9 +43,16 @@
   <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px">
     <label style="display:flex;align-items:center;gap:5px;font-size:.76rem;color:var(--dim);white-space:nowrap">두께 L(µm)
       <input id="xe-th" type="number" step="0.5" min="0.5" max="300" value="45" class="e-in" style="width:70px;padding:5px"
-             title="합제(cathode) 두께 µm — 파일 선택 전에 입력하면 이 배치의 모든 측정에 기록되어 대칭셀 σ_e=L/R1 이 바로 이 두께로 fit 됨.  셀별로 다르면 업로드 후 표의 L(µm) 칸에서 개별 수정."></label>
+             title="합제(cathode) 두께 µm.  ① 파일 선택 전에 입력하면 그 업로드 배치에 기록됨.  ② 이미 올라온 측정에 적용하려면 표에서 체크한 뒤 오른쪽 '체크행에 적용'."></label>
+    <button id="xe-th-apply" class="btn btn-sm btn-secondary" style="white-space:nowrap"
+            title="위 두께를 표에서 **체크한 대칭셀 행**에 한꺼번에 적용 (σ_e=L/R1 재계산).
+full 셀은 σ_e 에 두께를 안 쓰므로 건너뜁니다.">✓ 체크행에 적용</button>
     <input id="xe-file" type="file" multiple accept=".mpr,.mps,.csv" class="e-in" style="flex:1 1 300px;padding:5px" title="파일을 선택하면 왼쪽 두께와 함께 자동으로 업로드 · fit 진행">
     <button id="xe-refresh" class="btn btn-sm btn-secondary">↻ 목록</button>
+  </div>
+  <div style="font-size:.7rem;color:var(--dim);margin:-4px 0 6px">
+    ↑ 이 두께는 <b>새 업로드용</b>입니다.  이미 있는 측정은 표의 L(µm) 을 고치고 <b>옆 ✓</b> 를
+    누르거나, 여러 개면 체크 후 <b>✓ 체크행에 적용</b>.
   </div>
   <div id="xe-status" style="font-size:.74rem;color:var(--dim);margin-bottom:8px"></div>
   <div style="overflow-x:auto">
@@ -506,8 +513,11 @@ const EIS = {
         `title="이 측정의 합제(cathode) 두께 µm — 옆 ✓ 를 눌러야 저장된다 (σ_e=L/R1 재계산, 대칭셀만 유효).`+
         (r.filename_thickness_um!=null?` ⚠파일명은 ${r.filename_thickness_um}µm 이지만 그건 집전체(SUS ~15-20µm) 포함 총두께 → σ_e 엔 합제만(≈45) 쓸 것`:'')+`">`+
         `<button id="xe-Lok-${idx}" onclick="EIS.setThick('${r.filename}',this.previousElementSibling.value,${idx})" disabled `+
-        `style="border:none;background:none;color:var(--dim);cursor:pointer;font-size:.8rem;padding:0 2px;opacity:.25" `+
-        `title="입력한 두께 저장 (값을 바꾸면 활성화)">✓</button>`+
+        // ★ opacity .25 는 화면에서 **버튼이 없는 것**으로 읽혔다 (실제 신고: "확인 버튼 없고").
+        //   비활성일 때도 테두리를 줘서 '누를 수 있는 것' 임을 보이게 하고, 값이 바뀌면 초록으로.
+        `style="border:1px solid var(--border);background:none;color:var(--dim);cursor:pointer;`+
+        `font-size:.78rem;padding:0 4px;margin-left:3px;border-radius:4px;opacity:.55" `+
+        `title="입력한 두께 저장 — 값을 바꾸면 초록으로 활성화된다 (Enter 도 동일)">✓</button>`+
         (r.filename_thickness_um!=null&&r.L_composite_um!=null&&Math.abs(r.filename_thickness_um-r.L_composite_um)<0.51
           ?`<span style="color:#c0392b" title="파일명 총두께(집전체 포함)를 합제 L 로 입력한 듯 — σ_e 과대">⚠</span>`:'')+
         `</td>`+
@@ -529,6 +539,7 @@ const EIS = {
   thickDirty(idx){               // 값이 바뀌면 ✓ 만 켠다 — 저장은 ✓ 를 눌러야 (즉시반영 금지)
     const b=this.el('xe-Lok-'+idx); if(!b) return;
     b.disabled=false; b.style.opacity='1'; b.style.color='#1e8f5e';
+    b.style.borderColor='#1e8f5e'; b.style.fontWeight='700';
   },
   async setThick(filename, v, idx){  // ✓ 클릭/Enter 로만 호출 → override 저장 + σ_e=L/R1 재계산 (재fit 없음)
     const t=parseFloat(v);
@@ -540,6 +551,29 @@ const EIS = {
     if(d.error){ this.el('xe-status').innerHTML='<span style="color:#c0392b">두께 반영 실패: '+d.error+'</span>'; }
     else { this.el('xe-status').innerHTML='<span style="color:#1e8f5e">✓ '+filename+' → L='+t+'µm, σ_e 재계산됨</span>'; }
     this.renderExpTable(d);
+  },
+  async applyThickToChecked(){   // 위 두께칸 → 체크된 **대칭셀** 행에 일괄 적용
+    const t=parseFloat((this.el('xe-th')||{}).value);
+    if(!isFinite(t)||t<0.5||t>300){ this.el('xe-status').innerHTML=
+      '<span style="color:#c0392b">위 두께를 0.5~300µm 로 넣으세요</span>'; return; }
+    const files=this.selectedExpFiles();
+    if(!files.length){ this.el('xe-status').innerHTML=
+      '<span style="color:#a07c1f">표에서 적용할 행을 체크하세요 (오른쪽 체크박스)</span>'; return; }
+    this.el('xe-status').innerHTML=`<span style="color:#2a5db0">⏳ ${files.length}개 행에 L=${t}µm 적용 중…</span>`;
+    let okn=0, skip=[], last=null;
+    for(const fn of files){
+      try{
+        const d=await (await fetch('/api/eis_exp_thickness',{method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({filename:fn, thickness_um:t})})).json();
+        if(d.error){ skip.push(fn.replace(/\.[^.]+$/,'')+': '+d.error.slice(0,40)); }
+        else { okn++; last=d; }
+      }catch(e){ skip.push(fn+': '+e); }
+    }
+    this.el('xe-status').innerHTML =
+      `<span style="color:${okn?'#1e8f5e':'#c0392b'}">${okn?'✓':'✗'} ${okn}개 행 L=${t}µm 적용</span>`+
+      (skip.length?`<br><span style="color:#a07c1f">건너뜀 ${skip.length}: ${skip.join(' · ')}</span>`:'');
+    if(last) this.renderExpTable(last);
   },
   async renameExp(filename){     // 이름 변경 — 서버가 raw/extracted + fit행 + 두께지정을 함께 옮긴다
     const cur=(filename||'').replace(/\.[^.]+$/,'');
@@ -744,6 +778,8 @@ const EIS = {
     // 파일 선택 시 자동 업로드 (삭제된 수동 버튼 대신)
     this.el('xe-file').addEventListener('change', ()=>this.uploadExp());
     this.el('xe-refresh').addEventListener('click', ()=>this.loadExpList());
+    const _ta=this.el('xe-th-apply');
+    if(_ta) _ta.addEventListener('click', ()=>this.applyThickToChecked());
     this.loadExpList();   // 이미 먹인 측정 목록(표) 초기 로드
     this.el('e-ica-run').addEventListener('click', ()=>this.runICA());
     this.el('ec-run').addEventListener('click', ()=>this.runCycle());
