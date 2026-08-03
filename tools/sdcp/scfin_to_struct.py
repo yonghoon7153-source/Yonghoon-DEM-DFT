@@ -167,13 +167,19 @@ VSTYLE = {
     "S":  (0.48, 255, 250,   0, 255, 250,   0),
     "O":  (0.38, 254,   3,   0, 254,   3,   0),
     "H":  (0.20, 255, 255, 255, 255, 204, 204),
-    "Li": (0.40, 134, 224, 116, 134, 224, 116),
-    "Ni": (0.45,  58, 106, 184,  58, 106, 184),
+    "Li": (0.42,  70, 175,  90,  70, 175,  90),
+    "Ni": (0.46,  40,  90, 200,  40,  90, 200),
 }
+# ⚠ **반지름은 셀 크기에 맞춰 키워야 한다 (2026-08-03 실측).** 위 값은 ~10 A 분자용이라
+#   11.5 x 18.3 x 28.8 A 결정 셀에 그대로 쓰면 화면의 1% 짜리 **점**이 된다. 비율은
+#   분자 .vesta 와 같게 두고 전체를 상수배 한다 → 분자 그림과 상대 크기가 유지된다.
+RAD_SCALE_DEFAULT = 1.7
 # ⚠ scf.in 은 Ni1/Ni2 (AFM 부격자)를 라벨로 구분해 들고 있다. .vasp/.xyz 로 나갈 때는
 #   원소 Ni 로 뭉개지지만 **.vesta 는 site 단위 색을 쓰므로 부격자를 살릴 수 있다** —
 #   NiO6 팔면체가 파랑/회색으로 갈리면 반강자성 배치가 그림에서 바로 읽힌다.
-NI_SUB = {"Ni1": (58, 106, 184), "Ni2": (150, 152, 156)}
+# ⚠ **흰 배경에 옅은 회색을 쓰면 원자가 사라진다 (실측: Ni 절반이 안 보였다).**
+#   AFM 쌍은 파랑/보라로 — 둘 다 흰 배경에서 진하고, O(빨강)·S(노랑)·Li(초록)와 안 겹친다.
+NI_SUB = {"Ni1": (40, 90, 200), "Ni2": (150, 60, 170)}
 # (A1, A2, max_len, show_polyhedra)
 VBONDS = [("Ni", "O", 2.40, 1),   # NiO6 팔면체 + 분자 O 와의 흡착결합(1.89 A)도 여기서 그려진다
           ("Li", "O", 2.60, 0),
@@ -181,7 +187,7 @@ VBONDS = [("Ni", "O", 2.40, 1),   # NiO6 팔면체 + 분자 O 와의 흡착결�
           ("C", "S", 1.95, 0), ("S", "O", 1.80, 0), ("O", "H", 1.10, 0)]
 
 
-def write_vesta(path, cell, labels, elems, pos, title):
+def write_vesta(path, cell, labels, elems, pos, title, scale=RAD_SCALE_DEFAULT):
     """CRYSTAL 형식 .vesta. 좌표는 **분율**이어야 한다 (MOLECULE 판은 Cartesian).
 
     ⚠ CLAUDE.md: .vesta 는 **ASCII 전용 + CRLF**. 비ASCII 한 글자가 파싱을 깨뜨린 전례가
@@ -231,14 +237,17 @@ def write_vesta(path, cell, labels, elems, pos, title):
         if a1 not in present or a2 not in present:
             continue
         n += 1
-        # 필드: search_mode boundary_mode show_polyhedra search_by_label style
-        # ⚠ boundary_mode=1 이어야 **셀 경계를 넘는 결합**이 그려진다. 이 계의 흡착결합이
-        #   실제로 shift (1,1,0) 이라, 0 이면 결합선이 안 보여 "떠 있는" 것처럼 보인다.
-        L.append(f"  {n}  {a1:>5s} {a2:>5s}    0.00000  {mx:9.5f}  0  1  {poly}  0  1  "
-                 f"0.110  0.000 127 127 127")
+        # ⚠ 플래그는 **사용자의 기존 .vesta 와 한 글자도 다르지 않게** `0 1 1 0 1` 로 둔다.
+        #   그 파일이 정상 렌더되는 known-good 조합이다. 여기를 임의로 0 으로 바꿨더니
+        #   결합이 안 그려졌다(실측) — 이 5개 정수의 의미를 추측으로 건드리지 않는다.
+        #   boundary_mode(2번째)=1 이라 **셀 경계를 넘는 결합**도 그려진다. 이 계의
+        #   흡착결합이 실제로 shift (1,1,0) 이므로 이게 0 이면 분자가 떠 보인다.
+        L.append(f"  {n}  {a1:>5s} {a2:>5s}    0.00000  {mx:9.5f}  0  1  1  0  1  "
+                 f"{0.110 * scale:.3f}  0.000 127 127 127")
     L += ["  0 0 0 0", "SITET"]
     for i, (e, lb, sl) in enumerate(zip(elems, labels, site_lab), 1):
         rad, r1, g1, b1, r2, g2, b2 = VSTYLE.get(e, (0.40, 160, 160, 160, 160, 160, 160))
+        rad *= scale
         if lb in NI_SUB:
             r1, g1, b1 = NI_SUB[lb]; r2, g2, b2 = r1, g1, b1
         L.append(f"  {i:3d} {sl:>10s}  {rad:.4f} {r1:3d} {g1:3d} {b1:3d} "
@@ -248,6 +257,7 @@ def write_vesta(path, cell, labels, elems, pos, title):
           "DLPLY", " -1", "PLN2D", "  0   0   0   0", "ATOMT"]
     for k, e in enumerate(sorted(present, key=lambda x: list(elems).index(x)), 1):
         rad, r1, g1, b1, r2, g2, b2 = VSTYLE.get(e, (0.40, 160, 160, 160, 160, 160, 160))
+        rad *= scale
         L.append(f"  {k}  {e:>9s}  {rad:.4f} {r1:3d} {g1:3d} {b1:3d} {r2:3d} {g2:3d} {b2:3d}  50")
     # SCENE: c 축을 화면 위로 세운 측면 시점 (슬랩은 위에서 보면 층이 안 보인다)
     L += ["  0 0 0 0 0 0", "SCENE",
@@ -257,7 +267,7 @@ def write_vesta(path, cell, labels, elems, pos, title):
           "DISPF 37749698", "MODEL   0  1  0", "SURFS   0  1  1", "SECTS  32  1",
           "FORMS   0  1", "ATOMS   0  0  1", "BONDS   1", "POLYS   1", "VECTS 1.000000",
           "FORMP", "  1  1.0   0   0   0", "ATOMP", " 24  24   0  50  2.0   0", "BONDP",
-          "  1  16  0.110  0.000 127 127 127", "POLYP", "  50 1  0.030 150 150 150",
+          f"  1  16  {0.110 * scale:.3f}  0.000 127 127 127", "POLYP", "  50 1  0.030 150 150 150",
           "ISURF", "  0   0   0   0", "TEX3P", "  1         -INF         -INF", "SECTP",
           "  1  5.00000E-01  5.00000E-01  0.00000E+00  0.00000E+00  0.00000E+00  0.00000E+00",
           "CONTR", " 0.1 -1 1 1 10 -1 2 5", " 2 1 2 1", "   0   0   0", "   0   0   0",
@@ -324,6 +334,8 @@ def main():
                     help="QE scf.in 또는 Phase-A pose .xyz (확장자로 자동 판별)")
     ap.add_argument("--out", required=True)
     ap.add_argument("--tag", default=None, help="출력 접두어 (기본: 상위 디렉터리명)")
+    ap.add_argument("--vesta_scale", type=float, default=RAD_SCALE_DEFAULT,
+                    help="VESTA 원자 반지름 배율. 셀이 크면 키운다 (기본 1.7)")
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
 
@@ -345,7 +357,8 @@ def main():
         write_poscar(os.path.join(a.out, f"{tag}.vasp"), cell, order, counts, pos, comment)
         write_vesta(os.path.join(a.out, f"{tag}.vesta"), cell, labels, elems, pos,
                     f"{tag} (nat {len(elems)}) - unrelaxed single-point geometry, "
-                    f"NiO6 polyhedra + AFM sublattice colors (Ni1 blue / Ni2 gray)")
+                    f"NiO6 polyhedra + AFM sublattice colors (NiA blue / NiB purple)",
+                    scale=a.vesta_scale)
 
         print(f"\n══ {tag}  (nat {len(elems)}) ══")
         print(f"  cell  a {np.linalg.norm(cell[0]):.3f}  b {np.linalg.norm(cell[1]):.3f}"
