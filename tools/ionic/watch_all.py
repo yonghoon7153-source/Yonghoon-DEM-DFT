@@ -245,15 +245,14 @@ def render(captured: str) -> str:
             pruned.append(l)
         keep.append("\n".join(pruned).rstrip())
     out = [("\n" + BAR + "\n").join(keep)]
-    for _sh, items in sub.items():
-        done.append(f"{_sh}[" + " · ".join(dict.fromkeys(items)) + "]")
-    if done or idle:
+    # ⚠ 끝난 것·자료 없는 것은 **화면에 안 띄운다** (2026-08-03 요청).
+    #   watch(1) 은 스크롤이 안 되므로 지금 볼 것만 남기는 게 목적이다.
+    #   전체가 필요하면 --full. 다만 **몇 개가 접혔는지는** 한 줄로 남긴다 —
+    #   "아무것도 없음"과 "다 끝남"이 화면에서 같아 보이면 안 되기 때문.
+    n_fold = len(dict.fromkeys(done)) + len(dict.fromkeys(idle)) + len(sub)
+    if n_fold:
         out.append(BAR)
-        if done:
-            out.append("✅ 완료 — " + " · ".join(dict.fromkeys(done)))
-        if idle:
-            out.append("·  자료 없음 — " + " · ".join(dict.fromkeys(idle)))
-        out.append("   (--full 로 전부 펼침)")
+        out.append(f"({n_fold}건 접힘 — 완료·미가동. --full 로 펼침)")
     return "\n".join(out)
 
 
