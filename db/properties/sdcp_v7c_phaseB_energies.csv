@@ -2,6 +2,7 @@ job,E_Ry,status,error_bar_Ry,notes
 mol_doped,-518.39271245,converged,~1e-6,34 atoms; 8A vacuum box; r2SCAN->PBE+U n/a (gamma PBE); '!' final line
 mol_neutral,-519.68310300,converged,~1e-6,35 atoms; same recipe
 slab,-10563.22819091,MAXSTEP_PLATEAU_300it,0.0075,"96-atom clean LiNiO2(104), U-direct degauss0.05/beta0.10/ndim8; NO '!' line (plateau) -> last plain total-energy; last-6 band full-width 14.9 mRy (+-7.5 mRy = +-0.10 eV); acc_end 6.2e-3 Ry (new best); E still drifting -0.4 mRy/iter at cutoff -> true value slightly lower; drift/recipe systematics shared with complexes -> partial cancellation in E_bind"
+slab_slabfirst,-10563.23044425,converged,~1e-6,"96-atom clean LiNiO2(104), SAME cell/geometry as the plateau row; slab-first recipe degauss0.03/beta0.03/ndim8 + startingpot='file' (density inherited from the plateaued run, Broyden history reset) + electron_maxstep 30 -> 'convergence has been achieved in 30 iterations', '!' line present. Per-site magn present: Ni1 +1.020 / Ni2 -1.020 muB (low-spin Ni3+ S=1/2), Li +0.002, AFM sum 0.000. 2026-08-03 KST"
 complex_doped,-11081.73293860,DONE_PLATEAU,0.004,"130 atoms; U-direct recipe; E_bind(doped)=Ecd-Es-Emd=-0.11204 Ry=-1.524 eV (provisional)"
 complex_neutral,-11083.07396953,DONE_PLATEAU,0.004,"131 atoms; U-direct recipe; E_bind(neutral)=Ecn-Es-Emn=-0.16268 Ry=-2.213 eV (2026-07-17 KST)"
 "# E_bind(doped)  = E(complex_doped)  - E(slab) - E(mol_doped);  E_bind(neutral) analog; VERDICT = difference of the two."
@@ -13,4 +14,7 @@ complex_neutral,-11083.07396953,DONE_PLATEAU,0.004,"131 atoms; U-direct recipe; 
 "# >>> neutral pose lies down (image gap 4.72 A) -> -2.213 eV stands. UMA champion selection additionally discredited (it optimized the sandwich)."
 "# v2 protocol: same-pose doped = neutral geometry minus acidic H (C11H15O6S2 = mol_doped stoichiometry, refs unchanged), molecule-only"
 "# gamma relax (nstep 30, conv 1e-5) then 221 rescore on relaxed geometries for both states. VERDICT pending v2."
+"# ★ PLATEAU 는 깨진다 (2026-08-03). 아래 2026-08-01 판정(=plateau 가 정상 거동)은 **부분 철회**한다: 같은 셀/기하에서 plateau 밀도를 startingpot='file' 로 물려 SCF 를 **다시 시작**하니 30 iteration 만에 수렴했다('!' 줄 확보). 즉 한계고리(limit cycle)의 원인은 계 자체가 아니라 **Broyden 혼합 이력**이고, 이력을 비우고 좋은 밀도에서 재출발하면 빠져나온다. 처방: degauss 를 넓히지 말고 '수렴시켜 → 죽여 → 밀도 물려 재시작'."
+"# ★ 갱신 슬랩값의 영향: -10563.23044425 vs plateau -10563.22819091 = -30.7 meV (기존 오차막대 +-102 meV 안쪽 → plateau 규약이 사후 검증됨). E_bind 절대값은 doped -1.4937 / neutral -2.1827 eV 로 각각 +30.7 meV 이동하지만, **차분 +0.6890 eV 는 한 자리도 안 변한다** — 슬랩 항이 두 갈래에서 똑같이 상쇄되기 때문."
+"# ⚠ tprnfor 를 끈다 (2026-08-03 실측): SCF 수렴 후 PAW+U 힘 항이 96원자에서 35분+ 100%%(총 elapsed 1h48m, JOB DONE 0). 전 job 단일점 scf 이고 E_bind 는 총에너지 차분이라 힘을 안 쓴다 → 기본 .false."
 "# ⚠ SLAB PLATEAU 는 이 계의 정상 거동이다 (2026-08-01 확인). degauss 0.05/beta 0.10/ndim 8 판 acc_end 6.2e-3 Ry, degauss 0.03/beta 0.03/ndim 8 판 5.0e-3 Ry — 둘 다 특정 값 근처 limit cycle 로 갇힌다(진동률 47-53%, 자화는 안정). degauss 를 넓혀도 안 잡히고 0.03 판이 이미 더 낫다. 슬랩은 verdict 에서 상쇄되고 우리가 원하는 건 Ni 시드이므로 plateau 를 수용하고 2단계로 간다. 절대 E_bind 인용 시에만 오차막대를 붙인다."
