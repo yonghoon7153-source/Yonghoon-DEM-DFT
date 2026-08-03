@@ -88,6 +88,31 @@ def arrhenius(D):
     return -((n * sxy - sx * sy) / den) * kB
 
 
+def beta(mj, lo=2.0, hi=50.0):
+    """msd.json → 창 [lo,hi] 의 log-log 기울기. 확산이면 ~1.
+
+    ⚠ 이 화면이 예전에 '3-seed 완성 → open_items #1 닫을 조건 충족' 이라고 찍었는데,
+      정작 6/6 이 케이지(β 0.17–0.79)라 **그 Ea 를 쓰면 안 되는** 상태였다(2026-08-01).
+      Ea 를 보여줄 거면 게이트도 같은 화면에서 보여줘야 한다.
+    """
+    try:
+        d = json.load(open(mj))
+        t, y = d.get("times_ps"), d.get("msd_Li_A2")
+        if not t or not y:
+            return None
+        pts = [(math.log(a), math.log(b)) for a, b in zip(t, y)
+               if lo <= a <= hi and a > 0 and b > 0]
+        if len(pts) < 3:
+            return None
+        n = len(pts)
+        sx = sum(q[0] for q in pts); sy = sum(q[1] for q in pts)
+        sxx = sum(q[0] ** 2 for q in pts); sxy = sum(q[0] * q[1] for q in pts)
+        den = n * sxx - sx * sx
+        return (n * sxy - sx * sy) / den if abs(den) > 1e-30 else None
+    except Exception:
+        return None
+
+
 def md_progress(d):
     """md.log 마지막 Time[ps] → (ps, 퍼센트). 못 읽으면 (None, None)."""
     f = os.path.join(d, "md.log")
@@ -124,6 +149,7 @@ print("① comp1 멀티시드 — modelc Ea 정본 충돌을 닫는다 (open_ite
 ROOT = os.path.join(H, "work", "runs", "comp1_seeds")
 allD = {"deck(1234)": dict(DECK)}
 done_files = []
+caged = []                     # 확산영역 게이트 실패 목록
 n_done = 0                     # 부분 완료(seed 하나에 T 두 개 등)도 세는 카운터
 if not os.path.isdir(ROOT):
     print(f"  (아직 — {ROOT} 없음)")
@@ -142,7 +168,11 @@ else:
                     D = None
             if D:
                 Ds[T] = float(D)
-                srow.append(f"{T}K✓({D:.2e})")
+                b = beta(mj)
+                gate = "" if b is None else ("" if 0.8 <= b <= 1.2 else f"⛔β{b:.2f}")
+                if gate:
+                    caged.append(f"s{s}/T{T}(β{b:.2f})")
+                srow.append(f"{T}K✓({D:.2e}){gate}")
                 done_files.append(mj); n_done += 1
             else:
                 ps, pct = md_progress(d)
@@ -168,11 +198,19 @@ else:
         vals = list(eas.values())
         mean = sum(vals) / 3
         sd = (sum((v - mean) ** 2 for v in vals) / 2) ** 0.5
-        print(f"  ✅ **3-seed 완성**: comp1 Ea = {mean:.4f} ± {sd:.4f} eV "
-              f"({' / '.join(f'{k} {v:.4f}' for k, v in eas.items())})")
-        print(f"     → {MODELC_3SEED} 와 **같은 프로토콜**로 비교 가능. "
-              "open_items #1 닫을 조건 충족.")
-        print("     ⚠ 등록 전에 modelc 단일-deck 앵커(0.2235)를 SUPERSEDED 로 표시할 것.")
+        # ⚠⚠ **게이트를 먼저 본다.** 숫자가 다 모였다고 인용 가능한 게 아니다.
+        if caged:
+            print(f"  ⛔ **3-seed 숫자는 모였지만 인용 금지**: Ea = {mean:.4f} ± {sd:.4f} eV "
+                  f"({' / '.join(f'{k} {v:.4f}' for k, v in eas.items())})")
+            print(f"     확산영역 게이트 실패 {len(caged)}건: {', '.join(caged[:6])}")
+            print("     → 200 ps 로는 저이동도 계에서 MSD 가 확산 영역에 못 간다. 창 변경·시드")
+            print("       평균 어느 쪽으로도 구제 안 됨. **prod 연장(1600 ps) 또는 셀 확대**가 답.")
+            print("     근거: kb/results/mlip_md_diffusive_gate_2026_08_01.md")
+        else:
+            print(f"  ✅ **3-seed 완성 + 게이트 통과**: comp1 Ea = {mean:.4f} ± {sd:.4f} eV "
+                  f"({' / '.join(f'{k} {v:.4f}' for k, v in eas.items())})")
+            print(f"     → {MODELC_3SEED} 와 같은 프로토콜로 비교 가능. open_items #1 닫을 조건 충족.")
+            print("     ⚠ 등록 전에 modelc 단일-deck 앵커(0.2235)를 SUPERSEDED 로 표시할 것.")
     else:
         left = 6 - n_done
         eta = ""
@@ -184,12 +222,26 @@ else:
                 eta = f" · 런당 {per:.1f} h → 남은 {left}개 대략 {per * left:.0f} h"
         print(f"  진행 {n_done}/6 완료 · 남은 {left}개{eta}")
 
-if not alive("run_comp1_seeds.sh") and "c1md" not in tmux:
-    print("  ⛔ 프로세스도 tmux 도 없다 — 재기동:")
-    print("     conda activate uma && PY=$(which python3) && mkdir -p ~/work && \\")
-    print("     tmux new -s c1md -d \"PY=$PY bash tools/ionic/run_comp1_seeds.sh "
-          "> ~/work/comp1_seeds.log 2>&1\"")
-    print("     ⚠ 환경변수는 따옴표 **안쪽** — tmux 는 서버-클라이언트라 밖에 두면 안 넘어간다.")
+# ── 1600 ps 재시도 상태 ─────────────────────────────────────────────────
+LONG = os.path.join(H, "work", "runs", "comp1_seeds_p1600")
+if os.path.isdir(LONG):
+    n = len(glob.glob(os.path.join(LONG, "s*", "d*_cfg*", "T*", "msd.json")))
+    live = ""
+    for d in sorted(glob.glob(os.path.join(LONG, "s*", "d*_cfg*", "T*"))):
+        ps, _ = md_progress(d)
+        if ps is not None and not os.path.isfile(os.path.join(d, "msd.json")):
+            live = f" · 지금 {os.path.basename(d)} {ps:.0f}/1605 ps"
+    print(f"  ↻ 1600 ps 재시도: {n}/3 완료{live}")
+elif not alive("run_comp1_seeds.sh") and "c1long" not in tmux:
+    # ⚠ 200 ps 재기동을 권하면 안 된다 — msd.json 이 있어 전부 skip 되고, 설령 돌아도
+    #   게이트를 또 실패한다. 다음 수는 **prod 연장**이다.
+    print("  ⛔ 아무것도 안 돈다. 다음 수는 200 ps 재기동이 아니라 **prod 연장**:")
+    print("     conda activate uma && PY=$(which python3) && \\")
+    print("     tmux new -s c1long -d \"PY=$PY PRODPS=1600 SEEDS=2 \\")
+    print("       OUTROOT=$HOME/work/runs/comp1_seeds_p1600 \\")
+    print("       bash tools/ionic/run_comp1_seeds.sh > ~/work/comp1_p1600.log 2>&1\"")
+    print("     ⚠ 환경변수는 따옴표 **안쪽** · OUTROOT 를 바꿔야 기존 msd.json 에 안 막힌다.")
+    print("     ~27 h (3.0 ps/min × 1605 ps × 3 T). 이 결과가 캠페인 방향을 정한다.")
 print(BAR)
 
 # ═══ ② VGCF NEB (완료 — 한 줄) ═══════════════════════════════════════════
