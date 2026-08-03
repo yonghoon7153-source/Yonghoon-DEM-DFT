@@ -91,9 +91,11 @@
 - 미등재 67편의 대부분(≈63)은 **DEM·기계·건식전극 클러스터** — SE 캠페인과 축이 달라
   argyrodite 전용 INDEX 에 안 들어간 것이 설계상 자연스럽다. 다만 **SE 축 4편은 진짜 누락**:
   `huang2022_li2sis3_anomalous_conductivity_bvse` ·
-  `lee2024_multicomponent_argyrodite_mixed_oxidation_mtp` ·
-  `kim2026_hts_li3sc2po43_coating_midni_ncm` · `yun2023_deciphering_degradation_halide_vs_sulfide`
-  — 앞 3편은 2026-07-28 캠페인에서 우리가 직접 먹인 것들이다.
+  ~~`lee2024_multicomponent_argyrodite_mixed_oxidation_mtp`~~ **✅ 해소 2026-08-04** (INDEX 행 + comparison `[Lee24MO]` 키
+  + 축 A 4행 신설; 본문 실물 독립 검증 §11 = 교정 6·신규 16) ·
+  ~~`kim2026_hts_li3sc2po43_coating_midni_ncm`~~ **✅ 해소 2026-08-03** ·
+  `yun2023_deciphering_degradation_halide_vs_sulfide`
+  — 앞 3편은 2026-07-28 캠페인에서 우리가 직접 먹인 것들이다. **남은 진짜 누락 2편: huang2022 · yun2023.**
 - **판정**: 급하지 않다(사이트가 정본). 다만 논문 에이전트가 digest 를 쓸 때
   **INDEX 갱신을 같이 하도록 되어 있는데 그게 최근 3건에서 안 됐다** — 에이전트 지침 점검 필요.
   DEM 클러스터는 별도 인덱스로 분리 유지가 맞다(축이 다름).
@@ -108,6 +110,7 @@
 | ~~4~~ | ✅ **확보·다이제스트 완료 (2026-07-28)** Kim et al., Nano Energy 124, 109436 | 10.1016/j.nanoen.2024.109436 | **신규성 판정 완료**: enumerate 6 특성배열+단일 random supercell, config-분산 오차막대 **없음** → 우리 다중 config×멀티시드 산포 보고는 신규 기여로 원고 기재 가능 (digest: kim2024_mtp_argyrodite_disorder_gb.md) |
 | ~~5~~ | ✅ **확보·다이제스트 완료 (2026-07-28) — 단 귀속 오류 판명** Schlem et al. AEM 1903719 | 10.1002/aenm.201903719 | 실물 = **Li3MCl6(Y,Er) 기계화학 논문, LPSCl 데이터 0건** → 'ordered 0.25' 앵커 철회, li_transport 정정 완료. '무질서=공정변수'의 최정밀 외부 실증(Er 무질서 88→2.5% 연속 조절)으로 가치 전환. **신규 미결: LPSCl 0.25/0.22의 진짜 원전 추적** (후보: Schlem 2019 계열 argyrodite 논문 — 서지 확인 필요) |
 | (6) | Kim rapid-thermal (10.2 mS/cm, liu2022 재인용) | liu2022 참고문헌에서 확인 | 공정–무질서 관계 보강 (우선순위 낮음) |
+| 7 | **Chouchane, Yao, Cronk, Zhang, Meng**, "Improved Rate Capability for Dry Thick Electrodes through Finite Elements Method and Machine Learning Coupling", *ACS Energy Lett.* **2024, 9, 4** | (미확인) | **DEM/미세구조 트랙 직접 선행** — `Library of Real Particles → Stochastic Generation → FEM → 입자별 평균 SOD → Random Forest` 워크플로. Chouchane 은 ARTISTIC(Franco) → Meng 계보. `talks/moon2026_cau_...` 슬 32가 "Reference Work"로 인용. 2026-08-03 덱 재판독으로 발견 |
 
 확보 시 "논문 에이전트"(litdb-curator)로 다이제스트 → 서베이 ⚠딱지 승격.
 진행: #1 de Klerk·#2 Adeli·#3 Deng·#35쌍·#36쌍(Schlem 추정) — 2026-07-28 큐레이터 5기 가동.
@@ -207,10 +210,26 @@ digest는 `litdb/talks/`, 벤치마크 수치는 `db/properties/external_benchma
 | ~~**T9**~~ | ✅ **완료 (2026-07-28)** — 계면 상대 5종 {양극 만충/반충, **SE(LPSCl)**, **Li 음극**, LiNbO₃ 대조} 47종 전수 | **M6의 'vacuous' 판정을 우리 데이터로 확정 반증.** 축별 탈락: 양극 만충 **2** · 반충 **3** · **SE 29** · **Li 음극 35** · LNO 4. 코어 생존자 **11 → 3종**(CaF₂·LiF·MgO). 앵커 재현도 정확 — LPSCl vs Li −541.5 (Lee 2024 Li₆PS₅I −539.2, 0.4% 차) · vs LNO −108.8 (−107.5, 1.2%). 상세: **판정 이력 V1** | — | ✅ |
 | ~~**T10**~~ | ⛔ **폐기 (2026-07-28)** — E_hull 필터가 우리 풀에서 무력 | **예측이 빗나갔다.** hull ≥ 50 meV 탈락 **0종**(최대 CrO₃ 46, 나머지 ~0). 원인은 기준이 아니라 **풀**이다 — 47종이 애초에 안정한 흔한 이성분 화합물로 큐레이션돼 있어 어떤 열역학 안정성 기준도 통과한다. → 음성 결과를 `pool_provenance` 논증의 **정량 근거**로 전환. ⚠ '안정성이 안 중요하다'가 **아니다** — 발견 깔때기(Kim 2026은 ECW에서 94.3% 제거)에선 압도적으로 센 게이트고, 우리 풀은 그 단계를 이미 통과한 상태에서 시작할 뿐. 상세: **판정 이력 V2** | — | ⛔ |
 | **T11** | 🔶 **부분 완료 (2026-07-28)** — pseudo-binary ΔE_H₂S 47종 계산됨 | 최악군이 전부 알칼리·알칼리토 산화물(Na₂O −192 · BaO −160 · SrO −116 · Li₂O −108 · CaO −74 meV/atom)로 화학적으로 타당. 불화물은 전부 0 근처. Li₂O·CaO는 SE 축에서도 탈락 = 두 축이 같은 화학을 다른 각도에서 본다. **⚠ 남은 것: host LPSCl 자체의 ΔE_H₂S 기준선** — 없으면 '개선인지'를 말할 수 없다. ⚠ 이상욱 랩 반응 MD(SevenNet 500 ps, ICOHP, Sn 유인)와 **같은 것이 아니다**(0 K 열역학 vs 동역학) | 소 | **1** |
-| **T12** | **van Hove 상관함수** MSD 파이프라인 추가 | Lee 2024 Fig 3e: "cage에 갇힘 vs 자유 확산"을 MSD 기울기가 아니라 **거리–시간 지도**로 판별. 우리 disorder_ensemble의 "ordered frozen" 판정을 선명하게 | 소 | 2 |
+| **T12** | **van Hove 상관함수** MSD 파이프라인 추가 | Lee 2024 Fig 3e: "cage에 갇힘 vs 자유 확산"을 MSD 기울기가 아니라 **거리–시간 지도**로 판별. 우리 disorder_ensemble의 "ordered frozen" 판정을 선명하게. **✅ 도구 확정 (2026-08-04 ESI): `pymatgen-diffusion`**(Note S4, Zhu 2015) · G_s/G_d 분해 eq S4 — 그들도 **G_d 결과는 미게재**라 우리가 G_d 를 그리면 그 자체로 신규. ⚠ 도입 시 **컬러 정규화 기준 명시 필수**(§11-N8) | 소 | 2 |
+| **T13** 🆕 | **MSD 생산길이 200 ps 의 타당성 재검토** (2026-08-04 신설) | Lee 2024 ESI 실물: 그들은 **NPT 10 ns = 우리의 50배**. 우리 창(2–50 ps)이 고정이라 길이 자체가 곧바로 치명적이진 않지만, **느린 계에서 창 안의 유효 hop 수가 충분한지** 점검이 필요. 참고로 그들 Fig S5(a) 는 10 ns 에도 MSD 26 Å²(RMS ~5 Å)에 그친다 — **길이만으로 해결되지 않는다**는 반증이기도 하다 | 중 | 3 |
 
 > 🔑 **T9·T10·T11은 셋 다 비용이 작고 셋 다 우리 깔때기의 약점을 직접 친다.** M6 인프라를
 > 그대로 재사용하므로 묶어서 한 번에 돌리는 것이 맞다.
+
+> 🔁 **2026-08-04 · Lee 2024 ESI 29 pp 실물 검증이 T10·T11 의 성격을 바꿨다**
+> (`litdb/papers/lee2024_multicomponent_argyrodite_mixed_oxidation_mtp.md` §12):
+> - **T10 (E_hull)** — 이미 V2 로 폐기됐지만, **애초에 베낄 레시피 자체가 없었다**:
+>   ESI 29 pp 전체에서 `hull`·`convex`·`synthesiz` 검색 **0회**. 어떤 상도표·참조 DB·functional 로
+>   hull 을 잡았는지 **본문에도 ESI 에도 기술이 없다.** → 폐기 판정과 무관하게, 이 논문을
+>   **E_hull 방법 출처로 인용하면 안 된다.**
+> - **T11 (ΔE_H₂S)** — ⛔ **'그들 Table S4 값을 이식한다'는 선택지가 사라졌다.**
+>   ESI Table S3/S4 를 85행 전수 전사해보니 **할로겐을 분해하지 못한다**: Cl↔Br 8쌍 중 **7쌍 계면
+>   3값 완전동일**, D₁.₅ 혼합비 뒤집기 **7/7 완전동일**, I/Cl/Br 3종 통째 동일 골격 4개
+>   (그런데 같은 묶음 σ 는 최대 **3.18×** 차). 우리 축은 **Cl-rich** 이므로 **직접 계산 필수로 승격.**
+>   ✅ 다만 우리 T9 앵커 재현(−541.5 vs −539.2, −108.8 vs −107.5)은 **여전히 유효**하다 —
+>   그 앵커는 **모체 Li₆PS₅I 단일 조성**이라 할로겐 분해 문제와 무관하다.
+> - 전수 데이터는 `db/properties/lee2024_si_84_structures.csv`(85행), 재현 코드는
+>   `tools/litdb/lee2024_si_tables_transcribe.py`.
 
 ### ⚠ σ 절대값 규율 — 근거 재정의 (2026-07-28)
 
@@ -234,7 +253,7 @@ digest는 `litdb/talks/`, 벤치마크 수치는 `db/properties/external_benchma
 ### 이상욱 랩 논문 확보 위시리스트 (사용자가 탐색·제공 예정)
 | 순위 | 논문 | 왜 |
 |---|---|---|
-| 1 | **Nano Convergence 2026, 13, 27** — 코팅 스크리닝 (17,233 Li-P-S-O) | 우리 cascade/M6의 **직접 대조군**. S6 감사가 대기 |
+| ~~1~~ ✅ | **Nano Convergence 2026, 13, 27** — 코팅 스크리닝 (**17,230 Li·O 산화물** → Li₃Sc₂(PO₄)₃) | **확보·정독 완료** (`litdb/papers/kim2026_hts_li3sc2po43_coating_midni_ncm.md`). ⚠ 종전 표기 '17,233 Li-P-S-O'는 덱 저해상도 전사 오류 — 2026-08-03 철회 |
 | 2 | **Adv. Funct. Mater.** (revision) — argyrodite 가수분해 SevenNet | T2 방법 원본 |
 | 3 | **Chem. Eng. J.** (under review) — Li\|argyrodite 계면 MTP | T3 프로토콜 원본 |
 | 4 | JACS 2025, 147, 47381 — 준안정 3기술자 | metastable 고찰 보강 |
@@ -282,7 +301,14 @@ digest는 `litdb/talks/`, 벤치마크 수치는 `db/properties/external_benchma
 
 ### ⏳ 발표 구술 txt 대기
 두 발표 모두 구술 내용 txt를 받기로 함. 받으면 각 digest `§99` 를 채우고
-미해결 질문(lee Q1–Q6 / moon Q1–Q6)을 닫는다. **이 항목은 닫지 말 것.**
+미해결 질문(lee Q1–Q6 / **moon Q1b·Q2·Q3·Q4·Q5·Q6·Q7·Q8** — Q1은 2026-08-03 재판독으로 종결,
+Q7·Q8은 재판독으로 신설)을 닫는다. **이 항목은 닫지 말 것.**
+
+### 🆕 BEARS arXiv 확보 대기 (2026-08-03 덱 재판독 발)
+`talks/moon2026_cau_...` digest Q3·Q7·Q8이 전부 BEARS/스킬 논문으로만 닫힌다:
+**arXiv:2601.04748**(3계층 스킬 로딩 토큰 절감 실측치) + BEARS 본문(Validator의 **"8종 구조 검증 지표"**
+목록, "40+ skills"와 에이전트별 [3]/[5]/[6]/[8] 표기의 관계). ⚠ **우리 DEM 산출 구조에도 고정 검증
+세트가 없다** — 그들 8종 목록이 나오면 우리 세트 설계의 출발점으로 쓴다.
 
 ## ✅ 닫힌 항목
 - (여기로 이동)
