@@ -45,7 +45,10 @@ SERIES = [
     ("b2o3",      r"B$_2$O$_3$-doped",       "#c0392b", "^"),
 ]
 TEMPS = (600, 800, 1000)
-FIT = (2.0, 50.0)          # 캠페인 규약 창. 여기서만 기울기를 읽는다.
+FIT = (2.0, 50.0)          # 캠페인 규약 창. **여기서만** 기울기를 읽는다.
+# ⚠ 궤적은 200 ps 인데 창은 2-50 ps 다. 창 밖까지 그리는 게 중요하다 —
+#   확산영역 게이트가 생긴 뒤로는 "창 밖에서도 직선인가"가 판정의 일부이고,
+#   창만 보여 주면 독자가 그걸 확인할 수 없다. 창은 음영으로 표시한다.
 
 
 def load(path):
@@ -89,6 +92,11 @@ def main():
                 ax.plot(t, a * t + b, color=c, ls="--", lw=1.1, alpha=.55, zorder=2)
                 if T == TEMPS[0]:
                     used.append((lab, a / 6.0))
+        # 적합 창을 음영으로 — 어디서 D 를 읽었는지가 그림에 남아야 한다
+        ax.axvspan(FIT[0], min(FIT[1], t.max()), color="#94a3b8", alpha=.10, zorder=0)
+        if T == TEMPS[0]:
+            ax.text(FIT[1], ax.get_ylim()[1] * .02, f"  fit {FIT[0]:g}-{FIT[1]:g} ps",
+                    fontsize=8, color=MUT, va="bottom")
         apply_axes(ax, xlabel="time (ps)",
                    ylabel=r"Li MSD  ($\mathrm{\AA}^2$)" if T == TEMPS[0] else None)
         ax.set_title(f"{T} K", fontsize=13, fontweight="bold", color=INK)
