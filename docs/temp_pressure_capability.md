@@ -83,7 +83,7 @@ Eₐ(이온) 밴드 = **0.29–0.46 eV** (중앙 0.41 eV, Reisacher 2023 STATED,
 | ① | **f = F/RT** (BV Tafel 기울기) | `step4_dyn.py:624-625` — 솔버에서 **유일하게 T 를 따름** | **f ×0.9099** (38.280→34.828 V⁻¹, **30→60 °C**) | 맞음 (그 자체는 정확) | — | RT/F **26.12→28.71 mV** |
 | ② | **η_ct (반응 과전압)** | ①만 움직임 → η_ct ∝ 1/f | **×1.099 (+9.9 % 증가)** | R_ct 289.9→67.8 Ω·cm² = **×0.234 (4.28배 감소)** | ★**부호 반대** | 코드가 **4.7× 과대**. 45 °C 에선 ~2.2× 과대 |
 | ③ | **σ_ion (LPSCl)** | ~~`network_conductivity.py:44` 3.0e-3 S/cm **상수**~~ **[→ §9 구현됨]** `se_material.sigma_grain_S_cm(T)` 경유, `--temp-c` 로 스케일 (미지정 시 여전히 ×1.00 = 현행 전 코퍼스) | 기본 **×1.00** / `--temp-c` 시 밴드 배수 | ×2.47 (Eₐ 0.29) ~ **×3.74 (0.41)** ~ ×4.44 (0.46). kim2025 실측 R_ion 34.9→9.1 = ×3.84 | 기본값에서는 σ_ion **과소** (그대로) | 온도를 **주면** 해소, 안 주면 이온 옴강하 ~3–4× 과대 유지. **기본값을 바꾸는 것은 별도 결정** |
-| ④ | **i0 (교환전류밀도)** | `step4_dyn.py:627-629` — SOC 형상만, T 항 **없음** | ×1.00 | Eₐ(i0) ≈ 0.39 eV (R_ct 에서 유도, **ASSUMED/TREND-only**) | i0 과소 | ② 의 원인. 단독 앵커 없음(§F1) |
+| ④ | **i0 (교환전류밀도)** | ★ **구현됨** (`--i0-temp-scale`, `cam_kinetics.py`) — §12 | ×6.25 @60 °C | **Eₐ_i0 = Eₐ_Rct + k_B·T̄ = 0.4212 + 0.0274 = 0.4486 eV** (★MED-14 정정: **가산**이다. 옛 `≈0.39 eV` 는 부호가 반대였고 그대로 구현하면 i0(60) ×4.927 = 코드 대비 −21.2 %) | — | 코드는 정확형 `(T/T_ref)·exp[−Eₐ_Rct/k_B·(1/T−1/T_ref)]` 를 쓴다 (유효 Eₐ 는 이 값과 일치) |
 | ⑤ | **D_s (고상확산)** | `step4_dyn.py:524` `--d-s` 상수 | ×1.00 | **앵커 없음(§F1)** — kim2025 T_w 가 비단조(2929→1208→2350 s)라 추출 불가 | η_diff 과대 | 확산 무릎이 실제보다 **일찍** 나타남 → 용량 과소 |
 | ⑥ | **OCP U(x)** | `step4_dyn.py:592-593` — Chen2020 25 °C 테이블 `np.interp`, dU/dT 미적용 | 0 mV | U(x,T)=U(x,T_ref)+(T−T_ref)·dU/dT | x-의존 오프셋 | **litdb dU/dT 앵커 0건(§F1)**. 감사 언급 order(0.05–0.4 mV/K)×35 K = 2–14 mV, 미앵커 |
 | ⑦ | **σ_e (전자)** | `network_conductivity.py:47` 0.05 S/cm 상수 | ×1.00 | Reisacher 정성: **ohmic 영역은 T-무관** (CM-4 33.50 Ω @25 °C vs 43.89 @65 °C, 무상관) | 사실상 **무해** | 2C 전자 옴 0.01–0.03 mV. ⚠ 서로게이트 불일치(**이전** `Ea_AM=0.50 eV`, 'rough')는 **[→ §9 구현됨]** — 예측기 기본이 T-무관으로 바뀌어 솔버와 일치. 옛 값은 `legacy_arrhenius` 로만 재현 |
@@ -94,7 +94,9 @@ Eₐ(이온) 밴드 = **0.29–0.46 eV** (중앙 0.41 eV, Reisacher 2023 STATED,
 
 ### 3-3. 가장 위험한 3개 (요약)
 
-1. **② 부호 역전.** `--temp-k 333.15` 를 넣으면 코드는 반응 과전압을 **더 크게** 낸다.
+1. **② 부호 역전** — ★ **해소됨 (§12, `--i0-temp-scale`).  아래는 그 이전 상태의 기술이다.**
+   플래그를 **안 켜면** 여전히 성립하므로 가드가 hard-block 한다.
+   `--temp-k 333.15` 를 (i0 스케일 없이) 넣으면 코드는 반응 과전압을 **더 크게** 낸다.
    실제 R_ct 는 30→60 °C 에 **4.28× 감소**(kim2025, 우리 랩·우리 소재계 실측)해야 한다.
    ⇒ 사용자가 30/45/60 스윕을 돌리면 `eta_kin_mean` 이 **온도에 따라 단조 증가**하는 것을 보게 되는데,
    이는 실험과 정확히 반대다. **"온도를 반영했다"는 인상을 주면서 반대 답을 내는 것**이 가장 나쁘다.
@@ -217,7 +219,7 @@ flowchart TD
     ETA --> BAD["★부호 역전<br/>실제 R_ct 는 4.28× 감소<br/>(kim2025 289.9→67.8 Ω·cm²)<br/>⇒ 코드가 4.70× 과대"]
 
     SIG["σ_ion (LPSCl)<br/>Arrhenius, Eₐ 0.29–0.46 eV"] -.-> CUT1["network_conductivity.py:44<br/>SIGMA_BULK 3.0e-3 S/cm 상수<br/>step4 는 동결 그리드를 그대로 읽음<br/>⇒ 이온 옴강하 3–4× 과대"]
-    I0["i0 (교환전류밀도)<br/>Eₐ(i0) ≈ 0.39 eV (유도, ASSUMED)"] -.-> CUT2["step4_dyn.py:627-629<br/>SOC 형상만, T 항 없음<br/>⇒ 위 부호 역전의 원인"]
+    I0["i0 (교환전류밀도)<br/>★구현됨 --i0-temp-scale<br/>Eₐ_i0 = Eₐ_Rct + k_B·T̄ = 0.4486 eV (가산)"] -.-> CUT2["cam_kinetics.py<br/>kim2025 R_ct(T) 앵커 · RT 전인자 포함<br/>⇒ 부호역전 해소 (§12)"]
     DS["D_s (고상확산)<br/>Arrhenius"] -.-> CUT3["step4_dyn.py:524 --d-s 상수<br/>앵커 없음 §F1<br/>(kim2025 T_w 비단조 → 추출 불가)"]
     OCP["OCP 엔트로피 U(x,T)<br/>= U(x,T_ref) + ΔT·dU/dT"] -.-> CUT4["step4_dyn.py:592-593<br/>Chen2020 25 °C 테이블 interp<br/>dudt 는 :2453 에 로드되나 Q_rev 로만<br/>litdb dU/dT 앵커 0건 §F1"]
     HSE["SE 경도 H(T) / σ_y(T)<br/>승온 → 연화 → 접촉면적↑"] -.-> CUT5["plastic_coverage.py:39 H 상수<br/>mpm3d --sigma-y 상수<br/>LPSCl H(T) 앵커 없음 §F1"]
@@ -290,7 +292,7 @@ flowchart TD
 
 | ID | 내용 | 앵커 상태 | 라벨 |
 |---|---|---|---|
-| **T2-a** | **i0(T)** — `--ea-i0-ev` 도입. 후보값 = Eₐ(R_ct) **0.42 eV**(uncoated NCM811/LPSCl 72 wt%) 또는 **0.31 eV**(LNO-coated 62 wt%). i0 = RT/(nF·R_ct·a_s) 관계로 Eₐ(i0) ≈ Eₐ(R_ct) − k·T̄ ≈ **0.39 eV**. | kim2025 **3점 회귀 유도값 = TREND-only, 절대 인용 금지**. R_ct 는 계면 화학상태도 반영 → 순수 kinetics Eₐ 로 읽으면 과대. LNO-coated 는 45→60 이 거의 평탄 = **Arrhenius 가정이 코팅계에서 이미 깨짐** | ASSUMED, 스윕 전용 |
+| **T2-a** | **i0(T)** — `--ea-i0-ev` 도입. 후보값 = Eₐ(R_ct) **0.42 eV**(uncoated NCM811/LPSCl 72 wt%) 또는 **0.31 eV**(LNO-coated 62 wt%). i0 = RT/(nF·R_ct·a_s) ⇒ `d ln i0/d(1/T) = −(T + Eₐ_Rct/k_B)` ⇒ **Eₐ_i0 = Eₐ_Rct + k_B·T̄ = 0.4486 eV** (★MED-14: 옛 `− k·T̄ ≈ 0.39 eV` 는 **부호가 반대**였다 — 가산이다.  ★구현 완료 = §12 `--i0-temp-scale`.) | kim2025 **3점 회귀 유도값 = TREND-only, 절대 인용 금지**. R_ct 는 계면 화학상태도 반영 → 순수 kinetics Eₐ 로 읽으면 과대. LNO-coated 는 45→60 이 거의 평탄 = **Arrhenius 가정이 코팅계에서 이미 깨짐** | ASSUMED, 스윕 전용 |
 | **T2-b** | **Eₐ 의 r_SE 의존 (GB 몫).** bulk Eₐ 0.22–0.26 eV(MLIP-MD) ≪ 실험 GB포함 0.29–0.46 → 초과분 = GB. sub-µm SE 는 GB 밀도가 높아 Eₐ 가 커야 한다. | kim2025 분리 실측(bulk 0.13 / gb 0.61 eV)은 **bulk 값이 이상치**(MD 0.22–0.26 대비 비정상 낮음, 3점 TLM 피팅 노이즈 의심) | 방향만, 값 스윕 |
 | **T2-c** | **SE σ_y(T)/H(T)** — MPM `--sigma-y` 스윕으로 온도-연화 브래킷. 방향은 확정: 온도↑ → σ_y↓ → 압밀↑ → porosity↓ / coverage↑ / 두께↓. | lee2025 카드 "온도↑→σ_y↓→압밀↑(Bouvard 2000과 같은 결)" = **방향만**. **크기 앵커 없음**. 코드 자체 감도(σ_y 0.30→10.0 %, 0.25→9.0 %, 0.20→6.7 %, 0.15→5.6 %)로 상한만: 10–20 % 연화 → porosity **0.6–2 %p** ⇒ **DEM↔MPM 1.2 %p 신뢰한계를 통째로 잡아먹는다** | 스윕 전용 |
 | **T2-d** | **PTFE 모듈러스(T)** — PTFE 함유 레시피에서만. 저장탄성률 30→120 °C **−67 %**(~150→50 MPa, DMA), triclinic→hexagonal 전이 **19/30 °C**. 현재 `mpm3d_compaction.py:910` 은 0.30 GPa / σ_y 0.05 **단일 상수**. 사용자 30/45/60 °C 창이 이 전이 바로 위에 있다. | lee2025 / mun2025 STATED (단 DMA 창이 30–120 °C) | 조성-조건부 |
@@ -491,8 +493,9 @@ P1-a 명명 · P1-b/c/d 문서 명문화 · P1-e 하드코딩 제거 · P1-f σ 
 | ★ **예측기 UI 고지** — 무엇이 스케일되고 무엇이 안 되는지 + legacy 선택지 + Eₐ 밴드 선택지 + 결과 provenance 박스 | ✅ **구현 (2026-07-28 C-3)** | 화면에 상시 표시 | 요청 payload 는 기본과 동일 | `webapp/test_predictor_ui_and_sigma_grain.py` |
 | ★ **webapp σ_grain 단일출처** — `σ_Bruggeman`·`τ_Lap_eff`·`τ_Lap_geom`·MD 리포트가 런의 온도 provenance 를 따른다 | ✅ **구현 (2026-07-28 C-1)** | 자동(런의 provenance) | bitwise 3.0 | 위와 동일 |
 | provenance 필드 (T1-a) | 🔶 **부분** — STEP3 payload · 킷 `mpm_input.json` · Stage-E `stage_e_temperature_provenance` · 예측기 응답에는 있음. **STEP2 MPM metrics · STEP5 원장에는 아직 없음** | — | — | — |
-| **T1-d 부호-역전 가드** (`step4_dyn --temp-k` 를 T_ref 밖으로 주면서 i0/D_s Arrhenius 가 꺼져 있으면 hard warning) | ⛔ **미구현** | — | 경고 없음 (§3-3 ① 위험 그대로) | — |
-| i0(T) / R_ct(T) · D_s(T) · OCP dU/dT | ⛔ **미구현** | — | 25 °C 상수 | — (앵커 문제, §6-A T2-a·T3-a·T3-b) |
+| **T1-d 부호-역전 가드** (`step4_dyn --temp-k` 를 T_ref 밖으로 주면서 i0/D_s Arrhenius 가 꺼져 있으면 차단) | ✅ **구현 — hard-block** (★MED-16 정정: 여기 `⛔ 미구현` 이라 적혀 있었으나 실제로는 `temperature_verdict()` 가 `KINETICS_UNSCALED`/`GRID_T_MISMATCH` 로 **실행을 막는다**) | `--allow-unscaled-t` / `--allow-grid-t-mismatch` 로만 해제 | 기본 런은 25 °C·플래그 0 → 가드 미발동, npz 바이트 불변 | `step4_dyn.py --selftest` (temperature 블록) |
+| **i0(T) / R_ct(T)** | ✅ **구현 (§12)** — `--temp-k` + `--i0-temp-scale` **한 쌍**, kim2025 R_ct(T) 앵커 (Eₐ=0.4212 eV, R²=0.99943, RT 전인자 포함).  ★MED-16 정정: 여기 `⛔ 미구현` 이라 적혀 있었다 | 킷·webapp 이 온도 런에 자동 주입 | OFF 시 배수 정확히 1.0 = 기존 런 bitwise 불변 | `cam_kinetics.py --selftest` |
+| D_s(T) · OCP dU/dT | ⛔ **미구현** | — | 25 °C 상수 | — (앵커 문제, §6-A T3-a·T3-b) |
 | κ(T) · SE 경도 H(T)/σ_y(T) · STEP5 분해율 Eₐ | ⛔ **미구현** | — | 상수 | — (§F1 앵커 0건) |
 | **Find Optimal Design(예측기 스윕)의 온도** | ⛔ **미구현 — 대신 명시적으로 차단 (2026-07-28 C-3)** — `predictor_engine.sweep_optimal` 이 `predict()` 에 `temperature` 를 넘기지 않아 **항상 298 K**, 게다가 스윕 레인지 표에 `temperature` 가 없어 **1점으로 축퇴**한다(= 돌아가는 척하는 no-op). → 온도 체크를 풀면 **실행을 거부**하고 이유를 말하며, 스윕 결과 화면 상단에 **"298 K 고정" 배너**를 붙인다 | — | 298 K 고정 (+ 화면 고지) | `test_predictor_ui_and_sigma_grain.py` |
 | 구동 스택압(제작 300 → 운전 90 MPa) 2단 프로토콜 | 🔶 **부분** — MPM `--save-state/--load-state` + servo/hold 브래킷이 들어왔으나, **적대검증이 브래킷 한 팔의 결함을 지적**했다 → §9-4 | — | — | 담당 A/B |
@@ -539,9 +542,13 @@ OF TRUTH" 라고 **평서문으로 주장하던 것**을 위 사실에 맞게 �
 
 1. **σ_ion 하나만 움직인다.** i0/R_ct · D_s · OCP dU/dT · σ_e · κ · SE 경도 · 분해율은 25 °C 그대로다.
    ⇒ `--temp-c 60` 은 **"60 °C 전극"이 아니라 "σ_ion 만 60 °C 인 25 °C 전극"** 이다.
-2. **STEP4 kinetics 의 부호 역전(§3-3 ①)은 그대로다.** `step4_dyn --temp-k` 는 여전히 `f=F/RT` 만
-   움직여 반응 과전압을 **실험과 반대 방향**으로 낸다. `--temp-c`(σ) 와 `--temp-k`(kinetics) 를 함께
-   쓰면 **일부만 맞은 온도**가 되어 오히려 해석이 어려워진다 — 킷은 그래서 `--temp-k` 를 굽지 않는다.
+2. **STEP4 kinetics — 부호 역전은 해소, 그러나 여전히 PARTIAL.** (★MED-17 정정: 여기 "그대로다 …
+   킷은 그래서 `--temp-k` 를 굽지 않는다" 라고 적혀 §12 와 정면 모순이었다.  §12 기준으로 갱신한다.)
+   `--temp-k` 를 **`--i0-temp-scale` 과 한 쌍으로** 주면 i0 가 kim2025 R_ct(T) 앵커를 따라 부호가
+   실험과 **같아진다** (η_ct 60 °C 93.4 → 26.6 mV).  킷/webapp 도 온도 런에 이 쌍을 자동 주입한다.
+   ⚠ **한쪽만** 주는 것이 결함이다 — `--temp-k` 단독 = 부호 역전(가드가 차단),
+   `--i0-temp-scale` 단독 = 배수가 정확히 1.0 인데 `kinetics_T_scaling` 만 찍히는 **거짓 라벨**(가드가 차단).
+   그래도 D_s·OCP dU/dT 는 미앵커라 상태는 `PARTIAL_sigma_ion+i0` 다 — **전-물리 온도 스윕이 아니다.**
 3. **Eₐ 는 밴드다.** 0.29 / 0.41 / 0.46 eV (30→60 °C 에서 ×2.47 ~ ×4.44). **단일값 보고 금지** —
    세 값을 모두 돌려 밴드로 제시할 것. UI/CLI help/ provenance 모두 이 문구를 달고 있다.
 4. **같은 온도 안에서의 상대비교는 원래 안전하다** (σ_grain 이 양쪽에 같은 배수로 곱해져 상쇄).
@@ -738,9 +745,25 @@ provenance `derived_from_stated_anchors`.  `scripts/cam_kinetics.py` selftest �
 
 (정정 전 29.46 mV 는 전인자 누락으로 10.8 % 과소보정이었다 — 방향은 맞고 크기가 보수적이었다.)
 
-⇒ `--temp-k` 가 비로소 쓸 수 있는 노브가 됐다.  상태 라벨도 한 칸 올라간다:
+⇒ `--temp-k` 가 비로소 쓸 수 있는 노브가 됐다 — **단, `--i0-temp-scale` 과 한 쌍일 때만.**
+상태 라벨도 한 칸 올라간다:
 `PARTIAL_sigma_ion_only@60C` → **`PARTIAL_sigma_ion+i0@60C`**,
 `kinetics_T_scaling: NONE` → **`I0_ARRHENIUS_kim2025`**.
+
+**★ 짝-불변식 (2026-07-30 재검증에서 두 번 틀렸던 자리) ★**
+
+| 준 것 | 결과 | 가드 |
+|---|---|---|
+| `--temp-k T` + `--i0-temp-scale` | ✅ 부호 정상, i0 ×6.25 @60 °C | 통과 (해제 플래그 불필요) |
+| `--temp-k T` 만 | ⛔ **부호 역전** (§3-3①) | `KINETICS_UNSCALED` 차단 |
+| `--i0-temp-scale` 만 | ⛔ 배수가 **정확히 1.0** 인데 `kinetics_T_scaling=I0_ARRHENIUS_kim2025` 로 찍힘 = **거짓 라벨** | 그리드가 다른 T 면 hard-block + `--temp-k` 안내 |
+
+- **HIGH-4 (1차)**: 킷/webapp 경로에 `--i0-temp-scale` 이 **아예 없어** §12 가 CLI 전용이었다 → 주입.
+- **자체검증 (2차)**: 그 주입이 `--temp-k` 를 빼놓아 **배수 1.0 을 돌리면서 ×6.25 를 광고**했다
+  → 킷이 이제 **쌍으로** 굽고, `--allow-grid-t-mismatch` 는 제거했다(σ_ion 과 kinetics 가 같은 T
+  라 혼합이 아니며, 남겨두면 STEP3 가 `--temp-c` 를 못 구운 **진짜** 불일치까지 조용히 통과한다).
+- 회귀 핀: `webapp/test_temp_pressure_wiring.py` 가 **인자 줄에서** 두 플래그 개수가 STEP4 호출
+  수와 정확히 일치하는지 본다 (주석·echo 의 설명 문구는 제외 — 산문으로 GREEN 을 살 수 없게).
 
 ### 12-3. 여전히 미앵커 (그래서 "부분")
 

@@ -206,34 +206,80 @@ def main():
         chk('run_mpm.sh STEP3 호출에 --temp-c 45 --ea-ion-ev 0.29',
             'python3 "$SCR/mpm_webapp_payload.py" --temp-c 45 --ea-ion-ev 0.29 \\' in sh)
         chk('run_mpm.sh 에 --temp-c 는 1회만 (중복주입 없음)', sh.count('--temp-c') == 1)
-        # ★ 이 단언은 유지된다 (2026-07-29 재확인) — --temp-k 는 Kinetics.T = BV 지수의 f=F/(RT)
-        #   를 바꾸는데 i0 는 앵커가 없어 25 °C 그대로라, T 를 올리면 η_ct 가 **커진다**.  실제
-        #   R_ct 는 30→60 °C 에 4.28× 감소한다 → 정확히 반대(§3-3①).
+        # ★ 규약 이력 — 되돌리지 말 것.  [옛] --temp-k 는 굽지 않았다: Kinetics.T 는 BV 지수의
+        #   f=F/(RT) 만 바꾸는데 i0 가 앵커 없이 25 °C 로 남으면 T↑ 에 η_ct 가 **커져** 실측
+        #   (R_ct 30→60 °C 4.28× 감소)과 반대였다(§3-3①).  [지금] i0 앵커(kim2025)가 생겼고
+        #   --i0-temp-scale 과 **한 쌍으로** 주면 부호역전이 해소된다 → --temp-k 를 굽는 것이 옳다.
+        #   ★ 두 플래그의 짝을 깨는 것이 결함이다: --temp-k 단독 = 부호역전, --i0-temp-scale 단독 =
+        #     배수 1.0 인데 kinetics_T_scaling 만 찍히는 거짓 라벨 (실제로 그렇게 배선돼 있었다).
+        # ★ 킷은 **왜** 이 규약인지를 주석·echo 로 설명한다 (설명은 있어야 한다).  그래서 단언은
+        #   산문이 아니라 **실제 인자 줄**(주석·echo 를 뺀 continuation 줄)만 본다 — 안 그러면
+        #   설명 한 줄 늘릴 때마다 카운트가 깨지고, 반대로 설명만 고쳐도 GREEN 이 된다.
+        def arg_lines(text):
+            out = []
+            for ln in text.split('\n'):
+                s = ln.strip()
+                if not s or s.startswith('#') or s.startswith('echo '):
+                    continue
+                out.append(ln)
+            return out
+
         _tk = re.compile(r'--temp-k\s+[0-9]')     # 설명 문구가 아니라 **값이 붙은 실제 인자**만
-        chk('STEP4 --temp-k 는 굽지 않는다 (부호역전 방지, §3-3①)', not _tk.search(sh))
-        # ★ 그러나 온도 그리드를 만든 킷은 STEP4 가 T1-d 가드(GRID_T_MISMATCH)에 걸려 죽었다.
-        #   kinetics 는 25 °C 로 두되 그 불일치를 **명시 승인**해야 실행된다 → MIXED_TEMPERATURE.
-        #   (STEP4 호출이 실제로 있는 킷으로 확인 — 위 rt 는 rate 미선택이라 STEP4 블록이 없다)
+        chk('STEP4 없는 킷에는 --temp-k 인자가 없다',
+            not any(_tk.search(l) for l in arg_lines(sh)))
         rt_s4 = c.get(base + '?step4=0.2&s4vmin=3.0&s4vmax=4.5&s4icut=0.05&tempc=45')
         sh4 = member_text(rt_s4, 'run_mpm.sh')
+        _a4 = arg_lines(sh4)
         _n_call = sh4.count('python3 "$SCR/step4_dyn.py" --grid step4_grid.npz')
-        chk('STEP4 에 --allow-grid-t-mismatch 주입 (T1-d 가드 통과 + 혼합상태 명시)',
-            _n_call >= 1 and sh4.count('--allow-grid-t-mismatch') == _n_call,
-            f'STEP4 호출 {_n_call}개 / 플래그 {sh4.count("--allow-grid-t-mismatch")}개')
-        chk('STEP4 에도 --temp-k 인자는 여전히 없다 (부호역전 방지)', not _tk.search(sh4))
-        chk('다만 왜 안 넣었는지는 킷에 적혀 있다 (미래의 나를 위한 근거)',
-            '부호역전' in sh4 and '§3-3' in sh4)
-        chk('그 사실이 로그 배너에 적힌다', 'MIXED_TEMPERATURE' in sh4)
-        chk('온도 미지정 킷에는 이 플래그가 안 붙는다 (기본 불변)',
-            '--allow-grid-t-mismatch' not in member_text(
-                c.get(base + '?step4=0.2&s4vmin=3.0&s4vmax=4.5&s4icut=0.05'), 'run_mpm.sh'))
+        # ★★ 짝-불변식: --temp-k 와 --i0-temp-scale 은 **같은 인자 줄에 함께**, STEP4 호출 수만큼.
+        _n_pair = sum(1 for l in _a4 if re.search(r'--temp-k\s+318\.15\s+--i0-temp-scale', l))
+        _n_tk = sum(1 for l in _a4 if _tk.search(l))
+        _n_i0 = sum(1 for l in _a4 if '--i0-temp-scale' in l)
+        chk('★[H4] STEP4 에 --temp-k 318.15 --i0-temp-scale 이 **한 쌍으로** 주입',
+            _n_call >= 1 and _n_pair == _n_call,
+            f'쌍 {_n_pair}개 / STEP4 호출 {_n_call}개')
+        chk('★[H4] 인자 줄에서 --temp-k 와 --i0-temp-scale 개수가 정확히 일치 (짝 깨짐 없음)',
+            _n_tk == _n_i0 == _n_call, f'temp-k {_n_tk} / i0-scale {_n_i0} / 호출 {_n_call}')
+        # σ_ion 과 kinetics 가 같은 온도라 혼합이 아니다 → 이 해제 플래그는 **빼야** 한다
+        # (남기면 STEP3 가 --temp-c 를 못 구운 진짜 불일치까지 조용히 통과).
+        chk('★ --allow-grid-t-mismatch 는 더는 붙지 않는다 (진짜 불일치는 계속 hard-fail)',
+            not any('--allow-grid-t-mismatch' in l for l in _a4))
+        chk('왜 이 규약인지가 킷에 적혀 있다 (미래의 나를 위한 근거)',
+            '부호역전' in sh4 and '§3-3' in sh4 and '한 쌍' in sh4)
+        chk('★[H4] 배너가 i0 스케일을 밝힌다 (옛 "i0 앵커 없음" 거짓 제거)',
+            'i0 = kim2025' in sh4 and 'i0/D_s/OCP/σ_e/κ/SE-경도는 앵커 없어' not in sh4)
+        _pv = json.loads(member_text(rt_s4, 'mpm_input.json'))['temperature_provenance']
+        chk('★[H4] provenance 도 i0 배수를 기록 (세 거짓 진술 제거)',
+            any('--i0-temp-scale' in a for a in _pv['applied_to'])
+            and not any('i0 / D_s / OCP dU/dT 앵커 없음' in v
+                        for v in _pv['not_applied_to'].values()))
+        chk('★ provenance 가 --temp-k 도 함께 적용됐다고 기록 (배너와 일치)',
+            any('--temp-k 318.15 --i0-temp-scale' in a for a in _pv['applied_to']))
+        _sh_no_t = member_text(
+            c.get(base + '?step4=0.2&s4vmin=3.0&s4vmax=4.5&s4icut=0.05'), 'run_mpm.sh')
+        chk('온도 미지정 킷에는 i0 플래그도 --temp-k 도 없다 (기본 bitwise 불변)',
+            '--i0-temp-scale' not in _sh_no_t and not _tk.search(_sh_no_t)
+            and '--allow-grid-t-mismatch' not in _sh_no_t)
+        # ★ 짝-불변식의 **음성 대조**: 옛 배선(--i0-temp-scale 만)을 흉내내면 step4_dyn 이
+        #   거짓라벨 가드로 실제로 죽는지 — 킷 문자열이 아니라 **솔버**가 막는지 확인한다.
+        _s4 = __import__('step4_dyn')
+        _g45 = {'present': True, 'T_C': 45.0, 'factor': 2.5599, 'prov': {'T_C': 45.0}}
+        _e_pair, _m_pair = _s4.temperature_verdict(318.15, _g45, False, False, True)
+        chk('★ 짝을 지킨 킷 조합(temp-k=grid T + i0-scale)은 해제 플래그 없이 통과',
+            _e_pair == [] and _m_pair['kinetics_T_scaling'] == 'I0_ARRHENIUS_kim2025'
+            and _m_pair['released_guards'] == [], f"{_e_pair} / {_m_pair['released_guards']}")
+        _e_half, _ = _s4.temperature_verdict(298.15, _g45, False, False, True)
+        chk('★ 짝이 깨진 옛 조합(i0-scale 만, temp-k 기본)은 GRID_T_MISMATCH 로 차단',
+            _e_half == ['GRID_T_MISMATCH'], str(_e_half))
         tp = json.loads(member_text(rt, 'mpm_input.json'))['temperature_provenance']
         ref = se_material.provenance(45.0, 0.29)
         chk('provenance = se_material 규약 (T_C/T_ref/Ea/factor/convention)',
             all(tp[k] == ref[k] for k in ('T_C', 'T_ref_C', 'Ea_ion_eV', 'T_dependence',
                                           'sigma_ion_T_factor', 'convention')),
             f"factor={tp['sigma_ion_T_factor']:.4f}")
-        chk('provenance 가 "무엇이 미반영인지" 명시', 'STEP4 kinetics' in tp['not_applied_to'])
+        chk('provenance 가 "무엇이 미반영인지" 명시',
+            any(k.startswith('STEP4 kinetics') for k in tp['not_applied_to']),
+            str(sorted(tp['not_applied_to'])[:3]))
         rt2 = c.get(base + '?tempc=45')
         chk('Eₐ 미지정 = 엔진 기본 0.41 (--ea-ion-ev 미주입)',
             '--temp-c 45 \\' in member_text(rt2, 'run_mpm.sh')

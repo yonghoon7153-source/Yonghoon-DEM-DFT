@@ -721,6 +721,70 @@ def _grid_temperature(path):
             pass
 
 
+def apply_i0_temperature(i0_ref, i0_p, factor):
+    """i0(T) 배수를 **실효 진폭이 있는 쪽에만** 곱한다.  반환 (i0_ref', i0_p').
+
+    ★ 왜 모듈-레벨인가 (2026-07-30 재검증 HIGH-10): 이 로직의 회귀 테스트가 selftest 안의
+      **사본**(`_i0_face`)을 검사하고 있어서, main() 의 실제 배선을 되돌려도 (A8a~d)가 전부
+      PASS 했다 — 커버리지 0.  이제 프로덕션 경로와 테스트가 **같은 함수**를 쓴다.
+
+    per-face i0 는 두 경로가 다르다:
+        i0_p 없음 : i0_f = i0_ref · shape(x)                     → i0_ref 가 진폭
+        i0_p 있음 : _i0s = i0_p/i0_ref → i0_f = shape(x)·i0_p    → **i0_ref 가 상쇄**
+    """
+    f = float(factor)
+    if i0_p is not None:
+        return float(i0_ref), i0_p * f       # per-particle 진폭이 실효 i0
+    return float(i0_ref) * f, None
+
+
+CYCLE_RCT_ANCHOR = 'yun2023_rct_growth (341.7->982.3 ohm.cm2 @~100cyc, 30C)'
+
+
+def cycle_interphase_meta(cycle_n, i0_cycle_mult, asr_film_cycle_ohm_cm2, rest=False):
+    """B-1 사이클 계면상 감사 기록 (ASSUMED-FORM).  ★ 본 경로와 --rest 가 **같은 함수**를 쓴다.
+
+    HIGH-6: 옛 문자열은 'kim2025 R_ct(N) anchor' 를 인용했으나 kim2025 8행은 전부
+    post-formation (사이클 축 없음) — R_ct(N) 앵커는 yun2023 뿐이다.
+    MED-13: rest 분기는 이 기록을 아예 안 남기고 열화 플래그를 버렸다.
+    """
+    m = {'cycle_n': int(cycle_n), 'i0_cycle_mult': float(i0_cycle_mult),
+         'asr_film_cycle_ohm_cm2': float(asr_film_cycle_ohm_cm2),
+         'anchor': CYCLE_RCT_ANCHOR,
+         'provenance': (f'ASSUMED-FORM: mult from yun2023 R_ct(N) anchor '
+                        f'({CYCLE_RCT_ANCHOR.split("(", 1)[1].rstrip(")")}); '
+                        f'N->mult law pending fit (§6 N1)')}
+    if rest:
+        m['rest_note'] = ('I=0 이라 필름 옴성(asr_film)은 이 세그먼트에 영향 없음; i0 배수는 '
+                          'kin_r 에 반영되나 rest V 는 i0-가중 혼합전위라 균일 스케일이 상쇄된다 '
+                          '(기록 목적 — 체인 감사 연속성, MED-13)')
+    return m
+
+
+def temperature_banner(meta):
+    """콘솔 온도 배너 문자열 (없으면 '').  ★ 모듈-레벨인 이유 = HIGH-2/HIGH-10 의 교훈.
+
+    옛 배너는 main() 안 f-string 이라 테스트가 없었고, i0 스케일 여부와 무관하게 리터럴
+    ``i0/D_s/OCP/σ_e/κ 는 25°C 상수 (kinetics_T_scaling=NONE)`` 을 찍었다 — **같은 런의**
+    npz meta (``kinetics_T_scaling='I0_ARRHENIUS_kim2025'``, ``i0_T_factor=6.25``) 와
+    정면 모순.  npz 안 ``trust`` 는 조건부로 고쳐놓고 **터미널에 실제로 뜨는 유일한 문장**을
+    남긴 것.  이제 meta 한 곳에서 파생하고 selftest 가 이 함수를 직접 검사한다.
+    """
+    if not meta or meta.get('state') == 'ISOTHERMAL_25C':
+        return ''
+    kts = meta['kinetics_T_scaling']
+    if kts == 'NONE':
+        unscaled = 'i0/D_s/OCP/σ_e/κ 는 25°C 상수'
+    else:
+        unscaled = (f"i0 는 T 를 따름 (×{meta.get('i0_T_factor') or 1.0:.3f}, {kts}), "
+                    f"D_s/OCP/σ_e/κ 만 25°C 상수")
+    return (f"  ⚠ 온도 상태 {meta['state']} — σ_ion {meta['sigma_ion_T_C']:g}°C "
+            f"(×{meta['sigma_ion_T_factor']:.3f}) vs 동역학 {meta['temp_c_kinetics']:g}°C; "
+            f"{unscaled} (kinetics_T_scaling={kts}). σ-메트릭·용량 절대값 신뢰 금지"
+            + (f"  [해제: {', '.join(meta['released_guards'])}]"
+               if meta['released_guards'] else ''))
+
+
 def temperature_verdict(temp_k, grid, allow_unscaled_t, allow_grid_t_mismatch,
                         i0_t_scaled=False):
     """--temp-k 와 grid 의 σ_ion 온도를 대조한다 (순수함수 — selftest 가 직접 호출).
@@ -738,7 +802,16 @@ def temperature_verdict(temp_k, grid, allow_unscaled_t, allow_grid_t_mismatch,
     if abs(sig_eff_c - t_kin_c) > 0.05:
         # σ 가 놓인 온도 ≠ 동역학이 도는 온도 = 혼합-온도 셀.
         # grid 가 명시적으로 다른 T 를 들고 있으면 G-1(그리드 불일치), 아니면 기존 T1-d.
-        errors.append('GRID_T_MISMATCH' if sig_t_c is not None else 'KINETICS_UNSCALED')
+        # ★ HIGH-9 (2026-07-30 리뷰): i0 가 **스케일된** 상태에서 계약 없는 그리드를 만나면
+        #   옛 코드는 이 자리를 KINETICS_UNSCALED 로 코딩했다 → 동역학이 ×6.25 로 스케일됐는데
+        #   "kinetics unscaled 를 해제했다"가 released_guards 에 영구 기록되고, 차단 메시지는
+        #   사용자가 방금 켠 플래그와 정반대("i0 는 25 °C 상수")를 말하며, 정작 안 스케일된
+        #   σ_ion 의 해법(--allow-grid-t-mismatch)은 이 경로에서 **한 번도 제시되지 않았다**.
+        #   i0 가 스케일됐다면 남은 결함은 순수히 σ_ion 쪽 → GRID_T_MISMATCH 가 맞는 코드다.
+        #   (i0 미스케일 + 계약 없음 = 전부 25 °C 상수 = 역사적 T1-d → 라벨·해제 플래그 보존.
+        #    이 경우에도 혼합 사실 자체는 meta.state=MIXED_TEMPERATURE + trust 에 남는다.)
+        errors.append('GRID_T_MISMATCH' if (sig_t_c is not None or i0_t_scaled)
+                      else 'KINETICS_UNSCALED')
     if abs(t_kin_c - _T_REF_C) > 0.05 and 'KINETICS_UNSCALED' not in errors and not i0_t_scaled:
         errors.append('KINETICS_UNSCALED')             # i0/D_s/OCP 가 전부 25 °C 상수일 때만
     # ★ 2026-07-29 (A): --i0-temp-scale 이면 i0 는 kim2025 R_ct(T) 앵커를 따른다 → **부호역전이
@@ -2633,9 +2706,16 @@ def _selftest_temperature():
     _ip = np.array([2.0, 2.0])
 
     def _i0_face(kin_i0, i0_p_arr):
+        """실효 per-face i0.  ★ 프로덕션과 **같은** apply_i0_temperature 를 타야 의미가 있다
+        (HIGH-10: 옛 버전은 여기서 배선을 재구현해 main() 을 되돌려도 PASS 했다)."""
         _k = Kinetics(kin_i0)
         _s = None if i0_p_arr is None else i0_p_arr / _k.i0_ref
         return float(_k.i0(0.5) if _s is None else (_k.i0(0.5) * _s)[0])
+
+    def _i0_face_via_prod(factor, i0_p_arr):
+        """프로덕션 헬퍼를 통과시킨 뒤의 실효 i0 — main() 과 같은 코드경로."""
+        _r, _p = apply_i0_temperature(2.0, i0_p_arr, factor)
+        return _i0_face(_r, _p)
     # 스칼라 경로: i0_ref 에 곱하는 것이 맞다
     chk('(A8a) 스칼라 경로: 실효 i0 가 T 배수만큼 커진다',
         abs(_i0_face(2.0 * _tf60, None) / _i0_face(2.0, None) - _tf60) < 1e-12,
@@ -2648,11 +2728,62 @@ def _selftest_temperature():
     chk('(A8c) ★i0_p 에 곱하면 bimodal 에서도 T 를 따른다 (수정 확인)',
         abs(_i0_face(2.0, _ip * _tf60) / _i0_face(2.0, _ip) - _tf60) < 1e-12,
         f'×{_i0_face(2.0, _ip * _tf60) / _i0_face(2.0, _ip):.4f} (기대 ×{_tf60:.4f})')
+    # ★ (A8e) HIGH-10: **프로덕션 헬퍼**를 통과시켜 검사한다 — 사본이 아니라 main() 이 쓰는 함수.
+    #   apply_i0_temperature 를 잘못 고치면 여기서 잡힌다 (옛 테스트는 못 잡았다).
+    for _lbl, _arr in (('스칼라', None), ('bimodal', _ip)):
+        _base = _i0_face_via_prod(1.0, _arr)
+        _hot = _i0_face_via_prod(_tf60, _arr)
+        chk(f'(A8e) ★프로덕션 헬퍼 경유 — {_lbl} 경로 실효 i0 가 T 배수를 따른다',
+            abs(_hot / _base - _tf60) < 1e-12, f'×{_hot / _base:.4f} (기대 ×{_tf60:.4f})')
+    # ★[H6]+[M13] cycle_interphase 기록: 존재하지 않는 kim2025 R_ct(N) 을 인용하지 않고,
+    #   본 경로와 rest 가 **같은 헬퍼**를 써서 갈라지지 않는다.
+    _ci = cycle_interphase_meta(100, 0.348, 320.3)
+    _ci_r = cycle_interphase_meta(100, 0.348, 320.3, rest=True)
+    _ci_s = ' '.join(str(v) for v in _ci.values())
+    chk('★[H6] cycle_interphase 가 kim2025 를 R_ct(N) 앵커로 인용하지 않는다',
+        'kim2025' not in _ci_s and 'yun2023' in _ci_s and '341.7' in _ci_s, _ci['anchor'])
+    chk('★[M13] rest 기록이 본 경로와 같은 앵커·provenance (헬퍼 공유 → 드리프트 불가)',
+        _ci_r['anchor'] == _ci['anchor'] and _ci_r['provenance'] == _ci['provenance']
+        and 'rest_note' in _ci_r and 'rest_note' not in _ci)
+    chk('(A8f) 헬퍼가 활성 진폭 쪽만 건드린다 (반대쪽은 원본 그대로)',
+        apply_i0_temperature(2.0, None, _tf60)[1] is None
+        and apply_i0_temperature(2.0, _ip, _tf60)[0] == 2.0)
     # ⚠ 양쪽에 곱해도 tf 는 한 번만 적용된다 (i0_ref 가 상쇄되므로) — 첫 주석의 "또 상쇄된다"는
     #   틀린 추론이었다.  이 단언이 그 사실을 못박아 같은 오해가 재발하지 않게 한다.
     chk('(A8d) 양쪽에 곱해도 tf 는 정확히 한 번 (i0_ref 는 상쇄 — "이중적용" 오해 차단)',
         abs(_i0_face(2.0 * _tf60, _ip * _tf60) / _i0_face(2.0, _ip) - _tf60) < 1e-12,
         f'×{_i0_face(2.0 * _tf60, _ip * _tf60) / _i0_face(2.0, _ip):.4f} (기대 ×{_tf60:.4f})')
+
+    # ── 2026-07-30 재검증 리뷰 회귀 ────────────────────────────────────────────────────
+    # ★[H2] 콘솔 배너가 meta 와 **같은 사실**을 말한다 (옛 배너는 리터럴 NONE 을 박았다)
+    _m_on['i0_T_factor'] = _tf60
+    _b_on = temperature_banner(_m_on)
+    _b_off = temperature_banner(_m_off)
+    chk('★[H2] i0 스케일 런의 배너가 kinetics_T_scaling=NONE 이라고 **거짓말하지 않는다**',
+        'kinetics_T_scaling=NONE' not in _b_on
+        and 'I0_ARRHENIUS_kim2025' in _b_on and 'i0 는 T 를 따름' in _b_on, _b_on.strip())
+    chk('★[H2] 배너가 npz meta 의 kinetics_T_scaling 과 문자 그대로 일치',
+        f"kinetics_T_scaling={_m_on['kinetics_T_scaling']}" in _b_on
+        and f"kinetics_T_scaling={_m_off['kinetics_T_scaling']}" in _b_off)
+    chk('★[H2] 미스케일 런은 옛 문장을 그대로 유지 (기존 경고 약화 아님)',
+        'kinetics_T_scaling=NONE' in _b_off and 'i0/D_s/OCP/σ_e/κ 는 25°C 상수' in _b_off)
+    chk('★[H2] 자명한 25 °C / meta 없음 → 배너 없음 (기본 런 출력 불변)',
+        temperature_banner(None) == ''
+        and temperature_banner(temperature_verdict(298.15, dict(G_OFF, T_C=25.0),
+                                                   False, False)[1]) == '')
+    # ★[H9] 계약 없는 그리드 + i0 스케일 = 남은 결함이 σ_ion 쪽 → GRID_T_MISMATCH 로 코딩
+    _e_h9, _m_h9 = temperature_verdict(333.15, None, True, False, True)
+    chk('★[H9] 계약없는 그리드 + i0 스케일 → GRID_T_MISMATCH (KINETICS_UNSCALED 오라벨 아님)',
+        _e_h9 == ['GRID_T_MISMATCH'], str(_e_h9))
+    chk('★[H9] --allow-unscaled-t 로는 안 풀린다 (i0 는 이미 스케일됨 — 잘못된 해제 금지)',
+        temperature_verdict(333.15, None, True, False, True)[0] == ['GRID_T_MISMATCH'])
+    _e_h9b, _m_h9b = temperature_verdict(333.15, None, False, True, True)
+    chk('★[H9] --allow-grid-t-mismatch 가 올바른 해제 + released 라벨도 GRID_T_MISMATCH',
+        _e_h9b == [] and _m_h9b['released_guards'] == ['GRID_T_MISMATCH:--allow-grid-t-mismatch']
+        and _m_h9b['kinetics_T_scaling'] == 'I0_ARRHENIUS_kim2025',
+        f"{_e_h9b} / {_m_h9b['released_guards']}")
+    chk('★[H9] i0 **미**스케일 + 계약없음 은 역사적 T1-d 라벨 보존 (회귀 아님)',
+        temperature_verdict(333.15, None, False, False, False)[0] == ['KINETICS_UNSCALED'])
     print(f'  temperature selftest: {"PASS" if ok else "FAIL"}')
     return ok
 
@@ -2694,20 +2825,31 @@ def main():
     ap.add_argument('--am-split-um', type=float, default=3.5,
                     help='poly/SC 분류 반경 문턱 [µm], r≥split=poly (σ_ionic power-gate r_cut=3.5 '
                          '규약; 12:4µm(직경) 베드 = 반경 6:2 → 2~6 사이 아무 값이나 분리)')
-    ap.add_argument('--alpha-a', type=float, default=0.5)
-    ap.add_argument('--alpha-c', type=float, default=0.5)
+    # ★ LOW-2 (2026-07-30 리뷰): α_a+α_c ≠ 1 이면 선형화 BV 의 R_ct = RT/(F·i0·A) 가 더 이상
+    #   정확하지 않다 (실제 1/(dI/dη)|₀ = RT/(F·i0·A·(α_a+α_c))).  --i0-temp-scale 의 **비**는
+    #   α 가 T-무관이라 상쇄되어 무해하지만, i0 를 kim2025 R_ct **절대값**에 앵커할 때는
+    #   (α_a+α_c) 만큼 어긋난다 (0.7/0.5 → 20 %).  기본 0.5/0.5 는 합 1 이라 정확.
+    ap.add_argument('--alpha-a', type=float, default=0.5,
+                    help='BV 산화 전달계수 (기본 0.5).  ⚠ α_a+α_c≠1 이면 R_ct=RT/(F·i0·A) 규약이 '
+                         '(α_a+α_c) 배 어긋난다 — i0 앵커의 절대값 해석에만 영향, T-스케일 비는 무해.')
+    ap.add_argument('--alpha-c', type=float, default=0.5,
+                    help='BV 환원 전달계수 (기본 0.5).  --alpha-a 설명 참조.')
     ap.add_argument('--asr-film', type=float, default=0.0,
                     help='계면 필름 ASR [★Ω·m²★] (SEI/CEI 훅).  ⚠ 단위 주의(리뷰 electrochem#5): 표준 EIS 단위는 '
                          'Ω·cm²인데 이 옵션은 Ω·m² (1 Ω·cm² = 1e-4 Ω·m²).  Ω·cm² 로 넣고 싶으면 아래 '
                          '--asr-film-cycle-ohm-cm2 (자동 ×1e-4 변환)를 쓸 것.')
     # ── B-1 사이클 계면상 성장 (R_int(N) 화학몫; 리뷰 N1-F9 비-이중계산: R_ct=i0(N)↓ 한 채널,
-    #    필름옴성=asr-film 별개) ──  ⚠ 성장'값'은 kim2025 R_ct(N) 앵커에서 산출한 배수를 주입
+    #    필름옴성=asr-film 별개) ──  ⚠ 성장'값'은 **yun2023** R_ct(N) 앵커에서 산출한 배수를 주입
+    #    ★ HIGH-6 (2026-07-30 리뷰): 여기(및 콘솔·npz·help)가 kim2025 를 인용했으나 **거짓**이다 —
+    #      rint_eis_anchors.csv 의 kim2025 8행은 전부 cycle_n=post-formation (30/45/60 은 T_meas_C)
+    #      이고, 유일한 R_ct(N) 앵커는 yun2023_rct_growth (341.7→982.3 Ω·cm² @~100cyc, 30 °C).
     #    (법칙 N→배수 자동화는 Jung/Conforto fit 후 = §6 N1; 지금은 배수 직접 = ASSUMED-FORM 라벨).
     ap.add_argument('--cycle-n', type=int, default=0,
                     help='B-1 사이클 번호 N (메타·산출물 태그; 0=pristine).  전기화학엔 --i0-cycle-mult/'
                          '--asr-film-cycle가 실제 열화를 주입 — N 자체가 물성을 안 바꿈(법칙 미탑재, §6 N1).')
     ap.add_argument('--i0-cycle-mult', type=float, default=1.0,
-                    help='★R_ct 화학몫 채널: i0 → i0×배수 (배수=R_ct,0/R_ct(N)<1 열화; kim2025 앵커).  BV 비선형 '
+                    help='★R_ct 화학몫 채널: i0 → i0×배수 (배수=R_ct,0/R_ct(N)<1 열화; ★yun2023 R_ct(N) '
+                         '앵커 341.7→982.3 Ω·cm² @~100cyc — kim2025 는 사이클 축이 없다, HIGH-6).  BV 비선형 '
                          '전하이동 저항이 정직하게 성장(옴성 asr-film과 이중계산 금지).  1.0=무열화.  ★★배수는 '
                          'CHEMICAL-ONLY 몫(g_chem)이어야 함(리뷰 electrochem#2): 접촉면적 손실 R_ct 몫(g_mech)은 '
                          'ledger(A-3 rct_ct_area_rel) 소관 → B-2 통합은 ln R = ln g_chem + ln g_mech 로그-가법. '
@@ -2721,27 +2863,40 @@ def main():
     ap.add_argument('--i0-temp-scale', action='store_true',
                     help='★i0 를 --temp-k 에 따라 kim2025 R_ct(T) 앵커로 스케일 (기본 OFF).  '
                          'kim2025(우리와 같은 NCM811+LPSCl) 이 같은 셀을 30/45/60 °C 에서 측정 — '
-                         'R_ct 289.9/139.6/67.8 Ω·cm² → Eₐ=0.4212 eV (R²=0.99943).  R_ct∝1/i0 이라 '
-                         '이것이 i0 의 온도 앵커다: 60 °C 에서 i0 ×5.60.  ★이 플래그가 §3-3① '
+                         'R_ct 289.9/139.6/67.8 Ω·cm² → Eₐ=0.4212 eV (R²=0.99943).  ★선형화 BV 에서 '
+                         'R_ct=RT/(F·i0·A) 이므로 i0 ∝ **T/R_ct** (1/R_ct 아님, HIGH-1) → '
+                         '60 °C 에서 i0 **×6.25** (RT 전인자 빼면 5.60 = 10.5 퍼센트 과소).  '
+                         '★이 플래그가 §3-3① '
                          '**부호역전을 없앤다** — 없으면 T 를 올릴 때 η_ct 가 커져(실측은 4.28× 감소) '
                          '반대 답이 난다.  ⚠D_s(T)·OCP dU/dT 는 여전히 미앵커라 상태는 '
-                         'PARTIAL_sigma_ion+i0 다 (전-물리 스윕 아님).  전말: scripts/cam_kinetics.py')
+                         'PARTIAL_sigma_ion+i0 다 (전-물리 스윕 아님).  ⚠앵커는 **uncoated** 조성이다 — '
+                         '코팅 프리셋과 같이 쓰면 uncoated Eₐ 를 상속한다 (kim2025 LNO 는 비-Arrhenius). '
+                         '전말: scripts/cam_kinetics.py')
     ap.add_argument('--i0-temp-ea-ev', type=float, default=None,
                     help='위 스케일의 Eₐ override [eV] (기본 0.4212 = 3점 적합).  구간별 값 '
-                         '0.4049/0.4398 을 쓸어 **밴드로 보고**할 때 사용 — 단일값 보고 금지.')
+                         '0.4049/0.4398 을 쓸어 **밴드로 보고**할 때 사용 — 단일값 보고 금지.  '
+                         '⚠ --i0-temp-scale 없이 단독 지정하면 **거부**한다 (조용한 no-op 방지: '
+                         '옛 코드는 무시해서 세 런이 bitwise 동일한데 라벨만 달라졌다, MED-12).')
     ap.add_argument('--temp-k', type=float, default=298.15,
-                    help='운전 온도 [K].  ⚠ 이 값이 이 스크립트 안에서 바꾸는 것은 BV 열전압 f=F/RT '
-                         '**하나뿐**이다 — D_s·i0·OCP·σ_e·κ·열화율은 전부 25°C 상수라 T 를 안 따른다.  '
-                         '그래서 T 를 올리면 반응 과전압이 **커지는데(실험은 R_ct 가 4.28× 감소)** '
-                         '부호가 반대다.  T≠298.15 로 돌리려면 --allow-unscaled-t 가 필요하다.  '
+                    help='운전 온도 [K].  ⚠ 기본 상태(=--i0-temp-scale 없음)에서 이 값이 이 스크립트 안에서 '
+                         '바꾸는 것은 BV 열전압 f=F/RT **하나뿐**이다 — D_s·i0·OCP·σ_e·κ·열화율은 전부 '
+                         '25 °C 상수라 T 를 안 따른다.  그래서 T 를 올리면 반응 과전압이 '
+                         '**커지는데(실험은 R_ct 가 4.28× 감소)** 부호가 반대다.  이 상태로 T≠298.15 를 '
+                         '돌리려면 --allow-unscaled-t 가 필요하다.  ★**--i0-temp-scale 을 켜면** i0 가 '
+                         'kim2025 R_ct(T) 앵커를 따라 부호역전이 사라지므로 --allow-unscaled-t 없이 '
+                         '돌아간다 (D_s·OCP 는 여전히 25 °C = PARTIAL).  ⇒ 이 둘은 **한 쌍**으로 '
+                         '쓰는 것이 정상 경로다 (킷·webapp 도 쌍으로 굽는다).  '
                          '★σ_ion 만은 예외 — 그 값은 여기서 정하는 게 아니라 --grid(step4_grid.npz) 에 '
                          '**payload 가 --temp-c 로 구워 넣은 온도**로 이미 고정돼 있다.  그래서 이 값이 '
                          '그리드의 온도와 다르면 혼합-온도 셀이 되어 별도로 차단된다 '
                          '(--allow-grid-t-mismatch).  (docs/temp_pressure_capability.md §3)')
     ap.add_argument('--allow-unscaled-t', action='store_true',
                     help='T≠298.15 K 인데 동역학 물성(i0/D_s/OCP) Arrhenius 가 없는 상태로 실행하는 것을 '
-                         '명시 허용 (부호-역전 가드 해제).  npz meta 의 temperature.kinetics_T_scaling='
-                         'NONE 으로 기록된다.  ★그리드 σ_ion 온도 불일치는 이 플래그로 안 풀린다 '
+                         '명시 허용 (부호-역전 가드 해제).  이 플래그**만** 준 런은 npz meta 의 '
+                         'temperature.kinetics_T_scaling=NONE 으로 기록된다 — --i0-temp-scale 과 같이 '
+                         '주면 i0 는 앵커를 따르므로 I0_ARRHENIUS_kim2025 로 기록되고 이 해제는 무의미하다 '
+                         '(released_guards 에도 안 남는다: 가드가 애초에 안 올라간다).  '
+                         '★그리드 σ_ion 온도 불일치는 이 플래그로 안 풀린다 '
                          '(다른 결함 — --allow-grid-t-mismatch).')
     ap.add_argument('--allow-grid-t-mismatch', action='store_true',
                     help='★G-1 해제: --grid 안 σ_ion 이 구워진 온도와 --temp-k 가 어긋난 **혼합-온도** '
@@ -2816,6 +2971,29 @@ def main():
     #   이고 아래 어떤 값도 안 바뀐다 (기본 런 bitwise 불변).
     _i0_tf = 1.0
     _i0_tprov = None
+    # ★ MED-12 (2026-07-30 리뷰): --i0-temp-ea-ev 는 아래 블록 **안에서만** 읽힌다 → 활성화
+    #   플래그를 빠뜨리면 조용한 no-op 다.  help 가 지시하는 "구간 Eₐ 0.4049/0.4398 을 쓸어
+    #   밴드로 보고" 를 그렇게 하면 세 런이 bitwise 동일한데 파일명·로그엔 서로 다른 Eₐ 가 붙어
+    #   **"밴드 폭 0 = Eₐ 불확실성 무시가능"** 으로 오독된다.  같은 파일의 --d-s-poly/--i0-poly
+    #   반쪽지정 거부와 같은 규약으로 막는다.
+    if a.i0_temp_ea_ev is not None and not a.i0_temp_scale:
+        ap.error('--i0-temp-ea-ev 는 --i0-temp-scale 과 함께만 유효합니다 (단독 지정 = 조용한 '
+                 'no-op: Eₐ 를 바꿔도 런이 bitwise 동일해 "밴드 폭 0" 으로 오독됩니다).')
+    # ★ 2026-07-30 (자체검증, HIGH-4 배선 재검토): --i0-temp-scale 은 **--temp-k 를 읽는다**.
+    #   --temp-k 를 기본(25 °C)으로 둔 채 이 플래그만 주면 배수가 **정확히 1.0** 인데도 npz 에는
+    #   kinetics_T_scaling='I0_ARRHENIUS_kim2025' 가 찍힌다 = 거짓 라벨 (cam_kinetics 가 ea=0 을
+    #   거부하는 것과 같은 이유).  실제로 킷 배선이 이 함정에 빠져 "i0 ×6.25" 를 광고하면서
+    #   ×1.0 을 돌렸다.  그리드가 다른 온도를 들고 있으면 의도는 명백하므로 차단하고 안내한다.
+    if (a.i0_temp_scale and abs(a.temp_k - _T_REF_K) <= 0.05
+            and (_gt or {}).get('T_C') is not None and abs(_gt['T_C'] - _T_REF_C) > 0.05):
+        ap.error(
+            f'--i0-temp-scale 을 켰는데 --temp-k 가 기본 {_T_REF_K:g} K ({_T_REF_C:g} °C) 입니다 — '
+            f'i0 배수가 **정확히 1.0** (스케일 없음)인데 산출물에는 '
+            f'kinetics_T_scaling=I0_ARRHENIUS_kim2025 로 찍혀 거짓 라벨이 됩니다.\n'
+            f'  · --grid σ_ion 은 {_gt["T_C"]:g} °C 로 구워져 있습니다.\n'
+            f'  ▶ 그 온도로 돌리려면: --temp-k {_gt["T_C"] + 273.15:g} --i0-temp-scale\n'
+            f'  ▶ 25 °C 동역학이 의도라면: --i0-temp-scale 을 빼고 '
+            f'--allow-grid-t-mismatch 로 혼합-온도를 명시 승인하십시오.')
     if a.i0_temp_scale:
         import cam_kinetics as _ck
         _i0_tf = _ck.i0_temperature_factor(a.temp_k - 273.15, a.i0_temp_ea_ev)
@@ -2841,11 +3019,24 @@ def main():
                 f'  · --temp-k 동역학 온도      : {a.temp_k - 273.15:g} °C '
                 f'(기준 {_T_REF_K:g} K; f=F/RT 만 이 T 를 따름)']
         if 'GRID_T_MISMATCH' in _terr:
+            # ★ HIGH-9: 계약 **없는** 그리드도 이 분기로 온다 (i0 스케일 시).  그 경우 "payload 를
+            #   --temp-c 없이 다시 돌려라" 는 이미 그런 그리드라 무의미하므로 해법을 갈라 적는다.
+            _has_contract = bool((_gt or {}).get('present'))
             _msg += [
                 '  ⛔ G-1 혼합-온도: σ_ion 과 BV/확산/OCP 가 **서로 다른 온도**에 있습니다 — 어느 온도의',
-                '     셀도 아닙니다.  (STEP3 σ_ion_eff·이온 옴강하가 한 온도, 반응·확산이 다른 온도)',
-                f'     ▶ 그리드에 맞추려면: --temp-k {_sig_c + 273.15:g} --allow-unscaled-t',
-                '     ▶ 25 °C 로 돌리려면 : payload 를 --temp-c 없이 다시 돌려 그리드를 재생성',
+                '     셀도 아닙니다.  (STEP3 σ_ion_eff·이온 옴강하가 한 온도, 반응·확산이 다른 온도)']
+            if _has_contract:
+                _msg += [
+                    f'     ▶ 그리드에 맞추려면: --temp-k {_sig_c + 273.15:g}'
+                    + ('' if a.i0_temp_scale else ' --allow-unscaled-t'),
+                    '     ▶ 25 °C 로 돌리려면 : payload 를 --temp-c 없이 다시 돌려 그리드를 재생성']
+            else:
+                _msg += [
+                    '     ▶ 그리드에 온도 계약이 없습니다 (--temp-c 없이 만든 payload = σ_ion 25 °C 규약값).',
+                    f'     ▶ 제대로 맞추려면: payload(STEP3) 를 --temp-c {a.temp_k - 273.15:g} 로 다시 돌려',
+                    '        σ_ion 을 같은 온도로 굽고, 그 그리드로 이 런을 재실행하십시오.',
+                    f'     ▶ 25 °C 로 돌리려면 : --temp-k {_T_REF_K:g}']
+            _msg += [
                 '     ▶ 알고 감수(진단용) : --allow-grid-t-mismatch (meta 에 MIXED_TEMPERATURE 기록)']
         if 'KINETICS_UNSCALED' in _terr:
             _msg += [
@@ -2854,13 +3045,9 @@ def main():
                 '     ▶ BV 기울기만 보려는 의도면: --allow-unscaled-t (meta 에 kinetics_T_scaling=NONE)']
         _msg.append('  ▶ 상세: docs/temp_pressure_capability.md §3')
         ap.error('\n'.join(_msg))
-    if _tmeta and _tmeta['state'] != 'ISOTHERMAL_25C':
-        print(f"  ⚠ 온도 상태 {_tmeta['state']} — σ_ion {_tmeta['sigma_ion_T_C']:g}°C "
-              f"(×{_tmeta['sigma_ion_T_factor']:.3f}) vs 동역학 {_tmeta['temp_c_kinetics']:g}°C; "
-              f"i0/D_s/OCP/σ_e/κ 는 25°C 상수 (kinetics_T_scaling=NONE). "
-              f"σ-메트릭·용량 절대값 신뢰 금지"
-              + (f"  [해제: {', '.join(_tmeta['released_guards'])}]"
-                 if _tmeta['released_guards'] else ''), flush=True)
+    _tban = temperature_banner(_tmeta)
+    if _tban:
+        print(_tban, flush=True)
     if a.i0_poly is not None and a.i0 <= 0:
         # _i0s = i0_p/i0_ref 정규화 분모 — 0이면 0·inf=NaN이 AMG 빌드 후 newton_fail로 오진됨
         # (리뷰 #8 재현: '--i0 0 --i0-poly ...' → 그리드 로드·전처리 다 하고 죽음)
@@ -2933,6 +3120,25 @@ def main():
     dudt = _load_xy_csv(a.dudt_csv) if a.dudt_csv else None
     # ── ★Rest 스텝 (v2 chaining): 망/BV 솔브 없음 — CellSystem 빌드 전에 처리 (수 초) ──
     if a.rest:
+        # ★ MED-13 (2026-07-30 리뷰): 이 분기는 :3135 에서 sys.exit(0) 하는데, B-1 열화 배선
+        #   (--i0-cycle-mult) 과 i0(T) 적용이 **그 뒤**(:3146~)에 있었다.  그래서 체인 사이클의
+        #   rest 세그먼트가 --cycle-n/--i0-cycle-mult 를 받고도 cycle_interphase 기록 없이
+        #   버리면서, 온도 meta 는 "적용됨" 으로 찍혔다.  수치는 rest V 가 i0-가중 혼합전위라
+        #   균일 스케일이 상쇄돼 무해하지만 **기록 누락**은 감사 실패다.  → 여기서 같은 배선을
+        #   적용하고 meta 에 남긴다 (i0 는 아래 kin_r 에 반영, 상쇄되더라도 규약 일치).
+        _b1_rest_on = ((a.i0_cycle_mult != 1.0) or (a.asr_film_cycle_ohm_cm2 != 0.0)
+                       or (a.cycle_n != 0))
+        if _b1_rest_on and a.i0_cycle_mult <= 0:
+            ap.error('--i0-cycle-mult must be > 0 (i0 정규화 분모)')
+        # 본 경로(:3166~)와 **같은 규약**: i0_p 가 있으면 그쪽이 실효 진폭, 없으면 스칼라.
+        if i0_p is not None:
+            _rest_i0, _rest_i0p = a.i0, i0_p * a.i0_cycle_mult
+        else:
+            _rest_i0, _rest_i0p = a.i0 * a.i0_cycle_mult, None
+        _rest_i0, _rest_i0p = apply_i0_temperature(_rest_i0, _rest_i0p, _i0_tf)
+        if _b1_rest_on:
+            print(f'  ★B-1 계면상(N={a.cycle_n}, rest): R_ct 채널 i0×{a.i0_cycle_mult:g} '
+                  f'[ASSUMED-FORM: 배수=yun2023 R_ct(N) 앵커; 필름옴성은 I=0 이라 무효]', flush=True)
         n_am_r = len(r_um)
         xf, _prev_end, _cx = load_chain_state(a.init_state, n_am_r, a.nr, r_um, ocp)
         rad = RadialDiffusion(n_am_r, a.nr, r_um * 1e-6, ds_arg, ocp.c_max, 0.5)
@@ -2943,13 +3149,13 @@ def main():
         #   기준이라 클립 삭제분에 눈멂 — in-band 오버슛 절단까지 여기서 잡는다)
         _x_pre = float(((xf * rad.Vk).sum(1) / rad.Vk.sum() * _wv_r).sum())
         t_s = a.t_rest_min * 60.0
-        kin_r = Kinetics(a.i0, a.alpha_a, a.alpha_c, 0.0, a.temp_k)   # i0(x) 모양 = V-가중용
+        kin_r = Kinetics(_rest_i0, a.alpha_a, a.alpha_c, 0.0, a.temp_k)  # i0(x) 모양 = V-가중용
         _alive = None if _cx['dead'] is None else ~_cx['dead']
         print(f'  ★Rest {a.t_rest_min:g}min (REST-LOCAL I=0 완화; 입자간 재분배 미모델=v2.1 훅; '
               f'V=i0·A-가중{"" if _alive is not None else ", dead-마스크 無(구상태)"}) '
               f'← {a.init_state} (전런 end={_prev_end})', flush=True)
         ro, drift = run_rest(rad, ocp, V_p_r, t_s, i0_fn=kin_r.i0,
-                             i0_amp=(i0_p if i0_p is not None else None),
+                             i0_amp=(_rest_i0p if _rest_i0p is not None else None),
                              alive=_alive, j0=_cx['J'])
         drift_tot = abs(float(ro['x_mean'][-1]) - _x_pre)
         if not (drift <= 1e-9):                              # NaN-안전 부정형 (수치리뷰 chain#3d)
@@ -2971,6 +3177,9 @@ def main():
                          dict(mode='per_particle', min=float(rad.D.min()), max=float(rad.D.max()))))
         if _tmeta is not None:                           # 자명한 25 °C 기본이면 None → meta 불변
             meta['temperature'] = _tmeta
+        if _b1_rest_on:                                  # ★MED-13: rest 도 열화를 기록한다
+            meta['cycle_interphase'] = cycle_interphase_meta(
+                a.cycle_n, a.i0_cycle_mult, a.asr_film_cycle_ohm_cm2, rest=True)
         np.savez_compressed(a.out, **ro, x_shell_final=rad.x.copy(),
                             params_json=json.dumps(meta))
         if a.save_state:
@@ -3002,7 +3211,8 @@ def main():
         _asr_use = a.asr_film + a.asr_film_cycle_ohm_cm2 * 1e-4    # Ω·cm² → Ω·m²
         print(f'  ★B-1 계면상(N={a.cycle_n}): R_ct 채널 i0×{a.i0_cycle_mult:g} · 필름옴성 '
               f'+{a.asr_film_cycle_ohm_cm2:g} Ω·cm² (→ASR {_asr_use:g} Ω·m²)  '
-              f'[ASSUMED-FORM: 배수=kim2025 R_ct(N) 앵커; N→배수 법칙-fit 후속 §6 N1]', flush=True)
+              f'[ASSUMED-FORM: 배수=yun2023 R_ct(N) 앵커 341.7→982.3 Ω·cm² @~100cyc(30 °C); '
+              f'N→배수 법칙-fit 후속 §6 N1]', flush=True)
     # ★ i0(T) 를 **활성 경로 한 곳에만** 곱한다 (2026-07-29 자체검증 HIGH — 첫 배선이 틀렸다).
     #   per-face i0 는 두 경로가 다르다:
     #     i0_p 없음 : i0_f = kin.i0_ref · shape(x)                    → i0_ref 가 진폭
@@ -3015,11 +3225,9 @@ def main():
     #     상쇄되므로 곱해도 무해하고, i0_p 에 곱한 tf 는 그대로 남는다 → 양쪽에 곱해도 tf 가
     #     정확히 한 번 적용된다.  다만 아래 if/else 로 **활성 경로만** 곱하는 편이 의도가 분명해
     #     그대로 둔다 (어느 쪽이 진폭인지 코드가 스스로 말한다).
+    _kin_i0, _i0p_new = apply_i0_temperature(_i0_use, i0_p, _i0_tf)   # ★ 테스트와 같은 함수
     if i0_p is not None:
-        i0_p = i0_p * _i0_tf                 # per-particle 진폭이 실효 i0 → 여기에 T 를 싣는다
-        _kin_i0 = _i0_use                    # i0_ref 는 건드리지 않는다 (상쇄되므로 무의미)
-    else:
-        _kin_i0 = _i0_use * _i0_tf           # 스칼라 경로: i0_ref 가 곧 진폭
+        i0_p = _i0p_new
     kin = Kinetics(_kin_i0, a.alpha_a, a.alpha_c, _asr_use, a.temp_k)
     sysm = CellSystem(sid, sig_e, sig_i, pid, len(r_um), vox_um, z_top_um=z_top, z_bot_um=0.0,
                       periodic_xy=_per)
@@ -3055,9 +3263,11 @@ def main():
     if split_meta is not None:
         meta['am_electro_split'] = split_meta                # poly/SC 분리 감사 기록 (값+문턱+개수)
     if _b1_on:                                               # B-1 사이클 계면상 감사 기록 (ASSUMED-FORM)
-        meta['cycle_interphase'] = {'cycle_n': a.cycle_n, 'i0_cycle_mult': a.i0_cycle_mult,
-                                    'asr_film_cycle_ohm_cm2': a.asr_film_cycle_ohm_cm2,
-                                    'provenance': 'ASSUMED-FORM: mult=kim2025 R_ct(N) anchor; N→mult law pending fit (§6 N1)'}
+        # ★ HIGH-6 (2026-07-30 리뷰): 'kim2025 R_ct(N) anchor' 는 **존재하지 않는 앵커**였다.
+        #   kim2025 는 전부 post-formation(사이클 축 없음); R_ct(N) 앵커는 yun2023 뿐이다.
+        #   ★ MED-13: rest 분기와 **같은 헬퍼**를 써서 두 기록이 갈라지지 않게 한다.
+        meta['cycle_interphase'] = cycle_interphase_meta(
+            a.cycle_n, a.i0_cycle_mult, a.asr_film_cycle_ohm_cm2)
     np.savez_compressed(a.out, **out, params_json=json.dumps(meta))
     if a.save_state:                                         # newton_fail/soc_overrun 도 저장 — 로더가 명시 거부
         save_chain_state(a.save_state, out['x_shell_final'], r_um, ocp, reason,

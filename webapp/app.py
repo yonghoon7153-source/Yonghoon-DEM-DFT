@@ -6328,8 +6328,10 @@ def _kit_apply_temperature(tmp, t_c, ea_ev):
         raise RuntimeError('run_mpm.sh 의 STEP3(payload) 호출 마커를 찾지 못함 — 생성기가 바뀌었으니 '
                            'webapp/app.py _KIT_STEP3_CALL 을 갱신해야 한다 (온도 주입 침묵실패 방지)')
     flags = f' --temp-c {t_c:g}' + (f' --ea-ion-ev {ea_ev:g}' if ea_ev is not None else '')
-    note = (f'# ★ 운전 온도 {t_c:g} °C (webapp &tempc=) — σ_ion(SE)만 Kraft-2017 σ·T Arrhenius 로 스케일.\n'
-            f'#   i0/D_s/OCP/σ_e/κ/SE-경도는 앵커 없어 25 °C 상수 유지 → 전-물리 온도 스윕 아님 '
+    note = (f'# ★ 운전 온도 {t_c:g} °C (webapp &tempc=) — σ_ion(SE) 은 Kraft-2017 σ·T Arrhenius,\n'
+            f'#   i0 는 kim2025 R_ct(T) 앵커로 스케일 (STEP4 에 --temp-k {t_c + 273.15:g} '
+            f'--i0-temp-scale 을 **한 쌍으로** 주입 — 한쪽만 주면 부호역전/거짓라벨).\n'
+            f'#   D_s/OCP dU/dT/σ_e/κ/SE-경도는 앵커 없어 25 °C 상수 → 전-물리 온도 스윕 아님 '
             f'(docs/temp_pressure_capability.md §3).  Eₐ 는 밴드 0.29/0.41/0.46 eV 를 쓸어 보고할 것.\n')
     src = src.replace(
         _KIT_STEP3_CALL, note + _KIT_STEP3_CALL.replace(' \\\n', flags + ' \\\n'))
@@ -6338,23 +6340,43 @@ def _kit_apply_temperature(tmp, t_c, ea_ev):
     #   step4_dyn 은 기본 --temp-k 298.15 로 돌아가고, T1-d 가드가 GRID_T_MISMATCH 로
     #   **첫 STEP4 스텝에서 hard-fail** 한다 (실제 킷으로 재현 확인).  가드는 옳다 — 60 °C σ 위에서
     #   25 °C 반응속도를 돌리면 조용히 틀리니까.  틀린 건 킷이 그 짝을 안 맞춰준 것이었다.
-    #   ⚠ --allow-unscaled-t 를 함께 굽는다: i0/D_s/OCP 는 앵커가 없어(§F1) 25 °C 상수로 남으므로
+    #   ⚠ (옛 주석 정정 2026-07-30) i0 는 앵커가 **있다** — kim2025 R_ct(T).  D_s/OCP 만 미앵커라
     #     이 런은 **"σ_ion 만 60 °C" 인 혼합 상태**다.  플래그는 그 사실을 승인하는 것이고,
     #     산출물에는 PARTIAL_sigma_ion_only@<T>C 로 박힌다 — 전-물리 온도 스윕이 아니다.
     _S4_CALL = 'python3 "$SCR/step4_dyn.py" --grid step4_grid.npz \\\n'
     _n_s4 = src.count(_S4_CALL)
+    import sys as _s3
+    _sd3 = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'scripts')
+    if _sd3 not in _s3.path:
+        _s3.path.insert(0, _sd3)
+    import cam_kinetics as _ck
+    _i0f = _ck.i0_temperature_factor(t_c, ea_ev if ea_ev else None)
     if _n_s4:
-        # ★★ --temp-k 는 **굽지 않는다** (§3-3① 부호역전).  Kinetics.T 는 BV 지수의 f=F/(RT) 를
-        #    바꾸는데 i0 는 앵커가 없어 25 °C 그대로다 → T 를 올리면 f 가 작아져 같은 전류에
-        #    **η_ct 가 커진다**.  실제 R_ct 는 30→60 °C 에 4.28× **감소**한다(kim2025, 우리 소재계
-        #    실측) → 정확히 반대.  "온도를 반영했다는 인상을 주면서 반대 답을 내는 것"이 가장 나쁘다.
-        #    ⇒ kinetics 는 25 °C 로 두고, 그리드가 60 °C σ 라는 **불일치를 명시적으로 승인**만 한다.
-        #    그 결과 상태는 MIXED_TEMPERATURE (sigma_ion@{T}C, kinetics@25C) 로 산출물에 박힌다.
-        src = src.replace(_S4_CALL, _S4_CALL + '    --allow-grid-t-mismatch \\\n')
+        # ★★ 규약 이력 (중요 — 되돌리지 말 것) ★★
+        #   [옛 규약] --temp-k 를 **굽지 않았다** (§3-3① 부호역전).  Kinetics.T 는 BV 지수의
+        #     f=F/(RT) 를 바꾸는데 i0 가 25 °C 상수로 남으면 T 를 올릴수록 같은 전류에 필요한
+        #     η_ct 가 **커진다** — 실제 R_ct 는 30→60 °C 에 4.28× **감소**하므로 정확히 반대다.
+        #     "온도를 반영했다는 인상을 주면서 반대 답을 내는 것" 이 가장 나쁜 실패라, 킷은
+        #     kinetics 를 25 °C 로 두고 그리드 불일치만 --allow-grid-t-mismatch 로 승인했다.
+        #   [HIGH-4, 2026-07-30] 그 결과 프로덕션 경로엔 i0(T) 가 아예 없었다 → --i0-temp-scale 추가.
+        #   [자체검증 정정, 2026-07-30] ★그 수정이 반쪽이었다★ — --i0-temp-scale 은 **--temp-k 를
+        #     읽어** 배수를 만든다.  --temp-k 를 기본(298.15 K)으로 둔 채 플래그만 주면 배수는
+        #     **정확히 1.0** 인데 배너·provenance 는 ×6.25 를 광고하고 npz 엔
+        #     kinetics_T_scaling=I0_ARRHENIUS_kim2025 가 찍힌다 = 새 거짓 진술.
+        #   ⇒ **i0 앵커가 생긴 지금은 --temp-k 를 굽는 것이 옳다.**  옛 금지 사유(부호역전)는
+        #     i0 가 미앵커일 때만 성립했고, --i0-temp-scale 과 **함께** 주면 부호역전이 해소된다
+        #     (step4_dyn selftest A5: η_ct 60 °C 93.4 → 26.6 mV).  두 플래그는 **한 쌍**이다.
+        #   ⇒ --allow-grid-t-mismatch 는 **뺀다**: σ_ion 도 kinetics 도 같은 t_c 라 혼합이 아니다.
+        #     남겨두면 STEP3 가 --temp-c 를 못 구운 경우의 진짜 불일치까지 조용히 통과시킨다.
+        src = src.replace(_S4_CALL,
+                          _S4_CALL + f'    --temp-k {t_c + 273.15:g} --i0-temp-scale \\\n')
         src = src.replace('echo "[run_mpm] STEP4 솔버:',
-                          f'echo "[run_mpm] ★ STEP4 = MIXED_TEMPERATURE: σ_ion 은 그리드의 {t_c:g} °C, '
-                          f'kinetics(i0/D_s/OCP)는 25 °C 상수. --temp-k 는 의도적으로 미주입 '
-                          f'(부호역전 방지, docs/temp_pressure_capability.md §3-3①)"\n'
+                          f'echo "[run_mpm] ★ STEP4 온도: σ_ion = 그리드의 {t_c:g} °C · '
+                          f'i0 = kim2025 R_ct(T) 앵커로 스케일(--temp-k {t_c + 273.15:g} '
+                          f'--i0-temp-scale, x{_i0f:.3f}) · BV 열전압 f=F/RT 도 {t_c:g} °C. '
+                          f'D_s/OCP dU/dT/sigma_e/kappa 는 앵커 없어 25 °C 상수 = PARTIAL. '
+                          f'--temp-k 는 --i0-temp-scale 과 **한 쌍**이다 — 단독으로 주면 '
+                          f'부호역전(§3-3①). 코팅계는 Ea 가 다름(kim2025 LNO 비-Arrhenius)"\n'
                           f'echo "[run_mpm] STEP4 솔버:', 1)
     open(rp, 'w').write(src)
     pj = os.path.join(tmp, 'mpm_input.json')
@@ -6364,14 +6386,20 @@ def _kit_apply_temperature(tmp, t_c, ea_ev):
     tp = se_material.provenance(t_c, ea_ev)
     tp['applied_to'] = ['run_mpm.sh: mpm_webapp_payload.py --temp-c '
                         '(STEP3 σ_ion 복셀 솔브 + step4_grid.npz σ 테이블)',
-                        f'run_mpm.sh: step4_dyn.py --allow-grid-t-mismatch ({_n_s4} 개 STEP4 호출) '
-                        f'— σ_ion 은 그리드의 {t_c:g} °C 값을 쓰고 kinetics 는 25 °C 상수 '
-                        f'= MIXED_TEMPERATURE.  ★--temp-k 는 의도적으로 미주입: i0 앵커가 없어 '
-                        f'T 만 올리면 η_ct 가 반대 방향(증가)으로 움직인다 (§3-3①)']
+                        f'run_mpm.sh: step4_dyn.py --temp-k {t_c + 273.15:g} --i0-temp-scale '
+                        f'({_n_s4} 개 STEP4 호출) — σ_ion 은 그리드의 {t_c:g} °C, '
+                        f'i0 는 kim2025 R_ct(T) 앵커로 ×{_i0f:.4f} (RT 전인자 포함), '
+                        f'BV 열전압 f=F/RT 도 {t_c:g} °C.  ★두 플래그는 **한 쌍**이다: '
+                        f'--temp-k 단독 = 부호역전(§3-3①), --i0-temp-scale 단독 = 배수 1.0 인데 '
+                        f'kinetics_T_scaling 만 찍히는 거짓 라벨.  '
+                        f'⚠코팅계 Eₐ 는 다름(kim2025 LNO 비-Arrhenius — 앵커는 uncoated)']
     tp['not_applied_to'] = {
         'STEP1/2 MPM 압밀': 'SE 경도 H(T)/σ_y(T) 앵커 없음 (§F1) → 형상은 25 °C 값',
-        'STEP4 kinetics': 'i0 / D_s / OCP dU/dT 앵커 없음 (§F1) — --temp-k 는 굽지 않는다 '
-                          '(f=F/RT 만 움직여 반응 과전압 부호가 실험과 반대로 나옴, §3-3①)',
+        'STEP4 kinetics (D_s/OCP만)': 'D_s(T) / OCP dU/dT 앵커 없음 (§F1) → 25 °C 상수.  '
+                        '★i0 와 BV 열전압은 예외 — kim2025 R_ct(T) 앵커가 있어 '
+                        '--temp-k + --i0-temp-scale 한 쌍으로 반영된다 '
+                        '(i0 앵커가 생기기 전에는 --temp-k 를 굽지 않았다: f=F/RT 만 움직이면 '
+                        '반응 과전압 부호가 실험과 반대, §3-3①)',
         'σ_e / κ': 'ohmic 은 T-무관 (Reisacher, 정성) — 상수가 오히려 정합',
         'STEP5 열화율': 'Arrhenius 앵커 0건 (§F1) — Joule v2 는 Eₐ-free 유지',
     }

@@ -27,14 +27,17 @@ Kim, Kang, Park, Lee — Electrochim. Acta 542 (2025) 147413, Table S6.
     R_ct = 1/(dI/dη)|_{η=0} = **RT / (F · i0 · A)**      ← T 가 **RT 에도** 있다
 
 따라서 `i0 ∝ T / R_ct` 이지 `1/R_ct` 가 아니다.  첫 배선은 `ln R_ct` 를 그대로 적합해 Eₐ
-전량을 i0 에 실었고 → i0 배수가 **10.5 % 과소**(60 °C: 5.5982 vs 정합 6.2554).
+전량을 i0 에 실었고 → i0 배수가 **10.5 % 과소**(60 °C: 5.5974 vs 정합 6.2545).
 리포 자체 규약과도 어긋났다 — `se_material.py` 의 σ·T (Kraft) 규약은 이미 `(T_ref/T)`
 전인자를 포함한다.  올바른 형태:
 
     i0(T)/i0(T_ref) = (T/T_ref) · R_ct(T_ref)/R_ct(T)
                     = (T/T_ref) · exp[ −(Eₐ_Rct/k_B)·(1/T − 1/T_ref) ]
 
-    25 °C ×1.000 · 30 °C ×1.333 · 45 °C ×2.947 · 60 °C ×6.255
+    25 °C ×1.0000 · 30 °C ×1.3325 · 45 °C ×2.9907 · 60 °C ×6.2545
+    (★ 이 네 숫자는 아래 selftest 가 `i0_temperature_factor` 로 재계산해 대조한다 — LOW-1 에서
+     45 °C 자리에 2.947 이라는 손계산 오탈자가 **코드 소유 모듈에만** 남아 docs 와 갈렸다.
+     이제 이 표에 손으로 쓴 값이 함수와 어긋나면 selftest 가 FAIL 한다.)
 
 ★ 전이 가정 (라벨 필수) ★
 ─────────────────────────
@@ -181,9 +184,20 @@ def provenance(T_C=None, ea_ev=None):
             'R_ct 는 상태량이다 — 이 인수는 "온도가 높으면 반응이 빠르다"이지 '
             '"온도가 높으면 더 빨리 열화한다"가 아니다.  LPSCl 분해율 Eₐ 는 문헌에 '
             '존재하지 않는다 (docs/joule_hotspot.md TARGET 1) → 열화 가속에 쓰면 날조(§F1).'),
+        # ★ HIGH-3 (2026-07-30 리뷰): 옛 문자열은 "LNO 코팅계 T-스윕은 논문에 없음" 이라고
+        #   적었으나 **거짓**이다 — Table S4 (LNO 62 wt%) 에 30/45/60 °C 가 stated 로 있고,
+        #   그 데이터가 이 전이가정을 **반증**한다.  기계가 읽는 dict 가 문서(docstring §전이가정)
+        #   와 반대 사실을 말하고 있었고, 누락이 우리에게 유리한 방향이었다.
         'transfer_assumption': (
             '앵커는 72 wt% uncoated 한 조성 · post-formation.  Eₐ 가 조성/코팅/사이클 상태에 '
-            '무관하다고 가정.  LNO 코팅계 T-스윕은 논문에 없음.'),
+            '무관하다고 **가정**한다 — 그러나 이 가정은 코팅계에서 **반증**되어 있다: '
+            'kim2025 Table S4 (LNO 62 wt%) 의 R_ct = 22.4/8.7/7.6 Ω·cm² @30/45/60 °C 는 '
+            '비-Arrhenius (구간별 Eₐ 0.524 / 0.082 eV = 6.4× 스프레드, 3점 R²≈0.86).  '
+            '⇒ 코팅 프리셋과 함께 쓰면 uncoated Eₐ 를 조용히 상속한다 — 결과에 명기할 것.'),
+        'transfer_assumption_refuted_for_coated': True,
+        'coated_counter_anchor_T_C_Rct': [list(p) for p in RCT_T_ANCHOR_LNO],
+        'coated_counter_anchor_source': ('kim2025 Table S4 — NCM811+LPSCl 62wt%, LNO-coated; '
+                                         'non-Arrhenius (see transfer_assumption)'),
         'still_unanchored': ['D_s(T)', 'OCP dU/dT', 'sigma_e(T)', 'kappa(T)',
                              'SE hardness H(T)/sigma_y(T)', 'degradation rate'],
     }
@@ -263,9 +277,27 @@ def _selftest():
             if _r30 is None:
                 _r30, _rm30 = _rct, r_meas
             _errs.append((t_c, _rct / _r30, r_meas / _rm30))
-        _ok5 = all(abs(m / a - 1.0) < 0.03 for _, m, a in _errs)
-        chk('★ 비순환: 모델의 1/(dI/dη)|₀ 비가 앵커 R_ct 비와 3% 이내',
-            _ok5, ' · '.join(f'{t:.0f}°C 모델 {m:.4f} vs 앵커 {a:.4f}' for t, m, a in _errs))
+        # ★ MED-11 (2026-07-30 리뷰): tol 을 전 점 3% 로 두면 판별력이 **60 °C 한 점의 0.10 pp**
+        #   여유에 걸린다 — 현행 45 °C 는 −2.90%, 버그판(전인자 X)은 +1.90% 라 45 °C 만 보면
+        #   **버그판이 더 가깝다**.  2.90% 는 3점 적합의 고유 잔차(구간 Eₐ 0.4049/0.4398)이므로
+        #   물리 오류가 아니지만, EA 나 앵커를 조금만 건드려도 정상 코드가 위양성 FAIL 로 뒤집힌다.
+        #   ⇒ tol 을 점별로 분리: 45 °C 는 적합잔차 허용(5%), 60 °C 는 **판별점**이라 타이트(1%).
+        #   이 테스트가 실제로 판별하는 것은 "RT 전인자 유무" 뿐이다 (아래 5b 가 직접 핀).
+        _TOL = {30.0: 0.005, 45.0: 0.05, 60.0: 0.01}
+        _ok5 = all(abs(m / a - 1.0) < _TOL[t] for t, m, a in _errs)
+        chk('★ 비순환: 모델의 1/(dI/dη)|₀ 비가 앵커 R_ct 비와 일치 (점별 tol)',
+            _ok5, ' · '.join(f'{t:.0f}°C 모델 {m:.4f} vs 앵커 {a:.4f} '
+                             f'({(m/a-1)*100:+.2f}%, tol {_TOL[t]*100:g}%)'
+                             for t, m, a in _errs))
+        # ★ 판별력 증명: 전인자를 뺀 버그판은 60 °C 에서 tol 을 **반드시** 넘어야 한다
+        _bug60 = math.exp(-(EA_RCT_EV / KB_EV) * (1.0 / 333.15 - 1.0 / 298.15))
+        _k_bug = _K(2.0 * _bug60, temp_k=333.15)
+        _, _g_bug = _k_bug._ct(0.0, _k_bug.i0(0.5) * _A)
+        _m_bug = (1.0 / _g_bug) / _r30
+        _a60 = RCT_T_ANCHOR[2][1] / _rm30
+        chk('★[M11] 버그판(전인자 X)은 60 °C tol 을 넘어 FAIL 한다 (테스트가 실제로 판별)',
+            abs(_m_bug / _a60 - 1.0) > _TOL[60.0],
+            f'버그판 {(_m_bug/_a60-1)*100:+.2f}% vs tol {_TOL[60.0]*100:g}%')
     except Exception as e:
         chk('★ 비순환 앵커 재현', False, f'{type(e).__name__}: {e}')
 
@@ -309,6 +341,30 @@ def _selftest():
         and '날조' in p['NOT_a_degradation_rate'])
     chk('provenance 가 미앵커 목록을 병기', 'degradation rate' in p['still_unanchored'])
     chk('T 미지정이면 provenance 는 None (기본 산출물 불변)', provenance() is None)
+    # ★[H3] (2026-07-30 재검증): docstring 은 고쳤는데 **기계가 읽는 dict** 는 여전히
+    #   "LNO 코팅계 T-스윕은 논문에 없음" 을 npz 로 내보냈다 — 같은 dict 의 anchor_points 옆에서.
+    #   문자열을 읽는 테스트가 하나도 없어서 못 잡았다.  이제 전 문자열을 훑는다.
+    _all_str = ' '.join(str(v) for v in p.values())
+    chk('★[H3] provenance 어디에도 "논문에 없음" 류 거짓 진술이 없다',
+        '논문에 없음' not in _all_str and '스윕은 논문에' not in _all_str)
+    chk('★[H3] provenance 가 코팅계 반증 사실을 **기계판독 가능**하게 싣는다',
+        p.get('transfer_assumption_refuted_for_coated') is True
+        and p.get('coated_counter_anchor_T_C_Rct') == [list(x) for x in RCT_T_ANCHOR_LNO]
+        and '비-Arrhenius' in p['transfer_assumption'])
+    chk('★[H3] provenance 와 step4 trust 문자열이 서로 모순되지 않는다 (같은 사실)',
+        ('비-Arrhenius' in p['transfer_assumption']) and ('반증' in p['transfer_assumption']))
+
+    # ★[L1] 독스트링의 헤드라인 배수가 함수와 일치하는가 (손계산 오탈자가 세 군데서 갈렸다)
+    import re as _re
+    _doc = __doc__ or ''
+    _pairs = _re.findall(r'(\d+(?:\.\d+)?)\s*°C\s*×(\d+\.\d+)', _doc)
+    _bad = [(t, v) for t, v in _pairs
+            if abs(i0_temperature_factor(float(t)) - float(v)) > 5e-4]
+    chk('★[L1] 독스트링 i0 배수표가 함수 계산과 일치 (손계산 오탈자 차단)',
+        len(_pairs) >= 4 and not _bad,
+        f'{len(_pairs)}점 검사' + (f', 불일치 {_bad}' if _bad else ''))
+    chk('★[L1] 정정 전 값 5.5974 도 실제 (전인자 뺀) 계산과 일치',
+        abs(math.exp(-(EA_RCT_EV / KB_EV) * (1.0 / 333.15 - 1.0 / 298.15)) - 5.5974) < 5e-4)
 
     # 7) T_REF 규약이 se_material 과 같은가
     try:

@@ -33,8 +33,13 @@ STEP4 는 열화 **법칙**을 갖고 있지 않다.  `--cycle-n` 도움말이 �
   · 같은 표의 R_ion 은 126 → 156 = 1.24× 로 훨씬 작다 → 열화는 **반응면(R_ct)** 에 몰린다.
   ★★ 라벨 (2026-07-30 리뷰 HIGH-4): 이 2.87× 는 풀셀 TLM 피팅의 **측정 총 R_ct** 이지 순수
   화학몫이 아니다 — 계면화학 × 전기활성면적손실이 곱해져 있다.  다만 Yun 은 CAM 균열을
-  배제하려고 **단결정 NCM 을 일부러 채택**했고(litdb:60), 우리 mono 원장 g_mech ≈ 1.05 이므로
-  내장 기계몫은 **≈5 %** 로 작다 → g_chem ≈ 2.87/1.05 ≈ **2.74**.
+  배제하려고 **단결정 NCM 을 일부러 채택**했고(litdb:60), 우리 mono 접촉-원장 추정 g_mech ≈ 1.02
+  (CT 규약)이므로 내장 기계몫은 **≈2 %** 로 작다 → g_chem ≈ 2.87/1.02 ≈ **2.82**.
+  ★★ 규약 정정 (2026-07-30 리뷰 HIGH-8): 여기 쓰던 1.05 는 **Holm 규약**(1/√A) 값이었는데
+  `--i0-cycle-mult` 가 건드리는 채널은 **전하이동**이라 `read_ledger` 도 `rct_ct_area_rel`
+  (CT, 1/A)을 쓴다 → ledger 유무에 따라 규약이 갈리는 불일치였다.  CT 대표값 1.02 로 통일
+  (docs/a10_cycle_chemomech_design.md §6.3, 밴드 [0–2 %]).  ⚠ 이 값은 **실측이 아니라**
+  우리 A10 접촉-원장 시뮬(ASSUMED-FORM CZM) 추정이다.
   `--subtract-mech` 로 그 감산을 켤 수 있다 (기본 OFF = 총량 그대로, 라벨로 고지).
 ★★ 채널 배분 경고 (2026-07-30 리뷰 HIGH-5) ★★
 shape √N 의 정당화는 Park 의 "확산제한 Wagner **필름**" 인데, 필름 저항은 **옴성**(η ∝ I)이고
@@ -47,8 +52,16 @@ i0 감소는 **로그성**(η ∝ asinh)이다.  둘은 선형 극한에서만 �
 
 모양 (끝점 사이):
   Park 2023 AEM 10.1002/aenm.202203861 —
-  · 코팅/첨가제 계면상: **선형-√t** (확산제한 Wagner film) → g_chem ∝ √N
+  · 코팅/첨가제 계면상: **선형-√t** (확산제한 Wagner film) → g_chem ∝ √N †
   · bare: **파라볼릭(super-√t)** = 화학 위에 접촉손실이 얹힌 모양
+  † ★★ 라벨 강등 (2026-07-30 리뷰 MED-15) — `√t → √N` 은 **문헌지지가 아니라 ASSUMED** ★★
+    Park 의 기울기는 `25.73 Ω·h⁻⁰·⁵` = 명시적 **시간** 단위다.  Wagner 확산제한은 δ ∝ √t 이고
+    `√N ≡ √t` 는 **사이클 소요시간이 고정일 때만** 성립한다.  이 함수에는 시간 인자가 **없다**:
+      Yun 앵커 0.33C ≈ 6.06 h/cyc ↔ 2C = 1.0 h/cyc ⇒ 같은 N 에서 **√6.06 = 2.462× 과대**
+                                    ↔ 0.2C = 10 h/cyc ⇒ **1.284× 과소**
+    ⇒ 지금 `shape='sqrt'` 는 "Park 문헌지지" 가 아니라 **rate 가 앵커와 같을 때만 문헌지지**다.
+      rate 가 다르면 ASSUMED.  올바른 형태는 N 이 아니라 Σt 인덱싱: √(N·t_cyc/t_anchor).
+      → `--c-rate` 로 그 보정을 켤 수 있다 (기본 OFF = 기존 √N, bitwise 불변).
     ⚠ 그런데 우리는 접촉손실을 g_mech 로 **따로** 센다 → bare 의 super-√t 를 g_chem 에
       그대로 쓰면 접촉 몫을 두 번 센다.  그래서 이 모듈의 기본 shape 은 **√N** 이고,
       `--shape parabolic` 은 "원장 없이 총량만 보고 싶을 때" 전용이며 경고를 찍는다.
@@ -85,30 +98,67 @@ YUN_RION_FROM, YUN_RION_TO = 126.0, 156.0
 G_ION_AT_ANCHOR = YUN_RION_TO / YUN_RION_FROM       # 1.238… (참고: 전송은 열화 적음)
 ANCHOR_T_CYCLE_C = 30.0            # ★ Yun 2023 노화온도 (litdb:106) — 사용자 랩 60 °C 와 다름
 ANCHOR_C_RATE = 0.33               # Yun cycling rate
-G_MECH_BUILTIN = 1.05              # 앵커에 내장된 기계몫 추정 (SC-NMC 단결정, mono 원장 실측)
+# ★ HIGH-8 (2026-07-30 리뷰): 이 상수는 1.05 = **Holm 규약**(1/√A, 구속저항 몫) 값이었다.
+#   그런데 read_ledger() 는 스스로 "`--i0-cycle-mult` 가 건드리는 채널이 전하이동이라
+#   rct_holm_rel 이 아니라 **rct_ct_area_rel** 을 쓴다" 고 선언한다 → ledger 를 주면 CT,
+#   안 주면 Holm 이라는 **경로별 규약 불일치**.  CT 규약 대표값은 1.02
+#   (docs/a10_cycle_chemomech_design.md:150 "| mono | Holm 1.05× | **CT 1.02×(대표)** |";
+#    :152 "측정 CAM-SE R_int = 전하이동 지배 → CT(area⁻¹)가 대표규약").
+#   ⚠ 출처도 정정: "mono 원장 실측" 이 아니라 **우리 A10 접촉원장 시뮬 추정**이다
+#   (ASSUMED-FORM CZM; 자매 헤드라인 bimodal 1.51× 는 --poly-mode shrink-proxy 아티팩트로
+#    재해석 대기 — CLAUDE.md).  또한 이건 N=100 값인데 원장은 "즉시파단" 을 기록했으므로
+#   기계몫은 전반부 집중이다 → 전 N 상수 divisor 는 그 자체가 또 하나의 ASSUMED-FORM.
+G_MECH_BUILTIN = 1.02              # CT(area⁻¹) 규약, mono — ASSUMED-FORM (A10 접촉원장 시뮬)
+G_MECH_BUILTIN_CONVENTION = 'CT_area_inverse (rct_ct_area_rel) — Holm 규약이면 1.05'
+G_MECH_BUILTIN_SRC = ('docs/a10_cycle_chemomech_design.md §6.3 표 (mono, CT 대표규약).  '
+                      '출처 = 우리 A10 접촉-원장 시뮬 추정 (ASSUMED-FORM CZM), 실측 아님.  '
+                      '밴드 [규약×f0] = [0–2%]; 전 N 상수 divisor 는 ASSUMED-FORM '
+                      '(원장은 즉시파단 = 기계몫 전반부 집중)')
 ANCHOR_SRC = ('Yun 2023 EnSM 10.1016/j.ensm.2023.102787 TableS1 (bare SC-NMC811+LPSCl, '
               '★30 °C · 0.33C, R_ct 341.7→982.3 Ω·cm² @~100cyc = 2.87× = **측정 총량**'
-              '(기계몫 ≈5% 내장), table_verified_litdb) · shape = Park 2023 AEM '
+              '(기계몫 ≈2% 내장 — CT 규약, HIGH-8), table_verified_litdb) · shape = Park 2023 AEM '
               '10.1002/aenm.202203861 (coated/additive interphase = linear-√t).  '
               '⚠ 사용자 랩은 60 °C 노화 → 이 크기는 **하한**으로만 읽을 것 (§13)')
 
 SHAPES = ('sqrt', 'linear', 'parabolic')
 
 
-def g_chem(n, shape='sqrt', g_anchor=G_CHEM_AT_ANCHOR, n_anchor=YUN_RCT_N):
+def rate_time_factor(c_rate=None, anchor_c_rate=ANCHOR_C_RATE):
+    """사이클-수 축 → **시간** 축 환산 배수 t_cyc/t_anchor (MED-15).
+
+    Park 의 Wagner 확산제한 기울기는 `Ω·h⁻⁰·⁵` = **시간** 단위다.  `√N ≡ √t` 는 사이클
+    소요시간이 앵커와 같을 때만 성립하고, 한 사이클 소요시간 ∝ 1/C-rate 이므로
+
+        t_cyc / t_anchor = anchor_c_rate / c_rate
+
+    c_rate=None → **정확히 1.0** (기존 √N 경로 bitwise 불변; 기본 OFF).
+    """
+    if c_rate is None:
+        return 1.0
+    c = float(c_rate)
+    if not (c > 0.0):
+        raise ValueError(f'c_rate 는 양수여야 한다 (got {c_rate!r})')
+    return float(anchor_c_rate) / c
+
+
+def g_chem(n, shape='sqrt', g_anchor=G_CHEM_AT_ANCHOR, n_anchor=YUN_RCT_N, c_rate=None):
     """계면상 성장 배수 g_chem(N) = R_ct(N)/R_ct(0).  N=0 → 1.0, N=n_anchor → g_anchor.
 
     shape 은 **끝점 사이의 ASSUMED-FORM**:
       sqrt      — Park 코팅계 선형-√t (기본).  g = 1 + (g_a−1)·√(N/N_a)
       linear    — 하한 대조 (계면상이 두께-선형).  g = 1 + (g_a−1)·(N/N_a)
       parabolic — Park bare (super-√t).  ⚠ 접촉손실을 포함한 모양이라 g_mech 와 이중계산 위험
+
+    c_rate (MED-15) — 주면 진행좌표를 **시간**으로 인덱싱한다:
+      r = (N/N_a)·(anchor_c_rate/c_rate).  Park 기울기가 h⁻⁰·⁵ 단위이므로 이쪽이 옳다.
+      기본 None = 옛 √N (앵커 rate 0.33C 에서만 문헌지지; 다른 rate 에선 ASSUMED).
     """
     if shape not in SHAPES:
         raise ValueError(f'shape 은 {SHAPES} 중 하나 (got {shape!r})')
     n = float(n)
     if n <= 0:
         return 1.0
-    r = n / float(n_anchor)
+    r = (n / float(n_anchor)) * rate_time_factor(c_rate)
     f = {'sqrt': math.sqrt(r), 'linear': r, 'parabolic': r ** 1.5}[shape]
     return 1.0 + (float(g_anchor) - 1.0) * f
 
@@ -147,16 +197,25 @@ def read_ledger(path):
 
 
 def compose(n_list, shape='sqrt', ledger=None, merge_into_i0=False, subtract_mech=False,
-            film_frac=0.0, r_ct0_ohm_cm2=YUN_RCT_FROM):
+            film_frac=0.0, r_ct0_ohm_cm2=None, c_rate=None):
     """N 목록 → 채널 분리 표.  ledger = {N: g_mech} 또는 None.
 
     subtract_mech=True → 앵커의 내장 기계몫(G_MECH_BUILTIN)을 나눠 순수 화학몫으로 보정
     (리뷰 HIGH-4).  기본 OFF = 측정 총량 그대로 쓰되 라벨로 고지.
     """
+    # ★ LOW-3 (2026-07-30 리뷰): 범위 검증이 main() 에만 있어, 모듈로 직접 부르면
+    #   film_frac=1.5 가 예외 없이 통과하고 i0_cycle_mult=15.967 (= 사이클링이 i0 를 **16배
+    #   개선**) 을 돌려줬다.  1 < F < 1.53 이 위험창.  함수 자체에서 막는다.
+    if not (0.0 <= float(film_frac) <= 1.0):
+        raise ValueError(f'film_frac 은 0~1 (성장분의 옴성 몫 비율) 이어야 한다 (got {film_frac!r}) — '
+                         '1 을 넘으면 i0 배수가 >1 이 되어 "사이클링이 반응을 개선한다" 는 '
+                         '비물리 결과가 나온다 (LOW-3)')
+    if r_ct0_ohm_cm2 is not None and not (float(r_ct0_ohm_cm2) > 0.0):
+        raise ValueError(f'r_ct0_ohm_cm2 는 양수여야 한다 (got {r_ct0_ohm_cm2!r})')
     _ga = G_CHEM_AT_ANCHOR / (G_MECH_BUILTIN if subtract_mech else 1.0)
     rows = []
     for n in n_list:
-        gc = g_chem(n, shape, g_anchor=_ga)
+        gc = g_chem(n, shape, g_anchor=_ga, c_rate=c_rate)
         gm = None
         if ledger:
             gm = ledger.get(int(n))
@@ -164,13 +223,16 @@ def compose(n_list, shape='sqrt', ledger=None, merge_into_i0=False, subtract_mec
                 gm = 'NO_CHECKPOINT'
         gm_num = gm if isinstance(gm, float) else None
         tot = gc * gm_num if gm_num else None
+        _gb = tot if (merge_into_i0 and tot) else gc      # ★ 분할 기준 (HIGH-5: i0·필름 동일 기준)
         rows.append({
             'N': int(n),
             'g_chem': gc,
             'g_mech': gm,
             'g_total_Rct': tot,
-            'i0_cycle_mult': 1.0 / (((tot if (merge_into_i0 and tot) else gc) - 1.0)
-                                    * (1.0 - float(film_frac)) + 1.0),
+            # ★ HIGH-5 (재검증): 옛 코드는 i0 를 tot(총량) 기준, 필름을 gc(chem-only) 기준으로 써서
+            #   merge+film 조합에서 성장분 21.9% 가 조용히 증발했다 (ΔR 1141.6 → 891.1).
+            #   ⇒ **같은 기준(_gbase)** 으로 분할한다: i0 가 (1−F), 필름이 F.
+            'i0_cycle_mult': 1.0 / ((_gb - 1.0) * (1.0 - float(film_frac)) + 1.0),
             # ★ HIGH-9: merge 를 요청했는데 g_mech 가 없어 chem-only 로 떨어진 행을 **행별로** 표기.
             #   옛 코드는 rows[0] 라벨 하나를 전체에 인쇄해, 복붙하는 두 줄이 서로 다른 규약인데
             #   구별이 안 됐다.
@@ -180,12 +242,31 @@ def compose(n_list, shape='sqrt', ledger=None, merge_into_i0=False, subtract_mec
                                  if merge_into_i0 else 'chem only (규약)')),
             'merge_requested_but_chem_only': bool(merge_into_i0 and not tot),
             # ★ HIGH-5: 성장의 film_frac 몫을 옴성 채널로.  ΔR = R_ct0·(g−1) 중 그 몫을 Ω·cm² 로.
-            'asr_film_cycle_ohm_cm2': (float(r_ct0_ohm_cm2) * (gc - 1.0) * float(film_frac)
-                                       if film_frac > 0 else 0.0),
+            #   ★★ HIGH-1 (2026-07-30 재검증): r_ct0 기본값을 YUN_RCT_FROM(341.7)로 두었던 것이
+            #     치명적이었다 — 그건 **Yun 의 셀** R_ct0 이고, 게다가 step4 의 Ω·cm² 는 두 종류다:
+            #       --r-int-ohm-cm2  = footprint 기준 (nx·ny·vox²)
+            #       --asr-film-cycle-ohm-cm2 = **interfacial** 기준 (A_face = vox²)
+            #     남의 셀 footprint 값을 우리 셀 interfacial 플래그에 주입하면 (실측 DBE 베드
+            #     면적비 ≈44×, R_ct0 128.5 vs 341.7 = 2.66×) 0.2C 첫 스텝이 3.756 V → 1.325 V
+            #     (−2431 mV) 로 무너진다.  ⇒ 기본값 금지, **사용자가 자기 베드 값을 명시**해야 한다.
+            'asr_film_cycle_ohm_cm2': (float(r_ct0_ohm_cm2) * (_gb - 1.0) * float(film_frac)
+                                       if (film_frac > 0 and r_ct0_ohm_cm2) else 0.0),
+            'asr_basis': ('interfacial (A_face=vox²) — step4 --asr-film-cycle-ohm-cm2 규약; '
+                          '★footprint 기준 R_int 값을 넣지 말 것'
+                          if (film_frac > 0 and r_ct0_ohm_cm2) else None),
+            'r_ct0_ohm_cm2_used': (float(r_ct0_ohm_cm2) if r_ct0_ohm_cm2 else None),
             'i0_is_lower_bound_penalty': film_frac <= 0.0,
             'g_chem_is_measured_total': not subtract_mech,
             'anchor_T_cycle_C': ANCHOR_T_CYCLE_C,
             'extrapolated': bool(n > YUN_RCT_N),
+            # ★ MED-15: 진행좌표가 N 인지 Σt 인지 = 앵커 rate 와 다를 때 결정적
+            'progress_axis': ('cycle_count_N (√N; 앵커 rate 0.33C 에서만 Park 문헌지지, '
+                              '다른 rate 에선 ASSUMED — MED-15)' if c_rate is None else
+                              f'elapsed_time_Sigma_t (c_rate={float(c_rate):g}C, '
+                              f't_cyc/t_anchor={rate_time_factor(c_rate):.4f}) — Park 기울기가 '
+                              f'h^-0.5 단위라 이쪽이 규약-정합'),
+            'rate_time_factor': rate_time_factor(c_rate),
+            'c_rate': (float(c_rate) if c_rate is not None else None),
         })
     return rows
 
@@ -254,13 +335,34 @@ def _selftest():
     _r_tot = compose([100])[0]
     _r_sub = compose([100], subtract_mech=True)[0]
     chk('★[H4] 기본은 "측정 총량" 으로 라벨', _r_tot['g_chem_is_measured_total'] is True)
-    chk('★[H4] --subtract-mech 가 내장 기계몫(≈5%)을 실제로 나눈다',
+    chk('★[H4] --subtract-mech 가 내장 기계몫을 실제로 나눈다',
         _r_sub['g_chem_is_measured_total'] is False
         and abs(_r_sub['g_chem'] - G_CHEM_AT_ANCHOR / G_MECH_BUILTIN) < 1e-12,
         f"{_r_tot['g_chem']:.4f} → {_r_sub['g_chem']:.4f}")
+    # ★[H8] 위 단언은 **자기 상수 대비 산술 항등식**이라 G_MECH_BUILTIN 에 어떤 값을 넣어도
+    #   통과한다 (규약도 앵커도 검증 안 함).  값 자체를 설계문서와 대조하는 핀을 따로 박는다.
+    _a10 = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                        '..', 'docs', 'a10_cycle_chemomech_design.md')
+    try:
+        _a10_txt = open(_a10, encoding='utf-8').read()
+    except OSError:
+        _a10_txt = ''
+    chk('★[H8] G_MECH_BUILTIN 이 CT(area⁻¹) 규약 = 설계문서 §6.3 mono 대표값 1.02',
+        abs(G_MECH_BUILTIN - 1.02) < 1e-9 and 'CT_area_inverse' in G_MECH_BUILTIN_CONVENTION
+        and ('| mono | 1.05× | 1.02× |' in _a10_txt if _a10_txt else True),
+        f'{G_MECH_BUILTIN} ({G_MECH_BUILTIN_CONVENTION})'
+        + ('' if _a10_txt else ' — ⚠ 설계문서 미발견, 상수만 검사'))
+    chk('★[H8] 출처가 "실측" 이 아니라 우리 시뮬(ASSUMED-FORM)이라고 적혀 있다',
+        '실측 아님' in G_MECH_BUILTIN_SRC and 'ASSUMED-FORM' in G_MECH_BUILTIN_SRC)
+    chk('★[H8] read_ledger 채널(rct_ct_area_rel)과 내장 divisor 규약이 일치',
+        'rct_ct_area_rel' in (read_ledger.__doc__ or '')
+        and 'rct_ct_area_rel' in G_MECH_BUILTIN_CONVENTION)
     # [HIGH-5] film_frac 이 옴성 채널로 몫을 돌리고, 0 이면 하한이라고 낙인
     _r_f0 = compose([100])[0]
-    _r_f5 = compose([100], film_frac=0.5)[0]
+    # ★[H1] r_ct0 는 **우리 베드의 interfacial 기준** 값을 명시해야 한다 (기본값 없음 — 옛 코드가
+    #   Yun 셀의 footprint 값 341.7 을 기본으로 흘려 0.2C 첫 스텝을 −2431 mV 무너뜨렸다).
+    _R0_IFACE = 128.5                       # 실측 DBE 베드 interfacial R_ct0 [Ω·cm²]
+    _r_f5 = compose([100], film_frac=0.5, r_ct0_ohm_cm2=_R0_IFACE)[0]
     chk('★[H5] film_frac=0 은 "고율 penalty 하한" 으로 낙인 + asr 0',
         _r_f0['i0_is_lower_bound_penalty'] is True and _r_f0['asr_film_cycle_ohm_cm2'] == 0.0)
     chk('★[H5] film_frac=0.5 → 옴성 채널 값 산출 + i0 몫은 절반만',
@@ -268,6 +370,62 @@ def _selftest():
         and abs(1.0 / _r_f5['i0_cycle_mult'] - (1.0 + (G_CHEM_AT_ANCHOR - 1.0) * 0.5)) < 1e-12,
         f"asr {_r_f5['asr_film_cycle_ohm_cm2']:.1f} Ω·cm² · i0mult "
         f"{_r_f0['i0_cycle_mult']:.4f}→{_r_f5['i0_cycle_mult']:.4f}")
+    # ★[H1] r_ct0 를 안 주면 옴성 채널은 **0 이어야 한다** (남의 셀 기본값이 새는 것 금지)
+    chk('★[H1] film_frac>0 이어도 r_ct0 미지정이면 asr=0 + basis=None (기본값 유출 금지)',
+        compose([100], film_frac=0.5)[0]['asr_film_cycle_ohm_cm2'] == 0.0
+        and compose([100], film_frac=0.5)[0]['asr_basis'] is None)
+    chk('★[H1] asr_basis 가 interfacial 규약을 명시하고 footprint 혼입을 경고',
+        'interfacial' in (_r_f5['asr_basis'] or '') and 'footprint' in (_r_f5['asr_basis'] or ''))
+    # ★[H5] merge+film 동시 지정에서 성장분이 증발하지 않는다 (옛 코드 −21.9%)
+    _r_mf = compose([100], ledger={100: 1.51}, merge_into_i0=True, film_frac=0.5,
+                    r_ct0_ohm_cm2=_R0_IFACE)[0]
+    _tot = _r_mf['g_total_Rct']
+    _dR_i0 = _R0_IFACE * (1.0 / _r_mf['i0_cycle_mult'] - 1.0)
+    chk('★[H5] merge+film: i0 몫 + 필름 몫 = 총 성장분 (증발 0)',
+        abs((_dR_i0 + _r_mf['asr_film_cycle_ohm_cm2']) - _R0_IFACE * (_tot - 1.0)) < 1e-9,
+        f"{_dR_i0:.2f} + {_r_mf['asr_film_cycle_ohm_cm2']:.2f} vs {_R0_IFACE*(_tot-1.0):.2f} Ω·cm²")
+    # ★[M15] √t → √N: 진행좌표가 시간이어야 한다 (Park 기울기 = Ω·h⁻⁰·⁵)
+    chk('★[M15] c_rate 미지정 = 정확히 1.0 (기존 √N bitwise 불변)',
+        rate_time_factor().hex() == (1.0).hex()
+        and g_chem(50).hex() == g_chem(50, c_rate=ANCHOR_C_RATE).hex())
+    chk('★[M15] 2C 는 앵커(0.33C)보다 사이클이 짧다 → 같은 N 에서 성장 작다',
+        abs(rate_time_factor(2.0) - ANCHOR_C_RATE / 2.0) < 1e-12
+        and g_chem(100, c_rate=2.0) < g_chem(100),
+        f'√N {g_chem(100):.4f} vs Σt@2C {g_chem(100, c_rate=2.0):.4f}')
+    chk('★[M15] 0.2C 는 반대 방향 (사이클이 길어 성장 크다)',
+        g_chem(100, c_rate=0.2) > g_chem(100),
+        f'Σt@0.2C {g_chem(100, c_rate=0.2):.4f}')
+    _ov2 = (g_chem(100) - 1.0) / (g_chem(100, c_rate=2.0) - 1.0)
+    _un02 = (g_chem(100, c_rate=0.2) - 1.0) / (g_chem(100) - 1.0)
+    chk('★[M15] 리뷰가 계산한 편차와 일치 (2C 2.462× 과대 · 0.2C 1.284× 과소)',
+        abs(_ov2 - math.sqrt(2.0 / ANCHOR_C_RATE)) < 1e-12
+        and abs(_un02 - math.sqrt(ANCHOR_C_RATE / 0.2)) < 1e-12,
+        f'{_ov2:.3f}× / {_un02:.3f}×')
+    chk('★[M15] 진행좌표가 산출물에 라벨된다 (N 이면 ASSUMED 고지)',
+        'ASSUMED' in compose([100])[0]['progress_axis']
+        and 'elapsed_time' in compose([100], c_rate=2.0)[0]['progress_axis'])
+    for _bad in (0.0, -1.0):
+        try:
+            rate_time_factor(_bad)
+            chk(f'★[M15] c_rate={_bad} 거부', False, '통과해버림')
+        except ValueError:
+            chk(f'★[M15] c_rate={_bad} 거부', True)
+    # ★[L3] film_frac 범위 가드 — 옛 코드는 1.5 를 통과시켜 i0 배수 15.967 (사이클링이 i0 를
+    #   16배 **개선**) 을 예외 없이 돌려줬다.  main() 검증만 있어 모듈 직접호출로 뚫렸다.
+    for _bad in (1.5, -0.1, 2.0):
+        try:
+            compose([100], film_frac=_bad)
+            chk(f'★[L3] film_frac={_bad} 거부', False, '예외 없이 통과')
+        except ValueError:
+            chk(f'★[L3] film_frac={_bad} 거부 (비물리 i0 개선 차단)', True)
+    try:
+        compose([100], film_frac=0.5, r_ct0_ohm_cm2=-1.0)
+        chk('★[L3] r_ct0 음수 거부', False, '예외 없이 통과')
+    except ValueError:
+        chk('★[L3] r_ct0 음수 거부', True)
+    chk('★[L3] 경계값 0.0 / 1.0 은 정상 통과 (과잉 가드 아님)',
+        compose([100], film_frac=0.0)[0]['i0_cycle_mult'] > 0
+        and compose([100], film_frac=1.0)[0]['i0_cycle_mult'] == 1.0)
     # [HIGH-9] merge 요청이 체크포인트 없는 행에서 조용히 강등되지 않고 **행별로** 표기된다
     _rr = compose([37, 100], ledger={100: 1.51}, merge_into_i0=True)
     chk('★[H9] merge 요청인데 체크포인트 없는 행이 행별로 표시된다',
@@ -293,10 +451,23 @@ def main(argv=None):
     ap.add_argument('--subtract-mech', action='store_true',
                     help='앵커 끝점에 내장된 기계몫(≈5%%, SC-NMC 단결정)을 나눠 순수 화학몫으로 보정. '
                          '기본 OFF = 측정 총량 그대로 (라벨로 고지).')
+    ap.add_argument('--r-ct0-ohm-cm2', type=float, default=None,
+                    help='★--film-frac 사용 시 **필수**: 이 베드의 pristine R_ct [Ω·cm², '
+                         '**interfacial** 기준 = step4 --asr-film-cycle-ohm-cm2 규약].  '
+                         '⚠ footprint 기준(--r-int-ohm-cm2)값을 넣지 말 것 — 두 Ω·cm² 는 분모가 '
+                         '다르다(실측 베드 면적비 ≈44×).  기본값을 두지 않는 이유: 예전엔 Yun 의 '
+                         '셀 341.7 이 기본이라 남의 셀 값이 조용히 주입됐고, 0.2C 첫 스텝이 '
+                         '3.756 V → 1.325 V 로 무너졌다 (2026-07-30 재검증 HIGH-1).')
     ap.add_argument('--film-frac', type=float, default=0.0,
                     help='총 성장 중 **옴성 필름** 몫 [0-1] → --asr-film-cycle-ohm-cm2 로 산출. '
                          '기본 0 = 전량 i0(로그성) = 고율 penalty **하한**.  ⚠ F 값은 앵커 없음(§F1) '
                          '— 스윕 전용 (리뷰 HIGH-5: 전량 i0 는 분극을 1.2-3.1x 과소평가).')
+    ap.add_argument('--c-rate', type=float, default=None,
+                    help='★MED-15: 이 셀의 C-rate.  주면 진행좌표를 N 이 아니라 **경과시간 Σt** 로 '
+                         f'인덱싱한다 (앵커 {ANCHOR_C_RATE}C 대비 t_cyc/t_anchor='
+                         f'{ANCHOR_C_RATE}/c_rate).  Park 기울기가 Ω·h^-0.5 = **시간** 단위라 '
+                         '√N≡√t 는 rate 가 앵커와 같을 때만 성립한다 (2C 면 √N 이 2.46x 과대, '
+                         '0.2C 면 1.28x 과소).  기본 미지정 = 옛 √N (bitwise 불변).')
     ap.add_argument('--out-json', default='')
     a = ap.parse_args(argv)
     if a.selftest:
@@ -308,7 +479,30 @@ def main(argv=None):
     led = read_ledger(a.ledger) if a.ledger else None
     if not (0.0 <= a.film_frac <= 1.0):
         raise SystemExit(f'--film-frac 는 0-1 (got {a.film_frac})')
-    rows = compose(ns, a.shape, led, a.merge_into_i0, a.subtract_mech, a.film_frac)
+    # ★ HIGH-1: film 채널을 쓰려면 **이 베드의** R_ct0 를 명시해야 한다 (기본값 금지).
+    if a.film_frac > 0 and a.r_ct0_ohm_cm2 is None:
+        raise SystemExit(
+            '--film-frac 를 쓰려면 --r-ct0-ohm-cm2 (이 베드의 pristine R_ct, **interfacial** '
+            'Ω·cm²) 를 함께 주어야 합니다.\n'
+            '  이유: 옴성 필름 ASR = R_ct0·(g−1)·F 이므로 R_ct0 가 **누구의 셀인지**가 값을 정합니다.\n'
+            '  예전 기본값 341.7 은 Yun 2023 의 셀이고, 게다가 step4 의 Ω·cm² 는 두 종류입니다:\n'
+            '    --r-int-ohm-cm2          = footprint 기준 (nx·ny·vox²)\n'
+            '    --asr-film-cycle-ohm-cm2 = interfacial 기준 (A_face = vox²)   ← 이 값\n'
+            '  둘을 섞으면 실측 DBE 베드에서 면적비 ≈44×, 0.2C 첫 스텝 3.756 V → 1.325 V 로 무너집니다.\n'
+            '  → STEP4 산출 npz/metrics 의 pristine R_ct (interfacial) 를 확인해 넣으세요.')
+    if a.r_ct0_ohm_cm2 is not None and not (a.r_ct0_ohm_cm2 > 0):
+        raise SystemExit(f'--r-ct0-ohm-cm2 는 양수여야 합니다 (got {a.r_ct0_ohm_cm2})')
+    if a.c_rate is not None and not (a.c_rate > 0):
+        raise SystemExit(f'--c-rate 는 양수여야 합니다 (got {a.c_rate})')
+    rows = compose(ns, a.shape, led, a.merge_into_i0, a.subtract_mech, a.film_frac,
+                   a.r_ct0_ohm_cm2, a.c_rate)
+    if a.c_rate is None:
+        print(f'  ⚠ 진행좌표 = 사이클수 N (√N).  Park 앵커는 **시간** 축(Ω·h^-0.5)이라 이 규약은 '
+              f'앵커 rate {ANCHOR_C_RATE}C 에서만 문헌지지다 — 다른 rate 면 --c-rate 로 Σt '
+              f'인덱싱을 켜세요 (MED-15).', flush=True)
+    else:
+        print(f'  ★Σt 인덱싱: c_rate={a.c_rate:g}C → t_cyc/t_anchor='
+              f'{rate_time_factor(a.c_rate):.4f} (앵커 {ANCHOR_C_RATE}C)', flush=True)
     print(f'\n사이클 열화 N축 — shape={a.shape} (ASSUMED-FORM), 앵커 N={YUN_RCT_N} g={G_CHEM_AT_ANCHOR:.4f}×')
     print(f'  {ANCHOR_SRC}\n')
     print(f"  {'N':>5s} {'g_chem':>8s} {'g_mech':>10s} {'R_ct 총':>9s} {'--i0-cycle-mult':>16s}  주")
@@ -324,7 +518,7 @@ def main(argv=None):
               '— 위 표의 "채널" 열을 행별로 확인할 것 (복붙 시 규약이 섞인다).')
     for r in rows:
         print(f"  N={r['N']:<4d} 채널: {r['i0_mult_channel']}"
-              + (f"  · asr_film {r['asr_film_cycle_ohm_cm2']:.3g} Ω·cm²"
+              + (f"  · asr_film {r['asr_film_cycle_ohm_cm2']:.3g} Ω·cm² ({r['asr_basis']})"
                  if r['asr_film_cycle_ohm_cm2'] else ''))
     if rows and rows[0]['i0_is_lower_bound_penalty']:
         print('  ⚠ film_frac=0 → 전량 i0(로그성).  옴성 필름 몫이 빠져 **고율 분극의 하한**이다 '
