@@ -1,5 +1,5 @@
 &CONTROL
-    calculation     = 'relax'
+    calculation     = 'scf'
     prefix          = 'lno_relax'
     outdir          = './tmp'
     pseudo_dir      = '/data/work/pseudo'
@@ -29,7 +29,6 @@
 /
 &ELECTRONS
     conv_thr        = 1e-06
-    startingpot     = 'file'
     mixing_beta     = 0.03
     mixing_mode     = 'local-TF'
     mixing_ndim     = 20
@@ -46,10 +45,6 @@ ATOMIC_SPECIES
   Ni1   58.690  ni_pbe_v1.4.uspp.F.UPF
   Ni2   58.690  ni_pbe_v1.4.uspp.F.UPF
   O     15.999  O.pbe-n-kjpaw_psl.0.1.UPF
-
-HUBBARD ortho-atomic
-U Ni1-3d 6.2
-U Ni2-3d 6.2
 
 CELL_PARAMETERS angstrom
      18.272444937665     0.000000000000     0.000000000000

@@ -17,6 +17,15 @@
   2단계  (gabia 에서 relax 실행)
   3단계  python3 tools/sdcp/make_slab_relax.py --harvest <dir>  # 이완좌표 -> 1x4 192원자
 
+⚠⚠ **U-ramp 2단계가 필수다 (이 계의 실측 확정 사항).**
+  U=6.2 로 바로 들어가면 SCF 가 안 잡힌다 — 2026-08-03 실측: iteration 70 에 accuracy 10 Ry,
+  총 자화가 AFM 0 에서 +2.58 으로 흘러 **FM 붕괴**. 이유는 이완 안 된 절단면이라 배위수 5 인
+  표면 Ni 의 d 상태가 E_F 에 걸쳐 있어서, 큰 U 를 처음부터 걸면 점유행렬이 매 반복 뒤집힌다.
+  처방(기존 lineage 에서 확립): **U=0 으로 먼저 수렴 → 그 밀도를 startingpot='file' 로 물려
+  U=6.2 로 재시작.** master 문서: "FSM 만으론 슬로싱; 원 lineage 의 scf_u0+startingpot='file' 이 열쇠".
+  여기에 **FSM(tot_magnetization=0)** 을 같이 건다 — 깨끗한 슬랩은 AFM 총자화가 정확히 0 이어야
+  하고, 이건 물리적 구속이지 편법이 아니다.
+
 AFM: R-3m LiNiO2 는 면내(G-type) 반강자성이다. 기존 파이프라인의 판정
      (`phaseB_v7c_dft_binding.py` afm_inplane)과 같은 규약 — z-밴드 안에서 전역 교대.
 """
@@ -66,12 +75,13 @@ def afm_labels(at):
     return lab
 
 
-def write_relax(path, at, lab, fixed, kpts, prefix):
+def write_relax(path, at, lab, fixed, kpts, prefix,
+                calc='relax', u=U_NI, startingpot=None, fsm=True):
     n1, n2 = lab.count('Ni1'), lab.count('Ni2')
     if n1 != n2:
         sys.exit(f"⛔ AFM 이 불균형이다 (Ni1 {n1} / Ni2 {n2}) — 총 자화가 0 이 안 된다")
     present = [s for s in ORDER if s in lab]
-    L = ["&CONTROL", "    calculation     = 'relax'", f"    prefix          = '{prefix}'",
+    L = ["&CONTROL", f"    calculation     = '{calc}'", f"    prefix          = '{prefix}'",
          "    outdir          = './tmp'", "    pseudo_dir      = '/data/work/pseudo'",
          "    tprnfor         = .true.", "    tstress         = .false.",
          "    disk_io         = 'low'", "    nstep           = 80",
@@ -81,7 +91,12 @@ def write_relax(path, at, lab, fixed, kpts, prefix):
          f"    ecutwfc         = {ECUTWFC}", f"    ecutrho         = {ECUTRHO}",
          "    occupations     = 'smearing'", "    smearing        = 'mv'",
          f"    degauss         = {DEGAUSS}",
-         "    nspin           = 2", "    nosym           = .true.",
+         "    nspin           = 2", "    nosym           = .true."]
+    if fsm:
+        # ⚠ 깨끗한 AFM 슬랩은 총자화가 **정확히 0** 이어야 한다. 안 걸면 표면 Ni 가
+        #   FM 쪽으로 흘러버린다(실측 +2.58 muB). 물리적 구속이지 편법이 아니다.
+        L.append("    tot_magnetization = 0.0")
+    L += [
          # ⚠ **분산 보정 (2026-08-03 리뷰 지적).** repo 전체에 vdw_corr 가 한 줄도 없었다.
          #   맨 슬랩엔 영향이 작지만, 흡착 단계와 **같은 범함수를 써야** E_bind 가 성립하므로
          #   여기서부터 켠다.
@@ -93,7 +108,12 @@ def write_relax(path, at, lab, fixed, kpts, prefix):
             L.append(f"    starting_magnetization({k}) = -0.300")
         elif sp == 'Li':
             L.append(f"    starting_magnetization({k}) = 0.0")
-    L += ["/", "&ELECTRONS", f"    conv_thr        = {CONV_THR}",
+    L += ["/", "&ELECTRONS", f"    conv_thr        = {CONV_THR}"]
+    if startingpot:
+        # 1단계(U=0) 밀도를 물려받는다. restart_mode='restart' 가 아니다 —
+        # 그건 wfc 까지 이어받는 '중단 재개'라 disk_io='low' 와 충돌한다. 밀도만.
+        L.append(f"    startingpot     = '{startingpot}'")
+    L += [
           f"    mixing_beta     = {MIX_BETA}", "    mixing_mode     = 'local-TF'",
           f"    mixing_ndim     = {MIX_NDIM}", "    electron_maxstep = 300",
           "    diagonalization = 'david'", "    diago_david_ndim = 2", "/",
@@ -102,8 +122,10 @@ def write_relax(path, at, lab, fixed, kpts, prefix):
     for sp in present:
         m, pp = PSEUDOS[sp]
         L.append(f"  {sp:<3s} {m:>8s}  {pp}")
-    L += ["", "HUBBARD ortho-atomic", f"U Ni1-3d {U_NI}", f"U Ni2-3d {U_NI}", "",
-          "CELL_PARAMETERS angstrom"]
+    L += [""]
+    if u and u > 0:
+        L += ["HUBBARD ortho-atomic", f"U Ni1-3d {u}", f"U Ni2-3d {u}", ""]
+    L += ["CELL_PARAMETERS angstrom"]
     for v in at.cell.array:
         L.append(f"  {v[0]:18.12f} {v[1]:18.12f} {v[2]:18.12f}")
     L += ["", "ATOMIC_POSITIONS angstrom"]
@@ -154,9 +176,15 @@ def main():
     # 아래 2장 고정, 위 2장 자유 (리뷰 권고)
     fixed = set(bands[0][1]) | set(bands[1][1])
     lab = afm_labels(small)
-    write_relax(os.path.join(a.out, "relax.in"), small, lab, fixed, a.kpts, "lno_relax")
+    # 1단계: U=0 scf (싸다, 이온 이완 없음) — 좋은 밀도를 만드는 것이 목적
+    write_relax(os.path.join(a.out, "scf_u0.in"), small, lab, fixed, a.kpts, "lno_relax",
+                calc="scf", u=0.0, startingpot=None, fsm=True)
+    # 2단계: U=6.2 relax, 1단계 밀도 승계
+    write_relax(os.path.join(a.out, "relax.in"), small, lab, fixed, a.kpts, "lno_relax",
+                calc="relax", u=U_NI, startingpot="file", fsm=True)
     write(os.path.join(a.out, "start.vasp"), small, format="vasp", direct=False)
-    print(f"✓ {a.out}/relax.in  ({len(small)}원자, 고정 {len(fixed)} / 자유 {len(small)-len(fixed)})")
+    print(f"✓ {a.out}/scf_u0.in (1단계 U=0 scf) + relax.in (2단계 U={U_NI} relax, 밀도승계)")
+    print(f"   ({len(small)}원자, 고정 {len(fixed)} / 자유 {len(small)-len(fixed)})")
     print(f"   셀 {np.linalg.norm(cell[0]):.3f} x {np.linalg.norm(cell[1]):.3f} x "
           f"{np.linalg.norm(cell[2]):.3f} A · k {a.kpts}")
     print(f"   AFM Ni1 {lab.count('Ni1')} / Ni2 {lab.count('Ni2')} · U {U_NI} · vdw grimme-d3")
