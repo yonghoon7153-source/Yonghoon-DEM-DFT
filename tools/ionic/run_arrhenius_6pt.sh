@@ -22,6 +22,19 @@
 #   LPSOCl 242 ps 라 200 ps 로는 LPSOCl 이 모자란다. 계별로 다르게 주면 프로토콜이
 #   지저분해지므로 **온도 단위로** 통일한다.
 #
+# ── 적합 창에 대하여 (1저자 질문 2026-08-03: "fit 을 2-50 까지만 하는 게 맞아?") ──
+#   창은 이 실행을 **붙잡지 않는다.** msd.json 이 times_ps/msd_Li_A2 **시계열 전체**를
+#   저장하므로 창은 나중에 재계산 없이 바꿀 수 있다:
+#     python3 tools/ionic/msd_refit_window.py --glob '<OUTROOT>/*/T*_s*/**/msd.json'
+#   실측 근거로 2-50 을 유지한다 — LPSOCl 200 ps 는 창을 2-50 에서 100-200 으로 옮겨도
+#   기울기가 2 % 만 변하고(beta 0.98→1.02) Ea 가 안 움직인다. 반대로 창을 늦춰 '구제'
+#   하려 들면 modelc 100 ps 에서 Ea 0.223(R^2 0.992) → 0.155(R^2 0.875) 로 **나빠진다**.
+#   창이 아니라 **통계**가 문제이기 때문이다(62원자 셀에 Li 27개, 시간원점 1개).
+#
+# ★ 그래서 이번 54 런부터는 msd.json 에 **다중 시간원점 MSD**(msd_Li_A2_mto)가 같이
+#   쓰인다 — 같은 MD 에서 산포가 ~2.9배 줄어든다(추가 비용·디스크 0, 합성시험 검증).
+#   기존 런은 프레임을 안 남겨서 소급 적용이 안 된다. 재적합 감사는 --mto 로 본다.
+#
 #   cd ~/Yonghoon-DEM-DFT && git pull && conda activate uma
 #   tmux new -s arr6 -d 'bash tools/ionic/run_arrhenius_6pt.sh 2>&1 | tee -a ~/logs/arr6.log'
 #   bash tools/ionic/run_arrhenius_6pt.sh modelc      # 한 계만
@@ -113,3 +126,10 @@ ts "  python3 tools/ionic/msd_diffusive_check.py --glob '$OUTROOT/*/T*_s*/**/msd
 ts "  ⚠⚠ 게이트를 통과한 점만 아레니우스에 넣는다. 통과 못 한 점을 넣으면"
 ts "     그 점이 기울기를 끌어당겨 Ea 가 통째로 틀어진다."
 ts "  ⚠ 그리고 **세 계 전부 같은 온도 집합**으로 다시 적합해야 Ea 비교가 산다."
+ts ""
+ts "═══ 그리고 창 민감도를 SI 용으로 남긴다 (1저자 질문 §3) ═══"
+ts "  python3 tools/ionic/msd_refit_window.py --glob '$OUTROOT/*/T*_s*/**/msd.json' \\"
+ts "      --csv db/properties/msd_window_sensitivity.csv"
+ts "  python3 tools/ionic/msd_refit_window.py --glob '$OUTROOT/*/T*_s*/**/msd.json' --mto"
+ts "  ⚠ 2-50 창 D 와 MTO D 가 크게 다른 점은 **그 점의 통계가 모자란 것**이지"
+ts "    창을 바꿔서 해결할 문제가 아니다. 시드/시간을 늘려야 한다."

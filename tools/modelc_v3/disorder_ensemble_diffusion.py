@@ -98,8 +98,44 @@ def make_disordered(atoms, n_swaps, free_S, cl_idx, rng):
 
 
 # ----------------------------- MSD (cell-correct) -----------------------------
+def msd_multi_origin(cart_li, dt_ps, n_lag=150):
+    """Multi-time-origin (windowed) MSD:  MSD(tau) = <|r(t0+tau) - r(t0)|^2>_{t0, ions}.
+
+    WHY (2026-08-03, first-author question "is a 2-50 ps fit window right?").
+      The MSD above uses a SINGLE time origin (ref = cart[0]).  With only 27 Li in the
+      62-atom cells (58 in b2o3), that is 27 samples per lag -- the curve is dominated by
+      whichever few ions happened to find a fast channel.  Measured consequence: modelc
+      600 K has beta = 0.76 over 2-50 ps but 1.00 over 1-100 ps, and the slope changes
+      1.75x.  Averaging over every time origin multiplies the sample count by the number
+      of (weakly correlated) origins at no extra MD cost.
+
+    ⚠ Only lags up to n_frames/2 are returned.  At lag ~ n_frames there is a single
+      origin left and the estimator is noisier than the single-origin curve, which is
+      exactly the failure this is meant to remove.
+
+    ⚠ This does NOT replace msd_Li_A2 / D_Li_cm2_s.  Those stay byte-identical so every
+      published number stays reproducible; the MTO curve is stored alongside as
+      msd_Li_A2_mto for the window/statistics audit (tools/ionic/msd_refit_window.py --mto).
+    """
+    nt = cart_li.shape[0]
+    if nt < 8:
+        return [], [], []
+    lag_max = max(2, nt // 2)
+    lags = np.unique(np.linspace(1, lag_max, min(n_lag, lag_max)).astype(int))
+    tau, msd, norig = [], [], []
+    for L in lags:
+        d = cart_li[L:] - cart_li[:-L]               # (nt-L, n_Li, 3)
+        msd.append(float((d ** 2).sum(-1).mean()))
+        tau.append(float(L * dt_ps))
+        norig.append(int(nt - L))
+    return tau, msd, norig
+
+
 def li_diffusion_from_frames(frames, save_fs, fit_window_ps):
-    """Cell-correct unwrap in fractional coords; MSD(Li); D from MSD=6Dt fit."""
+    """Cell-correct unwrap in fractional coords; MSD(Li); D from MSD=6Dt fit.
+
+    Returns (D, t_ps, msd, extra) where extra carries the multi-time-origin curve.
+    """
     syms = np.array(frames[0].get_chemical_symbols())
     li = syms == "Li"
     cell = frames[0].cell.array  # NVT -> fixed cell
@@ -114,13 +150,24 @@ def li_diffusion_from_frames(frames, save_fs, fit_window_ps):
     disp2 = ((cart[:, li] - ref) ** 2).sum(axis=-1)  # (T, n_Li)
     msd = disp2.mean(axis=-1)                        # (T,)
     t_ps = np.arange(len(frames)) * save_fs / 1000.0
+
+    # --- multi-time-origin companion curve (free: no extra MD, no extra disk) ------
+    tau, msd_mto, norig = msd_multi_origin(cart[:, li], save_fs / 1000.0)
     lo, hi = fit_window_ps
+    extra = {"times_ps_mto": tau, "msd_Li_A2_mto": msd_mto, "n_origins_mto": norig,
+             "n_Li": int(li.sum())}
+    if tau:
+        mm = [(a, b) for a, b in zip(tau, msd_mto) if lo <= a <= hi]
+        if len(mm) >= 3:
+            s = np.polyfit([p[0] for p in mm], [p[1] for p in mm], 1)[0]
+            extra["D_Li_cm2_s_mto"] = float(s / 6.0 * 1e-4)
+
     m = (t_ps >= lo) & (t_ps <= hi)
     if m.sum() < 3:
-        return None, t_ps.tolist(), msd.tolist()
+        return None, t_ps.tolist(), msd.tolist(), extra
     slope = np.polyfit(t_ps[m], msd[m], 1)[0]        # Å²/ps
     D = slope / 6.0 * 1e-4                            # Å²/ps -> cm²/s
-    return float(D), t_ps.tolist(), msd.tolist()
+    return float(D), t_ps.tolist(), msd.tolist(), extra
 
 
 def anneal_relax_config(atoms, calc, anneal_T, anneal_ps, dt_fs, friction, fmax, seed):
@@ -173,9 +220,12 @@ def run_md(atoms, calc, T, equilib_ps, prod_ps, dt_fs, friction, save_fs,
     frames = []
     md.attach(lambda: frames.append(atoms.copy()), interval=save_int)
     md.run(int(prod_ps * 1000 / dt_fs))
-    D, t_ps, msd = li_diffusion_from_frames(frames, save_fs, fit_window_ps)
+    D, t_ps, msd, extra = li_diffusion_from_frames(frames, save_fs, fit_window_ps)
+    # ⚠ D_Li_cm2_s / times_ps / msd_Li_A2 의 정의는 **바꾸지 않는다** — 이미 나간 값들이
+    #   그대로 재현돼야 한다. 다중 시간원점 곡선은 옆에 덧붙이기만 한다(창 감사용).
     (out_dir / "msd.json").write_text(json.dumps(
-        {"T_K": T, "D_Li_cm2_s": D, "times_ps": t_ps, "msd_Li_A2": msd}, indent=2))
+        {"T_K": T, "D_Li_cm2_s": D, "times_ps": t_ps, "msd_Li_A2": msd,
+         "fit_window_ps": list(fit_window_ps), **extra}, indent=2))
     if save_traj:
         # full production trajectory (extended-xyz) for jump stats / Li-density
         # cube / van Hove. + sidecar meta so downstream tools auto-read save_fs.
