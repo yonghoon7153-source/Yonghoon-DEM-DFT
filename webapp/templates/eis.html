@@ -307,12 +307,12 @@ const EIS = {
   onSelChange(){ if(this.showExp) this.refreshExpOverlay(); },   // 체크 변경 → 켜져있으면 즉시 갱신
   async refreshExpOverlay(){
     const hint=this.el('e-exp-hint');
-    if(!this.showExp){ this.expNyq=null; hint.innerHTML=''; if(this.lastD){ this.drawNyquist(this.lastD); this.drawDRT(this.lastD); } return; }
+    if(!this.showExp){ this.expNyq=null; hint.innerHTML=''; if(this.lastD){ this.elems(this.lastD); this.drawNyquist(this.lastD); this.drawDRT(this.lastD); } return; }
     const files=this.selectedExpFiles();
     if(!files.length){
       this.expNyq={curves:[]};
       hint.innerHTML='<span style="color:#a07c1f">위 표에서 측정을 체크하면 그 측정만 Nyquist 에 겹칩니다</span>';
-      if(this.lastD){ this.drawNyquist(this.lastD); this.drawDRT(this.lastD); } return;
+      if(this.lastD){ this.elems(this.lastD); this.drawNyquist(this.lastD); this.drawDRT(this.lastD); } return;
     }
     try { const r=await (await fetch('/api/eis_exp?files='+encodeURIComponent(files.join(',')))).json();
       this.expNyq = (r && r.available) ? r : {curves:[], hint:(r&&r.hint)||'선택 측정 없음'}; }
@@ -325,7 +325,7 @@ const EIS = {
          : `<span style="color:#1e8f5e">🔬 실험 ${nc}개 겹침 (Ω·cm² ASR) — physics-EIS 선과 대조 `
            + `(셀 배치차 → 자릿수 대조).  실험이 눌려 보이면 한 번 더 눌러 <b>실험만</b> 으로</span>`)
       : `<span style="color:#a07c1f">${this.expNyq.hint||'선택 측정 없음'}</span>`;
-    if(this.lastD){ this.drawNyquist(this.lastD); this.drawDRT(this.lastD); }
+    if(this.lastD){ this.elems(this.lastD); this.drawNyquist(this.lastD); this.drawDRT(this.lastD); }
   },
   elems(d){
     const e = d.elements, fmt=(x,n=2)=> (x==null?'—':(Math.abs(x)>=100||Math.abs(x)<0.01?x.toPrecision(3):x.toFixed(n)));
@@ -339,7 +339,15 @@ const EIS = {
       ['R_w', fmt(e.R_w_ohm_cm2)+' Ω·cm²', 'ASSUMED-FORM'],
       ['τ_w', fmt(e.tau_w_s)+' s', 'r²/D_s (⚠D_s 미측정)'],
     ];
-    this.el('e-elems').innerHTML = cards.map(([k,v,s])=>
+    // ★ 등가회로 소자도 **모델 산출물**이다 — 실험만 모드에선 흐리게 + 라벨 (DRT 와 같은 규약).
+    //   지우지는 않는다: 실험 곡선을 해석할 때 참고 대조가 되고, 값의 출처가 라벨로 분명하다.
+    const _off = (this.expMode===2);
+    const _wrap = this.el('e-elems');
+    _wrap.style.opacity = _off ? '.42' : '';
+    _wrap.innerHTML = (_off ? '<div style="grid-column:1/-1;font-size:.74rem;color:#a07c1f">'
+        + '⏸ 실험만 모드 — 아래는 <b>모델(physics-EIS)</b> 소자값이며 화면의 실험 곡선에서 나온 것이 '
+        + '아닙니다.  실험 측정값은 위 표(R_s·R_int·R_w·C_dl)를 보세요.</div>' : '')
+      + cards.map(([k,v,s])=>
       `<div class="e-card"><div style="color:var(--dim);font-size:.76rem">${k}</div><b>${v}</b>`+
       `<div style="color:var(--dim);font-size:.7rem;margin-top:2px">${s}</div></div>`).join('');
   },
@@ -412,32 +420,46 @@ const EIS = {
   drawDRT(d){
     const cv=this.el('e-drt'), dpr=window.devicePixelRatio||1, W=cv.clientWidth||440, H=380;
     cv.width=W*dpr; cv.height=H*dpr; const ctx=cv.getContext('2d'); ctx.scale(dpr,dpr); ctx.clearRect(0,0,W,H);
-    const pts=d.drt.filter(p=>p.tau!=null&&p.gamma!=null&&p.tau>0);
-    if(!pts.length) return;
+    // ★ 실험만 모드(expMode 2)면 **모델 DRT 도 끈다** (2026-08-03 사용자 요청).
+    //   Nyquist 에선 모델을 숨겨놓고 DRT γ(τ)·피크·소자값은 계속 모델 것을 보여주면,
+    //   "시뮬 껐는데 시뮬 숫자가 남아있는" 상태가 된다.
+    const _modelOff = (this.expMode===2);
+    const pts=_modelOff ? [] : d.drt.filter(p=>p.tau!=null&&p.gamma!=null&&p.tau>0);
     const lt=pts.map(p=>Math.log10(p.tau)), g=pts.map(p=>p.gamma);
     // 실험 DRT 오버레이 (체크된 측정, /api/eis_exp 가 curve별 drt 반환)
     let expDrt=[];
     if(this.showExp && this.expNyq && this.expNyq.curves)
       expDrt=this.expNyq.curves.filter(c=>c.drt&&c.drt.length)
         .map(c=>({name:c.name, pts:c.drt.filter(p=>p.tau>0&&p.gamma!=null)})).filter(c=>c.pts.length);
+    if(!pts.length && !expDrt.length){                 // 그릴 것이 없음 → 빈 캔버스 + 안내
+      this._drtAxis=null; this._drtPeaks=[];
+      const pk=this.el('e-peaks'); if(pk) pk.innerHTML = _modelOff
+        ? '<span style="color:#a07c1f">실험만 모드 — 모델 DRT 는 꺼져 있고, 체크된 측정의 실험 DRT 가 없습니다</span>' : '';
+      ctx.font='12px system-ui'; ctx.fillStyle='#8a93a5'; ctx.textAlign='center';
+      ctx.fillText(_modelOff?'실험만 모드 — 표시할 실험 DRT 없음':'DRT 없음', W/2, H/2);
+      return;
+    }
     const allLt=lt.slice(), allG=g.slice();
     expDrt.forEach(c=>c.pts.forEach(p=>{ allLt.push(Math.log10(p.tau)); allG.push(p.gamma); }));
     const mL=52,mR=14,mT=14,mB=34, xmin=Math.min(...allLt),xmax=Math.max(...allLt),ymax=Math.max(...allG)*1.08;
     const {pw,ph}=this._axes(ctx,W,H,mL,mB,mT,mR,'log₁₀ τ (s)','γ(lnτ) (Ω·cm²)',xmin,xmax,0,ymax,true);
     const X=v=>mL+((v-xmin)/(xmax-xmin||1))*pw, Y=v=>mT+ph-(v/(ymax||1))*ph;
     // 문헌스타일: 깨끗한 남색 곡선 + 옅은 채움 (피크 수직선 제거 — 피크는 아래 텍스트로)
-    ctx.beginPath(); pts.forEach((p,i)=>{ const x=X(lt[i]),y=Y(g[i]); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
-    ctx.lineTo(X(xmax),Y(0)); ctx.lineTo(X(xmin),Y(0)); ctx.closePath();
-    ctx.fillStyle='rgba(31,78,140,.10)'; ctx.fill();
-    ctx.beginPath(); pts.forEach((p,i)=>{ const x=X(lt[i]),y=Y(g[i]); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
-    ctx.strokeStyle='#16355e'; ctx.lineWidth=1.6; ctx.stroke();
+    if(pts.length){
+      ctx.beginPath(); pts.forEach((p,i)=>{ const x=X(lt[i]),y=Y(g[i]); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+      ctx.lineTo(X(xmax),Y(0)); ctx.lineTo(X(xmin),Y(0)); ctx.closePath();
+      ctx.fillStyle='rgba(31,78,140,.10)'; ctx.fill();
+      ctx.beginPath(); pts.forEach((p,i)=>{ const x=X(lt[i]),y=Y(g[i]); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+      ctx.strokeStyle='#16355e'; ctx.lineWidth=1.6; ctx.stroke();
+    }
     // 실험 DRT (초록 선, 측정별) — 분포가 눌린 Nyquist 보다 프로세스 명확 (frame[4])
     expDrt.forEach(c=>{ ctx.beginPath();
       c.pts.forEach((p,i)=>{ const x=X(Math.log10(p.tau)),y=Y(p.gamma); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
       ctx.strokeStyle='#1e8f5e'; ctx.lineWidth=1.4; ctx.stroke(); });
     if(expDrt.length){ ctx.font='10px "JetBrains Mono",monospace'; ctx.textAlign='left';
-      ctx.fillStyle='#16355e'; ctx.fillText('— 모델', W-mR-92, mT+11);
-      ctx.fillStyle='#1e8f5e'; ctx.fillText('— 실험 '+expDrt.length+'개', W-mR-92, mT+24); }
+      if(pts.length){ ctx.fillStyle='#16355e'; ctx.fillText('— 모델', W-mR-92, mT+11); }
+      ctx.fillStyle='#1e8f5e';
+      ctx.fillText('— 실험 '+expDrt.length+'개', W-mR-92, mT+(pts.length?24:11)); }
     // 피크 = 곡선 위 작은 점 (수직선 대신 — 문헌스타일 깔끔) + hover hit-test 저장
     this._drtHits=[];
     (d.peaks||[]).forEach(p=>{ if(p.tau_s==null) return;
@@ -449,7 +471,11 @@ const EIS = {
     this._drtWH=[W,H];
     this._drtAxis={mL:mL, pw:pw, mT:mT, ph:ph, ltmin:xmin, ltmax:xmax};   // hover τ 역산용
     this._drtBands=d.bands||[];                                            // τ-대역 물리지도
-    this.el('e-peaks').innerHTML = '피크: ' + ((d.peaks||[]).length?
+    // ★ 실험만 모드면 모델 피크도 안 쓴다 (모델 DRT 를 껐으므로 그 피크는 화면에 없는 곡선의 것)
+    if(this.expMode===2){ this.el('e-peaks').innerHTML =
+      '<span style="color:#a07c1f">실험만 모드 — 모델 DRT·피크 꺼짐 '
+      + '(🔬 를 한 번 더 눌러 모델을 켜면 다시 나옵니다)</span>'; }
+    else this.el('e-peaks').innerHTML = '피크: ' + ((d.peaks||[]).length?
       d.peaks.map(p=>`<b style="color:#a07c1f">${p.f_Hz>=1?p.f_Hz.toPrecision(2)+'Hz':(p.f_Hz*1000).toPrecision(2)+'mHz'}</b>`+
         ` (R≈${p.R!=null?p.R.toFixed(2):'—'} Ω·cm²)`).join(' · ') : '—') +
       ' &nbsp;<span style="color:var(--dim)">= 전하전달(고주파)·확산(저주파) 분리</span>';
