@@ -506,21 +506,28 @@ const EIS = {
         // ★ 즉시반영 금지 (2026-08-03 사용자 요청): onchange 는 **입력칸을 벗어나기만 해도** 뜬다
         //   — 오타 중간값(예: 7 → 70 치는 중)이 그대로 저장돼 σ_e 가 틀린 두께로 재계산됐다.
         //   ⇒ 값이 바뀌면 옆 ✓ 버튼만 켜지고, **누를 때** 저장한다.  Enter 도 같은 동작.
-        `<td style="text-align:right;white-space:nowrap"><input type="number" step="0.5" min="0.5" max="300" `+
-        `id="xe-L-${idx}" value="${r.L_composite_um!=null?r.L_composite_um:''}" placeholder="45" `+
-        `oninput="EIS.thickDirty(${idx})" onkeydown="if(event.key==='Enter'){EIS.setThick('${r.filename}',this.value,${idx})}" `+
-        `style="width:52px;border:1px solid var(--border);background:none;color:inherit;font-size:.74rem;text-align:right;padding:1px 3px;border-radius:3px" `+
-        `title="이 측정의 합제(cathode) 두께 µm — 옆 ✓ 를 눌러야 저장된다 (σ_e=L/R1 재계산, 대칭셀만 유효).`+
-        (r.filename_thickness_um!=null?` ⚠파일명은 ${r.filename_thickness_um}µm 이지만 그건 집전체(SUS ~15-20µm) 포함 총두께 → σ_e 엔 합제만(≈45) 쓸 것`:'')+`">`+
-        `<button id="xe-Lok-${idx}" onclick="EIS.setThick('${r.filename}',this.previousElementSibling.value,${idx})" disabled `+
-        // ★ opacity .25 는 화면에서 **버튼이 없는 것**으로 읽혔다 (실제 신고: "확인 버튼 없고").
-        //   비활성일 때도 테두리를 줘서 '누를 수 있는 것' 임을 보이게 하고, 값이 바뀌면 초록으로.
-        `style="border:1px solid var(--border);background:none;color:var(--dim);cursor:pointer;`+
-        `font-size:.78rem;padding:0 4px;margin-left:3px;border-radius:4px;opacity:.55" `+
-        `title="입력한 두께 저장 — 값을 바꾸면 초록으로 활성화된다 (Enter 도 동일)">✓</button>`+
-        (r.filename_thickness_um!=null&&r.L_composite_um!=null&&Math.abs(r.filename_thickness_um-r.L_composite_um)<0.51
-          ?`<span style="color:#c0392b" title="파일명 총두께(집전체 포함)를 합제 L 로 입력한 듯 — σ_e 과대">⚠</span>`:'')+
-        `</td>`+
+        // ★★ full 셀엔 입력칸 자체를 안 그린다 — "두께 유지 안돼" 의 진짜 원인 (2026-08-03):
+        //   σ_e = L/R1 은 **대칭셀(SUS 이온블로킹)** 에서 R1=R_e 일 때만 성립하므로 full 셀은
+        //   eis_fit 이 L 을 아예 안 채운다 (L_composite_um = null).  그런데 표는 placeholder 45
+        //   짜리 **편집 가능한 칸**을 그려서, 70 을 넣고 ✓ 를 누르면 서버가 "full 셀은 두께를
+        //   안 씀" 으로 거부하고 재렌더에서 빈칸으로 되돌아갔다 = "설정이 유지되지 않는다".
+        //   ⇒ 죽은 입력칸을 없애고, 왜 안 쓰는지를 툴팁으로 말한다.
+        (r.cell_type !== 'symmetric'
+          ? `<td style="text-align:right;color:var(--dim)" title="full 셀은 두께를 안 쓴다 — σ_e=L/R1 은 대칭셀(SUS 이온블로킹)에서 R1=R_e 일 때만 성립하고, full 셀의 R1 은 R_int(계면)이라 L 로 나눠도 의미가 없다.">—</td>`
+          : `<td style="text-align:right;white-space:nowrap"><input type="number" step="0.5" min="0.5" max="300" `
+            + `id="xe-L-${idx}" value="${r.L_composite_um!=null?r.L_composite_um:''}" placeholder="45" `
+            + `oninput="EIS.thickDirty(${idx})" onkeydown="if(event.key==='Enter'){EIS.setThick('${r.filename}',this.value,${idx})}" `
+            + `style="width:52px;border:1px solid var(--border);background:none;color:inherit;font-size:.74rem;text-align:right;padding:1px 3px;border-radius:3px" `
+            + `title="이 측정의 합제(cathode) 두께 µm — 옆 ✓ 를 눌러야 저장된다 (σ_e=L/R1 재계산).`
+            + (r.filename_thickness_um!=null?` ⚠파일명은 ${r.filename_thickness_um}µm 이지만 그건 집전체(SUS ~15-20µm) 포함 총두께 → σ_e 엔 합제만(≈45) 쓸 것`:'')
+            + `">`
+            + `<button id="xe-Lok-${idx}" onclick="EIS.setThick('${r.filename}',this.previousElementSibling.value,${idx})" disabled `
+            + `style="border:1px solid var(--border);background:none;color:var(--dim);cursor:pointer;`
+            + `font-size:.78rem;padding:0 4px;margin-left:3px;border-radius:4px;opacity:.55" `
+            + `title="입력한 두께 저장 — 값을 바꾸면 초록으로 활성화된다 (Enter 도 동일)">✓</button>`
+            + (r.filename_thickness_um!=null&&r.L_composite_um!=null&&Math.abs(r.filename_thickness_um-r.L_composite_um)<0.51
+               ?`<span style="color:#c0392b" title="파일명 총두께(집전체 포함)를 합제 L 로 입력한 듯 — σ_e 과대">⚠</span>`:'')
+            + `</td>`)+
         `<td style="text-align:right;color:${r.rmse_pct>10?'#c0392b':'var(--dim)'}">${f(r.rmse_pct,1)}</td>`+
         `<td style="text-align:center"><input type="checkbox" class="xe-sel" value="${r.filename}" `+
         `onchange="EIS.onSelChange()" title="체크 → 아래 Nyquist '🔬 실험 겹치기' 로 이 측정만 겹침"></td>`+

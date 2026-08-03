@@ -25,7 +25,10 @@ import warnings
 import numpy as np
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-EIS = os.path.join(ROOT, '이종기술', 'eis')
+# ★ WEBAPP_EIS_FOLDER override (2026-08-03): 이 경로가 리포에 **하드코딩**돼 있어서,
+#   env 를 tmp 로 다 돌려놓은 테스트가 실측 아카이브의 fits CSV·두께 override 를 덮었다
+#   (실제 발생 — eis_fit_results.csv 12행 소실, 재실행으로 복구).  webapp/app.py 와 같은 규약.
+EIS = os.environ.get('WEBAPP_EIS_FOLDER') or os.path.join(ROOT, '이종기술', 'eis')
 EXTRACTED = os.path.join(EIS, 'extracted')
 FITS = os.path.join(EIS, 'fits')
 AREA = {'symmetric': round(math.pi * 0.5 ** 2, 4), 'full': round(math.pi * 0.65 ** 2, 4)}
