@@ -38,6 +38,30 @@ BOND_SCALE = 1.25
 MOL_SEED = ("C", "H", "S", "N", "F", "P", "B", "Cl")
 
 
+def read_extxyz(path):
+    """Phase-A 가 ASE 로 쓴 pose xyz. 2번째 줄 Lattice="..." 에 셀이 들어 있다.
+
+    ⚠ 원본 자세를 그대로 볼 수 있어야 한다 — scf.in 쪽 수치가 이상할 때
+      '스캔이 그렇게 낸 것'인지 'phaseB 가 망친 것'인지 가르는 유일한 대조군이다.
+    """
+    with open(path, errors="ignore") as f:
+        lines = f.read().splitlines()
+    nat = int(lines[0].split()[0])
+    m = re.search(r'Lattice="([^"]+)"', lines[1])
+    if not m:
+        raise SystemExit(f"⛔ {path} 2번째 줄에 Lattice=\"...\" 가 없다 — 셀 없는 순수 xyz 는 못 쓴다")
+    cell = np.array([float(x) for x in m.group(1).split()]).reshape(3, 3)
+    labels, pos = [], []
+    for ln in lines[2:2 + nat]:
+        v = ln.split()
+        labels.append(v[0]); pos.append([float(x) for x in v[1:4]])
+    return cell, labels, np.array(pos)
+
+
+def read_any(path):
+    return read_extxyz(path) if path.lower().endswith((".xyz", ".extxyz")) else read_scf_in(path)
+
+
 def read_scf_in(path):
     """CELL_PARAMETERS angstrom / ATOMIC_POSITIONS angstrom 만 읽는다 (이 생성기의 형식)."""
     with open(path, errors="ignore") as f:
@@ -127,16 +151,25 @@ def write_poscar(path, cell, order, counts, pos, comment):
             f.write(f"  {p[0]:18.12f} {p[1]:18.12f} {p[2]:18.12f}\n")
 
 
-def image_check(cell, labels, pos):
-    """이웃 셀 26개에 대한 최소 원자간 거리. 자기 셀(0,0,0)은 뺀다."""
+def image_min(cell, labels, pos, sel_a, sel_b):
+    """이웃 셀 26개에 대해 sel_a(자기 셀) ↔ sel_b(이미지) 최소 거리.
+
+    ⚠⚠ **슬랩↔슬랩은 절대 여기 넣지 마라 (2026-08-03 오판).** 슬랩은 a·b 로 주기적인
+      결정이라 경계를 넘는 Ni–O 1.94 Å · Ni–Ni 2.88 Å 이 **있어야 정상**이다. 첫 판은
+      전 원자쌍을 훑어서 그 격자 결합을 '이미지 샌드위치'로 오판했다. 샌드위치 판정에
+      의미가 있는 것은 **분자가 낀 쌍뿐**이다.
+    """
+    ia, ib = np.flatnonzero(sel_a), np.flatnonzero(sel_b)
+    if not len(ia) or not len(ib):
+        return None, {}
     worst, per_shift = None, {}
     for sh in itertools.product((-1, 0, 1), repeat=3):
         if sh == (0, 0, 0):
             continue
         t = np.array(sh) @ cell
-        d = np.linalg.norm(pos[:, None, :] - (pos[None, :, :] + t), axis=-1)
+        d = np.linalg.norm(pos[ia][:, None, :] - (pos[ib][None, :, :] + t), axis=-1)
         i, j = np.unravel_index(np.argmin(d), d.shape)
-        rec = (d[i, j], labels[i], labels[j], sh)
+        rec = (d[i, j], labels[ia[i]], labels[ib[j]], sh)
         per_shift[sh] = rec
         if worst is None or rec[0] < worst[0]:
             worst = rec
@@ -145,15 +178,18 @@ def image_check(cell, labels, pos):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--scf_in", required=True, nargs="+")
+    ap.add_argument("--scf_in", required=True, nargs="+",
+                    help="QE scf.in 또는 Phase-A pose .xyz (확장자로 자동 판별)")
     ap.add_argument("--out", required=True)
     ap.add_argument("--tag", default=None, help="출력 접두어 (기본: 상위 디렉터리명)")
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
 
     for path in a.scf_in:
-        tag = a.tag or os.path.basename(os.path.dirname(os.path.abspath(path)))
-        cell, labels0, pos0 = read_scf_in(path)
+        tag = a.tag or (os.path.splitext(os.path.basename(path))[0]
+                        if path.lower().endswith((".xyz", ".extxyz"))
+                        else os.path.basename(os.path.dirname(os.path.abspath(path))))
+        cell, labels0, pos0 = read_any(path)
         elems0 = [element(x) for x in labels0]
         elems, labels, pos, order, counts = group_by_species(elems0, labels0, pos0)
 
@@ -171,34 +207,47 @@ def main():
               f"  c {c_len:.3f} A     z-span {span:.3f} → 수직 진공 {c_len - span:.3f} A")
         print(f"  xyz 와 vasp 는 **같은 원자 순서·같은 좌표** ({'+'.join(f'{e}{c}' for e, c in zip(order, counts))})")
 
-        # ── ① 흡착하고 있나 (자기 셀 안, 분자↔슬랩) ──────────────────────────
         mol = split_molecule(elems, pos)
-        if mol.any() and (~mol).any():
-            dms = np.linalg.norm(pos[mol][:, None, :] - pos[~mol][None, :, :], axis=-1)
-            i, j = np.unravel_index(np.argmin(dms), dms.shape)
-            mi = np.flatnonzero(mol)[i]; si = np.flatnonzero(~mol)[j]
-            print(f"  ① 분자({mol.sum()}원자) ↔ 슬랩({(~mol).sum()}원자) 최근접 "
-                  f"{dms[i, j]:.3f} A  ({labels[mi]}↔{labels[si]})")
-            if dms[i, j] > 4.0:
-                print("     ⛔ 4 A 초과 — 접촉이 아니다. 이건 흡착 자세가 아니라 떠 있는 것이다.")
-            elif dms[i, j] > 3.2:
-                print("     ⚠ 물리흡착 경계 — 화학결합 없음. 의도한 자세인지 확인할 것.")
-            else:
-                print("     ✓ 접촉 (결합/근접 흡착)")
+        if not (mol.any() and (~mol).any()):
+            print("  (단일 조각 — 분자/슬랩 분할 없음)")
+            print(f"  → {a.out}/{tag}.xyz + {tag}.vasp")
+            continue
 
-        # ── ② 주기이미지와 붙어 있나 ────────────────────────────────────────
-        worst, per_shift = image_check(cell, labels, pos)
-        print(f"  ② 이웃셀 통틀어 최소 원자간 거리 {worst[0]:.3f} A "
-              f"({worst[1]}↔{worst[2]}, shift {worst[3]})")
-        for sh, lab in (((0, 0, 1), "c 축 위 (샌드위치 위험)"),
-                        ((1, 0, 0), "a 축 옆 (분자-분자 피복)"),
-                        ((0, 1, 0), "b 축 옆 (분자-분자 피복)")):
-            r = per_shift[sh]
-            print(f"     {lab:26s} {r[0]:7.3f} A  ({r[1]}↔{r[2]})")
+        # ── ⓪ z 단면: 슬랩 위에 얹혀 있는 게 맞나 ───────────────────────────
+        zs, zm = pos[~mol][:, 2], pos[mol][:, 2]
+        print(f"  ⓪ z 범위  슬랩 [{zs.min():6.2f}, {zs.max():6.2f}]   "
+              f"분자 [{zm.min():6.2f}, {zm.max():6.2f}]  (A)")
+
+        # ── ① 흡착하고 있나 (자기 셀 안, 분자↔슬랩) ──────────────────────────
+        dms = np.linalg.norm(pos[mol][:, None, :] - pos[~mol][None, :, :], axis=-1)
+        i, j = np.unravel_index(np.argmin(dms), dms.shape)
+        mi, si = np.flatnonzero(mol)[i], np.flatnonzero(~mol)[j]
+        d_ads = dms[i, j]
+        print(f"  ① 분자({mol.sum()}원자) ↔ 슬랩({(~mol).sum()}원자) 최근접 "
+              f"{d_ads:.3f} A  ({labels[mi]}↔{labels[si]})")
+        if d_ads > 4.0:
+            print("     ⛔ 4 A 초과 — 접촉이 아니다. 흡착 자세가 아니라 떠 있는 것이다.")
+        elif d_ads > 3.2:
+            print("     ⚠ 물리흡착 경계 — 화학결합 없음. 의도한 자세인지 확인할 것.")
+        else:
+            print("     ✓ 접촉 (결합/근접 흡착)")
+
+        # ── ② 주기이미지 — 분자가 낀 쌍만 본다 ──────────────────────────────
+        print("  ② 주기이미지 (슬랩↔슬랩 격자 결합은 제외 — 결정 그 자체라 정상)")
+        ms, ms_sh = image_min(cell, labels, pos, mol, ~mol)     # 분자 ↔ 이미지 슬랩
+        mm, _ = image_min(cell, labels, pos, mol, mol)          # 분자 ↔ 이미지 분자
+        ss, _ = image_min(cell, labels, pos, ~mol, ~mol)        # 참고용
+        print(f"     분자 ↔ 이미지 슬랩  {ms[0]:7.3f} A  ({ms[1]}↔{ms[2]}, shift {ms[3]})"
+              f"   ← 샌드위치 판정")
+        print(f"       그중 c 축 위       {ms_sh[(0, 0, 1)][0]:7.3f} A")
+        print(f"     분자 ↔ 이미지 분자  {mm[0]:7.3f} A  ({mm[1]}↔{mm[2]}, shift {mm[3]})"
+              f"   ← 피복률/측면 상호작용")
+        print(f"     [참고] 슬랩 ↔ 이미지 슬랩 {ss[0]:.3f} A ({ss[1]}↔{ss[2]}) = 격자 결합, 정상")
         # ⚠ 판정선은 물리다: 결합거리(~1.5-2.2 A)면 그 자세는 못 쓴다.
-        if worst[0] < 2.5:
+        img = min(ms[0], mm[0])
+        if img < 2.5:
             print("     ⛔ 결합거리 — 이미지 샌드위치. 이 자세의 E_bind 는 단일표면 값이 아니다.")
-        elif worst[0] < 3.5:
+        elif img < 3.5:
             print("     ⚠ vdW 접촉 — E_bind 에 이미지 상호작용이 섞인다. 셀을 키울 것.")
         else:
             print("     ✓ 이미지 분리 확보 (2026-07-17 철회 사유 없음)")
