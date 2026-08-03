@@ -6,10 +6,16 @@
 때문에, 눈으로 봐야 하는 건 **재배치 후**의 기하다.
 
 ⚠ 2026-07-17 에 doped 결합에너지를 철회한 원인이 이 지점이었다 — 분자가 수직으로 서서
-  티오펜 S 가 **주기이미지 슬랩의 O 와 1.506 Å**(결합거리)이었고, 그러면 E_bind 가
-  한 표면이 아니라 두 표면 몫이 된다. 그래서 이 도구는 구조만 뽑는 게 아니라
-  **① 분자↔슬랩 접촉거리(자기 셀)** 와 **② 이웃 셀 26개에 대한 최소 원자간 거리**를
-  같이 찍는다. ①이 없으면 흡착이 아니고, ②가 작으면 단일표면 값이 아니다.
+  티오펜 S 가 **c 를 넘은 이미지 슬랩의 O 와 1.506 Å**(결합거리)이었고, 그러면 E_bind 가
+  한 표면이 아니라 두 표면 몫이 된다. 그래서 구조만 뽑지 않고 거리를 같이 찍는다.
+
+⚠⚠ **거리를 층으로 갈라야 한다. 안 가르면 두 방향으로 다 틀린다 (2026-08-03, 실제로 다 틀림).**
+  ① 흡착 접촉  sh_z == 0 (자기 셀 포함) — 슬랩은 면내로 **연속된 하나의 표면**이다.
+     분자가 셀 모서리에 앉으면 진짜 결합상대가 shift (1,1,0) 에 있다. 자기 셀만 재면
+     그 결합(1.887 Å)을 놓치고 6.348 Å 을 보고 "떠 있다"고 오판한다.
+  ② 진공 너머  sh_z != 0 — 여기만 **인공 두 번째 표면**이다. 샌드위치 판정은 이 층에서만.
+  ③ 면내 피복  sh_z == 0, 분자↔분자 — 분자가 옆 셀 자기 자신과 닿으면 피복률이 과하다.
+  [참고] 슬랩↔슬랩 면내(Ni–O 1.94 Å, Ni–Ni 2.88 Å)는 **결정 그 자체**다. 판정에 넣지 마라.
 
 ⚠⚠ **xyz 와 vasp 는 반드시 같은 원자 순서로 쓴다 (2026-08-03).** POSCAR 는 같은 원소가
   연속해야 하는데 복합체는 O 가 슬랩과 분자 양쪽에 흩어져 있어 재정렬이 불가피하다.
@@ -151,29 +157,42 @@ def write_poscar(path, cell, order, counts, pos, comment):
             f.write(f"  {p[0]:18.12f} {p[1]:18.12f} {p[2]:18.12f}\n")
 
 
-def image_min(cell, labels, pos, sel_a, sel_b):
-    """이웃 셀 26개에 대해 sel_a(자기 셀) ↔ sel_b(이미지) 최소 거리.
+def pair_min(cell, labels, pos, sel_a, sel_b, layer, same=False):
+    """sel_a ↔ sel_b 최소 거리. `layer` 로 어떤 이미지를 볼지 고른다.
 
-    ⚠⚠ **슬랩↔슬랩은 절대 여기 넣지 마라 (2026-08-03 오판).** 슬랩은 a·b 로 주기적인
-      결정이라 경계를 넘는 Ni–O 1.94 Å · Ni–Ni 2.88 Å 이 **있어야 정상**이다. 첫 판은
-      전 원자쌍을 훑어서 그 격자 결합을 '이미지 샌드위치'로 오판했다. 샌드위치 판정에
-      의미가 있는 것은 **분자가 낀 쌍뿐**이다.
+    ⚠⚠ **이 함수의 layer 분리가 이 도구의 전부다. 두 번 틀렸다 (2026-08-03).**
+
+      1차 오판 — 전 원자쌍을 훑어 슬랩의 면내 격자 결합(Ni–O 1.94 Å, Ni–Ni 2.88 Å)을
+        '이미지 샌드위치'로 찍었다. 슬랩은 a·b 로 주기적인 결정이라 그 결합은 정상이다.
+      2차 오판 — 반대로 흡착거리를 **자기 셀 안에서만** 재서, 셀 모서리 근처에 앉은
+        분자의 진짜 결합상대(shift (1,1,0) 의 Ni, 1.887 Å)를 놓치고 6.348 Å 을 보고
+        "떠 있다"고 판정했다. 슬랩은 면내로 **연속된 하나의 표면**이다.
+
+      물리적으로 옳은 분리는 이것뿐이다:
+        layer='surface' (sh_z == 0, 자기 셀 포함) → **진짜 표면**. 흡착 접촉거리.
+        layer='vacuum'  (sh_z != 0)              → **진공 너머의 인공 두 번째 표면**.
+                                                    2026-07-17 샌드위치 철회의 그 축.
     """
     ia, ib = np.flatnonzero(sel_a), np.flatnonzero(sel_b)
     if not len(ia) or not len(ib):
-        return None, {}
-    worst, per_shift = None, {}
+        return None
+    best = None
     for sh in itertools.product((-1, 0, 1), repeat=3):
-        if sh == (0, 0, 0):
+        if layer == "surface" and sh[2] != 0:
             continue
-        t = np.array(sh) @ cell
-        d = np.linalg.norm(pos[ia][:, None, :] - (pos[ib][None, :, :] + t), axis=-1)
+        if layer == "vacuum" and sh[2] == 0:
+            continue
+        # ⚠ 같은 집합끼리 비교할 때 (0,0,0) 은 **분자 내부 결합**(C–H 1.08 Å 등)을 집는다.
+        #   대각선만 지우는 걸로는 부족하다 — 그 shift 자체를 빼야 이미지 접촉만 남는다.
+        if same and sh == (0, 0, 0):
+            continue
+        d = np.linalg.norm(pos[ia][:, None, :]
+                           - (pos[ib][None, :, :] + np.array(sh) @ cell), axis=-1)
         i, j = np.unravel_index(np.argmin(d), d.shape)
         rec = (d[i, j], labels[ia[i]], labels[ib[j]], sh)
-        per_shift[sh] = rec
-        if worst is None or rec[0] < worst[0]:
-            worst = rec
-    return worst, per_shift
+        if best is None or rec[0] < best[0]:
+            best = rec
+    return best
 
 
 def main():
@@ -218,39 +237,40 @@ def main():
         print(f"  ⓪ z 범위  슬랩 [{zs.min():6.2f}, {zs.max():6.2f}]   "
               f"분자 [{zm.min():6.2f}, {zm.max():6.2f}]  (A)")
 
-        # ── ① 흡착하고 있나 (자기 셀 안, 분자↔슬랩) ──────────────────────────
-        dms = np.linalg.norm(pos[mol][:, None, :] - pos[~mol][None, :, :], axis=-1)
-        i, j = np.unravel_index(np.argmin(dms), dms.shape)
-        mi, si = np.flatnonzero(mol)[i], np.flatnonzero(~mol)[j]
-        d_ads = dms[i, j]
-        print(f"  ① 분자({mol.sum()}원자) ↔ 슬랩({(~mol).sum()}원자) 최근접 "
-              f"{d_ads:.3f} A  ({labels[mi]}↔{labels[si]})")
-        if d_ads > 4.0:
-            print("     ⛔ 4 A 초과 — 접촉이 아니다. 흡착 자세가 아니라 떠 있는 것이다.")
-        elif d_ads > 3.2:
-            print("     ⚠ 물리흡착 경계 — 화학결합 없음. 의도한 자세인지 확인할 것.")
+        # ── ① 흡착 접촉 — **면내 주기를 포함한** 진짜 표면과의 거리 ──────────
+        ads = pair_min(cell, labels, pos, mol, ~mol, "surface")
+        print(f"  ① 흡착 접촉  분자({mol.sum()}) ↔ 표면({(~mol).sum()})  "
+              f"{ads[0]:.3f} A  ({ads[1]}↔{ads[2]}, shift {ads[3]})")
+        print("     (슬랩은 면내로 연속된 하나의 표면 — shift 가 (±1,±1,0) 이어도 같은 표면이다)")
+        if ads[0] < 2.5:
+            print("     ✓ 화학흡착 (결합거리)")
+        elif ads[0] < 3.2:
+            print("     ✓ 근접 접촉")
+        elif ads[0] < 4.0:
+            print("     ⚠ 물리흡착 경계 — 화학결합 없음")
         else:
-            print("     ✓ 접촉 (결합/근접 흡착)")
+            print("     ⛔ 4 A 초과 — 접촉이 아니다. 흡착 자세가 아니라 떠 있는 것이다.")
 
-        # ── ② 주기이미지 — 분자가 낀 쌍만 본다 ──────────────────────────────
-        print("  ② 주기이미지 (슬랩↔슬랩 격자 결합은 제외 — 결정 그 자체라 정상)")
-        ms, ms_sh = image_min(cell, labels, pos, mol, ~mol)     # 분자 ↔ 이미지 슬랩
-        mm, _ = image_min(cell, labels, pos, mol, mol)          # 분자 ↔ 이미지 분자
-        ss, _ = image_min(cell, labels, pos, ~mol, ~mol)        # 참고용
-        print(f"     분자 ↔ 이미지 슬랩  {ms[0]:7.3f} A  ({ms[1]}↔{ms[2]}, shift {ms[3]})"
-              f"   ← 샌드위치 판정")
-        print(f"       그중 c 축 위       {ms_sh[(0, 0, 1)][0]:7.3f} A")
-        print(f"     분자 ↔ 이미지 분자  {mm[0]:7.3f} A  ({mm[1]}↔{mm[2]}, shift {mm[3]})"
-              f"   ← 피복률/측면 상호작용")
-        print(f"     [참고] 슬랩 ↔ 이미지 슬랩 {ss[0]:.3f} A ({ss[1]}↔{ss[2]}) = 격자 결합, 정상")
-        # ⚠ 판정선은 물리다: 결합거리(~1.5-2.2 A)면 그 자세는 못 쓴다.
-        img = min(ms[0], mm[0])
+        # ── ② 진공 너머 = 인공 두 번째 표면 (2026-07-17 철회의 그 축) ────────
+        vac_s = pair_min(cell, labels, pos, mol, ~mol, "vacuum")
+        vac_m = pair_min(cell, labels, pos, mol, mol, "vacuum", same=True)
+        print(f"  ② 진공 너머 (c 를 넘는 이미지만)  분자↔슬랩 {vac_s[0]:.3f} A "
+              f"(shift {vac_s[3]})  ·  분자↔분자 {vac_m[0]:.3f} A")
+        img = min(vac_s[0], vac_m[0])
         if img < 2.5:
             print("     ⛔ 결합거리 — 이미지 샌드위치. 이 자세의 E_bind 는 단일표면 값이 아니다.")
         elif img < 3.5:
-            print("     ⚠ vdW 접촉 — E_bind 에 이미지 상호작용이 섞인다. 셀을 키울 것.")
+            print("     ⚠ vdW 접촉 — E_bind 에 이미지 상호작용이 섞인다. 진공을 키울 것.")
         else:
-            print("     ✓ 이미지 분리 확보 (2026-07-17 철회 사유 없음)")
+            print("     ✓ 진공 분리 확보 (2026-07-17 철회 사유 없음)")
+
+        # ── ③ 면내 피복 — 분자끼리 옆 셀에서 닿나 ───────────────────────────
+        lat = pair_min(cell, labels, pos, mol, mol, "surface", same=True)
+        print(f"  ③ 면내 피복  분자 ↔ 옆 셀 분자 {lat[0]:.3f} A "
+              f"({lat[1]}↔{lat[2]}, shift {lat[3]})"
+              f"{'  ⚠ 3.5 A 미만 — 피복률이 너무 높다' if lat[0] < 3.5 else ''}")
+        ss = pair_min(cell, labels, pos, ~mol, ~mol, "surface", same=True)
+        print(f"     [참고] 슬랩 ↔ 옆 셀 슬랩 {ss[0]:.3f} A ({ss[1]}↔{ss[2]}) = 격자 결합, 정상")
         print(f"  → {a.out}/{tag}.xyz + {tag}.vasp")
 
 
