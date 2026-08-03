@@ -46,6 +46,43 @@ LABELS = {
 # 이 열은 절대 내보내지 않는다 — 게이트가 φ 와 다른 모델을 섞어 한 물리상태가 아니다
 FORBIDDEN = ('use_porosity_pct',)
 
+# ★ 물리적 하드 경계 — 가우시안 PI 는 이걸 모른다.
+#   실제로 mpm_dg_mean 의 90 % PI 하한이 **−0.018** (음의 소성변형)로 나왔다.  선형-가우시안
+#   모형이 하한 0 인 양에 붙으면 생기는 일이다.  참값이 경계 밖일 수 없다는 건 사전지식이므로
+#   **띠는 잘라서 보이고, 잘랐다고 표시한다** — 잘린 사실 자체가 "여기서 적합이 헐겁다" 는 정보다.
+#   점추정은 자르지 않는다 (점추정이 경계를 넘으면 그건 숨기면 안 되는 실패다).
+BOUNDS = {
+    'phi_se': (0.0, 1.0), 'phi_am': (0.0, 1.0), 'coverage': (0.0, 1.0),
+    'f_perc': (0.0, 100.0), 'se_of_solid_pct': (0.0, 100.0),
+    'tau': (1.0, None),                 # 굴곡도는 정의상 ≥ 1
+    'thickness': (0.0, None), 'cn': (0.0, None), 'am_cn': (0.0, None),
+    'mpm_dg_mean': (0.0, None),         # 누적 소성변형 ≥ 0
+    'porosity_derived': (0.0, 100.0),
+    # mpm_plastic_gain_* 는 의도적으로 무경계 — 소성 흐름이 일부 지점의 피복을 **뺄** 수도
+    # 있어 부호를 단정할 근거가 없다 (§F1: 확신 없는 경계는 걸지 않는다).
+}
+
+
+def _apply_bounds(row):
+    """PI 를 물리 경계로 자르고 잘랐다고 표시.  점추정 위반은 자르지 않고 표시만.
+
+    log 타깃(τ·두께)은 역변환이 비대칭이라 "± 한 숫자" 로 쓸 수 없다 — 실측 두께가
+    −30.7 / +49.4 (38 % 차) 였다.  `asymmetric` 을 달아 UI 가 양쪽을 따로 쓰게 한다.
+    """
+    lo_b, hi_b = BOUNDS.get(row['target'], (None, None))
+    row['lo_raw'], row['hi_raw'], row['clipped'] = row['lo'], row['hi'], []
+    if lo_b is not None and row['lo'] < lo_b:
+        row['lo'] = lo_b
+        row['clipped'].append(f'하한 {lo_b:g}')
+    if hi_b is not None and row['hi'] > hi_b:
+        row['hi'] = hi_b
+        row['clipped'].append(f'상한 {hi_b:g}')
+    row['value_out_of_bounds'] = bool(
+        (lo_b is not None and row['value'] < lo_b) or (hi_b is not None and row['value'] > hi_b))
+    dn, up = row['value'] - row['lo'], row['hi'] - row['value']
+    row['asymmetric'] = bool(abs(up - dn) > 0.02 * max(abs(up), abs(dn), 1e-12))
+    return row
+
 _CACHE = {'path': None, 'mtime': None, 'bundle': None}
 
 
@@ -125,6 +162,7 @@ def predict_structure(d_se, d_am, am_pct, ps_frac, rve, loading, include_weak=Tr
                     'extrapolation': bool(p['extrapolation']),
                     'leverage': p['leverage'], 'nested': m.get('nested_cv_r2'),
                     'source': 'ML (ridge, nested-CV 검증)'})
+        _apply_bounds(out[-1])
     # ── porosity = 유도.  회귀하지 않는다 ────────────────────────────────────────────
     cl = (b.get('closure') or {}).get('porosity')
     if cl and 'phi_se' in got and 'phi_am' in got:
@@ -143,6 +181,7 @@ def predict_structure(d_se, d_am, am_pct, ps_frac, rve, loading, include_weak=Tr
                        f"(전파-가정 아님).  넓은 이유: ε 은 큰 두 수의 작은 차라 증폭률 "
                        f"{amp:.0f}× — φ 합의 1 % 오차가 ε 을 {0.01 * amp:.2f} σ 흔든다."
                        if amp else '띠는 학습 때 측정한 폴드-밖 잔차 sd.')})
+        _apply_bounds(out[-1])
     order = {'USABLE': 0, 'DERIVED': 1, 'WEAK': 2}
     out.sort(key=lambda r: (order.get(r['verdict'], 3), r['target']))
     return {'ready': True, 'rows': out, 'any_extrapolation': any_extrap,
@@ -249,6 +288,30 @@ def _selftest():                                                   # noqa: C901
         'porosity_derived' in g and '측정한' in (g['porosity_derived'].get('caveat') or ''))
     chk('모든 행이 PI 로 값을 감싼다',
         all(x['lo'] <= x['value'] <= x['hi'] for x in r['rows']))
+    # ★ 물리 경계 — 실측에서 mpm_dg_mean 의 PI 하한이 −0.018 (음의 소성변형) 이었다
+    chk('★어떤 행의 PI 도 물리 경계를 벗어나지 않는다 (음의 소성변형·τ<1 등)',
+        all(not (BOUNDS.get(x['target'], (None, None))[0] is not None
+                 and x['lo'] < BOUNDS[x['target']][0] - 1e-12) for x in r['rows'])
+        and all(not (BOUNDS.get(x['target'], (None, None))[1] is not None
+                     and x['hi'] > BOUNDS[x['target']][1] + 1e-12) for x in r['rows']))
+    chk('★잘랐으면 잘랐다고 표시하고 원값을 남긴다 (조용한 클리핑 금지)',
+        all(('clipped' in x and 'lo_raw' in x and 'hi_raw' in x) for x in r['rows'])
+        and all((not x['clipped']) or (x['lo_raw'] < x['lo'] - 1e-12
+                                       or x['hi_raw'] > x['hi'] + 1e-12) for x in r['rows']))
+    # 판별력: 경계 밖으로 뻗는 행을 만들어 실제로 잘리는지
+    _fake = {'target': 'mpm_dg_mean', 'value': 0.02, 'lo': -0.05, 'hi': 0.09}
+    _apply_bounds(_fake)
+    chk('★경계 밖 PI 는 실제로 잘리고 표시된다 (돌연변이 검사)',
+        _fake['lo'] == 0.0 and _fake['clipped'] and _fake['lo_raw'] == -0.05,
+        f"lo −0.05 → {_fake['lo']} · {_fake['clipped']}")
+    _asym = {'target': 'thickness', 'value': 80.9, 'lo': 50.2, 'hi': 130.3}
+    _apply_bounds(_asym)
+    chk('★log 타깃의 비대칭 PI 를 asymmetric 으로 표시 (± 한 숫자로 쓰면 양쪽 다 틀린다)',
+        _asym['asymmetric'] is True,
+        f"−{_asym['value']-_asym['lo']:.1f} / +{_asym['hi']-_asym['value']:.1f}")
+    _sym = {'target': 'phi_se', 'value': 0.32, 'lo': 0.28, 'hi': 0.36}
+    _apply_bounds(_sym)
+    chk('대칭 PI 는 asymmetric 이 아니다', _sym['asymmetric'] is False)
     r2 = predict_structure(9.9, 0.6, 130.0, 0.5, 300.0, 40.0)
     chk('★학습 범위 밖 설계 → extrapolation 표시 (조용히 답하지 않는다)',
         r2['any_extrapolation'])
