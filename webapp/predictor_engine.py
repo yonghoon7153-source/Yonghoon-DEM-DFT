@@ -326,7 +326,14 @@ def load_training_data(results_folder, archive_folder):
     unique = []
     n_dup = 0
     for r in rows:
-        key = f"{r['phi_se']:.4f}_{r.get('thickness',0):.1f}_{r['tau']:.3f}"
+        # ★ 2026-08-03: 키가 **지표 튜플**(phi_se·thickness·tau)이었다 — CLAUDE.md 가 기록한
+        #   130c598 버그와 **같은 유형**이 여기 남아 있었다: "distinct sibling families with
+        #   similar metrics were silently collapsed ... New: dedup by case_name only".
+        #   결과: full_metrics 187 건인데 학습 코퍼스는 170 — 17 건이 이유 없이 사라졌고,
+        #   지표가 우연히 가까운 **서로 다른 설계**가 지워질 수 있었다.
+        #   중복의 진짜 원인은 같은 케이스가 results/ 와 archive/ 에 둘 다 있는 것이므로
+        #   **이름**으로 지우는 것이 정확하다 (같은 이름 = 같은 케이스).
+        key = r['name']
         if key not in seen:
             seen.add(key)
             unique.append(r)
