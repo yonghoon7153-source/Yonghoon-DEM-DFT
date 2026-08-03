@@ -129,6 +129,11 @@
 > - **우리 그룹 내부 다리(개념, 수치 아님)**: **VGCF 공유** — [KimCA](`kim2025_conductive_agent_se_coating_cathode.md`, 우리 그룹)가 1D VGCF를 SE-코팅 도전재로 씀(0D Super P보다 우수). 이번 원자단위 프로젝트가 *같은 VGCF*를 다룸 → 복합전극 거시실험(KimCA)과 원자 흡착/확산(신규)의 물질 연결. **흡착E/W_ad 방법 계보**: 우리 UMA W_ad·[Choi2025] MLIP 계면접착과 "총에너지 차 기반 계면E" 동과(단 DFT·cluster).
 > **⚠ 규율**: (1) 논문 절대값(−2.50/−0.33/−3.16 eV)을 우리 argyrodite 값과 **절대 등치 금지** — 재료·축·계 전부 다름. (2) **흡착E 정의식·Li 기준상태(원자 vs bulk-Li)·vdW 미공개** → 우리 ORCA에선 이 셋을 *명시 고정*하고 리포트에 못박기(절대값 흔드는 method-artifact). (3) **nucleation overpotential 효과 미묘/혼재**(Cu와 비슷·고전류선 오히려↑) → "약한 결합→핵생성 장벽↓→균일" 서사는 데이터가 완전 지지 안 함; 이점 실체=공간 균일성+전자·화학 격리. (4) **기계강도 아님**(코팅 E 1.655 GPa≪Li 4.9) = 논문 novelty. (5) 물성 4축 편입 금지(방법 전이만) — 진전 있으면 이 note를 갱신.
 
+> 🎤 **TALK note [YMLee26-DTBL] — *발표 덱 · 물성 4축 A–F 어느 행에도 넣지 않는다*** [`talks/lee2026_yonsei_dtbl_ai_electrode_digitaltwin.md`]: **이용민(연세대 DTBL) "AI를 활용한 전극 미세구조 디지털화 기술과 물리 기반 배터리 시뮬레이션"** (2026 Korean Battery Symposium, 8/21, 자료집 pp.259–278; 사용자 분류 `(미분류)`). **이 덱은 DFT/물성 축이 아니라 *전극 미세구조·제조공정* 축**이다 — 이온전도도(A)·산화(B)·기계(C)·전자구조(D)·환원(E)·도핑(F) 어디에도 **수치로 편입하지 않는다**. 실질 대조는 **`comparison_vs_ours_DEM.md`**(§B 전달 삼중항 · §E 검증 · §F 흡수목록). **덱 등급 규율은 `talks/README.md`**(papers/ 보다 한 단계 낮음).
+> - **A축과 닿는 단 하나의 연결(개념, 수치 아님) = "Blinded Scale"**: 덱 슬 6이 **소재 수준 이온전도도 5.4×10⁻⁴ S/cm → 셀 내부(전극) 7.9×10⁻⁷ S/cm ≈ 3자릿수 강하**를 제시하고 그 격차를 **미세구조가 만든다**고 명명한다. ⇒ 우리 규율 **"문헌 σ(소재) 와 우리 σ_eff(전극) 를 같은 표에 넣지 않는다"** 의 *그룹 자체 근거*. ⚠⚠ **그 두 수치는 LLZO(산화물) 계열 인용값**이며 우리 LPSCl 값이 아니다 — **논리·비율만 쓰고 절대값은 A축 표에 넣지 말 것**. 인용 표기(`Nano Energy 79, 10545 (2021)`)도 논문번호 자릿수가 의심스러워 **레퍼런스 리스트 이식 금지**(digest §13-4).
+> - **정본 위치**: 덱 결과의 거의 전부가 이미 `papers/` 에 있다 — `park2020_digitaltwin_assb_foundational.md` · `kim2024_digital_twin_acsenergyletters.md` · `lim2025_virtual_calendering_framework.md` · `song2025_electrochemo_mechanical_microelectrode_ees.md`. **덱↔논문 충돌 시 논문이 정본.**
+> - **DFT 쪽으로 넘어올 가능성이 있는 항목 1건**: 슬 22 **"황화물 SE·폴리머는 측정 과정 자체가 구조를 왜곡한다"**(공기 부반응·열손상). 이건 *구조 획득*의 문제라 물성 4축은 아니지만, 우리 **대기안정(air/HSAB) 서사**와 물리적으로 같은 뿌리다. ⚠ 정본(Chem. Eng. J. 522 (2025) 167791 / AEM (2026) e05319) **미보유 → 인용 금지**.
+
 ## A. 이온전도도 — *Cl-rich가 빠르다 (전원 일치)*
 | 주장 | 출처 | 우리 (comp1→modelc) | 일치 |
 |---|---|---|---|

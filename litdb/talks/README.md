@@ -21,10 +21,15 @@
 |---|---|---|---|
 | `lee2026_skku_mlip_materials_design.md` | 이상욱 (성균관대 화학공학, CMS Lab) | MLIP 기반 소재 물성 해석 및 설계 | **정면 경쟁·동일 물질계**. `papers/kim2024_mtp_argyrodite_disorder_gb.md` 가 이 그룹 논문 |
 | `moon2026_cau_llm_agent_battery_automation.md` | 문장혁 (중앙대 에너지시스템공학) | LLM 기반 연구 분석 → AI-Agent 전극 모델링 | **직교·인프라 축**. 우리 repo 운영 방식과 대비 |
+| `lee2026_yonsei_dtbl_ai_electrode_digitaltwin.md` | **이용민** (연세대 화공생명, Digital Twin Battery Lab) | AI 전극 미세구조 디지털화 + 물리 기반 배터리 시뮬레이션 | **상류 계보·DEM/미세구조 축**. `papers/` 정본 4편(park2020·kim2024·lim2025·song2025)이 이 그룹 논문 — 덱은 그 지도 + 자기 한계 목록 |
 
 경쟁 분석(우위/열위/적용)은 `kb/projects/symposium_2026_competitive_analysis.md`.
+DEM/미세구조 축 대조는 `comparison_vs_ours_DEM.md` (물성 4축 `comparison_vs_ours.md` 에는 **수치로 넣지 않는다**).
 
 ## ⏳ 열려 있음
 
-두 발표 모두 **발표 내용 txt를 추가로 받기로 되어 있다**(2026-07-28 사용자). 받으면 각 digest의
-`§99 발표 구술 내용` 절을 채우고, 덱만으로는 판정 못 한 항목(§ 미해결 질문)을 닫는다.
+**lee2026_skku·moon2026_cau 두 발표**는 **발표 내용 txt를 추가로 받기로 되어 있다**(2026-07-28 사용자).
+받으면 각 digest의 `§99 발표 구술 내용` 절을 채우고, 덱만으로는 판정 못 한 항목(§ 미해결 질문)을 닫는다.
+**lee2026_yonsei_dtbl** 도 구술이 들어오면 같은 절차. 이 덱은 추가로 **정본 논문 3편 미보유**
+(ACS EL 10 (2025) 6223-6235 / AEM (2026) e05319 / Chem. Eng. J. 522 (2025) 167791) — 확보 전까지
+해당 수치는 "덱 소환값"으로만 쓰고 원고 인용 금지(digest §13·§15).

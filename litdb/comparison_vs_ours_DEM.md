@@ -35,6 +35,29 @@
 > **VGCF + PTFE** 둘 다)의 **순수 실험** 막 논문 → 시뮬 경쟁 아니라 **frame[4] 외부 실험 앵커**.  세 곳에 매핑:
 > (B) PTFE% σ 페널티 + 조성별 σ 실측 = 우리 σ_e/σ_ionic·Stage-2 보정/검증; (C) binder-VGCF fibril망 = 우리 CBD
 > morphology 모델 검증 + PC/SC-NCM 균열 = 우리 AM 파괴 검증.  데이터 `docs/data/lee2025_transport_anchors.csv`.
+>
+> ## 🎤 발표 덱 (papers/ 보다 한 등급 낮음 — `talks/README.md`)
+> **[YMLee26-DTBL]** `talks/lee2026_yonsei_dtbl_ai_electrode_digitaltwin.md` — **이용민(연세대 DTBL),
+> "AI를 활용한 전극 미세구조 디지털화 기술과 물리 기반 배터리 시뮬레이션"** (2026 Korean Battery Symposium,
+> 8/21, 자료집 pp.259–278, 인쇄 슬 39장; 사용자 분류 `(미분류)`).  **우리 DEM+MPM 계보의 *상류 그룹이 스스로
+> 그린 2026년 지도 + 자기 한계 목록***.  정본 4편은 이미 보유 — `papers/park2020_...`·`kim2024_...`·
+> `lim2025_...`·`song2025_...` → **수치 인용은 논문에서, 덱은 지도로만.**
+> - **✅ 재확인된 우리 positioning 2건**: ① 2026년 발표에서도 구조 *생성*은 **PSA/SEM 기반 규칙 배치**(GrainGeo,
+>   seed 1–5)로 유지 = **압축 물리 미시뮬** → 우리 predict-from-powder 차별 유지; ② 캘린더링은
+>   **reconstruct-then-compress**(ElastoDict) → 우리와 형제·직교(§C 참조).
+> - **🆕 새로 드러난 우리 공백 2건 (이 덱이 아니었으면 몰랐다)**: ① **DEM 슬러리 믹싱 + "2nd solvent" 모세관
+>   가교로 CBD migration 억제**(슬 34, ACS EL 10 (2025) 6223-6235) — **같은 도구(DEM), 다른 물리(습식·모세관)**
+>   → `positioning_vs_geodict.md` 의 "DEM은 우리 것" 뉘앙스를 **"건식 압밀 + granular constriction σ + 소성 MPM"**
+>   으로 좁혀 다시 써야 함; ② **OWRK 기반 work of adhesion·계면에너지 실측**(슬 33) = 우리 DEM 부착
+>   파라미터(DMT/JKR) 문헌 차용을 **측정량으로 바꾸는 경로**.  둘 다 **정본 미보유 → 수치 인용 금지.**
+> - **🆕 우리에게 유리한 새 논거 1건**: 슬 22 **"황화물 SE·폴리머는 *측정 과정 자체가* 구조를 왜곡한다"**
+>   (공기 부반응 / 열손상) ⇒ **재구성(top-down)이 원천적으로 취약한 소재계에서 bottom-up 생성의 가치가 커진다**
+>   = 우리 positioning의 *소재-특이* 정당화(기존 문서에 없던 각도).  ⚠ 정본(Chem. Eng. J. 522 (2025) 167791 /
+>   AEM (2026) e05319) 확보 전 **인용 금지**(digest §13-3).
+> - **저비용 흡수 1순위**: **REV/voxel 수렴을 *비용축과 함께* 한 장에 보고하는 그림 양식**(슬 19 —
+>   voxel 50–600 nm × domain 15→90 µm × 메모리/시간).  우리 domain·voxel 선택 근거 문서화 공백을 메움.
+> - ⚠ **소재계 혼재 주의**: 덱의 캘린더링·CBD migration·OWRK·DEM 믹싱은 **LIB 액체계(NCM622/811+PVDF/NMP)**,
+>   구조 생성/검증만 **황화물 ASSB(NCM711+LPSCl+NBR)**.  같은 표에 섞지 말 것.
 
 ## A. 압밀 / porosity (E_SE 강성이 floor를 정한다)
 - 문헌: Varkey(halide E=10.58) separator floor **21 %** / cathode **37 %** @350 MPa (강체 구, <20 % "추구 안 함").
@@ -562,6 +585,23 @@
     σ_ionic 앵커로 쓸 때 *깨끗이 분리된 셀의 R_ion* 만 쓸 것 (Bazzoun/Minnmann 이 대칭셀/full-blocking 쓴 이유).
   - **도전제 형상(0D Super P vs 1D VGCF):** VGCF 가 전자저항·R_int 둘 다 낮춤(1D 전자망 + SE-카본 계면면적↓ → 산화분해↓)
     = Lee 2025 VGCF σ_e 와 같은 결 → 우리 σ_e 도전제 형상 구분 약함 보강(우리 production = Super P 0D 가정).
+
+- **🎤 [YMLee26-DTBL] 발표 덱이 새로 노출한 우리 공백 2건 + 저비용 흡수 1건**
+  (`talks/lee2026_yonsei_dtbl_ai_electrode_digitaltwin.md` §8c–8d·§12; ⚠ **덱 등급** — 수치 인용 금지):
+  - ★ **습식 DEM(슬러리 믹싱) + 모세관 가교 = 우리 DEM 접촉모델의 미보유 물리.** 그들은 **NCM/NMP/2nd solvent**
+    3성분 DEM으로 *"bulk 용매와 비혼화성인 소량의 2nd solvent가 입자 사이에 모세관 구조를 만들어 CBD migration을
+    억제한다"* 를 보인다(입자 간 간극에 2nd solvent 집중, 표면에 NMP). **우리 DEM은 건식 분말 압밀 전용**이고
+    접촉모델은 DMT/JKR 부착 + 소성뿐 → **액상 가교 힘 항이 없다**. ⇒ ① positioning 문장을 **"DEM은 그들도 쓴다
+    (습식 믹싱) / 우리는 건식 압밀 + granular constriction σ + 소성 MPM"** 으로 좁혀 재작성(현행
+    `positioning_vs_geodict.md` 는 이 사실을 반영하지 않음), ② 습식/건식 공정 비교가 필요해지면 모세관 가교가
+    선행 흡수 항목. **정본 미보유(ACS Energy Lett. 10 (2025) 6223-6235) → 위시리스트 1순위.**
+  - ★ **OWRK 기반 work of adhesion / 계면 표면에너지 실측** — NCM·CB·PVDF × (NMP / 2nd solvent) 를
+    접촉각→OWRK 로 정량. **우리 DEM 부착 파라미터는 전부 문헌 차용**이라, 이건 *우리 입력을 실험으로 고정하는
+    경로*다(실험 협업 제안 소재). 같은 논문 소속 → 정본 미보유.
+  - **저비용 흡수(즉시 가능):** **REV/voxel 수렴을 정확도-비용 2축으로 한 장에 보고하는 그림 양식**
+    (덱 슬 19: voxel 50/75/150/300/600 nm @ domain 30³ µm + domain 15→90 µm @ voxel 75 nm + voxel수 대
+    메모리/시간). 우리는 domain·voxel 선택 근거를 수치로 남기지 않는다. ⚠ 그들 절대 시간·메모리
+    (~250–280 M voxel → 45–57 GB, 2.5–3 day)는 하드웨어·GeoDict 의존 → **우리 벤치마크 아님, 형상만.**
 
 - **📌 Li(Yang) 2026 ECER 리뷰원고(심사중) — 우리 미보유칸의 가장 체계적 카탈로그 (F축 지도; digest
   `papers/li2026_sulfide_stability_review_ecer.md` §13c)**:
