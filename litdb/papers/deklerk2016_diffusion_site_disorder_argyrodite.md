@@ -1,6 +1,6 @@
 # Diffusion Mechanism of Li Argyrodite Solid Electrolytes for Li-Ion Batteries and Prediction of Optimized Halogen Doping: The Effect of Li Vacancies, Halogens, and Halogen Disorder — de Klerk, Rosłoń & Wagemaker (Chem. Mater. 2016)
 
-> slug `deklerk2016_diffusion_site_disorder_argyrodite` · DOI `10.1021/acs.chemmater.6b03630` · type `DFT-AIMD (순수 계산, 실험 0)` · PDF `82ea256b/f8e6711f-32._Diffussorder.pdf` (inbox #32, 사용자 분류 `DFT`, 본문 9 pp 7955–7963) + **SI 확보(2026-07-28, 인박스 #32 Sup = `82ea256b/428d530d-32._Sup_Disorder.pdf`, 6 pp: Tables S1–S3 전표(300/450/600 K σ·점프율·Ea) + Fig S1(PSe₆/Br 밀도)·S2(PSe₆/Br 점프그래프)·S3(4a-RDF))** · digested `2026-07-28` (동일자 SI 반영 갱신) · status ✅
+> slug `deklerk2016_diffusion_site_disorder_argyrodite` · DOI `10.1021/acs.chemmater.6b03630` · type `DFT-AIMD (순수 계산, 실험 0)` · PDF `82ea256b/f8e6711f-32._Diffussorder.pdf` (inbox #32, 사용자 분류 `DFT`, 본문 9 pp 7955–7963) + **SI 확보(2026-07-28, 인박스 #32 Sup = `82ea256b/428d530d-32._Sup_Disorder.pdf`, 6 pp: Tables S1–S3 전표(300/450/600 K σ·점프율·Ea) + Fig S1(PSe₆/Br 밀도)·S2(PSe₆/Br 점프그래프)·S3(4a-RDF))** · digested `2026-07-28` (동일자 SI 반영 갱신) · **SI 독립 재검증 `2026-08-03`(불일치 0건 — §3 상단)** · status ✅ 종결
 > elements: Li, P, S, Se, Cl, Br, I
 > methods: DFT, AIMD
 > **저자**: Niek J. J. de Klerk, Irek Rosłoń, **Marnix Wagemaker*** — Department of Radiation Science and Technology, **TU Delft** (네덜란드). Chem. Mater. 2016, 28, 7955−7963. Received 2016-08-29 / Revised 09-29 / Published **2016-10-14**. **[외부]** (ADEM 네덜란드 + ERC FP7 307161 지원).
@@ -29,6 +29,8 @@ Li₇PS₆·Li₇PSe₆·Li₆PS₅Cl/Br/I 전 계열을 **VASP GGA AIMD(단위�
 
 ## 3. 핵심 물성 (수치 총정리)
 > ⚠ **출처 규율**: σ·점프율·Ea 정량은 **SI Tables S1–S3 정확값**(2026-07-28 SI 확보로 figure-read 전면 대체). 전부 **소환값**(우리 db 절대값과 혼합 금지; 그들 AIMD σ·Ea는 GGA·단위셀·100 ps 조건값). 괄호 = 1 표준편차(10-블록).
+>
+> **🔁 SI 독립 재검증 (2026-08-03, 인박스 #32 Sup 6 pp 2차 통독)**: SI 실물을 처음부터 다시 읽어 §3b 전표를 기계 대조 — **Tables S1–S3 × 14조성 × 8열(σ*_MSD·σ_J·점프율 3종·Ea 3종) 전값 및 괄호 표준편차·"−"·각주 a 표기까지 완전 일치, 불일치 0건**. Fig S1–S3 캡션 3건도 문구 단위 일치. **신규 사실 1건**(σ_J 재구성 검증, §9)·**표기 정밀화 1건**(Fig S2b, §8)만 추가 — 그 외 새로운 사실 없음 → **이 digest는 본문+SI 실물 기준으로 종결 상태**.
 >
 > **✅ figure-read → SI 표값 교정 이력 (2026-07-28)**: ① 450 K intercage 25/50/75/100 % ≈2/3/6/13×10¹⁰ → **1.79/3.12/6.20/14.36×10¹⁰ s⁻¹**(정합·정밀화); ② 450 K doublet 0→100 % ≈100/50/30/10/0.2×10¹⁰ → **103.68/52.44/26.11/10.09/0.21**(정합); ③ **limiting-rate 비 75 %/50 % "2×" → 6.20/3.12 = 1.99× 확정**; 100 % 붕괴 "~15×" → 3.12/0.21 = **14.9×**; ④ 600 K σ_J(Cl/Br) ≈4–5 → **4.66/4.32 S/cm**(정합), σ* ≈1–2 → **1.01/0.85**(상한 과대 판독이었음); ⑤ 300 K σ_J ≈1 → **0.89/1.23**(정합); **σ* ≈0.15–0.3 → Cl 0.04/Br 0.19 — Cl 오판(교정)**; ⑥ 본문 Ea 요약 "doublet·intracage 0.10–0.14 / intercage 0.20–0.25 eV"는 **대략치**로 판명 — SI 정밀값: Cl(50 %)·Br intercage **0.18–0.27**(온도별), doublet·intracage **0.10–0.17 eV**.
 
@@ -132,7 +134,7 @@ Li₇PS₆·Li₇PSe₆·Li₆PS₅Cl/Br/I 전 계열을 **VASP GGA AIMD(단위�
 - **무질서 자유도**: 4 f.u. 단위셀의 free-anion 8자리(4a×4 + 4c×4)에 S 4개·X 4개 배치. **Fig 8 시리즈 = Cl의 4c 점유 5단계: 0/25/50/75/100 %** = 셀당 4c-Cl 0/1/2/3/4개(나머지 Cl은 4a; S는 보수적으로 반대 배치).
 - **각 %당 배열 수 = 1개(단일 배열)**. 복수 배열·앙상블 평균 **없음**. 배열 선택 기준(랜덤/Ewald/enumerate) **일절 언급 없음** — **SI 실물 확인(2026-07-28)으로 확정: SI에도 배열 좌표·배치 그림·선택 기준 없음**(SI 구성 = Fig S1–S3 + Tables S1–S3이 전부).
   - *우리 해석(원문 아님)*: 1×1×1 셀에서는 4c 부격자(FCC 4자리)에서 1개(C=4)·2개(C=6)·3개(C=4) 고르기가 **입방 대칭으로 사실상 등가**라 "분포 %만 정하면 anion 배열은 거의 유일" — 단일 배열이 우연히 정당화되는 셀 크기. **더 큰 셀에선 성립 안 함**(배열 다양성 발생) → 이 방법을 supercell로 확장하려면 우리처럼 config 앙상블 필수.
-- **표준 Li₆PS₅Cl(Fig 2·3·4의 기본 시뮬) = 50:50 배열** — Fig 4b(4c에 Cl 2 + S 2) 추론이 **SI 표 라벨 "Li₆PS₅Cl (50 % Cl@4c)"로 공식 확정**(Tables S1–S3). "currently prepared materials"(refs 12·19의 실험 ≈even 분포)를 모사. **Li₆PS₅I = all-4a**(실험 ref 12 그대로). **+ 신규 확인(Fig S2b): 표준 Li₆PS₅Br 런도 4c에 Br 2개 = 50 % 배열**(본문엔 미명시였던 것).
+- **표준 Li₆PS₅Cl(Fig 2·3·4의 기본 시뮬) = 50:50 배열** — Fig 4b(4c에 Cl 2 + S 2) 추론이 **SI 표 라벨 "Li₆PS₅Cl (50 % Cl@4c)"로 공식 확정**(Tables S1–S3). "currently prepared materials"(refs 12·19의 실험 ≈even 분포)를 모사. **Li₆PS₅I = all-4a**(실험 ref 12 그대로). **+ 신규 확인(Fig S2b): 표준 Li₆PS₅Br 런도 4c가 S+Br mixed = 50 % 배열**(본문엔 미명시였던 것; 캡션은 "Br at 4c"까지·"2개"는 그림 판독 — §8 정밀화 2026-08-03).
 - **Li 배치**: 48h 24쌍에서 **쌍당 1 Li 제거**(쌍내 1.9 Å 동시점유가 에너지적 불리) → 24 Li. 쌍 안에서 어느 쪽 48h를 남기는지 기준 **미명시**(**SI에도 없음 — 2026-07-28 확정**). Li-vacancy는 조성으로 내재(Li₆ vs Li₇) — **명시적 공공 배치 규칙 없음**; 흥미롭게도 "Cl 케이지 5 Li / S 케이지 7 Li"의 불균등 분포는 **MD 중 자발 형성**(§5.6, 초기 배치 아님).
 - **가상 조성 분리실험**: **Li₆PS₆**(=Li₇PS₆−1Li/f.u.: vacancy만, Cl 없음)·**Li₇PS₅Cl**(=Li₆PS₅Cl+1Li/f.u.: Cl만, vacancy 없음) — 변수 분리를 *조성 조작*으로 구현(우리 grand-canonical이 아니라 중성 위반을 감수한 인공 셀; 전하보상 처리 언급 없음 → 사실상 jellium 배경 가정으로 추정, **원문 미명시**).
 - **Li₅PS₄X₂**: free-anion 8자리 전부 X(4a 4 + 4c 4 전부 halide), Li 20개.
@@ -202,7 +204,7 @@ Li₇PS₆·Li₆PS₅Cl·Li₆PS₅I 밀도맵 — 전 조성 4c 둘레 케이�
 | 8 | **점프율 vs 4c-Cl 점유(0–100 %)** | **★ 75 % 최적의 원자료** — 우리 disorder ensemble의 d-level 스캔과 정면 대응 |
 | 9 | Li₅PS₄X₂ 아레니우스 | 할로겐-rich(우리 modelc Cl1.6 계열) σ 동급의 최초 계산 근거 |
 | Fig S1 | Li₇PSe₆·Li₆PS₅Br 밀도맵(450 K) | Br=Cl과 유사한 퍼진 케이지+연결; PSe₆=국소화 — Fig 3 보완 |
-| Fig S2 | Li₇PSe₆·Li₆PS₅Br 점프그래프(450 K) | **Br 표준 런 = 4c에 Br 2개(50 %) 시각 확인**(pink 구슬) — §4.2 배열 판정 근거 |
+| Fig S2 | Li₇PSe₆·Li₆PS₅Br 점프그래프(450 K) | **Br 표준 런의 4c가 mixed**(캡션 원문: *"black: Se/S at 4c, **pink: Br at 4c**"* — 같은 4c에 S와 Br이 함께 앉음 = 무질서 배열) — §4.2 배열 판정 근거. **정밀화(2026-08-03)**: 캡션이 직접 말하는 것은 "Br이 4c에 있다"까지이고 **"2개(=50 %)"는 구슬 개수 판독값**(SI 표도 Br 행엔 % 라벨을 안 붙임 — % 라벨은 Li₆PS₅Cl 시리즈에만). 50 % 판정 자체는 본문의 "currently prepared materials(≈even 분포) 모사"와 정합하나, **표기 근거는 캡션이 아니라 그림 판독**임을 구분해 인용 |
 | Fig S3 | **4a-사이트 Li-RDF**(S vs Cl, 450 K) | 4a에서도 S 주위 > Cl 주위 — 5–7 Li 메커니즘이 두 자리 공통임의 증거 |
 | **Tables S1–S3** | **300/450/600 K × 14조성 σ*_MSD·σ_J·점프율 3종·Ea 전표(±1σ)** | **→ §3b 전문 수록** — figure-read 전면 대체·75 % 최적의 3온도 검증·σ* vs σ_J 지표 분리 |
 
@@ -211,6 +213,10 @@ Li₇PS₆·Li₆PS₅Cl·Li₆PS₅I 밀도맵 — 전 조성 4c 둘레 케이�
 - **MSD → D\*** + **f=D*/D_J** 상관 진단(Haven 대신).
 - **σ_J**: intercage rate + a=7.0 Å(케이지 중심간) — "intercage만이 실변위" 가정의 명시적 구현.
   - **SI 표 역산으로 드러난 규칙(우리 관찰, 원문 미서술)**: σ_J는 엄밀히는 **limiting-rate 기반** — 100 % Cl@4c처럼 doublet이 율속이 되면 σ_J를 intercage(14.36)가 아니라 **doublet rate(0.21→σ_J 0.18 @450 K; 1.32→0.82 @600 K)** 로 환산하고, 300 K처럼 doublet=0이면 σ_J 자체를 "−" 처리(intercage 5.34가 있어도). 본문 "intercage 거리 사용" 서술의 예외 처리 — "intercage가 국소 운동으로 전락"의 수치 구현.
+  - **★ 신규 (2026-08-03 SI 재검증): 위 규칙을 추정이 아니라 수치로 확정** — eq 3+5를 그대로 조립해 SI의 σ_J를 **독립 재계산**했다: σ_J = (n/V)·e²·D_J/(k_BT), D_J = τ_min·a²/6, **a = 7.0 Å 고정**, n = 셀당 Li 수(Li₆PS₅X 24 / Li₇PS₆·Li₇PSe₆ 28 / Li₅PS₄X₂ 20), V ≈ 10 Å 급 단위셀. 결과: **11개 대조 케이스(3온도·4계열) 전부 SI 표값과 1–4 % 내 일치** — 예) Cl 50 % 450 K 계산 2.64 vs SI 2.56, 600 K 4.79 vs 4.66, 75 % 450 K 5.24 vs 5.12, 0 % 300 K 0.051 vs 0.05, Li₇PS₆ 600 K 1.27 vs 1.24, Li₅PS₄Cl₂ 450 K 2.89 vs 2.90. 확정되는 것 셋:
+    1. **τ_min(3종 점프율의 최솟값)이 σ_J의 유일한 입력** — 100 % Cl@4c 450 K를 doublet(0.21)로 넣으면 **0.178 ≈ SI 0.18**, intercage(14.36)로 넣으면 **12.1 = 67× 과대**. limiting-rate 해석이 배타적으로 성립.
+    2. **doublet이 율속일 때도 a = 7.0 Å(케이지 중심간)를 그대로 쓴다** — 실제 doublet 변위 1.9 Å을 쓰면 (7.0/1.9)² ≈ 13.6× 작아진다. 즉 **100 % 배열의 σ_J 0.18/0.82는 "doublet 빈도로 케이지-간 거리를 뛴다"는 상한 가정값** — all-4c가 나쁘다는 결론의 방향은 안전하지만, 그 절대값은 이 환산 규약에 종속(인용 시 명시할 것).
+    3. **부수 산출: 그들 AIMD 셀 크기 역산** — 위 일치를 정확히 맞추는 V ≈ **985 ± 15 Å³ → a ≈ 9.95 ± 0.05 Å**(논문·SI 모두 격자상수 미기재). 실험 Li₆PS₅Cl a ≈ 9.86 Å 대비 **+1 %**로, PBE 과대추정과 정확히 부합 → "문헌 구조 → PBE minimization 후 MD"라는 §4.1 서술의 독립 확인.
 - **Li 밀도맵·점프 그래프**(선굵기=rate) 시각화, **원소별 RDF**(Li around 4c-Cl/S).
 - **10-블록 오차**: 시계열 블록 분할 표준편차.
 > 우리 적용: (1) **min-of-three-rates 지표** — 우리 MD에서도 doublet/intracage/intercage를 분리 집계하면 "무엇이 율속인가"를 d-level별로 말할 수 있음(현재 우리는 총 MSD만). (2) **f=D*/D_J** — 우리 Haven 논의와 등가지만 점프율 기반이라 저렴. (3) 케이지 중심간 7.0 Å 환산은 우리 F*(PMF percolation) 지표와 상보 — 같은 "inter-cage 병목"을 각각 rate와 free-energy로 잼.
@@ -251,7 +257,9 @@ Li₇PS₆·Li₆PS₅Cl·Li₆PS₅I 밀도맵 — 전 조성 4c 둘레 케이�
 - **후속 상충**: INDEX 계산값 #8(2024, MTP-MLIP 대규모·비-아레니우스)은 **σ 피크 = 4c 25 %** — 최적 위치는 방법 의존. 안전한 합의는 "양 끝(0/100 %)이 나쁘고 중간에 최적 존재"까지.
 - **Excel 메모 오류 정정**: INDEX 계산값 #6의 "LPSCl Ea ~0.38 eV"는 **이 논문의 LPSCl 값이 아님**(SI 정밀값: Cl(50 %) intercage 0.18/0.27/0.25 eV @300/450/600 K; 0.38 후보 = Rao2011 임피던스 Ea(Cl) 0.38 혼입 또는 **SI의 Li₇PS₆ 450 K intercage 0.37(−)** 오독 — 어느 쪽이든 LPSCl 아님) → INDEX 행 교정함.
 - ~~SI 미보유~~ → **SI 확보(2026-07-28, 인박스 #32 Sup)**: Tables S1–S3 전문 §3b 수록, figure-read 전면 교체(교정 이력 §3 상단). 남는 캐비앗: ① **300 K는 오차>값**(예: Cl σ_J 0.89±1.29, intercage 0.73±1.05) — 300 K 정량 인용 부적합이 표준편차로 정량 확인됨; ② SI Ea는 **온도별 값**(eq 2의 T-의존 환산)이라 단일 "Ea" 인용 시 온도 명시 필수(Cl intercage 0.18/0.27/0.25 @300/450/600 K); ③ 본문 Ea 요약(0.10–0.14/0.20–0.25)은 SI 표 대비 **대략치**.
-- **무질서 배열 좌표·Li 공공 배치 규칙·점프 카운팅 추가 세부는 SI에도 없음(확정)** — "단일 배열·기준 미명시" 판정 유지(§4.2).
+- **무질서 배열 좌표·Li 공공 배치 규칙·점프 카운팅 추가 세부는 SI에도 없음(확정)** — "단일 배열·기준 미명시" 판정 유지(§4.2). **격자상수도 본문·SI 모두 미기재**(우리 역산 a ≈ 9.95 Å, §9-3).
+- **★ 100 % Cl@4c의 σ_J(450 K 0.18 / 600 K 0.82)는 "doublet 빈도 × 케이지-간 7.0 Å" 환산의 상한값** — 2026-08-03 재구성으로 확정된 규약(§9-2). doublet의 실제 변위 1.9 Å로 환산하면 ≈1/13.6. **"all-4c도 σ가 0.18은 나온다" 식 인용 금지** — 안전한 진술은 "all-4c에서는 doublet이 새 율속이 되어 최적 분포(75 %) 대비 σ_J가 ~28× 낮다"(5.12→0.18, 같은 환산 규약 내 비교)까지.
+- **SI 재검증 결과(2026-08-03)**: Tables S1–S3 전값·Fig S1–S3 캡션 전부 재확인, **불일치 0건**. 신규 = σ_J 재구성 검증(§9)뿐 → digest **종결 상태**.
 - **셋업 연대적 한계**: ecut 280 eV·Γ-only MD·velocity-rescale NVT·100 ps·단위셀 52원자·10-블록 오차(점프 비상관 가정) — 2016 기준 표준이나 현대 기준 soft. 절대 Ea·σ는 이 조건값으로만 소환.
 - **Ea는 아레니우스 기울기가 아님**: eq 2(τ와 ν₀=10¹³ 가정의 로그 변환) — 우리·실험 아레니우스 Ea와 정의가 다름. 직접 등치 금지(방향·서열만).
 - **가상 조성(Li₆PS₆·Li₇PS₅Cl)의 전하 처리 미명시** — 결과는 시사적, 정량 인용 비권장.
