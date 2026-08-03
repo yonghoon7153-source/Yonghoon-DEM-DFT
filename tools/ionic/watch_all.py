@@ -138,6 +138,12 @@ def find_scalar(o, key, depth=0):
 
 # ═══ 작업 등록부 ═════════════════════════════════════════════════════════
 # 여기 한 군데만 고치면 생존 판정·재기동 안내가 같이 따라온다 (손으로 두 곳 맞추면 어긋난다).
+def _newest(*paths):
+    """존재하는 파일 중 가장 최근 것. 없으면 첫 경로(=아직 시작 안 함 표시용)."""
+    got = [(os.path.getmtime(q), q) for q in paths if os.path.isfile(q)]
+    return max(got)[1] if got else paths[0]
+
+
 JOBS = [
     {"key": "ELF",    "log": "/data/work/runs/lpsocl_elf/run.log",
      "done": ["/data/work/runs/lpsocl_elf/lpsocl_elf.cube"],
@@ -176,12 +182,6 @@ JOBS = [
      "done_marker": ("READY_FOR_QE_AND_SLAB", "GPU 해방 대기 완료 — 후속 ①② 는 수동 착수"),
      "done": [], "proc": (), "tmux": "chain2", "start": None},
 ]
-
-
-def _newest(*paths):
-    """존재하는 파일 중 가장 최근 것. 없으면 첫 경로(=아직 시작 안 함 표시용)."""
-    got = [(os.path.getmtime(q), q) for q in paths if os.path.isfile(q)]
-    return max(got)[1] if got else paths[0]
 
 
 def verdict(j):
