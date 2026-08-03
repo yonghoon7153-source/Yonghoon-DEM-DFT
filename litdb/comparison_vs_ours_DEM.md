@@ -58,6 +58,39 @@
 >   voxel 50–600 nm × domain 15→90 µm × 메모리/시간).  우리 domain·voxel 선택 근거 문서화 공백을 메움.
 > - ⚠ **소재계 혼재 주의**: 덱의 캘린더링·CBD migration·OWRK·DEM 믹싱은 **LIB 액체계(NCM622/811+PVDF/NMP)**,
 >   구조 생성/검증만 **황화물 ASSB(NCM711+LPSCl+NBR)**.  같은 표에 섞지 말 것.
+>
+> **[Moon26-CAU]** `talks/moon2026_cau_llm_agent_battery_automation.md` — **문장혁(중앙대 에너지시스템),
+> "AI 기반 배터리 연구 자동화: LLM 기반 연구 분석에서 AI-Agent 전극 모델링까지"** (전지기술 심포지엄 2026
+> 기술세션 3-4, 8/21, 자료집 pp.297–318; **덱 실물 전 22 pp 독립 재판독 2026-08-03**, 사용자 분류 `(미분류)`).
+> 본체는 **LLM 다중 에이전트(BEARS)** 지만, 04부(슬 25–39)가 통째로 **전극 미세구조 생성–검증–FEM** 이라
+> 우리 DEM 축과 직접 겹친다.  ⚠ **소재계는 흑연 음극(LIB)** — 황화물 ASSB 아님.  같은 표에 섞지 말 것.
+> - **🆕 그들 파이프라인 = ARTISTIC 골격 + 에이전트 운전** (슬 28, 재판독으로 새로 편입):
+>   `합성 실험 설계 → 제조 물리 모델링(Slurry→Drying→Calendering) → 전극 물성 계산(전자전도도·굴곡도·
+>   활성표면적·밀도) → 결정론적 학습(surrogate) → 다목적 최적화` + 실험설계로 되먹임.  단계 대 단계로
+>   `papers/ngandjong2021_dem_calendering_digital_twin.md`·`papers/duquesnoy2023_ml_multiobjective_manufacturing_optimization.md`
+>   와 대응한다 ⇒ **BEARS는 새 물리가 아니라 ARTISTIC 파이프라인의 자동 운전 버전**.  우리 차별은
+>   `positioning_vs_geodict.md` 가 좁힌 정의(**건식 압밀 + granular constriction σ + 소성 MPM**)로 그대로 유지.
+> - **🆕 우리 bimodal 명제와 같은 물리, 다른 도구 — 단 트레이드오프까지 옮길 것** (슬 37–38):
+>   흑연 전극 **80개(Single 55 / Binary 19 / Gradient 6)** 를 고정 로딩(**30 × 30 µm footprint · 8 mg/cm² ·
+>   95:3:2**)에서 생성 → 구조공간(`D_eff = D·ε^β`, τ_z vs ε, 가이드 α=1.9 Ebner/1.7/1.5 sphere) → **5개만**
+>   전기화학 검증.  **3C: HC05 binary 56.8 > HC06 53.4 > GRD01 45.4 > SPH010 33.6 > HC01 single 16.8 mAh/g
+>   (= 3.38×)**, 그러나 **0.5C 에서는 binary 가 single 대비 −6.4 %**.  ⇒ 우리 bimodal DEM 결과를 번역할 때
+>   **"고율에서만 역전"** 으로 써야 정확하다(고율 이득만 인용하면 문헌 부풀리기).  ⛔ 덱 소환값, 절대값 인용 금지.
+> - **🆕 굴곡도 단독으로 rate 를 설명 못 한다는 외부 관찰**: **SPH010 은 τ_z ≈ 1.55 로 5개 중 최저인데 3C 순위 4위**.
+>   우리 DEM/BVSE 문서의 "단일 기술자로 순위 매기지 않는다" 규율의 외부 근거.  ⚠ SPH010 만 입자 형상이 달라
+>   (구형) 변수 분리가 안 돼 있다 — **관찰까지만, 인과 단정 금지**.
+> - **🆕 확보 1순위 정본 (`papers/` 미보유)**: 슬 32가 인용한 **Chouchane, Yao, Cronk, Zhang, Meng,
+>   "Improved Rate Capability for Dry Thick Electrodes through FEM and Machine Learning Coupling",
+>   *ACS Energy Lett.* 2024, 9, 4** — `Library of Real Particles → Stochastic Generation → FEM → 입자별 평균 SOD →
+>   Random Forest` 워크플로.  **Chouchane 은 ARTISTIC(Franco) → Meng 그룹 계보**라 우리 DEM 트랙의 직접 선행이다.
+> - **🆕 검증 지표 공백 노출**: Validator Agent 가 생성 구조에 **8종 구조 검증 지표**(형태·수송·통계)를 돌린다고만
+>   적혀 있고 항목은 미공개(digest Q7).  우리 DEM 산출 구조에도 같은 종류의 **고정 검증 세트**가 없다 —
+>   `kb/open_items.md` 후보.
+> - **🆕 파이프라인 상하류 접점이 포맷 수준까지 특정됨**: 슬 39 Simulator 단계의 solver 실행이 **DIS / EIS / P2D**.
+>   우리 M5(P2D 파라미터 export)의 소비자가 구체화됐다.  또 그들 메모리층 이름이 **`docs/knowhow (INDEX.md)`** 로,
+>   우리 `litdb/INDEX.md` 와 **같은 부품**이다 — 우리에게 없는 건 저장소가 아니라 그 위의 orchestration 루프.
+> - ⚠ **덱 등급**: BEARS 는 arXiv, Battery-Sim-Agent 는 ICLR 2026 under review.  **수치 인용 금지**,
+>   구조·절차만 가져온다.
 
 ## A. 압밀 / porosity (E_SE 강성이 floor를 정한다)
 - 문헌: Varkey(halide E=10.58) separator floor **21 %** / cathode **37 %** @350 MPa (강체 구, <20 % "추구 안 함").
