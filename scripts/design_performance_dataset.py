@@ -32,12 +32,31 @@ import json
 import os
 import sys
 
-# MPM 산출물에서 가져올 것 — DEM 과 **같은 물리량의 독립 측정**(frame[4]) 이라 접두사로 분리
-MPM_KEYS = ('porosity_settled_pct', 'porosity_at_target_pct', 'thickness_um',
-            'coverage_AM_P_pct', 'coverage_AM_S_pct',
-            'coverage_AM_P_add_pct', 'coverage_AM_S_add_pct',
-            'final_stress_GPa', 'am_load_frac', 'E_SE_GPa', 'nu_SE', 'sigma_y_GPa',
-            'n_grid', 'protocol', 'readout')
+# ── MPM 산출물 (webapp payload writer 스키마 — 실측 188건에서 확인, 2026-08-03) ──────────
+#    ⚠ mpm3d_compaction --save-metrics 와 **다른 스키마**다.  실제 키를 쓴다.
+MPM_KEYS = (
+    # 구조 — DEM 과 **같은 물리량의 독립 측정**(frame[4])
+    'porosity_mpm_pct', 'thickness_mpm_um', 'bulk_density_g_cm3', 'se_fraction_pct',
+    'compacted_porosity_pct', 'seed_porosity_pct',
+    # coverage — ★RIGID(기하, 해석적) 와 PLASTIC(변형 SE 점) 두 규약을 같은 밴드에서
+    'coverage_AM_P_hertz_pct', 'coverage_AM_S_hertz_pct',          # plastic @Hertz
+    'coverage_AM_P_tabor_pct', 'coverage_AM_S_tabor_pct',          # plastic @Tabor
+    'coverage_AM_P_rigid_hertz_pct', 'coverage_AM_S_rigid_hertz_pct',
+    'coverage_AM_P_rigid_tabor_pct', 'coverage_AM_S_rigid_tabor_pct',
+    'cov_hertz_um', 'cov_tabor_um', 'cov_method',
+    # 소성 변형장 — **MPM 고유** (강체구 DEM 엔 존재하지 않는 양)
+    'dg_mean', 'dg_max', 'dg_vmax98', 'dg_nonzero_pct', 'strain_kind',
+    # 재료·프로토콜 (같은 캘리브레이션인지 확인용)
+    'E_SE_GPa', 'nu_SE', 'sigma_y_GPa', 'K_SE_GPa',
+    'final_stress_GPa', 'target_GPa', 'protocol', 'n_grid', 'n_am',
+)
+# ★★ 절대 가져오지 않는 키 — CLAUDE.md 가 명시적으로 보고 금지한 것:
+#   "NEVER report the voxel-adjacency `coverage_AM_*_mpm_pct` (~26 %) — density/n_vox-bound,
+#    does NOT converge; it is a preview artifact."
+#   ML feature 로 넣으면 격자 해상도를 물리인 척 학습한다.  이름이 그럴듯해서 자동수집에
+#   섞이기 쉬우므로 **명시 차단**하고, selftest 가 부재를 확인한다.
+MPM_FORBIDDEN = ('coverage_AM_P_mpm_pct', 'coverage_AM_S_mpm_pct')
+
 # STEP4 viz json 에서 가져올 성능 (있을 때만)
 S4_KEYS = ('c_rate', 'charge', 'end_reason', 'i_1c_a', 'v_min', 'v_max', 'cv_hold')
 
@@ -88,9 +107,19 @@ def build(results_folder, archive_folder, mpm_lab=None, verbose=True):
                 for k in MPM_KEYS:
                     if k in m and m[k] is not None:
                         r['mpm_' + k] = m[k]
+                # ★ MPM **고유** 파생: 소성 conforming = plastic − rigid coverage.
+                #   강체구 DEM 은 이 값이 정의상 0 이다 (docs/mpm_coverage_plastic_vs_rigid.md).
+                #   ⇒ 예측기에 넣을 가치가 있는 것은 coverage 절대값이 아니라 **이 증분**이다.
+                for _am in ('AM_P', 'AM_S'):
+                    for _band in ('hertz', 'tabor'):
+                        _pl = m.get(f'coverage_{_am}_{_band}_pct')
+                        _rg = m.get(f'coverage_{_am}_rigid_{_band}_pct')
+                        if _pl is not None and _rg is not None:
+                            r[f'mpm_plastic_gain_{_am}_{_band}_pp'] = round(
+                                float(_pl) - float(_rg), 3)
                 # ★ frame[4] 교차검증 지표: 같은 porosity 를 DEM 과 MPM 이 독립으로 잰 차이.
                 #   |gap| ≤ 4 %p 가 신뢰 밴드 (docs/mpm_scaffold_reliability_and_am_freeze.md).
-                dp, mpp = r.get('porosity'), m.get('porosity_settled_pct')
+                dp, mpp = r.get('porosity'), m.get('porosity_mpm_pct')
                 if dp and mpp is not None:
                     dp_pct = dp * 100.0 if dp <= 1.0 else dp
                     r['porosity_gap_pp'] = round(float(mpp) - dp_pct, 3)
@@ -180,8 +209,13 @@ def _selftest():
         if mpm:
             md = os.path.join(lab, nm)
             os.makedirs(md, exist_ok=True)
-            json.dump({'porosity_settled_pct': 16.7, 'thickness_um': 71.2,
-                       'coverage_AM_P_pct': 52.5, 'final_stress_GPa': 0.30,
+            # 실제 webapp payload 스키마 (188건 실측 확인)
+            json.dump({'porosity_mpm_pct': 16.7, 'thickness_mpm_um': 71.2,
+                       'coverage_AM_P_tabor_pct': 74.0, 'coverage_AM_P_rigid_tabor_pct': 70.0,
+                       'coverage_AM_P_hertz_pct': 52.0, 'coverage_AM_P_rigid_hertz_pct': 46.0,
+                       'coverage_AM_P_mpm_pct': 26.0,        # ★금지 키 — 들어오면 안 됨
+                       'coverage_AM_S_mpm_pct': 25.0,        # ★금지 키
+                       'dg_mean': 0.31, 'dg_max': 1.8, 'final_stress_GPa': 0.30,
                        'E_SE_GPa': 1.53, 'nu_SE': 0.49, 'protocol': 'hold'},
                       open(os.path.join(md, 'mpm_metrics.json'), 'w'))
         if s4:
@@ -195,8 +229,19 @@ def _selftest():
         cov['n'] == 4 and 'caseD_same_metrics_as_A' in by, f"{cov['n']}건: {sorted(by)}")
     chk('층 커버리지 정확 (MPM 2 · STEP4 1)', cov['mpm'] == 2 and cov['step4'] == 1)
     chk('★MPM 값이 mpm_ 접두사로 조인된다 (예측기가 0건 쓰던 층)',
-        by['caseA'].get('mpm_porosity_settled_pct') == 16.7
-        and by['caseA'].get('mpm_coverage_AM_P_pct') == 52.5)
+        by['caseA'].get('mpm_porosity_mpm_pct') == 16.7
+        and by['caseA'].get('mpm_thickness_mpm_um') == 71.2
+        and by['caseA'].get('mpm_dg_mean') == 0.31)
+    # ★★ CLAUDE.md 가 보고 금지한 복셀-인접 coverage 가 절대 안 들어와야 한다
+    _leak = [k for k in by['caseA'] if k.endswith('_mpm_pct') and 'coverage' in k]
+    chk('★금지 키(coverage_AM_*_mpm_pct, 복셀-인접 preview 아티팩트)가 차단된다',
+        not _leak, f'누출: {_leak}' if _leak else '없음')
+    # ★ MPM 고유 파생: 소성 − 강체 coverage 증분 (강체구 DEM 은 정의상 0)
+    chk('★소성 conforming 증분이 계산된다 (plastic − rigid)',
+        abs(by['caseA'].get('mpm_plastic_gain_AM_P_tabor_pp', 0) - 4.0) < 1e-9
+        and abs(by['caseA'].get('mpm_plastic_gain_AM_P_hertz_pp', 0) - 6.0) < 1e-9,
+        f"tabor +{by['caseA'].get('mpm_plastic_gain_AM_P_tabor_pp')} · "
+        f"hertz +{by['caseA'].get('mpm_plastic_gain_AM_P_hertz_pp')} %p")
     chk('★frame[4] porosity gap = MPM − DEM (독립 측정 대조)',
         abs(by['caseA']['porosity_gap_pp'] - (16.7 - 15.0)) < 1e-9
         and by['caseA']['porosity_cross_validated'] == 1,
@@ -211,9 +256,12 @@ def _selftest():
     cp = os.path.join(td, 'corpus.csv')
     cols = write_csv(rows, cp)
     got = {r['name']: r for r in _csv.DictReader(open(cp))}
-    chk('CSV 열이 모든 층의 합집합', 'mpm_porosity_settled_pct' in cols and 's4_c_rate' in cols)
+    chk('CSV 열이 모든 층의 합집합',
+        'mpm_porosity_mpm_pct' in cols and 'mpm_plastic_gain_AM_P_tabor_pp' in cols
+        and 's4_c_rate' in cols)
     chk('★MPM 없는 케이스의 MPM 칸이 빈 문자열 (0 아님)',
-        got['caseC']['mpm_porosity_settled_pct'] == ''
+        got['caseC']['mpm_porosity_mpm_pct'] == ''
+        and got['caseC']['mpm_plastic_gain_AM_P_tabor_pp'] == ''
         and got['caseC']['porosity'] not in ('', None))
     # 설계값은 predictor_engine 의 규약 d[µm] = r/scale·1e6·2 를 그대로 따라야 한다
     chk('설계값이 predictor_engine 유도와 동일 (재구현 안 함)',
