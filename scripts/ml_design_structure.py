@@ -215,11 +215,14 @@ def fit_target(X, y, kind='lin', max_terms=MAX_TERMS):
             'pi90_coverage': cover, 'select_trace': [(a, round(b, 4)) for a, b in trace]}
 
 
-def nested_cv(X, y, kind='lin', folds=10, seed=0, max_terms=MAX_TERMS):
+def nested_cv(X, y, kind='lin', folds=10, seed=0, max_terms=MAX_TERMS, return_pred=False):
     """중첩 CV — outer K-fold, inner 에서 **항선택과 λ 를 다시** 고른다.
 
     naive LOOCV 는 전체 데이터로 항을 고른 뒤 같은 데이터로 채점하므로 낙관 편향이 있다.
     보류된 폴드는 하이퍼선택에 일절 관여하지 않는다 ⇒ 편향 없는 일반화 추정.
+
+    return_pred=True 면 **폴드-밖 예측**도 돌려준다 (유도량 대조에 필요 — 같은 out-of-fold
+    조건에서 비교해야 공정하다).
     """
     ylog = kind == 'log'
     yy = np.log(np.clip(y, 1e-12, None)) if ylog else np.asarray(y, float)
@@ -240,7 +243,8 @@ def nested_cv(X, y, kind='lin', folds=10, seed=0, max_terms=MAX_TERMS):
         _, lam = max(((loocv(Ptr, yy[tr], l)[0], l) for l in LAM_GRID), key=lambda t: t[0])
         pred[te] = build(Xte, terms) @ ridge(Ptr, yy[tr], lam)
     ss = float(((yy - yy.mean()) ** 2).sum())
-    return 1.0 - float(((yy - pred) ** 2).sum()) / ss if ss > 0 else float('nan')
+    r2 = 1.0 - float(((yy - pred) ** 2).sum()) / ss if ss > 0 else float('nan')
+    return (r2, (np.exp(pred) if ylog else pred)) if return_pred else r2
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -358,18 +362,42 @@ def suggest(bundle, X, target, n_out=10, n_cand=2000, seed=0, allow_weak=False):
     lo, hi = np.percentile(X[:, ji], 2, axis=0), np.percentile(X[:, ji], 98, axis=0)
     mu, sd = np.asarray(m['mu']), np.asarray(m['sd'])
     Xs = (X - mu) / sd
-    rows = []
+    # ── 실현가능 상자 = 코퍼스가 실제로 덮는 **13 특징 전부**의 범위 ────────────────────
+    #   자유노브를 각자 백분위 안에서 뽑아도 **결합**은 코퍼스 밖일 수 있다.  d_se 를 크게,
+    #   d_am 을 작게 뽑으면 d_ratio = d_se/d_am 이 관측된 적 없는 값으로 폭주한다
+    #   (첫 실런: d_am=0.0013 µm = AM 1.3 nm → novelty 28597).  유도량까지 상자 안이어야 한다.
+    lo13, hi13 = X.min(0), X.max(0)
+    span = np.where(hi13 - lo13 > 0, hi13 - lo13, 1.0)
+    # ── novelty 상한 = 코퍼스 자신의 최근접이웃 거리 95 백분위 ─────────────────────────
+    #   상한이 없으면 score = PI × novelty 가 "가장 멀리" 만 고르는 축퇴에 빠진다.
+    #   "전형적 간격보다 먼가" 로 충분하고, 그 이상 멀어지는 건 정보가 아니라 외삽이다.
+    _d = np.linalg.norm(Xs[:, None, :] - Xs[None, :, :], axis=2)
+    np.fill_diagonal(_d, np.inf)
+    nov_cap = float(np.percentile(_d.min(1), 95))
+    rows, n_box, n_hull = [], 0, 0
     for knob in rs.uniform(lo, hi, size=(int(n_cand), len(FREE_KNOBS))):
         d = derive_features(*knob)
         c = np.array([float(d[f]) for f in DESIGN_FEATURES])
+        if np.any(c < lo13 - 0.02 * span) or np.any(c > hi13 + 0.02 * span):
+            n_box += 1
+            continue                                  # 유도량이 코퍼스 밖 → 시뮬해도 비교 불가
         p = predict(m, c)
-        nov = float(np.min(np.linalg.norm(Xs - (c - mu) / sd, axis=1)))
+        if p['extrapolation']:
+            n_hull += 1
+            continue                                  # 볼록포 밖 → 모형이 자기 무지도 못 잰다
+        nov = min(float(np.min(np.linalg.norm(Xs - (c - mu) / sd, axis=1))), nov_cap)
         rows.append((p['sd'] * nov, p, nov, knob))
     rows.sort(key=lambda t: -t[0])
-    return {'error': None, 'target': target, 'verdict': vd,
+    return {'error': (None if rows else
+                      f'후보 {n_cand} 개가 전부 걸러짐 (상자밖 {n_box} · 볼록포밖 {n_hull}) — '
+                      '--suggest-cand 를 늘리거나 코퍼스가 좁은지 확인'),
+            'target': target, 'verdict': vd, 'novelty_cap': round(nov_cap, 3),
+            'n_cand': int(n_cand), 'n_rejected_box': n_box, 'n_rejected_hull': n_hull,
+            'n_survived': len(rows),
             'rows': [{'score': round(s, 4), 'pred': round(p['value'], 4),
                       'pi90': [round(p['lo'], 4), round(p['hi'], 4)],
-                      'novelty': round(nov, 3), 'extrapolation': p['extrapolation'],
+                      'novelty': round(nov, 3), 'novelty_capped': nov >= nov_cap - 1e-9,
+                      'extrapolation': p['extrapolation'],
                       'design': {f: round(float(v), 4) for f, v in zip(FREE_KNOBS, k)}}
                      for s, p, nov, k in rows[:n_out]]}
 
@@ -439,10 +467,14 @@ def diagnose(csv_path, target, split_by='use_source', vs=None, folds=10):
     for g, ii in sorted(groups.items()):
         ii = np.asarray(ii, int)
         yy = np.asarray([float(rows[i][target]) for i in ii], float)
+        # ★ n/k ≥ MIN_N_OVER_K 때문에 n < 2·15 = 30 이면 k_cap ≤ 1 = **절편만** 적합 가능.
+        #   그런 부분집합의 nested R² ≈ 0 은 "안 배워진다" 가 아니라 "적합 자체를 안 했다" 다
+        #   — 증거로 읽으면 안 되므로 명시적으로 표시한다 (첫 실런 DEM n=20 이 정확히 이 경우).
+        _thin = len(ii) < 2 * MIN_N_OVER_K
         out['groups'][g] = {
-            'n': int(len(ii)),
-            'nested': (nested_cv(X[ii], yy, kind, folds=min(folds, max(3, len(ii) // 8)))
-                       if len(ii) >= MIN_N_TARGET else None)}
+            'n': int(len(ii)), 'too_thin': bool(_thin),
+            'nested': (None if (_thin or len(ii) < MIN_N_TARGET) else
+                       nested_cv(X[ii], yy, kind, folds=min(folds, max(3, len(ii) // 8))))}
     if vs:
         i2, y2 = _column(rows, vs)
         out['vs'] = {'column': vs, 'n': int(len(y2)),
@@ -465,6 +497,57 @@ def diagnose(csv_path, target, split_by='use_source', vs=None, folds=10):
     else:
         out['verdict'] = ('INTRINSIC — 좁혀도 안 좋아진다.  게이트 탓이 아니라 이 설계해상도에서 '
                           '본래 확률적(씨앗별 패킹) ⇒ 더 배우지 말고 ±PI 로 보고할 것.')
+    # ★ 게이트를 걷어내도 남는 천장 — SWITCHED 라고 "고치면 다 된다" 는 뜻이 아니다.
+    #   두 원인은 배타적이지 않다: 스위치 **때문에도** 못 배우고, 걷어낸 뒤에도 남는 몫이 있다.
+    _ceil = max([v for v in ([out['vs']['nested']] if (out['vs'] and out['vs']['nested']
+                                                       is not None) else []) + subs],
+                default=None)
+    out['residual_ceiling'] = _ceil
+    if _ceil is not None:
+        out['verdict'] += (f'  단, 단일-출처로 좁혀도 천장은 nested {_ceil:+.3f} — '
+                           f'나머지 {1 - _ceil:.0%} 는 게이트와 무관한 잔여 불확실성이므로 '
+                           '게이트를 고쳐도 ±PI 보고는 여전히 필요.')
+    return out
+
+
+def closure_test(csv_path, folds=10, seed=0):
+    """porosity 를 **직접 회귀** vs **φ 로부터 유도** — 어느 쪽이 나은가.
+
+    ε = 1 − φ_SE − φ_AM 이 코퍼스에서 성립한다면 porosity 를 따로 배울 이유가 없다.  그리고
+    φ_SE·φ_AM 이 각각 잘 배워지는데 ε 만 안 배워진다면 원인이 정보 부족이 아니라 **작은
+    차의 오차증폭**이다 (mpm_plastic_gain 이 소성−강체 차라서 무너진 것과 같은 기전).
+    두 예측 모두 **폴드-밖**이라 비교가 공정하다.
+    """
+    X, _ys, _names, rows = load_corpus(csv_path)
+    i_se, y_se = _column(rows, 'phi_se')
+    i_am, y_am = _column(rows, 'phi_am')
+    out = {}
+    for col in ('porosity', 'use_porosity_pct'):
+        i_p, y_p = _column(rows, col)
+        common = np.intersect1d(np.intersect1d(i_se, i_am), i_p)
+        if len(common) < MIN_N_TARGET:
+            out[col] = {'n': int(len(common)), 'error': '표본 부족'}
+            continue
+        m_se = {int(i): v for i, v in zip(i_se, y_se)}
+        m_am = {int(i): v for i, v in zip(i_am, y_am)}
+        m_p = {int(i): v for i, v in zip(i_p, y_p)}
+        se = np.array([m_se[int(i)] for i in common])
+        am = np.array([m_am[int(i)] for i in common])
+        po = np.array([m_p[int(i)] for i in common])
+        Xc = X[common]
+        # 코퍼스 자체의 닫힘 잔차 (모형이 아니라 **데이터**가 얼마나 닫히나)
+        clos = se + am + po / 100.0
+        r2_dir, _ = nested_cv(Xc, po, 'lin', folds=folds, seed=seed, return_pred=True)
+        _, p_se = nested_cv(Xc, se, 'lin', folds=folds, seed=seed, return_pred=True)
+        _, p_am = nested_cv(Xc, am, 'lin', folds=folds, seed=seed, return_pred=True)
+        der = 100.0 * (float(np.mean(clos)) - p_se - p_am)   # 닫힘 상수는 코퍼스에서 잰다
+        ss = float(((po - po.mean()) ** 2).sum())
+        r2_der = 1.0 - float(((po - der) ** 2).sum()) / ss if ss > 0 else float('nan')
+        out[col] = {'n': int(len(common)),
+                    'closure_mean': float(np.mean(clos)), 'closure_sd': float(np.std(clos)),
+                    'direct_nested': r2_dir, 'derived_nested': r2_der,
+                    'gain_derived': r2_der - r2_dir,
+                    'eps_mean_pct': float(np.mean(po)), 'eps_sd_pct': float(np.std(po))}
     return out
 
 
@@ -553,10 +636,17 @@ def _selftest():                                                   # noqa: C901
 
     rng = np.random.default_rng(7)
     n = 240
-    X = np.column_stack([rng.uniform(lo, hi, n) for lo, hi in
-                         ((0.3, 2.0), (2, 12), (50, 90), (0, 1), (30, 80), (1, 8),
-                          (0.05, 0.5), (0.5, 7), (0.2, 2), (10, 90),
-                          (2, 20), (0.1, 0.9), (-1.2, 0.7))])
+    # ★ 설계행렬은 **자유노브 6 개에서 유도**한다 — 13 열을 독립으로 뽑으면 실제 코퍼스에
+    #   존재할 수 없는 자기모순 행렬이 되고, 실현가능 필터가 (옳게) 전부 걸러버린다.
+    #   실런이 이걸 드러냈다: 픽스처가 현실을 안 닮으면 검사도 현실을 안 지킨다.
+    _knobs = np.column_stack([rng.uniform(lo, hi, n) for lo, hi in
+                              ((0.3, 2.0),      # d_se   µm
+                               (2.0, 12.0),     # d_am   µm
+                               (50.0, 90.0),    # am_pct wt%
+                               (0.0, 1.0),      # ps_frac
+                               (30.0, 80.0),    # rve    µm
+                               (1.0, 8.0))])    # loading mAh/cm²
+    X = np.array([[float(derive_features(*k)[f]) for f in DESIGN_FEATURES] for k in _knobs])
     y_lin = 0.6 * X[:, 2] - 2.0 * X[:, 1] + 0.03 * X[:, 2] * X[:, 1] + rng.normal(0, 1.0, n)
 
     print(' [1] 기저·적합·해석적 LOOCV')
@@ -709,6 +799,20 @@ def _selftest():                                                   # noqa: C901
     rej['models']['use_porosity_pct']['verdict'] = 'REJECT'
     chk('★판정 REJECT 타깃엔 제안을 거부한다 (못 맞히는 모형의 불확실성 = 잡음)',
         suggest(rej, X, 'use_porosity_pct', n_out=3, n_cand=50)['error'] is not None)
+    # ★ novelty 폭주 방지 — 상한이 없으면 score 가 "가장 먼 점" 으로 축퇴한다
+    #   (첫 실런: d_am=0.0013 µm 로 d_ratio 폭주 → novelty 28597 = 1 위)
+    chk('★novelty 가 코퍼스 자기 간격의 상한을 넘지 않는다 (축퇴 방지)',
+        all(s['novelty'] <= sg['novelty_cap'] + 1e-9 for s in sg['rows'])
+        and sg['novelty_cap'] < 1e3, f"상한={sg['novelty_cap']}")
+    chk('★제안이 전부 볼록포 안 (외삽 후보는 순위에 오르지 않는다)',
+        all(not s['extrapolation'] for s in sg['rows']))
+    chk('★유도량까지 코퍼스 상자 안 — d_ratio 폭주 후보가 걸러진다',
+        all(np.all(np.array([derive_features(*[s['design'][k] for k in FREE_KNOBS])[f]
+                             for f in DESIGN_FEATURES]) <= X.max(0) + 0.02 * np.ptp(X, 0) + 1e-9)
+            for s in sg['rows']))
+    chk('잘라낸 후보 수를 보고한다 (조용한 절단 금지)',
+        sg['n_cand'] == sg['n_survived'] + sg['n_rejected_box'] + sg['n_rejected_hull'],
+        f"{sg['n_cand']} = {sg['n_survived']}+{sg['n_rejected_box']}+{sg['n_rejected_hull']}")
     # 로컬 사본이 predictor_engine 원본과 같은가 (있는 환경에서만 — WSL 에선 반드시 검사됨)
     try:
         import sys as _s
@@ -758,8 +862,42 @@ def _selftest():                                                   # noqa: C901
         f"혼합 {d_in['mixture']['nested']:+.3f} → "
         + ' / '.join(f"{g} {v['nested']:+.3f}" for g, v in d_in['groups'].items()
                      if v['nested'] is not None))
-    chk('부검이 단일-출처 원열과도 대조한다 (--diagnose-vs)',
-        diagnose(p_sw, 'use_porosity_pct', vs='porosity', folds=5)['vs']['nested'] > 0.8)
+    _dv = diagnose(p_sw, 'use_porosity_pct', vs='porosity', folds=5)
+    chk('부검이 단일-출처 원열과도 대조한다 (--diagnose-vs)', _dv['vs']['nested'] > 0.8)
+    chk('★SWITCHED 판정에 잔여 천장을 함께 말한다 ("고치면 다 된다" 가 아님)',
+        _dv.get('residual_ceiling') is not None and '천장' in _dv['verdict'])
+    # ★ 표본이 얇은 부분집합은 적합 자체를 안 하고 그렇다고 말한다 (실런 DEM n=20 이 그 경우)
+    src_thin = np.where(np.arange(n) < 20, 'DEM', 'MPM')
+    p_th = _mk(y_sw, src_thin)
+    d_th = diagnose(p_th, 'use_porosity_pct', folds=5)
+    chk('★n<30 부분집합은 절편만 적합 가능 → nested 를 내지 않고 too_thin 으로 표시',
+        d_th['groups']['DEM']['too_thin'] and d_th['groups']['DEM']['nested'] is None,
+        f"DEM n={d_th['groups']['DEM']['n']}")
+    os.unlink(p_th)
+
+    print(' [10] 닫힘 검사 — porosity 직접 회귀 vs φ 유도')
+    with tempfile.NamedTemporaryFile('w', suffix='.csv', delete=False, newline='') as f3:
+        c3 = ['name'] + DESIGN_FEATURES + ['phi_se', 'phi_am', 'porosity', 'use_porosity_pct']
+        w3 = _csv.DictWriter(f3, fieldnames=c3)
+        w3.writeheader()
+        # φ 는 잘 배워지고, ε 는 그 잔차라 **정확히 닫힌다** → 유도가 이겨야 한다
+        se2 = 0.004 * X[:, 2] + 0.02
+        am2 = 0.30 + 0.002 * X[:, 5]
+        po2 = 100.0 * (1.0 - se2 - am2)
+        for i in range(n):
+            r3 = {'name': f'k{i}'}
+            r3.update({f: X[i, j] for j, f in enumerate(DESIGN_FEATURES)})
+            r3.update({'phi_se': se2[i], 'phi_am': am2[i],
+                       'porosity': po2[i], 'use_porosity_pct': po2[i]})
+            w3.writerow(r3)
+        p_cl = f3.name
+    ct = closure_test(p_cl, folds=5)['porosity']
+    chk('코퍼스 닫힘 φ_SE+φ_AM+ε ≈ 1 을 측정한다',
+        abs(ct['closure_mean'] - 1.0) < 1e-6, f"{ct['closure_mean']:.6f} ± {ct['closure_sd']:.1e}")
+    chk('★닫히는 코퍼스에선 유도가 직접 회귀에 밀리지 않는다',
+        ct['derived_nested'] > 0.9 and ct['gain_derived'] > -0.05,
+        f"직접 {ct['direct_nested']:+.3f} vs 유도 {ct['derived_nested']:+.3f}")
+    os.unlink(p_cl)
     os.unlink(p_sw)
     os.unlink(p_in)
 
@@ -789,12 +927,34 @@ def main(argv=None):
     ap.add_argument('--split-by', default='use_source', help='--diagnose 의 분할 열')
     ap.add_argument('--diagnose-vs', default='', metavar='COL',
                     help='--diagnose 와 비교할 단일-출처 원열 (예: porosity = raw DEM)')
+    ap.add_argument('--suggest-cand', type=int, default=4000,
+                    help='능동학습 후보 표본 수 (실현가능 필터를 통과할 만큼 넉넉히)')
+    ap.add_argument('--closure', action='store_true',
+                    help='porosity 를 직접 회귀 vs φ_SE·φ_AM 에서 유도 — 어느 쪽이 나은지')
     a = ap.parse_args(argv)
     if a.selftest:
         raise SystemExit(_selftest())
     if not os.path.isfile(a.csv):
         print(f'CSV 없음: {a.csv}\n  먼저: python3 scripts/design_performance_dataset.py --out {a.csv}')
         return 1
+    if a.closure:
+        print(f'닫힘 검사 — ε = 1 − φ_SE − φ_AM  ({a.csv})')
+        for col, r in closure_test(a.csv, folds=a.folds).items():
+            if r.get('error'):
+                print(f"  {col:20s} n={r['n']}  {r['error']}")
+                continue
+            print(f"  {col:20s} n={r['n']:4d}   ε = {r['eps_mean_pct']:.2f} ± "
+                  f"{r['eps_sd_pct']:.2f} %")
+            print(f"    코퍼스 닫힘 φ_SE+φ_AM+ε = {r['closure_mean']:.4f} ± {r['closure_sd']:.4f}"
+                  + ('   (≈1 → ε 는 유도 가능)' if abs(r['closure_mean'] - 1) < 0.05
+                     else '   (1 에서 벗어남 → 유도식이 이 코퍼스엔 안 맞음)'))
+            print(f"    직접 회귀  nested {r['direct_nested']:+.3f}")
+            print(f"    φ 에서 유도 nested {r['derived_nested']:+.3f}   "
+                  f"(차 {r['gain_derived']:+.3f})")
+            print('    ⇒ ' + ('유도가 낫다 — porosity 를 따로 배우지 말고 φ 에서 계산할 것'
+                              if r['gain_derived'] > 0.02 else
+                              '직접 회귀가 낫거나 동급 — 유도는 φ 오차가 작은 ε 로 증폭된다'))
+        return 0
     if a.diagnose:
         print(f'부검 — {a.diagnose}  (분할: {a.split_by})')
         d = diagnose(a.csv, a.diagnose, split_by=a.split_by,
@@ -802,8 +962,10 @@ def main(argv=None):
         _f = lambda v: ('  n/a' if v is None else f'{v:+.3f}')          # noqa: E731
         print(f"  혼합 전체            n={d['mixture']['n']:4d}  nested {_f(d['mixture']['nested'])}")
         for g, v in d['groups'].items():
-            print(f"  └ {a.split_by}={g:<18s} n={v['n']:4d}  nested {_f(v['nested'])}"
-                  + ('   (표본 부족 — 미적합)' if v['nested'] is None else ''))
+            _why = ('' if v['nested'] is not None else
+                    (f"   (n<{2*MIN_N_OVER_K:.0f} → 절편만 적합 가능 = **증거 아님**)"
+                     if v.get('too_thin') else '   (표본 부족 — 미적합)'))
+            print(f"  └ {a.split_by}={g:<18s} n={v['n']:4d}  nested {_f(v['nested'])}{_why}")
         if d['vs']:
             print(f"  단일-출처 원열 {d['vs']['column']:<12s} n={d['vs']['n']:4d}  "
                   f"nested {_f(d['vs']['nested'])}")
@@ -813,7 +975,8 @@ def main(argv=None):
     b = train(a.csv, a.out or None, folds=a.folds, do_nested=not a.no_nested)
     if a.suggest:
         X, _ys, _n, _r = load_corpus(a.csv)
-        res = suggest(b, X, a.suggest_target, n_out=a.suggest, allow_weak=a.allow_weak)
+        res = suggest(b, X, a.suggest_target, n_out=a.suggest,
+                      n_cand=a.suggest_cand, allow_weak=a.allow_weak)
         if res['error']:
             print(f"\n  능동학습 거부 — {res['error']}")
             _use = [t for t, m in b['models'].items() if m.get('verdict') == 'USABLE']
@@ -821,10 +984,14 @@ def main(argv=None):
             return 0
         print(f"\n  능동학습 — 다음 DEM 후보 ({res['target']}, 판정 {res['verdict']}, "
               'PI 폭 × 신규성):')
+        # 잘라낸 건 반드시 말한다 (조용한 절단은 "전부 훑었다" 로 읽힌다)
+        print(f"    후보 {res['n_cand']} → 생존 {res['n_survived']}  "
+              f"(실현불가 {res['n_rejected_box']} · 볼록포밖 {res['n_rejected_hull']}), "
+              f"novelty 상한 {res['novelty_cap']}")
         for i, s in enumerate(res['rows'], 1):
             print(f"   {i:2d}. score={s['score']:8.3f}  pred={s['pred']:8.3f} "
                   f"PI90={s['pi90']}  novelty={s['novelty']}"
-                  + ('  ⚠외삽' if s['extrapolation'] else ''))
+                  + ('(상한)' if s['novelty_capped'] else ''))
             print('       ' + '  '.join(f'{k}={v}' for k, v in s['design'].items()))
         print('   ★ 위 6 개가 자유노브 전부다 — 나머지 7 특징은 여기서 유도된다.')
         print('   CAVEAT: 휴리스틱 플래너다 — 진짜 정보이득은 그 점을 실제로 돌려야 안다.')
