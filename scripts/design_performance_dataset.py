@@ -119,7 +119,7 @@ def build(results_folder, archive_folder, mpm_lab=None, verbose=True):
     curated = _load_curated(_root)
     cov = {'n': len(rows), 'dem': len(rows), 'mpm': 0, 'step4': 0,
            'reviewed': 0, 'use_dem': 0, 'use_mpm': 0,
-           'compared': 0, 'curated_no_mpm': 0}
+           'compared': 0, 'curated_no_mpm': 0, 'from_curated': 0}
     for r in rows:
         r['has_dem'] = 1
         # ★ 원 DB 가 쓰는 판별 축 = SE/solid.  am_pct(wt%) 가 아니라 이것으로 봐야 문서와 대조된다.
@@ -162,6 +162,7 @@ def build(results_folder, archive_folder, mpm_lab=None, verbose=True):
                     r['regime'] = ('SE-poor-corner(MPM-overcompress)' if _dem_wins else
                                    ('SE-rich(DEM-eps-artifact)' if _gap >= GATE_BAND_PP
                                     else 'cross-validated'))
+                    r['mpm_source'] = 'mpm_metrics.json'
                     cov['use_dem' if _dem_wins else 'use_mpm'] += 1
         # ★ 큐레이션 조인은 **MPM 블록 밖**이다 (2026-08-03 정정): 처음엔 MPM 안에 넣어서,
         #   MPM 산출물이 없는 케이스는 판정이 있어도 아예 조회되지 않았다 → 실코퍼스에서
@@ -170,15 +171,39 @@ def build(results_folder, archive_folder, mpm_lab=None, verbose=True):
         r['reviewed'] = int(bool(_cu))
         if _cu:
             cov['reviewed'] += 1
+            # ★ 2026-08-03: 큐레이션 117건의 MPM 값은 **CSV 안에** 있다 (별도 MPM 캠페인).
+            #   webapp payload 가 쓰는 mpm_metrics.json 을 가진 169건과 **서로소**라, 처음엔
+            #   이 66건이 "MPM 없음" 으로 통째로 빠졌다.  판정·porosity 를 CSV 에서 직접 쓴다.
+            #   ⚠ **재계산하지 않는다** — corpus DEM 과 CSV MPM 을 섞어 gap 을 다시 만들면
+            #     스냅샷이 다른 두 값의 차가 되고, 부호·규약 사고의 전형이다.  CSV 의
+            #     use_source/use_porosity_pct 를 **그대로** 쓰고 출처를 태그한다.
+            if 'use_source' not in r and _cu.get('use_source'):
+                r['use_source'] = _cu['use_source']
+                r['mpm_source'] = 'curated_db'
+                r['regime'] = _cu.get('regime') or ''
+                try:
+                    r['use_porosity_pct'] = float(_cu['use_porosity_pct'])
+                except (TypeError, ValueError, KeyError):
+                    pass
+                try:                                   # CSV 는 DEM−MPM, 이 층은 MPM−DEM
+                    r['porosity_gap_mpm_minus_dem_pp'] = -float(_cu['gap_dem_minus_mpm'])
+                    r['porosity_cross_validated'] = int(
+                        abs(r['porosity_gap_mpm_minus_dem_pp']) <= GATE_BAND_PP)
+                except (TypeError, ValueError, KeyError):
+                    pass
+                cov['from_curated'] += 1
+                cov['use_dem' if _cu['use_source'] == 'DEM' else 'use_mpm'] += 1
             r['trust_curated'] = _cu.get('trust')
             r['verdict_curated'] = (_cu.get('verdict') or '')[:300]
             r['se_of_solid_pct_curated'] = _cu.get('se_of_solid_pct')
             r['use_source_curated'] = _cu.get('use_source')
-            if r.get('use_source'):                       # MPM 이 있어 자동판정이 난 경우만 대조
+            # ★ 대조는 **독립 자동판정**이 있을 때만 성립한다.  CSV 에서 승계한 판정을
+            #   같은 CSV 와 비교하면 항상 일치라 자기순환이고, "검증됐다" 로 오독된다.
+            if r.get('mpm_source') == 'mpm_metrics.json':
                 cov['compared'] += 1
                 if _cu.get('use_source') and _cu['use_source'] != r['use_source']:
                     r['use_source_disagrees_with_curated'] = _cu['use_source']
-            else:                                          # 판정은 있는데 이 런엔 MPM 이 없다
+            elif r.get('mpm_source') != 'curated_db':      # 판정도 MPM 도 못 쓰는 경우
                 cov['curated_no_mpm'] += 1
         sp = _find_layer(r['name'], roots, glob_pat='step4_*viz*.json')
         if sp:
@@ -214,9 +239,13 @@ def build(results_folder, archive_folder, mpm_lab=None, verbose=True):
             else:
                 print("    ⚠ 자동↔큐레이션 **대조 0건** — 규칙이 이 코퍼스에서 검증되지 "
                       "않았다 (일치/불일치 둘 다 주장 불가)")
+            if cov['from_curated']:
+                # ★ 이 66건은 규칙의 **검증**이 아니다 — CSV 판정을 그대로 승계한 것이고,
+                #   규칙의 117/117 재현은 그 CSV 자체에 대해 이미 따로 확인했다.
+                print(f"    · 큐레이션 CSV 에서 판정·porosity 승계 {cov['from_curated']}건 "
+                      f"(mpm_metrics.json 없는 셋 — 규칙 재검증 아님, 승계)")
             if cov['curated_no_mpm']:
-                print(f"    · 큐레이션 판정은 있으나 이 런에 MPM 산출물이 없는 케이스 "
-                      f"{cov['curated_no_mpm']}건")
+                print(f"    · 판정도 MPM 도 없는 케이스 {cov['curated_no_mpm']}건")
         if cov['step4'] == 0:
             print("  ⚠ STEP4 0건 — 성능 회귀 불가.  구조→성능은 "
                   "scripts/perf_reduced_order.py (적합 없는 물리) 로 간다.")
@@ -341,11 +370,17 @@ def _selftest():
         _nm.get('reviewed') == 1 and _nm.get('use_source_curated') == 'DEM'
         and _nm.get('has_mpm') == 0,
         f"reviewed={_nm.get('reviewed')} curated={_nm.get('use_source_curated')}")
-    chk('★MPM 없으면 자동판정은 안 만든다 (대조 대상 아님)',
-        'use_source' not in _nm and cov['curated_no_mpm'] == 1)
-    chk('★대조 건수를 따로 센다 (불일치 0 이 공허하게 참이 되는 것 차단)',
-        cov['compared'] == 1 and cov['reviewed'] == 2,
-        f"대조 {cov['compared']} / 판정보유 {cov['reviewed']}")
+    chk('★mpm_metrics 없어도 큐레이션 CSV 에서 판정·porosity 를 승계한다',
+        _nm.get('use_source') == 'DEM' and _nm.get('mpm_source') == 'curated_db'
+        and _nm.get('use_porosity_pct') is not None,
+        f"use={_nm.get('use_source')} por={_nm.get('use_porosity_pct')} src={_nm.get('mpm_source')}")
+    chk('★승계는 대조로 세지 않는다 (같은 CSV 와 비교 = 자기순환)',
+        cov['compared'] == 1 and cov['from_curated'] == 1 and cov['reviewed'] == 2,
+        f"대조 {cov['compared']} / 승계 {cov['from_curated']} / 판정보유 {cov['reviewed']}")
+    chk('★CSV 의 gap 부호를 이 층 규약(MPM−DEM)으로 뒤집어 싣는다',
+        _nm.get('porosity_gap_mpm_minus_dem_pp') is not None
+        and _nm['porosity_gap_mpm_minus_dem_pp'] < 0,      # 원 DB +7.1(DEM−MPM) → −7.1
+        str(_nm.get('porosity_gap_mpm_minus_dem_pp')))
     chk('★자동 규칙이 큐레이션 use_source 와 일치 (불일치 플래그 없음)',
         'use_source_disagrees_with_curated' not in _cur)
     # ★ SE/solid = 원 DB 의 판별 축 (am_pct 아님)
