@@ -237,8 +237,22 @@ fi
 
 # ── 2단계: 복합체 + 가스 ────────────────────────────────────────────────────
 if [ "$STAGE" = all ] || [ "$STAGE" = complexes ]; then
-  [ -s "$MAGJSON" ] || { ts "⛔ $MAGJSON 이 없다 — 1단계를 먼저 돌려라"; exit 1; }
-  ts "═══ 2단계: 시드 승계 후 복합체 ($(cat "$MAGJSON" | tr -d '\n ')) ═══"
+  # ⚠ 시드는 **결과가 아니라 초기 추측**이다. 관례값 ±0.3 도 이미 합리적 범위고,
+  #   슬랩에서 absolute magnetization 이 110.94 μB 로 안정(상대폭 0.05%)인 것으로
+  #   "AFM 이 유지된다"는 확인은 이미 끝났다. per-site 블록 확보가 계속 비싸지면
+  #   **시드 없이 진행하는 게 합리적**이다 — 1단계의 진짜 소득(레시피 검증:
+  #   degauss 0.03 · ndim 8 · 밀도승계 → 5e-3, plateau 가 정상)은 이미 챙겼다.
+  #   NO_SEED=1 로 그 판단을 명시적으로 내린다.
+  if [ ! -s "$MAGJSON" ]; then
+    if [ "${NO_SEED:-0}" = 1 ]; then
+      ts "⚠ 시드 없이 진행한다 (NO_SEED=1) — starting_magnetization 은 관례 ±0.3."
+      ts "   1단계에서 얻은 것: degauss $DEGAUSS · mixing_ndim $MIXNDIM · plateau 규약."
+    else
+      ts "⛔ $MAGJSON 이 없다 — 1단계를 먼저 돌리거나, 시드를 포기하려면 NO_SEED=1."
+      exit 1
+    fi
+  fi
+  ts "═══ 2단계: 복합체 ($([ -s "$MAGJSON" ] && cat "$MAGJSON" | tr -d '\n ' || echo '시드 없음 — 관례 ±0.3')) ═══"
   gen complexes || { ts "입력 재생성 실패"; exit 1; }
   for j in mol_neutral mol_doped complex_neutral complex_doped; do
     run_one "$j" 1 || ts "⚠ $j 실패 — 나머지는 계속 간다"
