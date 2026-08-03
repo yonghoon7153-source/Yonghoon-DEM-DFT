@@ -41,7 +41,9 @@
      onclick="openPaper('{{ p.id }}')" onkeydown="_kbd(event)" tabindex="0" role="button" style="cursor:pointer;padding:16px 18px">
   <div class="paper-top">
     <span class="tbadge tb-{{ p.track }}">{{ 'DFT' if p.track=='dft' else 'DEM' }}</span>
-    {% if p.type %}<span class="ptype">{{ p.type[:38] }}</span>{% endif %}
+    {# ⚠ [:38] 하드 컷은 한글 낱말 중간에서 잘려 "…실험 없" 처럼 보인다.
+     .ptype 에 이미 ellipsis 가 있으니 CSS 에 맡긴다. #}
+    {% if p.type %}<span class="ptype" title="{{ p.type }}" style="min-width:0">{{ p.type }}</span>{% endif %}
   </div>
   {% if p.pis %}<div style="margin-top:6px;display:flex;gap:4px;flex-wrap:wrap">
     {% for k in p.pis %}<span title="{{ PI[k].en }} · {{ PI[k].aff }}"
@@ -49,9 +51,14 @@
       {% if PI[k].our %}★{% endif %}{{ PI[k].ko if PI[k].ko != '—' else PI[k].en }}</span>{% endfor %}
   </div>{% endif %}
   <div style="font-weight:600;font-size:.9rem;line-height:1.4;margin-top:7px">{{ p.title }}</div>
+  {# ⚠ id 가 길면(banik2022_substitutions_oxidative_stability_argyrodite 등) flex 안에서
+     안 줄어들어 **날짜를 카드 밖으로 밀어낸다**(2026-08-03 실측). flex item 은 기본
+     min-width:auto 라 내용보다 작아지지 않는다 — min-width:0 을 줘야 줄어들고,
+     그래야 ellipsis 가 먹는다. 날짜는 flex:none 으로 항상 지킨다. #}
   <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:6px;gap:8px">
-    <span class="mono muted" style="font-size:.7rem">{{ p.id }}</span>
-    {% if p.digested %}<span class="muted" style="font-size:.68rem;white-space:nowrap" title="논문 에이전트 digest 등록일">📅 {{ p.digested }}</span>{% endif %}
+    <span class="mono muted" title="{{ p.id }}"
+          style="font-size:.7rem;flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.id }}</span>
+    {% if p.digested %}<span class="muted" style="font-size:.68rem;white-space:nowrap;flex:0 0 auto" title="논문 에이전트 digest 등록일">📅 {{ p.digested }}</span>{% endif %}
   </div>
 </div>
 {% endfor %}
@@ -74,15 +81,16 @@
      onclick="openPaper('{{ t.id }}')" onkeydown="_kbd(event)"
      tabindex="0" role="button" style="cursor:pointer;padding:16px 18px">
   <div class="paper-top"><span class="tbadge" style="background:#fef9c3;color:#854d0e">TALK</span>
-    {% if t.session %}<span class="ptype">{{ t.session[:44] }}</span>{% endif %}</div>
+    {% if t.session %}<span class="ptype" title="{{ t.session }}" style="min-width:0">{{ t.session }}</span>{% endif %}</div>
   <div style="font-weight:600;font-size:.9rem;line-height:1.4;margin-top:7px">{{ t.title }}</div>
   {% if t.speaker %}<div class="muted" style="font-size:.76rem;margin-top:4px">{{ t.speaker }}</div>{% endif %}
   {% if t.pis %}<div style="margin-top:5px">{% for k in t.pis %}<span title="{{ PI[k].en }} · {{ PI[k].aff }}"
     style="background:{{ PI[k].color }}18;color:{{ PI[k].color }};border-radius:99px;padding:1px 7px;font-size:.68rem;font-weight:600">
     {% if PI[k].our %}★{% endif %}{{ PI[k].ko if PI[k].ko != '—' else PI[k].en }}</span>{% endfor %}</div>{% endif %}
   <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:6px;gap:8px">
-    <span class="mono muted" style="font-size:.7rem">{{ t.id }}</span>
-    {% if t.digested %}<span class="muted" style="font-size:.68rem;white-space:nowrap">📅 {{ t.digested }}</span>{% endif %}
+    <span class="mono muted" title="{{ t.id }}"
+          style="font-size:.7rem;flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.id }}</span>
+    {% if t.digested %}<span class="muted" style="font-size:.68rem;white-space:nowrap;flex:0 0 auto">📅 {{ t.digested }}</span>{% endif %}
   </div>
 </div>
 {% endfor %}
