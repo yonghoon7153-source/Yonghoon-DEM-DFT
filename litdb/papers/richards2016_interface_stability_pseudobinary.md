@@ -1,9 +1,10 @@
 # Interface Stability in Solid-State Batteries — Richards/Miara/Wang/Kim/Ceder (Chem. Mater. 2016)
 
-> slug `richards2016_interface_stability_pseudobinary` · DOI `10.1021/acs.chemmater.5b04082` · type `DFT (grand-potential + pseudo-binary 계면 열역학; 실험 0)` · PDF 본문 `b9313d89-39._Interface_Stability_in_SolidState_Batteries.pdf` + SI 19 pp `66aff194-39._Sup_Interface_Stability_in_SolidState_Batteries.pdf` (인박스 파일번호 39) · digested `2026-07-28` · status ✅
+> slug `richards2016_interface_stability_pseudobinary` · DOI `10.1021/acs.chemmater.5b04082` · type `DFT (grand-potential + pseudo-binary 계면 열역학; 실험 0)` · PDF **본문 `litdb/inbox/39. Interface Stability in Solid-State Batteries.pdf`(8 pp — 2026-08-03 실물 확보)** (= 1차 digest 때의 업로드 `b9313d89`) + SI 19 pp `66aff194-39._Sup_…pdf`(**업로드 세션 한정 — 로컬 미보유**) (인박스 파일번호 39) · **사용자 분류 폴더 `DFT`** · digested `2026-07-28` · **본문 실물 독립 재검증 `2026-08-03`(§18 — Fig 1c/2/4 픽셀 정량 전표 신규, 교정 1건)** · status ✅ **(본문 실물 대조 완료 / SI는 업로드본 정독분 — 로컬 재검증 대기)**
 > elements: Li, P, S, Cl, O, N, F, Br, I, H, B, Ge, Sn, Ti, Zr, La, Nb, Al, Mg, Zn, Y, In, Cd, Mn, Co, Ni, Fe, V
 > methods: DFT, ESW
-> **저자**: William D. Richards,† Lincoln J. Miara,‡ Yan Wang,† Jae Chul Kim,† **Gerbrand Ceder***,†,¶,§ (†MIT · ‡Samsung Advanced Institute of Technology–USA · ¶UC Berkeley · §LBNL) · *Chem. Mater.* 2016, 28, 266−273 · Received 2015-10-20 / Published 2015-12-07
+> **저자**: William D. Richards,† Lincoln J. Miara,‡ Yan Wang,† Jae Chul Kim,† **Gerbrand Ceder***,†,¶,§ (†MIT · ‡Samsung Advanced Institute of Technology–USA · ¶UC Berkeley · §LBNL) · *Chem. Mater.* 2016, 28, 266−273 · Received 2015-10-20 / **Revised 2015-12-02** / Published 2015-12-07 · 교신 gceder@berkeley.edu · refs 59
+> **연구비**: **Samsung Advanced Institute of Technology(SAIT) 단독 지원** + 계산자원 XSEDE(NSF **ACI-1053575**). 이해상충 없음 선언. ⚠ 공저자 Miara·Y.Wang이 SAIT 소속 = **자금원과 저자 소속이 같은 산업 지원 연구**(결론 자체는 순수 열역학이라 편향 여지는 작지만, "SAIT 계열 3부작 [Rich16]·[Xiao19]·[Ong13]"의 공통 배경으로 기록).
 > 첫 페이지 실물 대조 완료 — 과제 메모의 예상 정체(Richards, Chem. Mater. 28, 266, DOI 10.1021/acs.chemmater.5b04082)와 **일치**.
 
 ---
@@ -35,10 +36,10 @@
 | ZnCl₂+Li₂S 예제 구동력 | **0.27 eV/atom** (완전 반응 ZnCl₂+Li₂S→2LiCl+ZnS, x=0.5 최심점) | Fig 3 |
 | LiPON(amorphous 대표) 산화 | **>1.2 V**에서 → Li₃PO₄ + Li₂PO₂N | 본문 |
 | 결정질 Li₂PO₂N 산화 | **>2.75 V**에서 → Li₄P₂O₇ (ref 24 메커니즘과 정합) | 본문 |
-| thiophosphate 예측 안정창 | **"2–2.5 V 사이만"** (본문 서술; Fig 2 막대 figure-read ~1.7–2.1 V) | 본문/Fig 2 |
+| thiophosphate 예측 안정창 | **"2–2.5 V 사이만"** (본문 서술) — **Fig 2 픽셀 정량(2026-08-03, ±0.03 V): Li₆PS₅Cl 2.06–2.32 · Li₃PS₄ 2.06–2.58 · LGPS 2.06–2.41 · Li₄SnS₄ 1.92–2.35 V** (구 digest의 "~1.7–2.1 V" figure-read는 **오독 — §18g에서 철회**) | 본문/Fig 2 |
 | μ_Li 앵커 | anode ≈ 0 eV/atom(vs Li), layered oxide cathode ≈ **−4 eV/atom** | 본문 |
 | 핵생성 장벽 | ΔG* = 16πγ³/(3ΔG²)·S(θ), S(θ)<1 — 이온성 고체 간 incoherent γ 유사 → **kinetic 안정화엔 작은 ΔG 필요** | Discussion |
-| 조합별 ΔΦ 수치 | **표 없음 — Fig 4·S1–S7 막대그래프만** (figure-read: thiophosphate|layered oxide ~−0.5(추출만)~−1.1(mixing), Li₂S|LiCoO₂ ~−2.9, 산화물 전해질 0~−0.3, LiYF₄ ≈ 0 eV/atom, ±0.05 판독오차) | Fig 4, S1–S7 |
+| 조합별 ΔΦ 수치 | **본문에 표 없음 — Fig 4·S1–S7 막대그래프만.** → **2026-08-03 Fig 4 픽셀 정량으로 12 전해질 × 7 양극 × (no-mixing, mixing) 84쌍 전표 복원(±0.01 eV/atom) = §18f.** 최심 `Li₄SnS₄\|LiCoO₂ −1.10/−1.10`, `LGPS\|LiCoO₂ −0.81/−1.02`, `Li₃PS₄\|LiCoO₂ −0.69/−0.97`; `Li₃PO₄`·`LiYF₄` 전 조합 ≈0 | Fig 4 (S1–S7은 SI 로컬 미보유) |
 
 ## 4. 방법 형식화 ★★ (최우선 — 수식 그대로)
 
@@ -106,7 +107,9 @@
   - Li₃PO₄: anodic `4 Li₃PO₄ → 2 Li₄P₂O₇ + O₂` / cathodic `Li₃PO₄ → 4 Li₂O + Li₃P`.
   - LLZO: anodic `4 Li₇La₃Zr₂O₁₂ → 4 Li₆Zr₂O₇ + O₂ + 6 La₂O₃` / cathodic `4 Li₇La₃Zr₂O₁₂ + 12 Li → 3 Zr + 6 La₂O₃ + 5 Li₈ZrO₆` (Zr⁰ 환원).
   - 할라이드류 anodic = 원소 할로겐/할로겐-rich 상 방출(예: `Li₂MgCl₄ → MgCl₂ + Cl₂`, `Li₂MgBr₄ → MgBr₂ + 2 Br`), cathodic = **비-Li 양이온 금속 환원**(예: `Li₂MgCl₄ → Mg + 4 LiCl`, `LiAlCl₄ → Al + 4 LiCl`, `Li₂CdCl₄ → Cd + 4 LiCl`, `Li₃InBr₆ → In + 6 LiBr`, `LiYF₄ → 4 LiF + Y`) — "제2 양이온 추가 = 저전압 음극에 대한 환원 불안정"의 표 근거.
-- **황화물 창은 좁다**: Fig 2에서 Li₃PS₄·LGPS·Li₄SnS₄·Li₆PS₅Cl 모두 ~1.7–2.1 V 좁은 막대(figure-read; 본문 서술 "2–2.5 V"). 동시대 [Zhu15] 표값 Li₆PS₅Cl 1.71–2.01 V와 정합(단 Richards는 수치표 미제공 — 정량 인용은 [Zhu15]로).
+- **황화물 창은 좁다**: Fig 2에서 Li₃PS₄·LGPS·Li₄SnS₄·Li₆PS₅Cl 모두 폭 0.3–0.5 V의 좁은 막대. **픽셀 정량(2026-08-03, §18d): Li₆PS₅Cl 2.06–2.32 V(폭 0.26) · Li₃PS₄ 2.06–2.58 · LGPS 2.06–2.41 · Li₄SnS₄ 1.92–2.35** — 본문 서술 "2–2.5 V"와 정확히 일치.
+  - 🔑 **2-step 논리의 정량 확인**: Li₂S 단독 anodic = **2.32 V**, Li₆PS₅Cl anodic = **2.32 V(동일 픽셀)** → argyrodite의 mixing 확장분 ≈ **0.00 V**, 즉 "anodic 한계 = Li₂S가 지배"가 근사가 아니라 **완전 pin**. 반면 Li₃PS₄ +0.26 · LGPS +0.09 · Li₄SnS₄ +0.03 V만 확장.
+  - ⚠ **[Zhu15]와 "정합"이라던 구 서술은 철회**(§18g): Richards 2.06–2.32 vs [Zhu15] 1.71–2.01 V로 **양단 모두 ~0.3 V 어긋남**. 산물 화학만 같고 전압은 hull 세대·entry(Li₄P₂S₆) 의존.
 
 ## 6. 결과 II — Li 금속 자가-passivation (본문 + Table S1)
 - **Li₃PS₄·Li₃PO₄·LiPON은 계산상 Li 금속에 불안정**하지만 실험적으로 안정 계면 형성 — Table S1이 보이듯 이 계면엔 **Li₂S/Li₂O + Li₃P 층**이 형성되는데, **Li₃P는 알려진 Li-이온 전도체**(ref 41 Nazri)라 분해를 passivate하면서 Li 전도는 유지. LiPON|Li의 이런 산물 형성은 in-situ XPS 실험(ref 42 Schwöbel 2015)으로 관찰됨.
@@ -115,7 +118,7 @@
 
 ## 7. 결과 III — pseudo-binary 예제와 양극 조합 스크리닝 (Fig 3·4)
 - **Fig 3 (ZnCl₂|Li₂S 교육 예제)**: Li–Zn–S–Cl 사원계 상도에서 ZnCl₂–Li₂S 반응 벡터가 hull 아래 LiCl–ZnS tieline과 교차 → 완전 반응 `ZnCl₂ + Li₂S → 2 LiCl + ZnS`가 x=0.5에서 **최대 구동력 0.27 eV/atom**. 역으로 **LiCl|ZnS 계면은 tieline 위 = 열역학 안정** — "상도의 tieline 존재 = 계면 안정"의 그림 문법.
-- **Fig 4 (양극 7종 × 대표 전해질 12종, μ_Li = 양극 평균전압)**: 값은 막대만(±0.05 figure-read) —
+- **Fig 4 (양극 7종 × 대표 전해질 12종, μ_Li = 양극 평균전압)** — **전 84쌍 정량표는 §18f** (Li₆PS₅Cl은 Fig 4에 없음) —
   - **thiophosphate가 최악**: PS₄기가 산화물 양극의 낮은 μ_Li + 산소 화학퍼텐셜과 이중으로 반응 → **PO₄(인산염)·전이금속 황화물 형성**. 최대는 layered **LiCoO₂·LiNiO₂** 조합(고전압+산소 제공), **LiFePO₄에도 불안정**(황화물 한정).
   - **산화물 전해질은 훨씬 안정**(0~−0.3 eV/atom대). 산화물 양극 전위서 "mixing 없이 이미 낮은 반응에너지" = redox 없이 조성 혼합만.
   - **Li₂S|LiCoO₂ ~−2.9 eV/atom**(Fig S3, figure-read) = 완전 탈리튬화(Li₂S→S) 구동력 — Li₂S 양극은 고전압 짝 금지.
@@ -215,8 +218,8 @@ Li₂MgCl₄·LiAlCl₄(전 양극), LiNbO₃(LiFePO₄/LiMnO₂/LiNiO₂/LiTiS�
 ### 12b. argyrodite 수치·산물 대조 (문헌 소환값 — 우리 절대값과 별도 표기)
 | 항목 | Richards 2016 | [Zhu15] (MP2015) | 우리 (MP2026, GG set) | 해석 |
 |---|---|---|---|---|
-| 산화 onset 반응 | `Li₆PS₅Cl → S + Li₃PS₄ + LiCl` (Table S1) | 2.01 V 동일 반응 | **2.256 V 동일 반응** | **✓✓✓ 3세대 hull에서 산물 화학 불변** (전압만 세대 의존 — [Zhu15] §10b 판정 재확인) |
-| 첫 환원 단계 | `2 Li₆PS₅Cl + 2 Li → Li₄P₂S₆ + 4 Li₂S + 2 LiCl` (**P⁴⁺ 중간체**) | 1.71 V에서 `+5 Li → P + Li₂S + LiCl` (P⁰) | ocv 1.717 V 경계(Li₃PS₄+Li₂S+LiCl 중성 조합) → red 1.242 V(P→LiP₇계) | ⚠ **hull entry 의존**: Richards hull엔 Li₄P₂S₆가 있어 첫 단계가 P⁵⁺→P⁴⁺; Zhu/우리 계단엔 없음. **P–P 결합 중간체 = MD에서 찾아볼 가치 있는 후보**(§13) — 단 "어느 쪽이 맞다" 단정 금지(DB 차) |
+| 산화 onset 반응 | `Li₆PS₅Cl → S + Li₃PS₄ + LiCl` (Table S1) · **전압 2.32 V**(Fig 2 픽셀, §18d) | 2.01 V 동일 반응 | **2.256 V 동일 반응** | **✓✓✓ 3세대 hull에서 산물 화학 불변**. 전압은 **Richards 2.32 > 우리 2.256 > [Zhu15] 2.01** — 우리 MP2026 값이 두 2015 계산 **사이**에 있고 실험열화학 하이브리드(Richards) 쪽에 0.07 V까지 근접 (신규, §18g) |
+| 첫 환원 단계 | `2 Li₆PS₅Cl + 2 Li → Li₄P₂S₆ + 4 Li₂S + 2 LiCl` (**P⁴⁺ 중간체**) · **전압 2.06 V**(Fig 2 픽셀) | 1.71 V에서 `+5 Li → P + Li₂S + LiCl` (P⁰) | ocv 1.717 V 경계(Li₃PS₄+Li₂S+LiCl 중성 조합) → red 1.242 V(P→LiP₇계) | ⚠ **hull entry 의존이 수치로 확인**: Richards hull엔 Li₄P₂S₆가 있어 첫 단계가 P⁵⁺→P⁴⁺이고, 그 결과 **cathodic 한계가 0.35 V 높다(2.06 vs 1.71/1.717)** — 우리·[Zhu15]는 서로 일치(P⁰ 경로). **P–P 결합 중간체 = MD에서 찾아볼 후보**(§13) — "어느 쪽이 맞다" 단정 금지(DB 차) |
 | 0 V 종점 | (S1은 창 경계 반응만; S5 LiTiS₂ 행이 저전위 방향 `5 Li₂S + P + LiCl`) | **Li₃P + Li₂S + LiCl, E_D −0.96 eV/atom** | **동일 산물** (esw: Li₃P+5Li₂S+LiCl) | ✓ 0 V 화학은 전원 일치 — 캠페인 ① 종점 |
 | 고전압(LiCoO₂ μ) 산물 | **SCl·CoSCl 등 S–Cl 화학** (LiCl 소모) | 2.88 V부터 PCl₃ (5 V E_D −1.33) | 우리 staircase **3.326 V SCl** (modelc 3.39 PCl₅) | ✓ **"Cl은 맨 마지막에 산화되며 S–Cl/P–Cl 상으로 감"** 3자 공통; 상 동정은 DB 의존 |
 | vs LiCoO₂ mixing 산물 | CoSCl+S+CoP₄O₁₁+CoS₂ (완전 delithiation, 평균전압 μ) | (해당 계산 없음 — 2016 JMCA 후속) | `nd2o3_interface_reactivity` (vs LiCoO₂): Co₉S₈+Li₃PO₄+Li₂S+LiCl+Li₂SO₄, dE −0.32~−0.33 eV/atom | △ **같은 형식·다른 μ/hull**: 우리 산물은 Li-보존적(저산화 조건), Richards는 심탈리튬 조건 — 산화도가 μ_Li 함수임을 보여주는 좋은 대비. 혼용 금지 |
@@ -251,6 +254,8 @@ Li₂MgCl₄·LiAlCl₄(전 양극), LiNbO₃(LiFePO₄/LiMnO₂/LiNiO₂/LiTiS�
 4. **캠페인 ① 설계 완성**: §13 표가 그대로 analyzer 스펙+스팟체크 목록. "그들 열역학 종점 ↔ 우리 동역학 경로" 역할 분담이 논문 프레임으로 깔끔.
 5. **고-Ni 주의보**: LiNbO₃\|LiNiO₂ mixing 반응(Li₃NbO₄+NiO)·Li₆PS₅Cl\|LiNiO₂의 NiCl₂/Ni₃S₄/Li₂SO₄ — 고-Ni 양극은 코팅·전해질 모두에게 LiCoO₂보다 가혹 (우리 NCM 문맥·[Zuo] sulfate 관찰과 결 일치).
 6. **이중 전해질(§9-7) 아이디어**: 황화물(음극측)+광창 할라이드(양극측) — 단 상호 eq 2 검증 필수라는 조건까지 세트로 인용.
+7. **★ axis ① 문장의 승격 경로(2026-08-03 신규, §18e)**: "argyrodite anodic = Li₂S anodic"이 **[Zhu15](2.00↔2.01)와 [Rich16](2.32↔2.32) 두 독립 hull에서 각각 성립**한다. **다음 액션: 우리 MP-2026 hull로 Li₂S 단독 anodic을 뽑아 2.256 V와 대조** — 일치하면 "세 세대 hull에서 불변인 관계"로 원고에 쓸 수 있다(절대 전압은 소스마다 0.3 V 흔들린다는 점을 같은 문단에 명시하는 조건).
+8. **In 음극·LiTaO₃(§18h)**: 우리 셀 설계·코팅 논의에서 "In 음극 = 열역학 창 회피책(Richards 명시 처방)", "표준 코팅 4종 = LTO/LiAlO₂/LiTaO₃/LNO"로 인용 가능.
 
 ## 15. 인용 가능 문장 (deck/paper용)
 - "Our interfacial-reactivity screen implements the pseudo-binary construction of Richards et al. (2016): the reaction energy is minimized over the mixing fraction x of the two phases, in both the closed (chemical) and Li-open (grand-potential) ensembles."
@@ -262,7 +267,7 @@ Li₂MgCl₄·LiAlCl₄(전 양극), LiNbO₃(LiFePO₄/LiMnO₂/LiNiO₂/LiTiS�
 - **0 K hull·PV/엔트로피 무시** + metastable SE의 E_hull→0 규약 = 창을 넓히는 방향의 선택 ([Zhu15]와 동일 한계).
 - **계면에너지 무시(~100 meV/atom 상한)**: |ΔΦ|가 이 급인 조합(산화물 전해질 다수, Fig 4의 0~−0.3 구간)은 **부호/순위 판정이 근사 안에 있음** — "none"과 "미세 반응"의 경계 조합을 확정 인용 금지.
 - **x-최소화 = 가장 발열인 혼합점**: 실제 계면은 확산 제한으로 그 조성을 못 찾아갈 수 있음 — 산물 목록은 "열역학이 허용하는 최심 조합"이지 실측 층서열이 아님. kinetics는 핵생성 논리(정성)뿐.
-- **수치 표 부재**: 조합별 ΔΦ는 막대그래프뿐 — 본 digest의 eV/atom 값은 전부 figure-read(±0.05) 표기. 정량 인용은 반응식(표)과 본문 명시값(0.27 eV/atom, 1.2/2.75 V)만.
+- **수치 표 부재(원문)**: 조합별 ΔΦ·창은 원문에 막대그래프뿐. → **2026-08-03 원본 래스터 픽셀 정량으로 복원**(§18d 창 37종 ±0.03 V / §18e binary 9종 / §18f ΔΦ 84쌍 ±0.01 eV/atom). **인용 규율**: 이 값들은 "우리가 그림에서 복원한 값"임을 명시하고 ±를 함께 적을 것 — 저자가 표로 준 수치가 아니다. 원문 명시 수치는 여전히 0.27 eV/atom·1.2/2.75 V·"2–2.5 V"뿐. **SI 유래 값(Fig S1–S7, 예: Li₂S\|LiCoO₂ ~−2.9)은 아직 눈대중 상태**(§18i).
 - **hull 세대 의존**: 실험 열화학 하이브리드(NIST-JANAF/Kubaschewski) + 2015 ICSD/MP — 중간상(Li₄P₂S₆ 유무, SCl vs PCl₃ 등)과 전압은 DB 세대에 민감. [Zhu15] §10b의 "산화측 민감" 판정이 여기도 그대로 적용 — **산물 '종'의 큰 화학(폴리설파이드/인산염/LiCl/합금)만 세대-불변으로 인용**.
 - **LiPON 대표성**: Li₃.₂PO₃.₈N₀.₂≈Li₁₆P₅O₁₉N 결정 근사(실물 amorphous) — LiPON 행 정량 이식 금지.
 - **이중 전해질 제안(Li₃PS₄+Li₂MgCl₄)은 본문 내 eq 2 미검증** — Table S2의 Li₂S|Li₂MgCl₄→4LiCl+MgS 발열 행이 황화물|염화물 혼합 반응 가능성을 시사. 제안 셀(Li₃PS₄|LiVS₂ 등)도 열역학 예측일 뿐 실증 없음.
@@ -279,3 +284,171 @@ Li₂MgCl₄·LiAlCl₄(전 양극), LiNbO₃(LiFePO₄/LiMnO₂/LiNiO₂/LiTiS�
 - **tieline 판정**: 상도에서 두 상을 잇는 tieline이 hull 위에 있으면 그 계면은 열역학 안정(Fig 3의 LiCl–ZnS).
 - **Gibbs triangle / nearest phases**: 조성을 포함하는 상도의 저에너지 facet 꼭짓점 상들 — 실험 형성에너지 참조점으로 사용(산화상태 보존 반응의 DFT 오차 상쇄).
 - **passivation vs kinetic stabilization**: 산물이 전자절연이라 구동력 자체가 꺼짐 vs 핵생성/확산이 느려 못 갈 뿐(ΔG* ∝ γ³/ΔG²) — 후자는 장기 열화 경로.
+
+---
+
+## 18. 본문 실물 독립 재검증 (2026-08-03) — inbox #39, 사용자 분류 폴더 `DFT`
+
+### 18a. 대상·동일성
+**대상**: `litdb/inbox/39. Interface Stability in Solid-State Batteries.pdf` — **8 pp, 본문 전문**. 각 페이지 풋터 `DOI: 10.1021/acs.chemmater.5b04082 · Chem. Mater. 2016, 28, 266−273`, 페이지 번호 266–273, 다운로드 스탬프 **HANYANG UNIV, 2026-07-28** = 1차 digest(2026-07-28) 당시 업로드본 `b9313d89`와 동일 파일로 판단. 본문 8 pp 전문 텍스트 추출 + **그림 4장(Fig 1·2·3·4) 임베디드 원본 래스터 추출 후 픽셀 정량**.
+> ⚠ **SI(19 pp)는 로컬 인박스에 없음** — §8(Tables S1–S9)·Fig S1–S7 관련 서술은 **1차 digest의 업로드본 정독분 그대로**이고 이번 재검증 범위 밖이다. (다만 §18f의 Fig 4 실측이 SI 유래 주장 여러 건을 간접 확증 — 아래.)
+
+### 18b. 서지·행정 신규 (구 digest 미기재)
+| 항목 | 실물 |
+|---|---|
+| Revised | **2015-12-02** (Received 10-20 / Revised 12-02 / Published 12-07) |
+| 교신 | **gceder@berkeley.edu** |
+| 연구비 | **SAIT(Samsung Advanced Institute of Technology) 단독** + XSEDE **NSF ACI-1053575** |
+| 이해상충 | "no competing financial interest" 선언 (⚠ SAIT 자금 + SAIT 소속 공저자 2인) |
+| refs | **59편** |
+| functional | ref 32 = **Perdew–Burke–Ernzerhof** 명시 인용 → **PBE 확정** (구 digest "PBE 계열" 헤지 해제) |
+
+### 18c. 본문 수치·서술 전수 대조 — **불일치 0**
+| 구 digest 기재 | 본문 실물 | 판정 |
+|---|---|---|
+| 계면E 무시 근거 Δγ 0.5 J/m² → ~100 meV/atom | "upper bound … 0.5 J m⁻²… remains only ∼100 meV per atom" | ✓ |
+| 전위 스캔 0–7 V (μ_Li 0~−7 eV) | 동일 | ✓ |
+| cutoff 520 eV · k ≥ 500/n_atoms | 동일 | ✓ |
+| Jain GGA/GGA+U 혼합(ref 36), Anisimov/Dudarev(37–38) | 동일 | ✓ |
+| 실험열화학 하이브리드(NIST-JANAF/Kubaschewski) + LiYF₄·Li₃PS₄·LiAlO₂ 예시 | 동일(`3Li₂S+2P+5S→2Li₃PS₄` 포함) | ✓ |
+| ICSD(26)·data-mined 치환(27)·MP(28)·pymatgen(30)·metastable→hull 0 | 동일 | ✓ |
+| ZnCl₂+Li₂S = **0.27 eV/atom**, 완전반응 `→2LiCl+ZnS`, LiCl–ZnS tieline 안정 | 동일 | ✓ |
+| LiPON **>1.2 V** → Li₃PO₄+Li₂PO₂N / Li₂PO₂N **>2.75 V** → Li₄P₂O₇ | 동일 | ✓ |
+| thiophosphate "2–2.5 V" 서술 | "predicted stability only between 2 and 2.5 V vs Li metal" | ✓ |
+| μ_Li 앵커 anode ≈0 / layered oxide ≈ −4 eV/atom | 동일 | ✓ |
+| ΔG* = 16πγ³/(3ΔG²)·S(θ), S(θ)<1 | 동일 | ✓ |
+| **"the anodic stability of Li₆PS₅Cl is determined primarily by the stability of Li₂S"** | **원문 그대로 존재**(p.3) | ✓✓ 축① 원조 문장 확정 |
+| polyanion(인산염·LiBH₄) 창 확장 / Li₂MnBr₄ Mn²⁺ 산화로 축소 | 동일 | ✓ |
+| Li₃P = 알려진 이온전도체(ref 41 Nazri), LiPON\|Li in-situ XPS(ref 42 Schwöbel) | 동일 | ✓ |
+| space-charge 반박·CV ≤10 V 아티팩트·LLZO/LiAlO₂/β″-알루미나 | 동일 | ✓ |
+| 이중 전해질 Li₃PS₄(음극측)+Li₂MgCl₄(양극측), eq 2 검증 필요 | 동일 | ✓ |
+| 제안 셀 Li₃PS₄/Li₇P₃S₁₁\|LiVS₂ · LiBH₄\|LiTiS₂ · LiTiS₂ 셀 "50+ 사이클 무코팅"(ref 46) | 동일 | ✓ |
+| eq 1–5 형식 | 동일(추출 텍스트가 수식 레이아웃을 흩뜨리지만 항 구성 일치) | ✓ |
+
+### 18d. ★ 신규 — Fig 2 픽셀 정량: **전해질 37종 안정창 전표** (구 digest "표 없음"의 정량 복원)
+**방법**: 임베디드 원본 래스터(869×1305) 직접 판독. x축 캘리브레이션은 점선 눈금 실측(1 V = 118.40 px, 0 V = x 30.6, 7 V = 우측 프레임) — **binary 7종의 좌단이 전부 0.00±0.01 V로 떨어져** 캘리브레이션이 자기검증됨(본문 "binary는 음이온이 완전환원 상태라 0 V까지 안정"과 일치). 불확도 **±0.03 V**.
+
+| 군 | 물질 | cathodic(하한) | anodic(상한) | 폭 | 대응 binary 대비 확장 |
+|---|---|---|---|---|---|
+| **F** | Li₂ZrF₆ | 1.35 | 6.54 | 5.19 | +0.16 |
+| | Li₃AlF₆ | 1.08 | 6.44 | 5.36 | +0.06 |
+| | LiYF₄ | 0.35 | **6.63** | 6.28 | +0.25 ← **전 37종 중 anodic 최고** |
+| | **LiF** | **0.00** | 6.38 | 6.39 | (binary) |
+| **Cl** | Li₂CdCl₄ | 2.20 | 4.24 | 2.04 | 0.00 |
+| | LiAlCl₄ | 1.70 | 4.52 | 2.82 | +0.28 |
+| | Li₂ZnCl₄ | 2.08 | 4.24 | 2.16 | 0.00 |
+| | Li₂MgCl₄ | 0.90 | 4.24 | 3.34 | 0.00 |
+| | **LiCl** | **0.00** | 4.24 | 4.24 | (binary) |
+| **Br** | Li₃InBr₆ | 2.21 | 3.64 | 1.43 | 0.00 |
+| | **Li₂MnBr₄** | 1.64 | **3.41** | 1.77 | **−0.23 ← Mn²⁺ 산화 예외의 정량(유일한 음의 확장)** |
+| | Li₂ZnBr₄ | 1.92 | 3.64 | 1.71 | 0.00 |
+| | LiAlBr₄ | 1.78 | 3.90 | 2.12 | +0.26 |
+| | Li₂MgBr₄ | 0.91 | 3.64 | 2.73 | 0.00 |
+| | **LiBr** | **0.00** | 3.64 | 3.65 | (binary) |
+| **O** | Li₃OCl | 0.00 | 3.00 | 3.00 | −0.11 (vs Li₂O) |
+| | **LiTi₂(PO₄)₃** | 2.71 | **4.76** | 2.05 | **+1.65 ← polyanion 확장 최대** |
+| | LiGe₂(PO₄)₃ | 2.93 | 4.47 | 1.54 | +1.36 |
+| | Li₃PO₄ | 0.75 | 4.21 | 3.45 | +1.10 |
+| | **LiPON**(Li₃.₂PO₃.₈N₀.₂) | 0.75 | **1.23** | 0.48 | — ← **본문 ">1.2 V 분해"와 1:1** (밴드 동정 자기검증) |
+| | LiNbO₃ | 1.71 | 4.31 | 2.60 | +1.20 |
+| | Li₄GeO₄ | 1.11 | 3.39 | 2.29 | +0.28 |
+| | LLZO | 0.06 | 3.11 | 3.05 | 0.00 |
+| | Li₂ZrO₃ | 0.26 | 3.43 | 3.17 | +0.32 |
+| | Li₄Ti₅O₁₂ | 1.98 | 3.79 | 1.81 | +0.68 |
+| | LiAlO₂ | 0.18 | 3.56 | 3.39 | +0.45 |
+| | **Li₂O** | **0.00** | 3.11 | 3.12 | (binary) |
+| **S** | **Li₆PS₅Cl** | **2.06** | **2.32** | **0.26** | **0.00 ← Li₂S에 완전 pin** |
+| | Li₄SnS₄ | 1.92 | 2.35 | 0.43 | +0.03 |
+| | LGPS | 2.06 | 2.41 | 0.35 | +0.09 |
+| | Li₃PS₄ | 2.06 | 2.58 | 0.52 | +0.26 |
+| | **Li₂S** | **0.00** | **2.32** | 2.33 | (binary) |
+| **H** | LiBH₄ | 0.56 | 1.93 | 1.38 | +0.98 (vs LiH) |
+| | **LiH** | **0.00** | 0.95 | 0.95 | (binary) |
+| **N** | Li₄NCl | 0.00 | 0.58 | 0.59 | +0.01 |
+| | Li₃BN₂ | 0.00 | 0.90 | 0.91 | +0.33 |
+| | **Li₃N** | **0.00** | **0.57** | 0.57 | (binary) ← 최협 |
+
+**이 표에서 새로 확정되는 것**
+1. 🔑 **"anodic 한계 = 최약 binary" 2-step 논리가 정량화됨**: 확장분(전해질 anodic − 해당 binary anodic)이 Li₆PS₅Cl **0.00** / Li₂MgCl₄·Li₂ZnCl₄·Li₂CdCl₄·Li₃InBr₆·Li₂ZnBr₄·Li₂MgBr₄·LLZO **0.00** — 즉 다수 물질에서 mixing 확장이 **측정 한계 이하**. 반면 폴리음이온계는 +1.1~+1.65 V로 크다. 본문이 정성으로만 말한 "mixing energy widens the window … in most cases this mixing energy is small"의 **수치 근거**.
+2. 🔑 **argyrodite는 Li₂S에 완전 pin(2.32 V 동일 픽셀)** — 우리 axis ① "S-limited onset"의 가장 강한 문헌 근거(정성 문장 + 정량 일치).
+3. 🔑 **Li₂MnBr₄만 −0.23 V(창 축소)** — "제2 양이온이 새 산화 채널을 연다"의 유일 사례가 수치로 분리됨. 우리 cascade의 **late-TM collapse 회피**와 같은 물리.
+4. **제2 양이온 = 환원 불안정의 정량**: binary는 전부 cathodic 0.00인데, 제2 양이온 도입 시 Li₂CdCl₄ 2.20 · Li₃InBr₆ 2.21 · Li₂ZnCl₄ 2.08 · LiAlCl₄ 1.70 V로 상승(= Li 금속·저전압 음극에 불안정). 본문 Discussion 마지막 문단의 표 없는 주장에 수치를 붙임.
+5. **LiF가 아니라 LiYF₄(6.63 V)가 anodic 최고** — 구 digest의 "LiF 최광(~6 V+)"은 *폭* 기준으론 맞지만(6.39) *상한* 기준으론 LiYF₄·Li₂ZrF₆가 위. 코팅 후보 논의에 쓸 때 축을 명시할 것.
+
+### 18e. 신규 — Fig 1c 픽셀 정량: Li binary 9종 (독립 2차 캘리브레이션)
+1 V = 90.5 px(별도 축), 좌단 전부 0.00 V.
+
+| Li₃N | Li₃P | LiH | Li₂S | LiI | Li₂O | LiBr | LiCl | LiF |
+|---|---|---|---|---|---|---|---|---|
+| **0.57** | **0.92** | **0.93** | **2.32** | **2.80** | **3.10** | **3.64** | **4.23** | **6.37** |
+
+- **교차검증**: Fig 2와 공유하는 6종(Li₃N·Li₂S·Li₂O·LiBr·LiCl·LiF)이 **±0.01 V 이내 일치** → 두 그림의 독립 판독이 서로를 검증. 서열은 구 digest §5 기재와 동일 ✓.
+- **신규 절대값**: **Li₃P 0.92 V**, **LiI 2.80 V**(Fig 2에 없는 2종). Li₃P 0.92 V = 캠페인 ①의 0 V 종점 산물이 *산화 쪽으로는* 0.92 V까지만 버틴다는 뜻 — SEI 산물의 자체 창으로 인용 가능.
+**★★ [Zhu15] Fig 2a 픽셀값과의 교차 대조 — 이번 재검증 최대 수확**
+두 논문은 **독립 데이터 소스**다([Zhu15] = 순수 MP-2015 DFT hull / [Rich16] = NIST-JANAF·Kubaschewski **실험 열화학 하이브리드**). 같은 물리량(Li-binary anodic limit)을 서로 다른 방식으로 낸 값:
+
+| binary | [Zhu15] Fig 2a | [Rich16] Fig 1c | Δ |
+|---|---|---|---|
+| LiF | 6.38 | 6.37 | **0.01** |
+| LiCl | 4.21 | 4.23 | **0.02** |
+| Li₃P | 0.85 | 0.92 | 0.07 |
+| Li₃N | 0.45 | 0.57 | 0.12 |
+| Li₂O | 2.90 | 3.10 | 0.20 |
+| **Li₂S** | **2.00** | **2.32** | **0.32** |
+| LiI | 2.46 | 2.80 | 0.34 |
+| LiBr | (없음) | 3.64 | — |
+| LiH | (없음) | 0.93 | — |
+
+- **패턴**: **할라이드(F·Cl)는 0.02 V 이내로 일치**하는데 **Li₂S·LiI·Li₂O는 Richards가 0.2–0.34 V 높다** — 실험 형성엔탈피를 쓰면 황화물/요오드화물이 더 안정하게 나온다는 뜻(DFT의 S/I 과산화 경향). 우리 hull 세대 논의에 쓸 수 있는 **소스-의존성의 정량 지도**.
+- 🔑🔑 **그런데 "argyrodite anodic = Li₂S anodic"은 두 hull에서 각각 성립한다**:
+  - [Zhu15]: Li₂S **2.00** ↔ Li₆PS₅Cl anodic **2.01** (Δ 0.01 V)
+  - [Rich16]: Li₂S **2.32** ↔ Li₆PS₅Cl anodic **2.32** (Δ 0.00 V, 동일 픽셀)
+  → **절대 전압은 소스마다 0.3 V 흔들려도, "S²⁻가 창 상단을 pin한다"는 관계는 hull-불변**. 우리 axis ① 문장을 "두 독립 열역학 소스에서 각각 재현되는 관계"로 승격할 수 있다(§14-7).
+- ✅ **우리 쪽 실행 가능한 검산(미수행)**: 우리 MP-2026 hull에서 **Li₂S 단독 anodic limit**을 뽑아 **2.256 V**(우리 LPSCl onset)와 같은지 보면 된다. 같으면 위 관계가 3번째 hull에서도 성립 — 값싼 계산으로 얻는 강한 문장. (⚠ 아직 안 했으므로 "성립한다"고 쓰지 말 것.)
+- 참고: [Zhu15] LiCl 4.21 V ↔ 본 논문 4.23–4.24 V — Cl 종단 산물의 무해성 서사(E축 LiCl-SEI)는 소스-불변 영역.
+
+### 18f. ★ 신규 — Fig 4 픽셀 정량: **ΔΦ_no-mixing / ΔΦ 84쌍 전표** (eV per non-Li atom, ±0.01)
+**방법**: 각 막대에서 "포화 단색 = no-mixing" 구간과 "빗금 = with-mixing" 구간을 색·빗금 백색 비율로 분리 판독. 세로축 1.2 eV = 677 px.
+**⚠ Fig 4의 전해질 12종에 Li₆PS₅Cl은 없다**(LiBH₄·Li₃PS₄·LGPS·Li₄SnS₄·LiAlO₂·LiNbO₃·LLZO·LiPON·Li₃PO₄·Li₂MgCl₄·LiAlCl₄·LiYF₄).
+
+| 전해질 \ 양극 | LiCoO₂ | LiFePO₄ | LiMnO₂ | LiNiO₂ | LiTiS₂ | LiVS₂ | Li₂S |
+|---|---|---|---|---|---|---|---|
+| LiBH₄ | −0.36 / **−0.82** | −0.25 / −0.41 | −0.24 / −0.58 | −0.24 / **−0.84** | 0.00 / **−0.01** | −0.05 / −0.07 | −0.07 / −0.31 |
+| Li₃PS₄ | −0.69 / **−0.97** | −0.37 / −0.38 | −0.36 / −0.62 | −0.34 / −0.82 | **−0.05 / −0.05** | 0.00 / **−0.01** | 0.00 / **−0.01** |
+| LGPS | −0.81 / **−1.02** | −0.45 / −0.46 | −0.44 / −0.62 | −0.42 / −0.79 | −0.03 / −0.05 | 0.00 / −0.01 | 0.00 / −0.01 |
+| Li₄SnS₄ | **−1.10 / −1.10** | −0.67 / −0.67 | −0.65 / −0.66 | −0.63 / −0.76 | 0.00 / −0.04 | 0.00 / −0.02 | 0.00 / −0.01 |
+| LiAlO₂ | −0.02 / −0.03 | 0.00 / −0.08 | 0.00 / −0.02 | 0.00 / −0.01 | 0.00 / −0.02 | 0.00 / −0.01 | 0.00 / −0.01 |
+| LiNbO₃ | **0.00 / −0.01** | 0.00 / −0.06 | 0.00 / −0.02 | 0.00 / **−0.07** | 0.00 / **−0.16** | 0.00 / −0.02 | 0.00 / −0.01 |
+| LLZO | −0.23 / −0.24 | −0.21 / −0.22 | −0.02 / −0.14 | −0.02 / −0.05 | **0.00 / −0.24** | **0.00 / −0.20** | **0.00 / −0.20** |
+| LiPON | −0.24 / −0.25 | −0.15 / −0.16 | −0.15 / −0.17 | −0.15 / −0.23 | −0.05 / −0.06 | −0.06 / −0.07 | −0.07 / −0.07 |
+| **Li₃PO₄** | **0.00 / −0.01** | 0.00 / −0.01 | 0.00 / −0.01 | 0.00 / −0.01 | 0.00 / −0.01 | 0.00 / −0.01 | 0.00 / −0.01 |
+| Li₂MgCl₄ | **0.00 / −0.09** | 0.00 / −0.06 | 0.00 / −0.08 | 0.00 / −0.17 | 0.00 / −0.04 | 0.00 / −0.08 | 0.00 / −0.14 |
+| LiAlCl₄ | **0.00 / −0.29** | 0.00 / −0.17 | 0.00 / −0.31 | 0.00 / **−0.41** | 0.00 / −0.08 | 0.00 / −0.14 | 0.00 / −0.30 |
+| **LiYF₄** | 0.00 / −0.01 | 0.00 / −0.01 | 0.00 / −0.01 | 0.00 / **−0.09** | 0.00 / −0.01 | 0.00 / −0.01 | 0.00 / −0.01 |
+
+**검증·신규 판정**
+1. ✓ **부등식 \|ΔΦ\| ≥ \|ΔΦ_no-mixing\| 이 84쌍 전부에서 성립** — 판독 절차 자체의 무결성 확인(eq 5 정의의 실측 검산).
+2. ✓✓ **SI 유래 §8 주장들이 본문 그림만으로 독립 확증됨**(SI 로컬 미보유 상태에서): `Li₃PO₄ 전 조합 ≈0`(§8b·8e) · `LiYF₄는 LiNiO₂ 한 칸만`(§8c) · `Li₂MgCl₄·LiAlCl₄는 @V 전부 0인데 mixing은 전부 반응`(§8d) · `LLZO는 황화물 양극 3종과 @V 0 / mixing 반응`(§8d) · `LiNbO₃\|LiCoO₂ none & \|LiNiO₂ 반응`(§8b) · `Li₃PS₄\|LiVS₂·Li₂S none/none`(§8a, 제안 셀 근거).
+3. 🔑 **황화물 중 최악은 Li₄SnS₄\|LiCoO₂ (−1.10)** 이고 **mixing 추가 이득이 0** — 즉 Sn계는 전위(Li 추출)만으로 이미 최심. 반대로 **Li₃PS₄·LGPS는 mixing이 각각 −0.28·−0.21 eV/atom을 더 얹는다**(PO₄+TM황화물 생성) = 본문 "2-경로 열화"의 경로별 몫 분리. 구 digest §9-2의 정성 서술에 **정량 배분**이 붙었다.
+4. 🔑 **LiNbO₃의 최대 반응은 LiTiS₂(−0.16)** — LNO는 산화물 양극엔 거의 무반응인데 **황화물 양극과는 가장 반응적**. LNO 코팅을 황화물 CAM 문맥에 이식할 때 주의.
+5. 🔑 **LLZO는 황화물 양극(LiTiS₂/LiVS₂/Li₂S)에서 @V 0.00인데 mixing −0.20~−0.24** — "산화물 SE \| 황화물" 맞대면의 화학 반응성이 산화물 양극(−0.05~−0.24)과 같은 급. 우리 [Cha] dual-compatibility 논의의 반례 관리용.
+6. **제안 셀의 수치 근거 확정**: `Li₃PS₄\|LiVS₂ = 0.00/−0.01` · `Li₃PS₄\|Li₂S = 0.00/−0.01` · `LiBH₄\|LiTiS₂ = 0.00/−0.01` (vs `LiBH₄\|LiCoO₂ −0.36/−0.82`) · `Li₃PS₄\|LiTiS₂ = −0.05/−0.05`(본문 "small driving force for insertion" 그대로).
+
+### 18g. ★ 교정 1건 (구 digest 오독 철회)
+| 위치 | 구 기재 | 실물 | 조치 |
+|---|---|---|---|
+| §3 표 · §5 마지막 bullet · §12b 해석 | 황화물 창 **"~1.7–2.1 V (figure-read)"** 이고 **"[Zhu15] 1.71–2.01 V와 정합"** | **Li₆PS₅Cl 2.06–2.32 V**(폭 0.26) 등 — [Zhu15]와 **양단 ~0.3 V 어긋남** | ✍ 세 곳 모두 수정. "Richards ≠ Zhu 전압, 산물 화학만 동일"로 재판정. **정량 인용은 이제 이 표(§18d)로 가능**(구 digest의 "정량 인용은 [Zhu15]로" 지침 해제) |
+- 원인 추정: 1차 digest는 업로드 PDF의 저해상 렌더에서 막대 위치를 눈대중했고, x축 원점이 이미지 좌단이 아니라 **좌측 여백 30.6 px 안쪽**이라는 점을 놓쳐 전 구간이 좌로 밀렸다(−0.26 V 계통오차 + 눈대중 오차).
+- **파급**: §12b "우리 2.256 V"와의 관계가 바뀐다 — 구 서술은 "Zhu 정합", 실제는 **Richards 2.32 ≳ 우리 2.256 > Zhu 2.01**. 우리 MP2026 값이 실험열화학 하이브리드에 더 가깝다는 건 **우리 쪽에 유리한 새 근거**이므로 §12b·comparison 축 B에 반영.
+
+### 18h. 본문 신규 사실 (구 digest 미기재)
+1. **인듐 금속 음극이 명시적 처방**: "oxide coatings on the cathode **and high voltage (low μ_Li) anode materials, e.g. indium metal, must be used**" — 황화물 셀에서 In 음극이 관행인 이유가 이 논문에서 열역학으로 처방됨. 우리 셀 문맥에서 "In 음극 = 창 회피책"이라 인용 가능.
+2. **표준 코팅 4종 명시**: Li₄Ti₅O₁₂·LiAlO₂·**LiTaO₃**·LiNbO₃ (구 digest는 LiTaO₃ 누락). "이들의 창이 어떤 황화물보다 넓고, 전부 산화물 양극 전위에서 안정"이 코팅 논리의 본문 한 줄.
+3. **LGPS 단일물질 전지(ref 45, Han/Gao/**Zhu**/Gaskell/**C. Wang**, Adv. Mater. 2015 "A Battery Made from a Single Material")** — LGPS를 음극·양극·전해질로 동시 사용(+카본으로 전자전도 부여). ⚡ **교차연결**: 이 ref 45의 저자군이 곧 [Zhu15] digest §서지에서 "1저자 Zhu 본인이 공저자"라고 플래그한 UMD Han/Wang 그룹 — 두 원전이 같은 실험 앵커를 공유한다.
+4. **ref 15 = Ong/Mo/Richards/Miara/Lee/Ceder EES 2013** = 우리 `papers/ong2013_lgps_family_substitution.md` — litdb 내부 상호참조 확정(Richards 본인이 저자).
+5. LiTiS₂ 셀 원전 동정: **ref 46 = Trevey/Stoldt/Lee, JES 2011**(High Power Nanocomposite TiS₂). LiBH₄ 계면저항 증가 = **ref 59 Takahashi 2013**.
+6. Conclusions 한 줄: **"thermodynamic calculations allowing mass transfer across the interface are also required"** — eq 4/2가 선택이 아니라 필수라는 저자 자신의 문장(우리 도구 정통성 인용문으로 §15보다 짧고 강함).
+
+### 18i. 남은 일
+- **SI 19 pp 로컬 확보 → §8(Tables S1–S9) 실물 재검증** (현재 §8은 업로드본 정독분, 이번 재검증 범위 밖). [Zhu15]·[Xiao19]는 SI까지 완결됐으므로 이 논문만 미완.
+- Fig S1–S7(음이온군별 ΔΦ 막대)도 SI 확보 시 §18f와 같은 방식으로 정량화 가능 — 특히 **Li₆PS₅Cl 행은 Fig 4에 없고 SI에만 있음**(§3의 `Li₂S|LiCoO₂ ~−2.9`도 Fig S3 유래로 미검증).
