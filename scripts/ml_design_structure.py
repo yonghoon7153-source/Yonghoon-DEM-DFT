@@ -262,11 +262,16 @@ def predict(model, x_row, z=Z90):
     Ainv = np.asarray(model['Ainv'])
     hstar = float(phi @ Ainv @ phi)
     sd = math.sqrt(max(model['s2'], 0.0) * (1.0 + max(hstar, 0.0)))
+    # ★ 인식적(epistemic) 몫만 따로 — 새 시뮬로 **줄일 수 있는** 불확실성.
+    #   전체 sd 는 s²·(1+h*) 라 관측잡음 s² 가 지배하고, 볼록포 안에선 h* ≪ 1 이라
+    #   sd 가 거의 상수다.  그걸로 순위를 매기면 전부 동점이 된다 (실런: 상위 10 개
+    #   score 가 0.073 으로 전부 같았다).  s²·h* 가 능동학습이 실제로 노려야 할 양이다.
+    sd_epi = math.sqrt(max(model['s2'], 0.0) * max(hstar, 0.0))
     lo, hi = v - z * sd, v + z * sd
     if model.get('log_target'):
         v, lo, hi = math.exp(v), math.exp(lo), math.exp(hi)
-    return {'value': v, 'lo': lo, 'hi': hi, 'sd': sd, 'leverage': hstar,
-            'extrapolation': hstar > model.get('h_max_train', np.inf)}
+    return {'value': v, 'lo': lo, 'hi': hi, 'sd': sd, 'sd_epistemic': sd_epi,
+            'leverage': hstar, 'extrapolation': hstar > model.get('h_max_train', np.inf)}
 
 
 def predict_target(model, x_row):
@@ -386,12 +391,23 @@ def suggest(bundle, X, target, n_out=10, n_cand=2000, seed=0, allow_weak=False):
             n_hull += 1
             continue                                  # 볼록포 밖 → 모형이 자기 무지도 못 잰다
         nov = min(float(np.min(np.linalg.norm(Xs - (c - mu) / sd, axis=1))), nov_cap)
-        rows.append((p['sd'] * nov, p, nov, knob))
+        # ★ 순위는 **인식적 불확실성**으로 매긴다 (= s·√h*).  PI 폭 × novelty 는 축퇴했다:
+        #   PI 폭은 볼록포 안에서 거의 상수이고 novelty 는 상한에 붙어, 상위 후보가 전부
+        #   동점(0.073)이 됐다.  h* 는 "이 점의 함수값을 모형이 얼마나 모르나" 라 새 시뮬로
+        #   줄어드는 바로 그 양이고, 공간 전체에서 크게 변한다.  novelty 는 보고만 한다.
+        rows.append((p['sd_epistemic'], p, nov, knob))
     rows.sort(key=lambda t: -t[0])
+    # 순위에 신호가 있나 — 전부 동점이면 그건 순위가 아니라 정렬 순서다
+    _sc = [r[0] for r in rows]
+    _degen = bool(_sc) and (max(_sc) - min(_sc)) <= 1e-9 * max(abs(max(_sc)), 1e-12)
     return {'error': (None if rows else
                       f'후보 {n_cand} 개가 전부 걸러짐 (상자밖 {n_box} · 볼록포밖 {n_hull}) — '
                       '--suggest-cand 를 늘리거나 코퍼스가 좁은지 확인'),
             'target': target, 'verdict': vd, 'novelty_cap': round(nov_cap, 3),
+            'score_is': 'epistemic sd = s*sqrt(h*)  (관측잡음 제외 — 새 시뮬로 줄어드는 몫)',
+            'degenerate': _degen,
+            'score_spread': (round(float(max(_sc) / min(_sc)), 2)
+                             if _sc and min(_sc) > 0 else None),
             'n_cand': int(n_cand), 'n_rejected_box': n_box, 'n_rejected_hull': n_hull,
             'n_survived': len(rows),
             'rows': [{'score': round(s, 4), 'pred': round(p['value'], 4),
@@ -543,11 +559,34 @@ def closure_test(csv_path, folds=10, seed=0):
         der = 100.0 * (float(np.mean(clos)) - p_se - p_am)   # 닫힘 상수는 코퍼스에서 잰다
         ss = float(((po - po.mean()) ** 2).sum())
         r2_der = 1.0 - float(((po - der) ** 2).sum()) / ss if ss > 0 else float('nan')
+        # ── 닫힘 **일관성** — 잔차 sd 를 ε 자신의 sd 와 견준다 ────────────────────────────
+        #   절대값이 1 에 가까운지가 아니라, 흔들림이 ε 의 변동에 비해 작은지가 관건이다.
+        #   같은 행의 φ 와 ε 이 **다른 모델**에서 왔으면 여기서 드러난다 (게이트가 porosity
+        #   출처만 바꾸고 φ 는 DEM 것을 그대로 두면, 그 행은 한 물리상태를 기술하지 않는다).
+        c_sd, e_sd = float(np.std(clos)), float(np.std(po)) / 100.0
+        ratio = c_sd / e_sd if e_sd > 0 else float('inf')
+        gain = r2_der - r2_dir
+        if ratio > 0.25:
+            vd = ('INCONSISTENT — 닫힘 잔차 sd 가 ε 자체 sd 의 '
+                  f'{ratio:.0%} 다.  이 열의 ε 과 같은 행의 φ 가 **다른 모델**에서 왔다는 뜻 '
+                  '⇒ 한 물리상태가 아니므로 ε 을 φ 에서 유도하면 안 되고, 이 열로 학습해도 안 된다.')
+        elif abs(gain) <= 0.02:
+            vd = ('TIE — 닫힘이 사실상 항등식이라 ε 은 φ 너머의 정보를 **하나도** 안 담는다. '
+                  '직접이든 유도든 같은 정보다.  낮은 R² 는 정보 부족이 아니라 **작은 차의 '
+                  f'오차증폭**: φ 합 ≈ {float(np.mean(se + am)):.3f} 인데 ε sd 는 {e_sd:.4f} 뿐 '
+                  f'(증폭률 {float(np.mean(se + am)) / e_sd:.0f}×) — φ 합의 1 % 오차가 '
+                  f'ε 을 {0.01 * float(np.mean(se + am)) / e_sd:.2f} σ 흔든다.')
+        elif gain > 0.02:
+            vd = 'DERIVED — φ 에서 계산하는 편이 낫다.  porosity 를 따로 배우지 말 것.'
+        else:
+            vd = ('DIRECT — 직접 회귀가 낫다.  유도는 φ 오차가 작은 ε 로 증폭되는 쪽이 '
+                  '더 크다는 뜻.')
         out[col] = {'n': int(len(common)),
-                    'closure_mean': float(np.mean(clos)), 'closure_sd': float(np.std(clos)),
-                    'direct_nested': r2_dir, 'derived_nested': r2_der,
-                    'gain_derived': r2_der - r2_dir,
-                    'eps_mean_pct': float(np.mean(po)), 'eps_sd_pct': float(np.std(po))}
+                    'closure_mean': float(np.mean(clos)), 'closure_sd': c_sd,
+                    'closure_ratio_to_eps_sd': ratio, 'consistent': bool(ratio <= 0.25),
+                    'direct_nested': r2_dir, 'derived_nested': r2_der, 'gain_derived': gain,
+                    'eps_mean_pct': float(np.mean(po)), 'eps_sd_pct': float(np.std(po)),
+                    'verdict': vd}
     return out
 
 
@@ -810,6 +849,13 @@ def _selftest():                                                   # noqa: C901
         all(np.all(np.array([derive_features(*[s['design'][k] for k in FREE_KNOBS])[f]
                              for f in DESIGN_FEATURES]) <= X.max(0) + 0.02 * np.ptp(X, 0) + 1e-9)
             for s in sg['rows']))
+    chk('★순위에 신호가 있다 — 전부 동점이면 순위가 아니라 정렬 순서 (실런이 그랬다)',
+        (not sg['degenerate']) and sg['score_spread'] is not None and sg['score_spread'] > 1.2,
+        f"최고/최저 {sg['score_spread']}× · degenerate={sg['degenerate']}")
+    chk('★score 가 인식적 몫만 쓴다 (관측잡음 s² 제외 — 그게 포함되면 상수가 된다)',
+        's*sqrt(h*)' in sg['score_is']
+        and all(s2['score'] < predict(o['models']['use_porosity_pct'],
+                                      X[0])['sd'] * 10 for s2 in sg['rows']))
     chk('잘라낸 후보 수를 보고한다 (조용한 절단 금지)',
         sg['n_cand'] == sg['n_survived'] + sg['n_rejected_box'] + sg['n_rejected_hull'],
         f"{sg['n_cand']} = {sg['n_survived']}+{sg['n_rejected_box']}+{sg['n_rejected_hull']}")
@@ -897,6 +943,25 @@ def _selftest():                                                   # noqa: C901
     chk('★닫히는 코퍼스에선 유도가 직접 회귀에 밀리지 않는다',
         ct['derived_nested'] > 0.9 and ct['gain_derived'] > -0.05,
         f"직접 {ct['direct_nested']:+.3f} vs 유도 {ct['derived_nested']:+.3f}")
+    chk('★정확히 닫히면 TIE 로 판정하고 "증폭" 을 근거와 함께 말한다 (근거 없는 기전 주장 금지)',
+        ct['verdict'].startswith('TIE') and ct['consistent'] and '증폭률' in ct['verdict'],
+        ct['verdict'][:60])
+    # ★ 판별력: ε 만 다른 모델에서 온 것처럼 흐트러뜨리면 INCONSISTENT 가 떠야 한다
+    #   (실런의 use_porosity_pct = 닫힘 잔차 sd 가 ε sd 의 78% → 게이트가 섞은 열)
+    with tempfile.NamedTemporaryFile('w', suffix='.csv', delete=False, newline='') as f4:
+        w4 = _csv.DictWriter(f4, fieldnames=c3); w4.writeheader()
+        _j = rng.normal(0, 0.7 * float(np.std(po2)), n)      # ε 만 오염 = 다른 출처 혼입
+        for i in range(n):
+            r4 = {'name': f'j{i}'}
+            r4.update({f: X[i, j] for j, f in enumerate(DESIGN_FEATURES)})
+            r4.update({'phi_se': se2[i], 'phi_am': am2[i],
+                       'porosity': po2[i] + _j[i], 'use_porosity_pct': po2[i] + _j[i]})
+            w4.writerow(r4)
+        p_bad = f4.name
+    chk('★출처가 섞인 열은 INCONSISTENT 로 잡는다 (닫힘 잔차 sd vs ε sd 비)',
+        closure_test(p_bad, folds=5)['porosity']['verdict'].startswith('INCONSISTENT'),
+        f"비율 {closure_test(p_bad, folds=5)['porosity']['closure_ratio_to_eps_sd']:.0%}")
+    os.unlink(p_bad)
     os.unlink(p_cl)
     os.unlink(p_sw)
     os.unlink(p_in)
@@ -946,14 +1011,12 @@ def main(argv=None):
             print(f"  {col:20s} n={r['n']:4d}   ε = {r['eps_mean_pct']:.2f} ± "
                   f"{r['eps_sd_pct']:.2f} %")
             print(f"    코퍼스 닫힘 φ_SE+φ_AM+ε = {r['closure_mean']:.4f} ± {r['closure_sd']:.4f}"
-                  + ('   (≈1 → ε 는 유도 가능)' if abs(r['closure_mean'] - 1) < 0.05
-                     else '   (1 에서 벗어남 → 유도식이 이 코퍼스엔 안 맞음)'))
+                  f"   (잔차 sd = ε sd 의 {r['closure_ratio_to_eps_sd']:.0%}"
+                  + (' → 일관)' if r['consistent'] else ' → **불일관**)'))
             print(f"    직접 회귀  nested {r['direct_nested']:+.3f}")
             print(f"    φ 에서 유도 nested {r['derived_nested']:+.3f}   "
                   f"(차 {r['gain_derived']:+.3f})")
-            print('    ⇒ ' + ('유도가 낫다 — porosity 를 따로 배우지 말고 φ 에서 계산할 것'
-                              if r['gain_derived'] > 0.02 else
-                              '직접 회귀가 낫거나 동급 — 유도는 φ 오차가 작은 ε 로 증폭된다'))
+            print(f"    ⇒ {r['verdict']}")
         return 0
     if a.diagnose:
         print(f'부검 — {a.diagnose}  (분할: {a.split_by})')
@@ -986,8 +1049,11 @@ def main(argv=None):
               'PI 폭 × 신규성):')
         # 잘라낸 건 반드시 말한다 (조용한 절단은 "전부 훑었다" 로 읽힌다)
         print(f"    후보 {res['n_cand']} → 생존 {res['n_survived']}  "
-              f"(실현불가 {res['n_rejected_box']} · 볼록포밖 {res['n_rejected_hull']}), "
-              f"novelty 상한 {res['novelty_cap']}")
+              f"(실현불가 {res['n_rejected_box']} · 볼록포밖 {res['n_rejected_hull']})")
+        print(f"    score = {res['score_is']}"
+              + (f"   최고/최저 {res['score_spread']}×" if res['score_spread'] else ''))
+        if res['degenerate']:
+            print('    ⚠ 전부 동점 — 이건 순위가 아니라 정렬 순서다.  참고하지 말 것.')
         for i, s in enumerate(res['rows'], 1):
             print(f"   {i:2d}. score={s['score']:8.3f}  pred={s['pred']:8.3f} "
                   f"PI90={s['pi90']}  novelty={s['novelty']}"
