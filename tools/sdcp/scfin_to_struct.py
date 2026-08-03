@@ -123,19 +123,58 @@ def group_by_species(elems, labels, pos):
             uniq, [elems.count(e) for e in uniq])
 
 
-def split_molecule(elems, pos):
-    """C/H/S 씨앗에서 공유결합 반지름으로 자라며 분자를 집는다. 나머지가 슬랩."""
+# 슬랩 전용 원소 — flood-fill 이 절대 흡수하면 안 된다 (리뷰 §2-8).
+#   화학흡착(분자 O ↔ 표면 Ni 1.9 Å = 결합거리)이 생기면 옛 판은 그 결합을 타고
+#   슬랩을 통째로 흡수했다 — 실측: mol 조각 129/130 인데 전부 ✓ 로 통과.
+SLAB_ONLY = ("Li", "Ni")
+MOL_O_MAX = 8            # v7c 분자 자체 O 6 + H-전이로 문 표면 O 1 + 여유 1
+
+
+def split_molecule(cell, elems, pos):
+    """C/H/S 씨앗에서 공유결합 반지름으로 자라며 분자를 집는다. 나머지가 슬랩.
+
+    리뷰 §2-8 반영:
+      · **MIC** — 셀 모서리에 걸친 분자는 랩된 좌표로는 절단돼 보인다. 최소이미지로 잰다.
+      · **슬랩원소 가드** — Li/Ni 는 SDCP 분자에 없는 원소다. 화학흡착 결합(O–Ni)을
+        타고 자라는 것을 원소 수준에서 차단한다. (전이된 H 가 붙든 표면 O 하나를
+        같이 물든 그건 조성 출력에 드러난다 — 조용히 붕괴하는 것과 다르다.)
+      · **붕괴 판정** — 그래도 분자 조각이 전체의 절반을 넘으면 분할이 무너진 것이다.
+        조용히 통과시키지 않고 ⛔ 를 찍고 exit 1 (판정 도구는 판정을 남긴다).
+    """
     n = len(elems)
     r = np.array([RCOV.get(e, 1.0) for e in elems])
-    d = np.linalg.norm(pos[:, None, :] - pos[None, :, :], axis=-1)
+    inv = np.linalg.inv(cell)
+    df = (pos[:, None, :] - pos[None, :, :]) @ inv
+    df -= np.round(df)                                   # 최소이미지 (MIC)
+    d = np.linalg.norm(df @ cell, axis=-1)
     bond = d < BOND_SCALE * (r[:, None] + r[None, :])
     np.fill_diagonal(bond, False)
+    metal = np.array([e in SLAB_ONLY for e in elems])
     mol = np.array([e in MOL_SEED for e in elems])
     while True:                                          # 씨앗에 붙은 O 까지 흡수
-        grown = mol | (bond & mol[None, :]).any(axis=1)
+        grown = (mol | (bond & mol[None, :]).any(axis=1)) & ~metal
         if (grown == mol).all():
-            return mol
+            break
         mol = grown
+    if (~mol).any() and mol.any():
+        comp = {}
+        for e in np.array(elems)[mol]:
+            comp[e] = comp.get(e, 0) + 1
+        comp_s = "".join(f"{e}{c}" for e, c in sorted(comp.items()))
+        # 붕괴의 실제 서명 = **슬랩 O 를 대량 흡수** (Li/Ni 는 위에서 원소로 막았다).
+        # 크기 비율(n/2)로 재면 작은 시험계에서 오판하므로 조성으로 잰다:
+        # v7c 분자 자체 O 6개 + H-전이로 표면 O 1개까지 = 정상 상한 MOL_O_MAX.
+        n_o = comp.get("O", 0)
+        if n_o > MOL_O_MAX:
+            raise SystemExit(
+                f"⛔ 분자/슬랩 분할 붕괴 — 분자 조각({comp_s})의 O 가 {n_o}개 "
+                f"(정상 상한 {MOL_O_MAX} = 자체 6 + H-전이 여유). flood-fill 이 표면 O 를 "
+                f"연쇄 흡수했다. BOND_SCALE({BOND_SCALE})/씨앗을 점검할 것. "
+                "이 상태의 ①②③ 판정은 전부 무의미하다 — 여기서 멈춘다.")
+        if n_o == 7:
+            print(f"  ⚠ 분자 조각({comp_s})의 O 가 7개 — 자체 6개 + 표면 O 하나를 물었다. "
+                  "H-전이 흔적이면 정상. 아니면 분할 의심.")
+    return mol
 
 
 def write_xyz(path, elems, pos, comment):
@@ -365,7 +404,7 @@ def main():
               f"  c {c_len:.3f} A     z-span {span:.3f} → 수직 진공 {c_len - span:.3f} A")
         print(f"  xyz 와 vasp 는 **같은 원자 순서·같은 좌표** ({'+'.join(f'{e}{c}' for e, c in zip(order, counts))})")
 
-        mol = split_molecule(elems, pos)
+        mol = split_molecule(cell, elems, pos)
         if not (mol.any() and (~mol).any()):
             print("  (단일 조각 — 분자/슬랩 분할 없음)")
             print(f"  → {a.out}/{tag}.xyz + .vasp + .vesta")

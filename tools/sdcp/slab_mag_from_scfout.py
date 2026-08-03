@@ -75,9 +75,11 @@ def main():
         ZVAL["Ni1"] = ZVAL["Ni2"] = a.zval
 
     txt = Path(a.scf_out).read_text(errors="ignore")
-    if not CONV.search(txt):
-        print("⚠ 'convergence has been achieved' 가 없다 — 미수렴 출력이다. "
-              "시드로 쓰면 안 된다.")
+    converged = bool(CONV.search(txt))
+    if not converged:
+        print("⚠ 'convergence has been achieved' 가 없다 — 미수렴 출력이다.\n"
+              "  (report=N 으로 찍힌 마지막 블록을 재시작 시드로 건지는 용도로는 정당 —\n"
+              "   json 에 converged:false 로 남기니 받는 쪽이 알고 쓴다)")
     # 원자별 블록의 **마지막** 출현만
     starts = [m.start() for m in SITE_HDR.finditer(txt)]
     if not starts:
@@ -121,14 +123,27 @@ def main():
         print(f"\nAFM 대칭성 Ni1+Ni2 = {net:+.3f} μB "
               + ("✓ (±0.05 이내)" if abs(net) < 0.05 else
                  "⚠ 0.05 초과 — 부격자가 안 맞았다. 시드로 쓰기 전에 슬랩을 다시 본다."))
+        # ⚠⚠ 리뷰 §2-3: 옛 판은 여기서 "⛔ 시드 금지" 를 **찍고도 파일을 쓰고 exit 0** —
+        #   드라이버의 `|| exit 1` 이 안 걸려 FM 시드가 그대로 하류에 들어갔다. 게다가
+        #   '부호만 승계' 정책이 FM 부호(+,+)를 관례 크기(+0.3,+0.3)로 **고정**해 버렸다.
+        #   판정 도구는 판정을 남기되, 오염 산출물은 쓰지 않는다: 파일 없이 exit 1.
         if seed["Ni1"] * seed["Ni2"] > 0:
-            print("⛔ Ni1·Ni2 부호가 같다 — AFM 이 아니라 FM 으로 떨어졌다. 시드 금지.")
+            raise SystemExit(
+                "⛔ Ni1·Ni2 부호가 같다 — AFM 이 아니라 FM 으로 떨어진 슬랩이다.\n"
+                "   이 값을 시드로 승계하면 FM 을 다음 계산에 **고정**하게 된다.\n"
+                "   → json 을 쓰지 않고 종료한다(exit 1). 슬랩 SCF 부터 다시 볼 것\n"
+                "     (U-ramp 2단계 + FSM: tools/sdcp/make_slab_relax.py 참조).")
     else:
-        print("\n⚠ Ni1/Ni2 라벨을 못 찾았다 — 이 슬랩이 AFM 분할 입력이 맞는지 확인")
+        raise SystemExit("⛔ Ni1/Ni2 라벨을 못 찾았다 — 이 슬랩이 AFM 분할 입력이 맞는지 확인. "
+                         "시드 없이 진행하면 관례값(±0.3)이 조용히 쓰인다 — 그건 받는 쪽에서 "
+                         "명시적으로 선택할 일이다.")
 
     if a.out and seed:
+        seed["converged"] = converged
+        seed["source"] = str(a.scf_out)
         print(f"\n시드(분율, 입력에 그대로 들어감): "
-              + " · ".join(f"{k} {seed[k]:+.3f}" for k in ("Ni1", "Ni2")))
+              + " · ".join(f"{k} {seed[k]:+.3f}" for k in ("Ni1", "Ni2"))
+              + ("" if converged else "   ⚠ converged:false — 재시작 시드 전용"))
         Path(a.out).write_text(json.dumps(seed, indent=2) + "\n")
         print(f"\n→ {a.out}   (다음 단계: --mag_json 로 넘긴다)")
 

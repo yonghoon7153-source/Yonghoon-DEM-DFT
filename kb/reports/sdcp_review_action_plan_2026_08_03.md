@@ -155,16 +155,25 @@ H 가 셀 안에서 균형 잡히고, 기체상 라디칼도 필요 없고, 두 
 ### A. 비용 0 — 지금 바로 (전부 코드 한두 줄)
 1. ✅ 슬랩 대칭화 + 게이트에 종단/대칭/CN/하한 추가 — **완료**
 2. ✅ `extract_scf_slab.py` 의 뒤집힌 판정 폐기 — **완료**
-3. `vdw_corr='grimme-d3'` 켜기 (1-2)
-4. 분자 참조를 **같은 상자**(둘의 max ext) + `occupations='fixed'` (2-5, 2-6)
-5. 복합체 속 슬랩 ↔ 독립 슬랩 **좌표 일치 assert** + `--freeze_frac` 기본 1.0 (2-1)
-6. 이미지 간격 assert 를 **무조건** 실행 + 기준 15 Å (2-9)
-7. `idx > 96` → `nat_slab` 인자화 (2-4)
-8. FM 시드 검출 시 `SystemExit` (2-3)
-9. `FIRE().run()` 수렴 bool 을 CSV 에 기록 (2-10)
-10. `scfin_to_struct.py` 분할에 조각크기·슬랩원소 가드 + MIC (2-8)
+3. ✅ `vdw_corr='grimme-d3'` 켜기 (1-2) — **완료 08-04** (make_slab_relax + phaseB 5입력 전부,
+   `--vdw none` 은 옛 결과 재현 전용)
+4. ✅ 분자 참조를 **같은 상자**(둘의 max ext) + `occupations='fixed'` (2-5, 2-6) — **완료 08-04**
+5. ✅ 복합체 속 슬랩 ↔ 독립 슬랩 **좌표 일치 assert** + phaseA `--freeze_frac` 기본 1.0
+   (2-1) — **완료 08-04** (tol 0.01 Å, 위반 시 SystemExit — 0.05 Å 어긋남 케이스로 검증)
+6. ✅ 이미지 간격 assert 를 **무조건** 실행 + 기준 15 Å (2-9) — **완료 08-04**
+   (셀 동일해도 검사, 3.3 Å 케이스 SystemExit 검증)
+7. ✅ `idx > 96` 하드코딩 제거 (2-4) — **완료 08-04**: phaseB 가 `meta.json` 에 `nat_slab` 을
+   쓴다. 하류 라디칼 검증은 반드시 이걸 읽는다 (옛 runner 는 폐기 경로라 미수정).
+8. ✅ FM 시드 검출 시 `SystemExit` (2-3) — **완료 08-04** (json 안 쓰고 exit 1;
+   FM/AFM 합성 scf.out 으로 검증. json 에 converged/source 필드 추가)
+9. ✅ `FIRE().run()` 수렴 bool 을 CSV 에 기록 (2-10) — **완료 08-04** (converged 열,
+   랭킹에서 미수렴 제외. + §C-17 의 측면 3×3 격자도 `--grid` 로 반영)
+10. ✅ `scfin_to_struct.py` 분할에 슬랩원소·조성 가드 + MIC (2-8) — **완료 08-04**
+    (화학흡착·PBC경계·붕괴·분자단독 4케이스 정답시험 통과. 붕괴 판정은 크기비가 아니라
+    **O 조성**으로 — 작은 계 오판 방지)
 11. doped 복합체 수렴 후 **Löwdin/Bader 전하 + per-site 자화** 판정 추가 — 라디칼로
     남았나 vs 음이온+Ni²⁺ 인가. **이 계산의 핵심 물리인데 지금 측정 자체를 안 한다**
+    (README_harvest 에 자리는 박아 둠 — 수렴 후 작업)
 12. 세 런(slab/cx_d/cx_n)의 **흡착점 원거리 Ni 모멘트 일치** 검증
 
 ### B. 슬랩 재건 (반나절)

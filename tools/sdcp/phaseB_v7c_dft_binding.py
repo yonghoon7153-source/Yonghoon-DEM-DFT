@@ -101,6 +101,10 @@ OPT = {
     #   **힘 계산에만 35분+**를 100% 로 태우고도 안 끝났다(실측 08-03, elapsed 1h48m).
     #   130/131 원자 복합체면 더 나쁘다. 필요하면 TPRNFOR=.true. 로 되살린다.
     "tprnfor": ".false.",
+    # ⚠⚠ 분산력 (리뷰 §1-2, 2026-08-03). repo 전체에 vdw_corr 가 한 줄도 없었다.
+    #   C11 분자의 납작한 자세는 0.8-1.5 eV, 선 자세는 0.2-0.4 eV 급 — 자세마다 달라
+    #   **상쇄되지 않고 랭킹까지 뒤집는다**. 다섯 입력 전부에 같은 값이 들어가야 한다.
+    "vdw": "grimme-d3",
 }
 
 # PBE USPP/PAW pseudos (all confirmed present in /data/work/pseudo)
@@ -324,12 +328,26 @@ def write_scf(path, atoms, labels, kind, kpts, pseudo_dir, prefix):
         f"    ntyp            = {ntyp}",
         f"    ecutwfc         = {ECUTWFC}",
         f"    ecutrho         = {ECUTRHO}",
-        "    occupations     = 'smearing'",
-        "    smearing        = 'mv'",
-        f"    degauss         = {OPT['degauss']}",
+    ]
+    # ⚠ 점유수 (리뷰 §2-6). 고립 분자에 smearing 0.03 Ry(0.41 eV) 를 쓰면 doped 의
+    #   SOMO 가 E_F 에 걸려 **분수 점유**가 생길 수 있고 doped 쪽만 0.05-0.2 eV 편향된다.
+    #   분자는 이산 준위라 'fixed' 가 물리적으로 옳다 (nspin=2 fixed 는 tot_magnetization
+    #   필수 — 아래 spin setup 이 항상 넣는다). 슬랩/복합체는 금속성 Ni 표면이라 smearing 유지.
+    if has_ni:
+        sys_lines += [
+            "    occupations     = 'smearing'",
+            "    smearing        = 'mv'",
+            f"    degauss         = {OPT['degauss']}",
+        ]
+    else:
+        sys_lines.append("    occupations     = 'fixed'")
+    sys_lines += [
         "    nspin           = 2",
         "    nosym           = .true.",
     ]
+    if OPT["vdw"] and OPT["vdw"] != "none":
+        # 다섯 입력 전부 동일 — 한 항이라도 빠지면 E_bind 차분에서 상쇄가 깨진다 (§1-2)
+        sys_lines.append(f"    vdw_corr        = '{OPT['vdw']}'")
     # ⚠⚠ **report 를 안 켜면 미수렴 런에서 per-site 자화를 못 건진다.**
     #   QE 의 'Magnetic moment per site' 블록은 기본적으로 **수렴 시점에만** 찍힌다
     #   (total/absolute magnetization 은 매 반복 찍히지만 그건 셀 전체값이라 시드로 못 쓴다).
@@ -434,11 +452,19 @@ def write_scf(path, atoms, labels, kind, kpts, pseudo_dir, prefix):
         f.write("\n".join(body))
 
 
-def box_molecule(atoms, vac=MOL_VACUUM):
+def box_molecule(atoms, vac=MOL_VACUUM, cell_L=None):
+    """분자를 진공 상자에 앉힌다.
+
+    ⚠ 리뷰 §2-5: doped/neutral 이 **각자 자기 크기의 상자**를 쓰면(21.3x20.0x27.8 vs
+      23.3x21.1x24.8) 상자 의존 오차(FFT 격자·이미지 상호작용)가 두 종에서 달라져
+      차분에서 상쇄되지 않는다. cell_L 을 주면 그 상자를 그대로 쓴다 —
+      **두 분자의 최대 범위로 만든 공통 상자**를 main 이 계산해서 넘긴다.
+    """
     m = atoms.copy()
-    ext = m.positions.max(axis=0) - m.positions.min(axis=0)
-    L = ext + 2 * vac
-    m.set_cell(L)
+    if cell_L is None:
+        ext = m.positions.max(axis=0) - m.positions.min(axis=0)
+        cell_L = ext + 2 * vac
+    m.set_cell(cell_L)
     m.center()
     m.pbc = True
     return m
@@ -524,6 +550,17 @@ def main():
                     help="1단계 슬랩 scf.out 에서 뽑은 {'Ni1':m,'Ni2':m} — "
                          "starting_magnetization 시드로 승계. "
                          "tools/sdcp/slab_mag_from_scfout.py 산출.")
+    ap.add_argument("--vdw", choices=["grimme-d3", "none"], default="grimme-d3",
+                    help="분산 보정 (기본 grimme-d3, 리뷰 §1-2). 다섯 입력 전부 동일 적용. "
+                         "'none' 은 옛 결과 재현용 진단 전용.")
+    ap.add_argument("--slab_coord_tol", type=float, default=0.01,
+                    help="복합체 속 슬랩 ↔ 독립 슬랩 좌표 허용오차 [A] (리뷰 §2-1). "
+                         "Phase-A 가 슬랩을 통째로 얼렸으면(freeze_frac 1.0) 파일 왕복 "
+                         "반올림뿐이라 0.01 로 충분하다. 이보다 크면 E(슬랩) 기준이 "
+                         "복합체와 다른 구조라는 뜻 — E_bind 에 슬랩 이완에너지가 섞인다.")
+    ap.add_argument("--min_image_gap", type=float, default=15.0,
+                    help="분자 꼭대기 → 다음 슬랩 이미지 최소 수직 간격 [A] (리뷰 §2-9, §4). "
+                         "옛 4 A 기준으로 실제 0.833 A 짜리가 통과한 전례가 있다.")
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
 
@@ -537,10 +574,14 @@ def main():
     OPT["startingpot"] = a.startingpot
     OPT["report"] = a.report
     OPT["tprnfor"] = a.tprnfor
+    OPT["vdw"] = a.vdw
     if a.mag_json:
         with open(a.mag_json) as f:
-            OPT["mag_seed"] = {k: float(v) for k, v in json.load(f).items()
-                               if k in ("Ni1", "Ni2")}
+            mj = json.load(f)
+        if mj.get("converged") is False:
+            print("⚠ mag_json 이 **미수렴** 슬랩에서 나온 시드다 (converged:false) — "
+                  "같은 슬랩의 재시작 시드로만 정당하다. 다른 계에 옮겨 쓰지 말 것.")
+        OPT["mag_seed"] = {k: float(v) for k, v in mj.items() if k in ("Ni1", "Ni2")}
         print(f"mag seed 승계: {OPT['mag_seed']}")
     print(f"[opt] degauss {OPT['degauss']} · FSM {'on' if OPT['fsm'] else 'OFF (free spin)'}"
           f" · maxstep {OPT['electron_maxstep']}"
@@ -581,6 +622,14 @@ def main():
             slab_labels = split_ni(slab_atoms, ni_ref, ref_lab, slab_atoms.cell.array)
     slab_ni = {i: slab_labels[i] for i in range(Nslab) if slab_labels[i] in ('Ni1', 'Ni2')}
 
+    # ── 분자 공통 상자 (리뷰 §2-5) — 두 종의 최대 범위 + 진공. 한 번 정해 둘 다 쓴다 ──
+    mol_d0, mol_n0 = read(a.mol_doped), read(a.mol_neutral)
+    ext = np.maximum(mol_d0.positions.max(0) - mol_d0.positions.min(0),
+                     mol_n0.positions.max(0) - mol_n0.positions.min(0))
+    mol_L = ext + 2 * a.mol_vacuum
+    print(f"분자 공통 상자: {mol_L[0]:.2f} x {mol_L[1]:.2f} x {mol_L[2]:.2f} A "
+          f"(두 종 최대범위 + 진공 {a.mol_vacuum} A — doped/neutral 동일)")
+
     jobs = [
         ("slab",            None,               "slab",             a.kpts,   "pb_slab"),
         ("complex_doped",   a.complex_doped,    "complex_doped",    a.kpts,   "pb_cxd"),
@@ -588,6 +637,7 @@ def main():
         ("mol_doped",       a.mol_doped,        "molecule_doped",   "gamma",  "pb_mold"),
         ("mol_neutral",     a.mol_neutral,      "molecule_neutral", "gamma",  "pb_moln"),
     ]
+    meta = {"nat_slab": Nslab, "vdw": OPT["vdw"], "jobs": {}}
     for name, src, kind, kpts, prefix in jobs:
         if kind == "slab":
             atoms, labels = slab_atoms, slab_labels
@@ -599,54 +649,88 @@ def main():
             # requires complex cell == slab cell; positions are Cartesian so only
             # the vacuum changes.
             if not np.allclose(atoms.cell.array, slab_atoms.cell.array, atol=1e-6):
-                c_new = slab_atoms.cell.array[2][2]
-                zmax = atoms.positions[:, 2].max()
-                assert zmax < c_new - 4.0, \
-                    f"{name}: molecule zmax {zmax:.2f} A too close to slab cell c={c_new:.2f}"
                 print(f"  [cell-fix] {name}: pose cell c={atoms.cell.array[2][2]:.2f} "
-                      f"-> slab c={c_new:.2f} A (Cartesian kept, image gap {c_new - zmax:.1f} A)")
+                      f"-> slab c={slab_atoms.cell.array[2][2]:.2f} A (Cartesian kept)")
                 atoms.set_cell(slab_atoms.cell, scale_atoms=False)
+            # ⚠⚠ 이미지 간격 — **무조건** 검사한다 (리뷰 §2-9). 옛 판은 셀이 다를 때만
+            #   검사해서, 자세 xyz 가 이미 슬랩 셀이면 0번 실행 — 실제 0.833 A 짜리
+            #   (sdcp_phaseB_complex_doped.vasp) 가 무검사 통과한 전례가 있다.
+            c_new = slab_atoms.cell.array[2][2]
+            zmax = atoms.positions[:, 2].max()
+            gap = c_new - zmax
+            if gap < a.min_image_gap:
+                raise SystemExit(
+                    f"⛔ {name}: 수직 이미지 간격 {gap:.2f} A < {a.min_image_gap} A — "
+                    f"분자 꼭대기(z {zmax:.2f})가 다음 슬랩 이미지와 너무 가깝다.\n"
+                    f"   E_bind 가 한 표면이 아니라 두 표면 몫이 된다 (2026-07-17 철회 사유).\n"
+                    f"   → Phase-A 를 --cz {zmax + a.min_image_gap + 1:.0f} 이상으로 다시 돌 것.")
+            print(f"  [gap-ok] {name}: 수직 이미지 간격 {gap:.1f} A ≥ {a.min_image_gap} A")
+            # ⚠⚠ 슬랩 좌표 일치 — 원소 기호만 보던 것을 좌표까지 본다 (리뷰 §2-1).
+            #   복합체 속 슬랩이 독립 슬랩과 다른 기하면 E_bind 에 슬랩 이완에너지
+            #   (0.1-1 eV)가 통째로 섞인다 — 판정하려는 차이가 0.04 eV 규모다.
             base = list(atoms.get_chemical_symbols())
             mism = sum(1 for i in range(Nslab)
                        if base[i] != slab_atoms.get_chemical_symbols()[i])
             if mism:
-                print(f"  !! {name}: {mism} of first {Nslab} atoms differ from the slab — "
-                      "index transfer unsafe; check phaseA atom ordering")
+                raise SystemExit(
+                    f"⛔ {name}: 앞 {Nslab}원자 중 {mism}개의 **원소**가 슬랩과 다르다 — "
+                    "Phase-A 원자 순서가 슬랩+분자 규약을 깼다. 인덱스 승계 불가.")
+            dmax = float(np.abs(atoms.positions[:Nslab] - slab_atoms.positions).max())
+            if dmax > a.slab_coord_tol:
+                raise SystemExit(
+                    f"⛔ {name}: 복합체 속 슬랩이 독립 슬랩과 최대 {dmax:.4f} A 어긋난다 "
+                    f"(허용 {a.slab_coord_tol} A).\n"
+                    f"   Phase-A 를 freeze_frac < 1.0 으로 돌렸거나 다른 슬랩을 줬다.\n"
+                    f"   → E(슬랩) 기준과 복합체의 슬랩이 같은 기하여야 상쇄가 성립한다.")
+            print(f"  [coord-ok] {name}: 슬랩 {Nslab}원자 좌표 일치 (최대 {dmax:.2e} A)")
             labels = base[:]
             for i in range(Nslab):
                 if labels[i] == 'Ni':
                     labels[i] = slab_ni[i]        # inherit identical slab sublattice
         else:
-            atoms = box_molecule(read(src), a.mol_vacuum)
+            atoms = box_molecule(read(src), a.mol_vacuum, cell_L=mol_L)
             labels = list(atoms.get_chemical_symbols())
         d = os.path.join(a.out, name)
         os.makedirs(d, exist_ok=True)
         write_scf(os.path.join(d, "scf.in"), atoms, labels, kind, kpts,
                   a.pseudo_dir, prefix)
         nni = sum(1 for x in labels if x in ('Ni1', 'Ni2'))
+        meta["jobs"][name] = {"nat": len(labels), "n_ni": nni, "kpts": kpts,
+                              "src": src or a.slab}
         print(f"  {name:16s} nat={len(labels):3d}  Ni={nni:3d}  k={kpts}  -> {name}/scf.in",
               flush=True)
 
+    # ⚠ 하류 검증(라디칼 위치 등)이 원자 인덱스 경계를 하드코딩하지 않도록 (리뷰 §2-4:
+    #   'idx > 96' 이 192원자 슬랩에서 슬랩 O 96개를 분자로 합산한 전례) 경계를 파일로 남긴다.
+    with open(os.path.join(a.out, "meta.json"), "w") as f:
+        json.dump(meta, f, indent=2)
+
     with open(os.path.join(a.out, "README_harvest.txt"), "w") as f:
         f.write(
-            "Phase-B DFT+U binding cross-check (single-point on UMA geometries)\n"
-            "  E_bind(tag) = E(complex_tag) - E_slab - E_mol(tag)\n"
-            "  VERDICT (robust)  = E_bind(doped) - E_bind(neutral)   (< 0 => doping strengthens)\n"
-            "  The slab (and its in-plane-AFM microstate) enters both E_bind identically and\n"
-            "  cancels in this difference, so the verdict does NOT depend on reproducing\n"
-            "  scf_u62's exact AFM (the phaseA and scf_u62 slabs are different structures).\n"
-            "  Absolute E_bind values carry a common, cancelling magnetic-state offset -- quote\n"
-            "  the difference, not the absolutes.\n\n"
+            "Phase-B DFT+U binding (single-point on UMA pose geometries)\n"
+            "  E_bind(tag) = E(complex_tag) - E_slab - E_mol(tag)      [negative = binding]\n"
+            "  VERDICT = E_bind(doped) - E_bind(neutral)               (< 0 => doping strengthens)\n\n"
+            "This generation PASSED the hard gates (they SystemExit on violation):\n"
+            f"  - slab coords inside each complex == reference slab (tol {a.slab_coord_tol} A)\n"
+            "    -> the slab term cancels EXACTLY; absolute E_bind per species is well-defined.\n"
+            f"  - vertical image gap >= {a.min_image_gap} A on every complex (2026-07-17 sandwich guard)\n"
+            f"  - vdw_corr = {OPT['vdw']} in ALL FIVE inputs (never mix on/off across terms)\n"
+            "  - both molecules share ONE box; molecules use occupations='fixed' (no smearing bias)\n\n"
+            "meta.json carries nat_slab — downstream checks (radical position etc.) must read\n"
+            "it instead of hardcoding atom-index boundaries (the old 'idx > 96' bug).\n\n"
             "Run order (sequential; slab is the heaviest ~96+ atoms):\n"
             "  for j in slab complex_doped complex_neutral mol_doped mol_neutral; do\n"
             "    cd $j && mpirun -np <N> pw.x -in scf.in > scf.out 2>&1; cd ..\n"
             "  done\n\n"
             "Harvest:\n"
             "  for j in slab complex_doped complex_neutral mol_doped mol_neutral; do\n"
-            "    printf '%-16s ' $j; grep '! *total energy' $j/scf.out | tail -1; done\n"
+            "    printf '%-16s ' $j; grep -a '! *total energy' $j/scf.out | tail -1; done\n"
             "  # convert Ry->eV (x13.605693) then apply E_bind formula.\n"
+            "  # doped complex converged? THEN run the Lowdin/per-site moment check:\n"
+            "  #   is it still a radical on -SO3, or anion + Ni2+ (charge transfer)?\n"
+            "  #   (review S5.A-11: this is the core physics -- measure it, don't assume)\n"
         )
-    print(f"\nwrote 5 inputs + README_harvest.txt under {a.out}", flush=True)
+    print(f"\nwrote 5 inputs + meta.json + README_harvest.txt under {a.out}", flush=True)
 
 
 if __name__ == "__main__":
