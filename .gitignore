@@ -18,5 +18,5 @@ webapp/uploads/
 #   로컬에서 폴백(3계)으로 그린 것을 커밋하면 제목은 "four compositions" 인데
 #   3계만 있는 그림이 repo 에 남는다(실제로 한 번 그랬다). 생성물은 추적하지 않고,
 #   확정본이 나오면 그때 -f 로 명시적으로 추가한다.
-docs/figures/msd_4sys.png
-db/properties/msd_4sys_plotted.csv
+docs/figures/msd_hosts.png
+db/properties/msd_hosts_plotted.csv
