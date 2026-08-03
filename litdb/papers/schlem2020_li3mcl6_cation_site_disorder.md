@@ -1,6 +1,6 @@
 # Mechanochemical Synthesis: A Tool to Tune Cation Site Disorder and Ionic Transport Properties of Li₃MCl₆ (M = Y, Er) Superionic Conductors — Schlem et al. (Adv. Energy Mater. 2020)
 
-> slug `schlem2020_li3mcl6_cation_site_disorder` · DOI `10.1002/aenm.201903719` · type `exp + DFT 보조(정적 defect-model만)` · PDF 본문 실물 `litdb/inbox/36. Mechanochemical Synthesis….pdf` (**inbox #36, 사용자 분류 `DFT` 태그** — 자체 VASP-PBE 정적 DFT 보유라 분류 정합, 단 exp-dominant·DFT보조임에 유의; 최초 digest는 업로드 쌍 `dbe52075` 본문 + `32a189c2` SI 15 pp) · digested `2026-07-28` · **본문 실물 감사 `2026-07-28`** (10 pp 전문 + Fig 3–7 렌더 대조: σ 1.7(1)×10⁻⁵/3.1(5)×10⁻⁴·무질서 2.5(1)/9.9(2) %·**Fig 5 에너지 4값(−247.74/−247.67/−247.80/−246.21 eV)**·Fig 6d Ea 0.41→0.49·Fig 7a,b 상관·Fig 3b BM ~88 %·Fig 4b 면적 ~5.4–6.3 Å²·DFT 셋업(VASP·PBE·PAW·520 eV·3×3×3 k·1×1×2 셀·실험격자·힘<10⁻⁴)·합성/EIS/XRD/PDF 파라미터 **전값 digest와 일치**; [새] 본문 **Eq (1) mc1/mc2 라벨 뒤바뀜** + λ 본문 표기 0.5594 Å — §0 감사 노트) · **SI 실물 미보유**(inbox에 "36. Sup" 없음 — Table S1–S10·Fig S1–S13 수치는 업로드본(32a189c2) 정독값 유지) · status ✅
+> slug `schlem2020_li3mcl6_cation_site_disorder` · DOI `10.1002/aenm.201903719` · type `exp + DFT 보조(정적 defect-model만)` · PDF 본문 실물 `litdb/inbox/36. Mechanochemical Synthesis….pdf` (**inbox #36, 사용자 분류 `DFT` 태그** — 자체 VASP-PBE 정적 DFT 보유라 분류 정합, 단 exp-dominant·DFT보조임에 유의; 최초 digest는 업로드 쌍 `dbe52075` 본문 + `32a189c2` SI 15 pp) · digested `2026-07-28` · **본문 실물 감사 `2026-07-28`** (10 pp 전문 + Fig 3–7 렌더 대조: σ 1.7(1)×10⁻⁵/3.1(5)×10⁻⁴·무질서 2.5(1)/9.9(2) %·**Fig 5 에너지 4값(−247.74/−247.67/−247.80/−246.21 eV)**·Fig 6d Ea 0.41→0.49·Fig 7a,b 상관·Fig 3b BM ~88 %·Fig 4b 면적 ~5.4–6.3 Å²·DFT 셋업(VASP·PBE·PAW·520 eV·3×3×3 k·1×1×2 셀·실험격자·힘<10⁻⁴)·합성/EIS/XRD/PDF 파라미터 **전값 digest와 일치**; [새] 본문 **Eq (1) mc1/mc2 라벨 뒤바뀜** + λ 본문 표기 0.5594 Å — §0 감사 노트) · **SI 실물 감사 `2026-08-03`** (SI 실물 = `litdb/inbox/36. Sup) Mechanochemical Synthesis….pdf`, **inbox #36 Sup, 사용자 분류 `DFT`**, **파일 16 pp = Wiley 표지 1 + 내부 S1–S15**; Table S1–S10·Fig S1–S13 **전값 일치**(S1 몰비 1.92/1.43·S2 무질서 8값·S3 구속·S4 σ/Ea 8행·S5–S10 격자·점유·z·Biso·Rwp/Rexp/GOF·LiCl wt%·Fig S4 Rw 14.8/16.8/14.2/8.7/28.5·Fig S1 Rw 27.0·Fig S2b strain 1.75/1.52/~0.92·Fig S13 축 5.85–6.20 Å²·2.3/6.3/7.7/88 %) · **[새] 5건**: ① **Fig S13의 앰풀·1 h Ea가 Fig 6d/Table S4와 뒤바뀜**(S13: 2.3 %→0.4845·6.3 %→0.4935 ↔ 본문: 앰풀 0.4925 > 1 h 0.4845) → 인쇄된 S13만으로는 Ea–면적 상관 비단조 ② Fig S4 캡션 상호참조 오류("phase fraction … see **Table S2**" → 실제 **Table S1**) ③ Fig S2b 축 라벨 "Slope (Strain) / 10³" 지수부호 오기(값 1.75 = 1.75×10⁻³) ④ Table S9 불확실도 표기 충돌(Y2 **0.8269(3)** = ±0.0003 ↔ Table S2 17.3(3) % = ±0.3 %) ⑤ Fig S1a에 **Li₃YCl₆ 1 min 시료**(Table S2·S4에 없는 5번째 시료)·λ **0.5594075 Å** 출처 확정 · **[논지 강화]** Y 계열도 **무질서 축에서는 σ·Ea 4점 단조**(§6.6·§10-3 재범위화) — §0b 감사 노트) · status ✅**(본문+SI 실물 완결)**
 > elements: Li, Y, Er, Cl
 > methods: DFT
 > **저자**: Roman Schlem, Sokseiha Muy, Nils Prinz, Ananya Banik, Yang Shao-Horn, Mirijam Zobel, **Wolfgang G. Zeier*** (JLU Giessen 물리화학·LaMa / MIT DMSE / Univ. Bayreuth) · *Adv. Energy Mater.* 2020, **10**, 1903719 · 접수 2019-11-12, online 2019-12-17 · **Open Access CC-BY**
@@ -11,7 +11,16 @@
 - **정체 실물 확정**: 본문 1쪽에서 제목·저자·DOI 확인 — **AEM 10, 1903719 = 할라이드 Li₃MCl₆(M=Y,Er) 논문**이다. **argyrodite(Li₆PS₅X) 논문이 아니다.** LPSCl 데이터·수치가 이 논문에는 **한 줄도 없다**.
 - **★특별 검증 결론 (요약)**: 우리 repo 전반(li_transport.json·세미나 원고·open_items #5)이 "Schlem 2020 AEM 10,1903719 = LPSCl ordered Ea 0.25 / Cl-rich 0.22 eV"로 인용해 왔으나, **그 수치는 이 DOI에 존재하지 않는다**(이 논문의 Ea는 Li₃ErCl₆ 0.41–0.49 / Li₃YCl₆ 0.45–0.49 eV). → **귀속 오류 확정. LPSCl 0.25/0.22의 원전은 별도 확보 필요.** 상세 §11b.
 - 그 판정과 별개로, 이 논문 자체는 우리 **'무질서 = 공정변수(합성으로 조절되는 변수)'** 논지의 **가장 깨끗한 외부 정량 실증**이다: 같은 조성에서 합성 경로(볼밀 vs 어닐 1 min/1 h vs 앰풀 1주)만 바꿔 **양이온 자리무질서 2.5→88 %**를 연속 조절하고, 그에 따라 **σ 18×·Ea −0.08 eV**가 움직임을 XRD+PDF 이중 프로브로 보였다.
-- **본문 실물 감사 노트 (2026-07-28, inbox #36 사용자 분류 `DFT`)**: 본문 10 pp 텍스트 전문 + 그림 페이지 렌더(Fig 3b·4b·5·6·7)로 digest를 재대조 — 위 metadata 라인 목록대로 **전값 일치**(Fig 5 DFT 에너지 4값·Fig 6d σ/Ea 4점·Fig 4b 면적 범위·병목 방향성 포함). **신규 발견 2건**: ① 본문 **Eq (1) 라벨 뒤바뀜** — 식은 `mc1·G(r)_ErCl₃ + mc2·G(r)_Li₃ErCl₆ = G(r)_total`인데 바로 아래 정의는 "mc1 = molar content **Li₃ErCl₆** / mc2 = molar content **ErCl₃**"로 서로 교차(논문 자체 오기; Table S1 몰비 1.92/1.43 인용 시 어느 상의 비인지 이 식만으로 확정 불가 — digest §3d는 "ErCl₃:Li₃ErCl₆ 몰비"로 SI 표 기준 유지). ② XRD 파장 본문 표기는 **0.5594 Å**(§8의 0.5594075는 Ag Kα₁ 표준값 보충 표기임을 명시). 접수 이력 보강: Received 2019-11-12 / **Revised 2019-12-02** / online 2019-12-17. **SI 실물은 inbox 미보유**("36. Sup" 없음) — SI 유래 수치(§3a Table S4·§3b Table S2·§3c S5–S10·Fig S13 등)는 업로드본(32a189c2, 15 pp) 정독값 그대로이며 실물 재감사는 불가.
+- **본문 실물 감사 노트 (2026-07-28, inbox #36 사용자 분류 `DFT`)**: 본문 10 pp 텍스트 전문 + 그림 페이지 렌더(Fig 3b·4b·5·6·7)로 digest를 재대조 — 위 metadata 라인 목록대로 **전값 일치**(Fig 5 DFT 에너지 4값·Fig 6d σ/Ea 4점·Fig 4b 면적 범위·병목 방향성 포함). **신규 발견 2건**: ① 본문 **Eq (1) 라벨 뒤바뀜** — 식은 `mc1·G(r)_ErCl₃ + mc2·G(r)_Li₃ErCl₆ = G(r)_total`인데 바로 아래 정의는 "mc1 = molar content **Li₃ErCl₆** / mc2 = molar content **ErCl₃**"로 서로 교차(논문 자체 오기; Table S1 몰비 1.92/1.43 인용 시 어느 상의 비인지 이 식만으로 확정 불가 — digest §3d는 "ErCl₃:Li₃ErCl₆ 몰비"로 SI 표 기준 유지). ② XRD 파장 본문 표기는 **0.5594 Å**(§8의 0.5594075는 Ag Kα₁ 표준값 보충 표기임을 명시). 접수 이력 보강: Received 2019-11-12 / **Revised 2019-12-02** / online 2019-12-17. **SI 실물은 inbox 미보유**("36. Sup" 없음) — SI 유래 수치(§3a Table S4·§3b Table S2·§3c S5–S10·Fig S13 등)는 업로드본(32a189c2, 15 pp) 정독값 그대로이며 실물 재감사는 불가. → **2026-08-03 SI 실물 입고로 이 항목 해소**(아래 §0b).
+
+- **★SI 실물 감사 노트 (2026-08-03, `inbox/36. Sup) …pdf`, 사용자 분류 `DFT`)**: 파일 **16 pp = Wiley 표지 1 + 내부 S1–S15**(기존 "15 pp" 표기는 내부 번호 기준 — 판본 동일). 표 전수(S1–S10) + 그림 페이지 렌더(S1·S2·S4·S6·S13) 대조 결과 **digest의 SI 유래 수치는 전값 일치**. 신규 발견 5 + 논지 강화 1:
+  1. **⚠ Fig S13 ↔ Fig 6d/Table S4 Ea 뒤바뀜 (가장 중요)** — Fig S13은 상단축 무질서 2.3 %(앰풀)를 Ea **0.4845** 점에, 6.3 %(1 h)를 Ea **0.4935** 점에 연결한다. 그런데 본문 **Fig 6d는 앰풀 0.4925 > 1 h 0.4845**, **Table S4도 0.49 > 0.48**로 정반대. 즉 **인쇄된 Fig S13에서는 저무질서 2점의 Ea가 서로 바뀌어 있고, 그 상태로는 Ea–병목면적 상관이 비단조**다(추세선은 그 위로 그냥 직선을 그어 놓았다). 뒤바꿈을 바로잡으면 4점이 단조가 되므로 **결론 자체는 살아남지만**, 상관의 실질 지렛대는 **BM 1점**임이 드러난다: 나머지 3점의 면적 스팬 5.878–5.905 Å²(**0.03 Å²**) 대비 Ea 산포 0.468–0.4935 eV(**0.025 eV ≈ 오차막대의 5배**), BM만 6.178 Å²로 홀로 떨어져 있음 → **사실상 2-클러스터 상관**.
+  2. **Fig S4 캡션 상호참조 오류** — "A certain phase fraction of ErCl₃ can still be found (see **Table S2**)"인데 상분율(scaling factor·몰비)은 **Table S1**에 있고 Table S2는 무질서 %다.
+  3. **Fig S2b 축 라벨 지수부호 오기** — "Slope (Strain) / 10³"인데 표시값 1.75는 실제 1.75×10⁻³ (본문 B·cosΘ 축과 검산 일치) → "×10³" 또는 "/10⁻³"이 맞다.
+  4. **Table S9 불확실도 표기 충돌** — Y2 occ **0.8269(3)**(±0.0003)로 인쇄. 같은 구속 파라미터가 Table S2에선 17.3(3) %(±0.3 %)라 **10× 불일치**. digest가 써 온 "0.827(3)"은 후자와 정합인 반올림이었으나, **실물 표기대로 0.8269(3)로 교정**하고 충돌을 남긴다(§3c).
+  5. **Fig S1a에 Li₃YCl₆ 시료가 5종**(BM · **1 min** · 5 min · 1 h · 앰풀) — 이 중 **1 min은 XRD/PDF에만 존재하고 Table S2·S4에 없다**(무질서·σ 미측정). 본문의 "Y는 5 min이 필요했다"는 진술의 **근거 그림이 바로 이 1 min 트레이스**(피크 광폭 = 결정화 미완). 또 λ = **0.5594075 Å**은 **Fig S1a 범례**에 인쇄된 값 — §8의 "표준값 보충 표기" 추정을 출처 확정으로 대체.
+  6. **[논지 강화] Y 계열도 '무질서 축'에서는 단조** — Fig S6c/d + Table S2/S4 대조: 무질서 9.8/16.1/17.3/100 % ↔ σ 3.4/4.7/5.5/9.5×10⁻⁵ S cm⁻¹(**단조 ↑**) ↔ Ea 0.4925/0.4785/0.4465/0.4455 eV(**단조 ↓**). **비단조인 것은 σ–무질서 상관이 아니라 '어닐 시간 → 무질서 감소' 쪽**(5 min 16.1 % < 1 h 17.3 %). → 기존 §10-3("Y는 지저분") 재범위화 필요(§6.6·§10-3 수정 반영).
+  - 부수: Fig S6c의 Ea 추세선은 **1 h 점(0.4465)을 건너뛰고** 직선을 긋는다 + Table S4·Fig S6 캡션의 "어닐 시간↑ → Ea↑·σ↓" 일반화는 **Y 1 h에서 성립하지 않음**. SI 표지(Wiley) 저자목록엔 **Ananya Banik 포함**, 저자 자체 SI 제목 페이지엔 **누락**(소속 첨자도 a,b만 배정).
 
 ## 1. 한 줄 요약
 Li₃ErCl₆/Li₃YCl₆(삼방 P3̄m1 할라이드 SE)에서 **합성 방법이 M2–M3 양이온 자리무질서를 결정**한다 — 볼밀(기계화학)은 거의 완전한 자리반전(~88–100 %), 후속 어닐은 시간에 따라 질서 회복(1 min 9.9 % → 1 h 7.6 %), 고전적 앰풀 합성은 최저(2.5 %) — 그리고 **무질서가 클수록 σ↑(1.7×10⁻⁵→3.1×10⁻⁴ S/cm)·Ea↓(0.49→0.41 eV)**. DFT(VASP, 정적)는 무질서 배열들이 질서 배열과 **에너지 등가(~1–2 meV/atom)**임을 보여 "무질서가 열역학이 아니라 **공정**으로 결정되는 변수"임을 뒷받침한다.
@@ -42,7 +51,10 @@ Li₃ErCl₆/Li₃YCl₆(삼방 P3̄m1 할라이드 SE)에서 **합성 방법이
 | BM + 1 h annealed | 5.5×10⁻⁵ | 0.45 |
 | Ampoule | 3.4×10⁻⁵ | 0.49 |
 
-→ Er 계열은 **σ 18× 스팬·Ea 단조**로 깨끗; **Y 계열은 비단조**(중간 시료들 σ·Ea 순서 섞임) — §10 비판 참조.
+→ Er 계열은 **σ 18× 스팬·Ea 단조**로 깨끗; Y 계열은 **어닐 시간 축에서만 비단조**(1 h가 5 min보다 σ↑·Ea↓) — 단 **무질서 축으로 다시 그리면 Y도 4점 단조**(§6.6·§10-3, SI 감사 2026-08-03).
+
+**Ea 3자리 값(그림 판독, Table S4는 2자리 반올림)**: Fig 6d(Er) 앰풀 **0.4925** / 1 h **0.4845** / 1 min **0.468** / BM ~0.411 · Fig S6c(Y) 앰풀 **0.4925** / 5 min **0.4785** / 1 h **0.4465** / BM **0.4455**.
+⚠ **Fig S13은 Er 앰풀·1 h Ea를 서로 뒤바꿔 찍었다**(2.3 %→0.4845, 6.3 %→0.4935) — Fig 6d/Table S4와 충돌(§0b-1). Ea를 인용할 땐 **Table S4 + Fig 6d 기준**을 쓸 것.
 
 ### 3b. M2–M3 자리무질서 전체 표 (Table S2; XRD Rietveld vs PDF 이중 정량) ★'무질서=공정변수' 데이터
 | Li₃ErCl₆ | XRD / % | PDF / % |
@@ -60,6 +72,8 @@ Li₃ErCl₆/Li₃YCl₆(삼방 P3̄m1 할라이드 SE)에서 **합성 방법이
 | Ampoule | 9.8(3) | — |
 
 → XRD와 PDF가 **독립적으로 같은 서열** 재현(어닐 시간↑ → 무질서↓; 앰풀 최저). Y는 전 구간 Er보다 무질서 높음.
+⚠ **Y는 어닐 시간축에서 반전**: 5 min 16.1(3) < 1 h 17.3(3) % — "어닐 시간↑ → 무질서↓"가 Y에선 깨진다(Er만 단조). 그런데도 σ·Ea는 이 순서를 그대로 따라간다(§6.6) → **인과의 축은 시간이 아니라 무질서**라는 방향으로 오히려 유리한 증거.
+⚠ **구속 주의(Table S3)**: 정련에서 **occ(M3) ≡ 1 − occ(M2)** 로 강제 — 즉 무질서 %는 **단일 정련 파라미터**이고 M 자리 총점유는 1로 고정된다. 표의 합이 0.999~1.000인 건 반올림 때문(→ 함의는 §10-6).
 
 ### 3c. Rietveld 점유율·격자 (Tables S5–S10)
 | 시료 | a=b / Å | c / Å | M2 occ | M3 occ | M2 z | M3 z | LiCl 불순물 | Rwp/GOF |
@@ -68,10 +82,12 @@ Li₃ErCl₆/Li₃YCl₆(삼방 P3̄m1 할라이드 SE)에서 **합성 방법이
 | Er BM+1h | 11.1684(1) | 6.0352(1) | 0.924(1) | 0.076(1) | 0.5126(6) | −0.038(5) | 6 wt% | 3.96 % / 3.20 |
 | Er ampoule | 11.16892(9) | 6.02670(9) | 0.975(1) | 0.025(1) | 0.5127(6) | −0.03(2) | 6 wt% | 4.14 % / 3.27 |
 | Y BM+5min | 11.1980(2) | 6.0446(2) | 0.839(3) | 0.161(3) | 0.521(1) | −0.031(4) | (미기재) | 1.43 % / 2.15 |
-| Y BM+1h | 11.2001(2) | 6.0441(2) | 0.827(3) | 0.173(3) | 0.488(1) | −0.065(3) | 4 wt% | 1.27 % / 1.88 |
+| Y BM+1h | 11.2001(2) | 6.0441(2) | **0.8269(3)** | 0.173(3) | 0.488(1) | −0.065(3) | 4 wt% | 1.27 % / 1.88 |
 | Y ampoule | 11.2008(2) | 6.0352(2) | 0.902(3) | 0.098(3) | 0.516(1) | −0.053(6) | 3 wt% | 1.75 % / 2.37 |
 
-공통 고정: M1(1a, 0,0,0) occ 1 / Cl1–Cl3(6i) occ 1(팔면체 배위 구속) / **Li1(6g, 0.3397,0.3397,0) occ 1·Li2(6h, z=0.5) occ 0.5 — Li는 X선 산란 약해 정련 불가, 고정값·Biso=5** (→ §10: "Li 재배열" 기전은 실측 아님).
+공통 고정: M1(1a, 0,0,0) occ 1 / Cl1–Cl3(6i) occ 1(팔면체 배위 구속) / **Li1(6g, 0.3397,0.3397,0) occ 1·Li2(6h, z=0.5) occ 0.5 — Li는 X선 산란 약해 정련 불가, 고정값·Biso=5** (→ §10: "Li 재배열" 기전은 실측 아님). Biso는 **M 3자리 공통(Var1)·Cl 3자리 공통(Var2)** 구속, **M2/M3 점유는 occ1/(1−occ1) 한 파라미터**(Table S3 실물 확인 2026-08-03).
+표기 주의: Y BM+1h만 SI가 **0.8269(3)**(±0.0003)로 인쇄 — 같은 값이 Table S2에선 17.3(3) %(±0.3 %)라 **불확실도 10× 충돌**(§0b-4). 표의 나머지 Y 값(0.839(3)/0.902(3))은 Table S2와 정합.
+Er BM+1min(Table S5)만 **γ=120° 미기재·LiCl wt% 미기재**(S6–S10엔 둘 다 있음) — 실물에서도 동일.
 
 ### 3d. 기타 수치
 | 항목 | 값 | 출처 |
@@ -79,8 +95,8 @@ Li₃ErCl₆/Li₃YCl₆(삼방 P3̄m1 할라이드 SE)에서 **합성 방법이
 | DFT defect-model 에너지 (1×1×2 supercell) | ordered −247.74 / full-inversion −247.67 / alternating −247.80(최저) / random+face-sharing **−246.21**(최고) eV | Fig 5 |
 | PDF 국소 지문 | Er1–Er2 ~7.1 Å 피크가 BM에서 **부재**, Er1–Er3 ~6.5 Å 강도↑ → 밀링 중 M2→M3 이동 | Fig 3a·3b inset |
 | 다면체 병목(삼각 전이면적) | 전 범위 ~5.4–6.3 Å²; 무질서↑에 따라 Oh(6g)–Td–Oh(6g)·z-방향 Oh–Oh **확대**, Oh(6h)–Td–Oh(6h) 축소 | Fig 4b |
-| Ea↔병목 상관 | z-방향 6h/6g **Oh–Oh 면적 5.88→6.18 Å²** ↔ Ea 0.49→0.41 eV (무질서 2.3→88 %) | Fig S13 |
-| Williamson–Hall strain 기울기 | 1 min 1.75×10⁻³ → 1 h 1.52×10⁻³ → 앰풀 ~0.93×10⁻³ (figure-read) — 어닐수록 미세변형↓ | Fig S2 |
+| Ea↔병목 상관 | z-방향 6h/6g **Oh–Oh 면적 5.878 / 5.902 / 5.905 / 6.178 Å²** ↔ Ea 0.4845 / 0.4935 / 0.468 / 0.411 eV (무질서 PDF 2.3 / 6.3 / 7.7 / 88 %) — ⚠ **앞 두 Ea는 Fig 6d·Table S4와 뒤바뀐 채 인쇄됨**(§0b-1); 저무질서 3점은 면적 스팬 0.03 Å²에 몰려 있어 **상관의 지렛대는 BM 1점** | Fig S13 (실물 판독 2026-08-03) |
+| Williamson–Hall strain 기울기 | 1 min 1.75×10⁻³ → 1 h 1.52×10⁻³ → 앰풀 ~0.92×10⁻³ (figure-read) — 어닐수록 미세변형↓. ⚠ 이 FWHM만 **다른 회절계(Bragg–Brentano·Cu원)** 데이터에서 뽑음(캡슐 Ag 데이터 아님), BM은 분석 불가 | Fig S2 |
 | BM 잔류 전구체 | ErCl₃:Li₃ErCl₆ 몰비 **1.92**(8 Å fit) / **1.43**(20 Å fit) — BM 시료는 국소 Li₃ErCl₆ + 다량 ErCl₃ 혼재 | Table S1 |
 | PDF fit Rw | 앰풀 14.8 / 1 h 16.8 / 1 min 14.2 / BM(8 Å) 8.7 / BM(20 Å) 28.5 / Y 5min 27.0 % | Fig 2d·S1d·S4 |
 | σ(300 °C) 참고(인용) | Li₃InCl₆ ~0.2 S/cm @300 °C (Steiner 1992) | intro |
@@ -112,7 +128,8 @@ Li₃ErCl₆/Li₃YCl₆(삼방 P3̄m1 할라이드 SE)에서 **합성 방법이
 - **Li₃YCl₆은 PDF 정량 불가**: Y 함유 전 시료에서 형광성 상수 배경(Fig S5) → S/N 저하·termination ripple → Rietveld만 사용.
 
 ### 6.3 어닐 시간축: 무질서 이완 + 미세변형 (Fig 3b; S2)
-무질서는 **밀링 직후 거의 완전(88–100 %) → 어닐 시간에 따라 감소 → 앰풀(1주)에서도 2.5 %(Er)/9.8 %(Y) 잔존** — 완전 질서엔 도달 못 함("changes over time and relaxes into a more, but not yet fully ordered structure"). Williamson–Hall: 어닐 길수록 strain↓(1.75→1.52→0.93×10⁻³) = 미세구조 이완 동반(→ §10 교란변수).
+무질서는 **밀링 직후 거의 완전(88–100 %) → 어닐 시간에 따라 감소 → 앰풀(1주)에서도 2.5 %(Er)/9.8 %(Y) 잔존** — 완전 질서엔 도달 못 함("changes over time and relaxes into a more, but not yet fully ordered structure"). Williamson–Hall: 어닐 길수록 strain↓(1.75→1.52→0.92×10⁻³) = 미세구조 이완 동반(→ §10 교란변수). ⚠ 단 이 strain 값들은 **다른 회절계(Bragg–Brentano/Cu)** 패턴에서 뽑은 FWHM 기반이라(Fig S2 캡션), Rietveld·PDF 무질서와 **같은 측정에서 나온 값이 아니다** — "무질서와 strain이 함께 움직인다"는 서술은 교차-측정 결합.
+⚠ **Y에선 시간축 자체가 단조가 아니다**: 5 min 16.1(3) % < 1 h 17.3(3) % (Er은 1 min 9.9 > 1 h 7.6로 정상). 즉 "어닐 시간 = 질서도 다이얼"은 Er에서만 깔끔.
 
 ### 6.4 다면체 경로 기하 (Fig 4)
 Er·Cl 위치만으로(Li 위치 미지 명시) 4종 점프의 **삼각 병목 전이면적** 계산. 어닐 시료들은 T_d–T_d·Oh–Oh 면적 변화 미미, BM(고무질서)에서 급변: **(001)면 Oh(6g)–T_d–Oh(6g)·z-방향 Oh–Oh 확대 ↔ (002)면 Oh(6h)–T_d–Oh(6h) 축소**. 해석: Er 무질서(→(001)면 유입) → 국소 왜곡 → **6g/6h 주변 다면체 재편** → Li 점유·경로 변화(정전 반발). Er에서만 가능(Y는 형광 문제).
@@ -124,8 +141,10 @@ Er·Cl 위치만으로(Li 위치 미지 명시) 4종 점프의 **삼각 병목 �
 
 ### 6.6 임피던스·수송 (Fig 6; S6; Table S4)
 - 나이퀴스트 = 반원 1개(CPE∥R) + 저주파 블로킹 꼬리(CPE). **α>0.9, 기하 정전용량 ~48 pF/cm² = bulk형 응답이나 bulk/GB 분리 불가 명시** → σ·Ea는 total.
-- 아레니우스 선형(-40..60 °C), σ_RT·Ea는 §3a. **어닐 시간↑ → σ↓·Ea↑** (Er 단조; Y 대체로 동일 방향·비단조).
+- 아레니우스 선형(-40..60 °C), σ_RT·Ea는 §3a. **어닐 시간↑ → σ↓·Ea↑** (Er 단조; **Y는 1 h에서 반전** — Ea 0.4465 < 5 min 0.4785, σ 5.5 > 4.7×10⁻⁵).
 - **Fig 7a,b (본문 핵심 그림)**: σ·Ea를 **무질서 %에 대해** 재플롯(XRD·PDF 두 척도 모두) → 단조 상관. Ea 0.49→0.41 eV, σ 1.7×10⁻⁵→3.1×10⁻⁴ S/cm.
+- **★Y도 무질서 축에선 단조 (SI 감사 2026-08-03, Fig S6c/d + Table S2/S4)**: 무질서 9.8 / 16.1 / 17.3 / 100 % ↔ σ 3.4 / 4.7 / 5.5 / 9.5 ×10⁻⁵ S cm⁻¹(**단조 ↑**, Fig S6d가 직접 이 플롯) ↔ Ea 0.4925 / 0.4785 / 0.4465 / 0.4455 eV(**단조 ↓**). Y의 "지저분함"은 **σ–무질서 상관이 아니라 어닐 시간–무질서 관계**에 있다(5 min < 1 h). → 이 논문의 중심 주장(무질서가 수송을 가른다)은 **Y에서 오히려 더 깨끗하게** 성립한다.
+- ⚠ 그러나 SI가 그것을 그렇게 쓰지 않는다: **Fig S6c의 Ea 추세선은 1 h 점(0.4465)을 건너뛰고** as-prepared→앰풀 직선을 긋고, Fig S6·Table S4 캡션은 "어닐 시간↑ → Ea↑·σ↓"로 일반화한다 — **Y 1 h에서 명백히 위반**.
 
 ### 6.7 구조–수송 상관 3줄 결론 (§2.5)
 1. **밀링 = 고무질서 생성, 어닐 = 시간의존 질서 회복** (DFT: 배열 간 등에너지 → 실현은 공정 몫; 어닐은 항상 Er2 고점유로 수렴).
@@ -140,7 +159,7 @@ Er·Cl 위치만으로(Li 위치 미지 명시) 4종 점프의 **삼각 병목 �
 - **무질서 처리**: Li/Er 배열 열거 → **pymatgen Ewald summation으로 정전에너지 사전선별** → **대칭 다른 최저 정전에너지 구조 10개를 DFT 재계산** (SQS 아님; enumerate→lowest-Ewald 노선 — [Liu] AFM 2022와 동일 철학, 우리 cfg-enumeration과 같은 계열).
 - **범위**: 정적 total energy **만**. NEB 없음·AIMD 없음·DOS/gap 미보고·기계물성 없음 → "무질서가 σ를 올린다"는 **계산으로 증명된 바 없음**(열역학 접근성만 계산).
 - 임피던스: VMP300(Biologic), 7 MHz–100 mHz, 10 mV, −40..60 °C.
-- XRD: STOE STADI P, **Ag Kα₁ λ=0.5594 Å**(본문 표기; 0.5594075는 표준값 — Ge(111) 단색화), Mythen2 4K(Dectris 4×), Debye–Scherrer, 0.5 mm 유리 모세관 밀봉, Q 0.3–20.5 Å⁻¹, 결정질 6 h·비정질 22 h. Rietveld = **TOPAS**(Chebyshev 10항 배경, mod. Thomson–Cox–Hastings pseudo-Voigt).
+- XRD: STOE STADI P, **Ag Kα₁ λ=0.5594 Å**(본문 표기; **0.5594075 Å는 Fig S1a 범례에 인쇄된 값** — 출처 확정 2026-08-03, Ge(111) 단색화), Mythen2 4K(Dectris 4×), Debye–Scherrer, 0.5 mm 유리 모세관 밀봉, Q 0.3–20.5 Å⁻¹, 결정질 6 h·비정질 22 h. Rietveld = **TOPAS**(Chebyshev 10항 배경, mod. Thomson–Cox–Hastings pseudo-Voigt).
 - PDF: **PDFgetX3**(S(Q) 푸리에; qdamp 0.011/qbroad 0.010 — LaB₆ 표준), fit = **PDFgui**(결정질)·**DiffPy-CMI**(BM 2상: mc1·G(r)_ErCl₃ + mc2·G(r)_Li₃ErCl₆ = G(r)_total, Eq 1 — ⚠ **본문 Eq (1)의 mc1/mc2 정의 라벨이 식과 뒤바뀜**(정의문은 mc1=Li₃ErCl₆·mc2=ErCl₃ 몰함량, §0 감사 노트)).
 
 ## 9. Figure set ★
@@ -153,22 +172,23 @@ Er·Cl 위치만으로(Li 위치 미지 명시) 4종 점프의 **삼각 병목 �
 | 5 | DFT defect 모델 4종 + 에너지 | 무질서 등에너지·face-sharing 벌점 — 우리 enumeration 서사의 실물 예 |
 | 6 | 나이퀴스트(대표+4종 비교)·아레니우스·σ/Ea vs 공정 | total-σ 판독 방식; "공정→수송" 그림 문법 |
 | 7 | σ·Ea vs **무질서 %** + Li 재배열/병목 확대 모식도 | 본문 결론 그림; 기전 2갈래(캐리어·병목) 구분 |
-| S1 | Li₃YCl₆ XRD/PDF/fit (5 min 결정화) | Y 계열 재현성; PDF Rw 27 % 한계 |
-| S2 | Williamson–Hall + strain 기울기 | 어닐=strain 이완 — 무질서와 병행하는 교란변수 |
+| S1 | Li₃YCl₆ XRD(a)/PDF(b)/Rietveld fit(c, Rwp 1.4 %·GOF 2.2)/PDF fit(d, Rw 27.0 %). **a·b에는 시료가 5종**(BM·**1 min**·5 min·1 h·앰풀)이고 **1 min은 Table S2·S4에 없다**(결정화 미완 = "Y는 5 min 필요"의 근거) | Y 계열 재현성; PDF Rw 27 % 한계; **"측정은 했으나 정량 못 한 시료"를 그림에만 남긴 사례**(우리 SI 관행 참고) |
+| S2 | Williamson–Hall(a) + strain 기울기(b; 1 min 1.75 / 1 h 1.52 / 앰풀 ~0.92 ×10⁻³) | 어닐=strain 이완 — 무질서와 병행하는 교란변수. ⚠ FWHM은 **별도 Bragg–Brentano·Cu 회절계** 데이터, BM은 분석 불가; b축 라벨 지수부호 오기 |
 | S3 | PDFgui 자리분열·ADP 구속 도식 | 국소대칭 저하를 fit에 넣는 법(방법론) |
-| S4 | Er PDF fit 5종(범위별) | 2상 fit·r-범위 전략 |
-| S5 | Y 형광 배경·termination ripple | 원소별 측정 한계 문서화 사례 |
-| S6 | Y 임피던스 풀세트 | Y 비단조 — 상관의 한계 |
+| S4 | Er PDF fit 5종(범위별; Rw 앰풀 14.8 / 1 h 16.8 / 1 min 14.2 / BM-8 Å 8.7 / BM-20 Å 28.5 %) | 2상 fit·r-범위 전략. ⚠ 캡션 상호참조 오류(상분율은 Table **S1**인데 S2로 지칭) |
+| S5 | Y 형광 배경·termination ripple (PDF는 (Y,Er)–Cl ~2.6 Å로 정규화) | 원소별 측정 한계 문서화 사례 |
+| S6 | Y 임피던스 풀세트 (a 나이퀴스트·b 아레니우스·c σ/Ea·**d σ vs Y2–Y3 무질서**) | **d가 핵심**: Y도 σ–무질서 단조. ⚠ c의 Ea 추세선은 1 h 점을 건너뜀 |
 | S7–S12 | 시료별 Rietveld fit + 표 | 점유율 전량 공개(§3c) |
-| S13 | **Ea vs z-방향 Oh–Oh 병목 면적** | 기하 서술자↔Ea 상관 — 우리 migration_volume/BVSE와 접속 |
+| S13 | **Ea vs z-방향 Oh–Oh 병목 면적**(하단축 5.85–6.20 Å², 상단축 무질서 2.3/6.3/7.7/88 %) | 기하 서술자↔Ea 상관 — 우리 migration_volume/BVSE와 접속. ⚠ **저무질서 2점 Ea가 Fig 6d/Table S4와 뒤바뀐 채 인쇄**(§0b-1) + 3점이 0.03 Å²에 밀집 = 사실상 2-클러스터 |
 
 ## 10. 주의/한계 (비판적으로)
 1. **Li를 못 봤다**: X선이라 Li 점유·위치 정련 불가(6g=1/6h=0.5/Biso=5 고정). "Li 재배열 = 캐리어 증가" 기전(Fig 7c)은 **가설**이고, 저자도 중성자+AIMD 필요를 명시. → 이 논문에서 가져갈 확정 사실은 "Er/Y 무질서 정량 + σ/Ea 상관"까지.
 2. **σ·Ea는 total(임피던스)**: bulk/GB 분리 불가 명시. 어닐은 무질서만이 아니라 **결정화도·strain(W–H)·입계·LiCl 3–6 wt%·잔류 ErCl₃**를 동시에 바꾼다 → σ 18×를 자리무질서 단독 효과로 읽으면 과대. 특히 **BM as-prepared 시료는 비정질+ErCl₃ 몰비 1.4–1.9 혼합물** — 상관 플롯의 최극단 점(88–100 %)이 가장 불확실(Y "100 %"는 육안 추정).
-3. **Y 계열 비단조**(σ 5 min 4.7 < 1 h 5.5×10⁻⁵; Ea 0.48/0.45; 무질서 16.1/17.3 %) — Er만큼 깨끗하지 않음. 상관은 "극단 간 방향"이 견고하고 중간점은 노이즈.
-4. **DFT는 수송을 계산하지 않았다**: 정적 4(+10)개 배열 에너지·소형 셀(6 f.u.)·PBE·실험격자 고정. 무질서→Ea↓는 **기하 상관(전이면적)**으로만 연결.
+3. **Y 계열 비단조 — 단 축을 구분해야 한다 (2026-08-03 SI 감사로 재범위화)**: 깨지는 것은 **어닐 시간 → 무질서**(5 min 16.1 % < 1 h 17.3 %)이고, **무질서 → σ·Ea는 Y도 4점 단조**(σ 3.4/4.7/5.5/9.5×10⁻⁵ ↔ Ea 0.4925/0.4785/0.4465/0.4455). 이전 판의 "Y는 중간점이 노이즈"는 **과도한 폄하였고 철회**한다. 대신 남는 비판은 ① SI 캡션·추세선이 이 반전을 감춘다(Fig S6c 추세선이 1 h 점 건너뜀) ② Y BM 무질서 "100 %"는 **육안 추정**이라 상관의 최극단 점이 여전히 연성이다.
+4. **DFT는 수송을 계산하지 않았다**: 정적 4(+10)개 배열 에너지·소형 셀(6 f.u.)·PBE·실험격자 고정. 무질서→Ea↓는 **기하 상관(전이면적)**으로만 연결. 게다가 그 기하 상관(Fig S13)은 **저무질서 3점이 0.03 Å² 안에 밀집·Ea 산포가 오차막대 5배**라 **BM 1점이 끄는 2-클러스터 상관**이고, 그 3점 중 2점은 **Fig 6d/Table S4와 Ea가 뒤바뀐 채 인쇄**됐다(§0b-1) → **"병목 면적이 Ea를 설명한다"는 이 논문 안에서 정량적으로 확립되지 않았다.**
 5. **무질서 종류 구분 필수**: 여기의 유익한 무질서 = **양이온 부격자 내 M2–M3**; Wang/Mo(ref32)의 유해한 무질서 = **M-on-Li antisite**(채널 차단; 이 물질에선 실험적으로 배제). "halide는 무질서가 좋다/나쁘다" 뭉뚱그리면 틀림.
-6. **argyrodite 이식 금지**: 자리 기하(삼방 P3̄m1 6g/6h vs 입방 F4̄3m 48h cage)·무질서 유형(양이온 M2–M3 vs 음이온 4a/4d)·수치 전부 물질군 다름. **방향(무질서↑→σ↑·Ea↓)과 '공정변수' 프레임만** 전이 가능.
+6. **[새] 정련 구속이 비화학량론을 원천 배제한다**: Table S3에서 **occ(M3) ≡ 1 − occ(M2)** 로 묶어 놓아 M 자리 총점유가 1로 고정 — 즉 **M-site 공석/과잉(Li₃₋₃ₓM₁₊ₓCl₆류 비화학량론)은 검정 자체가 불가능**하다. 하필 합성에서 **희토류 할라이드를 10 wt% 과량** 투입했고 BM 시료엔 ErCl₃가 몰비 1.4–1.9로 남아 있다(Table S1) → "무질서 %"가 실제로는 조성 편차를 일부 흡수했을 가능성을 이 데이터로는 배제할 수 없다. (Li는 애초에 X선으로 못 보므로 Li 자리 쪽도 마찬가지.)
+7. **argyrodite 이식 금지**: 자리 기하(삼방 P3̄m1 6g/6h vs 입방 F4̄3m 48h cage)·무질서 유형(양이온 M2–M3 vs 음이온 4a/4d)·수치 전부 물질군 다름. **방향(무질서↑→σ↑·Ea↓)과 '공정변수' 프레임만** 전이 가능.
 
 ## 11. 우리 DFT 대비 (comp1/modelc) → `../our_dft_baseline.md`
 | 항목 | 이 논문 (halide Li₃MCl₆) | 우리 (argyrodite comp1/modelc) | 판정 |
@@ -200,13 +220,16 @@ Er·Cl 위치만으로(Li 위치 미지 명시) 4종 점프의 **삼각 병목 �
 1. **'무질서=공정변수' 논지의 1급 외부 실증**: 같은 조성·4 공정·무질서 2.5→88 %·σ 18×·Ea −0.08 eV, XRD+PDF 이중 정량. 우리 disorder-ensemble(예: comp1 d=0→0.5) 서사에 "실험은 이렇게 무질서를 돌린다"는 실물 좌표 제공. deck 인용 1순위 = Fig 3b·7a,b.
 2. **DFT 등에너지 논리 차용**: "배열 간 ΔE ~meV/atom = 어느 배열이 실현되는가는 공정 몫" — 우리 enumeration 결과(저에너지 스프레드)를 같은 문장으로 프레이밍 가능. 동시에 **face-sharing 벌점(+26 meV/atom)** = 무질서 decorate 시 비물리 근접쌍을 Ewald 사전선별로 걸러야 한다는 근거(우리 이미 수행).
 3. **Ea-앵커 위생**: §11b — li_transport.json의 "Schlem 0.25 EXACT" 앵커는 재귀속 전까지 발표·원고에서 사용 중지 권고. "실험 LPSCl bulk 범위 0.16–0.30 내" 수준의 보수적 표현으로 대체.
-4. **기하 병목 서술자**: 음이온 좌표만으로 삼각 전이면적↔Ea 상관(Fig S13) — 우리 comp1/modelc/도핑 셀에 같은 기하 지표를 뽑아 BVSE 채널%와 교차하면 값싼 2차 서술자.
-5. **[Cha] LYC 연결**: 이 논문의 Li₃YCl₆ σ(3.4–9.5×10⁻⁵ S/cm)·합성 의존성은 우리 그룹 할라이드 코팅(LYC 0.37 mS/cm) 배경 물성 — 코팅용 할라이드도 공정(밀링/어닐)에 따라 σ 수 배 움직인다는 주의점.
+4. **기하 병목 서술자**: 음이온 좌표만으로 삼각 전이면적↔Ea 상관(Fig S13) — 우리 comp1/modelc/도핑 셀에 같은 기하 지표를 뽑아 BVSE 채널%와 교차하면 값싼 2차 서술자. ⚠ 단 **이 논문의 Fig S13을 "검증된 상관"으로 인용하진 말 것**(§10-4: 2-클러스터 + 인쇄 오류) — 차용할 것은 **지표의 정의**(점프 병목 = 음이온 3각형 면적)이지 그 상관계수가 아니다. 우리 쪽에서 4점이 아니라 **도핑·무질서 스캔 전 구간으로 면적↔Ea를 뽑으면 이 논문이 못 한 정량화가 곧 신규성**이 된다.
+5. **[새] "축을 구분해 그려라"는 방법론 교훈**: 이 논문의 Y 데이터는 **공정축(어닐 시간)으로 그리면 지저분하고 구조축(무질서 %)으로 그리면 단조**다(§6.6). 우리 캠페인도 σ·Ea를 **공정/조성 변수**가 아니라 **구조 서술자**(4d-Cl 점유·채널 %·site-PDOS 중심)에 대해 그리는 걸 기본 플롯 문법으로 삼는 편이 낫다 — 같은 데이터에서 상관이 살아나는 사례.
+6. **[Cha] LYC 연결**: 이 논문의 Li₃YCl₆ σ(3.4–9.5×10⁻⁵ S/cm)·합성 의존성은 우리 그룹 할라이드 코팅(LYC 0.37 mS/cm) 배경 물성 — 코팅용 할라이드도 공정(밀링/어닐)에 따라 σ 수 배 움직인다는 주의점.
 
 ## 13. 인용 가능 문장 (deck/paper용)
 - "Schlem et al. (AEM 2020, 1903719) showed for trigonal Li₃MCl₆ (M = Y, Er) that the synthesis route continuously tunes cation site disorder (2.5→88 % by Rietveld/PDF) and thereby the transport (σ ×18, Ea 0.49→0.41 eV) — an experimental demonstration that site disorder is a *process variable*, the same framing we use for anion-site disorder in argyrodites."
 - "Their static DFT finds ordered and site-inverted configurations degenerate within ~1–2 meV/atom (only face-sharing M–M arrangements are penalized), supporting the view that the realized disorder is set by processing, not by the ground state."
+- "The same trend holds in the Y analogue once the data are plotted against site disorder rather than against annealing time (σ 3.4→9.5×10⁻⁵ S cm⁻¹, Ea 0.49→0.45 eV for 9.8→100 % Y2–Y3 disorder, Fig. S6), i.e. the structural variable — not the process time — is the one that orders the transport." (SI 감사 2026-08-03 근거)
 - ⚠ 사용 금지(정정 전): "our Ea 0.253 matches Schlem 2020 LPSCl ordered 0.25 exactly" — **이 DOI에 그 수치 없음** (§11b).
+- ⚠ 사용 금지: "Schlem's Fig. S13 shows a linear Ea–bottleneck-area correlation" — **인쇄된 S13은 저무질서 2점 Ea가 본문과 뒤바뀌어 있고 사실상 2-클러스터**(§10-4).
 
 ## 14. 용어 미니사전
 - **PDF (pair distribution function)**: 전체 산란(브래그+확산)을 푸리에 변환한 G(r) — 국소(수 Å) 구조 프로브. Rietveld(평균구조)와 상보.
