@@ -95,6 +95,12 @@ OPT = {
     "mixing_beta": MIX_BETA,
     "startingpot": None,      # 'file' = 이전 charge density 승계 (밀도만, wfc 아님)
     "report": None,           # N = N 반복마다 per-site 자화 출력
+    # ⚠⚠ **기본이 .false. 다 (2026-08-03 변경).** 이 경로는 전부 단일점 scf 이고
+    #   E_bind 는 총에너지만 쓴다 — 힘은 어디에도 안 들어간다. 그런데 PAW+U 힘 항이
+    #   이 GPU 빌드에서 지독히 느리다: 96원자 슬랩이 SCF 수렴(30 iter) 후
+    #   **힘 계산에만 35분+**를 100% 로 태우고도 안 끝났다(실측 08-03, elapsed 1h48m).
+    #   130/131 원자 복합체면 더 나쁘다. 필요하면 TPRNFOR=.true. 로 되살린다.
+    "tprnfor": ".false.",
 }
 
 # PBE USPP/PAW pseudos (all confirmed present in /data/work/pseudo)
@@ -378,7 +384,7 @@ def write_scf(path, atoms, labels, kind, kpts, pseudo_dir, prefix):
     body.append(f"    prefix          = '{prefix}'")
     body.append("    outdir          = './tmp'")
     body.append(f"    pseudo_dir      = '{pseudo_dir}'")
-    body.append("    tprnfor         = .true.")
+    body.append(f"    tprnfor         = {OPT['tprnfor']}")
     body.append("    tstress         = .false.")
     body.append("    disk_io         = 'low'")
     body.append("/")
@@ -503,6 +509,9 @@ def main():
     ap.add_argument("--startingpot", choices=["atomic", "file"], default=None,
                     help="'file' = outdir 의 charge-density 를 이어받는다(밀도만). "
                          "restart_mode='restart' 와 달리 disk_io='low' 와 호환된다.")
+    ap.add_argument("--tprnfor", choices=[".true.", ".false."], default=".false.",
+                    help="힘 출력. 단일점 E_bind 에는 불필요하고 PAW+U 힘 항이 매우 "
+                         "느리다(96원자 슬랩 35분+) → 기본 .false.")
     ap.add_argument("--scf_must_converge", choices=[".true.", ".false."], default=None,
                     help="'.true.' 로 두면 미수렴 시 종료 — plateau 값을 수렴값으로 "
                          "오독하는 사고를 막는다.")
@@ -527,6 +536,7 @@ def main():
     OPT["mixing_beta"] = a.mixing_beta
     OPT["startingpot"] = a.startingpot
     OPT["report"] = a.report
+    OPT["tprnfor"] = a.tprnfor
     if a.mag_json:
         with open(a.mag_json) as f:
             OPT["mag_seed"] = {k: float(v) for k, v in json.load(f).items()

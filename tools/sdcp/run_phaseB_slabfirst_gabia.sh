@@ -45,7 +45,7 @@ UMA_PY=$(ls /data/apps/miniforge3/envs/uma/bin/python3 2>/dev/null || which pyth
 MAGJSON=$OUT/slab_mag.json
 mkdir -p "$OUT"
 ts(){ echo "[$(date +%m-%d\ %H:%M:%S)] $*"; }
-_banner(){ ts "설정: stage=$STAGE · degauss=$DEGAUSS · mixing_ndim=$MIXNDIM · maxstep=$MAXSTEP · scf_must_converge=$SCF_MUST"
+_banner(){ ts "설정: stage=$STAGE · degauss=$DEGAUSS · mixing_ndim=$MIXNDIM · maxstep=$MAXSTEP · scf_must_converge=$SCF_MUST · tprnfor=$TPRNFOR"
            ts "      밀도승계 RESTART=$RESTART $([ "$RESTART" = 1 ] && echo '(켜짐 — 기본)' || echo '(꺼짐)')"; }
 
 # ── 중복 실행 가드 ──────────────────────────────────────────────────────────
@@ -121,6 +121,12 @@ SCF_MUST=${SCF_MUST:-.true.}
 #   슬랩이 통째로 상쇄된다. 그래서 미수렴이어도 시드가 멀쩡하면 2단계로 간다.
 #   (db 에 이미 "Plateau convention" 선례가 있다 — sdcp_v7c_phaseB_energies.csv)
 PLATEAU_OK=${PLATEAU_OK:-1}
+# ⚠⚠ **힘 계산을 끈다 (2026-08-03 실측).** 슬랩이 SCF 30 iter 로 수렴한 뒤
+#   `negative rho` 줄에서 멈춰 보였는데, 실은 죽은 게 아니라 **tprnfor 힘 항**을
+#   35분+ 100% 로 돌고 있었다(elapsed 1h48m, JOB DONE 0). PAW+U 힘은 이 GPU 빌드에서
+#   극단적으로 느리다. 우리 경로는 전부 단일점 scf 이고 E_bind = 총에너지 차분이라
+#   **힘을 아무 데서도 안 쓴다** → 끄는 게 순이득. 130/131 원자면 손해가 더 크다.
+TPRNFOR=${TPRNFOR:-.false.}
 # ⚠⚠ **기본값이 1 이다 (2026-07-31 변경).** 이전 charge density 가 있으면 쓰는 게
 #   언제나 이득인데, 기본을 0 으로 두었다가 두 번 연속 그냥 시작해서 각각 8시간을 버렸다.
 #   원인은 tmux 가 **서버-클라이언트 구조**라는 것: `RESTART=1 tmux new -d '...'` 로는
@@ -150,7 +156,7 @@ gen(){   # $1 = "slab" | "complexes"
     --afm_mode inplane --mol_vacuum 8 --pseudo_dir /data/work/pseudo \
     --no_fsm --degauss "$DEGAUSS" --scf_must_converge "$SCF_MUST" \
     --electron_maxstep "$MAXSTEP" --seed_radical S:0.5 --mixing_ndim "$MIXNDIM" \
-    --report "$REPORT" \
+    --report "$REPORT" --tprnfor "$TPRNFOR" \
     ${extra[@]+"${extra[@]}"} --out "$OUT" || return 1
   # OOM 대책은 refine 판과 동일: 단일-k + david_ndim 2
   for j in slab complex_doped complex_neutral; do
