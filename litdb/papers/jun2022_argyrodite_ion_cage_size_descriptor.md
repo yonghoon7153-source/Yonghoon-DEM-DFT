@@ -843,5 +843,5 @@ docstring: *"std(V) = 0 → crystallographically equivalent sites (ordered); lar
 | Q2 | 케이지 반지름을 잰 **온도** | 판독 불가. 우리 재현 시 600 K 고정으로 자체 정의 |
 | Q3 | "surrounding Li" **컷오프** | 판독 불가. 우리가 R_c 민감도 스캔으로 대체 |
 | Q4 | Li-cage STD ↔ BVSE 채널 % 가 실제로 어긋나는 도펀트 | **§15.2 후처리로 즉시 검증 가능** — 채택 항목 2 |
-| Q5 | 2022 이전 이상욱 랩 argyrodite 논문 존재 여부 | 계보 "출발점" 판정의 마지막 확인 (미조사) |
+| Q5 | 2022 이전 이상욱 랩 argyrodite 논문 존재 여부 | 계보 "출발점" 판정의 마지막 확인. **🔎 2026-08-04 단서 확보 — "미조사" → "후보 1건 특정, 제목 확인 대기"**: `lee2024_multicomponent_argyrodite_mixed_oxidation_mtp` 본문 실물 검증(§11-N14)에서 그 논문의 **ref 35 = B. Jun, C. H. Lee, J. Kim and S. U. Lee, *Bull. Korean Chem. Soc.* 2021, **42**, 1014–1019** 발견 = **Jun + S. U. Lee 의 2022 이전 공저가 실재**한다. ⚠ 단 인용 맥락이 *"MD 는 빠르지만 정확도가 낮다(ref 33–35)"* 여서 **argyrodite 논문인지는 미확정** — 제목 확인 필요 |
 | Q6 | Jung 2020 Nano Lett. 20, 2303 (결정화도 정량 원전) | χc^7.14 회귀의 실험 데이터 원출처. **미보유** |
