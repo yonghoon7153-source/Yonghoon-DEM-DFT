@@ -13,8 +13,22 @@
   결합이 1.8-2.2 A 에 반드시 있다. 그래서 이 스크립트는
   **게이트를 통과하지 못하면 파일을 아예 쓰지 않는다.** 경고만 찍고 넘어가지 않는다.
 
-  python3 tools/sdcp/build_linio2_slab.py --layers 6 --vacuum 10 --supercell 4 1 \
+  python3 tools/sdcp/build_linio2_slab.py --layers 4 --vacuum 14 --supercell 1 2 \
       --out db/structures/linio2_104_rebuilt
+
+셀 크기 고르기 (문헌 감각)
+  (104) 의 **원시** 2D 셀은 2.878 x 5.781 A = 16.64 A^2, 층당 4원자(LiNiO2 1 화학식)로 아주 작다.
+  문헌의 NCM/LiNiO2(104) 흡착 계산이 가벼운 이유가 이것이다 — 보통 원시셀 1-6개를 쓴다.
+  ⚠ ase.build.surface 에 12원자 육방정 셀을 주면 ASE 는 R-centering 이 만드는 면내 병진
+    [-4/3,-2/3,1/3](5.781 A)을 못 보고 **원시셀의 3배**(2.878 x 18.272, 층당 12원자)를 낸다.
+    원하는 면적은 반복 수로 전부 도달하므로 그대로 쓰되, 아래 표의 기준이 그 3배 셀임을 기억할 것.
+
+    반복   층   원자수   표면적       비고
+    1x1    4     48     49.9 A^2    작은 분자 / 깨끗한 표면 에너지
+    1x2    4     96     99.8        **깨진 원본과 같은 원자수, 진짜 구조**
+    1x2    6    144     99.8        두꺼운 슬랩
+    1x3    4    144    149.7
+    2x2    4    192    199.6        깨진 원본과 **같은 면적**(측면 이미지 거리 보존)
 """
 import argparse
 import sys
@@ -105,8 +119,8 @@ def main():
     ap.add_argument("--vacuum", type=float, default=10.0)
     # ⚠ ASE 의 (104) 표면 셀은 a=18.272 · b=2.878 로 나온다. 원본 셀(11.512 x 18.272)에
     #   맞추려면 **b 를 4배** 해야 한다 (1 x 4). 축을 헷갈리면 a 가 73 A 로 튄다(실측).
-    ap.add_argument("--supercell", type=int, nargs=2, default=[1, 4],
-                    help="면내 반복. 1 4 = 18.272 x 11.512 A (원본과 같은 면적)")
+    ap.add_argument("--supercell", type=int, nargs=2, default=[1, 2],
+                    help="면내 반복 (ASE (104) 셀 2.878 x 18.272 = 49.9 A^2, 층당 12원자 기준)")
     ap.add_argument("--out", required=True, help="확장자 없는 출력 접두어")
     a = ap.parse_args()
 
