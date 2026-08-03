@@ -252,8 +252,11 @@ def literature():
             pi_counts[k] = pi_counts.get(k, 0) + 1
     pis = [dict(p, n=pi_counts.get(p["key"], 0)) for p in D.PI_REGISTRY if pi_counts.get(p["key"])]
     pis.sort(key=lambda x: (not x["our"], -x["n"]))
+    tmeta = D.topic_meta()
+    tcounts = {k: sum(1 for p in papers if k in p["topics"]) for k in tmeta}
     return render_template("literature.html", active="lit", papers=papers,
                            count=len(papers), counts=counts, talks=D.list_talks(),
+                           tmeta=tmeta, tcounts=tcounts, tprimer=D.topic_primer(),
                            pis=pis, PI=D.PI_BY_KEY)
 
 

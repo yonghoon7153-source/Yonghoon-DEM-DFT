@@ -32,19 +32,68 @@
 </div>
 {% endif %}
 
-<input class="search" placeholder="검색 (제목·id·type)..." oninput="filt(this.value)">
+
+{% if tmeta %}
+<div class="topic-bar" style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+  <span class="muted" style="font-size:.76rem;margin-right:2px">주제</span>
+  <button class="tp-chip active" data-tp="" onclick="setTP(this)"
+          style="border:1px solid var(--line);background:var(--bg);border-radius:99px;padding:3px 10px;font-size:.74rem;cursor:pointer">전체</button>
+  {% for k, m in tmeta.items() %}
+  <button class="tp-chip" data-tp="{{ k }}" onclick="setTP(this)" title="{{ m.desc }}"
+          style="border:1px solid {{ m.color }}44;background:{{ m.color }}12;color:{{ m.color }};border-radius:99px;padding:3px 10px;font-size:.74rem;cursor:pointer">
+    {{ m.label }}<span class="muted" style="margin-left:4px">{{ tcounts[k] }}</span>
+  </button>
+  {% endfor %}
+  <button class="tp-chip" id="favchip" data-tp="__fav" onclick="setTP(this)" title="별을 누른 논문만"
+          style="border:1px solid #f59e0b55;background:#f59e0b14;color:#b45309;border-radius:99px;padding:3px 10px;font-size:.74rem;cursor:pointer">
+    ★ 즐겨찾기<span class="muted" style="margin-left:4px" id="favn">0</span>
+  </button>
+</div>
+{% if tprimer %}
+<details style="margin-top:8px;border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:var(--bg)">
+  <summary style="cursor:pointer;font-size:.8rem;font-weight:600">📘 {{ tprimer.title }}</summary>
+  <div style="font-size:.78rem;line-height:1.65;margin-top:8px;white-space:pre-wrap">{{ tprimer.body|join('\n') }}</div>
+</details>
+{% endif %}
+<div class="muted" style="font-size:.72rem;margin-top:5px">
+  ⚠ 주제 태그는 <b>손으로 큐레이션</b>한다(<span class="mono">litdb/topics.json</span>).
+  검색창은 제목·id·type 만 훑어서 "screening" 을 쳐도 <b>제목에 그 단어가 있는 7편</b>만 잡히는데,
+  본문 전수 감사로는 <b>13편</b>이었다 — 그래서 태그를 따로 둔다.
+</div>
+{% endif %}
+<input class="search" placeholder="검색 (제목·id·type·주제)..." oninput="filt(this.value)">
 <div class="grid grid-3" id="plist" style="margin-top:16px">
 {% for p in papers %}
 <div class="card paper track-{{ p.track }}" data-track="{{ p.track }}" data-pi="{{ p.pis|join(',') }}"
-     data-t="{{ p.title|lower }} {{ p.id|lower }} {{ p.type|lower }} {{ p.digested }} {% for k in p.pis %}{{ PI[k].ko }} {{ PI[k].en|lower }} {% endfor %}"
+     data-tp="{{ p.topics|join(',') }}" data-id="{{ p.id }}"
+     data-t="{{ p.title|lower }} {{ p.id|lower }} {{ p.type|lower }} {{ p.digested }} {{ p.topics|join(' ')|lower }} {% for k in p.pis %}{{ PI[k].ko }} {{ PI[k].en|lower }} {% endfor %}"
      data-digested="{{ p.digested }}"
      onclick="openPaper('{{ p.id }}')" onkeydown="_kbd(event)" tabindex="0" role="button" style="cursor:pointer;padding:16px 18px">
   <div class="paper-top">
+    {# ⚠ 별은 카드 열기(onclick)와 겹치므로 stopPropagation 필수 #}
+    <button class="favbtn" data-id="{{ p.id }}" onclick="event.stopPropagation();toggleFav(this)"
+            title="즐겨찾기" aria-label="즐겨찾기"
+            style="border:0;background:none;cursor:pointer;font-size:.95rem;line-height:1;padding:0 4px 0 0;color:#d1d5db">☆</button>
     <span class="tbadge tb-{{ p.track }}">{{ 'DFT' if p.track=='dft' else 'DEM' }}</span>
     {# ⚠ [:38] 하드 컷은 한글 낱말 중간에서 잘려 "…실험 없" 처럼 보인다.
      .ptype 에 이미 ellipsis 가 있으니 CSS 에 맡긴다. #}
     {% if p.type %}<span class="ptype" title="{{ p.type }}" style="min-width:0">{{ p.type }}</span>{% endif %}
   </div>
+  {% if p.topics %}<div style="margin-top:6px;display:flex;gap:4px;flex-wrap:wrap">
+    {% for t in p.topics %}<span title="{{ tmeta[t].desc }}"
+      style="background:{{ tmeta[t].color }}18;color:{{ tmeta[t].color }};border-radius:5px;padding:1px 7px;font-size:.67rem;font-weight:700">
+      {{ tmeta[t].label }}</span>{% endfor %}
+  </div>{% endif %}
+  {% if p.gloss %}
+  {# ⚠ 카드 onclick 이 digest 를 여므로 여기서도 stopPropagation. 안 그러면 펼치려다 모달이 뜬다 #}
+  <details onclick="event.stopPropagation()" style="margin-top:8px">
+    <summary style="cursor:pointer;font-size:.72rem;color:var(--mut);font-weight:600">
+      💡 처음 보는 사람용 설명</summary>
+    <div style="font-size:.75rem;line-height:1.6;margin-top:5px">{{ p.gloss }}</div>
+    {% if p.caution %}<div style="font-size:.73rem;line-height:1.55;margin-top:5px;
+         border-left:3px solid #f59e0b;padding-left:7px;color:var(--mut)">
+      ⚠ {{ p.caution }}</div>{% endif %}
+  </details>{% endif %}
   {% if p.pis %}<div style="margin-top:6px;display:flex;gap:4px;flex-wrap:wrap">
     {% for k in p.pis %}<span title="{{ PI[k].en }} · {{ PI[k].aff }}"
       style="background:{{ PI[k].color }}18;color:{{ PI[k].color }};border-radius:99px;padding:1px 7px;font-size:.68rem;font-weight:600">
@@ -105,7 +154,26 @@
   </div>
 </div>
 <script>
-var curTrack='all', curQ='', curPI='', sortMode=false, origOrder=null;
+var curTrack='all', curQ='', curPI='', curTP='', sortMode=false, origOrder=null;
+// ⚠ 즐겨찾기는 서버에 안 올린다 — 개인 표시라 브라우저에만 둔다(localStorage).
+//   litdb 는 여러 사람이 보는 화면이고, 남의 별이 내 화면에 뜨면 오히려 방해가 된다.
+var FAVK='litdb_fav_v1';
+function favSet(){try{return new Set(JSON.parse(localStorage.getItem(FAVK)||'[]'))}catch(e){return new Set()}}
+function favSave(s){try{localStorage.setItem(FAVK,JSON.stringify([].slice.call(s)))}catch(e){}}
+function paintFav(){
+  var f=favSet();
+  document.querySelectorAll('.favbtn').forEach(function(b){
+    var on=f.has(b.dataset.id);
+    b.textContent=on?'★':'☆'; b.style.color=on?'#f59e0b':'#d1d5db';
+  });
+  var n=document.getElementById('favn'); if(n)n.textContent=f.size;
+}
+function toggleFav(b){
+  var f=favSet(), id=b.dataset.id;
+  if(f.has(id))f.delete(id); else f.add(id);
+  favSave(f); paintFav();
+  if(curTP==='__fav')apply();          // 즐겨찾기 필터 중이면 즉시 반영
+}
 function toggleSort(){
   var plist=document.getElementById('plist');
   var cards=[].slice.call(plist.querySelectorAll('.paper'));
@@ -123,13 +191,21 @@ function apply(){
     var okT = curTrack==='all' || c.dataset.track===curTrack;
     var okP = !curPI || (c.dataset.pi||'').split(',').indexOf(curPI)>=0;
     var okQ = !curQ || (c.dataset.t||'').indexOf(curQ)>=0;
-    var show = okT && okP && okQ; c.style.display=show?'':'none'; if(show)n++;
+    var okTP = !curTP || (curTP==='__fav'
+                 ? favSet().has(c.dataset.id||'')
+                 : (c.dataset.tp||'').split(',').indexOf(curTP)>=0);
+    var show = okT && okP && okQ && okTP; c.style.display=show?'':'none'; if(show)n++;
   });
   document.getElementById('nores').style.display=n?'none':'';
 }
 function setPI(b){curPI=b.dataset.pi;
   document.querySelectorAll('.pi-chip').forEach(function(x){x.classList.remove('active');x.style.outline=''});
   b.classList.add('active'); b.style.outline='2px solid currentColor';
+  apply();}
+function setTP(b){curTP=(curTP===b.dataset.tp)?'':b.dataset.tp;   // 같은 칩 다시 누르면 해제
+  document.querySelectorAll('.tp-chip').forEach(function(x){x.classList.remove('active');x.style.outline=''});
+  if(curTP){b.classList.add('active'); b.style.outline='2px solid currentColor';}
+  else{var a=document.querySelector('.tp-chip[data-tp=""]'); if(a)a.classList.add('active');}
   apply();}
 function setTrack(b){curTrack=b.dataset.track;
   document.querySelectorAll('.track-tabs .tt').forEach(function(x){x.classList.remove('active')});
@@ -141,6 +217,7 @@ function openPaper(id){
   document.getElementById('pmodal').classList.add('open');
   fetch('/api/paper/'+id).then(r=>r.json()).then(d=>{document.getElementById('pbody').innerHTML=d.html;});
 }
+paintFav();
 // ⌘K/딥링크로 온 경우 ?open=<id> 자동 오픈
 (function(){var m=new URLSearchParams(location.search).get('open');
   if(m&&/^[a-z0-9_]+$/i.test(m)&&document.querySelector('.paper[onclick*="'+m+'"]'))openPaper(m);})();

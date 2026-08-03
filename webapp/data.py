@@ -1514,6 +1514,41 @@ def list_talks() -> list:
     return out
 
 
+
+# ═══ litdb 주제 태그 (손 큐레이션) ═════════════════════════════════════════
+# ⚠ UI 검색은 제목/id/type 만 훑는다. 'screening' 을 쳐도 **제목에 그 단어가 있는 7편**만
+#   잡히는데, 본문 전수 감사에서 실제 스크리닝 계열은 13편이었다. 휴리스틱으로 늘리면
+#   또 틀리므로 litdb/topics.json 에 **명시적으로 등록**하고 그것만 믿는다.
+_TOPICS_CACHE = {}
+
+
+def litdb_topics() -> dict:
+    if not _TOPICS_CACHE:
+        f = LITDB / "topics.json"
+        try:
+            _TOPICS_CACHE.update(json.loads(f.read_text(encoding="utf-8")))
+        except Exception:
+            _TOPICS_CACHE["_topics"] = {}
+    return _TOPICS_CACHE
+
+
+def topic_meta() -> dict:
+    return litdb_topics().get("_topics", {})
+
+
+def topic_primer() -> dict:
+    return litdb_topics().get("_primer", {})
+
+
+def paper_topics(pid: str) -> dict:
+    """→ {topics: [...], gloss: str|None, caution: str|None}"""
+    e = litdb_topics().get(pid)
+    if not isinstance(e, dict):
+        return {"topics": [], "gloss": None, "caution": None}
+    return {"topics": e.get("topics", []), "gloss": e.get("gloss"),
+            "caution": e.get("caution")}
+
+
 def list_papers() -> list:
     """litdb/papers/*.md → [{id, title, type, track}] (DEM/DFT 분류 포함)."""
     out = []
@@ -1539,9 +1574,12 @@ def list_papers() -> list:
             md = re.search(r"digest(?:ed)?\s*`?(\d{4}-\d{2}-\d{2})`?", line, re.I)
             if md and not digested:
                 digested = md.group(1)
+        tp = paper_topics(f.stem)
         out.append({"id": f.stem, "title": title, "type": type_str,
                     "track": literature_track(f.stem, type_str, title),
-                    "digested": digested, "pis": paper_pis(f.stem)})
+                    "digested": digested, "pis": paper_pis(f.stem),
+                    "topics": tp["topics"], "gloss": tp["gloss"],
+                    "caution": tp["caution"]})
     return out
 
 
