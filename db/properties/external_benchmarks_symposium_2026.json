@@ -187,7 +187,7 @@
     "csp_metastable_conductivity": {
       "source": "lee2026_skku",
       "slide": "28-29 (PDF p.16-17)",
-      "status_of_underlying_work": "JACS 2025, 147, 51, 47381-47391 (출판). 정본 digest: litdb/papers/kim2025_csp_metastable_edge_sharing_sse.md — 본문 11pp + SI 24pp 전수 정독 2026-07-28, **본문 11pp 실물 독립 검증 2026-08-04 (digest §19; SI 실물 미재검)**",
+      "status_of_underlying_work": "JACS 2025, 147, 51, 47381-47391 (출판). 정본 digest: litdb/papers/kim2025_csp_metastable_edge_sharing_sse.md — 본문 11pp + SI 24pp 전수 정독 2026-07-28, **본문 11pp 실물 독립 검증 2026-08-04 (digest §19)**, **SI 24pp 실물 독립 검증 2026-08-04 (digest §20)**. σ 소환 출처인 Huang 2022 는 litdb/papers/huang2022_li2sis3_anomalous_conductivity_bvse.md — **본문 6pp §9 + ESI 12pp §11 실물 독립 검증 2026-08-04**",
       "engine": "USPEX GA + MTP + active learning",
       "targets": [
         {
@@ -225,8 +225,35 @@
           "quantity": "n-Li2SiS3 sigma_RT (실험)",
           "value": 2.4,
           "unit": "mS/cm",
-          "condition": "298 K, EIS 228-383 K, 펠릿 상대밀도 85%",
-          "confidence": "**Huang 2022 실험값 — 복원됨.** 조성 Li1.82SiP0.036S3"
+          "condition": "298 K. **펠릿 ⌀10 mm, 상대밀도 85 %, 두께는 논문 미보고 → 우리가 Fig 4b σ × Fig S4 R 로 역산한 L ≈ 1.251 mm (5점 편차 4 %)**. σ 는 **bulk + grain-boundary 합산** (ESI 명시) → **bulk σ 의 하한**이다. EIS 온도범위는 논문 안에 세 값 (ESI Experimental 228-383 K / Fig S4 캡션 228-375 K / **아레니우스 실제 280-375 K**)",
+          "confidence": "**Huang 2022 실험값 — 복원됨.** ESI Fig S4 의 R(298 K) = 65.3 Ω 로 **독립 재계산해도 2.44e-3 S/cm** (digest §11 검증4). ⚠ 조성식이 논문 안에서 둘 — 본문·Fig S1a **Li1.82SiP0.036S3** ↔ Table S1 **Li1.97Si0.97P0.03S3**(= Rietveld 점유율과 일치, 우리 대칭전개 확인). 인용은 'Li2SiS3 계, Rietveld 실측 Li/M = 1.97' 로"
+        },
+        {
+          "quantity": "n-Li2SiS3 Ea (실험) — **창별로 다르다**",
+          "value": {
+            "280-375 K": 0.278,
+            "228-280 K": 0.347
+          },
+          "unit": "eV",
+          "condition": "σT = A exp(-Ea/kT) 형. 본문 인쇄값 0.28 eV 는 **280-375 K 5점**만의 것이고, ESI Fig S4 에 있는 228/240/260 K 는 Fig 4b 의 x축(1000/T = 2.6-3.6) 밖이다. 9점 전부로 재구성하면 두 가지가 **298.5 K 에서 교차**한다",
+          "confidence": "**우리가 ESI Fig S4 9패널을 600 dpi 픽셀 판독해 재구성** (digest §11 E1, 코드 tools/litdb/huang2022_si_figs.py). 저온 가지 잔차 0.012 dec(2.9 %)로 잡음이 아니다. ⚠ 고온선을 228 K 로 외삽하면 실측 σ 를 **2.30배 과대평가**한다 → **'n-Li2SiS3 Ea = 0.28 eV' 를 창 없이 인용 금지**"
+        },
+        {
+          "quantity": "n-Li2SiS3 R_total (ESI Fig S4 원자료 9점)",
+          "value": {
+            "228": 3475.7,
+            "240": 1523.7,
+            "260": 437.08,
+            "280": 162.77,
+            "298": 65.298,
+            "300": 62.665,
+            "325": 27.731,
+            "350": 14.933,
+            "375": 11.791
+          },
+          "unit": "ohm (T in K)",
+          "condition": "bulk + gb 합. 기하인자 L/A = 0.1592 1/cm (우리 역산)",
+          "confidence": "우리 픽셀 판독. 교정 검증 — R(228) = 3476 Ω 이 Fig S5 등가회로 합(R_bulk 2250 + R_gb 1280 = 3530 Ω)과 **1.5 % 일치**. ⚠ **228 K 에서 R_gb 가 총저항의 36.3 %** → '입계 저항이 작다'는 **298 K 한정 서술**로만 (digest §11 E2)"
         }
       ],
       "descriptors_for_metastable_superionic": {
@@ -467,7 +494,7 @@
       "slide": "35 (PDF p.19)",
       "what": "Level 1 Metadata(YAML, 항상 로드, ~100 토큰) / Level 2 Body(Markdown, 트리거시, <5k) / Level 3 Bundled files(scripts·data, 필요시). 40+ modular skills, 8 범주",
       "claimed_benefit": "낮은 토큰 사용량 + 신뢰도 높은 출력 (⚠ 측정치는 덱에 없음 — 출처 arXiv:2601.04748 확보 필요)",
-   "consistency_flag": "덱은 40+ skills 라 하는데 에이전트별 표기 합은 [3]geometry+[5]simulation+[6]visualization&export+[8]validation = 22 + Analyzer(표기 없음). 관계 미설명 -> digest Q8",
+      "consistency_flag": "덱은 40+ skills 라 하는데 에이전트별 표기 합은 [3]geometry+[5]simulation+[6]visualization&export+[8]validation = 22 + Analyzer(표기 없음). 관계 미설명 -> digest Q8",
       "our_gap": "우리는 Level 2만 있다 — CLAUDE.md(항상 로드지만 100 토큰 아님) + tools/*.py(Level 3). 중간 메타데이터 층 부재",
       "our_action": "T7",
       "priority": 1
@@ -476,8 +503,8 @@
       "source": "moon2026_cau",
       "slide": "16 (PDF p.10)",
       "what": "황화물 ASSB 문헌에서 소재-공정-계면-성능-열화 관계를 neo4j KG로 추출. Graph RAG는 근거검색, GNN은 미연결 잠재관계 예측",
-   "db_scale": "노드 9,596 (16종: Cell/Claim/Component/CurveData/DerivedFeature/Factor/FigurePanel/Material/Mechanism/Metric/MetricResult/Paper/ProcessCondition/Sample/TestCondition/TestRun) · 관계 18,145 (17종: AFFECTS/CONCLUDES/DERIVED_FROM/EXPLAINED_BY/FOR_SAMPLE/HAS_COMPONENT/HAS_CURVE/HAS_PROCESSING/MEASURED_AS/PRODUCES/REALIZED_BY/REPORTS/SHOWN_IN/SUPPORTS/TESTED_BY/UNDER_CONDITION/USED_IN) — 2026-08-03 재판독으로 Q1 종결. 종전 기록의 HAS_UNIT/USES/TESTED_IN 은 전사 오류",
-   "schema_note": "MetricResult·TestCondition·UNDER_CONDITION·MEASURED_AS·SHOWN_IN->FigurePanel 조합이 있어 **실험 조건 맥락은 스키마 수준에서 보존**된다. 다만 property key 가 active_loading_mg_cm2·air_exposure_s 처럼 제조·측정 조건 중심이라 **계산 방법 맥락(functional·k-mesh·supercell)까지 담는지는 불명** -> 우리 T6 고유 확장은 Method/Functional/kMesh 노드타입",
+      "db_scale": "노드 9,596 (16종: Cell/Claim/Component/CurveData/DerivedFeature/Factor/FigurePanel/Material/Mechanism/Metric/MetricResult/Paper/ProcessCondition/Sample/TestCondition/TestRun) · 관계 18,145 (17종: AFFECTS/CONCLUDES/DERIVED_FROM/EXPLAINED_BY/FOR_SAMPLE/HAS_COMPONENT/HAS_CURVE/HAS_PROCESSING/MEASURED_AS/PRODUCES/REALIZED_BY/REPORTS/SHOWN_IN/SUPPORTS/TESTED_BY/UNDER_CONDITION/USED_IN) — 2026-08-03 재판독으로 Q1 종결. 종전 기록의 HAS_UNIT/USES/TESTED_IN 은 전사 오류",
+      "schema_note": "MetricResult·TestCondition·UNDER_CONDITION·MEASURED_AS·SHOWN_IN->FigurePanel 조합이 있어 **실험 조건 맥락은 스키마 수준에서 보존**된다. 다만 property key 가 active_loading_mg_cm2·air_exposure_s 처럼 제조·측정 조건 중심이라 **계산 방법 맥락(functional·k-mesh·supercell)까지 담는지는 불명** -> 우리 T6 고유 확장은 Method/Functional/kMesh 노드타입",
       "convergent_finding": "Case 1 (Unseen but Correct): 'Soft-acid cation doping (HSAB: Sn/Sb/As) in sulfide SE' -> 'Low ionic conductivity' RESOLVED (P(resolved) 0.57 / P(not_resolved) 0.18 / P(unknown) 0.25). **우리 cascade air_hsab 축과 같은 명제를 완전히 다른 경로로 도출**. Case 2 는 'Halide A in Li6PS5A electrolyte (Cl/Br/I)' RESOLVED (0.55/0.15/0.31) — 2026-08-03 재판독 교정: 종전 Li6PS5Cl 고정 표기는 오류. ⚠ 확률이 과반을 겨우 넘으므로 '높은 확신'이라 쓰지 말고 확률 병기",
       "our_action": "T6 — digest를 대체하지 말고 위에 얹기. 방법 맥락과 인용금지 규칙 보존이 조건",
       "priority": 4
