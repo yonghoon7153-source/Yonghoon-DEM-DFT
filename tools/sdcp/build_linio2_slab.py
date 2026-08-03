@@ -38,6 +38,7 @@ from ase import Atoms
 from ase.build import surface
 from ase.io import write
 from ase.neighborlist import neighbor_list
+from collections import Counter
 
 # LiNiO2, R-3m (alpha-NaFeO2 형). 육방정 설정.
 A_HEX, C_HEX = 2.878, 14.19
@@ -79,7 +80,57 @@ def solve_z():
     return best[0]
 
 
-def gate(at, label):
+def planes(at, tol=0.3):
+    """z 로 원자를 (104) 면 단위로 묶는다."""
+    order = np.argsort(at.positions[:, 2])
+    s = at.get_chemical_symbols()
+    g = [[order[0]]]
+    for k in order[1:]:
+        if at.positions[k, 2] - at.positions[g[-1][-1], 2] > tol:
+            g.append([])
+        g[-1].append(k)
+    return [(float(at.positions[q, 2].mean()), dict(Counter(s[i] for i in q))) for q in g]
+
+
+def ni_cn(at, cut=2.4):
+    """Ni 별 O 배위수. neighbor_list 로 주기이미지까지 편다."""
+    ii, jj = neighbor_list("ij", at, cut)
+    s = at.get_chemical_symbols()
+    return {i: sum(1 for k, x in zip(ii, jj) if k == i and s[x] == "O")
+            for i, x in enumerate(s) if x == "Ni"}
+
+
+def find_shift(z_o, layers, vacuum):
+    """bulk 를 c 방향으로 얼마나 밀고 잘라야 **대칭·정본 종단**이 나오나.
+
+    ⚠⚠ **shift 0 으로 자르면 안 된다 (2026-08-03, 설계 리뷰가 잡아냄).** 완전한 (104) 면
+      하나가 셀 경계에서 쪼개져서 위는 **순수 O3 면**, 아래는 Li3Ni3O3 이 된다. 비대칭이고,
+      더 나쁘게 자세 스캔은 z 최대면 위에 분자를 얹으므로 **Ni 없는 산소면에 흡착**시킨다 —
+      (104) 의 정본 표면(5배위 Ni 노출)이 아니다. Ni 3개는 배위수 3까지 떨어진다.
+      **결합길이 게이트는 이걸 통과시킨다** — 결합길이는 다 정상이라서. 원래 사고와 같은 패턴.
+    """
+    best = None
+    for sh in np.linspace(0, 1, 65)[:-1]:
+        bb = build_bulk(z_o)
+        f = bb.get_scaled_positions(); f[:, 2] = (f[:, 2] + sh) % 1.0
+        bb.set_scaled_positions(f)
+        sl = surface(bb, (1, 0, 4), layers=layers, vacuum=vacuum / 2)
+        P = planes(sl)
+        if len(P) < 2 or P[0][1] != P[-1][1]:
+            continue
+        cn = sorted(ni_cn(sl).values())
+        if not cn or min(cn) < 5 or max(cn) != 6:
+            continue
+        # 표면 Ni 가 정확히 CN 5, 내부가 6 인 것 중 면이 가장 많은(=온전한) 것
+        score = (len(P), -abs(sh - 0.0625))
+        if best is None or score > best[0]:
+            best = (score, float(sh), P, cn)
+    if best is None:
+        sys.exit("⛔ 어떤 z-shift 로도 대칭 (104) 종단이 안 나온다 — layers 를 바꿔 볼 것")
+    return best[1], best[2], best[3]
+
+
+def gate(at, label, is_slab=True):
     """⚠ 통과 못 하면 **예외를 던진다**. 경고만 찍고 파일을 쓰면 이 사고가 재발한다."""
     s = at.get_chemical_symbols()
     d = at.get_all_distances(mic=True)
@@ -105,10 +156,30 @@ def gate(at, label):
     ii, jj = neighbor_list("ij", at, 2.4)
     cn = [int(sum(1 for k, x in zip(ii, jj) if k == i and s[x] == "O"))
           for i, x in enumerate(s) if x == "Ni"]
-    lines.append(f"   Ni 의 O 배위수: 최소 {min(cn)} / 최대 {max(cn)} (벌크 6, 표면 4-5)")
+    lines.append(f"   Ni 의 O 배위수: 최소 {min(cn)} / 최대 {max(cn)} (벌크 6, 표면 5)")
     if max(cn) != 6:
         ok = False
         lines.append("   ⛔ 6배위 Ni 가 하나도 없다 — 내부 층이 없거나 구조가 깨졌다")
+    # ⚠⚠ 아래 세 검사가 2026-08-03 에 추가된 것이다. 결합길이만 보는 게이트는
+    #   "윗면이 순수 O3 인 비대칭 슬랩"을 **통과시켰다** — 결합길이는 다 정상이니까.
+    #   분자가 붙는 면이 뭔지가 결합에너지를 결정하므로 여기서 막아야 한다.
+    if is_slab and min(cn) < 5:
+        ok = False
+        lines.append(f"   ⛔ 배위수 {min(cn)} 인 Ni 가 있다 — 종단이 정본 (104)(표면 CN 5)이 아니다")
+    if not is_slab:
+        print("\n".join(lines))
+        return ok
+    P = planes(at)
+    top, bot = P[-1][1], P[0][1]
+    same = (top == bot)
+    lines.append(f"   종단면  아래 {bot}  /  위 {top}  {'일치' if same else '⛔ 불일치'}")
+    if not same:
+        ok = False
+        lines.append("   ⛔ 비대칭 슬랩 — 분자가 붙는 윗면이 아랫면과 다른 화학종이다")
+    if "Ni" not in top:
+        ok = False
+        lines.append("   ⛔ 윗면에 Ni 가 없다 — 흡착 자리(5배위 Ni)가 노출돼 있지 않다")
+    lines.append(f"   (104) 면 {len(P)}장 · 두께 {at.positions[:, 2].max() - at.positions[:, 2].min():.2f} A")
     print("\n".join(lines))
     return ok
 
@@ -116,10 +187,12 @@ def gate(at, label):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--layers", type=int, default=6)
-    ap.add_argument("--vacuum", type=float, default=10.0)
+    # ⚠ 진공은 **분자 꼭대기 → 다음 슬랩 바닥 15 A** 가 기준이다 (디폴 보정 톱니파가
+#   밀도 없는 구간에 앉아야 한다). 여기 값은 맨 슬랩용이고 복합체는 더 필요하다.
+    ap.add_argument("--vacuum", type=float, default=20.0)
     # ⚠ ASE 의 (104) 표면 셀은 a=18.272 · b=2.878 로 나온다. 원본 셀(11.512 x 18.272)에
     #   맞추려면 **b 를 4배** 해야 한다 (1 x 4). 축을 헷갈리면 a 가 73 A 로 튄다(실측).
-    ap.add_argument("--supercell", type=int, nargs=2, default=[1, 2],
+    ap.add_argument("--supercell", type=int, nargs=2, default=[1, 4],
                     help="면내 반복 (ASE (104) 셀 2.878 x 18.272 = 49.9 A^2, 층당 12원자 기준)")
     ap.add_argument("--out", required=True, help="확장자 없는 출력 접두어")
     a = ap.parse_args()
@@ -127,10 +200,16 @@ def main():
     z_o = solve_z()
     bulk_ = build_bulk(z_o)
     print(f"O z 자유도 = {z_o:.4f} (Ni-O 를 문헌 1.97 A 에 맞춰 역산)")
-    if not gate(bulk_, "bulk LiNiO2"):
+    if not gate(bulk_, "bulk LiNiO2", is_slab=False):
         sys.exit("⛔ 벌크가 게이트를 통과 못 했다 — 슬랩을 자를 이유가 없다")
 
-    sl = surface(bulk_, (1, 0, 4), layers=a.layers, vacuum=a.vacuum / 2)
+    sh, P0, cn0 = find_shift(z_o, a.layers, a.vacuum)
+    print(f"\nz-shift = {sh:.4f} c 로 자른다 (대칭 종단 + 표면 Ni CN 5)")
+    print(f"   완전한 (104) 면 {len(P0)}장, 종단 조성 {P0[0][1]}, Ni CN {sorted(set(cn0))}")
+    bb = build_bulk(z_o)
+    f = bb.get_scaled_positions(); f[:, 2] = (f[:, 2] + sh) % 1.0
+    bb.set_scaled_positions(f)
+    sl = surface(bb, (1, 0, 4), layers=a.layers, vacuum=a.vacuum / 2)
     sl = sl.repeat((a.supercell[0], a.supercell[1], 1))
     sl.set_pbc(True)
     print(f"\n(104) 슬랩: 면내 |a|={np.linalg.norm(sl.cell[0]):.3f} "
