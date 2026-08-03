@@ -4149,9 +4149,17 @@ def api_eis_exp():
 
 
 def _eis_archive_paths():
-    """이종기술/eis 아카이브 경로 (raw/extracted/catalog/fits)."""
+    """이종기술/eis 아카이브 경로 (raw/extracted/catalog/fits).
+
+    ★ WEBAPP_EIS_FOLDER 로 override 가능 (2026-08-03).  이 경로는 다른 폴더들과 달리
+      env 를 안 봐서 **리포 안 실제 측정 아카이브로 고정**돼 있었다 — 그 결과 이 라우트를
+      부르는 테스트가 WEBAPP_* 를 tmp 로 다 돌려놔도 **진짜 fits CSV·두께 override 를
+      덮어썼다** (실제로 발생: eis_fit_results.csv 12행 → 테스트 1행으로 소실.
+      extracted/*.csv 는 git tracked 라 무손상이었고 eis_fit.py 재실행으로 전량 복구).
+      derived 산출물은 재생성되지만 테스트가 실데이터를 만지는 구조 자체가 결함이다.
+    """
     _root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    a = os.path.join(_root, '이종기술', 'eis')
+    a = os.environ.get('WEBAPP_EIS_FOLDER') or os.path.join(_root, '이종기술', 'eis')
     return {'root': _root, 'archive': a, 'raw': os.path.join(a, 'raw'),
             'extracted': os.path.join(a, 'extracted'), 'catalog': os.path.join(a, 'eis_catalog.csv'),
             'fits': os.path.join(a, 'fits', 'eis_fit_results.csv')}
