@@ -718,7 +718,10 @@ def main():
         if (a.step4_ds_poly is not None or a.step4_i0_poly is not None) and _ds_scalar is None:
             _es += f' --am-split-um {a.step4_am_split_um:g}'
             _eslab = f' · ★poly/SC 분리(split r≥{a.step4_am_split_um:g}µm)'
+        # ★ STOP 센티널 (2026-08-03) — 스케줄 경로와 같은 규약: 진행 중인 rate 는 끝까지 마치고
+        #   (npz 는 런 끝에 한 번에 쓰이므로 kill 하면 통째로 날아간다) 다음 rate 전에 멈춘다.
         _dis_loop = f'''  for CR in {_dis}; do
+    if [ -f STOP ]; then echo "[run_mpm] ⏹ STOP 감지 — ${{CR}}C 시작 전 중단 (직전 rate 까지 산출물 온전; 재개: rm STOP && bash step4_only.sh)"; continue; fi
     echo "[run_mpm] STEP4 방전 ${{CR}}C start $(date)  (컷오프 {a.step4_vmin:g}–{a.step4_vmax:g} V{_rlab}{_eslab})"
     python3 "$SCR/step4_dyn.py" --grid step4_grid.npz \\
       --ocp-csv "$AP/ocp_nmc811_chen2020.csv" --params-json "$AP/params_nmc811_chen2020.json" \\
@@ -728,6 +731,7 @@ def main():
   done
 ''' if s4_rates else ''
         _chg_loop = f'''  for CR in {_chg}; do
+    if [ -f STOP ]; then echo "[run_mpm] ⏹ STOP 감지 — ${{CR}}C 시작 전 중단 (직전 rate 까지 산출물 온전; 재개: rm STOP && bash step4_only.sh)"; continue; fi
     echo "[run_mpm] STEP4 충전(CCCV) ${{CR}}C start $(date)  (CV@{a.step4_vmax:g}V → I<{a.step4_icut:g}C 종지{_rlab}{_eslab})"
     python3 "$SCR/step4_dyn.py" --grid step4_grid.npz \\
       --ocp-csv "$AP/ocp_nmc811_chen2020.csv" --params-json "$AP/params_nmc811_chen2020.json" \\
@@ -760,10 +764,17 @@ def main():
                 _sv = f's4state_{_i:02d}n{_cyc}.npz'
                 _ci = f' --init-state "{_prev_sv}"' if (a.step4_chain and _prev_sv) else ''
                 _co = f' --save-state "{_sv}"' if a.step4_chain else ''
-                _gp = (f'  if [ ! -f "{_prev_sv}" ]; then echo "[run_mpm] 스케줄[{_i}]cyc{_cyc} SKIP '
-                       f'— 체인 끊김({_prev_sv} 없음; step4_only.sh 로 재개)"; else\n'
-                       if (a.step4_chain and _prev_sv) else '')
-                _gs = '\n  fi' if (a.step4_chain and _prev_sv) else ''
+                # ★ STOP 센티널 (2026-08-03): 스텝 **시작 전**에만 본다 → 진행 중인 스텝은 끝까지
+                #   마치고 npz/viz/state 를 온전히 쓴 뒤 다음 스텝 전에 멈춘다.  kill 과 다르다:
+                #   kill 은 쓰는 도중이면 그 스텝을 통째로 날린다 (npz 는 스텝 끝에 한 번에 씀).
+                #   사용: touch $RUN_DIR/STOP      해제: rm $RUN_DIR/STOP
+                _sp = (f'  if [ -f STOP ]; then echo "[run_mpm] ⏹ STOP 감지 — 스케줄[{_i}]cyc{_cyc} '
+                       f'시작 전 중단 (직전까지 산출물 온전; 재개: rm STOP && bash step4_only.sh)"; else\n')
+                _ss = '\n  fi'
+                _gp = _sp + (f'  if [ ! -f "{_prev_sv}" ]; then echo "[run_mpm] 스케줄[{_i}]cyc{_cyc} SKIP '
+                             f'— 체인 끊김({_prev_sv} 없음; step4_only.sh 로 재개)"; else\n'
+                             if (a.step4_chain and _prev_sv) else '')
+                _gs = ('\n  fi' if (a.step4_chain and _prev_sv) else '') + _ss
                 if _st['k'] == 'r':
                     if a.step4_chain and _prev_sv:           # 실제 I=0 완화 (망솔브 없음 — 수 초, CPU)
                         _sl.append(
@@ -985,6 +996,60 @@ echo "          (오래된 run_* 폴더는 디스크 차면 지워도 됨 — �
                    '  exit 0\nfi\ncd "$RUN"\n' + s4_body)
         sp = os.path.join(a.out, 'step4_only.sh')
         open(sp, 'w').write(s4_only); os.chmod(sp, 0o755)
+    # ── harvest.sh — 끝난 스텝만 골라 tar 로 묶기 (2026-08-03) ─────────────────────────────
+    #    동기: 긴 스케줄에서 **앞 스텝 하나만** 쓰고 싶을 때 뭘 가져와야 하는지가 불명확했다.
+    #    스케줄 각 스텝은 끝나는 즉시 자기 npz/viz/state 를 쓰므로 체인 전체를 기다릴 필요가 없다.
+    #    두 모드: 기본 = 분석/뷰어용(작음, grid 제외) · --resume = 재개용(step4_grid.npz 포함, 큼).
+    #    ★plain 문자열 (f-string 아님 → bash ${} 리터럴).
+    harv = ('#!/usr/bin/env bash\n'
+            'set -uo pipefail\n'
+            '# 끝난 STEP4 스텝만 골라 tar.gz 로 묶는다.  체인 전체를 기다릴 필요 없음 —\n'
+            '# 각 스텝은 종료 즉시 자기 npz/viz/state 를 쓴다.\n'
+            '#   bash harvest.sh                       # latest_run 의 모든 step4 산출물 (뷰어용)\n'
+            '#   bash harvest.sh \'*chg_c0.2*\'          # 0.2C 충전 것만\n'
+            '#   bash harvest.sh \'*chg_c0.2*\' --resume # + step4_grid.npz·s4state (재개용, 큼)\n'
+            '#   HARVEST_RUN=/path/to/run_dir bash harvest.sh …\n'
+            'KIT="$(cd "$(dirname "$0")" && pwd)"\n'
+            'RUN="${HARVEST_RUN:-$KIT/latest_run}"\n'
+            '[ -d "$RUN" ] || { echo "run 폴더 없음: $RUN  (HARVEST_RUN=... 로 지정)"; exit 1; }\n'
+            'RUN="$(cd "$RUN" && pwd)"\n'
+            'PAT="${1:-step4_*}"\n'
+            'RESUME=0; for x in "$@"; do [ "$x" = "--resume" ] && RESUME=1; done\n'
+            'cd "$RUN"\n'
+            'TMP="$(mktemp -d)"; trap \'rm -rf "$TMP"\' EXIT\n'
+            'LIST="$TMP/files"; : > "$LIST"\n'
+            '# ── geometry / provenance (STEP2 산출 — 뷰어와 감사에 필수, 작음) ──\n'
+            'for f in mpm_payload.json mpm_metrics.json mpm_input.json mpm_run.log; do\n'
+            '  [ -f "$f" ] && echo "$f" >> "$LIST"\n'
+            'done\n'
+            'ls -1 step4_run_*.log 2>/dev/null >> "$LIST"\n'
+            '# ── 지정 패턴의 STEP4 산출물 (npz + viz json) ──\n'
+            'N=0\n'
+            'for f in $PAT; do\n'
+            '  [ -e "$f" ] || continue\n'
+            '  case "$f" in step4_grid.npz|s4state_*) continue;; esac   # 아래 --resume 에서만\n'
+            '  echo "$f" >> "$LIST"; N=$((N+1))\n'
+            'done\n'
+            '[ "$N" -gt 0 ] || { echo "패턴에 맞는 산출물 0개: $PAT   (여기 있는 것:)"; '
+            'ls -1 step4_*.npz step4_*.json 2>/dev/null | head -20; exit 1; }\n'
+            'if [ "$RESUME" = 1 ]; then\n'
+            '  for f in step4_grid.npz s4state_*.npz; do [ -e "$f" ] && echo "$f" >> "$LIST"; done\n'
+            'fi\n'
+            'sort -u "$LIST" -o "$LIST"\n'
+            '# ★모드를 파일명에 박는다 — 안 그러면 같은 초에 두 모드를 돌렸을 때 뒤엣것이\n'
+            '#   앞엣것을 조용히 덮어쓴다 (실측).  타임스탬프는 초 해상도라 충분치 않다.\n'
+            'MODE="view"; [ "$RESUME" = 1 ] && MODE="resume"\n'
+            'OUT="$KIT/harvest_$(basename "$RUN")_${MODE}_$(date +%Y%m%d_%H%M%S).tar.gz"\n'
+            '[ -e "$OUT" ] && OUT="${OUT%.tar.gz}_$$.tar.gz"   # 같은 초 재실행도 안 덮어씀\n'
+            'echo "── 묶는 파일 ──"; while read -r f; do printf "  %10s  %s\\n" '
+            '"$(du -h "$f" | cut -f1)" "$f"; done < "$LIST"\n'
+            'tar -czf "$OUT" -T "$LIST" || { echo "tar 실패"; exit 1; }\n'
+            'echo ""\n'
+            'echo "✓ $OUT   ($(du -h "$OUT" | cut -f1))"\n'
+            '[ "$RESUME" = 1 ] || echo "  (grid·state 제외 = 뷰어/분석용.  재개하려면 --resume)"\n'
+            'echo "  받기: scp <user>@<host>:$OUT ."\n')
+    hp = os.path.join(a.out, 'harvest.sh')
+    open(hp, 'w').write(harv); os.chmod(hp, 0o755)
     # ── A-1 사이클 열화 앵커 companion (real_degrading_electrode §3 A-1) — 이 킷 스캐폴드 + 케이스
     #    설정(box_x/n_grid/E_SE/ν/press)으로 바로 실행.  webapp 킷에 항상 포함(zip = dir 전체).
     #    ★plain 문자열 + __TOKEN__ 치환 (f-string 아님 → bash ${}/$() 리터럴; \<newline> 회피 위해
