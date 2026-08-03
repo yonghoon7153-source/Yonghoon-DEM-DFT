@@ -185,6 +185,34 @@ ONLY §F1; 레지스트리 Severson/NASA/Stanford/Oxford/sulfide).  전부 selft
 남은 것: WSL 실학습(sklearn) · C_dl/R_w 실험 EIS 앵커 · 오픈소스 실다운로드 · webapp EIS/사이클곡선 패널 ·
 STEP4 PyBaMM 패리티(#5) · 앵커대기(불변: Joule ΔT·코팅√N·SDCP E_bind·NCA175).
 
+### ★ 설계→구조 ML 예측기 확정 (2026-08-03, scripts/ml_design_structure.py + webapp/structure_predictor.py) ★
+σ 삼중항은 **의도적으로 ML 타깃이 아님** — 스케일링법칙(.975/.953/.90)이 소관이고 ML 은 그
+법칙의 **입력(구조)** 만 예측.  방법론은 리포가 σ 에 이미 쓴 것 그대로: 해석적 LOOCV(hat) ·
+탐욕 전방선택 + n/k ≥ 15:1 · **중첩 CV**(항·λ·기저족 전부 폴드 안에서 재선택) · Laplace 사후
+PI + 경험 커버리지 · leverage 외삽 게이트 · 순차 D-최적 배치제안.  numpy 전용 → 배포 추론에
+sklearn 불요(예측기 페이지 영구 "Not Trained" 의 원인이었음).
+**⚠ 곱항은 자유노브 6 개끼리로 제한이 생산 기본값 (free_products=True).**  13 특징 중 7 개가
+나머지 6 개의 대수적 함수(예: se_density_proxy=(100−am_pct)/d_se)라 유도량끼리의 곱은 물리적
+교호작용이 아니라 다항 재표현.  코퍼스 291 실측 대조(91 곱항 → 21 곱항):
+  mpm_plastic_gain nested 0.466→**0.587**, 편향 0.178→**0.032**
+  use_porosity_pct 편향 0.124→**0.007** (18배↓) · f_perc 편향 0.085→**0.008** (10배↓)
+  손실은 phi_se −0.011 / mpm_dg_mean −0.010 뿐.
+⇒ 유도량 곱 70 개는 **정보 없이 후보만 늘려 다중비교 문턱을 올리고 헛적합을 제공하는 과적합
+연료**였다.  되돌리려면 --derived-products (대조 전용).  ★DO NOT 되돌리지 말 것.
+판정(nested 기준, --free-knobs 기본): USABLE 7 = phi_se .929 · se_of_solid .928 · tau .921 ·
+thickness .880 · phi_am .855 · cn .798 · f_perc .772 / WEAK 4 = coverage·am_cn .708 ·
+mpm_plastic_gain .587 · mpm_dg_mean .611 / REJECT 1 = use_porosity_pct .397.
+**★ use_porosity_pct 는 학습·노출 금지 열** — 게이트가 porosity 만 MPM 으로 바꾸고 φ 는 DEM
+것을 남겨, 닫힘 잔차 sd 가 ε 자체 sd 의 **78 %** (한 물리상태가 아님).  porosity 는 회귀 말고
+**ε = C − φ_SE − φ_AM** 로 계산(raw DEM 닫힘 1.0000±0.0000 = 정확한 항등식 → φ 너머 정보 0).
+낮은 R²(0.61 천장)의 원인은 정보부족이 아니라 **작은 차의 오차증폭 17×** (φ 합 0.844 vs
+ε sd 0.0486).  띠는 전파-가정이 아니라 학습 때 **측정한** 폴드-밖 잔차 sd 2.98 %p.
+교호작용(--interactions): f_perc 가 유일한 강신호(linear .532→full .783, Δ교호 +0.257) —
+쌍이 d_se×am_pct · d_se×rve · am_pct×rve = 퍼콜레이션 문턱 + 유한크기 스케일링으로 물리 정합.
+**⚠ GPR 경로(predictor_engine)의 CV_R² 는 위 nested 와 같은 척도가 아님** — 커널 6 개 중
+최댓값을 전체 데이터로 골라 보고(max-of-6 낙관) + scaler_X/y 를 폴드 나누기 **전에** 적합
+(표준화 누수).  나란히 크기 비교 금지.  고치려면 커널선택 중첩 + 스케일러를 폴드 안으로(WSL).
+
 ### ★ 활성 트랙 (2026-07-15): SDCP manuscript + STEP 파이프라인 ★
 STEP1(DEM)·STEP2(MPM 압밀/payload)·STEP3(복셀 Kirchhoff σ_e/σ_ion + pore-τ +
 분산 + collector) = production.  STEP4-v1(저율 선형 BV 반응분포) = payload 탑재.

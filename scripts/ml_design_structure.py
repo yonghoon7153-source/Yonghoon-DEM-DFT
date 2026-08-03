@@ -108,6 +108,14 @@ def candidate_terms(d, family='full', free_products=False):
       `D50 x Dseed` 처럼 **독립 노브 쌍**을 묻는 거라면 이 제한을 켜야 답이 맞다.
       (1차항은 전부 남긴다 - 유도량은 유용한 비선형 변환이고, 해석이 걸린 건 곱항이다.)
     """
+    #   ★ 2026-08-03 코퍼스 291 실측으로 free_products=True 가 **생산 기본값**이 되었다.
+    #     유도량 곱을 허용(91 후보)했을 때 vs 자유노브만(21 후보):
+    #       mpm_plastic_gain  nested 0.466→0.587, 편향 0.178→0.032
+    #       use_porosity_pct  편향 0.124→0.007 (18배↓)
+    #       f_perc            편향 0.085→0.008 (10배↓), nested 0.758→0.772
+    #     즉 유도량 곱 70 개는 정보를 안 주면서 후보 수만 늘려 다중비교 문턱을 올리고
+    #     헛적합을 제공하는 **과적합 연료**였다.  손실은 phi_se −0.011 / dg_mean −0.010 뿐.
+    #     되돌리려면 --derived-products (대조 실험용).
     prod = list(range(len(FREE_KNOBS))) if free_products else list(range(d))
     terms = [[]] + [[i] for i in range(d)]
     if family in ('quadratic', 'full'):
@@ -205,7 +213,7 @@ def select_terms(X, y, max_terms=MAX_TERMS, lam=LAM_SELECT, family='full',
     return chosen, trace, k_cap
 
 
-def fit_target(X, y, kind='lin', max_terms=MAX_TERMS, family='auto', free_products=False):
+def fit_target(X, y, kind='lin', max_terms=MAX_TERMS, family='auto', free_products=True):
     """한 타깃 적합 — 항선택 → λ 튜닝 → Laplace 사후.  반환 model dict (JSON 직렬화 가능)."""
     ylog = kind == 'log'
     yy = np.log(np.clip(y, 1e-12, None)) if ylog else np.asarray(y, float)
@@ -813,7 +821,7 @@ def verdict(nested_r2, cover):
 
 
 def train(csv_path, out_path=None, verbose=True, folds=10, do_nested=True,
-          family='auto', free_products=False):
+          family='auto', free_products=True):
     X, ys, names, _rows = load_corpus(csv_path)
     if verbose:
         print(f'  설계행렬 {X.shape[0]} × {X.shape[1]}  ·  타깃 {len(ys)}개  '
@@ -1317,9 +1325,11 @@ def main(argv=None):
                     help='순차 D-최적 갱신을 끈다 = 개별 h* 상위 N (평평해짐).  대조용')
     ap.add_argument('--suggest-cand', type=int, default=4000,
                     help='능동학습 후보 표본 수 (실현가능 필터를 통과할 만큼 넉넉히)')
+    ap.add_argument('--derived-products', action='store_true',
+                    help='곱항에 **유도량끼리**도 허용 (구 기본값).  코퍼스 291 에서 이건 편향을 '
+                         '5~18배 키웠다 — 재현·대조용으로만 쓸 것')
     ap.add_argument('--free-knobs', action='store_true',
-                    help='곱항을 자유노브 6 개끼리로 제한 — 유도량끼리의 곱은 대수적 재표현이라 '
-                         '물리적 교호작용이 아니다 (주간보고의 D50 x Dseed 는 독립노브 쌍)')
+                    help='(기본 ON, 하위호환용 무동작 플래그) 곱항을 자유노브 6 개끼리로 제한')
     ap.add_argument('--basis', default='auto', choices=['auto', 'linear', 'quadratic', 'full'],
                     help='기저족.  auto = 폴드 **안에서** 타깃마다 재선택 (편향 없음)')
     ap.add_argument('--interactions', action='store_true',
@@ -1334,11 +1344,12 @@ def main(argv=None):
         return 1
     if a.interactions:
         print(f'교호작용 스크린 — 기저족 중첩 비교 ({a.csv})'
-              + ('   [곱항 = 자유노브 6 개끼리만]' if a.free_knobs else
-                 '   ⚠ 곱항에 유도량끼리가 섞임 — 물리적 교호작용을 물으려면 --free-knobs'))
+              + ('   ⚠ 곱항에 유도량끼리가 섞임 (구 기본값, 대조용)' if a.derived_products else
+                 '   [곱항 = 자유노브 6 개끼리만 — 기본]'))
         print(f"  {'타깃':32s} {'n':>4s} {'linear':>7s} {'+곡률':>7s} {'+교호':>7s} "
               f"{'Δ곡률':>7s} {'Δ교호':>7s} {'잡음':>7s}  판정")
-        _res = interaction_screen(a.csv, folds=a.folds, free_products=a.free_knobs)
+        _res = interaction_screen(a.csv, folds=a.folds,
+                                  free_products=not a.derived_products)
         for t, r in _res.items():
             print(f"  {t:32s} {r['n']:4d} {r['linear']:+7.3f} {r['quadratic']:+7.3f} "
                   f"{r['full']:+7.3f} {r['d_curvature']:+7.3f} {r['d_interaction']:+7.3f} "
@@ -1390,7 +1401,7 @@ def main(argv=None):
         return 0
     print(f'설계 → 구조 학습 — {a.csv}')
     b = train(a.csv, a.out or None, folds=a.folds, do_nested=not a.no_nested,
-              family=a.basis, free_products=a.free_knobs)
+              family=a.basis, free_products=not a.derived_products)
     if a.suggest:
         X, _ys, _n, _r = load_corpus(a.csv)
         res = suggest(b, X, a.suggest_target, n_out=a.suggest, n_cand=a.suggest_cand,
