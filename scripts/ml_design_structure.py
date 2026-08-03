@@ -303,40 +303,100 @@ def physics_audit(bundle, X):
 # ══════════════════════════════════════════════════════════════════════════════
 #  능동학습 — 다음 DEM 을 어디서 돌릴까
 # ══════════════════════════════════════════════════════════════════════════════
-def suggest(bundle, X, target, n_out=10, grid=7, seed=0):
-    """후보 격자에서 (PI 폭 × 신규성) 상위 n_out.  active_learning_suggest.py 와 같은 논리.
+def derive_features(d_se, d_am, am_pct, ps_frac, rve, loading):
+    """설계 13-특징을 **자유노브 6개**에서 유도 — predictor_engine 과 같은 정의.
+
+    ★ 13 특징 중 7 개(d_ratio·am_loading·se_density_proxy·layer_count·size_ratio_inv·
+      am_se_interaction·log_d_se)는 나머지 6 개의 **결정론적 함수**다.  그래서 13 차원을
+      독립으로 뽑으면 자기모순 설계가 나온다 (실제로 첫 실런에서 d_se=2.92 인데
+      log_d_se=0.85, d_ratio=0.215 인데 d_se/d_am=6.23 인 후보를 뱉었다 — 시뮬에 못 넣는 값).
+      가능하면 predictor_engine 을 그대로 재사용하고, 못 불러오면 아래 사본을 쓴다
+      (사본이 원본과 같은지는 selftest 가 대조한다).
+    """
+    try:                                              # 원본 재사용 (재구현 금지)
+        import sys as _sys
+        _wa = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'webapp')
+        if _wa not in _sys.path:
+            _sys.path.insert(0, _wa)
+        from predictor_engine import derive_features as _df
+        return _df(d_se, d_am, am_pct, ps_frac, rve, loading)
+    except Exception:                                 # noqa: BLE001 — 오프라인 사본
+        return {'d_se': d_se, 'd_am': d_am, 'am_pct': am_pct, 'ps_frac': ps_frac,
+                'rve': rve, 'loading': loading,
+                'd_ratio': d_se / d_am if d_am > 0 else 0.1,
+                'am_loading': am_pct * loading / 100,
+                'se_density_proxy': (100 - am_pct) / max(d_se, 0.1),
+                'layer_count': loading * 30 / max(d_se, 0.1),
+                'size_ratio_inv': d_am / d_se if d_se > 0 else 10,
+                'am_se_interaction': am_pct * (1 - ps_frac) / 100,
+                'log_d_se': math.log(max(d_se, 0.1))}
+
+
+FREE_KNOBS = ['d_se', 'd_am', 'am_pct', 'ps_frac', 'rve', 'loading']
+
+
+def suggest(bundle, X, target, n_out=10, n_cand=2000, seed=0, allow_weak=False):
+    """후보에서 (PI 폭 × 신규성) 상위 n_out.  active_learning_suggest.py 와 같은 논리.
+
+    ★ 후보는 **자유노브 6 개만 뽑고 나머지 7 개는 유도**한다 — 그래야 나온 설계를
+      그대로 DEM 에 넣을 수 있다 (13 차원 독립 샘플링은 자기모순 설계를 만든다).
+    ★ 판정이 REJECT 인 타깃에는 제안하지 않는다.  못 맞히는 모형의 불확실성 순위는
+      "어디가 정보가 많은가" 가 아니라 그냥 잡음이다.
 
     CAVEAT: 휴리스틱 플래너다.  진짜 정보이득은 그 점을 실제로 돌려봐야 안다.
     """
     m = bundle['models'].get(target)
     if m is None:
-        return []
+        return {'error': f'타깃 없음: {target}', 'rows': []}
+    vd = m.get('verdict', 'WEAK')
+    if vd == 'REJECT' or (vd == 'WEAK' and not allow_weak):
+        return {'error': (f'{target} 판정 = {vd} (nested R²={m.get("nested_cv_r2", float("nan")):+.3f}). '
+                          '못 맞히는 모형의 불확실성 순위는 정보이득이 아니라 잡음이다 — '
+                          'USABLE 타깃으로 제안하거나 --allow-weak 로 강행.'), 'rows': []}
     rs = np.random.default_rng(seed)
-    lo, hi = np.percentile(X, 5, axis=0), np.percentile(X, 95, axis=0)
-    cand = rs.uniform(lo, hi, size=(grid ** 2 * 40, X.shape[1]))
+    ji = [DESIGN_FEATURES.index(k) for k in FREE_KNOBS]
+    lo, hi = np.percentile(X[:, ji], 2, axis=0), np.percentile(X[:, ji], 98, axis=0)
     mu, sd = np.asarray(m['mu']), np.asarray(m['sd'])
     Xs = (X - mu) / sd
     rows = []
-    for c in cand:
+    for knob in rs.uniform(lo, hi, size=(int(n_cand), len(FREE_KNOBS))):
+        d = derive_features(*knob)
+        c = np.array([float(d[f]) for f in DESIGN_FEATURES])
         p = predict(m, c)
         nov = float(np.min(np.linalg.norm(Xs - (c - mu) / sd, axis=1)))
-        rows.append((p['sd'] * nov, p, nov, c))
+        rows.append((p['sd'] * nov, p, nov, knob))
     rows.sort(key=lambda t: -t[0])
-    return [{'score': round(s, 4), 'pred': round(p['value'], 4),
-             'pi90': [round(p['lo'], 4), round(p['hi'], 4)],
-             'novelty': round(nov, 3), 'extrapolation': p['extrapolation'],
-             'design': {f: round(float(v), 4) for f, v in zip(DESIGN_FEATURES, c)}}
-            for s, p, nov, c in rows[:n_out]]
+    return {'error': None, 'target': target, 'verdict': vd,
+            'rows': [{'score': round(s, 4), 'pred': round(p['value'], 4),
+                      'pi90': [round(p['lo'], 4), round(p['hi'], 4)],
+                      'novelty': round(nov, 3), 'extrapolation': p['extrapolation'],
+                      'design': {f: round(float(v), 4) for f, v in zip(FREE_KNOBS, k)}}
+                     for s, p, nov, k in rows[:n_out]]}
 
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  데이터층 → 학습
 # ══════════════════════════════════════════════════════════════════════════════
+def _column(rows, name):
+    """행 목록에서 한 수치열 → (idx, y).  파싱 안 되는 칸은 그 열에서만 뺀다."""
+    idx, val = [], []
+    for i, r in enumerate(rows):
+        v = r.get(name, '')
+        if v in ('', None):
+            continue
+        try:
+            val.append(float(v))
+            idx.append(i)
+        except (ValueError, TypeError):
+            pass
+    return np.asarray(idx, int), np.asarray(val, float)
+
+
 def load_corpus(csv_path):
-    """데이터층 CSV → (X, {target: (idx, y)}, names).  결측은 그 타깃에서만 제외."""
-    rows = list(_csv.DictReader(open(csv_path)))
+    """데이터층 CSV → (X, {target: (idx, y)}, names, rows).  결측은 그 타깃에서만 제외."""
+    raw = list(_csv.DictReader(open(csv_path)))
     keep, names = [], []
-    for r in rows:
+    for r in raw:
         try:
             keep.append(([float(r[f]) for f in DESIGN_FEATURES], r))
             names.append(r.get('name', ''))
@@ -346,19 +406,66 @@ def load_corpus(csv_path):
     kept_rows = [k[1] for k in keep]
     ys = {}
     for t, _k in STRUCTURE_TARGETS:
-        idx, val = [], []
-        for i, r in enumerate(kept_rows):
-            v = r.get(t, '')
-            if v in ('', None):
-                continue
-            try:
-                val.append(float(v))
-                idx.append(i)
-            except (ValueError, TypeError):
-                pass
+        idx, val = _column(kept_rows, t)
         if len(val) >= MIN_N_TARGET:
-            ys[t] = (np.asarray(idx, int), np.asarray(val, float))
-    return X, ys, names
+            ys[t] = (idx, val)
+    return X, ys, names, kept_rows
+
+
+def diagnose(csv_path, target, split_by='use_source', vs=None, folds=10):
+    """REJECT/WEAK 타깃 부검 — **혼합 자체가 문제인가**를 가른다.
+
+    `use_porosity_pct` 는 regime-gate 가 케이스마다 DEM 값이나 MPM 값을 고른 **스위치된**
+    양이다.  설계공간의 매끄러운 다항식은 "어느 모델이 무너졌나" 에 달린 불연속을 표현할
+    수 없다.  가설이 맞다면:
+
+      · 부분집합(DEM-출처만 / MPM-출처만)의 nested R² 가 혼합보다 뚜렷이 높다
+      · 단일-출처 원열(raw DEM porosity)이 게이트된 열보다 잘 배워진다
+
+    둘 다 아니면 게이트 탓이 아니라 porosity 가 이 설계해상도에서 **본래 확률적**이라는
+    뜻이다 (씨앗별 패킹).  둘은 처방이 다르다 — 전자는 게이트를 따로 배우면 되고,
+    후자는 더 배워도 소용없으니 ±밴드로 보고해야 한다.
+    """
+    X, _ys, _names, rows = load_corpus(csv_path)
+    kind = dict(STRUCTURE_TARGETS).get(target, 'lin')
+    idx, y = _column(rows, target)
+    out = {'target': target, 'kind': kind,
+           'mixture': {'n': int(len(y)),
+                       'nested': nested_cv(X[idx], y, kind, folds=folds) if len(y) >= MIN_N_TARGET else None},
+           'split_by': split_by, 'groups': {}, 'vs': None}
+    groups = {}
+    for i in idx:
+        groups.setdefault(str(rows[i].get(split_by, '') or '?'), []).append(i)
+    for g, ii in sorted(groups.items()):
+        ii = np.asarray(ii, int)
+        yy = np.asarray([float(rows[i][target]) for i in ii], float)
+        out['groups'][g] = {
+            'n': int(len(ii)),
+            'nested': (nested_cv(X[ii], yy, kind, folds=min(folds, max(3, len(ii) // 8)))
+                       if len(ii) >= MIN_N_TARGET else None)}
+    if vs:
+        i2, y2 = _column(rows, vs)
+        out['vs'] = {'column': vs, 'n': int(len(y2)),
+                     'nested': (nested_cv(X[i2], y2, kind, folds=folds)
+                                if len(y2) >= MIN_N_TARGET else None)}
+    # ── 판정 ───────────────────────────────────────────────────────────────────────
+    mx = out['mixture']['nested']
+    subs = [v['nested'] for v in out['groups'].values() if v['nested'] is not None]
+    gain_split = (max(subs) - mx) if (subs and mx is not None) else None
+    gain_vs = ((out['vs']['nested'] - mx)
+               if (out['vs'] and out['vs']['nested'] is not None and mx is not None) else None)
+    best = max([g for g in (gain_split, gain_vs) if g is not None], default=None)
+    if best is None:
+        out['verdict'] = 'INCONCLUSIVE — 부분집합 표본이 모자라 비교 불가'
+    elif best > 0.15:
+        out['verdict'] = ('SWITCHED — 단일-출처로 좁히면 뚜렷이 잘 배워진다.  게이트가 만든 '
+                          '불연속이 원인 ⇒ 구성요소와 게이트를 따로 배우는 게 맞다.')
+    elif best > 0.05:
+        out['verdict'] = 'PARTIALLY SWITCHED — 게이트가 일부 기여하지만 그것만으론 설명 안 됨.'
+    else:
+        out['verdict'] = ('INTRINSIC — 좁혀도 안 좋아진다.  게이트 탓이 아니라 이 설계해상도에서 '
+                          '본래 확률적(씨앗별 패킹) ⇒ 더 배우지 말고 ±PI 로 보고할 것.')
+    return out
 
 
 def verdict(nested_r2, cover):
@@ -373,7 +480,7 @@ def verdict(nested_r2, cover):
 
 
 def train(csv_path, out_path=None, verbose=True, folds=10, do_nested=True):
-    X, ys, names = load_corpus(csv_path)
+    X, ys, names, _rows = load_corpus(csv_path)
     if verbose:
         print(f'  설계행렬 {X.shape[0]} × {X.shape[1]}  ·  타깃 {len(ys)}개  '
               f'(n/k ≥ {MIN_N_OVER_K:.0f}:1 강제, 항 상한 {MAX_TERMS})')
@@ -577,13 +684,84 @@ def _selftest():                                                   # noqa: C901
     fmono = physics_audit(fake, X)['monotone']
     chk('★감사에 판별력이 있다 — 부호 뒤집은 모형은 VIOLATION (돌연변이 검사)',
         any((not p['ok']) and p['target'] == 'phi_am' for p in fmono))
-    sg = suggest(o, X, 'use_porosity_pct', n_out=5)
+    sg = suggest(o, X, 'use_porosity_pct', n_out=5, n_cand=300)
     chk('능동학습이 후보를 순위화 (PI 폭 × 신규성)',
-        len(sg) == 5 and sg[0]['score'] >= sg[-1]['score'],
-        f"top score={sg[0]['score']}")
-    chk('후보에 설계값 13개가 전부 실린다 (그대로 시뮬에 넣을 수 있게)',
-        len(sg[0]['design']) == len(DESIGN_FEATURES))
+        sg['error'] is None and len(sg['rows']) == 5
+        and sg['rows'][0]['score'] >= sg['rows'][-1]['score'],
+        f"top score={sg['rows'][0]['score'] if sg['rows'] else 'n/a'}")
+    chk('★후보가 **자유노브 6 개**만 낸다 (나머지 7 은 유도량)',
+        list(sg['rows'][0]['design'].keys()) == FREE_KNOBS)
+    # ★ 첫 실런이 뱉은 자기모순 설계(ln(2.92)≠0.85 등)가 재발하지 않는지
+    _d0 = sg['rows'][0]['design']
+    _full = derive_features(*[_d0[k] for k in FREE_KNOBS])
+    chk('★제안 설계가 자기무모순 — log_d_se=ln(d_se), size_ratio_inv=d_am/d_se, d_ratio=d_se/d_am',
+        abs(_full['log_d_se'] - math.log(max(_d0['d_se'], 0.1))) < 1e-9
+        and abs(_full['size_ratio_inv'] - _d0['d_am'] / _d0['d_se']) < 1e-9
+        and abs(_full['d_ratio'] - _d0['d_se'] / _d0['d_am']) < 1e-9,
+        f"d_se={_d0['d_se']:.3f} → log_d_se={_full['log_d_se']:.3f}")
+    # 판별력: 13 차원 독립 샘플이면 이 검사가 **떨어져야** 한다 (구판이 실제로 그랬음)
+    _bad = dict(zip(DESIGN_FEATURES, rng.uniform(0.5, 3.0, len(DESIGN_FEATURES))))
+    chk('★위 검사에 판별력이 있다 — 13 차원 독립 샘플은 자기모순으로 걸린다 (돌연변이)',
+        abs(_bad['log_d_se'] - math.log(max(_bad['d_se'], 0.1))) > 1e-6)
+    # REJECT 타깃엔 제안하지 않는다
+    import copy as _cp
+    rej = _cp.deepcopy(o)
+    rej['models']['use_porosity_pct']['verdict'] = 'REJECT'
+    chk('★판정 REJECT 타깃엔 제안을 거부한다 (못 맞히는 모형의 불확실성 = 잡음)',
+        suggest(rej, X, 'use_porosity_pct', n_out=3, n_cand=50)['error'] is not None)
+    # 로컬 사본이 predictor_engine 원본과 같은가 (있는 환경에서만 — WSL 에선 반드시 검사됨)
+    try:
+        import sys as _s
+        _s.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(
+            os.path.abspath(__file__))), 'webapp'))
+        from predictor_engine import derive_features as _pdf, INPUT_FEATURES as _PIF
+        _a = _pdf(1.3, 5.0, 78.0, 0.7, 60.0, 3.2)
+        chk('★DESIGN_FEATURES 가 predictor_engine.INPUT_FEATURES 와 동일 (규약 공유)',
+            DESIGN_FEATURES == list(_PIF))
+        chk('★유도식이 predictor_engine 과 일치 (재구현 표류 없음)',
+            all(abs(float(_a[k]) - float(derive_features(1.3, 5.0, 78.0, 0.7, 60.0, 3.2)[k]))
+                < 1e-9 for k in DESIGN_FEATURES))
+    except Exception as _e:                                        # noqa: BLE001
+        print(f'  ‥ predictor_engine 미가용 — 유도식 대조 생략 ({type(_e).__name__})')
     os.unlink(cp)
+
+    print(' [9] 부검(diagnose) — "스위치된 타깃" vs "본래 확률적" 구별')
+
+    def _mk(y, src):
+        with tempfile.NamedTemporaryFile('w', suffix='.csv', delete=False, newline='') as f2:
+            c2 = ['name', 'use_source'] + DESIGN_FEATURES + ['use_porosity_pct', 'porosity']
+            w2 = _csv.DictWriter(f2, fieldnames=c2)
+            w2.writeheader()
+            for i in range(n):
+                r2 = {'name': f'c{i}', 'use_source': src[i]}
+                r2.update({f: X[i, j] for j, f in enumerate(DESIGN_FEATURES)})
+                r2.update({'use_porosity_pct': y[i],
+                           'porosity': 0.5 * X[i, 2] + rng.normal(0, 0.5)})   # 단일-출처
+                w2.writerow(r2)
+            return f2.name
+    # (a) 스위치: 두 출처가 **서로 다른 함수** → 혼합은 못 배우고 부분집합은 배운다
+    src = np.where(X[:, 3] > 0.5, 'DEM', 'MPM')
+    y_sw = np.where(src == 'DEM', 0.5 * X[:, 2], 60.0 - 0.5 * X[:, 2]) + rng.normal(0, 0.5, n)
+    p_sw = _mk(y_sw, src)
+    d_sw = diagnose(p_sw, 'use_porosity_pct', folds=5)
+    chk('★스위치된 타깃을 SWITCHED 로 진단 (부분집합이 혼합보다 뚜렷이 높다)',
+        d_sw['verdict'].startswith('SWITCHED'),
+        f"혼합 {d_sw['mixture']['nested']:+.3f} → "
+        + ' / '.join(f"{g} {v['nested']:+.3f}" for g, v in d_sw['groups'].items()
+                     if v['nested'] is not None))
+    # (b) 본래 확률적: 출처와 무관한 잡음 → 좁혀도 안 좋아진다
+    y_in = 0.3 * X[:, 2] + rng.normal(0, 12.0, n)
+    p_in = _mk(y_in, src)
+    d_in = diagnose(p_in, 'use_porosity_pct', folds=5)
+    chk('★본래 확률적인 타깃은 INTRINSIC (좁혀도 개선 없음 — 처방이 반대)',
+        d_in['verdict'].startswith('INTRINSIC'),
+        f"혼합 {d_in['mixture']['nested']:+.3f} → "
+        + ' / '.join(f"{g} {v['nested']:+.3f}" for g, v in d_in['groups'].items()
+                     if v['nested'] is not None))
+    chk('부검이 단일-출처 원열과도 대조한다 (--diagnose-vs)',
+        diagnose(p_sw, 'use_porosity_pct', vs='porosity', folds=5)['vs']['nested'] > 0.8)
+    os.unlink(p_sw)
+    os.unlink(p_in)
 
     print(f"ML-DESIGN-STRUCTURE SELFTEST {ok}/{tot} {'PASS' if ok == tot else 'FAIL'}")
     return 0 if ok == tot else 1
@@ -600,24 +778,55 @@ def main(argv=None):
     ap.add_argument('--no-nested', action='store_true',
                     help='중첩 CV 생략 (빠르지만 선택 편향을 못 잰다 — 보고용으로 쓰지 말 것)')
     ap.add_argument('--suggest', type=int, default=0, metavar='N',
-                    help='능동학습: 다음 DEM 후보 N 개 (--suggest-target 과 함께)')
-    ap.add_argument('--suggest-target', default='use_porosity_pct')
+                    help='능동학습: 다음 DEM 후보 N 개.  자유노브 6 개만 출력한다 '
+                         '(나머지 7 개는 유도량이라 그대로 시뮬에 넣을 수 있음)')
+    ap.add_argument('--suggest-target', default='tau',
+                    help='제안을 뽑을 타깃 (판정 USABLE 이어야 함)')
+    ap.add_argument('--allow-weak', action='store_true',
+                    help='WEAK 타깃에도 제안 강행 (REJECT 는 여전히 거부)')
+    ap.add_argument('--diagnose', default='', metavar='TARGET',
+                    help='REJECT/WEAK 부검 — 출처별로 쪼개 혼합 자체가 문제인지 본다')
+    ap.add_argument('--split-by', default='use_source', help='--diagnose 의 분할 열')
+    ap.add_argument('--diagnose-vs', default='', metavar='COL',
+                    help='--diagnose 와 비교할 단일-출처 원열 (예: porosity = raw DEM)')
     a = ap.parse_args(argv)
     if a.selftest:
         raise SystemExit(_selftest())
     if not os.path.isfile(a.csv):
         print(f'CSV 없음: {a.csv}\n  먼저: python3 scripts/design_performance_dataset.py --out {a.csv}')
         return 1
+    if a.diagnose:
+        print(f'부검 — {a.diagnose}  (분할: {a.split_by})')
+        d = diagnose(a.csv, a.diagnose, split_by=a.split_by,
+                     vs=a.diagnose_vs or None, folds=a.folds)
+        _f = lambda v: ('  n/a' if v is None else f'{v:+.3f}')          # noqa: E731
+        print(f"  혼합 전체            n={d['mixture']['n']:4d}  nested {_f(d['mixture']['nested'])}")
+        for g, v in d['groups'].items():
+            print(f"  └ {a.split_by}={g:<18s} n={v['n']:4d}  nested {_f(v['nested'])}"
+                  + ('   (표본 부족 — 미적합)' if v['nested'] is None else ''))
+        if d['vs']:
+            print(f"  단일-출처 원열 {d['vs']['column']:<12s} n={d['vs']['n']:4d}  "
+                  f"nested {_f(d['vs']['nested'])}")
+        print(f"  ⇒ {d['verdict']}")
+        return 0
     print(f'설계 → 구조 학습 — {a.csv}')
     b = train(a.csv, a.out or None, folds=a.folds, do_nested=not a.no_nested)
     if a.suggest:
-        X, _ys, _n = load_corpus(a.csv)
-        print(f'\n  능동학습 — 다음 DEM 후보 ({a.suggest_target}, PI 폭 × 신규성):')
-        for i, s in enumerate(suggest(b, X, a.suggest_target, n_out=a.suggest), 1):
+        X, _ys, _n, _r = load_corpus(a.csv)
+        res = suggest(b, X, a.suggest_target, n_out=a.suggest, allow_weak=a.allow_weak)
+        if res['error']:
+            print(f"\n  능동학습 거부 — {res['error']}")
+            _use = [t for t, m in b['models'].items() if m.get('verdict') == 'USABLE']
+            print(f"    USABLE 타깃: {', '.join(_use) if _use else '(없음)'}")
+            return 0
+        print(f"\n  능동학습 — 다음 DEM 후보 ({res['target']}, 판정 {res['verdict']}, "
+              'PI 폭 × 신규성):')
+        for i, s in enumerate(res['rows'], 1):
             print(f"   {i:2d}. score={s['score']:8.3f}  pred={s['pred']:8.3f} "
                   f"PI90={s['pi90']}  novelty={s['novelty']}"
                   + ('  ⚠외삽' if s['extrapolation'] else ''))
-            print(f"       {s['design']}")
+            print('       ' + '  '.join(f'{k}={v}' for k, v in s['design'].items()))
+        print('   ★ 위 6 개가 자유노브 전부다 — 나머지 7 특징은 여기서 유도된다.')
         print('   CAVEAT: 휴리스틱 플래너다 — 진짜 정보이득은 그 점을 실제로 돌려야 안다.')
     return 0
 
