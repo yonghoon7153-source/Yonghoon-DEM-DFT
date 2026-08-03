@@ -68,9 +68,12 @@
 </div>
 
 <!-- ── 컨트롤 ── -->
-<div class="card">
+<div class="card" id="e-input-card">
   <div class="card-title" style="margin-bottom:8px">입력 (σ = STEP3 · i0/D_s = STEP4 · C_dl = 앵커)
-    <span id="e-case-badge" style="font-size:.72rem;font-weight:400"></span></div>
+    <span id="e-case-badge" style="font-size:.72rem;font-weight:400"></span>
+    <span id="e-input-off" style="display:none;font-size:.72rem;font-weight:400;color:#a07c1f"
+          title="🔬 실험만 모드 — 아래 그림은 실험 데이터만 그린 것이라 이 입력값들은 쓰이지 않습니다">
+      · ⏸ 실험만 모드 — 이 입력값은 그림에 안 쓰임</span></div>
   <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
     <button class="btn btn-sm btn-secondary" data-preset="sbe">SBE (σ_e 1.98)</button>
     <button class="btn btn-sm btn-secondary" data-preset="dbe">DBE (σ_e 3.00)</button>
@@ -270,12 +273,29 @@ const EIS = {
   },
   showExp:false, expNyq:null, lastD:null,
   selectedExpFiles(){ return Array.from(document.querySelectorAll('.xe-sel:checked')).map(c=>c.value); },
-  toggleExp(){   // 🔬 실험 겹치기 on/off → 표에서 체크된 측정만 오버레이
-    this.showExp = !this.showExp;
+  // 🔬 3-상태 (2026-08-03 사용자 요청): OFF → 겹치기 → **실험만**
+  //   겹치기 = 모델+실험 (축은 둘의 합집합 = 대조용, 자릿수 차이가 있으면 실험이 눌린다)
+  //   실험만 = 모델 곡선을 그리지 않고 **축을 실험 범위로** 잡는다 + 입력 카드를 흐리게
+  //           (모델 입력이 그림에 안 쓰이는데 켜져 있으면 "이 값으로 그린 그림" 으로 오해된다)
+  toggleExp(){
+    this.expMode = ((this.expMode|0) + 1) % 3;      // 0 off · 1 overlay · 2 exp-only
+    this.showExp = this.expMode > 0;                 // 기존 코드가 쓰는 플래그 유지
     const b=this.el('e-exp-toggle');
-    b.textContent = this.showExp?'🔬 실험 겹치기 ✓':'🔬 실험 겹치기';
-    b.classList.toggle('btn-primary', this.showExp); b.classList.toggle('btn-secondary', !this.showExp);
+    b.textContent = ['🔬 실험 겹치기','🔬 실험 겹치기 ✓','🔬 실험만 (모델 숨김)'][this.expMode];
+    b.classList.toggle('btn-primary', this.showExp);
+    b.classList.toggle('btn-secondary', !this.showExp);
+    b.title = ['클릭 → 실험 겹치기','클릭 → 실험만 보기 (모델 숨김 + 실험 범위로 zoom)',
+               '클릭 → 끄기 (모델만)'][this.expMode];
+    this.applyExpOnlyChrome();
     this.refreshExpOverlay();
+  },
+  applyExpOnlyChrome(){   // 실험만 모드에서 모델 입력 카드를 비활성 표시 (그림에 안 쓰이므로)
+    const card=this.el('e-input-card'); if(!card) return;
+    const only = this.expMode===2;
+    card.style.opacity = only?'.38':'';
+    card.style.pointerEvents = only?'none':'';
+    const tag=this.el('e-input-off');
+    if(tag) tag.style.display = only?'':'none';
   },
   onSelChange(){ if(this.showExp) this.refreshExpOverlay(); },   // 체크 변경 → 켜져있으면 즉시 갱신
   async refreshExpOverlay(){
@@ -292,7 +312,11 @@ const EIS = {
     catch(e){ this.expNyq={curves:[], hint:'fetch 실패'}; }
     const nc=(this.expNyq.curves||[]).length;
     hint.innerHTML = nc
-      ? `<span style="color:#1e8f5e">🔬 실험 ${nc}개 겹침 (Ω·cm² ASR) — physics-EIS 선과 대조 (셀 배치차 → 자릿수 대조)</span>`
+      ? (this.expMode===2
+         ? `<span style="color:#1e8f5e">🔬 실험만 ${nc}개 — 모델 숨김, 축을 <b>실험 범위로 zoom</b>. `
+           + `위 입력 카드는 이 그림에 안 쓰입니다 (다시 누르면 끔)</span>`
+         : `<span style="color:#1e8f5e">🔬 실험 ${nc}개 겹침 (Ω·cm² ASR) — physics-EIS 선과 대조 `
+           + `(셀 배치차 → 자릿수 대조).  실험이 눌려 보이면 한 번 더 눌러 <b>실험만</b> 으로</span>`)
       : `<span style="color:#a07c1f">${this.expNyq.hint||'선택 측정 없음'}</span>`;
     if(this.lastD){ this.drawNyquist(this.lastD); this.drawDRT(this.lastD); }
   },
@@ -339,9 +363,17 @@ const EIS = {
     if(this.showExp && this.expNyq && this.expNyq.curves) expCurves=this.expNyq.curves;
     const expAll=[]; expCurves.forEach(c=>(c.pts||[]).forEach(p=>expAll.push(p)));
     const mL=52,mR=14,mT=14,mB=34, pw=W-mL-mR, ph=H-mT-mB;
-    const allZre=pts.map(p=>p.zre).concat(expAll.map(p=>p.zre));
-    const allZim=pts.map(p=>p.zim).concat(expAll.map(p=>p.zim));
-    const dxmax=Math.max(...allZre)*1.03, xmin=0, dymin=Math.min(0,...allZim), dymax=Math.max(...allZim)*1.05;
+    // ★ 실험만 모드 = 축을 **실험 범위로** 잡는다 (2026-08-03).  겹치기 모드는 모델과 실험이
+    //   자릿수로 갈리면 실험이 한쪽 구석에 눌려 형상을 못 본다 — 모델을 뺀 zoom 이 그 해결.
+    //   (겹치기 모드는 합집합 유지 = 대조가 목적이므로 같은 축이 맞다.)
+    const expOnly = (this.expMode===2) && expAll.length>0;
+    const srcRe = expOnly ? expAll.map(p=>p.zre) : pts.map(p=>p.zre).concat(expAll.map(p=>p.zre));
+    const srcIm = expOnly ? expAll.map(p=>p.zim) : pts.map(p=>p.zim).concat(expAll.map(p=>p.zim));
+    const allZre=srcRe, allZim=srcIm;
+    // 실험만: 좌측 여백도 데이터에 맞춘다 (R_s 가 커서 0 부터 그리면 arc 가 오른쪽 끝에 몰림)
+    const _relo = Math.min(...allZre), _span = Math.max(...allZre) - _relo;
+    const xmin = expOnly ? Math.max(0, _relo - _span*0.06) : 0;
+    const dxmax=Math.max(...allZre)*1.03, dymin=Math.min(0,...allZim), dymax=Math.max(...allZim)*1.05;
     // ★equal aspect (Nyquist 표준): 같은 Ω·cm²/px → 짧은 축을 큰 축 스케일로 확장 (arc = 진짜 반원)
     const u=Math.max((dxmax-xmin)/pw,(dymax-dymin)/ph)||1;   // Ω·cm² per px (지배 축)
     const xmax=xmin+u*pw, ymin=dymin, ymax=dymin+u*ph;
@@ -351,17 +383,24 @@ const EIS = {
     expCurves.forEach(c=>{ (c.pts||[]).forEach(p=>{ if(p.zre==null||p.zim==null) return;
       ctx.beginPath(); ctx.arc(X(p.zre),Y(p.zim),2.0,0,7);
       ctx.fillStyle='rgba(24,138,88,.55)'; ctx.fill(); }); });
-    // physics-EIS = open circles (논문 스타일, 흰 배경)
-    ctx.lineWidth=1.4; ctx.strokeStyle='#1f4e8c';
-    pts.forEach(p=>{ ctx.beginPath(); ctx.arc(X(p.zre),Y(p.zim),3.0,0,7);
-      ctx.fillStyle='#ffffff'; ctx.fill(); ctx.stroke(); });
+    // physics-EIS = open circles (논문 스타일, 흰 배경) — ★실험만 모드에선 그리지 않는다
     const e=d.elements;
-    if(e.R0_ohm_cm2!=null){ ctx.fillStyle='#a07c1f'; ctx.textAlign='center';
-      ctx.fillText('R0', X(e.R0_ohm_cm2), Y(0)-4); }
-    // 범례
+    if(!expOnly){
+      ctx.lineWidth=1.4; ctx.strokeStyle='#1f4e8c';
+      pts.forEach(p=>{ ctx.beginPath(); ctx.arc(X(p.zre),Y(p.zim),3.0,0,7);
+        ctx.fillStyle='#ffffff'; ctx.fill(); ctx.stroke(); });
+      if(e.R0_ohm_cm2!=null){ ctx.fillStyle='#a07c1f'; ctx.textAlign='center';
+        ctx.fillText('R0', X(e.R0_ohm_cm2), Y(0)-4); }
+    }
+    // 범례 — 실험만 모드에선 모델 항목을 빼고, 축이 실험 범위임을 명시한다
     if(expCurves.length){ ctx.textAlign='left'; ctx.font='10px "JetBrains Mono",monospace';
-      ctx.fillStyle='#1f4e8c'; ctx.fillText('○ physics-EIS', W-mR-108, mT+10);
-      ctx.fillStyle='#1e8f5e'; ctx.fillText('● 실험(선택)', W-mR-108, mT+23); }
+      if(expOnly){
+        ctx.fillStyle='#1e8f5e'; ctx.fillText('● 실험만 (선택 측정)', W-mR-128, mT+10);
+        ctx.fillStyle='#a07c1f'; ctx.fillText('축 = 실험 범위 zoom',  W-mR-128, mT+23);
+      } else {
+        ctx.fillStyle='#1f4e8c'; ctx.fillText('○ physics-EIS', W-mR-108, mT+10);
+        ctx.fillStyle='#1e8f5e'; ctx.fillText('● 실험(선택)', W-mR-108, mT+23);
+      } }
   },
   drawDRT(d){
     const cv=this.el('e-drt'), dpr=window.devicePixelRatio||1, W=cv.clientWidth||440, H=380;
@@ -426,9 +465,16 @@ const EIS = {
     if(d.error){ this.el('xe-status').innerHTML='<span style="color:#c0392b">🔥 실패: '+d.error+'</span>'; }
     else {
       const nt=(d.notes||[]).length?' · <span style="color:#a07c1f">⚠ '+d.notes.join('; ')+'</span>':'';
-      this.el('xe-status').innerHTML=`<span style="color:#1e8f5e">✓ ${(d.saved||[]).length}개 저장</span> · `+
-        `fit: ${d.fit||'—'}${nt}`;
-      inp.value='';
+      // ★ 2026-08-03: fit 이 죽어도 무조건 초록 ✓ 를 띄우던 것을 고침 — 그때 아래 표는 **옛 값**
+      //   이라 "저장은 됐는데 값이 안 뜨고 L 지정이 안 먹는다" 로 보였다 (실제 신고).
+      const bad = (d.stale_table===true) || /^⛔/.test(d.fit||'') || /^⛔/.test(d.archive||'');
+      this.el('xe-status').innerHTML =
+        `<span style="color:${bad?'#a07c1f':'#1e8f5e'}">${bad?'⚠':'✓'} ${(d.saved||[]).length}개 저장</span> · `+
+        `<span style="color:${/^⛔/.test(d.fit||'')?'#c0392b':'inherit'}">fit: ${d.fit||'—'}</span>`+
+        (/^⛔/.test(d.archive||'')?` · <span style="color:#c0392b">${d.archive}</span>`:'')+nt+
+        (bad?`<br><span style="color:#c0392b">↳ 아래 표는 <b>이번 업로드가 반영되기 전</b> 값입니다 `+
+             `— 위 원인을 고친 뒤 다시 올리세요 (L(µm) 지정도 재fit 이 돼야 반영됩니다).</span>`:'');
+      if(!bad) inp.value='';
     }
     this.renderExpTable(d);   // 내부서 onSelChange → 오버레이 갱신
   },
@@ -436,21 +482,32 @@ const EIS = {
     const tb=this.el('xe-tbody'); if(!d||!d.rows) return;
     this.el('xe-count').textContent=`${d.n||0}개 측정 · ${d.fitted||0} fit 완료`;
     const f=(x,n=2)=> x==null?'—':(Math.abs(x)>=100?(''+x.toPrecision(3)):x.toFixed(n));
-    tb.innerHTML = (d.rows.map(r=>{
+    tb.innerHTML = (d.rows.map((r,idx)=>{
       const cell=r.cell_type==='full'?'<span style="color:#2a5db0">full</span>'
         :(r.cell_type==='symmetric'?'<span style="color:#1e8f5e">sym</span>':(r.cell_type||'—'));
       return `<tr style="border-bottom:1px solid rgba(0,0,0,.05)">`+
-        `<td style="padding:4px 8px;text-align:left" title="${r.filename}">${(r.filename||'').replace(/^2607\d\d_/,'').slice(0,30)}</td>`+
+        `<td style="padding:4px 8px;text-align:left" title="${r.filename}">`+
+        `<span>${(r.filename||'').replace(/^2607\d\d_/,'').slice(0,30)}</span>`+
+        `<button onclick="EIS.renameExp('${r.filename}')" style="background:none;border:none;color:var(--dim);`+
+        `cursor:pointer;font-size:.8rem;padding:0 0 0 4px;opacity:.45;transition:opacity .2s" `+
+        `onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.45" `+
+        `title="이름 변경 (원본·추출 파일 + fit 기록 + 두께 지정을 함께 옮김)">✏️</button></td>`+
         `<td style="text-align:left">${cell}</td><td style="text-align:left;color:var(--dim)">${(r.state||'').slice(0,11)}</td>`+
         `<td style="text-align:right">${f(r.R_s_ohmcm2)}</td><td style="text-align:right"><b>${f(r.R_int_ohmcm2)}</b></td>`+
         `<td style="text-align:right">${f(r.R_w_ohmcm2)}</td><td style="text-align:right">${f(r.C_dl_uF_cm2,1)}</td>`+
         `<td style="text-align:right">${f(r.sigma_e_mScm,4)}</td>`+
-        `<td style="text-align:right"><input type="number" step="0.5" min="0.5" max="300" `+
-        `value="${r.L_composite_um!=null?r.L_composite_um:''}" placeholder="45" `+
-        `onchange="EIS.setThick('${r.filename}',this.value)" `+
+        // ★ 즉시반영 금지 (2026-08-03 사용자 요청): onchange 는 **입력칸을 벗어나기만 해도** 뜬다
+        //   — 오타 중간값(예: 7 → 70 치는 중)이 그대로 저장돼 σ_e 가 틀린 두께로 재계산됐다.
+        //   ⇒ 값이 바뀌면 옆 ✓ 버튼만 켜지고, **누를 때** 저장한다.  Enter 도 같은 동작.
+        `<td style="text-align:right;white-space:nowrap"><input type="number" step="0.5" min="0.5" max="300" `+
+        `id="xe-L-${idx}" value="${r.L_composite_um!=null?r.L_composite_um:''}" placeholder="45" `+
+        `oninput="EIS.thickDirty(${idx})" onkeydown="if(event.key==='Enter'){EIS.setThick('${r.filename}',this.value,${idx})}" `+
         `style="width:52px;border:1px solid var(--border);background:none;color:inherit;font-size:.74rem;text-align:right;padding:1px 3px;border-radius:3px" `+
-        `title="이 측정의 합제(cathode) 두께 µm — 수정하면 σ_e=L/R1 즉시 재계산 (대칭셀만 유효).`+
+        `title="이 측정의 합제(cathode) 두께 µm — 옆 ✓ 를 눌러야 저장된다 (σ_e=L/R1 재계산, 대칭셀만 유효).`+
         (r.filename_thickness_um!=null?` ⚠파일명은 ${r.filename_thickness_um}µm 이지만 그건 집전체(SUS ~15-20µm) 포함 총두께 → σ_e 엔 합제만(≈45) 쓸 것`:'')+`">`+
+        `<button id="xe-Lok-${idx}" onclick="EIS.setThick('${r.filename}',this.previousElementSibling.value,${idx})" disabled `+
+        `style="border:none;background:none;color:var(--dim);cursor:pointer;font-size:.8rem;padding:0 2px;opacity:.25" `+
+        `title="입력한 두께 저장 (값을 바꾸면 활성화)">✓</button>`+
         (r.filename_thickness_um!=null&&r.L_composite_um!=null&&Math.abs(r.filename_thickness_um-r.L_composite_um)<0.51
           ?`<span style="color:#c0392b" title="파일명 총두께(집전체 포함)를 합제 L 로 입력한 듯 — σ_e 과대">⚠</span>`:'')+
         `</td>`+
@@ -469,7 +526,11 @@ const EIS = {
     const allb=this.el('xe-all'); if(allb) allb.checked=false;   // 재렌더 → 전체선택 리셋
     this.onSelChange();                                          // 켜져있으면 오버레이 갱신(선택 비면 힌트)
   },
-  async setThick(filename, v){   // 표의 L(µm) 칸 수정 → override 저장 + σ_e=L/R1 즉시 재계산 (재fit 없음)
+  thickDirty(idx){               // 값이 바뀌면 ✓ 만 켠다 — 저장은 ✓ 를 눌러야 (즉시반영 금지)
+    const b=this.el('xe-Lok-'+idx); if(!b) return;
+    b.disabled=false; b.style.opacity='1'; b.style.color='#1e8f5e';
+  },
+  async setThick(filename, v, idx){  // ✓ 클릭/Enter 로만 호출 → override 저장 + σ_e=L/R1 재계산 (재fit 없음)
     const t=parseFloat(v);
     if(!isFinite(t)||t<0.5||t>300){ this.el('xe-status').innerHTML='<span style="color:#c0392b">두께 0.5~300µm 범위로</span>'; return; }
     this.el('xe-status').innerHTML='<span style="color:#2a5db0">⏳ L='+t+'µm 반영 중…</span>';
@@ -479,6 +540,22 @@ const EIS = {
     if(d.error){ this.el('xe-status').innerHTML='<span style="color:#c0392b">두께 반영 실패: '+d.error+'</span>'; }
     else { this.el('xe-status').innerHTML='<span style="color:#1e8f5e">✓ '+filename+' → L='+t+'µm, σ_e 재계산됨</span>'; }
     this.renderExpTable(d);
+  },
+  async renameExp(filename){     // 이름 변경 — 서버가 raw/extracted + fit행 + 두께지정을 함께 옮긴다
+    const cur=(filename||'').replace(/\.[^.]+$/,'');
+    const nn=prompt('새 이름 (확장자 제외):', cur);
+    if(nn===null) return;                       // 취소
+    const v=(nn||'').trim();
+    if(!v||v===cur) return;
+    this.el('xe-status').innerHTML='<span style="color:#2a5db0">⏳ 이름 변경 중…</span>';
+    let d; try {
+      d = await (await fetch('/api/eis_exp_rename', {method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({filename, new_name:v})})).json();
+    } catch(e){ this.el('xe-status').innerHTML='<span style="color:#c0392b">이름 변경 실패: '+e+'</span>'; return; }
+    if(d.error){ this.el('xe-status').innerHTML='<span style="color:#c0392b">이름 변경 실패: '+d.error+'</span>'; }
+    else { this.el('xe-status').innerHTML='<span style="color:#1e8f5e">✓ '+filename+' → '+d.new_filename+'</span>'; }
+    if(d.rows) this.renderExpTable(d);
   },
   async deleteExp(filename){
     if(!confirm(`"${filename}" 을(를) 정말 삭제할까요?`)) return;

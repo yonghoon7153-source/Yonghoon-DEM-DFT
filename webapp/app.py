@@ -4376,22 +4376,130 @@ def api_eis_exp_upload():
     try:
         r = _sp.run([py, os.path.join(P['root'], 'scripts', 'eis_archive.py')],
                     capture_output=True, text=True, timeout=180, cwd=P['root'])
-        _ao = (r.stdout or r.stderr or '').strip().splitlines()
-        arch_msg = _ao[-1] if _ao else ''
+        arch_msg = _subproc_msg(r, 'archive(추출)')
+        arch_ok = (r.returncode == 0)
     except Exception as e:
-        arch_msg = f'archive 실패: {e}'
+        arch_msg, arch_ok = f'⛔ archive 실행 실패: {e}', False
     # CNLS fit (impedance 있으면) → 값도출
     fit_msg = ''
     try:
         r = _sp.run([py, os.path.join(P['root'], 'scripts', 'eis_fit.py')],
                     capture_output=True, text=True, timeout=300, cwd=P['root'])
-        _out = (r.stdout or '').strip().splitlines()
-        fit_msg = _out[-1] if _out else (r.stderr or '').strip()[:200]
+        fit_msg = _subproc_msg(r, 'fit(CNLS)')
+        fit_ok = (r.returncode == 0)
     except Exception as e:
-        fit_msg = f'fit 실패 (impedance 미설치?): {e}'
+        fit_msg, fit_ok = f'⛔ fit 실행 실패: {e}', False
     tab = _eis_exp_table()
-    return jsonify({'ok': True, 'saved': saved, 'notes': notes,
-                    'archive': arch_msg, 'fit': fit_msg, **tab})
+    # ★ 2026-08-03: 옛 코드는 fit 이 죽어도 ok:True 를 돌려줘 UI 가 초록 ✓ 를 띄웠고, 표는 **옛
+    #   결과**를 그대로 그렸다 — 사용자에겐 "저장은 됐는데 값이 안 뜬다 / L 지정이 안 먹는다" 로
+    #   보인다 (실제 신고).  실패를 실패로 돌려준다.
+    return jsonify({'ok': bool(fit_ok and arch_ok), 'saved': saved, 'notes': notes,
+                    'archive': arch_msg, 'fit': fit_msg,
+                    'stale_table': not fit_ok,       # True = 아래 표는 이번 업로드 반영 전 값
+                    **tab})
+
+
+def _subproc_msg(r, label):
+    """서브프로세스 결과 → 사람이 고칠 수 있는 한 줄.  (2026-08-03)
+
+    ★ 왜 필요한가: 옛 코드는 `(r.stderr or '').strip()[:200]` = traceback 의 **앞** 200자를
+      보여줬다.  파이썬 traceback 의 앞부분은 `Traceback… File "…", line 261, in <module>`
+      이고 **정작 원인인 마지막 줄**(`ModuleNotFoundError: No module named 'impedance'`)이
+      잘려나간다.  실제로 화면에 `…line 142, in main from i` 까지만 떠서 원인 판독이
+      불가능했다.  게다가 returncode 를 안 봐서 실패인데 ok:True + 초록 ✓ 가 떴다.
+    """
+    if r.returncode == 0:
+        _out = (r.stdout or '').strip().splitlines()
+        return _out[-1] if _out else ''
+    err = (r.stderr or '').strip()
+    lines = [l for l in err.splitlines() if l.strip()]
+    last = lines[-1] if lines else f'(stderr 없음, exit {r.returncode})'
+    m = re.search(r"No module named '([^']+)'", err)          # 가장 흔한 원인 → 처방까지
+    if m:
+        return (f'⛔ {label} 실패 — 파이썬 패키지 **{m.group(1)}** 미설치.  '
+                f'설치: pip install {m.group(1)}   (webapp 이 쓰는 인터프리터에: '
+                f'$PYTHON -m pip install {m.group(1)})')
+    return f'⛔ {label} 실패 (exit {r.returncode}): {last[:300]}'
+
+
+@app.route('/api/eis_exp_rename', methods=['POST'])
+def api_eis_exp_rename():
+    """실험 EIS 측정 **이름 변경** — raw/extracted 파일 + fits CSV 행 + 두께 override 를 함께 옮긴다.
+
+    부분 개명은 데이터를 잃는다: 파일만 바꾸고 fits 행을 안 옮기면 표에서 사라지고,
+    override 만 남으면 다음 재fit 이 **남의 두께**를 상속한다 (삭제 경로가 이미 겪은 문제,
+    2026-07-27 감사 M5).  ⇒ 네 곳을 한 번에, 실패하면 아무것도 안 바꾼다.
+    POST JSON {filename, new_name}.  확장자는 유지 (사용자가 줘도 무시).
+    """
+    import csv as _csv
+    import json as _json
+    P = _eis_archive_paths()
+    body = request.get_json(silent=True) or {}
+    fn = (body.get('filename') or '').strip()
+    new = (body.get('new_name') or '').strip()
+    if not fn or not new:
+        return jsonify({'error': 'filename / new_name 필요'}), 200
+    stem, ext = os.path.splitext(fn)
+    new_stem = os.path.splitext(new)[0].strip()
+    # 파일명 안전성: 경로구분자·상위참조 거부 (표시용 이름이 곧 파일명이라 여기서 막는다)
+    if not new_stem or not re.fullmatch(r'[A-Za-z0-9가-힣 ._+#()\-]{1,120}', new_stem):
+        return jsonify({'error': '이름은 영문/숫자/한글/공백/._+#()- 만, 1~120자 '
+                                 '(경로구분자·상위참조 금지)'}), 200
+    if new_stem == stem:
+        return jsonify({'error': '같은 이름입니다', **_eis_exp_table()}), 200
+    new_fn = new_stem + ext
+    # 대상 존재 확인 + 중복 거부 (덮어쓰면 남의 측정을 조용히 파괴한다)
+    _rows = {r['filename']: r for r in (_eis_exp_table().get('rows') or [])}
+    if fn not in _rows:
+        return jsonify({'error': f'그런 측정 없음: {fn}'}), 200
+    if new_fn in _rows:
+        return jsonify({'error': f'이미 있는 이름: {new_fn}'}), 200
+    moved = []
+    try:
+        for folder in ('raw', 'extracted'):
+            for _e in ({ext, '.csv', '.mpr', '.mps'} if folder == 'raw' else {'.csv'}):
+                src = _contained_join(P[folder], stem + _e)
+                if os.path.isfile(src):
+                    dst = _contained_join(P[folder], new_stem + _e)
+                    if os.path.exists(dst):
+                        raise RuntimeError(f'대상이 이미 있음: {os.path.basename(dst)}')
+                    os.rename(src, dst)
+                    moved.append((dst, src))                  # 되돌리기용 (dst→src)
+    except Exception as e:
+        for dst, src in reversed(moved):                      # 부분 개명 롤백
+            try:
+                os.rename(dst, src)
+            except Exception:
+                pass
+        return jsonify({'error': f'파일 이름변경 실패(되돌림): {e}'}), 200
+    # 두께 override 이관 (남기면 다음 재fit 이 남의 두께를 상속)
+    ov_path = os.path.join(P['archive'], 'thickness_overrides.json')
+    try:
+        ov = _json.load(open(ov_path)) if os.path.isfile(ov_path) else {}
+        for _k in (stem, fn):
+            if _k in ov:
+                ov[new_stem] = ov.pop(_k)
+        with open(ov_path, 'w') as fh:
+            _json.dump(ov, fh, ensure_ascii=False, indent=1)
+    except Exception:
+        pass
+    # fits CSV 행 이관 (안 옮기면 표에서 사라진다 = 값 손실로 보임)
+    fits = P['fits']
+    if os.path.isfile(fits):
+        try:
+            with open(fits, newline='') as fh:
+                rd = _csv.DictReader(fh); cols = rd.fieldnames; rows = list(rd)
+            for r in rows:
+                if r.get('filename') in (fn, stem):
+                    r['filename'] = new_fn
+                if r.get('stem') == stem:
+                    r['stem'] = new_stem
+            with open(fits, 'w', newline='') as fh:
+                w = _csv.DictWriter(fh, fieldnames=cols); w.writeheader(); w.writerows(rows)
+        except Exception as e:
+            return jsonify({'error': f'파일은 바뀌었으나 fit 기록 이관 실패: {e}',
+                            **_eis_exp_table()}), 200
+    return jsonify({'ok': True, 'filename': fn, 'new_filename': new_fn, **_eis_exp_table()})
 
 
 @app.route('/api/eis_exp_delete', methods=['POST'])
