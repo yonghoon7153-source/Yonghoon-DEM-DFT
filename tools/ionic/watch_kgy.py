@@ -232,6 +232,25 @@ if os.path.isdir(LONG):
         if ps is not None and not os.path.isfile(os.path.join(d, "msd.json")):
             live = f" · 지금 {os.path.basename(d)} {ps:.0f}/1605 ps"
     print(f"  ↻ 1600 ps 재시도: {n}/3 완료{live}")
+
+    # ── ③ 그 뒤에 걸어둔 6점 아레니우스 (1저자 요청) ─────────────────────
+    # ⚠ 사슬은 **산출물 개수**로 앞 작업 완료를 판정한다(프로세스 생존이 아니라).
+    #   여기서도 같은 기준으로 보여 줘야 화면과 사슬이 어긋나지 않는다.
+    ARR = os.path.join(H, "work", "runs", "arrhenius_6pt")
+    n_arr = len(glob.glob(os.path.join(ARR, "*", "T*_s*", "**", "msd.json"), recursive=True))
+    chain_up = "arrchain" in tmux
+    if n_arr:
+        done_sys = sorted({os.path.basename(os.path.dirname(os.path.dirname(g)))
+                           for g in glob.glob(os.path.join(ARR, "*", "T*_s*"))})
+        print(f"  ↻ 6점 아레니우스(500/700/900 K x 3계 x 3시드): {n_arr}/27 완료"
+              f"{'  ▶ 진행' if chain_up else '  ⛔ 사슬 세션 없음'}")
+    elif chain_up:
+        print("  ⏳ 6점 아레니우스 대기 중 (arrchain) — 위 1600 ps 가 3/3 되면 자동 착수")
+    elif n < 3:
+        print("  · 6점 아레니우스 미예약 — 1600 ps 뒤에 자동으로 걸려면:")
+        print("      tmux new -s arrchain -d 'bash tools/ionic/chain_after_c1long.sh "
+              "2>&1 | tee -a ~/logs/arrchain.log'")
+        print("    (kgy 는 우리 브랜치가 아니다 — 먼저 tools/ionic/ 와 db/structures/ 를 가져올 것)")
 elif not alive("run_comp1_seeds.sh") and "c1long" not in tmux:
     # ⚠ 200 ps 재기동을 권하면 안 된다 — msd.json 이 있어 전부 skip 되고, 설령 돌아도
     #   게이트를 또 실패한다. 다음 수는 **prod 연장**이다.
