@@ -215,6 +215,8 @@ _LIVE = "\x00LIVE"
 
 
 def live():
+    if FULL:
+        return
     """이 섹션은 **지금 볼 것**이다 — compact 에서도 접지 않는다.
 
     ⚠ 이모지(▶/⛔)만 보고 접으면 틀린다. 실측: disorder 의 진행 중 cfg 는
@@ -382,196 +384,86 @@ if want("disorder"):
       print("  ordered baseline: comp2 Ea 0.276±0.033 / comp1 0.253  (disorder가 낮추면 가설 확증)")
   print(BAR)
 
-# ═══ ② SDCP ══════════════════════════════════════════════════════════════
-# ⚠⚠ **슬랩 기하를 매번 직접 검사한다 (2026-08-03).** 이 감시자는 미가동일 때
-#   "재기동: tmux new -s pbslab ..." 명령을 찍는다. 그런데 2026-08-03 에 기준 슬랩이
-#   **구조적으로 깨져 있음**이 확인됐다 — Li24Ni24O48 산화물인데 2.5 A 미만 원자쌍이
-#   0개(Ni-O 최단 3.667 A, 있어야 할 원자의 1/3). 그 상태에서 재기동 안내를 그대로
-#   따르면 GPU 를 계속 태운다. 그래서 **재기동 안내 앞에 게이트를 둔다.**
-#   슬랩을 제대로 다시 지으면 이 게이트는 자동으로 통과하고 안내가 되살아난다.
-def _slab_broken():
-    """슬랩 scf.in 의 최단 원자간 거리로 판정. (True, 사유) 면 재기동 안내를 막는다."""
-    import itertools
-    f = os.path.join(_SF, "slab", "scf.in")
-    if not os.path.isfile(f):
-        return False, ""
-    try:
-        import numpy as np
-        L = open(f, errors="ignore").read().splitlines()
-        cell, pos, mode = [], [], None
-        for ln in L:
-            t = ln.split()
-            if not t:
-                continue
-            h = t[0].upper()
-            if h == "CELL_PARAMETERS":
-                mode = "c"; continue
-            if h == "ATOMIC_POSITIONS":
-                mode = "p"; continue
-            if h in ("K_POINTS", "ATOMIC_SPECIES", "HUBBARD") or ln.strip().startswith("&"):
-                mode = None; continue
-            if mode == "c" and len(t) == 3:
-                cell.append([float(x) for x in t])
-            elif mode == "p" and len(t) >= 4:
-                pos.append([float(x) for x in t[1:4]])
-        if len(cell) != 3 or not pos:
-            return False, ""
-        cell, pos = np.array(cell), np.array(pos)
-        best = 1e9
-        for sh in itertools.product((-1, 0, 1), repeat=3):
-            d = np.linalg.norm(pos[:, None, :] - (pos[None, :, :] + np.array(sh) @ cell), axis=-1)
-            if sh == (0, 0, 0):
-                np.fill_diagonal(d, 1e9)
-            best = min(best, float(d.min()))
-        # 산화물이면 양이온-음이온 결합이 반드시 1.8-2.2 A 에 있다. 2.5 A 를 넘으면 깨진 것.
-        if best > 2.5:
-            return True, f"최단 원자간 거리 {best:.3f} A — 결합이 하나도 없다(산화물 불가)"
-        return False, ""
-    except Exception as e:
-        return False, ""
-
-
-# 2026-07-30: 경로가 **슬랩-우선 2단계**로 바뀌었다. 그 디렉터리가 있으면 단계별
-#   사다리를 보여 주고, 없으면 예전 relax 감시로 떨어진다.
-#   ⚠ 예전 섹션은 "relax.out 이 있다"만 보고 SIGKILL 로 죽은 런을 이틀 내내
-#     '현재:' 로 보여줬다. 여기서도 **GPU pw.x 생존**을 같이 확인한다.
-_SF = "/data/work/runs/sdcp_linio2_binding/phaseB_v7c_slabfirst"
-_sf_jobs = ["slab", "mol_neutral", "mol_doped", "complex_neutral", "complex_doped"]
-if want("sdcp") and os.path.isdir(_SF):
-    print("② SDCP 슬랩-우선 (1단계 슬랩 → 시드 승계 → 2단계 복합체)")
-    _gpu_pw0 = subprocess.run(["pgrep", "-f", r"qe-.*-gpu/bin/pw\.x"],
-                              capture_output=True, text=True).stdout.strip()
-    _seed = os.path.join(_SF, "slab_mag.json")
-    if os.path.isfile(_seed):
-        try:
-            _sd = json.load(open(_seed))
-            print(f"   시드 승계 ✓ Ni1 {_sd.get('Ni1'):+.3f} / Ni2 {_sd.get('Ni2'):+.3f} "
-                  f"(수렴 {_sd.get('Ni1_muB','?')} μB)")
-        except Exception:
-            print("   ⚠ slab_mag.json 을 못 읽었다")
+# ═══ ② SDCP v2 — 슬랩 표면 이완 ═══════════════════════════════════════════
+# 2026-08-03: 옛 경로(phaseB_v7c_slabfirst)는 **깨진 슬랩** 위에서 돌았다 —
+#   Li24Ni24O48 산화물인데 2.5 A 미만 원자쌍이 0개(Ni-O 3.667 A, 원자가 1/3). 전부 폐기하고
+#   새 슬랩(db/structures/linio2_104_sym_1x4L4, 반전대칭 192/192, 게이트 통과)으로 다시 세웠다.
+#   여기서는 **지금 도는 v2 만** 자세히 본다. 옛 경로는 한 줄로만 남긴다.
+_V2 = "/data/work/runs/sdcp_v2"
+_RLX = os.path.join(_V2, "slab_relax", "relax.out")
+if want("sdcp"):
+    print("② SDCP v2 — LiNiO2(104) 표면 이완  (E_bind 기준점)")
+    if not os.path.isfile(_RLX):
+        print("   · 아직 시작 안 함")
     else:
-        print("   시드 아직 — 1단계 슬랩이 끝나야 생긴다")
-    _running = False
-    for j in _sf_jobs:
-        o = os.path.join(_SF, j, "scf.out")
-        if not os.path.isfile(o):
-            if FULL:
-                print(f"   ·  {j:16s} (아직)")
-            continue
-        txt = open(o, errors="ignore").read()
-        age = (NOW - datetime.fromtimestamp(os.path.getmtime(o))).total_seconds()
-        if "convergence has been achieved" in txt:
-            e = [l for l in txt.splitlines() if l.startswith("!")]
-            print(f"   ✓  {j:16s} {e[-1].strip()[:64] if e else '수렴'}")
-            continue
-        # 미수렴 — 도는 중인가 죽었는가
-        it = [l.strip() for l in txt.splitlines() if "iteration #" in l][-1:]
-        ac = [l.strip() for l in txt.splitlines() if "estimated scf accuracy" in l][-1:]
-        dead = ("signal 9" in txt or "MPI_ABORT" in txt or "%%%%" in txt)
-        if dead:
-            mark = "⛔ 죽음(출력에 abort)"
-        elif not _gpu_pw0:
-            mark = "⛔ 죽음(GPU pw.x 없음)"
-        elif age > 1800:
-            mark = f"⚠ {age/60:.0f}분째 출력 없음"
-        else:
-            mark = "▶ 진행"; _running = True; live()
-        print(f"   {mark}  {j}")
-        for l in (it + ac):
-            print(f"        {l[:88]}")
-    _brk, _why = _slab_broken()
-    if _brk:
-        print("   ⛔⛔ **이 슬랩은 깨져 있다 — 재기동 금지**")
-        print(f"      {_why}")
-        print("      2026-08-03 확인. Phase-A/Phase-B/표면 MD 전부 재검토 대상.")
-        print("      먼저 슬랩부터 다시 짓는다 (결합길이 게이트 통과해야 파일이 나온다):")
-        print("        python3 tools/sdcp/build_linio2_slab.py --layers 4 --supercell 1 2 \\")
-        print("            --vacuum 14 --out db/structures/linio2_104_rebuilt")
-        print("      근거: kb/reports/sdcp_preliminary_final_2026_08_03.md §6.4")
-    elif not _running:
-        # ⚠ 기본 힌트는 **slab 단계만**이다. MLIP-MD(UMA)가 GPU 에 있을 때
-        #   131원자 복합체를 같이 올리면 VRAM 이 부딪힌다(47/48 GB 전례).
-        #   96원자 슬랩은 단일-k 라 공존 가능하고, 2단계는 MD 가 끝난 뒤 잇는다.
-        _stage = "slab" if alive("aimd_mlip|disorder_ensemble_diffusion") == "ALIVE" else "all"
-        print("   ⛔ 도는 게 없다 — 재기동:")
-        print(f"      tmux new -s pbslab -d 'bash ~/Yonghoon-DEM-DFT/tools/sdcp/"
-              f"run_phaseB_slabfirst_gabia.sh {_stage} 2>&1 | tee -a "
-              "/data/work/runs/sdcp_linio2_binding/pbslabfirst.log'")
-        if _stage == "slab":
-            print("      (MLIP-MD 가 GPU 에 있어 1단계만 — 시드 나오면 complexes 로 잇는다)")
-        print("   로그: tail -30 /data/work/runs/sdcp_linio2_binding/pbslabfirst.log")
+        txt = open(_RLX, errors="ignore").read()
+        ls = txt.splitlines()
+        gpu = subprocess.run(["pgrep", "-f", r"qe-.*-gpu/bin/pw\.x"],
+                             capture_output=True, text=True).stdout.strip()
+        alive_j = ("lnorelax" in TMUX) and bool(gpu)
+        age = (NOW - datetime.fromtimestamp(os.path.getmtime(_RLX))).total_seconds()
+
+        # ── BFGS 이온 스텝 궤적 ──────────────────────────────────────────
+        etot = [float(m) for m in re.findall(r"^!\s+total energy\s+=\s+(-?[\d.]+)", txt, re.M)]
+        forc = [float(m) for m in re.findall(r"Total force =\s+([\d.]+)", txt)]
+        scfn = re.findall(r"convergence has been achieved in\s+(\d+) iterations", txt)
+        done = "Final scf calculation at the relaxed structure" in txt
+        cpu  = re.findall(r"total cpu time spent up to now is\s+([\d.]+) secs", txt)
+        RY_EV = 13.605693
+
+        print(f"   상태  {'▶ 진행 중' if alive_j else ('✅ 완료' if done else '⛔ 프로세스 없음')}"
+              f" · 로그 {age/60:.0f}분 전 · 이온스텝 {len(etot)}/80")
+        if etot:
+            # ⚠ 수렴 판정선을 **같이** 찍는다. 숫자만 보면 다 온 건지 알 수 없다.
+            print(f"   에너지  현재 {etot[-1]:.6f} Ry"
+                  + (f"  ·  직전 스텝 대비 {(etot[-1]-etot[-2])*RY_EV*1000:+.1f} meV"
+                     f"  (목표 |ΔE| < {1e-4*RY_EV*1000:.1f} meV)" if len(etot) > 1 else ""))
+        if forc:
+            print(f"   힘      Total force {forc[-1]:.6f} Ry/bohr"
+                  f"  (목표 < 1.0e-3)  {'✓ 도달' if forc[-1] < 1e-3 else '진행 중'}")
+            if len(forc) > 1:
+                print("           궤적 " + " → ".join(f"{f:.4f}" for f in forc[-6:]))
+        if scfn:
+            mx = [int(x) for x in scfn]
+            print(f"   SCF     스텝당 반복수 {mx[-6:]}  (300 이면 가짜 수렴 의심)")
+        # ── 현재 스텝 안쪽 ──────────────────────────────────────────────
+        it = [l.strip() for l in ls if "iteration #" in l][-1:]
+        ac = [l.strip() for l in ls if "estimated scf accuracy" in l][-1:]
+        if it or ac:
+            print("   지금    " + " · ".join(x for x in (it + ac)))
+        # ── 자성 건전성: AFM 이 유지되나 ────────────────────────────────
+        tm = re.findall(r"total magnetization\s+=\s+(-?[\d.]+)", txt)
+        am = re.findall(r"absolute magnetization\s+=\s+([\d.]+)", txt)
+        if tm and am:
+            ok_afm = abs(float(tm[-1])) < 0.5
+            print(f"   자성    total {float(tm[-1]):+.2f} / absolute {float(am[-1]):.2f} muB"
+                  f"  {'✓ AFM 유지' if ok_afm else '⛔ FM 으로 붕괴 — 시드 재설정 필요'}")
+        # ── 남은 시간 어림 ─────────────────────────────────────────────
+        if cpu and len(etot) >= 2:
+            per = float(cpu[-1]) / max(len(etot), 1)
+            print(f"   속도    스텝당 {per/60:.0f}분 · 경과 {float(cpu[-1])/3600:.1f}h"
+                  f" · 20스텝 가정 시 남은 {max(0,(20-len(etot)))*per/3600:.1f}h")
+        # ── 다음 단계 ──────────────────────────────────────────────────
+        if done:
+            print("   ✅ 이완 완료 → 다음:")
+            print(f"      python3 tools/sdcp/make_slab_relax.py --harvest {_V2}/slab_relax")
+            print("      (1x4 192원자로 복제 + 잔여력 검증 → 자세 탐색으로)")
+        elif not alive_j:
+            print("   ⛔ 죽었다 — env 를 tmux 따옴표 **안쪽**에 넣어 재기동:")
+            print("      tmux new -s lnorelax -d 'H=/data/apps/nvhpc/Linux_x86_64/24.11/"
+                  "comm_libs/12.6/hpcx/hpcx-2.20/ompi; export PATH=$H/bin:$PATH OPAL_PREFIX=$H \\")
+            print("        OMP_NUM_THREADS=1 CUDA_VISIBLE_DEVICES=0 OMPI_ALLOW_RUN_AS_ROOT=1 \\")
+            print("        OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1 LD_LIBRARY_PATH=$H/lib:/data/apps/"
+                  "nvhpc/Linux_x86_64/24.11/compilers/lib:/usr/local/cuda-12.6/lib64; \\")
+            print(f"        cd {_V2}/slab_relax && $H/bin/mpirun -np 1 --oversubscribe \\")
+            print("        /data/apps/qe-7.4.1-gpu/bin/pw.x -nk 1 -in relax.in > relax.out 2>&1'")
+        if alive_j:
+            live()
+    # ⚠ 옛 경로는 **한 줄만**. 재기동 안내를 찍으면 깨진 슬랩 위에서 GPU 를 태운다.
+    if os.path.isdir("/data/work/runs/sdcp_linio2_binding/phaseB_v7c_slabfirst"):
+        print("   ─ 옛 경로(phaseB_v7c_slabfirst)는 깨진 슬랩이라 폐기. 재기동하지 말 것.")
+        print("     근거: kb/reports/sdcp_preliminary_final_2026_08_03.md §6.4")
     print(BAR)
-    src = None                       # 아래 예전 블록을 건너뛴다
-else:
-    src = ""
-
-if src is not None:
-  print("② SDCP complex_doped_v2 relax (k 2×2×1)")
-  src, via = "", ""
-  env_out = os.environ.get("SDCP_OUT", "")
-  if env_out and os.path.isfile(env_out):
-      src, via = open(env_out, errors="ignore").read(), f"파일 {env_out}"
-  if not src:
-      # ⚠ pw.x 의 stdout 이 파일이 아니라 **tmux 페인(/dev/pts/N)** 인 경우가 있다 — 실제로 그랬다.
-      #   .out 파일이 아예 없으므로 페인 스크롤백에서 읽는다. 전 세션·전 페인을 훑는다.
-      #   ⚠ 재부팅 뒤엔 페인 자체가 없다 → 여기서 못 찾는 게 정상이고, 그건 '죽음'의 증거다.
-      # ⚠ 먼저 **파일**을 찾는다. 페인 스크롤백은 4000줄 밖으로 밀리면 못 읽고, 실제로
-      #   sdcp_cd 페인에서 아무것도 못 건진 반면 relax.out 은 디스크에 멀쩡히 있었다.
-      for g in ("/data/work/runs/sdcp*/**/relax.out", "/data/work/runs/sdcp*/**/*.out",
-                os.path.join(W, "runs", "sdcp*", "**", "relax.out")):
-          cands = sorted(glob.glob(os.path.expanduser(g), recursive=True),
-                         key=lambda f: os.path.getmtime(f), reverse=True)
-          if cands:
-              src, via = open(cands[0], errors="ignore").read(), f"파일 {cands[0]} (자동탐색)"
-              break
-  if not src:
-      sess = os.environ.get("SDCP_TMUX", "sdcp_cd")   # ⚠ want() 를 덮지 않게 이름을 분리
-      panes = [p for p in sh("tmux list-panes -a -F '#{session_name}:#{window_index}.#{pane_index}'"
-                             ).split() if p]
-      if sess:
-          panes = [p for p in panes if p.startswith(sess + ":")] + panes
-      for p in panes:
-          cap = sh(f"tmux capture-pane -p -t '{p}' -S -20000")
-          if re.search(r"iteration #|convergence has been achieved", cap):
-              src, via = cap, f"tmux {p}"
-              break
-  # ⚠ **파일이 있다 ≠ 돌고 있다.** relax.out 은 죽어도 그대로 남아서, 이 섹션이
-  #   2026-07-29 에 SIGKILL 로 죽은 런(iteration #246, accuracy 0.51 Ry)을 이틀 내내
-  #   "현재:" 로 보여줬다. GPU pw.x 생존과 파일 신선도로 죽음을 못 박는다.
-  _gpu_pw = subprocess.run(["pgrep", "-f", r"qe-.*-gpu/bin/pw\.x"],
-                           capture_output=True, text=True).stdout.strip()
-  _sdcp_dead = None
-  if src:
-      if "signal 9" in src or "Killed" in src or "MPI_ABORT" in src:
-          _sdcp_dead = "⛔ **죽었다 — 출력에 kill/abort 흔적**"
-      elif not _gpu_pw:
-          _sdcp_dead = "⛔ **죽었다 — GPU pw.x 프로세스 없음** (파일만 남은 것)"
-  if src:
-      print(f"  source: {via}")
-      if _sdcp_dead:
-          print(f"  {_sdcp_dead}")
-          _tail = [l.strip() for l in src.splitlines()
-                   if "signal" in l or "exit code" in l or "Error" in l][-2:]
-          for l in _tail:
-              print("    " + l[:110])
-          print("    아래 '현재:' 는 **마지막 순간의 스냅샷**이지 진행 상황이 아니다.")
-
-      def tail(pat, k):
-          ls = [l for l in src.splitlines() if re.search(pat, l)]
-          return ls[-k:] if ls else []
-      for l in tail(r"number of k points", 1):
-          print("  " + l.strip())
-      # ⚠ scf_must_converge=.false. + maxstep 도달 = **가짜 수렴**
-      print("  완료 step별 반복수 (maxstep과 같으면 **가짜 수렴**):")
-      done = tail(r"convergence has been achieved in", 3)
-      print("\n".join("    " + l.strip() for l in done) if done else "    (아직 없음)")
-      print("  현재:")
-      for l in tail(r"iteration #|estimated scf accuracy", 2):
-          print("    " + l.strip())
-  else:
-      print("  (못 찾음 — tmux 페인이 없다. 재부팅했다면 이게 정상이고 곧 재기동해야 한다.)")
-      print("   export SDCP_OUT=/경로.out  또는  export SDCP_TMUX=세션명")
-  print(BAR)
 
 # ═══ ③ MLIP 위원회 온도 스윕 (T1) ════════════════════════════════════════
 # 판정 파일이 있으면 스윕은 **끝난 일**이다 — 한 줄로 접고 결론만 남긴다.
