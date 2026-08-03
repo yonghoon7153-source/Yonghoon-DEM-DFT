@@ -93,8 +93,15 @@ def main():
         print(f"  band {b}: z={zc:6.2f}  n={n}  (Ni1 {n1}/Ni2 {n - n1})")
         if n != 4:
             clean = False
-    ok = clean and nb >= 4
-    print(f"verdict: {'CLEAN layered slab (bands of 4)' if ok else '!! NOT cleanly layered — inspect'}")
+    # ⚠⚠⚠ **이 판정은 폐기됐다 (2026-08-03).** "밴드당 Ni 4개"는 깨진 슬랩의 밀도(1/3)에
+    #   맞춰진 값이라 판정이 정확히 뒤집혀 있었다 — 실측:
+    #     정상 (104) 1x2 슬랩 (밴드당 Ni 6) -> "NOT cleanly layered" 로 **탈락**
+    #     깨진 원본     (밴드당 Ni 4)      -> "CLEAN layered slab" 로 **통과**
+    #   z-밴드 개수는 대리 지표다. 물리 불변량은 결합길이·배위수·종단이고, 그건
+    #   tools/sdcp/build_linio2_slab.py 의 gate() 가 본다. 여기서는 판정하지 않는다.
+    print("verdict: (판정 없음 — 이 검사는 폐기. build_linio2_slab.py 의 gate() 를 쓸 것)")
+    print(f"  z-밴드 {nb}개 · 밴드당 Ni {'4개씩' if clean else '4개가 아님'} "
+          "— 이 숫자만으로는 아무것도 판정하지 못한다")
     print(f"wrote {a.out}/slab_clean.xyz + slab_afm.json")
 
 
