@@ -211,6 +211,24 @@ def profile_for(name, path_cif):
     E = calc.bvse_distribution(mobile_ion="Li1+", r_cut=RCUT, resolution=RES, k=K)
     E = E - E.min()
     cell = calc.atoms.cell.array
+
+    # ⚠ **배열축 ↔ 격자벡터 대응 가드 (2026-08-04).** 4계 실측으로는 perm=[0,1,2]
+    #   (bvlain 이 배열축 i = 격자 a_i 로 reshape 한다) — 그래도 mesh_ 로 매번 확인한다.
+    #   bvlain 판올림으로 순서가 바뀌면 비스듬한 셀에서 반응좌표·감김 라벨이 소리 없이
+    #   틀어지기 때문. ⚠ 교훈 하나 더: 이 가드를 만들게 한 "버그"는 사실 검산 스크립트가
+    #   **cif 왕복 프레임(표준 방향)과 원본 xyz 프레임을 섞은 것**이었다 — 좌표 검산은
+    #   반드시 calc.atoms (bvlain 프레임) 하나로 통일할 것.
+    coords = calc.mesh_.reshape(E.shape + (3,))
+    perm = []
+    for ax in range(3):
+        step = np.zeros(3); step[ax] = 1
+        d = coords[tuple(step.astype(int))] - coords[0, 0, 0]
+        perm.append(int(np.argmax(np.abs(d))))
+    if sorted(perm) != [0, 1, 2]:
+        raise SystemExit(f"⛔ {name}: mesh_ 축 대응을 못 정했다 (perm={perm})")
+    if perm != [0, 1, 2]:
+        E = np.transpose(E, np.argsort(perm))       # 배열축 i ↔ 격자 a_i 로 정렬
+        print(f"    (bvlain 배열축 재배열: perm {perm} → 정렬)")
     perc = calc.percolation_barriers(encut=5.0)
     ref = sorted(float(perc[k]) for k in ("E_1D", "E_2D", "E_3D"))
 
