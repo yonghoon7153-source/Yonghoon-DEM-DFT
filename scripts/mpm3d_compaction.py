@@ -1421,7 +1421,11 @@ def main(argv):
                     _hit = _d > 0
                     _rr = am_r[_perc][_hit]
                     _n_supp = int(_hit.sum())
-                    _supp = float(np.pi * np.maximum(_rr ** 2 - (_rr - _d[_hit]) ** 2, 0.0).sum()) / max(area, 1e-30)
+                    # ★ `area` 는 :2337(프레임 루프 직전)에야 정의된다 — 여기서 쓰면 NameError 가
+                    #   except 에 잡혀 [am-jam] DISABLED 로 조용히 잼 전체가 꺼진다 (2026-08-05 실런에서
+                    #   q=95 가 무시되고 legacy 정지 12.76% 까지 내려간 원인).  박스 면적을 지역 계산.
+                    _area_jam = float(WIDTH * WIDTH)   # 진단용 비율 — periodic 의 _LATW²와 <1% 차
+                    _supp = float(np.pi * np.maximum(_rr ** 2 - (_rr - _d[_hit]) ** 2, 0.0).sum()) / max(_area_jam, 1e-30)
                     _am_jam_supp = _supp
                 print(f'  [am-jam] percolating AM skeleton: {int(_perc.sum())}/{_N} floor-connected, '
                       f'q={_q:g} → jam_z={am_jam_z:.3f} box = bed {(am_jam_z - FLOOR) * um_box:.2f}µm '
