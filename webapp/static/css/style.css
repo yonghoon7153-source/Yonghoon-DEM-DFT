@@ -921,3 +921,7 @@ tr.row-dim{opacity:.62}
 .att-drop:hover{border-color:#94a3b8}
 .att-drop.over{border-color:var(--accent,#2563eb);background:#eef6ff}
 @media print{.att-drop{display:none!important}}
+
+/* png↔csv 페어 (2026-08-05) */
+.att-pv{position:absolute;left:8px;bottom:8px}
+.att-dl2{right:88px}

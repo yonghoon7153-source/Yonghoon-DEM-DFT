@@ -2304,8 +2304,22 @@ def concept_attachments(cid: str) -> list[dict]:
                 continue
             out.append({"rel": rel, "name": p.name, "kind": _att_kind(rel),
                         "size_kb": round(p.stat().st_size / 1024, 1)})
-    out.sort(key=lambda x: (x["kind"] != "image", x["name"]))
-    return out
+    # 같은 이름 png ↔ csv 페어링 (하우스 관례: 그림과 Origin-ready CSV 가
+    #   같은 stem — `_origin` 접미는 무시하고 비교). 페어된 CSV 는 이미지 카드에
+    #   업혀 나가고 데이터 탭에서 빠진다.
+    by_stem = {os.path.splitext(x["name"])[0]: x for x in out if x["kind"] == "image"}
+    merged = []
+    for x in out:
+        if x["kind"] == "csv":
+            stem = os.path.splitext(x["name"])[0]
+            base = stem[:-7] if stem.endswith("_origin") else stem
+            host = by_stem.get(base) or by_stem.get(stem)
+            if host is not None and "pair" not in host:
+                host["pair"] = x
+                continue
+        merged.append(x)
+    merged.sort(key=lambda x: (x["kind"] != "image", x["name"]))
+    return merged
 
 _UP_EXT = {".png", ".jpg", ".jpeg", ".svg", ".csv", ".json", ".xyz", ".vasp", ".cif", ".pdf"}
 _UP_MAX = 50 * 1024 * 1024        # 50 MB/파일

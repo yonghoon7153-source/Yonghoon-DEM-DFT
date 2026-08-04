@@ -45,9 +45,14 @@
       <div class="att-thumb"><img loading="lazy" src="/api/file/{{ f.rel }}" alt="{{ f.name }}"></div>
       <div class="att-meta">
         <div class="mono" style="font-size:.7rem;font-weight:600">{{ f.name }}</div>
-        <div class="muted" style="font-size:.68rem">{{ f.size_kb }} KB</div>
+        <div class="muted" style="font-size:.68rem">{{ f.size_kb }} KB{% if f.pair %} · 📊 {{ f.pair.name }} ({{ f.pair.size_kb }} KB){% endif %}</div>
       </div>
-      <a class="btn sm att-dl" href="/api/file/{{ f.rel }}?dl=1" download>⬇ 저장</a>
+      {% if f.pair %}
+      <button type="button" class="btn sm att-pv" data-rel="{{ f.pair.rel }}"
+              data-name="{{ f.pair.name }}">📊 표</button>
+      <a class="btn sm att-dl att-dl2" href="/api/file/{{ f.pair.rel }}?dl=1" download>⬇ CSV</a>
+      {% endif %}
+      <a class="btn sm att-dl" href="/api/file/{{ f.rel }}?dl=1" download>⬇ {{ '저장' if not f.pair else 'PNG' }}</a>
     </div>
   {% endfor %}
   </div>
@@ -228,8 +233,16 @@
   // 카드 클릭 → 미리보기 (저장 버튼 클릭은 제외)
   document.querySelectorAll('.att-card').forEach(function(card){
     card.addEventListener('click', function(e){
-      if (e.target.closest('.att-dl')) return;
+      if (e.target.closest('.att-dl') || e.target.closest('.att-pv')) return;
       attOpen(card.dataset.rel, card.dataset.name, card.dataset.kind);
+    });
+  });
+
+  // 페어 CSV 미리보기 버튼
+  document.querySelectorAll('.att-pv').forEach(function(b){
+    b.addEventListener('click', function(e){
+      e.stopPropagation();
+      attOpen(b.dataset.rel, b.dataset.name, 'csv');
     });
   });
 
