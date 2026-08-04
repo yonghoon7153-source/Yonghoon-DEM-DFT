@@ -200,6 +200,88 @@ upd();
 </div>
 {% endif %}
 
+{# ── 방법별 활성화에너지 카드 (2026-08-05) — BV vs NEB vs MD ─────────────
+   1저자 질문 "BV 장벽과 MD Ea 가 왜 다르고 어느 게 믿을 만한가" 의 답을 카드로.
+   상세는 /concept/dft §12. 여기 숫자는 db 등록값(bv_path_profile_origin.csv 헤더)과 동일. #}
+<div class="card" style="margin-top:18px">
+  <h3>활성화 에너지는 방법마다 <u>다른 양</u>이다
+    <span class="muted" style="font-weight:400;font-size:.8rem">— BV percolation · DFT-NEB · MLIP-MD</span></h3>
+  <div class="muted" style="font-size:.8rem;margin-bottom:8px">
+    셋의 차이는 <b>정확도가 아니라 정의</b>다. BV 는 0 K 고정격자에 Li <b>한 개</b>를 넣고 잰
+    지형의 최고점, MD 는 유한 온도에서 Li <b>전부</b>가 움직여 만든 거시 D 의 온도 기울기다.
+  </div>
+
+  <div style="overflow-x:auto"><table style="font-size:.76rem;border-collapse:collapse;min-width:620px">
+    <tr style="border-bottom:2px solid var(--line,#e5e7eb)">
+      <th style="text-align:left;padding:4px 10px 4px 0">계</th>
+      <th style="text-align:right;padding:4px 10px">BV E<sub>perc</sub> (eV)</th>
+      <th style="text-align:right;padding:4px 10px">MD E<sub>a</sub> (eV)</th>
+      <th style="text-align:right;padding:4px 10px">BV − MD</th>
+      <th style="text-align:right;padding:4px 0 4px 10px">σ<sub>BV</sub>/σ<sub>MD</sub> @298 K</th>
+    </tr>
+    <tr><td style="padding:4px 10px 4px 0">LPSCl</td>
+      <td style="text-align:right;padding:4px 10px">0.195</td>
+      <td style="text-align:right;padding:4px 10px">0.253</td>
+      <td style="text-align:right;padding:4px 10px;color:#2563eb"><b>−58 meV</b></td>
+      <td style="text-align:right;padding:4px 0 4px 10px">9.6× 과대</td></tr>
+    <tr><td style="padding:4px 10px 4px 0">LPSCl1.6</td>
+      <td style="text-align:right;padding:4px 10px">0.228</td>
+      <td style="text-align:right;padding:4px 10px">0.197</td>
+      <td style="text-align:right;padding:4px 10px;color:#dc2626"><b>+31 meV</b></td>
+      <td style="text-align:right;padding:4px 0 4px 10px">0.30×</td></tr>
+    <tr><td style="padding:4px 10px 4px 0">LPSOCl1.6</td>
+      <td style="text-align:right;padding:4px 10px">0.223</td>
+      <td style="text-align:right;padding:4px 10px">0.287</td>
+      <td style="text-align:right;padding:4px 10px;color:#2563eb"><b>−64 meV</b></td>
+      <td style="text-align:right;padding:4px 0 4px 10px">12.0× 과대</td></tr>
+    <tr><td style="padding:4px 10px 4px 0">B₂O₃@LPSCl1.6</td>
+      <td style="text-align:right;padding:4px 10px">0.281</td>
+      <td style="text-align:right;padding:4px 10px">0.199</td>
+      <td style="text-align:right;padding:4px 10px;color:#dc2626"><b>+82 meV</b></td>
+      <td style="text-align:right;padding:4px 0 4px 10px">0.04× (24× 과소)</td></tr>
+  </table></div>
+
+  <div style="margin-top:10px;padding:8px 10px;background:#fef9c3;border-left:3px solid #2563eb;
+              font-size:.78rem;border-radius:0 4px 4px 0">
+    <b>★ 계통 편향이 아니다 — 부호가 양쪽 다 나온다.</b>
+    "고정 격자라 항상 과대평가" 같은 편향이면 상수 하나로 보정할 수 있는데,
+    −58 / +31 / −64 / +82 meV 로 <b>부호가 섞이므로 어떤 보정 계수도 존재하지 않는다.</b>
+    조성마다 지배하는 결손 물리가 다르다는 뜻 — 이것이 "BV 로 형제 계 순위를 매기지 말라"의
+    가장 단단한 근거다.
+  </div>
+
+  <div style="overflow-x:auto;margin-top:10px"><table style="font-size:.75rem;border-collapse:collapse;min-width:560px">
+    <tr style="border-bottom:2px solid var(--line,#e5e7eb)">
+      <th style="text-align:left;padding:4px 10px 4px 0">BV 가 못 보는 물리</th>
+      <th style="text-align:left;padding:4px 0 4px 10px">BV 값이 받는 편향</th></tr>
+    <tr><td style="padding:4px 10px 4px 0">격자 이완 — 홉 순간 음이온이 물러난다</td>
+      <td style="padding:4px 0 4px 10px"><b>과대</b> (얼어있는 창은 실제보다 좁다)</td></tr>
+    <tr><td style="padding:4px 10px 4px 0">공공 필요 — 옆자리가 비어야 뛴다</td>
+      <td style="padding:4px 0 4px 10px"><b>과소</b> (넓어도 막혀 있을 수 있다)</td></tr>
+    <tr><td style="padding:4px 10px 4px 0">Li–Li 상관 · 협동 도약</td>
+      <td style="padding:4px 0 4px 10px"><b>과대</b> (단일 이온 장벽이 실효보다 높다)</td></tr>
+    <tr><td style="padding:4px 10px 4px 0">경로 다중성 · 엔트로피</td>
+      <td style="padding:4px 0 4px 10px">부호 불정</td></tr>
+  </table></div>
+
+  <div class="muted" style="font-size:.76rem;margin-top:8px">
+    <b>신뢰도</b>: 실측 &gt; (수렴된) AIMD &gt; <b>MLIP-MD + β 게이트(우리 정본)</b> &gt; BV.
+    단 "더 낫다"가 아니라 담당이 다르다 — BV = 통로 위상·1차 스크리닝·그림,
+    NEB = 경로가 유일하게 정의되는 문제(우리는 VGCF/hBN 흡착원자에만; argyrodite 벌크는
+    협동 이동이라 경로 정의 불가), MD = Eₐ·D·조성 순위.
+    <br>σ 로 가면 지수 증폭: Eₐ 0.05 eV 오차 = RT σ <b>7.0배</b>, 위 4계는 최대/최소 <b>295배</b> 산포.
+    그래서 BV 로 σ(T) 표를 만들 수는 있어도 우리는 만들지 않는다.
+    <br>MD 쪽 자기 제약도 같이: MLIP은 DFT의 근사(UMA) · <b>σ 절대값 인용 금지</b>(Haven=1) ·
+    고온에서 재서 RT 외삽 · 유한 셀 · 게이트 탈락 점은 적합에서 제외.
+  </div>
+  <a href="/concept/dft#12-활성화-에너지는-방법마다-다른-양이다--bv--neb--md-2026-08-05"
+     style="display:inline-block;margin-top:6px;font-size:.78rem">
+    → DFT 개념 §12: 세 방법 비교표 · 결손 물리 4가지 · 부호 뒤섞임 실측 · 신뢰도 순서</a>
+  <div class="muted mono" style="font-size:.7rem;margin-top:4px">
+    db/properties/bv_path_profile_origin.csv · bv_path_segments_*.csv · kb/concepts/dft.md §12
+  </div>
+</div>
+
 {# ── MSD 200 ps + β 게이트 카드 (2026-08-04) — 3계 확정본 ───────────────── #}
 <div class="card" style="margin-top:18px">
   <h3>Li MSD 200 ps <span class="muted" style="font-weight:400;font-size:.8rem">— 3계 × 600/800/1000 K · 적합 2–50 ps (절편 자유) · β 게이트</span></h3>
