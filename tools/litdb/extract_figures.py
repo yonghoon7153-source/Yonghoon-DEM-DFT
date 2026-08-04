@@ -887,6 +887,66 @@ def why(slug, pdfs):
     return 0
 
 
+def audit_src():
+    """**남의 논문 그림이 섞였는지** 점검 (2026-08-06 1저자 발견 뒤 신설).
+
+    폴더마다 번호가 01 부터 다시 매겨져 `#33` 이 두 편을 가리키면 둘 다 같은 slug 로 붙었다
+    (매칭은 고쳤다 — 아래는 **이미 만들어 둔 데이터** 점검용).
+    그림마다 어느 PDF 에서 왔는지 `src` 가 남아 있으므로, 그 파일명이 그 논문 제목과
+    얼마나 겹치는지(IDF 가중)로 가른다. 재크로핑 뒤 0 이 나와야 정상.
+
+    ⚠ 출판사 해시 이름 SI(`anie…-sup-0001-misc_information.pdf`)는 제목 토큰이 없어
+      낮게 나온다 — 그런 건 `(?)` 로 따로 표시하고 오염으로 세지 않는다.
+    """
+    papers = _paper_index()
+    _df, idf = _idf(papers)
+
+    def sc(ft, tt):
+        den = sum(idf(t) for t in ft)
+        return (sum(idf(t) for t in (ft & tt)) / den) if den > 0 else 0.0
+
+    bad_tot = n_slug = 0
+    for j in sorted(OUT_ROOT.glob("*/figures.json")):
+        slug = j.parent.name
+        if slug not in papers:
+            continue
+        try:
+            figs = json.loads(j.read_text(encoding="utf-8")).get("figures", [])
+        except (OSError, ValueError):
+            continue
+        per = {}
+        for f in figs:
+            per.setdefault(f.get("src", ""), []).append(f.get("key", "?"))
+        if len(per) < 2:
+            continue
+        tt = papers[slug][0]
+        score = {}
+        for s in per:
+            core = re.sub(r"^\s*\d+\s*[.)]\s*", "", Path(s).name)
+            score[s] = sc(_toks(SI_TAG.sub(" ", core)), tt)
+        best = max(score.values())
+        # 제목과 거의 안 겹치는데 **다른 출처는 잘 겹치는** 경우만 남의 것으로 본다
+        bad = {s: v for s, v in per.items() if score[s] < 0.20 < best}
+        if not bad:
+            continue
+        # 파일명이 출판사 해시(anie202007621-sup-0001-misc…)면 그 논문 SI 일 수 있다 → 판정 보류.
+        # 가름: **다른 논문 제목에도 쓰이는 낱말**(df ≥ 1)이 3개 이상이어야 '알아볼 수 있는 제목'.
+        def known(s):
+            return sum(1 for t in _toks(Path(s).name) if _df.get(t, 0) >= 1)
+        sure = {s: v for s, v in bad.items() if known(s) >= 3}
+        n_bad = sum(len(v) for v in sure.values())
+        if n_bad:
+            n_slug += 1
+            bad_tot += n_bad
+        print(f"{'⛔' if n_bad else '？'} {slug}: {len(figs)}장 중 {n_bad}장 남의 것")
+        for s, keys in sorted(per.items(), key=lambda kv: -score[kv[0]]):
+            mark = "✓" if s not in bad else ("✗" if s in sure else "？")
+            print(f"     {mark} [{score[s]:4.0%}] {Path(s).name[:66]}  ({len(keys)}장)")
+    print(f"\n== 남의 그림이 섞인 논문 {n_slug}편 · 총 {bad_tot}장"
+          + ("  ✅ 깨끗함" if not bad_tot else "  → 재크로핑 필요"))
+    return 1 if bad_tot else 0
+
+
 def audit():
     """이미 잘라둔 것 전체 점검 — 53편을 눈으로 다 볼 수는 없으니 **의심스러운 것만** 띄운다.
 
@@ -968,6 +1028,8 @@ def main():
                     help="긴 변 픽셀 상한. 0 이면 --dpi 그대로")
     ap.add_argument("--dry", action="store_true", help="파일 안 쓰고 표만 출력")
     ap.add_argument("--clean", action="store_true", help="기존 <slug> 폴더를 지우고 새로")
+    ap.add_argument("--audit-src", dest="audit_src", action="store_true",
+                    help="남의 논문 그림이 섞였는지 점검 (그림의 src ↔ 논문 제목 대조)")
     ap.add_argument("--audit", action="store_true",
                     help="이미 잘라둔 것 전체 점검 (구멍·백지·SI만 등 의심스러운 것만)")
     ap.add_argument("--refresh", action="store_true",
@@ -978,6 +1040,9 @@ def main():
     ap.add_argument("--why", action="store_true",
                     help="--slug 과 함께: 각 캡션이 왜 살았는지/버려졌는지 좌표째로")
     a = ap.parse_args()
+
+    if a.audit_src:
+        return audit_src()
 
     if a.audit:
         return audit()
