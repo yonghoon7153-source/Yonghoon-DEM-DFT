@@ -1013,8 +1013,11 @@ def audit():
 def main():
     ap = argparse.ArgumentParser(
         description="논문 PDF 에서 그림·표를 캡션 기준으로 잘라 litdb/figures/<slug>/ 에 넣는다.")
-    ap.add_argument("--pdf", action="append",
-                    help="본문 PDF. SI 도 있으면 --pdf 를 한 번 더 (파일명에 sup/SI 가 있으면 S 번호로)")
+    # nargs="+" 와 append 를 같이 — `--pdf a.pdf b.pdf` (글로브 `01.*.pdf`) 와
+    # `--pdf a.pdf --pdf b.pdf` 둘 다 되게. 글로브가 2개를 잡으면 두 번째가
+    # 위치인수로 새서 usage 오류가 났다 (2026-08-06 1저자 신고).
+    ap.add_argument("--pdf", action="append", nargs="+", metavar="PDF",
+                    help="본문 PDF. 여러 개면 그냥 이어 쓰거나 글로브 (SI 는 파일명에 sup/SI 가 있으면 S 번호로)")
     ap.add_argument("--slug", help="litdb/papers/<slug>.md 의 slug")
     ap.add_argument("--inbox", action="store_true",
                     help="litdb/inbox/ 를 훑어 digest 와 자동 매칭 (기본은 매칭표만, --run 이면 실행)")
@@ -1040,6 +1043,8 @@ def main():
     ap.add_argument("--why", action="store_true",
                     help="--slug 과 함께: 각 캡션이 왜 살았는지/버려졌는지 좌표째로")
     a = ap.parse_args()
+    if a.pdf:                       # [[a,b],[c]] → [a,b,c]
+        a.pdf = [x for grp in a.pdf for x in grp]
 
     if a.audit_src:
         return audit_src()
