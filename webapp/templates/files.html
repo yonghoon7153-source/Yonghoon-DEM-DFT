@@ -60,6 +60,9 @@
       </div>
       {% endif %}
     </div>
+    {# 💬N — 코멘트가 하나라도 있으면 카드에서 바로 보인다 (comments.js 가 숫자만 갱신) #}
+    <span class="cmt-badge" data-cbadge="{{ f.rel }}"
+          {% if not ccounts.get(f.rel) %}style="display:none"{% endif %}>💬 {{ ccounts.get(f.rel, 0) }}</span>
     <a class="btn sm att-dl" href="/api/file/{{ f.rel }}?dl=1" download>⬇ 저장</a>
     {# 이름 바꾸기는 업로드 파일만 — repo 산출물은 도구가 같은 이름으로 다시 만든다 #}
     {% if f.rel.startswith('docs/uploads/') %}<button type="button" class="btn sm att-rn"
@@ -82,6 +85,8 @@
       </span>
     </div>
     <div class="att-body" id="att-body"></div>
+    {# 코멘트는 본문 바깥에 둔다 — att-body 는 비동기로 innerHTML 이 갈아끼워진다 #}
+    <div id="att-cmt"></div>
   </div>
 </div>
 
@@ -114,6 +119,7 @@
     var sv = document.getElementById('att-save');
     sv.href = '/api/file/' + rel + '?dl=1'; sv.setAttribute('download', name);
     body.innerHTML = '<div class="muted" style="padding:20px">불러오는 중…</div>';
+    if (window.mountComments) mountComments(document.getElementById('att-cmt'), rel);
     modal.style.display = 'flex';
     if (kind === 'csv'){
       fetch('/api/file/' + rel).then(function(r){return r.text();}).then(function(t){

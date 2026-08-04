@@ -50,6 +50,8 @@
   <div class="grid grid-3">
   {% for f in gi %}
     <div class="card att-card" data-rel="{{ f.rel }}" data-name="{{ f.name }}" data-kind="image">
+      <span class="cmt-badge" data-cbadge="{{ f.rel }}"
+            {% if not ccounts.get(f.rel) %}style="display:none"{% endif %}>💬 {{ ccounts.get(f.rel, 0) }}</span>
       <div class="att-thumb"><img loading="lazy" src="/api/file/{{ f.rel }}" alt="{{ f.name }}"></div>
       <div class="att-meta">
         <div class="mono" style="font-size:.7rem;font-weight:600">{{ f.name }}</div>
@@ -82,6 +84,8 @@
   <div class="grid grid-3">
   {% for f in gd %}
     <div class="card att-card" data-rel="{{ f.rel }}" data-name="{{ f.name }}" data-kind="{{ f.kind }}">
+      <span class="cmt-badge" data-cbadge="{{ f.rel }}"
+            {% if not ccounts.get(f.rel) %}style="display:none"{% endif %}>💬 {{ ccounts.get(f.rel, 0) }}</span>
       <div class="att-icon">{{ '📊' if f.kind=='csv' else ('📕' if f.kind=='pdf' else '📦') }}</div>
       <div class="att-meta">
         <div class="mono" style="font-size:.7rem;font-weight:600">{{ f.name }}</div>
@@ -117,6 +121,8 @@
       </span>
     </div>
     <div class="att-body" id="att-body"></div>
+    {# 코멘트는 본문 바깥 — att-body 는 비동기로 innerHTML 이 갈아끼워진다 #}
+    <div id="att-cmt"></div>
   </div>
 </div>
 
@@ -321,6 +327,7 @@
     var sv = document.getElementById('att-save');
     sv.href = '/api/file/' + rel + '?dl=1'; sv.setAttribute('download', name);
     body.innerHTML = '<div class="muted" style="padding:20px">불러오는 중…</div>';
+    if (window.mountComments) mountComments(document.getElementById('att-cmt'), rel);
     modal.style.display = 'flex';
     if (kind === 'csv'){
       fetch('/api/file/' + rel).then(function(r){ return r.text(); }).then(function(t){

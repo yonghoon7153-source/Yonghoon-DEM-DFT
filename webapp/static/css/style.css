@@ -921,6 +921,39 @@ tr.row-dim{opacity:.62}
 .att-table td{padding:3px 8px;border:1px solid var(--line,#e5e7eb);white-space:nowrap}
 @media print{.att-tabs,.att-modal,.att-dl,.att-rn{display:none!important}}
 
+/* ── 파일·그림 코멘트 (comments.js · Notion 식 💬N) ───────────────────
+   1저자 요청(2026-08-06): "확대하면 comment 적어놓을 수 있게 / 남기면 💬1 이 붙게".
+   미리보기 모달(.att-box) 아래, 그림 라이트박스 안에 같은 패널이 붙는다. */
+.cmt{border-top:1px solid var(--line,#e5e7eb);padding:10px 14px 12px;flex:none;
+  max-height:34vh;overflow:auto;background:var(--bg,#f8fafc)}
+.figpane-cmt{flex:0 1 auto;min-height:0;display:flex;flex-direction:column}
+.figpane .cmt{max-height:24vh;padding:8px 11px 10px}
+.cmt-h{font-size:.72rem;font-weight:700;color:var(--navy,#1f2937);margin-bottom:6px}
+.cmt-h .muted{font-weight:400}
+.cmt-i{background:var(--surface,#fff);border:1px solid var(--border,#e5e7eb);border-radius:8px;
+  padding:6px 9px;margin-bottom:6px}
+.cmt-meta{display:flex;justify-content:space-between;align-items:center;gap:8px;
+  font-size:.64rem;color:var(--muted,#94a3b8)}
+.cmt-del{background:none;border:0;color:var(--muted,#94a3b8);cursor:pointer;font-size:.7rem;
+  padding:0 2px;line-height:1;opacity:0;transition:opacity .12s}
+.cmt-i:hover .cmt-del,.cmt-del:focus-visible{opacity:1}
+.cmt-del:hover{color:var(--red,#dc2626)}
+.cmt-t{font-size:.78rem;line-height:1.55;color:var(--text2,#334155);white-space:pre-wrap;
+  word-break:break-word;margin-top:2px}
+.cmt-new{display:flex;gap:6px;align-items:flex-start;margin-top:2px}
+.cmt-in{flex:1;font:inherit;font-size:.78rem;padding:6px 8px;resize:vertical;
+  border:1px solid var(--border,#e5e7eb);border-radius:8px;background:var(--surface,#fff);
+  color:inherit;min-height:2.2em}
+.cmt-in:focus{outline:2px solid var(--accent-soft,#dbeafe);border-color:var(--accent,#2563eb)}
+/* 카드에 붙는 배지 — 카드가 다시 그려지지 않아도 숫자만 갱신된다.
+   왼쪽 위(썸네일 위)에 둔다 — 아래쪽은 ⬇저장·✏이름바꾸기가 이미 쓴다. */
+.cmt-badge{position:absolute;left:7px;top:7px;z-index:2;font-size:.66rem;font-weight:700;
+  color:var(--accent,#2563eb);background:var(--accent-soft,#eff6ff);
+  border:1px solid var(--border,#e5e7eb);border-radius:999px;padding:1px 7px;
+  box-shadow:0 1px 3px rgba(16,24,40,.10)}
+.figcard{position:relative}
+@media print{.cmt,.cmt-badge{display:none!important}}
+
 /* 드롭존 (2026-08-05 v2) */
 .att-drop{margin-top:12px;border:2px dashed var(--line,#cbd5e1);border-radius:12px;
   padding:18px;text-align:center;cursor:pointer;color:var(--navy,#1f2937);

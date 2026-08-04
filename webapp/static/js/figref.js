@@ -283,6 +283,12 @@
         if (el.style.display === "none") return;
         var r = el.getBoundingClientRect();
         if (userSize || el.style.height) userSize = [Math.round(r.width), Math.round(r.height)];
+        // 내용이 뒤늦게 늘어(코멘트가 fetch 후에 그려진다) 화면 밖으로 나가면 위로 당긴다
+        if (r.bottom > window.innerHeight - 8) {
+          var t = Math.max(8, window.innerHeight - 8 - r.height);
+          el.style.top = t + "px";
+          if (userPos) userPos = [userPos[0], t];
+        }
       }).observe(el);
       el.addEventListener("pointerup", function () {   // 리사이즈 핸들을 놓은 순간부터 기억
         var r = el.getBoundingClientRect();
@@ -329,6 +335,8 @@
         '</span></div>' +
         '<div class="figpane-img"><img src="/api/file/' + encodeURI(rec.rel) + '" alt="' + esc(rec.title) + '"></div>' +
         '<div class="figpane-cap">' + capHtml(rec) + noteHtml(rec, true) + '</div>' +
+        // 코멘트는 고정했을 때만 — 스쳐 지나가는 미리보기마다 fetch 하지 않는다
+        (pinned ? '<div class="figpane-cmt"></div>' : '') +
         '<div class="figpane-hint">' +
         (pinned ? '제목줄 끌면 이동 · 모서리로 크기조절 · +/− 또는 Ctrl+휠로 확대(스크롤)'
                 : '클릭하면 고정 · 본문에서 드래그로도 열려요') + '</div>';
@@ -336,6 +344,8 @@
       if (x) x.onclick = function (ev) { ev.preventDefault(); ev.stopPropagation(); close(); };
       // 고정된 팝업만 '창'으로 친다 — 스쳐 지나가는 미리보기까지 모달 배경막을 걷으면 깜빡인다
       el.classList.toggle("figpane-pinned", !!pinned);
+      if (pinned && global.mountComments)
+        global.mountComments(el.querySelector(".figpane-cmt"), rec.rel);
       zoom.bind(rec.key !== lastKey);        // 다른 그림으로 바뀌면 배율은 맞춤부터
       lastKey = rec.key;
       // ⚠ "block" 이면 CSS 의 display:flex 를 덮어써서 .figpane-img 의 flex 축소가 죽는다
@@ -379,6 +389,8 @@
       c.className = "figcard";
       c.setAttribute("data-fig", f.key);
       c.innerHTML =
+        '<span class="cmt-badge" data-cbadge="' + esc(f.rel) + '"' +
+        (f.comments ? '' : ' style="display:none"') + '>💬 ' + (f.comments || 0) + '</span>' +
         '<span class="figcard-thumb"><img loading="lazy" src="/api/file/' +
         encodeURI(f.rel) + '" alt="' + esc(f.title) + '"></span>' +
         '<span class="figcard-lab">' + esc(f.title) +

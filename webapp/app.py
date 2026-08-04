@@ -309,6 +309,23 @@ def api_concept_upload(cid):
     return jsonify(r)
 
 
+@app.route("/api/comments/<path:rel>", methods=["GET", "POST"])
+def api_comments(rel):
+    """파일 코멘트 읽기/달기 (Notion 식 💬). 대상은 실존 repo 파일만."""
+    if request.method == "GET":
+        return jsonify({"rel": rel, "items": D.file_comments(rel)})
+    d = request.get_json(silent=True) or {}
+    r = D.add_file_comment(rel, str(d.get("text", "")), str(d.get("who", "")))
+    return (jsonify(r), 400) if r.get("error") else jsonify(r)
+
+
+@app.route("/api/comments/<path:rel>", methods=["DELETE"])
+def api_comment_delete(rel):
+    """?id=<cid> 로 한 건 삭제. path 에 넣으면 파일 경로와 섞여 파싱이 애매해진다."""
+    r = D.del_file_comment(rel, request.args.get("id", ""))
+    return (jsonify(r), 400) if r.get("error") else jsonify(r)
+
+
 @app.route("/api/file-rename", methods=["POST"])
 def api_file_rename():
     """업로드 파일 이름 바꾸기. 파일을 옮기고 **문서에 적힌 경로도 같이** 고친다.
@@ -330,7 +347,7 @@ def files_gallery():
     fs = D.gallery_files(q, kind, used, folder)
     return render_template("files.html", active="files", files=fs, q=q, kind=kind,
                            used=used, folder=folder, days=D.gallery_days(fs),
-                           folders=D.gallery_folders())
+                           folders=D.gallery_folders(), ccounts=D.comment_counts())
 
 
 @app.route("/api/property/<name>")
@@ -381,7 +398,7 @@ def concept(cid):
                            term=term, raw_md=md, siblings=siblings, fallback_html=fallback,
                            papers=D.glossary_papers(cid),
                            attachments=(_att := D.concept_attachments(cid)),
-                           att_days=D.gallery_days(_att))
+                           att_days=D.gallery_days(_att), ccounts=D.comment_counts())
 
 
 @app.route("/api/concept/<cid>")

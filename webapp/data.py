@@ -2715,19 +2715,22 @@ def paper_figures(pid: str) -> list[dict]:
     except Exception:
         return []
     notes = paper_figure_notes(pid)
+    cc = comment_counts()                  # 그림 카드에 💬N 을 바로 찍기 위해
     out = []
     for f in meta.get("figures", []):
         p = d / f.get("file", "")
         if not p.is_file():
             continue                       # json 만 남고 png 가 지워진 경우 방어
+        rel = f"litdb/figures/{pid}/{f['file']}"
         out.append({
+            "comments": cc.get(rel, 0),
             "key": f.get("key") or f"f{f.get('label','')}",
             "kind": f.get("kind", "figure"),
             "label": str(f.get("label", "")),
             "page": f.get("page"),
             "caption": f.get("caption", ""),
             "w": f.get("w"), "h": f.get("h"),
-            "rel": f"litdb/figures/{pid}/{f['file']}",
+            "rel": rel,
             "size": p.stat().st_size,
             "notes": notes.get(f.get("key") or "", []),
         })
@@ -2782,3 +2785,73 @@ def papers_with_figures() -> dict[str, int]:
         if n:
             out[j.parent.name] = n
     return out
+
+
+# ── 파일 코멘트 (Notion 식 💬) ─────────────────────────────────────────────
+#   1저자 요청(2026-08-06): "files나 figure 사진 확대하면 comment 적어놓을 수 있게".
+#   그림·CSV 를 보다가 든 판단("이건 아티팩트 의심", "이 축은 log")을 그 파일 옆에 붙여
+#   둔다. repo 에 파일로 두므로 세션이 바뀌어도, 다른 머신에서도 그대로 보인다.
+COMMENTS_PATH = DB / "file_comments.json"
+
+
+def _load_comments() -> dict:
+    if not COMMENTS_PATH.exists():
+        return {}
+    try:
+        d = json.loads(COMMENTS_PATH.read_text(encoding="utf-8"))
+        return d if isinstance(d, dict) else {}
+    except (OSError, ValueError):
+        return {}
+
+
+def _save_comments(d: dict) -> None:
+    COMMENTS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    COMMENTS_PATH.write_text(json.dumps(d, ensure_ascii=False, indent=1, sort_keys=True),
+                             encoding="utf-8")
+
+
+def file_comments(rel: str) -> list[dict]:
+    """그 파일에 달린 코멘트 (오래된 순)."""
+    return _load_comments().get((rel or "").lstrip("/"), [])
+
+
+def add_file_comment(rel: str, text: str, who: str = "") -> dict:
+    """코멘트 추가. ⚠ 실존하는 repo 파일에만 — 경로 탈출·유령 키를 막는다."""
+    rel = (rel or "").lstrip("/")
+    if safe_repo_path(rel) is None:
+        return {"error": "그 파일을 찾을 수 없어요"}
+    text = " ".join((text or "").split("\n"))
+    text = (text or "").strip()
+    if not text:
+        return {"error": "내용이 비어 있어요"}
+    d = _load_comments()
+    lst = d.setdefault(rel, [])
+    item = {"id": f"c{int(_dt.datetime.now().timestamp() * 1000)}",
+            "text": text[:2000],
+            "at": _dt.datetime.now().strftime("%Y-%m-%d %H:%M"),
+            "who": (who or "").strip()[:40]}
+    lst.append(item)
+    _save_comments(d)
+    return {"ok": True, "item": item, "n": len(lst)}
+
+
+def del_file_comment(rel: str, cid: str) -> dict:
+    rel = (rel or "").lstrip("/")
+    d = _load_comments()
+    lst = d.get(rel)
+    if not lst:
+        return {"error": "코멘트가 없어요"}
+    keep = [c for c in lst if c.get("id") != cid]
+    if len(keep) == len(lst):
+        return {"error": "그 코멘트를 못 찾았어요"}
+    if keep:
+        d[rel] = keep
+    else:
+        d.pop(rel, None)                 # 빈 배열을 남기지 않는다
+    _save_comments(d)
+    return {"ok": True, "n": len(keep)}
+
+
+def comment_counts() -> dict[str, int]:
+    """rel → 코멘트 수 (배지용)."""
+    return {k: len(v) for k, v in _load_comments().items() if v}
