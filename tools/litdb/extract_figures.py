@@ -455,6 +455,15 @@ paper article letter communication sup supporting information supplementary supp
 """.split())
 
 
+# ⚠ \b 를 쓰면 안 된다: `_` 가 단어문자라 'Minnmann_2021_J' 에서 연도를 못 잡는다(실측).
+#   앞뒤에 **숫자만** 없으면 되고(긴 숫자열 속 우연한 20xx 는 제외), _ - . 공백은 경계로 본다.
+YEAR_RE = re.compile(r"(?<![0-9])(?:19|20)\d{2}(?![0-9])")
+
+
+def _years(t):
+    return set(YEAR_RE.findall(t or ""))
+
+
 def _toks(s):
     """제목/파일명 → 비교용 토큰 집합.
 
@@ -529,16 +538,27 @@ def match_inbox(inbox=INBOX, min_score=0.45, min_hits=4, rare=3):
         if num is not None and num in bynum:
             slug, why = bynum[num], f"inbox #{num}"
         else:
-            ft = _toks(re.sub(r"^\s*\d+\s*[.)]\s*", "", name))
+            core = re.sub(r"^\s*\d+\s*[.)]\s*", "", name)
+            ft = _toks(core)
+            fyears = _years(core)
             need = min(min_hits, len(ft))
             best, bs = None, 0.0
             for s, (tt, _n) in papers.items():
+                # ⚠ 연도가 어긋나면 같은 저자의 **다른 논문**이다 (2026-08-06 실측:
+                #   'Minnmann_2021_J.Electrochem.Soc' 이 minnmann2024 digest 에 100% 로 붙었다
+                #   — 파일명에 남은 토큰이 'minnmann' 하나뿐이라 만점이 나왔다).
+                sy = _years(s)
+                if sy and fyears and not (sy & fyears):
+                    continue
                 sc, hit = score(ft, tt)
                 if len(hit) < need or sc <= bs:
                     continue
                 # 토큰이 min_hits 에 못 미치면(ECERD2600097 처럼 짧은 파일명) **희소한**
-                # 토큰이 맞았을 때만 인정한다 — 흔한 `batteries` 하나로는 안 된다.
-                if len(hit) < min_hits and not any(df.get(t, 0) <= rare for t in hit):
+                # 토큰이 맞았을 때만, 그것도 **거의 다 맞았을 때만** 인정한다.
+                #   ⚠ 느슨하면 'Minnmann_2021_J.Electrochem.Soc'(digest 없는 논문)가
+                #     electrochem/soc 몇 개로 엉뚱한 digest 에 56% 로 붙는다 (2026-08-06 실측).
+                if len(hit) < min_hits and not (
+                        sc >= 0.75 and any(df.get(t, 0) <= rare for t in hit)):
                     continue
                 best, bs = s, sc
             if best and bs >= min_score:
