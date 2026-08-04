@@ -2246,3 +2246,61 @@ def dashboard_highlights() -> list:
     hi.append({"t": "comp2 disorder ensemble", "v": "d=0.50 anneal+relax 파이프라인 가동",
                "n": "cfg0 3온도 완료 · 멀티 config 판정 대기"})
     return hi
+
+# ─────────────────────────────────────────────────────────────
+# 개념 문서 첨부 (2026-08-05) — 그림·데이터를 웹에서 직접 열고 내려받기
+# ─────────────────────────────────────────────────────────────
+_ATT_RE = re.compile(r"(?<![\w/.])((?:docs|db)/[\w./*-]+\.(?:png|jpg|jpeg|svg|csv|json|xyz|vasp|cif))")
+_ATT_ROOTS = ("docs", "db")
+_IMG_EXT = (".png", ".jpg", ".jpeg", ".svg")
+
+
+def _att_kind(rel: str) -> str:
+    e = rel.lower()
+    if e.endswith(_IMG_EXT):
+        return "image"
+    if e.endswith(".csv"):
+        return "csv"
+    return "file"
+
+
+def safe_repo_path(rel: str) -> Path | None:
+    """docs/ · db/ 안의 파일만 허용 (경로 탈출·심볼릭 탈출 차단)."""
+    rel = (rel or "").lstrip("/")
+    if not rel.startswith(_ATT_ROOTS):
+        return None
+    p = (ROOT / rel).resolve()
+    for r in _ATT_ROOTS:
+        base = (ROOT / r).resolve()
+        if p.is_relative_to(base) and p.is_file():
+            return p
+    return None
+
+
+def concept_attachments(cid: str) -> list[dict]:
+    """개념 마크다운이 **본문에서 언급한** docs/·db/ 파일을 첨부로 모은다.
+
+    왜 자동 수집인가 — 별도 목록을 두면 문서와 어긋난다. 우리 개념 문서는 관례상
+    본문에 산출물 경로를 적어두므로(그림 `docs/figures/…png`, 데이터 `db/properties/…csv`)
+    그걸 그대로 긁으면 **문서와 항상 동기**된다. 실존하는 파일만 남긴다.
+    """
+    md = read_concept(cid)
+    if not md:
+        return []
+    seen, out = set(), []
+    for m in _ATT_RE.finditer(md):
+        tok = m.group(1)
+        # 문서가 `bv_path_annotated_*.png` 처럼 와일드카드로 적은 경우도 펼친다
+        rels = ([str(q.relative_to(ROOT)) for q in sorted(ROOT.glob(tok))]
+                if "*" in tok else [tok])
+        for rel in rels:
+            if rel in seen:
+                continue
+            seen.add(rel)
+            p = safe_repo_path(rel)
+            if not p:
+                continue
+            out.append({"rel": rel, "name": p.name, "kind": _att_kind(rel),
+                        "size_kb": round(p.stat().st_size / 1024, 1)})
+    out.sort(key=lambda x: (x["kind"] != "image", x["name"]))
+    return out

@@ -285,6 +285,20 @@ def api_csv(rel):
     return jsonify(D.read_csv(rel))
 
 
+@app.route("/api/file/<path:rel>")
+def api_file(rel):
+    """개념 문서 첨부 파일 서빙. ?dl=1 이면 다운로드(첨부), 아니면 인라인 미리보기.
+
+    ⚠ docs/ · db/ 안으로만 (data.safe_repo_path 가 경로 탈출·심볼릭 탈출 차단).
+    """
+    p = D.safe_repo_path(rel)
+    if p is None:
+        abort(404)
+    return send_from_directory(p.parent, p.name,
+                               as_attachment=bool(request.args.get("dl")),
+                               download_name=p.name)
+
+
 @app.route("/api/property/<name>")
 def api_property(name):
     p = D.DB / "properties" / f"{name}.json"
@@ -330,7 +344,8 @@ def concept(cid):
     fallback = md_html(md)
     return render_template("concept.html", active="glossary", cid=cid,
                            term=term, raw_md=md, siblings=siblings, fallback_html=fallback,
-                           papers=D.glossary_papers(cid))
+                           papers=D.glossary_papers(cid),
+                           attachments=D.concept_attachments(cid))
 
 
 @app.route("/api/concept/<cid>")
