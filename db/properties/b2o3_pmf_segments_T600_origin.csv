@@ -1,0 +1,20 @@
+﻿# PROVENANCE (2026-08-06): B2O3@LPSCl1.6, 600 K MLIP-MD, **4 SEEDS SUMMED**
+#   /data/work/b2o3md/b2o3_full/d0.00_cfg0/T600 + runs/b2o3_600_reseed/s2,s3,s4 (gabia),
+#   1900 frames each, 58 Li / 128 atoms, V 2436.3 A^3. Density integral 232.0 = 58 Li x 4 seeds.
+#   Densities are ensemble-averageable (unlike MSD), so summing seeds only improves statistics.
+# BETA GATE: b2o3 600 K passed (beta 0.81, 3-seed) - this is a gate-passing system/temperature.
+# NOMENCLATURE: PMF = potential of mean force; dF_perc = percolation free energy (paired with
+#   the bond-valence dE_perc); segment values are free-energy barriers dF. A bare "F" is avoided
+#   (F = force in MD literature).
+# TWO DEFINITIONS: first-spanning dF_perc = 0.0481 eV (thin filament, NOT adopted) vs
+#   TRANSITION (largest-cluster steepest rise) dF_perc = 0.1607 eV (ADOPTED).
+# KEY CONTRAST: bond-valence ranks b2o3 WORST of the four (dE_perc 0.281 eV, highest) while the
+#   MD free-energy landscape ranks it BEST (dF_perc 0.161 eV, lower than LPSCl1.6's 0.173).
+#   Gap dE-dF = +120 meV, twice LPSCl1.6's +56 meV. Channel at threshold: BV 0.76 vol% vs
+#   PMF 61.5 vol%. This is the "locality" failure mode of the static proxy (kb/concepts/bvse.md
+#   sec 9) seen directly: the open volume the dopant creates is invisible to the empty-lattice map.
+# dF_perc is a FREE ENERGY AT 600 K, not Ea (MD Ea = 0.199 +- 0.034 eV).
+# PMF free-energy barriers - B2O3@LPSCl1.6, T = 600 K, dF_perc 0.1607 eV. barrier_eV = dF(saddle) - dF(preceding valley).
+segment,hop_type,s_valley_A,s_saddle_A,dF_valley_eV,dF_saddle_eV,barrier_eV,valley_site,nearest_Li_A,saddle_window,window_r_A
+1,intra,0.000,1.850,-0.0000,0.1344,0.1344,Li site 1Cl+3S,nan,SClS window 1.92 Å,1.920
+2,intra,4.318,5.838,0.0049,0.0845,0.0796,Li site 3S,nan,SSS window 1.86 Å,1.860

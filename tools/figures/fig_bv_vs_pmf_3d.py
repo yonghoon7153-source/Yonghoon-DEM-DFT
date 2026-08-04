@@ -107,6 +107,8 @@ def main():
     ap.add_argument("--disp", default="LPSCl1.6")
     ap.add_argument("--pad", type=float, default=2.4)
     ap.add_argument("--nvox", type=int, default=110)
+    ap.add_argument("--maxbox", type=float, default=16.0,
+                    help="상자 한 변 상한 (Å) — 길쭉한 셀에서 시야 확보")
     ap.add_argument("--out", default="docs/figures/bv_vs_pmf_3d_modelc.png")
     a = ap.parse_args()
 
@@ -126,23 +128,35 @@ def main():
     rpm = pmfmod.analyse(F, cell, a.T, cap=dFp)
     print(f"ΔE_perc(BV) {rbv['E_perc']:.4f} eV · ΔF_perc(PMF,{a.T:.0f} K) {dFp:.4f} eV")
 
-    # 공통 상자 = 두 경로를 모두 감싸게
-    allp = np.vstack([rbv["cart"], rpm["cart"]])
-    lo, hi = allp.min(0) - a.pad, allp.max(0) + a.pad
-    span = hi - lo
+    # ⚠ 상자 잡기 (2026-08-05 수정): 두 경로를 한 상자에 넣으면 안 된다.
+    #   BV 경로와 PMF 경로는 셀 안 **다른 위치**를 지나므로, b2o3 처럼 길쭉한 셀
+    #   (격자 35×35×352)에서는 합집합 상자가 거대해져 등가면이 점처럼 보인다(실측).
+    #   → **크기는 같고 중심만 각자**인 상자를 쓴다: 축척은 공정, 내용은 각 경로 주변.
+    def extent(pts):
+        return pts.max(0) - pts.min(0)
+    span = np.maximum(extent(rbv["cart"]), extent(rpm["cart"])) + 2 * a.pad
+    span = np.minimum(span, a.maxbox)          # 너무 길면 잘라 시야 확보
+    def box_for(pts):
+        c = 0.5 * (pts.min(0) + pts.max(0))
+        return c - span / 2, c + span / 2
+    lo_bv, hi_bv = box_for(rbv["cart"])
+    lo, hi = box_for(rpm["cart"])              # PMF 패널 기본 상자
     n = np.maximum(24, np.rint(a.nvox * span / span.max()).astype(int))
-    G = np.stack(np.meshgrid(*[np.linspace(lo[d], hi[d], n[d]) for d in range(3)],
-                             indexing="ij"), -1)
     step = span / (n - 1)
+
+    def grid_for(lo_):
+        return np.stack(np.meshgrid(*[np.linspace(lo_[d], lo_[d] + span[d], n[d])
+                                      for d in range(3)], indexing="ij"), -1)
+    G_bv, G = grid_for(lo_bv), grid_for(lo)
 
     from bvlain import Lain
     calc = Lain(verbose=False); calc.read_file(str(ROOT / cif))
     E = calc.bvse_distribution(mobile_ion="Li1+", r_cut=bvp.RCUT,
                                resolution=bvp.RES, k=bvp.K)
     E = E - E.min()
-    VE = resample(E, cell, G, n)
+    VE = resample(E, cell, G_bv, n)
     VF = resample(F, cell, G, n)
-    VE, fE = keep_component(VE, rbv["E_perc"], rbv["cart"], lo, step, n)
+    VE, fE = keep_component(VE, rbv["E_perc"], rbv["cart"], lo_bv, step, n)
     VF, fF = keep_component(VF, dFp, rpm["cart"], lo, step, n)
     print(f"채널 부피비: BV {100*fE:.2f}% · PMF {100*fF:.2f}%")
 
@@ -161,8 +175,9 @@ def main():
     vE, faE, _n, _v = marching_cubes(VE, level=rbv["E_perc"], spacing=tuple(step))
     vF, faF, _n, _v = marching_cubes(VF, level=dFp, spacing=tuple(step))
     vI, faI, _n, _v = marching_cubes(VFi, level=lvl_iso, spacing=tuple(step))
-    vE, vF, vI = vE + lo, vF + lo, vI + lo
+    vE, vF, vI = vE + lo_bv, vF + lo, vI + lo
 
+    allp = rpm["cart"]
     c0 = allp.mean(0)
     _u, _s, vt = np.linalg.svd(allp - c0, full_matrices=False)
     nrm = vt[2]
@@ -173,22 +188,22 @@ def main():
 
     fig = plt.figure(figsize=(18.6, 6.9))
     ax1 = fig.add_subplot(1, 3, 1, projection="3d")
-    draw(ax1, vE, faE, atoms, cages, mic, shifts, lo, hi, rbv["cart"], rbv["e"],
+    draw(ax1, vE, faE, atoms, cages, mic, shifts, lo_bv, hi_bv, rbv["cart"], rbv["e"],
          "#ffd21f", view)
     ax1.set_title(f"① bond-valence channel  ΔE$_{{perc}}$ = {rbv['E_perc']:.3f} eV\n"
-                  f"0 K · empty lattice · single Li probe · {100*fE:.1f} vol%",
+                  f"0 K · empty lattice · single Li probe · {100*fE:.2f} vol%",
                   fontsize=11, color=INK)
     ax2 = fig.add_subplot(1, 3, 2, projection="3d")
     draw(ax2, vI, faI, atoms, cages, mic, shifts, lo, hi, rpm["cart"], rpm["e"],
          "#22c55e", view)
     ax2.set_title(f"② MD density, SAME volume as ①  (ΔF = {lvl_iso:.3f} eV)\n"
-                  f"{a.T:.0f} K · where the Li actually sit · {100*fFi:.1f} vol%",
+                  f"{a.T:.0f} K · where the Li actually sit · {100*fFi:.2f} vol%",
                   fontsize=11, color=INK)
     ax3 = fig.add_subplot(1, 3, 3, projection="3d")
     draw(ax3, vF, faF, atoms, cages, mic, shifts, lo, hi, rpm["cart"], rpm["e"],
          "#16a34a", view)
     ax3.set_title(f"③ MD free-energy channel at ΔF$_{{perc}}$ = {dFp:.3f} eV\n"
-                  f"{a.T:.0f} K · all 27 Li · {100*fF:.1f} vol% accessible",
+                  f"{a.T:.0f} K · all Li · {100*fF:.1f} vol% accessible",
                   fontsize=11, color=INK)
 
     fig.suptitle(f"{a.disp} — the same crystal seen by a static proxy and by the "
