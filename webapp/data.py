@@ -2252,7 +2252,9 @@ def dashboard_highlights() -> list:
 # 개념 문서 첨부 (2026-08-05) — 그림·데이터를 웹에서 직접 열고 내려받기
 # ─────────────────────────────────────────────────────────────
 _ATT_RE = re.compile(r"(?<![\w/.])((?:docs|db)/[\w./*-]+\.(?:png|jpg|jpeg|svg|csv|json|xyz|vasp|cif|pdf))")
-_ATT_ROOTS = ("docs", "db")
+#   litdb/figures = 논문 PDF 에서 잘라낸 그림(tools/litdb/extract_figures.py). 서빙만 허용하고
+#   갤러리(_GAL_DIRS)에는 안 넣는다 — 남의 논문 그림이 우리 산출물 목록을 덮으면 안 된다.
+_ATT_ROOTS = ("docs", "db", "litdb/figures")
 _IMG_EXT = (".png", ".jpg", ".jpeg", ".svg")
 
 
@@ -2527,3 +2529,49 @@ def _file_concept_index() -> dict[str, list[dict]]:
                 if not any(x["cid"] == cid for x in lst):
                     lst.append({"cid": cid, "term": term or cid})
     return idx
+
+
+# ── 논문 그림 크로핑 (litdb/figures/<slug>/) ──────────────────────────────
+#   tools/litdb/extract_figures.py 가 PDF 캡션을 앵커로 잘라 넣은 것.
+#   digest 본문의 "Fig. 5e" 같은 언급 위에 마우스를 올리면 오른쪽 여백에 뜬다.
+
+def paper_figures(pid: str) -> list[dict]:
+    """<pid> 논문의 크로핑된 그림 목록. 없으면 빈 리스트."""
+    d = LITDB / "figures" / pid
+    j = d / "figures.json"
+    if not j.exists():
+        return []
+    try:
+        meta = json.loads(j.read_text(encoding="utf-8"))
+    except Exception:
+        return []
+    out = []
+    for f in meta.get("figures", []):
+        p = d / f.get("file", "")
+        if not p.is_file():
+            continue                       # json 만 남고 png 가 지워진 경우 방어
+        out.append({
+            "key": f.get("key") or f"f{f.get('label','')}",
+            "kind": f.get("kind", "figure"),
+            "label": str(f.get("label", "")),
+            "page": f.get("page"),
+            "caption": f.get("caption", ""),
+            "w": f.get("w"), "h": f.get("h"),
+            "rel": f"litdb/figures/{pid}/{f['file']}",
+            "size": p.stat().st_size,
+        })
+    return out
+
+
+def papers_with_figures() -> dict[str, int]:
+    """slug → 그림 개수 (목록 화면 배지용)."""
+    base = LITDB / "figures"
+    if not base.is_dir():
+        return {}
+    out = {}
+    for d in base.iterdir():
+        if d.is_dir() and (d / "figures.json").exists():
+            n = len(paper_figures(d.name))
+            if n:
+                out[d.name] = n
+    return out

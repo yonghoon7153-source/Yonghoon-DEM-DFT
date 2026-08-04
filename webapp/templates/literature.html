@@ -78,6 +78,10 @@
     {# ⚠ [:38] 하드 컷은 한글 낱말 중간에서 잘려 "…실험 없" 처럼 보인다.
      .ptype 에 이미 ellipsis 가 있으니 CSS 에 맡긴다. #}
     {% if p.type %}<span class="ptype" title="{{ p.type }}" style="min-width:0">{{ p.type }}</span>{% endif %}
+    {# PDF 에서 잘라둔 그림이 있는 논문 표시 (tools/litdb/extract_figures.py) #}
+    {% if figcount.get(p.id) %}<span title="크로핑된 논문 그림 {{ figcount[p.id] }}개 — 열면 본문 Fig 언급에 링크된다"
+      style="flex:none;background:var(--accent-soft);color:var(--accent);border-radius:5px;
+             padding:1px 6px;font-size:.67rem;font-weight:700">🖼 {{ figcount[p.id] }}</span>{% endif %}
   </div>
   {% if p.topics %}<div style="margin-top:6px;display:flex;gap:4px;flex-wrap:wrap">
     {% for t in p.topics %}<span title="{{ tmeta[t].desc }}"
@@ -137,13 +141,16 @@
 </div>
 {% endif %}
 
-<div class="modal" id="pmodal" role="dialog" aria-modal="true" aria-labelledby="ptitle" onclick="if(event.target===this)this.classList.remove('open')">
-  <div class="modal-body" style="max-width:840px;width:100%">
+<div class="modal" id="pmodal" role="dialog" aria-modal="true" aria-labelledby="ptitle" onclick="if(event.target===this){this.classList.remove('open');window.figrefClose&&figrefClose()}">
+  <div class="modal-body" id="pmbox" style="max-width:840px;width:100%">
     <div class="modal-head"><h3 id="ptitle" class="mono" style="font-size:.85rem"></h3>
-      <button class="btn sm" onclick="document.getElementById('pmodal').classList.remove('open')">✕ 닫기</button></div>
+      <span style="display:flex;gap:6px;align-items:center">
+        <span id="pfigbadge" class="muted" style="font-size:.74rem"></span>
+        <button class="btn sm" onclick="document.getElementById('pmodal').classList.remove('open');window.figrefClose&&figrefClose()">✕ 닫기</button></span></div>
     <div class="doc" id="pbody" style="border:none;box-shadow:none;border-radius:0"></div>
   </div>
 </div>
+<script src="/static/js/figref.js"></script>
 <script>
 var curTrack='all', curQ='', curPI='', curTP='', sortMode=false, origOrder=null;
 // ⚠ 즐겨찾기는 서버에 안 올린다 — 개인 표시라 브라우저에만 둔다(localStorage).
@@ -212,8 +219,17 @@ function filt(q){curQ=q.toLowerCase().trim(); apply();}
 function openPaper(id){
   document.getElementById('ptitle').textContent=id;
   document.getElementById('pbody').innerHTML='<span class="muted">로딩...</span>';
+  document.getElementById('pfigbadge').textContent='';
+  if(window.figrefClose)figrefClose();
   document.getElementById('pmodal').classList.add('open');
-  fetch('/api/paper/'+id).then(r=>r.json()).then(d=>{document.getElementById('pbody').innerHTML=d.html;});
+  fetch('/api/paper/'+id).then(r=>r.json()).then(function(d){
+    var b=document.getElementById('pbody'); b.innerHTML=d.html;
+    if(window.mdFixEmphasis){} // 서버 렌더라 별도 보정 불필요
+    // 크로핑된 논문 그림 붙이기 — 본문 Fig 언급 링크화 + 하단 카드 (figref.js)
+    var n=window.figrefAttach?figrefAttach(b,d.figures||[],document.getElementById('pmbox')):0;
+    if(d.figures&&d.figures.length)
+      document.getElementById('pfigbadge').textContent='🖼 '+d.figures.length+'개'+(n?' · 본문 링크 '+n:'');
+  });
 }
 paintFav();
 // ⌘K/딥링크로 온 경우 ?open=<id> 자동 오픈

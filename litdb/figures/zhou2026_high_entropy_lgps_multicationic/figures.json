@@ -1,0 +1,487 @@
+{
+ "slug": "zhou2026_high_entropy_lgps_multicationic",
+ "dpi": 200,
+ "maxpx": 1500,
+ "generated": "2026-08-04",
+ "sources": [
+  "22d5d6c1-49._A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+  "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Design and X-ray diffraction patterns of Li10MP2S12 electrolytes. a, Prototype composition design of Li10MP2S12 electrolytes with different element species. b, X-ray diffraction patterns of as-synthesized Li10MP2S12. Except for L10WP2S12 which exhibits an amorphous state, all reflections correspond to the cor­ responding Li10GeP2S12 phase. c, Cell volume and the configurational entropy of Li10MP2S12. 2",
+   "bbox": [
+    31.6,
+    411.6,
+    565.8,
+    711.7
+   ],
+   "w": 1485,
+   "h": 834,
+   "dpi": 200,
+   "src": "22d5d6c1-49._A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Arrhenius plot and crystal structure of Li10MP2S12. a, Arrhenius plots for the Li10MP2S12 ionic conductivity with temperature. b, Cyclic voltammogram curve of Li|LM0.2PS|stainless steel cell. The decomposition potential of the LM0.2PS phase exceeds 5 V. c, Rietveld refinements of XRD of LM0.2PS in this work. LM0.2PS crystallizes in the tetragonal P42/nmc space group and the inset is SEM image. d, Time-dependent mean square displacement (MSD) Li+ ions in LM0.2PS at different temperatures. e, Li+ probability density, yellow isosurfaces are lithium trajectory density in the LM0.2PS lattice at 300 K, obtained from AIMD simulations at the isosurface level of 2 × 10−5 Å−3. 3",
+   "bbox": [
+    31.6,
+    454.2,
+    565.8,
+    692.6
+   ],
+   "w": 1485,
+   "h": 663,
+   "dpi": 200,
+   "src": "22d5d6c1-49._A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "blank": 0.779
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Entropy-induced modulation of electron localization and Li+ migration in LGPS-based solid electrolytes. a. Electron Localization Function (ELF)maps on the (001) plane for pristine LGPS and the LM0.2PS composition. b. The migration energy barrier was obtained by theoretical calculation for the models. (c) Potential energy as a function of the migration distance along the Li migration pathway. 4",
+   "bbox": [
+    31.6,
+    453.4,
+    565.8,
+    708.5
+   ],
+   "w": 1485,
+   "h": 710,
+   "dpi": 200,
+   "src": "22d5d6c1-49._A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "blank": 0.741
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. a, Raman spectrum of pristine LGPS and LM0.2PS electrolytes. b-c, 7Li and 31P MAS Nuclear Magnetic Resonance (NMR) spectra of pristine LGPS and LM0.2PS. d-k, X-ray photoelectron spectroscopy (XPS) spectra of the (d-h) pristine LGPS and (h-k) LM0.2PS. 5",
+   "bbox": [
+    31.6,
+    328.3,
+    565.8,
+    720.7
+   ],
+   "w": 1485,
+   "h": 1091,
+   "dpi": 200,
+   "src": "22d5d6c1-49._A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Nanocrystalline characteristic analysis of LM0.2PS. a, HRTEM image of LM0.2PS showing lattice fringes in nanocrystalline domains; the inset shows an enlarged view of a representative region. b, FFT pattern of the selected HRTEM region. c, Corresponding line-scan intensity profiles of lattice fringes. d-k, HAADF- STEM and corresponding homogeneous distribution of Ge, Si, Sn, Ti, W, P and S elements in LM0.2PS. 6",
+   "bbox": [
+    31.6,
+    422.0,
+    565.8,
+    711.7
+   ],
+   "w": 1485,
+   "h": 805,
+   "dpi": 200,
+   "src": "22d5d6c1-49._A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "blank": 0.365
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Electrochemical performance of high-entropy LM0.2PS at 25 ◦C. a, Potential response of Li|LM0.2PS|Li symmetric cells undergoing a CCD measurement at 25 ◦C. b, Long-term galvanostatic cycling of the Li|LM0.2PS|Li symmetric cell at 0.5 mA cm−2. The inset shows selected Nyquist plots collected after representative cycling stages, illustrating the evolution of the interfacial impedance response. converted into the instantaneous galvanostatic polarization voltage, the overall evolution of the interfacial response suggests an initial interfacial rearrangement followed by a relatively stable impedance behavior at extended cycling times. Taken together, these results show that LM0.2PS not only exhibits a higher CCD, but also enables a more durable Li-metal interface than pristine LGPS, thereby improving tolerance against long- term Li plating/stripping. LNO@NCM721/LGPS/LiIn full cell sho",
+   "bbox": [
+    31.6,
+    46.1,
+    566.0,
+    376.0
+   ],
+   "w": 1486,
+   "h": 917,
+   "dpi": 200,
+   "src": "22d5d6c1-49._A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. The electrochemical performance of battery devices based on the LM0.2PS solid electrolyte. a, Rate performance of an LNO@NCM721/LM0.2PS/LiIn cell at 0.1, 0.5, 1.0, 2.0 and 3.0C. b, dQ/dV curves of the LNO@NCM721/LM0.2PS /LiIn cell within the voltage window of 2.0–4.2 V for the first, second and third cycles at 0.1C. c, Coulombic efficiency, Charge and Discharge capacity of the LNO@NCM721/LM0.2PS/LiIn cell cycled at 1C at 25 ◦C. 3. Conclusions analysis, Data curation. Wenzheng Li: Visualization, Software, Re­ sources, Data curation. Jingjing Luo: Visualization, Validation, Soft­ ware, Resources, Methodology. Chuanzhou Long: Writing – review & editing, Visualization, Validation, Formal analysis, Data curation. Suzhu Yu: Writing – review & editing, Supervision, Resources, Meth­ odology, Investigation. Jun Wei: Writing – review & editing, Supervi­ sion, Resources, Project administrat",
+   "bbox": [
+    31.6,
+    46.1,
+    566.0,
+    348.0
+   ],
+   "w": 1486,
+   "h": 839,
+   "dpi": 200,
+   "src": "22d5d6c1-49._A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 5,
+   "file": "fig_S1.png",
+   "caption": "Supplementary Fig. 1. Schematic of the PXRD testing device with quartz holder and Kapton polyimide film. b. The characteristic peak (203) within the 28 to 32° range",
+   "bbox": [
+    48.0,
+    106.8,
+    547.3,
+    774.2
+   ],
+   "w": 1117,
+   "h": 1494,
+   "dpi": 161,
+   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "blank": 0.837
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 12,
+   "file": "fig_S4.png",
+   "caption": "Supplementary Fig. 4. Evaluation of electronic conductivity for LM0.2PS. a, DC polarization curves of LM0.2PS using symmetric cell configuration with blocking electrodes at different voltages from 300-500 mV. b, The relationship between the applied voltage and constant current is shown. Supplementary Fig. 3b depicts the linear relationship between the applied voltage and the steady-state current of LM0.2PS. The perfect linearity confirms that the electronic conduction process of the electrolyte obeys Ohm's law (U=IR) within the tested voltage range, indicating a constant electronic resistance and no non-linear electrochemical side reactions (e.g., electrolyte decomposition, ionic current interference). This result further verifies that the steady-state current in Supplementary Fig. 3a is dominated purely by electronic conduction, ensuring the reliability of the electronic conductivity ca",
+   "bbox": [
+    48.0,
+    26.0,
+    547.8,
+    586.4
+   ],
+   "w": 1333,
+   "h": 1495,
+   "dpi": 192,
+   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "blank": 0.964
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 15,
+   "file": "fig_S5.png",
+   "caption": "Supplementary Fig. 5. Different views of the structure of LM0.2PS. The black lines represent the unit cell.",
+   "bbox": [
+    56.8,
+    26.0,
+    538.5,
+    295.2
+   ],
+   "w": 1339,
+   "h": 748,
+   "dpi": 200,
+   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "blank": 0.876
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 16,
+   "file": "fig_S6.png",
+   "caption": "Supplementary Fig. 6. Linear plot of ln(퐷푇) vs. 1/T used to extract the activation energy for Li+ diffusion from the AIMD simulation.",
+   "bbox": [
+    48.0,
+    26.0,
+    547.3,
+    497.8
+   ],
+   "w": 1388,
+   "h": 1311,
+   "dpi": 200,
+   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "blank": 0.961
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 17,
+   "file": "fig_S7.png",
+   "caption": "Supplementary Fig. 7. Li+ probability density, yellow isosurfaces are lithium trajectory density in the LM0.2PS lattice, obtained from AIMD simulations at 300 K.",
+   "bbox": [
+    48.0,
+    26.0,
+    547.3,
+    268.7
+   ],
+   "w": 1388,
+   "h": 675,
+   "dpi": 200,
+   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "blank": 0.701
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 18,
+   "file": "fig_S8.png",
+   "caption": "Supplementary Fig.8. XPS spectra of the LM0.2PS.",
+   "bbox": [
+    48.0,
+    26.0,
+    538.3,
+    409.3
+   ],
+   "w": 1363,
+   "h": 1065,
+   "dpi": 200,
+   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 19,
+   "file": "fig_S9.png",
+   "caption": "Supplementary Fig.9. Micro-morphology and elemental analysis of the LM0.2PS electrolyte. a, SEM image of the synthesized LM0.2PS powder. b, Corresponding element mappings of LM0.2PS, indicating homogeneous dispersion of all constituent elements within the particle. Elemental mapping images based on EDS analysis demonstrate the homogeneous distribution of the high-entropy dopants (Si, Ge, Sn, Ti, W) throughout the particle, without observable phase segregation or local enrichment. Furthermore, the P and S maps show consistent spatial overlap, supporting the structural integrity of the PS43- tetrahedral framework. These results confirm the successful incorporation of multiple cations into the LGPS-type lattice, forming a chemically uniform high-entropy LM0.2PS solid-state electrolyte.",
+   "bbox": [
+    48.0,
+    26.0,
+    547.3,
+    362.5
+   ],
+   "w": 1388,
+   "h": 935,
+   "dpi": 200,
+   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "blank": 0.294
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 20,
+   "file": "fig_S10.png",
+   "caption": "Supplementary Fig. 10. Representative nanocrystalline domains in LM0.2PS. a,b, HRTEM images showing lattice fringes with representative interplanar spacings. c, TEM image indicating the selected-area electron diffraction (SAED) region. d, Indexed SAED pattern confirming the polycrystalline LGPS-type character of LM0.2PS.",
+   "bbox": [
+    48.0,
+    26.0,
+    547.3,
+    409.3
+   ],
+   "w": 1388,
+   "h": 1065,
+   "dpi": 200,
+   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "blank": 0.189
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 21,
+   "file": "fig_S11.png",
+   "caption": "Supplementary Fig. 11. Schematic diagram of a symmetric cell configuration with lithium metal as the electrode and LM0.2PS as the solid electrolyte.",
+   "bbox": [
+    48.0,
+    26.0,
+    547.3,
+    346.9
+   ],
+   "w": 1388,
+   "h": 892,
+   "dpi": 200,
+   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "blank": 0.721
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 22,
+   "file": "fig_S12.png",
+   "caption": "Supplementary Fig. 12. Electrochemical performance of high-entropy LGPS at 25 °C. a, Potential response of Li|LGPS|Li symmetric cells undergoing a CCD measurement at 25 °C. b, Electrochemical performance of the symmetric all-solid-state Li|LGPS|Li cell at 0.1 mA cm−2.",
+   "bbox": [
+    48.0,
+    124.8,
+    547.3,
+    669.8
+   ],
+   "w": 1374,
+   "h": 1499,
+   "dpi": 198,
+   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "blank": 0.836
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 22,
+   "file": "fig_S13.png",
+   "caption": "Supplementary Fig. 13. Schematic illustration of the ASSB configuration, with LiIn as the anode, LM0.2PS as the solid electrolyte for the cathode composite and separator. The cathode composite of LiNbO3-coated LiNi0.7Co0.2Mn0.1O2 powder, solid sulfide electrolyte LM0.2PS powder, and VGCF were mixed in a mass ratio of 80:20:3 using a mortar and pestle.",
+   "bbox": [
+    48.0,
+    124.8,
+    549.7,
+    669.8
+   ],
+   "w": 1380,
+   "h": 1499,
+   "dpi": 198,
+   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "blank": 0.836
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 23,
+   "file": "fig_S14.png",
+   "caption": "Supplementary Fig. 14. Coulombic efficiency, charge capacity, and discharge capacity of the LNO@NCM721/LGPS/LiIn cell cycled at 1C (voltage window, 2.0–4.2 V vs. Li+/Li at 25 °C).",
+   "bbox": [
+    48.0,
+    26.0,
+    547.3,
+    628.5
+   ],
+   "w": 1242,
+   "h": 1499,
+   "dpi": 179,
+   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "blank": 0.958
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 24,
+   "file": "fig_S15.png",
+   "caption": "Supplementary Fig.15. Impedance measurement for the LNO@NCM721/LM0.2PS/Li-In cell.",
+   "bbox": [
+    48.0,
+    26.0,
+    542.0,
+    451.4
+   ],
+   "w": 1373,
+   "h": 1182,
+   "dpi": 200,
+   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "blank": 0.946
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 6,
+   "file": "tab_S1.png",
+   "caption": "Supplementary Table 1. Configuration entropy of materials with different doping elements",
+   "bbox": [
+    90.0,
+    70.7,
+    505.3,
+    751.4
+   ],
+   "w": 912,
+   "h": 1494,
+   "dpi": 158,
+   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "blank": 0.973
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 11,
+   "file": "tab_S2.png",
+   "caption": "Supplementary Table 2. Comparison of ionic conductivity and activation energy for LGPS-based solid electrolytes with different configurational complexities.",
+   "bbox": [
+    49.0,
+    70.7,
+    546.1,
+    790.5
+   ],
+   "w": 1036,
+   "h": 1500,
+   "dpi": 150,
+   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 13,
+   "file": "tab_S3.png",
+   "caption": "Supplementary Table 3. The electronic conductivity of the LM0.2PS pellet employed for the DC polarization test was derived from the data presented in Supplementary Fig. 2 at 25 °C.",
+   "bbox": [
+    49.0,
+    201.1,
+    546.3,
+    461.6
+   ],
+   "w": 1382,
+   "h": 725,
+   "dpi": 200,
+   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 14,
+   "file": "tab_S4.png",
+   "caption": "Supplementary Table 4. Atomic coordinates, occupation factor and isotropic displacement parameters of LM0.2PS obtained from Rietveld refinement of XRD data (space group P42/nmc), a=b=8.70078 Å, c=12.59562 Å at 298 K.",
+   "bbox": [
+    49.0,
+    201.0,
+    548.7,
+    574.4
+   ],
+   "w": 1389,
+   "h": 1038,
+   "dpi": 200,
+   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "blank": 0.894
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 25,
+   "file": "tab_S5.png",
+   "caption": "Supplementary Table 5. Comparison of the electrochemical performance of this work with previously reported high-entropy sulfide electrolytes",
+   "bbox": [
+    49.0,
+    253.2,
+    546.3,
+    752.9
+   ],
+   "w": 1382,
+   "h": 1389,
+   "dpi": 200,
+   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "blank": 0.959
+  }
+ ]
+}

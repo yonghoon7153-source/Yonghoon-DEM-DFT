@@ -1,0 +1,182 @@
+{
+ "slug": "sendek2017_ml_screening_12k_conductors",
+ "dpi": 200,
+ "maxpx": 1500,
+ "generated": "2026-08-04",
+ "sources": [
+  "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf"
+ ],
+ "figures": [
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 26,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: Confirmation of upper bound on oxidation potential. Above we see the formation energy-based oxidative decomposition potential estimates we employ in this work versus rigorously calculated oxidative decomposition potentials reported in Ref. [22]. With two slight exceptions, the formation energy based potentials are always greater than the DFT-calculated potentials (the potentials are equal on the dotted y=x reference line). This suggests that the simple formation energy based estimates are generally upper bounds on the true decomposition potentials, as we expect from our analysis in Section 2.3. The estimates are especially accurate in the interval [0, 3], the range most relevant to LIB operation.",
+   "bbox": [
+    84.0,
+    26.0,
+    524.9,
+    352.1
+   ],
+   "w": 1226,
+   "h": 907,
+   "dpi": 200,
+   "src": "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf",
+   "blank": 0.959
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 27,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: Straight-line path width and electronegativity calculation. To calculate features SLPW and SLPE (1.17 and 1.18), we draw a straight line connecting each lithium atom i with its nearest lithium atom j in the supercell. We project the coordinates of all other atoms in the lattice onto this line and find the atom that gives the minimum distance connecting the straight line to the edge of the hard sphere defined by the atom. Atoms that do not project down onto a point between Li atoms i and j are ignored, e.g. atom Y is ignored (since θY > 90°) but atom X is not (θX < 90°). The minimum distance h is considered the straight-line path width for Li atom i. To calculate feature SLPW, we perform this width calculation for all Li atoms and take the average value. To calculate feature SLPE, we evaluate the Pauling electronegativity of the atom responsible for the minimum path width (atom",
+   "bbox": [
+    84.0,
+    26.0,
+    529.6,
+    362.0
+   ],
+   "w": 1239,
+   "h": 934,
+   "dpi": 200,
+   "src": "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf",
+   "blank": 0.924
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 28,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Flowchart for Metropolis Monte Carlo-style structural evolution. The above flowchart describes one step in the Monte Carlo scheme for swapping two atoms and/or vacancies in a structure with fractionally occupied sites. After each step, whether the trial structure is accepted or not, the feature vector of the resulting structure is calculated and added to the running average until convergence is reached. P(xi(j)) represents the occupation probability of atom type j in site i. Note that choosing the two sites 1 and 2 uniformly at random preserves detailed balance. Trial structures that are identical to the previous structure (i.e. two identical atoms or two vacancies are swapped) or are otherwise unfeasible structures (i.e. two non- interchangeable atoms are swapped), are ignored and their features are never sampled.",
+   "bbox": [
+    84.0,
+    26.0,
+    529.6,
+    403.5
+   ],
+   "w": 1239,
+   "h": 1049,
+   "dpi": 200,
+   "src": "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf",
+   "blank": 0.842
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 29,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: Metropolis convergence thresholds. The Metropolis structure evolution algorithm ends when convergence is reached. Convergence is defined as the point in which the running feature means of all features deviate by less than 1% for 100 consecutive steps. To visualize this degree of convergence relative to the spread of feature values across the training set, the 1%-of-mean values for all converged features for all training materials with fractional occupancies are normalized by the standard deviation of that feature value across the entire training set. Note that all features are converged within 10% of the training set feature spread.",
+   "bbox": [
+    84.0,
+    26.0,
+    528.6,
+    349.2
+   ],
+   "w": 1236,
+   "h": 899,
+   "dpi": 200,
+   "src": "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf",
+   "blank": 0.642
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 30,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: Conductivity threshold effects. The conductivity threshold for positive and negative classification affects the CVMR rate of the optimal model. The CVMR peaks when approximately 40% of the training set examples belong to the positive class, corresponding to a threshold of 10-5 S/cm. The threshold value of 10-4 S/cm we use in our screening is chosen due to technological requirements. Note the CVMR for the X-randomized case is always significantly higher than the CVMR of the true models. The false positive rate for the X-randomized case follows the trend of y=1-x, which we would expect from random drawing of materials. The false positive rate for the 10-4 S/cm cutoff model (indicated on the graph with the black arrow) is four times lower than that of the X-randomized models, suggesting a fourfold improvement over trial-and-error materials testing.",
+   "bbox": [
+    84.0,
+    26.0,
+    529.8,
+    403.8
+   ],
+   "w": 1239,
+   "h": 1050,
+   "dpi": 200,
+   "src": "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf",
+   "blank": 0.911
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 17,
+   "file": "tab_S1.png",
+   "caption": "Table S1: References for atomic mass8, Pauling electronegativity1,2, covalent radius9, ionic radius of most common oxidation state10, materials cost per kg11, and ranking of abundance in Earth’s crust12. For some elements, this data is unavailable. The sublattice bond ionicity (SBI) feature in the superionic predictor uses the ionicity difference between atoms, so structures including elements without electronegativity values (He, Ne, Ar, Pm, Eu, Tb, Yb, Rn) are eliminated from the screening. Costs are not calculated for materials including elements without reliable cost values (Ar, Kr, Tc, Pm, Po, At, Rn, Fr, Ra, Ac, Th) or earth abundance indeces (He, Ne, Ar, Kr, Tc, Xe, Pm, Po, At, Rn, Fr, Ra, Ac, Pa), but these materials are not eliminated from the screening.",
+   "bbox": [
+    79.5,
+    67.0,
+    533.8,
+    715.7
+   ],
+   "w": 1048,
+   "h": 1497,
+   "dpi": 166,
+   "src": "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf",
+   "blank": 0.858
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 20,
+   "file": "tab_S2.png",
+   "caption": "Table S2: Feature values for select training structures.",
+   "bbox": [
+    79.5,
+    67.0,
+    371.2,
+    440.5
+   ],
+   "w": 812,
+   "h": 1038,
+   "dpi": 200,
+   "src": "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf",
+   "blank": 0.877
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 21,
+   "file": "tab_S3.png",
+   "caption": "Table S3: Screening results with looser constraints. A list of the results of the Materials Project screening with looser screening constraints is given with all material specifications, ranked in the table by overall performance across all specifications. PLR is the superionic probability; d, ε, and A are confidence metrics for this prediction; Egap is the DFT computed band gap; is the upper bound oxidation ̃ 𝑉𝑜𝑥 potential; the “cost per area” column gives approximate materials cost per m2 per 10 μm thickness; Ehull is the energy above the convex hull; IA is the earth abundance index; to understand model performance, the final column provides references to studies on the ionic conductivity of these or similar materials. The screening criteria employed to generate this list are: PLR ≥ 0.5, Egap ≥ 0.5 eV; ≥ 3 V; Ehull ≤ 0.1 ̃ 𝑉𝑜𝑥 eV/atom; T = 0 (no transition metals present). Materials al",
+   "bbox": [
+    75.9,
+    67.0,
+    548.8,
+    724.3
+   ],
+   "w": 1078,
+   "h": 1498,
+   "dpi": 164,
+   "src": "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf",
+   "blank": 0.866
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 24,
+   "file": "tab_S4.png",
+   "caption": "Table S4: Screening results for stable superionics. A list of the results of the Materials Project screening based on superionic probability and stability only is given with all material specifications. All metrics are the same as in Table S3 with the addition of T, a Boolean that indicates if a transition metal is present in the structure (T = 1) or not (T = 0). The screening criteria employed to generate this list are: PLR ≥ 0.95, d ≤ 1.5; energy above hull = 0 eV/atom. Note most materials have small or zero band gaps, low oxidative decomposition voltages, and transition metals present, rendering them poorly suited for electrolyte applications. None of these materials are included in our training set, nor do any have reported ionic conductivity values to our knowledge.",
+   "bbox": [
+    85.0,
+    67.0,
+    527.8,
+    720.8
+   ],
+   "w": 1016,
+   "h": 1499,
+   "dpi": 165,
+   "src": "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf",
+   "blank": 0.87
+  }
+ ]
+}

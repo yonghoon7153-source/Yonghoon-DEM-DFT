@@ -271,7 +271,7 @@ def literature():
     return render_template("literature.html", active="lit", papers=papers,
                            count=len(papers), counts=counts, talks=D.list_talks(),
                            tmeta=tmeta, tcounts=tcounts, tprimer=D.topic_primer(),
-                           pis=pis, PI=D.PI_BY_KEY)
+                           pis=pis, PI=D.PI_BY_KEY, figcount=D.papers_with_figures())
 
 
 # ── API (구조뷰 / 차트 / 원본) ──────────────────────────
@@ -338,7 +338,8 @@ def api_paper(pid):
     if not p.exists():
         abort(404)
     html = md_html(p.read_text(encoding="utf-8", errors="ignore"))
-    return jsonify({"id": pid, "html": html})
+    # 크로핑된 논문 그림 — 본문의 "Fig. 5e" 를 브라우저에서 링크로 바꿔 여백에 띄운다.
+    return jsonify({"id": pid, "html": html, "figures": D.paper_figures(pid)})
 
 
 @app.route("/glossary")

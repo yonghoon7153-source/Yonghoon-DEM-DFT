@@ -81,7 +81,9 @@ document.addEventListener('keydown',function(e){if(e.key!=='Escape')return;
   document.body.classList.remove('nav-open');
   // 모달이 열려 있으면 그것만 닫고 조기 반환 — Esc 한 번에 모달+팔레트가 같이 닫히지 않게.
   var m=document.querySelector('.modal.open');
-  if(m){m.classList.remove('open');if(m._opener&&m._opener.focus)m._opener.focus();return;}
+  if(m){m.classList.remove('open');if(m._opener&&m._opener.focus)m._opener.focus();
+        if(window.figrefClose)figrefClose(); return;}
+  if(document.querySelector('.figpane')&&window.figrefClose){figrefClose();return;}
   closeCmdk();});
 
 // ── theme toggle ──

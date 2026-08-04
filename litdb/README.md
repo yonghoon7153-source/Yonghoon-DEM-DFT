@@ -10,6 +10,7 @@
 | `our_dft_baseline.md` | 우리 comp1/modelc DFT 기준값 — 모든 비교의 기준점 |
 | `comparison_vs_ours.md` | 문헌 물성 ↔ 우리 DFT **차이 + 적용 인사이트** |
 | `properties/*.md` | 물성별 교차표 (ionic / oxidation / mechanical / electronic) |
+| `figures/<slug>/` | **논문 PDF 에서 잘라낸 그림·표** + `figures.json` (색인). 아래 §🖼 참고 |
 
 ## 논문 "먹이는" 워크플로우  (= `litdb-curator` 에이전트)
 **트리거: PDF 업로드 후 "논문 에이전트 실행해줘"** (또는 "이 논문 litdb에 넣어줘", "이 논문 정리해줘", "feed this paper")
@@ -38,6 +39,28 @@
 - 산화/ESW 관련 → `comparison_vs_ours.md`
 - 특정 논문 관련 → 그 논문 `papers/<slug>.md` 의 §Q&A
 **트리거: "Q&A 작성해줘"** (또는 "이 q&A도 적어놔줘") → 직전 질문/답을 자동으로 해당 MD의 "🗨️ Q&A 로그"에 항목 추가.
+
+## 🖼 논문 그림 크로핑 (figures/)
+논문을 읽을 때 PDF 를 따로 열지 않게, **캡션을 앵커로 그림·표를 잘라** 저장한다.
+
+```bash
+python3 tools/litdb/extract_figures.py --slug <slug> --clean \
+    --pdf "litdb/inbox/<본문>.pdf" [--pdf "litdb/inbox/<SI>.pdf"]
+```
+- 출력: `litdb/figures/<slug>/fig_3.png` · `tab_S1.png` · `figures.json`
+- SI PDF 로 넘긴 것과 `Supplementary Fig. 1` 형태의 캡션은 **자동으로 S 번호**가 된다.
+- **임베디드 이미지 추출이 아니라 영역 렌더**다 — 벡터 그림(ACS/RSC 다수)도 똑같이 나온다.
+- 오탐(본문의 "Figure 3 shows …" 문단)은 ① 구두점 규칙 ② 그래픽 존재 검증 두 겹으로 막는다.
+  실측 70편 → 492개 추출, 0개인 16편은 한글 슬라이드·우리 원고 초안.
+- 긴 변 1500 px 상한 + PNG 재압축 (`--maxpx 0` 이면 원해상도). 그림 1장 ≈ 110 KB.
+
+**webapp 연동** — digest 본문에서 그림을 `Fig. 3`, `Fig. 5e`, `Table S1` 형태로 언급하면
+문헌 화면에서 자동으로 링크가 걸리고, 마우스를 올리거나 **드래그**하면 오른쪽 여백에 그림이 뜬다.
+문서 맨 아래에는 그림 카드가 쫙 깔린다 (클릭 → 큰 창 → 저장). "그림 3"·"Fig3" 표기는 안 잡힌다.
+
+> ⚠ 저작권: 여기 있는 건 **남의 논문 그림**이다. repo 를 공개로 돌릴 일이 생기면 `litdb/figures/`
+> 를 먼저 지운다(`litdb/inbox/` 의 PDF 원본은 이미 .gitignore 대상). 규모가 커지면
+> (논문 160편 × 15장 ≈ 260 MB) PNG 만 .gitignore 하고 `figures.json` 만 추적하는 쪽으로 바꾼다.
 
 ## 📐 개념/방법 노트 (concepts/)
 - `concepts/dos_vbm_efermi_methods.md` — DOS·PDOS 계산(수식), VBM 절대비교 불가+정렬, 절연체 E_F smearing artifact (코드 재현 포함). 슬라이드 21/24/25 방어용.
