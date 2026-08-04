@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """LPSOCl (O-doped LPSCl1.6) at V0 — standard-style DOS/PDOS figures.
-Data: db/properties/lpsocl_{dos,pdos_element}_smooth.csv (sigma 0.05 eV).
+Data: db/properties/lpsocl_dos_smooth.csv (sigma 0.05 eV) + lpsocl_pdos_element_smooth.csv (sigma 0.15 eV effective, 2026-08-04 re-smooth to match lpscl16 family; 0.05 original kept as *_sigma005.csv).
 Gap 2.2309 eV = VBM/CBM eigenvalues 2.3870/4.6179, fixed-occ nscf (03b, k882).
 Same figure family as b2o3/fig_b2o3_dos.py. Outputs 2 PNGs into cwd.
 """
