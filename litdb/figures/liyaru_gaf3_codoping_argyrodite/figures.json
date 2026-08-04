@@ -1,0 +1,658 @@
+{
+ "slug": "liyaru_gaf3_codoping_argyrodite",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-04",
+ "sources": [
+  "45. Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+  "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Structural analysis of electrolytes. (A) XRD patterns of the synthesized Li5.5+2xP1−xGaxS4.5Cl1.5−3xF3x electrolytes (x = 0%, 2%, 4%, 6%, 8%, 10%). (B) XRD profiles and Rietveld refinement outcomes for the LPSC-4%GaF sample. (C) Crystal-structural diagram of argyrodite LPSC-4%GaF. (D) F 1s and (E) S 2p spectra of LPSC-4%GaF. (F) SEM images and EDS elemental mapping of LPSC-4%GaF.",
+   "bbox": [
+    44.0,
+    26.0,
+    564.5,
+    386.6
+   ],
+   "w": 2170,
+   "h": 1503,
+   "dpi": 300,
+   "src": "45. Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.723
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Electrochemical performance evaluation of LPSC and Li5.5+2xP1−xGaxS4.5Cl1.5−3xF3x electrolytes. (A) Arrhenius plots illustrating the temperature-dependent ionic conductivities of Li5.5+2xP1−xGaxS4.5Cl1.5−3xF3x with varying doping levels (x = 0%, 2%, 4%, 6%, 8%, 10%). (B) Dependence of ionic conductivities and activation energies on the doping content in Li5.5+2xP1−xGaxS4.5Cl1.5−3xF3x. (C) Direct-current polarization curves of Li5.5+2xP1−xGaxS4.5Cl1.5−3xF3x. (D) Cyclic voltammetry profiles of Li/LPSC/LPSC + VGCF and Li/LPSC − xGaF/LPSC − xGaF + VGCF (x = 4%, x = 8%) semi-blocking cells at a scan rate of 0.1 mV/s. The optimal doping level (x = 4%) is identified and labeled as LPSC-4%GaF. indicating negligible influence on Li+ transport kinetics at this doping concentration. the difficulty of electron transition, thereby leading to reduced electronic conductivity [ 41 ]. The electro",
+   "bbox": [
+    37.0,
+    26.0,
+    558.3,
+    463.2
+   ],
+   "w": 2173,
+   "h": 1823,
+   "dpi": 300,
+   "src": "45. Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.884
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Stability properties of electrolytes. CCD measurements for Li5.5+2xP1−xGaxS4.5Cl1.5−3xF3x of (A) x = 0 and (B) x = 4%. (C) EIS profiles during cycling of Li/LPSC-4%GaF/ Li symmetric cell. (D) Galvanostatic lithium plating/stripping behavior in a Li symmetric cell using LPSC-4%GaF at 0.2 mA/cm2 and 25 °C. The corresponding segmented galvanostatic cycling performance at (E) 150 to 160 h and (F) 1,500 to 1,510 h of cycling. (G) Li plating/stripping performance in a Li symmetric cell using LPSC-4%GaF at 0.5 mA/cm2 and 25 °C.",
+   "bbox": [
+    37.0,
+    26.0,
+    557.5,
+    565.2
+   ],
+   "w": 2170,
+   "h": 2247,
+   "dpi": 300,
+   "src": "45. Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.873
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Pre- and post-cycling characterization and analysis of Li anode interface. The XPS spectra of (A) S 2p and (B) P 2p at the surface of Li/LPSC were collected after 200 h of cycling. The XPS spectra of (C) F 1s, (D) P 2p, (E) S 2p, and (F) Ga 3d at the surface of Li/LPSC-4%GaF were collected after 200 h of cycling. Li diffusion barrier on (G) Li (100) and (H) Li–Ga alloy (110) surfaces. (I) Schematic of the gradient structural interphase layer generated at the Li/LPSC-4%GaF interface. of the Li metal surface after cycling of the Li symmetric cell. Marked dendrite formation is observed on the Li metal surface after LPSC cycling, attributed to inhomogeneous interfacial contact and nonuniform deposition of Li+. In sharp contrast, in the Li/LPSC-4%GaF/Li symmetric cell, the lithium metal surface after cycling is relatively flat and dense, with no visible dendrites or cracks, indicating",
+   "bbox": [
+    44.0,
+    26.0,
+    565.3,
+    503.4
+   ],
+   "w": 2173,
+   "h": 1990,
+   "dpi": 300,
+   "src": "45. Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.836
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Air stabilization properties of electrolytes. (A) Quantity of H2S gas generated from Li5.5+2xP1−xGaxS4.5Cl1.5−3xF3x electrolyte (x = 0%, 2%, 4%, 6%, 8%, 10%) SE after exposure to moisture air (30% relative humidity). (B) Arrhenius plots and XRD patterns of the prepared (C) LPSC-4%GaF and (D) LPSC SEs before and after exposure to air.",
+   "bbox": [
+    37.0,
+    26.0,
+    557.5,
+    502.1
+   ],
+   "w": 2169,
+   "h": 1985,
+   "dpi": 300,
+   "src": "45. Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. All-solid-state battery performances. (A) Diagram of the all-solid-state battery. Charge–discharge profiles of (B) NCM811/LPSC/Li and (C) NCM811/LPSC-4%GaF/Li cells at 0.2 C under 25 °C. (D) Cycling performances of the cells with LPSC and LPSC-4%GaF electrolytes, and (E) the corresponding rate capabilities with currents range from 0.05 to 1 C. (F) Cycling performances of LCO/LPSC-4%GaF/Li cell. (G) Initial charging/discharging curves of LCO/LPSC-4%GaF/Li ASSLMB before and after air exposure.",
+   "bbox": [
+    44.0,
+    298.7,
+    564.5,
+    715.3
+   ],
+   "w": 2170,
+   "h": 1737,
+   "dpi": 300,
+   "src": "45. Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.884
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 7,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. XRD patterns and the corresponding Rietveld refinement results of LPSC.",
+   "bbox": [
+    64.8,
+    97.1,
+    488.9,
+    346.6
+   ],
+   "w": 1768,
+   "h": 1041,
+   "dpi": 300,
+   "src": "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 7,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. a) Raman spectra of as-prepared Li5.5+2xP1−xGaxS4.5Cl1.5−3xF3x (x = 2%, 4%, 6%,",
+   "bbox": [
+    64.8,
+    362.6,
+    543.4,
+    580.6
+   ],
+   "w": 1995,
+   "h": 909,
+   "dpi": 300,
+   "src": "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.869
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 8,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. XPS spectra of a) Li 1s, b) Ga 3d, c) P 2p, d) Cl 2p for the LPSC-4%GaF SE.",
+   "bbox": [
+    64.8,
+    26.0,
+    503.8,
+    400.6
+   ],
+   "w": 1830,
+   "h": 1562,
+   "dpi": 300,
+   "src": "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 8,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. SEM images and corresponding EDS (P, S, and Cl) element mappings of LPSC.",
+   "bbox": [
+    64.8,
+    416.6,
+    516.6,
+    688.6
+   ],
+   "w": 1883,
+   "h": 1134,
+   "dpi": 300,
+   "src": "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.539
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 9,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Nyquist plots of Li5.5+2xP1−xGaxS4.5Cl1.5−3xF3x electrolytes (x = 0%, 2%, 4%, 6%,",
+   "bbox": [
+    64.8,
+    26.0,
+    543.4,
+    328.6
+   ],
+   "w": 1995,
+   "h": 1262,
+   "dpi": 300,
+   "src": "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.948
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 9,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Nyquist plots of a) Li5.5PS4.5Cl1.46F0.04 electrolyte and b) Li5.5P0.96Ga0.04S4.5Cl1.5",
+   "bbox": [
+    64.8,
+    371.6,
+    533.5,
+    607.6
+   ],
+   "w": 1953,
+   "h": 984,
+   "dpi": 300,
+   "src": "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 10,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. a) The hopping pathways of 48h to 48h site for Li atom on LPSC SE (010) surface.",
+   "bbox": [
+    64.8,
+    26.0,
+    536.5,
+    274.6
+   ],
+   "w": 1966,
+   "h": 1037,
+   "dpi": 300,
+   "src": "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.856
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 10,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Direct-current polarization curves of pristine LPSC, Ga-doped, F-doped and Ga-F",
+   "bbox": [
+    64.8,
+    317.6,
+    533.5,
+    562.6
+   ],
+   "w": 1953,
+   "h": 1022,
+   "dpi": 300,
+   "src": "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 11,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. The relation of critical current density (CCD) and electronic conductivity as a",
+   "bbox": [
+    64.8,
+    146.6,
+    533.5,
+    436.6
+   ],
+   "w": 1953,
+   "h": 1210,
+   "dpi": 300,
+   "src": "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.855
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 12,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. EIS profiles during cycling of Li/LPSC/Li symmetric cell.",
+   "bbox": [
+    64.8,
+    26.0,
+    442.5,
+    292.6
+   ],
+   "w": 1574,
+   "h": 1112,
+   "dpi": 300,
+   "src": "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.956
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 12,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. a) Li plating and stripping in Li/LPSC-4%GaF/Li symmetric cell at 1.0 mA cm−2",
+   "bbox": [
+    64.8,
+    308.6,
+    533.5,
+    615.9
+   ],
+   "w": 1953,
+   "h": 1281,
+   "dpi": 300,
+   "src": "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.903
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 13,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. The XPS spectra of a) Li 1s and b) Cl 2p at the surface of Li/LPSC were",
+   "bbox": [
+    64.8,
+    26.0,
+    533.5,
+    292.6
+   ],
+   "w": 1953,
+   "h": 1112,
+   "dpi": 300,
+   "src": "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.906
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 13,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. The XPS spectra of a) Li 1s and b) Cl 2p at the surface of Li/LPSC-4%GaF were",
+   "bbox": [
+    64.8,
+    335.6,
+    533.5,
+    571.6
+   ],
+   "w": 1953,
+   "h": 984,
+   "dpi": 300,
+   "src": "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 14,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. The density of states (DOS) for a) Li2S, b) Li3P, c) LiCl, d) LiF.",
+   "bbox": [
+    64.8,
+    26.0,
+    493.0,
+    400.6
+   ],
+   "w": 1785,
+   "h": 1562,
+   "dpi": 300,
+   "src": "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 14,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. a) SEM images of pristine Li metal. b) SEM images of the Li metal surface of",
+   "bbox": [
+    64.8,
+    417.1,
+    533.5,
+    580.6
+   ],
+   "w": 1953,
+   "h": 682,
+   "dpi": 300,
+   "src": "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.418
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 15,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. Rest time-resolved EIS profiles of a) Li/LPSC/Li and b) Li/LPSC-4%GaF/Li",
+   "bbox": [
+    64.8,
+    26.0,
+    530.5,
+    256.6
+   ],
+   "w": 1941,
+   "h": 962,
+   "dpi": 300,
+   "src": "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.894
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 15,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. Adsorption free energies (∆Eads) of H2O on two Li sites (Li1−24g site, Li2−48h",
+   "bbox": [
+    64.8,
+    299.6,
+    517.1,
+    570.4
+   ],
+   "w": 1885,
+   "h": 1129,
+   "dpi": 300,
+   "src": "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.894
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 16,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. a) SEM images of the surface morphology of LiNi0.8Co0.1Mn0.1O2 particles, and",
+   "bbox": [
+    64.8,
+    26.0,
+    533.5,
+    202.6
+   ],
+   "w": 1953,
+   "h": 737,
+   "dpi": 300,
+   "src": "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.451
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 16,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. The impedance spectra of a) NCM811/LPSC/Li and b) NCM811/LPSC-",
+   "bbox": [
+    64.8,
+    245.6,
+    530.4,
+    436.6
+   ],
+   "w": 1941,
+   "h": 797,
+   "dpi": 300,
+   "src": "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 17,
+   "file": "fig_S22.png",
+   "caption": "Figure S22. Charge–discharge profiles of NCM811/LPSC-4%GaF/Li cell at various rates.",
+   "bbox": [
+    64.8,
+    371.6,
+    510.7,
+    598.6
+   ],
+   "w": 1858,
+   "h": 947,
+   "dpi": 300,
+   "src": "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 18,
+   "file": "fig_S23.png",
+   "caption": "Figure S23. a) SEM images of the surface morphology of LiCoO2 particles. The",
+   "bbox": [
+    64.8,
+    26.0,
+    533.5,
+    202.6
+   ],
+   "w": 1953,
+   "h": 737,
+   "dpi": 300,
+   "src": "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.45
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 18,
+   "file": "fig_S24.png",
+   "caption": "Figure 24. Galvanostatic charge/discharge curves of a) LCO/LPSC/Li and b) LCO/LPSC-",
+   "bbox": [
+    64.8,
+    245.6,
+    530.5,
+    454.6
+   ],
+   "w": 1941,
+   "h": 872,
+   "dpi": 300,
+   "src": "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.89
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 18,
+   "file": "fig_S25.png",
+   "caption": "Figure S25. Cycling performances of LCO/LPSC/Li cell at 0.2 C under 25 °C.",
+   "bbox": [
+    64.8,
+    497.6,
+    531.2,
+    688.6
+   ],
+   "w": 1944,
+   "h": 797,
+   "dpi": 300,
+   "src": "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.903
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 19,
+   "file": "fig_S26.png",
+   "caption": "Figure S26. Rate performances of LCO/LPSC/Li and LCO/LPSC-4%GaF/Li cells with",
+   "bbox": [
+    64.8,
+    26.0,
+    533.5,
+    310.6
+   ],
+   "w": 1953,
+   "h": 1187,
+   "dpi": 300,
+   "src": "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.934
+  },
+  {
+   "key": "fS27",
+   "kind": "figure",
+   "label": "S27",
+   "page": 19,
+   "file": "fig_S27.png",
+   "caption": "Figure S27. The initial charging/discharging curves of LCO/LPSC/Li ASSLMBs before and",
+   "bbox": [
+    64.8,
+    353.6,
+    533.5,
+    643.6
+   ],
+   "w": 1953,
+   "h": 1209,
+   "dpi": 300,
+   "src": "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.956
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 20,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Crystallographic data of LPSC and LPSC-4%GaF SEs. Compound Li6PS5Cl Li5.58P0.96Ga0.04S4.5Cl1.38F0.12",
+   "bbox": [
+    65.8,
+    73.6,
+    499.0,
+    292.5
+   ],
+   "w": 1805,
+   "h": 913,
+   "dpi": 300,
+   "src": "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.959
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 21,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Rietveld analysis results for the XRD pattern of LPSC-4%GaF. Wyckoff",
+   "bbox": [
+    65.8,
+    73.6,
+    517.0,
+    365.9
+   ],
+   "w": 1881,
+   "h": 1219,
+   "dpi": 300,
+   "src": "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 22,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Electrochemical properties of Li5.58P0.96Ga0.04S4.5Cl1.38F0.12 compared with other",
+   "bbox": [
+    65.8,
+    73.6,
+    532.5,
+    628.6
+   ],
+   "w": 1945,
+   "h": 2314,
+   "dpi": 300,
+   "src": "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.949
+  }
+ ]
+}

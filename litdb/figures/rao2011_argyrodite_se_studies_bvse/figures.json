@@ -1,0 +1,30 @@
+{
+ "slug": "rao2011_argyrodite_se_studies_bvse",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-04",
+ "sources": [
+  "23. Studies of lithium argyrodite solid electrolytes for all-solid-state batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2 (online color at: www.pss-a.com) Liþ migration pathways of Li6PS5X (X ¼ Cl, Br, I; left to right) for different energy thresholds characterizingequilibriumsites(1strow),ﬁrstlocalLiþpaths(2ndrow),extendedlocalLiþpathwaycages(3rdrow),andpathwaysforlong range Liþ migration. Note that pathways are different in detail (cf. text).",
+   "bbox": [
+    45.0,
+    209.7,
+    544.6,
+    710.1
+   ],
+   "w": 2083,
+   "h": 2086,
+   "dpi": 300,
+   "src": "23. Studies of lithium argyrodite solid electrolytes for all-solid-state batteries.pdf",
+   "blank": 0.733
+  }
+ ]
+}

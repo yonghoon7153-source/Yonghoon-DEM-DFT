@@ -1,33 +1,398 @@
 {
+ "adeli2019_halide_substitution_boosting_argyrodite": {
+  "figures": 18,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "33. Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution.pdf",
+   "33. Sup) Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution.pdf"
+  ]
+ },
+ "anderson2024_llzo_comprehensive_dopant_screening": {
+  "figures": 25,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "51. Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte.pdf",
+   "51. Sup) Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte.pdf"
+  ]
+ },
+ "bai2020_argyrodite_review_progress": {
+  "figures": 13,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "24. Research progress in Li-argyrodite-based solidstate electrolytes.pdf"
+  ]
+ },
+ "banik2022_substitutions_oxidative_stability_argyrodite": {
+  "figures": 4,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "18. Can_substitutions_affect_the_oxidative_stability_o.pdf"
+  ]
+ },
+ "choi2025_mlip_cu_taxn_interfacial_adhesion": {
+  "figures": 15,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "17. atomistic-insights-into-cu-amorphous-taxn-interfacial-adhesion-via-machine-learning-interatomic-potentials-effects-of.pdf"
+  ]
+ },
+ "choi2026_bzox_dry_zro2x_nmc_shell_coating": {
+  "figures": 11,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "28. Dry-Crafted Charge-Conductive ZrO2−x Cathode Shell Coating for High-Performance Sulfide-Based Solid-State Batteries.pdf",
+   "28. Sup) Dry-Crafted Charge-Conductive ZrO2−x Cathode Shell Coating for High-Performance Sulfide-Based Solid-State Batteries.pdf"
+  ]
+ },
+ "deklerk2016_diffusion_site_disorder_argyrodite": {
+  "figures": 11,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "32. Diffusion Mechanism of Li Argyrodite Solid Electrolytes for Li-Ion Batteries and Prediction of Optimized Halogen Doping The Effect of Li Vacancies, Halogens, and Halogen Disorder.pdf",
+   "32. Sup) Diffusion Mechanism of Li Argyrodite Solid Electrolytes for Li-Ion Batteries and Prediction of Optimized Halogen Doping The Effect of Li Vacancies, Halogens, and Halogen Disorder.pdf"
+  ]
+ },
+ "deng2016_elastic_superionic_electrolytes_dft": {
+  "figures": 1,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "34. Elastic Properties of Alkali Superionic Conductor Electrolytes from First Principles Calculations.pdf"
+  ]
+ },
+ "dyre2004_hopping_models_ion_conduction_noncrystals": {
+  "figures": 5,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "12. Hopping models for ion conduction in noncrystals.pdf"
+  ]
+ },
+ "fujimura2013_ml_conductivity_origin": {
+  "figures": 4,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "42. Accelerated Materials Design of Lithium Superionic Conductors Based on First-Principles Calculations and Machine Learning Algorithms.pdf"
+  ]
+ },
+ "he2019_dft_for_battery_materials_review": {
+  "figures": 21,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf"
+  ]
+ },
+ "hikima2022_operando_band_structure_assb": {
+  "figures": 2,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "25. Operando analysis of electronic band structure in an all-solid-state thin-film battery.pdf"
+  ]
+ },
  "huang2022_li2sis3_anomalous_conductivity_bvse": {
   "figures": 10,
   "generated": "2026-08-04",
   "pdfs": [
-   "47. Anomalously High Ionic Conductivity of Li2SiS3 Type Conductors.pdf",
-   "47. Sup) Anomalously High Ionic Conductivity of Li2SiS3 Type Conductors.pdf"
+   "47. Anomalously High Ionic Conductivity of Li2SiS3‑Type Conductors.pdf",
+   "47. Sup) Anomalously High Ionic Conductivity of Li2SiS3‑Type Conductors.pdf"
+  ]
+ },
+ "ishikawa2025_site_percolation_cooperative_ion_conduction": {
+  "figures": 5,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "11. Cooperative Ion Conduction Enabled by Site Percolation in Random Substitutional Crystals.pdf"
+  ]
+ },
+ "jun2022_argyrodite_ion_cage_size_descriptor": {
+  "figures": 19,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "48. Designing a descriptor for the computational screening of argyrodite-based solid-state superionic conductors uniformity of ion-cage size.pdf",
+   "48. Sup) Designing a descriptor for the computational screening of argyrodite-based solid-state superionic conductors uniformity of ion-cage size.pdf"
+  ]
+ },
+ "kahle2020_ht_aimd_screening": {
+  "figures": 13,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf"
+  ]
+ },
+ "kim2021_review_oxide_sulfide_se_interfaces": {
+  "figures": 22,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "06. Solid-State Li–Metal Batteries Challenges and Horizons of Oxide and Sulfide Solid Electrolytes and Their Interfaces.pdf",
+   "06. Sup) Solid-State Li–Metal Batteries Challenges and Horizons of Oxide and Sulfide Solid Electrolytes and Their Interfaces.pdf"
+  ]
+ },
+ "kim2024_mtp_argyrodite_disorder_gb": {
+  "figures": 22,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "35. Highly reliable and large-scale simulations of promising argyrodite solid-state electrolytes using a machine-learned moment tensor potential.pdf",
+   "35. Sup) Highly reliable and large-scale simulations of promising argyrodite solid-state electrolytes using a machine-learned moment tensor potential.pdf"
+  ]
+ },
+ "kim2026_hts_li3sc2po43_coating_midni_ncm": {
+  "figures": 38,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "01. S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
+   "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf"
+  ]
+ },
+ "kim2026_iccf_molten_salt_sei_lpscl_sheet": {
+  "figures": 7,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "07. Ion-conducting cavity filler enabling in-situ formation of SEI in sulfide-based solid electrolyte sheets for all-solid-state batteries.pdf"
+  ]
+ },
+ "kim2026_li_argyrodite_sei_reactive_md": {
+  "figures": 27,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "03. Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
+   "03. Sup) Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf"
   ]
  },
  "kraft2017_lattice_polarizability_argyrodite_Li6PS5X": {
   "figures": 22,
   "generated": "2026-08-04",
   "pdfs": [
-   "664401af-31._Influence_of_Lattice_Polarizability_on_the_Ionic_Conductivity_in_the_Lithium_Superionic_Argyrodites_Li6PS5X_X__Cl_Br_I.pdf",
-   "38f51c84-31._Sup_Inl_Br_I.pdf"
+   "31. Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf",
+   "31. Sup) Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf"
+  ]
+ },
+ "lee2024_multicomponent_argyrodite_mixed_oxidation_mtp": {
+  "figures": 4,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "02. Synergistic effects of chlorine substitution in sulfide electrolyte solid state batteries.pdf"
+  ]
+ },
+ "li2025_cubr2_dualdoping_argyrodite": {
+  "figures": 7,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "09. Engineering high-performance argyrodite sulfide electrolytes via metal halide doping for all-solid-state lithium metal batteries.pdf"
+  ]
+ },
+ "liang2025_quasilayered_argyrodite_li_migration": {
+  "figures": 4,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "26. Small - 2025 - Liang - Unraveling Lithium‐Ion Migration Mechanisms in Novel Quasi‐Layered Argyrodite Solid Electrolyte for.pdf"
+  ]
+ },
+ "liu2013_cage_methane_adsorption_hydrate_nucleation": {
+  "figures": 1,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "08. Effects of cage type and adsorption face on the cage–methane adsorption interaction Implications for hydrate nucleation studies.pdf"
+  ]
+ },
+ "liu2022_cl_crystallization_interface_argyrodite": {
+  "figures": 6,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "14. Revealing the Impact of Cl Substitution on the Crystallization Behavior and Interfacial Stability of Superionic Lithium Argyrodites.pdf"
+  ]
+ },
+ "liu2023_electron_redistribution_redox_resistible_mgf2": {
+  "figures": 37,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "05. Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
+   "05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf"
+  ]
+ },
+ "liyaru_gaf3_codoping_argyrodite": {
+  "figures": 34,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "45. Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf"
+  ]
+ },
+ "lu2025_tailoring_cl_rich_anode_licl": {
+  "figures": 21,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "04. Tailoring argyrodite electrolyte for enhanced interface compatibility with lithium anode.pdf",
+   "04. Sup) Tailoring argyrodite electrolyte for enhanced interface compatibility with lithium anode.pdf"
+  ]
+ },
+ "ma2024_sb_doping_lpsc_conductivity": {
+  "figures": 4,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "22. High performance P-based argyrodite sulfide electrolytes enabled by Sb-based argyrodite doping for all-solid-state lithium metal batteries†.pdf"
+  ]
+ },
+ "ong2013_lgps_family_substitution": {
+  "figures": 8,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "43. Phase stability, electrochemical stability and ionic conductivity of the Li10±1MP2X12 (M = Ge, Si, Sn, Al or P, and X = O, S or Se) family of superionic conductors.pdf"
+  ]
+ },
+ "qian2026_decanoate_coating_lpscl_moisture_interface": {
+  "figures": 26,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "44. Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf",
+   "44. Sup) Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf"
+  ]
+ },
+ "rao2011_argyrodite_se_studies_bvse": {
+  "figures": 1,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "23. Studies of lithium argyrodite solid electrolytes for all-solid-state batteries.pdf"
+  ]
+ },
+ "rao2025_iodide_argyrodite": {
+  "figures": 5,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "19. Iodide substituted halide-rich lithium argyrodite solid electrolytes with improved performance for all solid-state batteries†.pdf"
+  ]
+ },
+ "ren2026_li2zrcl6_low_ion_potential_doping": {
+  "figures": 5,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "50. Regulation of the Lattice dynamics of Li2ZrCl6 solid electrolytes via low-ion-potential element doping for all-solid-state batteries.pdf"
+  ]
+ },
+ "richards2016_interface_stability_pseudobinary": {
+  "figures": 20,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "39. Interface Stability in Solid-State Batteries.pdf",
+   "39. Sup) Interface Stability in Solid-State Batteries.pdf"
+  ]
+ },
+ "schlem2020_li3mcl6_cation_site_disorder": {
+  "figures": 28,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "36. Mechanochemical Synthesis A Tool to Tune Cation Site Disorder and Ionic Transport Properties of Li3MCl6 (M Y, Er) Superionic Conductors.pdf",
+   "36. Sup) Mechanochemical Synthesis A Tool to Tune Cation Site Disorder and Ionic Transport Properties of Li3MCl6 (M Y, Er) Superionic Conductors.pdf"
   ]
  },
  "sendek2017_ml_screening_12k_conductors": {
+  "figures": 16,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "40. Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
+   "40. Sup) Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf"
+  ]
+ },
+ "son2025_fivevolt_assb": {
+  "figures": 1,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "27. Five-volt-class high-capacity all-solid-state lithium batteries.pdf"
+  ]
+ },
+ "spencer2022_review_tco_band_structure_oxides": {
+  "figures": 33,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "46. A review of band structure and material properties of transparent conducting and semiconducting oxides Ga2O3, Al2O3, In2O3, ZnO, SnO2, CdO, NiO, CuO, and Sc2O3.pdf"
+  ]
+ },
+ "sundar2025_oxide_coating_screening_lpscl": {
   "figures": 9,
   "generated": "2026-08-04",
   "pdfs": [
-   "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf"
+   "15. Computationally-Guided Development of Sulfide Solid Electrolyte Powder Coatings for Enhanced Stability and Performance of Solid-State Batteries.pdf"
+  ]
+ },
+ "taklu2021_cucl_dualdoping_air_stability_argyrodite": {
+  "figures": 8,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "20. Dual CuCl doped argyrodite superconductor to boost the interfacial compatibility and air stability for all solid-state lithium metal batteries.pdf"
+  ]
+ },
+ "torii2025_lpscl_mechanical_anisotropy_dft": {
+  "figures": 9,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "21. first-principles-investigation-of-mechanical-properties-and-anisotropy-of-argyrodite-li6ps5cl-crystal-electrolytes.pdf"
+  ]
+ },
+ "wang2022_sulfide_thermal_stability_th_descriptor": {
+  "figures": 5,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "29. InfoMat - 2022 - Wang - Improving thermal stability of sulfide solid electrolytes  An intrinsic theoretical paradigm.pdf"
+  ]
+ },
+ "wang2025_electronic_localization_yo_argyrodite": {
+  "figures": 33,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "52. Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf"
+  ]
+ },
+ "whitten2023_ups_practical_best_practices": {
+  "figures": 4,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "10. Ultraviolet photoelectron spectroscopy Practical aspects and best practices.pdf"
+  ]
+ },
+ "xiao2019_cathode_coating_screening": {
+  "figures": 25,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "37. Computational Screening of Cathode Coatings for Solid-State Batteries.pdf",
+   "37. Sup1) Computational Screening of Cathode Coatings for Solid-State Batteries.pdf",
+   "37. Sup2) Computational Screening of Cathode Coatings for Solid-State Batteries.pdf"
+  ]
+ },
+ "yang2025_lao_dualdoping_argyrodite_lacl3": {
+  "figures": 5,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "27. La,O co doped LPSC_PO bond, LaCl3 형성.pdf"
   ]
  },
  "zhou2026_high_entropy_lgps_multicationic": {
   "figures": 25,
   "generated": "2026-08-04",
   "pdfs": [
-   "22d5d6c1-49._A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
-   "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf"
+   "49. A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf"
+  ]
+ },
+ "zhu2015_esw_grand_potential_origin": {
+  "figures": 6,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "38. Origin of Outstanding Stability in the Lithium Solid Electrolyte Materials Insights from Thermodynamic Analyses Based on First-Principles Calculations.pdf",
+   "38. Sup) Origin of Outstanding Stability in the Lithium Solid Electrolyte Materials Insights from Thermodynamic Analyses Based on First-Principles Calculations.pdf"
+  ]
+ },
+ "zhu2020_air_stable_se_design_principles": {
+  "figures": 4,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "30. Angew Chem Int Ed - 2020 - Zhu - Materials Design Principles for Air‐Stable Lithium Sodium Solid Electrolytes.pdf",
+   "30. anie202007621-sup-0001-misc_information.pdf"
+  ]
+ },
+ "zuo2022_chlorination_cathode_interface": {
+  "figures": 7,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "16. Impact of the Chlorination of Lithium Argyrodites on the ElectrolyteCathode Interface in Solid-State Batteries.pdf"
   ]
  }
 }

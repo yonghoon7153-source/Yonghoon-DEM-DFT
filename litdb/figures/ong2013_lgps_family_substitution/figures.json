@@ -1,0 +1,163 @@
+{
+ "slug": "ong2013_lgps_family_substitution",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-04",
+ "sources": [
+  "43. Phase stability, electrochemical stability and ionic conductivity of the Li10±1MP2X12 (M = Ge, Si, Sn, Al or P, and X = O, S or Se) family of superionic conductors.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Crystal structure of Li10GeP2S12. Large yellow atoms: S; small green atoms: fully occupied Li sites; small green-white atoms: partially occupied Li sites; red tetrahedra: (Ge0.5P0.5)S4; and blue tetrahedra: PS4.",
+   "bbox": [
+    36.5,
+    562.6,
+    298.0,
+    698.3
+   ],
+   "w": 1090,
+   "h": 566,
+   "dpi": 300,
+   "src": "43. Phase stability, electrochemical stability and ionic conductivity of the Li10±1MP2X12 (M = Ge, Si, Sn, Al or P, and X = O, S or Se) family of superionic conductors.pdf",
+   "blank": 0.662
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Calculated density of states for Li10GeP2X12 for X ¼ (a) O, (b) S and (c) Se using the HSE screened hybrid functional.",
+   "bbox": [
+    36.5,
+    196.8,
+    298.0,
+    708.1
+   ],
+   "w": 1090,
+   "h": 2132,
+   "dpi": 300,
+   "src": "43. Phase stability, electrochemical stability and ionic conductivity of the Li10±1MP2X12 (M = Ge, Si, Sn, Al or P, and X = O, S or Se) family of superionic conductors.pdf",
+   "blank": 0.847
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Eﬀect of (a) isovalent (Si4+ and Sn4+) and (b) aliovalent (P5+ and Al3+) cation substitutions on diﬀusivity in the LGPS structure. Data points at 1000 K, 1100 K, and 1200 K are excluded for Li11AlP2S12 and Li9P3S12 due to melting or breaking of Al–S/P–S bonds in the MD simulations.",
+   "bbox": [
+    36.5,
+    345.9,
+    298.0,
+    685.2
+   ],
+   "w": 1090,
+   "h": 1415,
+   "dpi": 300,
+   "src": "43. Phase stability, electrochemical stability and ionic conductivity of the Li10±1MP2X12 (M = Ge, Si, Sn, Al or P, and X = O, S or Se) family of superionic conductors.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1 Phase equilibria and decomposition energies for Li10\u00011MP2X12 Cation (M) Anion (X) Phase equilibria at Li10\u00011MP2X12 composition Edecomp (meV per atom) Si O Li4SiO4 + 2Li3PO4 92 Ge O Li4GeO4 + 2Li3PO4 96 Sn O 0.33Li8SnO6 + 0.67Li2SnO3 + 2Li3PO4 97 Si S Li4SiS4 + 2Li3PS4 19 Ge S Li4GeS4 + 2Li3PS4 25 Sn S Li4SnS4 + 2Li3PS4 25 Al S Li5AlS4 + 2Li3PS4 60 P S 3Li3PS4 22 Si Se Li4SiSe4 + Li4P2Se6 + Li2Se + Se 16 Ge Se Li4GeSe4 + Li4P2Se6 + Li2Se + Se 16 Sn Se Li4SnSe4 + Li4P2Se6 + Li2Se + Se 19",
+   "bbox": [
+    0.0,
+    6.4,
+    557.8,
+    765.0
+   ],
+   "w": 2201,
+   "h": 2993,
+   "dpi": 284,
+   "src": "43. Phase stability, electrochemical stability and ionic conductivity of the Li10±1MP2X12 (M = Ge, Si, Sn, Al or P, and X = O, S or Se) family of superionic conductors.pdf",
+   "blank": 0.899
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 4,
+   "file": "tab_2.png",
+   "caption": "Table 2 Relaxed structural parameters for Li10MP2X12 Cation (M) Anion (X) a (˚A) b (˚A) c (˚A) a (\u0006) b (\u0006) g (\u0006) Volume (˚A3) Channel size (˚A) Si O 6.985 6.990 10.649 90.86 89.70 89.88 520 1.43 Ge O 7.151 6.976 10.709 90.47 89.66 89.81 534 1.46 Sn O 7.499 6.821 10.966 89.70 90.12 89.35 561 1.50 Si S 8.566 8.848 12.920 91.90 90.65 90.31 979 1.84 Ge S 8.561 8.847 12.929 91.97 90.63 90.24 979 1.84 Sn S 8.666 8.950 13.133 91.97 90.58 90.08 1018 1.86 Al S 8.722 8.567 13.662 90.69 89.19 89.47 1021 1.92 P S 8.817 8.817 12.660 90.00 90.00 89.78 984 1.87 Si Se 9.040 9.381 13.630 91.89 90.74 90.35 1155 1.97 Ge Se 9.054 9.400 13.690 91.96 90.72 90.31 1164 1.96 Sn Se 9.084 9.434 13.797 92.09 90.70 90.17 1181 1.97",
+   "bbox": [
+    0.0,
+    6.4,
+    557.8,
+    765.0
+   ],
+   "w": 2201,
+   "h": 2993,
+   "dpi": 284,
+   "src": "43. Phase stability, electrochemical stability and ionic conductivity of the Li10±1MP2X12 (M = Ge, Si, Sn, Al or P, and X = O, S or Se) family of superionic conductors.pdf",
+   "blank": 0.899
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 5,
+   "file": "tab_3.png",
+   "caption": "Table 3 Phase equilibria for the Li10MP2X12 composition at cathode and anode mLi. The anode mLi is set at the chemical potential of bulk lithium (m0 Li), while the cathode mLi is set at m0 Li \u0003 5 eV, corresponding to a high voltage 5 V cathode Cation (M) Anion (X) Equilibrium phases at cathode, mLi ¼ m0 Equilibrium phases at anode, mLi ¼ m0 Li \u0003 5 eV Li Ge O GeP2O7, O2 Li15Ge4, Li2O, Li3P Si O SiP2O7, O2 Li21Si5, Li2O, Li3P Sn O SnP2O7, O2 Li17Sn4, Li2O, Li3P Ge S GeS2, P2S5, S Li15Ge4, Li2S, Li3P Si S SiS2, P2S5, S Li21Si5, Li2S, Li3P Sn S SnPS3, P2S5, S Li17Sn4, Li2S, Li3P Al S AlPS4, P2S5, S Li3Al2, Li2S, Li3P P S P2S5, S Li2S, Li3P Ge Se Ge4Se9, PSe, Se Li15Ge4, Li2Se, Li3P Si Se SiSe2, PSe, Se Li21Si5, Li2Se, Li3P Sn Se SnPSe3, PSe, Se Li17Sn4, Li2Se, Li3P",
+   "bbox": [
+    0.0,
+    6.4,
+    557.8,
+    765.0
+   ],
+   "w": 2201,
+   "h": 2993,
+   "dpi": 284,
+   "src": "43. Phase stability, electrochemical stability and ionic conductivity of the Li10±1MP2X12 (M = Ge, Si, Sn, Al or P, and X = O, S or Se) family of superionic conductors.pdf",
+   "blank": 0.88
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 6,
+   "file": "tab_4.png",
+   "caption": "Table 4 Li+ conductivity of cation-substituted compounds Li10\u0001xMP2S12 (M ¼ Si, Sn, P and Al) and anion-substituted compounds Li10GeP2X12 (X ¼ O, S and Se) at 300 K",
+   "bbox": [
+    0.0,
+    6.4,
+    557.8,
+    765.0
+   ],
+   "w": 2201,
+   "h": 2993,
+   "dpi": 284,
+   "src": "43. Phase stability, electrochemical stability and ionic conductivity of the Li10±1MP2X12 (M = Ge, Si, Sn, Al or P, and X = O, S or Se) family of superionic conductors.pdf",
+   "blank": 0.886
+  },
+  {
+   "key": "t5",
+   "kind": "table",
+   "label": "5",
+   "page": 7,
+   "file": "tab_5.png",
+   "caption": "Table 5 Eﬀect of lattice parameter changes on Li+ conductivity at 300 K in the LGPS structure",
+   "bbox": [
+    0.0,
+    6.4,
+    557.8,
+    765.0
+   ],
+   "w": 2201,
+   "h": 2993,
+   "dpi": 284,
+   "src": "43. Phase stability, electrochemical stability and ionic conductivity of the Li10±1MP2X12 (M = Ge, Si, Sn, Al or P, and X = O, S or Se) family of superionic conductors.pdf",
+   "blank": 0.878
+  }
+ ]
+}

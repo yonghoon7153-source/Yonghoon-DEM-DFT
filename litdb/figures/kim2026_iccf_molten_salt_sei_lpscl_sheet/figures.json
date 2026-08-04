@@ -1,0 +1,144 @@
+{
+ "slug": "kim2026_iccf_molten_salt_sei_lpscl_sheet",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-04",
+ "sources": [
+  "07. Ion-conducting cavity filler enabling in-situ formation of SEI in sulfide-based solid electrolyte sheets for all-solid-state batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. (a) Schematic illustration of a functional solid electrolyte LPSCl sheet incorporating an ICCF. Optical images of (b) a reference LPSCl sheet manufactured under optimized conditions, and sheets fabricated using an all-in-one coating containing an ATMS at (c) 5 and (d) 10 wt% relative to the total amount of LPSCl slurry. Surface scanning electron microscopy (SEM) images of (e) the reference LPSCl sheet and ATMS-containing sheets with (f) 5 and (g) 10 wt% ATMS. 2.5. Electrochemical characterization and electrochemical impedance spectra (EIS) according to Eq. (2): [20]. Li = Iss(ΔV −I0R0) Ionic conductivities of all the LPSCl sheets placed in the Ar-glove box were measured using an exterior Iviumstat (IVIUM Technologies Corp.), which is connected to the Ar-glove box, in the range of 1 Hz and 3 MHz with an amplitude of 10 mV with Ti/SEs/Ti Li-ion blocking symmetric cells at 25 ◦C. Th",
+   "bbox": [
+    31.6,
+    46.1,
+    566.0,
+    508.0
+   ],
+   "w": 2228,
+   "h": 1925,
+   "dpi": 300,
+   "src": "07. Ion-conducting cavity filler enabling in-situ formation of SEI in sulfide-based solid electrolyte sheets for all-solid-state batteries.pdf",
+   "blank": 0.544
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (a) Molecular structures of the cation and anion used in the ATMSs. (b) Optical image of an ATMS suitable for soaking the LPSCl sheet. (c) Color changes of different ATMSs after dispersion with LPSCl. (d) UV–Vis spectra of various ATMS–LPSCl mixtures. (e) Ionic conductivities of LPSCl_[EMIM][TFSI], LPSCl_[PMIM] [TFSI], and the reference LPSCl sheet. (f) Comparison of the ionic conductivity and recovery ratio of LPSCl_[EMIM][TFSI] with those of other reported films in the literature. mHz to 1 MHz. with a voxel size of 0.2 μm. To validate the simulated ionic conductiv­ ities of the LPSCl/NBR sheet against experimentally measured values, four microstructures were generated with porosities of 7.4%, 10.3%, 17.7%, and 28.2%. Their ionic conductivities were calculated under different contact resistivity values between LPSCl particles. For each case, the root-mean-square errors (RMSEs) b",
+   "bbox": [
+    31.6,
+    46.1,
+    566.0,
+    493.0
+   ],
+   "w": 2228,
+   "h": 1863,
+   "dpi": 300,
+   "src": "07. Ion-conducting cavity filler enabling in-situ formation of SEI in sulfide-based solid electrolyte sheets for all-solid-state batteries.pdf",
+   "blank": 0.654
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. (a) Ionic conductivity of the reference LPSCl, LPSCl_[EMIM][TFSI], LPSCl_1M LiTFSI [EMIM][TFSI], and LPSCl_1M LiTFSI [EMIM][TFSI] + 5 wt% FEC. (b) Viscosity of FEC, [EMIM][TFSI], 1 M LiTFSI [EMIM][TFSI], and 1 M LiTFSI [EMIM][TFSI] + 5 wt% FEC. (c) Lithium-ion transference number of the reference LPSCl, LPSCl_[EMIM][TFSI], LPSCl_1M LiTFSI [EMIM][TFSI], and LPSCl_1M LiTFSI [EMIM][TFSI] + 5 wt% FEC. Chronoamperometry profiles of a lithium symmetric cell; inset: EIS for the same cells before and after polarization, assembled with (d) the reference LPSCl, (e) LPSCl_[EMIM][TFSI], (f) LPSCl_1M LiTFSI [EMIM][TFSI], and (g) LPSCl_1M LiTFSI [EMIM][TFSI] + 5 wt% FEC. (h) Calculated HOMO and LUMO values of [EMIM][TFSI], Li+-[EMIM][TFSI], TFSI−, LiTFSI, FEC, and Li+-FEC. (i) Schematic illustration of the SEI formation using functional solid electrolytes. When the LPSCl reacts with incompatib",
+   "bbox": [
+    31.6,
+    46.1,
+    566.0,
+    602.0
+   ],
+   "w": 2228,
+   "h": 2317,
+   "dpi": 300,
+   "src": "07. Ion-conducting cavity filler enabling in-situ formation of SEI in sulfide-based solid electrolyte sheets for all-solid-state batteries.pdf",
+   "blank": 0.672
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. 3D digital twin structures of LPSCl sheets: a) Reference LPSCl with 7.4% porosity and b) LPSCl with 20.0% porosity before (left) and after (right) complete infiltration of the LPSCl_1M LiTFSI [EMIM][TFSI] + 5 wt% FEC into the pores. c) Comparison between simulated and experimental ionic conductivities for LPSCl_1M LiTFSI [EMIM][TFSI] and LPSCl_1M LiTFSI [EMIM][TFSI] + 5 wt% FEC. Simulated 3D ionic current density distributions and corresponding 2D cross-sectional views at the midplane for d) the reference LPSCl and e) LPSCl_1M LiTFSI [EMIM][TFSI] + 5 wt% FEC. f) Distribution of the average ionic current densities calculated over the x–y plane at regularly spaced z-positions (z = 0.1 μm, 0.3 μm, 0.5 μm, …) in the digital twin structures shown in panels d) and e). Each data point corresponds to a specific z-position.",
+   "bbox": [
+    31.6,
+    46.1,
+    565.8,
+    634.0
+   ],
+   "w": 2227,
+   "h": 2450,
+   "dpi": 300,
+   "src": "07. Ion-conducting cavity filler enabling in-situ formation of SEI in sulfide-based solid electrolyte sheets for all-solid-state batteries.pdf",
+   "blank": 0.617
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 10,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Measurements of the critical current densities of Li–In symmetric cells with different SEs: (a) Reference LPSCl, (b) LPSCl_[EMIM][TFSI], (c) LPSCl_1M LiTFSI [EMIM][TFSI], and (d) LPSCl_1M LiTFSI [EMIM][TFSI] + 5 wt% FEC. Corresponding S2p XPS spectra of the Li–In anode surface after formation cycle with (e) the reference LPSCl, (f) LPSCl_[EMIM][TFSI], (g) LPSCl_1M LiTFSI [EMIM][TFSI], and (h) LPSCl_1M LiTFSI [EMIM][TFSI] + 5 wt% FEC. Corresponding F1s XPS spectra of the Li–In anode surface after formation cycle with (i) the reference LPSCl, (j) LPSCl_[EMIM][TFSI], (k) LPSCl_1M LiTFSI [EMIM][TFSI], and (l) LPSCl_1M LiTFSI [EMIM][TFSI] + 5 wt% FEC. decreased CCD (0.6 mA cm−2) compared to reference LPSCl (0.8 mA cm−2), while adding lithium salt in ATMS shows improved CCD (1.0 mA cm−2). However, the CCD of the LPSCl_1M LiTFSI [EMIM][TFSI] + 5 wt % FEC cell shows the highest current d",
+   "bbox": [
+    31.6,
+    46.1,
+    566.0,
+    442.0
+   ],
+   "w": 2228,
+   "h": 1650,
+   "dpi": 300,
+   "src": "07. Ion-conducting cavity filler enabling in-situ formation of SEI in sulfide-based solid electrolyte sheets for all-solid-state batteries.pdf",
+   "blank": 0.79
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 11,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Electrochemical performance of ASSB cells using LPSCl sheets. (a) Cycle performance under 0.1 C at 50 ◦C for both charging and discharging. (b) Nyquist plot obtained after cycling of the corresponding ASSB cells. SEM images of the surfaces of the (c) anode and (d) cathode sides, obtained after cycling of the corresponding ASSB cells. 3.6. Electrochemical performance of ASSBs cycles during the charge-discharge operation, duplication was made with a new reference LPSCl, which also demonstrated short-circuit at 70 cycles, which are denoted as LPSCl cell 1 and 2, respectively. As shown in Fig. 6a, reference LPSCl cells 1 and 2 exhibited initial capacities of 180.2 and 180.1 mAh g−1, respectively. Cells prepared using ICCF in the SE, namely LPSCl_1M LiTFSI [EMIM][TFSI] and LPSCl_[EMIM][TFSI], demonstrated a slightly higher initial capacity and maintained it through 100 cycles. The LPS",
+   "bbox": [
+    31.6,
+    46.1,
+    566.0,
+    370.0
+   ],
+   "w": 2228,
+   "h": 1350,
+   "dpi": 300,
+   "src": "07. Ion-conducting cavity filler enabling in-situ formation of SEI in sulfide-based solid electrolyte sheets for all-solid-state batteries.pdf",
+   "blank": 0.693
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 11,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. (a) Schematic illustration of the LNO-coated NCM83/reference LPSCl and functional solid electrolyte/Li–In ASSB cell. (b) Cycle performance under 0.2C at 50 ◦C for both charging and discharging. 11",
+   "bbox": [
+    31.6,
+    500.9,
+    565.8,
+    721.3
+   ],
+   "w": 2227,
+   "h": 919,
+   "dpi": 300,
+   "src": "07. Ion-conducting cavity filler enabling in-situ formation of SEI in sulfide-based solid electrolyte sheets for all-solid-state batteries.pdf",
+   "blank": 0.74
+  }
+ ]
+}

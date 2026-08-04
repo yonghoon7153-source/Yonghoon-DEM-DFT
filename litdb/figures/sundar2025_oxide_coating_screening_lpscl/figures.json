@@ -1,0 +1,182 @@
+{
+ "slug": "sundar2025_oxide_coating_screening_lpscl",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-04",
+ "sources": [
+  "15. Computationally-Guided Development of Sulfide Solid Electrolyte Powder Coatings for Enhanced Stability and Performance of Solid-State Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Interfaces modeled in this work. The left image shows the all- solid-state battery containing Li6PS5Cl electrolyte powders (dark orange) coated with ALD-grown oxides (black). The three smaller schematics on the right are the magniﬁed representations of the Li-anode || Coating, Li6PS5Cl || Coating, and Cathode || Coating interfaces.",
+   "bbox": [
+    44.8,
+    60.4,
+    297.8,
+    215.7
+   ],
+   "w": 1055,
+   "h": 648,
+   "dpi": 300,
+   "src": "15. Computationally-Guided Development of Sulfide Solid Electrolyte Powder Coatings for Enhanced Stability and Performance of Solid-State Batteries.pdf",
+   "blank": 0.64
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. a) Heatmap showing the bandgap of the corresponding bulk binary oxide computed at the HSE level of DFT (mixing parameter = 0.32). The dashed black line at 3.92 eV denotes the bandgap of bulk LPSCl. b) Bulk and thin ﬁlm bandgaps of the candidate oxides listed in Table 1, computed at the HSE level of DFT.",
+   "bbox": [
+    44.8,
+    60.4,
+    552.9,
+    227.3
+   ],
+   "w": 2118,
+   "h": 697,
+   "dpi": 300,
+   "src": "15. Computationally-Guided Development of Sulfide Solid Electrolyte Powder Coatings for Enhanced Stability and Performance of Solid-State Batteries.pdf",
+   "blank": 0.77
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Heatmaps showing the lithium migration barrier values in various reaction products formed at the a) LPSCl || Oxide interface and b) Li || Oxide interface. The downward arrows to the left of the heatmaps denote the direction of increasing interfacial reactivity for each metal oxide.",
+   "bbox": [
+    42.0,
+    60.4,
+    550.0,
+    233.7
+   ],
+   "w": 2118,
+   "h": 723,
+   "dpi": 300,
+   "src": "15. Computationally-Guided Development of Sulfide Solid Electrolyte Powder Coatings for Enhanced Stability and Performance of Solid-State Batteries.pdf",
+   "blank": 0.704
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Physicochemical properties of ALD-coated LPSCl powders. XPS core level spectra of S 2p, P 2p, and corresponding coating elements A) Mg 2p, B) Zr 3d, and C) Zn 2p. Measurements were performed on pellets pressed from coated powders. The thickness of the ALD layer on individual powders is estimated to be ≈1 nm. STEM images and EDS elemental mapping of D) Mg, E) Zr, and F) Zn signal on coated LPSCl powders.",
+   "bbox": [
+    0.0,
+    60.4,
+    565.0,
+    354.7
+   ],
+   "w": 2355,
+   "h": 1228,
+   "dpi": 300,
+   "src": "15. Computationally-Guided Development of Sulfide Solid Electrolyte Powder Coatings for Enhanced Stability and Performance of Solid-State Batteries.pdf",
+   "blank": 0.684
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Ionic and Electronic conductivity of ALD-coated LPSCl relative to uncoated LPSCl. The dotted line intersects the y-axis at a value of 1. As noted in the text, the ALD ZnO-coated LPSCl has a 1Å Al2O3 seed layer. All values measured at 25 °C, 5 MPa ﬁxed stack pressure.",
+   "bbox": [
+    297.1,
+    60.4,
+    550.1,
+    250.7
+   ],
+   "w": 1055,
+   "h": 794,
+   "dpi": 300,
+   "src": "15. Computationally-Guided Development of Sulfide Solid Electrolyte Powder Coatings for Enhanced Stability and Performance of Solid-State Batteries.pdf",
+   "blank": 0.821
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Chemical and electrochemical reactivity of the MgO ALD LPSCl against Li contact. A,B) S 2p and P 2p core level spectra of uncoated and ALD MgO-coated LPSCl before and after Li deposition. C) Mg 2p and D) O 1s core level spectra of ALD MgO-coated LPSCl before and after Li deposition.",
+   "bbox": [
+    0.0,
+    60.4,
+    552.9,
+    418.7
+   ],
+   "w": 2304,
+   "h": 1494,
+   "dpi": 300,
+   "src": "15. Computationally-Guided Development of Sulfide Solid Electrolyte Powder Coatings for Enhanced Stability and Performance of Solid-State Batteries.pdf",
+   "blank": 0.855
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 10,
+   "file": "fig_8.png",
+   "caption": "Figure 8. CCD measurements of Li || Li symmetric cells with uncoated and MgO-coated LPSCl. A) Voltage response of uncoated LPSCl from 0.1 to 0.9 mA cm−2 and B) corresponding ASR measured after the indicated current density step. C) Voltage response of ALD MgO-coated LPSCl from 0.1 to 0.9 mA cm−2 and D) corresponding ASR measured after the indicated current density step. All measurements performed at 25 °C, 5 MPa ﬁxed stack pressure using 20 μm Li foils. CCD measurements in A and C correspond to Cell 1 in panels B and D.",
+   "bbox": [
+    42.0,
+    60.4,
+    550.0,
+    407.7
+   ],
+   "w": 2118,
+   "h": 1448,
+   "dpi": 300,
+   "src": "15. Computationally-Guided Development of Sulfide Solid Electrolyte Powder Coatings for Enhanced Stability and Performance of Solid-State Batteries.pdf",
+   "blank": 0.51
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1. Promising candidates to create stable Li6PS5Cl || Oxide interfaces. The ﬁrst ten oxides are those for which the Li6PS5Cl || Oxide interface is more stable relative to the Li6PS5Cl || Li2O. The reaction between Li6PS5Cl and Li2O is shown in Equation (1), with ΔE = −0.278 eV atom−1. The last oxide is ZnO, which forms the most stable Li6PS5Cl || Oxide interface amongst the other elements with d-orbital valence electrons.",
+   "bbox": [
+    45.8,
+    11.9,
+    589.2,
+    771.0
+   ],
+   "w": 2145,
+   "h": 2996,
+   "dpi": 284,
+   "src": "15. Computationally-Guided Development of Sulfide Solid Electrolyte Powder Coatings for Enhanced Stability and Performance of Solid-State Batteries.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 4,
+   "file": "tab_2.png",
+   "caption": "Table 2. Li || Oxide interfaces with the lowest driving forces for interface reactions. Li2O was not chosen as the reference oxide since there is no reaction with Li. Instead, all oxides from Table 1 and any other oxides with intermediate reaction energy values are listed in Table 2. The reference is ZnO, which is the least stable in Table 1.",
+   "bbox": [
+    43.0,
+    11.9,
+    589.2,
+    771.0
+   ],
+   "w": 2156,
+   "h": 2996,
+   "dpi": 284,
+   "src": "15. Computationally-Guided Development of Sulfide Solid Electrolyte Powder Coatings for Enhanced Stability and Performance of Solid-State Batteries.pdf",
+   "blank": 0.831
+  }
+ ]
+}

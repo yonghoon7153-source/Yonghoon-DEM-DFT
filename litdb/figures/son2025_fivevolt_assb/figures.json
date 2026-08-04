@@ -1,0 +1,30 @@
+{
+ "slug": "son2025_fivevolt_assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-04",
+ "sources": [
+  "27. Five-volt-class high-capacity all-solid-state lithium batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 14,
+   "file": "fig_S1.png",
+   "caption": "Extended Data Fig. 1 | Versatility of LiCl–4LTF for Li-rich and Ni-rich layered cathodes. a-d, Electrochemical performance of Ni-rich cathodes with the ZrO2–LZCF catholyte in NCM88|LPSCl | (Li–In) cells, presenting charge–discharge voltage profiles at 1 C and 2.5–5.0 V (vs. Li/Li+) for LiCl–4LTF- coated (a), LNbO-coated (b), and bare single-crystalline NCM88 (c), along",
+   "bbox": [
+    33.7,
+    36.1,
+    524.6,
+    554.7
+   ],
+   "w": 2046,
+   "h": 2162,
+   "dpi": 300,
+   "src": "27. Five-volt-class high-capacity all-solid-state lithium batteries.pdf",
+   "blank": 0.882
+  }
+ ]
+}

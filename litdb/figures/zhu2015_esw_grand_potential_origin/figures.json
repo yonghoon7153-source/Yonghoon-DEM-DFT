@@ -1,0 +1,126 @@
+{
+ "slug": "zhu2015_esw_grand_potential_origin",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-04",
+ "sources": [
+  "38. Origin of Outstanding Stability in the Lithium Solid Electrolyte Materials Insights from Thermodynamic Analyses Based on First-Principles Calculations.pdf",
+  "38. Sup) Origin of Outstanding Stability in the Lithium Solid Electrolyte Materials Insights from Thermodynamic Analyses Based on First-Principles Calculations.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Decomposition energy ED of (a) sulﬁde and (b) oxide solid electrolyte materials as a function of the applied voltage ϕ or Li chemical potential μLi. DOI: 10.1021/acsami.5b07517 ACS Appl. Mater. Interfaces 2015, 7, 23685−23693 23687",
+   "bbox": [
+    54.5,
+    536.3,
+    570.5,
+    741.5
+   ],
+   "w": 2151,
+   "h": 856,
+   "dpi": 300,
+   "src": "38. Origin of Outstanding Stability in the Lithium Solid Electrolyte Materials Insights from Thermodynamic Analyses Based on First-Principles Calculations.pdf",
+   "blank": 0.911
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. (a) Electrochemical window (solid color bar) of solid electrolyte and other materials. The oxidation potential to fully delithiate the material is marked by the dashed line. (b) Schematic diagram about the change of Li chemical potentials μLi (black line), the electrochemical potential μ̃Li + (blue dashed line), and μ̃e −(red dashed line) across the interface between the anode and the solid electrolyte. Since the actual proﬁle of μ̃e − determined by the charge carrier distribution may be complicated,32,33 the proﬁles of chemical and electrochemical potential shown here are schematic and may not be linear. The vertical scale is for the electrostatic potential or the voltage referenced to Li metal and is reversed for the chemical potential or electrochemical potential (eq 1). reduction potential (cathodic limit) of the solid electrolyte (Figure 2b). At the equilibrium, the redist",
+   "bbox": [
+    54.5,
+    59.9,
+    570.5,
+    308.8
+   ],
+   "w": 2151,
+   "h": 1038,
+   "dpi": 300,
+   "src": "38. Origin of Outstanding Stability in the Lithium Solid Electrolyte Materials Insights from Thermodynamic Analyses Based on First-Principles Calculations.pdf",
+   "blank": 0.619
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. (a) Electrochemical stability window (solid color bars) of commonly used coating layer materials. The oxidation potential to fully delithiate the material is marked by the dashed line. The line at 3.9 V represents the equilibrium voltage of the LiCoO2 cathode material. (b) Schematic diagram about the change of Li chemical potentials μLi (black line) and the electrochemical potential μ̃Li + (blue dashed line) and μ̃e −(red dashed line) across the interface between the solid electrolyte and the cathode material. DOI: 10.1021/acsami.5b07517 ACS Appl. Mater. Interfaces 2015, 7, 23685−23693 23689",
+   "bbox": [
+    54.5,
+    466.3,
+    570.5,
+    722.2
+   ],
+   "w": 2151,
+   "h": 1068,
+   "dpi": 300,
+   "src": "38. Origin of Outstanding Stability in the Lithium Solid Electrolyte Materials Insights from Thermodynamic Analyses Based on First-Principles Calculations.pdf",
+   "blank": 0.627
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Schematic diagram about the electrochemical window (color bars) and the Li chemical potential proﬁle (black line) in the all-solid- state Li-ion battery. The proﬁle of chemical potential is schematic in this plot and may not be linear. The high μLi in the anode (silver) and low μLi in the cathode (blue) are beyond the stability window of the solid electrolyte (green). The observed nominal electrochemical window is extended by the overpotential (dashed line) and by the interphases (orange and yellow), which account for the gap of μLi between solid electrolyte and electrodes across the interfaces.",
+   "bbox": [
+    318.5,
+    179.5,
+    570.5,
+    379.4
+   ],
+   "w": 1052,
+   "h": 834,
+   "dpi": 300,
+   "src": "38. Origin of Outstanding Stability in the Lithium Solid Electrolyte Materials Insights from Thermodynamic Analyses Based on First-Principles Calculations.pdf",
+   "blank": 0.706
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 2,
+   "file": "tab_1.png",
+   "caption": "Table 1. Electrochemical Window and Phase Equilibria at the Reduction and Oxidation Potentials of the Solid Electrolyte Materials reduction potential (V) phase equilibria at the reduction potential oxidation potential (V) phase equilibria at the oxidation potential Li2S - Li2S (stable at 0 V) 2.01 S LGPS 1.71 P, Li4GeS4, Li2S 2.14 Li3PS4, GeS2, S Li3.25Ge0.25P0.75S4 1.71 P, Li4GeS4, Li2S 2.14 Li3PS4, GeS2, S Li3PS4 1.71 P, Li2S 2.31 S, P2S5 Li4GeS4 1.62 Li2S, Ge 2.14 GeS2, S Li7P3S11 2.28 Li3PS4, P4S9 2.31 S, P2S5 Li6PS5Cl 1.71 P, Li2S, LiCl 2.01 Li3PS4, LiCl, S Li7P2S8I 1.71 P, Li2S, LiI 2.31 LiI, S, P2S5 LiPON 0.68 Li3P, LiPN2, Li2O 2.63 P3N5, Li4P2O7, N2 LLZO 0.05 Zr3O, La2O3, Li2O 2.91 Li2O2, La2O3, Li6Zr2O7 LLTO 1.75 Li4Ti5O12, Li7/6Ti11/6O4, La2Ti2O7 3.71 O2, TiO2, La2Ti2O7 LATP 2.17 P, LiTiPO5, AlPO4, Li3PO4 4.21 O2, LiTi2(PO4)3, Li4P2O7, AlPO4 LAGP 2.70 Ge, GeO2, Li4P2O7, AlPO4 4",
+   "bbox": [
+    55.5,
+    64.0,
+    569.5,
+    267.4
+   ],
+   "w": 2142,
+   "h": 849,
+   "dpi": 300,
+   "src": "38. Origin of Outstanding Stability in the Lithium Solid Electrolyte Materials Insights from Thermodynamic Analyses Based on First-Principles Calculations.pdf",
+   "blank": 0.883
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 2,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Crystal structures and phase equilibria of solid electrolyte materials Composition Acronym Structure used E above hull Phase equilibria (meV/atom) Li10GeP2S12 LGPS mp-6961381 21 Li3PS4, Li4GeS4 Li3.25Ge0.25P0.75S4 - - Li3PS4, Li4GeS4 Li3PS4 2 0 Li3PS4 Li4GeS4 mp-302493 0 Li4GeS4 Li7P3S11 mp-6417034 22 Li3PS4, P2S5 Li6PS5Cl 5 83 Li3PS4, Li2S, LiCl Li7P2S8I - - Li3PS4, LiI Li2PO2N LiPON 6 0 Li2PO2N Li7La3Zr2O12 LLZO 7 7 Li2O, La2O3, Li6Zr2O7 Li0.33La0.56TiO3 LLTO 8 68 TiO2, Li4Ti5O12, La2Ti2O7 Li1.3Al0.3Ti1.7(PO4)3 LATP 9 29 LiTi2(PO4)3, Li3PO4, AlPO4 Li1.5Al0.5Ge1.5(PO4)3 LAGP - - AlPO4, Ge5O(PO4)6, GeO2, Li4P2O7 Li3.5Zn0.25GeO4 LISICON 10 34 Li2ZnGeO4, Li4GeO4",
+   "bbox": [
+    62.4,
+    88.0,
+    522.5,
+    381.0
+   ],
+   "w": 1917,
+   "h": 1222,
+   "dpi": 300,
+   "src": "38. Sup) Origin of Outstanding Stability in the Lithium Solid Electrolyte Materials Insights from Thermodynamic Analyses Based on First-Principles Calculations.pdf",
+   "blank": 0.903
+  }
+ ]
+}

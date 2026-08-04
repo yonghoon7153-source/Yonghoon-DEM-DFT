@@ -1,0 +1,106 @@
+{
+ "slug": "ren2026_li2zrcl6_low_ion_potential_doping",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-04",
+ "sources": [
+  "50. Regulation of the Lattice dynamics of Li2ZrCl6 solid electrolytes via low-ion-potential element doping for all-solid-state batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 8,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic Illustration of the Ion-Potential-Regulated Design Strategy for Enhancing Chloride Framework Flexibility.",
+   "bbox": [
+    64.9,
+    428.7,
+    530.5,
+    701.2
+   ],
+   "w": 1941,
+   "h": 1136,
+   "dpi": 300,
+   "src": "50. Regulation of the Lattice dynamics of Li2ZrCl6 solid electrolytes via low-ion-potential element doping for all-solid-state batteries.pdf",
+   "blank": 0.316
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 11,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Crystal Structure and Local Environment Analysis of Er/Nd-Doped LZC SSEs. a) Schematic crystal structures of pristine Li2ZrCl6 and representative Er/Nd-dopant Li2ZrCl6 9",
+   "bbox": [
+    64.9,
+    263.1,
+    530.6,
+    743.9
+   ],
+   "w": 1941,
+   "h": 2004,
+   "dpi": 300,
+   "src": "50. Regulation of the Lattice dynamics of Li2ZrCl6 solid electrolytes via low-ion-potential element doping for all-solid-state batteries.pdf",
+   "blank": 0.611
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 15,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Li diffusion dynamics and conductivity analysis of Er/Nd-doped LZC SSEs. a–c) ⁺ carrier concentration, and its room- Mean square displacement (MSD) of Li at 600 K, directional MSD components, and ⁺ carrier concentration, and its room- corresponding Li spatial probability density distributions for a) Li ⁺ carrier concentration, and its room- 2ZrCl6, b) Li2.5Zr0.5Er0.5Cl6, and c) Li2.375Zr0.625Nd0.375Cl6. Arrhenius plots of Li diffusion coefficients and activation ⁺ carrier concentration, and its room- energies for d) Er³ -doped and e) Nd³ -doped systems. f) Comparison of Li diffusion ⁺ carrier concentration, and its room- ⁺ carrier concentration, and its room- ⁺ carrier concentration, and its room- coefficients (D), activation energies (Ea), and theoretical ionic conductivities (σ) derived from AIMD simulations. g) Room-temperature EIS spectra of pristine LZC and Er³ /Nd³ -doped",
+   "bbox": [
+    64.9,
+    51.3,
+    530.6,
+    533.1
+   ],
+   "w": 1941,
+   "h": 2009,
+   "dpi": 300,
+   "src": "50. Regulation of the Lattice dynamics of Li2ZrCl6 solid electrolytes via low-ion-potential element doping for all-solid-state batteries.pdf",
+   "blank": 0.844
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 19,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Ionic-potential-regulated lattice dynamics and Li transport mechanism. a) ⁺ carrier concentration, and its room- Structure–property descriptor map constructed based on the local Li potential field ( ⁺ carrier concentration, and its room- ΦLi) and the ionic-potential ratio of the central cation to the anion (ΦMe/ΦX). b) Screening map comparing the ionic potential and ionic conductivity of 18 substitution systems. Phonon density of states (DOS) of c) Li2ZrCl6, d) Li2.5Zr0.5Er0.5Cl6, and e) Li2.375Zr0.625Nd0.375Cl6. f) Li⁺ carrier concentration, and its room- 17",
+   "bbox": [
+    64.9,
+    51.3,
+    530.6,
+    704.8
+   ],
+   "w": 1941,
+   "h": 2724,
+   "dpi": 300,
+   "src": "50. Regulation of the Lattice dynamics of Li2ZrCl6 solid electrolytes via low-ion-potential element doping for all-solid-state batteries.pdf",
+   "blank": 0.609
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 21,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Rate charge/discharge profiles of NCM811 all-solid-state batteries using a) Li2ZrCl6, b) Li2.5Zr0.5Er0.5Cl6, and c) Li2.375Zr0.625Nd0.375Cl6 electrolytes. d) Comparison of the rate performance of NCM811 all-solid-state batteries based on Li2ZrCl6, Li2.5Zr0.5Er0.5Cl6, and 19",
+   "bbox": [
+    64.9,
+    152.7,
+    530.6,
+    728.0
+   ],
+   "w": 1941,
+   "h": 2398,
+   "dpi": 300,
+   "src": "50. Regulation of the Lattice dynamics of Li2ZrCl6 solid electrolytes via low-ion-potential element doping for all-solid-state batteries.pdf",
+   "blank": 0.865
+  }
+ ]
+}

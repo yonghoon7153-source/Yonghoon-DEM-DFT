@@ -1,0 +1,354 @@
+{
+ "slug": "adeli2019_halide_substitution_boosting_argyrodite",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-04",
+ "sources": [
+  "33. Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution.pdf",
+  "33. Sup) Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Crystal structure of Li5.5PS4.5Cl1.5 showing the PS4",
+   "bbox": [
+    0.0,
+    26.0,
+    595.3,
+    207.4
+   ],
+   "w": 2481,
+   "h": 757,
+   "dpi": 300,
+   "src": "33. Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution.pdf",
+   "blank": 0.718
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Figure 3. a) Lattice parameter of Li6@xPS5@xCl1+x vs. x showing that Vegard’s law is obeyed; b) complex impedance plots at 298 K of the cold-pressed pellets of Li6PS5Cl, Li5.75PS4.75Cl1.25, Li5.5PS4.5Cl1.5, and a sintered pellet of Li5.5PS4.5Cl1.5 (5508C for 10 min). Inset=magnified view at high frequencies, where the impedance is normalized to the respective pellet thickness (d) for better comparison; c) Arrhenius plot for Li5.5PS4.5Cl1.5 and corresponding Nyquist plot at 195 K (inset). The apex frequency is 1.11W105 Hz, which corresponds to a capacitance of 1.7W10@9 F; the a-value is about 0.9, indicating the ideality of the CPE; d) conductivity and Ea for Li6@xPS5@xCl1+x (x=0, 0.25, 0.375 and 0.5).",
+   "bbox": [
+    46.4,
+    230.3,
+    401.9,
+    553.6
+   ],
+   "w": 1482,
+   "h": 1348,
+   "dpi": 300,
+   "src": "33. Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution.pdf",
+   "blank": 0.89
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Figure 4. a) Li+-ion diffusivity in Li6@xPS5@xCl1+x obtained from 7Li PFG NMR measurements for x=0, 0.25 and 0.5; b) Arrhenius plots of the diffusivity and conductivity values for x=0 and x=0.5 from PFG and EIS. The value for x=0 is in accord with that reported in the literature which ranges between 0.33–0.37 eV[4] (where values are extracted from lnsT vs. T@1).",
+   "bbox": [
+    46.4,
+    199.7,
+    336.4,
+    496.3
+   ],
+   "w": 1209,
+   "h": 1237,
+   "dpi": 300,
+   "src": "33. Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Figure 5. a) 7Li MAS NMR for Li6@xPS5@xCl1+x (x=0, 0.25, 0.375, 0.5) b) correlation of the activation energies from both techniques with the 7Li isotropic chemical shift and the Haven ratio for all values of x under study.",
+   "bbox": [
+    0.0,
+    26.0,
+    595.3,
+    320.7
+   ],
+   "w": 2481,
+   "h": 1229,
+   "dpi": 300,
+   "src": "33. Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution.pdf",
+   "blank": 0.83
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 8,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. EDS mapping of the heat-treated Li5.5PS4.5Cl1.5 sample, which indicates a homogenous distribution of P, S and Cl at the micron scale.",
+   "bbox": [
+    79.1,
+    105.4,
+    517.7,
+    270.2
+   ],
+   "w": 1828,
+   "h": 687,
+   "dpi": 300,
+   "src": "33. Sup) Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution.pdf",
+   "blank": 0.522
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 9,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. XRD patterns of Li6-xPS5-xCl1+x (x = 0, 0.25, 0.375 and 0.55) showing the identified impurities. Calculated positions of the Bragg reflections are represented by the vertical tick marks in green.",
+   "bbox": [
+    46.6,
+    89.6,
+    548.9,
+    609.5
+   ],
+   "w": 2093,
+   "h": 2167,
+   "dpi": 300,
+   "src": "33. Sup) Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 11,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Direct current (DC) polarisation data for electronic conductivity determination for Li5.5PS4.5Cl1.5. The DC polarisation curve was fitted with a decay function, and the steady current value at the end of the curve was extrapolated. The electronic conductivity of 3×10-9 S.cm-1 was calculated by using Ohm's law.",
+   "bbox": [
+    46.6,
+    89.6,
+    548.9,
+    351.9
+   ],
+   "w": 2093,
+   "h": 1094,
+   "dpi": 300,
+   "src": "33. Sup) Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution.pdf",
+   "blank": 0.945
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 11,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Temperature dependence of the ionic conductivity for x = 0.25 and x = 0.375.",
+   "bbox": [
+    60.9,
+    401.6,
+    470.4,
+    725.2
+   ],
+   "w": 1707,
+   "h": 1349,
+   "dpi": 300,
+   "src": "33. Sup) Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 12,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Example fit of a PFG signal attenuation curve with variable gradient strength for Li5.5PS4.5Cl1.5 at 300 K. A diffusion coefficient of 1.01 x 10-11 m2/s was extracted by fitting the measured signal attenuation (blue dots) to the BP=STE modified Stejskal-Tanner equation.[3]",
+   "bbox": [
+    46.6,
+    89.6,
+    548.9,
+    298.6
+   ],
+   "w": 2093,
+   "h": 872,
+   "dpi": 300,
+   "src": "33. Sup) Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution.pdf",
+   "blank": 0.965
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 12,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Haven ratios versus temperature, for all four phases examined in the study, demonstrating the relative temperature insensitivity. The flat lines are the average values, and dashed lines indicate the standard error interval.",
+   "bbox": [
+    67.2,
+    336.8,
+    541.7,
+    631.8
+   ],
+   "w": 1977,
+   "h": 1230,
+   "dpi": 300,
+   "src": "33. Sup) Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 13,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Variable-temperature stack plot of static 7Li spectra for the parent phase at 300 MHz, demonstrating the absence of significant quadrupole coupling, in terms of the absence of satellite transitions, broadening of the central transition, and a shift in its position over the entire temperature range, which points to a change in the shielding properties as the primary source of the shift trend in Figure 5.",
+   "bbox": [
+    46.6,
+    89.6,
+    548.9,
+    343.3
+   ],
+   "w": 2093,
+   "h": 1058,
+   "dpi": 300,
+   "src": "33. Sup) Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution.pdf",
+   "blank": 0.902
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 13,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Stripping/plating of Li in a symmetric Li/Li5.5PS4.5Cl1.5/Li cell (0.7 mm thick electrolyte) at current density of 0.25 mA cm-2 with capacity cut-off of 1 mAh cm-2.",
+   "bbox": [
+    61.0,
+    404.3,
+    522.7,
+    668.8
+   ],
+   "w": 1924,
+   "h": 1103,
+   "dpi": 300,
+   "src": "33. Sup) Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution.pdf",
+   "blank": 0.962
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 14,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. a) Cyclic voltammogram using a Li/Li5.5PS4.5Cl1.5/stainless steel cell with a scan rate of 1 mV s-1 in the voltage window of 5.0 - 0.1 V. b) Comparison of cyclic voltammogram using Li/Li5.5PS4.5Cl1.5/stainless steel (red line) and Li/Li6PS5Cl/stainless steel (blue line) cells with a scan rate of 1 mV s-1 in the voltage window of 5.0 - 0.1 V.",
+   "bbox": [
+    66.8,
+    261.3,
+    525.8,
+    300.4
+   ],
+   "w": 1913,
+   "h": 164,
+   "dpi": 300,
+   "src": "33. Sup) Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution.pdf",
+   "blank": 0.846
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 14,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. a) Cyclic voltammogram of a Li/SE/stainless steel cell using Li6PS5Cl or Li5.5PS4.5Cl1.5 as a solid electrolyte layer with scan rate of 1 mV s-1. The first (solid) and second (dashed) scans are shown. References [1] P. R. Rayavarapu, N. Sharma, V. K. Peterson, S. Adams, J. Solid State Electrochem. 2012, 16, 1807. [2] D. H. Wu, A. D. Chen, C. S. Johnson, J. Magn. Reson. Ser. A, 1995, 115, 260. [3] W. S. Price, NMR Studies of Translational Motion, Cambridge University Press, Cambridge, UK, 2009, pp. 221-242. [4] E. O. Stejskal, J. E. Tanner, J. Chem. Phys. 1965, 42, 288. [5] G. E. Murch, Solid State Ion. 1982, 7, 177.",
+   "bbox": [
+    48.0,
+    479.4,
+    550.2,
+    519.3
+   ],
+   "w": 2093,
+   "h": 167,
+   "dpi": 300,
+   "src": "33. Sup) Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 2,
+   "file": "tab_1.png",
+   "caption": "Table 1: Atomic coordinates, occupation factor and isotropic displace-",
+   "bbox": [
+    47.4,
+    13.6,
+    589.1,
+    829.3
+   ],
+   "w": 1988,
+   "h": 2992,
+   "dpi": 264,
+   "src": "33. Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution.pdf",
+   "blank": 0.843
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 4,
+   "file": "tab_2.png",
+   "caption": "Table 2: Summary of the ionic conductivity (si, for pellets cold-pressed at 2 tons) at 298 K and Ea values obtained from EIS and PFG Arrhenius plots for the synthesized Li-argyrodites. Error in the ionic conductivities is determined from the span in the measurements for multiple samples of the same composition (extracted values of the impedance analyses are tabulated in Table S2 of the Supporting Information). Li6@xPS5@xCl1+x si(tot) [mScm@1] Ea (EIS) [eV] :0.01 Ea (PFG) [eV] Li6PS5Cl 2.5(1) 0.34 0.35(1) Li5.75PS4.75Cl1.25 4.2(2) 0.33 0.343(9) Li5.625PS4.625Cl1.375 5.6(2) 0.31 0.320(3) Li5.5PS4.5Cl1.5 9.4(1) 0.29 0.29(1) Li5.5PS4.5Cl1.5, sintered 12.0(2) – – Li5.45PS4.45Cl1.55 5.9(2) N/A Li5.4PS4.4Cl1.6 3.3(1) N/A",
+   "bbox": [
+    46.9,
+    13.6,
+    589.1,
+    829.3
+   ],
+   "w": 1989,
+   "h": 2992,
+   "dpi": 264,
+   "src": "33. Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution.pdf",
+   "blank": 0.855
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 8,
+   "file": "tab_S1.png",
+   "caption": "Table S1. EDX analysis of the Li6-xPS5-xCl1+x (x = 0, 0.25, 0.5). Two measurements per sample are represented. The sulfur content was not quantified due to minor hydrolysis that occurs during the sample transfer into the SEM chamber. Targetted Measurement Observed Average Element Atomic percent Weight percent Cl/P ratio ratio P-K 16.85 16.07 Cl-K 17.45 19.05 M1 1.04 0.99 Li6PS5Cl M2 0.94 P-K 17.49 16.70 Cl-K 16.42 17.95 P-K 14.7 13.98 Cl-K 18.5 20.12 M1 1.26 1.25 Li5.75PS4.75Cl1.25 M2 1.24 P-K 15.8 14.99 Cl-K 19.6 21.37 P-K 14.7 13.95 Cl-K 22 23.84 M1 1.50 1.51 Li5.5PS4.5Cl1.5 M2 1.52 P-K 13.9 13.16 Cl-K 21.2 23.05",
+   "bbox": [
+    49.0,
+    321.0,
+    523.7,
+    557.9
+   ],
+   "w": 1979,
+   "h": 988,
+   "dpi": 300,
+   "src": "33. Sup) Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 10,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Room temperature resistance values for Li6-xPS5-xCl1+x (pellets of 1.0 cm diameter) obtained from the fit of the real-axis impedance intercept in the Nyquist plot, illustrating the sampling used to derive the standard deviation in the reported conductivities. Nyquist plots for series A are represented in Figure 3b. Sample series x=0 x=0.25 x=0.375 x=0.5 Thickness (mm) 0.630 0.660 - 0.738 A R (Ω) 31.3 20 - 10 Total  2.6 4.2 - 9.4",
+   "bbox": [
+    77.3,
+    101.2,
+    504.2,
+    474.4
+   ],
+   "w": 1779,
+   "h": 1556,
+   "dpi": 300,
+   "src": "33. Sup) Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution.pdf",
+   "blank": 0.945
+  }
+ ]
+}

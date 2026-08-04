@@ -1,0 +1,106 @@
+{
+ "slug": "ishikawa2025_site_percolation_cooperative_ion_conduction",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-04",
+ "sources": [
+  "11. Cooperative Ion Conduction Enabled by Site Percolation in Random Substitutional Crystals.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 7,
+   "file": "fig_1.png",
+   "caption": "FIG. 1. The x-dependence of ionic conductivity σ (left axis). Square, triangle, and diamond symbols represent σ under electric ﬁelds applied along the (001), (101), and (111) directions, respectively. Symbols and error bars indicate time-averaged values and their standard deviations. Independent of the electric ﬁeld direction, σ begins to increase sharply from x = 0.2. This increase can be attributed to changes in the internal Li+ conﬁguration occurring at x = 0.2. The x- dependence of the length Lc of the largest Li+ cluster is also shown (right axis). Lc is normalized by the maximum simulation box length, with Lc = 1 indicating percolation. Circle symbol corresponds to time-averaged values. Error bars correspond to maximum and minimum values of Lc. Lc begins to increase from x = 0.2, indicating the onset of percolation, and Lc = 1 beyond x = 0.25.",
+   "bbox": [
+    66.0,
+    26.0,
+    544.4,
+    254.4
+   ],
+   "w": 1995,
+   "h": 953,
+   "dpi": 300,
+   "src": "11. Cooperative Ion Conduction Enabled by Site Percolation in Random Substitutional Crystals.pdf",
+   "blank": 0.846
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 8,
+   "file": "fig_2.png",
+   "caption": "FIG. 2. The trajectories of ions that moved more than a distance of ∆r = 3 during a time interval ∆t = 300, at x = 1/3 under an electric ﬁeld E = 2.1 applied along the (a) (001), (b) (101), and (c) (111) direction respectively. Diﬀerent colors represent diﬀerent Li+. For clarity, only ions located near the center of the simulation box are shown. Those mobile Li+ follow the same trajectory aligned along the direction of the applied electric ﬁeld. (d) Schematic image of single-ion hopping and cooperative knock-on migration. (e) A snapshot of displacement vectors at x = 1/3 under an electric ﬁeld E = 2.1 applied along the (101) direction during time interval ∆t = 1. For clarity, displacement vectors crossing the simulation box boundaries are omitted. Red and blue arrows indicate cooperative knock-on migration and single-ion hopping, respectively.",
+   "bbox": [
+    66.0,
+    128.8,
+    544.4,
+    446.1
+   ],
+   "w": 1994,
+   "h": 1323,
+   "dpi": 300,
+   "src": "11. Cooperative Ion Conduction Enabled by Site Percolation in Random Substitutional Crystals.pdf",
+   "blank": 0.885
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 10,
+   "file": "fig_3.png",
+   "caption": "FIG. 3. Snapshots of the three largest Li+ clusters at x = (a) 0.15, (b) 0.2, and (c) 0.25. Clusters are color-coded by size (blue, red, green). Clusters are deﬁned by Li+ ions occupying nearest- neighbor cationic sites. At x = 0.15, only small isolated clusters are observed. At x = 0.2, clusters intermittently percolate, coinciding with the onset of the increase in σ. At x = 0.25, a fully percolated single cluster spans the system.",
+   "bbox": [
+    66.0,
+    26.0,
+    544.3,
+    242.9
+   ],
+   "w": 1994,
+   "h": 905,
+   "dpi": 300,
+   "src": "11. Cooperative Ion Conduction Enabled by Site Percolation in Random Substitutional Crystals.pdf",
+   "blank": 0.884
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 11,
+   "file": "fig_4.png",
+   "caption": "FIG. 4. (a) Time evolution of the mean displacement ∆ξ of Li+ ions along the E direction over a time interval ∆t = 10 at x = 0.2. Circles and squares represent Li+ ions belonging to the largest cluster and the other clusters, respectively. At x = 0.2, Li+ ions in the largest cluster exhibit higher mobility, suggesting that the percolated clusters contribute to ionic conduction. (b) x-dependence of the time-averaged displacement ⟨∆ξ⟩, with error bars indicating standard deviations. Circles and squares correspond to Li+ ions in the largest cluster and in the other clusters, respectively. Above x = 0.2, ⟨∆ξ⟩increases sharply for ions in the largest cluster, indicating that Li+ percolation enhances ionic conduction.",
+   "bbox": [
+    66.0,
+    26.0,
+    544.4,
+    426.1
+   ],
+   "w": 1995,
+   "h": 1668,
+   "dpi": 300,
+   "src": "11. Cooperative Ion Conduction Enabled by Site Percolation in Random Substitutional Crystals.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 12,
+   "file": "fig_5.png",
+   "caption": "FIG. 5. The x-dependence of ionic conductivity σ in XxPb1−2xBixTe (X = Ag, Na) under electric ﬁelds applied along the (101) direction. Circle and square correspond to X = Ag and Na, respec- tively. symbols and error bars indicate time-averaged values and their standard deviations. For Ag, crystals collapse when an electric ﬁeld is applied for x > 1/3. Both roughly start to increase σ at x ∼0.2. However, the absolute value of σ is one order of magnitude smaller than in the Li+ case, and the rise is more gradual.",
+   "bbox": [
+    66.0,
+    26.0,
+    544.2,
+    256.0
+   ],
+   "w": 1993,
+   "h": 959,
+   "dpi": 300,
+   "src": "11. Cooperative Ion Conduction Enabled by Site Percolation in Random Substitutional Crystals.pdf",
+   "blank": 0.86
+  }
+ ]
+}

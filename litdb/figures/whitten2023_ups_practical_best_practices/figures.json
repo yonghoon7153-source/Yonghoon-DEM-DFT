@@ -1,0 +1,87 @@
+{
+ "slug": "whitten2023_ups_practical_best_practices",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-04",
+ "sources": [
+  "10. Ultraviolet photoelectron spectroscopy Practical aspects and best practices.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Comparison of a He I UPS spectrum plotted with respect to the Fermi level (left ordinate) and with respect to the vacuum level (right ordinate). “Binding Energy” is used to designate the energy referenced to the Fermi level, and “Ionization Energy” is used to designate the energy referenced to the vacuum level. Notice that when plotted with respect to the latter, the SECO corresponds to the photon energy.",
+   "bbox": [
+    300.6,
+    443.2,
+    565.8,
+    683.0
+   ],
+   "w": 1106,
+   "h": 1000,
+   "dpi": 300,
+   "src": "10. Ultraviolet photoelectron spectroscopy Practical aspects and best practices.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. a) Approximately normalized UPS spectra of sputtered Ag foil obtained with a He discharge lamp operating at normal and low pressures, plotted with respect to photoelectron kinetic energy; ten scans were averaged for each spectrum. b) Approximately normalized He I and He II UPS of the Ag 4d region, plotted with respect to the Fermi level. The “He I Spectrum” scan is extracted from the data in a), while the “He II Spectrum” scan is a different data set in which 27 scans were averaged. The horizontal arrows point to the ordinate scale used for a particular spectrum. These data were acquired on a VG Scientific MKII ESCALAB with a concentric hemispherical energy analyzer operating in FAT mode, with a pass energy of 2 eV and a sample bias of −6.19 V. The angles between the sample plane and entrance to the energy analyzer and He I lamp were ca. 90◦and 45◦, respectively. ZnO or TiO2, spu",
+   "bbox": [
+    31.6,
+    46.1,
+    566.0,
+    276.6
+   ],
+   "w": 2228,
+   "h": 962,
+   "dpi": 300,
+   "src": "10. Ultraviolet photoelectron spectroscopy Practical aspects and best practices.pdf",
+   "blank": 0.908
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. He I UPS data for 40 Å of α-sexithiophene on a gold substrate at 298 K. a) Photoelectron signal plotted as a function of binding energy, with zero corre­ sponding to the position of the Fermi level. b) Expansion of the region near the Fermi level; the inset shows the onset of the highest occupied state. c) Expansion of the region near the vacuum level cutoff, with the spectrum still plotted with respect to the Fermi level. d) Photoelectron signal replotted as a function of ionization energy, using the vacuum level cutoff value determined in figure c); the inset shows expansion of the region near the Fermi level. These data were acquired on a VG Scientific MKII ESCALAB with a concentric hemispherical energy analyzer operating in FAT mode, with a pass energy of 2 eV. The angles between the sample plane and entrance to the energy analyzer and He I lamp were ca. 90◦and 45◦, respectiv",
+   "bbox": [
+    31.6,
+    46.1,
+    566.0,
+    490.4
+   ],
+   "w": 2228,
+   "h": 1853,
+   "dpi": 300,
+   "src": "10. Ultraviolet photoelectron spectroscopy Practical aspects and best practices.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. He I UPS data for sputter-cleaned TiO2(110) at room temperature. a) Photoelectron signal plotted with respect to the Fermi level and showing determination of the SECO; b) expansion of the region near the Fermi level. The arrow indicates determination of the valence band edge. These data were acquired on a VG Scientific MKII ESCALAB with a concentric hemispherical energy analyzer operating in FAT mode, with a pass energy of 2 eV. The angles between the sample plane and entrance to the energy analyzer and He I lamp were ca. 90◦and 45◦, respectively. The sample bias was −6.22 V relative to ground. 4.4 eV. The generally accepted value range for clean polycrystalline gold is 5.3–5.5 eV [37,38], indicating that the gold sample in Fig. 5 is somewhat dirty from sitting for hours in the vacuum chamber. The work function may also be calculated for the α-sexithiophene film in Fig. 6, giving",
+   "bbox": [
+    31.6,
+    46.1,
+    566.0,
+    277.3
+   ],
+   "w": 2228,
+   "h": 965,
+   "dpi": 300,
+   "src": "10. Ultraviolet photoelectron spectroscopy Practical aspects and best practices.pdf",
+   "blank": 0.941
+  }
+ ]
+}

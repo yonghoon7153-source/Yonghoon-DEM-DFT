@@ -1,0 +1,221 @@
+{
+ "slug": "choi2026_bzox_dry_zro2x_nmc_shell_coating",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-04",
+ "sources": [
+  "28. Dry-Crafted Charge-Conductive ZrO2−x Cathode Shell Coating for High-Performance Sulfide-Based Solid-State Batteries.pdf",
+  "28. Sup) Dry-Crafted Charge-Conductive ZrO2−x Cathode Shell Coating for High-Performance Sulfide-Based Solid-State Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 Characterizations of NMC coated with WZO and BZOx. HR-TEM images of (a) NMC-WZO and (b) NMC-BZOx. TEM and EDS mapping images for (c–f) NMC-WZO and (g–j) NMC-BZOx. XPS spectra of (k) NMC-WZO and (l) NMC-BZOx.",
+   "bbox": [
+    47.6,
+    26.0,
+    564.2,
+    539.9
+   ],
+   "w": 2153,
+   "h": 2142,
+   "dpi": 300,
+   "src": "28. Dry-Crafted Charge-Conductive ZrO2−x Cathode Shell Coating for High-Performance Sulfide-Based Solid-State Batteries.pdf",
+   "blank": 0.498
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 Enhanced electrochemical performance of NMC-BZOx. Initial voltage profiles of (a) NMC, (b) NMC-WZO, and (c) NMC-BZOx at 0.1 C. (d) Coulombic efficiencies of NMC, NMC-WZO, and NMC-BZOx during the first cycle. (e) Long-term cycling performances and coulombic efficiencies of NMC, NMC-WZO, and NMC-BZOx at 0.1 C.",
+   "bbox": [
+    47.6,
+    26.0,
+    564.2,
+    272.9
+   ],
+   "w": 2153,
+   "h": 1030,
+   "dpi": 300,
+   "src": "28. Dry-Crafted Charge-Conductive ZrO2−x Cathode Shell Coating for High-Performance Sulfide-Based Solid-State Batteries.pdf",
+   "blank": 0.821
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 EIS and interfacial kinetics. (a) Nyquist plots of NMC, NMC-WZO, and NMC-BZOx before cycling and after the first cycle. (b) Cathode– anode (CA–CA) and cathode–solid electrolyte (CA–SE) resistances of NMC, NMC-WZO, and NMC-BZOx. (c) GITT curves during the second cycle at 0.2 C and corresponding (d) overpotential and normalized Li+ diffusion coefficients of NMC, NMC-WZO, and NMC-BZOx.",
+   "bbox": [
+    47.6,
+    26.0,
+    564.2,
+    354.9
+   ],
+   "w": 2153,
+   "h": 1371,
+   "dpi": 300,
+   "src": "28. Dry-Crafted Charge-Conductive ZrO2−x Cathode Shell Coating for High-Performance Sulfide-Based Solid-State Batteries.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 Ex situ measurements of the cycled electrode and DFT results. XPS spectra of (a) S 2p and (b) P 2p after 50 cycles at 0.2 C. (c,d) Structures of simulated LiNiO2(104)-LPSCl and BZOx-LPSCl and the pDOS for the lattice and interface S atoms, respectively.",
+   "bbox": [
+    47.6,
+    26.0,
+    564.2,
+    319.9
+   ],
+   "w": 2153,
+   "h": 1225,
+   "dpi": 300,
+   "src": "28. Dry-Crafted Charge-Conductive ZrO2−x Cathode Shell Coating for High-Performance Sulfide-Based Solid-State Batteries.pdf",
+   "blank": 0.796
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. (a), (b) SEM images of white ZrO2 (WZO) and black ZrO2-x (BZOx). (c) XRD",
+   "bbox": [
+    66.0,
+    26.0,
+    546.2,
+    492.7
+   ],
+   "w": 2001,
+   "h": 1945,
+   "dpi": 300,
+   "src": "28. Sup) Dry-Crafted Charge-Conductive ZrO2−x Cathode Shell Coating for High-Performance Sulfide-Based Solid-State Batteries.pdf",
+   "blank": 0.717
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. SEM images of (a) NMC, (b) NMC-WZO, and (c) NMC-BZOx.",
+   "bbox": [
+    66.0,
+    26.0,
+    529.3,
+    180.8
+   ],
+   "w": 1931,
+   "h": 646,
+   "dpi": 300,
+   "src": "28. Sup) Dry-Crafted Charge-Conductive ZrO2−x Cathode Shell Coating for High-Performance Sulfide-Based Solid-State Batteries.pdf",
+   "blank": 0.348
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. dQ/dV vs. voltage curves of (a) NMC, (b) NMC-WZO, and (c) NMC-BZOx during",
+   "bbox": [
+    66.0,
+    26.0,
+    546.2,
+    217.3
+   ],
+   "w": 2001,
+   "h": 798,
+   "dpi": 300,
+   "src": "28. Sup) Dry-Crafted Charge-Conductive ZrO2−x Cathode Shell Coating for High-Performance Sulfide-Based Solid-State Batteries.pdf",
+   "blank": 0.842
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Rate capability of Pristine NMC, NMC-WZO, and NMC-BZOₓ electrodes at various",
+   "bbox": [
+    66.0,
+    26.0,
+    546.0,
+    260.2
+   ],
+   "w": 2000,
+   "h": 977,
+   "dpi": 300,
+   "src": "28. Sup) Dry-Crafted Charge-Conductive ZrO2−x Cathode Shell Coating for High-Performance Sulfide-Based Solid-State Batteries.pdf",
+   "blank": 0.859
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. DC polarization plots and electron conductivities of NMC, NMC-WZO, and NMC-",
+   "bbox": [
+    66.0,
+    26.0,
+    546.0,
+    222.5
+   ],
+   "w": 2000,
+   "h": 820,
+   "dpi": 300,
+   "src": "28. Sup) Dry-Crafted Charge-Conductive ZrO2−x Cathode Shell Coating for High-Performance Sulfide-Based Solid-State Batteries.pdf",
+   "blank": 0.904
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. GITT curves of (a) NMC, (b) NMC-WZO, and (c) NMC-BZOx after the first cycle.",
+   "bbox": [
+    66.0,
+    26.0,
+    542.8,
+    218.5
+   ],
+   "w": 1987,
+   "h": 803,
+   "dpi": 300,
+   "src": "28. Sup) Dry-Crafted Charge-Conductive ZrO2−x Cathode Shell Coating for High-Performance Sulfide-Based Solid-State Batteries.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 9,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Structures of simulated (a) LiNiO2(104)-LPSCl, (b) ZrO2-LPSCl, and (c) ZrO2-x-",
+   "bbox": [
+    66.0,
+    26.0,
+    546.0,
+    199.4
+   ],
+   "w": 2000,
+   "h": 723,
+   "dpi": 300,
+   "src": "28. Sup) Dry-Crafted Charge-Conductive ZrO2−x Cathode Shell Coating for High-Performance Sulfide-Based Solid-State Batteries.pdf",
+   "blank": 0.748
+  }
+ ]
+}

@@ -1,0 +1,259 @@
+{
+ "slug": "kahle2020_ht_aimd_screening",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-04",
+ "sources": [
+  "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
+  "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Schematic representation of the screening funnel. Structures down- loaded from experimental repositories go sequentially through several computational filters. Each stage of the screening discards structures that are unsuitable as solid-state electrolytes based on ever more complex calculated properties. The final outcome is of a few tens of viable structures, that could be potential candidates for novel solid-state Li-ion conductors.",
+   "bbox": [
+    297.3,
+    36.8,
+    558.8,
+    345.3
+   ],
+   "w": 1091,
+   "h": 1286,
+   "dpi": 300,
+   "src": "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.619
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Histogram of the relative volume expansion between the experi- mental and the calculated ground-state volumes (at the PBE level) for 971 structures studied. In the left panel, we show the entire histogram, on the right we zoom on the region between 0.9 and 1.1.",
+   "bbox": [
+    36.5,
+    479.2,
+    298.0,
+    676.5
+   ],
+   "w": 1090,
+   "h": 823,
+   "dpi": 300,
+   "src": "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.89
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Diﬀusion coeﬃcients from FPMD for Li4Ga4I16, Li7Ga8Br24, Li8Cs4I12, Li20Ge2P4S24, Li40Cl24O8, Li20Cl12O4, and Li56Ta8O48 as solid lines in orange, brown, blue, violet, green, pink, and red, respectively (we refer to the composition of the actual supercell studied). The line of best fit is shown as a dashed line of the same color. The activation barriers, extracted from the slope of the fit, are in the legend (in brackets) in eV.",
+   "bbox": [
+    36.5,
+    36.8,
+    298.0,
+    221.9
+   ],
+   "w": 1090,
+   "h": 772,
+   "dpi": 300,
+   "src": "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.849
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 Li-Ionic density of Li20Ge2P4S24 at 500 K from FPMD. The unidimensional channels along the c-axis (along blue arrow) are clearly visible; see text for detail on how we calculate the density and the isosurface levels.",
+   "bbox": [
+    297.3,
+    36.8,
+    558.8,
+    332.5
+   ],
+   "w": 1091,
+   "h": 1233,
+   "dpi": 300,
+   "src": "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.497
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "file": "fig_8.png",
+   "caption": "Fig. 8 Li-Ionic density of Li56Ta8O48 at 500 K from FPMD.",
+   "bbox": [
+    36.5,
+    499.1,
+    281.7,
+    646.2
+   ],
+   "w": 1022,
+   "h": 614,
+   "dpi": 300,
+   "src": "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.53
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 9,
+   "file": "fig_9.png",
+   "caption": "Fig. 9 Li-Ionic density of Li16Re24S44 at 500 K from FPMD.",
+   "bbox": [
+    297.3,
+    499.1,
+    524.4,
+    706.3
+   ],
+   "w": 947,
+   "h": 865,
+   "dpi": 300,
+   "src": "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.583
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 10,
+   "file": "fig_10.png",
+   "caption": "Fig. 10 MSD of Li and the most prominent host-lattice species in Li16Re24S44 (top) and Li16Ti16P16O80 (bottom) at 750 K from FPMD. As explained in the caption of Fig. 5, the MSD of the entire trajectory is plotted as a solid line for each species, while thin lines show the tracer diﬀusion calculated for diﬀerent blocks of the trajectory, allowing for an estimate of the error for the MSD, which is given by the shaded area.",
+   "bbox": [
+    36.5,
+    36.8,
+    298.0,
+    328.1
+   ],
+   "w": 1090,
+   "h": 1215,
+   "dpi": 300,
+   "src": "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.902
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 10,
+   "file": "fig_11.png",
+   "caption": "Fig. 11 Li-Ionic density of Li16Ti16P16O80 at 500 K.",
+   "bbox": [
+    36.5,
+    571.0,
+    275.5,
+    706.3
+   ],
+   "w": 997,
+   "h": 565,
+   "dpi": 300,
+   "src": "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.693
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 10,
+   "file": "fig_12.png",
+   "caption": "Fig. 12 Li-Ionic density of Li20B4S16O64 at 600 K.",
+   "bbox": [
+    297.3,
+    36.8,
+    542.3,
+    353.7
+   ],
+   "w": 1022,
+   "h": 1321,
+   "dpi": 300,
+   "src": "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.324
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 11,
+   "file": "fig_14.png",
+   "caption": "Fig. 14 Li-Ionic density of Li24Cs8Cl32 at 750 K.",
+   "bbox": [
+    297.3,
+    36.8,
+    536.3,
+    216.3
+   ],
+   "w": 997,
+   "h": 749,
+   "dpi": 300,
+   "src": "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.497
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 13,
+   "file": "fig_15.png",
+   "caption": "Fig. 15 Diﬀusion coeﬃcients obtained from full FPMD and by the pinball model used in the screening at 1000 K, color-coded by the predominant anion. The vertical line at 10\u00028 gives the limit below which we cannot converge the slope of the MSD with FPMD, therefore we set this as the lower boundary for diﬀusion.",
+   "bbox": [
+    36.5,
+    36.8,
+    298.0,
+    185.5
+   ],
+   "w": 1090,
+   "h": 620,
+   "dpi": 300,
+   "src": "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.856
+  },
+  {
+   "key": "f17",
+   "kind": "figure",
+   "label": "17",
+   "page": 15,
+   "file": "fig_17.png",
+   "caption": "Fig. 17 Histogram of the average node-time per ionic step for each structure, in the pinball model in blue and with DFT in green.",
+   "bbox": [
+    297.3,
+    311.0,
+    558.7,
+    471.9
+   ],
+   "w": 1090,
+   "h": 672,
+   "dpi": 300,
+   "src": "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.866
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 35,
+   "file": "tab_S5.png",
+   "caption": "Table S5 Structures that are diffusive in the pinball model, but where we could not estimate the diffusion from FPMD ( group D) Structure DB DB-id Supercell Volume change Li4Mo3O8 ICSD 84602 Li24Mo18O48 5.8% Li1Ta1Si1O5 COD 1534486 Li4Ta4Si4O20 3.1% Li2P2Pd1O7 COD 1000333 Li8P8Pd4O28 14.9% Na1Li2P1O4 COD 9004248 Na8Li16P8O32 3.9% Ba1Na1Li3B6O12 ICSD 423774 Ba2Na2Li6B12O24 2.9% Na1Li1B4O7 ICSD 416956 Na4Li4B16O28 4.2% Na1Li2B1O3 COD 1511223 Na16Li32B16O48 2.8% Li1Au1S4O14 COD 4326716 Li4Au4S16O56 22.1% Li10B14Cl2O25 COD 1530960 Li10B14Cl2O25 1.8% Li1Au1I4 COD 1510187 Li8Au8I32 8.4% Li5La3Nb2O12 ICSD 68251 Li20La12Nb8O48 2.4% Li1Zr2As3O12 ICSD 190656 Li2Zr4As6O24 4.0% Li1Al1Ge1O5 COD 1526845 Li8Al8Ge8O40 -6.3% Li3Sc1F6 COD 1535801 Li18Sc6F36 4.0% Li1Nb3Cl8 ICSD 50232 Li4Nb12Cl32 5.8%",
+   "bbox": [
+    37.5,
+    73.1,
+    568.5,
+    279.9
+   ],
+   "w": 2213,
+   "h": 863,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.916
+  }
+ ]
+}

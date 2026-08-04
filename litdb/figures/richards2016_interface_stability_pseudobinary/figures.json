@@ -1,0 +1,392 @@
+{
+ "slug": "richards2016_interface_stability_pseudobinary",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-04",
+ "sources": [
+  "39. Interface Stability in Solid-State Batteries.pdf",
+  "39. Sup) Interface Stability in Solid-State Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic of a full cell showing a) decomposition of the electrolyte at the cathode/electrolyte interface during charging and b) reduction of the electrolyte by the lithium metal anode. c) Electrochemical stability ranges of lithium binary compounds. Where available, these ranges are computed from experimental thermody- namic data.",
+   "bbox": [
+    318.5,
+    179.2,
+    570.5,
+    358.2
+   ],
+   "w": 1052,
+   "h": 747,
+   "dpi": 300,
+   "src": "39. Interface Stability in Solid-State Batteries.pdf",
+   "blank": 0.732
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Electrochemical stability ranges of various electrolyte materials grouped by anion, with corresponding binary for comparison. The high-voltage stability of these materials is determined primarily by the anion. The predicted anodic and cathodic reactions that determine these stability windows are listed in Supporting Information Table S2.",
+   "bbox": [
+    318.5,
+    59.9,
+    570.5,
+    389.9
+   ],
+   "w": 1051,
+   "h": 1376,
+   "dpi": 300,
+   "src": "39. Interface Stability in Solid-State Batteries.pdf",
+   "blank": 0.75
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. a) Quaternary Li−Zn−S-Cl phase diagram, with stable phases labeled. The reaction vector between ZnCl2 and Li2S has been marked with a dotted green line, with a star marking the low energy equilibrium at the intersection of the ZnCl2−Li2S and LiCl-ZnS tielines. b) Energy of the reaction xZnCl2 + (1-x)Li2S →cequil as a function of x. The maximum reaction energy is for the complete reaction ZnCl2 + Li2S →2LiCl + ZnS.",
+   "bbox": [
+    54.5,
+    183.8,
+    306.5,
+    312.2
+   ],
+   "w": 1050,
+   "h": 537,
+   "dpi": 300,
+   "src": "39. Interface Stability in Solid-State Batteries.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Reaction energies for the interfaces of a selection of cathode/electrolyte combination at μLi corresponding to the average cathode voltage. Energies are given both for the energy of the lithium extraction only (no mixing) and for energy of cathode/electrolyte mixing open to lithium. Combinations with decomposition energies close to zero are expected to form stable interfaces. The results of these calculations for all of the electrolytes in Figure 2 are available in the Supporting Information as Figures S1−S7. Chem. Mater. 2016, 28, 266−273 269 DOI: 10.1021/acs.chemmater.5b04082",
+   "bbox": [
+    54.5,
+    525.7,
+    570.5,
+    721.5
+   ],
+   "w": 2151,
+   "h": 817,
+   "dpi": 300,
+   "src": "39. Interface Stability in Solid-State Batteries.pdf",
+   "blank": 0.845
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 6,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: Reaction energies for the interfaces of nitride electrolytes at µLi corresponding to the average cath- ode voltage. Energies are given both for the energy of the lithium extraction only (no mixing) and for energy of cathode/electrolyte mixing open to lithium, following the procedure of ﬁgure 4.",
+   "bbox": [
+    48.0,
+    26.0,
+    564.0,
+    278.9
+   ],
+   "w": 2150,
+   "h": 1054,
+   "dpi": 300,
+   "src": "39. Sup) Interface Stability in Solid-State Batteries.pdf",
+   "blank": 0.87
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 7,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: Reaction energies for the interfaces of hydride electrolytes at µLi corresponding to the average cath- ode voltage. Energies are given both for the energy of the lithium extraction only (no mixing) and for energy of cathode/electrolyte mixing open to lithium, following the procedure of ﬁgure 4.",
+   "bbox": [
+    48.0,
+    388.7,
+    564.0,
+    672.0
+   ],
+   "w": 2150,
+   "h": 1182,
+   "dpi": 300,
+   "src": "39. Sup) Interface Stability in Solid-State Batteries.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 8,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Reaction energies for the interfaces of sulﬁde electrolytes at µLi corresponding to the average cath- ode voltage. Energies are given both for the energy of the lithium extraction only (no mixing) and for energy of cathode/electrolyte mixing open to lithium, following the procedure of ﬁgure 4.",
+   "bbox": [
+    48.0,
+    372.3,
+    564.0,
+    666.0
+   ],
+   "w": 2150,
+   "h": 1225,
+   "dpi": 300,
+   "src": "39. Sup) Interface Stability in Solid-State Batteries.pdf",
+   "blank": 0.924
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 10,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: Reaction energies for the interfaces of oxide electrolytes at µLi corresponding to the average cathode voltage. Energies are given both for the energy of the lithium extraction only (no mixing) and for energy of cath- ode/electrolyte mixing open to lithium, following the procedure of ﬁgure 4.",
+   "bbox": [
+    48.0,
+    26.0,
+    564.0,
+    598.4
+   ],
+   "w": 2150,
+   "h": 2386,
+   "dpi": 300,
+   "src": "39. Sup) Interface Stability in Solid-State Batteries.pdf",
+   "blank": 0.938
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 14,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: Reaction energies for the interfaces of bromide electrolytes at µLi corresponding to the average cath- ode voltage. Energies are given both for the energy of the lithium extraction only (no mixing) and for energy of cathode/electrolyte mixing open to lithium, following the procedure of ﬁgure 4.",
+   "bbox": [
+    48.0,
+    26.0,
+    564.0,
+    317.0
+   ],
+   "w": 2150,
+   "h": 1213,
+   "dpi": 300,
+   "src": "39. Sup) Interface Stability in Solid-State Batteries.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 14,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: Reaction energies for the interfaces of chloride electrolytes at µLi corresponding to the average cath- ode voltage. Energies are given both for the energy of the lithium extraction only (no mixing) and for energy of cathode/electrolyte mixing open to lithium, following the procedure of ﬁgure 4.",
+   "bbox": [
+    48.0,
+    354.8,
+    564.0,
+    662.9
+   ],
+   "w": 2150,
+   "h": 1285,
+   "dpi": 300,
+   "src": "39. Sup) Interface Stability in Solid-State Batteries.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 16,
+   "file": "fig_S7.png",
+   "caption": "Figure S7: Reaction energies for the interfaces of ﬂuoride electrolytes at µLi corresponding to the average cath- ode voltage. Energies are given both for the energy of the lithium extraction only (no mixing) and for energy of cathode/electrolyte mixing open to lithium, following the procedure of ﬁgure 4.",
+   "bbox": [
+    48.0,
+    373.4,
+    564.0,
+    666.4
+   ],
+   "w": 2150,
+   "h": 1221,
+   "dpi": 300,
+   "src": "39. Sup) Interface Stability in Solid-State Batteries.pdf",
+   "blank": 0.945
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 2,
+   "file": "tab_S1.png",
+   "caption": "Table S1: Predicted anodic and cathodic reactions for the electrolytes of ﬁgure 2 at their stability limits. Anodic reaction (low µLi) Cathodic reaction (high µLi) 2 Li3BN2 ! 2 BN + N2 Li3BN2 ! Li3BN2 2 Li4NCl ! N2 + 2 LiCl Li4NCl ! Li4NCl 6 LiBH4 ! Li2B6H12 + 9 H2 6 LiBH4 ! Li2B6H12 + 18 LiH 2 Li3PS4 ! Li4P2S6 + 2 S 2 Li3PS4 ! Li4P2S6 + 2 Li2S Li10GeP2S12 ! Li2GeS3 + 2 Li3PS4 + S Li10GeP2S12 ! Li4GeS4 + Li4P2S6 + 2 Li2S Li4SnS4 ! S + Li2SnS3 Li4SnS4 ! 3 Li2S + SnS Li6PS5Cl ! S + Li3PS4 + LiCl 2 Li6PS5Cl ! 2 LiCl + Li4P2S6 + 4 Li2S 5 LiAlO2 ! LiAl5O8 + O2 4 LiAlO2 ! Li3Al2 + 2 Li5AlO4 3 Li4Ti5O12 ! 11 TiO2 + 2 Ti2O7 5 Li4Ti5O12 ! 3 Li5Ti7O16 + 4 Li2TiO3 2 Li2ZrO3 ! 2 ZrO2 + O2 7 Li2ZrO3 ! 3 Li6Zr2O7 + Zr 4 Li7La3Zr2O12 ! 4 Li6Zr2O7 + O2 + 6 La2O3 4 Li7La3Zr2O12 ! 3 Zr + 6 La2O3 + 5 Li8ZrO6 2 Li4GeO4 ! 2 Li2GeO3 + O2 Li4GeO4 ! 4 Li2O + Ge 4 LiNbO3 ! O2 + 2 Nb2O5 2 LiNbO3 ! LiNbO2 + Li3NbO",
+   "bbox": [
+    49.2,
+    49.9,
+    562.8,
+    459.8
+   ],
+   "w": 2142,
+   "h": 1709,
+   "dpi": 300,
+   "src": "39. Sup) Interface Stability in Solid-State Batteries.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 3,
+   "file": "tab_S2.png",
+   "caption": "Table S2: Predicted decomposition reactions for the electrolytes of ﬁgure 2 at cathode chemical potentials and mixing reactions with the cathode. cathode/electrolyte reaction at cathode voltage reaction with mixing LiBH4/LiCoO2 2 LiBH4 ! 2 BH3 + H2 7 LiCoO2 + 4 LiBH4 ! 4 B(HO)3 + 2 H2O + 7 Co LiBH4/LiFePO4 2 LiBH4 ! 2 BH3 + H2 3 LiFePO4 + 8 LiBH4 ! 3 FeP + 16 H2 + 4 B2O3 LiBH4/LiMnO2 2 LiBH4 ! 2 BH3 + H2 3 LiMnO2 + 2 LiBH4 ! Mn3(BO3)2 + 4 H2 LiBH4/LiNiO2 2 LiBH4 ! H2 + 2 BH3 3 LiNiO2 + 2 LiBH4 ! 2 NiH + Ni + 2 B(HO)3 LiBH4/LiTiS2 none none LiBH4/LiVS2 6 LiBH4 ! Li(BH)6 + 9 H2 57 LiVS2 + 10 LiBH4 ! 19 V3S4 + 2 Li3B5(HS5)2 + 18 H2S LiBH4/Li2S 6 LiBH4 ! 9 H2 + Li(BH)6 19 Li2S + 5 LiBH4 ! Li3B5(HS5)2 + 9 H2S Li3PS4/LiCoO2 2 Li3PS4 ! S + P2S7 3 LiCoO2 + 2 Li3PS4 ! Co(PO3)2 + 2 CoS2 + 4 S Li3PS4/LiFePO4 2 Li3PS4 ! P2S7 + S 2 Li3PS4 ! P2S7 + S Li3PS4/LiMnO2 2 Li3PS4 ! S + P2S7 14 LiMnO2 + 8 Li3",
+   "bbox": [
+    49.0,
+    105.4,
+    563.0,
+    687.3
+   ],
+   "w": 2142,
+   "h": 2425,
+   "dpi": 300,
+   "src": "39. Sup) Interface Stability in Solid-State Batteries.pdf",
+   "blank": 0.935
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 7,
+   "file": "tab_S3.png",
+   "caption": "Table S3: Predicted decomposition reactions for the nitride electrolytes of ﬁgure S1 at cathode chemical potentials and mixing reactions with the cathode. cathode/electrolyte reaction at cathode voltage reaction with mixing Li3N/LiCoO2 2 Li3N ! N2 2 Li3N ! N2 Li3N/LiFePO4 2 Li3N ! N2 2 Li3N ! N2 Li3N/LiMnO2 2 Li3N ! N2 2 Li3N ! N2 Li3N/LiNiO2 2 Li3N ! N2 2 Li3N ! N2 Li3N/LiTiS2 2 Li3N ! N2 2 Li3N ! N2 Li3N/LiVS2 2 Li3N ! N2 2 Li3N ! N2 Li3N/Li2S 2 Li3N ! N2 2 Li3N ! N2 Li3BN2/LiCoO2 2 Li3BN2 ! 2 BN + N2 2 Li3BN2 ! 2 BN + N2 Li3BN2/LiFePO4 2 Li3BN2 ! 2 BN + N2 2 Li3BN2 ! 2 BN + N2 Li3BN2/LiMnO2 2 Li3BN2 ! N2 + 2 BN 2 Li3BN2 ! 2 BN + N2 Li3BN2/LiNiO2 2 Li3BN2 ! N2 + 2 BN 2 Li3BN2 ! 2 BN + N2 Li3BN2/LiTiS2 2 Li3BN2 ! 2 BN + N2 2 Li3BN2 ! 2 BN + N2 Li3BN2/LiVS2 2 Li3BN2 ! N2 + 2 BN 2 Li3BN2 ! N2 + 2 BN Li3BN2/Li2S 2 Li3BN2 ! 2 BN + N2 2 Li3BN2 ! 2 BN + N2 Li4NCl/LiCoO2 2 Li4NCl ! N2 + 2 LiCl",
+   "bbox": [
+    49.0,
+    78.9,
+    563.0,
+    391.7
+   ],
+   "w": 2142,
+   "h": 1305,
+   "dpi": 300,
+   "src": "39. Sup) Interface Stability in Solid-State Batteries.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 8,
+   "file": "tab_S4.png",
+   "caption": "Table S4: Predicted decomposition reactions for the hydride electrolytes of ﬁgure S2 at cathode chemical potentials and mixing reactions with the cathode. cathode/electrolyte reaction at cathode voltage reaction with mixing LiH/LiCoO2 2 LiH ! H2 2 LiH ! H2 LiH/LiFePO4 2 LiH ! H2 2 LiH ! H2 LiH/LiMnO2 2 LiH ! H2 2 LiH ! H2 LiH/LiNiO2 2 LiH ! H2 2 LiH ! H2 LiH/LiTiS2 2 LiH ! H2 2 LiH ! H2 LiH/LiVS2 2 LiH ! H2 2 LiH ! H2 LiH/Li2S 2 LiH ! H2 2 LiH ! H2 LiBH4/LiCoO2 2 LiBH4 ! 2 BH3 + H2 7 LiCoO2 + 4 LiBH4 ! 4 B(HO)3 + 2 H2O + 7 Co LiBH4/LiFePO4 2 LiBH4 ! 2 BH3 + H2 3 LiFePO4 + 8 LiBH4 ! 16 H2 + 4 B2O3 + 3 FeP LiBH4/LiMnO2 2 LiBH4 ! H2 + 2 BH3 3 LiMnO2 + 2 LiBH4 ! 4 H2 + Mn3(BO3)2 LiBH4/LiNiO2 2 LiBH4 ! H2 + 2 BH3 3 LiNiO2 + 2 LiBH4 ! Ni + 2 NiH + 2 B(HO)3 LiBH4/LiTiS2 none none LiBH4/LiVS2 6 LiBH4 ! 9 H2 + Li(BH)6 57 LiVS2 + 10 LiBH4 ! 2 Li3B5(HS5)2 + 19 V3S4 + 18 H2S LiBH4/Li2S 6 LiBH4 ! 9 H",
+   "bbox": [
+    49.0,
+    84.9,
+    563.0,
+    375.3
+   ],
+   "w": 2142,
+   "h": 1211,
+   "dpi": 300,
+   "src": "39. Sup) Interface Stability in Solid-State Batteries.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 9,
+   "file": "tab_S5.png",
+   "caption": "Table S5: Predicted decomposition reactions for the sulﬁde electrolytes of ﬁgure S3 at cathode chemical potentials and mixing reactions with the cathode. cathode/electrolyte reaction at cathode voltage reaction with mixing Li2S/LiCoO2 Li2S ! S Li2S ! S Li2S/LiFePO4 Li2S ! S Li2S ! S Li2S/LiMnO2 Li2S ! S Li2S ! S Li2S/LiNiO2 Li2S ! S Li2S ! S Li2S/LiTiS2 none LiTiS2 + Li2S ! Li2TiS3 Li2S/LiVS2 none LiVS2 + 2 Li2S ! Li3VS4 Li2S/Li2S none none Li3PS4/LiCoO2 2 Li3PS4 ! P2S7 + S 3 LiCoO2 + 2 Li3PS4 ! 4 S + 2 CoS2 + Co(PO3)2 Li3PS4/LiFePO4 2 Li3PS4 ! P2S7 + S 2 Li3PS4 ! P2S7 + S Li3PS4/LiMnO2 2 Li3PS4 ! S + P2S7 14 LiMnO2 + 8 Li3PS4 ! 23 S + 3 Mn2S3 + 4 Mn2P2O7 Li3PS4/LiNiO2 2 Li3PS4 ! P2S7 + S 117 LiNiO2 + 44 Li3PS4 ! 39 Ni3S4 + 22 Li4P2O7 + 20 Li2SO4 Li3PS4/LiTiS2 Li3PS4 ! 4 Li2S + P Li3PS4 ! P + 4 Li2S Li3PS4/LiVS2 none none Li3PS4/Li2S none none Li10GeP2S12/LiCoO2 Li10GeP2S12 ! P2S7 + GeS2",
+   "bbox": [
+    49.0,
+    69.5,
+    563.0,
+    723.2
+   ],
+   "w": 2142,
+   "h": 2725,
+   "dpi": 300,
+   "src": "39. Sup) Interface Stability in Solid-State Batteries.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 11,
+   "file": "tab_S6.png",
+   "caption": "Table S6: Predicted decomposition reactions for the oxide electrolytes of ﬁgure S4 at cathode chemical potentials and mixing reactions with the cathode.",
+   "bbox": [
+    49.0,
+    141.2,
+    563.0,
+    651.5
+   ],
+   "w": 2142,
+   "h": 2127,
+   "dpi": 300,
+   "src": "39. Sup) Interface Stability in Solid-State Batteries.pdf",
+   "blank": 0.935
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 15,
+   "file": "tab_S7.png",
+   "caption": "Table S7: Predicted decomposition reactions for the bromide electrolytes of ﬁgure S5 at cathode chemical potentials and mixing reactions with the cathode. cathode/electrolyte reaction at cathode voltage reaction with mixing LiBr/LiCoO2 LiBr ! Br LiBr ! Br LiBr/LiFePO4 none LiFePO4 + 4 LiBr ! LiFeBr4 + Li3PO4 LiBr/LiMnO2 none none LiBr/LiNiO2 none 3 LiNiO2 + LiBr ! LiBrO3 + 3 NiO LiBr/LiTiS2 none none LiBr/LiVS2 none none LiBr/Li2S none none Li2MgBr4/LiCoO2 Li2MgBr4 ! MgBr2 + 2 Br 2 LiCoO2 + Li2MgBr4 ! 4 Br + Mg(CoO2)2 Li2MgBr4/LiFePO4 none 2 LiFePO4 + 3 Li2MgBr4 ! Mg3(PO4)2 + 4 LiBr + 2 LiFeBr4 Li2MgBr4/LiMnO2 none 2 LiMnO2 + 2 Li2MgBr4 ! 6 LiBr + Mg2MnO4 + MnBr2 Li2MgBr4/LiNiO2 none 2 LiNiO2 + 2 Li2MgBr4 ! 8 LiBr + NiO + Mg2NiO3 Li2MgBr4/LiTiS2 none 2 LiTiS2 + Li2MgBr4 ! MgS + 4 LiBr + Ti2S3 Li2MgBr4/LiVS2 none 3 LiVS2 + 2 Li2MgBr4 ! 8 LiBr + V3S4 + 2 MgS Li2MgBr4/Li2S none Li2S + Li2Mg",
+   "bbox": [
+    49.0,
+    105.4,
+    563.0,
+    687.3
+   ],
+   "w": 2142,
+   "h": 2425,
+   "dpi": 300,
+   "src": "39. Sup) Interface Stability in Solid-State Batteries.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "tS8",
+   "kind": "table",
+   "label": "S8",
+   "page": 17,
+   "file": "tab_S8.png",
+   "caption": "Table S8: Predicted decomposition reactions for the chloride electrolytes of ﬁgure S6 at cathode chemical potentials and mixing reactions with the cathode. cathode/electrolyte reaction at cathode voltage reaction with mixing LiCl/LiCoO2 none 3 LiCoO2 + 14 LiCl ! 3 LiCoCl4 + 2 LiClO3 LiCl/LiFePO4 none 2 LiFePO4 + LiCl ! Fe2PClO4 + Li3PO4 LiCl/LiMnO2 none 29 LiMnO2 + 3 LiCl ! 3 Li5Mn7O16 + Mn8Cl3O10 LiCl/LiNiO2 none 3 LiNiO2 + LiCl ! 3 NiO + LiClO3 LiCl/LiTiS2 none none LiCl/LiVS2 none none LiCl/Li2S none none Li2MgCl4/LiCoO2 none 20 LiCoO2 + 7 Li2MgCl4 ! 7 Mg(CoO2)2 + 6 LiCoCl4 + 4 LiClO3 Li2MgCl4/LiFePO4 none 2 LiFePO4 + 3 Li2MgCl4 ! 8 LiCl + 2 FeCl2 + Mg3(PO4)2 Li2MgCl4/LiMnO2 none 11 LiMnO2 + 10 Li2MgCl4 ! 32 LiCl + 5 Mg2MnO4 + 2 Mn3Cl4O Li2MgCl4/LiNiO2 none 2 LiNiO2 + 2 Li2MgCl4 ! Mg2NiO3 + NiO + 8 LiCl Li2MgCl4/LiTiS2 none 2 LiTiS2 + Li2MgCl4 ! 4 LiCl + MgS + Ti2S3 Li2MgCl4/LiVS2 non",
+   "bbox": [
+    49.0,
+    87.4,
+    563.0,
+    705.3
+   ],
+   "w": 2142,
+   "h": 2575,
+   "dpi": 300,
+   "src": "39. Sup) Interface Stability in Solid-State Batteries.pdf",
+   "blank": 0.94
+  },
+  {
+   "key": "tS9",
+   "kind": "table",
+   "label": "S9",
+   "page": 19,
+   "file": "tab_S9.png",
+   "caption": "Table S9: Predicted decomposition reactions for the ﬂuoride electrolytes of ﬁgure S7 at cathode chemical potentials and mixing reactions with the cathode. cathode/electrolyte reaction at cathode voltage reaction with mixing LiF/LiCoO2 none none LiF/LiFePO4 none none LiF/LiMnO2 none none LiF/LiNiO2 none none LiF/LiTiS2 none none LiF/LiVS2 none none LiF/Li2S none none LiYF4/LiCoO2 none none LiYF4/LiFePO4 none none LiYF4/LiMnO2 none none LiYF4/LiNiO2 none 3 LiNiO2 + 2 LiYF4 ! Y2O3 + 3 NiO + 8 LiF LiYF4/LiTiS2 none none LiYF4/LiVS2 none none LiYF4/Li2S none none Li3AlF6/LiCoO2 none 12 LiCoO2 + 5 Li3AlF6 ! LiAl5O8 + 30 LiF + 4 Co3O4 Li3AlF6/LiFePO4 none none Li3AlF6/LiMnO2 none 12 LiMnO2 + 5 Li3AlF6 ! 4 Mn3O4 + LiAl5O8 + 30 LiF Li3AlF6/LiNiO2 none 2 LiNiO2 + Li3AlF6 ! LiAlO2 + 6 LiF + 2 NiO Li3AlF6/LiTiS2 none none Li3AlF6/LiVS2 none none Li3AlF6/Li2S none 4 Li2S + Li3AlF6 ! Li5AlS4 + 6 LiF L",
+   "bbox": [
+    49.0,
+    49.9,
+    563.0,
+    555.4
+   ],
+   "w": 2142,
+   "h": 2108,
+   "dpi": 300,
+   "src": "39. Sup) Interface Stability in Solid-State Batteries.pdf",
+   "blank": 0.949
+  }
+ ]
+}

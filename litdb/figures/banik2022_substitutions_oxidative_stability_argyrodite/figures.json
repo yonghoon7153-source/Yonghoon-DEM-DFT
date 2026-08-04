@@ -1,0 +1,87 @@
+{
+ "slug": "banik2022_substitutions_oxidative_stability_argyrodite",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-04",
+ "sources": [
+  "18. Can_substitutions_affect_the_oxidative_stability_o.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. a) Schematic of oxidative degradation mechanism of a solid electrolyte in contact with a cathode active material based on band theory of solids. Oxidative degradation of the solid electrolyte involves electron transfer from the valence band edge to the cathode. Thus, for a stable electrolyte, the valence band minimum needs to be at energies below the Fermi level εF of cathode. The atoms that contribute to the band edges participate in the electron",
+   "bbox": [
+    67.0,
+    440.7,
+    533.2,
+    661.5
+   ],
+   "w": 1944,
+   "h": 921,
+   "dpi": 300,
+   "src": "18. Can_substitutions_affect_the_oxidative_stability_o.pdf",
+   "blank": 0.736
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Stepwise cyclic voltammogram for Li6PS5Cl and Ge-Li6PS5I and Si--Li6PS5I (a, b and c). Oxidative decomposition at high potentials leads to evolving peaks with varying peak area at potentials at which the electrolyte was apparently stable when lower reversal potentials were applied. Open-circuit voltage was 0.5 V vs. In/InLi. d) Comparison of oxidative currents at reversal potentials of CV scans normalized by moles of material to decouple from potential compositional differences.",
+   "bbox": [
+    67.0,
+    26.0,
+    533.3,
+    522.7
+   ],
+   "w": 1944,
+   "h": 2071,
+   "dpi": 300,
+   "src": "18. Can_substitutions_affect_the_oxidative_stability_o.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 8,
+   "file": "fig_3.png",
+   "caption": "Figure 3. a) Optical absorption spectra and b) hard X-ray photoemission spectra showing band gap, Eg and valence band edges, respectively. c) Calculated thermodynamic electrochemical stability windows and d) experimental oxidative stability limits. The stable region for each electrolyte is shown in green and the onset of oxidative decomposition is shown in orange followed by red to show the unstable potential region.",
+   "bbox": [
+    67.0,
+    109.8,
+    533.3,
+    570.3
+   ],
+   "w": 1944,
+   "h": 1920,
+   "dpi": 300,
+   "src": "18. Can_substitutions_affect_the_oxidative_stability_o.pdf",
+   "blank": 0.827
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 10,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Electronic structure of Li6PS5Cl. a) Schematic of pDOS showing major contribution of free S2- and non-bonding sulfur states from the PS43- unit in the valence band edge, whereas the conduction band is dominated by antibonding states of PS43-. Because of a larger electronegativity, the Cl- states reside deeper in the valence and do not participate in bonding with phosphorous. The PS43- bonding states are far below the valence band maximum. b) Partial, atom-projected DOS shows the PS43- unit along with free S2- and Cl- make up the valence band. c) Crystal Orbital Hamilton populations (COHP) shows the bonding – antibonding contributions of PS43- in the electronic structure.",
+   "bbox": [
+    67.0,
+    26.0,
+    533.8,
+    366.7
+   ],
+   "w": 1946,
+   "h": 1421,
+   "dpi": 300,
+   "src": "18. Can_substitutions_affect_the_oxidative_stability_o.pdf",
+   "blank": 0.904
+  }
+ ]
+}

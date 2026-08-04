@@ -1,0 +1,639 @@
+{
+ "slug": "wang2025_electronic_localization_yo_argyrodite",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-04",
+ "sources": [
+  "52. Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+  "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Structural properties of LPSC and LPSC-YO electrolytes. a) XRD Rietveld reﬁnement results of LPSC-YO. b) Neutron reﬁnement results of LPSC-YO. c) Crystal structure model of LPSC-YO electrolyte. d) XRD and e) Raman patterns of Li6+2xP1-xYxS5-1.5xO1.5xCl (x = 0, 0.02, 0.05, 0.08, 0.1). XPS spectra of f) P 2p, g) S 2p, h) O 1s. i,k) HRTEM images of LPSC-YO and j) corresponding SAED pattern.",
+   "bbox": [
+    46.2,
+    40.3,
+    544.6,
+    584.5
+   ],
+   "w": 2077,
+   "h": 2269,
+   "dpi": 300,
+   "src": "52. Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.738
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. a) Nyquist plots of Li6+2xP1-xYxS5-1.5xO1.5xCl (x = 0, 0.02, 0.05, 0.08, 0.1). b) Arrhenius plots of the temperature-dependent ionic conductivities of Li6+2xP1-xYxS5-1.5xO1.5xCl electrolytes with diﬀerent doping contents. c) Compositional relation of the ionic conductivity and the activation energy for Li6+2xP1-xYxS5-1.5xO1.5xCl. BVSE analysis and Li+ migration barriers of d) LPSC and e) LPSC-YO. f) Cyclic voltammetry proﬁle of Li/LPSC/LPSC+C and Li/LPSC-YO/LPSC-YO+C cell at 0.1 mV s−1. g) Quantity of H2S generated from LPSC and LPSC-YO exposed to air.",
+   "bbox": [
+    46.7,
+    40.3,
+    545.2,
+    421.2
+   ],
+   "w": 2078,
+   "h": 1588,
+   "dpi": 300,
+   "src": "52. Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.795
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Interfacial stability of LPSC and LPSC-YO with Li metal. Critical current density of a) Li/LPSC/Li and b) Li/LPSC-YO/Li. c) Galvanostatic cycling performance of Li/LPSC/Li and Li/LPSC-YO/Li at 0.1 mA cm−2. d) Galvanostatic cycling performance and enlarged view of Li/LPSC-YO/Li at 0.5 mA cm−2. Galvanostatic electrochemical impedance spectroscopy (GEIS) of e) Li/LPSC/Li and f) Li/LPSC-YO/Li. The corresponding DRT transition result of g) Li/LPSC/Li and h) Li/LPSC-YO/Li. i) Performance comparison of sulﬁde electrolytes reported in previous works.",
+   "bbox": [
+    46.7,
+    389.5,
+    545.4,
+    497.5
+   ],
+   "w": 2079,
+   "h": 452,
+   "dpi": 300,
+   "src": "52. Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.668
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Analysis of interfacial reaction. XPS depth proﬁling measurement for the Li/LPSC interface and Li/LPSC-YO interface after cycles: a) S 2p, b) P 2p, and c) O 1s. d–f) Time-of-ﬂight secondary ion mass spectrometry (TOF-SIMS) analysis of LiO−, LiS−, and Li2P−second ion fragments on the cycled Li/LPSC-YO surface and g) the corresponding depth proﬁles. SEM images of Li metal surface of Li symmetric cells assembled with h) LPSC and i) LPSC-YO electrolyte after long-term cycling. Schematic diagram of interfacial reactions and lithium dendrite growth at the j) Li/LPSC/Li and k) Li/LPSC-YO/Li symmetric cells.",
+   "bbox": [
+    46.2,
+    40.3,
+    548.4,
+    514.5
+   ],
+   "w": 2093,
+   "h": 1977,
+   "dpi": 300,
+   "src": "52. Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.709
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 5,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. The refinement results of the XRD of LPSC electrolyte.",
+   "bbox": [
+    64.8,
+    84.3,
+    458.0,
+    324.1
+   ],
+   "w": 1639,
+   "h": 1000,
+   "dpi": 300,
+   "src": "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 6,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. The refinement results of the neutron powder diffraction (NPD) of LPSC electrolyte.",
+   "bbox": [
+    84.0,
+    26.0,
+    512.0,
+    329.4
+   ],
+   "w": 1784,
+   "h": 1265,
+   "dpi": 300,
+   "src": "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.903
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 7,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. DFT models of the possibility of doping Y on different sites and corresponding formation energies. a) The optimized structure of Y and O substitution of P and S in the LPSC cell. b) The optimized structure of Y and O substitution of Li and S in the LPSC cell.",
+   "bbox": [
+    84.0,
+    26.0,
+    515.3,
+    399.6
+   ],
+   "w": 1798,
+   "h": 1557,
+   "dpi": 300,
+   "src": "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.85
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 8,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. XPS spectra of a) Li 1s, b) P 2p, c) S 2p, and d) Cl 2p in LPSC.",
+   "bbox": [
+    84.0,
+    26.0,
+    512.0,
+    313.8
+   ],
+   "w": 1784,
+   "h": 1200,
+   "dpi": 300,
+   "src": "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.899
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 9,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. XPS spectra of a) Li 1s and b) Cl 2p.",
+   "bbox": [
+    84.0,
+    26.0,
+    511.3,
+    251.4
+   ],
+   "w": 1781,
+   "h": 940,
+   "dpi": 300,
+   "src": "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.873
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 10,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. SEM image and the corresponding elemental EDS mappings of LPSC and LPSC-YO electrolytes.",
+   "bbox": [
+    84.0,
+    26.0,
+    512.0,
+    329.4
+   ],
+   "w": 1784,
+   "h": 1265,
+   "dpi": 300,
+   "src": "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.411
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 11,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. HRTEM dark-field image and elemental EDS (P, Y, S, Cl and O) mappings of LPSC- YO.",
+   "bbox": [
+    84.0,
+    26.0,
+    512.0,
+    376.2
+   ],
+   "w": 1784,
+   "h": 1460,
+   "dpi": 300,
+   "src": "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.271
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 12,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Nyquist plots of Li6+2xP1-xYxS5-1.5xO1.5xCl (x = 0, 0.02, 0.05, 0.08, 0.1) as a function of with temperature (25 oC - 60 oC).",
+   "bbox": [
+    84.0,
+    26.0,
+    512.0,
+    298.2
+   ],
+   "w": 1784,
+   "h": 1135,
+   "dpi": 300,
+   "src": "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.879
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 13,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Chronoamperometric measurement of LPSC at different voltages.",
+   "bbox": [
+    129.0,
+    26.0,
+    512.0,
+    329.2
+   ],
+   "w": 1597,
+   "h": 1264,
+   "dpi": 300,
+   "src": "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.943
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 14,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Chronoamperometric measurement of LPSC-YO at different voltages.",
+   "bbox": [
+    117.2,
+    26.0,
+    512.0,
+    329.4
+   ],
+   "w": 1646,
+   "h": 1265,
+   "dpi": 300,
+   "src": "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.948
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 15,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. BVSE analysis of a) LPSC and b) LPSC-YO.",
+   "bbox": [
+    84.0,
+    26.0,
+    512.0,
+    267.0
+   ],
+   "w": 1784,
+   "h": 1005,
+   "dpi": 300,
+   "src": "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.396
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 16,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. The adsorption energy of water molecules on different units. The ΔEad calculation of the PS4 unit end surface as an example: ΔEPS4 ad = EPS3O+H2O – Esurface – EH2O Where Esurface is the energy of surface structure, EPS3O+H2O is the energy of a H2O molecule adsorbed on the PS4 surface. According to this formula, we can calculate the values ΔEad of PS4, YS4 and PS3O are −1.69, −0.92, and −0.78 eV, respectively. Compared to the PS4, the adsorption energy of the PS3O and YS4 units for H2O is significantly reduced. It means that LPSC-YO is more difficult to absorb water than LPSC.",
+   "bbox": [
+    84.0,
+    26.0,
+    513.9,
+    173.4
+   ],
+   "w": 1792,
+   "h": 615,
+   "dpi": 300,
+   "src": "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.802
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 17,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. Illustration of the difficulty of the reaction between PS4, PS3O and YS4 tetrahedron with H2O based on DFT calculation. ΔEhy of the end surfaces of PS4, PS3O and YS4 units are calculated by the following reaction formula: PS4 +H2O → PS3O+H2S, ΔEPS4 hy = −1.84eV PS3O +H2O → PS2O2+H2S, ΔEPS3O hy = −1.75eV YS4 +H2O → YS3O+H2S, ΔEYS4 hy = 4.13eV According to these formula, we can calculate the ΔEhy of PS4, PS3O and YS4 as −1.84, -1.75, and 4.13eV, respectively. The ΔEhy of PS4 is the lowest, indicating that PS4 easily interacts with water. This further proves that the doping of Y and O enhances the air stability of sulfide electrolyte.",
+   "bbox": [
+    84.0,
+    26.0,
+    516.5,
+    220.2
+   ],
+   "w": 1803,
+   "h": 810,
+   "dpi": 300,
+   "src": "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 18,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Nyquist plots of the Li symmetric cell with LPSC-YO electrolyte as a function of storage time at room temperature.",
+   "bbox": [
+    93.7,
+    26.0,
+    512.0,
+    352.8
+   ],
+   "w": 1744,
+   "h": 1362,
+   "dpi": 300,
+   "src": "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.711
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 19,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. Galvanostatic cycling performance of Li/LPSC/Li at 0.5 mA cm-2.",
+   "bbox": [
+    84.0,
+    26.0,
+    512.0,
+    211.8
+   ],
+   "w": 1784,
+   "h": 775,
+   "dpi": 300,
+   "src": "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 20,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. Cycling performance of a) Cu/LPSC-YO/Li and b) Cu/LPSC/Li cells.",
+   "bbox": [
+    84.0,
+    26.0,
+    512.0,
+    274.8
+   ],
+   "w": 1784,
+   "h": 1037,
+   "dpi": 300,
+   "src": "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.857
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 21,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. The relative proportions of Li3P on the surfaces of a) Li/LPSC-YO, b) Li/LPSC and Li2S at the surfaces of c) Li/LPSC-YO, d) Li/LPSC after cycles.",
+   "bbox": [
+    84.0,
+    26.0,
+    512.0,
+    324.8
+   ],
+   "w": 1784,
+   "h": 1246,
+   "dpi": 300,
+   "src": "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.758
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 22,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. a-b) Time-of-flight secondary ion mass spectrometry (TOF-SIMS) analysis of LiS-, Li2P- second ion fragments on the cycled Li/LPSC surface.",
+   "bbox": [
+    84.0,
+    26.0,
+    512.0,
+    231.2
+   ],
+   "w": 1784,
+   "h": 856,
+   "dpi": 300,
+   "src": "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.828
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 23,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. Atomic structure of a) Li/LPSC and b) Li/LPSC-YO before interfacial reaction.",
+   "bbox": [
+    84.0,
+    26.0,
+    512.0,
+    454.2
+   ],
+   "w": 1784,
+   "h": 1785,
+   "dpi": 300,
+   "src": "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.604
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 24,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. Cycling performance of the cell with LPSC-YO at 0.1 C.",
+   "bbox": [
+    137.3,
+    26.0,
+    512.0,
+    329.4
+   ],
+   "w": 1562,
+   "h": 1265,
+   "dpi": 300,
+   "src": "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.914
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 25,
+   "file": "fig_S21.png",
+   "caption": "Figure S21. Cycling performance of the cell with LPSC-YO at 0.2 C.",
+   "bbox": [
+    137.3,
+    26.0,
+    512.0,
+    329.4
+   ],
+   "w": 1562,
+   "h": 1265,
+   "dpi": 300,
+   "src": "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.915
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 26,
+   "file": "fig_S22.png",
+   "caption": "Figure S22. Shear and puncture tests of pouch battery with LPSC-YO based on the dry process.",
+   "bbox": [
+    84.0,
+    26.0,
+    512.0,
+    345.0
+   ],
+   "w": 1784,
+   "h": 1330,
+   "dpi": 300,
+   "src": "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.201
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 27,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Crystallographic data (lattice parameters, atomic coordinates, and occupancy) of Li6.1P0.95Y0.05S4.925O0.075Cl (x = 0, space group = F-43m) obtained from Rietveld refinement of X-ray diffraction data.",
+   "bbox": [
+    41.8,
+    79.8,
+    556.5,
+    467.1
+   ],
+   "w": 2145,
+   "h": 1615,
+   "dpi": 300,
+   "src": "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.959
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 28,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Crystallographic data (lattice parameters, atomic coordinates, and occupancy) of Li6.1P0.95Y0.05S4.925O0.075Cl (space group = F-43m) obtained from Rietveld refinement of X-ray diffraction data.",
+   "bbox": [
+    41.8,
+    79.8,
+    556.5,
+    549.5
+   ],
+   "w": 2145,
+   "h": 1958,
+   "dpi": 300,
+   "src": "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.962
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 29,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Crystallographic parameters of Li6PS5Cl obtained from refinement results of the neutron powder diffraction (NPD).",
+   "bbox": [
+    41.8,
+    79.8,
+    556.5,
+    446.4
+   ],
+   "w": 2145,
+   "h": 1528,
+   "dpi": 300,
+   "src": "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.964
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 30,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Crystallographic parameters of Li6.1P0.95Y0.05S4.925O0.075Cl obtained from refinement results of the neutron powder diffraction (NPD).",
+   "bbox": [
+    41.8,
+    79.8,
+    556.5,
+    528.8
+   ],
+   "w": 2145,
+   "h": 1872,
+   "dpi": 300,
+   "src": "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.964
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 31,
+   "file": "tab_S5.png",
+   "caption": "Table S5. Quantitative data of ICP tests for Li6.1P0.95Y0.05S4.925O0.075Cl.",
+   "bbox": [
+    41.8,
+    79.8,
+    517.5,
+    279.3
+   ],
+   "w": 1983,
+   "h": 832,
+   "dpi": 300,
+   "src": "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.963
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 32,
+   "file": "tab_S6.png",
+   "caption": "Table S6. Comparison of critical current density (CCD) and cycling stability of Li-Li symmetrical cells between our work and recent publications. Cycling current Critical current density (mA cm- Name of SSE Reference density (mA cm-2) 2)/Cycling time (h)",
+   "bbox": [
+    41.8,
+    79.8,
+    556.5,
+    641.1
+   ],
+   "w": 2145,
+   "h": 2340,
+   "dpi": 300,
+   "src": "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.961
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 33,
+   "file": "tab_S7.png",
+   "caption": "Table S7. Summary of the sulfide electrolyte-based all-solid-state Li metal batteries performance. Cycling stability (current density/cycle Battery configuration (anode/electrolyte/cathode) Reference number/ capacity retention)",
+   "bbox": [
+    41.8,
+    79.8,
+    533.5,
+    612.6
+   ],
+   "w": 2050,
+   "h": 2221,
+   "dpi": 300,
+   "src": "52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.952
+  }
+ ]
+}

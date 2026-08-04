@@ -1,0 +1,182 @@
+{
+ "slug": "torii2025_lpscl_mechanical_anisotropy_dft",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-04",
+ "sources": [
+  "21. first-principles-investigation-of-mechanical-properties-and-anisotropy-of-argyrodite-li6ps5cl-crystal-electrolytes.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Spacious elastic anisotropy of the Li6PS5Cl crystal structure obtained using first-principles calculation: (a) Young’ modulus, (b) linear compressibility, (c) shear modulus, and (d) Poisson’s ratio/(1) three-dimensional and (2) two-dimensional anisotropy (blue; maximum value, green: minimum value). chemical bonds formed almost parallel to the surface, as shown in Figure 3c,d. This suggests that the vertical stresses applied to the {110} and {111} planes render these structures more susceptible to fracture. study defines the strain at which this dissociation occurs as the ‘partial fracture strain’. This specific value was defined as the maximum strain immediately before ionic bond dissociation. The presence or absence of chemical bond dissociation was determined based on the appearance or disappearance of the bonds in the VESTA software. Standard ionic bond distances are registe",
+   "bbox": [
+    45.5,
+    51.4,
+    561.5,
+    623.3
+   ],
+   "w": 2151,
+   "h": 2384,
+   "dpi": 300,
+   "src": "21. first-principles-investigation-of-mechanical-properties-and-anisotropy-of-argyrodite-li6ps5cl-crystal-electrolytes.pdf",
+   "blank": 0.854
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. (a) Stress−strain curves and (b−d) the side structure of the argyrodite Li6PS5Cl crystal with {100}, {110}, and {111} as the surfaces of its unit cells. https://doi.org/10.1021/acs.jpcc.5c05116 J. Phys. Chem. C 2025, 129, 17882−17891 17886",
+   "bbox": [
+    45.5,
+    557.9,
+    561.5,
+    733.2
+   ],
+   "w": 2151,
+   "h": 731,
+   "dpi": 300,
+   "src": "21. first-principles-investigation-of-mechanical-properties-and-anisotropy-of-argyrodite-li6ps5cl-crystal-electrolytes.pdf",
+   "blank": 0.839
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Various strained structures of the argyrodite Li6PS5Cl crystal with (a) {100}, (b) {110}, and (c) {111} as surfaces obtained using first- principles calculations (green: Li, bright green: Cl, yellow: S, purple: P).",
+   "bbox": [
+    45.5,
+    265.1,
+    561.5,
+    627.8
+   ],
+   "w": 2151,
+   "h": 1512,
+   "dpi": 300,
+   "src": "21. first-principles-investigation-of-mechanical-properties-and-anisotropy-of-argyrodite-li6ps5cl-crystal-electrolytes.pdf",
+   "blank": 0.876
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. (a,b) Two kinds of sulfide ion sites (red positions) in the Li6PS5Cl crystal structure and (c) the Bader charges of all ion types in the nonstrained Li6PS5Cl crystal structure calculated using first-principles calculations, (d−g) charge fluctuations in the strained Li6PS5Cl crystal structures: (d) Li, (e) P, (f1) S(1), (f2) S(2), and (g) Cl atoms. S(1) has an oxidation state close to −1, while S(2) has a greater negative charge of approximately −1.7. +1.23, which was the largest variation among the atoms of the Li6PS5Cl crystal. Notably, under strain along the {110} plane, the charge was more susceptible to changes, even under small strains. Although the change rates of the charges of S were relatively small, their variation patterns were different in the strain directions. Specifically, under strain along the {111} plane, S(1) exhibited both a charge increase and decrease Figu",
+   "bbox": [
+    45.5,
+    265.1,
+    561.5,
+    627.8
+   ],
+   "w": 2151,
+   "h": 1512,
+   "dpi": 300,
+   "src": "21. first-principles-investigation-of-mechanical-properties-and-anisotropy-of-argyrodite-li6ps5cl-crystal-electrolytes.pdf",
+   "blank": 0.876
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Figure 6. (a) Li6PS5Cl crystal structure with a {111} surface under 0.20 strain obtained by structural optimization. (b) Three sulfide ion sites in this model: yellow: S(1)-1, blue: S(1)-2, red: S(2).",
+   "bbox": [
+    45.5,
+    51.4,
+    561.5,
+    197.5
+   ],
+   "w": 2151,
+   "h": 609,
+   "dpi": 300,
+   "src": "21. first-principles-investigation-of-mechanical-properties-and-anisotropy-of-argyrodite-li6ps5cl-crystal-electrolytes.pdf",
+   "blank": 0.766
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Figure 7. (a) Schematic image of the situation applying shear strain to the Li6PS5Cl crystal model structure, (b) its stress−strain curve for shear strain and stress, and (c,d) its structural changes induced by shear strain. depending on its sites. For S(2), the charge variations under strain along the {110} and {111} planes were similar, whereas a different trend was observed under strain along the {100} plane. strain. The red site corresponds to S(2), which is positioned at the center of the Li6S octahedron. Due to uniaxial strain, one of the sulfide ions in the PS4 3−unit was attracted to three Li atoms, causing a charge difference to emerge between S(1)-1 and S(1)-2, which were originally equivalent. The {111}-oriented structure obtained through structural optimization under a strain of 0.20 is shown in Figure 6a. The three sulfide ion sites observed in this structure are listed in F",
+   "bbox": [
+    45.5,
+    220.5,
+    561.5,
+    591.0
+   ],
+   "w": 2151,
+   "h": 1545,
+   "dpi": 300,
+   "src": "21. first-principles-investigation-of-mechanical-properties-and-anisotropy-of-argyrodite-li6ps5cl-crystal-electrolytes.pdf",
+   "blank": 0.851
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1. Elastic Constants of the Li6PS5Cl Crystal Predicted from Its Elastic Tensor Obtained Using First-Principles Calculations elastic constants this study previous study10 C11 [GPa] 47.4 39.9 C12 [GPa] 28.4 23.1 C44 [GPa] 10.4 7.8 polycrystalline Young’s modulus E [GPa] 27.4 22.1 Bulk modulus B [GPa] 34.7 28.7 Shear modulus G [GPa] 10.0 8.1 Pugh’s ratio B/G 3.46 3.54 Poisson’s ratio ν 0.37 0.37 anisotropy index A 1.09 0.92",
+   "bbox": [
+    46.5,
+    593.0,
+    296.5,
+    756.5
+   ],
+   "w": 1043,
+   "h": 683,
+   "dpi": 300,
+   "src": "21. first-principles-investigation-of-mechanical-properties-and-anisotropy-of-argyrodite-li6ps5cl-crystal-electrolytes.pdf",
+   "blank": 0.857
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 5,
+   "file": "tab_2.png",
+   "caption": "Table 2. Lattice Constants of the Argyrodite Li6PS5Cl Crystal with {100}, {110}, and {111} as the Surfaces Obtained after Structural Optimizations",
+   "bbox": [
+    46.5,
+    267.7,
+    296.5,
+    327.7
+   ],
+   "w": 1043,
+   "h": 251,
+   "dpi": 300,
+   "src": "21. first-principles-investigation-of-mechanical-properties-and-anisotropy-of-argyrodite-li6ps5cl-crystal-electrolytes.pdf",
+   "blank": 0.688
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 5,
+   "file": "tab_3.png",
+   "caption": "Table 3. Mechanical Properties of the Argyrodite Li6PS5Cl Crystal Models with {100}, {110}, and {111} as the Surfaces Introduced by Their Stress−Strain Curves Obtained Using First-Principles Calculations",
+   "bbox": [
+    310.4,
+    267.7,
+    560.5,
+    339.4
+   ],
+   "w": 1043,
+   "h": 300,
+   "dpi": 300,
+   "src": "21. first-principles-investigation-of-mechanical-properties-and-anisotropy-of-argyrodite-li6ps5cl-crystal-electrolytes.pdf",
+   "blank": 0.708
+  }
+ ]
+}

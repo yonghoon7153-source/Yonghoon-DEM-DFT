@@ -1,0 +1,87 @@
+{
+ "slug": "fujimura2013_ml_conductivity_origin",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-04",
+ "sources": [
+  "42. Accelerated Materials Design of Lithium Superionic Conductors Based on First-Principles Calculations and Machine Learning Algorithms.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1 . Phases and properties in the Li 2 + 2 x Zn 1 − x GeO 4 system. (a) Pseudobinary Li 2 ZnGeO 4 -Li 4 GeO 4 phase diagram. [ 21 ] (b) Crystal structure of γ -LISICONs projected down the c axis. [GeO 4 ], [ZnO 4 ] and [LiO 4 ] identify the types of tetrahedra, with the corresponding cation at the centre of four coor- dinating oxide ions. Broken circles indicate octahedral Li sites. According to neutron diffraction data, [ 22 ] there are four crystallographically inequivalent Li sites, viz. , 4 a , 4 b , 4 c (1), and 4 c (2). Red circles (Li A ) correspond to 4 c (1) and 4 c (2) sites, which alternate along the c axis. Blue circles (Li B ) correspond to 4 a and 4 b sites, which also alternate along the c axis. (c) Estimated T c s for compositions with the γ structure in the pseudobinary Li 2 ZnGeO 4 -Li 4 GeO 4 . (d) Formation energies of structures in the ground state, E mix 0 , i",
+   "bbox": [
+    45.0,
+    67.9,
+    555.0,
+    413.4
+   ],
+   "w": 2126,
+   "h": 1440,
+   "dpi": 300,
+   "src": "42. Accelerated Materials Design of Lithium Superionic Conductors Based on First-Principles Calculations and Machine Learning Algorithms.pdf",
+   "blank": 0.824
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2 . Arrhenius plots of calculated Li-ion diffusion coefﬁ cients for Li 2 + 2 x Zn 1 − x GeO 4 ( x = 0.25, 0.50 and 0.75). Blue, red and black closed cir- cles are for x = 0.25, 0.50 and 0.75, respectively. Experimental data, shown as open circles [ 2 ] and open triangles, [ 29 ] are provided for comparison. Note that the extension to lower temperatures for x = 0.50 has a slope intermediate to that of x = 0.25 and x = 0.75 and is based on the reported deﬂ ection point of 550 K. [ 6 ]",
+   "bbox": [
+    42.3,
+    68.0,
+    297.2,
+    352.9
+   ],
+   "w": 1063,
+   "h": 1188,
+   "dpi": 300,
+   "src": "42. Accelerated Materials Design of Lithium Superionic Conductors Based on First-Principles Calculations and Machine Learning Algorithms.pdf",
+   "blank": 0.971
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3 . Diffusion coefﬁ cients at 1600 K, D 1600 , transition temperatures, T c , formation free energies of solid solutions at 1600K, Δ F S 1600 , and average volume of disordered structures, V dis as a function of chemical composition. D 1600 was calculated from FPMD simulations, and T c , Δ F S 1600 and V dis from energy minimization calculations. The compositions are taken from tie lines 1 and 2 in the pseudobinary phase diagrams atop each plot for II-IV, III-IV and V-IV type systems. Elements A and B for each composition and their corresponding data markers are shown in the legends at the top of the V dis plots. The change in p Oct with composition is shown in the bottom panel.",
+   "bbox": [
+    45.0,
+    67.9,
+    555.1,
+    654.1
+   ],
+   "w": 2126,
+   "h": 2443,
+   "dpi": 300,
+   "src": "42. Accelerated Materials Design of Lithium Superionic Conductors Based on First-Principles Calculations and Machine Learning Algorithms.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4 . Predicted ionic conductivities at 373 K, σ 373 , for 72 compositions in the system Li 8 − c A a B b O 4 , where A m + = Zn, Mg, Al, Ga, P or As, and B n + = Ge or Si, and c = ma + nb . Values of σ 373 were obtained by iterative analysis of calculated datasets and experimental datasets.",
+   "bbox": [
+    42.2,
+    68.0,
+    552.2,
+    275.0
+   ],
+   "w": 2126,
+   "h": 863,
+   "dpi": 300,
+   "src": "42. Accelerated Materials Design of Lithium Superionic Conductors Based on First-Principles Calculations and Machine Learning Algorithms.pdf",
+   "blank": 0.713
+  }
+ ]
+}

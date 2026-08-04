@@ -1,0 +1,49 @@
+{
+ "slug": "hikima2022_operando_band_structure_assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-04",
+ "sources": [
+  "25. Operando analysis of electronic band structure in an all-solid-state thin-film battery.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Band edges and Fermi levels of Al, Li2MnO3, Li1+x+yAlx(Ti,Ge)2−xSiy P3−yO12 (LASGTP), Li3PO4, and Li aligned to the vacuum level. The work functions (WFs) of Al, Li2MnO3, LASGTP, Li3PO4, and Li are shown in blue. The band gaps (Eg) of Li2MnO3, LASGTP, and Li3PO4 are shown in red. Electron afﬁnities (EAs) and ionization potentials (IPs) are displayed in black. CBM conduction band minimum, VBM valence band maximum, EF Fermi level. COMMUNICATIONS CHEMISTRY | (2022) 5:52 | https://doi.org/10.1038/s42004-022-00664-w | www.nature.com/commschem 3",
+   "bbox": [
+    37.6,
+    626.7,
+    557.7,
+    665.9
+   ],
+   "w": 2168,
+   "h": 164,
+   "dpi": 300,
+   "src": "25. Operando analysis of electronic band structure in an all-solid-state thin-film battery.pdf",
+   "blank": 0.897
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Band structure changes of all-solid-state batteries during cycling. a–c band diagrams of the battery with minimum assumptions and d–f band bending of the cathode side with additional assumptions represented by the relative energy level positions, during a, d pristine, b, e ﬁrst charge at 5.0 V, c, f ﬁrst discharge at 2.0 V. LASGTP Li1+x+yAlx(Ti,Ge)2−xSiyP3−yO12, CBM conduction band minimum, VBM valence band maximum, EF Fermi level, Eg band gap. Assumptions are detailed in the “Methods” section.",
+   "bbox": [
+    37.6,
+    31.7,
+    557.7,
+    392.1
+   ],
+   "w": 2168,
+   "h": 1503,
+   "dpi": 300,
+   "src": "25. Operando analysis of electronic band structure in an all-solid-state thin-film battery.pdf",
+   "blank": 0.945
+  }
+ ]
+}

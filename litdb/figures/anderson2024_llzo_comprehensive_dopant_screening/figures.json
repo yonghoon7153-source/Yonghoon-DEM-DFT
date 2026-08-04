@@ -1,0 +1,487 @@
+{
+ "slug": "anderson2024_llzo_comprehensive_dopant_screening",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-04",
+ "sources": [
+  "51. Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte.pdf",
+  "51. Sup) Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. All elements utilized in the doped LLZO samples made in the current study. Dopants studied previously (typically ionic conductivity only) are in blue, and new dopants reported for the ﬁrst time here are in yellow, with elements in the undoped in red. Herein, all the dopants (yellow and blue, except Sb) were tested and screened for not only ionic conductivity but we also systematically screened electronic conductivity, and stability window.",
+   "bbox": [
+    44.8,
+    60.4,
+    552.9,
+    293.7
+   ],
+   "w": 2118,
+   "h": 973,
+   "dpi": 300,
+   "src": "51. Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte.pdf",
+   "blank": 0.434
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. a) Representative XRD patterns of various doped LLZO samples showing pure cubic garnets, mixtures of cubic and tetragonal garnets, and samples that are multiphase including a non-garnet phase such as Li2ZrO3, La2Zr2O7, and SiO2 marked by *. b) Results of multiphase Rietveld ﬁts on the three Ga-doped samples.",
+   "bbox": [
+    42.0,
+    60.4,
+    550.1,
+    474.7
+   ],
+   "w": 2118,
+   "h": 1728,
+   "dpi": 300,
+   "src": "51. Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte.pdf",
+   "blank": 0.884
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Results of XRD ﬁtting: a) the total weight % fraction of garnet, and b) the fraction that cubic LLZO. c) The bond valence mismatch for each dopant. d) The defect energy for each dopant obtained from Ref. [12]. In (a) and (b), orange refers to substitution on optimal sites as predicted using the minimum defect energy shown in (d).",
+   "bbox": [
+    44.8,
+    60.4,
+    552.9,
+    447.7
+   ],
+   "w": 2118,
+   "h": 1615,
+   "dpi": 300,
+   "src": "51. Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte.pdf",
+   "blank": 0.793
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. a) Total ionic conductivity and b) electronic conductivity of all samples doped on the optimum site based on the defect energies from Ref. [12].",
+   "bbox": [
+    42.0,
+    60.4,
+    550.0,
+    500.7
+   ],
+   "w": 2118,
+   "h": 1836,
+   "dpi": 300,
+   "src": "51. Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte.pdf",
+   "blank": 0.527
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Results of CVs for testing the high voltage stability limit of the LLZO samples with the carbonate-based electrolyte. All samples have dopants substituted on the theoretical optimum sites. For all scans, the blank values were subtracted such that the voltage window ends at the lowest voltage where current exceeds 0 mA g−1. The red arrows highlight examples of dopants that strongly suppress or increase the oxidation.",
+   "bbox": [
+    44.8,
+    60.4,
+    552.9,
+    353.7
+   ],
+   "w": 2118,
+   "h": 1223,
+   "dpi": 300,
+   "src": "51. Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte.pdf",
+   "blank": 0.809
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. a) Results of CVs for testing the low voltage stability limit of the LLZO samples with the carbonate-based electrolyte. All samples have dopants substituted on the theoretical optimum sites. For all scans, the blank values were subtracted such that the voltage window ends at the highest voltage where current goes below 0 mA g−1. b–d) Results were obtained for the same test using ionic liquid electrolyte at 55 °C on a few selected dopants of high interest (in the black boxes in a). The stability window ends at the highest voltage where the LLZO signal dips below that of the blank.",
+   "bbox": [
+    44.8,
+    60.4,
+    552.9,
+    310.7
+   ],
+   "w": 2118,
+   "h": 1044,
+   "dpi": 300,
+   "src": "51. Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte.pdf",
+   "blank": 0.783
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 9,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: Site refinement for Ga on Li doped sample.",
+   "bbox": [
+    65.8,
+    26.0,
+    548.0,
+    317.7
+   ],
+   "w": 2010,
+   "h": 1216,
+   "dpi": 300,
+   "src": "51. Sup) Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 9,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: Site refinement for Ca on La doped sample.",
+   "bbox": [
+    65.8,
+    387.5,
+    547.8,
+    629.4
+   ],
+   "w": 2009,
+   "h": 1009,
+   "dpi": 300,
+   "src": "51. Sup) Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 10,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Site refinement for W on Zr doped sample.",
+   "bbox": [
+    65.8,
+    26.0,
+    549.0,
+    304.2
+   ],
+   "w": 2014,
+   "h": 1160,
+   "dpi": 300,
+   "src": "51. Sup) Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 10,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: PXRD patterns of doped LLZO samples containing unidentified phases.",
+   "bbox": [
+    66.0,
+    387.8,
+    532.8,
+    682.8
+   ],
+   "w": 1946,
+   "h": 1231,
+   "dpi": 300,
+   "src": "51. Sup) Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 11,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: PXRD overlay of aged (red) and pristine (black) samples for first set of samples.",
+   "bbox": [
+    65.8,
+    26.0,
+    543.0,
+    353.6
+   ],
+   "w": 1989,
+   "h": 1366,
+   "dpi": 300,
+   "src": "51. Sup) Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte.pdf",
+   "blank": 0.839
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 11,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: PXRD overlay of aged (red) and pristine (black) samples for second set of samples.",
+   "bbox": [
+    65.8,
+    395.8,
+    541.5,
+    662.2
+   ],
+   "w": 1983,
+   "h": 1111,
+   "dpi": 300,
+   "src": "51. Sup) Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte.pdf",
+   "blank": 0.778
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 12,
+   "file": "fig_S7.png",
+   "caption": "Figure S7: PXRD overlay of aged (red) and pristine (black) samples for third set of samples.",
+   "bbox": [
+    65.8,
+    26.0,
+    537.7,
+    352.1
+   ],
+   "w": 1967,
+   "h": 1360,
+   "dpi": 300,
+   "src": "51. Sup) Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte.pdf",
+   "blank": 0.834
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 12,
+   "file": "fig_S8.png",
+   "caption": "Figure S8: PXRD overlay of aged (red) and pristine (black) samples for fourth set of samples.",
+   "bbox": [
+    65.8,
+    394.3,
+    543.0,
+    660.9
+   ],
+   "w": 1989,
+   "h": 1112,
+   "dpi": 300,
+   "src": "51. Sup) Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte.pdf",
+   "blank": 0.783
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 13,
+   "file": "fig_S9.png",
+   "caption": "Figure S9: Lattice parameter for the cubic LLZO garnet component obtained for samples where",
+   "bbox": [
+    65.8,
+    26.0,
+    549.0,
+    210.6
+   ],
+   "w": 2014,
+   "h": 770,
+   "dpi": 300,
+   "src": "51. Sup) Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte.pdf",
+   "blank": 0.942
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 13,
+   "file": "fig_S10.png",
+   "caption": "Figure S10: Zoomed-in PXRD patterns of Ga and Fe doped LLZO, focusing on the",
+   "bbox": [
+    65.8,
+    338.3,
+    547.5,
+    637.8
+   ],
+   "w": 2008,
+   "h": 1249,
+   "dpi": 300,
+   "src": "51. Sup) Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte.pdf",
+   "blank": 0.904
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 14,
+   "file": "fig_S11.png",
+   "caption": "Figure S11: CV results for the low potential limit to the stability window obtained in the",
+   "bbox": [
+    66.0,
+    26.0,
+    549.0,
+    325.1
+   ],
+   "w": 2014,
+   "h": 1247,
+   "dpi": 300,
+   "src": "51. Sup) Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte.pdf",
+   "blank": 0.799
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 15,
+   "file": "fig_S12.png",
+   "caption": "Figure S12: Results of the CCD tests that yielded a critical current value, indicated by the red arrow. The first current is 0.05 mA/cm2 and each subsequent cycle is 0.05 mA/cm2 higher in",
+   "bbox": [
+    4.1,
+    26.0,
+    607.9,
+    429.1
+   ],
+   "w": 2516,
+   "h": 1681,
+   "dpi": 300,
+   "src": "51. Sup) Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte.pdf",
+   "blank": 0.816
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 16,
+   "file": "fig_S13.png",
+   "caption": "Figure S13: Results of the CCD tests that failed to reach a critical current. The yellow arrow",
+   "bbox": [
+    3.8,
+    26.0,
+    608.2,
+    429.1
+   ],
+   "w": 2518,
+   "h": 1681,
+   "dpi": 300,
+   "src": "51. Sup) Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte.pdf",
+   "blank": 0.774
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 17,
+   "file": "fig_S14.png",
+   "caption": "Figure S14: Results of the CCD tests for 6 samples where the dopants are on the La sites. The",
+   "bbox": [
+    4.1,
+    26.0,
+    607.9,
+    429.1
+   ],
+   "w": 2516,
+   "h": 1681,
+   "dpi": 300,
+   "src": "51. Sup) Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte.pdf",
+   "blank": 0.78
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 8,
+   "file": "tab_1.png",
+   "caption": "Table 1. Summary of key intrinsic properties obtained herein for a select list of dopants (for the full table, refer to Table S5, Supporting Information). The dopants are shown with the site in brackets. The garnet (%) refers to the phase percent that is either cubic or tetragonal garnet based on Rietveld reﬁnement, while cubic (%) refers solely to the phase fraction of cubic garnet. The ionic and electronic conductivities (𝜎i and 𝜎e), the bottom of the stability window (Vmin) were all extracted as detailed in the main text. The current in the high voltage stability test was also integrated between 3.8 and 4.3 V (HV: ʃIdt). Finally, the critical current density (CCD) was extracted as detailed in Figures S12–S14 (Supporting Information) for a cycled capacity of 0.1 mAh cm−2. Highlighted in bold are values of particular merit (selection details in Table S5, Supporting Information). The dop",
+   "bbox": [
+    43.0,
+    11.9,
+    589.2,
+    771.1
+   ],
+   "w": 2156,
+   "h": 2996,
+   "dpi": 284,
+   "src": "51. Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 4,
+   "file": "tab_S2.png",
+   "caption": "Table S2: List of sample compositions made in the current study. For all entries, the numbers indicate the molar amounts in the LLZO formulation, i.e. the undoped material is: Li7, La3, and Zr2. Dispensed Stiochiometry Dopant Doped on Li site Doped on La site Doped on Zr site B B0.2 Li8.4 La3 Zr2 B0.2 Li8.4 La2.8 Zr2 B0.2 Li8.4 La3 Zr1.8 Al Al0.2 Li8.4 La3 Zr2 Al0.2 Li8.4 La2.8 Zr2 Al0.2 Li8.4 La3 Zr1.8 Fe Fe0.2 Li8.4 La3 Zr2 Fe0.2 Li8.4 La2.8 Zr2 Fe0.2 Li8.4 La3 Zr1.8 Zn Zn0.2 Li8.4 La3 Zr2 Zn0.2 Li8.4 La2.8 Zr2 Zn0.2 Li8.4 La3 Zr1.8 Ga Ga0.2 Li8.4 La3 Zr2 Ga0.2 Li8.4 La2.8 Zr2 Ga0.2 Li8.4 La3 Zr1.8 Na Na0.2 Li8.4 La3 Zr2 Na0.2 Li8.4 La2.8 Zr2 Na0.2 Li8.4 La3 Zr1.8 K K0.2 Li8.4 La3 Zr2 K0.2 Li8.4 La2.8 Zr2 K0.2 Li8.4 La3 Zr1.8 Ca Ca0.2 Li8.4 La3 Zr2 Ca0.2 Li8.4 La2.8 Zr2 Ca0.2 Li8.4 La3 Zr1.8 Rb Rb0.2 Li8.4 La3 Zr2 Rb0.2 Li8.4 La2.8 Zr2 Rb0.2 Li8.4 La3 Zr1.8 Sr Sr0.2 Li8.4 La3 Zr2 Sr0.2",
+   "bbox": [
+    67.0,
+    67.4,
+    548.1,
+    722.8
+   ],
+   "w": 2005,
+   "h": 2732,
+   "dpi": 300,
+   "src": "51. Sup) Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte.pdf",
+   "blank": 0.874
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 5,
+   "file": "tab_S3.png",
+   "caption": "Table S3 Measured densities for various LLZO samples doped on the optimum site based on defect energy from the literature. Dopant Density (g/cm3) Relative Density Al 4.619 0.906 Zn 4.557 0.894 Fe 4.576 0.897 B 4.717 0.925 Ga 4.672 0.916 Ta 4.609 0.904 Au 4.771 0.936 Pt 4.870 0.955",
+   "bbox": [
+    67.0,
+    67.4,
+    548.0,
+    279.5
+   ],
+   "w": 2005,
+   "h": 885,
+   "dpi": 300,
+   "src": "51. Sup) Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte.pdf",
+   "blank": 0.938
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 6,
+   "file": "tab_S4.png",
+   "caption": "Table S4: Site refinement results for Ga on Li, Ca on La, and W on Zr doped samples.",
+   "bbox": [
+    66.0,
+    101.5,
+    508.8,
+    766.0
+   ],
+   "w": 1845,
+   "h": 2770,
+   "dpi": 300,
+   "src": "51. Sup) Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte.pdf",
+   "blank": 0.863
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 7,
+   "file": "tab_S5.png",
+   "caption": "Table S5: Summary of key intrinsic properties obtained herein. The dopants are all on the preferred sites as predicted by DFT as discussed in the main text. The garnet (%) refers to the phase percent that is either cubic or tetragonal garnet, while cubic (%) refers solely to the phase fraction of cubic garnet. The ionic and electronic conductivities (σi and σe), the top of the stability window (Vmax) and the bottom (Vmin) were all extracted as detailed in the main text. The current in the high voltage stability test was also integrated between 3.8 and 4.3 V (HV: ʃIdt). Finally, the critical current density (CCD) was extracted as detailed in figures S12 and S13 for a cycled capacity of 0.1 mAh/cm2. Highlighted in bold are values of particular merit (a high cubic content >94%, an ionic conductivity > 5×10-5 S/cm, an electronic conductivity <2.5×10-8 S/cm, ʃIdt < 1.39 mAh/g the value for un",
+   "bbox": [
+    67.0,
+    67.4,
+    551.6,
+    701.2
+   ],
+   "w": 2020,
+   "h": 2642,
+   "dpi": 300,
+   "src": "51. Sup) Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte.pdf",
+   "blank": 0.897
+  }
+ ]
+}

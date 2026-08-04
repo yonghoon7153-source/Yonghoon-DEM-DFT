@@ -1,0 +1,506 @@
+{
+ "slug": "qian2026_decanoate_coating_lpscl_moisture_interface",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-04",
+ "sources": [
+  "44. Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf",
+  "44. Sup) Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 Characterization of DA-coated LPSCl. (a) Cryo-TEM images of coated LPSCl; (b) EDX maps of DA–LPSCl; C 1s XPS spectra of (c) bare LPSCl and (d) DA–LPSCl; (e) FTIR spectra of control samples, bare LPSCl and DA–LPSCl.",
+   "bbox": [
+    47.6,
+    26.0,
+    564.2,
+    364.9
+   ],
+   "w": 2153,
+   "h": 1413,
+   "dpi": 300,
+   "src": "44. Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf",
+   "blank": 0.475
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 Comparison of DFT-calculated binding energies (blue), distances (green) and adsorption geometries of DA on the LPSCl (010) surface via the polar head and nonpolar tail.",
+   "bbox": [
+    47.6,
+    26.0,
+    564.2,
+    639.9
+   ],
+   "w": 2153,
+   "h": 2559,
+   "dpi": 300,
+   "src": "44. Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf",
+   "blank": 0.861
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 Effectiveness of the coating against moisture. X-ray diffraction patterns of (a) bare LPSCl and (b) DA–LPSCl monitored over time. The black * represent LiCl reflections, the red * denotes the Li2O2 reflections, and + denotes the LPSCl reflections; (c) comparison of ionic conductivities of bare and DA–LPSCl as a function of exposure time in humid air; XPS spectra of (d) bare LPSCl and (e) DA-coated LPSCl before and after exposure to moisture; (e) schematic illustration of the degradation of LPSCl upon moisture exposure.",
+   "bbox": [
+    47.6,
+    26.0,
+    564.2,
+    315.9
+   ],
+   "w": 2153,
+   "h": 1209,
+   "dpi": 300,
+   "src": "44. Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf",
+   "blank": 0.841
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 Electrochemical performance of bare LPSCl and DA–LPSCl SEs using a cathode composite comprised of bare NCM85 mixed with the SE, and a Li-In anode. Initial charge/discharge profiles of SSBs using (a) DA–LPSCl and (b) bare LPSCl as the SE in a 2.8–4.3 V window; (c) Rate performance of SSB batteries assembled with bare LPSCl and DA–LPSCl; Cycling battery performance of (d) DA–LPSCl and (e) bare LPSCl.",
+   "bbox": [
+    47.6,
+    26.0,
+    564.1,
+    307.9
+   ],
+   "w": 2153,
+   "h": 1175,
+   "dpi": 300,
+   "src": "44. Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 Origin of enhanced performance of SSBs fabricated with DA-coated LPSCl compared to bare LPSCl. (a) Nyquist plots of cells assembled with bare LPSCl and DA–LPSCl before and after cycling. Cycled cells are fitted with a transmission line model; (b) S 2p XPS spectra of bare and DA– LPSCl after cycling; (c) ToF-SIMS heat maps of SOx and POx signals after 150 cycles; (d) schematic of the protection mechanism of DA-coated LPSCl; (e) FIB cross-section images of bare LPSCl and DA–LPSCl after 150 cycles at 0.2 C.",
+   "bbox": [
+    47.6,
+    26.0,
+    564.2,
+    546.8
+   ],
+   "w": 2153,
+   "h": 2171,
+   "dpi": 300,
+   "src": "44. Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf",
+   "blank": 0.501
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "FIGURE 6 Electrochemical performance of symmetric cells using bare LPSCl or DA–LPSCl. (a) Comparison of Li-Li symmetric cells assembled with DA–LPSCl and bare LPSCl; (b) schematic illustration of the role of DA in stabilizing the Li‖Li interface; full SSBs with Li metal anodes and NCM85 cathodes using (c) bare LPSCl or (d) DA–LPSCl run at 35 MPa; (e) schematic illustration of the beneficial role of DA in the composite cathode.",
+   "bbox": [
+    47.6,
+    26.0,
+    564.2,
+    377.9
+   ],
+   "w": 2153,
+   "h": 1467,
+   "dpi": 300,
+   "src": "44. Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf",
+   "blank": 0.841
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 6,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. SEM images of bare LPSCl and DA-LPSCl.",
+   "bbox": [
+    48.0,
+    232.1,
+    514.2,
+    444.2
+   ],
+   "w": 1943,
+   "h": 885,
+   "dpi": 300,
+   "src": "44. Sup) Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf",
+   "blank": 0.226
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 7,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. XRD patterns of bare LPSCl and DA-LPSCl measured using Kapton tape to protect the samples.",
+   "bbox": [
+    48.0,
+    110.0,
+    567.0,
+    570.9
+   ],
+   "w": 2163,
+   "h": 1921,
+   "dpi": 300,
+   "src": "44. Sup) Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf",
+   "blank": 0.837
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 7,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. The most stable surface of argyrodite (LPSCl) calculated from DFT, corresponding to the (010) plane with a surface energy of 0.4 J m⁻².",
+   "bbox": [
+    48.0,
+    110.0,
+    567.0,
+    570.9
+   ],
+   "w": 2163,
+   "h": 1921,
+   "dpi": 300,
+   "src": "44. Sup) Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf",
+   "blank": 0.837
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 8,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Visualization of different DA conformations after structural relaxation.",
+   "bbox": [
+    48.0,
+    26.0,
+    518.8,
+    494.1
+   ],
+   "w": 1962,
+   "h": 1951,
+   "dpi": 300,
+   "src": "44. Sup) Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 9,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Visualization of selected binding sites on LPSCl.",
+   "bbox": [
+    48.0,
+    26.0,
+    564.0,
+    262.6
+   ],
+   "w": 2150,
+   "h": 987,
+   "dpi": 300,
+   "src": "44. Sup) Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf",
+   "blank": 0.836
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 9,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Stationary bottom surface of LPSCl. No constraints were used to prevent the motion of atoms on the opposite face of the slab, showing that these atoms were stationary throughout the relaxation. This indicates that the slab thickness and vacuum size were large enough to prevent interaction between the binding site atoms and the opposite face of the slab.",
+   "bbox": [
+    48.0,
+    278.7,
+    567.0,
+    583.3
+   ],
+   "w": 2163,
+   "h": 1270,
+   "dpi": 300,
+   "src": "44. Sup) Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf",
+   "blank": 0.889
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 10,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. P 2p X-ray photoelectron spectra (taken with transfer to the XPS in an inert-atmosphere transfer chamber) on pressed pellets of a) bare and b) 2 wt% DA-LPSCl.",
+   "bbox": [
+    48.0,
+    26.0,
+    567.0,
+    297.3
+   ],
+   "w": 2163,
+   "h": 1131,
+   "dpi": 300,
+   "src": "44. Sup) Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf",
+   "blank": 0.912
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 11,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Charge and discharge profiles of ASSBs using 5 wt% DA-LPSCl as the catholyte and separator, cycled at 0.2 C in the voltage window of 2.8 to 4.3 V versus Li+/Li. The cathode is NCM85 and the anode is Li-In.",
+   "bbox": [
+    48.0,
+    26.0,
+    567.0,
+    362.9
+   ],
+   "w": 2163,
+   "h": 1405,
+   "dpi": 300,
+   "src": "44. Sup) Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 12,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Cycling performance of a cell assembled with 2 wt% DA-LPSCl as the catholyte and separator, cycled at 0.2 C in the voltage window of 2.8-4.6 V versus Li+/Li. The cathode is NCM85 and the anode is Li-In.",
+   "bbox": [
+    48.0,
+    26.0,
+    567.0,
+    298.2
+   ],
+   "w": 2163,
+   "h": 1135,
+   "dpi": 300,
+   "src": "44. Sup) Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf",
+   "blank": 0.914
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 13,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Cycling battery performance of a high-cathode loading (21 mg.cm-2) cell assembled with 2 wt % DA-LPSCl as the catholyte and separator, cycled at 0.2 C in the voltage window of 2.8 to 4.3 V versus Li+/Li. The cathode is NCM85 and the anode is Li-In.",
+   "bbox": [
+    48.0,
+    26.0,
+    567.0,
+    293.1
+   ],
+   "w": 2163,
+   "h": 1114,
+   "dpi": 300,
+   "src": "44. Sup) Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 14,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. Cyclic voltammograms (CVs) of DA-LPSCl and LPSCl solid electrolytes in carbon-SE||In cells scanned from OCV to 5.0 V followed by a reverse scan and return to OCV at 0.1 mV s−1. a) comparison of the initial cycle of bare LPSCl and 2 wt% DA-LPSCl; CV curves from the 1st to 3rd cycle for b) bare LPSCl and c) 2 wt% DA-LPSCl.",
+   "bbox": [
+    48.0,
+    26.0,
+    567.0,
+    456.7
+   ],
+   "w": 2163,
+   "h": 1796,
+   "dpi": 300,
+   "src": "44. Sup) Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 15,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Transmission line model used for evaluating the impedance growth in the composite cathode.",
+   "bbox": [
+    48.0,
+    26.0,
+    567.0,
+    301.8
+   ],
+   "w": 2163,
+   "h": 1150,
+   "dpi": 300,
+   "src": "44. Sup) Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf",
+   "blank": 0.822
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 16,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. FIB cross-sectional images of DA-LPSCl after 150 cycles at a 0.2C rate. ASSBs were assembled using the DA-LPSCl or bare LPSCl as the catholyte and separator, and Li-In as the anode at a pressure of 200 MPa.",
+   "bbox": [
+    48.0,
+    26.0,
+    567.0,
+    299.4
+   ],
+   "w": 2163,
+   "h": 1140,
+   "dpi": 300,
+   "src": "44. Sup) Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf",
+   "blank": 0.287
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 16,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. FIB cross-sectional images of bare LPSCl after 150 cycles at a 0.2C rate. ASSBs were assembled using the DA-LPSCl or bare LPSCl as the catholyte and separator, and Li-In as the anode at a pressure of 200 MPa.",
+   "bbox": [
+    48.0,
+    345.2,
+    567.0,
+    598.3
+   ],
+   "w": 2163,
+   "h": 1055,
+   "dpi": 300,
+   "src": "44. Sup) Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf",
+   "blank": 0.233
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 17,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. Relative densities and corresponding porosities of bare LPSCl, 2 wt% DA–LPSCl, and 5 wt% DA-LPSCl pellets, highlighting the progressive densification (reduced porosity) upon adding more DA.",
+   "bbox": [
+    48.0,
+    26.0,
+    577.0,
+    309.1
+   ],
+   "w": 2205,
+   "h": 1180,
+   "dpi": 300,
+   "src": "44. Sup) Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf",
+   "blank": 0.831
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 18,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. SEM images comparing the lithium metal surface morphology after cycling in symmetric cells using DA-LPSCl (left column) and bare LPSCl (right column).",
+   "bbox": [
+    48.0,
+    26.0,
+    567.0,
+    559.2
+   ],
+   "w": 2163,
+   "h": 2222,
+   "dpi": 300,
+   "src": "44. Sup) Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf",
+   "blank": 0.383
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 19,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Conformation energies and probabilities associated with DA adopting each conformation",
+   "bbox": [
+    49.0,
+    91.9,
+    536.2,
+    403.4
+   ],
+   "w": 2031,
+   "h": 1298,
+   "dpi": 300,
+   "src": "44. Sup) Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf",
+   "blank": 0.953
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 19,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Argyrodite surface terminations and their calculated energies",
+   "bbox": [
+    49.0,
+    424.4,
+    526.6,
+    630.4
+   ],
+   "w": 1991,
+   "h": 859,
+   "dpi": 300,
+   "src": "44. Sup) Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 20,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Mass loading and ionic conductivity of DA-LPSCl as a function of decanoate content (wt%). DA wt% added (%) Ionic conductivity (mS.cm-1) at 26 ± 1 °C 1 1.4 2 1.3 5 0.7 10 0.2",
+   "bbox": [
+    49.0,
+    69.0,
+    558.5,
+    169.8
+   ],
+   "w": 2123,
+   "h": 421,
+   "dpi": 300,
+   "src": "44. Sup) Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 20,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Comparison of reported surface-modified LPSCl solid electrolytes under various air exposure conditions, including exposure time and relative humidity (RH). Material Air exposure time Relative humidity (%) Conductivity after coating (mS cm-1) Conductivity retention (%) Reference OScA-LPSCl 30 minutes 35% 3.02 83 15 Li6.03P1-xSe0.03S5Cl 30 minutes 10% 3.06 57 16 ZSM-5 zeolite-LPSCl 1 hour 50% 1.27 31 17 LPSBI-Bromo 2 hours 0.5% 2.8 89 18 UDSH@LPSC 5 hours 33% 2.1 86 19 UDSH@LPSC 3 days 33% 2.1 38 19 OPA-LPSClBr 24 hours <1% RH 2.5 92 20 g-C3N4-LPSCl 3 hours 20% 0.6 72 21 PBS@LPSCl 1 hour 50% N/A ~90 22 F-PDMS@LPSCl 72 hours <1% RH 2.0 49 23 Al2O3@LPSCl 4 hours Dry O2 exposure 1.7 N/A 24 DA-LPSCl 2 hours 39% 1.13 91% This work *OScA: oxysulfide-coated LPSCl. LPSBI: Li7P2S8Br0.5I0.5. Bromo:1-bromopentane or 1BR, C5H11Br. LPSClBr: Li6PS5Cl0.5Br0.5. UDSH: undecanethiol. OPA: phosphon",
+   "bbox": [
+    49.0,
+    183.7,
+    565.8,
+    500.4
+   ],
+   "w": 2154,
+   "h": 1320,
+   "dpi": 300,
+   "src": "44. Sup) Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf",
+   "blank": 0.893
+  }
+ ]
+}

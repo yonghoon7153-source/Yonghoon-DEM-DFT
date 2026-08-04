@@ -1,0 +1,30 @@
+{
+ "slug": "liu2013_cage_methane_adsorption_hydrate_nucleation",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-04",
+ "sources": [
+  "08. Effects of cage type and adsorption face on the cage–methane adsorption interaction Implications for hydrate nucleation studies.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. The different cages used in this work. The red balls are water oxygen and the gray balls are methane. The sticks are H-bonds, in which the yellow sticks indicate the adsorption face to the dissolved methane. The cage names are shown in the top right corners, respectively, and are described as follows. (A) [5263]5 cage, the most abundant cage in the methane solution prior to hydrate nucleation [17]. According to our previous notation, [ ]5 indicates that it is an incomplete cage with ﬁve vertices with only two shared edges for each. (D) 512 cage, the most common cage in hydrates. (G) 4151062 cage, which contains 4-, 5-, and 6-membered faces and is very abundant during hydrate nucleation. (L) 51268 cage, an example of a large cage. (P) 43576271 cage containing a 7-membered face. (Q) 44566381 cage containing an 8-membered face. (S) 435663 cage, a small cage containing 4-, 5-, and ",
+   "bbox": [
+    36.5,
+    500.6,
+    568.6,
+    695.2
+   ],
+   "w": 2218,
+   "h": 812,
+   "dpi": 300,
+   "src": "08. Effects of cage type and adsorption face on the cage–methane adsorption interaction Implications for hydrate nucleation studies.pdf",
+   "blank": 0.844
+  }
+ ]
+}

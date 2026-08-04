@@ -1,0 +1,88 @@
+{
+ "slug": "zhu2020_air_stable_se_design_principles",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-04",
+ "sources": [
+  "30. Angew Chem Int Ed - 2020 - Zhu - Materials Design Principles for Air‐Stable Lithium Sodium Solid Electrolytes.pdf",
+  "30. anie202007621-sup-0001-misc_information.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Predominance phase diagrams under different H2O and H2S chemical potentials. a) Li2S\u0002LiOH\u0002Li2O (left) and Na2S\u0002NaOH\u0002Na2O (right), b) LiCl\u0002LiOH\u0002Li2O (left) and NaCl\u0002NaOH\u0002Na2O (right). The orange stars correspond to the preset conditions: 0.1% H2O and 1 ppm H2S/HCl.",
+   "bbox": [
+    43.3,
+    288.4,
+    299.8,
+    418.4
+   ],
+   "w": 1070,
+   "h": 543,
+   "dpi": 300,
+   "src": "30. Angew Chem Int Ed - 2020 - Zhu - Materials Design Principles for Air‐Stable Lithium Sodium Solid Electrolytes.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 2,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Hydrolysis reaction energy of sulfides, including 46 binary M\u0002S (grey circles), 52 ternary Li\u0002M\u0002S (green triangles) and 65 Na\u0002M\u0002S (orange triangles), as a function of cation M. More-negative reaction energy indicates worse moisture stability (moisture sensitive), whereas more-positive reaction energy indicates better moisture stability (moisture stable). The horizontal dashed lines correspond to the hydrolysis reaction energy of Li2S (green) and Na2S (orange), respectively. 17473 Angew. Chem. Int. Ed. 2020, 59, 17472 –17476 \u0002 2020 Wiley-VCH GmbH www.angewandte.org",
+   "bbox": [
+    45.0,
+    472.4,
+    582.8,
+    693.9
+   ],
+   "w": 2242,
+   "h": 924,
+   "dpi": 300,
+   "src": "30. Angew Chem Int Ed - 2020 - Zhu - Materials Design Principles for Air‐Stable Lithium Sodium Solid Electrolytes.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Hydrolysis reactions for binary chlorides M-Cl, ternary lithium chlorides Li-M-Cl, and ternary sodium chlorides Na-M-Cl. The hydrolysis reactions are calculated using the same scheme as in Figure 2. Reaction energy is normalized to per H2O. The investigated compounds include M-Cl (grey circles), lithium ternary compounds Li-M-Cl (green triangles) and sodium ternary compounds Na-M-Cl (orange triangles). Compounds with more negative hydrolysis reaction energy are less stable against moisture, while compounds with more positive hydrolysis reaction energy are more stable against moisture. The horizontal dashed lines correspond to the hydrolysis reaction energy of LiCl (green) and NaCl (orange), respectively.",
+   "bbox": [
+    40.8,
+    217.0,
+    556.9,
+    422.4
+   ],
+   "w": 2151,
+   "h": 856,
+   "dpi": 300,
+   "src": "30. anie202007621-sup-0001-misc_information.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 4,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Hydrolysis reactions for M-S, Li-M-S, Na-M-S, Li-M-Cl. All hydrolysis reactions are calculated using the same scheme as in Figure 2. Reaction energy is normalized to per H2O.",
+   "bbox": [
+    39.4,
+    89.6,
+    556.9,
+    671.5
+   ],
+   "w": 2157,
+   "h": 2425,
+   "dpi": 300,
+   "src": "30. anie202007621-sup-0001-misc_information.pdf",
+   "blank": 0.889
+  }
+ ]
+}

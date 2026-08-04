@@ -4,9 +4,86 @@
  "maxpx": 3000,
  "generated": "2026-08-04",
  "sources": [
-  "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf"
+  "40. Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
+  "40. Sup) Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf"
  ],
  "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Flowchart of approach. Our approach consists of two main eﬀorts: ionic conductivity model building and structure screening. We first screen for the prerequisite requirements of band gap, electrochemical stability, energy above the convex hull (metastability), and materials cost. We then build a structure-based ionic conductivity predictor by defining a feature space and learning from experimentally reported lithium conductors in the literature. This model enables screening for materials with high likelihood of superionic character based on atomic structural characteristics.",
+   "bbox": [
+    36.5,
+    407.8,
+    558.8,
+    676.5
+   ],
+   "w": 2177,
+   "h": 1120,
+   "dpi": 300,
+   "src": "40. Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
+   "blank": 0.868
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Model selection. (a) Plotted in red against the right vertical axis is the cross-validation misclassification rate (CVMR) for the lowest CVMR logistic regression (LR) model with the number of features given on the horizontal axis. Plotted in blue against the left vertical axis is the training misclassification rate (TMR) for the same model. The solid lines represent the true model; the dotted lines represent the mean values for the X-randomized case. The lower TMR and CVMR values for all numbers of features confirms that the model performs up to three times better than random for the CVMR. The black arrow identifies the optimal model. (b) We plot the X-randomization performance metric cRr2 for the n-feature LR models. The cRr2 parameter is above the conventional threshold of 0.5 for the optimal LR model (black arrow). This implies the model has statistical significance.",
+   "bbox": [
+    297.3,
+    264.8,
+    558.8,
+    586.1
+   ],
+   "w": 1091,
+   "h": 1340,
+   "dpi": 300,
+   "src": "40. Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
+   "blank": 0.909
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 8,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Model performance. (a) Classification performance of the training data using logistic regression. The y-axis is the likelihood of a material exhibiting an ionic conductivity above 10\u00024 S cm\u00021, which is determined by a logistic function of the inner product of the feature vector {xi} with the vector of regression coeﬃcients {hi}. Four materials are misclassified. (b) Classification performance of the training data under leave-one-out cross validation (LOOCV) using logistic regression. Again four points have been misclassified. The conspicuously strongly misclassified superionic (blue marker with smallest PLR value) is LiLa(TiO3)2, with an ionic conductivity of 1 mS cm\u00021. This remarkable change in superionic probability under LOOCV suggests LiLa(TiO3)2 is an influential high-conductivity regime data point that changes the model significantly when removed.",
+   "bbox": [
+    36.5,
+    37.0,
+    298.0,
+    371.1
+   ],
+   "w": 1090,
+   "h": 1393,
+   "dpi": 300,
+   "src": "40. Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 10,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Screening results. The predicted likelihood of superionic character for 1054 stable non-metallic lithium-containing materials in the Materials Project database is plotted against the normalized distance-based con- fidence metric d. A smaller value of d indicates a lesser degree of extrapolation outside the training region and therefore higher confidence in the prediction. The upper and lower error bars for each material correspond to the standard deviation of the LOO ionic conductivity predictions. Note that the majority of classifications are non-superionic, as we might expect. Materials plotted in black belong to the subset of 21 stable materials with high oxidative decomposition voltages and band gaps, no transition metals, and high superionic probability.",
+   "bbox": [
+    36.5,
+    365.7,
+    298.0,
+    553.1
+   ],
+   "w": 1090,
+   "h": 782,
+   "dpi": 300,
+   "src": "40. Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
+   "blank": 0.783
+  },
   {
    "key": "fS1",
    "kind": "figure",
@@ -23,7 +100,7 @@
    "w": 1838,
    "h": 1360,
    "dpi": 300,
-   "src": "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf",
+   "src": "40. Sup) Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
    "blank": 0.96
   },
   {
@@ -42,7 +119,7 @@
    "w": 1857,
    "h": 1401,
    "dpi": 300,
-   "src": "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf",
+   "src": "40. Sup) Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
    "blank": 0.924
   },
   {
@@ -61,7 +138,7 @@
    "w": 1857,
    "h": 1574,
    "dpi": 300,
-   "src": "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf",
+   "src": "40. Sup) Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
    "blank": 0.853
   },
   {
@@ -80,7 +157,7 @@
    "w": 1853,
    "h": 1348,
    "dpi": 300,
-   "src": "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf",
+   "src": "40. Sup) Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
    "blank": 0.642
   },
   {
@@ -99,8 +176,65 @@
    "w": 1858,
    "h": 1575,
    "dpi": 300,
-   "src": "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf",
+   "src": "40. Sup) Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
    "blank": 0.917
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1 Training set. The training set consists of the 40 materials and their reported RT ionic conductivity values shown here. References for the atomistic structures are given in the rightmost column and references for the ionic conductivity values are given in the second-from-right column. Because this set includes many diverse structures, we can apply the resulting conductivity model to any crystalline material RT bulk ionic conductivity (S cm\u00021) Ionic conductivity ref. Structure ref. Composition LiLa(TiO3)2 1 \u0003 10\u00023 17 29 Li9.81Sn0.81P2.19S12 5.5 \u0003 10\u00023 30 30 Li10Ge(PS6)2 1.4 \u0003 10\u00022 7 31 Li10.35Si1.35P1.65S12 6.5 \u0003 10\u00023 30 30 Li14ZnGe4O16(2) 1.0 \u0003 10\u00026 32 33 and 34 Li2Ca(NH)2 6.4 \u0003 10\u00026 35 36 Li2Ge7O15 5.0 \u0003 10\u00026 37 38 Li2NH 2.5 \u0003 10\u00024 35 39 Li2S 1.0 \u0003 10\u000213 40 41 Li13.6Si2.8S1.2O16 6.0 \u0003 10\u00027 42 43 Li14Ge2V2O16 7.0 \u0003 10\u00025 44 45 Li15Ge3V2O4 6.03 \u0003 10\u00026 46 47 Li14.8Ge3.4W0.6O4 4.0 \u0003 ",
+   "bbox": [
+    37.5,
+    22.0,
+    558.1,
+    760.6
+   ],
+   "w": 2112,
+   "h": 2996,
+   "dpi": 292,
+   "src": "40. Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 5,
+   "file": "tab_2.png",
+   "caption": "Table 2 Atomistic features. The given 20 features are analysed in the combinatorial (all combinations considered) model-building process. In the second column are the Pearson’s rho values for conductivity correlation for the structures in the training set, none of which are greater than \u00050.3 and thus no single feature forms a robust screening criterion. The italicized features are used in the screening model and their logistic regression coeﬃcients are given in the rightmost column. A positive-signed coeﬃcient indicates a positive correlation with ionic conductivity within the model, while a negative-signed coeﬃcient indicates a negative correlation. The relative magnitude of the coeﬃcient indicates the feature’s importance to the model. ‘‘Nearest neighbours,’’ as used in features 2, 3, 4, 5, 6, 7, 8, 19, and 20, are defined to be all atoms within 4 Å. This large cutoﬀmay count second ne",
+   "bbox": [
+    37.5,
+    22.0,
+    557.8,
+    760.6
+   ],
+   "w": 2111,
+   "h": 2996,
+   "dpi": 292,
+   "src": "40. Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 10,
+   "file": "tab_3.png",
+   "caption": "Table 3 Screening results. A list of the results of the holistic Materials Project screening is given with all material specifications, ranked in order of overall predicted performance across all specifications. Materials are screened to identify those compounds with: superionic probability PLR Z 50%; band gap Egap Z 1 eV; upper bound oxidation potential V˜ox Z 4 V; no transition metals (T = 0); energy above the convex hull Ehull = 0 eV per atom. Also provided is the distance-based superionic prediction confidence metric d, the leave-one-out standard deviation of PLR e; a Boolean indicator A of whether the material is inside the applicability domain of the model, the estimated materials cost per m2 per 10 mm material thickness; and the earth abundance index IA. References are given in the right-most column for those materials that have been already studied in the literature or are simila",
+   "bbox": [
+    37.5,
+    22.0,
+    558.1,
+    760.6
+   ],
+   "w": 2112,
+   "h": 2996,
+   "dpi": 292,
+   "src": "40. Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
+   "blank": 0.875
   },
   {
    "key": "tS1",
@@ -118,7 +252,7 @@
    "w": 1894,
    "h": 2704,
    "dpi": 300,
-   "src": "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf",
+   "src": "40. Sup) Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
    "blank": 0.882
   },
   {
@@ -137,7 +271,7 @@
    "w": 1216,
    "h": 1557,
    "dpi": 300,
-   "src": "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf",
+   "src": "40. Sup) Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
    "blank": 0.905
   },
   {
@@ -156,7 +290,7 @@
    "w": 1971,
    "h": 2739,
    "dpi": 300,
-   "src": "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf",
+   "src": "40. Sup) Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
    "blank": 0.885
   },
   {
@@ -175,7 +309,7 @@
    "w": 1846,
    "h": 2725,
    "dpi": 300,
-   "src": "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf",
+   "src": "40. Sup) Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
    "blank": 0.899
   }
  ]

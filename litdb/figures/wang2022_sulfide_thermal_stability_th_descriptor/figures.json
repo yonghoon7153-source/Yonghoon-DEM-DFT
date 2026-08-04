@@ -1,0 +1,106 @@
+{
+ "slug": "wang2022_sulfide_thermal_stability_th_descriptor",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-04",
+ "sources": [
+  "29. InfoMat - 2022 - Wang - Improving thermal stability of sulfide solid electrolytes  An intrinsic theoretical paradigm.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 7,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 Thermal stability experiments of Li7P3S11-X%P2S3 (X = 0, 5, 10, 20, 30). (A) XRD patterns of Li7P3S11-X%P2S3 (X = 0, 5, 10, 20, 30) at 200–600\u0001C. The different colors are used to distinguish the different P2S3 contents. The complete XRD spectrum is shown on the left, and the enlarged view of the 28–34\u0001 region is shown on the right. (B) Differential scanning calorimetry (DSC) spectra of Li7P3S11-X%P2S3(X = 0, 5, 10, 20, 30). The arrows depict the trend of the main exothermic peaks. (C) Raman spectra of Li7P3S11-X%P2S3 (X = 0, 5, 10, 20, 30). The peak at about 380 cm\u00031 belongs to P2S6 4\u0003 polyhedra, the peak at 405 cm\u00031 belongs to P2S7 4\u0003 polyhedra and the peak at 420 cm\u00031 belongs to PS4 3\u0003 polyhedra. (D) X-ray diffraction (XRD), DSC, and the thermal stability parameter Th0 values of Li7P3S11 with different atomic ratios",
+   "bbox": [
+    39.6,
+    33.0,
+    553.9,
+    468.5
+   ],
+   "w": 2143,
+   "h": 1816,
+   "dpi": 300,
+   "src": "29. InfoMat - 2022 - Wang - Improving thermal stability of sulfide solid electrolytes  An intrinsic theoretical paradigm.pdf",
+   "blank": 0.862
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 9,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 Thermal stability parameter Th0 values of Li3PS4 modified by doping, where the values are marked below each element symbol for the whole Periodic Table. The redder the color where the element is, the greater the Th0 value and the better the thermal stability of the doped Li3PS4. The blue color corresponds to the opposite trend",
+   "bbox": [
+    39.6,
+    375.9,
+    553.6,
+    713.1
+   ],
+   "w": 2142,
+   "h": 1406,
+   "dpi": 300,
+   "src": "29. InfoMat - 2022 - Wang - Improving thermal stability of sulfide solid electrolytes  An intrinsic theoretical paradigm.pdf",
+   "blank": 0.801
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 9,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 (A) X-ray diffraction (XRD) pattern of Li3PS4 at 200–600\u0001C after doping with Cu, Si, Sn, and O elements. (B) differential scanning calorimetry (DSC) pattern of Li3PS4-5%M (M = Cu, Si, Sn, O). (C) Nyquist pattern of Li3PS4-5%M (M = Cu, Si, Sn, O) at room temperature",
+   "bbox": [
+    39.6,
+    375.9,
+    554.6,
+    713.1
+   ],
+   "w": 2146,
+   "h": 1406,
+   "dpi": 300,
+   "src": "29. InfoMat - 2022 - Wang - Improving thermal stability of sulfide solid electrolytes  An intrinsic theoretical paradigm.pdf",
+   "blank": 0.804
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 11,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 Thermal stability experiments of typical LixPySz sulfide solid electrolytes (SEs). (A) Schematic illustration of the heating apparatus to test thermal stability of sulfide SE, which is sealed in a quartz tube. (B) Experimental photos of typical sulfide SEs Li3PS4, Li7P3S11, and Li6PS5Cl at different temperatures. The red box shows the large changes of sulfide SEs at high temperature, which can non- quantitatively reflect the stability of sulfide SEs. (C) i–iii show the X-ray diffraction (XRD) diffraction patterns of Li3PS4, Li6PS5Cl, and Li7P3S11 at different temperatures, respectively. (D) The differential scanning calorimetry (DSC) test results of Li3PS4, Li6PS5Cl, and Li7P3S11. (E) XRD, DSC, and thermal stability parameter Th0 values of common sulfide SEs. The different colored bars indicate the Li/P/S atomic ratio of each sulfide SEs. It is worth noting that Li4P2S6 and Li2P",
+   "bbox": [
+    39.6,
+    33.0,
+    554.4,
+    410.0
+   ],
+   "w": 2146,
+   "h": 1572,
+   "dpi": 300,
+   "src": "29. InfoMat - 2022 - Wang - Improving thermal stability of sulfide solid electrolytes  An intrinsic theoretical paradigm.pdf",
+   "blank": 0.748
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 13,
+   "file": "fig_6.png",
+   "caption": "FIGURE 6 Schematic illustration of the new theoretical paradigm and rule between the thermal stability of a SE and its structure. The new theoretical paradigm is presented from three perspectives, namely “performance-structure-rule”. From a macroscopic point of view, thermal stability is the performance of ASSBs, which is determined by their main components. From a microscopic perspective, the thermal stability of each solid-state electrolyte material is determined by its structure, which is further subdivided into the crystal structure, polyhedra structure, and bonding. The macroscopic and microscopic relationships are summarized as linear rules involving factors such as the structure of the material, chemical bonding, and energy correction factor k",
+   "bbox": [
+    39.6,
+    33.0,
+    551.4,
+    295.3
+   ],
+   "w": 2133,
+   "h": 1094,
+   "dpi": 300,
+   "src": "29. InfoMat - 2022 - Wang - Improving thermal stability of sulfide solid electrolytes  An intrinsic theoretical paradigm.pdf",
+   "blank": 0.82
+  }
+ ]
+}

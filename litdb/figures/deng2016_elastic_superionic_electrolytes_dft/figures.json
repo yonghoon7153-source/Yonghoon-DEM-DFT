@@ -1,0 +1,30 @@
+{
+ "slug": "deng2016_elastic_superionic_electrolytes_dft",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-04",
+ "sources": [
+  "34. Elastic Properties of Alkali Superionic Conductor Electrolytes from First Principles Calculations.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 8,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Plot of the shear modulus (G) vs bulk modulus (B) for all inves- tigated SICEs calculated using the PBEsol functional. Dashed lines are the iso-Young’s modulus lines in GPa. Two dotted lines correspond to G/B = 0.5 and G/B = 0.6.",
+   "bbox": [
+    29.9,
+    26.0,
+    289.0,
+    212.8
+   ],
+   "w": 1081,
+   "h": 779,
+   "dpi": 300,
+   "src": "34. Elastic Properties of Alkali Superionic Conductor Electrolytes from First Principles Calculations.pdf",
+   "blank": 0.915
+  }
+ ]
+}

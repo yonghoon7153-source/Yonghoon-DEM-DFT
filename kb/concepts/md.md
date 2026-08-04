@@ -292,3 +292,7 @@ UMA-s-1p1(omat), Langevin NVT, dt 2 fs, friction 0.02, equilib 5 ps / prod 200 p
 > (정의 차이 · BV 결손 물리 4가지 · 부호 뒤섞임 실측 · 신뢰도 순서).
 
 *tags: MLIP-MD · PMF · potential of mean force · 자유에너지 지형 · percolation free energy · UMA · Langevin NVT · MSD · Einstein relation · Arrhenius · activation energy · Nernst-Einstein · Li diffusion · multiseed*
+
+---
+## 첨부 (업로드)
+- `docs/uploads/md/pmf 관련 설명.pdf`

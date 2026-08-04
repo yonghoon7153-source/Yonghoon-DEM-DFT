@@ -1,0 +1,106 @@
+{
+ "slug": "dyre2004_hopping_models_ion_conduction_noncrystals",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-04",
+ "sources": [
+  "12. Hopping models for ion conduction in noncrystals.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1: Typical potential for a system described by the RBM, shown here in one dimension. The barriers are",
+   "bbox": [
+    50.7,
+    353.4,
+    295.5,
+    471.6
+   ],
+   "w": 1021,
+   "h": 493,
+   "dpi": 300,
+   "src": "12. Hopping models for ion conduction in noncrystals.pdf",
+   "blank": 0.968
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2: Percolation on a two-dimensional square lattice. The upper picture shows the situation below the",
+   "bbox": [
+    302.3,
+    103.6,
+    547.1,
+    521.5
+   ],
+   "w": 1021,
+   "h": 1742,
+   "dpi": 300,
+   "src": "12. Hopping models for ion conduction in noncrystals.pdf",
+   "blank": 0.865
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3: Computer simulations of the random barrier model in three dimensions with the uniform barrier",
+   "bbox": [
+    50.7,
+    303.4,
+    295.5,
+    638.1
+   ],
+   "w": 1021,
+   "h": 1395,
+   "dpi": 300,
+   "src": "12. Hopping models for ion conduction in noncrystals.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Fig. 4: Computer simulations of the random barrier model for several barrier distributions [10]. The figure shows the ac conductivity relative to the dc conductivity as function of scaled frequency at low temperatures. The dots are shown as a guide to the eye giving a line of slope one, while the full line is the classical effective medium approximation (EMA). Today more advanced analytical",
+   "bbox": [
+    302.3,
+    336.7,
+    547.1,
+    538.2
+   ],
+   "w": 1021,
+   "h": 841,
+   "dpi": 300,
+   "src": "12. Hopping models for ion conduction in noncrystals.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5: RBM-prediction for the ac conductivity versus",
+   "bbox": [
+    302.3,
+    386.8,
+    547.0,
+    574.0
+   ],
+   "w": 1021,
+   "h": 781,
+   "dpi": 300,
+   "src": "12. Hopping models for ion conduction in noncrystals.pdf",
+   "blank": 0.89
+  }
+ ]
+}

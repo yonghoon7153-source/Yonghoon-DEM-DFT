@@ -1,0 +1,525 @@
+{
+ "slug": "kim2026_li_argyrodite_sei_reactive_md",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-04",
+ "sources": [
+  "03. Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
+  "03. Sup) Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. (a) Schematic illustration of the synthesis process for Li6+2xP1-xInxS5Cl electrolytes. (b) XRD patterns of Li6+2xP1-xInxS5Cl electrolytes. (c) XRD pattern of Li6+2xP1-xInxS5Cl electrolytes in the 2θ range of 29◦-32◦. (d) SEM image and corresponding EDS spectrum of LPSC-In0.08. (e) XRD Rietveld refinement results for LPSC and (f) LPSC-In0.08 electrolytes. (g) Raman spectra of Li6+2xP1-xInxS5Cl electrolytes. (h) P 2p, (i) S 2p, and (j) In 3d XPS spectra of the LPSC-In0.08. 3",
+   "bbox": [
+    31.6,
+    139.6,
+    565.8,
+    711.7
+   ],
+   "w": 2227,
+   "h": 2385,
+   "dpi": 300,
+   "src": "03. Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
+   "blank": 0.817
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (a) Nyquist plots of Li6+2xP1-xInxS5Cl electrolytes. (b) Arrhenius plots of ionic conductivity versus temperature for Li6+2xP1-xInxS5Cl electrolytes. (c) Rela­ tionship between ionic conductivity and activation energy for Li6+2xP1-xInxS5Cl electrolytes. (d) Cyclic voltammetry curves of LPSC+VGCF/LPSC/Li and LPSC-In0.08 + VGCF/LPSC-In0.08/Li batteries at 1 mV s−1. Critical current density of (e) Li/LPSC/Li and (f) Li/LPSC-In0.08/Li. (g) Galvanostatic cycling performance of Li/ LPSC/Li and Li/LPSC-In0.08/Li at 0.2 mA cm−2/0.2 mAh cm−2. pronounced reduction current is observed below 1.5 V, corresponding to the reduction reaction of PS4 from the Fermi level (Ef). This downward shift indicates that the valence electrons of S are more energetically stable, making them less suscep­ tible to being extracted during oxidation. This electronic stabilization corroborates the shift observed i",
+   "bbox": [
+    31.6,
+    46.1,
+    566.0,
+    444.0
+   ],
+   "w": 2228,
+   "h": 1658,
+   "dpi": 300,
+   "src": "03. Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
+   "blank": 0.799
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. (a) Schematic diagram of all-solid-state battery structure. (b) Initial charge and discharge curves at 0.05C and 30 ◦C. (c) Cycling performance of the all-solid- state battery assembled with Li6+2xP1-xInxS5Cl electrolytes at 0.5C. (d) Rate performance of the all-solid-state battery assembled with Li6+2xP1-xInxS5Cl electrolytes. (e) Charge and discharge curves of NCM811/LPSC-In0.08/Li-In solid-state batteries at different rates. 6",
+   "bbox": [
+    31.6,
+    183.6,
+    565.8,
+    711.7
+   ],
+   "w": 2227,
+   "h": 2201,
+   "dpi": 300,
+   "src": "03. Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
+   "blank": 0.864
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Electrochemical impedance spectra and corresponding DRT curves of (a, b, e, f) NCM811/LPSC/Li-In and (c, d, g, h) NCM811/LPSC-In0.08/Li-In batteries at different potentials during the first cycle.",
+   "bbox": [
+    31.6,
+    46.1,
+    565.8,
+    269.0
+   ],
+   "w": 2227,
+   "h": 929,
+   "dpi": 300,
+   "src": "03. Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
+   "blank": 0.624
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. (a) Cyclic voltammetry curves of NCM811/LPSC/Li-In and (b) NCM811/LPSC-In0.08/Li-In at different scan rates. (c) Relationship between peak current and scan rate in cyclic voltammetry curves of all-solid-state batteries assembled with Li6+2xP1-xInxS5Cl electrolytes. GITT curves of (d) NCM811/LPSC/Li-In and (e) NCM811/LPSC-In0.08/Li-In during initial cycle. (f) Li+ diffusion coefficient during charging and discharging. depicted in Fig. 5(c). The results indicate that the Li+ diffusion co­ efficients of the In-doped samples are higher than those of the undoped samples, consistent with their higher ionic conductivity results. This phenomenon may be attributed to severe interfacial side reactions be­ tween undoped LPSC and NCM811, which are effectively suppressed by In doping. This suppression reduces interfacial impedance, thereby promoting Li+ diffusion kinetics. the kinetic charact",
+   "bbox": [
+    31.6,
+    294.3,
+    566.0,
+    601.1
+   ],
+   "w": 2228,
+   "h": 1279,
+   "dpi": 300,
+   "src": "03. Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. SEM images and corresponding EDS mappings of the (a) NCM811/LPSC and (b) NCM811/LPSC-In0.08 composite cathodes after 200 cycles. 9",
+   "bbox": [
+    53.9,
+    421.7,
+    541.4,
+    730.8
+   ],
+   "w": 2032,
+   "h": 1288,
+   "dpi": 300,
+   "src": "03. Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
+   "blank": 0.079
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. (a) S 2p, (b) P 2p XPS spectra of the LPSC after 200 cycles. (c) S 2p, (d) P 2p XPS spectra of the LPSC-In0.08 after 200 cycles. 131.66 and 132.76 eV correspond to PS4 3−, those at 133.31 and 133.85 eV to P2Sx species, and the peaks at 133.85 and 134.75 eV are assigned to phosphorus oxides (POx). Notably, the relative peak areas of P2Sx and POx are significantly lower in LPSC-In0.08 than in pristine LPSC, further confirming the mitigated interfacial side reactions enabled by In doping. Additionally, the In 3d spectrum of LPSC-In0.08 show no detectable changes after cycling, suggesting that In maintains a stable valence state and does not participate in detrimental interfacial redox processes. The Cl 2p spectrum is dominated by the characteristic peaks of Cl−species and remains essentially unchanged [61]. Overall, these XPS results demonstrate that In doping effectively suppresses",
+   "bbox": [
+    31.6,
+    46.1,
+    566.0,
+    395.0
+   ],
+   "w": 2228,
+   "h": 1454,
+   "dpi": 300,
+   "src": "03. Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
+   "blank": 0.877
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. (a) SEM image and corresponding (b-f) EDS spectrum of LiNbO3-coated single-crystal LiNi0.8Co0.1Mn0.1O2.",
+   "bbox": [
+    50.7,
+    26.0,
+    537.2,
+    407.8
+   ],
+   "w": 2028,
+   "h": 1592,
+   "dpi": 300,
+   "src": "03. Sup) Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
+   "blank": 0.209
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. (a-b) SEM image and corresponding (c-e) EDS spectrum of LPSC.",
+   "bbox": [
+    50.7,
+    26.0,
+    544.6,
+    268.0
+   ],
+   "w": 2059,
+   "h": 1009,
+   "dpi": 300,
+   "src": "03. Sup) Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
+   "blank": 0.287
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. (a) Li 1s, (b) P 2p, (c) S 2p, (d) Cl 2p XPS spectra of the LPSC. (e) Li 1s and (f) Cl 2p XPS spectra of the LPSC-In0.08.",
+   "bbox": [
+    50.7,
+    26.0,
+    544.6,
+    392.8
+   ],
+   "w": 2059,
+   "h": 1529,
+   "dpi": 300,
+   "src": "03. Sup) Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
+   "blank": 0.844
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Nyquist plots of Li6+2xP1-xInxS5Cl (x = (a) 0, (b) 0.05, (c) 0.08, (d) 0.1) electrolytes at temperatures from 20 to 70°C.",
+   "bbox": [
+    50.7,
+    26.0,
+    544.6,
+    455.2
+   ],
+   "w": 2059,
+   "h": 1789,
+   "dpi": 300,
+   "src": "03. Sup) Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
+   "blank": 0.834
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. (a) DC polarization curves and (b-c) enlarged views of Li6+2xP1-xInxS5Cl (x = 0, 0.05, 0.08, 0.1).",
+   "bbox": [
+    50.7,
+    26.0,
+    544.6,
+    236.8
+   ],
+   "w": 2059,
+   "h": 879,
+   "dpi": 300,
+   "src": "03. Sup) Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
+   "blank": 0.886
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Calculated (a) TDOS and (b) PDOS of LPSC and LPSC-In0.08.",
+   "bbox": [
+    50.7,
+    26.0,
+    544.6,
+    299.2
+   ],
+   "w": 2059,
+   "h": 1139,
+   "dpi": 300,
+   "src": "03. Sup) Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
+   "blank": 0.885
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Critical current density of (a) Li/LPSC-In0.05/Li and (b) Li/LPSC-In0.1/Li.",
+   "bbox": [
+    50.7,
+    26.0,
+    544.6,
+    283.6
+   ],
+   "w": 2059,
+   "h": 1074,
+   "dpi": 300,
+   "src": "03. Sup) Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
+   "blank": 0.88
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 9,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Coulombic efficiency of the all-solid-state battery assembled with Li6+2xP1-xInxS5Cl electrolytes over the first 10 cycles at 0.05 C.",
+   "bbox": [
+    50.7,
+    26.0,
+    539.8,
+    392.6
+   ],
+   "w": 2039,
+   "h": 1528,
+   "dpi": 300,
+   "src": "03. Sup) Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
+   "blank": 0.886
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 10,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Cycling performance of NCM811/LPSC/Li-In and NCM811/LPSC-In0.08/Li-In batteries at 0.5 C under 10 MPa.",
+   "bbox": [
+    50.7,
+    26.0,
+    544.6,
+    439.2
+   ],
+   "w": 2059,
+   "h": 1723,
+   "dpi": 300,
+   "src": "03. Sup) Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
+   "blank": 0.911
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 11,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Charge and discharge curves of (a) NCM811/LPSC/Li-In, (b) NCM811/LPSC-In0.05/Li-In, and (c) NCM811/LPSC-In0.10/Li-In solid-state batteries at different rates.",
+   "bbox": [
+    50.7,
+    26.0,
+    544.6,
+    236.8
+   ],
+   "w": 2059,
+   "h": 879,
+   "dpi": 300,
+   "src": "03. Sup) Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
+   "blank": 0.859
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 12,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. Electrochemical impedance spectra and corresponding DRT curves of (a, b, e, f) NCM811/LPSC- In0.05/Li-In and (c, d, g, h) NCM811/LPSC-In0.10/Li-In batteries at different potentials during the first cycle.",
+   "bbox": [
+    50.7,
+    26.0,
+    544.6,
+    299.2
+   ],
+   "w": 2059,
+   "h": 1139,
+   "dpi": 300,
+   "src": "03. Sup) Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
+   "blank": 0.694
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 13,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Charge transfer impedance of the all-solid-state battery assembled with Li6+2xP1-xInxS5Cl electrolytes at different voltages during the first cycle.",
+   "bbox": [
+    50.7,
+    26.0,
+    540.0,
+    424.0
+   ],
+   "w": 2040,
+   "h": 1659,
+   "dpi": 300,
+   "src": "03. Sup) Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
+   "blank": 0.893
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 14,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. EIS curves of The NCM811/LPSC/Li-In and NCM811/LPSC-In0.08/Li-In battery at 3.7 V after the 1st and 100th cycles.",
+   "bbox": [
+    50.7,
+    26.0,
+    544.6,
+    486.4
+   ],
+   "w": 2059,
+   "h": 1919,
+   "dpi": 300,
+   "src": "03. Sup) Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 15,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Cyclic voltammetry curves of (a) NCM811/LPSC-In0.05/Li-In and (f) (b) NCM811/LPSC-In0.1/Li-In at different scan rates.",
+   "bbox": [
+    50.7,
+    26.0,
+    546.9,
+    283.6
+   ],
+   "w": 2068,
+   "h": 1074,
+   "dpi": 300,
+   "src": "03. Sup) Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
+   "blank": 0.872
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 16,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. GITT curves of (a) NCM811/LPSC-In0.05/Li-In and (b) NCM811/LPSC-In0.10/Li-In during initial cycle. (c)Li+ diffusion coefficient during charging and discharging.",
+   "bbox": [
+    50.7,
+    26.0,
+    544.8,
+    239.5
+   ],
+   "w": 2059,
+   "h": 890,
+   "dpi": 300,
+   "src": "03. Sup) Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 17,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. High-resolution transmission electron microscopy images of cycled (a) NCM811/LPSC and (b) NCM811/LPSC-In0.08 composite cathodes after 200 cycles.",
+   "bbox": [
+    50.7,
+    26.0,
+    544.6,
+    329.6
+   ],
+   "w": 2059,
+   "h": 1266,
+   "dpi": 300,
+   "src": "03. Sup) Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
+   "blank": 0.337
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 18,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. (a) Cl 2p XPS spectrum of the LPSC after 200 cycles. (b) Cl 2p and (c) In 3d XPS spectra of the LPSC-In0.08 after 200 cycles.",
+   "bbox": [
+    50.7,
+    26.0,
+    544.6,
+    236.2
+   ],
+   "w": 2059,
+   "h": 877,
+   "dpi": 300,
+   "src": "03. Sup) Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
+   "blank": 0.861
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 19,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Crystallographic data (lattice parameters, atomic coordinates, and occupancy) of Li6PS5Cl (space group = F-43m) obtained from Rietveld refinement of X-ray diffraction data.",
+   "bbox": [
+    51.7,
+    97.9,
+    545.0,
+    457.2
+   ],
+   "w": 2056,
+   "h": 1498,
+   "dpi": 300,
+   "src": "03. Sup) Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
+   "blank": 0.966
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 20,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Crystallographic data (lattice parameters, atomic coordinates, and occupancy) of Li6.16P0.92In0.08S5Cl (space group = F-43m) obtained from Rietveld refinement of X-ray diffraction data.",
+   "bbox": [
+    51.7,
+    71.8,
+    543.8,
+    474.3
+   ],
+   "w": 2051,
+   "h": 1678,
+   "dpi": 300,
+   "src": "03. Sup) Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
+   "blank": 0.966
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 21,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Summary of the sulfide electrolyte-based all-solid-state batteries performance. Doping element Ionic conductivity Cathode/electrolyte/anode Cycling stability (current density",
+   "bbox": [
+    51.7,
+    58.9,
+    703.8,
+    393.3
+   ],
+   "w": 2718,
+   "h": 1394,
+   "dpi": 300,
+   "src": "03. Sup) Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
+   "blank": 0.936
+  }
+ ]
+}

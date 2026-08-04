@@ -1,0 +1,106 @@
+{
+ "slug": "yang2025_lao_dualdoping_argyrodite_lacl3",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-04",
+ "sources": [
+  "27. La,O co doped LPSC_PO bond, LaCl3 형성.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. (a) XRD patterns of the prepared Li5.5+2xP1-xLaxS4.5-1.5xO1.5xCl1.5 electrolytes (x = 0.02, 0.04, 0.05, and 0.10). (b) XRD refinement and (c) crystal structural of the LPSC-La0.04 material. SEM images of the prepared (d) LPSC and (e) LPSC-La0.04. (f) Li-ion conductivity variations of the obtained electrolyte at RT. (g) Arrhenius plots derived from Li-ion conductivities of these different compositions measured at various temperatures. (h) RT electronic conductivities of LPSC and LPSC-La0.04. composite anode material was then positioned on the opposite side of the electrolyte, and a specific pressure was applied to complete the battery assembly. microscopy (SEM) images were acquired using a TESCAN MIRA LMS field-emission scanning electron microscope coupled with a Smartedx energy spectroscopy system. These techniques were employed to analyze the elemental distribution and morpholog",
+   "bbox": [
+    31.6,
+    46.1,
+    566.0,
+    530.4
+   ],
+   "w": 2228,
+   "h": 2019,
+   "dpi": 300,
+   "src": "27. La,O co doped LPSC_PO bond, LaCl3 형성.pdf",
+   "blank": 0.733
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (a) The quantity of H2S produced by the obtained materials at a testing humidity of 50–55 % and ambient temperature within 30 min. (b) XRD patterns of LPSC and LPSC-La0.04 after 30 min at RH = 50–55 %. (c) Electrolyte conductivity changes before and after 30 min at RH = 50–55 %. (d) The corresponding Arrhenius plots of LPSC and LPSC-La0.04. (f) Activation energy changes before and after 30 min at RH = 50–55 %. (e) Conductivity of electrolyte LPSC-La0.04 exposed to humidity of 40–45 % for 30 min at different annealing temperatures. (f) Conductivity of two electrolytes LPSC and LPSC-La0.04 after 30 min of leakage in an environment of RH = 40–45 % and the conductivity after sintering at 500 ◦C and conductivity of electrolyte powder LPSC-La0.04. Digital photos of the LPSC-La0.04 pellet before and after exposure, as well as after annealing at different temperatures, are shown in (g) a",
+   "bbox": [
+    31.6,
+    46.1,
+    566.0,
+    575.8
+   ],
+   "w": 2228,
+   "h": 2208,
+   "dpi": 300,
+   "src": "27. La,O co doped LPSC_PO bond, LaCl3 형성.pdf",
+   "blank": 0.823
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Critical current densities (CCD) of (a) Li/LPSC/Li, (b) Li/LPSC-La0.02/Li, (c) Li/LPSC-La0.04/Li, (d) Li/LPSC-La0.05/Li and (e) Li/LPSC-La0.10/Li. (f) CCD summary of these electrolytes. (g) Galvanostatic lithium stripping/plating behaviors of Li/LPSC/Li and Li/LPSC-Sn0.08/Li symmetric cells at 0.5 mA cm−2 and 0.5 mAh cm−2. Schematic of the Li stripping and plating processes for (h) LPSC/Li and (i) LPSC-La0.04/Li interface. (j) The enlarged image of interface (i). electrolyte, powder samples were exposed directly to a natural envi­ ronment with 40–45 %RH for 30 min and digital photos taken before and after exposure, as well as post-annealing images, are presented in Fig. 2h EIS measurements of the exposed powder indicate a conductivity of 7.48 × 10−2 mS cm−1. Following annealing at 500 ◦C, the conduc­ tivity was measured to be 6.4 × 10−1 mS cm−1 (Fig. 2f). This result shows that e",
+   "bbox": [
+    31.6,
+    46.1,
+    566.0,
+    573.6
+   ],
+   "w": 2228,
+   "h": 2199,
+   "dpi": 300,
+   "src": "27. La,O co doped LPSC_PO bond, LaCl3 형성.pdf",
+   "blank": 0.769
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. (a) Cycling performances of the ZrO2@NCM955/LPSC/Li-In and ZrO2@NCM955/LPSC-La0.04/Li-In ASSLMBs at C. (b) Nyquist plots of ZrO2@NCM955/ LPSC/Li-In and ZrO2@NCM955/LPSC-La0.04/Li-In after 100 cycles at 1C. (c) The initial charge/ discharge profiles and (d) rate capability test of the above batteries cycled at different C-rates at RT. increases linearly with the current density until a sudden drop occurs, indicating a short circuit due to lithium dendrite penetration through the electrolyte. The current density at this point is referred to as the critical current density (CCD), a value that typically reflects the solid electrolyte’s ability to suppress lithium dendrite growth [50]. Testing results reveal that the CCD of the pristine LPSC is 0.9 mA cm−2. For x = 0.02, 0.04, 0.05 and 0.10, the CCD values are 2.4, 3.1, 2.2, 2.0, mA cm−2, respectively. Thus, it can be observed that at",
+   "bbox": [
+    31.6,
+    46.1,
+    566.0,
+    341.8
+   ],
+   "w": 2228,
+   "h": 1233,
+   "dpi": 300,
+   "src": "27. La,O co doped LPSC_PO bond, LaCl3 형성.pdf",
+   "blank": 0.886
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Distribution of relaxation time (DRT) analysis conducted for the assembled batteries, including (a, b) ZrO2@NCM955/LPSC/Li-In and (c, d) ZrO2@NCM955/ LPSC-La0.04/Li-In, under various states of charge (SOC) and discharge (SOD) after completing the 100th cycle at 1C. All measurements were carried out at room temperature.",
+   "bbox": [
+    31.6,
+    46.1,
+    565.8,
+    696.0
+   ],
+   "w": 2227,
+   "h": 2709,
+   "dpi": 300,
+   "src": "27. La,O co doped LPSC_PO bond, LaCl3 형성.pdf",
+   "blank": 0.831
+  }
+ ]
+}

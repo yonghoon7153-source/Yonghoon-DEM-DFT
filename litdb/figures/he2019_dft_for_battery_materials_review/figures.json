@@ -1,0 +1,410 @@
+{
+ "slug": "he2019_dft_for_battery_materials_review",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-04",
+ "sources": [
+  "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. a) Temperature-dependent and b) pressure-dependent free energy curves (relative to C2) of different Na2FeSiO4 structures. Reprinted with permission.[53] Copyright 2018, Elsevier.",
+   "bbox": [
+    42.2,
+    323.1,
+    550.7,
+    531.6
+   ],
+   "w": 2120,
+   "h": 869,
+   "dpi": 300,
+   "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
+   "blank": 0.884
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Phonon dispersion spectra of Pmma-XO monolayers: a) Pmma-CO, b) Pmma-SiO, c) Pmma-GeO, and d) Pmma-SnO. Reprinted with permission.[54] Copyright 2018, IOP Publishing Ltd.",
+   "bbox": [
+    42.2,
+    553.1,
+    550.4,
+    694.1
+   ],
+   "w": 2119,
+   "h": 588,
+   "dpi": 300,
+   "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
+   "blank": 0.9
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Free energy and corresponding voltage proﬁles with a, d) a solid-phase reaction, b, e) phase transformation from a Li-poor phase to a Li-rich phase, and c, f) the case with a stable intermediate phase. Reprinted with permission.[56] Copyright 2012, American Chemical Society.",
+   "bbox": [
+    45.0,
+    26.0,
+    386.7,
+    252.2
+   ],
+   "w": 1425,
+   "h": 943,
+   "dpi": 300,
+   "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
+   "blank": 0.909
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Figure 4. a) Calculated adsorption energies per atom, and b) OCVs at different lithiation and sodiation degrees of a 2D AlN. Reprinted with permission.[40] Copyright 2018, Elsevier.",
+   "bbox": [
+    45.3,
+    283.4,
+    387.3,
+    461.2
+   ],
+   "w": 1426,
+   "h": 742,
+   "dpi": 300,
+   "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
+   "blank": 0.66
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Figure 5. a) Comparison of formation energies among seven stable structures at different sodium concentrations during the cycling of NaxMnO2 in a SIB. b) Voltage proﬁles in a sodium deintercalation process. The calculated and experimental data are differentiated by red and black lines. The sodium extraction sites for intermediate two-phase reactions are labeled above corresponding voltage plateaus, which are shown at the bottom left of b). Reprinted with permission.[57] Copyright 2012, American Chemical Society.",
+   "bbox": [
+    42.2,
+    26.0,
+    295.2,
+    352.6
+   ],
+   "w": 1055,
+   "h": 1362,
+   "dpi": 300,
+   "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
+   "blank": 0.89
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Figure 6. a) The formation energy plot of the intermediate products during the calciation of Sn, b) corresponding calciation voltage plot, and c) volume expansion plot per Ca. The structures of reactants and intermediate compounds are shown in the insets in a). Reprinted with permission.[58]",
+   "bbox": [
+    297.3,
+    26.0,
+    550.3,
+    401.6
+   ],
+   "w": 1055,
+   "h": 1566,
+   "dpi": 300,
+   "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
+   "blank": 0.87
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Schematic open-circuit energy diagram of an aqueous electrolyte. ΦA and ΦC are the work functions of the anode and cathode, respectively. Reprinted with permission.[59] Copyright 2009, American Chemical Society.",
+   "bbox": [
+    44.7,
+    26.0,
+    387.0,
+    372.5
+   ],
+   "w": 1427,
+   "h": 1445,
+   "dpi": 300,
+   "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
+   "blank": 0.808
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 6,
+   "file": "fig_8.png",
+   "caption": "Figure 8. a) The total DOSs and b–d) band structures of g-Mg3N2, LiMg3N2, and Li7Mg3N2. The Fermi level is aligned to 0 eV. The solid black and dashed red lines are for spin-up and spin-down cases, respectively. Reprinted with permission.[60] Copyright 2019, Royal Society of Chemistry.",
+   "bbox": [
+    41.9,
+    403.8,
+    383.9,
+    686.1
+   ],
+   "w": 1426,
+   "h": 1177,
+   "dpi": 300,
+   "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
+   "blank": 0.8
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 7,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Density of states for a) undoped, b) Mo-doped, and b) NCM523 samples. Reprinted with permission.[29] Copyright 2018, American Chemical Society.",
+   "bbox": [
+    42.2,
+    26.0,
+    550.3,
+    263.8
+   ],
+   "w": 2118,
+   "h": 992,
+   "dpi": 300,
+   "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
+   "blank": 0.65
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 7,
+   "file": "fig_10.png",
+   "caption": "Figure 10. a–d) The DOS and e–f) the band structure plots of Mg3Bi2 calculated using PBE and HSE06 exchange-correlation functionals with/without SOC. Local atomic DOS projections inside the sphere are deﬁned by the Wigner–Seitz radii (1.63 and 1.52 \u0001A for Bi and Mg, respectively). Reprinted with permission.[44] Copyright 2018, Royal Society of Chemistry.",
+   "bbox": [
+    42.2,
+    288.8,
+    392.1,
+    661.2
+   ],
+   "w": 1459,
+   "h": 1553,
+   "dpi": 300,
+   "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
+   "blank": 0.837
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 8,
+   "file": "fig_11.png",
+   "caption": "Figure 11. a–c) DOSs of LiNiO2, d–f) LiCoO2, and g–i) LiMnO2 obtained using PBE, PBE+U, and meta- SCAN functionals. Reprinted with permission.[61] Copyright 2018, Nature.",
+   "bbox": [
+    45.0,
+    115.3,
+    384.2,
+    391.6
+   ],
+   "w": 1414,
+   "h": 1152,
+   "dpi": 300,
+   "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
+   "blank": 0.814
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 8,
+   "file": "fig_12.png",
+   "caption": "Figure 12. a) Adsorption energy of SnO2 on the MoSe2 (1 0 0) plane as a function of Se-O band lengths. b) Geometrically optimized structure of SnO2-MoSe2 interface. c, d) Top and side views of the charge density difference of the SnO2-MoSe2 interface; the brown and purple bubbles represent charge accumulation and depletion, respectively. (Isosurface level = 0.000605 e bohr\u00033) Reprinted with permission.[34] Copyright 2018, Elsevier.",
+   "bbox": [
+    45.0,
+    413.4,
+    387.3,
+    667.5
+   ],
+   "w": 1427,
+   "h": 1060,
+   "dpi": 300,
+   "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
+   "blank": 0.853
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 9,
+   "file": "fig_13.png",
+   "caption": "Figure 13. The DOSs of a) V2O5 and V2O5 + Zn, b) V2O5•H2O and V2O5•H2O + Zn, c) V2O5•1.75H2O and V2O5•1.75H2O + Zn. The red line represents the location of the Fermi level. d–f) The deformation charge densities of V2O5 + Zn, V2O5•H2O + Zn and V2O5•1.75H2O + Zn, respectively. The gray dash line represents the hydrogen bond, and the isosurface value is 0.005 e bohr\u00033. Reprinted with permission.[62] Copyright 2019, Royal Society of Chemistry.",
+   "bbox": [
+    42.2,
+    26.0,
+    550.3,
+    287.1
+   ],
+   "w": 2118,
+   "h": 1089,
+   "dpi": 300,
+   "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
+   "blank": 0.82
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 9,
+   "file": "fig_14.png",
+   "caption": "Figure 14. Diffusion paths (indicated by dashed arrows) followed by a Li ion inside the internal cubic structures of spinel LMO of different sizes: a) 14 nm (bulk); b,c) 1.3 nm (nanoparticle). The black points in a) are positions of minimum energy that can be occupied by Li ions. d) Energy barrier proﬁles along the Li-ion diffusion paths in bulk LMO a) and nanosized LMO b,c), which are drawn with the blue, green, and black lines, respectively. Reprinted with permission from ref.[32] Copyright 2018 Royal Society of Chemistry.",
+   "bbox": [
+    42.2,
+    476.6,
+    381.1,
+    657.4
+   ],
+   "w": 1413,
+   "h": 755,
+   "dpi": 300,
+   "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
+   "blank": 0.681
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 10,
+   "file": "fig_15.png",
+   "caption": "Figure 15. Atomic conﬁgurations of a) perfect and b) pyridinic N-doped zigzag double-walled CNTs. c) Energy proﬁles of the Li atom’s penetrations through the outer wall and inner wall of perfect CNTs. d) Energy proﬁles of the Li and S atoms’ penetrations through the outer wall and inner wall of N-doped CNTs. Reprinted with permission.[64] Copyright 2018, Royal Society of Chemistry. functional underestimates the energy of the metal-d states near the Fermi level, whereas SCAN gives a more accurate prediction, and PBE+U tends to overestimate the energy of the O-p states. gap of pg-CN is 2.0 eV, while a-CB and the a-CB/pg-CN composite have no band gaps. The result veriﬁes that the strategy of encapsulating the original a-CB with a layer of pg-CN can enhance structural stability without lowering its electronic conductivity. Recently, DFT has been employed in the studies of the emerging MIB ma",
+   "bbox": [
+    45.0,
+    26.0,
+    553.1,
+    302.6
+   ],
+   "w": 2118,
+   "h": 1153,
+   "dpi": 300,
+   "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "f16",
+   "kind": "figure",
+   "label": "16",
+   "page": 11,
+   "file": "fig_16.png",
+   "caption": "Figure 16. a) Two transport pathways of Li inside Nb2O5. b,c) The possible neighboring sites to which the Li ions may migrate. d) Transport energy proﬁles of Li along path A and B listed in a). Reprinted with permission.[37] Copyright 2017, American Chemical Society. the charge transferring orientation changes. Except for moving from Zn to V and O, the electrons mainly exchange between Zn and H2O. The results are conﬁrmed by comparing the changes of DOSs of V2O5•H2O, which show that the DOSs move to lower energy section after the Zn2+",
+   "bbox": [
+    42.2,
+    26.0,
+    295.2,
+    471.9
+   ],
+   "w": 1055,
+   "h": 1859,
+   "dpi": 300,
+   "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
+   "blank": 0.801
+  },
+  {
+   "key": "f17",
+   "kind": "figure",
+   "label": "17",
+   "page": 12,
+   "file": "fig_17.png",
+   "caption": "Figure 17. a) Binding energies of different polysulﬁdes on different anchor materials. b) Ratios of vdW interaction for ﬁve selected anchor materials. c) Stabilized conformations of different polysulﬁdes adsorbed on the surface of TiS2 with/without vdW. Reprinted with permission.[71] Copyright 2015, American Chemical Society.",
+   "bbox": [
+    45.0,
+    26.0,
+    388.2,
+    395.4
+   ],
+   "w": 1431,
+   "h": 1540,
+   "dpi": 300,
+   "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
+   "blank": 0.875
+  },
+  {
+   "key": "f18",
+   "kind": "figure",
+   "label": "18",
+   "page": 13,
+   "file": "fig_18.png",
+   "caption": "Figure 18. a) The optimized structures with Li+ adsorbed on ZnFe2O4 (110) surface, O- terminated ZnFe2O4 (111) surface, and Zn-terminated ZnFe2O4 (111) surface, above are the corresponding Li+ saturated structures. b) The plots of binding energies as the function of Li+ concentration. Reprinted with permission.[72] Copyright 2018, American Chemical Society.",
+   "bbox": [
+    42.2,
+    26.0,
+    357.0,
+    341.4
+   ],
+   "w": 1313,
+   "h": 1315,
+   "dpi": 300,
+   "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
+   "blank": 0.827
+  },
+  {
+   "key": "f19",
+   "kind": "figure",
+   "label": "19",
+   "page": 13,
+   "file": "fig_19.png",
+   "caption": "Figure 19. DFT optimized structures of a) Si2, b) Si3, and c) Si6 clusters adsorbed on graphitic N-doped graphene. Optimized models of single Li and four Li atoms adsorbed on d,e) pyridinic structural NG and f,g) pyrrolic structural NG with Si6 cluster, respectively. Reprinted with permission.[73] Copyright 2018, Elsevier.",
+   "bbox": [
+    42.2,
+    385.3,
+    357.0,
+    676.3
+   ],
+   "w": 1313,
+   "h": 1213,
+   "dpi": 300,
+   "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
+   "blank": 0.837
+  },
+  {
+   "key": "f20",
+   "kind": "figure",
+   "label": "20",
+   "page": 14,
+   "file": "fig_20.png",
+   "caption": "Figure 20. The most stable adsorption conﬁgurations of Na ions on MTe2: a) Na0.25CoTe2, b) Na0.5ScTe2, c) Na0.5TiTe2, d) Na0.25FeTe2, e) Na1.5MnTe2. f) The plots of DE of different MTe2 as the function of sodiation state. Reprinted with permission.[38] Copyright 2018, Elsevier",
+   "bbox": [
+    45.0,
+    26.0,
+    391.5,
+    468.1
+   ],
+   "w": 1445,
+   "h": 1843,
+   "dpi": 300,
+   "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
+   "blank": 0.849
+  },
+  {
+   "key": "f21",
+   "kind": "figure",
+   "label": "21",
+   "page": 15,
+   "file": "fig_21.png",
+   "caption": "Figure 21. a) Comparison of delithiated/lithiated voltage errors of TMs phosphate (LixMPO4) between GGA and GGA+U with calculated U. (The o, l, and s denote olivine, layered, and spinel, respectively; x represents the lithiation state; the voltage error is obtained by subtracting the experimental voltage from the calculated voltage.) Reprinted with permission.[74] Copyright 2004, American Physical Society b) Difference between calculated and experimental Li intercalation potentials for GGA, GGA+U, and HSE06, with respect to different cathode materials. Reprinted with permission.[76] Copyright 2010, American Physical Society.",
+   "bbox": [
+    42.2,
+    26.0,
+    550.3,
+    268.6
+   ],
+   "w": 2118,
+   "h": 1012,
+   "dpi": 300,
+   "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
+   "blank": 0.904
+  }
+ ]
+}
