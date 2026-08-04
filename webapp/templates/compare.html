@@ -166,6 +166,7 @@ upd();
     <a href="/concept/bvse" style="display:inline-block;margin-top:6px;font-size:.78rem">
       → BVSE 개념 정리: 정의 · 두 지표 · 문헌 용법(σ 예측표 검산 사례 포함) · 역설 3건 · MD와 역할 분담</a>
   </div>
+
   <div class="chip-bar" style="margin-top:10px">
     {% for x in bvse.tables %}<button class="chip {% if loop.first %}active{% endif %}"
       onclick="plotBvse('{{ x.rel }}',this)" title="{{ x.note }}">{{ x.title }}</button>{% endfor %}
@@ -198,5 +199,73 @@ upd();
   </script>
 </div>
 {% endif %}
+
+{# ── MSD 200 ps + β 게이트 카드 (2026-08-04) — 3계 확정본 ───────────────── #}
+<div class="card" style="margin-top:18px">
+  <h3>Li MSD 200 ps <span class="muted" style="font-weight:400;font-size:.8rem">— 3계 × 600/800/1000 K · 적합 2–50 ps (절편 자유) · β 게이트</span></h3>
+  <div class="chart" id="msd3-chart" style="min-height:340px"></div>
+  <div style="overflow-x:auto;margin-top:10px"><table style="font-size:.76rem;border-collapse:collapse;min-width:560px">
+    <tr style="border-bottom:2px solid var(--line,#e5e7eb)">
+      <th style="text-align:left;padding:4px 10px 4px 0">계</th>
+      <th style="text-align:right;padding:4px 10px">600 K β</th>
+      <th style="text-align:right;padding:4px 10px">800 K β</th>
+      <th style="text-align:right;padding:4px 10px">1000 K β</th>
+      <th style="text-align:left;padding:4px 0 4px 10px">시드 근거</th>
+    </tr>
+    <tr style="border-bottom:1px solid var(--line,#e5e7eb)">
+      <td style="padding:4px 10px 4px 0">LPSCl1.6</td>
+      <td style="text-align:right;padding:4px 10px">0.82 ✓</td>
+      <td style="text-align:right;padding:4px 10px">0.86 ✓</td>
+      <td style="text-align:right;padding:4px 10px">0.92 ✓</td>
+      <td style="padding:4px 0 4px 10px">ladder 1시드 — 3시드 검사 대기</td>
+    </tr>
+    <tr style="border-bottom:1px solid var(--line,#e5e7eb)">
+      <td style="padding:4px 10px 4px 0"><b>LPSOCl1.6</b></td>
+      <td style="text-align:right;padding:4px 10px"><b style="color:#b91c1c">0.61 ⛔</b></td>
+      <td style="text-align:right;padding:4px 10px">0.86 ✓</td>
+      <td style="text-align:right;padding:4px 10px">1.02 ✓</td>
+      <td style="padding:4px 0 4px 10px"><b>4시드 앙상블 평균</b> (최초 게이트 검사)</td>
+    </tr>
+    <tr>
+      <td style="padding:4px 10px 4px 0">B2O3@LPSCl1.6</td>
+      <td style="text-align:right;padding:4px 10px">0.81 ✓</td>
+      <td style="text-align:right;padding:4px 10px">0.92 ✓</td>
+      <td style="text-align:right;padding:4px 10px">0.89 ✓</td>
+      <td style="padding:4px 0 4px 10px">ladder 1시드 — 3시드 검사 대기</td>
+    </tr>
+  </table></div>
+  <div class="callout cal-warn" style="font-size:.79rem;margin-top:8px">
+    <b>LPSOCl 600 K가 확산영역 게이트 탈락</b> (β 0.61 &lt; 0.8 — MSD 97 Å²로 크기는 충분,
+    <b>홉 통계</b> 문제. 시드별 β 0.52~0.98 갈림 → 앙상블 평균이 기본).
+    R² 0.975여도 β가 낮으면 확산이 아니다 — 그 D는 인용 금지.
+    <b>Ea 0.287±0.024는 이 점을 포함한 적합이라 재검토 대상</b>; 처방 = 6점 아레니우스
+    54런에서 게이트 통과 점만 재적합. 단일시드 곡선은 계층 예시 전용(정량은 멀티시드 json).
+  </div>
+  <div class="muted mono" style="font-size:.7rem;margin-top:4px">db/properties/msd_3sys_200ps_origin.csv (PROVENANCE/GATE NOTE 포함)</div>
+  <a href="/concept/md" style="display:inline-block;margin-top:6px;font-size:.78rem">
+    → MD 개념 정리 §4b–4d: β의 뜻 · R²로 못 잡는 이유 · 적합 규율 3건 · 게이트 판정 현황</a>
+  <script>
+  (function(){
+    var box = document.getElementById('msd3-chart');
+    if(typeof Plotly==='undefined'){box.innerHTML='<span class="muted">차트 라이브러리(Plotly)를 불러오지 못했어요.</span>';return;}
+    fetch('/api/csv/'+encodeURIComponent('properties/msd_3sys_200ps_origin.csv')).then(function(r){return r.json();}).then(function(d){
+      if(d.error||!d.columns){box.innerHTML='<span class="muted">CSV 로드 실패 — 확정본이 아직 없다</span>';return;}
+      var x = d.columns[0];
+      var SYSC = {'LPSCl1.6':'#6b7280','LPSOCl1.6':'#be123c','B2O3@LPSCl1.6':'#0284c7'};
+      var DASH = {'600':'dot','800':'dash','1000':'solid'};
+      var tr = d.columns.slice(1).map(function(c){
+        var m = c.match(/(.+)_(\d+)K$/); if(!m) return null;
+        return {x:d.data.map(function(r){return r[x];}), y:d.data.map(function(r){return r[c];}),
+                name:c, mode:'lines', line:{color:SYSC[m[1]]||'#1f2937', dash:DASH[m[2]]||'solid', width:1.6}};
+      }).filter(Boolean);
+      Plotly.newPlot(box, tr, {margin:{t:8,r:8,b:40,l:52},
+        xaxis:{title:'Time (ps)'}, yaxis:{title:'Li MSD (A^2)'},
+        legend:{font:{size:10}}, paper_bgcolor:'rgba(0,0,0,0)', plot_bgcolor:'rgba(0,0,0,0)'},
+        {displayModeBar:false, responsive:true});
+    });
+  })();
+  </script>
+</div>
+
 
 {% endblock %}

@@ -102,6 +102,11 @@ GLOSSARY = [
  "what":"시간에 따른 이온의 <b>평균제곱변위</b> ⟨r²(t)⟩. 확산이면 시간에 선형 → 기울기가 확산계수 D (Einstein 관계 ⟨r²⟩=6Dt).",
  "how":"MD 궤적에서 Li들의 변위를 시간창(예 2–50ps)으로 피팅. 초반 ballistic·후반 통계부족 구간은 제외.",
  "ours":"MSD 창 2–50ps 고정."},
+ {"id":"beta-gate", "term":"β 게이트 (확산영역 판정)", "full":"diffusive-regime gate, β = dlogMSD/dlogt",
+  "cat":"이온 수송",
+  "what":"MSD∝t^β 의 지수 β로 '진짜 확산인가'를 판정하는 게이트. β≈1(0.8–1.2)이어야 MSD=6Dt가 성립하고 D를 인용할 수 있다. β<0.8은 케이지(자리 안 진동+드문 홉), β≈2는 탄도.",
+  "how":"로그-로그 눈금에서 적합 창(2–50 ps)의 기울기를 잰다 + 창끝 MSD ≥ 3 Å² 병행. R²로는 못 잡는다 — R² 0.975인데 β 0.61인 실측 사례(LPSOCl 600 K)가 있다. 도구: tools/ionic/msd_diffusive_check.py.",
+  "ours":"comp1 600 K 전 판 탈락(β 0.17–0.79 → 1600 ps 연장 중) · LPSOCl 600 K 4시드 평균 β 0.61 탈락(2026-08-04, Ea 0.287 재검토 트리거) · 시드 하나로는 β 0.98↔0.52로 갈려서 앙상블 평균이 기본."},
 
 {"id":"arrhenius","term":"Arrhenius / Ea","full":"활성화에너지 · 전도도","cat":"이온 수송",
  "what":"확산이 온도에 지수적으로 의존: D=D₀·exp(−Ea/kT). log D vs 1/T 직선의 기울기 = <b>활성화에너지 Ea</b>(낮을수록 빠른 전도). σ는 Nernst–Einstein으로 D에서 환산.",
