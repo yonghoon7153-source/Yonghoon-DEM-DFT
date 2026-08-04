@@ -15,6 +15,9 @@ REPO=${REPO:-$HOME/Yonghoon-DEM-DFT}; [ -d "$REPO" ] || REPO=$HOME/work/Yonghoon
 E=${ELF_DIR:-/data/work/runs/lpsocl_elf}
 OUT=${OUT:-$E/postproc/planes_jet}
 CMAP=${CMAP:-jet}
+# 라벨판 규격 = b2o3 라벨판(docs/figures/cascade/b2o3_elf_plane_PS2O2.png, 913×786 px)
+#   레이아웃은 동일하고 dpi 만 높다(더 선명). 픽셀까지 똑같이 하려면 LABEL_DPI=126.
+LABEL_DPI=${LABEL_DPI:-220}
 PY=${PY:-python3}
 
 if pgrep -f "elf_planes_lpsocl.py" >/dev/null 2>&1; then
@@ -34,7 +37,7 @@ echo "── 렌더 (cmap=$CMAP) ──"
 nice -n 10 $PY tools/figures/elf_planes_lpsocl.py \
     --cube "$E/lpsocl_elf.cube" --out "$OUT" \
     --label "LPSOCl (Li27P5S21OCl8)" --tag lpsocl \
-    --cmap "$CMAP" --save_npz 2>&1 | grep -a -v '^\s*$'
+    --cmap "$CMAP" --label_dpi "$LABEL_DPI" --save_npz 2>&1 | grep -a -v '^\s*$'
 
 echo
 echo "── 산출 ──"; ls -la "$OUT" | grep -a -E "png|npz|csv"
@@ -44,3 +47,4 @@ echo "  scp root@121.78.116.27:'$OUT/*.png' ."
 echo "  scp root@121.78.116.27:'$OUT/lpsocl_elf_planes.npz' .    # 평면 캐시 — 다음 색 변경은 이걸로"
 echo "색만 또 바꾸려면 (cube 불필요, 로컬에서도 됨):"
 echo "  python3 tools/figures/restyle_elf_planes.py --npz lpsocl_elf_planes.npz --out planes_X --cmap turbo"
+echo "창을 b2o3 판(±3.2 Å)에 맞추려면:  … --half_crop 3.2"

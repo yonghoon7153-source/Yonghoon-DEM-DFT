@@ -51,9 +51,6 @@ from plot_elf_clean import read_cube, elf_cmap                       # noqa: E40
 # 여기선 진한 ELF 배경 위 가독성이 우선).
 ELEM_COLOR = {"Li": "#111111", "P": "#FF9933", "S": "#FFDC52", "Cl": "#3E8E41",
               "O": "#E8482B", "B": "#2ea3f2", "N": "#3050F8"}
-# 마커 안 글자색 — 밝은 마커엔 검정, 어두운 마커엔 흰색
-ELEM_TEXT = {"Li": "white", "P": "black", "S": "black", "Cl": "white",
-             "O": "white", "B": "black", "N": "white"}
 # 제목 색 (흰 배경) — 여긴 하우스 팔레트. 모티프의 주인공 원소로.
 TITLE_COLOR = {"PS4": "#7c3aed", "PS3O": "#be123c", "O_PLi": "#be123c",
                "ClLi2": "#65a30d", "SfreeLi2": "#c05621", "SLi2": "#c05621"}
@@ -62,6 +59,8 @@ TITLE_COLOR = {"PS4": "#7c3aed", "PS3O": "#be123c", "O_PLi": "#be123c",
 def get_cmap(name):
     """평면 컬러맵. jet = 논문에 이미 나간 b2o3/LPSCl16 family 와 동일 (기본값)."""
     return elf_cmap() if name == "house" else matplotlib.colormaps[name]
+
+
 # 결합 판정 컷오프 (Å) — sample_elf_bonds.py 의 CUT 표와 같은 계열
 CUT = {("P", "S"): 2.4, ("P", "O"): 1.9, ("Li", "S"): 3.0,
        ("Li", "Cl"): 3.1, ("Li", "O"): 2.5}
@@ -163,6 +162,10 @@ TITLE = {"PS4": "PS$_4$ — host P–S", "PS3O": "PS$_3$O — P–O vs P–S in 
          "O_PLi": "O site — P–O (covalent) vs Li–O (ionic)",
          "ClLi2": "Cl site — Li–Cl", "SfreeLi2": "free S$^{2-}$ — Li–S",
          "SLi2": "S site — Li–S"}
+# 라벨판 제목의 모티프 이름 (b2o3 판의 "PS2O2 plane" 자리)
+TITLE_SHORT = {"PS4": "PS$_4$", "PS3O": "PS$_3$O", "O_PLi": "O–(P,Li)",
+               "ClLi2": "Cl–Li$_2$", "SfreeLi2": "free S$^{2-}$–Li$_2$",
+               "SLi2": "S–Li$_2$"}
 
 
 def sample_plane(data, origin, cell, gn, p0, A, B, half, n):
@@ -185,13 +188,50 @@ def sample_plane(data, origin, cell, gn, p0, A, B, half, n):
     return img, us, e1, e2, nrm, c0
 
 
-def draw_marks(ax, marks, ms=15, fs=8.5):
-    """원자 = 색 원 + 그 안의 원소 기호 (b2o3/LPSCl16 슬라이드 판과 같은 양식)."""
+def text_on(color):
+    """마커 위 글자색 — 배경 밝기로 자동 결정 (WCAG 상대휘도).
+
+    ⚠ 고정 'black' 을 쓰면 Li(#111111) 처럼 어두운 마커에서 **글자가 사라진다**
+      (2026-08-04 실측: b2o3 라벨판엔 밝은 P·O 만 있어 안 드러났던 함정).
+    """
+    r, g, b = (int(color.lstrip("#")[i:i + 2], 16) / 255 for i in (0, 2, 4))
+    lin = [c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4 for c in (r, g, b)]
+    return "black" if 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2] > 0.32 else "white"
+
+
+def draw_marks(ax, marks, ms=15, fs=8.5, mec="black"):
+    """원자 = 색 원 + 검은 테두리 + 그 안의 원소 기호 (b2o3 라벨판 규격).
+
+    규격 출처: docs/figures/cascade/b2o3_elf_plane_PS2O2.png
+    """
     for s, u, v in marks:
-        ax.plot(u, v, "o", mfc=ELEM_COLOR.get(s, "#888"), mec="white", mew=1.1,
-                ms=ms, zorder=5)
-        ax.text(u, v, s, fontsize=fs, color=ELEM_TEXT.get(s, "white"), zorder=6,
+        c = ELEM_COLOR.get(s, "#888")
+        ax.plot(u, v, "o", mfc=c, mec=mec, mew=1.1, ms=ms, zorder=5)
+        ax.text(u, v, s, fontsize=fs, color=text_on(c), zorder=6,
                 ha="center", va="center", fontweight="bold")
+
+
+def draw_labeled(img, us, marks, half, title, cmap, path, contours=False, dpi=220):
+    """라벨판 — **b2o3 라벨판과 같은 규격**으로 낸다 (913×786 px).
+
+    규격 출처: docs/figures/cascade/b2o3_elf_plane_PS2O2.png 실측
+      figsize (7.5, 7) · dpi 220 · bbox tight · 축 라벨 "Å" · 컬러바 ELF 0–1 (0.2 간격)
+      원자 = 색 원 + 검은 테두리 + 그 안 검은 글자 · **등고선 없음**
+    contours=True 면 0.30/0.70 판정선을 얹는다 (기본 꺼짐 = 참조 그림과 동일).
+    """
+    fig, ax = plt.subplots(figsize=(7.5, 7))
+    im = ax.imshow(img, origin="lower", extent=[-half, half, -half, half],
+                   cmap=cmap, vmin=0, vmax=1, aspect="equal", interpolation="bilinear")
+    cb = plt.colorbar(im, ax=ax, shrink=0.85, pad=0.02)
+    cb.set_label("ELF", fontsize=12); cb.set_ticks(np.arange(0, 1.01, 0.2))
+    if contours:
+        ax.contour(us, us, img, levels=[0.30, 0.70], colors=["white", "black"],
+                   linewidths=[1.0, 1.2], linestyles=["--", "-"])
+    draw_marks(ax, marks, ms=15, fs=8.5, mec="black")
+    ax.set_xlabel("Å"); ax.set_ylabel("Å")
+    ax.set_title(title, fontsize=11)
+    plt.tight_layout()
+    fig.savefig(path, dpi=dpi, facecolor="white", bbox_inches="tight"); plt.close(fig)
 
 
 def draw_montage(imgs, half, cmap, label, path, dpi=220):
@@ -220,12 +260,13 @@ def draw_montage(imgs, half, cmap, label, path, dpi=220):
     fig.savefig(path, dpi=dpi, facecolor="white"); plt.close(fig)
 
 
-def save_planes_npz(path, imgs, half, label, tag):
-    """평면 배열 + 원자 마커를 캐시한다 (float16 = 정밀도 0.001 로 충분, 용량 1/4).
+def save_planes_npz(path, imgs, half, label, tag, titles=None):
+    """평면 배열 + 원자 마커 + 제목을 캐시한다 (float16 = 정밀도 0.001, 용량 1/4).
 
     ⚠ 이건 **그림 재렌더용 캐시**다. 정량(central_min)은 CSV 가 정본이고,
-      npz 는 색·라벨만 바꿀 때 cube 를 다시 안 읽으려고 두는 것이다.
+      npz 는 색·창·라벨만 바꿀 때 cube 를 다시 안 읽으려고 두는 것이다.
     """
+    titles = titles or {}
     d = {"__half": np.array(half), "__label": np.array(label), "__tag": np.array(tag),
          "__motifs": np.array(list(imgs))}
     for name, (img, us, marks) in imgs.items():
@@ -233,17 +274,23 @@ def save_planes_npz(path, imgs, half, label, tag):
         d[f"us::{name}"] = us.astype(np.float32)
         d[f"marks::{name}"] = np.array([[s, f"{u:.4f}", f"{v:.4f}"] for s, u, v in marks],
                                        dtype=object) if marks else np.zeros((0, 3), dtype=object)
+        d[f"title::{name}"] = np.array(titles.get(name, ""))
     np.savez_compressed(path, **d)
 
 
 def load_planes_npz(path):
-    """save_planes_npz 의 역. → (imgs, half, label, tag)"""
+    """save_planes_npz 의 역. → (imgs, half, label, tag, titles)
+
+    제목이 없는 옛 캐시도 읽힌다 (그때는 TITLE 표로 되돌아간다).
+    """
     z = np.load(path, allow_pickle=True)
-    imgs = {}
+    imgs, titles = {}, {}
     for name in [str(x) for x in z["__motifs"]]:
         marks = [(str(r[0]), float(r[1]), float(r[2])) for r in z[f"marks::{name}"]]
         imgs[name] = (z[f"img::{name}"].astype(np.float32), z[f"us::{name}"], marks)
-    return imgs, float(z["__half"]), str(z["__label"]), str(z["__tag"])
+        if f"title::{name}" in z.files:
+            titles[name] = str(z[f"title::{name}"])
+    return imgs, float(z["__half"]), str(z["__label"]), str(z["__tag"]), titles
 
 
 def main():
@@ -264,6 +311,10 @@ def main():
                          "그 밖의 matplotlib 이름도 됨")
     ap.add_argument("--save_npz", action="store_true",
                     help="평면 배열을 npz 로 캐시 → restyle_elf_planes.py 로 cube 없이 재렌더")
+    ap.add_argument("--label_dpi", type=int, default=220,
+                    help="라벨판 dpi. 참조 b2o3 판(913×786 px)과 픽셀까지 맞추려면 126")
+    ap.add_argument("--contours", action="store_true",
+                    help="라벨판에 0.30/0.70 판정선을 얹는다 (기본 꺼짐 = b2o3 라벨판과 동일)")
     a = ap.parse_args()
 
     CM = get_cmap(a.cmap)
@@ -280,7 +331,7 @@ def main():
         raise SystemExit("모티프를 하나도 못 찾았다 — --motifs 지정하거나 CUT 표 확인")
     print(f"{len(planes)} 개 평면: {', '.join(planes)}")
 
-    rows, imgs = [], {}
+    rows, imgs, titles = [], {}, {}
     for name, (i0, iA, iB) in planes.items():
         p0 = pos[i0]
         A = p0 + mic(pos[iA] - p0); B = p0 + mic(pos[iB] - p0)
@@ -305,28 +356,9 @@ def main():
         f_clean = out / f"elf_plane_{a.tag}_{name}.png"
         fig.savefig(f_clean, dpi=a.dpi); plt.close(fig)
 
-        # ── labeled (원자·등고선·컬러바) ─────────────────────────────────
-        fig, ax = plt.subplots(figsize=(7.4, 6.6))
-        im = ax.imshow(img, origin="lower", extent=[-a.half, a.half, -a.half, a.half],
-                       cmap=CM, vmin=0, vmax=1, aspect="equal",
-                       interpolation="bilinear")
-        cb = plt.colorbar(im, ax=ax, shrink=0.85, pad=0.02); cb.set_label("ELF", fontsize=12)
-        ax.contour(us, us, img, levels=[0.30, 0.70], colors=["white", "black"],
-                   linewidths=[1.0, 1.2], linestyles=["--", "-"])
-        for s_k, u, v in marks:
-            ax.plot(u, v, "o", mfc=ELEM_COLOR.get(s_k, "#888"), mec="white",
-                    mew=0.9, ms=9, zorder=5)
-            ax.text(u + 0.18, v + 0.18, s_k, fontsize=8, color="white", zorder=6,
-                    bbox=dict(boxstyle="round,pad=0.12", fc="black", alpha=0.55, ec="none"))
-        ax.set_xlabel("in-plane x (Å)"); ax.set_ylabel("in-plane y (Å)")
-        ax.set_title(f"{TITLE.get(name, name)} — {a.label}", fontsize=11.5)
-        ax.text(0.99, 0.015, "solid 0.70 (covalent) · dashed 0.30 (ionic)",
-                transform=ax.transAxes, ha="right", fontsize=8, color="white")
-        fig.tight_layout()
-        f_lab = out / f"{a.tag}_elf_plane_{name}.png"
-        fig.savefig(f_lab, dpi=220, facecolor="white", bbox_inches="tight"); plt.close(fig)
-
         # ── 판정 수치: 두 결합선 위 ELF 최솟값 ([0.40,0.60] 규약과 동일) ────
+        #    제목에 넣을 값이라 라벨판보다 **먼저** 잰다.
+        bonds = []
         for lab, tgt in (("A", A), ("B", B)):
             j = iA if lab == "A" else iB
             ts = np.linspace(0.40, 0.60, 9)
@@ -336,8 +368,34 @@ def main():
                 f = ((r - origin) @ np.linalg.inv(cell)) % 1.0
                 vals.append(float(map_coordinates(data, (f * gn)[:, None], order=1,
                                                   mode="grid-wrap")[0]))
+            bname = f"{sym[i0]}–{sym[j]}"
             rows.append([a.tag, name, f"{sym[i0]}-{sym[j]}",
                          f"{np.linalg.norm(tgt - p0):.3f}", f"{min(vals):.4f}"])
+            bonds.append((bname, min(vals)))
+
+        # ── labeled (b2o3 라벨판 규격) ───────────────────────────────────
+        #    제목 문법도 참조와 동일:
+        #    "계 — 모티프 plane (중심원자#번호: 2×P–O + 2×P–S, ELF_P–O≈0.93)"
+        #    배위는 중심원자의 **전체 이웃 껍질**(그림 평면에 안 보이는 것 포함),
+        #    ELF 는 **평면에 그려진 결합**의 central_min.
+        coord = {}
+        for e in ("O", "S", "Cl", "P", "Li"):
+            if e == sym[i0]:
+                continue
+            k = len(neighbors(sym, pos, mic, i0, e, cut(sym[i0], e)))
+            if k:
+                coord[f"{sym[i0]}–{e}"] = k
+        bt = " + ".join(f"{k}×{b}" for b, k in coord.items()) or "—"
+        seen, et = set(), []
+        for b, v in bonds:                      # 같은 종류 결합은 한 번만
+            if b not in seen:
+                seen.add(b); et.append(f"ELF$_{{{b}}}$≈{v:.2f}")
+        title = (f"{a.label.split(' (')[0]} — {TITLE_SHORT.get(name, name)} plane "
+                 f"({sym[i0]}#{i0+1}: {bt}, {' · '.join(et)})")
+        titles[name] = title
+        f_lab = out / f"{a.tag}_elf_plane_{name}.png"
+        draw_labeled(img, us, marks, a.half, title, CM, f_lab,
+                     contours=a.contours, dpi=a.label_dpi)
         print(f"    → {f_clean.name} · {f_lab.name}")
 
     # ── 몽타주 (슬라이드 양식: 크롬 없음 · 원자 글자 · 공유 컬러바) ───────
@@ -347,7 +405,7 @@ def main():
 
     if a.save_npz:
         f_npz = out / f"{a.tag}_elf_planes.npz"
-        save_planes_npz(f_npz, imgs, a.half, a.label, a.tag)
+        save_planes_npz(f_npz, imgs, a.half, a.label, a.tag, titles)
         print(f"→ 평면 캐시 {f_npz.name} — 색만 바꿀 땐 cube 없이 restyle_elf_planes.py")
 
     f_csv = out / f"{a.tag}_elf_planes.csv"

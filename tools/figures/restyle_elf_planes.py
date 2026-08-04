@@ -27,8 +27,22 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from elf_planes_lpsocl import (TITLE, TITLE_COLOR, draw_marks, draw_montage,   # noqa: E402
+from elf_planes_lpsocl import (TITLE, draw_labeled, draw_montage,             # noqa: E402
                                get_cmap, load_planes_npz)
+
+
+def crop(img, us, marks, half_new):
+    """캐시된 창(half)보다 좁게 잘라낸다 — b2o3 라벨판(±3.2 Å)에 창까지 맞출 때.
+
+    ⚠ 넓히는 건 불가능하다(없는 데이터다). 넓히려면 cube 에서 다시 샘플링해야 한다.
+    """
+    m = np.abs(us) <= half_new + 1e-9
+    if m.sum() < 8:
+        raise SystemExit(f"--half_crop {half_new} 가 너무 작다")
+    img2 = img[np.ix_(m, m)]
+    us2 = us[m]
+    marks2 = [(s, u, v) for s, u, v in marks if abs(u) <= half_new and abs(v) <= half_new]
+    return img2, us2, marks2
 
 
 def main():
@@ -39,43 +53,43 @@ def main():
     ap.add_argument("--motifs", nargs="*", default=None, help="기본은 캐시에 있는 것 전부")
     ap.add_argument("--dpi", type=int, default=300)
     ap.add_argument("--no_clean", action="store_true", help="크롬 없는 판 생략")
+    ap.add_argument("--half_crop", type=float, default=None,
+                    help="창을 이 반폭(Å)으로 잘라낸다. b2o3 라벨판과 맞추려면 3.2")
+    ap.add_argument("--contours", action="store_true",
+                    help="라벨판에 0.30/0.70 판정선 (기본 꺼짐 = b2o3 라벨판과 동일)")
     a = ap.parse_args()
 
-    imgs, half, label, tag = load_planes_npz(a.npz)
+    imgs, half, label, tag, titles = load_planes_npz(a.npz)
     if a.motifs:
         imgs = {k: v for k, v in imgs.items() if k in a.motifs}
         if not imgs:
-            raise SystemExit(f"--motifs 가 캐시에 없다. 있는 것: {list(imgs)}")
+            raise SystemExit("--motifs 가 캐시에 없다")
     CM = get_cmap(a.cmap)
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
-    print(f"{len(imgs)} 개 평면 · half {half} Å · cmap {a.cmap} · {label}")
+    H = a.half_crop if a.half_crop else half
+    print(f"{len(imgs)} 개 평면 · half {half} → {H} Å · cmap {a.cmap} · {label}")
+    if not titles:
+        print("  (옛 캐시 — 제목이 안 들어있어 TITLE 표로 대체한다)")
 
+    shown = {}
     for name, (img, us, marks) in imgs.items():
+        if a.half_crop:
+            img, us, marks = crop(img, us, marks, a.half_crop)
+        shown[name] = (img, us, marks)
+
         if not a.no_clean:                       # 크롬 없는 논문판
             fig = plt.figure(figsize=(6, 6)); ax = fig.add_axes([0, 0, 1, 1])
             ax.axis("off")
-            ax.imshow(img, origin="lower", extent=[-half, half, -half, half],
+            ax.imshow(img, origin="lower", extent=[-H, H, -H, H],
                       cmap=CM, vmin=0, vmax=1, aspect="equal", interpolation="bilinear")
             fig.savefig(out / f"elf_plane_{tag}_{name}.png", dpi=a.dpi); plt.close(fig)
 
-        fig, ax = plt.subplots(figsize=(7.4, 6.6))     # 라벨판
-        im = ax.imshow(img, origin="lower", extent=[-half, half, -half, half],
-                       cmap=CM, vmin=0, vmax=1, aspect="equal", interpolation="bilinear")
-        cb = plt.colorbar(im, ax=ax, shrink=0.85, pad=0.02); cb.set_label("ELF", fontsize=12)
-        ax.contour(us, us, img, levels=[0.30, 0.70], colors=["white", "black"],
-                   linewidths=[1.0, 1.2], linestyles=["--", "-"])
-        draw_marks(ax, marks)
-        ax.set_xlabel("in-plane x (Å)"); ax.set_ylabel("in-plane y (Å)")
-        ax.set_title(f"{TITLE.get(name, name)} — {label}", fontsize=11.5,
-                     color=TITLE_COLOR.get(name, "#1f2937"))
-        ax.text(0.99, 0.015, "solid 0.70 (covalent) · dashed 0.30 (ionic)",
-                transform=ax.transAxes, ha="right", fontsize=8, color="white")
-        fig.tight_layout()
-        fig.savefig(out / f"{tag}_elf_plane_{name}.png", dpi=220, facecolor="white",
-                    bbox_inches="tight"); plt.close(fig)
+        title = titles.get(name) or f"{label} — {TITLE.get(name, name)}"
+        draw_labeled(img, us, marks, H, title, CM,
+                     out / f"{tag}_elf_plane_{name}.png", contours=a.contours)
         print(f"  {name}")
 
-    draw_montage(imgs, half, CM, label, out / f"{tag}_elf_planes.png")
+    draw_montage(shown, H, CM, label, out / f"{tag}_elf_planes.png")
     print(f"→ {out}/  (몽타주 {tag}_elf_planes.png 포함)")
 
 
