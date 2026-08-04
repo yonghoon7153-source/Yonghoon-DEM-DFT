@@ -1,0 +1,33 @@
+{
+ "huang2022_li2sis3_anomalous_conductivity_bvse": {
+  "figures": 10,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "47. Anomalously High Ionic Conductivity of Li2SiS3 Type Conductors.pdf",
+   "47. Sup) Anomalously High Ionic Conductivity of Li2SiS3 Type Conductors.pdf"
+  ]
+ },
+ "kraft2017_lattice_polarizability_argyrodite_Li6PS5X": {
+  "figures": 22,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "664401af-31._Influence_of_Lattice_Polarizability_on_the_Ionic_Conductivity_in_the_Lithium_Superionic_Argyrodites_Li6PS5X_X__Cl_Br_I.pdf",
+   "38f51c84-31._Sup_Inl_Br_I.pdf"
+  ]
+ },
+ "sendek2017_ml_screening_12k_conductors": {
+  "figures": 9,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf"
+  ]
+ },
+ "zhou2026_high_entropy_lgps_multicationic": {
+  "figures": 25,
+  "generated": "2026-08-04",
+  "pdfs": [
+   "22d5d6c1-49._A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf"
+  ]
+ }
+}

@@ -264,7 +264,7 @@ def blank_ratio(pix):
 
 
 def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
-            maxpx=1500):
+            maxpx=1500, relto=None):
     out_dir = OUT_ROOT / slug
     found, seen, skipped = [], {}, []
     for pdf_path in pdf_paths:
@@ -347,7 +347,9 @@ def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
         r.pop("px", None)
     meta = {"slug": slug, "dpi": dpi, "maxpx": maxpx,
             "generated": time.strftime("%Y-%m-%d"),
-            "sources": [Path(p).name for p in pdf_paths],
+            # ⚠ 원본 PDF 는 repo 에 없다(litdb/inbox 는 .gitignore). 그래서 **어느 하위 폴더의
+            #   어느 파일**이었는지를 남긴다 — 다른 머신에서도 --inbox_dir 만 맞추면 다시 찾는다.
+            "sources": [_relto(p, relto) for p in pdf_paths],
             "figures": found}
     if not dry:
         out_dir.mkdir(parents=True, exist_ok=True)
@@ -432,7 +434,12 @@ def match_inbox(inbox=INBOX, min_score=0.45, min_hits=4, rare=3):
         return sum(idf(t) for t in hit) / den, hit
     bynum = {n: s for s, (_t, n) in papers.items() if n}
     assign, orphan = {}, []
-    for p in sorted(inbox.glob("*.pdf")):
+    # ⚠ rglob: 논문은 보통 주제·교수님별 하위 폴더로 나뉘어 있다(2026-08-06 1저자 폴더 실측).
+    #   최상위만 보면 한 편도 못 찾는다. 숨김/휴지통성 폴더는 건너뛴다.
+    for p in sorted(inbox.rglob("*.pdf")):
+        if any(d.startswith((".", "~$")) or d in ("$RECYCLE.BIN", "node_modules")
+               for d in p.relative_to(inbox).parts[:-1]):
+            continue
         name = p.stem
         num = int(m.group(1)) if (m := re.match(r"\s*(\d+)\s*[.)]", name)) else None
         si = bool(SI_TAG.search(name))
@@ -484,6 +491,27 @@ def match_inbox(inbox=INBOX, min_score=0.45, min_hits=4, rare=3):
     return assign, still
 
 
+def _relto(p, base):
+    """inbox 기준 상대경로 (없으면 파일명만)."""
+    p = Path(p)
+    if base:
+        try:
+            return str(p.relative_to(base))
+        except ValueError:
+            pass
+    return p.name
+
+
+def _show(p, box, width=76):
+    """inbox 기준 상대경로. 길면 **파일명 쪽을** 줄인다 — 어느 하위 폴더였는지가 더 중요하다."""
+    t = _relto(p, box)
+    if len(t) <= width:
+        return t
+    head, _, tail = t.rpartition("/")
+    keep = width - len(head) - 2
+    return (head + "/" + tail[:max(keep, 12)] + "…") if head and keep > 12 else t[:width - 1] + "…"
+
+
 def _report(slug, meta, skipped, dry):
     print(f"=== {slug} — {len(meta['figures'])}개 추출"
           f"{' (dry-run, 안 씀)' if dry else ''}")
@@ -497,6 +525,27 @@ def _report(slug, meta, skipped, dry):
             print(f"  {k:<6} p{p:<3} {why}")
     if not dry:
         print(f"→ litdb/figures/{slug}/  (figures.json 포함)")
+
+
+def _write_sources_index():
+    """slug → 원본 PDF (inbox 상대경로) 한눈 색인.
+
+    PDF 본체는 repo 에 없으므로(저작권·용량), **어디서 왔는지**만이라도 추적 가능하게 둔다.
+    figures.json 마다 들어 있는 sources 를 모아 litdb/figures/_sources.json 로 쓴다.
+    """
+    idx = {}
+    for j in sorted(OUT_ROOT.glob("*/figures.json")):
+        try:
+            m = json.loads(j.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        idx[m.get("slug", j.parent.name)] = {"pdfs": m.get("sources", []),
+                                             "figures": len(m.get("figures", [])),
+                                             "generated": m.get("generated")}
+    if idx:
+        (OUT_ROOT / "_sources.json").write_text(
+            json.dumps(idx, ensure_ascii=False, indent=1, sort_keys=True), encoding="utf-8")
+        print(f"→ litdb/figures/_sources.json  ({len(idx)}편: 어느 PDF 에서 왔는지 색인)")
 
 
 def main():
@@ -558,13 +607,13 @@ def main():
                    if len(v["main"]) > 1 else ""
             print(f"  {slug}  [{v['why']}]{warn}")
             for p in v["main"]:
-                print(f"      본문 {p.name[:74]}")
+                print(f"      본문 {_show(p, box)}")
             for p in v["si"]:
-                print(f"      SI   {p.name[:74]}")
+                print(f"      SI   {_show(p, box)}")
         if orphan:
             print("\n--- 짝 못 찾음 (digest 가 없거나 제목이 많이 다른 것)")
             for p, si in orphan[:30]:
-                print(f"  {'SI ' if si else '본문'} {p.name[:76]}")
+                print(f"  {'SI ' if si else '본문'} {_show(p, box)}")
             if len(orphan) > 30:
                 print(f"  … 외 {len(orphan)-30}개")
         if not a.run:
@@ -577,12 +626,13 @@ def main():
             print(f"[{i}/{len(assign)}] {slug}")
             shutil.rmtree(OUT_ROOT / slug, ignore_errors=True)
             try:
-                meta, skipped = extract(pdfs, slug, dpi=a.dpi, maxpx=a.maxpx)
+                meta, skipped = extract(pdfs, slug, dpi=a.dpi, maxpx=a.maxpx, relto=box)
             except Exception as e:                 # 한 편이 깨져도 나머지는 계속
                 print(f"   ⛔ 실패: {type(e).__name__}: {e}\n")
                 continue
             _report(slug, meta, skipped, dry=False)
             print()
+        _write_sources_index()
         return 0
 
     if not a.pdf or not a.slug:

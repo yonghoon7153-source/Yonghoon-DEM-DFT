@@ -55,8 +55,17 @@ source ~/.bashrc
 litfig --inbox          # 어느 PDF ↔ 어느 논문인지 표만
 litfig --inbox --run    # 실제로 자르기 (--skip-done 로 이어서)
 ```
-매칭 앵커는 ① digest 메타의 `inbox #NN` ↔ 파일명 앞 번호 ② 제목 토큰 겹침 ③ **PDF 1쪽 본문**
-(출판사 해시 파일명 `admi…suppmat.pdf` 대응). `Sup)`/`SI`/`ESI`/`mmc` 는 SI 로 보고 같은 논문에 묶는다.
+**하위 폴더까지 훑는다** — 논문을 `★ 랩실 논문/`·`DEM 논문/`·교수님별로 나눠 뒀어도 그대로 찾는다.
+inbox 가 다른 데 있으면 `--inbox_dir '/mnt/c/Users/<계정>/Desktop/읽어야되는 논문'`.
+
+매칭 앵커는 ① digest 메타의 `inbox #NN` ↔ 파일명 앞 번호 ② 제목 토큰 겹침(**IDF 가중** —
+`batteries` 같은 흔한 말은 증거로 안 친다) ③ **PDF 1쪽 본문**(출판사 해시 파일명
+`admi…suppmat.pdf` 대응). `Sup)`/`SI`/`ESI`/`mmc` 는 SI 로 보고 같은 논문에 묶는다.
+
+> **원본 PDF 는 repo 에 없다.** `litdb/inbox/` 가 .gitignore 대상이라 digest 는 경로만
+> 적어둘 뿐 실물은 각자 로컬에만 있다. 그래서 `--inbox --run` 이 `litdb/figures/_sources.json`
+> 에 **slug → 원본 PDF(inbox 상대경로)** 를 남긴다 — 다른 머신에서도 폴더 구조만 같으면
+> `--inbox_dir` 하나로 다시 찾는다.
 
 한 편만 콕 집을 때 — ⚠ `<slug>` 는 **자리표시자**다. `litdb/papers/` 의 실제 파일 이름을 넣는다:
 ```bash
