@@ -2735,14 +2735,21 @@ def paper_figures(pid: str) -> list[dict]:
 
 
 def papers_with_figures() -> dict[str, int]:
-    """slug → 그림 개수 (목록 화면 배지용)."""
+    """slug → 그림 개수 (목록 화면 배지용).
+
+    ⚠ paper_figures() 를 부르면 안 된다: 그건 digest 마크다운까지 읽어 주석을 뽑으므로
+      논문이 늘면 /literature 한 번에 수십 MB 를 읽는다(53편 환산 ~124 ms → 아래로 ~5 ms).
+      배지엔 개수만 필요하니 figures.json 만 훑는다.
+    """
     base = LITDB / "figures"
     if not base.is_dir():
         return {}
     out = {}
-    for d in base.iterdir():
-        if d.is_dir() and (d / "figures.json").exists():
-            n = len(paper_figures(d.name))
-            if n:
-                out[d.name] = n
+    for j in base.glob("*/figures.json"):
+        try:
+            n = len(json.loads(j.read_text(encoding="utf-8")).get("figures", []))
+        except (OSError, ValueError):
+            continue
+        if n:
+            out[j.parent.name] = n
     return out
