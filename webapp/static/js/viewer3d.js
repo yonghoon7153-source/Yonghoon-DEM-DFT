@@ -3437,7 +3437,10 @@ function applyViewMode(state, mode) {
       const _dist = [_rec, _tok].filter(Boolean).join('_');
       const _slug = String([_d.case || '', _dist].filter(Boolean).join('_'))
         .replace(/[^\w.-]+/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '').slice(0, 70);
-      const tag = (ionic ? 'ion' : 'elec') + '_zprofile' + (_slug ? '_' + _slug : '');
+      // ★ 2026-08-04: 여기도 netKey 와 같은 이분법이라 열류·Joule 이 'elec_zprofile' 로 저장돼
+      //   전자 프로파일과 파일명이 겹쳤다 (네 채널이 한 이름을 두고 _1/_2 로 뭉개짐).
+      const tag = (joule ? 'joule_q' : thermal ? 'therm' : ionic ? 'ion' : 'elec')
+                + '_zprofile' + (_slug ? '_' + _slug : '');
       const a1 = document.createElement('a'); a1.href = big.toDataURL('image/png'); a1.download = tag + '.png';
       document.body.appendChild(a1); a1.click(); a1.remove();
       const csv = pr.header + '\n' + pr.rows.map(r => r.join(',')).join('\n');
@@ -5496,6 +5499,12 @@ function pchipDenseGrid(zKnots, factor = 8) {
   return { z: Z, raw: R };
 }
 
+// ★ 한글 포함 폰트 스택 (2026-08-04).  'Inter,Arial,sans-serif' 는 한글 글리프가 없어 브라우저가
+//   글자 단위로 대체 폰트를 끼워 넣는데, 그 대체 폰트의 ascent 가 다르면 **회전된** y축 라벨에서
+//   한글 부분만 어긋나 보인다 (x축 라벨은 회전이 없어 멀쩡했다 = 회전 전용 증상).  스택에 한글
+//   폰트를 명시해 대체를 결정적으로 만든다.  ★두 렌더러보다 위에 선언 (TDZ 회피).
+const _FONT_KR = 'Inter,"Malgun Gothic","Apple SD Gothic Neo","Noto Sans KR","Nanum Gothic",Arial,sans-serif';
+
 function drawZProfileCanvas(cv, curves, yLab, leftLab, rightLab) {
   // ★흰 배경 실선 (matplotlib 느낌) — 화면 미리보기·다운로드 톤 통일 (사용자 요청).
   const g = cv.getContext('2d'), W = cv.width, H = cv.height, k = H / 120;
@@ -5513,7 +5522,7 @@ function drawZProfileCanvas(cv, curves, yLab, leftLab, rightLab) {
     g.stroke();
   }
   g.setLineDash([]);
-  g.fillStyle = '#374151'; g.font = `${10.5 * k}px Inter,sans-serif`;
+  g.fillStyle = '#374151'; g.font = `${10.5 * k}px ${_FONT_KR}`;   // 미리보기는 회전 없음(가로 라벨)
   g.textAlign = 'left'; g.fillText(leftLab || '집전체', mL + 1.5 * k, H - 4.5 * k);
   g.textAlign = 'right'; g.fillText(rightLab || '분리막', W - mR - 1.5 * k, H - 4.5 * k);
   g.textAlign = 'left'; g.fillText(yLab, mL + 4 * k, mT + 11 * k);
@@ -5546,11 +5555,13 @@ function drawZProfileMPL(cv, curves, yLab, leftLab, rightLab, title) {
   g.textAlign = 'center'; g.textBaseline = 'top';                // x 눈금 숫자
   for (let i = 0; i <= nX; i++) { const v = i / nX * zMax, x = mL + i / nX * pw;
     g.fillText(v.toFixed(zDec), x, H - mB + 8); g.beginPath(); g.moveTo(x, H - mB); g.lineTo(x, H - mB + 5); g.stroke(); }
-  g.font = '22px Inter,Arial,sans-serif'; g.textAlign = 'center'; g.textBaseline = 'bottom';
+  g.font = `22px ${_FONT_KR}`; g.textAlign = 'center'; g.textBaseline = 'bottom';
   g.fillText(`z (µm)  —  ${leftLab || '집전체'}(좌) → ${rightLab || '분리막'}(우)`, mL + pw / 2, H - 18);
-  g.save(); g.translate(28, mT + ph / 2); g.rotate(-Math.PI / 2); g.textBaseline = 'top'; g.textAlign = 'center';
+  // 회전 라벨은 textBaseline='middle' — 'top' 은 폰트 ascent 기준이라 대체 폰트가 끼면 그 구간만
+  // 어긋난다.  'middle' 은 em-box 중앙 기준이라 폰트가 섞여도 안정적이다.
+  g.save(); g.translate(34, mT + ph / 2); g.rotate(-Math.PI / 2); g.textBaseline = 'middle'; g.textAlign = 'center';
   g.fillText(yLab, 0, 0); g.restore();
-  if (title) { g.font = 'bold 24px Inter,Arial,sans-serif'; g.textAlign = 'center'; g.textBaseline = 'top'; g.fillText(title, W / 2, 16); }
+  if (title) { g.font = `bold 24px ${_FONT_KR}`; g.textAlign = 'center'; g.textBaseline = 'top'; g.fillText(title, W / 2, 16); }
   const MC = { '#f87171': '#d62728', '#a78bfa': '#7c3aed' };      // 흰 배경용 진한색
   curves.forEach(c => { g.strokeStyle = MC[c.color] || c.color; g.lineWidth = 2.6; g.setLineDash(c.dash ? [9, 6] : []);
     g.beginPath(); c.zs.forEach((z, i) => { const x = PX(z), y = PY(c.ys[i]); i ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke(); });
