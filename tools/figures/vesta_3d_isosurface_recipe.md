@@ -46,6 +46,18 @@ python3 tools/ionic/li_density_cube.py \
 matplotlib 대안(서버에서 바로): `tools/modelc_v3/plot_elf_3d_iso.py --cube comp1_ELF.cube --iso 0.85`.
 
 ---
+## 공통 관례: boundary section(cap) 은 opacity 0%
+
+등가면이 표시 경계에서 잘리면 VESTA 가 단면을 데이터-값 gradient(파랑/빨강)로 메꾼다
+(Properties → Isosurfaces 의 **O2** = 단면 불투명도, `.vesta` `ISURF` 줄 마지막 값).
+**모든 배포 그림에서 0% 로 끈다** — 이유 3가지: ① 잘리는 위치가 표시 박스의 산물(물리 아님),
+② 불투명 색면이 내부 3D 연결망을 가림, ③ 컬러바 없는 두 번째 색 스케일이 끼어들고
+BVSE 맵은 val² 단위라 eV 오독 유도. 정량(채널%·onset)은 voxel 계산이라 렌더 설정과 무관.
+상세: `kb/reports/paper_first_author_requests_2026_08.md` §7.
+gradient 가 필요하면 cap 이 아니라 의도된 도구로 — 경로 프로파일(`bv_path_profile`) 또는
+지정 평면 2D 슬라이스 + 라벨된 컬러바.
+
+---
 ## 슬라이드 배치
 - **Li-density(A)** → 이온전도 섹션, BVSE 슬라이드 뒤 (percolation/inter-cage). 2D 주석판 + 3D VESTA 같이.
 - **ELF(B)** → 전자구조/산화 섹션, PDOS·DOS 옆 (결합 성격 + S²⁻ lone-pair = 산화 자리 맥락).
