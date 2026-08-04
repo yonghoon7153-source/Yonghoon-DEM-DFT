@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}Files · 그림·데이터 갤러리{% endblock %}
+{% block content %}
+{# 전체 파일 갤러리 (2026-08-05) — 개념 첨부는 '본문이 언급한 것'만 보여주므로
+   나머지를 볼 길이 없었다. 여기서 repo 산출물 전체를 훑고 바로 받는다. #}
+<div class="page-header">
+  <div>
+    <h1>Files</h1>
+    <div class="sub">그림 · 데이터 · 구조 전체 — 클릭하면 미리보기, ⬇ 로 저장</div>
+  </div>
+</div>
+
+<form class="att-tabs" method="get" action="/files" style="flex-wrap:wrap">
+  <input class="inp" type="search" name="q" value="{{ q }}" placeholder="이름·경로로 검색 (예: msd, lpsocl, pmf)"
+         style="min-width:280px;flex:1;padding:7px 12px;border:1px solid var(--line,#e5e7eb);border-radius:8px;font-size:.82rem">
+  <a class="att-tab {% if not kind %}active{% endif %}" href="/files?q={{ q }}">전체</a>
+  <a class="att-tab {% if kind=='image' %}active{% endif %}" href="/files?kind=image&q={{ q }}">🖼 이미지</a>
+  <a class="att-tab {% if kind=='csv' %}active{% endif %}" href="/files?kind=csv&q={{ q }}">📊 CSV</a>
+  <a class="att-tab {% if kind=='file' %}active{% endif %}" href="/files?kind=file&q={{ q }}">📦 기타</a>
+  <button class="btn sm" type="submit">검색</button>
+</form>
+
+<div class="muted" style="font-size:.78rem;margin:4px 0 10px">{{ files|length }}개 · 최근 수정순</div>
+
+<div class="grid grid-3">
+{% for f in files %}
+  <div class="card att-card" data-rel="{{ f.rel }}" data-name="{{ f.name }}" data-kind="{{ f.kind }}">
+    {% if f.kind=='image' %}
+    <div class="att-thumb"><img loading="lazy" src="/api/file/{{ f.rel }}" alt="{{ f.name }}"></div>
+    {% else %}
+    <div class="att-icon">{{ '📊' if f.kind=='csv' else ('📕' if f.kind=='pdf' else '📦') }}</div>
+    {% endif %}
+    <div class="att-meta">
+      <div class="mono" style="font-size:.7rem;font-weight:600;word-break:break-all">{{ f.name }}</div>
+      <div class="muted" style="font-size:.66rem">{{ f.dir }} · {{ f.size_kb }} KB</div>
+    </div>
+    <a class="btn sm att-dl" href="/api/file/{{ f.rel }}?dl=1" download>⬇ 저장</a>
+  </div>
+{% else %}
+  <div class="muted">검색 결과가 없어요.</div>
+{% endfor %}
+</div>
+
+<div class="att-modal" id="att-modal">
+  <div class="att-box">
+    <div class="att-bar">
+      <span class="mono" id="att-title" style="font-size:.8rem;font-weight:700"></span>
+      <span style="margin-left:auto;display:flex;gap:8px">
+        <a class="btn sm" id="att-save" href="#" download>⬇ 저장</a>
+        <button type="button" class="btn sm" onclick="attClose()">✕ 닫기</button>
+      </span>
+    </div>
+    <div class="att-body" id="att-body"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var modal = document.getElementById('att-modal');
+  document.querySelectorAll('.att-card').forEach(function(c){
+    c.addEventListener('click', function(e){
+      if (e.target.closest('.att-dl')) return;
+      attOpen(c.dataset.rel, c.dataset.name, c.dataset.kind);
+    });
+  });
+  modal.addEventListener('click', function(e){ if (e.target === modal) attClose(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') attClose(); });
+  window.attClose = function(){ modal.style.display = 'none'; };
+  window.attOpen = function(rel, name, kind){
+    var body = document.getElementById('att-body');
+    document.getElementById('att-title').textContent = rel;
+    var sv = document.getElementById('att-save');
+    sv.href = '/api/file/' + rel + '?dl=1'; sv.setAttribute('download', name);
+    body.innerHTML = '<div class="muted" style="padding:20px">불러오는 중…</div>';
+    modal.style.display = 'flex';
+    if (kind === 'csv'){
+      fetch('/api/file/' + rel).then(function(r){return r.text();}).then(function(t){
+        var lines = t.replace(/^\uFEFF/, '').split(/\r?\n/).filter(function(x){return x.length;});
+        var notes = lines.filter(function(x){return x.trim().charAt(0)==='#';});
+        var rows  = lines.filter(function(x){return x.trim().charAt(0)!=='#';}).slice(0,40);
+        var h='';
+        if (notes.length) h += '<details style="margin-bottom:10px"><summary class="muted" style="cursor:pointer;font-size:.78rem">헤더 주석 '
+          + notes.length + '줄 (출처·규율)</summary><pre class="mono" style="white-space:pre-wrap;font-size:.68rem;margin:6px 0 0">'
+          + notes.join('\n').replace(/</g,'&lt;') + '</pre></details>';
+        h += '<div style="overflow:auto;max-height:56vh"><table class="att-table"><tbody>';
+        rows.forEach(function(ln,i){ h += '<tr>' + ln.split(',').map(function(c){
+          return (i?'<td>':'<th>') + c.replace(/</g,'&lt;') + (i?'</td>':'</th>'); }).join('') + '</tr>'; });
+        h += '</tbody></table></div>';
+        if (rows.length>=40) h += '<div class="muted" style="font-size:.72rem;margin-top:6px">앞 40행만 표시 — 전체는 ⬇ 저장</div>';
+        body.innerHTML = h;
+      });
+    } else if (kind === 'pdf'){
+      body.innerHTML = '<embed src="/api/file/' + rel + '" type="application/pdf" style="width:82vw;max-width:1100px;height:75vh">';
+    } else if (kind !== 'image'){
+      fetch('/api/file/' + rel).then(function(r){return r.text();}).then(function(t){
+        body.innerHTML = '<pre class="mono" style="white-space:pre-wrap;font-size:.7rem;max-height:60vh;overflow:auto">'
+          + t.slice(0,20000).replace(/</g,'&lt;') + '</pre>'; });
+    } else {
+      body.innerHTML = '<img src="/api/file/' + rel + '" alt="' + name + '">';
+    }
+  };
+})();
+</script>
+{% endblock %}

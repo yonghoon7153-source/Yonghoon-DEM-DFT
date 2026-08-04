@@ -2325,6 +2325,26 @@ _UP_EXT = {".png", ".jpg", ".jpeg", ".svg", ".csv", ".json", ".xyz", ".vasp", ".
 _UP_MAX = 50 * 1024 * 1024        # 50 MB/파일
 
 
+def _find_same_content(blob: bytes, name: str) -> str | None:
+    """내용이 같은 파일이 이미 repo(docs/·db/)에 있으면 그 경로를 돌려준다.
+
+    ⚠ 왜 필요한가 (2026-08-05 실측): 사용자가 webapp 에서 받은 그림을 다시 끌어올려
+      **20개 전부 repo 원본의 복사본**이 됐다. 같은 파일이 두 경로에 살면 어느 게
+      정본인지 흐려지고 용량도 두 배다. 같은 내용이면 **복사하지 않고 원본을 가리킨다**.
+      1차로 파일명, 2차로 크기+md5 로 확인 (오탐 0).
+    """
+    import hashlib
+    h = hashlib.md5(blob).hexdigest()
+    n = len(blob)
+    cands = list((ROOT / "docs").rglob(name)) + list((ROOT / "db").rglob(name))
+    for q in cands:
+        if "uploads" in q.parts or not q.is_file() or q.stat().st_size != n:
+            continue
+        if hashlib.md5(q.read_bytes()).hexdigest() == h:
+            return str(q.relative_to(ROOT))
+    return None
+
+
 def save_concept_upload(cid: str, files) -> dict:
     """드래그 업로드 저장 — docs/uploads/<cid>/ 에 쓰고 **문서 끝에 경로를 append**.
 
@@ -2335,7 +2355,7 @@ def save_concept_upload(cid: str, files) -> dict:
     if read_concept(cid) is None:
         return {"error": "no such concept", "saved": [], "rejected": []}
     updir = ROOT / "docs" / "uploads" / cid
-    saved, rejected = [], []
+    saved, rejected, linked = [], [], []
     for f in files:
         name = re.sub(r"[^A-Za-z0-9._\-]", "_", os.path.basename(f.filename or ""))
         name = name.lstrip(".")
@@ -2347,6 +2367,10 @@ def save_concept_upload(cid: str, files) -> dict:
         if not blob or len(blob) > _UP_MAX:
             rejected.append(f"{name} (빈 파일 또는 >50MB)")
             continue
+        dup = _find_same_content(blob, name)
+        if dup:                       # 이미 repo 에 같은 파일 → 복사 대신 그 경로 참조
+            linked.append(dup)
+            continue
         updir.mkdir(parents=True, exist_ok=True)
         stem, k = os.path.splitext(name)[0], 1
         q = updir / name
@@ -2355,11 +2379,48 @@ def save_concept_upload(cid: str, files) -> dict:
             q = updir / f"{stem}-{k}{ext}"
         q.write_bytes(blob)
         saved.append(str(q.relative_to(ROOT)))
-    if saved:
+    refs = saved + linked
+    if refs:
         mdp = CONCEPTS / f"{cid}.md"
         txt = mdp.read_text(encoding="utf-8", errors="ignore")
         if "## 첨부 (업로드)" not in txt:
             txt = txt.rstrip() + "\n\n---\n## 첨부 (업로드)\n"
-        txt = txt.rstrip() + "\n" + "\n".join(f"- `{r}`" for r in saved) + "\n"
-        mdp.write_text(txt, encoding="utf-8")
-    return {"saved": saved, "rejected": rejected}
+        have = set(re.findall(r"`((?:docs|db)/[^`]+)`", txt))
+        new = [r for r in refs if r not in have]          # 같은 경로 재기록 방지
+        if new:
+            txt = txt.rstrip() + "\n" + "\n".join(f"- `{r}`" for r in new) + "\n"
+            mdp.write_text(txt, encoding="utf-8")
+    return {"saved": saved, "linked": linked, "rejected": rejected}
+
+_GAL_DIRS = [("docs/figures", "그림"), ("db/properties", "데이터"),
+             ("db/structures", "구조"), ("docs/uploads", "업로드")]
+
+
+def gallery_files(q: str = "", kind: str = "") -> list[dict]:
+    """repo 의 그림·데이터·구조 파일 전수 목록 (webapp 갤러리용).
+
+    개념 문서 첨부는 '본문이 언급한 것'만 보여준다 — 그래서 나머지를 볼 길이 없어
+    사용자가 받은 파일을 다시 끌어올리는 일이 생겼다(2026-08-05). 이 목록이 그 구멍을 메운다.
+    """
+    out = []
+    for rel_dir, group in _GAL_DIRS:
+        base = ROOT / rel_dir
+        if not base.exists():
+            continue
+        for f in base.rglob("*"):
+            if not f.is_file() or f.name.startswith("."):
+                continue
+            if f.suffix.lower() not in _UP_EXT:
+                continue
+            k = _att_kind(str(f))
+            rel = str(f.relative_to(ROOT))
+            if q and q.lower() not in rel.lower():
+                continue
+            if kind and k != kind:
+                continue
+            st = f.stat()
+            out.append({"rel": rel, "name": f.name, "kind": k, "group": group,
+                        "dir": str(f.parent.relative_to(ROOT)),
+                        "size_kb": round(st.st_size / 1024, 1), "mtime": int(st.st_mtime)})
+    out.sort(key=lambda x: -x["mtime"])
+    return out

@@ -308,6 +308,14 @@ def api_concept_upload(cid):
     return jsonify(r)
 
 
+@app.route("/files")
+def files_gallery():
+    q = request.args.get("q", "").strip()
+    kind = request.args.get("kind", "").strip()
+    fs = D.gallery_files(q, kind)
+    return render_template("files.html", active="files", files=fs, q=q, kind=kind)
+
+
 @app.route("/api/property/<name>")
 def api_property(name):
     p = D.DB / "properties" / f"{name}.json"
