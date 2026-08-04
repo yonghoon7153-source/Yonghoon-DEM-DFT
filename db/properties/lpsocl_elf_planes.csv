@@ -2,6 +2,10 @@
 # 산출: tools/figures/elf_planes_lpsocl.py on /data/work/runs/lpsocl_elf/lpsocl_elf.cube (gabia)
 # 그림(PNG, 11장)은 gabia /data/work/runs/lpsocl_elf/postproc/planes/ — 수십 MB cube 와 함께 거기 둔다.
 #   clean판 elf_plane_lpsocl_*.png (논문용) · 라벨판 lpsocl_elf_plane_*.png · 몽타주 lpsocl_elf_planes.png
+# 2026-08-04: 컬러맵을 **jet** 으로 통일 (b2o3/LPSCl16 슬라이드 family 와 동일 — 검증: 그
+#   family 그림의 컬러바 픽셀 대조 mean|dRGB| 0.0033). 새 폴더 …/postproc/planes_jet/,
+#   재실행 = tools/figures/rerender_lpsocl_planes_gabia.sh. 예전 house 램프 판은 planes/ 에 그대로.
+#   ⚠ 색은 표시용일 뿐 **이 CSV 의 수치가 정본**이다 (jet 은 지각 균일하지 않다).
 # central_min = frac [0.40,0.60] 최솟값 (sample_elf_bonds.py 와 같은 규약)
 #
 # ⚠⚠ **인용 표준은 mean_central_min 이지 plane_central_min 이 아니다.**
