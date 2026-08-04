@@ -1,11 +1,17 @@
 # pure-SE DEM Heckel 시리즈 (LIGGGHTS, E_SE=1.35 GPa softened, r_SE=0.5µm, RVE 50×50µm, 동일 insert seed 78049)
 # 재생성 2026-08-05 — USB 원자료(post_SE_heckel_{100,200,300,400}) → make_heckel_manifest.py → heckel_analysis.py
-# D_union 은 atom 덤프 좌표에서 직접 계산한 렌즈 겹침(주기 x·y 최소상 이미지); 100 MPa 에서 contact 덤프와 0.00% 일치 검증됨.
+# 기점 규약: **마지막 contact 파일** 기점, atom·mesh 를 그 스텝에서 (webapp 코퍼스와 동일 규약).
+#   200/300/400 은 마지막 atom(1455000/1605000/1715000)보다 5000 스텝 앞이지만 plate_z 가 소수점까지
+#   동일 → 플레이트가 이미 완전 정지(hold 프로토콜 정상 동작)했음을 부수 확인.
+# D_union 은 atom 덤프 좌표에서 직접 계산한 렌즈 겹침(주기 x·y 최소상 이미지).
+#   ★ 4압력 전부에서 contact 덤프의 δ 로 계산한 값과 **0.00% 일치** (기하 경로 검증 완료).
 # ⚠ D_sphere 는 300/400 MPa 에서 1을 넘는다(구 부피 합 > 박스) = dense pure-SE 의 알려진 과압축 artifact → Heckel 은 D_union 으로만 맞출 것.
 # Heckel 적합 (D_union 4점): ln(1/(1-D)) = K·P + A, K=0.007257 /MPa, A=0.3132, R²=0.9653, P_y=137.8 MPa, σ_y≈46 MPa
+#   → 연화 배수 850/138 = 6.2× (σ_y 축 300/46 = 6.5×).  실패가 아니라 **연화의 정량** — E_eff 18× 연화가 설계다.
 # 앵커: 300 MPa → ε_union 10.08% = Minnmann et al. LPSCl cold-press ~10% @300 MPa
-P_MPa,plate_z_lu,eps_union_pct,D_union,eps_sphere_pct,D_sphere,phi_se_local,note
-100,0.0119872,30.92,0.6908,29.68,0.7032,0.7032,contact 덤프 존재 — 기하↔contact 렌즈 0.00% 일치
-200,0.00973721,19.01,0.8099,13.43,0.8657,0.8657,
-300,0.00823721,10.08,0.8992,-2.34,1.0234,1.0234,Minnmann ~10% 앵커 일치; eps_sphere 음수=과압축 artifact
-400,0.00713721,3.40,0.9660,-18.11,1.1811,1.1811,eps_sphere 음수=과압축 artifact
+# phi_se_local = V_SE/(A·h) (pure-SE 라 AM 부피 0) = D_sphere.  am_load_balance_jam.py 의 SE 응답곡선과 같은 축.
+P_MPa,step,plate_z_lu,eps_union_pct,D_union,eps_sphere_pct,D_sphere,phi_se_local,note
+100,1230000,0.0119872,30.92,0.6908,29.68,0.7032,0.7032,기하↔contact 렌즈 0.00% 일치
+200,1450000,0.00973721,19.01,0.8099,13.43,0.8657,0.8657,기하↔contact 0.00% 일치
+300,1600000,0.00823721,10.08,0.8992,-2.34,1.0234,1.0234,Minnmann ~10% 앵커 일치; eps_sphere 음수=과압축 artifact
+400,1710000,0.00713721,3.40,0.9660,-18.11,1.1811,1.1811,eps_sphere 음수=과압축 artifact
