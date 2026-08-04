@@ -26,8 +26,9 @@
    통째로 버려졌다(클릭·탭 전부 무동작, 2026-08-05 사용자 발견). #}
 {% set imgs = attachments|selectattr('kind','equalto','image')|list %}
 {% set data = attachments|rejectattr('kind','equalto','image')|list %}
+{% set ncited = attachments|selectattr('src','equalto','cited')|list|length %}
 <div class="section-title">첨부 · {{ attachments|length }}
-  <span class="muted" style="font-weight:400;font-size:.75rem">— 클릭하면 미리보기 · ⬇ 저장으로 다운로드 · 파일을 끌어오면 추가</span>
+  <span class="muted" style="font-weight:400;font-size:.75rem">— 📌 본문 인용 {{ ncited }} · 🔗 자동 연결 {{ attachments|length - ncited }} · 클릭 미리보기 · 파일을 끌어오면 추가</span>
 </div>
 
 {% if imgs or data %}
@@ -45,7 +46,7 @@
       <div class="att-thumb"><img loading="lazy" src="/api/file/{{ f.rel }}" alt="{{ f.name }}"></div>
       <div class="att-meta">
         <div class="mono" style="font-size:.7rem;font-weight:600">{{ f.name }}</div>
-        <div class="muted" style="font-size:.68rem">{{ f.size_kb }} KB{% if f.pair %} · 📊 {{ f.pair.name }} ({{ f.pair.size_kb }} KB){% endif %}</div>
+        <div class="muted" style="font-size:.68rem"><span class="src-{{ f.src }}">{{ '📌' if f.src=='cited' else '🔗' }}</span> {{ f.size_kb }} KB{% if f.pair %} · 📊 {{ f.pair.name }} ({{ f.pair.size_kb }} KB){% endif %}</div>
       </div>
       {% if f.pair %}
       <button type="button" class="btn sm att-pv" data-rel="{{ f.pair.rel }}"
@@ -67,7 +68,7 @@
       <div class="att-icon">{{ '📊' if f.kind=='csv' else ('📕' if f.kind=='pdf' else '📦') }}</div>
       <div class="att-meta">
         <div class="mono" style="font-size:.7rem;font-weight:600">{{ f.name }}</div>
-        <div class="muted" style="font-size:.68rem">{{ f.size_kb }} KB · {{ f.kind|upper }}</div>
+        <div class="muted" style="font-size:.68rem"><span class="src-{{ f.src }}">{{ '📌' if f.src=='cited' else '🔗' }}</span> {{ f.size_kb }} KB · {{ f.kind|upper }}</div>
       </div>
       <a class="btn sm att-dl" href="/api/file/{{ f.rel }}?dl=1" download>⬇ 저장</a>
     </div>

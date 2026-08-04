@@ -41,6 +41,22 @@ def load_bv(system="modelc"):
     return np.array(d), np.array(e)
 
 
+def bv_eperc(system):
+    """등록 CSV 헤더에서 그 계의 ΔE_perc 를 읽는다.
+
+    ⚠ 계마다 값이 다른데(0.195/0.228/0.223/0.281) 기본값을 하나 박아두면
+      다른 계를 그릴 때 조용히 틀린 선이 그려진다 — 자동 조회로 막는다.
+    """
+    import re as _re
+    for ln in open(BV_CSV, encoding="utf-8-sig"):
+        if not ln.lstrip('"﻿').startswith("#"):
+            break
+        m = _re.search(rf"{system}:.*?E_perc\s+([0-9.]+)\s*eV", ln)
+        if m:
+            return float(m.group(1))
+    raise SystemExit(f"⛔ {system} 의 E_perc 를 CSV 헤더에서 못 찾았다 — --E_perc 로 지정")
+
+
 def load_csv2(path):
     with open(path, encoding="utf-8-sig") as f:
         rows = [r for r in csv.reader(f) if r and not r[0].lstrip('"﻿').startswith("#")]
@@ -55,12 +71,16 @@ def main():
     ap.add_argument("--system", default="modelc")
     ap.add_argument("--disp", default="LPSCl1.6")
     ap.add_argument("--T", type=float, default=600)
-    ap.add_argument("--E_perc", type=float, default=0.2283)
-    ap.add_argument("--blocks", default="0.1875,0.1675,0.1825",
-                    help="블록 수렴 검사 F* 들 (half1,half2,quarter)")
+    ap.add_argument("--E_perc", type=float, default=None,
+                    help="비우면 등록 CSV 헤더에서 자동 조회")
+    ap.add_argument("--blocks", default="",
+                    help="블록 수렴 검사 ΔF_perc 들 (예: 0.1875,0.1675,0.1825). 비우면 표시 안 함")
     ap.add_argument("--out", default="docs/figures/bv_vs_pmf_modelc.png")
     a = ap.parse_args()
 
+    if a.E_perc is None:
+        a.E_perc = bv_eperc(a.system)
+        print(f"   ΔE_perc({a.system}) = {a.E_perc:.4f} eV (등록 CSV 헤더에서 조회)")
     P = Path(a.pmf_dir)
     dbv, ebv = load_bv(a.system)
     dpm, epm = load_csv2(P / f"{a.tag}_pmf_profile.csv")

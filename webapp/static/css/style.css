@@ -936,3 +936,7 @@ tr.row-dim{opacity:.62}
 .con-badge{display:inline-block;font-size:.66rem;font-weight:600;text-decoration:none;
   background:#eef6ff;color:#1d4ed8;border:1px solid #bfdbfe;border-radius:999px;padding:1px 7px}
 .con-badge:hover{background:#dbeafe}
+
+/* 첨부 출처 (2026-08-05): 📌 본문 인용 · 🔗 파일명 규칙 자동 연결 */
+.src-cited{filter:none}
+.src-auto{opacity:.55}

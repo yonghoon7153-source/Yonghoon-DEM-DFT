@@ -2280,6 +2280,43 @@ def safe_repo_path(rel: str) -> Path | None:
     return None
 
 
+# 파일명 → 개념 자동 연결 규칙 (2026-08-05)
+#   본문에 경로를 적어야만 첨부되던 걸 보완한다 — 새 그림·CSV 를 만들면 문서를 안 고쳐도
+#   해당 개념 페이지에 뜬다. 본문 언급분은 "cited", 규칙 매칭분은 "auto" 로 구분 표시.
+#   ⚠ 과다 첨부를 막으려고 계열 접두사만 쓴다(와일드카드 남발 금지). 개념당 상한 24개.
+_CONCEPT_FILE_RULES = {
+    "bvse":   ("bv_path_", "bvse_", "bv_structure_", "bv_3d_", "bv_vs_pmf"),
+    "md":     ("msd_", "pmf", "arrhenius", "hops_per_ion", "bv_vs_pmf", "li_density"),
+    "beta-gate": ("msd_", "hops_per_ion", "diffusive"),
+    "dft":    ("bv_path_annotated", "bv_path_segments", "bv_vs_pmf"),
+    "cohp":   ("cohp", "icohp"),
+    "bandgap": ("dos", "pdos", "gap", "bandstructure"),
+    "elastic": ("elastic", "eos"),
+    "neb":    ("neb",),
+    "ordered_vs_disordered": ("disorder", "voronoi", "antisite"),
+}
+_AUTO_MAX = 24
+
+
+def _auto_matched(cid: str) -> list[str]:
+    pats = _CONCEPT_FILE_RULES.get(cid)
+    if not pats:
+        return []
+    hits = []
+    for d in ("docs/figures", "db/properties"):
+        base = ROOT / d
+        if not base.exists():
+            continue
+        for f in base.rglob("*"):
+            if not f.is_file() or f.suffix.lower() not in _UP_EXT:
+                continue
+            n = f.name.lower()
+            if any(p in n for p in pats):
+                hits.append((f.stat().st_mtime, str(f.relative_to(ROOT))))
+    hits.sort(reverse=True)
+    return [r for _m, r in hits[:_AUTO_MAX]]
+
+
 def concept_attachments(cid: str) -> list[dict]:
     """개념 마크다운이 **본문에서 언급한** docs/·db/ 파일을 첨부로 모은다.
 
@@ -2304,7 +2341,18 @@ def concept_attachments(cid: str) -> list[dict]:
             if not p:
                 continue
             out.append({"rel": rel, "name": p.name, "kind": _att_kind(rel),
+                        "src": "cited",
                         "size_kb": round(p.stat().st_size / 1024, 1)})
+    for rel in _auto_matched(cid):                 # 규칙 자동 연결
+        if rel in seen:
+            continue
+        p = safe_repo_path(rel)
+        if not p:
+            continue
+        seen.add(rel)
+        out.append({"rel": rel, "name": p.name, "kind": _att_kind(rel), "src": "auto",
+                    "size_kb": round(p.stat().st_size / 1024, 1)})
+
     # 같은 이름 png ↔ csv 페어링 (하우스 관례: 그림과 Origin-ready CSV 가
     #   같은 stem — `_origin` 접미는 무시하고 비교). 페어된 CSV 는 이미지 카드에
     #   업혀 나가고 데이터 탭에서 빠진다.
