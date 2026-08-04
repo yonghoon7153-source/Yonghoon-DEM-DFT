@@ -43,17 +43,24 @@
 ## 🖼 논문 그림 크로핑 (figures/)
 논문을 읽을 때 PDF 를 따로 열지 않게, **캡션을 앵커로 그림·표를 잘라** 저장한다.
 
-**보통은 이 두 줄이면 끝난다** — `litdb/inbox/` 를 훑어 digest 와 자동으로 짝지어 준다:
+처음 한 번만 — Ubuntu 24.04(WSL)는 PEP 668 로 시스템 pip 이 막혀 있어 **venv** 를 쓴다:
 ```bash
-python3 tools/litdb/extract_figures.py --inbox          # 어느 PDF ↔ 어느 논문인지 표만
-python3 tools/litdb/extract_figures.py --inbox --run    # 실제로 자르기 (--skip-done 로 이어서)
+python3 -m venv ~/.venvs/litdb && ~/.venvs/litdb/bin/pip install -q pymupdf pillow
+echo "alias litfig='~/.venvs/litdb/bin/python3 ~/Yonghoon-DEM-DFT/tools/litdb/extract_figures.py'" >> ~/.bashrc
+source ~/.bashrc
+```
+
+**그다음부터는 이 두 줄이면 끝난다** — `litdb/inbox/` 를 훑어 digest 와 자동으로 짝지어 준다:
+```bash
+litfig --inbox          # 어느 PDF ↔ 어느 논문인지 표만
+litfig --inbox --run    # 실제로 자르기 (--skip-done 로 이어서)
 ```
 매칭 앵커는 ① digest 메타의 `inbox #NN` ↔ 파일명 앞 번호 ② 제목 토큰 겹침 ③ **PDF 1쪽 본문**
 (출판사 해시 파일명 `admi…suppmat.pdf` 대응). `Sup)`/`SI`/`ESI`/`mmc` 는 SI 로 보고 같은 논문에 묶는다.
 
 한 편만 콕 집을 때 — ⚠ `<slug>` 는 **자리표시자**다. `litdb/papers/` 의 실제 파일 이름을 넣는다:
 ```bash
-python3 tools/litdb/extract_figures.py --clean \
+litfig --clean \
     --slug kraft2017_lattice_polarizability_argyrodite_Li6PS5X \
     --pdf "litdb/inbox/31. Influence of Lattice Polarizability….pdf" \
     --pdf "litdb/inbox/31. Sup) Influence of Lattice Polarizability….pdf"

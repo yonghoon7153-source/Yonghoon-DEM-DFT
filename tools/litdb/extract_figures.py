@@ -39,7 +39,17 @@ import sys
 import time
 from pathlib import Path
 
-import fitz                                    # PyMuPDF
+try:
+    import fitz                                # PyMuPDF
+except ImportError:                            # ⚠ Ubuntu 24.04+ 는 PEP 668 로 시스템 pip 이 막힌다
+    sys.exit(
+        "⛔ PyMuPDF 가 없다. Ubuntu 24.04(WSL)는 시스템 pip 이 막혀 있어(PEP 668) venv 를 쓴다:\n"
+        "     python3 -m venv ~/.venvs/litdb\n"
+        "     ~/.venvs/litdb/bin/pip install -q pymupdf pillow\n"
+        "   그 다음부터는 python3 대신 이걸로 실행:\n"
+        "     ~/.venvs/litdb/bin/python3 tools/litdb/extract_figures.py --inbox\n"
+        "   (자주 쓸 거면 ~/.bashrc 에)  alias litfig='~/.venvs/litdb/bin/python3 "
+        "~/Yonghoon-DEM-DFT/tools/litdb/extract_figures.py'")
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT_ROOT = ROOT / "litdb" / "figures"
