@@ -1,0 +1,182 @@
+{
+ "slug": "so2021_dem_mold_pressure_assb_coldpress",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/16. Effect of mold pressure on compaction and ion conductivity of all-solid-state batteries revealed by the discrete element method.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematics of our DEM model. (a) Particle interactions with an added dashpot (blue) for plastic deformation. Relation between (b) the overlap dis­ tance hov during cold pressing and (c) the equilibrium overlap distance heq after cold pressing. (For interpretation of the references to color in this figure legend, the reader is referred to the Web version of this article.)",
+   "bbox": [
+    300.6,
+    528.8,
+    565.8,
+    692.6
+   ],
+   "w": 1106,
+   "h": 683,
+   "dpi": 300,
+   "src": "16. Effect of mold pressure on compaction and ion conductivity of all-solid-state batteries revealed by the discrete element method.pdf",
+   "blank": 0.852
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Spatial particle distribution of particle structures in SE layers initial, before, during and after cold-pressing. The SEM images (j–l) are reproduced from Sakuda et al. [12], with open access permission by Springer Nature. the height of the electrode expands slightly when the pressing stops. Comparisons of the structures between DEM (g-i) and the scanning electron microscopy SEM images of Sakuda et al. [12] can be observed (g, j) before and after cold-pressing at (h, k) 74 MPa and (i, l) 360 MPa.",
+   "bbox": [
+    31.6,
+    49.4,
+    565.8,
+    274.9
+   ],
+   "w": 2227,
+   "h": 941,
+   "dpi": 300,
+   "src": "16. Effect of mold pressure on compaction and ion conductivity of all-solid-state batteries revealed by the discrete element method.pdf",
+   "blank": 0.592
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. 3D particle distribution plot of an anode electrode including AM particles (fAM = 0.5). 5",
+   "bbox": [
+    94.1,
+    447.9,
+    501.2,
+    730.8
+   ],
+   "w": 1698,
+   "h": 1179,
+   "dpi": 300,
+   "src": "16. Effect of mold pressure on compaction and ion conductivity of all-solid-state batteries revealed by the discrete element method.pdf",
+   "blank": 0.573
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. The time series of the electrode height is shown in (a). The higher the applied pressure, the more compressed the final SE layer thickness. The relative density of the final SE layer is plotted with the mold pres­ sure in (b), and the simulations are compared with the experimental results of Sakuda et al. [12]. The effect of the AM fraction in the elec­ trode on the relative density is shown in (c). The higher the AM fraction, the lower the final density of the electrode. The SE coverage of AM is plotted in (d). The higher the AM fraction, the lower is the SE coverage on the available AM surface.",
+   "bbox": [
+    94.1,
+    447.9,
+    566.0,
+    730.8
+   ],
+   "w": 1968,
+   "h": 1179,
+   "dpi": 300,
+   "src": "16. Effect of mold pressure on compaction and ion conductivity of all-solid-state batteries revealed by the discrete element method.pdf",
+   "blank": 0.636
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Compressive stress distribution of the anode layer illustrated by a box plot for different mold pressures (a), 3D plot at 400 MPa (b), histograms of different types of particle pairs (c), and plots with mold pressure (d). 6",
+   "bbox": [
+    31.6,
+    400.5,
+    565.8,
+    721.3
+   ],
+   "w": 2227,
+   "h": 1338,
+   "dpi": 300,
+   "src": "16. Effect of mold pressure on compaction and ion conductivity of all-solid-state batteries revealed by the discrete element method.pdf",
+   "blank": 0.864
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Effect of mold pressure on the equilibrium overlap ratio, presented in a box plot (a) and average values for different particle pairs (b). 7",
+   "bbox": [
+    62.5,
+    554.3,
+    536.9,
+    730.8
+   ],
+   "w": 1978,
+   "h": 736,
+   "dpi": 300,
+   "src": "16. Effect of mold pressure on compaction and ion conductivity of all-solid-state batteries revealed by the discrete element method.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Ionic transfer properties in SE plotted with mold pressure and com­ parison with experiment of Sakuda et al. [12] and Nakamura et al. [42]. (a) Relative conduction coefficient and (b) tortuosity factors are plotted with different AM fractions.",
+   "bbox": [
+    300.6,
+    49.4,
+    565.8,
+    470.4
+   ],
+   "w": 1106,
+   "h": 1755,
+   "dpi": 300,
+   "src": "16. Effect of mold pressure on compaction and ion conductivity of all-solid-state batteries revealed by the discrete element method.pdf",
+   "blank": 0.904
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Relative conduction coefficient and the dependence of the SE volume fraction. (a) Comparison between our simulations and our new correlation. (b) Comparison between our new correlation with experiments of Sakuda et al. [12] and Nakamura et al. [42].",
+   "bbox": [
+    31.6,
+    303.0,
+    296.8,
+    702.1
+   ],
+   "w": 1106,
+   "h": 1664,
+   "dpi": 300,
+   "src": "16. Effect of mold pressure on compaction and ion conductivity of all-solid-state batteries revealed by the discrete element method.pdf",
+   "blank": 0.897
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1 Parameters in the simulation. Symbol Value Units Description Reference",
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    748.6
+   ],
+   "w": 2213,
+   "h": 2989,
+   "dpi": 300,
+   "src": "16. Effect of mold pressure on compaction and ion conductivity of all-solid-state batteries revealed by the discrete element method.pdf",
+   "blank": 0.894
+  }
+ ]
+}

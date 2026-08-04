@@ -1,0 +1,429 @@
+{
+ "slug": "thakur2014_eepa_adhesive_elastoplastic_dem",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/07. Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 5,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Normal contact force-displacement function for the contact model a non-linear b linear",
+   "bbox": [
+    45.0,
+    50.1,
+    486.4,
+    230.1
+   ],
+   "w": 1840,
+   "h": 751,
+   "dpi": 300,
+   "src": "07. Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 7,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Scanning electron microscopic (SEM) image of ESKAL 500",
+   "bbox": [
+    300.2,
+    50.5,
+    547.3,
+    247.1
+   ],
+   "w": 1031,
+   "h": 820,
+   "dpi": 300,
+   "src": "07. Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model.pdf",
+   "blank": 0.155
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Paired particle of aspect ratio = 1.5",
+   "bbox": [
+    300.2,
+    269.4,
+    547.3,
+    443.9
+   ],
+   "w": 1031,
+   "h": 728,
+   "dpi": 300,
+   "src": "07. Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model.pdf",
+   "blank": 0.322
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 DEM simulation of uniaxial test: a loading, b unloading, and c unconﬁned compression",
+   "bbox": [
+    300.2,
+    50.7,
+    550.3,
+    231.1
+   ],
+   "w": 1043,
+   "h": 752,
+   "dpi": 300,
+   "src": "07. Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model.pdf",
+   "blank": 0.719
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 Conﬁned compression-axial stress (σa) versus axial strain (εa) for three random simulations and one large size simulation",
+   "bbox": [
+    45.0,
+    266.7,
+    295.1,
+    447.8
+   ],
+   "w": 1043,
+   "h": 755,
+   "dpi": 300,
+   "src": "07. Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 Unconﬁned compression-axial stress (σa) versus axial strain (εa) for three random simulations and one large size simulation. Contact model parameters used are: f0 = −0.002 N, k2 = 100 and kadh = 0 kN/m (Note: N = number of particles, ηf = porosity corresponding to 0.5kPa stress)",
+   "bbox": [
+    45.0,
+    479.2,
+    295.1,
+    661.0
+   ],
+   "w": 1043,
+   "h": 758,
+   "dpi": 300,
+   "src": "07. Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model.pdf",
+   "blank": 0.936
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "Fig. 7 Predicted unconﬁned axial stress (σa)-strain (εa) relationship. Contact model parameters used are: f0 = −0.003 N, k2 = 3.5 and kadh = 0 kN/m",
+   "bbox": [
+    45.0,
+    51.0,
+    295.2,
+    228.1
+   ],
+   "w": 1043,
+   "h": 739,
+   "dpi": 300,
+   "src": "07. Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 10,
+   "file": "fig_8.png",
+   "caption": "Fig. 8 Predicted versus test ﬂow function for a limestone powder. Contact model parameters used are: f0 = −0.003 N, k2 = 3.5 and kadh = 0 kN/m",
+   "bbox": [
+    45.0,
+    291.2,
+    295.1,
+    472.8
+   ],
+   "w": 1043,
+   "h": 758,
+   "dpi": 300,
+   "src": "07. Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 11,
+   "file": "fig_10.png",
+   "caption": "Fig. 10 Effect of particle contact plasticity on ﬂow function ( f0 = −0.002 N, Kadh = 0 kN/m)",
+   "bbox": [
+    45.0,
+    50.6,
+    295.1,
+    242.1
+   ],
+   "w": 1043,
+   "h": 799,
+   "dpi": 300,
+   "src": "07. Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 11,
+   "file": "fig_11.png",
+   "caption": "Fig. 11 Bulk plasticity (εp / ε) as a function of particle plasticity",
+   "bbox": [
+    300.2,
+    50.8,
+    534.1,
+    233.1
+   ],
+   "w": 976,
+   "h": 761,
+   "dpi": 300,
+   "src": "07. Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 11,
+   "file": "fig_12.png",
+   "caption": "Fig. 12 Conﬁned compression-axial stress (σa) versus axial strain (εa) with λp = 0",
+   "bbox": [
+    300.2,
+    257.4,
+    550.3,
+    432.5
+   ],
+   "w": 1043,
+   "h": 731,
+   "dpi": 300,
+   "src": "07. Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model.pdf",
+   "blank": 0.94
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 12,
+   "file": "fig_13.png",
+   "caption": "Fig. 13 Conﬁned compression-porosity (η) versus axial strain (εa) with λp = 0.99",
+   "bbox": [
+    45.0,
+    51.0,
+    295.1,
+    223.1
+   ],
+   "w": 1043,
+   "h": 718,
+   "dpi": 300,
+   "src": "07. Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model.pdf",
+   "blank": 0.936
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 12,
+   "file": "fig_14.png",
+   "caption": "Fig. 14 Unconﬁned strength (σu) as a function of consolidated poros- ity (ηc) at different contact plasticity",
+   "bbox": [
+    300.2,
+    50.9,
+    550.2,
+    229.1
+   ],
+   "w": 1043,
+   "h": 743,
+   "dpi": 300,
+   "src": "07. Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 12,
+   "file": "fig_15.png",
+   "caption": "Fig. 15 Normalized unconﬁned strength (σa d2/f0, σu d2/f0) vs. coor- dination number (Zi, Z): f0 = −0.002 N unless stated explicitly",
+   "bbox": [
+    300.2,
+    262.5,
+    550.2,
+    432.4
+   ],
+   "w": 1043,
+   "h": 709,
+   "dpi": 300,
+   "src": "07. Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "f16",
+   "kind": "figure",
+   "label": "16",
+   "page": 13,
+   "file": "fig_16.png",
+   "caption": "Fig. 16 Variation of porosity (ηf) at end of ﬁlling with kadh and f0 : k1 = 1 and k2 = 10 kN/m",
+   "bbox": [
+    45.0,
+    496.0,
+    295.1,
+    691.1
+   ],
+   "w": 1043,
+   "h": 814,
+   "dpi": 300,
+   "src": "07. Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model.pdf",
+   "blank": 0.959
+  },
+  {
+   "key": "f17",
+   "kind": "figure",
+   "label": "17",
+   "page": 13,
+   "file": "fig_17.png",
+   "caption": "Fig. 17 Interparticle force ratio versus ﬁll porosity",
+   "bbox": [
+    300.2,
+    523.8,
+    530.2,
+    700.5
+   ],
+   "w": 960,
+   "h": 737,
+   "dpi": 300,
+   "src": "07. Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model.pdf",
+   "blank": 0.963
+  },
+  {
+   "key": "f18",
+   "kind": "figure",
+   "label": "18",
+   "page": 14,
+   "file": "fig_18.png",
+   "caption": "Fig. 18 Consolidated porosity (ηc) as a function of consolidation stress (σ1): k1 = 1 and k2 = 10 kN/m",
+   "bbox": [
+    45.0,
+    50.7,
+    295.1,
+    236.1
+   ],
+   "w": 1043,
+   "h": 773,
+   "dpi": 300,
+   "src": "07. Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "f19",
+   "kind": "figure",
+   "label": "19",
+   "page": 14,
+   "file": "fig_19.png",
+   "caption": "Fig. 19 Predicted ﬂow function for different kadh and f0 with k1 = 1 and k2 = 10 kN/m",
+   "bbox": [
+    300.2,
+    51.0,
+    550.3,
+    205.1
+   ],
+   "w": 1043,
+   "h": 643,
+   "dpi": 300,
+   "src": "07. Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model.pdf",
+   "blank": 0.955
+  },
+  {
+   "key": "f20",
+   "kind": "figure",
+   "label": "20",
+   "page": 14,
+   "file": "fig_20.png",
+   "caption": "Fig. 20 Mohr circle for uniaxial tension and compression",
+   "bbox": [
+    300.2,
+    589.2,
+    547.3,
+    700.5
+   ],
+   "w": 1031,
+   "h": 465,
+   "dpi": 300,
+   "src": "07. Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model.pdf",
+   "blank": 0.856
+  },
+  {
+   "key": "f21",
+   "kind": "figure",
+   "label": "21",
+   "page": 15,
+   "file": "fig_21.png",
+   "caption": "Fig. 21 Normalized unconﬁned compressive force (σu d2/fatp) as a function of coordination number (Z) and consolidated porosity (ηc)",
+   "bbox": [
+    45.0,
+    51.0,
+    295.1,
+    227.1
+   ],
+   "w": 1043,
+   "h": 735,
+   "dpi": 300,
+   "src": "07. Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model.pdf",
+   "blank": 0.948
+  },
+  {
+   "key": "f22",
+   "kind": "figure",
+   "label": "22",
+   "page": 15,
+   "file": "fig_22.png",
+   "caption": "Fig. 22 Unconﬁned stress strain behaviour as a function of limiting friction (case I: f0 = −0.002 N, k2 = 10 and Kadh = 0.1 kN/m, case II: f0 = −0.007 N, k2 = 10 and kadh = 0 kN/m)",
+   "bbox": [
+    300.2,
+    50.5,
+    550.3,
+    241.1
+   ],
+   "w": 1043,
+   "h": 795,
+   "dpi": 300,
+   "src": "07. Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 8,
+   "file": "tab_1.png",
+   "caption": "Table 1 Simulation parameters Number of particles 2,200 Particle density, ρ (kg/m3) 10,000 Co-efﬁcient of restitution, e 0.4 Loading spring stiffness, k1 (kN/m) 1 Unloading spring stiffness, k2 (kN/m) 1, 1.25, 2, 5, 10, 100 −0.002 to −0.05 Adhesive strength at ﬁrst contact or constant adhesive strength, f0, (N) Adhesive parameter stiffness, kadh (kN/m) 0.1–100 Particle static friction, μsf 0.5 Particle rolling friction, μrf 0.001 Wall friction, μwf 0 Top and bottom platen friction, μPf 0.1 Wall shear modulus, N/m2 1010",
+   "bbox": [
+    46.0,
+    28.2,
+    549.3,
+    753.1
+   ],
+   "w": 2077,
+   "h": 2991,
+   "dpi": 297,
+   "src": "07. Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model.pdf",
+   "blank": 0.86
+  }
+ ]
+}

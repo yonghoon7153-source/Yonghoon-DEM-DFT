@@ -1,0 +1,125 @@
+{
+ "slug": "schreiner2020_dem_calendering_lib",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/50. Modeling of the Calendering Process for Lithium-Ion Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. a) SEM-image NMC622 b) Screenshot of DEM modeled NMC622 electrode, c) SEM-image 4000x zoom NMC622 The size of the control volume was determined as a square with an edge length of 250 µm. On the sides of the control volume, boundary conditions were assumed. The height of the control volume is set to 120 µm for the generation of the particles. The generation of the particles was implemented in a “dynamic factory”. The dynamic factory fills the control volume until it reaches the desired level by creating particles with a defined flow rate. In the next step, the electrode is trimmed to the considered electrode thickness, in this case 56 µm. This procedure has the benefit that the time-consuming particle generation process has no need for repetition if the composition remains constant whilst the layer thickness of the coating varies. Furthermore, trimming the surface layers avoids th",
+   "bbox": [
+    32.4,
+    66.6,
+    297.3,
+    288.3
+   ],
+   "w": 1105,
+   "h": 925,
+   "dpi": 300,
+   "src": "50. Modeling of the Calendering Process for Lithium-Ion Batteries.pdf",
+   "blank": 0.395
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Typical load-displacement curve for an NMC622 electrode before (a), during (b) and after (c) compaction. The contact model for the interactions of the individual particles of the electrode was chosen because of the elastoplastic behavior of the electrode. The contact model describes the behavior of the electrode by interaction parameters between the particles. To reduce complexity, the parameterization was initially divided into two steps, with the two contact models: Edinburgh Elasto-Plastic Adhesion (EEPA) [19] and Bonding [20], being examined separately. Subsequently, the contact models were combined and a further parameterization was carried out. The EEPA model was selected because, in addition to the elastoplastic behavior of the particles, the binding forces between the particles can be reproduced. These binding forces become particularly important with increasing compactio",
+   "bbox": [
+    278.4,
+    109.4,
+    595.3,
+    330.3
+   ],
+   "w": 1322,
+   "h": 921,
+   "dpi": 300,
+   "src": "50. Modeling of the Calendering Process for Lithium-Ion Batteries.pdf",
+   "blank": 0.876
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Illustration of the influence of the contact plasticity ratio for purely NMC, purely PVDF and combinations of the two. The blue line represents",
+   "bbox": [
+    38.0,
+    310.8,
+    290.3,
+    507.8
+   ],
+   "w": 1052,
+   "h": 821,
+   "dpi": 300,
+   "src": "50. Modeling of the Calendering Process for Lithium-Ion Batteries.pdf",
+   "blank": 0.889
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Comparison of the load-displacement curves for the simulation and experiment, as well as the number of broken bonds. The shift during compaction (a) can be achieved through the change of critical shear/normal stress and surface energy. The magnitude of the compression pressure (b) is mostly defined by Young´s modulus. The elastic recovery can mainly be determined by the contact plasticity ratio (c). In addition, the surface energy ∆𝑌𝑌in the EEPA model was determined as an adjustable value for a load-dependent adhesion force 𝑓𝑓𝑚𝑚𝑚𝑚𝑚𝑚 . Values used were: ∆𝑌𝑌/𝑁𝑁𝑁𝑁𝑁𝑁_𝑁𝑁𝑁𝑁𝑁𝑁= 5 𝐽𝐽𝑚𝑚2 ⁄ , ∆𝑌𝑌/𝑃𝑃𝑃𝑃𝑃𝑃𝑃𝑃_𝑁𝑁𝑁𝑁𝑁𝑁= 20 𝐽𝐽𝑚𝑚2 ⁄ and ∆𝑌𝑌/𝑃𝑃𝑃𝑃𝑃𝑃𝑃𝑃_𝑃𝑃𝑃𝑃𝑃𝑃𝑃𝑃= 60 𝐽𝐽𝑚𝑚2 ⁄ . The required compression force of the compaction plate correlates with surface energy. For an approximation with the experimental values, only slight increases are recommended, otherwise, the required maximum compression force inc",
+   "bbox": [
+    281.1,
+    132.5,
+    565.8,
+    332.0
+   ],
+   "w": 1187,
+   "h": 832,
+   "dpi": 300,
+   "src": "50. Modeling of the Calendering Process for Lithium-Ion Batteries.pdf",
+   "blank": 0.903
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. User tool with illustration of input and output variables For example, by setting the physical properties of the electrode and the information about the machine, the user is advised of potential calendering parameters for setting the desired target property of the electrode. The parameters proposed by the model are based on the parameter areas examined by Schreiner et al. [17], as well as on literature and preliminary tests. The specifications of the target properties of the electrode, such as layer thickness, density or porosity, are determined by the requirements of the final battery cell and are taken as default values for the calendering process.",
+   "bbox": [
+    32.4,
+    162.9,
+    297.2,
+    312.6
+   ],
+   "w": 1105,
+   "h": 625,
+   "dpi": 300,
+   "src": "50. Modeling of the Calendering Process for Lithium-Ion Batteries.pdf",
+   "blank": 0.465
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1. Mass fractions and density of the coating materials selected for the simulation",
+   "bbox": [
+    32.5,
+    67.8,
+    562.0,
+    829.1
+   ],
+   "w": 2083,
+   "h": 2993,
+   "dpi": 283,
+   "src": "50. Modeling of the Calendering Process for Lithium-Ion Batteries.pdf",
+   "blank": 0.785
+  }
+ ]
+}

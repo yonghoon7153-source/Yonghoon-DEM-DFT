@@ -1,0 +1,220 @@
+{
+ "slug": "lee2024_multiphysics_dem_fem_initial_pressure_assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/51. Multiphysics modeling of the influence of initial pressure on mechanical and electrochemical performance of all-solid-state batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Overall simulation flow chart and schematics of DEM using contact model and FEM for an ASSB. 2",
+   "bbox": [
+    35.6,
+    386.0,
+    558.7,
+    730.8
+   ],
+   "w": 2180,
+   "h": 1437,
+   "dpi": 300,
+   "src": "51. Multiphysics modeling of the influence of initial pressure on mechanical and electrochemical performance of all-solid-state batteries.pdf",
+   "blank": 0.854
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 7,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Graphs of powder compaction for solid electrolyte mixtures: (a) compressibility when a constant stress was applied to the Top punch (TP) and bottom punch (BP). (b) Compaction responses for the various mixing ratios. 7",
+   "bbox": [
+    31.6,
+    530.8,
+    565.8,
+    721.3
+   ],
+   "w": 2227,
+   "h": 795,
+   "dpi": 300,
+   "src": "51. Multiphysics modeling of the influence of initial pressure on mechanical and electrochemical performance of all-solid-state batteries.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 8,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Plots of punch stress for: (a) cathode mixture, (b) cathode mixture and NMC only, (c) anode mixture, and (d) anode mixture and graphite only. the compaction response was observed, and a compression rate of 70% and stress transfer of 61% were obtained at the yield stress of the mixed material, as shown in Fig. 3(c). This was mainly because graphite has the characteristics of a solid lubricant with a very high compressibility. Further enhancement was achieved by increasing the graphite content, as shown in Fig. 3(d). However, this led to imperfect compactness. Excessive insertion can lead to a high dispersion of stress owing to the poor ductility of graphite, resulting in incomplete compaction. electrolyte, middle part where the cathode meets the left part of the solid electrolyte, and far-right portion of the cathode, as shown in Fig. 4(b). The same colors and symbols represent th",
+   "bbox": [
+    31.6,
+    49.6,
+    566.0,
+    406.0
+   ],
+   "w": 2228,
+   "h": 1486,
+   "dpi": 300,
+   "src": "51. Multiphysics modeling of the influence of initial pressure on mechanical and electrochemical performance of all-solid-state batteries.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 9,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Plots showing the relative capacity with different compression ratios of electrodes and electrolytes for: (a) voltage during discharge, (b) SOC during discharge, (c) voltage during charge, and (d) SOC changes during charge. In Case 1, the compression rates for the negative electrodes, solid electrolytes, and positive electrodes (cathode) are all set at 0.7, accompanied by an external pressure of 10 MPa. Meanwhile, in Case 2, the compression rates for these components remain at 0.5, and the external pressure is also 10 MPa. overall deformation characteristics of the material. Previous studies in the field of solid-state batteries also have extensively employed von Mises stress for numerous analyses [51–54]. Specifically, when analyzing the onset and progression of the plastic behavior of electrodes in solid-state batteries, the von Mises yield criterion has been utilized [53]. Add",
+   "bbox": [
+    31.6,
+    50.3,
+    566.0,
+    450.0
+   ],
+   "w": 2228,
+   "h": 1666,
+   "dpi": 300,
+   "src": "51. Multiphysics modeling of the influence of initial pressure on mechanical and electrochemical performance of all-solid-state batteries.pdf",
+   "blank": 0.892
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 10,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. The von Mises stresses and displacement profiles in the regions of the negative electrode, solid electrolyte, and positive electrode with a compression ratio of 0.7 during: (a) and (b) discharge, and (d) and (e) charge. The von Mises stress distributions with a compression ratio of 0.7 at: (c) fully discharged and (f) fully charged states. (g) von Mises stress and (h) displacement profile in the regions of the negative electrode, solid electrolyte, and positive electrode with a compression ratio of 0.5 during discharge. (i) The von Mises stress distribution at a fully discharged state with a compression ratio of 0.5. sensitive to external pressure despite applying the same expansion ratios to the cathode, anode, and external pressure, which resulted in a slightly smaller overall displacement. The von Mises stress distribution at a fully discharged state with a compression ratio o",
+   "bbox": [
+    31.6,
+    49.7,
+    566.0,
+    482.0
+   ],
+   "w": 2228,
+   "h": 1803,
+   "dpi": 300,
+   "src": "51. Multiphysics modeling of the influence of initial pressure on mechanical and electrochemical performance of all-solid-state batteries.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 11,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. (a) Voltage profile and (b) SOC changes with respect to the relative capacity with different compression ratios of electrodes and electrolytes during discharge for Cases 3, 4, and 5 in Table 3. The von Mises stress in the regions of the negative electrode, solid electrolyte, and positive electrode during discharge in Cases: (c) 3, (d) 4, and (e) 5. In Case 3, the compression rate for the negative electrodes is 0.7, while the compression rates for both the solid electrolytes and positive electrodes are set at 0.5. Similarly, in Case 4, the compression rate for the positive electrodes is 0.7, while the compression rates for the solid electrolytes and positive electrodes are both set at 0.5. In Case 5, the compression rates for the negative electrodes and positive electrodes are 0.5, while the compression rate for solid electrolytes is set at 0.7. In all Cases for 3, 4, and 5, an ex",
+   "bbox": [
+    31.6,
+    49.7,
+    566.0,
+    316.0
+   ],
+   "w": 2228,
+   "h": 1110,
+   "dpi": 300,
+   "src": "51. Multiphysics modeling of the influence of initial pressure on mechanical and electrochemical performance of all-solid-state batteries.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 12,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Voltage profile with respect to the relative capacity with different external pressures during: (a) discharge and (c) charge. SOC changes with respect to the relative capacity with different external pressures during: (b) discharge and (d) charge. the slope variations of the SOC with respect to the compression ratio shown in Fig. 4(b). The voltage and SOC variations during the charging process are shown in Fig. 7(c) and (d), respectively. These figures demonstrate opposite behaviors to those shown in Fig. 7(a) and (b) during discharge. pressure. In summary, this study highlighted that the external pressure significantly affected the electrochemical performance, and even a small increase in the external pressure from zero could substantially improve cell performance. The localized SOC variations within the electrodes at a low external pressure demonstrated the importance of carefu",
+   "bbox": [
+    31.6,
+    50.1,
+    566.0,
+    482.0
+   ],
+   "w": 2228,
+   "h": 1801,
+   "dpi": 300,
+   "src": "51. Multiphysics modeling of the influence of initial pressure on mechanical and electrochemical performance of all-solid-state batteries.pdf",
+   "blank": 0.875
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 13,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. The von Mises stresses during discharge with: (a) zero external pressure and (d) 50 MPa external pressure. Displacement profiles in the regions of the negative electrode, solid electrolyte, and positive electrode with: (b) zero external pressure and (e) 50 MPa external pressure. The von Mises stress distributions at a fully discharged state with: (c) zero external pressure and (f) 50 MPa external pressure. development of safer and more efficient batteries, significantly affecting the advancement of the battery industry and innovations in energy- storage technology. conducted by varying the compression ratios using FEM, as shown in Table 3. When the compression ratio of both electrodes and the solid electrolyte was changed from 0.5 to 0.7, the relative capacity increased from 0.6 to 0.8. However, along with this improvement, the maximum stress in the anode increased from 76 MPa to",
+   "bbox": [
+    31.6,
+    49.8,
+    566.0,
+    316.0
+   ],
+   "w": 2228,
+   "h": 1110,
+   "dpi": 300,
+   "src": "51. Multiphysics modeling of the influence of initial pressure on mechanical and electrochemical performance of all-solid-state batteries.pdf",
+   "blank": 0.897
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1 Material properties for powder compaction.",
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    743.5
+   ],
+   "w": 2213,
+   "h": 2968,
+   "dpi": 300,
+   "src": "51. Multiphysics modeling of the influence of initial pressure on mechanical and electrochemical performance of all-solid-state batteries.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 6,
+   "file": "tab_2.png",
+   "caption": "Table 2 Major physical, electrochemical, and mechanical parameters used in the model. Parameter Anode (graphite) Solid electrolyte (LGPS) Cathode (NMC) Geometry Layer thickness L 65 μm 75 μm 70 μm Electrode height",
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    743.5
+   ],
+   "w": 2213,
+   "h": 2968,
+   "dpi": 300,
+   "src": "51. Multiphysics modeling of the influence of initial pressure on mechanical and electrochemical performance of all-solid-state batteries.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 6,
+   "file": "tab_3.png",
+   "caption": "Table 3 Simulation case studies with different external pressures and different compression rates of the negative electrode, positive electrode, and solid electrolyte.",
+   "bbox": [
+    32.6,
+    31.6,
+    564.8,
+    743.5
+   ],
+   "w": 2219,
+   "h": 2968,
+   "dpi": 300,
+   "src": "51. Multiphysics modeling of the influence of initial pressure on mechanical and electrochemical performance of all-solid-state batteries.pdf",
+   "blank": 0.903
+  }
+ ]
+}

@@ -1,0 +1,163 @@
+{
+ "slug": "mun2025_dry_electrode_technology_assb_review",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/30. Advanced Materials - 2025 - Mun - Paving the Way for Next‐Generation All‐Solid‐State Batteries Dry Electrode Technology.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic illustration highlighting the main beneﬁts of the dry electrode process for ASSBs.",
+   "bbox": [
+    42.0,
+    71.0,
+    482.0,
+    373.7
+   ],
+   "w": 1835,
+   "h": 1263,
+   "dpi": 300,
+   "src": "30. Advanced Materials - 2025 - Mun - Paving the Way for Next‐Generation All‐Solid‐State Batteries Dry Electrode Technology.pdf",
+   "blank": 0.742
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. a) Comparison of the dry (upper) and wet coating (lower) electrode processes. b) Microscopic conceptual images of the cross-sectioned dry- (upper) and wet-coated (lower) electrodes.",
+   "bbox": [
+    44.8,
+    70.5,
+    552.9,
+    359.7
+   ],
+   "w": 2118,
+   "h": 1206,
+   "dpi": 300,
+   "src": "30. Advanced Materials - 2025 - Mun - Paving the Way for Next‐Generation All‐Solid‐State Batteries Dry Electrode Technology.pdf",
+   "blank": 0.675
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Electrode microstructures are prepared via the wet and dry coating processes together with the binders and methods used in the dry elec- trode coating process. a) Microstructural diﬀerences between the wet and dry coating processes. Reproduced with permission.[31] Copyright 2024, American Chemical Society. b) Preparation of a dry-processed cathode with a low PTFE binder content (0.1–1 wt.%). Reproduced with permission.[33] Copyright 2019, Elsevier B.V. All rights reserved. c) Chemical stability of a solid electrolyte with solvent during the wet coating process. Reproduced with permission.[36] Copyright 2022, Royal Society of Chemistry. d) Strategies for the suppression of side reactions between solid electrolytes and solvents. Reproduced with permission.[38] Copyright 2020, American Chemical Society. e) Young’s modulus for various materials.[40] f) The main steps of the dry coa",
+   "bbox": [
+    44.8,
+    70.8,
+    552.9,
+    618.3
+   ],
+   "w": 2118,
+   "h": 2283,
+   "dpi": 300,
+   "src": "30. Advanced Materials - 2025 - Mun - Paving the Way for Next‐Generation All‐Solid‐State Batteries Dry Electrode Technology.pdf",
+   "blank": 0.616
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Strategies for high energy density ASSBs. a) Cell design and conﬁguration for high-energy-density ASSBs and b) increase in energy density of ASSBs according to the various strategies. Reproduced with permission.[58] Copyright 2022, OAE Publishing Inc. and [59] Copyright 2022, Elsevier. c) Control of the particle size of the PTFE binder, d) modiﬁcation of the PTFE binder, and e) engineering of the interface between the cathode active materials and solid electrolyte for a thick dry cathode for ASSBs. Reproduced with permission.[62] Copyright 2024, Elsevier B.V.,[63] Copyright 2024, Royal Society of Chemistry and.[64] Copyright 2023, Wiley-VCH. f) Diﬀerences in the porosity of solid electrolyte membranes prepared via the wet and dry coating processes. Reproduced with permission.[59] Copyright 2022, Elsevier. g) Manipulation of the ﬁbrillization behavior of the PTFE binder within t",
+   "bbox": [
+    44.8,
+    70.4,
+    552.9,
+    497.7
+   ],
+   "w": 2118,
+   "h": 1781,
+   "dpi": 300,
+   "src": "30. Advanced Materials - 2025 - Mun - Paving the Way for Next‐Generation All‐Solid‐State Batteries Dry Electrode Technology.pdf",
+   "blank": 0.539
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Figure 5. a) Schematic of the fabrication procedure and structural design of DPCE. Reproduced with permission.[51] Copyright 2023, Springer Nature. b) Schematic of the dry electrode processes of the LFP cathode active material. Reproduced with permission.[43] Copyright 2024, Wiley. c) Schematic of the fabrication procedure and structural design of the WP thick electrode using PVdF as a binder and the DLS thick electrode using pitch as a binder. Reproduced with permission.[67] Copyright 2024, Elsevier B.V. d) Overview of the fabrication process of the slurry-based electrode with a binder and the dry compression process with hG. Reproduced with permission.[68] Copyright 2019, American Chemical Society. e) Schematic of the distinctive eﬀectiveness of LiPO2F2 as an electrode additive for ASSBs. Reproduced with permission.[70] Copyright 2024, Wiley-VCH. f) The three steps involved in the fabr",
+   "bbox": [
+    44.8,
+    70.3,
+    552.9,
+    653.0
+   ],
+   "w": 2118,
+   "h": 2429,
+   "dpi": 300,
+   "src": "30. Advanced Materials - 2025 - Mun - Paving the Way for Next‐Generation All‐Solid‐State Batteries Dry Electrode Technology.pdf",
+   "blank": 0.609
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 17,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Schematic of the perspective of the use of dry electrode process for ASSBs with the relevant challenges.",
+   "bbox": [
+    44.8,
+    71.0,
+    484.8,
+    243.7
+   ],
+   "w": 1835,
+   "h": 721,
+   "dpi": 300,
+   "src": "30. Advanced Materials - 2025 - Mun - Paving the Way for Next‐Generation All‐Solid‐State Batteries Dry Electrode Technology.pdf",
+   "blank": 0.742
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 10,
+   "file": "tab_1.png",
+   "caption": "Table 1. A summary of the cell conﬁgurations, compositions, and electrochemical performance of the various battery systems is presented in Figure 5.",
+   "bbox": [
+    151.8,
+    11.9,
+    589.2,
+    771.1
+   ],
+   "w": 1727,
+   "h": 2996,
+   "dpi": 284,
+   "src": "30. Advanced Materials - 2025 - Mun - Paving the Way for Next‐Generation All‐Solid‐State Batteries Dry Electrode Technology.pdf",
+   "blank": 0.963
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 15,
+   "file": "tab_2.png",
+   "caption": "Table 2. Summary of the cell conﬁgurations, compositions, and electrochemical performances of the various battery systems presented in Figure 6.",
+   "bbox": [
+    114.8,
+    11.9,
+    589.2,
+    771.1
+   ],
+   "w": 1873,
+   "h": 2996,
+   "dpi": 284,
+   "src": "30. Advanced Materials - 2025 - Mun - Paving the Way for Next‐Generation All‐Solid‐State Batteries Dry Electrode Technology.pdf",
+   "blank": 0.965
+  }
+ ]
+}

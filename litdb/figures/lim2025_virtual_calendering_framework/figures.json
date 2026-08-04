@@ -1,0 +1,125 @@
+{
+ "slug": "lim2025_virtual_calendering_framework",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "이용민 교수님/16. Validating the Virtual Calendering Process With3D-Reconstructed Composite Electrode An OptimizationFramework for Electrode Design.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Electrochemical performance of composite electrode with diﬀerent densities and reconstructed microstructure for the virtual calendering framework. a) Rate capability and b) cycle performance of Gr||NCM622 full cells with diﬀerent cathode densities. c) Schematic of the calendering process and digitally twinned structures before and after calendering, reconstructed from FIB-SEM tomographic images. Volume fractions of each electrode component, theoretically calculated and estimated from digitally twinned electrode structures for d) uncalendared and e) calendered (3.6 g cm−3) electrode.",
+   "bbox": [
+    44.8,
+    71.1,
+    552.9,
+    563.7
+   ],
+   "w": 2118,
+   "h": 2053,
+   "dpi": 300,
+   "src": "16. Validating the Virtual Calendering Process With3D-Reconstructed Composite Electrode An OptimizationFramework for Electrode Design.pdf",
+   "blank": 0.784
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Changes in microstructural and electrochemical properties change with varying electrode densities. a) Schematic of the virtual calendering process. b) Porosity changes with varying densities, theoretically calculated and obtained from a virtual calendering process. c) Eﬀective electronic conductivity of electrodes from experiments and virtual calendering process. d) Ionic tortuosity, e) speciﬁc surface area of NCM active material (spe- ciﬁc contact area between NCM and pore), and f) speciﬁc contact area between NCM and conductive binder domain (CBD), calculated from virtual calendering structures and actual (or reconstructed) calendering structures.",
+   "bbox": [
+    44.8,
+    70.5,
+    552.9,
+    601.6
+   ],
+   "w": 2118,
+   "h": 2214,
+   "dpi": 300,
+   "src": "16. Validating the Virtual Calendering Process With3D-Reconstructed Composite Electrode An OptimizationFramework for Electrode Design.pdf",
+   "blank": 0.665
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Pore network analysis based on the virtual calendering framework. a) Pore network structure visualized using ball (pore) and stick (connection) diagram for electrodes with densities 3.4, 3.6, and 3.8 g cm−3. b) Equivalent pore radius distribution and average equivalent pore radius. c) Pore coordination number distribution and average pore coordination number, with probability representing the normalized frequency of each coordination number. d) Pore connectivity matrices for assessing overall pore connectivity.",
+   "bbox": [
+    44.8,
+    70.9,
+    552.9,
+    583.7
+   ],
+   "w": 2118,
+   "h": 2138,
+   "dpi": 300,
+   "src": "16. Validating the Virtual Calendering Process With3D-Reconstructed Composite Electrode An OptimizationFramework for Electrode Design.pdf",
+   "blank": 0.79
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Stress analysis based on the virtual calendering framework. a) von Mises stress (VMS) of the NCM active material during the calendering process to achieve target electrode densities. b) Percentage of NCM volume where particle cracking could potentially occur (crackable), exceeding VMS thresholds of 100 MPa or 150 MPa. c) 3D visualization of the crackable NCM structure and the cracked NCM structure. d) Normalized volume percentage distribution along the electrode thickness direction.",
+   "bbox": [
+    42.0,
+    71.1,
+    550.1,
+    507.7
+   ],
+   "w": 2118,
+   "h": 1820,
+   "dpi": 300,
+   "src": "16. Validating the Virtual Calendering Process With3D-Reconstructed Composite Electrode An OptimizationFramework for Electrode Design.pdf",
+   "blank": 0.666
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Virtual calendering framework-driven electrochemical performance prediction. a) 5C discharge capacity of Gr||NCM622 full cells with varying cathode densities, evaluated through both experiments and simulations. b) Spatial (across electrode thickness) and temporal distribution of the state of lithiation (SOL) during 5C discharge simulation. c) Spatial distribution of the total overpotential, electrolyte lithium-ion concentration, and electrolyte potential at the end of 5C discharge simulation for diﬀerent cathode densities.",
+   "bbox": [
+    44.8,
+    70.9,
+    552.9,
+    377.7
+   ],
+   "w": 2118,
+   "h": 1279,
+   "dpi": 300,
+   "src": "16. Validating the Virtual Calendering Process With3D-Reconstructed Composite Electrode An OptimizationFramework for Electrode Design.pdf",
+   "blank": 0.533
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 10,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Schematic illustration of various electrode designs.",
+   "bbox": [
+    42.0,
+    71.1,
+    548.0,
+    409.7
+   ],
+   "w": 2110,
+   "h": 1412,
+   "dpi": 300,
+   "src": "16. Validating the Virtual Calendering Process With3D-Reconstructed Composite Electrode An OptimizationFramework for Electrode Design.pdf",
+   "blank": 0.533
+  }
+ ]
+}

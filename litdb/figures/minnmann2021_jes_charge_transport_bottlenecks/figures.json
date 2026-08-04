@@ -1,0 +1,125 @@
+{
+ "slug": "minnmann2021_jes_charge_transport_bottlenecks",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "건식전극 논문/04. Minnmann_2021_J._Electrochem._Soc._168_040537.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic illustration of the measurement setup with electron-blocking (top) and ion-blocking (bottom) electrodes as well as representative impedance spectra. The corresponding transmission line model used for ﬁtting the impedance spectra measured in these different cases is displayed in a simpliﬁed way. The exact equivalent circuit elements used to model the impedance contributions of electronic (blue), ionic (orange), and interfacial (grey) processes are depicted at the bottom of the ﬁgure. The two resistor elements rel, 1 and rel, 2 in the electronic transport process are attributed to electronic bulk transport and interfacial charge transfer, respectively. condition “open-open”).26,32 It describes how the cell impedance ZCC(ω) depends on the impedance zel of the electron conducting phase, the impedance zion of the ion conducting phase and the impedance zint of the interface",
+   "bbox": [
+    30.0,
+    60.9,
+    558.0,
+    488.4
+   ],
+   "w": 2202,
+   "h": 1782,
+   "dpi": 300,
+   "src": "04. Minnmann_2021_J._Electrochem._Soc._168_040537.pdf",
+   "blank": 0.872
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. (a) Effective partial ionic (orange) and electronic (blue) con- ductivity of composite cathodes with different volume fractions of CAM obtained from impedance spectroscopy. Electronic conductivities were obtained using ion-blocking electrodes, and ionic conductivities were obtained using electron-blocking electrodes. Volume fractions were calcu- lated with an average porosity of 14 vol.-%. (b) Calculated tortuosity factors of the composites. The ionic bulk conductivity of the solid electrolyte is 1.6 mS cm−1 and the electronic bulk conductivity of the CAM is 10 mS cm−1. Dashed lines are guides to the eye only.",
+   "bbox": [
+    298.0,
+    60.9,
+    557.1,
+    376.1
+   ],
+   "w": 1081,
+   "h": 1314,
+   "dpi": 300,
+   "src": "04. Minnmann_2021_J._Electrochem._Soc._168_040537.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Inﬂuence of different CAM fractions on the speciﬁc charge of ASSB cathode composites and CAM during the discharge step. The obtained speciﬁc charge is normalized to the mass of the cathode composite (top) and the mass of the CAM (bottom). Dashed lines are guides to the eye only. The dashed vertical line illustrates the boundary of a pure NCM cathode with 14 % porosity. The speciﬁc charge increases with increasing CAM fraction for low and medium fractions—independent of the C-rate. The ionic charge transport becomes a major limiting factor in composite cathodes with high CAM fractions.",
+   "bbox": [
+    30.0,
+    60.9,
+    289.1,
+    389.5
+   ],
+   "w": 1081,
+   "h": 1370,
+   "dpi": 300,
+   "src": "04. Minnmann_2021_J._Electrochem._Soc._168_040537.pdf",
+   "blank": 0.897
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Inﬂuence of conductive additives (VGCF) on the speciﬁc charge of composite cathodes with different CAM fractions. The speciﬁc charge is given per mass of the CAM (a) and per mass of the composite cathode (b). Lines are guides to the eye only. In the case of high CAM fractions (blue circles), electronic percolation is sufﬁcient and the addition of VGCF has no signiﬁcant beneﬁt for the speciﬁc charge. At low CAM fractions (orange squares), the addition of VGCF increases the speciﬁc charge at all C-rates. The speciﬁc charge increase does only slightly depend on the C-rate, which indicates that the increase in speciﬁc charge mainly originates from the gain of electronically contacted, otherwise isolated, CAM.",
+   "bbox": [
+    30.0,
+    60.9,
+    558.0,
+    295.9
+   ],
+   "w": 2201,
+   "h": 980,
+   "dpi": 300,
+   "src": "04. Minnmann_2021_J._Electrochem._Soc._168_040537.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Impact of the composite cathode CAM fraction and current density on the speciﬁc charge of ASSBs. The reduction of the speciﬁc charge with increasing current density is more pronounced in ASSBs with composite cathode CAM fractions > 53 vol.-%. At current densities < 0.5 mA cm−2 only the cell with the lowest CAM fraction exhibits lower composite-speciﬁc-charge compared to the other composites. This indicates that ionic transport within the composite cathode is not limiting the speciﬁc charge at lower current densities. spectra of the pristine (coarse) and the ball milled (ﬁne) LPSCl shows a reduction of the ionic conductivity from 1.6 to 1.2 mS cm−1 cathode. The results of conductivity measurements as well as C-rate tests are summarized in Fig. 6. We observed that the microstructural modiﬁcation, i.e. the grinding of the solid electrolyte, increases σion, eff and decreases σel, e",
+   "bbox": [
+    30.0,
+    354.0,
+    558.0,
+    581.0
+   ],
+   "w": 2202,
+   "h": 947,
+   "dpi": 300,
+   "src": "04. Minnmann_2021_J._Electrochem._Soc._168_040537.pdf",
+   "blank": 0.909
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Inﬂuence of a reduced solid electrolyte particle size on the ionic and electronic charge transport in a composite cathode with a CAM fraction of 61 vol.-% (left) and the respective C-rate capability of ASSB cells with composite cathode containing the different solid electrolytes (right). Decreasing the solid electrolyte particle size leads to a more homogeneous distribution of the materials, less clustering of CAM particles, and improved contact between the solid electrolyte and the CAM. Although the effective electronic partial conductivity is decreased, a higher C-rate capability is observed, because of lower ionic transport IR drops. feasible by improved processing of the cathodes, tortuosity will probably stay higher than in LIBs, posing a challenge for the optimization of composite cathodes for ASSBs. For instance, for that composite cathode, which showed the best C-rate p",
+   "bbox": [
+    30.0,
+    60.9,
+    558.0,
+    268.2
+   ],
+   "w": 2202,
+   "h": 865,
+   "dpi": 300,
+   "src": "04. Minnmann_2021_J._Electrochem._Soc._168_040537.pdf",
+   "blank": 0.788
+  }
+ ]
+}

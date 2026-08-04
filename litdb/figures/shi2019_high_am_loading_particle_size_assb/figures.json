@@ -1,0 +1,145 @@
+{
+ "slug": "shi2019_high_am_loading_particle_size_assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/43. Advanced Energy Materials - 2019 - Shi - High Active Material Loading in All‐Solid‐State Battery Electrode via Particle.pdf",
+  "DEM 논문/45. High Active Material Loading in All‐Solid‐State Battery Electrode via Particle size optimization.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. a) Example microstructures showing the composite cathode from its initial cubic shape (top-left, with box size Lbox) to its final compact shape (bottom-left, with height L) under a pressing pressure of 200 MPa. The model was built using the following parameters: fCAM = 80 wt%, = µ 5 m SE D , = µ 5 m CAM D . b) Particle size distributions used in the simulation. The average particle diameters and standard deviations measured from the SEM images were used as inputs in the log-normal distributions. c) Ionic percolating paths for two typical CAM particles (black dash lines). The paths con- nect CAM particles to the composite cathode/bulk SE interface (bottom of the simulation box).",
+   "bbox": [
+    42.0,
+    64.9,
+    552.3,
+    346.5
+   ],
+   "w": 2128,
+   "h": 1174,
+   "dpi": 300,
+   "src": "43. Advanced Energy Materials - 2019 - Shi - High Active Material Loading in All‐Solid‐State Battery Electrode via Particle.pdf",
+   "blank": 0.768
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. a–d) SEM images of LPS with average particle diameters of a) 8, b) 5, c) 3, and d) 1.5 µm prepared using different wet-ball-milling conditions. e,f) SEM images of LZO-coated NMC cathode particles with average diameters of e) 5 and f) 12 µm. ( V V θ = / CAM CAM active is likely because of the increased grain boundary (or particle boundary) resistance, which can be worsened by any residual solvent from the wet ball milling process. LPS with four dif- ferent average particle sizes (8, 5, 3, and 1.5 µm) was tested with LZO-coated NMC particles with average particle sizes of 5 and 12 µm. Representative SEM images of all the particles are presented in Figure 2. CAM). The result for each condition was averaged using at least three different random initial configurations. The convergence of the percolation results with the simula- tion box size is discussed in Section S2 in the Support",
+   "bbox": [
+    45.0,
+    60.9,
+    555.4,
+    267.6
+   ],
+   "w": 2128,
+   "h": 862,
+   "dpi": 300,
+   "src": "43. Advanced Energy Materials - 2019 - Shi - High Active Material Loading in All‐Solid‐State Battery Electrode via Particle.pdf",
+   "blank": 0.253
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Modeling results showing the effect of a) fCAM and b) λ on θCAM. c) θCAM as a function of both λ and fCAM. d) Critical λ needed to achieve θCAM = 80%, 90%, and 98% as a function of fCAM.",
+   "bbox": [
+    41.8,
+    64.9,
+    552.3,
+    417.7
+   ],
+   "w": 2128,
+   "h": 1471,
+   "dpi": 300,
+   "src": "43. Advanced Energy Materials - 2019 - Shi - High Active Material Loading in All‐Solid‐State Battery Electrode via Particle.pdf",
+   "blank": 0.819
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Visualization of models for a) fCAM = 70 wt%, = µ 3 m SE D , b) fCAM = 80 wt%, = µ 3 m SE D , and c) fCAM = 80 wt%, = µ 5 m SE D , with CAM shown in gray and SE showed in yellow ( = µ 5 m CAM D for all three models). The composite microstructures, isolated SE percolating networks, and isolated CAM particles are shown in the left-hand, middle, and right-hand columns, respectively. The yellow surfaces in the middle column were generated using the QuickSurf method by Gaussian interpolating the SE positions weighted by their diameters.[28] The solid-gray and transparent-gray colors in the right-hand column represent the active and inactive CAM, respectively. λ from 1 to 3 doubles θCAM from ≈30% to ≈60%, but at fCAM = 85 wt% increasing λ from 1 to 8 only slightly increases θCAM from ≈16% to ≈20%. Therefore, most of the active CAM in model c is limited to the volume near the separato",
+   "bbox": [
+    44.6,
+    63.9,
+    555.4,
+    326.3
+   ],
+   "w": 2129,
+   "h": 1094,
+   "dpi": 300,
+   "src": "43. Advanced Energy Materials - 2019 - Shi - High Active Material Loading in All‐Solid‐State Battery Electrode via Particle.pdf",
+   "blank": 0.416
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. a) First-cycle voltage curves of SSBs using different-sized LPS particles in the cathode composite with fixed NMC size (5 µm) and fCAM (60 wt%). b) Comparison of experimental capacities in with model-predicted capacities. c,d) First-cycle voltage curves of SSBs using different-sized NMC particles (5 and 12 µm) in the cathode composite with fixed LPS size (3 µm for (c) and 1.5 µm for (d)) and fCAM (80 wt%). e) Comparison of experimental capacities in (c) and (d) with model-predicted capacities. delivered larger discharge capacities than those with 5-µm CAM particles (red curves), further demonstrating that a larger λ benefits θCAM. The initial discharge capacities of the four cells are compared with the model-predicted specific capacities in Figure 5e and show good agreement. energy density and safety. However, high energy density can only be achieved if cathode composites can b",
+   "bbox": [
+    41.7,
+    64.9,
+    552.5,
+    338.4
+   ],
+   "w": 2130,
+   "h": 1141,
+   "dpi": 300,
+   "src": "43. Advanced Energy Materials - 2019 - Shi - High Active Material Loading in All‐Solid‐State Battery Electrode via Particle.pdf",
+   "blank": 0.886
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Figure 6. First-cycle voltage profiles of SSBs using a) 3-µm and c) 1.5-µm LPS in the cathode composite. The blue curves represent the cells with 60 wt% NMC, 35 wt% LPS, and 5 wt% CNF (fCAM = 60 wt%), the orange curves represent the cells with 70 wt% NMC, 25 wt% LPS, and 5 wt% CNF (fCAM = 70 wt%), and the black curves represent the cells with 80 wt% NMC, 15 wt% LPS, and 5 wt% CNF (fCAM = 80 wt%). b,d) Comparison of experimental first-cycle discharge capacities with model-predicted capacities. In all the cells, 5-µm NMC particles were used. λ is increased to ≈8. To put this finding into perspective, we calculate the CAM volume ratio in the cathode composite as a function of cathode loading using previously reported densities and composite cathode porosities (Figure 7a).[29] For fCAM = 80 wt%, the volume loading is ≈50 vol%, comparable to that of a common liquid cell cathode (usually >45 v",
+   "bbox": [
+    44.7,
+    64.9,
+    555.5,
+    401.1
+   ],
+   "w": 2129,
+   "h": 1402,
+   "dpi": 300,
+   "src": "43. Advanced Energy Materials - 2019 - Shi - High Active Material Loading in All‐Solid‐State Battery Electrode via Particle.pdf",
+   "blank": 0.904
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Figure 7. a) CAM volume loading in cathode composite as a function of fCAM. The shaded area represents the experimentally reported porosities for SSB cathode composites (between 0.1 and 0.2).[29] b) θCAM as a function of both λ and CAM volume loading.",
+   "bbox": [
+    42.2,
+    64.9,
+    552.3,
+    251.9
+   ],
+   "w": 2127,
+   "h": 780,
+   "dpi": 300,
+   "src": "43. Advanced Energy Materials - 2019 - Shi - High Active Material Loading in All‐Solid‐State Battery Electrode via Particle.pdf",
+   "blank": 0.739
+  }
+ ]
+}

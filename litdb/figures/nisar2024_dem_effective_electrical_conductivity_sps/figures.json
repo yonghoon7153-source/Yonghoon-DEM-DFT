@@ -1,0 +1,201 @@
+{
+ "slug": "nisar2024_dem_effective_electrical_conductivity_sps",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/39. Discrete element model for effective electrical conductivity of spark plasma sintered porous materials.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Temperature and pressure proﬁles for the whole sintering cycle of sample 1 (as an example)",
+   "bbox": [
+    45.0,
+    50.7,
+    295.2,
+    232.1
+   ],
+   "w": 1043,
+   "h": 757,
+   "dpi": 300,
+   "src": "39. Discrete element model for effective electrical conductivity of spark plasma sintered porous materials.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 SEM images showing porosity in necks, sample with 0.164 porosity",
+   "bbox": [
+    300.2,
+    50.1,
+    550.2,
+    177.1
+   ],
+   "w": 1043,
+   "h": 530,
+   "dpi": 300,
+   "src": "39. Discrete element model for effective electrical conductivity of spark plasma sintered porous materials.pdf",
+   "blank": 0.386
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Resistance network model—circuit using centres as nodes con- nected via resistor branches",
+   "bbox": [
+    45.0,
+    87.6,
+    482.4,
+    316.3
+   ],
+   "w": 1823,
+   "h": 954,
+   "dpi": 300,
+   "src": "39. Discrete element model for effective electrical conductivity of spark plasma sintered porous materials.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Two particles of different sizes connected by the neck",
+   "bbox": [
+    300.2,
+    54.5,
+    518.8,
+    154.3
+   ],
+   "w": 912,
+   "h": 417,
+   "dpi": 300,
+   "src": "39. Discrete element model for effective electrical conductivity of spark plasma sintered porous materials.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 Neck size distribution w.r.t porosity",
+   "bbox": [
+    45.0,
+    273.8,
+    292.0,
+    400.6
+   ],
+   "w": 1030,
+   "h": 530,
+   "dpi": 300,
+   "src": "39. Discrete element model for effective electrical conductivity of spark plasma sintered porous materials.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Fig. 7 Solution for the sample with porosity of 0.164: a convergence indicator, b converging solution at different heights across the sample, c ﬁnal potential distribution across the sample",
+   "bbox": [
+    45.0,
+    50.6,
+    295.1,
+    583.1
+   ],
+   "w": 1043,
+   "h": 2220,
+   "dpi": 300,
+   "src": "39. Discrete element model for effective electrical conductivity of spark plasma sintered porous materials.pdf",
+   "blank": 0.85
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "Fig. 8 Effective conductivity without grain boundary resistance as a function of porosity",
+   "bbox": [
+    300.2,
+    50.4,
+    550.2,
+    225.1
+   ],
+   "w": 1043,
+   "h": 729,
+   "dpi": 300,
+   "src": "39. Discrete element model for effective electrical conductivity of spark plasma sintered porous materials.pdf",
+   "blank": 0.963
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 8,
+   "file": "fig_9.png",
+   "caption": "Fig. 9 Map representing parametric study to calibrate grain boundary thickness and conductivity reduction factor",
+   "bbox": [
+    300.2,
+    257.2,
+    550.3,
+    442.1
+   ],
+   "w": 1043,
+   "h": 772,
+   "dpi": 300,
+   "src": "39. Discrete element model for effective electrical conductivity of spark plasma sintered porous materials.pdf",
+   "blank": 0.516
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 9,
+   "file": "fig_10.png",
+   "caption": "Fig. 10 Effective conductivity as a function of porosity with additional grain boundary resistance",
+   "bbox": [
+    45.0,
+    51.0,
+    295.2,
+    224.1
+   ],
+   "w": 1043,
+   "h": 722,
+   "dpi": 300,
+   "src": "39. Discrete element model for effective electrical conductivity of spark plasma sintered porous materials.pdf",
+   "blank": 0.964
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1 SPS sintering processing parameters and density Heating rate (K/min) Sintering temperature (◦C) Pressure (MPa) Holding time (min) Porosity Electrical conductivity κ (S/m) Sample 1 100 1200 5 10 0.216 4.33 × 105 Sample 2 100 1300 5 10 0.164 6.14 × 105 Sample 3 100 1100 30 10 0.106 7.44 × 105 Sample 4 100 1200 30 10 0.050 8.77 × 105",
+   "bbox": [
+    46.0,
+    28.5,
+    549.3,
+    753.1
+   ],
+   "w": 2084,
+   "h": 3001,
+   "dpi": 298,
+   "src": "39. Discrete element model for effective electrical conductivity of spark plasma sintered porous materials.pdf",
+   "blank": 0.931
+  }
+ ]
+}
