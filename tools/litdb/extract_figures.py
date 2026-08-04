@@ -409,6 +409,28 @@ def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
 #   자리표시자를 직접 채우게 하지 말고, inbox 를 훑어 digest 와 자동으로 짝지어 준다.
 INBOX = ROOT / "litdb" / "inbox"
 PAPERS = ROOT / "litdb" / "papers"
+PDF_MAP = ROOT / "litdb" / "pdf_map.tsv"
+
+
+def load_map():
+    """손으로 지정한 slug ↔ PDF 짝 (litdb/pdf_map.tsv). 자동 매칭보다 **우선**한다.
+
+    ⚠ 왜 필요한가 (2026-08-06): digest 제목이 원제를 의역한 경우가 많아 파일명과 토큰이
+      안 겹친다. 문턱을 낮추면 다른 데서 오탐이 터진다(실측: 본문 색인을 넓히면 6건 중
+      3건은 붙고 다른 1건은 오히려 밀렸다). 자동으로 안 되는 것만 여기 적는다.
+      형식: `<slug>\t<PDF 파일명 일부>`  (# 은 주석). 파일명은 **부분 일치**면 된다.
+    """
+    if not PDF_MAP.exists():
+        return []
+    out = []
+    for ln in PDF_MAP.read_text(encoding="utf-8").splitlines():
+        ln = ln.split("#")[0].strip()
+        if not ln or "\t" not in ln:
+            continue
+        slug, pat = (x.strip() for x in ln.split("\t", 1))
+        if slug and pat:
+            out.append((slug, pat.lower()))
+    return out
 
 
 def pdf_roots(inbox_dir=""):
@@ -527,6 +549,7 @@ def match_inbox(inbox=INBOX, min_score=0.45, min_hits=4, rare=3):
     assign, orphan = {}, []
     # ⚠ rglob: 논문은 보통 주제·교수님별 하위 폴더로 나뉘어 있다(2026-08-06 1저자 폴더 실측).
     #   최상위만 보면 한 편도 못 찾는다. 숨김/휴지통성 폴더는 건너뛴다.
+    manual = load_map()
     for p in sorted(inbox.rglob("*.pdf")):
         if any(d.startswith((".", "~$")) or d in ("$RECYCLE.BIN", "node_modules")
                for d in p.relative_to(inbox).parts[:-1]):
@@ -535,7 +558,14 @@ def match_inbox(inbox=INBOX, min_score=0.45, min_hits=4, rare=3):
         num = int(m.group(1)) if (m := re.match(r"\s*(\d+)\s*[.)]", name)) else None
         si = bool(SI_TAG.search(name))
         slug, why = None, ""
-        if num is not None and num in bynum:
+        low = str(p.relative_to(inbox)).lower()
+        for m_slug, pat in manual:            # ① 손으로 지정한 것이 최우선
+            if pat in low:
+                slug, why = m_slug, "수동 지정"
+                break
+        if slug:
+            pass
+        elif num is not None and num in bynum:
             slug, why = bynum[num], f"inbox #{num}"
         else:
             core = re.sub(r"^\s*\d+\s*[.)]\s*", "", name)
@@ -659,6 +689,44 @@ def _report(slug, meta, skipped, dry):
     if not dry:
         print(f"→ litdb/figures/{slug}/  (figures.json 포함)")
         _read_plan(slug, meta)
+
+
+def suggest(inbox):
+    """그림이 없는 digest × 짝 못 찾은 PDF → **후보 표**를 만들어 준다.
+
+    자동 매칭이 못 붙인 것을 손으로 채우기 쉽게, pdf_map.tsv 에 그대로 붙일 수 있는
+    형태로 낸다. 사람이 보고 틀린 줄만 지우면 된다.
+    """
+    papers = _paper_index()
+    df, idf = _idf(papers)
+    have = {d.name for d in OUT_ROOT.iterdir()
+            if d.is_dir() and (d / "figures.json").exists()} if OUT_ROOT.is_dir() else set()
+    assign, orphan = match_inbox(inbox)
+    pool = [p for p, _si in orphan]
+    todo = [s for s in papers if s not in have and s not in assign]
+    print(f"=== 후보 제안: 그림 없는 digest {len(todo)}편 × 짝 못 찾은 PDF {len(pool)}개\n")
+    print("# 아래를 litdb/pdf_map.tsv 에 붙이고 **틀린 줄은 지운다** (slug<TAB>파일명 일부)")
+    n = 0
+    for s in sorted(todo):
+        tt = papers[s][0]
+        best = []
+        for p in pool:
+            ft = _toks(re.sub(r"^\s*\d+\s*[.)]\s*", "", p.stem))
+            den = sum(idf(t) for t in ft)
+            hit = ft & tt
+            sc = (sum(idf(t) for t in hit) / den) if den else 0
+            if sc > 0.12:
+                best.append((sc, p))
+        best.sort(key=lambda x: -x[0])
+        if not best:
+            continue
+        n += 1
+        for sc, p in best[:3]:
+            mark = "" if sc >= 0.3 else "#  ⚠낮음 "
+            print(f"{mark}{s}\t{p.stem[:74]}   # {sc:.0%}")
+        print()
+    print(f"# 후보가 있는 digest {n}편 — 나머지는 PDF 가 이 폴더에 없다")
+    return 0
 
 
 def _write_sources_index():
@@ -810,12 +878,20 @@ def main():
     ap.add_argument("--clean", action="store_true", help="기존 <slug> 폴더를 지우고 새로")
     ap.add_argument("--audit", action="store_true",
                     help="이미 잘라둔 것 전체 점검 (구멍·백지·SI만 등 의심스러운 것만)")
+    ap.add_argument("--suggest", action="store_true",
+                    help="그림 없는 digest × 미매칭 PDF 후보표 (pdf_map.tsv 채우기용)")
     ap.add_argument("--why", action="store_true",
                     help="--slug 과 함께: 각 캡션이 왜 살았는지/버려졌는지 좌표째로")
     a = ap.parse_args()
 
     if a.audit:
         return audit()
+
+    if a.suggest:
+        box = Path(a.inbox_dir).expanduser() if a.inbox_dir else INBOX
+        if not box.is_dir():
+            raise SystemExit(f"⛔ {box} 가 없다 — --inbox_dir 로 지정")
+        return suggest(box)
 
     if a.inbox:
         box = Path(a.inbox_dir).expanduser() if a.inbox_dir else INBOX

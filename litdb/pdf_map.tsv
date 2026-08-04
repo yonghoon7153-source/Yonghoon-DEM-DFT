@@ -1,0 +1,11 @@
+# slug ↔ PDF 파일명(부분 일치) — **자동 매칭이 못 붙인 것만** 손으로 적는다.
+#
+# 왜 필요한가: digest 제목이 원제를 의역한 경우가 많아 파일명과 토큰이 안 겹친다.
+#   문턱을 낮추면 다른 데서 오탐이 터지므로(실측), 예외만 여기 모은다.
+#   이 파일이 inbox #NN·제목·1쪽본문 어느 앵커보다 **우선**한다.
+#
+# 형식:  <slug><TAB><PDF 파일명 일부>       (# 뒤는 주석)
+# 후보 뽑기:  python3 tools/litdb/extract_figures.py --suggest --inbox_dir "<폴더>"
+#
+# 예)
+# chen2011_percolation_micromodel_composite_electrode	52. Percolation micro-model
