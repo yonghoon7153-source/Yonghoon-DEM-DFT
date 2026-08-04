@@ -26,15 +26,50 @@
   }
 
   var SRCLAB = { set: "Figure set", sec: "본문 절" };
+  var BODY = null;                 // 링크화한 digest 본문 (점프 대상)
+
+  /* 옵시디언식 점프 — 주석을 누르면 본문의 그 줄로 스크롤 + 잠깐 하이라이트.
+   * 마크다운이 HTML 로 바뀌면 `**`·백틱이 사라지므로 서버가 평문 실마리(find)를 같이 준다.
+   * 표는 칸마다 <td> 로 쪼개지므로 실마리도 한 칸 안에서만 떼어 왔다. */
+  function norm(t) { return (t || "").replace(/[`*_~\s]+/g, " ").trim(); }
+
+  function jumpTo(find, src) {
+    if (!BODY || !find) return false;
+    var needle = norm(find);
+    if (needle.length < 4) return false;
+    var pool = src === "sec"
+      ? BODY.querySelectorAll("h1,h2,h3,h4,h5,h6")
+      : BODY.querySelectorAll("td,th,li,p,h1,h2,h3,h4,h5,h6");
+    var hit = null;
+    for (var i = 0; i < pool.length && !hit; i++)
+      if (norm(pool[i].textContent).indexOf(needle) !== -1) hit = pool[i];
+    if (!hit) {                    // 실마리가 잘렸을 수 있으니 앞 20자로 한 번 더
+      var short = needle.slice(0, 20);
+      for (var j = 0; j < pool.length && !hit; j++)
+        if (norm(pool[j].textContent).indexOf(short) !== -1) hit = pool[j];
+    }
+    if (!hit) return false;
+    var row = hit.closest("tr") || hit;          // 표는 행 전체를 강조
+    row.scrollIntoView({ behavior: "smooth", block: "center" });
+    row.classList.remove("figjump");
+    void row.offsetWidth;                        // 재생을 위해 리플로 강제
+    row.classList.add("figjump");
+    setTimeout(function () { row.classList.remove("figjump"); }, 2600);
+    return true;
+  }
 
   /* digest 주석 블록 — 논문 원문 캡션과 **구분해서** 보여준다 */
   function noteHtml(rec, compact) {
     if (!rec.notes || !rec.notes.length) return "";
     var list = compact ? rec.notes.slice(0, 1) : rec.notes;
     return '<div class="fignote"><div class="fignote-h">📝 우리 digest 정리</div>' +
-      list.map(function (n) {
-        return '<div class="fignote-i"><span class="fignote-src">' +
-          esc(SRCLAB[n.src] || n.src) + "</span>" + esc(n.text) + "</div>";
+      list.map(function (n, i) {
+        var can = !!n.find;
+        return '<div class="fignote-i' + (can ? " fignote-go" : "") + '"' +
+          (can ? ' role="button" tabindex="0" title="본문의 이 줄로 이동"' +
+                 ' data-find="' + esc(n.find) + '" data-src="' + esc(n.src) + '"' : "") +
+          '><span class="fignote-src">' + esc(SRCLAB[n.src] || n.src) + "</span>" +
+          esc(n.text) + (can ? ' <span class="fignote-jump">↩ 본문</span>' : "") + "</div>";
       }).join("") +
       (compact && rec.notes.length > 1
         ? '<div class="fignote-more">+' + (rec.notes.length - 1) + " 더 (클릭)</div>" : "") +
@@ -199,7 +234,24 @@
   }
 
   /* 조립 ---------------------------------------------------------------- */
+  /* 주석 클릭 → 본문 점프 (팝업·라이트박스 어디서든) */
+  document.addEventListener("click", function (e) {
+    var g = e.target.closest && e.target.closest(".fignote-go");
+    if (!g) return;
+    e.preventDefault();
+    e.stopPropagation();
+    var lb = document.getElementById("figlb");
+    var ok = jumpTo(g.dataset.find, g.dataset.src);
+    if (ok && lb) lb.classList.remove("open");     // 큰 창은 닫아야 본문이 보인다
+    if (!ok) g.classList.add("fignote-miss");
+  }, true);
+  document.addEventListener("keydown", function (e) {
+    var g = e.target.closest && e.target.closest(".fignote-go");
+    if (g && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); g.click(); }
+  });
+
   global.figrefAttach = function (bodyEl, figs, container) {
+    BODY = bodyEl;
     if (!bodyEl) return 0;
     var old = document.querySelector(".figpane");
     if (old) old.remove();

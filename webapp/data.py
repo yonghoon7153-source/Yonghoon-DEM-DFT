@@ -2634,6 +2634,13 @@ def _keys_in(text: str, default_kind: str = "f", bare: bool = False) -> list[str
     return uniq
 
 
+def _plain(md: str) -> str:
+    """마크다운 장식을 벗겨 렌더된 본문과 대조 가능한 평문으로."""
+    t = re.sub(r"[`*_~]+", "", md or "")
+    t = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", t)      # [글](링크) → 글
+    return " ".join(t.split())
+
+
 def paper_figure_notes(pid: str) -> dict:
     """slug → {figure key: [주석 문자열]}.
 
@@ -2654,20 +2661,27 @@ def paper_figure_notes(pid: str) -> dict:
         return {}
     notes: dict[str, list[str]] = {}
 
-    def put(k, txt, src):
-        """src: 'set' = Figure set 표 한 줄, 'sec' = 그 그림을 다루는 본문 절 제목."""
+    def put(k, txt, src, find=""):
+        """src: 'set' = Figure set 표 한 줄, 'sec' = 그 그림을 다루는 본문 절 제목.
+
+        find = 렌더된 본문(HTML)에서 그 줄을 되찾을 **실마리 문자열**. 마크다운은 HTML 로
+        바뀌면서 `**`·백틱이 사라지므로 그것들을 벗겨 평문으로 남긴다 — 클릭하면
+        브라우저가 이걸로 해당 줄을 찾아 스크롤한다(옵시디언식 점프).
+        ⚠ 표는 칸마다 <td> 로 쪼개지므로 실마리는 **한 칸 안에서만** 떼어야 한다.
+        """
         txt = " ".join(txt.split())
         if not txt or len(txt) < 4:
             return
         lst = notes.setdefault(k, [])
         if len(lst) < 3 and not any(x["text"] == txt for x in lst):
-            lst.append({"src": src, "text": txt[:400]})
+            lst.append({"src": src, "text": txt[:400], "find": _plain(find or txt)[:70]})
 
     in_tbl = False
     for ln in md.splitlines():
         if ln.startswith("#"):                      # ② 소제목 (명시적 Fig 언급만)
+            head_txt = ln.lstrip("# ").strip()
             for k in _keys_in(ln):
-                put(k, ln.lstrip("# ").strip(), "sec")
+                put(k, head_txt, "sec", head_txt)
             in_tbl = False
             continue
         if _FIGTBL_HEAD.match(ln):                  # ① Figure set 표 시작
@@ -2684,7 +2698,7 @@ def paper_figure_notes(pid: str) -> dict:
             body = " · ".join(c.replace("*", "") for c in cells[1:] if c)
             kind = "t" if re.search(r"tab", head, re.I) else "f"
             for k in _keys_in(head, default_kind=kind, bare=True):
-                put(k, body, "set")
+                put(k, body, "set", cells[1] if len(cells) > 1 else head)
     for lst in notes.values():                      # 표(정확) → 절 제목(맥락) 순
         lst.sort(key=lambda x: x["src"] != "set")
     return notes

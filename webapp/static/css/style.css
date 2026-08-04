@@ -977,6 +977,21 @@ tr.row-dim{opacity:.62}
   background:var(--surface);border:1px solid var(--border);border-radius:4px;
   padding:0 5px;margin-right:5px;vertical-align:1px}
 .fignote-more{font-size:.66rem;color:var(--muted);margin-top:3px}
+/* 주석 클릭 → 본문 점프 (옵시디언식) */
+.fignote-go{cursor:pointer;border-radius:5px;padding:2px 4px;margin-left:-4px;transition:background .12s}
+.fignote-go:hover,.fignote-go:focus-visible{background:var(--surface)}
+.fignote-jump{font-size:.62rem;font-weight:700;color:var(--accent);white-space:nowrap;opacity:0}
+.fignote-go:hover .fignote-jump,.fignote-go:focus-visible .fignote-jump{opacity:1}
+.fignote-miss{opacity:.5}
+.fignote-miss .fignote-jump{color:var(--red);opacity:1}
+.fignote-miss .fignote-jump::after{content:" 못 찾음"}
+/* 도착한 줄을 잠깐 노랗게 (본문 배경과 대비되게, 다크에서도) */
+@keyframes figjump{0%{background:#fde68a}70%{background:#fef3c7}100%{background:transparent}}
+.figjump,.figjump>td,.figjump>th{animation:figjump 2.6s ease-out}
+:root[data-theme="dark"] .figjump,:root[data-theme="dark"] .figjump>td{animation-name:figjumpD}
+@keyframes figjumpD{0%{background:#4d3a10}70%{background:#33280d}100%{background:transparent}}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .figjump,
+  :root:not([data-theme="light"]) .figjump>td{animation-name:figjumpD}}
 .figtext{font-size:.8rem;line-height:1.6;margin:12px 0 0;color:var(--dim)}
 .figpane-hint{padding:5px 11px 8px;font-size:.68rem;color:var(--muted);flex:none}
 
