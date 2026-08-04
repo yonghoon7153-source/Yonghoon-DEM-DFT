@@ -221,7 +221,12 @@
     function show(rec, anchor, pin) {
       if (pinned && !pin && pinned !== rec.key) return;
       clearTimeout(hideT);
-      if (pin) pinned = pinned === rec.key ? null : rec.key;
+      // 같은 그림을 다시 누르면 닫는다. ⚠ 예전엔 pinned=null 로만 두고 hide() 를 불렀는데,
+      //   마우스가 팝업 안에 있어 over=true 라 숨김이 취소돼 안 닫혔다 (✕ 도 같은 이유).
+      if (pin) {
+        if (pinned === rec.key) { close(); return; }
+        pinned = rec.key;
+      }
       el.innerHTML =
         '<div class="figpane-bar"><b>' + esc(rec.title) + '</b>' +
         '<span class="figpane-act">' +
@@ -235,7 +240,7 @@
         (pinned ? '제목줄을 끌면 이동 · 모서리로 크기조절 · 더블클릭하면 제자리'
                 : '클릭하면 고정 · 본문에서 드래그로도 열려요') + '</div>';
       var x = el.querySelector(".figpane-x");
-      if (x) x.onclick = function () { pinned = null; hide(0); };
+      if (x) x.onclick = function (ev) { ev.preventDefault(); ev.stopPropagation(); close(); };
       el.style.display = "block";
       place(anchor);
     }
