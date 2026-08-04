@@ -310,11 +310,25 @@ def api_concept_upload(cid):
     return jsonify(r)
 
 
+def _paper_cmt_index(rel):
+    """그림 코멘트가 바뀌면 /literature 카드의 검색 색인(data-cmt)도 같이 줘야 한다.
+
+    ⚠ 그 색인은 페이지 HTML 에 **구워져** 나가므로, 방금 단 코멘트는 새로고침 전까지
+      검색에 안 걸렸다 (1저자 신고 2026-08-06: "캡션7 처럼 comment1 이렇게 뜨게").
+      코멘트를 읽을 때마다 그 논문의 최신 색인을 같이 실어 보내 화면이 스스로 맞추게 한다.
+    """
+    seg = rel.split("/")
+    if not rel.startswith("litdb/figures/") or len(seg) != 4:
+        return None
+    return {"slug": seg[2], "cmt": D.paper_comment_search().get(seg[2], "")}
+
+
 @app.route("/api/comments/<path:rel>", methods=["GET", "POST"])
 def api_comments(rel):
     """파일 코멘트 읽기/달기 (Notion 식 💬). 대상은 실존 repo 파일만."""
     if request.method == "GET":
-        return jsonify({"rel": rel, "items": D.file_comments(rel)})
+        return jsonify({"rel": rel, "items": D.file_comments(rel),
+                        "paper": _paper_cmt_index(rel)})
     d = request.get_json(silent=True) or {}
     r = D.add_file_comment(rel, str(d.get("text", "")), str(d.get("who", "")))
     return (jsonify(r), 400) if r.get("error") else jsonify(r)

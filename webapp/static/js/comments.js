@@ -43,10 +43,25 @@
     paintBadge(rel, items.length);
   }
 
+  /* /literature 카드의 검색 색인(data-cmt)을 방금 단 코멘트로 갱신.
+   * 그 값은 페이지가 그려질 때 서버가 구워 넣은 것이라, 새로고침 전엔 방금 쓴 글로
+   * 검색해도 💬 배지가 안 떴다 (1저자 신고 2026-08-06). 서버가 최신 색인을 같이 준다. */
+  function syncPaperIndex(d) {
+    if (!d || !d.paper || !d.paper.slug) return;
+    var sel = window.CSS && CSS.escape ? CSS.escape(d.paper.slug)
+                                       : d.paper.slug.replace(/"/g, '\\"');
+    var card = document.querySelector('.paper[data-id="' + sel + '"]');
+    if (!card) return;
+    if (d.paper.cmt) card.setAttribute("data-cmt", d.paper.cmt);
+    else card.removeAttribute("data-cmt");
+    // 검색 중이면 배지가 바로 뜨게 다시 거른다 (/literature 에만 있는 함수)
+    if (document.getElementById("plist") && typeof window.apply === "function") window.apply();
+  }
+
   function load(box, rel) {
     fetch("/api/comments/" + encodeURI(rel))
       .then(function (r) { return r.json(); })
-      .then(function (d) { render(box, rel, d.items || []); })
+      .then(function (d) { render(box, rel, d.items || []); syncPaperIndex(d); })
       .catch(function () {
         box.innerHTML = '<div class="muted" style="font-size:.76rem">코멘트를 못 불러왔어요</div>';
       });

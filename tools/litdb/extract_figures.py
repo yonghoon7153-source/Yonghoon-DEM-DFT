@@ -560,6 +560,23 @@ def match_inbox(inbox=INBOX, min_score=0.45, min_hits=4, rare=3):
     # 지도의 오타가 조용히 묻히지 않게 — 없는 slug / 아무 파일도 못 맞춘 패턴을 보고한다
     bad_slug = [s for s, _pat in manual if not (PAPERS / f"{s}.md").exists()]
     used = set()
+
+    # ⚠ **번호가 유일할 때만 번호를 쓴다** (2026-08-06 1저자 발견).
+    #   폴더가 주제별로 나뉘어 있고(DEM 논문/·DFT 먹인 논문/·이상욱 교수님/…) **폴더마다 01 부터
+    #   다시 매겨진다**. 그래서 `#33` 이 서로 다른 논문 두 편을 가리켰고, 둘 다 같은 slug 로 붙어
+    #   argyrodite 논문 그림 목록에 DEM 그림 20장이 섞였다(adeli2019: 37장 중 20장이 남의 것,
+    #   같은 라벨끼리 덮어써서 원래 Fig 1 은 사라졌다). 전체 112편 중 19편이 이 상태였다.
+    #   → 번호가 여러 폴더에서 겹치면 번호는 열쇠가 아니다. 제목 토큰으로만 판정한다.
+    _num_cores = {}
+    for _p in inbox.rglob("*.pdf"):
+        if any(d.startswith((".", "~$")) or d in ("$RECYCLE.BIN", "node_modules")
+               for d in _p.relative_to(inbox).parts[:-1]):
+            continue
+        if (mm := re.match(r"\s*(\d+)\s*[.)]", _p.stem)):
+            core = re.sub(r"^\s*\d+\s*[.)]\s*", "", _p.stem)
+            core = SI_TAG.sub(" ", core).strip().lower()[:45]   # 같은 논문의 SI 판본은 한 편으로
+            _num_cores.setdefault(int(mm.group(1)), set()).add(core)
+    dup_nums = {n for n, cores in _num_cores.items() if len(cores) > 1}
     for p in sorted(inbox.rglob("*.pdf")):
         if any(d.startswith((".", "~$")) or d in ("$RECYCLE.BIN", "node_modules")
                for d in p.relative_to(inbox).parts[:-1]):
@@ -576,7 +593,7 @@ def match_inbox(inbox=INBOX, min_score=0.45, min_hits=4, rare=3):
                 break
         if slug:
             pass
-        elif num is not None and num in bynum:
+        elif num is not None and num in bynum and num not in dup_nums:
             slug, why = bynum[num], f"inbox #{num}"
         else:
             core = re.sub(r"^\s*\d+\s*[.)]\s*", "", name)
