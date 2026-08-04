@@ -998,8 +998,10 @@ tr.row-dim{opacity:.62}
   :root:not([data-theme="light"]) .figjump>td{animation-name:figjumpD}}
 .figtext{font-size:.8rem;line-height:1.6;margin:12px 0 0;color:var(--dim)}
 .figpane-hint{padding:5px 11px 8px;font-size:.68rem;color:var(--muted);flex:none}
-.figpane-dragging{opacity:.92;box-shadow:0 24px 60px rgba(16,24,40,.28);transition:none}
-.figpane-dragging .figpane-img{pointer-events:none}   /* 끌 때 그림이 선택되지 않게 */
+/* ⚠ 끌 때 pointer-events:none 을 쓰면 안 된다 — 종료를 한 번 놓치면 스크롤이 영영 막힌다.
+   선택 방지는 user-select 로 충분하다 (제목줄에 이미 걸려 있다). */
+.figpane-dragging{opacity:.92;box-shadow:0 24px 60px rgba(16,24,40,.28);transition:none;
+  user-select:none}
 
 .figstrip{margin-top:26px;padding-top:16px;border-top:1px solid var(--border)}
 .figstrip-head{font-size:.85rem;font-weight:700;color:var(--navy);margin-bottom:10px}

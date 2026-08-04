@@ -196,6 +196,20 @@ function toggleSort(){
     : origOrder;
   arr.forEach(function(c){plist.appendChild(c);});
 }
+// 캡션 색인은 "<key> <캡션>" 을 ¦ 로 이은 것 — 그림 단위로 세고 이름을 만든다
+function figHits(idx, q){
+  var n=0, names=[];
+  (idx||'').split('\u00a6').forEach(function(p){
+    if(p.indexOf(q)<0) return;
+    n++;
+    if(names.length<8){
+      var k=(p.split(' ')[0]||'');
+      names.push((k[0]==='t'?'Table ':(k[0]==='s'?'Scheme ':'Fig '))+k.slice(1).toUpperCase());
+    }
+  });
+  if(n>names.length) names.push('외 '+(n-names.length)+'장');
+  return {n:n, names:names};
+}
 function apply(){
   var n=0;
   document.querySelectorAll('.paper').forEach(function(c){
@@ -203,10 +217,15 @@ function apply(){
     var okP = !curPI || (c.dataset.pi||'').split(',').indexOf(curPI)>=0;
     // 제목·id·주제로 먼저, 없으면 **그림 캡션**까지 (캡션으로만 걸린 건 카드에 표시)
     var inMeta = !curQ || (c.dataset.t||'').indexOf(curQ)>=0;
-    var inFig  = !inMeta && !!curQ && (c.dataset.fig||'').indexOf(curQ)>=0;
+    var mk = (!inMeta && curQ) ? figHits(c.dataset.fig||'', curQ) : null;
+    var inFig = !!(mk && mk.n);
     var okQ = inMeta || inFig;
     var fb = c.querySelector('.figmatch');
-    if(fb) fb.style.display = inFig ? '' : 'none';
+    if(fb){
+      fb.style.display = inFig ? '' : 'none';
+      if(inFig){ fb.textContent = '🔍 캡션 ' + mk.n;
+                 fb.title = mk.names.join(', ') + ' 캡션에서 찾았어요 (제목에는 없음)'; }
+    }
     var okTP = !curTP || (curTP==='__fav'
                  ? favSet().has(c.dataset.id||'')
                  : (c.dataset.tp||'').split(',').indexOf(curTP)>=0);

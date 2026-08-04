@@ -2751,13 +2751,15 @@ def paper_figure_search() -> dict[str, str]:
             figs = json.loads(j.read_text(encoding="utf-8")).get("figures", [])
         except (OSError, ValueError):
             continue
+        # 그림 단위로 셀 수 있게 "<key> <캡션>" 을 ¦ 로 이어 붙인다 — 검색 결과에
+        # "몇 장에서 걸렸나 / 어느 그림인가" 를 표시하기 위해 (2026-08-06 1저자 요청).
         parts = []
         for f in figs:
             c = " ".join((f.get("caption") or "").split())[:110]
             if c:
-                parts.append(c)
+                parts.append((f.get("key") or "") + " " + c)
         if parts:
-            out[j.parent.name] = " ".join(parts).lower()[:6000]
+            out[j.parent.name] = "\u00a6".join(parts).lower()[:9000]
     return out
 
 

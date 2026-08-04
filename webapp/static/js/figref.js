@@ -147,7 +147,12 @@
     }
 
     function place(anchor) {
-      if (userSize) { el.style.width = userSize[0] + "px"; el.style.height = userSize[1] + "px"; }
+      if (userSize) {
+        // 사용자가 키운 크기는 max-height 상한(90vh)에 막히면 안 된다 — 상한을 푼다
+        el.style.maxHeight = "none";
+        el.style.width = userSize[0] + "px";
+        el.style.height = userSize[1] + "px";
+      }
       if (userPos) {                        // 사용자가 옮겨 놓은 자리를 지킨다
         var c = clampIn(userPos[0], userPos[1], el.offsetWidth, el.offsetHeight);
         el.style.left = c[0] + "px"; el.style.top = c[1] + "px";
@@ -184,25 +189,28 @@
       var dx = e.clientX - r.left, dy = e.clientY - r.top;
       pinned = pinned || "__drag";          // 끌기 시작하면 사라지지 않게
       el.classList.add("figpane-dragging");
-      bar.setPointerCapture(e.pointerId);
+      // ⚠ 이동/종료는 **window** 에 건다. 바(bar)에만 걸면 포인터가 바 밖으로 나간 채
+      //   놓였을 때 up 을 못 받아 figpane-dragging 이 남고, 그 클래스의 pointer-events:none
+      //   때문에 그림이 스크롤조차 안 된다 (2026-08-06 1저자 신고).
       function mv(ev) {
         var c = clampIn(ev.clientX - dx, ev.clientY - dy, r.width, r.height);
         userPos = c;
         el.style.left = c[0] + "px"; el.style.top = c[1] + "px";
       }
-      function up(ev) {
-        bar.releasePointerCapture(ev.pointerId);
-        bar.removeEventListener("pointermove", mv);
-        bar.removeEventListener("pointerup", up);
+      function up() {
+        window.removeEventListener("pointermove", mv);
+        window.removeEventListener("pointerup", up);
+        window.removeEventListener("pointercancel", up);
         el.classList.remove("figpane-dragging");
       }
-      bar.addEventListener("pointermove", mv);
-      bar.addEventListener("pointerup", up);
+      window.addEventListener("pointermove", mv);
+      window.addEventListener("pointerup", up);
+      window.addEventListener("pointercancel", up);
     });
     el.addEventListener("dblclick", function (e) {
       if (!(e.target.closest && e.target.closest(".figpane-bar"))) return;
       userPos = userSize = null;            // 자동배치로 되돌리기
-      el.style.height = "";
+      el.style.height = ""; el.style.maxHeight = "";
       place(null);
     });
     // CSS resize 로 크기를 바꾸면 기억한다
@@ -251,7 +259,9 @@
       }, ms == null ? 160 : ms);
     }
     function close() { pinned = null; over = false; userPos = userSize = null;
-                       el.style.height = ""; el.style.display = "none"; }
+                       el.style.height = ""; el.style.maxHeight = "";
+                       el.classList.remove("figpane-dragging");   // 혹시 남았으면 정리
+                       el.style.display = "none"; }
     return { show: show, hide: hide, close: close, el: el };
   }
 
@@ -323,6 +333,9 @@
     var g = e.target.closest && e.target.closest(".fignote-go");
     if (g && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); g.click(); }
   });
+
+  // /literature 검색이 "몇 장에서 걸렸나"를 세도록 키 접두 + 구분자로 저장한다
+  global.FIGSEP = "\u00a6";
 
   global.figrefAttach = function (bodyEl, figs, container) {
     BODY = bodyEl;
