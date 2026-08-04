@@ -1169,13 +1169,19 @@ def _selftest():
         np.percentile(_t, 100.0) >= np.percentile(_t, 95.0) >= np.percentile(_t, 90.0))
     chk('am-jam: q 는 [1,100] 으로 클램프된다 (0/음수/초과 입력 방어)',
         float(np.clip(0.0, 1.0, 100.0)) == 1.0 and float(np.clip(150.0, 1.0, 100.0)) == 100.0)
-    #    지지 면적: 평면 h 를 내릴수록 관통 입자와 단면적이 단조 증가해야 한다.
+    #    지지 척도 = **그림자** (d 를 r 로 캡): 리뷰 S9 — 단면적 π(r²−(r−d)²) 는 d>2r(완전 통과)에서
+    #    0 이 되어 비단조였다 (실측 q=75 66.5% → q=70 64.4%).  옛 selftest 는 fixture 최대 d 가 정확히
+    #    2r 이라 경계를 한 번도 안 넘었다 — 한 스텝만 넘겨도 실패하는 검사였다.  경계 너머까지 검사한다.
     _r = np.full(len(_t), 1.0)
     def _supp_at(h):
         d = _t - h; m = d > 0
-        return float(np.pi * np.maximum(_r[m] ** 2 - (_r[m] - d[m]) ** 2, 0.0).sum())
-    chk('am-jam: 지지 단면적은 평면을 내릴수록 단조 증가',
-        _supp_at(12.0) <= _supp_at(11.0) <= _supp_at(10.5) <= _supp_at(10.0))
+        dc = np.minimum(d[m], _r[m])
+        return float(np.pi * np.maximum(_r[m] ** 2 - (_r[m] - dc) ** 2, 0.0).sum())
+    chk('am-jam: 그림자 면적은 평면을 내릴수록 단조 증가 — 완전-통과(d>2r) 경계 너머 포함',
+        _supp_at(12.0) <= _supp_at(11.0) <= _supp_at(10.5) <= _supp_at(10.0)
+        <= _supp_at(9.0) <= _supp_at(8.0) <= _supp_at(7.0))
+    chk('am-jam: 완전 통과 입자의 그림자 = πr² (0 으로 사라지지 않는다)',
+        abs(_supp_at(7.0) - len(_t) * np.pi) < 1e-9)
     chk('am-jam: 최고점 평면의 지지 면적은 0 (그 위엔 아무것도 없다)',
         _supp_at(float(_t.max())) == 0.0)
 
@@ -1300,7 +1306,8 @@ def main(argv):
     rng = np.random.default_rng(args.seed)
     am_c = None; am_r = None; am_r_pristine = None                                       # (pristine radii = restart fingerprint)
     AM_vol = 0.0; am_top = 0.0; um_box = 0.0; am_jam_z = 0.0   # fixed-AM scaffold bookkeeping
-    _am_jam_supp = 0.0                                        # 잼 평면이 얹히는 AM 단면적 비율
+    _am_jam_supp = 0.0                                        # 잼 평면이 얹히는 AM 그림자 비율
+    _am_jam_status = 'off'                                    # off|active|no_percolating_cluster|disabled_error:*
     if args.am_scaffold:
         # DEM→MPM scaffold: real AM are FIXED (loaded from the LIGGGHTS dump) and become a grid
         # obstacle; only SE is the MPM material, RSA-packed into the interstices to a target volume
@@ -1410,6 +1417,9 @@ def main(argv):
                     _lab = np.arange(_N)
                 _floor_am = (am_c[:, 2] - am_r) <= (FLOOR + 1.5 * _rmed)             # AM resting on/near the floor
                 _perc = np.isin(_lab, np.unique(_lab[_floor_am])) if _floor_am.any() else np.zeros(_N, bool)
+                if args.am_jam_quantile < 50.0:
+                    sys.exit(f'[am-jam] --am-jam-quantile {args.am_jam_quantile:g} < 50 은 거부합니다 — '
+                             f'평면이 베드 중턱에 박혀 porosity 가 조용히 0%% 로 갑니다 (95 오타?).')
                 _q = float(np.clip(args.am_jam_quantile, 1.0, 100.0))
                 _n_supp = 0; _supp = 0.0
                 if _perc.any():
@@ -1425,8 +1435,15 @@ def main(argv):
                     #   except 에 잡혀 [am-jam] DISABLED 로 조용히 잼 전체가 꺼진다 (2026-08-05 실런에서
                     #   q=95 가 무시되고 legacy 정지 12.76% 까지 내려간 원인).  박스 면적을 지역 계산.
                     _area_jam = float(WIDTH * WIDTH)   # 진단용 비율 — periodic 의 _LATW²와 <1% 차
-                    _supp = float(np.pi * np.maximum(_rr ** 2 - (_rr - _d[_hit]) ** 2, 0.0).sum()) / max(_area_jam, 1e-30)
+                    # ★ 지지 척도는 단면적이 아니라 **그림자**다 (리뷰 S9): 평면을 완전히 통과한 입자
+                    #   (d>2r)의 단면적은 기하상 0 이라 np.maximum 이 0 을 주면 척도가 비단조가 된다
+                    #   (실측: q=75 66.5% → q=70 64.4%).  d 를 r 로 캡 → d≥r 이면 πr² (최대 그림자).
+                    _dc = np.minimum(_d[_hit], _rr)
+                    _supp = float(np.pi * np.maximum(_rr ** 2 - (_rr - _dc) ** 2, 0.0).sum()) / max(_area_jam, 1e-30)
                     _am_jam_supp = _supp
+                _am_jam_status = 'active' if am_jam_z > 0.0 else 'no_percolating_cluster'
+                if not _perc.any():
+                    print(f'  [am-jam] no floor-connected AM cluster ({_N} AM) → jam off')
                 print(f'  [am-jam] percolating AM skeleton: {int(_perc.sum())}/{_N} floor-connected, '
                       f'q={_q:g} → jam_z={am_jam_z:.3f} box = bed {(am_jam_z - FLOOR) * um_box:.2f}µm '
                       f'(am_top {am_top:.3f});  지지 {_n_supp} AM · 면적 {_supp:.3%} of platen '
@@ -1435,6 +1452,7 @@ def main(argv):
                          if _q >= 100.0 else ''))
             except Exception as _e:
                 print(f'  [am-jam] DISABLED ({_e}) → no geometric jam'); am_jam_z = 0.0
+                _am_jam_status = f'disabled_error:{type(_e).__name__}'   # 리뷰 S11: 조용한 no-op 을 provenance 에 남긴다
         # THICK-FILM vertical grid: a tall electrode (z_extent > lateral) would overflow the cubic
         # unit box (158µm/30µm → z maps to ~5).  Size nz so the grid spans [0, WALL0] at the SAME
         # dx as the lateral cells → SE keeps its calibrated resolution.  nz = n_grid when it fits
@@ -2445,6 +2463,7 @@ def main(argv):
     _dsc_tgt = float('inf')          # fail-safe: 0.0 이면 p>=0 이 항상 참 → 즉시 오정지
     _dsc_armed = False
     _dsc_qs_last = False; _dsc_qs_n = 0   # 정지-증명으로 닫힌 프로브 수
+    _geom_stop = None                     # 'am_jam'|'hard_floor' — 기하 정지가 reached 를 만들었다면
     _DSC_SETTLE_MAX = 12             # ★ 하강 전용 상한.  제하용 200 을 쓰면 문턱 근방에서
                                      #   프로브 하나가 198 프레임을 먹어 --frames 150 이 못 낸다
     _dsc_resumes = 0                      # 프로브가 "가짜 crossing" 이라 판정해 하강을 재개한 횟수
@@ -2670,6 +2689,7 @@ def main(argv):
                 _dsc_tgt = float(target - am_skel)                    # SE 가 실제로 넘어야 하는 문턱
                 if hard_floor or am_jam:
                     descend = False                                  # 기하 정지 — 즉시, 프로브 불필요
+                    _geom_stop = 'am_jam' if am_jam else 'hard_floor'   # 리뷰 F/S10: 응력 정지로 위장 금지
                 elif not args.stop_freeze_probe:
                     descend = (p + am_skel < target)                 # 기본 = 옛 순간 비교 (검증된 코퍼스 경로)
                 elif _dsc_left > 0:
@@ -2833,8 +2853,11 @@ def main(argv):
                 _srv_left = max(1, _srv_settle)                  # 첫 진입 → 바로 프로브 창
                 wall_vel[None] = 0.0
         por_end = por; p_end = p
-        if reached and por_at_target < 0:
+        if reached and por_at_target < 0 and _geom_stop is None:
             por_at_target = por                              # porosity when target stress was FIRST reached
+            # ★ 기하 정지(_geom_stop)면 여기 안 들어온다 — 그 경우 target 응력에 도달한 적이 없으므로
+            #   FINAL 은 'n/a (target never reached)' 를 찍는다 (리뷰 F: q=100 잼 런이 wallP 0.0000 인데
+            #   porosity@target=19.59% 를 찍던 거짓 라벨의 수정).
         _conv_need = 12 if args.servo_legacy else SERVO_HOLD
         if not args.quiet and (frame % args.print_every == 0 or conv >= _conv_need):
             thick = f"  thickness={height*um_box:5.2f}µm" if um_box > 0 else ""
@@ -3013,12 +3036,13 @@ def main(argv):
             'am_jam_z_um': (round((am_jam_z - FLOOR) * um_box, 3)
                             if (args.am_jam and am_jam_z > 0 and um_box > 0) else None),
             'am_jam_support_frac': (round(float(_am_jam_supp), 5) if args.am_jam else None),
+            'am_jam_status': _am_jam_status,
             # ── ★ 하강 정지의 출처 (2026-08-04) — "이 porosity 를 어떻게 얻었나" 를 payload 가 스스로 말한다.
             #    stop_mode='freeze_probe' 면 정지가 **정지 판독**으로 결정됐다는 뜻이고, 'legacy_moving'
             #    이면 움직이는 플래튼 판독으로 결정된 옛 경로다(그 경우 porosity 는 걸음 수의 함수일 수 있다).
             #    settled_over_target 은 최종 정착 응력 / 목표 — 1 근처가 아니면 "목표 압력 상태" 라고
             #    부르면 안 된다 (실측: 옛 경로 real_14 = 0.021, P:S 킷 = 0.009~0.049).
-            'stop_mode': ('freeze_probe' if args.stop_freeze_probe else 'legacy_moving'),
+            'stop_mode': (_geom_stop or ('freeze_probe' if args.stop_freeze_probe else 'legacy_moving')),
             'descend_probes': int(_dsc_probes),
             'descend_probe_resumes': int(_dsc_resumes),
             # ★ 판정 경로 (적대리뷰 S1): 실측 11개 프로브 중 **0개** 만 정지 증명(qs)을 통과했고
