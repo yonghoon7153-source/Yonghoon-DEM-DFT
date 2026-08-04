@@ -4,8 +4,8 @@
  "maxpx": 3000,
  "generated": "2026-08-04",
  "sources": [
-  "31. Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf",
-  "31. Sup) Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf"
+  "664401af-31._Influence_of_Lattice_Polarizability_on_the_Ionic_Conductivity_in_the_Lithium_Superionic_Argyrodites_Li6PS5X_X__Cl_Br_I.pdf",
+  "38f51c84-31._Sup_Inl_Br_I.pdf"
  ],
  "figures": [
   {
@@ -17,15 +17,15 @@
    "caption": "Figure 1. (a) Crystal structures of Li6PS5X with X = Cl, Br, I. In the ordered structure, X−anions form a cubic close-packed lattice with PS4 3− tetrahedra form Frank−Kasper polyhedra, which enclose two diﬀerent Li positions. The Li positions form localized cages in which multiple jump processes are possible. Jumps between the lithium positions (48h−24g−48h, doublet jump), intracage jumps (48h−48h), and intercage jumps can occur. The intercage jumps are suggested to dominate long-range transport, and site disorder between the 4a and 4c sites is known to aﬀect the conductivity signiﬁcantly.64 Synchrotron Pair Distribution Function Analysis. Mark-tubes made of borosilicate glass (Hilgenberg) with an outer diameter of 0.9 mm were ﬁlled in an argon glovebox and ﬂame-sealed. X-ray scattering data suitable for pair distribution function and diﬀraction analysis were performed at room temperatur",
    "bbox": [
     54.5,
-    59.9,
+    63.2,
     570.5,
     199.2
    ],
    "w": 2151,
-   "h": 581,
+   "h": 567,
    "dpi": 300,
-   "src": "31. Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf",
-   "blank": 0.819
+   "src": "664401af-31._Influence_of_Lattice_Polarizability_on_the_Ionic_Conductivity_in_the_Lithium_Superionic_Argyrodites_Li6PS5X_X__Cl_Br_I.pdf",
+   "blank": 0.815
   },
   {
    "key": "f2",
@@ -36,15 +36,15 @@
    "caption": "Figure 2. (a) Neutron powder diﬀraction data and results of the Rietveld reﬁnement for Li6PS5I as a representative reﬁnement. Small fractions of the impurity phases Li3PO4 and LiI can be seen and correspond to 1.5 and 1.6 wt %, respectively. (b) Pair distribution function [G(r)] of Li6PS5I, showing the goodness-of-ﬁt of the structural reﬁnement. An additional distance contribution around 3.4 Å can be seen that cannot be explained by the structural motif and appears to be decreasing from Cl to I.",
    "bbox": [
     54.5,
-    59.9,
+    63.2,
     570.5,
-    218.5
+    217.7
    ],
    "w": 2151,
-   "h": 662,
+   "h": 645,
    "dpi": 300,
-   "src": "31. Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf",
-   "blank": 0.895
+   "src": "664401af-31._Influence_of_Lattice_Polarizability_on_the_Ionic_Conductivity_in_the_Lithium_Superionic_Argyrodites_Li6PS5X_X__Cl_Br_I.pdf",
+   "blank": 0.892
   },
   {
    "key": "f3",
@@ -55,14 +55,14 @@
    "caption": "Figure 3. Structural data of Li6PS5X obtained from the Rietveld reﬁnements of neutron powder diﬀraction data and X-ray pair distribution function analysis. (a) Increasing lattice parameters due to the increasing ionic radii of the halide anions. (b) With increasing unit cell volume, the Li occupancies change and a higher volume stabilizes Li in the transition state Wyckoﬀposition 24g. (c) Observed site disorder between the halides and sulfur anions on the 4c site, which decreases with increasing anion radius. (d) Surface area of the triangle site for the 48h−24g−48h jump. The area increases, which stabilizes the occupancy of Li on the transition state site. Br0.25I0.75, and I) to study the eﬀect of the anion polarizability on the lattice stiﬀness and the associated ionic conductivity. The substitution of X in Li6PS5X only changes the polarizability and lattice parameter of the anion subl",
    "bbox": [
     54.5,
-    262.3,
+    267.2,
     570.5,
-    567.5
+    566.7
    ],
    "w": 2151,
-   "h": 1273,
+   "h": 1249,
    "dpi": 300,
-   "src": "31. Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf",
+   "src": "664401af-31._Influence_of_Lattice_Polarizability_on_the_Ionic_Conductivity_in_the_Lithium_Superionic_Argyrodites_Li6PS5X_X__Cl_Br_I.pdf",
    "blank": 0.944
   },
   {
@@ -74,14 +74,14 @@
    "caption": "Figure 4. Li+−Li+ jump distances in Li6PS5X obtained from the Rietveld reﬁnements of neutron powder Bragg data. With increasing unit cell volume, the intra- and intercage jump distances increase, while the doublet distance decreases, possibly due to being a measure of the Li+ disorder.",
    "bbox": [
     318.5,
-    214.5,
+    219.7,
     570.5,
     396.8
    ],
    "w": 1052,
-   "h": 761,
+   "h": 739,
    "dpi": 300,
-   "src": "31. Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf",
+   "src": "664401af-31._Influence_of_Lattice_Polarizability_on_the_Ionic_Conductivity_in_the_Lithium_Superionic_Argyrodites_Li6PS5X_X__Cl_Br_I.pdf",
    "blank": 0.934
   },
   {
@@ -93,15 +93,15 @@
    "caption": "Figure 5. (a) Representative Arrhenius plots of Li6PS5X, in 0.5 steps for clarity, obtained via temperature-dependent impedance spectroscopy. (b) Selected Nyquist plot of Li6PS5Br0.5I0.5 showing the quality of the impedance data and the ﬁt with the shown equivalent circuit. The apex frequency corresponds to 1.1 × 106 Hz and is shown as a red data point. measurements have been used previously to obtain elastic constants of lithium conducting thiophosphates73−75 and, just recently, the Debye temperature of Li10GeP2S12.50 Baranowski et al.73 found that speed of sound measurements (which are generally considered to be more accurate than indenta- tion)51−53 correlate well with indentation experiments, if the density of the samples is considered. conductivity is often given as an Arrhenius-equivalent process:71 ⎞ σ σ = − ⎛ ⎠⎟ T E k T exp 0 A ⎝⎜ B (5) with the activation energy being EA and the",
    "bbox": [
     54.5,
-    59.9,
+    63.2,
     570.5,
-    245.2
+    243.6
    ],
    "w": 2151,
-   "h": 773,
+   "h": 752,
    "dpi": 300,
-   "src": "31. Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf",
-   "blank": 0.94
+   "src": "664401af-31._Influence_of_Lattice_Polarizability_on_the_Ionic_Conductivity_in_the_Lithium_Superionic_Argyrodites_Li6PS5X_X__Cl_Br_I.pdf",
+   "blank": 0.939
   },
   {
    "key": "f6",
@@ -112,15 +112,15 @@
    "caption": "Figure 6. (a) Measured speeds of sound for Li6PS5X using the sound- response echo method (PE) and resonant ultrasound spectroscopy (RUS). With increasing polarizability of the halide anion, the speed of sound decreases and then slightly increases for Li6PS5I. (b) With decreasing lattice stiﬀness (i.e., decreasing speed of sound), the activation energy and the prefactor σ0 decrease. The increase in the iodine-containing samples can be attributed to the lack of anion disorder. The concurrent decrease of EA and σ0 leads to an overall decrease of the (c) conductivity with increasing softness of the anion lattice. The decrease of EA, as well as σ0, due to a softening of the lattice suggests an optimal lattice softness in ionic conductors for maximum conductivity. The literature values are shown for comparison.66 All error bars represent standard deviations obtained from measurements on three ",
    "bbox": [
     54.5,
-    59.9,
+    63.2,
     306.5,
-    571.6
+    570.0
    ],
    "w": 1051,
-   "h": 2133,
+   "h": 2113,
    "dpi": 300,
-   "src": "31. Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf",
-   "blank": 0.927
+   "src": "664401af-31._Influence_of_Lattice_Polarizability_on_the_Ionic_Conductivity_in_the_Lithium_Superionic_Argyrodites_Li6PS5X_X__Cl_Br_I.pdf",
+   "blank": 0.928
   },
   {
    "key": "f7",
@@ -131,15 +131,15 @@
    "caption": "Figure 7. (a) Debye frequencies in the series of Li6PS5X solid solutions. With increasing polarizability of the halide anion, the Debye frequency decreases. (b) Jump frequencies as obtained from the measured activation barriers and crystallographic jump distances against the obtained Debye frequencies. A correlation exists (dashed line as a guide-to-the-eye), linking the lattice softness and Debye frequency to the jump frequency of a moving ion. local structural changes aﬀect the activation energy as well, the entropy of migration is only dependent on the lattice vibrations. reﬂect the rate-limiting jump for long-range transport. It shows that the typical approximation of νD = ν0 is not entirely correct, as it is solely based on a parabolic potential well. Furthermore, with the changing site disorder, the predominant jump process may change, which would further aﬀect the overall jump fre",
    "bbox": [
     54.5,
-    59.9,
+    63.2,
     570.5,
-    218.8
+    217.2
    ],
    "w": 2150,
-   "h": 663,
+   "h": 643,
    "dpi": 300,
-   "src": "31. Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf",
-   "blank": 0.944
+   "src": "664401af-31._Influence_of_Lattice_Polarizability_on_the_Ionic_Conductivity_in_the_Lithium_Superionic_Argyrodites_Li6PS5X_X__Cl_Br_I.pdf",
+   "blank": 0.94
   },
   {
    "key": "f8",
@@ -150,15 +150,53 @@
    "caption": "Figure 8. Schematic of the eﬀect of lattice softening on the ion jump. With increasing lattice softness, i.e., changing bond strength, the local jump oscillators broaden, thereby altering the vibrational frequency, as well as the activation barrier for a jump.",
    "bbox": [
     54.5,
-    428.6,
+    417.4,
     306.5,
-    560.1
+    559.3
    ],
    "w": 1050,
-   "h": 549,
+   "h": 592,
    "dpi": 300,
-   "src": "31. Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf",
+   "src": "664401af-31._Influence_of_Lattice_Polarizability_on_the_Ionic_Conductivity_in_the_Lithium_Superionic_Argyrodites_Li6PS5X_X__Cl_Br_I.pdf",
    "blank": 0.916
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 7,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Overlay of pair distribution function G(r) plots for Li6PS5X, showing the additional distance at around 3.4 Å that may be due to the presence of a glassy phase.",
+   "bbox": [
+    63.9,
+    353.1,
+    534.8,
+    655.5
+   ],
+   "w": 1963,
+   "h": 1261,
+   "dpi": 300,
+   "src": "38f51c84-31._Sup_Inl_Br_I.pdf",
+   "blank": 0.924
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 15,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Meyer-Neldel plot of log(𝜎&) vs. EA. The Meyer-Neldel rule applies in the solid solutions as long as the site-disorder is prevalent, then a linear correlation cannot be observed anymore.",
+   "bbox": [
+    65.3,
+    198.6,
+    533.9,
+    712.6
+   ],
+   "w": 1953,
+   "h": 2143,
+   "dpi": 300,
+   "src": "38f51c84-31._Sup_Inl_Br_I.pdf",
+   "blank": 0.922
   },
   {
    "key": "tS1",
@@ -176,7 +214,7 @@
    "w": 1945,
    "h": 1574,
    "dpi": 300,
-   "src": "31. Sup) Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf",
+   "src": "38f51c84-31._Sup_Inl_Br_I.pdf",
    "blank": 0.719
   },
   {
@@ -195,7 +233,7 @@
    "w": 1945,
    "h": 1859,
    "dpi": 300,
-   "src": "31. Sup) Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf",
+   "src": "38f51c84-31._Sup_Inl_Br_I.pdf",
    "blank": 0.756
   },
   {
@@ -214,7 +252,7 @@
    "w": 1945,
    "h": 1673,
    "dpi": 300,
-   "src": "31. Sup) Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf",
+   "src": "38f51c84-31._Sup_Inl_Br_I.pdf",
    "blank": 0.73
   },
   {
@@ -233,7 +271,7 @@
    "w": 1945,
    "h": 1958,
    "dpi": 300,
-   "src": "31. Sup) Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf",
+   "src": "38f51c84-31._Sup_Inl_Br_I.pdf",
    "blank": 0.765
   },
   {
@@ -252,7 +290,7 @@
    "w": 1945,
    "h": 1474,
    "dpi": 300,
-   "src": "31. Sup) Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf",
+   "src": "38f51c84-31._Sup_Inl_Br_I.pdf",
    "blank": 0.701
   },
   {
@@ -271,7 +309,7 @@
    "w": 1945,
    "h": 1401,
    "dpi": 300,
-   "src": "31. Sup) Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf",
+   "src": "38f51c84-31._Sup_Inl_Br_I.pdf",
    "blank": 0.696
   },
   {
@@ -290,7 +328,7 @@
    "w": 1945,
    "h": 1500,
    "dpi": 300,
-   "src": "31. Sup) Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf",
+   "src": "38f51c84-31._Sup_Inl_Br_I.pdf",
    "blank": 0.714
   },
   {
@@ -309,7 +347,7 @@
    "w": 1945,
    "h": 1600,
    "dpi": 300,
-   "src": "31. Sup) Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf",
+   "src": "38f51c84-31._Sup_Inl_Br_I.pdf",
    "blank": 0.73
   },
   {
@@ -328,7 +366,7 @@
    "w": 1945,
    "h": 1699,
    "dpi": 300,
-   "src": "31. Sup) Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf",
+   "src": "38f51c84-31._Sup_Inl_Br_I.pdf",
    "blank": 0.741
   },
   {
@@ -347,7 +385,7 @@
    "w": 1945,
    "h": 1499,
    "dpi": 300,
-   "src": "31. Sup) Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf",
+   "src": "38f51c84-31._Sup_Inl_Br_I.pdf",
    "blank": 0.714
   },
   {
@@ -366,7 +404,7 @@
    "w": 1945,
    "h": 1699,
    "dpi": 300,
-   "src": "31. Sup) Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf",
+   "src": "38f51c84-31._Sup_Inl_Br_I.pdf",
    "blank": 0.739
   },
   {
@@ -385,7 +423,7 @@
    "w": 1945,
    "h": 1699,
    "dpi": 300,
-   "src": "31. Sup) Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf",
+   "src": "38f51c84-31._Sup_Inl_Br_I.pdf",
    "blank": 0.74
   },
   {
@@ -404,7 +442,7 @@
    "w": 1945,
    "h": 1699,
    "dpi": 300,
-   "src": "31. Sup) Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf",
+   "src": "38f51c84-31._Sup_Inl_Br_I.pdf",
    "blank": 0.741
   },
   {
@@ -423,7 +461,7 @@
    "w": 1945,
    "h": 1302,
    "dpi": 300,
-   "src": "31. Sup) Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf",
+   "src": "38f51c84-31._Sup_Inl_Br_I.pdf",
    "blank": 0.678
   }
  ]

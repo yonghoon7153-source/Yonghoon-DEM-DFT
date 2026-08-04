@@ -4,8 +4,8 @@
  "maxpx": 3000,
  "generated": "2026-08-04",
  "sources": [
-  "47. Anomalously High Ionic Conductivity of Li2SiS3‑Type Conductors.pdf",
-  "47. Sup) Anomalously High Ionic Conductivity of Li2SiS3‑Type Conductors.pdf"
+  "2eda362f-47._Anomalously_High_Ionic_Conductivity_of_Li2SiS3_Type_Conductors.pdf",
+  "192307dd-47._Sup_Anomalously_High_Ionic_Conductivity_of_Li2SiS3_Type_Conductors.pdf"
  ],
  "figures": [
   {
@@ -24,7 +24,7 @@
    "w": 2151,
    "h": 530,
    "dpi": 300,
-   "src": "47. Anomalously High Ionic Conductivity of Li2SiS3‑Type Conductors.pdf",
+   "src": "2eda362f-47._Anomalously_High_Ionic_Conductivity_of_Li2SiS3_Type_Conductors.pdf",
    "blank": 0.85
   },
   {
@@ -36,15 +36,15 @@
    "caption": "Figure 3. Structural evolution of n-Li2SiS3 (tetragonal, P42212) to e-Li2SiS3 (orthorhombic, Cmc21) with increasing temperature. The intermediate m-Li2SiS3 consists of n-Li2SiS3 and e-Li2SiS3. with increasing temperature. The XRD patterns recorded during the phase evolution of n-Li2SiS3 with increasing temperature are shown in Figure S3. In the case of n-Li2SiS3, two (Si/P)S4 tetrahedra link across a common edge to form (Si/P)2S6 dimers. The n-Li2SiS3 framework is composed of these dimers and diﬀers from that of e-Li2SiS3, which is formed by inﬁnite corner-shared SiS4 chains.16 It is speculated that the isolated dimers open to form linked chains at high temper- atures. The framework of n-Li2SiS3 has a 3D lithium conduction pathway (2D in the ab plane +1D along the c- axis). The 2D conduction pathway is formed by LiS4 tetrahedra in the 4d and 8g sites, which share a common edge and form a",
    "bbox": [
     45.5,
-    51.2,
+    54.4,
     561.5,
-    198.1
+    196.5
    ],
    "w": 2151,
-   "h": 613,
+   "h": 593,
    "dpi": 300,
-   "src": "47. Anomalously High Ionic Conductivity of Li2SiS3‑Type Conductors.pdf",
-   "blank": 0.852
+   "src": "2eda362f-47._Anomalously_High_Ionic_Conductivity_of_Li2SiS3_Type_Conductors.pdf",
+   "blank": 0.849
   },
   {
    "key": "f4",
@@ -55,14 +55,14 @@
    "caption": "Figure 4. Electrochemical properties of n-Li2SiS3. (a) Nyquist plots and (b) Arrhenius plots for the Li2SiS3-type conductors. Compared with e- and m-Li2SiS3,16 n-Li2SiS3 exhibits an anomalous high ionic conductivity even at room temperature (298 K). (c) Cyclic voltammogram curve of a Li/n-Li2SiS3/SUS cell; from −0.5 to 5 V at a scan rate of 1 mV s−1. (d) Charge−discharge curves of the all- solid-state battery based on n-Li2SiS3, Li−In, and LiNbO3-coated LiCoO2/LGPS as the electrolyte, anode, and cathode materials, respectively. The current rate for charge−discharge is 0.2 C.",
    "bbox": [
     309.4,
-    222.9,
+    225.5,
     561.5,
-    426.2
+    424.7
    ],
    "w": 1051,
-   "h": 848,
+   "h": 831,
    "dpi": 300,
-   "src": "47. Anomalously High Ionic Conductivity of Li2SiS3‑Type Conductors.pdf",
+   "src": "2eda362f-47._Anomalously_High_Ionic_Conductivity_of_Li2SiS3_Type_Conductors.pdf",
    "blank": 0.908
   },
   {
@@ -74,15 +74,34 @@
    "caption": "Figure 5. BVSE analysis of Li-ion migration within the n-Li2SiS3 and e-Li2SiS3 structures. (a1, b1) Crystal structures of n-Li2SiS3 (a1) and e-Li2SiS3 (b1) superimposed with the Li-ion potential map (marked in yellow). (a2, a3, b2, b3) Li-ion migration pathways of n-Li2SiS3 (a2, a3) and e-Li2SiS3 (b2, b3). (a4, b4) Energy proﬁles of the migration pathways in n-Li2SiS3 (a4) and e-Li2SiS3 (b4). Each pathway in (a2−a3) and (b2−b3) corresponds to the energy proﬁle of the same color in (a4) and (b4), respectively. populating split positions of lithium ions (Li1 in 4d and Li2 in 8g) play a key role in improving the ionic conductivity by ﬂattening the energy landscape of lithium ion migration through the lattice. The split positions of lithium ions in n- Li2SiS3 may be induced by the rearrangement of SiS4 tetrahedra from inﬁnite corner-shared chains to edge-shared dimers at low temperatures. Co",
    "bbox": [
     45.5,
-    51.2,
+    54.4,
     561.5,
-    263.8
+    262.3
    ],
    "w": 2151,
-   "h": 887,
+   "h": 867,
    "dpi": 300,
-   "src": "47. Anomalously High Ionic Conductivity of Li2SiS3‑Type Conductors.pdf",
-   "blank": 0.849
+   "src": "2eda362f-47._Anomalously_High_Ionic_Conductivity_of_Li2SiS3_Type_Conductors.pdf",
+   "blank": 0.845
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 5,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. X-ray diffraction patterns of the synthesized materials indicated in the ternary",
+   "bbox": [
+    66.0,
+    66.6,
+    532.2,
+    484.6
+   ],
+   "w": 1943,
+   "h": 1743,
+   "dpi": 300,
+   "src": "192307dd-47._Sup_Anomalously_High_Ionic_Conductivity_of_Li2SiS3_Type_Conductors.pdf",
+   "blank": 0.895
   },
   {
    "key": "fS2",
@@ -93,15 +112,15 @@
    "caption": "Figure S2. X-ray diffraction patterns of the Li2SiS3-type solid electrolytes. For comparison of",
    "bbox": [
     66.0,
-    26.0,
+    98.3,
     532.1,
-    293.2
+    281.6
    ],
    "w": 1943,
-   "h": 1114,
+   "h": 765,
    "dpi": 300,
-   "src": "47. Sup) Anomalously High Ionic Conductivity of Li2SiS3‑Type Conductors.pdf",
-   "blank": 0.958
+   "src": "192307dd-47._Sup_Anomalously_High_Ionic_Conductivity_of_Li2SiS3_Type_Conductors.pdf",
+   "blank": 0.937
   },
   {
    "key": "fS3",
@@ -112,15 +131,15 @@
    "caption": "Figure S3. Phase evolution of n-Li2SiS3 between 733 and 873 K. The prepared sample",
    "bbox": [
     66.0,
-    26.0,
+    101.5,
     532.2,
-    344.2
+    332.6
    ],
    "w": 1943,
-   "h": 1326,
+   "h": 964,
    "dpi": 300,
-   "src": "47. Sup) Anomalously High Ionic Conductivity of Li2SiS3‑Type Conductors.pdf",
-   "blank": 0.952
+   "src": "192307dd-47._Sup_Anomalously_High_Ionic_Conductivity_of_Li2SiS3_Type_Conductors.pdf",
+   "blank": 0.934
   },
   {
    "key": "fS4",
@@ -131,15 +150,15 @@
    "caption": "Figure S4. (a) Nyquist plots of n-Li2SiS3 between 228 and 375 K. Conductivities were obtained",
    "bbox": [
     66.0,
-    26.0,
+    69.4,
     531.9,
-    490.0
+    479.8
    ],
    "w": 1942,
-   "h": 1934,
+   "h": 1711,
    "dpi": 300,
-   "src": "47. Sup) Anomalously High Ionic Conductivity of Li2SiS3‑Type Conductors.pdf",
-   "blank": 0.958
+   "src": "192307dd-47._Sup_Anomalously_High_Ionic_Conductivity_of_Li2SiS3_Type_Conductors.pdf",
+   "blank": 0.954
   },
   {
    "key": "fS5",
@@ -150,15 +169,15 @@
    "caption": "Figure S5. Comparison of Nyquist plots of n-Li2SiS3 at 228 K and 298 K. An equivalent circuit",
    "bbox": [
     66.0,
-    26.0,
+    66.0,
     532.1,
-    304.4
+    298.0
    ],
    "w": 1943,
-   "h": 1161,
+   "h": 967,
    "dpi": 300,
-   "src": "47. Sup) Anomalously High Ionic Conductivity of Li2SiS3‑Type Conductors.pdf",
-   "blank": 0.907
+   "src": "192307dd-47._Sup_Anomalously_High_Ionic_Conductivity_of_Li2SiS3_Type_Conductors.pdf",
+   "blank": 0.887
   },
   {
    "key": "tS1",
@@ -176,7 +195,7 @@
    "w": 2144,
    "h": 2447,
    "dpi": 300,
-   "src": "47. Sup) Anomalously High Ionic Conductivity of Li2SiS3‑Type Conductors.pdf",
+   "src": "192307dd-47._Sup_Anomalously_High_Ionic_Conductivity_of_Li2SiS3_Type_Conductors.pdf",
    "blank": 0.961
   },
   {
@@ -195,7 +214,7 @@
    "w": 2144,
    "h": 2447,
    "dpi": 300,
-   "src": "47. Sup) Anomalously High Ionic Conductivity of Li2SiS3‑Type Conductors.pdf",
+   "src": "192307dd-47._Sup_Anomalously_High_Ionic_Conductivity_of_Li2SiS3_Type_Conductors.pdf",
    "blank": 0.978
   }
  ]

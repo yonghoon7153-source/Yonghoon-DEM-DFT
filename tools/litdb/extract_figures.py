@@ -170,25 +170,47 @@ def table_rect(page, cap, tables, stop_y=1e9, margin=5.0):
                       u.x1 + margin, u.y1 + margin) & page.rect)
 
 
+def is_prose(b, pr=None):
+    """이 블록이 **경계로 쓸 수 있는가** (본문 문단 · 다른 캡션 · 머리글/꼬리글).
+
+    ⚠ 왜 (2026-08-06 실측, son2025·rao2011): 그림 **안**의 축 라벨·범례·눈금도 텍스트
+      블록으로 추출된다. 그걸 경계로 삼으면 캡션 바로 위 2~11 pt 만 남아 그림이 통째로
+      버려진다("영역 없음"). son2025 는 본문 5장 전부, rao2011 은 Fig 1 이 이렇게 날아갔다.
+        son2025 p3: 캡션 (40,532,…) 바로 위 = "Energy (eV)" (162,517,197,526) → 높이 2 pt
+        rao2011 p2: 캡션 (306,726,…) 바로 위 = "20 40 60 80 100 -2000" → 높이 11 pt
+      산문은 낱말이 많다 — 축 라벨·범례는 짧다. 다른 그림의 캡션은 낱말 수와 무관하게
+      진짜 경계이므로 그대로 인정한다.
+    """
+    t = " ".join((b[4] or "").split())
+    if bool(is_caption(t)) or (len(t.split()) >= 8 and len(t) >= 45):
+        return True
+    # 학술지 머리글("Journal of the American Chemical Society")·쪽번호는 짧지만 진짜 경계다.
+    #   안 넣으면 크롭 맨 위에 러닝헤드가 딸려 들어온다 (2026-08-06 kraft2017 실측).
+    if pr is not None:
+        z = 0.09 * pr.height
+        if b[3] <= pr.y0 + z or b[1] >= pr.y1 - z:
+            return True
+    return False
+
+
 def _side_rect(page, cap, blocks, up, margin=6.0):
     """캡션 기준 위(up=True)/아래 영역 → (rect, 이미지수, 벡터수).
 
-    세로 경계는 "같은 단(column)에서 가장 가까운 다른 텍스트 블록" — 위에 다른 그림의
-    캡션이 있으면 거기서 끊긴다. 그다음 그래픽 bbox 로 실제 범위까지 넓힌다
-    (캡션보다 넓은 그림 / 삐져나온 축 라벨).
+    세로 경계는 "같은 단(column)에서 가장 가까운 **본문 문단**" — 위에 다른 그림의
+    캡션이 있으면 거기서 끊긴다. 그다음 그래픽 + 그림 안 텍스트로 실제 범위를 잡는다.
     """
     x0, y0, x1, y1 = cap[:4]
     band, pr = (x0, x1), page.rect
     if up:
         lim = pr.y0 + 24
         for b in blocks:
-            if b[3] <= y0 + 1 and band_overlap(band, (b[0], b[2])) > 0.45:
+            if b[3] <= y0 + 1 and band_overlap(band, (b[0], b[2])) > 0.45 and is_prose(b, pr):
                 lim = max(lim, b[3])
         rect = fitz.Rect(x0, lim + 2, x1, y0 - 2)
     else:
         lim = pr.y1 - 24
         for b in blocks:
-            if b[1] >= y1 - 1 and band_overlap(band, (b[0], b[2])) > 0.45:
+            if b[1] >= y1 - 1 and band_overlap(band, (b[0], b[2])) > 0.45 and is_prose(b, pr):
                 lim = min(lim, b[1])
         rect = fitz.Rect(x0, y1 + 2, x1, lim - 2)
     if rect.height < 36:
@@ -199,8 +221,18 @@ def _side_rect(page, cap, blocks, up, margin=6.0):
         u = hit[0][1]
         for _k, r in hit[1:]:
             u |= r
-        y_lo = max(min(rect.y0, u.y0) - margin, (lim + 2) if up else (y1 + 2))
-        y_hi = min(max(rect.y1, u.y1) + margin, (y0 - 2) if up else (lim - 2))
+        # 그림 안의 짧은 텍스트(축 라벨·범례)도 그림의 일부다 — 안 넣으면 잘려 나간다
+        for b in blocks:
+            if is_prose(b, pr):
+                continue
+            br = fitz.Rect(b[:4])
+            if br.intersects(rect) and (br & rect).get_area() > 0.5 * max(br.get_area(), 1e-6):
+                u |= br
+        # 그래픽(+그림 안 라벨)에 **딱 맞춘다**. 예전엔 min/max 로 느슨한 후보 사각형과
+        # 합쳤는데, 그러면 그림 위 빈 칸이 통째로 딸려 와 크롭이 반쯤 백지가 된다
+        # (2026-08-06 kraft2017 fig_S1 실측: 위쪽 절반이 여백).
+        y_lo = max(u.y0 - margin, (lim + 2) if up else (y1 + 2))
+        y_hi = min(u.y1 + margin, (y0 - 2) if up else (lim - 2))
         rect = fitz.Rect(min(rect.x0, u.x0) - margin, y_lo,
                          max(rect.x1, u.x1) + margin, y_hi) & pr
     ks = [k for k, _r in hit]
