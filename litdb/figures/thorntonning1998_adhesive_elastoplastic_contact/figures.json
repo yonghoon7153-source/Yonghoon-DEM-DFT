@@ -4,7 +4,141 @@
  "maxpx": 3000,
  "generated": "2026-08-05",
  "sources": [
-  "DEM 논문/05. A theoretical model for the stick bounce behaviour of adhesive, elastic-plastic spheres.pdf"
+  "05. A theoretical model for the stick bounce behaviour of adhesive, elastic-plastic spheres.pdf"
  ],
- "figures": []
+ "figures": [
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "F19. 3. Effect 0f 1mpact ve10c1ty 0n the n0rma1 c0ntact f0rce-d15p1acement re5p0n5e f0r e1a5t1c-perfect1y p1a5t1c 5phere5. 15 affected 6y the 5ever1ty 0f the 1mpact. When the 1mpact ve10c1ty 15 9reater than the y1e1d ve10c1ty, the un10ad1n9 5t1ff- ne55 1ncrea5e5 w1th 1ncrea5e 1n 1mpact ve10c1ty. C0n5e- 4uent1y, the rat10 0f w0rk d0ne dur1n9 e1a5t1c rec0very t0 the w0rk d0ne dur1n9 c0mpre5510n depend5 0n the ma9n1tude 0f the 1mpact ve10c1ty and theref0re the c0eff1c1ent 0fre5t1tut10n 15 ve10c1ty dependent, a5 dem0n5trated 1n the next 5ect10n.",
+   "bbox": [
+    0.0,
+    26.0,
+    627.0,
+    273.5
+   ],
+   "w": 2613,
+   "h": 1032,
+   "dpi": 300,
+   "src": "05. A theoretical model for the stick bounce behaviour of adhesive, elastic-plastic spheres.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "F19. 4. C0eff1c1ent 0f re5t1tut10n f0r e1a5t1c-perfect1y p1a5t1c 5phere5.",
+   "bbox": [
+    0.0,
+    72.8,
+    627.0,
+    244.7
+   ],
+   "w": 2613,
+   "h": 717,
+   "dpi": 300,
+   "src": "05. A theoretical model for the stick bounce behaviour of adhesive, elastic-plastic spheres.pdf",
+   "blank": 0.953
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "F19. 5. F0rce~115p1acement re1at10n5h1p f0r adhe51ve e1a5t1c 5phere5. 4 112 5 ,4 1/(, V (1 .18] (F•R",
+   "bbox": [
+    0.0,
+    26.0,
+    627.0,
+    196.7
+   ],
+   "w": 2613,
+   "h": 712,
+   "dpi": 300,
+   "src": "05. A theoretical model for the stick bounce behaviour of adhesive, elastic-plastic spheres.pdf",
+   "blank": 0.955
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "F19. 6. C0eff1c1ent 0f re5t1tut10n f0r adhe51ve e1a5t1c 5phere5.",
+   "bbox": [
+    0.0,
+    542.3,
+    627.0,
+    723.9
+   ],
+   "w": 2613,
+   "h": 758,
+   "dpi": 300,
+   "src": "05. A theoretical model for the stick bounce behaviour of adhesive, elastic-plastic spheres.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "F19. 7. N0rma1 tract10n d15tr16ut 5phere5. [ 3R*P, ,~1,.~ °-U2F)",
+   "bbox": [
+    0.0,
+    46.4,
+    627.0,
+    254.9
+   ],
+   "w": 2613,
+   "h": 869,
+   "dpi": 300,
+   "src": "05. A theoretical model for the stick bounce behaviour of adhesive, elastic-plastic spheres.pdf",
+   "blank": 0.867
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 8,
+   "file": "fig_9.png",
+   "caption": "F19.9. Effect 0f 1nterface ener9y 0n the c0eff1c1ent 0f re5t1tut10n (0: F= 0.2 J m \"-, 0: F= 0.4 J m -2).",
+   "bbox": [
+    0.0,
+    331.7,
+    627.0,
+    613.0
+   ],
+   "w": 2613,
+   "h": 1173,
+   "dpi": 300,
+   "src": "05. A theoretical model for the stick bounce behaviour of adhesive, elastic-plastic spheres.pdf",
+   "blank": 0.976
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 8,
+   "file": "fig_10.png",
+   "caption": "F19. 10. Effect 0f 11m1t1n9 c0ntact pre55ure 0n the c0eff1c1ent 0f re5t1tut10n (0: p)= 3.04 6Pa, 0: p: = 1.0 6Pa, 11: p)= 0.5 6Pa).",
+   "bbox": [
+    0.0,
+    331.7,
+    627.0,
+    613.0
+   ],
+   "w": 2613,
+   "h": 1173,
+   "dpi": 300,
+   "src": "05. A theoretical model for the stick bounce behaviour of adhesive, elastic-plastic spheres.pdf",
+   "blank": 0.976
+  }
+ ]
 }
