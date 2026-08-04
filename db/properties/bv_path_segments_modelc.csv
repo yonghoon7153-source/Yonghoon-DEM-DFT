@@ -1,0 +1,17 @@
+﻿# BV percolation path segment barriers - LPSCl1.6, axis [010], E_perc 0.2283 eV.
+# barrier_eV = E(saddle) - E(preceding valley) along the min-energy-line-integral path under the percolation ceiling.
+# valley_site: 'on Li' if a framework Li sits within 0.6 A, else 'vacant' (empty-lattice map: valleys are CANDIDATE sites); coordination = anions within 3.2 A.
+# saddle_window: the three nearest anions forming the bottleneck; window_r_A = distance to the closest of them.
+# EMPTY-LATTICE PROXY - not a measured barrier. Ea/sigma ranking is decided by MD (MD Ea = 0.197±0.032 eV). See kb/concepts/bvse.md sec 8-10.
+segment,s_valley_A,s_saddle_A,E_valley_eV,E_saddle_eV,barrier_eV,valley_site,nearest_Li_A,saddle_window,window_r_A
+1,0.000,1.027,0.0285,0.2256,0.1971,on Li 1Cl+3S,0.31,SSS window 2.23 Å,2.233
+2,2.051,3.089,0.0542,0.2180,0.1638,vacant 1Cl+3S,1.69,SClS window 2.34 Å,2.337
+3,4.229,4.997,0.0770,0.2220,0.1450,vacant 1Cl+3S,1.54,SSS window 2.23 Å,2.230
+4,5.764,6.754,0.0661,0.2178,0.1517,on Li 1Cl+3S,0.14,ClSS window 2.23 Å,2.228
+5,7.266,7.774,0.1990,0.2246,0.0255,vacant 1Cl+3S,1.49,ClSS window 2.24 Å,2.235
+6,8.538,9.420,0.0788,0.2066,0.1279,on Li 1Cl+3S,0.60,ClSS window 2.36 Å,2.358
+7,10.306,11.180,0.1615,0.2014,0.0398,vacant 1Cl+3S,1.90,SSCl window 2.33 Å,2.326
+8,11.794,12.817,0.1235,0.2250,0.1015,vacant 1Cl+3S,1.68,ClSS window 2.33 Å,2.334
+9,13.946,14.955,0.0426,0.2282,0.1855,vacant 1Cl+3S,1.81,SSS window 2.26 Å,2.265
+10,15.711,17.111,0.0560,0.1653,0.1093,on Li 1Cl+3S,0.11,SClS window 2.37 Å,2.374
+11,18.079,19.214,0.0570,0.2256,0.1686,vacant 1Cl+3S,1.71,SSS window 2.23 Å,2.233

@@ -294,8 +294,20 @@ def profile_for(name, path_cif):
     e = np.array([E2[tuple(p)] for p in path])
     wind = "[" + "".join(str(x) for x in T) + "]"
     print(f"    경로: winding {wind} · {len(path)}점 · 길이 {d[-1]:.1f} A · max {e.max():.4f} eV")
+    # 경로의 실공간 좌표(랩 해제 누적) + 구조 — 자리 라벨링용
+    #   (fig_bv_path_annotated.py 가 쓴다. 없어도 기존 소비자는 영향 없음)
+    cart = np.vstack([np.zeros(3), np.cumsum(step_cart, axis=0)]) + \
+        (np.array(start, float) / (np.array(N) - 1.0)) @ cell
     return {"axis": wind, "d": d, "e": e, "E_perc": float(t),
-            "ref": {k: float(perc[k]) for k in perc}}
+            "ref": {k: float(perc[k]) for k in perc},
+            "cart": cart, "cell": cell, "N": N,
+            # ⚠ calc.atoms 는 bvse_distribution 이 **이동 이온(Li)을 제거한** 빈 격자다.
+            #   자리 라벨링에는 Li 가 있어야 하므로 calc.atoms_copy(원본, 같은 프레임 —
+            #   cell 동일 확인 2026-08-05)를 쓴다. cif 왕복 프레임 혼용 함정 회피.
+            "atoms": [(s, np.asarray(p)) for s, p in
+                      zip(calc.atoms_copy.get_chemical_symbols(), calc.atoms_copy.positions)],
+            "framework": [(s, np.asarray(p)) for s, p in
+                          zip(calc.atoms.get_chemical_symbols(), calc.atoms.positions)]}
 
 
 def main():
