@@ -247,6 +247,13 @@ def main():
     cb3 = fig.colorbar(im, ax=ax3, fraction=0.045, pad=0.02)
     cb3.set_label("ΔF (eV)", fontsize=9); cb3.ax.tick_params(labelsize=8)
     ax3.set_aspect("equal"); ax3.set_xticks([]); ax3.set_yticks([])
+    # 눈금이 없으므로 축척 막대로 길이를 준다 (③만 2D라 3D 패널과 축척이 따로 논다)
+    L = span.max()
+    bar = 10.0 if L > 26 else (5.0 if L > 13 else 2.0)
+    x0, y0 = -L / 2 * 0.92, -L / 2 * 0.90
+    ax3.plot([x0, x0 + bar], [y0, y0], color=INK, lw=3.0, solid_capstyle="butt", zorder=6)
+    ax3.text(x0 + bar / 2, y0 + L * 0.018, f"{bar:.0f} Å", ha="center", fontsize=9,
+             color=INK, fontweight="bold", zorder=6)
     ax3.set_title(f"③ ΔF cross-section on the path plane\n"
                   f"{a.T:.0f} K · light = open, dark = blocked · black line = "
                   f"ΔF$_{{perc}}$ {dFp:.3f} eV ({100*fF:.1f} vol%)",
@@ -265,11 +272,13 @@ def main():
              "③ shows how much of the cell is already thermally accessible by the time the\n"
              "free-energy landscape percolates. Panel ③ is a 2D cut of ΔF on the path plane "
              "(light = low ΔF, i.e. open; black line = the ΔF_perc contour; red = the path):\n"
-             "at 61 vol% a 3D isosurface would be a solid blob, so the cross-section is the "
-             "readable view. ΔF_perc is a free energy at this temperature "
+             f"at {100*fF:.0f} vol% a 3D isosurface would be a solid blob, so the cross-section "
+             "is the readable view. ΔF_perc is a free energy at this temperature "
              "— not an activation energy.",
-             ha="center", fontsize=8.6, color=MUT)
-    fig.tight_layout(rect=[0, 0.055, 1, 0.95])
+             ha="center", va="bottom", fontsize=8.6, color=MUT)
+    # ⚠ rect 하단은 캡션 5줄(8.6 pt)이 들어갈 만큼 넉넉히 — 0.055 로 두면 aspect='equal'
+    #   인 ③ 이 아래로 내려와 캡션을 덮어썼다 (2026-08-06 실측).
+    fig.tight_layout(rect=[0, 0.155, 1, 0.95])
     fig.savefig(ROOT / a.out, dpi=260, facecolor="white")
     print(f"→ {a.out}")
 
