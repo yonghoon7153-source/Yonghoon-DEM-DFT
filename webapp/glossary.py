@@ -108,6 +108,13 @@ GLOSSARY = [
   "how":"로그-로그 눈금에서 적합 창(2–50 ps)의 기울기를 잰다 + 창끝 MSD ≥ 3 Å² 병행. R²로는 못 잡는다 — R² 0.975인데 β 0.61인 실측 사례(LPSOCl 600 K)가 있다. 도구: tools/ionic/msd_diffusive_check.py.",
   "ours":"comp1 600 K 전 판 탈락(β 0.17–0.79 → 1600 ps 연장 중) · LPSOCl 600 K 4시드 평균 β 0.61 탈락(2026-08-04, Ea 0.287 재검토 트리거) · 시드 하나로는 β 0.98↔0.52로 갈려서 앙상블 평균이 기본."},
 
+{"id":"pmf", "doc":"md", "doc_sec":"§7 PMF — 궤적에서 자유에너지 지형 뽑기",
+ "term":"PMF (자유에너지 지형)", "full":"potential of mean force, ΔF = −k<sub>B</sub>T·ln(ρ/ρ<sub>max</sub>)",
+ "cat":"이온 수송",
+ "what":"MD 궤적의 <b>시간평균 Li 밀도</b> ρ(r)를 자유에너지로 바꾼 3D 지도. MSD가 '얼마나 멀리 갔나'라면 PMF는 '어디에 얼마나 오래 있었나'다. BVSE와 달리 <b>Li 27개 전부·공공·상관 운동·격자 진동</b>이 이미 들어 있다.",
+ "how":"밀도 최대점을 0으로 두고 문턱을 올리며 최대 연결 성분을 본다. <b>전이점</b>(최대 성분 급상승) = 침투 자유에너지 ΔF<sub>perc</sub>. ⚠ <b>첫-관통</b>은 1.4% 실가닥이라 안 쓴다(25 ps에서 +35% 요동, 전이점은 ±10 meV). 도구: tools/ionic/pmf_path_profile.py — BV 판과 같은 침투 관례라 나란히 비교된다.",
+ "ours":"<b>LPSCl1.6 600 K</b>(단일 시드 MLIP-MD 100 ps): ΔF<sub>perc</sub> <b>0.173 eV</b> vs BV ΔE<sub>perc</sub> 0.228 (−56 meV) · 경로 8.4 Å/4구간(BV는 20.2 Å/11구간) · 문턱에서 채널 42.9 vol%(BV 0.5%). <b>같은 부피로 자르면 BV는 이어진 그물, 실제 Li 밀도는 고립 덩어리</b>. ⚠ ΔF<sub>perc</sub>는 <b>그 온도의 자유에너지지 Ea가 아니다</b>(오프셋 −50 meV, 계통적) — 온도·시드 수 병기 필수. ⚠ comp1 0.20 eV는 β 게이트 탈락 궤적이라 <b>표집 상한</b>(open_items #9)."},
+
 {"id":"arrhenius", "doc":"md", "doc_sec":"§5 Arrhenius — 활성화에너지","term":"Arrhenius / Ea","full":"활성화에너지 · 전도도","cat":"이온 수송",
  "what":"확산이 온도에 지수적으로 의존: D=D₀·exp(−Ea/kT). log D vs 1/T 직선의 기울기 = <b>활성화에너지 Ea</b>(낮을수록 빠른 전도). σ는 Nernst–Einstein으로 D에서 환산.",
  "how":"3온도(600/800/1000K) D를 log-1/T에 피팅. 저온(400/500K)은 통계부족으로 제외 판정. Ea 오차막대는 시드 분산.",

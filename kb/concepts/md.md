@@ -9,6 +9,7 @@
 4. 시간창 피팅
 5. Arrhenius — 활성화에너지
 6. Nernst–Einstein 전도도
+7. **PMF** — 궤적에서 자유에너지 지형 뽑기
 
 ---
 ## 1. Langevin NVT 동역학
@@ -209,6 +210,68 @@ graph TD
 **한 문장 요약**: UMA MLIP로 긴 NVT 궤적을 만들어 2–50 ps MSD 기울기에서 $D$를, 600/800/1000 K Arrhenius에서 $E_a$를 뽑되, $D$·$\sigma$ 절대값은 멀티시드로만 판정한다.
 
 ---
+## 7. PMF — 궤적에서 자유에너지 지형 뽑기 (2026-08-05)
+
+MSD 가 **얼마나 멀리 갔나**를 잰다면, PMF 는 **어디에 얼마나 오래 있었나**를 지도로 만든다.
+같은 궤적에서 나오지만 다른 질문에 답한다.
+
+### 7-1. 정의
+
+$$\Delta F(\mathbf r) = -k_B T \ln\!\left[\frac{\rho(\mathbf r)}{\rho_{\max}}\right]$$
+
+$\rho$ = 궤적 시간평균 Li 밀도(가우시안 0.4 Å 스무딩, 격자 0.2 Å).
+밀도 최대점이 0 이고, 덜 방문된 곳일수록 $\Delta F$ 가 크다.
+
+**용어 (문헌 표준)** — 방법 이름은 **potential of mean force (PMF)**(Kirkwood),
+침투 문턱은 **percolation free energy $\Delta F_{\text{perc}}$** (BV 쪽 $\Delta E_{\text{perc}}$ 와 짝),
+구간값은 **free-energy barrier $\Delta F$**.
+⚠ MD 문헌에서 홑 $F$ 는 보통 **힘**이고 $F^*$ 는 임계점 표기라, 둘 다 쓰지 않는다.
+
+### 7-2. BV 프록시와 뭐가 다른가
+
+PMF 는 궤적에서 나오므로 **BV 에 없는 네 가지가 이미 들어 있다** — Li 27개 전부의 점유,
+공공, 상관·협동 운동, 유한 온도 격자 진동. 그래서 §dft §12 의 "BV 결손 물리"가 해소된다.
+
+| | BV 프록시 | PMF (600 K) |
+|---|---|---|
+| 문턱 | $\Delta E_{\text{perc}}$ 0.228 eV | $\Delta F_{\text{perc}}$ **0.173 eV** |
+| 경로 | 20.2 Å · 11구간 · 최대 0.197 | 8.4 Å · 4구간 · 최대 **0.152** |
+| 문턱에서 채널 부피 | 0.5 vol% | **42.9 vol%** |
+
+> [!important] 같은 부피로 자르면 모양이 다르다
+> BV 채널(0.5 vol%)은 **이어진 그물**인데, 같은 부피의 실제 Li 밀도는 **고립된 자리 덩어리**다.
+> 정적 지도가 낮은 에너지에서 연결돼 보이는 건 매끄러운 퍼텐셜의 성질이고, 실제 이온은
+> 자리에 국재해 있다가 뛴다. BV 가 센 병목 11개 중 실제로 율속인 것은 1개뿐이다.
+
+### 7-3. 두 정의 — 첫-관통 vs 전이점
+
+문턱을 올리며 **최대 연결 성분**을 보면 두 지점이 나온다:
+
+| 정의 | modelc 값 | 채택 |
+|---|---|---|
+| 첫-관통 (처음 셀을 감는 순간) | 0.078 eV | ❌ — 1.4% **가는 실가닥**(유한크기 우연 연결) |
+| **전이점** (최대 성분 급상승) | **0.173 eV** | ✅ MASTER 채택 |
+
+**수치로 정당화됨(블록 검사)**: 궤적을 잘라 재보면 전이점은 0.1725(100 ps)/0.1875(앞 50)/
+0.1675(뒤 50)/0.1825(앞 25) = **±10 meV** 로 안정한데, 첫-관통은 25 ps 에서 0.078→0.105
+(**+35%**) 로 요동친다. → **전이점은 1시드 100 ps 로 이미 수렴**, 첫-관통은 아니다.
+
+### 7-4. 인용 규율
+
+- $\Delta F_{\text{perc}}$ 는 **그 온도의 자유에너지**지 $E_a$ 가 아니다.
+  실측 오프셋 $\Delta F_{\text{perc}} - E_a \approx -50$ meV (comp1·modelc 둘 다, **계통적**).
+  BV 의 오차가 부호까지 뒤섞이는 것과 대조 — 그래서 PMF 는 **순위·변화량은 살아남는다**.
+- **온도와 시드 수를 반드시 병기** (예: "600 K, single seed").
+- ⚠ **게이트 통과 계에만.** 케이지 상태면 병목 voxel 이 안 채워져 $\Delta F_{\text{perc}}$ 가
+  상한이 된다 — comp1 600 K 가 그 경우(open_items #9).
+- PMF 는 BVSE 와는 독립이지만 **MD 와는 같은 궤적**이라 상호검증에 쓰면 순환논증이다.
+
+도구 `tools/ionic/pmf_path_profile.py` (BV 판과 같은 침투 관례) ·
+그림 `docs/figures/bv_vs_pmf_modelc.png` · `bv_vs_pmf_3d_modelc.png` ·
+데이터 `db/properties/modelc_pmf_{profile,cluster,segments}_T600_origin.csv`
+
+
+---
 ## 우리 캠페인 적용
 UMA-s-1p1(omat), Langevin NVT, dt 2 fs, friction 0.02, equilib 5 ps / prod 200 ps, MSD 창 2–50 ps 고정, Arrhenius 600/800/1000 K 3점 (tools/modelc_v3/, tools/ionic/).
 
@@ -228,4 +291,4 @@ UMA-s-1p1(omat), Langevin NVT, dt 2 fs, friction 0.02, equilib 5 ps / prod 200 p
 > "BV·NEB·MD 가 주는 $E_a$ 는 서로 다른 양"의 정리는 **[DFT](/concept/dft) §12** 에 있다
 > (정의 차이 · BV 결손 물리 4가지 · 부호 뒤섞임 실측 · 신뢰도 순서).
 
-*tags: MLIP-MD · UMA · Langevin NVT · MSD · Einstein relation · Arrhenius · activation energy · Nernst-Einstein · Li diffusion · multiseed*
+*tags: MLIP-MD · PMF · potential of mean force · 자유에너지 지형 · percolation free energy · UMA · Langevin NVT · MSD · Einstein relation · Arrhenius · activation energy · Nernst-Einstein · Li diffusion · multiseed*
