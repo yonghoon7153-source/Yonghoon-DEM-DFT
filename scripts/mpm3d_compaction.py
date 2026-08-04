@@ -2302,12 +2302,26 @@ def main(argv):
     if args.platen_mach > 0:
         vmax = float(args.platen_mach) * _c_p * args.sub * dt
     _v_platen = vmax / (args.sub * dt)                        # box/t.u.
+    if args.platen_mach > 0:
+        _trav = int((WALL0 - WALL_MIN) / max(vmax, 1e-12)) + 1     # 최악: 전 구간 하강
+        if _trav > args.frames:
+            print(f'  ⚠ [platen] --platen-mach {args.platen_mach:g} → step {vmax:.6f} box/frame. '
+                  f'WALL0→WALL_MIN 전 구간 하강에 최대 {_trav:,} 프레임이 필요한데 --frames 는 '
+                  f'{args.frames:,} 입니다.\n'
+                  f'            (--platen-mach 는 --compact-to 0.25·vmax · servo 0.12·vmax · '
+                  f'제하 0.05·vmax 의 단위도 함께 줄입니다.)', flush=True)
     if (args.stop_freeze_probe and args.am_scaffold and args.am_load_frac <= 0.0
-            and args.floor_porosity <= 0.0 and not args.am_jam):
-        print('  ⚠ [stop] --stop-freeze-probe 를 하중분담(--am-load-frac + --floor-porosity)·기하정지'
-              '(--am-jam) 없이 켰습니다.  얼린 AM 은 wallP 에 기여가 0 이라 정지 판독은 SE 만 보고,\n'
-              '            실측상 SE 는 실험 공극률에서 목표의 12%% 뿐입니다 → **정지 조건이 성립하지 않아**\n'
-              '            공극률 ~0%% 까지 내려갑니다.  진단 목적이 아니면 하중분담을 함께 주세요.', flush=True)
+            and args.floor_porosity <= 0.0 and not args.am_jam and not args.allow_unconverged_servo):
+        # ★ 경고가 아니라 거부다 (적대리뷰 S2, 계측 확인): wallf 를 AM/비AM 으로 쪼개 실측하니
+        #   얼린 AM 의 기여가 **이동·정지 두 체제 모두에서 정확히 0.0 %** 였다 (플래튼 위 AM 셀은
+        #   격자 질량 자체가 없다).  즉 정지 판독은 SE 만 보는데 문턱은 전체 target 이다 —
+        #   '위험'이 아니라 **문턱이 틀렸다**.  실측 SE 응력은 실험 공극률에서 목표의 12 % 뿐이라
+        #   정지 조건이 성립할 수 없다.  진단 목적이면 --allow-unconverged-servo 로 통과시킬 것.
+        sys.exit('[stop] --stop-freeze-probe 는 scaffold 런에서 하중분담(--am-load-frac + '
+                 '--floor-porosity) 이나 기하정지(--am-jam) 없이 쓸 수 없습니다.\n'
+                 '       얼린 AM 의 wallP 기여는 실측 0.0 % 이므로 정지 판독은 SE 만 보고, SE 는 실험 '
+                 '공극률에서 목표의 12 % 뿐입니다 → 정지 조건이 성립하지 않습니다.\n'
+                 '       진단 목적이면 --allow-unconverged-servo 를 함께 주세요.')
     if not args.quiet:
         print(f"  [platen] v={_v_platen:.4f} box/t.u.  V/c_P={_v_platen / _c_p:.3f}  "
               f"V/c_S={_v_platen / _c_s:.2f}  step={vmax:.5f} box/frame"
@@ -2378,6 +2392,7 @@ def main(argv):
     _dsc_left = 0; _dsc_win = []; _dsc_probes = 0; _dsc_spread = None
     _dsc_tgt = float('inf')          # fail-safe: 0.0 이면 p>=0 이 항상 참 → 즉시 오정지
     _dsc_armed = False
+    _dsc_qs_last = False; _dsc_qs_n = 0   # 정지-증명으로 닫힌 프로브 수
     _DSC_SETTLE_MAX = 12             # ★ 하강 전용 상한.  제하용 200 을 쓰면 문턱 근방에서
                                      #   프로브 하나가 198 프레임을 먹어 --frames 150 이 못 낸다
     _dsc_resumes = 0                      # 프로브가 "가짜 crossing" 이라 판정해 하강을 재개한 횟수
@@ -2662,6 +2677,10 @@ def main(argv):
                         _dsc_left = 1                            # 아직 울림 → 창을 늘린다
                     else:
                         _dsc_spread = float(_sp_dsc); _dsc_probes += 1
+                        # 이 판정이 **정지 증명(qs)** 이었는지 **추세 외삽** 이었는지 남긴다.
+                        _dsc_qs_last = bool(settle_is_quasistatic(
+                            _dsc_win, rel_tol=max(args.servo_band, 1e-6) / 3.0)[0])
+                        _dsc_qs_n += int(_dsc_qs_last)
                         if _v_dsc == 'stop':
                             reached = True                       # 정지 판독이 문턱 이상 → 여기서 끝
                         else:
@@ -2945,6 +2964,11 @@ def main(argv):
             'stop_mode': ('freeze_probe' if args.stop_freeze_probe else 'legacy_moving'),
             'descend_probes': int(_dsc_probes),
             'descend_probe_resumes': int(_dsc_resumes),
+            # ★ 판정 경로 (적대리뷰 S1): 실측 11개 프로브 중 **0개** 만 정지 증명(qs)을 통과했고
+            #   나머지는 전부 추세-외삽 탈출구로 닫혔다.  '정지 판독' 이라 부르려면 이 값이 필요하다.
+            'descend_probe_quasistatic_n': int(_dsc_qs_n),
+            'descend_probe_route': ('quasistatic' if _dsc_qs_last else
+                                    ('extrapolated' if _dsc_probes else None)),
             'descend_probe_spread_rel': (round(float(_dsc_spread), 5)
                                          if _dsc_spread is not None and _dsc_spread == _dsc_spread
                                          and abs(_dsc_spread) != float('inf') else None),
