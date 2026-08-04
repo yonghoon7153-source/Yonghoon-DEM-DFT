@@ -271,7 +271,8 @@ def literature():
     return render_template("literature.html", active="lit", papers=papers,
                            count=len(papers), counts=counts, talks=D.list_talks(),
                            tmeta=tmeta, tcounts=tcounts, tprimer=D.topic_primer(),
-                           pis=pis, PI=D.PI_BY_KEY, figcount=D.papers_with_figures())
+                           pis=pis, PI=D.PI_BY_KEY, figcount=D.papers_with_figures(),
+                           figsearch=D.paper_figure_search())
 
 
 # ── API (구조뷰 / 차트 / 원본) ──────────────────────────

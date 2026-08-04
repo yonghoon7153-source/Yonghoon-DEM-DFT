@@ -2734,6 +2734,33 @@ def paper_figures(pid: str) -> list[dict]:
     return out
 
 
+def paper_figure_search() -> dict[str, str]:
+    """slug → 그 논문 그림·표 **캡션을 이어붙인 검색용 문자열** (소문자).
+
+    1저자 요청(2026-08-06): "figure 사진에 있는 논문 캡션도 검색되나?"
+    제목만으로는 "Nyquist 그림 있는 논문" 같은 걸 못 찾는다. 캡션 1,126장이 좋은 색인이다.
+    ⚠ 목록 페이지 HTML 에 통째로 실리므로 **캡션당 앞 110자**만 (전체를 넣으면 300 KB+).
+      figures.json 만 읽는다 — digest 는 안 읽는다(papers_with_figures 와 같은 이유).
+    """
+    base = LITDB / "figures"
+    if not base.is_dir():
+        return {}
+    out = {}
+    for j in base.glob("*/figures.json"):
+        try:
+            figs = json.loads(j.read_text(encoding="utf-8")).get("figures", [])
+        except (OSError, ValueError):
+            continue
+        parts = []
+        for f in figs:
+            c = " ".join((f.get("caption") or "").split())[:110]
+            if c:
+                parts.append(c)
+        if parts:
+            out[j.parent.name] = " ".join(parts).lower()[:6000]
+    return out
+
+
 def papers_with_figures() -> dict[str, int]:
     """slug → 그림 개수 (목록 화면 배지용).
 

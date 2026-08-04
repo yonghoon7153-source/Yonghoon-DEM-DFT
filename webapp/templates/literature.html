@@ -57,17 +57,21 @@
 {% endif %}
 <div class="muted" style="font-size:.72rem;margin-top:5px">
   ⚠ 주제 태그는 <b>손으로 큐레이션</b>한다(<span class="mono">litdb/topics.json</span>).
-  검색창은 제목·id·type 만 훑어서 "screening" 을 쳐도 <b>제목에 그 단어가 있는 7편</b>만 잡히는데,
-  본문 전수 감사로는 <b>13편</b>이었다 — 그래서 태그를 따로 둔다.
+  검색창은 제목·id·type <b>+ 잘라둔 그림·표 캡션</b>까지 훑는다 —
+  "Nyquist"·"Arrhenius"·"Rietveld" 처럼 제목엔 없고 그림에만 있는 말로도 찾힌다
+  (캡션으로만 걸린 논문은 <span style="background:#fef9c3;color:#854d0e;border-radius:4px;padding:0 4px;font-weight:700">🔍 캡션</span> 표시).
+  그래도 <b>본문 전수</b>는 아니라("screening" 제목 7편 vs 본문 13편) 태그를 따로 둔다.
 </div>
 {% endif %}
-<input class="search" placeholder="검색 (제목·id·type·주제)..." oninput="filt(this.value)">
+<input class="search" placeholder="검색 (제목·id·주제·그림 캡션)..." oninput="filt(this.value)">
 <div class="grid grid-3" id="plist" style="margin-top:16px">
 {% for p in papers %}
 <div class="card paper track-{{ p.track }}" data-track="{{ p.track }}" data-pi="{{ p.pis|join(',') }}"
      data-tp="{{ p.topics|join(',') }}" data-id="{{ p.id }}"
      data-t="{{ p.title|lower }} {{ p.id|lower }} {{ p.type|lower }} {{ p.digested }} {{ p.topics|join(' ')|lower }} {% for k in p.pis %}{{ PI[k].ko }} {{ PI[k].en|lower }} {% endfor %}"
      data-digested="{{ p.digested }}"
+     {# 그림·표 캡션 검색용 (litdb/figures/<slug>/figures.json) — 제목엔 없는 말로도 찾게 #}
+     {% if figsearch.get(p.id) %}data-fig="{{ figsearch[p.id] }}"{% endif %}
      onclick="openPaper('{{ p.id }}')" onkeydown="_kbd(event)" tabindex="0" role="button" style="cursor:pointer;padding:16px 18px">
   <div class="paper-top">
     {# ⚠ 별은 카드 열기(onclick)와 겹치므로 stopPropagation 필수 #}
@@ -79,6 +83,8 @@
      .ptype 에 이미 ellipsis 가 있으니 CSS 에 맡긴다. #}
     {% if p.type %}<span class="ptype" title="{{ p.type }}" style="min-width:0">{{ p.type }}</span>{% endif %}
     {# PDF 에서 잘라둔 그림이 있는 논문 표시 (tools/litdb/extract_figures.py) #}
+    <span class="figmatch" title="제목이 아니라 그림 캡션에서 찾았어요" style="display:none;flex:none;
+      background:#fef9c3;color:#854d0e;border-radius:5px;padding:1px 6px;font-size:.67rem;font-weight:700">🔍 캡션</span>
     {% if figcount.get(p.id) %}<span title="크로핑된 논문 그림 {{ figcount[p.id] }}개 — 열면 본문 Fig 언급에 링크된다"
       style="flex:none;background:var(--accent-soft);color:var(--accent);border-radius:5px;
              padding:1px 6px;font-size:.67rem;font-weight:700">🖼 {{ figcount[p.id] }}</span>{% endif %}
@@ -195,7 +201,12 @@ function apply(){
   document.querySelectorAll('.paper').forEach(function(c){
     var okT = curTrack==='all' || c.dataset.track===curTrack;
     var okP = !curPI || (c.dataset.pi||'').split(',').indexOf(curPI)>=0;
-    var okQ = !curQ || (c.dataset.t||'').indexOf(curQ)>=0;
+    // 제목·id·주제로 먼저, 없으면 **그림 캡션**까지 (캡션으로만 걸린 건 카드에 표시)
+    var inMeta = !curQ || (c.dataset.t||'').indexOf(curQ)>=0;
+    var inFig  = !inMeta && !!curQ && (c.dataset.fig||'').indexOf(curQ)>=0;
+    var okQ = inMeta || inFig;
+    var fb = c.querySelector('.figmatch');
+    if(fb) fb.style.display = inFig ? '' : 'none';
     var okTP = !curTP || (curTP==='__fav'
                  ? favSet().has(c.dataset.id||'')
                  : (c.dataset.tp||'').split(',').indexOf(curTP)>=0);
