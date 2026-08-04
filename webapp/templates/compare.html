@@ -126,6 +126,46 @@ upd();
     ⛔ <b>정량·순위는 원본 주기셀 값만.</b> 큐빅 근사는 <b>표시용</b>이고 b2o3 에서 6.73 → 23.83 %로
     3.5배 벌어진다 — 아래 대조표가 그 실증이다.
   </div>
+
+  {# ── 부피 ≠ 병목: 역설 3건 + 분해 (2026-08-04, /concept/bvse §7-9 요약) ── #}
+  <div style="margin-top:12px">
+    <div style="font-weight:700;font-size:.85rem;margin-bottom:6px">채널부피 %는 σ 랭킹 지표가 아니다 — 실측 3건</div>
+    <div style="overflow-x:auto"><table style="font-size:.76rem;border-collapse:collapse;min-width:560px">
+      <tr style="border-bottom:2px solid var(--line,#e5e7eb)">
+        <th style="text-align:left;padding:4px 10px 4px 0">쌍</th>
+        <th style="text-align:right;padding:4px 10px">채널부피</th>
+        <th style="text-align:right;padding:4px 10px">실측</th>
+        <th style="text-align:left;padding:4px 0 4px 10px">부피 지표가 놓친 것</th>
+      </tr>
+      <tr style="border-bottom:1px solid var(--line,#e5e7eb)">
+        <td style="padding:4px 10px 4px 0">comp1 → modelc</td>
+        <td style="text-align:right;padding:4px 10px">−15%</td>
+        <td style="text-align:right;padding:4px 10px"><b>σ ×4 ↑</b></td>
+        <td style="padding:4px 0 4px 10px"><b>vacancy/무질서</b> — 점유-무관 지도의 원리적 사각 (vacancy paradox)</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--line,#e5e7eb)">
+        <td style="padding:4px 10px 4px 0">modelc → LPSOCl</td>
+        <td style="text-align:right;padding:4px 10px">+43%</td>
+        <td style="text-align:right;padding:4px 10px"><b>D 0.60× ↓</b></td>
+        <td style="padding:4px 0 4px 10px"><b>O 트랩 문턱</b> — 부피는 D₀에(3.4×), Eₐ +90 meV가 이김 (0.60 = 0.18×3.4)</td>
+      </tr>
+      <tr>
+        <td style="padding:4px 10px 4px 0">modelc → B₂O₃</td>
+        <td style="text-align:right;padding:4px 10px">+45%</td>
+        <td style="text-align:right;padding:4px 10px"><b>σ 보존</b></td>
+        <td style="padding:4px 0 4px 10px"><b>국소성</b> — 열림이 도펀트 주변 집중 (23.8 vs 6.2%)</td>
+      </tr>
+    </table></div>
+    <div class="muted" style="font-size:.74rem;margin-top:6px">
+      채널부피 % → D₀(프리팩터) · percolation energy(문헌 표준어; 우리 옛 용어 "onset") → Eₐ 방향.
+      σ/Eₐ 정량은 MD 멀티시드가 판정 — BVSE는 공간 지도·메커니즘용.
+      <br>eV-보정판(bvlain Morse-BVEL, 2026-08-04)도 같은 역전을 재현: comp1 E_3D 0.273 vs modelc 0.478 eV
+      — MD는 반대(0.253 vs 0.197). 단위를 eV로 바꿔도 점유-무관 프록시의 한계는 그대로다
+      (<span class="mono">db/properties/bvse_bvlain_ev_4sys.csv</span>).
+    </div>
+    <a href="/concept/bvse" style="display:inline-block;margin-top:6px;font-size:.78rem">
+      → BVSE 개념 정리: 정의 · 두 지표 · 문헌 용법(σ 예측표 검산 사례 포함) · 역설 3건 · MD와 역할 분담</a>
+  </div>
   <div class="chip-bar" style="margin-top:10px">
     {% for x in bvse.tables %}<button class="chip {% if loop.first %}active{% endif %}"
       onclick="plotBvse('{{ x.rel }}',this)" title="{{ x.note }}">{{ x.title }}</button>{% endfor %}

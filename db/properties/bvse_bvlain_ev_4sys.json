@@ -1,0 +1,56 @@
+{
+  "property": "bvse_percolation_barriers_eV_bvlain",
+  "method": {
+    "code": "bvlain (Morse-BVEL, softBV 파라미터셋) — pip, CPU 초~분/계",
+    "settings": {
+      "mobile_ion": "Li1+",
+      "r_cut_A": 10.0,
+      "resolution_A": 0.25,
+      "k": 100,
+      "encut_eV": 5.0
+    },
+    "structures": "우리 relaxed V0 셀 (comp1_V0_k444.cif · modelc_V0_k663 · lpsocl_relaxV0 · b2o3_relaxV0)",
+    "date": "2026-08-04",
+    "why": "문헌(eV 단위 BV 장벽, softBV/BVlain 계열 발표자료)과 같은 축의 값을 우리 구조로 확보"
+  },
+  "⚠_VERDICT_ranking_forbidden": "절대 스케일은 그럴듯하다(comp1 E_3D 0.273 ≈ MD Ea 0.253 eV; 외부 LPSCl 발표값 0.334 동급). 그러나 가족 내 랭킹은 MD와 역전 — comp1 0.273 < modelc 0.478 (MD: modelc 0.197 < comp1 0.253). vacancy paradox(점유-무관 지도)가 eV 단위에서도 그대로 재현된 것. → σ/Ea 순위 인용 금지. kb/concepts/bvse.md §8-9 의 규율이 이 파일에도 적용된다.",
+  "⚠_supercell_caveat": "E_3D 는 셀 모양에 민감 — modelc/lpsocl 은 c=35 Å 적층셀, b2o3 는 128원자 셀에 도펀트 1개라 장축 침투가 도펀트/anti-site 층을 강제 통과한다(b2o3 0.908 eV 는 그 유한크기 산물). 계 간 비교는 같은 모양 셀에서만.",
+  "systems": {
+    "comp1": {
+      "formula": "Cl4Li24P4S20",
+      "E_1D_eV": 0.1953,
+      "E_2D_eV": 0.2637,
+      "E_3D_eV": 0.2734,
+      "MD_Ea_eV": "0.253",
+      "MD_src": "deck 단일시드 계열",
+      "runtime_s": 7.4
+    },
+    "modelc": {
+      "formula": "Cl8Li27P5S22",
+      "E_1D_eV": 0.2344,
+      "E_2D_eV": 0.2441,
+      "E_3D_eV": 0.4785,
+      "MD_Ea_eV": "0.197±0.032",
+      "MD_src": "3-seed×3-T",
+      "runtime_s": 23.9
+    },
+    "lpsocl": {
+      "formula": "Cl8Li27OP5S21",
+      "E_1D_eV": 0.2246,
+      "E_2D_eV": 0.2441,
+      "E_3D_eV": 0.5664,
+      "MD_Ea_eV": "0.287±0.024",
+      "MD_src": "4-seed×3-T",
+      "runtime_s": 22.6
+    },
+    "b2o3": {
+      "formula": "B2Cl16Li58O3P8S41",
+      "E_1D_eV": 0.2832,
+      "E_2D_eV": 0.3223,
+      "E_3D_eV": 0.9082,
+      "MD_Ea_eV": "0.199±0.034",
+      "MD_src": "3-seed×3-T reseed",
+      "runtime_s": 58.8
+    }
+  }
+}
