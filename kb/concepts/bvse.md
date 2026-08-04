@@ -256,4 +256,63 @@ MD 대응: `*_md_arrhenius.json` (멀티시드 Eₐ/D — σ/Eₐ 정량의 유�
 - E_3D는 셀 모양에 민감(적층셀 c=35 Å, b2o3는 128원자 셀에 도펀트 1개) — b2o3의 0.908은
   유한크기 산물. **σ/Eₐ 순위 인용 금지**는 이 값들에도 그대로 적용.
 
-*tags: BVSE · bond valence · BVS · softBV · percolation energy · migration barrier · Li migration · ion transport · screening · channel volume · prefactor · vacancy paradox*
+---
+## 10. Percolation 경로 프로파일 — 그림 읽는 법 (2026-08-05)
+
+그림: `docs/figures/bv_path_profile_4sys.png` · 데이터: `db/properties/bv_path_profile_origin.csv`
+
+### 10-1. 무엇을 그린 것인가 — 3D 지도의 1D 단면
+
+3D BV-EL 지도(eV, above-min)에서 **한 개의 선**을 뽑아 펼친 것이다. 두 단계로 만든다:
+
+1. **문턱 찾기** — 천장 $E_{\text{cap}}$ 을 0부터 올리며 `{E < cap}` 영역이 그 축으로
+   **셀을 감고 이어지는** 최초의 값을 이분법으로 찾는다 (26-연결, bvlain 규약).
+   그게 $E_{\text{perc}}$ = 점선. **이 값이 이 그림의 유일한 정량**이다.
+2. **경로 뽑기** — 그 천장 아래에서 **에너지 선적분 $\int E\,ds$ 최소** 경로를 Dijkstra 로
+   찾는다. 최단거리로 하면 천장 바로 밑을 직선으로 질러가 인공 평탄대가 생긴다.
+
+### 10-2. 축이 뜻하는 것
+
+| 축 | 뜻 |
+|---|---|
+| x (Reaction coordinate) | 경로를 따라 **실제로 이동한 거리**(Å). 시간도 진행률도 아니다 |
+| y (Energy) | 그 지점의 BV-EL 값(eV, 최솟값을 0으로) — **한 개 Li 프로브**가 느끼는 정전+반발 |
+| 점선 $E_{\text{perc}}$ | 위 ①의 문턱. 경로 최댓값과 같다(정의상) |
+| 골짜기 | Li 자리 (well) |
+| 봉우리 | 자리 사이 **병목**(saddle). 봉우리 중 가장 높은 것이 문턱을 정한다 |
+
+**봉우리 간격이 곧 홉 거리**다: modelc·b2o3 는 ~1.8 Å 간격으로 촘촘하고, comp1 은 ~2.9 Å.
+$n_{\text{hop}}$ 계산의 $d_{\text{hop}} \approx 3$ Å 과 같은 스케일 — 두 지표가 같은 격자를 본다.
+
+> [!warning] ⚠ 2026-08-05 수정 — "평탄대"는 물리가 아니었다
+> 초판 그림의 LPSOCl 긴 평탄 구간(그리고 LPSCl 앞머리의 평탄한 0 구간)은
+> **주기경계 랩 아티팩트**였다. Dijkstra 가 주기축에서 인덱스를 `% N` 으로 감싸는데,
+> 그 인덱스를 그대로 데카르트로 바꿔 거리를 누적해서 **셀을 넘는 한 걸음이
+> 셀 한 변만큼의 가짜 점프**로 잡혔다. 그 구간이 선으로 이어지며 평탄대처럼 보인 것.
+> - 실측: comp1 9.80 Å 점프 2개 = 그려진 길이의 **42%**, lpsocl 6.68 Å 2개 = **58%**
+> - 고침: 이웃 간 인덱스 차를 최소상(MIC)으로 되돌려 $\{-1,0,1\}$ 로 만든 뒤 누적
+> - 경로 길이 comp1 46.7 → **27.6 Å**, lpsocl 23.1 → **10.2 Å** (modelc·b2o3 는 랩 없어 불변)
+> - **$E_{\text{perc}}$·계 간 순위·bvlain 대조 게이트는 영향 없음** (같은 voxel 을 지난다)
+>
+> ~~"LPSOCl 평탄대 = 음이온 벽 통로"~~ 라고 설명했던 것은 **철회**한다. 그 구간은
+> 애초에 경로가 아니었다. 교훈: **주기셀에서 뽑은 1D 프로파일은 랩 해제부터 검산**한다.
+
+### 10-3. 이 그림으로 말할 수 있는 것 / 없는 것
+
+**된다**
+- 경로가 **우물–안장 반복**이라는 것 (= 자리 간 도약 수송이라는 그림)
+- 한 계 안에서 **어느 병목이 가장 높은가**, 그 병목이 몇 개나 있나
+- $E_{\text{perc}}$ 의 **절대 스케일**이 그럴듯한가 (comp1 0.195–0.273 vs MD 0.253)
+
+**안 된다**
+- **계 간 $E_a$/σ 순위** — 그림 제목의 MD $E_a$ 와 나란히 보면 바로 어긋난다:
+  BV 는 comp1(0.195) < lpsocl(0.223) < modelc(0.228) < b2o3(0.281),
+  MD 는 modelc(0.197) < b2o3(0.199) < comp1(0.253) < lpsocl(0.287). **comp1 이 정반대**다.
+  이유는 §9 의 세 실패 모드 — **empty-lattice proxy** 라 Li–Li 상호작용·공공·점유를
+  안 본다. 부제 "(empty-lattice proxy — ranking by MD)" 가 그 경고다.
+- **장벽의 정량값** — NEB/MD 가 정본. BV 는 스크리닝.
+- 봉우리 높이를 그대로 활성화에너지로 읽기 — 실제 이온은 여러 경로를 병렬로 쓴다.
+
+---
+
+*tags: BVSE · bond valence · BVS · softBV · percolation energy · migration barrier · Li migration · ion transport · screening · channel volume · prefactor · vacancy paradox · reaction coordinate · PBC unwrap*

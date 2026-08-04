@@ -257,10 +257,24 @@ def profile_for(name, path_cif):
     path = dijkstra_valley(E2, start, tgt, open_axes, t, cell, N)
     if path is None:
         raise SystemExit(f"⛔ {name}: cap={t:.3f} 에서 경로가 안 이어진다 (모순)")
-    idx = np.array(path, float)
-    frac = idx / np.array(N)
-    cart = frac @ cell
-    d = np.concatenate([[0.0], np.cumsum(np.linalg.norm(np.diff(cart, axis=0), axis=1))])
+    # ⚠⚠ **반응좌표는 랩을 풀고 재야 한다 (2026-08-05 수정).**
+    #   dijkstra 는 주기축에서 `v[d] %= sh[d]` 로 감싼다. 그 인덱스를 그대로
+    #   데카르트로 바꿔 거리를 누적하면, 셀을 넘는 한 걸음이 **셀 한 변만큼의
+    #   가짜 점프**로 잡힌다 — 프로파일엔 그 구간이 '평탄 구간'처럼 그려진다.
+    #   실측(수정 전): comp1 9.80 Å 점프 2개(전체 길이의 42%), lpsocl 6.68 Å 2개(58%).
+    #   → LPSOCl 패널의 긴 평탄대는 물리(넓은 통로)가 아니라 이 아티팩트였다.
+    #   고침: 이웃 간 인덱스 차를 {-1,0,1} 로 되돌린 뒤(26-이웃이므로 그게 참값)
+    #   그 차분만 데카르트로 환산해 누적한다. E 값·E_perc·순위는 영향 없다
+    #   (같은 voxel 을 지나므로) — 바뀌는 건 x축과 경로 길이뿐이다.
+    idx = np.array(path, int)
+    dif = np.diff(idx, axis=0)
+    for d_ax in range(3):
+        n_ax = E2.shape[d_ax]
+        dif[:, d_ax] = (dif[:, d_ax] + n_ax // 2) % n_ax - n_ax // 2   # 최소상 (MIC)
+    if np.abs(dif).max() > 1:
+        raise SystemExit(f"⛔ {name}: 랩 해제 후에도 |Δindex|>1 — 경로가 26-이웃이 아니다")
+    step_cart = (dif / np.array(N)) @ cell
+    d = np.concatenate([[0.0], np.cumsum(np.linalg.norm(step_cart, axis=1))])
     e = np.array([E2[tuple(p)] for p in path])
     wind = "[" + "".join(str(x) for x in T) + "]"
     print(f"    경로: winding {wind} · {len(path)}점 · 길이 {d[-1]:.1f} A · max {e.max():.4f} eV")
@@ -290,6 +304,10 @@ def main():
                 'then min-energy-line-integral path under that ceiling."\n')
         f.write('"# EMPTY-LATTICE PROXY: absolute scale plausible, family sigma/Ea ranking is '
                 'decided by MD (kb/concepts/bvse.md sec 8-9)."\n')
+        f.write('"# 2026-08-05 FIX: reaction coordinate is now PBC-unwrapped. Before the fix a '
+                'cell-crossing step was counted as a full cell-edge jump, which drew a FAKE FLAT '
+                'PLATEAU (comp1 2x9.80 A = 42% of the plotted length; lpsocl 2x6.68 A = 58%). '
+                'Path lengths comp1 46.7->27.6 A, lpsocl 23.1->10.2 A. E_perc / rankings unchanged."\n')
         for s, r in res.items():
             f.write(f'"# {s}: axis {r["axis"]}, E_perc {r["E_perc"]:.4f} eV; '
                     f'bvlain E_1D/2D/3D {r["ref"]["E_1D"]:.3f}/{r["ref"]["E_2D"]:.3f}/'
