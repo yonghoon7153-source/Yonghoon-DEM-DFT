@@ -246,6 +246,42 @@ def run_forward(cases, h_am=4.0, med_tol=0.015, max_tol=0.04):
                       n_outside=sum(1 for r in rows if not r['inside']))
 
 
+# 통과 밴드가 이 배수를 넘으면 그 PASS 는 정보가 아니다 — 떨어질 수 없는 시험은 시험이 아니다.
+VACUOUS_BAND_RATIO = 3.0
+H_AM_GRID = [0.5, 0.75, 1, 1.5, 2, 3, 4, 6, 8, 12, 20, 40]
+
+
+def scan_h_am(cases, grid=None, med_tol=0.015, max_tol=0.04, band=(3.0, 6.0)):
+    """★ 판정력 검사 — H_AM 을 얼마나 틀려도 이 시험을 통과하는가.
+
+    2026-08-05 에 실제로 당한 것: 10케이스 정방향이 PASS 였는데, H_AM 을 0.5~40 GPa
+    (80배) 로 흔들어도 전부 PASS 였다.  A_supp 가 ~10 %/µm 로 가팔라 h 가 H_AM 에 둔감하고
+    (모델을 **쓰기엔** 좋은 성질), 상대 문턱은 두꺼운 베드에서 더 헐거워지기 때문이다.
+    → PASS/FAIL 을 헤드라인으로 삼지 말고 **통과 밴드**를 보고한다.  밴드가 3배를 넘으면
+      VACUOUS: 그 데이터셋은 H_AM 을 제약하지 못하므로 모델의 증거가 될 수 없다.
+    """
+    grid = list(grid) if grid is not None else list(H_AM_GRID)
+    passed = [H for H in grid
+              if run_forward(cases, h_am=H, med_tol=med_tol,
+                             max_tol=max_tol)[1]['verdict'].startswith('PASS')]
+    if not passed:
+        return dict(passed=[], lo=None, hi=None, ratio=float('inf'),
+                    verdict='FAIL — 어떤 H_AM 으로도 문턱을 못 넘는다 (모델 기각)')
+    lo, hi = min(passed), max(passed)
+    ratio = hi / lo
+    lit_in = any(band[0] <= H <= band[1] for H in passed)
+    if ratio > VACUOUS_BAND_RATIO:
+        v = (f'VACUOUS — 통과 밴드 {lo:g}~{hi:g} GPa ({ratio:.0f}배).  이 데이터는 H_AM 을 '
+             f'제약하지 못하므로\n     PASS 가 모델의 증거가 되지 않는다 '
+             f'(떨어질 수 없는 시험은 시험이 아니다)')
+    elif not lit_in:
+        v = f'FAIL — 통과 밴드 {lo:g}~{hi:g} GPa 가 문헌대 {band[0]:g}~{band[1]:g} 를 배제'
+    else:
+        v = (f'PASS — 통과 밴드 {lo:g}~{hi:g} GPa ({ratio:.1f}배) 가 좁고 문헌대 '
+             f'{band[0]:g}~{band[1]:g} 를 포함')
+    return dict(passed=passed, lo=lo, hi=hi, ratio=ratio, verdict=v)
+
+
 def read_curve(path):
     """SE 응답곡선 CSV (두께_µm, wallP_GPa) → ndarray.  베드마다 다른 곡선을 줄 수 있다."""
     rows = [r for r in csv.reader(open(path)) if r and not r[0].lstrip().startswith('#')]
@@ -444,6 +480,19 @@ def _selftest():
     chk('주입한 곡선이 se_response 에 실제로 쓰인다',
         abs(se_response(30.0, cc2)[0] - 0.005) < 1e-12)
 
+    # ★ 판정력 검사가 실제로 VACUOUS 를 잡는가 — 오늘의 사고를 회귀 테스트로 박는다
+    man3 = os.path.join(td, 'cases_vac.csv')
+    with open(man3, 'w') as f:
+        f.write('label,p_gpa,am_csv,se_csv,h_dem_um\n')
+        h, _, _ = solve_height(am_c, am_r, 50.0, 4.0, 0.30, _LO, _HI)
+        f.write(f'thin,0.30,am.csv,am.csv,{h:.6f}\n')
+        f.write(f'thick,0.30,am.csv,am.csv,{h:.6f}\n')
+    sc = scan_h_am(read_cases(man3))
+    chk('판정력 검사가 넓은 통과 밴드를 VACUOUS 로 잡는다',
+        sc['ratio'] > VACUOUS_BAND_RATIO and sc['verdict'].startswith('VACUOUS'))
+    sc2 = scan_h_am(read_cases(man3), med_tol=1e-6, max_tol=1e-6)
+    chk('문턱을 극단으로 조이면 밴드가 좁아지거나 FAIL', not sc2['verdict'].startswith('VACUOUS'))
+
     print(f'selftest: {ok}/{ok + len(fail)} PASS' + (f'   FAILED: {fail}' if fail else ''))
     return 0 if not fail else 1
 
@@ -468,6 +517,9 @@ def main(argv=None):
                     help='★ 비순환 검증: 케이스 매니페스트 CSV '
                          '(label,p_gpa,am_csv,se_csv,h_dem_um[,curve_csv,box_um]).  '
                          '케이스마다 H_AM 을 역산해 **하나의 상수로 수렴하는지** 판정한다')
+    ap.add_argument('--h-am-scan', action='store_true',
+                    help='★ 판정력 검사 — H_AM 을 흔들어 **통과 밴드**를 낸다.  밴드가 3배를 '
+                         '넘으면 그 PASS 는 정보가 아니다 (VACUOUS)')
     ap.add_argument('--forward', action='store_true',
                     help='★ --cases 를 **정방향**으로 판정 (H_AM 고정 → 두께 예측 → DEM 대조). '
                          '역산은 자유표면에서 조건이 나빠 두께 정의 오차를 배수로 증폭한다')
@@ -476,6 +528,20 @@ def main(argv=None):
 
     if a.selftest:
         return _selftest()
+
+    if a.cases and a.h_am_scan:
+        cs = read_cases(a.cases)
+        print('★ 판정력 검사 — H_AM 을 얼마나 틀려도 통과하는가\n')
+        print(f'{"H_AM(GPa)":>10} {"median|Δh|/h":>13} {"max":>8}   판정')
+        for H in H_AM_GRID:
+            _, s1 = run_forward(cs, h_am=H)
+            print(f'{H:10g} {s1["median"]:13.2%} {s1["max"]:8.2%}   '
+                  f'{"PASS" if s1["verdict"].startswith("PASS") else "fail"}')
+        sc = scan_h_am(cs)
+        if sc['passed']:
+            print(f'\n  통과 밴드: {sc["lo"]:g}~{sc["hi"]:g} GPa  ({sc["ratio"]:.0f}배)')
+        print(f'\n  ▶ {sc["verdict"]}')
+        return 0
 
     if a.cases and a.forward:
         rows, summ = run_forward(read_cases(a.cases), h_am=a.h_am)
