@@ -77,29 +77,38 @@ def fit_window(t, y, lo, hi):
 def load_runs(specs, tmax, seed_mode='mean', exclude=('BROKEN',)):
     """--run LABEL=DIR 들에서 msd.json 을 훑는다. 시드 여럿이면 최소 시드(재현 가능)."""
     out = {}
+    # ⚠ 같은 라벨을 여러 번 주면 **root 를 누적**한다 (2026-08-04). 한 계의 시드가
+    #   폴더 여럿에 흩어져 있는 게 실태다 (modelc: 600_reseed + highT_reseed/modelc).
+    from collections import defaultdict
+    by_label = defaultdict(list)
     for spec in specs:
         label, root = spec.split("=", 1)
+        by_label[label].append(root)
+
+    def _short(f):
+        return os.sep.join(f.split(os.sep)[-5:-1])
+
+    for label, roots in by_label.items():
         for T in T_WANT:
             hits = []
-            for f in glob.glob(os.path.join(os.path.expanduser(root), "**", "msd.json"),
-                               recursive=True):
-                # ⚠ 제외 패턴 (2026-08-04 실측 2건): BROKEN(좌표버그 폐기본)은 기본 제외.
-                #   licube 류 — **같은 시드의 재실행**(밀도 cube 용 50 ps)이라 독립 시드가
-                #   아니고, 평균에 넣으면 이중계상 + 최단길이 절단으로 200 ps 를 50 ps 로
-                #   깎아 먹는다. --exclude licube 로 뺄 것.
-                if any(pat in f for pat in exclude if pat):
-                    continue
-                try:
-                    d = json.load(open(f))
-                except Exception:
-                    continue
-                if abs(float(d.get("T_K", -1)) - T) < 1:
-                    hits.append((f, d))
+            for root in roots:
+                for f in glob.glob(os.path.join(os.path.expanduser(root), "**", "msd.json"),
+                                   recursive=True):
+                    # ⚠ 제외 패턴 (2026-08-04 실측 2건): BROKEN(좌표버그 폐기본)은 기본 제외.
+                    #   licube 류 — **같은 시드의 재실행**(밀도 cube 용 50 ps)이라 독립
+                    #   시드가 아니고, 평균에 넣으면 이중계상 + 최단길이 절단이 난다.
+                    if any(pat in f for pat in exclude if pat):
+                        continue
+                    try:
+                        d = json.load(open(f))
+                    except Exception:
+                        continue
+                    if abs(float(d.get("T_K", -1)) - T) < 1:
+                        hits.append((f, d))
             if not hits:
                 print(f"  ⛔ {label} {T} K — msd.json 못 찾음 ({root})")
                 continue
             hits.sort(key=lambda x: x[0])
-            root_abs = os.path.expanduser(root)
             if seed_mode == "mean" and len(hits) > 1:
                 # ⚠⚠ **시드 평균이 기본이어야 하는 이유 (2026-08-04 실측).** 같은 계·같은 T
                 #   인데 시드만 다른 두 파일에서 beta 가 0.98 vs 0.52 로 갈렸다. 대표 하나를
@@ -119,13 +128,14 @@ def load_runs(specs, tmax, seed_mode='mean', exclude=('BROKEN',)):
                     ys.append(np.interp(g, tt, yy))
                 ymean = np.mean(ys, axis=0)
                 spread = float(np.std([y[-1] for y in ys]) / max(np.mean([y[-1] for y in ys]), 1e-9))
-                out[(label, T)] = {"t": g, "y": ymean, "src": f"{root} (mean of {len(hits)})",
+                out[(label, T)] = {"t": g, "y": ymean,
+                                   "src": f"{'+'.join(roots)} (mean of {len(hits)})",
                                    "traj_ps": Tend, "n_seed": len(hits),
                                    "spread": spread, "D_stored": None}
                 print(f"  ✓ {label} {T} K  [시드 {len(hits)}개 평균]  궤적 {Tend:.0f} ps · "
                       f"MSD@끝 {ymean[-1]:.1f} A^2 · 시드산포 {spread*100:.0f}%")
                 for hf, hd in hits:
-                    print(f"        · {os.path.relpath(hf, root_abs)}  "
+                    print(f"        · {_short(hf)}  "
                           f"({float(np.asarray(hd['times_ps'],float).max()):.0f} ps)")
                 continue
             f, d = hits[0]
@@ -136,7 +146,7 @@ def load_runs(specs, tmax, seed_mode='mean', exclude=('BROKEN',)):
                                "D_stored": d.get("D_Li_cm2_s")}
             print(f"  ✓ {label} {T} K  ({k.sum()}점, 궤적 {t.max():.0f} ps, "
                   f"MSD@{t[k].max():.0f}ps {y[k][-1]:.1f} A^2)")
-            print(f"        ← {os.path.relpath(f, root_abs)}"
+            print(f"        ← {_short(f)}"
                   + (f"   ⚠ 후보 {len(hits)}개 중 1개만 씀 — --seed_mode mean 권장"
                      if len(hits) > 1 else ""))
     return out
