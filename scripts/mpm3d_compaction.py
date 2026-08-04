@@ -222,6 +222,45 @@ def restart_unload_needed(p_settle, target, band=0.10):
     return bool(max(p_settle) > (1.0 + float(band)) * float(target))
 
 
+def descend_probe_verdict(win, target_eff, band=0.02, settle_max=12):
+    """하강 동결-프로브 창을 판정한다 — **정지 판독으로만** 정지를 결정하기 위한 순수 함수.
+
+    배경 (2026-08-04, P:S 5킷): 하강 정지가 `p + am_skel >= target` 의 **순간 비교**였고, 그 `p` 는
+    **움직이는 플래튼 위에서** 읽힌 값이다.  wallf = Σ grid_m·(grid_v − wall_vel) 이므로 하강 중
+    판독에는 음향복사(ρc·v) + 램(ρv²) + 격자 셔블링이 섞여 들어온다 — 실측 16.67 GPa 로 목표
+    0.3 의 **55배**, 같은 위치에서 플래튼을 세우면 0.023 (**715×** 차이).  그 결과 정지가 응력이
+    아니라 **걸음 수**로 결정됐다 (5킷 하강 프레임 = 4·4·4·4·3 정수, 갭 산술 ceil(0.05/step)+1 이
+    5/5 예측).  STOP_HOLD 지속-요구(68df3dae)로는 못 막는다 — 편향이 목표의 55배로 **지속**되므로
+    카운트가 그냥 채워지고 정지가 첫스침+3 으로 밀릴 뿐이다 (실측 4→6 프레임).
+
+    코드는 이 편향을 이미 알고 있었다: 제하 프로브와 S-1 servo 는 `wall_vel=0` 으로 **동결한 뒤**
+    읽는다("mid-rise frame read −0.23 GPa on a bed really at +0.19").  하강 판정에만 그 처리가
+    빠져 있었다 → 같은 구조(이동 → 동결 → 판독)를 여기에도 쓴다.
+
+    반환 (verdict, spread_rel):
+      'wait'   — 아직 울림.  창을 더 늘린다 (settle_max 까지)
+      'stop'   — 정지 판독이 target 이상 → **그 높이에서** 정지 (과주행 0)
+      'resume' — 정지 판독이 target 미만 → 하강 재개 (순간 스파이크였다)
+
+    S-1 관례를 따른다: 완전 정지를 증명하지 못해도 **추세를 외삽해 판정이 안 바뀌면** 행동한다
+    (이완 중인 베드에서 완전 정지를 기다리면 영영 결정 못 함).  단 문턱 근방(±band)에서는
+    수렴 선언이므로 진짜 정지를 요구한다."""
+    if not win:
+        return 'wait', float('inf')
+    qs, sp = settle_is_quasistatic(win, rel_tol=max(band, 1e-6) / 3.0)
+    p_now = float(win[-1])
+    # ★ 표본 <3 에서는 추세를 잴 수 없다 → slope=0 이 되어 외삽이 **자동으로 안정**이 되고,
+    #   "측정한 적 없는 사실을 검증했다"고 기록하게 된다.  settle_is_quasistatic 이 S-3 에서
+    #   고친 것과 정확히 같은 함정이라 여기서도 같은 규약(≥3 표본)을 건다.  selftest 가 잡음.
+    slope = (win[-1] - win[-3]) / 2.0 if len(win) >= 3 else 0.0
+    near = abs(p_now - target_eff) <= abs(band * target_eff)
+    stable = (len(win) >= 3) and (not near) \
+        and ((p_now >= target_eff) == ((p_now + 3.0 * slope) >= target_eff))
+    if not (qs or stable) and len(win) < int(settle_max):
+        return 'wait', sp
+    return ('stop' if p_now >= target_eff else 'resume'), sp
+
+
 def settle_is_quasistatic(p_window, rel_tol=0.15, abs_floor=1e-4):
     """Is a frozen-platen window actually AT REST, or still ringing?
 
@@ -867,6 +906,30 @@ def _selftest():
         arm_guard_active(75.0, 75.0, False) is True and arm_guard_active(69.0, 75.0, False) is False)
     chk('guard: DISABLED on a restart (would have forced 5 %p of extra plastic compaction)',
         arm_guard_active(17.6, 17.6, True) is False and arm_guard_active(68.3, 68.3, True) is False)
+
+    #    B'. 하강 동결-프로브 판정 (2026-08-04) — 여기까지가 P:S 5킷 결함의 커버리지 공백이었다.
+    #        68df3dae("STOP_HOLD 지속-요구")는 selftest 70/70 PASS 였지만 **그 분기를 실행하는
+    #        테스트가 0개**여서 "충격이 3프레임 넘게 지속되면 필터가 무력"임을 못 잡았다.
+    #        실측 수열로 고정한다.
+    #    (a) 실측 7:3 하강 프로브: 이동 판독 16.67 → 동결 후 급감.  target 0.3 을 한참 밑돌므로
+    #        추세 외삽으로도 판정 불변 → 'resume' (스파이크에 속아 멈추지 않는다).
+    chk('descend-probe: 이동 스파이크(16.67 GPa) 뒤 정지 판독이 목표 미달 → 하강 재개',
+        descend_probe_verdict([16.67, 0.52, 0.0233], 0.30)[0] == 'resume')
+    #    (b) 진짜 접촉: 정지 판독이 목표를 넘고 안정 → 그 높이에서 정지 (과주행 0).
+    chk('descend-probe: 정지 판독이 목표 초과·안정 → stop',
+        descend_probe_verdict([0.44, 0.42, 0.41], 0.30)[0] == 'stop')
+    #    (c) 문턱 근방(±band)은 수렴 선언이므로 진짜 정지를 요구한다 — 울리는 창은 'wait'.
+    chk('descend-probe: 문턱 근방에서 울리는 창은 판정 보류(wait)',
+        descend_probe_verdict([0.36, 0.24, 0.31], 0.30, band=0.02, settle_max=12)[0] == 'wait')
+    #    (d) 예산 소진 시엔 마지막(가장 정착된) 표본으로 강제 판정 — 무한 대기 금지.
+    chk('descend-probe: settle_max 도달 시 마지막 표본으로 강제 판정',
+        descend_probe_verdict([0.36, 0.24, 0.31], 0.30, band=0.02, settle_max=3)[0] == 'stop')
+    #    (e) 표본 부족(<3)은 정지를 증명하지 못했다 → wait (settle_is_quasistatic S-3 관례 상속).
+    chk('descend-probe: 표본 2개는 정지 미증명 → wait',
+        descend_probe_verdict([16.67, 0.52], 0.30, settle_max=12)[0] == 'wait')
+    #    (f) 단조 붕괴 중인 창이 우연히 목표 위에 있어도, 외삽이 아래로 가면 안정이 아니다 → wait.
+    chk('descend-probe: 붕괴 추세는 목표 위 표본이어도 안정 아님 → wait',
+        descend_probe_verdict([2.0, 0.9, 0.45], 0.30, band=0.02, settle_max=12)[0] == 'wait')
 
     #    C. cohesion gate re-armed from the state (else the restored binder is compiled out).
     chk('coh: restart without --coh re-arms the gate from the state',
