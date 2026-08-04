@@ -1,0 +1,125 @@
+{
+ "slug": "deysher2022_transport_mechanical_aspects_assb_review",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/29. Transport and mechanical aspects of all-solid-state lithium batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Survey of existing literature revealing the performance limitations of ASSBs. Low current densities and low areal loadings (denoted by the size of the point) are common. The ARPA-E IONICS project goal of 3 mA cm\u00012 from 2016 is denoted by the green dashed line for reference. (For interpretation of the references to colour in this ﬁgure legend, the reader is referred to the Web version of this article.)",
+   "bbox": [
+    31.6,
+    60.7,
+    563.7,
+    274.7
+   ],
+   "w": 2218,
+   "h": 892,
+   "dpi": 300,
+   "src": "29. Transport and mechanical aspects of all-solid-state lithium batteries.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Methods to optimize the electronic and ionic transport within the cathode and considerations for SSE electrochemical stability. a) & b) SSE-to-cathode particle size ratio effects on cathode capacity utilization [67]. c) Optimizing the composite ratio to maximize both ionic and electronic transport within the cathode [68]. d) Effect of carbon addition (Adapted with permission from Ref. [69] (Copyright 2017 American Chemical Society)) and e) various morphologies of common carbon additives [70] (CNT: carbon nanotubes, VGCF: vapor-grown carbon ﬁbers). f) Effect of carbon morphology on decomposition kinetics (Adapted with permission from Ref. [71] (Copyright 2019 American Chemical Society)). g) Electrochemical potential windows for several material classes of solid electrolytes (Adapted with permission from Ref. [72] (Copyright 2020 American Chemical Society)). h) SSE reaction energie",
+   "bbox": [
+    31.6,
+    60.7,
+    563.7,
+    500.0
+   ],
+   "w": 2218,
+   "h": 1831,
+   "dpi": 300,
+   "src": "29. Transport and mechanical aspects of all-solid-state lithium batteries.pdf",
+   "blank": 0.727
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Common mechanical failure mechanisms observed in ASSBs. a) Void formation between the cathode and the SSE due to the repeated expansion and contraction of cathode particles. b) Radially oriented grains within the cathode particles to mitigate the loss of contact with the SSE (Reproduced with permission from Ref. [92] (Copyright 2019 John Wiley and Sons)). c) Volume expansion of different cathode materials during cycling (Reproduced with permission from Ref. [86] (Copyright 2018 Royal Society of Chemistry)). d) & e) Mixing cathode materials with different volume change trends during lithiation to minimize the overall composite volume change (Reproduced with permission from Ref. [86] (Copyright 2018 Royal Society of Chemistry)).",
+   "bbox": [
+    31.6,
+    60.7,
+    563.7,
+    258.2
+   ],
+   "w": 2218,
+   "h": 823,
+   "dpi": 300,
+   "src": "29. Transport and mechanical aspects of all-solid-state lithium batteries.pdf",
+   "blank": 0.67
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Cell volume expansion in Li-metal ASSBs. a) Observation of dense Li plated in ASSBs. b) Evaluation of total cell volume change during cycling for Li metal full cells.",
+   "bbox": [
+    40.3,
+    60.7,
+    555.0,
+    160.4
+   ],
+   "w": 2146,
+   "h": 416,
+   "dpi": 300,
+   "src": "29. Transport and mechanical aspects of all-solid-state lithium batteries.pdf",
+   "blank": 0.564
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Cell volume expansion in multilayer Li-metal ASSBs. The magnitude of volume expansion experienced by Li metal cells increases linearly with the number of layers. New cell designs are needed to accommodate these macro-scale volume changes.",
+   "bbox": [
+    31.6,
+    60.7,
+    563.7,
+    207.5
+   ],
+   "w": 2218,
+   "h": 612,
+   "dpi": 300,
+   "src": "29. Transport and mechanical aspects of all-solid-state lithium batteries.pdf",
+   "blank": 0.749
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Measuring thermodynamic stability and electronic and ionic transport properties of SSEs. Cyclic voltammetry using a) planar current collectors and b) carbon composite electrodes for LGPS and LLZO SSEs (Contains data previously presented in Refs. [1,89]). A schematic of each setup is shown for reference. c) Comparison of two cell conﬁgurations on transport property measurements with mixed conductors. For mixed conductors, electron-blocking layers are needed, as demonstrated by the example d) EIS spectra and e) DC polarization measurements.",
+   "bbox": [
+    31.6,
+    60.7,
+    563.7,
+    476.9
+   ],
+   "w": 2218,
+   "h": 1735,
+   "dpi": 300,
+   "src": "29. Transport and mechanical aspects of all-solid-state lithium batteries.pdf",
+   "blank": 0.844
+  }
+ ]
+}

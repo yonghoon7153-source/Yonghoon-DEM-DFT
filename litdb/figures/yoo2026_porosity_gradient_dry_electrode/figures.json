@@ -1,0 +1,144 @@
+{
+ "slug": "yoo2026_porosity_gradient_dry_electrode",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "이용민 교수님/01. Porosity-Gradient Dry-Processed Graphite Electrode with Deformable Primer Layer for Boosting Fast-Charging Capability of Lithium-ion Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 8,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Role of PL as an adhesive and conductive interlayer in DPEs. a) Schematic illustration of the DPE fabrication process and the role of the PL as an adhesive and conductive interlayer. b) PL with various binders, including PAA, CMC, and PVDF.",
+   "bbox": [
+    33.8,
+    26.0,
+    545.8,
+    551.8
+   ],
+   "w": 2135,
+   "h": 2192,
+   "dpi": 300,
+   "src": "01. Porosity-Gradient Dry-Processed Graphite Electrode with Deformable Primer Layer for Boosting Fast-Charging Capability of Lithium-ion Batteries.pdf",
+   "blank": 0.691
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 11,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Pore structure characterization of DPEs. a) Reconstructed 3D XCT structures and pore distribution in the longitudinal-sectional layer at each electrode position: top, middle, and bottom. b) Porosity distribution along the electrode thickness direction obtained from XCT images. c) Stress-strain curves obtained from micro-indentation measurements. d) Compression modulus and e) elastic modulus for bare Cu, PAA-PL, CMC-PL, and PVDF-PL. f) Schematic illustration of symmetric cells used to measure ionic resistance. g) Electrochemical impedance spectra of symmetric cells, with corresponding calculated values of h) ionic resistance and i) ionic tortuosity.",
+   "bbox": [
+    33.8,
+    26.0,
+    545.8,
+    456.2
+   ],
+   "w": 2135,
+   "h": 1793,
+   "dpi": 300,
+   "src": "01. Porosity-Gradient Dry-Processed Graphite Electrode with Deformable Primer Layer for Boosting Fast-Charging Capability of Lithium-ion Batteries.pdf",
+   "blank": 0.653
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 13,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Electrochemical performances of the WPE and DPEs in a half cell. a) Initial voltage profiles, b) cycle performance at 0.5C (1.75 mA cm−2), c) rate capability at current densities of 0.1, 0.5, 1, 2, 3, and 5C, and d) CC capacity vs. CV capacity at each current density.",
+   "bbox": [
+    33.8,
+    26.0,
+    545.8,
+    363.3
+   ],
+   "w": 2135,
+   "h": 1406,
+   "dpi": 300,
+   "src": "01. Porosity-Gradient Dry-Processed Graphite Electrode with Deformable Primer Layer for Boosting Fast-Charging Capability of Lithium-ion Batteries.pdf",
+   "blank": 0.754
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 15,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Electrochemical performance of the WPE and DPEs in a full cell with an NCM 523 cathode. a) Initial voltage profiles, b) rate capability at current densities of 0.1, 0.5, 1, 2, 3, and 5C, and c) CC charging capacity vs. CV charging capacity at each current density. SEM and photographic images of an electrode surface of d) WPE, e) DPE@PAA-PL, f) DPE@CMC-PL, and g) DPE@PVDF-PL after 3C fast charge.",
+   "bbox": [
+    33.8,
+    26.0,
+    545.8,
+    643.4
+   ],
+   "w": 2135,
+   "h": 2573,
+   "dpi": 300,
+   "src": "01. Porosity-Gradient Dry-Processed Graphite Electrode with Deformable Primer Layer for Boosting Fast-Charging Capability of Lithium-ion Batteries.pdf",
+   "blank": 0.647
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 18,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. FIB-SEM tomography-based electrode microstructure characterization. a) Schematic illustration of FIB-SEM tomography acquisition and reconstructed 3D structures of WPE, DPE@PAA-PL, and DPE@PVDF-PL. b) Reconstructed 3D structures of the bare Cu, PAA- PL, and PVDF-PL in WPE, DPE@PAA-PL, and DPE@PVDF-PL respectively. c) 2D topological maps of the bare Cu and PLs. d) Normalized contact area between bare Cu or PL and active materials calculated from reconstructed 3D structures. e) Porosity distribution across the top, middle, and bottom layers of each electrode, analyzed from 3D XCT- and FIB-SEM tomography-based reconstructed structures. Connectivity matrices derived from the PNM for f) WPE, g) DPE@PAA-PL, and h) DPE@PVDF-PL.",
+   "bbox": [
+    33.8,
+    26.0,
+    545.8,
+    545.7
+   ],
+   "w": 2135,
+   "h": 2166,
+   "dpi": 300,
+   "src": "01. Porosity-Gradient Dry-Processed Graphite Electrode with Deformable Primer Layer for Boosting Fast-Charging Capability of Lithium-ion Batteries.pdf",
+   "blank": 0.549
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 20,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. FIB-SEM tomography-based electrochemical modeling and simulation. Li+ concentration 3D maps in active materials at end of 3C CC charging process of a) the WPE, b) DPE@PAA-PL, and c) DPE@PVDF-PL. Deconvoluted overpotential during 3C fast charging with respect to charge capacity of d) the WPE, e) DPE@PAA-PL, and f) DPE@PVDF-PL. Spatial distributions of Li⁺ concentration in electrolyte along the electrode depth as a function of SOC during 3C fast charging for g) the WPE, h) DPE@PAA-PL, and i) DPE@PVDF-PL.",
+   "bbox": [
+    33.8,
+    26.0,
+    545.8,
+    606.4
+   ],
+   "w": 2135,
+   "h": 2419,
+   "dpi": 300,
+   "src": "01. Porosity-Gradient Dry-Processed Graphite Electrode with Deformable Primer Layer for Boosting Fast-Charging Capability of Lithium-ion Batteries.pdf",
+   "blank": 0.565
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 22,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Conceptual illustration highlighting the role of the porosity-gradient architecture, enabled by the PVDF-PL, in promoting efficient ion transport and enhancing fast-charging performance in DPEs.",
+   "bbox": [
+    52.7,
+    184.2,
+    521.4,
+    534.3
+   ],
+   "w": 1954,
+   "h": 1460,
+   "dpi": 300,
+   "src": "01. Porosity-Gradient Dry-Processed Graphite Electrode with Deformable Primer Layer for Boosting Fast-Charging Capability of Lithium-ion Batteries.pdf",
+   "blank": 0.666
+  }
+ ]
+}

@@ -1,0 +1,201 @@
+{
+ "slug": "so2021_dem_fabrication_degradation_ductile_particles",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/37. So_2021_J._Electrochem._Soc._168_030538.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Overview of contact force interaction in DEM: (a) spring and dashpot interactions, (b) overlap distance and stress distribution.",
+   "bbox": [
+    30.0,
+    609.0,
+    493.2,
+    744.9
+   ],
+   "w": 1931,
+   "h": 567,
+   "dpi": 300,
+   "src": "37. So_2021_J._Electrochem._Soc._168_030538.pdf",
+   "blank": 0.857
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Overview of contact force interaction in our DEM model for elastic (a) and plastic (b) deformation. Force displacement hysteresis curves with different forces (c) and different hardness (d).",
+   "bbox": [
+    30.0,
+    428.8,
+    558.0,
+    735.9
+   ],
+   "w": 2201,
+   "h": 1281,
+   "dpi": 300,
+   "src": "37. So_2021_J._Electrochem._Soc._168_030538.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Time series of fabrication pressure (a) and height. Initial SE particle cluster before cold pressing (c) and after pressing (d)-(f). seen for 100 MPa (d), 200 MPa (e) and 500 MPa (f). The results in Fig. 3 were obtained with α = 0.65. Sakuda et al. (70% instead of 75%). The colored lines are from our simulations and the black rings represent cold pressing experiments from Sakuda et al.9 The relative SE density was measured by Sakuda et al.9 by comparing the density of cold pressed pellets with hot pressed pellets. We can see that that for the simulation with a relative area of α = 0.65, the results of relative density agree well with Figure 4 compares our simulations with experimental results of Sakuda et al. (2013)9 and the relative density is plotted with the fabrication pressure in (a). We used an indentation hardness of 1.9 GPa31 from literature with a similar Li2S sulﬁde c",
+   "bbox": [
+    30.0,
+    60.9,
+    558.0,
+    400.7
+   ],
+   "w": 2201,
+   "h": 1417,
+   "dpi": 300,
+   "src": "37. So_2021_J._Electrochem._Soc._168_030538.pdf",
+   "blank": 0.64
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. The relative density of SE plotted with the fabrication pressure for the simulations and experiments9 Comparison of local particle structures from SEM images (b)-(d) and simulation (e)-(g). SEM images (b)-(d) reproduced from Sakuda et al.9 by open access permission from Springer Nature.",
+   "bbox": [
+    30.0,
+    491.5,
+    558.0,
+    732.4
+   ],
+   "w": 2201,
+   "h": 1005,
+   "dpi": 300,
+   "src": "37. So_2021_J._Electrochem._Soc._168_030538.pdf",
+   "blank": 0.678
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Time series of electrode height (b). Electrode particles before cold pressing (c) and after pressing (d-f).",
+   "bbox": [
+    30.0,
+    391.8,
+    548.9,
+    744.9
+   ],
+   "w": 2162,
+   "h": 1472,
+   "dpi": 300,
+   "src": "37. So_2021_J._Electrochem._Soc._168_030538.pdf",
+   "blank": 0.563
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Distribution of normal stress on SE particles during lithiation for different SOC (a). Histogram of the normal stresses (b).",
+   "bbox": [
+    30.0,
+    60.9,
+    548.4,
+    210.0
+   ],
+   "w": 2161,
+   "h": 623,
+   "dpi": 300,
+   "src": "37. So_2021_J._Electrochem._Soc._168_030538.pdf",
+   "blank": 0.692
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Electrode structures for different fabrication pressures after 5 intercalation cycles with different SOC. the same time, SE f only varied slightly within 10% during electrode expansion which suggests that the change in SE rel k is dominated by change in . SE t The large variation in SE t can be explained by the development of cracks, as observed in Fig. 7, that greatly increases the conductivity path. In Fig. 9b the time series of SE rel k are plotted with different fabrication pressures. Although periodic variations can be seen, the permanent decrease in SE rel k is signiﬁcantly less when the fabrication pressure is higher.",
+   "bbox": [
+    30.0,
+    232.0,
+    489.0,
+    524.9
+   ],
+   "w": 1914,
+   "h": 1222,
+   "dpi": 300,
+   "src": "37. So_2021_J._Electrochem._Soc._168_030538.pdf",
+   "blank": 0.526
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Time series of height (a), SE volume fraction (b) and porosity (c) for different charging conditions. Time series of porosity for different fabrication pressures (d). Shortcomings of the study.—In this study, we simulated only in two dimensions. In Fig. 4 in Results, it was demonstrated that a 2D cluster DEM model may overestimate the solid fraction at low fabrication pressure. This may also affect the contact area between the particles. Even though our simulations were conducted in 2D, we assumed the domain to have a thickness in the z-direction for the purpose of contact area estimation and volume fractions. The shape of the particles was assumed to be spherical which simpliﬁed the calculations considerably. We included the effect of sub-particle contact indirectly by assigning a non-dimensional contact area ratio, α. In the AM-SE simulations, we limited the number of particl",
+   "bbox": [
+    30.0,
+    61.0,
+    558.1,
+    462.8
+   ],
+   "w": 2202,
+   "h": 1675,
+   "dpi": 300,
+   "src": "37. So_2021_J._Electrochem._Soc._168_030538.pdf",
+   "blank": 0.904
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 10,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Time series of tortuosity with different charging conditions (a) and different fabrication pressures (b). Similarly, time series of relative SE conductivity (c), (d).",
+   "bbox": [
+    30.0,
+    61.0,
+    558.0,
+    446.8
+   ],
+   "w": 2200,
+   "h": 1608,
+   "dpi": 300,
+   "src": "37. So_2021_J._Electrochem._Soc._168_030538.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 10,
+   "file": "fig_10.png",
+   "caption": "Figure 10. Time series of AM-SE contact area for different charging conditions (a) and different fabrication pressures (b). from each other. This model can also be applied for other ﬁelds such as powder packing fabrication and granular jamming control, where plastic deformation between particles is important. Firstly, the tensile strength of such materials is usually much weaker than the compressive, so it is necessary to simulate with different yield strength depending weather the particles are approaching or separating",
+   "bbox": [
+    30.0,
+    477.0,
+    558.0,
+    690.7
+   ],
+   "w": 2201,
+   "h": 892,
+   "dpi": 300,
+   "src": "37. So_2021_J._Electrochem._Soc._168_030538.pdf",
+   "blank": 0.906
+  }
+ ]
+}

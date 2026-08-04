@@ -1,0 +1,106 @@
+{
+ "slug": "cronau2021_stack_pressure_ionic_conductivity",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "건식전극 논문/02. How to Measure a Reliable Ionic ConductivityThe Stack Pressure Dilemma ofMicrocrystalline Sulfide-Based SolidElectrolytes.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 1,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Fabrication-pressure-dependent morphology of micro- crystalline solid electrolytes in contrast to amorphous or glass ceramic solid electrolytes. While the particles in amorphous or glass ceramic materials undergo a pressure-induced sintering process, the microcrystalline particles are only densiﬁed by the fabrication pressure, but not sintered together. This distinct morphology exerts a strong inﬂuence on the Li+ ion conductivity after release of the fabrication pressure.",
+   "bbox": [
+    309.5,
+    456.3,
+    561.5,
+    580.1
+   ],
+   "w": 1051,
+   "h": 516,
+   "dpi": 300,
+   "src": "02. How to Measure a Reliable Ionic ConductivityThe Stack Pressure Dilemma ofMicrocrystalline Sulfide-Based SolidElectrolytes.pdf",
+   "blank": 0.728
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 2,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Stack pressure dependence of the ionic conductivity at diﬀerent fabrication pressures of (a) AM-Li7P3S11, (b) AM-80 Li2S−20 P2S5, (c) GC-Li7P3S11, (d) GC-Li6PS5Br, (e) μC-Li6PS5Br, and (f) μC-Li10GeP2S12. ﬁndings have implications for (i) obtaining a reliable ionic conductivity value of a speciﬁc non-annealed SE pellet, which is close to the true bulk ionic conductivity of the SE particles, and (ii) assessing the performance of the SEs in ASSBs, which operate under pressure. dependent ionic conductivity measurements were carried out by sandwiching a SE pellet (without sputtering a metal ﬁlm on the pellet surface) between two tungsten carbide electrodes. Maximum pressures around 500 MPa were applied. Alter- natively, metal ﬁlms were sputtered on the pellet faces, and ionic conductivity measurements were carried out in speciﬁc cells under low stack pressures around 10 MPa. The fo",
+   "bbox": [
+    45.5,
+    54.2,
+    561.5,
+    522.9
+   ],
+   "w": 2151,
+   "h": 1954,
+   "dpi": 300,
+   "src": "02. How to Measure a Reliable Ionic ConductivityThe Stack Pressure Dilemma ofMicrocrystalline Sulfide-Based SolidElectrolytes.pdf",
+   "blank": 0.545
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Fabrication pressure dependence of the ionic conductivity of (a) GC-Li6PS5Br and (b) μC-Li6PS5Br at diﬀerent stack pressures.",
+   "bbox": [
+    45.5,
+    54.2,
+    561.5,
+    248.6
+   ],
+   "w": 2151,
+   "h": 811,
+   "dpi": 300,
+   "src": "02. How to Measure a Reliable Ionic ConductivityThe Stack Pressure Dilemma ofMicrocrystalline Sulfide-Based SolidElectrolytes.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 3,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Cross section view of four diﬀerent solid electrolyte pellets: (a) GC-Li6PS5Br pellet fabricated at 98 MPa, (b) GC-Li6PS5Br pellet fabricated at 392 MPa, (c) μC-Li6PS5Br after powder annealing at 550 °C and pellet fabrication at 392 MPa, and (d) μC-Li6PS5Br after powder annealing at 550 °C, pellet fabrication at 392 MPa, and pellet annealing at 550 °C. densiﬁed much further with increasing fabrication pressures. This is in accordance with a leveling eﬀect in the density of the pellets at high fabrication pressures (see Figure S3). plateau regime at stack pressures >30−50 MPa (green regime), at which the pellet/electrode contact is suﬃcient for obtaining reliable conductivity values close to the true bulk ionic conductivity of the SE particles. However, the plateau value of the ionic conductivity increases signiﬁcantly with increasing fabrication pressure of the pellet. This poi",
+   "bbox": [
+    45.5,
+    267.3,
+    561.5,
+    566.3
+   ],
+   "w": 2151,
+   "h": 1247,
+   "dpi": 300,
+   "src": "02. How to Measure a Reliable Ionic ConductivityThe Stack Pressure Dilemma ofMicrocrystalline Sulfide-Based SolidElectrolytes.pdf",
+   "blank": 0.634
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 4,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Schematic illustration of the morphology of amorphous or glass ceramic solid electrolyte vs the morphology of microcrystalline solid electrolyte under diﬀerent pressure conditions. In addition, measurement conditions for obtaining reliable conductivity values are indicated by green hooks; see text for explanations. above 200−250 MPa, a plateau regime with a virtually constant ionic conductivity is observed (green regime). On the other hand, the fabrication pressure dependence of the ionic conductivity is much weaker than observed for the AM and GC materials. conductivity should be independent of the stack pressure, as long as the stack pressure does not exceed the previously applied fabrication pressure. As expected, the measured Li+ ion conductivity of these sputtered pellets increases with increasing fabrication pressure. In Figure 4c,d, cross sections of μC- Li6PS5Br after a",
+   "bbox": [
+    45.5,
+    54.2,
+    561.5,
+    262.5
+   ],
+   "w": 2151,
+   "h": 869,
+   "dpi": 300,
+   "src": "02. How to Measure a Reliable Ionic ConductivityThe Stack Pressure Dilemma ofMicrocrystalline Sulfide-Based SolidElectrolytes.pdf",
+   "blank": 0.685
+  }
+ ]
+}

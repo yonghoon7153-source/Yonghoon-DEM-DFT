@@ -4,7 +4,8 @@
  "maxpx": 3000,
  "generated": "2026-08-05",
  "sources": [
-  "DEM 논문/18. Contact model for DEM simulation of compaction and sintering of all-solid-state battery electrodes.pdf"
+  "DEM 논문/18. Contact model for DEM simulation of compaction and sintering of all-solid-state battery electrodes.pdf",
+  "DEM 논문/41. Contact model for DEM simulation of compaction and sintering of all-solid-state battery electrodes.pdf"
  ],
  "figures": [
   {

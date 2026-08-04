@@ -1,0 +1,144 @@
+{
+ "slug": "minnmann2022_designing_cathodes_solidstate",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "건식전극 논문/03. Advanced Energy Materials - 2022 - Minnmann - Designing Cathodes and Cathode Active Materials for Solid‐State Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic overview of the important processes occurring on different length scales in SSB cathodes, causing various challenges to the development of scalable fabrication processes and tailored materials properties.",
+   "bbox": [
+    45.0,
+    64.9,
+    555.1,
+    240.9
+   ],
+   "w": 2126,
+   "h": 734,
+   "dpi": 300,
+   "src": "03. Advanced Energy Materials - 2022 - Minnmann - Designing Cathodes and Cathode Active Materials for Solid‐State Batteries.pdf",
+   "blank": 0.667
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Comparison of composite cathodes using a a) liquid- or b) solid-electrolyte. A liquid electrolyte can infiltrate the cathode and penetrate pores, leading to both, a uniform distribution of charge transport pathways and a low tortuosity for ion transport (red line in [a]). In the case of the solid electro- lyte, residual porosity and grain boundary resistances result in much more tortuous transport pathways and a higher overall tortuosity (red line in [b]). 2201425 (3 of 18) © 2022 The Authors. Advanced Energy Materials published by Wiley-VCH GmbH Adv. Energy Mater. 2022, 12, 2201425",
+   "bbox": [
+    44.9,
+    495.9,
+    555.2,
+    698.4
+   ],
+   "w": 2127,
+   "h": 845,
+   "dpi": 300,
+   "src": "03. Advanced Energy Materials - 2022 - Minnmann - Designing Cathodes and Cathode Active Materials for Solid‐State Batteries.pdf",
+   "blank": 0.738
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Schematic illustration of effects that come into play if changing the liquid electrolyte to a solid electrolyte. a) Cracking of CAMs induced by (chemo-)mechanical stress leads to reduced transport pathways in the case of a liquid electrolyte, because it can penetrate the newly formed pores. In case of a solid electrolyte, the transport pathways are increased in length. b) Large volume changes result in contact loss between CAM and SE and cause increased interface resistances. c) During cathode fabrication, a liquid electrolyte can penetrate the porous cathode and wet the free surface. A solid electrolyte is already part of the slurry before the cathode layer is fabricated. Although this may provide certain advantages in terms of reduction of processing steps, it is difficult to achieve intimate contact between CAM and SE, especially if the CAM possesses a complex surface morpho",
+   "bbox": [
+    42.2,
+    64.8,
+    552.3,
+    234.9
+   ],
+   "w": 2127,
+   "h": 709,
+   "dpi": 300,
+   "src": "03. Advanced Energy Materials - 2022 - Minnmann - Designing Cathodes and Cathode Active Materials for Solid‐State Batteries.pdf",
+   "blank": 0.675
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Maximum particle size according to Equation (1) for a C-rate of 0.1, 1, and 5 C depending on the range of the respective diffusion coef- ficient (colored areas). For NCM CAMs, the diffusion coefficient for ions was considered,[7] while for LFP and conversion-type materials, the diffu- sion coefficient for electrons was considered,[71] because they are mostly poor electronic conductors.",
+   "bbox": [
+    297.3,
+    64.9,
+    552.3,
+    251.8
+   ],
+   "w": 1064,
+   "h": 780,
+   "dpi": 300,
+   "src": "03. Advanced Energy Materials - 2022 - Minnmann - Designing Cathodes and Cathode Active Materials for Solid‐State Batteries.pdf",
+   "blank": 0.65
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. a) Calculated maximum radius change of spherical CAM particles as a function of the initial particle radius r0.[14,73–75] The absolute maximum volume change is much smaller for smaller particle radii, and the differences between different types of CAMs become less pronounced. b) Deconvolu- tion of the total volume change of NCM811 into c- and a-axis changes.[76] The c-axis first expands up to a potential of 4 V and subsequently contracts. The differences in the c- and a-axis change lead to internal stress and may cause anisotropic volume changes of SC CAMs. For conversion-type CAMs, more elaborate calculations would require knowledge of the phase nucleation geometry and are beyond the scope of this work.",
+   "bbox": [
+    45.0,
+    64.9,
+    555.2,
+    297.4
+   ],
+   "w": 2127,
+   "h": 970,
+   "dpi": 300,
+   "src": "03. Advanced Energy Materials - 2022 - Minnmann - Designing Cathodes and Cathode Active Materials for Solid‐State Batteries.pdf",
+   "blank": 0.884
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Influence of CAM and SE particle size on the different aspects of requirements for SSB cathodes. CAM particle size determines the properties on all three levels of composite cathodes and is an important design parameter for optimum cyclability in terms of kinetics and stability. such oxides do not show significant lithium-ion conductivity.[103] Moreover, post processing of, for example, NCA can lead to sig- nificant improvement in performance, further emphasizing the role of surface residuals in Ni-rich layered oxide CAMs.[104] Apart from the development of customized coating composi- tions, the micro- and/or nano-structure of the coating itself may also play an important role.[105] This has been evidenced, among others, through the preparation of a high-quality coating on a Ni-rich NCM consisting of a carbonaceous (Li2CO3) layer and a ZrO2 nanocrystal mono or bilayer. This kin",
+   "bbox": [
+    45.0,
+    64.9,
+    555.4,
+    309.9
+   ],
+   "w": 2128,
+   "h": 1022,
+   "dpi": 300,
+   "src": "03. Advanced Energy Materials - 2022 - Minnmann - Designing Cathodes and Cathode Active Materials for Solid‐State Batteries.pdf",
+   "blank": 0.799
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Strategies to overcome chemo-mechanical challenges in CAMs for SSBs: a) Influence of the choice of solid electrolyte (LYC = Li3YCl6, LPSX = Li6PS5Cl) on the performance of NCM with PC (P) or SC (S) particles. Reproduced with permission.[86] Copyright 2021, John Wiley and Sons. b) Influence of particle cracking on the cycling stability of SC and PC NCMs. Reproduced under terms of the CC-BY license.[91] Copyright 2021, The authors, published by IOP Publishing. c) Mitigating CAM particle cracking by the use of tailored “full concentration gradient” (FCG) CAM particles with rod-shaped crystallites. Reproduced with permission.[81] Copyright 2019, John Wiley and Sons.",
+   "bbox": [
+    42.5,
+    64.9,
+    552.6,
+    542.3
+   ],
+   "w": 2126,
+   "h": 1990,
+   "dpi": 300,
+   "src": "03. Advanced Energy Materials - 2022 - Minnmann - Designing Cathodes and Cathode Active Materials for Solid‐State Batteries.pdf",
+   "blank": 0.774
+  }
+ ]
+}

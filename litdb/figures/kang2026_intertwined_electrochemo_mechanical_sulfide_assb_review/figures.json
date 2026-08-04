@@ -1,0 +1,334 @@
+{
+ "slug": "kang2026_intertwined_electrochemo_mechanical_sulfide_assb_review",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "★ 랩실 논문/01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 (a) Electrochemical window of SEs and other materials. Reproduced from ref. 49 under the terms of the CC BY 4.0 license. Copyright 2015 The Authors, published by the American Chemical Society. (b) Thermodynamic, kinetic, and predicted electrochemical windows of electrodes and operation windows of full cells. Reproduced with permission from ref. 50. Copyright 2025, American Chemical Society.",
+   "bbox": [
+    36.5,
+    530.8,
+    558.8,
+    686.4
+   ],
+   "w": 2177,
+   "h": 650,
+   "dpi": 300,
+   "src": "01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf",
+   "blank": 0.709
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 (a) XPS spectra of S and P 2p of LPSCl at various cycles, showing the evolution of sulfur- and phosphorus-containing species associated with oxidative decomposition and CEI formation. Reproduced with per- mission from ref. 51. Copyright 2019, American Chemical Society. (b) Local fragment distribution of NiO2 \u0002 (green) fragments for the reference SE and the uncycled and cycled composite cathodes by ToF- SIMS analyses, revealing the progressive formation and spatial accumula- tion of phosphate-related decomposition products during cycling. Repro- duced with permission from ref. 33. Copyright 2019, American Chemical Society. \u0002 (blue) and POx",
+   "bbox": [
+    36.5,
+    43.8,
+    298.0,
+    242.8
+   ],
+   "w": 1090,
+   "h": 830,
+   "dpi": 300,
+   "src": "01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf",
+   "blank": 0.584
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 (a) Interfacial degradation at the cathode interface occurring at high SOC, illustrating oxygen release from the delithiated cathode and its reaction with sulfide SEs, leading to interfacial decomposition and rock- salt layer formation. Reproduced with permission from ref. 57. Copyright 2025, Elsevier. (b) Pseudo-binary phase diagram between LPSCl and delithiated NCA, indicating their thermodynamic incompatibility and the spontaneous formation of decomposition products. (c) Atomic structure of a half-charged NCA/LPSCl interface at 50 ps calculated by ab initio molecular dynamics (AIMD), showing interfacial reconstruction and the formation of decomposition species such as LiCl, Li3PO4, and NiS2. Reproduced with permission from ref. 51. Copyright 2019, American Chemical Society.",
+   "bbox": [
+    297.3,
+    43.8,
+    558.7,
+    234.9
+   ],
+   "w": 1091,
+   "h": 797,
+   "dpi": 300,
+   "src": "01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf",
+   "blank": 0.81
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 (a) ToF-SIMS measurements for cycled and uncycled composite cathodes with and without VGCF, showing increased phosphate-related fragment intensity in carbon-containing electrodes, indicative of accelerated SE decomposition. Reproduced with permission from ref. 71. Copyright 2020, American Chemical Society. (b) Eﬀect of CA on the decomposition of SEs, illustrating enhanced electron leakage and decomposition reactions at the TPB with increasing carbon content. Reproduced with permission from ref. 69. Copyright 2024, Wiley-VCH GmbH.",
+   "bbox": [
+    36.5,
+    540.5,
+    558.7,
+    676.5
+   ],
+   "w": 2177,
+   "h": 568,
+   "dpi": 300,
+   "src": "01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf",
+   "blank": 0.495
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 XPS spectra of Li3PS4 (LPS) sulfide SE for the (a) S 2p and (b) P 2p before and after Li deposition, showing the reductive decomposition of sulfide species by Li deposition. Reproduced with permission from ref. 81. Copyright 2016, Elsevier. (c) Diﬀerent types of Li metal–SE interfaces, illustrating the classification into stable, MIEC, and passivating SEI-forming interfaces and their distinct interfacial evolution behaviors. Reproduced with permission from ref. 47. Copyright 2018, Elsevier.",
+   "bbox": [
+    297.3,
+    43.8,
+    558.7,
+    328.1
+   ],
+   "w": 1091,
+   "h": 1186,
+   "dpi": 300,
+   "src": "01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf",
+   "blank": 0.695
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 (a) Voltage versus time for a Li|LPSCl|Li cell, plated at a current density of 3.0 mA cm\u00022, showing sudden voltage drop associated with filamentary conduction and short-circuiting. (b) Operando XCT images showing the growth of a crack through an initially pristine SE with Li penetration along defects and grain boundaries. Reproduced with permis- sion from ref. 89. Copyright 2023, Springer Nature. (c) SEI layer formation at the Li/LPS interface. Reproduced with permission from ref. 90. Copy- right 2025, Wiley-VCH GmbH.",
+   "bbox": [
+    36.5,
+    43.8,
+    298.0,
+    304.3
+   ],
+   "w": 1090,
+   "h": 1087,
+   "dpi": 300,
+   "src": "01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf",
+   "blank": 0.558
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Fig. 7 (a) Morphological structural changes in a composite cathode by the application of fabrication pressure, illustrating the formation of inter- facial voids arising from particle size mismatch and non-uniform stress distribution. Pressure-dependent (b) porosity, contact area fraction, and charge/discharge curves at 0.01C, showing that increased pressure reduces porosity, enhances interfacial contact, and improves electroche- mical performance. Reproduced from ref. 99 under the terms of the CC BY 3.0 license. Copyright 2020, Royal Society of Chemistry.",
+   "bbox": [
+    36.5,
+    43.8,
+    298.0,
+    191.7
+   ],
+   "w": 1090,
+   "h": 617,
+   "dpi": 300,
+   "src": "01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf",
+   "blank": 0.673
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "Fig. 8 (a) Discharge capacity of the cell before and after re-pressing, showing partial recovery of discharge capacity achieved by re-establishing physical contact. (b) Cell resistances determined through EIS measure- ments, indicating a significant increase in interfacial resistance during cycling and its reduction after re-pressing. Reproduced from ref. 105 under the terms of the CC BY-NC 3.0 license. Copyright 2020, Royal Society of Chemistry.",
+   "bbox": [
+    297.3,
+    43.8,
+    558.7,
+    141.5
+   ],
+   "w": 1091,
+   "h": 408,
+   "dpi": 300,
+   "src": "01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf",
+   "blank": 0.877
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 9,
+   "file": "fig_9.png",
+   "caption": "Fig. 9 (a) 3D rendering of the tomographic data over the high-nickel NCM secondary particle, illustrating crack initiation and propagation within the particle. (b) Evolution of Li concentration and the damage along the grain boundaries, showing the preferentially localized damage at grain boundaries. Reproduced from ref. 111 under the terms of the CC BY 4.0 license. Copyright 2020 The Authors, published by Springer Nature. (c) Morphological change of the single- and poly-crystalline high-nickel NCM cathode during pressing and cycling, highlighting severe intergranular cracking in polycrystalline particles and enhanced structural stability in single-crystalline counterparts. Reproduced with permission from ref. 114. Copyright 2021, Wiley-VCH GmbH.",
+   "bbox": [
+    36.5,
+    43.8,
+    558.8,
+    169.1
+   ],
+   "w": 2177,
+   "h": 523,
+   "dpi": 300,
+   "src": "01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf",
+   "blank": 0.715
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 9,
+   "file": "fig_10.png",
+   "caption": "Fig. 10 (a) Interface pore formation during stripping at an incoherent interface, illustrating the nucleation and growth of voids due to Li vacancy accumulation. Reproduced with permission from ref. 117. Copyright 2021, Wiley-VCH GmbH. (b) Li/LPSCl interface cycled above the critical stripping current density, showing progressive void coalescence and interfacial instability during repeated plating/stripping. (c) SEM cross-sections of the Li/LPSCl interface, revealing the evolution of voids, crack propagation, and severe interfacial degradation with cycling. Reproduced with permission from ref. 118. Copyright 2019, Springer Nature.",
+   "bbox": [
+    297.3,
+    247.1,
+    558.7,
+    565.6
+   ],
+   "w": 1091,
+   "h": 1328,
+   "dpi": 300,
+   "src": "01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf",
+   "blank": 0.44
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 10,
+   "file": "fig_11.png",
+   "caption": "Fig. 11 (a) Stress distribution at an 80% discharged state for various NCM-to-SE ratios, showing the development of localized stress concentrations with increasing microstructural inhomogeneity. (b) FIB-SEM images of composite cathodes with NCM-to-SE ratios of 70 : 30, 80 : 20, 85 : 15. Reproduced with permission from ref. 37. Copyright 2025, American Chemical Society. (c) Comparison of the volumetric strain, von Mises stress, and crack order between case 1 (inhomogeneous) and case 2 (homogeneous), demonstrating that structural inhomogeneity leads to heterogeneous stress distribution and accelerated crack propagation. Reproduced with permission from ref. 39. Copyright 2025, Elsevier.",
+   "bbox": [
+    36.5,
+    554.2,
+    558.7,
+    666.5
+   ],
+   "w": 2176,
+   "h": 469,
+   "dpi": 300,
+   "src": "01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf",
+   "blank": 0.612
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 11,
+   "file": "fig_12.png",
+   "caption": "Fig. 12 (a) In situ pressure measurement curves and voltage profiles of the Li–In cell and LTO cell, showing significantly larger pressure fluctua- tions in Li–In cells due to high-strain anode behavior. (b) XPS spectra obtained from the cathodes Li–In cell and LTO cell before after cycling. (c) Cross-sectional SEM images of the cathodes collected before and after cycling, revealing severe intergranular cracking and structural degradation in Li–In cells. (d) Schematic illustration of the anode-derived chemo- mechanical degradation of the cathode, highlighting stress transfer, dynamic interface evolution, and resulting heterogeneity-induced crack- ing. Reproduced with permission from ref. 32. Copyright 2023, Elsevier.",
+   "bbox": [
+    297.3,
+    43.8,
+    558.7,
+    399.2
+   ],
+   "w": 1091,
+   "h": 1482,
+   "dpi": 300,
+   "src": "01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf",
+   "blank": 0.704
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 12,
+   "file": "fig_13.png",
+   "caption": "Fig. 13 (a) Critical current density tests of sulfide SE symmetric cells, showing enhanced critical current density upon borohydride doping. (b) Borohydride doping eﬀect on the properties of Li/SE interphases, illustrating the formation of a thin, mechanically compliant, and electronically insulating SEI that stabilizes Li plating/stripping. Reproduced from ref. 127 under the terms of the CC BY 4.0 license. Copyright 2025 The Authors, published by Wiley-VCH GmbH. (c) Crystal structure of O-doped argyrodite SEs. (d) Cyclic voltammetry tests for C + SE|SE|Li cells, showing an expanded electrochemical stability window with suppressed decomposition reactions. (e) Li3PO4 as a buﬀer layer at the cathode interface. Reproduced with permission from ref. 128. Copyright 2022, Wiley-VCH GmbH.",
+   "bbox": [
+    36.5,
+    403.4,
+    558.8,
+    656.6
+   ],
+   "w": 2177,
+   "h": 1056,
+   "dpi": 300,
+   "src": "01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf",
+   "blank": 0.753
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 13,
+   "file": "fig_14.png",
+   "caption": "Fig. 14 (a) STEM-HAADF images of NCM particle with a conformal LZC coating layer. (b) Interfacial reactions between the NCM and LPSCl, illustrating the suppression of resistive interlayer formation by surface coating. (c) Cycling performances of ASSBs with NCM and NCM@LZC, demonstrating improved capacity retention upon interface stabilization. Reproduced with permission from ref. 137. Copyright 2024, Elsevier. (d) HR-TEM image of ALD LNO-coated NCM811, showing the formation of a uniform coating layer. (e) Operando XANES spectra of TMs of bare and LNO-coated NCM, indicating suppressed transition metal reduction and enhanced structural stability with coating. Reproduced with permission from ref. 138. Copyright 2019, American Chemical Society.",
+   "bbox": [
+    297.3,
+    43.8,
+    558.8,
+    207.8
+   ],
+   "w": 1091,
+   "h": 685,
+   "dpi": 300,
+   "src": "01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf",
+   "blank": 0.542
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 14,
+   "file": "fig_15.png",
+   "caption": "Fig. 15 (a) Cross-sectional images of the interface between the uncoated and LiPON coated Li metal with sulfide SEs, showing improved interfacial contact and suppression of interfacial void formation with LiPON coating. Reproduced from ref. 149 under the terms of the CC BY-NC 3.0 license. Copyright 2022, Royal Society of Chemistry. (b) Li plating–stripping on the current collector with a Ag–C nanocomposite layer during charging and discharging, illustrating uniform Li deposition and suppressed dendritic growth enabled by the interlayer. Reproduced with permission from ref. 152. Copyright 2020, Springer Nature.",
+   "bbox": [
+    36.5,
+    471.2,
+    558.8,
+    666.5
+   ],
+   "w": 2177,
+   "h": 815,
+   "dpi": 300,
+   "src": "01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf",
+   "blank": 0.617
+  },
+  {
+   "key": "f16",
+   "kind": "figure",
+   "label": "16",
+   "page": 15,
+   "file": "fig_16.png",
+   "caption": "Fig. 16 Schematic illustration of the coupled evolution of electrochemical reactions and mechanical instabilities in sulfide-based ASSBs and the related mitigation strategies.",
+   "bbox": [
+    36.5,
+    43.8,
+    558.7,
+    230.0
+   ],
+   "w": 2176,
+   "h": 777,
+   "dpi": 300,
+   "src": "01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf",
+   "blank": 0.456
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 15,
+   "file": "tab_1.png",
+   "caption": "Table 1 Summary of electrochemo-mechanical degradation mechanisms and mitigation strategies in sulfide-based ASSBs Degradation mechanism Major mechanistic origin Consequent degradation phenomena Mitigation strategy Tuning SE composition; surface coating of CAM; Interfacial hetero- geneity within the cathode Oxidative decomposition of sulfide SEs Heterogeneity within the interphases; cracking/debonding through fragile phases; loss of electrical/ionic conduction pathways; non-uniform electrochemical reaction Microstructural inhomogeneity Microstructure optimiza- tion; particle size control Interfacial hetero- geneity at anode/SE Non-uniform distribution of SE and CAM particles Heterogeneous volumetric strain and von Mises stress distributions; interfacial debonding/CAM cracking Reductive decomposition of sulfide SEs Heterogeneity within the interphases; void formation; non-uniform electroc",
+   "bbox": [
+    0.0,
+    6.4,
+    557.8,
+    760.8
+   ],
+   "w": 2216,
+   "h": 2997,
+   "dpi": 286,
+   "src": "01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf",
+   "blank": 0.784
+  }
+ ]
+}

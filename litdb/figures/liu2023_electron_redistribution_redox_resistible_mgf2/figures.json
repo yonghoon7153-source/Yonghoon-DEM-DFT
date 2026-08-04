@@ -2,10 +2,10 @@
  "slug": "liu2023_electron_redistribution_redox_resistible_mgf2",
  "dpi": 300,
  "maxpx": 3000,
- "generated": "2026-08-04",
+ "generated": "2026-08-05",
  "sources": [
-  "05. Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-  "05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf"
+  "DFT 먹인 논문/05. Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
+  "DFT 먹인 논문/05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf"
  ],
  "figures": [
   {
@@ -662,16 +662,16 @@
    "file": "fig_1.png",
    "caption": "Scheme 1. The schematic diagram showing the mechanism for sup- pression redox reaction.",
    "bbox": [
-    44.4,
+    0.0,
     26.0,
-    298.6,
+    595.3,
     199.3
    ],
-   "w": 1060,
+   "w": 2481,
    "h": 723,
    "dpi": 300,
    "src": "05. Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.406
+   "blank": 0.621
   },
   {
    "key": "tS1",

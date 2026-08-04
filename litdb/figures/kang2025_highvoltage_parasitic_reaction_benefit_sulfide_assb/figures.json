@@ -1,0 +1,87 @@
+{
+ "slug": "kang2025_highvoltage_parasitic_reaction_benefit_sulfide_assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "★ 랩실 논문/03. High-voltage stability of sulfide-based all-solid state batteries benefit of the parasitic reaction.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 SEM/EDS images of (a) bare NCM and (b) SE-coated NCM particles. (c) XRD spectra of bare and SE-coated NCM particles. Cross-sectional SEM images of composite cathodes employing (d) bare NCM and (e) SE-coated NCM after fabrication.",
+   "bbox": [
+    36.5,
+    43.8,
+    558.7,
+    229.7
+   ],
+   "w": 2176,
+   "h": 776,
+   "dpi": 300,
+   "src": "03. High-voltage stability of sulfide-based all-solid state batteries benefit of the parasitic reaction.pdf",
+   "blank": 0.48
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 2,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 (a) Voltage profiles of NCM|LPSCl|Li-In full cells employing bare- NCM and SE-coated NCM. (b) OCV evolution during storage after charging to 4.25 V. (c) Nyquist plots of full cells obtained during storage. Area- specific (d) interfacial and (e) Warburg resistances (O cm2) obtained during calendar aging at SOC = 100%. (f) Voltage profiles and (g) cycling performances of the ASSBs after aging.",
+   "bbox": [
+    297.3,
+    449.6,
+    558.7,
+    656.6
+   ],
+   "w": 1091,
+   "h": 863,
+   "dpi": 300,
+   "src": "03. High-voltage stability of sulfide-based all-solid state batteries benefit of the parasitic reaction.pdf",
+   "blank": 0.881
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 (a) and (b) XRD patterns for the composite cathodes before and after calendar aging at SOC = 100%. Cross-sectional TEM images and FFTs of the (c) bare NCM and (d) SE-coated NCM active materials after storage at SOC = 100%.",
+   "bbox": [
+    297.3,
+    43.8,
+    558.8,
+    304.2
+   ],
+   "w": 1091,
+   "h": 1086,
+   "dpi": 300,
+   "src": "03. High-voltage stability of sulfide-based all-solid state batteries benefit of the parasitic reaction.pdf",
+   "blank": 0.611
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Schematic illustration of interfacial reactions in composite cathodes employing bare NCM and SE-coated NCM.",
+   "bbox": [
+    36.5,
+    43.8,
+    297.9,
+    205.8
+   ],
+   "w": 1090,
+   "h": 676,
+   "dpi": 300,
+   "src": "03. High-voltage stability of sulfide-based all-solid state batteries benefit of the parasitic reaction.pdf",
+   "blank": 0.536
+  }
+ ]
+}

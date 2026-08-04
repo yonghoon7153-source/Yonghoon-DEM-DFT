@@ -1,0 +1,220 @@
+{
+ "slug": "trevisanello2021_sc_pc_ncm_cracking_diffusion",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "건식전극 논문/01. Sup) Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf"
+ ],
+ "figures": [
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Krypton physisorption isotherms for a set of PC and SC cathodes recovered from",
+   "bbox": [
+    64.8,
+    294.1,
+    533.4,
+    718.2
+   ],
+   "w": 1953,
+   "h": 1768,
+   "dpi": 300,
+   "src": "01. Sup) Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
+   "blank": 0.959
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. a) Voltage curves recorded during the first charge/discharge cycle of batteries",
+   "bbox": [
+    64.8,
+    120.1,
+    533.1,
+    646.8
+   ],
+   "w": 1952,
+   "h": 2196,
+   "dpi": 300,
+   "src": "01. Sup) Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
+   "blank": 0.967
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Surface area of polycrystalline NCM as a function of the cut-off voltage during",
+   "bbox": [
+    64.8,
+    120.7,
+    533.4,
+    711.0
+   ],
+   "w": 1953,
+   "h": 2460,
+   "dpi": 300,
+   "src": "01. Sup) Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
+   "blank": 0.977
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 6,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Exemplary potential profiles during polarization and successive relaxation",
+   "bbox": [
+    64.8,
+    29.4,
+    533.2,
+    456.3
+   ],
+   "w": 1952,
+   "h": 1780,
+   "dpi": 300,
+   "src": "01. Sup) Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
+   "blank": 0.945
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 7,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Nyquist plots of data recorded with the three-electrode setup at 3.94 V during the",
+   "bbox": [
+    64.8,
+    29.4,
+    533.3,
+    341.6
+   ],
+   "w": 1953,
+   "h": 1302,
+   "dpi": 300,
+   "src": "01. Sup) Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
+   "blank": 0.935
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 8,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Nyquist plots showing the development of the Li|LE electrode impedance upon",
+   "bbox": [
+    64.8,
+    29.4,
+    530.5,
+    256.5
+   ],
+   "w": 1941,
+   "h": 947,
+   "dpi": 300,
+   "src": "01. Sup) Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Voltage profiles of single-crystalline NCM during a test similar to the one",
+   "bbox": [
+    64.8,
+    280.1,
+    533.3,
+    600.4
+   ],
+   "w": 1952,
+   "h": 1335,
+   "dpi": 300,
+   "src": "01. Sup) Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
+   "blank": 0.956
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 9,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Powder diffraction data for the synthetized NCM single-crystalline material",
+   "bbox": [
+    28.5,
+    29.4,
+    533.4,
+    433.7
+   ],
+   "w": 2105,
+   "h": 1685,
+   "dpi": 300,
+   "src": "01. Sup) Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 10,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Scanning electron microscopy images of a) polycrystalline NCM and b) single-",
+   "bbox": [
+    64.8,
+    29.4,
+    530.5,
+    275.8
+   ],
+   "w": 1941,
+   "h": 1028,
+   "dpi": 300,
+   "src": "01. Sup) Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
+   "blank": 0.372
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 11,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Cumulative distribution of particle radii obtained from SEM for polycrystalline",
+   "bbox": [
+    64.8,
+    29.4,
+    530.5,
+    68.9
+   ],
+   "w": 1941,
+   "h": 166,
+   "dpi": 300,
+   "src": "01. Sup) Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
+   "blank": 0.967
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 9,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Results of the Rietveld refinement of singe-crystalline NCM. During minimization",
+   "bbox": [
+    65.8,
+    431.7,
+    532.4,
+    674.9
+   ],
+   "w": 1945,
+   "h": 1015,
+   "dpi": 300,
+   "src": "01. Sup) Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
+   "blank": 0.935
+  }
+ ]
+}
