@@ -308,6 +308,18 @@ def api_concept_upload(cid):
     return jsonify(r)
 
 
+@app.route("/api/file-rename", methods=["POST"])
+def api_file_rename():
+    """업로드 파일 이름 바꾸기. 파일을 옮기고 **문서에 적힌 경로도 같이** 고친다.
+
+    uploads 밖은 data.rename_upload 가 거절한다 (도구가 같은 이름으로 다시 만들어
+    두 벌이 되는 걸 막는다) — 400 으로 사유를 그대로 돌려준다.
+    """
+    d = request.get_json(silent=True) or {}
+    r = D.rename_upload(str(d.get("rel", "")), str(d.get("name", "")))
+    return (jsonify(r), 400) if r.get("error") else jsonify(r)
+
+
 @app.route("/files")
 def files_gallery():
     q = request.args.get("q", "").strip()

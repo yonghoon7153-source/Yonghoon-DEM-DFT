@@ -61,6 +61,9 @@
       {% endif %}
     </div>
     <a class="btn sm att-dl" href="/api/file/{{ f.rel }}?dl=1" download>⬇ 저장</a>
+    {# 이름 바꾸기는 업로드 파일만 — repo 산출물은 도구가 같은 이름으로 다시 만든다 #}
+    {% if f.rel.startswith('docs/uploads/') %}<button type="button" class="btn sm att-rn"
+      title="이름 바꾸기 (문서에 적힌 경로도 같이 고침)">✏</button>{% endif %}
   </div>
 {% endfor %}
 </div>
@@ -82,12 +85,13 @@
   </div>
 </div>
 
+<script src="/static/js/rename.js"></script>
 <script>
 (function(){
   var modal = document.getElementById('att-modal');
   document.querySelectorAll('.att-card').forEach(function(c){
     c.addEventListener('click', function(e){
-      if (e.target.closest('.att-dl')) return;
+      if (e.target.closest('.att-dl') || e.target.closest('.att-rn')) return;
       attOpen(c.dataset.rel, c.dataset.name, c.dataset.kind, c.dataset.con || '');
     });
   });

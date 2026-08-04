@@ -495,9 +495,32 @@ def main():
     a = ap.parse_args()
 
     if a.inbox:
-        box = Path(a.inbox_dir) if a.inbox_dir else INBOX
+        box = Path(a.inbox_dir).expanduser() if a.inbox_dir else INBOX
         if not box.is_dir():
-            raise SystemExit(f"⛔ {box} 가 없다 — PDF 를 litdb/inbox/ 에 넣고 다시")
+            # litdb/inbox/ 는 .gitignore 대상이라 clone 한 머신에는 없다 (2026-08-06 실측).
+            # PDF 가 있을 만한 곳을 뒤져 후보를 알려준다 — WSL 이면 보통 윈도 Downloads.
+            cands, seen = [], set()
+            for base in [Path.home(), Path("/mnt/c/Users"), Path("/mnt/d")]:
+                if not base.is_dir():
+                    continue
+                try:
+                    for f in base.glob("*/[Dd]ownload*/*.pdf"):
+                        if f.parent not in seen:
+                            seen.add(f.parent); cands.append(f.parent)
+                    for f in base.glob("*/*.pdf"):
+                        if f.parent not in seen:
+                            seen.add(f.parent); cands.append(f.parent)
+                except (PermissionError, OSError):
+                    pass
+            msg = [f"⛔ {box} 가 없다.",
+                   "   litdb/inbox/ 는 .gitignore 대상이라 clone 한 머신에는 안 따라온다.",
+                   "   ① PDF 를 거기에 모으거나  ② --inbox_dir 로 있는 곳을 가리킨다:",
+                   "        litfig --inbox --inbox_dir '/mnt/c/Users/<계정>/Downloads'"]
+            if cands:
+                msg.append("\n   PDF 가 보이는 폴더 (개수순):")
+                for d in sorted(cands, key=lambda p: -len(list(p.glob('*.pdf'))))[:8]:
+                    msg.append(f"      {len(list(d.glob('*.pdf'))):>4}개  {d}")
+            raise SystemExit("\n".join(msg))
         assign, orphan = match_inbox(box)
         if a.only:
             assign = {k: v for k, v in assign.items() if a.only.lower() in k.lower()}

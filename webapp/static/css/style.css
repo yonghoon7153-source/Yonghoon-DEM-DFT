@@ -911,7 +911,7 @@ tr.row-dim{opacity:.62}
 .att-table th{background:#f1f5f9;text-align:left;padding:4px 8px;border:1px solid var(--line,#e5e7eb);
   position:sticky;top:0;white-space:nowrap}
 .att-table td{padding:3px 8px;border:1px solid var(--line,#e5e7eb);white-space:nowrap}
-@media print{.att-tabs,.att-modal,.att-dl{display:none!important}}
+@media print{.att-tabs,.att-modal,.att-dl,.att-rn{display:none!important}}
 
 /* 드롭존 (2026-08-05 v2) */
 .att-drop{margin-top:12px;border:2px dashed var(--line,#cbd5e1);border-radius:12px;
@@ -925,6 +925,9 @@ tr.row-dim{opacity:.62}
 /* png↔csv 페어 (2026-08-05) */
 .att-pv{position:absolute;left:8px;bottom:8px}
 .att-dl2{right:88px}
+/* ✏ 이름 바꾸기 — 저장 버튼과 겹치지 않게 왼쪽 아래. 평소엔 흐리게, 카드 위에서 또렷하게 */
+.att-rn{position:absolute;left:8px;bottom:8px;padding:3px 8px;opacity:.5;transition:opacity .15s}
+.att-card:hover .att-rn,.att-rn:focus-visible{opacity:1}
 
 /* Files 갤러리: 날짜 구분선 · 개념 배지 (2026-08-05) */
 .day-head{display:flex;align-items:baseline;gap:10px;margin:20px 0 8px;

@@ -2399,6 +2399,63 @@ def _find_same_content(blob: bytes, name: str) -> str | None:
     return None
 
 
+# 파일명 정규화 — 예전엔 [A-Za-z0-9._-] 외를 전부 `_` 로 바꿔서 한글 이름이
+#   `pmf______.pdf` 처럼 뭉개졌다(2026-08-06 1저자 지적). 경로를 깨뜨리는 글자만 막는다.
+_BAD_NAME = re.compile(r'[\x00-\x1f/\\:*?"<>|]')
+
+
+def safe_filename(raw: str) -> str:
+    """업로드/이름변경용 파일명 정규화. 한글·공백은 살리고 경로 문자만 막는다."""
+    name = _BAD_NAME.sub("_", os.path.basename(raw or "")).strip()
+    name = re.sub(r"\s+", " ", name).strip(". ")
+    if name in ("", ".", ".."):
+        return ""
+    stem, ext = os.path.splitext(name)          # ⚠ 통째로 자르면 확장자가 날아간다
+    return (stem[:120 - len(ext)] + ext) if len(name) > 120 else name
+
+
+def rename_upload(rel: str, newname: str) -> dict:
+    """`docs/uploads/**` 파일 이름 바꾸기 + 본문에 적힌 경로도 같이 고친다.
+
+    ⚠ uploads 밖(docs/figures, db/properties …)은 **금지**한다: 그 경로들은 도구
+      스크립트가 그 이름으로 다시 만들어 내므로, 바꿔봐야 다음 실행 때 원래 이름이
+      또 생겨 두 벌이 된다. 표시 이름만 바꾸고 싶은 파일은 문서에서 캡션으로 쓴다.
+    """
+    if not str(rel).startswith("docs/uploads/"):
+        return {"error": "업로드한 파일(docs/uploads/)만 이름을 바꿀 수 있어요 — "
+                         "repo 산출물은 도구가 같은 이름으로 다시 만들어서 두 벌이 됩니다."}
+    src = safe_repo_path(rel)
+    if src is None:
+        return {"error": "그 파일을 찾을 수 없어요"}
+    # safe_filename 이 디렉터리 성분을 떼므로 "../../x" 는 폴더 밖으로 못 나간다(그냥 x 가 된다)
+    name = safe_filename(newname)
+    if not name:
+        return {"error": "이름이 비어 있어요"}
+    if os.path.splitext(name)[1].lower() != src.suffix.lower():
+        name += src.suffix                      # 확장자를 지웠으면 되살린다
+    if os.path.splitext(name)[1].lower() not in _UP_EXT:
+        return {"error": f"허용 확장자가 아니에요: {os.path.splitext(name)[1]}"}
+    dst = src.parent / name
+    if dst == src:
+        return {"ok": True, "rel": rel, "name": src.name, "unchanged": True}
+    if dst.exists():
+        return {"error": f"같은 이름이 이미 있어요: {name}"}
+    old_rel = str(src.relative_to(ROOT))
+    new_rel = str(dst.relative_to(ROOT))
+    src.rename(dst)
+    # 본문이 진실의 근원이므로 경로를 적어둔 문서도 같이 고친다
+    touched = []
+    for md in list(CONCEPTS.glob("*.md")) + list((ROOT / "kb").rglob("*.md")):
+        try:
+            t = md.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            continue
+        if old_rel in t:
+            md.write_text(t.replace(old_rel, new_rel), encoding="utf-8")
+            touched.append(str(md.relative_to(ROOT)))
+    return {"ok": True, "rel": new_rel, "name": name, "docs": touched}
+
+
 def save_concept_upload(cid: str, files) -> dict:
     """드래그 업로드 저장 — docs/uploads/<cid>/ 에 쓰고 **문서 끝에 경로를 append**.
 
@@ -2411,8 +2468,7 @@ def save_concept_upload(cid: str, files) -> dict:
     updir = ROOT / "docs" / "uploads" / cid
     saved, rejected, linked = [], [], []
     for f in files:
-        name = re.sub(r"[^A-Za-z0-9._\-]", "_", os.path.basename(f.filename or ""))
-        name = name.lstrip(".")
+        name = safe_filename(f.filename or "")
         ext = os.path.splitext(name)[1].lower()
         if not name or ext not in _UP_EXT:
             rejected.append(f.filename or "(이름 없음)")

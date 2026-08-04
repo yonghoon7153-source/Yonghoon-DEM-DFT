@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="{{ vsrc('katex.min.css','https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css') }}">
 {% endblock %}
 {% block content %}
+<script src="/static/js/rename.js"></script>
 <div class="page-header concept-head">
   <div>
     <div class="crumb"><a href="/glossary">← Glossary</a></div>
@@ -60,6 +61,8 @@
       <a class="btn sm att-dl att-dl2" href="/api/file/{{ f.pair.rel }}?dl=1" download>⬇ CSV</a>
       {% endif %}
       <a class="btn sm att-dl" href="/api/file/{{ f.rel }}?dl=1" download>⬇ {{ '저장' if not f.pair else 'PNG' }}</a>
+      {% if f.rel.startswith('docs/uploads/') %}<button type="button" class="btn sm att-rn"
+        title="이름 바꾸기 (문서에 적힌 경로도 같이 고침)">✏</button>{% endif %}
     </div>
   {% endfor %}
   </div>
@@ -85,6 +88,8 @@
         <div class="muted" style="font-size:.68rem"><span class="src-{{ f.src }}">{{ '📌' if f.src=='cited' else '🔗' }}</span> {{ f.size_kb }} KB · {{ f.kind|upper }}</div>
       </div>
       <a class="btn sm att-dl" href="/api/file/{{ f.rel }}?dl=1" download>⬇ 저장</a>
+      {% if f.rel.startswith('docs/uploads/') %}<button type="button" class="btn sm att-rn"
+        title="이름 바꾸기 (문서에 적힌 경로도 같이 고침)">✏</button>{% endif %}
     </div>
   {% endfor %}
   </div>
@@ -256,7 +261,8 @@
   // 카드 클릭 → 미리보기 (저장 버튼 클릭은 제외)
   document.querySelectorAll('.att-card').forEach(function(card){
     card.addEventListener('click', function(e){
-      if (e.target.closest('.att-dl') || e.target.closest('.att-pv')) return;
+      if (e.target.closest('.att-dl') || e.target.closest('.att-pv')
+          || e.target.closest('.att-rn')) return;
       attOpen(card.dataset.rel, card.dataset.name, card.dataset.kind);
     });
   });
