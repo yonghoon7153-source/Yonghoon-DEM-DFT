@@ -366,7 +366,8 @@ def concept(cid):
     return render_template("concept.html", active="glossary", cid=cid,
                            term=term, raw_md=md, siblings=siblings, fallback_html=fallback,
                            papers=D.glossary_papers(cid),
-                           attachments=D.concept_attachments(cid))
+                           attachments=(_att := D.concept_attachments(cid)),
+                           att_days=D.gallery_days(_att))
 
 
 @app.route("/api/concept/<cid>")

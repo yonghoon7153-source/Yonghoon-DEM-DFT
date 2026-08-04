@@ -2340,9 +2340,10 @@ def concept_attachments(cid: str) -> list[dict]:
             p = safe_repo_path(rel)
             if not p:
                 continue
-            out.append({"rel": rel, "name": p.name, "kind": _att_kind(rel),
-                        "src": "cited",
-                        "size_kb": round(p.stat().st_size / 1024, 1)})
+            st = p.stat()
+        out.append({"rel": rel, "name": p.name, "kind": _att_kind(rel), "src": "cited",
+                    "size_kb": round(st.st_size / 1024, 1), "mtime": int(st.st_mtime),
+                    "day": _dt.datetime.fromtimestamp(st.st_mtime).strftime("%Y-%m-%d")})
     for rel in _auto_matched(cid):                 # 규칙 자동 연결
         if rel in seen:
             continue
@@ -2350,8 +2351,10 @@ def concept_attachments(cid: str) -> list[dict]:
         if not p:
             continue
         seen.add(rel)
+        st = p.stat()
         out.append({"rel": rel, "name": p.name, "kind": _att_kind(rel), "src": "auto",
-                    "size_kb": round(p.stat().st_size / 1024, 1)})
+                    "size_kb": round(st.st_size / 1024, 1), "mtime": int(st.st_mtime),
+                    "day": _dt.datetime.fromtimestamp(st.st_mtime).strftime("%Y-%m-%d")})
 
     # 같은 이름 png ↔ csv 페어링 (하우스 관례: 그림과 Origin-ready CSV 가
     #   같은 stem — `_origin` 접미는 무시하고 비교). 페어된 CSV 는 이미지 카드에
@@ -2367,7 +2370,7 @@ def concept_attachments(cid: str) -> list[dict]:
                 host["pair"] = x
                 continue
         merged.append(x)
-    merged.sort(key=lambda x: (x["kind"] != "image", x["name"]))
+    merged.sort(key=lambda x: -x.get("mtime", 0))      # 최근순 (날짜 그룹용)
     return merged
 
 _UP_EXT = {".png", ".jpg", ".jpeg", ".svg", ".csv", ".json", ".xyz", ".vasp", ".cif", ".pdf"}

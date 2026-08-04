@@ -57,9 +57,28 @@ def keep_component(V, thr, seeds, lo, step, n):
     return np.where(mask, V, thr + 1.0), float(mask.mean())
 
 
-def draw(ax, verts, faces, atoms, cages, mic, shifts, lo, hi, path, e, color, view):
+def slab(V, big, nrm, lo, span, n, thick=5.0):
+    """**시선 방향으로 얇은 단면**만 남긴다 (통짜 덩어리 → 채널 단면).
+
+    ⚠ 왜 (2026-08-06, 1저자 지적 2회): 문턱에서 채널이 셀의 60~75% 라 등가면을 통째로
+      그리면 초록 덩어리가 되어 아무 정보가 없다. 모서리 도려내기(cutaway)도 잘린 면이
+      메시처럼 보여 실패. **시선 법선 방향 ±thick/2 슬랩**만 남기면 채널이 어떻게
+      이어지고 골격이 어디를 막는지가 단면으로 드러난다 (토모그래피 관례).
+    """
+    V = V.copy()
+    g = np.stack(np.meshgrid(*[np.linspace(lo[d], lo[d] + span[d], n[d])
+                               for d in range(3)], indexing="ij"), -1)
+    c = lo + span / 2
+    w = (g - c) @ nrm                       # 시선 법선 성분
+    V[np.abs(w) > thick / 2] = big
+    return V
+
+
+def draw(ax, verts, faces, atoms, cages, mic, shifts, lo, hi, path, e, color, view,
+         edge="none", alpha=0.40):
     ax.add_collection3d(Poly3DCollection(verts[faces], facecolor=color,
-                                         edgecolor="none", alpha=0.40, zsort="average"))
+                                         edgecolor=edge, lw=0.15, alpha=alpha,
+                                         zsort="average"))
     for i, (s, p) in enumerate(atoms):
         if s == "P":
             lig = [p + mic(q - p) for t, q in atoms
@@ -107,6 +126,7 @@ def main():
     ap.add_argument("--disp", default="LPSCl1.6")
     ap.add_argument("--pad", type=float, default=2.4)
     ap.add_argument("--nvox", type=int, default=110)
+
     ap.add_argument("--maxbox", type=float, default=16.0,
                     help="상자 한 변 상한 (Å) — 길쭉한 셀에서 시야 확보")
     ap.add_argument("--out", default="docs/figures/bv_vs_pmf_3d_modelc.png")
@@ -173,9 +193,9 @@ def main():
           f"(BV 채널 {100*fE:.2f}%) — 성분 필터 없음(고립 자리 표시)")
 
     vE, faE, _n, _v = marching_cubes(VE, level=rbv["E_perc"], spacing=tuple(step))
-    vF, faF, _n, _v = marching_cubes(VF, level=dFp, spacing=tuple(step))
+    vF = faF = None                          # 슬랩은 시선(nrm) 확정 후에 만든다
     vI, faI, _n, _v = marching_cubes(VFi, level=lvl_iso, spacing=tuple(step))
-    vE, vF, vI = vE + lo_bv, vF + lo, vI + lo
+    vE, vI = vE + lo_bv, vI + lo
 
     allp = rpm["cart"]
     c0 = allp.mean(0)
@@ -199,11 +219,37 @@ def main():
     ax2.set_title(f"② MD density, SAME volume as ①  (ΔF = {lvl_iso:.3f} eV)\n"
                   f"{a.T:.0f} K · where the Li actually sit · {100*fFi:.2f} vol%",
                   fontsize=11, color=INK)
-    ax3 = fig.add_subplot(1, 3, 3, projection="3d")
-    draw(ax3, vF, faF, atoms, cages, mic, shifts, lo, hi, rpm["cart"], rpm["e"],
-         "#16a34a", view)
-    ax3.set_title(f"③ MD free-energy channel at ΔF$_{{perc}}$ = {dFp:.3f} eV\n"
-                  f"{a.T:.0f} K · all Li · {100*fF:.1f} vol% accessible",
+    # ③ 2D 단면 지도 — 3D 등가면은 61 vol% 라 통짜 덩어리가 되어 정보가 없다
+    #   (2026-08-06 사용자 지적 2회: 통짜 → 도려내기(메시) → **단면 지도**로 확정).
+    #   경로 주평면 위 ΔF 를 색으로, ΔF_perc 등고선을 굵게, 경로를 겹친다.
+    ax3 = fig.add_subplot(1, 3, 3)
+    e1p, e2p = vt[0], vt[1]
+    gx = np.linspace(-span.max() / 2, span.max() / 2, 260)
+    GX, GY = np.meshgrid(gx, gx)
+    R = (c0 + GX[..., None] * e1p + GY[..., None] * e2p).reshape(-1, 3)
+    fr = (R @ np.linalg.inv(cell)) % 1.0
+    M = map_coordinates(F, (fr * np.array(F.shape)).T, order=1,
+                        mode="grid-wrap").reshape(GX.shape)
+    # 밝을수록 낮은 ΔF(= 열림), 어두울수록 막힘 — 초록 덧칠은 이중 부호화라 뺐다
+    im = ax3.contourf(GX, GY, M, levels=np.linspace(0, max(dFp * 2.2, 0.3), 24),
+                      cmap="Blues", extend="max")
+    ax3.contour(GX, GY, M, levels=[dFp], colors=["#111827"], linewidths=2.0)
+    P2 = (rpm["cart"] - c0) @ np.vstack([e1p, e2p]).T
+    ax3.plot(P2[:, 0], P2[:, 1], color="#dc2626", lw=2.6, zorder=5)
+    for s_, pp in atoms:                       # 평면 ±1.6 Å 안 음이온만
+        for sh in shifts:
+            v = pp + sh - c0
+            if abs(float(v @ vt[2])) > 1.6 or s_ in ("Li", "P"):
+                continue
+            x, y = float(v @ e1p), float(v @ e2p)
+            if abs(x) < span.max() / 2 and abs(y) < span.max() / 2:
+                ax3.plot(x, y, "o", ms=7, mfc=ATOM_C.get(s_, "#888"), mec="white", mew=0.8)
+    cb3 = fig.colorbar(im, ax=ax3, fraction=0.045, pad=0.02)
+    cb3.set_label("ΔF (eV)", fontsize=9); cb3.ax.tick_params(labelsize=8)
+    ax3.set_aspect("equal"); ax3.set_xticks([]); ax3.set_yticks([])
+    ax3.set_title(f"③ ΔF cross-section on the path plane\n"
+                  f"{a.T:.0f} K · light = open, dark = blocked · black line = "
+                  f"ΔF$_{{perc}}$ {dFp:.3f} eV ({100*fF:.1f} vol%)",
                   fontsize=11, color=INK)
 
     fig.suptitle(f"{a.disp} — the same crystal seen by a static proxy and by the "
@@ -217,7 +263,10 @@ def main():
              "from the time-averaged Li density of the MLIP-MD trajectory.\n"
              "① and ② enclose the same volume, so their shapes can be compared directly; "
              "③ shows how much of the cell is already thermally accessible by the time the\n"
-             "free-energy landscape percolates. ΔF_perc is a free energy at this temperature "
+             "free-energy landscape percolates. Panel ③ is a 2D cut of ΔF on the path plane "
+             "(light = low ΔF, i.e. open; black line = the ΔF_perc contour; red = the path):\n"
+             "at 61 vol% a 3D isosurface would be a solid blob, so the cross-section is the "
+             "readable view. ΔF_perc is a free energy at this temperature "
              "— not an activation energy.",
              ha="center", fontsize=8.6, color=MUT)
     fig.tight_layout(rect=[0, 0.055, 1, 0.95])

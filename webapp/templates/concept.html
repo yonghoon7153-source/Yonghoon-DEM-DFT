@@ -40,8 +40,14 @@
 
 {% if imgs %}
 <div class="att-pane" id="att-img">
+  {% for grp in att_days %}
+  {% set gi = grp.files|selectattr('kind','equalto','image')|list %}
+  {% if gi %}
+  <div class="day-head"><span class="day-date">{{ grp.day }}</span>
+    <span class="day-rel">{{ grp.label }}</span>
+    <span class="muted" style="font-size:.72rem">{{ gi|length }}개</span></div>
   <div class="grid grid-3">
-  {% for f in imgs %}
+  {% for f in gi %}
     <div class="card att-card" data-rel="{{ f.rel }}" data-name="{{ f.name }}" data-kind="image">
       <div class="att-thumb"><img loading="lazy" src="/api/file/{{ f.rel }}" alt="{{ f.name }}"></div>
       <div class="att-meta">
@@ -57,13 +63,21 @@
     </div>
   {% endfor %}
   </div>
+  {% endif %}
+  {% endfor %}
 </div>
 {% endif %}
 
 {% if data %}
 <div class="att-pane" id="att-data" {% if imgs %}style="display:none"{% endif %}>
+  {% for grp in att_days %}
+  {% set gd = grp.files|rejectattr('kind','equalto','image')|list %}
+  {% if gd %}
+  <div class="day-head"><span class="day-date">{{ grp.day }}</span>
+    <span class="day-rel">{{ grp.label }}</span>
+    <span class="muted" style="font-size:.72rem">{{ gd|length }}개</span></div>
   <div class="grid grid-3">
-  {% for f in data %}
+  {% for f in gd %}
     <div class="card att-card" data-rel="{{ f.rel }}" data-name="{{ f.name }}" data-kind="{{ f.kind }}">
       <div class="att-icon">{{ '📊' if f.kind=='csv' else ('📕' if f.kind=='pdf' else '📦') }}</div>
       <div class="att-meta">
@@ -74,6 +88,8 @@
     </div>
   {% endfor %}
   </div>
+  {% endif %}
+  {% endfor %}
 </div>
 {% endif %}
 
