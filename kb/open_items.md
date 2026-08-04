@@ -107,6 +107,16 @@
   **INDEX 갱신을 같이 하도록 되어 있는데 그게 최근 3건에서 안 됐다** — 에이전트 지침 점검 필요.
   DEM 클러스터는 별도 인덱스로 분리 유지가 맞다(축이 다름).
 
+### 10. ~~ELF·그림 계 표시명이 4가지로 갈렸다~~ → ✅ **닫음 (2026-08-06)**
+`LPSOCl` / `LPSOCl1.6` / `LPSOCl (Li27P5S21OCl8)` / `LPSOCl (O-substituted)` 가 섞여 있었다.
+**db/properties 가 이미 `LPSOCl1.6`** (hops_per_ion.csv·bv_path_segments_lpsocl.csv) 이므로
+**데이터 쪽에 맞춘다** — CSV 열 이름과 그림 범례가 같은 말을 해야 한다.
+- `tools/figures/house_style.py` 에 **DISP / DISP_LONG** 등록: 계 비교 그림은 `DISP`
+  (LPSCl1.6 · LPSOCl1.6 · B2O3@LPSCl1.6 · comp1), 조성식이 요점인 단일계 그림(ELF·COHP)은
+  `DISP_LONG` (`LPSOCl1.6 (Li₂₇P₅S₂₁OCl₈)`).
+- 스크립트 5개 라벨 교체 완료. ⚠ **이미 만들어진 PNG 는 옛 라벨 그대로**다 — ELF 는 cube 가
+  gabia 에만 있어 재생성이 서버 작업이므로, 다음에 그 그림을 손댈 때 같이 다시 뽑는다.
+
 ### 8. lpscl16 PDOS 의 VB-top DOS 가 비정상적으로 작다 (2026-08-04 발견 · 판별 대기)
 - gap 정합 검사 중 발견: lpscl16 DOS/PDOS 파일의 **CB 에지는 정본 2.099 와 정합**하는데,
   **E=0(VBM) 에서 DOS 가 0.019 states/eV** — lpsocl(1.59)·b2o3(2.82)의 **1/80~1/150**.

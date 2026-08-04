@@ -26,6 +26,18 @@ ELEM = {
 # system colors for cross-system comparisons
 SYS = {"modelc": "#6b7280", "lpsocl": "#be123c", "b2o3": "#0284c7", "comp1": "#9ca3af"}
 
+# 계 표시명 — **한 가지로 통일** (2026-08-06 결정, 미뤄두던 항목을 닫음).
+#   그림마다 LPSOCl / LPSOCl1.6 / "LPSOCl (Li27P5S21OCl8)" 로 갈려 있었다.
+#   db/properties (hops_per_ion.csv, bv_path_segments_lpsocl.csv …)가 이미 `LPSOCl1.6` 이므로
+#   **데이터 쪽에 맞춘다** — 그래야 CSV 열 이름과 그림 범례가 같은 말을 한다.
+#   규칙: 계를 **비교**하는 그림은 아래 DISP 를 그대로 쓴다 (LPSCl1.6 / B2O3@LPSCl1.6 / …).
+#         한 계만 다루면서 **조성식 자체가 요점**인 그림(ELF·COHP)은 DISP_LONG 을 쓴다.
+DISP = {"modelc": "LPSCl1.6", "lpsocl": "LPSOCl1.6",
+        "b2o3": "B2O3@LPSCl1.6", "comp1": "comp1"}
+DISP_LONG = {"modelc": "LPSCl1.6 (Li$_{27}$P$_5$S$_{22}$Cl$_8$)",
+             "lpsocl": "LPSOCl1.6 (Li$_{27}$P$_5$S$_{21}$OCl$_8$)",
+             "b2o3": "B$_2$O$_3$@LPSCl1.6", "comp1": "comp1 (Li$_6$PS$_5$Cl)"}
+
 GAPBAND = "#fef9c3"   # band-gap span fill
 GAPLINE = "#2563eb"   # VBM/CBM dashed verticals (ls="--")
 GAPTEXT = "#92400e"   # gap label text

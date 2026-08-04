@@ -64,7 +64,7 @@ def main():
         })
     cf = OUTC / "lpsocl_icohp_origin.csv"
     with open(cf, "w", newline="", encoding="utf-8-sig") as f:
-        f.write("# LPSOCl (Li27P5S21OCl8, 62at) ICOHP per bond — Origin-ready\n")
+        f.write("# LPSOCl1.6 (Li27P5S21OCl8, 62at) ICOHP per bond — Origin-ready\n")
         f.write(f"# {d['method'][:150]}\n")
         f.write(f"# charge spilling {d.get('charge_spilling_pct')}% (<2% 권장 범위)\n")
         f.write("# ⚠ ICOHP 는 **적분값**이다. bonding/antibonding 곡선은 COHPCAR.lobster 필요.\n")
@@ -114,7 +114,7 @@ def main():
     ax2.legend(frameon=False, fontsize=9)
     ax2.set_ylim(0, max(-float(cmp_[k]["lpsocl"]) for k in keys) * 1.25)
 
-    fig.suptitle("LPSOCl (Li$_{27}$P$_5$S$_{21}$OCl$_8$) ICOHP — LOBSTER 5.1.1, "
+    fig.suptitle("LPSOCl1.6 (Li$_{27}$P$_5$S$_{21}$OCl$_8$) ICOHP — LOBSTER 5.1.1, "
                  f"charge spilling {d.get('charge_spilling_pct')}%",
                  fontsize=10.5, color=MUT, y=1.005)
     fig.tight_layout()

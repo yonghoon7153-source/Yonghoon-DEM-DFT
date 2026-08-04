@@ -31,7 +31,7 @@
   python3 tools/figures/elf_planes_lpsocl.py \\
       --cube /data/work/runs/lpsocl_elf/lpsocl_elf.cube \\
       --out  /data/work/runs/lpsocl_elf/postproc/planes \\
-      --label "LPSOCl (Li27P5S21OCl8)" --tag lpsocl --save_npz
+      --label "LPSOCl1.6 (Li27P5S21OCl8)" --tag lpsocl --save_npz
 """
 import argparse
 import csv

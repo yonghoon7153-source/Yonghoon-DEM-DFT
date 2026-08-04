@@ -148,7 +148,7 @@ def main():
     #   (2857 → 3636 px). 두 줄로 접는다.
     sub = ("\nboxed % = ICOHP fraction inside the plotted window"
            if covs and min(covs) < 0.95 else "")
-    fig.suptitle("LPSOCl (Li$_{27}$P$_5$S$_{21}$OCl$_8$) COHP — LOBSTER 5.1.1, "
+    fig.suptitle("LPSOCl1.6 (Li$_{27}$P$_5$S$_{21}$OCl$_8$) COHP — LOBSTER 5.1.1, "
                  "per-bond average;  rows have independent x-scales" + sub,
                  fontsize=11, color=MUT, y=1.0)
     outp = Path(args.out)

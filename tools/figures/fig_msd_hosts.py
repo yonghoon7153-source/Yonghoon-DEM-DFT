@@ -48,7 +48,7 @@ OUTCSV = REPO / "db/properties/msd_hosts_plotted.csv"
 # (CSV 열 접두어, 범례, 색, 마커)
 SERIES_MAIN = [
     ("LPSCl1.6",  "LPSCl1.6 (host)",         "#2563eb", "s"),
-    ("lpsocl",    "LPSOCl (O-substituted)",  "#7c3aed", "D"),
+    ("lpsocl",    "LPSOCl1.6",               "#7c3aed", "D"),
     ("b2o3",      r"B$_2$O$_3$-doped",       "#c0392b", "^"),
 ]
 # ⚠ 게이트 탈락 계열. 기본에서 뺀다(위 docstring). --with-lpscl 로만 들어온다.

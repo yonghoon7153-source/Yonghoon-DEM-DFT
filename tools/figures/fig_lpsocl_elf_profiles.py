@@ -159,7 +159,7 @@ def main():
     apply_axes(ax, xlabel="fraction along bond path", ylabel="ELF",
                title="all bonds overlaid", fontsize=11)
 
-    fig.suptitle("LPSOCl (Li₂₇P₅S₂₁OCl₈) — ELF along each bond path.  "
+    fig.suptitle("LPSOCl1.6 (Li₂₇P₅S₂₁OCl₈) — ELF along each bond path.  "
                  "Host P–S / P–O stay covalent; Li–O is the most ionic Li bond.",
                  fontsize=12.5, color=INK, y=0.995)
     fig.text(0.5, 0.004,
