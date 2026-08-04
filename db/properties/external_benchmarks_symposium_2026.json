@@ -1,666 +1,703 @@
 {
-  "property": "external_benchmarks_symposium_2026",
-  "date": "2026-07-28",
-  "description": "2026년도 전지기술 심포지엄(한국전기화학회, 8/21) 기술세션 3-3(이상욱, 성균관대) · 3-4(문장혁, 중앙대) 발표 덱에서 추출한 외부 벤치마크. 우리 계산의 재현 표적(target)과 방법론 참조점으로만 쓴다.",
-  "honesty_header": [
-    "⛔ 이 파일의 모든 수치는 **발표 소환값**이다 — peer-review 논문값보다도 한 단계 낮은 신뢰 등급(슬라이드 축약·반올림·문맥 소실).",
-    "⛔ 우리 db 절대값과 **같은 표·같은 플롯에 넣지 말 것**. 우리 값과의 대조는 반드시 '재현 표적 vs 우리 결과' 형식으로, 출처를 병기해서.",
-    "⛔ 발표 덱은 발표 시간에 맞춰 잘라낸 것이라 **부재의 증거가 아니다**. '그들은 X를 안 한다'는 서술은 litdb/papers/ 의 논문 실물 감사에서만 나올 수 있다.",
-    "⛔ MLIP σ 절대값은 훈련 functional의 각인을 받는다(같은 물질에서 8배 갈림, kim2024). 아래 σ·D 값은 **비율·자릿수로만** 인용하고 절대값 대조 금지.",
-    "✅ 이 파일의 용도는 두 가지뿐: (1) 우리가 새 계산을 돌릴 때의 재현 표적, (2) 방법론 항목의 출처."
-  ],
-  "sources": [
-    {
-      "id": "lee2026_skku",
-      "speaker": "Sang Uck Lee (이상욱)",
-      "affiliation": "성균관대학교 화학공학부 (CMS Lab)",
-      "title": "기계학습 포텐셜 기반 소재 물성 해석 및 설계 (MLIP-Based Materials Analysis and Design)",
-      "session": "2026년도 전지기술 심포지엄 기술세션 3-3, 2026-08-21",
-      "proceedings_pages": "279-296",
-      "digest": "litdb/talks/lee2026_skku_mlip_materials_design.md",
-      "canonical_paper_in_our_db": "litdb/papers/kim2024_mtp_argyrodite_disorder_gb.md",
-      "relation_to_us": "정면 경쟁 — 같은 물질(argyrodite) · 같은 도구(MLIP) · 다른 축"
-    },
-    {
-      "id": "moon2026_cau",
-      "speaker": "Janghyuk Moon (문장혁)",
-      "affiliation": "중앙대학교 에너지시스템공학부",
-      "title": "AI 기반 배터리 연구 자동화: LLM 기반 연구 분석에서 AI-Agent 전극 모델링까지",
-      "session": "2026년도 전지기술 심포지엄 기술세션 3-4, 2026-08-21",
-      "proceedings_pages": "297-318",
-      "digest": "litdb/talks/moon2026_cau_llm_agent_battery_automation.md",
-      "relation_to_us": "직교 — 상하류 관계. 우리가 원자 스케일 파라미터를 만들고 그들이 셀 스케일에서 소비"
-    }
-  ],
-  "reproduction_targets": {
-    "_note": "우리가 해당 계산을 돌렸을 때 '맞았다'고 볼 표적. 정량 일치를 요구하지 않는다 — 엔진(UMA 사전학습 vs MTP 자체학습)과 프로토콜이 다르다.",
-    "li_argyrodite_interface_md": {
-      "source": "lee2026_skku",
-      "slide": "18-19 (PDF p.11-12)",
-      "status_of_underlying_work": "SSRN 프리프린트 (peer-review 미통과). 정본 digest: litdb/papers/kim2026_li_argyrodite_sei_reactive_md.md — 2026-07-28 실물 정독 완료",
-      "engine": "MTP (자체 학습, 5400 dataset, passive+active learning)",
-      "system": "Li6PS5Cl(100) | Li(100), 생산 MD > 6000 atoms",
-      "targets": [
-        {
-          "quantity": "interphase 두께",
-          "value": 11,
-          "unit": "nm",
-          "condition": "소형 모델, 핵생성 개시 ~11 ns",
-          "confidence": "논문 실물 확인. ⚠ 본문 내부 모순(추가분해 억제 vs 계속분해)이 있어 **하한**으로 읽을 것"
-        },
-        {
-          "quantity": "interphase 결정상",
-          "value": "Li2S",
-          "unit": null,
-          "condition": "RDF 피크 위치 일치. ⚠ Li3P·LiCl 은 결정화하지 않고 비정질/고립 클러스터로 남는다",
-          "confidence": "정성"
-        },
-        {
-          "quantity": "D_Li (interphase 결정영역)",
-          "value": 4e-08,
-          "unit": "cm^2/s",
-          "condition": "**350 K**, MSD 창 11-20 ns",
-          "confidence": "논문값. 덱 대비 10배 정정됨"
-        },
-        {
-          "quantity": "D_Li (잔여 벌크)",
-          "value": 1.1e-07,
-          "unit": "cm^2/s",
-          "condition": "**350 K**, MSD 창 0-20 ns 전구간",
-          "confidence": "논문값. 덱 대비 10배 정정됨"
-        },
-        {
-          "quantity": "D_Li (pristine 참조)",
-          "value": 1.6e-07,
-          "unit": "cm^2/s",
-          "condition": "350 K, kim2024 소환값",
-          "confidence": "3번째 기준값 — 덱에 없었음"
-        },
-        {
-          "quantity": "D 비 (interphase/bulk)",
-          "value": 0.36,
-          "unit": null,
-          "condition": "파생",
-          "confidence": "**절대값보다 이 비율만 인용 안전**"
-        },
-        {
-          "quantity": "핵생성 개시 시각",
-          "value": [
-            11,
-            30
-          ],
-          "unit": "ns",
-          "condition": "소형 모델 11 ns / 대형 모델 ~30 ns — **계 크기 의존**",
-          "confidence": "⚠ 시드 1개라 확률과정의 산포를 알 수 없다"
-        }
-      ],
-      "experimental_anchor_cited_by_them": "ACS Energy Lett. 2022, 7, 3064-3071 (Luo, cryo-TEM interphase layer). 덱 슬 19가 이 그림 두 장을 그대로 붙여넣었고 라벨은 **25 degC / 60 degC**(2026-08-03 원해상도 재판독; 이전 기록의 80 degC는 우리 오독), 왼쪽 패널에 **~12 nm** 와 Li2S(111) ~0.33 nm 표기 → 계산 11 nm vs 실험 ~12 nm 대조가 성립. 온도 조건의 출처는 Luo 원논문 그림이다",
-      "our_status": "공백 (T3)",
-      "how_to_use": "T3 성공 판정 = interphase 형성 · Li2S 결정화 · D비 < 1. ⚠ **1순위 관측량은 D 가 아니라 잔존 PS4 층수 vs 시간**(z-bin + P-S 거리컷). 우리 표준 200 ps 로는 핵생성(11 ns)을 못 본다 — 최소 20 ns 필요. 비용 초과 시 [두께 절반 + 20 ns] > [두께 유지 + 2 ns].",
-      "_deck_corrections_2026_07_28": {
-        "note": "⛔ **2026-08-03 정정의 정정** — 덱 실물(inbox 재투입본)을 embedded raster 원해상도로 재판독한 결과, 아래 3건은 **덱 오류가 아니라 2026-07-28 저해상도 판독의 전사 오류**였다. 덱 실물: D 둘 다 x10^-7, 온도 라벨 25/60 degC. kim2026_hts 의 17,233 건도 같은 이유로 철회(덱 원문 17,230 Li, O). 규율은 유지(수치는 논문에서), 절차에 추가: 덱이 틀렸다고 기록하기 전에 덱 실물을 원해상도로 재판독한다. 근거: litdb/talks/lee2026_skku_mlip_materials_design.md §15.",
-        "corrected": [
-          {
-            "item": "D_Li (interphase 결정영역)",
-            "deck": "0.4e-7 cm^2/s (덱 실물, 2026-08-03 재판독)",
-            "actual": "0.4e-7 cm^2/s",
-            "error": "없음 — 이전의 '덱 자릿수 10배 오기' 판정 철회(우리 전사 오류였음)"
-          },
-          {
-            "item": "D_Li (잔여 벌크)",
-            "deck": "1.1e-7 cm^2/s (덱 실물, 2026-08-03 재판독)",
-            "actual": "1.1e-7 cm^2/s",
-            "error": "없음 — 동일 철회"
-          },
-          {
-            "item": "실험 대조 조건",
-            "deck": "인용된 Luo 2022 cryo-TEM 그림 2장, 라벨 25 degC / 60 degC (덱 실물, 2026-08-03 재판독)",
-            "actual": "본문에는 '~12 nm Li2S interphase, cryo-TEM' 한 문장뿐. 온도 조건은 이 논문 본문에 없다",
-            "error": "출처 분리로 해소 — 온도 라벨은 Luo 원논문 그림의 것. 인용하려면 Luo 원논문 확보 필요. 서지(ACS Energy Lett. 2022, 7, 3064)는 ref [49]로 정확"
-          }
-        ],
-        "survived": [
-          "interphase 두께 ~11 nm",
-          "Li2S 결정상 동정",
-          "D 비 0.36"
-        ],
-        "lesson": "덱에서 안전한 것은 **비율과 정성 서술**이고, 절대값·조건은 논문 실물로만."
-      },
-      "msd_window_trap": "⚠ 영역분해 D 의 시간창이 구획마다 다르다 — 벌크 0-20 ns 전구간, 결정영역 11-20 ns. **0-11 ns 창을 쓰면 'SEI 가 벌크보다 3배 빠르다'는 반대 결론이 나온다.** T5(영역분해 MSD) 설계 시 창을 반드시 명시하고 상전이 전/후를 분리할 것."
-    },
-    "argyrodite_hydrolysis": {
-      "source": "lee2026_skku",
-      "slide": "21-24 (PDF p.13-14)",
-      "status_of_underlying_work": "Adv. Funct. Mater. revision (2026-07 기준)",
-      "engine": "SevenNet (fine-tuned uMLIP)",
-      "mlip_accuracy_reported": {
-        "energy_meV_per_atom": 8.8,
-        "force_eV_per_A": 0.57,
-        "stress_kbar": 0.35
-      },
-      "system": "Li6PS5Cl(100) 4 nm + 용액 2.5 nm, 3x3 nm, 32 H3O+ / 32 OH- / 200 H2O, 500 ps",
-      "targets": [
-        {
-          "quantity": "ICOHP(P-S)",
-          "value": -6.43,
-          "unit": "eV",
-          "condition": "결합거리 2.04 A",
-          "confidence": "덱 명시값"
-        },
-        {
-          "quantity": "ICOHP(P-S(H))",
-          "value": -4.69,
-          "unit": "eV",
-          "condition": "양성자화, 결합거리 2.18 A",
-          "confidence": "덱 명시값"
-        },
-        {
-          "quantity": "양성자화에 의한 P-S 약화율",
-          "value": 0.27,
-          "unit": "fraction",
-          "condition": "(6.43-4.69)/6.43",
-          "confidence": "파생 — **T2의 핵심 표적**"
-        },
-        {
-          "quantity": "Sn 치환 상대 E_a (SnS4-H -> PS4-H)",
-          "value": 0.28,
-          "unit": "eV",
-          "condition": "Li6.25P0.75Sn0.25S5Cl",
-          "confidence": "덱 명시값"
-        },
-        {
-          "quantity": "SnS4-H 정규화 신호",
-          "value": [
-            0.6,
-            0.8
-          ],
-          "unit": null,
-          "condition": "0-500 ps 유지, PS4-H 는 ~0",
-          "confidence": "덱 히트맵 판독"
-        }
-      ],
-      "mechanism": "H3O+/OH- 존재 시 PS4 분해 -> H2S 발생 -> 표면 붕괴. polyhedron-sulfur -> single-sulfur. Sn 치환은 H를 SnS4 쪽으로 유인해 PS4를 보호",
-      "our_status": "air_hsab 정성 tier만 보유 (T2)",
-      "our_experimental_anchor": "litdb/papers/taklu2021_cucl_dualdoping_air_stability_argyrodite.md — CuCl 이원도핑, H2S 1.07 -> 0.49 cm3/g (Cu3PS4 형성, HSAB soft-acid)",
-      "triangulation_note": "실험(Taklu, Cu) + 기구(Lee, Sn) + 문헌KG 예측(Moon Case 1, Sn/Sb/As) + 우리 스크리닝(air_hsab)이 **모두 HSAB soft-acid 명제로 수렴**한다. 독립 경로 4개의 일치 — 단 '우리가 그들을 검증했다'는 인과 주장 금지"
-    },
-    "csp_metastable_conductivity": {
-      "source": "lee2026_skku",
-      "slide": "28-29 (PDF p.16-17)",
-      "status_of_underlying_work": "JACS 2025, 147, 51, 47381-47391 (출판). 정본 digest: litdb/papers/kim2025_csp_metastable_edge_sharing_sse.md — 본문 11pp + SI 24pp 전수 정독 2026-07-28, **본문 11pp 실물 독립 검증 2026-08-04 (digest §19)**, **SI 24pp 실물 독립 검증 2026-08-04 (digest §20)**. σ 소환 출처인 Huang 2022 는 litdb/papers/huang2022_li2sis3_anomalous_conductivity_bvse.md — **본문 6pp §9 + ESI 12pp §11 실물 독립 검증 2026-08-04**",
-      "engine": "USPEX GA + MTP + active learning",
-      "targets": [
-        {
-          "quantity": "D_600K 상승 (corner → edge)",
-          "value": ">=2",
-          "unit": "orders of magnitude",
-          "condition": "**확산계수 기준**, 600 K 단일 온도, 시드 1, 오차막대 없음",
-          "confidence": "논문 본문 서술. ⚠ 살아남는 것은 'corner ≈ 0 / edge = 유한' 이분법뿐 — edge 구조 간 순위(rank 3 D=1.75 vs rank 4 D=1.15)는 통계적으로 무의미할 공산"
-        },
-        {
-          "quantity": "packing ratio α (corner vs edge)",
-          "value": "0.0834->=0.100 vs 0.0753-0.0796",
-          "unit": null,
-          "condition": "Li2SiS3. 4조성 모두 edge 가 낮다. **2026-08-04 Fig 5a 700 dpi 재판독값** (종전 0.084-0.100 vs 0.0765-0.0805 대체)",
-          "confidence": "**세 기술자 중 가장 깨끗한 분리** (corner 최저 0.0834 > edge 최고 0.0796). ⚠ corner rank 2 막대가 축 상한 0.100 에서 **클립** → 상단은 판독 불가. ⚠ 초록·본문의 'higher packing efficiency' 표현은 방향이 반대라 이식 금지 — **'낮은 α'로만 서술**"
-        },
-        {
-          "quantity": "dead volume (corner → edge)",
-          "value": "-0.69",
-          "unit": "A^3",
-          "condition": "Li2SiS3 5.67→4.98 · Li4SiGeS6 6.05→5.36 (양쪽 다 정확히 -0.69, -11~12%)",
-          "confidence": "⚠ 두 조성에서 Δ가 정확히 같은 것이 우연인지 산출 인공물인지 판단 불가"
-        },
-        {
-          "quantity": "E_hull 전 40구조",
-          "value": [
-            0,
-            42
-          ],
-          "unit": "meV/atom",
-          "condition": "50 meV 컷 전원 통과",
-          "confidence": "Table S2 실측"
-        },
-        {
-          "quantity": "n-Li2SiS3 sigma_RT (실험)",
-          "value": 2.4,
-          "unit": "mS/cm",
-          "condition": "298 K. **펠릿 ⌀10 mm, 상대밀도 85 %, 두께는 논문 미보고 → 우리가 Fig 4b σ × Fig S4 R 로 역산한 L ≈ 1.251 mm (5점 편차 4 %)**. σ 는 **bulk + grain-boundary 합산** (ESI 명시) → **bulk σ 의 하한**이다. EIS 온도범위는 논문 안에 세 값 (ESI Experimental 228-383 K / Fig S4 캡션 228-375 K / **아레니우스 실제 280-375 K**)",
-          "confidence": "**Huang 2022 실험값 — 복원됨.** ESI Fig S4 의 R(298 K) = 65.3 Ω 로 **독립 재계산해도 2.44e-3 S/cm** (digest §11 검증4). ⚠ 조성식이 논문 안에서 둘 — 본문·Fig S1a **Li1.82SiP0.036S3** ↔ Table S1 **Li1.97Si0.97P0.03S3**(= Rietveld 점유율과 일치, 우리 대칭전개 확인). 인용은 'Li2SiS3 계, Rietveld 실측 Li/M = 1.97' 로"
-        },
-        {
-          "quantity": "n-Li2SiS3 Ea (실험) — **창별로 다르다**",
-          "value": {
-            "280-375 K": 0.278,
-            "228-280 K": 0.347
-          },
-          "unit": "eV",
-          "condition": "σT = A exp(-Ea/kT) 형. 본문 인쇄값 0.28 eV 는 **280-375 K 5점**만의 것이고, ESI Fig S4 에 있는 228/240/260 K 는 Fig 4b 의 x축(1000/T = 2.6-3.6) 밖이다. 9점 전부로 재구성하면 두 가지가 **298.5 K 에서 교차**한다",
-          "confidence": "**우리가 ESI Fig S4 9패널을 600 dpi 픽셀 판독해 재구성** (digest §11 E1, 코드 tools/litdb/huang2022_si_figs.py). 저온 가지 잔차 0.012 dec(2.9 %)로 잡음이 아니다. ⚠ 고온선을 228 K 로 외삽하면 실측 σ 를 **2.30배 과대평가**한다 → **'n-Li2SiS3 Ea = 0.28 eV' 를 창 없이 인용 금지**"
-        },
-        {
-          "quantity": "n-Li2SiS3 R_total (ESI Fig S4 원자료 9점)",
-          "value": {
-            "228": 3475.7,
-            "240": 1523.7,
-            "260": 437.08,
-            "280": 162.77,
-            "298": 65.298,
-            "300": 62.665,
-            "325": 27.731,
-            "350": 14.933,
-            "375": 11.791
-          },
-          "unit": "ohm (T in K)",
-          "condition": "bulk + gb 합. 기하인자 L/A = 0.1592 1/cm (우리 역산)",
-          "confidence": "우리 픽셀 판독. 교정 검증 — R(228) = 3476 Ω 이 Fig S5 등가회로 합(R_bulk 2250 + R_gb 1280 = 3530 Ω)과 **1.5 % 일치**. ⚠ **228 K 에서 R_gb 가 총저항의 36.3 %** → '입계 저항이 작다'는 **298 K 한정 서술**로만 (digest §11 E2)"
-        }
-      ],
-      "descriptors_for_metastable_superionic": {
-        "⚠_deck_list_was_wrong": "덱 슬 29 에 적힌 3 기술자(dead volume / distance of cation / Li-S4 distortion)는 **논문 결론부와 다르다**. 덱의 ①②는 기술자가 아니라 **기구**이고, `d_c > d_e` 는 정의식도 수치표도 없는 기하 논증(Fig 4e)이다.",
-        "actual_three": [
-          {
-            "name": "packing ratio α",
-            "eq": "SI eq 9",
-            "our_verdict": "❌ **재구현 금지** — V_dead 에 알고리즘 정의가 없다(컷오프·이온반경 규약·voxel 여부 전부 미기재). 새로 발명하면 그들 값과 비교 불가",
-            "our_substitute": "✅ **BVSE 채널 % 를 이미 갖고 있고 더 낫다** (tools/comp1_v3/, above-min ≤ iso). 같은 목적을 정전 퍼텐셜에서 잰다"
-          },
-          {
-            "name": "Li-S4 부격자 부피",
-            "eq": "본문",
-            "our_verdict": "✅ **가능(변형)** — 우리 host 는 Li 1차 배위가 S/Cl 혼합이라 **Li-(S,Cl)4** 로 정의. 기존 UMA-MD 600 K 궤적 후처리(pymatgen CrystalNN + ConvexHull). 새 시뮬 0"
-          },
-          {
-            "name": "CSM (continuous symmetry measure)",
-            "eq": "SI eq 10-11",
-            "our_verdict": "✅ **가능** — pymatgen chemenv 에 기계 있음. 같은 궤적에 얹으면 끝",
-            "caveat": "⚠ Fig 5b(Li4SiGeS6)에서는 분리가 무너진다(edge rank5 가 오히려 CSM 낮음). 평균±sd·상관계수·회귀 **전부 없음 = 육안 주장**. 'predictive indicator' 는 과하다"
-          }
-        ],
-        "not_applicable_to_us": "**corner/edge 자동분류 자체가 우리 host 에 정의되지 않는다** — argyrodite 의 PS4 는 고립 사면체라 P-S-P 다리가 없다. 그 축이 존재하지 않는다.",
-        "new_descriptor_candidate_T13": "🆕 대신 **도펀트-PS4 공유 S 개수**(0=고립 / 1=corner / 2=edge)는 우리에게만 가능하고 문헌 선례가 없다 — 도펀트 양이온 다면체가 PS4 와 S 를 몇 개 공유하는가."
-      },
-      "our_status": "무관 — 문제설정 다름(host 고정 개질). 단 'metastable이 더 좋을 수 있다'는 명제는 kb/concepts/ordered_vs_disordered.md 와 공명",
-      "⛔_RETRACTED_2026_07_28": {
-        "what": "이 블록에 등록돼 있던 σ 값 3개를 **철회한다** — 논문 실물에 존재하지 않는다.",
-        "retracted_values": [
-          {
-            "was": "Li2SiS3 corner-sharing sigma = 1e-4 mS/cm",
-            "status": "**논문에 없음**"
-          },
-          {
-            "was": "Li2SiS3 edge-sharing sigma = 2.4 mS/cm",
-            "status": "**논문에 없음**"
-          },
-          {
-            "was": "sigma 상승 = 4 orders of magnitude",
-            "status": "**논문에 없음** — 2도 3도 아니다"
-          }
-        ],
-        "what_the_paper_actually_says": [
-          "계산: 'at least **2 orders of magnitude** higher' — **σ 가 아니라 D_600K 기준**",
-          "실험: 'over **3 orders of magnitude** in ionic conductivity' — 이것도 자기 측정이 아니라 **ref 36 = Huang et al., JACS 2022, 144, 4989 (Kanno 그룹) 소환값**"
-        ],
-        "why_no_sigma": "논문은 σ 를 어떤 조성·어떤 상에도 보고하지 않는다. SI eq 7(Arrhenius)·eq 8(NE)은 방법 서술만 있고 **결과에 한 번도 쓰이지 않은 보일러플레이트**다 — 단일 온도(600 K)만 돌려서 Arrhenius 자체가 불가능하다.",
-        "provenance_guess": "0.0001 / 2.4 mS/cm 는 Huang 2022 원문 값일 가능성이 높으나 **우리는 그 PDF 가 없다 → 판독 불가. 확보 전까지 인용 금지.**",
-        "worse_than_kim2026": "kim2026_hts 는 최소한 신뢰구간(0.2 [0.01, 2.4] mS/cm)이라도 있었다. 여기는 **D 조차 단일 궤적·60 ps·단일 온도·시드 1·오차막대 전무**다.",
-        "resolution_2026_07_28_huang_pdf": {
-          "status": "**부분 복원.** Huang et al., JACS 2022, 144, 4989 (DOI 10.1021/jacs.1c13178) 실물 확보 — JACS 2025 CSP 논문의 ref 36 이자 덱 수치의 진짜 출처.",
-          "restored": [
-            {
-              "value": "2.4 mS/cm @ 298 K",
-              "what": "n-Li2SiS3 (정방정 P4(2)2(1)2, 고립 edge-shared (Si/P)2S6 이량체). Ea 0.28 eV",
-              "provenance": "**Huang 2022 실험값** — JACS 2025 계산값이 아니다. 인용 시 반드시 병기.",
-              "caveat": "실조성은 순수 Li2SiS3 가 아니라 **Li1.82SiP0.036S3** (Si/P = 0.97:0.03)"
-            }
-          ],
-          "still_retracted": [
-            {
-              "was": "corner-sharing 1e-4 mS/cm",
-              "why": "**철회 유지, 근거 승격(2026-08-04 본문 실물 검증).** 종전 사유 '~~Huang 은 e-Li2SiS3 의 sigma 를 수치로 주지 않는다 → 역산 2.4e-3 mS/cm~~' 는 **우리 사실오인**이었다 — **Fig 4b 가 n·m·e 아레니우스 3계열을 직접 싣는다**. 픽셀 판독(교정 검증: red 기울기가 인쇄값 Ea 0.28 eV 를 0.2814 로 재현) → **e sigma(298 K) = 1.8e-6 S/cm = 1.8e-3 mS/cm, Ea 0.476 eV** → 덱 값은 **약 18배 낮다**. 부수 수확: **m-Li2SiS3 = 5.3e-5 S/cm, Ea 0.451 eV** (인쇄 '~0.5' 는 10 % 올림)"
-            },
-            {
-              "was": "4 orders of magnitude",
-              "why": "초록·본문·결론 모두 **3 orders**, 그래픽초록 **1000 times**. **Fig 4b 실측 n/e = 1190배 = 3.08 자릿수 → 논문의 '3 orders' 는 자기 그림으로 검증 통과.** ⚠ 단 그래픽초록 막대비 자체는 **24배**로 그려져 있고 sigma 축에 눈금이 없다 → **그래픽초록에서 수치 이식 금지**"
-            }
-          ],
-          "extra_caveat": "Huang 의 '3자릿수' 비교 대상도 **자기 측정이 아니라 ref 16 소환값**이다 — sigma 뿐 아니라 **Ea 도** 그렇다(Fig 4b 캡션 위첨자 16). ⚠ ref 16 서지 정정: **Ahn & Huggins, Solid State Ionics 1991, 46, 237** (종전 기재 'Ahn & Huggins 1990' 은 우리 오기 — 1990 MRB 25, 381 은 ref 17, 1989 MRB 24, 889 는 ref 15). 논문 자신의 ref 16 저자명도 'Taeahn, B.' 로 깨져 있다.",
-          "verification_2026_08_04": "**Huang 2022 본문 6 pp 실물 독립 검증 완료** (digest §9; 자기정정 11 · 신규 16; ESI 12 pp 는 미재검). 이 항목에 직결되는 것: ① e/m sigma 를 역산이 아니라 **Fig 4b 실측**으로 확보 ② '3 orders' 검증 통과 ③ **BVSE 유효장벽 ↔ 실험 Ea 는 방향·서열만 일치**(0.228/0.367 vs 0.281/0.476 = 19~23 % 과소, 격차 재현율 71 %) — 종전 '방향·크기 모두 일치' 는 우리 과장이라 철회 ④ 🔴 **본문이 자기 Fig 5b4 를 오귀속** — '[100] blue 사슬이 0.367 eV' 라 쓰지만 그림에서 **blue = 0.274 eV**, 0.367 은 **green(bc 2D)** 이고 blue 는 셋 중 최저다 → **e 쪽에서는 차원 상승 서사가 성립하지 않는다** ⑤ Ea 0.28 eV 의 아레니우스 창은 **279~378 K** (Nyquist 창 228~375 K 와 다름) ⑥ **이 논문에 제1원리 계산 0** — DFT 벤치마크로 인용 금지 ⑦ 라이선스 **CC-BY-NC-ND** → 그림 재가공 금지.",
-          "direction_conflict": "⚠ Huang 에서 edge-sharing(n-Li2SiS3)은 **저온상**이고 승온하면 n→m→e 로 corner 사슬이 된다. JACS 2025 CSP 의 '준안정 edge-sharing' 서사와 방향이 다르니 두 논문을 같이 인용할 때 뭉개지 말 것.",
-          "canonical_digest": "litdb/papers/huang2022_li2sis3_anomalous_conductivity_bvse.md"
-        }
-      },
-      "⚠_cross_composition_warning": "그들 세 기술자는 **같은 조성 안의 폴리모프 10개 줄 세우기**로만 검증됐다. **조성이 다른 47종을 가로질러 쓴 적이 없다.** 특히 α 는 MS4 부피 자체가 화학 따라 변해 조성 간 비교가 무의미하다 — 쓴다면 **조성별 상대 지표로만**.",
-      "method_dependence_red_flag": "🔴 **PBE 단독인데 SCAN 이 PBE 를 흔든다.** 검증 14종 중 SCAN 을 돌린 5건에서 **3건 부호 반전**(Li3PS4 −26→+8 · Na3PS4 −8→+23 · LiAlCl4 −12→+1.5 meV/atom). 그런데 **본론 4조성엔 SCAN 을 아예 안 돌렸다.** corner vs edge 의 E_rel 차가 3–42 meV/atom 인데 functional 하나로 그 크기의 역전이 관측됐다 → 우리 언어로 **real difference 가 아니라 method-dependent claim**.",
-      "contradicts": "**Jun 2022 (Nat. Mater. 21, 924, Ceder) 와 정면 충돌**: 그쪽은 corner-sharing framework 가 초이온전도에 유리하다고 본다. 이 논문은 충돌을 인정만 하고 미해소 — 가장 자연스러운 화해(그쪽 산화물 / 이쪽 황화물)조차 명시하지 않는다. → **'edge 가 좋다'를 일반 명제로 인용 금지**, '황화물 4조성에서' 단서 필수.",
-      "supports_our_no_csp_decision": "논문 스스로 **>80 atom 셀에서 저에너지 영역 정확도가 붕괴**한다고 자백한다(LiGa(SeO3)2 MAE_f 114 meV/atom). 우리 modelc 62 at · B2O3 128 at 규모면 **이미 신뢰구간 밖** → symposium 분석의 'CSP 안 하기로' 판정에 외부 근거 확보.",
-      "lab_internal_inconsistency": "같은 랩 안에서 MLIP 전략이 갈린다 — 이 논문은 graph-uMLIP 을 'fine-tune 이 필수'라고 깎고 MTP 를 새로 학습하는데, kim2026_hts 는 **SevenNet 7net-0 을 fine-tune 없이 그대로** 쓴다. **우리 UMA 사전학습 사용을 방어하는 데 이 불일치가 쓸 만하다.**"
-    },
-    "coating_screening_scale": {
-      "source": "lee2026_skku",
-      "slide": "13 (PDF p.9)",
-      "status_of_underlying_work": "Nano Convergence 2026, 13, 27 (출판됨)",
-      "engine": "SevenNet",
-      "targets": [
-        {
-          "quantity": "초기 풀",
-          "value": 17230,
-          "unit": "structures",
-          "condition": "Li, O 함유 결정구조 @ Materials Project (덱 원문: '17,230 Li, O crystal structure @ MP')",
-          "confidence": "덱 실물 + 논문 실물 일치 (2026-08-03 원해상도 재판독; 종전 기록 '17,233 Li-P-S-O'는 우리 전사 오류로 철회)"
-        },
-        {
-          "quantity": "스크리닝 축",
-          "value": [
-            "electrochemical stability",
-            "mechanical stability",
-            "electronic stability",
-            "Li-ion conductivity"
-          ],
-          "unit": null,
-          "condition": null,
-          "confidence": "덱 도해"
-        }
-      ],
-      "our_comparable": {
-        "pool": 47,
-        "note": "우리 cascade_v23_ranked.csv. 풀 크기는 그들이 약 10^2 배지만 축 밀도(ESW·EOS·전 C_ij·BVSE·blocking·계면반응성 x 3농도)는 우리가 높다. **'우리가 47종을 스크리닝했다'를 그들 17,230과 등치하지 말 것** — db/properties/cascade_screening_funnel.json 의 pool_provenance 규율 그대로 적용.",
-        "action": "PDF 확보 최우선 (kb/projects/symposium_2026_competitive_analysis.md §7 위시리스트 1순위). S6 후보나열 감사의 직접 대조군"
-      }
-    },
-    "electrode_microstructure_rate": {
-      "source": "moon2026_cau",
-      "slide": "37-38 (PDF p.20-21)",
-      "status_of_underlying_work": "BEARS (arXiv, peer-review 미통과)",
-      "system": "그래파이트, footprint 30x30 um, 로딩 8 mg/cm2, wt% 95:3:2 (2026-08-03 덱 재판독 교정: 종전 30x38 um 은 전사 오류)",
-      "targets": [
-        {
-          "quantity": "생성 전극 수",
-          "value": 80,
-          "unit": "structures",
-          "condition": "single/binary/gradient, DOE 기반 — 내역 Single 55 / Binary 19 / Gradient 6 (2026-08-03 재판독 신규)",
-          "confidence": "덱 명시값"
-        },
-        {
-          "quantity": "전기화학 검증 수",
-          "value": 5,
-          "unit": "structures",
-          "condition": "SPH010/HC01/HC06/HC05/GRD01 (2026-08-03 재판독 교정: SPH10 -> SPH010)",
-          "confidence": "⚠ 80개 전부 시뮬레이션한 것이 아니다"
-        },
-        {
-          "quantity": "3C 방전용량 (binary vs single)",
-          "value": 3.38,
-          "unit": "x",
-          "condition": "HC05(binary) 56.8 vs HC01(single) 16.8 mAh/g — 2026-08-03 재판독 교정: 비교쌍은 HC06 이 아니라 HC05",
-          "confidence": "덱 서술 '약 3배' + 랭킹 막대 실측 (6배 확대 판독)"
-        },
-        {
-          "quantity": "0.5C 방전용량 (binary vs single)",
-          "value": -6.4,
-          "unit": "%",
-          "condition": "HC01(single) -> HC05(binary), 저율에서는 binary 가 손해 — 2026-08-03 재판독 신규",
-          "confidence": "덱 막대그림 화살표 주석 (6배 확대 판독)"
-        },
-        {
-          "quantity": "3C 방전용량 랭킹",
-          "value": null,
-          "unit": "mAh/g",
-          "condition": "HC05 binary 56.8 > HC06 binary 53.4 > GRD01 gradient 45.4 > SPH010 sphere 33.6 > HC01 single 16.8 (Core 5) — 2026-08-03 재판독 신규",
-          "confidence": "덱 랭킹 막대 실측 (6배 확대 판독)"
-        },
-        {
-          "quantity": "through-plane tortuosity tau_z (근사)",
-          "value": null,
-          "unit": null,
-          "condition": "SPH010 ~1.55 < HC05 ~1.81 < HC06 ~1.90 < HC01 ~1.92 < GRD01 ~1.93 — tau_z 최저인 SPH010 이 3C 4위 = 굴곡도 단독으로 rate 설명 불가 (관찰까지만, SPH010 은 입자형상도 달라 변수 분리 안 됨)",
-          "confidence": "구조공간 산점도에서 읽은 근사 좌표 — 인용 시 ~ 유지"
-        }
-      ],
-      "our_comparable": "DEM 트랙(bimodal AM 시스템 — AM_P + AM_S + SE). 같은 물리 명제(bimodal 입도가 수송 경로를 여는가)를 다른 도구(DEM 접촉·응력·percolation vs FEM 전기화학)로 본다. 상보적. ⚠ 번역 시 3C 이득만 옮기지 말고 0.5C -6.4 % 트레이드오프까지 같이 쓸 것",
-      "bruggeman_note": "슬 29: tau = eps^(-alpha), NMC alpha=0.5 vs Graphite alpha=1.9 — 같은 관계식에서 지수가 4배 다름"
-    },
-    "agent_model_fitting": {
-      "source": "moon2026_cau",
-      "slide": "23 (PDF p.14)",
-      "status_of_underlying_work": "Battery-Sim-Agent, ICLR 2026 under review",
-      "targets": [
-        {
-          "quantity": "Total duration",
-          "value": 8565.8,
-          "unit": "s",
-          "condition": "약 70 라운드 (2026-08-03 재판독 교정: 종전 8965.8 s 는 전사 오류)",
-          "confidence": "덱 명시값"
-        },
-        {
-          "quantity": "Final RMSE",
-          "value": 0.5513,
-          "unit": null,
-          "condition": null,
-          "confidence": "덱 명시값"
-        },
-        {
-          "quantity": "Final MAPE",
-          "value": 2.4258,
-          "unit": null,
-          "condition": null,
-          "confidence": "덱 명시값"
-        }
-      ],
-      "caveat": "베이스라인(수동 피팅) 비교치가 덱에 없다 — 절대 성능 판단 불가"
-    }
+ "property": "external_benchmarks_symposium_2026",
+ "date": "2026-07-28",
+ "description": "2026년도 전지기술 심포지엄(한국전기화학회, 8/21) 기술세션 3-3(이상욱, 성균관대) · 3-4(문장혁, 중앙대) 발표 덱에서 추출한 외부 벤치마크. 우리 계산의 재현 표적(target)과 방법론 참조점으로만 쓴다.",
+ "honesty_header": [
+  "⛔ 이 파일의 모든 수치는 **발표 소환값**이다 — peer-review 논문값보다도 한 단계 낮은 신뢰 등급(슬라이드 축약·반올림·문맥 소실).",
+  "⛔ 우리 db 절대값과 **같은 표·같은 플롯에 넣지 말 것**. 우리 값과의 대조는 반드시 '재현 표적 vs 우리 결과' 형식으로, 출처를 병기해서.",
+  "⛔ 발표 덱은 발표 시간에 맞춰 잘라낸 것이라 **부재의 증거가 아니다**. '그들은 X를 안 한다'는 서술은 litdb/papers/ 의 논문 실물 감사에서만 나올 수 있다.",
+  "⛔ MLIP σ 절대값은 훈련 functional의 각인을 받는다(같은 물질에서 8배 갈림, kim2024). 아래 σ·D 값은 **비율·자릿수로만** 인용하고 절대값 대조 금지.",
+  "✅ 이 파일의 용도는 두 가지뿐: (1) 우리가 새 계산을 돌릴 때의 재현 표적, (2) 방법론 항목의 출처."
+ ],
+ "sources": [
+  {
+   "id": "lee2026_skku",
+   "speaker": "Sang Uck Lee (이상욱)",
+   "affiliation": "성균관대학교 화학공학부 (CMS Lab)",
+   "title": "기계학습 포텐셜 기반 소재 물성 해석 및 설계 (MLIP-Based Materials Analysis and Design)",
+   "session": "2026년도 전지기술 심포지엄 기술세션 3-3, 2026-08-21",
+   "proceedings_pages": "279-296",
+   "digest": "litdb/talks/lee2026_skku_mlip_materials_design.md",
+   "canonical_paper_in_our_db": "litdb/papers/kim2024_mtp_argyrodite_disorder_gb.md",
+   "relation_to_us": "정면 경쟁 — 같은 물질(argyrodite) · 같은 도구(MLIP) · 다른 축"
   },
-  "methodology_references": {
-    "_note": "수치가 아니라 방법. 우리 실행 항목 T1-T8 의 출처.",
-    "extrapolation_grade_control": {
-      "source": "lee2026_skku",
-      "slide": "16 (PDF p.10)",
-      "what": "MTP-MD 스냅샷마다 extrapolation grade gamma 를 계산, gamma_select ~ gamma_break 사이를 'Accurate region'으로 정의. 벗어난 구조는 DFT 재계산 후 재훈련(active learning)",
-      "our_gap": "우리 UMA MD는 스냅샷 수준 외삽 판정이 전무하다. 검증을 물질 수준에서만 했다",
-      "our_action": "T1 재정의 — '감마 확보'가 아니라 **'UMA 용 외삽 대리지표 설계'**. 후보: 궤적 스냅샷의 UMA vs DFT 단일점 오차 분포 / 앙상블 분산 / 힘 예측 불확실도",
-      "priority": 1,
-      "actual_values_from_paper": {
-        "gamma_select": 2,
-        "gamma_break": "10 -> 5 -> 2 (단계적으로 조임)",
-        "kim2024_comparison": "5 / 20 — 이 논문이 최대 10배 엄격",
-        "key_idea": "최종 단계에서 gamma_break = gamma_select = 2 로 맞춰 '프로덕션 궤적 전체가 gamma<=2 안' 을 **수렴 판정 지표로 전용**"
-      },
-      "⛔_not_transferable": "**gamma 숫자는 UMA 에 이식 불가.** gamma 는 MTP 의 선형 기저 위 maxvol/D-optimality 로 정의되는데 UMA 는 비선형 등변 GNN 이라 **정의 자체가 없다**. 이식할 것은 논리 구조뿐: ①대리지표 하나 정한다 ②**선별 문턱과 중단 문턱을 분리**한다 ③중단 문턱을 조여 수렴을 판정한다."
-    },
-    "reaction_coordinate_training_set": {
-      "source": "lee2026_skku",
-      "slide": "21 (PDF p.13)",
-      "what": "훈련셋을 반응 진행 단계로 층화: pre-mixing -> material prepared -> reactants -> transition state -> products. 하위셋에 Guided MD(D_S-H, D_O-H 좌표 유도) 포함",
-      "our_action": "T4 — 우리는 학습을 안 하므로 **검증셋**으로 전용. 단계별 UMA vs DFT 단일점 비교",
-      "priority": 2
-    },
-    "functional_parallel_training": {
-      "source": "lee2026_skku",
-      "slide": "14 (PDF p.9)",
-      "what": "단일점 DFT를 functional 3종(PBE / optB88 / PBE+D3damp)으로 병렬 계산해 각각 MLIP 학습, 어느 것이 물리를 재현하는지 판정",
-      "outcome_in_their_paper": "optB88-vdW만 site-disorder 의존성 재현. PBE·PBE-D3는 100%-ordered를 3.7 mS/cm로 오판. sigma_80% 가 4.19 / 0.55 / 2.46 으로 **8배 갈림** (kim2024)",
-      "why_it_matters_to_us": "**우리 'MLIP 절대값 인용 금지' 규율의 외부 정면 증거**. 경쟁 그룹 데이터로 우리 방법론을 정당화할 수 있다",
-      "priority": "인용 자산 (실행 아님)"
-    },
-    "region_resolved_msd": {
-      "source": "lee2026_skku",
-      "slide": "18 (PDF p.11)",
-      "what": "계면/벌크 구획별로 MSD를 분리해 D를 따로 산출",
-      "our_action": "T5 — 기존 MSD 파이프라인에 구획 마스크만 추가하면 됨",
-      "priority": 2
-    },
-    "skill_three_level_loading": {
-      "source": "moon2026_cau",
-      "slide": "35 (PDF p.19)",
-      "what": "Level 1 Metadata(YAML, 항상 로드, ~100 토큰) / Level 2 Body(Markdown, 트리거시, <5k) / Level 3 Bundled files(scripts·data, 필요시). 40+ modular skills, 8 범주",
-      "claimed_benefit": "낮은 토큰 사용량 + 신뢰도 높은 출력 (⚠ 측정치는 덱에 없음 — 출처 arXiv:2601.04748 확보 필요)",
-      "consistency_flag": "덱은 40+ skills 라 하는데 에이전트별 표기 합은 [3]geometry+[5]simulation+[6]visualization&export+[8]validation = 22 + Analyzer(표기 없음). 관계 미설명 -> digest Q8",
-      "our_gap": "우리는 Level 2만 있다 — CLAUDE.md(항상 로드지만 100 토큰 아님) + tools/*.py(Level 3). 중간 메타데이터 층 부재",
-      "our_action": "T7",
-      "priority": 1
-    },
-    "knowledge_graph_link_prediction": {
-      "source": "moon2026_cau",
-      "slide": "16 (PDF p.10)",
-      "what": "황화물 ASSB 문헌에서 소재-공정-계면-성능-열화 관계를 neo4j KG로 추출. Graph RAG는 근거검색, GNN은 미연결 잠재관계 예측",
-      "db_scale": "노드 9,596 (16종: Cell/Claim/Component/CurveData/DerivedFeature/Factor/FigurePanel/Material/Mechanism/Metric/MetricResult/Paper/ProcessCondition/Sample/TestCondition/TestRun) · 관계 18,145 (17종: AFFECTS/CONCLUDES/DERIVED_FROM/EXPLAINED_BY/FOR_SAMPLE/HAS_COMPONENT/HAS_CURVE/HAS_PROCESSING/MEASURED_AS/PRODUCES/REALIZED_BY/REPORTS/SHOWN_IN/SUPPORTS/TESTED_BY/UNDER_CONDITION/USED_IN) — 2026-08-03 재판독으로 Q1 종결. 종전 기록의 HAS_UNIT/USES/TESTED_IN 은 전사 오류",
-      "schema_note": "MetricResult·TestCondition·UNDER_CONDITION·MEASURED_AS·SHOWN_IN->FigurePanel 조합이 있어 **실험 조건 맥락은 스키마 수준에서 보존**된다. 다만 property key 가 active_loading_mg_cm2·air_exposure_s 처럼 제조·측정 조건 중심이라 **계산 방법 맥락(functional·k-mesh·supercell)까지 담는지는 불명** -> 우리 T6 고유 확장은 Method/Functional/kMesh 노드타입",
-      "convergent_finding": "Case 1 (Unseen but Correct): 'Soft-acid cation doping (HSAB: Sn/Sb/As) in sulfide SE' -> 'Low ionic conductivity' RESOLVED (P(resolved) 0.57 / P(not_resolved) 0.18 / P(unknown) 0.25). **우리 cascade air_hsab 축과 같은 명제를 완전히 다른 경로로 도출**. Case 2 는 'Halide A in Li6PS5A electrolyte (Cl/Br/I)' RESOLVED (0.55/0.15/0.31) — 2026-08-03 재판독 교정: 종전 Li6PS5Cl 고정 표기는 오류. ⚠ 확률이 과반을 겨우 넘으므로 '높은 확신'이라 쓰지 말고 확률 병기",
-      "our_action": "T6 — digest를 대체하지 말고 위에 얹기. 방법 맥락과 인용금지 규칙 보존이 조건",
-      "priority": 4
-    },
-    "literature_reporting_bias_metaanalysis": {
-      "source": "moon2026_cau",
-      "slide": "17 (PDF p.10)",
-      "what": "Li-air 5,689편 -> 4,183편 -> 피인용 상위 1,000편 PDF에서 에너지밀도와 **질량 기준**을 GPT로 추출",
-      "finding": "전셀 질량 기준 에너지밀도는 대체로 500 Wh/kg 미만. 그 이상 보고는 활물질·탄소·전극 등 **가벼운 질량 기준** 때문이며, 500 초과 3편은 주로 전해질 무게를 줄여 달성",
-      "why_it_matters_to_us": "문헌 보고 관행이 수치를 부풀린다는 메타분석이 **학회 발표 본론에 들어간 전례**. 우리 정직성 장치(vacuous gate·컷 지배 경고·상속 상수 폭로)도 부록이 아니라 본론으로 낼 근거",
-      "priority": "서사 자산"
-    }
-  },
-  "industry_context": {
-    "source": "moon2026_cau",
-    "slide": "8 (PDF p.6)",
-    "_caveat": "SNE리서치 단월(1월) 기준. 연간으로 오독 금지. 발표 덱 재인용이므로 원 출처 확인 후 사용",
-    "sk_on_ai_platform": {
-      "introduced": "2025-07",
-      "development_period": "기존 대비 1/3 단축",
-      "cost_estimation_speed": "2시간 -> 10초 (700배)",
-      "claimed_saving": "완성차 프로젝트당 수백억 예상"
-    },
-    "k_battery_market_jan": {
-      "LG에너지솔루션": {
-        "GWh": 4.7,
-        "yoy_pct": -14.9,
-        "share_pct": 6.6
-      },
-      "SK온": {
-        "GWh": 2.3,
-        "yoy_pct": -21.3,
-        "share_pct": 3.2
-      },
-      "삼성SDI": {
-        "GWh": 1.6,
-        "yoy_pct": -24.4,
-        "share_pct": 2.2
-      },
-      "3사_합계": {
-        "GWh": 8.6,
-        "yoy_pct": -17.3,
-        "share_pct": 12
-      }
-    },
-    "use": "원고/발표 도입부 서사 — 시장 역성장 국면에서 AI 계산이 개발 속도·원가로 활로를 낸다"
-  },
-  "open_questions": [
-    {
-      "id": "Q1",
-      "q": "[CLOSED 2026-08-03] 이상욱 랩 코팅 스크리닝 17,230 -> 최종 후보의 실체 = Li3Sc2(PO4)3 (Nano Converg. 2026, 13, 27 정본 확보 + 덱 슬 13에도 후보명 명시)",
-      "close_by": "Nano Convergence 2026, 13, 27 PDF",
-      "blocks": "S6 감사"
-    },
-    {
-      "id": "Q2",
-      "q": "Li|LPSCl 계면 MD가 어느 무질서 배열을 썼나",
-      "close_by": "Chem. Eng. J. / 구술 txt",
-      "blocks": "T3 프로토콜"
-    },
-    {
-      "id": "Q3",
-      "q": "gamma_select / gamma_break 수치 기준",
-      "close_by": "논문 SI / 구술 txt",
-      "blocks": "T1 설계"
-    },
-    {
-      "id": "Q4",
-      "q": "가수분해 H2S 발생량 정량 (Taklu 실험값과 대조 가능한가)",
-      "close_by": "Adv. Funct. Mater. revision",
-      "blocks": "T2 검증"
-    },
-    {
-      "id": "Q5",
-      "q": "Adv. Energy Mater. revision 이 config-variance 오차막대를 추가했는가",
-      "close_by": "논문",
-      "blocks": "우리 우위 주장 3-2의 유효 범위"
-    },
-    {
-      "id": "Q6",
-      "q": "그들 P2D 입력 스키마 (우리 sigma/Ea를 넣으려면 어떤 형식)",
-      "close_by": "구술 txt / 접촉",
-      "blocks": "T8(=M5)"
-    }
-  ],
-  "status": "OPEN — 발표 구술 txt 및 이상욱 랩 논문 추가 입수 예정 (사용자, 2026-07-28). 닫지 말 것.",
-  "lee_lab_bibliography": {
-    "_note": "2026-07-28 웹 검색으로 서지 확정. 덱에는 저널·권·페이지만 있고 제목이 없었다 — 아래 제목은 검색으로 확인한 것이며 PDF 실물 확보 전까지 '서지 확인됨, 본문 미확인' 상태다.",
-    "confirmed": [
-      {
-        "rank": 1,
-        "cite": "Nano Convergence 2026, 13, 27",
-        "title": "High-throughput discovery of Li3Sc2(PO4)3 as a protective coating for stabilizing mid-Ni NCM interfaces in all-solid-state batteries",
-        "authors": "J. H. Kim, S. Lee, S. U. Lee",
-        "doi": "10.1186/s40580-026-00555-z",
-        "access": "open access (Springer)",
-        "why": "우리 cascade/M6 의 직접 대조군. 덱 슬 13 의 '17,230 Li, O crystal structure @ MP' 스크리닝. **최종 후보가 Li3Sc2(PO4)3 = Sc 계** — 우리 cascade_v23_ranked 1위가 Sc2O3 인 것과 수렴(단 조성은 인산염 vs 산화물로 다름)",
-        "status": "⏳ PDF 확보 대기"
-      },
-      {
-        "rank": 3,
-        "cite": "SSRN preprint (Chem. Eng. J. 투고본으로 추정)",
-        "title": "Deciphering Li2S-like SEI Formation Mechanism at Li/Argyrodite Anodic Interfaces via Large-Scale Machine-Learned Reactive Dynamics",
-        "authors": "Ji Seon Kim, Ji Hoon Kim, Sang Uck Lee",
-        "doi": "SSRN abstract_id=6772406",
-        "access": "preprint (즉시 입수 가능)",
-        "why": "T3(Li|LPSCl 반응 MD) 프로토콜 원본. 덱 슬 18-19 의 정본. **초록에 기구가 명시**: Li 삽입이 PS4 사면체를 불안정화 → 무질서 S-rich 비정질층이 전해질로 침투 → 결정 도메인 핵생성·성장, Li2S 특유의 short-to-medium range order",
-        "status": "⏳ 프리프린트 — 최우선 입수(공개돼 있음)"
-      },
-      {
-        "rank": 4,
-        "cite": "JACS 2025, 147, 51, 47381-47391",
-        "title": "Machine Learning-Assisted Crystal Structure Prediction of Solid-State Electrolytes Reveals Superior Ionic Conductivity in Metastable Edge-Sharing Phases",
-        "authors": "(Lee group)",
-        "doi": "10.1021/jacs.5c15665",
-        "access": "ACS",
-        "why": "덱 슬 28-29 정본. 준안정 edge-sharing 이 안정 corner-sharing 보다 Li 이동도 우수. SSE 후보 4종에 적용(Li2SiS3 포함)",
-        "status": "⏳"
-      },
-      {
-        "rank": 6,
-        "cite": "Rare Metals 2025, 44, 2366",
-        "title": "New crystal structure of Li3YCl6: structural relationship and ionic conductivity for solid-state electrolytes",
-        "authors": "Ji Hoon Kim, Byeongsun Jun, Yong Jun Jang, Chi Ho Lee, Sang Uck Lee",
-        "doi": "10.1007/s12598-024-03069-x",
-        "access": "Wiley",
-        "why": "CSP 보조. **할라이드계(Li3YCl6)** 라 우리 황화물 축과는 다름 — 우선순위 낮음",
-        "status": "⏳ 낮은 우선순위"
-      },
-      {
-        "rank": "NEW",
-        "cite": "J. Mater. Chem. A 2024, 12, 12, 7272",
-        "title": "Design of multicomponent argyrodite based on a mixed oxidation state as promising solid-state electrolyte using moment tensor potentials",
-        "authors": "(Lee group)",
-        "doi": "10.1039/d4ta00361f",
-        "access": "RSC",
-        "why": "**검색 중 새로 발견 — 덱에 없던 논문**. '다중성분 argyrodite + 혼합 산화수' = **우리 co-doping 캠페인과 정면으로 같은 문제설정**. kim2024(무질서) 의 자매편으로 보이며, 우리 codoping_ml 1081쌍의 직접 선행연구일 가능성. **우선순위 2위로 승격**",
-        "status": "⏳ 신규 — 사용자에게 요청"
-      }
-    ],
-    "not_found_still_unpublished": [
-      {
-        "cite": "Adv. Funct. Mater. (revision)",
-        "topic": "argyrodite 가수분해 SevenNet + Sn 억제 (덱 슬 21-24)",
-        "note": "미출판이라 검색 불가. T2(ICOHP 기술자) 방법 원본 — 구술 txt 나 출판 후 확보"
-      },
-      {
-        "cite": "Adv. Energy Mater. (revision)",
-        "topic": "Dynamic properties 후속 (덱 슬 13)",
-        "note": "미출판. **Q5(config-variance 오차막대 추가 여부) 가 여기 걸려 있다** — 우리 신규성 주장의 유효범위"
-      },
-      {
-        "cite": "arXiv:2601.04748",
-        "topic": "BEARS 스킬 3계층 (문장혁 랩, 덱 슬 35)",
-        "note": "덱 표기 판독 신뢰도 낮음 — 번호 확인 필요"
-      }
-    ]
+  {
+   "id": "moon2026_cau",
+   "speaker": "Janghyuk Moon (문장혁)",
+   "affiliation": "중앙대학교 에너지시스템공학부",
+   "title": "AI 기반 배터리 연구 자동화: LLM 기반 연구 분석에서 AI-Agent 전극 모델링까지",
+   "session": "2026년도 전지기술 심포지엄 기술세션 3-4, 2026-08-21",
+   "proceedings_pages": "297-318",
+   "digest": "litdb/talks/moon2026_cau_llm_agent_battery_automation.md",
+   "relation_to_us": "직교 — 상하류 관계. 우리가 원자 스케일 파라미터를 만들고 그들이 셀 스케일에서 소비"
   }
+ ],
+ "reproduction_targets": {
+  "_note": "우리가 해당 계산을 돌렸을 때 '맞았다'고 볼 표적. 정량 일치를 요구하지 않는다 — 엔진(UMA 사전학습 vs MTP 자체학습)과 프로토콜이 다르다.",
+  "li_argyrodite_interface_md": {
+   "source": "lee2026_skku",
+   "slide": "18-19 (PDF p.11-12)",
+   "status_of_underlying_work": "SSRN 프리프린트 (peer-review 미통과). 정본 digest: litdb/papers/kim2026_li_argyrodite_sei_reactive_md.md — 2026-07-28 실물 정독 완료",
+   "engine": "MTP (자체 학습, 5400 dataset, passive+active learning)",
+   "system": "Li6PS5Cl(100) | Li(100), 생산 MD > 6000 atoms",
+   "targets": [
+    {
+     "quantity": "interphase 두께",
+     "value": 11,
+     "unit": "nm",
+     "condition": "소형 모델, 핵생성 개시 ~11 ns",
+     "confidence": "논문 실물 확인. ⚠ 본문 내부 모순(추가분해 억제 vs 계속분해)이 있어 **하한**으로 읽을 것"
+    },
+    {
+     "quantity": "interphase 결정상",
+     "value": "Li2S",
+     "unit": null,
+     "condition": "RDF 피크 위치 일치. ⚠ Li3P·LiCl 은 결정화하지 않고 비정질/고립 클러스터로 남는다",
+     "confidence": "정성"
+    },
+    {
+     "quantity": "D_Li (interphase 결정영역)",
+     "value": 4e-08,
+     "unit": "cm^2/s",
+     "condition": "**350 K**, MSD 창 11-20 ns",
+     "confidence": "논문값. 덱 대비 10배 정정됨"
+    },
+    {
+     "quantity": "D_Li (잔여 벌크)",
+     "value": 1.1e-07,
+     "unit": "cm^2/s",
+     "condition": "**350 K**, MSD 창 0-20 ns 전구간",
+     "confidence": "논문값. 덱 대비 10배 정정됨"
+    },
+    {
+     "quantity": "D_Li (pristine 참조)",
+     "value": 1.6e-07,
+     "unit": "cm^2/s",
+     "condition": "350 K, kim2024 소환값",
+     "confidence": "3번째 기준값 — 덱에 없었음"
+    },
+    {
+     "quantity": "D 비 (interphase/bulk)",
+     "value": 0.36,
+     "unit": null,
+     "condition": "파생",
+     "confidence": "**절대값보다 이 비율만 인용 안전**"
+    },
+    {
+     "quantity": "핵생성 개시 시각",
+     "value": [
+      11,
+      30
+     ],
+     "unit": "ns",
+     "condition": "소형 모델 11 ns / 대형 모델 ~30 ns — **계 크기 의존**",
+     "confidence": "⚠ 시드 1개라 확률과정의 산포를 알 수 없다"
+    }
+   ],
+   "experimental_anchor_cited_by_them": "ACS Energy Lett. 2022, 7, 3064-3071 (Luo, cryo-TEM interphase layer). 덱 슬 19가 이 그림 두 장을 그대로 붙여넣었고 라벨은 **25 degC / 60 degC**(2026-08-03 원해상도 재판독; 이전 기록의 80 degC는 우리 오독), 왼쪽 패널에 **~12 nm** 와 Li2S(111) ~0.33 nm 표기 → 계산 11 nm vs 실험 ~12 nm 대조가 성립. 온도 조건의 출처는 Luo 원논문 그림이다",
+   "our_status": "공백 (T3) — 프로토콜은 확정됐다(셀·온도·길이·1순위 관측량·착수 게이트, 2026-08-04 구획 마스크까지). 계산은 미착수. ⚠ 우리 표준 200 ps 로는 결정 핵생성(11 ns)을 못 본다.",
+   "how_to_use": "T3 성공 판정 = interphase 형성 · Li2S 결정화 · D비 < 1. ⚠ **1순위 관측량은 D 가 아니라 잔존 PS4 층수 vs 시간**(z-bin + P-S 거리컷). 우리 표준 200 ps 로는 핵생성(11 ns)을 못 본다 — 최소 20 ns 필요. 비용 초과 시 [두께 절반 + 20 ns] > [두께 유지 + 2 ns].",
+   "_deck_corrections_2026_07_28": {
+    "note": "⛔ **2026-08-03 정정의 정정** — 덱 실물(inbox 재투입본)을 embedded raster 원해상도로 재판독한 결과, 아래 3건은 **덱 오류가 아니라 2026-07-28 저해상도 판독의 전사 오류**였다. 덱 실물: D 둘 다 x10^-7, 온도 라벨 25/60 degC. kim2026_hts 의 17,233 건도 같은 이유로 철회(덱 원문 17,230 Li, O). 규율은 유지(수치는 논문에서), 절차에 추가: 덱이 틀렸다고 기록하기 전에 덱 실물을 원해상도로 재판독한다. 근거: litdb/talks/lee2026_skku_mlip_materials_design.md §15.",
+    "corrected": [
+     {
+      "item": "D_Li (interphase 결정영역)",
+      "deck": "0.4e-7 cm^2/s (덱 실물, 2026-08-03 재판독)",
+      "actual": "0.4e-7 cm^2/s",
+      "error": "없음 — 이전의 '덱 자릿수 10배 오기' 판정 철회(우리 전사 오류였음)"
+     },
+     {
+      "item": "D_Li (잔여 벌크)",
+      "deck": "1.1e-7 cm^2/s (덱 실물, 2026-08-03 재판독)",
+      "actual": "1.1e-7 cm^2/s",
+      "error": "없음 — 동일 철회"
+     },
+     {
+      "item": "실험 대조 조건",
+      "deck": "인용된 Luo 2022 cryo-TEM 그림 2장, 라벨 25 degC / 60 degC (덱 실물, 2026-08-03 재판독)",
+      "actual": "본문에는 '~12 nm Li2S interphase, cryo-TEM' 한 문장뿐. 온도 조건은 이 논문 본문에 없다",
+      "error": "출처 분리로 해소 — 온도 라벨은 Luo 원논문 그림의 것. 인용하려면 Luo 원논문 확보 필요. 서지(ACS Energy Lett. 2022, 7, 3064)는 ref [49]로 정확"
+     }
+    ],
+    "survived": [
+     "interphase 두께 ~11 nm",
+     "Li2S 결정상 동정",
+     "D 비 0.36"
+    ],
+    "lesson": "덱에서 안전한 것은 **비율과 정성 서술**이고, 절대값·조건은 논문 실물로만."
+   },
+   "msd_window_trap": "⚠ 영역분해 D 의 시간창이 구획마다 다르다 — 벌크 0-20 ns 전구간, 결정영역 11-20 ns. **0-11 ns 창을 쓰면 'SEI 가 벌크보다 3배 빠르다'는 반대 결론이 나온다.** T5(영역분해 MSD) 설계 시 창을 반드시 명시하고 상전이 전/후를 분리할 것.",
+   "_updates_2026_08_04": {
+    "source": "kb/open_items.md T3 (논문 실물 재검증)",
+    "region_mask": "⚠ 구획 마스크를 '계면 ±d' 로 잡으면 안 된다 — 결정 Li₂S 핵은 **계면에서 LPSC 쪽 ~3 nm 안쪽**(z≈75 Å, 초기 계면 z≈105 Å)에서 시작한다 → **LPSC 쪽 0–5 nm 를 독립 bin** 으로.",
+    "initial_contact": "⚠ 원논문은 초기 접촉을 *\"direct contact\"* 한 마디로만 적고 이완 절차가 0줄이다 → '즉시 분해'가 **초기 배치 의존**일 수 있다. 우리 프로토콜은 접촉 간격·평형화를 명시할 것.",
+    "layer_spacing": "잔존 PS₄ 층수 → nm 환산은 **층 간격 ≈0.5 nm = a/2** (2026-08-04 검산)."
+   }
+  },
+  "argyrodite_hydrolysis": {
+   "source": "lee2026_skku",
+   "slide": "21-24 (PDF p.13-14)",
+   "status_of_underlying_work": "Adv. Funct. Mater. revision (2026-07 기준)",
+   "engine": "SevenNet (fine-tuned uMLIP)",
+   "mlip_accuracy_reported": {
+    "energy_meV_per_atom": 8.8,
+    "force_eV_per_A": 0.57,
+    "stress_kbar": 0.35
+   },
+   "system": "Li6PS5Cl(100) 4 nm + 용액 2.5 nm, 3x3 nm, 32 H3O+ / 32 OH- / 200 H2O, 500 ps",
+   "targets": [
+    {
+     "quantity": "ICOHP(P-S)",
+     "value": -6.43,
+     "unit": "eV",
+     "condition": "결합거리 2.04 A",
+     "confidence": "덱 명시값"
+    },
+    {
+     "quantity": "ICOHP(P-S(H))",
+     "value": -4.69,
+     "unit": "eV",
+     "condition": "양성자화, 결합거리 2.18 A",
+     "confidence": "덱 명시값"
+    },
+    {
+     "quantity": "양성자화에 의한 P-S 약화율",
+     "value": 0.27,
+     "unit": "fraction",
+     "condition": "(6.43-4.69)/6.43",
+     "confidence": "파생 — **T2의 핵심 표적**"
+    },
+    {
+     "quantity": "Sn 치환 상대 E_a (SnS4-H -> PS4-H)",
+     "value": 0.28,
+     "unit": "eV",
+     "condition": "Li6.25P0.75Sn0.25S5Cl",
+     "confidence": "덱 명시값"
+    },
+    {
+     "quantity": "SnS4-H 정규화 신호",
+     "value": [
+      0.6,
+      0.8
+     ],
+     "unit": null,
+     "condition": "0-500 ps 유지, PS4-H 는 ~0",
+     "confidence": "덱 히트맵 판독"
+    }
+   ],
+   "mechanism": "H3O+/OH- 존재 시 PS4 분해 -> H2S 발생 -> 표면 붕괴. polyhedron-sulfur -> single-sulfur. Sn 치환은 H를 SnS4 쪽으로 유인해 PS4를 보호",
+   "our_status": "air_hsab 정성 tier만 보유 (T2). COHP 파이프라인 자체는 우리 계에서 확보(LPSOCl 곡선 원자료 회수 2026-07-29) — **양성자화 상태 ICOHP 는 미착수**. T11(ΔE_H₂S) 은 47종 계산됨 / host LPSCl 기준선 미보유.",
+   "our_experimental_anchor": "litdb/papers/taklu2021_cucl_dualdoping_air_stability_argyrodite.md — CuCl 이원도핑, H2S 1.07 -> 0.49 cm3/g (Cu3PS4 형성, HSAB soft-acid)",
+   "triangulation_note": "실험(Taklu, Cu) + 기구(Lee, Sn) + 문헌KG 예측(Moon Case 1, Sn/Sb/As) + 우리 스크리닝(air_hsab)이 **모두 HSAB soft-acid 명제로 수렴**한다. 독립 경로 4개의 일치 — 단 '우리가 그들을 검증했다'는 인과 주장 금지",
+   "_updates_2026_08_04": {
+    "source": "kb/open_items.md T11 · lee2024 ESI 전수 전사(db/properties/lee2024_si_84_structures.csv, 85행)",
+    "no_transplant": "⛔ **'그들 Table S4 값을 이식한다'는 선택지가 사라졌다** — ESI Table S3/S4 가 **할로겐을 분해하지 못한다**(Cl↔Br 8쌍 중 7쌍 계면 3값 완전동일, I/Cl/Br 3종 통째 동일 골격 4개인데 같은 묶음 σ 는 최대 3.18× 차). 우리 축은 Cl-rich 이므로 **직접 계산 필수로 승격**.",
+    "still_valid": "✅ T9 앵커 재현(−541.5 vs −539.2 · −108.8 vs −107.5)은 유효 — 그 앵커는 모체 Li₆PS₅I 단일 조성이라 할로겐 분해 문제와 무관하다."
+   }
+  },
+  "csp_metastable_conductivity": {
+   "source": "lee2026_skku",
+   "slide": "28-29 (PDF p.16-17)",
+   "status_of_underlying_work": "JACS 2025, 147, 51, 47381-47391 (출판). 정본 digest: litdb/papers/kim2025_csp_metastable_edge_sharing_sse.md — 본문 11pp + SI 24pp 전수 정독 2026-07-28, **본문 11pp 실물 독립 검증 2026-08-04 (digest §19)**, **SI 24pp 실물 독립 검증 2026-08-04 (digest §20)**. σ 소환 출처인 Huang 2022 는 litdb/papers/huang2022_li2sis3_anomalous_conductivity_bvse.md — **본문 6pp §9 + ESI 12pp §11 실물 독립 검증 2026-08-04**",
+   "engine": "USPEX GA + MTP + active learning",
+   "targets": [
+    {
+     "quantity": "D_600K 상승 (corner → edge)",
+     "value": ">=2",
+     "unit": "orders of magnitude",
+     "condition": "**확산계수 기준**, 600 K 단일 온도, 시드 1, 오차막대 없음",
+     "confidence": "논문 본문 서술. ⚠ 살아남는 것은 'corner ≈ 0 / edge = 유한' 이분법뿐 — edge 구조 간 순위(rank 3 D=1.75 vs rank 4 D=1.15)는 통계적으로 무의미할 공산"
+    },
+    {
+     "quantity": "packing ratio α (corner vs edge)",
+     "value": "0.0834->=0.100 vs 0.0753-0.0796",
+     "unit": null,
+     "condition": "Li2SiS3. 4조성 모두 edge 가 낮다. **2026-08-04 Fig 5a 700 dpi 재판독값** (종전 0.084-0.100 vs 0.0765-0.0805 대체)",
+     "confidence": "**세 기술자 중 가장 깨끗한 분리** (corner 최저 0.0834 > edge 최고 0.0796). ⚠ corner rank 2 막대가 축 상한 0.100 에서 **클립** → 상단은 판독 불가. ⚠ 초록·본문의 'higher packing efficiency' 표현은 방향이 반대라 이식 금지 — **'낮은 α'로만 서술**"
+    },
+    {
+     "quantity": "dead volume (corner → edge)",
+     "value": "-0.69",
+     "unit": "A^3",
+     "condition": "Li2SiS3 5.67→4.98 · Li4SiGeS6 6.05→5.36 (양쪽 다 정확히 -0.69, -11~12%)",
+     "confidence": "⚠ 두 조성에서 Δ가 정확히 같은 것이 우연인지 산출 인공물인지 판단 불가"
+    },
+    {
+     "quantity": "E_hull 전 40구조",
+     "value": [
+      0,
+      42
+     ],
+     "unit": "meV/atom",
+     "condition": "50 meV 컷 전원 통과",
+     "confidence": "Table S2 실측"
+    },
+    {
+     "quantity": "n-Li2SiS3 sigma_RT (실험)",
+     "value": 2.4,
+     "unit": "mS/cm",
+     "condition": "298 K. **펠릿 ⌀10 mm, 상대밀도 85 %, 두께는 논문 미보고 → 우리가 Fig 4b σ × Fig S4 R 로 역산한 L ≈ 1.251 mm (5점 편차 4 %)**. σ 는 **bulk + grain-boundary 합산** (ESI 명시) → **bulk σ 의 하한**이다. EIS 온도범위는 논문 안에 세 값 (ESI Experimental 228-383 K / Fig S4 캡션 228-375 K / **아레니우스 실제 280-375 K**)",
+     "confidence": "**Huang 2022 실험값 — 복원됨.** ESI Fig S4 의 R(298 K) = 65.3 Ω 로 **독립 재계산해도 2.44e-3 S/cm** (digest §11 검증4). ⚠ 조성식이 논문 안에서 둘 — 본문·Fig S1a **Li1.82SiP0.036S3** ↔ Table S1 **Li1.97Si0.97P0.03S3**(= Rietveld 점유율과 일치, 우리 대칭전개 확인). 인용은 'Li2SiS3 계, Rietveld 실측 Li/M = 1.97' 로"
+    },
+    {
+     "quantity": "n-Li2SiS3 Ea (실험) — **창별로 다르다**",
+     "value": {
+      "280-375 K": 0.278,
+      "228-280 K": 0.347
+     },
+     "unit": "eV",
+     "condition": "σT = A exp(-Ea/kT) 형. 본문 인쇄값 0.28 eV 는 **280-375 K 5점**만의 것이고, ESI Fig S4 에 있는 228/240/260 K 는 Fig 4b 의 x축(1000/T = 2.6-3.6) 밖이다. 9점 전부로 재구성하면 두 가지가 **298.5 K 에서 교차**한다",
+     "confidence": "**우리가 ESI Fig S4 9패널을 600 dpi 픽셀 판독해 재구성** (digest §11 E1, 코드 tools/litdb/huang2022_si_figs.py). 저온 가지 잔차 0.012 dec(2.9 %)로 잡음이 아니다. ⚠ 고온선을 228 K 로 외삽하면 실측 σ 를 **2.30배 과대평가**한다 → **'n-Li2SiS3 Ea = 0.28 eV' 를 창 없이 인용 금지**"
+    },
+    {
+     "quantity": "n-Li2SiS3 R_total (ESI Fig S4 원자료 9점)",
+     "value": {
+      "228": 3475.7,
+      "240": 1523.7,
+      "260": 437.08,
+      "280": 162.77,
+      "298": 65.298,
+      "300": 62.665,
+      "325": 27.731,
+      "350": 14.933,
+      "375": 11.791
+     },
+     "unit": "ohm (T in K)",
+     "condition": "bulk + gb 합. 기하인자 L/A = 0.1592 1/cm (우리 역산)",
+     "confidence": "우리 픽셀 판독. 교정 검증 — R(228) = 3476 Ω 이 Fig S5 등가회로 합(R_bulk 2250 + R_gb 1280 = 3530 Ω)과 **1.5 % 일치**. ⚠ **228 K 에서 R_gb 가 총저항의 36.3 %** → '입계 저항이 작다'는 **298 K 한정 서술**로만 (digest §11 E2)"
+    }
+   ],
+   "descriptors_for_metastable_superionic": {
+    "⚠_deck_list_was_wrong": "덱 슬 29 에 적힌 3 기술자(dead volume / distance of cation / Li-S4 distortion)는 **논문 결론부와 다르다**. 덱의 ①②는 기술자가 아니라 **기구**이고, `d_c > d_e` 는 정의식도 수치표도 없는 기하 논증(Fig 4e)이다.",
+    "actual_three": [
+     {
+      "name": "packing ratio α",
+      "eq": "SI eq 9",
+      "our_verdict": "❌ **재구현 금지** — V_dead 에 알고리즘 정의가 없다(컷오프·이온반경 규약·voxel 여부 전부 미기재). 새로 발명하면 그들 값과 비교 불가",
+      "our_substitute": "✅ **BVSE 채널 % 를 이미 갖고 있고 더 낫다** (tools/comp1_v3/, above-min ≤ iso). 같은 목적을 정전 퍼텐셜에서 잰다"
+     },
+     {
+      "name": "Li-S4 부격자 부피",
+      "eq": "본문",
+      "our_verdict": "✅ **가능(변형)** — 우리 host 는 Li 1차 배위가 S/Cl 혼합이라 **Li-(S,Cl)4** 로 정의. 기존 UMA-MD 600 K 궤적 후처리(pymatgen CrystalNN + ConvexHull). 새 시뮬 0"
+     },
+     {
+      "name": "CSM (continuous symmetry measure)",
+      "eq": "SI eq 10-11",
+      "our_verdict": "✅ **가능** — pymatgen chemenv 에 기계 있음. 같은 궤적에 얹으면 끝",
+      "caveat": "⚠ Fig 5b(Li4SiGeS6)에서는 분리가 무너진다(edge rank5 가 오히려 CSM 낮음). 평균±sd·상관계수·회귀 **전부 없음 = 육안 주장**. 'predictive indicator' 는 과하다"
+     }
+    ],
+    "not_applicable_to_us": "**corner/edge 자동분류 자체가 우리 host 에 정의되지 않는다** — argyrodite 의 PS4 는 고립 사면체라 P-S-P 다리가 없다. 그 축이 존재하지 않는다.",
+    "new_descriptor_candidate": "⚠ **번호 정정 (2026-08-06)** — 이 항목을 'T13' 으로 적어 뒀으나 open_items 의 T13 은 'MSD 생산길이 200 ps 재검토'다. 이 기술자는 **아직 T 번호가 없는 후보**이며, 가장 가까운 등록 항목은 T14(Li–(S,Cl)₄ CSM)다. — 원문: 🆕 대신 **도펀트-PS4 공유 S 개수**(0=고립 / 1=corner / 2=edge)는 우리에게만 가능하고 문헌 선례가 없다 — 도펀트 양이온 다면체가 PS4 와 S 를 몇 개 공유하는가."
+   },
+   "our_status": "무관 — 문제설정 다름(host 고정 개질). 단 'metastable이 더 좋을 수 있다'는 명제는 kb/concepts/ordered_vs_disordered.md 와 공명",
+   "⛔_RETRACTED_2026_07_28": {
+    "what": "이 블록에 등록돼 있던 σ 값 3개를 **철회한다** — 논문 실물에 존재하지 않는다.",
+    "retracted_values": [
+     {
+      "was": "Li2SiS3 corner-sharing sigma = 1e-4 mS/cm",
+      "status": "**논문에 없음**"
+     },
+     {
+      "was": "Li2SiS3 edge-sharing sigma = 2.4 mS/cm",
+      "status": "**논문에 없음**"
+     },
+     {
+      "was": "sigma 상승 = 4 orders of magnitude",
+      "status": "**논문에 없음** — 2도 3도 아니다"
+     }
+    ],
+    "what_the_paper_actually_says": [
+     "계산: 'at least **2 orders of magnitude** higher' — **σ 가 아니라 D_600K 기준**",
+     "실험: 'over **3 orders of magnitude** in ionic conductivity' — 이것도 자기 측정이 아니라 **ref 36 = Huang et al., JACS 2022, 144, 4989 (Kanno 그룹) 소환값**"
+    ],
+    "why_no_sigma": "논문은 σ 를 어떤 조성·어떤 상에도 보고하지 않는다. SI eq 7(Arrhenius)·eq 8(NE)은 방법 서술만 있고 **결과에 한 번도 쓰이지 않은 보일러플레이트**다 — 단일 온도(600 K)만 돌려서 Arrhenius 자체가 불가능하다.",
+    "provenance_guess": "0.0001 / 2.4 mS/cm 는 Huang 2022 원문 값일 가능성이 높으나 **우리는 그 PDF 가 없다 → 판독 불가. 확보 전까지 인용 금지.**",
+    "worse_than_kim2026": "kim2026_hts 는 최소한 신뢰구간(0.2 [0.01, 2.4] mS/cm)이라도 있었다. 여기는 **D 조차 단일 궤적·60 ps·단일 온도·시드 1·오차막대 전무**다.",
+    "resolution_2026_07_28_huang_pdf": {
+     "status": "**부분 복원.** Huang et al., JACS 2022, 144, 4989 (DOI 10.1021/jacs.1c13178) 실물 확보 — JACS 2025 CSP 논문의 ref 36 이자 덱 수치의 진짜 출처.",
+     "restored": [
+      {
+       "value": "2.4 mS/cm @ 298 K",
+       "what": "n-Li2SiS3 (정방정 P4(2)2(1)2, 고립 edge-shared (Si/P)2S6 이량체). Ea 0.28 eV",
+       "provenance": "**Huang 2022 실험값** — JACS 2025 계산값이 아니다. 인용 시 반드시 병기.",
+       "caveat": "실조성은 순수 Li2SiS3 가 아니라 **Li1.82SiP0.036S3** (Si/P = 0.97:0.03)"
+      }
+     ],
+     "still_retracted": [
+      {
+       "was": "corner-sharing 1e-4 mS/cm",
+       "why": "**철회 유지, 근거 승격(2026-08-04 본문 실물 검증).** 종전 사유 '~~Huang 은 e-Li2SiS3 의 sigma 를 수치로 주지 않는다 → 역산 2.4e-3 mS/cm~~' 는 **우리 사실오인**이었다 — **Fig 4b 가 n·m·e 아레니우스 3계열을 직접 싣는다**. 픽셀 판독(교정 검증: red 기울기가 인쇄값 Ea 0.28 eV 를 0.2814 로 재현) → **e sigma(298 K) = 1.8e-6 S/cm = 1.8e-3 mS/cm, Ea 0.476 eV** → 덱 값은 **약 18배 낮다**. 부수 수확: **m-Li2SiS3 = 5.3e-5 S/cm, Ea 0.451 eV** (인쇄 '~0.5' 는 10 % 올림)"
+      },
+      {
+       "was": "4 orders of magnitude",
+       "why": "초록·본문·결론 모두 **3 orders**, 그래픽초록 **1000 times**. **Fig 4b 실측 n/e = 1190배 = 3.08 자릿수 → 논문의 '3 orders' 는 자기 그림으로 검증 통과.** ⚠ 단 그래픽초록 막대비 자체는 **24배**로 그려져 있고 sigma 축에 눈금이 없다 → **그래픽초록에서 수치 이식 금지**"
+      }
+     ],
+     "extra_caveat": "Huang 의 '3자릿수' 비교 대상도 **자기 측정이 아니라 ref 16 소환값**이다 — sigma 뿐 아니라 **Ea 도** 그렇다(Fig 4b 캡션 위첨자 16). ⚠ ref 16 서지 정정: **Ahn & Huggins, Solid State Ionics 1991, 46, 237** (종전 기재 'Ahn & Huggins 1990' 은 우리 오기 — 1990 MRB 25, 381 은 ref 17, 1989 MRB 24, 889 는 ref 15). 논문 자신의 ref 16 저자명도 'Taeahn, B.' 로 깨져 있다.",
+     "verification_2026_08_04": "**Huang 2022 본문 6 pp 실물 독립 검증 완료** (digest §9; 자기정정 11 · 신규 16; ESI 12 pp 는 미재검). 이 항목에 직결되는 것: ① e/m sigma 를 역산이 아니라 **Fig 4b 실측**으로 확보 ② '3 orders' 검증 통과 ③ **BVSE 유효장벽 ↔ 실험 Ea 는 방향·서열만 일치**(0.228/0.367 vs 0.281/0.476 = 19~23 % 과소, 격차 재현율 71 %) — 종전 '방향·크기 모두 일치' 는 우리 과장이라 철회 ④ 🔴 **본문이 자기 Fig 5b4 를 오귀속** — '[100] blue 사슬이 0.367 eV' 라 쓰지만 그림에서 **blue = 0.274 eV**, 0.367 은 **green(bc 2D)** 이고 blue 는 셋 중 최저다 → **e 쪽에서는 차원 상승 서사가 성립하지 않는다** ⑤ Ea 0.28 eV 의 아레니우스 창은 **279~378 K** (Nyquist 창 228~375 K 와 다름) ⑥ **이 논문에 제1원리 계산 0** — DFT 벤치마크로 인용 금지 ⑦ 라이선스 **CC-BY-NC-ND** → 그림 재가공 금지.",
+     "direction_conflict": "⚠ Huang 에서 edge-sharing(n-Li2SiS3)은 **저온상**이고 승온하면 n→m→e 로 corner 사슬이 된다. JACS 2025 CSP 의 '준안정 edge-sharing' 서사와 방향이 다르니 두 논문을 같이 인용할 때 뭉개지 말 것.",
+     "canonical_digest": "litdb/papers/huang2022_li2sis3_anomalous_conductivity_bvse.md"
+    }
+   },
+   "⚠_cross_composition_warning": "그들 세 기술자는 **같은 조성 안의 폴리모프 10개 줄 세우기**로만 검증됐다. **조성이 다른 47종을 가로질러 쓴 적이 없다.** 특히 α 는 MS4 부피 자체가 화학 따라 변해 조성 간 비교가 무의미하다 — 쓴다면 **조성별 상대 지표로만**.",
+   "method_dependence_red_flag": "🔴 **PBE 단독인데 SCAN 이 PBE 를 흔든다.** 검증 14종 중 SCAN 을 돌린 5건에서 **3건 부호 반전**(Li3PS4 −26→+8 · Na3PS4 −8→+23 · LiAlCl4 −12→+1.5 meV/atom). 그런데 **본론 4조성엔 SCAN 을 아예 안 돌렸다.** corner vs edge 의 E_rel 차가 3–42 meV/atom 인데 functional 하나로 그 크기의 역전이 관측됐다 → 우리 언어로 **real difference 가 아니라 method-dependent claim**.",
+   "contradicts": "**Jun 2022 (Nat. Mater. 21, 924, Ceder) 와 정면 충돌**: 그쪽은 corner-sharing framework 가 초이온전도에 유리하다고 본다. 이 논문은 충돌을 인정만 하고 미해소 — 가장 자연스러운 화해(그쪽 산화물 / 이쪽 황화물)조차 명시하지 않는다. → **'edge 가 좋다'를 일반 명제로 인용 금지**, '황화물 4조성에서' 단서 필수.",
+   "supports_our_no_csp_decision": "논문 스스로 **>80 atom 셀에서 저에너지 영역 정확도가 붕괴**한다고 자백한다(LiGa(SeO3)2 MAE_f 114 meV/atom). 우리 modelc 62 at · B2O3 128 at 규모면 **이미 신뢰구간 밖** → symposium 분석의 'CSP 안 하기로' 판정에 외부 근거 확보.",
+   "lab_internal_inconsistency": "같은 랩 안에서 MLIP 전략이 갈린다 — 이 논문은 graph-uMLIP 을 'fine-tune 이 필수'라고 깎고 MTP 를 새로 학습하는데, kim2026_hts 는 **SevenNet 7net-0 을 fine-tune 없이 그대로** 쓴다. **우리 UMA 사전학습 사용을 방어하는 데 이 불일치가 쓸 만하다.**",
+   "_updates_2026_08_04": {
+    "source": "kb/open_items.md T12·T14·T15",
+    "van_hove_T12": "⛔ 판정축은 **self-part 한정**. Jun 2022 Fig 4(c) 는 σ 가 10⁴ 배 다른 세 배열의 **G_d 지도가 육안 구별 불가**였다 → 게이트 판정에는 **G_s 만**, G_d 는 협동성의 정성 서술로만. (⚠ G_s 띠 중심 ~4 Å, 5 Å 은 상한)",
+    "T15_Tsim_rule": "🆕 순위·비율 주장에는 **T_sim(600 K)의 D 를 의무 병기**한다. Kim 2025 LYC 에서 600 K 총 MSD 는 ±12 % 인데 300 K 외삽 σ 는 5.5× 로 벌어지고 **hcp_2 는 순위가 뒤집힌다** — 우리도 600/800/1000 K → 300 K 외삽이라 노출이 같다."
+   }
+  },
+  "coating_screening_scale": {
+   "source": "lee2026_skku",
+   "slide": "13 (PDF p.9)",
+   "status_of_underlying_work": "Nano Convergence 2026, 13, 27 (출판됨)",
+   "engine": "SevenNet",
+   "targets": [
+    {
+     "quantity": "초기 풀",
+     "value": 17230,
+     "unit": "structures",
+     "condition": "Li, O 함유 결정구조 @ Materials Project (덱 원문: '17,230 Li, O crystal structure @ MP')",
+     "confidence": "덱 실물 + 논문 실물 일치 (2026-08-03 원해상도 재판독; 종전 기록 '17,233 Li-P-S-O'는 우리 전사 오류로 철회)"
+    },
+    {
+     "quantity": "스크리닝 축",
+     "value": [
+      "electrochemical stability",
+      "mechanical stability",
+      "electronic stability",
+      "Li-ion conductivity"
+     ],
+     "unit": null,
+     "condition": null,
+     "confidence": "덱 도해"
+    }
+   ],
+   "our_comparable": {
+    "pool": 47,
+    "note": "우리 cascade_v23_ranked.csv. 풀 크기는 그들이 약 10^2 배지만 축 밀도(ESW·EOS·전 C_ij·BVSE·blocking·계면반응성 x 3농도)는 우리가 높다. **'우리가 47종을 스크리닝했다'를 그들 17,230과 등치하지 말 것** — db/properties/cascade_screening_funnel.json 의 pool_provenance 규율 그대로 적용.",
+    "action": "PDF 확보 최우선 (kb/projects/symposium_2026_competitive_analysis.md §7 위시리스트 1순위). S6 후보나열 감사의 직접 대조군"
+   }
+  },
+  "electrode_microstructure_rate": {
+   "source": "moon2026_cau",
+   "slide": "37-38 (PDF p.20-21)",
+   "status_of_underlying_work": "BEARS (arXiv, peer-review 미통과)",
+   "system": "그래파이트, footprint 30x30 um, 로딩 8 mg/cm2, wt% 95:3:2 (2026-08-03 덱 재판독 교정: 종전 30x38 um 은 전사 오류)",
+   "targets": [
+    {
+     "quantity": "생성 전극 수",
+     "value": 80,
+     "unit": "structures",
+     "condition": "single/binary/gradient, DOE 기반 — 내역 Single 55 / Binary 19 / Gradient 6 (2026-08-03 재판독 신규)",
+     "confidence": "덱 명시값"
+    },
+    {
+     "quantity": "전기화학 검증 수",
+     "value": 5,
+     "unit": "structures",
+     "condition": "SPH010/HC01/HC06/HC05/GRD01 (2026-08-03 재판독 교정: SPH10 -> SPH010)",
+     "confidence": "⚠ 80개 전부 시뮬레이션한 것이 아니다"
+    },
+    {
+     "quantity": "3C 방전용량 (binary vs single)",
+     "value": 3.38,
+     "unit": "x",
+     "condition": "HC05(binary) 56.8 vs HC01(single) 16.8 mAh/g — 2026-08-03 재판독 교정: 비교쌍은 HC06 이 아니라 HC05",
+     "confidence": "덱 서술 '약 3배' + 랭킹 막대 실측 (6배 확대 판독)"
+    },
+    {
+     "quantity": "0.5C 방전용량 (binary vs single)",
+     "value": -6.4,
+     "unit": "%",
+     "condition": "HC01(single) -> HC05(binary), 저율에서는 binary 가 손해 — 2026-08-03 재판독 신규",
+     "confidence": "덱 막대그림 화살표 주석 (6배 확대 판독)"
+    },
+    {
+     "quantity": "3C 방전용량 랭킹",
+     "value": null,
+     "unit": "mAh/g",
+     "condition": "HC05 binary 56.8 > HC06 binary 53.4 > GRD01 gradient 45.4 > SPH010 sphere 33.6 > HC01 single 16.8 (Core 5) — 2026-08-03 재판독 신규",
+     "confidence": "덱 랭킹 막대 실측 (6배 확대 판독)"
+    },
+    {
+     "quantity": "through-plane tortuosity tau_z (근사)",
+     "value": null,
+     "unit": null,
+     "condition": "SPH010 ~1.55 < HC05 ~1.81 < HC06 ~1.90 < HC01 ~1.92 < GRD01 ~1.93 — tau_z 최저인 SPH010 이 3C 4위 = 굴곡도 단독으로 rate 설명 불가 (관찰까지만, SPH010 은 입자형상도 달라 변수 분리 안 됨)",
+     "confidence": "구조공간 산점도에서 읽은 근사 좌표 — 인용 시 ~ 유지"
+    }
+   ],
+   "our_comparable": "DEM 트랙(bimodal AM 시스템 — AM_P + AM_S + SE). 같은 물리 명제(bimodal 입도가 수송 경로를 여는가)를 다른 도구(DEM 접촉·응력·percolation vs FEM 전기화학)로 본다. 상보적. ⚠ 번역 시 3C 이득만 옮기지 말고 0.5C -6.4 % 트레이드오프까지 같이 쓸 것",
+   "bruggeman_note": "슬 29: tau = eps^(-alpha), NMC alpha=0.5 vs Graphite alpha=1.9 — 같은 관계식에서 지수가 4배 다름"
+  },
+  "agent_model_fitting": {
+   "source": "moon2026_cau",
+   "slide": "23 (PDF p.14)",
+   "status_of_underlying_work": "Battery-Sim-Agent, ICLR 2026 under review",
+   "targets": [
+    {
+     "quantity": "Total duration",
+     "value": 8565.8,
+     "unit": "s",
+     "condition": "약 70 라운드 (2026-08-03 재판독 교정: 종전 8965.8 s 는 전사 오류)",
+     "confidence": "덱 명시값"
+    },
+    {
+     "quantity": "Final RMSE",
+     "value": 0.5513,
+     "unit": null,
+     "condition": null,
+     "confidence": "덱 명시값"
+    },
+    {
+     "quantity": "Final MAPE",
+     "value": 2.4258,
+     "unit": null,
+     "condition": null,
+     "confidence": "덱 명시값"
+    }
+   ],
+   "caveat": "베이스라인(수동 피팅) 비교치가 덱에 없다 — 절대 성능 판단 불가"
+  }
+ },
+ "methodology_references": {
+  "_note": "수치가 아니라 방법. 우리 실행 항목 T1-T8 의 출처.",
+  "extrapolation_grade_control": {
+   "source": "lee2026_skku",
+   "slide": "16 (PDF p.10)",
+   "what": "MTP-MD 스냅샷마다 extrapolation grade gamma 를 계산, gamma_select ~ gamma_break 사이를 'Accurate region'으로 정의. 벗어난 구조는 DFT 재계산 후 재훈련(active learning)",
+   "our_gap": "우리 UMA MD는 스냅샷 수준 외삽 판정이 전무하다. 검증을 물질 수준에서만 했다",
+   "our_action": "T1 재정의 — '감마 확보'가 아니라 **'UMA 용 외삽 대리지표 설계'**. 후보: 궤적 스냅샷의 UMA vs DFT 단일점 오차 분포 / 앙상블 분산 / 힘 예측 불확실도",
+   "priority": 1,
+   "actual_values_from_paper": {
+    "gamma_select": 2,
+    "gamma_break": "10 -> 5 -> 2 (단계적으로 조임)",
+    "kim2024_comparison": "5 / 20 — 이 논문이 최대 10배 엄격",
+    "key_idea": "최종 단계에서 gamma_break = gamma_select = 2 로 맞춰 '프로덕션 궤적 전체가 gamma<=2 안' 을 **수렴 판정 지표로 전용**"
+   },
+   "⛔_not_transferable": "**gamma 숫자는 UMA 에 이식 불가.** gamma 는 MTP 의 선형 기저 위 maxvol/D-optimality 로 정의되는데 UMA 는 비선형 등변 GNN 이라 **정의 자체가 없다**. 이식할 것은 논리 구조뿐: ①대리지표 하나 정한다 ②**선별 문턱과 중단 문턱을 분리**한다 ③중단 문턱을 조여 수렴을 판정한다."
+  },
+  "reaction_coordinate_training_set": {
+   "source": "lee2026_skku",
+   "slide": "21 (PDF p.13)",
+   "what": "훈련셋을 반응 진행 단계로 층화: pre-mixing -> material prepared -> reactants -> transition state -> products. 하위셋에 Guided MD(D_S-H, D_O-H 좌표 유도) 포함",
+   "our_action": "T4 — 우리는 학습을 안 하므로 **검증셋**으로 전용. 단계별 UMA vs DFT 단일점 비교",
+   "priority": 2
+  },
+  "functional_parallel_training": {
+   "source": "lee2026_skku",
+   "slide": "14 (PDF p.9)",
+   "what": "단일점 DFT를 functional 3종(PBE / optB88 / PBE+D3damp)으로 병렬 계산해 각각 MLIP 학습, 어느 것이 물리를 재현하는지 판정",
+   "outcome_in_their_paper": "optB88-vdW만 site-disorder 의존성 재현. PBE·PBE-D3는 100%-ordered를 3.7 mS/cm로 오판. sigma_80% 가 4.19 / 0.55 / 2.46 으로 **8배 갈림** (kim2024)",
+   "why_it_matters_to_us": "**우리 'MLIP 절대값 인용 금지' 규율의 외부 정면 증거**. 경쟁 그룹 데이터로 우리 방법론을 정당화할 수 있다",
+   "priority": "인용 자산 (실행 아님)"
+  },
+  "region_resolved_msd": {
+   "source": "lee2026_skku",
+   "slide": "18 (PDF p.11)",
+   "what": "계면/벌크 구획별로 MSD를 분리해 D를 따로 산출",
+   "our_action": "T5 — 기존 MSD 파이프라인에 구획 마스크만 추가하면 됨",
+   "priority": 2
+  },
+  "skill_three_level_loading": {
+   "source": "moon2026_cau",
+   "slide": "35 (PDF p.19)",
+   "what": "Level 1 Metadata(YAML, 항상 로드, ~100 토큰) / Level 2 Body(Markdown, 트리거시, <5k) / Level 3 Bundled files(scripts·data, 필요시). 40+ modular skills, 8 범주",
+   "claimed_benefit": "낮은 토큰 사용량 + 신뢰도 높은 출력 (⚠ 측정치는 덱에 없음 — 출처 arXiv:2601.04748 확보 필요)",
+   "consistency_flag": "덱은 40+ skills 라 하는데 에이전트별 표기 합은 [3]geometry+[5]simulation+[6]visualization&export+[8]validation = 22 + Analyzer(표기 없음). 관계 미설명 -> digest Q8",
+   "our_gap": "우리는 Level 2만 있다 — CLAUDE.md(항상 로드지만 100 토큰 아님) + tools/*.py(Level 3). 중간 메타데이터 층 부재",
+   "our_action": "T7",
+   "priority": 1
+  },
+  "knowledge_graph_link_prediction": {
+   "source": "moon2026_cau",
+   "slide": "16 (PDF p.10)",
+   "what": "황화물 ASSB 문헌에서 소재-공정-계면-성능-열화 관계를 neo4j KG로 추출. Graph RAG는 근거검색, GNN은 미연결 잠재관계 예측",
+   "db_scale": "노드 9,596 (16종: Cell/Claim/Component/CurveData/DerivedFeature/Factor/FigurePanel/Material/Mechanism/Metric/MetricResult/Paper/ProcessCondition/Sample/TestCondition/TestRun) · 관계 18,145 (17종: AFFECTS/CONCLUDES/DERIVED_FROM/EXPLAINED_BY/FOR_SAMPLE/HAS_COMPONENT/HAS_CURVE/HAS_PROCESSING/MEASURED_AS/PRODUCES/REALIZED_BY/REPORTS/SHOWN_IN/SUPPORTS/TESTED_BY/UNDER_CONDITION/USED_IN) — 2026-08-03 재판독으로 Q1 종결. 종전 기록의 HAS_UNIT/USES/TESTED_IN 은 전사 오류",
+   "schema_note": "MetricResult·TestCondition·UNDER_CONDITION·MEASURED_AS·SHOWN_IN->FigurePanel 조합이 있어 **실험 조건 맥락은 스키마 수준에서 보존**된다. 다만 property key 가 active_loading_mg_cm2·air_exposure_s 처럼 제조·측정 조건 중심이라 **계산 방법 맥락(functional·k-mesh·supercell)까지 담는지는 불명** -> 우리 T6 고유 확장은 Method/Functional/kMesh 노드타입",
+   "convergent_finding": "Case 1 (Unseen but Correct): 'Soft-acid cation doping (HSAB: Sn/Sb/As) in sulfide SE' -> 'Low ionic conductivity' RESOLVED (P(resolved) 0.57 / P(not_resolved) 0.18 / P(unknown) 0.25). **우리 cascade air_hsab 축과 같은 명제를 완전히 다른 경로로 도출**. Case 2 는 'Halide A in Li6PS5A electrolyte (Cl/Br/I)' RESOLVED (0.55/0.15/0.31) — 2026-08-03 재판독 교정: 종전 Li6PS5Cl 고정 표기는 오류. ⚠ 확률이 과반을 겨우 넘으므로 '높은 확신'이라 쓰지 말고 확률 병기",
+   "our_action": "T6 — digest를 대체하지 말고 위에 얹기. 방법 맥락과 인용금지 규칙 보존이 조건",
+   "priority": 4
+  },
+  "literature_reporting_bias_metaanalysis": {
+   "source": "moon2026_cau",
+   "slide": "17 (PDF p.10)",
+   "what": "Li-air 5,689편 -> 4,183편 -> 피인용 상위 1,000편 PDF에서 에너지밀도와 **질량 기준**을 GPT로 추출",
+   "finding": "전셀 질량 기준 에너지밀도는 대체로 500 Wh/kg 미만. 그 이상 보고는 활물질·탄소·전극 등 **가벼운 질량 기준** 때문이며, 500 초과 3편은 주로 전해질 무게를 줄여 달성",
+   "why_it_matters_to_us": "문헌 보고 관행이 수치를 부풀린다는 메타분석이 **학회 발표 본론에 들어간 전례**. 우리 정직성 장치(vacuous gate·컷 지배 경고·상속 상수 폭로)도 부록이 아니라 본론으로 낼 근거",
+   "priority": "서사 자산"
+  }
+ },
+ "industry_context": {
+  "source": "moon2026_cau",
+  "slide": "8 (PDF p.6)",
+  "_caveat": "SNE리서치 단월(1월) 기준. 연간으로 오독 금지. 발표 덱 재인용이므로 원 출처 확인 후 사용",
+  "sk_on_ai_platform": {
+   "introduced": "2025-07",
+   "development_period": "기존 대비 1/3 단축",
+   "cost_estimation_speed": "2시간 -> 10초 (700배)",
+   "claimed_saving": "완성차 프로젝트당 수백억 예상"
+  },
+  "k_battery_market_jan": {
+   "LG에너지솔루션": {
+    "GWh": 4.7,
+    "yoy_pct": -14.9,
+    "share_pct": 6.6
+   },
+   "SK온": {
+    "GWh": 2.3,
+    "yoy_pct": -21.3,
+    "share_pct": 3.2
+   },
+   "삼성SDI": {
+    "GWh": 1.6,
+    "yoy_pct": -24.4,
+    "share_pct": 2.2
+   },
+   "3사_합계": {
+    "GWh": 8.6,
+    "yoy_pct": -17.3,
+    "share_pct": 12
+   }
+  },
+  "use": "원고/발표 도입부 서사 — 시장 역성장 국면에서 AI 계산이 개발 속도·원가로 활로를 낸다"
+ },
+ "open_questions": [
+  {
+   "id": "Q1",
+   "q": "[CLOSED 2026-08-03] 이상욱 랩 코팅 스크리닝 17,230 -> 최종 후보의 실체 = Li3Sc2(PO4)3 (Nano Converg. 2026, 13, 27 정본 확보 + 덱 슬 13에도 후보명 명시)",
+   "close_by": "Nano Convergence 2026, 13, 27 PDF",
+   "blocks": "S6 감사"
+  },
+  {
+   "id": "Q2",
+   "q": "Li|LPSCl 계면 MD가 어느 무질서 배열을 썼나",
+   "close_by": "Chem. Eng. J. / 구술 txt",
+   "blocks": "T3 프로토콜"
+  },
+  {
+   "id": "Q3",
+   "q": "gamma_select / gamma_break 수치 기준",
+   "close_by": "논문 SI / 구술 txt",
+   "blocks": "T1 설계"
+  },
+  {
+   "id": "Q4",
+   "q": "가수분해 H2S 발생량 정량 (Taklu 실험값과 대조 가능한가)",
+   "close_by": "Adv. Funct. Mater. revision",
+   "blocks": "T2 검증"
+  },
+  {
+   "id": "Q5",
+   "q": "Adv. Energy Mater. revision 이 config-variance 오차막대를 추가했는가",
+   "close_by": "논문",
+   "blocks": "우리 우위 주장 3-2의 유효 범위"
+  },
+  {
+   "id": "Q6",
+   "q": "그들 P2D 입력 스키마 (우리 sigma/Ea를 넣으려면 어떤 형식)",
+   "close_by": "구술 txt / 접촉",
+   "blocks": "T8(=M5)"
+  },
+  {
+   "id": "Q7",
+   "q": "BEARS 본문 + arXiv:2601.04748 (3계층 스킬 로딩 토큰 절감 실측치 · Validator '8종 구조 검증 지표')",
+   "close_by": "arXiv/논문 실물",
+   "blocks": "T7"
+  }
+ ],
+ "status": "OPEN — 발표 구술 txt 및 이상욱 랩 논문 추가 입수 예정 (사용자, 2026-07-28). 닫지 말 것. 2026-08-06 갱신: 내용은 open_items 와 정합 · 대기 중인 것은 전부 **외부 자료 확보**가 조건이다.",
+ "lee_lab_bibliography": {
+  "_note": "2026-07-28 웹 검색으로 서지 확정. 덱에는 저널·권·페이지만 있고 제목이 없었다 — 아래 제목은 검색으로 확인한 것이며 PDF 실물 확보 전까지 '서지 확인됨, 본문 미확인' 상태다.",
+  "confirmed": [
+   {
+    "rank": 1,
+    "cite": "Nano Convergence 2026, 13, 27",
+    "title": "High-throughput discovery of Li3Sc2(PO4)3 as a protective coating for stabilizing mid-Ni NCM interfaces in all-solid-state batteries",
+    "authors": "J. H. Kim, S. Lee, S. U. Lee",
+    "doi": "10.1186/s40580-026-00555-z",
+    "access": "open access (Springer)",
+    "why": "우리 cascade/M6 의 직접 대조군. 덱 슬 13 의 '17,230 Li, O crystal structure @ MP' 스크리닝. **최종 후보가 Li3Sc2(PO4)3 = Sc 계** — 우리 cascade_v23_ranked 1위가 Sc2O3 인 것과 수렴(단 조성은 인산염 vs 산화물로 다름)",
+    "status": "⏳ PDF 확보 대기"
+   },
+   {
+    "rank": 3,
+    "cite": "SSRN preprint (Chem. Eng. J. 투고본으로 추정)",
+    "title": "Deciphering Li2S-like SEI Formation Mechanism at Li/Argyrodite Anodic Interfaces via Large-Scale Machine-Learned Reactive Dynamics",
+    "authors": "Ji Seon Kim, Ji Hoon Kim, Sang Uck Lee",
+    "doi": "SSRN abstract_id=6772406",
+    "access": "preprint (즉시 입수 가능)",
+    "why": "T3(Li|LPSCl 반응 MD) 프로토콜 원본. 덱 슬 18-19 의 정본. **초록에 기구가 명시**: Li 삽입이 PS4 사면체를 불안정화 → 무질서 S-rich 비정질층이 전해질로 침투 → 결정 도메인 핵생성·성장, Li2S 특유의 short-to-medium range order",
+    "status": "⏳ 프리프린트 — 최우선 입수(공개돼 있음)"
+   },
+   {
+    "rank": 4,
+    "cite": "JACS 2025, 147, 51, 47381-47391",
+    "title": "Machine Learning-Assisted Crystal Structure Prediction of Solid-State Electrolytes Reveals Superior Ionic Conductivity in Metastable Edge-Sharing Phases",
+    "authors": "(Lee group)",
+    "doi": "10.1021/jacs.5c15665",
+    "access": "ACS",
+    "why": "덱 슬 28-29 정본. 준안정 edge-sharing 이 안정 corner-sharing 보다 Li 이동도 우수. SSE 후보 4종에 적용(Li2SiS3 포함)",
+    "status": "⏳"
+   },
+   {
+    "rank": 6,
+    "cite": "Rare Metals 2025, 44, 2366",
+    "title": "New crystal structure of Li3YCl6: structural relationship and ionic conductivity for solid-state electrolytes",
+    "authors": "Ji Hoon Kim, Byeongsun Jun, Yong Jun Jang, Chi Ho Lee, Sang Uck Lee",
+    "doi": "10.1007/s12598-024-03069-x",
+    "access": "Wiley",
+    "why": "CSP 보조. **할라이드계(Li3YCl6)** 라 우리 황화물 축과는 다름 — 우선순위 낮음",
+    "status": "⏳ 낮은 우선순위"
+   },
+   {
+    "rank": "NEW",
+    "cite": "J. Mater. Chem. A 2024, 12, 12, 7272",
+    "title": "Design of multicomponent argyrodite based on a mixed oxidation state as promising solid-state electrolyte using moment tensor potentials",
+    "authors": "(Lee group)",
+    "doi": "10.1039/d4ta00361f",
+    "access": "RSC",
+    "why": "**검색 중 새로 발견 — 덱에 없던 논문**. '다중성분 argyrodite + 혼합 산화수' = **우리 co-doping 캠페인과 정면으로 같은 문제설정**. kim2024(무질서) 의 자매편으로 보이며, 우리 codoping_ml 1081쌍의 직접 선행연구일 가능성. **우선순위 2위로 승격**",
+    "status": "⏳ 신규 — 사용자에게 요청"
+   }
+  ],
+  "not_found_still_unpublished": [
+   {
+    "cite": "Adv. Funct. Mater. (revision)",
+    "topic": "argyrodite 가수분해 SevenNet + Sn 억제 (덱 슬 21-24)",
+    "note": "미출판이라 검색 불가. T2(ICOHP 기술자) 방법 원본 — 구술 txt 나 출판 후 확보"
+   },
+   {
+    "cite": "Adv. Energy Mater. (revision)",
+    "topic": "Dynamic properties 후속 (덱 슬 13)",
+    "note": "미출판. **Q5(config-variance 오차막대 추가 여부) 가 여기 걸려 있다** — 우리 신규성 주장의 유효범위"
+   },
+   {
+    "cite": "arXiv:2601.04748",
+    "topic": "BEARS 스킬 3계층 (문장혁 랩, 덱 슬 35)",
+    "note": "덱 표기 판독 신뢰도 낮음 — 번호 확인 필요"
+   }
+  ]
+ },
+ "updated": "2026-08-06",
+ "changelog": [
+  {
+   "date": "2026-08-03",
+   "what": "덱 원해상도 재판독 — 덱 오류 3건이 **우리 저해상도 오독**이었음이 드러나 정정의 정정 (li_argyrodite_interface_md·coating_screening_scale·electrode_microstructure_rate·agent_model_fitting 에 반영). Q1 CLOSED."
+  },
+  {
+   "date": "2026-08-04",
+   "what": "논문 실물 검증 4건이 항목의 성격을 바꿈 — T3 구획 마스크·T11 이식 불가·T12 판정축 축소·T14/T15 신설. 아래 `_updates_2026_08` 참조."
+  },
+  {
+   "date": "2026-08-06",
+   "what": "파일이 2026-07-28 에 멈춰 있어 open_items 와 어긋난 것을 맞춤 (T 번호 충돌 포함). 수치는 하나도 새로 만들지 않았다 — 근거는 전부 kb/open_items.md 와 각 digest."
+  }
+ ]
 }

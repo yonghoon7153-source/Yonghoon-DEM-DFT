@@ -280,9 +280,12 @@ function jumpFigs(){
   }
   _figBack=box.scrollTop;
   // ⚠ offsetTop 은 offsetParent 에 따라 달라진다(창을 끌면 #pmbox 가 position:relative 가 된다)
-  //   — 화면 좌표 차이로 계산하면 어떤 상태에서도 맞는다
+  //   — 화면 좌표 차이로 계산하면 어떤 상태에서도 맞는다.
+  // ⚠ 제목줄이 sticky 라 그 높이만큼 빼지 않으면 그림 목록 머리가 제목줄에 가린다.
+  var head=box.querySelector('.modal-head');
+  var pad=(head?head.offsetHeight:0)+8;
   box.scrollTo({top: box.scrollTop + st.getBoundingClientRect().top
-                     - box.getBoundingClientRect().top - 8, behavior:'smooth'});
+                     - box.getBoundingClientRect().top - pad, behavior:'smooth'});
   st.classList.remove('figjump'); void st.offsetWidth; st.classList.add('figjump');
   setTimeout(function(){st.classList.remove('figjump');},2600);
   if(btn){btn.textContent='↑ 읽던 자리'; btn.title='본문에서 읽던 자리로 (단축키 F)';}

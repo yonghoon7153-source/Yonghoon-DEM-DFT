@@ -19,6 +19,21 @@
   {% for h in b.honesty_header %}<div style="margin-top:6px">{{ h|bold }}</div>{% endfor %}
 </div>
 
+{# 이 파일이 언제 기준인지 화면에서 바로 보이게 — 2026-07-28 에 멈춘 걸 모르고 읽던 문제 #}
+<div class="muted" style="font-size:.78rem;margin-top:8px">
+  덱 분석 기준일 <b>{{ b.date }}</b>{% if b.updated %} · 마지막 갱신 <b>{{ b.updated }}</b>{% endif %}
+  · 근거 원장 <span class="mono">kb/open_items.md</span>
+</div>
+{% if b.changelog %}
+<details style="margin-top:8px;border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:var(--bg)">
+  <summary style="cursor:pointer;font-size:.8rem;font-weight:600">🕘 갱신 이력 {{ b.changelog|length }}건</summary>
+  <ul style="margin:8px 0 0 16px">
+    {% for c in b.changelog %}<li style="font-size:.8rem;line-height:1.6">
+      <span class="mono muted">{{ c.date }}</span> — {{ c.what|bold }}</li>{% endfor %}
+  </ul>
+</details>
+{% endif %}
+
 <!-- ── 덱 정정 원장 ─────────────────────────────────────── -->
 <h2 style="margin-top:30px;font-size:1rem">📋 덱 정정 원장 <span class="muted"
   style="font-weight:400;font-size:.8rem">({{ ledger|length }}건 — 발표 덱 ↔ 논문 실물 불일치)</span></h2>
@@ -146,6 +161,19 @@
     </tbody>
   </table>
   </div>
+
+  {# 논문 실물을 다시 읽고 성격이 바뀐 것들 — 표적 수치보다 이게 더 자주 판단을 바꾼다 #}
+  {% if t._updates_2026_08_04 %}
+  <div class="callout" style="margin-top:10px;border-left:3px solid var(--accent)">
+    <b>🔁 2026-08-04 논문 실물 재검증</b>
+    <div class="muted" style="font-size:.74rem;margin-top:2px">{{ t._updates_2026_08_04.source }}</div>
+    <ul style="margin:6px 0 0 16px">
+      {% for k, v in t._updates_2026_08_04.items() if k != 'source' %}
+      <li style="font-size:.8rem;line-height:1.6">{{ v|bold }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
 
   {% if t.msd_window_trap %}<div class="callout cal-warn" style="margin-top:10px">{{ t.msd_window_trap|bold }}</div>{% endif %}
   {% if t.mechanism %}<div style="margin-top:8px;font-size:.82rem"><b>기구</b>: {{ t.mechanism }}</div>{% endif %}

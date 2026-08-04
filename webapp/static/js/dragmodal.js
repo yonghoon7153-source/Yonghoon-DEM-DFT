@@ -117,6 +117,13 @@
     return top;
   }
 
+  // 굴리기 시작하면 붙어 있는 제목줄에 그림자 (본문과 겹친 걸 알아보게)
+  document.addEventListener("scroll", function (e) {
+    var b = e.target;
+    if (!b.classList || !b.classList.contains("modal-body")) return;
+    b.classList.toggle("scrolled", b.scrollTop > 4);
+  }, true);
+
   window.winFocus = focusWin;
   window.winSync = sync;
   window.winIsTop = isTop;
