@@ -241,7 +241,46 @@ upd();
     <b>Ea 0.287±0.024는 이 점을 포함한 적합이라 재검토 대상</b>; 처방 = 6점 아레니우스
     30런(신규 27 + lpsocl 600 재실행 3)과 기존 게이트-통과 점으로 재적합. 단일시드 곡선은 계층 예시 전용(정량은 멀티시드 json).
   </div>
-  <div class="muted mono" style="font-size:.7rem;margin-top:4px">db/properties/msd_3sys_200ps_origin.csv (PROVENANCE/GATE NOTE 포함)</div>
+  {# ── β 는 홉 수를 잰다: 예측 vs 실측 (2026-08-04) ── #}
+  <div style="margin-top:12px">
+    <div style="font-weight:700;font-size:.85rem;margin-bottom:4px">β 는 시간이 아니라 <b>홉 수</b>를 잰다 — 그래서 예측된다</div>
+    <div class="muted" style="font-size:.76rem;margin-bottom:6px">
+      이온당 홉 수 n<sub>hop</sub> = 6Dt / d<sub>hop</sub>² (d<sub>hop</sub> ≈ 3 Å = 이웃 Li 자리 간격) ·
+      ≥10 충분 · 3–10 경계 · &lt;3 부족
+    </div>
+    <div style="overflow-x:auto"><table style="font-size:.76rem;border-collapse:collapse;min-width:480px">
+      <tr style="border-bottom:2px solid var(--line,#e5e7eb)">
+        <th style="text-align:left;padding:4px 10px 4px 0">600 K · 200 ps</th>
+        <th style="text-align:right;padding:4px 10px">예측 n<sub>hop</sub></th>
+        <th style="text-align:right;padding:4px 10px">실측 β</th>
+        <th style="text-align:left;padding:4px 0 4px 10px">일치</th>
+      </tr>
+      <tr style="border-bottom:1px solid var(--line,#e5e7eb)">
+        <td style="padding:4px 10px 4px 0">LPSCl1.6</td><td style="text-align:right;padding:4px 10px">13.9</td>
+        <td style="text-align:right;padding:4px 10px">0.87 ✓</td><td style="padding:4px 0 4px 10px">✅</td></tr>
+      <tr style="border-bottom:1px solid var(--line,#e5e7eb)">
+        <td style="padding:4px 10px 4px 0"><b>LPSOCl1.6</b></td>
+        <td style="text-align:right;padding:4px 10px"><b>8.4</b> (경계)</td>
+        <td style="text-align:right;padding:4px 10px"><b style="color:#b91c1c">0.61 ⛔</b></td>
+        <td style="padding:4px 0 4px 10px">✅</td></tr>
+      <tr><td style="padding:4px 10px 4px 0">B2O3@LPSCl1.6</td><td style="text-align:right;padding:4px 10px">13.9</td>
+        <td style="text-align:right;padding:4px 10px">0.81 ✓</td><td style="padding:4px 0 4px 10px">✅</td></tr>
+    </table></div>
+    <div class="muted" style="font-size:.74rem;margin-top:6px">
+      LPSOCl 만 탈락한 이유가 여기서 닫힌다 — Ea 가 90 meV 높아 같은 온도·시간에서 D 가 0.60배,
+      즉 <b>홉이 40% 적다</b>. 사고가 아니라 예측 가능했던 통계 부족.
+      ⚠ n<sub>hop</sub> 은 <b>상한</b>(되돌아오는 홉 미포함, Haven 0.3–0.7 &lt; 1).
+    </div>
+  </div>
+  <div class="callout cal-warn" style="font-size:.79rem;margin-top:8px">
+    <b>저온 β 저하는 현실적인가 — 둘을 갈라야 한다.</b>
+    <b>표집 인공물</b>(궤적이 짧아 홉이 없음 = 측정 실패)과 <b>진짜 아확산</b>(케이지·상관 운동이 만드는
+    실재 거동)이 <b>같은 숫자로 보인다</b>. 다만 진짜 아확산도 <b>점근적으로는 β = 1</b> 이다
+    (아니면 D 자체가 정의되지 않는다). 그래서 저온 β 저하 자체는 현실적이지만
+    <b>그 기울기를 D 라고 쓰면 안 된다</b>.
+    판별 실험 = 궤적을 늘렸을 때 β 가 오르는가 (comp1 600 K 200 → 1600 ps, 진행 중).
+  </div>
+  <div class="muted mono" style="font-size:.7rem;margin-top:4px">db/properties/msd_3sys_200ps_origin.csv · hops_per_ion.csv (PROVENANCE/GATE NOTE 포함)</div>
   <a href="/concept/md" style="display:inline-block;margin-top:6px;font-size:.78rem">
     → MD 개념 정리 §4b–4d: β의 뜻 · R²로 못 잡는 이유 · 적합 규율 3건 · 게이트 판정 현황</a>
   <script>

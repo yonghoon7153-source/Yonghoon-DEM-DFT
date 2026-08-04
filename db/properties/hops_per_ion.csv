@@ -1,0 +1,30 @@
+﻿# Hops per Li ion vs temperature: n_hop = 6*D*t / d_hop^2.
+# D from measured multiseed Ea + D(600 K); d_hop = 3 A (Li-Li site spacing).
+# UPPER BOUND: back-correlated hops (Haven 0.3-0.7 < 1) are not counted,
+#   so the real hop requirement is higher. Read thresholds conservatively.
+# beta_observed = v2 multiseed ensemble gate result (2026-08-04) where available.
+system,T_K,prod_ps,D_cm2_s,MSD_A2,hops_per_ion,beta_observed,verdict
+LPSCl1.6 (modelc),1000,200,4.7791e-05,573.49,63.72,0.92,확산 통계 충분
+LPSCl1.6 (modelc),900,200,3.7070e-05,444.84,49.43,,확산 통계 충분
+LPSCl1.6 (modelc),800,200,2.6986e-05,323.83,35.98,0.93,확산 통계 충분
+LPSCl1.6 (modelc),700,200,1.7941e-05,215.29,23.92,,확산 통계 충분
+LPSCl1.6 (modelc),600,200,1.0410e-05,124.92,13.88,0.87,확산 통계 충분
+LPSCl1.6 (modelc),500,200,4.8585e-06,58.30,6.48,,경계 — 시드마다 흔들림
+LPSCl1.6 (modelc),400,200,1.5491e-06,18.59,2.07,,홉 부족 → beta 낮은 게 정상
+LPSCl1.6 (modelc),300,200,2.3053e-07,2.77,0.31,,홉 부족 → beta 낮은 게 정상
+LPSOCl1.6,1000,200,5.7754e-05,693.04,77.00,1.02,확산 통계 충분
+LPSOCl1.6,900,200,3.9890e-05,478.68,53.19,,확산 통계 충분
+LPSOCl1.6,800,200,2.5117e-05,301.41,33.49,0.86,확산 통계 충분
+LPSOCl1.6,700,200,1.3858e-05,166.29,18.48,,확산 통계 충분
+LPSOCl1.6,600,200,6.2705e-06,75.25,8.36,0.61,경계 — 시드마다 흔들림
+LPSOCl1.6,500,200,2.0662e-06,24.79,2.75,,홉 부족 → beta 낮은 게 정상
+LPSOCl1.6,400,200,3.9080e-07,4.69,0.52,,홉 부족 → beta 낮은 게 정상
+LPSOCl1.6,300,200,2.4356e-08,0.29,0.03,,홉 부족 → beta 낮은 게 정상
+B2O3@LPSCl1.6,1000,200,4.8536e-05,582.43,64.71,0.97,확산 통계 충분
+B2O3@LPSCl1.6,900,200,3.7551e-05,450.62,50.07,,확산 통계 충분
+B2O3@LPSCl1.6,800,200,2.7248e-05,326.97,36.33,0.83,확산 통계 충분
+B2O3@LPSCl1.6,700,200,1.8040e-05,216.48,24.05,,확산 통계 충분
+B2O3@LPSCl1.6,600,200,1.0410e-05,124.92,13.88,0.81,확산 통계 충분
+B2O3@LPSCl1.6,500,200,4.8211e-06,57.85,6.43,,경계 — 시드마다 흔들림
+B2O3@LPSCl1.6,400,200,1.5195e-06,18.23,2.03,,홉 부족 → beta 낮은 게 정상
+B2O3@LPSCl1.6,300,200,2.2178e-07,2.66,0.30,,홉 부족 → beta 낮은 게 정상
