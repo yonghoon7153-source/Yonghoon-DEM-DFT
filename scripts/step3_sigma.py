@@ -422,6 +422,10 @@ def solve_thermal(sid, vox, z_top_um, z_bot_um=0.0, k_table=None, field_sids=Non
         # ★열류(∝ k∇T) 아님 — 정상 전도 ∇·(k∇T)=0 은 소산 0, 직렬 flux 상별 동일.
         share = phase_current_share(res, sid, k_table)
         out['temp_drop_share'] = {SID_NAME[k]: round(v, 4) for k, v in share.items()}
+        # ★ T(z) 프로파일 원자료 — 전자/이온이 phi_profile 을 갖는 것과 같은 자격을 열전도에도 준다.
+        #   (2026-08-04: 뷰어가 열류·Joule 모드에서 **전자 φ(z)** 를 그리고 있었다 — 열전도는 자기
+        #    solve 의 정규화 온도 T(z)@ΔT=1 이 있어야 한다.)  '_' prefix = JSON 前 pop 대상.
+        out['_res'] = res
         if field_sids is not None:                             # 열류 |k∇T| 점군 (多상 = 全상 solid conduct)
             fp, fj = field_point_cloud(res, sid, k_table, vox, tuple(field_sids), max_points=field_max)
             if fp is not None:

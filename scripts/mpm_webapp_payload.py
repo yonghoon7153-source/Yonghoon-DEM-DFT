@@ -1003,6 +1003,23 @@ def main():
                       f"({_cgm['n_bottom_contacts']['wetted']} contacts) vs bare "
                       f"{_cgm['bare_sigma_S_cm']:.3g} S/cm ({_cgm['n_bottom_contacts']['bare']}) → "
                       f"R_geom {_rgs} Ωcm² (측정 R_int와의 갭 = 화학/열화 몫)")
+                # ★ φ(z)/T(z) 프로파일 헬퍼 (Oh 2025 primer 논문 Fig 4e 문법 = ΔV=1V 전도 솔브의
+                # 두께방향 전위) — 층별 전도-복셀 평균.  solve 규약: 바닥판 φ=1, 꼭대기 φ=0.
+                # ★ 여기(이온 solve 前)에 두는 이유: 예전엔 `if _res3i['n_dof']:` 안에서 정의돼
+                #   SE 미퍼콜(n_dof=0) 케이스에서 이름 자체가 없었다 — 아래 thermal 블록이 이걸
+                #   부르는 순간 좋은 압밀 뒤에 NameError 로 payload 가 죽는다 (2026-06-21 `geom`
+                #   사고와 같은 형태).  호출부보다 얕은 스코프에서 무조건 정의한다.
+                def _phi_prof(_resX):
+                    if not _resX or 'phi' not in _resX:
+                        return None
+                    _P, _C = _resX['phi'], _resX['cond']
+                    _pz, _zz = [], []
+                    for _k in range(sid3.shape[2]):
+                        _m3 = _C[:, :, _k]
+                        if _m3.any():
+                            _pz.append(float(_P[:, :, _k][_m3].mean()))
+                            _zz.append(round((_k + 0.5) * a.step3_vox, 3))
+                    return {'z_um': _zz, 'phi': [float(f'{v:.5g}') for v in _pz]}
                 # IONIC network on the SAME grid (paper Fig-2d/f axis): SE + SDCP conduct Li⁺
                 # (user principle — SDCP is NOT an ion insulator), AM/carbon/PTFE block.
                 _t1 = _time.time()
@@ -1043,20 +1060,7 @@ def main():
                                 'j_1C_mA_cm2': _fse.get('j_1C_mA_cm2'),
                                 'note': ('v(0..1): ×j_top→A/cm²@ΔV=1V; ×focus_top→|J|/⟨J_z⟩(바이어스 무관); '
                                          '국소 mA/cm²@C-rate = focus×j_1C×C (j_1C=면적용량, Chen2020 창)')}
-                    # ★ φ(z) 프로파일 (Oh 2025 primer 논문 Fig 4e 문법 = ΔV=1V 전도 솔브의
-                    # 두께방향 전위) — 층별 전도-복셀 평균.  전자(정본) + 전자(bare 집전체:
-                    # 계면 강하 그림) + 이온 3곡선.  solve 규약: 바닥판 φ=1, 꼭대기 φ=0.
-                    def _phi_prof(_resX):
-                        if 'phi' not in _resX:
-                            return None
-                        _P, _C = _resX['phi'], _resX['cond']
-                        _pz, _zz = [], []
-                        for _k in range(sid3.shape[2]):
-                            _m3 = _C[:, :, _k]
-                            if _m3.any():
-                                _pz.append(float(_P[:, :, _k][_m3].mean()))
-                                _zz.append(round((_k + 0.5) * a.step3_vox, 3))
-                        return {'z_um': _zz, 'phi': [float(f'{v:.5g}') for v in _pz]}
+                    # 전자(정본) + 전자(bare 집전체: 계면 강하 그림) + 이온 3곡선 (헬퍼는 위에서 정의).
                     step3['phi_profile'] = {k: v for k, v in {
                         'electronic': _phi_prof(_res3), 'electronic_bare': _phi_prof(_res3b),
                         'ionic': _phi_prof(_res3i)}.items() if v}
@@ -1083,6 +1087,7 @@ def main():
                                                 field_max=a.field_max_points, periodic_xy=a.periodic)
                         _tfp = _th.pop('_field_pts', None)
                         _tfj = _th.pop('_field_j', None)
+                        _tres = _th.pop('_res', None)          # T(z) 프로파일용 (JSON 前 pop 필수)
                         step3['thermal'] = {
                             'k_eff_W_mK': _th['k_eff_W_mK'], 'n_dof': _th['n_dof'],
                             'cg_resid': _th['cg_resid'], 'temp_drop_share': _th.get('temp_drop_share'),
@@ -1093,6 +1098,12 @@ def main():
                                       'carbon/SDCP/PTFE/pore=ASSUMED(소분율·--k-carbon 스윕); network_conductivity '
                                       'thermal과 같은 k 앵커 공유 → 표현-일치만, 스케일 다름(W/mK vs mScm-eq), 독립검증 아님'
                                       + (' ⚠UNCONVERGED' if _th.get('unconverged') else ''))}
+                        # ★ T(z)@ΔT=1 프로파일 — 전자 φ(z)/이온 φ(z) 와 같은 층평균 문법(_phi_prof).
+                        #   열전도는 多상(全상 열통과)이라 마스크가 전자/이온보다 넓다 = 자기 solve 의 것.
+                        if _tres is not None:
+                            _tprof = _phi_prof(_tres)
+                            if _tprof:
+                                step3.setdefault('phi_profile', {})['thermal'] = _tprof
                         if _tfp is not None and _tfj is not None:   # 열류 |k∇T| 필드 (전자/이온 필드 문법)
                             _tfj = np.nan_to_num(_tfj, nan=0.0, posinf=0.0, neginf=0.0)
                             _p998t = max(float(np.percentile(_tfj, 99.8)), 1e-30)

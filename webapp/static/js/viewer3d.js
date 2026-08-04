@@ -3362,7 +3362,7 @@ function applyViewMode(state, mode) {
           + Object.entries(share).filter(([, v]) => v >= 0.001).map(([k, v]) => `${k} ${(100 * v).toFixed(0)}%`).join(' · ') + `</div>` : '')
       + `<div style="margin-top:6px;padding:6px 7px;background:#0d1117;border:1px solid #2a2d3e;border-radius:6px">
            <div style="display:flex;justify-content:space-between;align-items:center">
-             <b style="font-size:11.5px;color:#cbd5e1">두께방향 프로파일 (Fig 4e)</b>
+             <b style="font-size:11.5px;color:#cbd5e1">두께방향 프로파일 ${joule ? '⟨q⟩(z) 발열' : thermal ? 'T(z)·열류' : '(Fig 4e)'}</b>
              <button id="fld-prof-dl" title="이 프로파일을 PNG(3×)+CSV로 저장" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 7px;cursor:pointer;font-size:12px">📈</button>
            </div>
            <canvas id="fld-prof" width="220" height="120" style="width:100%;margin-top:4px;border-radius:4px"></canvas>
@@ -3373,33 +3373,50 @@ function applyViewMode(state, mode) {
       const cv = document.getElementById('fld-prof'), cap = document.getElementById('fld-prof-cap');
       if (!cv) return;
       const pp = s3 && s3.phi_profile;
-      const netKey = ionic ? 'ionic' : 'electronic';
-      let rows = [], curves = [], yLab = '', capTxt = '', hdr = '';
-      if (pp && pp[netKey] && pp[netKey].z_um) {              // 정확한 φ(z) = Fig4e
-        const L = Math.max(...pp[netKey].z_um);
-        curves.push({ zs: pp[netKey].z_um, ys: pp[netKey].phi, color: ionic ? '#a78bfa' : '#f87171', dash: false });
-        const bz = (!ionic && pp.electronic_bare && pp.electronic_bare.z_um) ? pp.electronic_bare : null;
-        if (bz) curves.push({ zs: bz.z_um, ys: bz.phi, color: '#f87171', dash: true });
-        yLab = 'φ (V @ΔV=1V)';
-        capTxt = `φ(z) @ΔV=1V — Oh2025 Fig4e 대응${ionic ? '' : ' · 실선 정본 / 점선 bare 집전체(계면 강하)'}`;
-        hdr = 'z_um,z_over_L,phi_V,phi_bare_V';
-        rows = pp[netKey].z_um.map((z, i) => [z.toFixed(2), (z / L).toFixed(4),
-          pp[netKey].phi[i], bz ? bz.phi[i] : '']);
-      } else if (fld.length) {                               // 폴백: 필드 클라우드 ⟨|J|⟩(z)
+      // ★ 2026-08-04 수정: netKey 가 `ionic ? 'ionic' : 'electronic'` 이라 **열류(kt_field)·Joule
+      //   (jt_field) 모드가 전자 φ(z) 를 자기 프로파일인 양** 그렸다.  모드별로 갈라준다:
+      //     thermal → T(z)@ΔT=1 (자기 ∇·(k∇T)=0 solve; 신형 payload 의 phi_profile.thermal)
+      //     joule   → 전위 자체가 없음 (q∝|J|²/σ 는 SOURCE 밀도) → 항상 필드-클라우드 ⟨q⟩(z)
+      const netKey = joule ? null : thermal ? 'thermal' : ionic ? 'ionic' : 'electronic';
+      const modeCol = joule ? '#f59e0b' : thermal ? '#fb923c' : ionic ? '#a78bfa' : '#f87171';
+      let rows = [], curves = [], yLab = '', capTxt = '', hdr = '', title = '';
+      if (netKey && pp && pp[netKey] && pp[netKey].z_um) {    // 정확한 φ(z)/T(z) = Fig4e
+        const src = pp[netKey], L = Math.max(...src.z_um);
+        curves.push({ zs: src.z_um, ys: src.phi, color: modeCol, dash: false });
+        // bare 집전체 점선은 전자 전용 — 이온·열전도엔 대응물이 없다.
+        const bz = (!ionic && !thermal && pp.electronic_bare && pp.electronic_bare.z_um) ? pp.electronic_bare : null;
+        if (bz) curves.push({ zs: bz.z_um, ys: bz.phi, color: modeCol, dash: true });
+        yLab = thermal ? 'T (@ΔT=1)' : 'φ (V @ΔV=1V)';
+        capTxt = thermal
+          ? 'T(z) @ΔT=1 — ∇·(k∇T)=0 정규화 온도 (열류 아님; 기울기 ∝ 국소 열저항).  多상(全상 열통과)이라 마스크가 전자·이온망보다 넓다'
+          : `φ(z) @ΔV=1V — Oh2025 Fig4e 대응${ionic ? '' : ' · 실선 정본 / 점선 bare 집전체(계면 강하)'}`;
+        hdr = thermal ? 'z_um,z_over_L,T_norm' : 'z_um,z_over_L,phi_V,phi_bare_V';
+        title = thermal ? '두께방향 T(z) 프로파일 (열전도 ΔT=1)' : '두께방향 φ(z) 프로파일 (Oh2025 Fig4e)';
+        rows = src.z_um.map((z, i) => thermal
+          ? [z.toFixed(2), (z / L).toFixed(4), src.phi[i]]
+          : [z.toFixed(2), (z / L).toFixed(4), src.phi[i], bz ? bz.phi[i] : '']);
+      } else if (fld.length) {                               // 폴백: 필드 클라우드 층평균
         const NB = 24, sum = new Float64Array(NB), cnt = new Int32Array(NB);
         let zmx = 1e-9; for (const p of fld) if (p[2] > zmx) zmx = p[2];
         for (const p of fld) { const b = Math.max(0, Math.min(NB - 1, Math.floor(p[2] / zmx * NB))); sum[b] += p[3]; cnt[b]++; }
         const zs = [], ys = [];
         for (let b = 0; b < NB; b++) if (cnt[b]) { zs.push((b + 0.5) / NB * zmx); ys.push(sum[b] / cnt[b]); }
-        curves.push({ zs, ys, color: ionic ? '#a78bfa' : '#f87171', dash: false });
-        yLab = '⟨|J|⟩(z) 상대';
-        capTxt = '⟨|J|⟩(z) 상대 (필드 클라우드 서브샘플 — 노이즈 있음) · 정확한 매끈한 φ(z) Fig4e는 <b>payload 재생성</b> 후';
-        hdr = 'z_um,z_over_L,jmag_rel';
+        curves.push({ zs, ys, color: modeCol, dash: false });
+        yLab = joule ? '⟨q⟩(z) 상대' : thermal ? '⟨|k∇T|⟩(z) 상대' : '⟨|J|⟩(z) 상대';
+        capTxt = (joule ? '⟨q⟩(z) 상대 — Joule 발열밀도 q∝|J|²/σ 층평균 (전위 대응물 없음: 발열은 SOURCE 밀도)'
+                : thermal ? '⟨|k∇T|⟩(z) 상대 — 열류 크기 층평균'
+                : '⟨|J|⟩(z) 상대')
+          + ' (필드 클라우드 서브샘플 — 노이즈 있음)'
+          + (joule ? '' : thermal ? ' · 매끈한 T(z)는 <b>payload 재생성</b> 후'
+                                  : ' · 정확한 매끈한 φ(z) Fig4e는 <b>payload 재생성</b> 후');
+        hdr = joule ? 'z_um,z_over_L,q_rel' : thermal ? 'z_um,z_over_L,kgradT_rel' : 'z_um,z_over_L,jmag_rel';
+        title = joule ? '두께방향 Joule 발열밀도 ⟨q⟩(z)'
+              : thermal ? '두께방향 열류 ⟨|k∇T|⟩(z)' : '두께방향 ⟨|J|⟩(z) 프로파일';
         rows = zs.map((z, i) => [z.toFixed(2), (z / zmx).toFixed(4), ys[i].toFixed(5)]);
       } else { cap.textContent = '프로파일 데이터 없음'; return; }
       drawZProfileCanvas(cv, curves, yLab);                  // 인라인 미리보기
       cap.innerHTML = capTxt;
-      state._fldProf = { rows, header: hdr, curves, yLab };  // 고해상 export용 원자료 보존
+      state._fldProf = { rows, header: hdr, curves, yLab, title };  // 고해상 export용 원자료 보존
     })();
     const pfBtn = document.getElementById('fld-prof-dl');
     if (pfBtn) pfBtn.onclick = () => {
@@ -3407,7 +3424,9 @@ function applyViewMode(state, mode) {
       if (!pr) return;
       const big = document.createElement('canvas'); big.width = 1280; big.height = 760;   // ★matplotlib 흰배경 실선판 (다운로드)
       drawZProfileMPL(big, pr.curves, pr.yLab, '집전체', '분리막',
-        (String(pr.yLab).indexOf('φ') >= 0 ? '두께방향 φ(z) 프로파일 (Oh2025 Fig4e)' : '두께방향 프로파일 (Fig4e)'));
+        // ★ 제목은 프로파일이 스스로 들고 온다 (예전엔 yLab 에 'φ' 가 있나로 추측 → 열류·Joule 이
+        //   전부 'Fig4e' 라는 남의 제목을 달았다).  구형 state 대비 폴백만 남김.
+        pr.title || (String(pr.yLab).indexOf('φ') >= 0 ? '두께방향 φ(z) 프로파일 (Oh2025 Fig4e)' : '두께방향 프로파일'));
       // 케이스별 유니크 파일명 (안 그러면 elec_zprofile / _1 로 뭉개짐).  ★레시피(additive_counts)를
       // 우선 — payload에 내재적이라 SBE(VGCF-PTFE)↔DBE(VGCF-PTFE-SDCP)가 항상 다름.  collector selected는
       // 두 payload에서 같은 기본값(SBE)일 수 있어 구분 불가 → SBE/DBE 토큰만 가독성용으로 덧붙임.
