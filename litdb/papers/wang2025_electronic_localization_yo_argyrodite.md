@@ -1,6 +1,6 @@
 # Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries — Dewen Wang / Chong Liu (Angew. Chem. Int. Ed. 2025, VIP)
 
-> slug `wang2025_electronic_localization_yo_argyrodite` · DOI `10.1002/anie.202501411` · type `exp + DFT/BVSE 보조` · PDF `2c40956f(본문 11p)` + `459bf7a1(SI 34p)` · digested `2026-08-04` · status ✅
+> slug `wang2025_electronic_localization_yo_argyrodite` · DOI `10.1002/anie.202501411` · type `exp + DFT/BVSE 보조` · PDF `2c40956f(본문 11p)` + `459bf7a1(SI 34p)` · digested `2026-08-04` · **2차 패스(본문 그림 픽셀 독립 검증) `2026-08-04` → §18** · status ✅
 > elements: Li, P, S, Cl, Y, O
 > methods: DFT, BVSE, DOS, PDOS, ELF, LOBSTER, XPS, Raman
 > **저자**: Dewen Wang⁺, Chong Liu⁺(공동1저자), Ruoyu Wang, Tianran Zhang, Butian Chen, Tenghui Wang, Qi Lu, Wen Yin(CSNS 동관), **Xiangfeng Liu***(UCAS 베이징) · Angew 2025, 64, e202501411 (2025-01-17 접수 → 03-09 온라인, VIP)
@@ -46,7 +46,7 @@ Li₆PS₅Cl에 Y₂O₃로 Y³⁺→P⁵⁺(4b)+O²⁻→S²⁻(16e) 5% 공치�
 | rate 0.1→1.0C (Li-In) | 118.6→**23.6** mAh/g | 122.2→**62.5** mAh/g | Fig 6b |
 | 격자 a (XRD Rietveld) | 9.84764 Å | **9.84824 Å (+0.0006 Å = +0.006%)** | §13-1 참조 |
 | Raman PS₄³⁻ | 427.18 cm⁻¹ | 동일 (shift/splitting 없음) | Fig 1e |
-| 밴드갭 | **미보고** (PDOS 창 −6..6 eV만) | 미보고 | — |
+| 밴드갭 | 본문·SI **미보고** → **2차 패스 그림 실측 ~2.1 eV** | 실측 **~2.55 eV** | Fig 5e 픽셀(§18.2) — DOS-threshold 판독, ±0.2–0.3 eV |
 
 ## 4. 재료·실험 방법
 - **합성**: Li₂S(Alfa)+P₂S₅+LiCl+**Y₂O₃**(Aladdin, 99.9%) → 유성밀 500 rpm 10 h(지르코니아 1:40) → 펠릿, 석영관 밀봉 → **550 °C 10 h**(3 °C/min), 전 과정 Ar GB.
@@ -236,7 +236,11 @@ LCO/Li 0.1C: 112.0 mAh/g·89.6%/100cyc vs 100.1·77.2%. LCO/Li-In 0.5C: **91.9 m
 | Y³⁺ 자리 | **P(4b)** — 형성E Δ0.0123 eV/atom(배열 각 1개)+constrain된 정련 | **cascade M³⁺ site-rule: 26/26 전원 Li_24g**(O는 S_16e; Y₂O₃ 포함, host=modelc, UMA 스케일) | **⚠ 정면 충돌(방법·호스트 의존)** — 그들 Y@P는 +2Li(carrier↑), 우리 Y@Li는 donor-blocking. 어느 쪽이 맞는지에 따라 σ 기전이 정반대. 우리 쪽도 UMA·Cl-rich host라 직접 반증은 아님 → 검증 계산 가치(§14-①) |
 | M³⁺ 도핑의 Li 수송 효과 | "장벽 절반" | cascade **bvs_li_proxy 0.83–0.92로 균일**(M³⁺ 종류 무관·Nd σ-drop 0.52×는 blocking) | **✗ 방향 상충** — 우리 데이터는 "M³⁺ 도핑은 Li 이동도를 거의 안 바꾼다". 단 사이트 모델이 다르니(P vs Li) 동일 조건 비교 아님 |
 | σ_e | 6.33→1.55×10⁻⁷ S/cm | (우리 σ_e 실측 없음; wide-gap 축만) | 그들 LPSC 베이스라인이 [Adeli]3e-9·[Taklu]8.75e-9·[Yang25]2.59e-9 대비 60–200× 높음 — 시료 품질 의심 |
-| band gap | 미보고 | comp1 2.066 / modelc 2.099 eV (PBE fixed-occ nscf) | 비교 불가(그들 PDOS 창만 존재) |
+| band gap | 본문 미보고 → **Fig 5e 픽셀 실측 ≈2.07 eV**(LPSC) / ≈2.55 eV(YO) | comp1 **2.066** / modelc 2.099 eV (PBE fixed-occ nscf) | **✓ 정합** — 같은 PBE 스케일, 사실상 같은 자리. 우리 2.066이 특이값 아님을 타 그룹·VASP로 교차확인(§18.2). ⚠ 그들 값은 DOS-threshold 판독이라 **db 편입·절대값 인용 금지** |
+| VBM character | Fig 5e: 밴드 가장자리 **S-p 독점**(P-p는 S-p의 2%) | comp1/modelc 둘 다 **VBM = S 3p** | **✓✓ 독립 확인** — 단 논문 본문은 이걸 "p–p 혼성 at Fermi level"이라 **반대로 서술**(§18.1) |
+| O 2p 위치 | Fig 5e: O-p 무게의 **82%가 E<−2 eV**(S-p는 30%) | LPSOCl(+O) **O 2p 매몰**(site-PDOS, 창 −8..0 eV) | **✓✓ 정합** — 방법 다른데 결론 같음. 함의도 같음: O는 산화 onset을 못 움직인다(그들 CV onset 불변과 자기일관) |
+| O 치환의 gap 효과 | +0.48 eV (2.07→2.55) | +0.16 eV (comp1 2.066 → LPSOCl 2.2309) | **✓ 방향 일치**, 크기 3배 — 그들 VASP 모델 O 농도가 훨씬 높은 탓(O@Cl 2개)으로 설명됨 |
+| σ₀(전지수인자) 거동 | σ·Ea 실측이 **σ₀ 3.6× 감소**를 요구(§18.4) | cascade: M³⁺는 Li 이동도 거의 불변, **Nd는 σ 0.52× blocking** | **✓ 방향 일치(우리 쪽과)** — 그런데 논문 설명("carrier↑·채널 확장")과는 **반대**. 그들 자기 모순 |
 | 무질서 처리 | 없음(정렬 스냅샷 1개) | disorder ensemble·SQS 계열 규율 | 우리 기준 미달 |
 | O 도핑 위치 | 정련=16e(S자리) vs **VASP=Cl자리** vs BVSE=불명 | 우리 LPSOCl(+O)는 S자리 O, gap 2.2309 eV | 그들 내부 불일치(§13-5) |
 | Ea 실험 | 0.375→0.34 eV (EIS 벌크+입계) | comp1 MLIP-MD 0.253 (단일궤적; modelc 3-seed 0.197±0.032) | 방법 다름(EIS vs 벌크 MD) — 방향만: 우리가 벌크라 낮은 게 정상 |
@@ -257,18 +261,28 @@ LCO/Li 0.1C: 112.0 mAh/g·89.6%/100cyc vs 100.1·77.2%. LCO/Li-In 0.5C: **91.9 m
 12. **통계 전무** — 셀 반복수(n), 오차막대, BVSE 배열 앙상블, DFT 배열 샘플링 모두 없음. 대칭셀·CCD는 단일 셀 서사.
 13. **순환 구조** — Y@4b를 가정한 정련("확인") → 그 구조로 BVSE("채널 확장") → 그 결론으로 실험 σ 해석. 각 고리는 독립 검증 없이 서로를 인용.
 14. **"electronic localization"의 인과 비약** — §8.2의 4개 비약(열역학 부재·Y/O 미분리·σ_e 연결 없음·정량지표 부재).
+15. **⭐ [2차] "p–p hybridization at the Fermi level"이 자기 Fig 5e와 어긋난다** — 밴드 가장자리에서 P-p는 S-p의 **2%**(P-p 봉우리는 −4.4 eV). LPSC의 VBM은 사실상 **순수 S 3p**다. 게다가 도핑 후 Y-d가 가장자리에 **18%** 들어오므로, "비편재→국재" 서사와 양이온 성분의 변화 방향이 **반대**다. → §18.1. **1차의 "용어 부정확" 판정을 "사실 오류"로 승격.**
+16. **⭐ [2차] σ·Ea 쌍이 "carrier 증가" 설명과 모순** — σ 1.29× / ΔEa 0.040 eV ⇒ 전지수인자 σ₀가 **3.6× 감소**해야 성립. 논문 설명(채널 확장+carrier 증가)은 σ₀ 증가 방향. 결론은 ΔEa>0.0065 eV면 성립해 **판독 정밀도에 둔감**. → §18.4.
+17. **[2차] Fig 2d/e BVSE 두 패널의 표본 비대칭** — LPSC 프로파일이 LPSC-YO보다 현저히 조밀·불규칙 → 경로/샘플링이 서로 다름. iso-level 미표기까지 겹쳐 "1.11→0.61 = 절반"의 비교 가능성 자체가 흔들린다. → §18.5.
+18. **[2차] Fig 5 캡션 원소 표기 오류 2건** — "S 2p"(→ S 3p, 2p는 내각 XPS 준위) · "**Y 3d**"(→ Y 4d, Y에 3d 껍질 없음). → §18.6.
+19. **[2차] Arrhenius 창 35 K(25–60 °C)·5점·오차 미보고** — 조성 간 Ea 차 0.040 eV의 유의성 판정 불가. → §18.8.
+20. **[2차] 0.5C 용량 불일치** — Fig 6b rate 86.1 vs Fig 6d 사이클 초기 91.9 mAh/g(=Fig 6b의 0.4C 값과 동일). → §18.9.
 
 ## 14. 적용 인사이트 (우리 캠페인에)
 - **① Y@P(4b) vs Y@Li(24g) site-preference 검증 계산 가치** — 우리 cascade는 M³⁺ 전원 Li_24g(UMA·modelc host), 이 논문은 Y@P(4b)(PBE 형성E 2배열+constrained 정련). comp1 host에서 Y@4b(+2Li) vs Y@24g(−2Li)를 **같은 DFT 기준**으로 형성E·BVSE 채널%·(가능하면 MLIP-MD Ea)로 갈라보면, 이 논문 기전의 사활+우리 site-rule의 host 의존성을 동시에 판정할 수 있다. (Y³⁺→P⁵⁺면 carrier가 +2Li, Y³⁺→Li⁺면 −2Li — **부호가 반대**라 σ 기전이 정반대로 갈림.)
 - **② BVSE 규율의 반면교재** — "BVSE 장벽 절대값을 Ea/σ 서사로 쓰면 자기 실험과 3× 어긋난다"의 출판 사례. 우리 채널%-only 규율의 근거 각주로 인용 가능.
 - **③ DRT 열화 추적 차용** — τ(10⁻⁶ SSE/10⁻⁴ SEI)×스트리핑 용량 색맵으로 "무엇이 언제 죽는지" 분리 — 우리 계면 논의(축 E)의 실험 파트너 기법으로 명기.
 - **④ Li₂O interphase = wide-gap 절연 산물 가족** — LiCl([Lu]·[Li25])·LiF 계열과 같은 축 E 서사. O-도핑 argyrodite(우리 LPSOCl, +B₂O₃)의 음극 방어 논리로 소환 가능(단 물량 정량 없음 명시).
-- **⑤ CV 2.48 V** — 우리 2.256 V(S-limited) 위 kinetic overshoot 데이터점 하나 추가(B①). "치환으로 onset은 안 움직인다"([Banik])와도 정합(YO도 onset 동일, 전류만↓).
+- **⑤ CV 2.48 V** — 우리 2.256 V(S-limited) 위 kinetic overshoot 데이터점 하나 추가(B①). "치환으로 onset은 안 움직인다"([Banik])와도 정합(YO도 onset 동일, 전류만↓). [2차] Fig 2f 전류 실측으로 확정: >2.5 V에서 두 시료 **~1×**(§18.7).
+- **⑥ ⭐[2차] 외부 교차검증 카드 3장** — 이 논문의 Fig 5e는 (a) LPSC PBE gap **≈2.07 eV**(우리 comp1 2.066), (b) **VBM = S 3p 독점**, (c) **O 2p 매몰**을 전부 독립적으로 보여준다(§18.2·18.3). 우리 세 결과가 "우리 세팅 탓"이 아님을 **다른 그룹·VASP·같은 PBE**로 받칠 수 있는 드문 카드다. 단 gap 절대값은 그림 판독이라 **"wide-gap 2 eV대·O가 넓히는 방향" 수준까지만** 인용.
+- **⑦ ⭐[2차] "자기 그림으로 반박되는 전자구조 서사"의 사례** — §18.1(p–p 혼성)·§18.4(σ₀ 방향)은 **PDOS를 정성 그림으로만 쓰면 어떻게 틀리는지**의 교보재다. 우리 site-PDOS 규율(⟨3p⟩ mean-3p를 **그림 표시 창과 동일한 −8..0 eV 창**에서 정량화)이 왜 필요한지의 각주로 인용 가능 — §14-②(BVSE 채널%-only)와 같은 역할.
 
 ## 15. 인용 가능 문장 (deck/paper용)
 - "Wang et al. (Angew 2025) report that 5% Y/O co-substitution in Li₆PS₅Cl suppresses interfacial Li₂S/Li₃P formation (21.3→9.9% / 9.0→3.6% in XPS) and forms an in-situ Li₂O interphase, extending Li-symmetric cycling to >4800 h — an anode-axis (kinetic passivation) improvement, with the oxidation onset unchanged (~2.48 V CV), consistent with our S²⁻-limited 2.256 V."
 - "Their BVSE 'barrier halving' (1.11→0.61 eV) exceeds their own measured Ea (0.375/0.34 eV) by 2–3×, illustrating why we restrict BVSE to channel-fraction descriptors rather than absolute migration barriers."
 - "The claimed Y-site (P 4b, +2 Li carriers) conflicts with our UMA cascade site rule (all 26 M³⁺ dopants on Li 24g); the two models predict opposite carrier changes and remain untested against each other."
+- [2차] "Their own PBE PDOS (Fig 5e) places the Li₆PS₅Cl valence-band edge on essentially pure S 3p — P p-character is ~2% of S there, with the genuine P–S p–p bonding state 4 eV lower — independently supporting the S-3p-dominated VBM we obtain for comp1."
+- [2차] "In the O-substituted argyrodite, 82% of the O 2p weight lies more than 2 eV below the valence-band edge, consistent with our LPSOCl result that O 2p is buried and therefore cannot shift the S²⁻-limited oxidation onset."
 
 ## 16. 주의/한계 (재인용 시)
 - LPSC σ 2.75/Ea 0.375는 **그림 판독**(본문 수치 없음) — "≈" 필수.
@@ -277,8 +291,11 @@ LCO/Li 0.1C: 112.0 mAh/g·89.6%/100cyc vs 100.1·77.2%. LCO/Li-In 0.5C: **91.9 m
 - "100%/1300 cycles"는 Li-In·0.5C·저활용·coated-catholyte 조건부 — 무단서 인용 금지.
 - Madelung −166.51/−175.07 eV/atom은 **유닛 전하가 다른 비교** — 정전 안정성 순위로 이식 금지.
 - 우리 cascade Y₂O₃ 수치(de_post_anneal −0.99 eV/atom 등)는 **UMA 스케일·modelc host 내부 비교 전용** — 이 논문 PBE 값과 절대 비교 금지.
+- **[2차] 밴드갭 2.07/2.55 eV는 그림 판독(DOS-threshold)** — CLAUDE.md 규율상 **db 편입 금지·절대값 인용 금지**. 허용 문장은 "그들 PBE PDOS도 wide-gap 2 eV대, O가 넓히는 방향까지 우리와 같다"까지(±0.2–0.3 eV 병기).
+- **[2차] 그들 PDOS 인용 시 "S 2p"를 그대로 옮기지 말 것** — 캡션 오타다. 가전자대는 **S 3p**(우리 site-PDOS 서술자와 같은 궤도). Y도 3d가 아니라 **4d**.
+- **[2차] LPSC σ·Ea(2.74 mS/cm·0.380 eV)는 픽셀 실측값** — 본문에 숫자가 없다. 인용 시 "Fig 2c 판독" 명시.
 
-## 17. 기법 용어 미니사전
+## 17. 기법 용어 미니사전 (§18은 그 아래)
 - **BVSE (bond-valence site energy)**: 결합원자가 불일치 |BVS−1|²+정전항으로 만든 정적 에너지 지도. 채널 연결성 판별엔 유용, **절대 장벽≠Ea**.
 - **Voronoi decomposition**: 결정 간극을 Voronoi 다면체로 분할해 이동 이온 후보 자리/병목 추출(플랫폼 전처리).
 - **ELF**: 전자 국재화 함수(0–1). 공유결합=결합축 국재, 이온결합=음이온 위 국재 — "이온성 지도"에 가까움.
@@ -288,3 +305,194 @@ LCO/Li 0.1C: 112.0 mAh/g·89.6%/100cyc vs 100.1·77.2%. LCO/Li-In 0.5C: **91.9 m
 - **GEIS**: 정전류 하 임피던스 — 작동 중 계면 추적.
 - **CCD**: 대칭셀 단락 임계 전류밀도(계면+미세구조 총합 지표).
 - **MPI (CSNS)**: 중국 산란중성자원 Multi-Physics Instrument — TOF 중성자 회절(경원소 Li/O 감도 확보용).
+
+---
+
+## 18. ★★★ 2차 패스 — 본문 그림 **픽셀 독립 검증** (2026-08-04)
+
+**1차 패스**(같은 날 앞선 세션)는 본문 + **SI 34 pp**의 텍스트·표를 정독했다. 이번 패스는 통로가 다르다:
+사용자가 inbox `52.`(본문 PDF 11 pp, **SI 없이**)를 다시 넣었고, 이번엔 그림을 **600–900 dpi로 렌더해
+축 프레임·눈금·막대·곡선을 픽셀로 실측**한 뒤 인쇄된 문장과 대조했다.
+재현 코드 **`tools/litdb/wang2025_fig_verify.py`** (PyMuPDF + PIL만, numpy 없음 — `ren2026_fig_verify.py` 선례 준용),
+출력 `litdb/inbox/_52_verify_out.txt`.
+
+> **결과 요약**: 1차가 "미보고 / 비교 불가"로 남긴 **밴드갭 칸이 채워졌고**(§18.2 — 우리 comp1과 정합),
+> 1차가 "부정확한 표현" 수준으로 넘어간 **PDOS 주장은 자기 그림에 의해 정면 반박된다**(§18.1).
+> **신규 4건**(§18.1·18.2·18.3·18.4). 1차의 판정은 하나도 뒤집히지 않았고, 두 건이 더 강해졌다.
+
+### 18.1 ✗✗ **신규·최중요** — "p–p hybridization **at the Fermi level**"은 자기 Fig 5e가 부정한다
+
+본문(p. 8) 원문: *"PDOS results show that P-p orbitals and S-p orbitals of PS₄ tetrahedron of LPSC exhibit
+**p–p orbital hybridization at the Fermi level**, which explains the electron delocalization of the PS₄ tetrahedron
+in the ELF analysis."* — 이 문장이 LPSC 쪽 기전의 **출발점**이다(그래야 "YO는 다르다"가 성립).
+
+1차 §8.1은 이걸 *"'at the Fermi level'은 부정확(절연체 — VBM 근방을 뜻함)"* 이라는 **용어 문제**로 넘겼다.
+픽셀 실측 결과 **용어 문제가 아니라 사실 문제**다. Fig 5e 상단 패널에서 곡선 높이(px):
+
+| E (eV) | P-p | S-p | P/S |
+|---:|---:|---:|---:|
+| **−4.4** | **193** | **178** | **108%** ← 진짜 p–p 결합상태 |
+| −3.5 | 13 | 43 | 30% |
+| −2.0 | 10 | 184 | 5% |
+| **−0.8** (S-p VBM 봉우리) | **7** | **457** | **2%** |
+| −0.2 | 4 | 67 | 6% |
+
+> 🔑 **P-p의 봉우리는 −4.4 eV — VBM보다 4 eV 아래다.** 거기서는 P-p ≈ S-p(108%)로 진짜 P–S σ 결합상태가 맞다.
+> 그러나 **밴드 가장자리(그들이 말한 "Fermi level")에서 P-p는 자기 최대치의 4%, S-p의 2%밖에 안 된다.**
+> 즉 **LPSC의 VBM은 사실상 순수 S 3p**이고, 논문이 "PS₄ 사면체의 전자 비편재화"의 근거로 든
+> p–p 혼성은 **그 자리에 없다**.
+>
+> **우리 데이터와의 관계**: 우리 comp1/modelc VBM character = **S 3p** (`our_dft_baseline.md` §핵심발산).
+> 이 논문의 Fig 5e는 **우리 결과를 독립적으로 재확인**해준다 — 그들 본문 문장만 빼면.
+> free-S site-PDOS ⟨3p⟩ −1.1 eV 서사(축 B①)와도 한 줄.
+
+**그리고 방향이 오히려 반대다.** 하단 패널(LPSC-YO)에서 Y-d는 **VBM 봉우리(−0.55 eV)에만** 나타난다
+(Y-d 79 px vs S-p 442 px = **18%**), 가전자대 나머지 구간에서는 0이다.
+
+| | 밴드 가장자리의 양이온 성분 |
+|---|---|
+| LPSC (도핑 전) | P-p = S-p의 **2%** (사실상 없음) |
+| LPSC-YO (도핑 후) | Y-d = S-p의 **18%** |
+
+> 🔑 **도핑은 밴드 가장자리의 양이온 성분을 없앤 게 아니라 새로 만들었다**(2% → 18%).
+> 논문 서사("비편재 → 국재")의 전자구조적 방향과 **정반대**로 읽힌다.
+> 공정하게: Y-d 혼입이 S 3p를 **아래로 밀어 안정화**한다는 해석은 가능하다(§18.2의 gap 증가와 정합).
+> 그러나 그 해석은 논문에 없고, 논문이 실제로 쓴 "p–p vs d–p" 대비는 **자기 그림에서 성립하지 않는다.**
+
+### 18.2 ✅ **신규** — 밴드갭을 그림에서 뽑았다: **~2.1 / ~2.55 eV** (1차의 "비교 불가" 칸이 채워짐)
+
+Fig 5e에는 갭이 그려져 있는데 본문·SI 어디에도 숫자가 없다. 축 눈금(−6…+6 eV, 101.75 px/eV)을 잡고
+S-p 곡선이 **연속 5열 이상 임계 위로** 올라오는 지점을 밴드 가장자리로 정의해 실측:
+
+| | VBM | CBM | **gap** |
+|---|---:|---:|---:|
+| LPSC | +0.30 eV | +2.38 eV | **≈ 2.07 eV** |
+| LPSC-YO | +0.22 eV | +2.76 eV | **≈ 2.55 eV** |
+
+- SI가 밝힌 계산 수준은 **PBE-GGA/PAW, ecut 500 eV**(§9). PBE 스케일에서 LPSC ~2.1 eV는 **정상 범위**이고,
+  **우리 canonical comp1 2.066 eV**(fixed-occ nscf VBM/CBM 고유값)와 사실상 같은 자리다.
+  → 우리 2.066이 특이값이 아님을 **다른 그룹·다른 코드(VASP)·같은 functional**로 교차확인한 셈.
+- **O 치환이 갭을 넓힌다**: 그들 +0.48 eV, **우리 comp1 2.066 → LPSOCl(+O) 2.2309 = +0.16 eV**.
+  **방향 일치, 크기는 그들이 3배** — 그들 VASP 모델의 O 농도가 훨씬 높기 때문으로 보인다
+  (§13-5: VASP 모델은 O를 **Cl 자리에 2개** = 관례셀이면 Cl의 50%, 실험 조성 O0.075와 자릿수가 다름).
+  즉 **크기 차이는 실물 차이가 아니라 모델 농도 차이**로 설명된다.
+
+> ⚠⚠ **인용 규율**: 이 2.07/2.55는 **그림에서 읽은 DOS-threshold 값**이다.
+> CLAUDE.md의 "band gap = fixed-occ nscf VBM/CBM 고유값만 인정, DOS-threshold 판독 금지(~0.3 eV 과소)"가
+> 그대로 적용된다 — **우리 db에 넣지 않고, 문헌 절대값으로도 인용하지 않는다.**
+> 쓸 수 있는 문장은 딱 하나: **"그들 PBE PDOS도 wide-gap 2 eV대이고 O 치환에서 갭이 넓어지는 방향까지 우리와 같다."**
+> (±0.2–0.3 eV 필수 병기.)
+
+### 18.3 ✅ **신규** — O 2p는 **S 3p VBM 아래로 매몰**돼 있다 (우리 LPSOCl 결과의 독립 확인)
+
+Fig 5e 하단 패널에서 색별 곡선 높이를 −6…+0.3 eV 구간에서 적분해 "깊은 쪽(E < −2 eV) 비율"을 냈다:
+
+| 성분 | E < −2 eV 무게 비율 | 봉우리 위치 |
+|---|---:|---|
+| **O-p** | **82%** | −5.5 eV, −2.8 eV |
+| S-p | 30% | **−0.55 eV** (VBM) |
+
+> 🔑 **O 2p 무게의 82%가 VBM에서 2 eV 이상 아래**에 있고, 밴드 가장자리는 S 3p가 독점한다.
+> = 우리 **LPSOCl(+O) "O 2p 매몰"** 결과와 같은 그림. 우리 쪽은 site-PDOS 정량(창 −8..0 eV)으로,
+> 이쪽은 원소분해 PDOS로 — **방법이 다른데 결론이 같다**(축 B① 보강).
+> 함의도 같다: **O 치환은 산화 onset을 움직이지 못한다**(가장자리가 여전히 S 3p이므로).
+> 실제로 이 논문 CV(Fig 2f)에서도 **산화 onset은 LPSC/LPSC-YO 동일하고 전류만 줄었다**(§5.5) — 자기 일관.
+
+### 18.4 ⚠ **신규** — Fig 2c 실측: σ·Ea 두 값이 **carrier 증가 설명과 아귀가 안 맞는다**
+
+LPSC 쪽 σ·Ea는 본문에 숫자가 없어 1차는 "~2.75 mS/cm·~0.375 eV (그림 판독)"로 뒀다. 막대를 픽셀로 실측
+(**x=0.05 행이 인쇄 라벨 3.53 / 0.34를 그대로 재현** → 축 보정 검증됨):
+
+| x | σ (mS/cm) | Ea (eV) |
+|---|---:|---:|
+| **0 (LPSC)** | **2.74** | **0.380** |
+| 0.02 | 3.36 | 0.361 |
+| **0.05 (LPSC-YO)** | **3.54** | **0.340** ← 인쇄 라벨과 일치 |
+| 0.08 | 2.66 | 0.351 |
+| 0.1 | 2.57 | 0.351 |
+
+Arrhenius 자기일관성 검사 (298 K, σT = σ₀·exp(−Ea/kT)):
+
+- 실측 σ 비 = 3.54/2.74 = **1.29×**
+- ΔEa = 0.040 eV **만으로** 기대되는 비 = exp(0.040/0.02569) = **4.70×**
+- ⇒ 아귀를 맞추려면 **전지수인자 σ₀가 3.6× 감소**해야 한다.
+
+> 🔑 그런데 논문의 설명(p. 4)은 *"aliovalent substitution of the large-size Y³⁺ to P⁵⁺ **enlarges the Li⁺ transport
+> channels and increases the Li⁺ carrier concentration**"* — **둘 다 σ₀를 올리는 방향**이다.
+> 자기 데이터는 σ₀가 **내려갔다**고 말한다. 즉 **"채널 확장 + carrier 증가"는 자기 σ·Ea 쌍으로 지지되지 않는다.**
+> 물리적으로 더 자연스러운 읽기: Y/O 치환이 **일부 Li 자리를 막거나(O의 강한 국소 흡인, Li–O R0 1.466 Å)
+> 이동 가능 자리 수·시도빈도를 줄이면서** 장벽만 살짝 낮췄다 — 이건 우리 cascade 결과
+> (**M³⁺ 도핑은 Li 이동도를 거의 안 바꾸고, Nd는 σ 0.52×로 blocking**)와 **오히려 같은 방향**이다.
+>
+> **민감도**: LPSC의 Ea(0.380)는 픽셀 판독이라 오차가 있다. 그러나 "σ₀ 감소" 결론은
+> **ΔEa > 0.0065 eV이기만 하면 성립**한다(= kT·ln 1.29). 인쇄된 0.34와 어떤 합리적 LPSC 값을 넣어도
+> 부호는 안 바뀐다 — **결론은 판독 정밀도에 둔감**하다.
+> ⚠ 단, σ는 벌크+입계 합산이므로 σ₀ 감소를 "벌크 carrier 감소"로 곧장 번역하면 안 된다
+> (치밀화·입계 기여가 σ₀에 섞인다). 말할 수 있는 건 **"논문이 든 설명은 자기 수치와 맞지 않는다"**까지다.
+
+### 18.5 ⚠ **1차 판정 보강** — Fig 2d/e BVSE 두 패널은 **표본이 서로 다르다**
+
+1차 §6.3은 1.11/0.61 eV가 "60 Å 경로의 최대값"임을 밝혔다. 픽셀로 두 프로파일을 나란히 보면 하나 더 보인다:
+**LPSC(파랑) 곡선은 마커가 훨씬 조밀·불규칙**하고(톱니 봉우리 다수, 1.11 eV 봉우리가 4곳에 불규칙 분포),
+**LPSC-YO(보라)는 눈에 띄게 성기고 매끄럽다**(준주기적 톱니).
+
+> 같은 알고리즘·같은 샘플링으로 뽑은 두 경로라면 격자상수가 0.006% 다른 두 구조에서
+> **점 밀도와 봉우리 규칙성이 이렇게 다를 이유가 없다.** 경로 선택 또는 샘플링 간격이 서로 달랐다는 뜻이고,
+> 그러면 **"1.11 → 0.61 = 절반"은 두 표본을 비교한 값**이 된다.
+> 1차 §6.4-③ 판정(✗✗ 과대 표현)을 **한 단계 더 강화**한다: 방법 내재 편향·단일 스냅샷·자기 실측과 3× 불일치에
+> **표본 비대칭**이 추가된다.
+> (덧: 두 패널 어디에도 **iso-level이 없다.** 등가면 두 장을 눈으로 비교시키면서 등고선 값을 안 주는 건
+> 우리 BVSE 규율 — "채널% = above-min ≤ iso, iso 명시" — 의 정반대다.)
+
+### 18.6 ⚠ **신규(경미)** — Fig 5 캡션의 원소 배치 표기 2건이 틀렸다
+
+Fig 5 캡션 원문: *"f) PDOS for **S 2p** in LPSC and **Y 3d** in LPSC-YO."*
+
+- **S 2p → S 3p**: S 2p는 결합에너지 ~162 eV의 **내각 준위**(그들 XPS Fig 1g가 재는 바로 그것)다.
+  −6…+6 eV 창의 가전자대 곡선은 **S 3p**다. 그림 범례 자체는 "S-p"로 옳게 적혀 있어 캡션만 오염.
+- **Y 3d → Y 4d**: Y(Z=39)는 [Kr]4d¹5s². **3d는 Y에 존재하지 않는 껍질**이다. 본문(p. 8)은 "Y-d"로만 써서 무사.
+
+> 실질 해석엔 영향 없지만, **XPS 표기와 가전자 PDOS 표기를 섞어 쓴 흔적**이라 §13-10(전반적 교정 품질)에 합류한다.
+> 우리 쪽 함의: 우리 캠페인의 표준 서술자가 **site-PDOS ⟨S 3p⟩ mean-3p**이므로,
+> 이 논문을 인용할 때 "S 2p"로 옮겨 적으면 우리 지표와 충돌한다 — **인용 시 S 3p로 교정할 것.**
+
+### 18.7 ✅ **재확인(신규 수치)** — Fig 2f CV 전류 실측
+
+| 특징 | LPSC | LPSC-YO | 비 |
+|---|---:|---:|---:|
+| 환원 피크 전류 (~0 V) | −0.24 mA | −0.15 mA | 0.62× |
+| 재산화 피크 (~0.45 V, P³⁻→P⁰) | +0.070 mA | +0.030 mA | 0.43× |
+| >2.5 V 산화 전류 | ~0.02 mA | ~0.02 mA | **~1×** |
+
+> 1차 §5.5의 판정("onset은 사실상 동일, 전류 크기만 차이")을 **수치로 확정**한다.
+> 고전압 쪽은 **두 시료가 구별되지 않는다** — 논문 본문도 이건 정직하게 인정한다
+> ("LPSC-YO electrolyte also shows similar results, thus surface modification strategy need be carried out
+> when matching well with high voltage cathode").
+> ⇒ 이 논문은 **음극축 논문**이라는 1차 결론이 CV 전류로도 확인된다. 축 B(산화)에는 이식 금지.
+
+### 18.8 ⚠ **신규(경미)** — Arrhenius 창이 **35 K**뿐이다
+
+Fig 2b의 x축 데이터 범위는 1000/T ≈ **3.00 → 3.35**, 즉 **T ≈ 333 → 298 K (25–60 °C)**, 5점.
+5개 조성의 Ea 차이가 최대 0.040 eV인데, 이 폭의 창에서 5점 회귀로 뽑은 값이다.
+
+> 오차막대·반복셀(n)이 없어 **0.380 vs 0.340의 유의성을 판정할 수 없다.**
+> §13-12(통계 전무)에 합류. 인용 시 "25–60 °C, 단일 셀, 오차 미보고" 단서 필수.
+
+### 18.9 ⚠ **신규(경미)** — 0.5C 용량이 두 그림에서 다르다
+
+- Fig 6b (rate test): 0.5C = **86.1 mAh/g**
+- Fig 6d (장기 사이클): 0.5C **초기 방전 91.9 mAh/g**
+
+91.9는 Fig 6b의 **0.4C 값과 정확히 같은 숫자**다. rate 시험과 사이클 시험이 다른 셀일 수는 있으나,
+같은 0.5C에서 6.7% 차이 + 인접 rate 값과의 일치는 **전사 오류를 의심할 만하다**. §13-10에 합류.
+(수명 서사 자체엔 영향 없음 — 오히려 §13-11의 "저활용률" 논점을 강화한다: 91.9는 0.1C 122.2의 **75%**.)
+
+### 18.10 이번 패스가 바꾼 것 / 안 바꾼 것
+
+| | |
+|---|---|
+| **채워짐** | §3 밴드갭 칸(미보고 → 그림 실측 ~2.1/~2.55 eV), §12 밴드갭 행(비교 불가 → **정합**) |
+| **강해짐** | §6.4-③ BVSE 판정(+표본 비대칭 §18.5) · §13-12 통계 전무(+§18.8) · §13-10 교정 품질(+§18.6, §18.9) |
+| **뒤집힘** | 없음 |
+| **신규 비판** | §18.1(PDOS 주장이 자기 그림에 반박됨 — **1차의 "용어 부정확"에서 "사실 오류"로 승격**), §18.4(σ₀ 방향 모순) |
+| **신규 우호 소견** | §18.2·§18.3 — 그들 PBE PDOS는 **우리 comp1 gap·VBM(S 3p)·O 2p 매몰을 독립 확인**해준다. 이 논문에서 우리가 **믿고 쓸 수 있는 계산 결과는 사실상 이 세 가지**(그리고 논문이 강조하지 않는 것들)다 |
