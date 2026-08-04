@@ -71,7 +71,7 @@ def fit_window(t, y, lo, hi):
     return float(A[0]), float(A[1]), r2, float(beta), float(ys[-1])
 
 
-def load_runs(specs, tmax):
+def load_runs(specs, tmax, seed_mode='mean'):
     """--run LABEL=DIR 들에서 msd.json 을 훑는다. 시드 여럿이면 최소 시드(재현 가능)."""
     out = {}
     for spec in specs:
@@ -89,15 +89,43 @@ def load_runs(specs, tmax):
             if not hits:
                 print(f"  ⛔ {label} {T} K — msd.json 못 찾음 ({root})")
                 continue
-            hits.sort(key=lambda x: (re.findall(r"s(\d+)", x[0]) or ["0"])[0])
+            hits.sort(key=lambda x: x[0])
+            root_abs = os.path.expanduser(root)
+            if seed_mode == "mean" and len(hits) > 1:
+                # ⚠⚠ **시드 평균이 기본이어야 하는 이유 (2026-08-04 실측).** 같은 계·같은 T
+                #   인데 시드만 다른 두 파일에서 beta 가 0.98 vs 0.52 로 갈렸다. 대표 하나를
+                #   고르는 규칙은 그 갈림을 **숨긴다**. 독립 시드는 같은 계의 다른 초기속도라
+                #   MSD 앙상블 평균이 정당하다 (msd_diffusive_check.py --average 와 같은 논리).
+                lens = [float(np.asarray(h[1]["times_ps"], float).max()) for h in hits]
+                Tend = min(min(lens), tmax)
+                g = np.arange(0.0, Tend + 1e-9, 0.1)
+                ys = []
+                for hf, hd in hits:
+                    tt = np.asarray(hd["times_ps"], float)
+                    yy = np.asarray(hd["msd_Li_A2"], float)
+                    ys.append(np.interp(g, tt, yy))
+                ymean = np.mean(ys, axis=0)
+                spread = float(np.std([y[-1] for y in ys]) / max(np.mean([y[-1] for y in ys]), 1e-9))
+                out[(label, T)] = {"t": g, "y": ymean, "src": f"{root} (mean of {len(hits)})",
+                                   "traj_ps": Tend, "n_seed": len(hits),
+                                   "spread": spread, "D_stored": None}
+                print(f"  ✓ {label} {T} K  [시드 {len(hits)}개 평균]  궤적 {Tend:.0f} ps · "
+                      f"MSD@끝 {ymean[-1]:.1f} A^2 · 시드산포 {spread*100:.0f}%")
+                for hf, hd in hits:
+                    print(f"        · {os.path.relpath(hf, root_abs)}  "
+                          f"({float(np.asarray(hd['times_ps'],float).max()):.0f} ps)")
+                continue
             f, d = hits[0]
             t = np.asarray(d["times_ps"], float); y = np.asarray(d["msd_Li_A2"], float)
             k = t <= tmax + 1e-9
-            out[(label, T)] = {"t": t[k], "y": y[k], "src": f,
+            out[(label, T)] = {"t": t[k], "y": y[k], "src": f, "n_seed": 1, "spread": 0.0,
                                "traj_ps": float(t.max()),
                                "D_stored": d.get("D_Li_cm2_s")}
             print(f"  ✓ {label} {T} K  ({k.sum()}점, 궤적 {t.max():.0f} ps, "
-                  f"MSD@{t[k].max():.0f}ps {y[k][-1]:.1f} A^2)  ← {os.path.basename(os.path.dirname(f))}")
+                  f"MSD@{t[k].max():.0f}ps {y[k][-1]:.1f} A^2)")
+            print(f"        ← {os.path.relpath(f, root_abs)}"
+                  + (f"   ⚠ 후보 {len(hits)}개 중 1개만 씀 — --seed_mode mean 권장"
+                     if len(hits) > 1 else ""))
     return out
 
 
@@ -118,7 +146,7 @@ def load_csv(path, tmax):
         k = (t <= tmax + 1e-9) & ~np.isnan(y)
         if k.sum() < 3:
             continue
-        out[(label, T)] = {"t": t[k], "y": y[k], "src": path,
+        out[(label, T)] = {"t": t[k], "y": y[k], "src": path, "n_seed": 1, "spread": 0.0,
                            "traj_ps": float(t[k].max()), "D_stored": None}
         print(f"  ✓ {label} {T} K  ({k.sum()}점, {t[k].max():.0f} ps, "
               f"MSD_end {y[k][-1]:.1f} A^2)")
@@ -132,6 +160,9 @@ def main():
     ap.add_argument("--order", nargs="+", default=["modelc", "lpsocl", "b2o3"],
                     help="패널 순서 (라벨)")
     ap.add_argument("--tmax", type=float, default=200.0, help="도시 상한 [ps]")
+    ap.add_argument("--seed_mode", choices=["mean", "min"], default="mean",
+                    help="같은 (계,T) 에 msd.json 이 여럿일 때. mean=MSD 곡선 앙상블 평균(기본, "
+                         "권장) · min=경로 사전순 첫 파일 하나(옛 동작, 시드 갈림을 숨긴다)")
     ap.add_argument("--fit", type=float, nargs=2, default=[2.0, 50.0],
                     help="적합 창 [ps] (기본 2 50 = 캠페인 규약)")
     ap.add_argument("--out_png", default="docs/figures/msd_3sys_200ps.png")
@@ -141,7 +172,7 @@ def main():
     data = {}
     print("── 수확")
     if a.run:
-        data.update(load_runs(a.run, a.tmax))
+        data.update(load_runs(a.run, a.tmax, a.seed_mode))
     for c in a.csv:
         data.update(load_csv(c, a.tmax))
     if not data:
@@ -154,8 +185,10 @@ def main():
 
     lo, hi = a.fit
     print(f"\n── 적합 (창 {lo:g}-{hi:g} ps · MSD = 6Dt + c, 절편 자유)")
-    print(f"{'계':<10}{'T':>6}{'slope':>9}{'절편':>8}{'R^2':>7}{'beta':>7}"
-          f"{'MSD@창끝':>10}{'D (cm2/s)':>12}  게이트")
+    # ⚠ 열 이름은 **창 끝 시각을 명시**한다 (2026-08-04). 'MSD@창끝' 이라고만 쓰니
+    #   궤적 길이로 오독됐다 — 궤적은 200 ps 인데 표는 창(50 ps) 값을 보여 준다.
+    print(f"{'계':<14}{'T':>6}{'slope':>9}{'절편':>8}{'R^2':>7}{'beta':>7}"
+          f"{'MSD@'+format(hi,'g')+'ps':>11}{'D (cm2/s)':>12}{'seed':>6}  게이트")
     fits = {}
     for lab in labels:
         for T in T_WANT:
@@ -164,7 +197,7 @@ def main():
                 continue
             f = fit_window(d["t"], d["y"], lo, hi)
             if f is None:
-                print(f"{DISPLAY.get(lab,lab):<10}{T:>6}   창 안 점 3개 미만 — 적합 불가")
+                print(f"{DISPLAY.get(lab,lab):<14}{T:>6}   창 안 점 3개 미만 — 적합 불가")
                 continue
             s, c, r2, beta, msd_end = f
             D = s / 6.0 * 1e-4
@@ -174,8 +207,12 @@ def main():
                 "⛔ beta" if not ok_b else "") + ("⛔ MSD<3" if not ok_m else "")
             fits[(lab, T)] = {"slope": s, "intercept": c, "r2": r2, "beta": beta,
                               "msd_end": msd_end, "D": D, "gate_ok": ok_b and ok_m}
-            print(f"{DISPLAY.get(lab,lab):<10}{T:>6}{s:>9.3f}{c:>8.2f}{r2:>7.3f}"
-                  f"{beta:>7.2f}{msd_end:>10.1f}{D:>12.3e}  {gate}")
+            print(f"{DISPLAY.get(lab,lab):<14}{T:>6}{s:>9.3f}{c:>8.2f}{r2:>7.3f}"
+                  f"{beta:>7.2f}{msd_end:>11.1f}{D:>12.3e}"
+                  f"{d.get('n_seed',1):>6}  {gate}")
+
+    tlens = sorted({round(v["traj_ps"]) for v in data.values()})
+    print(f"  (궤적 길이 {tlens} ps · 위 MSD 열은 **창 끝 {hi:g} ps** 값이지 궤적 끝이 아니다)")
 
     # ── Origin CSV ────────────────────────────────────────────────────────
     os.makedirs(os.path.dirname(a.out_csv), exist_ok=True)
