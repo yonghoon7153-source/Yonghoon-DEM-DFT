@@ -43,6 +43,9 @@ DISPLAY = {"modelc": "LPSCl1.6", "lpsocl": "LPSOCl1.6", "b2o3": "B2O3@LPSCl1.6",
 MD_EA = {"modelc": "0.197 ± 0.032", "lpsocl": "0.287 ± 0.024", "b2o3": "0.199 ± 0.034",
          "comp1": "0.253"}
 T_WANT = (600, 800, 1000)
+# CSV 왕복용 역매핑 — CSV 열은 표시명(LPSCl1.6 등)으로 저장되는데, 색(SYS)·Ea(MD_EA)는
+# 내부명(modelc 등) 키다. 역매핑 없이는 CSV 로 다시 그릴 때 전 계가 잉크색이 된다.
+INV_DISPLAY = {v: k for k, v in DISPLAY.items()}
 BETA_OK = (0.80, 1.20)
 MSD_MIN = 3.0            # A^2, msd_diffusive_check.py 와 같은 게이트
 
@@ -150,6 +153,7 @@ def load_csv(path, tmax):
         if not m:
             continue
         label, T = m.group(1), int(m.group(2))
+        label = INV_DISPLAY.get(label, label)          # 표시명 → 내부명
         if T not in T_WANT:
             continue
         y = np.array([float(x[i + 1]) if x[i + 1] else float("nan") for x in r[1:]])
