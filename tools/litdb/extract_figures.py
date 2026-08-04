@@ -745,11 +745,10 @@ def audit():
         g = gaps(main) + gaps(si, "S")
         if g:
             flags.append("번호 구멍 " + ",".join(g[:6]) + ("…" if len(g) > 6 else ""))
-        # ⚠ 표는 흰 바탕에 글자라 원래 blank 가 높다 — 그림만 본다
-        blank = [r["key"] for r in figs
-                 if r["kind"] != "table" and r.get("blank", 0) >= 0.965]
-        if blank:
-            flags.append("거의 백지 " + ",".join(blank[:4]))
+        # ⚠ '거의 백지' 검사는 뺐다 (2026-08-06 실물 확인): 추출 단계가 이미 blank > 0.985 를
+        #   버리므로, audit 이 0.965 로 잡던 건 **성긴 선그래프뿐**이었다 — 실제로 열어 보니
+        #   liu2013 f4(3점 직선)·fujimura2013 f2(아레니우스 산점도) 전부 정상 크롭.
+        #   경보가 다 거짓이면 진짜를 가린다.
         tall = [r["key"] for r in figs if r["kind"] != "table"
                 and r.get("w") and r["h"] / r["w"] >= 4.5]
         if tall:
