@@ -856,7 +856,12 @@ def _r(v, nd=1):
 
 
 # 2026-07-28 1차 digest 가 **SI Table S5** 에서 옮겨 적은 '>10× 36종' 목록.
-# SI PDF 는 현재 inbox 에 없어서 재확인이 불가능하므로 여기 박아두고 그림과 대조한다.
+# SI PDF 는 (이 2차 패스 시점에) inbox 에 없어서 여기 박아두고 그림과 대조했다.
+#
+# ⚠ 2026-08-04 3차 패스(`anderson2024_si_tableS5.py`)가 SI PDF 로 아래를 확정했다 — digest §20:
+#   · 'Rh' 는 **'Ho' 의 철자 오타**였다. 엄격한 >10× 는 35종이고 Ho(9.7×) 를 반올림해 넣어야 36.
+#   · 결측 5종은 SI 가 맞다(…Yb). **Fig 4a·4b 가 Y·Yb 칸을 맞바꿔 실은 것**이 논문 쪽 오류다.
+# 아래 상수는 **2차 패스 당시의 입력을 그대로 보존**한 것이라 고치지 않는다(재현성).
 DIGEST_36_FROM_SI = (
     "Ag Al Au Bi Ca Cd Ce Co Cs Cu Dy Fe Ga Gd Hf In K Lu Mg Na Nb Ni Pb Pr "
     "Rb Rh Ru Sc Sm Sn Sr Ta Tl W Y Zn").split()
@@ -890,8 +895,17 @@ def check_vs_si_digest(sig):
                  b, ("%.3e" % vb[0]) if vb else "GREY(Fig 4 에 값 없음)"))
     print("  ⚠ 두 목록의 차이가 **Y↔Yb · Rh↔Ho 두 쌍의 맞교환뿐**이다(양쪽 다 정확히 36종).")
     print("    = 그림과 Table S5 중 하나가 이 두 쌍을 서로 바꿔 싣고 있거나,")
-    print("      1차 digest 의 SI 전사에서 기호가 뒤바뀌었다. **SI PDF 재확보 전까지 미해결.**")
-    print("    그때까지 Y/Yb·Rh/Ho 4종의 σ 는 어느 쪽 값도 단독 인용하지 말 것.")
+    print("      1차 digest 의 SI 전사에서 기호가 뒤바뀌었다.")
+    print()
+    print("  ✅ 2026-08-04 3차 패스가 SI PDF 로 확정 (digest §20 · anderson2024_si_tableS5.py):")
+    print("     · Rh/Ho — **논문은 무결**. 그림·SI 값이 오차 안에서 일치한다")
+    print("       (Rh 2.58e-6 = undoped 1.6× · Ho 1.57e-5 = 9.7×).")
+    print("       1차 digest 36종 목록의 'Rh' 가 'Ho' 의 철자 오타였을 뿐이다.")
+    print("       엄격한 >10× 는 **35종**, Ho 를 반올림(9.7×→10×)해 넣어야 본문의 36 이 된다.")
+    print("     · Y/Yb — **논문 쪽 오류**. Table S5 + Fig 3(59/59 일치)가 Fig 4 를 이긴다.")
+    print("       채택: **Y(La) σ_i 2.46e-5 · σ_e 3.14e-8 (측정됨) / Yb(La) σ 미측정**.")
+    print("       Fig 4a·4b 두 패널 모두 Y·Yb 칸을 맞바꿔 실었다.")
+    print("     ⛔ 이 함수의 위 출력은 **2차 패스 당시 상태의 기록**이다. 인용은 §20 을 따를 것.")
 
 
 def main():
