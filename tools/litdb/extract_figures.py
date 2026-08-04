@@ -33,6 +33,7 @@ usage — 보통은 이 두 줄이면 끝난다 (inbox 를 훑어 digest 와 자
 """
 import argparse
 import json
+import math
 import re
 import shutil
 import sys
@@ -397,13 +398,38 @@ def _paper_index():
     return out
 
 
-def match_inbox(inbox=INBOX, min_score=0.42, min_hits=4):
+def _idf(papers):
+    """토큰 희소도. `batteries`·`lithium` 처럼 어느 논문에나 있는 말은 증거가 못 된다.
+
+    ⚠ 왜 (2026-08-06 실측): `batteries-12-00060-v2.pdf`(MDPI 파일명, 제목 정보 0)가
+      살아남은 토큰 `batteries` 하나로 엉뚱한 논문에 "제목 100%" 로 붙었다.
+      단순 개수 대신 **희소한 토큰이 맞았는가**로 점수를 매긴다.
+    """
+    df = {}
+    for tt, _n in papers.values():
+        for t in tt:
+            df[t] = df.get(t, 0) + 1
+    n = max(len(papers), 1)
+    return df, (lambda t: math.log(1.0 + n / df.get(t, 0.5)))
+
+
+def match_inbox(inbox=INBOX, min_score=0.45, min_hits=4, rare=3):
     """inbox PDF → slug 매칭. (배정, 미배정) 반환.
 
-    앵커 두 가지: ① digest 메타의 `inbox #NN` ↔ 파일명 맨 앞 번호 (정확), 흔치 않다(160편 중 20).
-                 ② 제목 토큰 겹침 — 파일명이 대개 제목에서 왔다.
+    앵커 세 가지: ① digest 메타의 `inbox #NN` ↔ 파일명 맨 앞 번호 (정확), 흔치 않다(160편 중 20).
+                 ② 제목 토큰 겹침 — **IDF 가중**(흔한 말은 거의 0점)
+                 ③ 그래도 못 찾으면 PDF 1쪽 본문
     """
     papers = _paper_index()
+    df, idf = _idf(papers)
+
+    def score(ft, tt):
+        """맞은 토큰의 희소도 합 / 파일명 토큰 전체의 희소도 합."""
+        den = sum(idf(t) for t in ft)
+        if den <= 0:
+            return 0.0, set()
+        hit = ft & tt
+        return sum(idf(t) for t in hit) / den, hit
     bynum = {n: s for s, (_t, n) in papers.items() if n}
     assign, orphan = {}, []
     for p in sorted(inbox.glob("*.pdf")):
@@ -415,16 +441,15 @@ def match_inbox(inbox=INBOX, min_score=0.42, min_hits=4):
             slug, why = bynum[num], f"inbox #{num}"
         else:
             ft = _toks(re.sub(r"^\s*\d+\s*[.)]\s*", "", name))
-            # 파일명이 짧으면(ECERD2600097 처럼 토큰 1~2개) min_hits 를 못 채운다 —
-            # 대신 "긴 토큰(≥8자)이 맞았는가"로 변별력을 본다.
             need = min(min_hits, len(ft))
             best, bs = None, 0.0
             for s, (tt, _n) in papers.items():
-                hit = ft & tt
-                sc = len(hit) / max(len(ft), 1)
+                sc, hit = score(ft, tt)
                 if len(hit) < need or sc <= bs:
                     continue
-                if len(hit) < min_hits and not any(len(t) >= 8 for t in hit):
+                # 토큰이 min_hits 에 못 미치면(ECERD2600097 처럼 짧은 파일명) **희소한**
+                # 토큰이 맞았을 때만 인정한다 — 흔한 `batteries` 하나로는 안 된다.
+                if len(hit) < min_hits and not any(df.get(t, 0) <= rare for t in hit):
                     continue
                 best, bs = s, sc
             if best and bs >= min_score:
@@ -447,8 +472,8 @@ def match_inbox(inbox=INBOX, min_score=0.42, min_hits=4):
         ft = _toks(head)
         best, bs = None, 0.0
         for s, (tt, _n) in papers.items():
-            hit = ft & tt
-            sc = len(hit) / max(len(tt), 1)          # 여긴 제목 쪽 기준(본문이 훨씬 길다)
+            # 여긴 **제목 쪽** 기준으로 본다 (1쪽 본문이 제목보다 훨씬 길다)
+            sc, hit = score(tt, ft)
             if len(hit) >= 5 and sc > bs:
                 best, bs = s, sc
         if best and bs >= 0.45:

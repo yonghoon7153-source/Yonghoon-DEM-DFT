@@ -2251,7 +2251,12 @@ def dashboard_highlights() -> list:
 # ─────────────────────────────────────────────────────────────
 # 개념 문서 첨부 (2026-08-05) — 그림·데이터를 웹에서 직접 열고 내려받기
 # ─────────────────────────────────────────────────────────────
-_ATT_RE = re.compile(r"(?<![\w/.])((?:docs|db)/[\w./*-]+\.(?:png|jpg|jpeg|svg|csv|json|xyz|vasp|cif|pdf))")
+_ATT_EXT_RE = r"(?:png|jpg|jpeg|svg|csv|json|xyz|vasp|cif|pdf)"
+_ATT_RE = re.compile(r"(?<![\w/.])((?:docs|db)/[\w./*-]+\." + _ATT_EXT_RE + r")")
+# ⚠ 위 정규식은 **공백이 든 파일명**을 못 잡는다 (`pmf 관련 설명.pdf` → `docs/…/pmf` 에서 끊김).
+#   이름 바꾸기로 한글·공백 이름이 생기면서 첨부가 통째로 사라졌다(2026-08-06 1저자 신고).
+#   우리 문서 관례는 경로를 백틱으로 감싸는 것이므로, 백틱 안은 공백까지 통째로 받는다.
+_ATT_TICK_RE = re.compile(r"`((?:docs|db)/[^`\n]+\." + _ATT_EXT_RE + r")`")
 #   litdb/figures = 논문 PDF 에서 잘라낸 그림(tools/litdb/extract_figures.py). 서빙만 허용하고
 #   갤러리(_GAL_DIRS)에는 안 넣는다 — 남의 논문 그림이 우리 산출물 목록을 덮으면 안 된다.
 _ATT_ROOTS = ("docs", "db", "litdb/figures")
@@ -2330,8 +2335,10 @@ def concept_attachments(cid: str) -> list[dict]:
     if not md:
         return []
     seen, out = set(), []
-    for m in _ATT_RE.finditer(md):
-        tok = m.group(1)
+    # 백틱 안(공백 허용)을 먼저, 그다음 백틱 없이 적힌 것 — 둘 다 seen 으로 중복 제거된다
+    toks = [m.group(1) for m in _ATT_TICK_RE.finditer(md)]
+    toks += [m.group(1) for m in _ATT_RE.finditer(md)]
+    for tok in toks:
         # 문서가 `bv_path_annotated_*.png` 처럼 와일드카드로 적은 경우도 펼친다
         rels = ([str(q.relative_to(ROOT)) for q in sorted(ROOT.glob(tok))]
                 if "*" in tok else [tok])
@@ -2343,9 +2350,12 @@ def concept_attachments(cid: str) -> list[dict]:
             if not p:
                 continue
             st = p.stat()
-        out.append({"rel": rel, "name": p.name, "kind": _att_kind(rel), "src": "cited",
-                    "size_kb": round(st.st_size / 1024, 1), "mtime": int(st.st_mtime),
-                    "day": _dt.datetime.fromtimestamp(st.st_mtime).strftime("%Y-%m-%d")})
+            # ⚠ 이 append 가 for 밖에 있었다 (2026-08-06 발견): 와일드카드가 N개로
+            #   펼쳐져도 마지막 1개만 등록됐고, 마지막 것이 없는 파일이면 직전 것의
+            #   크기·날짜를 달고 잘못 올라갔다.
+            out.append({"rel": rel, "name": p.name, "kind": _att_kind(rel), "src": "cited",
+                        "size_kb": round(st.st_size / 1024, 1), "mtime": int(st.st_mtime),
+                        "day": _dt.datetime.fromtimestamp(st.st_mtime).strftime("%Y-%m-%d")})
     for rel in _auto_matched(cid):                 # 규칙 자동 연결
         if rel in seen:
             continue
@@ -2401,7 +2411,9 @@ def _find_same_content(blob: bytes, name: str) -> str | None:
 
 # 파일명 정규화 — 예전엔 [A-Za-z0-9._-] 외를 전부 `_` 로 바꿔서 한글 이름이
 #   `pmf______.pdf` 처럼 뭉개졌다(2026-08-06 1저자 지적). 경로를 깨뜨리는 글자만 막는다.
-_BAD_NAME = re.compile(r'[\x00-\x1f/\\:*?"<>|]')
+#   `#`·`%`·`&`·백틱도 막는다: 파일 이름으로는 되지만 URL(/api/file/…) 이 그 앞에서 잘리고,
+#   백틱은 본문에 경로를 감싸 적는 우리 관례를 깨뜨린다.
+_BAD_NAME = re.compile(r'[\x00-\x1f/\\:*?"<>|#%&`]')
 
 
 def safe_filename(raw: str) -> str:
