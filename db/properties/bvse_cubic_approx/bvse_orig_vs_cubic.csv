@@ -1,4 +1,10 @@
 # BVSE Li-channel volume %% (above-min <= iso). orig = as-relaxed cell; cubic = faithful conventional-cubic approximant (real atoms folded)
+# COLUMN WARNING (added 2026-08-05): b2o3_cubic is the DOPANT-CENTERED box, not a bulk-like one.
+#   Its gap vs b2o3_orig (17.05 vs 3.83 at iso 0.25) is the LOCALITY RESULT, not a representation error.
+#   Representation check = bulk-like boxes only: modelc +1.05, lpsocl -1.34, b2o3_bulk -0.53 %p at iso 0.5 (all within +-1.3 %p).
+#   b2o3_orig and b2o3_bulk_orig are the SAME original cell (duplicated for column pairing).
+# QUOTE RULE: orig columns only. The cubic box is a display/sampling window (not a true periodicity;
+#   isosurfaces are clipped at box faces). Units are valence^2, NOT eV. See kb/results/bvse_cubic_approx_2026_07_16.md
 iso_val2,modelc_orig,modelc_cubic,b2o3_orig,b2o3_cubic,lpsocl_orig,lpsocl_cubic,b2o3_bulk_orig,b2o3_bulk_cubic
 0.25,1.23,1.89,3.83,17.05,2.37,1.49,3.83,3.46
 0.5,3.32,4.37,6.73,23.83,4.74,3.4,6.73,6.2
