@@ -2,7 +2,7 @@
 title: "SDCP 종합 정리 — 오비탈 · 작용기 · DFT (마스터)"
 tags: [project/sdcp-linio2, results, orbitals, doping, dft, binder]
 date: 2026-07-16
-status: phaseB-5of5-DONE_verdict-registered-2026-07-17
+status: phaseB-5of5-DONE_verdict-PENDING-v2 (doped v1 retracted 2026-07-17; see open_items #4)
 supersedes-headline-of: sdcp_linio2_binding_report.md (2026-06-01, UMA 시대)
 ---
 
