@@ -25,6 +25,25 @@
    "dpi": 300,
    "src": "12. Effect of Contact Deformations on the Adhesion of Particles.pdf",
    "blank": 0.946
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 8,
+   "file": "fig_3.png",
+   "caption": "FIG. 3. Graphs showing the relationships of the inter- action forces acting in the contact between a ball and a plane, and the ball deformation.",
+   "bbox": [
+    0.0,
+    53.6,
+    504.0,
+    224.8
+   ],
+   "w": 2100,
+   "h": 714,
+   "dpi": 300,
+   "src": "12. Effect of Contact Deformations on the Adhesion of Particles.pdf",
+   "blank": 0.968
   }
  ]
 }

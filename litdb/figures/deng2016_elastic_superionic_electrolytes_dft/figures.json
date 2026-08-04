@@ -2,29 +2,125 @@
  "slug": "deng2016_elastic_superionic_electrolytes_dft",
  "dpi": 300,
  "maxpx": 3000,
- "generated": "2026-08-04",
+ "generated": "2026-08-05",
  "sources": [
-  "34. Elastic Properties of Alkali Superionic Conductor Electrolytes from First Principles Calculations.pdf"
+  "DEM 논문/34. Advanced Energy Materials - 2023 - Schneider - Effect of Particle Size and Pressure on the Transport Properties of the Fast.pdf",
+  "DFT 먹인 논문/34. Elastic Properties of Alkali Superionic Conductor Electrolytes from First Principles Calculations.pdf"
  ],
  "figures": [
   {
    "key": "f1",
    "kind": "figure",
    "label": "1",
-   "page": 8,
+   "page": 2,
    "file": "fig_1.png",
-   "caption": "Figure 1. Plot of the shear modulus (G) vs bulk modulus (B) for all inves- tigated SICEs calculated using the PBEsol functional. Dashed lines are the iso-Young’s modulus lines in GPa. Two dotted lines correspond to G/B = 0.5 and G/B = 0.6.",
+   "caption": "Figure 1. Pressure behavior of Na3PS4,[16] Na3SbS4,[15] Na2S·P2S5 glass,[19] β-AgI,[8] LiBH4,[12] Li-β-alumina,[14] and Li0.35La0.52TiO2.96[13] (LLTO) ion conductors extracted from literature. The conductivities σ were nor- malized to the conductivity σ 0 measured at the lowest available pres- sure to better compare literature data that is otherwise several orders of magnitude apart.",
    "bbox": [
-    29.9,
-    59.0,
-    289.0,
-    210.4
+    297.3,
+    64.9,
+    552.3,
+    312.0
    ],
-   "w": 1081,
-   "h": 632,
+   "w": 1064,
+   "h": 1030,
    "dpi": 300,
-   "src": "34. Elastic Properties of Alkali Superionic Conductor Electrolytes from First Principles Calculations.pdf",
-   "blank": 0.901
+   "src": "34. Advanced Energy Materials - 2023 - Schneider - Effect of Particle Size and Pressure on the Transport Properties of the Fast.pdf",
+   "blank": 0.872
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. a) False color SEM image of the two t-Li7SiPS8 sieving fractions. b) Relative number fraction of t-Li7SiPS8 particle sizes (expressed as the Feret diameter). c) Cumulative number- (straight line) and volume-based (dashed line) PSD. The volume-based distribution curves were calculated based on the Feret diameter. d) Evolution of pellet thickness and e) pellet relative density of t-Li7SiPS8 sieving fractions under pelletizing pressure. The insert in (d) schematically depicts the experiment. The filled data points indicate increasing pressure, while the hollow points indicate the release sweep. f) “in die” Heckel plot analysis for the two sieving fractions. The dashed lines indicate the linear regime, while the dotted lines aid to estimate the relative density of the sample. The gray and white areas correspond to the regions in which particle rearrangement and (agglomerate) fragme",
+   "bbox": [
+    44.9,
+    64.9,
+    555.4,
+    398.6
+   ],
+   "w": 2128,
+   "h": 1391,
+   "dpi": 300,
+   "src": "34. Advanced Energy Materials - 2023 - Schneider - Effect of Particle Size and Pressure on the Transport Properties of the Fast.pdf",
+   "blank": 0.762
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Evolution of ionic conductivity with applied uni-axial pressure (first cycle). Orange and blue circles represent <50 µm and >50 µm par- ticle size fractions, respectively. Hollow and filled circles denote imped- ance measurements performed on increasing and decreasing the applied pressure (see inserted scheme).",
+   "bbox": [
+    45.0,
+    64.9,
+    300.0,
+    312.9
+   ],
+   "w": 1063,
+   "h": 1034,
+   "dpi": 300,
+   "src": "34. Advanced Energy Materials - 2023 - Schneider - Effect of Particle Size and Pressure on the Transport Properties of the Fast.pdf",
+   "blank": 0.87
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. a) Crystal structure of t-Li7SiPS8 with the bond valence sum iso-energy landscape in red, indicating favorable 1D conduction channels along the c direction. The black triangle depicts the bottleneck spanned by three sulfur atoms. b) Li MSD from AIMD simulations at 700 K for different cell volumes of t-Li7SiPS8. Linear fits of Li MSD are depicted as straight grey lines. c) Natural logarithm of ionic conductivity of t-Li7SiPS8 from the experi- ment with pressure. The fitted slope is depicted as a black line. The data points and error bars represent the average and standard deviation of three (<50 µm) and two (>50 µm) consecutive pressure-release sweeps. We refer to the Supporting Information for a more detailed derivation of Equation (2). The pressure dependence of the pre- exponential factor σ 0 is small (less than 10% of the second term in Equation (2))[11,16,43–47] as verified",
+   "bbox": [
+    42.2,
+    64.9,
+    552.5,
+    193.0
+   ],
+   "w": 2128,
+   "h": 535,
+   "dpi": 300,
+   "src": "34. Advanced Energy Materials - 2023 - Schneider - Effect of Particle Size and Pressure on the Transport Properties of the Fast.pdf",
+   "blank": 0.803
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Evolution of ionic conductivity with applied uniaxial stack pres- sure. Hollow and filled circles represent EIS measurements performed at a stack pressure of 0.01 and 0.1 GPa, respectively. The particle size fractions of < 50 µm and > 50 µm are depicted in orange and blue. The inserted scheme describes the measurement procedure of EIS meas- urements at a fixed stack pressure after pressing at variable pelletizing pressures.",
+   "bbox": [
+    300.1,
+    64.9,
+    555.1,
+    316.2
+   ],
+   "w": 1064,
+   "h": 1048,
+   "dpi": 300,
+   "src": "34. Advanced Energy Materials - 2023 - Schneider - Effect of Particle Size and Pressure on the Transport Properties of the Fast.pdf",
+   "blank": 0.853
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Figure 6. a) Histogram plot of Feret diameter distribution of t-Li7SiPS8 (< 50 µm) with gamma distribution function fit in blue. A workflow scheme for the DEM/FVA is depicted as an insert. b) Normalized ionic conductivity from varying pelletizing pressure (orange) and constant stack pressure (0.1 GPa, blue) experiment as a function of variable compression pres- sure. For the DEM/FVA, the pressure axis relates to the experimental pellet thickness, that was used for parametrization. The activation volume effect was considered in both scenarios, however it is almost negligible in the 0.1 GPa stack pressure scenario (upward triangle) compared to the variable pressure scenario (downward triangle). The experimental conductivity was normalized to the value at 0.5 GPa. At this pressure, the maximum ionic conductivity in the pelletizing pressure experiment was reached.",
+   "bbox": [
+    297.3,
+    64.9,
+    552.3,
+    554.3
+   ],
+   "w": 1064,
+   "h": 2040,
+   "dpi": 300,
+   "src": "34. Advanced Energy Materials - 2023 - Schneider - Effect of Particle Size and Pressure on the Transport Properties of the Fast.pdf",
+   "blank": 0.68
   }
  ]
 }

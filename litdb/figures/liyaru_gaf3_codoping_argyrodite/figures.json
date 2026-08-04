@@ -2,10 +2,10 @@
  "slug": "liyaru_gaf3_codoping_argyrodite",
  "dpi": 300,
  "maxpx": 3000,
- "generated": "2026-08-04",
+ "generated": "2026-08-05",
  "sources": [
-  "45. Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
-  "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf"
+  "DFT 먹인 논문/45. Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+  "DFT 먹인 논문/45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf"
  ],
  "figures": [
   {
@@ -482,6 +482,25 @@
    "dpi": 300,
    "src": "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
    "blank": 0.921
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 17,
+   "file": "fig_S21.png",
+   "caption": "Figure. S21. SEM images of the Li/LPSC interface after a) 100 cycles, b) 200 cycles, and c)",
+   "bbox": [
+    64.8,
+    65.9,
+    533.5,
+    272.0
+   ],
+   "w": 1953,
+   "h": 860,
+   "dpi": 300,
+   "src": "45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.286
   },
   {
    "key": "fS22",

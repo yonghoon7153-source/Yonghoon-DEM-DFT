@@ -2,30 +2,37 @@
  "slug": "kim2026_hts_li3sc2po43_coating_midni_ncm",
  "dpi": 300,
  "maxpx": 3000,
- "generated": "2026-08-04",
+ "generated": "2026-08-05",
  "sources": [
-  "01. S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-  "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf"
+  "DEM 논문/01. Integration of DEM-based microstructure generation with FEM and RNM simulations for evaluating ionic conductivity in composite cathodes of all-solid-state batteries.pdf",
+  "DFT 먹인 논문/01. S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
+  "★ 랩실 논문/01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf",
+  "건식전극 논문/01. Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
+  "이상욱 교수님/1. High-Throughput Discovery of Li3Sc2(PO4)3 as a Protective Coating for Stabilizing Mid-Ni NCM Interfaces in All-Solid-State Batteries.pdf",
+  "이용민 교수님/01. Porosity-Gradient Dry-Processed Graphite Electrode with Deformable Primer Layer for Boosting Fast-Charging Capability of Lithium-ion Batteries.pdf",
+  "DFT 먹인 논문/01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
+  "건식전극 논문/01. Sup) Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
+  "이상욱 교수님/1. Sup) High-Throughput Discovery of Li3Sc2(PO4)3 as a Protective Coating for Stabilizing Mid-Ni NCM Interfaces in All-Solid-State Batteries.pdf"
  ],
  "figures": [
   {
    "key": "f1",
    "kind": "figure",
    "label": "1",
-   "page": 3,
+   "page": 8,
    "file": "fig_1.png",
-   "caption": "Fig. 1. The mechanism of s-p hybridization inducing electronic structure reconfiguration. (a) The local electronic structure analysis of Li/LPSC1.5 and Li/ LPSC1.5- MgClO interface. (b) The partial density of states for Li/LPSC1.5 interface. (c)The partial density of states for LPSC1.5-MgClO electrolyte. (d) Schematic illustration of interface reaction at the Li/LPSC1.5 and Li/LPSC1.5-MgClO interface. 3− tetrahedrons due of electronic redistribution observed in the ELF analysis. The widening of the inter­ facial band gap indicates a reduction of redox for LPSC1.5-MgClO electrolyte, attributed to the decreased energy of bonding state. Spe­ cifically, the Li-s orbit is primarily concentrated near the Fermi level (0 eV), while the Mg-p orbit also exhibits a significant peak state density near 0 eV, demonstrating the emergence of s-p hybridization at the interface. Additionally, strong inter",
+   "caption": "Fig. 1. Role of PL as an adhesive and conductive interlayer in DPEs. a) Schematic illustration of the DPE fabrication process and the role of the PL as an adhesive and conductive interlayer. b) PL with various binders, including PAA, CMC, and PVDF.",
    "bbox": [
-    31.6,
-    49.4,
-    566.0,
-    377.1
+    33.8,
+    26.0,
+    545.8,
+    551.8
    ],
-   "w": 2228,
-   "h": 1366,
+   "w": 2135,
+   "h": 2192,
    "dpi": 300,
-   "src": "01. S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.755
+   "src": "01. Porosity-Gradient Dry-Processed Graphite Electrode with Deformable Primer Layer for Boosting Fast-Charging Capability of Lithium-ion Batteries.pdf",
+   "blank": 0.691
   },
   {
    "key": "f2",
@@ -50,115 +57,305 @@
    "key": "f3",
    "kind": "figure",
    "label": "3",
-   "page": 5,
+   "page": 13,
    "file": "fig_3.png",
-   "caption": "Fig. 3. The evolution process of crystal structure. (a) XRD Rietveld refinement plots of pristine LPSC1.5, LPSC1.5-MgClO after lithiation, and LPSC1.5 after lithiation- delithiation. (b) The scheme illustration of the crystal structural evolution process. 5",
+   "caption": "Fig. 3. Electrochemical performances of the WPE and DPEs in a half cell. a) Initial voltage profiles, b) cycle performance at 0.5C (1.75 mA cm−2), c) rate capability at current densities of 0.1, 0.5, 1, 2, 3, and 5C, and d) CC capacity vs. CV capacity at each current density.",
    "bbox": [
-    31.6,
-    434.5,
-    565.8,
-    721.3
+    33.8,
+    26.0,
+    545.8,
+    363.3
    ],
-   "w": 2227,
-   "h": 1196,
+   "w": 2135,
+   "h": 1406,
    "dpi": 300,
-   "src": "01. S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.733
+   "src": "01. Porosity-Gradient Dry-Processed Graphite Electrode with Deformable Primer Layer for Boosting Fast-Charging Capability of Lithium-ion Batteries.pdf",
+   "blank": 0.754
   },
   {
    "key": "f4",
    "kind": "figure",
    "label": "4",
-   "page": 6,
+   "page": 15,
    "file": "fig_4.png",
-   "caption": "Fig. 4. Analysis of interfacial redox reaction. XPS spectrums of LPSC1.5-MgClO after 1st (a) charge, (b) charge-discharge and (c) discharge-charge process. Raman spectrum of (d) the pristine LPSC1.5 and LPSC1.5-MgClO electrolytes, (e) LPSC1.5-MgClO and (f) the LPSC1.5 electrolytes after charging at 3.6 V. 2.3. Interface stability of Li-argyrodite interfacial stability between the electrolyte and Li anode. The electrochemical impedance spectroscopy (EIS) analysis in Fig. 5f shows that the impedance of Li/LPSC1.5-MgClO/Li symmetric cell re­ duces after 100 cycles, demonstrating the interface stability between LPSC1.5-MgClO electrolyte and Li anode. In contrast, the impedance of the Li/LPSC1.5/Li indicates a short circuit of the cell after 100 cycles. The reaction process and interfacial evolution were further analyzed using the distribution of relaxation times (DRT) in Fig. 5g. The differe",
+   "caption": "Fig. 4. Electrochemical performance of the WPE and DPEs in a full cell with an NCM 523 cathode. a) Initial voltage profiles, b) rate capability at current densities of 0.1, 0.5, 1, 2, 3, and 5C, and c) CC charging capacity vs. CV charging capacity at each current density. SEM and photographic images of an electrode surface of d) WPE, e) DPE@PAA-PL, f) DPE@CMC-PL, and g) DPE@PVDF-PL after 3C fast charge.",
    "bbox": [
-    31.6,
-    49.4,
-    566.0,
-    426.1
+    33.8,
+    26.0,
+    545.8,
+    643.4
    ],
-   "w": 2228,
-   "h": 1571,
+   "w": 2135,
+   "h": 2573,
    "dpi": 300,
-   "src": "01. S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.868
+   "src": "01. Porosity-Gradient Dry-Processed Graphite Electrode with Deformable Primer Layer for Boosting Fast-Charging Capability of Lithium-ion Batteries.pdf",
+   "blank": 0.647
   },
   {
    "key": "f5",
    "kind": "figure",
    "label": "5",
-   "page": 7,
+   "page": 18,
    "file": "fig_5.png",
-   "caption": "Fig. 5. Interface stability of LPSC1.5 and LPSC1.5-MgClO electrolytes against Li metal. The critical current density of (a) LPSC1.5-MgClO, and (b)LPSC1.5. (c) A comparison of the cycling performance of Li//Li symmetric cells based on LPSC1.5-MgClO with previously published Li-argyrodite electrolytes with various mod­ ifications. (d) Galvanostatic cycling of the Li symmetric cells with LPSC1.5 and LPSC1.5-MgClO electrolytes at 0.2 mAh cm−2. (e) Galvanostatic cycling of the Li symmetric cell with LPSC1.5-MgClO electrolyte at 1 mAh cm−2. (f) Galvanostatic electrochemical impedance spectroscopy (GEIS) and (g) distribution of relaxation times (DRT) of the Li/LPSC1.5-MgClO/Li symmetric cell at 25 ◦C and Li/LPSC1.5/Li symmetric cell at 25 ◦C. (h) SEM images (side-view) of LPSC1.5 and the corresponding elemental EDS (P and S) mappings at the Cu interface in Li/Cu cell after 50 cycles. (i) SEM im",
+   "caption": "Fig. 5. FIB-SEM tomography-based electrode microstructure characterization. a) Schematic illustration of FIB-SEM tomography acquisition and reconstructed 3D structures of WPE, DPE@PAA-PL, and DPE@PVDF-PL. b) Reconstructed 3D structures of the bare Cu, PAA- PL, and PVDF-PL in WPE, DPE@PAA-PL, and DPE@PVDF-PL respectively. c) 2D topological maps of the bare Cu and PLs. d) Normalized contact area between bare Cu or PL and active materials calculated from reconstructed 3D structures. e) Porosity distribution across the top, middle, and bottom layers of each electrode, analyzed from 3D XCT- and FIB-SEM tomography-based reconstructed structures. Connectivity matrices derived from the PNM for f) WPE, g) DPE@PAA-PL, and h) DPE@PVDF-PL.",
    "bbox": [
-    31.6,
-    49.4,
-    566.0,
-    485.1
+    33.8,
+    26.0,
+    545.8,
+    545.7
    ],
-   "w": 2228,
-   "h": 1816,
+   "w": 2135,
+   "h": 2166,
    "dpi": 300,
-   "src": "01. S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.729
+   "src": "01. Porosity-Gradient Dry-Processed Graphite Electrode with Deformable Primer Layer for Boosting Fast-Charging Capability of Lithium-ion Batteries.pdf",
+   "blank": 0.549
   },
   {
    "key": "f6",
    "kind": "figure",
    "label": "6",
-   "page": 8,
+   "page": 20,
    "file": "fig_6.png",
-   "caption": "Fig. 6. Electrochemical performance. (a) Cyclic voltammetry profiles of Li-In/LPSC1.5-MgClO/LPSC1.5-MgClO+C and Li-In/LPSC1.5/LPSC1.5-MgClO+C semi- blocking cells at 1 mV s-1. (b) The charge/discharge curves at various cycles of the LiFePO4/LPSC1.5-MgClO/Li. (c) The rate performance of the LFP/LPSC1.5- MgClO/Li and LFP/LPSC1.5/Li cells. (d) The initial charge-discharge curves of the NCM83/LPSC1.5-MgClO/Li and NCM83/LPSC1.5/Li cells at 0.1 C. at 0.1 C. (e) The charge/discharge curves at various cycles of the NCM83/LPSC1.5-MgClO/Li cell. (f) The rate performance of the NCM83/LPSC1.5-MgClO/Li and NCM83 /LPSC1.5/Li cells. (g) Cycle performance of the LiFePO4/LPSC1.5-MgClO/Li and LiFePO4/LPSC1.5/Li at 0.5 C. (h) Cycle performance of the NCM83/LPSC1.5- MgClO/Li and NCM83/LPSC1.5/Li cells at 0.1 C. 8",
+   "caption": "Fig. 6. FIB-SEM tomography-based electrochemical modeling and simulation. Li+ concentration 3D maps in active materials at end of 3C CC charging process of a) the WPE, b) DPE@PAA-PL, and c) DPE@PVDF-PL. Deconvoluted overpotential during 3C fast charging with respect to charge capacity of d) the WPE, e) DPE@PAA-PL, and f) DPE@PVDF-PL. Spatial distributions of Li⁺ concentration in electrolyte along the electrode depth as a function of SOC during 3C fast charging for g) the WPE, h) DPE@PAA-PL, and i) DPE@PVDF-PL.",
+   "bbox": [
+    33.8,
+    26.0,
+    545.8,
+    606.4
+   ],
+   "w": 2135,
+   "h": 2419,
+   "dpi": 300,
+   "src": "01. Porosity-Gradient Dry-Processed Graphite Electrode with Deformable Primer Layer for Boosting Fast-Charging Capability of Lithium-ion Batteries.pdf",
+   "blank": 0.565
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Effective ionic conductivity 𝜎eff,ion as a function of mean SE particle size 𝐷SE and 𝑓CAM computed using (a) FEM and (b) RNM. SE network descriptors as a function of 𝐷SE and 𝑓CAM: (c) SE utilization 𝜃SE, (d) SE–SE coordination number 𝑍SE−SE, and (e) average SE–SE contact resistance ̄𝑅SE−SE. Fig. 8 summarizes the results from the RNM calculations. As shown in Fig. 8(a), 𝜎eff,ion increases monotonically with pressure across all compositions. This trend is attributed to enhanced particle packing and improved SE–SE contact formation, leading to more effective percola- tion. From 100 to 400 MPa, the absolute and relative improvements are +0.067 mS/cm (98%) for 70 wt.%, +0.044 mS/cm (126%) for 75 wt.%, and +0.023 mS/cm (291%) for 80 wt.%. Although the relative gain is largest at 80 wt.% due to a poorly connected initial network, the highest absolute values are still reached at 70 wt.%,",
    "bbox": [
     31.6,
-    305.0,
-    565.8,
-    683.0
+    50.7,
+    567.0,
+    361.2
    ],
-   "w": 2227,
-   "h": 1576,
+   "w": 2232,
+   "h": 1295,
    "dpi": 300,
-   "src": "01. S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.845
+   "src": "01. Integration of DEM-based microstructure generation with FEM and RNM simulations for evaluating ionic conductivity in composite cathodes of all-solid-state batteries.pdf",
+   "blank": 0.647
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 11,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Pressure-dependent properties of the SE phase evaluated using resistor network modeling (RNM): (a) effective ionic conductivity 𝜎eff,ion, (b) SE-utilization 𝜃SE, (c) average SE–SE contact resistance ̄𝑅SE−SE, and (d) SE–SE coordination number 𝑍SE−SE as a function of compaction pressure for cathodes with 𝑓CAM = 70, 75, and 80 wt.%. While FEM offers high-fidelity spatial resolution, RNM provided similar accuracy at drastically reduced computational cost — up to two orders of magnitude faster — without requiring mesh generation or SE phase preparation. This makes RNM especially suitable for large-scale parametric studies and high-throughput screening. pathways alongside ionic conduction for a more comprehensive rep- resentation of the composite cathode. Although electronic percolation is typically ensured experimentally through the addition of a small fraction of conductive additives",
+   "bbox": [
+    31.6,
+    50.7,
+    567.0,
+    427.2
+   ],
+   "w": 2232,
+   "h": 1570,
+   "dpi": 300,
+   "src": "01. Integration of DEM-based microstructure generation with FEM and RNM simulations for evaluating ionic conductivity in composite cathodes of all-solid-state batteries.pdf",
+   "blank": 0.974
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 9,
+   "file": "fig_9.png",
+   "caption": "Fig. 9 (a) 3D rendering of the tomographic data over the high-nickel NCM secondary particle, illustrating crack initiation and propagation within the particle. (b) Evolution of Li concentration and the damage along the grain boundaries, showing the preferentially localized damage at grain boundaries. Reproduced from ref. 111 under the terms of the CC BY 4.0 license. Copyright 2020 The Authors, published by Springer Nature. (c) Morphological change of the single- and poly-crystalline high-nickel NCM cathode during pressing and cycling, highlighting severe intergranular cracking in polycrystalline particles and enhanced structural stability in single-crystalline counterparts. Reproduced with permission from ref. 114. Copyright 2021, Wiley-VCH GmbH.",
+   "bbox": [
+    36.5,
+    43.8,
+    558.8,
+    169.1
+   ],
+   "w": 2177,
+   "h": 523,
+   "dpi": 300,
+   "src": "01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf",
+   "blank": 0.715
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 9,
+   "file": "fig_10.png",
+   "caption": "Fig. 10 (a) Interface pore formation during stripping at an incoherent interface, illustrating the nucleation and growth of voids due to Li vacancy accumulation. Reproduced with permission from ref. 117. Copyright 2021, Wiley-VCH GmbH. (b) Li/LPSCl interface cycled above the critical stripping current density, showing progressive void coalescence and interfacial instability during repeated plating/stripping. (c) SEM cross-sections of the Li/LPSCl interface, revealing the evolution of voids, crack propagation, and severe interfacial degradation with cycling. Reproduced with permission from ref. 118. Copyright 2019, Springer Nature.",
+   "bbox": [
+    297.3,
+    247.1,
+    558.7,
+    565.6
+   ],
+   "w": 1091,
+   "h": 1328,
+   "dpi": 300,
+   "src": "01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf",
+   "blank": 0.44
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 10,
+   "file": "fig_11.png",
+   "caption": "Fig. 11 (a) Stress distribution at an 80% discharged state for various NCM-to-SE ratios, showing the development of localized stress concentrations with increasing microstructural inhomogeneity. (b) FIB-SEM images of composite cathodes with NCM-to-SE ratios of 70 : 30, 80 : 20, 85 : 15. Reproduced with permission from ref. 37. Copyright 2025, American Chemical Society. (c) Comparison of the volumetric strain, von Mises stress, and crack order between case 1 (inhomogeneous) and case 2 (homogeneous), demonstrating that structural inhomogeneity leads to heterogeneous stress distribution and accelerated crack propagation. Reproduced with permission from ref. 39. Copyright 2025, Elsevier.",
+   "bbox": [
+    36.5,
+    554.2,
+    558.7,
+    666.5
+   ],
+   "w": 2176,
+   "h": 469,
+   "dpi": 300,
+   "src": "01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf",
+   "blank": 0.612
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 11,
+   "file": "fig_12.png",
+   "caption": "Fig. 12 (a) In situ pressure measurement curves and voltage profiles of the Li–In cell and LTO cell, showing significantly larger pressure fluctua- tions in Li–In cells due to high-strain anode behavior. (b) XPS spectra obtained from the cathodes Li–In cell and LTO cell before after cycling. (c) Cross-sectional SEM images of the cathodes collected before and after cycling, revealing severe intergranular cracking and structural degradation in Li–In cells. (d) Schematic illustration of the anode-derived chemo- mechanical degradation of the cathode, highlighting stress transfer, dynamic interface evolution, and resulting heterogeneity-induced crack- ing. Reproduced with permission from ref. 32. Copyright 2023, Elsevier.",
+   "bbox": [
+    297.3,
+    43.8,
+    558.7,
+    399.2
+   ],
+   "w": 1091,
+   "h": 1482,
+   "dpi": 300,
+   "src": "01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf",
+   "blank": 0.704
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 12,
+   "file": "fig_13.png",
+   "caption": "Fig. 13 (a) Critical current density tests of sulfide SE symmetric cells, showing enhanced critical current density upon borohydride doping. (b) Borohydride doping eﬀect on the properties of Li/SE interphases, illustrating the formation of a thin, mechanically compliant, and electronically insulating SEI that stabilizes Li plating/stripping. Reproduced from ref. 127 under the terms of the CC BY 4.0 license. Copyright 2025 The Authors, published by Wiley-VCH GmbH. (c) Crystal structure of O-doped argyrodite SEs. (d) Cyclic voltammetry tests for C + SE|SE|Li cells, showing an expanded electrochemical stability window with suppressed decomposition reactions. (e) Li3PO4 as a buﬀer layer at the cathode interface. Reproduced with permission from ref. 128. Copyright 2022, Wiley-VCH GmbH.",
+   "bbox": [
+    36.5,
+    403.4,
+    558.8,
+    656.6
+   ],
+   "w": 2177,
+   "h": 1056,
+   "dpi": 300,
+   "src": "01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf",
+   "blank": 0.753
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 13,
+   "file": "fig_14.png",
+   "caption": "Fig. 14 (a) STEM-HAADF images of NCM particle with a conformal LZC coating layer. (b) Interfacial reactions between the NCM and LPSCl, illustrating the suppression of resistive interlayer formation by surface coating. (c) Cycling performances of ASSBs with NCM and NCM@LZC, demonstrating improved capacity retention upon interface stabilization. Reproduced with permission from ref. 137. Copyright 2024, Elsevier. (d) HR-TEM image of ALD LNO-coated NCM811, showing the formation of a uniform coating layer. (e) Operando XANES spectra of TMs of bare and LNO-coated NCM, indicating suppressed transition metal reduction and enhanced structural stability with coating. Reproduced with permission from ref. 138. Copyright 2019, American Chemical Society.",
+   "bbox": [
+    297.3,
+    43.8,
+    558.8,
+    207.8
+   ],
+   "w": 1091,
+   "h": 685,
+   "dpi": 300,
+   "src": "01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf",
+   "blank": 0.542
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 14,
+   "file": "fig_15.png",
+   "caption": "Fig. 15 (a) Cross-sectional images of the interface between the uncoated and LiPON coated Li metal with sulfide SEs, showing improved interfacial contact and suppression of interfacial void formation with LiPON coating. Reproduced from ref. 149 under the terms of the CC BY-NC 3.0 license. Copyright 2022, Royal Society of Chemistry. (b) Li plating–stripping on the current collector with a Ag–C nanocomposite layer during charging and discharging, illustrating uniform Li deposition and suppressed dendritic growth enabled by the interlayer. Reproduced with permission from ref. 152. Copyright 2020, Springer Nature.",
+   "bbox": [
+    36.5,
+    471.2,
+    558.8,
+    666.5
+   ],
+   "w": 2177,
+   "h": 815,
+   "dpi": 300,
+   "src": "01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf",
+   "blank": 0.617
+  },
+  {
+   "key": "f16",
+   "kind": "figure",
+   "label": "16",
+   "page": 15,
+   "file": "fig_16.png",
+   "caption": "Fig. 16 Schematic illustration of the coupled evolution of electrochemical reactions and mechanical instabilities in sulfide-based ASSBs and the related mitigation strategies.",
+   "bbox": [
+    36.5,
+    43.8,
+    558.7,
+    230.0
+   ],
+   "w": 2176,
+   "h": 777,
+   "dpi": 300,
+   "src": "01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf",
+   "blank": 0.456
   },
   {
    "key": "fS1",
    "kind": "figure",
    "label": "S1",
-   "page": 3,
+   "page": 2,
    "file": "fig_S1.png",
-   "caption": "Figure S1. The partial density of states for Li/LPSC1.5-MgClO interface.",
+   "caption": "Figure S1. Krypton physisorption isotherms for a set of PC and SC cathodes recovered from",
    "bbox": [
-    84.1,
-    352.4,
-    490.4,
-    593.6
+    64.8,
+    294.1,
+    533.4,
+    718.2
    ],
-   "w": 1694,
-   "h": 1006,
+   "w": 1953,
+   "h": 1768,
    "dpi": 300,
-   "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.91
+   "src": "01. Sup) Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
+   "blank": 0.959
   },
   {
    "key": "fS2",
    "kind": "figure",
    "label": "S2",
-   "page": 4,
+   "page": 3,
    "file": "fig_S2.png",
-   "caption": "Figure S2. HAADF-STEM images and corresponding EDS mapping images for the particles.",
+   "caption": "Figure S2. a) Voltage curves recorded during the first charge/discharge cycle of batteries",
    "bbox": [
-    95.6,
-    72.4,
-    502.6,
-    336.8
+    64.8,
+    120.1,
+    533.1,
+    646.8
    ],
-   "w": 1697,
-   "h": 1103,
+   "w": 1952,
+   "h": 2196,
    "dpi": 300,
-   "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.408
+   "src": "01. Sup) Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
+   "blank": 0.967
   },
   {
    "key": "fS3",
@@ -166,132 +363,132 @@
    "label": "S3",
    "page": 4,
    "file": "fig_S3.png",
-   "caption": "Figure S3. XPS spectrums of cycled LPSC1.5-MgClO for Cl 2p, O 1s, and Mg 2p spectrums.",
+   "caption": "Figure S3. Surface area of polycrystalline NCM as a function of the cut-off voltage during",
    "bbox": [
-    95.3,
-    359.9,
-    502.8,
-    486.0
+    64.8,
+    120.7,
+    533.4,
+    711.0
    ],
-   "w": 1699,
-   "h": 527,
+   "w": 1953,
+   "h": 2460,
    "dpi": 300,
-   "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.879
+   "src": "01. Sup) Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
+   "blank": 0.977
   },
   {
    "key": "fS4",
    "kind": "figure",
    "label": "S4",
-   "page": 4,
+   "page": 6,
    "file": "fig_S4.png",
-   "caption": "Figure S4. The Static 31P NMR spectra of LPSC1.5 and LPSC1.5-MgClO electrolytes.",
+   "caption": "Figure S4. Exemplary potential profiles during polarization and successive relaxation",
    "bbox": [
-    110.1,
-    505.5,
-    487.8,
-    668.1
+    64.8,
+    29.4,
+    533.2,
+    456.3
    ],
-   "w": 1575,
-   "h": 678,
+   "w": 1952,
+   "h": 1780,
    "dpi": 300,
-   "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.928
+   "src": "01. Sup) Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
+   "blank": 0.945
   },
   {
    "key": "fS5",
    "kind": "figure",
    "label": "S5",
-   "page": 5,
+   "page": 7,
    "file": "fig_S5.png",
-   "caption": "Figure S5. TOF-SIMS depth profiles of various secondary ion species.",
+   "caption": "Figure S5. Nyquist plots of data recorded with the three-electrode setup at 3.94 V during the",
    "bbox": [
-    143.6,
-    73.2,
-    454.6,
-    288.5
+    64.8,
+    29.4,
+    533.3,
+    341.6
    ],
-   "w": 1297,
-   "h": 897,
+   "w": 1953,
+   "h": 1302,
    "dpi": 300,
-   "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.931
+   "src": "01. Sup) Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
+   "blank": 0.935
   },
   {
    "key": "fS6",
    "kind": "figure",
    "label": "S6",
-   "page": 5,
+   "page": 8,
    "file": "fig_S6.png",
-   "caption": "Figure S6. TOF-SIMS images of the (a) LiS- intensity, (b) SO- and LiS- intensities, (c) LiCl-, LiO-,",
+   "caption": "Figure S6. Nyquist plots showing the development of the Li|LE electrode impedance upon",
    "bbox": [
-    84.1,
-    313.8,
-    514.1,
-    516.5
+    64.8,
+    29.4,
+    530.5,
+    256.5
    ],
-   "w": 1793,
-   "h": 846,
+   "w": 1941,
+   "h": 947,
    "dpi": 300,
-   "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.675
+   "src": "01. Sup) Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
+   "blank": 0.927
   },
   {
    "key": "fS7",
    "kind": "figure",
    "label": "S7",
-   "page": 6,
+   "page": 11,
    "file": "fig_S7.png",
-   "caption": "Figure S7. Charge-discharge curves for the Li/LPSC1.5/LPSC1.5-C and Li/LPSC1.5-",
+   "caption": "Figure S7. Calculated surface energies and models of Li6PS5Cl according to its surface indices.",
    "bbox": [
-    84.1,
-    68.8,
-    511.7,
-    278.0
+    66.0,
+    66.0,
+    543.5,
+    396.7
    ],
-   "w": 1783,
-   "h": 873,
+   "w": 1990,
+   "h": 1378,
    "dpi": 300,
-   "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.936
+   "src": "1. Sup) High-Throughput Discovery of Li3Sc2(PO4)3 as a Protective Coating for Stabilizing Mid-Ni NCM Interfaces in All-Solid-State Batteries.pdf",
+   "blank": 0.937
   },
   {
    "key": "fS8",
    "kind": "figure",
    "label": "S8",
-   "page": 6,
+   "page": 9,
    "file": "fig_S8.png",
-   "caption": "Figure S8. Discharge-charge curves for the Li/LPSC1.5/LPSC1.5-C and Li/LPSC1.5-",
+   "caption": "Figure S8. Powder diffraction data for the synthetized NCM single-crystalline material",
    "bbox": [
-    84.1,
-    310.2,
-    511.7,
-    545.1
+    28.5,
+    29.4,
+    533.4,
+    433.7
    ],
-   "w": 1783,
-   "h": 980,
+   "w": 2105,
+   "h": 1685,
    "dpi": 300,
-   "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.94
+   "src": "01. Sup) Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
+   "blank": 0.939
   },
   {
    "key": "fS9",
    "kind": "figure",
    "label": "S9",
-   "page": 7,
+   "page": 10,
    "file": "fig_S9.png",
-   "caption": "Figure S9. XPS spectrums of LPSC1.5 after first charge.",
+   "caption": "Figure S9. Scanning electron microscopy images of a) polycrystalline NCM and b) single-",
    "bbox": [
-    125.4,
-    71.0,
-    490.8,
-    229.0
+    64.8,
+    29.4,
+    530.5,
+    275.8
    ],
-   "w": 1524,
-   "h": 659,
+   "w": 1941,
+   "h": 1028,
    "dpi": 300,
-   "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.897
+   "src": "01. Sup) Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
+   "blank": 0.372
   },
   {
    "key": "fS10",
@@ -655,42 +852,137 @@
    "blank": 0.72
   },
   {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 15,
+   "file": "tab_1.png",
+   "caption": "Table 1 Summary of electrochemo-mechanical degradation mechanisms and mitigation strategies in sulfide-based ASSBs Degradation mechanism Major mechanistic origin Consequent degradation phenomena Mitigation strategy Tuning SE composition; surface coating of CAM; Interfacial hetero- geneity within the cathode Oxidative decomposition of sulfide SEs Heterogeneity within the interphases; cracking/debonding through fragile phases; loss of electrical/ionic conduction pathways; non-uniform electrochemical reaction Microstructural inhomogeneity Microstructure optimiza- tion; particle size control Interfacial hetero- geneity at anode/SE Non-uniform distribution of SE and CAM particles Heterogeneous volumetric strain and von Mises stress distributions; interfacial debonding/CAM cracking Reductive decomposition of sulfide SEs Heterogeneity within the interphases; void formation; non-uniform electroc",
+   "bbox": [
+    0.0,
+    6.4,
+    557.8,
+    760.8
+   ],
+   "w": 2216,
+   "h": 2997,
+   "dpi": 286,
+   "src": "01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf",
+   "blank": 0.784
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 3,
+   "file": "tab_2.png",
+   "caption": "Table 2 Weight and volume ratios of cathode compositions with varying CAM:SE ratios and fixed additive content (CNF, PTFE). 𝑓CAM (wt.%) CAM:SE:CNF:PTFE wt.% vol.% 70 70:27.7:2:0.3 45.3:52.7:1.5:0.5 75 75:22.7:2:0.3 52.2:45.5:1.6:0.6 80 80:17.7:2:0.3 59.5:38.3:1.7:0.6",
+   "bbox": [
+    32.6,
+    31.0,
+    566.0,
+    746.9
+   ],
+   "w": 2224,
+   "h": 2983,
+   "dpi": 300,
+   "src": "01. Integration of DEM-based microstructure generation with FEM and RNM simulations for evaluating ionic conductivity in composite cathodes of all-solid-state batteries.pdf",
+   "blank": 0.87
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 5,
+   "file": "tab_3.png",
+   "caption": "Table 3 DEM input parameters used in this study. Parameter Value Source SE–SE friction coefficient (𝜇SE−SE) 0.4 [33] CAM–CAM friction coefficient (𝜇CAM−CAM) 0.4 [33] CAM–SE friction coefficient (𝜇CAM−SE) 0.4 [33] SE Young’s modulus (𝐸SE) [GPa] 22.1 [55] CAM Young’s modulus (𝐸CAM) [GPa] 161.5 [33] SE Poisson’s ratio (𝜈SE) 0.37 [55] CAM Poisson’s ratio (𝜈CAM) 0.30 [43] Coefficient of restitution (RC) 0.4 [33]",
+   "bbox": [
+    32.6,
+    31.0,
+    563.3,
+    748.5
+   ],
+   "w": 2213,
+   "h": 2990,
+   "dpi": 300,
+   "src": "01. Integration of DEM-based microstructure generation with FEM and RNM simulations for evaluating ionic conductivity in composite cathodes of all-solid-state batteries.pdf",
+   "blank": 0.892
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 6,
+   "file": "tab_4.png",
+   "caption": "Table 4 Summary of particle size distribution parameters for SE and CAM powders. Material 𝐷10 [μm] 𝐷50 [μm] 𝐷 [μm] 𝐷90 [μm] SE 0.71 1.49 2.00 3.80 CAM 3.90 5.50 6.00 7.62",
+   "bbox": [
+    32.6,
+    31.0,
+    563.3,
+    747.6
+   ],
+   "w": 2213,
+   "h": 2987,
+   "dpi": 300,
+   "src": "01. Integration of DEM-based microstructure generation with FEM and RNM simulations for evaluating ionic conductivity in composite cathodes of all-solid-state batteries.pdf",
+   "blank": 0.878
+  },
+  {
+   "key": "t5",
+   "kind": "table",
+   "label": "5",
+   "page": 7,
+   "file": "tab_5.png",
+   "caption": "Table 5 Average simulation times at box factor 35 for FEM and RNM methods across different cathode compositions. Method 𝑓CAM [wt.%] 70 75 80 FEM Simulation Time [s] 3352 3131 2551 RNM Simulation Time [s] 105 58 26 FEM/RNM Factor 32 54 98",
+   "bbox": [
+    32.6,
+    31.0,
+    566.0,
+    746.9
+   ],
+   "w": 2224,
+   "h": 2983,
+   "dpi": 300,
+   "src": "01. Integration of DEM-based microstructure generation with FEM and RNM simulations for evaluating ionic conductivity in composite cathodes of all-solid-state batteries.pdf",
+   "blank": 0.868
+  },
+  {
    "key": "tS1",
    "kind": "table",
    "label": "S1",
-   "page": 14,
+   "page": 12,
    "file": "tab_S1.png",
-   "caption": "Table S1. Crystallographic data of the pristine LPSC1.5 electrolyte obtained from Rietveld",
+   "caption": "Table S1. Representative 88 crystal structures screened in high-throughput screening process",
    "bbox": [
-    85.1,
-    296.6,
-    512.5,
-    707.2
+    67.0,
+    67.6,
+    548.0,
+    690.4
    ],
-   "w": 1782,
-   "h": 1711,
+   "w": 2005,
+   "h": 2596,
    "dpi": 300,
-   "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.94
+   "src": "1. Sup) High-Throughput Discovery of Li3Sc2(PO4)3 as a Protective Coating for Stabilizing Mid-Ni NCM Interfaces in All-Solid-State Batteries.pdf",
+   "blank": 0.969
   },
   {
    "key": "tS2",
    "kind": "table",
    "label": "S2",
-   "page": 15,
+   "page": 18,
    "file": "tab_S2.png",
-   "caption": "Table S2. Crystallographic data of LPSC1.5-MgClO electrolyte obtained from Rietveld Refinement",
+   "caption": "Table S2. Representative 8 crystal structures screened in high-throughput screening process along",
    "bbox": [
-    85.1,
-    74.8,
-    512.9,
-    727.2
+    67.0,
+    67.6,
+    548.0,
+    786.9
    ],
-   "w": 1783,
-   "h": 2720,
+   "w": 2005,
+   "h": 2998,
    "dpi": 300,
-   "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.927
+   "src": "1. Sup) High-Throughput Discovery of Li3Sc2(PO4)3 as a Protective Coating for Stabilizing Mid-Ni NCM Interfaces in All-Solid-State Batteries.pdf",
+   "blank": 0.977
   },
   {
    "key": "tS3",

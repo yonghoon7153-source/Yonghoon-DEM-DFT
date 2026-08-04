@@ -2,12 +2,32 @@
  "slug": "adeli2019_halide_substitution_boosting_argyrodite",
  "dpi": 300,
  "maxpx": 3000,
- "generated": "2026-08-04",
+ "generated": "2026-08-05",
  "sources": [
-  "33. Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution.pdf",
-  "33. Sup) Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution.pdf"
+  "DEM 논문/33. Parameter sensitivity analysis and calibration of a discrete element model for optimizing all-solid-state-battery cathode microstructures.pdf",
+  "DFT 먹인 논문/33. Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution.pdf",
+  "DFT 먹인 논문/33. Sup) Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution.pdf"
  ],
  "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematics of the used spring–dashpot contact model, defined according to Eqs. (6) and (7).",
+   "bbox": [
+    300.6,
+    49.9,
+    567.0,
+    163.3
+   ],
+   "w": 1111,
+   "h": 474,
+   "dpi": 300,
+   "src": "33. Parameter sensitivity analysis and calibration of a discrete element model for optimizing all-solid-state-battery cathode microstructures.pdf",
+   "blank": 0.949
+  },
   {
    "key": "f2",
    "kind": "figure",
@@ -83,6 +103,291 @@
    "dpi": 300,
    "src": "33. Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution.pdf",
    "blank": 0.83
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Effect of box size factor on porosity (𝜖) at different cathode active material loadings (𝑓CAM) for (a) SE19 and (b) SE45.",
+   "bbox": [
+    300.6,
+    222.1,
+    567.0,
+    552.8
+   ],
+   "w": 1111,
+   "h": 1379,
+   "dpi": 300,
+   "src": "33. Parameter sensitivity analysis and calibration of a discrete element model for optimizing all-solid-state-battery cathode microstructures.pdf",
+   "blank": 0.974
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. (a) Illustration of wall effects, (b) definition of side length ratio (𝜔).",
+   "bbox": [
+    38.3,
+    70.3,
+    288.1,
+    177.3
+   ],
+   "w": 1042,
+   "h": 447,
+   "dpi": 300,
+   "src": "33. Parameter sensitivity analysis and calibration of a discrete element model for optimizing all-solid-state-battery cathode microstructures.pdf",
+   "blank": 0.522
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. (a) Porosity (𝜖) as a function of 𝜔 for SE19, (b) for SE45. sensitivity trends, likely due to random variations in particle insertion during simulations. The Young’s modulus 𝐸SE was more sensitive at lower 𝑓CAM, while 𝐸CAM became more critical at higher 𝑓CAM, corre- sponding to the increased influence of CAM content. Poisson’s ratios for both SE (𝜈SE) and CAM (𝜈CAM) showed no significant trends, possibly due to their narrow range in literature, limiting their impact within this study. Despite pressure affecting packing and percolation behavior, the sensitivity matrices showed no significant pressure-related trends, suggesting that within the studied range, pressure variations have a limited impact compared to other factors like friction coefficients and Young’s modulus.",
+   "bbox": [
+    31.6,
+    208.5,
+    298.0,
+    550.0
+   ],
+   "w": 1111,
+   "h": 1424,
+   "dpi": 300,
+   "src": "33. Parameter sensitivity analysis and calibration of a discrete element model for optimizing all-solid-state-battery cathode microstructures.pdf",
+   "blank": 0.765
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 9,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Effect of box size factor on porosity (𝜖) with 𝜔= 0.7 for (a) SE19, (b) SE45. and RC showed the lowest sensitivity, indicating minimal influence on percolation and utilization behaviors. For 𝜖, while 𝜇CAM-SE remained the most sensitive parameter, 𝐸SE also showed significant sensitivity in SE45. For SE19, the importance of 𝜇SE-SE increased due to the smaller SE particles, while 𝜇CAM-CAM sensitivity decreased, reflecting the reduced influence of CAM–CAM in- teractions in a SE-dominated system. Poisson ratios and RC consistently had the lowest sensitivity across all cases. Overall, SE45 showed greater sensitivity to parameter variations than SE19, likely due to the lower particle size ratio 𝜆, making the system more responsive to changes in friction and mechanical proper- ties. For porosity, larger SE particles in SE45 led to more pronounced packing effects, where parameter variatio",
+   "bbox": [
+    300.6,
+    65.5,
+    567.0,
+    407.0
+   ],
+   "w": 1111,
+   "h": 1424,
+   "dpi": 300,
+   "src": "33. Parameter sensitivity analysis and calibration of a discrete element model for optimizing all-solid-state-battery cathode microstructures.pdf",
+   "blank": 0.973
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 10,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. Effect of Monte Carlo points for porosity calculations for (a) SE19, (b) SE45.",
+   "bbox": [
+    31.6,
+    50.1,
+    294.7,
+    391.6
+   ],
+   "w": 1097,
+   "h": 1424,
+   "dpi": 300,
+   "src": "33. Parameter sensitivity analysis and calibration of a discrete element model for optimizing all-solid-state-battery cathode microstructures.pdf",
+   "blank": 0.966
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 10,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. Simulation time as a function of box size factor for SE19 and SE45 across different CAM loadings (𝑓CAM), highlighting the impact of SE particle size and CAM loading on computational demands.",
+   "bbox": [
+    31.6,
+    417.6,
+    298.0,
+    570.2
+   ],
+   "w": 1111,
+   "h": 636,
+   "dpi": 300,
+   "src": "33. Parameter sensitivity analysis and calibration of a discrete element model for optimizing all-solid-state-battery cathode microstructures.pdf",
+   "blank": 0.96
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 11,
+   "file": "fig_12.png",
+   "caption": "Fig. 12. Influence of CAM–SE friction coefficient (𝜇CAM-SE) on (a) CAM utilization (𝜃CAM), (c) SE utilization (𝜃SE), and (e) porosity (𝜖), and influence of SE Young’s modulus (𝐸SE) on (b) CAM utilization, (d) SE utilization, and (f) porosity, across different CAM loadings (𝑓CAM) at 400 MPa for SE45. SE particle sizes to ensure percolation even at higher CAM loadings. Moreover, pressure increases result in notable improvements in both utilization and porosity suggests that mechanical densification plays a crucial role in defining the electrochemical performance envelope. These observations, combined with the simulation data, emphasize how sensitive cathode performance is to microstructural design choices and underline the predictive value of the modeling framework when calibrated against experimental benchmarks. straightforward to measure experimentally. Fig. 18 provides a compre- hensive",
+   "bbox": [
+    31.6,
+    49.6,
+    567.0,
+    560.6
+   ],
+   "w": 2232,
+   "h": 2130,
+   "dpi": 300,
+   "src": "33. Parameter sensitivity analysis and calibration of a discrete element model for optimizing all-solid-state-battery cathode microstructures.pdf",
+   "blank": 0.972
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 12,
+   "file": "fig_13.png",
+   "caption": "Fig. 13. Sensitivity matrices for CAM utilization (𝜃CAM), SE utilization (𝜃SE), and porosity (𝜖) across different CAM loadings (𝑓CAM), pressures, and SE particle sizes (SE45 and SE19), with sensitivity normalized between 0 and 1 and indicated by sphere size (smaller sphere = lower sensitivity, larger sphere = higher sensitivity): (a–c) SE45, (d–f) SE19.",
+   "bbox": [
+    31.6,
+    49.0,
+    567.0,
+    286.3
+   ],
+   "w": 2232,
+   "h": 990,
+   "dpi": 300,
+   "src": "33. Parameter sensitivity analysis and calibration of a discrete element model for optimizing all-solid-state-battery cathode microstructures.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 12,
+   "file": "fig_14.png",
+   "caption": "Fig. 14. Normalized sensitivity index ranking for CAM utilization (𝜃CAM), SE utilization (𝜃SE), and porosity (𝜖) for (a) SE45 and (b) SE19. across all 𝑓CAM, though slight underestimations occur at 85 wt% CAM. Regarding porosity 𝜖, the model is relatively accurate for SE45, while consistently underestimating 𝜖 for SE19, particularly at higher 𝑓CAM and pressures. Despite these issues, the model successfully captures the trend of increasing porosity with higher 𝑓CAM, consistent with experimental behavior. These findings suggest that while the nominal parameter set provides a reliable baseline, refinement is needed for higher 𝑓CAM and smaller SE particles. sensitivity, their impact was found to be moderate in comparison to the friction coefficients. To refine the model, we unified the friction coefficients (𝜇CAM-SE, 𝜇SE-SE, and 𝜇CAM-CAM) into an effective friction coefficient (𝜇) across five",
+   "bbox": [
+    31.6,
+    319.6,
+    567.0,
+    594.2
+   ],
+   "w": 2232,
+   "h": 1145,
+   "dpi": 300,
+   "src": "33. Parameter sensitivity analysis and calibration of a discrete element model for optimizing all-solid-state-battery cathode microstructures.pdf",
+   "blank": 0.842
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 13,
+   "file": "fig_15.png",
+   "caption": "Fig. 15. First cycle charge and discharge curves at 200 MPa and 400 MPa for SE45 (a–d) and SE19 (e–h) across different CAM loadings (𝑓CAM = 60, 70, 80, and 85 wt%).",
+   "bbox": [
+    38.9,
+    49.5,
+    556.4,
+    272.0
+   ],
+   "w": 2157,
+   "h": 928,
+   "dpi": 300,
+   "src": "33. Parameter sensitivity analysis and calibration of a discrete element model for optimizing all-solid-state-battery cathode microstructures.pdf",
+   "blank": 0.942
+  },
+  {
+   "key": "f16",
+   "kind": "figure",
+   "label": "16",
+   "page": 13,
+   "file": "fig_16.png",
+   "caption": "Fig. 16. Comparison of specific discharge capacities at different pressures and CAM loadings (𝑓CAM) for SE45 (a) and SE19 (b).",
+   "bbox": [
+    100.3,
+    298.2,
+    498.4,
+    470.1
+   ],
+   "w": 1659,
+   "h": 717,
+   "dpi": 300,
+   "src": "33. Parameter sensitivity analysis and calibration of a discrete element model for optimizing all-solid-state-battery cathode microstructures.pdf",
+   "blank": 0.97
+  },
+  {
+   "key": "f17",
+   "kind": "figure",
+   "label": "17",
+   "page": 14,
+   "file": "fig_17.png",
+   "caption": "Fig. 17. Densities (a) and corresponding porosities (b) of cathodes pressed uniaxially with SE19 and SE45 across different CAM loadings (𝑓CAM) at 200 MPa and 400 MPa.",
+   "bbox": [
+    31.6,
+    51.1,
+    298.0,
+    428.8
+   ],
+   "w": 1111,
+   "h": 1575,
+   "dpi": 300,
+   "src": "33. Parameter sensitivity analysis and calibration of a discrete element model for optimizing all-solid-state-battery cathode microstructures.pdf",
+   "blank": 0.966
+  },
+  {
+   "key": "f18",
+   "kind": "figure",
+   "label": "18",
+   "page": 15,
+   "file": "fig_18.png",
+   "caption": "Fig. 18. Comparison of simulations and experimental data using nominal parameter values for SE19 and SE45: (a) CAM utilization for SE19, (b) CAM utilization for SE45, (c) porosity for SE19, and (d) porosity for SE45.",
+   "bbox": [
+    31.6,
+    85.9,
+    567.0,
+    422.2
+   ],
+   "w": 2232,
+   "h": 1403,
+   "dpi": 300,
+   "src": "33. Parameter sensitivity analysis and calibration of a discrete element model for optimizing all-solid-state-battery cathode microstructures.pdf",
+   "blank": 0.964
+  },
+  {
+   "key": "f19",
+   "kind": "figure",
+   "label": "19",
+   "page": 15,
+   "file": "fig_19.png",
+   "caption": "Fig. 19. Relative error analysis as a function of effective friction coefficient (𝜇) at various CAM loadings under 200 and 400 MPa: (a–d) CAM utilization for SE19 and SE45, (e–h) porosity for SE19 and SE45.",
+   "bbox": [
+    31.6,
+    481.7,
+    567.0,
+    711.5
+   ],
+   "w": 2232,
+   "h": 958,
+   "dpi": 300,
+   "src": "33. Parameter sensitivity analysis and calibration of a discrete element model for optimizing all-solid-state-battery cathode microstructures.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "f20",
+   "kind": "figure",
+   "label": "20",
+   "page": 17,
+   "file": "fig_20.png",
+   "caption": "Fig. 20. SE utilization (𝜃SE) simulation results with nominal parameter values for (a) SE19 and (b) SE45 at 200 and 400 MPa.",
+   "bbox": [
+    101.2,
+    49.5,
+    497.2,
+    222.3
+   ],
+   "w": 1651,
+   "h": 721,
+   "dpi": 300,
+   "src": "33. Parameter sensitivity analysis and calibration of a discrete element model for optimizing all-solid-state-battery cathode microstructures.pdf",
+   "blank": 0.976
   },
   {
    "key": "fS1",
@@ -278,20 +583,20 @@
    "key": "t1",
    "kind": "table",
    "label": "1",
-   "page": 2,
+   "page": 3,
    "file": "tab_1.png",
-   "caption": "Table 1: Atomic coordinates, occupation factor and isotropic displace-",
+   "caption": "Table 1 Weight and volume ratios of cathode compositions with varying CAM:SE content and fixed additive content (CB, CNF, PTFE). 𝑓CAM (wt.%) CAM:SE:CB:CNF:PTFE wt.% vol.% 60 60:37:1:1:1 34.3:61.6:1.4:1.4:1.3 70 70:27:1:1:1 45.0:50.5:1.5:1.6:1.4 80 80:17:1:1:1 58.6:36.2:1.8:1.8:1.6 85 85:12:1:1:1 66.9:27.4:1.9:2.0:1.8",
    "bbox": [
-    47.4,
-    13.6,
-    589.1,
-    829.3
+    32.6,
+    31.0,
+    566.0,
+    746.9
    ],
-   "w": 1988,
-   "h": 2992,
-   "dpi": 264,
-   "src": "33. Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution.pdf",
-   "blank": 0.843
+   "w": 2224,
+   "h": 2983,
+   "dpi": 300,
+   "src": "33. Parameter sensitivity analysis and calibration of a discrete element model for optimizing all-solid-state-battery cathode microstructures.pdf",
+   "blank": 0.874
   },
   {
    "key": "t2",
@@ -299,18 +604,75 @@
    "label": "2",
    "page": 4,
    "file": "tab_2.png",
-   "caption": "Table 2: Summary of the ionic conductivity (si, for pellets cold-pressed at 2 tons) at 298 K and Ea values obtained from EIS and PFG Arrhenius plots for the synthesized Li-argyrodites. Error in the ionic conductivities is determined from the span in the measurements for multiple samples of the same composition (extracted values of the impedance analyses are tabulated in Table S2 of the Supporting Information). Li6@xPS5@xCl1+x si(tot) [mScm@1] Ea (EIS) [eV] :0.01 Ea (PFG) [eV] Li6PS5Cl 2.5(1) 0.34 0.35(1) Li5.75PS4.75Cl1.25 4.2(2) 0.33 0.343(9) Li5.625PS4.625Cl1.375 5.6(2) 0.31 0.320(3) Li5.5PS4.5Cl1.5 9.4(1) 0.29 0.29(1) Li5.5PS4.5Cl1.5, sintered 12.0(2) – – Li5.45PS4.45Cl1.55 5.9(2) N/A Li5.4PS4.4Cl1.6 3.3(1) N/A",
+   "caption": "Table 2 Material densities used in this work. Description Parameter Unit Value Source Density (CAM) 𝜌CAM g cm−3 4.77 [35] Density (SE) 𝜌SE g cm−3 1.64 [36] Density (CB) 𝜌CB g cm−3 2.00 [37] Density (CNF) 𝜌CNF g cm−3 1.90 Supplier Density (PTFE) 𝜌PTFE g cm−3 2.15 [38]",
    "bbox": [
-    46.9,
-    13.6,
-    589.1,
-    829.3
+    32.6,
+    31.0,
+    563.3,
+    746.9
    ],
-   "w": 1989,
-   "h": 2992,
-   "dpi": 264,
-   "src": "33. Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution.pdf",
-   "blank": 0.855
+   "w": 2212,
+   "h": 2983,
+   "dpi": 300,
+   "src": "33. Parameter sensitivity analysis and calibration of a discrete element model for optimizing all-solid-state-battery cathode microstructures.pdf",
+   "blank": 0.885
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 6,
+   "file": "tab_3.png",
+   "caption": "Table 3 DEM simulation parameters used in this work. Description Parameter Unit Boundaries Nominal value Source SE-SE friction coefficient 𝜇SE-SE – 0.2–0.6 0.4 This work CAM-CAM friction coefficient 𝜇CAM-CAM – 0.2–0.6 0.4 This work CAM-SE friction coefficient 𝜇CAM-SE – 0.2–0.6 0.4 This work SE Young’s modulus 𝐸SE GPa 15–26 20.5 [14,31,34,48,49] CAM Young’s modulus 𝐸CAM GPa 123–200 161.5 [14,31,33–35,50–54] SE Poisson ratio 𝜈SE – 0.29–0.37 0.33 [14,31,48,55] CAM Poisson ratio 𝜈CAM – 0.24–0.3 0.27 [14,31,33,35,51] Coefficient of restitution 𝑅𝐶 – 0.2–0.6 0.4 This work Pressure 𝑝 MPa 200–400 300 This work considered as CAM. The volumes of CAM (𝑉CAM), SE (𝑉SE) and voids (𝑉void) were calculated using their respective volume fractions: in [56]. For each parameter, 10 value points were selected under a discrete uniform distribution between the lower and upper boundaries, while the remaining para",
+   "bbox": [
+    32.6,
+    31.0,
+    566.0,
+    769.9
+   ],
+   "w": 2164,
+   "h": 2998,
+   "dpi": 292,
+   "src": "33. Parameter sensitivity analysis and calibration of a discrete element model for optimizing all-solid-state-battery cathode microstructures.pdf",
+   "blank": 0.909
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 10,
+   "file": "tab_4.png",
+   "caption": "Table 4 Properties of prepared DF cathode sheets. 𝑓CAM (wt.%) SE 𝜙 Thickness (μm)",
+   "bbox": [
+    32.6,
+    31.0,
+    563.3,
+    746.9
+   ],
+   "w": 2212,
+   "h": 2983,
+   "dpi": 300,
+   "src": "33. Parameter sensitivity analysis and calibration of a discrete element model for optimizing all-solid-state-battery cathode microstructures.pdf",
+   "blank": 0.907
+  },
+  {
+   "key": "t5",
+   "kind": "table",
+   "label": "5",
+   "page": 13,
+   "file": "tab_5.png",
+   "caption": "Table 5 Friction coefficient parameter set. Parameter set 𝜇SE-SE 𝜇CAM-CAM 𝜇CAM-SE 𝜇 1 0.2 0.2 0.2 0.2 2 0.3 0.3 0.3 0.3 3 0.4 0.4 0.4 0.4 4 0.5 0.5 0.5 0.5 5 0.6 0.6 0.6 0.6",
+   "bbox": [
+    32.6,
+    31.0,
+    563.3,
+    747.6
+   ],
+   "w": 2212,
+   "h": 2987,
+   "dpi": 300,
+   "src": "33. Parameter sensitivity analysis and calibration of a discrete element model for optimizing all-solid-state-battery cathode microstructures.pdf",
+   "blank": 0.922
   },
   {
    "key": "tS1",

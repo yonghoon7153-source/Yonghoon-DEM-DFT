@@ -2,10 +2,11 @@
  "slug": "zhou2026_high_entropy_lgps_multicationic",
  "dpi": 300,
  "maxpx": 3000,
- "generated": "2026-08-04",
+ "generated": "2026-08-05",
  "sources": [
-  "49. A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
-  "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf"
+  "DEM 논문/49. Investigating the production of all-solid-state battery composite cathodes by numerical simulation of the stressing conditions in a high-intensity mixer.pdf",
+  "DFT 먹인 논문/49. A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+  "DFT 먹인 논문/49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf"
  ],
  "figures": [
   {
@@ -140,6 +141,44 @@
    "dpi": 300,
    "src": "49. A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
    "blank": 0.93
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 10,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. FIB images of cathodes fabricated at different rotational speeds. (a) Cross-section 1000 min−1. (b) Top view 1000 min−1. (c) Cross-section 10 000 min−1. (d) Top view 10 000 min−1. 𝐶discharge (Fig. 9a), it can be seen that the capacity increases almost linearly with increasing rotational speed (𝐶discharge ∝ 𝑛) and the highest cell capacity is obtained with the cathode mixtures prepared at 10 000 min−1 (𝐶discharge = (109 ± 5) mA h g−1). This confirms the microstructural observations (Fig. 8) and the hypothesis that due to the higher rotational speed, better mixing occurs and due to the higher energy input, the probability of aggregation of the materials is increased, both leading to increased interfacial contacts between LFP, CB, and LIC. The improved interfacial contact is also strongly caused by the comminution of the LIC agglomerate clusters, which is evident from the improved c",
+   "bbox": [
+    31.6,
+    49.8,
+    563.7,
+    373.9
+   ],
+   "w": 2218,
+   "h": 1352,
+   "dpi": 300,
+   "src": "49. Investigating the production of all-solid-state battery composite cathodes by numerical simulation of the stressing conditions in a high-intensity mixer.pdf",
+   "blank": 0.46
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 11,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Mean discharge capacity of heteroaggregate powders. (a) Dependency of discharge capacity on rotational speed (𝑡mix = 60 min). (b) Dependency of discharge capacity on mixing time (𝑡mix = 5 min–60 min). (c) Dependency of discharge capacity on mean stress intensity per particle (𝑡mix = 60 min). (d) Dependency of discharge capacity on stress number (𝑡mix = 5 min–60 min). (e) Dependency of discharge capacity on specific energy (𝑡mix = 60 min). (f) Dependency of discharge capacity on specific energy (𝑡mix = 5 𝑚𝑖𝑛− 60 min).",
+   "bbox": [
+    31.6,
+    49.8,
+    563.7,
+    549.2
+   ],
+   "w": 2218,
+   "h": 2082,
+   "dpi": 300,
+   "src": "49. Investigating the production of all-solid-state battery composite cathodes by numerical simulation of the stressing conditions in a high-intensity mixer.pdf",
+   "blank": 0.933
   },
   {
    "key": "fS1",
@@ -387,6 +426,82 @@
    "dpi": 300,
    "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
    "blank": 0.886
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 6,
+   "file": "tab_1.png",
+   "caption": "Table 1 Experimental results of the DAOR determination. Rotational speed [min−1] Sequence 1 Sequence 2 Angle 𝛷1 [◦] Angle 𝛷2 [◦] Angle 𝛷1 [◦] Angle 𝛷2 [◦] 5 31.20 ± 3.99 54.46 ± 4.92 29.65 ± 4.62 51.87 ± 4.18 10 30.08 ± 5.87 57.38 ± 4.74 30.32 ± 5.29 56.03 ± 5.30 15 29.05 ± 4.44 61.32 ± 4.62 29.14 ± 4.97 62.03 ± 6.16 60 14.78 ± 3.49 65.75 ± 2.10 14.60 ± 3.64 65.14 ± 2.62",
+   "bbox": [
+    32.6,
+    31.3,
+    563.3,
+    747.9
+   ],
+   "w": 2212,
+   "h": 2987,
+   "dpi": 300,
+   "src": "49. Investigating the production of all-solid-state battery composite cathodes by numerical simulation of the stressing conditions in a high-intensity mixer.pdf",
+   "blank": 0.874
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 6,
+   "file": "tab_2.png",
+   "caption": "Table 2 Simulation results of the DAOR determination.",
+   "bbox": [
+    32.6,
+    31.3,
+    563.3,
+    747.9
+   ],
+   "w": 2212,
+   "h": 2987,
+   "dpi": 300,
+   "src": "49. Investigating the production of all-solid-state battery composite cathodes by numerical simulation of the stressing conditions in a high-intensity mixer.pdf",
+   "blank": 0.874
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 7,
+   "file": "tab_3.png",
+   "caption": "Table 3 Calibrated parameters and material properties of the coarse-grains. Mixer wall Coarse-grain Pure density 𝜌0 [kg m−3] 4510 3047 Particle density 𝜌p [kg m−3] – 1250 Bulk density 𝜌b,sim [kg m−3] – 750 Elastic modulus 𝐸[MPa] 120 000 25 Poisson’s ratio 𝜈[–] 0.3 0.3 particle–wall (pw) particle–particle (pp) Restitution coefficient 𝑒 [–] 0.3 0.3 Rolling friction 𝜇r [–] – 0.2 Static friction 𝜇s [–] 0.5 0.47 Dynamic friction 𝜇d [–] 0.3 0.44 Surface energy 𝛤[J m−2] 0.001 0.0045",
+   "bbox": [
+    32.6,
+    31.3,
+    563.3,
+    747.9
+   ],
+   "w": 2212,
+   "h": 2987,
+   "dpi": 300,
+   "src": "49. Investigating the production of all-solid-state battery composite cathodes by numerical simulation of the stressing conditions in a high-intensity mixer.pdf",
+   "blank": 0.781
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 8,
+   "file": "tab_4.png",
+   "caption": "Table 4 Mean stress intensities and particle velocity at different mixer regions.",
+   "bbox": [
+    32.6,
+    31.3,
+    563.3,
+    748.1
+   ],
+   "w": 2212,
+   "h": 2988,
+   "dpi": 300,
+   "src": "49. Investigating the production of all-solid-state battery composite cathodes by numerical simulation of the stressing conditions in a high-intensity mixer.pdf",
+   "blank": 0.81
   },
   {
    "key": "tS1",

@@ -2,10 +2,11 @@
  "slug": "zhu2015_esw_grand_potential_origin",
  "dpi": 300,
  "maxpx": 3000,
- "generated": "2026-08-04",
+ "generated": "2026-08-05",
  "sources": [
-  "38. Origin of Outstanding Stability in the Lithium Solid Electrolyte Materials Insights from Thermodynamic Analyses Based on First-Principles Calculations.pdf",
-  "38. Sup) Origin of Outstanding Stability in the Lithium Solid Electrolyte Materials Insights from Thermodynamic Analyses Based on First-Principles Calculations.pdf"
+  "DEM 논문/38. Effect of mold pressure on compaction and ion conductivity of all-solid-state batteries revealed by teh discrete element method.pdf",
+  "DFT 먹인 논문/38. Origin of Outstanding Stability in the Lithium Solid Electrolyte Materials Insights from Thermodynamic Analyses Based on First-Principles Calculations.pdf",
+  "DFT 먹인 논문/38. Sup) Origin of Outstanding Stability in the Lithium Solid Electrolyte Materials Insights from Thermodynamic Analyses Based on First-Principles Calculations.pdf"
  ],
  "figures": [
   {
@@ -69,39 +70,115 @@
    "key": "f4",
    "kind": "figure",
    "label": "4",
-   "page": 6,
+   "page": 5,
    "file": "fig_4.png",
-   "caption": "Figure 4. Schematic diagram about the electrochemical window (color bars) and the Li chemical potential proﬁle (black line) in the all-solid- state Li-ion battery. The proﬁle of chemical potential is schematic in this plot and may not be linear. The high μLi in the anode (silver) and low μLi in the cathode (blue) are beyond the stability window of the solid electrolyte (green). The observed nominal electrochemical window is extended by the overpotential (dashed line) and by the interphases (orange and yellow), which account for the gap of μLi between solid electrolyte and electrodes across the interfaces.",
+   "caption": "Fig. 4. The time series of the electrode height is shown in (a). The higher the applied pressure, the more compressed the final SE layer thickness. The relative density of the final SE layer is plotted with the mold pres­ sure in (b), and the simulations are compared with the experimental results of Sakuda et al. [12]. The effect of the AM fraction in the elec­ trode on the relative density is shown in (c). The higher the AM fraction, the lower the final density of the electrode. The SE coverage of AM is plotted in (d). The higher the AM fraction, the lower is the SE coverage on the available AM surface.",
    "bbox": [
-    318.5,
-    184.7,
-    570.5,
-    377.9
+    94.1,
+    447.9,
+    566.0,
+    730.8
    ],
-   "w": 1052,
-   "h": 806,
+   "w": 1968,
+   "h": 1179,
    "dpi": 300,
-   "src": "38. Origin of Outstanding Stability in the Lithium Solid Electrolyte Materials Insights from Thermodynamic Analyses Based on First-Principles Calculations.pdf",
-   "blank": 0.697
+   "src": "38. Effect of mold pressure on compaction and ion conductivity of all-solid-state batteries revealed by teh discrete element method.pdf",
+   "blank": 0.636
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Compressive stress distribution of the anode layer illustrated by a box plot for different mold pressures (a), 3D plot at 400 MPa (b), histograms of different types of particle pairs (c), and plots with mold pressure (d). 6",
+   "bbox": [
+    31.6,
+    400.5,
+    565.8,
+    721.3
+   ],
+   "w": 2227,
+   "h": 1338,
+   "dpi": 300,
+   "src": "38. Effect of mold pressure on compaction and ion conductivity of all-solid-state batteries revealed by teh discrete element method.pdf",
+   "blank": 0.864
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Effect of mold pressure on the equilibrium overlap ratio, presented in a box plot (a) and average values for different particle pairs (b). 7",
+   "bbox": [
+    62.5,
+    554.3,
+    536.9,
+    730.8
+   ],
+   "w": 1978,
+   "h": 736,
+   "dpi": 300,
+   "src": "38. Effect of mold pressure on compaction and ion conductivity of all-solid-state batteries revealed by teh discrete element method.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Ionic transfer properties in SE plotted with mold pressure and com­ parison with experiment of Sakuda et al. [12] and Nakamura et al. [42]. (a) Relative conduction coefficient and (b) tortuosity factors are plotted with different AM fractions.",
+   "bbox": [
+    300.6,
+    49.4,
+    565.8,
+    470.4
+   ],
+   "w": 1106,
+   "h": 1755,
+   "dpi": 300,
+   "src": "38. Effect of mold pressure on compaction and ion conductivity of all-solid-state batteries revealed by teh discrete element method.pdf",
+   "blank": 0.904
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Relative conduction coefficient and the dependence of the SE volume fraction. (a) Comparison between our simulations and our new correlation. (b) Comparison between our new correlation with experiments of Sakuda et al. [12] and Nakamura et al. [42].",
+   "bbox": [
+    31.6,
+    303.0,
+    296.8,
+    702.1
+   ],
+   "w": 1106,
+   "h": 1664,
+   "dpi": 300,
+   "src": "38. Effect of mold pressure on compaction and ion conductivity of all-solid-state batteries revealed by teh discrete element method.pdf",
+   "blank": 0.897
   },
   {
    "key": "t1",
    "kind": "table",
    "label": "1",
-   "page": 2,
+   "page": 4,
    "file": "tab_1.png",
-   "caption": "Table 1. Electrochemical Window and Phase Equilibria at the Reduction and Oxidation Potentials of the Solid Electrolyte Materials reduction potential (V) phase equilibria at the reduction potential oxidation potential (V) phase equilibria at the oxidation potential Li2S - Li2S (stable at 0 V) 2.01 S LGPS 1.71 P, Li4GeS4, Li2S 2.14 Li3PS4, GeS2, S Li3.25Ge0.25P0.75S4 1.71 P, Li4GeS4, Li2S 2.14 Li3PS4, GeS2, S Li3PS4 1.71 P, Li2S 2.31 S, P2S5 Li4GeS4 1.62 Li2S, Ge 2.14 GeS2, S Li7P3S11 2.28 Li3PS4, P4S9 2.31 S, P2S5 Li6PS5Cl 1.71 P, Li2S, LiCl 2.01 Li3PS4, LiCl, S Li7P2S8I 1.71 P, Li2S, LiI 2.31 LiI, S, P2S5 LiPON 0.68 Li3P, LiPN2, Li2O 2.63 P3N5, Li4P2O7, N2 LLZO 0.05 Zr3O, La2O3, Li2O 2.91 Li2O2, La2O3, Li6Zr2O7 LLTO 1.75 Li4Ti5O12, Li7/6Ti11/6O4, La2Ti2O7 3.71 O2, TiO2, La2Ti2O7 LATP 2.17 P, LiTiPO5, AlPO4, Li3PO4 4.21 O2, LiTi2(PO4)3, Li4P2O7, AlPO4 LAGP 2.70 Ge, GeO2, Li4P2O7, AlPO4 4",
+   "caption": "Table 1 Parameters in the simulation. Symbol Value Units Description Reference",
    "bbox": [
-    55.5,
-    64.0,
-    569.5,
-    267.4
+    32.6,
+    31.6,
+    563.3,
+    748.6
    ],
-   "w": 2142,
-   "h": 849,
+   "w": 2213,
+   "h": 2989,
    "dpi": 300,
-   "src": "38. Origin of Outstanding Stability in the Lithium Solid Electrolyte Materials Insights from Thermodynamic Analyses Based on First-Principles Calculations.pdf",
-   "blank": 0.883
+   "src": "38. Effect of mold pressure on compaction and ion conductivity of all-solid-state batteries revealed by teh discrete element method.pdf",
+   "blank": 0.894
   },
   {
    "key": "tS1",

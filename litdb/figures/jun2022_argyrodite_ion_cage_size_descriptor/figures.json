@@ -2,10 +2,11 @@
  "slug": "jun2022_argyrodite_ion_cage_size_descriptor",
  "dpi": 300,
  "maxpx": 3000,
- "generated": "2026-08-04",
+ "generated": "2026-08-05",
  "sources": [
-  "48. Designing a descriptor for the computational screening of argyrodite-based solid-state superionic conductors uniformity of ion-cage size.pdf",
-  "48. Sup) Designing a descriptor for the computational screening of argyrodite-based solid-state superionic conductors uniformity of ion-cage size.pdf"
+  "DEM 논문/48. A Polynomial-Time Algorithm for Non-Optimal Multi-Agent Pathfinding.pdf",
+  "DFT 먹인 논문/48. Designing a descriptor for the computational screening of argyrodite-based solid-state superionic conductors uniformity of ion-cage size.pdf",
+  "DFT 먹인 논문/48. Sup) Designing a descriptor for the computational screening of argyrodite-based solid-state superionic conductors uniformity of ion-cage size.pdf"
  ],
  "figures": [
   {
@@ -102,6 +103,44 @@
    "dpi": 300,
    "src": "48. Designing a descriptor for the computational screening of argyrodite-based solid-state superionic conductors uniformity of ion-cage size.pdf",
    "blank": 0.942
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Figure 6: Timing and solution-length results on binary trees.",
+   "bbox": [
+    89.1,
+    202.9,
+    570.2,
+    347.9
+   ],
+   "w": 2005,
+   "h": 605,
+   "dpi": 300,
+   "src": "48. A Polynomial-Time Algorithm for Non-Optimal Multi-Agent Pathfinding.pdf",
+   "blank": 0.958
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Figure 7: Timing and solution-length results on ternary trees.",
+   "bbox": [
+    89.1,
+    68.9,
+    570.2,
+    201.0
+   ],
+   "w": 2005,
+   "h": 551,
+   "dpi": 300,
+   "src": "48. A Polynomial-Time Algorithm for Non-Optimal Multi-Agent Pathfinding.pdf",
+   "blank": 0.957
   },
   {
    "key": "fS1",

@@ -2,86 +2,664 @@
  "slug": "lee2024_multicomponent_argyrodite_mixed_oxidation_mtp",
  "dpi": 300,
  "maxpx": 3000,
- "generated": "2026-08-04",
+ "generated": "2026-08-05",
  "sources": [
-  "02. Synergistic effects of chlorine substitution in sulfide electrolyte solid state batteries.pdf"
+  "DEM 논문/02. DEM simulation of solid-electrolyte separator and cathode densification using a stress-based multi-contact elasto-plastic model.pdf",
+  "DFT 먹인 논문/02. Synergistic effects of chlorine substitution in sulfide electrolyte solid state batteries.pdf",
+  "★ 랩실 논문/02. Toughened bi-modal cathodes for all-solid-state batteries via controlled interfacial heterogeneity.pdf",
+  "건식전극 논문/02. How to Measure a Reliable Ionic ConductivityThe Stack Pressure Dilemma ofMicrocrystalline Sulfide-Based SolidElectrolytes.pdf",
+  "이상욱 교수님/2. Design of multicomponent argyrodite based on a mixed oxidation state as promising solid-state electrolyte using moment tensor potentials.pdf",
+  "이용민 교수님/02. Modulating Carbon Binder Domain Viscoelasticity Suppresses Time-Dependent Spring-Back in Single-Crystal Cathodes.pdf",
+  "DEM 논문/02. Sup) DEM simulation of solid-electrolyte separator and cathode densification using a stress-based multi-contact elasto-plastic model.pdf",
+  "★ 랩실 논문/02. Sup) Toughened bi-modal cathodes for all-solid-state batteries via controlled interfacial heterogeneity.pdf",
+  "이상욱 교수님/2. Sup) Design of multicomponent argyrodite based on a mixed oxidation state as promising solid-state electrolyte using moment tensor potentials.pdf"
  ],
  "figures": [
   {
    "key": "f1",
    "kind": "figure",
    "label": "1",
-   "page": 3,
+   "page": 5,
    "file": "fig_1.png",
-   "caption": "Fig. 1. (a) Voltage window and ionic conductivity as a function of chlorine content for diﬀerent sulﬁde-based solid electrolytes, including Li 7 P 3 S 11 , Li 3 PS 4 , Li 20 Si 3 P 3 S 23 Cl (LSPSCl), Li 6 PS 5 Cl (LPSCl1.0), Li 5.5 PS 4.5 Cl 1.5 (LPSCl1.5), Li 5 PS 4 Cl 2 (LPSCl2.0). Space groups for Li 7-x PS 6-x Cl x have also been labeled. LPSCl1.0 and LPSCl1.5 are the cubic F-43 m phase, while for LPSCl2.0, the C2mm phase is represented by solid lines and the F-43 m one is represented by dashed lines. (b) reac- tion strain (at K eﬀ= 0 GPa) versus voltage window for sulﬁde-based SEs with diﬀerent chlorine contents in the composition. (c) Exact stability window at diﬀerent mechanical constrictions (K eﬀ= 0, 10 and 20 GPa) for Li 7 P 3 S 11 (Cl 0 ) and Li 7-x PS 6-x Cl x ( x = 0.5, 1.0, 1.5, and 2.0). The color represents the level of reaction energy, where darker color corresponds to ",
+   "caption": "Fig. 1. Schematic illustration of CBD viscoelasticity modulated by temperature and its impact on microstructural evolution and spring-back during storage.",
    "bbox": [
-    31.9,
-    51.5,
-    568.3,
-    307.2
+    51.3,
+    223.3,
+    558.3,
+    499.0
    ],
-   "w": 2236,
-   "h": 1067,
+   "w": 2114,
+   "h": 1150,
    "dpi": 300,
-   "src": "02. Synergistic effects of chlorine substitution in sulfide electrolyte solid state batteries.pdf",
-   "blank": 0.802
+   "src": "02. Modulating Carbon Binder Domain Viscoelasticity Suppresses Time-Dependent Spring-Back in Single-Crystal Cathodes.pdf",
+   "blank": 0.717
   },
   {
    "key": "f2",
    "kind": "figure",
    "label": "2",
-   "page": 5,
+   "page": 2,
    "file": "fig_2.png",
-   "caption": "Fig. 2. (a) Ex-situ XRD patterns of LPSCl1.5 and Li 7 P 3 S 11 (LPS) after Li deposition in asymmetric batteries (Li/SE/SS)) with and without mechanical constrictions. The operating stack pressure is applied at 100 MPa. SS: stainless steel. (b) P 2p and S 2p XPS spectra in Li/LPSCl1.5/SS cells after Li deposition with and without mechanical constrictions. (c) Decomposition reaction pathways at K eﬀ= 0 and 20 GPa and predicted decomposition products in diﬀerent phase equilibria within each voltage range. All decomposition products are the ground state phases within each voltage range. (d-f) Stripping/plating behavior in (d) Li/LPSCl1.5/Li cell, (e) Li/LPSCl0.5/Li cell, and (f) Li/LPSCl1.0/Li cell at a current density of 0.1 mA cm − 2 and continuous 1 h plating/stripping durations. (g-l) Stripping/plating behavior in Li/G-SE-G/Li cell at a current density of 0.25 - 10 mA cm − 2 with the ca",
+   "caption": "Figure 2. Stack pressure dependence of the ionic conductivity at diﬀerent fabrication pressures of (a) AM-Li7P3S11, (b) AM-80 Li2S−20 P2S5, (c) GC-Li7P3S11, (d) GC-Li6PS5Br, (e) μC-Li6PS5Br, and (f) μC-Li10GeP2S12. ﬁndings have implications for (i) obtaining a reliable ionic conductivity value of a speciﬁc non-annealed SE pellet, which is close to the true bulk ionic conductivity of the SE particles, and (ii) assessing the performance of the SEs in ASSBs, which operate under pressure. dependent ionic conductivity measurements were carried out by sandwiching a SE pellet (without sputtering a metal ﬁlm on the pellet surface) between two tungsten carbide electrodes. Maximum pressures around 500 MPa were applied. Alter- natively, metal ﬁlms were sputtered on the pellet faces, and ionic conductivity measurements were carried out in speciﬁc cells under low stack pressures around 10 MPa. The fo",
    "bbox": [
-    31.9,
-    51.7,
-    568.1,
-    416.2
+    45.5,
+    54.2,
+    561.5,
+    522.9
    ],
-   "w": 2236,
-   "h": 1520,
+   "w": 2151,
+   "h": 1954,
    "dpi": 300,
-   "src": "02. Synergistic effects of chlorine substitution in sulfide electrolyte solid state batteries.pdf",
-   "blank": 0.817
+   "src": "02. How to Measure a Reliable Ionic ConductivityThe Stack Pressure Dilemma ofMicrocrystalline Sulfide-Based SolidElectrolytes.pdf",
+   "blank": 0.545
   },
   {
    "key": "f3",
    "kind": "figure",
    "label": "3",
-   "page": 7,
+   "page": 5,
    "file": "fig_3.png",
-   "caption": "Fig. 3. Galvanostatic charge-discharge voltage proﬁles and cycling performance of (a,b) Li-G/Li 5.5 PS 4.5 Cl 1.5 /LNMO batteries at 0.1C. (c) Voltage proﬁles and (d) cycling performance of Li-G/ Li 5.5 PS 4.5 Cl 1.5 /LCO battery discharged at 1–20 C after charging at 0.1 C and holding voltage at 4.3 V. (e) Voltage proﬁles and (f) cycling performance of Li-G/ Li 5.5 PS 4.5 Cl 1.5 -Li 6 PS 5 Cl 1 -Li 5.5 PS 4.5 Cl 1.5 /NMC811 batteries at 20 C-rate of continuous charge and discharge. All LCO batteries were cycled at room temperature, LNMO battery and NMC811 battery were cycled at 55 °C.",
+   "caption": "Fig. 3 (a) Li-ion diﬀusion trajectories during MTP-based MD calculations based on MTP for representative ionic conductors of group (1)–(3). The purple line represents the Li-ion diﬀusion path in (b) the Li-ion network structure consisting of 4c-cages and 4a-cages. (c) A schematic of the dynamic lattice eﬀect of [A]4+ (d) the solid-electrolyte inductive eﬀect of [C]6+ and (e) van Hove correlation function.",
    "bbox": [
-    31.9,
-    50.8,
-    568.1,
-    375.2
+    36.5,
+    44.6,
+    558.8,
+    377.8
    ],
-   "w": 2236,
-   "h": 1353,
+   "w": 2177,
+   "h": 1390,
    "dpi": 300,
-   "src": "02. Synergistic effects of chlorine substitution in sulfide electrolyte solid state batteries.pdf",
-   "blank": 0.891
+   "src": "2. Design of multicomponent argyrodite based on a mixed oxidation state as promising solid-state electrolyte using moment tensor potentials.pdf",
+   "blank": 0.644
   },
   {
    "key": "f4",
    "kind": "figure",
    "label": "4",
-   "page": 8,
+   "page": 5,
    "file": "fig_4.png",
-   "caption": "Fig. 4. (a) Predicted LCO-LPSCl1.5 and LNMO-LPSCl1.5 interphase decomposition products in diﬀerent phase equilibria within each voltage range at K eﬀ= 20 GPa. All decomposition products are the ground state phases within each voltage range. (b) Ex-situ P 2p and S 2p XPS spectra of the LCO electrode of Li/LPSCl1.5/LCO cell before and after cycling. (c) Ex-situ P 2p and S 2p XPS spectra of the LNMO electrode of Li-G/LPSCl1.5/LNMO cell before and after cycling.",
+   "caption": "Figure 4. (a) SEM and EDS images of LZO-coated B-NCA particles. (b) Cross-sectional TEM images of LZO-coated B-NCA. (c) Voltage profile of the ASSB with LZO-coated B-NCA cathode during the rate-capability test from 0.1 to 1.0C. (d) Capacity retention and Coulombic efficiency of the ASSB with LZO-coated B-NCA cathode. (e) Ionic, (f) interfacial, and (g) Warburg resistances (Ω cm2) of cells with U-NCA and B-NCA cathodes measured every 50 cycles. proportional relationship between Rw and δs (eq 2), these results indicate that the inferior rate performance of B-NCA arises from its longer diffusion distance. where z is the number of electrons consumed, F is the Faraday constant, cLi +,s is the bulk concentration of Li+, Ds is the effective diffusion coefficient for Li+, R is the gas constant, T is the temperature, and δs is the diffusion distance.47 While Rion showed only a minimal increase fr",
    "bbox": [
-    31.9,
-    50.8,
-    568.1,
-    353.2
+    45.5,
+    54.4,
+    561.5,
+    462.2
    ],
-   "w": 2235,
-   "h": 1261,
+   "w": 2151,
+   "h": 1700,
    "dpi": 300,
-   "src": "02. Synergistic effects of chlorine substitution in sulfide electrolyte solid state batteries.pdf",
-   "blank": 0.74
+   "src": "02. Toughened bi-modal cathodes for all-solid-state batteries via controlled interfacial heterogeneity.pdf",
+   "blank": 0.705
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. XPS spectra for S 2p and P 2p core levels after 5 cycles of composite cathodes with (a) bare B-NCA and (b) LZO-coated B-NCA. Cross- sectional SEM images of LZO-coated B-NCA cathodes after (c) 5, (d) 50, and (e) 100 cycles at 0.5C. Distribution of (f) Li concentration and (g) von Mises stress in LZO-coated NCA upon charging at 0.5C. (h) Damage at the boundaries between primary particles in large LZO-coated NCA at SOC = 100%, showing intergranular separation inside the secondary particles. A damage value of unity signifies complete detachment. LPSCl interfaces and consequently initiates localized side reactions. The resulting surface heterogeneity of active materials, coupled with the repetitive volume change during cycling, generates uneven stress distributions that accelerate mechanical degradation and eventually leads to particle cracking.27 These cracks are reported to be str",
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    419.5
+   ],
+   "w": 2151,
+   "h": 1522,
+   "dpi": 300,
+   "src": "02. Toughened bi-modal cathodes for all-solid-state batteries via controlled interfacial heterogeneity.pdf",
+   "blank": 0.586
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 12,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. a-b) Cross-sectional SEM images of RC-S and HC-S. c-d) Reconstructed 2D cathode structure models of RC-S and HC-S from SEM images e) Specific CAM–CBD contact area",
+   "bbox": [
+    51.3,
+    360.3,
+    558.3,
+    742.6
+   ],
+   "w": 2114,
+   "h": 1594,
+   "dpi": 300,
+   "src": "02. Modulating Carbon Binder Domain Viscoelasticity Suppresses Time-Dependent Spring-Back in Single-Crystal Cathodes.pdf",
+   "blank": 0.513
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Visualization of the simulated densiﬁcation process of the solid-state separator. ha is the initial thickness of the coating, hb denotes the compacted thickness at maximum applied pressure, and hc is the ﬁnal ﬁlm thickness after the electrode relaxes from the pressure applied by the press. 9",
+   "bbox": [
+    31.6,
+    516.9,
+    563.6,
+    738.1
+   ],
+   "w": 2218,
+   "h": 923,
+   "dpi": 300,
+   "src": "02. DEM simulation of solid-electrolyte separator and cathode densification using a stress-based multi-contact elasto-plastic model.pdf",
+   "blank": 0.668
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Inﬂuence of different contact models on the compaction pressure on the particle structure and the ﬁnal ﬁlm thickness.",
+   "bbox": [
+    300.6,
+    61.9,
+    563.7,
+    275.5
+   ],
+   "w": 1097,
+   "h": 891,
+   "dpi": 300,
+   "src": "02. DEM simulation of solid-electrolyte separator and cathode densification using a stress-based multi-contact elasto-plastic model.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 10,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. (left) Film thickness of the solid-state separator over compaction pressure obtained by densiﬁcation simulations, (right) comparison of ﬁnal ﬁlm thickness obtained from experiments and simulations.",
+   "bbox": [
+    31.6,
+    61.9,
+    563.6,
+    277.2
+   ],
+   "w": 2218,
+   "h": 899,
+   "dpi": 300,
+   "src": "02. DEM simulation of solid-electrolyte separator and cathode densification using a stress-based multi-contact elasto-plastic model.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 10,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. Inﬂuence of different densiﬁcation pressure on the porosity and evolution of the degree of densiﬁcation of the ﬁnal structure of the solid-state separator.",
+   "bbox": [
+    31.6,
+    310.1,
+    296.5,
+    514.7
+   ],
+   "w": 1105,
+   "h": 854,
+   "dpi": 300,
+   "src": "02. DEM simulation of solid-electrolyte separator and cathode densification using a stress-based multi-contact elasto-plastic model.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 11,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. Visualization of the simulated densiﬁcation process of the cathode structure. ha is the initial thickness of the coating, hb denotes the compacted thickness at maximum applied pressure, and hc is the ﬁnal ﬁlm thickness after the electrode relaxes from the pressure applied by the press.",
+   "bbox": [
+    31.6,
+    61.9,
+    563.7,
+    227.2
+   ],
+   "w": 2218,
+   "h": 690,
+   "dpi": 300,
+   "src": "02. DEM simulation of solid-electrolyte separator and cathode densification using a stress-based multi-contact elasto-plastic model.pdf",
+   "blank": 0.744
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 11,
+   "file": "fig_12.png",
+   "caption": "Fig. 12. (left) Film thickness of the composite cathode over compaction pressure obtained by densiﬁcation simulations, (right) comparison of ﬁnal ﬁlm thickness obtained from experiments and simulations.",
+   "bbox": [
+    31.6,
+    260.2,
+    563.6,
+    472.3
+   ],
+   "w": 2218,
+   "h": 885,
+   "dpi": 300,
+   "src": "02. DEM simulation of solid-electrolyte separator and cathode densification using a stress-based multi-contact elasto-plastic model.pdf",
+   "blank": 0.95
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 11,
+   "file": "fig_13.png",
+   "caption": "Fig. 13. Inﬂuence of different densiﬁcation pressure on the porosity and evolution of degree of densiﬁcation of the ﬁnal structure of the composite cathode.",
+   "bbox": [
+    31.6,
+    515.1,
+    296.5,
+    719.5
+   ],
+   "w": 1105,
+   "h": 853,
+   "dpi": 300,
+   "src": "02. DEM simulation of solid-electrolyte separator and cathode densification using a stress-based multi-contact elasto-plastic model.pdf",
+   "blank": 0.94
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 12,
+   "file": "fig_14.png",
+   "caption": "Fig. 14. Inﬂuence of densiﬁcation pressure on the ionic conductivity and surface area in contact between solid electrolyte particles of the solid-state separator.",
+   "bbox": [
+    31.6,
+    544.8,
+    296.5,
+    738.1
+   ],
+   "w": 1105,
+   "h": 807,
+   "dpi": 300,
+   "src": "02. DEM simulation of solid-electrolyte separator and cathode densification using a stress-based multi-contact elasto-plastic model.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. (a) Crystal structure and Wyckoff position of halogenated Li-argyrodite (Li6PS5D [D = Cl, Br, I]). (b) Six configurations of argyrodite according to site occupancy D− at the 4c site. Each percentage indicates the D− occupancy at the 4c site. The green circle indicates the position of D− at the 4c site.",
+   "bbox": [
+    64.8,
+    64.9,
+    533.4,
+    468.9
+   ],
+   "w": 1953,
+   "h": 1684,
+   "dpi": 300,
+   "src": "2. Sup) Design of multicomponent argyrodite based on a mixed oxidation state as promising solid-state electrolyte using moment tensor potentials.pdf",
+   "blank": 0.768
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 4,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Machine-learned moment tensor potential (MTP) development workflow for evaluating ionic conductivity (𝜎*+).",
+   "bbox": [
+    64.8,
+    262.7,
+    533.4,
+    678.1
+   ],
+   "w": 1953,
+   "h": 1732,
+   "dpi": 300,
+   "src": "2. Sup) Design of multicomponent argyrodite based on a mixed oxidation state as promising solid-state electrolyte using moment tensor potentials.pdf",
+   "blank": 0.731
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 7,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Correlation between MTP- and DFT-based energy and force evaluations for the",
+   "bbox": [
+    64.8,
+    64.9,
+    533.4,
+    334.8
+   ],
+   "w": 1953,
+   "h": 1125,
+   "dpi": 300,
+   "src": "2. Sup) Design of multicomponent argyrodite based on a mixed oxidation state as promising solid-state electrolyte using moment tensor potentials.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 8,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Arrhenius plots of diffusivities calculated by MTP_optB88-vdw of the",
+   "bbox": [
+    64.8,
+    314.3,
+    533.4,
+    577.4
+   ],
+   "w": 1953,
+   "h": 1097,
+   "dpi": 300,
+   "src": "2. Sup) Design of multicomponent argyrodite based on a mixed oxidation state as promising solid-state electrolyte using moment tensor potentials.pdf",
+   "blank": 0.963
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 9,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. MSD plots of Li ion calculated by MTP_optB88-vdw of the representative",
+   "bbox": [
+    64.8,
+    64.9,
+    533.4,
+    344.4
+   ],
+   "w": 1953,
+   "h": 1165,
+   "dpi": 300,
+   "src": "2. Sup) Design of multicomponent argyrodite based on a mixed oxidation state as promising solid-state electrolyte using moment tensor potentials.pdf",
+   "blank": 0.959
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 11,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Ionic conductivities calculated from AIMD and MTP_optB88-vdw at 300 K (𝜎*+) compared to experimental values.",
+   "bbox": [
+    64.8,
+    64.9,
+    533.4,
+    339.2
+   ],
+   "w": 1953,
+   "h": 1144,
+   "dpi": 300,
+   "src": "2. Sup) Design of multicomponent argyrodite based on a mixed oxidation state as promising solid-state electrolyte using moment tensor potentials.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 16,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Crystal structures of representative Li-argyrodite (a) Li6.5Si0.5Sb0.5S5I, (b)",
+   "bbox": [
+    64.8,
+    64.9,
+    533.4,
+    432.1
+   ],
+   "w": 1953,
+   "h": 1531,
+   "dpi": 300,
+   "src": "2. Sup) Design of multicomponent argyrodite based on a mixed oxidation state as promising solid-state electrolyte using moment tensor potentials.pdf",
+   "blank": 0.793
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 18,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Schematic of a 3 × 3 × 3 supercell structure composed of 27 unit-cells considering",
+   "bbox": [
+    64.8,
+    485.1,
+    533.4,
+    703.0
+   ],
+   "w": 1953,
+   "h": 909,
+   "dpi": 300,
+   "src": "2. Sup) Design of multicomponent argyrodite based on a mixed oxidation state as promising solid-state electrolyte using moment tensor potentials.pdf",
+   "blank": 0.578
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 21,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Heatmap plot of calculated interface reaction energy (∆𝐸2K.EGLM,E",
+   "bbox": [
+    64.8,
+    92.4,
+    547.6,
+    617.5
+   ],
+   "w": 2012,
+   "h": 2189,
+   "dpi": 300,
+   "src": "2. Sup) Design of multicomponent argyrodite based on a mixed oxidation state as promising solid-state electrolyte using moment tensor potentials.pdf",
+   "blank": 0.613
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 22,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Heatmap plot illustrating the significantly improved chemical stability of Sn4+ and Ge4+ in [A]4+",
+   "bbox": [
+    64.8,
+    64.9,
+    530.5,
+    646.7
+   ],
+   "w": 1941,
+   "h": 2425,
+   "dpi": 300,
+   "src": "2. Sup) Design of multicomponent argyrodite based on a mixed oxidation state as promising solid-state electrolyte using moment tensor potentials.pdf",
+   "blank": 0.662
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 19,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. Cross-sectional SEM images of the composite cathodes employing bare B-NCA and LZO-coated B-NCA active materials.",
+   "bbox": [
+    66.0,
+    79.8,
+    547.9,
+    231.4
+   ],
+   "w": 2008,
+   "h": 633,
+   "dpi": 300,
+   "src": "02. Sup) Toughened bi-modal cathodes for all-solid-state batteries via controlled interfacial heterogeneity.pdf",
+   "blank": 0.561
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 7,
+   "file": "tab_1.png",
+   "caption": "Table 1 Modeling parameters of the densiﬁcation simulation.",
+   "bbox": [
+    32.6,
+    42.7,
+    562.7,
+    760.3
+   ],
+   "w": 2210,
+   "h": 2990,
+   "dpi": 300,
+   "src": "02. DEM simulation of solid-electrolyte separator and cathode densification using a stress-based multi-contact elasto-plastic model.pdf",
+   "blank": 0.854
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 7,
+   "file": "tab_2.png",
+   "caption": "Table 2 Solid-state separator and cathode formulation. Material Mass fraction",
+   "bbox": [
+    32.6,
+    42.7,
+    562.7,
+    760.3
+   ],
+   "w": 2210,
+   "h": 2990,
+   "dpi": 300,
+   "src": "02. DEM simulation of solid-electrolyte separator and cathode densification using a stress-based multi-contact elasto-plastic model.pdf",
+   "blank": 0.854
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 7,
+   "file": "tab_3.png",
+   "caption": "Table 3 Values of the parameter used in the simulations. b",
+   "bbox": [
+    32.6,
+    42.7,
+    562.7,
+    760.3
+   ],
+   "w": 2210,
+   "h": 2990,
+   "dpi": 300,
+   "src": "02. DEM simulation of solid-electrolyte separator and cathode densification using a stress-based multi-contact elasto-plastic model.pdf",
+   "blank": 0.854
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 10,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Ionic conductivities calculated from AIMD and MTP_optB88-vdw at 300 K (𝜎*+) compared to experimental values.",
+   "bbox": [
+    65.8,
+    67.4,
+    532.4,
+    708.9
+   ],
+   "w": 1945,
+   "h": 2674,
+   "dpi": 300,
+   "src": "2. Sup) Design of multicomponent argyrodite based on a mixed oxidation state as promising solid-state electrolyte using moment tensor potentials.pdf",
+   "blank": 0.95
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 13,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Chemical formula and indices of all simulated structures, and ionic conductivities at 300 K (𝜎*+) calculated from MTP_optB88-vdw",
+   "bbox": [
+    65.8,
+    66.4,
+    532.4,
+    777.9
+   ],
+   "w": 1945,
+   "h": 2966,
+   "dpi": 300,
+   "src": "2. Sup) Design of multicomponent argyrodite based on a mixed oxidation state as promising solid-state electrolyte using moment tensor potentials.pdf",
+   "blank": 0.957
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 23,
+   "file": "tab_S3.png",
+   "caption": "Table S3. The calculated interface reaction energy (∆𝐸#$%&'()*&",
+   "bbox": [
+    65.8,
+    66.4,
+    520.1,
+    797.2
+   ],
+   "w": 1862,
+   "h": 2995,
+   "dpi": 295,
+   "src": "2. Sup) Design of multicomponent argyrodite based on a mixed oxidation state as promising solid-state electrolyte using moment tensor potentials.pdf",
+   "blank": 0.942
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 26,
+   "file": "tab_S4.png",
+   "caption": "Table S4. The calculated H2S formation energy (∆𝐸,!-",
+   "bbox": [
+    65.8,
+    66.6,
+    472.1,
+    768.3
+   ],
+   "w": 1693,
+   "h": 2925,
+   "dpi": 300,
+   "src": "2. Sup) Design of multicomponent argyrodite based on a mixed oxidation state as promising solid-state electrolyte using moment tensor potentials.pdf",
+   "blank": 0.954
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 18,
+   "file": "tab_S5.png",
+   "caption": "Table S5. Boundary conditions for electrochemical modeling.",
+   "bbox": [
+    88.9,
+    67.5,
+    475.1,
+    357.0
+   ],
+   "w": 1610,
+   "h": 1207,
+   "dpi": 300,
+   "src": "02. Sup) Toughened bi-modal cathodes for all-solid-state batteries via controlled interfacial heterogeneity.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 20,
+   "file": "tab_S6.png",
+   "caption": "Table S6. Fitted parameters of the EIS spectra obtained from LZO-coated B-NCA | LPSCl | Li- In full cells during cycling at 0.5C.",
+   "bbox": [
+    67.0,
+    67.5,
+    536.4,
+    301.1
+   ],
+   "w": 1956,
+   "h": 974,
+   "dpi": 300,
+   "src": "02. Sup) Toughened bi-modal cathodes for all-solid-state batteries via controlled interfacial heterogeneity.pdf",
+   "blank": 0.95
   }
  ]
 }

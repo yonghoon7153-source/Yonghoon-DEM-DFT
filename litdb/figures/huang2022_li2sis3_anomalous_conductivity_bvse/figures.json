@@ -2,87 +2,126 @@
  "slug": "huang2022_li2sis3_anomalous_conductivity_bvse",
  "dpi": 300,
  "maxpx": 3000,
- "generated": "2026-08-04",
+ "generated": "2026-08-05",
  "sources": [
-  "47. Anomalously High Ionic Conductivity of Li2SiS3‑Type Conductors.pdf",
-  "47. Sup) Anomalously High Ionic Conductivity of Li2SiS3‑Type Conductors.pdf"
+  "DEM 논문/47. Understanding mechanical stresses upon solid-state battery electrode cycling using discrete element method.pdf",
+  "DFT 먹인 논문/47. Anomalously High Ionic Conductivity of Li2SiS3‑Type Conductors.pdf",
+  "DFT 먹인 논문/47. Sup) Anomalously High Ionic Conductivity of Li2SiS3‑Type Conductors.pdf"
  ],
  "figures": [
   {
    "key": "f1",
    "kind": "figure",
    "label": "1",
-   "page": 2,
+   "page": 3,
    "file": "fig_1.png",
-   "caption": "Figure 1. (a) Ternary diagram of Li2S−SiS2−P2S5. The solid electrolytes synthesized in this study are summarized here. The pink area indicates the solid electrolyte region, which mainly consists of the Li2SiS3-type structure. (b) X-ray diﬀraction patterns of the Li2SiS3-type solid electrolytes. The upper pattern (marked in red) represents the material synthesized in this study, while the lower two patterns (marked in blue and green) are reference spectra from the ICDD database. Figure 2. (a) Time-of-ﬂight neutron diﬀraction patterns and the corresponding Rietveld reﬁnement ﬁts of n-Li2SiS3 at 298 K. The experimental proﬁle is represented by red crosses; the green line denotes the calculated pattern; the diﬀerence proﬁle is shown in blue, and the calculated positions of the Bragg reﬂections are given in dark green (n-Li2SiS3, 99.17%) and orange (Si, 0.83%) at the bottom of the plot. (b, c",
+   "caption": "Fig. 1. Schematic representation of the simulation workflow based on the experimental procedure of cycling SSB composite cathodes under isostatic compressing.",
    "bbox": [
-    45.5,
-    260.3,
-    561.5,
-    387.2
+    31.6,
+    49.4,
+    567.8,
+    401.2
    ],
-   "w": 2151,
-   "h": 530,
+   "w": 2235,
+   "h": 1467,
    "dpi": 300,
-   "src": "47. Anomalously High Ionic Conductivity of Li2SiS3‑Type Conductors.pdf",
-   "blank": 0.85
+   "src": "47. Understanding mechanical stresses upon solid-state battery electrode cycling using discrete element method.pdf",
+   "blank": 0.795
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Representation of the transition of M1 from the uniaxially compressed state to the relaxed state. interfaces and AM active surface that lead to heterogeneous (de)lith­ iation electrochemical kinetics. As a result, when performing numerical electrochemical simulations using microstructures derived from our simulations, symmetrical charge and discharge profiles are anticipated, without difference in potential values since the AM particles revert to their original size after each step. This would be because of the homo­ geneous AM size change during the DEM simulations. However, by using this approach, we assume that the DEM model should be able to capture the effects of isostatic compression on the microstructure allowing for a comprehensive analysis of the resulting microstructural changes and stress distribution within the electrode during electrochemical cycling under applied pr",
+   "bbox": [
+    31.6,
+    429.0,
+    566.0,
+    637.0
+   ],
+   "w": 2228,
+   "h": 868,
+   "dpi": 300,
+   "src": "47. Understanding mechanical stresses upon solid-state battery electrode cycling using discrete element method.pdf",
+   "blank": 0.824
   },
   {
    "key": "f3",
    "kind": "figure",
    "label": "3",
-   "page": 3,
+   "page": 4,
    "file": "fig_3.png",
-   "caption": "Figure 3. Structural evolution of n-Li2SiS3 (tetragonal, P42212) to e-Li2SiS3 (orthorhombic, Cmc21) with increasing temperature. The intermediate m-Li2SiS3 consists of n-Li2SiS3 and e-Li2SiS3. with increasing temperature. The XRD patterns recorded during the phase evolution of n-Li2SiS3 with increasing temperature are shown in Figure S3. In the case of n-Li2SiS3, two (Si/P)S4 tetrahedra link across a common edge to form (Si/P)2S6 dimers. The n-Li2SiS3 framework is composed of these dimers and diﬀers from that of e-Li2SiS3, which is formed by inﬁnite corner-shared SiS4 chains.16 It is speculated that the isolated dimers open to form linked chains at high temper- atures. The framework of n-Li2SiS3 has a 3D lithium conduction pathway (2D in the ab plane +1D along the c- axis). The 2D conduction pathway is formed by LiS4 tetrahedra in the 4d and 8g sites, which share a common edge and form a",
+   "caption": "Fig. 3. Representation of the transition of M1 from the relaxed state to the isostatically compressed state. challenging task beyond the scope of this publication. applied in lateral dimensions. 2.1.4. Electronic conductivity and ionic geometrical tortuosity factor calculations 3. Results and discussion In order to analyze the microstructural characteristics of the elec­ trode, we use physical properties and geometrical descriptors. We used the effective electronic conductivity σel arising from the percolated network of AM particles, and the geometrical tortuosity τ for ionic conduction along the percolated network of SE particles. The σel and τ of the microstructures serve as quantitative indicators for the impact of the compressing protocol on the electrode’s electrochemical performance. These parameters provide a simple means of assessing both the ionic and electronic properties of th",
    "bbox": [
-    45.5,
-    54.4,
-    561.5,
-    196.5
+    31.6,
+    49.4,
+    566.0,
+    251.7
    ],
-   "w": 2151,
-   "h": 593,
+   "w": 2228,
+   "h": 844,
    "dpi": 300,
-   "src": "47. Anomalously High Ionic Conductivity of Li2SiS3‑Type Conductors.pdf",
-   "blank": 0.849
+   "src": "47. Understanding mechanical stresses upon solid-state battery electrode cycling using discrete element method.pdf",
+   "blank": 0.825
   },
   {
    "key": "f4",
    "kind": "figure",
    "label": "4",
-   "page": 3,
+   "page": 5,
    "file": "fig_4.png",
-   "caption": "Figure 4. Electrochemical properties of n-Li2SiS3. (a) Nyquist plots and (b) Arrhenius plots for the Li2SiS3-type conductors. Compared with e- and m-Li2SiS3,16 n-Li2SiS3 exhibits an anomalous high ionic conductivity even at room temperature (298 K). (c) Cyclic voltammogram curve of a Li/n-Li2SiS3/SUS cell; from −0.5 to 5 V at a scan rate of 1 mV s−1. (d) Charge−discharge curves of the all- solid-state battery based on n-Li2SiS3, Li−In, and LiNbO3-coated LiCoO2/LGPS as the electrolyte, anode, and cathode materials, respectively. The current rate for charge−discharge is 0.2 C.",
+   "caption": "Fig. 4. Average stress exerted on each dimension of M1 as a function of particles’ position in z dimension and the radius under 375 MPa uniaxial compression. The microstructure is presented with particles color coded according to the exerted stress on each dimension. stress distribution becomes imperative for enhancing electrochemical cycling protocols, thereby optimizing the battery cell’s overall cycle life and preserving the health of the AM and SE structural integrity. This milder approach not only mitigates the risk of structural damage but also contributes to the sustained performance and longevity of the SSB cell. across the microstructure thickness after the charge. Before the AM size increases to simulate discharging, AM experi­ ences higher stress compared to SE particles due to the deformable and soft nature of the SE. This gap in stress levels widens with AM particle expansio",
    "bbox": [
-    309.4,
-    225.5,
-    561.5,
-    424.7
+    31.6,
+    49.4,
+    566.0,
+    423.7
    ],
-   "w": 1051,
-   "h": 831,
+   "w": 2228,
+   "h": 1561,
    "dpi": 300,
-   "src": "47. Anomalously High Ionic Conductivity of Li2SiS3‑Type Conductors.pdf",
-   "blank": 0.908
+   "src": "47. Understanding mechanical stresses upon solid-state battery electrode cycling using discrete element method.pdf",
+   "blank": 0.821
   },
   {
    "key": "f5",
    "kind": "figure",
    "label": "5",
-   "page": 4,
+   "page": 6,
    "file": "fig_5.png",
-   "caption": "Figure 5. BVSE analysis of Li-ion migration within the n-Li2SiS3 and e-Li2SiS3 structures. (a1, b1) Crystal structures of n-Li2SiS3 (a1) and e-Li2SiS3 (b1) superimposed with the Li-ion potential map (marked in yellow). (a2, a3, b2, b3) Li-ion migration pathways of n-Li2SiS3 (a2, a3) and e-Li2SiS3 (b2, b3). (a4, b4) Energy proﬁles of the migration pathways in n-Li2SiS3 (a4) and e-Li2SiS3 (b4). Each pathway in (a2−a3) and (b2−b3) corresponds to the energy proﬁle of the same color in (a4) and (b4), respectively. populating split positions of lithium ions (Li1 in 4d and Li2 in 8g) play a key role in improving the ionic conductivity by ﬂattening the energy landscape of lithium ion migration through the lattice. The split positions of lithium ions in n- Li2SiS3 may be induced by the rearrangement of SiS4 tetrahedra from inﬁnite corner-shared chains to edge-shared dimers at low temperatures. Co",
+   "caption": "Fig. 5. a) Average stress exerted on each dimension of M1 as a function of particles’ position in z dimension and the radius under 5 MPa isostatic compression. The microstructure is presented with particles color coded according to the exerted stress on each dimension. b) Heatmaps of exerted stress in z dimension at the dis­ charged and charged states over the xy cross-section of M1 and M2 under 5 MPa isostatic compression.",
    "bbox": [
-    45.5,
-    54.4,
-    561.5,
-    262.3
+    31.6,
+    49.4,
+    565.8,
+    686.4
    ],
-   "w": 2151,
-   "h": 867,
+   "w": 2227,
+   "h": 2655,
    "dpi": 300,
-   "src": "47. Anomalously High Ionic Conductivity of Li2SiS3‑Type Conductors.pdf",
-   "blank": 0.845
+   "src": "47. Understanding mechanical stresses upon solid-state battery electrode cycling using discrete element method.pdf",
+   "blank": 0.698
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. a) Electrodes’ σel evolution normalized by the conductivity of the AM (σAM) of the microstructures resulting from different isostatic compressions. b) Electrodes’ τ evolution for the microstructures resulting from different isostatic compressions. The x axis represents the microstructures resulting from different steps in the modeling workflow where Di and Ci refer to the discharging and charging for the ith time under isostatic compression. The green markers in the legend are aimed to differentiate the two microstructures and are not used for data representation. 7",
+   "bbox": [
+    31.6,
+    236.9,
+    565.8,
+    702.1
+   ],
+   "w": 2227,
+   "h": 1939,
+   "dpi": 300,
+   "src": "47. Understanding mechanical stresses upon solid-state battery electrode cycling using discrete element method.pdf",
+   "blank": 0.967
   },
   {
    "key": "fS1",

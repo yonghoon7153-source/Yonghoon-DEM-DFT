@@ -2,10 +2,11 @@
  "slug": "kahle2020_ht_aimd_screening",
  "dpi": 300,
  "maxpx": 3000,
- "generated": "2026-08-04",
+ "generated": "2026-08-05",
  "sources": [
-  "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
-  "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf"
+  "DEM 논문/41. Contact model for DEM simulation of compaction and sintering of all-solid-state battery electrodes.pdf",
+  "DFT 먹인 논문/41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
+  "DFT 먹인 논문/41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf"
  ],
  "figures": [
   {
@@ -31,39 +32,58 @@
    "key": "f3",
    "kind": "figure",
    "label": "3",
-   "page": 6,
+   "page": 5,
    "file": "fig_3.png",
-   "caption": "Fig. 3 Histogram of the relative volume expansion between the experi- mental and the calculated ground-state volumes (at the PBE level) for 971 structures studied. In the left panel, we show the entire histogram, on the right we zoom on the region between 0.9 and 1.1.",
+   "caption": "Fig. 3. Plot of the relative consolidation rate with the spring force (a) and the interparticle force-displacement curve (b) including fusion bond contacts.",
    "bbox": [
-    36.5,
-    493.6,
-    298.0,
-    676.5
+    39.6,
+    57.2,
+    438.0,
+    203.6
    ],
-   "w": 1090,
-   "h": 763,
+   "w": 1661,
+   "h": 611,
    "dpi": 300,
-   "src": "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
-   "blank": 0.888
+   "src": "41. Contact model for DEM simulation of compaction and sintering of all-solid-state battery electrodes.pdf",
+   "blank": 0.882
   },
   {
    "key": "f4",
    "kind": "figure",
    "label": "4",
-   "page": 7,
+   "page": 6,
    "file": "fig_4.png",
-   "caption": "Fig. 4 Diﬀusion coeﬃcients from FPMD for Li4Ga4I16, Li7Ga8Br24, Li8Cs4I12, Li20Ge2P4S24, Li40Cl24O8, Li20Cl12O4, and Li56Ta8O48 as solid lines in orange, brown, blue, violet, green, pink, and red, respectively (we refer to the composition of the actual supercell studied). The line of best fit is shown as a dashed line of the same color. The activation barriers, extracted from the slope of the fit, are in the legend (in brackets) in eV.",
+   "caption": "Fig. 4. Force displacement curves that show the effect of c spring and c area (a) and with a consolidation limit h lim",
    "bbox": [
-    36.5,
-    43.8,
-    298.0,
-    221.9
+    40.9,
+    57.4,
+    422.0,
+    202.6
    ],
-   "w": 1090,
-   "h": 743,
+   "w": 1589,
+   "h": 606,
    "dpi": 300,
-   "src": "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
-   "blank": 0.836
+   "src": "41. Contact model for DEM simulation of compaction and sintering of all-solid-state battery electrodes.pdf",
+   "blank": 0.893
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Effect of yield strength σ ( yield ) (a) and Young modulus E (b) on the force-displacement curve.",
+   "bbox": [
+    39.4,
+    224.1,
+    423.4,
+    370.5
+   ],
+   "w": 1601,
+   "h": 611,
+   "dpi": 300,
+   "src": "41. Contact model for DEM simulation of compaction and sintering of all-solid-state battery electrodes.pdf",
+   "blank": 0.874
   },
   {
    "key": "f6",
@@ -85,42 +105,61 @@
    "blank": 0.485
   },
   {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. The effect of c spring on the dynamic change of the particle packing height (a) and the relative Young’s Modulus.",
+   "bbox": [
+    39.4,
+    57.8,
+    423.4,
+    206.6
+   ],
+   "w": 1601,
+   "h": 621,
+   "dpi": 300,
+   "src": "41. Contact model for DEM simulation of compaction and sintering of all-solid-state battery electrodes.pdf",
+   "blank": 0.909
+  },
+  {
    "key": "f8",
    "kind": "figure",
    "label": "8",
-   "page": 9,
+   "page": 8,
    "file": "fig_8.png",
-   "caption": "Fig. 8 Li-Ionic density of Li56Ta8O48 at 500 K from FPMD.",
+   "caption": "Fig. 8. Plot of the relative density with the mold pressure and the effect of parameters c area and h lim",
    "bbox": [
-    36.5,
-    514.9,
-    281.7,
-    646.2
+    37.7,
+    233.3,
+    423.4,
+    378.5
    ],
-   "w": 1022,
-   "h": 548,
+   "w": 1608,
+   "h": 606,
    "dpi": 300,
-   "src": "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
-   "blank": 0.486
+   "src": "41. Contact model for DEM simulation of compaction and sintering of all-solid-state battery electrodes.pdf",
+   "blank": 0.905
   },
   {
    "key": "f9",
    "kind": "figure",
    "label": "9",
-   "page": 9,
+   "page": 11,
    "file": "fig_9.png",
-   "caption": "Fig. 9 Li-Ionic density of Li16Re24S44 at 500 K from FPMD.",
+   "caption": "Fig. 9. Effect of the pressing time versus the viscoelastic response time.",
    "bbox": [
-    297.3,
-    499.1,
-    524.4,
-    706.3
+    45.6,
+    58.0,
+    428.4,
+    202.0
    ],
-   "w": 947,
-   "h": 865,
+   "w": 1596,
+   "h": 601,
    "dpi": 300,
-   "src": "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
-   "blank": 0.583
+   "src": "41. Contact model for DEM simulation of compaction and sintering of all-solid-state battery electrodes.pdf",
+   "blank": 0.899
   },
   {
    "key": "f10",
@@ -2477,6 +2516,44 @@
    "dpi": 300,
    "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
    "blank": 0.901
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 7,
+   "file": "tab_1.png",
+   "caption": "Table 1 Material properties used in the simulations. Symbol Value Units Description References e 0.5 − Restitution coeﬃcient This study E SE 24 GPa SE Young modulus (LPS) Sakuda et al. [4] E AM 199 GPa SE Young modulus (LPS) Cheng et al. [10] μ 0.5 - Friction coeﬃcient This study v 0.3 - Poisson ratio This study H SE 1.9 GPa Hardness of SE (LPS) McGrogan et al. [8] H AM 11.2 Hardness of AM (NCM) Cheng et al. [10]",
+   "bbox": [
+    40.6,
+    40.4,
+    433.8,
+    631.9
+   ],
+   "w": 1639,
+   "h": 2465,
+   "dpi": 300,
+   "src": "41. Contact model for DEM simulation of compaction and sintering of all-solid-state battery electrodes.pdf",
+   "blank": 0.827
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 7,
+   "file": "tab_2.png",
+   "caption": "Table 2 Simulation setup parameters in the different simulations. Description Monodisperse Coated Unit Number of AM particles 0 10,746 — Number of SE particles 1,846 27,263 — Primary AM diameter — 1 μm Primary SE diameter 1 0.5 μm Domain size 10 20 μm Fraction of AM particles 0 0.734 — AM aggregate size — 5 μm SE aggregate size — 1.45 μm",
+   "bbox": [
+    40.6,
+    40.4,
+    433.8,
+    631.9
+   ],
+   "w": 1639,
+   "h": 2465,
+   "dpi": 300,
+   "src": "41. Contact model for DEM simulation of compaction and sintering of all-solid-state battery electrodes.pdf",
+   "blank": 0.827
   },
   {
    "key": "tS5",

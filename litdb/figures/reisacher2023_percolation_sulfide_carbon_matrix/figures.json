@@ -4,7 +4,9 @@
  "maxpx": 3000,
  "generated": "2026-08-05",
  "sources": [
-  "27. Percolation Behavior of a Sulfide Electrolyte___Carbon Additive_Matrix for Composite Cathodes in All-Solid-State Batteries.pdf"
+  "DEM 논문/23. microstructural-modeling-of-composite-cathodes-for-all-solid-state-batteries.pdf",
+  "DEM 논문/27. Percolation Behavior of a Sulfide Electrolyte___Carbon Additive_Matrix for Composite Cathodes in All-Solid-State Batteries.pdf",
+  "건식전극 논문/06. microstructural-modeling-of-composite-cathodes-for-all-solid-state-batteries.pdf"
  ],
  "figures": [
   {
@@ -122,23 +124,99 @@
    "blank": 0.372
   },
   {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Utilization level of AM and SE (left) and speciﬁc active interface area between the ionic and electronic conduction cluster (right) for composite cathode arrangements at a constant porosity of 20% and AM particle size d = 5 μm. The lower x-axis reﬂects the total fraction of AM in the whole electrode, including porous space and SE, while the composition shown in the upper x-axis reﬂects the AM and SE volume in the solid phase, only. These ﬁndings correlate well with the observation of high fractions of inactive NCM-622 for large AM particle sizes, measured via ex situ X-ray diﬀraction and with their attributed low eﬀective electronic conductivity studied by Strauss et al.13 For a porosity of 20%, the resulting utilization levels of AM and SE, as well as the volume-speciﬁc interface area, are shown in Figure 7. The presented utilization level reveals the limitations for cathode p",
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    199.0
+   ],
+   "w": 2151,
+   "h": 567,
+   "dpi": 300,
+   "src": "23. microstructural-modeling-of-composite-cathodes-for-all-solid-state-batteries.pdf",
+   "blank": 0.847
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 6,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Speciﬁc active interface area between the ionic and electronic conduction cluster at diﬀerent porosities for 5 μm-sized AM particles.",
+   "bbox": [
+    318.5,
+    446.5,
+    570.5,
+    630.8
+   ],
+   "w": 1051,
+   "h": 769,
+   "dpi": 300,
+   "src": "23. microstructural-modeling-of-composite-cathodes-for-all-solid-state-batteries.pdf",
+   "blank": 0.861
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 7,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Porosity dependence of the utilization level of AM and SE (left) and the speciﬁc active interface area between the ionic and electronic conduction cluster (right) for composite cathode microstructures at a constant composition of 70/30 vol% AM with electrolyte and AM particle size d = 5 μm. The lower x-axis reﬂects the total fraction of AM in the whole microstructure including porous space and SE. (82/18 wt% for NMC-622 and LPS). Apart from the shift of the optimal composition toward higher AM fractions for rising porosity, the ionic conduction limitation gains importance for higher porosities: the drop at compositions above the optimum is more pronounced at a porosity of 20% compared to 5 and 10%. Keeping a constant composition and varying the porosity, the eﬀect of densiﬁcation of composite electrodes can be studied. Figure 9 shows the percolation properties for porosities fr",
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    199.0
+   ],
+   "w": 2151,
+   "h": 567,
+   "dpi": 300,
+   "src": "23. microstructural-modeling-of-composite-cathodes-for-all-solid-state-batteries.pdf",
+   "blank": 0.876
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 7,
+   "file": "fig_10.png",
+   "caption": "Figure 10. Speciﬁc interface area between the electronic and ionic cluster for diﬀerent electrode thicknesses between 20 and 140 μm at a constant porosity of 20% and an AM particle size of d = 5 μm. The lower x-axis reﬂects the total fraction of AM in the whole composite, including porous space and SE, while the composition shown in the upper x-axis reﬂects the AM and SE volume in the solid phase, only. The microstructure models for minimal and maximal electrode thickness at 47 vol% AM fraction are shown (right).",
+   "bbox": [
+    318.5,
+    238.2,
+    570.5,
+    392.0
+   ],
+   "w": 1052,
+   "h": 642,
+   "dpi": 300,
+   "src": "23. microstructural-modeling-of-composite-cathodes-for-all-solid-state-batteries.pdf",
+   "blank": 0.868
+  },
+  {
    "key": "t1",
    "kind": "table",
    "label": "1",
-   "page": 3,
+   "page": 4,
    "file": "tab_1.png",
-   "caption": "Table 1. Prepared powder mixtures of the conducting matrix with weight (wt.) and volume (vol.) fractions.",
+   "caption": "Table 1. General Microstructural Modeling Input Parameters",
    "bbox": [
-    160.9,
-    47.0,
-    566.0,
-    777.7
+    55.5,
+    43.6,
+    569.5,
+    791.8
    ],
-   "w": 1661,
-   "h": 2995,
-   "dpi": 295,
-   "src": "27. Percolation Behavior of a Sulfide Electrolyte___Carbon Additive_Matrix for Composite Cathodes in All-Solid-State Batteries.pdf",
-   "blank": 0.866
+   "w": 2058,
+   "h": 2994,
+   "dpi": 288,
+   "src": "23. microstructural-modeling-of-composite-cathodes-for-all-solid-state-batteries.pdf",
+   "blank": 0.837
   },
   {
    "key": "t2",

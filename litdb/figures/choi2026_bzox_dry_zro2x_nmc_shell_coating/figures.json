@@ -2,10 +2,10 @@
  "slug": "choi2026_bzox_dry_zro2x_nmc_shell_coating",
  "dpi": 300,
  "maxpx": 3000,
- "generated": "2026-08-04",
+ "generated": "2026-08-05",
  "sources": [
-  "28. Dry-Crafted Charge-Conductive ZrO2−x Cathode Shell Coating for High-Performance Sulfide-Based Solid-State Batteries.pdf",
-  "28. Sup) Dry-Crafted Charge-Conductive ZrO2−x Cathode Shell Coating for High-Performance Sulfide-Based Solid-State Batteries.pdf"
+  "DFT 먹인 논문/28. Dry-Crafted Charge-Conductive ZrO2−x Cathode Shell Coating for High-Performance Sulfide-Based Solid-State Batteries.pdf",
+  "DFT 먹인 논문/28. Sup) Dry-Crafted Charge-Conductive ZrO2−x Cathode Shell Coating for High-Performance Sulfide-Based Solid-State Batteries.pdf"
  ],
  "figures": [
   {
@@ -140,6 +140,25 @@
    "dpi": 300,
    "src": "28. Sup) Dry-Crafted Charge-Conductive ZrO2−x Cathode Shell Coating for High-Performance Sulfide-Based Solid-State Batteries.pdf",
    "blank": 0.121
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure. S3. O 1s XPS spectra of (a) NMC, (b) NMC-WZO, and (c) NMC-BZOx.",
+   "bbox": [
+    66.0,
+    66.0,
+    527.8,
+    213.1
+   ],
+   "w": 1925,
+   "h": 613,
+   "dpi": 300,
+   "src": "28. Sup) Dry-Crafted Charge-Conductive ZrO2−x Cathode Shell Coating for High-Performance Sulfide-Based Solid-State Batteries.pdf",
+   "blank": 0.814
   },
   {
    "key": "fS4",

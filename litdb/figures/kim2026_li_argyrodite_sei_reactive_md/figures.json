@@ -2,10 +2,15 @@
  "slug": "kim2026_li_argyrodite_sei_reactive_md",
  "dpi": 300,
  "maxpx": 3000,
- "generated": "2026-08-04",
+ "generated": "2026-08-05",
  "sources": [
-  "03. Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
-  "03. Sup) Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf"
+  "DEM 논문/03. Cohesive, frictional powders contact models for tension.pdf",
+  "DFT 먹인 논문/03. Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
+  "★ 랩실 논문/03. High-voltage stability of sulfide-based all-solid state batteries benefit of the parasitic reaction.pdf",
+  "건식전극 논문/03. Advanced Energy Materials - 2022 - Minnmann - Designing Cathodes and Cathode Active Materials for Solid‐State Batteries.pdf",
+  "이상욱 교수님/3. Deciphering Li₂S-like SEI Formation Mechanism at LiArgyrodite Anodic Interfaces via Large-Scale Machine-Learned Reactive Dynamics.pdf",
+  "이용민 교수님/03. Optimized carbon coating on SiOx enables balanced ionelectron transport and uniform dispersion in SiOxGraphite composite electrodes.pdf",
+  "DFT 먹인 논문/03. Sup) Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf"
  ],
  "figures": [
   {
@@ -69,39 +74,39 @@
    "key": "f4",
    "kind": "figure",
    "label": "4",
-   "page": 8,
+   "page": 7,
    "file": "fig_4.png",
-   "caption": "Fig. 4. Electrochemical impedance spectra and corresponding DRT curves of (a, b, e, f) NCM811/LPSC/Li-In and (c, d, g, h) NCM811/LPSC-In0.08/Li-In batteries at different potentials during the first cycle.",
+   "caption": "Fig. 4. (a) Cycling performance and (b) capacity retention behavior of SiOx/graphite||NCM622 full cells over 100 cycles at 0.5C-rate. (c, d) EIS spectra measured (c) after pre-cycling and (d) after 100 cycles at SOC 50%. (e) Fitted RSEI and Rct of each cell after precycling and after 100 cycles. SiOx@thick-C exhibited lower capacity retention than SiOx@moderate- C. This suggests that excessive carbon coating thickness may limit the reversible electrochemical reaction of SiOx during cycling. Fig. 4c and d shows the EIS spectra of the cells measured after pre-cycling and after 100 cycles, respectively. After pre-cycling, SiOx@moderate-C exhibited the lowest impedance (Fig. 4c), similar to the half-cell EIS results in Fig. 3d–g. Furthermore, the impedance gap among the samples was maintained after 100 cycles (Fig. 4d). The fitted resistance values derived from the EIS spectra also showed th",
    "bbox": [
     31.6,
-    49.8,
-    565.8,
-    269.0
+    49.4,
+    566.0,
+    331.0
    ],
-   "w": 2227,
-   "h": 914,
+   "w": 2228,
+   "h": 1175,
    "dpi": 300,
-   "src": "03. Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
-   "blank": 0.62
+   "src": "03. Optimized carbon coating on SiOx enables balanced ionelectron transport and uniform dispersion in SiOxGraphite composite electrodes.pdf",
+   "blank": 0.869
   },
   {
    "key": "f5",
    "kind": "figure",
    "label": "5",
-   "page": 8,
+   "page": 18,
    "file": "fig_5.png",
-   "caption": "Fig. 5. (a) Cyclic voltammetry curves of NCM811/LPSC/Li-In and (b) NCM811/LPSC-In0.08/Li-In at different scan rates. (c) Relationship between peak current and scan rate in cyclic voltammetry curves of all-solid-state batteries assembled with Li6+2xP1-xInxS5Cl electrolytes. GITT curves of (d) NCM811/LPSC/Li-In and (e) NCM811/LPSC-In0.08/Li-In during initial cycle. (f) Li+ diffusion coefficient during charging and discharging. depicted in Fig. 5(c). The results indicate that the Li+ diffusion co­ efficients of the In-doped samples are higher than those of the undoped samples, consistent with their higher ionic conductivity results. This phenomenon may be attributed to severe interfacial side reactions be­ tween undoped LPSC and NCM811, which are effectively suppressed by In doping. This suppression reduces interfacial impedance, thereby promoting Li+ diffusion kinetics. the kinetic charact",
+   "caption": "Fig. 5. Comparison of SEI formation and PS₄ decomposition at the Li (100) | the LPSC (100) interface with and without a sulfur coating over 50 ns of MD simulation. (a) Initial uncoated structure consisting of 20 nm the LPSC and 16 nm Li metal. (b) Initial configuration with an additional sulfur coating (~3 nm) inserted between the LPSC and Li layers. Final interfacial structures after 50 ns MD simulation for (c) the uncoated and (d) sulfur-coated systems, showing differences in SEI thickness and crystallinity. (e) Time evolution of the number of intact PS₄ units in the LPSC region, highlighting suppressed decomposition in the sulfur-coated system.",
    "bbox": [
-    31.6,
-    307.2,
-    566.0,
-    601.1
+    46.5,
+    26.0,
+    784.3,
+    387.8
    ],
-   "w": 2228,
-   "h": 1225,
-   "dpi": 300,
-   "src": "03. Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
-   "blank": 0.896
+   "w": 2993,
+   "h": 1468,
+   "dpi": 292,
+   "src": "3. Deciphering Li₂S-like SEI Formation Mechanism at LiArgyrodite Anodic Interfaces via Large-Scale Machine-Learned Reactive Dynamics.pdf",
+   "blank": 0.745
   },
   {
    "key": "f6",
@@ -128,18 +133,18 @@
    "label": "7",
    "page": 10,
    "file": "fig_7.png",
-   "caption": "Fig. 7. (a) S 2p, (b) P 2p XPS spectra of the LPSC after 200 cycles. (c) S 2p, (d) P 2p XPS spectra of the LPSC-In0.08 after 200 cycles. 131.66 and 132.76 eV correspond to PS4 3−, those at 133.31 and 133.85 eV to P2Sx species, and the peaks at 133.85 and 134.75 eV are assigned to phosphorus oxides (POx). Notably, the relative peak areas of P2Sx and POx are significantly lower in LPSC-In0.08 than in pristine LPSC, further confirming the mitigated interfacial side reactions enabled by In doping. Additionally, the In 3d spectrum of LPSC-In0.08 show no detectable changes after cycling, suggesting that In maintains a stable valence state and does not participate in detrimental interfacial redox processes. The Cl 2p spectrum is dominated by the characteristic peaks of Cl−species and remains essentially unchanged [61]. Overall, these XPS results demonstrate that In doping effectively suppresses",
+   "caption": "Figure 7. Strategies to overcome chemo-mechanical challenges in CAMs for SSBs: a) Influence of the choice of solid electrolyte (LYC = Li3YCl6, LPSX = Li6PS5Cl) on the performance of NCM with PC (P) or SC (S) particles. Reproduced with permission.[86] Copyright 2021, John Wiley and Sons. b) Influence of particle cracking on the cycling stability of SC and PC NCMs. Reproduced under terms of the CC-BY license.[91] Copyright 2021, The authors, published by IOP Publishing. c) Mitigating CAM particle cracking by the use of tailored “full concentration gradient” (FCG) CAM particles with rod-shaped crystallites. Reproduced with permission.[81] Copyright 2019, John Wiley and Sons.",
    "bbox": [
-    31.6,
-    50.1,
-    566.0,
-    395.0
+    42.5,
+    64.9,
+    552.6,
+    542.3
    ],
-   "w": 2228,
-   "h": 1438,
+   "w": 2126,
+   "h": 1990,
    "dpi": 300,
-   "src": "03. Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
-   "blank": 0.875
+   "src": "03. Advanced Energy Materials - 2022 - Minnmann - Designing Cathodes and Cathode Active Materials for Solid‐State Batteries.pdf",
+   "blank": 0.774
   },
   {
    "key": "fS1",
@@ -463,6 +468,44 @@
    "dpi": 300,
    "src": "03. Sup) Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
    "blank": 0.816
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 12,
+   "file": "tab_1.png",
+   "caption": "Table 1. Li-ion diffusivity values (cm²/s) extracted from different regions of the Li (100) | LPSC (100) interface, including the crystalline region and the remaining LPSC bulk. The bulk LPSC value from a separate simulation is also provided for comparison.[35]",
+   "bbox": [
+    67.0,
+    68.5,
+    531.3,
+    839.1
+   ],
+   "w": 1807,
+   "h": 2998,
+   "dpi": 280,
+   "src": "3. Deciphering Li₂S-like SEI Formation Mechanism at LiArgyrodite Anodic Interfaces via Large-Scale Machine-Learned Reactive Dynamics.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 8,
+   "file": "tab_2.png",
+   "caption": "Table 2 Microscopic material parameters used (second column) Symbol Value rescaled units SI-units tu 1 1µs 10−6 s",
+   "bbox": [
+    46.0,
+    28.2,
+    549.3,
+    721.2
+   ],
+   "w": 2098,
+   "h": 2888,
+   "dpi": 300,
+   "src": "03. Cohesive, frictional powders contact models for tension.pdf",
+   "blank": 0.887
   },
   {
    "key": "tS1",

@@ -2,29 +2,49 @@
  "slug": "wang2022_sulfide_thermal_stability_th_descriptor",
  "dpi": 300,
  "maxpx": 3000,
- "generated": "2026-08-04",
+ "generated": "2026-08-05",
  "sources": [
-  "29. InfoMat - 2022 - Wang - Improving thermal stability of sulfide solid electrolytes  An intrinsic theoretical paradigm.pdf"
+  "DEM 논문/29. Transport and mechanical aspects of all-solid-state lithium batteries.pdf",
+  "DFT 먹인 논문/29. InfoMat - 2022 - Wang - Improving thermal stability of sulfide solid electrolytes  An intrinsic theoretical paradigm.pdf"
  ],
  "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Survey of existing literature revealing the performance limitations of ASSBs. Low current densities and low areal loadings (denoted by the size of the point) are common. The ARPA-E IONICS project goal of 3 mA cm\u00012 from 2016 is denoted by the green dashed line for reference. (For interpretation of the references to colour in this ﬁgure legend, the reader is referred to the Web version of this article.)",
+   "bbox": [
+    31.6,
+    60.7,
+    563.7,
+    274.7
+   ],
+   "w": 2218,
+   "h": 892,
+   "dpi": 300,
+   "src": "29. Transport and mechanical aspects of all-solid-state lithium batteries.pdf",
+   "blank": 0.92
+  },
   {
    "key": "f2",
    "kind": "figure",
    "label": "2",
-   "page": 7,
+   "page": 4,
    "file": "fig_2.png",
-   "caption": "FIGURE 2 Thermal stability experiments of Li7P3S11-X%P2S3 (X = 0, 5, 10, 20, 30). (A) XRD patterns of Li7P3S11-X%P2S3 (X = 0, 5, 10, 20, 30) at 200–600\u0001C. The different colors are used to distinguish the different P2S3 contents. The complete XRD spectrum is shown on the left, and the enlarged view of the 28–34\u0001 region is shown on the right. (B) Differential scanning calorimetry (DSC) spectra of Li7P3S11-X%P2S3(X = 0, 5, 10, 20, 30). The arrows depict the trend of the main exothermic peaks. (C) Raman spectra of Li7P3S11-X%P2S3 (X = 0, 5, 10, 20, 30). The peak at about 380 cm\u00031 belongs to P2S6 4\u0003 polyhedra, the peak at 405 cm\u00031 belongs to P2S7 4\u0003 polyhedra and the peak at 420 cm\u00031 belongs to PS4 3\u0003 polyhedra. (D) X-ray diffraction (XRD), DSC, and the thermal stability parameter Th0 values of Li7P3S11 with different atomic ratios",
+   "caption": "Fig. 2. Methods to optimize the electronic and ionic transport within the cathode and considerations for SSE electrochemical stability. a) & b) SSE-to-cathode particle size ratio effects on cathode capacity utilization [67]. c) Optimizing the composite ratio to maximize both ionic and electronic transport within the cathode [68]. d) Effect of carbon addition (Adapted with permission from Ref. [69] (Copyright 2017 American Chemical Society)) and e) various morphologies of common carbon additives [70] (CNT: carbon nanotubes, VGCF: vapor-grown carbon ﬁbers). f) Effect of carbon morphology on decomposition kinetics (Adapted with permission from Ref. [71] (Copyright 2019 American Chemical Society)). g) Electrochemical potential windows for several material classes of solid electrolytes (Adapted with permission from Ref. [72] (Copyright 2020 American Chemical Society)). h) SSE reaction energie",
    "bbox": [
-    39.6,
-    33.0,
-    553.9,
-    462.4
+    31.6,
+    60.7,
+    563.7,
+    500.0
    ],
-   "w": 2143,
-   "h": 1790,
+   "w": 2218,
+   "h": 1831,
    "dpi": 300,
-   "src": "29. InfoMat - 2022 - Wang - Improving thermal stability of sulfide solid electrolytes  An intrinsic theoretical paradigm.pdf",
-   "blank": 0.86
+   "src": "29. Transport and mechanical aspects of all-solid-state lithium batteries.pdf",
+   "blank": 0.727
   },
   {
    "key": "f3",
@@ -87,20 +107,20 @@
    "key": "f6",
    "kind": "figure",
    "label": "6",
-   "page": 13,
+   "page": 9,
    "file": "fig_6.png",
-   "caption": "FIGURE 6 Schematic illustration of the new theoretical paradigm and rule between the thermal stability of a SE and its structure. The new theoretical paradigm is presented from three perspectives, namely “performance-structure-rule”. From a macroscopic point of view, thermal stability is the performance of ASSBs, which is determined by their main components. From a microscopic perspective, the thermal stability of each solid-state electrolyte material is determined by its structure, which is further subdivided into the crystal structure, polyhedra structure, and bonding. The macroscopic and microscopic relationships are summarized as linear rules involving factors such as the structure of the material, chemical bonding, and energy correction factor k",
+   "caption": "Fig. 6. Measuring thermodynamic stability and electronic and ionic transport properties of SSEs. Cyclic voltammetry using a) planar current collectors and b) carbon composite electrodes for LGPS and LLZO SSEs (Contains data previously presented in Refs. [1,89]). A schematic of each setup is shown for reference. c) Comparison of two cell conﬁgurations on transport property measurements with mixed conductors. For mixed conductors, electron-blocking layers are needed, as demonstrated by the example d) EIS spectra and e) DC polarization measurements.",
    "bbox": [
-    39.6,
-    33.0,
-    551.4,
-    288.7
+    31.6,
+    60.7,
+    563.7,
+    476.9
    ],
-   "w": 2133,
-   "h": 1067,
+   "w": 2218,
+   "h": 1735,
    "dpi": 300,
-   "src": "29. InfoMat - 2022 - Wang - Improving thermal stability of sulfide solid electrolytes  An intrinsic theoretical paradigm.pdf",
-   "blank": 0.816
+   "src": "29. Transport and mechanical aspects of all-solid-state lithium batteries.pdf",
+   "blank": 0.844
   }
  ]
 }

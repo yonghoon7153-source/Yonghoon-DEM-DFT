@@ -8,6 +8,25 @@
  ],
  "figures": [
   {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Contact of a curved rigid indenter and a deformable halfspace.",
+   "bbox": [
+    0.0,
+    62.5,
+    524.4,
+    233.9
+   ],
+   "w": 2185,
+   "h": 715,
+   "dpi": 300,
+   "src": "06. Similarity analysis of inelastic contact.pdf",
+   "blank": 0.973
+  },
+  {
    "key": "f3",
    "kind": "figure",
    "label": "3",
@@ -34,16 +53,16 @@
    "file": "fig_4.png",
    "caption": "Fig. 4. Complete finite element mesh, pia.:; 50, designed for the reduced fiat die problem with details in the region pia.:; 2.",
    "bbox": [
-    88.3,
+    0.0,
     61.4,
-    437.9,
+    524.4,
     196.5
    ],
-   "w": 1458,
+   "w": 2185,
    "h": 564,
    "dpi": 300,
    "src": "06. Similarity analysis of inelastic contact.pdf",
-   "blank": 0.759
+   "blank": 0.837
   },
   {
    "key": "f8",
