@@ -76,7 +76,7 @@ def main():
     ax.axhspan(0, a.E_perc, color="#f1f5f9", zorder=0)
     ax.plot(dbv, ebv, color=SYS[a.system], lw=2.0)
     ax.axhline(a.E_perc, ls="--", lw=1.2, color=INK)
-    ax.text(dbv[-1], a.E_perc + 0.005, f"$E_{{perc}}$ = {a.E_perc:.3f} eV",
+    ax.text(dbv[-1], a.E_perc + 0.005, f"$\\Delta E_{{perc}}$ = {a.E_perc:.3f} eV",
             ha="right", fontsize=10, color=INK, fontweight="bold")
     ax.set_title("① BV proxy — 0 K, empty lattice, one Li probe",
                  fontsize=11.5, color=INK)
@@ -86,11 +86,11 @@ def main():
     ax.axhspan(0, F_trans, color="#eef6ff", zorder=0)
     ax.plot(dpm, epm, color="#0284c7", lw=2.0)
     ax.axhline(F_trans, ls="--", lw=1.2, color=INK)
-    ax.text(dpm[-1], F_trans + 0.005, f"$F^*$ = {F_trans:.3f} eV",
+    ax.text(dpm[-1], F_trans + 0.005, f"$\\Delta F_{{perc}}$ = {F_trans:.3f} eV",
             ha="right", fontsize=10, color=INK, fontweight="bold")
     ax.set_title(f"② MD PMF — {a.T:.0f} K, all 27 Li, vibrating framework",
                  fontsize=11.5, color=INK)
-    ax.set_ylabel(f"Free energy at {a.T:.0f} K (eV)", fontsize=11)
+    ax.set_ylabel(f"Free energy $\\Delta F$ at {a.T:.0f} K (eV)", fontsize=11)
 
     for ax in axes[:2]:
         ax.set_xlabel("Reaction coordinate (Å)", fontsize=11)
@@ -102,14 +102,14 @@ def main():
     ax.plot(lv, pct, color="#0284c7", lw=2.0)
     ax.axvline(F_trans, ls="--", lw=1.2, color="#dc2626")
     ax.text(F_trans + 0.006, pct.max() * 0.55,
-            f"transition (adopted)\n$F^*$ = {F_trans:.3f} eV", fontsize=9.5,
+            f"transition (adopted)\n$\\Delta F_{{perc}}$ = {F_trans:.3f} eV", fontsize=9.5,
             color="#dc2626", fontweight="bold")
     if blocks:
         ax.axvspan(min(blocks), max(blocks), color="#dc2626", alpha=0.10, zorder=0)
         ax.text(np.mean(blocks), pct.max() * 0.30,
                 f"block scatter\n±{(max(blocks)-min(blocks))/2*1000:.0f} meV",
                 fontsize=8.5, color="#dc2626", ha="center")
-    ax.set_xlabel("PMF level F (eV)", fontsize=11)
+    ax.set_xlabel("PMF level $\\Delta F$ (eV)", fontsize=11)
     ax.set_ylabel("largest connected Li cluster (% of cell)", fontsize=11)
     ax.set_title("③ percolation transition + convergence", fontsize=11.5, color=INK)
     for s in ("top", "right"):
@@ -123,7 +123,7 @@ def main():
              "minimum-energy-line-integral path, PBC-unwrapped mesh metric); only the input "
              "field differs.\nThe BV map knows no Li, no vacancies and no temperature; the PMF "
              "is built from the time-averaged Li density of the MD trajectory. "
-             "F* is a free energy at this temperature — not an activation energy.",
+             "ΔF_perc is a free energy at this temperature — not an activation energy.",
              ha="center", fontsize=8.8, color=MUT)
     fig.tight_layout()
     fig.savefig(ROOT / a.out, dpi=300, bbox_inches="tight", facecolor="white")

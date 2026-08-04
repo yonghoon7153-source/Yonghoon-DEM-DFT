@@ -200,6 +200,92 @@ upd();
 </div>
 {% endif %}
 
+{# ── PMF 카드 (2026-08-05) — MD 자유에너지 지형 vs BV 프록시 ─────────────
+   1저자 요청: 3D 대조 + 문헌 용어 정리. 수치는 db/properties/modelc_pmf_*_T600_origin.csv. #}
+<div class="card" style="margin-top:18px">
+  <h3>MD 자유에너지 지형 (PMF) <span class="muted" style="font-weight:400;font-size:.8rem">— LPSCl1.6 · 600 K · BV 프록시와 같은 관례로 대조</span></h3>
+
+  <div class="muted" style="font-size:.8rem;margin-bottom:8px">
+    BV 지도가 <b>Li 를 다 빼고 한 개만</b> 넣은 0 K 정전기 지형이라면, PMF 는 MD 궤적의
+    <b>시간평균 Li 밀도</b>를 자유에너지로 바꾼 것이다 — Li 27개 전부, 공공, 상관 운동,
+    격자 진동이 이미 들어가 있다.
+  </div>
+
+  <div style="padding:8px 10px;background:#f8fafc;border-left:3px solid #0284c7;
+              font-size:.78rem;border-radius:0 4px 4px 0;margin-bottom:10px">
+    <b>용어 (문헌 표준)</b> — 지도 = <b>potential of mean force (PMF)</b>,
+    ΔF(r) = −k<sub>B</sub>T·ln[ρ(r)/ρ<sub>max</sub>] ·
+    침투 문턱 = <b>percolation free energy ΔF<sub>perc</sub></b> (BV 쪽 ΔE<sub>perc</sub> 와 짝) ·
+    구간 = <b>free-energy barrier ΔF</b>.
+    <br>⚠ MD 문헌에서 홑 <i>F</i> 는 <b>힘(force)</b> 이라 쓰지 않고, 별표 <i>F*</i> 도
+    임계점 표기와 겹쳐 피한다. Δ 를 붙여 '장벽'임을 명시한다.
+  </div>
+
+  <div style="overflow-x:auto"><table style="font-size:.76rem;border-collapse:collapse;min-width:640px">
+    <tr style="border-bottom:2px solid var(--line,#e5e7eb)">
+      <th style="text-align:left;padding:4px 10px 4px 0"></th>
+      <th style="text-align:left;padding:4px 10px">BV 프록시</th>
+      <th style="text-align:left;padding:4px 0 4px 10px">MD PMF (600 K)</th></tr>
+    <tr><td style="padding:4px 10px 4px 0">움직이는 것</td>
+      <td style="padding:4px 10px">Li <b>프로브 1개</b>, 나머지 Li 제거</td>
+      <td style="padding:4px 0 4px 10px">Li <b>27개 전부</b> + 골격 진동</td></tr>
+    <tr><td style="padding:4px 10px 4px 0">침투 문턱</td>
+      <td style="padding:4px 10px">ΔE<sub>perc</sub> = <b>0.228 eV</b></td>
+      <td style="padding:4px 0 4px 10px">ΔF<sub>perc</sub> = <b>0.173 eV</b> (−56 meV)</td></tr>
+    <tr><td style="padding:4px 10px 4px 0">경로</td>
+      <td style="padding:4px 10px">20.2 Å · 11 구간 · 최대 0.197 eV</td>
+      <td style="padding:4px 0 4px 10px">8.4 Å · 4 구간 · 최대 <b>0.152 eV</b></td></tr>
+    <tr><td style="padding:4px 10px 4px 0">문턱에서의 채널 부피</td>
+      <td style="padding:4px 10px">0.5 vol%</td>
+      <td style="padding:4px 0 4px 10px"><b>42.9 vol%</b></td></tr>
+  </table></div>
+
+  <div style="margin-top:10px;padding:8px 10px;background:#e2f6ec;border-left:3px solid #059669;
+              font-size:.78rem;border-radius:0 4px 4px 0">
+    <b>★ 같은 부피로 잘라 보면 모양이 다르다.</b> BV 채널(0.5 vol%)은 <b>이어진 그물</b>인데,
+    같은 부피의 실제 Li 밀도는 <b>고립된 자리 덩어리</b>다. 정적 지도가 낮은 에너지에서
+    연결돼 보이는 건 매끄러운 퍼텐셜의 성질이고, 실제 이온은 자리에 국재해 있다가 뛴다.
+    그리고 자유에너지 지형이 실제로 관통할 때쯤이면 셀의 <b>43%</b> 가 이미 열 접근 가능하다.
+  </div>
+
+  <div style="overflow-x:auto;margin-top:10px"><table style="font-size:.75rem;border-collapse:collapse;min-width:560px">
+    <tr style="border-bottom:2px solid var(--line,#e5e7eb)">
+      <th style="text-align:left;padding:4px 10px 4px 0">검증</th>
+      <th style="text-align:left;padding:4px 0 4px 10px">결과</th></tr>
+    <tr><td style="padding:4px 10px 4px 0">등록값 재현 (독립 파이프라인)</td>
+      <td style="padding:4px 0 4px 10px">전이점 ΔF<sub>perc</sub> <b>0.1725</b> = 등록 곡선 재계산 0.1725
+        (채택값 0.17). 옛 도구는 6-연결+bbox, 새 도구는 26-연결+감김 — <b>알고리즘 무관</b></td></tr>
+    <tr><td style="padding:4px 10px 4px 0">궤적 동일성</td>
+      <td style="padding:4px 0 4px 10px">D(Li) 7.901e-6 cm²/s = MASTER 등록 7.90e-6 ✓</td></tr>
+    <tr><td style="padding:4px 10px 4px 0">수렴 (블록 검사)</td>
+      <td style="padding:4px 0 4px 10px">0.1725(100 ps) / 0.1875(앞 50) / 0.1675(뒤 50) / 0.1825(앞 25)
+        → <b>±10 meV</b>. 1시드 100 ps 로 <b>이미 수렴</b> — 3시드 재실행 불필요</td></tr>
+    <tr><td style="padding:4px 10px 4px 0">정의 선택의 근거</td>
+      <td style="padding:4px 0 4px 10px">첫-관통(0.078)은 25 ps 에서 +35% 요동 = <b>1.4% 실가닥</b> 아티팩트.
+        전이점(최대 상승률) 정의만 안정 → MASTER 채택이 수치로 정당화</td></tr>
+    <tr><td style="padding:4px 10px 4px 0">계산 방법 확정</td>
+      <td style="padding:4px 0 4px 10px">폴더명은 <span class="mono">aimd</span> 지만 <b>MLIP-MD</b> —
+        62원자 110 ps 를 <b>93.9분</b>(0.10 s/step)에 완주. DFT-AIMD 라면 수 주</td></tr>
+  </table></div>
+
+  <div class="muted" style="font-size:.76rem;margin-top:8px">
+    ⚠ <b>ΔF<sub>perc</sub> 는 그 온도의 자유에너지지 E<sub>a</sub> 가 아니다</b> —
+    실측 오프셋 ΔF<sub>perc</sub> − E<sub>a</sub> ≈ −50 meV (계통적). 인용할 때 <b>온도(600 K)</b> 와
+    <b>단일 시드</b>를 반드시 병기.
+    <br>⚠ comp1(LPSCl)의 ΔF<sub>perc</sub> 0.20 eV 는 <b>β 게이트 탈락 궤적</b>에서 나온 값이라
+    표집 상한이다 (open_items #9) — 1600 ps 연장이 판정 중.
+    <br>비교 그림: <span class="mono">docs/figures/bv_vs_pmf_modelc.png</span>(프로파일·클러스터 곡선) ·
+    <span class="mono">bv_vs_pmf_3d_modelc.png</span>(3D 3패널)
+  </div>
+  <a href="/concept/dft#12-활성화-에너지는-방법마다-다른-양이다--bv--neb--md-2026-08-05"
+     style="display:inline-block;margin-top:6px;font-size:.78rem">
+    → DFT 개념 §12: 방법별 활성화에너지 — 정의 차이·신뢰도 순서</a>
+  <div class="muted mono" style="font-size:.7rem;margin-top:4px">
+    db/properties/modelc_pmf_{profile,cluster,segments}_T600_origin.csv ·
+    tools/ionic/pmf_path_profile.py · tools/figures/fig_bv_vs_pmf{,_3d}.py
+  </div>
+</div>
+
 {# ── 방법별 활성화에너지 카드 (2026-08-05) — BV vs NEB vs MD ─────────────
    1저자 질문 "BV 장벽과 MD Ea 가 왜 다르고 어느 게 믿을 만한가" 의 답을 카드로.
    상세는 /concept/dft §12. 여기 숫자는 db 등록값(bv_path_profile_origin.csv 헤더)과 동일. #}

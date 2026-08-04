@@ -4,7 +4,15 @@
 1저자 요청(2026-08-05): BV 프록시 말고 **MD 로 구한 자유에너지 지형**으로
 경로 프로파일·구간 장벽·3D 등가면을 그리자. LPSCl1.6(게이트 통과 계)이 대상.
 
-    F(r) = -k_B T ln( rho(r) / rho_max )      [eV]   (밀도 최대점 = 0)
+    ΔF(r) = -k_B T ln[ ρ(r) / ρ_max ]        [eV]   (밀도 최대점 = 0)
+
+용어 (문헌 표준, 2026-08-05 통일)
+  · 방법 이름 = **potential of mean force (PMF)** — Kirkwood 이래 표준어
+  · 지도     = free-energy landscape from the Li probability density
+  · 침투 문턱 = **percolation free energy ΔF_perc** (BV 쪽 ΔE_perc 와 짝)
+  · 구간 장벽 = **free-energy barrier ΔF**
+  ⚠ MD 문헌에서 홑 F 는 보통 **힘(force)** 이라 쓰지 않는다. Δ 를 붙여 '장벽'임을 명시하고,
+    별표 F* 도 쓰지 않는다(임계점 관례라 자유에너지와 혼동).
 
 BV 판과 **완전히 같은 관례**로 분석한다 (fig_bv_path_profile 의 원시함수 재사용):
   · 26-연결 + {0,1}³ 감김 판정, 축별 이분탐색으로 침투 문턱 F*(1D/2D/3D)
@@ -125,11 +133,11 @@ def analyse(F, cell, T, gate_axes=(2, 4, 8), cap=None):
     """BV 판과 같은 관례로 문턱·경로. fig_bv_path_profile 의 원시함수를 그대로 쓴다."""
     N = np.array(F.shape)
     perc = {}
-    for name, need in zip(("F_1D", "F_2D", "F_3D"), gate_axes):
+    for name, need in zip(("dF_1D", "dF_2D", "dF_3D"), gate_axes):
         t = bvp.perc_threshold(F, need)
         perc[name] = t
         print(f"   {name} = {t:.4f} eV" if t is not None else f"   {name} = 없음")
-    t = cap if cap is not None else perc["F_1D"]
+    t = cap if cap is not None else perc["dF_1D"]
     if t is None:
         raise SystemExit("⛔ 1D 침투조차 없다 — 표집 부족(궤적이 짧다) 의심")
     T7wind, v = bvp.wrap_witness(F, t)
@@ -221,7 +229,7 @@ def main():
     lv = np.linspace(0.005, min(0.60, float(F[F < F_CAP].max())), 120)
     pct = cluster_curve(F, lv)
     F_trans, slope = transition_level(lv, pct)
-    print(f"클러스터 곡선: 전이점 F* = {F_trans:.4f} eV (최대 상승률 {slope:.0f} %/eV)")
+    print(f"클러스터 곡선: 전이점 ΔF_perc = {F_trans:.4f} eV (최대 상승률 {slope:.0f} %/eV)")
 
     r = analyse(F, cell, a.T, cap=F_trans if a.use_transition else None)
     r["F_trans"] = F_trans
@@ -263,34 +271,34 @@ def main():
               f" | {vl.replace(chr(10),' ')} | {sd.replace(chr(10),' ')}")
         rows.append({"segment": k, "hop_type": htype[k - 1],
                      "s_valley_A": f"{d[j]:.3f}", "s_saddle_A": f"{d[i]:.3f}",
-                     "F_valley_eV": f"{e[j]:.4f}", "F_saddle_eV": f"{e[i]:.4f}",
+                     "dF_valley_eV": f"{e[j]:.4f}", "dF_saddle_eV": f"{e[i]:.4f}",
                      "barrier_eV": f"{db:.4f}", "valley_site": vl.replace("\n", " "),
                      "nearest_Li_A": f"{dli:.2f}", "saddle_window": sd.replace("\n", " "),
                      "window_r_A": f"{wr:.3f}"})
 
     # ── 산출: 프로파일 CSV · 구간 CSV · 그림 ───────────────────────────
     with open(out / f"{a.tag}_pmf_profile.csv", "w", newline="", encoding="utf-8-sig") as f:
-        f.write(f"# MD Li-density PMF percolation-path profile - {a.label or a.tag}, "
-                f"T = {a.T:.0f} K, F_perc = {r['F_perc']:.4f} eV, axis {r['axis']}.\n")
+        f.write(f"# Potential-of-mean-force (PMF) percolation-path profile - {a.label or a.tag}, "
+                f"T = {a.T:.0f} K, dF_perc = {r['F_perc']:.4f} eV, axis {r['axis']}.\n")
         f.write("# F(r) = -kB*T*ln(rho/rho_max) from the time-averaged Li density "
                 f"({len(a.cube) or 1} trajectory/ies summed).\n")
         f.write("# Same conventions as the BV figures (26-connectivity percolation, "
                 "min-energy-line-integral path, PBC-unwrapped mesh metric).\n")
-        f.write("# WARNING: F* is a FREE ENERGY AT THIS TEMPERATURE, not Ea. Sampling-limited "
+        f.write("# WARNING: dF_perc is a FREE ENERGY AT THIS TEMPERATURE, not Ea. Sampling-limited "
                 "if the trajectory is short - use only for beta-gate-passing systems.\n")
-        w = csv.writer(f); w.writerow(["d_A", "F_eV"])
+        w = csv.writer(f); w.writerow(["d_A", "dF_eV"])
         for x, y in zip(d, e):
             w.writerow([f"{x:.3f}", f"{y:.4f}"])
     with open(out / f"{a.tag}_pmf_segments.csv", "w", newline="", encoding="utf-8-sig") as f:
-        f.write(f"# PMF segment barriers - {a.label or a.tag}, T = {a.T:.0f} K, "
-                f"F_perc {r['F_perc']:.4f} eV. barrier_eV = F(saddle) - F(preceding valley).\n")
+        f.write(f"# PMF free-energy barriers - {a.label or a.tag}, T = {a.T:.0f} K, "
+                f"dF_perc {r['F_perc']:.4f} eV. barrier_eV = dF(saddle) - dF(preceding valley).\n")
         w = csv.DictWriter(f, fieldnames=list(rows[0])); w.writeheader(); w.writerows(rows)
     with open(out / f"{a.tag}_pmf_cluster.csv", "w", newline="", encoding="utf-8-sig") as f:
         f.write(f"# Largest connected Li cluster vs PMF level - {a.label or a.tag}, "
                 f"T = {a.T:.0f} K.\n")
-        f.write(f"# First-spanning F* = {r['ref']['F_1D']:.4f} eV ; "
-                f"TRANSITION (steepest rise, ADOPTED) F* = {r['F_trans']:.4f} eV.\n")
-        w = csv.writer(f); w.writerow(["F_eV", "largest_cluster_pct"])
+        f.write(f"# First-spanning dF_perc = {r['ref']['dF_1D']:.4f} eV ; "
+                f"TRANSITION (steepest rise, ADOPTED) dF_perc = {r['F_trans']:.4f} eV.\n")
+        w = csv.writer(f); w.writerow(["dF_eV", "largest_cluster_pct"])
         for x, y in zip(r["curve"][0], r["curve"][1]):
             w.writerow([f"{x:.4f}", f"{y:.4f}"])
     np.savez_compressed(out / f"{a.tag}_pmf_path.npz", d=d, e=e, cart=cart,
@@ -302,7 +310,7 @@ def main():
     ax.axhspan(0, r["F_perc"], color="#eef6ff", zorder=0)
     ax.plot(d, e, color="#0284c7", lw=2.0, zorder=3)
     ax.axhline(r["F_perc"], ls="--", lw=1.2, color=INK, zorder=2)
-    ax.text(d[-1], r["F_perc"] + 0.004, f"$F^*$ = {r['F_perc']:.3f} eV",
+    ax.text(d[-1], r["F_perc"] + 0.004, f"$\\Delta F_{{perc}}$ = {r['F_perc']:.3f} eV",
             ha="right", fontsize=10, color=INK, fontweight="bold")
     for k, (j, i, db) in enumerate(seg, 1):
         ax.annotate("", xy=(d[i], e[i]), xytext=(d[i], e[j]),
@@ -311,7 +319,7 @@ def main():
                 color=INK, va="center", fontweight="bold")
         ax.plot(d[i], e[i], "o", ms=5, mfc="white", mec="#0284c7", mew=1.4, zorder=4)
     ax.set_xlabel("Reaction coordinate (Å)", fontsize=11.5)
-    ax.set_ylabel(f"Li free energy, PMF at {a.T:.0f} K (eV)", fontsize=11.5)
+    ax.set_ylabel(f"Free energy $\\Delta F$ at {a.T:.0f} K (eV)", fontsize=11.5)
     ax.set_title(f"MD Li-density PMF percolation path — {a.label or a.tag}, "
                  f"axis {r['axis']}, T = {a.T:.0f} K", fontsize=12.5,
                  color=INK, fontweight="bold")

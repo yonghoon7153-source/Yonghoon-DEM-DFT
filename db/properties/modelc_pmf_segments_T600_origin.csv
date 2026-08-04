@@ -1,20 +1,26 @@
 ﻿# PROVENANCE (2026-08-05): recomputed from the ORIGINAL MLIP-MD trajectory
 #   runs/modelC_v3/aimd/T600/traj.traj (1000 frames, prod 100 ps, dt 2 fs, save 100 fs,
 #   equilib 10 ps excluded; 62 atoms / 27 Li; V 1216.38 A^3; D(Li) 7.901e-6 cm2/s).
-#   ⚠ The folder is named "aimd" but this is MLIP-MD, not DFT-AIMD: 110 ps of a 62-atom cell
-#   finished in 93.9 min (~0.10 s/step) - DFT would need weeks. Label figures "MLIP-MD".
-# REPRODUCTION CHECK: this independent pipeline (26-connectivity winding percolation)
-#   reproduces the registered curve exactly - transition F* 0.1725 eV vs 0.1725 recomputed
-#   from docs/figures/elf_licl/percolation_comp1_modelc_EXACT.csv (adopted value 0.17).
-#   First-spanning 0.0782 vs the old header's 0.080 (that one is the 1.4% thin-filament
-#   artefact MASTER decided NOT to adopt).
-# CONVERGENCE (block test, same trajectory): transition F* = 0.1725 (full 100 ps) /
-#   0.1875 (first 50 ps) / 0.1675 (second 50 ps) / 0.1825 (first 25 ps) -> +-10 meV.
-#   First-spanning by contrast swings 0.0782 -> 0.1052 at 25 ps (+35%) = fragile.
-#   => the TRANSITION definition is converged at 1 seed x 100 ps; first-spanning is not.
-# SINGLE SEED. F* is a FREE ENERGY AT 600 K, not Ea (measured offset F* - Ea ~ -50 meV).
-# PMF segment barriers - LPSCl1.6, T = 600 K, F_perc 0.1725 eV. barrier_eV = F(saddle) - F(preceding valley).
-segment,hop_type,s_valley_A,s_saddle_A,F_valley_eV,F_saddle_eV,barrier_eV,valley_site,nearest_Li_A,saddle_window,window_r_A
+#   The folder is named "aimd" but this is MLIP-MD, not DFT-AIMD: 110 ps of a 62-atom cell
+#   in 93.9 min (~0.10 s/step) - DFT would need weeks. Label figures "MLIP-MD".
+# NOMENCLATURE (literature standard): the map is the POTENTIAL OF MEAN FORCE (PMF),
+#   dF(r) = -kB*T*ln[rho(r)/rho_max]; the percolation threshold is the PERCOLATION FREE
+#   ENERGY dF_perc (paired with the bond-valence side's dE_perc); segment values are
+#   FREE-ENERGY BARRIERS dF. A bare "F" is avoided (F = force in MD literature) and so is
+#   the star notation F*.
+# TWO DEFINITIONS: first-spanning dF_perc = 0.0782 eV (a 1.4% thin filament, NOT adopted)
+#   vs TRANSITION (largest-cluster steepest rise) dF_perc = 0.1725 eV (ADOPTED, = 0.17).
+# REPRODUCTION: this independent pipeline (26-connectivity winding percolation) returns
+#   0.1725 eV, matching the registered curve docs/figures/elf_licl/
+#   percolation_comp1_modelc_EXACT.csv recomputed the same way (0.1725).
+# CONVERGENCE (block test): transition dF_perc = 0.1725 (full 100 ps) / 0.1875 (first 50 ps)
+#   / 0.1675 (second 50 ps) / 0.1825 (first 25 ps) -> +-10 meV. First-spanning by contrast
+#   swings to 0.1052 at 25 ps (+35%). => the transition definition is converged at
+#   1 seed x 100 ps; first-spanning is not.
+# SINGLE SEED, T = 600 K. dF_perc is a FREE ENERGY AT THIS TEMPERATURE, not Ea
+#   (measured offset dF_perc - Ea ~ -50 meV, systematic).
+# PMF free-energy barriers - LPSCl1.6, T = 600 K, dF_perc 0.1725 eV. barrier_eV = dF(saddle) - dF(preceding valley).
+segment,hop_type,s_valley_A,s_saddle_A,dF_valley_eV,dF_saddle_eV,barrier_eV,valley_site,nearest_Li_A,saddle_window,window_r_A
 1,intra,0.000,1.800,-0.0000,0.1519,0.1519,Li site 1Cl+3S,nan,SClS window 1.87 Å,1.874
 2,intra,3.330,3.531,0.0202,0.0214,0.0012,Li site 1Cl+3S,nan,SSS window 2.22 Å,2.222
 3,intra,4.287,5.752,0.0106,0.0580,0.0474,Li site 1Cl+3S,nan,SClS window 2.24 Å,2.244
