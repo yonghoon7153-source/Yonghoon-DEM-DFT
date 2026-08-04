@@ -60,10 +60,12 @@
   검색창은 제목·id·type <b>+ 잘라둔 그림·표 캡션</b>까지 훑는다 —
   "Nyquist"·"Arrhenius"·"Rietveld" 처럼 제목엔 없고 그림에만 있는 말로도 찾힌다
   (캡션으로만 걸린 논문은 <span style="background:#fef9c3;color:#854d0e;border-radius:4px;padding:0 4px;font-weight:700">🔍 캡션</span> 표시).
+  그림에 <b>내가 달아 둔 코멘트</b>도 같이 훑는다 — 그쪽에서 걸리면
+  <span style="background:var(--accent-soft);color:var(--accent);border-radius:4px;padding:0 4px;font-weight:700">💬 코멘트</span> 로 갈라 표시한다(논문 원문과 섞지 않는다).
   그래도 <b>본문 전수</b>는 아니라("screening" 제목 7편 vs 본문 13편) 태그를 따로 둔다.
 </div>
 {% endif %}
-<input class="search" placeholder="검색 (제목·id·주제·그림 캡션)..." oninput="filt(this.value)">
+<input class="search" placeholder="검색 (제목·id·주제·그림 캡션·내 코멘트)..." oninput="filt(this.value)">
 <div class="grid grid-3" id="plist" style="margin-top:16px">
 {% for p in papers %}
 <div class="card paper track-{{ p.track }}" data-track="{{ p.track }}" data-pi="{{ p.pis|join(',') }}"
@@ -72,6 +74,8 @@
      data-digested="{{ p.digested }}"
      {# 그림·표 캡션 검색용 (litdb/figures/<slug>/figures.json) — 제목엔 없는 말로도 찾게 #}
      {% if figsearch.get(p.id) %}data-fig="{{ figsearch[p.id] }}"{% endif %}
+     {# 그림에 달아 둔 내 코멘트도 검색 대상 (db/file_comments.json) #}
+     {% if cmtsearch.get(p.id) %}data-cmt="{{ cmtsearch[p.id] }}"{% endif %}
      onclick="openPaper('{{ p.id }}')" onkeydown="_kbd(event)" tabindex="0" role="button" style="cursor:pointer;padding:16px 18px">
   <div class="paper-top">
     {# ⚠ 별은 카드 열기(onclick)와 겹치므로 stopPropagation 필수 #}
@@ -85,6 +89,9 @@
     {# PDF 에서 잘라둔 그림이 있는 논문 표시 (tools/litdb/extract_figures.py) #}
     <span class="figmatch" title="제목이 아니라 그림 캡션에서 찾았어요" style="display:none;flex:none;
       background:#fef9c3;color:#854d0e;border-radius:5px;padding:1px 6px;font-size:.67rem;font-weight:700">🔍 캡션</span>
+    {# 내가 그림에 적어 둔 코멘트에서 걸린 경우 — 논문 원문(캡션)과 확실히 구분한다 #}
+    <span class="cmtmatch" title="내가 적어 둔 코멘트에서 찾았어요" style="display:none;flex:none;
+      background:var(--accent-soft);color:var(--accent);border-radius:5px;padding:1px 6px;font-size:.67rem;font-weight:700">💬 코멘트</span>
     {% if figcount.get(p.id) %}<span title="크로핑된 논문 그림 {{ figcount[p.id] }}개 — 열면 본문 Fig 언급에 링크된다"
       style="flex:none;background:var(--accent-soft);color:var(--accent);border-radius:5px;
              padding:1px 6px;font-size:.67rem;font-weight:700">🖼 {{ figcount[p.id] }}</span>{% endif %}
@@ -152,6 +159,10 @@
     <div class="modal-head"><h3 id="ptitle" class="mono" style="font-size:.85rem"></h3>
       <span style="display:flex;gap:6px;align-items:center">
         <span id="pfigbadge" class="muted" style="font-size:.74rem"></span>
+        {# 그림 목록이 digest 맨 끝이라 긴 논문은 한참 굴려야 닿는다 — 한 번에 점프.
+           한 번 더 누르면 읽던 자리(본문 위)로 되돌아온다. 단축키 F / Esc 는 닫기. #}
+        <button class="btn sm" id="pfigjump" style="display:none"
+                onclick="jumpFigs()" title="그림 목록으로 (단축키 F · 다시 누르면 위로)">🖼 그림 ↓</button>
         <button class="btn sm" onclick="document.getElementById('pmodal').classList.remove('open');window.figrefClose&&figrefClose()">✕ 닫기</button></span></div>
     <div class="doc" id="pbody" style="border:none;box-shadow:none;border-radius:0"></div>
   </div>
@@ -204,7 +215,8 @@ function figHits(idx, q){
     n++;
     if(names.length<8){
       var k=(p.split(' ')[0]||'');
-      names.push((k[0]==='t'?'Table ':(k[0]==='s'?'Scheme ':'Fig '))+k.slice(1).toUpperCase());
+      names.push(!k ? '그림'            // 키를 못 찾은 경우(figures.json 이 바뀐 뒤 등)
+        : (k[0]==='t'?'Table ':(k[0]==='s'?'Scheme ':'Fig '))+k.slice(1).toUpperCase());
     }
   });
   if(n>names.length) names.push('외 '+(n-names.length)+'장');
@@ -215,16 +227,24 @@ function apply(){
   document.querySelectorAll('.paper').forEach(function(c){
     var okT = curTrack==='all' || c.dataset.track===curTrack;
     var okP = !curPI || (c.dataset.pi||'').split(',').indexOf(curPI)>=0;
-    // 제목·id·주제로 먼저, 없으면 **그림 캡션**까지 (캡션으로만 걸린 건 카드에 표시)
+    // 제목·id·주제로 먼저, 없으면 **그림 캡션 → 내 코멘트** 순 (걸린 경로를 카드에 표시)
     var inMeta = !curQ || (c.dataset.t||'').indexOf(curQ)>=0;
     var mk = (!inMeta && curQ) ? figHits(c.dataset.fig||'', curQ) : null;
     var inFig = !!(mk && mk.n);
-    var okQ = inMeta || inFig;
+    var ck = (!inMeta && curQ) ? figHits(c.dataset.cmt||'', curQ) : null;
+    var inCmt = !!(ck && ck.n);
+    var okQ = inMeta || inFig || inCmt;
     var fb = c.querySelector('.figmatch');
     if(fb){
       fb.style.display = inFig ? '' : 'none';
       if(inFig){ fb.textContent = '🔍 캡션 ' + mk.n;
                  fb.title = mk.names.join(', ') + ' 캡션에서 찾았어요 (제목에는 없음)'; }
+    }
+    var cb = c.querySelector('.cmtmatch');
+    if(cb){
+      cb.style.display = inCmt ? '' : 'none';
+      if(inCmt){ cb.textContent = '💬 코멘트 ' + ck.n;
+                 cb.title = ck.names.join(', ') + ' 에 내가 적어 둔 코멘트에서 찾았어요'; }
     }
     var okTP = !curTP || (curTP==='__fav'
                  ? favSet().has(c.dataset.id||'')
@@ -246,10 +266,40 @@ function setTrack(b){curTrack=b.dataset.track;
   document.querySelectorAll('.track-tabs .tt').forEach(function(x){x.classList.remove('active')});
   b.classList.add('active'); apply();}
 function filt(q){curQ=q.toLowerCase().trim(); apply();}
+/* 그림 목록으로 점프 / 되돌아오기 — 모달 스크롤 컨테이너는 #pmbox */
+var _figBack=null;
+function jumpFigs(){
+  var box=document.getElementById('pmbox'), st=document.querySelector('#pbody .figstrip');
+  if(!box||!st) return;
+  var btn=document.getElementById('pfigjump');
+  if(_figBack!==null){                       // 두 번째 클릭 = 읽던 자리로
+    box.scrollTo({top:_figBack, behavior:'smooth'});
+    _figBack=null; if(btn){btn.textContent='🖼 그림 ↓'; btn.title='그림 목록으로 (단축키 F)';}
+    return;
+  }
+  _figBack=box.scrollTop;
+  // ⚠ offsetTop 은 offsetParent 에 따라 달라진다(창을 끌면 #pmbox 가 position:relative 가 된다)
+  //   — 화면 좌표 차이로 계산하면 어떤 상태에서도 맞는다
+  box.scrollTo({top: box.scrollTop + st.getBoundingClientRect().top
+                     - box.getBoundingClientRect().top - 8, behavior:'smooth'});
+  st.classList.remove('figjump'); void st.offsetWidth; st.classList.add('figjump');
+  setTimeout(function(){st.classList.remove('figjump');},2600);
+  if(btn){btn.textContent='↑ 읽던 자리'; btn.title='본문에서 읽던 자리로 (단축키 F)';}
+}
+// F = 그림으로/되돌아오기 (글 쓰는 중이면 제외)
+document.addEventListener('keydown',function(e){
+  if(e.key!=='f'&&e.key!=='F'&&e.key!=='ㄹ') return;
+  if(e.ctrlKey||e.metaKey||e.altKey) return;
+  if(!document.getElementById('pmodal').classList.contains('open')) return;
+  if(e.target.closest('input,textarea,select,[contenteditable]')) return;
+  e.preventDefault(); jumpFigs();
+});
 function openPaper(id){
   document.getElementById('ptitle').textContent=id;
   document.getElementById('pbody').innerHTML='<span class="muted">로딩...</span>';
   document.getElementById('pfigbadge').textContent='';
+  document.getElementById('pfigjump').style.display='none';
+  _figBack=null; document.getElementById('pfigjump').textContent='🖼 그림 ↓';
   if(window.figrefClose)figrefClose();
   document.getElementById('pmodal').classList.add('open');
   fetch('/api/paper/'+id).then(r=>r.json()).then(function(d){
@@ -257,8 +307,18 @@ function openPaper(id){
     if(window.mdFixEmphasis){} // 서버 렌더라 별도 보정 불필요
     // 크로핑된 논문 그림 붙이기 — 본문 Fig 언급 링크화 + 하단 카드 (figref.js)
     var n=window.figrefAttach?figrefAttach(b,d.figures||[],document.getElementById('pmbox')):0;
-    if(d.figures&&d.figures.length)
-      document.getElementById('pfigbadge').textContent='🖼 '+d.figures.length+'개'+(n?' · 본문 링크 '+n:'');
+    var figs=d.figures||[];
+    if(figs.length){
+      // 캡션 있는 장수·본문 링크·내 코멘트 수를 한 줄에 (어디까지 정리됐는지 바로 보이게)
+      var nc=figs.reduce(function(a,f){return a+(f.comments||0);},0);
+      var ncap=figs.filter(function(f){return (f.caption||'').length>12;}).length;
+      var el=document.getElementById('pfigbadge');
+      el.textContent='🖼 '+figs.length+'개'+(ncap?' · 캡션 '+ncap:'')
+                    +(n?' · 본문 링크 '+n:'')+(nc?' · 💬 '+nc:'');
+      el.title=figs.length+'장 크로핑 · 캡션 읽힌 '+ncap+'장 · 본문 Fig 언급 링크 '+n
+              +'곳'+(nc?' · 내가 단 코멘트 '+nc+'건':' · 코멘트 없음');
+      document.getElementById('pfigjump').style.display='';
+    }
   });
 }
 paintFav();

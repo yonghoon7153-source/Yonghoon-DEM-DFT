@@ -272,7 +272,8 @@ def literature():
                            count=len(papers), counts=counts, talks=D.list_talks(),
                            tmeta=tmeta, tcounts=tcounts, tprimer=D.topic_primer(),
                            pis=pis, PI=D.PI_BY_KEY, figcount=D.papers_with_figures(),
-                           figsearch=D.paper_figure_search())
+                           figsearch=D.paper_figure_search(),
+                           cmtsearch=D.paper_comment_search())
 
 
 # ── API (구조뷰 / 차트 / 원본) ──────────────────────────
@@ -344,9 +345,10 @@ def files_gallery():
     kind = request.args.get("kind", "").strip()
     used = request.args.get("used", "").strip()
     folder = request.args.get("folder", "").strip()
-    fs = D.gallery_files(q, kind, used, folder)
+    cmt = request.args.get("cmt", "").strip()
+    fs = D.gallery_files(q, kind, used, folder, cmt)
     return render_template("files.html", active="files", files=fs, q=q, kind=kind,
-                           used=used, folder=folder, days=D.gallery_days(fs),
+                           used=used, folder=folder, cmt=cmt, days=D.gallery_days(fs),
                            folders=D.gallery_folders(), ccounts=D.comment_counts())
 
 

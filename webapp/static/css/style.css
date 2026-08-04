@@ -952,6 +952,8 @@ tr.row-dim{opacity:.62}
   border:1px solid var(--border,#e5e7eb);border-radius:999px;padding:1px 7px;
   box-shadow:0 1px 3px rgba(16,24,40,.10)}
 .figcard{position:relative}
+/* 이름이 아니라 코멘트에서 걸린 파일 — 검색 결과에서 눈에 띄게 */
+.cmt-badge-hit{background:#fef9c3;color:#854d0e;border-color:#fde68a}
 @media print{.cmt,.cmt-badge{display:none!important}}
 
 /* 드롭존 (2026-08-05 v2) */

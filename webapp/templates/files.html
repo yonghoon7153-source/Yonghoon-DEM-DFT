@@ -11,24 +11,29 @@
 </div>
 
 <form class="att-tabs" method="get" action="/files" style="flex-wrap:wrap">
-  <input class="inp" type="search" name="q" value="{{ q }}" placeholder="이름·경로로 검색 (예: msd, lpsocl, pmf)"
+  {# 검색은 경로 + **내가 달아 둔 코멘트**까지 (1저자 요청 2026-08-06) #}
+  <input class="inp" type="search" name="q" value="{{ q }}" placeholder="이름·경로·💬코멘트로 검색 (예: msd, lpsocl, log 스케일)"
          style="min-width:280px;flex:1;padding:7px 12px;border:1px solid var(--line,#e5e7eb);border-radius:8px;font-size:.82rem">
-  <a class="att-tab {% if not kind %}active{% endif %}" href="/files?q={{ q }}">전체</a>
-  <a class="att-tab {% if kind=='image' %}active{% endif %}" href="/files?kind=image&q={{ q }}">🖼 이미지</a>
-  <a class="att-tab {% if kind=='csv' %}active{% endif %}" href="/files?kind=csv&q={{ q }}">📊 CSV</a>
-  <a class="att-tab {% if kind=='file' %}active{% endif %}" href="/files?kind=file&q={{ q }}">📦 기타</a>
+  {% if cmt %}<input type="hidden" name="cmt" value="{{ cmt }}">{% endif %}
+  <a class="att-tab {% if not kind %}active{% endif %}" href="/files?q={{ q }}&cmt={{ cmt }}">전체</a>
+  <a class="att-tab {% if kind=='image' %}active{% endif %}" href="/files?kind=image&q={{ q }}&cmt={{ cmt }}">🖼 이미지</a>
+  <a class="att-tab {% if kind=='csv' %}active{% endif %}" href="/files?kind=csv&q={{ q }}&cmt={{ cmt }}">📊 CSV</a>
+  <a class="att-tab {% if kind=='file' %}active{% endif %}" href="/files?kind=file&q={{ q }}&cmt={{ cmt }}">📦 기타</a>
   <button class="btn sm" type="submit">검색</button>
 </form>
 
 <div class="att-tabs" style="flex-wrap:wrap;margin-bottom:4px">
   <span class="muted" style="font-size:.74rem;align-self:center">개념 연결</span>
-  <a class="att-tab {% if not used %}active{% endif %}" href="/files?q={{ q }}&kind={{ kind }}&folder={{ folder }}">전체</a>
-  <a class="att-tab {% if used=='yes' %}active{% endif %}" href="/files?q={{ q }}&kind={{ kind }}&folder={{ folder }}&used=yes">📎 개념에 첨부됨</a>
-  <a class="att-tab {% if used=='no' %}active{% endif %}" href="/files?q={{ q }}&kind={{ kind }}&folder={{ folder }}&used=no">미연결</a>
+  <a class="att-tab {% if not used %}active{% endif %}" href="/files?q={{ q }}&kind={{ kind }}&folder={{ folder }}&cmt={{ cmt }}">전체</a>
+  <a class="att-tab {% if used=='yes' %}active{% endif %}" href="/files?q={{ q }}&kind={{ kind }}&folder={{ folder }}&cmt={{ cmt }}&used=yes">📎 개념에 첨부됨</a>
+  <a class="att-tab {% if used=='no' %}active{% endif %}" href="/files?q={{ q }}&kind={{ kind }}&folder={{ folder }}&cmt={{ cmt }}&used=no">미연결</a>
+  {# 내가 코멘트를 단 파일만 — 적어 둔 판단을 되찾는 통로 #}
+  <a class="att-tab {% if cmt=='yes' %}active{% endif %}" style="{% if cmt=='yes' %}background:var(--accent-soft);color:var(--accent){% endif %}"
+     href="/files?q={{ q }}&kind={{ kind }}&folder={{ folder }}&used={{ used }}{% if cmt!='yes' %}&cmt=yes{% endif %}">💬 코멘트 단 것</a>
   <span class="muted" style="font-size:.74rem;align-self:center;margin-left:10px">폴더</span>
-  <a class="att-tab {% if not folder %}active{% endif %}" href="/files?q={{ q }}&kind={{ kind }}&used={{ used }}">전체</a>
+  <a class="att-tab {% if not folder %}active{% endif %}" href="/files?q={{ q }}&kind={{ kind }}&used={{ used }}&cmt={{ cmt }}">전체</a>
   {% for d in folders %}
-  <a class="att-tab {% if folder==d %}active{% endif %}" href="/files?q={{ q }}&kind={{ kind }}&used={{ used }}&folder={{ d }}">{{ d }}</a>
+  <a class="att-tab {% if folder==d %}active{% endif %}" href="/files?q={{ q }}&kind={{ kind }}&used={{ used }}&cmt={{ cmt }}&folder={{ d }}">{{ d }}</a>
   {% endfor %}
 </div>
 
@@ -61,8 +66,9 @@
       {% endif %}
     </div>
     {# 💬N — 코멘트가 하나라도 있으면 카드에서 바로 보인다 (comments.js 가 숫자만 갱신) #}
-    <span class="cmt-badge" data-cbadge="{{ f.rel }}"
-          {% if not ccounts.get(f.rel) %}style="display:none"{% endif %}>💬 {{ ccounts.get(f.rel, 0) }}</span>
+    <span class="cmt-badge{% if f.cmt_hit %} cmt-badge-hit{% endif %}" data-cbadge="{{ f.rel }}"
+          {% if f.cmt_hit %}title="이름이 아니라 코멘트에서 찾았어요"{% endif %}
+          {% if not ccounts.get(f.rel) %}style="display:none"{% endif %}>💬 {{ ccounts.get(f.rel, 0) }}{% if f.cmt_hit %} 🔍{% endif %}</span>
     <a class="btn sm att-dl" href="/api/file/{{ f.rel }}?dl=1" download>⬇ 저장</a>
     {# 이름 바꾸기는 업로드 파일만 — repo 산출물은 도구가 같은 이름으로 다시 만든다 #}
     {% if f.rel.startswith('docs/uploads/') %}<button type="button" class="btn sm att-rn"

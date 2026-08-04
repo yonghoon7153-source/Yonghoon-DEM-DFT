@@ -9,6 +9,7 @@ canonical 방법 메타(kb/methodology/computational_methods_canonical.md)와 �
 from __future__ import annotations
 import json, csv, re, os
 import datetime as _dt
+from urllib.parse import quote as _urlquote
 from pathlib import Path
 from functools import lru_cache
 
@@ -1736,6 +1737,16 @@ def search_index() -> list:
     for p in list_papers():
         idx.append({"t": "논문", "label": p["title"][:70], "sub": p["type"][:40],
                     "url": f"/literature?open={p['id']}", "kw": f"{p['id']} {p['track']}"})
+    # 내가 적어 둔 코멘트 (1저자 요청 2026-08-06: "그 comment 도 검색에서 걸리게").
+    # 그림 코멘트는 그 논문을 열고, 나머지는 /files 에서 그 파일만 걸러 보여준다.
+    for c in comment_all():
+        rel, seg = c["rel"], c["rel"].split("/")
+        if rel.startswith("litdb/figures/") and len(seg) == 4:
+            url = f"/literature?open={seg[2]}"
+        else:
+            url = "/files?q=" + _urlquote(seg[-1])
+        idx.append({"t": "코멘트", "label": c["text"][:70],
+                    "sub": f"💬 {seg[-1]} · {c['at']}", "url": url, "kw": rel})
     return idx
 
 
@@ -2519,13 +2530,16 @@ _GAL_DIRS = [("docs/figures", "그림"), ("db/properties", "데이터"),
 
 
 def gallery_files(q: str = "", kind: str = "", used: str = "",
-                  folder: str = "") -> list[dict]:
+                  folder: str = "", cmt: str = "") -> list[dict]:
     """repo 의 그림·데이터·구조 파일 전수 목록 (webapp 갤러리용).
 
     개념 문서 첨부는 '본문이 언급한 것'만 보여준다 — 그래서 나머지를 볼 길이 없어
     사용자가 받은 파일을 다시 끌어올리는 일이 생겼다(2026-08-05). 이 목록이 그 구멍을 메운다.
     """
     cidx = _file_concept_index()
+    # 코멘트도 검색 대상 (1저자 요청 2026-08-06) — 파일명엔 없는 말로도 걸리게
+    cmts, ccnt = comment_index(), comment_counts()
+    ql = q.lower()
     out = []
     for rel_dir, group in _GAL_DIRS:
         base = ROOT / rel_dir
@@ -2538,11 +2552,17 @@ def gallery_files(q: str = "", kind: str = "", used: str = "",
                 continue
             k = _att_kind(str(f))
             rel = str(f.relative_to(ROOT))
-            if q and q.lower() not in rel.lower():
-                continue
+            cmt_hit = False
+            if q:
+                if ql not in rel.lower():
+                    cmt_hit = ql in cmts.get(rel, "")
+                    if not cmt_hit:
+                        continue
             if kind and k != kind:
                 continue
             if folder and not rel.startswith(folder):
+                continue
+            if cmt == "yes" and not ccnt.get(rel):
                 continue
             st = f.stat()
             cons = cidx.get(rel, [])
@@ -2552,6 +2572,7 @@ def gallery_files(q: str = "", kind: str = "", used: str = "",
                 continue
             out.append({"rel": rel, "name": f.name, "kind": k, "group": group,
                         "dir": str(f.parent.relative_to(ROOT)), "concepts": cons,
+                        "comments": ccnt.get(rel, 0), "cmt_hit": cmt_hit,
                         "size_kb": round(st.st_size / 1024, 1), "mtime": int(st.st_mtime),
                         "day": _dt.datetime.fromtimestamp(st.st_mtime).strftime("%Y-%m-%d")})
     out.sort(key=lambda x: -x["mtime"])          # 날짜 그룹 기본 = 최근순
@@ -2855,3 +2876,62 @@ def del_file_comment(rel: str, cid: str) -> dict:
 def comment_counts() -> dict[str, int]:
     """rel → 코멘트 수 (배지용)."""
     return {k: len(v) for k, v in _load_comments().items() if v}
+
+
+def comment_index() -> dict[str, str]:
+    """rel → 그 파일 코멘트를 이어붙인 소문자 문자열 (검색용).
+
+    1저자 요청(2026-08-06): "그 comment 도 검색에서 걸리게".
+    적어 둔 판단("이 축은 log", "다른 조성 — 비교 인용 금지")은 파일명에 없는 말이라
+    이름 검색으로는 절대 안 걸린다. 코멘트 자체가 색인이 된다.
+    """
+    return {rel: " ".join(c.get("text", "") for c in items).lower()
+            for rel, items in _load_comments().items() if items}
+
+
+def comment_all() -> list[dict]:
+    """코멘트 전체를 최근순으로 (⌘K 색인·목록용). rel·text·at 만."""
+    out = []
+    for rel, items in _load_comments().items():
+        for c in items:
+            out.append({"rel": rel, "text": c.get("text", ""),
+                        "at": c.get("at", ""), "id": c.get("id", "")})
+    out.sort(key=lambda x: x["at"], reverse=True)
+    return out
+
+
+def _fig_keys(slug: str) -> dict[str, str]:
+    """<slug> 의 파일이름 → 그림 키(f3 · t1 …). figures.json 한 번만 읽는다."""
+    j = LITDB / "figures" / slug / "figures.json"
+    try:
+        figs = json.loads(j.read_text(encoding="utf-8")).get("figures", [])
+    except (OSError, ValueError):
+        return {}
+    return {f.get("file", ""): (f.get("key") or "") for f in figs}
+
+
+def paper_comment_search() -> dict[str, str]:
+    """slug → 그 논문 **그림에 달아 둔 코멘트**를 이어붙인 검색용 문자열.
+
+    캡션 색인(paper_figure_search)과 같은 형식 "<key> <글>" ¦ 이어붙이기 —
+    /literature 검색이 "몇 장에서, 어느 그림에서 걸렸나"를 그대로 표시할 수 있다.
+    """
+    cm = _load_comments()
+    if not cm:
+        return {}
+    parts: dict[str, list[str]] = {}
+    keys: dict[str, dict[str, str]] = {}
+    for rel, items in cm.items():
+        if not items or not rel.startswith("litdb/figures/"):
+            continue
+        seg = rel.split("/")
+        if len(seg) != 4:
+            continue
+        slug, fname = seg[2], seg[3]
+        if slug not in keys:
+            keys[slug] = _fig_keys(slug)
+        k = keys[slug].get(fname, "")
+        txt = " ".join(" ".join((c.get("text") or "").split()) for c in items)[:300]
+        if txt:
+            parts.setdefault(slug, []).append(f"{k} {txt}")
+    return {s: "¦".join(v).lower()[:9000] for s, v in parts.items()}
