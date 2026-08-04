@@ -18,7 +18,7 @@
   // Fig. 5e / Figure 5(e) / Figs 2-3 / Table S3 / Scheme 1
   var RE = /\b(Fig(?:ures?|s)?\.?|FIGS?\.?|Tables?|Schemes?)\s*\.?\s*\(?(S?\d{1,3})\)?([a-z](?:\s*[–—,\-]\s*[a-z])*)?(?![\w.])/g;
   var SKIP = { CODE: 1, PRE: 1, A: 1, SCRIPT: 1, STYLE: 1, TEXTAREA: 1, BUTTON: 1 };
-  var PANE_W = 380;
+  var PANE_MIN = 340, PANE_MAX = 680;   // 여백 크기에 맞춰 이 사이에서 정해진다
 
   function keyOf(word, num) {
     var c = word.toLowerCase().charAt(0);
@@ -137,20 +137,29 @@
     el.addEventListener("mouseenter", function () { over = true; clearTimeout(hideT); });
     el.addEventListener("mouseleave", function () { over = false; if (!pinned) hide(80); });
 
+    /* 여백이 넓으면 팝업도 넓게 — 380 px 고정이면 다패널 그림이 안 읽힌다(1저자 지적).
+       오른쪽/왼쪽 중 넓은 쪽을 골라 그 폭에 맞춘다. 둘 다 좁으면 본문 위에 겹쳐 띄운다. */
     function place(anchor) {
       var box = container.getBoundingClientRect();
-      var left = box.right + 14;
-      // 여백이 모자라면 왼쪽 여백 → 그것도 없으면 본문 위에 살짝 겹쳐 띄운다
-      if (left + PANE_W > window.innerWidth - 8) {
-        left = box.left - PANE_W - 14;
-        if (left < 8) left = Math.max(8, window.innerWidth - PANE_W - 12);
+      var gapR = window.innerWidth - box.right - 26;
+      var gapL = box.left - 26;
+      var w = Math.max(PANE_MIN, Math.min(PANE_MAX, Math.max(gapR, gapL)));
+      var left;
+      if (gapR >= w) left = box.right + 14;              // 오른쪽 여백
+      else if (gapL >= w) left = box.left - w - 14;       // 왼쪽 여백
+      else {                                             // 둘 다 좁다 → 겹쳐서
+        w = Math.max(PANE_MIN, Math.min(PANE_MAX, window.innerWidth - 40));
+        left = Math.max(12, (window.innerWidth - w) / 2);
       }
-      var ar = anchor ? anchor.getBoundingClientRect() : box;
-      var top = Math.max(12, Math.min(ar.top - 40, window.innerHeight - el.offsetHeight - 12));
+      el.style.width = w + "px";
       el.style.left = left + "px";
-      el.style.top = top + "px";
-      el.style.width = PANE_W + "px";
+      var ar = anchor ? anchor.getBoundingClientRect() : box;
+      var h = el.offsetHeight || 400;
+      el.style.top = Math.max(12, Math.min(ar.top - 40, window.innerHeight - h - 12)) + "px";
     }
+    window.addEventListener("resize", function () {
+      if (el.style.display !== "none") place(null);
+    });
 
     function show(rec, anchor, pin) {
       if (pinned && !pin && pinned !== rec.key) return;
