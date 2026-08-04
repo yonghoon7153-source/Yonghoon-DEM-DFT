@@ -776,14 +776,17 @@ def parse_args(argv):
     ap.add_argument('--allow-unconverged-servo', action='store_true',
                     help='servo 가 밴드 안에서 수렴하지 못해도 계속 진행 (기본=중단).  실험 전용 — '
                          '산출물 state_provenance.servo_status 에 not_converged 가 박힌다.')
-    ap.add_argument('--stop-legacy', action='store_true',
-                    help='하강 정지를 **옛 순간-비교**로 복원 (움직이는 플래튼에서 읽은 p 를 그대로 '
-                         'target 과 비교) — **옛 scaffold 코퍼스 바이트 재현 전용**.  기본값은 이제 '
-                         '동결-프로브(이동→동결→정지판독)다.  ★2026-08-04 실측: 옛 경로는 하강 중 '
-                         'wallP 가 정지값의 47~1158배로 읽혀(속도 결합 편향) 정지가 응력이 아니라 '
-                         '**걸음 수**로 결정됐다 — P:S 5킷 하강 프레임 4·4·4·4·3 = 갭 산술 '
-                         'ceil(0.05/step)+1 이 5/5 예측.  --servo-legacy(제하/평형 팔) 와 다른 축이니 '
-                         '혼동하지 말 것.')
+    ap.add_argument('--stop-freeze-probe', action='store_true',
+                    help='하강 정지를 **정지 판독**으로 결정한다 (후보 crossing → 플래튼 동결 → 재판독). '
+                         '★ OPT-IN 이며 기본은 옛 순간-비교다 — 이유: 얼린 AM 은 wallP 에 기여가 0 이라 '
+                         '정지 판독은 **SE 만** 본다.  실측(real_14, --compact-to): 실험 공극률 15.55%% 에서 '
+                         'SE 가 내는 응력은 0.0359 GPa = 목표의 **12%%** 뿐이고 9.12%% 에서도 0.169 (56%%). '
+                         '따라서 하중분담(--am-load-frac + --floor-porosity) 이나 기하 정지(--am-jam) 없이 '
+                         '이 플래그를 켜면 **정지 조건이 성립하지 않아 공극률 ~0%% 까지 내려간다**. '
+                         '옛 경로의 결함(하강 중 wallP 가 정지값의 47~1158배 → 정지가 응력이 아니라 걸음 '
+                         '수로 결정; P:S 5킷 4·4·4·4·3 프레임 = 갭 산술 ceil(0.05/step)+1 이 5/5 예측)은 '
+                         '별도 문서 docs/mpm_platen_kinematic_stop_defect.md 참조.  '
+                         '--servo-legacy(제하/평형 팔) 와 다른 축이니 혼동하지 말 것.')
     ap.add_argument('--platen-mach', type=float, default=0.0,
                     help='플래튼 속도를 **마하수**로 지정 (V/c_P, c_P=√(λ+2µ)).  0 = 기존 기하 규칙 '
                          'vmax=0.008·(WALL0−FLOOR).  ★기존 규칙은 V_platen=(WALL0−FLOOR) 라는 항등식이라 '
@@ -1118,6 +1121,30 @@ def _selftest():
     chk('probe: am_skel 만큼 문턱이 낮아지면 같은 판독이 resume→stop 으로 뒤집힌다',
         descend_probe_verdict([0.16, 0.155, 0.155], 0.30)[0] == 'resume'
         and descend_probe_verdict([0.16, 0.155, 0.155], 0.30 - 0.18)[0] == 'stop')
+    # ★ 리뷰 지적(M-6): 위 창들은 전부 이상화된 수열이라 **실제 프로브가 만드는 모양**을 한 번도
+    #   시험하지 않았다.  실제 창은 [슬램, 감쇠…] 이고, 무장 프레임을 버리지 않으면 그 한 값이
+    #   settle_is_quasistatic 의 전체-창 스프레드를 영구 지배해 qs 가 절대 True 가 못 된다.
+    chk('probe(실제모양): 감쇠 중이라 외삽이 문턱 아래면 wait — 아직 정지 아님',
+        descend_probe_verdict([0.40, 0.36, 0.355], 0.30)[0] == 'wait')
+    chk('probe(실제모양): 정착한 진짜 crossing 은 오염 유무와 무관하게 stop (판정은 견고)',
+        descend_probe_verdict([0.40, 0.355, 0.352, 0.351], 0.30)[0] == 'stop'
+        and descend_probe_verdict([16.7, 0.40, 0.355, 0.352, 0.351], 0.30)[0] == 'stop')
+    chk('probe(실제모양): 슬램 뒤 가짜 crossing 은 오염 유무와 무관하게 resume',
+        descend_probe_verdict([0.5, 0.03, 0.023], 0.30)[0] == 'resume'
+        and descend_probe_verdict([16.7, 0.5, 0.03, 0.023], 0.30)[0] == 'resume')
+    chk('probe: 오염 샘플은 판정이 아니라 spread(진단값)를 망친다 — 0.13 → 4.50',
+        descend_probe_verdict([0.40, 0.355, 0.352, 0.351], 0.30)[1] < 0.2
+        and descend_probe_verdict([16.7, 0.40, 0.355, 0.352, 0.351], 0.30)[1] > 4.0)
+    chk('probe: 오염 샘플은 전체-창 스프레드를 지배해 qs 를 무력화한다 (settle_is_quasistatic 직접)',
+        settle_is_quasistatic([16.7] + [0.023] * 9, rel_tol=0.00667)[0] is False
+        and settle_is_quasistatic([0.023] * 10, rel_tol=0.00667)[0] is True)
+    #   문턱 근방(near)에서는 qs·stable 둘 다 꺼지므로 settle_max 타임아웃이 유일한 출구다.
+    #   하강 전용 상한(12)이 아니라 제하용 200 을 쓰면 프로브 하나가 --frames 150 을 다 먹는다.
+    chk('probe: 문턱 근방 미정착 창은 settle_max 에서 강제 판정되고 그 상한이 12 여야 한다',
+        descend_probe_verdict([0.3005 + 0.05 * 0.7 ** k for k in range(12)], 0.30,
+                              settle_max=12)[0] in ('stop', 'resume')
+        and descend_probe_verdict([0.3005 + 0.05 * 0.7 ** k for k in range(11)], 0.30,
+                                  settle_max=12)[0] == 'wait')
 
     print(f"selftest: {ok}/{ok + len(fail)} PASS" + (f"   FAILED: {fail}" if fail else ""))
     return 1 if fail else 0
@@ -2267,12 +2294,20 @@ def main(argv):
     #     real_14 (31µm)  V/c_P 0.11 · V/c_S 0.80 · 램 ρV² 0.33 GPa (target 의 1.1배)
     #     P:S 킷 (119µm)  V/c_P 0.43 · V/c_S 3.05(초음속) · 램 4.78 GPa (16배)
     #   --platen-mach 로 마하수를 직접 걸면 베드 높이·해상도와 무관하게 준정적 조건을 고정할 수 있다.
-    _c_p = float(_M) ** 0.5                                  # P-파속 (box/t.u., ρ=1 규약; _M = λ+2µ)
+    #   ★ SE 기준이어야 한다.  _M 은 CFL 용 **전 상 최대치**(AM E=140 → c_P 13.7, SDCP …)라
+    #     그걸 쓰면 --preset real14 에서 마하 0.01 요청이 실제 SE 기준 0.027 로 돈다.
+    _c_p = float(LA_SE + 2.0 * MU_SE) ** 0.5                 # SE P-파속 (box/t.u., ρ=1 규약)
     _c_s = float(MU_SE) ** 0.5                               # S-파속 — 소성(등체적) 응답은 이쪽으로 전파
     vmax = 0.008 * (WALL0 - FLOOR)                           # 기존 기하 규칙 (기본)
     if args.platen_mach > 0:
         vmax = float(args.platen_mach) * _c_p * args.sub * dt
     _v_platen = vmax / (args.sub * dt)                        # box/t.u.
+    if (args.stop_freeze_probe and args.am_scaffold and args.am_load_frac <= 0.0
+            and args.floor_porosity <= 0.0 and not args.am_jam):
+        print('  ⚠ [stop] --stop-freeze-probe 를 하중분담(--am-load-frac + --floor-porosity)·기하정지'
+              '(--am-jam) 없이 켰습니다.  얼린 AM 은 wallP 에 기여가 0 이라 정지 판독은 SE 만 보고,\n'
+              '            실측상 SE 는 실험 공극률에서 목표의 12%% 뿐입니다 → **정지 조건이 성립하지 않아**\n'
+              '            공극률 ~0%% 까지 내려갑니다.  진단 목적이 아니면 하중분담을 함께 주세요.', flush=True)
     if not args.quiet:
         print(f"  [platen] v={_v_platen:.4f} box/t.u.  V/c_P={_v_platen / _c_p:.3f}  "
               f"V/c_S={_v_platen / _c_s:.2f}  step={vmax:.5f} box/frame"
@@ -2340,7 +2375,11 @@ def main(argv):
     UNLOAD_HOLD = 3          # at-rest probes IN BAND required to call the unload done (cf. STOP_HOLD)
     # ── ★ 하강 동결-프로브 상태 (2026-08-04) — 제하 프로브·S-1 servo 와 같은 구조 ─────────────
     #    하강 정지를 **정지 판독**으로만 결정한다.  자세한 근거는 descend_probe_verdict() docstring.
-    _dsc_left = 0; _dsc_win = []; _dsc_probes = 0; _dsc_spread = None; _dsc_tgt = 0.0
+    _dsc_left = 0; _dsc_win = []; _dsc_probes = 0; _dsc_spread = None
+    _dsc_tgt = float('inf')          # fail-safe: 0.0 이면 p>=0 이 항상 참 → 즉시 오정지
+    _dsc_armed = False
+    _DSC_SETTLE_MAX = 12             # ★ 하강 전용 상한.  제하용 200 을 쓰면 문턱 근방에서
+                                     #   프로브 하나가 198 프레임을 먹어 --frames 150 이 못 낸다
     _dsc_resumes = 0                      # 프로브가 "가짜 crossing" 이라 판정해 하강을 재개한 횟수
     _wall_z_start = float(wall_z[None])
     # ── unload bracketing search state (2026-07-28 HIGH-a) ────────────────────────────────────
@@ -2564,12 +2603,12 @@ def main(argv):
                 _dsc_tgt = float(target - am_skel)                    # SE 가 실제로 넘어야 하는 문턱
                 if hard_floor or am_jam:
                     descend = False                                  # 기하 정지 — 즉시, 프로브 불필요
-                elif args.stop_legacy:
-                    descend = (p + am_skel < target)                 # 옛 순간 비교 (바이트 재현 전용)
+                elif not args.stop_freeze_probe:
+                    descend = (p + am_skel < target)                 # 기본 = 옛 순간 비교 (검증된 코퍼스 경로)
                 elif _dsc_left > 0:
                     descend = None                                   # 프로브 진행 중 (아래 공통부에서 처리)
                 elif p + am_skel >= target:
-                    _dsc_left = max(1, _srv_settle); _dsc_win = []    # 후보 crossing → 동결하고 다시 읽는다
+                    _dsc_left = max(1, _srv_settle) + 1; _dsc_win = []; _dsc_armed = True   # 후보 crossing → 동결·재판독 (+1 = 버릴 무장 프레임)
                     descend = None
                 else:
                     descend = True
@@ -2590,13 +2629,13 @@ def main(argv):
                 #     같은 아티팩트를 다시 흡수한다.
                 guard = arm_guard_active(por, por0, args.load_state)
                 _dsc_tgt = float(target)
-                if args.stop_legacy:
+                if not args.stop_freeze_probe:
                     reach_cnt = reach_cnt + 1 if (p >= target and not guard) else 0
                     descend = reach_cnt < STOP_HOLD
                 elif _dsc_left > 0:
                     descend = None
                 elif p >= target and not guard:
-                    _dsc_left = max(1, _srv_settle); _dsc_win = []
+                    _dsc_left = max(1, _srv_settle) + 1; _dsc_win = []; _dsc_armed = True
                     descend = None
                 else:
                     descend = True
@@ -2605,13 +2644,21 @@ def main(argv):
             #    속도 결합 항이 사라져 판독이 곧 정적 경계응력이다(제하 프로브·S-1 과 같은 구조).
             #    정지 판독이 문턱 이상 → 그 높이에서 reached (과주행 0).  미만 → 가짜 crossing, 재개.
             if _dsc_left > 0 and descend is None:
-                wall_vel[None] = 0.0                             # 동결 — 이 프레임은 이동하지 않는다
+                # ★ wall_vel 은 **다음** 프레임 substep 부터 0 이다 (substep 이 판정보다 먼저 돈다).
+                #   이 프레임의 p 는 아직 '움직이는' 판독이므로 **창에 넣지 않는다** — 넣으면 그 한 값이
+                #   settle_is_quasistatic 의 전체-창 스프레드를 영구 지배해 qs 가 절대 True 가 못 된다
+                #   (실측: [16.7]+[0.023]*k → spread 4.5@W=3 → 157@W=200).  wall_z 는 안 내리므로
+                #   68df3dae 와 달리 과주행은 0 이다.
+                wall_vel[None] = 0.0                             # 다음 프레임부터 정지 판독
                 _dsc_left -= 1
-                _dsc_win.append(float(p))
+                if _dsc_armed:
+                    _dsc_armed = False                           # 무장 프레임 = 이동 판독 → 버림
+                else:
+                    _dsc_win.append(float(p))
                 if _dsc_left == 0:
                     _v_dsc, _sp_dsc = descend_probe_verdict(
-                        _dsc_win, _dsc_tgt, band=args.servo_band, settle_max=_settle_max_srv)
-                    if _v_dsc == 'wait' and len(_dsc_win) < _settle_max_srv:
+                        _dsc_win, _dsc_tgt, band=args.servo_band, settle_max=_DSC_SETTLE_MAX)
+                    if _v_dsc == 'wait':          # 함수가 settle_max 를 이미 강제 → 여기선 단순 연장
                         _dsc_left = 1                            # 아직 울림 → 창을 늘린다
                     else:
                         _dsc_spread = float(_sp_dsc); _dsc_probes += 1
@@ -2895,13 +2942,18 @@ def main(argv):
             #    이면 움직이는 플래튼 판독으로 결정된 옛 경로다(그 경우 porosity 는 걸음 수의 함수일 수 있다).
             #    settled_over_target 은 최종 정착 응력 / 목표 — 1 근처가 아니면 "목표 압력 상태" 라고
             #    부르면 안 된다 (실측: 옛 경로 real_14 = 0.021, P:S 킷 = 0.009~0.049).
-            'stop_mode': ('legacy_moving' if args.stop_legacy else 'freeze_probe'),
+            'stop_mode': ('freeze_probe' if args.stop_freeze_probe else 'legacy_moving'),
             'descend_probes': int(_dsc_probes),
             'descend_probe_resumes': int(_dsc_resumes),
             'descend_probe_spread_rel': (round(float(_dsc_spread), 5)
                                          if _dsc_spread is not None and _dsc_spread == _dsc_spread
                                          and abs(_dsc_spread) != float('inf') else None),
-            'settled_over_target': round(float(p_end) / float(target), 4) if target > 0 else None,
+            # ★ 정착 추정치(_p_ach = 마지막 ≤5 프레임 평균)로 계산하고, reached 가 아니면 None.
+            #   p_end 를 그대로 쓰면 --frames 소진이 하강 프레임에 걸렸을 때 이동 판독(목표의 50~100배)이 실린다.
+            'settled_over_target': (round(float(_p_ach) / float(target), 4)
+                                   if (target > 0 and reached) else None),
+            'wall_z_at_floor': bool(float(wall_z[None]) <= WALL_MIN * 1.001),   # 플래튼 바닥 도달 = 과압축 신호
+            'wall_min': round(float(WALL_MIN), 5),
             'platen_mach_V_over_cP': round(float(_v_platen) / float(_c_p), 4),
             'platen_mach_V_over_cS': round(float(_v_platen) / float(_c_s), 3),
             'quasistatic_ok': bool(_v_platen / _c_p <= 0.01),
