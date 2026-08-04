@@ -359,4 +359,67 @@ modelc 600·800 K 는 2–50 창에서 β 0.76 / 0.62 로 **게이트 아래**�
 
 ---
 
-## 5. (다음 요청 자리)
+## 5. MLIP-MD 와 AIMD 의 근본적 차이 · AIMD 는 저온이 되나 (1저자 요청 #4, 2026-08-04)
+
+### 5-1. 한 줄 답
+
+**차이는 "힘을 누가 계산하나" 하나뿐이고** (동역학·열욕·적분은 동일),
+**AIMD 는 저온이 가능하기는커녕 고온조차 통계가 간당간당하다** — 저온의 병목은
+힘의 정확도가 아니라 **홉 통계**인데, AIMD 는 시간당 통계가 가장 비싼 방법이기 때문.
+
+### 5-2. 근본 차이 — 힘의 출처
+
+| | AIMD | MLIP-MD (우리: UMA-s-1p1) |
+|---|---|---|
+| 매 스텝의 힘 | **DFT SCF 를 수렴**시켜 Hellmann–Feynman 힘 | DFT 로 **학습된 대리모델**이 즉석 예측 |
+| 힘의 지위 | 범함수 한계 안에서 "정확" | DFT 의 근사 (학습 분포 안 ~수 meV/Å) |
+| 전자 자유도 | 있음 — 전하이동·결합파괴를 스스로 따라감 | **없음** — 전자 이벤트는 원리적으로 못 봄 |
+| 분포 밖 외삽 | 개념 자체가 없음 | **위험** — 실측 2건: UMA Li₃N 결정론적 편향(사용 금지 판정), b2o3 O-자리에서 UMA 선호를 DFT 가 −6.63 eV 로 뒤집음 |
+| 스텝 비용 (62–128원자) | ~분 단위 | ~수십 ms |
+| 200 ps (10⁵ 스텝, dt 2 fs) | **~수십~수백 일** | **1.5–2 h** (RTX3090/A6000) |
+
+운동방정식(Langevin NVT, dt 2 fs, friction 0.02)은 양쪽이 똑같다. **속도 ~10³–10⁴배**가
+모든 실무 차이의 근원이다.
+
+### 5-3. 그 속도 차이가 만드는 통계 차이
+
+문헌 AIMD 관행 = **수십 ps · 소형 셀 · 단일 궤적 · 고온(600–1200 K)** (우리 litdb 의
+HT-AIMD 스크리닝 kahle2020 도 이 한계 안). 우리 β 게이트 기준으로 보면:
+
+- 오늘 실측: **200 ps × 4시드로도** LPSOCl 600 K 가 β 0.61 로 탈락 (홉 부족).
+- AIMD 20–50 ps 단일런이면 같은 계에서 β 판정 자체가 성립하지 않는다 —
+  "AIMD 라서 정확한 D" 가 아니라 **"힘은 정확한데 통계가 없는 D"** 가 나온다.
+- MLIP 가 산 것: 멀티시드 × 200 ps × 여러 온도 × 게이트 검증 — AIMD 비용으로는
+  이 중 하나도 표준화할 수 없다.
+
+### 5-4. "AIMD 는 저온이 가능한가" — 반대다, 저온일수록 더 불가능하다
+
+저온 병목은 §1 에서 계산한 그대로 **필요 궤적 길이의 지수 증가**다
+(300 K: 2.2–20.5 ns). 방법별로 환산하면:
+
+| | 600 K (0.2 ns 급) | 300 K (2–20 ns 급) |
+|---|---|---|
+| MLIP | 시간 단위 | **몇 주** (셀 확대 병행 시 단축) — 가시권 |
+| AIMD | 수십~수백 일 | **수년~수백 년 규모** — 논외 |
+
+즉 **저온을 여는 쪽은 MLIP**다 (지금 도는 comp1 1600 ps 같은 연장이 가능한 이유).
+AIMD 로 저온을 "정확하게" 하겠다는 건 통계 문제를 정확한 힘으로 풀겠다는 범주 착오다.
+
+⚠ 균형을 위해 하나: **저온에서는 MLIP 쪽 위험도 커진다.** 장벽 오차 δE 가 통계에 주는
+왜곡이 exp(δE/kT) 라 저온일수록 증폭되고, rare event 일수록 모델 오차에 민감하다.
+그래서 저온 주장은 (i) MLIP 로 통계를 만들고 (ii) 핵심 에너지 서열은 DFT 로 재판하는
+2단이 우리 표준이다 (b2o3 O-자리 사례가 그 필요성의 실증).
+
+### 5-5. 우리 캠페인의 역할 분담 (원고 문장용)
+
+> Forces were evaluated with the UMA-s-1p1 machine-learned interatomic potential,
+> which reproduces DFT forces at ~10³–10⁴ lower cost and thereby enables the
+> multi-seed, 200 ps-per-point statistics that our diffusive-regime gate requires;
+> ab initio MD at equal cost would be limited to tens of ps on a single seed,
+> below the hop-count threshold at which MSD slopes measure diffusion.
+> Energy orderings that the MLIP cannot be trusted to resolve (site preference,
+> electronic events) were adjudicated by static DFT.
+
+---
+
+## 6. (다음 요청 자리)
