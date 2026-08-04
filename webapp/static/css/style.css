@@ -235,7 +235,10 @@ textarea:focus-visible,[tabindex]:focus-visible,.tabs button:focus-visible{
 .modal.open{display:flex}
 .modal-body{background:var(--surface);border-radius:var(--radius);max-width:92vw;max-height:90vh;overflow:auto;box-shadow:var(--shadow-lg)}
 .modal-body img{max-width:88vw;max-height:80vh;display:block}
-.modal-head{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-bottom:1px solid var(--border)}
+.modal-head{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;
+  border-bottom:1px solid var(--border);cursor:move;user-select:none;touch-action:none}
+/* 끌어 옮기는 중 — 본문이 선택되지 않게, 그림자로 떠 있는 느낌 */
+.modal-dragging{box-shadow:0 26px 64px rgba(16,24,40,.30);transition:none;user-select:none}
 
 /* toast */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
