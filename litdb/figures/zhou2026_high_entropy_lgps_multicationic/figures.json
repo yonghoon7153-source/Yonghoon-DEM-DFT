@@ -36,15 +36,15 @@
    "caption": "Fig. 2. Arrhenius plot and crystal structure of Li10MP2S12. a, Arrhenius plots for the Li10MP2S12 ionic conductivity with temperature. b, Cyclic voltammogram curve of Li|LM0.2PS|stainless steel cell. The decomposition potential of the LM0.2PS phase exceeds 5 V. c, Rietveld refinements of XRD of LM0.2PS in this work. LM0.2PS crystallizes in the tetragonal P42/nmc space group and the inset is SEM image. d, Time-dependent mean square displacement (MSD) Li+ ions in LM0.2PS at different temperatures. e, Li+ probability density, yellow isosurfaces are lithium trajectory density in the LM0.2PS lattice at 300 K, obtained from AIMD simulations at the isosurface level of 2 × 10−5 Å−3. 3",
    "bbox": [
     31.6,
-    454.2,
+    463.5,
     565.8,
-    531.9
+    692.6
    ],
    "w": 2227,
-   "h": 325,
+   "h": 955,
    "dpi": 300,
    "src": "49. A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
-   "blank": 0.848
+   "blank": 0.764
   },
   {
    "key": "f3",
@@ -55,15 +55,15 @@
    "caption": "Fig. 3. Entropy-induced modulation of electron localization and Li+ migration in LGPS-based solid electrolytes. a. Electron Localization Function (ELF)maps on the (001) plane for pristine LGPS and the LM0.2PS composition. b. The migration energy barrier was obtained by theoretical calculation for the models. (c) Potential energy as a function of the migration distance along the Li migration pathway. 4",
    "bbox": [
     31.6,
-    453.4,
+    460.6,
     565.8,
-    577.2
+    708.5
    ],
    "w": 2227,
-   "h": 517,
+   "h": 1034,
    "dpi": 300,
    "src": "49. A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
-   "blank": 0.675
+   "blank": 0.738
   },
   {
    "key": "f4",
@@ -93,15 +93,15 @@
    "caption": "Fig. 5. Nanocrystalline characteristic analysis of LM0.2PS. a, HRTEM image of LM0.2PS showing lattice fringes in nanocrystalline domains; the inset shows an enlarged view of a representative region. b, FFT pattern of the selected HRTEM region. c, Corresponding line-scan intensity profiles of lattice fringes. d-k, HAADF- STEM and corresponding homogeneous distribution of Ge, Si, Sn, Ti, W, P and S elements in LM0.2PS. 6",
    "bbox": [
     31.6,
-    422.0,
+    437.0,
     565.8,
-    575.1
+    711.7
    ],
    "w": 2227,
-   "h": 639,
+   "h": 1145,
    "dpi": 300,
    "src": "49. A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
-   "blank": 0.426
+   "blank": 0.334
   },
   {
    "key": "f6",
@@ -112,15 +112,15 @@
    "caption": "Fig. 6. Electrochemical performance of high-entropy LM0.2PS at 25 ◦C. a, Potential response of Li|LM0.2PS|Li symmetric cells undergoing a CCD measurement at 25 ◦C. b, Long-term galvanostatic cycling of the Li|LM0.2PS|Li symmetric cell at 0.5 mA cm−2. The inset shows selected Nyquist plots collected after representative cycling stages, illustrating the evolution of the interfacial impedance response. converted into the instantaneous galvanostatic polarization voltage, the overall evolution of the interfacial response suggests an initial interfacial rearrangement followed by a relatively stable impedance behavior at extended cycling times. Taken together, these results show that LM0.2PS not only exhibits a higher CCD, but also enables a more durable Li-metal interface than pristine LGPS, thereby improving tolerance against long- term Li plating/stripping. LNO@NCM721/LGPS/LiIn full cell sho",
    "bbox": [
     31.6,
-    49.4,
+    49.7,
     566.0,
-    343.2
+    376.0
    ],
    "w": 2228,
-   "h": 1226,
+   "h": 1360,
    "dpi": 300,
    "src": "49. A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
-   "blank": 0.917
+   "blank": 0.922
   },
   {
    "key": "f7",

@@ -27,6 +27,25 @@
    "blank": 0.612
   },
   {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Heatmaps showing the reactivity of various interfaces. The central schematic shows the solid-state battery shown in Figure 1. In each heatmap, the coating refers to the binary oxide of the corresponding element. In each scale bar, dark green colors indicate less reactive interfaces or more favorable oxides. For oxides that do not react with the cathodes, ΔE values were set to zero. Yellow colors denote elements that form reactive oxide interfaces. Grey denotes elements where the reaction energies were not calculated.",
+   "bbox": [
+    42.0,
+    70.6,
+    550.1,
+    263.7
+   ],
+   "w": 2118,
+   "h": 805,
+   "dpi": 300,
+   "src": "15. Computationally-Guided Development of Sulfide Solid Electrolyte Powder Coatings for Enhanced Stability and Performance of Solid-State Batteries.pdf",
+   "blank": 0.587
+  },
+  {
    "key": "f3",
    "kind": "figure",
    "label": "3",
@@ -72,16 +91,16 @@
    "file": "fig_5.png",
    "caption": "Figure 5. Physicochemical properties of ALD-coated LPSCl powders. XPS core level spectra of S 2p, P 2p, and corresponding coating elements A) Mg 2p, B) Zr 3d, and C) Zn 2p. Measurements were performed on pellets pressed from coated powders. The thickness of the ALD layer on individual powders is estimated to be ≈1 nm. STEM images and EDS elemental mapping of D) Mg, E) Zr, and F) Zn signal on coated LPSCl powders.",
    "bbox": [
-    0.0,
-    60.4,
-    565.0,
-    289.3
+    44.8,
+    71.1,
+    552.9,
+    354.7
    ],
-   "w": 2355,
-   "h": 955,
+   "w": 2118,
+   "h": 1183,
    "dpi": 300,
    "src": "15. Computationally-Guided Development of Sulfide Solid Electrolyte Powder Coatings for Enhanced Stability and Performance of Solid-State Batteries.pdf",
-   "blank": 0.676
+   "blank": 0.636
   },
   {
    "key": "f6",
@@ -110,16 +129,16 @@
    "file": "fig_7.png",
    "caption": "Figure 7. Chemical and electrochemical reactivity of the MgO ALD LPSCl against Li contact. A,B) S 2p and P 2p core level spectra of uncoated and ALD MgO-coated LPSCl before and after Li deposition. C) Mg 2p and D) O 1s core level spectra of ALD MgO-coated LPSCl before and after Li deposition.",
    "bbox": [
-    0.0,
-    60.4,
+    44.8,
+    70.8,
     552.9,
     418.7
    ],
-   "w": 2304,
-   "h": 1494,
+   "w": 2118,
+   "h": 1451,
    "dpi": 300,
    "src": "15. Computationally-Guided Development of Sulfide Solid Electrolyte Powder Coatings for Enhanced Stability and Performance of Solid-State Batteries.pdf",
-   "blank": 0.855
+   "blank": 0.841
   },
   {
    "key": "f8",

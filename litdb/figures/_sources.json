@@ -88,7 +88,7 @@
   ]
  },
  "huang2022_li2sis3_anomalous_conductivity_bvse": {
-  "figures": 8,
+  "figures": 11,
   "generated": "2026-08-04",
   "pdfs": [
    "47. Anomalously High Ionic Conductivity of Li2SiS3‑Type Conductors.pdf",
@@ -103,7 +103,7 @@
   ]
  },
  "jun2022_argyrodite_ion_cage_size_descriptor": {
-  "figures": 17,
+  "figures": 19,
   "generated": "2026-08-04",
   "pdfs": [
    "48. Designing a descriptor for the computational screening of argyrodite-based solid-state superionic conductors uniformity of ion-cage size.pdf",
@@ -201,7 +201,7 @@
   ]
  },
  "liu2023_electron_redistribution_redox_resistible_mgf2": {
-  "figures": 38,
+  "figures": 39,
   "generated": "2026-08-04",
   "pdfs": [
    "05. Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
@@ -284,7 +284,7 @@
   ]
  },
  "sendek2017_ml_screening_12k_conductors": {
-  "figures": 14,
+  "figures": 16,
   "generated": "2026-08-04",
   "pdfs": [
    "40. Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
@@ -306,7 +306,7 @@
   ]
  },
  "sundar2025_oxide_coating_screening_lpscl": {
-  "figures": 9,
+  "figures": 10,
   "generated": "2026-08-04",
   "pdfs": [
    "15. Computationally-Guided Development of Sulfide Solid Electrolyte Powder Coatings for Enhanced Stability and Performance of Solid-State Batteries.pdf"
@@ -320,7 +320,7 @@
   ]
  },
  "torii2025_lpscl_mechanical_anisotropy_dft": {
-  "figures": 9,
+  "figures": 11,
   "generated": "2026-08-04",
   "pdfs": [
    "21. first-principles-investigation-of-mechanical-properties-and-anisotropy-of-argyrodite-li6ps5cl-crystal-electrolytes.pdf"
@@ -334,7 +334,7 @@
   ]
  },
  "wang2025_electronic_localization_yo_argyrodite": {
-  "figures": 33,
+  "figures": 35,
   "generated": "2026-08-04",
   "pdfs": [
    "52. Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf",

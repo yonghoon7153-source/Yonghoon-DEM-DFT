@@ -73,15 +73,15 @@
    "caption": "Figure 4. Schematic workflow for interface construction and adhesion analysis. (1) a-TaxN slabs are generated using the MQA procedure, followed by vacuum introduction and annealing at 1000 K. (2) Three interface construction methods are considered: bulk adjoining with either static relaxation or annealing at 1000 K, and simulated deposition of Cu atoms onto a-TaxN slabs. (3) The resulting interfaces are subjected to SMD simulations, where the Cu slab is pulled away from the fixed a-TaxN slab to evaluate interfacial adhesion. Cu atoms are shown in yellow, Ta in red, and N in blue.",
    "bbox": [
     45.5,
-    67.0,
+    54.4,
     561.5,
-    283.2
+    281.3
    ],
    "w": 2151,
-   "h": 902,
+   "h": 947,
    "dpi": 300,
    "src": "17. atomistic-insights-into-cu-amorphous-taxn-interfacial-adhesion-via-machine-learning-interatomic-potentials-effects-of.pdf",
-   "blank": 0.636
+   "blank": 0.625
   },
   {
    "key": "f5",
@@ -92,15 +92,15 @@
    "caption": "Figure 5. Properties of Cu deposition on a-TaxN substrates with varying Ta content, with darker lines indicating higher Ta concentration. (a) Number of Cu clusters as a function of deposited atoms, where clusters are defined as groups of two or more atoms with distances below 3.20 Å. (b) Root mean square (RMS) surface roughness during deposition, defined as in ref 57. (c) Evolution of surface coverage, calculated as the sum of areas of lateral surface bins occupied by at least one Cu atom (bin side length is 2.56 Å, similar to Cu−Cu nearest-neighbor distance). Star symbols indicate the point at which the surface coverage reaches 90%. (d) In-plane (solid lines) and out-of-plane (dashed lines) MSD of Cu atoms over time, computed for the first 75 deposited Cu atoms, roughly corresponding to the clustering peaks shown in panel (a). This behavior reflects a Volmer−Weber 3D island growth mode,",
    "bbox": [
     45.5,
-    327.1,
+    330.5,
     561.5,
-    515.2
+    626.1
    ],
    "w": 2151,
-   "h": 785,
+   "h": 1233,
    "dpi": 300,
    "src": "17. atomistic-insights-into-cu-amorphous-taxn-interfacial-adhesion-via-machine-learning-interatomic-potentials-effects-of.pdf",
-   "blank": 0.948
+   "blank": 0.953
   },
   {
    "key": "f6",
@@ -149,15 +149,15 @@
    "caption": "Figure 8. Averaged pulling force as a function of separation distance during SMD simulations for Cu/a-TaxN interfaces constructed by relaxation (blue), annealing (orange), and deposition (green). (a) Cu/a-TaN, (b) Cu/a-Ta2N, (c) Cu/a-Ta4N. The cross-sectional area of the simulation cell perpendicular to the pulling direction is 14.5 nm2 for all cases. Insets show the corresponding Wad obtained from each simulation.",
    "bbox": [
     45.5,
-    116.4,
+    54.4,
     561.5,
-    201.3
+    199.3
    ],
    "w": 2151,
-   "h": 355,
+   "h": 605,
    "dpi": 300,
    "src": "17. atomistic-insights-into-cu-amorphous-taxn-interfacial-adhesion-via-machine-learning-interatomic-potentials-effects-of.pdf",
-   "blank": 0.937
+   "blank": 0.921
   },
   {
    "key": "f9",
@@ -168,15 +168,15 @@
    "caption": "Figure 9. Snapshots from SMD simulations of Cu/a-Ta2N interfaces generated under relaxed (top), annealed (middle), and deposited (bottom) conditions. Columns correspond to different simulation stages: (a, d, g) peak force stage (t = tpeak), (b, e, h) 0.5 ns after peak force stage (t = tpeak + 0.5 ns), (c,f,i) top view of Ta2N surface when the simulation is ended (t = tend). For clarity, only the first-column snapshots include structural analysis overlays: dislocation segments identified by the dislocation extraction algorithm (DXA)67 are shown as thick tubes (bright-green, 1/6⟨112⟩Shockley partial dislocations; magenta, 1/6⟨110⟩stair-rod partial dislocations), and Cu atoms are colored according to their local structural environment (e.g., hexagonal close-packed (HCP) or disordered). 4 are not the area under the force−separation distance curves, but area under the force−spring displacemen",
    "bbox": [
     45.5,
-    236.1,
+    238.4,
     561.5,
-    562.8
+    608.5
    ],
    "w": 2151,
-   "h": 1362,
+   "h": 1543,
    "dpi": 300,
    "src": "17. atomistic-insights-into-cu-amorphous-taxn-interfacial-adhesion-via-machine-learning-interatomic-potentials-effects-of.pdf",
-   "blank": 0.593
+   "blank": 0.627
   },
   {
    "key": "f10",
@@ -206,15 +206,15 @@
    "caption": "Figure 11. Snapshots of the Cu/a-Ta2N interfaces during SMD simulations, colored by atomic equivalent strain computed relative to the initial structure at the start of the SMD simulation. Top, middle, and bottom panels correspond to relaxed, annealed, and deposited interfaces, respectively. (a, d, g) Side views of at t = 0.5 ns. (b, e, h) Bottom views at t = 0.5 ns, showing Cu atoms only (Ta and N omitted) to highlight strain distribution in the Cu layer directly contacting Ta2N. (c, f, i) Side views at t = tpeak. White bonds indicate Cu−Ta and Cu−N bonds. the a-TaxN layer, resulting in precompressed bonds. During pulling, these compressions must first be relieved and reversed to tension, significantly enhancing interfacial robustness. This increasingly robust intermixed structure enables progressively greater stress transfer into the bulk Cu region, a capability that steadily diminishes",
    "bbox": [
     45.5,
-    51.4,
+    54.7,
     561.5,
-    359.2
+    451.4
    ],
    "w": 2151,
-   "h": 1283,
+   "h": 1654,
    "dpi": 300,
    "src": "17. atomistic-insights-into-cu-amorphous-taxn-interfacial-adhesion-via-machine-learning-interatomic-potentials-effects-of.pdf",
-   "blank": 0.579
+   "blank": 0.632
   },
   {
    "key": "f12",

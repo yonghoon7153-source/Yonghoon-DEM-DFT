@@ -35,16 +35,16 @@
    "file": "fig_2.png",
    "caption": "Figure 2. Electrochemical characterizations of LPSC and LPSC-MF electrolytes. a) Nyquist plots of Li6+3xP1\u0000 xMgxS5Cl1\u0000 2xF2x electrolytes (x=0, 0.1, 0.2 and 0.3) at 25°C. b) Arrhenius plots of the temperature-dependent ionic conductivities of Li6+3xP1\u0000 xMgxS5Cl1\u0000 2xF2x electrolytes with different doping contents. c) Ionic conductivities and activation energy of Li6+3xP1\u0000 xMgxS5Cl1\u0000 2xF2x against different doping contents. d) Stable current response of LPSC and LPSC-MF (x=0.1) at different voltages. Li6+3xP1\u0000 xMgxS5Cl1\u0000 2xF2x (x=0.1) electrolyte as the optimal doping amount and denote the electrolyte as LPSC-MF. Other modified electrolytes with higher MgF2 doping are defined as Li6+3xP1\u0000 xMgxS5Cl1\u0000 2xF2x (x=0.2 and 0.3) argyrodite sulfides.",
    "bbox": [
-    44.2,
-    64.9,
+    46.4,
+    53.8,
     548.3,
-    374.8
+    371.8
    ],
-   "w": 2101,
-   "h": 1292,
+   "w": 2092,
+   "h": 1326,
    "dpi": 300,
    "src": "05. Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.935
+   "blank": 0.934
   },
   {
    "key": "f3",
@@ -55,15 +55,15 @@
    "caption": "Figure 3. Stability properties of LPSC and LPSC-MF electrolytes. Critical current density of a) the Li/LPSC/Li symmetric cell and the Li/LPSC-MF/Li symmetric cell at 25°C. b) Li plating and stripping in Li/LPSC/Li and Li/LPSC-MF/Li symmetric cell at 0.1 mAcm\u0000 2 under 25°C. c) The impedance spectra of the symmetric cell measured at different cycling times. d), e) and f) Sectional galvanostatic cycling performance of Li/LPSC-MF/Li symmetric cell corresponding to different cycling times. g) Galvanostatic cycling performance of Li/LPSC-MF/Li symmetric cell at 0.5 mAcm\u0000 2 under 25°C.",
    "bbox": [
     46.4,
-    64.9,
-    551.1,
-    322.7
+    53.8,
+    543.7,
+    486.1
    ],
-   "w": 2104,
-   "h": 1075,
+   "w": 2073,
+   "h": 1802,
    "dpi": 300,
    "src": "05. Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.874
+   "blank": 0.881
   },
   {
    "key": "f4",
@@ -73,16 +73,35 @@
    "file": "fig_4.png",
    "caption": "Figure 4. Analysis of interfacial reaction and products. a) Cyclic voltammetry profile of Li/LPSC/LPSC+C and Li/LPSC-MF/LPSC-MF+C semi- blocking cell at 0.1 mVs\u0000 1. Ex situ Raman spectra results of b) LPSC and c) LPSC-MF in different voltage states of the LiCoO2/sulfide-SE/Li cells. Interfacial compositional alteration by XPS analysis after cycling over d) S 2p and e) P 2p spectra at Li/LPSC and Li/LPSC-MF interface. XPS depth profiling analysis of the Li anode/electrolyte interface. Overall spectra evolution of f) F 1s with different etch level at the Li/LPSC-MF interface. SEM images of lithium metal surface of Li symmetric cells assembled with h) LPSC and i) LPSC-MF after short circuit. Schematic illustrations of interface reaction and Li dendrite growth at the g) Li/LPSC interface and Li/LPSC-MF interface.",
    "bbox": [
-    44.2,
-    289.5,
-    548.2,
-    483.2
+    46.4,
+    308.7,
+    548.1,
+    668.9
    ],
-   "w": 2101,
-   "h": 808,
+   "w": 2091,
+   "h": 1502,
    "dpi": 300,
    "src": "05. Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.847
+   "blank": 0.691
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Inhibition mechanism of redox reaction based on First-principle calculations. Atomic structure of a) Li/LPSC system and b) Li/LPSC-MF system in initial and after reaction. The local electronic structure of c) LPSC and d) LPSC-MF electrolytes. e) Calculated partial density of states (PDOS) of PS4 unit in LPSC and MgS4 unit in LPSC-MF electrolytes. Schematic diagram of electron transfer processes for f) PS4 unit LPSC and g) MgS4 unit LPSC-MF electrolytes. h) Sketch for illustrating of redox reaction process in LPSC and LPSC-MF electrolytes with Li.",
+   "bbox": [
+    46.4,
+    53.8,
+    540.9,
+    393.1
+   ],
+   "w": 2061,
+   "h": 1414,
+   "dpi": 300,
+   "src": "05. Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.777
   },
   {
    "key": "f6",

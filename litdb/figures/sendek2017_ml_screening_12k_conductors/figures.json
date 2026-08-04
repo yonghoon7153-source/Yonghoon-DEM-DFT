@@ -28,6 +28,44 @@
    "blank": 0.864
   },
   {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Model selection. (a) Plotted in red against the right vertical axis is the cross-validation misclassification rate (CVMR) for the lowest CVMR logistic regression (LR) model with the number of features given on the horizontal axis. Plotted in blue against the left vertical axis is the training misclassification rate (TMR) for the same model. The solid lines represent the true model; the dotted lines represent the mean values for the X-randomized case. The lower TMR and CVMR values for all numbers of features confirms that the model performs up to three times better than random for the CVMR. The black arrow identifies the optimal model. (b) We plot the X-randomization performance metric cRr2 for the n-feature LR models. The cRr2 parameter is above the conventional threshold of 0.5 for the optimal LR model (black arrow). This implies the model has statistical significance.",
+   "bbox": [
+    297.3,
+    265.9,
+    558.8,
+    586.1
+   ],
+   "w": 1091,
+   "h": 1336,
+   "dpi": 300,
+   "src": "40. Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
+   "blank": 0.907
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 8,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Model performance. (a) Classification performance of the training data using logistic regression. The y-axis is the likelihood of a material exhibiting an ionic conductivity above 10\u00024 S cm\u00021, which is determined by a logistic function of the inner product of the feature vector {xi} with the vector of regression coeﬃcients {hi}. Four materials are misclassified. (b) Classification performance of the training data under leave-one-out cross validation (LOOCV) using logistic regression. Again four points have been misclassified. The conspicuously strongly misclassified superionic (blue marker with smallest PLR value) is LiLa(TiO3)2, with an ionic conductivity of 1 mS cm\u00021. This remarkable change in superionic probability under LOOCV suggests LiLa(TiO3)2 is an influential high-conductivity regime data point that changes the model significantly when removed.",
+   "bbox": [
+    36.5,
+    43.8,
+    298.0,
+    371.1
+   ],
+   "w": 1090,
+   "h": 1365,
+   "dpi": 300,
+   "src": "40. Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
+   "blank": 0.918
+  },
+  {
    "key": "f4",
    "kind": "figure",
    "label": "4",
@@ -36,15 +74,15 @@
    "caption": "Fig. 4 Screening results. The predicted likelihood of superionic character for 1054 stable non-metallic lithium-containing materials in the Materials Project database is plotted against the normalized distance-based con- fidence metric d. A smaller value of d indicates a lesser degree of extrapolation outside the training region and therefore higher confidence in the prediction. The upper and lower error bars for each material correspond to the standard deviation of the LOO ionic conductivity predictions. Note that the majority of classifications are non-superionic, as we might expect. Materials plotted in black belong to the subset of 21 stable materials with high oxidative decomposition voltages and band gaps, no transition metals, and high superionic probability.",
    "bbox": [
     36.5,
-    365.7,
-    451.8,
+    379.7,
+    298.0,
     553.1
    ],
-   "w": 1731,
-   "h": 782,
+   "w": 1090,
+   "h": 723,
    "dpi": 300,
    "src": "40. Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
-   "blank": 0.812
+   "blank": 0.783
   },
   {
    "key": "fS1",
