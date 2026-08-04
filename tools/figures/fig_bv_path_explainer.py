@@ -76,13 +76,16 @@ def main():
                 ha="left", fontsize=10.5, color=INK, fontweight="bold",
                 arrowprops=dict(arrowstyle="->", color=INK, lw=1.2))
 
-    # 홉 거리 (봉우리 간격)
+    # 봉우리 간격 = 경로상 부자리 간격 (⚠ 직선 Li–Li 홉 거리 3 Å 과 다른 양 —
+    #   2026-08-05 리뷰 정정: 'one hop' 표기는 n_hop 의 d_hop 과 혼동을 유발해 철회)
     i0, i1 = pk[4], pk[5]
     y = 0.255
     ax.annotate("", xy=(d[i0], y), xytext=(d[i1], y),
                 arrowprops=dict(arrowstyle="<->", color=MUT, lw=1.1))
-    ax.text((d[i0] + d[i1]) / 2, y + 0.006, f"one hop ≈ {d[i1] - d[i0]:.1f} Å",
-            ha="center", fontsize=10, color=MUT)
+    ax.text((d[i0] + d[i1]) / 2, y + 0.006,
+            f"adjacent bottlenecks ≈ {d[i1] - d[i0]:.1f} Å apart along the path\n"
+            f"(sub-site spacing — not the 3 Å straight-line Li–Li hop distance)",
+            ha="center", fontsize=9, color=MUT)
 
     ax.text(10.4, 0.038, "below the dashed line =\nthe pockets that link into a crossing path",
             fontsize=10, color=MUT, va="center", ha="center",

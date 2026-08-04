@@ -228,6 +228,12 @@ def draw_labeled(img, us, marks, half, title, cmap, path, contours=False, dpi=22
         ax.contour(us, us, img, levels=[0.30, 0.70], colors=["white", "black"],
                    linewidths=[1.0, 1.2], linestyles=["--", "-"])
     draw_marks(ax, marks, ms=15, fs=8.5, mec="black")
+    # ⚠ 제목의 ELF 값 = 평면에 그려진 결합(각 종류의 최단 결합) — 인용 정본은
+    #   mean_central_min (lpsocl_elf_planes.csv, 예: Cl–Li 평면 0.48 vs 평균 0.40).
+    #   그림만 유통돼도 오인이 없게 각주를 그림 안에 박는다 (2026-08-05 리뷰 반영).
+    ax.text(0.012, 0.014, "title ELF = drawn (shortest) bonds; citable = ensemble mean (CSV)",
+            transform=ax.transAxes, fontsize=7, color="white", zorder=7,
+            bbox=dict(boxstyle="round,pad=0.15", fc="black", alpha=0.45, ec="none"))
     ax.set_xlabel("Å"); ax.set_ylabel("Å")
     ax.set_title(title, fontsize=11)
     plt.tight_layout()

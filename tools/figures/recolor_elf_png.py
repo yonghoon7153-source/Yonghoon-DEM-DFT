@@ -72,8 +72,8 @@ def main():
     if a.report:
         return
 
-    n = im.shape[0]
-    fig = plt.figure(figsize=(n / a.dpi, n / a.dpi))
+    h, w = im.shape[:2]                      # 비정사각 입력도 왜곡 없이 (리뷰 nit)
+    fig = plt.figure(figsize=(w / a.dpi, h / a.dpi))
     ax = fig.add_axes([0, 0, 1, 1]); ax.axis("off")
     ax.imshow(val, cmap=get_cmap(a.dst), vmin=0, vmax=1, interpolation="nearest")
     fig.savefig(a.out, dpi=a.dpi); plt.close(fig)

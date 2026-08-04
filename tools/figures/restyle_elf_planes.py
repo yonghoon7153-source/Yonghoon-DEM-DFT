@@ -57,9 +57,16 @@ def main():
                     help="창을 이 반폭(Å)으로 잘라낸다. b2o3 라벨판과 맞추려면 3.2")
     ap.add_argument("--contours", action="store_true",
                     help="라벨판에 0.30/0.70 판정선 (기본 꺼짐 = b2o3 라벨판과 동일)")
+    ap.add_argument("--label", default=None,
+                    help="계 표시명 오버라이드 (예: LPSOCl1.6). 몽타주 suptitle 과 캐시 제목의 "
+                         "계 이름 부분을 치환한다 — cube 재방문 없이 표기 규약을 맞출 때")
     a = ap.parse_args()
 
     imgs, half, label, tag, titles = load_planes_npz(a.npz)
+    if a.label:
+        old = label.split(" (")[0]
+        titles = {k: v.replace(old, a.label, 1) for k, v in titles.items()}
+        label = a.label
     if a.motifs:
         imgs = {k: v for k, v in imgs.items() if k in a.motifs}
         if not imgs:
