@@ -132,16 +132,19 @@ def band_overlap(a, b):
     return max(0.0, hi - lo) / w if w > 0 else 0.0
 
 
-def table_rect(page, cap, tables, margin=5.0):
+def table_rect(page, cap, tables, stop_y=1e9, margin=5.0):
     """표는 **본문과 같은 텍스트**라 '그래픽 검증'이 안 통한다 → PyMuPDF 표 검출을 쓴다.
 
     ⚠ 캡션 블록이 표 앞부분을 통째로 삼키는 쪽이 있다(실측: Hargreaves SI p21 에서
       캡션 bbox 가 첫 표를 덮었다). 그래서 "캡션 **아래**"가 아니라 "캡션 시작선 이후"에
       걸리는 표를 전부 합집합한다 — 한 캡션이 이어진 두 조각을 거느리는 경우까지 잡힌다.
+      단 stop_y(= 같은 쪽의 다음 캡션 y0)에서 끊는다 — 안 그러면 Table S6 크롭에 S7 까지
+      딸려 들어간다(실측: Kraft 2017 SI p8).
     """
     x0, y0, x1, y1 = cap[:4]
     hit = [fitz.Rect(t) for t in tables]
-    hit = [t for t in hit if t.y1 > y0 + 2 and band_overlap((x0, x1), (t.x0, t.x1)) > 0.30]
+    hit = [t for t in hit if t.y1 > y0 + 2 and band_overlap((x0, x1), (t.x0, t.x1)) > 0.30
+           and t.y0 < stop_y]                   # ⚠ 다음 캡션 앞에서 끊는다
     if not hit:
         return None
     u = fitz.Rect(hit[0])
@@ -189,7 +192,7 @@ def _side_rect(page, cap, blocks, up, margin=6.0):
     return (rect if rect.height >= 36 else None), ks.count("img"), ks.count("draw")
 
 
-def region_for(page, cap, kind, blocks, tables=(), min_draw=6):
+def region_for(page, cap, kind, blocks, tables=(), min_draw=6, stop_y=1e9):
     """캡션 블록 → (잘라낼 사각형, 이미지수, 벡터수).
 
     figure/scheme 는 캡션 **위**가 기본. ⚠ SI 는 캡션을 그림 **위**에 두는 쪽이 많다
@@ -197,7 +200,7 @@ def region_for(page, cap, kind, blocks, tables=(), min_draw=6):
     위가 비면 아래로 한 번 더 본다 — 표는 처음부터 아래.
     """
     if kind == "table":
-        r = table_rect(page, cap, tables)
+        r = table_rect(page, cap, tables, stop_y)
         if r is not None and r.height >= 36:
             return r, 1, 0
         return _side_rect(page, cap, blocks, up=False)
@@ -276,8 +279,12 @@ def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
                     label = "S" + label        # SI 의 "Figure 3" 은 곧 Fig S3
                 key = f"{kind[0]}{label.upper()}"
                 cr, caption = merge_caption(blocks, cap)
+                # 같은 쪽에서 이 캡션 다음에 오는 캡션의 시작선 — 표 크롭의 아래 한계
+                stop_y = min([b[1] for b, h in caps
+                              if h and b[1] > cr.y1 + 1
+                              and band_overlap((cr.x0, cr.x1), (b[0], b[2])) > 0.30] or [1e9])
                 rect, n_img, n_draw = region_for(page, tuple(cr), kind, blocks, tabs,
-                                                 min_draw=min_draw)
+                                                 min_draw=min_draw, stop_y=stop_y)
                 if rect is None:
                     skipped.append((key, pno + 1, "영역 없음"))
                     continue
