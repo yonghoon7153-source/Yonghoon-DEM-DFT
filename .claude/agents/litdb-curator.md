@@ -23,9 +23,10 @@ You are the **litdb-curator** for the Hanyang argyrodite DFT project. Your job: 
 4. **Compare vs our baseline** (`litdb/our_dft_baseline.md`): fill §7 with same/different/why. Be critical — flag method-dependence (functional, ion-relax, disorder, k-mesh) before claiming a real difference. Never invent numbers; if a value isn't in the paper, write "n/a".
 5. **Crop the paper's figures** (2026-08-06, 1저자 요청 — 이제 표준 단계):
    ```
-   python3 tools/litdb/extract_figures.py --slug <slug> --clean \
+   python3 tools/litdb/extract_figures.py --slug <이번 digest 의 실제 slug> --clean \
        --pdf "<main.pdf>" [--pdf "<SI.pdf>"]
    ```
+   (여러 편을 한꺼번에 밀 때는 `--inbox` 로 매칭표를 먼저 보고 `--inbox --run --skip-done`.)
    캡션을 앵커로 그림/표 영역을 렌더해 `litdb/figures/<slug>/` 에 넣는다 (SI 는 자동으로 S 번호).
    출력 표를 **눈으로 확인**하고, 놓친 그림이나 오탐이 있으면 그것만 보고한다 — 아래 정도는 정상이다:
    그림이 PDF 에 아예 안 들어간 쪽(빈 영역), 스캔 PDF, 우리 원고 초안.

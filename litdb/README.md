@@ -43,16 +43,27 @@
 ## 🖼 논문 그림 크로핑 (figures/)
 논문을 읽을 때 PDF 를 따로 열지 않게, **캡션을 앵커로 그림·표를 잘라** 저장한다.
 
+**보통은 이 두 줄이면 끝난다** — `litdb/inbox/` 를 훑어 digest 와 자동으로 짝지어 준다:
 ```bash
-python3 tools/litdb/extract_figures.py --slug <slug> --clean \
-    --pdf "litdb/inbox/<본문>.pdf" [--pdf "litdb/inbox/<SI>.pdf"]
+python3 tools/litdb/extract_figures.py --inbox          # 어느 PDF ↔ 어느 논문인지 표만
+python3 tools/litdb/extract_figures.py --inbox --run    # 실제로 자르기 (--skip-done 로 이어서)
+```
+매칭 앵커는 ① digest 메타의 `inbox #NN` ↔ 파일명 앞 번호 ② 제목 토큰 겹침 ③ **PDF 1쪽 본문**
+(출판사 해시 파일명 `admi…suppmat.pdf` 대응). `Sup)`/`SI`/`ESI`/`mmc` 는 SI 로 보고 같은 논문에 묶는다.
+
+한 편만 콕 집을 때 — ⚠ `<slug>` 는 **자리표시자**다. `litdb/papers/` 의 실제 파일 이름을 넣는다:
+```bash
+python3 tools/litdb/extract_figures.py --clean \
+    --slug kraft2017_lattice_polarizability_argyrodite_Li6PS5X \
+    --pdf "litdb/inbox/31. Influence of Lattice Polarizability….pdf" \
+    --pdf "litdb/inbox/31. Sup) Influence of Lattice Polarizability….pdf"
 ```
 - 출력: `litdb/figures/<slug>/fig_3.png` · `tab_S1.png` · `figures.json`
 - SI PDF 로 넘긴 것과 `Supplementary Fig. 1` 형태의 캡션은 **자동으로 S 번호**가 된다.
 - **임베디드 이미지 추출이 아니라 영역 렌더**다 — 벡터 그림(ACS/RSC 다수)도 똑같이 나온다.
 - 오탐(본문의 "Figure 3 shows …" 문단)은 ① 구두점 규칙 ② 그래픽 존재 검증 두 겹으로 막는다.
   실측 70편 → 492개 추출, 0개인 16편은 한글 슬라이드·우리 원고 초안.
-- 긴 변 1500 px 상한 + PNG 재압축 (`--maxpx 0` 이면 원해상도). 그림 1장 ≈ 110 KB.
+- 기본 300 dpi (긴 변 3000 px 상한) + PNG 재압축. 그림 1장 ≈ 250 KB — 슬라이드에 바로 써도 된다.
 
 **webapp 연동** — digest 본문에서 그림을 `Fig. 3`, `Fig. 5e`, `Table S1` 형태로 언급하면
 문헌 화면에서 자동으로 링크가 걸리고, 마우스를 올리거나 **드래그**하면 오른쪽 여백에 그림이 뜬다.
@@ -60,7 +71,8 @@ python3 tools/litdb/extract_figures.py --slug <slug> --clean \
 
 > ⚠ 저작권: 여기 있는 건 **남의 논문 그림**이다. repo 를 공개로 돌릴 일이 생기면 `litdb/figures/`
 > 를 먼저 지운다(`litdb/inbox/` 의 PDF 원본은 이미 .gitignore 대상). 규모가 커지면
-> (논문 160편 × 15장 ≈ 260 MB) PNG 만 .gitignore 하고 `figures.json` 만 추적하는 쪽으로 바꾼다.
+> (논문 160편 × 15장 ≈ 600 MB) PNG 만 .gitignore 하고 `figures.json` 만 추적하는 쪽으로 바꾼다
+> — 그때는 `--inbox --run` 한 번이면 각자 로컬에서 그대로 복원된다.
 
 ## 📐 개념/방법 노트 (concepts/)
 - `concepts/dos_vbm_efermi_methods.md` — DOS·PDOS 계산(수식), VBM 절대비교 불가+정렬, 절연체 E_F smearing artifact (코드 재현 포함). 슬라이드 21/24/25 방어용.

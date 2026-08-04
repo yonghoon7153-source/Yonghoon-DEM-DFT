@@ -1,7 +1,7 @@
 {
  "slug": "kraft2017_lattice_polarizability_argyrodite_Li6PS5X",
- "dpi": 200,
- "maxpx": 1500,
+ "dpi": 300,
+ "maxpx": 3000,
  "generated": "2026-08-04",
  "sources": [
   "664401af-31._Influence_of_Lattice_Polarizability_on_the_Ionic_Conductivity_in_the_Lithium_Superionic_Argyrodites_Li6PS5X_X__Cl_Br_I.pdf",
@@ -21,11 +21,11 @@
     570.5,
     199.2
    ],
-   "w": 1434,
-   "h": 388,
-   "dpi": 200,
+   "w": 2151,
+   "h": 581,
+   "dpi": 300,
    "src": "664401af-31._Influence_of_Lattice_Polarizability_on_the_Ionic_Conductivity_in_the_Lithium_Superionic_Argyrodites_Li6PS5X_X__Cl_Br_I.pdf",
-   "blank": 0.816
+   "blank": 0.819
   },
   {
    "key": "f2",
@@ -40,11 +40,11 @@
     570.5,
     218.5
    ],
-   "w": 1434,
-   "h": 442,
-   "dpi": 200,
+   "w": 2151,
+   "h": 662,
+   "dpi": 300,
    "src": "664401af-31._Influence_of_Lattice_Polarizability_on_the_Ionic_Conductivity_in_the_Lithium_Superionic_Argyrodites_Li6PS5X_X__Cl_Br_I.pdf",
-   "blank": 0.891
+   "blank": 0.895
   },
   {
    "key": "f3",
@@ -59,11 +59,11 @@
     570.5,
     567.5
    ],
-   "w": 1434,
-   "h": 849,
-   "dpi": 200,
+   "w": 2151,
+   "h": 1273,
+   "dpi": 300,
    "src": "664401af-31._Influence_of_Lattice_Polarizability_on_the_Ionic_Conductivity_in_the_Lithium_Superionic_Argyrodites_Li6PS5X_X__Cl_Br_I.pdf",
-   "blank": 0.939
+   "blank": 0.944
   },
   {
    "key": "f4",
@@ -78,11 +78,11 @@
     570.5,
     396.8
    ],
-   "w": 701,
-   "h": 508,
-   "dpi": 200,
+   "w": 1052,
+   "h": 761,
+   "dpi": 300,
    "src": "664401af-31._Influence_of_Lattice_Polarizability_on_the_Ionic_Conductivity_in_the_Lithium_Superionic_Argyrodites_Li6PS5X_X__Cl_Br_I.pdf",
-   "blank": 0.929
+   "blank": 0.934
   },
   {
    "key": "f5",
@@ -97,11 +97,11 @@
     570.5,
     245.2
    ],
-   "w": 1434,
-   "h": 516,
-   "dpi": 200,
+   "w": 2151,
+   "h": 773,
+   "dpi": 300,
    "src": "664401af-31._Influence_of_Lattice_Polarizability_on_the_Ionic_Conductivity_in_the_Lithium_Superionic_Argyrodites_Li6PS5X_X__Cl_Br_I.pdf",
-   "blank": 0.934
+   "blank": 0.94
   },
   {
    "key": "f6",
@@ -116,11 +116,11 @@
     306.5,
     571.6
    ],
-   "w": 701,
-   "h": 1422,
-   "dpi": 200,
+   "w": 1051,
+   "h": 2133,
+   "dpi": 300,
    "src": "664401af-31._Influence_of_Lattice_Polarizability_on_the_Ionic_Conductivity_in_the_Lithium_Superionic_Argyrodites_Li6PS5X_X__Cl_Br_I.pdf",
-   "blank": 0.925
+   "blank": 0.927
   },
   {
    "key": "f7",
@@ -135,11 +135,11 @@
     570.5,
     218.8
    ],
-   "w": 1434,
-   "h": 442,
-   "dpi": 200,
+   "w": 2150,
+   "h": 663,
+   "dpi": 300,
    "src": "664401af-31._Influence_of_Lattice_Polarizability_on_the_Ionic_Conductivity_in_the_Lithium_Superionic_Argyrodites_Li6PS5X_X__Cl_Br_I.pdf",
-   "blank": 0.942
+   "blank": 0.944
   },
   {
    "key": "f8",
@@ -154,11 +154,11 @@
     306.5,
     560.1
    ],
-   "w": 701,
-   "h": 366,
-   "dpi": 200,
+   "w": 1050,
+   "h": 549,
+   "dpi": 300,
    "src": "664401af-31._Influence_of_Lattice_Polarizability_on_the_Ionic_Conductivity_in_the_Lithium_Superionic_Argyrodites_Li6PS5X_X__Cl_Br_I.pdf",
-   "blank": 0.907
+   "blank": 0.916
   },
   {
    "key": "tS1",
@@ -173,11 +173,11 @@
     532.9,
     445.0
    ],
-   "w": 1297,
-   "h": 1050,
-   "dpi": 200,
+   "w": 1945,
+   "h": 1574,
+   "dpi": 300,
    "src": "38f51c84-31._Sup_Inl_Br_I.pdf",
-   "blank": 0.707
+   "blank": 0.719
   },
   {
    "key": "tS2",
@@ -192,11 +192,11 @@
     532.9,
     513.4
    ],
-   "w": 1297,
-   "h": 1240,
-   "dpi": 200,
+   "w": 1945,
+   "h": 1859,
+   "dpi": 300,
    "src": "38f51c84-31._Sup_Inl_Br_I.pdf",
-   "blank": 0.745
+   "blank": 0.756
   },
   {
    "key": "tS3",
@@ -211,11 +211,11 @@
     532.9,
     468.7
    ],
-   "w": 1297,
-   "h": 1116,
-   "dpi": 200,
+   "w": 1945,
+   "h": 1673,
+   "dpi": 300,
    "src": "38f51c84-31._Sup_Inl_Br_I.pdf",
-   "blank": 0.718
+   "blank": 0.73
   },
   {
    "key": "tS4",
@@ -230,11 +230,11 @@
     532.9,
     537.1
    ],
-   "w": 1297,
-   "h": 1306,
-   "dpi": 200,
+   "w": 1945,
+   "h": 1958,
+   "dpi": 300,
    "src": "38f51c84-31._Sup_Inl_Br_I.pdf",
-   "blank": 0.755
+   "blank": 0.765
   },
   {
    "key": "tS5",
@@ -249,11 +249,11 @@
     532.9,
     421.2
    ],
-   "w": 1297,
-   "h": 983,
-   "dpi": 200,
+   "w": 1945,
+   "h": 1474,
+   "dpi": 300,
    "src": "38f51c84-31._Sup_Inl_Br_I.pdf",
-   "blank": 0.694
+   "blank": 0.701
   },
   {
    "key": "tS6",
@@ -268,11 +268,11 @@
     532.9,
     403.4
    ],
-   "w": 1297,
-   "h": 934,
-   "dpi": 200,
+   "w": 1945,
+   "h": 1401,
+   "dpi": 300,
    "src": "38f51c84-31._Sup_Inl_Br_I.pdf",
-   "blank": 0.686
+   "blank": 0.696
   },
   {
    "key": "tS7",
@@ -287,11 +287,11 @@
     532.9,
     783.6
    ],
-   "w": 1297,
-   "h": 1000,
-   "dpi": 200,
+   "w": 1945,
+   "h": 1500,
+   "dpi": 300,
    "src": "38f51c84-31._Sup_Inl_Br_I.pdf",
-   "blank": 0.704
+   "blank": 0.714
   },
   {
    "key": "tS8",
@@ -306,11 +306,11 @@
     532.9,
     533.0
    ],
-   "w": 1297,
-   "h": 1066,
-   "dpi": 200,
+   "w": 1945,
+   "h": 1600,
+   "dpi": 300,
    "src": "38f51c84-31._Sup_Inl_Br_I.pdf",
-   "blank": 0.717
+   "blank": 0.73
   },
   {
    "key": "tS9",
@@ -325,11 +325,11 @@
     532.9,
     475.0
    ],
-   "w": 1297,
-   "h": 1133,
-   "dpi": 200,
+   "w": 1945,
+   "h": 1699,
+   "dpi": 300,
    "src": "38f51c84-31._Sup_Inl_Br_I.pdf",
-   "blank": 0.729
+   "blank": 0.741
   },
   {
    "key": "tS10",
@@ -344,11 +344,11 @@
     532.9,
     427.2
    ],
-   "w": 1297,
-   "h": 1000,
-   "dpi": 200,
+   "w": 1945,
+   "h": 1499,
+   "dpi": 300,
    "src": "38f51c84-31._Sup_Inl_Br_I.pdf",
-   "blank": 0.703
+   "blank": 0.714
   },
   {
    "key": "tS11",
@@ -363,11 +363,11 @@
     532.9,
     475.0
    ],
-   "w": 1297,
-   "h": 1133,
-   "dpi": 200,
+   "w": 1945,
+   "h": 1699,
+   "dpi": 300,
    "src": "38f51c84-31._Sup_Inl_Br_I.pdf",
-   "blank": 0.729
+   "blank": 0.739
   },
   {
    "key": "tS12",
@@ -382,11 +382,11 @@
     532.9,
     475.0
    ],
-   "w": 1297,
-   "h": 1133,
-   "dpi": 200,
+   "w": 1945,
+   "h": 1699,
+   "dpi": 300,
    "src": "38f51c84-31._Sup_Inl_Br_I.pdf",
-   "blank": 0.729
+   "blank": 0.74
   },
   {
    "key": "tS13",
@@ -401,11 +401,11 @@
     532.9,
     475.0
    ],
-   "w": 1297,
-   "h": 1133,
-   "dpi": 200,
+   "w": 1945,
+   "h": 1699,
+   "dpi": 300,
    "src": "38f51c84-31._Sup_Inl_Br_I.pdf",
-   "blank": 0.73
+   "blank": 0.741
   },
   {
    "key": "tS14",
@@ -420,11 +420,11 @@
     532.9,
     379.7
    ],
-   "w": 1297,
-   "h": 868,
-   "dpi": 200,
+   "w": 1945,
+   "h": 1302,
+   "dpi": 300,
    "src": "38f51c84-31._Sup_Inl_Br_I.pdf",
-   "blank": 0.67
+   "blank": 0.678
   }
  ]
 }

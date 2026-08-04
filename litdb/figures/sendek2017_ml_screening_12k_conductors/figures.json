@@ -1,7 +1,7 @@
 {
  "slug": "sendek2017_ml_screening_12k_conductors",
- "dpi": 200,
- "maxpx": 1500,
+ "dpi": 300,
+ "maxpx": 3000,
  "generated": "2026-08-04",
  "sources": [
   "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf"
@@ -20,11 +20,11 @@
     524.9,
     352.1
    ],
-   "w": 1226,
-   "h": 907,
-   "dpi": 200,
+   "w": 1838,
+   "h": 1360,
+   "dpi": 300,
    "src": "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf",
-   "blank": 0.959
+   "blank": 0.96
   },
   {
    "key": "fS2",
@@ -39,9 +39,9 @@
     529.6,
     362.0
    ],
-   "w": 1239,
-   "h": 934,
-   "dpi": 200,
+   "w": 1857,
+   "h": 1401,
+   "dpi": 300,
    "src": "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf",
    "blank": 0.924
   },
@@ -58,11 +58,11 @@
     529.6,
     403.5
    ],
-   "w": 1239,
-   "h": 1049,
-   "dpi": 200,
+   "w": 1857,
+   "h": 1574,
+   "dpi": 300,
    "src": "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf",
-   "blank": 0.842
+   "blank": 0.853
   },
   {
    "key": "fS4",
@@ -77,9 +77,9 @@
     528.6,
     349.2
    ],
-   "w": 1236,
-   "h": 899,
-   "dpi": 200,
+   "w": 1853,
+   "h": 1348,
+   "dpi": 300,
    "src": "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf",
    "blank": 0.642
   },
@@ -96,11 +96,11 @@
     529.8,
     403.8
    ],
-   "w": 1239,
-   "h": 1050,
-   "dpi": 200,
+   "w": 1858,
+   "h": 1575,
+   "dpi": 300,
    "src": "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf",
-   "blank": 0.911
+   "blank": 0.917
   },
   {
    "key": "tS1",
@@ -115,11 +115,11 @@
     533.8,
     715.7
    ],
-   "w": 1048,
-   "h": 1497,
-   "dpi": 166,
+   "w": 1894,
+   "h": 2704,
+   "dpi": 300,
    "src": "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf",
-   "blank": 0.858
+   "blank": 0.882
   },
   {
    "key": "tS2",
@@ -134,11 +134,11 @@
     371.2,
     440.5
    ],
-   "w": 812,
-   "h": 1038,
-   "dpi": 200,
+   "w": 1216,
+   "h": 1557,
+   "dpi": 300,
    "src": "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf",
-   "blank": 0.877
+   "blank": 0.905
   },
   {
    "key": "tS3",
@@ -153,11 +153,11 @@
     548.8,
     724.3
    ],
-   "w": 1078,
-   "h": 1498,
-   "dpi": 164,
+   "w": 1971,
+   "h": 2739,
+   "dpi": 300,
    "src": "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf",
-   "blank": 0.866
+   "blank": 0.885
   },
   {
    "key": "tS4",
@@ -172,11 +172,11 @@
     527.8,
     720.8
    ],
-   "w": 1016,
-   "h": 1499,
-   "dpi": 165,
+   "w": 1846,
+   "h": 2725,
+   "dpi": 300,
    "src": "7bb21cc6-40._Sup_Holistic_computational_structure_screening_of_more_than_12_000_candidates_for_solid_lithiumion_conductor_materials.pdf",
-   "blank": 0.87
+   "blank": 0.899
   }
  ]
 }

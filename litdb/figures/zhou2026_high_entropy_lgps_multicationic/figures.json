@@ -1,7 +1,7 @@
 {
  "slug": "zhou2026_high_entropy_lgps_multicationic",
- "dpi": 200,
- "maxpx": 1500,
+ "dpi": 300,
+ "maxpx": 3000,
  "generated": "2026-08-04",
  "sources": [
   "22d5d6c1-49._A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
@@ -21,11 +21,11 @@
     565.8,
     711.7
    ],
-   "w": 1485,
-   "h": 834,
-   "dpi": 200,
+   "w": 2227,
+   "h": 1252,
+   "dpi": 300,
    "src": "22d5d6c1-49._A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
-   "blank": 0.925
+   "blank": 0.931
   },
   {
    "key": "f2",
@@ -40,11 +40,11 @@
     565.8,
     692.6
    ],
-   "w": 1485,
-   "h": 663,
-   "dpi": 200,
+   "w": 2227,
+   "h": 994,
+   "dpi": 300,
    "src": "22d5d6c1-49._A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
-   "blank": 0.779
+   "blank": 0.784
   },
   {
    "key": "f3",
@@ -59,11 +59,11 @@
     565.8,
     708.5
    ],
-   "w": 1485,
-   "h": 710,
-   "dpi": 200,
+   "w": 2227,
+   "h": 1064,
+   "dpi": 300,
    "src": "22d5d6c1-49._A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
-   "blank": 0.741
+   "blank": 0.746
   },
   {
    "key": "f4",
@@ -78,11 +78,11 @@
     565.8,
     720.7
    ],
-   "w": 1485,
-   "h": 1091,
-   "dpi": 200,
+   "w": 2227,
+   "h": 1636,
+   "dpi": 300,
    "src": "22d5d6c1-49._A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
-   "blank": 0.92
+   "blank": 0.923
   },
   {
    "key": "f5",
@@ -97,11 +97,11 @@
     565.8,
     711.7
    ],
-   "w": 1485,
-   "h": 805,
-   "dpi": 200,
+   "w": 2227,
+   "h": 1208,
+   "dpi": 300,
    "src": "22d5d6c1-49._A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
-   "blank": 0.365
+   "blank": 0.368
   },
   {
    "key": "f6",
@@ -116,11 +116,11 @@
     566.0,
     376.0
    ],
-   "w": 1486,
-   "h": 917,
-   "dpi": 200,
+   "w": 2228,
+   "h": 1375,
+   "dpi": 300,
    "src": "22d5d6c1-49._A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
-   "blank": 0.918
+   "blank": 0.921
   },
   {
    "key": "f7",
@@ -135,11 +135,11 @@
     566.0,
     348.0
    ],
-   "w": 1486,
-   "h": 839,
-   "dpi": 200,
+   "w": 2228,
+   "h": 1259,
+   "dpi": 300,
    "src": "22d5d6c1-49._A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
-   "blank": 0.927
+   "blank": 0.931
   },
   {
    "key": "fS1",
@@ -154,11 +154,11 @@
     547.3,
     774.2
    ],
-   "w": 1117,
-   "h": 1494,
-   "dpi": 161,
+   "w": 2081,
+   "h": 2782,
+   "dpi": 300,
    "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
-   "blank": 0.837
+   "blank": 0.838
   },
   {
    "key": "fS4",
@@ -173,11 +173,11 @@
     547.8,
     586.4
    ],
-   "w": 1333,
-   "h": 1495,
-   "dpi": 192,
+   "w": 2083,
+   "h": 2336,
+   "dpi": 300,
    "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
-   "blank": 0.964
+   "blank": 0.963
   },
   {
    "key": "fS5",
@@ -192,11 +192,11 @@
     538.5,
     295.2
    ],
-   "w": 1339,
-   "h": 748,
-   "dpi": 200,
+   "w": 2008,
+   "h": 1122,
+   "dpi": 300,
    "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
-   "blank": 0.876
+   "blank": 0.877
   },
   {
    "key": "fS6",
@@ -211,11 +211,11 @@
     547.3,
     497.8
    ],
-   "w": 1388,
-   "h": 1311,
-   "dpi": 200,
+   "w": 2081,
+   "h": 1967,
+   "dpi": 300,
    "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
-   "blank": 0.961
+   "blank": 0.962
   },
   {
    "key": "fS7",
@@ -230,11 +230,11 @@
     547.3,
     268.7
    ],
-   "w": 1388,
-   "h": 675,
-   "dpi": 200,
+   "w": 2081,
+   "h": 1012,
+   "dpi": 300,
    "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
-   "blank": 0.701
+   "blank": 0.702
   },
   {
    "key": "fS8",
@@ -249,9 +249,9 @@
     538.3,
     409.3
    ],
-   "w": 1363,
-   "h": 1065,
-   "dpi": 200,
+   "w": 2043,
+   "h": 1598,
+   "dpi": 300,
    "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
    "blank": 0.918
   },
@@ -268,11 +268,11 @@
     547.3,
     362.5
    ],
-   "w": 1388,
-   "h": 935,
-   "dpi": 200,
+   "w": 2081,
+   "h": 1403,
+   "dpi": 300,
    "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
-   "blank": 0.294
+   "blank": 0.295
   },
   {
    "key": "fS10",
@@ -287,11 +287,11 @@
     547.3,
     409.3
    ],
-   "w": 1388,
-   "h": 1065,
-   "dpi": 200,
+   "w": 2081,
+   "h": 1598,
+   "dpi": 300,
    "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
-   "blank": 0.189
+   "blank": 0.188
   },
   {
    "key": "fS11",
@@ -306,11 +306,11 @@
     547.3,
     346.9
    ],
-   "w": 1388,
-   "h": 892,
-   "dpi": 200,
+   "w": 2081,
+   "h": 1338,
+   "dpi": 300,
    "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
-   "blank": 0.721
+   "blank": 0.724
   },
   {
    "key": "fS12",
@@ -325,9 +325,9 @@
     547.3,
     669.8
    ],
-   "w": 1374,
-   "h": 1499,
-   "dpi": 198,
+   "w": 2081,
+   "h": 2271,
+   "dpi": 300,
    "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
    "blank": 0.836
   },
@@ -344,9 +344,9 @@
     549.7,
     669.8
    ],
-   "w": 1380,
-   "h": 1499,
-   "dpi": 198,
+   "w": 2091,
+   "h": 2271,
+   "dpi": 300,
    "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
    "blank": 0.836
   },
@@ -363,11 +363,11 @@
     547.3,
     628.5
    ],
-   "w": 1242,
-   "h": 1499,
-   "dpi": 179,
+   "w": 2081,
+   "h": 2511,
+   "dpi": 300,
    "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
-   "blank": 0.958
+   "blank": 0.956
   },
   {
    "key": "fS15",
@@ -382,9 +382,9 @@
     542.0,
     451.4
    ],
-   "w": 1373,
-   "h": 1182,
-   "dpi": 200,
+   "w": 2059,
+   "h": 1773,
+   "dpi": 300,
    "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
    "blank": 0.946
   },
@@ -401,11 +401,11 @@
     505.3,
     751.4
    ],
-   "w": 912,
-   "h": 1494,
-   "dpi": 158,
+   "w": 1732,
+   "h": 2837,
+   "dpi": 300,
    "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
-   "blank": 0.973
+   "blank": 0.978
   },
   {
    "key": "tS2",
@@ -420,11 +420,11 @@
     546.1,
     790.5
    ],
-   "w": 1036,
-   "h": 1500,
-   "dpi": 150,
+   "w": 2072,
+   "h": 3000,
+   "dpi": 300,
    "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
-   "blank": 0.896
+   "blank": 0.907
   },
   {
    "key": "tS3",
@@ -439,11 +439,11 @@
     546.3,
     461.6
    ],
-   "w": 1382,
-   "h": 725,
-   "dpi": 200,
+   "w": 2073,
+   "h": 1087,
+   "dpi": 300,
    "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
-   "blank": 0.918
+   "blank": 0.924
   },
   {
    "key": "tS4",
@@ -458,11 +458,11 @@
     548.7,
     574.4
    ],
-   "w": 1389,
-   "h": 1038,
-   "dpi": 200,
+   "w": 2083,
+   "h": 1557,
+   "dpi": 300,
    "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
-   "blank": 0.894
+   "blank": 0.904
   },
   {
    "key": "tS5",
@@ -477,11 +477,11 @@
     546.3,
     752.9
    ],
-   "w": 1382,
-   "h": 1389,
-   "dpi": 200,
+   "w": 2073,
+   "h": 2084,
+   "dpi": 300,
    "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
-   "blank": 0.959
+   "blank": 0.963
   }
  ]
 }

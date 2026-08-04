@@ -19,10 +19,13 @@ digest(`litdb/papers/<slug>.md`) 본문에 `Fig. 5e` 같은 언급이 나오면 
     ② **기하 검증** — 잘라낼 영역에 실제 그래픽(배치 이미지 or 벡터 경로)이 있어야 한다.
        본문 문단 위에는 본문 문단밖에 없으므로 여기서 확실히 걸린다.
 
-usage
-  python3 tools/litdb/extract_figures.py --pdf <file.pdf> --slug <litdb slug>
-  python3 tools/litdb/extract_figures.py --pdf <file.pdf> --slug <slug> --dry   # 안 쓰고 표만
-  python3 tools/litdb/extract_figures.py --pdf a.pdf --pdf b.pdf --slug <slug>  # 본문+SI 합치기
+usage — 보통은 이 두 줄이면 끝난다 (inbox 를 훑어 digest 와 자동으로 짝지어 준다)
+  python3 tools/litdb/extract_figures.py --inbox           # 어느 PDF ↔ 어느 논문인지 표만
+  python3 tools/litdb/extract_figures.py --inbox --run     # 실제로 자르기
+
+한 편만 콕 집을 때 (⚠ <slug> 는 자리표시자다 — litdb/papers/ 의 실제 파일 이름을 넣는다)
+  python3 tools/litdb/extract_figures.py --slug kraft2017_lattice_polarizability_argyrodite_Li6PS5X \\
+      --pdf "litdb/inbox/31. ….pdf" --pdf "litdb/inbox/31. Sup) ….pdf" --clean
 
 출력
   litdb/figures/<slug>/fig_<label>.png ...
@@ -342,18 +345,197 @@ def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
     return meta, skipped
 
 
+# ── inbox 자동 매칭 ─────────────────────────────────────────────────────
+#   1저자가 `--slug <slug>` 를 그대로 붙여넣어 bash 오류를 냈다(2026-08-06).
+#   자리표시자를 직접 채우게 하지 말고, inbox 를 훑어 digest 와 자동으로 짝지어 준다.
+INBOX = ROOT / "litdb" / "inbox"
+PAPERS = ROOT / "litdb" / "papers"
+SI_TAG = re.compile(r"(^|[^a-z])(sup(p|pl|porting|plementary|plement)?|si|esi|mmc|suppmat)"
+                    r"([^a-z]|$)", re.I)
+STOP = set("""the a an of on in for and or to with by from as at is are was were be been its
+their this that these those we our using via toward towards into over under between among
+new novel high low high- ultra super study investigation effect effects influence role
+based enabling enables enabled behavior behaviour properties property analysis review
+paper article letter communication sup supporting information supplementary supplement
+""".split())
+
+
+def _toks(s):
+    """제목/파일명 → 비교용 토큰 집합.
+
+    ⚠ 인접 토큰을 이어붙인 것도 넣는다: 파일명은 구두점이 지워져 `solidstate` 인데
+      제목은 `solid-state` 라 그냥 토큰만 쓰면 안 겹친다(실측: inbox #39, #4, #50 미배정).
+    """
+    s = re.sub(r"[^0-9a-zA-Z]+", " ", s.lower())
+    seq = [t for t in s.split() if len(t) > 2 and t not in STOP and not t.isdigit()]
+    out = set(seq)
+    out |= {a + b for a, b in zip(seq, seq[1:])}
+    return out
+
+
+def _paper_index():
+    """slug → (제목 토큰, inbox 번호 or None)."""
+    out = {}
+    for f in sorted(PAPERS.glob("*.md")):
+        if f.name.startswith("_"):
+            continue
+        head = f.read_text(encoding="utf-8", errors="ignore")[:4000]
+        title = next((ln.lstrip("# ").strip() for ln in head.splitlines()
+                      if ln.startswith("# ")), f.stem)
+        m = re.search(r"inbox\s*#\s*(\d+)", head)
+        out[f.stem] = (_toks(title) | _toks(f.stem), int(m.group(1)) if m else None)
+    return out
+
+
+def match_inbox(inbox=INBOX, min_score=0.42, min_hits=4):
+    """inbox PDF → slug 매칭. (배정, 미배정) 반환.
+
+    앵커 두 가지: ① digest 메타의 `inbox #NN` ↔ 파일명 맨 앞 번호 (정확), 흔치 않다(160편 중 20).
+                 ② 제목 토큰 겹침 — 파일명이 대개 제목에서 왔다.
+    """
+    papers = _paper_index()
+    bynum = {n: s for s, (_t, n) in papers.items() if n}
+    assign, orphan = {}, []
+    for p in sorted(inbox.glob("*.pdf")):
+        name = p.stem
+        num = int(m.group(1)) if (m := re.match(r"\s*(\d+)\s*[.)]", name)) else None
+        si = bool(SI_TAG.search(name))
+        slug, why = None, ""
+        if num is not None and num in bynum:
+            slug, why = bynum[num], f"inbox #{num}"
+        else:
+            ft = _toks(re.sub(r"^\s*\d+\s*[.)]\s*", "", name))
+            # 파일명이 짧으면(ECERD2600097 처럼 토큰 1~2개) min_hits 를 못 채운다 —
+            # 대신 "긴 토큰(≥8자)이 맞았는가"로 변별력을 본다.
+            need = min(min_hits, len(ft))
+            best, bs = None, 0.0
+            for s, (tt, _n) in papers.items():
+                hit = ft & tt
+                sc = len(hit) / max(len(ft), 1)
+                if len(hit) < need or sc <= bs:
+                    continue
+                if len(hit) < min_hits and not any(len(t) >= 8 for t in hit):
+                    continue
+                best, bs = s, sc
+            if best and bs >= min_score:
+                slug, why = best, f"제목 {bs:.0%}"
+        if slug:
+            assign.setdefault(slug, {"main": [], "si": [], "why": why})
+            assign[slug]["si" if si else "main"].append(p)
+        else:
+            orphan.append((p, si))
+
+    # 파일명이 출판사 해시인 것들(admi202200011sup0001suppmat.pdf, 1s2.0S…mmc1.pdf)은
+    # 이름으로는 못 잡는다 → **1쪽 본문**을 읽어 한 번 더 시도한다.
+    still = []
+    for p, si in orphan:
+        try:
+            with fitz.open(p) as d:
+                head = d[0].get_text()[:600] if d.page_count else ""
+        except Exception:
+            head = ""
+        ft = _toks(head)
+        best, bs = None, 0.0
+        for s, (tt, _n) in papers.items():
+            hit = ft & tt
+            sc = len(hit) / max(len(tt), 1)          # 여긴 제목 쪽 기준(본문이 훨씬 길다)
+            if len(hit) >= 5 and sc > bs:
+                best, bs = s, sc
+        if best and bs >= 0.45:
+            assign.setdefault(best, {"main": [], "si": [], "why": f"1쪽 본문 {bs:.0%}"})
+            assign[best]["si" if si else "main"].append(p)
+        else:
+            still.append((p, si))
+    return assign, still
+
+
+def _report(slug, meta, skipped, dry):
+    print(f"=== {slug} — {len(meta['figures'])}개 추출"
+          f"{' (dry-run, 안 씀)' if dry else ''}")
+    print("key    p   크기         공백  캡션")
+    for r in meta["figures"]:
+        print(f"{r['key']:<6} {r['page']:<3} {r['w']}x{r['h']:<7} "
+              f"{r['blank']:.2f}  {r['caption'][:64]}")
+    if skipped:
+        print(f"--- 제외 {len(skipped)}건 (오탐 방지)")
+        for k, p, why in skipped[:18]:
+            print(f"  {k:<6} p{p:<3} {why}")
+    if not dry:
+        print(f"→ litdb/figures/{slug}/  (figures.json 포함)")
+
+
 def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--pdf", action="append", required=True,
+    ap = argparse.ArgumentParser(
+        description="논문 PDF 에서 그림·표를 캡션 기준으로 잘라 litdb/figures/<slug>/ 에 넣는다.")
+    ap.add_argument("--pdf", action="append",
                     help="본문 PDF. SI 도 있으면 --pdf 를 한 번 더 (파일명에 sup/SI 가 있으면 S 번호로)")
-    ap.add_argument("--slug", required=True, help="litdb/papers/<slug>.md 의 slug")
-    ap.add_argument("--dpi", type=int, default=200)
-    ap.add_argument("--maxpx", type=int, default=1500,
-                    help="긴 변 픽셀 상한 (repo 용량 관리). 0 이면 --dpi 그대로")
+    ap.add_argument("--slug", help="litdb/papers/<slug>.md 의 slug")
+    ap.add_argument("--inbox", action="store_true",
+                    help="litdb/inbox/ 를 훑어 digest 와 자동 매칭 (기본은 매칭표만, --run 이면 실행)")
+    ap.add_argument("--run", action="store_true", help="--inbox 에서 실제로 추출까지")
+    ap.add_argument("--inbox_dir", default="", help="inbox 위치를 바꿔서 (기본 litdb/inbox)")
+    ap.add_argument("--only", default="", help="--inbox 에서 slug 에 이 문자열이 든 것만")
+    ap.add_argument("--skip-done", action="store_true",
+                    help="--inbox 에서 이미 figures.json 이 있는 논문은 건너뛴다")
+    ap.add_argument("--dpi", type=int, default=300)
+    ap.add_argument("--maxpx", type=int, default=3000,
+                    help="긴 변 픽셀 상한. 0 이면 --dpi 그대로")
     ap.add_argument("--dry", action="store_true", help="파일 안 쓰고 표만 출력")
     ap.add_argument("--clean", action="store_true", help="기존 <slug> 폴더를 지우고 새로")
     a = ap.parse_args()
 
+    if a.inbox:
+        box = Path(a.inbox_dir) if a.inbox_dir else INBOX
+        if not box.is_dir():
+            raise SystemExit(f"⛔ {box} 가 없다 — PDF 를 litdb/inbox/ 에 넣고 다시")
+        assign, orphan = match_inbox(box)
+        if a.only:
+            assign = {k: v for k, v in assign.items() if a.only.lower() in k.lower()}
+        if a.skip_done:
+            assign = {k: v for k, v in assign.items()
+                      if not (OUT_ROOT / k / "figures.json").exists()}
+        print(f"=== inbox 매칭: 논문 {len(assign)}편 / 짝 못 찾은 PDF {len(orphan)}개\n")
+        for slug, v in sorted(assign.items()):
+            warn = "  ⚠ 본문 후보 2개 이상 — 표를 보고 아닌 건 --pdf 로 따로 돌린다" \
+                   if len(v["main"]) > 1 else ""
+            print(f"  {slug}  [{v['why']}]{warn}")
+            for p in v["main"]:
+                print(f"      본문 {p.name[:74]}")
+            for p in v["si"]:
+                print(f"      SI   {p.name[:74]}")
+        if orphan:
+            print("\n--- 짝 못 찾음 (digest 가 없거나 제목이 많이 다른 것)")
+            for p, si in orphan[:30]:
+                print(f"  {'SI ' if si else '본문'} {p.name[:76]}")
+            if len(orphan) > 30:
+                print(f"  … 외 {len(orphan)-30}개")
+        if not a.run:
+            print("\n※ 매칭표만 냈다. 실제로 자르려면 뒤에 --run 을 붙인다:")
+            print("     python3 tools/litdb/extract_figures.py --inbox --run")
+            return 0
+        print()
+        for i, (slug, v) in enumerate(sorted(assign.items()), 1):
+            pdfs = [str(p) for p in v["main"] + v["si"]]
+            print(f"[{i}/{len(assign)}] {slug}")
+            shutil.rmtree(OUT_ROOT / slug, ignore_errors=True)
+            try:
+                meta, skipped = extract(pdfs, slug, dpi=a.dpi, maxpx=a.maxpx)
+            except Exception as e:                 # 한 편이 깨져도 나머지는 계속
+                print(f"   ⛔ 실패: {type(e).__name__}: {e}\n")
+                continue
+            _report(slug, meta, skipped, dry=False)
+            print()
+        return 0
+
+    if not a.pdf or not a.slug:
+        raise SystemExit(
+            "⛔ --pdf 와 --slug 가 둘 다 필요하다 (또는 --inbox 로 자동 매칭).\n"
+            "   ⚠ <slug> 는 자리표시자다 — litdb/papers/ 의 실제 파일 이름을 넣는다. 예:\n"
+            "     python3 tools/litdb/extract_figures.py --inbox            # 뭐가 뭔지 먼저 보기\n"
+            "     python3 tools/litdb/extract_figures.py --inbox --run      # 전부 자르기\n"
+            "     python3 tools/litdb/extract_figures.py --clean \\\n"
+            "         --slug kraft2017_lattice_polarizability_argyrodite_Li6PS5X \\\n"
+            "         --pdf 'litdb/inbox/31. Influence of Lattice Polarizability….pdf'")
     for p in a.pdf:
         if not Path(p).exists():
             raise SystemExit(f"⛔ PDF 없음: {p}")
@@ -361,18 +543,8 @@ def main():
         shutil.rmtree(OUT_ROOT / a.slug, ignore_errors=True)
 
     meta, skipped = extract(a.pdf, a.slug, dpi=a.dpi, dry=a.dry, maxpx=a.maxpx)
-    print(f"=== {a.slug} — {len(meta['figures'])}개 추출"
-          f"{' (dry-run, 안 씀)' if a.dry else ''}")
-    print("key    p   크기         공백  캡션")
-    for r in meta["figures"]:
-        print(f"{r['key']:<6} {r['page']:<3} {r['w']}x{r['h']:<7} "
-              f"{r['blank']:.2f}  {r['caption'][:64]}")
-    if skipped:
-        print(f"\n--- 제외 {len(skipped)}건 (오탐 방지)")
-        for k, p, why in skipped[:18]:
-            print(f"  {k:<6} p{p:<3} {why}")
-    if not a.dry:
-        print(f"\n→ litdb/figures/{a.slug}/  (figures.json 포함)")
+    _report(a.slug, meta, skipped, a.dry)
+    return 0
 
 
 if __name__ == "__main__":
