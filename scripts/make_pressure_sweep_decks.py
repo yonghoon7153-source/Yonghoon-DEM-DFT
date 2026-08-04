@@ -115,18 +115,25 @@ def main(argv=None):
     tag = a.tag or detect_tag(text)
     if not tag:
         sys.exit('출력 태그를 찾지 못했습니다 (`shell mkdir post_<TAG>` 부재) → --tag 로 주세요')
-    cur = a.current_mpa
-    if cur <= 0:
-        m = re.search(r'(\d+)\s*$', tag)
-        cur = float(m.group(1)) if m else 0.0
+    m = re.search(r'(\d+)\s*$', tag)
+    tail = float(m.group(1)) if m else None
+    cur = a.current_mpa if a.current_mpa > 0 else (tail or 0.0)
     scale, how = infer_scale(read_target(text), cur)
 
     os.makedirs(a.out, exist_ok=True)
-    base = re.sub(r'_?\d+$', '', tag)           # 태그에서 압력 숫자를 떼어낸 몸통
+    # ★ 태그 끝 숫자가 **압력**인 경우에만 떼어낸다.  `SE_heckel_300` 은 압력이지만
+    #   `real_14` 의 14 는 **케이스 번호**다 — 그걸 떼면 real_100/real_300 이 되어 케이스
+    #   정체성이 사라지고 다른 케이스와 충돌할 수도 있다.  판별: 끝 숫자가 원본 압력과
+    #   같을 때만 압력으로 본다.  아니면 태그를 통째로 두고 `_P<압력>` 을 덧붙인다.
+    tail_is_pressure = tail is not None and abs(tail - cur) < 1e-9
+    base = re.sub(r'_?\d+$', '', tag) if tail_is_pressure else tag
+    print(f'  태그 끝 숫자 {("= 압력 → 교체" if tail_is_pressure else "≠ 압력(케이스 번호) → 보존하고 _P 접미")}'
+          f'  ·  새 태그 몸통 "{base}"')
     print(f'원본 {a.deck}\n  태그 {tag}  ·  현재 압력 {cur:g} MPa  ·  단위 {how}\n')
     cmds = []
     for p in [float(x) for x in a.pressures.split(',') if x.strip()]:
-        tag_new = f'{base}_{int(round(p))}'
+        tag_new = (f'{base}_{int(round(p))}' if tail_is_pressure
+                   else f'{base}_P{int(round(p))}')
         path = os.path.join(a.out, f'input_{tag_new}.liggghts')
         with open(path, 'w') as f:
             f.write(make_deck(text, tag, tag_new, p * scale, cur, p))
@@ -201,9 +208,20 @@ def _selftest():
     same = make_deck(deck, 'SE_heckel_300', 'SE_heckel_300', 0.300, 300.0, 300.0)
     chk('같은 압력·같은 태그면 바이트 동일', same == deck)
 
-    base = __import__('re').sub(r'_?\d+$', '', 'SE_heckel_300')
-    chk('태그 몸통에서 압력 숫자만 떨어진다', base == 'SE_heckel')
-    chk('숫자 없는 태그는 그대로', __import__('re').sub(r'_?\d+$', '', 'real_14x') == 'real_14x')
+    # ★ 태그 끝 숫자가 압력일 때만 떼어낸다.  `real_14` 의 14 는 케이스 번호다 —
+    #   그걸 압력으로 오인해 떼면 real_100/real_300 이 되어 케이스 정체성이 사라진다.
+    def tag_for(tag, cur, p):
+        m = re.search(r'(\d+)\s*$', tag)
+        tail = float(m.group(1)) if m else None
+        is_p = tail is not None and abs(tail - cur) < 1e-9
+        b = re.sub(r'_?\d+$', '', tag) if is_p else tag
+        return f'{b}_{int(p)}' if is_p else f'{b}_P{int(p)}'
+    chk('끝 숫자 = 압력이면 교체 (SE_heckel_300 @300 → SE_heckel_100)',
+        tag_for('SE_heckel_300', 300, 100) == 'SE_heckel_100')
+    chk('★ 끝 숫자 ≠ 압력이면 보존하고 _P 접미 (real_14 @300 → real_14_P100)',
+        tag_for('real_14', 300, 100) == 'real_14_P100')
+    chk('★ 케이스 번호가 사라지지 않는다', 'real_14' in tag_for('real_14', 300, 600))
+    chk('숫자 없는 태그도 _P 접미', tag_for('bimodal', 300, 600) == 'bimodal_P600')
 
     print(f'selftest: {ok}/{ok + len(fail)} PASS' + (f'   FAILED: {fail}' if fail else ''))
     return 0 if not fail else 1
