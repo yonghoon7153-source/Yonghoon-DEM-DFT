@@ -776,6 +776,21 @@ def parse_args(argv):
     ap.add_argument('--allow-unconverged-servo', action='store_true',
                     help='servo 가 밴드 안에서 수렴하지 못해도 계속 진행 (기본=중단).  실험 전용 — '
                          '산출물 state_provenance.servo_status 에 not_converged 가 박힌다.')
+    ap.add_argument('--stop-legacy', action='store_true',
+                    help='하강 정지를 **옛 순간-비교**로 복원 (움직이는 플래튼에서 읽은 p 를 그대로 '
+                         'target 과 비교) — **옛 scaffold 코퍼스 바이트 재현 전용**.  기본값은 이제 '
+                         '동결-프로브(이동→동결→정지판독)다.  ★2026-08-04 실측: 옛 경로는 하강 중 '
+                         'wallP 가 정지값의 47~1158배로 읽혀(속도 결합 편향) 정지가 응력이 아니라 '
+                         '**걸음 수**로 결정됐다 — P:S 5킷 하강 프레임 4·4·4·4·3 = 갭 산술 '
+                         'ceil(0.05/step)+1 이 5/5 예측.  --servo-legacy(제하/평형 팔) 와 다른 축이니 '
+                         '혼동하지 말 것.')
+    ap.add_argument('--platen-mach', type=float, default=0.0,
+                    help='플래튼 속도를 **마하수**로 지정 (V/c_P, c_P=√(λ+2µ)).  0 = 기존 기하 규칙 '
+                         'vmax=0.008·(WALL0−FLOOR).  ★기존 규칙은 V_platen=(WALL0−FLOOR) 라는 항등식이라 '
+                         '**두꺼운 전극일수록 빨리 내려찍는다** — 실측 real_14(31µm) V/c_P=0.11 vs '
+                         'P:S 킷(119µm) 0.43(전단파 대비 3.05 = 초음속).  관행적 준정적 한계는 ≤10⁻². '
+                         '판독 편향은 동결-프로브가 잡지만 **베드 상태 자체의 rate 의존**(같은 변형에서 '
+                         'σzz_vol 이 속도 반감당 1.3배)은 이 노브로만 잡힌다.  권장 0.01~0.02.')
     ap.add_argument('--unload-band', type=float, default=0.10,
                     help='--load-state 제하 전용: 목표압 수용 밴드 (기본 ±10%%).  ★ 2026-07-28 이전에는 '
                          '수용조건이 한쪽(p ≤ 1.02·target)뿐이라 플래튼이 베드에서 완전히 떨어져 p≈0 이 된 '
@@ -1081,6 +1096,28 @@ def _selftest():
         except Exception:
             _ok = False
         chk(f'--restart-settle {_bad_settle} with --load-state is refused', _ok)
+
+    # ── ★ 하강 동결-프로브 (2026-08-04) ─────────────────────────────────────────────────────
+    #    이 경로는 2026-08-04 이전까지 selftest 커버리지가 **0** 이었다 — 68df3dae 가 "70/70 PASS" 로
+    #    통과했지만 바뀐 분기를 실행하는 테스트가 하나도 없었고, 그 수정이 real_14 앵커를 15.93→14.38 %
+    #    로 깨뜨린 것을 리뷰가 사후에 찾았다.  같은 일이 다시 없도록 판정 로직을 여기 고정한다.
+    chk('probe: 첫-접촉 슬램(16.7 GPa) 뒤 정착 0.023 → resume (가짜 crossing 기각)',
+        descend_probe_verdict([16.7, 0.5, 0.03, 0.023, 0.023], 0.30)[0] == 'resume')
+    chk('probe: 진짜 재하(정지판독 0.35) → stop',
+        descend_probe_verdict([0.36, 0.352, 0.350, 0.350], 0.30)[0] == 'stop')
+    chk('probe: 아직 울리는 창 → wait (조용한 통과 금지)',
+        descend_probe_verdict([0.9, 0.05, 0.6], 0.30)[0] == 'wait')
+    chk('probe: 문턱 근방이라도 정착했으면 판정한다 (0.300 → stop)',
+        descend_probe_verdict([0.301, 0.300, 0.300], 0.30)[0] == 'stop')
+    chk('probe: 문턱 바로 아래 + 정착 → resume',
+        descend_probe_verdict([0.298, 0.297, 0.297], 0.30)[0] == 'resume')
+    chk('probe: 빈 창은 wait (판정 불가)', descend_probe_verdict([], 0.30)[0] == 'wait')
+    chk('probe: 창이 settle_max 에 닿으면 마지막 값으로 강제 판정 (무한대기 금지)',
+        descend_probe_verdict([0.9, 0.05, 0.6, 0.2], 0.30, settle_max=4)[0] in ('stop', 'resume'))
+    #    am_skel 이 붙으면 SE 가 넘어야 할 문턱은 target−am_skel 로 낮아진다 (하중분담).
+    chk('probe: am_skel 만큼 문턱이 낮아지면 같은 판독이 resume→stop 으로 뒤집힌다',
+        descend_probe_verdict([0.16, 0.155, 0.155], 0.30)[0] == 'resume'
+        and descend_probe_verdict([0.16, 0.155, 0.155], 0.30 - 0.18)[0] == 'stop')
 
     print(f"selftest: {ok}/{ok + len(fail)} PASS" + (f"   FAILED: {fail}" if fail else ""))
     return 1 if fail else 0
@@ -2224,7 +2261,23 @@ def main(argv):
     load(xs, mus, las, ylds, pvs, coh_np)
     area = (_LATW * _LATW if PERIODIC else WIDTH * WIDTH)   # periodic → grid-aligned cell area (self-consistent)
     target = args.target_gpa
-    vmax = 0.008 * (WALL0 - FLOOR)                           # platen speed (slow = quasi-static)
+    # ── 플래튼 속도 ────────────────────────────────────────────────────────────────────────
+    #   기존 규칙 vmax = 0.008·(WALL0−FLOOR) 은 프레임시간이 sub·dt 이므로 V_platen = (WALL0−FLOOR)
+    #   라는 **항등식**이 된다 → 두꺼운 전극일수록 빨리 내려찍는다.  실측(2026-08-04):
+    #     real_14 (31µm)  V/c_P 0.11 · V/c_S 0.80 · 램 ρV² 0.33 GPa (target 의 1.1배)
+    #     P:S 킷 (119µm)  V/c_P 0.43 · V/c_S 3.05(초음속) · 램 4.78 GPa (16배)
+    #   --platen-mach 로 마하수를 직접 걸면 베드 높이·해상도와 무관하게 준정적 조건을 고정할 수 있다.
+    _c_p = float(_M) ** 0.5                                  # P-파속 (box/t.u., ρ=1 규약; _M = λ+2µ)
+    _c_s = float(MU_SE) ** 0.5                               # S-파속 — 소성(등체적) 응답은 이쪽으로 전파
+    vmax = 0.008 * (WALL0 - FLOOR)                           # 기존 기하 규칙 (기본)
+    if args.platen_mach > 0:
+        vmax = float(args.platen_mach) * _c_p * args.sub * dt
+    _v_platen = vmax / (args.sub * dt)                        # box/t.u.
+    if not args.quiet:
+        print(f"  [platen] v={_v_platen:.4f} box/t.u.  V/c_P={_v_platen / _c_p:.3f}  "
+              f"V/c_S={_v_platen / _c_s:.2f}  step={vmax:.5f} box/frame"
+              + ("  (--platen-mach)" if args.platen_mach > 0 else "  (기하 규칙 0.008·H)")
+              + ("   ⚠ 준정적 한계(V/c_P≤0.01) 초과" if _v_platen / _c_p > 0.01 else ""))
     wall_z[None] = WALL0
     _state_wall_z = None
     if _state_in is not None:
@@ -2285,6 +2338,10 @@ def main(argv):
     _p_settle = []; _p_tail = []
     _probe_left = 0; _unload_cnt = 0
     UNLOAD_HOLD = 3          # at-rest probes IN BAND required to call the unload done (cf. STOP_HOLD)
+    # ── ★ 하강 동결-프로브 상태 (2026-08-04) — 제하 프로브·S-1 servo 와 같은 구조 ─────────────
+    #    하강 정지를 **정지 판독**으로만 결정한다.  자세한 근거는 descend_probe_verdict() docstring.
+    _dsc_left = 0; _dsc_win = []; _dsc_probes = 0; _dsc_spread = None; _dsc_tgt = 0.0
+    _dsc_resumes = 0                      # 프로브가 "가짜 crossing" 이라 판정해 하강을 재개한 횟수
     _wall_z_start = float(wall_z[None])
     # ── unload bracketing search state (2026-07-28 HIGH-a) ────────────────────────────────────
     # z_lo = highest platen height that still read ABOVE the band (starts at the restart height,
@@ -2497,8 +2554,25 @@ def main(argv):
                 #   운동학적 정지이지 응력 평형이 아니다.  정지 후 wallP 는 목표의 1/20~1/100 로 이완했고
                 #   (프레임5 에 −0.049 GPa = 플래튼 인장 = 반동), porosity 서열은 frame 0 것이 그대로 남아
                 #   소성이 서열을 시험하지 못했다.  hard_floor/am_jam 은 기하학적 정지라 즉시 적용 유지.
-                reach_cnt = reach_cnt + 1 if (p + am_skel >= target) else 0
-                descend = (reach_cnt < STOP_HOLD) and not hard_floor and not am_jam
+                #
+                #   ★ 2026-08-04(2차) — STOP_HOLD 만으로는 **부족했다**.  편향이 target 의 47~1158배로
+                #     **지속**되므로 3연속 카운트가 그냥 채워져, 정지가 첫스침+3 으로 2프레임 밀렸을 뿐이다
+                #     (실측 4→6 프레임, ε 13.65→12.20 = 과압축 악화).  게다가 crossing 이 진짜인 런에는
+                #     +2·vmax 과주행을 얹어 real_14 앵커를 15.93→14.38 %(−1.55 %p) 로 깨뜨렸다(실측).
+                #     → 시간 필터가 아니라 **판독 자체**를 고쳐야 한다: 순간 crossing 이 뜨면 그 프레임
+                #     **이동하지 않고** 동결해 정지 판독을 얻고, 그 값으로만 정지를 결정한다.
+                _dsc_tgt = float(target - am_skel)                    # SE 가 실제로 넘어야 하는 문턱
+                if hard_floor or am_jam:
+                    descend = False                                  # 기하 정지 — 즉시, 프로브 불필요
+                elif args.stop_legacy:
+                    descend = (p + am_skel < target)                 # 옛 순간 비교 (바이트 재현 전용)
+                elif _dsc_left > 0:
+                    descend = None                                   # 프로브 진행 중 (아래 공통부에서 처리)
+                elif p + am_skel >= target:
+                    _dsc_left = max(1, _srv_settle); _dsc_win = []    # 후보 crossing → 동결하고 다시 읽는다
+                    descend = None
+                else:
+                    descend = True
             else:
                 # loose→dense mix: a big rigid AM hitting the platen spikes wallP for ~1 frame, which
                 # froze the platen in the loose state (premature stop → slow crawl).  Keep descending
@@ -2509,10 +2583,44 @@ def main(argv):
                 #   guard would demand another 5 %p of descent with no stress justification — turning an
                 #   unload request into extra plastic compaction.  A restarted bed is in contact with the
                 #   platen from frame 0 and has no loose-bed first-contact transient to guard against.
+                #   ★ 2026-08-04: 이 팔에도 동결-프로브를 건다.  판독 편향은 scaffold 전용이 아니라
+                #     **모든 하강에 있다**(wallf = Σ m·(v−v_wall); 실측 정지값의 47~1158배).  arm_guard 는
+                #     느슨한 초기 구간을 건너뛰는 용도라 그대로 유지하고, 그 뒤 crossing 만 프로브한다.
+                #     pure-SE Minnmann σ_y 보정이 이 팔을 지나가므로 여기가 안 고쳐지면 재보정이
+                #     같은 아티팩트를 다시 흡수한다.
                 guard = arm_guard_active(por, por0, args.load_state)
-                reach_cnt = reach_cnt + 1 if (p >= target and not guard) else 0
-                descend = reach_cnt < STOP_HOLD
-            if descend is None:
+                _dsc_tgt = float(target)
+                if args.stop_legacy:
+                    reach_cnt = reach_cnt + 1 if (p >= target and not guard) else 0
+                    descend = reach_cnt < STOP_HOLD
+                elif _dsc_left > 0:
+                    descend = None
+                elif p >= target and not guard:
+                    _dsc_left = max(1, _srv_settle); _dsc_win = []
+                    descend = None
+                else:
+                    descend = True
+            # ── ★ 하강 동결-프로브 처리 (2026-08-04) ────────────────────────────────────────────
+            #    후보 crossing 이 뜬 프레임부터 플래튼을 **세우고** 읽는다.  wall_vel=0 이면 wallf 의
+            #    속도 결합 항이 사라져 판독이 곧 정적 경계응력이다(제하 프로브·S-1 과 같은 구조).
+            #    정지 판독이 문턱 이상 → 그 높이에서 reached (과주행 0).  미만 → 가짜 crossing, 재개.
+            if _dsc_left > 0 and descend is None:
+                wall_vel[None] = 0.0                             # 동결 — 이 프레임은 이동하지 않는다
+                _dsc_left -= 1
+                _dsc_win.append(float(p))
+                if _dsc_left == 0:
+                    _v_dsc, _sp_dsc = descend_probe_verdict(
+                        _dsc_win, _dsc_tgt, band=args.servo_band, settle_max=_settle_max_srv)
+                    if _v_dsc == 'wait' and len(_dsc_win) < _settle_max_srv:
+                        _dsc_left = 1                            # 아직 울림 → 창을 늘린다
+                    else:
+                        _dsc_spread = float(_sp_dsc); _dsc_probes += 1
+                        if _v_dsc == 'stop':
+                            reached = True                       # 정지 판독이 문턱 이상 → 여기서 끝
+                        else:
+                            _dsc_resumes += 1                    # 가짜 crossing → 다음 프레임부터 하강 재개
+                        _dsc_win = []
+            elif descend is None:
                 pass                                         # --load-state unload: platen already moved UP
             elif descend:
                 # ★ S-2 (2026-07-29 적대리뷰 CONFIRMED — 이번 라운드가 만든 회귀): 밴드 확대가
@@ -2782,6 +2890,21 @@ def main(argv):
             'um_box_um': round(float(um_box), 4) if um_box > 0 else None,   # µm per box unit (payload scale)
             'final_stress_GPa': round(float(p_end), 4), 'target_GPa': float(target),
             'am_load_frac': float(args.am_load_frac),
+            # ── ★ 하강 정지의 출처 (2026-08-04) — "이 porosity 를 어떻게 얻었나" 를 payload 가 스스로 말한다.
+            #    stop_mode='freeze_probe' 면 정지가 **정지 판독**으로 결정됐다는 뜻이고, 'legacy_moving'
+            #    이면 움직이는 플래튼 판독으로 결정된 옛 경로다(그 경우 porosity 는 걸음 수의 함수일 수 있다).
+            #    settled_over_target 은 최종 정착 응력 / 목표 — 1 근처가 아니면 "목표 압력 상태" 라고
+            #    부르면 안 된다 (실측: 옛 경로 real_14 = 0.021, P:S 킷 = 0.009~0.049).
+            'stop_mode': ('legacy_moving' if args.stop_legacy else 'freeze_probe'),
+            'descend_probes': int(_dsc_probes),
+            'descend_probe_resumes': int(_dsc_resumes),
+            'descend_probe_spread_rel': (round(float(_dsc_spread), 5)
+                                         if _dsc_spread is not None and _dsc_spread == _dsc_spread
+                                         and abs(_dsc_spread) != float('inf') else None),
+            'settled_over_target': round(float(p_end) / float(target), 4) if target > 0 else None,
+            'platen_mach_V_over_cP': round(float(_v_platen) / float(_c_p), 4),
+            'platen_mach_V_over_cS': round(float(_v_platen) / float(_c_s), 3),
+            'quasistatic_ok': bool(_v_platen / _c_p <= 0.01),
             'floor_porosity_pct': float(args.floor_porosity) if args.floor_porosity > 0 else None,
             'se_target_GPa': round(float(target * (1.0 - args.am_load_frac)), 4) if (args.am_load_frac > 0 and args.floor_porosity <= 0) else None,
             'coverage_AM_P_pct': cov_out.get('AM_P'), 'coverage_AM_S_pct': cov_out.get('AM_S'),
