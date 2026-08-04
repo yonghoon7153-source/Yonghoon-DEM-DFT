@@ -125,8 +125,16 @@ _GCACHE = {}
 
 
 def graphics(page):
-    """이 쪽의 그래픽 bbox 들 — 배치 이미지 + 벡터 경로. (쪽당 1회만: get_drawings 가 느리다)"""
-    ck = (id(page.parent), page.number)
+    """이 쪽의 그래픽 bbox 들 — 배치 이미지 + 벡터 경로. (쪽당 1회만: get_drawings 가 느리다)
+
+    ⚠ 캐시 키에 **id(page.parent) 를 쓰면 안 된다** (2026-08-06, 53편 배치에서 발각):
+      문서를 닫고 다음 걸 열면 CPython 이 같은 주소를 재사용해서 키가 충돌한다
+      (실측 2편 6회 반복 → 27건 충돌). 그러면 뒤 논문의 쪽이 **앞 논문의 그래픽**을
+      물려받아 기하 검증이 엉뚱하게 통과/탈락한다.
+      증상: 한 편만 돌리면 4장인데 배치로 돌리면 1장(huang2022), sendek2017 fig_2·3 소실.
+      파일 경로로 키를 잡고, 문서마다 캐시를 비운다.
+    """
+    ck = (page.parent.name, page.number)
     if ck in _GCACHE:
         return _GCACHE[ck]
     out = []
@@ -301,6 +309,7 @@ def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
     out_dir = OUT_ROOT / slug
     found, seen, skipped = [], {}, []
     for pdf_path in pdf_paths:
+        _GCACHE.clear()                        # 문서마다 비운다 (위 주석 참고)
         doc = fitz.open(pdf_path)
         # ⚠ 여기 예전에 `\bsup|\bsi\b|…` 라는 **별도 정규식**이 있었다 (2026-08-06 실측 사고):
         #   `\bsup` 이 "**Sup**erionic"·"**sup**erconductor" 를 잡아, 제목에 그 낱말이 든
