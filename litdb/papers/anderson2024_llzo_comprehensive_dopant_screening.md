@@ -1,6 +1,6 @@
 # Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte — Anderson/McCalla (Adv. Energy Mater. 2024)
 
-> slug `anderson2024_llzo_comprehensive_dopant_screening` · DOI `10.1002/aenm.202304025` · type `exp (HT combinatorial synthesis + PXRD/Rietveld + EIS + DC σ_e + CV-ESW + CCD; 자체 계산 0)` · PDF 본문 `0d1f9207-51.…pdf`(12 pp) + SI `911157c5-51._Sup…pdf`(17 pp) · digested `2026-07-28` · status ✅ (본문 12 pp + SI 17 pp 전수 정독)
+> slug `anderson2024_llzo_comprehensive_dopant_screening` · DOI `10.1002/aenm.202304025` · type `exp (HT combinatorial synthesis + PXRD/Rietveld + EIS + DC σ_e + CV-ESW + CCD; 자체 계산 0)` · PDF 본문 `0d1f9207-51.…pdf`(12 pp) + SI `911157c5-51._Sup…pdf`(17 pp) · digested `2026-07-28` · **2차 패스(본문 그림 픽셀 독립 검증) `2026-08-04` → §19** · status ✅ (본문 12 pp + SI 17 pp 전수 정독)
 > elements: Li, La, Zr, O, B, Al, Fe, Zn, Ga, Na, K, Ca, Rb, Sr, Y, Ag, Cs, Ba, Pr, Nd, Sm, Gd, Tb, Dy, Ho, Er, Tm, Yb, Lu, Bi, Mg, Si, P, Sc, Ti, V, Cr, Mn, Co, Ni, Cu, Ge, Se, Nb, Mo, Ru, Rh, Pd, Cd, In, Sn, Ce, Eu, Hf, Ta, W, Re, Ir, Pt, Au, Tl, Pb, Te
 > methods: ESW
 >
@@ -13,6 +13,15 @@
 > **절대값·컷 값을 우리 문맥으로 이식 금지.** 이식 가능한 것은 **방법·논증 구조**이지 숫자가 아니다.
 > ⚠ **methods 태그가 `ESW` 하나뿐인 것은 실수가 아니다** — 이 논문은 자체 DFT/AIMD/BVSE를 **하나도 하지 않는다**
 > (§4.4 참조). 계산은 전부 **문헌 승계**(Miara 2015 결함에너지 · 자체 선행연구의 bond-valence mismatch).
+>
+> ### 🔴 인용 전 필독 — 2026-08-04 2차 패스(§19) 결과 요약
+> 1. **1차 digest(SI 기반)와 2차 패스(그림 픽셀 기반)가 서로를 독립 검증했다** — garnet%/cubic% 잔차
+>    중앙값 0.03/0.15 pp, σ_i 1.06×. 이 논문 수치는 우리 litdb에서 **두 경로로 확인된 데이터**다.
+> 2. ⛔ **단 `Y`·`Yb`·`Rh`·`Ho` 4종의 σ는 예외** — 그림과 SI가 두 쌍 맞교환으로 어긋난다. **인용 금지**(§19.5).
+> 3. 🔧 **§5b 교정 2건**: "선호 site는 대부분 >90 % cubic" → 실측 **42 %뿐**(중앙값 74.9 %) ·
+>    미동정 2차상 6종의 **"Ga"는 `Ge` 오기**(§19.3a, §19.6).
+> 4. ✅ **핵심 긍정 결과는 더 단단해졌다**: 예측 site가 3자리 중 cubic% 1위 = **49/51 (96 %)**.
+>    반면 서술자 *크기* 는 cubic%를 전혀 예측 못 한다(**ρ ≈ 0**), BV↔DFT 자리 일치율은 **51 %**(§19.4).
 
 ---
 
@@ -302,14 +311,23 @@ calculations or the far cheaper bond valence calculations promotes the cubic pha
   정확히 갈린다. LiAlLa₄O₈은 "Al³⁺ 유사 이온이 들어갈 수 있는 상들의 **placeholder**"이고,
   Ga 시료에서는 실제로 **LiGaLa₄O₈**. (Al 도핑 시료엔 안 나타나므로 기판 Al 오염이 아님을 확인.)
 - **Si on Zr → 완전 상분리**: 소량 SiO₂ + undoped와 동일한 LLZO. (Table S5 Si cubic 25.79 %.)
-- **일반화 (Fig 3b)**: 최적 자리는 **>90 % c-LLZO**가 대다수, 비최적 자리는 **c-LLZO 20–40 %**
+- **일반화 (Fig 3b)**: ~~최적 자리는 **>90 % c-LLZO**가 대다수~~, 비최적 자리는 **c-LLZO 20–40 %**
   (undoped 수준) + 나머지 >50 %가 t-LLZO/불순물.
+  > 🔧 **2026-08-04 교정 (§19.3a)**: 앞부분은 본문 문장(*"giving >90 % c-LLZO in most cases"*)을 그대로
+  > 옮긴 것인데, Fig 3b 픽셀 실측으로는 **>90 %가 25/59 = 42 %뿐이고 중앙값은 74.9 %**, 오히려
+  > **24/59(41 %)가 70 % 미만**이다. "대다수"는 성립하지 않는다. 뒷부분(비최적 20–40 %)은 맞다(67–71 %).
+  > 대신 **더 강한 형태로 성립하는 명제**는 이것이다 — **선호 site가 3자리 중 cubic% 1위 = 49/51 (96 %)**.
   > 🔑 저자들의 해석: *"the sites predicted via defect energy do not so much predict the likelihood of
   > the dopants going into the structure, but rather the likelihood of those dopants distorting the
   > materials into the cubic structure."* — **결함에너지는 "들어가느냐"가 아니라 "입방화시키느냐"를 예측한다.**
 - **총 garnet 함량은 대체로 >95 %**이고 **최적 자리/대체 자리 차이가 뚜렷하지 않다**(Fig 3a) —
   "많은 도펀트가 세 자리 어디에나 실제로 들어간다. 다만 입방화가 늘 따라오진 않는다."
-- 미동정 2차상 6종 = **Ga·Re·Ir·Pt·Pd·Au — 전부 Zr 자리** (Fig 3a `*` 표시, 패턴 Fig S4).
+  > ⚠ **2026-08-04 단서 (§19.3c)**: Fig 3a의 y축은 **80 wt%에서 잘려 있다.** 선호 site 기준
+  > **Mo·Rh·Pd·Te** 는 총 garnet <80 %라 패널에 점이 아예 없다(대체 site까지 세면 12종 추가).
+  > "대체로 >95 %"는 **잘린 축 위에서 읽힌 인상**이다.
+- 미동정 2차상 6종 = **Ge·Re·Ir·Pt·Pd·Au — 전부 Zr 자리** (Fig 3a `*` 표시, 패턴 Fig S4).
+  > 🔧 **2026-08-04 교정 (§19.6)**: 1차 digest는 첫 항목을 **Ga**로 적었으나 Fig 3a x축 라벨 확대 결과
+  > **`*Ge`** 다. Ga는 Li-site 그룹이라 "전부 Zr 자리"와도 모순이었다 — Ge로 고치면 6종 전부 Zr 자리 ✅.
 - 극단 실패: **Te(Zr) garnet 4.70 %**, **Pd(Zr) 26.91 %**, **Mo(Zr) 51.85 %**(대량 LiMoO₂ 형성),
   **Rh(Zr) 65.53 %**, **Au(Zr) 85.13 %**.
 - **격자상수 (Fig S9)**: 입방 성분 a = **12.97–13.03 Å**, **모든 도핑 시료가 undoped보다 작다**.
@@ -807,6 +825,11 @@ calculations or the far cheaper bond valence calculations promotes the cubic pha
 | 6 | 그림 참조 번호 | p.4 *"defect energy calculations in **Figure 2d**"* | — | 결함에너지는 **Fig 3d** | ✅ **Fig 3d** — 본문 오타 |
 | 7 | 시료 수 | "59 dopants … (177 materials)" / "180 PXRD patterns of the doped samples" | Table S2 = 177행 | — | ✅ 177 도핑 + 세트별 undoped 3 = **180 패턴**. "of the doped samples"가 부정확한 표현 |
 | 8 | 2차상 표기 | "LiAlLa₄O₈" (Al³⁺-유사 이온용 placeholder; Ga 시료는 실제 LiGaLa₄O₈) | — | Fig 2b "2.0 % LiAlLa₄O₈" | ✅ 본문·그림 일치 |
+| **9** | **신규/기보고 도판트 수** (2026-08-04, §19.3d) | "**29 novel**, plus the 30 previously reported" | — | **Fig 1 픽셀: 노랑 30 / 파랑 30 = 60종**, 캡션 "except Sb" | 🔴 **본문이 뒤바뀌었다** — 신규 **30**, 기보고 30(그중 Sb 미스크리닝) → 스크리닝 59 ✅. Fig 3/4/5/6 x축도 전부 59종(Sb 없음) |
+| **10** | **Fig 3a y축 절단** (§19.3c) | "total LLZO content is generally high (>95 %)" | — | **패널 a 하한 = 80 wt%**, Mo·Rh·Pd·Te(선호 site)가 축 아래로 사라짐 | 🔴 **절단 사실이 본문·캡션 어디에도 없다.** 인용 시 "80 wt% 이상만 표시된 축" 병기 |
+| **11** | **선호 site cubic% 서술** (§19.3a) | ">90 % c-LLZO in **most cases**" | — | **Fig 3b 픽셀: 25/59 = 42 %**, 중앙값 74.9 % | 🔴 **"most cases" 불성립.** 대신 "선호 site가 3자리 중 1위 = 49/51(96 %)"이 정확한 형태 |
+| **12** | **이온성 액체 재측정 온도** (§19.6) | 본문 p.9 **60 °C** / Experimental **60 °C** | — | **Fig 6 캡션 55 °C** | 🟡 2:1로 **60 °C** 채택하되 캡션 55 °C 병기 |
+| **13** | **σ 결측 5종 + >10× 36종** (§19.5) | — | Table S5(1차 판독): 결측 …**Yb** / 36종에 **Rh·Y** | Fig 4a 픽셀: 결측 …**Y** / 36종에 **Ho·Yb** | 🔴🔴 **미해결.** 차이가 `Y↔Yb`·`Rh↔Ho` 맞교환뿐(양쪽 다 36종). **SI 재확보 전까지 4종 σ 인용 금지** |
 
 ---
 
@@ -870,3 +893,162 @@ calculations or the far cheaper bond valence calculations promotes the cubic pha
 - **full-factorial matrix screening** — 깔때기(순차 게이트) 대신 **모든 후보 × 모든 축**을 다 재고
   축별 merit flag만 붙이는 설계. 정보 소실이 없는 대신 **최종 답이 하나로 안 좁혀진다**.
   이 논문의 선택이자, §3e에서 보듯 **그럴 수밖에 없었던 선택**.
+
+---
+
+## 19. 🔴 2차 패스 (2026-08-04) — 본문 그림 픽셀 독립 검증 ★★★
+
+> **왜 다시 했나.** 사용자가 이 논문(inbox `51.`, 분류 폴더 `DFT`)을 다시 먹였다. 그런데 이번 inbox에는
+> **본문 12 pp만 있고 SI가 없다**. 1차 digest(2026-07-28)는 SI Table S5를 전수 정독해 썼으므로,
+> 같은 걸 반복하는 대신 **SI를 전혀 안 보고 본문 그림만으로 같은 수치를 복원**해서 1차 결과를 교차검증했다.
+> 스크립트 `tools/litdb/anderson2024_fig_verify.py` (PIL만, numpy 없음),
+> 복원표 `db/properties/anderson2024_llzo_dopant_screening_recovered.csv` (59행).
+>
+> **방법**: Fig 4는 σ를 연속 컬러맵 주기율표로 그린다 → 컬러바를 LUT로 만들어 셀 채움색을 역변환.
+> Fig 3a/3b는 마커를 색(주황=최적자리 / 진홍·남색=대체자리)으로 분리해 y좌표를 wt%로 환산.
+> **Table 1에 인쇄된 18종이 그대로 ground truth**라서 역변환 정확도를 자기검증할 수 있다.
+
+### 19.1 역판독 정확도 — 먼저 이것부터 (이게 안 맞으면 아래 전부 무효)
+
+| 대상 | n | 잔차 | 판정 |
+|---|---:|---|---|
+| σ_i (Fig 4a → Table 1) | 18 | \|Δlog₁₀\| **중앙값 0.024 (=1.06×)**, 최대 0.083 (=1.21×), 편의 +0.002 dex | ✅ |
+| σ_e (Fig 4b → Table 1) | 18 | \|Δlog₁₀\| 중앙값 0.086, 최대 0.112, **계통편의 +0.064 dex** → 보정 후 사용 | ✅ |
+| garnet wt% (Fig 3a → Table 1) | 18 | \|Δ\| **중앙값 0.03 pp**, 최대 0.10 pp | ✅✅ |
+| cubic wt% (Fig 3b → Table 1) | 18 | \|Δ\| **중앙값 0.15 pp**, 최대 0.53 pp | ✅✅ |
+
+**본문에만 있고 Table 1엔 없는 수치와도 독립 일치** (= 역판독이 진짜 맞는다는 4중 확인):
+
+- **Ta**: 픽셀 σ 2.44×10⁻⁴ / cubic **70.9 %** / garnet 94.5 % ↔ 본문 *"2.5×10⁻⁴ … 70 % c-LLZO and 24 % t-LLZO
+  along with just under 6 % Li₅La₃Ta₂O₁₂"* — **70.9 + 23.6 = 94.5** 로 회계까지 맞는다.
+- **Sm 3.03×10⁻⁵ / Gd 5.44×10⁻⁵** ↔ 본문 2.92×10⁻⁵ / 5.52×10⁻⁵ (오차 4 % / 1.5 %).
+- **Tm 6.58×10⁻⁶ vs In 2.58×10⁻⁵ = 3.9배** ↔ 본문 *"Tm … about four times less conductive than In"*.
+- **Ga on La / Ga on Zr cubic = 33.6 / 38.7 %** ↔ Fig 2b Rietveld 34.7 / **38.7 %**.
+- 1차 digest가 SI에서 옮긴 값들과도 일치: Au garnet 85.08(SI 85.13) · Ti cubic 58.0(58.21) ·
+  Co 44.13(44.13) · Ba 30.4(30.70) · Si 25.74(25.79) · Pd 26.8(26.91) · Mo 51.9(51.85) · Te 4.9(4.70).
+
+> 🔑 **즉 1차 digest(SI 기반)와 2차 패스(그림 기반)가 서로를 독립적으로 검증했다.** 이 논문의 수치는
+> 우리 litdb 안에서 **두 경로로 확인된 몇 안 되는 데이터**다. 아래 §19.5의 4개 칸만 예외.
+
+### 19.2 ★ 본문 계수 주장 — 전부 재현됨
+
+- *"36 dopants yield a >10× improvement"* → 픽셀에서 **정확히 36종** (기준 undoped 1.6×10⁻⁶,
+  측정된 도판트 54종 중). 1차 digest의 Table S5 전수 재현과 **같은 36**.
+- *"just three show a lower conductivity than undoped"* → 픽셀에서 **Pd 1.07×10⁻⁶ · Pt 1.48×10⁻⁶ ·
+  Ge 1.70×10⁻⁶** (Ge는 1.6×10⁻⁶ 경계 바로 위 — 역판독이 컬러바 하단에서 ~20 % 높게 나오는 것과 정합).
+  SI 값 Ge 1.40 / Pt 1.27 / Pd 0.825 ×10⁻⁶ 와 **같은 3종**.
+- *"nearly all doped samples have a lower σ_e between 1 and 5×10⁻⁸"* → 픽셀 **44/54 = 81 %** 가 그 구간.
+  구간 밖 상위: **Co 9.3×10⁻⁷ · Ru 1.95×10⁻⁷ · Cu 1.33×10⁻⁷ · Ir 1.25×10⁻⁷** — 1차 digest의 위험군과 동일.
+
+### 19.3 🔴 신규 — 본문 진술이 그림과 어긋나는 4건
+
+**(a) "선호 site는 대부분 >90 % cubic" 은 소수파다.**
+본문 §2.1: *"the c-LLZO content is nearly uniformly favored for the preferred site giving **>90 % c-LLZO
+in most cases**"*. 픽셀 실측 59종 선호-site cubic%:
+
+| | n | 중앙값 | >90 % | 70 % 미만 |
+|---|---:|---:|---:|---:|
+| **선호(주황)** | 59 | **74.9 %** | **25 (42 %)** | **24 (41 %)** |
+| 비선호 A(진홍) | 51 | 26.5 % | 0 | — |
+| 비선호 B(남색) | 59 | 30.4 % | 0 | — |
+
+70 % 미만인 24종: Te 5 · Si 26 · Pd 27 · Ba 30 · Pt 35 · In 42 · Pr 42 · Co 44 · K 44 · Cu 45 · Mn 47 ·
+Au 49 · Nd 50 · Mo 52 · Rb 54 · Rh 56 · Ho 57 · Tb 57 · Ti 58 · Ir 59 · Ag 60 · P 61 · Sc 62 · Na 68.
+→ **"most cases"가 아니라 42 %다.** 1차 digest §5b도 이 문장을 그대로 옮겼으니 **함께 교정**한다.
+비선호 site가 20–40 %대라는 쪽은 잘 맞는다(67–71 %가 그 구간).
+
+**(b) 그런데 "예측한 site가 최선"이라는 핵심 주장 자체는 강하게 성립한다** — 두 진술을 분리해야 한다.
+3개 site를 다 읽을 수 있는 51종에서 **선호 site가 cubic% 1위 = 49/51 (96 %)**. 꼴찌는 **Mo 하나뿐**
+(선호 Zr 52 % < Li 67 % < La 76 %). → *"어느 자리에 넣을지"* 예측력은 진짜고, 틀린 건 *"얼마나 입방화되는지"* 다.
+**이게 이 논문에서 우리가 가져갈 가장 단단한 명제다.**
+
+**(c) Fig 3a의 y축은 80 wt%에서 잘려 있다 — 실패 시료가 그림에서 사라진다.**
+선호 site 기준 **Mo · Rh · Pd · Te** 4종은 총 garnet < 80 wt%라 패널 a에 **점이 아예 없다**
+(대체 site까지 세면 B·Al·Ca·Y·Ba·Nd·Gd·Tm·Lu·Mo·Te·Ta 등 추가). 본문 *"The total LLZO content is
+generally high (>95 %) in most samples"* 는 **잘린 축 위에서 읽힌 인상**이다. 축이 잘렸다는 말은 어디에도 없다.
+
+**(d) Fig 1은 도판트를 60종 칠한다 — 본문의 "29 novel"과 안 맞는다.**
+픽셀 분류: **노랑(novel) 30 · 파랑(previously reported) 30 = 60종**.
+
+- 노랑 30: Na P K V Cu Se Rh Pd Ag Cd In Sn Cs Lu Re Ir Pt Au Tl Pb Bi Pr Sm Eu Tb Dy Ho Er Tm Yb
+- 파랑 30: B Mg Al Si Ca Sc Ti Cr Mn Fe Co Ni Zn Ga Ge Rb Sr Y Nb Mo Ru **Sb** Te Ba Hf Ta W Ce Nd Gd
+
+Fig 1 캡션이 *"all the dopants (yellow and blue, **except Sb**) were tested and screened"* 라 하고,
+Fig 3/4/5/6의 x축·칸에도 **Sb가 없다(정확히 59종)**. 즉 **합성 60종 / 스크리닝 59종**이고,
+본문의 *"29 novel, plus the 30 previously reported"* 는 **신규가 30, 기보고-스크리닝분이 29**로 뒤바뀐 것이다.
+→ 이건 §16 #7(177 vs 180)과 별개 항목이다. ⚠ 다만 **180 패턴의 정체**는 SI Table S2(177행)를 본
+1차 판정("177 도핑 + undoped 3")과 이번 Sb 해석("60×3") 중 어느 쪽인지 **SI 없이는 확정 못 한다** —
+§19.5의 미해결 목록에 함께 둔다.
+
+### 19.4 ★ DFT/BV 서술자 예측력 — 이 논문의 "DFT" 부분을 정량화
+
+사용자가 이 논문을 `DFT` 폴더로 분류했지만 **자체 DFT는 0건**이고(§4d), DFT는 **ref [12] Miara/Ceder 2015의
+결함에너지를 Fig 3d에 옮겨 그린 것**뿐이다. 2차 패스에서 Fig 3c(BV mismatch)·3d(결함에너지)를
+site별로 되읽어 그 서술자들의 값어치를 처음으로 수치화했다.
+
+| 질문 | 결과 |
+|---|---|
+| 저자의 "이론 최적 site" = argmin(결함에너지) 인가 | **38/38 일치** (마커 겹침으로 19종 판정 보류). 정의대로 쓰였다 ✅ |
+| argmin(BV mismatch) = argmin(결함에너지) 인가 | **18/35 = 51 %** 만 일치 |
+| 불일치의 방향 | **17건 중 15건이 "BV→Li site / DFT→Zr site"** (Cr Cu Hf Ir Mn Mo Nb Ni P Pd Rh Se Ta Ti + Cd·Tl은 La→Zr, Zn만 반대) |
+| 서술자 *크기* 가 cubic wt%를 예측하는가 | **BV ρ = −0.05 (n=56) · 결함에너지 ρ = 0.00 (n=54)** — 사실상 무상관 |
+
+> 🔑 본문은 *"[BV calculations] have difficulty differentiating between tetrahedral (Li) and octahedral (Zr)
+> site preference"* 라고 **정성적으로만** 말한다. 픽셀로 재보면 그 실패는 **적중률 51 %, 그리고 거의 전부
+> 한 방향(Li로 과잉 배정)**이다 — 동전던지기 수준이고, 편향된 동전이다.
+>
+> 🔑 그리고 **두 서술자 다 크기로는 아무것도 예측 못 한다(ρ≈0)**. 저자들의 Ga/Fe 반례
+> (*"Ga and Fe have considerably higher defect energies and bond valence mismatches than … Sn"*)는
+> 예외가 아니라 **전체 경향**이었다.
+
+**우리 캠페인에 주는 함의 (`tools/cascade` 설계)**:
+
+1. **자리 선택(site assignment)과 효과 크기(magnitude)는 다른 문제다.** 결함에너지는 앞쪽만 답한다(96 % 적중).
+   우리 cascade에서 결함/치환 에너지를 **순위 점수로 쓰면 안 되고 게이트로만** 써야 한다는 근거.
+2. **BV mismatch는 결함에너지의 대체재가 아니다** — 51 % 적중, Li/Zr 구분 실패. 우리 BVSE(경로 장벽)와는
+   애초에 다른 물건이라는 §18 규율에 더해, **"값싼 자리-적합 서술자" 자체가 못 미덥다**는 실험 증거.
+3. 이건 `ren2026`의 Φ=z/r 붕괴(R²=0.065)와 **같은 결의 결과**다: 0-비용 정전기 서술자는
+   *사전필터*지 *순위기*가 아니다. → [[ren2026_li2zrcl6_low_ion_potential_doping]] §4.5와 나란히 인용할 것.
+
+### 19.5 🔴🔴 미해결 — 그림과 SI(1차 digest)가 어긋나는 4칸
+
+Fig 4a에서 **σ 결측(회색)인 도판트**와 **>10× 36종 목록**을 1차 digest의 SI Table S5 판독과 대조:
+
+| | 1차 digest (SI Table S5) | 2차 패스 (Fig 4a 픽셀) |
+|---|---|---|
+| σ 결측 5종 | Er · Mo · Tb · Te · **Yb** | Er · Mo · Tb · Te · **Y** |
+| >10× 36종 중 차이 | … **Rh** … **Y** … | … **Ho** … **Yb** … |
+
+**두 목록의 차이가 `Y↔Yb` · `Rh↔Ho` 두 쌍의 맞교환뿐이고, 양쪽 다 정확히 36종이다.**
+Fig 4a 픽셀 실측: **Y = 회색(값 없음)**, **Yb = 2.75×10⁻⁵**, **Rh = 2.75×10⁻⁶**, **Ho = 1.73×10⁻⁵**
+(란탄족 줄 크롭으로 육안 재확인: Tb·Er 회색, **Yb 분홍**).
+
+원인은 둘 중 하나 — ① 논문 자체가 Fig 4와 Table S5에서 이 두 쌍을 뒤바꿔 실었거나,
+② 1차 digest의 SI 전사에서 기호가 뒤바뀌었거나. **SI PDF가 inbox에 없어 확정 불가.**
+
+> ⛔ **인용 규율**: 확정 전까지 **Y · Yb · Rh · Ho 4종의 σ_i/σ_e는 어느 쪽 값도 단독 인용 금지.**
+> 특히 **Y**는 §8의 "고전압 passivation 최강군 Sc·Y·Dy·Er"에 들어 있어서, "Y는 산화 억제는 좋은데
+> σ는 미측정" 같은 서사를 쓰려면 이 칸이 먼저 해결돼야 한다.
+> **해결 방법**: SI PDF를 inbox에 다시 넣고 Table S5의 Y/Yb·Rh/Ho 행만 재판독 → 이 절을 갱신.
+
+### 19.6 부수 — 소소한 신규 확인 4건
+
+- **§5b의 "미동정 2차상 6종" 목록 자기교정**: 1차 digest는 **Ga**·Re·Ir·Pt·Pd·Au라 적었는데,
+  Fig 3a x축 라벨을 확대해 보면 별표는 **`*Ge` `*Pd` `*Re` `*Ir` `*Pt` `*Au`** 다 → **Ga가 아니라 Ge**.
+  (Ga는 Li-site 그룹이라 "전부 Zr 자리"라는 같은 문장과도 모순이었다. Ge로 고치면 6종 전부 Zr 자리 ✅.)
+- **Fig 6 캡션은 55 °C, 본문·Experimental Section은 60 °C** — 이온성 액체 저전압 재측정 온도가 어긋난다.
+  1차 digest §9는 60 °C를 채택했는데, 캡션 55 °C를 병기해 두는 게 맞다.
+- **Te는 Fig 5·Fig 6에도 없다.** 두 CV 그림 모두 undoped + **58종**뿐(Zr 그룹에서 Te만 빠짐).
+  garnet 4.7 %라 전극을 못 만든 것으로 보이나 **사유 서술 없음** — §15.9의 "결측 사유 공란" 항목에 Te 추가.
+- **Fig 3c/3d에는 Re가 없다** (BV mismatch·결함에너지 둘 다 미제공), **Fig 3d의 Yb 자리는 `n/a`**
+  (Miara 2015가 Yb를 안 다룸). 즉 결함에너지가 실제로 존재하는 도판트는 **57종**이다.
+
+### 19.7 재현
+
+```
+python tools/litdb/anderson2024_fig_verify.py      # 전체 출력 = litdb/inbox/_51_verify_out.txt
+```
+
+출력물: `db/properties/anderson2024_llzo_dopant_screening_recovered.csv` (59행).
+**`source` 열이 핵심** — `paper Table 1`(인쇄값 18종) vs `pixel readback (Fig 3/4)`(우리 역판독 41종)를
+**절대 섞어 인용하지 말 것**. 역판독 정확도 근거는 §19.1.
