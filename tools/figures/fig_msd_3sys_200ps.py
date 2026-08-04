@@ -71,7 +71,7 @@ def fit_window(t, y, lo, hi):
     return float(A[0]), float(A[1]), r2, float(beta), float(ys[-1])
 
 
-def load_runs(specs, tmax, seed_mode='mean'):
+def load_runs(specs, tmax, seed_mode='mean', exclude=('BROKEN',)):
     """--run LABEL=DIR 들에서 msd.json 을 훑는다. 시드 여럿이면 최소 시드(재현 가능)."""
     out = {}
     for spec in specs:
@@ -80,6 +80,12 @@ def load_runs(specs, tmax, seed_mode='mean'):
             hits = []
             for f in glob.glob(os.path.join(os.path.expanduser(root), "**", "msd.json"),
                                recursive=True):
+                # ⚠ 제외 패턴 (2026-08-04 실측 2건): BROKEN(좌표버그 폐기본)은 기본 제외.
+                #   licube 류 — **같은 시드의 재실행**(밀도 cube 용 50 ps)이라 독립 시드가
+                #   아니고, 평균에 넣으면 이중계상 + 최단길이 절단으로 200 ps 를 50 ps 로
+                #   깎아 먹는다. --exclude licube 로 뺄 것.
+                if any(pat in f for pat in exclude if pat):
+                    continue
                 try:
                     d = json.load(open(f))
                 except Exception:
@@ -98,6 +104,10 @@ def load_runs(specs, tmax, seed_mode='mean'):
                 #   MSD 앙상블 평균이 정당하다 (msd_diffusive_check.py --average 와 같은 논리).
                 lens = [float(np.asarray(h[1]["times_ps"], float).max()) for h in hits]
                 Tend = min(min(lens), tmax)
+                if max(lens) - min(lens) > 1.0:
+                    print(f"  ⚠ {label} {T} K — 시드 길이 불일치 {sorted(set(round(v) for v in lens))} ps."
+                          f" 평균이 최단 {Tend:.0f} ps 로 절단된다. 짧은 파일이 보조런이면"
+                          f" --exclude 로 뺄 것.")
                 g = np.arange(0.0, Tend + 1e-9, 0.1)
                 ys = []
                 for hf, hd in hits:
@@ -160,6 +170,9 @@ def main():
     ap.add_argument("--order", nargs="+", default=["modelc", "lpsocl", "b2o3"],
                     help="패널 순서 (라벨)")
     ap.add_argument("--tmax", type=float, default=200.0, help="도시 상한 [ps]")
+    ap.add_argument("--exclude", nargs="*", default=["BROKEN"],
+                    help="경로에 이 문자열이 들어간 msd.json 은 무시 (기본 BROKEN). "
+                         "예: --exclude BROKEN licube")
     ap.add_argument("--seed_mode", choices=["mean", "min"], default="mean",
                     help="같은 (계,T) 에 msd.json 이 여럿일 때. mean=MSD 곡선 앙상블 평균(기본, "
                          "권장) · min=경로 사전순 첫 파일 하나(옛 동작, 시드 갈림을 숨긴다)")
@@ -172,7 +185,7 @@ def main():
     data = {}
     print("── 수확")
     if a.run:
-        data.update(load_runs(a.run, a.tmax, a.seed_mode))
+        data.update(load_runs(a.run, a.tmax, a.seed_mode, tuple(a.exclude)))
     for c in a.csv:
         data.update(load_csv(c, a.tmax))
     if not data:
