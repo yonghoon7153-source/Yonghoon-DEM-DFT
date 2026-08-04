@@ -8,6 +8,25 @@
  ],
  "figures": [
   {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Operando analysis of electronic band structure in all-solid-state batteries. Schematics of a prototypical Li-ion battery consisting of intercalation electrodes in a liquid-electrolyte, b all-solid-state battery, and c the model all-solid-state battery investigated in this study. d Experimental setup of operando hard X-ray photoelectron spectroscopy (HAXPES) technique employed to investigate band structure. e HAXPE spectra as a function of cell voltage and f operando battery band structure analysis. EC ethylene carbonate, DEC diethyl carbonate, CBM conduction band minimum, EF Fermi level, VBM valence band maximum. 2 COMMUNICATIONS CHEMISTRY | (2022) 5:52 | https://doi.org/10.1038/s42004-022-00664-w | www.nature.com/commschem",
+   "bbox": [
+    37.6,
+    324.2,
+    557.8,
+    688.9
+   ],
+   "w": 2168,
+   "h": 1521,
+   "dpi": 300,
+   "src": "25. Operando analysis of electronic band structure in an all-solid-state thin-film battery.pdf",
+   "blank": 0.809
+  },
+  {
    "key": "f2",
    "kind": "figure",
    "label": "2",
@@ -35,15 +54,34 @@
    "caption": "Fig. 3 Band structure changes of all-solid-state batteries during cycling. a–c band diagrams of the battery with minimum assumptions and d–f band bending of the cathode side with additional assumptions represented by the relative energy level positions, during a, d pristine, b, e ﬁrst charge at 5.0 V, c, f ﬁrst discharge at 2.0 V. LASGTP Li1+x+yAlx(Ti,Ge)2−xSiyP3−yO12, CBM conduction band minimum, VBM valence band maximum, EF Fermi level, Eg band gap. Assumptions are detailed in the “Methods” section.",
    "bbox": [
     37.6,
-    31.7,
+    44.8,
     557.7,
-    392.1
+    392.0
    ],
    "w": 2168,
-   "h": 1503,
+   "h": 1448,
    "dpi": 300,
    "src": "25. Operando analysis of electronic band structure in an all-solid-state thin-film battery.pdf",
-   "blank": 0.945
+   "blank": 0.941
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Binding energy shifts (ΔBE) during the ﬁrst charge to 5.0 V and open-circuit relaxation. ΔBE of a, the current collector and electrolyte, a-1 Al 1s, a-2 P 1s, and b the cathode, b-1 Li 1s, and b-2 O 1s peaks, relative to the Fermi energy of Li during Al cathode-grounded operando hard X-ray photoelectron spectroscopy (HAXPES). Considering the behaviors of the peak shifts in Li 1s and O 1s, the ﬁrst charge process can be divided into four stages: stage 1, 2.8 V to 3.25 V (0 ≤x < 0.04 in Li2−xMnO3); stage 2, 3.25 V to 4.38 V (0.04 ≤x < 0.27); stage 3, 4.38 V to 4.65 V (0.27 ≤x < 0.63); and stage 4, 4.65 V to 5.0 V (0.63 ≤x < 1.0). The time scale differs between the charging and open-circuit modes.",
+   "bbox": [
+    37.6,
+    445.9,
+    557.7,
+    677.2
+   ],
+   "w": 2168,
+   "h": 964,
+   "dpi": 300,
+   "src": "25. Operando analysis of electronic band structure in an all-solid-state thin-film battery.pdf",
+   "blank": 0.889
   }
  ]
 }

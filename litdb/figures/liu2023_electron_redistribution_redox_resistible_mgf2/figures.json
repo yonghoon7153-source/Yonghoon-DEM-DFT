@@ -17,15 +17,15 @@
    "caption": "Figure 1. Structural properties of Li6PS5Cl (LPSC) and Li6PS5Cl-MgF2 (LPSC-MF) electrolytes. XRD patterns and the corresponding Rietveld refinement results of a) LPSC and b) LPSC-MF electrolytes. c) Crystal structural diagram of argyrodite LPSC-MF electrolyte. d) SEM image and the corresponding elemental EDS (P, Mg, S, Cl and F) mappings of LPSC-MF electrolyte. e) XRD patterns of as-prepared Li6+3xP1\u0000 xMgxS5Cl1\u0000 2xF2x electrolytes (x=0, 0.1, 0.2 and 0.3) and enlarged diagram of the characteristic peaks.",
    "bbox": [
     46.4,
-    357.8,
+    375.4,
     543.2,
-    692.3
+    688.9
    ],
    "w": 2071,
-   "h": 1395,
+   "h": 1307,
    "dpi": 300,
    "src": "05. Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.754
+   "blank": 0.738
   },
   {
    "key": "f2",
@@ -36,15 +36,15 @@
    "caption": "Figure 2. Electrochemical characterizations of LPSC and LPSC-MF electrolytes. a) Nyquist plots of Li6+3xP1\u0000 xMgxS5Cl1\u0000 2xF2x electrolytes (x=0, 0.1, 0.2 and 0.3) at 25°C. b) Arrhenius plots of the temperature-dependent ionic conductivities of Li6+3xP1\u0000 xMgxS5Cl1\u0000 2xF2x electrolytes with different doping contents. c) Ionic conductivities and activation energy of Li6+3xP1\u0000 xMgxS5Cl1\u0000 2xF2x against different doping contents. d) Stable current response of LPSC and LPSC-MF (x=0.1) at different voltages. Li6+3xP1\u0000 xMgxS5Cl1\u0000 2xF2x (x=0.1) electrolyte as the optimal doping amount and denote the electrolyte as LPSC-MF. Other modified electrolytes with higher MgF2 doping are defined as Li6+3xP1\u0000 xMgxS5Cl1\u0000 2xF2x (x=0.2 and 0.3) argyrodite sulfides.",
    "bbox": [
     44.2,
-    41.0,
+    64.9,
     548.3,
     374.8
    ],
    "w": 2101,
-   "h": 1392,
+   "h": 1292,
    "dpi": 300,
    "src": "05. Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.917
+   "blank": 0.935
   },
   {
    "key": "f3",
@@ -55,15 +55,15 @@
    "caption": "Figure 3. Stability properties of LPSC and LPSC-MF electrolytes. Critical current density of a) the Li/LPSC/Li symmetric cell and the Li/LPSC-MF/Li symmetric cell at 25°C. b) Li plating and stripping in Li/LPSC/Li and Li/LPSC-MF/Li symmetric cell at 0.1 mAcm\u0000 2 under 25°C. c) The impedance spectra of the symmetric cell measured at different cycling times. d), e) and f) Sectional galvanostatic cycling performance of Li/LPSC-MF/Li symmetric cell corresponding to different cycling times. g) Galvanostatic cycling performance of Li/LPSC-MF/Li symmetric cell at 0.5 mAcm\u0000 2 under 25°C.",
    "bbox": [
     46.4,
-    41.0,
+    64.9,
     551.1,
-    489.5
+    322.7
    ],
    "w": 2104,
-   "h": 1870,
+   "h": 1075,
    "dpi": 300,
    "src": "05. Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.872
+   "blank": 0.874
   },
   {
    "key": "f4",
@@ -76,13 +76,13 @@
     44.2,
     289.5,
     548.2,
-    671.9
+    483.2
    ],
    "w": 2101,
-   "h": 1594,
+   "h": 808,
    "dpi": 300,
    "src": "05. Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.711
+   "blank": 0.847
   },
   {
    "key": "f6",
@@ -93,15 +93,15 @@
    "caption": "Figure 6. All-solid-state battery performances. a) Schematic diagram of LiCoO2/LPSC-MF/Li cell. b) Charge-discharge profiles of the LCO/Li cells with LPSC and LPSC-MF electrolytes at 0.1 C and 25°C. c) Cycling and d) rate performances of the cells with LPSC and LPSC-MF electrolytes. e) Charge-discharge profiles of LCO/LPSC-MF/Li cell at various rates. f) Cycling performance and coulomb efficiency of LPSC-MF electrolyte at 0.2 C.",
    "bbox": [
     46.4,
-    41.0,
+    53.8,
     543.5,
-    302.3
+    298.9
    ],
    "w": 2072,
-   "h": 1090,
+   "h": 1022,
    "dpi": 300,
    "src": "05. Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.772
+   "blank": 0.788
   },
   {
    "key": "fS1",
@@ -111,16 +111,16 @@
    "file": "fig_S1.png",
    "caption": "Figure S1. 7Li MAS NMR spectra of LPSC and LPSC-MF electrolyte.",
    "bbox": [
-    139.0,
-    115.8,
-    456.3,
+    82.6,
+    54.9,
+    540.6,
     329.4
    ],
-   "w": 1323,
-   "h": 891,
+   "w": 1909,
+   "h": 1145,
    "dpi": 300,
    "src": "05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.855
+   "blank": 0.902
   },
   {
    "key": "fS2",
@@ -131,15 +131,15 @@
    "caption": "Figure S2. DFT models of the possibility of doping Mg on different sites and corresponding formation energies. a) The initial constructed structures and b) The optimized structure of Mg and F substitution of Li and Cl in the LPSC cell. (Mg atom was set at 48h and F atom was set at 4d site. Mg and F substitute occurs at adjacent positions.) c) The initial constructed structures and d) The optimized structure of Mg and F substitution of Li and Cl in the LPSC cell. (Mg atom was set at 48h and F atom was set at 4d site. The Mg and F atoms are far away from each other.) e) The optimized structure of Mg and F substitution of P and Cl in the LPSC cell. (Mg atom was set at 4b and F atom was set at 4d site)",
    "bbox": [
     82.6,
-    81.2,
-    512.9,
-    519.8
+    54.9,
+    540.6,
+    518.3
    ],
-   "w": 1793,
-   "h": 1828,
+   "w": 1909,
+   "h": 1932,
    "dpi": 300,
    "src": "05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.877
+   "blank": 0.896
   },
   {
    "key": "fS3",
@@ -150,15 +150,15 @@
    "caption": "Figure S3. SEM image and the corresponding elemental EDS (P, S, and Cl) mappings of LPSC electrolyte.",
    "bbox": [
     82.6,
-    81.2,
-    512.9,
+    54.9,
+    540.6,
     269.3
    ],
-   "w": 1793,
-   "h": 785,
+   "w": 1909,
+   "h": 895,
    "dpi": 300,
    "src": "05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.394
+   "blank": 0.487
   },
   {
    "key": "fS4",
@@ -169,15 +169,15 @@
    "caption": "Figure S4. Elemental quantitative analysis of the synthesized LPSC-MF electrolyte.",
    "bbox": [
     82.6,
-    81.2,
-    512.9,
+    54.9,
+    540.6,
     222.2
    ],
-   "w": 1793,
-   "h": 588,
+   "w": 1909,
+   "h": 698,
    "dpi": 300,
    "src": "05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.807
+   "blank": 0.83
   },
   {
    "key": "fS5",
@@ -188,15 +188,15 @@
    "caption": "Figure S5. XRD patterns of as-prepared Li6+3xP1-xMgxS5Cl1-2xF2x electrolytes (x = 0, 0.1, 0.2, 0.3).",
    "bbox": [
     82.6,
-    81.2,
-    512.9,
+    54.9,
+    540.6,
     395.0
    ],
-   "w": 1793,
-   "h": 1308,
+   "w": 1909,
+   "h": 1418,
    "dpi": 300,
    "src": "05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.939
+   "blank": 0.938
   },
   {
    "key": "fS6",
@@ -207,15 +207,15 @@
    "caption": "Figure S6. XRD patterns of as-prepared Li6+3xP1-xMgxS5Cl1-2xF2x electrolytes (x = 0.2, 0.3).",
    "bbox": [
     82.6,
-    81.2,
-    512.9,
+    54.9,
+    540.6,
     350.0
    ],
-   "w": 1793,
-   "h": 1121,
+   "w": 1909,
+   "h": 1231,
    "dpi": 300,
    "src": "05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.928
+   "blank": 0.926
   },
   {
    "key": "fS7",
@@ -226,15 +226,15 @@
    "caption": "Figure S7. Raman spectra of as-prepared Li6+3xP1-xMgxS5Cl1-2xF2x electrolytes (x = 0, 0.1, 0.2 and 0.3).",
    "bbox": [
     82.6,
-    81.2,
-    512.9,
+    54.9,
+    540.6,
     285.4
    ],
-   "w": 1793,
-   "h": 852,
+   "w": 1909,
+   "h": 962,
    "dpi": 300,
    "src": "05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.941
+   "blank": 0.94
   },
   {
    "key": "fS8",
@@ -245,15 +245,15 @@
    "caption": "Figure S8. Nyquist plots of Li6+3xP1-xMgxS5Cl1-2xF2x electrolytes (x = 0, 0.1, 0.2 and 0.3) as a function of with temperature (25 oC - 70 oC).",
    "bbox": [
     82.6,
-    81.2,
-    512.9,
+    54.9,
+    540.6,
     380.9
    ],
-   "w": 1793,
-   "h": 1250,
+   "w": 1909,
+   "h": 1360,
    "dpi": 300,
    "src": "05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.893
+   "blank": 0.9
   },
   {
    "key": "fS9",
@@ -264,15 +264,15 @@
    "caption": "Figure S9. Nyquist plots of a) LPSC-0.1MgCl2 electrolyte and b) LPSC-0.2LiF electrolyte at 25 oC.",
    "bbox": [
     82.6,
-    81.2,
-    512.9,
+    54.9,
+    540.6,
     239.0
    ],
-   "w": 1793,
-   "h": 658,
+   "w": 1909,
+   "h": 768,
    "dpi": 300,
    "src": "05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.949
+   "blank": 0.943
   },
   {
    "key": "fS10",
@@ -283,15 +283,15 @@
    "caption": "Figure S10. a) Chronoamperometric measurement of LPSC and LPSC-MF electrolytes at different voltages.",
    "bbox": [
     82.6,
-    81.2,
-    512.9,
-    254.6
+    54.9,
+    540.6,
+    252.6
    ],
-   "w": 1793,
-   "h": 723,
+   "w": 1909,
+   "h": 825,
    "dpi": 300,
    "src": "05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.938
+   "blank": 0.932
   },
   {
    "key": "fS11",
@@ -302,15 +302,15 @@
    "caption": "Figure S11. Critical current density of the Li/Li symmetric cell with different doping contents at 50 oC: a) x = 0.2; b) x = 0.3.",
    "bbox": [
     82.6,
-    81.2,
-    513.4,
-    207.8
+    54.9,
+    540.6,
+    205.9
    ],
-   "w": 1796,
-   "h": 528,
+   "w": 1909,
+   "h": 630,
    "dpi": 300,
    "src": "05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.879
+   "blank": 0.887
   },
   {
    "key": "fS12",
@@ -321,15 +321,15 @@
    "caption": "Figure S12. Critical current density of the Li/LPSC/Li symmetric cell and the Li/LPSC-MF/Li symmetric cell at 50 oC.",
    "bbox": [
     82.6,
-    81.2,
-    512.9,
+    54.9,
+    540.6,
     238.0
    ],
-   "w": 1793,
-   "h": 654,
+   "w": 1909,
+   "h": 764,
    "dpi": 300,
    "src": "05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.857
+   "blank": 0.87
   },
   {
    "key": "fS13",
@@ -340,15 +340,15 @@
    "caption": "Figure S13. Long-term Li plating/stripping cycling at 0.1 mA cm-2 for a) LPSC-MF (x = 0.2) and b) LPSC-MF (x = 0.3).",
    "bbox": [
     82.6,
-    81.2,
-    521.7,
+    54.9,
+    540.6,
     175.4
    ],
-   "w": 1830,
-   "h": 393,
+   "w": 1909,
+   "h": 503,
    "dpi": 300,
    "src": "05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.723
+   "blank": 0.769
   },
   {
    "key": "fS14",
@@ -359,15 +359,15 @@
    "caption": "Figure S14. Galvanostatic cycling of the Li symmetric cells with LPSC and LPSC-MF electrolytes at 1 mA cm-2/2 mAh cm-2 under 50 oC.",
    "bbox": [
     82.6,
-    81.2,
-    512.9,
+    54.9,
+    540.6,
     191.5
    ],
-   "w": 1793,
-   "h": 460,
+   "w": 1909,
+   "h": 570,
    "dpi": 300,
    "src": "05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.811
+   "blank": 0.836
   },
   {
    "key": "fS15",
@@ -378,15 +378,15 @@
    "caption": "Figure S15. Rest time-resolved EIS profiles of Li/LPSC-MF/Li symmetric cell.",
    "bbox": [
     82.6,
-    81.2,
-    512.9,
+    54.9,
+    540.6,
     284.9
    ],
-   "w": 1793,
-   "h": 850,
+   "w": 1909,
+   "h": 960,
    "dpi": 300,
    "src": "05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.89
+   "blank": 0.898
   },
   {
    "key": "fS16",
@@ -397,15 +397,15 @@
    "caption": "Figure S16. Galvanostatic cycling of the Li symmetric cells with LPSC-MF electrolyte at 0.5 mA cm-2/1 mAh cm-2 under 25 oC.",
    "bbox": [
     82.6,
-    81.2,
-    512.9,
+    54.9,
+    540.6,
     208.2
    ],
-   "w": 1793,
-   "h": 530,
+   "w": 1909,
+   "h": 640,
    "dpi": 300,
    "src": "05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.856
+   "blank": 0.868
   },
   {
    "key": "fS17",
@@ -416,15 +416,15 @@
    "caption": "Figure S17. Galvanostatic cycling of the Li symmetric cells with LPSC-MF electrolyte at 1 mA cm-2/1 mAh cm-2 under 25 oC.",
    "bbox": [
     82.6,
-    81.2,
-    512.9,
+    54.9,
+    540.6,
     208.2
    ],
-   "w": 1793,
-   "h": 530,
+   "w": 1909,
+   "h": 640,
    "dpi": 300,
    "src": "05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.834
+   "blank": 0.852
   },
   {
    "key": "fS18",
@@ -435,15 +435,15 @@
    "caption": "Figure S18. Interfacial compostional alteration by XPS before and after cycling over a) Li 1s; b) P 2p; c) S 2p; and d) Cl 2p spectra at Li/LPSC interface.",
    "bbox": [
     82.6,
-    81.2,
-    524.5,
+    54.9,
+    540.6,
     253.5
    ],
-   "w": 1842,
-   "h": 719,
+   "w": 1909,
+   "h": 829,
    "dpi": 300,
    "src": "05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.862
+   "blank": 0.868
   },
   {
    "key": "fS19",
@@ -454,15 +454,15 @@
    "caption": "Figure S19. XPS depth profiling analysis of the Li anode/electrolye interface. Overall spectra evolution of a) Li 1s, c) P 2p, e) S 2p, g) Cl 1s and i) Mg 1s with different etch level at the Li/LPSC-MF interface. XPS spectra of b) Li 1s, d) P 2p, f) S 2p, h) Cl 2p and j) Mg 1s at the Li/LPSC-MF interface.",
    "bbox": [
     82.6,
-    81.2,
-    512.9,
-    348.2
+    54.9,
+    540.6,
+    346.1
    ],
-   "w": 1793,
-   "h": 1113,
+   "w": 1909,
+   "h": 1214,
    "dpi": 300,
    "src": "05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.852
+   "blank": 0.863
   },
   {
    "key": "fS20",
@@ -473,15 +473,15 @@
    "caption": "Figure S20. SEM images of lithium metal surface of Li symmetric cells assembled with LPSC after short circuit.",
    "bbox": [
     82.6,
-    81.2,
-    512.9,
-    207.8
+    54.9,
+    540.6,
+    207.3
    ],
-   "w": 1793,
-   "h": 528,
+   "w": 1909,
+   "h": 636,
    "dpi": 300,
    "src": "05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.401
+   "blank": 0.514
   },
   {
    "key": "fS21",
@@ -492,15 +492,15 @@
    "caption": "Figure S21. SEM image and EDS mapping of lithium metal after cycling a) LPSC and b) LPSC-MF electrolytes.",
    "bbox": [
     82.6,
-    81.2,
-    512.9,
+    54.9,
+    540.6,
     193.6
    ],
-   "w": 1793,
-   "h": 469,
+   "w": 1909,
+   "h": 579,
    "dpi": 300,
    "src": "05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.264
+   "blank": 0.419
   },
   {
    "key": "fS22",
@@ -511,15 +511,15 @@
    "caption": "Figure S22. The PDOS of P in the a) LPSC and b) LPSC-MF.",
    "bbox": [
     82.6,
-    81.2,
-    512.9,
-    252.7
+    54.9,
+    540.6,
+    252.6
    ],
-   "w": 1793,
-   "h": 716,
+   "w": 1909,
+   "h": 825,
    "dpi": 300,
    "src": "05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.934
+   "blank": 0.933
   },
   {
    "key": "fS23",
@@ -530,15 +530,15 @@
    "caption": "Figure S23. Charge–discharge profiles of LCO/LPSC/Li cell at 0.1C and 25 oC. Inset is the enlarged charging curve with burr, indicating growth of lithium dendrites.",
    "bbox": [
     82.6,
-    81.2,
-    512.9,
+    54.9,
+    540.6,
     270.3
    ],
-   "w": 1793,
-   "h": 789,
+   "w": 1909,
+   "h": 899,
    "dpi": 300,
    "src": "05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.946
+   "blank": 0.941
   },
   {
    "key": "fS24",
@@ -549,15 +549,15 @@
    "caption": "Figure S24. Charge–discharge profiles of LCO/liquid electrolyte/Li cell at 0.1C under 25 oC.",
    "bbox": [
     82.6,
-    81.2,
-    512.9,
+    54.9,
+    540.6,
     270.3
    ],
-   "w": 1793,
-   "h": 789,
+   "w": 1909,
+   "h": 899,
    "dpi": 300,
    "src": "05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.946
+   "blank": 0.941
   },
   {
    "key": "fS25",
@@ -568,15 +568,15 @@
    "caption": "Figure S25. Charge–discharge profiles of LCO/LPSC-MF/Li cell at 0.1C and 25 oC.",
    "bbox": [
     82.6,
-    81.2,
-    512.9,
+    54.9,
+    540.6,
     270.3
    ],
-   "w": 1793,
-   "h": 789,
+   "w": 1909,
+   "h": 899,
    "dpi": 300,
    "src": "05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.941
+   "blank": 0.937
   },
   {
    "key": "fS26",
@@ -587,15 +587,15 @@
    "caption": "Figure S26. The impedance spectra of the LCO/LPSC-MF/Li cell at different 100 cycles.",
    "bbox": [
     39.4,
-    89.6,
-    556.1,
+    41.9,
+    558.3,
     280.6
    ],
-   "w": 2153,
-   "h": 797,
+   "w": 2163,
+   "h": 996,
    "dpi": 300,
    "src": "05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.953
+   "blank": 0.947
   },
   {
    "key": "fS27",
@@ -606,15 +606,34 @@
    "caption": "Figure S27. Cycling performances of batteries assembled with LPSC-MF electrolyte at 25 oC and 0.5C.",
    "bbox": [
     39.4,
-    89.6,
-    556.1,
+    41.9,
+    558.3,
     311.6
    ],
-   "w": 2153,
-   "h": 926,
+   "w": 2163,
+   "h": 1125,
    "dpi": 300,
    "src": "05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.941
+   "blank": 0.939
+  },
+  {
+   "key": "fS28",
+   "kind": "figure",
+   "label": "S28",
+   "page": 33,
+   "file": "fig_S28.png",
+   "caption": "Figure S28. Cycling performances of the LiCoO2/Li cells with LPSC and LPSC-MF electrolytes at 50 oC.",
+   "bbox": [
+    39.4,
+    41.9,
+    558.3,
+    305.6
+   ],
+   "w": 2163,
+   "h": 1100,
+   "dpi": 300,
+   "src": "05. Sup) Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.929
   },
   {
    "key": "s1",
@@ -627,13 +646,13 @@
     44.4,
     26.0,
     298.6,
-    202.7
+    199.3
    ],
    "w": 1060,
-   "h": 737,
+   "h": 723,
    "dpi": 300,
    "src": "05. Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
-   "blank": 0.417
+   "blank": 0.406
   },
   {
    "key": "tS1",

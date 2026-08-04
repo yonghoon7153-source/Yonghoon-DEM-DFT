@@ -17,14 +17,14 @@
    "bbox": [
     36.5,
     562.6,
-    298.0,
-    698.3
+    321.9,
+    667.3
    ],
-   "w": 1090,
-   "h": 566,
+   "w": 1190,
+   "h": 437,
    "dpi": 300,
    "src": "43. Phase stability, electrochemical stability and ionic conductivity of the Li10±1MP2X12 (M = Ge, Si, Sn, Al or P, and X = O, S or Se) family of superionic conductors.pdf",
-   "blank": 0.662
+   "blank": 0.656
   },
   {
    "key": "f2",
@@ -35,15 +35,15 @@
    "caption": "Fig. 2 Calculated density of states for Li10GeP2X12 for X ¼ (a) O, (b) S and (c) Se using the HSE screened hybrid functional.",
    "bbox": [
     36.5,
-    196.8,
+    209.2,
     298.0,
-    708.1
+    706.7
    ],
    "w": 1090,
-   "h": 2132,
+   "h": 2074,
    "dpi": 300,
    "src": "43. Phase stability, electrochemical stability and ionic conductivity of the Li10±1MP2X12 (M = Ge, Si, Sn, Al or P, and X = O, S or Se) family of superionic conductors.pdf",
-   "blank": 0.847
+   "blank": 0.846
   },
   {
    "key": "f3",
@@ -54,15 +54,15 @@
    "caption": "Fig. 3 Eﬀect of (a) isovalent (Si4+ and Sn4+) and (b) aliovalent (P5+ and Al3+) cation substitutions on diﬀusivity in the LGPS structure. Data points at 1000 K, 1100 K, and 1200 K are excluded for Li11AlP2S12 and Li9P3S12 due to melting or breaking of Al–S/P–S bonds in the MD simulations.",
    "bbox": [
     36.5,
-    345.9,
+    355.2,
     298.0,
     685.2
    ],
    "w": 1090,
-   "h": 1415,
+   "h": 1376,
    "dpi": 300,
    "src": "43. Phase stability, electrochemical stability and ionic conductivity of the Li10±1MP2X12 (M = Ge, Si, Sn, Al or P, and X = O, S or Se) family of superionic conductors.pdf",
-   "blank": 0.913
+   "blank": 0.911
   },
   {
    "key": "t1",

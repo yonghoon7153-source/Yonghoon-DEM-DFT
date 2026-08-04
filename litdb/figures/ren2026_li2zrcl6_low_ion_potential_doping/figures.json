@@ -16,15 +16,15 @@
    "caption": "Figure 1. Schematic Illustration of the Ion-Potential-Regulated Design Strategy for Enhancing Chloride Framework Flexibility.",
    "bbox": [
     64.9,
-    428.7,
+    407.4,
     530.5,
     701.2
    ],
    "w": 1941,
-   "h": 1136,
+   "h": 1225,
    "dpi": 300,
    "src": "50. Regulation of the Lattice dynamics of Li2ZrCl6 solid electrolytes via low-ion-potential element doping for all-solid-state batteries.pdf",
-   "blank": 0.316
+   "blank": 0.365
   },
   {
    "key": "f2",
@@ -35,12 +35,12 @@
    "caption": "Figure 2. Crystal Structure and Local Environment Analysis of Er/Nd-Doped LZC SSEs. a) Schematic crystal structures of pristine Li2ZrCl6 and representative Er/Nd-dopant Li2ZrCl6 9",
    "bbox": [
     64.9,
-    263.1,
+    268.9,
     530.6,
     743.9
    ],
    "w": 1941,
-   "h": 2004,
+   "h": 1980,
    "dpi": 300,
    "src": "50. Regulation of the Lattice dynamics of Li2ZrCl6 solid electrolytes via low-ion-potential element doping for all-solid-state batteries.pdf",
    "blank": 0.611
@@ -56,13 +56,13 @@
     64.9,
     51.3,
     530.6,
-    533.1
+    519.2
    ],
    "w": 1941,
-   "h": 2009,
+   "h": 1951,
    "dpi": 300,
    "src": "50. Regulation of the Lattice dynamics of Li2ZrCl6 solid electrolytes via low-ion-potential element doping for all-solid-state batteries.pdf",
-   "blank": 0.844
+   "blank": 0.852
   },
   {
    "key": "f4",
@@ -75,13 +75,13 @@
     64.9,
     51.3,
     530.6,
-    704.8
+    691.3
    ],
    "w": 1941,
-   "h": 2724,
+   "h": 2668,
    "dpi": 300,
    "src": "50. Regulation of the Lattice dynamics of Li2ZrCl6 solid electrolytes via low-ion-potential element doping for all-solid-state batteries.pdf",
-   "blank": 0.609
+   "blank": 0.604
   },
   {
    "key": "f5",
@@ -92,15 +92,15 @@
    "caption": "Figure 5. Rate charge/discharge profiles of NCM811 all-solid-state batteries using a) Li2ZrCl6, b) Li2.5Zr0.5Er0.5Cl6, and c) Li2.375Zr0.625Nd0.375Cl6 electrolytes. d) Comparison of the rate performance of NCM811 all-solid-state batteries based on Li2ZrCl6, Li2.5Zr0.5Er0.5Cl6, and 19",
    "bbox": [
     64.9,
-    152.7,
+    158.5,
     530.6,
-    728.0
+    727.9
    ],
    "w": 1941,
-   "h": 2398,
+   "h": 2373,
    "dpi": 300,
    "src": "50. Regulation of the Lattice dynamics of Li2ZrCl6 solid electrolytes via low-ion-potential element doping for all-solid-state batteries.pdf",
-   "blank": 0.865
+   "blank": 0.866
   }
  ]
 }

@@ -17,15 +17,15 @@
    "caption": "Fig. 1 Schematic representation of the screening funnel. Structures down- loaded from experimental repositories go sequentially through several computational filters. Each stage of the screening discards structures that are unsuitable as solid-state electrolytes based on ever more complex calculated properties. The final outcome is of a few tens of viable structures, that could be potential candidates for novel solid-state Li-ion conductors.",
    "bbox": [
     297.3,
-    36.8,
+    43.8,
     558.8,
     345.3
    ],
    "w": 1091,
-   "h": 1286,
+   "h": 1257,
    "dpi": 300,
    "src": "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
-   "blank": 0.619
+   "blank": 0.61
   },
   {
    "key": "f3",
@@ -36,15 +36,15 @@
    "caption": "Fig. 3 Histogram of the relative volume expansion between the experi- mental and the calculated ground-state volumes (at the PBE level) for 971 structures studied. In the left panel, we show the entire histogram, on the right we zoom on the region between 0.9 and 1.1.",
    "bbox": [
     36.5,
-    479.2,
+    493.6,
     298.0,
     676.5
    ],
    "w": 1090,
-   "h": 823,
+   "h": 763,
    "dpi": 300,
    "src": "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
-   "blank": 0.89
+   "blank": 0.888
   },
   {
    "key": "f4",
@@ -55,15 +55,15 @@
    "caption": "Fig. 4 Diﬀusion coeﬃcients from FPMD for Li4Ga4I16, Li7Ga8Br24, Li8Cs4I12, Li20Ge2P4S24, Li40Cl24O8, Li20Cl12O4, and Li56Ta8O48 as solid lines in orange, brown, blue, violet, green, pink, and red, respectively (we refer to the composition of the actual supercell studied). The line of best fit is shown as a dashed line of the same color. The activation barriers, extracted from the slope of the fit, are in the legend (in brackets) in eV.",
    "bbox": [
     36.5,
-    36.8,
+    43.8,
     298.0,
     221.9
    ],
    "w": 1090,
-   "h": 772,
+   "h": 743,
    "dpi": 300,
    "src": "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
-   "blank": 0.849
+   "blank": 0.836
   },
   {
    "key": "f6",
@@ -74,15 +74,15 @@
    "caption": "Fig. 6 Li-Ionic density of Li20Ge2P4S24 at 500 K from FPMD. The unidimensional channels along the c-axis (along blue arrow) are clearly visible; see text for detail on how we calculate the density and the isosurface levels.",
    "bbox": [
     297.3,
-    36.8,
+    43.8,
     558.8,
     332.5
    ],
    "w": 1091,
-   "h": 1233,
+   "h": 1204,
    "dpi": 300,
    "src": "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
-   "blank": 0.497
+   "blank": 0.485
   },
   {
    "key": "f8",
@@ -93,15 +93,15 @@
    "caption": "Fig. 8 Li-Ionic density of Li56Ta8O48 at 500 K from FPMD.",
    "bbox": [
     36.5,
-    499.1,
+    514.9,
     281.7,
     646.2
    ],
    "w": 1022,
-   "h": 614,
+   "h": 548,
    "dpi": 300,
    "src": "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
-   "blank": 0.53
+   "blank": 0.486
   },
   {
    "key": "f9",
@@ -131,15 +131,15 @@
    "caption": "Fig. 10 MSD of Li and the most prominent host-lattice species in Li16Re24S44 (top) and Li16Ti16P16O80 (bottom) at 750 K from FPMD. As explained in the caption of Fig. 5, the MSD of the entire trajectory is plotted as a solid line for each species, while thin lines show the tracer diﬀusion calculated for diﬀerent blocks of the trajectory, allowing for an estimate of the error for the MSD, which is given by the shaded area.",
    "bbox": [
     36.5,
-    36.8,
+    43.8,
     298.0,
     328.1
    ],
    "w": 1090,
-   "h": 1215,
+   "h": 1186,
    "dpi": 300,
    "src": "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
-   "blank": 0.902
+   "blank": 0.901
   },
   {
    "key": "f11",
@@ -150,15 +150,15 @@
    "caption": "Fig. 11 Li-Ionic density of Li16Ti16P16O80 at 500 K.",
    "bbox": [
     36.5,
-    571.0,
+    586.3,
     275.5,
     706.3
    ],
    "w": 997,
-   "h": 565,
+   "h": 501,
    "dpi": 300,
    "src": "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
-   "blank": 0.693
+   "blank": 0.667
   },
   {
    "key": "f12",
@@ -169,15 +169,15 @@
    "caption": "Fig. 12 Li-Ionic density of Li20B4S16O64 at 600 K.",
    "bbox": [
     297.3,
-    36.8,
+    43.8,
     542.3,
     353.7
    ],
    "w": 1022,
-   "h": 1321,
+   "h": 1292,
    "dpi": 300,
    "src": "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
-   "blank": 0.324
+   "blank": 0.308
   },
   {
    "key": "f14",
@@ -188,15 +188,15 @@
    "caption": "Fig. 14 Li-Ionic density of Li24Cs8Cl32 at 750 K.",
    "bbox": [
     297.3,
-    36.8,
+    43.8,
     536.3,
     216.3
    ],
    "w": 997,
-   "h": 749,
+   "h": 720,
    "dpi": 300,
    "src": "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
-   "blank": 0.497
+   "blank": 0.475
   },
   {
    "key": "f15",
@@ -207,15 +207,15 @@
    "caption": "Fig. 15 Diﬀusion coeﬃcients obtained from full FPMD and by the pinball model used in the screening at 1000 K, color-coded by the predominant anion. The vertical line at 10\u00028 gives the limit below which we cannot converge the slope of the MSD with FPMD, therefore we set this as the lower boundary for diﬀusion.",
    "bbox": [
     36.5,
-    36.8,
+    43.8,
     298.0,
     185.5
    ],
    "w": 1090,
-   "h": 620,
+   "h": 591,
    "dpi": 300,
    "src": "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
-   "blank": 0.856
+   "blank": 0.849
   },
   {
    "key": "f17",
@@ -226,15 +226,2257 @@
    "caption": "Fig. 17 Histogram of the average node-time per ionic step for each structure, in the pinball model in blue and with DFT in green.",
    "bbox": [
     297.3,
-    311.0,
+    330.8,
     558.7,
     471.9
    ],
    "w": 1090,
-   "h": 672,
+   "h": 589,
    "dpi": 300,
    "src": "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.858
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 3,
+   "file": "fig_S4.png",
+   "caption": "Fig. S4 MSD(t) for Li20Ge2P4S24 from FPMD for all temperatures studied.",
+   "bbox": [
+    36.5,
+    355.0,
+    310.8,
+    424.5
+   ],
+   "w": 1144,
+   "h": 290,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 4,
+   "file": "fig_S5.png",
+   "caption": "Fig. S5 MSD(t) for Li8Ga8Br24 from FPMD for all temperatures studied.",
+   "bbox": [
+    36.5,
+    546.9,
+    302.8,
+    633.6
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 4,
+   "file": "fig_S6.png",
+   "caption": "Fig. S6 MSD(t) for Li4Ga4I16 from FPMD for all temperatures studied.",
+   "bbox": [
+    309.2,
+    546.9,
+    575.5,
+    633.6
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.835
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 5,
+   "file": "fig_S7.png",
+   "caption": "Fig. S7 MSD(t) for Li40Cl24O8 from FPMD for all temperatures studied.",
+   "bbox": [
+    36.5,
+    546.9,
+    302.8,
+    633.6
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.822
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 5,
+   "file": "fig_S8.png",
+   "caption": "Fig. S8 MSD(t) for Li20Cl12O4 from FPMD for all temperatures studied.",
+   "bbox": [
+    309.2,
+    546.9,
+    575.5,
+    633.6
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.818
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 6,
+   "file": "fig_S9.png",
+   "caption": "Fig. S9 MSD(t) for Li8Cs4I12 from FPMD for all temperatures studied.",
+   "bbox": [
+    36.5,
+    546.9,
+    302.8,
+    633.6
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.86
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 6,
+   "file": "fig_S10.png",
+   "caption": "Fig. S10 MSD(t) for Li56Ta8O48 from FPMD for all temperatures studied.",
+   "bbox": [
+    309.2,
+    546.9,
+    575.5,
+    633.6
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.877
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 8,
+   "file": "fig_S11.png",
+   "caption": "Fig. S11 MSD(t) for Li16Re24S44 from FPMD for all temperatures stud- ied.",
+   "bbox": [
+    36.5,
+    546.9,
+    302.8,
+    633.6
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.906
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 8,
+   "file": "fig_S12.png",
+   "caption": "Fig. S12 MSD(t) for Li16Ti16P16O80 from FPMD for all temperatures studied.",
+   "bbox": [
+    309.2,
+    559.3,
+    575.5,
+    633.6
+   ],
+   "w": 1110,
+   "h": 310,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.869
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 9,
+   "file": "fig_S13.png",
+   "caption": "Fig. S13 MSD(t) for Li16Ti16P16O80 from FPMD for all temperatures studied.",
+   "bbox": [
+    36.5,
+    559.3,
+    302.8,
+    633.6
+   ],
+   "w": 1110,
+   "h": 310,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.869
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 9,
+   "file": "fig_S14.png",
+   "caption": "Fig. S14 MSD(t) for Li48P8S40I8 from FPMD for all temperatures studied.",
+   "bbox": [
+    309.2,
+    559.3,
+    575.5,
+    633.6
+   ],
+   "w": 1110,
+   "h": 310,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.893
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 10,
+   "file": "fig_S15.png",
+   "caption": "Fig. S15 MSD(t) for Li20B4S16O64 from FPMD for all temperatures stud- ied.",
+   "bbox": [
+    36.5,
+    559.3,
+    302.8,
+    633.6
+   ],
+   "w": 1110,
+   "h": 310,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.884
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 10,
+   "file": "fig_S16.png",
+   "caption": "Fig. S16 MSD(t) for Li4Ta4Ge4O20 from FPMD for all temperatures stud- ied.",
+   "bbox": [
+    309.2,
+    559.3,
+    575.5,
+    633.6
+   ],
+   "w": 1110,
+   "h": 310,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.902
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 11,
+   "file": "fig_S17.png",
+   "caption": "Fig. S17 MSD(t) for Li12Al12Si12O48 from FPMD for all temperatures studied.",
+   "bbox": [
+    36.5,
+    559.3,
+    302.8,
+    633.6
+   ],
+   "w": 1110,
+   "h": 310,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 11,
+   "file": "fig_S18.png",
+   "caption": "Fig. S18 MSD(t) for Li8Mg8S12O48 from FPMD for all temperatures stud- ied.",
+   "bbox": [
+    309.2,
+    560.2,
+    575.5,
+    633.6
+   ],
+   "w": 1110,
+   "h": 306,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.893
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 12,
+   "file": "fig_S19.png",
+   "caption": "Fig. S19 MSD(t) for Li16I16O48 from FPMD for all temperatures studied.",
+   "bbox": [
+    36.5,
+    546.9,
+    302.8,
+    633.6
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.891
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 12,
+   "file": "fig_S20.png",
+   "caption": "Fig. S20 MSD(t) for Li8B8S20 from FPMD for all temperatures studied.",
+   "bbox": [
+    309.2,
+    546.9,
+    575.5,
+    633.6
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.869
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 13,
+   "file": "fig_S21.png",
+   "caption": "Fig. S21 MSD(t) for Li24Y4B12O36 from FPMD for all temperatures stud- ied.",
+   "bbox": [
+    36.5,
+    559.3,
+    302.8,
+    633.6
+   ],
+   "w": 1110,
+   "h": 310,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.844
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 13,
+   "file": "fig_S22.png",
+   "caption": "Fig. S22 MSD(t) for Li24Cs8Cl32 from FPMD for all temperatures studied.",
+   "bbox": [
+    309.2,
+    546.9,
+    575.5,
+    633.6
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.883
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 14,
+   "file": "fig_S23.png",
+   "caption": "Fig. S23 MSD(t) for Li18Ga6P16O58 from FPMD for all temperatures studied.",
+   "bbox": [
+    36.5,
+    559.3,
+    302.8,
+    633.6
+   ],
+   "w": 1110,
+   "h": 310,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.871
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 14,
+   "file": "fig_S24.png",
+   "caption": "Fig. S24 MSD(t) for Rb4Li28Si8O32 from FPMD for all temperatures stud- ied.",
+   "bbox": [
+    309.2,
+    559.3,
+    575.5,
+    633.6
+   ],
+   "w": 1110,
+   "h": 310,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.893
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 15,
+   "file": "fig_S25.png",
+   "caption": "Fig. S25 MSD(t) for Li16S16O56 from FPMD for all temperatures studied.",
+   "bbox": [
+    36.5,
+    546.9,
+    305.8,
+    633.6
+   ],
+   "w": 1123,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.869
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 15,
+   "file": "fig_S26.png",
+   "caption": "Fig. S26 MSD(t) for Li16Zn8Sn8Se32 from FPMD for all temperatures studied.",
+   "bbox": [
+    309.2,
+    559.3,
+    575.5,
+    633.6
+   ],
+   "w": 1110,
+   "h": 310,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.835
+  },
+  {
+   "key": "fS27",
+   "kind": "figure",
+   "label": "S27",
+   "page": 16,
+   "file": "fig_S27.png",
+   "caption": "Fig. S27 MSD(t) for Li18Ga6F36 from FPMD for all temperatures studied.",
+   "bbox": [
+    36.5,
+    546.9,
+    302.8,
+    633.6
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.906
+  },
+  {
+   "key": "fS28",
+   "kind": "figure",
+   "label": "S28",
+   "page": 16,
+   "file": "fig_S28.png",
+   "caption": "Fig. S28 MSD(t) for Li16In16Ge8S48 from FPMD for all temperatures studied.",
+   "bbox": [
+    309.2,
+    559.3,
+    575.5,
+    633.6
+   ],
+   "w": 1110,
+   "h": 310,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.853
+  },
+  {
+   "key": "fS29",
+   "kind": "figure",
+   "label": "S29",
+   "page": 17,
+   "file": "fig_S29.png",
+   "caption": "Fig. S29 MSD(t) for Li8Ti12O28 from FPMD for all temperatures studied.",
+   "bbox": [
+    36.5,
+    546.9,
+    302.8,
+    633.6
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "fS30",
+   "kind": "figure",
+   "label": "S30",
+   "page": 17,
+   "file": "fig_S30.png",
+   "caption": "Fig. S30 MSD(t) for Li8Mo8As8O48 from FPMD for all temperatures stud- ied.",
+   "bbox": [
+    309.2,
+    559.3,
+    575.5,
+    633.6
+   ],
+   "w": 1110,
+   "h": 310,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.885
+  },
+  {
+   "key": "fS31",
+   "kind": "figure",
+   "label": "S31",
+   "page": 18,
+   "file": "fig_S31.png",
+   "caption": "Fig. S31 MSD(t) for Li16Ga16Cl48 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    410.2,
+    302.8,
+    496.9
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "fS32",
+   "kind": "figure",
+   "label": "S32",
+   "page": 18,
+   "file": "fig_S32.png",
+   "caption": "Fig. S32 MSD(t) for Li16Ga16Br64 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    640.4,
+    302.8,
+    727.1
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.909
+  },
+  {
+   "key": "fS33",
+   "kind": "figure",
+   "label": "S33",
+   "page": 18,
+   "file": "fig_S33.png",
+   "caption": "Fig. S33 MSD(t) for Li12Mg2Br16 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    411.1,
+    575.5,
+    496.9
+   ],
+   "w": 1110,
+   "h": 358,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "fS34",
+   "kind": "figure",
+   "label": "S34",
+   "page": 18,
+   "file": "fig_S34.png",
+   "caption": "Fig. S34 MSD(t) for Li12P28 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    628.0,
+    575.5,
+    727.1
+   ],
+   "w": 1110,
+   "h": 414,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.924
+  },
+  {
+   "key": "fS35",
+   "kind": "figure",
+   "label": "S35",
+   "page": 19,
+   "file": "fig_S35.png",
+   "caption": "Fig. S35 MSD(t) for Li12As4S12 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    114.8,
+    302.8,
+    201.5
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "fS36",
+   "kind": "figure",
+   "label": "S36",
+   "page": 19,
+   "file": "fig_S36.png",
+   "caption": "Fig. S36 MSD(t) for Li4B4S16Cl16O48 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    400.5,
+    302.8,
+    462.3
+   ],
+   "w": 1110,
+   "h": 259,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.846
+  },
+  {
+   "key": "fS37",
+   "kind": "figure",
+   "label": "S37",
+   "page": 19,
+   "file": "fig_S37.png",
+   "caption": "Fig. S37 MSD(t) for Li2Sn4P6O24 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    648.9,
+    302.8,
+    723.1
+   ],
+   "w": 1110,
+   "h": 311,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.883
+  },
+  {
+   "key": "fS38",
+   "kind": "figure",
+   "label": "S38",
+   "page": 19,
+   "file": "fig_S38.png",
+   "caption": "Fig. S38 MSD(t) for Li4Ge9O20 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    114.8,
+    575.5,
+    201.5
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.883
+  },
+  {
+   "key": "fS39",
+   "kind": "figure",
+   "label": "S39",
+   "page": 19,
+   "file": "fig_S39.png",
+   "caption": "Fig. S39 MSD(t) for Li8I8O32 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    375.6,
+    575.5,
+    462.3
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.849
+  },
+  {
+   "key": "fS40",
+   "kind": "figure",
+   "label": "S40",
+   "page": 19,
+   "file": "fig_S40.png",
+   "caption": "Fig. S40 MSD(t) for Rb8Li4Ta4S16 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    648.9,
+    575.5,
+    723.1
+   ],
+   "w": 1110,
+   "h": 311,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.863
+  },
+  {
+   "key": "fS41",
+   "kind": "figure",
+   "label": "S41",
+   "page": 20,
+   "file": "fig_S41.png",
+   "caption": "Fig. S41 MSD(t) for Li8P56 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    102.4,
+    302.8,
+    201.5
+   ],
+   "w": 1110,
+   "h": 414,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "fS42",
+   "kind": "figure",
+   "label": "S42",
+   "page": 20,
+   "file": "fig_S42.png",
+   "caption": "Fig. S42 MSD(t) for Li16P8O28 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    375.6,
+    302.8,
+    462.3
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.909
+  },
+  {
+   "key": "fS43",
+   "kind": "figure",
+   "label": "S43",
+   "page": 20,
+   "file": "fig_S43.png",
+   "caption": "Fig. S43 MSD(t) for Li16Ge32O72 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    636.4,
+    302.8,
+    723.1
+   ],
+   "w": 1110,
+   "h": 363,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "fS44",
+   "kind": "figure",
+   "label": "S44",
+   "page": 20,
+   "file": "fig_S44.png",
+   "caption": "Fig. S44 MSD(t) for Li8Au8F32 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    114.8,
+    575.5,
+    201.5
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.841
+  },
+  {
+   "key": "fS45",
+   "kind": "figure",
+   "label": "S45",
+   "page": 20,
+   "file": "fig_S45.png",
+   "caption": "Fig. S45 MSD(t) for Li12Se6O24 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    375.6,
+    575.5,
+    462.3
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.88
+  },
+  {
+   "key": "fS46",
+   "kind": "figure",
+   "label": "S46",
+   "page": 20,
+   "file": "fig_S46.png",
+   "caption": "Fig. S46 MSD(t) for Li16Al16Se32 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    636.4,
+    575.5,
+    723.1
+   ],
+   "w": 1110,
+   "h": 363,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.895
+  },
+  {
+   "key": "fS47",
+   "kind": "figure",
+   "label": "S47",
+   "page": 21,
+   "file": "fig_S47.png",
+   "caption": "Fig. S47 MSD(t) for Li4In4P8O28 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    127.3,
+    302.8,
+    201.5
+   ],
+   "w": 1110,
+   "h": 310,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.889
+  },
+  {
+   "key": "fS48",
+   "kind": "figure",
+   "label": "S48",
+   "page": 21,
+   "file": "fig_S48.png",
+   "caption": "Fig. S48 MSD(t) for Li24Ti6O24 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    299.0,
+    302.8,
+    385.6
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "fS49",
+   "kind": "figure",
+   "label": "S49",
+   "page": 21,
+   "file": "fig_S49.png",
+   "caption": "Fig. S49 MSD(t) for Li24Si8O28 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    483.1,
+    302.8,
+    569.8
+   ],
+   "w": 1110,
+   "h": 363,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "fS50",
+   "kind": "figure",
+   "label": "S50",
+   "page": 21,
+   "file": "fig_S50.png",
+   "caption": "Fig. S50 MSD(t) for Li16In16Si8Se48 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    127.3,
+    575.5,
+    201.5
+   ],
+   "w": 1110,
+   "h": 310,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.88
+  },
+  {
+   "key": "fS51",
+   "kind": "figure",
+   "label": "S51",
+   "page": 21,
+   "file": "fig_S51.png",
+   "caption": "Fig. S51 MSD(t) for Li8B8S16O64 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    315.2,
+    575.5,
+    389.5
+   ],
+   "w": 1110,
+   "h": 310,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.864
+  },
+  {
+   "key": "fS52",
+   "kind": "figure",
+   "label": "S52",
+   "page": 23,
+   "file": "fig_S52.png",
+   "caption": "Fig. S52 MSD(t) for Li16Ce8N16 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    349.9,
+    302.8,
+    436.5
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "fS53",
+   "kind": "figure",
+   "label": "S53",
+   "page": 23,
+   "file": "fig_S53.png",
+   "caption": "Fig. S53 MSD(t) for Li24Sr12Ta8O44 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    648.9,
+    302.8,
+    723.1
+   ],
+   "w": 1110,
+   "h": 311,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.858
+  },
+  {
+   "key": "fS54",
+   "kind": "figure",
+   "label": "S54",
+   "page": 23,
+   "file": "fig_S54.png",
+   "caption": "Fig. S54 MSD(t) for Li20Re4N16 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    349.9,
+    575.5,
+    436.5
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "fS55",
+   "kind": "figure",
+   "label": "S55",
+   "page": 23,
+   "file": "fig_S55.png",
+   "caption": "Fig. S55 MSD(t) for Li24Zn4O16 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    636.4,
+    575.5,
+    723.1
+   ],
+   "w": 1110,
+   "h": 363,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.868
+  },
+  {
+   "key": "fS56",
+   "kind": "figure",
+   "label": "S56",
+   "page": 24,
+   "file": "fig_S56.png",
+   "caption": "Fig. S56 MSD(t) for Li64K16Al16O64 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    127.3,
+    302.8,
+    201.5
+   ],
+   "w": 1110,
+   "h": 310,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.897
+  },
+  {
+   "key": "fS57",
+   "kind": "figure",
+   "label": "S57",
+   "page": 24,
+   "file": "fig_S57.png",
+   "caption": "Fig. S57 MSD(t) for Li8Al4B20O40 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    388.1,
+    302.8,
+    462.3
+   ],
+   "w": 1110,
+   "h": 311,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.88
+  },
+  {
+   "key": "fS58",
+   "kind": "figure",
+   "label": "S58",
+   "page": 24,
+   "file": "fig_S58.png",
+   "caption": "Fig. S58 MSD(t) for Li8Cs12Br20 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    636.4,
+    302.8,
+    723.1
+   ],
+   "w": 1110,
+   "h": 363,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.964
+  },
+  {
+   "key": "fS59",
+   "kind": "figure",
+   "label": "S59",
+   "page": 24,
+   "file": "fig_S59.png",
+   "caption": "Fig. S59 MSD(t) for Na4Li8B4P8O32 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    139.7,
+    575.5,
+    201.5
+   ],
+   "w": 1110,
+   "h": 258,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.875
+  },
+  {
+   "key": "fS60",
+   "kind": "figure",
+   "label": "S60",
+   "page": 24,
+   "file": "fig_S60.png",
+   "caption": "Fig. S60 MSD(t) for Li4La4C8O24 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    388.1,
+    575.5,
+    462.3
+   ],
+   "w": 1110,
+   "h": 311,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.88
+  },
+  {
+   "key": "fS61",
+   "kind": "figure",
+   "label": "S61",
+   "page": 24,
+   "file": "fig_S61.png",
+   "caption": "Fig. S61 MSD(t) for Li16Au16F64 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    636.4,
+    575.5,
+    723.1
+   ],
+   "w": 1110,
+   "h": 363,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "fS62",
+   "kind": "figure",
+   "label": "S62",
+   "page": 25,
+   "file": "fig_S62.png",
+   "caption": "Fig. S62 MSD(t) for Li16Si32B16O96 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    127.3,
+    302.8,
+    201.5
+   ],
+   "w": 1110,
+   "h": 310,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.907
+  },
+  {
+   "key": "fS63",
+   "kind": "figure",
+   "label": "S63",
+   "page": 25,
+   "file": "fig_S63.png",
+   "caption": "Fig. S63 MSD(t) for Li8Cd4P16O48 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    388.1,
+    302.8,
+    462.3
+   ],
+   "w": 1110,
+   "h": 311,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "fS64",
+   "kind": "figure",
+   "label": "S64",
+   "page": 25,
+   "file": "fig_S64.png",
+   "caption": "Fig. S64 MSD(t) for Li16Si24O56 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    636.4,
+    302.8,
+    723.1
+   ],
+   "w": 1110,
+   "h": 363,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "fS65",
+   "kind": "figure",
+   "label": "S65",
+   "page": 25,
+   "file": "fig_S65.png",
+   "caption": "Fig. S65 MSD(t) for Li32Te16O48 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    114.8,
+    575.5,
+    201.5
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "fS66",
+   "kind": "figure",
+   "label": "S66",
+   "page": 25,
+   "file": "fig_S66.png",
+   "caption": "Fig. S66 MSD(t) for Li36Au12O36 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    375.6,
+    575.5,
+    462.3
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.847
+  },
+  {
+   "key": "fS67",
+   "kind": "figure",
+   "label": "S67",
+   "page": 25,
+   "file": "fig_S67.png",
+   "caption": "Fig. S67 MSD(t) for Sr12Li24Si24N48 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    648.9,
+    575.5,
+    723.1
+   ],
+   "w": 1110,
+   "h": 311,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.873
+  },
+  {
+   "key": "fS68",
+   "kind": "figure",
+   "label": "S68",
+   "page": 26,
+   "file": "fig_S68.png",
+   "caption": "Fig. S68 MSD(t) for Li3Y3Mo9O24 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    127.3,
+    302.8,
+    201.5
+   ],
+   "w": 1110,
+   "h": 310,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.835
+  },
+  {
+   "key": "fS69",
+   "kind": "figure",
+   "label": "S69",
+   "page": 26,
+   "file": "fig_S69.png",
+   "caption": "Fig. S69 MSD(t) for Li12Mo6O24 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    375.6,
+    302.8,
+    462.3
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "fS70",
+   "kind": "figure",
+   "label": "S70",
+   "page": 26,
+   "file": "fig_S70.png",
+   "caption": "Fig. S70 MSD(t) for Li24Pd12O24 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    636.4,
+    302.8,
+    723.1
+   ],
+   "w": 1110,
+   "h": 363,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.87
+  },
+  {
+   "key": "fS71",
+   "kind": "figure",
+   "label": "S71",
+   "page": 26,
+   "file": "fig_S71.png",
+   "caption": "Fig. S71 MSD(t) for Li24Sc8B16O48 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    127.3,
+    575.5,
+    201.5
+   ],
+   "w": 1110,
+   "h": 310,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.893
+  },
+  {
+   "key": "fS72",
+   "kind": "figure",
+   "label": "S72",
+   "page": 26,
+   "file": "fig_S72.png",
+   "caption": "Fig. S72 MSD(t) for Li2Nb6In2Cl18 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    388.1,
+    575.5,
+    462.3
+   ],
+   "w": 1110,
+   "h": 311,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.9
+  },
+  {
+   "key": "fS73",
+   "kind": "figure",
+   "label": "S73",
+   "page": 26,
+   "file": "fig_S73.png",
+   "caption": "Fig. S73 MSD(t) for Li24W4N16 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    636.4,
+    575.5,
+    723.1
+   ],
+   "w": 1110,
+   "h": 363,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.873
+  },
+  {
+   "key": "fS74",
+   "kind": "figure",
+   "label": "S74",
+   "page": 27,
+   "file": "fig_S74.png",
+   "caption": "Fig. S74 MSD(t) for Li6Zn6As6O24 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    127.3,
+    302.8,
+    201.5
+   ],
+   "w": 1110,
+   "h": 310,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.859
+  },
+  {
+   "key": "fS75",
+   "kind": "figure",
+   "label": "S75",
+   "page": 27,
+   "file": "fig_S75.png",
+   "caption": "Fig. S75 MSD(t) for Li32Ta8N24 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    375.6,
+    302.8,
+    462.3
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.892
+  },
+  {
+   "key": "fS76",
+   "kind": "figure",
+   "label": "S76",
+   "page": 27,
+   "file": "fig_S76.png",
+   "caption": "Fig. S76 MSD(t) for Li24Sc8N16 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    636.4,
+    302.8,
+    723.1
+   ],
+   "w": 1110,
+   "h": 363,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "fS77",
+   "kind": "figure",
+   "label": "S77",
+   "page": 27,
+   "file": "fig_S77.png",
+   "caption": "Fig. S77 MSD(t) for Li9Al3Mo6As6O42 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    139.7,
+    575.5,
+    201.5
+   ],
+   "w": 1110,
+   "h": 258,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.864
+  },
+  {
+   "key": "fS78",
+   "kind": "figure",
+   "label": "S78",
+   "page": 27,
+   "file": "fig_S78.png",
+   "caption": "Fig. S78 MSD(t) for Li24P24O72 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    375.6,
+    575.5,
+    462.3
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "fS79",
+   "kind": "figure",
+   "label": "S79",
+   "page": 27,
+   "file": "fig_S79.png",
+   "caption": "Fig. S79 MSD(t) for Li56P8N32 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    636.4,
+    575.5,
+    723.1
+   ],
+   "w": 1110,
+   "h": 363,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "fS80",
+   "kind": "figure",
+   "label": "S80",
+   "page": 28,
+   "file": "fig_S80.png",
+   "caption": "Fig. S80 MSD(t) for Li8Y8Si8O32 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    127.3,
+    302.8,
+    201.5
+   ],
+   "w": 1110,
+   "h": 310,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.865
+  },
+  {
+   "key": "fS81",
+   "kind": "figure",
+   "label": "S81",
+   "page": 28,
+   "file": "fig_S81.png",
+   "caption": "Fig. S81 MSD(t) for Li16Si16O40 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    375.6,
+    302.8,
+    462.3
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "fS82",
+   "kind": "figure",
+   "label": "S82",
+   "page": 28,
+   "file": "fig_S82.png",
+   "caption": "Fig. S82 MSD(t) for Li64Nb8N32O4 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    648.9,
+    302.8,
+    723.1
+   ],
+   "w": 1110,
+   "h": 311,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.86
+  },
+  {
+   "key": "fS83",
+   "kind": "figure",
+   "label": "S83",
+   "page": 28,
+   "file": "fig_S83.png",
+   "caption": "Fig. S83 MSD(t) for Li36Mg12P16O64F12 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    140.6,
+    575.5,
+    201.5
+   ],
+   "w": 1110,
+   "h": 255,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.893
+  },
+  {
+   "key": "fS84",
+   "kind": "figure",
+   "label": "S84",
+   "page": 28,
+   "file": "fig_S84.png",
+   "caption": "Fig. S84 MSD(t) for Li32Pt4O24 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    375.6,
+    575.5,
+    462.3
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.903
+  },
+  {
+   "key": "fS85",
+   "kind": "figure",
+   "label": "S85",
+   "page": 28,
+   "file": "fig_S85.png",
+   "caption": "Fig. S85 MSD(t) for Li24Ga8B16O48 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    648.9,
+    575.5,
+    723.1
+   ],
+   "w": 1110,
+   "h": 311,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.889
+  },
+  {
+   "key": "fS86",
+   "kind": "figure",
+   "label": "S86",
+   "page": 29,
+   "file": "fig_S86.png",
+   "caption": "Fig. S86 MSD(t) for Li48Al16Si16O80 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    127.3,
+    302.8,
+    201.5
+   ],
+   "w": 1110,
+   "h": 310,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.861
+  },
+  {
+   "key": "fS87",
+   "kind": "figure",
+   "label": "S87",
+   "page": 29,
+   "file": "fig_S87.png",
+   "caption": "Fig. S87 MSD(t) for Li32Be20B24O72 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    388.1,
+    302.8,
+    462.3
+   ],
+   "w": 1110,
+   "h": 311,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.877
+  },
+  {
+   "key": "fS88",
+   "kind": "figure",
+   "label": "S88",
+   "page": 29,
+   "file": "fig_S88.png",
+   "caption": "Fig. S88 MSD(t) for Li32K8Nb8O40 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    648.9,
+    302.8,
+    723.1
+   ],
+   "w": 1110,
+   "h": 311,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.875
+  },
+  {
+   "key": "fS89",
+   "kind": "figure",
+   "label": "S89",
+   "page": 29,
+   "file": "fig_S89.png",
+   "caption": "Fig. S89 MSD(t) for Li16Te4O20 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    114.8,
+    575.5,
+    201.5
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.908
+  },
+  {
+   "key": "fS90",
+   "kind": "figure",
+   "label": "S90",
+   "page": 29,
+   "file": "fig_S90.png",
+   "caption": "Fig. S90 MSD(t) for Li16Ge20O48 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    375.6,
+    575.5,
+    462.3
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "fS91",
+   "kind": "figure",
+   "label": "S91",
+   "page": 29,
+   "file": "fig_S91.png",
+   "caption": "Fig. S91 MSD(t) for Li56Nb8N32 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    636.4,
+    575.5,
+    723.1
+   ],
+   "w": 1110,
+   "h": 363,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.907
+  },
+  {
+   "key": "fS92",
+   "kind": "figure",
+   "label": "S92",
+   "page": 30,
+   "file": "fig_S92.png",
+   "caption": "Fig. S92 MSD(t) for Li24Al8N16 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    114.8,
+    302.8,
+    201.5
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "fS93",
+   "kind": "figure",
+   "label": "S93",
+   "page": 30,
+   "file": "fig_S93.png",
+   "caption": "Fig. S93 MSD(t) for Li24Ga8B16O48 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    388.1,
+    302.8,
+    462.3
+   ],
+   "w": 1110,
+   "h": 311,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.889
+  },
+  {
+   "key": "fS94",
+   "kind": "figure",
+   "label": "S94",
+   "page": 30,
+   "file": "fig_S94.png",
+   "caption": "Fig. S94 MSD(t) for Li32Al16B16O64 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    648.9,
+    302.8,
+    723.1
+   ],
+   "w": 1110,
+   "h": 311,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.889
+  },
+  {
+   "key": "fS95",
+   "kind": "figure",
+   "label": "S95",
+   "page": 30,
+   "file": "fig_S95.png",
+   "caption": "Fig. S95 MSD(t) for Li16Zn4P8O32 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    127.3,
+    575.5,
+    201.5
+   ],
+   "w": 1110,
+   "h": 310,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.869
+  },
+  {
+   "key": "fS96",
+   "kind": "figure",
+   "label": "S96",
+   "page": 30,
+   "file": "fig_S96.png",
+   "caption": "Fig. S96 MSD(t) for K6Li6Zn6O12 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    388.1,
+    575.5,
+    462.3
+   ],
+   "w": 1110,
+   "h": 311,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.884
+  },
+  {
+   "key": "fS97",
+   "kind": "figure",
+   "label": "S97",
+   "page": 30,
+   "file": "fig_S97.png",
+   "caption": "Fig. S97 MSD(t) for Li48Te8O48 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    636.4,
+    575.5,
+    723.1
+   ],
+   "w": 1110,
+   "h": 363,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.881
+  },
+  {
+   "key": "fS98",
+   "kind": "figure",
+   "label": "S98",
+   "page": 31,
+   "file": "fig_S98.png",
+   "caption": "Fig. S98 MSD(t) for Li12W6O24 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    114.8,
+    302.8,
+    201.5
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "fS99",
+   "kind": "figure",
+   "label": "S99",
+   "page": 31,
+   "file": "fig_S99.png",
+   "caption": "Fig. S99 MSD(t) for Sr4Li16P8 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    375.6,
+    302.8,
+    462.3
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.902
+  },
+  {
+   "key": "fS100",
+   "kind": "figure",
+   "label": "S100",
+   "page": 31,
+   "file": "fig_S100.png",
+   "caption": "Fig. S100 MSD(t) for Li12B28O48 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    636.4,
+    302.8,
+    723.1
+   ],
+   "w": 1110,
+   "h": 363,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.907
+  },
+  {
+   "key": "fS101",
+   "kind": "figure",
+   "label": "S101",
+   "page": 31,
+   "file": "fig_S101.png",
+   "caption": "Fig. S101 MSD(t) for Sr4Li8Ta8O28 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    127.3,
+    575.5,
+    201.5
+   ],
+   "w": 1110,
+   "h": 310,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "fS102",
+   "kind": "figure",
+   "label": "S102",
+   "page": 31,
+   "file": "fig_S102.png",
+   "caption": "Fig. S102 MSD(t) for Cs8Li12B20O40 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    388.1,
+    575.5,
+    462.3
+   ],
+   "w": 1110,
+   "h": 311,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "fS103",
+   "kind": "figure",
+   "label": "S103",
+   "page": 31,
+   "file": "fig_S103.png",
+   "caption": "Fig. S103 MSD(t) for Li24Ba16Ta8N32 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    648.9,
+    575.5,
+    723.1
+   ],
+   "w": 1110,
+   "h": 311,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "fS104",
+   "kind": "figure",
+   "label": "S104",
+   "page": 32,
+   "file": "fig_S104.png",
+   "caption": "Fig. S104 MSD(t) for Li32Si32O80 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    114.8,
+    302.8,
+    201.5
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "fS105",
+   "kind": "figure",
+   "label": "S105",
+   "page": 32,
+   "file": "fig_S105.png",
+   "caption": "Fig. S105 MSD(t) for Li24Be12B16O48 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    388.1,
+    302.8,
+    462.3
+   ],
+   "w": 1110,
+   "h": 311,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.869
+  },
+  {
+   "key": "fS106",
+   "kind": "figure",
+   "label": "S106",
+   "page": 32,
+   "file": "fig_S106.png",
+   "caption": "Fig. S106 MSD(t) for Li16In16Ge16O64 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    648.9,
+    302.8,
+    723.1
+   ],
+   "w": 1110,
+   "h": 311,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.889
+  },
+  {
+   "key": "fS107",
+   "kind": "figure",
+   "label": "S107",
+   "page": 32,
+   "file": "fig_S107.png",
+   "caption": "Fig. S107 MSD(t) for Cs8Li8B8P16O60 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    139.7,
+    575.5,
+    201.5
+   ],
+   "w": 1110,
+   "h": 258,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "fS108",
+   "kind": "figure",
+   "label": "S108",
+   "page": 32,
+   "file": "fig_S108.png",
+   "caption": "Fig. S108 MSD(t) for Li16Te8W8O48 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    388.1,
+    575.5,
+    462.3
+   ],
+   "w": 1110,
+   "h": 311,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.88
+  },
+  {
+   "key": "fS109",
+   "kind": "figure",
+   "label": "S109",
+   "page": 32,
+   "file": "fig_S109.png",
+   "caption": "Fig. S109 MSD(t) for Li8Al6Ge6Br2O24 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    661.3,
+    575.5,
+    723.1
+   ],
+   "w": 1110,
+   "h": 259,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
    "blank": 0.866
+  },
+  {
+   "key": "fS110",
+   "kind": "figure",
+   "label": "S110",
+   "page": 33,
+   "file": "fig_S110.png",
+   "caption": "Fig. S110 MSD(t) for Li6Mo12O39 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    114.8,
+    302.8,
+    201.5
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "fS111",
+   "kind": "figure",
+   "label": "S111",
+   "page": 33,
+   "file": "fig_S111.png",
+   "caption": "Fig. S111 MSD(t) for Li24Ta24O36F72 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    388.1,
+    302.8,
+    462.3
+   ],
+   "w": 1110,
+   "h": 311,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "fS112",
+   "kind": "figure",
+   "label": "S112",
+   "page": 33,
+   "file": "fig_S112.png",
+   "caption": "Fig. S112 MSD(t) for Li16Mg8Si8O32 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    649.8,
+    302.8,
+    723.1
+   ],
+   "w": 1110,
+   "h": 307,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.837
+  },
+  {
+   "key": "fS113",
+   "kind": "figure",
+   "label": "S113",
+   "page": 33,
+   "file": "fig_S113.png",
+   "caption": "Fig. S113 MSD(t) for Li24Ba16Nb8N32 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    127.3,
+    575.5,
+    201.5
+   ],
+   "w": 1110,
+   "h": 310,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "fS114",
+   "kind": "figure",
+   "label": "S114",
+   "page": 33,
+   "file": "fig_S114.png",
+   "caption": "Fig. S114 MSD(t) for Rb8Li12B4P16O56 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    400.5,
+    575.5,
+    462.3
+   ],
+   "w": 1110,
+   "h": 259,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.909
+  },
+  {
+   "key": "fS115",
+   "kind": "figure",
+   "label": "S115",
+   "page": 33,
+   "file": "fig_S115.png",
+   "caption": "Fig. S115 MSD(t) for Li24Zr4Be4F48 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    648.9,
+    575.5,
+    723.1
+   ],
+   "w": 1110,
+   "h": 311,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.876
+  },
+  {
+   "key": "fS116",
+   "kind": "figure",
+   "label": "S116",
+   "page": 34,
+   "file": "fig_S116.png",
+   "caption": "Fig. S116 MSD(t) for Li32B32O64 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    114.8,
+    302.8,
+    201.5
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "fS117",
+   "kind": "figure",
+   "label": "S117",
+   "page": 34,
+   "file": "fig_S117.png",
+   "caption": "Fig. S117 MSD(t) for Li16B24P8O64 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    315.2,
+    302.8,
+    389.5
+   ],
+   "w": 1110,
+   "h": 310,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.874
+  },
+  {
+   "key": "fS118",
+   "kind": "figure",
+   "label": "S118",
+   "page": 34,
+   "file": "fig_S118.png",
+   "caption": "Fig. S118 MSD(t) for Li24Al8B16O48 from FPMD at 1000 K.",
+   "bbox": [
+    36.5,
+    503.2,
+    302.8,
+    577.5
+   ],
+   "w": 1110,
+   "h": 311,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.853
+  },
+  {
+   "key": "fS119",
+   "kind": "figure",
+   "label": "S119",
+   "page": 34,
+   "file": "fig_S119.png",
+   "caption": "Fig. S119 MSD(t) for Li12Re12O48 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    114.8,
+    575.5,
+    201.5
+   ],
+   "w": 1110,
+   "h": 362,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.906
+  },
+  {
+   "key": "fS120",
+   "kind": "figure",
+   "label": "S120",
+   "page": 34,
+   "file": "fig_S120.png",
+   "caption": "Fig. S120 MSD(t) for K16Li16Y16F80 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    315.2,
+    575.5,
+    389.5
+   ],
+   "w": 1110,
+   "h": 310,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "fS121",
+   "kind": "figure",
+   "label": "S121",
+   "page": 34,
+   "file": "fig_S121.png",
+   "caption": "Fig. S121 MSD(t) for Li16Nb16O48 from FPMD at 1000 K.",
+   "bbox": [
+    309.2,
+    490.8,
+    575.5,
+    577.5
+   ],
+   "w": 1110,
+   "h": 363,
+   "dpi": 300,
+   "src": "41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf",
+   "blank": 0.901
   },
   {
    "key": "tS5",

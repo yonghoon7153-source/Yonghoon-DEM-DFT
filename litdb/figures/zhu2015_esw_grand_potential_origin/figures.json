@@ -17,15 +17,15 @@
    "caption": "Figure 1. Decomposition energy ED of (a) sulﬁde and (b) oxide solid electrolyte materials as a function of the applied voltage ϕ or Li chemical potential μLi. DOI: 10.1021/acsami.5b07517 ACS Appl. Mater. Interfaces 2015, 7, 23685−23693 23687",
    "bbox": [
     54.5,
-    536.3,
+    539.5,
     570.5,
-    741.5
+    733.1
    ],
    "w": 2151,
-   "h": 856,
+   "h": 808,
    "dpi": 300,
    "src": "38. Origin of Outstanding Stability in the Lithium Solid Electrolyte Materials Insights from Thermodynamic Analyses Based on First-Principles Calculations.pdf",
-   "blank": 0.911
+   "blank": 0.909
   },
   {
    "key": "f2",
@@ -36,15 +36,15 @@
    "caption": "Figure 2. (a) Electrochemical window (solid color bar) of solid electrolyte and other materials. The oxidation potential to fully delithiate the material is marked by the dashed line. (b) Schematic diagram about the change of Li chemical potentials μLi (black line), the electrochemical potential μ̃Li + (blue dashed line), and μ̃e −(red dashed line) across the interface between the anode and the solid electrolyte. Since the actual proﬁle of μ̃e − determined by the charge carrier distribution may be complicated,32,33 the proﬁles of chemical and electrochemical potential shown here are schematic and may not be linear. The vertical scale is for the electrostatic potential or the voltage referenced to Li metal and is reversed for the chemical potential or electrochemical potential (eq 1). reduction potential (cathodic limit) of the solid electrolyte (Figure 2b). At the equilibrium, the redist",
    "bbox": [
     54.5,
-    59.9,
+    63.2,
     570.5,
-    308.8
+    307.2
    ],
    "w": 2151,
-   "h": 1038,
+   "h": 1018,
    "dpi": 300,
    "src": "38. Origin of Outstanding Stability in the Lithium Solid Electrolyte Materials Insights from Thermodynamic Analyses Based on First-Principles Calculations.pdf",
-   "blank": 0.619
+   "blank": 0.61
   },
   {
    "key": "f3",
@@ -55,15 +55,15 @@
    "caption": "Figure 3. (a) Electrochemical stability window (solid color bars) of commonly used coating layer materials. The oxidation potential to fully delithiate the material is marked by the dashed line. The line at 3.9 V represents the equilibrium voltage of the LiCoO2 cathode material. (b) Schematic diagram about the change of Li chemical potentials μLi (black line) and the electrochemical potential μ̃Li + (blue dashed line) and μ̃e −(red dashed line) across the interface between the solid electrolyte and the cathode material. DOI: 10.1021/acsami.5b07517 ACS Appl. Mater. Interfaces 2015, 7, 23685−23693 23689",
    "bbox": [
     54.5,
-    466.3,
+    471.5,
     570.5,
-    722.2
+    713.2
    ],
    "w": 2151,
-   "h": 1068,
+   "h": 1008,
    "dpi": 300,
    "src": "38. Origin of Outstanding Stability in the Lithium Solid Electrolyte Materials Insights from Thermodynamic Analyses Based on First-Principles Calculations.pdf",
-   "blank": 0.627
+   "blank": 0.604
   },
   {
    "key": "f4",
@@ -74,15 +74,15 @@
    "caption": "Figure 4. Schematic diagram about the electrochemical window (color bars) and the Li chemical potential proﬁle (black line) in the all-solid- state Li-ion battery. The proﬁle of chemical potential is schematic in this plot and may not be linear. The high μLi in the anode (silver) and low μLi in the cathode (blue) are beyond the stability window of the solid electrolyte (green). The observed nominal electrochemical window is extended by the overpotential (dashed line) and by the interphases (orange and yellow), which account for the gap of μLi between solid electrolyte and electrodes across the interfaces.",
    "bbox": [
     318.5,
-    179.5,
+    184.7,
     570.5,
-    379.4
+    377.9
    ],
    "w": 1052,
-   "h": 834,
+   "h": 806,
    "dpi": 300,
    "src": "38. Origin of Outstanding Stability in the Lithium Solid Electrolyte Materials Insights from Thermodynamic Analyses Based on First-Principles Calculations.pdf",
-   "blank": 0.706
+   "blank": 0.697
   },
   {
    "key": "t1",

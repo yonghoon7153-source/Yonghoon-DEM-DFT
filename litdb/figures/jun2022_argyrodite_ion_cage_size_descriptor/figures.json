@@ -9,25 +9,6 @@
  ],
  "figures": [
   {
-   "key": "f1",
-   "kind": "figure",
-   "label": "1",
-   "page": 3,
-   "file": "fig_1.png",
-   "caption": "Fig. 1 (a) Crystal structure of argyrodite Li6PS5X (X ¼ Cl, Br or I). Single anions (S2\u0001 and X\u0001) form a face-centered cubic lattice (Wyckoﬀ4a) and half of the tetrahedral voids (Wyckoﬀ4c) with PS4 3\u0001 polyanions in the octahedral sites (Wyckoﬀ4b). Li ions are partially occupied at Wyckoﬀ24g and 48h sites around Wyckoﬀ4c sites of single anions in the form of a pseudo-octahedral cage (4c-cage). (b) Li ion network structure consists of 4c-cages and 4a-cages, where the 4c-cage has a tetrahedral arrangement and the 4a-cage is in the center of the tetrahedron.",
-   "bbox": [
-    36.5,
-    34.9,
-    298.0,
-    280.0
-   ],
-   "w": 1090,
-   "h": 1022,
-   "dpi": 300,
-   "src": "48. Designing a descriptor for the computational screening of argyrodite-based solid-state superionic conductors uniformity of ion-cage size.pdf",
-   "blank": 0.771
-  },
-  {
    "key": "f2",
    "kind": "figure",
    "label": "2",
@@ -37,14 +18,14 @@
    "bbox": [
     36.5,
     379.5,
-    558.8,
-    556.4
+    387.3,
+    486.5
    ],
-   "w": 2177,
-   "h": 738,
+   "w": 1462,
+   "h": 446,
    "dpi": 300,
    "src": "48. Designing a descriptor for the computational screening of argyrodite-based solid-state superionic conductors uniformity of ion-cage size.pdf",
-   "blank": 0.735
+   "blank": 0.699
   },
   {
    "key": "f3",
@@ -66,25 +47,6 @@
    "blank": 0.839
   },
   {
-   "key": "f4",
-   "kind": "figure",
-   "label": "4",
-   "page": 5,
-   "file": "fig_4.png",
-   "caption": "Fig. 4 (a) Isosurface of Li-ion probability density distribution and van Hove correlation function of (b) self- and (c) distinct-part at diﬀerent site disorder conﬁgurations of Li6PS5Cl, 100% Cl\u0001 ﬁlled ordered conﬁguration at 4a- or 4c-sites and 50% site disordered conﬁguration.",
-   "bbox": [
-    36.5,
-    357.8,
-    558.8,
-    707.3
-   ],
-   "w": 2177,
-   "h": 1457,
-   "dpi": 300,
-   "src": "48. Designing a descriptor for the computational screening of argyrodite-based solid-state superionic conductors uniformity of ion-cage size.pdf",
-   "blank": 0.65
-  },
-  {
    "key": "f5",
    "kind": "figure",
    "label": "5",
@@ -94,14 +56,14 @@
    "bbox": [
     36.5,
     34.9,
-    298.0,
+    550.3,
     253.8
    ],
-   "w": 1090,
+   "w": 2141,
    "h": 913,
    "dpi": 300,
    "src": "48. Designing a descriptor for the computational screening of argyrodite-based solid-state superionic conductors uniformity of ion-cage size.pdf",
-   "blank": 0.945
+   "blank": 0.897
   },
   {
    "key": "fS1",
@@ -112,15 +74,15 @@
    "caption": "Figure S1. Schematic workflow of AIMD simulations to obtain ionic conductivity (σRT) at room temperature. After structural optimization, an independent full simulation is performed at multiple temperatures. Finally, results are concatenated by ensemble average and σRT is obtained using Arrhenius fitting.",
    "bbox": [
     66.3,
-    26.0,
+    79.4,
     538.1,
-    350.7
+    336.4
    ],
    "w": 1966,
-   "h": 1354,
+   "h": 1072,
    "dpi": 300,
    "src": "48. Sup) Designing a descriptor for the computational screening of argyrodite-based solid-state superionic conductors uniformity of ion-cage size.pdf",
-   "blank": 0.885
+   "blank": 0.855
   },
   {
    "key": "fS2",
@@ -131,15 +93,15 @@
    "caption": "Figure S2. Schematic illustration of Li-ion diffusion in bulk Li6PS5Cl. The contribution of each configuration to bulk ionic conductivity depends on the relative thermodynamic structural stability and its own ionic conductivity.",
    "bbox": [
     66.3,
-    26.0,
+    117.5,
     551.6,
-    365.1
+    345.6
    ],
    "w": 2023,
-   "h": 1414,
+   "h": 952,
    "dpi": 300,
    "src": "48. Sup) Designing a descriptor for the computational screening of argyrodite-based solid-state superionic conductors uniformity of ion-cage size.pdf",
-   "blank": 0.604
+   "blank": 0.412
   },
   {
    "key": "fS3",
@@ -150,15 +112,15 @@
    "caption": "Figure S3. (a) Scatter plot with regression curve of ;<=>./ ;@$A@. with respect to experimentally measured crystallinity of argyrodite Li6-xPS5-xCl1+x. ;<=>. and ;@$A@. are experimental and calculated ionic conductivities, and W@ is the degree of crystallinity. The inset is the regression equation. (b) Comparison between the calculated Li-ion conductivity of argyrodite Li6-xPS5-xCl1+x at 80% and 70% crystallinity and experimentally measured Li-ion conductivities.",
    "bbox": [
     66.3,
-    26.0,
+    79.4,
     551.7,
-    280.7
+    266.8
    ],
    "w": 2023,
-   "h": 1062,
+   "h": 782,
    "dpi": 300,
    "src": "48. Sup) Designing a descriptor for the computational screening of argyrodite-based solid-state superionic conductors uniformity of ion-cage size.pdf",
-   "blank": 0.962
+   "blank": 0.948
   },
   {
    "key": "fS4",
@@ -169,15 +131,15 @@
    "caption": "Figure S4. Isosurfaces of Li-ion probability density distribution (upper) and self-part of van Hove correlation function (lower) of Li6PS5Br for different site disorder configurations. 100% Br- filled ordered configuration at (a) 4a site or (b) 4c sites, and (c) 50% site disordered configuration.",
    "bbox": [
     66.3,
-    26.0,
+    79.4,
     551.7,
-    322.6
+    320.7
    ],
    "w": 2023,
-   "h": 1237,
+   "h": 1007,
    "dpi": 300,
    "src": "48. Sup) Designing a descriptor for the computational screening of argyrodite-based solid-state superionic conductors uniformity of ion-cage size.pdf",
-   "blank": 0.647
+   "blank": 0.561
   },
   {
    "key": "fS5",
@@ -188,15 +150,15 @@
    "caption": "Figure S5. Isosurface of Li-ion probability density distribution (upper) and self-part of van Hove correlation function (lower) of Li6PS5I at different site disorder configurations. 100% I- filled ordered configuration at (a) 4a site or (b) 4c sites, and (c) 50% site disordered configuration.",
    "bbox": [
     66.3,
-    401.9,
+    381.2,
     551.6,
-    651.9
+    650.1
    ],
    "w": 2023,
-   "h": 1043,
+   "h": 1121,
    "dpi": 300,
    "src": "48. Sup) Designing a descriptor for the computational screening of argyrodite-based solid-state superionic conductors uniformity of ion-cage size.pdf",
-   "blank": 0.586
+   "blank": 0.613
   },
   {
    "key": "fS6",
@@ -207,15 +169,15 @@
    "caption": "Figure S6. Arrhenius plots of diffusivities calculated by AIMD simulation of Li6-xPS5-xX1+x (x = 0, 0.25, 0.5, 0.75), X = (a) Cl, (b) Br and (c) I according to site disorder in the temperature range from 600 K to 1200 K for extrapolated diffusivity at 300 K. 16",
    "bbox": [
     65.1,
-    26.0,
+    65.2,
     730.4,
-    496.9
+    495.0
    ],
    "w": 2773,
-   "h": 1963,
+   "h": 1792,
    "dpi": 300,
    "src": "48. Sup) Designing a descriptor for the computational screening of argyrodite-based solid-state superionic conductors uniformity of ion-cage size.pdf",
-   "blank": 0.856
+   "blank": 0.842
   },
   {
    "key": "fS7",
@@ -226,15 +188,15 @@
    "caption": "Figure S7. Li-ion trajectories and probability densities of Li-ion during 20ps AIMD simulations at 900K for different site disorder configurations of Li6PS5Cl, 100% Cl- filled ordered configuration at 4a- or 4c- sites and 50% site disordered configuration. Each color of the Li-ion trajectory indicates different Li-ion.",
    "bbox": [
     65.1,
-    258.0,
+    85.8,
     550.1,
-    616.8
+    614.5
    ],
    "w": 2021,
-   "h": 1495,
+   "h": 2204,
    "dpi": 300,
    "src": "48. Sup) Designing a descriptor for the computational screening of argyrodite-based solid-state superionic conductors uniformity of ion-cage size.pdf",
-   "blank": 0.687
+   "blank": 0.778
   },
   {
    "key": "fS8",
@@ -245,15 +207,15 @@
    "caption": "Figure S8. Schematics of intra- and inter-cage diffusion pathway with detailed analysis structures for different site disorder configurations of Li6PS5Cl, 100% S2- filled ordered configuration at 4c-sites and 50% site disordered configuration.",
    "bbox": [
     65.1,
-    26.0,
+    65.2,
     550.2,
-    413.3
+    411.0
    ],
    "w": 2022,
-   "h": 1614,
+   "h": 1442,
    "dpi": 300,
    "src": "48. Sup) Designing a descriptor for the computational screening of argyrodite-based solid-state superionic conductors uniformity of ion-cage size.pdf",
-   "blank": 0.783
+   "blank": 0.754
   },
   {
    "key": "t1",

@@ -16,15 +16,15 @@
    "caption": "Figure 1. Plot of the shear modulus (G) vs bulk modulus (B) for all inves- tigated SICEs calculated using the PBEsol functional. Dashed lines are the iso-Young’s modulus lines in GPa. Two dotted lines correspond to G/B = 0.5 and G/B = 0.6.",
    "bbox": [
     29.9,
-    26.0,
+    59.0,
     289.0,
-    212.8
+    210.4
    ],
    "w": 1081,
-   "h": 779,
+   "h": 632,
    "dpi": 300,
    "src": "34. Elastic Properties of Alkali Superionic Conductor Electrolytes from First Principles Calculations.pdf",
-   "blank": 0.915
+   "blank": 0.901
   }
  ]
 }

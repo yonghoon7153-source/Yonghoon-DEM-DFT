@@ -16,15 +16,15 @@
    "caption": "Figure 1. a) Temperature-dependent and b) pressure-dependent free energy curves (relative to C2) of different Na2FeSiO4 structures. Reprinted with permission.[53] Copyright 2018, Elsevier.",
    "bbox": [
     42.2,
-    323.1,
+    332.6,
     550.7,
     531.6
    ],
    "w": 2120,
-   "h": 869,
+   "h": 830,
    "dpi": 300,
    "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
-   "blank": 0.884
+   "blank": 0.882
   },
   {
    "key": "f2",
@@ -35,15 +35,15 @@
    "caption": "Figure 2. Phonon dispersion spectra of Pmma-XO monolayers: a) Pmma-CO, b) Pmma-SiO, c) Pmma-GeO, and d) Pmma-SnO. Reprinted with permission.[54] Copyright 2018, IOP Publishing Ltd.",
    "bbox": [
     42.2,
-    553.1,
+    576.5,
     550.4,
     694.1
    ],
    "w": 2119,
-   "h": 588,
+   "h": 491,
    "dpi": 300,
    "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
-   "blank": 0.9
+   "blank": 0.876
   },
   {
    "key": "f3",
@@ -73,15 +73,15 @@
    "caption": "Figure 4. a) Calculated adsorption energies per atom, and b) OCVs at different lithiation and sodiation degrees of a 2D AlN. Reprinted with permission.[40] Copyright 2018, Elsevier.",
    "bbox": [
     45.3,
-    283.4,
+    290.2,
     387.3,
     461.2
    ],
    "w": 1426,
-   "h": 742,
+   "h": 713,
    "dpi": 300,
    "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
-   "blank": 0.66
+   "blank": 0.646
   },
   {
    "key": "f5",
@@ -111,15 +111,15 @@
    "caption": "Figure 6. a) The formation energy plot of the intermediate products during the calciation of Sn, b) corresponding calciation voltage plot, and c) volume expansion plot per Ca. The structures of reactants and intermediate compounds are shown in the insets in a). Reprinted with permission.[58]",
    "bbox": [
     297.3,
-    26.0,
+    65.9,
     550.3,
     401.6
    ],
    "w": 1055,
-   "h": 1566,
+   "h": 1400,
    "dpi": 300,
    "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
-   "blank": 0.87
+   "blank": 0.854
   },
   {
    "key": "f7",
@@ -149,15 +149,15 @@
    "caption": "Figure 8. a) The total DOSs and b–d) band structures of g-Mg3N2, LiMg3N2, and Li7Mg3N2. The Fermi level is aligned to 0 eV. The solid black and dashed red lines are for spin-up and spin-down cases, respectively. Reprinted with permission.[60] Copyright 2019, Royal Society of Chemistry.",
    "bbox": [
     41.9,
-    403.8,
+    417.9,
     383.9,
     686.1
    ],
    "w": 1426,
-   "h": 1177,
+   "h": 1118,
    "dpi": 300,
    "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
-   "blank": 0.8
+   "blank": 0.788
   },
   {
    "key": "f9",
@@ -187,15 +187,15 @@
    "caption": "Figure 10. a–d) The DOS and e–f) the band structure plots of Mg3Bi2 calculated using PBE and HSE06 exchange-correlation functionals with/without SOC. Local atomic DOS projections inside the sphere are deﬁned by the Wigner–Seitz radii (1.63 and 1.52 \u0001A for Bi and Mg, respectively). Reprinted with permission.[44] Copyright 2018, Royal Society of Chemistry.",
    "bbox": [
     42.2,
-    288.8,
+    307.2,
     392.1,
     661.2
    ],
    "w": 1459,
-   "h": 1553,
+   "h": 1476,
    "dpi": 300,
    "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
-   "blank": 0.837
+   "blank": 0.831
   },
   {
    "key": "f11",
@@ -206,15 +206,15 @@
    "caption": "Figure 11. a–c) DOSs of LiNiO2, d–f) LiCoO2, and g–i) LiMnO2 obtained using PBE, PBE+U, and meta- SCAN functionals. Reprinted with permission.[61] Copyright 2018, Nature.",
    "bbox": [
     45.0,
-    115.3,
+    140.0,
     384.2,
     391.6
    ],
    "w": 1414,
-   "h": 1152,
+   "h": 1049,
    "dpi": 300,
    "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
-   "blank": 0.814
+   "blank": 0.798
   },
   {
    "key": "f12",
@@ -225,15 +225,15 @@
    "caption": "Figure 12. a) Adsorption energy of SnO2 on the MoSe2 (1 0 0) plane as a function of Se-O band lengths. b) Geometrically optimized structure of SnO2-MoSe2 interface. c, d) Top and side views of the charge density difference of the SnO2-MoSe2 interface; the brown and purple bubbles represent charge accumulation and depletion, respectively. (Isosurface level = 0.000605 e bohr\u00033) Reprinted with permission.[34] Copyright 2018, Elsevier.",
    "bbox": [
     45.0,
-    413.4,
+    457.9,
     387.3,
     667.5
    ],
    "w": 1427,
-   "h": 1060,
+   "h": 874,
    "dpi": 300,
    "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
-   "blank": 0.853
+   "blank": 0.813
   },
   {
    "key": "f13",
@@ -263,15 +263,15 @@
    "caption": "Figure 14. Diffusion paths (indicated by dashed arrows) followed by a Li ion inside the internal cubic structures of spinel LMO of different sizes: a) 14 nm (bulk); b,c) 1.3 nm (nanoparticle). The black points in a) are positions of minimum energy that can be occupied by Li ions. d) Energy barrier proﬁles along the Li-ion diffusion paths in bulk LMO a) and nanosized LMO b,c), which are drawn with the blue, green, and black lines, respectively. Reprinted with permission from ref.[32] Copyright 2018 Royal Society of Chemistry.",
    "bbox": [
     42.2,
-    476.6,
+    484.2,
     381.1,
     657.4
    ],
    "w": 1413,
-   "h": 755,
+   "h": 723,
    "dpi": 300,
    "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
-   "blank": 0.681
+   "blank": 0.664
   },
   {
    "key": "f15",
@@ -358,15 +358,15 @@
    "caption": "Figure 19. DFT optimized structures of a) Si2, b) Si3, and c) Si6 clusters adsorbed on graphitic N-doped graphene. Optimized models of single Li and four Li atoms adsorbed on d,e) pyridinic structural NG and f,g) pyrrolic structural NG with Si6 cluster, respectively. Reprinted with permission.[73] Copyright 2018, Elsevier.",
    "bbox": [
     42.2,
-    385.3,
+    411.1,
     357.0,
     676.3
    ],
    "w": 1313,
-   "h": 1213,
+   "h": 1106,
    "dpi": 300,
    "src": "13. Energy Environ Materials - 2019 - He - Density Functional Theory for Battery Materials.pdf",
-   "blank": 0.837
+   "blank": 0.821
   },
   {
    "key": "f20",

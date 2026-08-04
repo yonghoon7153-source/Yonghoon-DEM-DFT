@@ -4,8 +4,8 @@
  "maxpx": 3000,
  "generated": "2026-08-04",
  "sources": [
-  "22d5d6c1-49._A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
-  "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf"
+  "49. A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+  "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf"
  ],
  "figures": [
   {
@@ -24,7 +24,7 @@
    "w": 2227,
    "h": 1225,
    "dpi": 300,
-   "src": "22d5d6c1-49._A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "src": "49. A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
    "blank": 0.938
   },
   {
@@ -36,15 +36,15 @@
    "caption": "Fig. 2. Arrhenius plot and crystal structure of Li10MP2S12. a, Arrhenius plots for the Li10MP2S12 ionic conductivity with temperature. b, Cyclic voltammogram curve of Li|LM0.2PS|stainless steel cell. The decomposition potential of the LM0.2PS phase exceeds 5 V. c, Rietveld refinements of XRD of LM0.2PS in this work. LM0.2PS crystallizes in the tetragonal P42/nmc space group and the inset is SEM image. d, Time-dependent mean square displacement (MSD) Li+ ions in LM0.2PS at different temperatures. e, Li+ probability density, yellow isosurfaces are lithium trajectory density in the LM0.2PS lattice at 300 K, obtained from AIMD simulations at the isosurface level of 2 × 10−5 Å−3. 3",
    "bbox": [
     31.6,
-    463.5,
+    454.2,
     565.8,
-    692.6
+    531.9
    ],
    "w": 2227,
-   "h": 955,
+   "h": 325,
    "dpi": 300,
-   "src": "22d5d6c1-49._A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
-   "blank": 0.764
+   "src": "49. A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.848
   },
   {
    "key": "f3",
@@ -55,15 +55,15 @@
    "caption": "Fig. 3. Entropy-induced modulation of electron localization and Li+ migration in LGPS-based solid electrolytes. a. Electron Localization Function (ELF)maps on the (001) plane for pristine LGPS and the LM0.2PS composition. b. The migration energy barrier was obtained by theoretical calculation for the models. (c) Potential energy as a function of the migration distance along the Li migration pathway. 4",
    "bbox": [
     31.6,
-    460.6,
+    453.4,
     565.8,
-    708.5
+    577.2
    ],
    "w": 2227,
-   "h": 1034,
+   "h": 517,
    "dpi": 300,
-   "src": "22d5d6c1-49._A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
-   "blank": 0.738
+   "src": "49. A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.675
   },
   {
    "key": "f4",
@@ -81,7 +81,7 @@
    "w": 2227,
    "h": 1572,
    "dpi": 300,
-   "src": "22d5d6c1-49._A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "src": "49. A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
    "blank": 0.921
   },
   {
@@ -93,15 +93,15 @@
    "caption": "Fig. 5. Nanocrystalline characteristic analysis of LM0.2PS. a, HRTEM image of LM0.2PS showing lattice fringes in nanocrystalline domains; the inset shows an enlarged view of a representative region. b, FFT pattern of the selected HRTEM region. c, Corresponding line-scan intensity profiles of lattice fringes. d-k, HAADF- STEM and corresponding homogeneous distribution of Ge, Si, Sn, Ti, W, P and S elements in LM0.2PS. 6",
    "bbox": [
     31.6,
-    437.0,
+    422.0,
     565.8,
-    711.7
+    575.1
    ],
    "w": 2227,
-   "h": 1145,
+   "h": 639,
    "dpi": 300,
-   "src": "22d5d6c1-49._A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
-   "blank": 0.334
+   "src": "49. A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.426
   },
   {
    "key": "f6",
@@ -112,15 +112,15 @@
    "caption": "Fig. 6. Electrochemical performance of high-entropy LM0.2PS at 25 ◦C. a, Potential response of Li|LM0.2PS|Li symmetric cells undergoing a CCD measurement at 25 ◦C. b, Long-term galvanostatic cycling of the Li|LM0.2PS|Li symmetric cell at 0.5 mA cm−2. The inset shows selected Nyquist plots collected after representative cycling stages, illustrating the evolution of the interfacial impedance response. converted into the instantaneous galvanostatic polarization voltage, the overall evolution of the interfacial response suggests an initial interfacial rearrangement followed by a relatively stable impedance behavior at extended cycling times. Taken together, these results show that LM0.2PS not only exhibits a higher CCD, but also enables a more durable Li-metal interface than pristine LGPS, thereby improving tolerance against long- term Li plating/stripping. LNO@NCM721/LGPS/LiIn full cell sho",
    "bbox": [
     31.6,
-    49.7,
+    49.4,
     566.0,
-    376.0
+    343.2
    ],
    "w": 2228,
-   "h": 1360,
+   "h": 1226,
    "dpi": 300,
-   "src": "22d5d6c1-49._A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
-   "blank": 0.922
+   "src": "49. A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
+   "blank": 0.917
   },
   {
    "key": "f7",
@@ -138,7 +138,7 @@
    "w": 2228,
    "h": 1245,
    "dpi": 300,
-   "src": "22d5d6c1-49._A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "src": "49. A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
    "blank": 0.93
   },
   {
@@ -157,7 +157,7 @@
    "w": 2081,
    "h": 893,
    "dpi": 300,
-   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
    "blank": 0.493
   },
   {
@@ -176,7 +176,7 @@
    "w": 2083,
    "h": 1601,
    "dpi": 300,
-   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
    "blank": 0.945
   },
   {
@@ -195,7 +195,7 @@
    "w": 2008,
    "h": 489,
    "dpi": 300,
-   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
    "blank": 0.716
   },
   {
@@ -214,7 +214,7 @@
    "w": 2081,
    "h": 1299,
    "dpi": 300,
-   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
    "blank": 0.942
   },
   {
@@ -233,7 +233,7 @@
    "w": 2081,
    "h": 789,
    "dpi": 300,
-   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
    "blank": 0.618
   },
   {
@@ -252,7 +252,7 @@
    "w": 2043,
    "h": 1365,
    "dpi": 300,
-   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
    "blank": 0.904
   },
   {
@@ -271,7 +271,7 @@
    "w": 2081,
    "h": 1177,
    "dpi": 300,
-   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
    "blank": 0.159
   },
   {
@@ -290,7 +290,7 @@
    "w": 2081,
    "h": 1411,
    "dpi": 300,
-   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
    "blank": 0.08
   },
   {
@@ -309,7 +309,7 @@
    "w": 2081,
    "h": 1123,
    "dpi": 300,
-   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
    "blank": 0.668
   },
   {
@@ -328,7 +328,7 @@
    "w": 2081,
    "h": 1128,
    "dpi": 300,
-   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
    "blank": 0.67
   },
   {
@@ -347,7 +347,7 @@
    "w": 2091,
    "h": 1128,
    "dpi": 300,
-   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
    "blank": 0.671
   },
   {
@@ -366,7 +366,7 @@
    "w": 2081,
    "h": 1002,
    "dpi": 300,
-   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
    "blank": 0.891
   },
   {
@@ -385,7 +385,7 @@
    "w": 2059,
    "h": 809,
    "dpi": 300,
-   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
    "blank": 0.886
   },
   {
@@ -404,7 +404,7 @@
    "w": 1732,
    "h": 2837,
    "dpi": 300,
-   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
    "blank": 0.978
   },
   {
@@ -423,7 +423,7 @@
    "w": 2072,
    "h": 3000,
    "dpi": 300,
-   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
    "blank": 0.907
   },
   {
@@ -442,7 +442,7 @@
    "w": 2073,
    "h": 1087,
    "dpi": 300,
-   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
    "blank": 0.924
   },
   {
@@ -461,7 +461,7 @@
    "w": 2083,
    "h": 1557,
    "dpi": 300,
-   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
    "blank": 0.904
   },
   {
@@ -480,7 +480,7 @@
    "w": 2073,
    "h": 2084,
    "dpi": 300,
-   "src": "0a979dba-49._Sup_A_highentropy_multicationic_substituted_Li10GeP2S12_solid_electrolyte_enabling_stable_allsolidstate_batteries.pdf",
+   "src": "49. Sup) A high-entropy multicationic substituted Li10GeP2S12 solid electrolyte enabling stable all-solid-state batteries.pdf",
    "blank": 0.963
   }
  ]

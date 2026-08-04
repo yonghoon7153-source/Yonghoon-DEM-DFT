@@ -8,6 +8,25 @@
  ],
  "figures": [
   {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1 (online color at: www.pss-a.com) Rietveld reﬁnement of crystalline Li6PS5I.",
+   "bbox": [
+    300.1,
+    549.0,
+    550.2,
+    724.4
+   ],
+   "w": 1043,
+   "h": 732,
+   "dpi": 300,
+   "src": "23. Studies of lithium argyrodite solid electrolytes for all-solid-state batteries.pdf",
+   "blank": 0.938
+  },
+  {
    "key": "f2",
    "kind": "figure",
    "label": "2",
@@ -16,15 +35,15 @@
    "caption": "Figure 2 (online color at: www.pss-a.com) Liþ migration pathways of Li6PS5X (X ¼ Cl, Br, I; left to right) for different energy thresholds characterizingequilibriumsites(1strow),ﬁrstlocalLiþpaths(2ndrow),extendedlocalLiþpathwaycages(3rdrow),andpathwaysforlong range Liþ migration. Note that pathways are different in detail (cf. text).",
    "bbox": [
     45.0,
-    209.7,
+    229.3,
     544.6,
     710.1
    ],
    "w": 2083,
-   "h": 2086,
+   "h": 2004,
    "dpi": 300,
    "src": "23. Studies of lithium argyrodite solid electrolytes for all-solid-state batteries.pdf",
-   "blank": 0.733
+   "blank": 0.723
   }
  ]
 }

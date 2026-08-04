@@ -17,15 +17,15 @@
    "caption": "Fig. 1. (a) NPD pattern of Cl15 sample. (b) Cl occupancy on 4a and 4d sites for samples. (c) 7Li and (d, e) 31P MAS-NMR spectrum. Schematic diagram of (f) P coordination environment and (g) local Li cluster structure. crystal lattice. Fig. 1b compares Cl occupancy at Wyckoff 4a/4d sites for the as-prepared samples. The Cl15 SE demonstrates the Cl occupancy of 56.32 % and 90.01 % on 4a and 4d positions, which surpasses that of the others. With the addition of more Cl, a distinctly turning point in Cl occupancy and LiCl percentage is found from the Cl15 to Cl18 samples (Fig. S1c). It is indicated that the added LiCl is not completely fused into argyrodite crystal lattice for Cl18. The maximum Cl occupancy on the 4d sites is realized by Cl15 sample. Additionally, the ionic conductivity, error bar and activiation energy of the synthesized samples are shown in Fig. S2. The Cl15 sample reaches",
    "bbox": [
     31.6,
-    46.1,
+    49.4,
     566.0,
     488.3
    ],
    "w": 2228,
-   "h": 1843,
+   "h": 1830,
    "dpi": 300,
    "src": "04. Tailoring argyrodite electrolyte for enhanced interface compatibility with lithium anode.pdf",
-   "blank": 0.829
+   "blank": 0.831
   },
   {
    "key": "f2",
@@ -36,15 +36,15 @@
    "caption": "Fig. 2. (a) Voltage/current density-time profile of Li|Cl15|Li symmetric cell. Voltage-capacity/time profile of (b, c) Li|SE|SS and (d, e) Li|SE|Pre SS asymmetric cells. (f) Cycling performances of LCO|SE|Li cells. 4",
    "bbox": [
     31.6,
-    233.7,
+    242.1,
     565.8,
     721.3
    ],
    "w": 2227,
-   "h": 2033,
+   "h": 1998,
    "dpi": 300,
    "src": "04. Tailoring argyrodite electrolyte for enhanced interface compatibility with lithium anode.pdf",
-   "blank": 0.866
+   "blank": 0.862
   },
   {
    "key": "f3",
@@ -55,15 +55,15 @@
    "caption": "Fig. 3. (a, b) Current-potential curves of SS|SE|Li cells. (c, d) Impedance varying with standing time and the corresponding resistance contributions. (e, f) Rct and Rinter change derived from EIS data. 5",
    "bbox": [
     31.6,
-    202.3,
+    215.2,
     565.8,
     721.3
    ],
    "w": 2227,
-   "h": 2163,
+   "h": 2110,
    "dpi": 300,
    "src": "04. Tailoring argyrodite electrolyte for enhanced interface compatibility with lithium anode.pdf",
-   "blank": 0.886
+   "blank": 0.88
   },
   {
    "key": "f4",
@@ -74,15 +74,15 @@
    "caption": "Fig. 4. (a) Cross-section SEM and energy dispersive X-ray mapping images of the Cl15/Li interface region obtained after cycling. (b) Depth-dependent Li 1s, S 2p and P 2p spectra and (c, d) semi-quantitative XPS results of the cycled Cl15 sample. 6",
    "bbox": [
     31.6,
-    263.6,
+    269.7,
     565.8,
     721.3
    ],
    "w": 2227,
-   "h": 1908,
+   "h": 1883,
    "dpi": 300,
    "src": "04. Tailoring argyrodite electrolyte for enhanced interface compatibility with lithium anode.pdf",
-   "blank": 0.67
+   "blank": 0.668
   },
   {
    "key": "f5",
@@ -93,15 +93,15 @@
    "caption": "Fig. 5. (a) Normalized signal intensity of LiCl and Li2Sx −species with increased sputtering depth and (b, c) corresponding 3D spectra. (d) Surface morphology of cycled Li. (e) 7Li and (f) 31P NMR spectra of cycled Cl15. (g) Normalized fraction of configurations based on 31P NMR analysis. 7",
    "bbox": [
     31.6,
-    254.6,
+    260.7,
     565.7,
     721.3
    ],
    "w": 2227,
-   "h": 1946,
+   "h": 1920,
    "dpi": 300,
    "src": "04. Tailoring argyrodite electrolyte for enhanced interface compatibility with lithium anode.pdf",
-   "blank": 0.758
+   "blank": 0.756
   },
   {
    "key": "f6",
@@ -112,15 +112,15 @@
    "caption": "Fig. 6. (a) Interface energy of three models. (b) Average charge transfer for the LiCl/LPSCl and Li/LPSCl pairs. (c) Projected density of state of LiCl and LPSCl. (d) Comparison of band gap and diffusion barrier for commonly-formed interphases. becomes resilient against Li dendrite. Consequently, the interface compatibility of Li/Cl15 pair is realized through the LiCl-containing interphase, contributing to the superior electrochemical cycling dura­ bility of cells employing the Cl15 and Li anode. As such, the delicate regulation on anion lattice site of Cl-modified argyrodite electrolyte showcases us a promising avenue in boosting its interface stability to­ ward Li anode. as well as Li dendrites growth, due to the electron-shielding effect of the derived LiCl and its low barrier for Li migration as calculated, which ensures an apparent anode interface compatibility. The symmetric cell e",
    "bbox": [
     31.6,
-    46.1,
+    49.4,
     566.0,
     517.9
    ],
    "w": 2228,
-   "h": 1966,
+   "h": 1953,
    "dpi": 300,
    "src": "04. Tailoring argyrodite electrolyte for enhanced interface compatibility with lithium anode.pdf",
-   "blank": 0.854
+   "blank": 0.856
   },
   {
    "key": "f7",
@@ -131,15 +131,15 @@
    "caption": "Fig. 7. Schematic illustration of the Li/Cl15 interface compatibility.",
    "bbox": [
     100.9,
-    46.1,
+    49.4,
     494.5,
     239.8
    ],
    "w": 1641,
-   "h": 808,
+   "h": 794,
    "dpi": 300,
    "src": "04. Tailoring argyrodite electrolyte for enhanced interface compatibility with lithium anode.pdf",
-   "blank": 0.178
+   "blank": 0.163
   },
   {
    "key": "fS1",
@@ -150,15 +150,15 @@
    "caption": "Fig. S1. (a) XRD and (b) NPD patterns of the samples. (c) Refined total Cl occupancy and LiCl",
    "bbox": [
     66.0,
-    26.0,
+    66.0,
     549.0,
-    390.1
+    386.1
    ],
    "w": 2013,
-   "h": 1518,
+   "h": 1334,
    "dpi": 300,
    "src": "04. Sup) Tailoring argyrodite electrolyte for enhanced interface compatibility with lithium anode.pdf",
-   "blank": 0.84
+   "blank": 0.824
   },
   {
    "key": "fS2",
@@ -169,15 +169,15 @@
    "caption": "Fig. S2. (a) Impedance spectra, (b) ionic conductivity and (c) Arrhenius fitting plots of the as-",
    "bbox": [
     66.0,
-    115.6,
+    95.6,
     546.0,
-    272.5
+    268.5
    ],
    "w": 2000,
-   "h": 655,
+   "h": 721,
    "dpi": 300,
    "src": "04. Sup) Tailoring argyrodite electrolyte for enhanced interface compatibility with lithium anode.pdf",
-   "blank": 0.833
+   "blank": 0.837
   },
   {
    "key": "fS3",
@@ -188,15 +188,15 @@
    "caption": "Fig. S3. Voltage/current density-time profile of (a, c) Cl10- and (b, d) Cl15-based symmetric",
    "bbox": [
     66.0,
-    316.1,
+    296.1,
     549.0,
-    596.3
+    592.2
    ],
    "w": 2013,
-   "h": 1168,
+   "h": 1235,
    "dpi": 300,
    "src": "04. Sup) Tailoring argyrodite electrolyte for enhanced interface compatibility with lithium anode.pdf",
-   "blank": 0.865
+   "blank": 0.87
   },
   {
    "key": "fS4",
@@ -207,15 +207,15 @@
    "caption": "Fig. S4. Voltage/current density-time profile of Cl15-based symmetric cell at 0.9 mA cm-2.",
    "bbox": [
     66.0,
-    26.0,
+    66.0,
     515.2,
-    283.6
+    280.2
    ],
    "w": 1872,
-   "h": 1074,
+   "h": 893,
    "dpi": 300,
    "src": "04. Sup) Tailoring argyrodite electrolyte for enhanced interface compatibility with lithium anode.pdf",
-   "blank": 0.834
+   "blank": 0.8
   },
   {
    "key": "fS5",
@@ -226,15 +226,15 @@
    "caption": "Fig. S5. First charge/discharge curve of cells using (a) Cl15 and (b) Cl10. (c) Comparison of cell",
    "bbox": [
     66.0,
-    300.3,
+    302.0,
     549.0,
-    450.0
+    446.0
    ],
    "w": 2013,
-   "h": 625,
+   "h": 601,
    "dpi": 300,
    "src": "04. Sup) Tailoring argyrodite electrolyte for enhanced interface compatibility with lithium anode.pdf",
-   "blank": 0.851
+   "blank": 0.848
   },
   {
    "key": "fS6",
@@ -245,15 +245,15 @@
    "caption": "Fig. S6. Cycling performance of LCO||Li-In cell at 5 C.",
    "bbox": [
     66.0,
-    493.6,
+    473.6,
     546.0,
-    674.6
+    670.6
    ],
    "w": 2000,
-   "h": 755,
+   "h": 821,
    "dpi": 300,
    "src": "04. Sup) Tailoring argyrodite electrolyte for enhanced interface compatibility with lithium anode.pdf",
-   "blank": 0.814
+   "blank": 0.833
   },
   {
    "key": "fS7",
@@ -264,15 +264,15 @@
    "caption": "Fig. S7. (a) Structure models with varied Cl occupancy at 4a/4d sites and (b) the corresponding",
    "bbox": [
     66.0,
-    26.0,
+    66.0,
     549.0,
-    399.9
+    395.9
    ],
    "w": 2013,
-   "h": 1559,
+   "h": 1375,
    "dpi": 300,
    "src": "04. Sup) Tailoring argyrodite electrolyte for enhanced interface compatibility with lithium anode.pdf",
-   "blank": 0.83
+   "blank": 0.809
   },
   {
    "key": "fS8",
@@ -283,15 +283,15 @@
    "caption": "Fig. S8. Change of Rbulk and Rgb with standing time for both (a) Cl15- and (b) Cl10-based cells.",
    "bbox": [
     66.0,
-    444.0,
+    423.5,
     536.8,
-    630.0
+    625.9
    ],
    "w": 1962,
-   "h": 775,
+   "h": 845,
    "dpi": 300,
    "src": "04. Sup) Tailoring argyrodite electrolyte for enhanced interface compatibility with lithium anode.pdf",
-   "blank": 0.912
+   "blank": 0.918
   },
   {
    "key": "fS9",
@@ -302,15 +302,15 @@
    "caption": "Fig. S9. Cross-section SEM and EDS mapping images of the Li/Cl10 pair after cycling and the",
    "bbox": [
     66.0,
-    26.0,
+    66.0,
     549.0,
-    373.3
+    369.3
    ],
    "w": 2013,
-   "h": 1448,
+   "h": 1264,
    "dpi": 300,
    "src": "04. Sup) Tailoring argyrodite electrolyte for enhanced interface compatibility with lithium anode.pdf",
-   "blank": 0.376
+   "blank": 0.285
   },
   {
    "key": "fS10",
@@ -321,15 +321,15 @@
    "caption": "Fig. S10. (a) Depth-dependent Li 1s, S 2p and P 2p spectra of the cycled Cl10 sample and (b, c)",
    "bbox": [
     66.0,
-    26.0,
+    66.0,
     549.0,
-    409.9
+    405.8
    ],
    "w": 2013,
-   "h": 1600,
+   "h": 1416,
    "dpi": 300,
    "src": "04. Sup) Tailoring argyrodite electrolyte for enhanced interface compatibility with lithium anode.pdf",
-   "blank": 0.718
+   "blank": 0.682
   },
   {
    "key": "fS11",
@@ -340,15 +340,15 @@
    "caption": "Fig. S11. (a) Normalized signal intensity of LiCl and Li2Sx- species with increased sputtering",
    "bbox": [
     66.0,
-    26.0,
+    66.0,
     549.0,
-    522.9
+    520.2
    ],
    "w": 2013,
-   "h": 2071,
+   "h": 1893,
    "dpi": 300,
    "src": "04. Sup) Tailoring argyrodite electrolyte for enhanced interface compatibility with lithium anode.pdf",
-   "blank": 0.803
+   "blank": 0.788
   },
   {
    "key": "fS12",
@@ -359,15 +359,15 @@
    "caption": "Fig. S12. Atomic percentage of P, S and Cl elements in the unreacted (A) and reacted (B) areas.",
    "bbox": [
     66.0,
-    198.4,
+    178.4,
     538.8,
-    456.9
+    453.6
    ],
    "w": 1971,
-   "h": 1078,
+   "h": 1148,
    "dpi": 300,
    "src": "04. Sup) Tailoring argyrodite electrolyte for enhanced interface compatibility with lithium anode.pdf",
-   "blank": 0.819
+   "blank": 0.826
   },
   {
    "key": "tS1",

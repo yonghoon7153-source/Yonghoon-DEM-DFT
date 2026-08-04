@@ -18,15 +18,15 @@
    "caption": "Figure 1. Flowchart Describing the Computational Screening of Cathode-Coating Materials Following the initial screening, phase stability, electrochemical stability, and chemical stability were used as sequential ﬁlters for the high-throughput screening. Eg is the density functional theory (DFT)-calculated Kohn-Sham band gap; Vred and Vox are the reduction and oxidation limits of the electrochemical stability window in V versus Li metal, respectively; DErxt is the reaction energy of the material with the cathode or electrolyte in eV/atom; LPS denotes the SSE material Li3PS4; and NCM denotes the fully lithiated cathode material LiNi1/3Co1/3Mn1/3O2.",
    "bbox": [
     51.7,
-    26.0,
+    43.5,
     382.5,
-    474.9
+    472.1
    ],
    "w": 1379,
-   "h": 1871,
+   "h": 1786,
    "dpi": 300,
    "src": "37. Computational Screening of Cathode Coatings for Solid-State Batteries.pdf",
-   "blank": 0.553
+   "blank": 0.531
   },
   {
    "key": "f2",
@@ -37,15 +37,15 @@
    "caption": "Figure 2. Histogram of Numbers of Compounds for Each Category That Pass Each Filter in the High-Throughput Screening Red, ﬂuorides; green, chlorides; purple, oxyﬂuorides; orange, non-polyanionic oxides; blue, polyanionic oxides; black, others. Filter 2, phase stability screening; ﬁlter 3, electrochemical stability screening; ﬁlter 4, chemical stability screening.",
    "bbox": [
     51.7,
-    26.0,
+    43.5,
     378.9,
-    249.7
+    246.8
    ],
    "w": 1364,
-   "h": 933,
+   "h": 848,
    "dpi": 300,
    "src": "37. Computational Screening of Cathode Coatings for Solid-State Batteries.pdf",
-   "blank": 0.922
+   "blank": 0.915
   },
   {
    "key": "f3",
@@ -56,15 +56,15 @@
    "caption": "Figure 3. Electrochemical and Chemical Stability Screening Results Each material is represented by a dot in the graphs. Red, ﬂuorides; green, chlorides; purple, oxyﬂuorides; orange, non-polyanionic oxides; blue, polyanionic oxides; black, others. (A) Electrochemical stability windows of 1,600 phase-stable materials. (B) Chemical reaction energy DErxt with Li3PS4 (LPS) and fully lithiated LiNi1/3Co1/3Mn1/3O2 (NCM) for the 302 screened materials enclosed in the green box in Figure 3A. See also Table S1.",
    "bbox": [
     51.7,
-    26.0,
+    43.5,
     382.5,
-    279.1
+    276.2
    ],
    "w": 1379,
-   "h": 1055,
+   "h": 970,
    "dpi": 300,
    "src": "37. Computational Screening of Cathode Coatings for Solid-State Batteries.pdf",
-   "blank": 0.873
+   "blank": 0.86
   },
   {
    "key": "f4",
@@ -75,15 +75,15 @@
    "caption": "Figure 4. Electrochemical Stability Windows of Common Thiophosphate and Oxide Solid-State Electrolytes (Gray), Non-polyanionic Oxide Coatings (Orange), and Polyanionic Oxides (Blue)",
    "bbox": [
     51.7,
-    26.0,
+    43.5,
     379.2,
-    220.9
+    218.0
    ],
    "w": 1365,
-   "h": 813,
+   "h": 728,
    "dpi": 300,
    "src": "37. Computational Screening of Cathode Coatings for Solid-State Batteries.pdf",
-   "blank": 0.883
+   "blank": 0.872
   },
   {
    "key": "f5",
@@ -94,15 +94,15 @@
    "caption": "Figure 5. Reaction Energies DErxt at Fully Lithiated Cathode/SSE, Fully Lithiated Cathode/ Coating, and Coating/SSE Interfaces in meV/atom The speciﬁc values for DErxt are provided in Table S2. Each cell is mapped to a color from green to red according to the color bar on the right, with the dark green color denoting low chemical reactivity and the dark red color denoting high chemical reactivity. See also Tables S2–S5.",
    "bbox": [
     51.7,
-    26.0,
+    43.5,
     382.1,
-    308.4
+    305.6
    ],
    "w": 1378,
-   "h": 1178,
+   "h": 1093,
    "dpi": 300,
    "src": "37. Computational Screening of Cathode Coatings for Solid-State Batteries.pdf",
-   "blank": 0.681
+   "blank": 0.657
   },
   {
    "key": "f6",
@@ -113,15 +113,15 @@
    "caption": "Figure 6. Distribution of Oxidation Limit for Ortho-phosphates (PO4 4\u0003), and Meta-Phosphates (PO3 \u0003) That Pass the Phase Stability Filter (Filter 2) The violin plot shows the kernel density estimation of the distribution, and the inner box spans the interquartile range (IQR) of the distribution, with the whiskers extending the box by 1.5 3 IQR on both sides. The white dot inside the box denotes the median. materials. For example, LiCs(PO3)2 exhibits an extremely high oxidation limit of 6.2 V; however, its high Li-ion migration barrier (1.27 eV) may prevent its use as a cathode coating. The same problem also exists for LiBa(B3O5)3 and LiLa(PO3)4, as observed in Table 2, and other phosphates with high oxidation limits shown in Table S1, such as LiGd(PO3)4 (Vox = 5.30 V, Ea = 0.96 eV94), LiK(PO3)2 (Vox = 5.09 V, Ea = 1.89 eV80), and LiDy(PO3)4 (Vox = 4.86 V, Ea = 0.96 eV95). The trade-off c",
    "bbox": [
     51.7,
-    26.0,
+    43.5,
     382.6,
-    231.6
+    228.7
    ],
    "w": 1379,
-   "h": 857,
+   "h": 772,
    "dpi": 300,
    "src": "37. Computational Screening of Cathode Coatings for Solid-State Batteries.pdf",
-   "blank": 0.932
+   "blank": 0.926
   },
   {
    "key": "f7",
@@ -132,15 +132,15 @@
    "caption": "Figure 7. Correlation between Oxidation Limit and Li Atomic Fraction in Polyanionic Oxides (A) Oxidation limit versus Li atomic fraction for the 411 polyanionic oxides (polyanions) that pass the phase stability screening (ﬁlter 2). The red dots denote the 66 polyanionic oxides that pass chemical stability screening (ﬁlter 5). The green dashed horizontal line marks the oxidation limit = 4.5 V versus Li metal. The blue dashed line is the linear trend line. (B) Maximum Li atomic fraction versus oxidation limit for the 411 polyanionic oxides that pass the phase stability screening (ﬁlter 2). A point (x and y) in the proﬁle means that all polyanionic oxides with an oxidation limit of x or higher have a maximum Li atomic fraction of y. LiPO3 is marked by the black arrows. 20%. The resulting small Li-Li hopping distance in LiPO3 contributes to the low calcu- lated activation energy for Li vacan",
    "bbox": [
     51.7,
-    26.0,
+    43.5,
     382.5,
-    272.8
+    269.9
    ],
    "w": 1379,
-   "h": 1029,
+   "h": 944,
    "dpi": 300,
    "src": "37. Computational Screening of Cathode Coatings for Solid-State Batteries.pdf",
-   "blank": 0.925
+   "blank": 0.921
   },
   {
    "key": "f8",
@@ -151,15 +151,15 @@
    "caption": "Figure 8. Various Interfaces in a Coated Cathode Composite The general coating strategy only considers the SSE/coating and coating/cathode interfaces, whereas materials decomposition under electrochemical cycling can still occur at other interfaces, i.e., the current collector/SSE, SSE/cathode (imperfect coating), and SSE/carbon interfaces. NCM), forming H-inserted CoO2 (HCoO2) and Li3PO4 (Table S4). According to the data in Table S2, this exchange reaction is thermodynamically favored with a driving force around 60 meV/atom. The fact that both proton100 and Li+ have good mobility in LiH2PO4 may facilitate the reaction at room temperature. For spinel LMO cathode, a similar exchange reaction to form H-inserted Mn2O4 (HMn2O4) and Li3PO4 has a small driving force (4 meV/atom), while for olivine LFPO cathode the exchange reac- tion to form H-inserted FePO4 (HFePO4) and Li3PO4 is not thermody",
    "bbox": [
     51.7,
-    26.0,
+    43.5,
     382.5,
-    349.2
+    346.3
    ],
    "w": 1379,
-   "h": 1347,
+   "h": 1263,
    "dpi": 300,
    "src": "37. Computational Screening of Cathode Coatings for Solid-State Batteries.pdf",
-   "blank": 0.635
+   "blank": 0.61
   },
   {
    "key": "f9",
@@ -170,15 +170,15 @@
    "caption": "Figure 9. Coating Recommendations for Various Cathode/SSE Interfaces under Different Processing Conditions (A) Oxide cathode/sulﬁde SSE. (B) Oxide cathode/LLZO. (C) LFPO/sulﬁde SSE. (D) LFPO/LLZO.",
    "bbox": [
     51.7,
-    26.0,
+    43.5,
     381.5,
-    360.9
+    358.0
    ],
    "w": 1375,
-   "h": 1396,
+   "h": 1311,
    "dpi": 300,
    "src": "37. Computational Screening of Cathode Coatings for Solid-State Batteries.pdf",
-   "blank": 0.735
+   "blank": 0.72
   },
   {
    "key": "fS1",
@@ -189,15 +189,15 @@
    "caption": "Figure S1. Crystal structures and Li vacancy percolating pathways for Li2ZrO3 and the six polyanionic oxides. Related to Table 2. Li vacancy positions are labeled by numbers. Green balls: Li vacancies; yellow tetrahedrons: LiO4; brown octahedrons: ZrO6; purple tetrahedrons: PO4; blue octahedrons: TiO6; pink polyhedrons: BaO12; cyan triangles and tetrahedrons: BO3 and BO4; red polyhedrons: LaO8; CsO8 polyhedrons are not shown for clarity. (A) Li2ZrO3 (1 → 2 → 3 → 4 → 1). (B) LiH2PO4 (1 → 2 → 3 → 4 → 1). (C) LiTi2(PO4)3 (1 → 2 → 3 → 4 → 1). (D) LiBa(B3O5)3 (1 → 2 → 3 → 4 → 1). (E) LiPO3 (1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 1). (F) LiLa(PO3)4 (1 → 2 → 3 → 4 → 1). (G) LiCs(PO3)2 (1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 1).",
    "bbox": [
     66.0,
-    26.0,
+    66.0,
     544.3,
     568.0
    ],
    "w": 1993,
-   "h": 2259,
+   "h": 2092,
    "dpi": 300,
    "src": "37. Sup1) Computational Screening of Cathode Coatings for Solid-State Batteries.pdf",
-   "blank": 0.797
+   "blank": 0.781
   },
   {
    "key": "fS2",
@@ -208,15 +208,15 @@
    "caption": "Figure 2. Histogram of Numbers of Compounds for Each Category That Pass Each Filter in the High-Throughput Screening Red, ﬂuorides; green, chlorides; purple, oxyﬂuorides; orange, non-polyanionic oxides; blue, polyanionic oxides; black, others. Filter 2, phase stability screening; ﬁlter 3, electrochemical stability screening; ﬁlter 4, chemical stability screening.",
    "bbox": [
     51.7,
-    26.0,
+    43.5,
     378.9,
-    249.7
+    246.8
    ],
    "w": 1364,
-   "h": 933,
+   "h": 848,
    "dpi": 300,
    "src": "37. Sup2) Computational Screening of Cathode Coatings for Solid-State Batteries.pdf",
-   "blank": 0.922
+   "blank": 0.915
   },
   {
    "key": "fS3",
@@ -227,15 +227,15 @@
    "caption": "Figure 3. Electrochemical and Chemical Stability Screening Results Each material is represented by a dot in the graphs. Red, ﬂuorides; green, chlorides; purple, oxyﬂuorides; orange, non-polyanionic oxides; blue, polyanionic oxides; black, others. (A) Electrochemical stability windows of 1,600 phase-stable materials. (B) Chemical reaction energy DErxt with Li3PS4 (LPS) and fully lithiated LiNi1/3Co1/3Mn1/3O2 (NCM) for the 302 screened materials enclosed in the green box in Figure 3A. See also Table S1.",
    "bbox": [
     51.7,
-    26.0,
+    43.5,
     382.5,
-    279.1
+    276.2
    ],
    "w": 1379,
-   "h": 1055,
+   "h": 970,
    "dpi": 300,
    "src": "37. Sup2) Computational Screening of Cathode Coatings for Solid-State Batteries.pdf",
-   "blank": 0.873
+   "blank": 0.86
   },
   {
    "key": "fS4",
@@ -246,15 +246,15 @@
    "caption": "Figure 4. Electrochemical Stability Windows of Common Thiophosphate and Oxide Solid-State Electrolytes (Gray), Non-polyanionic Oxide Coatings (Orange), and Polyanionic Oxides (Blue)",
    "bbox": [
     51.7,
-    26.0,
+    43.5,
     379.2,
-    220.9
+    218.0
    ],
    "w": 1365,
-   "h": 813,
+   "h": 728,
    "dpi": 300,
    "src": "37. Sup2) Computational Screening of Cathode Coatings for Solid-State Batteries.pdf",
-   "blank": 0.883
+   "blank": 0.872
   },
   {
    "key": "fS5",
@@ -265,15 +265,15 @@
    "caption": "Figure 5. Reaction Energies DErxt at Fully Lithiated Cathode/SSE, Fully Lithiated Cathode/ Coating, and Coating/SSE Interfaces in meV/atom The speciﬁc values for DErxt are provided in Table S2. Each cell is mapped to a color from green to red according to the color bar on the right, with the dark green color denoting low chemical reactivity and the dark red color denoting high chemical reactivity. See also Tables S2–S5.",
    "bbox": [
     51.7,
-    26.0,
+    43.5,
     382.1,
-    308.4
+    305.6
    ],
    "w": 1378,
-   "h": 1178,
+   "h": 1093,
    "dpi": 300,
    "src": "37. Sup2) Computational Screening of Cathode Coatings for Solid-State Batteries.pdf",
-   "blank": 0.681
+   "blank": 0.657
   },
   {
    "key": "fS6",
@@ -284,15 +284,15 @@
    "caption": "Figure 6. Distribution of Oxidation Limit for Ortho-phosphates (PO4 4\u0003), and Meta-Phosphates (PO3 \u0003) That Pass the Phase Stability Filter (Filter 2) The violin plot shows the kernel density estimation of the distribution, and the inner box spans the interquartile range (IQR) of the distribution, with the whiskers extending the box by 1.5 3 IQR on both sides. The white dot inside the box denotes the median. materials. For example, LiCs(PO3)2 exhibits an extremely high oxidation limit of 6.2 V; however, its high Li-ion migration barrier (1.27 eV) may prevent its use as a cathode coating. The same problem also exists for LiBa(B3O5)3 and LiLa(PO3)4, as observed in Table 2, and other phosphates with high oxidation limits shown in Table S1, such as LiGd(PO3)4 (Vox = 5.30 V, Ea = 0.96 eV94), LiK(PO3)2 (Vox = 5.09 V, Ea = 1.89 eV80), and LiDy(PO3)4 (Vox = 4.86 V, Ea = 0.96 eV95). The trade-off c",
    "bbox": [
     51.7,
-    26.0,
+    43.5,
     382.5,
-    231.6
+    228.7
    ],
    "w": 1379,
-   "h": 857,
+   "h": 772,
    "dpi": 300,
    "src": "37. Sup2) Computational Screening of Cathode Coatings for Solid-State Batteries.pdf",
-   "blank": 0.932
+   "blank": 0.926
   },
   {
    "key": "fS7",
@@ -303,15 +303,15 @@
    "caption": "Figure 7. Correlation between Oxidation Limit and Li Atomic Fraction in Polyanionic Oxides (A) Oxidation limit versus Li atomic fraction for the 411 polyanionic oxides (polyanions) that pass the phase stability screening (ﬁlter 2). The red dots denote the 66 polyanionic oxides that pass chemical stability screening (ﬁlter 5). The green dashed horizontal line marks the oxidation limit = 4.5 V versus Li metal. The blue dashed line is the linear trend line. (B) Maximum Li atomic fraction versus oxidation limit for the 411 polyanionic oxides that pass the phase stability screening (ﬁlter 2). A point (x and y) in the proﬁle means that all polyanionic oxides with an oxidation limit of x or higher have a maximum Li atomic fraction of y. LiPO3 is marked by the black arrows. 20%. The resulting small Li-Li hopping distance in LiPO3 contributes to the low calcu- lated activation energy for Li vacan",
    "bbox": [
     51.7,
-    26.0,
+    43.5,
     382.5,
-    272.8
+    269.9
    ],
    "w": 1379,
-   "h": 1029,
+   "h": 944,
    "dpi": 300,
    "src": "37. Sup2) Computational Screening of Cathode Coatings for Solid-State Batteries.pdf",
-   "blank": 0.925
+   "blank": 0.921
   },
   {
    "key": "fS8",
@@ -322,15 +322,15 @@
    "caption": "Figure 8. Various Interfaces in a Coated Cathode Composite The general coating strategy only considers the SSE/coating and coating/cathode interfaces, whereas materials decomposition under electrochemical cycling can still occur at other interfaces, i.e., the current collector/SSE, SSE/cathode (imperfect coating), and SSE/carbon interfaces. NCM), forming H-inserted CoO2 (HCoO2) and Li3PO4 (Table S4). According to the data in Table S2, this exchange reaction is thermodynamically favored with a driving force around 60 meV/atom. The fact that both proton100 and Li+ have good mobility in LiH2PO4 may facilitate the reaction at room temperature. For spinel LMO cathode, a similar exchange reaction to form H-inserted Mn2O4 (HMn2O4) and Li3PO4 has a small driving force (4 meV/atom), while for olivine LFPO cathode the exchange reac- tion to form H-inserted FePO4 (HFePO4) and Li3PO4 is not thermody",
    "bbox": [
     51.7,
-    26.0,
+    43.5,
     382.5,
-    349.2
+    346.3
    ],
    "w": 1379,
-   "h": 1347,
+   "h": 1263,
    "dpi": 300,
    "src": "37. Sup2) Computational Screening of Cathode Coatings for Solid-State Batteries.pdf",
-   "blank": 0.635
+   "blank": 0.61
   },
   {
    "key": "fS9",
@@ -341,15 +341,15 @@
    "caption": "Figure 9. Coating Recommendations for Various Cathode/SSE Interfaces under Different Processing Conditions (A) Oxide cathode/sulﬁde SSE. (B) Oxide cathode/LLZO. (C) LFPO/sulﬁde SSE. (D) LFPO/LLZO.",
    "bbox": [
     51.7,
-    26.0,
+    43.5,
     381.5,
-    360.9
+    358.0
    ],
    "w": 1375,
-   "h": 1396,
+   "h": 1311,
    "dpi": 300,
    "src": "37. Sup2) Computational Screening of Cathode Coatings for Solid-State Batteries.pdf",
-   "blank": 0.735
+   "blank": 0.72
   },
   {
    "key": "t1",
@@ -438,13 +438,13 @@
     66.0,
     100.9,
     517.3,
-    766.0
+    446.9
    ],
    "w": 1881,
-   "h": 2772,
+   "h": 1442,
    "dpi": 300,
    "src": "37. Sup1) Computational Screening of Cathode Coatings for Solid-State Batteries.pdf",
-   "blank": 0.956
+   "blank": 0.923
   },
   {
    "key": "tS3",
@@ -457,13 +457,13 @@
     66.0,
     100.9,
     511.5,
-    766.0
+    470.4
    ],
    "w": 1857,
-   "h": 2772,
+   "h": 1540,
    "dpi": 300,
    "src": "37. Sup1) Computational Screening of Cathode Coatings for Solid-State Batteries.pdf",
-   "blank": 0.967
+   "blank": 0.94
   },
   {
    "key": "tS4",

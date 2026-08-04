@@ -16,15 +16,91 @@
    "caption": "Figure 1. The different cages used in this work. The red balls are water oxygen and the gray balls are methane. The sticks are H-bonds, in which the yellow sticks indicate the adsorption face to the dissolved methane. The cage names are shown in the top right corners, respectively, and are described as follows. (A) [5263]5 cage, the most abundant cage in the methane solution prior to hydrate nucleation [17]. According to our previous notation, [ ]5 indicates that it is an incomplete cage with ﬁve vertices with only two shared edges for each. (D) 512 cage, the most common cage in hydrates. (G) 4151062 cage, which contains 4-, 5-, and 6-membered faces and is very abundant during hydrate nucleation. (L) 51268 cage, an example of a large cage. (P) 43576271 cage containing a 7-membered face. (Q) 44566381 cage containing an 8-membered face. (S) 435663 cage, a small cage containing 4-, 5-, and ",
    "bbox": [
     36.5,
-    500.6,
+    512.2,
     568.6,
     695.2
    ],
    "w": 2218,
-   "h": 812,
+   "h": 763,
    "dpi": 300,
    "src": "08. Effects of cage type and adsorption face on the cage–methane adsorption interaction Implications for hydrate nucleation studies.pdf",
-   "blank": 0.844
+   "blank": 0.834
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. The cage–methane PMFs for the pentagonal adsorption face. The error bars are covered by the labels.",
+   "bbox": [
+    295.7,
+    26.0,
+    558.8,
+    241.2
+   ],
+   "w": 1097,
+   "h": 897,
+   "dpi": 300,
+   "src": "08. Effects of cage type and adsorption face on the cage–methane adsorption interaction Implications for hydrate nucleation studies.pdf",
+   "blank": 0.962
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Figure 3. The cage–methane PMFs for different adsorption faces in the G cage, 4151062.",
+   "bbox": [
+    295.7,
+    547.2,
+    558.8,
+    738.1
+   ],
+   "w": 1097,
+   "h": 797,
+   "dpi": 300,
+   "src": "08. Effects of cage type and adsorption face on the cage–methane adsorption interaction Implications for hydrate nucleation studies.pdf",
+   "blank": 0.967
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Figure 4. The activation energies (Ea) of cage-adsorbing methane change with the face size (Nv).",
+   "bbox": [
+    305.5,
+    56.3,
+    568.6,
+    227.5
+   ],
+   "w": 1097,
+   "h": 714,
+   "dpi": 300,
+   "src": "08. Effects of cage type and adsorption face on the cage–methane adsorption interaction Implications for hydrate nucleation studies.pdf",
+   "blank": 0.983
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 4,
+   "file": "fig_5.png",
+   "caption": "Figure 5. The cage–methane PMFs for the P and Q cages with large faces, compared to the PMF for the G cage.",
+   "bbox": [
+    305.5,
+    247.1,
+    568.6,
+    437.9
+   ],
+   "w": 1097,
+   "h": 796,
+   "dpi": 300,
+   "src": "08. Effects of cage type and adsorption face on the cage–methane adsorption interaction Implications for hydrate nucleation studies.pdf",
+   "blank": 0.954
   }
  ]
 }

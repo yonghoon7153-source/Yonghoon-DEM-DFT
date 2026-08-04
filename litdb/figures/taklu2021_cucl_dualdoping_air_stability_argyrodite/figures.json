@@ -16,15 +16,15 @@
    "caption": "Fig. 1. Synthesized Li argyrodite sulfide solid electrolyte, Li6+3xP1−xCuxS5−xCl1+x (0.1 ≤x ≤0.5) a) X-ray diffraction patterns at different dopant levels; b) Raman measurement of solid electrolyte at different CuCl doping levels and red-shift; c) Raman Cu-S band at 475 cm−1 for x = 0.1 doping level and also d) and e) are deconvolution at 150–350 cm−1 and 500–650 cm−1 regions, respectively. the ionic radius of used dopants in the crystal structure [7,25]. The thermodynamic instability of lattice is mainly related to the solubility limit, and cations (Мn+ ions) favorably occupy the 4b site to form a framework in the argyrodite structure [37,38]. Additional investigation via XRD Rietveld refinement analysis for simultaneous doping of CuCl in Li-argyrodite structure confirmed that Cu shares the 4b site of phos­ phorus and Cl occupies Wyckoff 4a and 4c sulfur site as indicated in Fig. S1a an",
    "bbox": [
     31.6,
-    46.1,
+    49.4,
     566.0,
     349.9
    ],
    "w": 2228,
-   "h": 1267,
+   "h": 1252,
    "dpi": 300,
    "src": "20. Dual CuCl doped argyrodite superconductor to boost the interfacial compatibility and air stability for all solid-state lithium metal batteries.pdf",
-   "blank": 0.901
+   "blank": 0.904
   },
   {
    "key": "f2",
@@ -35,15 +35,15 @@
    "caption": "Fig. 2. The Li argyrodite sulfide solid electrolytes with different dopant amount, Li6+3xP1−xCuxS5−xCl1+x (0 ≤x ≤0.5) at RT. a) ionic conductivity alteration with varied sintering temperature (brown) and reaction duration (blue) for the synthesis of LPSC-1 (x = 0.1) sulfide solid electrolyte; b) Arrhenius conductivity plots as a function of temperature for different dopant levels; c) ionic conductivity variation in the with varied CuCl dopant levels and d) the Li migration path in Li6PS5Cl and Li6.3P0.9Cu0.1S4.9Cl1.1 via DFT calculation. sintering temperature probes for pure cubic argyrodite phase formation. However, as the sintering temperature was increased to 600 ◦C, ionic conductivity dropped immediately and was primarily caused by the increase in impurity phases. Elemental sulfur was experimentally observed on the tip of the reaction vessel with the formation of intense yellow color",
    "bbox": [
     31.6,
-    46.1,
+    49.4,
     566.0,
     347.9
    ],
    "w": 2228,
-   "h": 1259,
+   "h": 1245,
    "dpi": 300,
    "src": "20. Dual CuCl doped argyrodite superconductor to boost the interfacial compatibility and air stability for all solid-state lithium metal batteries.pdf",
-   "blank": 0.89
+   "blank": 0.888
   },
   {
    "key": "f3",
@@ -54,12 +54,12 @@
    "caption": "Fig. 3. CV voltage profile of composite sulfide-carbon with sulfide electrolyte (LPSC-P and/or LPSC-1) with Li or In-metal anode. Composite electrode C-LPSC-P and C-LPSC-1 with a) and b) In-metal anode and composite electrode C-LPSC-1 with Li-metal anode; c) and d) respectively. e) and f) are the 2nd CV cycle for both In and Li metal anodes, both LPSC-P and LPSC-1 with their respective composite electrodes. 5",
    "bbox": [
     31.6,
-    359.3,
+    369.7,
     565.8,
     711.7
    ],
    "w": 2227,
-   "h": 1470,
+   "h": 1426,
    "dpi": 300,
    "src": "20. Dual CuCl doped argyrodite superconductor to boost the interfacial compatibility and air stability for all solid-state lithium metal batteries.pdf",
    "blank": 0.872
@@ -73,15 +73,15 @@
    "caption": "Fig. 4. Galvanostatic symmetric voltage profile and electronic conductivity of SE with varied dopant levels. a) Symmetric cell Li | SE | Li configuration for pristine (LPSC-P, black) and 0.1 CuCl doped (LPSC-1, red) at 0.1 mA cm−2 current density under 50 оC. The inset graphs demonstrate the Li plating-stripping at varied cycle time. b) The relation of electronic conductivity (orange) and critical current density, CCD (dark green) as a function of different dopant level; c) Chronoamperometric measurement, SUS | SE | SUS cell at 1 V for different sulfide samples. 6",
    "bbox": [
     31.6,
-    432.5,
+    443.4,
     565.8,
     702.1
    ],
    "w": 2227,
-   "h": 1125,
+   "h": 1079,
    "dpi": 300,
    "src": "20. Dual CuCl doped argyrodite superconductor to boost the interfacial compatibility and air stability for all solid-state lithium metal batteries.pdf",
-   "blank": 0.841
+   "blank": 0.836
   },
   {
    "key": "f5",
@@ -92,15 +92,15 @@
    "caption": "Fig. 5. Galvanostatic symmetric cell, Li | SE | Li voltage profiles at 50 ◦C. a) and b) Critical current density, CCD with increased step size current density c) and d) Li plating and stripping performance of LPSC-P and LPSC-1 at 3 mA cm−2 respectively.",
    "bbox": [
     31.6,
-    46.1,
+    49.4,
     565.8,
     337.3
    ],
    "w": 2227,
-   "h": 1215,
+   "h": 1200,
    "dpi": 300,
    "src": "20. Dual CuCl doped argyrodite superconductor to boost the interfacial compatibility and air stability for all solid-state lithium metal batteries.pdf",
-   "blank": 0.89
+   "blank": 0.884
   },
   {
    "key": "f6",
@@ -111,15 +111,15 @@
    "caption": "Fig. 6. Morphological alteration of Li metal before and after cycling in the symmetric cells. a) SEM images of the Li metal surface before cycling, after the fifth cycle, and after being short-circuited for pristine, LPSC-P and doped LPSC-1 sulfide solid electrolyte; b) EDX mapping of LPSC-P and LPSC-1 after the fifth cycle for each element on the Li metal. 7",
    "bbox": [
     31.6,
-    362.7,
+    406.0,
     565.8,
     711.7
    ],
    "w": 2227,
-   "h": 1455,
+   "h": 1275,
    "dpi": 300,
    "src": "20. Dual CuCl doped argyrodite superconductor to boost the interfacial compatibility and air stability for all solid-state lithium metal batteries.pdf",
-   "blank": 0.414
+   "blank": 0.331
   },
   {
    "key": "f7",
@@ -130,12 +130,12 @@
    "caption": "Fig. 7. XPS interfacial compatibility test before and after cycling over a) Li (1s) and b) S (2p) XPS spectra at Li | SE interface; c) the resistance developed (R/Ro) at Li | SE interface as a function of aging time. d) Scheme illustrates the development of decomposition, dendrite growth, and alterations of Li kinetics at Li | SE interface in LPSC-P and LPSC-1. Fresh (before cycling), after the fifth cycling (discharge state) at 0.5 mA cm−2 current density. 8",
    "bbox": [
     31.6,
-    380.2,
+    388.5,
     565.8,
     711.7
    ],
    "w": 2227,
-   "h": 1382,
+   "h": 1348,
    "dpi": 300,
    "src": "20. Dual CuCl doped argyrodite superconductor to boost the interfacial compatibility and air stability for all solid-state lithium metal batteries.pdf",
    "blank": 0.673
@@ -149,15 +149,15 @@
    "caption": "Fig. 8. The chemical stability synthesized and commercial (LPS) solid sulfide electrolyte as a function of humid air and H2S gas generation. a) H2S amount under controlled humidity of 55–60%; b) XRD patterns of LPSC-1 before and after exposure in ambient air (humidity = 66%) for 1 hr followed by sintering for 1 hr at 550 ◦C. 9",
    "bbox": [
     31.6,
-    537.1,
+    547.8,
     565.8,
     711.7
    ],
    "w": 2227,
-   "h": 729,
+   "h": 684,
    "dpi": 300,
    "src": "20. Dual CuCl doped argyrodite superconductor to boost the interfacial compatibility and air stability for all solid-state lithium metal batteries.pdf",
-   "blank": 0.891
+   "blank": 0.881
   }
  ]
 }

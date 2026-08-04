@@ -16,15 +16,15 @@
    "caption": "Figure 1. Interfaces modeled in this work. The left image shows the all- solid-state battery containing Li6PS5Cl electrolyte powders (dark orange) coated with ALD-grown oxides (black). The three smaller schematics on the right are the magniﬁed representations of the Li-anode || Coating, Li6PS5Cl || Coating, and Cathode || Coating interfaces.",
    "bbox": [
     44.8,
-    60.4,
+    71.1,
     297.8,
     215.7
    ],
    "w": 1055,
-   "h": 648,
+   "h": 603,
    "dpi": 300,
    "src": "15. Computationally-Guided Development of Sulfide Solid Electrolyte Powder Coatings for Enhanced Stability and Performance of Solid-State Batteries.pdf",
-   "blank": 0.64
+   "blank": 0.612
   },
   {
    "key": "f3",
@@ -35,15 +35,15 @@
    "caption": "Figure 3. a) Heatmap showing the bandgap of the corresponding bulk binary oxide computed at the HSE level of DFT (mixing parameter = 0.32). The dashed black line at 3.92 eV denotes the bandgap of bulk LPSCl. b) Bulk and thin ﬁlm bandgaps of the candidate oxides listed in Table 1, computed at the HSE level of DFT.",
    "bbox": [
     44.8,
-    60.4,
+    71.0,
     552.9,
     227.3
    ],
    "w": 2118,
-   "h": 697,
+   "h": 653,
    "dpi": 300,
    "src": "15. Computationally-Guided Development of Sulfide Solid Electrolyte Powder Coatings for Enhanced Stability and Performance of Solid-State Batteries.pdf",
-   "blank": 0.77
+   "blank": 0.749
   },
   {
    "key": "f4",
@@ -54,15 +54,15 @@
    "caption": "Figure 4. Heatmaps showing the lithium migration barrier values in various reaction products formed at the a) LPSCl || Oxide interface and b) Li || Oxide interface. The downward arrows to the left of the heatmaps denote the direction of increasing interfacial reactivity for each metal oxide.",
    "bbox": [
     42.0,
-    60.4,
+    70.9,
     550.0,
     233.7
    ],
    "w": 2118,
-   "h": 723,
+   "h": 679,
    "dpi": 300,
    "src": "15. Computationally-Guided Development of Sulfide Solid Electrolyte Powder Coatings for Enhanced Stability and Performance of Solid-State Batteries.pdf",
-   "blank": 0.704
+   "blank": 0.685
   },
   {
    "key": "f5",
@@ -75,13 +75,13 @@
     0.0,
     60.4,
     565.0,
-    354.7
+    289.3
    ],
    "w": 2355,
-   "h": 1228,
+   "h": 955,
    "dpi": 300,
    "src": "15. Computationally-Guided Development of Sulfide Solid Electrolyte Powder Coatings for Enhanced Stability and Performance of Solid-State Batteries.pdf",
-   "blank": 0.684
+   "blank": 0.676
   },
   {
    "key": "f6",
@@ -92,15 +92,15 @@
    "caption": "Figure 6. Ionic and Electronic conductivity of ALD-coated LPSCl relative to uncoated LPSCl. The dotted line intersects the y-axis at a value of 1. As noted in the text, the ALD ZnO-coated LPSCl has a 1Å Al2O3 seed layer. All values measured at 25 °C, 5 MPa ﬁxed stack pressure.",
    "bbox": [
     297.1,
-    60.4,
+    71.2,
     550.1,
     250.7
    ],
    "w": 1055,
-   "h": 794,
+   "h": 749,
    "dpi": 300,
    "src": "15. Computationally-Guided Development of Sulfide Solid Electrolyte Powder Coatings for Enhanced Stability and Performance of Solid-State Batteries.pdf",
-   "blank": 0.821
+   "blank": 0.811
   },
   {
    "key": "f7",
@@ -130,15 +130,15 @@
    "caption": "Figure 8. CCD measurements of Li || Li symmetric cells with uncoated and MgO-coated LPSCl. A) Voltage response of uncoated LPSCl from 0.1 to 0.9 mA cm−2 and B) corresponding ASR measured after the indicated current density step. C) Voltage response of ALD MgO-coated LPSCl from 0.1 to 0.9 mA cm−2 and D) corresponding ASR measured after the indicated current density step. All measurements performed at 25 °C, 5 MPa ﬁxed stack pressure using 20 μm Li foils. CCD measurements in A and C correspond to Cell 1 in panels B and D.",
    "bbox": [
     42.0,
-    60.4,
+    70.7,
     550.0,
     407.7
    ],
    "w": 2118,
-   "h": 1448,
+   "h": 1405,
    "dpi": 300,
    "src": "15. Computationally-Guided Development of Sulfide Solid Electrolyte Powder Coatings for Enhanced Stability and Performance of Solid-State Batteries.pdf",
-   "blank": 0.51
+   "blank": 0.496
   },
   {
    "key": "t1",

@@ -16,15 +16,15 @@
    "caption": "Figure 1. CV measurements of a) In/InLijLi6PS5CljLi6PS5Cl/C and b) In/InLijLi5.5PS4.5Cl1.5jLi5.5PS4.5Cl1.5/C cells at 25°C. The content of C additive is 20 wt%. The surface area of C65 was measured to be 59 m2g\u0000 1. We assume that all carbon particles are well covered by SEs in the SE/C electrode. The arrows indicate the CV curves from the first to the third cycle. Box plots of normalized c) S\u0000 and d) Cl\u0000 signal intensities of ToF-SIMS surface analyses (10 measurements per sample) of SE/C electrodes. The signal intensity is normalized to the total ion signal intensity of the corresponding spectrum. The average signal intensities were labelled in (c) and (d). The relative increase of S\u0000 and Cl\u0000 signal intensities were evaluated to compare the decomposition degree of SEs.",
    "bbox": [
     297.5,
-    404.5,
+    418.9,
     550.1,
-    611.9
+    608.9
    ],
    "w": 1054,
-   "h": 865,
+   "h": 793,
    "dpi": 300,
    "src": "16. Impact of the Chlorination of Lithium Argyrodites on the ElectrolyteCathode Interface in Solid-State Batteries.pdf",
-   "blank": 0.898
+   "blank": 0.89
   },
   {
    "key": "f2",
@@ -35,15 +35,15 @@
    "caption": "Figure 2. Impedance evolution of a) Li6PS5Cl and b) Li5.5PS4.5Cl1.5 SSBs resting upon 3.7 V vs. In/InLi at 25°C. The impedance spectra are stacked with a y-axis shift of 35 Ω for each spectrum. The equivalent circuit and the corresponding contributions are marked in (c). The transport-reaction scheme in the composite cathode is described by a transmission line model (TLM). Rct, Rel and Rion represent the resistance contributions from charge transfer, electron transport and ionic transport, respectively. Wdiff denotes the Warburg impedance for diffusion inside insertion active particle. Cdc accounts for the differ- ential capacity of NCM. CPEint represents the constant phase element for the interfacial capacitance. d) Comparison of Rcat increase against the square root of time (t0.5).",
    "bbox": [
     298.7,
-    336.8,
-    544.8,
-    612.3
+    311.8,
+    548.8,
+    608.9
    ],
-   "w": 1027,
-   "h": 1149,
+   "w": 1043,
+   "h": 1239,
    "dpi": 300,
    "src": "16. Impact of the Chlorination of Lithium Argyrodites on the ElectrolyteCathode Interface in Solid-State Batteries.pdf",
-   "blank": 0.825
+   "blank": 0.837
   },
   {
    "key": "f3",
@@ -54,15 +54,15 @@
    "caption": "Figure 3. Galvanostatic charge/discharge curves of a) Li6PS5Cl and b) Li5.5PS4.5Cl1.5 cells at 0.5C. c) Comparison of the cycling stability of two cells. Nyquist plots of d) Li6PS5Cl and e) Li5.5PS4.5Cl1.5 cells after 1st, 10th and 50th charge.",
    "bbox": [
     46.4,
-    472.8,
+    493.6,
     296.1,
-    692.3
+    688.9
    ],
    "w": 1041,
-   "h": 916,
+   "h": 815,
    "dpi": 300,
    "src": "16. Impact of the Chlorination of Lithium Argyrodites on the ElectrolyteCathode Interface in Solid-State Batteries.pdf",
-   "blank": 0.887
+   "blank": 0.875
   },
   {
    "key": "f4",
@@ -73,15 +73,15 @@
    "caption": "Figure 4. Box plots of normalized a) S\u0000 and b) Cl\u0000 signal intensities from ToF-SIMS surface analyses of SE/NCM85 electrodes after aging at 3.7 V (vs. In/InLi) for 60 h. The signal intensities in (a) and (b) are normalized in relation to the total ion signal intensity of the corresponding spectrum. Because we assume that the oxygen-involving degradation chemical degradation exclusively takes place on the surface of the NCM secondary particles, the signal intensities of PO3 \u0000 signal intensity of the corresponding spectrum. In this way, deviations due to a different fraction of interfaces within the analysis area are partly compensated. \u0000 and SO3 \u0000 fragments in (c) and (d) are normalized by the NiO2",
    "bbox": [
     46.4,
-    519.5,
+    532.7,
     547.0,
     678.9
    ],
    "w": 2086,
-   "h": 665,
+   "h": 610,
    "dpi": 300,
    "src": "16. Impact of the Chlorination of Lithium Argyrodites on the ElectrolyteCathode Interface in Solid-State Batteries.pdf",
-   "blank": 0.908
+   "blank": 0.902
   },
   {
    "key": "f5",
@@ -92,15 +92,15 @@
    "caption": "Figure 5. ToF-SIMS measurements of Li6PS5Cl/NCM and Li5.5PS4.5Cl1.5/NCM cells after 100 cycles. All spectra were measured in negative ion mode on the sidewalls of 45° craters. All secondary ion images were normalized to the total ion signal to compensate topographic effects such as the FIB crater geometry. Exemplary of Supporting Information images of NiO2 \u0000 +S5 \u0000 +S6 \u0000 ·PO3 \u0000 ·SO3 \u0000 ) and a RGB overlap. Cathode active material particles, solid electrolyte, and degradation layer are well distinguished in the overlay image. \u0000 , Cl\u0000 , (PO2 \u0000 ), (SO2 \u0000 ), (S4",
    "bbox": [
     46.4,
-    41.0,
+    53.8,
     548.8,
-    249.5
+    246.2
    ],
    "w": 2094,
-   "h": 870,
+   "h": 802,
    "dpi": 300,
    "src": "16. Impact of the Chlorination of Lithium Argyrodites on the ElectrolyteCathode Interface in Solid-State Batteries.pdf",
-   "blank": 0.511
+   "blank": 0.508
   },
   {
    "key": "f6",
@@ -113,13 +113,13 @@
     46.4,
     26.0,
     293.7,
-    205.3
+    201.9
    ],
    "w": 1031,
-   "h": 748,
+   "h": 734,
    "dpi": 300,
    "src": "16. Impact of the Chlorination of Lithium Argyrodites on the ElectrolyteCathode Interface in Solid-State Batteries.pdf",
-   "blank": 0.781
+   "blank": 0.776
   },
   {
    "key": "f7",
@@ -130,15 +130,15 @@
    "caption": "Figure 7. Schematic illustration of SEjNCM interfacial degradation. At low voltages (<4.2 V vs. Li+/Li), the electrochemical decomposition of Li argyrodites takes place. In the high voltage range (\u00154.2 V vs. Li+/Li), the oxygen-involving degradation dominates the interfacial reactions, and generates gaseous (represented by SO2) and oxygenated sulfur and phosphorus species (sulfate/sulfite and phosphate) at the interface.",
    "bbox": [
     46.4,
-    543.5,
+    556.0,
     537.4,
-    701.1
+    698.9
    ],
    "w": 2047,
-   "h": 658,
+   "h": 597,
    "dpi": 300,
    "src": "16. Impact of the Chlorination of Lithium Argyrodites on the ElectrolyteCathode Interface in Solid-State Batteries.pdf",
-   "blank": 0.566
+   "blank": 0.523
   }
  ]
 }

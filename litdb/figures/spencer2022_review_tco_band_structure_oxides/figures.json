@@ -16,15 +16,15 @@
    "caption": "FIG. 1. A partial periodic table highlighting the elements Sc, Ni, Cu, Zn, Cd, Al, Ga, In, and Sn that comprise the oxides discussed in this review.",
    "bbox": [
     47.0,
-    406.0,
+    412.8,
     565.0,
     693.3
    ],
    "w": 2160,
-   "h": 1198,
+   "h": 1170,
    "dpi": 300,
    "src": "46. A review of band structure and material properties of transparent conducting and semiconducting oxides Ga2O3, Al2O3, In2O3, ZnO, SnO2, CdO, NiO, CuO, and Sc2O3.pdf",
-   "blank": 0.668
+   "blank": 0.657
   },
   {
    "key": "f2",
@@ -54,15 +54,15 @@
    "caption": "FIG. 3. Electronic band structure and high symmetry points of b-Ga2O3 at (a) GGA-DFT (PBE) level and (b) hybrid functional (HF) HF-DFT (Gau-PBE) level. Reproduced with permission from Mock et al., Phys. Rev. B 96, 245205 (2017). Copyright 2017 APS (Ref. 86).",
    "bbox": [
     47.0,
-    342.1,
+    358.4,
     303.0,
     666.3
    ],
    "w": 1068,
-   "h": 1352,
+   "h": 1284,
    "dpi": 300,
    "src": "46. A review of band structure and material properties of transparent conducting and semiconducting oxides Ga2O3, Al2O3, In2O3, ZnO, SnO2, CdO, NiO, CuO, and Sc2O3.pdf",
-   "blank": 0.711
+   "blank": 0.671
   },
   {
    "key": "f4",
@@ -72,16 +72,16 @@
    "file": "fig_4.png",
    "caption": "FIG. 4. Experimental (solid) and calculated (open) thermal conductivity values of b-Ga2O3 from literature. Data points were collected from Refs. 39, 41, 55, and 120–124. Data are plotted for anisotropic values found for each of the three crystal- lographic directions.",
    "bbox": [
-    76.3,
-    57.7,
-    563.0,
+    309.0,
+    94.5,
+    565.0,
     386.3
    ],
-   "w": 2029,
-   "h": 1370,
+   "w": 1068,
+   "h": 1217,
    "dpi": 300,
    "src": "46. A review of band structure and material properties of transparent conducting and semiconducting oxides Ga2O3, Al2O3, In2O3, ZnO, SnO2, CdO, NiO, CuO, and Sc2O3.pdf",
-   "blank": 0.892
+   "blank": 0.955
   },
   {
    "key": "f5",
@@ -111,15 +111,15 @@
    "caption": "FIG. 6. Evidence of non-negligible anisotropy in the valence band curvatures at the C point of the Brillouin zone. The dashed red arrows represent two lowest vertical band-to-band transitions with polarization along the b axis while the black arrows represent transitions polarized within the a-c plane. Reproduced with permission from Mock et al., Phys. Rev. B 96, 245205 (2017). Copyright 2017 APS (Ref. 86).",
    "bbox": [
     47.0,
-    466.2,
+    477.2,
     303.0,
     657.3
    ],
    "w": 1068,
-   "h": 797,
+   "h": 751,
    "dpi": 300,
    "src": "46. A review of band structure and material properties of transparent conducting and semiconducting oxides Ga2O3, Al2O3, In2O3, ZnO, SnO2, CdO, NiO, CuO, and Sc2O3.pdf",
-   "blank": 0.931
+   "blank": 0.93
   },
   {
    "key": "f8",
@@ -130,15 +130,15 @@
    "caption": "FIG. 8. Schematics for the crystal structure of the metastable Ga2O3 consisting of (a) trigonal/rhombohedral a-Ga2O3 belonging to space group R\u00023C (#167) with the c-axis ori- entated upwards, (b) cubic c-Ga2O3 belonging to space group Fd\u00023m (#227) with the c-axis orientated upward, (c) body centered cubic d-Ga2O3 belonging to space group Ia\u00023 (#206) with the c-axis orientated upward, (d) hexagonal e-Ga2O3 belonging to space group P63mc (#186) with the c-axis orientated upward, and (e) orthorhombic j-Ga2O3 belonging to space group Pna21 (#33) with the c-axis orientated upward. Purple, Ga; red, O.",
    "bbox": [
     49.0,
-    405.3,
+    409.0,
     563.0,
-    664.0
+    663.2
    ],
    "w": 2142,
-   "h": 1079,
+   "h": 1060,
    "dpi": 300,
    "src": "46. A review of band structure and material properties of transparent conducting and semiconducting oxides Ga2O3, Al2O3, In2O3, ZnO, SnO2, CdO, NiO, CuO, and Sc2O3.pdf",
-   "blank": 0.861
+   "blank": 0.86
   },
   {
    "key": "f10",
@@ -168,15 +168,15 @@
    "caption": "FIG. 11. Measured (AlxGa1\u0002x)2O3 equilibrium diagram. Reproduced with permis- sion from Hill et al., J. Am. Ceram. Soc. 35, 135 (1952). Copyright 1952 Wiley Online Library (Ref. 114).",
    "bbox": [
     309.0,
-    57.7,
+    94.5,
     565.0,
     374.0
    ],
    "w": 1068,
-   "h": 1319,
+   "h": 1166,
    "dpi": 300,
    "src": "46. A review of band structure and material properties of transparent conducting and semiconducting oxides Ga2O3, Al2O3, In2O3, ZnO, SnO2, CdO, NiO, CuO, and Sc2O3.pdf",
-   "blank": 0.923
+   "blank": 0.929
   },
   {
    "key": "f13",
@@ -187,15 +187,15 @@
    "caption": "FIG. 13. Evolution of the lowest bandgap energy in a-(AlGa)2O3 thin ﬁlms in com- parison with AlGaAs and AlGaN. Reproduced with permission from Jinno et al., Sci. Adv. 7, eabd5891 (2021). Copyright 2021 AAAS; licensed under a Creative Commons Attribution (CC BY) license. (Ref. 199).",
    "bbox": [
     309.0,
-    391.7,
+    397.7,
     565.0,
     665.7
    ],
    "w": 1068,
-   "h": 1142,
+   "h": 1118,
    "dpi": 300,
    "src": "46. A review of band structure and material properties of transparent conducting and semiconducting oxides Ga2O3, Al2O3, In2O3, ZnO, SnO2, CdO, NiO, CuO, and Sc2O3.pdf",
-   "blank": 0.938
+   "blank": 0.927
   },
   {
    "key": "f14",
@@ -206,15 +206,15 @@
    "caption": "FIG. 14. e1;? (red squares) and e1;k (blue triangles) for a-(AlxGa1\u0002x)2O3 as determined from the Cauchy dispersion extrapolation. Short dashed lines indicate the best ﬁt to Eq. (5) with associated bowing parameter b. Black square and trian- gle indicate e1;? and e1;k for the m-plane sapphire substrate, respectively. Reproduced with permission from Hilﬁker et al., Appl. Phys. Lett. 119, 092103 (2021). Copyright 2021 AIP Publishing LLC (Ref. 228).",
    "bbox": [
     309.0,
-    461.6,
+    462.6,
     565.0,
     648.3
    ],
    "w": 1068,
-   "h": 779,
+   "h": 775,
    "dpi": 300,
    "src": "46. A review of band structure and material properties of transparent conducting and semiconducting oxides Ga2O3, Al2O3, In2O3, ZnO, SnO2, CdO, NiO, CuO, and Sc2O3.pdf",
-   "blank": 0.923
+   "blank": 0.926
   },
   {
    "key": "f15",
@@ -244,15 +244,15 @@
    "caption": "FIG. 16. a-Al2O3 crystal structure belonging to space group R\u00023c (#167) with the c-axis oriented upward (gray ¼ Al, red ¼ O).",
    "bbox": [
     311.0,
-    498.8,
+    505.7,
     563.0,
-    682.1
+    681.2
    ],
    "w": 1051,
-   "h": 764,
+   "h": 733,
    "dpi": 300,
    "src": "46. A review of band structure and material properties of transparent conducting and semiconducting oxides Ga2O3, Al2O3, In2O3, ZnO, SnO2, CdO, NiO, CuO, and Sc2O3.pdf",
-   "blank": 0.841
+   "blank": 0.835
   },
   {
    "key": "f18",
@@ -284,10 +284,10 @@
     0.0,
     57.7,
     548.5,
-    323.0
+    322.2
    ],
    "w": 2286,
-   "h": 1106,
+   "h": 1103,
    "dpi": 300,
    "src": "46. A review of band structure and material properties of transparent conducting and semiconducting oxides Ga2O3, Al2O3, In2O3, ZnO, SnO2, CdO, NiO, CuO, and Sc2O3.pdf",
    "blank": 0.822
@@ -320,15 +320,15 @@
    "caption": "FIG. 21. Unit cells for (a) wurtzite ZnO belonging to space group P63mc (#186), (b) zinc blende ZnO belonging to space group F\u000243m (#216), and (c) rocksalt ZnO belonging to space group Fm\u00023m (#225). All three unit cells are shown with the c-axis orientated upwards (olive ¼ Zn, red ¼ O).",
    "bbox": [
     49.0,
-    465.1,
+    476.2,
     563.0,
-    682.1
+    681.2
    ],
    "w": 2142,
-   "h": 905,
+   "h": 855,
    "dpi": 300,
    "src": "46. A review of band structure and material properties of transparent conducting and semiconducting oxides Ga2O3, Al2O3, In2O3, ZnO, SnO2, CdO, NiO, CuO, and Sc2O3.pdf",
-   "blank": 0.851
+   "blank": 0.842
   },
   {
    "key": "f22",
@@ -339,15 +339,15 @@
    "caption": "FIG. 22. The calculated bandgap of ZnO. LDA was ﬁrst used to determine a bandgap of 0.23 eV. Using SIC-PP, the bandgap was determined to be 3.77 eV. Reproduced with permission from Vogel et al., Phys. Rev. B 52, R14316 (1995). Copyright 1995 APS (Ref. 567).",
    "bbox": [
     309.0,
-    455.2,
+    462.7,
     565.0,
     666.3
    ],
    "w": 1068,
-   "h": 881,
+   "h": 849,
    "dpi": 300,
    "src": "46. A review of band structure and material properties of transparent conducting and semiconducting oxides Ga2O3, Al2O3, In2O3, ZnO, SnO2, CdO, NiO, CuO, and Sc2O3.pdf",
-   "blank": 0.853
+   "blank": 0.846
   },
   {
    "key": "f23",
@@ -358,15 +358,15 @@
    "caption": "FIG. 23. Temperature dependence of the ZnO lattice parameters from 4.2 to 296 K. Reproduced with permission from Reeber, J. Appl. Phys. 41, 5063–5066 (1970). Copyright 1970 AIP Publishing LLC (Ref. 609).",
    "bbox": [
     309.0,
-    502.4,
+    510.0,
     565.0,
     675.3
    ],
    "w": 1068,
-   "h": 721,
+   "h": 689,
    "dpi": 300,
    "src": "46. A review of band structure and material properties of transparent conducting and semiconducting oxides Ga2O3, Al2O3, In2O3, ZnO, SnO2, CdO, NiO, CuO, and Sc2O3.pdf",
-   "blank": 0.901
+   "blank": 0.906
   },
   {
    "key": "f24",
@@ -377,15 +377,15 @@
    "caption": "FIG. 24. The fundamental bandgap energies (EA 0) and UV-VUV band-to-band tran- sitions (E1, E2) for MgxZn1\u0002xO. Reproduced with permission from Schmidt-Grund et al., Thin Solid Films 455, 500 (2004). Copyright 2004 Elsevier (Ref. 662).",
    "bbox": [
     311.0,
-    524.7,
+    531.0,
     563.0,
-    673.7
+    672.2
    ],
    "w": 1051,
-   "h": 622,
+   "h": 589,
    "dpi": 300,
    "src": "46. A review of band structure and material properties of transparent conducting and semiconducting oxides Ga2O3, Al2O3, In2O3, ZnO, SnO2, CdO, NiO, CuO, and Sc2O3.pdf",
-   "blank": 0.933
+   "blank": 0.93
   },
   {
    "key": "f26",
@@ -396,15 +396,15 @@
    "caption": "FIG. 26. Electronic structure of rutile SnO2. The dotted red lines were determined using HSE03þG0W0, while the solid black lines were determined using LDA þ U þ D. Reproduced with permission from Schleife et al., Phys. Rev. B 83, 035116 (2011). Copyright 2011 APS (Ref. 715).",
    "bbox": [
     309.0,
-    474.1,
+    480.2,
     565.0,
     666.3
    ],
    "w": 1068,
-   "h": 802,
+   "h": 777,
    "dpi": 300,
    "src": "46. A review of band structure and material properties of transparent conducting and semiconducting oxides Ga2O3, Al2O3, In2O3, ZnO, SnO2, CdO, NiO, CuO, and Sc2O3.pdf",
-   "blank": 0.789
+   "blank": 0.784
   },
   {
    "key": "f27",
@@ -417,13 +417,13 @@
     0.0,
     57.7,
     435.8,
-    272.3
+    271.5
    ],
    "w": 1817,
-   "h": 895,
+   "h": 892,
    "dpi": 300,
    "src": "46. A review of band structure and material properties of transparent conducting and semiconducting oxides Ga2O3, Al2O3, In2O3, ZnO, SnO2, CdO, NiO, CuO, and Sc2O3.pdf",
-   "blank": 0.85
+   "blank": 0.849
   },
   {
    "key": "f28",
@@ -434,15 +434,15 @@
    "caption": "FIG. 28. Calculated band structure for CdO. The indirect gap was determined to be 1.65 eV, and the direct gap was calculated to be 2.91 eV. Reproduced with permis- sion from Lindsay and Parker, Phys. Rev. B 92, 144301 (2015). Copyright 2015 APS (Ref. 802).",
    "bbox": [
     309.0,
-    57.7,
+    94.5,
     565.0,
     296.2
    ],
    "w": 1068,
-   "h": 995,
+   "h": 842,
    "dpi": 300,
    "src": "46. A review of band structure and material properties of transparent conducting and semiconducting oxides Ga2O3, Al2O3, In2O3, ZnO, SnO2, CdO, NiO, CuO, and Sc2O3.pdf",
-   "blank": 0.905
+   "blank": 0.906
   },
   {
    "key": "f29",
@@ -453,15 +453,15 @@
    "caption": "FIG. 29. Transport mobility of CdO thin ﬁlms plotted as a function of carrier concen- trations. Simulations using the MS model and Matthiessen’s rule are included. Reproduced with permission from Vasheghani Farahani et al., J. Appl. Phys. 109, 073712 (2011). Copyright 2011 AIP Publishing LLC (Ref. 811).",
    "bbox": [
     47.0,
-    492.4,
+    500.0,
     303.0,
     666.3
    ],
    "w": 1068,
-   "h": 726,
+   "h": 694,
    "dpi": 300,
    "src": "46. A review of band structure and material properties of transparent conducting and semiconducting oxides Ga2O3, Al2O3, In2O3, ZnO, SnO2, CdO, NiO, CuO, and Sc2O3.pdf",
-   "blank": 0.911
+   "blank": 0.909
   },
   {
    "key": "f30",
@@ -472,15 +472,15 @@
    "caption": "FIG. 30. Cubic NiO unit cell with space group Fm\u00023m (#225). The c-axis is orien- tated upward (green ¼ Ni, red ¼ O).",
    "bbox": [
     311.0,
-    57.7,
+    94.5,
     563.0,
-    268.2
+    267.4
    ],
    "w": 1051,
-   "h": 878,
+   "h": 722,
    "dpi": 300,
    "src": "46. A review of band structure and material properties of transparent conducting and semiconducting oxides Ga2O3, Al2O3, In2O3, ZnO, SnO2, CdO, NiO, CuO, and Sc2O3.pdf",
-   "blank": 0.814
+   "blank": 0.797
   },
   {
    "key": "f31",
@@ -491,15 +491,15 @@
    "caption": "FIG. 31. Band structure of NiO with all energies relative to the valence band maxi- mum. The gray lines represent PBE calculations, while the black lines represent ACBNO calculations. Reproduced with permission from Agapito et al., Phys. Rev. X 5, 011006 (2015). Copyright 2015 APS, licensed under a Creative Commons Attribution (CC BY) license (Ref. 883).",
    "bbox": [
     309.0,
-    503.1,
+    506.6,
     565.0,
     657.3
    ],
    "w": 1068,
-   "h": 643,
+   "h": 629,
    "dpi": 300,
    "src": "46. A review of band structure and material properties of transparent conducting and semiconducting oxides Ga2O3, Al2O3, In2O3, ZnO, SnO2, CdO, NiO, CuO, and Sc2O3.pdf",
-   "blank": 0.738
+   "blank": 0.731
   },
   {
    "key": "f32",
@@ -512,13 +512,13 @@
     0.0,
     57.7,
     562.9,
-    309.4
+    308.6
    ],
    "w": 2346,
-   "h": 1050,
+   "h": 1046,
    "dpi": 300,
    "src": "46. A review of band structure and material properties of transparent conducting and semiconducting oxides Ga2O3, Al2O3, In2O3, ZnO, SnO2, CdO, NiO, CuO, and Sc2O3.pdf",
-   "blank": 0.843
+   "blank": 0.844
   },
   {
    "key": "f33",
@@ -529,15 +529,15 @@
    "caption": "FIG. 33. Phase diagram for the copper oxide polymorphs calculated using DFT hybrid functionals. The inlet displays the copper oxide polymorphs grand potential as a function of oxygen chemical potential. Reproduced with permission from Heinemann et al., Phys. Rev. B 87, 115111 (2013). Copyright 2013 APS (Ref. 931).",
    "bbox": [
     309.0,
-    489.8,
+    503.5,
     565.0,
     666.3
    ],
    "w": 1068,
-   "h": 736,
+   "h": 680,
    "dpi": 300,
    "src": "46. A review of band structure and material properties of transparent conducting and semiconducting oxides Ga2O3, Al2O3, In2O3, ZnO, SnO2, CdO, NiO, CuO, and Sc2O3.pdf",
-   "blank": 0.519
+   "blank": 0.472
   },
   {
    "key": "f34",
@@ -548,15 +548,15 @@
    "caption": "FIG. 34. Electronic band structure and density of states for (a) Cu2O, (b) CuO, and (c) Cu4O3 determined using hybrid functional DFT calculations. Reproduced with permission from Heinemann et al., Phys. Rev. B 87, 115111 (2013). Copyright 2013 APS (Ref. 931).",
    "bbox": [
     47.0,
-    474.5,
+    482.2,
     565.0,
     684.3
    ],
    "w": 2160,
-   "h": 875,
+   "h": 843,
    "dpi": 300,
    "src": "46. A review of band structure and material properties of transparent conducting and semiconducting oxides Ga2O3, Al2O3, In2O3, ZnO, SnO2, CdO, NiO, CuO, and Sc2O3.pdf",
-   "blank": 0.725
+   "blank": 0.712
   },
   {
    "key": "f35",
@@ -569,13 +569,13 @@
     0.0,
     57.7,
     565.0,
-    315.5
+    314.8
    ],
    "w": 2355,
-   "h": 1075,
+   "h": 1072,
    "dpi": 300,
    "src": "46. A review of band structure and material properties of transparent conducting and semiconducting oxides Ga2O3, Al2O3, In2O3, ZnO, SnO2, CdO, NiO, CuO, and Sc2O3.pdf",
-   "blank": 0.803
+   "blank": 0.802
   },
   {
    "key": "f36",
@@ -586,15 +586,15 @@
    "caption": "FIG. 36. Calculated band structure of Sc2O3. Reproduced with permission from Richard et al., Phys. Rev. B 82, 035206 (2010). Copyright 2010 APS (Ref. 1044).",
    "bbox": [
     309.0,
-    419.9,
+    430.9,
     565.0,
     684.3
    ],
    "w": 1068,
-   "h": 1103,
+   "h": 1057,
    "dpi": 300,
    "src": "46. A review of band structure and material properties of transparent conducting and semiconducting oxides Ga2O3, Al2O3, In2O3, ZnO, SnO2, CdO, NiO, CuO, and Sc2O3.pdf",
-   "blank": 0.752
+   "blank": 0.739
   },
   {
    "key": "f37",
@@ -624,15 +624,15 @@
    "caption": "FIG. 38. The substrate temperature dependence of the indirect bandgap and the refractive index of Sc2O3. (Note typo in legend.) Reproduced with permission from Liu et al., Thin Solid Films 518, 2920–2923 (2010). Copyright 2010 Elsevier (Ref. 1030).",
    "bbox": [
     309.0,
-    483.6,
+    491.1,
     565.0,
     666.3
    ],
    "w": 1068,
-   "h": 763,
+   "h": 731,
    "dpi": 300,
    "src": "46. A review of band structure and material properties of transparent conducting and semiconducting oxides Ga2O3, Al2O3, In2O3, ZnO, SnO2, CdO, NiO, CuO, and Sc2O3.pdf",
-   "blank": 0.913
+   "blank": 0.909
   }
  ]
 }

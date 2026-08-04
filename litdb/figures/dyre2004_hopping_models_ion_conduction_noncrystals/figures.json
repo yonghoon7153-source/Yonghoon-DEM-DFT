@@ -16,15 +16,15 @@
    "caption": "Fig. 1: Typical potential for a system described by the RBM, shown here in one dimension. The barriers are",
    "bbox": [
     50.7,
-    353.4,
+    336.7,
     295.5,
-    471.6
+    459.6
    ],
    "w": 1021,
-   "h": 493,
+   "h": 513,
    "dpi": 300,
    "src": "12. Hopping models for ion conduction in noncrystals.pdf",
-   "blank": 0.968
+   "blank": 0.964
   },
   {
    "key": "f2",
@@ -35,15 +35,15 @@
    "caption": "Fig. 2: Percolation on a two-dimensional square lattice. The upper picture shows the situation below the",
    "bbox": [
     302.3,
-    103.6,
+    118.0,
     547.1,
-    521.5
+    504.7
    ],
    "w": 1021,
-   "h": 1742,
+   "h": 1612,
    "dpi": 300,
    "src": "12. Hopping models for ion conduction in noncrystals.pdf",
-   "blank": 0.865
+   "blank": 0.853
   },
   {
    "key": "f3",
@@ -54,15 +54,15 @@
    "caption": "Fig. 3: Computer simulations of the random barrier model in three dimensions with the uniform barrier",
    "bbox": [
     50.7,
-    303.4,
+    286.8,
     295.5,
     638.1
    ],
    "w": 1021,
-   "h": 1395,
+   "h": 1465,
    "dpi": 300,
    "src": "12. Hopping models for ion conduction in noncrystals.pdf",
-   "blank": 0.939
+   "blank": 0.94
   },
   {
    "key": "f4",
@@ -73,12 +73,12 @@
    "caption": "Fig. 4: Computer simulations of the random barrier model for several barrier distributions [10]. The figure shows the ac conductivity relative to the dc conductivity as function of scaled frequency at low temperatures. The dots are shown as a guide to the eye giving a line of slope one, while the full line is the classical effective medium approximation (EMA). Today more advanced analytical",
    "bbox": [
     302.3,
-    336.7,
+    303.4,
     547.1,
     538.2
    ],
    "w": 1021,
-   "h": 841,
+   "h": 979,
    "dpi": 300,
    "src": "12. Hopping models for ion conduction in noncrystals.pdf",
    "blank": 0.901
@@ -92,15 +92,15 @@
    "caption": "Fig. 5: RBM-prediction for the ac conductivity versus",
    "bbox": [
     302.3,
-    386.8,
+    320.1,
     547.0,
     574.0
    ],
    "w": 1021,
-   "h": 781,
+   "h": 1059,
    "dpi": 300,
    "src": "12. Hopping models for ion conduction in noncrystals.pdf",
-   "blank": 0.89
+   "blank": 0.911
   }
  ]
 }

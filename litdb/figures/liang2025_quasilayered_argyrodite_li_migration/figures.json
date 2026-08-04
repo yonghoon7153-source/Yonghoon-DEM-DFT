@@ -16,15 +16,15 @@
    "caption": "Figure 1. a) Schematic diagram of the crystal structure of the Argyrodite-type solid electrolyte. b) Three types of Li-ion migration pathways in the Argyrodite crystal structure. c) Arrangement of PS4 tetrahedra in the lattice and the types of substitutions involved in this work. d,e) Schematic diagrams of the P2mm space group structures from diﬀerent views.",
    "bbox": [
     44.8,
-    60.4,
+    70.9,
     552.9,
     363.7
    ],
    "w": 2118,
-   "h": 1265,
+   "h": 1221,
    "dpi": 300,
    "src": "26. Small - 2025 - Liang - Unraveling Lithium‐Ion Migration Mechanisms in Novel Quasi‐Layered Argyrodite Solid Electrolyte for.pdf",
-   "blank": 0.798
+   "blank": 0.791
   },
   {
    "key": "f2",
@@ -35,15 +35,15 @@
    "caption": "Figure 2. a) Li-ion trajectory in the original Argyrodite structure, P2mm space group Argyrodite, and substituted structures (20 ps). (Green shade represents halogen cage layer, yellow shade represents S cage layer). b) Calculated ion conductivity of Li+ at 300 K and comparison of the activation energies for Li ion migration obtained from AIMD and NEB calculations. c) Ion conductivity of diﬀerent substituted structures and Mayer bond order analysis for S-Li and X-Li at the 4c site. d) The ion conductivity of Li ions in the upper layer (up-Li) and lower layer (down-Li) and the 𝜎up/𝜎down. The relatively high ionic conductivity is noted for the unique quasi-layered crystal structure of Argyrodite.",
    "bbox": [
     42.0,
-    60.4,
+    70.6,
     550.1,
     430.7
    ],
    "w": 2118,
-   "h": 1544,
+   "h": 1501,
    "dpi": 300,
    "src": "26. Small - 2025 - Liang - Unraveling Lithium‐Ion Migration Mechanisms in Novel Quasi‐Layered Argyrodite Solid Electrolyte for.pdf",
-   "blank": 0.658
+   "blank": 0.654
   },
   {
    "key": "f3",
@@ -54,15 +54,15 @@
    "caption": "Figure 3. a) Evolutions of DOS with diﬀerent degrees of disorder at the 4a/4c sites in Li6PS5Cl. b) Evolutions of the PDOS of Cl-3p orbitals at 4a sites. c) Evolutions of the PDOS of S-3p orbitals at 4c sites. Insets indicate the total bond valence of 4c-S/Li/4a-Cl. d) Evolutions of the S-3p orbitals at 4a sites.",
    "bbox": [
     44.8,
-    60.4,
+    71.0,
     552.9,
     370.7
    ],
    "w": 2118,
-   "h": 1294,
+   "h": 1250,
    "dpi": 300,
    "src": "26. Small - 2025 - Liang - Unraveling Lithium‐Ion Migration Mechanisms in Novel Quasi‐Layered Argyrodite Solid Electrolyte for.pdf",
-   "blank": 0.835
+   "blank": 0.829
   },
   {
    "key": "f4",
@@ -73,15 +73,15 @@
    "caption": "Figure 4. a) The 3D ELF isosurface, IRI, and Li ion trajectory distribution for diﬀerent substituted structures. b) The IRI scatter plots for Li6PS5Cl, P2mm-Li6PS5Cl, and Li6PSe4SCl. c) The schematic diagram of the Li ion migration energy and mechanisms.",
    "bbox": [
     42.0,
-    60.4,
+    70.9,
     550.0,
     429.7
    ],
    "w": 2118,
-   "h": 1540,
+   "h": 1496,
    "dpi": 300,
    "src": "26. Small - 2025 - Liang - Unraveling Lithium‐Ion Migration Mechanisms in Novel Quasi‐Layered Argyrodite Solid Electrolyte for.pdf",
-   "blank": 0.696
+   "blank": 0.692
   }
  ]
 }

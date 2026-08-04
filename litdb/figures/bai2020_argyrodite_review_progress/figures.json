@@ -16,15 +16,15 @@
    "caption": "Fig. 1 (a) Ordered crystal structure of Li6PS5X (X ¼ Cl, Br, I). The X\u0001 anions form a cubic close-packed lattice with PS4 tetrahedra in the octahedral sites and free S2\u0001 in half of the tetrahedral sites (Wyckoﬀ4d). (b) The Li+ cages-like polyhedra in which diﬀerent jump processes are possible: (i) doublet jumps between adjacent lithium positions (48h–24g–48h), intra-cage jumps within the cage (48h–48h), and inter-cage jumps between the cages (48h–48h). Reproduced with permission from ref. 31. Copyright 2018, American Chemical Society.",
    "bbox": [
     36.5,
-    34.9,
+    44.6,
     558.8,
     240.0
    ],
    "w": 2177,
-   "h": 856,
+   "h": 816,
    "dpi": 300,
    "src": "24. Research progress in Li-argyrodite-based solidstate electrolytes.pdf",
-   "blank": 0.815
+   "blank": 0.809
   },
   {
    "key": "f2",
@@ -35,15 +35,15 @@
    "caption": "Fig. 2 (a) Time-resolved mass change in Li6PS5I and Li6PS5I–20Sn electrolytes in pure O2. (b) XRD patterns, (c) X-ray absorption near-edge structure (XANES) of P K-edge, and (d) Arrhenius plots of Li6PS5I–20Sn before and after exposure to 10% humidity; the samples after the reheating process are shown in (b) and (d). (e) Schematic of the diﬃculty in oxidation by H2O of PS4 and (P/Sn)S4 tetrahedrons based on DFT calculations. Reproduced with permission from ref. 84. Copyright 2020, John Wiley & Sons, Inc.",
    "bbox": [
     36.5,
-    34.9,
+    44.6,
     558.8,
-    335.4
+    334.8
    ],
    "w": 2177,
-   "h": 1253,
+   "h": 1210,
    "dpi": 300,
    "src": "24. Research progress in Li-argyrodite-based solidstate electrolytes.pdf",
-   "blank": 0.889
+   "blank": 0.872
   },
   {
    "key": "f3",
@@ -54,12 +54,12 @@
    "caption": "Fig. 3 Structural data for Li6+xP1\u0001xSixS5Br obtained from the Rietveld reﬁnements of the XRD patterns. (a) Lattice parameters increased with an increase in x due to the larger ionic radius of Si4+. The upper limit in the lattice parameter at a composition of x ¼ 0.3 is limited by the solubility. (b) MS4 (M ¼ Si1\u0001xPx) polyhedral volumes increased due to the Si4+ substitution and resultant unit-cell expansion. (c) Site disorder between Br\u0001 and S2\u0001, which is relatively constant as x increases. The error bars reﬂect 3s of the standard deviations obtained from the Rietveld reﬁnement. Reproduced with permission from ref. 27. Copyright 2018, the Royal Society of Chemistry.",
    "bbox": [
     36.5,
-    34.9,
+    44.6,
     298.0,
-    483.4
+    482.6
    ],
    "w": 1090,
-   "h": 1870,
+   "h": 1826,
    "dpi": 300,
    "src": "24. Research progress in Li-argyrodite-based solidstate electrolytes.pdf",
    "blank": 0.934
@@ -73,15 +73,15 @@
    "caption": "Fig. 4 (a) Crystal structure of Li6.7Si0.7Sb0.3S5I with fully occupied S (16e) site and 2.6% and 1.7% S2\u0001/I\u0001 (4a, 4c) mixed occupied sites. The dark violet polyhedron indicates the (Sb/Si)S4 tetrahedra. The colored balls indicate four Li+ sites: turquoise (Li1, 48h), teal (Li2, 24g), green (Li3, 48h), and orange (Li, 4d). (b) Discrete jumps of Li+ diﬀusion: doublet jumps (Li1 (48h)–Li2 (24g)–Li1 (48h): blue arrow), intra-cage jumps (Li1 (48h)–Li1 (48h): red arrow), and inter-cage jumps (Li1 (48h)– Li1 (48h): orange arrow); (c) the new inter-cage jump Li3 (48h)–Li3 (48h) (orange arrow). Reproduced with permission from ref. 85. Copyright 2019, American Chemical Society.",
    "bbox": [
     297.3,
-    34.9,
+    44.6,
     558.8,
-    344.7
+    343.8
    ],
    "w": 1091,
-   "h": 1292,
+   "h": 1248,
    "dpi": 300,
    "src": "24. Research progress in Li-argyrodite-based solidstate electrolytes.pdf",
-   "blank": 0.727
+   "blank": 0.718
   },
   {
    "key": "f5",
@@ -92,15 +92,15 @@
    "caption": "Fig. 5 (a) Li+–Li+ jump distances obtained from the Rietveld reﬁne- ments of the neutron diﬀraction data. (b) Room-temperature ionic conductivity of Li6PS5Br annealed at diﬀerent temperatures. Repro- duced with permission from ref. 134. Copyright 2019, the Royal Society of Chemistry.",
    "bbox": [
     297.3,
-    288.5,
+    312.0,
     558.8,
     674.0
    ],
    "w": 1091,
-   "h": 1608,
+   "h": 1509,
    "dpi": 300,
    "src": "24. Research progress in Li-argyrodite-based solidstate electrolytes.pdf",
-   "blank": 0.886
+   "blank": 0.881
   },
   {
    "key": "f6",
@@ -111,15 +111,15 @@
    "caption": "Fig. 6 (a) Schematic of the one-pot crystallization using UMA (top) and rapid crystal growth using RTA (bottom). The enlarged images in the circle show the crystallinity of each powder during the in situ nucleation and crystal growth stages. (b) Relationship between the ionic conductivity of Li7\u0001xPS6\u0001xClx prepared using two diﬀerent milling methods (UMA and CMA) and x. (c) Relationship between the ionic conductivity of Li6PS5Cl at x ¼ 1.0 and 1.5 prepared by using UMA and CMA and the milling time. Reproduced with permission from ref. 135. Copyright 2018, American Chemical Society.",
    "bbox": [
     36.5,
-    34.9,
+    44.6,
     558.8,
-    252.5
+    251.6
    ],
    "w": 2177,
-   "h": 908,
+   "h": 864,
    "dpi": 300,
    "src": "24. Research progress in Li-argyrodite-based solidstate electrolytes.pdf",
-   "blank": 0.787
+   "blank": 0.775
   },
   {
    "key": "f7",
@@ -130,15 +130,15 @@
    "caption": "Fig. 7 Eﬀect of heat treatment on the formation mechanism, crystal phase, and impurities of Li argyrodite electrolytes prepared by using the liquid-phase method. Reproduced with permission from ref. 156. Copyright 2019, the Royal Society of Chemistry.",
    "bbox": [
     36.5,
-    544.4,
+    550.9,
     558.8,
-    707.3
+    706.7
    ],
    "w": 2177,
-   "h": 679,
+   "h": 650,
    "dpi": 300,
    "src": "24. Research progress in Li-argyrodite-based solidstate electrolytes.pdf",
-   "blank": 0.624
+   "blank": 0.606
   },
   {
    "key": "f8",
@@ -149,15 +149,15 @@
    "caption": "Fig. 8 (a) Schematic of the inﬁltration of an NCM111 porous electrode with Li6PS5Br SSEs and the cross-sectional FE-SEM images of the NCM111 electrode before (upper) and after (bottom) pressing. (b) Charge–discharge curves and (c) rate performance of the ASSLBs with an inﬁltrated NCM111 electrode. Reproduced with permission from ref. 41. Copyright 2016, the Royal Society of Chemistry.",
    "bbox": [
     36.5,
-    443.1,
+    464.8,
     558.8,
-    697.3
+    696.7
    ],
    "w": 2177,
-   "h": 1060,
+   "h": 967,
    "dpi": 300,
    "src": "24. Research progress in Li-argyrodite-based solidstate electrolytes.pdf",
-   "blank": 0.691
+   "blank": 0.67
   },
   {
    "key": "t1",

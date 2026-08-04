@@ -17,15 +17,15 @@
    "caption": "Fig. 1. (a) Machine-learned moment tensor potential (MTP) development workflow. (b) A schematic diagram of trained and untrained regions in an arbitrary coordinate space according to training sets. The gray region and colored circle represent untrained and trained regions, respectively. 2.5. MTP training according to each DFT functional conductivities at 300 K (σRT) were obtained by extrapolating from the values for high temperatures using Arrhenius fitting. For the accurate σRT evaluation, we performed MD simulations at 7 different tempera­ tures from 350 K to 500 K at 25 K intervals and repeated this process twice to generate an ensemble average. The target temperature was obtained by increasing the temperature by 10 K to the target tempera­ ture during 100 ps of NVT simulation. After that, the NPT simulation was carried out at a target temperature over 10 ns. Subsequently, the diffusi",
    "bbox": [
     31.6,
-    46.1,
+    49.4,
     566.0,
     328.0
    ],
    "w": 2228,
-   "h": 1176,
+   "h": 1162,
    "dpi": 300,
    "src": "35. Highly reliable and large-scale simulations of promising argyrodite solid-state electrolytes using a machine-learned moment tensor potential.pdf",
-   "blank": 0.642
+   "blank": 0.635
   },
   {
    "key": "f2",
@@ -36,12 +36,12 @@
    "caption": "Fig. 2. Arrhenius plots of diffusivities calculated by (a) AIMD_PBE, (b) MTP_PBE, (c) MTP_PBE-D3(BJ), and (d) MTP_optB88-vdw of the six characteristic config­ urations of Li6PS5Cl at temperatures range from 350 K to 700 K (from 600 K to 1200 K for AIMD_PBE) for extrapolated diffusivity at 300 K. 4",
    "bbox": [
     31.6,
-    404.8,
+    410.1,
     563.7,
     721.3
    ],
    "w": 2218,
-   "h": 1320,
+   "h": 1298,
    "dpi": 300,
    "src": "35. Highly reliable and large-scale simulations of promising argyrodite solid-state electrolytes using a machine-learned moment tensor potential.pdf",
    "blank": 0.899
@@ -55,15 +55,15 @@
    "caption": "Fig. 3. (a) Schematic of a 3 × 3 × 3 supercell structure composed of 27 unit-cells considering the thermodynamic stability of the six characteristic configurations. (b) An Arrhenius plot comparing the diffusivity of Li6PS5Cl random structure and fully ordered (0% Cl- at 4c) and disordered (50% Cl- at 4c) configurations. (c) Li-ion diffusion trajectories during MD simulations of random structure and fully ordered and disordered configurations. 5",
    "bbox": [
     31.6,
-    462.5,
+    470.4,
     565.8,
     711.7
    ],
    "w": 2227,
-   "h": 1039,
+   "h": 1006,
    "dpi": 300,
    "src": "35. Highly reliable and large-scale simulations of promising argyrodite solid-state electrolytes using a machine-learned moment tensor potential.pdf",
-   "blank": 0.702
+   "blank": 0.691
   },
   {
    "key": "f4",
@@ -74,15 +74,15 @@
    "caption": "Fig. 4. (a) The workflow for developing MTPs trained at the van der Waals optB88 level of theory (MTP_optB88-vdw) for a GB system through a sequential process of passive and active-learning using additionally generated surface and GB models. 6",
    "bbox": [
     31.6,
-    410.0,
+    415.5,
     565.7,
     721.3
    ],
    "w": 2227,
-   "h": 1298,
+   "h": 1275,
    "dpi": 300,
    "src": "35. Highly reliable and large-scale simulations of promising argyrodite solid-state electrolytes using a machine-learned moment tensor potential.pdf",
-   "blank": 0.456
+   "blank": 0.445
   },
   {
    "key": "f5",
@@ -93,15 +93,15 @@
    "caption": "Fig. 5. ∑5[100](021) grain boundary (GB) structures generated from (a) fully ordered and disordered configurations of Li6PS5Cl for MTP training with lattice parameters of a = 10.2795 Å, b = 22.9857 Å, and c = 45.9713 Å and (b) a random structure for an MTP-based MD simulation with lattice parameters of a = 30 Å, b = 68 Å, and c = 135 Å. The gray and blue shades denote the GB and Bulk region, respectively. (c) Li-ion diffusivities as a function of extent from the GB interface. The gray, red, orange, and blue regions mean “GB”, “Near_GB”, “Far_GB”, and “Bulk” regions, respectively. (d) Time evolution of normalized number of Li-ions around the GB region during 5 ns of MD simulation. 7",
    "bbox": [
     31.6,
-    359.3,
+    369.5,
     565.8,
     690.1
    ],
    "w": 2227,
-   "h": 1380,
+   "h": 1337,
    "dpi": 300,
    "src": "35. Highly reliable and large-scale simulations of promising argyrodite solid-state electrolytes using a machine-learned moment tensor potential.pdf",
-   "blank": 0.516
+   "blank": 0.503
   },
   {
    "key": "fS1",
@@ -112,15 +112,15 @@
    "caption": "Figure S1. (a) Crystal structure and Wyckoff position of halogenated Li-argyrodite (Li6PS5X [X = Cl, Br, I]). (b) Six configurations of argyrodite according to site occupancy X- at the 4c site. Each percentage indicates the X- occupancy at the 4c site. The green circle indicates the position of X- at the 4c site.",
    "bbox": [
     66.0,
-    26.0,
+    79.1,
     549.0,
-    598.8
+    581.8
    ],
    "w": 2013,
-   "h": 2388,
+   "h": 2096,
    "dpi": 300,
    "src": "35. Sup) Highly reliable and large-scale simulations of promising argyrodite solid-state electrolytes using a machine-learned moment tensor potential.pdf",
-   "blank": 0.771
+   "blank": 0.74
   },
   {
    "key": "fS2",
@@ -131,15 +131,15 @@
    "caption": "Figure S2. Hyperparameter optimization of (a) 𝑅,-# (at levmax = 8) and (b) levmax (at 𝑅,-#= 5Å) in MTP for energy and force prediction and computing time. The mean absolute error (MAE) for",
    "bbox": [
     66.0,
-    26.0,
+    79.1,
     549.0,
-    279.6
+    265.7
    ],
    "w": 2013,
-   "h": 1058,
+   "h": 779,
    "dpi": 300,
    "src": "35. Sup) Highly reliable and large-scale simulations of promising argyrodite solid-state electrolytes using a machine-learned moment tensor potential.pdf",
-   "blank": 0.962
+   "blank": 0.947
   },
   {
    "key": "fS3",
@@ -150,15 +150,15 @@
    "caption": "Figure S3. Regression performance of developed MTP_optB88-vdw for Li6PS5X (X=Cl, Br, I).",
    "bbox": [
     66.0,
-    26.0,
+    79.1,
     549.0,
-    601.7
+    584.6
    ],
    "w": 2013,
-   "h": 2400,
+   "h": 2107,
    "dpi": 300,
    "src": "35. Sup) Highly reliable and large-scale simulations of promising argyrodite solid-state electrolytes using a machine-learned moment tensor potential.pdf",
-   "blank": 0.904
+   "blank": 0.886
   },
   {
    "key": "fS4",
@@ -169,15 +169,15 @@
    "caption": "Figure S4. Mean-squared displacement (MSD) plots and analyses of Li-ions in (a) fully ordered (100% Cl- at 4c) and (b) disordered (50% Cl- at 4c) configurations of Li6PS5Cl at 350K. The",
    "bbox": [
     66.0,
-    26.0,
+    79.1,
     549.0,
-    272.9
+    258.5
    ],
    "w": 2013,
-   "h": 1030,
+   "h": 749,
    "dpi": 300,
    "src": "35. Sup) Highly reliable and large-scale simulations of promising argyrodite solid-state electrolytes using a machine-learned moment tensor potential.pdf",
-   "blank": 0.91
+   "blank": 0.875
   },
   {
    "key": "fS5",
@@ -188,15 +188,15 @@
    "caption": "Figure S5. Arrhenius plots of diffusivities calculated by (a) AIMD_PBE and (b) MTP_optB88-",
    "bbox": [
     66.0,
-    26.0,
+    79.1,
     546.0,
-    489.4
+    475.0
    ],
    "w": 2000,
-   "h": 1932,
+   "h": 1651,
    "dpi": 300,
    "src": "35. Sup) Highly reliable and large-scale simulations of promising argyrodite solid-state electrolytes using a machine-learned moment tensor potential.pdf",
-   "blank": 0.875
+   "blank": 0.854
   },
   {
    "key": "fS6",
@@ -207,15 +207,15 @@
    "caption": "Figure S6. Li-ion diffusion trajectories of site occupancy during MD simulations of (a) Li6PS5Br",
    "bbox": [
     66.0,
-    26.0,
+    79.1,
     549.0,
-    382.8
+    368.4
    ],
    "w": 2013,
-   "h": 1488,
+   "h": 1206,
    "dpi": 300,
    "src": "35. Sup) Highly reliable and large-scale simulations of promising argyrodite solid-state electrolytes using a machine-learned moment tensor potential.pdf",
-   "blank": 0.689
+   "blank": 0.615
   },
   {
    "key": "fS7",
@@ -226,15 +226,15 @@
    "caption": "Figure S7. Analysis of sulfur trajectories to track the motion of PS4 polyhedrons from the 10 ns MD simulations of 3 × 3 × 3 supercell structures of fully ordered (0% Cl- at 4c) and disordered (50% Cl- at 4c) argyrodite structures at 600K using MTP_optB88-vdw.",
    "bbox": [
     66.0,
-    26.0,
+    79.1,
     549.0,
-    493.9
+    479.7
    ],
    "w": 2013,
-   "h": 1951,
+   "h": 1670,
    "dpi": 300,
    "src": "35. Sup) Highly reliable and large-scale simulations of promising argyrodite solid-state electrolytes using a machine-learned moment tensor potential.pdf",
-   "blank": 0.794
+   "blank": 0.759
   },
   {
    "key": "fS8",
@@ -245,15 +245,15 @@
    "caption": "Figure S8. Comparison of Li-ion diffusivity between relaxed and fixed motions of the PS4",
    "bbox": [
     66.0,
-    26.0,
+    79.1,
     549.0,
-    406.3
+    391.6
    ],
    "w": 2013,
-   "h": 1586,
+   "h": 1303,
    "dpi": 300,
    "src": "35. Sup) Highly reliable and large-scale simulations of promising argyrodite solid-state electrolytes using a machine-learned moment tensor potential.pdf",
-   "blank": 0.911
+   "blank": 0.891
   },
   {
    "key": "fS9",
@@ -264,15 +264,15 @@
    "caption": "Figure S9. Thermodynamic stability (𝛾GH) of the designed GB models using the stable facets considering tilt- and twist-type. The tilt-type gives relatively better stability than twist-type and",
    "bbox": [
     66.0,
-    26.0,
+    79.1,
     549.0,
-    414.0
+    399.8
    ],
    "w": 2013,
-   "h": 1618,
+   "h": 1337,
    "dpi": 300,
    "src": "35. Sup) Highly reliable and large-scale simulations of promising argyrodite solid-state electrolytes using a machine-learned moment tensor potential.pdf",
-   "blank": 0.9
+   "blank": 0.878
   },
   {
    "key": "fS10",
@@ -283,15 +283,15 @@
    "caption": "Figure S10. Surface slab model of Li-argyrodite with (021) facet.",
    "bbox": [
     66.0,
-    26.0,
+    79.1,
     527.1,
-    388.8
+    373.8
    ],
    "w": 1922,
-   "h": 1513,
+   "h": 1229,
    "dpi": 300,
    "src": "35. Sup) Highly reliable and large-scale simulations of promising argyrodite solid-state electrolytes using a machine-learned moment tensor potential.pdf",
-   "blank": 0.897
+   "blank": 0.873
   },
   {
    "key": "fS11",
@@ -302,15 +302,15 @@
    "caption": "Figure S11. (a) Mean-squared displacement (MSD) plots of Li-ions and (b) Li-ion diffusivity",
    "bbox": [
     66.0,
-    26.0,
+    79.1,
     549.0,
-    453.6
+    439.2
    ],
    "w": 2013,
-   "h": 1783,
+   "h": 1501,
    "dpi": 300,
    "src": "35. Sup) Highly reliable and large-scale simulations of promising argyrodite solid-state electrolytes using a machine-learned moment tensor potential.pdf",
-   "blank": 0.947
+   "blank": 0.936
   },
   {
    "key": "fS12",
@@ -321,15 +321,15 @@
    "caption": "Figure S12. (a) Li and (b) S, P, and Cl trajectories of the ∑5 [100](021) GB during MD",
    "bbox": [
     66.0,
-    26.0,
+    79.1,
     549.0,
-    341.6
+    327.5
    ],
    "w": 2013,
-   "h": 1316,
+   "h": 1036,
    "dpi": 300,
    "src": "35. Sup) Highly reliable and large-scale simulations of promising argyrodite solid-state electrolytes using a machine-learned moment tensor potential.pdf",
-   "blank": 0.653
+   "blank": 0.556
   },
   {
    "key": "fS13",
@@ -340,15 +340,15 @@
    "caption": "Figure S13. The radial distribution function (RDF) of a Li–Li pair around the GB region of a ∑5 [100](021) structure during 100 ps and 10 ns MTP-based MD simulations at 350 K.",
    "bbox": [
     66.0,
-    26.0,
+    79.1,
     549.0,
-    292.3
+    289.8
    ],
    "w": 2013,
-   "h": 1111,
+   "h": 879,
    "dpi": 300,
    "src": "35. Sup) Highly reliable and large-scale simulations of promising argyrodite solid-state electrolytes using a machine-learned moment tensor potential.pdf",
-   "blank": 0.96
+   "blank": 0.949
   },
   {
    "key": "t1",

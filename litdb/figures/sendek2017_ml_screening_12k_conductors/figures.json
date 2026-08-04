@@ -17,53 +17,15 @@
    "caption": "Fig. 1 Flowchart of approach. Our approach consists of two main eﬀorts: ionic conductivity model building and structure screening. We first screen for the prerequisite requirements of band gap, electrochemical stability, energy above the convex hull (metastability), and materials cost. We then build a structure-based ionic conductivity predictor by defining a feature space and learning from experimentally reported lithium conductors in the literature. This model enables screening for materials with high likelihood of superionic character based on atomic structural characteristics.",
    "bbox": [
     36.5,
-    407.8,
+    415.3,
     558.8,
     676.5
    ],
    "w": 2177,
-   "h": 1120,
+   "h": 1089,
    "dpi": 300,
    "src": "40. Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
-   "blank": 0.868
-  },
-  {
-   "key": "f2",
-   "kind": "figure",
-   "label": "2",
-   "page": 6,
-   "file": "fig_2.png",
-   "caption": "Fig. 2 Model selection. (a) Plotted in red against the right vertical axis is the cross-validation misclassification rate (CVMR) for the lowest CVMR logistic regression (LR) model with the number of features given on the horizontal axis. Plotted in blue against the left vertical axis is the training misclassification rate (TMR) for the same model. The solid lines represent the true model; the dotted lines represent the mean values for the X-randomized case. The lower TMR and CVMR values for all numbers of features confirms that the model performs up to three times better than random for the CVMR. The black arrow identifies the optimal model. (b) We plot the X-randomization performance metric cRr2 for the n-feature LR models. The cRr2 parameter is above the conventional threshold of 0.5 for the optimal LR model (black arrow). This implies the model has statistical significance.",
-   "bbox": [
-    297.3,
-    264.8,
-    558.8,
-    586.1
-   ],
-   "w": 1091,
-   "h": 1340,
-   "dpi": 300,
-   "src": "40. Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
-   "blank": 0.909
-  },
-  {
-   "key": "f3",
-   "kind": "figure",
-   "label": "3",
-   "page": 8,
-   "file": "fig_3.png",
-   "caption": "Fig. 3 Model performance. (a) Classification performance of the training data using logistic regression. The y-axis is the likelihood of a material exhibiting an ionic conductivity above 10\u00024 S cm\u00021, which is determined by a logistic function of the inner product of the feature vector {xi} with the vector of regression coeﬃcients {hi}. Four materials are misclassified. (b) Classification performance of the training data under leave-one-out cross validation (LOOCV) using logistic regression. Again four points have been misclassified. The conspicuously strongly misclassified superionic (blue marker with smallest PLR value) is LiLa(TiO3)2, with an ionic conductivity of 1 mS cm\u00021. This remarkable change in superionic probability under LOOCV suggests LiLa(TiO3)2 is an influential high-conductivity regime data point that changes the model significantly when removed.",
-   "bbox": [
-    36.5,
-    37.0,
-    298.0,
-    371.1
-   ],
-   "w": 1090,
-   "h": 1393,
-   "dpi": 300,
-   "src": "40. Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
-   "blank": 0.919
+   "blank": 0.864
   },
   {
    "key": "f4",
@@ -75,14 +37,14 @@
    "bbox": [
     36.5,
     365.7,
-    298.0,
+    451.8,
     553.1
    ],
-   "w": 1090,
+   "w": 1731,
    "h": 782,
    "dpi": 300,
    "src": "40. Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
-   "blank": 0.783
+   "blank": 0.812
   },
   {
    "key": "fS1",
@@ -93,15 +55,15 @@
    "caption": "Figure S1: Confirmation of upper bound on oxidation potential. Above we see the formation energy-based oxidative decomposition potential estimates we employ in this work versus rigorously calculated oxidative decomposition potentials reported in Ref. [22]. With two slight exceptions, the formation energy based potentials are always greater than the DFT-calculated potentials (the potentials are equal on the dotted y=x reference line). This suggests that the simple formation energy based estimates are generally upper bounds on the true decomposition potentials, as we expect from our analysis in Section 2.3. The estimates are especially accurate in the interval [0, 3], the range most relevant to LIB operation.",
    "bbox": [
     84.0,
-    26.0,
+    85.2,
     524.9,
     352.1
    ],
    "w": 1838,
-   "h": 1360,
+   "h": 1113,
    "dpi": 300,
    "src": "40. Sup) Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
-   "blank": 0.96
+   "blank": 0.951
   },
   {
    "key": "fS2",
@@ -112,15 +74,15 @@
    "caption": "Figure S2: Straight-line path width and electronegativity calculation. To calculate features SLPW and SLPE (1.17 and 1.18), we draw a straight line connecting each lithium atom i with its nearest lithium atom j in the supercell. We project the coordinates of all other atoms in the lattice onto this line and find the atom that gives the minimum distance connecting the straight line to the edge of the hard sphere defined by the atom. Atoms that do not project down onto a point between Li atoms i and j are ignored, e.g. atom Y is ignored (since θY > 90°) but atom X is not (θX < 90°). The minimum distance h is considered the straight-line path width for Li atom i. To calculate feature SLPW, we perform this width calculation for all Li atoms and take the average value. To calculate feature SLPE, we evaluate the Pauling electronegativity of the atom responsible for the minimum path width (atom",
    "bbox": [
     84.0,
-    26.0,
+    66.0,
     529.6,
     362.0
    ],
    "w": 1857,
-   "h": 1401,
+   "h": 1234,
    "dpi": 300,
    "src": "40. Sup) Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
-   "blank": 0.924
+   "blank": 0.913
   },
   {
    "key": "fS3",
@@ -131,15 +93,15 @@
    "caption": "Figure S3: Flowchart for Metropolis Monte Carlo-style structural evolution. The above flowchart describes one step in the Monte Carlo scheme for swapping two atoms and/or vacancies in a structure with fractionally occupied sites. After each step, whether the trial structure is accepted or not, the feature vector of the resulting structure is calculated and added to the running average until convergence is reached. P(xi(j)) represents the occupation probability of atom type j in site i. Note that choosing the two sites 1 and 2 uniformly at random preserves detailed balance. Trial structures that are identical to the previous structure (i.e. two identical atoms or two vacancies are swapped) or are otherwise unfeasible structures (i.e. two non- interchangeable atoms are swapped), are ignored and their features are never sampled.",
    "bbox": [
     84.0,
-    26.0,
+    85.5,
     529.6,
-    403.5
+    391.8
    ],
    "w": 1857,
-   "h": 1574,
+   "h": 1277,
    "dpi": 300,
    "src": "40. Sup) Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
-   "blank": 0.853
+   "blank": 0.821
   },
   {
    "key": "fS4",
@@ -150,15 +112,15 @@
    "caption": "Figure S4: Metropolis convergence thresholds. The Metropolis structure evolution algorithm ends when convergence is reached. Convergence is defined as the point in which the running feature means of all features deviate by less than 1% for 100 consecutive steps. To visualize this degree of convergence relative to the spread of feature values across the training set, the 1%-of-mean values for all converged features for all training materials with fractional occupancies are normalized by the standard deviation of that feature value across the entire training set. Note that all features are converged within 10% of the training set feature spread.",
    "bbox": [
     84.0,
-    26.0,
+    82.4,
     528.6,
-    349.2
+    340.7
    ],
    "w": 1853,
-   "h": 1348,
+   "h": 1077,
    "dpi": 300,
    "src": "40. Sup) Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
-   "blank": 0.642
+   "blank": 0.551
   },
   {
    "key": "fS5",
@@ -169,15 +131,15 @@
    "caption": "Figure S5: Conductivity threshold effects. The conductivity threshold for positive and negative classification affects the CVMR rate of the optimal model. The CVMR peaks when approximately 40% of the training set examples belong to the positive class, corresponding to a threshold of 10-5 S/cm. The threshold value of 10-4 S/cm we use in our screening is chosen due to technological requirements. Note the CVMR for the X-randomized case is always significantly higher than the CVMR of the true models. The false positive rate for the X-randomized case follows the trend of y=1-x, which we would expect from random drawing of materials. The false positive rate for the 10-4 S/cm cutoff model (indicated on the graph with the black arrow) is four times lower than that of the X-randomized models, suggesting a fourfold improvement over trial-and-error materials testing.",
    "bbox": [
     84.0,
-    26.0,
+    85.6,
     529.8,
-    403.8
+    392.1
    ],
    "w": 1858,
-   "h": 1575,
+   "h": 1278,
    "dpi": 300,
    "src": "40. Sup) Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
-   "blank": 0.917
+   "blank": 0.899
   },
   {
    "key": "t1",

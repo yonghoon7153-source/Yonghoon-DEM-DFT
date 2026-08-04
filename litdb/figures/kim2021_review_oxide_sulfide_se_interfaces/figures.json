@@ -17,15 +17,15 @@
    "caption": "Figure 1. Change in energy density upon replacing liquid electrolyte in conventional LIB with solid electrolyte (all-solid-state LIB) and Li metal anode (all-solid-state Li metal batteries). The volumetric and gravimetric energy densities are represented by Evol and Egrav, respectively. Reproduced with permission.[10] Copyright 2016, the Nature Publishing Group.",
    "bbox": [
     42.2,
-    54.3,
+    64.9,
     552.2,
     299.6
    ],
    "w": 2127,
-   "h": 1023,
+   "h": 979,
    "dpi": 300,
    "src": "06. Solid-State Li–Metal Batteries Challenges and Horizons of Oxide and Sulfide Solid Electrolytes and Their Interfaces.pdf",
-   "blank": 0.78
+   "blank": 0.77
   },
   {
    "key": "f2",
@@ -36,15 +36,15 @@
    "caption": "Figure 2. a) Typical discharge curve of a battery, showing the influence of the various types of polarization. Overall voltage (V) of the cell is lower than the open-circuit voltage (Voc) ascribed to the applied current flowing through the cell, which result in voltage drops due to several physical phenomena. b–c) classic impedance spectra with frequency and associated components of solid state batteries. Simple battery circuit diagram, where the electrolyte and cell internal connections (inductance L, resistance R) in series with two constant phase elements parallel to two corresponding resistances (R1//C1 and R2//C2). Warburg impedance for diffusion processes, ROhm is the internal resistance, and two Rinterface are the impedances of the electrode reac- tions (c), which influenced by SEI formation, imperfect contact, and interfacial cracking.",
    "bbox": [
     45.0,
-    54.3,
+    64.9,
     555.2,
     402.6
    ],
    "w": 2127,
-   "h": 1452,
+   "h": 1408,
    "dpi": 300,
    "src": "06. Solid-State Li–Metal Batteries Challenges and Horizons of Oxide and Sulfide Solid Electrolytes and Their Interfaces.pdf",
-   "blank": 0.818
+   "blank": 0.815
   },
   {
    "key": "f3",
@@ -55,15 +55,15 @@
    "caption": "Figure 3. Overview of transport, electrochemical, mechanical stabilities, and processing temperature of oxides and sulfide solid electrolyte. Corre- sponding data including Li+ ion conductivity, activation energy, pre-exponential, transference number, electrochemical stability window, mechanical properties, and processing temperature are available in Table S1 (Supporting Information). and vacancies are equally distributed to allow the conduction of Li ions, which can be introduced into the perovskite at the A site through aliovalent doping.[87,88] Lithium lanthanum titanate (LixLa(2−x)/3TiO3, LLTO) exhibits a maximum bulk ionic conductivity of 1 × 10−3 S cm−1 at room temperature at x near 0.3 (corresponding to an A-site vacancy concentration of 8–10%), with a decrease in the conductivity observed for higher lithium content.[89–91] Because of the difference in the ionic radii of Li+ (0.92",
    "bbox": [
     45.0,
-    54.3,
+    64.9,
     555.4,
     369.3
    ],
    "w": 2128,
-   "h": 1313,
+   "h": 1269,
    "dpi": 300,
    "src": "06. Solid-State Li–Metal Batteries Challenges and Horizons of Oxide and Sulfide Solid Electrolytes and Their Interfaces.pdf",
-   "blank": 0.922
+   "blank": 0.917
   },
   {
    "key": "f4",
@@ -74,15 +74,15 @@
    "caption": "Figure 4. Li ion transport pathways for a) Li7La3Zr2O12 and b) Li10GeP2S12. c) Processing approaches for sulfide (left) and oxide solid electrolyte (right). a) Reproduced with permission.[507] Copyright 2020, the Nature Publishing Group. b) Reproduced with permission.[169] Copyright 2013, the Royal Society of Chemistry. c) Reproduced with permission.[342] Copyright 2018, Cambridge University Press.",
    "bbox": [
     42.2,
-    54.3,
+    64.9,
     552.3,
     340.8
    ],
    "w": 2127,
-   "h": 1195,
+   "h": 1151,
    "dpi": 300,
    "src": "06. Solid-State Li–Metal Batteries Challenges and Horizons of Oxide and Sulfide Solid Electrolytes and Their Interfaces.pdf",
-   "blank": 0.68
+   "blank": 0.668
   },
   {
    "key": "f5",
@@ -93,15 +93,15 @@
    "caption": "Figure 5. Effect of chemical stability of Li7La3Zr2O12 on a,b) Li2CO3 formation steps, and c) interfacial resistance. a) Reproduced with permission.[508] Copyright 2016, Wiley-VCH. b) Reproduced with permission.[229] Copyright 2017, the Royal Society of Chemistry. resistance unacceptably increased from 54 Ω cm2 (polished under inert atmosphere) to ≈3000 and ≈37 000 Ω cm2, respec- tively. For context, in a typical LIB, the interfacial resistance is lower than tens of Ω cm2.[40,46,47] of a lithium carbonate (Li2CO3) contamination layer and higher interfacial resistance at the Li/LLZO interface.[136,229–231] At low- to-moderate temperatures (25 °C < T < ≈200 °C), the reaction is thought to consist of several sequential steps, including the Li+/H+ exchange and protonation of LLZO and the formation of a lithium hydroxide (LiOH) intermediate accompanied by Li and presumably O loss in LLZO, fol",
    "bbox": [
     45.0,
-    54.3,
+    64.9,
     556.9,
     275.1
    ],
    "w": 2134,
-   "h": 921,
+   "h": 877,
    "dpi": 300,
    "src": "06. Solid-State Li–Metal Batteries Challenges and Horizons of Oxide and Sulfide Solid Electrolytes and Their Interfaces.pdf",
-   "blank": 0.799
+   "blank": 0.791
   },
   {
    "key": "f6",
@@ -112,15 +112,15 @@
    "caption": "Figure 6. a) Electrochemical stability of Li10GeP2S12. b) Stoichiometry stability windows and phase stability windows for various Li-SSE materials and NASICON. c) Electrochemical stability of Li7La3Zr2O12 solid electrolytes. d) Schematic of the electrochemical activity of argyrodite LPSC on oxida- tion (delithiation) and reduction (lithiation). a,c) Reproduced with permission.[76] Copyright 2016, Wiley-VCH, b) Reproduced with permission.[303] Copyright 2020, the Royal Society of Chemistry. d) Reproduced with permission.[308] Copyright 2020, the Nature Publishing Group.",
    "bbox": [
     45.0,
-    54.3,
+    64.9,
     555.1,
     344.6
    ],
    "w": 2126,
-   "h": 1210,
+   "h": 1166,
    "dpi": 300,
    "src": "06. Solid-State Li–Metal Batteries Challenges and Horizons of Oxide and Sulfide Solid Electrolytes and Their Interfaces.pdf",
-   "blank": 0.795
+   "blank": 0.785
   },
   {
    "key": "f7",
@@ -131,15 +131,15 @@
    "caption": "Figure 7. Common interfacial failure mechanism in all-solid-state Li metal batteries. a) Thermal treatment for intimate bonding (interfacial neck growth), a,b) applied potential during battery operation, and c) volume change of active materials upon lithiation/delithiation may lead to different modes of interfacial failures such as insulating phase formation due to a) interdiffusion, b) oxidation of the solid electrolyte, and c) interfacial cracking. a) Reproduced with permission.[351] Copyright 2011, Elsevier. b) Reproduced with permission.[320] Copyright 2017, Royal Society of Chemistry. c) Reproduced with permission.[326] Copyright 2017, American Chemical Society. d) Reproduced with permission.[509] Copyright 2020, Cell Press. within oxide-based composite cathodes however accelerate chemical reaction kinetics and diffusion processes. The cal- culation of the thermodynamic reaction ene",
    "bbox": [
     45.0,
-    54.3,
+    64.9,
     555.4,
     449.4
    ],
    "w": 2127,
-   "h": 1647,
+   "h": 1603,
    "dpi": 300,
    "src": "06. Solid-State Li–Metal Batteries Challenges and Horizons of Oxide and Sulfide Solid Electrolytes and Their Interfaces.pdf",
-   "blank": 0.662
+   "blank": 0.652
   },
   {
    "key": "f8",
@@ -150,15 +150,15 @@
    "caption": "Figure 8. Chemical compatibility window of Li-garnet with oxide cathode active materials. Corresponding data are available in Table 1. other than LCO require to be investigated in the future. For example, in a recent study, differential scanning calorimetry (DSC) was used to investigate the reactivity of a LCO–LLZTO composite pellet, showing negligible reaction up to their sin- tering temperature ≈ 1050 °C except a minor reaction event at 700 °C.[350] Subsequently, the same cathode preparation condi- tions were applied to ASSLB full-cell fabrication consisting of LCO–LLZTO as the cathode composite, LLZTO pellet as the solid electrolyte, and In–Li as the metallic anode, delivering a promising the first discharge capacity of 113 mA h g−1 at a current density of 50 µA cm−2 at 50 °C.[200] To achieve inti- mate contact for the LCO/LLZO interface using a crystalline, micrometer-size LCO and LL",
    "bbox": [
     42.2,
-    54.3,
+    64.9,
     552.5,
     352.7
    ],
    "w": 2128,
-   "h": 1244,
+   "h": 1200,
    "dpi": 300,
    "src": "06. Solid-State Li–Metal Batteries Challenges and Horizons of Oxide and Sulfide Solid Electrolytes and Their Interfaces.pdf",
-   "blank": 0.885
+   "blank": 0.88
   },
   {
    "key": "f9",
@@ -169,15 +169,15 @@
    "caption": "Figure 9. a) Evolution of interfacial resistance at cathode/sulfide electrolyte interface upon cycling for Li–In|b-Li3PS4|NCM-811 + b-Li3PS4 batteries charged to different upper cut-off voltages between 4.0 and 5.0 V. b) Quantification of the cathode interface at the current collector from XPS S 2p spectra at different etching times and for different upper cut-off voltages ranging from 4.0 to 5.0 V. a,b) Reproduced with permission.[320] Copyright 2019, Royal Society of Chemistry. resistance of the β-Li3PS4–NCM811 interface was investigated for a Li–In|β-Li3PS4|β-Li3PS4–NCM811 cell (Figure 9a).[320] Using electrochemical cycling experiments, electrochemical imped- ance spectroscopy (EIS), and ex situ/in situ XPS, significant interfacial resistance was shown to evolve, severely affecting the battery performance above charging voltages of 4.3 V. Further- more, depth profiling of the forming",
    "bbox": [
     42.2,
-    54.3,
+    64.9,
     552.5,
     563.8
    ],
    "w": 2128,
-   "h": 2124,
+   "h": 2080,
    "dpi": 300,
    "src": "06. Solid-State Li–Metal Batteries Challenges and Horizons of Oxide and Sulfide Solid Electrolytes and Their Interfaces.pdf",
-   "blank": 0.806
+   "blank": 0.803
   },
   {
    "key": "f10",
@@ -188,15 +188,15 @@
    "caption": "Figure 10. Elemental mapping of solid electrolyte interphase in sulfide based cathode composite. a) SAM mapping of Mn, S, and Cl elements from a cross section of the composite LiMn2O4 electrode of the LiMn2O4/Li6PS5Cl/Li−In half-cell before and after charging. b) ToF-SIMS measurements on crater sidewalls for cathodes (NCM622/Li6PS5Cl interface) before and after cycling, showing a significant increase of POx− and SOx—fragments due to battery cycling. a) Reproduced with permission.[362] Copyright 2017, the American Chemical Society. b) Reproduced with permission.[363] Copyright 2019, the American Chemical Society. products (S, PxSy) but with a new phase of LiCl (Figure 10a).[362] A scanning auger microscopy (SAM) image of the LMO–LPSC composite revealed clear phase separation between the LiCl particles and sulfur-containing particles after 22 cycles at cur- rent density of 66 µA cm−2. Befo",
    "bbox": [
     45.0,
-    54.3,
+    64.9,
     556.8,
     390.3
    ],
    "w": 2133,
-   "h": 1401,
+   "h": 1357,
    "dpi": 300,
    "src": "06. Solid-State Li–Metal Batteries Challenges and Horizons of Oxide and Sulfide Solid Electrolytes and Their Interfaces.pdf",
-   "blank": 0.505
+   "blank": 0.491
   },
   {
    "key": "f11",
@@ -207,15 +207,15 @@
    "caption": "Figure 11. Mechanical degradation of garnet based cathode composite in Li6.6La3Zr1.6Ta0.4O12–LiCoO2/Li6.6La3Zr1.6Ta0.4O12/In–Li cell. a) SEM cross- section images of a composite cathode of Li6.6La3Zr1.6Ta0.4O12–LiCoO2 that underwent 100 charge–discharge cycles at 50 °C. b) Electrochemical impedance spectra before and after 100 cycling. a,b) Reproduced with permission.[200] Copyright 2019, Royal Society of Chemistry. and chemical reaction during room-temperature cycling than sulfide-based cathode composites, the observed microcracks in the LLZO–LCO composite cathode from the repetitive expan- sion and contraction of LCO is thought to be the main origin of the capacity degradation. To mitigate the interfacial degradation from the interfacial contact issues in the solid–solid interface system, hybrid-type cathodes on LLZO solid electrolytes have often been tested by adding small amounts of ",
    "bbox": [
     300.1,
-    54.3,
+    64.9,
     555.4,
     416.6
    ],
    "w": 1064,
-   "h": 1510,
+   "h": 1466,
    "dpi": 300,
    "src": "06. Solid-State Li–Metal Batteries Challenges and Horizons of Oxide and Sulfide Solid Electrolytes and Their Interfaces.pdf",
-   "blank": 0.592
+   "blank": 0.578
   },
   {
    "key": "f12",
@@ -226,15 +226,15 @@
    "caption": "Figure 12. Electrochemical performance of all-solid-state batteries. a) Cycling performance and Coulombic efficiency of the Ag–C|Li6PS5Cl|LiNi0.90Co0.05Mn0.05O2 (NMC) prototype pouch cell (0.6 Ah) are plotted against the cycle numbers. A charge/discharge rate of 0.5 C/0.5 C was applied (voltage window, 2.5–4.25 V vs Li + /Li at 60 °C). The areal capacity loading of the NMC cathode was 6.8 mAh cm−2 (1.0 C = 6.8 mA cm−2). Inset shows TEM image of an LZO-coated NMC particle. b) Design and fabrication of infiltrated all-solid-state sodium batteries. Manufacturing steps (left) for an Na3V2P3O12 (NVP)-Na3.4Zr2Si2.4P0.6O12 (NZSP)-Na battery using the chemical infiltration method through porous NZSP scaffold for increased effective reaction area. SEM images (right) of a cross-sectional NVP (dark contrast)-infiltrated NZSP (bright contrast) pellet. c) Discharge capacity degradation of dif- ferent",
    "bbox": [
     42.2,
-    301.9,
+    306.5,
     553.8,
     639.2
    ],
    "w": 2133,
-   "h": 1406,
+   "h": 1387,
    "dpi": 300,
    "src": "06. Solid-State Li–Metal Batteries Challenges and Horizons of Oxide and Sulfide Solid Electrolytes and Their Interfaces.pdf",
-   "blank": 0.747
+   "blank": 0.743
   },
   {
    "key": "f13",
@@ -245,15 +245,15 @@
    "caption": "Figure 13. Formation mechanism of solid electrolyte interphase (SEI) between solid electrolyte and Li metal anode. a) Reactive and metastable solid–electrolyte interphase (SEI). b) Reactive and mixed conducting interphase. c) Schematic illustration of the dynamic changes at the Li/ LLZO interface during repeated Li dissolution/deposition cycles. a,b) Reproduced with permission.[315] Copyright 2015, Elsevier. c) Reproduced with permission.[433] Copyright 2018, Elsevier.",
    "bbox": [
     42.2,
-    54.3,
+    64.9,
     297.1,
-    358.1
+    357.6
    ],
    "w": 1064,
-   "h": 1267,
+   "h": 1221,
    "dpi": 300,
    "src": "06. Solid-State Li–Metal Batteries Challenges and Horizons of Oxide and Sulfide Solid Electrolytes and Their Interfaces.pdf",
-   "blank": 0.396
+   "blank": 0.375
   },
   {
    "key": "f14",
@@ -264,15 +264,15 @@
    "caption": "Figure 14. a) Effect of pressure on interfacial resistance in Li|Li symmetrical LLZO cell. Results of long-time lithium stripping experiments at 0.1 mA cm−2 without externally applied pressure (top) and ≈35 MPa external applied pressure perpendicular to the interface (down). By applying external pressure, pore formation that leads to contact loss is fully prevented. b) Microstructure of Li metal contact with LLZO electrolyte before and after stripping at current density of 0.1 mA cm−2 for 12 h (1.2 mAh cm−2). c,d) 3D solid electrolyte framework as a host for the plating and subsequent stripping of the Li metal; trilayer LLZO electrolyte with infiltrated Li metal anode shows cumulative areal capacity plated of 7.5 mAh cm−2 under two different current densities of 2.5 and 10 mA cm−2. a,b) Reproduced with permission.[81] Copyright 2019, the American Chemical Society. c,d) Reproduced with pe",
    "bbox": [
     42.2,
-    54.3,
+    64.9,
     552.3,
     387.2
    ],
    "w": 2127,
-   "h": 1388,
+   "h": 1344,
    "dpi": 300,
    "src": "06. Solid-State Li–Metal Batteries Challenges and Horizons of Oxide and Sulfide Solid Electrolytes and Their Interfaces.pdf",
-   "blank": 0.577
+   "blank": 0.561
   },
   {
    "key": "f15",
@@ -283,15 +283,15 @@
    "caption": "Figure 15. Strategies to mitigate Li dendrite formation by a) porous current collector (Au and Ni) b) soft PDMS substrate to accommodate compressive stress generated during Li plating. a) Reproduced with permission.[471] Copyright 2020, the American Chemical Society. b) Reproduced with permis- sion.[436] Copyright 2018, the Nature Publishing Group. adhesive strength, which is governed by the surface chemistry and Li “wettability”.[472] Achieving lower interfacial resistance at the Li/solid electrolyte interface is of paramount impor- tance as it plays a key role in minimizing Li dendrite nuclea- tion and growth, which is one of the main contributors to poor Li stripping/plating stability, coulombic efficiency, and cycle life.[70,80,230] In principle, the Li/LLZO interfacial ASR should be compatible with interfacial resistances in conventional LIBs, i.e., lower than several tens of ohm·cm",
    "bbox": [
     42.2,
-    54.3,
+    64.9,
     552.5,
     334.7
    ],
    "w": 2128,
-   "h": 1169,
+   "h": 1125,
    "dpi": 300,
    "src": "06. Solid-State Li–Metal Batteries Challenges and Horizons of Oxide and Sulfide Solid Electrolytes and Their Interfaces.pdf",
-   "blank": 0.647
+   "blank": 0.632
   },
   {
    "key": "f16",
@@ -302,15 +302,15 @@
    "caption": "Figure 16. a) Effect of interfacial modification by introducing thin-metal coating between Li metal and LLZO. Improved Li wettability is demonstrated by Al coating. b) A schematic of the garnet–lithium interface performance achieved using LLZO electrolyte with or without surface modification. Without surface modification, LLZO/Li interface suffers poor contact and large interfacial resistance, leading to an uneven lithium flux and thus the formation of lithium dendrites. With the Sn thin-film modification, a self-limited intermediate layer of Li–Sn alloy appears and then bridges the garnet and the lithium, fulfilling excellent contact and wetting between LLZO electrolyte and Li metal and homogenizing the current distribution and lithium flux. c) Electrochemical performance of full cells paired with LiFePO4 cathodes. Schematic of the full cell structure, where a gel membrane was used betw",
    "bbox": [
     42.2,
-    268.9,
+    279.0,
     552.3,
     602.1
    ],
    "w": 2127,
-   "h": 1389,
+   "h": 1347,
    "dpi": 300,
    "src": "06. Solid-State Li–Metal Batteries Challenges and Horizons of Oxide and Sulfide Solid Electrolytes and Their Interfaces.pdf",
-   "blank": 0.745
+   "blank": 0.739
   },
   {
    "key": "f17",
@@ -321,15 +321,15 @@
    "caption": "Figure 17. Effect of interfacial modification by introducing Li3PO4 between Li metal and LLZO on electrochemical performance. a) Illustration of the interface design of ionic conductive but electronic insulating SEI using atomic layer deposition (ALD). Formation of amorphous Li3PO4 (LPO, ≈10 nm) layer on polished LLZO pellet via decomposition of LiOtBu and TMPO. The pellet presents rough surface with a large amount of cracks and pores due to surface inhomogeneity during sintering. Surface densification under high temperature, which helps form uniform and dense LPO interphase (brown). Lithium dendrite penetration into the garnet electrolyte, resulting from unstable and weak interface chemistry during cycling with Li anode. The top LPO layer stabilizes the Li/LLZO interface by forming a stable and dense SEI with Li2O, Li3P chemicals (orange). b) Galvanostatic cycling of Li/LPO/ LLZO/Li cel",
    "bbox": [
     45.2,
-    367.9,
+    376.1,
     555.3,
     639.1
    ],
    "w": 2126,
-   "h": 1130,
+   "h": 1096,
    "dpi": 300,
    "src": "06. Solid-State Li–Metal Batteries Challenges and Horizons of Oxide and Sulfide Solid Electrolytes and Their Interfaces.pdf",
-   "blank": 0.705
+   "blank": 0.698
   },
   {
    "key": "f18",
@@ -340,15 +340,15 @@
    "caption": "Figure 18. a) Effect of interfacial modification by introducing LiF and LiI between Li metal and Li7P3S11. On interfacial resistance, symmetrical cell performance, and full cell performance. Schematic diagrams of the processes for the surface coating of LiF (or LiI) layer on the Li metal surface (left). Schematic diagrams of lithium stripping/plating behavior of bare Li with untreated solid electrolyte and LiF (or LiI) coated Li metal with HFE (or I) infiltrated electrolyte (center). Nyquist plots of Li/LPS/Li, Li@LiI/LPS(I)/LiI@Li, and Li@LiF/LPS(HFE)/LiF@Li symmetrical cells (right). Galvanostatic b) Galvanostatic discharge/charge voltage profiles of Li/Li7P3S11/Li (black), Li@LiI/Li7P3S11(I)/LiI@Li (blue), and Li@LiF/Li7P3S11(HFE)/LiF@Li (red) symmetrical cells at current densities of 0.5 mA cm−2 with a fixed stripping/plating capacity of 0.1 mAh cm−2 at room temperature. c) Galvanost",
    "bbox": [
     42.2,
-    54.3,
+    62.9,
     552.3,
     439.8
    ],
    "w": 2127,
-   "h": 1607,
+   "h": 1572,
    "dpi": 300,
    "src": "06. Solid-State Li–Metal Batteries Challenges and Horizons of Oxide and Sulfide Solid Electrolytes and Their Interfaces.pdf",
-   "blank": 0.692
+   "blank": 0.681
   },
   {
    "key": "t1",

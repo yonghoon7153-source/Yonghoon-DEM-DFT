@@ -8,6 +8,101 @@
  ],
  "figures": [
   {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | Characterization of LiCl–4Li2TiF6. a, Arrhenius plots of Li+ conductivities for Li+-conductive fluoride SEs. b,c, Crystal structures of Li2TiF6 with TiF6 (b) and LiF6 building units (c). d, HRPD patterns for LiCl–4Li2TiF6 and Li2TiF6. 2θ represents the diffraction angle measured in XRD patterns, corresponding to twice the incident angle θ in Bragg’s law (nλ = 2d sin θ). e, Cl K-edge XAS spectra of",
+   "bbox": [
+    33.7,
+    66.3,
+    347.2,
+    529.6
+   ],
+   "w": 1307,
+   "h": 1931,
+   "dpi": 300,
+   "src": "27. Five-volt-class high-capacity all-solid-state lithium batteries.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 | Mechanism behind the enhanced Li+ conductivity in LiCl–Li2TiF6. a–d, Crystal structures (a), topological analysis based on Li+ transport channel size (b), Arrhenius plots of AIMD simulations (c) and probability density at 1,050 K (d) of Li2TiF6, Li2.125TiF6, Li2TiF5.875Cl0.125 and Li2.125TiF5.875Cl0.125. The red dashed circles",
+   "bbox": [
+    33.7,
+    65.9,
+    520.7,
+    491.4
+   ],
+   "w": 2030,
+   "h": 1774,
+   "dpi": 300,
+   "src": "27. Five-volt-class high-capacity all-solid-state lithium batteries.pdf",
+   "blank": 0.759
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 | Electrochemical characterization of LiCl–4Li2TiF6 and LNMO ASSB cells at 30 °C. a, CV curves for different halide SEs at 0.1 mV s−1. b, Electrochemical stability window of SEs and shielding materials and the operating-voltage window of CAMs. c, SEM image of LiCl–4LTF-coated LNMO (left) with the corresponding EDXS elemental maps of O and F (middle), and",
+   "bbox": [
+    33.7,
+    495.1,
+    498.4,
+    593.7
+   ],
+   "w": 1937,
+   "h": 412,
+   "dpi": 300,
+   "src": "27. Five-volt-class high-capacity all-solid-state lithium batteries.pdf",
+   "blank": 0.883
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 | LNbO versus LiCl–4LTF shielding for LNMO. a,b, HRTEM images and corresponding fast Fourier transform patterns of LNbO-coated LNMO electrodes before cycling (a) and after cycling (b). c,d, Corresponding results for LiCl–4LTF- coated LNMO electrodes before cycling (c) and after cycling (d). e,f, HAADF- STEM images and corresponding EELS spectra after cycling for LNbO-coated (e) and LiCl–4LTF-coated LNMO electrodes (f). g,h, Ex situ XPS Y 3d and Cl 2p spectra",
+   "bbox": [
+    33.7,
+    315.0,
+    525.3,
+    600.2
+   ],
+   "w": 2049,
+   "h": 1189,
+   "dpi": 300,
+   "src": "27. Five-volt-class high-capacity all-solid-state lithium batteries.pdf",
+   "blank": 0.734
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 | Electrochemical performance of 5-V spinel cathodes with LiCl–4LTF in ASSB cells. a,b, Charge–discharge voltage profiles at 30 °C of LiCl–4LTF- coated LCMO (a) and LFMO (b). c, Charge–discharge voltage profiles of LiCl–4LTF–LNMO between 2.3 V and 5.0 V (versus Li/Li+) at 0.1C and 60 °C. d,e, Charge–discharge voltage profiles of pouch-type LNMO|LPSCl|Li ASSB with LiCl–4LTF-coated LNMO at 0.2C (for discharge; 0.1C for charge) and 30 °C under 5 MPa (d) and corresponding cycling performance (e). The insets in d and e",
+   "bbox": [
+    33.7,
+    314.9,
+    438.0,
+    457.5
+   ],
+   "w": 1686,
+   "h": 596,
+   "dpi": 300,
+   "src": "27. Five-volt-class high-capacity all-solid-state lithium batteries.pdf",
+   "blank": 0.956
+  },
+  {
    "key": "fS1",
    "kind": "figure",
    "label": "S1",
@@ -16,15 +111,15 @@
    "caption": "Extended Data Fig. 1 | Versatility of LiCl–4LTF for Li-rich and Ni-rich layered cathodes. a-d, Electrochemical performance of Ni-rich cathodes with the ZrO2–LZCF catholyte in NCM88|LPSCl | (Li–In) cells, presenting charge–discharge voltage profiles at 1 C and 2.5–5.0 V (vs. Li/Li+) for LiCl–4LTF- coated (a), LNbO-coated (b), and bare single-crystalline NCM88 (c), along",
    "bbox": [
     33.7,
-    36.1,
+    43.0,
     524.6,
     554.7
    ],
    "w": 2046,
-   "h": 2162,
+   "h": 2133,
    "dpi": 300,
    "src": "27. Five-volt-class high-capacity all-solid-state lithium batteries.pdf",
-   "blank": 0.882
+   "blank": 0.88
   }
  ]
 }

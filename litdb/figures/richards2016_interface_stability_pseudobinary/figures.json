@@ -17,15 +17,15 @@
    "caption": "Figure 1. Schematic of a full cell showing a) decomposition of the electrolyte at the cathode/electrolyte interface during charging and b) reduction of the electrolyte by the lithium metal anode. c) Electrochemical stability ranges of lithium binary compounds. Where available, these ranges are computed from experimental thermody- namic data.",
    "bbox": [
     318.5,
-    179.2,
+    184.6,
     570.5,
-    358.2
+    356.6
    ],
    "w": 1052,
-   "h": 747,
+   "h": 718,
    "dpi": 300,
    "src": "39. Interface Stability in Solid-State Batteries.pdf",
-   "blank": 0.732
+   "blank": 0.727
   },
   {
    "key": "f2",
@@ -36,15 +36,15 @@
    "caption": "Figure 2. Electrochemical stability ranges of various electrolyte materials grouped by anion, with corresponding binary for comparison. The high-voltage stability of these materials is determined primarily by the anion. The predicted anodic and cathodic reactions that determine these stability windows are listed in Supporting Information Table S2.",
    "bbox": [
     318.5,
-    59.9,
+    63.2,
     570.5,
-    389.9
+    388.3
    ],
    "w": 1051,
-   "h": 1376,
+   "h": 1356,
    "dpi": 300,
    "src": "39. Interface Stability in Solid-State Batteries.pdf",
-   "blank": 0.75
+   "blank": 0.747
   },
   {
    "key": "f3",
@@ -55,15 +55,15 @@
    "caption": "Figure 3. a) Quaternary Li−Zn−S-Cl phase diagram, with stable phases labeled. The reaction vector between ZnCl2 and Li2S has been marked with a dotted green line, with a star marking the low energy equilibrium at the intersection of the ZnCl2−Li2S and LiCl-ZnS tielines. b) Energy of the reaction xZnCl2 + (1-x)Li2S →cequil as a function of x. The maximum reaction energy is for the complete reaction ZnCl2 + Li2S →2LiCl + ZnS.",
    "bbox": [
     54.5,
-    183.8,
+    189.3,
     306.5,
-    312.2
+    311.5
    ],
    "w": 1050,
-   "h": 537,
+   "h": 510,
    "dpi": 300,
    "src": "39. Interface Stability in Solid-State Batteries.pdf",
-   "blank": 0.882
+   "blank": 0.885
   },
   {
    "key": "f4",
@@ -74,15 +74,15 @@
    "caption": "Figure 4. Reaction energies for the interfaces of a selection of cathode/electrolyte combination at μLi corresponding to the average cathode voltage. Energies are given both for the energy of the lithium extraction only (no mixing) and for energy of cathode/electrolyte mixing open to lithium. Combinations with decomposition energies close to zero are expected to form stable interfaces. The results of these calculations for all of the electrolytes in Figure 2 are available in the Supporting Information as Figures S1−S7. Chem. Mater. 2016, 28, 266−273 269 DOI: 10.1021/acs.chemmater.5b04082",
    "bbox": [
     54.5,
-    525.7,
+    529.4,
     570.5,
-    721.5
+    713.2
    ],
    "w": 2151,
-   "h": 817,
+   "h": 767,
    "dpi": 300,
    "src": "39. Interface Stability in Solid-State Batteries.pdf",
-   "blank": 0.845
+   "blank": 0.836
   },
   {
    "key": "fS1",
@@ -93,15 +93,15 @@
    "caption": "Figure S1: Reaction energies for the interfaces of nitride electrolytes at µLi corresponding to the average cath- ode voltage. Energies are given both for the energy of the lithium extraction only (no mixing) and for energy of cathode/electrolyte mixing open to lithium, following the procedure of ﬁgure 4.",
    "bbox": [
     48.0,
-    26.0,
+    33.7,
     564.0,
     278.9
    ],
    "w": 2150,
-   "h": 1054,
+   "h": 1022,
    "dpi": 300,
    "src": "39. Sup) Interface Stability in Solid-State Batteries.pdf",
-   "blank": 0.87
+   "blank": 0.868
   },
   {
    "key": "fS2",
@@ -112,15 +112,15 @@
    "caption": "Figure S2: Reaction energies for the interfaces of hydride electrolytes at µLi corresponding to the average cath- ode voltage. Energies are given both for the energy of the lithium extraction only (no mixing) and for energy of cathode/electrolyte mixing open to lithium, following the procedure of ﬁgure 4.",
    "bbox": [
     48.0,
-    388.7,
+    426.7,
     564.0,
     672.0
    ],
    "w": 2150,
-   "h": 1182,
+   "h": 1024,
    "dpi": 300,
    "src": "39. Sup) Interface Stability in Solid-State Batteries.pdf",
-   "blank": 0.888
+   "blank": 0.873
   },
   {
    "key": "fS3",
@@ -131,15 +131,15 @@
    "caption": "Figure S3: Reaction energies for the interfaces of sulﬁde electrolytes at µLi corresponding to the average cath- ode voltage. Energies are given both for the energy of the lithium extraction only (no mixing) and for energy of cathode/electrolyte mixing open to lithium, following the procedure of ﬁgure 4.",
    "bbox": [
     48.0,
-    372.3,
+    421.7,
     564.0,
     666.0
    ],
    "w": 2150,
-   "h": 1225,
+   "h": 1020,
    "dpi": 300,
    "src": "39. Sup) Interface Stability in Solid-State Batteries.pdf",
-   "blank": 0.924
+   "blank": 0.911
   },
   {
    "key": "fS4",
@@ -150,15 +150,15 @@
    "caption": "Figure S4: Reaction energies for the interfaces of oxide electrolytes at µLi corresponding to the average cathode voltage. Energies are given both for the energy of the lithium extraction only (no mixing) and for energy of cath- ode/electrolyte mixing open to lithium, following the procedure of ﬁgure 4.",
    "bbox": [
     48.0,
-    26.0,
+    147.4,
     564.0,
     598.4
    ],
    "w": 2150,
-   "h": 2386,
+   "h": 1880,
    "dpi": 300,
    "src": "39. Sup) Interface Stability in Solid-State Batteries.pdf",
-   "blank": 0.938
+   "blank": 0.922
   },
   {
    "key": "fS5",
@@ -169,15 +169,15 @@
    "caption": "Figure S5: Reaction energies for the interfaces of bromide electrolytes at µLi corresponding to the average cath- ode voltage. Energies are given both for the energy of the lithium extraction only (no mixing) and for energy of cathode/electrolyte mixing open to lithium, following the procedure of ﬁgure 4.",
    "bbox": [
     48.0,
-    26.0,
+    82.9,
     564.0,
-    317.0
+    316.9
    ],
    "w": 2150,
-   "h": 1213,
+   "h": 976,
    "dpi": 300,
    "src": "39. Sup) Interface Stability in Solid-State Batteries.pdf",
-   "blank": 0.925
+   "blank": 0.903
   },
   {
    "key": "fS6",
@@ -188,15 +188,15 @@
    "caption": "Figure S6: Reaction energies for the interfaces of chloride electrolytes at µLi corresponding to the average cath- ode voltage. Energies are given both for the energy of the lithium extraction only (no mixing) and for energy of cathode/electrolyte mixing open to lithium, following the procedure of ﬁgure 4.",
    "bbox": [
     48.0,
-    354.8,
+    418.6,
     564.0,
     662.9
    ],
    "w": 2150,
-   "h": 1285,
+   "h": 1019,
    "dpi": 300,
    "src": "39. Sup) Interface Stability in Solid-State Batteries.pdf",
-   "blank": 0.923
+   "blank": 0.904
   },
   {
    "key": "fS7",
@@ -207,15 +207,15 @@
    "caption": "Figure S7: Reaction energies for the interfaces of ﬂuoride electrolytes at µLi corresponding to the average cath- ode voltage. Energies are given both for the energy of the lithium extraction only (no mixing) and for energy of cathode/electrolyte mixing open to lithium, following the procedure of ﬁgure 4.",
    "bbox": [
     48.0,
-    373.4,
+    420.0,
     564.0,
     666.4
    ],
    "w": 2150,
-   "h": 1221,
+   "h": 1027,
    "dpi": 300,
    "src": "39. Sup) Interface Stability in Solid-State Batteries.pdf",
-   "blank": 0.945
+   "blank": 0.929
   },
   {
    "key": "tS1",

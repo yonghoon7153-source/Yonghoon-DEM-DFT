@@ -16,15 +16,15 @@
    "caption": "Fig. 1 (a) Schematic of reference structure for Li6PS5Cl from ICSD with adjusted occupancies (b) Composition vs. Ehull and formation energy for all halogen substituted argyrodites (c) Band structure of Li5.5PS4.5ClBr0.5 (d) Band Structure of Li5.5PS4.5ClI0.5.",
    "bbox": [
     36.5,
-    382.6,
+    397.0,
     298.0,
     592.8
    ],
    "w": 1090,
-   "h": 876,
+   "h": 816,
    "dpi": 300,
    "src": "19. Iodide substituted halide-rich lithium argyrodite solid electrolytes with improved performance for all solid-state batteries†.pdf",
-   "blank": 0.566
+   "blank": 0.543
   },
   {
    "key": "f2",
@@ -35,15 +35,15 @@
    "caption": "Fig. 2 Heatmap of interfacial reaction energy between cathodes and argyrodites.",
    "bbox": [
     36.5,
-    491.5,
+    506.7,
     298.0,
     696.4
    ],
    "w": 1090,
-   "h": 855,
+   "h": 791,
    "dpi": 300,
    "src": "19. Iodide substituted halide-rich lithium argyrodite solid electrolytes with improved performance for all solid-state batteries†.pdf",
-   "blank": 0.564
+   "blank": 0.537
   },
   {
    "key": "f3",
@@ -54,12 +54,12 @@
    "caption": "Fig. 3 (a) Plot of ionic conductivity vs. total halogen mole fractions, with all compositions categorized based on total halogen content. (b) Plot of calculated diﬀusivities for temperatures 600–1000 K for different halogen compositions (c) Radial distribution of Li atoms around all anions in Li5.5PS4.5ClBr0.5 (d) Radial distribution of Li atoms around all anions in Li5.5PS4.5ClI0.5.",
    "bbox": [
     297.3,
-    443.7,
+    446.1,
     558.8,
     656.6
    ],
    "w": 1091,
-   "h": 888,
+   "h": 878,
    "dpi": 300,
    "src": "19. Iodide substituted halide-rich lithium argyrodite solid electrolytes with improved performance for all solid-state batteries†.pdf",
    "blank": 0.926
@@ -73,15 +73,15 @@
    "caption": "Fig. 4 (a) Variation Ionic conductivity and Activation barrier for increasing I/Cl ratios (b) Comparison of variation of average volume of Li Voronoi polyhedron and ionic conductivity with increasing I/Cl ratios (c) Plot of calculated diﬀusivities at for 600–1000 K (d) Schematic of enlarged Li polyhedron in Li5.5PS4.5Cl1.25I0.25. Distribution of Li polyhedra volume in (e) Li5.5PS4.5Cl1.5, (f) Li5.5PS4.5Cl0.75I0.75 and (g) Li5.5PS4.5I1.5.",
    "bbox": [
     297.3,
-    36.8,
+    43.8,
     558.7,
     396.7
    ],
    "w": 1091,
-   "h": 1500,
+   "h": 1471,
    "dpi": 300,
    "src": "19. Iodide substituted halide-rich lithium argyrodite solid electrolytes with improved performance for all solid-state batteries†.pdf",
-   "blank": 0.882
+   "blank": 0.879
   },
   {
    "key": "t1",

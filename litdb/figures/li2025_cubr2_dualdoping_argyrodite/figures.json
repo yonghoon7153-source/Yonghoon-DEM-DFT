@@ -16,15 +16,15 @@
    "caption": "Fig. 1. Preparation process and structural properties of electrolytes. a) Schematic synthesis of sulfide SSEs by conventional solid-phase reaction methods. b) XRD patterns and the corresponding Rietveld refinement results of LPSC-CB. c) Crystal structural diagram of argyrodite LPSC-CB. d) XRD patterns of as-prepared Li5.5 + 3xP1−xCuxS4.5Cl1.5 − 2xBr2x (x = 0, 0.05, 0.1,0.15 and 0.2) and enlarged diagram of the characteristic peaks. e) Cu 2p and f) Br 3d spectra of LPSC-CB. protect the sample from airborne radiation during XRD testing. Fig. S4 shows that the appearance of CuBr2 diffraction peaks in Li5.5PS4.5Cl1.5–0.1CuBr2 (denoted as LPSC-0.1CuBr2) reinforces the fact that the successful doping of CuBr2 in the crystal structure rather than simple physical mixing. Changes in the lattice parameter a (Å) for sulfide SSEs with different doping levels are quantified in Fig. S5, and the trends",
    "bbox": [
     31.6,
-    46.1,
+    49.4,
     566.0,
     423.6
    ],
    "w": 2228,
-   "h": 1574,
+   "h": 1561,
    "dpi": 300,
    "src": "09. Engineering high-performance argyrodite sulfide electrolytes via metal halide doping for all-solid-state lithium metal batteries.pdf",
-   "blank": 0.811
+   "blank": 0.806
   },
   {
    "key": "f2",
@@ -35,15 +35,15 @@
    "caption": "Fig. 2. Electrochemical characterizations of LPSC-P and LPSC-CB. a) Arrhenius plots of temperature-dependent ionic conductivities of Li5.5 + 3xP1−xCuxS4.5Cl1.5 − 2xBr2x with different doping contents. b) Ionic conductivities and activation energy of Li5.5 + 3xP1−xCuxS4.5Cl1.5 − 2xBr2x against various doping contents. c) Stable current response of LPSC-P and LPSC-CB at different voltages. d) Non-spin-resolved partial density of states (PDOS) calculations for LPCS-CB. e) Cyclic voltammetry profiles and f) partial magnification plots of Li/LPSC-P/LPSC-P+VGCF and Li/LPSC-CB/LPSC-CB+VGCF semi-blocking cell at 0.1 mV s−1. maintain the overall electroneutrality, which promises to lower the energy barrier for Li+ migration [32,34]. short circuits by lithium dendrites [45,46]. Fig. 3a illustrates that the voltage of a Li symmetrical cell with LPSC-P declines irreversibly when the current density ",
    "bbox": [
     31.6,
-    46.1,
+    49.4,
     566.0,
     327.1
    ],
    "w": 2228,
-   "h": 1172,
+   "h": 1159,
    "dpi": 300,
    "src": "09. Engineering high-performance argyrodite sulfide electrolytes via metal halide doping for all-solid-state lithium metal batteries.pdf",
-   "blank": 0.789
+   "blank": 0.787
   },
   {
    "key": "f3",
@@ -54,15 +54,15 @@
    "caption": "Fig. 3. Stability properties of LPSC-P and LPSC-CB. CCD of a) the Li/LPSC-P/Li symmetric cell and the Li/LPSC-CB/Li symmetric cell at RT. b) Variation of electronic conductivity and CCD at different doping levels. c) Li plating and stripping in Li symmetric cells of Li/LPSC-P/Li and Li/LPSC-CB/Li at 0.2 mA cm−2 under RT. d) Galvanostatic cycling performance of Li symmetric cells of Li/LPSC-P/Li and Li/LPSC-CB/Li at 0.5 mA cm−2 under RT. plating and stripping behavior with the current density of 0.5 mA cm−2 interface in Fig. S19 has two clear peaks, wherein the peak at 56.3 eV signifies the formation of LiCl [50]. It is worth noting that an amount of LiCl is detected at the Li/LPSC-CB interface after cycling and a new LiBr peak at 56.9 eV appears simultaneously. As depicted in Fig. S20, the intensities of the Cl 2p and Br 3d characteristic peaks at the Li/LPSC-CB interface become larger a",
    "bbox": [
     31.6,
-    46.1,
+    57.8,
     566.0,
-    456.5
+    449.4
    ],
    "w": 2228,
-   "h": 1710,
+   "h": 1633,
    "dpi": 300,
    "src": "09. Engineering high-performance argyrodite sulfide electrolytes via metal halide doping for all-solid-state lithium metal batteries.pdf",
-   "blank": 0.873
+   "blank": 0.867
   },
   {
    "key": "f4",
@@ -73,15 +73,15 @@
    "caption": "Fig. 4. Analysis of interfacial reaction and products. Interfacial compositional alteration by XPS analysis after cycling over a) S 2p and b) P 2p spectra at Li/LPSC-P and Li/LPSC-CB interface. Ex-situ Raman spectra result of c) LPSC-P and d) LPSC-CB in different voltage states of the full cells. Schematic illustrations of interface reaction and Li dendrite growth at the e) Li/LPSC-P interface and f) Li/LPSC-CB interface. circulating in the LPSC-P electrolyte (Fig. S23). In contrast, the Li metal surface of the Li/LPSC-CB/Li symmetric cell is textured and smooth without visible defects. SEM images of the cross-section at the interface also provide more visual evidence (Fig. S24). For the interface of LPSC-P/Li after cycling, the sulfide SSE decomposed severely and a large number of interfacial byproducts as well as irreparable interfacial con­ tact failures were observed. While in the in",
    "bbox": [
     31.6,
-    46.1,
+    49.4,
     566.0,
     362.0
    ],
    "w": 2228,
-   "h": 1317,
+   "h": 1303,
    "dpi": 300,
    "src": "09. Engineering high-performance argyrodite sulfide electrolytes via metal halide doping for all-solid-state lithium metal batteries.pdf",
-   "blank": 0.691
+   "blank": 0.688
   },
   {
    "key": "f5",
@@ -92,15 +92,15 @@
    "caption": "Fig. 5. Stabilization mechanism of anode interfaces based on first-principles calculations. Atomic structure of a) Li/LPSC-P system and b) Li/LPSC-CB system in initial and after reaction. ELF for the interface of c) Li/LPSC-P and d) Li/LPSC-CB. e) Calculated PDOS of Li-s, Cl-p and Br-p in LPSC-CB. The PDOS plots of f) Li2S, g) LiBr, and h) LiCl. The Fermi levels are set to be 0 eV (dark dash lines). 10−4 S cm−1. Indeed, solvent stability is a crucial parameter for sulfide SSEs along with air stability. Therefore, we selected the common labo­ ratory solvent chlorobenzene to evaluate the solvent stability. LPSC-P and LPSC-CB were characterized by EIS after different immersion times (Fig. S29). It can be seen that the ionic conductivity of the immersed LPSC-CB electrolyte decreases somewhat and remains at the level of 1 mS cm−1 even after 24 h of immersion, which indicates the superior solv",
    "bbox": [
     31.6,
-    46.1,
+    49.4,
     566.0,
     458.8
    ],
    "w": 2228,
-   "h": 1720,
+   "h": 1707,
    "dpi": 300,
    "src": "09. Engineering high-performance argyrodite sulfide electrolytes via metal halide doping for all-solid-state lithium metal batteries.pdf",
-   "blank": 0.737
+   "blank": 0.738
   },
   {
    "key": "f6",
@@ -111,15 +111,15 @@
    "caption": "Fig. 6. Stability of LPSC-P and LPSC-CB in extreme environments. a) The quantity of H2S gas generated from as-prepared sulfide SSEs after exposure to moisture air (20 % relative humidity). b) XRD patterns of LPSC-CB exposed for different times. c) XANES of P K-edge in LPSC-CB before and after exposure. d) Arrhenius plots of the electrolytes before and after exposure to air. e) The calculated adsorption energies of a water molecule on different units.",
    "bbox": [
     31.6,
-    46.1,
+    49.4,
     565.8,
     340.6
    ],
    "w": 2227,
-   "h": 1228,
+   "h": 1215,
    "dpi": 300,
    "src": "09. Engineering high-performance argyrodite sulfide electrolytes via metal halide doping for all-solid-state lithium metal batteries.pdf",
-   "blank": 0.857
+   "blank": 0.846
   },
   {
    "key": "f7",
@@ -130,15 +130,15 @@
    "caption": "Fig. 7. All-solid-state battery performances. a) Schematic diagram of a mould full cell based on the sulfide SSEs. b) Cycling performance and c) charge-discharge profiles of the cells at 0.2 C and RT. d) Rate performance of the cells with LPSC-P or LPSC-CB. e) Charge-discharge profiles and f) cycling performance of the FeS2/Li cell with LPSC-CB at 0.1 C and RT. g) Charge-discharge profiles of FeS2/LPSC-CB/Li cell at various rates. 8",
    "bbox": [
     31.6,
-    375.5,
+    400.0,
     565.8,
     711.7
    ],
    "w": 2227,
-   "h": 1402,
+   "h": 1300,
    "dpi": 300,
    "src": "09. Engineering high-performance argyrodite sulfide electrolytes via metal halide doping for all-solid-state lithium metal batteries.pdf",
-   "blank": 0.831
+   "blank": 0.819
   }
  ]
 }

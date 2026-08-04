@@ -17,15 +17,15 @@
    "caption": "Fig. 1. The mechanism of s-p hybridization inducing electronic structure reconfiguration. (a) The local electronic structure analysis of Li/LPSC1.5 and Li/ LPSC1.5- MgClO interface. (b) The partial density of states for Li/LPSC1.5 interface. (c)The partial density of states for LPSC1.5-MgClO electrolyte. (d) Schematic illustration of interface reaction at the Li/LPSC1.5 and Li/LPSC1.5-MgClO interface. 3− tetrahedrons due of electronic redistribution observed in the ELF analysis. The widening of the inter­ facial band gap indicates a reduction of redox for LPSC1.5-MgClO electrolyte, attributed to the decreased energy of bonding state. Spe­ cifically, the Li-s orbit is primarily concentrated near the Fermi level (0 eV), while the Mg-p orbit also exhibits a significant peak state density near 0 eV, demonstrating the emergence of s-p hybridization at the interface. Additionally, strong inter",
    "bbox": [
     31.6,
-    46.1,
+    49.4,
     566.0,
     377.1
    ],
    "w": 2228,
-   "h": 1380,
+   "h": 1366,
    "dpi": 300,
    "src": "01. S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.759
+   "blank": 0.755
   },
   {
    "key": "f2",
@@ -36,15 +36,15 @@
    "caption": "Fig. 2. Chemical evolutions of argyrodite LPSC1.5-MgClO electrolytes. (a) HAADF-STEM images and corresponding EDS mapping images for the particles. (b) High- magnification cryo-TEM images of LPSC1.5-MgClO electrolytes. (c) The Static 7Li NMR spectra of cycled LPSC1.5 and LPSC1.5-MgClO electrolytes. (d) The TOF-SIMS chemical mappings of the interphase in LPSC1.5-MgClO. within the material, resulting in lattice distortion and stress concentra­ tion. These findings indicate that the reconstruction of electronic states alters bonding states and fine-tunes the surface structure, resulting in modification of the interface products. challenging. The compositional distribution and evolution of the Li/LPSC1.5- MgClO interface were investigated by using TOF-SIMS in Fig. 2d [35]. The distribution intensities of LiS−, SO−, LiCl−, and LiO−in Fig. 2d and distribution intensities of additional componen",
    "bbox": [
     31.6,
-    46.1,
+    49.4,
     566.0,
     497.8
    ],
    "w": 2228,
-   "h": 1883,
+   "h": 1870,
    "dpi": 300,
    "src": "01. S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.47
+   "blank": 0.469
   },
   {
    "key": "f3",
@@ -55,15 +55,15 @@
    "caption": "Fig. 3. The evolution process of crystal structure. (a) XRD Rietveld refinement plots of pristine LPSC1.5, LPSC1.5-MgClO after lithiation, and LPSC1.5 after lithiation- delithiation. (b) The scheme illustration of the crystal structural evolution process. 5",
    "bbox": [
     31.6,
-    422.0,
+    434.5,
     565.8,
     721.3
    ],
    "w": 2227,
-   "h": 1248,
+   "h": 1196,
    "dpi": 300,
    "src": "01. S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.743
+   "blank": 0.733
   },
   {
    "key": "f4",
@@ -74,15 +74,15 @@
    "caption": "Fig. 4. Analysis of interfacial redox reaction. XPS spectrums of LPSC1.5-MgClO after 1st (a) charge, (b) charge-discharge and (c) discharge-charge process. Raman spectrum of (d) the pristine LPSC1.5 and LPSC1.5-MgClO electrolytes, (e) LPSC1.5-MgClO and (f) the LPSC1.5 electrolytes after charging at 3.6 V. 2.3. Interface stability of Li-argyrodite interfacial stability between the electrolyte and Li anode. The electrochemical impedance spectroscopy (EIS) analysis in Fig. 5f shows that the impedance of Li/LPSC1.5-MgClO/Li symmetric cell re­ duces after 100 cycles, demonstrating the interface stability between LPSC1.5-MgClO electrolyte and Li anode. In contrast, the impedance of the Li/LPSC1.5/Li indicates a short circuit of the cell after 100 cycles. The reaction process and interfacial evolution were further analyzed using the distribution of relaxation times (DRT) in Fig. 5g. The differe",
    "bbox": [
     31.6,
-    46.1,
+    49.4,
     566.0,
     426.1
    ],
    "w": 2228,
-   "h": 1584,
+   "h": 1571,
    "dpi": 300,
    "src": "01. S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.872
+   "blank": 0.868
   },
   {
    "key": "f5",
@@ -93,15 +93,15 @@
    "caption": "Fig. 5. Interface stability of LPSC1.5 and LPSC1.5-MgClO electrolytes against Li metal. The critical current density of (a) LPSC1.5-MgClO, and (b)LPSC1.5. (c) A comparison of the cycling performance of Li//Li symmetric cells based on LPSC1.5-MgClO with previously published Li-argyrodite electrolytes with various mod­ ifications. (d) Galvanostatic cycling of the Li symmetric cells with LPSC1.5 and LPSC1.5-MgClO electrolytes at 0.2 mAh cm−2. (e) Galvanostatic cycling of the Li symmetric cell with LPSC1.5-MgClO electrolyte at 1 mAh cm−2. (f) Galvanostatic electrochemical impedance spectroscopy (GEIS) and (g) distribution of relaxation times (DRT) of the Li/LPSC1.5-MgClO/Li symmetric cell at 25 ◦C and Li/LPSC1.5/Li symmetric cell at 25 ◦C. (h) SEM images (side-view) of LPSC1.5 and the corresponding elemental EDS (P and S) mappings at the Cu interface in Li/Cu cell after 50 cycles. (i) SEM im",
    "bbox": [
     31.6,
-    46.1,
+    49.4,
     566.0,
     485.1
    ],
    "w": 2228,
-   "h": 1830,
+   "h": 1816,
    "dpi": 300,
    "src": "01. S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.728
+   "blank": 0.729
   },
   {
    "key": "f6",
@@ -112,12 +112,12 @@
    "caption": "Fig. 6. Electrochemical performance. (a) Cyclic voltammetry profiles of Li-In/LPSC1.5-MgClO/LPSC1.5-MgClO+C and Li-In/LPSC1.5/LPSC1.5-MgClO+C semi- blocking cells at 1 mV s-1. (b) The charge/discharge curves at various cycles of the LiFePO4/LPSC1.5-MgClO/Li. (c) The rate performance of the LFP/LPSC1.5- MgClO/Li and LFP/LPSC1.5/Li cells. (d) The initial charge-discharge curves of the NCM83/LPSC1.5-MgClO/Li and NCM83/LPSC1.5/Li cells at 0.1 C. at 0.1 C. (e) The charge/discharge curves at various cycles of the NCM83/LPSC1.5-MgClO/Li cell. (f) The rate performance of the NCM83/LPSC1.5-MgClO/Li and NCM83 /LPSC1.5/Li cells. (g) Cycle performance of the LiFePO4/LPSC1.5-MgClO/Li and LiFePO4/LPSC1.5/Li at 0.5 C. (h) Cycle performance of the NCM83/LPSC1.5- MgClO/Li and NCM83/LPSC1.5/Li cells at 0.1 C. 8",
    "bbox": [
     31.6,
-    296.4,
+    305.0,
     565.8,
     683.0
    ],
    "w": 2227,
-   "h": 1611,
+   "h": 1576,
    "dpi": 300,
    "src": "01. S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
    "blank": 0.845
@@ -130,16 +130,16 @@
    "file": "fig_S1.png",
    "caption": "Figure S1. The partial density of states for Li/LPSC1.5-MgClO interface.",
    "bbox": [
-    104.8,
-    373.7,
+    84.1,
+    352.4,
     490.4,
-    598.8
+    593.6
    ],
-   "w": 1608,
-   "h": 939,
+   "w": 1694,
+   "h": 1006,
    "dpi": 300,
    "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.906
+   "blank": 0.91
   },
   {
    "key": "fS2",
@@ -150,15 +150,15 @@
    "caption": "Figure S2. HAADF-STEM images and corresponding EDS mapping images for the particles.",
    "bbox": [
     95.6,
-    26.0,
+    72.4,
     502.6,
-    341.5
+    336.8
    ],
    "w": 1697,
-   "h": 1315,
+   "h": 1103,
    "dpi": 300,
    "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.503
+   "blank": 0.408
   },
   {
    "key": "fS3",
@@ -169,15 +169,15 @@
    "caption": "Figure S3. XPS spectrums of cycled LPSC1.5-MgClO for Cl 2p, O 1s, and Mg 2p spectrums.",
    "bbox": [
     95.3,
-    357.1,
+    359.9,
     502.8,
-    489.8
+    486.0
    ],
    "w": 1699,
-   "h": 554,
+   "h": 527,
    "dpi": 300,
    "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.884
+   "blank": 0.879
   },
   {
    "key": "fS4",
@@ -188,12 +188,12 @@
    "caption": "Figure S4. The Static 31P NMR spectra of LPSC1.5 and LPSC1.5-MgClO electrolytes.",
    "bbox": [
     110.1,
-    505.4,
+    505.5,
     487.8,
-    668.7
+    668.1
    ],
    "w": 1575,
-   "h": 682,
+   "h": 678,
    "dpi": 300,
    "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
    "blank": 0.928
@@ -207,15 +207,15 @@
    "caption": "Figure S5. TOF-SIMS depth profiles of various secondary ion species.",
    "bbox": [
     143.6,
-    26.0,
+    73.2,
     454.6,
-    294.7
+    288.5
    ],
    "w": 1297,
-   "h": 1121,
+   "h": 897,
    "dpi": 300,
    "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.947
+   "blank": 0.931
   },
   {
    "key": "fS6",
@@ -226,15 +226,15 @@
    "caption": "Figure S6. TOF-SIMS images of the (a) LiS- intensity, (b) SO- and LiS- intensities, (c) LiCl-, LiO-,",
    "bbox": [
     84.1,
-    310.4,
+    313.8,
     514.1,
-    524.4
+    516.5
    ],
    "w": 1793,
-   "h": 893,
+   "h": 846,
    "dpi": 300,
    "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.692
+   "blank": 0.675
   },
   {
    "key": "fS7",
@@ -245,15 +245,15 @@
    "caption": "Figure S7. Charge-discharge curves for the Li/LPSC1.5/LPSC1.5-C and Li/LPSC1.5-",
    "bbox": [
     84.1,
-    26.0,
+    68.8,
     511.7,
-    283.0
+    278.0
    ],
    "w": 1783,
-   "h": 1072,
+   "h": 873,
    "dpi": 300,
    "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.948
+   "blank": 0.936
   },
   {
    "key": "fS8",
@@ -264,15 +264,15 @@
    "caption": "Figure S8. Discharge-charge curves for the Li/LPSC1.5/LPSC1.5-C and Li/LPSC1.5-",
    "bbox": [
     84.1,
-    329.9,
+    310.2,
     511.7,
-    548.3
+    545.1
    ],
    "w": 1783,
-   "h": 911,
+   "h": 980,
    "dpi": 300,
    "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.936
+   "blank": 0.94
   },
   {
    "key": "fS9",
@@ -283,15 +283,15 @@
    "caption": "Figure S9. XPS spectrums of LPSC1.5 after first charge.",
    "bbox": [
     125.4,
-    26.0,
+    71.0,
     490.8,
-    232.2
+    229.0
    ],
    "w": 1524,
-   "h": 860,
+   "h": 659,
    "dpi": 300,
    "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.919
+   "blank": 0.897
   },
   {
    "key": "fS10",
@@ -302,15 +302,15 @@
    "caption": "Figure S10. XPS spectrums of LPSC1.5-MgClO after 18th discharge-charge.",
    "bbox": [
     126.6,
-    247.8,
+    252.1,
     490.5,
-    411.4
+    406.7
    ],
    "w": 1517,
-   "h": 683,
+   "h": 645,
    "dpi": 300,
    "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.909
+   "blank": 0.903
   },
   {
    "key": "fS11",
@@ -321,12 +321,12 @@
    "caption": "Figure S11. The critical current density of (a) LPSC1.5, (b) LPSC1.5-MgClO (1 wt. % Mg(ClO4)2 additive), (c) LPSC1.5-MgClO (2 wt. % Mg(ClO4)2 additive)and (b)LPSC1.5-MgClO (3 wt. % Mg(ClO4)2 additive)",
    "bbox": [
     96.1,
-    427.4,
+    428.6,
     514.1,
-    669.1
+    666.7
    ],
    "w": 1743,
-   "h": 1008,
+   "h": 993,
    "dpi": 300,
    "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
    "blank": 0.87
@@ -340,15 +340,15 @@
    "caption": "Figure S12. The voltage curve of (a) LPSC1.5-MgClO (1wt. % Mg(ClO4)2 additive), and (b)LPSC1.5-MgClO (3wt. % Mg(ClO4)2 additive).",
    "bbox": [
     84.0,
-    26.0,
+    68.4,
     514.0,
-    357.0
+    356.3
    ],
    "w": 1792,
-   "h": 1380,
+   "h": 1200,
    "dpi": 300,
    "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.951
+   "blank": 0.943
   },
   {
    "key": "fS13",
@@ -359,15 +359,15 @@
    "caption": "Figure S13. The top-view and side- view SEM images of (a) LPSC1.5 and (b)LPSC1.5-MgClO",
    "bbox": [
     84.1,
-    396.1,
+    376.5,
     514.0,
-    719.9
+    711.5
    ],
    "w": 1792,
-   "h": 1350,
+   "h": 1397,
    "dpi": 300,
    "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.429
+   "blank": 0.446
   },
   {
    "key": "fS14",
@@ -378,15 +378,15 @@
    "caption": "Figure S14. Cross-sectional SEM image of the LPSC1.5-MgClO pellet after 200 cycles at 0.5 mA",
    "bbox": [
     84.1,
-    26.0,
+    72.7,
     513.8,
-    205.0
+    196.2
    ],
    "w": 1791,
-   "h": 747,
+   "h": 516,
    "dpi": 300,
    "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.53
+   "blank": 0.321
   },
   {
    "key": "fS15",
@@ -397,15 +397,15 @@
    "caption": "Figure S15. The three cycles of CV profiles on the Li-In/LPSC1.5/LPSC1.5-C and Li-",
    "bbox": [
     110.6,
-    251.8,
+    258.5,
     484.9,
-    423.5
+    415.9
    ],
    "w": 1561,
-   "h": 716,
+   "h": 658,
    "dpi": 300,
    "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.878
+   "blank": 0.866
   },
   {
    "key": "fS16",
@@ -416,15 +416,15 @@
    "caption": "Figure S16. Nyquist plots of the (a) LFP/LPSC1.5/Li, (b) LFP/LPSC1.5-MgClO/Li",
    "bbox": [
     84.1,
-    470.4,
+    450.8,
     514.0,
-    751.1
+    743.8
    ],
    "w": 1792,
-   "h": 1171,
+   "h": 1222,
    "dpi": 300,
    "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.894
+   "blank": 0.896
   },
   {
    "key": "fS17",
@@ -435,15 +435,15 @@
    "caption": "Figure S17. XPS spectra of (a) P 2p and (b) S 2p of LPSC1.5 electrolyte and (c) P 2p and (d) S 2p",
    "bbox": [
     84.1,
-    95.8,
+    98.1,
     509.8,
-    392.3
+    389.1
    ],
    "w": 1775,
-   "h": 1236,
+   "h": 1214,
    "dpi": 300,
    "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.887
+   "blank": 0.885
   },
   {
    "key": "fS18",
@@ -453,16 +453,16 @@
    "file": "fig_S18.png",
    "caption": "Figure S18. SEM images of the pristine LPSC1.5 and cycled LPSC1.5 electrolyte.",
    "bbox": [
-    118.8,
-    470.4,
+    84.1,
+    450.4,
     479.3,
     606.8
    ],
-   "w": 1503,
-   "h": 570,
+   "w": 1648,
+   "h": 653,
    "dpi": 300,
    "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.357
+   "blank": 0.483
   },
   {
    "key": "fS19",
@@ -473,15 +473,15 @@
    "caption": "Figure S19. SEM images of the pristine and cycled LPSC1.5-MgClO (2 wt.%) electrolyte.",
    "bbox": [
     84.0,
-    92.9,
+    94.4,
     522.7,
-    228.5
+    221.2
    ],
    "w": 1828,
-   "h": 566,
+   "h": 529,
    "dpi": 300,
    "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.342
+   "blank": 0.295
   },
   {
    "key": "fS20",
@@ -492,15 +492,15 @@
    "caption": "Figure S20. SEM images of the LPSC1.5 electrolyte with different weight ratio of 1%, 2%, and 3%",
    "bbox": [
     84.0,
-    92.9,
+    94.4,
     522.7,
-    228.5
+    221.2
    ],
    "w": 1828,
-   "h": 566,
+   "h": 529,
    "dpi": 300,
    "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.342
+   "blank": 0.295
   },
   {
    "key": "fS21",
@@ -510,16 +510,16 @@
    "file": "fig_S21.png",
    "caption": "Figure S21. The cross-view SEM images of the cycled LPSC1.5-MgClO electrolyte.",
    "bbox": [
-    114.1,
-    306.4,
+    84.1,
+    286.7,
     484.1,
-    520.8
+    515.7
    ],
-   "w": 1542,
-   "h": 894,
+   "w": 1667,
+   "h": 955,
    "dpi": 300,
    "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.255
+   "blank": 0.349
   },
   {
    "key": "fS22",
@@ -530,15 +530,15 @@
    "caption": "Figure S22. The ion conductivity of the LPSC1.5 and the LPSC1.5 electrolyte with different weight",
    "bbox": [
     84.1,
-    26.0,
+    66.6,
     514.1,
-    345.5
+    342.0
    ],
    "w": 1792,
-   "h": 1332,
+   "h": 1149,
    "dpi": 300,
    "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.947
+   "blank": 0.938
   },
   {
    "key": "fS23",
@@ -549,15 +549,15 @@
    "caption": "Figure S23. Impedance spectra of the LPSC1.5 and LPSC1.5-MgCLO with different ratios (98:2,",
    "bbox": [
     84.1,
-    485.9,
+    466.3,
     532.4,
-    625.5
+    623.2
    ],
    "w": 1869,
-   "h": 583,
+   "h": 655,
    "dpi": 300,
    "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.907
+   "blank": 0.91
   },
   {
    "key": "fS24",
@@ -568,15 +568,15 @@
    "caption": "Figure S24. XRD patterns and the corresponding Rietveld refinement results for the pristine",
    "bbox": [
     84.1,
-    26.0,
+    73.7,
     514.0,
-    329.7
+    319.9
    ],
    "w": 1792,
-   "h": 1266,
+   "h": 1026,
    "dpi": 300,
    "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.917
+   "blank": 0.899
   },
   {
    "key": "fS25",
@@ -587,15 +587,15 @@
    "caption": "Figure S25. XRD patterns and the corresponding Rietveld refinement results for the LPSC1.5-",
    "bbox": [
     84.0,
-    376.6,
+    357.0,
     511.7,
-    657.6
+    652.5
    ],
    "w": 1783,
-   "h": 1171,
+   "h": 1232,
    "dpi": 300,
    "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.891
+   "blank": 0.896
   },
   {
    "key": "fS26",
@@ -606,15 +606,15 @@
    "caption": "Figure S26. XRD patterns and the corresponding Rietveld refinement results for the LPSC1.5-",
    "bbox": [
     84.1,
-    26.0,
+    68.0,
     511.7,
-    298.7
+    294.4
    ],
    "w": 1783,
-   "h": 1137,
+   "h": 944,
    "dpi": 300,
    "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.898
+   "blank": 0.88
   },
   {
    "key": "fS27",
@@ -625,12 +625,12 @@
    "caption": "Figure S27. Raman spectra of the LPSC1.5 and LPSC1.5-MgClO electrolytes with different ratios",
    "bbox": [
     84.1,
-    345.4,
+    325.7,
     527.0,
-    579.6
+    576.2
    ],
    "w": 1847,
-   "h": 976,
+   "h": 1044,
    "dpi": 300,
    "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
    "blank": 0.928
@@ -644,15 +644,15 @@
    "caption": "Scheme 1. The mechanism of orbital hybridization induced electronic structure reconfiguration of Li5.5P4.5SCl1.5 for enhanced lithium-compatibility. 2",
    "bbox": [
     51.7,
-    485.2,
+    500.3,
     543.6,
     730.8
    ],
    "w": 2051,
-   "h": 1024,
+   "h": 961,
    "dpi": 300,
    "src": "01. S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.737
+   "blank": 0.72
   },
   {
    "key": "tS1",

@@ -18,13 +18,13 @@
     45.5,
     51.4,
     561.5,
-    623.3
+    349.3
    ],
    "w": 2151,
-   "h": 2384,
+   "h": 1242,
    "dpi": 300,
    "src": "21. first-principles-investigation-of-mechanical-properties-and-anisotropy-of-argyrodite-li6ps5cl-crystal-electrolytes.pdf",
-   "blank": 0.854
+   "blank": 0.857
   },
   {
    "key": "f3",
@@ -37,13 +37,13 @@
     45.5,
     557.9,
     561.5,
-    733.2
+    713.1
    ],
    "w": 2151,
-   "h": 731,
+   "h": 648,
    "dpi": 300,
    "src": "21. first-principles-investigation-of-mechanical-properties-and-anisotropy-of-argyrodite-li6ps5cl-crystal-electrolytes.pdf",
-   "blank": 0.839
+   "blank": 0.817
   },
   {
    "key": "f4",
@@ -54,15 +54,15 @@
    "caption": "Figure 4. Various strained structures of the argyrodite Li6PS5Cl crystal with (a) {100}, (b) {110}, and (c) {111} as surfaces obtained using first- principles calculations (green: Li, bright green: Cl, yellow: S, purple: P).",
    "bbox": [
     45.5,
-    265.1,
+    443.4,
     561.5,
     627.8
    ],
    "w": 2151,
-   "h": 1512,
+   "h": 769,
    "dpi": 300,
    "src": "21. first-principles-investigation-of-mechanical-properties-and-anisotropy-of-argyrodite-li6ps5cl-crystal-electrolytes.pdf",
-   "blank": 0.876
+   "blank": 0.899
   },
   {
    "key": "f5",
@@ -73,15 +73,15 @@
    "caption": "Figure 5. (a,b) Two kinds of sulfide ion sites (red positions) in the Li6PS5Cl crystal structure and (c) the Bader charges of all ion types in the nonstrained Li6PS5Cl crystal structure calculated using first-principles calculations, (d−g) charge fluctuations in the strained Li6PS5Cl crystal structures: (d) Li, (e) P, (f1) S(1), (f2) S(2), and (g) Cl atoms. S(1) has an oxidation state close to −1, while S(2) has a greater negative charge of approximately −1.7. +1.23, which was the largest variation among the atoms of the Li6PS5Cl crystal. Notably, under strain along the {110} plane, the charge was more susceptible to changes, even under small strains. Although the change rates of the charges of S were relatively small, their variation patterns were different in the strain directions. Specifically, under strain along the {111} plane, S(1) exhibited both a charge increase and decrease Figu",
    "bbox": [
     45.5,
-    265.1,
+    443.4,
     561.5,
     627.8
    ],
    "w": 2151,
-   "h": 1512,
+   "h": 769,
    "dpi": 300,
    "src": "21. first-principles-investigation-of-mechanical-properties-and-anisotropy-of-argyrodite-li6ps5cl-crystal-electrolytes.pdf",
-   "blank": 0.876
+   "blank": 0.899
   },
   {
    "key": "f6",

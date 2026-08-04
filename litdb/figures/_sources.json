@@ -37,7 +37,7 @@
   ]
  },
  "choi2026_bzox_dry_zro2x_nmc_shell_coating": {
-  "figures": 11,
+  "figures": 12,
   "generated": "2026-08-04",
   "pdfs": [
    "28. Dry-Crafted Charge-Conductive ZrO2−x Cathode Shell Coating for High-Performance Sulfide-Based Solid-State Batteries.pdf",
@@ -45,7 +45,7 @@
   ]
  },
  "deklerk2016_diffusion_site_disorder_argyrodite": {
-  "figures": 11,
+  "figures": 12,
   "generated": "2026-08-04",
   "pdfs": [
    "32. Diffusion Mechanism of Li Argyrodite Solid Electrolytes for Li-Ion Batteries and Prediction of Optimized Halogen Doping The Effect of Li Vacancies, Halogens, and Halogen Disorder.pdf",
@@ -81,14 +81,14 @@
   ]
  },
  "hikima2022_operando_band_structure_assb": {
-  "figures": 2,
+  "figures": 4,
   "generated": "2026-08-04",
   "pdfs": [
    "25. Operando analysis of electronic band structure in an all-solid-state thin-film battery.pdf"
   ]
  },
  "huang2022_li2sis3_anomalous_conductivity_bvse": {
-  "figures": 10,
+  "figures": 8,
   "generated": "2026-08-04",
   "pdfs": [
    "47. Anomalously High Ionic Conductivity of Li2SiS3‑Type Conductors.pdf",
@@ -103,7 +103,7 @@
   ]
  },
  "jun2022_argyrodite_ion_cage_size_descriptor": {
-  "figures": 19,
+  "figures": 17,
   "generated": "2026-08-04",
   "pdfs": [
    "48. Designing a descriptor for the computational screening of argyrodite-based solid-state superionic conductors uniformity of ion-cage size.pdf",
@@ -111,7 +111,7 @@
   ]
  },
  "kahle2020_ht_aimd_screening": {
-  "figures": 13,
+  "figures": 131,
   "generated": "2026-08-04",
   "pdfs": [
    "41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
@@ -158,7 +158,7 @@
   ]
  },
  "kraft2017_lattice_polarizability_argyrodite_Li6PS5X": {
-  "figures": 22,
+  "figures": 24,
   "generated": "2026-08-04",
   "pdfs": [
    "31. Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf",
@@ -187,7 +187,7 @@
   ]
  },
  "liu2013_cage_methane_adsorption_hydrate_nucleation": {
-  "figures": 1,
+  "figures": 5,
   "generated": "2026-08-04",
   "pdfs": [
    "08. Effects of cage type and adsorption face on the cage–methane adsorption interaction Implications for hydrate nucleation studies.pdf"
@@ -201,7 +201,7 @@
   ]
  },
  "liu2023_electron_redistribution_redox_resistible_mgf2": {
-  "figures": 37,
+  "figures": 38,
   "generated": "2026-08-04",
   "pdfs": [
    "05. Electron Redistribution Enables Redox-Resistible Li6PS5Cl towards High-Performance All-Solid-State Lithium Batteries.pdf",
@@ -247,7 +247,7 @@
   ]
  },
  "rao2011_argyrodite_se_studies_bvse": {
-  "figures": 1,
+  "figures": 2,
   "generated": "2026-08-04",
   "pdfs": [
    "23. Studies of lithium argyrodite solid electrolytes for all-solid-state batteries.pdf"
@@ -276,7 +276,7 @@
   ]
  },
  "schlem2020_li3mcl6_cation_site_disorder": {
-  "figures": 28,
+  "figures": 29,
   "generated": "2026-08-04",
   "pdfs": [
    "36. Mechanochemical Synthesis A Tool to Tune Cation Site Disorder and Ionic Transport Properties of Li3MCl6 (M Y, Er) Superionic Conductors.pdf",
@@ -284,7 +284,7 @@
   ]
  },
  "sendek2017_ml_screening_12k_conductors": {
-  "figures": 16,
+  "figures": 14,
   "generated": "2026-08-04",
   "pdfs": [
    "40. Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf",
@@ -292,7 +292,7 @@
   ]
  },
  "son2025_fivevolt_assb": {
-  "figures": 1,
+  "figures": 6,
   "generated": "2026-08-04",
   "pdfs": [
    "27. Five-volt-class high-capacity all-solid-state lithium batteries.pdf"
@@ -342,7 +342,7 @@
   ]
  },
  "whitten2023_ups_practical_best_practices": {
-  "figures": 4,
+  "figures": 6,
   "generated": "2026-08-04",
   "pdfs": [
    "10. Ultraviolet photoelectron spectroscopy Practical aspects and best practices.pdf"

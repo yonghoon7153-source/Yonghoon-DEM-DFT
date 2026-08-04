@@ -16,15 +16,15 @@
    "caption": "FIGURE 2 Thermal stability experiments of Li7P3S11-X%P2S3 (X = 0, 5, 10, 20, 30). (A) XRD patterns of Li7P3S11-X%P2S3 (X = 0, 5, 10, 20, 30) at 200–600\u0001C. The different colors are used to distinguish the different P2S3 contents. The complete XRD spectrum is shown on the left, and the enlarged view of the 28–34\u0001 region is shown on the right. (B) Differential scanning calorimetry (DSC) spectra of Li7P3S11-X%P2S3(X = 0, 5, 10, 20, 30). The arrows depict the trend of the main exothermic peaks. (C) Raman spectra of Li7P3S11-X%P2S3 (X = 0, 5, 10, 20, 30). The peak at about 380 cm\u00031 belongs to P2S6 4\u0003 polyhedra, the peak at 405 cm\u00031 belongs to P2S7 4\u0003 polyhedra and the peak at 420 cm\u00031 belongs to PS4 3\u0003 polyhedra. (D) X-ray diffraction (XRD), DSC, and the thermal stability parameter Th0 values of Li7P3S11 with different atomic ratios",
    "bbox": [
     39.6,
-    33.0,
+    49.4,
     553.9,
     468.5
    ],
    "w": 2143,
-   "h": 1816,
+   "h": 1747,
    "dpi": 300,
    "src": "29. InfoMat - 2022 - Wang - Improving thermal stability of sulfide solid electrolytes  An intrinsic theoretical paradigm.pdf",
-   "blank": 0.862
+   "blank": 0.858
   },
   {
    "key": "f3",
@@ -35,15 +35,15 @@
    "caption": "FIGURE 3 Thermal stability parameter Th0 values of Li3PS4 modified by doping, where the values are marked below each element symbol for the whole Periodic Table. The redder the color where the element is, the greater the Th0 value and the better the thermal stability of the doped Li3PS4. The blue color corresponds to the opposite trend",
    "bbox": [
     39.6,
-    375.9,
+    547.8,
     553.6,
     713.1
    ],
    "w": 2142,
-   "h": 1406,
+   "h": 690,
    "dpi": 300,
    "src": "29. InfoMat - 2022 - Wang - Improving thermal stability of sulfide solid electrolytes  An intrinsic theoretical paradigm.pdf",
-   "blank": 0.801
+   "blank": 0.857
   },
   {
    "key": "f4",
@@ -54,15 +54,15 @@
    "caption": "FIGURE 4 (A) X-ray diffraction (XRD) pattern of Li3PS4 at 200–600\u0001C after doping with Cu, Si, Sn, and O elements. (B) differential scanning calorimetry (DSC) pattern of Li3PS4-5%M (M = Cu, Si, Sn, O). (C) Nyquist pattern of Li3PS4-5%M (M = Cu, Si, Sn, O) at room temperature",
    "bbox": [
     39.6,
-    375.9,
+    547.8,
     554.6,
     713.1
    ],
    "w": 2146,
-   "h": 1406,
+   "h": 690,
    "dpi": 300,
    "src": "29. InfoMat - 2022 - Wang - Improving thermal stability of sulfide solid electrolytes  An intrinsic theoretical paradigm.pdf",
-   "blank": 0.804
+   "blank": 0.846
   },
   {
    "key": "f5",
@@ -75,13 +75,13 @@
     39.6,
     33.0,
     554.4,
-    410.0
+    403.5
    ],
    "w": 2146,
-   "h": 1572,
+   "h": 1545,
    "dpi": 300,
    "src": "29. InfoMat - 2022 - Wang - Improving thermal stability of sulfide solid electrolytes  An intrinsic theoretical paradigm.pdf",
-   "blank": 0.748
+   "blank": 0.742
   },
   {
    "key": "f6",
@@ -94,13 +94,13 @@
     39.6,
     33.0,
     551.4,
-    295.3
+    288.7
    ],
    "w": 2133,
-   "h": 1094,
+   "h": 1067,
    "dpi": 300,
    "src": "29. InfoMat - 2022 - Wang - Improving thermal stability of sulfide solid electrolytes  An intrinsic theoretical paradigm.pdf",
-   "blank": 0.82
+   "blank": 0.816
   }
  ]
 }

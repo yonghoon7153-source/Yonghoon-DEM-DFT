@@ -17,15 +17,15 @@
    "caption": "Figure 1. a) Li3ErCl6 unit cell with the building units of ErCl63− octahedra that form a trigonal unit cell and face-sharing ErCl63− octahedra chains perpendicular to the (002) plane, with three possible erbium sites (Er1, Wyckoff 1a and Er2, Er3, Wyckoff 2d). b) Lithium occupies the vacant octahedral sites (Wyckoff 6g (100% occupied), 6h (50% occupied)). c,d) Six edge-sharing LiCl65− octahedra surround each ErCl63− octahedron in a honeycomb arrangement in the a–b plane. e) Possible lithium pathways through the face-sharing LiCl65− octahedra along the c-direction and through a tetrahedral void along the a–b plane. Within the plane, a wide range lithium ionic transport is likely only mediated by the partially occupied lithium 6h positions.",
    "bbox": [
     42.2,
-    54.3,
+    64.9,
     552.3,
     339.8
    ],
    "w": 2127,
-   "h": 1190,
+   "h": 1146,
    "dpi": 300,
    "src": "36. Mechanochemical Synthesis A Tool to Tune Cation Site Disorder and Ionic Transport Properties of Li3MCl6 (M Y, Er) Superionic Conductors.pdf",
-   "blank": 0.747
+   "blank": 0.737
   },
   {
    "key": "f2",
@@ -36,15 +36,15 @@
    "caption": "Figure 2. a) Collected X-ray diffraction data and b) calculated pair distribution function G(r) for differently prepared Li3ErCl6 samples. c) Additionally, an example Rietveld refinement against the collected X-ray diffraction data and d) fit for the corresponding, calculated G(r) are shown. While the as- prepared sample shows broad reflections indicating a strong amorphization during ball milling, a seemingly complete crystallization of the ball-milled sample can be achieved within 1 min as observable in the diffraction data and respective G(r).",
    "bbox": [
     45.0,
-    290.9,
+    296.9,
     555.1,
     678.3
    ],
    "w": 2126,
-   "h": 1615,
+   "h": 1590,
    "dpi": 300,
    "src": "36. Mechanochemical Synthesis A Tool to Tune Cation Site Disorder and Ionic Transport Properties of Li3MCl6 (M Y, Er) Superionic Conductors.pdf",
-   "blank": 0.835
+   "blank": 0.832
   },
   {
    "key": "f3",
@@ -55,15 +55,15 @@
    "caption": "Figure 3. a) Comparison of the pair distribution function G(r) of differently prepared Li3ErCl6 samples and b) evolution of the Er2–Er3 site disorder as obtained from G(r) fits (open circles) and Rietveld refinements (open squares). The Er distances are highlighted in the calculated G(r) (a) and the inset of (b).",
    "bbox": [
     42.2,
-    54.3,
+    64.9,
     552.3,
     240.9
    ],
    "w": 2127,
-   "h": 778,
+   "h": 734,
    "dpi": 300,
    "src": "36. Mechanochemical Synthesis A Tool to Tune Cation Site Disorder and Ionic Transport Properties of Li3MCl6 (M Y, Er) Superionic Conductors.pdf",
-   "blank": 0.875
+   "blank": 0.867
   },
   {
    "key": "f4",
@@ -74,15 +74,15 @@
    "caption": "Figure 4. a) Different transition areas for possible lithium diffusion and b) preparation method induced local deformation of structural features. A clear correlation of the obtained Er2–Er3 site disorder can be observed for each of the transition areas. Mechanochemical milling introduces local distortions of the structure that can be visualized using the triangular polyhedral-transition areas, which are ultimately related to the lithium diffusion pathway.",
    "bbox": [
     45.0,
-    54.3,
+    64.9,
     555.1,
     272.7
    ],
    "w": 2126,
-   "h": 911,
+   "h": 867,
    "dpi": 300,
    "src": "36. Mechanochemical Synthesis A Tool to Tune Cation Site Disorder and Ionic Transport Properties of Li3MCl6 (M Y, Er) Superionic Conductors.pdf",
-   "blank": 0.83
+   "blank": 0.821
   },
   {
    "key": "f5",
@@ -93,15 +93,15 @@
    "caption": "Figure 5. Density functional theory calculated defect models for a 1 × 1 × 2 supercell of Li3ErCl6. a,b) Fully occupied Er2 and Er3 sites, fully ordered and fully disordered, respectively, result in a comparable DFT energy and therefore stability for both structures. Although the same holds for (c), the local symmetry reduction for the rotation-inversion center makes this defect model less likely. A mixed defect model including local face-sharing ErCl63− octahedra yields the highest energy and lowest stability, possibly related to the resulting strong electrostatic Er2–Er3 repulsion.",
    "bbox": [
     45.0,
-    444.9,
+    449.3,
     555.1,
     677.2
    ],
    "w": 2127,
-   "h": 969,
+   "h": 950,
    "dpi": 300,
    "src": "36. Mechanochemical Synthesis A Tool to Tune Cation Site Disorder and Ionic Transport Properties of Li3MCl6 (M Y, Er) Superionic Conductors.pdf",
-   "blank": 0.756
+   "blank": 0.751
   },
   {
    "key": "f6",
@@ -112,15 +112,34 @@
    "caption": "Figure 6. a) Representative Nyquist plot of the 1 h subsequently annealed Li3ErCl6 sample, b–d) the comparison of Nyquist plots for the differently prepared samples, normalized to the respective pellet thickness, Arrhenius diagrams, and extracted activation energies as well as the ionic conductivi- ties. With increasing annealing time, the activation energy increases while a decrease of the ionic conductivity can be observed. Open circles correspond to ionic conductivity values and squares to the obtained activation barriers.",
    "bbox": [
     42.2,
-    54.3,
+    64.9,
     552.3,
     406.3
    ],
    "w": 2127,
-   "h": 1467,
+   "h": 1423,
    "dpi": 300,
    "src": "36. Mechanochemical Synthesis A Tool to Tune Cation Site Disorder and Ionic Transport Properties of Li3MCl6 (M Y, Er) Superionic Conductors.pdf",
-   "blank": 0.9
+   "blank": 0.899
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Figure 7. a,b) Evolution of the ionic conductivity and the activation barrier with increasing Er2–Er3 site disorder. c) Overall, an increased erbium occupancy in the (001) plane likely leads to a reordering of the lithium substructure, due to the increased Coulombic repulsion in this plane (Wyckoff 6g position) and potentially creates further vacant sites. d) The decreasing activation barrier can likely be related to a change of the bottlenecks for lithium diffusion.",
+   "bbox": [
+    45.0,
+    64.9,
+    555.1,
+    377.5
+   ],
+   "w": 2127,
+   "h": 1303,
+   "dpi": 300,
+   "src": "36. Mechanochemical Synthesis A Tool to Tune Cation Site Disorder and Ionic Transport Properties of Li3MCl6 (M Y, Er) Superionic Conductors.pdf",
+   "blank": 0.866
   },
   {
    "key": "fS1",
@@ -131,15 +150,15 @@
    "caption": "Figure S1: Collected X-ray diffraction data (a) and calculated pair distribution functions G(r) (b) for differently prepared Li3YCl6 samples. Additionally, an example Rietveld-refinement against the collected X-ray diffraction data (c) and fit for the corresponding, calculated G(r) (d) are shown. While the as prepared sample shows broad reflections indicating a strong amorphization during ball milling, a seemingly complete crystallization of the ball milled sample can be achieved within 5 min as observable in the diffraction data and respective G(r).",
    "bbox": [
     65.3,
-    26.0,
+    72.9,
     533.6,
     536.4
    ],
    "w": 1952,
-   "h": 2128,
+   "h": 1933,
    "dpi": 300,
    "src": "36. Sup) Mechanochemical Synthesis A Tool to Tune Cation Site Disorder and Ionic Transport Properties of Li3MCl6 (M Y, Er) Superionic Conductors.pdf",
-   "blank": 0.871
+   "blank": 0.858
   },
   {
    "key": "fS2",
@@ -169,15 +188,15 @@
    "caption": "Figure S3: PDFGui processing induced splitting of the erbium and chloride positions and the corresponding employed constraints of the atomic displacement parameter for the pair distribution function analysis. The splitting of the chloride positions allows for a slight symmetry reduction from the P3\"m1 space group and therefore represents highly local distortions that cannot be obtained with Rietveld-refinements.",
    "bbox": [
     65.3,
-    26.0,
+    75.2,
     595.3,
     368.6
    ],
    "w": 2209,
-   "h": 1428,
+   "h": 1223,
    "dpi": 300,
    "src": "36. Sup) Mechanochemical Synthesis A Tool to Tune Cation Site Disorder and Ionic Transport Properties of Li3MCl6 (M Y, Er) Superionic Conductors.pdf",
-   "blank": 0.948
+   "blank": 0.938
   },
   {
    "key": "fS4",
@@ -188,15 +207,15 @@
    "caption": "Figure S4: PDF fits for the differently prepared Li3ErCl6 samples. a, b, c represent the annealed samples that were fit in a range of 20 Å. A shorter range of 8 Å was used for the ball milled sample (d) due to its lower crystallinity and smaller coherence length. A certain phase fraction of ErCl3 can still be found (see Table S2). The short-range structure deviates from the longe- range structure (20 Å, (e)), which can be explained by the low coherence of the product phase",
    "bbox": [
     65.3,
-    26.0,
+    66.0,
     533.6,
     613.5
    ],
    "w": 1952,
-   "h": 2449,
+   "h": 2282,
    "dpi": 300,
    "src": "36. Sup) Mechanochemical Synthesis A Tool to Tune Cation Site Disorder and Ionic Transport Properties of Li3MCl6 (M Y, Er) Superionic Conductors.pdf",
-   "blank": 0.884
+   "blank": 0.877
   },
   {
    "key": "fS5",
@@ -207,12 +226,12 @@
    "caption": "Figure S5: Comparison of diffraction behavior for Li3YCl6 and Li3ErCl6. An additional background contribution can be observed in the diffraction pattern for Li3YCl6 (a, b) that is present in every prepared Y-containing sample, likely related to an occurring fluorescence-like behavior. The intensity in the diffraction patterns was not additionally scaled. This additional background contribution leads to a worse signal to noise ratio and thereof resulting occurrence of terminal ripples (c,d) when processing the diffraction data, making a proper analysis impossible The pair distribution functions in (c, d) were normalized to the (Y, Er)-Cl distance of around 2.6 Å corresponding to the octahedral MCl63- environment found in both compounds in the same amount.",
    "bbox": [
     65.3,
-    107.6,
+    87.0,
     533.6,
     571.2
    ],
    "w": 1952,
-   "h": 1933,
+   "h": 2019,
    "dpi": 300,
    "src": "36. Sup) Mechanochemical Synthesis A Tool to Tune Cation Site Disorder and Ionic Transport Properties of Li3MCl6 (M Y, Er) Superionic Conductors.pdf",
    "blank": 0.892
@@ -245,15 +264,15 @@
    "caption": "Figure S7: Rietveld-refinement against the diffraction pattern of the ball milled and 1 min subsequently annealed Li3ErCl6 sample.",
    "bbox": [
     65.3,
-    26.0,
+    32.0,
     558.3,
     359.0
    ],
    "w": 2055,
-   "h": 1388,
+   "h": 1363,
    "dpi": 300,
    "src": "36. Sup) Mechanochemical Synthesis A Tool to Tune Cation Site Disorder and Ionic Transport Properties of Li3MCl6 (M Y, Er) Superionic Conductors.pdf",
-   "blank": 0.912
+   "blank": 0.911
   },
   {
    "key": "fS8",
@@ -264,15 +283,15 @@
    "caption": "Figure S8: Rietveld-refinement against the diffraction pattern of the ball milled and 1 h subsequently annealed Li3ErCl6 sample.",
    "bbox": [
     65.3,
-    26.0,
+    33.0,
     560.2,
     361.9
    ],
    "w": 2063,
-   "h": 1400,
+   "h": 1371,
    "dpi": 300,
    "src": "36. Sup) Mechanochemical Synthesis A Tool to Tune Cation Site Disorder and Ionic Transport Properties of Li3MCl6 (M Y, Er) Superionic Conductors.pdf",
-   "blank": 0.911
+   "blank": 0.91
   },
   {
    "key": "fS9",
@@ -283,12 +302,12 @@
    "caption": "Figure S9: Rietveld-refinement against the diffraction pattern of the ampoule synthesized Li3ErCl6 sample.",
    "bbox": [
     65.3,
-    26.0,
+    35.9,
     556.3,
     364.0
    ],
    "w": 2046,
-   "h": 1409,
+   "h": 1368,
    "dpi": 300,
    "src": "36. Sup) Mechanochemical Synthesis A Tool to Tune Cation Site Disorder and Ionic Transport Properties of Li3MCl6 (M Y, Er) Superionic Conductors.pdf",
    "blank": 0.906
@@ -302,15 +321,15 @@
    "caption": "Figure S10: Rietveld-refinement against the diffraction pattern of the ball milled and 5 min subsequently annealed Li3YCl6 sample.",
    "bbox": [
     65.3,
-    26.0,
+    36.8,
     558.7,
     366.4
    ],
    "w": 2057,
-   "h": 1419,
+   "h": 1374,
    "dpi": 300,
    "src": "36. Sup) Mechanochemical Synthesis A Tool to Tune Cation Site Disorder and Ionic Transport Properties of Li3MCl6 (M Y, Er) Superionic Conductors.pdf",
-   "blank": 0.93
+   "blank": 0.928
   },
   {
    "key": "fS11",
@@ -321,15 +340,15 @@
    "caption": "Figure S11: Rietveld-refinement against the diffraction pattern of the ball milled and 1 h subsequently annealed Li3YCl6 sample.",
    "bbox": [
     65.3,
-    26.0,
+    45.4,
     558.7,
     374.6
    ],
    "w": 2056,
-   "h": 1453,
+   "h": 1372,
    "dpi": 300,
    "src": "36. Sup) Mechanochemical Synthesis A Tool to Tune Cation Site Disorder and Ionic Transport Properties of Li3MCl6 (M Y, Er) Superionic Conductors.pdf",
-   "blank": 0.925
+   "blank": 0.922
   },
   {
    "key": "fS12",
@@ -340,15 +359,15 @@
    "caption": "Figure S12: Rietveld-refinement against the diffraction pattern of the ampoule synthesized Li3YCl6 sample.",
    "bbox": [
     65.3,
-    26.0,
+    47.4,
     557.8,
     373.4
    ],
    "w": 2053,
-   "h": 1448,
+   "h": 1359,
    "dpi": 300,
    "src": "36. Sup) Mechanochemical Synthesis A Tool to Tune Cation Site Disorder and Ionic Transport Properties of Li3MCl6 (M Y, Er) Superionic Conductors.pdf",
-   "blank": 0.927
+   "blank": 0.921
   },
   {
    "key": "fS13",
@@ -359,15 +378,15 @@
    "caption": "Figure S13: Changing activation barrier with changing transition state area along the z- direction in Li3ErCl6.",
    "bbox": [
     65.3,
-    425.9,
+    451.6,
     530.6,
     720.7
    ],
    "w": 1939,
-   "h": 1229,
+   "h": 1122,
    "dpi": 300,
    "src": "36. Sup) Mechanochemical Synthesis A Tool to Tune Cation Site Disorder and Ionic Transport Properties of Li3MCl6 (M Y, Er) Superionic Conductors.pdf",
-   "blank": 0.924
+   "blank": 0.915
   },
   {
    "key": "tS1",

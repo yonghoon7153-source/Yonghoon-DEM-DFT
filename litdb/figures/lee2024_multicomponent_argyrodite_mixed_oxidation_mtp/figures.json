@@ -16,15 +16,15 @@
    "caption": "Fig. 1. (a) Voltage window and ionic conductivity as a function of chlorine content for diﬀerent sulﬁde-based solid electrolytes, including Li 7 P 3 S 11 , Li 3 PS 4 , Li 20 Si 3 P 3 S 23 Cl (LSPSCl), Li 6 PS 5 Cl (LPSCl1.0), Li 5.5 PS 4.5 Cl 1.5 (LPSCl1.5), Li 5 PS 4 Cl 2 (LPSCl2.0). Space groups for Li 7-x PS 6-x Cl x have also been labeled. LPSCl1.0 and LPSCl1.5 are the cubic F-43 m phase, while for LPSCl2.0, the C2mm phase is represented by solid lines and the F-43 m one is represented by dashed lines. (b) reac- tion strain (at K eﬀ= 0 GPa) versus voltage window for sulﬁde-based SEs with diﬀerent chlorine contents in the composition. (c) Exact stability window at diﬀerent mechanical constrictions (K eﬀ= 0, 10 and 20 GPa) for Li 7 P 3 S 11 (Cl 0 ) and Li 7-x PS 6-x Cl x ( x = 0.5, 1.0, 1.5, and 2.0). The color represents the level of reaction energy, where darker color corresponds to ",
    "bbox": [
     31.9,
-    45.4,
+    51.5,
     568.3,
-    310.2
+    307.2
    ],
    "w": 2236,
-   "h": 1104,
+   "h": 1067,
    "dpi": 300,
    "src": "02. Synergistic effects of chlorine substitution in sulfide electrolyte solid state batteries.pdf",
-   "blank": 0.811
+   "blank": 0.802
   },
   {
    "key": "f2",
@@ -35,15 +35,15 @@
    "caption": "Fig. 2. (a) Ex-situ XRD patterns of LPSCl1.5 and Li 7 P 3 S 11 (LPS) after Li deposition in asymmetric batteries (Li/SE/SS)) with and without mechanical constrictions. The operating stack pressure is applied at 100 MPa. SS: stainless steel. (b) P 2p and S 2p XPS spectra in Li/LPSCl1.5/SS cells after Li deposition with and without mechanical constrictions. (c) Decomposition reaction pathways at K eﬀ= 0 and 20 GPa and predicted decomposition products in diﬀerent phase equilibria within each voltage range. All decomposition products are the ground state phases within each voltage range. (d-f) Stripping/plating behavior in (d) Li/LPSCl1.5/Li cell, (e) Li/LPSCl0.5/Li cell, and (f) Li/LPSCl1.0/Li cell at a current density of 0.1 mA cm − 2 and continuous 1 h plating/stripping durations. (g-l) Stripping/plating behavior in Li/G-SE-G/Li cell at a current density of 0.25 - 10 mA cm − 2 with the ca",
    "bbox": [
     31.9,
-    45.4,
+    51.7,
     568.1,
-    419.2
+    416.2
    ],
    "w": 2236,
-   "h": 1558,
+   "h": 1520,
    "dpi": 300,
    "src": "02. Synergistic effects of chlorine substitution in sulfide electrolyte solid state batteries.pdf",
-   "blank": 0.816
+   "blank": 0.817
   },
   {
    "key": "f3",
@@ -54,15 +54,15 @@
    "caption": "Fig. 3. Galvanostatic charge-discharge voltage proﬁles and cycling performance of (a,b) Li-G/Li 5.5 PS 4.5 Cl 1.5 /LNMO batteries at 0.1C. (c) Voltage proﬁles and (d) cycling performance of Li-G/ Li 5.5 PS 4.5 Cl 1.5 /LCO battery discharged at 1–20 C after charging at 0.1 C and holding voltage at 4.3 V. (e) Voltage proﬁles and (f) cycling performance of Li-G/ Li 5.5 PS 4.5 Cl 1.5 -Li 6 PS 5 Cl 1 -Li 5.5 PS 4.5 Cl 1.5 /NMC811 batteries at 20 C-rate of continuous charge and discharge. All LCO batteries were cycled at room temperature, LNMO battery and NMC811 battery were cycled at 55 °C.",
    "bbox": [
     31.9,
-    45.4,
+    50.8,
     568.1,
-    378.2
+    375.2
    ],
    "w": 2236,
-   "h": 1387,
+   "h": 1353,
    "dpi": 300,
    "src": "02. Synergistic effects of chlorine substitution in sulfide electrolyte solid state batteries.pdf",
-   "blank": 0.895
+   "blank": 0.891
   },
   {
    "key": "f4",
@@ -73,15 +73,15 @@
    "caption": "Fig. 4. (a) Predicted LCO-LPSCl1.5 and LNMO-LPSCl1.5 interphase decomposition products in diﬀerent phase equilibria within each voltage range at K eﬀ= 20 GPa. All decomposition products are the ground state phases within each voltage range. (b) Ex-situ P 2p and S 2p XPS spectra of the LCO electrode of Li/LPSCl1.5/LCO cell before and after cycling. (c) Ex-situ P 2p and S 2p XPS spectra of the LNMO electrode of Li-G/LPSCl1.5/LNMO cell before and after cycling.",
    "bbox": [
     31.9,
-    45.4,
+    50.8,
     568.1,
-    356.2
+    353.2
    ],
    "w": 2235,
-   "h": 1296,
+   "h": 1261,
    "dpi": 300,
    "src": "02. Synergistic effects of chlorine substitution in sulfide electrolyte solid state batteries.pdf",
-   "blank": 0.746
+   "blank": 0.74
   }
  ]
 }
