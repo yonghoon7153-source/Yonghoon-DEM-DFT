@@ -4,9 +4,124 @@
  "maxpx": 3000,
  "generated": "2026-08-05",
  "sources": [
-  "건식전극 논문/01. Sup) Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf"
+  "01. Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
+  "01. Sup) Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf"
  ],
  "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. a–d) Focused ion beam (FIB) cross-sectional SEM images of cathode sheets in pristine, as-casted conditions (left) and charged to 4.2 V (right) for polycrystalline NCM and e–h) monolithic, single crystalline NCM. The development of gaps, highlighted by red arrows, in the microstructure of the secondary particle is evident in the polycrystalline sample but cannot be observed in the monolithic one.",
+   "bbox": [
+    42.2,
+    493.2,
+    552.2,
+    687.3
+   ],
+   "w": 2127,
+   "h": 810,
+   "dpi": 300,
+   "src": "01. Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
+   "blank": 0.406
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. a) Krypton physisorption isotherms for a set of PC cathodes recovered from batteries charged to different cutoff potentials and b) BET specific surface areas extracted from these isotherms and the isotherms shown in Figure S1 in the Supporting Information. The gray-shade base- lines represent the specific surface area of the pristine NCM single-crys- talline (SC) and polycrystalline (PC) powders, used as a reference value to exclude contributions from the binder and conductive carbon. Error bars represent the sample weighing error.",
+   "bbox": [
+    45.0,
+    162.5,
+    300.0,
+    639.9
+   ],
+   "w": 1063,
+   "h": 1990,
+   "dpi": 300,
+   "src": "01. Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Evolution of the Warburg coefficient determined by galvano- static polarization and relaxation for a) polycrystalline secondary particles of NCM and b) single-crystalline (monolithic) particles of NCM.",
+   "bbox": [
+    297.3,
+    64.9,
+    552.3,
+    539.9
+   ],
+   "w": 1064,
+   "h": 1980,
+   "dpi": 300,
+   "src": "01. Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
+   "blank": 0.902
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Apparent lithium diffusion coefficient Li",
+   "bbox": [
+    45.0,
+    64.9,
+    296.9,
+    299.7
+   ],
+   "w": 1051,
+   "h": 979,
+   "dpi": 300,
+   "src": "01. Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
+   "blank": 0.873
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. a) Equivalent circuit used to describe and fit EIS data of full cells recorded in potentiostatic conditions at a given open circuit voltage (OCV). b) Exemplary Nyquist plot with data and fit according to the previous equiv- alent circuit. c,d) Nyquist plot of impedance data recorded during the first cycle for polycrystalline and single crystalline cathodes, respectively. polycrystalline NCM. While this model seems to fit the data well, it cannot reliably separate contributions from the two elec- trodes. At low frequencies, polarization of the lithium electrode and subsequent Warburg-like diffusion of lithium in the liquid/ SEI region is observed. Even though cells employing a reference electrode are better suited to study processes by EIS when other contributions cannot be avoided, it is still possible to use the value of ZW obtained from the relaxation as an input parameter (W",
+   "bbox": [
+    297.3,
+    64.9,
+    552.5,
+    396.1
+   ],
+   "w": 1065,
+   "h": 1381,
+   "dpi": 300,
+   "src": "01. Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
+   "blank": 0.8
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Results of the test described in Scheme 1 for cracked (HV cell) and crack-free (LV cell) polycrystalline NCM. Extracts from FIB-SEM images and arrows elucidate the connection between the morphological state of the particles to the voltage/capacity curves. a–f) Voltage profiles as function of the specific capacity recorded for the HV and LV cells in each step of Scheme 1.",
+   "bbox": [
+    42.2,
+    64.9,
+    552.3,
+    394.6
+   ],
+   "w": 2127,
+   "h": 1375,
+   "dpi": 300,
+   "src": "01. Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
+   "blank": 0.884
+  },
   {
    "key": "fS1",
    "kind": "figure",
@@ -196,6 +311,25 @@
    "dpi": 300,
    "src": "01. Sup) Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
    "blank": 0.967
+  },
+  {
+   "key": "s1",
+   "kind": "scheme",
+   "label": "1",
+   "page": 7,
+   "file": "fig_1.png",
+   "caption": "Scheme 1. Procedure of the “kinetic test” used to highlight the different performance of polycrystalline cathode active material with and without secondary particle cracking that occurs at high voltage. is met. As discussed in the previous section, the particle dimen- sion and surface area available for charge transfer directly influ- ence the value of the diffusion overpotential during cycling. For small, uncracked polycrystalline NCM particles (diameter < 3 µm), the overpotential would be comparable to similarly sized single-crystals, as the CAMs would have similar sur- face area and effective particle size. However, in the pristine state the typically large (diameter > 5 µm) secondary particles of polycrystalline NCM should exhibit higher overpotentials and worse specific capacities and rate capability compared to cracked NCM, which is characterized by a higher surface area. Therefore",
+   "bbox": [
+    300.1,
+    64.9,
+    555.4,
+    235.0
+   ],
+   "w": 1065,
+   "h": 710,
+   "dpi": 300,
+   "src": "01. Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
+   "blank": 0.674
   },
   {
    "key": "tS1",
