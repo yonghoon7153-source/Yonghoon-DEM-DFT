@@ -621,6 +621,52 @@ def _write_sources_index():
         print(f"→ litdb/figures/_sources.json  ({len(idx)}편: 어느 PDF 에서 왔는지 색인)")
 
 
+def why(slug, pdfs):
+    """왜 그 그림이 버려졌는지 좌표째로 — '영역 없음' 의 원인을 눈으로 본다.
+
+    캡션은 찾았는데 위/아래 어느 쪽도 36 pt 를 못 넘으면 버린다. 그 판단에 쓰인
+    병합 캡션 bbox·경계선·후보 사각형·주변 그래픽을 전부 찍는다.
+    """
+    for pdf_path in pdfs:
+        doc = fitz.open(pdf_path)
+        si_file = bool(SI_TAG.search(Path(pdf_path).stem))
+        print(f"\n##### {Path(pdf_path).name[:78]}  (SI 파일? {si_file})")
+        for pno in range(doc.page_count):
+            page = doc[pno]
+            blocks = text_blocks(page)
+            caps = [(b, is_caption(b[4])) for b in blocks]
+            for cap, hit in caps:
+                if not hit:
+                    continue
+                kind, label, cap_si = hit
+                cr, captxt = merge_caption(blocks, cap)
+                up, ui, ud = _side_rect(page, tuple(cr), blocks, up=True)
+                dn, di, dd = _side_rect(page, tuple(cr), blocks, up=False)
+                ok = (up is not None and (ui or ud >= 6)) or (dn is not None and (di or dd >= 6))
+                print(f"  p{pno+1} {kind[0]}{label}{' (SI캡션)' if cap_si else ''} "
+                      f"{'OK' if ok else '⛔'}")
+                print(f"      쪽 {tuple(round(v) for v in page.rect)} · "
+                      f"캡션블록 {tuple(round(v) for v in cap[:4])} → 병합 "
+                      f"{tuple(round(v) for v in cr)}")
+                for nm, r, ni, nd in (("위", up, ui, ud), ("아래", dn, di, dd)):
+                    if r is None:
+                        print(f"      {nm}: 없음 (높이 36 pt 미만)")
+                    else:
+                        print(f"      {nm}: {tuple(round(v) for v in r)} "
+                              f"h={r.height:.0f} 이미지{ni} 벡터{nd}")
+                if not ok:
+                    g = graphics(page)
+                    print(f"      쪽 전체 그래픽 {len(g)}개: "
+                          + ", ".join(f"{k}{tuple(round(v) for v in r)}" for k, r in g[:4]))
+                    print(f"      캡션 앞뒤 블록:")
+                    for b in sorted(blocks, key=lambda b: b[1]):
+                        if abs(b[1] - cr.y0) < 260:
+                            print(f"        {tuple(round(v) for v in b[:4])} "
+                                  f"{' '.join(b[4].split())[:56]}")
+        doc.close()
+    return 0
+
+
 def audit():
     """이미 잘라둔 것 전체 점검 — 53편을 눈으로 다 볼 수는 없으니 **의심스러운 것만** 띄운다.
 
@@ -704,6 +750,8 @@ def main():
     ap.add_argument("--clean", action="store_true", help="기존 <slug> 폴더를 지우고 새로")
     ap.add_argument("--audit", action="store_true",
                     help="이미 잘라둔 것 전체 점검 (구멍·백지·SI만 등 의심스러운 것만)")
+    ap.add_argument("--why", action="store_true",
+                    help="--slug 과 함께: 각 캡션이 왜 살았는지/버려졌는지 좌표째로")
     a = ap.parse_args()
 
     if a.audit:
@@ -812,6 +860,9 @@ def main():
             raise SystemExit(f"⛔ PDF 없음: {p}")
     if a.clean and not a.dry:
         shutil.rmtree(OUT_ROOT / a.slug, ignore_errors=True)
+
+    if a.why:
+        return why(a.slug, a.pdf)
 
     meta, skipped = extract(a.pdf, a.slug, dpi=a.dpi, dry=a.dry, maxpx=a.maxpx)
     _report(a.slug, meta, skipped, a.dry)
