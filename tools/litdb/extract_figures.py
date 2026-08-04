@@ -760,12 +760,15 @@ def refresh(box, apply_it=False, dpi=300, maxpx=3000):
     먼저 dry-run 으로 장수를 비교해 표를 내고, --apply 를 줘야 실제로 덮어쓴다.
     """
     assign, _o = match_inbox(box)
+    todo = [d for d in sorted(OUT_ROOT.glob("*/figures.json")) if d.parent.name in assign]
+    print(f"훑는 중… PDF 가 있는 {len(todo)}편을 dry-run 으로 비교한다 "
+          f"(렌더링은 안 하지만 쪽 분석은 실제와 같아 몇 분 걸린다)")
     rows = []
-    for d in sorted(OUT_ROOT.glob("*/figures.json")):
+    for k, d in enumerate(todo, 1):
         slug = d.parent.name
-        v = assign.get(slug)
-        if not v:
-            continue                       # 이 폴더에 PDF 가 없다 — 건드리지 않는다
+        v = assign[slug]
+        # 진행이 보이게 — 안 그러면 몇 분 동안 화면이 멈춘 것처럼 보인다
+        print(f"\r  [{k}/{len(todo)}] {slug[:52]:<52}", end="", flush=True)
         try:
             old = len(json.loads(d.read_text(encoding="utf-8")).get("figures", []))
         except (OSError, ValueError):
@@ -779,7 +782,8 @@ def refresh(box, apply_it=False, dpi=300, maxpx=3000):
             continue
         if new != old:
             rows.append((slug, old, new, pdfs))
-    print(f"=== 재추출 대상: {len(rows)}편 (PDF 가 있는 {len(assign)}편 중)")
+    print(f"\r{' ' * 68}\r", end="")
+    print(f"=== 재추출 대상: {len(rows)}편 (PDF 가 있는 {len(todo)}편 중)")
     for slug, old, new, _p in rows:
         print(f"   {slug[:56]:<56} {old:>3} → {new:>3}  ({new-old:+d})")
     if not rows:
