@@ -5534,7 +5534,7 @@ function drawZProfileCanvas(cv, curves, yLab, leftLab, rightLab) {
 function drawZProfileMPL(cv, curves, yLab, leftLab, rightLab, title) {
   const g = cv.getContext('2d'), W = cv.width, H = cv.height;
   g.fillStyle = '#ffffff'; g.fillRect(0, 0, W, H);
-  const mL = 104, mR = 30, mT = title ? 56 : 26, mB = 78, pw = W - mL - mR, ph = H - mT - mB;
+  const mR = 30, mT = title ? 56 : 26, mB = 78;
   const allY = curves.flatMap(c => c.ys);
   let yMin = Math.min(...allY), yMax = Math.max(...allY);
   if (!(yMax > yMin)) yMax = yMin + 1e-9;
@@ -5542,13 +5542,25 @@ function drawZProfileMPL(cv, curves, yLab, leftLab, rightLab, title) {
   const zMax = Math.max(...curves.flatMap(c => c.zs), 1e-9);
   const yr = yMax - yMin, yDec = yr < 0.2 ? 3 : yr < 2 ? 2 : yr < 50 ? 1 : 0;
   const zDec = zMax < 2 ? 2 : zMax < 50 ? 1 : 0;
-  const PX = z => mL + z / zMax * pw, PY = y => mT + (1 - (y - yMin) / (yMax - yMin)) * ph;
   const nX = 6, nY = 5;
+  // ★ 좌측 여백을 눈금 글자폭에서 **계산**한다 (2026-08-04).  mL 이 104 고정이라 3자리 소수 눈금
+  //   ('0.463' ≈ 50px, 우측정렬 x=mL−10=94 → 44..94) 과 회전 y라벨(중심 34, 띠 두께 ~30 → 19..49)이
+  //   5px 겹쳐 라벨이 숫자 위에 얹혔다.  한글 대체 폰트가 끼면 라벨 띠가 더 두꺼워져 더 겹친다.
+  //   눈금을 그릴 때와 **같은 폰트로 실측**해 띄운다 → 자릿수·폰트가 바뀌어도 안 겹친다.
+  const TICK_FONT = `20px ${_FONT_KR}`, LAB_BAND = 34, LAB_PAD = 8, LAB_GAP = 12;
+  g.font = TICK_FONT;
+  let tickW = 0;
+  for (let i = 0; i <= nY; i++)
+    tickW = Math.max(tickW, g.measureText((yMax - i / nY * (yMax - yMin)).toFixed(yDec)).width);
+  const yLabX = LAB_PAD + LAB_BAND / 2;                            // 회전 라벨 띠의 중심
+  const mL = Math.max(104, Math.ceil(LAB_PAD + LAB_BAND + LAB_GAP + tickW + 10));
+  const pw = W - mL - mR, ph = H - mT - mB;
+  const PX = z => mL + z / zMax * pw, PY = y => mT + (1 - (y - yMin) / (yMax - yMin)) * ph;
   g.strokeStyle = '#e5e7eb'; g.lineWidth = 1;                     // 격자
   for (let i = 0; i <= nY; i++) { const y = mT + i / nY * ph; g.beginPath(); g.moveTo(mL, y); g.lineTo(W - mR, y); g.stroke(); }
   for (let i = 0; i <= nX; i++) { const x = mL + i / nX * pw; g.beginPath(); g.moveTo(x, mT); g.lineTo(x, H - mB); g.stroke(); }
   g.strokeStyle = '#111827'; g.lineWidth = 1.4; g.strokeRect(mL, mT, pw, ph);   // 축 프레임
-  g.fillStyle = '#111827'; g.font = '20px Inter,Arial,sans-serif';
+  g.fillStyle = '#111827'; g.font = TICK_FONT;                   // ★ 위 폭 실측과 동일 폰트여야 함
   g.textAlign = 'right'; g.textBaseline = 'middle';              // y 눈금 숫자
   for (let i = 0; i <= nY; i++) { const v = yMax - i / nY * (yMax - yMin), y = mT + i / nY * ph;
     g.fillText(v.toFixed(yDec), mL - 10, y); g.beginPath(); g.moveTo(mL - 5, y); g.lineTo(mL, y); g.stroke(); }
@@ -5558,8 +5570,9 @@ function drawZProfileMPL(cv, curves, yLab, leftLab, rightLab, title) {
   g.font = `22px ${_FONT_KR}`; g.textAlign = 'center'; g.textBaseline = 'bottom';
   g.fillText(`z (µm)  —  ${leftLab || '집전체'}(좌) → ${rightLab || '분리막'}(우)`, mL + pw / 2, H - 18);
   // 회전 라벨은 textBaseline='middle' — 'top' 은 폰트 ascent 기준이라 대체 폰트가 끼면 그 구간만
-  // 어긋난다.  'middle' 은 em-box 중앙 기준이라 폰트가 섞여도 안정적이다.
-  g.save(); g.translate(34, mT + ph / 2); g.rotate(-Math.PI / 2); g.textBaseline = 'middle'; g.textAlign = 'center';
+  // 어긋난다.  'middle' 은 em-box 중앙 기준이라 폰트가 섞여도 안정적이고, 위 mL 계산이 가정한
+  // '중심 yLabX, 두께 LAB_BAND' 띠와 정확히 일치한다.
+  g.save(); g.translate(yLabX, mT + ph / 2); g.rotate(-Math.PI / 2); g.textBaseline = 'middle'; g.textAlign = 'center';
   g.fillText(yLab, 0, 0); g.restore();
   if (title) { g.font = `bold 24px ${_FONT_KR}`; g.textAlign = 'center'; g.textBaseline = 'top'; g.fillText(title, W / 2, 16); }
   const MC = { '#f87171': '#d62728', '#a78bfa': '#7c3aed' };      // 흰 배경용 진한색
