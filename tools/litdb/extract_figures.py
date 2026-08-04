@@ -226,8 +226,12 @@ def _side_rect(page, cap, blocks, up, margin=6.0):
         rect = fitz.Rect(x0, y1 + 2, x1, lim - 2)
     if rect.height < 36:
         return None, 0, 0
+    # ⚠ 분모를 그래픽 넓이로만 잡으면 **스캔본**에서 무너진다 (2026-08-06 실측, Thornton 1998):
+    #   스캔 PDF 는 쪽 전체가 이미지 1장이라, 그림 영역이 아무리 맞아도 "쪽 넓이의 12%"를
+    #   못 넘으면 '그래픽 없음' 으로 버려진다 — 10장 중 7장이 그렇게 날아갔다.
+    #   둘 중 **작은 쪽** 기준으로 본다: 큰 그래픽이 영역을 덮는 경우도 통과한다.
     hit = [(k, r) for k, r in graphics(page) if r.intersects(rect) and
-           (r & rect).get_area() > 0.12 * r.get_area()]
+           (r & rect).get_area() > 0.12 * min(r.get_area(), rect.get_area())]
     if hit:
         u = hit[0][1]
         for _k, r in hit[1:]:
