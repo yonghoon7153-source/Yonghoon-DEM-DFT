@@ -550,6 +550,9 @@ def match_inbox(inbox=INBOX, min_score=0.45, min_hits=4, rare=3):
     # ⚠ rglob: 논문은 보통 주제·교수님별 하위 폴더로 나뉘어 있다(2026-08-06 1저자 폴더 실측).
     #   최상위만 보면 한 편도 못 찾는다. 숨김/휴지통성 폴더는 건너뛴다.
     manual = load_map()
+    # 지도의 오타가 조용히 묻히지 않게 — 없는 slug / 아무 파일도 못 맞춘 패턴을 보고한다
+    bad_slug = [s for s, _pat in manual if not (PAPERS / f"{s}.md").exists()]
+    used = set()
     for p in sorted(inbox.rglob("*.pdf")):
         if any(d.startswith((".", "~$")) or d in ("$RECYCLE.BIN", "node_modules")
                for d in p.relative_to(inbox).parts[:-1]):
@@ -562,6 +565,7 @@ def match_inbox(inbox=INBOX, min_score=0.45, min_hits=4, rare=3):
         for m_slug, pat in manual:            # ① 손으로 지정한 것이 최우선
             if pat in low:
                 slug, why = m_slug, "수동 지정"
+                used.add(pat)
                 break
         if slug:
             pass
@@ -620,6 +624,17 @@ def match_inbox(inbox=INBOX, min_score=0.45, min_hits=4, rare=3):
             assign[best]["si" if si else "main"].append(p)
         else:
             still.append((p, si))
+    dead = [(s, pat) for s, pat in manual if pat not in used]
+    if bad_slug or dead:
+        print("⚠ litdb/pdf_map.tsv 점검")
+        for s in bad_slug:
+            print(f"   없는 slug: {s}")
+        # 일부 폴더만 훑을 땐 대부분 안 맞는 게 정상이라 목록을 줄여 낸다
+        for s, pat in dead[:10]:
+            print(f"   아무 PDF 도 못 맞춘 패턴: {s}  ←  '{pat[:52]}'")
+        if len(dead) > 10:
+            print(f"   … 외 {len(dead)-10}개 (이 폴더에 그 PDF 가 없으면 정상)")
+        print()
     return assign, still
 
 

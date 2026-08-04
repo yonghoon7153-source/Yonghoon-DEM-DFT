@@ -1,11 +1,49 @@
-# slug ↔ PDF 파일명(부분 일치) — **자동 매칭이 못 붙인 것만** 손으로 적는다.
+# slug ↔ PDF 파일명(부분 일치, 소문자 비교) — **자동 매칭이 못 붙인 것만** 손으로 적는다.
 #
 # 왜 필요한가: digest 제목이 원제를 의역한 경우가 많아 파일명과 토큰이 안 겹친다.
 #   문턱을 낮추면 다른 데서 오탐이 터지므로(실측), 예외만 여기 모은다.
 #   이 파일이 inbox #NN·제목·1쪽본문 어느 앵커보다 **우선**한다.
 #
 # 형식:  <slug><TAB><PDF 파일명 일부>       (# 뒤는 주석)
+#   · 비교 대상은 inbox 기준 **상대경로**라 폴더명도 넣을 수 있다.
+#   · 본문·SI 를 함께 잡으려면 둘 다에 들어 있는 제목 조각을 쓴다 (Sup) 판정은 자동).
 # 후보 뽑기:  python3 tools/litdb/extract_figures.py --suggest --inbox_dir "<폴더>"
 #
-# 예)
-# chen2011_percolation_micromodel_composite_electrode	52. Percolation micro-model
+# ── 접촉역학 · 소성 ────────────────────────────────────────────────
+jacksongreen2005_fem_elastoplastic_hemispherical_contact	a finite element study of elasto-plastic hemispherical contact
+mesarovicfleck2000_dissimilar_elastoplastic_indentation	frictionless indentation of dissimilar
+thorntonning1998_adhesive_elastoplastic_contact	stick bounce behaviour of adhesive
+pasha2014_linear_elastoplastic_adhesive_contact	a linear model of elasto-plastic and adhesive contact
+thakur2014_eepa_adhesive_elastoplastic_dem	micromechanical analysis of cohesive granular materials
+#
+# ── 미세구조 · percolation · 수송 ──────────────────────────────────
+chen2011_percolation_micromodel_composite_electrode	percolation micro-model to predict the effective properties
+taufactor_tortuosity_factor_tomography_tool	taufactor an open-source application
+nisar2024_dem_effective_electrical_conductivity_sps	discrete element model for effective electrical conductivity
+minnmann2021_jes_charge_transport_bottlenecks	minnmann_2021_j._electrochem
+sangros2020_dem_electrical_conductive_paths_assb	sangrós giménez - modeling the electrical conductive paths
+#
+# ── 공정: 캘린더링 · 압축 · 건식전극 ───────────────────────────────
+ngandjong2021_dem_calendering_digital_twin	15. investigating electrode calendering
+sangros2019_dem_calendering_lib_electrode	numerical simulation of the behavior of lithium-ion battery electrodes
+schreiner2020_dem_calendering_lib	50. modeling of the calendering process
+lyu2025_3d_dem_drying_calendering_lib	three-dimensional discrete element simulation of electrode
+sangros2020_lib_electrode_dem_mech_elec_ionic	mechanical, electrical, and ionic behavior of lithium-ion
+so2021_dem_mold_pressure_assb_coldpress	16. effect of mold pressure on compaction
+so2022_dem_compaction_coated_particles_assb	simulation of the compaction of an all-solid-state battery cathode
+wet_processing_resolved_am_ssb_cathode_manufacturing	cathode manufacturing via wet-processin
+lee2025_corolling_dryprocess_lpscl_ptfe	enabled by co-rolling
+liu2025_dry_processing_high_energy_li_batteries_review	liu - dry processing technique
+mun2025_dry_electrode_technology_assb_review	mun - paving the way for next
+lim2025_virtual_calendering_framework	validating the virtual calendering process
+#
+# ── 소재 · 바인더 · 복합양극 ───────────────────────────────────────
+sakuda2013_sulfide_mechanical_property	sulfide solid electrolyte with favorable mechanical property
+shi2019_high_am_loading_particle_size_assb	high active material loading in all
+oh2026_bimodal_composite_cathode	bimodal composite cathodes advancing the chemo-mechanical
+kim2026_charge_engineered_cnf_binder	charge-engineered cellulose nanofibril binders
+park2026_thiolene_sbr_binder_assb	thiol-ene click
+#
+# ── 다물리 · ML ────────────────────────────────────────────────────
+lee2024_multiphysics_dem_fem_initial_pressure_assb	multiphysics modeling of the influence of initial pressure
+duquesnoy2023_ml_multiobjective_manufacturing_optimization	machine learning-assisted multi-objective optimization of batter
