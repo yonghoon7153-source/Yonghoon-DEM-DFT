@@ -28,6 +28,11 @@ LPSCl (Li₆PS₅Cl) vs LPSCl₁.₆ (Li₅.₄PS₄.₄Cl₁.₆) · 2026-06-21
 - **AIMD-MLIP**: Ea 0.253→0.224, σ 3.4→14 mS/cm, D600 3.09e-6→7.90e-6.
 - **BVSE**: comp1 단일 채널(BVS 1.60–1.64) → modelc bimodal(60.2%가 1.83–1.89, anti-site Cl 인접). 정적 채널은 −15%인데 σ는 ×4 (역설) → vacancy가 BVSE 못 보는 곳에서 작동.
 - **Voronoi 무질서 std**: P 0→0.37, Cl 0→0.74, Li 0.21→1.15 (무질서↑ 정량).
+> ⚠ **2026-08-05 단서 (open_items #9)**: 아래 F* 는 **600 K MLIP-MD** 궤적 산출이고,
+> comp1 의 그 궤적(deck)은 β 게이트 **미검사**이며 형제 시드는 **6/6 케이지**다.
+> F* 는 연결 경로의 **가장 덜 방문된 voxel** 이 정하므로 표집 부족 시 **상한(과대)** 이고,
+> 더 갇힌 comp1 이 더 부풀려져 **−15% 감소폭이 과장됐을 수 있다**. 1600 ps 연장이 판별.
+> 또한 BVSE 와는 독립이지만 **MD 와는 같은 궤적**이라 상호검증으로 쓰면 순환논증이다.
 - **Percolation (Li-density PMF, F=−kT·lnρ, exact cube)**: 침투 *전이*(largest-cluster steepest-rise) comp1 **0.20** → modelc **0.17 eV** (~15%↓, **AIMD Ea 0.253→0.224와 정합**, ratio 0.85≈0.89). ⚠️ 첫-관통(first-spanning) 정의는 0.20/0.08이나 modelc의 0.08은 largest-cluster **1.4% 가는 실가닥(유한크기 우연 연결)**이라 대표 장벽 아님 → **전이값(0.20/0.17) 사용**(2.5×가 아니라 ~15%↓). inter-cage 경로 평탄 = Ea↓를 BVSE와 독립 재확인; cluster-count/부피 역설 해소.
 
 ### [C] 결합 화학은 불변 (= 대조군, σ↑가 구조 탓임을 증명)
