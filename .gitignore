@@ -20,3 +20,27 @@ webapp/uploads/
 #   확정본이 나오면 그때 -f 로 명시적으로 추가한다.
 docs/figures/msd_hosts.png
 db/properties/msd_hosts_plotted.csv
+
+# ── 로컬 실행 환경·산출물 (2026-08-05) ──────────────────────────────
+#   webapp 을 로컬에서 돌리면 생기는 것들. 추적하면 pull --rebase 가 매번 막힌다.
+venv/
+.venv/
+webapp/venv/
+webapp/.venv/
+webapp/results/
+webapp/archive/
+webapp/mpm_lab/
+webapp.log
+serve.sh
+docs/db/
+
+#   개념 문서 드래그 업로드 — **로컬 첨부는 기본 비추적**.
+#   repo 에 영구 보존할 파일만 `git add -f docs/uploads/<cid>/<file>` 로 명시 추가한다
+#   (문서 본문의 경로 기록은 그대로 남으므로, 커밋된 것만 다른 사람에게도 보인다).
+docs/uploads/
+
+#   DEM/MPM 로컬 분석 산출물 (별도 파이프라인 — dft repo 추적 대상 아님)
+cycle_*.csv
+cycle_*.json
+rint_decomp.*
+docs/figures/mpm*_*.png
