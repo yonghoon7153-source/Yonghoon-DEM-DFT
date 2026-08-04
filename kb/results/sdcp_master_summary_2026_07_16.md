@@ -74,8 +74,16 @@ supersedes-headline-of: sdcp_linio2_binding_report.md (2026-06-01, UMA 시대)
 | complex_doped | −11081.73293860 | DONE (PLATEAU ±0.004 Ry) |
 | complex_neutral | −11083.07396953 | **DONE** (PLATEAU ±0.004 Ry, 2026-07-17) |
 
-- **E_bind(doped) = −0.11204 Ry = −1.524 eV** / **E_bind(neutral) = −0.16268 Ry = −2.213 eV** (둘 다 favorable).
-- **★VERDICT = Δ(doped−neutral) = +0.689 eV — 중성이 더 강하게 결합.** UMA Phase-A의 방향(도핑 강화, Δ −2.46 eV)이 DFT+U에서 **부호째 반전**. UMA(oc20·비이완 슬랩·전하/스핀 무지)가 doped chelation을 과대평가한 것으로 판정 — Phase-A 값은 이제 "자리/자세 스캔용"으로만 강등.
+> [!warning] ⚠ 이 절의 doped 값은 **철회됐다 (2026-07-17 당일)** — 아래는 기록 보존용
+> **E_bind(doped) −1.524 eV 와 그로부터 나온 Δ +0.689 eV 는 인용 금지.**
+> 사유: doped 자세(UMA 챔피언 `chelation_r90`)가 분자를 세워 티오펜 S 가 **주기 이미지
+> 슬랩의 O 와 1.506 Å**(= 결합 거리)에 놓인 "샌드위치" 아티팩트. 즉 분자가 목표 표면이
+> 아니라 **진공 건너편 이미지와도 결합**한 상태의 에너지다. neutral(−2.213 eV, 이미지 갭
+> 4.72 Å)만 건전하다. 확정판 = **v2 same-pose** (open_items #4, 진행 중).
+> 아래 서술(부호 견고 논거 포함)은 그 철회된 숫자 위에서 쓰인 것이라 **v2 로 재판정 대상**이다.
+
+- ~~**E_bind(doped) = −0.11204 Ry = −1.524 eV**~~ (철회) / **E_bind(neutral) = −0.16268 Ry = −2.213 eV** (건전).
+- ~~**★VERDICT = Δ(doped−neutral) = +0.689 eV — 중성이 더 강하게 결합.**~~ (v2 재판정 대상) UMA Phase-A의 방향(도핑 강화, Δ −2.46 eV)이 DFT+U에서 **부호째 반전**. UMA(oc20·비이완 슬랩·전하/스핀 무지)가 doped chelation을 과대평가한 것으로 판정 — Phase-A 값은 이제 "자리/자세 스캔용"으로만 강등.
 - 오차 논거: Δ에서는 **슬랩 에너지가 항등적으로 소거**(같은 E_slab을 양쪽에서 뺌) → 슬랩 plateau ±0.10 eV 무관. complex 두 개의 ±0.004 Ry(~±0.05 eV)만 남아 Δ=0.689 eV 대비 S/N ~9:1 — **부호는 견고**.
 - 주의: doped(chelation_r90)와 neutral(chelation_r0)은 **각자의 UMA 챔피언 자세** — "최선 대 최선" 비교(설계 의도). 같은 자세 비교가 아님.
 
@@ -91,7 +99,9 @@ supersedes-headline-of: sdcp_linio2_binding_report.md (2026-06-01, UMA 시대)
 - 그림: MO scheme(스크래치), Phase-A heatmap 3종(6월)
 
 ## 8. 남은 일
-1. ~~complex_neutral 수렴 → ★VERDICT 등록~~ ✅ 2026-07-17 (+0.689 eV, 중성 우세 — 헤드라인 4 반전 반영)
+1. ~~complex_neutral 수렴 → ★VERDICT 등록 ✅ 2026-07-17 (+0.689 eV, 중성 우세)~~
+   ⚠ **2026-08-05 정합 수정**: 이 "등록"은 같은 날 철회된 doped v1(−1.524) 위에서 계산된 값이라
+   **미확정**이다. 문서 머리말(§헤드라인 4)이 정본이고 본 줄은 기록 보존용. 확정 = v2 (open_items #4).
 2. **PTFE step 2 + D3 패스** — VERDICT 반전으로 중요도 ↑: 이제 SDCP의 결합 우위 주장은 "도핑 강화"가 아니라 **"PTFE(vdW) 대비 화학흡착급(−1.5~−2.2 eV)"** 축으로 세워야 함
 3. (옵션) doped가 왜 약해지는지 분해: SO₃⁻/SO₃H 자세 교차 재채점(같은 자세 비교), hole 비편재 vs H-결합 기여 분리
 4. (옵션) n=4 외삽으로 백본 지분 포화 확인 / polaron 준위 도식
