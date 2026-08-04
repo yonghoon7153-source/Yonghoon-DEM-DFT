@@ -45,7 +45,7 @@ MD_EA = {"modelc": "0.197 ± 0.032", "lpsocl": "0.287 ± 0.024", "b2o3": "0.199 
 T_WANT = (600, 800, 1000)
 # CSV 왕복용 역매핑 — CSV 열은 표시명(LPSCl1.6 등)으로 저장되는데, 색(SYS)·Ea(MD_EA)는
 # 내부명(modelc 등) 키다. 역매핑 없이는 CSV 로 다시 그릴 때 전 계가 잉크색이 된다.
-INV_DISPLAY = {v: k for k, v in DISPLAY.items()}
+INV_DISPLAY = {v: k for k, v in DISPLAY.items() if k != v}  # self-엔트리가 역매핑을 덮지 않게
 BETA_OK = (0.80, 1.20)
 MSD_MIN = 3.0            # A^2, msd_diffusive_check.py 와 같은 게이트
 
@@ -174,6 +174,9 @@ def main():
     ap.add_argument("--order", nargs="+", default=["modelc", "lpsocl", "b2o3"],
                     help="패널 순서 (라벨)")
     ap.add_argument("--tmax", type=float, default=200.0, help="도시 상한 [ps]")
+    ap.add_argument("--panel_note", nargs="*", default=[], metavar="LABEL=TEXT",
+                    help="패널 하단 좌측 주석 (영문 — 예: lpsocl='mean of 4 seeds'). "
+                         "CSV 왕복은 시드 수 정보를 잃으므로 확정본에서 손으로 명시한다.")
     ap.add_argument("--exclude", nargs="*", default=["BROKEN"],
                     help="경로에 이 문자열이 들어간 msd.json 은 무시 (기본 BROKEN). "
                          "예: --exclude BROKEN licube")
@@ -265,6 +268,7 @@ def main():
     print(f"\n→ {a.out_csv}")
 
     # ── 그림 ──────────────────────────────────────────────────────────────
+    pnotes = dict(x.split("=", 1) for x in a.panel_note)
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -329,6 +333,9 @@ def main():
         axp.text(0.025, 0.905, f"multiseed $E_a$ = {MD_EA.get(lab,'?')} eV",
                  ha="left", va="top", fontsize=9, color=MUT,
                  transform=axp.transAxes, zorder=6)
+        if lab in pnotes:
+            axp.text(0.025, 0.845, pnotes[lab], ha="left", va="top", fontsize=8.2,
+                     color=MUT, style="italic", transform=axp.transAxes, zorder=6)
         if nfail:
             axp.text(0.5, 0.012, "* β outside 0.8–1.2 → not a diffusive fit; D not quotable",
                      ha="center", va="bottom", fontsize=8.2, color="#b45309",
