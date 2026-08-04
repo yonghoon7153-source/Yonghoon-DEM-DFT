@@ -8,6 +8,7 @@ canonical 방법 메타(kb/methodology/computational_methods_canonical.md)와 �
 """
 from __future__ import annotations
 import json, csv, re, os
+import datetime as _dt
 from pathlib import Path
 from functools import lru_cache
 
@@ -2396,12 +2397,14 @@ _GAL_DIRS = [("docs/figures", "그림"), ("db/properties", "데이터"),
              ("db/structures", "구조"), ("docs/uploads", "업로드")]
 
 
-def gallery_files(q: str = "", kind: str = "") -> list[dict]:
+def gallery_files(q: str = "", kind: str = "", used: str = "",
+                  folder: str = "") -> list[dict]:
     """repo 의 그림·데이터·구조 파일 전수 목록 (webapp 갤러리용).
 
     개념 문서 첨부는 '본문이 언급한 것'만 보여준다 — 그래서 나머지를 볼 길이 없어
     사용자가 받은 파일을 다시 끌어올리는 일이 생겼다(2026-08-05). 이 목록이 그 구멍을 메운다.
     """
+    cidx = _file_concept_index()
     out = []
     for rel_dir, group in _GAL_DIRS:
         base = ROOT / rel_dir
@@ -2418,9 +2421,58 @@ def gallery_files(q: str = "", kind: str = "") -> list[dict]:
                 continue
             if kind and k != kind:
                 continue
+            if folder and not rel.startswith(folder):
+                continue
             st = f.stat()
+            cons = cidx.get(rel, [])
+            if used == "yes" and not cons:
+                continue
+            if used == "no" and cons:
+                continue
             out.append({"rel": rel, "name": f.name, "kind": k, "group": group,
-                        "dir": str(f.parent.relative_to(ROOT)),
-                        "size_kb": round(st.st_size / 1024, 1), "mtime": int(st.st_mtime)})
-    out.sort(key=lambda x: -x["mtime"])
+                        "dir": str(f.parent.relative_to(ROOT)), "concepts": cons,
+                        "size_kb": round(st.st_size / 1024, 1), "mtime": int(st.st_mtime),
+                        "day": _dt.datetime.fromtimestamp(st.st_mtime).strftime("%Y-%m-%d")})
+    out.sort(key=lambda x: -x["mtime"])          # 날짜 그룹 기본 = 최근순
     return out
+
+
+def gallery_days(files: list[dict]) -> list[dict]:
+    """날짜별 묶음 (최근 날짜부터). 템플릿에서 구분선 헤더로 쓴다."""
+    days: dict[str, list[dict]] = {}
+    for f in files:
+        days.setdefault(f["day"], []).append(f)
+    today = _dt.date.today()
+    out = []
+    for d in sorted(days, reverse=True):
+        dd = _dt.date.fromisoformat(d)
+        delta = (today - dd).days
+        label = "오늘" if delta == 0 else ("어제" if delta == 1 else f"{delta}일 전")
+        out.append({"day": d, "label": label, "files": days[d], "n": len(days[d])})
+    return out
+
+
+def gallery_folders() -> list[str]:
+    return [d for d, _g in _GAL_DIRS if (ROOT / d).exists()]
+
+def _file_concept_index() -> dict[str, list[dict]]:
+    """파일 → 그 파일을 첨부로 가진 개념 문서들 (역인덱스).
+
+    concept_attachments 를 전 개념에 돌려 뒤집는다. 페어(png↔csv)로 업힌 CSV 도
+    같은 문서에 속하므로 함께 넣는다. 갤러리에서 '이 그림이 어느 개념 것인지'를
+    보여주고 바로 그 페이지로 보내기 위한 것 (2026-08-05).
+    """
+    idx: dict[str, list[dict]] = {}
+    for cid in sorted(concept_ids()):
+        term = None
+        try:
+            import glossary as _G
+            term = next((g["term"] for g in _G.GLOSSARY if g["id"] == cid), None)
+        except Exception:
+            pass
+        for a in concept_attachments(cid):
+            for rel in [a["rel"]] + ([a["pair"]["rel"]] if a.get("pair") else []):
+                lst = idx.setdefault(rel, [])
+                if not any(x["cid"] == cid for x in lst):
+                    lst.append({"cid": cid, "term": term or cid})
+    return idx

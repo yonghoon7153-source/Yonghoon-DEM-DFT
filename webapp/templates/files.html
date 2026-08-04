@@ -20,11 +20,30 @@
   <button class="btn sm" type="submit">검색</button>
 </form>
 
-<div class="muted" style="font-size:.78rem;margin:4px 0 10px">{{ files|length }}개 · 최근 수정순</div>
+<div class="att-tabs" style="flex-wrap:wrap;margin-bottom:4px">
+  <span class="muted" style="font-size:.74rem;align-self:center">개념 연결</span>
+  <a class="att-tab {% if not used %}active{% endif %}" href="/files?q={{ q }}&kind={{ kind }}&folder={{ folder }}">전체</a>
+  <a class="att-tab {% if used=='yes' %}active{% endif %}" href="/files?q={{ q }}&kind={{ kind }}&folder={{ folder }}&used=yes">📎 개념에 첨부됨</a>
+  <a class="att-tab {% if used=='no' %}active{% endif %}" href="/files?q={{ q }}&kind={{ kind }}&folder={{ folder }}&used=no">미연결</a>
+  <span class="muted" style="font-size:.74rem;align-self:center;margin-left:10px">폴더</span>
+  <a class="att-tab {% if not folder %}active{% endif %}" href="/files?q={{ q }}&kind={{ kind }}&used={{ used }}">전체</a>
+  {% for d in folders %}
+  <a class="att-tab {% if folder==d %}active{% endif %}" href="/files?q={{ q }}&kind={{ kind }}&used={{ used }}&folder={{ d }}">{{ d }}</a>
+  {% endfor %}
+</div>
 
+<div class="muted" style="font-size:.78rem;margin:4px 0 10px">{{ files|length }}개 · 날짜별 (최근순)</div>
+
+{% for grp in days %}
+<div class="day-head">
+  <span class="day-date">{{ grp.day }}</span>
+  <span class="day-rel">{{ grp.label }}</span>
+  <span class="muted" style="font-size:.72rem">{{ grp.n }}개</span>
+</div>
 <div class="grid grid-3">
-{% for f in files %}
-  <div class="card att-card" data-rel="{{ f.rel }}" data-name="{{ f.name }}" data-kind="{{ f.kind }}">
+{% for f in grp.files %}
+  <div class="card att-card" data-rel="{{ f.rel }}" data-name="{{ f.name }}" data-kind="{{ f.kind }}"
+       data-con="{% for c in f.concepts %}{{ c.cid }}|{{ c.term }}{% if not loop.last %};{% endif %}{% endfor %}">
     {% if f.kind=='image' %}
     <div class="att-thumb"><img loading="lazy" src="/api/file/{{ f.rel }}" alt="{{ f.name }}"></div>
     {% else %}
@@ -33,18 +52,27 @@
     <div class="att-meta">
       <div class="mono" style="font-size:.7rem;font-weight:600;word-break:break-all">{{ f.name }}</div>
       <div class="muted" style="font-size:.66rem">{{ f.dir }} · {{ f.size_kb }} KB</div>
+      {% if f.concepts %}
+      <div class="con-row">
+        {% for c in f.concepts %}
+        <a class="con-badge" href="/concept/{{ c.cid }}" title="{{ c.term }} 개념 문서로">📎 {{ c.term }}</a>
+        {% endfor %}
+      </div>
+      {% endif %}
     </div>
     <a class="btn sm att-dl" href="/api/file/{{ f.rel }}?dl=1" download>⬇ 저장</a>
   </div>
-{% else %}
-  <div class="muted">검색 결과가 없어요.</div>
 {% endfor %}
 </div>
+{% else %}
+<div class="muted">검색 결과가 없어요.</div>
+{% endfor %}
 
 <div class="att-modal" id="att-modal">
   <div class="att-box">
     <div class="att-bar">
       <span class="mono" id="att-title" style="font-size:.8rem;font-weight:700"></span>
+      <span id="att-links" style="display:flex;gap:6px;margin-left:10px"></span>
       <span style="margin-left:auto;display:flex;gap:8px">
         <a class="btn sm" id="att-save" href="#" download>⬇ 저장</a>
         <button type="button" class="btn sm" onclick="attClose()">✕ 닫기</button>
@@ -60,15 +88,25 @@
   document.querySelectorAll('.att-card').forEach(function(c){
     c.addEventListener('click', function(e){
       if (e.target.closest('.att-dl')) return;
-      attOpen(c.dataset.rel, c.dataset.name, c.dataset.kind);
+      attOpen(c.dataset.rel, c.dataset.name, c.dataset.kind, c.dataset.con || '');
     });
   });
   modal.addEventListener('click', function(e){ if (e.target === modal) attClose(); });
   document.addEventListener('keydown', function(e){ if (e.key === 'Escape') attClose(); });
   window.attClose = function(){ modal.style.display = 'none'; };
-  window.attOpen = function(rel, name, kind){
+  window.attOpen = function(rel, name, kind, con){
     var body = document.getElementById('att-body');
     document.getElementById('att-title').textContent = rel;
+    var lk = document.getElementById('att-links');
+    lk.innerHTML = '';
+    if (con) con.split(';').forEach(function(pair){
+      var p = pair.split('|');
+      if (p.length < 2) return;
+      var a = document.createElement('a');
+      a.className = 'con-badge'; a.href = '/concept/' + p[0];
+      a.textContent = '📎 ' + p[1] + ' 문서로 →';
+      lk.appendChild(a);
+    });
     var sv = document.getElementById('att-save');
     sv.href = '/api/file/' + rel + '?dl=1'; sv.setAttribute('download', name);
     body.innerHTML = '<div class="muted" style="padding:20px">불러오는 중…</div>';

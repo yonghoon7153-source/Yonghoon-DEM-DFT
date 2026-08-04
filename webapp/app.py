@@ -312,8 +312,12 @@ def api_concept_upload(cid):
 def files_gallery():
     q = request.args.get("q", "").strip()
     kind = request.args.get("kind", "").strip()
-    fs = D.gallery_files(q, kind)
-    return render_template("files.html", active="files", files=fs, q=q, kind=kind)
+    used = request.args.get("used", "").strip()
+    folder = request.args.get("folder", "").strip()
+    fs = D.gallery_files(q, kind, used, folder)
+    return render_template("files.html", active="files", files=fs, q=q, kind=kind,
+                           used=used, folder=folder, days=D.gallery_days(fs),
+                           folders=D.gallery_folders())
 
 
 @app.route("/api/property/<name>")
