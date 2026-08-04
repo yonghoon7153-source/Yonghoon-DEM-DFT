@@ -513,6 +513,17 @@ def parse_args(argv):
     ap.add_argument('--compact-to', type=float, default=0.0,
                     help='displacement-driven: descend the platen until bed porosity ≤ this %% then HOLD, '
                          'regardless of stress — for a target-density demo (e.g. 15).  0 = stress servo (default)')
+    ap.add_argument('--am-jam-quantile', type=float, default=100.0,
+                    help='--am-jam 의 잼 평면 정의: 퍼콜하는 AM 의 (z+r) **백분위수** (기본 100 = max = '
+                         '기존 동작, 바이트 재현).  ★2026-08-05 실측(real_14, 457 AM): max 기준은 플래튼이 '
+                         '**입자 단 1개**(지지 면적 0.003%%) 위에 얹혀 31.31µm 에서 멈춘다 — DEM 두께 '
+                         '30.28µm 보다 1.03µm 높고, 압밀이 아예 일어나지 않는다(wallP 전 구간 0.0000). '
+                         '접촉 역학상 플래튼은 최고점이 아니라 **상위 몇 %% 입자가 만드는 지지 평면**에 '
+                         '놓인다.  같은 베드에서 95%% → 30.31µm (DEM 대비 +0.03), 90%% → 30.26 (−0.02) 로 '
+                         '90~95%% 구간이 DEM 두께를 감싸고 그 안에서 평평하다(폭 0.05µm) = 백분위수 선택에 '
+                         '둔감한 고원.  ⚠ 이 값은 real_14 **한 케이스**에서만 확인됐다: 기본값을 바꾸기 전에 '
+                         '여러 케이스에서 같은 백분위수가 DEM 두께를 재현하는지 사전등록 검증이 필요하다 '
+                         '(안 하면 한 케이스에 맞춘 fitting 이다).')
     ap.add_argument('--am-jam', action='store_true',
                     help='OPTION C (geometric AM-jamming, scaffold only): the platen CANNOT penetrate the '
                          'PERCOLATING (floor-connected) frozen-AM skeleton — descent hard-stops at that '
@@ -1146,6 +1157,28 @@ def _selftest():
         and descend_probe_verdict([0.3005 + 0.05 * 0.7 ** k for k in range(11)], 0.30,
                                   settle_max=12)[0] == 'wait')
 
+    # ── ★ am-jam 평면 정의 (2026-08-05) ─────────────────────────────────────────────────
+    #    q=100(=max) 은 정의상 **가장 높은 알갱이 1개** 위에 얹힌다 — 지지 평면이 아니다.
+    #    real_14 실측: q=100 → 31.31µm (지지 AM 1개, 면적 0.003%), DEM 두께는 30.28µm.
+    _t = np.array([10.0, 10.1, 10.2, 10.3, 10.4, 10.5, 10.6, 10.7, 10.8, 12.0])   # 하나만 튀는 분포
+    chk('am-jam: q=100 은 최고점 = 튀는 1개를 그대로 따라간다',
+        abs(float(np.percentile(_t, 100.0)) - 12.0) < 1e-9)
+    chk('am-jam: q=95 는 튀는 1개를 무시하고 본체 상단에 붙는다',
+        float(np.percentile(_t, 95.0)) < 11.5)
+    chk('am-jam: q 는 단조 — 낮출수록 평면이 내려간다',
+        np.percentile(_t, 100.0) >= np.percentile(_t, 95.0) >= np.percentile(_t, 90.0))
+    chk('am-jam: q 는 [1,100] 으로 클램프된다 (0/음수/초과 입력 방어)',
+        float(np.clip(0.0, 1.0, 100.0)) == 1.0 and float(np.clip(150.0, 1.0, 100.0)) == 100.0)
+    #    지지 면적: 평면 h 를 내릴수록 관통 입자와 단면적이 단조 증가해야 한다.
+    _r = np.full(len(_t), 1.0)
+    def _supp_at(h):
+        d = _t - h; m = d > 0
+        return float(np.pi * np.maximum(_r[m] ** 2 - (_r[m] - d[m]) ** 2, 0.0).sum())
+    chk('am-jam: 지지 단면적은 평면을 내릴수록 단조 증가',
+        _supp_at(12.0) <= _supp_at(11.0) <= _supp_at(10.5) <= _supp_at(10.0))
+    chk('am-jam: 최고점 평면의 지지 면적은 0 (그 위엔 아무것도 없다)',
+        _supp_at(float(_t.max())) == 0.0)
+
     print(f"selftest: {ok}/{ok + len(fail)} PASS" + (f"   FAILED: {fail}" if fail else ""))
     return 1 if fail else 0
 
@@ -1267,6 +1300,7 @@ def main(argv):
     rng = np.random.default_rng(args.seed)
     am_c = None; am_r = None; am_r_pristine = None                                       # (pristine radii = restart fingerprint)
     AM_vol = 0.0; am_top = 0.0; um_box = 0.0; am_jam_z = 0.0   # fixed-AM scaffold bookkeeping
+    _am_jam_supp = 0.0                                        # 잼 평면이 얹히는 AM 단면적 비율
     if args.am_scaffold:
         # DEM→MPM scaffold: real AM are FIXED (loaded from the LIGGGHTS dump) and become a grid
         # obstacle; only SE is the MPM material, RSA-packed into the interstices to a target volume
@@ -1376,11 +1410,25 @@ def main(argv):
                     _lab = np.arange(_N)
                 _floor_am = (am_c[:, 2] - am_r) <= (FLOOR + 1.5 * _rmed)             # AM resting on/near the floor
                 _perc = np.isin(_lab, np.unique(_lab[_floor_am])) if _floor_am.any() else np.zeros(_N, bool)
+                _q = float(np.clip(args.am_jam_quantile, 1.0, 100.0))
+                _n_supp = 0; _supp = 0.0
                 if _perc.any():
-                    am_jam_z = float((am_c[_perc, 2] + am_r[_perc]).max())
+                    _tops = am_c[_perc, 2] + am_r[_perc]
+                    am_jam_z = float(np.percentile(_tops, _q))
+                    # 이 평면이 실제로 **몇 알갱이에 얹히는지** 를 함께 보고한다 (구를 평면으로 자른 단면적).
+                    #   q=100 이면 정의상 1개 · 면적 ~0 이 되어 "지지 평면" 이 아님이 드러난다.
+                    _d = _tops - am_jam_z
+                    _hit = _d > 0
+                    _rr = am_r[_perc][_hit]
+                    _n_supp = int(_hit.sum())
+                    _supp = float(np.pi * np.maximum(_rr ** 2 - (_rr - _d[_hit]) ** 2, 0.0).sum()) / max(area, 1e-30)
+                    _am_jam_supp = _supp
                 print(f'  [am-jam] percolating AM skeleton: {int(_perc.sum())}/{_N} floor-connected, '
-                      f'jam_z={am_jam_z:.3f} box = bed {(am_jam_z - FLOOR) * um_box:.1f}µm '
-                      f'(am_top {am_top:.3f}) → platen hard-stops at the rigid AM top.')
+                      f'q={_q:g} → jam_z={am_jam_z:.3f} box = bed {(am_jam_z - FLOOR) * um_box:.2f}µm '
+                      f'(am_top {am_top:.3f});  지지 {_n_supp} AM · 면적 {_supp:.3%} of platen '
+                      f'→ platen hard-stops there.'
+                      + ('   ⚠ q=100 = 최고점 1개 위 (지지 평면이 아님; --am-jam-quantile 참조)'
+                         if _q >= 100.0 else ''))
             except Exception as _e:
                 print(f'  [am-jam] DISABLED ({_e}) → no geometric jam'); am_jam_z = 0.0
         # THICK-FILM vertical grid: a tall electrode (z_extent > lateral) would overflow the cubic
@@ -2956,6 +3004,11 @@ def main(argv):
             'um_box_um': round(float(um_box), 4) if um_box > 0 else None,   # µm per box unit (payload scale)
             'final_stress_GPa': round(float(p_end), 4), 'target_GPa': float(target),
             'am_load_frac': float(args.am_load_frac),
+            'am_jam': bool(args.am_jam),
+            'am_jam_quantile': (float(args.am_jam_quantile) if args.am_jam else None),
+            'am_jam_z_um': (round((am_jam_z - FLOOR) * um_box, 3)
+                            if (args.am_jam and am_jam_z > 0 and um_box > 0) else None),
+            'am_jam_support_frac': (round(float(_am_jam_supp), 5) if args.am_jam else None),
             # ── ★ 하강 정지의 출처 (2026-08-04) — "이 porosity 를 어떻게 얻었나" 를 payload 가 스스로 말한다.
             #    stop_mode='freeze_probe' 면 정지가 **정지 판독**으로 결정됐다는 뜻이고, 'legacy_moving'
             #    이면 움직이는 플래튼 판독으로 결정된 옛 경로다(그 경우 porosity 는 걸음 수의 함수일 수 있다).
