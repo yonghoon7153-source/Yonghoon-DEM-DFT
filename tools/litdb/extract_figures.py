@@ -751,6 +751,54 @@ def suggest(inbox):
     return 0
 
 
+def refresh(box, apply_it=False, dpi=300, maxpx=3000):
+    """추출기를 고친 뒤 **결과가 달라지는 논문만** 골라 다시 뽑는다.
+
+    ⚠ 왜 (2026-08-06): 전체 재생성은 PNG 가 통째로 새 blob 이 되어 .git 이 한 번에
+      수백 MB 늘어난다(실측: 재생성 4회에 .git 972 MB). 고친 규칙이 실제로 영향을 준
+      논문만 다시 뽑으면 히스토리가 그만큼만 는다.
+    먼저 dry-run 으로 장수를 비교해 표를 내고, --apply 를 줘야 실제로 덮어쓴다.
+    """
+    assign, _o = match_inbox(box)
+    rows = []
+    for d in sorted(OUT_ROOT.glob("*/figures.json")):
+        slug = d.parent.name
+        v = assign.get(slug)
+        if not v:
+            continue                       # 이 폴더에 PDF 가 없다 — 건드리지 않는다
+        try:
+            old = len(json.loads(d.read_text(encoding="utf-8")).get("figures", []))
+        except (OSError, ValueError):
+            old = -1
+        pdfs = [str(q) for q in v["main"] + v["si"]]
+        try:
+            meta, _sk = extract(pdfs, slug, dry=True, dpi=dpi, maxpx=maxpx)
+            new = len(meta["figures"])
+        except Exception as e:
+            print(f"   ⛔ {slug}: {type(e).__name__}: {e}")
+            continue
+        if new != old:
+            rows.append((slug, old, new, pdfs))
+    print(f"=== 재추출 대상: {len(rows)}편 (PDF 가 있는 {len(assign)}편 중)")
+    for slug, old, new, _p in rows:
+        print(f"   {slug[:56]:<56} {old:>3} → {new:>3}  ({new-old:+d})")
+    if not rows:
+        print("   바뀌는 게 없다 — 다시 뽑을 필요 없음")
+        return 0
+    if not apply_it:
+        print("\n※ 표만 냈다. 실제로 덮어쓰려면 --apply 를 붙인다.")
+        return 0
+    print()
+    for i, (slug, _o, _n, pdfs) in enumerate(rows, 1):
+        print(f"[{i}/{len(rows)}] {slug}")
+        shutil.rmtree(OUT_ROOT / slug, ignore_errors=True)
+        meta, skipped = extract(pdfs, slug, dpi=dpi, maxpx=maxpx, relto=box)
+        _report(slug, meta, skipped, dry=False)
+        print()
+    _write_sources_index()
+    return 0
+
+
 def _write_sources_index():
     """slug → 원본 PDF (inbox 상대경로) 한눈 색인.
 
@@ -901,6 +949,9 @@ def main():
     ap.add_argument("--clean", action="store_true", help="기존 <slug> 폴더를 지우고 새로")
     ap.add_argument("--audit", action="store_true",
                     help="이미 잘라둔 것 전체 점검 (구멍·백지·SI만 등 의심스러운 것만)")
+    ap.add_argument("--refresh", action="store_true",
+                    help="추출기를 고친 뒤 **장수가 달라지는 논문만** 골라 재추출 (--apply 로 실행)")
+    ap.add_argument("--apply", action="store_true", help="--refresh 에서 실제로 덮어쓴다")
     ap.add_argument("--suggest", action="store_true",
                     help="그림 없는 digest × 미매칭 PDF 후보표 (pdf_map.tsv 채우기용)")
     ap.add_argument("--why", action="store_true",
@@ -909,6 +960,12 @@ def main():
 
     if a.audit:
         return audit()
+
+    if a.refresh:
+        box = Path(a.inbox_dir).expanduser() if a.inbox_dir else INBOX
+        if not box.is_dir():
+            raise SystemExit(f"⛔ {box} 가 없다 — --inbox_dir 로 지정")
+        return refresh(box, apply_it=a.apply, dpi=a.dpi, maxpx=a.maxpx)
 
     if a.suggest:
         box = Path(a.inbox_dir).expanduser() if a.inbox_dir else INBOX
