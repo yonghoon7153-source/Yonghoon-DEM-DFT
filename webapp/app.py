@@ -6770,43 +6770,50 @@ def mpm_input_package(case_id):
         #   사이클, Loop 반복도 상태 누적) + Rest 는 실제 I=0 완화 런.  미지정 = v1 독립런.
         if _s4sched and request.args.get('s4chain', '') in ('1', 'true', 'on'):
             cmd += ['--step4-chain']
-        # ★bimodal poly/SC 전기화학 분리 (파워유저 URL, s4x100 문법): &s4dsp=&s4dss= (D_s [m²/s])
-        #   &s4i0p=&s4i0s= (i0 [A/m²]) &s4split= (반경 문턱 µm, 기본 3.5).  반쪽 지정은 400으로
-        #   명시 거부(생성기 ap.error를 500 stderr로 흘리지 않고 앞단에서 — 침묵/불명확 실패 금지).
-        #   값 가이드: docs/ncm_sc_poly_electrochem_anchors.md (i0 분리값은 문헌 부재 — 스윕 전용).
-        def _fpos(name):
-            _t = request.args.get(name, '').strip()
-            if not _t:
-                return None, None
-            try:
-                _v = float(_t)
-            except (ValueError, TypeError):
-                return None, f'&{name}= 값이 숫자가 아님: {_t!r}'
-            return (_v, None) if _v > 0 else (None, f'&{name}= 는 > 0 이어야 함: {_t}')
-        _dsp, _e1 = _fpos('s4dsp'); _dss, _e2 = _fpos('s4dss')
-        _i0p, _e3 = _fpos('s4i0p'); _i0s, _e4 = _fpos('s4i0s')
-        _spl, _e5 = _fpos('s4split')
-        _err = next((e for e in (_e1, _e2, _e3, _e4, _e5) if e), None)
-        if _err:
+    # ★2026-08-04 게이트 탈출: poly/SC 분리는 STEP4-v2 전용이 아니다 — scaffold 의
+    #   AM_P/AM_S **라벨**을 정하므로 MPM·mpm_metrics·grid 에도 영향.  위 게이트("STEP4 선택
+    #   시 주입")에 묶여 있어 s4grid=1(grid까지만)일 때 체크박스·URL 파라미터가 **조용히
+    #   무시**됐고, 생성기가 레거시 경로로 떨어져 0:10 의 2µm 입자 4587 개를 전부 AM_P 로
+    #   찍었다 (실측 mpm_metrics: coverage_AM_P=76.6 / AM_S=0.0).  컷오프·R_int 는 진짜
+    #   v2 전용이라 게이트 안에 남긴다.
+    # ★bimodal poly/SC 전기화학 분리 (파워유저 URL, s4x100 문법): &s4dsp=&s4dss= (D_s [m²/s])
+    #   &s4i0p=&s4i0s= (i0 [A/m²]) &s4split= (반경 문턱 µm, 기본 3.5).  반쪽 지정은 400으로
+    #   명시 거부(생성기 ap.error를 500 stderr로 흘리지 않고 앞단에서 — 침묵/불명확 실패 금지).
+    #   값 가이드: docs/ncm_sc_poly_electrochem_anchors.md (i0 분리값은 문헌 부재 — 스윕 전용).
+    def _fpos(name):
+        _t = request.args.get(name, '').strip()
+        if not _t:
+            return None, None
+        try:
+            _v = float(_t)
+        except (ValueError, TypeError):
+            return None, f'&{name}= 값이 숫자가 아님: {_t!r}'
+        return (_v, None) if _v > 0 else (None, f'&{name}= 는 > 0 이어야 함: {_t}')
+    _dsp, _e1 = _fpos('s4dsp'); _dss, _e2 = _fpos('s4dss')
+    _i0p, _e3 = _fpos('s4i0p'); _i0s, _e4 = _fpos('s4i0s')
+    _spl, _e5 = _fpos('s4split')
+    _err = next((e for e in (_e1, _e2, _e3, _e4, _e5) if e), None)
+    if _err:
+        shutil.rmtree(tmp, ignore_errors=True)
+        return jsonify({'error': _err}), 400
+    if (_dsp is None) != (_dss is None) or (_i0p is None) != (_i0s is None):
+        shutil.rmtree(tmp, ignore_errors=True)
+        return jsonify({'error': 's4dsp/s4dss (또는 s4i0p/s4i0s)는 쌍으로만 — 반쪽 지정 거부'}), 400
+    if _dsp is not None:
+        cmd += ['--step4-ds-poly', f'{_dsp:g}', '--step4-ds-sc', f'{_dss:g}']
+    if _i0p is not None:
+        cmd += ['--step4-i0-poly', f'{_i0p:g}', '--step4-i0-sc', f'{_i0s:g}']
+    if _spl is not None and (_dsp is not None or _i0p is not None):
+        cmd += ['--step4-am-split-um', f'{_spl:g}']
+    # ★문헌 프리셋 (&s4pp=1, UI 체크박스): 정본 docs/data/sc_poly_preset.csv를 생성기가 해석
+    #   (D_s poly 4e-15 Chen2020 / SC 3e-15 Trevisanello 밴드 기하중앙; i0 분리 부재 확정 →
+    #   공유).  명시 s4dsp와 동시 지정은 생성기가 모호-거부 → 여기서도 앞단 400.
+    if request.args.get('s4pp', '') in ('1', 'true', 'on'):
+        if _dsp is not None or _i0p is not None:
             shutil.rmtree(tmp, ignore_errors=True)
-            return jsonify({'error': _err}), 400
-        if (_dsp is None) != (_dss is None) or (_i0p is None) != (_i0s is None):
-            shutil.rmtree(tmp, ignore_errors=True)
-            return jsonify({'error': 's4dsp/s4dss (또는 s4i0p/s4i0s)는 쌍으로만 — 반쪽 지정 거부'}), 400
-        if _dsp is not None:
-            cmd += ['--step4-ds-poly', f'{_dsp:g}', '--step4-ds-sc', f'{_dss:g}']
-        if _i0p is not None:
-            cmd += ['--step4-i0-poly', f'{_i0p:g}', '--step4-i0-sc', f'{_i0s:g}']
-        if _spl is not None and (_dsp is not None or _i0p is not None):
-            cmd += ['--step4-am-split-um', f'{_spl:g}']
-        # ★문헌 프리셋 (&s4pp=1, UI 체크박스): 정본 docs/data/sc_poly_preset.csv를 생성기가 해석
-        #   (D_s poly 4e-15 Chen2020 / SC 3e-15 Trevisanello 밴드 기하중앙; i0 분리 부재 확정 →
-        #   공유).  명시 s4dsp와 동시 지정은 생성기가 모호-거부 → 여기서도 앞단 400.
-        if request.args.get('s4pp', '') in ('1', 'true', 'on'):
-            if _dsp is not None or _i0p is not None:
-                shutil.rmtree(tmp, ignore_errors=True)
-                return jsonify({'error': 's4pp(프리셋)와 명시 s4dsp/s4i0p 동시 지정 불가 — 하나만'}), 400
-            cmd += ['--step4-sc-poly-preset']
+            return jsonify({'error': 's4pp(프리셋)와 명시 s4dsp/s4i0p 동시 지정 불가 — 하나만'}), 400
+        cmd += ['--step4-sc-poly-preset']
+
     try:
         subprocess.run(cmd, check=True, cwd=repo, capture_output=True, text=True)
     except subprocess.CalledProcessError as e:

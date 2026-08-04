@@ -370,6 +370,7 @@ def main():
     #   mono 4µm 단결정(이종기술 No.1/No.2) → 전부 AM_S; mono 대립 → 전부 AM_P; bimodal → 혼합.
     #   (기본 mono→AM_P의 SDCP 관례를 이 경로에서만 덮어씀 — 단결정 실험의 정직한 재료 배정.)
     am_rows = []
+    _am_class_mode = 'size_absolute'   # 분류 규약 provenance (기본 = _es_split_req 절대문턱 경로)
     _ds_scalar = None            # mono 베드 + poly/SC 분리 요청 → 단일 클래스 scalar D_s [m²/s]
     _ds_scalar_cls = None        # 'sc' | 'poly' (scalar D_s가 어느 클래스인지 — 라벨/태그용)
     if am_raw:
@@ -398,10 +399,25 @@ def main():
                     _ds_scalar = a.step4_ds_sc if _n_po == 0 else a.step4_ds_poly
                     _ds_scalar_cls = 'sc' if _n_po == 0 else 'poly'
         else:
-            thr = (rmin * rmax) ** 0.5 if rmax / max(rmin, 1e-12) > 1.4 else -1.0
+            # ★ 2026-08-04 수정: 단분산 베드를 **크기와 무관하게 전부 AM_P** 로 찍던 레거시
+            #   ('sdcp_mono_amp' 관례).  실측 사고: 0:10 케이스(4587개 전부 r=2µm = 소립)가
+            #   type1(AM_P) 로 기록 → mpm_metrics 가 coverage_AM_P=76.6 / AM_S=0.0 으로 보고 →
+            #   (a) 코퍼스의 coverage_AM_P·mpm_plastic_gain_AM_P 열에 6µm 값과 2µm 값이 혼재,
+            #   (b) mpm3d_compaction 의 사이클 변형이 sid 로 poly/SC 를 가르므로(1184-1185행)
+            #       물리적으로 SC 인 2µm 입자에 **poly 팽창**이 걸림 = 부호 반대.
+            #   위 _es_split_req 경로는 이미 절대문턱으로 정직하게 나누고 있었다("이 경로에서만
+            #   덮어씀") — 그 정직한 규약을 기본 경로에도 적용해 둘을 일치시킨다.
+            _UM_PER_LU = 1000.0
+            if rmax / max(rmin, 1e-12) > 1.4:
+                thr_lu = (rmin * rmax) ** 0.5                 # bimodal: 두 봉우리 사이 기하중앙
+                _mode = 'bimodal_geometric_mean'
+            else:
+                thr_lu = a.step4_am_split_um / _UM_PER_LU     # mono: 절대 크기 문턱 (기본 3.5µm 반경)
+                _mode = f'mono_absolute_{a.step4_am_split_um:g}um'
             for rec in am_raw:
-                rec[0] = 1 if (thr < 0 or float(rec[4]) >= thr) else 2      # AM_P=1 / AM_S=2 by size
+                rec[0] = 1 if float(rec[4]) >= thr_lu else 2   # AM_P=1 / AM_S=2 by size
                 am_rows.append(rec)
+            _am_class_mode = _mode
 
     def write_csv(path, rows, note):
         with open(path, 'w', newline='') as f:
@@ -524,8 +540,8 @@ def main():
                 else {'mode': 'bimodal_split', 'ds_poly': a.step4_ds_poly, 'ds_sc': a.step4_ds_sc,
                       'i0_poly': a.step4_i0_poly, 'i0_sc': a.step4_i0_sc,
                       'am_split_um': a.step4_am_split_um}),
-            # 재료 크기-분류 경로: split 요청 시 절대 문턱, 아니면 SDCP 관례(mono→AM_P).
-            'am_material_class_mode': ('size_absolute' if _es_split_req else 'sdcp_mono_amp')}
+            # 재료 크기-분류 경로 (2026-08-04: 'sdcp_mono_amp' 관례 폐지 — 모든 경로가 크기 기준).
+            'am_material_class_mode': _am_class_mode}
     if a.op_pressure_mpa is not None:
         # ★ 압력 provenance (docs/temp_pressure_capability.md §P1-a): 제작압 ≠ 구동압.  이 키는 플래그를
         #   준 경우에만 추가 → 기존 mpm_input.json 스키마는 그대로(바이트 동일).  하류가 "이 킷의 A-1
