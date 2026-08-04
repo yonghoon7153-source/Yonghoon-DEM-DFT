@@ -34,6 +34,7 @@ usage — 보통은 이 두 줄이면 끝난다 (inbox 를 훑어 digest 와 자
 import argparse
 import json
 import math
+import os
 import re
 import shutil
 import sys
@@ -363,6 +364,35 @@ def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
 #   자리표시자를 직접 채우게 하지 말고, inbox 를 훑어 digest 와 자동으로 짝지어 준다.
 INBOX = ROOT / "litdb" / "inbox"
 PAPERS = ROOT / "litdb" / "papers"
+
+
+def pdf_roots(inbox_dir=""):
+    """PDF 를 찾을 곳들 (순서대로).
+
+    ⚠ 왜 업로드 폴더까지 (2026-08-06 1저자 요청 "논문 에이전트 먹이면 자동으로"):
+      채팅에 올린 PDF 는 litdb/inbox/ 가 아니라 Claude Code 업로드 폴더에 떨어진다.
+      inbox 에만 의존하면 "방금 올린 논문"을 못 찾아 매번 --pdf 로 경로를 줘야 한다.
+    """
+    out = []
+    if inbox_dir:
+        out.append(Path(inbox_dir).expanduser())
+    else:
+        out.append(INBOX)
+    env = os.environ.get("CLAUDE_UPLOAD_DIR", "")
+    if env:
+        out.append(Path(env).expanduser())
+    up = Path.home() / ".claude" / "uploads"
+    if up.is_dir():                             # 세션별 폴더 — 최근 것부터
+        try:
+            out += sorted((d for d in up.iterdir() if d.is_dir()),
+                          key=lambda d: -d.stat().st_mtime)
+        except OSError:
+            pass
+    seen, uniq = set(), []
+    for d in out:
+        if d.is_dir() and d not in seen:
+            seen.add(d); uniq.append(d)
+    return uniq
 # SI 판별. ⚠ `si` 를 느슨하게 잡으면 **원소 기호 Si** 를 SI 로 오인한다 — 실측(2026-08-06):
 #   "43. Phase stability … of the Li10±1MP2X12 (M = Ge, Si, Sn …)" 이 SI 로 분류돼
 #   본문이 사라지고 그림 번호가 전부 S1,S2… 로 잘못 붙었다.
@@ -519,6 +549,37 @@ def _show(p, box, width=76):
     return (head + "/" + tail[:max(keep, 12)] + "…") if head and keep > 12 else t[:width - 1] + "…"
 
 
+def _read_plan(slug, meta, top=8):
+    """**에이전트가 다음에 할 일**을 출력에 박아 넣는다.
+
+    ⚠ 왜 (2026-08-06 1저자 요청): "논문 먹이면 저절로 되게". 규칙을 에이전트 프롬프트에만
+      적어두면 잊는다. 자른 직후 화면에 '이 파일들을 Read 하라'가 경로째로 찍혀 있으면
+      그게 다음 행동이 된다. 사람이 볼 때도 어느 그림부터 볼지 안내가 된다.
+    표(tab_*)는 뺀다 — 글자라서 이미지로 읽는 것보다 PDF 텍스트가 정확하다.
+    """
+    figs = [r for r in meta["figures"] if r["kind"] != "table"]
+    if not figs:
+        return
+    main = [r for r in figs if not r["label"].startswith("S")]
+    si = [r for r in figs if r["label"].startswith("S")]
+    pick = (main + si)[:top]
+    ntab = len(meta["figures"]) - len(figs)
+    print()
+    print("┌─ 다음 단계 (필수) — 잘라낸 그림을 **Read 로 실제로 본다** ─────────────")
+    print("│  캡션만 읽고 쓰면 축·단위·마커 위치를 지어내게 된다. 보고 나서 digest 를 쓴다.")
+    for r in pick:
+        cap = r["caption"][:58].replace("\n", " ")
+        print(f"│  Read litdb/figures/{slug}/{r['file']}   ({cap}…)")
+    if len(figs) > top:
+        print(f"│  … 본문 그림 {len(main)} + SI {len(si)} 중 위 {len(pick)}장이 우선. "
+              f"나머지는 필요할 때만.")
+    if ntab:
+        print(f"│  표 {ntab}장(tab_*.png)은 이미지로 안 읽는다 — PDF 텍스트가 정확하다.")
+    print("│  본 그림에서만 읽은 값은 digest 에 `figure-read ≈` 로 표시하고,")
+    print("│  무엇을 보고 무엇을 안 봤는지 사용자에게 밝힌다.")
+    print("└──────────────────────────────────────────────────────────────────")
+
+
 def _report(slug, meta, skipped, dry):
     print(f"=== {slug} — {len(meta['figures'])}개 추출"
           f"{' (dry-run, 안 씀)' if dry else ''}")
@@ -532,6 +593,7 @@ def _report(slug, meta, skipped, dry):
             print(f"  {k:<6} p{p:<3} {why}")
     if not dry:
         print(f"→ litdb/figures/{slug}/  (figures.json 포함)")
+        _read_plan(slug, meta)
 
 
 def _write_sources_index():
@@ -555,6 +617,69 @@ def _write_sources_index():
         print(f"→ litdb/figures/_sources.json  ({len(idx)}편: 어느 PDF 에서 왔는지 색인)")
 
 
+def audit():
+    """이미 잘라둔 것 전체 점검 — 53편을 눈으로 다 볼 수는 없으니 **의심스러운 것만** 띄운다.
+
+    잡아내는 것
+      · 그림 0개                     → 캡션 형식이 특이하거나 스캔 PDF
+      · 번호 구멍 (Fig 1,2,4 …)      → 그 번호를 놓쳤다 (전면 그림·캡션 아래 배치 등)
+      · 본문 없이 SI 만              → SI 오분류(원소기호 Si 등) 또는 본문 PDF 누락
+      · 거의 백지 (그림만, blank ≥ 0.965) → 영역을 잘못 잡았다 (표는 원래 흰 바탕이라 제외)
+      · 극단 세로비 (h/w ≥ 4.5)      → 두 그림을 한 장에 물었을 수 있다
+    """
+    rows, warn = [], 0
+    for j in sorted(OUT_ROOT.glob("*/figures.json")):
+        try:
+            m = json.loads(j.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            print(f"⛔ {j.parent.name}: figures.json 을 못 읽는다")
+            warn += 1
+            continue
+        figs = m.get("figures", [])
+        slug = m.get("slug", j.parent.name)
+        main = [r for r in figs if r["kind"] != "table" and not r["label"].startswith("S")]
+        si = [r for r in figs if r["kind"] != "table" and r["label"].startswith("S")]
+        tab = [r for r in figs if r["kind"] == "table"]
+        flags = []
+        if not figs:
+            flags.append("그림 0개")
+        if not main and si:
+            flags.append(f"본문 없이 SI {len(si)}장뿐")
+
+        def gaps(lst, pre=""):
+            ns = sorted(int(re.sub(r"\D", "", r["label"]) or 0) for r in lst)
+            if not ns:
+                return []
+            return [f"{pre}{k}" for k in range(1, max(ns)) if k not in ns]
+        g = gaps(main) + gaps(si, "S")
+        if g:
+            flags.append("번호 구멍 " + ",".join(g[:6]) + ("…" if len(g) > 6 else ""))
+        # ⚠ 표는 흰 바탕에 글자라 원래 blank 가 높다 — 그림만 본다
+        blank = [r["key"] for r in figs
+                 if r["kind"] != "table" and r.get("blank", 0) >= 0.965]
+        if blank:
+            flags.append("거의 백지 " + ",".join(blank[:4]))
+        tall = [r["key"] for r in figs if r["kind"] != "table"
+                and r.get("w") and r["h"] / r["w"] >= 4.5]
+        if tall:
+            flags.append("극단 세로비 " + ",".join(tall[:4]))
+        rows.append((slug, len(main), len(si), len(tab), flags))
+        warn += bool(flags)
+
+    print(f"=== 점검: {len(rows)}편 · 그림 "
+          f"{sum(r[1] for r in rows)}(본문) + {sum(r[2] for r in rows)}(SI) + "
+          f"{sum(r[3] for r in rows)}(표)\n")
+    print(f"{'slug':<48} 본문  SI  표   확인할 것")
+    for slug, nm, ns, nt, flags in rows:
+        mark = "⚠" if flags else " "
+        print(f"{mark} {slug[:46]:<46} {nm:>4} {ns:>3} {nt:>3}   {'; '.join(flags)}")
+    ok = sum(1 for r in rows if not r[4])
+    print(f"\n깨끗 {ok}편 / 확인 필요 {len(rows)-ok}편")
+    print("※ '번호 구멍'은 대개 정상이다 — 전면 그림, 캡션이 그림 아래인 배치, PDF 에 그림이")
+    print("  아예 안 들어간 쪽. 해당 논문만 --slug <slug> --clean 으로 다시 돌려 보고 판단한다.")
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser(
         description="논문 PDF 에서 그림·표를 캡션 기준으로 잘라 litdb/figures/<slug>/ 에 넣는다.")
@@ -573,7 +698,12 @@ def main():
                     help="긴 변 픽셀 상한. 0 이면 --dpi 그대로")
     ap.add_argument("--dry", action="store_true", help="파일 안 쓰고 표만 출력")
     ap.add_argument("--clean", action="store_true", help="기존 <slug> 폴더를 지우고 새로")
+    ap.add_argument("--audit", action="store_true",
+                    help="이미 잘라둔 것 전체 점검 (구멍·백지·SI만 등 의심스러운 것만)")
     a = ap.parse_args()
+
+    if a.audit:
+        return audit()
 
     if a.inbox:
         box = Path(a.inbox_dir).expanduser() if a.inbox_dir else INBOX
@@ -641,6 +771,28 @@ def main():
             print()
         _write_sources_index()
         return 0
+
+    if a.slug and not a.pdf:
+        # 에이전트가 경로를 안 찾아도 되게: slug 만 주면 스스로 찾는다.
+        #   litdb/inbox/ → 채팅 업로드 폴더 순으로, 먼저 걸리는 곳에서 쓴다.
+        roots = pdf_roots(a.inbox_dir)
+        near = []
+        for box in roots:
+            found, _o = match_inbox(box)
+            v = found.get(a.slug)
+            if v:
+                a.pdf = [str(q) for q in v["main"] + v["si"]]
+                print(f"※ PDF 자동 탐색 성공 [{v['why']}] — {box}")
+                for q in v["main"] + v["si"]:
+                    print(f"   {_show(q, box)}")
+                break
+            near += [k for k in found if a.slug.split("_")[0] in k]
+        if not a.pdf:
+            raise SystemExit(
+                f"⛔ '{a.slug}' 의 PDF 를 못 찾았다. 뒤진 곳:\n"
+                + "".join(f"     {d}\n" for d in roots)
+                + "   --pdf 로 직접 주거나, 어디에 있는지 --inbox --inbox_dir <폴더> 로 확인한다.\n"
+                + (f"   비슷한 slug: {', '.join(sorted(set(near))[:3])}\n" if near else ""))
 
     if not a.pdf or not a.slug:
         raise SystemExit(
