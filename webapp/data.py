@@ -1698,20 +1698,25 @@ def search_index() -> list:
     #   덱 2편은 안 들어갔다. 인용 규율이 다르므로 track 을 '발표'로 구분해 넣는다.
     talks = [("발표", t_["title"], f"{t_.get('speaker','')} · {t_.get('session','')}",
               f"/literature#{t_['id']}") for t_ in list_talks()]
+    # 순서·묶음은 사이드바(base.html)와 같게 — 두 군데가 어긋나면 찾는 사람이 헷갈린다
     pages = [
         ("페이지", "Dashboard", "커버리지 매트릭스·조성 요약", "/"),
+        # 결과 보기
         ("페이지", "Property Explorer", "정렬·필터 물성 표 + provenance", "/explorer"),
-        ("페이지", "Periodic Table", "원소별 조성 탐색", "/elements"),
         ("페이지", "Comparison", "조성 간 비교 + 레이더", "/compare"),
-        ("페이지", "Screening·ML", "AI 계산 도핑 스크리닝 (cascade)", "/cascade"),
+        ("페이지", "Periodic Table", "원소별 조성 탐색", "/elements"),
+        # 계산 돌리기
         ("페이지", "Compute", "원클릭 계산 입력 생성", "/compute"),
-        # ⚠ 사이드바엔 있는데 검색으론 못 찾던 3개 (2026-07-29 감사)
+        ("페이지", "Screening·ML", "AI 계산 도핑 스크리닝 (cascade)", "/cascade"),
+        ("페이지", "Methods", "계산 방법 canonical", "/methods"),
+        # 문헌·검증  (⚠ Benchmarks·Nd 서베이는 사이드바엔 있는데 검색으론 못 찾던 것, 2026-07-29 감사)
+        ("페이지", "Literature", "DEM/DFT 문헌", "/literature"),
         ("페이지", "Benchmarks", "외부 재현 표적 · 덱 정정 원장 · 판정 이력 · 위원회 온도 스윕", "/benchmarks"),
         ("페이지", "Nd 치환 서베이", "원소 치환 문헌 54편 색인", "/nd-survey"),
-        ("페이지", "미결 리스트 (Open Items)", "판정 대기 · PDF 확보 대기 · ML 후속 · 심포지엄 대응", "/todo"),
-        ("페이지", "Methods", "계산 방법 canonical", "/methods"),
-        ("페이지", "Literature", "DEM/DFT 문헌", "/literature"),
+        # 자료·기록
+        ("페이지", "Files", "그림·데이터·구조 전체 갤러리 (💬 코멘트)", "/files"),
         ("페이지", "Glossary", "용어 설명집", "/glossary"),
+        ("페이지", "미결 리스트 (Open Items)", "판정 대기 · PDF 확보 대기 · ML 후속 · 심포지엄 대응", "/todo"),
         ("페이지", "Work Log", "작업 기록", "/log"),
     ]
     for t, label, sub, url in pages + talks:
