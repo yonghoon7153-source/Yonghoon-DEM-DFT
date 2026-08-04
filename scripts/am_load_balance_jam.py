@@ -140,13 +140,88 @@ def solve_height(centres, radii, box_um, h_am, p_target, lo, hi, tol=1e-4):
     return h, P(h), 'ok'
 
 
-def invert_h_am(centres, radii, box_um, h_dem, p_target):
+def invert_h_am(centres, radii, box_um, h_dem, p_target, curve=REAL14_SE_CURVE):
     """주어진 두께가 나오려면 H_AM 이 얼마여야 하나 — **문헌값과 대조하기 위한 역산**."""
     a = support_fraction(centres, radii, h_dem, box_um)
-    s, _ = se_response(h_dem)
+    s, _ = se_response(h_dem, curve)
     if a <= 0:
         return float('inf'), a, s
     return (p_target - s) / a, a, s
+
+
+def read_curve(path):
+    """SE 응답곡선 CSV (두께_µm, wallP_GPa) → ndarray.  베드마다 다른 곡선을 줄 수 있다."""
+    rows = [r for r in csv.reader(open(path)) if r and not r[0].lstrip().startswith('#')]
+    arr = np.array([[float(r[0]), float(r[1])] for r in rows])
+    if len(arr) < 2:
+        sys.exit(f'{path}: 응답곡선은 최소 2점 필요')
+    return arr[np.argsort(-arr[:, 0])]        # 두께 내림차순 (REAL14_SE_CURVE 규약)
+
+
+def read_cases(path):
+    """케이스 매니페스트 CSV → dict 리스트.
+
+    헤더: label,p_gpa,am_csv,se_csv,h_dem_um[,curve_csv,box_um]
+    상대경로는 매니페스트 파일 기준으로 푼다 (킷 폴더를 통째로 옮겨도 깨지지 않게).
+    """
+    import os
+    base = os.path.dirname(os.path.abspath(path))
+    with open(path) as f:
+        rd = csv.DictReader(r for r in f if not r.lstrip().startswith('#'))
+        need = {'label', 'p_gpa', 'am_csv', 'se_csv', 'h_dem_um'}
+        if not need <= set(rd.fieldnames or []):
+            sys.exit(f'{path}: 헤더에 {sorted(need)} 가 모두 있어야 합니다 (현재 {rd.fieldnames})')
+        out = []
+        for r in rd:
+            if not (r.get('label') or '').strip():
+                continue
+            rel = lambda k: (os.path.join(base, r[k]) if r.get(k) and not os.path.isabs(r[k])
+                             else r.get(k) or '')
+            out.append(dict(label=r['label'].strip(), p=float(r['p_gpa']),
+                            am=rel('am_csv'), se=rel('se_csv'),
+                            h_dem=float(r['h_dem_um']), curve=rel('curve_csv'),
+                            box=float(r.get('box_um') or 50.0)))
+    if not out:
+        sys.exit(f'{path}: 케이스가 없습니다')
+    return out
+
+
+def run_cases(cases, band=(3.0, 6.0), tol_frac=0.25):
+    """★ 비순환 검증 — 케이스마다 H_AM 을 역산하고 **하나의 상수로 수렴하는지** 본다.
+
+    사전등록한 판정 규칙 (실행 전에 고정, 결과를 보고 바꾸지 않는다):
+      PASS  : 역산 H_AM 의 (최대−최소)/중앙값 ≤ 25 % **이고** 중앙값이 문헌대 3~6 GPa 안
+      FAIL  : 흩어짐이 25 % 초과 — 단일 재료상수로 설명되지 않음 = 모델 기각
+      DRIFT : 흩어짐은 크지만 P 에 대해 **단조**이면 기각이 아니라 진단이다 —
+              압입경도의 압력의존(Meyer 법칙 / 구속 경화).  log-log 기울기 m 을 함께 낸다
+              (H ∝ P^m; m≈0 이 순수 상수, m>0 이 경화).  이 경우 다음 실험은 m 의 문헌 대조.
+    """
+    rows = []
+    for c in cases:
+        am_c, am_r, _ = read_scaffold(c['am'])
+        curve = read_curve(c['curve']) if c['curve'] else REAL14_SE_CURVE
+        h_am, asup, sse = invert_h_am(am_c, am_r, c['box'], c['h_dem'], c['p'], curve)
+        _, inside = se_response(c['h_dem'], curve)
+        rows.append(dict(label=c['label'], p=c['p'], h=c['h_dem'], a=asup, s=sse,
+                         hm=h_am, n_am=len(am_r), inside=inside))
+    hs = np.array([r['hm'] for r in rows], float)
+    fin = np.isfinite(hs)
+    med = float(np.median(hs[fin])) if fin.any() else float('nan')
+    spread = float((hs[fin].max() - hs[fin].min()) / med) if fin.sum() > 1 and med else 0.0
+    slope = float('nan')
+    if fin.sum() >= 3:
+        pp = np.array([r['p'] for r in rows], float)[fin]
+        if pp.max() > pp.min():
+            slope = float(np.polyfit(np.log(pp), np.log(hs[fin]), 1)[0])
+    in_band = band[0] <= med <= band[1]
+    if spread <= tol_frac and in_band:
+        verdict = 'PASS — 단일 H_AM 이 모든 케이스를 설명한다 (비순환 검증 통과)'
+    elif np.isfinite(slope) and abs(slope) > 0.15:
+        verdict = (f'DRIFT — H_AM 이 P 에 단조 의존 (H ∝ P^{slope:+.2f}).  기각이 아니라 '
+                   f'압입경도의 구속-경화(Meyer) 진단이다')
+    else:
+        verdict = 'FAIL — 단일 재료상수로 설명 안 됨.  A_supp 정의 또는 SE 곡선을 재검토'
+    return rows, dict(median=med, spread=spread, slope=slope, in_band=in_band, verdict=verdict)
 
 
 def _selftest():
@@ -195,6 +270,58 @@ def _selftest():
     pu, ps = porosities(30.28, 25.170, 25.548)
     chk('union porosity > sphere porosity (같은 높이)', pu > ps)
 
+    # ── 비순환 검증 판정기 (--cases) ────────────────────────────────────────────────
+    # 합성 베드: 같은 기하를 여러 압력에 걸어 "진짜 상수 H_AM" 을 심어두고 회수되는지 본다.
+    import os
+    import tempfile
+    td = tempfile.mkdtemp(prefix='albj_')
+    amp = os.path.join(td, 'am.csv')
+    with open(amp, 'w') as f:
+        for i in range(200):
+            f.write(f'1,{0.000003 * (i % 16)},{0.000003 * (i // 16)},'
+                    f'{(27.0 + 0.02 * i) / UM_PER_LU},{1.5 / UM_PER_LU}\n')
+    am_c, am_r, _ = read_scaffold(amp)
+    _LO, _HI = 28.0, float((am_c[:, 2] + am_r).max())     # main 과 같은 규약: hi = 최고점
+    H_TRUE = 4.0
+    man = os.path.join(td, 'cases.csv')
+    with open(man, 'w') as f:
+        f.write('label,p_gpa,am_csv,se_csv,h_dem_um\n')
+        for p in (0.10, 0.30, 0.60):
+            h, _, st = solve_height(am_c, am_r, 50.0, H_TRUE, p, _LO, _HI)
+            chk(f'합성 베드가 P={p:g} 에서 내부 해를 가진다', st == 'ok')
+            f.write(f'P{int(p * 1000)},{p},am.csv,am.csv,{h:.6f}\n')
+    rows, summ = run_cases(read_cases(man))
+    chk('매니페스트가 케이스 3개를 읽는다', len(rows) == 3)
+    chk('심어둔 H_AM 을 케이스마다 회수 (역산 ↔ 정방향 일관)',
+        all(abs(r['hm'] - H_TRUE) < 0.05 for r in rows))
+    chk('진짜 상수면 흩어짐 ≈ 0 → PASS 판정', summ['spread'] < 0.02 and summ['verdict'].startswith('PASS'))
+    chk('상대경로를 매니페스트 위치 기준으로 푼다', os.path.isabs(read_cases(man)[0]['am']))
+
+    # 압력에 따라 H_AM 이 실제로 드리프트하는 베드는 PASS 가 아니라 DRIFT 로 잡혀야 한다
+    man2 = os.path.join(td, 'cases_drift.csv')
+    with open(man2, 'w') as f:
+        f.write('label,p_gpa,am_csv,se_csv,h_dem_um\n')
+        for p, hh in ((0.10, 2.5), (0.30, 4.0), (0.60, 6.4)):
+            h, _, _ = solve_height(am_c, am_r, 50.0, hh, p, _LO, _HI)
+            f.write(f'P{int(p * 1000)},{p},am.csv,am.csv,{h:.6f}\n')
+    _, s2 = run_cases(read_cases(man2))
+    chk('P 에 단조 의존하는 H_AM 은 DRIFT 로 진단', s2['verdict'].startswith('DRIFT'))
+    chk('DRIFT 의 Meyer 기울기가 양수로 회수', s2['slope'] > 0.3
+
+        )
+    # 판정이 결과를 보고 흔들리지 않게 — 문턱은 인자로 고정되어 있어야 한다
+    _, s3 = run_cases(read_cases(man), tol_frac=0.0)
+    chk('문턱을 0 으로 조이면 같은 데이터라도 PASS 가 아니다',
+        not s3['verdict'].startswith('PASS'))
+
+    # 베드별 SE 응답곡선 주입 (다른 조성은 다른 곡선을 써야 한다)
+    cp = os.path.join(td, 'curve.csv')
+    open(cp, 'w').write('# h_um,wallP_GPa\n30.0,0.005\n28.0,0.050\n')
+    cc2 = read_curve(cp)
+    chk('응답곡선 CSV 는 두께 내림차순으로 정규화', cc2[0, 0] > cc2[-1, 0])
+    chk('주입한 곡선이 se_response 에 실제로 쓰인다',
+        abs(se_response(30.0, cc2)[0] - 0.005) < 1e-12)
+
     print(f'selftest: {ok}/{ok + len(fail)} PASS' + (f'   FAILED: {fail}' if fail else ''))
     return 0 if not fail else 1
 
@@ -215,11 +342,38 @@ def main(argv=None):
     ap.add_argument('--invert', action='store_true',
                     help='주어진 --dem-thickness 가 나오려면 H_AM 이 얼마여야 하는지 역산 '
                          '(문헌 밴드와 대조용; 이 값을 그대로 --h-am 에 넣으면 순환이다)')
+    ap.add_argument('--cases', default='',
+                    help='★ 비순환 검증: 케이스 매니페스트 CSV '
+                         '(label,p_gpa,am_csv,se_csv,h_dem_um[,curve_csv,box_um]).  '
+                         '케이스마다 H_AM 을 역산해 **하나의 상수로 수렴하는지** 판정한다')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
 
     if a.selftest:
         return _selftest()
+
+    if a.cases:
+        cases = read_cases(a.cases)
+        rows, summ = run_cases(cases)
+        print(f'비순환 검증 — 케이스 {len(rows)}개, 케이스별 H_AM 역산\n')
+        print(f'{"label":>14} {"P(GPa)":>7} {"h_DEM(µm)":>10} {"A_supp":>8} {"SE(GPa)":>8} '
+              f'{"SE/P":>6} {"H_AM(GPa)":>10}')
+        for r in rows:
+            print(f'{r["label"]:>14} {r["p"]:7.3f} {r["h"]:10.2f} {r["a"]:8.2%} {r["s"]:8.4f} '
+                  f'{r["s"] / r["p"]:6.1%} {r["hm"]:10.2f}'
+                  + ('' if r['inside'] else '   ⚠SE외삽'))
+        print(f'\n  중앙값 H_AM = {summ["median"]:.2f} GPa   '
+              f'(문헌대 3~6 GPa {"안 ✓" if summ["in_band"] else "밖 ✗"})')
+        print(f'  흩어짐 (max−min)/median = {summ["spread"]:.1%}   '
+              f'(사전등록 문턱 25 %)')
+        if np.isfinite(summ['slope']):
+            print(f'  압력 의존 log-log 기울기  H ∝ P^{summ["slope"]:+.3f}   '
+                  f'(0 이면 순수 재료상수)')
+        print(f'\n  ▶ {summ["verdict"]}')
+        print('\n  ⚠ 케이스가 모두 같은 압력이면 이것은 **조성 축** 검증이고, 압력 축은 '
+              '검증되지 않는다.\n     Heckel 을 주장하려면 같은 베드의 다압력 DEM 두께가 필요하다.')
+        return 0
+
     if not a.am or not a.se:
         ap.error('--am 과 --se 가 필요합니다 (또는 --selftest)')
 
