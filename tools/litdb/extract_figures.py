@@ -270,7 +270,11 @@ def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
     found, seen, skipped = [], {}, []
     for pdf_path in pdf_paths:
         doc = fitz.open(pdf_path)
-        si = bool(re.search(r"\bsup|\bsi\b|supporting|supplement", Path(pdf_path).name, re.I))
+        # ⚠ 여기 예전에 `\bsup|\bsi\b|…` 라는 **별도 정규식**이 있었다 (2026-08-06 실측 사고):
+        #   `\bsup` 이 "**Sup**erionic"·"**sup**erconductor" 를 잡아, 제목에 그 낱말이 든
+        #   논문 11편의 **본문 그림이 통째로 S 번호**로 붙었다(kraft2017 본문 8장 → SI 8장).
+        #   SI_TAG 하나만 쓴다 — 매칭 쪽과 판정이 갈리면 이런 사고가 또 난다.
+        si = bool(SI_TAG.search(Path(pdf_path).stem))
         for pno in range(doc.page_count):
             page = doc[pno]
             blocks = text_blocks(page)
