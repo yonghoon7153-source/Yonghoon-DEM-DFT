@@ -41,14 +41,34 @@ git checkout FETCH_HEAD -- tools/ionic/pmf_path_profile.py tools/ionic/li_densit
 git --no-pager log -1 --format="  도구 커밋 %h %s" FETCH_HEAD
 
 echo "── 1) $TEMP K 궤적 찾기 (프레임이 저장된 것만) ──"
-mapfile -t TRAJS < <(find runs "$OUT" -name traj.xyz -path "*T${TEMP}*" 2>/dev/null \
-                     | grep -a -i "modelc\|lpscl1.6\|lpscl16" | head -"$NSEED")
+if [ -n "${TRAJ_GLOB:-}" ]; then          # 직접 지정 (로컬 백업·다른 경로)
+  mapfile -t TRAJS < <(ls -1 $TRAJ_GLOB 2>/dev/null | head -"$NSEED")
+else
+  mapfile -t TRAJS < <(find runs "$OUT" -name traj.xyz -path "*T${TEMP}*" 2>/dev/null \
+                       | grep -a -i "modelc\|lpscl1.6\|lpscl16" | head -"$NSEED")
+fi
 echo "  찾은 궤적 ${#TRAJS[@]}개:"; printf '   %s\n' "${TRAJS[@]:-(없음)}"
 
 if [ "${#TRAJS[@]}" -eq 0 ]; then
-  echo "  → 저장된 프레임이 없다. $TEMP K 를 --save_traj 로 재실행한다 (GPU, ~20-40분)."
-  nvidia-smi --query-gpu=memory.used,memory.total --format=csv,noheader
-  echo "  (pw.x 가 돌고 있으면 지금 중단하고 나중에 실행할 것)"
+  # ⚠⚠ 2026-08-05: 예전 판은 여기서 **자동으로 GPU MD 를 시작**했다. Arrhenius 런이
+  #   --save_traj 없이 돌아 프레임이 없는 게 정상이라 이 분기가 거의 항상 타는데,
+  #   pw.x 와 VRAM 이 겹치면 사고다 (CLAUDE.md: pw.x 와 UMA 동시 실행 금지).
+  #   → **명시적 옵트인(ALLOW_MD=1)** 없이는 여기서 멈춘다.
+  USED=$(nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits | head -1)
+  echo "  → 저장된 프레임이 없다 (Arrhenius 런은 --save_traj 없이 돈다 = 정상)."
+  echo "     현재 VRAM 사용 ${USED} MiB"
+  if [ "${ALLOW_MD:-0}" != "1" ]; then
+    echo "  ⛔ MD 재실행은 옵트인이다. GPU 가 한가한 걸 확인한 뒤:"
+    echo "       ALLOW_MD=1 bash tools/ionic/run_modelc_pmf.sh"
+    echo "     또는 이미 있는 궤적을 직접 지정:"
+    echo "       TRAJ_GLOB='/path/to/T600/traj.xyz' bash tools/ionic/run_modelc_pmf.sh"
+    exit 2
+  fi
+  if [ "${USED:-0}" -gt 2000 ]; then
+    echo "  ⚠ VRAM 이 이미 ${USED} MiB 점유 중이다 — pw.x 확인 후 진행할 것 (10초 대기)"
+    sleep 10
+  fi
+  echo "  → $TEMP K 를 --save_traj 로 재실행 (GPU, ~20-40분)"
   unset LD_LIBRARY_PATH OPAL_PREFIX 2>/dev/null || true
   $PY tools/modelc_v3/disorder_ensemble_diffusion.py \
       --v0_xyz "$XYZ" --label modelc --out_root "$OUT" \
