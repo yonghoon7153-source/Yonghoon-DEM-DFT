@@ -336,10 +336,16 @@ def main():
                          fontweight="bold", zorder=6,
                          # 흰 배경 — 다른 곡선 위를 지날 때 글자가 묻히지 않게
                          bbox=dict(fc="white", ec="none", alpha=0.75, pad=1.2))
-        axp.axvspan(lo, hi, color="#fef9c3", alpha=0.55, zorder=0)
-        axp.text((lo + hi) / 2, ymax * 0.30, f"fit\n{lo:g}–{hi:g} ps",
-                 ha="center", va="center", fontsize=8.5, color="#92400e",
-                 linespacing=1.4, zorder=1)
+        # 도시 범위가 적합 창과 같으면(50 ps 판) 음영이 전체를 덮어 무의미 — 생략
+        if hi < a.tmax - 1e-9:
+            axp.axvspan(lo, hi, color="#fef9c3", alpha=0.55, zorder=0)
+            axp.text((lo + hi) / 2, ymax * 0.30, f"fit\n{lo:g}–{hi:g} ps",
+                     ha="center", va="center", fontsize=8.5, color="#92400e",
+                     linespacing=1.4, zorder=1)
+        else:
+            axp.text(0.985, 0.975, f"fit window = full range ({lo:g}–{hi:g} ps)",
+                     ha="right", va="top", fontsize=8, color="#92400e",
+                     transform=axp.transAxes, zorder=1)
         # 계 이름은 **좌상단** — 곡선 끝 라벨(우측)과 안 겹치게 (2026-08-04 충돌 수정)
         axp.text(0.025, 0.975, f"{DISPLAY.get(lab, lab)}",
                  ha="left", va="top", fontsize=13, color=INK, fontweight="bold",

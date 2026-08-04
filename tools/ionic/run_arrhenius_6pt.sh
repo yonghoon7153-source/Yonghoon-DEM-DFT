@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =============================================================================
-# run_arrhenius_6pt.sh — 6점 아레니우스(500-1000 K)를 **세 계 전부 처음부터** 다시
+# run_arrhenius_6pt.sh — 6점 아레니우스(500-1000 K) 완성용 **30 런** (신규 27 + lpsocl 600 재실행 3)
 #
 # 왜 (1저자 요청 2026-08-03, kb/reports/paper_first_author_requests_2026_08.md §1)
 #   지금은 600/800/1000 3점이라 **직선인지 아닌지를 따질 수가 없다**. 6점이면 직선성
@@ -10,10 +10,20 @@
 #   Ea 비교(LPSOCl 이 modelc 보다 +90 meV 등)가 **다른 적합끼리의 비교**가 되어 깨진다.
 #   B2O3 실증: 고온 3점 Ea 0.207 vs 5점(400-1000) 0.214 — 적합 집합이 값을 바꾼다.
 #
-# ⚠⚠ **기존 점을 재사용하지 않고 전부 다시 돈다 (2026-08-03 결정).**
-#   modelc·b2o3 는 400/500 K 를 이미 갖고 있지만 **단일 시드**다. 그걸 3시드 점들과 섞으면
-#   오차막대가 점마다 달라져서, 6점 적합의 가중치를 정할 근거가 사라진다.
-#   → 6온도 x 3계 x 3시드 = **54 런**. 모든 점이 같은 3시드 오차막대를 갖는다.
+# ~~⚠⚠ 기존 점을 재사용하지 않고 전부 다시 돈다 (2026-08-03 결정) → 54 런~~
+# **[개정 2026-08-04 — 사용자 결정: 30 런]** 54 의 근거("기존 400/500 이 단일시드")는
+#   맞았지만, v2 게이트 검사(msd_3sys_200ps 작업)로 **기존 600/800/1000 멀티시드 점이
+#   9칸 중 8칸 게이트 통과**임이 확인됐다 (modelc 0.87/0.93/0.92 · b2o3 0.81/0.83/0.97 ·
+#   lpsocl 0.61⛔/0.86/1.02). 멀쩡한 칸을 다시 돌 이유가 없다.
+#   → **신규 온도 27 런 (500/700/900 x 3계 x 3시드) + lpsocl 600 K 재실행 3 런 = 30 런.**
+#   기존 점 위치(최종 적합 때 합친다):
+#     modelc 600  = kgy  ~/work/runs/modelc_600_reseed        (3시드 200 ps)
+#     modelc hiT  = kgy  ~/work/runs/highT_reseed/modelc      (3시드 100 ps)
+#     b2o3  600   = gabia /data/work/b2o3md/runs/b2o3_600_reseed (3시드 200 ps)
+#     b2o3  hiT   = kgy  ~/work/runs/highT_reseed/b2o3        (3시드 100 ps)
+#     lpsocl 800/1000 = kgy ~/work/runs/lpsocl_md             (4시드 200 ps)
+#   ⚠ 각주 의무: 기존 hiT 는 100 ps(창 2-50 완전 포함이라 D 동일)·MTO 없음.
+#     신규 30 런만 MTO 를 갖는다 — 재적합 감사에서 섞어 볼 때 명시할 것.
 #
 # ⚠ 400 K 는 뺀다. 필요 prod 가 323-1279 ps 로(md_temperature_feasibility.py) 200 ps 표준을
 #   넘고, 계마다 필요량이 4배 차이 나서 프로토콜 통일이 깨진다. 6점(500-1000)이면 충분하다.
@@ -31,7 +41,7 @@
 #   하려 들면 modelc 100 ps 에서 Ea 0.223(R^2 0.992) → 0.155(R^2 0.875) 로 **나빠진다**.
 #   창이 아니라 **통계**가 문제이기 때문이다(62원자 셀에 Li 27개, 시간원점 1개).
 #
-# ★ 그래서 이번 54 런부터는 msd.json 에 **다중 시간원점 MSD**(msd_Li_A2_mto)가 같이
+# ★ 그래서 이번 신규 30 런부터는 msd.json 에 **다중 시간원점 MSD**(msd_Li_A2_mto)가 같이
 #   쓰인다 — 같은 MD 에서 산포가 ~2.9배 줄어든다(추가 비용·디스크 0, 합성시험 검증).
 #   기존 런은 프레임을 안 남겨서 소급 적용이 안 된다. 재적합 감사는 --mto 로 본다.
 #
@@ -39,7 +49,7 @@
 #   tmux new -s arr6 -d 'bash tools/ionic/run_arrhenius_6pt.sh 2>&1 | tee -a ~/logs/arr6.log'
 #   bash tools/ionic/run_arrhenius_6pt.sh modelc      # 한 계만
 #
-# 비용(A6000): 54 런. 200 ps ~1.5-2 h, 500 K(400 ps) ~3-4 h → 전체 대략 **4일**.
+# 비용: 30 런. 200 ps ~1.5-2 h, 500 K(400 ps) ~3-4 h → 전체 대략 **2일** (구 54런 4일).
 # =============================================================================
 set -euo pipefail; set +H
 REPO="$(cd "$(dirname "$0")/../.." && pwd)"; cd "$REPO"
@@ -69,7 +79,12 @@ b2o3|db/structures/b2o3_relaxV0.xyz
 EOF
 }
 # 온도:prod(ps). 500 K 만 길다 — 위 주석 참조.
-TEMP_PROD="500:400 600:200 700:200 800:200 900:200 1000:200"
+#   기본 = 신규 온도만 (30런 계획). 전면 재실행(구 54런)을 원하면:
+#     TEMP_PROD="500:400 600:200 700:200 800:200 900:200 1000:200" LPSOCL_EXTRA="" bash ...
+TEMP_PROD=${TEMP_PROD:-"500:400 700:200 900:200"}
+# lpsocl 만 600 K 재실행 — 4시드 200 ps 앙상블 beta 0.61 게이트 탈락(2026-08-04 v2)의 재판정.
+#   신규 런은 MTO(다중 시간원점)가 있어 beta 추정 산포가 ~2.9배 작다.
+LPSOCL_EXTRA=${LPSOCL_EXTRA:-"600:200"}
 
 ts(){ echo "[$(date +%m-%d\ %H:%M:%S)] $*"; }
 
@@ -92,16 +107,18 @@ print(f"   구조 게이트 OK (최단 {mind:.3f} A, nat {nat})")
 PY
 }
 
-ts "6점 아레니우스 — 500/600/700/800/900/1000 K · 시드 ${SEEDS} · 3계 = 54 런"
-ts "⚠ 기존 점을 재사용하지 않는다. 전부 같은 3시드 오차막대를 갖게 처음부터 돈다."
+ts "6점 아레니우스 30런 계획 — 신규 ${TEMP_PROD} x 3계 x 시드(${SEEDS}) + lpsocl [${LPSOCL_EXTRA}]"
+ts "기존 600/800/1000 멀티시드 점은 게이트 통과 확인(2026-08-04 v2) — 재사용. lpsocl 600 만 재실행."
 
 while IFS='|' read -r LABEL XYZ; do
   [ "$ONLY" = all ] || [ "$ONLY" = "$LABEL" ] || continue
   test -f "$REPO/$XYZ" || { ts "⛔ $LABEL: $XYZ 없음 — 건너뜀"; continue; }
   ts "═══ $LABEL ($XYZ) ═══"
   sanity "$REPO/$XYZ"
+  TP_LIST="$TEMP_PROD"
+  [ "$LABEL" = "lpsocl" ] && [ -n "$LPSOCL_EXTRA" ] && TP_LIST="$TEMP_PROD $LPSOCL_EXTRA"
   for S in $SEEDS; do
-    for TP in $TEMP_PROD; do
+    for TP in $TP_LIST; do
       T=${TP%%:*}; P=${TP##*:}
       OUT="$OUTROOT/$LABEL/T${T}_s${S}"
       if [ -s "$OUT/msd.json" ]; then ts "  ✓ $LABEL T${T} s${S} 이미 있음 — 건너뜀"; continue; fi
@@ -126,6 +143,8 @@ ts "  python3 tools/ionic/msd_diffusive_check.py --glob '$OUTROOT/*/T*_s*/**/msd
 ts "  ⚠⚠ 게이트를 통과한 점만 아레니우스에 넣는다. 통과 못 한 점을 넣으면"
 ts "     그 점이 기울기를 끌어당겨 Ea 가 통째로 틀어진다."
 ts "  ⚠ 그리고 **세 계 전부 같은 온도 집합**으로 다시 적합해야 Ea 비교가 산다."
+ts "  ⚠ 최종 6점 적합 = 신규(이 OUTROOT) + 기존 멀티시드 점(헤더의 위치 목록) 결합."
+ts "     lpsocl 600 K 는 **신규 MTO-beta ≥ 0.8 일 때만** 넣는다 — 아니면 5점 + 1600 ps 프로브."
 ts ""
 ts "═══ 그리고 창 민감도를 SI 용으로 남긴다 (1저자 질문 §3) ═══"
 ts "  python3 tools/ionic/msd_refit_window.py --glob '$OUTROOT/*/T*_s*/**/msd.json' \\"

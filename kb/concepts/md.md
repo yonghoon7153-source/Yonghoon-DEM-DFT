@@ -116,7 +116,7 @@ $$\text{MSD} \propto t^{\beta}, \qquad \beta = \frac{d(\log \text{MSD})}{d(\log 
   b2o3 600 K 3시드 D 1.039e-5 = 등록 아레니우스 D_600_mean 1.041e-5 재현 ✓.
 - LPSOCl 600 K: MSD 는 97 Å²@200 ps 로 충분 — 크기가 아니라 **홉 통계** 문제
   (시드산포 36%). O 트랩의 홉 희소화와 정합. → **Ea 0.287±0.024 는 이 점을 포함한
-  적합이라 재검토 대상**. 처방 = 6점 아레니우스 54런에서 게이트 통과 점만 재적합.
+  적합이라 재검토 대상**. 처방 = 6점 아레니우스 30런(신규 27 + lpsocl 600 재실행 3, 2026-08-04 결정)과 기존 게이트-통과 점으로 재적합.
 - 그림·데이터: `docs/figures/msd_3sys_200ps.png` · `db/properties/msd_3sys_200ps_origin.csv`
   (PROVENANCE/GATE NOTE 블록 포함) · 상세: `kb/reports/paper_first_author_requests_2026_08.md` §4
 

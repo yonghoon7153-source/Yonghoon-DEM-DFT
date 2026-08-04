@@ -20,7 +20,7 @@
   재검토 필요 (paper_first_author_requests_2026_08.md §4 의 선택지 3안).
   **modelc·b2o3 3시드 평균 검사 완료 (v2)**: modelc 0.87/0.93/0.92 · b2o3 0.81/0.83/0.97
   전부 통과 — 단일시드 '아슬' 해소. b2o3 600 K 3시드 D 가 등록 D_600_mean 을 재현(1.039 vs
-  1.041e-5). **잔여 이슈는 LPSOCl 600 K 하나** — 54런 MTO-β 로 1차 판정, 안 되면 1600 ps 프로브.
+  1.041e-5). **잔여 이슈는 LPSOCl 600 K 하나** — 30런(lpsocl 600 재실행 포함, 2026-08-04 결정) MTO-β 로 1차 판정, 안 되면 1600 ps 프로브.
   게이트 통과 전까지 전부 인용 보류.
 - 근거: `kb/results/mlip_md_diffusive_gate_2026_08_01.md` ·
   `tools/ionic/msd_diffusive_check.py`
