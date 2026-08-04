@@ -363,8 +363,15 @@ def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
 #   자리표시자를 직접 채우게 하지 말고, inbox 를 훑어 digest 와 자동으로 짝지어 준다.
 INBOX = ROOT / "litdb" / "inbox"
 PAPERS = ROOT / "litdb" / "papers"
-SI_TAG = re.compile(r"(^|[^a-z])(sup(p|pl|porting|plementary|plement)?|si|esi|mmc|suppmat)"
-                    r"([^a-z]|$)", re.I)
+# SI 판별. ⚠ `si` 를 느슨하게 잡으면 **원소 기호 Si** 를 SI 로 오인한다 — 실측(2026-08-06):
+#   "43. Phase stability … of the Li10±1MP2X12 (M = Ge, Si, Sn …)" 이 SI 로 분류돼
+#   본문이 사라지고 그림 번호가 전부 S1,S2… 로 잘못 붙었다.
+#   그래서 sup/mmc 계열은 느슨하게, **si·esi 는 파일명 구분자(_ - .)로 둘러싸인 때만** 본다
+#   (tz4c02029_si_001.pdf ○ / ", Si," ×).
+SI_TAG = re.compile(
+    r"(?:(?:^|[^a-z])sup(?:p|pl|porting|plementary|plement|pmat)?(?:[^a-z]|$)"
+    r"|(?:^|[^a-z])mmc(?:[^a-z]|$)"
+    r"|(?:^|[_\-.])e?si(?:[_\-.0-9]|$))", re.I)
 STOP = set("""the a an of on in for and or to with by from as at is are was were be been its
 their this that these those we our using via toward towards into over under between among
 new novel high low high- ultra super study investigation effect effects influence role
