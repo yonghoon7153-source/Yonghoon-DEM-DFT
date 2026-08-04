@@ -1,0 +1,486 @@
+{
+ "slug": "shenouda2020_dem_metal_powder_am_liggghts_tutorial",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/20. Discrete Element Method Analysis for Metal Powders Used in Additive Manufacturing, and DEM Simulation Tutorial Using LIGGGHTS-PUBLIC.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 31,
+   "file": "fig_2.png",
+   "caption": "Figure 2: Whitelist for model combinations",
+   "bbox": [
+    141.6,
+    318.2,
+    470.4,
+    625.0
+   ],
+   "w": 1370,
+   "h": 1279,
+   "dpi": 300,
+   "src": "20. Discrete Element Method Analysis for Metal Powders Used in Additive Manufacturing, and DEM Simulation Tutorial Using LIGGGHTS-PUBLIC.pdf",
+   "blank": 0.628
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 36,
+   "file": "fig_3.png",
+   "caption": "Figure 3: Importing .vtk simulation files into ParaView Initially, the particles will be populated as white point particles. The particles can be changed to be displayed according to their force, velocity, point ID, tangential velocity, radius, or mass. Point Gaussian is the preferred method to view the particles at their actual sizes. Select the particles in the pipeline",
+   "bbox": [
+    65.8,
+    379.5,
+    546.2,
+    651.9
+   ],
+   "w": 2002,
+   "h": 1136,
+   "dpi": 300,
+   "src": "20. Discrete Element Method Analysis for Metal Powders Used in Additive Manufacturing, and DEM Simulation Tutorial Using LIGGGHTS-PUBLIC.pdf",
+   "blank": 0.184
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 37,
+   "file": "fig_4.png",
+   "caption": "Figure 4: ParaView GUI",
+   "bbox": [
+    65.8,
+    112.0,
+    546.2,
+    384.4
+   ],
+   "w": 2002,
+   "h": 1136,
+   "dpi": 300,
+   "src": "20. Discrete Element Method Analysis for Metal Powders Used in Additive Manufacturing, and DEM Simulation Tutorial Using LIGGGHTS-PUBLIC.pdf",
+   "blank": 0.118
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 37,
+   "file": "fig_5.png",
+   "caption": "Figure 5: Velocity distributions Alternatively, the raw data file can be saved as a .csv file, which can be imported into Excel or Matlab for analysis or further post processing. This is performed by File>Save Data. In order to evaluate the mass flow rate of particles, an extra set of commands are placed in the input script. This command requires that a planar object be created using a CAD program. It works by counting how many particles pass through the face, their sizes, and their masses.",
+   "bbox": [
+    66.0,
+    471.1,
+    548.7,
+    622.8
+   ],
+   "w": 2012,
+   "h": 633,
+   "dpi": 300,
+   "src": "20. Discrete Element Method Analysis for Metal Powders Used in Additive Manufacturing, and DEM Simulation Tutorial Using LIGGGHTS-PUBLIC.pdf",
+   "blank": 0.747
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 38,
+   "file": "fig_6.png",
+   "caption": "Figure 6: Massflow raw data",
+   "bbox": [
+    160.3,
+    130.6,
+    451.0,
+    242.6
+   ],
+   "w": 1211,
+   "h": 467,
+   "dpi": 300,
+   "src": "20. Discrete Element Method Analysis for Metal Powders Used in Additive Manufacturing, and DEM Simulation Tutorial Using LIGGGHTS-PUBLIC.pdf",
+   "blank": 0.356
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 67,
+   "file": "fig_7.png",
+   "caption": "Figure 7: CED = 950000 ergs/cc, 72.54 deg",
+   "bbox": [
+    66.0,
+    85.0,
+    546.0,
+    443.8
+   ],
+   "w": 2000,
+   "h": 1496,
+   "dpi": 300,
+   "src": "20. Discrete Element Method Analysis for Metal Powders Used in Additive Manufacturing, and DEM Simulation Tutorial Using LIGGGHTS-PUBLIC.pdf",
+   "blank": 0.085
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 68,
+   "file": "fig_8.png",
+   "caption": "Figure 8: CED = 900000 ergs/cc, 73.08 deg",
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    412.5
+   ],
+   "w": 2000,
+   "h": 1444,
+   "dpi": 300,
+   "src": "20. Discrete Element Method Analysis for Metal Powders Used in Additive Manufacturing, and DEM Simulation Tutorial Using LIGGGHTS-PUBLIC.pdf",
+   "blank": 0.055
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 69,
+   "file": "fig_9.png",
+   "caption": "Figure 9: CED = 850000 ergs/cc, 58.7 deg",
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    412.5
+   ],
+   "w": 2000,
+   "h": 1444,
+   "dpi": 300,
+   "src": "20. Discrete Element Method Analysis for Metal Powders Used in Additive Manufacturing, and DEM Simulation Tutorial Using LIGGGHTS-PUBLIC.pdf",
+   "blank": 0.055
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 70,
+   "file": "fig_10.png",
+   "caption": "Figure 10: CED = 800000 ergs/cc, 55.79 deg",
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    412.5
+   ],
+   "w": 2000,
+   "h": 1444,
+   "dpi": 300,
+   "src": "20. Discrete Element Method Analysis for Metal Powders Used in Additive Manufacturing, and DEM Simulation Tutorial Using LIGGGHTS-PUBLIC.pdf",
+   "blank": 0.055
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 71,
+   "file": "fig_11.png",
+   "caption": "Figure 11: CED = 750000 ergs/cc, 51.29 deg",
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    412.5
+   ],
+   "w": 2000,
+   "h": 1444,
+   "dpi": 300,
+   "src": "20. Discrete Element Method Analysis for Metal Powders Used in Additive Manufacturing, and DEM Simulation Tutorial Using LIGGGHTS-PUBLIC.pdf",
+   "blank": 0.055
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 72,
+   "file": "fig_12.png",
+   "caption": "Figure 12: CED = 700000ergs/cc, 44.26 deg",
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    412.5
+   ],
+   "w": 2000,
+   "h": 1444,
+   "dpi": 300,
+   "src": "20. Discrete Element Method Analysis for Metal Powders Used in Additive Manufacturing, and DEM Simulation Tutorial Using LIGGGHTS-PUBLIC.pdf",
+   "blank": 0.055
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 73,
+   "file": "fig_13.png",
+   "caption": "Figure 13: CED = 650000 ergs/cc, 38.55 deg",
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    412.5
+   ],
+   "w": 2000,
+   "h": 1444,
+   "dpi": 300,
+   "src": "20. Discrete Element Method Analysis for Metal Powders Used in Additive Manufacturing, and DEM Simulation Tutorial Using LIGGGHTS-PUBLIC.pdf",
+   "blank": 0.055
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 74,
+   "file": "fig_14.png",
+   "caption": "Figure 14: CED = 600000 ergs/cc, 31.83 deg",
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    412.5
+   ],
+   "w": 2000,
+   "h": 1444,
+   "dpi": 300,
+   "src": "20. Discrete Element Method Analysis for Metal Powders Used in Additive Manufacturing, and DEM Simulation Tutorial Using LIGGGHTS-PUBLIC.pdf",
+   "blank": 0.055
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 75,
+   "file": "fig_15.png",
+   "caption": "Figure 15: CED = 550000 ergs/cc, 30.22 deg",
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    412.5
+   ],
+   "w": 2000,
+   "h": 1444,
+   "dpi": 300,
+   "src": "20. Discrete Element Method Analysis for Metal Powders Used in Additive Manufacturing, and DEM Simulation Tutorial Using LIGGGHTS-PUBLIC.pdf",
+   "blank": 0.055
+  },
+  {
+   "key": "f16",
+   "kind": "figure",
+   "label": "16",
+   "page": 76,
+   "file": "fig_16.png",
+   "caption": "Figure 16: CED = 500000 ergs/cc, 26.45 deg",
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    412.5
+   ],
+   "w": 2000,
+   "h": 1444,
+   "dpi": 300,
+   "src": "20. Discrete Element Method Analysis for Metal Powders Used in Additive Manufacturing, and DEM Simulation Tutorial Using LIGGGHTS-PUBLIC.pdf",
+   "blank": 0.055
+  },
+  {
+   "key": "f17",
+   "kind": "figure",
+   "label": "17",
+   "page": 77,
+   "file": "fig_17.png",
+   "caption": "Figure 17: CED = 450000 ergs/cc, 25.59 deg",
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    412.5
+   ],
+   "w": 2000,
+   "h": 1444,
+   "dpi": 300,
+   "src": "20. Discrete Element Method Analysis for Metal Powders Used in Additive Manufacturing, and DEM Simulation Tutorial Using LIGGGHTS-PUBLIC.pdf",
+   "blank": 0.055
+  },
+  {
+   "key": "f18",
+   "kind": "figure",
+   "label": "18",
+   "page": 78,
+   "file": "fig_18.png",
+   "caption": "Figure 18: 400000 ergs/cc, 24.7 deg",
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    412.5
+   ],
+   "w": 2000,
+   "h": 1444,
+   "dpi": 300,
+   "src": "20. Discrete Element Method Analysis for Metal Powders Used in Additive Manufacturing, and DEM Simulation Tutorial Using LIGGGHTS-PUBLIC.pdf",
+   "blank": 0.055
+  },
+  {
+   "key": "f19",
+   "kind": "figure",
+   "label": "19",
+   "page": 79,
+   "file": "fig_19.png",
+   "caption": "Figure 19: CED = 350000 ergs/cc, 22.22 deg",
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    412.5
+   ],
+   "w": 2000,
+   "h": 1444,
+   "dpi": 300,
+   "src": "20. Discrete Element Method Analysis for Metal Powders Used in Additive Manufacturing, and DEM Simulation Tutorial Using LIGGGHTS-PUBLIC.pdf",
+   "blank": 0.055
+  },
+  {
+   "key": "f20",
+   "kind": "figure",
+   "label": "20",
+   "page": 80,
+   "file": "fig_20.png",
+   "caption": "Figure 20: CED = 300000 ergs/cc, 21.82 deg",
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    412.5
+   ],
+   "w": 2000,
+   "h": 1444,
+   "dpi": 300,
+   "src": "20. Discrete Element Method Analysis for Metal Powders Used in Additive Manufacturing, and DEM Simulation Tutorial Using LIGGGHTS-PUBLIC.pdf",
+   "blank": 0.055
+  },
+  {
+   "key": "f21",
+   "kind": "figure",
+   "label": "21",
+   "page": 81,
+   "file": "fig_21.png",
+   "caption": "Figure 21: CED = 250000 ergs/cc, 21.69 deg",
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    412.5
+   ],
+   "w": 2000,
+   "h": 1444,
+   "dpi": 300,
+   "src": "20. Discrete Element Method Analysis for Metal Powders Used in Additive Manufacturing, and DEM Simulation Tutorial Using LIGGGHTS-PUBLIC.pdf",
+   "blank": 0.055
+  },
+  {
+   "key": "f22",
+   "kind": "figure",
+   "label": "22",
+   "page": 82,
+   "file": "fig_22.png",
+   "caption": "Figure 22: CED = 200000 ergs/cc, 20.52 deg",
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    412.5
+   ],
+   "w": 2000,
+   "h": 1444,
+   "dpi": 300,
+   "src": "20. Discrete Element Method Analysis for Metal Powders Used in Additive Manufacturing, and DEM Simulation Tutorial Using LIGGGHTS-PUBLIC.pdf",
+   "blank": 0.055
+  },
+  {
+   "key": "f23",
+   "kind": "figure",
+   "label": "23",
+   "page": 83,
+   "file": "fig_23.png",
+   "caption": "Figure 23: CED = 150000 ergs/cc, 20.06 deg",
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    412.5
+   ],
+   "w": 2000,
+   "h": 1444,
+   "dpi": 300,
+   "src": "20. Discrete Element Method Analysis for Metal Powders Used in Additive Manufacturing, and DEM Simulation Tutorial Using LIGGGHTS-PUBLIC.pdf",
+   "blank": 0.055
+  },
+  {
+   "key": "f25",
+   "kind": "figure",
+   "label": "25",
+   "page": 85,
+   "file": "fig_25.png",
+   "caption": "Figure 25: CED = 5000 ergs/cc, 19.30 deg",
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    412.5
+   ],
+   "w": 2000,
+   "h": 1444,
+   "dpi": 300,
+   "src": "20. Discrete Element Method Analysis for Metal Powders Used in Additive Manufacturing, and DEM Simulation Tutorial Using LIGGGHTS-PUBLIC.pdf",
+   "blank": 0.055
+  },
+  {
+   "key": "f26",
+   "kind": "figure",
+   "label": "26",
+   "page": 86,
+   "file": "fig_26.png",
+   "caption": "Figure 26: No cohesion, 18.07 deg",
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    412.5
+   ],
+   "w": 2000,
+   "h": 1444,
+   "dpi": 300,
+   "src": "20. Discrete Element Method Analysis for Metal Powders Used in Additive Manufacturing, and DEM Simulation Tutorial Using LIGGGHTS-PUBLIC.pdf",
+   "blank": 0.055
+  },
+  {
+   "key": "f27",
+   "kind": "figure",
+   "label": "27",
+   "page": 87,
+   "file": "fig_27.png",
+   "caption": "Figure 27: CED = 1000000 ergs/cc, 71.22 deg",
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    412.5
+   ],
+   "w": 2000,
+   "h": 1444,
+   "dpi": 300,
+   "src": "20. Discrete Element Method Analysis for Metal Powders Used in Additive Manufacturing, and DEM Simulation Tutorial Using LIGGGHTS-PUBLIC.pdf",
+   "blank": 0.055
+  }
+ ]
+}

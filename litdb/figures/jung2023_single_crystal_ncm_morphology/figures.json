@@ -1,0 +1,144 @@
+{
+ "slug": "jung2023_single_crystal_ncm_morphology",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "★ 랩실 논문/09. Customizing the morphology and microstructure of single-crystalline Ni-rich layered cathode materials for all-solid-state batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematic of Li+ transport in composite electrodes with different types of NCMs for ASSBs: (a) PC-NCM and (b) SC-NCM particles embedded in LPSCl solid electrolytes. performance of ASSBs. particle agglomeration. Furthermore, the FESEM images confirmed that the surface damage was effectively recovered by the post-heat treatment of the wet-milled SC-NCM particles. The morphologies of the Ni0.82Co0.12Mn0.06(OH)2 precursor and synthesized NCM particles are shown in Fig. 2 and Fig. S1. The spherical Ni0.82Co0.12Mn0.06(OH)2 particles with a particle size of ~5 μm were successfully prepared through the coprecipitation process after the optimization of process variables (Fig. 2a). As confirmed by elemental mapping results using EDS, transition metals (TMs) were uniformly distributed in the particles (Fig. S2), representing a high fraction of Ni (>82 at%). Both PC-NCM and SC-NCM cathode ma",
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    313.6
+   ],
+   "w": 2228,
+   "h": 1102,
+   "dpi": 300,
+   "src": "09. Customizing the morphology and microstructure of single-crystalline Ni-rich layered cathode materials for all-solid-state batteries.pdf",
+   "blank": 0.535
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. FESEM images of precursor and NCMs with different synthesis conditions: (a) precursor (b) 800 ◦C (PC-NCM), (c) 900 ◦C (as-prepared SC-NCM), (d) wet- milled SC-NCM, (e) SC-NCM after a post-heat treatment, and (f) comparison on particle size distributions of the samples. of PC-NCM and SC-NCM particles were observed using TEM. As ex­ pected, PC-NCM particles contained a large number of structural defects (i.e. internal voids and grain boundaries), whereas there was no evi­ dence of grain boundaries or internal voids in SC-NCM particles. The microstructural difference between PC-NCM and SC-NCM particles was mainly attributed to the different process variables during synthesis. High-resolution TEM images and fast Fourier transform (FFT) patterns confirmed the fine crystal structures of PC-NCM and SC-NCM particles. the PC-NCM cathode were relatively higher than those of the SC-NCM cath",
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    449.8
+   ],
+   "w": 2228,
+   "h": 1670,
+   "dpi": 300,
+   "src": "09. Customizing the morphology and microstructure of single-crystalline Ni-rich layered cathode materials for all-solid-state batteries.pdf",
+   "blank": 0.507
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Structural characterizations of NCMs: comparisons of (a) XRD patterns, (b) TEM images with corresponding FFT patterns, (c) particle hardness of NCMs. microstructural characteristics. In the case of PC-NCM, the liquid elec­ trolyte readily penetrates between the primary particles, thereby reducing Rct by providing a larger interface for Li+ insertion and extraction. Moreover, the penetration of the liquid electrolyte allows for shorter diffusion lengths within the bulk of PC-NCM. As a result, the PC- NCM cathode exhibits superior rate capability and lower overpotential when used in LIB with a conventional liquid electrolyte [43]. after cycling. This indicated that the structural degradation of the SC- NCM cathode was suppressed by its high mechanical strength (Fig. 5c and 5d). Thus, the excellent hardness of SC-NCM particles should be considered as a predominant factor that direct",
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    411.5
+   ],
+   "w": 2228,
+   "h": 1510,
+   "dpi": 300,
+   "src": "09. Customizing the morphology and microstructure of single-crystalline Ni-rich layered cathode materials for all-solid-state batteries.pdf",
+   "blank": 0.812
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Electrochemical performance of PC-NCM and SC-NCM in LIBs: voltage profiles of (a) PC-NCM and (b) SC-NCM. (c) SOC dependence of cathodic polarization (ΔV). (d) Cycling performance (0.5 C).",
+   "bbox": [
+    31.6,
+    49.4,
+    565.8,
+    362.4
+   ],
+   "w": 2227,
+   "h": 1305,
+   "dpi": 300,
+   "src": "09. Customizing the morphology and microstructure of single-crystalline Ni-rich layered cathode materials for all-solid-state batteries.pdf",
+   "blank": 0.909
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Cross-sectional FESEM images of cathodes after 100 cycles in LIBs: (a) PC-NCM and (b) SC-NCM. (c) dQ/dV graphs for 1st, 50th, and 100th cycles of PC-NCM and (d) SC-NCM.",
+   "bbox": [
+    31.6,
+    400.1,
+    565.8,
+    694.7
+   ],
+   "w": 2227,
+   "h": 1228,
+   "dpi": 300,
+   "src": "09. Customizing the morphology and microstructure of single-crystalline Ni-rich layered cathode materials for all-solid-state batteries.pdf",
+   "blank": 0.765
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Electrochemical performance of PC-NCM and SC-NCM in ASSBs: voltage profiles of (a) PC-NCM and (b) SC-NCM. (c) rate capabilities at various C-rates. (d) SOC dependence of cathodic polarization (ΔV). (e) schematics of the Li+ transport pathway from surface to bulk for PC-NCM and SC-NCM. the trend observed for a conventional LIB with a liquid electrolyte. Even at a high current density (5 C), we noted that the capacity retention of the SC-NCM cathode was 74.0 %, while a considerably lower value was retained in the PC-NCM cathode (41.6 %) (Fig. 6c). As shown in Fig. 6d, the trend of the ΔV dependence on the SOC of the ASSB was opposite to that observed for the LIB (Fig. 4c). cycling. In contrast, charge-transfer reactions occur only along the sur­ face of SC-NCM particles with a small active interface, which mainly limits the reversible capacity during cycling. Nevertheless, the bene",
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    551.6
+   ],
+   "w": 2228,
+   "h": 2094,
+   "dpi": 300,
+   "src": "09. Customizing the morphology and microstructure of single-crystalline Ni-rich layered cathode materials for all-solid-state batteries.pdf",
+   "blank": 0.752
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Cycling performance of ASSBs and FESEM images of cathodes: (a) ASSBs with PC-NCM and SC-NCM cathodes at cut-off voltage 3.9 V vs. In-Li/Li+. (b) PC- NCM and (c) SC-NCM before cycling. (d) PC-NCM and (e) SC-NCM after 150 cycles. hardness. Therefore, we note that effective Li+ transport pathways can be developed in the SC-NCM cathode. As compared in Fig. 7, the ca­ pacity retention and discharge capacity of the SC-NCM cathode (84.9%) were higher than those of the PC-NCM cathode (65.6%) after 150 cycles at 0.5 C with a cut-off voltage of 3.9 V vs. In–Li/Li+ at room temperature. Cross-sectional SEM images indicate the formation of microcracks in PC- NCM particles and the effective suppression of microcracks in SC-NCM particles after 150 cycles. Acknowledgements This work was supported by the Ministry of Trade, Industry and Energy/Korea Evaluation Institute of Industrial Technology (M",
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    225.0
+   ],
+   "w": 2228,
+   "h": 733,
+   "dpi": 300,
+   "src": "09. Customizing the morphology and microstructure of single-crystalline Ni-rich layered cathode materials for all-solid-state batteries.pdf",
+   "blank": 0.605
+  }
+ ]
+}

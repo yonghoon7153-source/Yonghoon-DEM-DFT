@@ -1,0 +1,239 @@
+{
+ "slug": "stomakhin2013_mpm_snow_elastoplastic",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/14. A material point method for snow simulation.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 1,
+   "file": "fig_1.png",
+   "caption": "Figure 1: Rolling snowball. As the snowball moves down the hill, compressed snow sticks, demonstrating that we can handle so- called packing snow effect. c⃝Disney.",
+   "bbox": [
+    312.0,
+    125.1,
+    564.0,
+    408.5
+   ],
+   "w": 1051,
+   "h": 1182,
+   "dpi": 300,
+   "src": "14. A material point method for snow simulation.pdf",
+   "blank": 0.069
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 2,
+   "file": "fig_2.png",
+   "caption": "Figure 2: Snowball smash. A snowball smashes against a wall with sticky (bottom) and non-sticky (top) collisions. c⃝Disney.",
+   "bbox": [
+    48.0,
+    49.7,
+    300.0,
+    233.0
+   ],
+   "w": 1051,
+   "h": 764,
+   "dpi": 300,
+   "src": "14. A material point method for snow simulation.pdf",
+   "blank": 0.092
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 2,
+   "file": "fig_3.png",
+   "caption": "Figure 3: Double smash. Snowballs collide and shatter. c⃝Disney.",
+   "bbox": [
+    48.0,
+    256.0,
+    300.0,
+    333.9
+   ],
+   "w": 1051,
+   "h": 326,
+   "dpi": 300,
+   "src": "14. A material point method for snow simulation.pdf",
+   "blank": 0.067
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 2,
+   "file": "fig_4.png",
+   "caption": "Figure 4: Snowball drop. A basic snowball hitting the ground. c⃝Disney. describing the many phases of snow behavior with one constitutive relation. To do this, we borrow from the vast engineering litera- ture on snow and demonstrate that an elasto-plastic treatment is an effective means of handling the transition between many different behaviors including ﬂowing, clumping, breaking and more. The paper continues with a discussion of related work in Section 2. In Section 3 we present the basics of MPM, and in Sections 4 through 9 we present details of the method. Finally, we discuss results and conclusions in Sections 10 and 11.",
+   "bbox": [
+    48.0,
+    356.8,
+    300.0,
+    432.9
+   ],
+   "w": 1051,
+   "h": 318,
+   "dpi": 300,
+   "src": "14. A material point method for snow simulation.pdf",
+   "blank": 0.062
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 2,
+   "file": "fig_5.png",
+   "caption": "Figure 5: SIGGRAPH. The MPM method naturally handles frac- ture, giving us interesting naturalistic shapes. c⃝Disney.",
+   "bbox": [
+    312.0,
+    563.7,
+    564.0,
+    698.1
+   ],
+   "w": 1051,
+   "h": 561,
+   "dpi": 300,
+   "src": "14. A material point method for snow simulation.pdf",
+   "blank": 0.116
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 3,
+   "file": "fig_6.png",
+   "caption": "Figure 6: Castle destruction. Modeled structures like this castle can be destroyed using our method. c⃝Disney. an elasto-plastic constitutive relation worked well for generating realistic dynamics for a wide range of visual phenomena. This rep- resentation, as well as ﬁnite-element-based discretization, is very common in the engineering literature [Meschke et al. 1996; Cresseri and Jommi 2005; St Lawrence and Bradley 1975; Dutykh et al. 2011; Cresseri et al. 2010; Brown 1980; Nicot 2004]. volume change, which we model in our method similarly to a nor- mal mesh-based solid simulation. Stiffness is also important, and while MPM cannot do this as well as mesh-based elasticity (the de- formation gradient is less accurate), it is more effective than grid- based elasticity as the deformation gradient is not dissipative and remains synchronized with positions. Plasticity and fracture are also h",
+   "bbox": [
+    48.0,
+    49.7,
+    564.0,
+    194.3
+   ],
+   "w": 2151,
+   "h": 603,
+   "dpi": 300,
+   "src": "14. A material point method for snow simulation.pdf",
+   "blank": 0.065
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 4,
+   "file": "fig_7.png",
+   "caption": "Figure 7: An overview of the material point method (MPM). The top and the bottom rows are steps that operate on particles while the middle depicts grid-based operations.",
+   "bbox": [
+    48.0,
+    70.1,
+    564.0,
+    263.3
+   ],
+   "w": 2150,
+   "h": 805,
+   "dpi": 300,
+   "src": "14. A material point method for snow simulation.pdf",
+   "blank": 0.04
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 5,
+   "file": "fig_8.png",
+   "caption": "Figure 8: A snow block breaks over a wedge. We use the middle- right image as a reference and show how changing different param- eters in our model affects the look and dynamics of the material.",
+   "bbox": [
+    48.0,
+    39.0,
+    300.0,
+    314.1
+   ],
+   "w": 1051,
+   "h": 1147,
+   "dpi": 300,
+   "src": "14. A material point method for snow simulation.pdf",
+   "blank": 0.076
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 7,
+   "file": "fig_9.png",
+   "caption": "Figure 9: Walking character. A character stepping through snow produces an interesting structure. c⃝Disney.",
+   "bbox": [
+    48.0,
+    49.7,
+    564.0,
+    187.9
+   ],
+   "w": 2151,
+   "h": 577,
+   "dpi": 300,
+   "src": "14. A material point method for snow simulation.pdf",
+   "blank": 0.061
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 6,
+   "file": "fig_10.png",
+   "caption": "Figure 10: Snowplow. The characteristic cylindrical tube spray is created by the snowplow. c⃝Disney.",
+   "bbox": [
+    48.0,
+    57.0,
+    300.0,
+    230.8
+   ],
+   "w": 1051,
+   "h": 725,
+   "dpi": 300,
+   "src": "14. A material point method for snow simulation.pdf",
+   "blank": 0.107
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 8,
+   "file": "fig_11.png",
+   "caption": "Figure 11: Character digging. The vicious motion of a pick cre- ates an interesting irregular corrugation in the snow. c⃝Disney.",
+   "bbox": [
+    48.0,
+    49.7,
+    300.0,
+    151.5
+   ],
+   "w": 1051,
+   "h": 425,
+   "dpi": 300,
+   "src": "14. A material point method for snow simulation.pdf",
+   "blank": 0.1
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 9,
+   "file": "fig_12.png",
+   "caption": "Figure 12: The end. We can simulate other words, too. c⃝Disney. ACM Transactions on Graphics, Vol. 32, No. 4, Article 102, Publication Date: July 2013",
+   "bbox": [
+    302.6,
+    442.7,
+    564.0,
+    707.9
+   ],
+   "w": 1091,
+   "h": 1106,
+   "dpi": 300,
+   "src": "14. A material point method for snow simulation.pdf",
+   "blank": 0.507
+  }
+ ]
+}

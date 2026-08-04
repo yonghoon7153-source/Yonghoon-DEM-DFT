@@ -22,11 +22,60 @@
    "24. Research progress in Li-argyrodite-based solidstate electrolytes.pdf"
   ]
  },
+ "bak2024_binder_distribution_multilayer": {
+  "figures": 6,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "이용민 교수님/20. Advanced multilayer model electrode for binder distribution within composite electrodes of lithium batteries.pdf"
+  ]
+ },
  "banik2022_substitutions_oxidative_stability_argyrodite": {
   "figures": 4,
   "generated": "2026-08-04",
   "pdfs": [
    "18. Can_substitutions_affect_the_oxidative_stability_o.pdf"
+  ]
+ },
+ "bielefeld2020_effective_ionic_conductivity_binder": {
+  "figures": 7,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "건식전극 논문/08. modeling-effective-ionic-conductivity-and-binder-influence-in-composite-cathodes-for-all-solid-state-batteries.pdf"
+  ]
+ },
+ "boschpadros2014_dem_liggghts_msc_thesis": {
+  "figures": 4,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "DEM 논문/21. Discrete element simulations with Liggghts.pdf"
+  ]
+ },
+ "bucci2017_chemomech_failure_assb_cycling_czm": {
+  "figures": 5,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "DEM 논문/25. Modeling of internal mechanical failure of all-solid-state batteries during electrochemical cycling, and implications for battery design.pdf"
+  ]
+ },
+ "bucci2018_mechanical_instability_interface_delamination": {
+  "figures": 8,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "DEM 논문/22. Mechanical instability of electrode-electrolyte interfaces in solid-state batteries.pdf"
+  ]
+ },
+ "cha2024_dualcompatible_halide_ncm_lpscl_interface": {
+  "figures": 6,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "★ 랩실 논문/05. Stabilizing the interface between high-Ni oxide cathode and Li6PS5Cl for all-solid-state batteries via dual-compatible halides.pdf"
+  ]
+ },
+ "cho2024_conflicting_roles_conductive_additive": {
+  "figures": 6,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "★ 랩실 논문/07. Conflicting roles of conductive additives in controlling cathode performance in all-solid-state batteries.pdf"
   ]
  },
  "choi2025_mlip_cu_taxn_interfacial_adhesion": {
@@ -57,6 +106,13 @@
   "generated": "2026-08-04",
   "pdfs": [
    "34. Elastic Properties of Alkali Superionic Conductor Electrolytes from First Principles Calculations.pdf"
+  ]
+ },
+ "dmt1975_adhesion_contact_deformation": {
+  "figures": 1,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "DEM 논문/12. Effect of Contact Deformations on the Adhesion of Particles.pdf"
   ]
  },
  "dyre2004_hopping_models_ion_conduction_noncrystals": {
@@ -95,6 +151,20 @@
    "47. Sup) Anomalously High Ionic Conductivity of Li2SiS3‑Type Conductors.pdf"
   ]
  },
+ "huang2025_dem_lbm_heat_conduction_composite_cathode": {
+  "figures": 21,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "DEM 논문/26. Modelling heat conduction in 3D composite cathode microstructures of all-solid-state batteries.pdf"
+  ]
+ },
+ "intergranular_cracking_nmc811_jmca2023": {
+  "figures": 5,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "DEM 논문/19. Direct observations of electrochemically induced intergranular cracking in polycrystalline NMC811 particles - d3ta03057a.pdf"
+  ]
+ },
  "ishikawa2025_site_percolation_cooperative_ion_conduction": {
   "figures": 5,
   "generated": "2026-08-04",
@@ -108,6 +178,20 @@
   "pdfs": [
    "48. Designing a descriptor for the computational screening of argyrodite-based solid-state superionic conductors uniformity of ion-cage size.pdf",
    "48. Sup) Designing a descriptor for the computational screening of argyrodite-based solid-state superionic conductors uniformity of ion-cage size.pdf"
+  ]
+ },
+ "jun2026_ppma_econductive_binder_si_lowpressure_assb": {
+  "figures": 5,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "건식전극 논문/10. PPMA low P si anode ASSB.pdf"
+  ]
+ },
+ "jung2023_single_crystal_ncm_morphology": {
+  "figures": 7,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "★ 랩실 논문/09. Customizing the morphology and microstructure of single-crystalline Ni-rich layered cathode materials for all-solid-state batteries.pdf"
   ]
  },
  "kahle2020_ht_aimd_screening": {
@@ -126,12 +210,62 @@
    "06. Sup) Solid-State Li–Metal Batteries Challenges and Horizons of Oxide and Sulfide Solid Electrolytes and Their Interfaces.pdf"
   ]
  },
+ "kim2023_chemomech_failure_highstrain_anode": {
+  "figures": 6,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "★ 랩실 논문/08. Chemo-mechanical failure of solid composite cathodes accelerated by high-strain anodes in all-solid-state batteries.pdf"
+  ]
+ },
+ "kim2024_carbon_volumetric_occupation_se_domain": {
+  "figures": 5,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "★ 랩실 논문/06. Accelerated Degradation of All-Solid-State Batteries Induced through Volumetric Occupation of the Carbon Additive in the Solid Electrolyte Domain.pdf"
+  ]
+ },
+ "kim2024_digital_twin_acsenergyletters": {
+  "figures": 6,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "이용민 교수님/18. Digital Twin Battery Modeling and Simulations A New Analysis and Design Tool for Rechargeable Batteries.pdf"
+  ]
+ },
  "kim2024_mtp_argyrodite_disorder_gb": {
   "figures": 22,
   "generated": "2026-08-04",
   "pdfs": [
    "35. Highly reliable and large-scale simulations of promising argyrodite solid-state electrolytes using a machine-learned moment tensor potential.pdf",
    "35. Sup) Highly reliable and large-scale simulations of promising argyrodite solid-state electrolytes using a machine-learned moment tensor potential.pdf"
+  ]
+ },
+ "kim2025_conductive_agent_se_coating_cathode": {
+  "figures": 5,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "이용민 교수님/19. Impact of Conductive Agents in Sulfide ElectrolyteCoating on Cathode Active Materials for CompositeElectrodes in All‐Solid‐State Batteries.pdf"
+  ]
+ },
+ "kim2025_csp_metastable_edge_sharing_sse": {
+  "figures": 18,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "이상욱 교수님/4. Machine Learning-Assisted Crystal Structure Prediction of Solid-State Electrolytes Reveals Superior Ionic Conductivity in Metastable Edge-Sharing Phases.pdf",
+   "이상욱 교수님/4. Sup) Machine Learning-Assisted Crystal Structure Prediction of Solid-State Electrolytes Reveals Superior Ionic Conductivity in Metastable Edge-Sharing Phases.pdf"
+  ]
+ },
+ "kim2025_impedance_decoupling_tlm_assb": {
+  "figures": 6,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "★ 랩실 논문/04. Multiple-reaction kinetics of composite electrodes for sulfide-based all-solid-state batteries Impedance decoupling.pdf"
+  ]
+ },
+ "kim2025_li3ycl6_new_crystal_structure": {
+  "figures": 4,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "이상욱 교수님/5. New crystal structure of Li₃YCl₆ structural relationship and ionic conductivity for solid-state electrolytes.pdf"
   ]
  },
  "kim2026_hts_li3sc2po43_coating_midni_ncm": {
@@ -155,6 +289,20 @@
   "pdfs": [
    "03. Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf",
    "03. Sup) Mitigating interfacial degradation of Li6PS5Clhigh‑nickel cathode via indium doping for durable all-solid-state lithium batteries.pdf"
+  ]
+ },
+ "klar2016_dp_sand_animation": {
+  "figures": 17,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "DEM 논문/13. Drucker-Prager Elastoplasticity for Sand Animation.pdf"
+  ]
+ },
+ "kogutetsion2002_ep_sphere_rigid_flat": {
+  "figures": 8,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "DEM 논문/09. Elastic-Plastic Contact Analysis of a Sphere and a Rigid Flat.pdf"
   ]
  },
  "kraft2017_lattice_polarizability_argyrodite_Li6PS5X": {
@@ -231,11 +379,26 @@
    "22. High performance P-based argyrodite sulfide electrolytes enabled by Sb-based argyrodite doping for all-solid-state lithium metal batteries†.pdf"
   ]
  },
+ "minnmann2024_microstructure_porosity_visualization": {
+  "figures": 8,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "DEM 논문/24. Minnmann_2024_J._Electrochem._Soc._171_060514 Visualizing the Impact of the Composite Cathode Microstructure and Porosity on Solid-State Battery Performance.pdf"
+  ]
+ },
  "ong2013_lgps_family_substitution": {
   "figures": 8,
   "generated": "2026-08-04",
   "pdfs": [
    "43. Phase stability, electrochemical stability and ionic conductivity of the Li10±1MP2X12 (M = Ge, Si, Sn, Al or P, and X = O, S or Se) family of superionic conductors.pdf"
+  ]
+ },
+ "park2020_digitaltwin_assb_foundational": {
+  "figures": 26,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "이용민 교수님/22. Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf",
+   "이용민 교수님/22. Sup) Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf"
   ]
  },
  "qian2026_decanoate_coating_lpscl_moisture_interface": {
@@ -258,6 +421,15 @@
   "generated": "2026-08-04",
   "pdfs": [
    "19. Iodide substituted halide-rich lithium argyrodite solid electrolytes with improved performance for all solid-state batteries†.pdf"
+  ]
+ },
+ "reisacher2023_percolation_sulfide_carbon_matrix": {
+  "figures": 12,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "DEM 논문/23. microstructural-modeling-of-composite-cathodes-for-all-solid-state-batteries.pdf",
+   "DEM 논문/27. Percolation Behavior of a Sulfide Electrolyte___Carbon Additive_Matrix for Composite Cathodes in All-Solid-State Batteries.pdf",
+   "건식전극 논문/06. microstructural-modeling-of-composite-cathodes-for-all-solid-state-batteries.pdf"
   ]
  },
  "ren2026_li2zrcl6_low_ion_potential_doping": {
@@ -291,6 +463,20 @@
    "40. Sup) Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf"
   ]
  },
+ "shenouda2020_dem_metal_powder_am_liggghts_tutorial": {
+  "figures": 25,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "DEM 논문/20. Discrete Element Method Analysis for Metal Powders Used in Additive Manufacturing, and DEM Simulation Tutorial Using LIGGGHTS-PUBLIC.pdf"
+  ]
+ },
+ "so2022_dem_contact_model_assb_compaction_sintering": {
+  "figures": 10,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "DEM 논문/18. Contact model for DEM simulation of compaction and sintering of all-solid-state battery electrodes.pdf"
+  ]
+ },
  "son2025_fivevolt_assb": {
   "figures": 6,
   "generated": "2026-08-04",
@@ -303,6 +489,20 @@
   "generated": "2026-08-04",
   "pdfs": [
    "46. A review of band structure and material properties of transparent conducting and semiconducting oxides Ga2O3, Al2O3, In2O3, ZnO, SnO2, CdO, NiO, CuO, and Sc2O3.pdf"
+  ]
+ },
+ "stomakhin2013_mpm_snow_elastoplastic": {
+  "figures": 12,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "DEM 논문/14. A material point method for snow simulation.pdf"
+  ]
+ },
+ "storakers1997_similarity_inelastic_contact": {
+  "figures": 4,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "DEM 논문/06. Similarity analysis of inelastic contact.pdf"
   ]
  },
  "sundar2025_oxide_coating_screening_lpscl": {
@@ -362,6 +562,13 @@
   "generated": "2026-08-04",
   "pdfs": [
    "27. La,O co doped LPSC_PO bond, LaCl3 형성.pdf"
+  ]
+ },
+ "yun2023_deciphering_degradation_halide_vs_sulfide": {
+  "figures": 5,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "★ 랩실 논문/10. Deciphering the critical degradation factors of solid composite electrodes with halide electrolytes Interfacial reaction versus ionic transport.pdf"
   ]
  },
  "zhou2026_high_entropy_lgps_multicationic": {

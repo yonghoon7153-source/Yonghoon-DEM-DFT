@@ -1,0 +1,410 @@
+{
+ "slug": "huang2025_dem_lbm_heat_conduction_composite_cathode",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/26. Modelling heat conduction in 3D composite cathode microstructures of all-solid-state batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematics of the SSBs: 1) Aluminium foil as cathode current collector; 2) a cathode consists of active material (LCO) and solid electrolyte (LLZO); 3) a lithium metal anode; 4) an electrolytic copper foil. [24].",
+   "bbox": [
+    31.6,
+    624.5,
+    294.7,
+    711.7
+   ],
+   "w": 1097,
+   "h": 364,
+   "dpi": 300,
+   "src": "26. Modelling heat conduction in 3D composite cathode microstructures of all-solid-state batteries.pdf",
+   "blank": 0.388
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Cathode structure generation by DEM, red and blue particles represent LCO and LLZO. Certain numbers of red particle 1 (represent LCO) and blue particle 2 (represent LLZO) were randomly generated within a 3D container (80 μm × 80 μm × 430 μm), in which the porosity is 8.1 %, volume ratio of LCO and LLZO is 1:1. (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.) 4",
+   "bbox": [
+    31.6,
+    488.3,
+    563.6,
+    711.7
+   ],
+   "w": 2218,
+   "h": 932,
+   "dpi": 300,
+   "src": "26. Modelling heat conduction in 3D composite cathode microstructures of all-solid-state batteries.pdf",
+   "blank": 0.535
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Flow chart of LBM for heat conduction model: step 1) Initialize T, fα and feq α ; step 2) Collision step (Eq. (18)): calculate the updated distribution function *; step 4) Apply appropriate boundary fα; step 3) Streaming step: move fα→fα * (Eq. (19)). conditions; step 5) Compute macroscopic properties T from fα 4. Boundary conditions: Apply appropriate boundary conditions to simulate walls, inlets, outlets, or interfaces within the simulated cathode. Because the collision and streaming steps are launched in separated phases respectively, the heat conduction processes be- tween the connected material phases are calculated by the interface boundary conditions (will be discussed in Section 2.3.2). 5. Compute macroscopic properties T from fα * using Eq. (19) at each. The temperature field is used to analyse the heat transfer and for visualization. 6. Repeat steps (2)–(5) with time st",
+   "bbox": [
+    31.6,
+    49.4,
+    294.7,
+    484.0
+   ],
+   "w": 1097,
+   "h": 1812,
+   "dpi": 300,
+   "src": "26. Modelling heat conduction in 3D composite cathode microstructures of all-solid-state batteries.pdf",
+   "blank": 0.476
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Boundary conditions of temperature fields in cathode microstruc- ture samples.",
+   "bbox": [
+    300.6,
+    616.2,
+    563.7,
+    721.3
+   ],
+   "w": 1097,
+   "h": 439,
+   "dpi": 300,
+   "src": "26. Modelling heat conduction in 3D composite cathode microstructures of all-solid-state batteries.pdf",
+   "blank": 0.756
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Interface boundary detection schematic and steps: 1) Digitalize the cathode microstructure, LCO for 1, LLZO for 2 and pore for 0; 2) locate the interface boundary grids; 3) identify three interface types, LCO/LLZO, LLZO/ pore, and LCO/pore; 4) apply the correct boundary condition settings.",
+   "bbox": [
+    300.6,
+    49.4,
+    563.7,
+    403.8
+   ],
+   "w": 1097,
+   "h": 1478,
+   "dpi": 300,
+   "src": "26. Modelling heat conduction in 3D composite cathode microstructures of all-solid-state batteries.pdf",
+   "blank": 0.21
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. The interface thermal equilibrium temperature Te for material 1/2 contacted grids. gradients between phases (e.g., active material and electrolyte). Such resistance can significantly affect heat transfer, particularly in highly heterogeneous systems or degraded structures with poor interfacial contact. To address this, future extensions of the model could incorpo- rate interface-specific thermal resistance or multi-scale approaches to capture interfacial phenomena more accurately.",
+   "bbox": [
+    31.6,
+    50.3,
+    294.7,
+    254.0
+   ],
+   "w": 1097,
+   "h": 850,
+   "dpi": 300,
+   "src": "26. Modelling heat conduction in 3D composite cathode microstructures of all-solid-state batteries.pdf",
+   "blank": 0.402
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Diagram of heat transfer experiment for packed particles. mm, length: 140 mm) is selected to contain packed steel particles (of 6.35 mm diameter spheres, height of accumulated packed particle: 105 mm). The thermal insulation material is used to cover the tube for a better thermal insulation effect. The particles are heated at the bottom with a constant temperature Ts = 341.35 K (68.2 ◦C). The top side is exposed to the environment with the ambient temperature Ta = 291.9 K (18.7 ◦C) and emits the heat to the ambient by natural convection. The other sides are adiabatic due to the thermal insulation.",
+   "bbox": [
+    300.6,
+    49.4,
+    563.7,
+    239.4
+   ],
+   "w": 1097,
+   "h": 793,
+   "dpi": 300,
+   "src": "26. Modelling heat conduction in 3D composite cathode microstructures of all-solid-state batteries.pdf",
+   "blank": 0.8
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 10,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Comparison of measured temperature with error bars and simulated mean cross temperature in different heights (TC1: 0 (bottom), TC2: 14 mm, TC3: 34.5 mm, TC4: 61 mm, TC5:84 mm, TC6: 100 mm) for packed particles. distance between the heated plate and the temperature recorded level, the LB model simulated temperature points are the averaged values of horizontal sections at different heights. It is noted that the experiment was repeated 3 times, and the measured results are taken as the averaged values for enhancing the accuracy and reliability of the measured re- sults. The heights of numbered thermal couple probes for temperature measurement are also depicted in Fig. 8. Those simulation results are obtained after 6 × 105 iterations and the related physical time is 3000 s. Generally, all the simulation results show good consistency with the experimental data, indicating this LB mode",
+   "bbox": [
+    31.6,
+    49.4,
+    294.7,
+    242.8
+   ],
+   "w": 1097,
+   "h": 807,
+   "dpi": 300,
+   "src": "26. Modelling heat conduction in 3D composite cathode microstructures of all-solid-state batteries.pdf",
+   "blank": 0.946
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 12,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. (a) 3-D temperature distribution graph and (b) gradient across the conduction direction for three phases (i.e., whole solid-phase, LCO and LLZO) of Case I-a1/ b1/a5/b5.",
+   "bbox": [
+    31.6,
+    50.0,
+    563.7,
+    707.9
+   ],
+   "w": 2218,
+   "h": 2742,
+   "dpi": 300,
+   "src": "26. Modelling heat conduction in 3D composite cathode microstructures of all-solid-state batteries.pdf",
+   "blank": 0.655
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 13,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. Comparison of effective thermal conductivity distributions keff for Case I-a: “LCO(5μm): LLZO(5μm) = 1:1”, Case I-b: “LCO(5μm): LLZO(5μm) = 4:1” and Case I-c: “LCO(5μm): LLZO(5μm) = 1:4”.",
+   "bbox": [
+    31.6,
+    50.7,
+    421.0,
+    640.0
+   ],
+   "w": 1624,
+   "h": 2456,
+   "dpi": 300,
+   "src": "26. Modelling heat conduction in 3D composite cathode microstructures of all-solid-state batteries.pdf",
+   "blank": 0.948
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 14,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. Sample Case II-a with similar tortuosity across the X, Y, and Z dimensions, overall porosity εoverall=21.1 %, the particle size: LCO & LLZO are 5 μm and 10 μm, respectively, the volume fraction ratio of LCO & LLZO are 1:1: (a) tortuosity for pore, LCO and LLZO, (b) effective thermal conductivity distributions keff. volumetric ratio of LCO to LLZO. Tortuosity values of the pores, LCO, and LLZO phases and ETCs are provided for each sample across the X, Y, and Z dimensions, and the standard deviations of these parameters on three dimensions are also presented. higher τLCO looks to reduce the ETC and impede the heat conduction. Additionally, higher τLLZO more like to decrease the ETC but not obvious by comparing Case II-b1y and II-b2x with similar τpore and τLCO. It is strongly consistent with thermodynamics fundamentals: For the tortuosity of the pore phase τpore, vacuum pore is th",
+   "bbox": [
+    31.6,
+    262.7,
+    563.7,
+    464.5
+   ],
+   "w": 2218,
+   "h": 842,
+   "dpi": 300,
+   "src": "26. Modelling heat conduction in 3D composite cathode microstructures of all-solid-state batteries.pdf",
+   "blank": 0.875
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 15,
+   "file": "fig_12.png",
+   "caption": "Fig. 12. Sample Case II-b with different tortuosity across the X, Y, and Z dimensions, overall porosity εoverall=21.1 %, the particle size: LCO & LLZO are 5 μm and 10 μm, respectively, the volume fraction ratio of LCO & LLZO are 1:1: (a) tortuosity for pore, LCO and LLZO, (b) effective thermal conductivity distributions keff. its microstructural optimization remains important, especially in sys- tems where it forms a significant fraction of the composite. , bi1i2⋯ip are regression coefficients with pth-order. ϵ is the model’s error term (also known as the residuals), which provides for random variation in y not explained by the x variables. The second term in Eq. (32) rep- resents the linear term, the third term represents the quadratic terms, and so on, up to the pth term representing the pth-order interaction terms. The major gap of ETCs is contributed by the tortuosity three com- pone",
+   "bbox": [
+    31.6,
+    311.5,
+    563.7,
+    495.3
+   ],
+   "w": 2218,
+   "h": 767,
+   "dpi": 300,
+   "src": "26. Modelling heat conduction in 3D composite cathode microstructures of all-solid-state batteries.pdf",
+   "blank": 0.9
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 17,
+   "file": "fig_14.png",
+   "caption": "Fig. 14. Comparison of three groups of cathode samples with varying particle sizes and overall porosity εoverall = 7% and different LCO &LLZO diameters. LLZO) and Case III-e (intermediate equal particle sizes of 5 μm for both LCO and LLZO) across all LCO volumetric fractions (30 % to 70 %). Case III-d exhibits the lowest ETC, emphasizing the impact of larger particles on reducing interfacial contact and conduction efficiency. On the other hand, Case III-e serves as an intermediate particle size compared to III-a and III-d, and the ETC of III-e are higher than III-d but obviously lower than III-a. These results indicate that smaller LCO and LLZO particles facilitate better thermal pathways. This is because at the same volume fraction, there are more smaller particles to provide enhanced connected heat conduction pathways, hence giving higher ETC values. In summary, the particle size plays",
+   "bbox": [
+    31.6,
+    357.6,
+    294.7,
+    567.9
+   ],
+   "w": 1097,
+   "h": 877,
+   "dpi": 300,
+   "src": "26. Modelling heat conduction in 3D composite cathode microstructures of all-solid-state batteries.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1 Physical properties of cathode materials",
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    748.3
+   ],
+   "w": 2213,
+   "h": 2987,
+   "dpi": 300,
+   "src": "26. Modelling heat conduction in 3D composite cathode microstructures of all-solid-state batteries.pdf",
+   "blank": 0.772
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 7,
+   "file": "tab_2.png",
+   "caption": "Table 2 Outline and interface boundary condition (BC) settings for cathode samples Boundary classification Surface of sample Boundary type Value for setting Outline Top surface Neumann BC Heat flux qloss = boundary 200, 000 W/m2 Bottom temperature Tsubstrate = 343 K Vertical surfaces Adiabatic BC Interface Bottom surface Dirichlet BC Material 1 side surfaces at material 1/2 interface Dirichlet BC Te at related interface grids of material 1/2 boundary Te at related interface grids of material 1/2 Material 2 side surfaces at material 1/2 interface Dirichlet BC Material 1 side surfaces at material 1/pores interface Adiabatic BC N/A Material 2 side surfaces at material 2/pores interface Adiabatic BC N/A",
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    745.1
+   ],
+   "w": 2213,
+   "h": 2974,
+   "dpi": 300,
+   "src": "26. Modelling heat conduction in 3D composite cathode microstructures of all-solid-state batteries.pdf",
+   "blank": 0.705
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 9,
+   "file": "tab_3.png",
+   "caption": "Table 3 Outline and interface boundary condition settings for packed particle heat conduction experiment. Boundary classification Surface of sample Boundary type Value for setting Outline Top surface Robin BC Ambient temperature T∞= 291.85 K Bottom surface Dirichlet BC boundary",
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    748.6
+   ],
+   "w": 2213,
+   "h": 2989,
+   "dpi": 300,
+   "src": "26. Modelling heat conduction in 3D composite cathode microstructures of all-solid-state batteries.pdf",
+   "blank": 0.851
+  },
+  {
+   "key": "t5",
+   "kind": "table",
+   "label": "5",
+   "page": 11,
+   "file": "tab_5.png",
+   "caption": "Table 5 Comparison of three cases of cathode samples with different porosities for Case I-a: “LCO(5μm): LLZO(5μm) = 1:1”, Case I-b: “LCO(5μm): LLZO(5μm) = 4:1” and Case I- c: “LCO(5μm): LLZO(5μm) = 1:4” Group Sample Particle sizes (μm) Tortuosity Volume ratios (LCO: LLZO) Overall porosity (%) LCO LLZO Pores LCO LLZO I-a I-a1 inf 2.552 2.661 4.4 I-a2 inf 2.418 2.839 8.1 I-a3 50.42 2.824 3.075 1:1 15.1 I-a4 22.30 3.428 3.718 21.1 I-a5 5.278 4.905 5.436 31.2 I-b I-b1 inf 1.354 inf 4.4 I-b2 inf 1.415 inf 8.1 I-b3 5 5 50.42 1.596 inf 4:1 15.1 I-b4 22.30 1.801 inf 21.1 I-b5 5.278 2.319 inf 31.2 I-c I-c1 inf inf 1.354 4.4 I-c2 inf inf 1.415 8.1 I-c3 50.42 inf 1.596 1:4 15.1 I-c4 22.30 inf 1.801 21.1 I-c5 5.278 inf 2.319 31.2",
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    748.6
+   ],
+   "w": 2213,
+   "h": 2989,
+   "dpi": 300,
+   "src": "26. Modelling heat conduction in 3D composite cathode microstructures of all-solid-state batteries.pdf",
+   "blank": 0.879
+  },
+  {
+   "key": "t6",
+   "kind": "table",
+   "label": "6",
+   "page": 13,
+   "file": "tab_6.png",
+   "caption": "Table 6 Comparison of effective thermal conductivity keff of LBM simulated and effective medium theory (EMT) model analytical results, volume ratio of interconnected pores and solid material to the related whole phases for Case I-a Sample LBM simu. keff ( W m−1 K−1) EMT model: Interconnected Interconnected keff ( Solid phase Pore-phase W m−1 K−1) I-a1 1.816 1.904 99.965 % 0.213 % I-a2 1.452 1.753 99.987 % 4.455 % I-a3 0.945 1.475 99.883 % 11.054 % I-a4 0.775 1.243 99.871 % 19.897 % I-a5 0.542 0.874 99.819 % 74.265 % I-b1 4.023 3.716 99.965 % 0.213 % I-b2 3.279 3.472 99.987 % 4.455 % I-b3 2.005 3.014 99.883 % 11.054 % I-b4 1.477 2.620 99.871 % 19.897 % I-b5 1.078 1.966 99.819 % 74.265 % I-c1 1.041 0.751 99.965 % 0.213 % I-c2 0.792 0.695 99.987 % 4.455 % I-c3 0.722 0.593 99.883 % 11.054 % I-c4 0.557 0.509 99.871 % 19.897 % I-c5 0.413 0.377 99.819 % 74.265 %",
+   "bbox": [
+    32.6,
+    31.6,
+    562.7,
+    742.1
+   ],
+   "w": 2210,
+   "h": 2962,
+   "dpi": 300,
+   "src": "26. Modelling heat conduction in 3D composite cathode microstructures of all-solid-state batteries.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "t7",
+   "kind": "table",
+   "label": "7",
+   "page": 14,
+   "file": "tab_7.png",
+   "caption": "Table 7 Case II-a cathode microstructure parameters: first group with similar tortuosity",
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    745.3
+   ],
+   "w": 2213,
+   "h": 2975,
+   "dpi": 300,
+   "src": "26. Modelling heat conduction in 3D composite cathode microstructures of all-solid-state batteries.pdf",
+   "blank": 0.884
+  },
+  {
+   "key": "t8",
+   "kind": "table",
+   "label": "8",
+   "page": 15,
+   "file": "tab_8.png",
+   "caption": "Table 8 Case II-b cathode microstructure parameters: second group with different tortuosity",
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    749.2
+   ],
+   "w": 2213,
+   "h": 2991,
+   "dpi": 300,
+   "src": "26. Modelling heat conduction in 3D composite cathode microstructures of all-solid-state batteries.pdf",
+   "blank": 0.907
+  },
+  {
+   "key": "t9",
+   "kind": "table",
+   "label": "9",
+   "page": 17,
+   "file": "tab_9.png",
+   "caption": "Table 9 Case III: Comparison of three groups of cathode samples with varying particle sizes and overall porosity εoverall = 7% and different LCO &LLZO diameters for Case III-a: “LCO:LLZO = 3 μm:3 μm”, Case III-b: “LCO:LLZO = 6 μm:3 μm”, Case III-c: “LCO:LLZO = 3 μm:6 μm”, Case III-d: “LCO:LLZO = 6 μm:6 μm”, and Case III-e: “LCO:LLZO = 5 μm:5 μm”. ( W m−1 K−1) Group Sample Particle sizes (μm) CAM vol%: LCO/(LCO+LLZO) Volume ratios (LCO/LLZO) Tortuosity Overall porosity (%) keff LCO LLZO LCO LLZO Case III-a III-a1 30 % 3:7 13.22 1.767 1.280 III-a2 40 % 4:6 4.900 2.232 1.689 III-a3 3 3 50 % 5:5 3.046 3.103 2.113 III-a4 60 % 6:4 2.179 5.059 2.978 III-a5 70 % 7:3 1.740 14.80 4.005 Case III-b III-b1 30 % 3:7 31.88 1.568 1.148 III-b2 40 % 4:6 5.691 1.847 1.419 III-b3 6 3 50 % 5:5 3.103 2.334 1.770 III-b4 60 % 6:4 2.167 3.240 2.312 III-b5 70 % 7:3 1.705 6.142 2.924 Case III-c III-c1 30 % 3:7 6.1",
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    744.4
+   ],
+   "w": 2213,
+   "h": 2971,
+   "dpi": 300,
+   "src": "26. Modelling heat conduction in 3D composite cathode microstructures of all-solid-state batteries.pdf",
+   "blank": 0.904
+  }
+ ]
+}

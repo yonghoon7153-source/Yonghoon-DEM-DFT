@@ -1,0 +1,106 @@
+{
+ "slug": "kim2025_conductive_agent_se_coating_cathode",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "이용민 교수님/19. Impact of Conductive Agents in Sulfide ElectrolyteCoating on Cathode Active Materials for CompositeElectrodes in All‐Solid‐State Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 | (a) Schematic illustration of the SE coating process for SE@CAM and SE–SP@CAM. Surface SEM images of (b) bare NCM, (c) SE@ CAM, and (d) SE–SP@CAM.",
+   "bbox": [
+    39.4,
+    28.0,
+    555.9,
+    517.3
+   ],
+   "w": 2154,
+   "h": 2040,
+   "dpi": 300,
+   "src": "19. Impact of Conductive Agents in Sulfide ElectrolyteCoating on Cathode Active Materials for CompositeElectrodes in All‐Solid‐State Batteries.pdf",
+   "blank": 0.688
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 | (a) Cross‐sectional SEM image of SE@CAM and (b) magnified view of the red‐marked region in (a), and its corresponding EDS maps for (c) Ni, (d) S, and (e) C. (f) Cross‐sectional SEM image of SE–SP@CAM and (g) magnified view of the red‐marked region in (f), and its corresponding EDS maps for (h) Ni, (i) S, and (j) C.",
+   "bbox": [
+    39.4,
+    28.0,
+    555.9,
+    428.8
+   ],
+   "w": 2154,
+   "h": 1671,
+   "dpi": 300,
+   "src": "19. Impact of Conductive Agents in Sulfide ElectrolyteCoating on Cathode Active Materials for CompositeElectrodes in All‐Solid‐State Batteries.pdf",
+   "blank": 0.252
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 | Cross‐sectional SEM image of the SE@CAM electrode and its corresponding EDS maps for (b) Ni, (c) S, and (d) C. (e) Cross‐ sectional SEM image of the SE–SP@CAM electrode and its corresponding EDS maps for (f) Ni, (g) S, and (h) C. (i) DC polarization curves of SE@ CAM and SE–SP@CAM under 50 mV. (j) Nyquist plots of electron‐blocking cells using SE@CAM and SE–SP@CAM. (k) Calculated electrical and ionic conductivities of SE@CAM and SE–SP@CAM.",
+   "bbox": [
+    39.4,
+    28.0,
+    555.9,
+    417.3
+   ],
+   "w": 2154,
+   "h": 1623,
+   "dpi": 300,
+   "src": "19. Impact of Conductive Agents in Sulfide ElectrolyteCoating on Cathode Active Materials for CompositeElectrodes in All‐Solid‐State Batteries.pdf",
+   "blank": 0.472
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 | (a) First‐cycle charge–discharge voltage profiles at 0.1 C and 25°C of NCM/Li all‐solid‐state half‐cells using SE@CAM and SE–SP@ CAM electrodes. (b) Voltage profiles and corresponding polarization plots obtained using GITT, and (c) the calculated relative active surface area of SE@CAM and SE–SP@CAM electrodes. (d) Nyquist plot, (e) rate performance, and (f) corresponding cycling performance of all‐solid‐state half‐cells using SE@CAM and SE–SP@CAM electrodes. Cycling performance was conducted under a 0.1 C charge/0.5 C discharge condition.",
+   "bbox": [
+    39.4,
+    28.0,
+    555.9,
+    347.0
+   ],
+   "w": 2154,
+   "h": 1330,
+   "dpi": 300,
+   "src": "19. Impact of Conductive Agents in Sulfide ElectrolyteCoating on Cathode Active Materials for CompositeElectrodes in All‐Solid‐State Batteries.pdf",
+   "blank": 0.887
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 | (a) Surface and (b) cross‐sectional SEM images of SE–VGCF@CAM. (c) Comparison of electrical and ionic conductivities of SE@ CAM, SE–SP@CAM, and SE–VGCF@CAM. (d) First‐cycle charge–discharge voltage profiles at 0.1 C and 25°C, (e) rate performance, and (f) cycling performance (0.1 C charge/0.5 C discharge) of NCM/Li all‐solid‐state half‐cells using SE@CAM, SE–SP@CAM, and SE–VGCF@CAM electrodes. (g) Schematic illustration of the microstructures of SE–SP@CAM and SE–VGCF@CAM.",
+   "bbox": [
+    39.4,
+    28.0,
+    555.9,
+    520.5
+   ],
+   "w": 2154,
+   "h": 2053,
+   "dpi": 300,
+   "src": "19. Impact of Conductive Agents in Sulfide ElectrolyteCoating on Cathode Active Materials for CompositeElectrodes in All‐Solid‐State Batteries.pdf",
+   "blank": 0.688
+  }
+ ]
+}

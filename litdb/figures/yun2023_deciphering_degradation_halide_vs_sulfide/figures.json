@@ -1,0 +1,106 @@
+{
+ "slug": "yun2023_deciphering_degradation_halide_vs_sulfide",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "★ 랩실 논문/10. Deciphering the critical degradation factors of solid composite electrodes with halide electrolytes Interfacial reaction versus ionic transport.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. (a) Schematic of an ASSB with NCM-LPSCl and NCM-LIC. Voltage profiles of ASSBs with (b) NCM-LPSCl and (c) NCM-LIC cathodes during the rate-capability test from 0.1C to 2.0C. (d) Capacity retentions and Coulombic efficiencies of ASSBs with NCM-LPSCl and NCM-LIC. 3",
+   "bbox": [
+    31.6,
+    254.8,
+    565.8,
+    721.3
+   ],
+   "w": 2227,
+   "h": 1945,
+   "dpi": 300,
+   "src": "10. Deciphering the critical degradation factors of solid composite electrodes with halide electrolytes Interfacial reaction versus ionic transport.pdf",
+   "blank": 0.864
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (a) Equivalent circuit for the TLM with interfacial reactions. (b) AC-impedance spectra of NCM-LPSCl and NCM-LIC with corresponding ionic and interfacial resistances. 4",
+   "bbox": [
+    31.6,
+    401.7,
+    565.8,
+    721.3
+   ],
+   "w": 2227,
+   "h": 1333,
+   "dpi": 300,
+   "src": "10. Deciphering the critical degradation factors of solid composite electrodes with halide electrolytes Interfacial reaction versus ionic transport.pdf",
+   "blank": 0.739
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. SSRM mapping results of (a) NCM-LPSCl and (b) NCM-LIC after cycling. The 2D scanning plots (top left in (a) and (b)) shows the resistivity values displayed over an X-Y plane. The yellow lines (A-A’ and B-B’) indicates the selected regions for the line scan. The line scan of resistivity (top right in (a) and (b)) displays the change in resistivity at the SE-active material interfaces. The 3D resistivity-topology scan (bottom) combines the resistivity data with z-height data, providing a simultaneous visualization of the topology of the sample and the corresponding resistivity. XPS spectra for (c) P 2p, S 2p of NCM-LPSCl and (d) In 3d, Cl 2p of NCM-LIC. was conducted in a scan area of 2 μm × 2 μm. The vertical axis in the 3D plot represents the topology (height variation) of the composite cathode in the region of interest. The SSRM result showed two regions corre­ sponding to the N",
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    444.6
+   ],
+   "w": 2228,
+   "h": 1648,
+   "dpi": 300,
+   "src": "10. Deciphering the critical degradation factors of solid composite electrodes with halide electrolytes Interfacial reaction versus ionic transport.pdf",
+   "blank": 0.781
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Evolution of AC-impedance spectra and corresponding ionic conductivities of (a) LPSCl- and (b) LIC-SEs upon aging test. Modulus mapping results of (c, d) pristine and (e, f) tested (c, e) LPSCl and (d, f) LIC. conductivity at 1.6 mS cm−1 without any considerable decay under pressure (Fig. 4b). The following might be considered as possible origins for the conductivity loss of LIC: (i) structure/phase transformation, (ii) compositional change, and (iii) deteriorated solid-solid contacts. We confirmed that LIC retained its crystal structure/phase (Fig. S8) and compositions (Fig. 3d) after continuous conductivity measurements or charge-discharge cycling, from which possibilities (i) and (ii) mentioned above could be ruled out. Interestingly, no conductivity loss was observed in the LIC material that was stored in an Ar-filled glove box for a similar period (Fig. S9). This suggests th",
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    466.4
+   ],
+   "w": 2228,
+   "h": 1739,
+   "dpi": 300,
+   "src": "10. Deciphering the critical degradation factors of solid composite electrodes with halide electrolytes Interfacial reaction versus ionic transport.pdf",
+   "blank": 0.78
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Distributions of von Mises stress and cracks in the electrolyte phase of (a) NCM-LPSCl and (b) NCM-LIC after full lithiation. The red lines represent the cracks at the intergranular interfaces. (c) Schematic illustration of SE-dependent degradation behaviors of NCM-LPSCl and NCM-LIC. 7",
+   "bbox": [
+    31.6,
+    227.4,
+    565.8,
+    721.3
+   ],
+   "w": 2227,
+   "h": 2059,
+   "dpi": 300,
+   "src": "10. Deciphering the critical degradation factors of solid composite electrodes with halide electrolytes Interfacial reaction versus ionic transport.pdf",
+   "blank": 0.532
+  }
+ ]
+}

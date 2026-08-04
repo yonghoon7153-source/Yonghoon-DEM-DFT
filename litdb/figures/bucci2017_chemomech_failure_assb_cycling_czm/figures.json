@@ -1,0 +1,106 @@
+{
+ "slug": "bucci2017_chemomech_failure_assb_cycling_czm",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/25. Modeling of internal mechanical failure of all-solid-state batteries during electrochemical cycling, and implications for battery design.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Geometry, discretization and boundary conditions of a ﬁnite element model of a composite electrode. Electrode particles are embedded in a mixed conductor, consisting of a solid electrolyte and an electronically conductive additive.",
+   "bbox": [
+    36.5,
+    44.6,
+    558.7,
+    330.5
+   ],
+   "w": 2177,
+   "h": 1192,
+   "dpi": 300,
+   "src": "25. Modeling of internal mechanical failure of all-solid-state batteries during electrochemical cycling, and implications for battery design.pdf",
+   "blank": 0.598
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Evolution of damage in the solid electrolyte material at subse- quent states of charge. With increasing Li content, the active material undergoes chemical expansion. As the particles' stress-free strain increases, compressive stress develops in most of the microstructure. However, a few regions in proximity of the particles corner are under tensile stress (rust-colored regions in the right contour plots above). This tension grows large enough to initiate fracture in the solid electrolyte matrix, this phenomenon is captured in the simulation by the cohesive elements. Cracks (marked with black lines) propagate from corner to corner, cutting oﬀdiﬀusion paths for Li within the electrolyte.",
+   "bbox": [
+    297.3,
+    44.6,
+    558.9,
+    522.0
+   ],
+   "w": 1091,
+   "h": 1991,
+   "dpi": 300,
+   "src": "25. Modeling of internal mechanical failure of all-solid-state batteries during electrochemical cycling, and implications for battery design.pdf",
+   "blank": 0.417
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 Various combinations of Vegard's parameters of the active material and SE fracture energy are analyzed. The overlap of two sets of results is observed. They correspond to the two cases marked as a ((a) 30% volume change of the active material and SE fracture energy Gc ¼ 1.0 J m\u00022, and (a) 15% volume change of the active material and SE fracture energy Gc ¼ 0.25 J m\u00022), and other two cases, marked as b ((b) 15% volume change of the active material and SE fracture energy Gc ¼ 1.0 J m\u00022, and (b) 7.5% volume change of the active material and SE fracture energy Gc ¼ 0.25 J m\u00022). The interpretation of this outcome is based on the system's energy balance. As the particles volume increases upon lithiation, the solid electrolyte volume is forced to shrink. Here we assume the volume-averaged deformation of the entire region to be zero. A less restrictive assumption would allow for the elect",
+   "bbox": [
+    36.5,
+    44.6,
+    298.0,
+    207.0
+   ],
+   "w": 1090,
+   "h": 678,
+   "dpi": 300,
+   "src": "25. Modeling of internal mechanical failure of all-solid-state batteries during electrochemical cycling, and implications for battery design.pdf",
+   "blank": 0.914
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 2,
+   "file": "tab_1.png",
+   "caption": "Table 1 Mechanical properties of solid electrolyte materials",
+   "bbox": [
+    0.0,
+    6.4,
+    557.8,
+    765.1
+   ],
+   "w": 2201,
+   "h": 2993,
+   "dpi": 284,
+   "src": "25. Modeling of internal mechanical failure of all-solid-state batteries during electrochemical cycling, and implications for battery design.pdf",
+   "blank": 0.975
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 4,
+   "file": "tab_2.png",
+   "caption": "Table 2 Material parameters for problems in Section 2 Input value Description F ¼ 96 485.3365 C mol\u00021 Faraday's constant R ¼ 8.314 J K\u00021 mol\u00021 Gas constant T ¼ 298 K Temperature MEl ¼ 10\u000215 m2 s\u00021 Mobility of Li in the electrode material MSE ¼ 10\u000213 m2 s\u00021 Mobility of Li in the solid electrolyte material cmaxAM ¼ 1 Maximum relative number of moles of Li per mole of electrode compound cmaxSE ¼ 0.25 Maximum relative number of moles of Li per mole of solid electrolyte i ¼ 10 A m2 Maximum relative number of moles of Li per mole of solid electrolyte gLi ¼ 1 Activity coeﬃcient n ¼ 0.3 Poisson's ratio for both materials bAM ¼ 0.1 Relative lattice constant for Li in electrode material bSE ¼ 0 Relative lattice constant for Li in the solid electrolyte material EAM ¼ 100 GPa Young's modulus of the electrode material ESE ¼ 15 GPa Young's modulus of the solid electrolyte material Gc ¼ 1.0 J m\u00022 Fract",
+   "bbox": [
+    0.0,
+    19.9,
+    557.8,
+    765.1
+   ],
+   "w": 2239,
+   "h": 2993,
+   "dpi": 289,
+   "src": "25. Modeling of internal mechanical failure of all-solid-state batteries during electrochemical cycling, and implications for battery design.pdf",
+   "blank": 0.793
+  }
+ ]
+}

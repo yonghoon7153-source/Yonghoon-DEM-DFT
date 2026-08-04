@@ -1,0 +1,163 @@
+{
+ "slug": "bucci2018_mechanical_instability_interface_delamination",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/22. Mechanical instability of electrode-electrolyte interfaces in solid-state batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "FIG. 1. The electrode microstructure is idealized by an assembly of space-ﬁlling truncated octahedra. Each polyhedron embeds an electrode particle and it is treated as a representative volume. The external surface of the electrolyte shell is close to spherical, therefore we assume radial symmetry. The thickness of the electrolyte shell, with respect to the particle radius, depends on the volume ratio occupied by the particles. Typical values of active material loading are in the range 50–60% for commercial batteries. On the right the geometric factor f = RB/RA is plotted as a function of active material loading. Substituting RB = f RA, we rewrite Eq. (3) as material φAM (i.e., volume of the electrode particles vs the total volume of the electrode). Based on the geometric con- struction illustrated in Fig. 1, the function f (φAM) is easily derived (right plot in Fig. 1). \u0004 Af 3 −R3\u0005 R3 u(",
+   "bbox": [
+    44.0,
+    65.0,
+    564.2,
+    263.1
+   ],
+   "w": 2168,
+   "h": 827,
+   "dpi": 300,
+   "src": "22. Mechanical instability of electrode-electrolyte interfaces in solid-state batteries.pdf",
+   "blank": 0.867
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "FIG. 2. Schematic representation of the 1D analysis carried out. A single particle is idealized as spherical in shape and it is embedded in a shell of solid electrolyte. The solid electrolyte material is visualized by an elastic spring and the interface by a cohesive traction-separation law. The spring is a schematic for illustrative purposes; the model is a continuum solid. The particle changes its volume following the change in stoichiometry. During battery charge Li deintercalates from the positive electrode causing, in most cases, the active material to contract. We do not model the individual electrode particles explicitly, but we regard their radius change as an imposed displacement u. Constitutive laws for the solid electrolyte and the cohesive interface are sketched. The SE layer linear elastic response consists of a monotonic function of its total elongation (stretching of the s",
+   "bbox": [
+    44.0,
+    576.3,
+    564.2,
+    631.0
+   ],
+   "w": 2168,
+   "h": 229,
+   "dpi": 300,
+   "src": "22. Mechanical instability of electrode-electrolyte interfaces in solid-state batteries.pdf",
+   "blank": 0.805
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "FIG. 3. (a) The contour plot on the left shows the relative volume contraction of electrode particles [according to Eq. (10)]. For most combinations of material properties, interfacial fracture energy, and electrolyte stiffness, 2.5% of radial strain (corresponding 7.5% volume change) is sufﬁcient to nucleate fracture. Such a low Vegard’s strain is typical for most Li-intercalating compounds. Compliant solid electrolyte materials are preferable to avoid delamination. Cohesive length is ﬁxed at 1 nm. (b) The chemical strain required to fracture decreases with the length of the fracture process zone. The plot shows a generalization of the result in (a) illustrated in nondimensional form. The intercalation strain is normalized with respect to the interfacial cohesive length. The horizontal axis represents the ratio between cohesive stiffness (i.e., the slope of the traction separation law i",
+   "bbox": [
+    44.0,
+    65.4,
+    564.2,
+    247.5
+   ],
+   "w": 2168,
+   "h": 760,
+   "dpi": 300,
+   "src": "22. Mechanical instability of electrode-electrolyte interfaces in solid-state batteries.pdf",
+   "blank": 0.752
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "FIG. 4. The two plots illustrate the difference between mechanically (a) unstable and (b) stable interfaces in the plane deﬁned by the relative crack opening and the relative displacement of the interface. The red curves represent the equilibrium conﬁgurations obtained by imposing the balance between the radial force in the electrolyte shell and the cohesive force at the interface. Before fracture occurs, the opening of the interface is zero and the ﬁrst part of the equilibrium curve is vertical. After nucleation, the slope of the red curve depends on the relative stiffness of bulk SE material and interface according to the equation u/RA = −(1/Acritical)([[u]]/[[u]]R) and the deﬁnition of Acritical as in Eq. (11). The black lines are constructed by imposing the compatibility with the external loading (i.e., the displacement due to the shrinking particle). The black line shifts up as the ",
+   "bbox": [
+    44.0,
+    54.5,
+    564.2,
+    250.3
+   ],
+   "w": 2168,
+   "h": 816,
+   "dpi": 300,
+   "src": "22. Mechanical instability of electrode-electrolyte interfaces in solid-state batteries.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "FIG. 5. Regimes of stable vs unstable delamination at the electrode particle interface are represented. According to Eq. (12), fracture stability depends on three dimensionless parameters. The parameter on the horizontal axis is descriptive of the constitutive behavior of the SE material (Young’s modulus Ese) and of the interface (cohesive strength Fc). The particle’s radius A and cohesive length [[u]]R are the governing length scales for this problem. The contour lines deﬁne the stable particle size normalized by the cohesive length. Mechanical stability can also be achieved by increasing the cohesive length or decreasing the particle size. For a ﬁxed volume ratio of active material, stability improves with the stiffness of the solid electrolyte. The dependence on the Poisson’s ratio is weak, unless the SE material is close to being incompressible.",
+   "bbox": [
+    44.0,
+    64.4,
+    564.2,
+    273.9
+   ],
+   "w": 2168,
+   "h": 874,
+   "dpi": 300,
+   "src": "22. Mechanical instability of electrode-electrolyte interfaces in solid-state batteries.pdf",
+   "blank": 0.572
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "FIG. 6. A plot of stress ﬁelds in the solid-electrolyte shell as a function of Possion’s ratio (a) ν = 0.15 (b) ν = 0.35. The stress ﬁelds are developed during the charging process, where the embedded electrode particle shrinks in size. Ese is the Young’s modulus of solid electrolyte and φAM is the volume ratio of active material. the delaminated surface of a spherical particle as a reﬂective boundary. Each of the 1000 random walkers, starting from the particle’s center, moves in a succession of random steps until it escapes the particle. standard deviation obtained for the intact particle (0% of delaminated boundary). In the simulations the particle’s surface is discretized with 2160 triangles. Two sets of analyses are carried out, by assum- ing the delaminated interface to be represented by contiguous or noncontiguous collections of discrete triangular elements [see Fig. 8(c)]. Discont",
+   "bbox": [
+    44.0,
+    65.5,
+    564.2,
+    238.3
+   ],
+   "w": 2168,
+   "h": 720,
+   "dpi": 300,
+   "src": "22. Mechanical instability of electrode-electrolyte interfaces in solid-state batteries.pdf",
+   "blank": 0.951
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "FIG. 7. If elastoplastic constitutive behavior is assumed for the solid electrolyte, the SE shell may undergo plastic ﬂow in proximity to the interface. Depending on the electrolyte yield stress σyield and the interfacial fracture strength Fc, the system may release energy via plastic ﬂow or fracture. The contour lines in Fig. 3(b) deﬁne the transition between these two modes according to Eq. (7). The result has a weak dependence on the volume fraction of active material, as highlighted by the shift of the contour lines. Such contour lines correspond, from right to left, to increasing volume ratios of active material (within the range 0.4–0.7). For any value of SE Poisson’s ratio, plasticity will prevent fracture if the yield stress is not greater than half of the fracture strength.",
+   "bbox": [
+    44.0,
+    401.7,
+    301.1,
+    619.8
+   ],
+   "w": 1072,
+   "h": 910,
+   "dpi": 300,
+   "src": "22. Mechanical instability of electrode-electrolyte interfaces in solid-state batteries.pdf",
+   "blank": 0.722
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "file": "fig_8.png",
+   "caption": "FIG. 8. Via random walk analysis we calculate the ﬁrst passage from the center to the surface of a partially delaminated spherical particle. The delaminated surface is treated as a reﬂective boundary. The particle’s surface is discretized with 2160 triangles and delaminated surfaces are either contiguous or noncontiguous collections of triangles [see panel (c)]. A large shift in both mean and standard deviation of the ﬁrst passage times is observed when delaminated surfaces are contiguous [see panels (a) and (b)]. The average deintercalation (intercalation) time increases with delamination; however, the impact on the total charging (discharging) time may be small, if the particle radius is small compared to the electrode thickness or if the electrolyte is not very conductive. During battery charge, the transport of Li within the posi- tive electrode is characterized by two timescales: th",
+   "bbox": [
+    44.0,
+    64.6,
+    564.2,
+    482.0
+   ],
+   "w": 2168,
+   "h": 1740,
+   "dpi": 300,
+   "src": "22. Mechanical instability of electrode-electrolyte interfaces in solid-state batteries.pdf",
+   "blank": 0.748
+  }
+ ]
+}

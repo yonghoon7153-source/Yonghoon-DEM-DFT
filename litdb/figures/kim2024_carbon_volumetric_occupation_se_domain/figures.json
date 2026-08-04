@@ -1,0 +1,106 @@
+{
+ "slug": "kim2024_carbon_volumetric_occupation_se_domain",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "★ 랩실 논문/06. Accelerated Degradation of All-Solid-State Batteries Induced through Volumetric Occupation of the Carbon Additive in the Solid Electrolyte Domain.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Positive active material portion-dependent cell performances at 3 wt% of carbon additive: a) formation voltage proﬁles at 0.05 C, b) rate performances, c) ionic, and d) electrical conductivity of electrode pellets, and e) volumetric occupation diagram and scheme illustrating the eﬀect of carbon additive on three-compositional elements.",
+   "bbox": [
+    44.8,
+    71.1,
+    552.9,
+    468.7
+   ],
+   "w": 2118,
+   "h": 1658,
+   "dpi": 300,
+   "src": "06. Accelerated Degradation of All-Solid-State Batteries Induced through Volumetric Occupation of the Carbon Additive in the Solid Electrolyte Domain.pdf",
+   "blank": 0.789
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Carbon additive composition-dependent cell performances at 90 wt% of positive active materials: a) formation voltage proﬁle 0.05 C, b) irreversible capacity at formation process c) rate performances, d) cycleability of electrode pellets, e) polarization growth during initial de-lithiation of NCM pellets with various carbon additive contents, and f) post-mortem O 1s XPS spectra after formation with 1 and 3 wt% of carbon additive.",
+   "bbox": [
+    42.0,
+    70.6,
+    550.1,
+    513.7
+   ],
+   "w": 2118,
+   "h": 1848,
+   "dpi": 300,
+   "src": "06. Accelerated Degradation of All-Solid-State Batteries Induced through Volumetric Occupation of the Carbon Additive in the Solid Electrolyte Domain.pdf",
+   "blank": 0.866
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. a) HR-TEM images of the FIB-processed 90 wt.% NCM incorpo- rated pellet electrodes and b) line EDS proﬁle of the active material and carbon-solid electrolyte domain interfaces with SC 1 and SC 3 wt% elec- trodes, c) scheme illustrating the eﬀect of carbon additive on the decom- position of solid electrolyte.",
+   "bbox": [
+    44.8,
+    70.8,
+    297.8,
+    523.7
+   ],
+   "w": 1055,
+   "h": 1889,
+   "dpi": 300,
+   "src": "06. Accelerated Degradation of All-Solid-State Batteries Induced through Volumetric Occupation of the Carbon Additive in the Solid Electrolyte Domain.pdf",
+   "blank": 0.424
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. a) Schematic representation of the spherical carbon (SC) and carbon ﬁber (CF)-type additive comprised electrodes b) overlapped EDS map of fabricated dry electrode with C, S, and, Ni K𝛼signal, c) measured ionic and electrical conductivity of SC and CF introduced dry electrodes.",
+   "bbox": [
+    42.0,
+    70.9,
+    550.1,
+    515.7
+   ],
+   "w": 2118,
+   "h": 1854,
+   "dpi": 300,
+   "src": "06. Accelerated Degradation of All-Solid-State Batteries Induced through Volumetric Occupation of the Carbon Additive in the Solid Electrolyte Domain.pdf",
+   "blank": 0.579
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. a) Initial voltage proﬁles for ex-situ analysis voltage points b) post-mortem S 2p XPS spectra dependent on state-of-charge at 3.0 and 3.2 V (vs Li-In/Li+), c) rate capability, and d) 60 °C cycle performance at 6.0 mA h cm−2 areal capacity dry electrode with spherical carbon and carbon ﬁber additive.",
+   "bbox": [
+    44.8,
+    71.1,
+    552.9,
+    373.7
+   ],
+   "w": 2118,
+   "h": 1262,
+   "dpi": 300,
+   "src": "06. Accelerated Degradation of All-Solid-State Batteries Induced through Volumetric Occupation of the Carbon Additive in the Solid Electrolyte Domain.pdf",
+   "blank": 0.872
+  }
+ ]
+}

@@ -1,0 +1,334 @@
+{
+ "slug": "klar2016_dp_sand_animation",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/13. Drucker-Prager Elastoplasticity for Sand Animation.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 1,
+   "file": "fig_1.png",
+   "caption": "Figure 1: Sand falls through the narrow neck of an hourglass, accumulating at the bottom.",
+   "bbox": [
+    48.0,
+    90.1,
+    564.0,
+    299.2
+   ],
+   "w": 2150,
+   "h": 872,
+   "dpi": 300,
+   "src": "13. Drucker-Prager Elastoplasticity for Sand Animation.pdf",
+   "blank": 0.212
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2: A solid ball drops into a sandbox, spraying sand in all directions.",
+   "bbox": [
+    48.3,
+    49.7,
+    563.7,
+    154.4
+   ],
+   "w": 2148,
+   "h": 437,
+   "dpi": 300,
+   "src": "13. Drucker-Prager Elastoplasticity for Sand Animation.pdf",
+   "blank": 0.119
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Figure 3: A sand castle is hit with a deformable ball while falling. The sand and ball are fully coupled in the simulation.",
+   "bbox": [
+    48.0,
+    407.8,
+    300.0,
+    575.7
+   ],
+   "w": 1051,
+   "h": 700,
+   "dpi": 300,
+   "src": "13. Drucker-Prager Elastoplasticity for Sand Animation.pdf",
+   "blank": 0.284
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 4,
+   "file": "fig_5.png",
+   "caption": "Figure 5: A rake is dragged around a rock, producing a circular pattern in the sand. Particles Grid p , xn+1",
+   "bbox": [
+    148.2,
+    48.0,
+    563.9,
+    158.1
+   ],
+   "w": 1733,
+   "h": 459,
+   "dpi": 300,
+   "src": "13. Drucker-Prager Elastoplasticity for Sand Animation.pdf",
+   "blank": 0.122
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 4,
+   "file": "fig_6.png",
+   "caption": "Figure 6: Relationship between F, FE, and FP .",
+   "bbox": [
+    77.9,
+    576.7,
+    288.0,
+    695.8
+   ],
+   "w": 877,
+   "h": 497,
+   "dpi": 300,
+   "src": "13. Drucker-Prager Elastoplasticity for Sand Animation.pdf",
+   "blank": 0.728
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 4,
+   "file": "fig_7.png",
+   "caption": "Figure 7: Overview of MPM stages.",
+   "bbox": [
+    315.4,
+    177.7,
+    560.5,
+    278.1
+   ],
+   "w": 1022,
+   "h": 419,
+   "dpi": 300,
+   "src": "13. Drucker-Prager Elastoplasticity for Sand Animation.pdf",
+   "blank": 0.436
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 5,
+   "file": "fig_8.png",
+   "caption": "Figure 8: A stick is dragged through a bed of sand, tracing out a butterﬂy shape in the sand.",
+   "bbox": [
+    48.1,
+    49.7,
+    563.9,
+    158.1
+   ],
+   "w": 2150,
+   "h": 452,
+   "dpi": 300,
+   "src": "13. Drucker-Prager Elastoplasticity for Sand Animation.pdf",
+   "blank": 0.116
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 6,
+   "file": "fig_11.png",
+   "caption": "Figure 11: A shovel digs through sand and pushes it aside. ipmpvp(xn particle p to node i is wn i ). This leads to the full form of the velocity transfer,",
+   "bbox": [
+    48.0,
+    49.7,
+    300.0,
+    130.9
+   ],
+   "w": 1051,
+   "h": 339,
+   "dpi": 300,
+   "src": "13. Drucker-Prager Elastoplasticity for Sand Animation.pdf",
+   "blank": 0.165
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 6,
+   "file": "fig_12.png",
+   "caption": "Figure 12: Sand is poured from a spout into a pile in a lab (left) and with our method (right).",
+   "bbox": [
+    312.0,
+    48.0,
+    564.0,
+    157.3
+   ],
+   "w": 1051,
+   "h": 457,
+   "dpi": 300,
+   "src": "13. Drucker-Prager Elastoplasticity for Sand Animation.pdf",
+   "blank": 0.286
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 7,
+   "file": "fig_13.png",
+   "caption": "Figure 13: Varying the friction angle changes the shape of a pile of sand. A larger angle produces a taller sand pile with steeper sides.",
+   "bbox": [
+    48.0,
+    48.0,
+    300.0,
+    223.2
+   ],
+   "w": 1051,
+   "h": 731,
+   "dpi": 300,
+   "src": "13. Drucker-Prager Elastoplasticity for Sand Animation.pdf",
+   "blank": 0.112
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 8,
+   "file": "fig_14.png",
+   "caption": "Figure 14: A column of sand collapses into a pile. Sand particles are colored based on their current plastic deformation behavior. The plot shows the locations of these particles in principal stress space. Green particles lie within the yield surface and experience no plasticity. Blue particles are projected to the yield surface along a direction that avoids volume change. Red particles are experiencing tension and are projected to the tip of the conical yield surface; these particles are separating freely with no stress.",
+   "bbox": [
+    48.0,
+    64.8,
+    564.0,
+    156.3
+   ],
+   "w": 2150,
+   "h": 382,
+   "dpi": 300,
+   "src": "13. Drucker-Prager Elastoplasticity for Sand Animation.pdf",
+   "blank": 0.779
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 8,
+   "file": "fig_15.png",
+   "caption": "Figure 15: The yield surface for Drucker-Prager is shown in prin- ciple stretch space. The yield surface has the shape of a cone with its tip at the origin, which corresponds to no stress. Green par- ticles are inside the yield surface and exhibit an elastic response. Blue particles are under compression but experience more shear than friction allows. These conﬁgurations are projected to the yield surface along a direction that avoids volume change. Red particles are experiencing tension and are projected to the tip of the conical yield surface. These particles separate freely without stress.",
+   "bbox": [
+    312.0,
+    385.6,
+    564.0,
+    626.0
+   ],
+   "w": 1051,
+   "h": 1003,
+   "dpi": 300,
+   "src": "13. Drucker-Prager Elastoplasticity for Sand Animation.pdf",
+   "blank": 0.566
+  },
+  {
+   "key": "f16",
+   "kind": "figure",
+   "label": "16",
+   "page": 9,
+   "file": "fig_16.png",
+   "caption": "Figure 16: Three particles in a collapsing pile of sand are colored for reference. As these particles deform plasticly, their yield surface changes as they undergo hardening, resulting in a wider cone for projection. Hardening causes each particle to have its own yield surface. p will be computed based on vn+1 Since xn+1 i , one could adjust vn+1 Wood 2008] would lead to excessive volume gain. Instead, noting that tr(ˆϵp) = 0, the Drucker-Prager model uses a non-associative ﬂow to preserve volume during the plastic projection i to enforce φ(xn+1 p ) ≥0. While this would likely lead to good results, it complicates collision processing in both the ex- plicit and implicit cases. Instead, we process collisions against the nodes themselves as in [Gast et al. 2015]. This is difﬁcult be- cause φ(xn+1 T ) = etr(Hp) = etr(ϵp) = det(Σp) = det(FE det(UpeHpVp p ). i ) ≥0 does not make sense. There s",
+   "bbox": [
+    48.0,
+    65.7,
+    564.0,
+    137.3
+   ],
+   "w": 2151,
+   "h": 300,
+   "dpi": 300,
+   "src": "13. Drucker-Prager Elastoplasticity for Sand Animation.pdf",
+   "blank": 0.755
+  },
+  {
+   "key": "f18",
+   "kind": "figure",
+   "label": "18",
+   "page": 10,
+   "file": "fig_18.png",
+   "caption": "Figure 18: Comparison on notched sand block fall. Initial (left), ours (middle), and Narain et al. [2010] (right).",
+   "bbox": [
+    48.0,
+    48.0,
+    564.0,
+    194.5
+   ],
+   "w": 2150,
+   "h": 612,
+   "dpi": 300,
+   "src": "13. Drucker-Prager Elastoplasticity for Sand Animation.pdf",
+   "blank": 0.112
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 11,
+   "file": "tab_2.png",
+   "caption": "Table 2: Simulation performance. Note that ∆t denotes the maximum allowed time step size. The actual ∆t is adaptive and may be restricted by CFL condition when the particle velocities are high. In all of our simulations we use a CFL number of 1, i.e., we don’t allow particles to move further than ∆x in a time step. CPU types used are: †Intel Xeon X5650, ‡Intel Xeon W3680, ⋆Intel Xeon E5-2690 v2, ◦Intel Xeon E5-2690, §Intel Xeon X5690. Acknowledgements unstable ringing instability like FLIP does. We further show the ro- bustness and stability of our method in a 3D energetic scenario. In Figure 2, a rigid ball is dropped into a 1m× 1m× 0.35m sand box with impact speed 6m/s. The impact dynamics are stable and al- most noise-free, resulting in a smooth and symmetric crown splash visual appearance. The authors were partially supported by NSF CCF-1422795, ONR (N000141110719, N000141210834), DO",
+   "bbox": [
+    49.0,
+    34.1,
+    563.9,
+    742.9
+   ],
+   "w": 2146,
+   "h": 2955,
+   "dpi": 300,
+   "src": "13. Drucker-Prager Elastoplasticity for Sand Animation.pdf",
+   "blank": 0.866
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 11,
+   "file": "tab_3.png",
+   "caption": "Table 3: Material parameters are provided for all of our 3D simu- lations. Friction angle φF and hardening parameters h0, h1, and h3 are listed in degrees for convenience. ACM Trans. Graph., Vol. 35, No. 4, Article 103, Publication Date: July 2016",
+   "bbox": [
+    49.0,
+    34.1,
+    563.9,
+    743.4
+   ],
+   "w": 2146,
+   "h": 2957,
+   "dpi": 300,
+   "src": "13. Drucker-Prager Elastoplasticity for Sand Animation.pdf",
+   "blank": 0.867
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 12,
+   "file": "tab_4.png",
+   "caption": "Table 4: Performance comparison with Narain et al. [2010].",
+   "bbox": [
+    49.0,
+    34.1,
+    563.0,
+    742.9
+   ],
+   "w": 2142,
+   "h": 2955,
+   "dpi": 300,
+   "src": "13. Drucker-Prager Elastoplasticity for Sand Animation.pdf",
+   "blank": 0.897
+  }
+ ]
+}

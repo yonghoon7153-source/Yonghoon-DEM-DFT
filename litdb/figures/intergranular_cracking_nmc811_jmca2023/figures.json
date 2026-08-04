@@ -1,0 +1,106 @@
+{
+ "slug": "intergranular_cracking_nmc811_jmca2023",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/19. Direct observations of electrochemically induced intergranular cracking in polycrystalline NMC811 particles - d3ta03057a.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 5,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 (a and b) Volume rendering of the same region of an NMC811 electrode at (a) blue – pristine and (b) red – charged state (4.5 V s Li/ Li+). (c) Charging prole for NMC811 electrode to 4.5 V at C/50, noting potentials at which the two nano-CT datasets were collected. (d and e) Representative ortho slices of the same particles at pristine and charged state at (d) separator and (e) current collector.",
+   "bbox": [
+    0.0,
+    34.7,
+    596.0,
+    389.8
+   ],
+   "w": 2484,
+   "h": 1481,
+   "dpi": 300,
+   "src": "19. Direct observations of electrochemically induced intergranular cracking in polycrystalline NMC811 particles - d3ta03057a.pdf",
+   "blank": 0.732
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 (a) Volume rendering of merged pristine electrode showing the current collector in white, analysed particles in orange, and other particles in blue. (b–i) Volume rendering of merged electrode showing the particle location of particles 1 to 8 in orange. (j–q) Surface rendering of charged particle with volume rendering of the segmented cracking within (yellow). (i–vii) Pristine particle centre ortho slice. (1–8) Charged particle centre ortho slice. Table below shows corresponding size and location values for each particle above. More particles than highlighted here have also been analysed (see Fig. S1†).",
+   "bbox": [
+    0.0,
+    34.7,
+    596.0,
+    417.7
+   ],
+   "w": 2484,
+   "h": 1597,
+   "dpi": 300,
+   "src": "19. Direct observations of electrochemically induced intergranular cracking in polycrystalline NMC811 particles - d3ta03057a.pdf",
+   "blank": 0.511
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 (a and b) Ortho slice of particle 1 at (a) pristine and (b) charged state. (c–j) Surface rending of 8 charged particles with skeletonised crack structure within, colour represents mean radius and line thickness represents volume. The table below shows the corresponding results from the crack segmentation. (k) Graph showing the % of particle volume change that is attributed to segmented crack. (l) Percentage of total particle volume occupied by the segmented crack. (m) Split rendering of particle 1 showing the crack (red) concentrated in the centre portions.",
+   "bbox": [
+    0.0,
+    34.7,
+    596.0,
+    273.5
+   ],
+   "w": 2484,
+   "h": 996,
+   "dpi": 300,
+   "src": "19. Direct observations of electrochemically induced intergranular cracking in polycrystalline NMC811 particles - d3ta03057a.pdf",
+   "blank": 0.693
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 (a) GREAT analysis of exemplar particles with dierent cracking proles, with ortho slice of each particle inset. (b) Through thickness analysis of minimum normalised intensity value for all particles. (c) Radial distribution plots of pixel intensity showing cracked areas in red and un- cracked areas in blue.",
+   "bbox": [
+    0.0,
+    497.8,
+    596.0,
+    695.7
+   ],
+   "w": 2484,
+   "h": 825,
+   "dpi": 300,
+   "src": "19. Direct observations of electrochemically induced intergranular cracking in polycrystalline NMC811 particles - d3ta03057a.pdf",
+   "blank": 0.78
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 (a) Model geometry extracted from X-ray CT. (b) Cut-out of the underlying agglomerate microstructure comprising 400 primary particles. (c) Comparison of the single particle voltage with the experimental cell voltage response. (d) The lattice parameter strains as measured by Xu et al.21 (e) The phase eld damage variable and (f) maximum principal stress proles at a cut-out mid-way through the particle.",
+   "bbox": [
+    0.0,
+    292.7,
+    596.0,
+    656.9
+   ],
+   "w": 2484,
+   "h": 1519,
+   "dpi": 300,
+   "src": "19. Direct observations of electrochemically induced intergranular cracking in polycrystalline NMC811 particles - d3ta03057a.pdf",
+   "blank": 0.768
+  }
+ ]
+}

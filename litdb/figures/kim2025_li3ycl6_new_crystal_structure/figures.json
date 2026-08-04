@@ -1,0 +1,87 @@
+{
+ "slug": "kim2025_li3ycl6_new_crystal_structure",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "이상욱 교수님/5. New crystal structure of Li₃YCl₆ structural relationship and ionic conductivity for solid-state electrolytes.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Schematic images of halide structures changing from a hcp_1, b hcp_3, c ccp_1 and d hcp_4 to hcp_2 (each triangle color indicates orientations of [YCl6]3-) candidates, indicating that the tested structures are ther- modynamically reasonable. In addition, despite the dis- parities in composition, the energy results of the hcp_2, hcp_3, and ccp_1 structures (already experimentally veri- ﬁed) show a trend consistent with the experimental results. Moreover, an Ehull value close to 0 indicates a thermody- namically stable structure, and our results (Table 1), which show Ehull values below 30 meV\u0002atom-1 for all structures, imply potential synthesizability under speciﬁc experimen- tal conditions. Furthermore, the calculated Ehull values for the experimentally synthesized hcp_1 and predicted hcp_4 were 24 and 27 meV\u0002atom-1, respectively, suggesting only a minor disparity between these str",
+   "bbox": [
+    45.0,
+    53.2,
+    550.3,
+    411.0
+   ],
+   "w": 2106,
+   "h": 1492,
+   "dpi": 300,
+   "src": "5. New crystal structure of Li₃YCl₆ structural relationship and ionic conductivity for solid-state electrolytes.pdf",
+   "blank": 0.736
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Isosurface of Li-ion probability density distribution according to direction in halide structures: a hcp_1, b hcp_2, c hcp_3, d ccp_1, and e hcp_4 at 600 K",
+   "bbox": [
+    45.0,
+    53.2,
+    550.3,
+    650.6
+   ],
+   "w": 2106,
+   "h": 2490,
+   "dpi": 300,
+   "src": "5. New crystal structure of Li₃YCl₆ structural relationship and ionic conductivity for solid-state electrolytes.pdf",
+   "blank": 0.685
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 7,
+   "file": "tab_1.png",
+   "caption": "Table 1 Results of density functional theory (DFT) and structural information for energy/atom, energy of hull, anion close packing and ionic conductivities according to various structures (calculation was conducted with an equivalent Li3YCl6 composition with only difference being the structures) Parameters hcp_1 (P \u00023m1) hcp_2 (Pnma) hcp_3 (Pnma) ccp_1 (C2/m) hcp_4 (C2) Energy/atom (eV\u0002atom-1) - 4.32 - 4.32 - 4.32 - 4.32 - 4.31 Ehull (meV\u0002atom-1) 24 23 17 21 27 Close packing hcp hcp hcp ccp hcp Ionic conductivity (mS\u0002cm-1) 12.6 10.2 18.8 3.4 38.5",
+   "bbox": [
+    46.0,
+    12.1,
+    589.2,
+    780.5
+   ],
+   "w": 2121,
+   "h": 3000,
+   "dpi": 281,
+   "src": "5. New crystal structure of Li₃YCl₆ structural relationship and ionic conductivity for solid-state electrolytes.pdf",
+   "blank": 0.887
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 10,
+   "file": "tab_2.png",
+   "caption": "Table 2 Eanti and experimental and calculated ionic conductivities of Li3YCl6 (hcp_1) and LGPS structures Structures Eanti ðmeV \u0002 atom\u00031Þ rðmS\u0002cm\u00031Þ rcalðmS\u0002cm\u00031Þ Li3YCl6 (hcp_1) 17.6 0.03–0.5 12.6 (0.6) LGPS 32.2 12 12–13",
+   "bbox": [
+    46.0,
+    12.1,
+    589.2,
+    780.5
+   ],
+   "w": 2121,
+   "h": 3000,
+   "dpi": 281,
+   "src": "5. New crystal structure of Li₃YCl₆ structural relationship and ionic conductivity for solid-state electrolytes.pdf",
+   "blank": 0.837
+  }
+ ]
+}

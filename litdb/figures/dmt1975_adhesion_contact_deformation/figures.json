@@ -1,0 +1,30 @@
+{
+ "slug": "dmt1975_adhesion_contact_deformation",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/12. Effect of Contact Deformations on the Adhesion of Particles.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "FIG. 1. Schematic diagram for calculating the defor- mation arising in the contact between an elastic ball and a rigid plane. Journal of Colloid and Interface Science. Vol. 53, No. 2, November 1975",
+   "bbox": [
+    0.0,
+    415.1,
+    504.0,
+    615.6
+   ],
+   "w": 2100,
+   "h": 836,
+   "dpi": 300,
+   "src": "12. Effect of Contact Deformations on the Adhesion of Particles.pdf",
+   "blank": 0.946
+  }
+ ]
+}

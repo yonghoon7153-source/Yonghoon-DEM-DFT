@@ -1,0 +1,163 @@
+{
+ "slug": "minnmann2024_microstructure_porosity_visualization",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "DEM 논문/24. Minnmann_2024_J._Electrochem._Soc._171_060514 Visualizing the Impact of the Composite Cathode Microstructure and Porosity on Solid-State Battery Performance.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 5,
+   "file": "fig_1.png",
+   "caption": "Figure 1. SEM images and analysis results of differently sized Li3PS4−0.5LiI solid electrolyte particles. Solid electrolytes were ball milled with (a) 10 mm (BM10), (b) 3 mm (BM03) and (c) 1 mm (BM01) milling media. Red boundaries indicate individual particles and were inserted manually. Smaller milling media lead to a reduction in particle size without signiﬁcant loss of ionic conductivity. (d) Volume-weighted particle size distribution measured by laser diffraction. (e) XRD pattern of BM10, BM03 and BM01 samples showing characteristic patterns of glassy samples with some LiI impurity. Analogous to our previous work,18 the use of fully lithiated NCM means that lithium ion transfer cannot take place between NCM and ISE due to the very high charge transfer resistance. T-type and Z- type TLMs (Fig. S2) correspond to the different cell setups as described below. Detailed explanations of the",
+   "bbox": [
+    30.0,
+    60.9,
+    558.7,
+    487.5
+   ],
+   "w": 2205,
+   "h": 1779,
+   "dpi": 300,
+   "src": "24. Minnmann_2024_J._Electrochem._Soc._171_060514 Visualizing the Impact of the Composite Cathode Microstructure and Porosity on Solid-State Battery Performance.pdf",
+   "blank": 0.542
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Evaluation of partial effective conductivities of composite cathodes containing 70 wt-% CAM and 30 wt-% ISE from impedance spectra using selectively blocking cell conﬁgurations. (a) Ion blocking cells (steel|cathode|steel) and respective impedance spectrum with ﬁt (red line), and (b) full-blocking cell (steel|cathode|ISE|cathode|steel) and respective impedance spectrum with ﬁt (red line). Effective conductivities of (c) electronic and (d) ionic charge carriers display an inﬂuence of the charge transport on the particle size of the solid electrolyte. While the effective electronic conductivity decreases with smaller ISE particles, the effective ionic conductivity increases, showing a more homogeneous distribution of both phases. Dashed lines are guides to the eye. Based on the uncertainty of the thickness determination, the inﬂuence of the applied pressure and the ﬁt, we estimat",
+   "bbox": [
+    29.8,
+    60.9,
+    558.0,
+    471.3
+   ],
+   "w": 2202,
+   "h": 1711,
+   "dpi": 300,
+   "src": "24. Minnmann_2024_J._Electrochem._Soc._171_060514 Visualizing the Impact of the Composite Cathode Microstructure and Porosity on Solid-State Battery Performance.pdf",
+   "blank": 0.891
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Schematic representation of the PFIB-SEM tomography procedure to obtain three-dimensional reconstructions of composite cathodes. After image acquisition, both BSE and SE images are used to assign CAM (NCM, blue), ISE (Li3PS4−0.5LiI, yellow) and pore (black) volumes. Using only BSE images does not result in a sufﬁciently clear segmentation of pores as SEM is not a surface-sensitive technique and materials that lie lower than these pores contribute to the signal. In contrast, SE images depend more on surface topography, which makes it easier to detect pores as they are cavities in a ﬁnely polished ﬂat surface. Details about the tomography parameters are shown in Sect. S2. the same way as larger pores do and so contribute to the overall charge transport resistance.33,53,68 Additionally, we assume some material redeposition to be present during PFIB-milling, which results in materi",
+   "bbox": [
+    30.0,
+    60.9,
+    558.0,
+    305.9
+   ],
+   "w": 2202,
+   "h": 1022,
+   "dpi": 300,
+   "src": "24. Minnmann_2024_J._Electrochem._Soc._171_060514 Visualizing the Impact of the Composite Cathode Microstructure and Porosity on Solid-State Battery Performance.pdf",
+   "blank": 0.679
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Segmented 3D reconstructions of cathode composites containing solid electrolyte that was treated with differently sized milling media. (a) Abbreviations indicating the employed milling media diameter: BM10 = 10 mm, BM03 = 3 mm, BM01 = 1 mm). All reconstructed volumes feature a voxel size of 100 nm. The reconstructed volume is segmented, and the corresponding volume fractions are determined for (b) CAM (NCM), (c) ISE (Li3PS4−0.5LiI) and (d) pores. Black horizontal bars indicate the expected values calculated with the employed masses, the material density, and the porosity determined from geometric dimensions of the sample. between CAM and ISE, SCAM-ISE). If particles of the same phase form clusters, only part of the surface area of the particles is available for interfaces with other phases and Sa-b is reduced. The interface area between CAM and ISE is of particular importance f",
+   "bbox": [
+    30.0,
+    60.9,
+    558.0,
+    429.0
+   ],
+   "w": 2202,
+   "h": 1535,
+   "dpi": 300,
+   "src": "24. Minnmann_2024_J._Electrochem._Soc._171_060514 Visualizing the Impact of the Composite Cathode Microstructure and Porosity on Solid-State Battery Performance.pdf",
+   "blank": 0.681
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Microstructural descriptors obtained from analyzing the reconstructed microstructure of the composite cathodes. (a) CAM phase showing smaller clusters for cathodes with smaller ISE particles and SE phase showing signiﬁcantly reduced particle clusters >10 μm. (b) Chords describe 1D protrusion of phases and the respective length distribution can be determined for the different phases. Total chord length resembles the sum of all chord lengths. (c) Speciﬁc interface area between the different phases showing a clear dependence on the ISE particle size. bulk expected conductivity a,bulk σ and the phase fraction , a φ according to Eq. 3 that the concept of tortuosity factors is, although useful for battery research, still under debate and tortuosity factors are not neces- sarily a sufﬁcient way to quantify microstructures, especially if these are heterogeneous in nature.76 However, th",
+   "bbox": [
+    30.0,
+    60.9,
+    558.0,
+    415.0
+   ],
+   "w": 2202,
+   "h": 1477,
+   "dpi": 300,
+   "src": "24. Minnmann_2024_J._Electrochem._Soc._171_060514 Visualizing the Impact of the Composite Cathode Microstructure and Porosity on Solid-State Battery Performance.pdf",
+   "blank": 0.761
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 10,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Simulation results of ionic-ﬂux and comparison of experimentally determined and simulated tortuosities. (a) Ionic ﬂux-distributions simulated for the three microstructure reconstructions with different ISE particle size. (b) Tortuosity factors of electronic and ionic transport determined from impedance spectra and from charge transport simulations on the reconstructed microstructures. A signiﬁcant improvement of the ionic transport is visible for smaller ISE particles. Large differences between experimental and simulated charge transport indicate an inﬂuence of segmented porosity and particle-particle contact resistances. sizes is reﬂected by both simulation and experiment. The increase in the electronic tortuosity with decreasing ISE particle size can be explained by the fact that these small ISE particles, can effectively break up CAM clusters, which slightly decreases effect",
+   "bbox": [
+    30.0,
+    60.9,
+    558.0,
+    406.0
+   ],
+   "w": 2202,
+   "h": 1439,
+   "dpi": 300,
+   "src": "24. Minnmann_2024_J._Electrochem._Soc._171_060514 Visualizing the Impact of the Composite Cathode Microstructure and Porosity on Solid-State Battery Performance.pdf",
+   "blank": 0.68
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 11,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Electrochemical cycling performance of the analyzed cathodes in full cell conﬁguration. Full cells were constructed using In|InLi anodes and a mass loading of 10.7 mg cm−2. (a) Discharge C-rate capability, (b) differential capacity at 0.1 C and discharge curves of cells at (c) 0.1 C and (d) 1 C. Large ISE particles result in reduced capacity due to slower kinetics and higher overpotentials as well as particle clusters that reduce the charge transfer capabilities.",
+   "bbox": [
+    30.0,
+    352.6,
+    558.0,
+    726.6
+   ],
+   "w": 2201,
+   "h": 1559,
+   "dpi": 300,
+   "src": "24. Minnmann_2024_J._Electrochem._Soc._171_060514 Visualizing the Impact of the Composite Cathode Microstructure and Porosity on Solid-State Battery Performance.pdf",
+   "blank": 0.85
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 12,
+   "file": "fig_8.png",
+   "caption": "Figure 8. CAM utilization as a function of cycle number. Utilization was calculated by determining the active mass of the CAM phase. A much lower level of CAM utilization is observed for cathodes with large ISE particles showing the extent to which CAM clusters affect the electrochemical performance. degradation. We attribute low Coulomb efﬁciency determined for all samples to interfacial degradation and chemo-mechanical losses within the ﬁrst cycle.78 These result from contact loss at the CAM- ISE interface51,79 due to expansion and contraction of CAM particles during (dis-)charge, which are more severe in case of the BM10 sample as there are already smaller SCAM-ISE values.",
+   "bbox": [
+    30.0,
+    60.9,
+    290.0,
+    265.9
+   ],
+   "w": 1084,
+   "h": 855,
+   "dpi": 300,
+   "src": "24. Minnmann_2024_J._Electrochem._Soc._171_060514 Visualizing the Impact of the Composite Cathode Microstructure and Porosity on Solid-State Battery Performance.pdf",
+   "blank": 0.871
+  }
+ ]
+}

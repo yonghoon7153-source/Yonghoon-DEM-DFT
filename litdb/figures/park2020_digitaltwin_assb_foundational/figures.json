@@ -1,0 +1,506 @@
+{
+ "slug": "park2020_digitaltwin_assb_foundational",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "이용민 교수님/22. Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf",
+  "이용민 교수님/22. Sup) Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. 3D digital twin all-solid-state NCM electrodes with varying the fraction of NCM. a) 3D digital twin all-solid-state electrodes of NCM 60, 70, 80, and 90 wt% on random seed 1. b) 3D structure and c) its corresponding 2D digital tomography image of NCM 60 wt%. d) Average volume fraction/ error percentage of the electrode components on all random seeds as a function of NCM ratio. the first report of both simulated and experimental results based on genuine digital twin models. In addition, our digital twin models show logical trends that each effective conductivity range depends on the amount of corresponding conductive materials. In particular, the effective ionic conductivity values of the NCM 90 wt% electrodes could not be calculated due to disconnected percolation pathways between LPSCl particles. (Figure S10, Sup- porting Information). Another remarkable point in the simulated",
+   "bbox": [
+    45.0,
+    64.9,
+    555.4,
+    337.0
+   ],
+   "w": 2128,
+   "h": 1135,
+   "dpi": 300,
+   "src": "22. Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf",
+   "blank": 0.496
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Comparative experimental data and simulation results of the effective a) electronic and b) ionic conductivities. Electron density in the NCM structure in c) NCM 60 and d) NCM 80 wt% electrodes. Li+ ion density in the LPSCl structure in e) NCM 60 and f) NCM 80 wt% electrodes. model was operated. Amazingly, the simulated average capacity deviation at 1C was ≈11 mA h g−1 while the values of the other works based on the electrode having the nanosized conductive materials were more than 12.5 mA h g−1 at 1C (Figure S14, Sup- porting Information). These improvements are ascribed to the higher accuracy of our digital twin electrodes with respect to their microstructures and the pre-checked parameters such as the effective electronic/ionic conductivities. Furthermore, con- sidering the gravimetric specific capacities based on the mass of the NCM active material, it is evident that the s",
+   "bbox": [
+    42.2,
+    64.9,
+    552.5,
+    343.9
+   ],
+   "w": 2128,
+   "h": 1163,
+   "dpi": 300,
+   "src": "22. Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf",
+   "blank": 0.62
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Voltage profiles with NCM-based gravimetric capacities for NCM a) 60, b) 70, and c) 80 wt%, and with electrode-based areal capacities for NCM d) 60, e) 70, and f) 80 wt% at various C-rates (0.1, 0.5, and 1C).",
+   "bbox": [
+    45.0,
+    64.9,
+    555.1,
+    426.1
+   ],
+   "w": 2126,
+   "h": 1506,
+   "dpi": 300,
+   "src": "22. Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf",
+   "blank": 0.85
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Lithiation at the last moment of discharge for a cell in the charged state at a) 0.1C, b) 0.5C, and c) 1C at 3.0 V and at d) 0.1C, e) 0.5C, and f) 1C at 3.5 V. has been solved by coating or doping specific materials (LiNbO3, lithium halide, etc.) on electrode materials for faster electrochem- ical reaction rate and less side reactions on the interface of the active materials and solid electrolytes. from the 80 wt% electrode is higher and less uniform than that from the 70 wt% electrode. This is a result of the higher amount of active material in the 80 wt% electrode leading to higher ion flux. In addition, the lower amount of solid electrolyte in the 80 wt% electrode results in narrower and more complicated ion pathways. The problem associated with the NCM 80 wt% elec- trode thus results in higher ohmic resistance in the solid electro- lyte network as a result of mass transport",
+   "bbox": [
+    42.2,
+    64.9,
+    552.5,
+    380.4
+   ],
+   "w": 2128,
+   "h": 1316,
+   "dpi": 300,
+   "src": "22. Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf",
+   "blank": 0.762
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Ion (Li+) flux of the NCM 70 wt% electrode at the last moment after discharging at a) 0.1C and b) 1C and of the NCM 80 wt% electrode at the last moment after discharging at c) 0.1C and d) 1C.",
+   "bbox": [
+    45.0,
+    64.9,
+    555.1,
+    367.3
+   ],
+   "w": 2126,
+   "h": 1261,
+   "dpi": 300,
+   "src": "22. Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf",
+   "blank": 0.681
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Surface overpotential of the NCM 70 wt% electrode at the last moment after discharging at a) 0.1C and b) 1C and of the NCM 80 wt% elec- trode at the last moment after discharging at c) 0.1C and d) 1C.",
+   "bbox": [
+    45.0,
+    403.6,
+    553.2,
+    696.9
+   ],
+   "w": 2118,
+   "h": 1223,
+   "dpi": 300,
+   "src": "22. Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf",
+   "blank": 0.842
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Design parameters for an all-solid-state battery with a solid sulfide electrolyte and lithium metal electrode.",
+   "bbox": [
+    42.2,
+    64.9,
+    512.2,
+    332.9
+   ],
+   "w": 1960,
+   "h": 1118,
+   "dpi": 300,
+   "src": "22. Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf",
+   "blank": 0.589
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Particle size analysis data of LiNbO3-coated LiNi0.7Co0.15Mn0.15O2 and Li6PS5Cl.",
+   "bbox": [
+    66.0,
+    421.3,
+    525.7,
+    694.3
+   ],
+   "w": 1916,
+   "h": 1138,
+   "dpi": 300,
+   "src": "22. Sup) Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf",
+   "blank": 0.971
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Cross-sectional FESEM image of an NCM secondary particle.",
+   "bbox": [
+    66.0,
+    79.1,
+    436.0,
+    266.5
+   ],
+   "w": 1542,
+   "h": 782,
+   "dpi": 300,
+   "src": "22. Sup) Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf",
+   "blank": 0.411
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. 3D digital twin all-solid-state NCM 60, 70, 80, and 90 wt% electrodes at four random seeds (2~5).",
+   "bbox": [
+    66.0,
+    309.4,
+    529.5,
+    695.4
+   ],
+   "w": 1932,
+   "h": 1609,
+   "dpi": 300,
+   "src": "22. Sup) Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf",
+   "blank": 0.56
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. (a) A tomography image of digital twin NCM 70 wt% electrode and (b) cross- sectional FESEM image of an NCM 70 wt% electrode.",
+   "bbox": [
+    66.0,
+    101.9,
+    529.3,
+    311.9
+   ],
+   "w": 1931,
+   "h": 876,
+   "dpi": 300,
+   "src": "22. Sup) Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf",
+   "blank": 0.364
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 4,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. 3D NBR structures in NCM 60, 70, 80, and 90 wt% at five random seeds (1~5).",
+   "bbox": [
+    66.0,
+    381.3,
+    529.5,
+    732.3
+   ],
+   "w": 1932,
+   "h": 1464,
+   "dpi": 300,
+   "src": "22. Sup) Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf",
+   "blank": 0.63
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 5,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Dead particle analysis of NCM in NCM 60, 70, 80, and 90 wt% at five random seeds (1~5).",
+   "bbox": [
+    66.0,
+    101.9,
+    515.9,
+    392.9
+   ],
+   "w": 1875,
+   "h": 1214,
+   "dpi": 300,
+   "src": "22. Sup) Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf",
+   "blank": 0.94
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 5,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Dead particle analysis of LPSCl in NCM 60, 70, 80, and 90 wt% at five random seeds (1~5).",
+   "bbox": [
+    66.0,
+    450.7,
+    520.6,
+    732.0
+   ],
+   "w": 1895,
+   "h": 1173,
+   "dpi": 300,
+   "src": "22. Sup) Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 6,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Specific contact area value ranges with or without dead particles at different amounts of active material.",
+   "bbox": [
+    66.0,
+    124.7,
+    502.1,
+    367.8
+   ],
+   "w": 1818,
+   "h": 1014,
+   "dpi": 300,
+   "src": "22. Sup) Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf",
+   "blank": 0.914
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 6,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Domains with the governing equation and its boundary conditions for calculation of electron and ion density (Ohm’s law).[12]",
+   "bbox": [
+    66.0,
+    448.5,
+    529.3,
+    661.0
+   ],
+   "w": 1931,
+   "h": 887,
+   "dpi": 300,
+   "src": "22. Sup) Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf",
+   "blank": 0.758
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 7,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. LPSCl structures without dead particles in NCM 90 wt% at five random seeds (1~5).",
+   "bbox": [
+    66.0,
+    79.0,
+    529.3,
+    363.1
+   ],
+   "w": 1931,
+   "h": 1184,
+   "dpi": 300,
+   "src": "22. Sup) Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf",
+   "blank": 0.742
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 7,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. In-depth (a) electron densities of the NCM structure in NCM 60 wt% electrodes and (b) ion densities of the LPSCl structure in NCM 80 wt% electrodes over 20 mA cm-2.",
+   "bbox": [
+    66.0,
+    410.7,
+    526.7,
+    633.3
+   ],
+   "w": 1920,
+   "h": 928,
+   "dpi": 300,
+   "src": "22. Sup) Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf",
+   "blank": 0.719
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 8,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. In-depth ion densities of the LPSCl structure in NCM 80 wt% electrodes over 80 mA cm-2.",
+   "bbox": [
+    66.0,
+    79.0,
+    530.9,
+    289.8
+   ],
+   "w": 1938,
+   "h": 879,
+   "dpi": 300,
+   "src": "22. Sup) Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf",
+   "blank": 0.883
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 8,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. Stacked all-solid-state cell and governing equations for electrochemical modeling.[18f, 19]",
+   "bbox": [
+    66.0,
+    393.3,
+    494.5,
+    647.6
+   ],
+   "w": 1786,
+   "h": 1061,
+   "dpi": 300,
+   "src": "22. Sup) Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf",
+   "blank": 0.758
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 9,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Comparison between experimental data and simulation results for discharge capacity data.[15]",
+   "bbox": [
+    66.0,
+    124.8,
+    507.0,
+    384.9
+   ],
+   "w": 1838,
+   "h": 1084,
+   "dpi": 300,
+   "src": "22. Sup) Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 9,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. Lithiation analysis data at the last moment of discharge at 0.1, 0.5, and 1C.",
+   "bbox": [
+    66.0,
+    488.4,
+    529.3,
+    625.7
+   ],
+   "w": 1931,
+   "h": 573,
+   "dpi": 300,
+   "src": "22. Sup) Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf",
+   "blank": 0.672
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 10,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. In-depth partial volumes at the last moment of discharge at 0.1, 0.5, and 1C over 80% lithiation.",
+   "bbox": [
+    66.0,
+    79.1,
+    529.3,
+    244.5
+   ],
+   "w": 1931,
+   "h": 690,
+   "dpi": 300,
+   "src": "22. Sup) Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf",
+   "blank": 0.704
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 10,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. Surface overpotential analysis data of the NCM 70 wt% electrode at the last moment after charging at (a) 0.1 and (b) 1C and the NCM 80 wt% electrode at the last moment after charging at (c) 0.1 and (d) 1C.",
+   "bbox": [
+    66.0,
+    325.2,
+    529.3,
+    671.3
+   ],
+   "w": 1931,
+   "h": 1443,
+   "dpi": 300,
+   "src": "22. Sup) Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf",
+   "blank": 0.805
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 11,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Intrinsic electric and ionic conductivities of the electrode materials. Unit: S cm-1 Electric Ionic conductivity conductivity",
+   "bbox": [
+    67.0,
+    103.1,
+    510.8,
+    746.6
+   ],
+   "w": 1850,
+   "h": 2683,
+   "dpi": 300,
+   "src": "22. Sup) Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf",
+   "blank": 0.967
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 11,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Model parameters and formulas",
+   "bbox": [
+    67.0,
+    129.9,
+    510.8,
+    746.6
+   ],
+   "w": 1850,
+   "h": 2571,
+   "dpi": 300,
+   "src": "22. Sup) Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf",
+   "blank": 0.97
+  }
+ ]
+}
