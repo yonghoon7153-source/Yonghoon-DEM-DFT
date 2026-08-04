@@ -1,5 +1,10 @@
 # 📚 LITDB — Argyrodite SE Literature Index
 
+> **이 파일은 SE(argyrodite) 축이다.** DEM·MPM·건식전극 digest 는 축이 달라 여기 없고
+> **`INDEX_DEM.md`** (자동 생성: `tools/litdb/build_index.py`) 에 있다.
+> 두 인덱스 어디에도 없는 digest 는 `python3 tools/litdb/build_index.py --check` 로 잡는다
+> (2026-08-06 기준 0편 — open_items #7 해결).
+>
 > 자동 생성 from Excel (`dbce603a`). 갱신: 2026-06-23. 각 논문 상세는 `papers/<slug>.md` (digest), 물성 교차표는 `properties/`, 우리 DFT 대비는 `comparison_vs_ours.md`.
 
 Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
