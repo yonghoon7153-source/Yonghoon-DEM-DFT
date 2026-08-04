@@ -14,7 +14,7 @@ GLOSSARY = [
  "how":"① 결정 구조(원자 좌표+격자) 입력 → ② 교환상관 범함수(PBE 등)와 기저(평면파+cutoff), pseudopotential, k-point 격자 선택 → ③ <b>SCF</b> 반복으로 전자밀도를 자기일관되게 수렴 → ④ 총에너지·힘(→구조최적화)·응력(→탄성/EOS)·고유값(→밴드/gap) 산출. 후처리로 DOS/ELF/Bader/COHP 등을 뽑는다.",
  "ours":"Quantum ESPRESSO(평면파+pseudopotential)로 gap·EOS·elastic·ε∞를, LOBSTER로 ICOHP를 계산. canonical 레시피는 methods 페이지 참조 — pseudo/ecut/k가 물성·조성마다 달라 비교 전 반드시 확인."},
 
-{"id":"scf","term":"SCF","full":"Self-Consistent Field (자기일관장)","cat":"기초 이론",
+{"id":"scf", "doc":"dft", "doc_sec":"§8 Kohn-Sham 방정식과 SCF","term":"SCF","full":"Self-Consistent Field (자기일관장)","cat":"기초 이론",
  "what":"전자밀도가 만드는 퍼텐셜이 다시 그 밀도를 결정하는 '닭-달걀' 관계를, 초기 추정 → 계산 → 갱신을 반복해 <b>입출력이 일치(self-consistent)</b>할 때까지 수렴시키는 절차. DFT 한 스텝의 심장.",
  "how":"초기 밀도 → 퍼텐셜 → Kohn–Sham 방정식 풀어 새 밀도 → mixing(예: β=0.3)으로 섞어 갱신 → 에너지 변화(conv_thr, 예 1e-8 Ry)가 임계값 이하가 되면 수렴. iteration 수와 'estimated scf accuracy'로 진행을 본다.",
  "ours":"러너/watch가 'iteration #'과 accuracy를 추적. SCF가 iter 1~2 만에 'JOB DONE'이면 skip 의심(ε∞ 삽질의 원인이었음)."},
@@ -24,12 +24,12 @@ GLOSSARY = [
  "how":"원소별 UPF 파일을 pseudo_dir에서 로드. 종류에 따라 필요 cutoff(ecutwfc/ecutrho)가 다르다(USPP는 낮게, PAW는 ecutrho 높게). <b>비교하려면 같은 종류·같은 cutoff여야</b> — 절대에너지·물성이 계열마다 다르므로.",
  "ours":"elastic/EOS/gap/ε∞ = USPP(li/s/cl/br v1.4.uspp + P rrkjus). LOBSTER(ICOHP) = all-PAW 필수. MD(UMA) = pseudo 개념 없음. 'comp1=PAW'로 착각했다가 백업 확인 후 USPP로 정정한 게 오늘 큰 교훈."},
 
-{"id":"kpoint","term":"k-point","full":"브릴루앙 존 샘플링","cat":"기초 이론",
+{"id":"kpoint", "doc":"dft", "doc_sec":"§10 Energy Cutoff와 K-point","term":"k-point","full":"브릴루앙 존 샘플링","cat":"기초 이론",
  "what":"주기적 결정에서 전자 상태는 역공간(k-space)의 함수라, 적분을 유한개 k점 격자로 근사한다. 격자가 촘촘할수록 정확하지만 무거움. <b>셀이 크면(역공간 작음) 적은 k로 충분</b>.",
  "how":"K_POINTS automatic n₁ n₂ n₃. 수렴은 절대 개수가 아니라 <b>k×L(격자길이 반영 밀도)</b>로 판단 — 큰 셀엔 작은 k. gap/전도체는 더 촘촘히 필요.",
  "ours":"comp1(cubic-52)=k444, modelc(rhombo-62)=k221. 셀이 달라 k숫자가 다른 게 정상 — comp2를 k222→k444로 올린 건 comp1과 같은 셀이라 밀도를 맞춘 것."},
 
-{"id":"functional","term":"XC Functional","full":"교환상관 범함수 (PBE 등)","cat":"기초 이론",
+{"id":"functional", "doc":"dft", "doc_sec":"§7 Hohenberg-Kohn · §8 Kohn-Sham (XC 항)","term":"XC Functional","full":"교환상관 범함수 (PBE 등)","cat":"기초 이론",
  "what":"DFT에서 유일하게 근사가 들어가는 부분 = 전자 교환+상관 에너지. GGA(PBE)가 표준, 밴드갭을 <b>과소평가</b>하는 경향(HSE 같은 hybrid가 보정하나 무거움).",
  "how":"pseudopotential에 함께 지정(예 pbe). gap이 실험보다 작게 나오는 건 PBE의 알려진 한계 — 경향/상대비교엔 유효.",
  "ours":"PBE 표준. ORCA SDCP 분자는 r²SCAN-3c(meta-GGA)."},
@@ -40,7 +40,7 @@ GLOSSARY = [
  "how":"<b>fixed-occupation nscf의 VBM/CBM 고유값</b>으로 읽는 게 정본. DOS의 문턱(threshold)으로 읽으면 ~0.3 eV 과소평가되니 금지.",
  "ours":"canonical(eigenvalue): comp1 2.066 / modelc 2.099 / +B₂O₃ 1.9671 / lpsocl 2.2309 eV · comp2 2.04는 <b>잠정</b>(legacy band_gaps, fixed-occ 재확인중 — eigenvalue canonical 아님). DOS-threshold(1.76/1.82)는 폐기. ⚠ 도핑 델타는 <b>같은 호스트끼리</b>: +O(LPSOCl)는 modelc 기준 +0.132, +B₂O₃는 modelc 기준 −0.132(comp1 2.066을 before로 쓰면 Cl 증량 효과가 섞인다). 그리고 gap↑이 실측 전자전도도 하락을 뜻하진 않는다 — Nd 도핑에선 bulk gap이 0.55 eV <b>좁아지는데</b> 실측 σ_e는 떨어졌다(계면/미세구조 지배, electronic.json)."},
 
-{"id":"dos","term":"DOS","full":"Density of States (상태밀도)","cat":"전자 구조",
+{"id":"dos", "doc":"bandgap", "doc_sec":"§4 왜 DOS-threshold 판독은 틀리나","term":"DOS","full":"Density of States (상태밀도)","cat":"전자 구조",
  "what":"에너지 E에서 전자가 차지할 수 있는 상태의 개수 분포 g(E). 어디에 상태가 몰려있고 어디가 비었는지(gap)를 보여준다. 페르미 준위 근처 형태가 전도 특성을 좌우.",
  "how":"① SCF → ② 촘촘한 k로 <b>nscf</b> → ③ dos.x/projwfc.x로 g(E) 산출 → ④ E축(페르미를 0으로) vs g(E) 그래프. gap = g(E)=0인 구간. 스무딩(가우시안 broadening) 적용해 그림.",
  "ours":"db/properties에 *_dos_smooth.csv(modelc/b2o3 등). 사이트 Charts 탭에서 클릭하면 Plotly로 렌더."},
@@ -66,12 +66,12 @@ GLOSSARY = [
  "how":"DFT 파동함수를 원자궤도 기저로 재투영(LOBSTER) → 원자쌍별 -COHP(E) → 페르미까지 적분 = ICOHP. <b>all-PAW nscf + charge spilling<5%</b> 필요.",
  "ours":"골격 P–S: comp1 −5.938 / comp2 −5.913(강한 공유) ≫ 이온결합 Li–X. <b>Li–Cl/Li–Br(−2.111 / −1.934)은 comp2 값</b>이다 — comp1엔 Br이 없고 comp1의 Li–Cl은 −1.861. Li–Br이 Li–Cl보다 약한 건 <b>격자 연화</b>로 나타난다(comp2 E_VRH 22.06→20.03, B_VRH −18.2%; 동일 USPP·k444·cubic-52 비교쌍). ⚠ 이온전도 이득은 <b>미확인</b> — comp2 σ300 중앙 0.41× comp1, 3-seed 범위 0.12–1.48× inconclusive. '기계강성엔 둔감'도 틀렸다(bulk −18%는 계열 내 최대 변화). minimal-basis −5.12는 artifact(폐기)."},
 
-{"id":"cobi","term":"COBI / ICOBI","full":"Crystal Orbital Bond Index","cat":"화학 결합",
+{"id":"cobi", "doc":"cohp", "doc_sec":"§4 ICOBI — 결합 차수","term":"COBI / ICOBI","full":"Crystal Orbital Bond Index","cat":"화학 결합",
  "what":"결합 <b>차수(order, 몇 겹 결합인가)</b>를 무차원으로. ICOHP가 '얼마나 세냐(에너지)'라면 ICOBI는 '얼마나 겹치냐(전자쌍 공유 정도)'. 이온결합은 ICOBI가 작다.",
  "how":"LOBSTER가 COHP와 동시에 산출(cobiGenerator). ICOBI≈1이면 단일 공유결합.",
  "ours":"comp2 P–S 0.925(공유) vs Li–Br 0.280(이온성). ELF(시각)와 ICOBI(숫자)로 결합성격을 교차 확인."},
 
-{"id":"lobster","term":"LOBSTER","full":"결합 후처리 프로그램","cat":"화학 결합",
+{"id":"lobster", "doc":"cohp", "doc_sec":"§5 LOBSTER 재투영과 charge spilling","term":"LOBSTER","full":"결합 후처리 프로그램","cat":"화학 결합",
  "what":"평면파 DFT 결과를 국소 원자궤도 기저로 재투영해 COHP/COBI/전하를 뽑는 후처리 도구.",
  "how":"QE nscf(all-PAW, nbnd 넉넉, ecut 높게) → lobsterin 설정 → LOBSTER 실행. charge spilling<5%가 신뢰 기준.",
  "ours":"comp2 spilling 1.37% ✅. all-PAW라 elastic(USPP)과 pseudo가 다른 게 정상(물성별 축이 다름)."},
@@ -98,7 +98,7 @@ GLOSSARY = [
  "how":"Langevin NVT(dt 2fs, 온도 고정) 평형 5ps + 생산 200ps. 여러 온도·여러 시드로 통계. MLIP라 <b>pseudopotential 개념이 없다</b>(DFT와 다른 축).",
  "ours":"UMA-s-1p1(omat), 600/800/1000K. 절대값 인용 금지·멀티시드 판정만. <b>시드 수는 조성마다 다르다</b> — comp1/modelc deck 앵커는 온도당 <b>단일 궤적</b>(오차막대 없음), modelc의 멀티시드 값은 3-seed×3-T 0.197±0.032, b2o3 3-seed, LPSOCl 4-seed, comp2 3-seed. 조성 간 비교는 같은 시드 프로토콜끼리만. UMA는 Li₃N엔 금지(편향)."},
 
-{"id":"msd","term":"MSD → D","full":"Mean Squared Displacement","cat":"이온 수송",
+{"id":"msd", "doc":"md", "doc_sec":"§3 MSD와 Einstein 관계 · §4 시간창 피팅","term":"MSD → D","full":"Mean Squared Displacement","cat":"이온 수송",
  "what":"시간에 따른 이온의 <b>평균제곱변위</b> ⟨r²(t)⟩. 확산이면 시간에 선형 → 기울기가 확산계수 D (Einstein 관계 ⟨r²⟩=6Dt).",
  "how":"MD 궤적에서 Li들의 변위를 시간창(예 2–50ps)으로 피팅. 초반 ballistic·후반 통계부족 구간은 제외.",
  "ours":"MSD 창 2–50ps 고정."},
@@ -108,7 +108,7 @@ GLOSSARY = [
   "how":"로그-로그 눈금에서 적합 창(2–50 ps)의 기울기를 잰다 + 창끝 MSD ≥ 3 Å² 병행. R²로는 못 잡는다 — R² 0.975인데 β 0.61인 실측 사례(LPSOCl 600 K)가 있다. 도구: tools/ionic/msd_diffusive_check.py.",
   "ours":"comp1 600 K 전 판 탈락(β 0.17–0.79 → 1600 ps 연장 중) · LPSOCl 600 K 4시드 평균 β 0.61 탈락(2026-08-04, Ea 0.287 재검토 트리거) · 시드 하나로는 β 0.98↔0.52로 갈려서 앙상블 평균이 기본."},
 
-{"id":"arrhenius","term":"Arrhenius / Ea","full":"활성화에너지 · 전도도","cat":"이온 수송",
+{"id":"arrhenius", "doc":"md", "doc_sec":"§5 Arrhenius — 활성화에너지","term":"Arrhenius / Ea","full":"활성화에너지 · 전도도","cat":"이온 수송",
  "what":"확산이 온도에 지수적으로 의존: D=D₀·exp(−Ea/kT). log D vs 1/T 직선의 기울기 = <b>활성화에너지 Ea</b>(낮을수록 빠른 전도). σ는 Nernst–Einstein으로 D에서 환산.",
  "how":"3온도(600/800/1000K) D를 log-1/T에 피팅. 저온(400/500K)은 통계부족으로 제외 판정. Ea 오차막대는 시드 분산.",
  "ours":"<b>단일 궤적 deck 앵커</b>: comp1 0.253 / modelc 0.224 (comp1↔modelc 비교 전용, 시드 오차막대 없음). <b>멀티시드</b>: modelc 0.197±0.032 · b2o3 0.199±0.034 (3-seed×3-T) / LPSOCl 0.287±0.024 (4-seed×3-T) / comp2 0.275±0.033 (3-seed). LPSOCl vs modelc = +90 meV(둘 다 멀티시드). comp2는 800K 시드 산포가 커서 300K 외삽 σ 비율 판정 보류(0.12–1.48×, inconclusive). ⚠ 프로토콜이 다른 값끼리 빼면 안 됨."},
@@ -135,7 +135,7 @@ GLOSSARY = [
  "ours":"adhesion.json. MLIP-elastic 상관은 2026-07-23 deprecated(재계산 필요)."},
 
 # ── MLIP·자동화 ───────────────────────────────────────
-{"id":"mlip","term":"MLIP / UMA","full":"Machine-Learned Interatomic Potential","cat":"MLIP·자동화",
+{"id":"mlip", "doc":"md", "doc_sec":"§2 MLIP가 DFT 힘을 대체","term":"MLIP / UMA","full":"Machine-Learned Interatomic Potential","cat":"MLIP·자동화",
  "what":"DFT 데이터로 학습해 <b>원자간 힘을 DFT 정확도로 즉시</b> 내주는 신경망 퍼텐셜. MD·대규모·다샘플에 필수(DFT는 너무 비쌈). UMA는 foundation model(범용 학습).",
  "how":"구조→에너지/힘을 학습. pseudopotential·k-point 개념 없음. 검증(우리 조성에 편향 없나)이 중요.",
  "ours":"UMA-s-1p1로 MD·phonon·MLIP-EOS. LPSCl 계열엔 검증된 표준, Li₃N엔 금지."},

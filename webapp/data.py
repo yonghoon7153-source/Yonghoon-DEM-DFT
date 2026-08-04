@@ -1724,7 +1724,9 @@ def search_index() -> list:
                           f"{CASCADE_DOPANT.get(cid, '')} " + " ".join(COMP_ELEMENTS.get(cid, []))})
     have = concept_ids()
     for g in G.GLOSSARY:
-        url = f"/concept/{g['id']}" if g["id"] in have else "/glossary"
+        # 자기 문서가 없어도 내용이 다른 개념 문서에 있으면 거기로 (doc 필드, 2026-08-04)
+        url = (f"/concept/{g['id']}" if g["id"] in have
+               else f"/concept/{g['doc']}" if g.get("doc") else "/glossary")
         idx.append({"t": "용어", "label": g["term"], "sub": g["full"],
                     "url": url, "kw": f"{g['id']} {g['cat']}"})
     for cid in sorted(have):
