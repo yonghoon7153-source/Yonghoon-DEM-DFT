@@ -59,10 +59,13 @@ OUT_ROOT = ROOT / "litdb" / "figures"
 # ① 캡션 후보. 번호 뒤에 소문자가 바로 붙으면(2a) 본문 참조이므로 (?![a-z]) 로 막는다.
 #   ⚠ "Supplementary Fig. 1." 처럼 접두어가 붙는 저널이 있다(실측: Zhou 2026 SI 는 이것 때문에
 #     27쪽에서 0개가 나왔다). 접두어가 붙으면 번호에 S 가 없어도 SI 번호로 취급한다.
+#   ⚠ 옛 스캔 저널의 OCR 은 글자를 숫자로 읽는다 — 실측(Thornton & Ning 1998, Powder Tech.):
+#     "Fig. 3." → **"F19. 3."** (i→1, g→9, o→0, s→5, l→1). 캡션은 멀쩡한데 키워드만 깨져
+#     9쪽짜리 논문에서 캡션 인정 0건이었다. 키워드 철자만 관대하게 받는다 (번호는 진짜 숫자).
 SI_PRE = r"(?:Supplementary|Supplemental|Supporting|Extended\s+Data|Extended|Online)\s+"
 CAP_RE = re.compile(
     r"^\s*(?P<si>" + SI_PRE + r")?"
-    r"(?P<kind>Fig(?:ure|\.)?|FIG(?:URE|\.)?|Table|TABLE|Scheme|SCHEME)\s*"
+    r"(?P<kind>F[i1l][gq9](?:ure|s)?\.?|Tab[l1]e|Sche[mn]e)\s*"
     r"(?P<label>S?\d+)(?![a-z0-9])\s*(?P<sep>[.|:,–—]|\s)\s*(?P<rest>.*)",
     re.S | re.I)
 # 본문 문단이 흔히 쓰는 동사 — 구두점이 없을 때 최종 판별
@@ -79,8 +82,8 @@ def is_caption(text):
     if not m:
         return None
     kw = m.group("kind").lower()
-    kind = "table" if kw.startswith("table") else \
-           ("scheme" if kw.startswith("scheme") else "figure")
+    kind = "table" if kw.startswith("tab") else \
+           ("scheme" if kw.startswith("sch") else "figure")
     rest, sep = m.group("rest"), m.group("sep")
     if sep in ".|:,–—":              # "Figure 1." / "Figure 5 |" → 캡션 확정
         pass
@@ -836,7 +839,8 @@ def audit():
         tab = [r for r in figs if r["kind"] == "table"]
         flags = []
         if not figs:
-            flags.append("그림 0개")
+            flags.append("그림 0개 — 캡션을 못 찾음 (원고형 PDF: 캡션이 뒤쪽 "
+                         "'Figure captions' 절에 몰려 있거나 / OCR 이 심하게 깨졌거나)")
         if not main and si:
             flags.append(f"본문 없이 SI {len(si)}장뿐")
 
