@@ -88,6 +88,70 @@
     });
   }
 
+  /* 확대·축소 -----------------------------------------------------------
+   * 가로로 긴 그림(Table S5 등)은 max-width:100% 때문에 팝업 폭에 맞춰 줄어들어
+   * 글씨를 못 읽는다 (2026-08-06 1저자 신고: "확대시 옆에도 스크롤이 생기게").
+   * '맞춤'을 벗어나면 이미지를 **원본 픽셀 기준**으로 키우고 max-width 를 풀어서
+   * 컨테이너(.figpane-img, overflow:auto)에 가로·세로 스크롤이 생기게 한다.
+   * 팝업·라이트박스가 같은 컨트롤을 쓴다 (host 만 다르다). */
+  var ZSTEP = 1.25, ZMIN = 0.15, ZMAX = 8;
+
+  function zoomBtns() {
+    return '<span class="figzoom-ctl">' +
+      '<button type="button" class="btn sm figz" data-z="-" title="축소 (Ctrl+휠)">−</button>' +
+      '<button type="button" class="btn sm figz figz-lab" data-z="0"' +
+      ' title="맞춤 ⇄ 원본 크기 (그림 더블클릭도 같음)">맞춤</button>' +
+      '<button type="button" class="btn sm figz" data-z="+" title="확대 (Ctrl+휠)">+</button></span>';
+  }
+
+  function Zoom(host, onZoom) {
+    var z = 0;                       // 0 = 맞춤(폭에 맞춤) · 그 외 = 원본 대비 배율
+    function img() { return host.querySelector(".figpane-img img"); }
+    function paint() {
+      var lab = host.querySelector(".figz-lab");
+      if (lab) lab.textContent = z ? Math.round(z * 100) + "%" : "맞춤";
+      if (onZoom) onZoom(z);                         // 컨테이너 높이 고정 등 (팝업)
+      host.classList.toggle("figzoom", !!z);
+      var im = img();
+      if (!im) return;
+      if (!z) { im.style.width = ""; return; }
+      im.style.width = im.naturalWidth
+        ? Math.round(im.naturalWidth * z) + "px"     // 원본 해상도 기준
+        : Math.round(z * 100) + "%";                 // 아직 안 불러왔으면 임시로
+    }
+    function set(v) { z = v ? Math.max(ZMIN, Math.min(ZMAX, v)) : 0; paint(); }
+    function bump(dir) {                             // 맞춤에서 누르면 '지금 보이는 크기'부터
+      var im = img();
+      var cur = z || (im && im.naturalWidth ? im.clientWidth / im.naturalWidth : 1);
+      set(cur * (dir > 0 ? ZSTEP : 1 / ZSTEP));
+    }
+    host.addEventListener("click", function (e) {
+      var b = e.target.closest && e.target.closest(".figz");
+      if (!b) return;
+      e.preventDefault(); e.stopPropagation();
+      var d = b.getAttribute("data-z");
+      if (d === "+") bump(1); else if (d === "-") bump(-1); else set(z ? 0 : 1);
+    });
+    host.addEventListener("dblclick", function (e) {
+      if (!(e.target.closest && e.target.closest(".figpane-img"))) return;
+      e.preventDefault(); set(z ? 0 : 1);
+    });
+    host.addEventListener("wheel", function (e) {
+      if (!(e.ctrlKey || e.metaKey)) return;
+      if (!(e.target.closest && e.target.closest(".figpane-img"))) return;
+      e.preventDefault();
+      bump(e.deltaY < 0 ? 1 : -1);
+    }, { passive: false });
+    return {
+      bind: function (reset) {          // innerHTML 을 다시 그린 뒤 호출
+        if (reset) z = 0;
+        var im = img();
+        if (im) im.addEventListener("load", paint);   // 원본 크기는 로드 뒤에야 안다
+        paint();
+      }
+    };
+  }
+
   /* ① 본문 링크화 ------------------------------------------------------- */
   function linkify(root, index) {
     var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
@@ -226,42 +290,75 @@
       });
     }
 
+    /* 확대하면 팝업 높이를 '지금 높이'로 못 박는다.
+       .figpane-img 는 flex:1 1 auto 라 높이가 내용만큼 늘어나는데, 부모는 max-height 로
+       잘리기만 해서(overflow:hidden) **세로 스크롤이 안 생기고 잘려 나갔다**.
+       부모 높이가 확정되면 그 안에서 shrink → overflow:auto 가 살아난다.
+       CSS resize 로 사용자가 이미 크기를 잡아 뒀으면(el.style.height) 건드리지 않는다. */
+    var zoomHeld = false;
+    var zoom = Zoom(el, function (z) {
+      if (z && !el.style.height) {
+        el.style.height = el.offsetHeight + "px";
+        el.style.maxHeight = "none";
+        zoomHeld = true;
+      } else if (!z && zoomHeld) {
+        el.style.height = ""; el.style.maxHeight = ""; zoomHeld = false;
+      }
+    });
+    var lastKey = null;
+
     function show(rec, anchor, pin) {
       if (pinned && !pin && pinned !== rec.key) return;
       clearTimeout(hideT);
       // 같은 그림을 다시 누르면 닫는다. ⚠ 예전엔 pinned=null 로만 두고 hide() 를 불렀는데,
       //   마우스가 팝업 안에 있어 over=true 라 숨김이 취소돼 안 닫혔다 (✕ 도 같은 이유).
       if (pin) {
-        if (pinned === rec.key) { close(); return; }
+        if (pinned === rec.key) {
+          // digest 를 앞으로 보내 팝업이 가려진 상태라면 '닫기'가 아니라 '앞으로'
+          if (global.winIsTop && !global.winIsTop(el)) { global.winFocus(el); return; }
+          close(); return;
+        }
         pinned = rec.key;
       }
       el.innerHTML =
         '<div class="figpane-bar"><b>' + esc(rec.title) + '</b>' +
-        '<span class="figpane-act">' +
-        '<a class="btn sm" href="/api/file/' + encodeURI(rec.rel) + '" target="_blank" rel="noopener">↗ 크게</a>' +
+        '<span class="figpane-act">' + zoomBtns() +
+        '<a class="btn sm" href="/api/file/' + encodeURI(rec.rel) + '" target="_blank" rel="noopener">↗</a>' +
         '<a class="btn sm" href="/api/file/' + encodeURI(rec.rel) + '?dl=1" download>⬇</a>' +
         (pinned ? '<button type="button" class="btn sm figpane-x">✕</button>' : '') +
         '</span></div>' +
         '<div class="figpane-img"><img src="/api/file/' + encodeURI(rec.rel) + '" alt="' + esc(rec.title) + '"></div>' +
         '<div class="figpane-cap">' + capHtml(rec) + noteHtml(rec, true) + '</div>' +
         '<div class="figpane-hint">' +
-        (pinned ? '제목줄을 끌면 이동 · 모서리로 크기조절 · 더블클릭하면 제자리'
+        (pinned ? '제목줄 끌면 이동 · 모서리로 크기조절 · +/− 또는 Ctrl+휠로 확대(스크롤)'
                 : '클릭하면 고정 · 본문에서 드래그로도 열려요') + '</div>';
       var x = el.querySelector(".figpane-x");
       if (x) x.onclick = function (ev) { ev.preventDefault(); ev.stopPropagation(); close(); };
-      el.style.display = "block";
+      // 고정된 팝업만 '창'으로 친다 — 스쳐 지나가는 미리보기까지 모달 배경막을 걷으면 깜빡인다
+      el.classList.toggle("figpane-pinned", !!pinned);
+      zoom.bind(rec.key !== lastKey);        // 다른 그림으로 바뀌면 배율은 맞춤부터
+      lastKey = rec.key;
+      // ⚠ "block" 이면 CSS 의 display:flex 를 덮어써서 .figpane-img 의 flex 축소가 죽는다
+      //   → 그림이 팬 밖으로 자라 세로 스크롤 없이 잘려 나갔다 (2026-08-06)
+      el.style.display = "flex";
       place(anchor);
+      // 창 순서: 방금 연 팝업이 앞 + 모달을 '창 모드'로 (dragmodal.js)
+      if (pin && global.winFocus) global.winFocus(el); else if (global.winSync) global.winSync();
     }
     function hide(ms) {
       clearTimeout(hideT);
       hideT = setTimeout(function () {
-        if (!over && !pinned) el.style.display = "none";
+        if (!over && !pinned) { el.style.display = "none"; if (global.winSync) global.winSync(); }
       }, ms == null ? 160 : ms);
     }
-    function close() { pinned = null; over = false; userPos = userSize = null;
+    function close() { pinned = null; over = false; userPos = userSize = null; lastKey = null;
+                       zoomHeld = false;
                        el.style.height = ""; el.style.maxHeight = "";
                        el.classList.remove("figpane-dragging");   // 혹시 남았으면 정리
-                       el.style.display = "none"; }
+                       el.classList.remove("figpane-pinned");
+                       el.style.display = "none";
+                       el.style.zIndex = "";                      // 창 순서 초기화
+                       if (global.winSync) global.winSync(); }
     return { show: show, hide: hide, close: close, el: el };
   }
 
@@ -307,13 +404,17 @@
       '<div class="modal-body" style="max-width:min(1100px,94vw)">' +
       '<div class="modal-head"><h3 style="font-size:.9rem;margin:0">' + esc(f.title) +
       (f.page ? ' <span class="muted">· p' + f.page + '</span>' : '') + '</h3>' +
-      '<span style="display:flex;gap:6px">' +
+      '<span style="display:flex;gap:6px;align-items:center">' + zoomBtns() +
       '<a class="btn sm" href="/api/file/' + encodeURI(f.rel) + '?dl=1" download>⬇ 저장</a>' +
       '<button type="button" class="btn sm" data-x>✕ 닫기</button></span></div>' +
-      '<div style="padding:14px"><img style="max-width:100%;height:auto" src="/api/file/' +
-      encodeURI(f.rel) + '" alt="' + esc(f.title) + '">' +
-      '<div class="figtext">' + capHtml(f) + noteHtml(f, false) + '</div></div></div>';
+      '<div style="padding:14px">' +
+      '<div class="figpane-img figlb-img"><img src="/api/file/' +
+      encodeURI(f.rel) + '" alt="' + esc(f.title) + '"></div>' +
+      '<div class="figtext">' + capHtml(f) + noteHtml(f, false) + '</div>' +
+      '<div class="figlb-cmt"></div></div></div>';
     m.querySelector("[data-x]").onclick = function () { m.classList.remove("open"); };
+    Zoom(m.querySelector(".modal-body")).bind(true);
+    if (global.mountComments) global.mountComments(m.querySelector(".figlb-cmt"), f.rel);
     m.classList.add("open");
   }
 
@@ -391,5 +492,6 @@
     if (p) p.remove();
     var m = document.getElementById("figlb");
     if (m) m.classList.remove("open");
+    if (global.winSync) global.winSync();     // 남은 모달의 배경막 되돌리기
   };
 })(window);

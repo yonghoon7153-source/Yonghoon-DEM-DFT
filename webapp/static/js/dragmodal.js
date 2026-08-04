@@ -68,4 +68,56 @@
       delete b.dataset.dx; delete b.dataset.dy;
     });
   });
+
+  /* ── 창 앞뒤 순서 (윈도우식) ────────────────────────────────────────
+   * 1저자 요청(2026-08-06): "digest 쪽 누르면 digest가 맨앞, fig 누르면 fig가 맨앞".
+   * 기본 z 는 modal 80 < figpane 95 로 고정이라 그림 팝업이 늘 위였다.
+   * 누른 창에 100 부터 올라가는 z 를 인라인으로 물려 순서를 바꾼다.
+   *
+   * ⚠ 모달은 화면 전체를 덮는 반투명 배경막이라, 그냥 위로 올리면 그 막이 그림
+   *   팝업을 가려 다시 못 누른다. 그래서 **그림 팝업이 떠 있는 동안만** 모달을
+   *   '창 모드'(.modal-win: 막 투명 + pointer-events 해제)로 바꾼다 — 두 창이
+   *   나란히 살아 있고, 팝업을 닫으면 원래의 어두운 모달로 돌아온다. */
+  var ZTOP = 100;
+
+  function paneOpen() {                    // 고정(pinned)된 팝업만 '창'으로 친다
+    var p = document.querySelector(".figpane.figpane-pinned");
+    // ⚠ offsetParent 로 판정하면 안 된다 — position:fixed 는 항상 null 이라 늘 '닫힘'이 된다
+    return !!(p && p.getClientRects().length);
+  }
+  function sync() {
+    var on = paneOpen();
+    document.querySelectorAll(".modal.open").forEach(function (m) {
+      m.classList.toggle("modal-win", on);
+      if (!on) m.style.zIndex = "";        // 팝업이 없으면 기본 층으로 되돌린다
+    });
+  }
+  function focusWin(el) {
+    if (!el) return;
+    if (+el.style.zIndex === ZTOP) return;             // 이미 맨 앞
+    el.style.zIndex = ++ZTOP;
+    sync();
+  }
+
+  document.addEventListener("pointerdown", function (e) {
+    if (!e.target.closest) return;
+    var pane = e.target.closest(".figpane");
+    if (pane) { focusWin(pane); return; }
+    var body = e.target.closest(".modal-body");
+    if (body) focusWin(body.closest(".modal"));
+  }, true);
+
+  /* 이 창이 맨 앞인가 — 그림 팝업이 digest 뒤에 완전히 가려졌을 때
+     Fig 링크를 다시 누르면 '닫기'가 아니라 '앞으로'가 되게 하려고 쓴다 */
+  function isTop(el) {
+    var z = +(el.style.zIndex || 0), top = true;
+    document.querySelectorAll(".modal.open").forEach(function (m) {
+      if (+(m.style.zIndex || 0) > z) top = false;
+    });
+    return top;
+  }
+
+  window.winFocus = focusWin;
+  window.winSync = sync;
+  window.winIsTop = isTop;
 })();

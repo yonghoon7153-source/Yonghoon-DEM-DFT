@@ -239,6 +239,11 @@ textarea:focus-visible,[tabindex]:focus-visible,.tabs button:focus-visible{
   border-bottom:1px solid var(--border);cursor:move;user-select:none;touch-action:none}
 /* 끌어 옮기는 중 — 본문이 선택되지 않게, 그림자로 떠 있는 느낌 */
 .modal-dragging{box-shadow:0 26px 64px rgba(16,24,40,.30);transition:none;user-select:none}
+/* 창 모드 — 그림 팝업이 떠 있는 동안만. 배경막을 걷어 두 창을 나란히 쓰고,
+   누른 쪽이 앞으로 온다(dragmodal.js). 팝업을 닫으면 원래 모달로 돌아온다. */
+.modal.modal-win{background:transparent;pointer-events:none;backdrop-filter:none}
+.modal.modal-win .modal-body{pointer-events:auto;
+  box-shadow:0 24px 64px rgba(16,24,40,.30),0 0 0 1px var(--border)}
 
 /* toast */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
@@ -969,6 +974,16 @@ tr.row-dim{opacity:.62}
 :root[data-theme="dark"] .figpane-img{background:#f4f6fa}   /* 논문 그림은 흰 배경 전제 */
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .figpane-img{background:#f4f6fa}}
 .figpane-img img{max-width:100%;height:auto;display:block;margin:0 auto}
+/* 확대(맞춤 해제) 상태 — max-width 를 풀어야 컨테이너에 **가로** 스크롤이 생긴다.
+   가로로 긴 표가 팬 폭에 맞춰 줄어들어 글씨를 못 읽던 문제(2026-08-06 1저자 신고). */
+.figzoom .figpane-img{text-align:left}
+/* max-height 도 풀어야 한다 — 라이트박스의 .modal-body img{max-height:80vh} 가
+   폭을 되돌려(비율 유지) 확대가 먹지 않는다 */
+.figzoom .figpane-img img{max-width:none;max-height:none;margin:0}
+.figzoom-ctl{display:flex;gap:2px;flex:none}
+.figzoom-ctl .figz{padding:1px 6px;font-variant-numeric:tabular-nums}
+.figz-lab{min-width:3.2em}
+.figlb-img{max-height:64vh;border:1px solid var(--border2);border-radius:var(--radius-sm)}
 .figpane-cap{padding:8px 11px;font-size:.74rem;line-height:1.55;color:var(--dim);
   border-top:1px solid var(--border2);max-height:11em;overflow:auto;flex:0 0 auto}
 /* 논문 원문 캡션 vs 우리 digest 주석 — 색·아이콘으로 확실히 갈라 놓는다 */
