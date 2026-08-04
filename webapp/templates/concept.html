@@ -133,7 +133,7 @@
 <a class="card sibling" href="/literature?open={{ p.id }}">
   <div style="display:flex;align-items:center;gap:7px"><span class="tbadge tb-{{ p.track }}">{{ 'DFT' if p.track=='dft' else 'DEM' }}</span>
     <span class="mono muted" style="font-size:.68rem">{{ p.id }}</span></div>
-  <div style="font-weight:600;font-size:.82rem;margin-top:5px;line-height:1.4">{{ p.title }}</div>
+  <div style="font-weight:600;font-size:.82rem;margin-top:5px;line-height:1.4">{{ p.title_html|safe }}</div>
 </a>
 {% endfor %}
 </div>

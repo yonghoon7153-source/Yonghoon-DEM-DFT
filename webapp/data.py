@@ -1511,7 +1511,8 @@ def list_talks() -> list:
             md = re.search(r"digested `?(\d{4}-\d{2}-\d{2})`?", line)
             if md and not digested:
                 digested = md.group(1)
-        out.append({"id": f.stem, "title": title, "speaker": speaker,
+        out.append({"id": f.stem, "title": title_plain(title), "title_html": title_html(title),
+                    "speaker": speaker,
                     "session": session, "digested": digested, "pis": paper_pis(f.stem)})
     return out
 
@@ -1551,6 +1552,29 @@ def paper_topics(pid: str) -> dict:
             "caution": e.get("caution")}
 
 
+_EM_STRONG = re.compile(r"\*\*(.+?)\*\*", re.S)
+_EM_ITAL = re.compile(r"(?<![\w*])\*(?!\s)([^*]+?)(?<!\s)\*(?![\w*])")
+
+
+def title_plain(t: str) -> str:
+    """제목에서 마크다운 강조 기호를 걷어낸다 — 검색·⌘K·tooltip 은 이걸 쓴다.
+
+    ⚠ `**` 가 남아 있으면 "Jong-Won Lee" 로 검색해도 안 걸린다.
+    """
+    return _EM_ITAL.sub(r"\1", _EM_STRONG.sub(r"\1", t or ""))
+
+
+def title_html(t: str) -> str:
+    """제목의 강조를 **색**으로 (1저자 2026-08-06: "여기에서는 다 볼드이니까 색깔로 분류").
+
+    목록 카드의 제목은 이미 굵어서 볼드를 더 줘도 안 갈린다 —
+    `**우리 랩·우리 그림**` 같은 표시가 눈에 들어와야 그게 표시로서 값을 한다.
+    """
+    s = (t or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
+    s = _EM_STRONG.sub(r'<span class="t-em">\1</span>', s)
+    return _EM_ITAL.sub(r'<span class="t-it">\1</span>', s)
+
+
 def list_papers() -> list:
     """litdb/papers/*.md → [{id, title, type, track}] (DEM/DFT 분류 포함)."""
     out = []
@@ -1577,7 +1601,9 @@ def list_papers() -> list:
             if md and not digested:
                 digested = md.group(1)
         tp = paper_topics(f.stem)
-        out.append({"id": f.stem, "title": title, "type": type_str,
+        # title 은 **평문**(검색·⌘K·tooltip), title_html 은 강조를 색으로 바꾼 것(카드)
+        out.append({"id": f.stem, "title": title_plain(title), "title_html": title_html(title),
+                    "type": type_str,
                     "track": literature_track(f.stem, type_str, title),
                     "digested": digested, "pis": paper_pis(f.stem),
                     "topics": tp["topics"], "gloss": tp["gloss"],

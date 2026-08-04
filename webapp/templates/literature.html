@@ -107,7 +107,8 @@
       style="background:{{ PI[k].color }}18;color:{{ PI[k].color }};border-radius:99px;padding:1px 7px;font-size:.68rem;font-weight:600">
       {% if PI[k].our %}★{% endif %}{{ PI[k].ko if PI[k].ko != '—' else PI[k].en }}</span>{% endfor %}
   </div>{% endif %}
-  <div style="font-weight:600;font-size:.9rem;line-height:1.4;margin-top:7px">{{ p.title }}</div>
+  {# 제목 안의 마크다운 강조는 **색**으로 (카드 제목은 이미 굵어 볼드로는 안 갈린다) #}
+  <div style="font-weight:600;font-size:.9rem;line-height:1.4;margin-top:7px">{{ p.title_html|safe }}</div>
   {# ⚠ id 가 길면(banik2022_substitutions_oxidative_stability_argyrodite 등) flex 안에서
      안 줄어들어 **날짜를 카드 밖으로 밀어낸다**(2026-08-03 실측). flex item 은 기본
      min-width:auto 라 내용보다 작아지지 않는다 — min-width:0 을 줘야 줄어들고,
@@ -139,7 +140,7 @@
      tabindex="0" role="button" style="cursor:pointer;padding:16px 18px">
   <div class="paper-top"><span class="tbadge" style="background:#fef9c3;color:#854d0e">TALK</span>
     {% if t.session %}<span class="ptype" title="{{ t.session }}" style="min-width:0">{{ t.session }}</span>{% endif %}</div>
-  <div style="font-weight:600;font-size:.9rem;line-height:1.4;margin-top:7px">{{ t.title }}</div>
+  <div style="font-weight:600;font-size:.9rem;line-height:1.4;margin-top:7px">{{ t.title_html|safe }}</div>
   {% if t.speaker %}<div class="muted" style="font-size:.76rem;margin-top:4px">{{ t.speaker }}</div>{% endif %}
   {% if t.pis %}<div style="margin-top:5px">{% for k in t.pis %}<span title="{{ PI[k].en }} · {{ PI[k].aff }}"
     style="background:{{ PI[k].color }}18;color:{{ PI[k].color }};border-radius:99px;padding:1px 7px;font-size:.68rem;font-weight:600">

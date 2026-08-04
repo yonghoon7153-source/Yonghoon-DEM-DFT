@@ -954,6 +954,12 @@ tr.row-dim{opacity:.62}
 .figcard{position:relative}
 /* 이름이 아니라 코멘트에서 걸린 파일 — 검색 결과에서 눈에 띄게 */
 .cmt-badge-hit{background:#fef9c3;color:#854d0e;border-color:#fde68a}
+
+/* digest 제목 안의 강조 (1저자 2026-08-06: "여기에서는 다 볼드이니까 색깔로 분류").
+   목록 카드 제목은 이미 굵어서 **볼드**를 더 줘도 안 갈린다 → 색으로 가른다.
+   `**우리 랩·우리 그림**` = 파랑 · `*방법·성격 표시*` = 보라 기울임. */
+.t-em{color:var(--accent)}
+.t-it{color:var(--violet);font-style:italic}
 @media print{.cmt,.cmt-badge{display:none!important}}
 
 /* 드롭존 (2026-08-05 v2) */
