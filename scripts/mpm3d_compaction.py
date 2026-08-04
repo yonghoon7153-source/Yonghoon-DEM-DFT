@@ -2425,7 +2425,17 @@ def main(argv):
                 hard_floor = (args.am_load_frac > 0.0 and args.floor_porosity > 0.0
                               and por <= args.floor_porosity)
                 am_jam = (am_jam_z > 0.0 and wall_z[None] <= am_jam_z)   # ★ OPTION C: platen reached percolating AM top → rigid jam
-                descend = (p + am_skel < target) and not hard_floor and not am_jam
+                # ★ 2026-08-04 — 지속-요구(STOP_HOLD)를 scaffold 분기에도 건다.  여기는 `p >= target` 의
+                #   **순간** 비교라 첫-접촉 동적 스파이크 1프레임이면 플래튼이 그 자리에서 얼어붙었다.
+                #   아래 non-scaffold 분기는 정확히 같은 이유로 이미 STOP_HOLD 연속 프레임을 요구한다
+                #   ("a big rigid AM hitting the platen spikes wallP for ~1 frame") — scaffold 만 무방비였다.
+                #   실측 (P:S 5킷, 2026-08-04): 하강이 **정확히 4·4·4·4·3 프레임**에서 멎어
+                #   스트로크/초기두께 = N×0.008 (0.03198/0.03204/0.03203/0.03200/0.02405) — 정수 프레임 =
+                #   운동학적 정지이지 응력 평형이 아니다.  정지 후 wallP 는 목표의 1/20~1/100 로 이완했고
+                #   (프레임5 에 −0.049 GPa = 플래튼 인장 = 반동), porosity 서열은 frame 0 것이 그대로 남아
+                #   소성이 서열을 시험하지 못했다.  hard_floor/am_jam 은 기하학적 정지라 즉시 적용 유지.
+                reach_cnt = reach_cnt + 1 if (p + am_skel >= target) else 0
+                descend = (reach_cnt < STOP_HOLD) and not hard_floor and not am_jam
             else:
                 # loose→dense mix: a big rigid AM hitting the platen spikes wallP for ~1 frame, which
                 # froze the platen in the loose state (premature stop → slow crawl).  Keep descending
