@@ -2603,6 +2603,93 @@ def _file_concept_index() -> dict[str, list[dict]]:
 #   tools/litdb/extract_figures.py 가 PDF 캡션을 앵커로 잘라 넣은 것.
 #   digest 본문의 "Fig. 5e" 같은 언급 위에 마우스를 올리면 오른쪽 여백에 뜬다.
 
+# digest 본문에서 그림별 주석 뽑기 — 그림을 눌렀을 때 "논문 캡션"과 함께
+#   "우리 digest 가 뭐라 썼나"를 같이 보여준다 (2026-08-06 1저자 요청).
+_FIGREF_RE = re.compile(
+    r"\b(?:Fig(?:ures?|s)?\.?|FIGS?\.?|Tables?|Schemes?)\s*\.?\s*\(?(S?\d{1,3})\)?", re.I)
+_FIGTBL_HEAD = re.compile(r"^\s*\|\s*\**\s*(fig|그림|figure)\b", re.I)
+
+
+def _kind_of(word: str) -> str:
+    w = word.lower()
+    return "t" if w.startswith("tab") else ("s" if w.startswith("scheme") else "f")
+
+
+def _keys_in(text: str, default_kind: str = "f", bare: bool = False) -> list[str]:
+    """문장 안의 그림 참조 → ['f3','tS1'] (부분 패널 a/b 는 본 그림으로 합친다).
+
+    ⚠ bare 는 **Figure set 표 첫 칸에만** 쓴다(`1a,b`·`S2` 처럼 Fig 없이 번호만 적는 칸).
+      소제목에까지 켜면 `### 1. 한 줄 요약` 이 Fig 1 로 붙는다 (2026-08-06 실측).
+    """
+    out, pos = [], 0
+    for m in _FIGREF_RE.finditer(text):
+        out.append(_kind_of(m.group(0).strip()) + m.group(1).upper())
+        pos = 1
+    if not pos and bare:              # 'Fig' 없이 숫자만 적힌 표 첫칸 (예: `1a,b`, `S2`)
+        out = [default_kind + n.upper() for n in re.findall(r"\bS?\d{1,3}", text)]
+    seen, uniq = set(), []
+    for k in out:
+        if k not in seen:
+            seen.add(k); uniq.append(k)
+    return uniq
+
+
+def paper_figure_notes(pid: str) -> dict:
+    """slug → {figure key: [주석 문자열]}.
+
+    두 갈래로 모은다:
+      ① `## Figure set` 표 (`| Fig | 내용 | 우리 활용 |`) — 그림당 한 줄로 정리돼 있어 제일 정확
+      ② 그 그림을 언급한 **소제목**(`### 5.3 … (Fig 6a) …`) — 어느 절에서 다루는지
+    본문 문장까지 다 긁으면(zhou2026 은 한 그림에 16줄) 팝업이 넘치므로 3개까지만.
+    """
+    for sub in ("papers", "talks"):
+        f = LITDB / sub / f"{pid}.md"
+        if f.exists():
+            break
+    else:
+        return {}
+    try:
+        md = f.read_text(encoding="utf-8", errors="ignore")
+    except OSError:
+        return {}
+    notes: dict[str, list[str]] = {}
+
+    def put(k, txt, src):
+        """src: 'set' = Figure set 표 한 줄, 'sec' = 그 그림을 다루는 본문 절 제목."""
+        txt = " ".join(txt.split())
+        if not txt or len(txt) < 4:
+            return
+        lst = notes.setdefault(k, [])
+        if len(lst) < 3 and not any(x["text"] == txt for x in lst):
+            lst.append({"src": src, "text": txt[:400]})
+
+    in_tbl = False
+    for ln in md.splitlines():
+        if ln.startswith("#"):                      # ② 소제목 (명시적 Fig 언급만)
+            for k in _keys_in(ln):
+                put(k, ln.lstrip("# ").strip(), "sec")
+            in_tbl = False
+            continue
+        if _FIGTBL_HEAD.match(ln):                  # ① Figure set 표 시작
+            in_tbl = True
+            continue
+        if in_tbl:
+            if not ln.lstrip().startswith("|"):
+                in_tbl = False
+                continue
+            cells = [c.strip() for c in ln.strip().strip("|").split("|")]
+            if len(cells) < 2 or set(cells[0]) <= set("-: "):
+                continue                            # 구분선
+            head = cells[0].replace("*", "")
+            body = " · ".join(c.replace("*", "") for c in cells[1:] if c)
+            kind = "t" if re.search(r"tab", head, re.I) else "f"
+            for k in _keys_in(head, default_kind=kind, bare=True):
+                put(k, body, "set")
+    for lst in notes.values():                      # 표(정확) → 절 제목(맥락) 순
+        lst.sort(key=lambda x: x["src"] != "set")
+    return notes
+
+
 def paper_figures(pid: str) -> list[dict]:
     """<pid> 논문의 크로핑된 그림 목록. 없으면 빈 리스트."""
     d = LITDB / "figures" / pid
@@ -2613,6 +2700,7 @@ def paper_figures(pid: str) -> list[dict]:
         meta = json.loads(j.read_text(encoding="utf-8"))
     except Exception:
         return []
+    notes = paper_figure_notes(pid)
     out = []
     for f in meta.get("figures", []):
         p = d / f.get("file", "")
@@ -2627,6 +2715,7 @@ def paper_figures(pid: str) -> list[dict]:
             "w": f.get("w"), "h": f.get("h"),
             "rel": f"litdb/figures/{pid}/{f['file']}",
             "size": p.stat().st_size,
+            "notes": notes.get(f.get("key") or "", []),
         })
     return out
 

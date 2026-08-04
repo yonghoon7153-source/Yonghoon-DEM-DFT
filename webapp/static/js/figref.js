@@ -25,6 +25,28 @@
     return (c === "t" ? "t" : c === "s" ? "s" : "f") + num.toUpperCase();
   }
 
+  var SRCLAB = { set: "Figure set", sec: "본문 절" };
+
+  /* digest 주석 블록 — 논문 원문 캡션과 **구분해서** 보여준다 */
+  function noteHtml(rec, compact) {
+    if (!rec.notes || !rec.notes.length) return "";
+    var list = compact ? rec.notes.slice(0, 1) : rec.notes;
+    return '<div class="fignote"><div class="fignote-h">📝 우리 digest 정리</div>' +
+      list.map(function (n) {
+        return '<div class="fignote-i"><span class="fignote-src">' +
+          esc(SRCLAB[n.src] || n.src) + "</span>" + esc(n.text) + "</div>";
+      }).join("") +
+      (compact && rec.notes.length > 1
+        ? '<div class="fignote-more">+' + (rec.notes.length - 1) + " 더 (클릭)</div>" : "") +
+      "</div>";
+  }
+
+  function capHtml(rec) {
+    if (!rec.caption) return "";
+    return '<div class="figcap"><div class="figcap-h">📄 논문 캡션 (원문)</div>' +
+      esc(rec.caption) + "</div>";
+  }
+
   function esc(s) {
     return String(s).replace(/[&<>"]/g, function (c) {
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
@@ -107,7 +129,7 @@
         (pinned ? '<button type="button" class="btn sm figpane-x">✕</button>' : '') +
         '</span></div>' +
         '<div class="figpane-img"><img src="/api/file/' + encodeURI(rec.rel) + '" alt="' + esc(rec.title) + '"></div>' +
-        '<div class="figpane-cap">' + esc(rec.caption || "") + '</div>' +
+        '<div class="figpane-cap">' + capHtml(rec) + noteHtml(rec, true) + '</div>' +
         (pinned ? '' : '<div class="figpane-hint">클릭하면 고정 · 드래그로도 열려요</div>');
       var x = el.querySelector(".figpane-x");
       if (x) x.onclick = function () { pinned = null; hide(0); };
@@ -171,8 +193,7 @@
       '<button type="button" class="btn sm" data-x>✕ 닫기</button></span></div>' +
       '<div style="padding:14px"><img style="max-width:100%;height:auto" src="/api/file/' +
       encodeURI(f.rel) + '" alt="' + esc(f.title) + '">' +
-      '<p class="muted" style="font-size:.8rem;margin:10px 0 0;line-height:1.6">' +
-      esc(f.caption || "") + '</p></div></div>';
+      '<div class="figtext">' + capHtml(f) + noteHtml(f, false) + '</div></div></div>';
     m.querySelector("[data-x]").onclick = function () { m.classList.remove("open"); };
     m.classList.add("open");
   }

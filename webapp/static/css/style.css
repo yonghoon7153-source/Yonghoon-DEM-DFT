@@ -963,7 +963,21 @@ tr.row-dim{opacity:.62}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .figpane-img{background:#f4f6fa}}
 .figpane-img img{max-width:100%;height:auto;display:block;margin:0 auto}
 .figpane-cap{padding:8px 11px;font-size:.74rem;line-height:1.55;color:var(--dim);
-  border-top:1px solid var(--border2);max-height:9.5em;overflow:auto;flex:none}
+  border-top:1px solid var(--border2);max-height:14em;overflow:auto;flex:none}
+/* 논문 원문 캡션 vs 우리 digest 주석 — 색·아이콘으로 확실히 갈라 놓는다 */
+.figcap-h,.fignote-h{font-size:.68rem;font-weight:700;letter-spacing:.02em;margin-bottom:3px}
+.figcap-h{color:var(--muted)}
+.fignote-h{color:var(--accent)}
+.figcap{margin-bottom:9px}
+.fignote{border-left:3px solid var(--accent);padding-left:8px;background:var(--accent-soft);
+  border-radius:0 6px 6px 0;padding:6px 8px 6px 9px;color:var(--text2)}
+.fignote-i{margin-bottom:5px}
+.fignote-i:last-child{margin-bottom:0}
+.fignote-src{display:inline-block;font-size:.62rem;font-weight:700;color:var(--accent);
+  background:var(--surface);border:1px solid var(--border);border-radius:4px;
+  padding:0 5px;margin-right:5px;vertical-align:1px}
+.fignote-more{font-size:.66rem;color:var(--muted);margin-top:3px}
+.figtext{font-size:.8rem;line-height:1.6;margin:12px 0 0;color:var(--dim)}
 .figpane-hint{padding:5px 11px 8px;font-size:.68rem;color:var(--muted);flex:none}
 
 .figstrip{margin-top:26px;padding-top:16px;border-top:1px solid var(--border)}
