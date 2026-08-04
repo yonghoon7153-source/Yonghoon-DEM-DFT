@@ -124,4 +124,9 @@ VGCF/hBN 호스트에서의 Li 확산 장벽 (CI-NEB 프로파일 피크 = $E_a$
 - **2L2L**(이중 갤러리) 구성은 현재 진행 중.
 - 프로파일은 대칭 단봉을 확인한 값만 채택 — 단조 프로파일은 끝점 재이완.
 
+
+> [!note] 방법 간 비교
+> "BV·NEB·MD 가 주는 $E_a$ 는 서로 다른 양"의 정리는 **[DFT](/concept/dft) §12** 에 있다
+> (정의 차이 · BV 결손 물리 4가지 · 부호 뒤섞임 실측 · 신뢰도 순서).
+
 *tags: NEB · CI-NEB · MEP · saddle point · climbing image · nudged elastic band · migration barrier · hBN · graphene · confinement*

@@ -14,6 +14,7 @@
 9. 원자핵 위치 업데이트 (구조 최적화)
 10. Energy Cutoff와 K-point
 11. Smearing
+12. **활성화 에너지는 방법마다 다른 양이다** — BV / NEB / MD 비교
 
 ---
 ## 1. 다체계 Hamiltonian
@@ -184,6 +185,77 @@ SCF에서 iteration마다 Fermi/밴드가 달라져 charge density가 크게 변
 **부가 설명**: VASP `ISMEAR`(0 Gaussian / 1 MP / -5 tetrahedron), `SIGMA`(0.05~0.2). Metal `ISMEAR=1,SIGMA=0.2` / Insulator `ISMEAR=0,SIGMA=0.05` 또는 `-5`(DOS).
 
 ---
+## 12. 활성화 에너지는 방법마다 **다른 양**이다 — BV / NEB / MD (2026-08-05)
+
+1저자 질문: "BV 장벽과 MD $E_a$ 가 왜 다르고, 어느 쪽이 더 믿을 만한가."
+답의 핵심은 **정확도 차이가 아니라 정의 차이**다 — 셋은 애초에 서로 다른 물리량을 잰다.
+
+### 12-1. 세 방법이 계산하는 것
+
+| | **BV(SE) percolation** | **DFT-NEB** | **MD Arrhenius** |
+|---|---|---|---|
+| 움직이는 것 | Li **프로브 1개** (나머지 Li 는 **제거**) | Li 1개 (+ 지정한 공공) | **전 Li**, 골격도 진동 |
+| 온도 | 0 K, 정적 | 0 K, 정적 | 유한 온도(우리 600–1000 K) |
+| 격자 | **완전 고정** | 이완 허용 | 열적으로 진동·팽창 |
+| 산출 | 최저 경로 위 **최댓값** = 문턱 | 지정 경로의 안장점 엔탈피 | **거시 $D(T)$** 의 기울기 |
+| 담기는 물리 | 기하 병목 | 병목 + 국소 이완 | 병목 + 공공 + Li–Li 상관 + 협동 도약 + 이완 + **엔트로피** |
+| 비용 | 초–분 | 시간–일 | 시간(MLIP) / 주–월(AIMD) |
+| 오차 막대 | **없음**(값 1개) | 수렴 판정만 | **멀티시드 표준편차** |
+
+$$E_a^{\text{MD}} = -k_B\frac{d\ln D}{d(1/T)} \quad\text{vs}\quad
+E_{\text{perc}}^{\text{BV}} = \max_{\text{best path}} E_{\text{BV}}(\mathbf r)$$
+
+왼쪽은 **수송 계수의 온도 응답**, 오른쪽은 **정적 지형의 한 점**. 같은 이름(활성화
+에너지)으로 부를 뿐 같은 양이 아니다.
+
+### 12-2. BV 가 못 보는 네 가지 (그리고 부호가 뒤섞이는 이유)
+
+| 빠진 물리 | BV 값이 받는 편향 |
+|---|---|
+| **격자 이완** — 실제 홉에서 음이온이 물러나 준다 | **과대** (얼어있는 창은 실제보다 좁다) |
+| **공공 필요** — 옆자리가 비어야 뛴다 | **과소** (통로가 넓어도 막혀 있을 수 있다) |
+| **Li–Li 상관·협동 도약** — 여럿이 동시에 밀고 당긴다 | **과대** (단일 이온 장벽이 실효보다 높다) |
+| **경로 다중성·엔트로피** — 여러 경로의 앙상블이 $E_a$ 를 정한다 | 부호 불정 |
+
+> [!important] ★ 계통 편향이 아니라는 실측 증거 (우리 4계)
+> $E_{\text{perc}}^{\text{BV}} - E_a^{\text{MD}}$ = LPSCl **−58** · LPSCl1.6 **+31** ·
+> LPSOCl1.6 **−64** · B₂O₃@LPSCl1.6 **+82** meV — **부호가 양쪽 다 나온다.**
+> "고정 격자라 항상 과대평가" 같은 계통 편향이면 상수 보정으로 고칠 수 있는데,
+> 부호가 섞이므로 **어떤 보정 계수도 존재하지 않는다.** 조성마다 지배하는 결손 물리가
+> 다르다는 뜻이고, 이것이 "BV 로 형제 계 순위를 매기지 말라"의 가장 단단한 근거다.
+
+계별 해석(우리 db 와 정합):
+- **LPSCl** BV 가 58 meV 낮게 → 케이지 **안** 은 넓은데 케이지 **사이** 점프가 드문 계
+  (600 K β 게이트 탈락으로 독립 확인). 점유·공공 사각이 낙관으로 나타남 = vacancy paradox.
+- **B₂O₃@LPSCl1.6** BV 가 82 meV 높게 → 도펀트 주변 통로가 국소적이라 고정 격자 지도에선
+  좁아 보이지만 실제로는 이완하며 열린다 (국소성 분해와 정합).
+
+### 12-3. σ 로 넘어가면 오차가 **지수로 증폭**된다
+
+$\sigma \propto \exp(-E_a/k_BT)$ 라 298 K 에서 $E_a$ 0.05 eV 오차 = σ **7.0배**.
+우리 4계에 BV 장벽을 그대로 넣으면 σ 가 **0.04×–12×** (최대/최소 **295배**) 로 흩어진다.
+그래서 **BV 로 σ(T) 표를 만들 수 있어도 우리는 만들지 않는다** (bvse.md §9 재현 실험).
+
+### 12-4. 신뢰도 순서와 역할 분담
+
+> **실측 > (수렴된) AIMD > MLIP-MD + 게이트(우리) > BV**
+
+단 "더 낫다"가 아니라 **담당이 다르다**:
+
+| 방법 | 우리 캠페인에서의 담당 |
+|---|---|
+| **BV** | 통로 위상·연결성, 1차 스크리닝(저에너지 percolation 없으면 탈락), 그림 |
+| **NEB** | 경로가 **유일하게 정의되는** 문제 — 우리는 VGCF/hBN Li 흡착원자에만 사용. argyrodite 벌크는 협동 이동이라 경로 정의 불가(jun2022 ESI 명문) |
+| **MLIP-MD** | **$E_a$·$D$·조성 순위 = 정본.** β 게이트 + 멀티시드 오차막대 필수 |
+
+MD 쪽 자기 제약도 같이 적어 둔다: MLIP 은 DFT 의 근사(UMA) · **σ 절대값 인용 금지**
+(Haven=1 가정) · 고온에서 재서 RT 외삽 · 유한 셀 · 게이트 탈락 점은 적합에서 제외.
+
+관련 문서: **[BVSE](/concept/bvse)** §7–10 · **[MD](/concept/md)** · **[NEB](/concept/neb)** ·
+**[β 게이트](/concept/beta-gate)** · 그림 `docs/figures/bv_path_annotated_*.png` ·
+`bv_3d_*.png` · 데이터 `db/properties/bv_path_segments_*.csv`
+
+---
 ## 전체 요약
 ```mermaid
 graph TD
@@ -203,4 +275,4 @@ graph TD
 ---
 **우리 캠페인 적용**: Quantum ESPRESSO(평면파+pseudopotential)로 gap·EOS·elastic·ε∞를, LOBSTER로 ICOHP를 계산. canonical 레시피(pseudo/ecut/k)는 조성·물성마다 다르니 Methods 페이지 참조 — comp1은 USPP·k444·ecut 52/520, 비교 전 반드시 확인.
 
-*tags: DFT · Kohn-Sham · SCF · Hamiltonian · Born-Oppenheimer · Hartree-Fock · 전자밀도 · Exchange-Correlation · 평면파기저*
+*tags: DFT · Kohn-Sham · SCF · Hamiltonian · Born-Oppenheimer · Hartree-Fock · 전자밀도 · Exchange-Correlation · 평면파기저 · 활성화에너지 · BV vs NEB vs MD · 방법 비교*

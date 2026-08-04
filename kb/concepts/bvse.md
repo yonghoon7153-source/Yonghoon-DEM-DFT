@@ -363,4 +363,9 @@ $n_{\text{hop}}$ 계산의 $d_{\text{hop}} \approx 3$ Å 과 같은 스케일 �
 
 ---
 
+
+> [!note] 방법 간 비교
+> "BV·NEB·MD 가 주는 $E_a$ 는 서로 다른 양"의 정리는 **[DFT](/concept/dft) §12** 에 있다
+> (정의 차이 · BV 결손 물리 4가지 · 부호 뒤섞임 실측 · 신뢰도 순서).
+
 *tags: BVSE · bond valence · BVS · softBV · percolation energy · migration barrier · Li migration · ion transport · screening · channel volume · prefactor · vacancy paradox · reaction coordinate · PBC unwrap*

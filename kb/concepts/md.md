@@ -223,4 +223,9 @@ UMA-s-1p1(omat), Langevin NVT, dt 2 fs, friction 0.02, equilib 5 ps / prod 200 p
 - **$D$·$\sigma$ 절대값 인용 금지.** 비율·순위도 **멀티시드 판정만** (단일시드 1.33× 철회 사례).
 - **UMA는 Li₃N 금지** — LPSCl 계열에는 검증된 표준.
 
+
+> [!note] 방법 간 비교
+> "BV·NEB·MD 가 주는 $E_a$ 는 서로 다른 양"의 정리는 **[DFT](/concept/dft) §12** 에 있다
+> (정의 차이 · BV 결손 물리 4가지 · 부호 뒤섞임 실측 · 신뢰도 순서).
+
 *tags: MLIP-MD · UMA · Langevin NVT · MSD · Einstein relation · Arrhenius · activation energy · Nernst-Einstein · Li diffusion · multiseed*
