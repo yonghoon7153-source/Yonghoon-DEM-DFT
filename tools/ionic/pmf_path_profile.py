@@ -95,7 +95,33 @@ def pmf_from_density(rho, T):
     return np.minimum(F, F_CAP)
 
 
-def analyse(F, cell, T, gate_axes=(2, 4, 8)):
+def cluster_curve(F, levels):
+    """F 를 올리며 **최대 연결 성분 부피비**(%)를 잰다 (26-연결 + PBC 면 병합).
+
+    ⚠⚠ 왜 필요한가 — **첫-관통과 전이점은 다른 값이다.**
+      첫-관통(perc_threshold) = 처음으로 셀을 감는 순간. 그런데 그게 **1.4% 짜리 가는
+      실가닥**(유한크기 우연 연결)일 수 있다 (modelc 실측: 0.08 eV 가 그 경우).
+      전이점 = 최대 성분이 **급상승**하는 F — 대표 통로가 열리는 지점.
+      MASTER(2026-06-21)가 채택한 F* 0.20/0.17 은 **전이점** 정의다.
+    """
+    tot = F.size
+    out = []
+    for lv in levels:
+        lab = bvp._labels_周期(F <= lv)
+        cnt = np.bincount(lab.ravel())
+        cnt[0] = 0
+        out.append(100.0 * (cnt.max() if cnt.size > 1 else 0) / tot)
+    return np.array(out)
+
+
+def transition_level(levels, pct):
+    """최대 성분 곡선의 **최대 상승률** 지점 = 전이점 F*."""
+    dp = np.diff(pct) / np.diff(levels)
+    k = int(np.argmax(dp))
+    return float(0.5 * (levels[k] + levels[k + 1])), float(dp[k])
+
+
+def analyse(F, cell, T, gate_axes=(2, 4, 8), cap=None):
     """BV 판과 같은 관례로 문턱·경로. fig_bv_path_profile 의 원시함수를 그대로 쓴다."""
     N = np.array(F.shape)
     perc = {}
@@ -103,7 +129,7 @@ def analyse(F, cell, T, gate_axes=(2, 4, 8)):
         t = bvp.perc_threshold(F, need)
         perc[name] = t
         print(f"   {name} = {t:.4f} eV" if t is not None else f"   {name} = 없음")
-    t = perc["F_1D"]
+    t = cap if cap is not None else perc["F_1D"]
     if t is None:
         raise SystemExit("⛔ 1D 침투조차 없다 — 표집 부족(궤적이 짧다) 의심")
     T7wind, v = bvp.wrap_witness(F, t)
@@ -155,6 +181,10 @@ def main():
     ap.add_argument("--label", default="")
     ap.add_argument("--out_dir", default=".")
     ap.add_argument("--min_prom", type=float, default=0.02)
+    ap.add_argument("--use_transition", action="store_true", default=True,
+                    help="경로를 **전이점** 문턱에서 뽑는다 (MASTER 채택 정의; 기본)")
+    ap.add_argument("--first_spanning", dest="use_transition", action="store_false",
+                    help="대신 첫-관통 문턱을 쓴다 (가는 실가닥일 수 있음)")
     ap.add_argument("--selftest_bv", default=None,
                     help="검증용: cif 로 BV 지도를 만들어 rho=exp(-E/kT) 가짜 밀도로 자체검사")
     a = ap.parse_args()
@@ -187,7 +217,15 @@ def main():
     if frac0 > 0.60:
         print("⚠ 미방문 voxel 이 60% 를 넘는다 — 궤적이 짧을 가능성. F* 는 상한으로 읽을 것")
 
-    r = analyse(F, cell, a.T)
+    # 첫-관통 vs 전이점 (MASTER 채택 정의 = 전이점)
+    lv = np.linspace(0.005, min(0.60, float(F[F < F_CAP].max())), 120)
+    pct = cluster_curve(F, lv)
+    F_trans, slope = transition_level(lv, pct)
+    print(f"클러스터 곡선: 전이점 F* = {F_trans:.4f} eV (최대 상승률 {slope:.0f} %/eV)")
+
+    r = analyse(F, cell, a.T, cap=F_trans if a.use_transition else None)
+    r["F_trans"] = F_trans
+    r["curve"] = (lv, pct)
     mic = mic_fn(cell)
     cages = cage_centers(atoms, mic)
     d, e, cart = r["d"], r["e"], r["cart"]
@@ -247,6 +285,14 @@ def main():
         f.write(f"# PMF segment barriers - {a.label or a.tag}, T = {a.T:.0f} K, "
                 f"F_perc {r['F_perc']:.4f} eV. barrier_eV = F(saddle) - F(preceding valley).\n")
         w = csv.DictWriter(f, fieldnames=list(rows[0])); w.writeheader(); w.writerows(rows)
+    with open(out / f"{a.tag}_pmf_cluster.csv", "w", newline="", encoding="utf-8-sig") as f:
+        f.write(f"# Largest connected Li cluster vs PMF level - {a.label or a.tag}, "
+                f"T = {a.T:.0f} K.\n")
+        f.write(f"# First-spanning F* = {r['ref']['F_1D']:.4f} eV ; "
+                f"TRANSITION (steepest rise, ADOPTED) F* = {r['F_trans']:.4f} eV.\n")
+        w = csv.writer(f); w.writerow(["F_eV", "largest_cluster_pct"])
+        for x, y in zip(r["curve"][0], r["curve"][1]):
+            w.writerow([f"{x:.4f}", f"{y:.4f}"])
     np.savez_compressed(out / f"{a.tag}_pmf_path.npz", d=d, e=e, cart=cart,
                         cell=cell, F_perc=r["F_perc"], T=a.T, axis=r["axis"],
                         sym=np.array([s for s, _p in atoms]),
