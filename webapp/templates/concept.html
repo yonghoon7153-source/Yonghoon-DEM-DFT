@@ -18,33 +18,36 @@
 </div>
 
 
-{# ── 첨부 (2026-08-05) — 본문이 언급한 그림·데이터를 직접 열고 내려받기 ───────
+{# ── 첨부 (2026-08-05, v2) — 본문이 언급한 그림·데이터 + 사용자 업로드 ─────
    자동 수집(data.concept_attachments): 문서에 적힌 docs/·db/ 경로를 긁어 실존 파일만.
-   별도 목록을 두면 문서와 어긋나므로 본문을 진실의 근원으로 삼는다. #}
-{% if attachments %}
+   업로드는 docs/uploads/<cid>/ 에 저장 + 본문 끝 '## 첨부 (업로드)' 절에 경로를 append
+   → "본문 = 진실의 근원" 불변식 유지.
+   ⚠ 스크립트는 반드시 {% raw %}{% endraw %}content block **안**에 — v1 이 endblock 뒤에 놓여
+   통째로 버려졌다(클릭·탭 전부 무동작, 2026-08-05 사용자 발견). #}
 {% set imgs = attachments|selectattr('kind','equalto','image')|list %}
 {% set data = attachments|rejectattr('kind','equalto','image')|list %}
 <div class="section-title">첨부 · {{ attachments|length }}
-  <span class="muted" style="font-weight:400;font-size:.75rem">— 클릭하면 열리고, 저장 버튼으로 바로 받아요</span>
+  <span class="muted" style="font-weight:400;font-size:.75rem">— 클릭하면 미리보기 · ⬇ 저장으로 다운로드 · 파일을 끌어오면 추가</span>
 </div>
+
+{% if imgs or data %}
 <div class="att-tabs">
-  {% if imgs %}<button class="att-tab active" data-t="img">🖼 이미지 <span class="muted">{{ imgs|length }}</span></button>{% endif %}
-  {% if data %}<button class="att-tab {% if not imgs %}active{% endif %}" data-t="data">📄 데이터 <span class="muted">{{ data|length }}</span></button>{% endif %}
-  <a class="btn sm" style="margin-left:auto" href="/api/file/{{ attachments[0].rel }}?dl=1" download>⬇ 첫 파일 받기</a>
+  {% if imgs %}<button type="button" class="att-tab active" data-t="img">🖼 이미지 <span class="muted">{{ imgs|length }}</span></button>{% endif %}
+  {% if data %}<button type="button" class="att-tab {% if not imgs %}active{% endif %}" data-t="data">📄 데이터 <span class="muted">{{ data|length }}</span></button>{% endif %}
 </div>
+{% endif %}
 
 {% if imgs %}
 <div class="att-pane" id="att-img">
   <div class="grid grid-3">
   {% for f in imgs %}
-    <div class="card att-card" onclick="attOpen('{{ f.rel }}','{{ f.name }}')">
+    <div class="card att-card" data-rel="{{ f.rel }}" data-name="{{ f.name }}" data-kind="image">
       <div class="att-thumb"><img loading="lazy" src="/api/file/{{ f.rel }}" alt="{{ f.name }}"></div>
       <div class="att-meta">
         <div class="mono" style="font-size:.7rem;font-weight:600">{{ f.name }}</div>
         <div class="muted" style="font-size:.68rem">{{ f.size_kb }} KB</div>
       </div>
-      <a class="btn sm att-dl" href="/api/file/{{ f.rel }}?dl=1" download
-         onclick="event.stopPropagation()">⬇ 저장</a>
+      <a class="btn sm att-dl" href="/api/file/{{ f.rel }}?dl=1" download>⬇ 저장</a>
     </div>
   {% endfor %}
   </div>
@@ -55,33 +58,40 @@
 <div class="att-pane" id="att-data" {% if imgs %}style="display:none"{% endif %}>
   <div class="grid grid-3">
   {% for f in data %}
-    <div class="card att-card" onclick="attOpen('{{ f.rel }}','{{ f.name }}','{{ f.kind }}')">
-      <div class="att-icon">{{ '📊' if f.kind=='csv' else '📦' }}</div>
+    <div class="card att-card" data-rel="{{ f.rel }}" data-name="{{ f.name }}" data-kind="{{ f.kind }}">
+      <div class="att-icon">{{ '📊' if f.kind=='csv' else ('📕' if f.kind=='pdf' else '📦') }}</div>
       <div class="att-meta">
         <div class="mono" style="font-size:.7rem;font-weight:600">{{ f.name }}</div>
         <div class="muted" style="font-size:.68rem">{{ f.size_kb }} KB · {{ f.kind|upper }}</div>
       </div>
-      <a class="btn sm att-dl" href="/api/file/{{ f.rel }}?dl=1" download
-         onclick="event.stopPropagation()">⬇ 저장</a>
+      <a class="btn sm att-dl" href="/api/file/{{ f.rel }}?dl=1" download>⬇ 저장</a>
     </div>
   {% endfor %}
   </div>
 </div>
 {% endif %}
 
-<div class="att-modal" id="att-modal" onclick="attClose(event)">
-  <div class="att-box" onclick="event.stopPropagation()">
+<div class="att-drop" id="att-drop">
+  <div style="font-size:1.5rem">⤵</div>
+  <div id="att-drop-msg"><b>파일을 여기(또는 페이지 아무 데나)로 끌어다 놓으면 이 문서에 첨부돼요</b>
+    <span class="muted">— 클릭해서 선택해도 됩니다</span></div>
+  <div class="muted" style="font-size:.72rem">png · jpg · svg · csv · json · xyz · vasp · cif · pdf — docs/uploads/{{ cid }}/ 에 저장되고 문서 끝에 경로가 기록돼요</div>
+  <input type="file" id="att-file" multiple style="display:none"
+         accept=".png,.jpg,.jpeg,.svg,.csv,.json,.xyz,.vasp,.cif,.pdf">
+</div>
+
+<div class="att-modal" id="att-modal">
+  <div class="att-box">
     <div class="att-bar">
       <span class="mono" id="att-title" style="font-size:.8rem;font-weight:700"></span>
       <span style="margin-left:auto;display:flex;gap:8px">
         <a class="btn sm" id="att-save" href="#" download>⬇ 저장</a>
-        <button class="btn sm" onclick="attClose()">✕ 닫기</button>
+        <button type="button" class="btn sm" onclick="attClose()">✕ 닫기</button>
       </span>
     </div>
     <div class="att-body" id="att-body"></div>
   </div>
 </div>
-{% endif %}
 
 {% if papers %}
 <div class="section-title">이 기법을 쓴 litdb 논문 · {{ papers|length }}</div>
@@ -200,60 +210,109 @@
   }
 })();
 </script>
-{% endblock %}
 
 <script>
-// ── 첨부 탭 · 라이트박스 (2026-08-05) ────────────────────────────────
-document.querySelectorAll('.att-tab').forEach(function(b){
-  b.onclick = function(){
-    document.querySelectorAll('.att-tab').forEach(function(x){x.classList.remove('active');});
-    b.classList.add('active');
-    var img = document.getElementById('att-img'), dat = document.getElementById('att-data');
-    if (img) img.style.display = (b.dataset.t==='img') ? '' : 'none';
-    if (dat) dat.style.display = (b.dataset.t==='data') ? '' : 'none';
-  };
-});
-function attOpen(rel, name, kind){
-  var m = document.getElementById('att-modal'), body = document.getElementById('att-body');
-  document.getElementById('att-title').textContent = name;
-  document.getElementById('att-save').href = '/api/file/' + rel + '?dl=1';
-  document.getElementById('att-save').setAttribute('download', name);
-  body.innerHTML = '<div class="muted" style="padding:20px">불러오는 중…</div>';
-  m.style.display = 'flex';
-  if (kind === 'csv'){
-    // CSV 는 표로 미리보기 (앞 40행) — 주석(#) 줄은 위에 따로 접어 보여준다
-    fetch('/api/file/' + rel).then(function(r){return r.text();}).then(function(t){
-      var lines = t.replace(/^\uFEFF/, '').split(/\r?\n/).filter(function(x){return x.length;});
-      var notes = lines.filter(function(x){return x.trim().charAt(0)==='#';});
-      var rows  = lines.filter(function(x){return x.trim().charAt(0)!=='#';}).slice(0, 40);
-      var h = '';
-      if (notes.length) h += '<details style="margin-bottom:10px"><summary class="muted" style="cursor:pointer;font-size:.78rem">'
-        + '헤더 주석 ' + notes.length + '줄 (출처·규율)</summary><pre class="mono" style="white-space:pre-wrap;'
-        + 'font-size:.68rem;margin:6px 0 0">' + notes.join('\n').replace(/</g,'&lt;') + '</pre></details>';
-      h += '<div style="overflow:auto;max-height:56vh"><table class="att-table"><tbody>';
-      rows.forEach(function(ln, i){
-        var cells = ln.split(',');
-        h += '<tr>' + cells.map(function(c){
-          return (i===0 ? '<th>' : '<td>') + c.replace(/</g,'&lt;') + (i===0 ? '</th>' : '</td>');
-        }).join('') + '</tr>';
-      });
-      h += '</tbody></table></div>';
-      if (rows.length >= 40) h += '<div class="muted" style="font-size:.72rem;margin-top:6px">앞 40행만 표시 — 전체는 저장해서 보세요</div>';
-      body.innerHTML = h;
-    }).catch(function(){ body.innerHTML = '<div class="muted" style="padding:20px">미리보기 실패 — 저장으로 받아주세요</div>'; });
-  } else if (kind && kind !== 'image'){
-    fetch('/api/file/' + rel).then(function(r){return r.text();}).then(function(t){
-      body.innerHTML = '<pre class="mono" style="white-space:pre-wrap;font-size:.7rem;max-height:60vh;overflow:auto">'
-        + t.slice(0, 20000).replace(/</g,'&lt;') + '</pre>';
+// ── 첨부: 탭 · 라이트박스 · 드래그 업로드 (2026-08-05 v2) ──────────
+(function(){
+  // 탭
+  document.querySelectorAll('.att-tab').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('.att-tab').forEach(function(x){x.classList.remove('active');});
+      b.classList.add('active');
+      var img = document.getElementById('att-img'), dat = document.getElementById('att-data');
+      if (img) img.style.display = (b.dataset.t === 'img') ? '' : 'none';
+      if (dat) dat.style.display = (b.dataset.t === 'data') ? '' : 'none';
     });
-  } else {
-    body.innerHTML = '<img src="/api/file/' + rel + '" alt="' + name + '">';
+  });
+
+  // 카드 클릭 → 미리보기 (저장 버튼 클릭은 제외)
+  document.querySelectorAll('.att-card').forEach(function(card){
+    card.addEventListener('click', function(e){
+      if (e.target.closest('.att-dl')) return;
+      attOpen(card.dataset.rel, card.dataset.name, card.dataset.kind);
+    });
+  });
+
+  // 모달: 배경 클릭 = 닫기, 상자 내부는 무시
+  var modal = document.getElementById('att-modal');
+  if (modal){
+    modal.addEventListener('click', function(e){ if (e.target === modal) attClose(); });
   }
-}
-function attClose(e){
-  if (e && e.target && e.target.closest && e.target.closest('.att-box') && e.type === 'click'
-      && !e.target.classList.contains('att-modal')) { /* 내부 클릭은 무시 */ }
-  document.getElementById('att-modal').style.display = 'none';
-}
-document.addEventListener('keydown', function(e){ if (e.key === 'Escape') attClose(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') attClose(); });
+
+  // 드래그 업로드 — 드롭존 + 페이지 전체
+  var dz = document.getElementById('att-drop'), fi = document.getElementById('att-file');
+  if (dz){
+    dz.addEventListener('click', function(){ fi.click(); });
+    fi.addEventListener('change', function(){ attUpload(fi.files); });
+    ['dragover','dragenter'].forEach(function(ev){
+      document.addEventListener(ev, function(e){ e.preventDefault(); dz.classList.add('over'); });
+    });
+    document.addEventListener('dragleave', function(e){
+      if (!e.relatedTarget) dz.classList.remove('over');
+    });
+    document.addEventListener('drop', function(e){
+      e.preventDefault(); dz.classList.remove('over');
+      if (e.dataTransfer && e.dataTransfer.files.length) attUpload(e.dataTransfer.files);
+    });
+  }
+
+  window.attUpload = function(files){
+    if (!files || !files.length) return;
+    var fd = new FormData();
+    for (var i = 0; i < files.length; i++) fd.append('file', files[i]);
+    var st = document.getElementById('att-drop-msg');
+    st.innerHTML = '<b>업로드 중… (' + files.length + '개)</b>';
+    fetch('/api/concept-upload/{{ cid }}', {method: 'POST', body: fd})
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if (d.saved && d.saved.length){ location.reload(); }
+        else st.innerHTML = '<b style="color:#dc2626">실패</b> — ' +
+          ((d.rejected || []).join(', ') || '허용되지 않는 형식');
+      })
+      .catch(function(){ st.innerHTML = '<b style="color:#dc2626">업로드 실패</b>'; });
+  };
+
+  window.attOpen = function(rel, name, kind){
+    var body = document.getElementById('att-body');
+    document.getElementById('att-title').textContent = name;
+    var sv = document.getElementById('att-save');
+    sv.href = '/api/file/' + rel + '?dl=1'; sv.setAttribute('download', name);
+    body.innerHTML = '<div class="muted" style="padding:20px">불러오는 중…</div>';
+    modal.style.display = 'flex';
+    if (kind === 'csv'){
+      fetch('/api/file/' + rel).then(function(r){ return r.text(); }).then(function(t){
+        var lines = t.replace(/^\uFEFF/, '').split(/\r?\n/).filter(function(x){ return x.length; });
+        var notes = lines.filter(function(x){ return x.trim().charAt(0) === '#'; });
+        var rows  = lines.filter(function(x){ return x.trim().charAt(0) !== '#'; }).slice(0, 40);
+        var h = '';
+        if (notes.length) h += '<details style="margin-bottom:10px"><summary class="muted" '
+          + 'style="cursor:pointer;font-size:.78rem">헤더 주석 ' + notes.length
+          + '줄 (출처·규율)</summary><pre class="mono" style="white-space:pre-wrap;font-size:.68rem;'
+          + 'margin:6px 0 0">' + notes.join('\n').replace(/</g, '&lt;') + '</pre></details>';
+        h += '<div style="overflow:auto;max-height:56vh"><table class="att-table"><tbody>';
+        rows.forEach(function(ln, i){
+          h += '<tr>' + ln.split(',').map(function(c){
+            return (i ? '<td>' : '<th>') + c.replace(/</g, '&lt;') + (i ? '</td>' : '</th>');
+          }).join('') + '</tr>';
+        });
+        h += '</tbody></table></div>';
+        if (rows.length >= 40) h += '<div class="muted" style="font-size:.72rem;margin-top:6px">앞 40행만 표시 — 전체는 ⬇ 저장</div>';
+        body.innerHTML = h;
+      }).catch(function(){ body.innerHTML = '<div class="muted" style="padding:20px">미리보기 실패 — ⬇ 저장으로 받아주세요</div>'; });
+    } else if (kind === 'pdf'){
+      body.innerHTML = '<embed src="/api/file/' + rel + '" type="application/pdf" style="width:82vw;max-width:1100px;height:75vh">';
+    } else if (kind && kind !== 'image'){
+      fetch('/api/file/' + rel).then(function(r){ return r.text(); }).then(function(t){
+        body.innerHTML = '<pre class="mono" style="white-space:pre-wrap;font-size:.7rem;max-height:60vh;overflow:auto">'
+          + t.slice(0, 20000).replace(/</g, '&lt;') + '</pre>';
+      });
+    } else {
+      body.innerHTML = '<img src="/api/file/' + rel + '" alt="' + name + '">';
+    }
+  };
+  window.attClose = function(){ if (modal) modal.style.display = 'none'; };
+})();
 </script>
+
+{% endblock %}

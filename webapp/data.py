@@ -2250,7 +2250,7 @@ def dashboard_highlights() -> list:
 # ─────────────────────────────────────────────────────────────
 # 개념 문서 첨부 (2026-08-05) — 그림·데이터를 웹에서 직접 열고 내려받기
 # ─────────────────────────────────────────────────────────────
-_ATT_RE = re.compile(r"(?<![\w/.])((?:docs|db)/[\w./*-]+\.(?:png|jpg|jpeg|svg|csv|json|xyz|vasp|cif))")
+_ATT_RE = re.compile(r"(?<![\w/.])((?:docs|db)/[\w./*-]+\.(?:png|jpg|jpeg|svg|csv|json|xyz|vasp|cif|pdf))")
 _ATT_ROOTS = ("docs", "db")
 _IMG_EXT = (".png", ".jpg", ".jpeg", ".svg")
 
@@ -2261,6 +2261,8 @@ def _att_kind(rel: str) -> str:
         return "image"
     if e.endswith(".csv"):
         return "csv"
+    if e.endswith(".pdf"):
+        return "pdf"
     return "file"
 
 
@@ -2304,3 +2306,46 @@ def concept_attachments(cid: str) -> list[dict]:
                         "size_kb": round(p.stat().st_size / 1024, 1)})
     out.sort(key=lambda x: (x["kind"] != "image", x["name"]))
     return out
+
+_UP_EXT = {".png", ".jpg", ".jpeg", ".svg", ".csv", ".json", ".xyz", ".vasp", ".cif", ".pdf"}
+_UP_MAX = 50 * 1024 * 1024        # 50 MB/파일
+
+
+def save_concept_upload(cid: str, files) -> dict:
+    """드래그 업로드 저장 — docs/uploads/<cid>/ 에 쓰고 **문서 끝에 경로를 append**.
+
+    왜 문서에 쓰나: 첨부 목록은 본문에서 자동 수집되므로(불변식 "본문 = 진실의 근원"),
+    파일만 두면 안 보인다. '## 첨부 (업로드)' 절을 만들어 경로를 한 줄씩 쌓는다.
+    파일명은 [A-Za-z0-9._-] 로 정규화, 충돌 시 -2, -3 … 접미.
+    """
+    if read_concept(cid) is None:
+        return {"error": "no such concept", "saved": [], "rejected": []}
+    updir = ROOT / "docs" / "uploads" / cid
+    saved, rejected = [], []
+    for f in files:
+        name = re.sub(r"[^A-Za-z0-9._\-]", "_", os.path.basename(f.filename or ""))
+        name = name.lstrip(".")
+        ext = os.path.splitext(name)[1].lower()
+        if not name or ext not in _UP_EXT:
+            rejected.append(f.filename or "(이름 없음)")
+            continue
+        blob = f.read()
+        if not blob or len(blob) > _UP_MAX:
+            rejected.append(f"{name} (빈 파일 또는 >50MB)")
+            continue
+        updir.mkdir(parents=True, exist_ok=True)
+        stem, k = os.path.splitext(name)[0], 1
+        q = updir / name
+        while q.exists():
+            k += 1
+            q = updir / f"{stem}-{k}{ext}"
+        q.write_bytes(blob)
+        saved.append(str(q.relative_to(ROOT)))
+    if saved:
+        mdp = CONCEPTS / f"{cid}.md"
+        txt = mdp.read_text(encoding="utf-8", errors="ignore")
+        if "## 첨부 (업로드)" not in txt:
+            txt = txt.rstrip() + "\n\n---\n## 첨부 (업로드)\n"
+        txt = txt.rstrip() + "\n" + "\n".join(f"- `{r}`" for r in saved) + "\n"
+        mdp.write_text(txt, encoding="utf-8")
+    return {"saved": saved, "rejected": rejected}

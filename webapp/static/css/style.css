@@ -912,3 +912,12 @@ tr.row-dim{opacity:.62}
   position:sticky;top:0;white-space:nowrap}
 .att-table td{padding:3px 8px;border:1px solid var(--line,#e5e7eb);white-space:nowrap}
 @media print{.att-tabs,.att-modal,.att-dl{display:none!important}}
+
+/* 드롭존 (2026-08-05 v2) */
+.att-drop{margin-top:12px;border:2px dashed var(--line,#cbd5e1);border-radius:12px;
+  padding:18px;text-align:center;cursor:pointer;color:var(--navy,#1f2937);
+  background:#fafbfc;transition:border-color .15s, background .15s;font-size:.82rem;
+  display:flex;flex-direction:column;gap:4px;align-items:center}
+.att-drop:hover{border-color:#94a3b8}
+.att-drop.over{border-color:var(--accent,#2563eb);background:#eef6ff}
+@media print{.att-drop{display:none!important}}

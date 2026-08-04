@@ -299,6 +299,15 @@ def api_file(rel):
                                download_name=p.name)
 
 
+@app.route("/api/concept-upload/<cid>", methods=["POST"])
+def api_concept_upload(cid):
+    """개념 문서 드래그 업로드. 저장 후 페이지 새로고침이 첨부를 다시 수집한다."""
+    r = D.save_concept_upload(cid, request.files.getlist("file"))
+    if r.get("error"):
+        abort(404)
+    return jsonify(r)
+
+
 @app.route("/api/property/<name>")
 def api_property(name):
     p = D.DB / "properties" / f"{name}.json"
