@@ -1,0 +1,14 @@
+﻿# BVSE Li-channel volume fraction vs iso level - ORIGINAL (as-relaxed) cells only = the canonical numbers.
+# Figure: docs/figures/bvse_cubic/bvse_channel_original_cells.png
+# Definition: volume fraction of voxels with BVSE(above-min) <= iso, referenced to the ORIGINAL map global minimum.
+# UNITS: iso is valence^2 (BVSE = (BVS-1)^2), NOT eV. Relative comparison only.
+# Source: db/properties/bvse_cubic_approx/bvse_orig_vs_cubic.csv (orig columns) - identical values, no re-derivation.
+# WARNING: channel volume is a PREFACTOR-side (D0) indicator, not a barrier. It does NOT rank Ea/sigma
+#   - MD is the authority there (LPSOCl has +43% channel volume yet a HIGHER Ea, 0.287 vs 0.197 eV).
+#   See kb/concepts/bvse.md sec 7 (two metrics) and sec 9 (three failure modes).
+iso_val2,LPSCl1.6_undoped_pct,LPSOCl_plusO_pct,B2O3_at_LPSCl1.6_pct
+0.25,1.23,2.37,3.83
+0.5,3.32,4.74,6.73
+1.0,8.36,9.8,12.22
+1.5,13.44,14.76,17.09
+2.0,17.85,19.19,21.25
