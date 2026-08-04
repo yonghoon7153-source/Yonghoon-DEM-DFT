@@ -52,16 +52,34 @@ import numpy as np
 UM_PER_LU = 1000.0        # scaffold CSV 는 LIGGGHTS 단위(LU); 1 LU = 1000 µm 규약
 
 # ── real_14 정착 SE 응답곡선 (2026-08-05 실측, --compact-to + hold, n_grid 384, sub 160) ──────
-#    (두께 µm, 정착 wallP GPa).  wallP 는 **전체 면적**으로 정규화된 값이므로 그대로 더하면 된다
-#    (A_supp 로 다시 나누지 말 것 — 그게 이 식이 (1−A)·σ 꼴이 아닌 이유).
-#    30.22 점은 --am-jam q=95 런, 나머지 4점은 --compact-to 스윕.
+#    (φ_SE_local, 정착 wallP GPa).  wallP 는 **전체 면적**으로 정규화된 값이므로 그대로 더하면
+#    된다 (A_supp 로 다시 나누지 말 것 — 그게 이 식이 (1−A)·σ 꼴이 아닌 이유).
+#    30.22 µm 점은 --am-jam q=95 런, 나머지 4점은 --compact-to 스윕.
+#
+#    ★ 색인 변수가 두께(µm)가 아니라 **φ_SE_local = V_SE / (A·h − V_AM)** 인 이유:
+#    두께는 베드마다 다른 양이라 real_14(28~30µm) 곡선을 6mAh 베드(111~116µm)에 대면
+#    4배 외삽이 되어 wallP_SE 가 0 으로 붕괴한다 (2026-08-05 10케이스 런에서 전 행 0.0000 로
+#    실제 발생).  SE 응력은 SE 가 자기 몫의 공간에서 얼마나 조밀한가에 달린 **물성**이므로
+#    φ_SE_local 로 색인하면 두께가 달라도 곡선 안에 떨어진다.
+#    real_14 환산 근거: V_AM 46679.9 µm³ · V_SE 17190.8 µm³ · A 2500 µm² (겹침 946.7)
+#      두께 30.22/29.81/28.92/28.24/27.70 µm → φ 0.5955/0.6174/0.6710/0.7187/0.7617
 REAL14_SE_CURVE = np.array([
-    [30.22, 0.0098],
-    [29.81, 0.0359],
-    [28.92, 0.1038],
-    [28.24, 0.1411],
-    [27.70, 0.1690],
+    [0.5955, 0.0098],
+    [0.6174, 0.0359],
+    [0.6710, 0.1038],
+    [0.7187, 0.1411],
+    [0.7617, 0.1690],
 ])
+
+# 곡선 밖으로 이만큼(φ 단위)까지만 외삽을 허용한다.  그 너머는 값을 만들지 않고 거부한다 —
+# 조용한 외삽이 0.0000 을 내놓고 "SE 항이 없는 계산" 을 정상 결과처럼 보이게 만들었다.
+SE_EXTRAP_MARGIN = 0.03
+
+
+def phi_se_local(h, v_am, v_se, area):
+    """비-AM 공간에서의 SE 충전율.  AM 이 차지한 부피를 뺀 곳에 SE 가 얼마나 들어찼는가."""
+    free = area * h - v_am
+    return float(v_se / free) if free > 0 else float('inf')
 
 
 def read_scaffold(path):
@@ -91,23 +109,27 @@ def support_fraction(centres, radii, h, box_um):
     return float(np.pi * np.maximum(rr ** 2 - (rr - dc) ** 2, 0.0).sum()) / float(box_um ** 2)
 
 
-def se_response(h, curve=REAL14_SE_CURVE):
-    """측정 SE 응답곡선 wallP_SE(h) — log 선형 보간, 밖은 양끝 기울기로 외삽.
+def se_response(phi, curve=REAL14_SE_CURVE):
+    """측정 SE 응답곡선 wallP_SE(φ_SE_local) — log 선형 보간, 좁은 마진까지만 외삽.
 
-    응력은 두께에 대해 지수적으로 오르므로 log 공간에서 보간한다 (실측 구간 기울기
-    0.10~0.41 /%p, 포화 경향).  외삽은 양끝 기울기를 유지 — **외삽 구간은 신뢰구간 밖**이라
-    호출부가 flag 를 함께 받는다.
+    응력은 조밀도에 대해 지수적으로 오르므로 log 공간에서 보간한다.  반환은
+    (wallP_GPa, inside).  **마진 밖은 nan** 을 돌려준다 — 조용히 0 을 내놓으면
+    "SE 항이 통째로 빠진 계산" 이 정상 결과로 보고된다 (실제로 그렇게 당했다).
     """
-    xs = curve[:, 0][::-1]                    # 두께 오름차순
-    ys = np.log(curve[:, 1][::-1])
-    inside = bool(xs[0] <= h <= xs[-1])
-    if h < xs[0]:
+    xs = curve[:, 0]                          # φ 오름차순
+    ys = np.log(curve[:, 1])
+    if xs[0] > xs[-1]:
+        xs, ys = xs[::-1], ys[::-1]
+    inside = bool(xs[0] <= phi <= xs[-1])
+    if inside:
+        return float(np.exp(np.interp(phi, xs, ys))), True
+    if phi < xs[0] - SE_EXTRAP_MARGIN or phi > xs[-1] + SE_EXTRAP_MARGIN:
+        return float('nan'), False            # 거부 — 값을 만들지 않는다
+    if phi < xs[0]:
         k = (ys[1] - ys[0]) / (xs[1] - xs[0])
-        return float(np.exp(ys[0] + k * (h - xs[0]))), inside
-    if h > xs[-1]:
-        k = (ys[-1] - ys[-2]) / (xs[-1] - xs[-2])
-        return float(np.exp(ys[-1] + k * (h - xs[-1]))), inside
-    return float(np.exp(np.interp(h, xs, ys))), inside
+        return float(np.exp(ys[0] + k * (phi - xs[0]))), False
+    k = (ys[-1] - ys[-2]) / (xs[-1] - xs[-2])
+    return float(np.exp(ys[-1] + k * (phi - xs[-1]))), False
 
 
 def porosities(h, solid_union_um, solid_sphere_um):
@@ -116,13 +138,24 @@ def porosities(h, solid_union_um, solid_sphere_um):
             max(0.0, 1.0 - solid_sphere_um / h) * 100.0)
 
 
-def solve_height(centres, radii, box_um, h_am, p_target, lo, hi, tol=1e-4):
-    """P(h) = A_supp(h)·H_AM + wallP_SE(h) = p_target 를 만족하는 h (이분법).
+def _p_of_h(centres, radii, box_um, h_am, h, v_am, v_se, curve):
+    """P(h) = A_supp(h)·H_AM + wallP_SE(φ_SE_local(h)).  SE 거부 구간은 0 으로 두되 flag."""
+    a = support_fraction(centres, radii, h, box_um)
+    s, ins = se_response(phi_se_local(h, v_am, v_se, box_um ** 2), curve)
+    ok = np.isfinite(s)
+    return a * h_am + (s if ok else 0.0), a, (s if ok else float('nan')), ins
+
+
+def solve_height(centres, radii, box_um, h_am, p_target, lo, hi,
+                 v_am=0.0, v_se=0.0, curve=REAL14_SE_CURVE, tol=1e-4):
+    """P(h) = p_target 를 만족하는 h (이분법).
 
     P(h) 는 h 감소에 단조 증가(그림자↑·SE응력↑)하므로 이분법이 안전하다.
+    v_am/v_se 를 안 주면 SE 항은 real_14 곡선을 그대로 h 로 쓰던 옛 거동이 아니라
+    **0** 이 된다 (φ 를 만들 수 없으므로) — 호출부가 의도적으로 기하만 쓸 때의 경로.
     """
     def P(h):
-        return support_fraction(centres, radii, h, box_um) * h_am + se_response(h)[0]
+        return _p_of_h(centres, radii, box_um, h_am, h, v_am, v_se, curve)[0]
     if P(hi) > p_target:                      # 가장 느슨한 높이에서도 이미 초과
         return hi, P(hi), 'above_at_hi'
     if P(lo) < p_target:                      # 가장 조밀한 높이에서도 미달
@@ -140,13 +173,77 @@ def solve_height(centres, radii, box_um, h_am, p_target, lo, hi, tol=1e-4):
     return h, P(h), 'ok'
 
 
-def invert_h_am(centres, radii, box_um, h_dem, p_target, curve=REAL14_SE_CURVE):
-    """주어진 두께가 나오려면 H_AM 이 얼마여야 하나 — **문헌값과 대조하기 위한 역산**."""
+def invert_h_am(centres, radii, box_um, h_dem, p_target,
+                curve=REAL14_SE_CURVE, v_am=0.0, v_se=0.0):
+    """주어진 두께가 나오려면 H_AM 이 얼마여야 하나 — **문헌값과 대조하기 위한 역산**.
+
+    ⚠ 이 방향은 **조건이 나쁘다**: h_DEM 의 서브미크론 오차가 1/(dA_supp/dh) 만큼 증폭된다
+    (real_14 실측: A_supp 1.5 %↔7.3 % 가 평면 0.56 µm 차이 → H_AM 이 20↔4 로 5배 튄다).
+    판정에는 정방향(H_AM 고정 → h 예측)을 쓸 것 — 같은 배수로 **억제**된다.
+    """
     a = support_fraction(centres, radii, h_dem, box_um)
-    s, _ = se_response(h_dem, curve)
+    s, ins = se_response(phi_se_local(h_dem, v_am, v_se, box_um ** 2), curve)
+    if not np.isfinite(s):
+        s, ins = 0.0, False
     if a <= 0:
         return float('inf'), a, s
     return (p_target - s) / a, a, s
+
+
+def dA_dh(centres, radii, box_um, h, eps=0.05):
+    """dA_supp/dh — 조건수.  역산이 얼마나 증폭하고 정방향이 얼마나 억제하는지의 척도."""
+    return (support_fraction(centres, radii, h - eps, box_um)
+            - support_fraction(centres, radii, h + eps, box_um)) / (2 * eps)
+
+
+def run_forward(cases, h_am=4.0, med_tol=0.015, max_tol=0.04):
+    """★ 정방향 검증 — H_AM 을 **문헌값에 고정**하고 두께를 예측해 DEM 과 대조한다.
+
+    왜 역산이 아니라 이 방향인가: A_supp 는 자유표면에서 가파르다 (real_14 실측
+    ~10 %/µm).  그래서 h_DEM → H_AM 역산은 서브미크론 두께 정의 오차를 배수로 **증폭**하고
+    (2026-08-05 10케이스: A_supp 4.9× 산포 = 평면 0.56 µm), H_AM → h 정방향은 같은 배수로
+    **억제**한다 (H_AM 을 5배 틀려도 h 는 0.57 µm 이동).  모델을 실제로 쓰는 방향도 이쪽이다.
+
+    사전등록 문턱 (2026-08-05, 실행 전 고정):
+      PASS : median |Δh|/h ≤ 1.5 %  **그리고**  max |Δh|/h ≤ 4 %
+      FAIL : 그 외
+    상대 기준인 이유는 베드 두께가 30~116 µm 로 4배 흩어져 있기 때문.
+    ★ Δh 는 **관례 무관**이다 (두께엔 sphere/union 구분이 없다) — 이 검증이 오늘의
+      1.25 %p 관례 함정을 아예 비껴가는 이유.  Δε 는 참고로 sphere 관례로 환산해 병기.
+    """
+    rows = []
+    for c in cases:
+        am_c, am_r, _ = read_scaffold(c['am'])
+        se_c, se_r, _ = read_scaffold(c['se'])
+        v_am = float((4.0 / 3.0 * np.pi * am_r ** 3).sum())
+        v_se = float((4.0 / 3.0 * np.pi * se_r ** 3).sum())
+        area = c['box'] ** 2
+        curve = read_curve(c['curve']) if c['curve'] else REAL14_SE_CURVE
+        lo = max(float(am_c[:, 2].min()), (v_am + v_se) / area * 1.001)
+        hi = float((am_c[:, 2] + am_r).max())
+        h, pach, st = solve_height(am_c, am_r, c['box'], h_am, c['p'], lo, hi,
+                                   v_am, v_se, curve)
+        _, a, s, ins = _p_of_h(am_c, am_r, c['box'], h_am, h, v_am, v_se, curve)
+        dh = h - c['h_dem']
+        solid = (v_am + v_se) / area                  # sphere 관례 고체 높이
+        de = solid * (1.0 / c['h_dem'] - 1.0 / h) * 100.0
+        rows.append(dict(label=c['label'], p=c['p'], h_dem=c['h_dem'], h=h, dh=dh,
+                         rel=abs(dh) / c['h_dem'], de=de, a=a, s=s, inside=ins,
+                         status=st, phi=phi_se_local(h, v_am, v_se, area)))
+    rel = np.array([r['rel'] for r in rows], float)
+    med, mx = float(np.median(rel)), float(rel.max())
+    bad = [r['label'] for r in rows if r['status'] != 'ok']
+    if bad:
+        verdict = (f'FAIL — 경계에서 해가 안 잡힌 케이스 {len(bad)}개 '
+                   f'({", ".join(bad[:3])}…): 모델이 그 압력에 도달 못 하거나 이미 초과')
+    elif med <= med_tol and mx <= max_tol:
+        verdict = ('PASS — 문헌 H_AM 하나로 모든 두께를 사전등록 문턱 안에서 재현 '
+                   '(비순환 검증 통과)')
+    else:
+        verdict = (f'FAIL — median {med:.1%} (문턱 {med_tol:.1%}) · '
+                   f'max {mx:.1%} (문턱 {max_tol:.1%})')
+    return rows, dict(median=med, max=mx, verdict=verdict, h_am=h_am,
+                      n_outside=sum(1 for r in rows if not r['inside']))
 
 
 def read_curve(path):
@@ -199,11 +296,20 @@ def run_cases(cases, band=(3.0, 6.0), tol_frac=0.25):
     rows = []
     for c in cases:
         am_c, am_r, _ = read_scaffold(c['am'])
+        se_c, se_r, _ = read_scaffold(c['se'])
+        v_am = float((4.0 / 3.0 * np.pi * am_r ** 3).sum())
+        v_se = float((4.0 / 3.0 * np.pi * se_r ** 3).sum())
         curve = read_curve(c['curve']) if c['curve'] else REAL14_SE_CURVE
-        h_am, asup, sse = invert_h_am(am_c, am_r, c['box'], c['h_dem'], c['p'], curve)
-        _, inside = se_response(c['h_dem'], curve)
+        h_am, asup, sse = invert_h_am(am_c, am_r, c['box'], c['h_dem'], c['p'],
+                                      curve, v_am, v_se)
+        _, inside = se_response(phi_se_local(c['h_dem'], v_am, v_se, c['box'] ** 2), curve)
         rows.append(dict(label=c['label'], p=c['p'], h=c['h_dem'], a=asup, s=sse,
-                         hm=h_am, n_am=len(am_r), inside=inside))
+                         hm=h_am, n_am=len(am_r), inside=inside,
+                         dadh=dA_dh(am_c, am_r, c['box'], c['h_dem'])))
+    return _score_cases(rows, band, tol_frac)
+
+
+def _score_cases(rows, band, tol_frac):
     hs = np.array([r['hm'] for r in rows], float)
     fin = np.isfinite(hs)
     med = float(np.median(hs[fin])) if fin.any() else float('nan')
@@ -247,22 +353,38 @@ def _selftest():
     # 응답곡선: 측정점 재현 + 두께↓ 이면 응력↑
     for hh, ss in REAL14_SE_CURVE:
         chk(f'응답곡선이 측정점 {hh:.2f}µm 을 재현', abs(se_response(hh)[0] - ss) < 1e-9)
-    chk('응답곡선은 두께가 얇을수록 크다', se_response(28.0)[0] > se_response(30.0)[0])
-    chk('측정 구간 밖은 inside=False 로 표시', se_response(35.0)[1] is False)
+    chk('응답곡선은 SE 가 조밀할수록 크다', se_response(0.75)[0] > se_response(0.60)[0])
+    chk('측정 구간 밖은 inside=False 로 표시', se_response(0.80)[1] is False)
+    chk('★ 마진 밖은 값을 만들지 않고 nan (조용한 0 이 SE 항 실종을 감췄다)',
+        not np.isfinite(se_response(0.30)[0]) and not np.isfinite(se_response(1.20)[0]))
+    chk('마진 안(0.03)은 외삽하되 inside=False',
+        np.isfinite(se_response(0.78)[0]) and se_response(0.78)[1] is False)
+    chk('φ_SE_local = V_SE/(A·h − V_AM)',
+        abs(phi_se_local(30.22, 46679.9, 17190.8, 2500.0) - 0.5955) < 5e-4)
+    # 베드를 통째로 k 배 (h→k·h, 부피→k·배) 하면 φ 는 정확히 불변 → 같은 응력이 나와야 한다.
+    # 이게 곡선이 두께 30µm 베드에서 113µm 베드로 **옮겨갈 수 있는** 근거다.
+    _k = 3.74
+    chk('★ 베드를 4배 키워도 같은 조밀도면 같은 응력 (곡선이 베드를 옮겨간다)',
+        abs(se_response(phi_se_local(30.22 * _k, 46679.9 * _k, 17190.8 * _k, 2500.0))[0]
+            - se_response(phi_se_local(30.22, 46679.9, 17190.8, 2500.0))[0]) < 1e-9)
+    chk('두께만 늘리고 부피를 그대로 두면 φ 가 떨어져 응력도 떨어진다 (자명하지 않은 방향)',
+        se_response(phi_se_local(30.6, 46679.9, 17190.8, 2500.0))[0]
+        < se_response(phi_se_local(30.22, 46679.9, 17190.8, 2500.0))[0])
 
     # 하중평형: H_AM 이 크면 더 느슨한(두꺼운) 높이에서 멈춘다 = 압력 의존이 살아있다
-    cc = np.array([[0.0, 0.0, 29.0 + 0.2 * i] for i in range(50)])
-    rr = np.full(50, 1.0)
-    h1, _, _ = solve_height(cc, rr, 50.0, 2.0, 0.30, 27.0, 31.0)
-    h2, _, _ = solve_height(cc, rr, 50.0, 6.0, 0.30, 27.0, 31.0)
+    cc = np.array([[0.0, 0.0, 27.0 + 0.02 * i] for i in range(200)])
+    rr = np.full(200, 1.5)
+    _clo, _chi = 28.0, float((cc[:, 2] + rr).max())
+    h1, _, _ = solve_height(cc, rr, 50.0, 2.0, 0.30, _clo, _chi)
+    h2, _, _ = solve_height(cc, rr, 50.0, 6.0, 0.30, _clo, _chi)
     chk('H_AM 이 크면 더 두꺼운 높이에서 정지', h2 > h1)
-    hp1, _, _ = solve_height(cc, rr, 50.0, 4.0, 0.10, 27.0, 31.0)
-    hp2, _, _ = solve_height(cc, rr, 50.0, 4.0, 0.60, 27.0, 31.0)
+    hp1, _, _ = solve_height(cc, rr, 50.0, 4.0, 0.10, _clo, _chi)
+    hp2, _, _ = solve_height(cc, rr, 50.0, 4.0, 0.60, _clo, _chi)
     chk('압력이 높으면 더 얇은 높이에서 정지 (Heckel 방향)', hp2 < hp1)
     chk('압력 의존이 실재 — 100 vs 600 MPa 두께 차 > 0.1µm', (hp1 - hp2) > 0.1)
 
     # 역산은 정방향과 일관 (같은 H_AM 을 돌려줘야 한다)
-    hstar, _, _ = solve_height(cc, rr, 50.0, 4.0, 0.30, 27.0, 31.0)
+    hstar, _, _ = solve_height(cc, rr, 50.0, 4.0, 0.30, _clo, _chi)
     hb, _, _ = invert_h_am(cc, rr, 50.0, hstar, 0.30)
     chk('역산 H_AM 이 정방향과 일치', abs(hb - 4.0) < 0.02)
 
@@ -346,11 +468,35 @@ def main(argv=None):
                     help='★ 비순환 검증: 케이스 매니페스트 CSV '
                          '(label,p_gpa,am_csv,se_csv,h_dem_um[,curve_csv,box_um]).  '
                          '케이스마다 H_AM 을 역산해 **하나의 상수로 수렴하는지** 판정한다')
+    ap.add_argument('--forward', action='store_true',
+                    help='★ --cases 를 **정방향**으로 판정 (H_AM 고정 → 두께 예측 → DEM 대조). '
+                         '역산은 자유표면에서 조건이 나빠 두께 정의 오차를 배수로 증폭한다')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
 
     if a.selftest:
         return _selftest()
+
+    if a.cases and a.forward:
+        rows, summ = run_forward(read_cases(a.cases), h_am=a.h_am)
+        print(f'★ 정방향 검증 — H_AM = {summ["h_am"]:g} GPa 고정(문헌), 두께를 예측해 DEM 과 대조')
+        print('   사전등록 문턱: median |Δh|/h ≤ 1.5 %  그리고  max ≤ 4 %\n')
+        print(f'{"label":>24} {"P(GPa)":>7} {"h_DEM":>8} {"h_pred":>8} {"Δh(µm)":>8} '
+              f'{"|Δh|/h":>7} {"Δε(%p)":>8} {"A_supp":>7} {"SE(GPa)":>8}')
+        for r in rows:
+            print(f'{r["label"]:>24} {r["p"]:7.3f} {r["h_dem"]:8.2f} {r["h"]:8.2f} '
+                  f'{r["dh"]:+8.2f} {r["rel"]:7.2%} {r["de"]:+8.2f} {r["a"]:7.2%} '
+                  f'{r["s"]:8.4f}'
+                  + ('' if r['inside'] else '  ⚠SE외삽')
+                  + ('' if r['status'] == 'ok' else f'  ⚠{r["status"]}'))
+        print(f'\n  median |Δh|/h = {summ["median"]:.2%}   ·   max = {summ["max"]:.2%}')
+        if summ['n_outside']:
+            print(f'  ⚠ SE 응답곡선 밖 {summ["n_outside"]}/{len(rows)} 케이스 — '
+                  f'그 행의 SE 항은 신뢰구간 밖')
+        print(f'\n  ▶ {summ["verdict"]}')
+        print('\n  Δh 는 **관례 무관**(두께엔 sphere/union 구분 없음) — 이 검증은 오늘의 '
+              '1.25 %p\n  관례 함정을 비껴간다.  Δε 는 sphere 관례 환산 참고값.')
+        return 0
 
     if a.cases:
         cases = read_cases(a.cases)
