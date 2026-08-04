@@ -3,9 +3,9 @@
 # valley_site: 'on Li' if a framework Li sits within 0.6 A, else 'vacant' (empty-lattice map: valleys are CANDIDATE sites); coordination = anions within 3.2 A.
 # saddle_window: the three nearest anions forming the bottleneck; window_r_A = distance to the closest of them.
 # EMPTY-LATTICE PROXY - not a measured barrier. Ea/sigma ranking is decided by MD (MD Ea = 0.287±0.024 eV). See kb/concepts/bvse.md sec 8-10.
-segment,s_valley_A,s_saddle_A,E_valley_eV,E_saddle_eV,barrier_eV,valley_site,nearest_Li_A,saddle_window,window_r_A
-1,0.000,1.169,0.0000,0.2218,0.2218,on Li 1Cl+3S,0.22,ClSS window 2.11 Å,2.108
-2,1.804,2.451,0.0798,0.1876,0.1078,vacant 1Cl+3S,1.66,ClSS window 2.21 Å,2.206
-3,3.632,4.644,0.0176,0.2196,0.2020,vacant 1Cl+3S,1.74,SSS window 2.28 Å,2.277
-4,5.403,6.839,0.0402,0.1377,0.0975,on Li 1Cl+3S,0.13,ClSS window 2.38 Å,2.383
-5,7.948,8.734,0.0496,0.2225,0.1729,vacant 1Cl+3S,1.61,SSS window 2.22 Å,2.217
+segment,path_group,hop_type,s_valley_A,s_saddle_A,E_valley_eV,E_saddle_eV,barrier_eV,valley_site,nearest_Li_A,cage_center,cage_dist_A,saddle_window,window_r_A
+1,Path 1,inter,0.000,1.169,0.0000,0.2218,0.2218,on Li 1Cl+3S,0.22,S#53,2.40,ClSS window 2.11 Å,2.108
+2,Path 1,inter,1.804,2.451,0.0798,0.1876,0.1078,vacant 1Cl+3S,1.66,Cl#62,2.26,ClSS window 2.21 Å,2.206
+3,Path 2,intra,3.632,4.644,0.0176,0.2196,0.2020,vacant 1Cl+3S,1.74,S#53,2.45,SSS window 2.28 Å,2.277
+4,Path 2,intra,5.403,6.839,0.0402,0.1377,0.0975,on Li 1Cl+3S,0.13,S#53,2.47,ClSS window 2.38 Å,2.383
+5,Path 2,intra,7.948,8.734,0.0496,0.2225,0.1729,vacant 1Cl+3S,1.61,S#53,2.39,SSS window 2.22 Å,2.217

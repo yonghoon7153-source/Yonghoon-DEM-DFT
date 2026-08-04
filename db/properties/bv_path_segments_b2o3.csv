@@ -3,16 +3,16 @@
 # valley_site: 'on Li' if a framework Li sits within 0.6 A, else 'vacant' (empty-lattice map: valleys are CANDIDATE sites); coordination = anions within 3.2 A.
 # saddle_window: the three nearest anions forming the bottleneck; window_r_A = distance to the closest of them.
 # EMPTY-LATTICE PROXY - not a measured barrier. Ea/sigma ranking is decided by MD (MD Ea = 0.199±0.034 eV). See kb/concepts/bvse.md sec 8-10.
-segment,s_valley_A,s_saddle_A,E_valley_eV,E_saddle_eV,barrier_eV,valley_site,nearest_Li_A,saddle_window,window_r_A
-1,0.000,1.175,0.0000,0.2319,0.2319,on Li 1Cl+4S,0.19,SSS window 2.30 Å,2.299
-2,1.895,3.082,0.1081,0.1989,0.0909,vacant 1Cl+3S,1.60,SClS window 2.29 Å,2.290
-3,4.085,5.117,0.0892,0.2411,0.1519,on Li 1Cl+3S,0.41,ClSS window 2.25 Å,2.253
-4,5.655,6.375,0.2234,0.2547,0.0313,vacant 1Cl+3S,1.67,SClS window 2.23 Å,2.226
-5,7.094,7.900,0.1157,0.2758,0.1601,vacant 1Cl+3S,1.46,SSS window 2.25 Å,2.253
-6,8.706,9.838,0.1207,0.2754,0.1547,on Li 1Cl+3S,0.30,SClS window 2.33 Å,2.325
-7,10.341,10.592,0.2276,0.2402,0.0125,vacant 1Cl+3S,1.29,ClSS window 2.32 Å,2.318
-8,11.662,12.445,0.0978,0.2811,0.1832,on Li 1Cl+3S,0.10,SSS window 2.27 Å,2.266
-9,13.334,14.777,0.1460,0.2298,0.0838,vacant 1Cl+3S,1.52,SSCl window 2.40 Å,2.403
-10,15.952,16.736,0.1193,0.2787,0.1594,on Li 1Cl+3S,0.14,SSS window 2.24 Å,2.238
-11,17.781,18.734,0.0654,0.1826,0.1172,vacant 1Cl+3S,1.92,ClSS window 2.32 Å,2.324
-12,19.739,20.827,0.0899,0.2319,0.1420,vacant 1Cl+3S,1.92,SSS window 2.30 Å,2.299
+segment,path_group,hop_type,s_valley_A,s_saddle_A,E_valley_eV,E_saddle_eV,barrier_eV,valley_site,nearest_Li_A,cage_center,cage_dist_A,saddle_window,window_r_A
+1,Path 1,intra,0.000,1.175,0.0000,0.2319,0.2319,on Li 1Cl+4S,0.19,S#54,2.45,SSS window 2.30 Å,2.299
+2,Path 2,inter,1.895,3.082,0.1081,0.1989,0.0909,vacant 1Cl+3S,1.60,S#54,2.33,SClS window 2.29 Å,2.290
+3,Path 3,intra,4.085,5.117,0.0892,0.2411,0.1519,on Li 1Cl+3S,0.41,Cl#59,2.29,ClSS window 2.25 Å,2.253
+4,Path 4,inter,5.655,6.375,0.2234,0.2547,0.0313,vacant 1Cl+3S,1.67,Cl#59,2.17,SClS window 2.23 Å,2.226
+5,Path 5,intra,7.094,7.900,0.1157,0.2758,0.1601,vacant 1Cl+3S,1.46,S#54,2.41,SSS window 2.25 Å,2.253
+6,Path 6,inter,8.706,9.838,0.1207,0.2754,0.1547,on Li 1Cl+3S,0.30,S#54,2.38,SClS window 2.33 Å,2.325
+7,Path 6,inter,10.341,10.592,0.2276,0.2402,0.0125,vacant 1Cl+3S,1.29,Cl#59,2.32,ClSS window 2.32 Å,2.318
+8,Path 7,intra,11.662,12.445,0.0978,0.2811,0.1832,on Li 1Cl+3S,0.10,S#54,2.42,SSS window 2.27 Å,2.266
+9,Path 7,intra,13.334,14.777,0.1460,0.2298,0.0838,vacant 1Cl+3S,1.52,S#54,2.41,SSCl window 2.40 Å,2.403
+10,Path 8,inter,15.952,16.736,0.1193,0.2787,0.1594,on Li 1Cl+3S,0.14,S#54,2.44,SSS window 2.24 Å,2.238
+11,Path 8,inter,17.781,18.734,0.0654,0.1826,0.1172,vacant 1Cl+3S,1.92,Cl#59,2.41,ClSS window 2.32 Å,2.324
+12,Path 9,intra,19.739,20.827,0.0899,0.2319,0.1420,vacant 1Cl+3S,1.92,S#54,2.49,SSS window 2.30 Å,2.299
