@@ -266,14 +266,30 @@ def profile_for(name, path_cif):
     #   고침: 이웃 간 인덱스 차를 {-1,0,1} 로 되돌린 뒤(26-이웃이므로 그게 참값)
     #   그 차분만 데카르트로 환산해 누적한다. E 값·E_perc·순위는 영향 없다
     #   (같은 voxel 을 지나므로) — 바뀌는 건 x축과 경로 길이뿐이다.
+    #
+    # ⚠ metric (2026-08-05 리뷰 ISSUE-1 반영): bvlain `_mesh` 는 linspace(0,1,N)
+    #   **양끝 포함**이라 물리 voxel 간격은 cell/(N-1) 이고, 인덱스 0 과 N-1 은
+    #   **같은 평면**이다 (실측 max|E[0]-E[-1]| ~ 1e-11). 따라서
+    #   (i) 일반 스텝 = cell/(N-1), (ii) 경계를 넘거나 복제 이음새를 지나는 스텝은
+    #   물리적으로 0 Å. cell/N 로 나누면 길이가 계별 +0.1 ~ -4.2% 틀어진다(lpsocl 최대).
+    #   dijkstra 가중치(slen)는 인덱스-metric 그대로 둔다 — 경로 '선택'에만 관여하고
+    #   E_perc·프로파일 E 와 무관 (comp1 은 등방 N 이라 선택 불변).
     idx = np.array(path, int)
-    dif = np.diff(idx, axis=0)
+    phys = np.empty_like(idx)
     for d_ax in range(3):
-        n_ax = E2.shape[d_ax]
-        dif[:, d_ax] = (dif[:, d_ax] + n_ax // 2) % n_ax - n_ax // 2   # 최소상 (MIC)
+        n_ax = N[d_ax]
+        if d_ax in open_axes:               # 2배 확장축: 복제 이음새(N-1 ≡ N) = 같은 평면
+            phys[:, d_ax] = (idx[:, d_ax] // n_ax) * (n_ax - 1) + idx[:, d_ax] % n_ax
+        else:                               # 주기축: 유일 평면 수 = N-1 (0 ≡ N-1)
+            phys[:, d_ax] = idx[:, d_ax] % (n_ax - 1)
+    dif = np.diff(phys, axis=0)
+    for d_ax in range(3):
+        if d_ax not in open_axes:           # 주기축 MIC (주기 = N-1)
+            m = N[d_ax] - 1
+            dif[:, d_ax] = (dif[:, d_ax] + m // 2) % m - m // 2
     if np.abs(dif).max() > 1:
         raise SystemExit(f"⛔ {name}: 랩 해제 후에도 |Δindex|>1 — 경로가 26-이웃이 아니다")
-    step_cart = (dif / np.array(N)) @ cell
+    step_cart = (dif / (np.array(N) - 1.0)) @ cell
     d = np.concatenate([[0.0], np.cumsum(np.linalg.norm(step_cart, axis=1))])
     e = np.array([E2[tuple(p)] for p in path])
     wind = "[" + "".join(str(x) for x in T) + "]"
@@ -304,10 +320,11 @@ def main():
                 'then min-energy-line-integral path under that ceiling."\n')
         f.write('"# EMPTY-LATTICE PROXY: absolute scale plausible, family sigma/Ea ranking is '
                 'decided by MD (kb/concepts/bvse.md sec 8-9)."\n')
-        f.write('"# 2026-08-05 FIX: reaction coordinate is now PBC-unwrapped. Before the fix a '
-                'cell-crossing step was counted as a full cell-edge jump, which drew a FAKE FLAT '
-                'PLATEAU (comp1 2x9.80 A = 42% of the plotted length; lpsocl 2x6.68 A = 58%). '
-                'Path lengths comp1 46.7->27.6 A, lpsocl 23.1->10.2 A. E_perc / rankings unchanged."\n')
+        f.write('"# 2026-08-05 FIX(2): reaction coordinate is PBC-unwrapped AND uses the bvlain '
+                'mesh metric (endpoint-inclusive grid: spacing cell/(N-1); boundary/seam-crossing '
+                'steps are 0 A - same physical plane). Pre-fix fake plateaus: comp1 2x9.80 A = 42% '
+                'of plotted length, lpsocl 2x6.68 A = 58% (jump = |lattice vector| x (N-1)/N, '
+                'independently verified). E_perc / E values / rankings unchanged by both fixes."\n')
         for s, r in res.items():
             f.write(f'"# {s}: axis {r["axis"]}, E_perc {r["E_perc"]:.4f} eV; '
                     f'bvlain E_1D/2D/3D {r["ref"]["E_1D"]:.3f}/{r["ref"]["E_2D"]:.3f}/'

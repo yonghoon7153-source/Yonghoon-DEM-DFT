@@ -62,7 +62,7 @@ def main():
     imax = int(np.argmax(e))
 
     # ── 라벨 (영어만 — 하우스 규칙) ────────────────────────────────────
-    ax.annotate("valley = a Li site\n(comfortable spot)",
+    ax.annotate("valley = a candidate Li site\n(comfortable spot)",
                 xy=(d[vl[2]], e[vl[2]]), xytext=(d[vl[2]] - 0.4, -0.052),
                 ha="center", fontsize=10.5, color=INK,
                 arrowprops=dict(arrowstyle="->", color=MUT, lw=1.1))
