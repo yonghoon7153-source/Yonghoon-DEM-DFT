@@ -184,6 +184,10 @@ def main():
     ap.add_argument("--order", nargs="+", default=["modelc", "lpsocl", "b2o3"],
                     help="패널 순서 (라벨)")
     ap.add_argument("--tmax", type=float, default=200.0, help="도시 상한 [ps]")
+    ap.add_argument("--basis", default="single seed — illustrative hierarchy only",
+                    help="suptitle 의 곡선 근거 문구 (영문). 시드평균이면 예: "
+                         "'seed-ensemble mean curves'. 곡선 성격이 바뀌면 여기도 바꿔야 "
+                         "한다 — v1 이 평균 곡선에 'single seed' 를 달고 나간 사고 방지.")
     ap.add_argument("--panel_note", nargs="*", default=[], metavar="LABEL=TEXT",
                     help="패널 하단 좌측 주석 (영문 — 예: lpsocl='mean of 4 seeds'). "
                          "CSV 왕복은 시드 수 정보를 잃으므로 확정본에서 손으로 명시한다.")
@@ -353,7 +357,7 @@ def main():
         axp.set_xlim(0, a.tmax); axp.set_ylim(0, ymax)
         apply_axes(axp, xlabel="Time (ps)",
                    ylabel="Li MSD (Å$^2$)" if axp is axs[0] else None)
-    fig.suptitle("Li mean-squared displacement, MLIP-MD (single seed — illustrative hierarchy only; "
+    fig.suptitle(f"Li mean-squared displacement, MLIP-MD ({a.basis}; "
                  "quantitative D/$E_a$ from the multiseed Arrhenius sets)",
                  fontsize=9.5, color=MUT, y=0.995)
     fig.tight_layout()

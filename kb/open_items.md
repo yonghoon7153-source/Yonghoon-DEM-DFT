@@ -18,8 +18,9 @@
   탈락** (β 0.61, MSD 는 97 Å²@200 ps 로 충분 = 홉 통계 문제; 시드별 0.52~0.98 갈림).
   800 K 0.86 / 1000 K 1.02 통과. → **Ea 0.287±0.024 는 케이지 오염된 600 K 점을 포함** —
   재검토 필요 (paper_first_author_requests_2026_08.md §4 의 선택지 3안).
-  modelc·b2o3 는 ladder 단일시드로 600 K β 0.82/0.81 아슬 통과 — **3시드 평균 검사 미완**
-  (reseed 파일 위치 확인됨: modelc_600_reseed@kgy · b2o3_600_reseed@gabia).
+  **modelc·b2o3 3시드 평균 검사 완료 (v2)**: modelc 0.87/0.93/0.92 · b2o3 0.81/0.83/0.97
+  전부 통과 — 단일시드 '아슬' 해소. b2o3 600 K 3시드 D 가 등록 D_600_mean 을 재현(1.039 vs
+  1.041e-5). **잔여 이슈는 LPSOCl 600 K 하나** — 54런 MTO-β 로 1차 판정, 안 되면 1600 ps 프로브.
   게이트 통과 전까지 전부 인용 보류.
 - 근거: `kb/results/mlip_md_diffusive_gate_2026_08_01.md` ·
   `tools/ionic/msd_diffusive_check.py`
