@@ -134,12 +134,25 @@
     el.style.display = "none";
     document.body.appendChild(el);
     var pinned = null, hideT = null, over = false;
+    // 사용자가 직접 옮기거나 크기를 바꾸면 그 값을 기억하고 자동배치를 멈춘다 (1저자 요청)
+    var userPos = null, userSize = null;
     el.addEventListener("mouseenter", function () { over = true; clearTimeout(hideT); });
     el.addEventListener("mouseleave", function () { over = false; if (!pinned) hide(80); });
 
     /* 여백이 넓으면 팝업도 넓게 — 380 px 고정이면 다패널 그림이 안 읽힌다(1저자 지적).
        오른쪽/왼쪽 중 넓은 쪽을 골라 그 폭에 맞춘다. 둘 다 좁으면 본문 위에 겹쳐 띄운다. */
+    function clampIn(x, y, w, h) {          // 화면 밖으로 못 나가게 (제목줄은 항상 잡히게)
+      return [Math.max(8 - w + 90, Math.min(x, window.innerWidth - 90)),
+              Math.max(8, Math.min(y, window.innerHeight - 44))];
+    }
+
     function place(anchor) {
+      if (userSize) { el.style.width = userSize[0] + "px"; el.style.height = userSize[1] + "px"; }
+      if (userPos) {                        // 사용자가 옮겨 놓은 자리를 지킨다
+        var c = clampIn(userPos[0], userPos[1], el.offsetWidth, el.offsetHeight);
+        el.style.left = c[0] + "px"; el.style.top = c[1] + "px";
+        return;
+      }
       var box = container.getBoundingClientRect();
       var gapR = window.innerWidth - box.right - 26;
       var gapL = box.left - 26;
@@ -161,6 +174,50 @@
       if (el.style.display !== "none") place(null);
     });
 
+    /* 제목줄을 잡아 끌면 이동 — 끄는 순간 자동으로 고정(pin)된다.
+       버튼(↗ 크게 · ⬇ · ✕) 위에서 시작한 건 무시. 제목줄 더블클릭 = 원래 자리로. */
+    el.addEventListener("pointerdown", function (e) {
+      var bar = e.target.closest && e.target.closest(".figpane-bar");
+      if (!bar || (e.target.closest && e.target.closest("a,button"))) return;
+      e.preventDefault();
+      var r = el.getBoundingClientRect();
+      var dx = e.clientX - r.left, dy = e.clientY - r.top;
+      pinned = pinned || "__drag";          // 끌기 시작하면 사라지지 않게
+      el.classList.add("figpane-dragging");
+      bar.setPointerCapture(e.pointerId);
+      function mv(ev) {
+        var c = clampIn(ev.clientX - dx, ev.clientY - dy, r.width, r.height);
+        userPos = c;
+        el.style.left = c[0] + "px"; el.style.top = c[1] + "px";
+      }
+      function up(ev) {
+        bar.releasePointerCapture(ev.pointerId);
+        bar.removeEventListener("pointermove", mv);
+        bar.removeEventListener("pointerup", up);
+        el.classList.remove("figpane-dragging");
+      }
+      bar.addEventListener("pointermove", mv);
+      bar.addEventListener("pointerup", up);
+    });
+    el.addEventListener("dblclick", function (e) {
+      if (!(e.target.closest && e.target.closest(".figpane-bar"))) return;
+      userPos = userSize = null;            // 자동배치로 되돌리기
+      el.style.height = "";
+      place(null);
+    });
+    // CSS resize 로 크기를 바꾸면 기억한다
+    if (window.ResizeObserver) {
+      new ResizeObserver(function () {
+        if (el.style.display === "none") return;
+        var r = el.getBoundingClientRect();
+        if (userSize || el.style.height) userSize = [Math.round(r.width), Math.round(r.height)];
+      }).observe(el);
+      el.addEventListener("pointerup", function () {   // 리사이즈 핸들을 놓은 순간부터 기억
+        var r = el.getBoundingClientRect();
+        userSize = [Math.round(r.width), Math.round(r.height)];
+      });
+    }
+
     function show(rec, anchor, pin) {
       if (pinned && !pin && pinned !== rec.key) return;
       clearTimeout(hideT);
@@ -174,7 +231,9 @@
         '</span></div>' +
         '<div class="figpane-img"><img src="/api/file/' + encodeURI(rec.rel) + '" alt="' + esc(rec.title) + '"></div>' +
         '<div class="figpane-cap">' + capHtml(rec) + noteHtml(rec, true) + '</div>' +
-        (pinned ? '' : '<div class="figpane-hint">클릭하면 고정 · 드래그로도 열려요</div>');
+        '<div class="figpane-hint">' +
+        (pinned ? '제목줄을 끌면 이동 · 모서리로 크기조절 · 더블클릭하면 제자리'
+                : '클릭하면 고정 · 본문에서 드래그로도 열려요') + '</div>';
       var x = el.querySelector(".figpane-x");
       if (x) x.onclick = function () { pinned = null; hide(0); };
       el.style.display = "block";
@@ -186,7 +245,8 @@
         if (!over && !pinned) el.style.display = "none";
       }, ms == null ? 160 : ms);
     }
-    function close() { pinned = null; over = false; el.style.display = "none"; }
+    function close() { pinned = null; over = false; userPos = userSize = null;
+                       el.style.height = ""; el.style.display = "none"; }
     return { show: show, hide: hide, close: close, el: el };
   }
 
