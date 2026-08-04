@@ -10,9 +10,13 @@ heckel_analysis.py 는 압력마다 (atom 덤프 · contact 덤프 · plate_z) �
   python3 scripts/make_heckel_manifest.py --root "/mnt/f/.../post_SE" --out heckel/manifest.json
   python3 scripts/heckel_analysis.py heckel/manifest.json
 
-폴더 이름에서 압력을 읽는다 (`post_SE_heckel_300` → 300 MPa).  atom/mesh 는 **같은
-타임스텝**을 짝지어 고르고, 못 맞추면 그 압력을 넣지 않고 사유를 찍는다 (조용히 빼면
-Heckel 이 3점 fit 이 된 걸 모른다).
+폴더 이름에서 압력을 읽는다 (`post_SE_heckel_300` → 300 MPa).
+
+★★ 기점 규약 (2026-08-05 사용자 확인 — webapp 에 먹인 모든 케이스가 이 규약):
+    **마지막 contact 파일**을 기점으로 삼고 atom·mesh 를 **그 스텝에서** 가져온다.
+    덤프 간격이 다르다 (atom/mesh 5000 vs contact 10000) → "마지막 atom" 을 기점으로 잡으면
+    contact 가 없는 스텝에 걸려 교차검증을 통째로 버린다 (실제로 4압력 중 3점을 그렇게 버렸다).
+    contact 기점이면 세 파일이 **정확히 같은 순간**이고 기존 코퍼스와 같은 상태를 본다.
 """
 from __future__ import annotations
 
@@ -53,7 +57,7 @@ def plate_z_from_stl(path):
     return min(zs)
 
 
-def scan(root, pattern='post_SE_heckel_*', contact_tol=20000):
+def scan(root, pattern='post_SE_heckel_*'):
     pts, skipped = [], []
     for d in sorted(glob.glob(os.path.join(root, pattern))):
         if not os.path.isdir(d):
@@ -72,14 +76,24 @@ def scan(root, pattern='post_SE_heckel_*', contact_tol=20000):
         if not meshes:
             skipped.append((os.path.basename(d), 'mesh STL 없음 → plate_z 불명'))
             continue
-        # ★ atom 과 mesh 는 **같은 타임스텝** 이어야 한다.  공통 스텝 중 최대를 쓴다.
-        common = sorted(set(map(_step, atoms)) & set(map(_step, meshes)))
-        if not common:
-            skipped.append((os.path.basename(d),
-                            f'atom/mesh 타임스텝이 하나도 안 겹침 '
-                            f'(atom max {_step(atoms[-1])}, mesh max {_step(meshes[-1])})'))
-            continue
-        st = common[-1]
+        # ★★ 규약 (2026-08-05 사용자 확인, webapp 에 먹인 모든 케이스가 이 규약):
+        #    **마지막 contact 파일을 기점**으로 삼고 atom·mesh 를 **그 스텝에서** 가져온다.
+        #    덤프 간격이 다르므로(atom/mesh 5000 vs contact 10000) "마지막 atom" 을 기점으로
+        #    잡으면 contact 가 없는 스텝에 걸린다 — 내가 처음 그렇게 짜서 4압력 중 3점의
+        #    교차검증을 버렸다.  contact 기점이면 세 파일이 **정확히 같은 순간**이라 스텝차가
+        #    아예 없고, 기존 코퍼스와도 같은 상태를 본다.
+        a_steps, m_steps = set(map(_step, atoms)), set(map(_step, meshes))
+        triple = sorted(set(map(_step, cons)) & a_steps & m_steps)
+        if triple:
+            st, anchor = triple[-1], 'contact'
+        else:
+            common = sorted(a_steps & m_steps)
+            if not common:
+                skipped.append((os.path.basename(d),
+                                f'atom/mesh 타임스텝이 하나도 안 겹침 '
+                                f'(atom max {_step(atoms[-1])}, mesh max {_step(meshes[-1])})'))
+                continue
+            st, anchor = common[-1], 'atom'      # contact 가 없는 폴더 → 폴백(플래그)
         atom = next(a for a in atoms if _step(a) == st)
         mesh = next(x for x in meshes if _step(x) == st)
         try:
@@ -87,22 +101,10 @@ def scan(root, pattern='post_SE_heckel_*', contact_tol=20000):
         except Exception as e:
             skipped.append((os.path.basename(d), f'STL 파싱 실패 ({type(e).__name__})'))
             continue
-        # contact 는 **교차검증 전용**(렌즈는 atom 좌표로 정확히 계산된다).
-        # ★ 덤프 간격이 다르다: atom/mesh 5000 vs contact 10000 → 마지막 atom 스텝에
-        #   contact 가 없는 경우가 흔하다 (실제로 4압력 중 3점이 그래서 버려졌다).
-        #   같은 스텝이 있으면 그것을, 없으면 **가장 가까운** 것을 붙이고 스텝 차이를 남긴다.
-        same = [c for c in cons if _step(c) == st]
-        if same:
-            cc, gap = same, 0
-        elif cons and contact_tol > 0:
-            near = min(cons, key=lambda c: abs(_step(c) - st))
-            gap = _step(near) - st
-            cc, gap = ([near], gap) if abs(gap) <= contact_tol else ([], gap)
-        else:
-            cc, gap = [], None
+        cc = [c for c in cons if _step(c) == st]
         pts.append(dict(P_MPa=p_mpa, plate_z=pz, atom=os.path.abspath(atom),
-                        contacts=[os.path.abspath(c) for c in cc], step=st,
-                        contact_step_gap=(gap if cc else None),
+                        contacts=[os.path.abspath(c) for c in cc], step=st, anchor=anchor,
+                        last_atom_step=(max(a_steps) if a_steps else None),
                         n_contact_files=len(cons), mesh=os.path.abspath(mesh)))
     return sorted(pts, key=lambda r: r['P_MPa']), skipped
 
@@ -113,10 +115,6 @@ def main(argv=None):
     ap.add_argument('--root', help='post_SE_heckel_* 폴더들이 있는 상위 디렉터리')
     ap.add_argument('--pattern', default='post_SE_heckel_*', help='폴더 glob')
     ap.add_argument('--out', default='heckel/manifest.json')
-    ap.add_argument('--contact-tol-steps', type=int, default=20000,
-                    help='contact 덤프를 atom 스텝에서 이만큼까지 떨어져도 붙인다 (교차검증 전용; '
-                         '덤프 간격이 atom 5000 / contact 10000 로 달라 정확히 안 맞는 게 정상). '
-                         '0 이면 같은 스텝만')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
     if a.selftest:
@@ -124,7 +122,7 @@ def main(argv=None):
     if not a.root:
         ap.error('--root 가 필요합니다 (또는 --selftest)')
 
-    pts, skipped = scan(a.root, a.pattern, a.contact_tol_steps)
+    pts, skipped = scan(a.root, a.pattern)
     if not pts:
         sys.exit(f'{a.root}: 쓸 수 있는 압력점이 없습니다 ({len(skipped)}개 건너뜀)'
                  + ('' if not skipped else f' — {skipped[0][1]}'))
@@ -133,13 +131,12 @@ def main(argv=None):
                for p in pts], open(a.out, 'w'), indent=2)
     print(f'{a.out}  ·  압력점 {len(pts)}개')
     for p in pts:
-        g = p.get('contact_step_gap')
-        tag = (f'contact {len(p["contacts"])}개'
-               + ('' if not p['contacts'] or not g else f' (스텝차 {g:+d})'))
-        if not p['contacts']:
-            tag += ('  ⚠ 교차검증 없음 — 폴더에 contact 파일 '
-                    f'{p["n_contact_files"]}개'
-                    + (f', 가장 가까운 것이 {g:+d} 스텝으로 허용치 밖' if g else ''))
+        la = p.get('last_atom_step')
+        tag = f'기점={p["anchor"]}  contact {len(p["contacts"])}개'
+        if p['anchor'] == 'contact' and la and la != p['step']:
+            tag += f'  (마지막 atom 은 {la} — contact 기점 규약대로 {p["step"]} 사용)'
+        if p['anchor'] != 'contact':
+            tag += f'  ⚠ contact 파일 {p["n_contact_files"]}개 — 규약 밖 폴백, 교차검증 없음'
         print(f'  {p["P_MPa"]:>4} MPa  step={p["step"]:<9} plate_z={p["plate_z"]:.6g}  ' + tag)
     for n, why in skipped:
         print(f'  ⚠ 건너뜀 {n}: {why}')
@@ -196,21 +193,29 @@ def _selftest():
     chk('mesh 없으면 거부 (plate_z 불명)',
         any(n.endswith('_400') and 'mesh' in w for n, w in skipped))
 
-    # ★ atom 5000 / contact 10000 간격이라 마지막 atom 스텝엔 contact 가 없는 게 정상 —
-    #   가장 가까운 것을 붙여야 한다 (이걸 안 해서 4압력 중 3점의 교차검증을 버렸다)
+    # ★★ 규약: **마지막 contact 기점** — atom/mesh 는 그 스텝에서.  덤프 간격이 다르므로
+    #    (atom 5000 / contact 10000) 마지막 atom 을 기점으로 잡으면 contact 없는 스텝에 걸린다.
     d5 = os.path.join(td, 'post_SE_heckel_500')
     os.makedirs(d5, exist_ok=True)
     for s_ in (1450000, 1455000):
         open(os.path.join(d5, f'atom_{s_}.liggghts'), 'w').write('x\n')
-        stl(os.path.join(d5, f'mesh_{s_}.stl'), 0.02)
+        stl(os.path.join(d5, f'mesh_{s_}.stl'), 0.02 if s_ == 1450000 else 0.019)
     open(os.path.join(d5, 'contact_1450000.liggghts'), 'w').write('x\n')
     p5 = [r for r in scan(td)[0] if r['P_MPa'] == 500][0]
-    chk('★ 스텝이 안 맞아도 가장 가까운 contact 를 붙인다', len(p5['contacts']) == 1)
-    chk('붙인 contact 의 스텝 차이를 기록한다', p5['contact_step_gap'] == -5000)
-    chk('마지막 atom 스텝은 그대로 유지 (교차검증 때문에 상태를 되돌리지 않는다)',
-        p5['step'] == 1455000)
-    p5b = [r for r in scan(td, contact_tol=0)[0] if r['P_MPa'] == 500][0]
-    chk('--contact-tol-steps 0 이면 정확히 같은 스텝만', not p5b['contacts'])
+    chk('★ 마지막 contact 를 기점으로 삼는다 (마지막 atom 이 아니라)', p5['step'] == 1450000)
+    chk('세 파일이 같은 스텝 → 교차검증 가능', len(p5['contacts']) == 1)
+    chk('plate_z 도 기점 스텝의 mesh 에서 (다른 프레임 섞지 않는다)',
+        abs(p5['plate_z'] - 0.02) < 1e-12)
+    chk('마지막 atom 스텝을 기록해 규약 이탈을 눈에 보이게', p5['last_atom_step'] == 1455000)
+    chk('기점 종류를 남긴다', p5['anchor'] == 'contact')
+
+    # contact 가 아예 없는 폴더는 atom 기점 폴백 + 플래그
+    d6 = os.path.join(td, 'post_SE_heckel_600')
+    os.makedirs(d6, exist_ok=True)
+    open(os.path.join(d6, 'atom_900.liggghts'), 'w').write('x\n')
+    stl(os.path.join(d6, 'mesh_900.stl'), 0.015)
+    p6 = [r for r in scan(td)[0] if r['P_MPa'] == 600][0]
+    chk('contact 없으면 atom 기점 폴백 + 플래그', p6['anchor'] == 'atom' and not p6['contacts'])
 
     # 바이너리 STL 도 읽혀야 한다 (LIGGGHTS 빌드에 따라 갈린다)
     b = os.path.join(td, 'bin.stl')
