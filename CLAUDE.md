@@ -48,6 +48,10 @@
 ## litdb (문헌)
 - "논문 에이전트" 요청 = litdb-curator 서브에이전트: litdb/papers/ digest + INDEX.md + comparison_vs_ours.md 갱신.
 - 문헌 수치는 소환값 — 우리 db 절대값과 섞지 않기 (방법 명시 없이 이식 금지).
+- **litdb 를 볼 때는 `litdb/figures/<slug>/` 의 크로핑 PNG 를 Read 로 같이 본다** (digest 텍스트만
+  보고 답하지 않기). 어느 그림인지는 그 폴더의 figures.json caption 으로 찾고, 없으면
+  `tools/litdb/extract_figures.py --inbox` 로 먼저 만든다. **본 그림/안 본 그림을 구분해 말한다.**
+  그림에서만 읽은 값은 `figure-read ≈` 표기. 표(tab_*.png)는 PDF 텍스트가 더 정확하다.
 
 ## 원고 작성
 - kb/templates/manuscript_prompts.md 의 템플릿 사용 (figure 단위 요청, Wiley 스타일 R&D, 학술 5문장 재번역,
