@@ -188,6 +188,8 @@ def main(argv=None):
     ap.add_argument('--repo', default='/home/ubuntu/Yonghoon-DEM-DFT', help='V100 리포 경로')
     ap.add_argument('--no-overlap', action='store_true',
                     help='겹침 계산 생략 (빠르지만 ε 목표가 ~1%%p 밀려 φ 도달점이 위로 이동)')
+    ap.add_argument('--eps-only', action='store_true',
+                    help='ε 목표만 공백구분 한 줄로 (배치 스크립트가 그대로 for 루프에 먹인다)')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
     if a.selftest:
@@ -201,6 +203,19 @@ def main(argv=None):
         ov, ov_src = bed_overlap(a.kit, area, v_am + v_se)
     phis = [float(x) for x in a.phi.split(',')] if a.phi else list(PHI_DEFAULT)
     name = os.path.basename(os.path.normpath(a.kit))
+
+    if a.eps_only:
+        # 배치용: ε 만 한 줄.  φ 가 물리적으로 불가능(h≤0)하면 조용히 빠지므로, 개수가
+        # 요청 φ 수와 다르면 배치가 눈치채도록 stderr 에 경고를 남긴다 (침묵 축소 금지).
+        eps = [e for p in phis for h, e in [eps_for_phi(p, v_am, v_se, area, ov)] if h is not None]
+        if len(eps) != len(phis):
+            print(f'⚠ {name}: φ {len(phis)}개 중 {len(eps)}개만 도달 가능 (나머지는 h≤0)',
+                  file=sys.stderr)
+        if ov_src is None and not a.no_overlap:
+            print(f'⚠ {name}: 겹침 미보정 (metrics 부재) — ε 목표가 ~1%p 밀린다', file=sys.stderr)
+        print(' '.join(f'{e:.2f}' for e in eps))
+        return 0
+
     print(f'베드 {name}:  V_AM {v_am:,.0f} · V_SE {v_se:,.0f} µm³ · 측면 {lat:g} µm '
           f'(SE/solid {v_se / (v_am + v_se):.1%})')
     print(f'  겹침 {ov:,.1f} µm³ = 고체높이 {ov / area:.3f} µm  '
