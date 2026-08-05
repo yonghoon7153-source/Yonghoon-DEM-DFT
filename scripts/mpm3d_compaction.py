@@ -3062,6 +3062,19 @@ def main(argv):
             'platen_mach_V_over_cP': round(float(_v_platen) / float(_c_p), 4),
             'platen_mach_V_over_cS': round(float(_v_platen) / float(_c_s), 3),
             'quasistatic_ok': bool(_v_platen / _c_p <= 0.01),
+            # ★ 2026-08-05: 실행 조건을 **json 이 스스로** 말하게 한다.  이 세션에서 실제로 당한 것 —
+            #   기존 SE 응답곡선 5점의 --sub / --frames / --compact-to 를 되찾을 수 없었다.  n_grid·
+            #   periodic·protocol 은 기록되는데 서브스텝·프레임·목표가 빠져 있어서, "그 곡선이 어떤
+            #   조건이었나" 에 답할 방법이 없었고 곡선 전체가 재생성 대상이 됐다.  같은 일을 막는다.
+            'sub': int(args.sub),
+            'frames_budget': int(args.frames),
+            'compact_to_pct': (float(args.compact_to) if args.compact_to > 0 else None),
+            'dt': float(args.dt),
+            'arch': str(args.arch),
+            'lateral_box': float(args.lateral_box),
+            'e_se_gpa': float(args.e_se), 'nu_se': float(args.nu_se),
+            'am_scaffold_src': (args.am_scaffold.rsplit('/', 1)[-1] if args.am_scaffold else None),
+            'se_dump_src': (args.se_dump.rsplit('/', 1)[-1] if args.se_dump else None),
             'floor_porosity_pct': float(args.floor_porosity) if args.floor_porosity > 0 else None,
             'se_target_GPa': round(float(target * (1.0 - args.am_load_frac)), 4) if (args.am_load_frac > 0 and args.floor_porosity <= 0) else None,
             'coverage_AM_P_pct': cov_out.get('AM_P'), 'coverage_AM_S_pct': cov_out.get('AM_S'),
