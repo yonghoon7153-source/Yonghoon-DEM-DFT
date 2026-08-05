@@ -74,10 +74,18 @@ def bed_overlap(kit_dir, area, v_sph_sum):
         e = m.get('porosity_settled_pct') or m.get('porosity_mpm_pct')
         if h and e is not None:
             ov = v_sph_sum - float(h) * (1.0 - float(e) / 100.0) * area
+            tag = f'{os.path.relpath(p, kit_dir)} (h {float(h):.3f}µm · ε_union {float(e):.3f}%)'
+            # ★ 음수 = union 고체가 AM+SE 구 부피 합보다 크다 = 기하적으로 불가능.
+            #   실제 원인은 metrics 가 **첨가제 포함**(run_VGCF1_PTFE1_… 등) solid 를 재는데
+            #   여기 v_sph_sum 은 AM+SE 스캐폴드만이라는 것이다.  조용히 0 으로 클램프하면
+            #   "보정했다" 는 거짓 인상을 준다 (§F1) → 사유를 그대로 노출하고 미보정 처리.
+            if ov < 0:
+                return (0.0, f'⚠ 역산 음수 ({ov:,.0f} µm³) — {tag} 가 AM+SE 외 상(첨가제 등)을 '
+                             f'포함 → 미보정 (실행은 scaffold 만 쓰므로 순수 AM+SE 로 돈다; '
+                             f'φ 는 사후 실측 환산)')
             # ⚠ 겹침은 압밀 상태의 함수 — 다른 두께 목표에 쓰면 근사다.  무해한 이유:
             #   목표는 도달점 유도용이고 곡선은 **실측 정착값**(json)으로 만든다.
-            return (max(0.0, float(ov)),
-                    f'{os.path.relpath(p, kit_dir)} (h {float(h):.3f}µm · ε_union {float(e):.3f}%)')
+            return (float(ov), tag)
     return 0.0, None
 
 
@@ -158,6 +166,13 @@ def _selftest():
         0.9 * 946.7 < _ov < 1.1 * 946.7)
     chk('metrics 없으면 0 + 라벨 없음 (조용한 보정 금지)',
         bed_overlap(_tmp.mkdtemp(), A, V_AM + V_SE) == (0.0, None))
+    # ★ 첨가제 포함 metrics → 역산 음수: 클램프만 하고 침묵하면 "보정됨" 오해 (§F1)
+    _d2 = _tmp.mkdtemp()
+    _json.dump({'thickness_um': 113.199, 'porosity_settled_pct': 12.203},
+               open(os.path.join(_d2, 'mpm_metrics.json'), 'w'))
+    _ov2, _src2 = bed_overlap(_d2, A, 243067.0)
+    chk('★ 역산 음수(첨가제 포함 metrics) → 0 + 사유 노출',
+        _ov2 == 0.0 and _src2 is not None and '음수' in _src2)
     print(f'selftest: {ok}/{ok + len(fail)} PASS' + (f'  FAILED {fail}' if fail else ''))
     return 0 if not fail else 1
 
