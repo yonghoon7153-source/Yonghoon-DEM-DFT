@@ -1,0 +1,19 @@
+# ── 핵심 ──
+pybamm[all]>=24.5        # [all] 이 IDAKLU solver 포함. 이거 없으면 2~5배 느림
+numpy>=1.24
+scipy>=1.11
+pandas>=2.0
+matplotlib>=3.7
+PyYAML>=6.0
+
+# ── 병렬 / 저장 ──
+joblib>=1.3
+pyarrow>=14.0            # parquet
+tqdm>=4.65
+openpyxl>=3.1            # 원본 xlsx export 호환용
+
+# ── 테스트 ──
+pytest>=7.4
+
+# ── GPU (Phase 7, 선택) ──
+# requirements-gpu.txt 참조

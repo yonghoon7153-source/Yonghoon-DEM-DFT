@@ -1,0 +1,13 @@
+# 스모크 테스트용 coarse 격자 — step 0.05
+# 조건 수: 5 × 5 × 5 = 125  (nproc=8 에서 약 5분 목표)
+extends: base.yaml
+
+grid:
+  lli:    {start: 0.0, stop: 0.20, step: 0.05}    # 5개
+  lam_pe: {start: 0.0, stop: 0.20, step: 0.05, type: de}
+  lam_ne: {start: 0.0, stop: 0.20, step: 0.05, type: de}
+  noise:  [0.0]
+
+run:
+  chunk_size: 50
+  save_full_timeseries: false     # 정규화 격자 300점만 저장

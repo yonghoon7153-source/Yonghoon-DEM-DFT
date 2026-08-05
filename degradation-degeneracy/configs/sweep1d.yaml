@@ -1,0 +1,18 @@
+# 32p 재현용 — 원본과 동일한 1D sweep
+# 각 모드를 하나씩만 적용. 모드별 프로토콜 매핑 준수.
+extends: base.yaml
+
+sweep1d:
+  values: [0, 0.1, 0.2, 0.3]      # 원본과 동일
+  modes:
+    - reference
+    - lli
+    - lam_ne_li
+    - lam_ne_de
+    - lam_pe_li
+    - lam_pe_de
+
+plot:
+  layout: [2, 3]                  # 32p 와 동일한 2×3
+  normalize_capacity: true
+  show_fullcell: true

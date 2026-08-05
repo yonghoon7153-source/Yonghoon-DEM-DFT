@@ -1,0 +1,7 @@
+# Phase 7 전용. CUDA 버전에 맞춰 조정할 것.
+# 주의: PyBaMM DFN + composite phases는 JAX 백엔드에서 동작하지 않을 가능성이 높다.
+#       docs/03_ARCHITECTURE.md 6절 "GPU 현실론" 참조.
+
+jax[cuda12]>=0.4.30
+# surrogate 학습용 (Phase 7-4 이후)
+# torch --index-url https://download.pytorch.org/whl/cu121

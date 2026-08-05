@@ -1,0 +1,30 @@
+# 결과물 — 용량이 크므로 커밋하지 않는다
+results/
+*.parquet
+*.h5
+*.hdf5
+.cache/
+
+# 환경
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# 산출 문서 (자동 생성)
+docs/ENV_REPORT.md
+docs/RESULTS.md
+docs/GPU_NOTES.md
+
+# OS / 편집기
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# 원본 코드 참고본은 커밋한다 (회귀 검증 기준)
+!reference/

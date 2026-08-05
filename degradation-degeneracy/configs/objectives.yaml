@@ -1,0 +1,35 @@
+# 34p 목적함수 정의
+#   J(p) = w_pocv·RMSE_pocv/scale_pocv
+#        + w_dvdq·RMSE_dvdq/scale_dvdq
+#        + w_dqdv·RMSE^w_dqdv/scale_dqdv
+
+objectives:
+  pocv:              {w_pocv: 1.0, w_dvdq: 0.0, w_dqdv: 0.0}
+  pocv_dvdq:         {w_pocv: 1.0, w_dvdq: 1.0, w_dqdv: 0.0}   # 기존 (33p)
+  pocv_dvdq_dqdv:    {w_pocv: 1.0, w_dvdq: 1.0, w_dqdv: 1.0}   # 개선 (34p)
+  dqdv_only:         {w_pocv: 0.0, w_dvdq: 0.0, w_dqdv: 1.0}
+
+scaling:
+  method: reference_rmse     # baseline 조건의 RMSE로 각 항 정규화
+
+dqdv:
+  smoothing: savgol          # 33p "peak smoothing control parameter"
+  window: 21
+  polyorder: 3
+  peak_weight: 3.0           # 33p "peak weight factor" → RMSE 위첨자 w
+  peak_prominence: 0.05
+  peak_halfwidth: 10         # 피크 ±N 포인트에 가중
+
+fitting:
+  # ⚠ 원본 33p: ub=[1.1, 0, 1.1, 0], lb=[1.00, -0.3, 1.00, -0.15]
+  #   α 하한이 1.00이면 열화(α<1)를 표현할 수 없다.
+  #   정규화 기준 확인 후 필요 시 확장하고, physics 커밋으로 근거를 남길 것.
+  init_guess: [1.03, -0.1, 1.08, -0.01]
+  bounds_lb:  [1.00, -0.30, 1.00, -0.15]
+  bounds_ub:  [1.10,  0.00, 1.10,  0.00]
+  method: L-BFGS-B
+  n_restarts: 5              # multi-start → 결과 불일치 자체가 축퇴 증거
+  detect_active_bounds: true
+
+scoring:
+  tolerance: 0.02            # 2%p 초과 오차면 degenerate 판정
