@@ -187,29 +187,33 @@ case "$MODE" in
     ;;
 
   baseline)   # Phase 1
-    not_impl baseline
-    # exec python -m src.baseline --config "$CONFIG" --out "$OUT"
+    exec python -m src.baseline --config "$CONFIG" --log-level "$LOG_LEVEL"
     ;;
 
   sweep1d)    # Phase 2
-    not_impl sweep1d
-    # exec python -m src.sweep --config "$CONFIG" --out "$OUT" \
-    #   --solver "$SOLVER" --log-level "$LOG_LEVEL"
+    [[ "$CONFIG" == "configs/base.yaml" ]] && CONFIG="configs/sweep1d.yaml"
+    exec python -m src.sweep --config "$CONFIG" --out "$OUT" \
+      --log-level "$LOG_LEVEL"
     ;;
 
   grid)       # Phase 3
-    not_impl grid
-    # exec python -m src.grid \
-    #   --config "$CONFIG" \
-    #   --lli "$LLI" --lam-pe "$LAM_PE" --lam-ne "$LAM_NE" \
-    #   --lam-pe-type "$LAM_PE_TYPE" --lam-ne-type "$LAM_NE_TYPE" \
-    #   --c-rate "$C_RATE" --v-upper "$V_UPPER" --v-lower "$V_LOWER" \
-    #   --noise "$NOISE" --noise-seed "$NOISE_SEED" \
-    #   --backend "$BACKEND" --nproc "$NPROC" --solver "$SOLVER" \
-    #   --chunk-size "$CHUNK_SIZE" \
-    #   $([[ "$RESUME"  == "true" ]] && echo --resume) \
-    #   $([[ "$DRY_RUN" == "true" ]] && echo --dry-run) \
-    #   --out "$OUT" --tag "$TAG" --log-level "$LOG_LEVEL"
+    [[ "$CONFIG" == "configs/base.yaml" ]] && CONFIG="configs/grid_coarse.yaml"
+    GRID_ARGS=(--config "$CONFIG"
+               --nproc "$NPROC" --chunk-size "$CHUNK_SIZE"
+               --out "$OUT" --log-level "$LOG_LEVEL")
+    [[ "$LLI"    != "none" ]] && GRID_ARGS+=(--lli "$LLI")
+    [[ "$LAM_PE" != "none" ]] && GRID_ARGS+=(--lam-pe "$LAM_PE")
+    [[ "$LAM_NE" != "none" ]] && GRID_ARGS+=(--lam-ne "$LAM_NE")
+    GRID_ARGS+=(--lam-pe-type "$LAM_PE_TYPE" --lam-ne-type "$LAM_NE_TYPE")
+    [[ "$NOISE" != "0" ]] && GRID_ARGS+=(--noise "$NOISE")
+    GRID_ARGS+=(--noise-seed "$NOISE_SEED")
+    [[ "$RESUME"  == "true" ]] && GRID_ARGS+=(--resume)
+    [[ "$DRY_RUN" == "true" ]] && GRID_ARGS+=(--dry-run)
+    [[ -n "$TAG" ]] && GRID_ARGS+=(--tag "$TAG")
+    if [[ "$BACKEND" == "gpu" ]]; then
+      echo "[경고] --backend gpu 는 아직 미구현 (Phase 7). CPU로 fallback." >&2
+    fi
+    exec python -m src.grid "${GRID_ARGS[@]}"
     ;;
 
   fit)        # Phase 4
