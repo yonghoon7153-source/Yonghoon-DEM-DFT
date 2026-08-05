@@ -110,6 +110,35 @@ def to_degradation_modes(p, r: float = 1.0, convention: str = "derived",
     return {"lam_pe": float(lam_pe), "lam_ne": float(lam_ne), "lli": float(lli)}
 
 
+def to_modes_halfcell(p, p_ini, r: float) -> dict:
+    """★ Case 1 — full-range half-cell OCV 기준에서의 역환산 (21p 식 원형).
+
+    이 기준에서는 α·β가 논문과 같은 의미를 갖는다.
+        α_PE = C_PE/C_full,  β_PE = −y0·α_PE
+        α_NE = C_NE/C_full,  β_NE = (z0−1)·α_NE      (s = 1−z 로 방전방향 정렬)
+    따라서 셀별 상수 없이 21p 식이 그대로 성립한다.
+
+        LAM_PE = 1 − α_PE·r/α_PE,ini
+        LAM_NE = 1 − α_NE·r/α_NE,ini
+        LLI    = 1 − (α_NE + β_NE − β_PE)·r / (α_NE,ini + β_NE,ini − β_PE,ini)
+
+    LLI의 전극 기준(NE)은 전하 보존에서 나온다: 완충 상태에서
+    PE 보유 Li = −β_PE·C_full, NE 보유 Li = (α_NE+β_NE)·C_full 이므로
+    총재고 = (α_NE + β_NE − β_PE)·C_full.
+    비교용으로 21p 표기 그대로인 PE 기준도 함께 반환한다.
+    """
+    a_pe, b_pe, a_ne, b_ne = p
+    a_pe0, b_pe0, a_ne0, b_ne0 = p_ini
+    inv_ne = a_ne0 + b_ne0 - b_pe0
+    inv_pe = a_pe0 + b_pe0 - b_ne0
+    return {
+        "lam_pe": float(1.0 - a_pe * r / a_pe0),
+        "lam_ne": float(1.0 - a_ne * r / a_ne0),
+        "lli": float(1.0 - (a_ne + b_ne - b_pe) * r / inv_ne) if inv_ne else float("nan"),
+        "lli_pe_basis": float(1.0 - (a_pe + b_pe - b_ne) * r / inv_pe) if inv_pe else float("nan"),
+    }
+
+
 def modes_to_params(lam_pe: float, lam_ne: float, lli: float, r: float) -> np.ndarray:
     """역함수 — 참값에서 기대되는 α·β (테스트·진단용, "paper" 규약)."""
     a_pe = (1.0 - lam_pe) / r
@@ -244,13 +273,37 @@ def extract_reference(df):
     return ref
 
 
+def build_reference_interps(mode: str, grid_ref: dict, hc=None):
+    """fitting 기준 곡선. mode = "grid" (기준 셀 창) | "halfcell" (전 범위 반쪽셀)."""
+    if mode == "grid":
+        return (make_ref_interp(grid_ref["x"], grid_ref["pe"]),
+                make_ref_interp(grid_ref["x"], grid_ref["ne"]))
+    if mode == "halfcell":
+        # PE: s ∝ y (방전 중 리튬화 → 증가) / NE: s ∝ 1−z (방전방향으로 정렬)
+        # ★ windowed_curve가 s∈[0,1]을 가정하므로 **테이블 구간을 [0,1]로 정규화**한다.
+        #   (정규화 없이 넣으면 확보 범위 밖이 전부 끝값으로 평평해져 fitting이 망가진다
+        #    — 실측: LAM 오차 0.10 vs 정규화 후 개선)
+        #   이때 α는 "테이블 구간 대비" 비율이 되지만, LAM은 ini로 정규화되므로
+        #   구간 상수가 약분돼 식은 그대로 성립한다.
+        y, u_pe = np.asarray(hc["y_pe"]), np.asarray(hc["u_pe"])
+        z, u_ne = np.asarray(hc["z_ne"]), np.asarray(hc["u_ne"])
+        s_pe = (y - y.min()) / (y.max() - y.min())
+        s_ne = 1.0 - z
+        s_ne = (s_ne - s_ne.min()) / (s_ne.max() - s_ne.min())
+        order = np.argsort(s_ne)
+        return (make_ref_interp(s_pe, u_pe), make_ref_interp(s_ne[order], u_ne[order]))
+    raise ValueError(f"알 수 없는 reference 모드: {mode}")
+
+
 def _fit_one(task: dict) -> list[dict]:
     """한 조건에 대해 목적함수 4종을 각각 fitting (워커에서 실행)."""
     from src.objective import compute_features, default_scales, make_objective
 
     x = np.asarray(task["x"])
-    ref_pe = make_ref_interp(np.asarray(task["ref_x"]), np.asarray(task["ref_pe"]))
-    ref_ne = make_ref_interp(np.asarray(task["ref_x"]), np.asarray(task["ref_ne"]))
+    grid_ref = {"x": np.asarray(task["ref_x"]), "pe": np.asarray(task["ref_pe"]),
+                "ne": np.asarray(task["ref_ne"])}
+    ref_pe, ref_ne = build_reference_interps(task["reference"], grid_ref,
+                                             task.get("halfcell"))
     obj_cfg = task["obj_cfg"]
 
     target = compute_features(x, np.asarray(task["v_target"]), obj_cfg, with_peaks=True)
@@ -274,11 +327,18 @@ def _fit_one(task: dict) -> list[dict]:
         res = fit(J, task["init"], task["lb"], task["ub"],
                   n_restarts=task["n_restarts"], seed=task["seed"])
         inv = task["inventory"]
-        derived = to_degradation_modes(res.p, task["r"], "derived",
-                                       inv["w_pe"], inv["w_ne"], inv["kappa"])
+        if task["reference"] == "halfcell":
+            hc = to_modes_halfcell(res.p, task["p_ini"], task["r"])
+            main_modes = hc
+            extra = {"lli_hat_pe_basis": hc["lli_pe_basis"]}
+        else:
+            main_modes = to_degradation_modes(res.p, task["r"], "derived",
+                                              inv["w_pe"], inv["w_ne"], inv["kappa"])
+            extra = {}
         paper = to_degradation_modes(res.p, task["r"], "paper")
         code = to_degradation_modes(res.p, task["r"], "code")
         rows.append({
+            **extra, "reference": task["reference"],
             **task["truth"],
             "cond_id": task["cond_id"], "objective": name,
             "q_mah": task["q_mah"], "r": task["r"],
@@ -288,8 +348,8 @@ def _fit_one(task: dict) -> list[dict]:
             "any_bound_active": res.any_bound_active,
             "n_restarts": res.n_restarts, "n_restarts_agree": res.n_restarts_agree,
             "p_spread": res.p_spread, "J_spread": res.J_spread,
-            "lam_pe_hat": derived["lam_pe"], "lam_ne_hat": derived["lam_ne"],
-            "lli_hat": derived["lli"],            # ★ 유도식 (기본)
+            "lam_pe_hat": main_modes["lam_pe"], "lam_ne_hat": main_modes["lam_ne"],
+            "lli_hat": main_modes["lli"],
             "lli_hat_21p": paper["lli"], "lli_hat_code": code["lli"],
             "bounds_preset": task["bounds_preset"],
         })
@@ -299,7 +359,7 @@ def _fit_one(task: dict) -> list[dict]:
 def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
             bounds_preset: str, n_restarts: int, nproc: int,
             use_noisy: bool = True, limit: int | None = None,
-            base_config: str | None = None) -> dict:
+            base_config: str | None = None, reference: str = "grid") -> dict:
     """grid 결과 전체에 fitting 수행 → fits.parquet."""
     import time
     from pathlib import Path
@@ -327,6 +387,14 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
     base_cfg = _load(base_config or "configs/base.yaml")
     inv = reference_inventory(base_cfg, q_ref / 1000.0).as_dict()
 
+    # ── Case 1: full-range half-cell OCV 기준 ──
+    hc_dict, p_ini = None, None
+    if reference == "halfcell":
+        from src.halfcell import get_halfcell_reference
+        hc = get_halfcell_reference(base_cfg)
+        hc_dict = hc.as_dict()
+        log.info("half-cell 기준 범위: %s", hc.coverage())
+
     v_col = "v_full_noisy" if (use_noisy and "v_full_noisy" in df.columns) else "v_full"
     tasks = []
     for cond_id, g in df.groupby("cond_id", sort=False):
@@ -342,11 +410,24 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
             "ref_full": ref_full, "obj_cfg": obj_cfg, "objectives": objectives,
             "init": bounds["init"], "lb": bounds["lb"], "ub": bounds["ub"],
             "bounds_preset": bounds_preset, "n_restarts": n_restarts,
-            "inventory": inv,
+            "inventory": inv, "reference": reference, "halfcell": hc_dict,
+            "p_ini": p_ini,
             "seed": abs(hash(cond_id)) % (2**31),
         })
     if limit:
         tasks = tasks[:limit]
+
+    if reference == "halfcell":
+        # ★ ini 정규화용: 기준 셀 자신을 먼저 fitting해 α_ini·β_ini를 얻는다
+        ref_task = next(t for t in tasks if t["r"] == max(x["r"] for x in tasks))
+        ref_task = {**ref_task, "objectives": {"pocv_dvdq": objectives.get(
+            "pocv_dvdq", {"w_pocv": 1.0, "w_dvdq": 1.0})}}
+        ini_row = _fit_one({**ref_task, "p_ini": [1.0, 0.0, 1.0, 0.0]})[0]
+        p_ini = [float(ini_row[k]) for k in PARAM_NAMES]
+        log.info("α_ini·β_ini = %s (기준 조건 자체 fitting)",
+                 [round(v, 4) for v in p_ini])
+        for t in tasks:
+            t["p_ini"] = p_ini
 
     log.info("fitting: %d조건 × %d목적함수 × %d restart (nproc=%d)",
              len(tasks), len(objectives), n_restarts, nproc)
@@ -370,7 +451,8 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
         "run_type": "fit", "input": str(in_dir),
         "n_conditions": len(tasks), "objectives": list(objectives),
         "bounds_preset": bounds_preset, "bounds": bounds,
-        "n_restarts": n_restarts, "target_column": v_col,
+        "n_restarts": n_restarts, "target_column": v_col, "reference": reference,
+        "p_ini": p_ini,
         "q_ref_mah": q_ref, "lli_inventory_constants": inv, "elapsed_s": round(elapsed, 1),
         "fits_parquet": str(path),
     }))
@@ -397,6 +479,8 @@ def main() -> None:
     ap.add_argument("--bounds", default="expanded", help="expanded | original_33p")
     ap.add_argument("--n-restarts", dest="n_restarts", type=int, default=None)
     ap.add_argument("--nproc", type=int, default=multiprocessing.cpu_count())
+    ap.add_argument("--reference", default="grid", choices=["grid", "halfcell"],
+                    help="grid=기준 셀 창(유도식 환산) | halfcell=전 범위 반쪽셀(21p 식)")
     ap.add_argument("--clean", action="store_true", help="노이즈 없는 곡선으로 fitting")
     ap.add_argument("--limit", type=int, default=None, help="앞 N조건만 (스모크용)")
     ap.add_argument("--log-level", default="INFO")
@@ -426,7 +510,7 @@ def main() -> None:
         bounds_preset=args.bounds,
         n_restarts=args.n_restarts or int(fcfg.get("n_restarts", 5)),
         nproc=args.nproc, use_noisy=not args.clean, limit=args.limit,
-        base_config=args.base_config,
+        base_config=args.base_config, reference=args.reference,
     )
     print(json.dumps(summary, ensure_ascii=False, indent=2))
 

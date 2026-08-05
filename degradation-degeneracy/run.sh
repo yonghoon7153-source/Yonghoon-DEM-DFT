@@ -39,6 +39,7 @@ BOUNDS_PRESET="expanded"          # expanded | original_33p
 N_RESTARTS="auto"                 # auto = objectives.yaml 의 n_restarts
 CLEAN="false"                     # true면 노이즈 없는 곡선으로 fitting
 LIMIT=""                          # 앞 N조건만 (스모크용)
+REFERENCE="grid"                  # grid (유도식) | halfcell (21p 식, 전 범위 반쪽셀)
 
 # 실행 제어
 BACKEND="cpu"             # cpu | gpu
@@ -142,6 +143,7 @@ while [[ $# -gt 0 ]]; do
     --n-restarts)    N_RESTARTS="$2"; shift 2 ;;
     --clean)         CLEAN="true"; shift ;;
     --limit)         LIMIT="$2"; shift 2 ;;
+    --reference)     REFERENCE="$2"; shift 2 ;;
     --backend)       BACKEND="$2"; shift 2 ;;
     --nproc)         NPROC="$2"; shift 2 ;;
     --solver)        SOLVER="$2"; shift 2 ;;
@@ -218,7 +220,9 @@ case "$MODE" in
     [[ -n "$OBJECTIVE" ]] && FIT_ARGS+=(--objective "$OBJECTIVE")
     [[ "$N_RESTARTS" != "auto" ]] && FIT_ARGS+=(--n-restarts "$N_RESTARTS")
     [[ "$CLEAN" == "true" ]] && FIT_ARGS+=(--clean)
+    FIT_ARGS+=(--reference "$REFERENCE")
     [[ -n "$LIMIT" ]] && FIT_ARGS+=(--limit "$LIMIT")
+    [[ "$REFERENCE" == "halfcell" && "$BOUNDS_PRESET" == "expanded" ]] && FIT_ARGS[3]="halfcell"
     exec python -m src.fitting "${FIT_ARGS[@]}"
     ;;
 
