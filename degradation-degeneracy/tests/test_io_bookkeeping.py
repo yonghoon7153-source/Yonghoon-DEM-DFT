@@ -66,3 +66,64 @@ def test_merge_chunks_keeps_newest_block(tmp_path):
 
 def test_merge_chunks_empty(tmp_path):
     assert merge_chunks(tmp_path) is None
+
+
+def test_chunk_filename_has_pid(tmp_path):
+    """프로세스가 다르면 청크 파일명이 겹치지 않아야 한다 (동시 실행 시 덮어쓰기 방지)."""
+    import os
+
+    p = save_chunk(_frame("c1", 1.0), tmp_path, 0)
+    assert p.name == f"chunk_00000_{os.getpid()}.parquet"
+
+
+def test_merge_orders_by_mtime_not_name(tmp_path):
+    """이름순이 아니라 생성순(mtime)으로 최신을 고른다.
+
+    두 프로세스가 각자 chunk_idx를 세면 이름 정렬로는 시간 순서를 알 수 없다.
+    """
+    import os
+    import time
+
+    d = tmp_path / "chunks"
+    d.mkdir(parents=True)
+    old = d / "chunk_00009_111.parquet"      # 이름은 뒤, 시간은 앞
+    new = d / "chunk_00000_222.parquet"      # 이름은 앞, 시간은 뒤
+    _frame("c1", 1.0).to_parquet(old, index=False)
+    time.sleep(0.01)
+    _frame("c1", 9.0).to_parquet(new, index=False)
+    os.utime(old, (1_000_000, 1_000_000))    # old를 확실히 과거로
+
+    merge_chunks(tmp_path)
+    df = pd.read_parquet(tmp_path / "curves.parquet")
+    assert set(df.v_full) == {9.0}           # 나중에 만들어진 값이 이김
+
+
+def test_run_lock_blocks_concurrent_run(tmp_path, monkeypatch):
+    """살아있는 grid 실행이 있으면 두 번째 실행은 거부된다."""
+    import pytest
+
+    import src.io as io_mod
+
+    (tmp_path / ".run.lock").write_text("4242 2026-01-01T00:00:00\n")
+    monkeypatch.setattr(io_mod, "_pid_alive", lambda pid: pid == 4242)
+    with pytest.raises(RuntimeError, match="이미 실행 중"):
+        io_mod.acquire_run_lock(tmp_path)
+
+
+def test_lock_ignores_unrelated_process(tmp_path, monkeypatch):
+    """PID는 살아있지만 grid가 아닌 프로세스(재사용된 PID)면 잠금을 회수한다."""
+    import src.io as io_mod
+
+    (tmp_path / ".run.lock").write_text("4242 2026-01-01T00:00:00\n")
+    monkeypatch.setattr(io_mod, "_pid_alive", lambda pid: False)
+    io_mod.acquire_run_lock(tmp_path)        # 예외 없이 통과
+    io_mod.release_run_lock(tmp_path)
+
+
+def test_stale_lock_is_reclaimed(tmp_path):
+    """죽은 프로세스가 남긴 lock은 자동 정리된다."""
+    from src.io import acquire_run_lock
+
+    (tmp_path / ".run.lock").write_text("999999 2026-01-01T00:00:00\n")
+    acquire_run_lock(tmp_path)               # 예외 없이 통과해야 함
+    assert (tmp_path / ".run.lock").exists()
