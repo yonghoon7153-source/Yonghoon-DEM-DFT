@@ -101,7 +101,9 @@ def _pid_alive(pid: int) -> bool:
         return True   # 살아 있으나 다른 사용자 소유
     cmdline = Path(f"/proc/{pid}/cmdline")
     if cmdline.exists():   # PID 재사용 오탐 방지 (Linux)
-        return "src.grid" in cmdline.read_text(errors="ignore").replace("\x00", " ")
+        cmd = cmdline.read_text(errors="ignore").replace("\x00", " ")
+        # 리뷰 F13: fit lock(.fit.lock)도 이 함수를 쓰므로 fitting 프로세스도 인정
+        return any(m in cmd for m in ("src.grid", "src.fitting"))
     return True
 
 

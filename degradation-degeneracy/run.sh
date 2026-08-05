@@ -214,6 +214,8 @@ case "$MODE" in
     ;;
 
   fit)        # Phase 4
+    # halfcell 기준 + 기본 bound면 전용 preset으로 (리뷰 F3: 인덱스 패치는 버그였음)
+    [[ "$REFERENCE" == "halfcell" && "$BOUNDS_PRESET" == "expanded" ]] && BOUNDS_PRESET="halfcell"
     FIT_ARGS=(--in "${IN_DIR:-$OUT}" --nproc "$NPROC"
               --bounds "$BOUNDS_PRESET" --log-level "$LOG_LEVEL")
     [[ -n "$IN_DIR" ]] && FIT_ARGS+=(--out "$IN_DIR")
@@ -222,7 +224,6 @@ case "$MODE" in
     [[ "$CLEAN" == "true" ]] && FIT_ARGS+=(--clean)
     FIT_ARGS+=(--reference "$REFERENCE")
     [[ -n "$LIMIT" ]] && FIT_ARGS+=(--limit "$LIMIT")
-    [[ "$REFERENCE" == "halfcell" && "$BOUNDS_PRESET" == "expanded" ]] && FIT_ARGS[3]="halfcell"
     [[ "$RESUME" == "true" ]] && FIT_ARGS+=(--resume)
     exec python -m src.fitting "${FIT_ARGS[@]}"
     ;;

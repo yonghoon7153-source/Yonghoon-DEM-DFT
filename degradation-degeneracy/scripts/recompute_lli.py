@@ -38,6 +38,15 @@ def main() -> int:
         raise SystemExit(f"fits.parquet 없음: {fits_path}")
     f = pd.read_parquet(fits_path)
 
+    # 리뷰 F12: 이 스크립트의 유도식은 grid 기준(reference="grid") 전용이다.
+    # halfcell 행에 적용하면 테이블-상대 α·β에 grid 규약을 씌워 조용히 틀린다.
+    if "reference" in f.columns and (f["reference"] != "grid").any():
+        n_hc = int((f["reference"] != "grid").sum())
+        raise SystemExit(
+            f"halfcell 기준 행 {n_hc}개 포함 — 이 스크립트는 grid 기준 전용입니다. "
+            f"halfcell 행의 LLI는 fitting 시점에 to_modes_halfcell로 이미 계산돼 "
+            f"있으며(행의 *_ini 열 참조), 재계산이 필요하면 별도로 분기하세요.")
+
     # reference 용량 [Ah] — r = Q/Q_ref 이므로 q_mah/r 로 복원 가능
     q_ref_ah = float((f["q_mah"] / f["r"]).median()) / 1000.0
 

@@ -32,6 +32,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import logging
 from dataclasses import dataclass, field
 
@@ -186,15 +187,18 @@ def _minimize_until_stable(objective, x0, bounds, method: str,
     개선이 멈출 때까지 반복한다 (최적화 실패와 목적함수의 평평함을 구분하기 위함)."""
     opts = _NM_OPTIONS if method == "Nelder-Mead" else None
     best_x, best_f, ok, nfev = np.asarray(x0, float), np.inf, False, 0
+    cur_x = best_x
     for _ in range(max_rounds):
-        res = minimize(objective, best_x, method=method, bounds=bounds, options=opts)
+        res = minimize(objective, cur_x, method=method, bounds=bounds, options=opts)
         nfev += int(res.nfev)
         if not np.isfinite(res.fun):
             break
         improved = best_f - float(res.fun)
-        best_x, ok = np.asarray(res.x, float), bool(res.success)
+        cur_x, ok = np.asarray(res.x, float), bool(res.success)
+        # 리뷰 F16: best_x는 개선됐을 때만 갱신 — 반환 (p, J) 불일치 방지
         if float(res.fun) < best_f:
             best_f = float(res.fun)
+            best_x = cur_x
         if improved < tol:
             break
     return best_x, best_f, ok, nfev
@@ -240,7 +244,8 @@ def fit(objective, init, lb, ub, n_restarts: int = 1, seed: int = 0,
         return FitResult(nan, float("nan"), False, 0, (False,) * 4, n_restarts, 0)
 
     results.sort(key=lambda t: t[1])
-    p_best, J_best, ok, nfev = results[0]
+    p_best, J_best, ok, _ = results[0]
+    nfev = sum(t[3] for t in results)     # 리뷰 F17: 전체 restart의 평가 수 합
 
     # 최적해와 J가 사실상 같은데 p가 다른 해 = 평평한 골짜기
     near = [p for p, J, *_ in results if abs(J - J_best) <= agree_tol * max(1.0, abs(J_best))]
@@ -308,8 +313,11 @@ def _fit_one(task: dict) -> list[dict]:
     obj_cfg = task["obj_cfg"]
 
     target = compute_features(x, np.asarray(task["v_target"]), obj_cfg, with_peaks=True)
+    # 리뷰 F9: scale은 조건 불변이어야 J를 격자 전체에서 비교할 수 있다.
+    # ref_feat를 타깃 격자(target.v_grid)로 계산하면 dqdv scale이 조건마다 미세하게
+    # 달라지므로, reference **자기 격자**로 계산한다 (scale은 상수라 격자 불일치 무해).
     ref_feat = compute_features(np.asarray(task["ref_x"]), np.asarray(task["ref_full"]),
-                                obj_cfg, v_grid=target.v_grid)
+                                obj_cfg)
     scales = default_scales(ref_feat)
 
     def model_fn(p):
@@ -338,17 +346,26 @@ def _fit_one(task: dict) -> list[dict]:
             extra = {}
         paper = to_degradation_modes(res.p, task["r"], "paper")
         code = to_degradation_modes(res.p, task["r"], "code")
+        p_ini = task.get("p_ini") or [float("nan")] * 4
         rows.append({
             **extra, "reference": task["reference"],
             **task["truth"],
             "cond_id": task["cond_id"], "objective": name,
             "q_mah": task["q_mah"], "r": task["r"],
             **dict(zip(PARAM_NAMES, res.p)),
+            # 리뷰 F12: halfcell 재계산에 필요한 p_ini를 행에도 저장
+            **{f"{k}_ini": float(v) for k, v in zip(PARAM_NAMES, p_ini)},
             "J": res.J, "converged": res.converged, "n_eval": res.n_eval,
             **{f"bound_active_{k}": v for k, v in zip(PARAM_NAMES, res.bound_active)},
             "any_bound_active": res.any_bound_active,
+            # 리뷰 F1: grid 기준의 α=1 소프트 벽(창 부족 벌점이 만드는 파일업)은
+            # box bound가 아니라 bound_active에 안 잡힌다 → 별도 플래그
+            "alpha_wall_pe": bool(abs(res.p[0] - 1.0) < 1e-3),
+            "alpha_wall_ne": bool(abs(res.p[2] - 1.0) < 1e-3),
             "n_restarts": res.n_restarts, "n_restarts_agree": res.n_restarts_agree,
             "p_spread": res.p_spread, "J_spread": res.J_spread,
+            # 리뷰 F4: restart별 (p, J) 원본 — 사후에 노이즈 환산 임계로 재집계 가능
+            "restarts_json": json.dumps(res.restarts),
             "lam_pe_hat": main_modes["lam_pe"], "lam_ne_hat": main_modes["lam_ne"],
             "lli_hat": main_modes["lli"],
             "lli_hat_21p": paper["lli"], "lli_hat_code": code["lli"],
@@ -394,8 +411,16 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
     if reference == "halfcell":
         from src.halfcell import get_halfcell_reference
         hc = get_halfcell_reference(base_cfg)
+        cov = hc.coverage()
+        # 리뷰 F11: to_modes_halfcell의 LLI 식은 테이블이 화학량론 전 범위일 때만
+        # 성립한다 (sim 테이블 y_min=0.251이면 오프셋 ≈2.2Ah로 LLI가 조용히 틀림).
+        if cov["pe_min"] > 0.01 or cov["pe_max"] < 0.99 \
+                or cov["ne_min"] > 0.01 or cov["ne_max"] < 0.99:
+            raise RuntimeError(
+                f"half-cell 테이블이 전 범위가 아님 ({cov}). "
+                f"method='ocp' 캐시를 사용하세요 (python -m src.halfcell --method ocp)")
         hc_dict = hc.as_dict()
-        log.info("half-cell 기준 범위: %s", hc.coverage())
+        log.info("half-cell 기준 범위: %s", cov)
 
     v_col = "v_full_noisy" if (use_noisy and "v_full_noisy" in df.columns) else "v_full"
     tasks = []
@@ -421,25 +446,45 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
         tasks = tasks[:limit]
 
     if reference == "halfcell":
-        # ★ ini 정규화용: 기준 셀 자신을 먼저 fitting해 α_ini·β_ini를 얻는다
-        ref_task = next(t for t in tasks if t["r"] == max(x["r"] for x in tasks))
-        ref_task = {**ref_task, "objectives": {"pocv_dvdq": objectives.get(
-            "pocv_dvdq", {"w_pocv": 1.0, "w_dvdq": 1.0})}}
+        # ★ ini 정규화용: 기준 셀 자신을 먼저 fitting해 α_ini·β_ini를 얻는다.
+        # 리뷰 F2: max(r)로 고르면 reference의 noise 변형 3개가 r=1.0 동률이라
+        # 행 순서에 따라 노이즈 곡선에 self-fitting할 수 있고, --limit로 잘리면
+        # 열화 조건이 뽑힌다 → truth로 명시 선택하고 clean 곡선을 강제한다.
+        def _is_ref(t):
+            tr = t["truth"]
+            return (tr["lli"] == 0 and tr["lam_pe"] == 0 and tr["lam_ne"] == 0
+                    and float(tr.get("noise", 0.0)) == 0.0)
+
+        ref_candidates = [t for t in tasks if _is_ref(t)]
+        if not ref_candidates:
+            raise RuntimeError(
+                "p_ini 기준 조건(lli=lam_pe=lam_ne=0, noise=0)이 태스크에 없음 "
+                "(--limit로 잘렸을 수 있음)")
+        ref_task = {**ref_candidates[0],
+                    "objectives": {"pocv_dvdq": objectives.get(
+                        "pocv_dvdq", {"w_pocv": 1.0, "w_dvdq": 1.0})}}
         ini_row = _fit_one({**ref_task, "p_ini": [1.0, 0.0, 1.0, 0.0]})[0]
         p_ini = [float(ini_row[k]) for k in PARAM_NAMES]
-        log.info("α_ini·β_ini = %s (기준 조건 자체 fitting)",
-                 [round(v, 4) for v in p_ini])
+        log.info("α_ini·β_ini = %s (기준 조건 %s 자체 fitting)",
+                 [round(v, 4) for v in p_ini], ref_task["cond_id"])
         for t in tasks:
             t["p_ini"] = p_ini
 
     from src.io import (acquire_run_lock, load_completed, mark_completed,
                         merge_chunks, release_run_lock, save_chunk)
 
-    # ── resume: 완료 조건 건너뛰기 (grid와 같은 정책, fit 전용 파일 사용) ──
-    done = load_completed(out_dir, "fit_completed.jsonl") if resume else set()
+    # ── resume: 완료 조건 건너뛰기 ──
+    # 리뷰 F18: 완료 파일명에 실행 서명(목적함수·기준·bound·타깃 열)을 넣는다.
+    # 안 그러면 다른 --objective로 resume했을 때 새 목적함수가 조용히 누락된다.
+    run_sig = hashlib.sha1(json.dumps(
+        [sorted(objectives), reference, bounds_preset, v_col],
+        sort_keys=True).encode()).hexdigest()[:8]
+    completed_name = f"fit_completed_{run_sig}.jsonl"
+    done = load_completed(out_dir, completed_name) if resume else set()
     todo = [t for t in tasks if t["cond_id"] not in done]
     if resume and done:
-        log.info("fit resume: %d개 완료 확인, %d개 남음", len(done), len(todo))
+        log.info("fit resume(sig=%s): %d개 완료 확인, %d개 남음",
+                 run_sig, len(done), len(todo))
 
     log.info("fitting: %d조건 × %d목적함수 × %d restart (nproc=%d)",
              len(todo), len(objectives), n_restarts, nproc)
@@ -460,7 +505,7 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
                            subdir="fit_chunks")
                 chunk_idx += 1
                 for t in chunk:
-                    mark_completed(out_dir, t["cond_id"], "fit_completed.jsonl")
+                    mark_completed(out_dir, t["cond_id"], completed_name)
                 n_done += len(chunk)
                 el = time.perf_counter() - t0
                 # tqdm은 파일 리다이렉트 시 버퍼링으로 안 보인다 → 로그로 진행률
@@ -474,6 +519,10 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
     # 이전 실행분(resume)까지 합쳐 병합. 같은 (cond_id, objective, ...)는 최신만.
     path = merge_chunks(out_dir, "fits.parquet", subdir="fit_chunks",
                         keys=("cond_id", "objective", "reference", "bounds_preset"))
+    if path is None:      # 리뷰 F19: 전부 resume-완료면 청크가 없어도 죽지 않게
+        path = out_dir / "fits.parquet"
+        if not path.exists():
+            raise RuntimeError("청크도 기존 fits.parquet도 없음 — 실행된 조건이 없습니다")
     fits = pd.read_parquet(path)
 
     write_manifest(out_dir, base_manifest("", extra={

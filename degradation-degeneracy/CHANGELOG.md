@@ -85,3 +85,37 @@ coarse 95조건, 정답 대비 평균 |오차|:
 → 즉 논문 식을 임의로 바꾼 것이 아니라, **기준을 논문과 맞춘 뒤 전극 기준만
   전하 보존에 맞게 고른 것**이다. Case 2의 유도식은 기준 셀 창을 쓸 때의
   등가 형태이며, 두 경로가 독립적으로 같은 결론(LLI 오차 0.011~0.012)에 도달한다.
+
+### Phase 4 — 적대적 리뷰 반영 (2026-08-05)
+
+Fable 최고강도 리뷰 20건 중 수용 15건 즉시 수정, 해석 규칙 5건 문서화.
+**1순위 판정: V100에서 돌던 fine fitting(8dfd3b6)은 유효 — 죽일 필요 없음**
+(리뷰어가 수식 재유도 + coarse 실데이터 스팟 재실행으로 교차 확인).
+
+즉시 수정 (코드):
+- F3  run.sh halfcell 경로의 FIT_ARGS 인덱스 버그 (--nproc 값을 덮어씀) → preset을 배열 구성 전에 결정
+- F2  p_ini 기준 조건을 max(r)로 고르던 것 → truth(전부 0 + noise=0) 명시 선택, 없으면 예외
+- F13 .fit.lock 판정이 src.grid만 인정 → src.fitting도 인정
+- F12 recompute_lli.py가 halfcell 행을 grid 규약으로 덮어쓸 수 있던 것 → 가드 + p_ini를 행에 저장
+- F11 halfcell LLI 식은 전 범위 테이블 전제 → coverage 검사, sim 테이블이면 예외
+- F9  dqdv scale이 타깃 격자 의존 → reference 자기 격자로 계산 (조건 불변)
+- F6  expanded β 하한 -0.40이 고LLI 코너 참값(-0.36)과 겹침 → -0.60
+- F16 _minimize_until_stable의 (p, J) 불일치 가능성 → best_x 갱신 조건 수정
+- F17 n_eval이 best restart만 집계 → 전체 합
+- F18 fit resume이 목적함수 구성 변경을 감지 못 함 → 실행 서명 포함 완료 파일
+- F19 전부 resume-완료 시 crash → 가드
+- F1  α=1 소프트 벽(창 부족 벌점의 파일업)은 bound_active에 안 잡힘 → alpha_wall_* 열 추가
+- F4  restart 원본 미저장 → restarts_json 열 (사후 재집계용)
+- F20 테스트 공백 → halfcell 항등/스케일 불변, F16 회귀, dqdv 해석 검증 추가 (총 85개)
+
+수정 후 Case 1 정확도 (coarse 95, clean): LAM_PE 0.018 / LAM_NE 0.018 / LLI 0.0088
+— F9(스케일)·F2(기준 선택) 수정만으로 이전(0.054/0.126/0.039) 대비 대폭 개선.
+이제 Case 1(논문 기준)과 Case 2(유도식) 모두 LLI ~0.01 수준으로 수렴.
+
+해석 규칙 (Phase 5·6에서 반드시 적용):
+- F1  grid 기준의 α_true<1 조건은 "원리적 복원불가군"으로 분리 집계 (alpha_wall_* 사용)
+- F4  degeneracy 집계는 n_restarts로 조건화 (adaptive 조기 종료 때문), restarts_json으로 노이즈 환산 임계 재집계
+- F5  degenerate 판정은 clean-fit 방법 바이어스(LAM_PE ~2.9%p)를 베이스라인으로 차감
+- F10 noisy dQ/dV의 피크 가중은 스퓨리어스 피크로 희석될 수 있음 — "피크 가중 실패"로 오독 금지
+- F14 격자에 "저LLI + 고LAM_PE" 코너가 없음(완방 프레임 guard 산물) — 22p 결론 서술 시 명시
+- F15 (PLAUSIBLE) reference만 완충 시작이라 lli→0 극한 공통 오프셋 가능 — sanity 조건 1개로 정량화 예정

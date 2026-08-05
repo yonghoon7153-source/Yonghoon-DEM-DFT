@@ -230,3 +230,61 @@ def test_derived_lli_recovers_truth_on_synthetic(cfg):
         assert got["lam_pe"] == pytest.approx(lam_pe, abs=1e-12)
         assert got["lam_ne"] == pytest.approx(lam_ne, abs=1e-12)
         assert got["lli"] == pytest.approx(lli, abs=1e-12)
+
+
+# ---------------------------------------------------------------- 리뷰 반영 회귀
+
+def test_halfcell_lli_identity_and_scale_invariance():
+    """to_modes_halfcell: p=p_ini·(참조상태)면 LAM=LLI=0, 그리고 테이블 정규화
+    상수가 α·β 전체에 곱해져도 결과 불변 (리뷰 F20 공백 보강)."""
+    from src.fitting import to_modes_halfcell
+
+    p_ini = [1.4652, -0.3954, 1.0289, -0.0255]     # 실측 ini
+    got = to_modes_halfcell(p_ini, p_ini, r=1.0)
+    assert got["lam_pe"] == pytest.approx(0.0, abs=1e-12)
+    assert got["lam_ne"] == pytest.approx(0.0, abs=1e-12)
+    assert got["lli"] == pytest.approx(0.0, abs=1e-12)
+
+    # 열화 상태 하나 (r<1) — 스케일 c를 α·β 모두에 곱해도 LAM·LLI 불변
+    p = [1.30, -0.30, 1.10, -0.10]
+    r = 0.85
+    base = to_modes_halfcell(p, p_ini, r)
+    c = 1.7
+    scaled = to_modes_halfcell([v * c for v in p], [v * c for v in p_ini], r)
+    for k in ("lam_pe", "lam_ne", "lli"):
+        assert scaled[k] == pytest.approx(base[k], rel=1e-12), k
+
+
+def test_minimize_until_stable_returns_consistent_pair():
+    """리뷰 F16: 반환된 p에서 J를 다시 평가하면 반환 J와 일치해야 한다."""
+    from src.fitting import _minimize_until_stable
+
+    def J(p):
+        return float((p[0] - 0.3) ** 2 + (p[1] + 0.2) ** 2)
+
+    x, f, ok, nfev = _minimize_until_stable(J, [0.9, 0.9],
+                                            [(-1, 1), (-1, 1)], "Nelder-Mead")
+    assert J(x) == pytest.approx(f, abs=1e-12)
+
+
+def test_alpha_wall_flag_semantics():
+    """리뷰 F1: α=1 소프트 벽은 box bound가 아니라 별도 플래그로 잡아야 한다."""
+    from src.fitting import _bound_active
+
+    # α=1.0은 expanded bound(0.7~1.8) 내부 → bound_active는 False여야 정상
+    assert _bound_active([1.0, 0.0, 1.0, 0.0],
+                         [0.7, -0.6, 0.7, -0.6], [1.8, 0.4, 1.8, 0.4]) == \
+        (False, False, False, False)
+    # 벽 감지는 fits 행의 alpha_wall_* 열이 담당 (fitting._fit_one에서 |α−1|<1e-3)
+
+
+def test_dqdv_linear_voltage_gives_constant_dqdv(obj_cfg):
+    """리뷰 F20: 해석적 검증 — V가 x에 선형이면 dQ/dV는 상수(=1/기울기)."""
+    from src.objective import dqdv_on_grid
+
+    x = np.linspace(0, 1, 300)
+    v = 4.2 - 1.5 * x                       # dV/dQ = -1.5 → dQ/dV = -1/1.5
+    v_grid = np.linspace(2.8, 4.1, 200)
+    out = dqdv_on_grid(x, v, v_grid, window=21, polyorder=3)
+    inner = out[np.isfinite(out)][10:-10]   # 경계 몇 점 제외
+    np.testing.assert_allclose(inner, -1.0 / 1.5, rtol=5e-3)
