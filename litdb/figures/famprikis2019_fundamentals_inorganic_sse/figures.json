@@ -1,0 +1,163 @@
+{
+ "slug": "famprikis2019_fundamentals_inorganic_sse",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "79dcf62a-56._Fundamentals_of_inorganic_solidstate_electrolytes_for_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | Schematic representation of a bipolar-stacked solid-state battery cell. Insets are magnified sections that highlight the three main challenges facing solid-state batteries with metal anodes: (1) inhomogeneous metal deposition, (2) formation of blocking interface and (3) contact loss on electrochemical cycling. The relative scale of the battery components is indicative of typical laboratory-scale cells. For commercial cells, inactive volume (solid electrolyte, current collectors, porosity) should be minimized and the electrodes should be balanced (chemically and mechanically14).",
+   "bbox": [
+    36.5,
+    64.6,
+    297.7,
+    225.5
+   ],
+   "w": 1089,
+   "h": 671,
+   "dpi": 300,
+   "src": "79dcf62a-56._Fundamentals_of_inorganic_solidstate_electrolytes_for_batteries.pdf",
+   "blank": 0.606
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 | Multiscale ion transport and major associated techniques. Arrows denote the transport of mobile cations in the solid electrolyte (SE) framework (in green). The major descriptors relating to ion transport are highlighted at each length scale: energy (EHop) and frequency of hops (νHop) at the atomic scale; the conductivities (σi) and area-specific resistances (ASRi) of defining features at larger scales; culminating in total device impedance, ZSSB. The techniques utilized to directly probe ion transport (that is, quantitatively determine the above descriptors; in dark blue) and complementary methods used to aid interpretation (in light blue) are placed in their associated length scales. migration (ΔSm), the jump distance (α0) and the attempt frequency (ν0), are related as follows: Anion frameworks that are mechanically softer, such as sulfides or selenides, have been thought to ai",
+   "bbox": [
+    36.5,
+    45.5,
+    560.9,
+    321.7
+   ],
+   "w": 2186,
+   "h": 1152,
+   "dpi": 300,
+   "src": "79dcf62a-56._Fundamentals_of_inorganic_solidstate_electrolytes_for_batteries.pdf",
+   "blank": 0.622
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 | Cation migration mechanisms and associated energy profiles. a, The arrows indicate three typical migration mechanisms: vacancy, direct interstitial and correlated (interstitialcy) involving a single or multiple sites (blue and red, respectively). Circles represent cations in stable (green) and metastable (orange) sites of a model crystal lattice. Dotted lines represent the transition state for cation hopping as imposed by the anionic framework (not shown explicitly). b,c, The energy profiles associated with cation migration via direct vacancy or interstitial hopping (b) and correlated hopping (c) are shown with their associated hopping energies, Em, hopping distances α0 and hopping frequencies, ν0.",
+   "bbox": [
+    5.0,
+    183.7,
+    323.5,
+    460.3
+   ],
+   "w": 1329,
+   "h": 1153,
+   "dpi": 300,
+   "src": "79dcf62a-56._Fundamentals_of_inorganic_solidstate_electrolytes_for_batteries.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 | Evolution of chemical potential across the solid electrolyte in contact with an anode and a cathode. The y axes denote the voltage (V, increasing) and the chemical potential (μ, decreasing) (see equation (4)) of the mobile cation as a function of the solid electrolyte (SE) thickness on the x axis. The evolution of the chemical potential leads to a concentration of the mobile cation close to the anode and dilution close to the cathode. These concentration gradients can directly lead to decomposition of the solid electrolyte and/or reaction with the electrodes. This phenomenon exemplified here for Li can also apply to Na and Mg.",
+   "bbox": [
+    36.5,
+    72.0,
+    295.1,
+    266.0
+   ],
+   "w": 1078,
+   "h": 809,
+   "dpi": 300,
+   "src": "79dcf62a-56._Fundamentals_of_inorganic_solidstate_electrolytes_for_batteries.pdf",
+   "blank": 0.324
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 | Reaction possibilities and functional scenarios for solid electrolyte/electrode interfaces in solid-state batteries. a,b, Illustration of the parasitic (1) redox, (2) chemical and (3) electrochemical reactions that can take place depending on their respective free energy, ΔG (a), imposing the need for interface (xfc) engineering of functional batteries through (1) intrinsic stability, (2) kinetically stabilized decomposition and/or (3) artificial protection strategies (b). Effective interfaces will allow Li+ diffusion and prevent electrons or other atoms/ions from interdiffusing. SE and E denote atomic species in the solid electrolyte and electrode materials, respectively. x, y and n are stoichiometric coefficients and n can be positive or negative (reduction or oxidation, respectively).",
+   "bbox": [
+    36.5,
+    66.5,
+    551.2,
+    203.3
+   ],
+   "w": 2145,
+   "h": 571,
+   "dpi": 300,
+   "src": "79dcf62a-56._Fundamentals_of_inorganic_solidstate_electrolytes_for_batteries.pdf",
+   "blank": 0.731
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 10,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 | Mechanical degradation of a solid-state battery. The mechanical properties (Young’s and shear moduli, E and G, respectively, fracture toughness KIc) of the solid electrolyte (SE) and electrode (E) dictate the response of the system to the strain (εelectrochemical) during cycling. The adhesion of different solid phases in the composite can be quantified through the adhesion strength σadh and interfacial energy γxfc.",
+   "bbox": [
+    36.5,
+    47.1,
+    293.9,
+    228.0
+   ],
+   "w": 1073,
+   "h": 754,
+   "dpi": 300,
+   "src": "79dcf62a-56._Fundamentals_of_inorganic_solidstate_electrolytes_for_batteries.pdf",
+   "blank": 0.297
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 11,
+   "file": "fig_7.png",
+   "caption": "Fig. 7 | Simplified flowchart of available methods for the processing of solid electrolytes for solid-state batteries. From powder reagents to solid- state batteries, the solid electrolyte needs to be synthesized, densified and integrated into the device. These steps can utilize interchangeably either dry (blue) and/or wet (green) processing approaches. Auxiliary methods (yellow) such as mechanochemistry and spark-plasma sintering can also be utilized in specific parts of the process flow. aFor example, sol-gel70, spray drying95, dip coating122 and so on. bFor example, tape casting, screen printing and so on139. to achieve the desired microstructure55,116. Softer materials such as sulfides and borohydrides might have a relative advantage against the typically refractory oxides due to their ability to be densified at low (even ambient) temperatures. The method of reference is spark plasma",
+   "bbox": [
+    36.5,
+    72.1,
+    299.8,
+    413.2
+   ],
+   "w": 1098,
+   "h": 1422,
+   "dpi": 300,
+   "src": "79dcf62a-56._Fundamentals_of_inorganic_solidstate_electrolytes_for_batteries.pdf",
+   "blank": 0.175
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 8,
+   "file": "tab_1.png",
+   "caption": "Table 1 | Experimental and computational techniques that have been employed to characterize solid electrolyte/electrode interfaces for solid-state batteries Technique (sub-techniques) Observables/descriptors Operandoa Sub-micron spatial resolutionb Representative examples Electrochemistry Impedance spectroscopy Macroscopic resistances, capacitances, permittivity X Refs. 69,70,95 Electrochemical (de-) lithiation/sodiation Effective stability window Refs. 83,99 Full-cell cycling Capacity fade, overpotential X Refs. 7,15 Spectroscopy Nuclear magnetic resonance spectroscopy (pulse field gradient, 2D correlations) Local structure, diffusivity and activation energy, charge transfer X Refs. 67,129 X-ray photoelectron spectroscopy Composition, local structure, oxidation states X Refs. 64,88,94,130 X-ray absorption spectroscopy Local structure, oxidation states X Refs. 101,131 Raman spectroscopy ",
+   "bbox": [
+    38.8,
+    47.4,
+    556.5,
+    438.8
+   ],
+   "w": 2158,
+   "h": 1632,
+   "dpi": 300,
+   "src": "79dcf62a-56._Fundamentals_of_inorganic_solidstate_electrolytes_for_batteries.pdf",
+   "blank": 0.049
+  }
+ ]
+}
