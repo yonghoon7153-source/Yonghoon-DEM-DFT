@@ -1,6 +1,6 @@
 # Fundamentals of inorganic solid-state electrolytes for batteries — Famprikis / Canepa / Dawson / Islam* / Masquelier* (Nature Materials 2019, 18, 1278–1291)
 
-> slug `famprikis2019_fundamentals_inorganic_sse` · DOI `10.1038/s41563-019-0431-3` · type `review (자체 계산·실험 0)` · PDF `79dcf62a-56._Fundamentals_of_inorganic_solidstate_electrolytes_for_batteries.pdf` · digested `2026-08-05` · status ✅
+> slug `famprikis2019_fundamentals_inorganic_sse` · DOI `10.1038/s41563-019-0431-3` · type `review (자체 계산·실험 0)` · PDF `litdb/inbox/56. Fundamentals of inorganic solid-state electrolytes for batteries.pdf` (최초 digest 시 임시본 `79dcf62a-56._Fundamentals_…pdf` — 동일 파일) · digested `2026-08-05` · **재투입 검증 `2026-08-06`**(inbox #56 · 분류 DFT — §17) · status ✅
 > elements: Li, Na, Mg, H, B, N, O, F, Si, P, S, Cl, Ge, Br, I, Al, Ti, Zr, Ag, Sn, La, In, Co, Ni, Mn
 > methods: DFT, AIMD, MD, MLIP, ESW, XPS, Raman, elastic
 > **저자**: Theodosios Famprikis (Amiens LRCS/UPJV + Bath), Pieremanuele Canepa (Bath → NUS), James A. Dawson (Bath/Newcastle), **M. Saiful Islam\*** (Bath), **Christian Masquelier\*** (Amiens/RS2E) · 본문 11 pp · 그림 7 + 표 1 + Box 1 · refs 151 · Received 2018-10-31 / Published 2019-08-19
@@ -154,8 +154,22 @@ Conclusions: 물질탐색 · 계면 캐릭터라이제이션 · **공정/역학 
 **`Fig. 2` 를 실제로 본 내용** (figure-read):
 - 스케일 사다리 5칸 — **Atomic (Å)** → **Micro (nm)** → **Macro (µm)** → **Device (mm)** → **Solid-state battery (cm)**.
 - 각 칸의 서술자: 원자 = `E_Hop`, `ν_Hop` (팔면체/사면체 다면체가 그려진 결정격자); 마이크로 = `σ_crystal`(줄무늬 = 결정립 내부), `σ_GBi`(빨간 입계선), `σ_amorphous`(얼룩 = 비정질 영역); 매크로 = `σ_meso` (다결정 + **노란 영역 = 기공/2차상**, 균열 같은 선이 하나 보임); 디바이스 = `ASR charge transfer`, **`Contact area`**, `ASR xface` (파란 양극 입자가 연두 SE 매트릭스에 박혀 있고, **검은 톱니 = 공극/접촉상실** 에 빨간 ✗ 로 막힌 경로 표시); 셀 = `σ_macro`, `Z_SSB`.
-- 아래 기법 바(figure-read, 스팬은 그림에서만 읽힘): **NMR**(Å~nm), **Molecular dynamics**(Å~nm), **Impedance spectroscopy**(µm~cm), **Continuum modelling**(nm~cm), **Diffraction/PDF**(nm~mm), **Electron microscopy**(Å~mm), **Vibrational spectroscopy**(Å~nm).
-- ★ **여기가 우리 포지셔닝의 핵심**: 아래쪽 방법 바에 **입자 스케일의 이산(discrete) 역학 방법이 없다.** MD 는 Å–nm 에서 끝나고, 그 위는 곧바로 **continuum** 으로 점프한다. **`Contact area` 라는 서술자를 그림 한가운데 그려 놓고, 그것을 계산하는 방법은 사다리에 없다.** DEM 이 정확히 그 빈칸이다 → §6, §14④.
+- 아래 기법 바 **7개** — 스팬은 그림에서만 읽히므로 `fig_2.png`(폭 2186 px) 위에서 **픽셀로 실측**했다(2026-08-06 재검증). 스케일 앵커 px: Atomic(Å)≈300 · Micro(nm)≈700 · Macro(µm)≈1027 · Device(mm)≈1465 · SSB(cm)≈1913.
+
+  | 기법 | 바 스팬 (px) | 실제 스케일 범위 | 색 = 분류 |
+  |---|---|---|---|
+  | Nuclear magnetic resonance | 85–913 | Å → nm(µm 직전) | **진파랑 = 직접 프로브** |
+  | **Molecular dynamics** | 84–739 | Å → nm | **진파랑 = 직접 프로브** |
+  | Impedance spectroscopy | 1058–2084 | µm → cm | **진파랑 = 직접 프로브** |
+  | **Continuum modelling** | 836–2085 | nm(µm 직전) → cm | **진파랑 = 직접 프로브** |
+  | Diffraction / PDF analysis | 310–1894 | **Å → cm (사다리 전 구간)** | 연파랑 = 보조 |
+  | Electron microscopy | 310–1485 | Å → mm | 연파랑 = 보조 |
+  | Vibrational spectroscopy | 86–1066 | **Å → µm** | 연파랑 = 보조 |
+
+  ⚠ **초판 digest 정정 2건**: Diffraction/PDF 를 "nm~mm" 로, Vibrational spectroscopy 를 "Å~nm" 로 적었으나 **둘 다 과소**였다 (각각 Å→cm, Å→µm).
+- ★ **캡션이 색으로 나누는 두 등급을 초판이 놓쳤다** — *"techniques utilized to **directly probe** ion transport (that is, **quantitatively determine the above descriptors**; in **dark blue**) and **complementary** methods used to aid interpretation (in **light blue**)"*. 즉 리뷰는 **Molecular dynamics 를 NMR·임피던스와 같은 등급의 "이온수송 직접·정량 프로브"로 분류**한다(회절·전자현미경·진동분광은 보조). **→ 우리 MLIP-MD 라인을 "보조 계산"이 아니라 *수송 서술자를 정량 산출하는 1차 기법*으로 자리매김할 수 있는 리뷰급 근거.** 마찬가지로 **continuum modelling 도 직접 프로브** 등급이다.
+- ★ **우리 포지셔닝(정정된 형태)**: 초판은 *"µm 칸에 방법 바가 없다"* 고 썼는데 **이는 그림과 다르다** — µm(px 1027)을 지나는 바가 **4개**(Continuum · Diffraction/PDF · Electron microscopy · Vibrational spectroscopy)다. NMR 이 913 에서 끝나고 임피던스가 1058 에서 시작해 **첫 줄에만 µm 부근 흰 틈**이 생기는데, 초판은 그 틈을 사다리 전체의 공백으로 오독했다.
+  **살아남는(그리고 더 강한) 주장**: 7개 바는 **전부 이온수송·구조 프로브**다. **역학량(강성·접착·소성·파괴)을 다루는 방법도, 접촉 기하를 *산출*하는 방법도 사다리에 단 하나도 없다** — 스케일이 아니라 **물리 축이 통째로 빠져 있다**. 리뷰는 `Contact area` 를 Device(mm) 칸의 서술자로 그려 놓고, 그것을 **입력으로 받는** continuum 만 사다리에 넣었지 **만들어내는** 방법은 넣지 않았다. DEM 이 정확히 그 자리다 → §6, §14④.
 
 #### (a) Atomic scale (Å) — `Fig. 3`
 - 이동 이온은 **음이온 골격**(O²⁻·S²⁻ 또는 폴리음이온)이 만드는 사이트/경로를 따라 확산. 사이트 에너지는 **배위환경** 이 결정(결정에서는 보통 사면체/팔면체).
@@ -164,7 +178,10 @@ Conclusions: 물질탐색 · 계면 캐릭터라이제이션 · **공정/역학 
 - **Eq.(1)** `σ = q n u = σ₀ T^m e^{−E_a/k_BT}`, m ≈ −1. **E_a 는 결함 형성에너지 E_f 와 이동장벽 E_m 의 합** (외인성 영역에서는 E_f 가 사라지고 E_m 만 남는다).
 - **Eq.(2)** `σ₀ = z (n q²/k_B) e^{ΔS_m/k_B} α₀² ν₀` — 기하인자 z(≤1), 이동 엔트로피 ΔS_m, hop 거리 α₀, 시도 진동수 ν₀.
 - **`Fig. 3b`** (figure-read): 이중 우물 + 전이상태, `E_m` 화살표, `α₀` hop 거리, 우물 곡률로 `ν₀` 를 표현 — **점선 곡선 3개로 곡률(=ν₀)이 재료마다 다름** 을 시각화. 축에 눈금 없음(개념도).
-- **`Fig. 3c`** (figure-read): 준안정(침입형) 사이트 – 안정 사이트 – 준안정 사이트의 3중 우물. **`E_m^interstitialcy` 를 나타내는 빨간 화살표가 직접 hop 의 노란 화살표보다 눈에 띄게 짧다** = 협동 기구가 장벽을 낮춘다. 그리고 **`α₀' < α₀`** — 협동 hop 은 이온 하나당 유효 이동거리도 짧다. (본문은 "reduced migration energy" 만 말하고 α₀' 단축은 그림에서만 읽힌다.)
+- **`Fig. 3c`** (figure-read, 2026-08-06 확대 재확인): 준안정(침입형) – 안정 – 준안정 사이트의 3중 우물. 초록 이온이 왼쪽 준안정 사이트에서 안정 사이트로 들어가며 거기 있던 주황 이온을 오른쪽 준안정 사이트로 밀어낸다(협동 1회 사건).
+  - **장벽**: `E_m^interstitialcy` 빨간 화살표는 **준안정 사이트 바닥 → 좌측 장벽 top**, 오른쪽 노란 화살표는 **안정 사이트 바닥 → 우측 장벽 top**. 노란 쪽이 **약 2배 길다** ⇒ 협동 기구가 장벽을 낮춘다. ⚠ **초판 표현 정정**: 노란 화살표를 "직접 hop" 이라고 불렀는데, 이것은 **같은 협동 사건 안에서 *안정 사이트에서 출발할 때* 보이는 장벽**(= `Fig. 3b` 의 `E_m` 에 해당하는 기준선)이지 별도의 직접-hop 곡선이 아니다. 비교 자체는 유효하다.
+  - **거리**: `α₀` 는 **준안정→준안정 전 구간**(= 침입형 결함/전하가 옮겨간 거리), `α₀'` 는 **개별 이온의 실제 변위**(준안정→안정, ≈0.48 α₀). 둘 다 **그림에 명시 라벨**로 있고 본문에는 없다.
+  - ★ **해석 주의(2026-08-06 정정)**: Eq.(2) 의 `α₀²` 에 들어가는 것은 **전하가 옮겨간 거리 = 긴 쪽 α₀** 다. 개별 이온이 α₀' 만 움직인다고 해서 σ₀ 가 그만큼 깎이지 않는다. **즉 이 그림대로면 협동 기구는 "장벽↓ + hop 거리 유지" 로 순이득**이다 — 초판이 `comparison_vs_ours.md` 에 적었던 "α₀² 가 줄어 상쇄된다" 는 **α₀ 를 잘못 집은 것이라 철회**한다(§17-⑥).
 - **연질 골격(sulfide/selenide)의 두 경쟁 효과** (중요): ① 낮은 포논 진동수 → **E_a ↓** (도움), ② 동시에 **ν₀ ↓ 및 ΔS_m ↓ → Eq.(2) 의 prefactor σ₀ ↓** (해로움). Kraft(ref 29)는 **시도 진동수 ↔ 음속 유래 Debye 진동수** 상관을, Muy(ref 31)는 **E_a ↔ 포논 밴드센터**(비탄성 중성자산란) 상관을 보였다.
 - **Paddle-wheel**: SO₄²⁻·PO₄³⁻ 등 폴리음이온의 회전이 이온이동을 돕는다는 가설. 계산이 PS₄³⁻(ref 32)·BH₄⁻(ref 33)·OH⁻ 쌍극자(ref 34)의 회전자유도와 σ 의 상관을 재부각. **QENS 직접 증거**는 LiCB₁₁H₁₂·NaCB₁₁H₁₂ 에서(refs 35,36).
 - **Eq.(3) Nernst–Einstein**: `D = (u/q)k_BT = σ/(nq²) · H_R k_BT`, **H_R = Haven ratio**. ★ 리뷰가 명시적으로 유보를 단다: *"there is recent debate about the validity of equation (3) in the case of solid electrolytes where the migration of multiple charge carriers is highly correlated and/or in solid electrolytes that exhibit anisotropic migration pathways"* (ref 39, Marcolongo & Marzari). **→ 우리 CLAUDE.md 의 "σ 절대값 인용 금지, NE Haven=1" 규율의 문헌 근거** (§11).
@@ -194,7 +211,9 @@ Conclusions: 물질탐색 · 계면 캐릭터라이제이션 · **공정/역학 
 - **부피분율 창**: 에너지밀도 + 전자 percolation → SE **< 50 %**; 이온 percolation 한계 회피 → SE **> 25 %** (둘 다 ref 68).
 - **입도**: *"the above thresholds are also a function of **particle size (distribution)** in the composites and **smaller** electrode (and electrolyte) particle sizes promote **both lower electronic and ionic percolation thresholds**, respectively, and high active area of ionic contact available to charge transfer"*(refs 68,74,76).
 - **공간전하** (`Fig. 4`, Eq.(4)): `V = −μ_Li/(qF)`. 계면에서 μ_Li 가 **수 mV·nm⁻¹** 로 급변 → **nm 급 공간전하층**. 고체는 액체보다 **유전율이 낮아 bulk polarization 을 못 하므로** 이 효과가 더 커질 수 있다.
-- **`Fig. 4` figure-read**: SE 내부의 μ_Li 는 **평탄한 plateau**, 급경사는 양 계면에만. 초록 띠(= 전해질 안정창) 안에 **SE bulk μ_Li 는 들어 있고, 음극·양극의 μ_Li 는 띠 밖**(아래·위)에 있다 → **분해 구동력은 bulk 가 아니라 계면에서 생긴다**는 그림. 하단 격자 만화: 음극쪽 = 사이트 대부분 채워짐(**공공 고갈 / 침입형 축적 → 양의 공간전하**), 양극쪽 = 대부분 비어 있음(**공공 축적 → 음의 공간전하**). x축은 "Solid electrolyte thickness (nm)", 눈금 없음.
+- **`Fig. 4` figure-read**: SE 내부의 μ_Li 는 **평탄한 plateau**, 급경사는 양 계면에만. 초록 띠(= `Electrolyte stability window`, 양방향 화살표로 폭 표시) 안에 **SE bulk μ_Li 는 들어 있고, 음극(`V_anode`)·양극의 μ_Li 는 띠 밖**(아래·위)에 있다 → **분해 구동력은 bulk 가 아니라 계면에서 생긴다**는 그림. 하단 격자 만화: 음극쪽 = 사이트 대부분 채워짐(**공공 고갈 / 침입형 축적 → 양의 공간전하**), 양극쪽 = 대부분 비어 있음(**공공 축적 → 음의 공간전하**). x축은 "Solid electrolyte thickness (nm)", 눈금 없음.
+  - ★ **초판 누락(2026-08-06 보강)**: 그림의 논지를 짊어지는 라벨이 **물음표 두 개**다 — 음극쪽 띠 아래 `Reduction to Li-rich interphase?`, 양극쪽 띠 위 `Oxidation to Li-poor interphase?`. **띠를 벗어난 구간에서 계면상이 생기느냐를 리뷰가 단정하지 않고 물음으로 남긴 것** — 우리 ESW onset 과 실험 CV 의 격차를 "속도론적 여유" 로 설명할 때 이 물음표가 그대로 근거가 된다.
+  - ⚠ **크롭 잘림**: `fig_2.png` 와 달리 `fig_4.png` 는 **상단이 잘려** `μ_Li,cathode` 와 `Oxidation to Li-poor interphase?` 가 부분적으로만 보인다(위 내용은 PDF 원본 페이지로 확인).
 
 ### 5.3 Electrochemical stability (`Fig. 5`, `Table 1`)
 
@@ -209,12 +228,19 @@ Conclusions: 물질탐색 · 계면 캐릭터라이제이션 · **공정/역학 
 - **환원 한계 = 양이온이 결정**: (비이동) 양이온의 **전자친화도**. 단, 전자친화도는 **구조·결합 특성에 좌우** — *"a phosphorus atom will be reduced more easily if **weakly bonded to sulfur** compared with when **strongly bonded to oxygen**, as exemplified by the increased stability of Li₃PO₄ compared with Li₃PS₄"*(ref 65). 나아가 **환원 안정성 ↔ 폴리음이온 단위의 결합 강성(bond stiffness)** 이 LISICON 계열에서 실험적으로 상관됨(ref 31, Muy).
   **→ 우리 O-도핑(LPSOCl)·B₂O₃ 라인의 물리가 여기 그대로 있다**: O 가 P 결합을 강화 → 환원 저항 ↑.
 - 금속류 함유 SE(Ti in NASICON/perovskite, Ge in NASICON/LISICON/LGPS)는 저전압에서 **혼합전도 계면상(MCI)** 을 만들기 쉬워 위험.
-- **`Fig. 5b` 계면 3시나리오** (figure-read: 오른쪽 3패널에 `σ_xfc,ion ↑` / `σ_xfc,e⁻ ↓` 화살표가 붙어 있다):
+- **`Fig. 5b` 계면 3시나리오** (figure-read, 2026-08-06 확대 재확인):
+  - ⚠ **초판 정정**: `σ_xfc,ion ↑` / `σ_xfc,e⁻ ↓` 화살표는 **3패널 전부가 아니라 (2) Kinetic stabilization·(3) Artificial protection 두 패널에만** 붙어 있다. (1) Intrinsic stability 에는 `ΔG > 0` 만 있고 σ 화살표가 없다 — 반응이 없으니 계면상 전도도를 논할 필요가 없다는 뜻이라 **그림이 맞다**.
+  - ★★ **논문 자체의 오류를 하나 찾았다** — `Fig. 5b` 는 **(2) Kinetic stabilization 에도 `ΔG > 0` 이라고 인쇄**해 놓았다. 그런데 **같은 그림의 캡션**은 *"(2) **kinetically stabilized decomposition**"* 이라 하고, **본문**은 *"**Given that reactivity is favoured**, the kinetics and consequently the extent of reaction are governed by the interfacial transport properties. If either is impeded, the reaction is blocked and the interface becomes kinetically stabilized"* 라고 한다. 즉 시나리오 (2)는 **분해가 열역학적으로 유리한(ΔG < 0) 채로 속도론이 막는 경우**이고, `ΔG > 0` 이면 그건 정의상 (1) Intrinsic stability 다. **⇒ `Fig. 5b`(2) 의 부호는 `ΔG < 0` 이어야 한다.** 인용할 때 그림을 그대로 옮기면 틀린다 (LiPON·garnet 예시도 전부 "분해가 일어나되 멈춘다" 쪽이다).
+  - 패널 그림 자체는 일관된다: (1) 깨끗한 계면으로 Li⁺ 만 통과 / (2) 갈색 계면상이 생겼고 **e⁻ 는 빨간 ✗ 로 차단, Li⁺ 는 통과** / (3) 파란 인공 코팅층이 **e⁻ 차단, Li⁺ 통과**.
+  - 세 시나리오의 내용:
   1. **본질적 안정 (ΔG > 0)** — 이상적이나 금속 전극과는 **거의 없다**. 예외: **Na-β-Al₂O₃ vs Na 금속**(ref 91). 논쟁 사례: 도핑 LLZO 가 Li 접촉에서 **약간 리튬화 → cubic→tetragonal 상전이**; tetragonal 이 σ 는 낮지만 **nm 급 필름이라 전도를 거의 안 막는다 = 이상적 계면상**(ref 92).
   2. **속도론적 안정화** — 분해는 하지만 계면상이 **이온전도 O / 전자절연 O** 이면 유한두께에서 멈춘다. **LiPON** 이 교과서 예: Li₃PO₄ + Li₃N 으로 분해되어 **nm 급·전기화학적 안정·이온전도성** 계면상 형성. **최악은 MCI** — 전자·이온 둘 다 통해 무한 성장 → 저항 폭증·금속음극 단락.
   3. **인공 보호** — 코팅(Li₄Ti₅O₁₂ ref 95, LiNb₁₋ₓTaₓO₃ refs 7,9, Li₁₋ₓB₁₋ₓCₓO₃ ref 96) — 주로 산화물, 주로 **양극쪽 산화 보호**. 기능 해석 두 갈래: **공간전하 완화** vs **전자·비-Li 원자 확산 차단**. 음극쪽 인공보호는 Li 는 시도되나 Na·Mg 는 **부족**. **dual-electrolyte**(환원 안정 SE 는 음극, 산화 안정 SE 는 양극) 도 대안.
   - 부수: SE 는 전극뿐 아니라 **도전재(카본)·집전체** 와도 redox 분해할 수 있다 → 코팅 전략을 **첨가제·집전체·전해질 입자 자체** 로 확장 필요.
-- **`Table 1`** = 계면 캐릭터라이제이션 기법 카탈로그(기법 / 관측량 / **operando 가능?** / **서브마이크론 분해능?** / 대표문헌). 계산은 두 줄뿐: **"Phase diagrams from first principles"**(조성·열역학 안정창, NA/NA, refs 65,80) 과 **"Molecular dynamics"**(원자구조·반응기구·확산도, NA/**X**, refs 84,138).
+- **`Table 1`** = 계면 캐릭터라이제이션 기법 카탈로그(기법 / 관측량 / **operando 가능?** / **서브마이크론 분해능?** / 대표문헌). **표 안에서 `X` 는 "해당됨" 체크 표시**다(빈칸 = 해당 없음, `NA` = 적용 불가). 계산은 두 줄뿐:
+  - **"Phase diagrams from first principles"** — 조성·열역학 안정창 / operando `NA` / 서브마이크론 **빈칸** / refs 65,80.
+  - **"Molecular dynamics"** — 원자구조·반응기구·확산도 / operando `NA` / **서브마이크론 `X` = 해당됨** / refs 84,138 (ref 138 = Cheng/Goddard, Li 전극/Li₆PS₅Cl 계면 reactive dynamics).
+  - ⚠ 초판이 이 `X` 를 §5.3 에서는 "아니오", §9 에서는 "예" 로 엇갈리게 적었다 — **"예"가 맞다**(2026-08-06 정정). `Fig. 2` 가 MD 를 "직접 프로브" 로 분류한 것과도 일관된다.
 - 계산의 한계 2가지를 리뷰가 못박는다: **(1) 상태도는 이미 아는 결정상 지식에 의존**(모르는 상은 못 찾음), **(2) 속도론적 안정화 효과를 명시적으로 못 담는다.**
 
 ### 5.4 Mechanics ★★ (`Fig. 6`) — 사용자 축 (2)
@@ -234,7 +260,8 @@ Conclusions: 물질탐색 · 계면 캐릭터라이제이션 · **공정/역학 
    그리고 결론:
    > *"DFT calculations can provide estimations for the **elastic moduli** of pristine materials, whose atomic structures are known(**ref 110 = Deng 2016**). However, the **fracture toughness greatly depends on the microstructure and will need to be determined experimentally.**"*
    **⇒ 이 리뷰의 판정: K_Ic 는 DFT 가 줄 수 없는 양이다.** 우리 repo 에 K_Ic 가 없는 것은 **누락이 아니라 방법론적 경계** 라는 뜻 — 다만 그 경계를 **넘는 도구가 DEM/FEM/CZM** 이라는 것도 같이 따라온다(§6).
-6. **`Fig. 6` figure-read**: 육각 결정립으로 그린 SE 안에 **주황 지그재그 균열**이 뻗고 그 위에 `Fracture / K_Ic` 라벨 + 양방향 화살표(전파 방향). 균열을 가로지르려는 `Li⁺` 는 **빨간 ✗** 로 막힘 = **균열 = 이온 차단**. SE 에는 `E_SE, G_SE`, 전극(파란 곡면)에는 `E_E, G_E`. 왼쪽 아래 = **Adhesion** 영역에 `σ_adh, γ_xfc` 와 서로 당기는 화살표. 오른쪽 아래 = **Delamination** 영역에 `ε_electrochemical` 와 벌어진 갈색 계면선, 여기서도 Li⁺ 가 ✗. **눈금·수치는 없다.**
+6. **`Fig. 6` figure-read**: 육각 결정립으로 그린 SE 안에 **주황 지그재그 균열**이 뻗고 그 위에 `Fracture / K_Ic` 라벨 + 양방향 화살표(전파 방향). 균열을 가로지르려는 `Li⁺` 는 **빨간 ✗** 로 막힘 = **균열 = 이온 차단**. SE 에는 `E_SE, G_SE`, 전극(파란 곡면)에는 `E_E, G_E`. 왼쪽 아래 = **Adhesion** 영역에 `σ_adh, γ_xfc` 와 서로 당기는 작은 화살표들. 오른쪽 아래 = **Delamination** 영역에 `ε_electrochemical` 와 벌어진 갈색 계면선, 여기서도 Li⁺ 가 ✗. **눈금·수치는 없다.**
+   - ★ **초판 누락(2026-08-06 보강)** — 이 그림에 `Li⁺` 가 **셋** 그려져 있고 **✗ 가 붙은 것은 둘뿐**이다: 균열을 건너려는 것(✗), 박리면을 건너려는 것(✗), 그리고 **Adhesion 영역에서 잘 붙은 계면을 ✗ 없이 통과하는 것**. 즉 그림 한 장이 **"역학적 온전함(접착 유지) = 이온 전달 유지 / 파괴·박리 = 이온 차단"** 을 3항 대비로 진술한다. 본문의 *"the direct link between **mechanical strength and effective ionic transport across interfaces**"*(ref 107) 가 그림에서 이렇게 구현돼 있다 — 우리 `adhesion.json`(W_ad) → 계면저항 서사의 시각 자료로 그대로 쓸 수 있다.
 
 ### 5.5 Box 1 — 금속 음극의 계면·전착 문제 ★★
 
@@ -254,7 +281,11 @@ Conclusions: 물질탐색 · 계면 캐릭터라이제이션 · **공정/역학 
   (4) 최근 제안: **전자가 SE bulk 를 관통해 음극에서 떨어진 곳에서 Li 를 직접 핵생성**(ref 137).
 - **설계 원칙 6가지**: ① Li/SE 접착·젖음 개선(표면처리, ref 142) ② **기계적 폴리싱**(ref 143)·버퍼 박막 코팅(ref 106) ③ 분해를 설계해 **이온전도·전자차단 계면상** 유도(ref 151, LiI in Li₂S–P₂S₅) ④ **전극 미세구조화로 실표면적 증대 → footprint 당 CCD ↑**(ref 120, trilayer garnet) ⑤ **높은 K_Ic + 미세구조 제어(입경·기공률·기존 균열·기공 연결성)**(refs 55,12,138) ⑥ **SE 의 전자전도도 최소화**(ref 137).
 - 리뷰의 결론: *"it is currently **unclear which of the aforementioned factors is the most crucial**"*.
-- ⚠ Box 1 의 그림(패널 a: 불균일 전류·핫스팟 / 패널 b: 균열 전파)은 "Fig. N" 캡션이 없어 **크로핑 도구가 뽑지 못했다** — 페이지 렌더로만 확인했다.
+- ⚠ Box 1 의 그림은 캡션이 *"Inhomogeneous Li deposition through solid electrolytes. **a**, … **b**, …"* 로 시작해 **"Fig. N" 표기가 없다** → 크로핑 도구가 앵커를 못 잡아 `litdb/figures/<slug>/` 에 **없다**. p.1286(PDF 9쪽) 원본 렌더로 확인했다(2026-08-06 재확인):
+  - **패널 a `Inhomogeneous current`** — Li 금속(주황) 위 SE(연두 다결정). 불완전 접촉 자리와 **갈색 계면상**이 만든 두 지점으로 `Li⁺ current`(진한 주황 화살표)와 `e⁻ current`(연한 주황)가 **몰려들고**, 그 주변에 회색 `Stress field` 가 번진다 = **핫스팟**. 캡션: *"**Imperfect contact and interphase formation (brown) cause current hotspots**"*.
+  - **패널 b `Crack propagation`** — 같은 구도에서 **입계·공극·결정립 내부** 세 자리에 검은 균열이 각각 뻗는다. 캡션: *"Preferential Li deposition in **grain boundaries, voids and/or within grains** creates localized stress resulting in fracture. **Li could be deposited directly in the bulk of solid electrolyte through electronic leakage if σ_el ≠ 0.**"*
+  - **범례 5종**: Li⁺ current / e⁻ current / Stress field / Solid electrolyte / Li metal.
+  - ★ 패널 a 는 **"불완전 접촉 → 전류 핫스팟"** 을 그림으로 못박는다 — 우리 DEM 축(접촉면적 분포)이 **전기화학적 실패**로 직결된다는 리뷰의 유일한 시각 진술이다.
 
 ### 5.6 Processing routes (`Fig. 7`) ★ — 사용자 축 (1) 의 나머지 절반
 
@@ -329,20 +360,26 @@ Conclusions: 물질탐색 · 계면 캐릭터라이제이션 · **공정/역학 
 
 `Fig. 2` 하단 기법 바를 그대로 옮기면:
 
+`Fig. 2` 하단 기법 바를 **픽셀 실측대로** 옮기면 (2026-08-06 재검증 — 초판의 눈대중 도면을 교체):
+
 ```
-Å ─────── nm ─────── µm ─────── mm ─────── cm
- [NMR         ]                                    ← 원자~나노
- [MD          ]                                    ← 원자~나노   ← 우리 DFT/MLIP-MD 여기
-                    [ Impedance spectroscopy    ]  ← 매크로~셀
-        [ Continuum modelling               ]      ← 나노~셀
-   [ Diffraction / PDF                 ]
- [ Electron microscopy            ]
- [ Vibrational spectroscopy ]
-                    ↑
-              ★ 이 칸(µm, 입자 스케일 이산 역학)에 방법 바가 없다
+        Å         nm        µm        mm        cm
+NMR     [==============]
+MD      [==========]                                     <- 우리 MLIP-MD 여기
+Imped.                     [========================]
+Contin.              [==============================]
+Diff/PDF[=======================================]
+ElecMic [============================]
+VibSpec [==================]
+                           ^
+        µm 칸은 4개 바(Contin./Diff-PDF/ElecMic/VibSpec)가 지난다 — 비어 있지 않다.
+        비어 있는 것은 *스케일*이 아니라 *물리 축*이다:
+        7개 바가 전부 이온수송·구조 프로브이고,
+        역학량(강성·접착·소성·파괴)과 접촉 기하를 *산출*하는 방법은 단 하나도 없다.
 ```
 
-- 리뷰는 `Fig. 2` 의 **Device(mm)** 칸에 **`Contact area` 를 서술자로 명시** 해 놓고, 그것을 **계산하는 방법은 사다리에 넣지 않았다.** `Continuum modelling` 은 접촉면적을 **입력으로 받는** 방법이지 **만들어내는** 방법이 아니다.
+- ⚠ **초판 정정**: 초판은 여기에 *"µm 칸에 방법 바가 없다"* 고 그렸는데 **그림과 다르다**. 첫 줄에서 NMR(…913 px)이 끝나고 임피던스(1058 px…)가 시작하며 µm 부근에 흰 틈이 생기는 것을 사다리 전체의 공백으로 오독한 것이다.
+- **정정 후에도 우리 논거는 살아 있고 오히려 강해진다**: 리뷰는 `Fig. 2` 의 **Device(mm)** 칸에 **`Contact area` 를 서술자로 명시** 해 놓고, 그것을 **계산하는 방법은 사다리에 넣지 않았다.** `Continuum modelling` 은 접촉면적을 **입력으로 받는** 방법이지 **만들어내는** 방법이 아니다. 그리고 사다리에는 **역학 축 자체가 없다** — `Fig. 6` 이 `E/G·K_Ic·σ_adh/γ_xfc·ε` 를 성능 결정 인자로 세워 놓고도, `Fig. 2` 의 방법 사다리에는 그 양들을 산출하는 기법이 한 줄도 없다. **리뷰 내부의 두 그림이 서로 안 이어진다** (→ §14④).
 - **DEM 은 정확히 그 빈칸을 채운다**: 입자 강성(E,G) + 점착(γ) + 소성(σ_y) + PSD + 성형압을 넣으면 **패킹·기공률·접촉면적·접촉수(coordination number)** 가 나오고, 그것이 곧 ref 68 의 "contact area per volume of composite" 이며 ASR 의 분모다.
 - **∴ 우리 repo 이름(DEM-DFT)의 정당화가 이 그림 한 장으로 끝난다** — DFT 는 왼쪽 끝(E_hop, ν_hop, E/G/γ), DEM 은 가운데(접촉·기공), continuum/EIS 는 오른쪽. **두 끝을 우리가 다 갖고 있고, 리뷰가 비워 둔 가운데를 잇는 것이 기여다.**
 - ⚠ 정직하게: 리뷰 저자들이 DEM 을 몰라서 뺐다기보다, **2019 년 시점에 SSB DEM 문헌이 거의 없었다**(우리 litdb 의 DEM 논문 대부분이 2020–2026). 즉 이건 "리뷰의 오류"가 아니라 **연대적 공백** 이고, 그래서 **"Famprikis 2019 가 정의한 빈칸을 2020년대 DEM 이 메웠다"** 는 서사가 성립한다.
@@ -414,17 +451,20 @@ Conclusions: 물질탐색 · 계면 캐릭터라이제이션 · **공정/역학 
 | Fig | 내용 (무엇을 보여주나) | 우리 활용 |
 |---|---|---|
 | 1 | Bipolar 적층 SSB 셀 모식도 + 인셋 3개 = 고체전해질의 3대 도전: (1) 금속음극 불균일 전착(수지상), (2) 계면(이온 차단 계면상), (3) **물리적 접촉**(양극 구형 입자가 SE 표면에 점접촉만). 캡션이 "**비활성 부피(SE·집전체·기공률)를 최소화하라**"를 명시 | **인셋 (3) = DEM 그림 그 자체** — 우리 DEM 캠페인의 "왜"를 한 장으로 설명하는 슬라이드. deck 1페이지 후보 |
-| 2 | **다중스케일 사다리** Å→nm→µm→mm→cm 와 각 스케일 서술자(E_Hop·ν_Hop / σ_crystal·σ_GBi·σ_amorphous / σ_meso / **ASR charge transfer·Contact area·ASR xface** / σ_macro·Z_SSB) + 하단 기법 스팬 바 7개 | ★★ **우리 포지셔닝 도면**. DFT/MLIP-MD = 왼쪽 끝, DEM = 방법 바가 **비어 있는 µm 칸**, EIS/continuum = 오른쪽. §6.3 논거의 근거 그림 |
+| 2 | **다중스케일 사다리** Å→nm→µm→mm→cm 와 각 스케일 서술자(E_Hop·ν_Hop / σ_crystal·σ_GBi·σ_amorphous / σ_meso / **ASR charge transfer·Contact area·ASR xface** / σ_macro·Z_SSB) + 하단 기법 스팬 바 7개. **진파랑 = 이온수송 직접·정량 프로브(NMR·MD·임피던스·continuum), 연파랑 = 보조(회절/PDF·전자현미경·진동분광)** | ★★ **우리 포지셔닝 도면**. DFT/MLIP-MD = 왼쪽 끝이며 리뷰 분류상 **"직접 프로브"** 등급. ⚠ **µm 칸이 비었다는 초판 서술은 오독**(4개 바가 지난다) — 실제 공백은 **역학·접촉 기하를 산출하는 방법이 사다리에 아예 없다**는 것. §5.2 픽셀 실측표·§6.3 참조 |
 | 3a | 세 가지 양이온 이동 기구: 공공 / 직접 침입형 / **협동(interstitialcy)**. 안정·준안정 사이트를 색으로 구분 | 우리 BVSE 채널·MLIP-MD 확산 해석의 용어 고정 |
 | 3b | 이중우물 에너지 프로파일 — E_m, hop 거리 α₀, 우물 곡률로 표현된 시도진동수 ν₀ (점선으로 곡률 변화) | Eq.(2) prefactor 를 그림으로 이해. 우리 Ea 만 보고 σ₀ 를 무시하면 안 된다는 시각적 근거 |
-| 3c | 협동(interstitialcy) 프로파일 — **E_m^interstitialcy 화살표가 직접 hop 보다 짧고, 유효 hop 거리 α₀' < α₀** (figure-read) | Cl-rich 의 D 증가를 "장벽 저하 + 협동" 두 갈래로 설명할 때의 도식 |
+| 3c | 협동(interstitialcy) 프로파일 — **E_m^interstitialcy(준안정 사이트 기준)가 안정 사이트 기준 장벽의 절반쯤**. 거리 라벨 둘: **α₀ = 전하/결함이 옮겨간 거리(준안정→준안정), α₀' = 개별 이온의 변위(≈0.48 α₀)** | Cl-rich 의 D 증가를 "장벽 저하 + 협동" 으로 설명할 때의 도식. ⚠ Eq.(2)의 `α₀²` 에 들어가는 건 **긴 쪽 α₀** — "α₀' 때문에 σ₀ 가 상쇄된다"는 초판 해석은 철회(§5.2·§17-⑥) |
 | 4 | SE 두께(nm)에 따른 μ_Li / 전압 프로파일. 안정창(초록 띠) 안에 **SE bulk μ_Li 는 들어 있고 양 전극 μ_Li 는 밖**; 계면에서만 급경사(**수 mV/nm**); 음극쪽 공공 고갈(양의 공간전하) / 양극쪽 공공 축적(음의 공간전하) | 우리 grand-potential ESW 가 **bulk 열역학** 임을 명확히 하는 그림. "onset 2.256 V" 는 이 띠의 상단이고, 실제 분해는 계면에서 시작한다 |
-| 5a,b | (a) 계면 반응 3유형 = redox / chemical / electrochemical 반응식과 모식도. (b) 기능하는 계면 3시나리오 = 본질안정 / **속도론적 안정화**(σ_xfc,ion↑ σ_xfc,e⁻↓) / **인공보호**(파란 층) | 우리 SEI/코팅 축(B₂O₃·Nd·LPSOCl)이 어느 시나리오를 노리는지 라벨링. `miao2023` F2 분류의 원형 |
-| 6 | **기계적 열화 종합도**: SE(E_SE,G_SE)·전극(E_E,G_E), **Fracture K_Ic** 로 라벨된 균열이 결정립을 관통하며 **Li⁺ 경로를 ✗ 로 차단**, 왼쪽 **Adhesion(σ_adh, γ_xfc)**, 오른쪽 **Delamination(ε_electrochemical)**. 수치·눈금 없음 | ★★ **우리 기계 축의 지도**. adhesion.json(γ_xfc·σ_adh 칸) / elastic.json(E,G 칸) / **비어 있는 K_Ic 칸** 을 이 그림 위에 그대로 표시하면 캠페인 공백도가 된다 |
+| 5a,b | (a) 계면 반응 3유형 = redox / chemical / electrochemical 반응식과 모식도. (b) 기능하는 계면 3시나리오 = 본질안정(ΔG>0, σ 화살표 없음) / **속도론적 안정화**(σ_xfc,ion↑ σ_xfc,e⁻↓, 갈색 계면상이 e⁻ 만 ✗) / **인공보호**(파란 코팅층이 e⁻ 만 ✗) | 우리 SEI/코팅 축(B₂O₃·Nd·LPSOCl)이 어느 시나리오를 노리는지 라벨링. `miao2023` F2 분류의 원형. ⚠ **그림 (2)의 `ΔG > 0` 은 논문 오식 — `ΔG < 0` 이어야 한다**(캡션·본문과 모순, §14-11). 슬라이드로 옮길 때 부호 교정 필수 |
+| 6 | **기계적 열화 종합도**: SE(E_SE,G_SE)·전극(E_E,G_E), **Fracture K_Ic** 로 라벨된 균열이 결정립을 관통하며 **Li⁺ 경로를 ✗ 로 차단**, 왼쪽 **Adhesion(σ_adh, γ_xfc)**, 오른쪽 **Delamination(ε_electrochemical)**. **Li⁺ 가 셋 그려져 있고 ✗ 는 둘 — 균열·박리는 ✗, 잘 붙은 Adhesion 계면은 ✗ 없이 통과**. 수치·눈금 없음 | ★★ **우리 기계 축의 지도**. adhesion.json(γ_xfc·σ_adh 칸) / elastic.json(E,G 칸) / **비어 있는 K_Ic 칸** 을 이 그림 위에 그대로 표시하면 캠페인 공백도가 된다. 3항 Li⁺ 대비 = "역학적 온전함 ↔ 이온 전달" 을 한 장으로 보여주는 슬라이드 |
 | 7 | 합성→치밀화→집적 공정 흐름도. **파랑=건식 / 초록=습식 / 노랑=보조(볼밀·SPS)**, 종착 **'Pellet-type' vs 'Sheet-type'** | 우리 DEM 시나리오(냉간가압 pellet vs 슬러리 sheet)가 이 그림의 어느 가지인지 고정. 건식전극 digest 계열과 연결 |
 | Table 1 | 계면 캐릭터라이제이션 기법 카탈로그 — 기법 / 관측량 / operando 가능 / 서브마이크론 분해능 / 대표문헌. **계산은 "first-principles phase diagram" 과 "MD" 두 줄뿐** | 우리 계산이 실험 어느 칸을 대체/보완하는지의 지도. **계산 줄이 2개뿐이라는 사실 자체가 2019년 계산의 위치** |
 
-> ⚠ **크로핑 상태**: 도구가 8장(fig 1–7 + Table 1)을 뽑았다. **fig_3.png 는 패널 a 가 잘려 b 부터 시작하고 오른쪽에 본문 한 단이 들어왔다**; **fig_1.png·fig_4.png 는 상단 라벨이 살짝 잘렸다**(각각 "(1) Metallic anodes / (2) Interfaces", "V_cathode / μ_Li,cathode"). 잘린 부분은 페이지 렌더(1쪽·2쪽·4쪽·6쪽)로 확인했다. **Box 1 의 그림(패널 a 핫스팟 / b 균열전파)은 "Fig. N" 캡션이 없어 추출되지 않았다.**
+> ⚠ **크로핑 상태 (2026-08-06 재투입 검증 후)**: 도구가 8장(fig 1–7 + Table 1)을 뽑았다.
+> - ✅ **`fig_1.png`·`fig_4.png` 는 상단 잘림을 복구해 다시 뽑았다** — 이제 `(1) Metallic anodes`/`(2) Interfaces` 인셋 라벨과 `V_cathode`·`μ_Li,cathode`·`Oxidation to Li-poor interphase?` 가 모두 들어 있다(캡션 앵커 bbox 를 위로 24/29 pt 확장, `figures.json` 의 `recrop` 필드에 기록). 초판 digest 가 "잘림" 이라 적어 둔 부분은 **더 이상 유효하지 않다**.
+> - ⚠ **`fig_3.png` 는 여전히 패널 a 가 없고 b 부터 시작하며 오른쪽에 본문 한 단이 들어와 있다** — 패널 a(3가지 이동 기구 모식도)는 페이지 렌더로만 확인.
+> - ⚠ **Box 1 의 그림은 캡션이 "Fig. N" 이 아니라 `Inhomogeneous Li deposition through solid electrolytes. a, … b, …` 여서 추출 자체가 안 된다** — PDF 9쪽(p.1286) 원본 렌더로 확인(§5.5 에 상세 기술).
 
 ---
 
@@ -531,13 +571,15 @@ Conclusions: 물질탐색 · 계면 캐릭터라이제이션 · **공정/역학 
 1. **자체 데이터가 없다 — 전 수치가 2차 인용이고, 대부분 "≈" 로 반올림돼 있다.** E ≈ 20 / G ≈ 7 / G ≈ 60 GPa 처럼 **오차·시편조건·측정법이 삭제된 채** 전달된다. 특히 **McGrogan 값(ref 108)은 시편 밀도·기공률이 안 붙어 있어** 우리 단결정 DFT 와의 +10 % 일치가 **얼마나 우연인지 판정 불가**. → **"실험이 우리를 검증했다" 는 주장 금지.**
 2. **K_Ic 를 "결정 인자"로 격상해 놓고 값을 하나도 안 준다.** 이건 리뷰의 게으름이라기보다 2019년 문헌 부재의 반영이지만, 결과적으로 **"중요하다"는 수사만 남고 설계에 쓸 수 있는 수는 없다.** 우리가 K_Ic 를 언급할 때 이 논문을 **수치 출처로 인용하면 안 된다**(개념 출처로만).
 3. **미세구조 축이 전부 정성이다.** 기공률·상대밀도·tortuosity·성형압·입경 — **단 하나의 수치도 없다.** Bruggeman 같은 유효매질 식도 없다. **정량 제약은 φ_SE 25–50 % 두 개뿐이고, 그것조차 단일 출처(ref 68)의 재인용이다.** → DEM 논문에서 이 리뷰를 인용할 때는 **"문제 정의" 인용** 이지 **"파라미터 출처" 인용이 아니다.**
-4. **`Fig. 2` 의 방법 사다리에 입자 스케일 이산 역학이 없다.** `Contact area` 를 서술자로 그려 놓고 그 계산 방법을 안 넣은 것은 **그림 내부의 논리적 구멍** 이다(continuum 은 접촉면적을 입력으로 받는다). 2019년 시점의 연대적 공백이지만, **본문 주장("접촉을 최대화·유지해야 한다")과 그림의 방법 스팬이 어긋나는 지점** 이므로 그대로 지적 가능하다.
+4. **`Fig. 2` 의 방법 사다리에 역학 축이 통째로 없다.** (⚠ 2026-08-06 정정 — 초판은 이것을 "µm 칸이 비었다" 로 잘못 적었다. µm 은 4개 바가 지난다. §5.2·§6.3 참조.) 실제 구멍은 **물리 축**이다: 7개 바가 전부 이온수송·구조 프로브이고, `Fig. 6` 이 성능 결정 인자로 세운 `E/G·K_Ic·σ_adh/γ_xfc·ε_electrochemical` 를 **산출하는 기법은 사다리에 한 줄도 없다.** `Contact area` 를 서술자로 그려 놓고 그 계산 방법을 안 넣은 것도 같은 결(continuum 은 접촉면적을 **입력으로 받는다**). 2019년 시점의 연대적 공백이지만, **본문 주장("접촉을 최대화·유지해야 한다")·`Fig. 6` 과 `Fig. 2` 의 방법 스팬이 서로 안 이어지는 지점** 이므로 그대로 지적 가능하다.
 5. **"soft sulfide 가 유리" 와 "soft sulfide 는 취성" 이 같은 문단에 병치되고 화해되지 않는다.** 리뷰는 두 명제를 나란히 놓고 넘어간다 — **어느 조건에서 연성 이점이 취성 위험을 이기는지(입경? 변형률 속도? 기공률?)** 에 대한 판정이 없다. 우리 `fan2026`(>3 µm 파쇄 / <1 µm 완화)이 그 판정의 후속이다.
 6. **Monroe–Newman 기각과 "더 무른 SE 가 유리할 수 있다"(ref 146) 사이의 처방이 불확정.** 리뷰 스스로 *"currently unclear which of the aforementioned factors is the most crucial"* 로 끝낸다. **∴ 이 리뷰로 "무르면 좋다/나쁘다" 어느 쪽도 결론짓지 말 것.**
 7. **공간전하층(SCL)이 `Fig. 4` 로 크게 그려지지만 수치가 0.** 두께·전위 강하·용량 어느 것도 없다. **`miao2023`·`fan2026` 과 똑같이 SCL 은 여전히 정성** — 3편의 리뷰가 6년에 걸쳐 같은 그림을 그리고 같은 숫자 부재를 반복한다는 점 자체가 리뷰어 코멘트 소재.
 8. **Nernst–Einstein 유보를 달아 놓고, 정작 본문 σ 값들은 그 유보 없이 인용한다.** Eq.(3) 의 타당성을 문제 삼은 바로 다음 절에서 σ_macro 10 mS/cm 를 무유보로 쓴다. 내부 일관성 결함.
 9. **시점 한계(2019).** halide SE(Li₃YCl₆·Li₂ZrCl₆ 계열)가 **사실상 부재** 하고, 고엔트로피·건식전극·MLIP 대규모 MD·**SSB DEM** 이 전부 이후 문헌이다. **2026년 우리 캠페인의 "현재 지형" 근거로는 쓰지 말고, "축 정의"의 고전으로만 인용.**
 10. **우리 축과 무관한 것도 분명히**: ICOHP/COBI·Bader·ELF·BVSE·NEB·DOS/PDOS 가 **한 번도 안 나온다.** 우리의 결합·전하 분석 축은 이 리뷰의 사각지대이므로 **"리뷰가 지지한다" 고 쓸 수 없다.**
+11. **★ `Fig. 5b` 의 부호 오류 (논문 자체의 오식)** — **(2) Kinetic stabilization 에 `ΔG > 0` 이라고 인쇄**돼 있는데, 같은 그림 캡션(*"kinetically stabilized **decomposition**"*)·본문(*"**Given that reactivity is favoured** … the reaction is blocked and the interface becomes kinetically stabilized"*)과 정면으로 모순된다. **`ΔG < 0` 이어야 한다.** ΔG>0 이면 그건 정의상 (1) Intrinsic stability 다. **⇒ 이 그림을 슬라이드로 그대로 옮기면 오류를 승계한다** — 인용 시 부호를 고치거나 캡션·본문 쪽을 인용할 것. (2026-08-06 재투입 검증에서 확인)
+12. **(우리 쪽 도구 한계 — 논문 비판 아님, 2026-08-06 처리 완료)** 캡션 앵커 크로핑은 **그림이 캡션 위쪽으로 페이지 상단까지 뻗으면 위를 자른다**. `fig_1.png`(인셋 (1)·(2) 라벨)·`fig_4.png`(`μ_Li,cathode`·`Oxidation to Li-poor interphase?`)가 그 사례였고 **둘 다 bbox 를 확장해 다시 뽑았다**. **남은 것은 `fig_3.png`(패널 a 없음)와 Box 1 그림(캡션에 "Fig." 가 없어 추출 불가)** — 이 둘은 크롭만 보고 인용하지 말고 원본 페이지(4쪽·9쪽)를 같이 볼 것.
 
 ---
 
@@ -588,3 +630,38 @@ Conclusions: 물질탐색 · 계면 캐릭터라이제이션 · **공정/역학 
 - **tortuosity(굴곡도)** — 유효 경로 길이 / 직선 거리. 기공이 많을수록 이온이 돌아가야 한다. **이 리뷰는 단어만 쓰고 식·값은 주지 않는다.**
 - **SPS (spark plasma sintering)** — 펄스 전류로 분말을 급속 소결. 미세구조 정밀 제어가 가능해 "기준 방법"이지만 비용이 금지적.
 - **green body** — 소결 전, 분말을 성형만 해 놓은 상태의 성형체. 소결은 이것을 굽는 과정.
+
+---
+
+## 17. 재투입 검증 로그 (2026-08-06 · inbox #56 · 사용자 분류 `DFT`)
+
+논문이 `litdb/inbox/56. Fundamentals of inorganic solid-state electrolytes for batteries.pdf` 로 다시 들어와, **실물 PDF 텍스트 + 크로핑 PNG 를 다시 열어** 초판 digest(2026-08-05, 590줄)를 대조했다. 최초 digest 는 임시 업로드본(`79dcf62a-…`)으로 작성됐고, **같은 파일임을 확인**했다(14쪽·Fig 7+Table 1+Box 1·Nature Materials 18, 1278–1291).
+
+### 실제로 본 것 / 안 본 것
+- **본 그림 (7/8)**: `fig_1` `fig_2` `fig_3`(b,c 확대 포함) `fig_4` `fig_5`(라벨 확대 포함) `fig_6` `fig_7` + **Box 1 그림**(크로핑 없음 → PDF 9쪽 원본 렌더).
+- **안 본 것 (1/8)**: `tab_1.png` — 표는 이미지보다 PDF 텍스트가 정확해서 텍스트로만 읽었다(우리 관례).
+- `fig_2` 의 기법 바 스팬은 눈대중이 아니라 **PIL 픽셀 실측**으로 뽑았다.
+
+### 확인된 것 (변경 없음)
+- 역학 수치 3세트(**E≈20/G≈7** thiophosphate glass ref108 · **E≈150/G≈60** garnet ref147 · **G≈4** LiBH₄ ref148), **Li 항복 ~0.8 MPa**(ref144), **CCD ≤0.3 vs 목표 3–10 mA/cm²**(ref10), **Li 몰부피 ~10×** — 전부 Box 1 원문 그대로.
+- **음이온 IP 사다리** `N³⁻ < P³⁻ < H⁻ ≪ S²⁻ < I⁻ < O²⁻ < Br⁻ < Cl⁻ ≪ F⁻`(ref65) — 원문 일치.
+- **φ_SE `<50 %` / `>25 %`**(ref68), **GB 는 황화물서 무시할 만함**(ref54), **과전압 ±0.5 V**(ref83), **LLZO 0.05 V·20 meV/atom**(ref65,80), **σ 10/1/0.1 mS/cm**(ref7/59,60/61), **18 C @100 °C**, **>10,000 cycles** — 전부 원문 일치.
+- **K_Ic·γ 수치 0건** 판정 유지. `Fig. 6` 에 기호만 있고 본문은 "실험으로만 결정" 이라고 못박는다.
+- `Fig. 6` `Fig. 7` `Fig. 1`(인셋 3) 의 초판 figure-read 서술은 **전부 그림과 일치**.
+
+### 정정·보강 6건
+| # | 항목 | 초판 | 정정 |
+|---|---|---|---|
+| ① | `Fig. 2` 기법 바 스팬 | Diffraction/PDF "nm~mm" · Vibrational "Å~nm" | **Å→cm** · **Å→µm** (픽셀 실측, §5.2 표) |
+| ② | `Fig. 2` 사다리의 공백 | "**µm 칸에 방법 바가 없다**" | **오독** — µm 은 4개 바가 지난다. 실제 공백은 **역학·접촉 기하 산출 방법이 사다리에 전무**(더 강한 논거로 교체, §6.3·§14④) |
+| ③ | `Fig. 2` 색 등급 | 언급 없음 | **진파랑 = 이온수송 직접·정량 프로브 / 연파랑 = 보조**. 리뷰가 **MD 를 NMR·임피던스와 같은 "직접 프로브" 등급**으로 분류 → **우리 MLIP-MD 라인의 리뷰급 정당화**(신규 소득) |
+| ④ | `Fig. 5b` (2) Kinetic stabilization | 부호 미확인 | **논문이 `ΔG > 0` 으로 오식** — 캡션("kinetically stabilized **decomposition**")·본문("**reactivity is favoured**")과 모순, **`ΔG < 0` 이어야 한다**. 인용 시 교정 필수(§14-11) |
+| ⑤ | `Fig. 5b` σ_xfc 화살표 | "오른쪽 **3패널**에" | **(2)·(3) 두 패널에만**. (1) 은 반응이 없어 애초에 불필요 |
+| ⑥ | `Fig. 3c` 의 α₀ | "α₀' < α₀ ⇒ Eq.(2) 의 **α₀² 가 줄어 협동 이득이 상쇄**" | **철회** — σ₀ 에 들어가는 α₀ 는 **전하가 옮겨간 긴 거리**이고 α₀' 는 개별 이온 변위다. 그림대로면 협동은 **장벽↓ + hop 거리 유지 = 순이득**. `comparison_vs_ours.md` §A 해당 줄도 함께 정정 |
+
+**추가 보강**: `Fig. 4` 의 물음표 라벨 2개(`Reduction to Li-rich interphase?` / `Oxidation to Li-poor interphase?`), `Fig. 6` 의 **Li⁺ 3개 중 ✗ 는 2개**(접착 계면은 통과), **Box 1 그림 패널 a/b 상세 + 범례 5종**, `Table 1` 의 `X` = 체크 표시(→ **MD 는 서브마이크론 분해능 O**, 초판 §5.3/§9 불일치 해소).
+
+### 크롭 처리
+- ✅ **`fig_1.png`·`fig_4.png` 재크롭 완료** — 상단 잘림(인셋 (1)(2) 라벨 / `V_cathode`·`μ_Li,cathode`·`Oxidation to Li-poor interphase?`)을 bbox 를 위로 24·29 pt 확장해 복구했다. `figures.json` 의 `bbox`·`w`·`h` 갱신 + `recrop` 필드 기록.
+- ⚠ **`fig_3.png`** 은 여전히 패널 a 없음(b 부터, 오른쪽에 본문 한 단 유입) — 도구가 `Fig. 3` 캡션 아래만 잡는다.
+- ⚠ **Box 1 그림은 추출 불가**(캡션이 `Inhomogeneous Li deposition through solid electrolytes. a, …` 로 "Fig." 가 없다). 이 둘은 원본 페이지(4쪽·9쪽) 병행 필수.

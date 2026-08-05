@@ -15,16 +15,17 @@
    "file": "fig_1.png",
    "caption": "Fig. 1 | Schematic representation of a bipolar-stacked solid-state battery cell. Insets are magnified sections that highlight the three main challenges facing solid-state batteries with metal anodes: (1) inhomogeneous metal deposition, (2) formation of blocking interface and (3) contact loss on electrochemical cycling. The relative scale of the battery components is indicative of typical laboratory-scale cells. For commercial cells, inactive volume (solid electrolyte, current collectors, porosity) should be minimized and the electrodes should be balanced (chemically and mechanically14).",
    "bbox": [
-    36.5,
-    64.6,
-    297.7,
-    225.5
+    33.5,
+    40.6,
+    300.7,
+    227.5
    ],
-   "w": 1089,
-   "h": 671,
+   "w": 1114,
+   "h": 779,
    "dpi": 300,
    "src": "79dcf62a-56._Fundamentals_of_inorganic_solidstate_electrolytes_for_batteries.pdf",
-   "blank": 0.606
+   "blank": 0.606,
+   "recrop": "2026-08-06 재투입 검증 — 상단 잘림 복구(캡션 앵커 bbox 를 위로 확장)"
   },
   {
    "key": "f2",
@@ -72,16 +73,17 @@
    "file": "fig_4.png",
    "caption": "Fig. 4 | Evolution of chemical potential across the solid electrolyte in contact with an anode and a cathode. The y axes denote the voltage (V, increasing) and the chemical potential (μ, decreasing) (see equation (4)) of the mobile cation as a function of the solid electrolyte (SE) thickness on the x axis. The evolution of the chemical potential leads to a concentration of the mobile cation close to the anode and dilution close to the cathode. These concentration gradients can directly lead to decomposition of the solid electrolyte and/or reaction with the electrodes. This phenomenon exemplified here for Li can also apply to Na and Mg.",
    "bbox": [
-    36.5,
-    72.0,
-    295.1,
-    266.0
+    33.5,
+    43.0,
+    298.1,
+    268.0
    ],
-   "w": 1078,
-   "h": 809,
+   "w": 1104,
+   "h": 938,
    "dpi": 300,
    "src": "79dcf62a-56._Fundamentals_of_inorganic_solidstate_electrolytes_for_batteries.pdf",
-   "blank": 0.324
+   "blank": 0.324,
+   "recrop": "2026-08-06 재투입 검증 — 상단 잘림 복구(캡션 앵커 bbox 를 위로 확장)"
   },
   {
    "key": "f5",
@@ -159,5 +161,6 @@
    "src": "79dcf62a-56._Fundamentals_of_inorganic_solidstate_electrolytes_for_batteries.pdf",
    "blank": 0.049
   }
- ]
+ ],
+ "recropped": "2026-08-06"
 }
