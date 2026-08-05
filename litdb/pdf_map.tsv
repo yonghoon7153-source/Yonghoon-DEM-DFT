@@ -72,3 +72,12 @@ mulks2024_hard_soft_electrons_holes	53. hard and soft electrons
 #   [ok] SI 크롭 2장은 기록된 bbox 로 이 SI PDF 에서 픽셀 크기까지 재현 확인됨
 #        (fig_S1 2151x851 / fig_S2 2164x2624, digest §15a) — SI 가 있는 동안은 재유도 가능.
 #   자동 매칭은 제목 81 % 로 잘 붙는다 — 수동 지정 줄은 필요 없다('Sup)' 는 자동으로 SI 로 묶인다).
+#
+# ── InF3 argyrodite (EXTERNAL) ──────────────────
+# 가드: li2024_inf3_argyrodite_ultrathin_film 의 SI 는 **docx** 라 inbox PDF 에서 재생성이 불가능하다.
+#   figures/ 에는 fig_1..6(본문 PDF 유래) + fig_S1..S34(docx 임베디드 이미지 유래) 40장이 들어 있는데,
+#   inbox 엔 본문 PDF('55. A Versatile InF 3 …') 만 있다.
+#   [!!] '--slug li2024_inf3_argyrodite_ultrathin_film --clean' 금지 — SI 크롭 34 장이 통째로 날아가고
+#        본문 PDF 만으로는 되살릴 방법이 없다. (2026-08-06 실제로 지웠다가 git checkout 으로 복구.)
+#        ('--inbox --run --skip-done' 은 안전.)
+#   자동 매칭은 제목으로 잘 붙는다 — 수동 지정 줄 불필요.

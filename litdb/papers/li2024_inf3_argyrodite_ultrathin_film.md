@@ -1,6 +1,7 @@
 # A Versatile InF₃ Substituted Argyrodite Sulfide Electrolyte Toward Ultrathin Films for All-Solid-State Lithium Batteries — Dabing Li et al. (USTB, Li-Zhen Fan 그룹) · **본문+SI 통합 digest**
 
 > slug `li2024_inf3_argyrodite_ultrathin_film` · **Adv. Energy Mater. 2024, 14(47), 2402929** · DOI **10.1002/aenm.202402929** (Wiley-VCH; Received **2024-07-04** · Revised **2024-09-22** · Published online **2024-10-10**) · type `exp (도핑·전기화학·필름·풀셀) + DFT 보조 (자리 형성E · 슬랩 CI-NEB · Li 금속 슬랩 CI-NEB · H₂O/유기용매 흡착E · PDOS)` · PDF **본문 12 pp** + **SI docx**(Methods + Fig S1–S34 + Table S1–S4) · digested `2026-08-05` · 태그 **[외부]** · status ✅**(본문+SI 완결)**
+> **재투입 검증 `2026-08-06`** — 같은 논문이 `litdb/inbox/55. A Versatile InF 3 Substituted Argyrodite Sulﬁde ElectrolyteToward Ultrathin Films for All-Solid-State Lithium Batteries.pdf` (**inbox #55 · 사용자 분류 폴더 `DFT`**) 로 재투입돼 **본문 12 pp 전문(PyMuPDF 59.8 k자) 재추출 + `Fig. 1`–`Fig. 6` 전 6 장 이미지 재판독**. → **§14** (교정 **1**(⑥ 철회) · 신규 적발 **4**(⑯–⑲) · 출처 정밀화 **1** · 신규 판독 그림 **2**(`Fig. 5`·`Fig. 6`)). ⚠ **SI 는 이번 재투입에 없다**(원 digest 의 docx SI 가 유일 출처 — Fig S1–S34·Table S1–S4 항목은 재검증 대상 아님).
 > elements: Li, P, S, Cl, F, In, O, Co, Fe, Si
 > methods: DFT, NEB, DOS, PDOS, XPS, Raman
 > **저자**: **Dabing Li**†, **Xinyu Liu**†, **Yang Li**, Xiaoxue Zhao, Meng Wu, Xiang Qi, Lei Gao, **Li-Zhen Fan\*** (fanlizhen@ustb.edu.cn) — Beijing Advanced Innovation Center for Materials Genome Engineering / Beijing Key Lab for Advanced Energy Materials and Technologies, **University of Science and Technology Beijing (USTB)**. (†공동 1저자)
@@ -123,8 +124,8 @@ Cl-rich argyrodite **Li₅.₇PS₄.₇Cl₁.₃** 에 **InF₃ 를 격자 공�
 | 시료 | 조성 | σ (25 °C) | 출처 |
 |---|---|---|---|
 | pristine LPSC | Li₅.₇PS₄.₇Cl₁.₃ | **4.8 mS cm⁻¹** | [본문] |
-| **In-only** | **Li₅.₇₄P₀.₉₈In₀.₀₂S₄.₇Cl₁.₃** | **7.0 mS cm⁻¹** | **[SI 인쇄] `Fig. S8b`** ⭐ |
-| **F-only** | **Li₅.₇PS₄.₇Cl₁.₂₄F₀.₀₆** | **4.3 mS cm⁻¹** | **[SI 인쇄] `Fig. S8a`** ⭐ |
+| **In-only** | **Li₅.₇₄P₀.₉₈In₀.₀₂S₄.₇Cl₁.₃** | **7 mS cm⁻¹** | ⭐ **[본문 인쇄]** *"the high ionic conductivity of **7 mS cm⁻¹** in the LPSC with only In substitution (`Fig. S8b`)"* (2026-08-06 정밀화 — 조성식만 SI) |
+| **F-only** | **Li₅.₇PS₄.₇Cl₁.₂₄F₀.₀₆** | **4.3 mS cm⁻¹** | ⭐ **[본문 인쇄]** *"the ionic conductivity of F-only doped LPSC is **4.3 mS cm⁻¹**, which is slightly lower than that of pristine LPSC (`Fig. S8a`)"* (2026-08-06 정밀화) |
 | co-doped x=0.02 | Li₅.₇₄P₀.₉₈In₀.₀₂S₄.₇Cl₁.₂₄F₀.₀₆ | **5.6 mS cm⁻¹** (최고) | [본문] |
 | co-doped x=0.04 | — | ≈ 4.9 | [figure-read ≈] `Fig. 2b` |
 | co-doped x=0.06 (**LPSCInF**) | Li₅.₈₂P₀.₉₄In₀.₀₆S₄.₇Cl₁.₁₂F₀.₁₈ | **4.0** | [본문] `Fig. 4a` "Before" |
@@ -232,7 +233,7 @@ Cl-rich argyrodite **Li₅.₇PS₄.₇Cl₁.₃** 에 **InF₃ 를 격자 공�
 | 항목 | LPSC (x=0) | LPSCInF (x=0.06) |
 |---|---|---|
 | CCD | **1.0 mA cm⁻²** | **2.5 mA cm⁻²** |
-| 대칭셀 @ 0.5 mA cm⁻² | **75 h 에 단락** (`Fig. S12`) | **2000 h 안정** (`Fig. 3d`) ⚠본문은 "800 h" |
+| 대칭셀 @ 0.5 mA cm⁻² | **75 h 에 단락** (`Fig. S12`) | **2000 h 안정** (`Fig. 3d`) ✅ **본문·그림·`Table S2` 3자 일치**(2026-08-06 재검증 — 이전 "본문 800 h" 지적은 **철회**, §14a) |
 | 대칭셀 @ 1 mA cm⁻², 1 mAh cm⁻² | — | **>1000 h** (`Fig. S14`) |
 | x=0.02 대칭셀 | — | >750 h (`Fig. S13`) |
 | 분극 전압 | **23 → 101 mV** (증가) | **22 mV 평탄** |
@@ -451,8 +452,9 @@ Cl-rich argyrodite **Li₅.₇PS₄.₇Cl₁.₃** 에 **InF₃ 를 격자 공�
 ## 6. Figure set ★ — 그림별 전수 해설
 
 > ⚠ **아래 표는 "우리가 실제로 본 그림"과 "캡션·본문으로만 정리한 그림"이 섞여 있다.**
-> **실제 PNG 를 Read 로 본 것 (10 장)**: `Fig. 1` · `Fig. 2` · `Fig. 3` · `Fig. 4` · `Fig. S4` · `Fig. S8` · `Fig. S9` · `Fig. S11` · `Fig. S22` · `Fig. S24`.
-> **안 본 것 (30 장)**: `Fig. 5` · `Fig. 6` (풀셀 성능 — 본문 인쇄값이 충분) 및 나머지 SI 그림 전부.
+> **실제 PNG 를 Read 로 본 것 (12 장)**: `Fig. 1` · `Fig. 2` · `Fig. 3` · `Fig. 4` · **`Fig. 5` · `Fig. 6`**(2026-08-06 재투입 때 추가 판독) · `Fig. S4` · `Fig. S8` · `Fig. S9` · `Fig. S11` · `Fig. S22` · `Fig. S24`.
+> **안 본 것 (28 장)**: SI 그림 전부(`Fig. S1`–`S3`·`S5`–`S7`·`S10`·`S12`–`S21`·`S23`·`S25`–`S34`).
+> ⇒ **본문 그림(`Fig. 1`–`6`)은 이제 전수 판독 완료**, SI 그림은 위 6 장만 봤다.
 > 그림에서만 읽은 값은 본문 곳곳에 **[figure-read ≈]** 로 표기했다.
 
 | Fig | 내용 (무엇을 보여주나) | 우리 활용 |
@@ -467,15 +469,15 @@ Cl-rich argyrodite **Li₅.₇PS₄.₇Cl₁.₃** 에 **InF₃ 를 격자 공�
 | **2e,f** | PDOS: **LPSC 1.78 eV / LPSCInF 2.75 eV** | ✅ **본 그림.** ⚠ **DOS 문턱 판독** — 우리 규율(fixed-occ nscf 고유값) 위반 방식. E_F 가 VBM 에 붙어 있다. 절대 갭 직접 비교 금지(§8b) |
 | **3a,b** | CCD 계단 시험 — x=0 **1.0** / x=0.06 **2.5 mA cm⁻²** 에서 단락 | ✅ **본 그림** |
 | **3c** | CCD vs "capacity" 문헌 산점도 | ✅ **본 그림.** ⚠ 두 축이 거의 같은 양(capacity = CCD × 스텝시간)이라 **비교 성립 안 함**(§11-⑧). **Li₅.₄PS₄.₄Cl₁.₆ = 우리 modelc 조성이 최하점(CCD ≈0.55)** |
-| **3d** | x=0.06 대칭셀 **2000 h @ 0.5 mA cm⁻², η ≈ ±22 mV** | ✅ **본 그림.** ⚠ **본문은 같은 조건을 "800 h"라고 쓴다** — 그림/본문 불일치(§11-⑥) |
+| **3d** | x=0.06 대칭셀 **2000 h @ 0.5 mA cm⁻², η ≈ ±22 mV** | ✅ **본 그림.** 본문·`Table S2` 와 **일치**(이전 "본문 800 h" 지적 철회, §14a) |
 | **3e,f** | 순환 50 h 후 XPS: F 1s **LiF 684.8** · In 3d **In⁰ + Li–In alloy** 신규 | ✅ **본 그림.** ⚠ F 1s 이동이 본문상 **0.3 eV** 뿐(전하보정 오차 수준) · In⁰/Li–In 성분은 **In³⁺ 대비 매우 작다** — SEI 서사가 소수성분에 얹혀 있다 |
 | **3g,h** | Li(100) **0.38 eV** vs Li–In alloy(110) **0.17 eV** 표면 확산 장벽 | ✅ **본 그림.** 두 프로파일 모두 **대칭·매끄러움**(수렴 양호) — `Fig. S9b` 와 대조된다 |
 | **4a** | ★ **용매 침지 전후 σ**: LPSC 4.8→3.0/2.1/1.0 · LPSCInF 4.0→3.65/3.3/2.85 | ✅ **본 그림.** **리뷰 "maintain σ after immersion" 의 근거 데이터.** ⚠ 출발점이 4.8 vs 4.0 — **초기 σ 17 % 를 팔았다** |
 | **4b,c** | ★ toluene 흡착 모델: **LPSC E_ad −0.41 / LPSCInF −0.12 eV** | ✅ **본 그림.** **리뷰 Fig 4c 의 원본.** ⚠ **vdW 보정 없는 PBE 로 방향족 흡착** — 절대값 신뢰 불가(§11-①) |
 | **4d,e** | toluene 1 h 후 Raman(pristine PS₄ 422.6 급감/이동, co-doped 불변) · XRD(pristine → **Li₄P₂S₆·Li₃P·LiCl**) | ✅ **본 그림.** **구조 분해의 직접 증거 — 이 논문에서 가장 설득력 있는 데이터.** 분해산물이 우리 0 V 분해식(Li₃P + Li₂S + LiCl)과 겹친다 |
 | **4f** | ★ 만화: `PS₄ + C₇H₈ → P₂S₆ + Li₃P` vs `InS₄ + C₇H₈ → ✗` | ✅ **본 그림.** **리뷰 Fig 4c 의 나머지 절반.** ⚠ x=0.06 에서 사면체의 **94 % 가 여전히 PS₄** — 만화가 실제 조성을 반영하지 않는다(§11-⑦) |
-| **5a–g** | LPSCInF 필름 제조 개요 · LCO/필름/Li 충방전·율속·500 cyc 83.2 %·EIS | 안 봄 (본문 인쇄값으로 충분). 35 µm 필름·2.9 Ω cm² 는 우리 dry-electrode 축 참고 |
-| **6a–e** | FeS₂/필름/Li 60 °C: 834.1 mAh g⁻¹·ICE 96.9 %·100 cyc 91.3 %·**410 Wh kg⁻¹** | 안 봄 (본문 인쇄값으로 충분) |
+| **5a–g** | LPSCInF 필름 제조 개요 · LCO/필름/Li 충방전·율속·500 cyc 83.2 %·EIS | ✅ **본 그림(2026-08-06 추가).** 율속·500 cyc·EIS(223.5→330.6 Ω)·80 °C 노출(134.7→127.8) 전부 본문값과 일치. ⚠ **`Fig. 5a` 도식은 "유발 분쇄 → 복합체 → 캘린더 롤"만 그린다** — SI Methods 의 **doctor blade on PET** 단계가 도식에서 빠져 있어, 본문의 *"slurry casting"* 과 그림의 인상이 어긋난다(§14b-신규④는 아님, 서술 수준 지적). 35 µm·2.9 Ω cm² 는 우리 dry-electrode 축 참고 |
+| **6a–e** | FeS₂/필름/Li 60 °C: 834.1 mAh g⁻¹·ICE 96.9 %·100 cyc 91.3 %·**410 Wh kg⁻¹** | ✅ **본 그림(2026-08-06 추가).** `6e` 의 "This work" 별점 [figure-read ≈] **4.1 mAh cm⁻² / ≈400 Wh kg⁻¹** = `Table S3` (4.17 / 410) 와 정합 ✓. ⚠ `6a` 2nd 방전의 **상부 평탄부가 [figure-read ≈] 2.0 V** 로 보여 본문 *"2.2 and 1.5 V"* 와 0.1–0.2 V 어긋난다(판독 불확실 ±0.1 — **저확신 관찰**, 본문 인쇄값을 우선) |
 | **S1** | 격자상수 vs x (9.825 → 9.856 Å) | 안 봄 — 본문 인쇄값 사용 |
 | **S2** | x = 0.15 XRD (2차상 다수) | 안 봄 |
 | **S3** | DFT 도핑 자리 모델 (In: P-4b/Li-24g/Li-48h · F: Cl-4a/Cl-4d/PS₄-S/InS₄-S) | 안 봄 — 캡션이 자리 목록을 다 준다 |
@@ -670,8 +672,8 @@ Cl-rich argyrodite **Li₅.₇PS₄.₇Cl₁.₃** 에 **InF₃ 를 격자 공�
 **⑤ ⚠ CV 로 "창이 넓어졌다"를 주장하지만 그림은 진폭만 보여준다**
 `Fig. 2d` 에서 두 시료의 산화/환원 **밴드 위치는 같다**. 달라지는 것은 전류 크기다. *"suggesting a wide-voltage window stability"* 는 **onset 이동이 아니라 반응량 감소**로 다시 써야 한다. (그림 라벨 *"Reduce/Oxidize **to** PS₄³⁻"* 도 오기.)
 
-**⑥ ⚠ 본문과 그림이 어긋난다 — 대칭셀 수명**
-본문: *"can be operated stably over **800 h** at a flat overpotential of 22 mV (Figure 3d)"*. 그런데 **`Fig. 3d` 는 0.5 mA cm⁻² 에서 2000 h 를 보여주고**, `Table S2` 도 **2000** 으로 적는다. 그림이 본문보다 **2.5 배 유리**한 방향의 불일치다.
+**⑥ ~~본문과 그림이 어긋난다 — 대칭셀 수명~~ → ❌ 철회 (2026-08-06 재검증)**
+~~본문이 "800 h"라 쓰는데 `Fig. 3d` 는 2000 h 다~~ — **오지적이었다.** 재투입 PDF 본문 전문에서 해당 문장은 *"the Li/LPSCInF (x = 0.06)/Li symmetric cell can be operated stably over **2000 h** at a flat overpotential of 22 mV"* (p.5) 이고, 논문 전체에서 `800` 이 나오는 곳은 **PIB 분자량 "Mw ≈800000" 단 한 군데**다. **본문·`Fig. 3d`·`Table S2` 가 모두 2000 h 로 일치**한다 → §14a.
 
 **⑦ ⚠ `Fig. 4f` 만화가 실제 조성을 반영하지 않는다**
 x = 0.06 에서 사면체의 **94 % 가 여전히 PS₄** 인데, 만화는 "PS₄ 는 분해, InS₄ 는 무분해"로 그려 **6 % 의 InS₄ 가 전체를 지키는 것처럼** 읽힌다. 정작 `Fig. S24b` 는 co-doped 계에서도 **"P-site"** 흡착을 계산했다 — 즉 논문 자신의 계산이 말하는 것은 **"In 이 이웃 P 의 전자환경을 바꿨다"**(2차 근접 효과)인데, 만화·본문 서사는 **"In 이 P 를 대체했다"** 로 읽히게 만든다. 이 구분이 없으면 **필요한 In 량의 스케일링(왜 6 %면 되는가)** 을 설명할 수 없다.
@@ -695,6 +697,17 @@ CCD 시험에서 capacity = CCD × (스텝 시간)이므로 두 축은 종속이
 
 **⑭ ⚠ 극성 척도가 리뷰와 다르다**: 이 논문은 **polar index**(2.4/3.4/4.3), [Fan26] 리뷰 §3.2 는 **donor number**. **NMP·THF 같은 고-DN 용매는 이 논문에서 시험되지 않았다** — 리뷰가 이 논문을 §3.2 의 DN 논증 옆에 놓을 때 **척도가 바뀐다**는 점을 밝혀야 한다.
 
+**⑯ ⚠⚠ [신규 2026-08-06] "양이온의 *환원*이 *산화* 한계를 정한다" — 두 문장 안에서 산화/환원이 뒤집힌다**
+p.5 원문: *"Based on previous reports, **the reduction of cations largely determines the oxidative limit** of sulfide SEs.[20] Compared with high valence ions such as Ge⁴⁺, P⁵⁺, and Sb⁵⁺, In³⁺ has relatively good **reduction stability** and can be electrochemically stabilized **under reducing conditions**."* — 앞 문장은 "산화 한계", 바로 뒤 문장은 전부 **환원** 이야기다. 물리적으로도 **양이온 환원은 환원(음극쪽) 한계**를 정하지 산화 한계를 정하지 않는다(**황화물의 산화 한계는 S²⁻ 가 잡는다** = 우리 ESW 축 ①, `our_dft_baseline.md` onset 2.256 V S-limited). 게다가 인용한 **[20] = [Zhu20] 은 가수분해·환원 안정성 논문**이라 "oxidative limit" 의 근거가 될 수 없다. ⇒ **이 논문이 CV `Fig. 2d` 의 산화쪽 개선을 In³⁺ 로 설명하는 사슬 전체가 이 오기 위에 얹혀 있다.** 우리 축으로 옮길 때 **"In 은 환원(음극) 축, 산화 축은 여전히 S²⁻"** 로 바로잡아 인용할 것.
+
+**⑰ ⚠ [신규 2026-08-06] Li–In 합금 표면에너지 단위가 물리적으로 성립하지 않는다**
+p.5: *"the surface energies of Li–In alloy (100), (110), and (111) are **0.50, 0.40, and 0.51 eV Å⁻²**"*. **1 eV Å⁻² = 16.02 J m⁻²** 이므로 이 값들은 **6.4–8.2 J m⁻²** 다 — **Li 금속 실측 표면에너지 ≈0.5 J m⁻²(≈0.03 eV Å⁻²)의 10–20 배**이고 텅스텐(~3 J m⁻²)보다도 크다. **단위 오기**(eV/표면원자 또는 J m⁻² 를 eV Å⁻² 로 잘못 적었을 가능성)로 보인다. 순위((110) 최저)는 살릴 수 있어도 **절대값은 인용 금지**. ⇒ `Fig. S19a` 를 우리 슬랩 표면에너지와 같은 표에 넣지 말 것.
+
+**⑱ ⚠ [신규 2026-08-06] "Li 캐리어 농도↑" 와 "vacancy 더 생성" 을 한 문장에서 동시에 주장한다**
+p.4: *"doping In³⁺ with the lower valence in place of P⁵⁺ … **increases the Li⁺ carrier concentration** and **generates more vacancies** to transport ions"*. In³⁺→P⁵⁺ 는 전하보상으로 **Li 를 +2/In 넣는다**(5.7 → 5.82). argyrodite 의 Li 자리(48h)는 부분점유이므로 **Li 가 늘면 vacancy 는 줄어든다** — 두 주장은 같은 방향일 수 없다. (Cl-rich 계열의 표준 서사는 그 반대다: **Cl↑ → Li↓ → vacancy↑**. 우리 comp1→modelc 가 정확히 그 경로다.) ⇒ **σ 상승의 기전을 "vacancy 증가"로 옮겨 쓰지 말 것.** 이 논문 자신의 NEB(장벽 0.662→0.236)는 **병목 확장(구조)** 서사이지 캐리어/vacancy 서사가 아니다.
+
+**⑲ ⚠ [신규 2026-08-06] 본문이 자기 그림을 오지칭한다** — p.5: *"As shown in **Figure 4e**, the presence of LiF is verified by the characteristic peak observed at 684.8 eV in the **F 1s** spectrum"*. `Fig. 4e` 는 **toluene 침지 전후 XRD** 이고, 순환 후 F 1s 는 **`Fig. 3e`** 다(바로 두 문장 앞에서 "depicted in Figure 3e,f" 라고 옳게 쓴다). 단순 오식이지만 **LiF-SEI 서사의 유일한 직접 증거를 가리키는 문장**이라 인용 시 `Fig. 3e` 로 고쳐 적을 것.
+
 **⑮ ⚠ 데이터 공개 문구가 [GaF₃] 편과 글자 그대로 같다** (*"privacy or ethical restrictions"*). 재료 논문에 부적절한 상투구가 그룹 템플릿으로 재사용되고 있다.
 
 ---
@@ -711,7 +724,7 @@ CCD 시험에서 capacity = CCD × (스텝 시간)이므로 두 축은 종속이
 ## 13. ★ 1저자 보고용 — A13 을 어떻게 쓸 것인가
 
 **사실관계 (반박 불가)**
-1. 이 논문은 **σ 축에서 In-only(7.0)·F-only(4.3) dose-matched 실험 대조군**을 갖고 있다 (`Fig. S8`).
+1. 이 논문은 **σ 축에서 In-only(7)·F-only(4.3) dose-matched 실험 대조군**을 갖고 있다 (`Fig. S8`). **★ 두 수치는 SI 가 아니라 본문 p.4 에 인쇄돼 있다**(2026-08-06 확인) — 즉 **리뷰 교신저자가 자기 본문에서 이미 In/F 를 갈라 놨다**. A13 을 "갈라라"가 아니라 **"당신 ref [97] 본문이 이미 갈랐고, 그 결과가 축마다 부호가 반대다"** 로 쓸 근거가 더 단단해진다.
 2. 이 논문은 **수분 축에서 pristine/In-only/F-only/co-doped 4 종 계산 대조군**을 갖고 있다 (`Fig. S22`, 감소량 In 0.12 / F 0.15 / co 0.32 eV).
 3. **리뷰가 실제로 인용한 축(유기용매 침지 후 σ 유지)에는 단일 도펀트 대조군이 없다** (`Fig. 4a`, `Fig. S24b` 는 pristine vs co-doped 2 점).
 4. **두 축에서 In 과 F 의 부호가 반대다**: σ 는 **In↑ / F↓**, 수분은 **F(0.15) > In(0.12)**.
@@ -729,3 +742,65 @@ CCD 시험에서 capacity = CCD × (스텝 시간)이므로 두 축은 종속이
 
 **한 문단 총평**
 공정(35 µm 슬러리 캐스팅 필름 → 410 Wh kg⁻¹ FeS₂ 셀)까지 밀고 간 점에서 이 계열 중 **가장 완성도 높은 실증 논문**이다. 그리고 σ·수분 두 축에서 **단일 도펀트 대조군을 실제로 갖춘 드문 사례**이기도 하다. 그러나 **정작 리뷰가 인용한 용매 축은 pristine vs co-doped 2 점뿐**이고, 그 축의 계산 근거(toluene 흡착 −0.41 → −0.12 eV)는 **vdW 보정 없는 PBE** 로 얻은 값이라 절대값 신뢰도가 낮다. DFT 파트 전반이 **k-mesh·vdW·종단·이미지 수 미기재 + 실험의 4–12 배 과도핑 + 미수렴으로 보이는 NEB + 성립하지 않는 Rietveld 점유** 로 재현 불가에 가깝다. **실험은 강하고 계산은 삽화에 가깝다** — 우리가 In/F 기여를 계산 축에서 제대로 분해하면(§8e) 이 계열 전체가 못 한 자리를 채울 수 있다.
+
+---
+
+## 14. ★ 재투입 실물 재검증 (`2026-08-06`) — inbox #55 본문 PDF
+
+> **왜 다시 봤나**: 같은 논문이 `litdb/inbox/55. A Versatile InF 3 Substituted Argyrodite Sulﬁde
+> ElectrolyteToward Ultrathin Films for All-Solid-State Lithium Batteries.pdf` (**사용자 분류 폴더 `DFT`**)
+> 로 재투입됐다. 원 digest(2026-08-05)는 **업로드본 본문 + SI docx** 로 썼으므로, 이번엔 **inbox 실물 본문**
+> 으로 대조했다.
+> **범위**: 본문 12 pp **전문 재추출**(PyMuPDF, 59,789 자 → `litdb/inbox/_55_text.txt`) + **`Fig. 1`–`Fig. 6`
+> 전 6 장 이미지 재판독**(그중 `Fig. 5`·`Fig. 6` 은 **이번이 첫 판독**).
+> ⚠ **SI 는 이번 재투입에 없다** — inbox #55 에 Sup) 파일이 없고 원 digest 의 SI 는 docx 였다.
+> 따라서 **`Fig. S*`·`Table S*` 항목은 이번 검증 대상이 아니다**(원 digest 기록 그대로 유지).
+> ⚠ **주의(도구)**: `extract_figures.py --slug … --clean` 을 이 slug 에 돌리면 **SI 크롭 34 장이 지워진다**
+> (본문 PDF 만으로는 fig_S* 를 다시 못 만든다). 이번에 실제로 지워졌다가 `git checkout` 으로 복구했다.
+> **이 slug 에는 `--clean` 금지** — SI docx 를 다시 넣기 전까지.
+
+### 14a. 교정 1 건 — **§11-⑥ 철회**
+
+| 항목 | 원 digest | 실물 | 판정 |
+|---|---|---|---|
+| 대칭셀 수명 본문값 | *"본문은 **800 h**, `Fig. 3d` 는 2000 h — 2.5 배 불일치"* | 본문 p.5: *"can be operated stably over **2000 h** at a flat overpotential of 22 mV"*. 논문 전체에서 `800` 은 **PIB "Mw ≈800000"** 한 곳뿐 | ❌ **오지적 — 철회.** 본문·`Fig. 3d`·`Table S2` **3자 일치** |
+
+### 14b. 신규 적발 4 건 (전부 §11 에 ⑯–⑲ 로 편입)
+
+| # | 내용 | 심각도 |
+|---|---|---|
+| **⑯** | *"the **reduction** of cations largely determines the **oxidative** limit"* (p.5) — 산화/환원 뒤바뀜. 뒤 문장은 전부 환원 이야기이고, 인용한 [Zhu20] 도 가수분해·환원 논문. **황화물 산화 한계는 S²⁻**(우리 ESW 축 ①) | ⚠⚠ **높음** — CV 산화쪽 개선을 In³⁺ 로 설명하는 사슬 전체가 이 위에 얹혀 있다 |
+| **⑰** | Li–In 합금 표면에너지 **0.50/0.40/0.51 eV Å⁻² = 6.4–8.2 J m⁻²** → Li 실측(≈0.5 J m⁻²)의 **10–20 배**. 단위 오기 | ⚠ 중간 — 순위만 사용, 절대값 인용 금지 |
+| **⑱** | *"increases the Li⁺ carrier concentration **and generates more vacancies**"* (p.4) — In³⁺→P⁵⁺ 는 Li 를 **늘리므로**(5.7→5.82) vacancy 는 **줄어든다**. 두 주장이 동시 성립 불가 | ⚠ 중간 — σ 상승 기전을 "vacancy 증가"로 옮겨 쓰지 말 것 |
+| **⑲** | p.5 *"As shown in **Figure 4e** … F 1s"* → 실제로는 **`Fig. 3e`**(`Fig. 4e` 는 XRD). 두 문장 앞에서는 옳게 "Figure 3e,f" 라고 쓴다 | 낮음 — 인용 시 `Fig. 3e` 로 고쳐 적기 |
+
+### 14c. 출처 정밀화 1 건
+
+- **In-only 7 mS cm⁻¹ · F-only 4.3 mS cm⁻¹ 은 `[SI 인쇄]` 가 아니라 `[본문 인쇄]`** 다 (p.4 두 문장에 그대로 있다;
+  SI `Fig. S8` 은 Nyquist 그림과 조성식). → **§3b 표 수정 + §13-1 강화**. **A13 논증이 더 세진다** —
+  단일도펀트 분리 결과가 **리뷰 교신저자 본인 논문의 본문에** 인쇄돼 있다.
+
+### 14d. 재판독으로 **확인된**(불일치 0) 본문 수치 — 이번에 실물로 다시 맞춘 것
+
+`Fig. 1b` R_wp **4.61 %** / R_p **1.18 %** · a **9.825 → 9.856 Å** · Raman **422.6 → 417.3 cm⁻¹** ·
+XPS S 2p **162.5/161.2**(PS₄) **163.9/161.6**(InS₄) · F 1s **684.5**(pristine) **684.8**(cycled) ·
+In 3d **444.4/451.9** · σ **4.8(x=0) / 5.6(x=0.02) / 4.0(x=0.06)** · Ea **0.29 eV**(x=0.02) ·
+σ_e **2.94×10⁻⁹** · CCD **1.0 → 2.5 mA cm⁻²** · NEB **0.662 → 0.236 eV** ·
+Li(100) **0.38** → Li–In(110) **0.17** · Li–In(100) **0.23 eV** · PDOS **1.78 → 2.75 eV** · LiF gap **7.4 eV** ·
+H₂S **3.82 / 1.73 / 1.16 / 1.10 cm³ g⁻¹** · 대기 10 min 후 σ **2.5 vs 0.24** ·
+ΔE_ads 감소 **In 0.12 / F 0.15 / co 0.32 eV** · toluene E_ad **−0.41 → −0.12 eV** · DCM **−0.30** · EtOAc **−0.69 eV** ·
+용매 σ 감소율 **37.5/56.3/79.2 %(pristine) vs 8.75/17.5/28.8 %(co)** — **`Fig. 4a` 인쇄 절대값
+(4.8→3.0/2.1/1.0 · 4.0→3.65/3.3/2.85)으로 재검산해 소수점까지 정합** ✓ ·
+필름 **35 µm · 1.4 mS cm⁻¹ · Ea 0.33 eV · 274 mS · 2.9 Ω cm² · σ_e 8.31×10⁻¹⁰** ·
+LCO **135.7 mAh g⁻¹ · ICE 86.2 % · 500 cyc 83.2 % · EIS 223.5→330.6 Ω · 80 °C 후 134.7→127.8** ·
+FeS₂ **834.1 · ICE 96.9 % · 100 cyc 91.3 % · 410 Wh kg⁻¹** · µSi **105.1 · ICE 70.2 % · 95.8 %**.
+→ **원 digest 의 본문 수치는 위 전 항목에서 실물과 일치**(교정은 §14a 1 건뿐).
+
+### 14e. 새로 본 그림 2 장에서만 읽은 것 (`figure-read ≈`)
+
+- **`Fig. 5a`**: 도식이 **유발 분쇄 → LPSC-InF@PIB 복합체 → 캘린더 롤(35 µm)** 순서만 그린다.
+  SI Methods 의 **doctor blade on 50 µm PET** 단계가 도식에 없어, 본문 *"slurry casting"* 과 인상이 어긋난다(서술 수준).
+- **`Fig. 6a`**: 2nd 방전 상부 평탄부가 **≈2.0 V** 로 보인다(본문 *"2.2 and 1.5 V"*). 판독 불확실 **±0.1 V** —
+  **저확신 관찰**이므로 본문 인쇄값을 우선한다. (100th 는 실제로 더 높은 쪽으로 이동 = 본문 서술과 정합 ✓)
+- **`Fig. 6e`**: "This work" 별점 **≈4.1 mAh cm⁻² / ≈400 Wh kg⁻¹** = `Table S3`(4.17 / 410) 와 정합 ✓.
+- **`Fig. 5d`·`5f`·`5g`·`6b`·`6d`**: 율속·500 cyc·EIS 곡선 전부 본문 인쇄값과 일치, 새 정보 없음.
