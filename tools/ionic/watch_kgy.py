@@ -97,20 +97,24 @@ def beta(mj, lo=2.0, hi=50.0):
     """
     try:
         d = json.load(open(mj))
-        t, y = d.get("times_ps"), d.get("msd_Li_A2")
-        if not t or not y:
-            return None
-        pts = [(math.log(a), math.log(b)) for a, b in zip(t, y)
-               if lo <= a <= hi and a > 0 and b > 0]
-        if len(pts) < 3:
-            return None
-        n = len(pts)
-        sx = sum(q[0] for q in pts); sy = sum(q[1] for q in pts)
-        sxx = sum(q[0] ** 2 for q in pts); sxy = sum(q[0] * q[1] for q in pts)
-        den = n * sxx - sx * sx
-        return (n * sxy - sx * sy) / den if abs(den) > 1e-30 else None
+        return _beta_series(d.get("times_ps"), d.get("msd_Li_A2"), lo, hi)
     except Exception:
         return None
+
+
+def _beta_series(t, y, lo=2.0, hi=50.0):
+    """시계열 자체에서 log-log 기울기. MTO 계열(msd_Li_A2_mto)에도 같은 게이트를 건다."""
+    if not t or not y:
+        return None
+    pts = [(math.log(a), math.log(b)) for a, b in zip(t, y)
+           if lo <= a <= hi and a > 0 and b > 0]
+    if len(pts) < 3:
+        return None
+    n = len(pts)
+    sx = sum(q[0] for q in pts); sy = sum(q[1] for q in pts)
+    sxx = sum(q[0] ** 2 for q in pts); sxy = sum(q[0] * q[1] for q in pts)
+    den = n * sxx - sx * sx
+    return (n * sxy - sx * sy) / den if abs(den) > 1e-30 else None
 
 
 def md_progress(d):
@@ -144,166 +148,98 @@ print(f"kgy {NOW:%m-%d %H:%M} · GPU {gpu} [util%, used, total MiB] · "
 print(f"  MLIP-MD {'ALIVE' if alive('disorder_ensemble_diffusion') else '-'}")
 print(BAR)
 
-# ═══ ① comp1 멀티시드 (open_items #1 을 닫는 계산) ═══════════════════════
-print("① comp1 멀티시드 — modelc Ea 정본 충돌을 닫는다 (open_items #1)")
+# ═══ ① comp1 멀티시드 — **판정 종료**. 기본은 3줄 요약 ═══════════════════
+# ⚠ 이 항목은 2026-08-06 에 닫혔다(결론: 시간으로는 못 닫는다, 셀 확대 필요).
+#   화면은 '지금 무엇을 봐야 하나' 를 위한 것이지 기록 보관소가 아니다 —
+#   닫힌 판정을 60 초마다 6 줄씩 다시 읽을 이유가 없다. 원장은 open_items #1.
+#   원본 표가 필요하면 `V=1 python3 tools/ionic/watch_kgy.py`.
+VERBOSE = os.environ.get("V", "") not in ("", "0")
+
 ROOT = os.path.join(H, "work", "runs", "comp1_seeds")
-allD = {"deck(1234)": dict(DECK)}
-eas = {}                       # 200 ps 시드별 Ea — 아래 1600 ps 블록이 대조용으로 읽는다
-done_files = []
-caged = []                     # 확산영역 게이트 실패 목록
-n_done = 0                     # 부분 완료(seed 하나에 T 두 개 등)도 세는 카운터
-if not os.path.isdir(ROOT):
-    print(f"  (아직 — {ROOT} 없음)")
-else:
-    for s in (2, 3):
-        srow, Ds = [], {}
-        live = ""
-        for T in TS:
-            d = os.path.join(ROOT, f"s{s}", "d0.00_cfg0", f"T{T}")
-            mj = os.path.join(d, "msd.json")
-            D = None
-            if os.path.isfile(mj):
+LONG = os.path.join(H, "work", "runs", "comp1_seeds_p1600")
+
+
+def scan_seeds(root, seeds, ts=TS):
+    """{seed: {T: (D, beta)}} — msd.json 의 D 가 있는 것만."""
+    out = {}
+    for s in seeds:
+        row = {}
+        for T in ts:
+            for d in (os.path.join(root, f"s{s}", "d0.00_cfg0", f"T{T}"),
+                      os.path.join(root, f"s{s}", f"T{T}")):
+                mj = os.path.join(d, "msd.json")
+                if not os.path.isfile(mj):
+                    continue
                 try:
                     D = json.load(open(mj)).get("D_Li_cm2_s")
                 except Exception:
                     D = None
-            if D:
-                Ds[T] = float(D)
-                b = beta(mj)
-                gate = "" if b is None else ("" if 0.8 <= b <= 1.2 else f"⛔β{b:.2f}")
-                if gate:
-                    caged.append(f"s{s}/T{T}(β{b:.2f})")
-                srow.append(f"{T}K✓({D:.2e}){gate}")
-                done_files.append(mj); n_done += 1
-            else:
-                ps, pct = md_progress(d)
-                if ps is not None:
-                    srow.append(f"{T}K▶{pct:.0f}%")
-                    live = f"    ▶ 지금 T{T} — {ps:.1f}/{TOTAL_PS:.0f} ps ({pct:.0f}%)"
-                else:
-                    srow.append(f"{T}K·")
-        ea = arrhenius(Ds)
-        tag = f"  s{s} : " + "  ".join(srow) + f"   [{len(Ds)}/3]"
-        print(tag + (f"  Ea {ea:.4f} eV" if ea else ""))
-        if live:
-            print(live)
-        if len(Ds) == 3:
-            allD[f"s{s}"] = Ds
+                if D:
+                    row[T] = (float(D), beta(mj))
+                break
+        if row:
+            out[s] = row
+    return out
 
-    # ── 3-seed 판정 (다 끝나면) ─────────────────────────────────────────
-    eas = {k: arrhenius(v) for k, v in allD.items()}
-    eas = {k: v for k, v in eas.items() if v}
-    print(f"  기준선 deck(1234) Ea {eas.get('deck(1234)', float('nan')):.4f} eV "
-          f"(li_transport.json headline)")
-    if len(eas) == 3:
-        vals = list(eas.values())
-        mean = sum(vals) / 3
-        sd = (sum((v - mean) ** 2 for v in vals) / 2) ** 0.5
-        # ⚠⚠ **게이트를 먼저 본다.** 숫자가 다 모였다고 인용 가능한 게 아니다.
-        if caged:
-            print(f"  ⛔ **3-seed 숫자는 모였지만 인용 금지**: Ea = {mean:.4f} ± {sd:.4f} eV "
-                  f"({' / '.join(f'{k} {v:.4f}' for k, v in eas.items())})")
-            print(f"     확산영역 게이트 실패 {len(caged)}건: {', '.join(caged[:6])}")
-            print("     → 200 ps 로는 저이동도 계에서 MSD 가 확산 영역에 못 간다. 창 변경·시드")
-            print("       평균 어느 쪽으로도 구제 안 됨. **prod 연장(1600 ps) 또는 셀 확대**가 답.")
-            print("     근거: kb/results/mlip_md_diffusive_gate_2026_08_01.md")
-        else:
-            print(f"  ✅ **3-seed 완성 + 게이트 통과**: comp1 Ea = {mean:.4f} ± {sd:.4f} eV "
-                  f"({' / '.join(f'{k} {v:.4f}' for k, v in eas.items())})")
-            print(f"     → {MODELC_3SEED} 와 같은 프로토콜로 비교 가능. open_items #1 닫을 조건 충족.")
-            print("     ⚠ 등록 전에 modelc 단일-deck 앵커(0.2235)를 SUPERSEDED 로 표시할 것.")
-    else:
-        left = 6 - n_done
-        eta = ""
-        if len(done_files) >= 2:
-            ts = sorted(os.path.getmtime(f) for f in done_files)
-            per = (ts[-1] - ts[0]) / (len(ts) - 1) / 3600.0
-            # ⚠ per 가 0 이면(같은 mtime) ETA 를 찍지 않는다 — "0 h 남음"은 거짓말이다
-            if per > 0.05:
-                eta = f" · 런당 {per:.1f} h → 남은 {left}개 대략 {per * left:.0f} h"
-        print(f"  진행 {n_done}/6 완료 · 남은 {left}개{eta}")
 
-# ── 1600 ps 재시도 상태 ─────────────────────────────────────────────────
-LONG = os.path.join(H, "work", "runs", "comp1_seeds_p1600")
-if os.path.isdir(LONG):
-    n = len(glob.glob(os.path.join(LONG, "s*", "d*_cfg*", "T*", "msd.json")))
-    live = ""
-    for d in sorted(glob.glob(os.path.join(LONG, "s*", "d*_cfg*", "T*"))):
-        ps, _ = md_progress(d)
-        if ps is not None and not os.path.isfile(os.path.join(d, "msd.json")):
-            live = f" · 지금 {os.path.basename(d)} {ps:.0f}/1605 ps"
-    print(f"  ↻ 1600 ps 재시도: {n}/3 완료{live}")
+s200 = scan_seeds(ROOT, (2, 3))
+s1600 = scan_seeds(LONG, (1, 2, 3, 4))
+n200 = sum(len(v) for v in s200.values())
+n1600 = sum(len(v) for v in s1600.values())
 
-    # ⚠⚠ **재시도의 목적은 '완료'가 아니라 게이트 통과다.** 예전엔 개수만 찍어서,
-    #   1600 ps 가 3/3 이 돼도 화면 맨 위는 여전히 200 ps 의 "인용 금지"를 보여 주고
-    #   정작 답(β 가 확산영역에 들어왔나)은 디스크에 읽히지 않은 채 있었다.
-    #   → 200 ps 와 **똑같은 게이트**를 걸어서 여기서 바로 판정한다.
-    if n:
-        Dl, bl, caged_l = {}, {}, []
-        for mj in sorted(glob.glob(os.path.join(LONG, "s*", "d*_cfg*", "T*", "msd.json"))):
-            m = re.search(r"T(\d+)", mj)
-            if not m:
+
+def _gate_counts(sc):
+    ok = bad = 0
+    for row in sc.values():
+        for _, b in row.values():
+            if b is None:
                 continue
-            T = int(m.group(1))
-            try:
-                D = json.load(open(mj)).get("D_Li_cm2_s")
-            except Exception:
-                D = None
-            if not D:
-                continue
-            Dl[T] = float(D)
-            b = beta(mj)
-            bl[T] = b
-            if b is not None and not (0.8 <= b <= 1.2):
-                caged_l.append(f"T{T}(β{b:.2f})")
-        if Dl:
-            row = "  ".join(
-                f"{T}K({Dl[T]:.2e})" + ("" if bl.get(T) is None else
-                                        (f"✅β{bl[T]:.2f}" if 0.8 <= bl[T] <= 1.2
-                                         else f"⛔β{bl[T]:.2f}"))
-                for T in sorted(Dl))
-            print(f"     1600 ps 게이트: {row}")
-            ea_l = arrhenius(Dl)
-            if len(Dl) == 3 and ea_l:
-                # 200 ps 같은 시드(s2)와 나란히 — 8배 늘렸을 때 답이 얼마나 움직였나
-                s2_200 = eas.get("s2")
-                delta = (f" · 같은 시드 200 ps 대비 {ea_l - s2_200:+.4f} eV"
-                         if s2_200 else "")
-                if caged_l:
-                    print(f"     ⛔ **1600 ps 로도 게이트 실패** {len(caged_l)}건: "
-                          f"{', '.join(caged_l)} → Ea {ea_l:.4f} eV 인용 금지{delta}")
-                    print("        연장으로 안 되면 남은 수는 **셀 확대**뿐이다"
-                          "(62원자 셀 Li 27개 = 통계 부족이 원인).")
-                else:
-                    print(f"     ✅ **1600 ps 게이트 통과** — comp1 Ea = {ea_l:.4f} eV "
-                          f"(단일시드 s2){delta}")
-                    print(f"        ⚠ 단일시드다. {MODELC_3SEED} 와 나란히 놓으려면 "
-                          "**s3/s4 도 1600 ps 로** 돌려 오차막대를 만들어야 한다.")
-                    print("        → 그전까지 open_items #1 은 닫지 않는다.")
-            elif caged_l:
-                print(f"     ⛔ 현재까지 게이트 실패 {len(caged_l)}건: {', '.join(caged_l)}")
+            ok, bad = (ok + 1, bad) if 0.8 <= b <= 1.2 else (ok, bad + 1)
+    return ok, bad
 
-if (not os.path.isdir(LONG) and not alive("run_comp1_seeds.sh")
-        and "c1long" not in tmux):
-    # ⚠ 200 ps 재기동을 권하면 안 된다 — msd.json 이 있어 전부 skip 되고, 설령 돌아도
-    #   게이트를 또 실패한다. 다음 수는 **prod 연장**이다.
-    print("  ⛔ 아무것도 안 돈다. 다음 수는 200 ps 재기동이 아니라 **prod 연장**:")
-    print("     conda activate uma && PY=$(which python3) && \\")
-    print("     tmux new -s c1long -d \"PY=$PY PRODPS=1600 SEEDS=2 \\")
-    print("       OUTROOT=$HOME/work/runs/comp1_seeds_p1600 \\")
-    print("       bash tools/ionic/run_comp1_seeds.sh > ~/work/comp1_p1600.log 2>&1\"")
-    print("     ⚠ 환경변수는 따옴표 **안쪽** · OUTROOT 를 바꿔야 기존 msd.json 에 안 막힌다.")
-    print("     ~27 h (3.0 ps/min × 1605 ps × 3 T). 이 결과가 캠페인 방향을 정한다.")
+
+ok2, bad2 = _gate_counts(s200)
+ok16, bad16 = _gate_counts(s1600)
+
+print("① comp1 — ✅ **판정 종료 (2026-08-06)**: 시간으로는 못 닫는다")
+if n200 or n1600:
+    print(f"   200 ps 게이트 {ok2}/{ok2 + bad2} 통과 · "
+          f"1600 ps(8배) {ok16}/{ok16 + bad16} 통과(1000 K 만) · "
+          f"같은 시드 Ea +0.133 eV 이동 = 3시드 산포의 2.3배")
+    print("   창 재적합도 구제 아님(600 K 는 어떤 창에서도 확산영역 없음) · MTO 도 불가 "
+          "→ **남은 수는 셀 확대**")
+    print("   ⛔ 현재 comp1 에 **인용 가능한 Ea 없음**. 원장: kb/open_items.md #1 · "
+          "db/properties/msd_window_scan_comp1_p1600.csv")
+else:
+    print(f"   (런 없음 — {ROOT})")
+
+if VERBOSE and (n200 or n1600):
+    print("   ── V=1 상세 ──────────────────────────────────────────────")
+    for tag, sc in (("200 ps ", s200), ("1600ps ", s1600)):
+        for s, row in sorted(sc.items()):
+            cells = "  ".join(
+                f"{T}K({D:.2e})" + ("" if b is None else
+                                    ("✅" if 0.8 <= b <= 1.2 else "⛔") + f"β{b:.2f}")
+                for T, (D, b) in sorted(row.items()))
+            ea = arrhenius({T: D for T, (D, _) in row.items()})
+            print(f"   {tag}s{s} : {cells}" + (f"   Ea {ea:.4f} eV" if ea else ""))
+    print(f"   deck(1234) Ea {arrhenius(DECK):.4f} eV (li_transport.json headline)")
+
+# 아직 안 끝난 1600 ps 런이 있으면 그것만 살려 둔다 (진행 중인 것은 화면에 필요하다)
+for d in sorted(glob.glob(os.path.join(LONG, "s*", "*", "T*"))
+                + glob.glob(os.path.join(LONG, "s*", "T*"))):
+    if os.path.isfile(os.path.join(d, "msd.json")):
+        continue
+    ps, _ = md_progress(d)
+    if ps is not None:
+        print(f"   ▶ 진행 중 {os.path.relpath(d, LONG)} — {ps:.0f}/1605 ps "
+              f"({100 * ps / 1605:.0f}%)")
 print(BAR)
 
-
-# ═══ ② VGCF NEB (완료 — 한 줄) ═══════════════════════════════════════════
-NEB = os.path.join(H, "work", "vgcf_hbn", "neb")
+# ═══ ② VGCF NEB — 완료. 한 줄 + 남은 구멍 한 줄 ═══════════════════════════
+NEB = os.path.join(H, "work", "neb")
 if os.path.isdir(NEB):
-    # ⚠ 하위 디렉터리를 다 세면 안 된다 — QE 의 outdir `tmp/` 가 끼어 7/8 로 보였다
-    #   (2026-07-31 실측). **neb.out 이 있는 것만** 케이스다.
-    cases = sorted(os.path.basename(os.path.dirname(o))
-                   for o in glob.glob(os.path.join(NEB, "*", "neb.out")))
+    cases = [c for c in sorted(os.listdir(NEB)) if os.path.isdir(os.path.join(NEB, c))]
     conv = 0
     for c in cases:
         try:
@@ -312,81 +248,124 @@ if os.path.isdir(NEB):
                 conv += 1
         except Exception:
             pass
-    print(f"② VGCF NEB — {conv}/{len(cases)} 수렴 · ✅ 기전 판정 완료(2026-07-30) "
-          "= **CONFINEMENT**")
-    print("   상세: bash tools/vgcf_hbn/watch_neb.sh · "
-          "kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md")
-    print("   ⚠ 남은 구멍은 3L 포화뿐 — 0.147 eV 는 '수렴값' 아닌 **2L 값**으로만 인용.")
-    print("     닫으려면 Li_in_gallery_3L1L (129 atoms = 2L2L 과 같은 크기, kgy 실현 검증됨).")
+    print(f"② VGCF NEB — {conv}/{len(cases)} 수렴 · ✅ 기전 = **CONFINEMENT**(2026-07-30) · "
+          "상세 `bash tools/vgcf_hbn/watch_neb.sh`")
+    print("   ⚠ 0.147 eV 는 **2L 값**(수렴값 아님). 닫으려면 Li_in_gallery_3L1L (129 atoms).")
     print(BAR)
 
-# ═══ ③ 6점 아레니우스 — 2026-08-06 계획 변경 ════════════════════════════════
+# ═══ ③ 6점 아레니우스 — 지금 도는 것. 화면의 주인공 ══════════════════════
 # 왜 500 K 를 뺐나: comp1 이 **600 K / 1600 ps 로도** 게이트 실패(β0.37)했고 창 재적합도
 #   구제가 아니었다(어떤 창에서도 확산영역 없음). 500 K 는 100 K 더 낮은데 계획 prod 는
 #   1/4(400 ps)이라 거의 확실히 탈락한다. → 700/900 을 먼저 돌려 **MTO 의 실측 효과**와
 #   500 K 필요량을 정하고 나서 500 K 를 건다. 6점을 포기한 게 아니라 **순서를 바꾼 것**.
-print("③ 6점 아레니우스 — 700/900 선행 (500 K 는 결과 보고 결정)")
 ARR = os.path.join(H, "work", "runs", "arrhenius_6pt")
 SYSL = ("modelc", "lpsocl", "b2o3")
-PLAN_T = (700, 900)                     # 이번 판에 도는 신규 온도
-PLAN_N = len(PLAN_T) * len(SYSL) * 3 + 3     # 18 + lpsocl 600 재실행 3
+SEEDL = (2, 3, 4)
+# 계획: 신규 700/900 x 3계 x 3시드 = 18 · lpsocl 600 재실행 3 = 21
+PLAN = [(lab, T, s) for lab in SYSL for T in (700, 900) for s in SEEDL] \
+       + [("lpsocl", 600, s) for s in SEEDL]
+ARR_TOTAL_PS = EQ_PS + 200.0
 arr_up = [s for s in ("arr6", "arrchain") if s in tmux]
 
-arr_rows, n_arr, arr_caged = {}, 0, []
-for mj in sorted(glob.glob(os.path.join(ARR, "*", "T*_s*", "**", "msd.json"),
-                           recursive=True)):
-    m = re.search(r"/([^/]+)/T(\d+)_s(\d+)/", mj)
-    if not m:
-        continue
-    lab, T, s = m.group(1), int(m.group(2)), m.group(3)
-    try:
-        D = json.load(open(mj)).get("D_Li_cm2_s")
-    except Exception:
-        D = None
-    if not D:
-        continue
-    n_arr += 1
-    b = beta(mj)
-    arr_rows.setdefault(lab, {}).setdefault(T, []).append((float(D), b))
-    if b is not None and not (0.8 <= b <= 1.2):
-        arr_caged.append(f"{lab}/T{T}s{s}(β{b:.2f})")
+print("③ 6점 아레니우스 — **700/900 선행** (500 K 는 이 β 를 보고 정한다)")
+print("   ⚠ 500 K 400 ps 를 지금 안 태우는 이유: comp1 이 600 K/1600 ps 로도 탈락했다. "
+       "500 K 는 100 K 더 낮고 prod 는 1/4.")
 
-if n_arr:
-    print(f"  진행 {n_arr}/{PLAN_N}"
-          f"{'  ▶ ' + ','.join(arr_up) if arr_up else '  ⛔ 세션 없음 — 죽었는지 확인'}")
-    for lab in SYSL:
-        if lab not in arr_rows:
+cell, live, done_mt = {}, [], []
+for lab, T, s in PLAN:
+    d = os.path.join(ARR, lab, f"T{T}_s{s}")
+    mj = os.path.join(d, "msd.json")
+    if os.path.isfile(mj):
+        try:
+            j = json.load(open(mj))
+            D = j.get("D_Li_cm2_s")
+        except Exception:
+            j, D = {}, None
+        if D:
+            b = beta(mj)
+            # ★ 신규 런은 다중 시간원점(MTO)을 갖는다 — 있으면 그 β 도 같이 본다.
+            #   MTO 의 실측 효과를 보는 것이 이번 판의 목적 중 하나다.
+            bm = beta(mj) if "msd_Li_A2_mto" not in j else _beta_series(
+                j.get("times_ps_mto") or j.get("times_ps"), j["msd_Li_A2_mto"])
+            cell[(lab, T, s)] = (float(D), b, bm, "msd_Li_A2_mto" in j)
+            done_mt.append(os.path.getmtime(mj))
             continue
-        cells = []
-        for T in sorted(arr_rows[lab]):
-            vs = arr_rows[lab][T]
-            dm = sum(v[0] for v in vs) / len(vs)
-            bs = [v[1] for v in vs if v[1] is not None]
-            bm = sum(bs) / len(bs) if bs else None
-            g = "" if bm is None else ("✅" if 0.8 <= bm <= 1.2 else "⛔")
-            cells.append(f"{T}K({dm:.2e}){g}β{bm:.2f}" if bm else f"{T}K({dm:.2e})")
-        print(f"    {lab:7s} " + "  ".join(cells) + f"   [{sum(len(v) for v in arr_rows[lab].values())}]")
-    # ⚠ comp1 에서 배운 것 — 개수만 찍고 게이트를 안 보면 못 쓰는 숫자를 모으게 된다.
-    if arr_caged:
-        print(f"  ⛔ 게이트 실패 {len(arr_caged)}건: {', '.join(arr_caged[:6])}"
-              + (" …" if len(arr_caged) > 6 else ""))
-        print("     → 이 점들은 아레니우스에서 **뺀다**. 창을 옮겨 구제하지 않는다"
+    ps, pct = md_progress(d)
+    if ps is not None:
+        cell[(lab, T, s)] = None
+        live.append((lab, T, s, ps, 100.0 * min(1.0, ps / ARR_TOTAL_PS)))
+
+n_done = sum(1 for v in cell.values() if v)
+print(f"   진행 **{n_done}/{len(PLAN)}**"
+      f"{'  ▶ ' + ','.join(arr_up) if arr_up else '  ⛔ 세션 없음 — 죽었는지 확인'}", end="")
+if len(done_mt) >= 2:
+    ts_ = sorted(done_mt)
+    per = (ts_[-1] - ts_[0]) / (len(ts_) - 1) / 3600.0
+    if per > 0.02:
+        print(f" · 런당 {per:.2f} h → 남은 {len(PLAN) - n_done}개 ≈ {per * (len(PLAN) - n_done):.0f} h",
+              end="")
+print()
+
+# ── 계 x 온도 격자 (시드별 게이트를 그대로 보여준다) ────────────────────────
+# ⚠ 한글은 터미널에서 2칸을 먹는다 — 헤더에 쓰면 열이 어긋난다. 라벨은 ASCII 로.
+W = 27
+print("     " + "system".ljust(9) + "".join(f"{T} K".ljust(W) for T in (600, 700, 900)))
+mto_seen = False
+for lab in SYSL:
+    cells = []
+    for T in (600, 700, 900):
+        if (lab, T, SEEDL[0]) not in [(l, t, s) for l, t, s in PLAN]:
+            cells.append("-".ljust(W))
+            continue
+        marks = []
+        for s in SEEDL:
+            v = cell.get((lab, T, s))
+            if v is None and (lab, T, s) in cell:
+                marks.append(f"s{s}▶")
+            elif v:
+                D, b, bm, has = v
+                mto_seen |= has
+                g = "·" if b is None else ("✓" if 0.8 <= b <= 1.2 else "✗")
+                marks.append(f"s{s}{g}")
+            else:
+                marks.append(f"s{s}·")
+        Ds = [cell[(lab, T, s)][0] for s in SEEDL if cell.get((lab, T, s))]
+        bs = [cell[(lab, T, s)][1] for s in SEEDL
+              if cell.get((lab, T, s)) and cell[(lab, T, s)][1] is not None]
+        tag = (f"{sum(Ds) / len(Ds):.2e} β{sum(bs) / len(bs):.2f}" if Ds and bs
+               else (f"{sum(Ds) / len(Ds):.2e}" if Ds else ""))
+        cells.append(f"{' '.join(marks)} {tag}".ljust(W))
+    print(f"     {lab:9s}" + "".join(cells))
+print("     (s#✓ 게이트통과 · s#✗ 실패 · s#▶ 진행 · s#· 대기 · 값 = 시드평균 D, β)")
+
+for lab, T, s, ps, pct in live:
+    print(f"     ▶ 지금 {lab} T{T} s{s} — {ps:.1f}/{ARR_TOTAL_PS:.0f} ps ({pct:.0f}%)")
+
+# ── 게이트 요약 — comp1 에서 배운 것: 개수만 보면 못 쓸 숫자를 모으게 된다 ──
+bad = [f"{l}/T{t}s{s}(β{v[1]:.2f})" for (l, t, s), v in sorted(cell.items())
+       if v and v[1] is not None and not (0.8 <= v[1] <= 1.2)]
+if n_done:
+    if bad:
+        print(f"   ⛔ 게이트 실패 {len(bad)}/{n_done}: {', '.join(bad[:6])}"
+              + (" …" if len(bad) > 6 else ""))
+        print("      → 이 점들은 아레니우스에서 **뺀다**. 창을 옮겨 구제하지 않는다"
               "(comp1 1600 ps 에서 확인).")
     else:
-        print("  ✅ 여기까지 전부 게이트 통과 — 신규 런의 MTO 효과가 실측되는 중")
-    if n_arr >= PLAN_N:
-        print("  ▶ 다 끝났다. 500 K 필요량을 이 β 로 정하고 나서 걸 것:")
-        print("     python3 tools/ionic/msd_refit_window.py --mto \\")
-        print(f"       --glob '{ARR}/*/T*_s*/**/msd.json'")
-        print("     tmux new -s arr500 -d 'TEMP_PROD=\"500:<정한값>\" LPSOCL_EXTRA=\"\" \\")
-        print("       bash tools/ionic/run_arrhenius_6pt.sh 2>&1 | tee -a ~/logs/arr500.log'")
-elif arr_up:
-    print(f"  ⏳ 착수 직후 — 아직 msd.json 없음 (세션 {','.join(arr_up)})")
-else:
-    print("  · 미착수. 700/900 선행판:")
-    print("     tmux new -s arr6 -d 'TEMP_PROD=\"700:200 900:200\" \\")
-    print("       bash tools/ionic/run_arrhenius_6pt.sh 2>&1 | tee -a ~/logs/arr6.log'")
-    print("    (kgy 는 우리 브랜치가 아니다 — 먼저 tools/ionic/ 와 db/structures/ 를 가져올 것)")
+        print(f"   ✅ {n_done}/{n_done} 게이트 통과")
+    if mto_seen:
+        print("   ★ MTO(다중 시간원점) 감지 — 단일원점 대비 β 산포가 줄어드는지가 이번 판의 관전 포인트")
+
+if n_done >= len(PLAN):
+    print("   ▶ 다 끝났다. 500 K 필요 prod 를 이 β 로 정하고 나서 걸 것:")
+    print("      python3 tools/ionic/msd_refit_window.py --mto \\")
+    print(f"        --glob '{ARR}/*/T*_s*/**/msd.json'")
+    print("      tmux new -s arr500 -d 'TEMP_PROD=\"500:<정한값>\" LPSOCL_EXTRA=\"\" \\")
+    print("        bash tools/ionic/run_arrhenius_6pt.sh 2>&1 | tee -a ~/logs/arr500.log'")
+elif not arr_up and not n_done:
+    print("   · 미착수:")
+    print("      tmux new -s arr6 -d 'TEMP_PROD=\"700:200 900:200\" \\")
+    print("        bash tools/ionic/run_arrhenius_6pt.sh 2>&1 | tee -a ~/logs/arr6.log'")
+print(BAR)
 
 # ═══ 브랜치 상기 ═════════════════════════════════════════════════════════
 br = sh("git -C ~/Yonghoon-DEM-DFT branch --show-current").strip()
