@@ -55,6 +55,8 @@ source .venv/bin/activate
 | `docs/02_CODE_AUDIT.md` | 원본 코드 분석 및 문제점 |
 | `docs/03_ARCHITECTURE.md` | 목표 구조, run.sh 스펙, GPU 현실론 |
 | `docs/04_PROMPTS.md` | Phase 0~7 단계별 프롬프트 + git 규약 |
+| `docs/05_HANDOFF.md` | 구축 환경 설명서 (원본 작성자용) |
+| `docs/06_REVIEW_DECISIONS.md` | **적대적 리뷰 처리 대장 — 기각·유보 항목과 해석 규칙** |
 
 ## 참고 자료
 
