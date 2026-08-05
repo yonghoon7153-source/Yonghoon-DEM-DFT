@@ -176,6 +176,42 @@ def main():
         print(f"   지금 문턱 위 {nab[-1]}개 · 22스텝 동안 {nab[0]}→{nab[-1]}. "
               "⚠ 마지막 몇 개가 가장 오래 걸린다 — 개수를 선형으로 외삽하지 말 것.")
 
+    # ── 1c) ★ **지금** 문턱 위인 원자는 누구이고 어느 층에 있나 ────────────
+    # 이게 "구조가 어떻게 되고 있나" 의 직접적인 답이다.
+    #   · 한 층(z 대역)에 몰려 있다  → 그 층이 아직 이완 중. 시간이 답.
+    #   · 여러 층에 흩어져 있다      → 층별 이완이 아니라 **잡음 바닥**에 닿았을 가능성.
+    #     (degauss/격자 탓이면 특정 층에 몰릴 이유가 없다)
+    frames0 = parse_positions(a.out)
+    last = steps[-1]
+    above = sorted(((v, i) for i, v in last.items() if v >= a.thr), reverse=True)
+    if above:
+        print(f"\n①c 지금 문턱 위 {len(above)}개 — 누구이고 어느 z 에 있나")
+        zof = {}
+        if frames0:
+            fr = frames0[-1]
+            for _, i in above:
+                if i - 1 < len(fr):
+                    zof[i] = fr[i - 1][3]
+        for v, i in above:
+            sym = free.get(i, ("?", True))[0]
+            z = zof.get(i)
+            print(f"   atom {i:4d} {sym:4s} |F| {v:.5f} ({v/a.thr:.1f}×)"
+                  + (f" · z {z:.3f} Å" if z is not None else ""))
+        if len(zof) >= 3:
+            zs = sorted(zof.values())
+            span = zs[-1] - zs[0]
+            # 슬랩 전체 z 범위 대비 얼마나 좁은 대역에 모여 있나
+            allz = [t[3] for t in frames0[-1]] if frames0 else []
+            slab = (max(allz) - min(allz)) if allz else 0.0
+            frac = span / slab if slab > 0 else 1.0
+            print(f"   z 분포 {zs[0]:.2f}–{zs[-1]:.2f} Å (폭 {span:.2f} Å, 슬랩 {slab:.1f} Å 의 {frac*100:.0f}%)")
+            if frac < 0.35:
+                print("   → ✅ **한 대역에 몰려 있다** = 그 층이 아직 이완 중이다. **시간이 답**이고 "
+                      "파라미터를 바꿀 이유가 없다.")
+            else:
+                print("   → ⚠ **슬랩 전역에 흩어져 있다** = 층 이완이 아니라 **힘 바닥(잡음)** 의심. "
+                      "⑤의 degauss/컷 검산으로 넘어간다.")
+
     # ── 2) 상위 원자의 힘·좌표 궤적 ────────────────────────────────────────
     top = [i for i, _ in cnt.most_common(a.top)]
     print(f"\n② 상위 {len(top)}개 원자의 힘 궤적 (최근 {a.steps}스텝)")
