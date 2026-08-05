@@ -71,7 +71,7 @@
 | H₂S 발생·Li₂O/LiOH 부산물 | 가수분해 산물(HSAB: S²⁻ soft base ↔ H soft acid; O는 격자 Li 산화) | §3.1 |
 | σ 유지 0→3 days (1-undecanethiol 코팅, 21.9→7.2 %RH 별) | 소수성 분자층이 습윤공기 처리 가능케 함 (Fig 3d, ref 86) | §3.1 |
 | Li₇P₃S₁₁ σ_SE'/σ_SE vs donor number: decane·1,2-dichloroethane·toluene ≈1 / anisole 약간↓ / 1,4-dioxane ~0.1 / PC·propanenitrile·2-butanone·diglyme "overload"(붕괴) | 용매 극성(donor number)↑ → 열화↑ (Fig 4a, ref 92) | §3.2 |
-| E_ad(toluene@LPSClInF) = **−0.12 eV** | InF₃ 치환이 용매 내성 부여; PS₄는 공격받아 P₂S₆+Li₃P, InS₄는 무분해 (Fig 4c, ref 97) | §3.2 |
+| E_ad(toluene@LPSClInF) = **−0.12 eV** | InF₃ 치환이 용매 내성 부여; PS₄는 공격받아 P₂S₆+Li₃P, InS₄는 무분해 (Fig 4c, ref 97). **✅ ref [97] 원전 digest 완료(2026-08-05): `papers/li2024_inf3_argyrodite_ultrathin_film.md`** — 리뷰 Fig 4c = 원전 `Fig. 4b,c`+`4f`, σ 데이터는 `Fig. 4a`. ⚠ **원전에 "lattice bond energy"·"polarizability" 표현 없음(A12 확정)**, In/F 는 **σ·수분 두 축에서만 분리**됐고 **용매 축은 미분리**(A13) | §3.2 |
 
 ### 4.3 열 안정성
 | 값 | 의미 | 위치 |
@@ -274,7 +274,7 @@
 |---|---|---|---|
 | §3.4/4.1.1 산화 개시 = **S²⁻ 우선 산화**, 황화물 산화전위 ~2 V, LGPS 창 1.7–2.1 V | 정성 서술 + 표준 인용(refs 114/130) | grand-potential onset **2.256 V**(S²⁻-limited, comp1=modelc 동일) + **free-S site-PDOS ⟨3p⟩ −1.1 eV = "어느 S가 먼저"의 자리-분해 정량** | **✓✓ 재현+심화** — 리뷰가 "S²⁻ 우선"이라 말하는 것을 우리는 *free S(4d) vs PS₄ S*까지 분해; [Banik] S-pin과 3자 정합 |
 | §3.1 공기 전략① "O 도핑 → P–O" + Fig 3a(ΔE_ad 완화) + HSAB | LPSC→LPSOCF ΔE_ad −1.63→−1.19 eV; ref 83 = **Li₅.₅PS₄.₅Cl₁.₅ O-doping**(우리 modelc 사촌 조성!) | LPSOCl gap **2.231 eV**(확장)+O 2p 매몰(깨끗한 엣지); ICOHP P–O 강결합(기존 baseline) | **✓ 같은 전략 칸** — 우리 O-doping은 리뷰 전략①의 전자구조 관측량(gap·엣지 청정도) 버전; 단 가수분해(H₂O/H₂S 기체)는 우리 0K hull 밖 — "우리가 H₂S 억제 계산" 주장 금지 |
-| §3.1/3.2 "격자 결합에너지 강화 → 공격 면역"(InF₃ 예) | E_ad −0.12 eV; InS₄ 무분해 vs PS₄ 분해 | **B–S 결합이 free-S를 −1.1→−2.15 eV로 안정화** = 같은 논리의 B₂O₃판 | **✓ 동형 기전** — "취약 단위를 강결합으로 묶는다"; 우리 것은 자리-분해 PDOS라는 신규 관측량 |
+| §3.1/3.2 "격자 결합에너지 강화 → 공격 면역"(InF₃ 예) | E_ad −0.12 eV; InS₄ 무분해 vs PS₄ 분해 | **B–S 결합이 free-S를 −1.1→−2.15 eV로 안정화** = 같은 논리의 B₂O₃판 | **✓ 동형 기전 — 단 *논리 형태까지만* (2026-08-05 원전 대조로 한정)**: "취약 단위를 강결합으로 묶는다"는 같으나 **축이 다르다** — 취약점이 **P⁵⁺(친핵 공격)** vs **free-S²⁻(산화)**, 관측량이 **분자–표면 흡착E** vs **자리분해 PDOS ⟨3p⟩**, 그리고 **[Zhu20] 대기 축에서 In₂S₃ +0.599(9/46위) ↔ B₂S₃ −0.901(44/46위) = 정반대**. 우리 것은 자리-분해 PDOS라는 신규 관측량 (→ `papers/li2024_inf3_argyrodite_ultrathin_film.md` §8d) |
 | §5.2.2 SE 개질 → in-situ 전자절연 SEI (Fig 24a–b = [Liu23]/[Li25]) | 할로겐/F/LiI 도핑 → Li-halide/불화물 SEI(전자절연·이온전도) | `anode_interface_b2o3.json`·`b2o3_sei_gaps.json` = **B₂O₃ 유래 SEI 산물의 gap(전자차단성) 정량 서열** | **✓✓ 정중앙 적중** — 리뷰 §5.2.2의 설계 rubric(전자절연 SEI)을 우리는 *산물별 gap 수치*로 구현; Fig 24a/b가 우리 digest 2편의 그림이라 계보 직접 연결 |
 | §5.2.3 이상 SEI 4조건(나노두께·저장벽 Li⁺·**전자절연**·기계 적응) | 정성 rubric | b2o3_sei_gaps = 조건③의 정량 지표; 조건①②④는 우리 미계산 | **○ 부분** — 조건③만 커버; 두께/기계(①④)는 H-리스트 |
 | §5.1.1–5.1.2 덴드라이트 = 분해산물 **좁은 gap→전자침투→dead Li**; ionization-level 서술자(Fig 17a) | MD(ref 178)·서술자(ref 180) | 우리 SEI-gap 지표와 **형제 서술자** — wide-gap 산물(LiCl·Li₂O류)=차단, narrow-gap=위험 | **✓ 개념 일치** — ref 180 ionization level vs 우리 gap 지표의 정식 비교가 유망한 후속 과제 |
