@@ -2397,6 +2397,17 @@ def main(argv):
               f"V/c_S={_v_platen / _c_s:.2f}  step={vmax:.5f} box/frame"
               + ("  (--platen-mach)" if args.platen_mach > 0 else "  (기하 규칙 0.008·H)")
               + ("   ⚠ 준정적 한계(V/c_P≤0.01) 초과" if _v_platen / _c_p > 0.01 else ""))
+        if args.platen_mach <= 0:
+            # ★ 크로스-베드 비교의 함정 (2026-08-06 실측으로 확인).  기하 규칙 vmax=0.008·(WALL0−FLOOR)
+            #   은 재하 속도를 **베드 높이에 비례**시킨다 → 두께가 다른 두 베드를 비교하면 재료·해상도가
+            #   같아도 재하율이 다르다.  실측: real_14(31.3 µm) V/c_P=0.031 vs kit_ps_7_3(113.9 µm)
+            #   V/c_P=0.105 (3.4×), 후자는 V/c_S=0.75 = 전단파속의 75 % 로 준정적이 전혀 아니다.
+            #   소성은 전단 지배라 이 상태의 wallP 에는 관성이 크게 섞이고, 그 결과 φ 색인 SE 응답곡선
+            #   비교(σ(φ) 전이 검증)가 통째로 교란된다 — 조용히 틀린 답이 나오므로 반드시 경고한다.
+            #   같은 n_grid 안에서는 v 가 불변이므로 해상도 비교는 안전하다 (베드가 같으면 높이도 같다).
+            print(f"           ⚠ 재하율이 베드 높이에 묶여 있다 (H={WALL0 - FLOOR:.4f} box). "
+                  f"두께가 다른 베드끼리 σ 를 비교하려면 --platen-mach 로 마하수를 통일할 것 "
+                  f"— 안 그러면 재하율 차이가 베드 차이로 오독된다.")
     wall_z[None] = WALL0
     _state_wall_z = None
     if _state_in is not None:

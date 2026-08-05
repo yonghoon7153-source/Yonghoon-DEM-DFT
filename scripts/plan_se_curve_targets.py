@@ -188,6 +188,13 @@ def main(argv=None):
     ap.add_argument('--repo', default='/home/ubuntu/Yonghoon-DEM-DFT', help='V100 리포 경로')
     ap.add_argument('--no-overlap', action='store_true',
                     help='겹침 계산 생략 (빠르지만 ε 목표가 ~1%%p 밀려 φ 도달점이 위로 이동)')
+    ap.add_argument('--platen-mach', type=float, default=0.03,
+                    help='플래튼 마하수(V/c_P) — 반드시 지정해서 내보낸다.  기본 0.03 = real_14 '
+                         '기준곡선의 실측 재하율.  ★ 왜 필수인가: mpm3d 의 기본 기하 규칙 '
+                         'vmax=0.008·(WALL0−FLOOR) 은 재하 속도를 베드 높이에 비례시켜, 두께가 '
+                         '다른 두 베드를 비교하면 재하율이 달라진다 (실측 real_14 0.031 vs '
+                         'kit_ps_7_3 0.105 = 3.4배, 후자는 V/c_S=0.75) → σ(φ) 전이 검증이 통째로 '
+                         '교란된다.  마하수로 고정하면 높이와 무관해진다.')
     ap.add_argument('--eps-only', action='store_true',
                     help='ε 목표만 공백구분 한 줄로 (배치 스크립트가 그대로 for 루프에 먹인다)')
     ap.add_argument('--selftest', action='store_true')
@@ -246,6 +253,7 @@ setsid nohup bash -c '
         --se-dump     {a.kit}/se_scaffold.csv \\
         --n-grid {a.n_grid} --sub {a.sub} --print-every 5 \\
         --protocol hold --periodic \\
+        --platen-mach {a.platen_mach:g} \\
         --compact-to $E --save-metrics xfer_{name}_e${{T}}.json \\
         > xfer_{name}_e${{T}}.log 2>&1
     echo "  EXIT=$?  wall=$((SECONDS-t0))s"
