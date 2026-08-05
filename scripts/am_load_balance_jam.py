@@ -72,6 +72,28 @@ UM_PER_LU = 1000.0        # scaffold CSV 는 LIGGGHTS 단위(LU); 1 LU = 1000 µ
 #      4배 외삽이 되어 wallP_SE 가 0 으로 붕괴한다 (10케이스 런에서 전 행 0.0000 로 실제 발생).
 #      SE 응력은 SE 가 자기 몫의 공간에서 얼마나 조밀한가에 달린 물성이므로 φ 로 색인하면
 #      두께가 달라도 곡선 안에 떨어진다.  real_14 환산: V_AM 46679.9 · V_SE 17190.8 · A 2500
+#
+#    ★★★ 전이 가정은 실측으로 **기각되었다** (2026-08-06, scripts/analyze_se_curve_transfer.py).
+#      φ 색인이 두께 외삽 붕괴를 고치는 것은 맞지만, **다른 베드에 그대로 쓸 수는 없다**.
+#      kit_ps_7_3(P:S 7:3, SE/solid 34.2 %, 108–117 µm)을 real_14 와 **재하율까지 맞춰**
+#      (--platen-mach, V/c_P 0.030 vs 0.0306) 같은 φ 에서 재니:
+#          φ 0.700 → 2.96×   0.754 → 2.83×   0.851 → 3.65×   0.905 → 3.83×
+#      즉 같은 φ 에서 kit 의 SE 가 **3배 안팎의 응력**을 받는다.  (재하율을 맞추기 전에는
+#      2.3~3.0× 로 보였다 — kit 이 3.4배 빨리 눌려 σ 가 과소평가돼 있었다.  재하율 교정은
+#      결론을 뒤집은 게 아니라 20~28 % 강화했다.)
+#      부수 관찰: kit 은 φ 0.632 에서 아직 σ=0 (real_14 는 이미 0.073) → **개시가 늦고 그 뒤
+#      훨씬 가파르다**; kit 최대 σ 1.012 GPa = σ_y(0.30)의 3.4배 → 편차응력은 σ_y 에 갇혀도
+#      **정수압은 안 갇힌다**.  real_14(최대 0.278 < σ_y)는 아직 공극으로 흐르는 중이고,
+#      kit 은 잔여 공극에 닿지 못해 가압되는 중이라는 뜻 = 같은 φ 라도 **잔여 공극의
+#      도달가능성(채널 기하)이 다르다**.
+#      ⇒ 이 곡선은 **real_14 전용**이다.  다른 베드에 쓰려면 그 베드에서 직접 재야 한다
+#        (scripts/plan_se_curve_targets.py 가 φ 격자 측정점을 설계해 준다).
+#        미측정 베드에 쓰면 아래 CURVE_BED / assert_curve_bed 가 경고한다.
+#      아직 안 갈린 것: 3배 차가 **조성(채널 기하)** 때문인지 **두께(≈4배)** 때문인지.
+#        kit_ps_{0_10,3_7,5_5,7_3,10_0} 를 같은 두께에서 비교하면 분리된다 (다음 실험).
+#
+#: 이 곡선을 잰 베드.  다른 베드에 쓰면 assert_curve_bed 가 경고한다 (위 ★★★ 참조).
+CURVE_BED = 'real_14'
 REAL14_SE_CURVE = np.array([
     [0.5356, 0.0000],   # ε_union 20.090 %  t 31.511 µm  — jamming 前
     [0.5593, 0.0001],   #        18.685     30.967
@@ -89,6 +111,32 @@ REAL14_SE_CURVE = np.array([
 # 곡선 밖으로 이만큼(φ 단위)까지만 외삽을 허용한다.  그 너머는 값을 만들지 않고 거부한다 —
 # 조용한 외삽이 0.0000 을 내놓고 "SE 항이 없는 계산" 을 정상 결과처럼 보이게 만들었다.
 SE_EXTRAP_MARGIN = 0.03
+
+#: 곡선을 다른 베드에 쓸 때 나가는 경고를 케이스당 한 번만 (배치 출력이 뒤덮이지 않게).
+_CURVE_BED_WARNED = set()
+
+
+def assert_curve_bed(case_name, curve_bed=None, quiet=False):
+    """이 케이스가 곡선을 잰 베드가 아니면 경고한다 (2026-08-06 전이 기각 — 상단 ★★★).
+
+    거부가 아니라 경고인 이유: 베드별 곡선을 다 재기 전까지는 real_14 곡선이 유일한
+    수단이고, 그걸 막으면 파이프라인이 통째로 선다.  대신 **결과에 이 사실이 반드시
+    따라붙게** 해서 "곡선 하나로 전 코퍼스" 로 읽히는 것을 막는다.  실측 배수는
+    같은 φ 에서 최대 3.8× 였으므로 미측정 베드의 절대값은 그 정도 불확실하다.
+    """
+    bed = curve_bed or CURVE_BED
+    key = (str(case_name), bed)
+    if quiet or key in _CURVE_BED_WARNED:
+        return False
+    if bed.lower() in str(case_name).lower():
+        return False                                  # 곡선을 잰 그 베드 → 정상
+    _CURVE_BED_WARNED.add(key)
+    print(f"  ⚠ [curve] '{case_name}' 는 곡선을 잰 베드({bed})가 아닙니다 — SE 응답곡선의 "
+          f"베드-전이는 실측으로 기각됐습니다 (같은 φ 에서 최대 3.8× 차, 2026-08-06). "
+          f"이 케이스의 SE 응력·유도량은 ORDER-OF-MAGNITUDE 로만 읽으십시오. "
+          f"정확한 값이 필요하면 plan_se_curve_targets.py 로 이 베드의 곡선을 직접 재십시오.",
+          file=sys.stderr)
+    return True
 
 
 def phi_se_local(h, v_am, v_se, area):
@@ -238,6 +286,8 @@ def run_forward(cases, h_am=4.0, med_tol=0.015, max_tol=0.04):
         v_se = float((4.0 / 3.0 * np.pi * se_r ** 3).sum())
         area = c['box'] ** 2
         curve = read_curve(c['curve']) if c['curve'] else REAL14_SE_CURVE
+        if not c['curve']:                       # 내장 real_14 곡선을 쓸 때만 베드 경고
+            assert_curve_bed(c.get('name', '?'))
         lo = max(float(am_c[:, 2].min()), (v_am + v_se) / area * 1.001)
         hi = float((am_c[:, 2] + am_r).max())
         h, pach, st = solve_height(am_c, am_r, c['box'], h_am, c['p'], lo, hi,
@@ -355,6 +405,8 @@ def run_cases(cases, band=(3.0, 6.0), tol_frac=0.25):
         v_am = float((4.0 / 3.0 * np.pi * am_r ** 3).sum())
         v_se = float((4.0 / 3.0 * np.pi * se_r ** 3).sum())
         curve = read_curve(c['curve']) if c['curve'] else REAL14_SE_CURVE
+        if not c['curve']:                       # 내장 real_14 곡선을 쓸 때만 베드 경고
+            assert_curve_bed(c.get('name', '?'))
         h_am, asup, sse = invert_h_am(am_c, am_r, c['box'], c['h_dem'], c['p'],
                                       curve, v_am, v_se)
         _, inside = se_response(phi_se_local(c['h_dem'], v_am, v_se, c['box'] ** 2), curve)
@@ -533,6 +585,16 @@ def _selftest():
         sc['ratio'] > VACUOUS_BAND_RATIO and sc['verdict'].startswith('VACUOUS'))
     sc2 = scan_h_am(read_cases(man3), med_tol=1e-6, max_tol=1e-6)
     chk('문턱을 극단으로 조이면 밴드가 좁아지거나 FAIL', not sc2['verdict'].startswith('VACUOUS'))
+
+    # ── 베드-전이 가드 (2026-08-06 기각 이후) ──────────────────────────────────
+    _CURVE_BED_WARNED.clear()
+    chk('곡선을 잰 베드(real_14)에는 경고 없음',
+        assert_curve_bed('input_real_14') is False
+        and assert_curve_bed('real_14_P300') is False)
+    chk('다른 베드에는 경고', assert_curve_bed('kit_ps_7_3') is True)
+    chk('경고는 케이스당 한 번 (배치 출력 보호)', assert_curve_bed('kit_ps_7_3') is False)
+    chk('--quiet 로 억제 가능', assert_curve_bed('kit_ps_5_5', quiet=True) is False)
+    _CURVE_BED_WARNED.clear()
 
     print(f'selftest: {ok}/{ok + len(fail)} PASS' + (f'   FAILED: {fail}' if fail else ''))
     return 0 if not fail else 1
