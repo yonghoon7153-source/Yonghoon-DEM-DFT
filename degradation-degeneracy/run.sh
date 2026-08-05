@@ -229,13 +229,12 @@ case "$MODE" in
     ;;
 
   score)      # Phase 5
-    not_impl score
-    # exec python -m src.scoring --in "${IN_DIR:-$OUT}" --out "$OUT"
+    exec python -m src.scoring --in "${IN_DIR:-$OUT}" --log-level "$LOG_LEVEL"
     ;;
 
   hessian)    # Phase 5
-    not_impl hessian
-    # exec python -m src.hessian --in "${IN_DIR:-$OUT}" --out "$OUT"
+    exec python -m src.hessian --in "${IN_DIR:-$OUT}" \
+      --objective "${OBJECTIVE:-pocv_dvdq}" --log-level "$LOG_LEVEL"
     ;;
 
   report)     # Phase 6
