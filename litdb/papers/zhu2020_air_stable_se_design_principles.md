@@ -255,7 +255,9 @@ binary predominance(Fig 1)로 기준선·조건 고정 → 대표 가수분해 �
 | **RE(Nd) 도핑** | Li–M–S 중 **RE=환원안정 최우수**·수분 중하위(Fig 3a); "doping candidate" 명시 | Nd₂O₃ cascade(NdPO₄/NdCl₃ passivator·음극 Nd⁰+LiCl) | **✓ 환원측 외부 지지**(2020 계산 선례) — 단 **수분측은 Zhu상 Li–RE–S 음수(민감)** → "Nd가 대기안정도 준다" 주장 금지; [Yang25] La-O의 대기 개선은 **O(P–O) 몫**이지 RE 몫 아님(Zhu가 그 분리를 정량 근거로 뒷받침) |
 | **B³⁺** | 황화물·염화물 양쪽에서 **최악급 가수분해**(Fig 2 왼쪽 끝 ~−0.9; 염화물 예외 P·B) | +B₂O₃ 도핑: 산화 onset +0.18 V·B–S −2.15 eV 안정화(전자·산화 축 이득) | **⚠ 축-긴장(real, 방법 아님)**: B–S 결합 형성은 **수분축(B④) 부채** 가능성 — B가 B–O 배위로 남으면 회피, B–S로 가면 Zhu 지도상 위험. B₂O₃ 조성의 가수분해 ΔG 확인 필요 (§10-②) |
 | Li₂S(=free S²⁻ 유사체) | **0.1 % H₂O에선 +0.225 eV로 안정** | (우리 free-S 서사: 산화축에서 가장 취약한 자리) | **△ 뉘앙스**: "free S²⁻가 H₂S 원천"이라는 통념([Fan26] 공기축)과 달리, 저습도 열역학에선 **PS₄→PO₄ 전환이 주 엔진**이고 Li₂S형 S는 조건부 안정. 습도 올리면(μ_H₂O↑) Li₂S도 넘어감 — **조건 명시가 판정을 가름**(method-boundary, real difference 아님) |
-| 염화물 수분안정 | LiCl 등 거의 전부 양수 — **LiCl+H₂O→LiOH+HCl +0.977 eV/H₂O**(SI 정확값) | 우리 분해산물 LiCl(SEI/CEI 절연 buffer) | ✓ **LiCl 산물은 대기·수분에도 불활성**이라는 보너스 의미 부여(이제 정량 인용 가능) — 단 Cl-rich *argyrodite*가 수분안정이란 뜻 아님(호스트는 여전히 황화물; [Wu] 90 °C calendar는 Cl-rich 열세) |
+| 염화물 수분안정 | LiCl 등 거의 전부 양수 — **LiCl+H₂O→LiOH+HCl +0.977 eV/H₂O**(SI 본문) / xlsx 1.335 | 우리 분해산물 LiCl(SEI/CEI 절연 buffer) | ✓ **LiCl 산물은 대기·수분에도 불활성**이라는 보너스 의미 부여(정량 인용 가능) — 단 Cl-rich *argyrodite*가 수분안정이란 뜻 아님(호스트는 여전히 황화물; [Wu] 90 °C calendar는 Cl-rich 열세). ⚠ **인용은 본문 0.977로** — xlsx/그림값 1.335는 §3b.2 오프셋 |
+| **ESW 창** (xlsx 신규) | **Li₇PS₆ 1.708–2.129 V** · Li₃PS₄ 1.708–2.369 V · Li₇P₃S₁₁ 2.291–2.320 V (MP-GGA ordered 상, grand-potential) | comp1 환원한계 **1.242 V** · 산화 onset 2.256 V(LiS₄ 제외) | **⚠ 같은 물질 아님 — 직접 비교 금지**: Li₇PS₆는 **Cl 없는** argyrodite 모체이고 우리는 Li₆PS₅Cl. 차이(1.708 vs 1.242)는 **조성(Cl)·구조·상집합**이 전부 달라서지 방법 차이가 아니다. **✓ 방법 계보는 동일**(둘 다 Zhu/He/Mo 스킴) → **A6 검산 앵커**로 쓰는 게 맞는 용법(§10b.2): 우리 파이프라인에 Li₃PS₄를 넣어 1.708–2.369가 나오는지 확인 |
+| **4.5 V 산화** (xlsx 신규) | Li₃PS₄ ΔE=−2.095 · Li₇PS₆ −2.224 eV/Li (전 화합물 계산됐으나 **본문 미논의**) | 우리 산화 4축(B①–④) | ✗ **아직 아무도 안 쓴 데이터** — 우리 B① 산화 onset 서사에 외부 대조군으로 붙일 수 있는 미개척 칸. 단 4.5 V **고정 전압 1점**이라 우리 onset(연속 μ_Li 프로파일)과 축이 다름 |
 | gap/σ/기계 | 없음(전부 n/a) | — | 비교 대상 아님 |
 | 무질서·kinetics | 0 (ordered MP 상·열역학만; 저자도 passivation 별도 명시) | 우리도 0K hull 동일 한계 + 표면 kinetics 없음 | ✓ 같은 한계 공유 — 실험 H₂S 발생량(cm³/g)과의 정량 대응은 양쪽 다 불가(방향·서열만) |
 
@@ -286,13 +288,75 @@ binary predominance(Fig 1)로 기준선·조건 고정 → 대표 가수분해 �
 4. **인용·프레임**: 대기안정 주장엔 항상 **조건(습도 부분압) 명시** — Zhu의 Li₂S 조건부 안정이 교훈. 또 "HSAB적으로 안정" 대신 "가수분해 반응에너지 기준(Zhu 스킴)"으로 말하면 정량 인용 가능.
 5. **차트 포맷 차용**: Fig 3의 2축(수분×환원) 가이드 차트에 우리 축(σ-blocking·산화 onset·기계)을 붙인 다차원 cascade 차트 = deck/논문 Figure 후보.
 
+## 10b. ★★ B④ moisture 축 실행 레시피 — 이제 정답지까지 있다 (`kb/open_items.md` §H 대응)
+> `comparison_vs_ours.md` §H가 *"가수분해(수분) 축 — B④ moisture ΔG_hyd 계산 **0**"* 을 열어 두고 [Zhu20]을
+> 레시피 원전으로 지목해 왔다. SI PDF로 **절차**가 왔고, 이번 xlsx로 **정답지(검산 앵커)** 가 왔다.
+> ⚠ **우리는 아직 가수분해를 한 건도 계산하지 않았다.** 아래는 실행 계획이지 결과가 아니다.
+
+### 10b.1 절차 — 우리 언어로 (SI Step 1–4 재서술)
+| 단계 | 무엇을 하나 | 필요한 입력 | 우리 보유 |
+|---|---|---|---|
+| **0. 기준 에너지 세팅** | 고체는 MP 형성에너지(GGA-PBE + MP anion correction), **엔트로피·PV 무시**. hull 위 **50 meV/atom 이내 전부** 포함(준안정 포함) | MP API key, chemsys | ✅ (우리 hull 파이프라인 그대로) |
+| **0'. 기체·수산화물 예외 처리** | H₂O·H₂S·HCl은 **NIST-JANAF 실험 ΔH+S @300 K**, 수산화물 19종도 **실험 ΔH**(DFT 아님) | JANAF 표 값 하드코딩 | ⚠ **새로 넣어야 함** — 우리 파이프라인에 기체 μ 자리가 없다 |
+| **0''. 부분압 보정** | `Δμ(x) = k_BT·ln x`; preset `x(H₂O)=10⁻³`(RH ~3 % @300 K), `x(H₂S)=x(HCl)=10⁻⁶`. 수치로 **−0.1786 / −0.3572 eV** | — | ✅ 한 줄 |
+| **1. pseudo-binary 프로파일** | `Li_xM_yS_z – Li_xM_yO_z` 축을 따라 상평형 프로파일을 뽑고(**수산화물 제외**), 출발 조성에 **가장 가까운 전이 상평형**을 대표 반응으로. 임계 `μ_c(H₂O)` 동시 산출 | pymatgen `PhaseDiagram` + `get_transition_chempots` 계열 | ✅ 우리 ESW의 `get_element_profile`과 같은 장치 |
+| **2. 수산화물 존재 확인** | 그 계에 `M(OH)_t`가 있나? 없으면 **Step 1이 최종** | 수산화물 19종 목록 | ✅ |
+| **3. μ_t 계산** | `M(OH)_t ↔ MO_{t/2}` 전이 화학퍼텐셜 `μ_t`. **μ_t > μ_c 면 Step 1이 최종** | — | ✅ |
+| **4. pseudo-oxide 삽입** | `μ_t < μ_c`면 조성 `MO_{t/2}`, 에너지 `E = E(M(OH)_t) − t·μ_c` 인 **가상 상**을 상도에 넣고 Step 1 재계산 → `μ_c′`. `μ_c > μ_c′`면 Step 4 채택, 아니면 Step 1. **에너지는 실제 `M(OH)_t` 기준으로 환산** | — | ✅ |
+| **5. 대표 반응 선정** | 후보 반응 전부 **H₂O 1몰로 정규화**한 뒤 **ΔG 최저**를 채택 (= tracer-H₂O 극한: 미량 물 vs 과량 황화물) | — | ✅ |
+| **산물 후보 집합** | `Li₂S · Li₂O · M–S · M–O · Li–M–S · Li–M–O · M(OH)_t/LiOH · oxysulfide/sulfate(M–S–O, Li–S–O)` | 우리 chemsys에 **S–O 화합물(Li₂SO₄ 등) 포함 필수** | ⚠ 확인 필요 |
+
+🔑 **Fig 1이 이 알고리즘의 그림 버전**이다: 세로 경계 = Step 3의 `μ_t`(Li ≈ −0.63 / Na ≈ −1.27 eV, `figure-read`), 대각선 = Step 1의 전이, 별 = preset. 구현 후 **Fig 1을 재현하는 것이 첫 단위테스트**다.
+
+### 10b.2 검산 앵커 — xlsx의 어느 값으로 우리 구현을 검증하나
+우리 계(Li–P–S–Cl–O–B–Nd)의 구성 이성분·삼성분 중 **xlsx에 정답이 있는 것**을 순서대로:
+
+| 순위 | 검산 대상 | 정답 (xlsx / 본문) | 왜 이것부터 |
+|---|---|---|---|
+| **A1** | `½Li₂S + H₂O → ½H₂S + LiOH` | **+0.225** (본문 식 1과 일치) | 가장 단순. 수산화물 실험값 + 기체 μ + 부분압이 **전부** 걸리는 최소 테스트. 여기서 틀리면 그 아래는 볼 필요 없음 |
+| **A2** | `LiCl + H₂O → HCl + LiOH` | **본문 +0.977** (xlsx 1.335는 §3b.2 오프셋) | HCl 축 검증 **+ 우리가 어느 규약을 쓰는지 확정**. 0.977이 나오면 우리 구현이 논문 *본문* 규약. 1.335가 나오면 HCl 보정을 빠뜨린 것 |
+| **A3** | `2LiOH → Li₂O + H₂O` | **+0.413** (SI 식 10) | 수산화물↔산화물 `μ_t` 자체 = Step 3 단위테스트. Fig 1의 세로선 위치와 동치 |
+| **A4** | `¼Li₃PS₄ + H₂O → H₂S + ¼Li₃PO₄` | **본문 −0.608 / xlsx −0.594** | **우리 계의 핵심 반응**. Step 1(S–O pseudo-binary)이 제대로 도는지. 산물이 Li₃PO₄로 나와야 함 |
+| **A5** | `Li₇PS₆` (argyrodite 모체) | **−0.682**, ESW 1.708–2.129 V | comp1에 가장 가까운 xlsx 화합물. **Cl 없는 우리 계**의 정답지 |
+| **A6** | `Li₃PS₄` 0 V/4.5 V + ESW | ΔE(0V) −1.416 · ΔE(4.5V) −2.095 · **1.708–2.369 V** | 우리 ESW 파이프라인이 Zhu-Mo 스킴을 재현하는지 (가수분해와 독립 검증) |
+| **A7** | `B₂S₃` / `Li₃BS₃` | **−0.901 / −0.893** | +B₂O₃ 리스크 판정의 기준선 (§10b.3-②) |
+| **A8** | `Nd₂S₃` / `LiNdS₂` / `NdCl₃` | **−0.191 / −0.273 / 1.298(→0.584)** | Nd 도핑 서사의 수분측 기준선 |
+
+⚠ **A1–A3이 통과해야 A4 이후가 의미 있다.** 그리고 **A1·A3(황화물·수산화물)은 xlsx=본문이라 안전**하지만, **A2(염화물)는 두 값 중 어느 쪽을 목표로 하는지 먼저 정하고 시작해야 한다** — 우리는 **본문 규약(0.977)** 을 목표로 잡는다(preset 조건 정의와 일치하므로).
+⚠ **재현 규율**: 고체 엔트로피/PV 무시 · 수산화물 무보정 실험값 · 엔트로피는 기체 3종만 · hull+50 meV 준안정 포함 — **같은 혼합 규칙을 써야 Zhu 수치와 비교 가능**. 규칙 하나만 바꿔도 ±0.1 eV급으로 흔들린다.
+
+### 10b.3 그 다음 — 우리 조성에 돌릴 때
+① **대상**: `comp1(Li₆PS₅Cl)` · `modelc(LPSCl1.6)` · `LPSOCl(+O)` · `+B₂O₃` · `Nd-doped`. 예상 결과와 그 의미:
+- LPSOCl은 **ΔG_hyd가 덜 음수**여야 한다 — O-doping이 Li₃PO₄ 형성 구동력을 **합성 단계에서 선지불**했으므로. 그게 안 나오면 우리 O-doping 서사의 열역학 해석을 재검토해야 한다.
+- 산물에 **Li₃PO₄가 나오는지**가 §5.2 서사의 직접 확인.
+② **⚠ +B₂O₃가 급소**: B는 **황화물 최악(−0.90)·염화물도 음수(BCl₃ −0.120→환산 −0.834)** 다. 유일한 방어선은 **B가 B–O 배위로 남는 것**. 그러므로 계산 목표는 "B₂O₃-doped의 ΔG_hyd 값" 하나가 아니라 **분해 산물에서 B가 어디로 가는가**(B–O 유지 vs B–S 형성)다. 리뷰어가 이 논문을 들고 물어볼 자리 — 미리 답을 만들어 둔다.
+③ **`air_hsab` 정성 tier의 승급 — 차이와 한계**:
+
+| | 지금 (`air_hsab`) | Zhu 정량축 | 승급 시 문제 |
+|---|---|---|---|
+| 값 | 4단 큐레이션 `0.2 / 0.45 / 0.6 / 1.0` (47 도판트, 32종이 0.2 동점) | 연속 ΔG (eV/H₂O) | ✅ 동점 해소 — 0.2 동점 32종이 −0.9…+0.6으로 펼쳐진다 |
+| 근거 | HSAB soft-S 친화 + F 보너스 (**우리 계산 아님**) | 반응 열역학 | ✅ 근거 격상 |
+| 이름 | "HSAB 등급" | — | 🔴 **이름부터 부정확**: §3b.4대로 실제 구동변수는 soft/hard가 아니라 **oxophilicity(산물 산화물 안정성)**. Sb³⁺(+0.535) vs Sb⁵⁺(−0.167) 반전을 HSAB는 못 낸다 → **`air_dGhyd`로 개명**하고 HSAB는 해석 주석으로 강등 |
+| 대상 | 도판트 **산화물**(B₂O₃·Nd₂O₃·ZnO…) 47종 | 도판트의 **황화물/염화물** | 🔴 **범주 불일치** — 산화물은 가수분해 반응 자체가 (거의) 없다. "도판트가 들어간 뒤 형성되는 M–S 종"을 대상으로 재정의해야 한다 |
+| 커버리지 | 47 도판트 | Mg **없음**, Co/Ni/Mo **없음**, La는 Li계 없음 | ⚠ 우리 47종 중 **일부는 Zhu 표에 정답이 없다** → 그 칸은 우리가 직접 계산하거나 `n/a`로 남긴다. **문헌값으로 채운 칸과 우리 계산 칸을 반드시 구분 표시** |
+| 게이트 승격 | `screening_roadmap` §8: 큐레이션 값은 **게이트 승격 금지** | — | 우리가 직접 계산한 칸만 게이트로 쓸 수 있다. Zhu 소환값은 **참조열**로만 |
+
+④ **[Yang25] H₂S 실측·[Taklu]/[Li25] HSAB 주장과의 다리**: 우리가 A1–A8을 통과한 뒤 우리 조성 ΔG_hyd를 내면, 문헌의 정성 주장과 실측 H₂S(cm³/g) 사이에 **정량 중간항**이 생긴다. ⚠ 단 **열역학 서열 ↔ 실측 발생량은 1:1 대응 불가**(kinetics·표면적·결정성) — 방향과 서열까지만.
+
 ## 11. 인용 가능 문장 (deck/paper용)
 - "Zhu & Mo's database thermodynamics traces the moisture hypersensitivity of thiophosphates to the formation of highly stable Li₃PO₄ (ΔG_hyd = −0.608 eV/H₂O for Li₃PS₄); our ICOHP (P–O −8.43 vs P–S −5.98) and O-site preference (−0.67 eV/O) provide the bond-level counterpart, and O-doping pre-pays exactly this driving force."
 - "Rare-earth cations were computationally identified (Zhu 2020) as the most reduction-tolerant dopants among lithium sulfides — an external precedent for our Nd-based cascade — while their moisture benefit is marginal, so the air-stability gain of RE–O co-doping must be credited to P–O bond formation."
 - "Hydrolysis energetics are condition-dependent: even Li₂S is thermodynamically stable at 0.1 % H₂O (+0.225 eV/H₂O) — air-stability claims require an explicit humidity chemical potential."
+- "Across the 269 compounds tabulated by Zhu & Mo, the hydrolysis energy of binary sulfides splits into two disjoint groups separated by a 0.31 eV gap (Pr₂S₃ −0.140 to MnS +0.170 eV/H₂O), indicating that moisture tolerance is governed less by a continuous soft/hard-acid scale than by whether the cation's oxide is markedly more stable than its sulfide."
+- "The soft-acid rationale holds at the extremes (Au⁺/Cu⁺/Ag⁺ ≥ +1.0 vs Be²⁺/Al³⁺/B³⁺ ≤ −0.90 eV/H₂O) but not in between: Sb³⁺ (+0.535) and Sb⁵⁺ (−0.167) differ by 0.70 eV for the same element, so oxidation state — not softness alone — sets the hydrolysis energy."
+- ⚠ **내부용 (외부 인용 전 재확인 필요)**: "In the published spreadsheet and the chloride scatter plots, hydrolysis energies of chlorides appear to omit the 1 ppm HCl partial-pressure term (0.357 eV per HCl at 300 K) that the SI text applies; correcting for it moves Li₂ZrCl₆ (0.632 → −0.08) and LiAlCl₄ (0.383 → −0.33 eV/H₂O) to the moisture-sensitive side." — **우리 유도**이지 논문 주장이 아니다.
 
 ## 12. 주의/한계 (over-claim 방지)
-- **SI PDF는 확보, 수치표 xlsx는 미보유**: 대표반응 알고리즘·DFT 세팅·SI 반응 6종은 확보(§4). 그러나 **화합물별 정확값 전표(가수분해·0 V·4.5 V)는 xlsx에만** — 본 digest의 Fig 2·3·S1·S2 좌표값은 전부 "판독 ~값".
+- ✅ **SI PDF + xlsx 전부 확보 (2026-08-05)**: 대표반응 알고리즘·DFT 세팅·SI 반응 6종(§4) + **269 화합물 전표**(§3b). Fig 2·3·S1의 좌표는 이제 **정확값**으로 인용한다(Fig S2만 미판독).
+- 🔴 **염화물 부분압 규약 불일치 (§3b.2)** — 논문의 chloride 표·산점도가 **HCl 1 ppm 보정을 빠뜨렸다**(HCl 1개당 +0.357 eV). **Fig S1 한 장 안에서 기준선(맞음)과 데이터 점(틀림)의 규약이 다르다.** 인용 시: (a) 황화물은 xlsx 그대로 안전, (b) **염화물은 `−0.357×n_HCl` 환산 후 인용하거나 as-published임을 명시**, (c) "Li₂ZrCl₆·Li₃YCl₆는 수분안정"이라는 Fig 3c 기반 인용은 **하지 말 것**(환산하면 −0.08 / +0.17 = 경계선). ⚠ 이 환산은 **우리 추론**이고 논문이 제시한 값이 아니다.
+- **xlsx vs 본문의 소소한 불일치**: Li₃PS₄ 본문 −0.608 vs xlsx −0.594 (Δ0.014, entry/버전 차이로 추정). 인용은 **본문값 우선 + xlsx 병기**.
+- **`Li₄SiS₄`가 entry id 공란**인데 SI Methods의 자체-DFT 4종 목록엔 없다 — 출처 미상 1건, 인용 주의.
+- **Fig 2·3a에 `Cr⁶⁺` 라벨이 있는데 xlsx에 Cr⁶⁺ 화합물이 없다**(Cr은 Cr³⁺만) — 축 라벨 잔재로 보이나 미확인(`figure-read`, 낮은 확신).
 - **열역학 only**: kinetics·표면 passivation·수화층·입계 없음(저자 명시). 실험 H₂S 부피(cm³/g)와 1:1 대응 불가 — 서열/방향만.
 - **MP GGA + 실험 기체/OH 혼합 스킴**: 절대 ΔG ±0.1 eV급 스킴 의존성 예상(anion correction·OH 실험값 무보정 명시·고체 엔트로피/PV 무시·hull+50 meV 준안정 포함). 우리가 재구현할 때 같은 혼합 규칙을 써야 비교 가능.
 - **조성 대표성**: "Li–M–S"는 MP 등재(hull+50 meV) 화합물 — argyrodite(Li₆PS₅Cl)·Cl-rich·도핑 고용체는 직접 계산 대상 아님. 우리 조성 이식은 우리가 직접 계산해야.
@@ -307,3 +371,6 @@ binary predominance(Fig 1)로 기준선·조건 고정 → 대표 가수분해 �
 - **grand-potential 분석**: 열린 계(기체·Li 저장고와 물질 교환) 자유에너지 최소화 — 우리 ESW의 μ_Li 자리에 μ_H₂O·μ_H₂S를 넣으면 이 논문.
 - **HSAB**: hard/soft acid–base 경험칙 — soft acid(Sn⁴⁺·Cu⁺ 등)는 soft base(S²⁻) 선호 → 황화물 결합 강해 가수분해 저항. 이 논문이 이를 ΔG로 정량화.
 - **환원 반응에너지 (0 V)**: Li/Na 금속 접촉 상황(μ_alkali=0)에서 alkali 흡수 분해 ΔG(eV per alkali) — 음수 클수록 음극에서 잘 분해.
+- **cathodic / anodic limit (V)**: 같은 grand-potential 스캔에서 분해가 시작되는 **아래 전압 / 위 전압** = ESW 양끝. xlsx에만 있고 본문엔 없다. **eV 단위 반응에너지(0 V·4.5 V)와 V 단위 limit은 다른 양** — 전자는 "그 전압에서 얼마나 세게 분해되나", 후자는 "몇 V부터 분해되나".
+- **부분압 보정 `Δμ(x) = k_BT·ln x`**: 기체를 표준상태(1 bar)가 아니라 실제 희박 농도에서 볼 때 화학퍼텐셜을 낮추는 항. 300 K에서 **0.1 % → −0.1786 eV**, **1 ppm → −0.3572 eV**. 생성 기체(H₂S/HCl)에 붙으면 반응을 **더 자발적으로**, 반응물(H₂O)에 붙으면 **덜 자발적으로** 만든다. 이 항 하나를 빠뜨리면 판정 부호가 바뀔 수 있다 — 실제로 이 논문의 염화물 표에서 그런 일이 일어났다(§3b.2).
+- **oxophilicity (산소친화도)**: 어떤 양이온이 S보다 O와 결합하기를 얼마나 더 선호하는가. §3b.4의 결론 — 가수분해 지도의 실제 구동변수는 HSAB의 soft/hard가 아니라 이것이다(같은 원소도 산화수가 바뀌면 뒤집힌다).
