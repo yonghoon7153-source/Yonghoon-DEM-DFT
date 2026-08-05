@@ -51,24 +51,39 @@ import numpy as np
 
 UM_PER_LU = 1000.0        # scaffold CSV 는 LIGGGHTS 단위(LU); 1 LU = 1000 µm 규약
 
-# ── real_14 정착 SE 응답곡선 (2026-08-05 실측, --compact-to + hold, n_grid 384, sub 160) ──────
-#    (φ_SE_local, 정착 wallP GPa).  wallP 는 **전체 면적**으로 정규화된 값이므로 그대로 더하면
-#    된다 (A_supp 로 다시 나누지 말 것 — 그게 이 식이 (1−A)·σ 꼴이 아닌 이유).
-#    30.22 µm 점은 --am-jam q=95 런, 나머지 4점은 --compact-to 스윕.
+# ── real_14 정착 SE 응답곡선 (2026-08-05 **11점 재생성**, GPU 5.5 h) ────────────────────
+#    (φ_SE_local, 정착 wallP GPa).  wallP 는 전체 면적 정규화값이라 그대로 더한다
+#    (A_supp 로 다시 나누지 말 것 — 이 식이 (1−A)·σ 꼴이 아닌 이유).
+#    조건: n_grid 384 · sub 160 · --protocol hold · --periodic · --arch cuda --gpu-mem 8
+#          --compact-to <ε_target> (변위구동 → 실측 정착 두께·wallP 를 그대로 기록)
+#    ★ 옛 5점 폐기 이유: 실행 조건(--sub/--frames)이 복구 불가였고(json 미기록·산출물 부재),
+#      같은 목표로 재현하니 σ 가 **계통적으로 +8~19 % 높았다** = 다른 프로토콜 확정.
+#      MPM 은 random_seed 고정 결정론이라 런-투-런 노이즈가 아니다.
 #
-#    ★ 색인 변수가 두께(µm)가 아니라 **φ_SE_local = V_SE / (A·h − V_AM)** 인 이유:
-#    두께는 베드마다 다른 양이라 real_14(28~30µm) 곡선을 6mAh 베드(111~116µm)에 대면
-#    4배 외삽이 되어 wallP_SE 가 0 으로 붕괴한다 (2026-08-05 10케이스 런에서 전 행 0.0000 로
-#    실제 발생).  SE 응력은 SE 가 자기 몫의 공간에서 얼마나 조밀한가에 달린 **물성**이므로
-#    φ_SE_local 로 색인하면 두께가 달라도 곡선 안에 떨어진다.
-#    real_14 환산 근거: V_AM 46679.9 µm³ · V_SE 17190.8 µm³ · A 2500 µm² (겹침 946.7)
-#      두께 30.22/29.81/28.92/28.24/27.70 µm → φ 0.5955/0.6174/0.6710/0.7187/0.7617
+#    ★★ 곡선의 두 성질 (이 트랙의 물리 결론):
+#      (1) φ ≲ 0.58 → σ ≈ 0.  SE 가 **jamming 전**이라 하중을 못 받는다 (진짜 0).
+#      (2) φ ≳ 0.81 → **포화**.  von Mises σ_y = 0.30 GPa 에서 항복하므로 측정 최대가
+#          0.2771 < 0.30 이다.  ⇒ **SE 혼자서는 target 0.30 GPa 를 원리적으로 못 낸다** —
+#          2026-08-05 오전 "freeze-probe 로는 어떤 scaffold 런도 정지 불가" 의 물리적 근거.
+#          하중-분담 항 A_supp·H_AM 이 없으면 방정식에 해가 없다.
+#
+#    ★ 색인 변수가 두께(µm)가 아니라 φ_SE_local = V_SE/(A·h − V_AM) 인 이유:
+#      두께는 베드마다 다른 양이라 real_14(26~31µm) 곡선을 6mAh 베드(111~116µm)에 대면
+#      4배 외삽이 되어 wallP_SE 가 0 으로 붕괴한다 (10케이스 런에서 전 행 0.0000 로 실제 발생).
+#      SE 응력은 SE 가 자기 몫의 공간에서 얼마나 조밀한가에 달린 물성이므로 φ 로 색인하면
+#      두께가 달라도 곡선 안에 떨어진다.  real_14 환산: V_AM 46679.9 · V_SE 17190.8 · A 2500
 REAL14_SE_CURVE = np.array([
-    [0.5955, 0.0098],
-    [0.6174, 0.0359],
-    [0.6710, 0.1038],
-    [0.7187, 0.1411],
-    [0.7617, 0.1690],
+    [0.5356, 0.0000],   # ε_union 20.090 %  t 31.511 µm  — jamming 前
+    [0.5593, 0.0001],   #        18.685     30.967
+    [0.5785, 0.0004],   #        17.598     30.558
+    [0.5956, 0.0117],   #        16.670     30.218   ← DEM 두께(30.28) 근방
+    [0.6174, 0.0388],   #        15.529     29.810
+    [0.6707, 0.1157],   #        12.945     28.925
+    [0.7184, 0.1582],   #        10.847     28.244
+    [0.7617, 0.1850],   #         9.095     27.700
+    [0.8106, 0.1979],   #         7.272     27.155   ← 포화 시작
+    [0.8588, 0.2376],   #         5.616     26.679
+    [0.9131, 0.2771],   #         3.900     26.203   ★ σ_y 0.30 근접, 최대
 ])
 
 # 곡선 밖으로 이만큼(φ 단위)까지만 외삽을 허용한다.  그 너머는 값을 만들지 않고 거부한다 —
@@ -110,26 +125,30 @@ def support_fraction(centres, radii, h, box_um):
 
 
 def se_response(phi, curve=REAL14_SE_CURVE):
-    """측정 SE 응답곡선 wallP_SE(φ_SE_local) — log 선형 보간, 좁은 마진까지만 외삽.
+    """측정 SE 응답곡선 wallP_SE(φ_SE_local) — **선형 보간** (log 아님).  반환 (GPa, inside).
 
-    응력은 조밀도에 대해 지수적으로 오르므로 log 공간에서 보간한다.  반환은
-    (wallP_GPa, inside).  **마진 밖은 nan** 을 돌려준다 — 조용히 0 을 내놓으면
-    "SE 항이 통째로 빠진 계산" 이 정상 결과로 보고된다 (실제로 그렇게 당했다).
+    ★ 2026-08-05 11점 재생성으로 보간 방식을 바꿨다.  옛 5점은 좁은 구간(φ 0.596~0.762)만
+    덮어 지수적으로 보였고 log 보간이 맞았지만, 넓힌 곡선은 **S-커브**다:
+      · 아래쪽에 σ = 0 인 점이 실재 → log 는 −inf 라 다룰 수 없다
+      · 위쪽은 σ_y 포화 → 지수 외삽하면 σ_y 를 넘어 발산한다
+    11점이 φ 0.5356~0.9131 을 Δφ ≈ 0.02~0.05 로 촘촘히 덮으므로 선형이면 충분하다.
+
+    경계 처리는 **물리적으로 비대칭**이다:
+      · φ < 최소 → **0.0 반환 (inside=True)**.  더 느슨하면 jamming 이 더 멀어질 뿐 —
+        외삽이 아니라 확실한 물리다.
+      · φ > 최대 → **거부(nan)**.  포화하는 건 알지만 정확한 값은 모른다 (σ_y 근방).
     """
-    xs = curve[:, 0]                          # φ 오름차순
-    ys = np.log(curve[:, 1])
+    xs = np.asarray(curve[:, 0], float)
+    ys = np.asarray(curve[:, 1], float)
     if xs[0] > xs[-1]:
         xs, ys = xs[::-1], ys[::-1]
-    inside = bool(xs[0] <= phi <= xs[-1])
-    if inside:
-        return float(np.exp(np.interp(phi, xs, ys))), True
-    if phi < xs[0] - SE_EXTRAP_MARGIN or phi > xs[-1] + SE_EXTRAP_MARGIN:
-        return float('nan'), False            # 거부 — 값을 만들지 않는다
     if phi < xs[0]:
-        k = (ys[1] - ys[0]) / (xs[1] - xs[0])
-        return float(np.exp(ys[0] + k * (phi - xs[0]))), False
-    k = (ys[-1] - ys[-2]) / (xs[-1] - xs[-2])
-    return float(np.exp(ys[-1] + k * (phi - xs[-1]))), False
+        return 0.0, True                      # jamming 전 — 물리적 0
+    if phi > xs[-1] + SE_EXTRAP_MARGIN:
+        return float('nan'), False            # 포화 구간 — 값 미상, 거부
+    if phi > xs[-1]:                          # 좁은 마진: 마지막 값 유지 (포화 → 상수 근사)
+        return float(ys[-1]), False
+    return float(np.interp(phi, xs, ys)), True
 
 
 def porosities(h, solid_union_um, solid_sphere_um):
@@ -390,11 +409,21 @@ def _selftest():
     for hh, ss in REAL14_SE_CURVE:
         chk(f'응답곡선이 측정점 {hh:.2f}µm 을 재현', abs(se_response(hh)[0] - ss) < 1e-9)
     chk('응답곡선은 SE 가 조밀할수록 크다', se_response(0.75)[0] > se_response(0.60)[0])
-    chk('측정 구간 밖은 inside=False 로 표시', se_response(0.80)[1] is False)
-    chk('★ 마진 밖은 값을 만들지 않고 nan (조용한 0 이 SE 항 실종을 감췄다)',
-        not np.isfinite(se_response(0.30)[0]) and not np.isfinite(se_response(1.20)[0]))
-    chk('마진 안(0.03)은 외삽하되 inside=False',
-        np.isfinite(se_response(0.78)[0]) and se_response(0.78)[1] is False)
+    # ★ 2026-08-05 11점 곡선의 **비대칭** 경계 (물리)
+    chk('아래쪽 밖 = 0.0 + inside (jamming 전은 확실한 물리, 외삽 아님)',
+        se_response(0.30) == (0.0, True))
+    chk('위쪽 마진 밖 = nan 거부 (포화값 미상 — 조용한 값 생성 금지)',
+        not np.isfinite(se_response(1.20)[0]) and se_response(1.20)[1] is False)
+    chk('위쪽 좁은 마진 = 마지막 값 유지 + inside=False (포화 상수 근사)',
+        abs(se_response(0.93)[0] - REAL14_SE_CURVE[:, 1].max()) < 1e-12
+        and se_response(0.93)[1] is False)
+    chk('★ σ_max < σ_y 0.30 — SE 혼자 target 0.30 도달 불가 (하중분담 항이 필수인 근거)',
+        REAL14_SE_CURVE[:, 1].max() < 0.30)
+    chk('곡선이 φ 로 단조 비감소 (S-커브: jamming 0 → 상승 → σ_y 포화)',
+        all(REAL14_SE_CURVE[i, 1] <= REAL14_SE_CURVE[i + 1, 1] + 1e-12
+            for i in range(len(REAL14_SE_CURVE) - 1)))
+    chk('선형 보간이 측정 11점을 정확히 재현',
+        all(abs(se_response(float(x))[0] - float(y)) < 1e-12 for x, y in REAL14_SE_CURVE))
     chk('φ_SE_local = V_SE/(A·h − V_AM)',
         abs(phi_se_local(30.22, 46679.9, 17190.8, 2500.0) - 0.5955) < 5e-4)
     # 베드를 통째로 k 배 (h→k·h, 부피→k·배) 하면 φ 는 정확히 불변 → 같은 응력이 나와야 한다.
@@ -423,6 +452,18 @@ def _selftest():
     hstar, _, _ = solve_height(cc, rr, 50.0, 4.0, 0.30, _clo, _chi)
     hb, _, _ = invert_h_am(cc, rr, 50.0, hstar, 0.30)
     chk('역산 H_AM 이 정방향과 일치', abs(hb - 4.0) < 0.02)
+
+    # ★ 단일-베드 경로 회귀 (2026-08-05): --invert/--sweep-p 가 v_am/v_se 를 안 넘겨
+    #   φ_SE_local=0 → SE 항이 통째로 사라지던 버그.  φ 를 제대로 주면 0 이 아니어야 한다.
+    _vam = float((4.0 / 3.0 * np.pi * rr ** 3).sum())        # 위 합성 베드(r=1.5, 200개)
+    _vse = _vam * 0.35                                        # 임의의 SE 부피
+    _h0 = 29.0
+    chk('★ 단일-베드: v_am/v_se 를 주면 φ>0 이고 SE 항이 살아있다',
+        phi_se_local(_h0, _vam, _vse, 2500.0) > 0
+        and invert_h_am(cc, rr, 50.0, _h0, 0.30, REAL14_SE_CURVE, _vam, _vse)[2] >= 0.0)
+    chk('★ v_am/v_se 없이 호출하면 φ=0 → SE 항 0 (옛 버그의 서명 — 기본값 의존 금지)',
+        phi_se_local(_h0, 0.0, 0.0, 2500.0) == 0.0
+        and se_response(0.0) == (0.0, True))
 
     # 관례: union 은 sphere 보다 항상 크다(= 고체를 적게 세므로) — 부호 회귀 방지
     pu, ps = porosities(30.28, 25.170, 25.548)
@@ -595,7 +636,9 @@ def main(argv=None):
 
     # 고체 부피 — 두 관례.  sphere = 구 부피 합(겹침 이중계상, DEM 정본).
     # union 은 렌즈 겹침을 빼서 근사한다 (SE-SE + AM-SE; 삼중 겹침은 무시 = 상한).
-    v_sph = float((4.0 / 3.0 * np.pi * am_r ** 3).sum() + (4.0 / 3.0 * np.pi * se_r ** 3).sum())
+    v_am_sph = float((4.0 / 3.0 * np.pi * am_r ** 3).sum())
+    v_se_sph = float((4.0 / 3.0 * np.pi * se_r ** 3).sum())
+    v_sph = v_am_sph + v_se_sph
 
     def lens_overlap(c1, r1, c2, r2, same):
         from scipy.spatial import cKDTree
@@ -632,7 +675,10 @@ def main(argv=None):
     if a.invert:
         if a.dem_thickness <= 0:
             ap.error('--invert 에는 --dem-thickness 가 필요합니다')
-        hb, asup, sse = invert_h_am(am_c, am_r, a.box_um, a.dem_thickness, a.p_target)
+        # ★ v_am/v_se 필수 — 없으면 φ_SE_local=0 이 되어 SE 항이 통째로 사라진다
+        #   (2026-08-05: 11점 곡선 도입 후 이 경로가 옛 두께-색인 시그니처로 남아 있던 버그)
+        hb, asup, sse = invert_h_am(am_c, am_r, a.box_um, a.dem_thickness, a.p_target,
+                                    REAL14_SE_CURVE, v_am_sph, v_se_sph)
         print(f'역산 @ {a.dem_thickness:.2f}µm, P={a.p_target:g} GPa:')
         print(f'  AM 지지 면적 {asup:.3%}  ·  SE 응답 {sse:.4f} GPa (= P 의 {sse / a.p_target:.1%})')
         print(f'  → 필요한 H_AM = ({a.p_target:g} − {sse:.4f}) / {asup:.5f} = **{hb:.2f} GPa**')
@@ -648,9 +694,10 @@ def main(argv=None):
     print(f'{"P (GPa)":>8} {"h (µm)":>8} {"A_supp":>8} {"SE (GPa)":>9} {"AM 몫":>7} '
           f'{"ε_union":>9} {"ε_sphere":>9} {"vs DEM":>8}')
     for p in ps:
-        h, pach, st = solve_height(am_c, am_r, a.box_um, a.h_am, p, lo, hi)
+        h, pach, st = solve_height(am_c, am_r, a.box_um, a.h_am, p, lo, hi,
+                                   v_am_sph, v_se_sph)
         asup = support_fraction(am_c, am_r, h, a.box_um)
-        sse, inside = se_response(h)
+        sse, inside = se_response(phi_se_local(h, v_am_sph, v_se_sph, A))
         pu, psph = porosities(h, solid_uni, solid_sph)
         vs = f'{h - a.dem_thickness:+.2f}' if a.dem_thickness > 0 else '—'
         flag = ('' if st == 'ok' else f'  ⚠{st}') + ('' if inside else '  ⚠SE외삽')
