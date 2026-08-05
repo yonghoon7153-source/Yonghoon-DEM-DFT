@@ -84,6 +84,77 @@ Li₃PS₄ + 3 H₂O  →  Li₃PO₄ + 3 H₂S↑
 > ⚠ 단 **우리 계산은 0 K hull 축이고 가수분해(H₂O/H₂S 기체)는 그 밖**이다 —
 > "우리가 H₂S 억제를 계산했다"는 주장 금지 (digest §11 과 같은 규율).
 
+### 🔵 건진 문장 (2차분)
+
+> "This process triggers **local structural rearrangements or interfacial phase transitions**,
+> leading to a **continuous deterioration of interfacial transport properties** during
+> electrochemical cycling."
+
+> "From a structural perspective, the **low lattice energy, insufficient charge density, and
+> highly polar covalent bond characteristics** collectively constitute the root causes of the
+> **thermodynamic and kinetic** susceptibility of sulfide SEs to hydrolysis and oxidation reactions."
+
+> "The **Hard-Soft-Electron-Hole (HSEH) theory** proposed by Mulks et al. extends the HSAB
+> concept to **multi-electron systems** [80]."
+
+### 🟢 우리 해석 (2차분)
+
+**Q3 — 이 문장이 절의 무게중심을 옮긴다.**
+앞까지는 "보관·취급 중 대기 노출"(storage) 얘기였는데, 이 문장은 그 피해가 **셀을 밀봉한 뒤에도
+사이클 내내 계속된다**(operation)로 넘긴다. 대기 노출로 계면에 심어진 산물이 **씨앗**이 되어
+사이클마다 상전이·재배열을 이어간다는 것 — *"잠깐 노출됐는데 괜찮겠지"* 가 안 통하는 이유가 여기다.
+발표에서 **"대기 안정성은 보관 문제가 아니라 수명 문제"** 한 줄로 쓰면 잘 먹힌다.
+
+**Q4 — 이 절 전체의 '근본 원인' 요약문.** 구조 기술자 세 개를 세운다:
+① 낮은 격자에너지 ② 불충분한 전하밀도 ③ 강한 극성 공유결합.
+★ 이 세 개가 **정확히 우리가 계산으로 갖고 있는 축**이라 접점이 제일 좋은 문장이다:
+
+| 원고의 정성 기술자 | 우리 정량 대응물 | 어디에 |
+|---|---|---|
+| low lattice energy | EOS **B₀** · E_hull | `db/properties/eos.json` · explorer |
+| (in)sufficient charge density | **Bader 净전하** (Li·P·S 자리별) | `db/properties/bader_ae_*.csv` |
+| polar / covalent 성격 | **ICOHP P–S** · **ELF 결합 중앙 최솟값** | `db/properties/*icohp*` · `elf_bonds_3sys_origin.csv` |
+
+> 값은 여기 옮기지 않는다 → `litdb/our_dft_baseline.md` · `/explorer`.
+> ⚠ 그래도 **"우리가 가수분해를 계산했다"는 주장은 금지** — 우리 축은 0 K hull 이고
+> H₂O/H₂S 기체는 그 밖이다. 쓸 수 있는 말은 *"원고가 정성으로 지목한 근본 원인에 대해
+> 우리는 조성별 정량 기술자를 갖고 있다"* 까지.
+
+**Q5 — HSEH.** HSAB 는 원래 **2중심·2전자** 짝짓기 휴리스틱인데, HSEH(Mulks, Chem 2024)는 이를
+**다전자계 + 전자/홀 거동**으로 확장한 틀이다. 우리에게 반가운 이유는 **화학 휴리스틱을
+전자구조 관측량으로 갈아타는 다리**이기 때문 — HSEH 를 들먹이는 순간 자연스러운 정량 언어가
+**밴드엣지 성격 · 결합분해 COHP · 전하 재분배**가 되고, 그건 우리가 이미 내는 것들이다
+(LPSOCl 의 O 2p 매몰·깨끗한 엣지, B₂O₃ 의 free-S 안정화가 그 결의 관측량).
+
+### 🔴 원고가 얼버무린 곳 (2차분)
+
+| # | 지점 | 무엇이 문제 | 우리 입장 |
+|---|---|---|---|
+| **A3** ⭐ | Q4 의 *"highly **polar** covalent bond"* | **분극률(polarizability) ↔ 극성(polarity) 을 뒤섞었다.** 앞(Q1)에서는 P–S 가 M–O 대비 *stronger polarizability* 라고 옳게 썼는데, 여기선 *highly polar* 라 한다. 전기음성도 차는 Δχ(P–S) ≈ 0.4 vs Δχ(P–O) ≈ 1.25 — 즉 **P–S 는 산화물보다 덜 극성이고 더 공유결합적이며, 대신 더 분극되기 쉽다**(무른 전자구름). 논지에 필요한 건 **높은 분극률**이지 높은 극성이 아니다 | **리비전 지적 1순위.** 두 용어를 갈라 쓰도록 요구. 우리 쪽 대응물도 **ICOHP(공유성)** 와 **ELF(전자 국재)** 로 갈려 있어 구분이 실익이 있다 |
+| **A4** | Q4 의 *"thermodynamic **and** kinetic susceptibility"* | **A2 와 같은 뭉갬이 재발**한다 — 이번엔 요약문에서. 1회성 표현 실수가 아니라 **원고 전반의 패턴** | 리뷰 코멘트를 "이 문장 하나"가 아니라 **"절 전체에서 두 축을 분리하라"** 로 올려 쓴다 |
+| **A5** | Q5 의 HSEH | **2024년 신생 이론**을 기성 틀처럼 인용한다. 확인할 것 — ① HSEH 가 **황화물 SE 에 실제로 적용된 선례**가 있나, 아니면 유비로 끌어온 것인가 ② 뒤 본문에서 HSEH 로 **무엇을 설명·예측**하나, 아니면 이름만 얹고 끝나나 | 후자면 **name-drop 지적**. 남기려면 "무엇을 새로 설명하는지" 한 문장을 요구 |
+
+---
+
+## 🧾 리뷰 코멘트 초안 (누적 — 리비전 회신용)
+
+> 원고에 실제로 쓸 문장 후보. 위 🔴 표를 한 단계 올려 정리한 것.
+
+1. **(용어) 분극률 ≠ 극성** — §3.1 은 P–S 결합을 한 곳에서는 *stronger polarizability*,
+   다른 곳에서는 *highly polar covalent* 로 기술한다. 전기음성도 차를 보면 P–S 는 P–O 보다
+   **덜 극성·더 공유결합적이며 더 분극되기 쉽다**. 논지가 기대는 성질은 후자이므로 두 용어를
+   구분해 쓸 것을 권한다. *(A3)*
+2. **(축 분리) 열역학과 속도론** — §3.1 은 HSAB 의 **열역학적** 선호를 *kinetic barrier* ·
+   *kinetic susceptibility* 로 반복해서 이어 붙인다. 실제 가수분해 속도는 표면적·결정성
+   (비정질 > 결정질)·조성에 크게 좌우되므로, 두 축을 분리해 서술하고 속도론 주장에는
+   그에 맞는 근거를 붙일 것을 권한다. *(A2 · A4)*
+3. **(주범 특정) 물 vs 산소** — 원고는 *moisture and oxygen* 을 병렬로 놓지만, 보고된 열화
+   실험 대부분이 **RH 를 지배 변수**로 삼는다. H₂O 가수분해와 건조 O₂ 산화의 상대적 기여를
+   구분해 주면 뒤의 완화 전략(흡습 차단 vs 산화 차단) 선택 근거가 분명해진다. *(A1)*
+4. **(신생 이론 위치)** HSEH [80] 가 이 리뷰에서 **무엇을 새로 설명하는지** 한 문장으로
+   밝혀 줄 것. 황화물 SE 에 적용된 선례가 없다면 "유비로 도입"임을 명시하는 편이 안전하다. *(A5)*
+
+
 ---
 
 ## 📌 인용문 대장 (누적)
@@ -92,6 +163,9 @@ Li₃PS₄ + 3 H₂O  →  Li₃PO₄ + 3 H₂S↑
 |---|---|---|---|---|
 | Q1 | §3.1 | P–S/M–S 는 M–O 대비 **결합에너지 낮고 분극률 큼** → H₂O/O₂ 공격에 취약 [78] | 그대로 인용 가능 | — |
 | Q2 | §3.1 | S²⁻ 는 전형적 **soft base**, 양성자·극성분자에 강한 친화성 | ⚠ 원고는 이어서 *kinetic barrier* 로 연결 — **그 연결은 빼고** 인용 | "S²⁻ 의 soft-base 특성이 가수분해를 **열역학적으로** 유리하게 만든다" |
+| Q3 | §3.1 | 국소 구조 재배열·계면 상전이 → **사이클 중 계면 수송 물성의 지속적 열화** | 그대로 인용 가능 · 다만 "연속"의 기전(상 성장 vs 응력 파괴)은 원고가 안 가름 | "대기 안정성은 보관 문제가 아니라 **수명 문제**다" |
+| Q4 | §3.1 | 낮은 격자에너지 · 불충분한 전하밀도 · 강한 극성 공유결합 = 가수분해·산화 취약성의 근본 원인 | ⚠ **A3**(polar↔polarizable 혼동) · **A4**(열역학/속도론 뭉갬) 둘 다 걸림 — **그대로 인용 금지** | "격자에너지 · 전하밀도 · 결합의 공유성/분극률이 황화물의 취약성을 **열역학적으로** 규정한다" |
+| Q5 | §3.1 | **HSEH**(Mulks 2024)가 HSAB 를 **다전자계**로 확장 [80] | ⚠ 신생 이론 — "확장한 틀이 제안돼 있다" 수준으로만 | "HSAB 를 다전자·전자/홀 거동으로 확장한 HSEH 가 제안돼 있다(Mulks 2024)" |
 
 ---
 
