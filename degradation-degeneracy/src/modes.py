@@ -133,6 +133,13 @@ def build_overrides(lli: float, lam_pe: float, lam_ne: float,
     guards 위반(농도>최대, porosity 초과 등)은 InfeasibleConditionError로 던진다
     — 해당 조합이 고정 cutoff 하에서 물리적으로 성립하지 않는다는 뜻이며,
     grid는 이를 failed.csv에 기록하고 계속 진행한다.
+
+    ★ 영(zero) 조건도 빈 dict를 반환하지 않는다 (리뷰 F15, 2026-08-06 실측 확정).
+      예전에는 `lli=lam_pe=lam_ne=0 → {}`였는데, 그러면 그 조건만 완충 baseline에서
+      시작하고 나머지는 완방→CC충전(CV 없음) 프레임이라 **reference만 1.74% 더
+      충전된 상태**가 됐다. 결과: 참값이 0인 조건에서 LAM_PE·LLI가 ~1.6%p로 추정.
+      (실측: lli=1e-4 조건의 r=0.98264, lam_pe_hat=0.0158, lli_hat=0.0157)
+      영 조건도 완방 농도를 명시해 모든 조건을 같은 프레임에 둔다.
     """
     g = guards or {}
     max_mode = float(g.get("max_mode_value", 0.9))
@@ -145,9 +152,6 @@ def build_overrides(lli: float, lam_pe: float, lam_ne: float,
     if lam_pe_type not in ("de", "li") or lam_ne_type not in ("de", "li"):
         raise InfeasibleConditionError(
             f"lam type은 de|li 만 지원: pe={lam_pe_type}, ne={lam_ne_type}")
-
-    if lli == 0 and lam_pe == 0 and lam_ne == 0:
-        return {}
 
     ov: dict = {}
 

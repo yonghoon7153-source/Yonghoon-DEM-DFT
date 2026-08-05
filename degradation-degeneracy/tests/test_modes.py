@@ -71,9 +71,30 @@ def test_unknown_mode_raises(baseline, d_orig):
 
 # ---------------------------------------------------------------- 조합(build_overrides)
 
-def test_zero_degradation_is_identity(baseline, d_orig):
-    """모든 값 0이면 overrides가 비어야 함 (reference 조건)."""
-    assert build_overrides(0, 0, 0, "de", "de", baseline, d_orig) == {}
+def test_zero_condition_stays_in_discharged_frame(baseline, d_orig):
+    """★ 리뷰 F15: 영 조건도 완방 프레임에 있어야 한다 (빈 dict 아님).
+
+    예전 구현은 lli=lam_pe=lam_ne=0 에서 {}를 반환했고, 그러면 그 조건만
+    완충 baseline에서 시작해 나머지(완방→CC충전)와 프레임이 어긋났다.
+    실측 결과 reference가 1.74% 더 충전된 상태가 되어, 참값 0인 조건의
+    LAM_PE·LLI가 ~1.6%p로 추정되는 계통 편향이 생겼다.
+    """
+    ov = build_overrides(0, 0, 0, "de", "de", baseline, d_orig)
+    assert ov != {}, "영 조건이 완충 baseline으로 새면 프레임 불일치가 재발한다"
+    # 농도는 완방 상태 그대로, 구조 파라미터는 건드리지 않음
+    assert ov[P_NE1_INIT] == pytest.approx(d_orig.ne_primary, rel=1e-12)
+    assert ov[P_NE2_INIT] == pytest.approx(d_orig.ne_secondary, rel=1e-12)
+    assert ov[P_PE_INIT] == pytest.approx(d_orig.pe, rel=1e-12)
+    for k in (P_PE_VF, P_PE_POR, P_NE1_VF, P_NE2_VF, P_NE_POR):
+        assert k not in ov
+
+
+def test_zero_condition_matches_tiny_degradation_limit(baseline, d_orig):
+    """연속성: 영 조건과 극소 열화 조건의 override가 매끄럽게 이어져야 한다."""
+    ov0 = build_overrides(0, 0, 0, "de", "de", baseline, d_orig)
+    ov1 = build_overrides(1e-6, 0, 0, "de", "de", baseline, d_orig)
+    for k in (P_NE1_INIT, P_NE2_INIT, P_PE_INIT):
+        assert ov1[k] == pytest.approx(ov0[k], rel=1e-5)
 
 
 def test_single_lam_ne_de_equals_original(baseline, d_orig):
