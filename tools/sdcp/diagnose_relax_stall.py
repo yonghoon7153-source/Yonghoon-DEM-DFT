@@ -146,9 +146,22 @@ def main():
     #   자유 원자가 24개면 어느 하나는 늘 튀어 있다 — 그게 정상이다.
     #   **문턱 위 개수**는 그 착시가 없다. 이게 줄면 수렴 중, 눌러앉으면 진짜 문제.
     print(f"\n①b 문턱({a.thr:g}) 위 원자 수 — max 하나보다 이게 진행을 정직하게 보여준다")
+    # ⚠⚠ **쓰다 만 블록을 세면 안 된다.** 계산이 도는 중이면 마지막 힘 블록이 잘려서
+    #   자유 원자가 덜 파싱되고, 그러면 '문턱 위 개수' 가 **가짜로 뚝 떨어진다**
+    #   (실측 2026-08-06: 마지막이 21→9 로 보였다). 파싱된 자유 원자 수로 검증한다.
+    seen = [len(s) for s in steps]
+    partial = [k for k, v in enumerate(seen) if v < n_free]
     nab = [sum(1 for v in s.values() if v >= a.thr) for s in steps]
-    print("   " + " ".join(f"{v:2d}" for v in nab[-min(len(nab), 22):]) + f"   (자유 {n_free}개 중)")
-    if len(nab) >= 6:
+    show = min(len(nab), 22)
+    print("   " + " ".join(("  ?" if seen[k] < n_free else f"{nab[k]:3d}")
+                           for k in range(len(nab) - show, len(nab)))
+          + f"   (자유 {n_free}개 중)")
+    if partial:
+        print(f"   ⚠ 원자가 덜 파싱된 스텝 {len(partial)}개(= '?') — 쓰다 만 블록이다. "
+              "세지 않는다. 마지막이면 다음 갱신 때 다시 볼 것.")
+    full = [nab[k] for k in range(len(nab)) if seen[k] >= n_free]
+    if len(full) >= 6:
+        nab = full
         half = len(nab) // 2
         e0 = sum(nab[:half]) / half
         e1 = sum(nab[half:]) / (len(nab) - half)
@@ -159,6 +172,9 @@ def main():
             print(f"   ⛔ **늘고 있다** ({e0:.1f} → {e1:.1f}) — 발산 의심.")
         else:
             print(f"   ⚠ **평평하다** ({e0:.1f} → {e1:.1f}) — 여기서부터가 진짜 정체다.")
+        # 남은 개수로 예산을 본다 — 마지막 몇 개가 오래 걸리므로 선형 외삽은 하지 않는다.
+        print(f"   지금 문턱 위 {nab[-1]}개 · 22스텝 동안 {nab[0]}→{nab[-1]}. "
+              "⚠ 마지막 몇 개가 가장 오래 걸린다 — 개수를 선형으로 외삽하지 말 것.")
 
     # ── 2) 상위 원자의 힘·좌표 궤적 ────────────────────────────────────────
     top = [i for i, _ in cnt.most_common(a.top)]

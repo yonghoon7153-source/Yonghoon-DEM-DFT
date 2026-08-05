@@ -455,6 +455,55 @@ def _sdcp_maxcomp(out_path, in_path):
         return []
     return out
 
+def _sdcp_nabove(out_path, in_path, thr=1e-3):
+    """이온스텝별 (문턱 위 자유원자 수, 파싱된 자유원자 수).
+
+    ⚠⚠ **max|F| 하나로 진행을 판정하면 안 된다** (2026-08-06 실측).
+      자유 원자가 24개면 어느 하나는 늘 튀어 있어서 max 가 톱니를 그리고, 그걸
+      '평탄역/정체' 로 오독한다. 정작 개별 원자는 0.042 -> 0.001 로 38배 내려가 있었다.
+      **문턱 위 개수**는 그 착시가 없다.
+    ⚠ 계산이 도는 중이면 마지막 힘 블록이 잘린다 — 그러면 개수가 가짜로 뚝 떨어지므로
+      파싱된 자유원자 수를 같이 돌려주고 부족한 스텝은 호출부에서 버린다.
+    """
+    free, on, n = {}, False, 0
+    try:
+        for line in open(in_path, errors="ignore"):
+            if line.lstrip().startswith("ATOMIC_POSITIONS"):
+                on, n = True, 0
+                continue
+            if on:
+                f = line.split()
+                if len(f) < 4:
+                    break
+                n += 1
+                free[n] = not (len(f) >= 7 and f[4] == "0" and f[5] == "0" and f[6] == "0")
+    except OSError:
+        return []
+    nfree = sum(1 for v in free.values() if v)
+    if not nfree:
+        return []
+    out, cur, on = [], {}, False
+    try:
+        for line in open(out_path, errors="ignore"):
+            if "Forces acting on atoms" in line:
+                on, cur = True, {}
+                continue
+            if on and ("Total force" in line or line.lstrip().startswith("The ")):
+                if cur:
+                    out.append((sum(1 for v in cur.values() if v >= thr), len(cur)))
+                on, cur = False, {}
+                continue
+            f = line.split()
+            if on and len(f) >= 9 and f[0] == "atom" and free.get(int(f[1]), False):
+                try:
+                    cur[int(f[1])] = max(abs(float(v)) for v in f[6:9])
+                except ValueError:
+                    pass
+    except OSError:
+        return []
+    return [(a, b, nfree) for a, b in out]
+
+
 _V2 = "/data/work/runs/sdcp_v2"
 # ⚠ U-ramp 2단계다 — 1단계 scf_u0.out(U=0, 밀도 만들기) → 2단계 relax.out(U=6.2, 이완).
 #   어느 쪽을 보고 있는지 화면에 찍지 않으면 "이온스텝 0/80" 을 정체로 오해한다.
@@ -523,6 +572,21 @@ if want("sdcp"):
                         _need = math.log(b / 1e-3) / -math.log(r)
                         print(f"           감소율 {r:.3f}/스텝 → 1e-3 까지 약 {_need:.0f}스텝")
             print(f"           참고: Total force {forc[-1]:.6f} (자유원자 전체 노름 — 문턱 대상 아님)")
+            # ★ max 하나보다 이게 진행을 정직하게 보여준다 (위 _sdcp_nabove 주석 참조)
+            na = _sdcp_nabove(_RLX, os.path.join(_V2, "slab_relax", "relax.in"))
+            na_full = [(x, tot) for x, seen, tot in na if seen >= tot]
+            if len(na_full) >= 6:
+                seq = [x for x, _ in na_full]
+                tot = na_full[0][1]
+                print(f"   문턱위  {' '.join(str(v) for v in seq[-14:])}  (자유 {tot}개 중)")
+                h = len(seq) // 2
+                e0, e1 = sum(seq[:h]) / h, sum(seq[h:]) / (len(seq) - h)
+                verdict = ("✅ 줄고 있다 — 수렴 중" if e1 < e0 * 0.85 else
+                           ("⛔ 늘고 있다 — 발산 의심" if e1 > e0 * 1.15 else
+                            "⚠ 평평하다 — 여기서부터가 진짜 정체"))
+                print(f"           전반 {e0:.1f} → 후반 {e1:.1f}  {verdict}")
+                if len(na) > len(na_full):
+                    print(f"           (쓰다 만 블록 {len(na)-len(na_full)}개 제외)")
         if scfn:
             mx = [int(x) for x in scfn]
             print(f"   SCF     스텝당 반복수 {mx[-6:]}  (300 이면 가짜 수렴 의심)")
