@@ -1,0 +1,182 @@
+{
+ "slug": "miao2023_role_of_interfaces_solid_state_batteries",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "663eb3cf-56._Role_of_Interfaces_in_SolidState_Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Change from liquid–solid interfaces to solid–solid interfaces. a) An LIB cell consisting of multiphase composite electrode layers and a porous polymer separator layer with liquid electrolyte soaked through the whole cell. b) An SSB cell consisting either of multiphase composite electrode layers and an SE layer (left), or of a composite cathode layer, an SE layer, and a Li-metal anode (right). Schematic illustration for the Li-ion transport in c) LIBs and d) SSBs. The Li+ migration potential increases at each interface. originating from the grains and GBs, respectively, as shown in Figure 2a. Nevertheless, for many SEs, the GBs do not induce a separate, easily distinguishable semicircle in the Nyquist plot.[34,35] In this situation, the GB resistance needs to be deter- mined by deconvoluting each component using the equivalent circuits constructed according to the observed capac",
+   "bbox": [
+    42.2,
+    64.9,
+    552.5,
+    326.7
+   ],
+   "w": 2128,
+   "h": 1092,
+   "dpi": 300,
+   "src": "663eb3cf-56._Role_of_Interfaces_in_SolidState_Batteries.pdf",
+   "blank": 0.328
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. a) Typical Nyquist plots of sulfide (or halide) SEs under dif- ferent pressures and that of oxide SEs. Rb and RGB represent the grain bulk resistance and GB resistance, respectively. Schematic illustration of the variation of b) Li+ concentration and c) energy barrier across the GB. Ea(G) and Ea(GB) represent the activation energy in the grains and GBs, respectively. semicircle in the Nyquist plot (Figure 2a).[40–44] However, there are few reports on the effect of GBs in sulfide and halide SEs so far.[45,46]",
+   "bbox": [
+    45.0,
+    64.9,
+    300.2,
+    452.7
+   ],
+   "w": 1064,
+   "h": 1617,
+   "dpi": 300,
+   "src": "663eb3cf-56._Role_of_Interfaces_in_SolidState_Batteries.pdf",
+   "blank": 0.587
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. a) Schematic illustration of the polymer-matrix CSE. Lewis acid–base interactions between fillers and the polymer-Li salt system are shown in the two enlarged images at the right panel. Schematic dependency of ionic conductivity σ on b) the filler content and c) temperature. At Point A, there is no filler. At Point B, continuous percolation pathways along the interface layer of the fillers are formed. The activation energy Ea of the polymer-matrix CSEs is reduced by adding inorganic fillers due to the percolative pathways along the interface layer for ion transport. Typical Ea values of PEO/LiClO4- matrix CSEs with oxide nanoparticles,[70,71] PAN/LiClO4-matrix CSE with oxide nanowires,[75] and PEO/LiTFSI-matrix CSEs with oxide nanowires,[76] are presented. PAN and LiTFSI represent polyacrylonitrile and bis(trifluoromethane)sulfonamide lithium, respectively. d) Schematic illustr",
+   "bbox": [
+    45.0,
+    64.9,
+    555.1,
+    488.8
+   ],
+   "w": 2126,
+   "h": 1767,
+   "dpi": 300,
+   "src": "663eb3cf-56._Role_of_Interfaces_in_SolidState_Batteries.pdf",
+   "blank": 0.339
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Microstructure of the composite electrodes with a) inorganic SE and b) polymer-matrix SE. In (a), voids appear between the inorganic SE particles and the AMPs. Cracking or delamination may occur due to the volume change of AMPs during cycling. In (b), intimate contact is realized between the polymer-matrix SE and the AMPs. Voids may appear after cycling because of the plastic deformation of the polymer-matrix SE. c) Schematic energy diagram of the CAMP and sulfide SE. When the μc of the CAMP is higher than the HOMO of the sulfide SE, the sulfide SE is not oxidized and the CAMP/sulfide system is thermodynamically stable (left). If the μc of the CAMP is lower than the HOMO of the sulfide SE, a cathode electrolyte interphase (CEI) with a HOMO lower than the μc is required to keep the CAMP/sulfide system stable (middle). If the HOMO of the CEI is higher than the μc, continuous inte",
+   "bbox": [
+    45.0,
+    64.9,
+    555.3,
+    511.0
+   ],
+   "w": 2127,
+   "h": 1860,
+   "dpi": 300,
+   "src": "663eb3cf-56._Role_of_Interfaces_in_SolidState_Batteries.pdf",
+   "blank": 0.339
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 10,
+   "file": "fig_5.png",
+   "caption": "Figure 5. a) Interfacial issues (marked with the numbers of ①−⑤) at the electrode/SE separator interfaces and b−g) corresponding solutions. b) In situ polymerization of SEs (solution for ①, ③, and ④). c) Building a buffer layer between the cathode and the SE separator (solution for ① and ②). d) External stimuli used to bond the cathode and the SE separator (solution for ①). e) Building a buffer layer between the anode and the SE separator. The buffer layer can be a protective layer to prevent side reactions (solution for ⑤), a lithiophilic layer to improve the wettability of Li metal with the SE separator (solution for ③ and ④), or a stiff layer to suppress Li dendrite growth (solution for ④). f) 3D structural design of anodes (solution for ③ and ④). g) Alternative anode materials with different equilibrium potentials (solution for ④ and ⑤).[8–19,218–223] polymerized PEGMEA could elimina",
+   "bbox": [
+    42.2,
+    64.9,
+    552.5,
+    505.6
+   ],
+   "w": 2128,
+   "h": 1837,
+   "dpi": 300,
+   "src": "663eb3cf-56._Role_of_Interfaces_in_SolidState_Batteries.pdf",
+   "blank": 0.095
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 15,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Perspectives for the future research on the interfaces of SSBs.",
+   "bbox": [
+    45.0,
+    501.4,
+    485.1,
+    706.4
+   ],
+   "w": 1835,
+   "h": 855,
+   "dpi": 300,
+   "src": "663eb3cf-56._Role_of_Interfaces_in_SolidState_Batteries.pdf",
+   "blank": 0.266
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 8,
+   "file": "tab_1.png",
+   "caption": "Table 1. Examples of cycling performance of the SSB cells based on sulfide and halide SEs under different pressure. SE Anode||cathode Pressure to prepare Testing conditions Rate/current",
+   "bbox": [
+    43.2,
+    11.9,
+    589.2,
+    771.1
+   ],
+   "w": 2155,
+   "h": 2996,
+   "dpi": 284,
+   "src": "663eb3cf-56._Role_of_Interfaces_in_SolidState_Batteries.pdf",
+   "blank": 0.899
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 9,
+   "file": "tab_2.png",
+   "caption": "Table 2. Some coatings on the CAMPs used in the SSB cells based on sulfide SEs. Cathode Coating SE in composite Anode Testing T",
+   "bbox": [
+    46.0,
+    11.9,
+    589.2,
+    771.1
+   ],
+   "w": 2144,
+   "h": 2996,
+   "dpi": 284,
+   "src": "663eb3cf-56._Role_of_Interfaces_in_SolidState_Batteries.pdf",
+   "blank": 0.908
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 13,
+   "file": "tab_3.png",
+   "caption": "Table 3. Some buffer layers used at the Li/SE interfaces. SE Buffer layer Cycling conditions of Li||Li cell (current density [mA cm−2] & capacity [mA h cm−2], T)",
+   "bbox": [
+    46.0,
+    11.9,
+    589.2,
+    771.1
+   ],
+   "w": 2144,
+   "h": 2996,
+   "dpi": 284,
+   "src": "663eb3cf-56._Role_of_Interfaces_in_SolidState_Batteries.pdf",
+   "blank": 0.925
+  }
+ ]
+}

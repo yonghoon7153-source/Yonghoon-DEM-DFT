@@ -443,10 +443,11 @@
   ]
  },
  "li2024_inf3_argyrodite_ultrathin_film": {
-  "figures": 6,
+  "figures": 40,
   "generated": "2026-08-05",
   "pdfs": [
-   "d21f5302-55._A_Versatile_InF_3_Substituted_Argyrodite_Sul_de_ElectrolyteToward_Ultrathin_Films_for_AllSolidState_Lithium_Batteries.pdf"
+   "d21f5302-55._A_Versatile_InF_3_Substituted_Argyrodite_Sul_de_ElectrolyteToward_Ultrathin_Films_for_AllSolidState_Lithium_Batteries.pdf",
+   "7b92edde-55._Sup_A_eries.docx (SI, docx — embedded images)"
   ]
  },
  "li2025_cubr2_dualdoping_argyrodite": {
@@ -542,6 +543,13 @@
   "generated": "2026-08-05",
   "pdfs": [
    "DEM 논문/04. Frictionless indentation of dissimilar elastic±plastic spheres.pdf"
+  ]
+ },
+ "miao2023_role_of_interfaces_solid_state_batteries": {
+  "figures": 9,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "663eb3cf-56._Role_of_Interfaces_in_SolidState_Batteries.pdf"
   ]
  },
  "minnmann2021_jes_charge_transport_bottlenecks": {
