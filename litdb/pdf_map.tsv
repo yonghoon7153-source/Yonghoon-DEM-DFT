@@ -49,20 +49,26 @@ lee2024_multiphysics_dem_fem_initial_pressure_assb	multiphysics modeling of the 
 duquesnoy2023_ml_multiobjective_manufacturing_optimization	machine learning-assisted multi-objective optimization of batter
 #
 # ── 개념화학 (EXTERNAL) ──────────────────
-# 가드: 업로드된 '53. Sup3) …' (82 pp) 는 본문(22)+SI(60) 을 이어붙인 중복본이다.
-#   그걸 넣고 추출하면 본문 Fig. 1 이 Fig. S1 로 잡혀 S 번호가 오염된다(§14-12).
-#   아래 줄은 'Sup' 이 없는 본문 파일만 가리킨다 — 그림 51장은 이미 추출돼 있고 git 에 들어있다.
-#   '53. Sup2) …' (60 pp) 는 정상 SI 단독본이다 — 제목 74% 로 자동으로 이 slug 에 SI 로 붙는다
-#   (수동 지정 불필요, 2026-08-06 실측). 크롭 41/51 장이 이 파일에서 나왔다.
-#   [!] 단 지금 inbox 엔 SI-2 만 있고 본문 PDF 가 없다 → '--slug … --clean' 은 본문 크롭 10장을
-#       지운다. 재추출은 본문 PDF 를 같이 넣고서. ('--inbox --skip-done' 은 안전.)
-mulks2024_hard_soft_electrons_holes	53. hard and soft electrons
+# 가드: 업로드된 '53. Sup3) …' (82 pp) 는 본문(22)+SI(60) 을 이어붙인 중복본이다.
+#   그걸 넣고 추출하면 본문 Fig. 1 이 Fig. S1 로 잡혀 S 번호가 오염된다(§14-12).
+#   아래 줄은 'Sup' 이 없는 본문 파일만 가리킨다 — 그림 51장은 이미 추출돼 있고 git 에 들어있다.
+#   '53. Sup2) …' (60 pp) 는 정상 SI 단독본이다 — 제목 74% 로 자동으로 이 slug 에 SI 로 붙는다
+#   (수동 지정 불필요, 2026-08-06 실측). 크롭 41/51 장이 이 파일에서 나왔다.
+#   [!] 단 지금 inbox 엔 SI-2 만 있고 본문 PDF 가 없다 → '--slug … --clean' 은 본문 크롭 10장을
+#       지운다. 재추출은 본문 PDF 를 같이 넣고서. ('--inbox --skip-done' 은 안전.)
+mulks2024_hard_soft_electrons_holes	53. hard and soft electrons
 #
 # ── 대기안정 열역학 (EXTERNAL) ──────────────────
-# 가드: zhu2020 은 본문 5 pp + SI 5 pp 인데, 지금 inbox 엔 '54. Materials Design Principles …'
-#   (본문 단독)만 있고 SI PDF 는 로컬에서 사라졌다. 그림 5장 중 fig_S1·fig_S2 는 그 SI 에서만 나온다.
-#   → '--slug zhu2020_air_stable_se_design_principles --clean' 은 SI 크롭 2장을 지우고 복구 불가다.
-#     ('--inbox --run --skip-done' 은 안전. 재추출하려면 SI PDF 를 같이 넣고서.)
+# 가드: zhu2020 은 본문 5 pp + SI 5 pp 인데 inbox 엔 늘 둘 중 하나만 있다. 방향이 바뀌므로
+#   '--clean' 전에 반드시 지금 무엇이 있는지 먼저 본다.
+#   [2026-08-06 오전] 본문만 있었다  → --clean 시 fig_S1·fig_S2 유실
+#   [2026-08-06 오후] SI 만 있다      → --clean 시 fig_1·fig_2·fig_3 유실   ← 지금 상태
+#     (inbox: '54. Sup) Materials Design Principles …' 만 존재. 본문 '54. Materials Design …' 은 사라졌다.)
+#   [!!] 지금 방향이 더 위험하다 — fig_3 은 수동 bbox 라 지우면 박스를 손으로 다시 찾아야 한다(아래).
+#   → '--slug zhu2020_air_stable_se_design_principles --clean' 금지.
+#     ('--inbox --run --skip-done' 은 안전. 재추출은 본문+SI 를 같이 넣고서.)
 #   [!] fig_3 은 자동 추출이 구조적으로 못 잡는다(2단 조판 + 오른쪽 단 세로 그림 → 캡션 위 영역 소실).
 #       figures.json 의 f3 은 수동 bbox (300,152,548,684)@300dpi 로 넣은 것이니 덮어쓰지 말 것 (digest §14a-B).
-#   자동 매칭은 제목 81 % 로 잘 붙는다 — 수동 지정 줄은 필요 없다.
+#   [ok] SI 크롭 2장은 기록된 bbox 로 이 SI PDF 에서 픽셀 크기까지 재현 확인됨
+#        (fig_S1 2151x851 / fig_S2 2164x2624, digest §15a) — SI 가 있는 동안은 재유도 가능.
+#   자동 매칭은 제목 81 % 로 잘 붙는다 — 수동 지정 줄은 필요 없다('Sup)' 는 자동으로 SI 로 묶인다).

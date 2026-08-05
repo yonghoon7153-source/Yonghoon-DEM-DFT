@@ -6,7 +6,8 @@
  "sources": [
   "944d0e44-55._Materials_Design_Principles_for_AirStable_LithiumSodium_Solid_Electrolytes.pdf",
   "ae64797e-55._Sup_Materials_Design_Principles_for_AirStable_LithiumSodium_SolidElectrolytes.pdf",
-  "54. Materials Design Principles for Air-Stable LithiumSodium Solid Electrolytes.pdf"
+  "54. Materials Design Principles for Air-Stable LithiumSodium Solid Electrolytes.pdf",
+  "54. Sup) Materials Design Principles for Air-Stable LithiumSodium SolidElectrolytes.pdf"
  ],
  "figures": [
   {
@@ -83,7 +84,8 @@
    "h": 851,
    "dpi": 300,
    "src": "ae64797e-55._Sup_Materials_Design_Principles_for_AirStable_LithiumSodium_SolidElectrolytes.pdf",
-   "blank": 0.927
+   "blank": 0.927,
+   "note": "re-render from \"54. Sup)\" PDF at this bbox reproduces the on-disk PNG pixel-for-pixel (2151x851), 2026-08-06 (digest §15a)."
   },
   {
    "key": "fS2",
@@ -102,7 +104,8 @@
    "h": 2624,
    "dpi": 300,
    "src": "ae64797e-55._Sup_Materials_Design_Principles_for_AirStable_LithiumSodium_SolidElectrolytes.pdf",
-   "blank": 0.894
+   "blank": 0.894,
+   "note": "read + machine-verified 2026-08-06 (digest §15b): un-stacked version of Fig. 2 — one bar per COMPOUND, not per cation. Bars touching zero line = 46 / 52 / 64 / 14 vs xlsx 46 / 52 / 65 / 14; the missing Na-M-S bar is NaScS2 = +0.000 eV/H2O (zero height, invisible). Shares the same fixed 55-cation axis order as Fig. 2 and Fig. S1."
   }
  ]
 }

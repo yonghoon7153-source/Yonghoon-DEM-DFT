@@ -1,7 +1,7 @@
 # Materials Design Principles for Air-Stable Lithium/Sodium Solid Electrolytes — Zhu & Mo (Angew. Chem. Int. Ed. 2020)
 
 > slug `zhu2020_air_stable_se_design_principles` · DOI `10.1002/anie.202007621` · type `DFT (database thermodynamics, 실험 0)` · PDF `litdb/inbox/30. Angew Chem Int Ed - 2020 - Zhu - ….pdf` + **SI PDF** `30. anie202007621-sup-0001-misc_information.pdf` + **★ SI xlsx `anie_202007621_sm_miscellaneous_information.xlsx` 확보·전수 전사 완료 (2026-08-05)** (본문 5 pp Communication + SI 5 pp: Methods 2 pp·Fig S1·S2·refs + xlsx 6 시트 269 화합물) · digested `2026-07-17` (SI PDF 반영 2026-07-17 · **SI xlsx 전사 + 그림 재판독 2026-08-05** · **본문 재투입 #54 + 그림 기계판독 2026-08-06 → §14**) · status ✅ · 사용자 분류 `DFT`
-> **검증 이력**: 1차 digest 2026-07-17(본문+SI PDF) · 2차 SI xlsx 전수 전사 + 그림 재판독 2026-08-05(§3b, 염화물 오프셋 오류 적발) · **3차 본문 재투입(#54) 중복 판정 + 그림 픽셀 검산 2026-08-06(§14 — 신규 내용 0건, 그러나 `Fig. 3` 색인 누락 복구 · Fig 2 x축 서술 정정 · Cr⁶⁺ 미해결 항목 해소)**
+> **검증 이력**: 1차 digest 2026-07-17(본문+SI PDF) · 2차 SI xlsx 전수 전사 + 그림 재판독 2026-08-05(§3b, 염화물 오프셋 오류 적발) · **3차 본문 재투입(#54) 중복 판정 + 그림 픽셀 검산 2026-08-06(§14 — 신규 내용 0건, 그러나 `Fig. 3` 색인 누락 복구 · Fig 2 x축 서술 정정 · Cr⁶⁺ 미해결 항목 해소)** · **4차 SI 재투입(#54 Sup) 2026-08-06(§15 — 텍스트 신규 0건, 그러나 ✅ 마지막 미판독 그림 `Fig S2` 해소[= Fig 2 의 겹침 없는 판, 막대 46/52/64+1/14 기계 검산] · 🔴 pseudopotential 목록↔계산대상 불일치 신규 적발 · 🔴 재추출 가드 방향 반전)** — **이 논문은 본문·SI·xlsx·그림 5장 전부 소진, 안 본 그림 0장**
 > elements: S, Cl, O, H, Li, Be, B, Na, Al, Si, P, K, Ca, Sc, Ti, V, Cr, Mn, Fe, Cu, Zn, Ga, Ge, As, Sr, Y, Zr, Nb, Ag, Cd, In, Sn, Sb, Te, Ba, La, Ce, Pr, Nd, Sm, Gd, Tb, Dy, Ho, Er, Tm, Hf, Ta, W, Au, Hg, Pb, Bi
 > methods: DFT, ESW
 > **저자**: Yizhou Zhu*(UMD→Northwestern) · **Yifei Mo***(UMD) — **🔑 우리 grand-potential ESW 방법의 원저자 그룹**(Zhu/He/Mo ACS AMI 2015 · JMCA 2016 = 이 논문 ref [2] = 우리 ESW 계보의 그 논문) + **[Banik]의 Mo와 동일 인물**. Angew 2020, 59, 17472–17476 (Energy Storage Hot Paper).
@@ -190,6 +190,7 @@ xlsx ternary 4시트에는 `4.5V reaction / 4.5V reaction energy` 와 **`Cathodi
 ## 4. DFT/계산 방법 ★ (SI Methods 전문 반영)
 - **code / DB**: 대부분 고체상은 **Materials Project 형성에너지** 직접 소환(고체는 **엔트로피·PV 항 무시** — ref [1]=Zhu/He/Mo 2015·2016 관례 명시). **자체 DFT는 MP에 없던 4종만**: Li₃AsS₄·Na₃AsS₄(enargite Cu₃AsS₄ iso-structure, **Pmn2₁**; Al-Qawasmeh & Holzwarth 2016), Li₃YCl₆(Asano 2018·Wang/Mo 2019 실험 구조), Li₂ZrCl₆(Li₂ZrF₆ iso-structure, **P3̄1m**).
 - **DFT 세팅(그 4종)**: **VASP + PAW, GGA-PBE, ecut 520 eV**, pseudopotential **Li_sv·Na_pv·P·S**(표준 VASP), **MP 표준 anion correction** 적용. k-mesh·이완 조건은 SI에도 미기재(n/a); **DFT+U·vdW 언급 없음**.
+  🔴 **그런데 이 pseudopotential 목록이 계산 대상과 안 맞는다 (2026-08-06 SI 재판독, §15c)** — 자체 DFT 4종은 Li₃AsS₄·Na₃AsS₄·Li₃YCl₆·Li₂ZrCl₆ 이므로 필요한 원소는 **Li·Na·As·S·Y·Cl·Zr** 인데, SI 가 적은 건 `Li_sv, Na_pv, P, S` 뿐이다. **`P` 는 4종 어디에도 안 들어가고**, **`As·Y·Zr·Cl` 넷은 쓰였는데 목록에 없다**. (인산염 계산에서 문장을 복사해 온 흔적으로 읽힌다.) k-mesh·수렴조건 부재와 합쳐 **자체 DFT 4종은 SI 기재만으로는 재현 불가** — Li₃YCl₆ 0.886 · Li₂ZrCl₆ 0.632 가 바로 이 4종에서 나온 값이라 §3b.2 염화물 논의에 직접 걸린다.
 - **hydroxide 고체 19종은 실험 표준생성엔탈피**(NIST-JANAF) — "벤치마크된 correction scheme이 없어서"라고 명시. 목록: LiOH·NaOH·KOH·RbOH·CsOH·Be/Mg/Ca/Sr/Ba(OH)₂·B(OH)₃·Al(OH)₃·Cd/Fe/Co/Ni/Cu/Pb/Mn(OH)₂.
 - **기체 H₂O·H₂S·HCl: 실험 생성엔탈피+엔트로피**(NIST-JANAF), **T=300 K, 엔트로피는 기체 3종만** 포함. 부분압 보정 **Δμ(x)=k_B·T·ln x** (표준상태 기준); x(H₂O)=0.1 % = **300 K RH ~3 %**, x(H₂S)=1 ppm = **작업환경 허용노출한계**, HCl도 1 ppm. → **0 K hull이 아니라 유한-부분압 grand-potential**(전압축의 μ_Li를 μ_H₂O·μ_H₂S로 바꾼 것). **DFT(고체)+실험(기체·OH) 혼합 스킴**이라는 점이 방법의 핵심이자 주의점.
 - **화합물 선정**: MP에서 **convex hull 위 50 meV/atom 이내** 전부(= 준안정 포함) + 자체 계산 Li₃AsS₄/Na₃AsS₄ 추가.
@@ -228,7 +229,7 @@ Li₂S·Na₂S·LiCl·NaCl의 경쟁상은 hydroxide/oxide. (μ_H₂O, μ_H₂S/
 binary predominance(Fig 1)로 기준선·조건 고정 → 대표 가수분해 반응 ΔG(eV/H₂O)를 전 cation에 일괄 적용(Fig 2) → "ternary=binary와 Li₂S의 내삽" 규칙 + 유일 예외 thiophosphate(인산염 구동력) → 여기에 환원축(0 V lithiation)을 직교로 붙여 2축 가이드 차트(Fig 3) → "Li 황화물론 동시 만족 불가, In/RE 도핑·Li함량·염화물·Na계가 출구" 설계 원칙으로 닫음.
 
 ## 7. Figure set ★
-> 크로핑 `litdb/figures/zhu2020_air_stable_se_design_principles/` (5장). **2026-08-05에 실제로 본 것: Fig 1 · Fig 2 · Fig 3 · Fig S1** (4장) — **2026-08-06 재투입 때 같은 4장을 다시 봤고, `Fig. 2`는 픽셀 좌표까지 기계 판독했다(§14b)**. **안 본 것: Fig S2**(화합물별 막대그래프 — xlsx 정확값이 들어와 그림 판독이 불필요해졌다). 그림에서만 읽은 값은 `figure-read ≈`.
+> 크로핑 `litdb/figures/zhu2020_air_stable_se_design_principles/` (5장). **✅ 2026-08-06 SI 재투입(§15)으로 5장 전부 실제로 봤다 — 안 본 그림 0장.** 이력: 2026-08-05 에 Fig 1·2·3·S1 (4장), 2026-08-06 본문 재투입 때 같은 4장 재판독 + `Fig. 2` 픽셀 기계 판독(§14b), **2026-08-06 SI 재투입 때 마지막 1장 `Fig S2` 판독 + 막대 개수 기계 검산(§15b)**. 그림에서만 읽은 값은 `figure-read ≈`.
 > ⚠ **`fig_3.png`는 2026-08-06까지 `figures.json`에 색인돼 있지 않았다**(디스크엔 있는데 목록엔 없음 → webapp의 `Fig. 3` 링크가 안 걸림). 원인·복구는 §14a.
 
 | Fig | 내용 | 우리 활용 |
@@ -239,7 +240,7 @@ binary predominance(Fig 1)로 기준선·조건 고정 → 대표 가수분해 �
 | 3b | Na–M–S 65종. **오른쪽 위가 채워진다** — Pr/La/Gd/Nd/Sm/Y가 x>0·y>0 박스, Zn/Hg/Au/Ga/In/Sn도 상단. Na 금속전지의 구조적 이점 | Li vs Na의 구조적 차이를 한 장으로 — "Li 황화물의 한계는 물질이 아니라 Li 자체"라는 논지 |
 | 3c | Li–M–Cl 14종: y **−0.3…1.5**(Be²⁺ 한 종만 0 아래 — "전부 양수"가 아니다) × x −3.0…0(전부 음수). 판독값이 xlsx와 **정확히 일치**(In 1.38·Cd 1.30·Zn 1.29·Ga 1.21·Sc 0.90·Y 0.89·Cr 0.845·Er 0.84·Mn 0.73·Zr 0.63·Fe³⁺ 0.62·Al 0.38·Fe²⁺ 0.30·Be −0.03) | ⚠ **이 패널이 §3b.2 오프셋을 그대로 물려받는다** — preset 환산하면 Zr/Fe/Al/Be 4종이 음수로 내려간다. "할라이드는 대기 OK·음극 NG"의 원판이지만 **y축 절대값은 재인용 금지** |
 | S1 | 염화물 산점도: M–Cl(회색 ○ 53)·Li–M–Cl(초록 ▽ 14)·**Na–M–Cl(주황 △ 39, 본문에 없는 계열)**. y −0.75…2.8 | 🔴 **우리가 오류를 잡은 그림**: LiCl 초록점선 `figure-read ≈0.98`·NaCl 주황점선 `≈1.53`(SI 본문 규약)인데 **같은 그림의 LiCl·NaCl 데이터 점은 ≈1.34·≈1.88(xlsx 규약)** — 기준선과 점의 규약 불일치(§3b.2). 판독 확인: 음수는 P⁵⁺ `≈−0.69`·B³⁺ `≈−0.12` 둘뿐 ✓ xlsx |
-| S2 | 4계열 화합물별 가수분해 ΔG **막대그래프** | **이번에 안 봄** — xlsx가 같은 데이터를 정확값으로 주므로 그림 판독이 불필요. 필요 시 `fig_S2.png` |
+| S2 | 4계열(M–S 파랑 / Li–M–S 초록 / Na–M–S 주황 / Li–M–Cl 보라) 가수분해 ΔG **막대그래프**, 4단 세로 배열 | ✅ **2026-08-06 판독 완료(§15b)**. 정체가 밝혀졌다 — **`Fig. 2` 의 "겹침 없는" 판**이다. Fig 2 는 양이온 칸마다 여러 화합물이 **포개져 있는데**(Li–M–S 52 화합물이 35 칸에, Sb³⁺ 칸에만 5종) Fig S2 는 **화합물 1개 = 막대 1개**로 펼친다. 막대 개수 기계 검산 = **46 / 52 / 64(+1 비가시) / 14 = xlsx 계열 수와 정확 일치**. 축 순서는 Fig 2·S1 과 **같은 55칸 고정 양이온 축의 부분열**(§14b-2 결론 3중 확인) | **`Fig. 2` 판독의 정본**. §14b-1 에서 "블롭이 잘려 좌표가 밀린 칸"(Ti⁴⁺·Sm·Nd·Ce·Ti³⁺·Sb⁵⁺)의 **원인이 바로 이 겹침**이고, 그 칸들은 Fig S2 로 풀어야 한다. ⚠ **우리 cascade 그림 교훈**: 한 칸에 여러 조성을 포개면 값이 안 읽힌다 — 본문엔 Fig 2 형(요약)·SI엔 Fig S2 형(전개)을 **쌍으로** 내는 것이 이 논문의 실제 해법 |
 | xlsx | **269 화합물 전표**(가수분해 + 0 V + **4.5 V** + **ESW 양끝**) | ✅ **확보·전사 완료** → `db/properties/zhu2020_si_*.csv` (§3b) |
 
 ## 8. Post-processing ★
@@ -354,7 +355,8 @@ binary predominance(Fig 1)로 기준선·조건 고정 → 대표 가수분해 �
 - ⚠ **내부용 (외부 인용 전 재확인 필요)**: "In the published spreadsheet and the chloride scatter plots, hydrolysis energies of chlorides appear to omit the 1 ppm HCl partial-pressure term (0.357 eV per HCl at 300 K) that the SI text applies; correcting for it moves Li₂ZrCl₆ (0.632 → −0.08) and LiAlCl₄ (0.383 → −0.33 eV/H₂O) to the moisture-sensitive side." — **우리 유도**이지 논문 주장이 아니다.
 
 ## 12. 주의/한계 (over-claim 방지)
-- ✅ **SI PDF + xlsx 전부 확보 (2026-08-05)**: 대표반응 알고리즘·DFT 세팅·SI 반응 6종(§4) + **269 화합물 전표**(§3b). Fig 2·3·S1의 좌표는 이제 **정확값**으로 인용한다(Fig S2만 미판독).
+- ✅ **SI PDF + xlsx 전부 확보 (2026-08-05, SI PDF 로컬 복귀 2026-08-06)**: 대표반응 알고리즘·DFT 세팅·SI 반응 6종(§4) + **269 화합물 전표**(§3b). Fig 2·3·S1의 좌표는 이제 **정확값**으로 인용한다. **Fig S2 도 2026-08-06 판독 완료 — 이 논문에 안 본 그림은 없다(§15b)**.
+- 🔴 **자체 DFT 4종은 SI 기재만으로 재현 불가 (2026-08-06, §15c)** — pseudopotential 목록 `Li_sv, Na_pv, P, S` 가 대상(Li₃AsS₄·Na₃AsS₄·Li₃YCl₆·Li₂ZrCl₆)과 불일치(**P 는 불필요·As/Y/Zr/Cl 은 누락**)이고 k-mesh·수렴조건도 없다. 이 4종에서 나온 **Li₃YCl₆ 0.886 · Li₂ZrCl₆ 0.632** 를 인용할 때는 "MP 소환값이 아니라 저자 자체 계산이며 세팅이 불완전 기재"라고 밝힌다. (나머지 265 화합물은 MP 소환이라 이 문제와 무관.)
 - 🔴 **염화물 부분압 규약 불일치 (§3b.2)** — 논문의 chloride 표·산점도가 **HCl 1 ppm 보정을 빠뜨렸다**(HCl 1개당 +0.357 eV). **Fig S1 한 장 안에서 기준선(맞음)과 데이터 점(틀림)의 규약이 다르다.** 인용 시: (a) 황화물은 xlsx 그대로 안전, (b) **염화물은 `−0.357×n_HCl` 환산 후 인용하거나 as-published임을 명시**, (c) "Li₂ZrCl₆·Li₃YCl₆는 수분안정"이라는 Fig 3c 기반 인용은 **하지 말 것**(환산하면 −0.08 / +0.17 = 경계선). ⚠ 이 환산은 **우리 추론**이고 논문이 제시한 값이 아니다.
 - **xlsx vs 본문의 소소한 불일치**: Li₃PS₄ 본문 −0.608 vs xlsx −0.594 (Δ0.014, entry/버전 차이로 추정). 인용은 **본문값 우선 + xlsx 병기**.
 - **`Li₄SiS₄`가 entry id 공란**인데 SI Methods의 자체-DFT 4종 목록엔 없다 — 출처 미상 1건, 인용 주의.
@@ -420,3 +422,59 @@ binary predominance(Fig 1)로 기준선·조건 고정 → 대표 가수분해 �
 - `figures.json` 에 `f3` 추가 + `sources` 에 #54 등록, `generated` 2026-08-06.
 - `litdb/pdf_map.tsv` 에 **재추출 가드** 추가 — 지금 inbox 엔 **본문 PDF 만** 있고 **SI PDF 는 로컬에서 사라졌다**. 이 상태로 `--slug … --clean` 을 돌리면 **`fig_S1`·`fig_S2` 가 지워지고 복구할 원본이 없다**. (`--inbox --run --skip-done` 은 안전.)
 - 평문 보존: `litdb/inbox/_54_text.txt`(콜론-소수점 원본 그대로), 판독 보조 이미지 `_54_f2_left.png`·`_54_f3a_cr6.png`. ⚠ `litdb/inbox/` 는 .gitignore 대상이라 **로컬 전용** — repo 로 넘어오는 근거는 `figures/<slug>/*.png` 5장과 이 digest 뿐이다.
+
+---
+
+## 15. ★ 4차 검증 — **SI 재투입**(inbox `54. Sup)`, 2026-08-06)
+
+> **계기**: 사용자가 `litdb/inbox/54. Sup) Materials Design Principles for Air-Stable LithiumSodium
+> SolidElectrolytes.pdf`(5 pp)를 "논문 에이전트로 처리" 요청(사용자 분류 폴더 `DFT`).
+> **새 논문이 아니라 이 digest 의 SI 다** — 같은 논문의 **네 번째** 투입(#30 본문+SI → 해시 #55 본문+SI → #54 본문 → **#54 SI**).
+> 하루 전 §14 가 "본문만 왔고 SI 는 사라졌다"고 적은 그 SI 가 돌아왔다. **텍스트 신규 0건**이지만 이번 회차의 소득은 세 가지 — **마지막 미판독 그림 해소 · 재추출 가드 방향 반전 · 방법 재현성 결함 신규 1건**.
+
+### 15a. 중복 판정 — **텍스트 신규 0건** (기계 대조)
+- **판본 동일성**: `figures.json` 에 저장돼 있던 **Fig S1·S2 캡션**(724 자·185 자, 2026-08-05 에 해시 #55 SI 에서 뜬 것)이 이번 PDF 평문 p3·p4 에 **문자 단위로 그대로**(NFKC + 공백 정규화 후) 들어 있다 → 같은 조판본 확정.
+- **크롭 재현성**: `figures.json` 에 기록된 bbox 로 **이 PDF 에서 다시 렌더하면 픽셀 크기가 디스크의 PNG 와 동일** — `fig_S1` 2151×851 ✓ · `fig_S2` 2164×2624 ✓. 즉 두 SI 크롭은 이제 **원본에서 재유도 가능**(어제까지는 복구 불가 상태였다).
+- **SI 전용 값 전수 재확인** — (6) LiCl +0.977 · (7) NaCl +1.532 · (8) 2LiCl +2.368 · (9) 2NaCl +4.129 · (10) 2LiOH +0.413 · (11) 2NaOH +1.083 **전부 §3 표와 일치**. 세팅도 일치: ecut **520 eV** · hull **+50 meV/atom** · T **300 K** · H₂O **0.1 %**(= RH ~3 %) · H₂S/HCl **1 ppm** · Δμ=k_BT ln x · Pmn2₁(Li₃AsS₄) · P3̄1m(Li₂ZrCl₆) · 0 V **및 4.5 V** redox.
+- **수산화물 19종 목록 기계 카운트 = 19** ✓ (§4 기재와 원소까지 동일). Step 1–4 대표반응 알고리즘도 §4 서술과 일치, 불일치 0건.
+- 참고: 이 SI 는 본문 PDF 와 달리 평문이 깨끗하다 — §14a 의 콜론-소수점(`0:225`)·`þ`·`¼` 함정이 **없다**. 같은 논문이라도 본문/SI 조판이 다르니 치환 규칙을 그대로 재사용하지 말 것.
+- 사소한 것: SI 본문이 NaCl 값을 **`+1.532. eV`** 로 적었다(마침표 오타). 인용에 영향 없음.
+
+### 15b. ✅ **마지막 미판독 그림 `Fig S2` 해소** — 정체는 "`Fig. 2` 의 겹침 없는 판"
+2026-07-17·08-05·08-06(§14b) 세 회차 내내 "xlsx 정확값이 있으니 막대 판독은 불필요"라며 넘겼던 그림이다. **실제로 보니 그 판단이 반쯤 틀렸다** — 값 때문이 아니라 **`Fig. 2` 를 해석하는 데 필요한 그림**이었다.
+
+- **구조**: 4단 세로 패널(M–S 파랑 / Li–M–S 초록 / Na–M–S 주황 / Li–M–Cl 보라), y = 가수분해 ΔG(eV/H₂O), x = 양이온.
+- **🔑 핵심 발견 — Fig 2 는 한 칸에 여러 화합물을 포갠 그림이고, Fig S2 는 그걸 편 그림이다.**
+  Fig S2 의 x 라벨에는 **같은 양이온이 여러 번 나온다**(Li–M–S 패널의 `Sb³⁺` 5번·`P⁵⁺` 3번·`Cu⁺` 3번·`B³⁺` 2번…). 전사본으로 확인: **Li–M–S 52 화합물이 35 개 양이온 칸에**, Na–M–S 65 화합물이 42 칸에 들어간다. 한 칸 안의 폭도 작지 않다 — `Sb³⁺` 칸은 Li₅SbS₄ +0.026 … LiSbS₂ +0.279 로 **0.25 eV 스프레드**, `P⁵⁺` 칸은 Li₇PS₆ −0.682 … Li₃PS₄ −0.594.
+  → **§14b-1 에서 "블롭이 잘려 중심좌표가 밀렸다"고 판정한 6칸(Ti⁴⁺·Sm·Nd·Ce·Ti³⁺·Sb⁵⁺)의 원인이 바로 이 겹침이다.** 전사 오류가 아니라는 §14b-1 결론은 유지되고, **원인까지 확정**됐다.
+- **막대 개수 기계 검산** (패널별 프레임 검출 → 0 선 검출 → 0 선에 닿는 막대 런 카운트):
+  **M–S 46 ✓ · Li–M–S 52 ✓ · Li–M–Cl 14 ✓ · Na–M–S 64 (xlsx 65)**.
+  🔑 **모자란 1개의 정체까지 확인** — `NaScS₂ = +0.000 eV/H₂O` 로 **막대 높이가 정확히 0** 이라 그려지지 않는다. 전사본에서 Na–M–S 를 |ΔG| 오름차순 정렬하면 1위가 NaScS₂ 0.000(2위 NaTmS₂ +0.031)이다. → **불일치 0건, 전사본 269 행이 그림으로 네 번째 교차검증됐다.**
+  덤: **NaScS₂ 는 수분 안정/민감 경계에 정확히 걸터앉은 유일한 화합물**인데 그림에서는 보이지 않는다. Fig S2 만 보고 "Na–M–S 는 64종"이라고 세면 안 된다.
+- **축 순서 = §14b-2 의 3중 확인**: Li–M–Cl 패널 순서(Be·Al·Zr·Er·Sc·Y·Mn·Fe³⁺·Fe²⁺·Cr³⁺·Ga·In·Cd·Zn)를 `Fig. S1` 의 55칸 마스터 축 인덱스로 바꾸면 (1,3,8,13,17,18,35,36,37,40,44,48,49,52) — **단조 증가**. M–S 패널도 동일. 즉 **Fig 2·S1·S2 가 같은 고정 양이온 축을 공유하고, 패널마다 없는 칸만 뺀다**. §14b-2 의 "값 순 정렬이 아니다" 결론이 세 번째 그림에서 재확인됐다 — 우리 cascade 그림 캡션 규율(§14b-2)은 그대로 간다.
+
+### 15c. 🔴 신규 결함 1건 — **pseudopotential 목록이 계산 대상과 안 맞는다** (§4·§12 반영 완료)
+SI Methods 는 자체 DFT 대상을 **Li₃AsS₄·Na₃AsS₄·Li₃YCl₆·Li₂ZrCl₆** 4종이라 하고, 두 문장 뒤에 "The pseudopotential used are **Li_sv, Na_pv, P, S**" 라 적는다.
+
+| | |
+|---|---|
+| 필요 원소 | Li · Na · **As** · S · **Y** · **Cl** · **Zr** |
+| SI 기재 | Li · Na · **P** · S |
+| 누락 | **As · Y · Zr · Cl** (4/7) |
+| 불필요 기재 | **P** — 4종 어디에도 P 가 없다 |
+
+thiophosphate 계산에서 문장을 복사한 흔적으로 읽힌다. k-mesh·이완/수렴 조건도 SI 에 없으므로 **이 4종은 SI 기재만으로 재현 불가**다. 265/269 는 MP 소환이라 무관하지만, **하필 이 4종에 Li₃YCl₆(0.886)·Li₂ZrCl₆(0.632) 가 들어 있다** — §3b.2 의 염화물 오프셋 논의에서 우리가 "경계선으로 내려간다"고 판정한 바로 그 둘이다. 인용 규율: **"저자 자체 계산 + 세팅 불완전 기재"** 를 병기한다.
+(§12 의 `Li₄SiS₄` entry-id 공란 항목은 **여전히 미해결** — SI Methods 4종 목록에 없는 건 이번에도 확인됐다.)
+
+### 15d. 🔴 운영 조치 — **재추출 가드 방향이 뒤집혔다**
+§14c 가 적은 가드는 **"본문 PDF 만 있고 SI 가 없다 → `--clean` 은 `fig_S1`·`fig_S2` 를 지운다"** 였다. 지금은 **정반대**다:
+
+| | 2026-08-06 오전(§14c) | 2026-08-06 오후(지금) |
+|---|---|---|
+| inbox 본문 PDF | ✅ `54. Materials Design…` | ⛔ **없음** |
+| inbox SI PDF | ⛔ 없음 | ✅ `54. Sup) Materials Design…` |
+| `--clean` 시 유실 | `fig_S1`·`fig_S2` | **`fig_1`·`fig_2`·`fig_3`** |
+
+**지금 방향이 더 위험하다** — `fig_3` 은 자동 추출이 구조적으로 못 잡아 **수동 bbox `(300,152,548,684)` 로 손수 넣은 것**(§14a-B)이라, 지워지면 원본 없이는 복구가 안 될 뿐 아니라 **박스를 다시 손으로 찾아야 한다**. `litdb/pdf_map.tsv` 의 가드 문단을 이 방향으로 고쳐 썼다.
+- `figures.json`: `sources` 에 `54. Sup) …` 추가, `generated` 2026-08-06 유지. `fS1`·`fS2` 의 `src` 는 해시 파일명 그대로 둔다(같은 조판본임이 15a 로 확인됐고, 파일명 이력을 지울 이유가 없다).
+- **결론: 이 논문은 본문·SI·xlsx·그림 5장까지 전부 소진됐다.** 다음에 `54.`·`55.` 계열 파일이 또 올라오면 **digest 갱신 없이 중복 처리**하면 된다 — 단 그때도 **inbox 에 본문/SI 중 무엇이 있는지 먼저 보고 가드 방향을 갱신**한다(이번 회차의 실제 소득이 그것이었다).
