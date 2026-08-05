@@ -272,10 +272,20 @@ print("   ⚠ 500 K 400 ps 를 지금 안 태우는 이유: comp1 이 600 K/1600
        "500 K 는 100 K 더 낮고 prod 는 1/4.")
 
 cell, live, done_mt = {}, [], []
+# ⚠⚠ 드라이버(disorder_ensemble_diffusion.py)는 --out_root **아래에 또**
+#   `d{disorder}_cfg{n}/T{T}/` 를 만든다. 즉 산출물은
+#     arrhenius_6pt/<계>/T700_s2/d0.00_cfg0/T700/{msd.json,md.log}
+#   이지 T700_s2/ 바로 밑이 아니다. 직접 경로로 찾으면 **돌고 있는데 0/21 로 보인다**
+#   (2026-08-06 실측: GPU 93 % 인데 화면은 진행 표시 0). 항상 재귀로 찾는다.
+def _under(d, name):
+    hits = glob.glob(os.path.join(d, "**", name), recursive=True)
+    return hits[0] if hits else None
+
+
 for lab, T, s in PLAN:
     d = os.path.join(ARR, lab, f"T{T}_s{s}")
-    mj = os.path.join(d, "msd.json")
-    if os.path.isfile(mj):
+    mj = _under(d, "msd.json")
+    if mj:
         try:
             j = json.load(open(mj))
             D = j.get("D_Li_cm2_s")
@@ -290,10 +300,14 @@ for lab, T, s in PLAN:
             cell[(lab, T, s)] = (float(D), b, bm, "msd_Li_A2_mto" in j)
             done_mt.append(os.path.getmtime(mj))
             continue
-    ps, pct = md_progress(d)
+    lg = _under(d, "md.log")
+    ps, pct = md_progress(os.path.dirname(lg)) if lg else (None, None)
     if ps is not None:
         cell[(lab, T, s)] = None
         live.append((lab, T, s, ps, 100.0 * min(1.0, ps / ARR_TOTAL_PS)))
+    elif os.path.isdir(d):
+        # 디렉터리는 생겼는데 md.log 가 아직 없다 = 방금 착수(구조 준비/UMA 로드)
+        live.append((lab, T, s, None, None))
 
 n_done = sum(1 for v in cell.values() if v)
 print(f"   진행 **{n_done}/{len(PLAN)}**"
@@ -339,7 +353,10 @@ for lab in SYSL:
 print("     (s#✓ 게이트통과 · s#✗ 실패 · s#▶ 진행 · s#· 대기 · 값 = 시드평균 D, β)")
 
 for lab, T, s, ps, pct in live:
-    print(f"     ▶ 지금 {lab} T{T} s{s} — {ps:.1f}/{ARR_TOTAL_PS:.0f} ps ({pct:.0f}%)")
+    if ps is None:
+        print(f"     ▶ 지금 {lab} T{T} s{s} — 착수 직후(md.log 아직 없음)")
+    else:
+        print(f"     ▶ 지금 {lab} T{T} s{s} — {ps:.1f}/{ARR_TOTAL_PS:.0f} ps ({pct:.0f}%)")
 
 # ── 게이트 요약 — comp1 에서 배운 것: 개수만 보면 못 쓸 숫자를 모으게 된다 ──
 bad = [f"{l}/T{t}s{s}(β{v[1]:.2f})" for (l, t, s), v in sorted(cell.items())
