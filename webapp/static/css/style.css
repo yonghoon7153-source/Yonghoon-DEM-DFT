@@ -1091,3 +1091,15 @@ tr.row-dim{opacity:.62}
 .figcard-thumb img{max-width:100%;max-height:96px;object-fit:contain}
 .figcard-lab{font-size:.74rem;font-weight:600;color:var(--text2);padding:0 6px 8px}
 @media print{.figpane,.figstrip{display:none!important}}
+
+/* Property Explorer 세부 분석 열 (2026-08-06) — canonical 앵커 5열과 시각적으로 구분한다.
+   ⚠ 빈칸의 뜻이 다르다: 앵커는 TODO(미계산), 여기는 '—'(그 분석을 안 했거나 정의가 다름). */
+.exp-table th.xcol,.exp-table td.xcol{background:var(--bg)}
+.exp-table th.acol,.exp-table td.acol{background:var(--bg);min-width:230px}
+.achips{display:flex;flex-wrap:wrap;gap:3px}
+.achip{display:inline-flex;align-items:center;gap:3px;font-size:.64rem;font-weight:700;
+  color:var(--dim);background:var(--surface);border:1px solid var(--border);
+  border-radius:5px;padding:1px 5px;white-space:nowrap}
+.achip i{font-style:normal;font-weight:600;color:var(--muted);font-size:.92em}
+/* BVSE 는 계 간 **순위 인용 금지** 자료라 눈에 띄게 표시해 둔다 (파일 자체 규율) */
+.achip-warn{color:#854d0e;background:#fef9c3;border-color:#fde68a}

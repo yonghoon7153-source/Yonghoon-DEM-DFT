@@ -7,6 +7,11 @@
   ('E_VRH_GPa','E_VRH','GPa'),
   ('MD_Ea_eV','MD Ea','eV'),
   ('ICOHP_PS','ICOHP P–S','eV')] %}
+{# 세부 분석 열 — canonical 앵커와 **다른 그룹**이다. 빈칸은 TODO 가 아니라 '—'
+   (그 계에 그 분석을 안 했거나 정의가 다르다는 뜻). #}
+{% set xprops = [
+  ('ELF_PS','ELF P–S','central-min'),
+  ('BADER_P','Bader P','e')] %}
 <div class="page-header">
   <div><h1>Property Explorer</h1>
     <div class="sub">조성 × canonical 물성 — 정렬·필터 + 값마다 <b>method provenance</b> · 클릭하면 인용 복사</div></div>
@@ -37,11 +42,20 @@
         <span class="th-prov" aria-hidden="true">ⓘ</span>
       </th>
       {% endfor %}
+      {% for key,label,unit in xprops %}
+      <th onclick="expSort({{ props|length + loop.index + 1 }})" class="sortable-h num xcol" tabindex="0"
+          role="button" onkeydown="_kbd(event)" aria-sort="none" title="{{ extra_meta.get(key,'') }}">
+        {{ label }} <span class="th-unit">{{ unit }}</span>
+        <span class="th-prov" aria-hidden="true">ⓘ</span>
+      </th>
+      {% endfor %}
+      <th class="acol">보유 분석 <span class="th-unit">db 실물 기준</span></th>
     </tr>
   </thead>
   <tbody>
   {% for cid,c in COMPS.items() %}
     {% set has = namespace(v=false) %}{% for key,label,unit in props %}{% if canonical.get(key,{}).get(cid) is not none %}{% set has.v = true %}{% endif %}{% endfor %}
+    {%- for key,label,unit in xprops %}{% if extra.get(key,{}).get(cid) is not none %}{% set has.v = true %}{% endif %}{% endfor %}
     <tr data-fam="{{ c.family }}" data-hasval="{{ 1 if has.v else 0 }}" data-s="{{ c.label|lower }} {{ c.formula|lower }} {{ cid }}">
       <td><a href="/composition/{{ cid }}" class="exp-comp"><span class="dot" style="background:{{ c.color }}"></span>{{ c.label }}</a>
         <div class="exp-formula mono">{{ c.formula }}</div></td>
@@ -59,6 +73,23 @@
           {% else %}<span class="cell-todo">TODO</span>{% endif %}
         </td>
       {% endfor %}
+      {% for key,label,unit in xprops %}
+        {% set xv = extra.get(key,{}).get(cid) %}
+        <td class="num xcol">
+          {% if xv is not none %}
+          <button class="cell-cite" data-method="{{ extra_meta.get(key,'') }}"
+                  onclick="citeVal('{{ c.label }}','{{ label }}','{{ xv }}','{{ unit }}',this.dataset.method)"
+                  title="클릭 → 인용 복사&#10;{{ extra_meta.get(key,'') }}">{{ xv }}</button>
+          {% else %}<span class="muted">—</span>{% endif %}
+        </td>
+      {% endfor %}
+      <td class="acol">
+        {% set am = amatrix.get(cid, {}) %}
+        {% if am %}<span class="achips">
+          {% for tag, n in am|dictsort %}<span class="achip{% if tag=='BVSE' %} achip-warn{% endif %}"
+             title="{{ awhy.get(tag, tag) }}{% if n %} · CSV {{ n }}개{% endif %}">{{ tag }}{% if n %}<i>{{ n }}</i>{% endif %}</span>{% endfor %}
+        </span>{% else %}<span class="muted">—</span>{% endif %}
+      </td>
     </tr>
   {% endfor %}
   </tbody>

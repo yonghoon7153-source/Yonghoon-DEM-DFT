@@ -269,7 +269,9 @@ def _csv_kind(name: str) -> str:
     #   icohp/cohp 순서 함정과 같은 계열이다 (아래 주석 참조).
     for k, tag in [("phonon", "Phonon"), ("pdos", "PDOS"), ("dos", "DOS"), ("arrhenius", "Arrhenius"),
                    ("conductivity", "Conductivity"), ("msd", "MSD"), ("eos", "EOS"),
-                   ("bvse", "BVSE"), ("elf", "ELF"),
+                   # ⚠ bv_path_* (BVSE 경로·구간표) 가 'data' 로 떨어져 있었다 — 같은 BVSE 자료다.
+                   ("bvse", "BVSE"), ("bv_path", "BVSE"), ("bv_3d", "BVSE"), ("bv_vs_pmf", "PMF"),
+                   ("pmf", "PMF"), ("elf", "ELF"),
                    ("charge", "Charge"), ("bader", "Bader"), ("xps", "XPS"),
                    ("voronoi", "Voronoi"), ("neb", "NEB"), ("barrier", "Barrier"),
                    ("drag", "Drag"), ("diffusion", "Diffusion"), ("binding", "Binding"),
@@ -361,6 +363,98 @@ CANONICAL_META = {
                  "comp2=3-seed(잠정) — 조성 간 비교는 같은 프로토콜끼리만",
     "ICOHP_PS":  "LOBSTER all-PAW ext-basis (comp2 = comp2_icohp_origin.csv, 2026-07-25 커밋)",
 }
+
+# ── 세부 분석 열 (explorer '더 보기') ────────────────────────────────────
+# 1저자 요청(2026-08-06): "dos, pdos, elf 등등 많잖아 — 세분화하고 매칭시켜줘".
+# ⚠ CANONICAL(위 5개)은 kb 나침반과 짝이 맞는 **앵커**다. 여기 값을 거기 섞으면
+#   compare·metric 카드가 '미계산 TODO' 를 잘못 띄운다 → **별도 그룹**으로 둔다.
+#   빈칸은 TODO 가 아니라 '—' (그 계에 그 분석을 안 했거나 정의가 다르다).
+_ELF_SYS2CID = {"comp1": "comp1", "modelc": "modelc", "lpsocl": "lpsocl",
+                "lpscl1.6": "modelc", "b2o3": "b2o3"}
+_BADER_FILES = {"modelc": "bader_ae_modelc_LPSCl16.csv", "b2o3": "bader_ae_b2o3.csv",
+                "lpsocl": "bader_ae_lpsocl.csv"}
+
+
+@lru_cache(maxsize=2)
+def elf_central_min() -> dict:
+    """조성 → P–S 결합 **중앙 최솟값** ELF.
+
+    ⚠ 판별력이 있는 건 midpoint 가 아니라 central_min 이다(CSV 머리 주석) —
+      midpoint 는 짧은 결합에서 lone-pair 에 걸려 다 0.94 로 뭉친다.
+    """
+    f = DB / "properties" / "elf_bonds_3sys_origin.csv"
+    if not f.exists():
+        return {}
+    out = {}
+    for r in csv.DictReader(x for x in f.read_text(encoding="utf-8-sig").splitlines()
+                            if not x.startswith("#")):
+        cid = _ELF_SYS2CID.get((r.get("system") or "").strip().lower())
+        if cid and (r.get("bond") or "").strip().upper() == "P-S":
+            try: out[cid] = round(float(r["ELF_central_min"]), 3)
+            except (TypeError, ValueError): pass
+    return out
+
+
+@lru_cache(maxsize=2)
+def bader_charge(species: str = "P") -> dict:
+    """조성 → Bader 净전하 (all-electron). 기본 P — 도펀트에 반응하는 자리다
+    (Li 는 3계 모두 +0.88 로 불변이라 열로 쓰면 정보가 없다)."""
+    out = {}
+    for cid, fn in _BADER_FILES.items():
+        f = DB / "properties" / fn
+        if not f.exists():
+            continue
+        for r in csv.DictReader(x for x in f.read_text(encoding="utf-8-sig").splitlines()
+                                if not x.startswith("#")):
+            if (r.get("species_or_site") or "").strip() == species:
+                try: out[cid] = round(float(r["bader_net_e"]), 3)
+                except (TypeError, ValueError): pass
+    return out
+
+
+# 조성별 '어떤 분석을 갖고 있나' — **실물 파일**이 기준.
+#   ⚠ 새 판정 규칙을 만들지 않는다. datafiles_for()/_csv_kind() 가 이미 prefix 별칭과
+#     icohp↔cohp·phonon↔dos 순서 함정까지 처리한 정본이다 (거기에 맞춰야 조성 페이지의
+#     'Charts' 탭 칩과 같은 말을 한다).
+EXTRA_META = {
+    "ELF_PS": "ELF 결합 **중앙 최솟값** (P–S) — QE pp.x plot_num=8. "
+              "⚠ midpoint 는 짧은 결합에서 lone-pair 에 걸려 다 0.94 로 뭉친다(판별력 없음)",
+    "BADER_P": "Bader 净전하, all-electron (P 자리) — Li 는 3계 모두 +0.88 로 불변이라 정보가 없다",
+}
+_ANALYSIS_ORDER = ["DOS", "PDOS", "ELF", "ICOHP", "COHP", "Bader", "Charge", "BVSE",
+                   "MSD", "Arrhenius", "Diffusion", "NEB", "Barrier", "EOS", "Phonon", "XPS", "IR"]
+ANALYSIS_WHY = {
+    "DOS": "상태밀도 (fixed-occ nscf)", "PDOS": "원소분해 상태밀도",
+    "ELF": "전자국재함수 — P–S 중앙 최솟값이 판별량",
+    "ICOHP": "결합 세기 적분값 (LOBSTER)", "COHP": "결합 세기 곡선",
+    "Bader": "원자별 净전하 (all-electron)", "Charge": "전하 밀도·분해",
+    "BVSE": "결합원자가 에너지 지도 — ⚠ 순위·정량은 원본 주기셀 값만, 계 간 순위 인용 금지",
+    "MSD": "평균제곱변위 (창 2–50 ps 고정)", "Arrhenius": "MLIP-MD 아레니우스 (600/800/1000 K)",
+    "Diffusion": "확산계수", "NEB": "전이상태 장벽", "Barrier": "장벽",
+    "EOS": "상태방정식 B₀", "Phonon": "포논 — 동역학 안정성", "XPS": "코어레벨", "IR": "적외",
+}
+
+
+def analysis_matrix() -> dict:
+    """조성 → {분석종류: 파일수}. 숫자 하나로 못 줄이는 것(DOS·PDOS·ELF 곡선)을
+    표에 억지 스칼라로 넣는 대신 '갖고 있나'로 맞춰 보여준다."""
+    # canonical 앵커가 있으면 그 계산은 한 것이다 — comp1 처럼 결과가 **집계 JSON**
+    # (electronic.json·eos.json·elastic.json)에 든 계는 CSV 만 보면 통째로 비어 보인다.
+    CANON_TAG = {"gap_eV": "Gap", "B0_GPa": "EOS", "E_VRH_GPa": "탄성",
+                 "ICOHP_PS": "ICOHP", "MD_Ea_eV": "MD"}
+    out = {}
+    for cid in COMPOSITIONS:
+        kinds = {}
+        for f in datafiles_for(cid):
+            k = f.get("kind")
+            if k and k != "data":
+                kinds[k] = kinds.get(k, 0) + 1
+        for prop, tag in CANON_TAG.items():
+            if CANONICAL.get(prop, {}).get(cid) is not None:
+                kinds.setdefault(tag, 0)          # 0 = 값은 있는데 CSV 는 따로 없다
+        out[cid] = kinds
+    return out
+
 
 # ─────────────────────────────────────────────────────────────
 # Cascade / ML 도핑 스크리닝 (AI 계산 기반) — UMA 상대 스크리닝 번들

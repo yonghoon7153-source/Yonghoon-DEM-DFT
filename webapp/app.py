@@ -179,11 +179,15 @@ def elements():
 
 @app.route("/explorer")
 def explorer():
+    # 세부 분석 열 — canonical 앵커(5개)와 **구분해서** 넘긴다 (빈칸이 TODO 가 아니다)
+    extra = {"ELF_PS": D.elf_central_min(), "BADER_P": D.bader_charge("P")}
     return render_template("explorer.html", active="explorer",
                            canonical=D.canonical_table(), canonical_meta=D.CANONICAL_META,
                            canonical_provisional=D.CANONICAL_PROVISIONAL,
                            comp_elements=D.COMP_ELEMENTS,
-                           categories=D.CATEGORIES)
+                           categories=D.CATEGORIES,
+                           extra=extra, extra_meta=D.EXTRA_META,
+                           amatrix=D.analysis_matrix(), awhy=D.ANALYSIS_WHY)
 
 
 @app.route("/compute")
