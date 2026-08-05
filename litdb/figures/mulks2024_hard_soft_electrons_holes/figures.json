@@ -1,0 +1,1001 @@
+{
+ "slug": "mulks2024_hard_soft_electrons_holes",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-05",
+ "sources": [
+  "1572305d-53._Hard_and_soft_electrons_and_holes.pdf",
+  "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+  "8eb8cb54-53._Sup3_Hard_and_soft_electrons_and_holes.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Overview of some ways of scrutinizing ambident chemical reactivity Red lobes: positive values, blue lobes: negative values. Atoms shown in gray are carbon, white are hydrogen, and red are oxygen.",
+   "bbox": [
+    51.7,
+    45.2,
+    548.1,
+    708.7
+   ],
+   "w": 2069,
+   "h": 2765,
+   "dpi": 300,
+   "src": "1572305d-53._Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.868
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Process overview of the determination of EHRs and EHIs",
+   "bbox": [
+    51.7,
+    45.2,
+    382.8,
+    268.6
+   ],
+   "w": 1381,
+   "h": 932,
+   "dpi": 300,
+   "src": "1572305d-53._Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.619
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Graphical overview of the electron density and density differences used in this study for the example nucleophile phenolate",
+   "bbox": [
+    51.7,
+    45.3,
+    382.5,
+    334.0
+   ],
+   "w": 1379,
+   "h": 1204,
+   "dpi": 300,
+   "src": "1572305d-53._Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.907
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Selected ambident molecules iodide, only 7% O-alkylation were found.98,99 This supports the initial assignment that the FF identiﬁes the harder part of the HOMO-dominated electronic response, whereas f \u0002 2ðrÞ identiﬁes the softer part. A negative EHR then isolates the soft response, and a positive EHR isolates the hard response.",
+   "bbox": [
+    51.7,
+    45.2,
+    382.8,
+    194.8
+   ],
+   "w": 1381,
+   "h": 624,
+   "dpi": 300,
+   "src": "1572305d-53._Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 11,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Selected visualizations of the Fukui functions and electronic hardness responses Contour plots (top) and projections onto the electron density (bottom, red is positive and blue is negative). The given numbers are electronic hardness indices in 10\u00023 e. Atoms shown in yellow are sulfur and turquoise are nitrogen. Dimethylsulfoxide 1: contour r = 0.01; projection r = 0.01, range G 2 , 10\u00023. Pyridine 5: contour r = 0.01; projection r = 0.02, range G 2 , 10\u00023. N,N,N0,N00,N00-pentamethyldiethylenetriamine 4: contour r = 0.02; projection r = 0.02, range G 4 , 10\u00023. Diiminium pyridine adduct 15: contour r = 0.01; projection r = 0.02, range G 2 , 10\u00023.",
+   "bbox": [
+    51.7,
+    45.3,
+    382.5,
+    594.3
+   ],
+   "w": 1379,
+   "h": 2289,
+   "dpi": 300,
+   "src": "1572305d-53._Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.793
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 14,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Reactivity and electronic hardness of benzo[a]pyrene 18 The contour plot (r = 0.004), the projection onto the molecular electron density (r = 0.02, range G 1 , 10\u00023 red via green to blue), and the EHIs (in 10\u00023 e) are displayed.",
+   "bbox": [
+    51.7,
+    45.2,
+    382.8,
+    297.7
+   ],
+   "w": 1381,
+   "h": 1053,
+   "dpi": 300,
+   "src": "1572305d-53._Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.907
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 14,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Reactivity and electronic hardness of enfumafungin 24 The contour plot (r = 0.004), the projection onto the molecular electron density (r = 0.02, range G 1 , 10\u00023 red via green to blue), and the EHIs (in 10\u00023 e) as the average of the two hemiacetal diastereomers are displayed. Single-point calculations were run with a triple zeta basis set (def2-TZVPP).",
+   "bbox": [
+    51.7,
+    483.9,
+    550.9,
+    700.9
+   ],
+   "w": 2081,
+   "h": 905,
+   "dpi": 300,
+   "src": "1572305d-53._Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.85
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 15,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Reactivity and electronic hardness of the potassium zincate 27 The contour plot (r = 0.005), the projection onto the molecular electron density (r = 0.01, range G 1 , 10\u00023 red via green to blue), and the EHIs (in 10\u00023 e) are displayed. A simpliﬁcation of the structure in the solid state was utilized. The benzyl ligand in the solid state bridges zinc to the potassium of the repetitive unit through p-coordination. We simpliﬁed the molecule as bimetallic monomer with a p-coordinated monodentate toluene ligand at potassium.",
+   "bbox": [
+    51.7,
+    45.3,
+    382.5,
+    277.5
+   ],
+   "w": 1379,
+   "h": 969,
+   "dpi": 300,
+   "src": "1572305d-53._Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.869
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 16,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Reactivity and electronic hardness of the imidazopyrazine 30 The contour plot (r = 0.002), the projection onto the molecular electron density (r = 0.01, range G 5 , 10\u00024 red via green to blue), and the EHIs (in 10\u00023 e) are displayed.",
+   "bbox": [
+    51.7,
+    45.2,
+    382.8,
+    324.0
+   ],
+   "w": 1381,
+   "h": 1163,
+   "dpi": 300,
+   "src": "1572305d-53._Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 4,
+   "file": "fig_S1.png",
+   "caption": "Figure 1. Overview of some ways of scrutinizing ambident chemical reactivity Red lobes: positive values, blue lobes: negative values. Atoms shown in gray are carbon, white are hydrogen, and red are oxygen.",
+   "bbox": [
+    51.7,
+    45.2,
+    548.1,
+    708.7
+   ],
+   "w": 2069,
+   "h": 2765,
+   "dpi": 300,
+   "src": "8eb8cb54-53._Sup3_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.868
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 7,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Screenshot of the orca_plot interface. Select “1 - Enter type of plot” followed by “2 - (scf) electron density” to set the desired plot. “4 - Enter number of grid intervals” allows setting the resolution. We chose 80 throughout this study but lower resolutions may be desired for large molecules. Afterwards, choose “5 - Select output file format” and “7 - 3D Gaussian cube”. The final settings are displayed in Figure S3.",
+   "bbox": [
+    49.2,
+    64.9,
+    547.2,
+    506.5
+   ],
+   "w": 2075,
+   "h": 1841,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.051
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 7,
+   "file": "fig_S3.png",
+   "caption": "Figure 3. Graphical overview of the electron density and density differences used in this study for the example nucleophile phenolate",
+   "bbox": [
+    51.7,
+    45.3,
+    382.5,
+    334.0
+   ],
+   "w": 1379,
+   "h": 1204,
+   "dpi": 300,
+   "src": "8eb8cb54-53._Sup3_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.907
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 9,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Screenshot of the first density subtraction performed in ChemCraft. Repeat the procedure with the second (“DMSO-1e.cube”) and third (“DMSO-2e.cube”) density according to eq. 4b. 𝑓−2(𝑟) = 𝜌𝑁−1(𝑟) −𝜌𝑁−2(𝑟) (4b) Lastly, subtract 𝑓−2(𝑟) from 𝑓−(𝑟) to receive the EHR 𝑓(2,−)(𝑟) according to eq. 5b. 𝑓(2,−)(𝑟) = 𝑓−(𝑟) −𝑓−2(𝑟) = 𝜌𝑁(𝑟) −2𝜌𝑁−1(𝑟) + 𝜌𝑁−2(𝑟) (5b) Finally, activate the last generated density, click “Show isosurface”, and adjust the contour value to visualise the EHR (Figure S5). You can save images (“File”, “Save as”, “Save image”) or export this cube (“Cube operations”, “Save current cube to file”) for later use.",
+   "bbox": [
+    50.6,
+    64.9,
+    547.1,
+    351.3
+   ],
+   "w": 2069,
+   "h": 1194,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.734
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 11,
+   "file": "fig_S5.png",
+   "caption": "Figure 5. Selected visualizations of the Fukui functions and electronic hardness responses Contour plots (top) and projections onto the electron density (bottom, red is positive and blue is negative). The given numbers are electronic hardness indices in 10\u00023 e. Atoms shown in yellow are sulfur and turquoise are nitrogen. Dimethylsulfoxide 1: contour r = 0.01; projection r = 0.01, range G 2 , 10\u00023. Pyridine 5: contour r = 0.01; projection r = 0.02, range G 2 , 10\u00023. N,N,N0,N00,N00-pentamethyldiethylenetriamine 4: contour r = 0.02; projection r = 0.02, range G 4 , 10\u00023. Diiminium pyridine adduct 15: contour r = 0.01; projection r = 0.02, range G 2 , 10\u00023.",
+   "bbox": [
+    51.7,
+    45.3,
+    382.5,
+    594.3
+   ],
+   "w": 1379,
+   "h": 2289,
+   "dpi": 300,
+   "src": "8eb8cb54-53._Sup3_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.793
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 10,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Screenshot of the generated EHR mapped onto the electron density.",
+   "bbox": [
+    50.6,
+    431.7,
+    544.6,
+    717.3
+   ],
+   "w": 2059,
+   "h": 1191,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.656
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 12,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Example analysis spreadsheet for computing the FI and EHI.",
+   "bbox": [
+    50.6,
+    87.0,
+    534.5,
+    351.5
+   ],
+   "w": 2016,
+   "h": 1103,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.665
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 15,
+   "file": "fig_S8.png",
+   "caption": "Figure 8. Reactivity and electronic hardness of the potassium zincate 27 The contour plot (r = 0.005), the projection onto the molecular electron density (r = 0.01, range G 1 , 10\u00023 red via green to blue), and the EHIs (in 10\u00023 e) are displayed. A simpliﬁcation of the structure in the solid state was utilized. The benzyl ligand in the solid state bridges zinc to the potassium of the repetitive unit through p-coordination. We simpliﬁed the molecule as bimetallic monomer with a p-coordinated monodentate toluene ligand at potassium.",
+   "bbox": [
+    51.7,
+    45.3,
+    382.5,
+    277.5
+   ],
+   "w": 1379,
+   "h": 969,
+   "dpi": 300,
+   "src": "8eb8cb54-53._Sup3_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.869
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 16,
+   "file": "fig_S9.png",
+   "caption": "Figure 9. Reactivity and electronic hardness of the imidazopyrazine 30 The contour plot (r = 0.002), the projection onto the molecular electron density (r = 0.01, range G 5 , 10\u00024 red via green to blue), and the EHIs (in 10\u00023 e) are displayed.",
+   "bbox": [
+    51.7,
+    45.2,
+    382.8,
+    324.0
+   ],
+   "w": 1381,
+   "h": 1163,
+   "dpi": 300,
+   "src": "8eb8cb54-53._Sup3_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 9,
+   "file": "tab_1.png",
+   "caption": "Table 1. Selected Fukui and electronic hardness indices of the investigated molecules in 10\u00023 e Molecule Atom f \u0002 f \u0002 2 f ð2; \u0002 Þ 1 O 397 199 199 S 227 326 \u0002100 H@C1/C2 43 63 \u000210 2 S 654 575 78 N 265 311 \u000246 3 N 358 472 \u0002114 C 642 528 114 4 N1 \u00029 175 \u0002184 N2 287 \u0002130 417 N3 6 176 \u0002170 C4 43 47 \u00023.7 5 N 60 64 \u00024.4 C2/6 149 148 1 C3/5 150 154 \u00024.0 C4 43 47 \u00023.7 6 O 274 147 128 C1 42 83 \u000241 C2/6 104 119 \u000215 C4 138 182 \u000244 6H+ C3/5 65 55 9 C4 148 193 \u000245 7 C1 142 \u000290 232 C2/6 61 193 \u0002132 C3/5 83 188 \u0002104 C4 142 \u000290 232 7H+ C1 117 \u000264 181 C2/6 37 245 \u0002208 C3/5 94 179 \u000285 C4 161 \u0002110 271 8 N 53 65 \u000212 C3 113 90 24 C4 101 97 5 C5 93 121 \u000228 8H+ C3 102 123 \u000221 C4 54 82 \u000229 C8 134 108 26 Molecule Atom f + f +2 f ð2;+Þ 7 N 141 46 \u000295 O1/2 198 91 \u0002106 C1 19 88 70 C2/6 51 75 24 C3/5 40 61 21 C4 84 140 55 9 C1 241 256 15 C3 228 199 \u000229 (E)-H@C1 87 192 18 (Z)-H@C1 70 80 10 10 C1 56 43 \u00022 C2 141 \u000291 \u00022",
+   "bbox": [
+    52.7,
+    99.2,
+    381.9,
+    733.7
+   ],
+   "w": 1373,
+   "h": 2645,
+   "dpi": 300,
+   "src": "1572305d-53._Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.516
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 9,
+   "file": "tab_S1.png",
+   "caption": "Table 1. Selected Fukui and electronic hardness indices of the investigated molecules in 10\u00023 e Molecule Atom f \u0002 f \u0002 2 f ð2; \u0002 Þ 1 O 397 199 199 S 227 326 \u0002100 H@C1/C2 43 63 \u000210 2 S 654 575 78 N 265 311 \u000246 3 N 358 472 \u0002114 C 642 528 114 4 N1 \u00029 175 \u0002184 N2 287 \u0002130 417 N3 6 176 \u0002170 C4 43 47 \u00023.7 5 N 60 64 \u00024.4 C2/6 149 148 1 C3/5 150 154 \u00024.0 C4 43 47 \u00023.7 6 O 274 147 128 C1 42 83 \u000241 C2/6 104 119 \u000215 C4 138 182 \u000244 6H+ C3/5 65 55 9 C4 148 193 \u000245 7 C1 142 \u000290 232 C2/6 61 193 \u0002132 C3/5 83 188 \u0002104 C4 142 \u000290 232 7H+ C1 117 \u000264 181 C2/6 37 245 \u0002208 C3/5 94 179 \u000285 C4 161 \u0002110 271 8 N 53 65 \u000212 C3 113 90 24 C4 101 97 5 C5 93 121 \u000228 8H+ C3 102 123 \u000221 C4 54 82 \u000229 C8 134 108 26 Molecule Atom f + f +2 f ð2;+Þ 7 N 141 46 \u000295 O1/2 198 91 \u0002106 C1 19 88 70 C2/6 51 75 24 C3/5 40 61 21 C4 84 140 55 9 C1 241 256 15 C3 228 199 \u000229 (E)-H@C1 87 192 18 (Z)-H@C1 70 80 10 10 C1 56 43 \u00022 C2 141 \u000291 \u00022",
+   "bbox": [
+    52.7,
+    99.2,
+    381.9,
+    733.7
+   ],
+   "w": 1373,
+   "h": 2645,
+   "dpi": 300,
+   "src": "8eb8cb54-53._Sup3_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.516
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 15,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Atomic Hirshfeld charges and reactivity indices of cyanide 3. Hirshfeld charges (e) Indices N N-1 N-2 f- f-2 f(2,-) f(2,-) rel. f(2,-) HF D3BJ 1 C -0.45586 0.179565 0.725859 0.63543 0.54629 -0.08913 -0.02467 0.216782 2 N -0.54412 -0.17956 0.274141 0.36456 0.45370 0.08914 0.02467 0.21678 PBE20 D3BJ 1 C -0.49283 0.117471 0.660809 0.61030 0.54334 -0.06696 -0.04684 0.411569 2 N -0.50714 -0.11747 0.339191 0.38968 0.45666 0.06698 0.04683 0.411489 B3LYP21 D3BJ 1 C -0.48228 0.13360 0.674087 0.61588 0.54049 -0.07539 -0.03841 0.337501 2 N -0.5177 -0.13360 0.325914 0.38410 0.45951 0.07541 0.03840 0.337422 DSD-BLYP D3BJ 1 C -0.46542 0.17647 0.70455 0.64189 0.52808 -0.11380 0.00000 0 2 N -0.53456 -0.17647 0.29545 0.35810 0.47191 0.11382 0.00000 0",
+   "bbox": [
+    51.6,
+    68.3,
+    540.9,
+    393.7
+   ],
+   "w": 2039,
+   "h": 1357,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.912
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 16,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Selected FIs and dual descriptors of radical anions of selected molecules in atomic units (e). Molecule Atom 𝑓+ 𝑓+2 𝑓(2,+) ∆𝑓(2,+) 14’ O 0.248 0.002 −0.246 0.030 C1/C3 0.055 0.010 0.039 0.029 C2 0.255 0.003 −0.252 −0.139 H@C1/C3 0.064 0.134 0.070 0.034 16’ O 0.184 0.127 −0.056 0.099 C1 0.027 0.028 0.001 0.042 C2 0.136 0.065 −0.071 −0.089 C4 0.168 0.131 −0.037 −0.085 H@C5 0.044 0.089 −0.003 0.035",
+   "bbox": [
+    51.6,
+    68.3,
+    543.8,
+    811.3
+   ],
+   "w": 1984,
+   "h": 2993,
+   "dpi": 290,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.957
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 17,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Atomic Mulliken charges and reactivity indices of dimethylsulfoxide 1.",
+   "bbox": [
+    51.6,
+    94.9,
+    543.1,
+    760.8
+   ],
+   "w": 2049,
+   "h": 2775,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 18,
+   "file": "tab_S5.png",
+   "caption": "Table S5. Atomic Mulliken charges and reactivity indices of pyridine 5.",
+   "bbox": [
+    51.6,
+    69.0,
+    538.3,
+    491.9
+   ],
+   "w": 2028,
+   "h": 1763,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.924
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 19,
+   "file": "tab_S6.png",
+   "caption": "Table S6. Atomic Mulliken charges and reactivity indices of DMSO 1 in CPCM for DMSO. The last row gives the relative difference to the respective index for 1 without CPCM.",
+   "bbox": [
+    51.6,
+    94.8,
+    545.9,
+    645.9
+   ],
+   "w": 2060,
+   "h": 2298,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.908
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 21,
+   "file": "tab_S7.png",
+   "caption": "Table S7. Atomic Hirshfeld charges and reactivity indices of dimethylsulfoxide 1.",
+   "bbox": [
+    51.6,
+    68.3,
+    538.3,
+    490.6
+   ],
+   "w": 2028,
+   "h": 1761,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "tS8",
+   "kind": "table",
+   "label": "S8",
+   "page": 22,
+   "file": "tab_S8.png",
+   "caption": "Table S8. Atomic Hirshfeld charges and reactivity indices of thiocyanate 2.",
+   "bbox": [
+    51.6,
+    92.6,
+    538.3,
+    277.1
+   ],
+   "w": 2028,
+   "h": 770,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.908
+  },
+  {
+   "key": "tS9",
+   "kind": "table",
+   "label": "S9",
+   "page": 23,
+   "file": "tab_S9.png",
+   "caption": "Table S9. Atomic Hirshfeld charges and reactivity indices of cyanide 3.",
+   "bbox": [
+    51.6,
+    92.6,
+    538.3,
+    269.8
+   ],
+   "w": 2028,
+   "h": 740,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.911
+  },
+  {
+   "key": "tS10",
+   "kind": "table",
+   "label": "S10",
+   "page": 24,
+   "file": "tab_S10.png",
+   "caption": "Table S10. Atomic Hirshfeld charges and reactivity indices of N,N,N’,N’’,N’’-pentamethyldiethylenetriamine 4.",
+   "bbox": [
+    51.6,
+    92.6,
+    538.3,
+    768.6
+   ],
+   "w": 2028,
+   "h": 2818,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "tS11",
+   "kind": "table",
+   "label": "S11",
+   "page": 26,
+   "file": "tab_S11.png",
+   "caption": "Table S11. Atomic Hirshfeld charges and reactivity indices of pyridine 5.",
+   "bbox": [
+    51.6,
+    92.6,
+    538.4,
+    504.6
+   ],
+   "w": 2029,
+   "h": 1718,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "tS12",
+   "kind": "table",
+   "label": "S12",
+   "page": 27,
+   "file": "tab_S12.png",
+   "caption": "Table S12. Atomic Hirshfeld charges and reactivity indices of phenolate 6.",
+   "bbox": [
+    51.6,
+    92.6,
+    538.3,
+    519.3
+   ],
+   "w": 2028,
+   "h": 1779,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "tS13",
+   "kind": "table",
+   "label": "S13",
+   "page": 28,
+   "file": "tab_S13.png",
+   "caption": "Table S13. Atomic Hirshfeld charges and reactivity indices of phenol 6H+.",
+   "bbox": [
+    51.6,
+    92.6,
+    538.3,
+    473.3
+   ],
+   "w": 2028,
+   "h": 1588,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "tS14",
+   "kind": "table",
+   "label": "S14",
+   "page": 29,
+   "file": "tab_S14.png",
+   "caption": "Table S14. Atomic Hirshfeld charges and reactivity indices of nitrobenzene 7.",
+   "bbox": [
+    51.6,
+    92.6,
+    538.3,
+    765.7
+   ],
+   "w": 2028,
+   "h": 2806,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "tS15",
+   "kind": "table",
+   "label": "S15",
+   "page": 31,
+   "file": "tab_S15.png",
+   "caption": "Table S15. Atomic Hirshfeld charges and reactivity indices of nitrobenzene 7H+.",
+   "bbox": [
+    51.6,
+    92.6,
+    538.3,
+    570.4
+   ],
+   "w": 2028,
+   "h": 1992,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "tS16",
+   "kind": "table",
+   "label": "S16",
+   "page": 32,
+   "file": "tab_S16.png",
+   "caption": "Table S16. Atomic Hirshfeld charges and reactivity indices of isoquinoline 8.",
+   "bbox": [
+    51.6,
+    115.2,
+    538.3,
+    615.7
+   ],
+   "w": 2028,
+   "h": 2087,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "tS17",
+   "kind": "table",
+   "label": "S17",
+   "page": 33,
+   "file": "tab_S17.png",
+   "caption": "Table S17. Atomic Hirshfeld charges and reactivity indices of isoquinoline 8H+.",
+   "bbox": [
+    51.6,
+    92.6,
+    457.3,
+    614.6
+   ],
+   "w": 1691,
+   "h": 2176,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.902
+  },
+  {
+   "key": "tS18",
+   "kind": "table",
+   "label": "S18",
+   "page": 34,
+   "file": "tab_S18.png",
+   "caption": "Table S18. Atomic Hirshfeld charges and reactivity indices of 1-buten-3-ium 9.",
+   "bbox": [
+    51.6,
+    92.6,
+    538.4,
+    504.6
+   ],
+   "w": 2029,
+   "h": 1718,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "tS19",
+   "kind": "table",
+   "label": "S19",
+   "page": 35,
+   "file": "tab_S19.png",
+   "caption": "Table S19. Atomic Hirshfeld charges and reactivity indices of 1-chlorobut-2-ene 10.",
+   "bbox": [
+    51.6,
+    92.6,
+    538.3,
+    478.8
+   ],
+   "w": 2028,
+   "h": 1611,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "tS20",
+   "kind": "table",
+   "label": "S20",
+   "page": 36,
+   "file": "tab_S20.png",
+   "caption": "Table S20. Atomic Hirshfeld charges and reactivity indices of chlorobutane 11.",
+   "bbox": [
+    51.6,
+    92.6,
+    538.3,
+    533.4
+   ],
+   "w": 2028,
+   "h": 1838,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "tS21",
+   "kind": "table",
+   "label": "S21",
+   "page": 37,
+   "file": "tab_S21.png",
+   "caption": "Table S21. Atomic Hirshfeld charges and reactivity indices of oxaisoindolium 12.",
+   "bbox": [
+    51.6,
+    92.6,
+    538.3,
+    696.3
+   ],
+   "w": 2028,
+   "h": 2517,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "tS22",
+   "kind": "table",
+   "label": "S22",
+   "page": 38,
+   "file": "tab_S22.png",
+   "caption": "Table S22. Atomic Hirshfeld charges and reactivity indices of diiminium pyridine adduct 13.",
+   "bbox": [
+    51.6,
+    92.6,
+    538.3,
+    770.1
+   ],
+   "w": 2028,
+   "h": 2824,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.912
+  },
+  {
+   "key": "tS23",
+   "kind": "table",
+   "label": "S23",
+   "page": 40,
+   "file": "tab_S23.png",
+   "caption": "Table S23. Atomic Hirshfeld charges and reactivity indices of acetone 14.",
+   "bbox": [
+    51.6,
+    92.6,
+    538.3,
+    447.9
+   ],
+   "w": 2028,
+   "h": 1482,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "tS24",
+   "kind": "table",
+   "label": "S24",
+   "page": 41,
+   "file": "tab_S24.png",
+   "caption": "Table S24. Atomic Hirshfeld charges and reactivity indices of methyl-3-oxobutanoate 15.",
+   "bbox": [
+    51.6,
+    68.3,
+    538.3,
+    578.3
+   ],
+   "w": 2028,
+   "h": 2126,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.911
+  },
+  {
+   "key": "tS25",
+   "kind": "table",
+   "label": "S25",
+   "page": 42,
+   "file": "tab_S25.png",
+   "caption": "Table S25. Atomic Hirshfeld charges and reactivity indices of (E)-pent-3-en-2-one 16.",
+   "bbox": [
+    51.6,
+    92.6,
+    538.4,
+    548.8
+   ],
+   "w": 2029,
+   "h": 1902,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.909
+  },
+  {
+   "key": "tS26",
+   "kind": "table",
+   "label": "S26",
+   "page": 43,
+   "file": "tab_S26.png",
+   "caption": "Table S26. Atomic Hirshfeld charges and reactivity indices of compound (E)-pent-3-en-2-one lithium complex 17.",
+   "bbox": [
+    51.6,
+    92.6,
+    538.4,
+    563.6
+   ],
+   "w": 2029,
+   "h": 1964,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "tS27",
+   "kind": "table",
+   "label": "S27",
+   "page": 44,
+   "file": "tab_S27.png",
+   "caption": "Table S27. Atomic Hirshfeld charges and reactivity indices of benzo[a]pyrene 18.",
+   "bbox": [
+    51.6,
+    68.3,
+    538.3,
+    772.9
+   ],
+   "w": 2028,
+   "h": 2937,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "tS28",
+   "kind": "table",
+   "label": "S28",
+   "page": 46,
+   "file": "tab_S28.png",
+   "caption": "Table S28. Atomic Hirshfeld charges and reactivity indices of enfumafungine 23 (S at hemiketal-C). Computed at def2- TZVPP level.",
+   "bbox": [
+    51.6,
+    68.3,
+    543.7,
+    764.2
+   ],
+   "w": 2051,
+   "h": 2901,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.886
+  },
+  {
+   "key": "tS29",
+   "kind": "table",
+   "label": "S29",
+   "page": 49,
+   "file": "tab_S29.png",
+   "caption": "Table S29. Atomic Hirshfeld charges and reactivity indices of enfumafungine 23 (R at hemiketal-C). Computed at def2- TZVPP level.",
+   "bbox": [
+    51.6,
+    68.8,
+    543.6,
+    770.4
+   ],
+   "w": 2050,
+   "h": 2924,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.885
+  },
+  {
+   "key": "tS30",
+   "kind": "table",
+   "label": "S30",
+   "page": 52,
+   "file": "tab_S30.png",
+   "caption": "Table S30. Atomic Hirshfeld charges and reactivity indices of enfumafungine 27 (toluene)K(-N(SiMe3)2)2ZnCH2Ph 27.",
+   "bbox": [
+    51.6,
+    90.4,
+    538.3,
+    761.7
+   ],
+   "w": 2028,
+   "h": 2798,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.914
+  },
+  {
+   "key": "tS31",
+   "kind": "table",
+   "label": "S31",
+   "page": 55,
+   "file": "tab_S31.png",
+   "caption": "Table S31. Atomic Hirshfeld charges and reactivity indices of chloroimidazopyrazine 30.",
+   "bbox": [
+    51.6,
+    92.6,
+    543.7,
+    811.3
+   ],
+   "w": 2051,
+   "h": 2996,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "tS32",
+   "kind": "table",
+   "label": "S32",
+   "page": 57,
+   "file": "tab_S32.png",
+   "caption": "Table S32. Atomic Hirshfeld charges and reactivity indices of acetone 14, with its structure optimised as radical anion: 14’.",
+   "bbox": [
+    51.6,
+    92.6,
+    545.9,
+    479.5
+   ],
+   "w": 2060,
+   "h": 1614,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "tS33",
+   "kind": "table",
+   "label": "S33",
+   "page": 58,
+   "file": "tab_S33.png",
+   "caption": "Table S33. Atomic Hirshfeld charges and reactivity indices of (E)-pent-3-en-2-one 16, with its structure optimised as radical anion: 16’.",
+   "bbox": [
+    51.6,
+    114.7,
+    545.8,
+    584.5
+   ],
+   "w": 2060,
+   "h": 1959,
+   "dpi": 300,
+   "src": "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "blank": 0.923
+  }
+ ]
+}

@@ -558,6 +558,15 @@
    "DEM 논문/24. Minnmann_2024_J._Electrochem._Soc._171_060514 Visualizing the Impact of the Composite Cathode Microstructure and Porosity on Solid-State Battery Performance.pdf"
   ]
  },
+ "mulks2024_hard_soft_electrons_holes": {
+  "figures": 52,
+  "generated": "2026-08-05",
+  "pdfs": [
+   "1572305d-53._Hard_and_soft_electrons_and_holes.pdf",
+   "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf",
+   "8eb8cb54-53._Sup3_Hard_and_soft_electrons_and_holes.pdf"
+  ]
+ },
  "mun2025_dry_electrode_technology_assb_review": {
   "figures": 8,
   "generated": "2026-08-05",
@@ -639,12 +648,10 @@
   ]
  },
  "reisacher2023_percolation_sulfide_carbon_matrix": {
-  "figures": 12,
+  "figures": 8,
   "generated": "2026-08-05",
   "pdfs": [
-   "DEM 논문/23. microstructural-modeling-of-composite-cathodes-for-all-solid-state-batteries.pdf",
-   "DEM 논문/27. Percolation Behavior of a Sulfide Electrolyte___Carbon Additive_Matrix for Composite Cathodes in All-Solid-State Batteries.pdf",
-   "건식전극 논문/06. microstructural-modeling-of-composite-cathodes-for-all-solid-state-batteries.pdf"
+   "27. Percolation Behavior of a Sulfide Electrolyte___Carbon Additive_Matrix for Composite Cathodes in All-Solid-State Batteries.pdf"
   ]
  },
  "ren2026_li2zrcl6_low_ion_potential_doping": {
@@ -842,10 +849,11 @@
   ]
  },
  "trevisanello2021_sc_pc_ncm_cracking_diffusion": {
-  "figures": 11,
+  "figures": 18,
   "generated": "2026-08-05",
   "pdfs": [
-   "건식전극 논문/01. Sup) Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf"
+   "01. Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf",
+   "01. Sup) Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf"
   ]
  },
  "wang2022_sulfide_thermal_stability_th_descriptor": {
