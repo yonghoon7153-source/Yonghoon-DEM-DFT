@@ -1,6 +1,6 @@
 """plot_grid_summary.py — grid 결과 요약 지도 (용량 heatmap).
 
-Phase 5의 축퇴 지도(plot_map.py) 이전 단계로, grid 곡선 데이터의 sanity check용:
+Phase 5의 degeneracy 지도(plot_map.py) 이전 단계로, grid 곡선 데이터의 sanity check용:
 x=LAM_PE, y=LAM_NE, color=Q[mAh], facet=LLI. 불능(infeasible) 셀은 회색 표시.
 """
 

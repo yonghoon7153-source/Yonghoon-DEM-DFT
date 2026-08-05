@@ -3,7 +3,7 @@
 **full-cell 곡선 하나로 LAM_PE와 LAM_NE를 분리할 수 있는가?**
 
 2026-08-05 연구세미나 22p에서 `LAM_PE ≈ LAM_NE ≈ 13%`로 나온 결과가
-실제 물리인지 **fitting 축퇴(degeneracy)** 인지 판별하기 위한 코드베이스.
+실제 물리인지 **fitting degeneracy** 인지 판별하기 위한 코드베이스.
 
 PyBaMM으로 정답을 아는 합성 데이터를 대량 생성하고,
 기존 α·β fitting 코드가 그 정답을 복원하는지 채점한다.
@@ -51,7 +51,7 @@ source .venv/bin/activate
 | 파일 | 내용 |
 |---|---|
 | `docs/00_START_HERE.md` | 부트스트랩 — 에이전트 진입점 |
-| `docs/01_CONTEXT.md` | 연구 배경, 축퇴 문제 정의 |
+| `docs/01_CONTEXT.md` | 연구 배경, degeneracy 문제 정의 |
 | `docs/02_CODE_AUDIT.md` | 원본 코드 분석 및 문제점 |
 | `docs/03_ARCHITECTURE.md` | 목표 구조, run.sh 스펙, GPU 현실론 |
 | `docs/04_PROMPTS.md` | Phase 0~7 단계별 프롬프트 + git 규약 |

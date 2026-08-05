@@ -13,7 +13,7 @@
 
 원본 스크립트는 **한 번에 모드 하나만**(LLI만, LAM_NE만…) 넣어서 32p 그림을 만듭니다.
 그런데 실제 셀은 LLI·LAM_PE·LAM_NE가 **동시에** 일어나므로, 22p의
-`LAM_PE ≈ LAM_NE ≈ 13%`가 진짜인지 fitting 축퇴인지 확인하려면
+`LAM_PE ≈ LAM_NE ≈ 13%`가 진짜인지 fitting degeneracy인지 확인하려면
 **조합 격자를 훑어야** 합니다.
 
 ```
@@ -265,7 +265,7 @@ Phase 2  모드 중첩·32p 재현      ✅   원본 회귀 검증 통과
 Phase 3  조합 격자·병렬화        ✅   fine 격자 3,069조건 생성   ← 여기까지 완료
 ──────────────────────────────────
 Phase 4  Fitting 이식           ⬜   33p MATLAB → Python, 34p 목적함수
-Phase 5  축퇴 판정·지도          ⬜   정답 vs 복원값 채점, Hessian
+Phase 5  degeneracy 판정·지도          ⬜   정답 vs 복원값 채점, Hessian
 Phase 6  목적함수 4종 비교        ⬜   ★ 최종 산출물
 Phase 7  GPU 시도               ⬜   선택. 실패해도 기록이 산출물
 ```
@@ -290,7 +290,7 @@ Phase 7  GPU 시도               ⬜   선택. 실패해도 기록이 산출물
 | | dQ/dV 피크 가중 (33p "peak weight factor"), savgol 스무딩 (33p "peak smoothing") |
 
 **핵심 장치 — multi-start**: 초기값을 bound 안에서 무작위로 바꿔가며 여러 번(기본 5회)
-최적화합니다. **결과가 서로 다르게 나오면 그 자체가 축퇴의 직접 증거**입니다.
+최적화합니다. **결과가 서로 다르게 나오면 그 자체가 degeneracy의 직접 증거**입니다.
 같은 데이터에 같은 코드인데 답이 갈린다는 뜻이니까요.
 
 > ⚠ **미리 알려드릴 문제 — 33p의 bound**
@@ -310,7 +310,7 @@ Phase 7  GPU 시도               ⬜   선택. 실패해도 기록이 산출물
 
 ---
 
-### Phase 5 — 축퇴 판정 · 지도
+### Phase 5 — degeneracy 판정 · 지도
 
 **하는 일**: 정답과 복원값을 대조해 채점하고, 파라미터 공간 어디가 위험한지 지도를 그립니다.
 
@@ -320,21 +320,21 @@ Phase 7  GPU 시도               ⬜   선택. 실패해도 기록이 산출물
 |---|---|
 | `err_lli`, `err_lam_pe`, `err_lam_ne` | 복원값 − 정답 |
 | `abs_err_max` | 셋 중 최대 오차 |
-| **`pe_ne_antisym`** | `err_pe × err_ne < 0` — **축퇴의 특징적 지문.** PE를 과대평가한 만큼 NE를 과소평가해 상쇄된 경우 |
+| **`pe_ne_antisym`** | `err_pe × err_ne < 0` — **degeneracy의 특징적 지문.** PE를 과대평가한 만큼 NE를 과소평가해 상쇄된 경우 |
 | `n_restarts_agree` | multi-start 결과 일치 개수 → 해의 유일성 지표 |
-| `degenerate` | `abs_err_max > 0.02` (2%p) 이면 축퇴 판정 |
+| `degenerate` | `abs_err_max > 0.02` (2%p) 이면 degeneracy 판정 |
 
 **Hessian 분석** (`src/hessian.py`): 최적점에서 목적함수의 2차 미분을 계산합니다.
 
-- 고윳값 하나가 0에 가까우면 → **평평한 골짜기(flat valley)** = 축퇴
+- 고윳값 하나가 0에 가까우면 → **평평한 골짜기(flat valley)** = degeneracy
 - 그 최소 고윳값의 **고유벡터 방향**을 봅니다. α_PE와 α_NE가 **같은 부호로 묶여
   있으면**, "PE와 NE를 같이 움직여도 목적함수가 안 변한다" = 22p에서 두 값이
   붙어 나온 이유가 물리가 아니라 수학이라는 증거입니다.
-- 조건수(최대/최소 고윳값)가 클수록 심한 축퇴.
+- 조건수(최대/최소 고윳값)가 클수록 심한 degeneracy.
 
 **지도** (`tools/plot_map.py`): x=LAM_PE, y=LAM_NE, 색=오차, LLI별로 여러 장.
 그리고 여기에 **22p 실험 조건(LAM_PE≈13%, LAM_NE≈13%, LLI≈17%)을 마커로 찍습니다.**
-→ *"우리 실험 조건이 축퇴 영역 안에 있는가"* 에 그림 하나로 답합니다.
+→ *"우리 실험 조건이 degeneracy 영역 안에 있는가"* 에 그림 하나로 답합니다.
 
 **실행**: `./run.sh --mode score --in results/grid_fine_v1` / `--mode hessian`
 **산출**: `degeneracy_map.parquet`, `figures/degeneracy_map.png`
@@ -356,7 +356,7 @@ Phase 7  GPU 시도               ⬜   선택. 실패해도 기록이 산출물
 나오는 표:
 
 ```
-| objective        | 축퇴 비율 | 평균 |err| | PE-NE 상쇄 비율 |
+| objective        | degeneracy 비율 | 평균 |err| | PE-NE 상쇄 비율 |
 |------------------|----------|-----------|----------------|
 | pocv             |    ?%    |     ?     |       ?        |
 | pocv_dvdq        |    ?%    |     ?     |       ?        |   ← 기존
@@ -364,11 +364,11 @@ Phase 7  GPU 시도               ⬜   선택. 실패해도 기록이 산출물
 | dqdv_only        |    ?%    |     ?     |       ?        |
 ```
 
-**가중치 최적화**: `w_dqdv`를 0~2로 훑어서 축퇴 비율이 최소가 되는 조합을 찾습니다.
+**가중치 최적화**: `w_dqdv`를 0~2로 훑어서 degeneracy 비율이 최소가 되는 조합을 찾습니다.
 *"가중치를 임의로 튜닝한 것 아니냐"* 는 질문에 대한 근거가 됩니다.
 
 **`docs/RESULTS.md` 자동 생성** — 실행 조건, 비교표, 핵심 결론 3줄,
-그리고 22p 실험 조건의 축퇴 여부 판정.
+그리고 22p 실험 조건의 degeneracy 여부 판정.
 
 **실행**: `./run.sh --mode all --config configs/grid_fine.yaml --nproc 32 --out results/final_v1`
 
@@ -394,13 +394,13 @@ Phase 7  GPU 시도               ⬜   선택. 실패해도 기록이 산출물
 ### 최종적으로 답하게 되는 질문 5개
 
 1. 기존 fitting 코드는 어떤 (LAM_PE, LAM_NE, LLI) 조합에서 정답을 복원하는가?
-2. 축퇴가 발생하는 영역은 파라미터 공간의 몇 %인가?
-3. **22p의 실험 조건은 그 축퇴 영역 안에 있는가?**
-4. **34p의 dQ/dV 추가가 축퇴 영역을 얼마나 줄이는가? (X% → Y%)**
+2. degeneracy가 발생하는 영역은 파라미터 공간의 몇 %인가?
+3. **22p의 실험 조건은 그 degeneracy 영역 안에 있는가?**
+4. **34p의 dQ/dV 추가가 degeneracy 영역을 얼마나 줄이는가? (X% → Y%)**
 5. 목적함수 가중치의 최적 조합은?
 
 **4번이 가장 중요합니다.** 이 숫자가 나오면 34p 수정을 "기능을 추가했다"가 아니라
-**"축퇴 영역을 X%에서 Y%로 줄였다"** 로 정량 보고할 수 있습니다.
+**"degeneracy 영역을 X%에서 Y%로 줄였다"** 로 정량 보고할 수 있습니다.
 
 그리고 3번의 답이 "그렇다"로 나오면, 22p의 `LAM_PE ≈ LAM_NE ≈ 13%`는
 **물리가 아니라 fitting의 한계**라는 결론이 되고, 지도교수님 지적에 대한
@@ -422,7 +422,7 @@ LAM_NE를 0에서 0.20까지 **4배 늘려도 용량이 28 mAh(0.7%)밖에 안 �
 측정 노이즈에 묻히는 수준입니다. 반면 LAM_PE 방향으로는 400 mAh 넘게 변합니다.
 
 → 고LLI 영역에서 **LAM_NE는 full-cell 곡선에 거의 흔적을 남기지 않습니다.**
-fitting이 이 영역에서 LAM_NE를 제대로 복원할 가능성은 낮고, 그게 바로 축퇴입니다.
+fitting이 이 영역에서 LAM_NE를 제대로 복원할 가능성은 낮고, 그게 바로 degeneracy입니다.
 22p의 조건(LLI≈17%)이 정확히 이 영역에 있다는 점이 중요합니다.
 Phase 5의 지도로 확정할 부분입니다.
 
@@ -453,7 +453,7 @@ Phase 5의 지도로 확정할 부분입니다.
 | 파일 | 내용 |
 |---|---|
 | `docs/SETUP_GPU.md` | 새 서버 환경 구축 상세 (V100 노트, 트러블슈팅) |
-| `docs/01_CONTEXT.md` | 축퇴 문제가 뭔지 |
+| `docs/01_CONTEXT.md` | degeneracy 문제가 뭔지 |
 | `docs/02_CODE_AUDIT.md` | 원본 코드 분석 |
 | `docs/03_ARCHITECTURE.md` | 구조 설계, GPU 현실론 |
 | `docs/04_PROMPTS.md` | Phase별 작업 계획 |

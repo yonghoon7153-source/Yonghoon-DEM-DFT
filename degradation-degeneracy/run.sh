@@ -34,14 +34,11 @@ NOISE="0"
 NOISE_SEED="42"
 
 # fitting
-OBJECTIVE="pocv_dvdq"
-W_POCV="1.0"
-W_DVDQ="1.0"
-W_DQDV="0.0"
-INIT_GUESS="1.03,-0.1,1.08,-0.01"
-BOUNDS_LB="1.00,-0.30,1.00,-0.15"
-BOUNDS_UB="1.10,0.00,1.10,0.00"
-N_RESTARTS="1"
+OBJECTIVE=""                      # 비우면 objectives.yaml 전체 (4종)
+BOUNDS_PRESET="expanded"          # expanded | original_33p
+N_RESTARTS="auto"                 # auto = objectives.yaml 의 n_restarts
+CLEAN="false"                     # true면 노이즈 없는 곡선으로 fitting
+LIMIT=""                          # 앞 N조건만 (스모크용)
 
 # 실행 제어
 BACKEND="cpu"             # cpu | gpu
@@ -67,7 +64,7 @@ MODE
   sweep1d    32p 재현 — 모드별 1D sweep
   grid       조합 격자 곡선 생성          ★ 핵심
   fit        생성된 곡선에 alpha/beta fitting
-  score      축퇴 판정 및 지도 생성
+  score      degeneracy 판정 및 지도 생성
   hessian    조건수 / 고윳값 분석
   report     그림 + 표 생성
   all        grid -> fit -> score -> report
@@ -90,13 +87,13 @@ MODE
 
 fitting
   --objective LIST       pocv | pocv_dvdq | pocv_dvdq_dqdv | dqdv_only (콤마 다중)
-  --w-pocv F             pOCV 가중치
-  --w-dvdq F             dV/dQ 가중치
-  --w-dqdv VAL           dQ/dV 가중치 (축 문법으로 sweep 가능)
-  --init-guess CSV       a_PE,b_PE,a_NE,b_NE
-  --bounds-lb CSV        하한
-  --bounds-ub CSV        상한
-  --n-restarts N         multi-start 횟수 (축퇴 진단용, 권장 5)
+                         기본: objectives.yaml 의 4종 전부
+  --bounds PRESET        expanded (기본) | original_33p
+                         original_33p 는 33p 원본 bound. alpha 하한 1.00이
+                         "LAM = 용량손실"을 강제하는지 비교하는 용도
+  --n-restarts N         multi-start 횟수 (degeneracy 진단용, 기본 5)
+  --clean                노이즈 없는 곡선으로 fitting
+  --limit N              앞 N조건만 (스모크용)
 
 실행 제어
   --backend B            cpu | gpu   (기본 cpu)
@@ -118,7 +115,8 @@ fitting
   ./run.sh --mode sweep1d --out results/sweep1d_v1
   ./run.sh --mode grid --lli 0:0.2:0.05 --lam-pe 0:0.2:0.05 --lam-ne 0:0.2:0.05 --dry-run
   ./run.sh --mode grid --config configs/grid_fine.yaml --nproc 32 --out results/final_v1
-  ./run.sh --mode fit --in results/final_v1 --objective pocv,pocv_dvdq,pocv_dvdq_dqdv --n-restarts 5
+  ./run.sh --mode fit --in results/grid_fine_v1 --nproc 32
+  ./run.sh --mode fit --in results/grid_fine_v1 --bounds original_33p --nproc 32
   ./run.sh --mode score --in results/final_v1
 EOF
 }
@@ -140,13 +138,10 @@ while [[ $# -gt 0 ]]; do
     --noise)         NOISE="$2"; shift 2 ;;
     --noise-seed)    NOISE_SEED="$2"; shift 2 ;;
     --objective)     OBJECTIVE="$2"; shift 2 ;;
-    --w-pocv)        W_POCV="$2"; shift 2 ;;
-    --w-dvdq)        W_DVDQ="$2"; shift 2 ;;
-    --w-dqdv)        W_DQDV="$2"; shift 2 ;;
-    --init-guess)    INIT_GUESS="$2"; shift 2 ;;
-    --bounds-lb)     BOUNDS_LB="$2"; shift 2 ;;
-    --bounds-ub)     BOUNDS_UB="$2"; shift 2 ;;
+    --bounds)        BOUNDS_PRESET="$2"; shift 2 ;;
     --n-restarts)    N_RESTARTS="$2"; shift 2 ;;
+    --clean)         CLEAN="true"; shift ;;
+    --limit)         LIMIT="$2"; shift 2 ;;
     --backend)       BACKEND="$2"; shift 2 ;;
     --nproc)         NPROC="$2"; shift 2 ;;
     --solver)        SOLVER="$2"; shift 2 ;;
@@ -217,13 +212,14 @@ case "$MODE" in
     ;;
 
   fit)        # Phase 4
-    not_impl fit
-    # exec python -m src.fitting --in "${IN_DIR:-$OUT}" --out "$OUT" \
-    #   --objective "$OBJECTIVE" \
-    #   --w-pocv "$W_POCV" --w-dvdq "$W_DVDQ" --w-dqdv "$W_DQDV" \
-    #   --init-guess "$INIT_GUESS" \
-    #   --bounds-lb "$BOUNDS_LB" --bounds-ub "$BOUNDS_UB" \
-    #   --n-restarts "$N_RESTARTS" --nproc "$NPROC"
+    FIT_ARGS=(--in "${IN_DIR:-$OUT}" --nproc "$NPROC"
+              --bounds "$BOUNDS_PRESET" --log-level "$LOG_LEVEL")
+    [[ -n "$IN_DIR" ]] && FIT_ARGS+=(--out "$IN_DIR")
+    [[ -n "$OBJECTIVE" ]] && FIT_ARGS+=(--objective "$OBJECTIVE")
+    [[ "$N_RESTARTS" != "auto" ]] && FIT_ARGS+=(--n-restarts "$N_RESTARTS")
+    [[ "$CLEAN" == "true" ]] && FIT_ARGS+=(--clean)
+    [[ -n "$LIMIT" ]] && FIT_ARGS+=(--limit "$LIMIT")
+    exec python -m src.fitting "${FIT_ARGS[@]}"
     ;;
 
   score)      # Phase 5

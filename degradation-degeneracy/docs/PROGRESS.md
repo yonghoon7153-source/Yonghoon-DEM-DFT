@@ -7,7 +7,7 @@
 - [x] Phase 2 — 모드 중첩 · 32p 재현      `phase2-done`
 - [x] Phase 3 — 조합 격자 · 병렬화        `phase3-done`  ← 2026-08-05 여기까지 완료
 - [ ] Phase 4 — Fitting 이식              `phase4-done`
-- [ ] Phase 5 — 축퇴 판정 · 지도          `phase5-done`
+- [ ] Phase 5 — degeneracy 판정 · 지도          `phase5-done`
 - [ ] Phase 6 — 목적함수 비교             `phase6-done`
 - [ ] Phase 7 — GPU 시도 (선택)           `phase7-done`
 
