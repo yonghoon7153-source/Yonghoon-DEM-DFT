@@ -57,6 +57,8 @@ source .venv/bin/activate
 | `docs/04_PROMPTS.md` | Phase 0~7 단계별 프롬프트 + git 규약 |
 | `docs/05_HANDOFF.md` | 구축 환경 설명서 (원본 작성자용) |
 | `docs/06_REVIEW_DECISIONS.md` | **적대적 리뷰 처리 대장 — 기각·유보 항목과 해석 규칙** |
+| `docs/07_LAM_LLI.md` | **LAM / LLI 열화모드 정의 — 물리·수식·코드·흔한 오해** |
+| `docs/GPU_NOTES.md` | PyBaMM/DFN의 CUDA 가능성 실측 판정 (Phase 7-1) |
 
 ## 참고 자료
 
