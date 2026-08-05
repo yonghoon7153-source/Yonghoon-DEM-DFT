@@ -232,6 +232,44 @@ DN 이 크면(강한 σ-주개) 공격이 세고, 방향족·무배위 용매(�
 
 ---
 
+## §3.3 Thermal Stability — *"400–500 °C 안정"이 안전성으로 읽히는 문제*
+
+### 🔵 건진 문장
+
+> "From the intrinsic material perspective, most crystalline sulfide SEs exhibit a high thermal
+> stability maximum. **Under inert atmospheres**, representative materials such as **LGPS, LPSCl,
+> and Li₇P₃S₁₁** maintain stable crystal structures within the **400–500 °C** range without
+> significant thermal decomposition or phase transitions, which demonstrates **thermal resistance
+> significantly superior to conventional carbonate-based liquid electrolytes** (Figure 5a)
+> [99,101,102]. This elevated thermal decomposition temperature primarily results from the
+> **continuous covalent-ionic hybrid bond network** within the sulfide lattice and the **low
+> content of volatile components**, providing enhanced structural retention under thermal excitation."
+
+### 🔴 원고가 얼버무린 곳
+
+| # | 지점 | 무엇이 문제 | 우리 입장 |
+|---|---|---|---|
+| **A14** ⭐⭐ **구조화학 오류** | *"**continuous** covalent-ionic hybrid bond network"* | **LPSCl(아지로다이트)의 음이온 골격은 연결망이 아니라 고립 PS₄³⁻ + free S²⁻ + Cl⁻ 다.** 원고 자신이 §3.1·§3.2 에서 *"PS₄³⁻ **structural units**"* 라 부른 그것이다. 세 물질을 한 문장으로 묶었지만 실제로는 **연결도가 다 다르다** — LGPS 는 (Ge/P)S₄ 사슬, Li₇P₃S₁₁ 은 P₂S₇⁴⁻ 이합체 + PS₄³⁻, **LPSCl 은 완전 고립**. "continuous network" 로 뭉뚱그리면 **원고 자신의 §3.1 서술과 충돌**한다 | **리비전 지적 강도 상위.** 세 물질의 **음이온 연결도(isolated / dimer / chain)를 갈라 쓰고**, 열안정 기여를 연결도와 연결지어 서술하도록 요구. 그래야 §3.1(고립 PS₄ 가 공격받는다)과 §3.3(연결망이 열에 강하다)이 안 부딪힌다 |
+| **A15** ⭐⭐ | *"under **inert atmospheres**"* → *"thermal resistance significantly superior to carbonate liquid electrolytes"* | **조건과 결론이 어긋난다.** 불활성 분위기의 상전이 온도는 **셀 안전성과 거의 무관**하다 — 실제 열 위험은 SE 단독이 아니라 **충전된 양극의 O₂ 방출·Li 금속과의 발열 반응**이고, 그건 400–500 °C 훨씬 아래에서 시작한다. 게다가 카보네이트 액체의 위험은 **분해 온도가 아니라 인화점·증기압·발열 폭주**다(DMC 인화점 ~18 °C). **분해온도끼리 비교하는 것 자체가 축이 안 맞는다** | *"불활성 분위기 기준"* 을 결론 문장에도 달고, 안전성 비교는 **DSC 발열 개시온도·발열량(J/g)**, 그리고 **양극/Li 공존 조건**에서 하도록 요구 |
+| **A16** | *"**low content of volatile components**"* | 관찰 자체는 타당하나(고체 vs 통째로 휘발성인 액체) **황화물의 열분해 산물에 H₂S·S 가 있다**. "휘발 성분이 적다"가 곧 "방출 위험이 낮다"는 아니다 — §3.1 이 같은 H₂S 를 위험으로 다룬다 | 분해 **온도**와 분해 **산물의 독성/가연성**을 갈라 쓸 것 |
+| **A17** | **400–500 °C** 의 성립 조건 | 승온속도·분위기·시편(분말/펠릿)·측정법(TGA vs DSC vs in-situ XRD)에 따라 달라진다. ref [99,101,102] 세 편이 같은 조건인지도 불명 | **B4 계열** — 임계 수치에 (a)방법 (b)조건 (c)출처 한 줄 |
+
+### 🟢 우리 해석
+
+★ **A14 는 B1(축 간 상충)의 또 다른 실례**다. 같은 "공유-이온 혼성 결합"이
+§3.1 에서는 **약점의 근원**(낮은 결합에너지·높은 분극률 → 물 공격 취약),
+§3.5 에서는 **장점**(저 E·소성변형 → 접촉 유리),
+§3.3 에서는 다시 **장점**(열분해 온도 높음)으로 인용된다.
+→ 리비전 코멘트로 묶어 쓸 때 *"결합 특성 하나가 절마다 다른 부호로 인용된다"* 로 올리면 무게가 실린다.
+
+> 🔎 **우리 축과의 거리** — 우리는 **열분해 축이 없다**. 갖고 있는 건 `b2o3_phonon_stability.json`·
+> `comp2_v3_phonon_uma.json` 의 **0 K 동역학 안정성(포논)** 이고, 이건 *"허수 진동수가 없다"* 이지
+> *"몇 도에서 분해되나"* 가 아니다. ⚠ 두 축을 같은 말로 쓰지 않는다.
+> §3.3 은 우리가 **비어 있는 축**임을 확인해 주는 절이다(→ B1 표의 열 하나가 통째로 빈칸).
+
+
+---
+
 ## 🧭 내가 따로 잡은 revision 포인트 (B 계열 — 문장이 아니라 **구조**)
 
 > A 계열은 1저자가 준 문장에 붙은 지적이고, 여기는 **digest 전체(113 pp 요약)를 훑어서
@@ -366,6 +404,17 @@ digest 에 잡힌 것만도 — *파괴인성 **0.2–0.4 MPa·m¹ᐟ²*** · *�
    *"highly **polar** covalent"* 는 그 축에서 벗어난 표현이므로, **polarizability 로 통일**하면
    진단–대응이 하나의 물성으로 이어진다. *(A3·A12)*
 
+11. **(구조화학 — 상위 지적) "continuous network" 서술** — §3.3 은 LGPS·LPSCl·Li₇P₃S₁₁ 의
+   열안정을 *"continuous covalent-ionic hybrid bond network"* 로 설명하지만, 세 물질의 음이온
+   연결도는 서로 다르다 — LGPS 사슬, Li₇P₃S₁₁ 은 P₂S₇⁴⁻ 이합체 + PS₄³⁻, **LPSCl 은 고립 PS₄³⁻ +
+   free S²⁻ + Cl⁻ 로 연결망이 아니다**. 원고 자신이 §3.1·§3.2 에서 *"PS₄³⁻ structural units"* 라
+   부른 그것이다. 연결도를 갈라 서술하고 열안정 기여를 그와 연결지어 주기 바란다. *(A14)*
+12. **(조건과 결론의 정합) 열 안정성 비교 축** — *"under inert atmospheres"* 에서 얻은 400–500 °C 를
+   근거로 *"카보네이트 액체 전해질보다 우수"* 라 맺는 것은 축이 어긋난다. 액체의 위험은 분해온도가
+   아니라 **인화점·증기압·발열 폭주**이며, 고체계의 실제 열 위험도 SE 단독이 아니라 **충전 양극의
+   O₂ 방출·Li 금속과의 발열 반응**이다. 비교하려면 **DSC 발열 개시온도·발열량**, 그리고 **양극/Li
+   공존 조건**의 값을 쓰고, 아니면 *"불활성 분위기 기준"* 을 결론 문장에도 달아 주기 바란다. *(A15·A16)*
+
 5. **(outlook 의 구체화)** §3.1 맺음의 "미래 모델 4요건"(결합에너지 강화 · 다중스케일 계면
    상전이 kinetics · 전자–홀 결합 · 고체–기체 반응 열역학) 중 **전자–홀 결합은 ref [80],
    고체–기체 열역학은 ref [84] 가 이미 부분적으로 다룬다**. 각 요건에 *현재 도달점*과
@@ -383,6 +432,7 @@ digest 에 잡힌 것만도 — *파괴인성 **0.2–0.4 MPa·m¹ᐟ²*** · *�
 | Q3 | §3.1 | 국소 구조 재배열·계면 상전이 → **사이클 중 계면 수송 물성의 지속적 열화** | 그대로 인용 가능 · 다만 "연속"의 기전(상 성장 vs 응력 파괴)은 원고가 안 가름 | "대기 안정성은 보관 문제가 아니라 **수명 문제**다" |
 | Q4 | §3.1 | 낮은 격자에너지 · 불충분한 전하밀도 · 강한 극성 공유결합 = 가수분해·산화 취약성의 근본 원인 | ⚠ **A3**(polar↔polarizable 혼동) · **A4**(열역학/속도론 뭉갬) 둘 다 걸림 — **그대로 인용 금지** | "격자에너지 · 전하밀도 · 결합의 공유성/분극률이 황화물의 취약성을 **열역학적으로** 규정한다" |
 | Q5 | §3.1 | **HSEH**(Mulks 2024)가 HSAB 를 **다전자계**로 확장 [80] | ⚠ 신생 이론 — "확장한 틀이 제안돼 있다" 수준으로만 | "HSAB 를 다전자·전자/홀 거동으로 확장한 HSEH 가 제안돼 있다(Mulks 2024)" |
+| Q10 | §3.3 | 불활성 분위기에서 LGPS·LPSCl·Li₇P₃S₁₁ 이 **400–500 °C** 까지 구조 유지; 원인 = 연속 공유–이온 혼성 결합망 + 낮은 휘발 성분 | ⛔ **그대로 인용 금지** — *continuous network* 가 LPSCl 에 안 맞고(A14), 액체와의 비교 축이 어긋난다(A15) | "**불활성 분위기 기준으로** 결정성 황화물 SE 는 400–500 °C 까지 상 구조를 유지한다고 보고된다" — 액체 비교·연결망 설명 **없이** |
 | Q9 | §3.2 | **InF₃** 첨가 → 격자 결합에너지↑ · **분극률↓** → 유기용매 침지 후에도 σ 유지 (Fig 4c) | ⚠ 측정법 없음(A12) · In/F 기여 미분리(A13). 다만 **"분극률"** 축은 §3.1 과 일관 | "강결합 성분(InF₃ 등) 도입이 **분극률을 낮춰** 용매 침지 후 σ 유지에 기여한다고 보고된다" |
 | Q8 | §3.2 | HSAB 근거로 **P⁵⁺ = 비교적 soft Lewis acid**, 고립전자쌍 극성용매 = **strong Lewis base** → 친핵 공격 → P–S 절단·저전도 구조단위 (Fig 4b) | ⛔ **인용 금지** — §3.1 과 P⁵⁺ 분류가 모순(A7)이고 HSAB 짝짓기 방향도 어긋난다(A9) | "고립전자쌍 주개(고-DN 용매)가 P 를 친핵 공격해 P–S 를 끊는다" — **HSAB 라벨 없이** |
 | Q7 | §3.2 | **NMP**(고유전율·강용매화)가 PS₄³⁻·P₂S₇⁴⁻ 와 **비가역 반응** → P–S 절단·구조단위 재배열 | ⚠ *irreversibly* 의 근거(열역학/동역학)를 원고가 안 단다 — 인용 시 "비가역적으로 보고된다" 정도로 | "고립전자쌍을 가진 고-DN 용매(NMP 등)가 PS₄ 를 친핵 공격해 P–S 를 끊는다" |
@@ -393,7 +443,7 @@ digest 에 잡힌 것만도 — *파괴인성 **0.2–0.4 MPa·m¹ᐟ²*** · *�
 ## 🗂 다음에 채울 자리 (1저자가 문장 주는 대로)
 
 - [x] §3.2 Solvent Compatibility — Q7 (A7·A8)
-- [ ] §3.3 Thermal
+- [x] §3.3 Thermal — Q10 (A14·A15·A16·A17)
 - [ ] §3.4 Electrochemical (ESW)
 - [ ] §3.5 Mechanical
 - [ ] §4 양극 계면 · §5 음극 계면
