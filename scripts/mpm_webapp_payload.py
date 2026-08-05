@@ -445,6 +445,9 @@ def main():
                     help='skip the STEP3 current-density FIELD export (electronic_field / ionic_field)')
     ap.add_argument('--no-thermal', action='store_true',
                     help='skip STEP3 열전도 (σ_thermal 多상 k_eff) 솔브')
+    ap.add_argument('--no-trackb', action='store_true',
+                    help='Track-B(COMSOL 하이브리드) 파라미터 계산 생략 — τ_geo 추가 솔브 1회 + '
+                         'AM face walk 를 끈다')
     ap.add_argument('--periodic', action='store_true',
                     help='STEP3 σ-solve(전자/이온/열/pore-τ/반응)에 x,y 주기 BC 적용 (MPM RVE '
                          "'boundary p p f' 정합 — 측면 wrap, z=plate 유지).  기본 OFF = 절연 측벽(기존).")
@@ -1078,6 +1081,112 @@ def main():
                           f"({_res3i['n_dof']:,} dof, resid {_res3i['resid']:.1e}, {_time.time()-_t1:.0f}s)  "
                           f"share: " + " ".join(f"{k} {100*v:.0f}%"
                                                 for k, v in step3['ion_dissipation_share'].items()))
+                    # ★ Track-B — COMSOL 하이브리드(AM 해상구 + SE 연속체) 파라미터: τ_full/τ_geo/
+                    #   κ_dom + AM 표면 face-walk 패치 분율.  κ_dom 이중계상 가드: 하이브리드는 AM
+                    #   구를 기하로 해상하므로 AM-장애물 굴곡도는 모델이 스스로 만든다 → SE 연속체에
+                    #   줄 전도도는 σ_bulk·(φ_full/τ_full)/(φ_geo/τ_geo) 여야 한다 (τ_geo = "AM
+                    #   여집합을 꽉 찬 SE 로 이상화"한 같은 복셀 Laplace 해 — kdom_calibration).
+                    if not a.no_trackb:
+                        _tb = {}
+                        try:
+                            _t7 = _time.time()
+                            # 구세대 체크아웃 가드 (리뷰 minor): 헬퍼 부재 시 τ_geo 대형 솔브를
+                            # 돌기 전에 저비용으로 error 경로로 — V100 등에서 git pull 누락 대비
+                            if not hasattr(_s3, 'tau_from_solve'):
+                                raise AttributeError('step3_sigma 에 Track-B 헬퍼 부재 '
+                                                     '(tau_from_solve 등) — git pull 필요')
+                            # 크롭: pore_tau 와 같은 규약 — rasterize 박스 상단의 void 패딩 캡을
+                            # 빼고 z ≤ 두께만 잰다 (pore_tau docstring 의 크롭 근거 참조)
+                            _nzc = max(2, min(sid3.shape[2],
+                                              int(np.floor(float(_ztop) / a.step3_vox + 0.5))))
+                            _sidc = sid3[:, :, :_nzc]
+                            _cnt = np.bincount(_sidc.ravel().astype(np.int64), minlength=len(_sig3i))
+                            _tb.update({'tau_convention': 'linear: sigma_eff = sigma_bulk*phi/tau',
+                                        'crop_nz': int(_nzc),
+                                        'phi_denominator': 'cropped_total_voxels'})
+                            # φ_full = 이온 전도상 복셀 분율.  전도집합 = σ_i>0 이고 격자에 실재하는
+                            # sid — 테이블에 σ>0 이어도 복셀 0개면 solve 에 없다 (부재상으로
+                            # mixed_phase 오탐하지 않기 위해 실재만 센다)
+                            _csid = [s for s in range(len(_sig3i)) if _sig3i[s] > 0.0 and _cnt[s] > 0]
+                            _phi_full = float(sum(int(_cnt[s]) for s in _csid)) / float(_sidc.size)
+                            _tb['phi_full'] = float(f'{_phi_full:.6g}')
+                            # 균일성 가드: 전도상 σ 가 서로 다르면 (예: SDCP 1e-3 ≠ SE) 단일 σ_bulk
+                            # 기반 τ 가 정의 불가 → tau_full=None + reason (§F1: 날조 금지)
+                            _sigs = sorted({float(_sig3i[s]) for s in _csid})
+                            if len(_sigs) == 1:
+                                _tb['mixed_phase'] = None
+                                _tb['sigma_bulk_ion_S_cm'] = _sigs[0]
+                                _tau_full = _s3.tau_from_solve(_phi_full, _sigs[0],
+                                                               float(_res3i['sigma_eff']))
+                            else:
+                                # TODO(trackb): mixed 이온상(예: SDCP+SE) 의 단일 σ_bulk 환원 규약
+                                # 미결 — 지금은 None+reason 이 정직(§F1), 하이브리드는 sigma_ion_eff
+                                # 를 직접 쓰거나 SE-only 재솔브 필요
+                                _tau_full = None
+                                _tb['sigma_bulk_ion_S_cm'] = None
+                                _tb['mixed_phase'] = {
+                                    'sigma_by_sid_S_cm': {_s3.SID_NAME.get(s, str(s)): float(_sig3i[s])
+                                                          for s in _csid},
+                                    'reason': ('conducting phases carry unequal sigma_ion → single-'
+                                               'sigma_bulk tau undefined; use sigma_ion_eff_S_cm')}
+                            _tb['tau_full'] = None if _tau_full is None else float(f'{_tau_full:.4g}')
+                            # τ_geo: AM(sid 1,2)=0.0 / 나머지(void 포함) 전부 1.0 — 순수 AM-장애물
+                            # 기하 굴곡도.  σ_bulk=1 이므로 sigma_eff 가 곧 D_rel.
+                            # ★ 크롭 그리드로 푼다 (리뷰 major, 합성 실측 +1~12% 편향): geo 테이블은
+                            #   void 도 σ=1 이라 rasterize 상단 패딩 캡이 도전층으로 남아 plate 가
+                            #   캡을 잰다 — pore_tau docstring 이 명시한 바로 그 실패 모드.  이온
+                            #   τ_full 솔브(_res3i)는 void σ=0 이라 무영향이므로 그대로 둔다.
+                            _sig_geo = np.array([1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
+                            _res_geo = _s3.solve_sigma_z(_sidc, _sig_geo, a.step3_vox, z_top_um=_ztop,
+                                                         z_bot_um=0.0, periodic_xy=a.periodic)
+                            _D_geo = float(_res_geo['sigma_eff'])
+                            _phi_geo = 1.0 - float(int(_cnt[1]) + int(_cnt[2])) / float(_sidc.size)
+                            _tau_geo = _s3.tau_from_solve(_phi_geo, 1.0, _D_geo)
+                            _tb['phi_geo'] = float(f'{_phi_geo:.6g}')
+                            _tb['tau_geo'] = None if _tau_geo is None else float(f'{_tau_geo:.4g}')
+                            _tb['D_rel_geo'] = float(f'{_D_geo:.4g}')
+                            if _res_geo.get('reason'):
+                                _tb['geo_reason'] = _res_geo['reason']
+                            _kdom = _s3.kdom_calibration(_phi_full, _tau_full, _phi_geo, _tau_geo)
+                            _tb['kdom_ratio'] = None if _kdom is None else float(f'{_kdom:.4g}')
+                            _tb['kappa_dom_S_cm'] = (
+                                None if (_kdom is None or _tb['sigma_bulk_ion_S_cm'] is None)
+                                else float(f"{_kdom * _tb['sigma_bulk_ion_S_cm']:.4g}"))
+                            if _kdom is not None and _kdom > 1.0:
+                                print(f'  ⚠ Track-B κ_dom/σ_bulk = {_kdom:.3g} > 1 — 규약/입력 '
+                                      '불일치 신호 (AM-장애물 굴곡도보다 좋은 유효전도?)')
+                            # per-particle AM 표면 패치 (COMSOL 구면 f_cov 경계조건용).  n_am 은
+                            # rasterize 입력 배열 길이를 명시 — pid.max()+1 추정 금지 (SuperP
+                            # _fid.max()+1 전역오프셋 버그의 회귀 방지)
+                            _pp = _s3.am_surface_patches(sid3, pid3, len(_am_c))
+                            # isfinite 벨트 (리뷰 minor): 헬퍼가 den=max(n_face,1) 로 NaN 을 막지만
+                            # ('bare NaN kills JSON.parse' — 이 파일의 확립 규약) 계약 변경에도
+                            # payload JSON 이 죽지 않게 한 겹 더
+                            _tb['per_particle'] = {
+                                'n_face': [int(v) for v in _pp['n_face']],
+                                **{_k: [round(float(v), 4) if np.isfinite(v) else 0.0
+                                        for v in _pp[_k]]
+                                   for _k in ('f_reaction', 'f_carbon', 'f_void', 'f_block')}}
+                            # face-walk 클래스 평균 vs 기존 coverage — 교차확인 print 만 (저장 안 함;
+                            # 잣대가 다름: face-walk=복셀 면 인접, coverage=Hertz 0.13µm 밴드)
+                            _fr = np.asarray(_pp['f_reaction'], float)
+                            _cchk = ' · '.join(
+                                f"{_nm} face-walk {100.0 * float(_fr[t == _ty].mean()):.1f}% "
+                                f"vs cov(Hertz) {cov_bands[_nm][0]}%"
+                                for _ty, _nm in ((1, 'AM_P'), (2, 'AM_S')) if (t == _ty).any())
+                            if _cchk:
+                                print('  Track-B f_reaction ' + _cchk)
+                            step3['trackb'] = _tb
+                            print(f"  Track-B: τ_full {_tb['tau_full']} · τ_geo {_tb['tau_geo']} · "
+                                  f"κ_dom/σ_bulk {_tb['kdom_ratio']} "
+                                  f"({'mixed' if _tb['mixed_phase'] else 'uniform'}) · "
+                                  f"crop_nz {_nzc} ({_time.time()-_t7:.0f}s)")
+                        except Exception as _e_tb:
+                            # 조용히 삼키지 않는다 — 2026-06-21 geom NameError 사고(정상 압밀 뒤
+                            # payload 통째 사망)의 재발 방지: 부분결과 + error 키를 남기고 STEP3 유지
+                            step3['trackb'] = {**_tb, 'error': f'{type(_e_tb).__name__}: {_e_tb}'}
+                            print(f'  ⚠ Track-B failed ({type(_e_tb).__name__}: {_e_tb}) — '
+                                  'step3.trackb.error 기록, STEP3 결과는 유지')
                 # ── STEP3 열전도 (σ_thermal, 多상 k) — 同 sid3 격자 재사용, ∇·(k∇T)=0 (σ_e/σ_ion과 동일 솔버) ──
                 if not a.no_thermal:
                     try:
