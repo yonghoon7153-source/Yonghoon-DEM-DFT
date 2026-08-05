@@ -148,6 +148,7 @@ print(BAR)
 print("① comp1 멀티시드 — modelc Ea 정본 충돌을 닫는다 (open_items #1)")
 ROOT = os.path.join(H, "work", "runs", "comp1_seeds")
 allD = {"deck(1234)": dict(DECK)}
+eas = {}                       # 200 ps 시드별 Ea — 아래 1600 ps 블록이 대조용으로 읽는다
 done_files = []
 caged = []                     # 확산영역 게이트 실패 목록
 n_done = 0                     # 부분 완료(seed 하나에 T 두 개 등)도 세는 카운터
@@ -232,6 +233,55 @@ if os.path.isdir(LONG):
         if ps is not None and not os.path.isfile(os.path.join(d, "msd.json")):
             live = f" · 지금 {os.path.basename(d)} {ps:.0f}/1605 ps"
     print(f"  ↻ 1600 ps 재시도: {n}/3 완료{live}")
+
+    # ⚠⚠ **재시도의 목적은 '완료'가 아니라 게이트 통과다.** 예전엔 개수만 찍어서,
+    #   1600 ps 가 3/3 이 돼도 화면 맨 위는 여전히 200 ps 의 "인용 금지"를 보여 주고
+    #   정작 답(β 가 확산영역에 들어왔나)은 디스크에 읽히지 않은 채 있었다.
+    #   → 200 ps 와 **똑같은 게이트**를 걸어서 여기서 바로 판정한다.
+    if n:
+        Dl, bl, caged_l = {}, {}, []
+        for mj in sorted(glob.glob(os.path.join(LONG, "s*", "d*_cfg*", "T*", "msd.json"))):
+            m = re.search(r"T(\d+)", mj)
+            if not m:
+                continue
+            T = int(m.group(1))
+            try:
+                D = json.load(open(mj)).get("D_Li_cm2_s")
+            except Exception:
+                D = None
+            if not D:
+                continue
+            Dl[T] = float(D)
+            b = beta(mj)
+            bl[T] = b
+            if b is not None and not (0.8 <= b <= 1.2):
+                caged_l.append(f"T{T}(β{b:.2f})")
+        if Dl:
+            row = "  ".join(
+                f"{T}K({Dl[T]:.2e})" + ("" if bl.get(T) is None else
+                                        (f"✅β{bl[T]:.2f}" if 0.8 <= bl[T] <= 1.2
+                                         else f"⛔β{bl[T]:.2f}"))
+                for T in sorted(Dl))
+            print(f"     1600 ps 게이트: {row}")
+            ea_l = arrhenius(Dl)
+            if len(Dl) == 3 and ea_l:
+                # 200 ps 같은 시드(s2)와 나란히 — 8배 늘렸을 때 답이 얼마나 움직였나
+                s2_200 = eas.get("s2")
+                delta = (f" · 같은 시드 200 ps 대비 {ea_l - s2_200:+.4f} eV"
+                         if s2_200 else "")
+                if caged_l:
+                    print(f"     ⛔ **1600 ps 로도 게이트 실패** {len(caged_l)}건: "
+                          f"{', '.join(caged_l)} → Ea {ea_l:.4f} eV 인용 금지{delta}")
+                    print("        연장으로 안 되면 남은 수는 **셀 확대**뿐이다"
+                          "(62원자 셀 Li 27개 = 통계 부족이 원인).")
+                else:
+                    print(f"     ✅ **1600 ps 게이트 통과** — comp1 Ea = {ea_l:.4f} eV "
+                          f"(단일시드 s2){delta}")
+                    print(f"        ⚠ 단일시드다. {MODELC_3SEED} 와 나란히 놓으려면 "
+                          "**s3/s4 도 1600 ps 로** 돌려 오차막대를 만들어야 한다.")
+                    print("        → 그전까지 open_items #1 은 닫지 않는다.")
+            elif caged_l:
+                print(f"     ⛔ 현재까지 게이트 실패 {len(caged_l)}건: {', '.join(caged_l)}")
 
     # ── ③ 그 뒤에 걸어둔 6점 아레니우스 (1저자 요청) ─────────────────────
     # ⚠ 사슬은 **산출물 개수**로 앞 작업 완료를 판정한다(프로세스 생존이 아니라).
