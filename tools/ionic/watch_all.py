@@ -402,6 +402,59 @@ if want("disorder"):
 #   Li24Ni24O48 산화물인데 2.5 A 미만 원자쌍이 0개(Ni-O 3.667 A, 원자가 1/3). 전부 폐기하고
 #   새 슬랩(db/structures/linio2_104_sym_1x4L4, 반전대칭 192/192, 게이트 통과)으로 다시 세웠다.
 #   여기서는 **지금 도는 v2 만** 자세히 본다. 옛 경로는 한 줄로만 남긴다.
+def _sdcp_maxcomp(out_path, in_path):
+    """이온스텝별 **자유 원자의 max|힘 성분|** 궤적. QE BFGS 가 forc_conv_thr 에 거는 양.
+
+    ⚠ 화면에 찍던 `Total force` 는 **자유 원자 전체의 노름**(√Σ|F|²)이라 원자 수가 많으면
+      실제 판정량보다 몇 배 크게 나온다 — 그걸 1e-3 문턱과 나란히 찍는 바람에
+      "아직 10배 남았다" 로 읽혔다(2026-08-05 실측: 노름 0.0102 vs 실제 판정량 0.0032).
+      per-atom 출력에는 **고정 원자(if_pos 0 0 0)** 의 raw 힘도 같이 찍히므로
+      relax.in 의 플래그로 걸러야 한다 (안 걸르면 0.049 짜리 고정 O 가 잡힌다).
+    """
+    free = {}
+    try:
+        on = False
+        n = 0
+        for line in open(in_path, errors="ignore"):
+            f = line.split()
+            if line.lstrip().startswith("ATOMIC_POSITIONS"):
+                on, n = True, 0
+                continue
+            if on:
+                if len(f) < 4:
+                    break
+                n += 1
+                free[n] = not (len(f) >= 7 and f[4] == "0" and f[5] == "0" and f[6] == "0")
+    except OSError:
+        return []
+    if not free:
+        return []
+    out, cur, on = [], 0.0, False
+    try:
+        for line in open(out_path, errors="ignore"):
+            if "Forces acting on atoms" in line:
+                on, cur = True, 0.0
+                continue
+            if on and "Total force" in line:
+                out.append(cur)
+                on = False
+                continue
+            # iverbosity 를 올리면 본 블록과 Total force 사이에 기여도 분해
+            # (The non-local contrib. / The ionic contribution / The Hubbard contrib. …)가
+            # 끼는데, 그것도 같은 `atom N type M force =` 형식이라 그대로 두면 물어 버린다.
+            if on and line.lstrip().startswith("The "):
+                on = False
+                out.append(cur)
+                continue
+            f = line.split()
+            if on and len(f) >= 9 and f[0] == "atom" and free.get(int(f[1]), False):
+                for v in f[6:9]:
+                    try: cur = max(cur, abs(float(v)))
+                    except ValueError: pass
+    except OSError:
+        return []
+    return out
+
 _V2 = "/data/work/runs/sdcp_v2"
 # ⚠ U-ramp 2단계다 — 1단계 scf_u0.out(U=0, 밀도 만들기) → 2단계 relax.out(U=6.2, 이완).
 #   어느 쪽을 보고 있는지 화면에 찍지 않으면 "이온스텝 0/80" 을 정체로 오해한다.
@@ -440,10 +493,21 @@ if want("sdcp"):
                   + (f"  ·  직전 스텝 대비 {(etot[-1]-etot[-2])*RY_EV*1000:+.1f} meV"
                      f"  (목표 |ΔE| < {1e-4*RY_EV*1000:.1f} meV)" if len(etot) > 1 else ""))
         if forc:
-            print(f"   힘      Total force {forc[-1]:.6f} Ry/bohr"
-                  f"  (목표 < 1.0e-3)  {'✓ 도달' if forc[-1] < 1e-3 else '진행 중'}")
-            if len(forc) > 1:
-                print("           궤적 " + " → ".join(f"{f:.4f}" for f in forc[-6:]))
+            # ⚠ 판정량은 **자유 원자 max|성분|** 이다 (Total force = 노름, 문턱과 다른 양)
+            mc = _sdcp_maxcomp(_RLX, os.path.join(_V2, "slab_relax", "relax.in"))
+            if mc:
+                print(f"   힘      max|성분| {mc[-1]:.5f} Ry/bohr  (판정량, 목표 < 1.0e-3)"
+                      f"  {'✓ 도달' if mc[-1] < 1e-3 else '진행 중'}")
+                print("           궤적 " + " → ".join(f"{f:.5f}" for f in mc[-6:]))
+                if len(mc) >= 6 and mc[-1] >= 1e-3:
+                    # 최근 구간 기하평균 감소율로 남은 스텝 추정 (톱니가 있어 6점 이상만)
+                    import math
+                    a, b = mc[-6], mc[-1]
+                    r = (b / a) ** (1 / 5) if a > 0 and b > 0 else 1.0
+                    if 0 < r < 0.999:
+                        need = math.log(b / 1e-3) / -math.log(r)
+                        print(f"           감소율 {r:.3f}/스텝 → 1e-3 까지 약 {need:.0f}스텝")
+            print(f"           참고: Total force {forc[-1]:.6f} (자유원자 전체 노름 — 문턱 대상 아님)")
         if scfn:
             mx = [int(x) for x in scfn]
             print(f"   SCF     스텝당 반복수 {mx[-6:]}  (300 이면 가짜 수렴 의심)")
