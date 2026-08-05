@@ -283,25 +283,8 @@ if os.path.isdir(LONG):
             elif caged_l:
                 print(f"     ⛔ 현재까지 게이트 실패 {len(caged_l)}건: {', '.join(caged_l)}")
 
-    # ── ③ 그 뒤에 걸어둔 6점 아레니우스 (1저자 요청) ─────────────────────
-    # ⚠ 사슬은 **산출물 개수**로 앞 작업 완료를 판정한다(프로세스 생존이 아니라).
-    #   여기서도 같은 기준으로 보여 줘야 화면과 사슬이 어긋나지 않는다.
-    ARR = os.path.join(H, "work", "runs", "arrhenius_6pt")
-    n_arr = len(glob.glob(os.path.join(ARR, "*", "T*_s*", "**", "msd.json"), recursive=True))
-    chain_up = "arrchain" in tmux
-    if n_arr:
-        done_sys = sorted({os.path.basename(os.path.dirname(os.path.dirname(g)))
-                           for g in glob.glob(os.path.join(ARR, "*", "T*_s*"))})
-        print(f"  ↻ 6점 아레니우스(500-1000 K 6점 x 3계 x 3시드): {n_arr}/54 완료"
-              f"{'  ▶ 진행' if chain_up else '  ⛔ 사슬 세션 없음'}")
-    elif chain_up:
-        print("  ⏳ 6점 아레니우스 대기 중 (arrchain) — 위 1600 ps 가 3/3 되면 자동 착수")
-    elif n < 3:
-        print("  · 6점 아레니우스 미예약 — 1600 ps 뒤에 자동으로 걸려면:")
-        print("      tmux new -s arrchain -d 'bash tools/ionic/chain_after_c1long.sh "
-              "2>&1 | tee -a ~/logs/arrchain.log'")
-        print("    (kgy 는 우리 브랜치가 아니다 — 먼저 tools/ionic/ 와 db/structures/ 를 가져올 것)")
-elif not alive("run_comp1_seeds.sh") and "c1long" not in tmux:
+if (not os.path.isdir(LONG) and not alive("run_comp1_seeds.sh")
+        and "c1long" not in tmux):
     # ⚠ 200 ps 재기동을 권하면 안 된다 — msd.json 이 있어 전부 skip 되고, 설령 돌아도
     #   게이트를 또 실패한다. 다음 수는 **prod 연장**이다.
     print("  ⛔ 아무것도 안 돈다. 다음 수는 200 ps 재기동이 아니라 **prod 연장**:")
@@ -312,6 +295,7 @@ elif not alive("run_comp1_seeds.sh") and "c1long" not in tmux:
     print("     ⚠ 환경변수는 따옴표 **안쪽** · OUTROOT 를 바꿔야 기존 msd.json 에 안 막힌다.")
     print("     ~27 h (3.0 ps/min × 1605 ps × 3 T). 이 결과가 캠페인 방향을 정한다.")
 print(BAR)
+
 
 # ═══ ② VGCF NEB (완료 — 한 줄) ═══════════════════════════════════════════
 NEB = os.path.join(H, "work", "vgcf_hbn", "neb")
@@ -335,6 +319,74 @@ if os.path.isdir(NEB):
     print("   ⚠ 남은 구멍은 3L 포화뿐 — 0.147 eV 는 '수렴값' 아닌 **2L 값**으로만 인용.")
     print("     닫으려면 Li_in_gallery_3L1L (129 atoms = 2L2L 과 같은 크기, kgy 실현 검증됨).")
     print(BAR)
+
+# ═══ ③ 6점 아레니우스 — 2026-08-06 계획 변경 ════════════════════════════════
+# 왜 500 K 를 뺐나: comp1 이 **600 K / 1600 ps 로도** 게이트 실패(β0.37)했고 창 재적합도
+#   구제가 아니었다(어떤 창에서도 확산영역 없음). 500 K 는 100 K 더 낮은데 계획 prod 는
+#   1/4(400 ps)이라 거의 확실히 탈락한다. → 700/900 을 먼저 돌려 **MTO 의 실측 효과**와
+#   500 K 필요량을 정하고 나서 500 K 를 건다. 6점을 포기한 게 아니라 **순서를 바꾼 것**.
+print("③ 6점 아레니우스 — 700/900 선행 (500 K 는 결과 보고 결정)")
+ARR = os.path.join(H, "work", "runs", "arrhenius_6pt")
+SYSL = ("modelc", "lpsocl", "b2o3")
+PLAN_T = (700, 900)                     # 이번 판에 도는 신규 온도
+PLAN_N = len(PLAN_T) * len(SYSL) * 3 + 3     # 18 + lpsocl 600 재실행 3
+arr_up = [s for s in ("arr6", "arrchain") if s in tmux]
+
+arr_rows, n_arr, arr_caged = {}, 0, []
+for mj in sorted(glob.glob(os.path.join(ARR, "*", "T*_s*", "**", "msd.json"),
+                           recursive=True)):
+    m = re.search(r"/([^/]+)/T(\d+)_s(\d+)/", mj)
+    if not m:
+        continue
+    lab, T, s = m.group(1), int(m.group(2)), m.group(3)
+    try:
+        D = json.load(open(mj)).get("D_Li_cm2_s")
+    except Exception:
+        D = None
+    if not D:
+        continue
+    n_arr += 1
+    b = beta(mj)
+    arr_rows.setdefault(lab, {}).setdefault(T, []).append((float(D), b))
+    if b is not None and not (0.8 <= b <= 1.2):
+        arr_caged.append(f"{lab}/T{T}s{s}(β{b:.2f})")
+
+if n_arr:
+    print(f"  진행 {n_arr}/{PLAN_N}"
+          f"{'  ▶ ' + ','.join(arr_up) if arr_up else '  ⛔ 세션 없음 — 죽었는지 확인'}")
+    for lab in SYSL:
+        if lab not in arr_rows:
+            continue
+        cells = []
+        for T in sorted(arr_rows[lab]):
+            vs = arr_rows[lab][T]
+            dm = sum(v[0] for v in vs) / len(vs)
+            bs = [v[1] for v in vs if v[1] is not None]
+            bm = sum(bs) / len(bs) if bs else None
+            g = "" if bm is None else ("✅" if 0.8 <= bm <= 1.2 else "⛔")
+            cells.append(f"{T}K({dm:.2e}){g}β{bm:.2f}" if bm else f"{T}K({dm:.2e})")
+        print(f"    {lab:7s} " + "  ".join(cells) + f"   [{sum(len(v) for v in arr_rows[lab].values())}]")
+    # ⚠ comp1 에서 배운 것 — 개수만 찍고 게이트를 안 보면 못 쓰는 숫자를 모으게 된다.
+    if arr_caged:
+        print(f"  ⛔ 게이트 실패 {len(arr_caged)}건: {', '.join(arr_caged[:6])}"
+              + (" …" if len(arr_caged) > 6 else ""))
+        print("     → 이 점들은 아레니우스에서 **뺀다**. 창을 옮겨 구제하지 않는다"
+              "(comp1 1600 ps 에서 확인).")
+    else:
+        print("  ✅ 여기까지 전부 게이트 통과 — 신규 런의 MTO 효과가 실측되는 중")
+    if n_arr >= PLAN_N:
+        print("  ▶ 다 끝났다. 500 K 필요량을 이 β 로 정하고 나서 걸 것:")
+        print("     python3 tools/ionic/msd_refit_window.py --mto \\")
+        print(f"       --glob '{ARR}/*/T*_s*/**/msd.json'")
+        print("     tmux new -s arr500 -d 'TEMP_PROD=\"500:<정한값>\" LPSOCL_EXTRA=\"\" \\")
+        print("       bash tools/ionic/run_arrhenius_6pt.sh 2>&1 | tee -a ~/logs/arr500.log'")
+elif arr_up:
+    print(f"  ⏳ 착수 직후 — 아직 msd.json 없음 (세션 {','.join(arr_up)})")
+else:
+    print("  · 미착수. 700/900 선행판:")
+    print("     tmux new -s arr6 -d 'TEMP_PROD=\"700:200 900:200\" \\")
+    print("       bash tools/ionic/run_arrhenius_6pt.sh 2>&1 | tee -a ~/logs/arr6.log'")
+    print("    (kgy 는 우리 브랜치가 아니다 — 먼저 tools/ionic/ 와 db/structures/ 를 가져올 것)")
 
 # ═══ 브랜치 상기 ═════════════════════════════════════════════════════════
 br = sh("git -C ~/Yonghoon-DEM-DFT branch --show-current").strip()
