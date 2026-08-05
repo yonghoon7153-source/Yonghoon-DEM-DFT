@@ -154,7 +154,10 @@ def load_pkg(pkg_dir: Path) -> dict:
             contacts.append({'i': str(r.get('i')).strip(), 'j': str(r.get('j')).strip(),
                              'delta_um': _fnum(r.get('delta_um'), 'contacts.delta_um'),
                              'a_hertz_um': _fnum(r.get('a_hertz_um'), 'contacts.a_hertz_um'),
-                             'g_holm_S': _fnum(r.get('g_holm_S'), 'contacts.g_holm_S')})
+                             'g_holm_S': _fnum(r.get('g_holm_S'), 'contacts.g_holm_S'),
+                             # v1.1 추가 — 없으면 None (구 pkg 호환).  repair tol 판단에 필수.
+                             'gap_um': (_fnum(r.get('gap_um'), 'contacts.gap_um')
+                                        if r.get('gap_um') not in (None, '') else None)})
     else:
         warnings.append('am_am_contacts.csv 없음 — Holm g 교차대조 표는 생략')
 
@@ -864,12 +867,51 @@ def write_readme(pkg: dict, ctx: dict, todos, out_dir: Path, java_name: str = 'm
     md.append('| `fin`.set("action","union") | Unknown property | 줄 삭제 (union 이 기본값) |')
     md.append('| `setSolveFor` | NoSuchMethod **컴파일** 에러 (try 로 못 잡음) | try 블록 두 개 삭제 — 비결합 물리라 같이 풀려도 동일 |')
     md.append('| `autoMeshSize(4)` | 넥 병목 미해상 (σ_e 과소) | 4→3(→2) 로 낮춤 — 요소수 급증 주의 |')
-    md.append('| repair tolerance | tol > δ_min(0.2nm급) 이면 극소-겹침 접촉이 **삼켜져 소멸** / '
-              'tol > gap 스냅이면 근접-비접촉이 **점접촉**이 됨 — 돌긴 도나 점접촉 컨덕턴스는 '
-              '요소크기 비례라 **σ_e 가 메시-의존(비수렴)** | 옛 AM-메시 워크플로의 tol 사용(T15) '
-              '+ finalize 후 접촉 수 검산 + 근접-비접촉 72쌍류는 브릿지 실린더(T2)로 물리 면적 부여 |')
+    md.append('| repair tolerance | 접촉 소멸 ↔ 틈 점접촉화 (아래 §3-1 표) | §3-1 의 권장값 + '
+              'finalize 후 접촉 수 검산 |')
     md.append('| `BallSelection` condition/입력명 | Unknown property | inside↔somevertex 등 값 교체 |')
     md.append('| `InterpolationCurve` table | Unknown property | Polygon 폴백 (VGCF 절 주석 참조) |')
+    md.append('')
+    md.append('### 3-1) repair tolerance — 이 패키지의 실측 표 (tol 하나로는 불가능)')
+    md.append('')
+    _cs = pkg['contacts']
+    _dv = sorted(c['delta_um'] for c in _cs if (c['delta_um'] or 0) > 0)
+    _gv = sorted(c['gap_um'] for c in _cs
+                 if c.get('gap_um') is not None and c['gap_um'] > 0)
+    if not _dv:
+        md.append('_접촉 데이터 없음 — 표 생략._')
+    else:
+        md.append(f'겹침 접촉 **{len(_dv)}** 개 (δ {_dv[0]*1000:.1f}~{_dv[-1]*1000:.0f} nm)'
+                  + (f' · 근접-비겹침 **{len(_gv)}** 개 (gap {_gv[0]*1000:.1f}~{_gv[-1]*1000:.0f} nm)'
+                     if _gv else ' · gap 컬럼 없음(구 pkg — 틈 통계 불가)'))
+        md.append('')
+        if _gv and _gv[-1] > _dv[0]:
+            md.append(f'⚠ **δ 구간과 gap 구간이 겹친다** ({_dv[0]*1000:.1f}–{_dv[-1]*1000:.0f} nm '
+                      f'vs {_gv[0]*1000:.1f}–{_gv[-1]*1000:.0f} nm) → tolerance 하나로 '
+                      '"접촉 보존"과 "틈 제거"를 **동시에 만족시킬 수 없다**.')
+            md.append('')
+        md.append('| tol (nm) | 삼켜질 접촉 | 스냅될 틈 |')
+        md.append('|---|---|---|')
+        for tol_nm in (0.5, 1, 2, 5, 10, 20, 50, 100):
+            t_um = tol_nm / 1000.0
+            eat = sum(1 for d in _dv if d < t_um)
+            snap = sum(1 for g in _gv if g < t_um)
+            mark = ' ← **권장**' if tol_nm == 1 else (' ★위험' if eat > 0.15 * len(_dv) else '')
+            md.append(f'| {tol_nm:g} | {eat} ({100*eat/len(_dv):.1f} %) | '
+                      + (f'{snap} ({100*snap/len(_gv):.1f} %)' if _gv else '—') + f' |{mark}')
+        md.append('')
+        md.append('**권장**: tol 을 **≤1–2 nm** 로 두어 접촉을 보존한다 (그 위로 올리면 접촉이 '
+                  '두 자릿수 % 로 소멸해 σ_e 가 통째로 낮아진다).  남는 sliver 는 tol 이 아니라 '
+                  '**mesh 세분**(autoMeshSize 4→3→2)으로 다룬다.')
+        if _gv:
+            md.append('')
+            md.append(f'**틈 {len(_gv)} 개는 tol 로 못 닫는다** — 다 닫으려면 '
+                      f'tol ≥ {_gv[-1]*1000:.0f} nm 인데 그 값이면 접촉 '
+                      f'{100*sum(1 for d in _dv if d < _gv[-1])/len(_dv):.0f} % 가 소멸한다.  '
+                      '또 tol 로 스냅시키면 **점접촉 특이점**이 되어 컨덕턴스가 요소크기에 '
+                      '비례 → mesh 를 조일수록 σ_e 가 흘러내린다(비수렴).  '
+                      '⇒ **브릿지 실린더 TODO(trackb) T2 가 유일한 해법** '
+                      '(r = max(a_hertz, ~1.2·vox), STEP3 rasterize 와 같은 회로 + 물리 넥 면적).')
     md.append('| VGCF Edge 전류 feature | 미정 (버전/모듈) | TODO(trackb) — 첫 실행 시 확정 |')
     md.append('| 고립 AM 클러스터 | singular matrix | ec 선택에서 고립 클러스터 제외 (TODO 주석) |')
     md.append('| dset1/dset2 매핑 | 빈 표 | Results 에서 데이터셋 재지정 |')

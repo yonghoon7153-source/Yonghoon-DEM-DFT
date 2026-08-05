@@ -290,17 +290,22 @@ def build_contacts(kit):
             if d > r[i] + r[j] + TOL_AM_UM:
                 continue
             delta = max(0.0, float(r[i] + r[j] - d))
+            gap = max(0.0, float(d - r[i] - r[j]))           # δ>0 이면 0, 근접-비겹침만 >0
             rstar = float(r[i] * r[j] / (r[i] + r[j]))
             a = float(np.sqrt(rstar * delta))
             sc = 2.0 * sig[i] * sig[j] / (sig[i] + sig[j])   # 이종 접촉의 직렬(조화) σ [S/cm]
-            rows.append([int(i), int(j), delta, a, holm_conductance_S(sc, a)])
+            # ★ gap 은 v1.1 추가 컬럼 — COMSOL repair tolerance 선택에 필수다.  실측(real_14):
+            #   δ 0.2~711 nm 와 gap 0.1~95 nm 의 **구간이 완전히 겹쳐** tol 하나로 "접촉 보존"과
+            #   "틈 제거"를 동시에 못 한다 (tol 95nm 로 틈을 다 닫으면 접촉 60 % 가 소멸).
+            #   ⇒ tol 은 작게(≤1~2nm) 두어 접촉을 지키고, 틈은 브릿지 실린더로 닫는다.
+            rows.append([int(i), int(j), delta, a, holm_conductance_S(sc, a), gap])
     return rows
 
 
 def write_contacts(out, rows):
     p = os.path.join(out, 'am_am_contacts.csv')
     with open(p, 'w', newline='') as f:
-        f.write(f'# comsol_pkg v1.0 am_am_contacts — 접촉 규약: gap <= {TOL_AM_UM} um '
+        f.write(f'# comsol_pkg v1.1 am_am_contacts — 접촉 규약: gap <= {TOL_AM_UM} um '
                 f'(= step3_sigma.rasterize tol_am_um; econn 과 동일)\n')
         f.write('# R*=ri*rj/(ri+rj); a=sqrt(R**delta); sigma_c=2*si*sj/(si+sj) [S/cm]; '
                 'g=2*sigma_c*(a_um*1e-4) [S] (Holm R=1/(2*sigma_c*a))\n')
@@ -309,9 +314,9 @@ def write_contacts(out, rows):
         #   A_volume min-caps)를 연결해 a 를 상한 밴드로도 병기 (계약 v1.0 은 Hertz 단일).
         f.write('# TODO(trackb): Stage-E 소성-면적 옵션 (network_conductivity physics 모드 연결)\n')
         w = csv.writer(f)
-        w.writerow(['i', 'j', 'delta_um', 'a_hertz_um', 'g_holm_S'])
-        for i, j, d, a, g in rows:
-            w.writerow([i, j, f'{d:.12g}', f'{a:.12g}', f'{g:.12g}'])
+        w.writerow(['i', 'j', 'delta_um', 'a_hertz_um', 'g_holm_S', 'gap_um'])
+        for i, j, d, a, g, gp in rows:
+            w.writerow([i, j, f'{d:.12g}', f'{a:.12g}', f'{g:.12g}', f'{gp:.12g}'])
     return p
 
 
