@@ -1,6 +1,7 @@
 # Role of Interfaces in Solid-State Batteries — Miao / Guan / Ma / Li* / Nan* (Adv. Mater. 2023, 35, 2206402)
 
 > slug `miao2023_role_of_interfaces_solid_state_batteries` · DOI `10.1002/adma.202206402` · type **review (문헌 컴파일 — 자체 계산·실험 0)** · PDF `663eb3cf-56._Role_of_Interfaces_in_SolidState_Batteries.pdf` (21 pp, 본문 15 pp + refs 266) · digested `2026-08-05` · status ✅
+> **로컬 원본** = `litdb/inbox/56. Role of Interfaces in Solid-State Batteries.pdf` (**inbox #56 · 사용자 분류 폴더 `DFT`**) — 업로드본과 동일 파일. **재투입 검증 `2026-08-06`**: 21쪽 텍스트 전문 재전사 + 그림 6장(fig_1–fig_6) 재추출·**재열람**. 본문 수치·표 3개·Figure 6장 모두 일치, 신규 사실 없음. 유일한 정정 = **Fig. 2a 반원 귀속**(아래 §7 표) — 고압 곡선에 반원이 있는 게 아니라 **없다**.
 > elements: Li, P, S, Cl, Br, I, O, N, F, B, Al, Si, Ge, Sn, In, Ti, Zr, Y, La, Nb, Ta, W, Ag, Mg, Zn, Cu, Co, Ni, Mn
 > methods: EIS, STEM, HRTEM, EELS, ALD, ESW
 
@@ -355,14 +356,14 @@ SSB의 성능은 재료가 아니라 **고체–고체 계면**이 결정한다�
 
 ## 7. Figure set ★
 
-> ✅ **6장 전부 실제로 Read 로 봤다** (fig_1 ~ fig_6). 표 3장(tab_1·tab_2·tab_3.png)은 이미지로 안
+> ✅ **6장 전부 실제로 Read 로 봤다** (fig_1 ~ fig_6) — 2026-08-05 최초, **2026-08-06 inbox #56 재투입 때 6장 전부 다시 봄**(그림 파일은 재추출해도 동일). 표 3장(tab_1·tab_2·tab_3.png)은 이미지로 안
 > 보고 PDF 텍스트로 전사했다(관례 — 표는 텍스트가 정확). 그림에서만 읽은 값은 **figure-read ≈** 표기.
 
 | Fig | 내용 (무엇을 보여주나) | 우리 활용 |
 |---|---|---|
 | **1a,b** | LIB(액체가 전 셀에 스며 액체–고체 계면) vs SSB 2종(복합전극+SE층 / 복합양극+SE+Li금속). 붉은 원으로 "고체–고체 계면"을 찍어 강조 | 발표 오프닝 — "계면 개수가 폭증한다"의 한 장 |
 | **1c,d** | ★ Li⁺ **migration potential** 프로파일: LIB는 전극 양끝 **두 봉우리만**, SSB는 SE 입자 접촉마다 **주기적 봉우리**. 캡션 명시: "The Li⁺ migration potential increases at each interface" | 우리 BVSE 채널·퍼콜레이션 서사의 **정성 만화판** — "직렬 장벽이 입자 수만큼" 프레임 차용 |
-| **2a** | Nyquist 도식 3종: 황화물 고압(작은 R_GB 반원+거의 수직선) / 황화물 저압(더 큰 R_GB) / 산화물(**R_b 반원 + 그보다 큰 R_GB 반원** 2개 분리). figure-read: **축에 눈금 숫자 없음**(순수 도식) | EIS 해석 규율 — "GB 반원이 안 보이면 R_GB는 등가회로 가정에 의존" 인용 |
+| **2a** | Nyquist 도식 3종. **정정(2026-08-06 재열람)**: 왼쪽 붉은 선(**황화물 고압**)은 원점 근처에서 바로 솟는 **거의 수직선 — 반원이 아예 없다**; 두 번째 붉은 선(**황화물 저압**)의 발치에만 **작은 반원 1개**가 붙고 거기에 `R_GB` 화살표가 달려 있다; 파란 선(**산화물**)은 **R_b 반원 + 그보다 큰 R_GB 반원 2개**. 즉 그림이 본문("고압에서는 별도 반원이 생기지 않는다 / 50 MPa 저압이면 반원이 나타난다")과 **정확히 일치**한다. figure-read: **축에 눈금 숫자 없음**(순수 도식) | EIS 해석 규율 — "GB 반원이 안 보이면 R_GB는 등가회로 가정에 의존" 인용. 압력↔GB 반원 유무는 **Table 1의 50 MPa vs 370 MPa 행과 같은 축**이다 |
 | **2b,c** | GB에서 **Li⁺ 농도 급감**(b, 초록) → **E_a(GB) ≫ E_a(G)**(c, 주기 퍼텐셜 + GB 봉우리 1개) | 공간전하층의 **표준 교과서 그림**. 우리 T3/GB 논의의 정성 기준선 (⚠ 숫자 0개 — §11.3) |
 | **3a** | 폴리머-매트릭스 CSE + 필러 주위 **Lewis 산–염기** + Stern층/확산층 확대도 | CSE 계면 어휘 (우리 축 아님, 배경) |
 | **3b,c** | ★ **σ vs 필러 함량 곡선에 최댓값**(A=무필러 → B=퍼콜레이션 → 그 이상 응집으로 감소) + Arrhenius A/B 2선 + **E_a 표**(PEO/LiClO₄ ~1.0→~0.5 eV 등, figure-read) | **이 리뷰의 유일한 명시적 trade-off 그림** — 리뷰어 노트 B1에서 "당신 그룹은 2023에 이런 곡선을 그렸다"의 근거 |
