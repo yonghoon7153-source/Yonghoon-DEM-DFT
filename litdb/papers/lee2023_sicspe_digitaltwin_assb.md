@@ -6,6 +6,9 @@
 > 단일-서랍 규칙(CLAUDE.md)에 따라 이관 — 그전까지 DFT webapp 목록에 안 떴다.
 
 
+> elements: H Li Nb O S
+> methods: dft
+
 **인용:** Jongjun Lee, Seoungwoo Byun, **Hyobin Lee**, Youngjoon Roh, Dahee Jin, **Jaejin Lim**, Jihun Song,
 Cyril Bubu Dzakpasu, Joonam Park, **Yong Min Lee\*** — "Digital-Twin-Driven Structural and Electrochemical
 Analysis of Li⁺ Single-Ion Conducting Polymer Electrolyte for All-Solid-State Batteries," *Battery Energy*

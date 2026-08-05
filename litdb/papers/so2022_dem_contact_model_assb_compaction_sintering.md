@@ -2,6 +2,9 @@
 
 > slug `so2022_dem_contact_model_assb_compaction_sintering` · DOI `10.1016/j.mex.2022.101857` (원논문 `10.1016/j.jpowsour.2022.231279`) · type `DEM` (methods/접촉모델 정의서) · PDF `So_2022_MethodsX_DEM_ContactModel_ASSB_Compaction_Sintering.pdf` · digested `2026-06-26` · status ✅ · OPEN ACCESS (CC BY)
 
+> elements: Co Li O P S
+> methods: elastic
+
 ## 1. 한 줄 요약
 **우리가 이미 digest한 So 2021 (JPS, LPS+Si cold-press DEM)의 *접촉모델 그 자체*를 따로 떼어 완전히 유도한 동반(companion) MethodsX 논문.**
 핵심은 **Maxwell 점탄성 모델에서 유도한 "평형 overlap(h_eq)의 *변화율(rate)*" 소성·점탄성 접촉법칙**(So 2021의 h_eq를 *왜·어떻게* 그렇게 정의하는지의 1차 도출)과, **porosity→0일 때 강체-구 접촉의 수치 파탄(접촉면적·스프링 상수 과소평가)을 막는 두 인자 — 면적 인자 c_area 와 스프링 인자 c_spring**, 그리고 **소성·점탄성 + 소결(sintering, 융착 결합 fusion bond)을 한 rate 식 안에 통합**한 점이다.

@@ -6,6 +6,9 @@
 > 단일-서랍 규칙(CLAUDE.md)에 따라 이관 — 그전까지 DFT webapp 목록에 안 떴다.
 
 
+> elements: C F Li O P
+> methods: dft, elastic
+
 **인용:** Gwonsik Nam†, Jaejin Lim†, Seungyeop Choi†, Sang Cheol Nam, Kijoo Hong, Jisung Lee,
 **Yong Min Lee\*** — "Materials- and process-driven microstructural engineering for scalable
 dry-processed electrode manufacturing", *Materials Horizons* **13** (2026) 3149-3177,

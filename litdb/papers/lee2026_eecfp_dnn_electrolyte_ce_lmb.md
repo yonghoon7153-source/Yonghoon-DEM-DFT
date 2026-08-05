@@ -4,6 +4,9 @@
 > **저자**: Doo Bong Lee(고려대 Battery-Smart Factory, 공동1저)/**Jinwoo Park**(가천대 화공·바이오·배터리공학, 공동1저)/Eunji Kim(가천대)/**Woong Kim**(교신, 고려대 신소재 woongkim@korea.ac.kr) — Energy Storage Materials 86 (2026) 104972 (접수 2025-12-04 / 수정 2026-01-23 / 게재확정 2026-02-06 / 온라인 2026-02-07)
 > **⚠ 정체 주의**: **액체 전해질 리튬금속전지(LMB) 논문** — 황화물 SE/argyrodite/ASSB 아님. litdb 보관 이유 = ① **해석가능 ML 스크리닝 워크플로**(우리 47-dopant cascade의 방법 참고) ② **LiF/Li₂O-rich 무기 SEI = 우리 wide-gap 절연 interphase 패밀리의 액체-LMB 실험판**. 물성 4축(A–D) 수치 비교 대상 아님.
 
+> elements: B Cl F Li O P S
+> methods: bandgap, bvse, dft, esw, md, mlip
+
 ---
 
 ## 0. 이 digest를 읽는 법

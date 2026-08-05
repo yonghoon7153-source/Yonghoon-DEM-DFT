@@ -6,6 +6,8 @@
 > 기반 digest.  본문 §2–6(전체 수식·알고리즘 11개)은 미열람 → 방법 수식 디테일은 Stomakhin 2013
 > (`papers/stomakhin2013_*`)·우리 코드로 보완.  변종 분류·contact·fracture·응용·코드·비교는 intro에서 stated.
 
+> elements: C
+
 ## 1. 한 줄 요약
 **MPM(Material Point Method)의 첫 종합 리뷰**(339 ref, ~2019까지) — Sulsky 1994 이래 25년의 이론·구현·응용을
 한 그림으로 정리.  우리 MPM(`mpm3d_compaction.py`/`mpm2d_*`, Taichi MLS-MPM + von Mises J2)이 **속한 방법론

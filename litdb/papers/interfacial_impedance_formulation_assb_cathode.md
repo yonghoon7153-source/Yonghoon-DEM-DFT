@@ -10,6 +10,9 @@
 > - kim2025 가 *분해 가능성 조건*(R_int/R_i 비, Morasch)을 강조했다면, 이 논문은 거기에 더해 **(a) 압밀압력 → r_i,gb 의 정량 의존, (b) CAM 입경 → r_i,gb ↔ r_i/e 의 trade-off, (c) bimodal CAM 으로 그 trade-off 돌파** 라는 *설계규칙*을 추가한다.
 > - ★ **우리에게 왜 중요한가 (3줄):** (1) **계면 임피던스를 r_i,bulk + r_i,gb + r_i/e(=R_ct) + r_e + Z_low(Warburg) 로 *해석적으로 분해*한 정식화** = 우리 Kirchhoff/Holm σ-솔버가 *구조적으로* 계산하는 ASR 의 *주파수영역 카운터파트*. (2) 그들 **r_i,gb(입계)·r_i,bulk(입내) 분리**가 우리 Cronau(r_SE) GB 인자를 정당화하고, 그들 **r_i/e(=R_ct)·Z_low(Warburg)** 는 우리 *미보유* frame[5] kinetics 칸(kim2025 와 동일 빈 칸)을 정확히 짚어 준다. (3) 그들 **"r_i,gb ↔ r_i/e trade-off → bimodal CAM 으로 돌파"** 설계규칙은 우리 predictor·Furnas-dip 작업과 교차검증할 *설계 가설*.
 
+> elements: Cl F H Li O P S
+> methods: arrhenius, dft
+
 ---
 
 ## §0. 이 논문의 위치 — TLM 앵커 4종 지도 + 우리 ASR 와의 관계 (이 절이 framing)

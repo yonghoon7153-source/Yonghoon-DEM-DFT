@@ -6,6 +6,9 @@
 > 단일-서랍 규칙(CLAUDE.md)에 따라 이관 — 그전까지 DFT webapp 목록에 안 떴다.
 
 
+> elements: Br Cl Ge Li P S
+> methods: dft
+
 **인용:** M. Cronau, M. Szabo, C. König, T. B. Wassermann, B. Roling\*,
 "How to Measure a Reliable Ionic Conductivity? The Stack Pressure Dilemma of
 Microcrystalline Sulfide-Based Solid Electrolytes," *ACS Energy Letters*

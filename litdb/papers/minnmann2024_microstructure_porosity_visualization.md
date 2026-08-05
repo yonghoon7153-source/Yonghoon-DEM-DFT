@@ -2,6 +2,9 @@
 
 > slug `minnmann2024_microstructure_porosity_visualization` · DOI `10.1149/1945-7111/ad510e` · type `exp` (FIB-SEM 토모 + EIS-TLM + 사이클; 보조 flux/random-walk τ 시뮬) · PDF `Minnmann_2024_JES_CompositeCathodeMicrostructure_Porosity_Visualization.pdf` · digested `2026-06-26` · status ✅
 
+> elements: I Li O P S
+> methods: msd
+
 ## 1. 한 줄 요약
 **우리 핵심 porosity 앵커 저자(Minnmann, Janek 그룹)의 2024 Editors' Choice** — SE(ISE) 입경만 바꾼 3개 복합 양극(BM10/BM03/BM01)을
 **Xe-plasma FIB-SEM 토모그래피로 3D 재구성**하여 **porosity·상분율·계면면적·chord length·tortuosity를 정량화**하고,

@@ -6,6 +6,9 @@
 > **J. Power Sources 617 (2024) 235157**. Received 21 Feb 2024, revised 24 Jun 2024, accepted 29 Jul 2024, online 31 Jul 2024.
 > **[우리 그룹]** = 안용훈 그룹 계보 (한양대 **Jong-Won Lee** 교신). kang2025(기생반응)·kang2026(intertwined 리뷰)와 **동일 교신저자·동일 그룹**. Junhee Kang은 이 논문 공저 = kang2025/kang2026 제1·공저자와 동일 인물 → **우리 그룹 cathode-interface 라인의 초기(2024) 논문**.
 
+> elements: Cl Co In Li Mn Ni O P S Y Zr
+> methods: dft, esw, md
+
 ---
 
 ## 0. 이 digest를 읽는 법 (먼저 읽으세요 — 핵심 개념 "dual compatibility")

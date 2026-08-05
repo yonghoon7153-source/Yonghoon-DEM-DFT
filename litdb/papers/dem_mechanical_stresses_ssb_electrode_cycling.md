@@ -19,6 +19,9 @@
 > ⚠ **소재/방법 정렬 — 우리와 *거의* 같음(드물게 좋은 정합):** SE = **Li₆PS₅Cl (LPSCl, 우리와 동일!)** 73.30 wt%, CAM = **NMC532 (LiNi₀.₅Mn₀.₃Co₀.₂O₂)** 26.7 wt% (⚠ 우리 production 은 NMC**811** — 같은 NMC 계열이나 *조성 다름*).  code = **LIGGGHTS (우리와 동일)**, 접촉 = **Hertz(Granular Force Field, GFF)**, **rigid 구** (소성·형상변화 *없음*).  ⇒ porosity·σ 절대값은 *NMC532·조성차* 로 직접 동일시 주의하나, **방법·메커니즘·추세는 우리에 *가장* 직접 전이 가능**.
 > ⚠ **이 논문은 *응력*과 *기하 descriptor*(σ_el normalized·τ)만 — 진짜 σ_ionic/σ_e *절대값* 솔버 없음(GeoDict ConductoDict/DiffuDict = *상대* σ_el·τ); 균열·소성·morphology *없음*; AM 팽창은 *균일 rate*(확산분포 무시, 저자 명시).**
 
+> elements: Li
+> methods: elastic
+
 ---
 
 ## 1. 한 줄 요약

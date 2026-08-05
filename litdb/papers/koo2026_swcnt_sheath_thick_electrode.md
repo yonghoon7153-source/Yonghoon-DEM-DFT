@@ -6,6 +6,9 @@
 > 단일-서랍 규칙(CLAUDE.md)에 따라 이관 — 그전까지 DFT webapp 목록에 안 떴다.
 
 
+> elements: C F Li O P
+> methods: dft, elastic
+
 **인용:** Jin Kyo Koo†, Jaejin Lim†, Chaeyeon Ha, Yewon Kwon, Jae Kwon Seo, Hyun-seung Kim\*,
 **Yong Min Lee\***, Young-Jun Kim\*, "A continuous carbon nanotube sheath enables ultrahigh
 energy density and fast charging in dry-processed thick electrodes", *Joule* **10** (2026)

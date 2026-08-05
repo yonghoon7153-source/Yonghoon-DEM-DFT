@@ -5,6 +5,9 @@
 > ¹ **Yonsei Univ., Chemical & Biomolecular Engineering (Seoul)** · ² **DGIST, Energy Science & Engineering (Daegu)** · ³ **Yonsei Univ., Battery Engineering (Seoul)**
 > Battery Energy **4** (2025) e70044 · Received 29 Apr 2025 / Revised 1 Aug 2025 / Accepted 9 Aug 2025 · OPEN ACCESS (CC-BY) · Funding: NST (No. GTL24011-000) + MOTIE Technology Innovation Program (No. 2410009726)
 
+> elements: Cl Li Nb O P S
+> methods: bader, bandgap, cohp, dft, dos, elf, esw, functional, md, mlip, neb
+
 ---
 
 ## 0. 이 digest를 읽는 법 (핵심 + 우리와의 관계)

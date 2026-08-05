@@ -9,6 +9,8 @@
 > 크기-의존 균열, LZO 코팅, EIS-TLM 분해, FEM electrochemo-mechanical 모델)에 우리 DEM+MPM이 정렬해야 한다.
 > "이 논문을 기반으로 받아야지 우리 실험실 trend를 따라갈 수 있다" — 사용자.
 
+> elements: C Li O S
+
 ---
 
 ## 1. 한 줄 요약

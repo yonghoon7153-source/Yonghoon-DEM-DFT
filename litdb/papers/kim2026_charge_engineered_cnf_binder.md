@@ -6,6 +6,9 @@
 > 단일-서랍 규칙(CLAUDE.md)에 따라 이관 — 그전까지 DFT webapp 목록에 안 떴다.
 
 
+> elements: Al C Cl F H Li O P
+> methods: adhesion, dft, functional, pseudo
+
 **인용:** Sang-Woo Kim†, Nag-Young Kim†, Anseong Park, Jinho Ha, Cheol Bak, Yoojin Kim, Seong-Seok
 Chae, Jung-Hui Kim, Sang-Cheol Nam, Chaoji Chen, **Yong Min Lee**, Jung-Il Choi, **Won Bo Lee\***,
 **Sang-Young Lee\***, "Charge-engineered cellulose nanofibril binders for PFAS-free, high-loading

@@ -4,6 +4,9 @@
 > **저자**: **Bereket Woldegbreal Taklu**, **Wei-Nien Su**(교신), Yosef Nikodimos, Keseven Lakshmanan, Nigusu Tiruneh Temesgen, Pei-Xuan Lin, Shi-Kai Jiang, Chen-Jui Huang, Di-Yan Wang, Hwo-Shuenn Sheu, **She-Huang Wu**(교신), **Bing Joe Hwang**(교신) · Nano Energy **90** (2021) 106542
 > **소속**: **National Taiwan University of Science and Technology (NTUST)** Nano-electrochemistry Lab + Dept. Chem. Eng. + Tunghai Univ. + **NSRRC**(싱크로트론) · **외부 그룹 (≠ 우리 한양/Jong-Won Lee/Y.M.Lee/Cho/Cha/Kang)**
 
+> elements: Br Cl Cu F Ge H Li O P S Sn
+> methods: arrhenius, bvse, dft, dos, esw, functional, md, mlip, pseudo
+
 ---
 
 ## 0. 이 digest를 읽는 법 (그리고 stray-파일 / 중복 검증 결과)

@@ -5,6 +5,9 @@
 > ⚠ **동명 구분**: 제1저자 **Jihyeon Kang (중앙대 Chung-Ang)** ≠ 랩 자체논문의 **Junhee Kang (한양대, `kang2025_toughened_bimodal_nca_lzo`)** — 다른 사람, 다른 논문.
 > 데이터 CSV: `docs/data/kang2025_bollard_binder_anchors.csv`
 
+> elements: C F Li Na O P
+> methods: dft, mlip
+
 ## 1. 한 줄 요약
 건식전극(DBE)의 유일한 fibrillation 바인더 PTFE(PFAS 규제·이온절연·약한 접착)를 **"bollard hitch(계선주 매듭)" 이중-바인더**로 보완:
 **PAA-grafted CMC(=PC)가 NMC 산화물 표면에 Na⁺-매개 화학흡착(E_ads −2.24 eV)으로 붙는 "bollard(계선주)"**가 되고, **PTFE fibril이 그 bollard에 Na–F 결합(−0.35 eV)+물리 얽힘으로 계류되는 "rope"**가 되어 — PTFE를 2→0.6 wt%(>70% 감축)로 줄이고도 30 mg/cm²(4.0 mAh/cm²@2C)~90 mg/cm²(15.6 mAh/cm²) 고로딩 양극을 만든다.  앵커링 물리를 **MLP-DFT 흡착에너지 + 400 K NVT-MD 탈착 동역학**으로 정량 — **우리 SDCP 술폰산-NCM 화학앵커(E_bind −4.8 eV MLIP)와 정확히 같은 개념-클래스**(CAM 산화물 표면 이온성 화학흡착이 PTFE의 vdW-only 접착을 대체)의 독립 선례.

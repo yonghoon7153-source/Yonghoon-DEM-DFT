@@ -2,6 +2,9 @@
 
 > slug `bazzoun2025_dem_parameter_sensitivity_assb_cathode` · DOI `10.1016/j.electacta.2025.146536` · type `DEM` · PDF `Bazzoun_2025_ElectrochimActa_DEM_ParameterSensitivity_ASSBCathode.pdf` · digested `2026-06-26` · status ✅
 
+> elements: Li
+> methods: elastic
+
 ## 1. 한 줄 요약 (TL;DR)
 **우리와 정확히 같은 공정(단축 냉간가압 LPSCl+NCM811 양극)·같은 코드(LIGGGHTS)·같은 연구(DEM 압밀)** 의
 **파라미터 민감도 분석 + 실험 캘리브레이션** 논문 — 8개 입력(입경분포·마찰 3종·E 2종·ν 2종·COR)이

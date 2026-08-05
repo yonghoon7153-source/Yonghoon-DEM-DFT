@@ -2,6 +2,9 @@
 
 > slug `so2021_dem_mold_pressure_assb_coldpress` · DOI `10.1016/j.jpowsour.2021.230344` · type `DEM` · PDF `So_2021_JPS_DEM_mold_pressure_ASSB_cold_pressing.pdf` · digested `2026-06-23` · status ✅
 
+> elements: Li P S
+> methods: elastic
+
 ## 1. 한 줄 요약
 **소성변형(plastic deformation)을 명시적으로 넣은 3D cold-press DEM**(in-house MATLAB, 비선형 Hertz+hysteresis)으로
 LPS(Li₂S–P₂S₅) SE + Si AM 전극의 압밀(상대밀도)과 SE 이온전도도(σ_SE^rel)를 몰드압력·AM조성 함수로 예측 —

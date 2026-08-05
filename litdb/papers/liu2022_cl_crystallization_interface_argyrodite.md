@@ -6,6 +6,9 @@
 
 > ⚠ **혼동 주의 — 이 논문 ≠ Zuo 2022 Angew**. 둘 다 "LPSCl vs Li₅.₅PS₄.₅Cl₁.₅ Cl 치환" 주제이고 둘 다 2022년이라 INDEX의 Excel exp#10·calc#10 행이 Zuo의 DOI(`10.1002/anie.202213228`)와 *섞여* 기록돼 있었으나, **이 PDF의 실제 정체는 Zhejiang Univ. Tu 그룹의 AdvFunctMater 논문**(DOI `10.1002/adfm.202207978`, Excel exp#2·계산#? / DFT시트 #4와 동일). Zuo는 Giessen(Janek)·NCM85 양극 계면·ToF-SIMS/DEMS 실험 중심; **Liu(본 논문)는 *결정화(annealing)* + *Li 금속 음극* 계면 + AIMD/RDF**가 핵심으로 **다른 논문·다른 그룹·다른 초점**.
 
+> elements: Cl Li O P S
+> methods: arrhenius, dft, esw, functional, md, mlip, msd, pseudo
+
 ---
 
 ## 0. 이 digest를 읽는 법

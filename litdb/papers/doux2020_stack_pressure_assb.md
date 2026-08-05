@@ -6,6 +6,9 @@
 > 단일-서랍 규칙(CLAUDE.md)에 따라 이관 — 그전까지 DFT webapp 목록에 안 떴다.
 
 
+> elements: Cl Li P S
+> methods: dft
+
 **인용:** Jean-Marie Doux, Han Nguyen, Darren H. S. Tan, Abhik Banerjee, Xuefeng Wang,
 Erik A. Wu, Chiho Jo, Hedi Yang, Ying Shirley Meng\*, "Stack Pressure Considerations for
 Room-Temperature All-Solid-State Lithium Metal Batteries," *Advanced Energy Materials*

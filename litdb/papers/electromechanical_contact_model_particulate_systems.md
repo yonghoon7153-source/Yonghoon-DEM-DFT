@@ -11,6 +11,8 @@
 > 우리 ASSB 로의 전사는 *공식(formulation)·커플링 구조*만, 숫자는 아님. 또한 **rigid-sphere DEM + CONTACT 탄성**(Hertz)이라
 > *진짜 SHAPE 소성·이온/열 채널·battery σ_grain* 은 없음 = **우리가 더 advanced 한 칸**(아래 §C 7개 차별점).
 
+> elements: B C H
+
 ---
 
 ## 1. 한 줄 요약

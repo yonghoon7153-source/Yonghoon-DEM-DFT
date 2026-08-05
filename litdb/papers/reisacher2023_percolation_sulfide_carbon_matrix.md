@@ -10,6 +10,9 @@
 > (3) **자매 carbon 논문 3종**과 짝: **Reisacher(이 논문) = carbon 전자망의 *percolation 임계 위치*(언제 켜지나)** ↔ **Kim 2024(AcceleDomain) = carbon의 *부피 점유*(SE를 밀어냄)** ↔
 > **Cho 2024(Hanyang Lee group) = carbon의 *양면성*(σ_e↑ vs σ_ion↓·분해 가속)**.  → 셋 합치면 "도전제 = 양날의 검 + *최소량으로 percolate* 시켜야"라는 우리 CBD/Stage-2 테제의 *완전한 실험 골격*.
 
+> elements: Cl Li P S
+> methods: arrhenius
+
 ---
 
 ## §0. ★ 이 논문의 위치 — "최소 carbon 으로 전자 percolate" + 자매 carbon 논문 지도 (이 절이 digest 의 framing)

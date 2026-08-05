@@ -8,6 +8,9 @@
 > 압밀/porosity 데이터 없음.** 우리에겐 **바인더 물성 앵커**(SDCP 전도성 바인더 모델링 / A3 `--coh` / W2 binder-σ 클래스 /
 > coat-vs-fibril 시딩)로 소비하는 논문. 절대값 전이는 각 행의 caveat 준수.
 
+> elements: F Li Mn O P
+> methods: dft
+
 ## 1. 한 줄 요약
 PVDF(비극성 vdW-only, 취성, 이온 절연)를 **삼중블록 공중합체 ICEP** [P(AN-co-AMPS)]₂-b-PEO — **탄성**(연신 283 %) +
 **수소결합 접착**(DFT −1.8~−2.2 eV, SAICAS 4~7×) + **이온전도**(0.135 mS/cm, PVDF의 2.1×) 3기능 동시 —

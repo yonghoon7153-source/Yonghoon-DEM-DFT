@@ -2,6 +2,8 @@
 
 > slug `so2022_dem_compaction_coated_particles_assb` · DOI `10.1016/j.jpowsour.2022.231279` · type `DEM` (결과/적용 논문) · PDF `So_2022_JPowerSources_DEM_Compaction_CoatedParticles_ASSBCathode.pdf` · digested `2026-06-26` · status ✅ · OPEN ACCESS (© 2022 Elsevier)
 
+> elements: Co Li O P S
+
 ---
 
 ## 1. 한 줄 요약

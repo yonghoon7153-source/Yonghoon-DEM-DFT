@@ -7,6 +7,9 @@
 > ⚠ **소재 주의 (제일 먼저):** SE = **LGPS (Li₁₀GeP₂S₁₂) + LLZO** — **우리 LPSCl 아님**. CAM = **NMC (LiNiₓMnᵧCo_zO₂, 일반)** + 흑연 음극 + carbon black.
 > LGPS 황화물이지만 E=37.2 GPa ≠ 우리 LPSCl 22.1–24. → **σ 절대값 전사 금지, 추세·방법론(DEM→FEM 커플링)만**.
 
+> elements: Ge Li P S
+> methods: elastic
+
 ---
 
 ## 1. 한 줄 요약 (bilingual)

@@ -4,6 +4,9 @@
 > **저자**: R. P. Rao*, S. Adams** — Department of Materials Science and Engineering, **National University of Singapore (NUS)**. 교신 둘 다 (mserp@nus.edu.sg / mseasn@nus.edu.sg). Phys. Status Solidi A **208, No. 8, 1804–1807 (2011)**. Received 29 Sep 2010, accepted 4 Jan 2011, online 4 Jul 2011.
 > **태그**: `[외부]` — NUS Singapore (Hanyang/J-W Lee/Y.M.Lee/Cho/Kang/Cha 그룹 **아님**). 연구유형 = **Original Paper(연구논문)**, 리뷰·학위논문 아님. 짧은 4쪽 정통 연구논문.
 
+> elements: Br Cl F I Li P S
+> methods: arrhenius, bader, bandgap, bvse, cohp, dft, esw, functional, md, mlip, neb
+
 ---
 
 ## 0. 이 digest를 읽는 법 (가장 중요)

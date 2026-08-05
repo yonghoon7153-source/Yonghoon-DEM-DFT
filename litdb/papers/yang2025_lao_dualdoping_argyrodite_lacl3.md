@@ -3,6 +3,9 @@
 > slug `yang2025_lao_dualdoping_argyrodite_lacl3` · DOI `10.1016/j.electacta.2025.146619` · type `exp (계산 0)` · PDF 본문 `cc9fb4bc-LaO_co_doped_LPSC_PO_bond_LaCl3____1.pdf` (11 pp) + **SI `a2f73b4e-1s2.0S0013468625009806mmc1.pdf` (12 pp — Fig S1–S15·Table S1–S4 전부 확보·정독)** · digested `2026-07-14` · status ✅
 > **저자**: Jie Yang, Yi Wang, Ziling Jiang, Lin Li, Ziyu Lu, Miao Deng, Qiyue Luo, Siwu Li, Chen Liu, Zhenyu Wang, **Chuang Yu**(교신) — HUST Wuhan(화학·전기전자) · Guilin Univ. of Electronic Tech. · Xidian Univ. · Electrochimica Acta **535** (2025) 146619 (accepted 2025-06-02)
 
+> elements: Cl H La Li Nb Nd O P S Zr
+> methods: arrhenius, dft, esw, md, mlip, neb
+
 ---
 
 ## 0. 이 digest를 읽는 법

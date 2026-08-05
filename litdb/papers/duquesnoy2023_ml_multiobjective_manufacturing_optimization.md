@@ -2,6 +2,9 @@
 
 > slug `duquesnoy2023_ml_multiobjective_manufacturing_optimization` · DOI `10.1016/j.ensm.2022.12.040` · type `mixed (CGMD+DEM physics-sim + SISSO ML + Bayesian multi-objective optimization + exp 검증)` · PDF `Duquesnoy_2023_EnergyStorageMater_ML_MultiObjective_ManufacturingOptimization_main.pdf` (+ `_SI.pdf`) · digested `2026-07-10` · status ✅
 
+> elements: C I
+> methods: md
+
 ## 1. 한 줄 요약
 **우리 프로젝트 전체 비전(설계수치 입력 → ML이 full-metric 예측 → 미세구조 그림 → 최적화/역설계)의 *published archetype*.**
 Franco 그룹(ARTISTIC, Amiens)이 **물리기반 제조 시뮬(CGMD 슬러리 → 건조 → DEM 캘린더링)** 으로 합성 데이터셋을 만들고,

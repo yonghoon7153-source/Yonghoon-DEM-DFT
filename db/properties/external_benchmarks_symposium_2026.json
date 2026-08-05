@@ -7,7 +7,8 @@
   "⛔ 우리 db 절대값과 **같은 표·같은 플롯에 넣지 말 것**. 우리 값과의 대조는 반드시 '재현 표적 vs 우리 결과' 형식으로, 출처를 병기해서.",
   "⛔ 발표 덱은 발표 시간에 맞춰 잘라낸 것이라 **부재의 증거가 아니다**. '그들은 X를 안 한다'는 서술은 litdb/papers/ 의 논문 실물 감사에서만 나올 수 있다.",
   "⛔ MLIP σ 절대값은 훈련 functional의 각인을 받는다(같은 물질에서 8배 갈림, kim2024). 아래 σ·D 값은 **비율·자릿수로만** 인용하고 절대값 대조 금지.",
-  "✅ 이 파일의 용도는 두 가지뿐: (1) 우리가 새 계산을 돌릴 때의 재현 표적, (2) 방법론 항목의 출처."
+  "✅ 이 파일의 용도는 두 가지뿐: (1) 우리가 새 계산을 돌릴 때의 재현 표적, (2) 방법론 항목의 출처.",
+  "🆕 **`peer_reviewed_anchors` 절은 등급이 다르다** — 발표 덱이 아니라 peer-review 논문에서 온 값이다. 그래도 소환값이므로 우리 절대값과 같은 표에 넣지 않는 규율은 동일하게 적용한다."
  ],
  "sources": [
   {
@@ -466,6 +467,142 @@
    "caveat": "베이스라인(수동 피팅) 비교치가 덱에 없다 — 절대 성능 판단 불가"
   }
  },
+ "peer_reviewed_anchors": {
+  "_note": "★ 여기는 **peer-review 논문**에서 온 앵커다 — 위 `reproduction_targets`(발표 덱 소환값)보다 신뢰 등급이 한 단계 높다. 그래도 **문헌 소환값**이라는 사실은 같으므로 우리 db 절대값과 같은 표·같은 플롯에 넣지 않는다. 용도는 (1) 우리 판정의 외부 대조, (2) 우리에게 없는 축의 확인.",
+  "mechanical_elastic_fracture": {
+   "source": "[Famprikis19] Nat. Mater. 18, 1278 (2019) + [Miao23] Adv. Mater. (2023)",
+   "digest": [
+    "litdb/papers/famprikis2019_fundamentals_inorganic_sse.md",
+    "litdb/papers/miao2023_role_of_interfaces_solid_state_batteries.md"
+   ],
+   "status_of_underlying_work": "peer-review 리뷰 2편 (자체 계산·실험 0, 전 수치가 재소환값)",
+   "engine": "실험 (나노인덴테이션 등) — 계산 아님",
+   "why_this_matters": "우리 benchmarks 에 **역학 축이 통째로 없었다**. 그런데 우리는 elastic.json(relaxed-ion full Cij)·eos.json(BM-EOS B₀)·adhesion.json(γ)을 갖고 있고, 심사 중 리뷰 §3.5 검토에서 이 축이 정면으로 걸렸다(kb/reviews/ECERD2600097_review_notes.md A48·A61).",
+   "targets": [
+    {
+     "quantity": "thiophosphate glass Young's E",
+     "value": "≈ 20",
+     "unit": "GPa",
+     "condition": "나노인덴테이션 실측 ([Famprikis19] ref 108, McGrogan). ⚠ **유리**이지 결정 아지로다이트가 아니다",
+     "confidence": "★ peer-review 리뷰가 소환한 실측값. 재료 차이 때문에 **'검증'이 아니라 '같은 자리'** 까지만"
+    },
+    {
+     "quantity": "thiophosphate glass shear G",
+     "value": "≈ 7",
+     "unit": "GPa",
+     "condition": "같은 출처",
+     "confidence": "★ 위와 같음"
+    },
+    {
+     "quantity": "garnet (산화물) E / G",
+     "value": "≈ 150 / 60",
+     "unit": "GPa",
+     "condition": "계열 대비용 — 황화물이 **한 자릿수 무르다**는 근거",
+     "confidence": "★ 소환값. 계열 서열로만"
+    },
+    {
+     "quantity": "LiBH₄ shear G",
+     "value": "≈ 4",
+     "unit": "GPa",
+     "condition": "무기 SE 중 최연질 끝",
+     "confidence": "★ 소환값"
+    },
+    {
+     "quantity": "LiPON E vs Li 금속 E",
+     "value": "31 vs 3.4",
+     "unit": "GPa",
+     "condition": "[Miao23] 이 Monroe–Newman 기준(G_buffer ≥ 2·G_Li)의 실증으로 든 짝",
+     "confidence": "★ 소환값. ⚠ **그 기준 자체가 무기 SE 에 부적용**이라는 판정이 아래에 있다"
+    },
+    {
+     "quantity": "Li 금속 항복강도 σ_y",
+     "value": "≈ 0.8",
+     "unit": "MPa",
+     "condition": "[Famprikis19] ref 144 (Masias). **DEM 접촉모델 입력**으로 바로 쓸 수 있는 값",
+     "confidence": "★ 소환값. 우리 DEM 쪽 입력 조달 현황표 참조(comparison_vs_ours_DEM.md §A)"
+    },
+    {
+     "quantity": "SE 성형/제조압 범위",
+     "value": "50 – 510",
+     "unit": "MPa",
+     "condition": "[Miao23] Table 1 (15행, '50 MPa Low vs 370 MPa High' 직접 대조 포함)",
+     "confidence": "★ 소환값. **DEM 압력 sweep 의 실측 경계**"
+    },
+    {
+     "quantity": "복합양극 SE 부피분율 창",
+     "value": "25 – 50",
+     "unit": "vol %",
+     "condition": "하한 = 이온 percolation, 상한 = 에너지밀도+전자 percolation ([Famprikis19] ref 68 = Bielefeld/Janek 2019, 우리 digest 보유)",
+     "confidence": "★ 소환값. **DEM 조성 sweep 에 바로 넣을 수 있는 유일한 정량 경계조건**"
+    },
+    {
+     "quantity": "파괴인성 K_IC",
+     "value": "— (수치 없음)",
+     "unit": null,
+     "condition": "⛔ **부정 결과** — [Famprikis19] 는 K_IC 를 개념으로만 다루고 숫자를 하나도 붙이지 않는다. γ 도 기호·정의뿐",
+     "confidence": "★ 확인된 부재. 그런데 **이 부재가 우리에게 면책이 된다** — 아래 verdict 참조"
+    }
+   ],
+   "verdicts": [
+    "✅ **clamped-ion 배제, relaxed-ion 채택** — 우리 comp1 relaxed E_VRH / G_VRH 가 위 유리 실측과 같은 자리이고(+10 % / +16 %), clamped 는 **2.4–2.9 배** 어긋난다. `elastic.json` `vacancy_paradox_role` 의 판정에 **외부 앵커가 하나 더** 붙었다. ⚠ 유리 vs 결정이라 *'실험이 검증했다'* 는 금지 — *'같은 자리, clamped 배제'* 까지만.",
+    "✅ **K_IC 공백은 누락이 아니라 방법론적 경계다** — [Famprikis19]: *\"탄성계수와 달리 파괴인성은 치밀도·입경·불순물·기존 균열·기공에 강하게 의존하며 실험으로 결정해야 한다. DFT 는 탄성계수는 줄 수 있다\"*. 곧 우리가 K_IC 를 못 내는 것은 **원자 스케일 계산의 경계**이고, 올바른 처방은 **K_IC 를 DEM/CZM 의 sweep 파라미터로 받는 것**이다.",
+    "⛔ **Monroe–Newman 은 무기 SE 에 적용되지 않는다** — 이론(Ahmad & Viswanathan, PRL 2017) + 실험(E ≈ 20 GPa 유리부터 150 GPa 가넷까지 **전 구간에서 Li 이 성장**). 따라서 위 LiPON 31 vs Li 3.4 GPa 짝은 **기준의 근거가 아니라 그 기준이 왜 깨지는지의 예시**로 읽는다. 우리 쪽 함의: *'단단하게 만들면 덴드라이트가 막힌다'* 를 설계 원칙으로 쓰지 않는다.",
+    "✅ **황화물에서 GB 효과는 무시할 만하다** — [Famprikis19] 와 [Miao23] 이 **서로 다른 원전**으로 같은 결론. 우리 단결정 주기셀 계산의 문헌 방어선이 단일 출처가 아니다. ⚠ [Miao23] 자신이 *'few reports'* 라 했으니 `kim2024_mtp_argyrodite_disorder_gb` 교차확인 후 인용."
+   ],
+   "our_comparable": {
+    "note": "우리 쪽 앵커: `db/properties/elastic.json` `dft_0K_relaxed_ion_stress_strain_full_Cij` (LPSCl·LPSCl1.6·LPSOCl full 6×6 Cij, k×L=40) + `eos.json` B₀(BM-EOS, 상호검증 Δ3 %) + `adhesion.json` γ(⚠ UMA 슬랩) + `cascade_v23_champions.csv` `eos_B0_GPa`·`anneal_dV_pct`.",
+    "action": "→ `kb/open_items.md` #14 (ΔV_rxn × C_ij + Griffith 이상취성 하한). ⚠ b2o3_champion 전단은 withheld 상태라 도핑계 G 는 아직 못 낸다."
+   }
+  },
+  "air_hydrolysis_thermodynamics": {
+   "source": "[Zhu20] Zhu & Mo, Angew. Chem. Int. Ed. 2020, 59, 17472 — SI xlsx 전수 전사",
+   "digest": [
+    "litdb/papers/zhu2020_air_stable_se_design_principles.md"
+   ],
+   "status_of_underlying_work": "peer-review 논문 + SI 스프레드시트 원본",
+   "engine": "MP GGA-PBE 형성에너지(고체) + NIST-JANAF 실험(기체·수산화물) 혼합 스킴",
+   "why_this_matters": "우리 cascade 의 공기축(`air_protect_tier`)이 **정성 등급**이라 검증이 불가능했다. 이제 같은 축의 문헌 정량값이 옆에 붙어서 어긋나는 곳을 셀 수 있다.",
+   "targets": [
+    {
+     "quantity": "Li₂S 가수분해 ΔG (기준선)",
+     "value": "+0.225",
+     "unit": "eV per H₂O",
+     "condition": "T = 300 K, x(H₂O) = 0.1 % (RH ~3 %), x(H₂S) = 1 ppm. 양수 = 수분 안정",
+     "confidence": "★ SI 원본. 본문 eq.(1) 과 일치 확인"
+    },
+    {
+     "quantity": "우리 47종 중 문헌 대조 가능",
+     "value": "35 / 47",
+     "unit": null,
+     "condition": "(양이온, 산화수) 키 매칭. 나머지 12종(Cr·W·Nb·Ta·Mo·Mg·V·Fe·Co·Ni)은 M-S 표에 없다",
+     "confidence": "★ `db/properties/cascade_air_axis_lit_vs_tier.csv` 에서 빌드마다 재생성"
+    },
+    {
+     "quantity": "우리 정성 등급과의 일치율",
+     "value": "26 일치 / 9 과소평가",
+     "unit": null,
+     "condition": "어긋난 9종이 **전부 같은 방향** — In³⁺·Sn⁴⁺·Ba²⁺·Na⁺·Ge⁴⁺·Ga³⁺·Sr²⁺·Ca²⁺(×2)",
+     "confidence": "★ 재생성 가능. 근거: kb/open_items.md #13"
+    },
+    {
+     "quantity": "산화수 민감도 (Sb³⁺ ↔ Sb⁵⁺)",
+     "value": "+0.535 ↔ −0.167",
+     "unit": "eV per H₂O",
+     "condition": "같은 원소가 산화수로 **0.70 eV 뒤집힌다** — HSAB softness 로는 설명 불가, 산물 산화물 안정성으로는 설명됨",
+     "confidence": "★ 우리 `cation_oxidation_state` 키 설계(ml-13)를 사후 정당화한 값"
+    }
+   ],
+   "verdicts": [
+    "⚠ **우리가 문헌 오류를 하나 찾았다** — [Zhu20] 의 chloride 시트(M-Cl / Li-M-Cl / Na-M-Cl)가 SI 본문 이성분 식과 어긋난다. 차이 = **0.357 eV = k_BT·ln(10⁶) @300 K = HCl 1 ppm 보정항**. 교차검증 3건(Fig 1 의 LiCl→LiOH 경계 · Fig S1 기준선 · Fig S1 데이터점/Fig 3c) 결과 **같은 그림 안에서 기준선과 데이터점의 규약이 다르다.** 조치: 원본값(`as_published`)과 우리 환산값(`preset_OURS`)을 **둘 다** 내고 섞지 않는다.",
+    "⛔ **`air_protect_tier` 의 낮은 등급을 '공기 불안정' 으로 읽지 않는다** — 그건 판정이 아니라 **판정 없음**이다. 이 축으로 도펀트를 탈락시키지 않는다(9종이 부당하게 깎여 있다).",
+    "⚠ **프록시 한계** — 우리 도펀트는 산화물/불화물인데 대조 대상은 **이성분 황화물**이다. '이 양이온이 PS₄ 골격을 지킬까'의 프록시이지 코팅 자체의 대기안정성이 아니다."
+   ],
+   "our_comparable": {
+    "note": "cascade 테마 **`air_stability_lit`** (metric `dG_hyd_MS_lit`) 로 상설화. 도펀트 행에 `dG_hyd_MS_lit`·`dG_hyd_MCl_lit_pub`·`dG_hyd_MCl_preset_ours` 병기.",
+    "action": "→ 근본 해결은 `kb/open_items.md` #12 ([Zhu20] 레시피로 ΔG_hyd 직접 계산해 정성 등급 대체). 그러면 같은 CSV 에서 정성/문헌/우리계산 **3자 대조**가 된다."
+   }
+  }
+ },
  "methodology_references": {
   "_note": "수치가 아니라 방법. 우리 실행 항목 T1-T8 의 출처.",
   "extrapolation_grade_control": {
@@ -685,7 +822,7 @@
    }
   ]
  },
- "updated": "2026-08-06",
+ "updated": "2026-08-05",
  "changelog": [
   {
    "date": "2026-08-03",
@@ -698,6 +835,10 @@
   {
    "date": "2026-08-06",
    "what": "파일이 2026-07-28 에 멈춰 있어 open_items 와 어긋난 것을 맞춤 (T 번호 충돌 포함). 수치는 하나도 새로 만들지 않았다 — 근거는 전부 kb/open_items.md 와 각 digest."
+  },
+  {
+   "date": "2026-08-05",
+   "what": "`peer_reviewed_anchors` 신설 — 역학 축(Famprikis19·Miao23)과 공기/가수분해 축(Zhu20). 역학은 이 파일에 **축 자체가 없었다**. 핵심 소득 3개: (1) thiophosphate glass E≈20/G≈7 GPa 가 우리 relaxed-ion 과 같은 자리 → clamped-ion 배제의 외부 앵커, (2) K_IC 는 [Famprikis19] 도 숫자를 안 준다 + '실험 결정 물성' 판정 → 우리 공백이 방법론적 경계임을 확인, (3) Monroe–Newman 무기 SE 부적용 판정. 덤: Zhu20 chloride 시트의 HCl 1 ppm 보정 누락(우리가 전사 중 발견)."
   }
  ]
 }

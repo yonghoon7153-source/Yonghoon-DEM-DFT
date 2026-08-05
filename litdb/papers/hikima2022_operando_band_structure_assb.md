@@ -4,6 +4,9 @@
 > **저자**: Kazuhiro Hikima, Keisuke Shimizu, Hisao Kiuchi, Yoyo Hinuma, Kota Suzuki, **Masaaki Hirayama, Eiichiro Matsubara, Ryoji Kanno** (Tokyo Institute of Technology / Toyohashi Univ. Tech / Kyoto Univ. / AIST / Waseda) · Communications Chemistry **5**:52 (2022) · open access
 > **[외부]** — 도쿄공대 **Ryoji Kanno**(LGPS·argyrodite 분야 거두) 그룹 + AIST(Hinuma=first-principles). **우리 그룹(한양대 J-W Lee/Y.M.Lee/Cho/Kang/Cha) 아님.** ⚠ **핵심**: 이 논문은 **고체전해질을 *반도체 소자*로 취급**하여 박막 ASSB의 *전체 밴드구조*(VBM·CBM·E_F·일함수·band bending)를 **operando HAXPES**로 충전 중 실측한다. 즉 우리 grand-potential 산화분석(`oxidation_stability_VBM_vs_grandpotential_report`)의 *valence-side 관측량*(VBM/IE)을 *작동 중(operando)*으로 보는 실험판이고, [Whitten](UPS 튜토리얼)·[Banik](HAXPES VBM 불변)이 *정적*으로 본 밴드엣지를 *시간/전압 분해*로 확장한다.
 
+> elements: Li Mn O P Ti
+> methods: bandgap, cohp, dft, esw, functional, md, mlip
+
 ---
 
 ## 0. 이 digest를 읽는 법 (왜 이걸 먹였나)

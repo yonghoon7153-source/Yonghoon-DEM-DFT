@@ -4,6 +4,9 @@
 >
 > ★ Paper #26 — **DEM + thermal**: 우리 σ_thermal 채널의 가장 직접적인 문헌 카운터파트. 우리와 *같은 워크플로의 절반*(DEM으로 미세구조 생성)을 공유하되, 열전도는 **접촉망 저항(Kirchhoff/Holm)이 아니라 voxel화된 3D Lattice Boltzmann 연속체 PDE**로 푼다. 소재는 **산화물 LCO/LLZO**(우리 황화물 LPSCl/NCM 아님 → 절대값 전이 금지, 추세만).
 
+> elements: K
+> methods: phonon
+
 ---
 
 ## 1. 한 줄 요약

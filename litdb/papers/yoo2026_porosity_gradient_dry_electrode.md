@@ -6,6 +6,9 @@
 > 단일-서랍 규칙(CLAUDE.md)에 따라 이관 — 그전까지 DFT webapp 목록에 안 떴다.
 
 
+> elements: C F Li O P
+> methods: dft, elastic
+
 **인용:** Hyundong Yoo†, Jaejin Lim†, Jun Ho Hwang, Seungeun Oh, Yong Min Lee\*, Hansu Kim\*,
 "Porosity-Gradient Dry-Processed Graphite Electrode with Deformable Primer Layer for Boosting
 Fast-Charging Capability of Lithium-ion Batteries", *Energy Storage Materials* (2026),

@@ -189,6 +189,61 @@
 {% endfor %}
 
 <!-- ── T1 모델 위원회 결과 ──────────────────────────────── -->
+{# ── peer-review 논문 앵커 — 덱 소환값과 등급이 다르므로 절을 갈라 놓는다 ── #}
+{% if b.peer_reviewed_anchors %}
+<h2 style="margin-top:34px;font-size:1rem">📗 논문 앵커 <span class="muted"
+  style="font-weight:400;font-size:.8rem">(peer-review 논문 소환값 — 위 덱 표적보다 한 등급 위)</span></h2>
+<div class="muted" style="font-size:.8rem;margin-top:4px">{{ b.peer_reviewed_anchors._note|bold }}</div>
+
+{% for key, t in b.peer_reviewed_anchors.items() if key != '_note' %}
+<details class="card" style="margin-top:12px;padding:14px 18px">
+  <summary style="cursor:pointer;font-weight:600;font-size:.92rem">
+    {{ key }}
+    <span class="muted" style="font-weight:400;font-size:.76rem">· {{ t.engine }}</span>
+    <span class="tbadge" style="background:#ecfdf5;color:#065f46;margin-left:6px">peer-reviewed</span>
+  </summary>
+
+  <div class="muted" style="font-size:.78rem;margin-top:8px"><b>출처</b>: {{ t.source }}</div>
+  {% if t.digest %}
+  <div class="muted" style="font-size:.76rem;margin-top:2px">digest:
+    {% for g in t.digest %}<span class="mono">{{ g }}</span>{% if not loop.last %} · {% endif %}{% endfor %}</div>
+  {% endif %}
+  {% if t.why_this_matters %}
+  <div class="callout" style="margin-top:8px;border-left:3px solid var(--accent)">{{ t.why_this_matters|bold }}</div>
+  {% endif %}
+
+  <div style="overflow-x:auto;margin-top:10px">
+  <table class="tbl">
+    <thead><tr><th>물리량</th><th>값</th><th>단위</th><th>조건</th><th>신뢰도</th></tr></thead>
+    <tbody>
+    {% for q in t.targets %}
+      <tr><td style="font-size:.82rem">{{ q.quantity }}</td>
+        <td class="mono">{{ q.value }}</td>
+        <td class="mono muted">{{ q.unit or '—' }}</td>
+        <td style="font-size:.78rem">{{ q.condition|bold }}</td>
+        <td style="font-size:.76rem" class="muted">{{ q.confidence|bold }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+
+  {% if t.verdicts %}
+  <div style="margin-top:10px"><b style="font-size:.85rem">판정</b>
+    <ul style="margin:6px 0 0 16px">
+      {% for v in t.verdicts %}<li style="font-size:.8rem;line-height:1.65">{{ v|bold }}</li>{% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  {% if t.our_comparable %}
+    <div class="callout" style="margin-top:10px"><b>우리 대비</b> — {{ t.our_comparable.note|bold }}
+      {% if t.our_comparable.action %}<div class="muted" style="margin-top:4px">{{ t.our_comparable.action|bold }}</div>{% endif %}
+    </div>
+  {% endif %}
+</details>
+{% endfor %}
+{% endif %}
+
 {% if committee %}
 {% set C = committee %}
 <h2 style="margin-top:34px;font-size:1rem">🧪 T1 — MLIP 모델 위원회 <span class="muted"

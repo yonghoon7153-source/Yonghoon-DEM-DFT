@@ -3,6 +3,9 @@
 
 > slug `ngandjong2021_dem_calendering_digital_twin` · DOI `10.1016/j.jpowsour.2020.229320` · type `DEM (+ CGMD 슬러리/건조 + FEM 전기화학; exp 검증)` · PDF `Ngandjong_2021_JPowerSources_ElectrodeCalendering_DEM_DigitalTwin.pdf` · digested `2026-06-26` · status ✅
 
+> elements: Li
+> methods: elastic
+
 ---
 
 ## 1. 한 줄 요약

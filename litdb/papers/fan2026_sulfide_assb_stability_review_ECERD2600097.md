@@ -6,6 +6,9 @@
 > `kb/reviews/ECERD2600097_review_notes.md`. 이 digest 는 *원고가 무엇을 말하는가*,
 > 그쪽은 *우리가 그걸 어떻게 읽었는가* 다.
 
+> elements: B Br C Cl Cu F Fe Ge H I In Li N Nb O P S Y
+> methods: bvse, dft, elf, esw, functional, md, mlip, pdos
+
 ## 0. 이 digest를 읽는 법
 - 이 논문은 **황화물 ASSB "안정성" 전 분야의 field-map 리뷰** (본문 56 pp + 참고문헌 239개 + Figure 26개). [Bai](argyrodite 전용)·[Rupp](oxide/sulfide 광역)·[Kang](우리 그룹 electrochemo-mechanical)에 이은 **네 번째 리뷰 좌표계** — 이번 것은 "**안정성 축**"으로 짠 지도이며, 우리 캠페인(자유-S 산화 서사·B₂O₃/O 도핑·음극 SEI json)이 **여섯 칸에 동시에 꽂힌다** (§11).
 - **미출판 draft**라는 점 주의: 인용 시 "ECER-D-26-00097, submitted to Electrochem. Energy Rev." 로만; 수치·주장은 게재본에서 바뀔 수 있음.

@@ -6,6 +6,9 @@
 > 단일-서랍 규칙(CLAUDE.md)에 따라 이관 — 그전까지 DFT webapp 목록에 안 떴다.
 
 
+> elements: C H Li
+> methods: dft, elastic
+
 **인용:** Young Joon Park, Kyu Tae Kim, Seunggoo Jun, Jong Seok Kim, Jaehyun Yoon, Cheol Bak,
 **Yong Min Lee**(공저), Dong Hyeon Kim, Ji Young Kim, **Yoon Seok Jung\*** (교신),
 "Multi-Faceted Binder Enhancement via Slurry-Applicable Thiol-Ene Click Chemistry for

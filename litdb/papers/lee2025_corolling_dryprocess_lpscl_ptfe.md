@@ -2,6 +2,8 @@
 
 > slug `lee2025_corolling_dryprocess_lpscl_ptfe` · DOI `10.1038/s41467-025-59363-4` · type `exp` (실험, no DEM/MPM) · PDF `Lee_2025_NatCommun_corolling_dryprocess_LPSCl_PTFE.pdf` (main) + `..._Sup.pdf` (SI 40 p) · digested `2026-06-24` · status ✅ · Open Access CC-BY
 
+> elements: Li
+
 ## 1. 한 줄 요약
 **우리와 정확히 같은 소재(LPSCl <1 µm SE + NCM811 PC-NCM/NCM82 SC-NCM CAM)·같은 두 도전첨가제(VGCF + PTFE)**로
 건식 co-rolling 박막 양극을 만든 **순수 실험** 논문 — DEM/MPM 시뮬은 없지만 (a) **PTFE wt%가 σ_ionic·σ_e를 둘 다

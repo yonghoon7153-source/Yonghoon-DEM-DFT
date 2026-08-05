@@ -5,6 +5,9 @@
 > ᵃ **한양대 Materials Science & Chemical Eng. (Ansan)** — Kuk Young Cho · ᵇ Yonsei Chemical & Biomolecular Eng. · ᶜ DGIST Energy Science · ᵈ ETRI Materials & Components · ᵉ Yonsei Battery Eng. · Yong Min Lee
 > Chem. Eng. J. **529** (2026) 173036 · Received 2 Nov 2025 / Revised 20 Dec 2025 / Accepted 14 Jan 2026 / Available 15 Jan 2026
 
+> elements: B C Cl F Li Nd O P S
+> methods: bandgap, dft, esw, functional, md
+
 ---
 
 ## 0. 이 digest를 읽는 법 (핵심 + 우리 비교의 의미)

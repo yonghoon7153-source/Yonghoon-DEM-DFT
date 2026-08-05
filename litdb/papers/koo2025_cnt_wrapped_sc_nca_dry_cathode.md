@@ -6,6 +6,9 @@
 > 단일-서랍 규칙(CLAUDE.md)에 따라 이관 — 그전까지 DFT webapp 목록에 안 떴다.
 
 
+> elements: Al Cl Co Li Na Ni O
+> methods: dft
+
 **인용:** Jin Kyo Koo†, Jaejin Lim†, Jeongmin Shin, Jae Kwon Seo, Chaeyeon Ha, Weerawat To A Ran,
 Jung-Hun Lee, Yewon Kwon, **Yong Min Lee\***, Young-Jun Kim\*, "Dry-processed ultra-high-energy
 cathodes (99.6wt%, 4.0 g cm⁻³) using single-crystalline Ni-rich oxides", *Energy Storage Materials*

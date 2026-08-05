@@ -6,6 +6,9 @@
 > 단일-서랍 규칙(CLAUDE.md)에 따라 이관 — 그전까지 DFT webapp 목록에 안 떴다.
 
 
+> elements: H Li Mn Na O S V Zn
+> methods: arrhenius, dft, dos, functional, kpoint, pdos, pseudo
+
 **인용:** Yanghyun Cho§, Nayeon Jung§, Jongha Hwang, Minhee Park, Won Bo Lee, Chi Keung Song,
 Wonseok Hyun, **Yong Min Lee**, Ga Young Jeong, **Bumjoon Seo\***, **Myung-Jun Kwak\***,
 **Woo-Jin Song\***, "Electronic-ionic polymer composite with proton-coupled electron transfer

@@ -4,6 +4,9 @@
 > **저자**: Yang Li, Gang Wu (공동 1저자), Xiaomeng Fan, Dabing Li, Hong Liu, Xiaoxue Zhao, Wanqing Ren, Peng Lei, Xianyi Zhao, Xun Wang, **Guoxu Wang** (교신, Heze Univ.), Lei Gao, **Ce-Wen Nan** (Tsinghua), **Li-Zhen Fan** (교신, USTB) · ESM 77 (2025) 104221
 > **소속**: USTB(北京科技大学) Inst. Adv. Materials & Tech. + Guilin Univ. Tech. + **Tsinghua** State Key Lab New Ceramics + **Heze Univ.** · **외부 그룹 (≠ 우리 한양/Jong-Won Lee/Y.M.Lee/Cho/Cha/Kang)**
 
+> elements: Br Cl Cu F Fe H Li O P S
+> methods: arrhenius, bandgap, dft, elf, esw, functional, kpoint, md, pdos, pseudo
+
 ---
 
 ## 0. 이 digest를 읽는 법 (그리고 stray-파일 검증 결과)

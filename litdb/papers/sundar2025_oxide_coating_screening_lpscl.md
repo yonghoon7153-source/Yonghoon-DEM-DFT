@@ -3,6 +3,9 @@
 > slug `sundar2025_oxide_coating_screening_lpscl` · DOI `10.1002/advs.202513191` · type `DFT high-throughput screening + exp 검증(ALD·XPS·EIS·CCD)` · PDF `82ea256b-…15._Computteries.pdf` · digested `2026-06-26` · status ✅ · 태그 **[외부]**
 > **저자**: Aditya Sundar, Taewoo Kim, Francisco Lagunas, Anil U. Mane, Udochukwu D. Eze, Colton Ginter, Rajesh Pathak, Sanja Tepavcevic, Jeffrey W. Elam, Zachary D. Hood, **Peter Zapol***, **Justin G. Connell*** (Argonne National Laboratory + University of Chicago) · Adv. Sci. 2025, 12, e13191 · Received 2025-07-14, Published 2025-10-15.
 
+> elements: Al Ca Cl Cr Li Mg Mn Nb O P S Sc Si Ti Y Zn Zr
+> methods: bandgap, bvse, dft, esw, functional, kpoint, md, mlip, neb
+
 ---
 
 ## 0. 이 digest를 읽는 법 (먼저 — 우리 연구와의 위치 정렬)

@@ -23,6 +23,9 @@
 > ⚠ **소재가 우리와 다름(절대 전이 금지):** SE = **LPS = 75Li₂S·25P₂S₅ glass(argyrodite *아님*)**, AM = **Si *음극*(NMC 양극 아님; β_Si=2.8 → ~280 % 부피팽창)**. 우리 = **LPSCl + NMC811**. **방법·메커니즘·추세만** 전이; porosity·σ·응력 *절대값* 전이 금지.
 > ⚠ **2D**(저자 명시 Shortcomings: "we simulated only in two dimensions") + **단일 실현** + **κ_SE^rel = TauFactor τ-기반 *상대값***(접촉저항 Holm *없음*).
 
+> elements: C H Li O S Si
+> methods: elastic
+
 ---
 
 ## 1. 한 줄 요약

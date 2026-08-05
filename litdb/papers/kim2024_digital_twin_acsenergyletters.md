@@ -6,6 +6,9 @@
 > `docs/lit_kim2024_digital_twin_acsenergyletters.md` 에서 논문 에이전트가 작성. 단일-서랍 규칙(CLAUDE.md)에 따라 이관.
 
 
+> elements: Li
+> methods: arrhenius, dft, md
+
 **인용(★ PDF에서 검증한 정확한 서지):** Suhwan Kim, **Hyobin Lee**, **Jaejin Lim**, Joonam Park, **Yong Min Lee**\* —
 "Digital Twin Battery Modeling and Simulations: A New Analysis and Design Tool for Rechargeable Batteries,"
 ***ACS Energy Letters* 2024, _9_, 5225–5239.**  **DOI: 10.1021/acsenergylett.4c01931.**

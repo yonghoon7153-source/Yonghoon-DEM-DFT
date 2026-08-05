@@ -2,6 +2,9 @@
 
 > slug `liu2013_cage_methane_adsorption_hydrate_nucleation` · DOI `10.1016/j.cplett.2013.05.012` · type `classical-MD (GROMACS, PMF)` · PDF `fef2173b-8._Effectstudies.pdf` · digested `2026-06-26` · status ✅ (filed as EXTERNAL)
 
+> elements: C H Li P S
+> methods: bvse, dft, md, mlip, msd, neb
+
 ---
 
 ## ⚠ OFF-TOPIC / EXTERNAL — NOT an argyrodite / battery paper

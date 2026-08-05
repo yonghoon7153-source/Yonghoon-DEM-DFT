@@ -6,6 +6,9 @@
 > 단일-서랍 규칙(CLAUDE.md)에 따라 이관 — 그전까지 DFT webapp 목록에 안 떴다.
 
 
+> elements: Cl Co F Li Mn Ni O P S
+> methods: dft
+
 **인용:** E. Trevisanello, R. Ruess\*, G. Conforto, F. H. Richter, J. Janek\*,
 "Polycrystalline and Single Crystalline NCM Cathode Materials—Quantifying Particle
 Cracking, Active Surface Area, and Lithium Diffusion," *Advanced Energy Materials*

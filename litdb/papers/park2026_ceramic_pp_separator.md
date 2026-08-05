@@ -6,6 +6,9 @@
 > 단일-서랍 규칙(CLAUDE.md)에 따라 이관 — 그전까지 DFT webapp 목록에 안 떴다.
 
 
+> elements: Al F Li O P
+> methods: dft
+
 **인용:** Kwang Tae Park^a,†, Seungyeop Choi^b,†, Jun Pyo Seo^b, Rakhwi Hong^a, Minjae Kwon^a,
 Joo Sung Lee^c, **Yong Min Lee\*** (yongmin@yonsei.ac.kr), "Ultra-thin ceramic-coated dry-biaxially
 stretched polypropylene separator achieving balanced ionic transport and short-circuit resistance in

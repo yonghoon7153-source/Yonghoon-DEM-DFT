@@ -22,6 +22,8 @@
 > > *정성적*으로 보인 "다결정 입계균열"을 *정량·직접관찰*(X-ray nano-CT, 같은 입자 before/after)로 확정한다.  소재는
 > > **NMC811 (= 우리 production CAM)** 로 정확히 일치(단 *cell* 은 LIB 액체전해질 — ASSB 아님, §10 주의).
 
+> elements: B C Li
+
 ---
 
 ## 1. 한 줄 요약

@@ -6,6 +6,9 @@
 > 단일-서랍 규칙(CLAUDE.md)에 따라 이관 — 그전까지 DFT webapp 목록에 안 떴다.
 
 
+> elements: Li P S
+> methods: dft, elastic
+
 **인용:** Anja Bielefeld, Dominik A. Weber, Jürgen Janek, "Modeling Effective Ionic Conductivity and
 Binder Influence in Composite Cathodes for All-Solid-State Batteries", *ACS Appl. Mater. Interfaces*
 **2020**, *12*, 12821−12833.  DOI **10.1021/acsami.9b22788**.

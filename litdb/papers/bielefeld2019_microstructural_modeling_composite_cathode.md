@@ -7,6 +7,8 @@
 >
 > 데이터 CSV: `docs/data/bielefeld2019_percolation.csv` (이 digest 전용, 정밀 수치). 기존 `bielefeld2019_percolation.csv`도 같은 내용(병존).
 
+> elements: Li P S
+
 ---
 
 ## 1. 한 줄 요약 (bilingual)

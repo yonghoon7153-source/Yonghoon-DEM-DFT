@@ -4,6 +4,9 @@
 > **저자**: Rikuya Ishikawa¹, Kyohei Takae², Rei Kurita¹ — ¹Tokyo Metropolitan University (Dept. of Physics), ²Tottori University (Mechanical & Physical Engineering). 교신 Ishikawa / Kurita.
 > **태그**: `[외부]` `theory` — argyrodite 논문 아님(rock-salt 모델계). **물성 4축 절대 비교 금지**: 우리 LPSCl 수치와 직접 대조 X. 보관 이유 = **우리 cascade dopant-blocking·dual-x·percolation 멘탈모델의 *이론 백본*** (개념/임계값 프레임 only).
 
+> elements: Ag Bi Cl In K Li Na O P Pb S Sc Sn Te
+> methods: bvse, cohp, dft, md, mlip
+
 ---
 
 ## 0. 이 digest를 읽는 법 (가장 중요)

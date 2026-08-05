@@ -3,6 +3,9 @@
 > slug `choi2026_bzox_dry_zro2x_nmc_shell_coating` · DOI `10.1002/smll.73805` (Small 2026, 0:e73805; Received 2026-01-27 / Accepted 2026-05-09) · type `exp(코팅·전기화학) + DFT보조(계면 슬랩 pDOS·결합길이)` · PDF `inbox/28. Dry-Crafted…pdf`(본문 10 pp) + `inbox/28. Sup) …pdf`(SI 10 pp, Fig S1–S8+Table S1) · digested `2026-07-16` (SI-only digest 같은 날 본문 확보로 통합 업그레이드) · 태그 **[외부]** · 사용자 분류 폴더 `DFT`
 > ← supersedes `bzox_dry_zro2x_nmc_shell_coating_sulfide_assb.md` (SI-only 구판; 스텁으로 대체)
 
+> elements: Co Li Mn Ni O P S Zr
+> methods: bader, bandgap, cohp, dft, elf, esw, functional, kpoint, md, mlip, neb, pdos, pseudo
+
 ---
 
 ## 0. 판 이력 / 이 digest를 읽는 법

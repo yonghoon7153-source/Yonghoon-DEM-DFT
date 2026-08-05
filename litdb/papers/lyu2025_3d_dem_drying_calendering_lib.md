@@ -3,6 +3,8 @@
 
 > slug `lyu2025_3d_dem_drying_calendering_lib` · DOI `10.1016/j.ijepes.2025.110521` · type `DEM (3D RVE, 건조+압연 연속; exp 검증)` · PDF `Lyu_2025_IJEPES_3D_DEM_ElectrodeEvolution_DryingCalendering.pdf` · digested `2026-06-26` · status ✅ · OPEN ACCESS (CC BY 4.0)
 
+> elements: B Li
+
 ---
 
 ## 1. 한 줄 요약

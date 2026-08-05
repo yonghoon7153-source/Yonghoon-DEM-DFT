@@ -6,6 +6,9 @@
 > 단일-서랍 규칙(CLAUDE.md)에 따라 이관 — 그전까지 DFT webapp 목록에 안 떴다.
 
 
+> elements: C F H Li O Si
+> methods: adhesion, dft
+
 **인용:** Jihwan Oh†, Seungyeop Choi†, Youyeong Shin, Sun Hyu Kim, Cheol Bak, Wonseok Yang,
 Gyuna Bae, Eunji Kim, Chung-Seok Oh, Yong Min Lee\*, "Optimized Carbon Coating on SiOx
 Enables Balanced Ion/Electron Transport and Uniform Dispersion in SiOx/Graphite Composite

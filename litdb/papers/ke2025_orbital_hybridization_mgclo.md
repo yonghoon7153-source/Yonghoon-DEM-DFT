@@ -3,6 +3,9 @@
 > slug `ke2025_orbital_hybridization_mgclo` · DOI `10.1016/j.ensm.2025.104125` · type `exp + DFT` · PDF `d52adce6-…Stability.pdf` (+ SI `3c7af41e`) · digested `2026-06-23` · status ✅
 > **저자**: Junmin Ke, Guofeng Xu*, Furong Liu, Mengru Wu, Han Bao, Ali Zulfiqar (Beijing Univ. of Technology) · ESM 76 (2025) 104125
 
+> elements: Cl Li O P S
+> methods: bader, bandgap, dft, elastic, elf, esw, functional, md, pdos, pseudo
+
 ---
 
 ## 0. 이 digest를 읽는 법

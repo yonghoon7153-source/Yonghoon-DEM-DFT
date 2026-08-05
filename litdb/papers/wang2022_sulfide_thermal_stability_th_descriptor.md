@@ -4,6 +4,9 @@
 > **저자**: Shuo Wang / Yujing Wu / **Hong Li** / **Liquan Chen** / **Fan Wu**(교신, IOP CAS 물리연구소·Tianmu Lake Inst.) — InfoMat 2022;4(8):e12316, open access
 > **⚠ 저자 구분**: 교신 **Fan Wu(吴凡, IOP CAS 물리)** ≠ [Fan26] 리뷰의 **Li-Zhen Fan(USTB)**. 단 **[Fan26] 리뷰의 ref 109 ★★★ = 바로 이 논문** (Th₀/Th′ 서술자 원전) — fan26 digest §15가 "즉시 이식" 후보로 지목했던 그 논문.
 
+> elements: Cl Cu H Li O P S Si Sn
+> methods: bandgap, cohp, dft, esw, md, mlip, pdos
+
 ---
 
 ## 0. 이 digest를 읽는 법

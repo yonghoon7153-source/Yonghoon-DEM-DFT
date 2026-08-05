@@ -3,6 +3,8 @@
 
 > slug `liu2025_dry_processing_high_energy_li_batteries_review` · DOI `10.1002/smll.202510454` · type `REVIEW (건식공정 총설; 실험·시뮬 *원저 아님* — 문헌 종합)` · PDF `Liu_2025_Small_DryProcessing_HighEnergyDensity_LiBatteries_Review.pdf` · digested `2026-06-26` · status ✅
 
+> elements: Cl F In Li O P S
+
 ---
 
 ## 1. 한 줄 요약

@@ -6,6 +6,9 @@
 > 단일-서랍 규칙(CLAUDE.md)에 따라 이관 — 그전까지 DFT webapp 목록에 안 떴다.
 
 
+> elements: Cl Cu Fe Li O S
+> methods: dft
+
 **인용:** P. Minnmann, F. Strauss, A. Bielefeld, R. Ruess, P. Adelhelm, S. Burkhardt, S. L. Dreyer,
 E. Trevisanello, H. Ehrenberg, T. Brezesinski\*, F. H. Richter\*, J. Janek\*,
 "Designing Cathodes and Cathode Active Materials for Solid-State Batteries," *Advanced Energy
