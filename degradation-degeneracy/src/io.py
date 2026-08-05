@@ -44,15 +44,45 @@ def save_chunk(df: pd.DataFrame, out_dir: str | Path, chunk_idx: int) -> Path:
 
 
 def merge_chunks(out_dir: str | Path, name: str = "curves.parquet") -> Path | None:
-    """chunks/*.parquet → 단일 parquet 병합."""
+    """chunks/*.parquet → 단일 parquet 병합.
+
+    같은 조건이 여러 청크에 있으면(같은 디렉터리에 --resume 없이 재실행한 경우)
+    **가장 나중 청크만 남긴다.** 중복 행이 남으면 downstream fitting이
+    같은 조건을 여러 번 세게 된다.
+    """
     out_dir = Path(out_dir)
     files = sorted((out_dir / "chunks").glob("chunk_*.parquet"))
     if not files:
         return None
-    df = pd.concat([pd.read_parquet(f) for f in files], ignore_index=True)
+    parts = []
+    for i, f in enumerate(files):
+        part = pd.read_parquet(f)
+        part["_chunk"] = i          # 뒤쪽 청크가 최신
+        parts.append(part)
+    df = pd.concat(parts, ignore_index=True)
+
+    if "cond_id" in df.columns:
+        # 조건별 최신 청크만 유지 (부분 행이 아니라 블록 단위로 선택)
+        newest = df.groupby("cond_id")["_chunk"].transform("max")
+        df = df[df["_chunk"] == newest].reset_index(drop=True)
+    df = df.drop(columns="_chunk")
+
     path = out_dir / name
     df.to_parquet(path, index=False)
     return path
+
+
+def load_failed(out_dir: str | Path) -> set[str]:
+    """failed.csv의 **고유** cond_id 집합.
+
+    행 수를 세면 재실행 시 중복 기록 때문에 집계가 어긋난다
+    (completed.jsonl은 set으로 중복 제거되므로 기준을 맞춘다).
+    """
+    path = Path(out_dir) / "failed.csv"
+    if not path.exists():
+        return set()
+    with open(path, newline="", encoding="utf-8") as f:
+        return {row["cond_id"] for row in csv.DictReader(f) if row.get("cond_id")}
 
 
 def append_failed(out_dir: str | Path, cond_id: str, cond: dict, reason: str) -> None:

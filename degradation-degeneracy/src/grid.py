@@ -27,8 +27,8 @@ import pandas as pd
 from src.baseline import DischargedState, get_discharged_state
 from src.config import config_hash, load_config, validate_config
 from src.curves import add_noise, extract_curves
-from src.io import (append_failed, base_manifest, load_completed, mark_completed,
-                    merge_chunks, save_chunk, write_manifest)
+from src.io import (append_failed, base_manifest, load_completed, load_failed,
+                    mark_completed, merge_chunks, save_chunk, write_manifest)
 from src.modes import Baseline, InfeasibleConditionError, build_overrides
 from src.runner import make_solver, run_one, solver_name
 
@@ -232,6 +232,13 @@ def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
     todo = [c for c in conditions if c.cond_id not in done]
     if resume and done:
         log.info("resume: %d개 완료 확인, %d개 남음", len(done), len(todo))
+    elif not resume and not dry_run:
+        prev = load_completed(out_dir)
+        if prev:
+            log.warning(
+                "출력 디렉터리에 이미 완료 기록 %d건이 있는데 --resume 없이 실행합니다. "
+                "전부 재계산되고 청크가 중복 누적됩니다. "
+                "이어서 하려면 --resume, 새로 하려면 다른 --out 을 쓰세요.", len(prev))
 
     # ── 완방상태는 병렬 전에 1회 산출 (워커에 값만 전달) ──
     d = get_discharged_state(cfg)
@@ -285,8 +292,16 @@ def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
         "discharged_state": d_dict,
     }))
 
+    # failed.csv 중복 방지 — 이미 기록된 조건은 다시 쓰지 않는다
+    recorded_failed = load_failed(out_dir)
+
+    def _record_failure(cond_id: str, cond: dict, reason: str) -> None:
+        if cond_id not in recorded_failed:
+            append_failed(out_dir, cond_id, cond, reason)
+            recorded_failed.add(cond_id)
+
     for c, reason in infeasible:
-        append_failed(out_dir, c.cond_id, asdict(c), f"infeasible: {reason}")
+        _record_failure(c.cond_id, asdict(c), f"infeasible: {reason}")
         mark_completed(out_dir, c.cond_id)   # 재실행에서도 건너뛰도록
 
     # ── chunk 단위 병렬 실행 ──
@@ -295,17 +310,22 @@ def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
     t_start = time.perf_counter()
     chunk_idx = _next_chunk_idx(out_dir)
 
-    with tqdm(total=len(feasible), desc="grid", unit="cond") as bar:
+    # ★ 워커 풀을 청크 간에 재사용한다.
+    #   청크마다 Parallel을 새로 만들면 워커가 매번 pybamm import + composite DFN
+    #   빌드를 반복해 청크당 수십 초가 낭비된다 (V100 32코어 실측: 95조건에 71.6 s,
+    #   이론값 10 s). context manager로 묶으면 그 비용을 실행당 1회로 상각한다.
+    with tqdm(total=len(feasible), desc="grid", unit="cond") as bar, \
+            Parallel(n_jobs=nproc, backend="loky") as parallel:
         for start in range(0, len(feasible), chunk_size):
             chunk = feasible[start:start + chunk_size]
-            results = Parallel(n_jobs=nproc, backend="loky")(
+            results = parallel(
                 delayed(_solve_condition)(cfg, c, d_dict, protocol_name)
                 for c in chunk
             )
             frames = []
             for r in results:
                 if r["error"] is not None:
-                    append_failed(out_dir, r["cond_id"], r["cond"], r["error"])
+                    _record_failure(r["cond_id"], r["cond"], r["error"])
                     n_failed += 1
                 else:
                     frames.append(_result_to_frame(r, protocol_name))
@@ -321,11 +341,10 @@ def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
     merged = merge_chunks(out_dir, "curves.parquet")
     elapsed = time.perf_counter() - t_start
 
-    # 누적 집계 (resume 시 이전 실행분 포함) — 파일 기준이 진실
+    # 누적 집계 (resume 시 이전 실행분 포함) — 파일 기준이 진실.
+    # 양쪽 모두 '고유 cond_id 수'로 세야 한다 (한쪽만 set이면 재실행 시 어긋남).
     n_done_total = len(load_completed(out_dir))
-    fail_path = out_dir / "failed.csv"
-    n_failed_total = (max(0, len(fail_path.read_text(encoding="utf-8").splitlines()) - 1)
-                      if fail_path.exists() else 0)
+    n_failed_total = len(load_failed(out_dir))
     write_manifest(out_dir, {
         "n_ok": n_ok, "n_failed": n_failed,               # 이번 호출분
         "n_completed_total": n_done_total,                 # 누적 (failed 포함)
