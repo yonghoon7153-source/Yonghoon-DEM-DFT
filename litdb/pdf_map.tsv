@@ -52,4 +52,8 @@ duquesnoy2023_ml_multiobjective_manufacturing_optimization	machine learning-assi
 # 가드: 업로드된 '53. Sup3) …' (82 pp) 는 본문(22)+SI(60) 을 이어붙인 중복본이다.
 #   그걸 넣고 추출하면 본문 Fig. 1 이 Fig. S1 로 잡혀 S 번호가 오염된다(§14-12).
 #   아래 줄은 'Sup' 이 없는 본문 파일만 가리킨다 — 그림 51장은 이미 추출돼 있고 git 에 들어있다.
+#   '53. Sup2) …' (60 pp) 는 정상 SI 단독본이다 — 제목 74% 로 자동으로 이 slug 에 SI 로 붙는다
+#   (수동 지정 불필요, 2026-08-06 실측). 크롭 41/51 장이 이 파일에서 나왔다.
+#   [!] 단 지금 inbox 엔 SI-2 만 있고 본문 PDF 가 없다 → '--slug … --clean' 은 본문 크롭 10장을
+#       지운다. 재추출은 본문 PDF 를 같이 넣고서. ('--inbox --skip-done' 은 안전.)
 mulks2024_hard_soft_electrons_holes	53. hard and soft electrons

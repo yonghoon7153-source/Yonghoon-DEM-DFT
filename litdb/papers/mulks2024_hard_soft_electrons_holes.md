@@ -137,8 +137,8 @@ hard 자리와 soft 자리를 동시에** 집어낸다.
 | 지원 | Fonds der Chemischen Industrie Liebig Fellowship (Li 210/01), AvH Feodor Lynen Return Fellowship, RWTH 계산자원 rwth0928/rwth1236 |
 | 이해상충 | 저자가 **Chem 의 "Next-Generation" Advisory Board** 소속 (본인 명시) |
 | 편집도구 | DeepL + Word 사용 명시 |
-| 로컬 파일 | **inbox #53 · 사용자 분류 폴더 `DFT`**. 본문 22 pp + SI 60 pp. 업로드된 `53. Sup3) …pdf`(82 pp)는 **본문+SI 이어붙인 중복본**(§14-12·§14c-A) — 그림 추출에 넣지 말 것. SI 평문 = `inbox/_53si3_text.txt` |
-| 검증 이력 | 1차 digest 2026-08-05 · **2차** Table 1 산술 전수 대조 2026-08-06(§14b, 오타 4건) · **3차** SI 실물 기계 검산 2026-08-06(§14c, Table S3 오류 4건·Table S6 재현 실패·라벨 오류 6건) |
+| 로컬 파일 | **inbox #53 · 사용자 분류 폴더 `DFT`**. 본문 22 pp + SI 60 pp. **SI 원본 = `inbox/53. Sup2) …pdf`(60 pp, 깨끗한 SI 단독본 — 그림 51장 중 41장의 추출 source)**. 업로드된 `53. Sup3) …pdf`(82 pp)는 **본문+SI 이어붙인 중복본**(§14-12·§14c-A) — 그림 추출에 넣지 말 것. SI 평문 = `inbox/_53si3_text.txt` |
+| 검증 이력 | 1차 digest 2026-08-05 · **2차** Table 1 산술 전수 대조 2026-08-06(§14b, 오타 4건) · **3차** SI 실물 기계 검산 2026-08-06(§14c, Table S3 오류 4건·Table S6 재현 실패·라벨 오류 6건) · **4차** SI-2 재투입 중복 판정 2026-08-06(§14d, 60/60쪽 완전 일치 — 신규 내용 0건) |
 
 ## 3. 핵심 물성 (수치) — **이 논문엔 없다**
 
@@ -709,6 +709,24 @@ diphenylmethane 과 반응 시 **아연에 결합한 톨릴 리간드가 양성�
 - **2차 Fukui 열 머리글이 두 표기로 섞여 있다**: `f⁻²/f⁺²` = S1,S2,S4,S6,S7–S12,S16,S18,S21–S26,S33 /
   `f⁻⁻/f⁺⁺` = S5,S13,S14,S15,S17,S19,S20,S27–S32.
 - **S3·S19·S20 은 "Hirshfeld charges (e) / Indices" 머리 블록 자체가 없다** → 열 폭이 달라진다.
+
+### 14d. 4차 — SI-2 재투입 (2026-08-06): **중복 확정, 신규 내용 0건**
+
+> **계기**: 사용자가 `litdb/inbox/53. Sup2) Hard and soft electrons and holes.pdf`(60 pp)를
+> "논문 에이전트로 처리" 요청(사용자 분류 폴더 `DFT`). **새 논문이 아니라 이 digest 의 SI 다.**
+
+- **판정: 중복.** 60쪽 전부를 기존 `_53si3_text.txt`(SI-3 에서 뜬 SI 60쪽)와 공백 정규화 후 대조 →
+  **60/60쪽 문자 단위 완전 일치, 차이 0쪽**. 고유 내용 없음 → digest 본문 수정 사항 없음.
+- **이미 반영돼 있었다**: `figures/mulks2024_hard_soft_electrons_holes/figures.json` 의 `sources` 에
+  `c247bf09-53._Sup2_…pdf` 가 있고, 크로핑 **51장 중 41장**(`fig_S1`–`S8` + `tab_S1`–`S33`)이
+  **바로 이 파일에서 잘린 것**이다. 즉 1차 digest 때 쓴 SI 원본이 이름만 바꿔 다시 들어온 것.
+- **달라진 것 하나** — §14c-A 는 "SI 실물은 SI-3(82 pp) 뿐"이라고 적었으나, 이제
+  **본문 오염이 없는 깨끗한 SI 단독본(SI-2, 60 pp)이 로컬에 있다.** 재추출이 필요해지면
+  SI-3 가 아니라 **이 파일**을 쓴다(§14-12 의 S 번호 오염 문제가 원천적으로 없음).
+- **🔴 재추출 주의** — 지금 `inbox/` 에는 **SI-2 만 있고 본문 PDF 는 없다.**
+  이 상태로 `extract_figures.py --slug mulks2024_hard_soft_electrons_holes --clean` 을 돌리면
+  본문 크롭 10장(`fig_1`–`9`, `tab_1`)이 **지워지고 SI 41장만 남는다.** 본문 PDF 를 같이 넣거나
+  `--clean` 없이 돌릴 것. (`--inbox --skip-done` 은 이미 done 으로 걸러지므로 안전 — 실측 확인.)
 
 ## 15. 기법 용어 미니사전
 - **HSAB (Hard-Soft Acid-Base)**: Pearson(1963). 작고 전하밀도 높고 잘 안 분극되는 파트너(hard)끼리,
