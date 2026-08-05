@@ -481,12 +481,14 @@ if want("sdcp"):
         done = "Final scf calculation at the relaxed structure" in txt
         cpu  = re.findall(r"total cpu time spent up to now is\s+([\d.]+) secs", txt)
         RY_EV = 13.605693
+        NSTEP = 80          # relax.in 의 nstep — 표시/예산 경고가 같은 값을 본다
+        _need = 0           # 힘 문턱까지 필요한 이온스텝 (0=미산출, None=평탄역이라 예보 불가)
 
         print(f"   단계  {_STAGE}"
               + ("   (1단계엔 이온스텝이 없다 — 정상)" if "1단계" in _STAGE else ""))
         print(f"   상태  {'▶ 진행 중' if alive_j else ('✅ 완료' if done else '⛔ 프로세스 없음')}"
               f" · 로그 {age/60:.0f}분 전"
-              + (f" · 이온스텝 {len(etot)}/80" if "2단계" in _STAGE else ""))
+              + (f" · 이온스텝 {len(etot)}/{NSTEP}" if "2단계" in _STAGE else ""))
         if etot:
             # ⚠ 수렴 판정선을 **같이** 찍는다. 숫자만 보면 다 온 건지 알 수 없다.
             print(f"   에너지  현재 {etot[-1]:.6f} Ry"
@@ -504,9 +506,22 @@ if want("sdcp"):
                     import math
                     a, b = mc[-6], mc[-1]
                     r = (b / a) ** (1 / 5) if a > 0 and b > 0 else 1.0
-                    if 0 < r < 0.999:
-                        need = math.log(b / 1e-3) / -math.log(r)
-                        print(f"           감소율 {r:.3f}/스텝 → 1e-3 까지 약 {need:.0f}스텝")
+                    # ⚠⚠ **톱니를 감쇠로 오독하지 않는다.** 창 안의 진폭(max/min)이 창 양끝의
+                    #   감소폭보다 크면 그건 '내려가는 중' 이 아니라 **평탄역에서 흔들리는 것**이다.
+                    #   기하평균 r 을 그대로 외삽하면 있지도 않은 수렴 시각을 만들어 낸다
+                    #   (SDCP 에서 6점으로 6일을 예보했다가 철회한 것과 같은 함정).
+                    win = mc[-6:]
+                    amp = (max(win) - min(win)) / max(min(win), 1e-12)
+                    drop = (a - b) / max(a, 1e-12)
+                    plateau = amp > max(drop, 0.0) * 1.5
+                    if plateau:
+                        print(f"           ⛔ **평탄역** — 최근 6스텝이 {min(win):.5f}–{max(win):.5f} 에서"
+                              f" 진동(진폭 {amp*100:.0f}%) 하고 순감소는 {drop*100:+.0f}% 뿐이다.")
+                        print("              이 구간에서 감쇠율을 외삽하면 안 된다 — **수렴 시각을 예보할 수 없다**.")
+                        _need = None
+                    elif 0 < r < 0.999:
+                        _need = math.log(b / 1e-3) / -math.log(r)
+                        print(f"           감소율 {r:.3f}/스텝 → 1e-3 까지 약 {_need:.0f}스텝")
             print(f"           참고: Total force {forc[-1]:.6f} (자유원자 전체 노름 — 문턱 대상 아님)")
         if scfn:
             mx = [int(x) for x in scfn]
@@ -526,8 +541,24 @@ if want("sdcp"):
         # ── 남은 시간 어림 ─────────────────────────────────────────────
         if cpu and len(etot) >= 2:
             per = float(cpu[-1]) / max(len(etot), 1)
-            print(f"   속도    스텝당 {per/60:.0f}분 · 경과 {float(cpu[-1])/3600:.1f}h"
-                  f" · 20스텝 가정 시 남은 {max(0,(20-len(etot)))*per/3600:.1f}h")
+            # ⚠⚠ 예전엔 '20스텝 가정' 이 **하드코딩**이라, 22스텝째에 max(0,20-22)=0 →
+            #   힘 추세가 "87스텝 더" 라고 찍은 바로 아래에서 "남은 0.0h" 가 나왔다(2026-08-06).
+            #   기준은 **힘 문턱까지 필요한 스텝**이고, 없으면 예보하지 않는다.
+            line = f"   속도    스텝당 {per/60:.0f}분 · 경과 {float(cpu[-1])/3600:.1f}h"
+            if _need:
+                left_h = _need * per / 3600
+                line += f" · 힘 기준 남은 {_need:.0f}스텝 ≈ **{left_h:.0f}h ({left_h/24:.1f}일)**"
+            elif _need is None and etot:
+                line += " · 남은 시간 **예보 불가**(위 평탄역 판정)"
+            print(line)
+            # 자기 nstep 예산 안에 못 들어가는 것은 별도로 경고한다 — 조용히 중단되면
+            # '수렴했다' 와 구별이 안 된다.
+            budget = NSTEP - len(etot)
+            if _need and _need > budget:
+                print(f"   ⛔ **예산 초과** — nstep {NSTEP} 중 {budget}스텝 남았는데 힘 기준으로 "
+                      f"{_need:.0f}스텝이 필요하다. 이대로면 **수렴 전에 멈춘다.**")
+                print("      선택지: (a) nstep 상향 후 restart_mode='restart' (b) 힘 문턱 완화 "
+                      "(c) 믹싱/구속 재설계. 지금 상태로 더 기다리는 것은 답이 아니다.")
         # ── 다음 단계 ──────────────────────────────────────────────────
         if done:
             print("   ✅ 이완 완료 → 다음:")
