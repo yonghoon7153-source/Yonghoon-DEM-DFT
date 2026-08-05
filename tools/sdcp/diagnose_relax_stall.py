@@ -198,19 +198,35 @@ def main():
             print(f"   atom {i:4d} {sym:4s} |F| {v:.5f} ({v/a.thr:.1f}×)"
                   + (f" · z {z:.3f} Å" if z is not None else ""))
         if len(zof) >= 3:
-            zs = sorted(zof.values())
-            span = zs[-1] - zs[0]
-            # 슬랩 전체 z 범위 대비 얼마나 좁은 대역에 모여 있나
+            # ⚠ **폭(span)만 보면 안 된다.** 두 개의 또렷한 층에 몰려 있어도 그 사이 간격
+            #   때문에 폭이 커져서 '전역에 흩어졌다' 로 오판한다(실측 2026-08-06: 두 평면
+            #   z≈16.22 / 18.34 인데 폭이 2.13 Å 로 잡혔다). **층으로 묶어서** 판정한다.
+            zs = sorted(zof.items(), key=lambda kv: kv[1])
+            LAYER_TOL = 0.35            # 같은 층으로 볼 z 차이 (Å)
+            layers, cur = [], [zs[0]]
+            for k, v in zs[1:]:
+                if v - cur[-1][1] <= LAYER_TOL:
+                    cur.append((k, v))
+                else:
+                    layers.append(cur); cur = [(k, v)]
+            layers.append(cur)
             allz = [t[3] for t in frames0[-1]] if frames0 else []
             slab = (max(allz) - min(allz)) if allz else 0.0
-            frac = span / slab if slab > 0 else 1.0
-            print(f"   z 분포 {zs[0]:.2f}–{zs[-1]:.2f} Å (폭 {span:.2f} Å, 슬랩 {slab:.1f} Å 의 {frac*100:.0f}%)")
-            if frac < 0.35:
-                print("   → ✅ **한 대역에 몰려 있다** = 그 층이 아직 이완 중이다. **시간이 답**이고 "
+            print(f"   층 묶음 {len(layers)}개 (같은 층 = Δz ≤ {LAYER_TOL} Å) · 슬랩 두께 {slab:.1f} Å")
+            for L in layers:
+                zc = sum(v for _, v in L) / len(L)
+                syms = " ".join(f"{free.get(k,('?',))[0]}{k}" for k, _ in L)
+                print(f"     z≈{zc:6.2f} Å — {len(L)}개: {syms}")
+            # 자유 원자가 존재하는 z 대역 안에서만 판단해야 한다(고정층은 애초에 후보가 아니다)
+            fz = [frames0[-1][i - 1][3] for i in free
+                  if free[i][1] and i - 1 < len(frames0[-1])]
+            freespan = (max(fz) - min(fz)) if fz else slab
+            if len(layers) <= 2 or (len(layers) / max(len(set(round(z,1) for z in fz)), 1)) < 0.6:
+                print("   → ✅ **소수 층에 몰려 있다** = 그 층이 아직 이완 중이다. **시간이 답**이고 "
                       "파라미터를 바꿀 이유가 없다.")
             else:
-                print("   → ⚠ **슬랩 전역에 흩어져 있다** = 층 이완이 아니라 **힘 바닥(잡음)** 의심. "
-                      "⑤의 degauss/컷 검산으로 넘어간다.")
+                print(f"   → ⚠ **자유 대역({freespan:.1f} Å) 전역에 흩어져 있다** = 층 이완이 아니라 "
+                      "**힘 바닥(잡음)** 의심. ⑤의 degauss/컷 검산으로 넘어간다.")
 
     # ── 2) 상위 원자의 힘·좌표 궤적 ────────────────────────────────────────
     top = [i for i, _ in cnt.most_common(a.top)]
