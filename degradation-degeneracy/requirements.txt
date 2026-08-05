@@ -1,4 +1,7 @@
 # ── 핵심 ──
+# 검증 완료 조합 (2026-08-05, docs/ENV_REPORT.md):
+#   pybamm 26.7.1.0 / numpy 2.4.6 / scipy 1.17.1 / pandas 3.0.5 / Python 3.11
+#   IDAKLU OK, composite DFN OK, 1 solve ≈ 2 s
 pybamm[all]>=24.5        # [all] 이 IDAKLU solver 포함. 이거 없으면 2~5배 느림
 numpy>=1.24
 scipy>=1.11
