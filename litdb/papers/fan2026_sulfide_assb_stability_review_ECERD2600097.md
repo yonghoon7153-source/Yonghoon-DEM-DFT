@@ -2,6 +2,10 @@
 
 > slug `fan2026_sulfide_assb_stability_review_ECERD2600097` · DOI **없음(미출판; draft 내 placeholder "10.1002/((please add manuscript number))" — EER은 Springer인데 Wiley prefix가 박혀 있는 템플릿 잔재)** · type **review (문헌 컴파일, 자체 계산/실험 0)** · PDF 4분할 `653a4e87-ECERD2600097___1.pdf`(30p) + `eb8d18d5-…___2.pdf`(30p) + `5d14fe59-…___3.pdf`(30p) + `38482998-…___4.pdf`(23p) — **총 113 pp, 전 페이지 정독** · digested `2026-07-16` · status ✅ · **📌 우선순위 must-read (INDEX 최상단)**
 
+> 🔗 **리비전 노트 따로 있음** — 1저자가 심사 리비전 중 건진 문장·우리 해석·지적 후보는
+> `kb/reviews/ECERD2600097_review_notes.md`. 이 digest 는 *원고가 무엇을 말하는가*,
+> 그쪽은 *우리가 그걸 어떻게 읽었는가* 다.
+
 ## 0. 이 digest를 읽는 법
 - 이 논문은 **황화물 ASSB "안정성" 전 분야의 field-map 리뷰** (본문 56 pp + 참고문헌 239개 + Figure 26개). [Bai](argyrodite 전용)·[Rupp](oxide/sulfide 광역)·[Kang](우리 그룹 electrochemo-mechanical)에 이은 **네 번째 리뷰 좌표계** — 이번 것은 "**안정성 축**"으로 짠 지도이며, 우리 캠페인(자유-S 산화 서사·B₂O₃/O 도핑·음극 SEI json)이 **여섯 칸에 동시에 꽂힌다** (§11).
 - **미출판 draft**라는 점 주의: 인용 시 "ECER-D-26-00097, submitted to Electrochem. Energy Rev." 로만; 수치·주장은 게재본에서 바뀔 수 있음.
