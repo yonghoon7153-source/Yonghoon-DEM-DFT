@@ -2,10 +2,11 @@
  "slug": "zhu2020_air_stable_se_design_principles",
  "dpi": 300,
  "maxpx": 3000,
- "generated": "2026-08-05",
+ "generated": "2026-08-06",
  "sources": [
   "944d0e44-55._Materials_Design_Principles_for_AirStable_LithiumSodium_Solid_Electrolytes.pdf",
-  "ae64797e-55._Sup_Materials_Design_Principles_for_AirStable_LithiumSodium_SolidElectrolytes.pdf"
+  "ae64797e-55._Sup_Materials_Design_Principles_for_AirStable_LithiumSodium_SolidElectrolytes.pdf",
+  "54. Materials Design Principles for Air-Stable LithiumSodium Solid Electrolytes.pdf"
  ],
  "figures": [
   {
@@ -45,6 +46,25 @@
    "dpi": 300,
    "src": "944d0e44-55._Materials_Design_Principles_for_AirStable_LithiumSodium_Solid_Electrolytes.pdf",
    "blank": 0.914
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Guiding charts for cation selection. The moisture stability (hydrolysis reaction energy, y-axis) versus reduction stability (reduction reaction energy with alkali metal, x-axis) for a) 52 lithium ternary sulfides b) 65 sodium ternary sulfides, and c) 14 lithium ternary chlorides.",
+   "bbox": [
+    300.0,
+    152.0,
+    548.0,
+    684.0
+   ],
+   "w": 1034,
+   "h": 2217,
+   "dpi": 300,
+   "src": "54. Materials Design Principles for Air-Stable LithiumSodium Solid Electrolytes.pdf",
+   "note": "manual crop (auto-detect rejects: caption sits beside a left-column text block; see digest §14)"
   },
   {
    "key": "fS1",

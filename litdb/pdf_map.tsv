@@ -57,3 +57,12 @@ duquesnoy2023_ml_multiobjective_manufacturing_optimization	machine learning-assi
 #   [!] 단 지금 inbox 엔 SI-2 만 있고 본문 PDF 가 없다 → '--slug … --clean' 은 본문 크롭 10장을
 #       지운다. 재추출은 본문 PDF 를 같이 넣고서. ('--inbox --skip-done' 은 안전.)
 mulks2024_hard_soft_electrons_holes	53. hard and soft electrons
+#
+# ── 대기안정 열역학 (EXTERNAL) ──────────────────
+# 가드: zhu2020 은 본문 5 pp + SI 5 pp 인데, 지금 inbox 엔 '54. Materials Design Principles …'
+#   (본문 단독)만 있고 SI PDF 는 로컬에서 사라졌다. 그림 5장 중 fig_S1·fig_S2 는 그 SI 에서만 나온다.
+#   → '--slug zhu2020_air_stable_se_design_principles --clean' 은 SI 크롭 2장을 지우고 복구 불가다.
+#     ('--inbox --run --skip-done' 은 안전. 재추출하려면 SI PDF 를 같이 넣고서.)
+#   [!] fig_3 은 자동 추출이 구조적으로 못 잡는다(2단 조판 + 오른쪽 단 세로 그림 → 캡션 위 영역 소실).
+#       figures.json 의 f3 은 수동 bbox (300,152,548,684)@300dpi 로 넣은 것이니 덮어쓰지 말 것 (digest §14a-B).
+#   자동 매칭은 제목 81 % 로 잘 붙는다 — 수동 지정 줄은 필요 없다.
