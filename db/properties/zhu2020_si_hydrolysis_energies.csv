@@ -1,0 +1,148 @@
+# Zhu & Mo, "Materials Design Principles for Air-Stable Lithium/Sodium Solid Electrolytes",
+#   Angew. Chem. Int. Ed. 2020, 59, 17472-17476.  DOI 10.1002/anie.202007621
+#   SOURCE FILE: anie_202007621_sm_miscellaneous_information.xlsx (SI spreadsheet), 전수 전사 2026-08-05.
+#
+# !! 이것은 문헌 소환값이다. 우리(Yonghoon-DEM-DFT) 계산이 아니다. !!
+#   우리 db 절대값(db/properties/*.json, ESW/gap/sigma 등)과 같은 표·같은 축에 넣지 말 것.
+#   인용할 때는 반드시 (a) 출처 (b) 계산 수준 (c) 부분압 조건을 함께 적는다.
+#
+# 계산 수준 (SI Methods):
+#   - 고체 대부분 = Materials Project 형성에너지 직접 소환 (GGA-PBE + MP anion correction),
+#     엔트로피/PV 항 무시. 대상은 MP convex hull 위 50 meV/atom 이내 화합물 전부(준안정 포함).
+#   - 자체 DFT 4종만: Li3AsS4, Na3AsS4 (enargite-type Pmn2_1), Li3YCl6, Li2ZrCl6 (P-31m).
+#     VASP + PAW, GGA-PBE, ecut 520 eV, pseudo Li_sv/Na_pv/P/S. k-mesh 미기재. entry id 칸이 빈 행이 이들.
+#   - hydroxide 고체 19종 = NIST-JANAF 실험 표준생성엔탈피 (보정 스킴 없음).
+#   - 기체 H2O/H2S/HCl = NIST-JANAF 실험 엔탈피+엔트로피, T = 300 K.
+#   - 부분압 보정 dmu(x) = kB*T*ln(x);  preset: x(H2O)=0.1% (=300 K RH ~3%), x(H2S)=x(HCl)=1 ppm.
+#   - 대표 가수분해 반응 = H2O 당 정규화 후 최저 dG 반응 (tracer-H2O 극한). SI Step 1-4 알고리즘.
+#   -> DFT(고체) + 실험(기체/수산화물) 혼합 스킴. 절대값은 ~0.1 eV급 스킴 의존성 예상.
+#
+# !! 염화물 부분압 규약 불일치 (우리가 전사 중 발견, 2026-08-05) !!
+#   Excel 의 sulfide 시트는 SI 본문값과 일치한다 (Li2S 0.225 = SI eq.(1); Li3PS4 -0.594 vs 본문 -0.608).
+#   그러나 chloride 시트(M-Cl / Li-M-Cl / Na-M-Cl)는 SI 본문 이성분 식과 어긋난다:
+#     Excel LiCl 1.335 vs SI 본문 +0.977 / Excel NaCl 1.880 vs SI 본문 +1.532.
+#   차이 = 0.357 eV = kB*T*ln(1e6) @300 K = HCl 1 ppm 보정항, HCl 1개당.
+#   교차검증 3건: (i) Fig 1 의 LiCl->LiOH 경계까지 거리가 0.977 로 읽힌다 (SI 본문 규약),
+#                (ii) Fig S1 의 LiCl/NaCl 점선 기준선도 0.98/1.53 에 그려져 있다 (SI 본문 규약),
+#                (iii) 그런데 Fig S1 의 LiCl/NaCl *데이터 점* 과 Fig 3c 의 14종은 Excel 값과 정확히 일치.
+#   => 논문의 chloride 산점도/표는 HCl 1 ppm 보정을 빠뜨린 것으로 보인다 (H2O 0.1% 보정은 들어가 있음).
+#      같은 그림(Fig S1) 안에서 기준선과 데이터 점의 규약이 다르다.
+#   조치: 원본값을 'as_published' 로 그대로 두고, 우리가 유도한 preset 환산값을 별도 열로 병기한다.
+#     dG_preset_corrected_OURS = dG_as_published - 0.35714 * n_gas_per_H2O   (chloride only)
+#     sulfide 는 보정 0 (이미 preset).  ⚠ 이 환산은 우리 추론이다 - 논문이 제시한 값이 아니다.
+#     인용 시 어느 열을 썼는지 반드시 밝힐 것.
+#
+# THIS FILE: SI xlsx 시트 'M-S' (46 binary sulfides) + 'M-Cl' (53 binary chlorides) = 99 행.
+#   가수분해 반응식 + 반응에너지 (eV per H2O). 양수 = 수분 안정, 음수 = 자발 가수분해(수분 민감).
+# 열 정의:
+#   source_sheet                     원본 xlsx 시트명
+#   system                           binary_sulfide | binary_chloride
+#   row_in_sheet                     원본 시트의 행 번호 (전사 대조용)
+#   compound / cation / mp_entry_id  원본 그대로. mp_entry_id 가 n/a_own_DFT 면 저자 자체 DFT
+#   hydrolysis_reaction              원본 반응식 문자열 (H2O 1몰 기준 정규화)
+#   gas_product / n_gas_per_H2O      생성 기체와 H2O 1몰당 계수 (반응식에서 우리가 파싱)
+#   h2o_coeff_check                  좌변 H2O 계수 (전부 1.0 이어야 정상 - 전사 검증용)
+#   dG_hyd_eV_per_H2O_as_published   ★ 논문 SI xlsx 값 그대로. 인용의 기본값.
+#   preset_correction_eV_OURS        우리가 적용한 환산항 (sulfide 0 / chloride -0.35714*n_HCl)
+#   dG_hyd_eV_per_H2O_preset_OURS    ★★ 우리 유도값 - 논문 값 아님. 위 규약 불일치 주석 참조.
+#
+source_sheet,system,row_in_sheet,compound,cation,mp_entry_id,hydrolysis_reaction,gas_product,n_gas_per_H2O,h2o_coeff_check,dG_hyd_eV_per_H2O_as_published,preset_correction_eV_OURS,dG_hyd_eV_per_H2O_preset_OURS
+M-S,binary_sulfide,1,K2S,K+,mp-1022,0.5 K2S + H2O -> 0.5 H2S + KHO,H2S,0.5,1.0,0.403,0.0,0.403
+M-S,binary_sulfide,2,BaS,Ba2+,mp-1500,0.5 BaS + H2O -> 0.5 H2S + 0.5 Ba(HO)2,H2S,0.5,1.0,0.422,0.0,0.422
+M-S,binary_sulfide,3,Na2S,Na+,mp-648,0.5 Na2S + H2O -> 0.5 H2S + NaHO,H2S,0.5,1.0,0.416,0.0,0.416
+M-S,binary_sulfide,4,SrS,Sr2+,mp-1087,0.5 SrS + H2O -> 0.5 H2S + 0.5 Sr(HO)2,H2S,0.5,1.0,0.359,0.0,0.359
+M-S,binary_sulfide,5,Li2S,Li+,mp-1153,0.5 Li2S + H2O -> 0.5 H2S + LiHO,H2S,0.5,1.0,0.225,0.0,0.225
+M-S,binary_sulfide,6,CaS,Ca2+,mp-1672,0.5 CaS + H2O -> 0.5 H2S + 0.5 Ca(HO)2,H2S,0.5,1.0,0.264,0.0,0.264
+M-S,binary_sulfide,7,La2S3,La3+,mp-7475,5 La2S3 + H2O -> H2S + La10S14O,H2S,1.0,1.0,-0.365,0.0,-0.365
+M-S,binary_sulfide,8,Tb2S3,Tb3+,mp-9323,0.5 Tb2S3 + H2O -> H2S + 0.5 Tb2SO2,H2S,1.0,1.0,-0.467,0.0,-0.467
+M-S,binary_sulfide,9,Ce2S3,Ce3+,mp-20973,0.5 Ce2S3 + H2O -> H2S + 0.5 Ce2SO2,H2S,1.0,1.0,-0.216,0.0,-0.216
+M-S,binary_sulfide,10,Pr2S3,Pr3+,mp-15179,5 Pr2S3 + H2O -> H2S + Pr10S14O,H2S,1.0,1.0,-0.14,0.0,-0.14
+M-S,binary_sulfide,11,Nd2S3,Nd3+,mp-438,0.5 Nd2S3 + H2O -> H2S + 0.5 Nd2SO2,H2S,1.0,1.0,-0.191,0.0,-0.191
+M-S,binary_sulfide,12,Sm2S3,Sm3+,mp-1403,0.5 Sm2S3 + H2O -> H2S + 0.5 Sm2SO2,H2S,1.0,1.0,-0.303,0.0,-0.303
+M-S,binary_sulfide,13,Gd2S3,Gd3+,mp-608146,0.5 Gd2S3 + H2O -> H2S + 0.5 Gd2SO2,H2S,1.0,1.0,-0.342,0.0,-0.342
+M-S,binary_sulfide,14,Dy2S3,Dy3+,mp-1270,0.5 Dy2S3 + H2O -> H2S + 0.5 Dy2SO2,H2S,1.0,1.0,-0.511,0.0,-0.511
+M-S,binary_sulfide,15,Y2S3,Y3+,mp-541289,0.5 Y2S3 + H2O -> H2S + 0.5 Y2SO2,H2S,1.0,1.0,-0.4,0.0,-0.4
+M-S,binary_sulfide,16,Ho2S3,Ho3+,mp-878,0.5 Ho2S3 + H2O -> H2S + 0.5 Ho2SO2,H2S,1.0,1.0,-0.535,0.0,-0.535
+M-S,binary_sulfide,17,Er2S3,Er3+,mp-2234,0.5 Er2S3 + H2O -> H2S + 0.5 Er2SO2,H2S,1.0,1.0,-0.568,0.0,-0.568
+M-S,binary_sulfide,18,Tm2S3,Tm3+,mp-18529,0.5 Tm2S3 + H2O -> H2S + 0.5 Tm2SO2,H2S,1.0,1.0,-0.583,0.0,-0.583
+M-S,binary_sulfide,19,HfS2,Hf4+,mp-985829,0.5 HfS2 + H2O -> H2S + 0.5 HfO2,H2S,1.0,1.0,-0.625,0.0,-0.625
+M-S,binary_sulfide,20,ZrS2,Zr4+,mp-1186,ZrS2 + H2O -> H2S + ZrSO,H2S,1.0,1.0,-0.459,0.0,-0.459
+M-S,binary_sulfide,21,Sc2S3,Sc3+,mp-401,0.5 Sc2S3 + H2O -> H2S + 0.5 Sc2SO2,H2S,1.0,1.0,-0.449,0.0,-0.449
+M-S,binary_sulfide,22,Ti2S3,Ti3+,mp-1101099,0.5 Ti2S3 + H2O -> H2S + 0.5 TiO2 + 0.5 TiS,H2S,1.0,1.0,-0.168,0.0,-0.168
+M-S,binary_sulfide,23,TiS2,Ti4+,mp-2156,0.5 TiS2 + H2O -> H2S + 0.5 TiO2,H2S,1.0,1.0,-0.304,0.0,-0.304
+M-S,binary_sulfide,24,MnS,Mn2+,mp-2065,MnS + H2O -> H2S + MnO,H2S,1.0,1.0,0.17,0.0,0.17
+M-S,binary_sulfide,25,BeS,Be2+,mp-422,BeS + H2O -> H2S + BeO,H2S,1.0,1.0,-1.053,0.0,-1.053
+M-S,binary_sulfide,26,Al2S3,Al3+,mp-2654,0.3333 Al2S3 + H2O -> H2S + 0.3333 Al2O3,H2S,1.0,1.0,-0.91,0.0,-0.91
+M-S,binary_sulfide,27,ZnS,Zn2+,mp-556716,ZnS + H2O -> H2S + ZnO,H2S,1.0,1.0,1.081,0.0,1.081
+M-S,binary_sulfide,28,CdS,Cd2+,mp-672,0.5 CdS + H2O -> 0.5 H2S + 0.5 Cd(HO)2,H2S,0.5,1.0,0.948,0.0,0.948
+M-S,binary_sulfide,29,In2S3,In3+,mp-22216,0.3333 In2S3 + H2O -> H2S + 0.3333 In2O3,H2S,1.0,1.0,0.599,0.0,0.599
+M-S,binary_sulfide,30,Ga2S3,Ga3+,mp-539,0.3333 Ga2S3 + H2O -> H2S + 0.3333 Ga2O3,H2S,1.0,1.0,0.362,0.0,0.362
+M-S,binary_sulfide,31,FeS,Fe2+,mp-505531,0.5 FeS + H2O -> 0.5 H2S + 0.5 Fe(HO)2,H2S,0.5,1.0,0.55,0.0,0.55
+M-S,binary_sulfide,32,Cu2S,Cu+,mp-581212,1.25 Cu2S + H2O -> H2S + 0.25 CuSO4 + 2.25 Cu,H2S,1.0,1.0,1.267,0.0,1.267
+M-S,binary_sulfide,33,CuS,Cu2+,mp-555599,0.5 CuS + H2O -> 0.5 H2S + 0.5 Cu(HO)2,H2S,0.5,1.0,0.939,0.0,0.939
+M-S,binary_sulfide,34,SiS2,Si4+,mp-1602,0.5 SiS2 + H2O -> H2S + 0.5 SiO2,H2S,1.0,1.0,-0.847,0.0,-0.847
+M-S,binary_sulfide,35,Ag2S,Ag+,mp-31053,1.286 Ag2S + H2O -> H2S + 2.286 Ag + 0.1429 Ag2S2O7,H2S,1.0,1.0,1.04,0.0,1.04
+M-S,binary_sulfide,36,SnS2,Sn4+,mp-1170,0.5 SnS2 + H2O -> H2S + 0.5 SnO2,H2S,1.0,1.0,0.441,0.0,0.441
+M-S,binary_sulfide,37,HgS,Hg2+,mp-1123,1.25 HgS + H2O -> H2S + 0.25 Hg2SO4 + 0.75 Hg,H2S,1.0,1.0,1.001,0.0,1.001
+M-S,binary_sulfide,38,GeS2,Ge4+,mp-542613,0.5 GeS2 + H2O -> H2S + 0.5 GeO2,H2S,1.0,1.0,0.412,0.0,0.412
+M-S,binary_sulfide,39,Bi2S3,Bi3+,mp-22856,Bi2S3 + H2O -> H2S + Bi2S2O,H2S,1.0,1.0,0.75,0.0,0.75
+M-S,binary_sulfide,40,B2S3,B3+,mp-1199451,0.3333 B2S3 + H2O -> H2S + 0.3333 B2O3,H2S,1.0,1.0,-0.901,0.0,-0.901
+M-S,binary_sulfide,41,Sb2S3,Sb3+,mp-2809,0.3333 Sb2S3 + H2O -> H2S + 0.3333 Sb2O3,H2S,1.0,1.0,0.535,0.0,0.535
+M-S,binary_sulfide,42,Sb2S5,Sb5+,mvc-15221,0.5 Sb2S5 + H2O -> H2S + 0.08333 Sb2(SO4)3 + 0.4167 Sb2S3,H2S,1.0,1.0,-0.167,0.0,-0.167
+M-S,binary_sulfide,43,As2S3,As3+,mp-641,0.3333 As2S3 + H2O -> H2S + 0.3333 As2O3,H2S,1.0,1.0,0.537,0.0,0.537
+M-S,binary_sulfide,44,P2S5,P5+,mp-541788,0.3333 P2S5 + H2O -> H2S + 0.3333 P2S2O3,H2S,1.0,1.0,-0.156,0.0,-0.156
+M-S,binary_sulfide,45,PbS2,Pb4+,mp-1025039,PbS2 + H2O -> H2S + 0.75 PbS + 0.25 PbSO4,H2S,1.0,1.0,0.236,0.0,0.236
+M-S,binary_sulfide,46,Au2S,Au+,mp-947,1.25 Au2S + H2O -> H2S + 2.25 Au + 0.25 AuSO4,H2S,1.0,1.0,1.339,0.0,1.339
+M-Cl,binary_chloride,1,KCl,K+,mp-23193,KCl + H2O -> HCl + KHO,HCl,1.0,1.0,2.177,-0.35716,1.8198
+M-Cl,binary_chloride,2,BaCl2,Ba2+,mp-568662,0.5 BaCl2 + H2O -> HCl + 0.5 Ba(HO)2,HCl,1.0,1.0,1.636,-0.35716,1.2788
+M-Cl,binary_chloride,3,NaCl,Na+,mp-22862,NaCl + H2O -> HCl + NaHO,HCl,1.0,1.0,1.88,-0.35716,1.5228
+M-Cl,binary_chloride,4,SrCl2,Sr2+,mp-23209,0.5 SrCl2 + H2O -> HCl + 0.5 Sr(HO)2,HCl,1.0,1.0,1.398,-0.35716,1.0408
+M-Cl,binary_chloride,5,LiCl,Li+,mp-1185319,LiCl + H2O -> HCl + LiHO,HCl,1.0,1.0,1.335,-0.35716,0.9778
+M-Cl,binary_chloride,6,CaCl2,Ca2+,mp-22904,0.5 CaCl2 + H2O -> HCl + 0.5 Ca(HO)2,HCl,1.0,1.0,1.161,-0.35716,0.8038
+M-Cl,binary_chloride,7,LaCl3,La3+,mp-22896,LaCl3 + H2O -> 2 HCl + LaClO,HCl,2.0,1.0,1.375,-0.71432,0.6607
+M-Cl,binary_chloride,8,TbCl3,Tb3+,mp-570232,0.6667 TbCl3 + H2O -> 2 HCl + 0.3333 Tb2O3,HCl,2.0,1.0,1.344,-0.71432,0.6297
+M-Cl,binary_chloride,9,CeCl3,Ce3+,mp-582011,CeCl3 + H2O -> 2 HCl + CeClO,HCl,2.0,1.0,1.301,-0.71432,0.5867
+M-Cl,binary_chloride,10,PrCl3,Pr3+,mp-23211,PrCl3 + H2O -> 2 HCl + PrClO,HCl,2.0,1.0,1.378,-0.71432,0.6637
+M-Cl,binary_chloride,11,NdCl3,Nd3+,mp-23183,NdCl3 + H2O -> 2 HCl + NdClO,HCl,2.0,1.0,1.298,-0.71432,0.5837
+M-Cl,binary_chloride,12,SmCl3,Sm3+,mp-867875,SmCl3 + H2O -> 2 HCl + SmClO,HCl,2.0,1.0,0.892,-0.71432,0.1777
+M-Cl,binary_chloride,13,GdCl3,Gd3+,mp-23265,GdCl3 + H2O -> 2 HCl + GdClO,HCl,2.0,1.0,1.089,-0.71432,0.3747
+M-Cl,binary_chloride,14,DyCl3,Dy3+,mp-28448,DyCl3 + H2O -> 2 HCl + DyClO,HCl,2.0,1.0,0.906,-0.71432,0.1917
+M-Cl,binary_chloride,15,YCl3,Y3+,mp-27455,YCl3 + H2O -> 2 HCl + YClO,HCl,2.0,1.0,1.131,-0.71432,0.4167
+M-Cl,binary_chloride,16,HoCl3,Ho3+,mp-864662,HoCl3 + H2O -> 2 HCl + HoClO,HCl,2.0,1.0,0.871,-0.71432,0.1567
+M-Cl,binary_chloride,17,ErCl3,Er3+,mp-867891,ErCl3 + H2O -> 2 HCl + ErClO,HCl,2.0,1.0,0.806,-0.71432,0.0917
+M-Cl,binary_chloride,18,TmCl3,Tm3+,mp-28044,TmCl3 + H2O -> 2 HCl + TmClO,HCl,2.0,1.0,0.791,-0.71432,0.0767
+M-Cl,binary_chloride,19,HfCl4,Hf4+,mp-29422,0.5 HfCl4 + H2O -> 2 HCl + 0.5 HfO2,HCl,2.0,1.0,0.501,-0.71432,-0.2133
+M-Cl,binary_chloride,20,ZrCl4,Zr4+,mp-569175,0.5 ZrCl4 + H2O -> 2 HCl + 0.5 ZrO2,HCl,2.0,1.0,0.669,-0.71432,-0.0453
+M-Cl,binary_chloride,21,ScCl3,Sc3+,mp-23309,0.6667 ScCl3 + H2O -> 2 HCl + 0.3333 Sc2O3,HCl,2.0,1.0,0.982,-0.71432,0.2677
+M-Cl,binary_chloride,22,TaCl5,Ta5+,mp-29831,0.4 TaCl5 + H2O -> 2 HCl + 0.2 Ta2O5,HCl,2.0,1.0,0.497,-0.71432,-0.2173
+M-Cl,binary_chloride,23,TiCl3,Ti3+,mp-571143,0.6667 TiCl3 + H2O -> 2 HCl + 0.3333 Ti2O3,HCl,2.0,1.0,0.738,-0.71432,0.0237
+M-Cl,binary_chloride,24,TiCl4,Ti4+,mp-30092,0.5 TiCl4 + H2O -> 2 HCl + 0.5 TiO2,HCl,2.0,1.0,0.671,-0.71432,-0.0433
+M-Cl,binary_chloride,25,MnCl2,Mn2+,mp-28233,0.5 MnCl2 + H2O -> HCl + 0.5 Mn(HO)2,HCl,1.0,1.0,0.739,-0.35716,0.3818
+M-Cl,binary_chloride,26,BeCl2,Be2+,mp-23267,BeCl2 + H2O -> 2 HCl + BeO,HCl,2.0,1.0,0.027,-0.71432,-0.6873
+M-Cl,binary_chloride,27,NbCl5,Nb5+,mp-23307,NbCl5 + H2O -> 2 HCl + NbCl3O,HCl,2.0,1.0,0.529,-0.71432,-0.1853
+M-Cl,binary_chloride,28,AlCl3,Al3+,mp-25469,AlCl3 + H2O -> 2 HCl + AlClO,HCl,2.0,1.0,0.228,-0.71432,-0.4863
+M-Cl,binary_chloride,29,VCl5,V5+,mp-1101909,0.4 VCl5 + H2O -> 2 HCl + 0.2 V2O5,HCl,2.0,1.0,1.058,-0.71432,0.3437
+M-Cl,binary_chloride,30,ZnCl2,Zn2+,mp-22909,ZnCl2 + H2O -> 2 HCl + ZnO,HCl,2.0,1.0,1.809,-0.71432,1.0947
+M-Cl,binary_chloride,31,CrCl3,Cr3+,mp-569890,CrCl3 + H2O -> 2 HCl + CrClO,HCl,2.0,1.0,1.002,-0.71432,0.2877
+M-Cl,binary_chloride,32,CdCl2,Cd2+,mp-22881,0.5 CdCl2 + H2O -> HCl + 0.5 Cd(HO)2,HCl,1.0,1.0,1.4,-0.35716,1.0428
+M-Cl,binary_chloride,33,InCl3,In3+,mp-862983,InCl3 + H2O -> 2 HCl + InClO,HCl,2.0,1.0,1.035,-0.71432,0.3207
+M-Cl,binary_chloride,34,GaCl3,Ga3+,mp-30952,GaCl3 + H2O -> 2 HCl + GaClO,HCl,2.0,1.0,1.053,-0.71432,0.3387
+M-Cl,binary_chloride,35,FeCl3,Fe3+,mp-583463,FeCl3 + H2O -> 2 HCl + FeClO,HCl,2.0,1.0,0.423,-0.71432,-0.2913
+M-Cl,binary_chloride,36,CuCl,Cu+,mp-22914,2 CuCl + H2O -> 2 HCl + Cu2O,HCl,2.0,1.0,1.527,-0.71432,0.8127
+M-Cl,binary_chloride,37,CuCl2,Cu2+,mp-30999,0.5 CuCl2 + H2O -> HCl + 0.5 Cu(HO)2,HCl,1.0,1.0,0.961,-0.35716,0.6038
+M-Cl,binary_chloride,38,SiCl4,Si4+,mp-28391,0.5 SiCl4 + H2O -> 2 HCl + 0.5 SiO2,HCl,2.0,1.0,0.174,-0.71432,-0.5403
+M-Cl,binary_chloride,39,AgCl,Ag+,mp-22922,2 AgCl + H2O -> 2 HCl + Ag2O,HCl,2.0,1.0,2.688,-0.71432,1.9737
+M-Cl,binary_chloride,40,SnCl4,Sn4+,mp-29866,0.5 SnCl4 + H2O -> 2 HCl + 0.5 SnO2,HCl,2.0,1.0,1.127,-0.71432,0.4127
+M-Cl,binary_chloride,41,HgCl2,Hg2+,mp-22855,1.25 HgCl2 + H2O -> 2 HCl + 0.25 Hg5(ClO2)2,HCl,2.0,1.0,2.431,-0.71432,1.7167
+M-Cl,binary_chloride,42,GeCl4,Ge4+,mp-30086,0.5 GeCl4 + H2O -> 2 HCl + 0.5 GeO2,HCl,2.0,1.0,1.155,-0.71432,0.4407
+M-Cl,binary_chloride,43,BiCl3,Bi3+,mp-22908,BiCl3 + H2O -> 2 HCl + BiClO,HCl,2.0,1.0,1.2,-0.71432,0.4857
+M-Cl,binary_chloride,44,BCl3,B3+,mp-23184,0.6667 BCl3 + H2O -> 2 HCl + 0.3333 B2O3,HCl,2.0,1.0,-0.12,-0.71432,-0.8343
+M-Cl,binary_chloride,45,SbCl3,Sb3+,mp-22872,SbCl3 + H2O -> 2 HCl + SbClO,HCl,2.0,1.0,1.219,-0.71432,0.5047
+M-Cl,binary_chloride,46,SbCl5,Sb5+,mp-23176,0.4 SbCl5 + H2O -> 2 HCl + 0.2 Sb2O5,HCl,2.0,1.0,1.054,-0.71432,0.3397
+M-Cl,binary_chloride,47,TeCl4,Te4+,mp-569561,0.5 TeCl4 + H2O -> 2 HCl + 0.5 TeO2,HCl,2.0,1.0,1.228,-0.71432,0.5137
+M-Cl,binary_chloride,48,AsCl3,As3+,mp-23280,0.6667 AsCl3 + H2O -> 2 HCl + 0.3333 As2O3,HCl,2.0,1.0,1.145,-0.71432,0.4307
+M-Cl,binary_chloride,49,AsCl5,As5+,mp-30106,AsCl5 + H2O -> 2 HCl + AsCl3O,HCl,2.0,1.0,0.634,-0.71432,-0.0803
+M-Cl,binary_chloride,50,PCl5,P5+,mp-23228,PCl5 + H2O -> 2 HCl + PCl3O,HCl,2.0,1.0,-0.687,-0.71432,-1.4013
+M-Cl,binary_chloride,51,PbCl4,Pb4+,mp-570355,PbCl4 + H2O -> 2 HCl + 0.1667 Pb(ClO3)2 + 0.8333 PbCl2,HCl,2.0,1.0,1.07,-0.71432,0.3557
+M-Cl,binary_chloride,52,WCl6,W6+,mp-571518,0.3333 WCl6 + H2O -> 2 HCl + 0.3333 WO3,HCl,2.0,1.0,1.055,-0.71432,0.3407
+M-Cl,binary_chloride,53,AuCl,Au+,mp-32780,2 AuCl + H2O -> 2 HCl + 1.333 Au + 0.3333 Au2O3,HCl,2.0,1.0,2.046,-0.71432,1.3317

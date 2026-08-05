@@ -1,0 +1,225 @@
+# Zhu & Mo, "Materials Design Principles for Air-Stable Lithium/Sodium Solid Electrolytes",
+#   Angew. Chem. Int. Ed. 2020, 59, 17472-17476.  DOI 10.1002/anie.202007621
+#   SOURCE FILE: anie_202007621_sm_miscellaneous_information.xlsx (SI spreadsheet), 전수 전사 2026-08-05.
+#
+# !! 이것은 문헌 소환값이다. 우리(Yonghoon-DEM-DFT) 계산이 아니다. !!
+#   우리 db 절대값(db/properties/*.json, ESW/gap/sigma 등)과 같은 표·같은 축에 넣지 말 것.
+#   인용할 때는 반드시 (a) 출처 (b) 계산 수준 (c) 부분압 조건을 함께 적는다.
+#
+# 계산 수준 (SI Methods):
+#   - 고체 대부분 = Materials Project 형성에너지 직접 소환 (GGA-PBE + MP anion correction),
+#     엔트로피/PV 항 무시. 대상은 MP convex hull 위 50 meV/atom 이내 화합물 전부(준안정 포함).
+#   - 자체 DFT 4종만: Li3AsS4, Na3AsS4 (enargite-type Pmn2_1), Li3YCl6, Li2ZrCl6 (P-31m).
+#     VASP + PAW, GGA-PBE, ecut 520 eV, pseudo Li_sv/Na_pv/P/S. k-mesh 미기재. entry id 칸이 빈 행이 이들.
+#   - hydroxide 고체 19종 = NIST-JANAF 실험 표준생성엔탈피 (보정 스킴 없음).
+#   - 기체 H2O/H2S/HCl = NIST-JANAF 실험 엔탈피+엔트로피, T = 300 K.
+#   - 부분압 보정 dmu(x) = kB*T*ln(x);  preset: x(H2O)=0.1% (=300 K RH ~3%), x(H2S)=x(HCl)=1 ppm.
+#   - 대표 가수분해 반응 = H2O 당 정규화 후 최저 dG 반응 (tracer-H2O 극한). SI Step 1-4 알고리즘.
+#   -> DFT(고체) + 실험(기체/수산화물) 혼합 스킴. 절대값은 ~0.1 eV급 스킴 의존성 예상.
+#
+# !! 염화물 부분압 규약 불일치 (우리가 전사 중 발견, 2026-08-05) !!
+#   Excel 의 sulfide 시트는 SI 본문값과 일치한다 (Li2S 0.225 = SI eq.(1); Li3PS4 -0.594 vs 본문 -0.608).
+#   그러나 chloride 시트(M-Cl / Li-M-Cl / Na-M-Cl)는 SI 본문 이성분 식과 어긋난다:
+#     Excel LiCl 1.335 vs SI 본문 +0.977 / Excel NaCl 1.880 vs SI 본문 +1.532.
+#   차이 = 0.357 eV = kB*T*ln(1e6) @300 K = HCl 1 ppm 보정항, HCl 1개당.
+#   교차검증 3건: (i) Fig 1 의 LiCl->LiOH 경계까지 거리가 0.977 로 읽힌다 (SI 본문 규약),
+#                (ii) Fig S1 의 LiCl/NaCl 점선 기준선도 0.98/1.53 에 그려져 있다 (SI 본문 규약),
+#                (iii) 그런데 Fig S1 의 LiCl/NaCl *데이터 점* 과 Fig 3c 의 14종은 Excel 값과 정확히 일치.
+#   => 논문의 chloride 산점도/표는 HCl 1 ppm 보정을 빠뜨린 것으로 보인다 (H2O 0.1% 보정은 들어가 있음).
+#      같은 그림(Fig S1) 안에서 기준선과 데이터 점의 규약이 다르다.
+#   조치: 원본값을 'as_published' 로 그대로 두고, 우리가 유도한 preset 환산값을 별도 열로 병기한다.
+#     dG_preset_corrected_OURS = dG_as_published - 0.35714 * n_gas_per_H2O   (chloride only)
+#     sulfide 는 보정 0 (이미 preset).  ⚠ 이 환산은 우리 추론이다 - 논문이 제시한 값이 아니다.
+#     인용 시 어느 열을 썼는지 반드시 밝힐 것.
+#
+# THIS FILE: SI xlsx 시트 'Li-M-S'(52) + 'Na-M-S'(65) + 'Li-M-Cl'(14) + 'Na-M-Cl'(39) = 170 행.
+#   각 행에 0 V 환원 / 4.5 V 산화 / 가수분해가 함께 들어 있다 (원본 시트 구조 그대로 보존).
+#
+# ★ 본문에 없는 것 2가지가 이 시트에 있다 (2026-08-05 확인):
+#   (1) 4.5 V 산화 반응식 + 반응에너지 - 논문 본문은 0 V(환원)만 논의한다.
+#   (2) cathodic_limit_V / anodic_limit_V = 전기화학 안정성 창(ESW) 양끝, V vs Li/Li+ (또는 Na/Na+).
+#       우리 grand-potential ESW 와 같은 방법(ref [1] Zhu/He/Mo 2015 ACS AMI · 2016 JMCA)의 산출물.
+#       ⚠ 그래도 우리 ESW 값과 한 표에 넣지 말 것 - 그들은 MP-GGA ordered 상, 우리는 우리 구조/조건.
+#
+# 열 정의:
+#   source_sheet / alkali / anion    원본 시트와 계열
+#   row_in_sheet                     원본 시트 행 번호 (전사 대조용)
+#   compound / cation / mp_entry_id  원본 그대로. n/a_own_DFT = 저자 자체 DFT (Li3AsS4/Na3AsS4/Li3YCl6/Li2ZrCl6)
+#   reaction_0V / dE_0V_eV_per_alkali    Li(Na) 금속 접촉(0 V) 환원분해. eV per alkali. 음수 클수록 음극에서 잘 분해
+#   reaction_4p5V / dE_4p5V_eV_per_alkali  4.5 V 탈리튬 산화분해. eV per alkali. (본문 미논의)
+#   cathodic_limit_V / anodic_limit_V      ESW 하한/상한, V vs Li/Li+ (Na 시트는 vs Na/Na+)
+#   hydrolysis_reaction .. dG_hyd_*        CSV 1 과 동일 정의 (아래 주의 동일)
+#   dG_hyd_eV_per_H2O_as_published   ★ 논문 값 그대로
+#   dG_hyd_eV_per_H2O_preset_OURS    ★★ 우리 유도값 (chloride 만 -0.35714*n_HCl) - 논문 값 아님
+#
+source_sheet,alkali,anion,row_in_sheet,compound,cation,mp_entry_id,reaction_0V,dE_0V_eV_per_alkali,reaction_4p5V,dE_4p5V_eV_per_alkali,cathodic_limit_V,anodic_limit_V,hydrolysis_reaction,gas_product,n_gas_per_H2O,h2o_coeff_check,dG_hyd_eV_per_H2O_as_published,preset_correction_eV_OURS,dG_hyd_eV_per_H2O_preset_OURS
+Li-M-S,Li,S,1,KLiS,K+,mp-8430,KLiS + Li -> Li2S + K,-0.344,KLiS -> KS + Li,-2.699,0.344,1.801,KLiS + H2O -> 0.5 H2S + 0.5 K2S + LiHO,H2S,0.5,1.0,0.303,0.0,0.303
+Li-M-S,Li,S,2,NaLiS,Na+,mp-8452,NaLiS + Li -> Li2S + Na,-0.38,NaLiS -> NaS + Li,-2.536,0.38,1.964,NaLiS + H2O -> 0.5 H2S + 0.5 Na2S + LiHO,H2S,0.5,1.0,0.244,0.0,0.244
+Li-M-S,Li,S,3,LiTbS2,Tb3+,mp-1222297,0.3333 LiTbS2 + Li -> 0.6667 Li2S + 0.3333 Tb,-0.219,LiTbS2 -> TbS2 + Li,-2.323,0.663,2.177,LiTbS2 + H2O -> H2S + 0.5 Tb2SO2 + 0.5 Li2S,H2S,1.0,1.0,-0.298,0.0,-0.298
+Li-M-S,Li,S,4,LiPrS2,Pr3+,mp-675419,0.3333 LiPrS2 + Li -> 0.6667 Li2S + 0.3333 Pr,-0.338,LiPrS2 -> PrS2 + Li,-2.71,0.901,1.913,LiPrS2 + H2O -> H2S + 0.5 Li2S + 0.5 Pr2SO2,H2S,1.0,1.0,-0.264,0.0,-0.264
+Li-M-S,Li,S,5,LiNdS2,Nd3+,mp-36791,0.3333 LiNdS2 + Li -> 0.6667 Li2S + 0.3333 Nd,-0.315,LiNdS2 -> NdS2 + Li,-2.645,0.904,1.92,LiNdS2 + H2O -> H2S + 0.5 Li2S + 0.5 Nd2SO2,H2S,1.0,1.0,-0.273,0.0,-0.273
+Li-M-S,Li,S,6,LiSmS2,Sm3+,mp-1222296,0.3333 LiSmS2 + Li -> 0.6667 Li2S + 0.3333 Sm,-0.269,LiSmS2 -> SmS2 + Li,-2.499,0.844,2.001,LiSmS2 + H2O -> H2S + 0.5 Sm2SO2 + 0.5 Li2S,H2S,1.0,1.0,-0.261,0.0,-0.261
+Li-M-S,Li,S,7,LiGdS2,Gd3+,mp-1222370,0.3333 LiGdS2 + Li -> 0.6667 Li2S + 0.3333 Gd,-0.23,LiGdS2 -> GdS2 + Li,-2.382,0.802,2.118,LiGdS2 + H2O -> H2S + 0.5 Gd2SO2 + 0.5 Li2S,H2S,1.0,1.0,-0.213,0.0,-0.213
+Li-M-S,Li,S,8,LiDyS2,Dy3+,mp-15789,0.3333 LiDyS2 + Li -> 0.6667 Li2S + 0.3333 Dy,-0.209,LiDyS2 -> DyS2 + Li,-2.091,0.598,2.376,LiDyS2 + H2O -> H2S + 0.5 Dy2SO2 + 0.5 Li2S,H2S,1.0,1.0,-0.295,0.0,-0.295
+Li-M-S,Li,S,9,LiYS2,Y3+,mp-15788,0.3333 LiYS2 + Li -> 0.6667 Li2S + 0.3333 Y,-0.206,LiYS2 -> 0.5 Y2S3 + 0.5 S + Li,-2.025,0.598,2.367,LiYS2 + H2O -> H2S + 0.5 Y2SO2 + 0.5 Li2S,H2S,1.0,1.0,-0.192,0.0,-0.192
+Li-M-S,Li,S,10,LiHoS2,Ho3+,mp-15790,0.3333 LiHoS2 + Li -> 0.6667 Li2S + 0.3333 Ho,-0.205,LiHoS2 -> HoS2 + Li,-2.051,0.548,2.388,LiHoS2 + H2O -> H2S + 0.5 Ho2SO2 + 0.5 Li2S,H2S,1.0,1.0,-0.309,0.0,-0.309
+Li-M-S,Li,S,11,LiErS2,Er3+,mp-15791,0.3333 LiErS2 + Li -> 0.6667 Li2S + 0.3333 Er,-0.197,LiErS2 -> ErS2 + Li,-2.158,0.484,2.342,LiErS2 + H2O -> H2S + 0.5 Er2SO2 + 0.5 Li2S,H2S,1.0,1.0,-0.309,0.0,-0.309
+Li-M-S,Li,S,12,LiScS2,Sc3+,mp-1001786,0.3333 LiScS2 + Li -> 0.6667 Li2S + 0.3333 Sc,-0.31,LiScS2 -> 0.5 Sc2S3 + 0.5 S + Li,-1.932,0.643,2.472,0.6667 LiScS2 + H2O -> H2S + 0.3333 Li2S + 0.3333 Sc2O3,H2S,1.0,1.0,-0.187,0.0,-0.187
+Li-M-S,Li,S,13,LiTiS2,Ti3+,mp-9615,0.3333 LiTiS2 + Li -> 0.6667 Li2S + 0.3333 Ti,-0.774,LiTiS2 -> TiS2 + Li,-2.625,1.251,1.646,0.6667 LiTiS2 + H2O -> H2S + 0.3333 Li2TiO3 + 0.3333 TiS,H2S,1.0,1.0,-0.107,0.0,-0.107
+Li-M-S,Li,S,14,Li4TiS4,Ti4+,mp-766540,0.25 Li4TiS4 + Li -> Li2S + 0.25 Ti,-1.015,0.25 Li4TiS4 -> 0.25 TiS3 + 0.25 S + Li,-2.34,1.871,2.047,0.5 Li4TiS4 + H2O -> H2S + 0.1667 Li8TiS6 + 0.3333 Li2TiO3,H2S,1.0,1.0,-0.273,0.0,-0.273
+Li-M-S,Li,S,15,Li8TiS6,Ti4+,mp-753546,0.25 Li8TiS6 + Li -> 1.5 Li2S + 0.25 Ti,-1.009,0.125 Li8TiS6 -> 0.125 TiS3 + 0.375 S + Li,-2.284,1.783,2.063,0.3333 Li8TiS6 + H2O -> H2S + 0.3333 Li2TiO3 + Li2S,H2S,1.0,1.0,-0.262,0.0,-0.262
+Li-M-S,Li,S,16,Li6MnS4,Mn2+,mp-756490,0.5 Li6MnS4 + Li -> 2 Li2S + 0.5 Mn,-1.436,0.1667 Li6MnS4 -> 0.1667 MnS2 + 0.3333 S + Li,-2.408,1.436,1.741,Li6MnS4 + H2O -> H2S + 3 Li2S + MnO,H2S,1.0,1.0,0.205,0.0,0.205
+Li-M-S,Li,S,17,Li14Mn2S9,Mn2+,mp-756198,0.25 Li14Mn2S9 + Li -> 2.25 Li2S + 0.5 Mn,-1.437,0.07143 Li14Mn2S9 -> 0.1429 MnS2 + 0.3571 S + Li,-2.384,1.436,1.741,0.5 Li14Mn2S9 + H2O -> H2S + 3.5 Li2S + MnO,H2S,1.0,1.0,0.202,0.0,0.202
+Li-M-S,Li,S,18,Li3NbS4,Nb5+,mp-769032,0.2 Li3NbS4 + Li -> 0.8 Li2S + 0.2 Nb,-1.368,0.3333 Li3NbS4 -> 0.3333 NbS3 + 0.3333 S + Li,-2.29,2.07,2.095,1.167 Li3NbS4 + H2O -> H2S + 0.25 Li2SO4 + 0.1667 Li5(NbS2)7 + 1.083 Li2S,H2S,1.0,1.0,-0.243,0.0,-0.243
+Li-M-S,Li,S,19,Li8Nb2S9,Nb5+,mp-769036,0.1 Li8Nb2S9 + Li -> 0.9 Li2S + 0.2 Nb,-1.444,0.125 Li8Nb2S9 -> 0.25 NbS3 + 0.375 S + Li,-2.371,2.07,2.095,0.5833 Li8Nb2S9 + H2O -> H2S + 0.1667 Li5(NbS2)7 + 1.667 Li2S + 0.25 Li2SO4,H2S,1.0,1.0,-0.689,0.0,-0.689
+Li-M-S,Li,S,20,LiAlS2,Al3+,mp-1106183,0.2 LiAlS2 + Li -> 0.2 Li2Al + 0.4 Li2S,-0.677,LiAlS2 -> 0.5 Al2S3 + 0.5 S + Li,-1.758,0.966,2.671,0.625 LiAlS2 + H2O -> H2S + 0.125 LiAl5O8 + 0.25 Li2S,H2S,1.0,1.0,-0.631,0.0,-0.631
+Li-M-S,Li,S,21,Li3VS4,V5+,mp-760375,0.2 Li3VS4 + Li -> 0.8 Li2S + 0.2 V,-1.432,0.3333 Li3VS4 -> 0.3333 VS2 + 0.6667 S + Li,-2.042,1.791,2.302,0.2791 Li3VS4 + H2O -> 0.6628 H2S + 0.0814 Li2SO4 + 0.09302 V3S4 + 0.6744 LiHO,H2S,0.6628,1.0,0.254,0.0,0.254
+Li-M-S,Li,S,22,LiCrS2,Cr3+,mp-4226,0.3333 LiCrS2 + Li -> 0.6667 Li2S + 0.3333 Cr,-1.337,LiCrS2 -> CrS2 + Li,-1.938,1.337,2.562,0.5 LiCrS2 + H2O -> H2S + 0.5 LiCrO2,H2S,1.0,1.0,0.219,0.0,0.219
+Li-M-S,Li,S,23,LiInS2,In3+,mp-1188392,0.1364 LiInS2 + Li -> 0.2727 Li2S + 0.04545 Li13In3,-0.733,LiInS2 -> 0.5 In2S3 + 0.5 S + Li,-1.836,1.428,2.583,LiInS2 + H2O -> 0.5 H2S + 0.5 In2S3 + LiHO,H2S,0.5,1.0,0.622,0.0,0.622
+Li-M-S,Li,S,24,LiGaS2,Ga3+,mp-3647,0.2 LiGaS2 + Li -> 0.2 Li2Ga + 0.4 Li2S,-0.962,LiGaS2 -> 0.5 Ga2S3 + 0.5 S + Li,-1.789,1.304,2.636,0.5 LiGaS2 + H2O -> H2S + 0.5 LiGaO2,H2S,1.0,1.0,0.333,0.0,0.333
+Li-M-S,Li,S,25,Li2Cu4S3,Cu+,mp-1178005,0.1875 Li2Cu4S3 + Li -> 0.25 LiCu3 + 0.5625 Li2S,-1.438,0.5 Li2Cu4S3 -> 0.1667 Cu7S4 + 0.8333 CuS + Li,-2.828,1.812,1.839,0.55 Li2Cu4S3 + H2O -> H2S + 0.2 Li3CuS2 + 0.25 Li2SO4 + 2 Cu,H2S,1.0,1.0,0.13,0.0,0.13
+Li-M-S,Li,S,26,LiCuS,Cu+,mp-774736,0.75 LiCuS + Li -> 0.25 LiCu3 + 0.75 Li2S,-1.384,LiCuS -> CuS + Li,-2.679,1.812,1.839,LiCuS + H2O -> 0.5 H2S + 0.125 Cu7S4 + 0.125 Cu + LiHO,H2S,0.5,1.0,0.223,0.0,0.223
+Li-M-S,Li,S,27,Li3CuS2,Cu+,mp-1177695,0.75 Li3CuS2 + Li -> 0.25 LiCu3 + 1.5 Li2S,-1.352,0.3333 Li3CuS2 -> 0.3333 CuS2 + Li,-2.511,1.757,1.864,0.3333 Li3CuS2 + H2O -> 0.5 H2S + 0.04167 Cu7S4 + 0.04167 Cu + LiHO,H2S,0.5,1.0,0.239,0.0,0.239
+Li-M-S,Li,S,28,Li4SiS4,Si4+,n/a_own_DFT,0.122 Li4SiS4 + Li -> 0.4878 Li2S + 0.02439 Li21Si5,-0.692,0.25 Li4SiS4 -> 0.25 SiS2 + 0.5 S + Li,-1.86,1.124,2.555,0.3333 Li4SiS4 + H2O -> H2S + 0.3333 Li2S + 0.3333 Li2SiO3,H2S,1.0,1.0,-0.217,0.0,-0.217
+Li-M-S,Li,S,29,Li2SnS3,Sn4+,mp-1190364,0.1212 Li2SnS3 + Li -> 0.3636 Li2S + 0.0303 Li17Sn4,-1.043,0.5 Li2SnS3 -> 0.5 SnS2 + 0.5 S + Li,-2.155,1.959,2.22,1.75 Li2SnS3 + H2O -> H2S + 0.75 Li4SnS4 + 0.25 Li2SO4 + SnS,H2S,1.0,1.0,0.169,0.0,0.169
+Li-M-S,Li,S,30,Li4SnS4,Sn4+,mp-1195718,0.1212 Li4SnS4 + Li -> 0.4848 Li2S + 0.0303 Li17Sn4,-1.023,0.25 Li4SnS4 -> 0.25 SnS2 + 0.5 S + Li,-2.153,1.72,2.22,0.2222 Li4SnS4 + H2O -> 0.6111 H2S + 0.05556 Li2SO4 + 0.2222 SnS + 0.7778 LiHO,H2S,0.6111,1.0,0.276,0.0,0.276
+Li-M-S,Li,S,31,Li4GeS4,Ge4+,mp-30249,0.129 Li4GeS4 + Li -> 0.5161 Li2S + 0.03226 Li15Ge4,-1.038,0.25 Li4GeS4 -> 0.25 GeS2 + 0.5 S + Li,-2.094,1.62,2.288,0.2 Li4GeS4 + H2O -> 0.8 H2S + 0.2 Li2GeO3 + 0.4 LiHO,H2S,0.8,1.0,0.235,0.0,0.235
+Li-M-S,Li,S,32,LiBiS2,Bi3+,mp-1222404,0.1667 LiBiS2 + Li -> 0.3333 Li2S + 0.1667 Li3Bi,-1.197,LiBiS2 -> BiS2 + Li,-2.329,1.691,2.171,LiBiS2 + H2O -> 0.5 H2S + 0.5 Bi2S3 + LiHO,H2S,0.5,1.0,0.306,0.0,0.306
+Li-M-S,Li,S,33,Li3BiS3,Bi3+,mp-753720,0.1667 Li3BiS3 + Li -> 0.5 Li2S + 0.1667 Li3Bi,-1.226,0.3333 Li3BiS3 -> 0.3333 BiS2 + 0.3333 S + Li,-2.323,1.691,2.129,0.5 Li3BiS3 + H2O -> 0.5 H2S + 0.5 LiBiS2 + LiHO,H2S,0.5,1.0,0.137,0.0,0.137
+Li-M-S,Li,S,34,Li5BiS4,Bi3+,mp-755139,0.1667 Li5BiS4 + Li -> 0.6667 Li2S + 0.1667 Li3Bi,-1.272,0.2 Li5BiS4 -> 0.2 BiS2 + 0.4 S + Li,-2.342,1.691,2.129,0.25 Li5BiS4 + H2O -> 0.5 H2S + 0.25 LiBiS2 + LiHO,H2S,0.5,1.0,0.112,0.0,0.112
+Li-M-S,Li,S,35,Li5B7S13,B3+,mp-532413,0.03571 Li5B7S13 + Li -> 0.25 LiB + 0.4643 Li2S,-1.282,0.2 Li5B7S13 -> BS2 + 0.2 B2S3 + Li,-2.391,1.607,2.109,0.09375 Li5B7S13 + H2O -> H2S + 0.07292 Li3BS3 + 0.08333 Li3B7O12,H2S,1.0,1.0,-0.908,0.0,-0.908
+Li-M-S,Li,S,36,Li3BS3,B3+,mp-5614,0.25 Li3BS3 + Li -> 0.25 LiB + 0.75 Li2S,-1.276,0.3333 Li3BS3 -> 0.3333 BS2 + 0.3333 S + Li,-2.297,1.587,2.034,0.5833 Li3BS3 + H2O -> H2S + 0.08333 Li3B7O12 + 0.75 Li2S,H2S,1.0,1.0,-0.893,0.0,-0.893
+Li-M-S,Li,S,37,Li3Sb17S27,Sb3+,mp-767137,0.009804 Li3Sb17S27 + Li -> 0.2647 Li2S + 0.1667 Li3Sb,-1.327,0.3333 Li3Sb17S27 -> 2.833 Sb2S3 + 0.5 S + Li,-2.372,1.851,2.063,0.3333 Li3Sb17S27 + H2O -> 0.5 H2S + 2.833 Sb2S3 + LiHO,H2S,0.5,1.0,0.085,0.0,0.085
+Li-M-S,Li,S,38,Li3Sb11S18,Sb3+,mp-767088,0.01515 Li3Sb11S18 + Li -> 0.2727 Li2S + 0.1667 Li3Sb,-1.322,0.3333 Li3Sb11S18 -> 1.833 Sb2S3 + 0.5 S + Li,-2.215,1.851,2.063,0.3333 Li3Sb11S18 + H2O -> 0.5 H2S + 1.833 Sb2S3 + LiHO,H2S,0.5,1.0,0.243,0.0,0.243
+Li-M-S,Li,S,39,LiSbS2,Sb3+,mp-1079885,0.1667 LiSbS2 + Li -> 0.3333 Li2S + 0.1667 Li3Sb,-1.314,LiSbS2 -> 0.5 Sb2S3 + 0.5 S + Li,-2.179,1.781,2.063,LiSbS2 + H2O -> 0.5 H2S + 0.5 Sb2S3 + LiHO,H2S,0.5,1.0,0.279,0.0,0.279
+Li-M-S,Li,S,40,Li3SbS3,Sb3+,mp-1194339,0.1667 Li3SbS3 + Li -> 0.5 Li2S + 0.1667 Li3Sb,-1.313,0.3333 Li3SbS3 -> 0.1667 Sb2S3 + 0.5 S + Li,-2.213,1.777,1.959,0.5 Li3SbS3 + H2O -> 0.5 H2S + 0.5 LiSbS2 + LiHO,H2S,0.5,1.0,0.227,0.0,0.227
+Li-M-S,Li,S,41,Li5SbS4,Sb3+,mp-776268,0.1667 Li5SbS4 + Li -> 0.6667 Li2S + 0.1667 Li3Sb,-1.392,0.2 Li5SbS4 -> 0.1 Sb2S3 + 0.5 S + Li,-2.316,1.777,1.957,0.6667 Li5SbS4 + H2O -> H2S + 1.417 Li2S + 0.25 Li2SO4 + 0.6667 Sb,H2S,1.0,1.0,0.026,0.0,0.026
+Li-M-S,Li,S,42,Li3SbS4,Sb5+,mp-756316,0.125 Li3SbS4 + Li -> 0.5 Li2S + 0.125 Li3Sb,-1.474,0.3333 Li3SbS4 -> 0.1667 Sb2S3 + 0.8333 S + Li,-2.006,1.957,2.299,Li3SbS4 + H2O -> H2S + 0.75 Li3SbS3 + 0.25 LiSbS2 + 0.25 Li2SO4,H2S,1.0,1.0,-0.016,0.0,-0.016
+Li-M-S,Li,S,43,Li2TeS3,Te4+,mp-558731,0.1667 Li2TeS3 + Li -> 0.5 Li2S + 0.1667 Li2Te,-1.844,0.5 Li2TeS3 -> 1.5 S + 0.5 Te + Li,-1.675,1.989,2.579,0.5 Li2TeS3 + H2O -> H2S + 0.25 Li2S + 0.25 Li2SO4 + 0.5 Te,H2S,1.0,1.0,-0.081,0.0,-0.081
+Li-M-S,Li,S,44,LiAsS2,As3+,mp-555874,0.1667 LiAsS2 + Li -> 0.3333 Li2S + 0.1667 Li3As,-1.406,LiAsS2 -> AsS2 + Li,-2.274,2.224,2.389,0.875 LiAsS2 + H2O -> H2S + 0.25 Li2SO4 + 0.125 Li3AsS4 + 0.75 As,H2S,1.0,1.0,0.044,0.0,0.044
+Li-M-S,Li,S,45,Li3AsS3,As3+,mp-28471,0.1667 Li3AsS3 + Li -> 0.5 Li2S + 0.1667 Li3As,-1.396,0.3333 Li3AsS3 -> 0.3333 AsS2 + 0.3333 S + Li,-2.227,1.658,2.224,0.8333 Li3AsS3 + H2O -> 0.5 H2S + 0.5 Li3AsS4 + 0.3333 As + LiHO,H2S,0.5,1.0,-0.237,0.0,-0.237
+Li-M-S,Li,S,46,Li3AsS4,As5+,n/a_own_DFT,0.125 Li3AsS4 + Li -> 0.5 Li2S + 0.125 Li3As,-1.392,0.3333 Li3AsS4 -> 0.3333 AsS2 + 0.6667 S + Li,-1.636,1.658,2.79,0.2353 Li3AsS4 + H2O -> 0.7941 H2S + 0.1471 Li2SO4 + 0.2353 As + 0.4118 LiHO,H2S,0.7941,1.0,0.434,0.0,0.434
+Li-M-S,Li,S,47,Li7P3S11,P5+,mp-641703,0.04167 Li7P3S11 + Li -> 0.4583 Li2S + 0.125 Li3P,-1.463,0.1429 Li7P3S11 -> 0.2143 P2S7 + 0.07143 S + Li,-2.219,2.291,2.32,0.1071 Li7P3S11 + H2O -> H2S + 0.03571 P2S5 + 0.25 Li3PO4,H2S,1.0,1.0,-0.65,0.0,-0.65
+Li-M-S,Li,S,48,Li3PS4,P5+,mp-985583,0.125 Li3PS4 + Li -> 0.5 Li2S + 0.125 Li3P,-1.416,0.3333 Li3PS4 -> 0.1667 P2S7 + 0.1667 S + Li,-2.095,1.708,2.369,0.25 Li3PS4 + H2O -> H2S + 0.25 Li3PO4,H2S,1.0,1.0,-0.594,0.0,-0.594
+Li-M-S,Li,S,49,Li7PS6,P5+,mp-1211324,0.125 Li7PS6 + Li -> 0.75 Li2S + 0.125 Li3P,-1.46,0.1429 Li7PS6 -> 0.07143 P2S7 + 0.3571 S + Li,-2.224,1.708,2.129,0.25 Li7PS6 + H2O -> H2S + 0.25 Li3PO4 + 0.5 Li2S,H2S,1.0,1.0,-0.682,0.0,-0.682
+Li-M-S,Li,S,50,Li2WS4,W6+,mp-753195,0.1667 Li2WS4 + Li -> 0.6667 Li2S + 0.1667 W,-1.676,0.5 Li2WS4 -> 0.5 WS2 + S + Li,-2.215,2.129,3.234,Li2WS4 + H2O -> H2S + 0.25 Li2SO4 + WS2 + 0.75 Li2S,H2S,1.0,1.0,-0.602,0.0,-0.602
+Li-M-S,Li,S,51,Li3AuS2,Au+,mp-15999,0.2105 Li3AuS2 + Li -> 0.4211 Li2S + 0.05263 Li15Au4,-0.728,0.3333 Li3AuS2 -> 0.1667 Au2S + 0.5 S + Li,-2.195,1.782,2.164,0.3077 Li3AuS2 + H2O -> 0.5769 H2S + 0.03846 Li2SO4 + 0.3077 Au + 0.8462 LiHO,H2S,0.5769,1.0,0.241,0.0,0.241
+Li-M-S,Li,S,52,LiAuS,Au+,mp-29829,0.2105 LiAuS + Li -> 0.2105 Li2S + 0.05263 Li15Au4,-0.74,LiAuS -> 0.5 Au2S + 0.5 S + Li,-2.179,1.902,2.191,2.75 LiAuS + H2O -> H2S + 0.75 Li3AuS2 + 0.25 Li2SO4 + 2 Au,H2S,1.0,1.0,0.167,0.0,0.167
+Na-M-S,Na,S,1,KNaS,K+,mp-28383,KNaS + Na -> Na2S + K,0.01,KNaS -> KS + Na,-3.142,-0.01,1.358,0.5 KNaS + H2O -> 0.5 H2S + 0.5 NaHO + 0.5 KHO,H2S,0.5,1.0,0.426,0.0,0.426
+Na-M-S,Na,S,2,NaLiS,Li+,mp-8452,NaLiS + Na -> Na2S + Li,0.417,NaLiS -> 0.1429 LiS4 + 0.4286 Li2S + Na,-2.751,-0.417,1.581,NaLiS + H2O -> 0.5 H2S + 0.5 Na2S + LiHO,H2S,0.5,1.0,0.244,0.0,0.244
+Na-M-S,Na,S,3,NaLaS2,La3+,mp-1220714,0.3333 NaLaS2 + Na -> 0.6667 Na2S + 0.3333 La,0.329,NaLaS2 -> LaS2 + Na,-2.679,0.128,1.821,NaLaS2 + H2O -> H2S + 0.5 La2SO2 + 0.5 Na2S,H2S,1.0,1.0,0.199,0.0,0.199
+Na-M-S,Na,S,4,NaTbS2,Tb3+,mp-999126,0.3333 NaTbS2 + Na -> 0.6667 Na2S + 0.3333 Tb,0.316,NaTbS2 -> TbS2 + Na,-2.312,-0.145,2.188,NaTbS2 + H2O -> H2S + 0.5 Tb2SO2 + 0.5 Na2S,H2S,1.0,1.0,0.112,0.0,0.112
+Na-M-S,Na,S,5,NaCe5S8,Ce3+,mp-37496,0.06667 NaCe5S8 + Na -> 0.5333 Na2S + 0.3333 Ce,0.094,NaCe5S8 -> CeS2 + 2 Ce2S3 + Na,-2.83,0.96,1.835,0.25 NaCe5S8 + H2O -> H2S + 0.25 NaCeS2 + 0.5 Ce2SO2,H2S,1.0,1.0,-0.257,0.0,-0.257
+Na-M-S,Na,S,6,NaCeS2,Ce3+,mp-1221073,0.3333 NaCeS2 + Na -> 0.6667 Na2S + 0.3333 Ce,0.193,NaCeS2 -> CeS2 + Na,-2.665,0.301,1.835,NaCeS2 + H2O -> H2S + 0.5 Ce2SO2 + 0.5 Na2S,H2S,1.0,1.0,0.114,0.0,0.114
+Na-M-S,Na,S,7,NaPrS2,Pr3+,mp-1220912,0.3333 NaPrS2 + Na -> 0.6667 Na2S + 0.3333 Pr,0.23,NaPrS2 -> PrS2 + Na,-2.6,0.131,1.9,NaPrS2 + H2O -> H2S + 0.5 Pr2SO2 + 0.5 Na2S,H2S,1.0,1.0,0.244,0.0,0.244
+Na-M-S,Na,S,8,NaNdS2,Nd3+,mp-999470,0.3333 NaNdS2 + Na -> 0.6667 Na2S + 0.3333 Nd,0.248,NaNdS2 -> NdS2 + Na,-2.55,0.094,1.95,NaNdS2 + H2O -> H2S + 0.5 Nd2SO2 + 0.5 Na2S,H2S,1.0,1.0,0.221,0.0,0.221
+Na-M-S,Na,S,9,NaSmS2,Sm3+,mp-999455,0.3333 NaSmS2 + Na -> 0.6667 Na2S + 0.3333 Sm,0.256,NaSmS2 -> SmS2 + Na,-2.519,0.067,1.981,NaSmS2 + H2O -> H2S + 0.5 Sm2SO2 + 0.5 Na2S,H2S,1.0,1.0,0.118,0.0,0.118
+Na-M-S,Na,S,10,NaGdS2,Gd3+,mp-8260,0.3333 NaGdS2 + Na -> 0.6667 Na2S + 0.3333 Gd,0.318,NaGdS2 -> GdS2 + Na,-2.333,-0.043,2.166,NaGdS2 + H2O -> H2S + 0.5 Gd2SO2 + 0.5 Na2S,H2S,1.0,1.0,0.234,0.0,0.234
+Na-M-S,Na,S,11,NaDyS2,Dy3+,mp-999490,0.3333 NaDyS2 + Na -> 0.6667 Na2S + 0.3333 Dy,0.321,NaDyS2 -> DyS2 + Na,-2.096,-0.194,2.334,NaDyS2 + H2O -> H2S + 0.5 Dy2SO2 + 0.5 Na2S,H2S,1.0,1.0,0.098,0.0,0.098
+Na-M-S,Na,S,12,NaYS2,Y3+,mp-10226,0.3333 NaYS2 + Na -> 0.6667 Na2S + 0.3333 Y,0.324,NaYS2 -> 0.5 Y2S3 + 0.5 S + Na,-2.027,-0.196,2.328,NaYS2 + H2O -> H2S + 0.5 Y2SO2 + 0.5 Na2S,H2S,1.0,1.0,0.204,0.0,0.204
+Na-M-S,Na,S,13,NaHoS2,Ho3+,mp-5694,0.3333 NaHoS2 + Na -> 0.6667 Na2S + 0.3333 Ho,0.324,NaHoS2 -> HoS2 + Na,-2.057,-0.243,2.346,NaHoS2 + H2O -> H2S + 0.5 Ho2SO2 + 0.5 Na2S,H2S,1.0,1.0,0.083,0.0,0.083
+Na-M-S,Na,S,14,NaErS2,Er3+,mp-3613,0.3333 NaErS2 + Na -> 0.6667 Na2S + 0.3333 Er,0.326,NaErS2 -> ErS2 + Na,-2.181,-0.29,2.319,NaErS2 + H2O -> H2S + 0.5 Er2SO2 + 0.5 Na2S,H2S,1.0,1.0,0.066,0.0,0.066
+Na-M-S,Na,S,15,NaTmS2,Tm3+,mp-9076,0.3333 NaTmS2 + Na -> 0.6667 Na2S + 0.3333 Tm,0.329,NaTmS2 -> 0.1 Tm10S19 + 0.1 S + Na,-2.125,-0.329,2.339,NaTmS2 + H2O -> H2S + 0.5 Tm2SO2 + 0.5 Na2S,H2S,1.0,1.0,0.031,0.0,0.031
+Na-M-S,Na,S,16,Na2ZrS3,Zr4+,mp-1210267,0.25 Na2ZrS3 + Na -> 0.75 Na2S + 0.25 Zr,-0.243,0.5 Na2ZrS3 -> 0.5 ZrS3 + Na,-2.564,0.39,1.936,0.5 Na2ZrS3 + H2O -> H2S + 0.5 Na2S + 0.5 ZrO2,H2S,1.0,1.0,0.045,0.0,0.045
+Na-M-S,Na,S,17,NaScS2,Sc3+,mp-999460,0.3333 NaScS2 + Na -> 0.6667 Na2S + 0.3333 Sc,0.182,NaScS2 -> 0.5 Sc2S3 + 0.5 S + Na,-2.051,-0.035,2.298,0.6667 NaScS2 + H2O -> H2S + 0.3333 Na2S + 0.3333 Sc2O3,H2S,1.0,1.0,0,0.0,0.0
+Na-M-S,Na,S,18,Na3TaS4,Ta5+,mp-1202226,0.2 Na3TaS4 + Na -> 0.8 Na2S + 0.2 Ta,-0.735,0.3333 Na3TaS4 -> 0.3333 TaS3 + 0.3333 S + Na,-2.334,0.998,2.029,0.3333 Na3TaS4 + H2O -> H2S + 0.3333 Na2S + 0.3333 NaTaO3,H2S,1.0,1.0,-0.093,0.0,-0.093
+Na-M-S,Na,S,19,NaTiS2,Ti3+,mp-7942,0.3333 NaTiS2 + Na -> 0.6667 Na2S + 0.3333 Ti,-0.343,NaTiS2 -> TiS2 + Na,-2.924,0.753,1.409,2 NaTiS2 + H2O -> H2S + Na2TiS2O + TiS,H2S,1.0,1.0,-0.108,0.0,-0.108
+Na-M-S,Na,S,20,Na2Mn2S3,Mn2+,mp-28079,0.25 Na2Mn2S3 + Na -> 0.75 Na2S + 0.5 Mn,-1.008,0.5 Na2Mn2S3 -> 0.5 MnS + 0.5 MnS2 + Na,-3.082,1.11,1.418,0.6 Na2Mn2S3 + H2O -> H2S + 0.2 Na6MnS4 + MnO,H2S,1.0,1.0,0.195,0.0,0.195
+Na-M-S,Na,S,21,Na6MnS4,Mn2+,mp-5055,0.5 Na6MnS4 + Na -> 2 Na2S + 0.5 Mn,-0.839,0.1667 Na6MnS4 -> 0.1667 MnS2 + 0.3333 S + Na,-2.74,0.839,1.541,0.125 Na6MnS4 + H2O -> 0.5 H2S + 0.125 Mn(HO)2 + 0.75 NaHO,H2S,0.5,1.0,0.418,0.0,0.418
+Na-M-S,Na,S,22,Na3NbS4,Nb5+,mp-1196173,0.2 Na3NbS4 + Na -> 0.8 Na2S + 0.2 Nb,-0.805,0.3333 Na3NbS4 -> 0.3333 NbS3 + 0.3333 S + Na,-2.414,1.226,1.875,0.3333 Na3NbS4 + H2O -> H2S + 0.3333 NaNbO3 + 0.3333 Na2S,H2S,1.0,1.0,0.164,0.0,0.164
+Na-M-S,Na,S,23,Na3AlS3,Al3+,mp-560538,0.3333 Na3AlS3 + Na -> Na2S + 0.3333 Al,-0.423,0.3333 Na3AlS3 -> 0.1667 Al2S3 + 0.5 S + Na,-2.329,0.423,1.951,0.6667 Na3AlS3 + H2O -> H2S + Na2S + 0.3333 Al2O3,H2S,1.0,1.0,-0.306,0.0,-0.306
+Na-M-S,Na,S,24,Na3VS4,V5+,mp-29143,0.2 Na3VS4 + Na -> 0.8 Na2S + 0.2 V,-0.895,0.3333 Na3VS4 -> 0.3333 VS2 + 0.6667 S + Na,-2.211,1.097,2.012,0.2222 Na3VS4 + H2O -> 0.8333 H2S + 0.2222 NaVO2 + 0.05556 Na2SO4 + 0.3333 NaHO,H2S,0.8333,1.0,0.511,0.0,0.511
+Na-M-S,Na,S,25,Na2Zn2S3,Zn2+,mp-1094107,0.2407 Na2Zn2S3 + Na -> 0.03704 NaZn13 + 0.7222 Na2S,-0.763,0.5 Na2Zn2S3 -> 0.5 ZnS2 + 0.5 ZnS + Na,-2.571,0.832,1.64,0.5 Na2Zn2S3 + H2O -> 0.5 H2S + ZnS + NaHO,H2S,0.5,1.0,0.479,0.0,0.479
+Na-M-S,Na,S,26,Na4Zn3S5,Zn2+,mp-1024070,0.1605 Na4Zn3S5 + Na -> 0.03704 NaZn13 + 0.8025 Na2S,-0.758,0.25 Na4Zn3S5 -> 0.5 ZnS2 + 0.25 ZnS + Na,-2.579,0.832,1.618,Na4Zn3S5 + H2O -> 0.5 H2S + 1.5 Na2Zn2S3 + NaHO,H2S,0.5,1.0,0.447,0.0,0.447
+Na-M-S,Na,S,27,Na2ZnS2,Zn2+,mp-1024067,0.4815 Na2ZnS2 + Na -> 0.03704 NaZn13 + 0.963 Na2S,-0.74,0.5 Na2ZnS2 -> 0.5 ZnS2 + Na,-2.579,0.812,1.618,Na2ZnS2 + H2O -> 0.5 H2S + 0.5 Na2Zn2S3 + NaHO,H2S,0.5,1.0,0.463,0.0,0.463
+Na-M-S,Na,S,28,Na6ZnS4,Zn2+,mp-8389,0.4815 Na6ZnS4 + Na -> 0.03704 NaZn13 + 1.926 Na2S,-0.671,0.1667 Na6ZnS4 -> 0.1667 ZnS2 + 0.3333 S + Na,-2.59,0.671,1.604,0.25 Na6ZnS4 + H2O -> 0.5 H2S + 0.25 Na2ZnS2 + NaHO,H2S,0.5,1.0,0.452,0.0,0.452
+Na-M-S,Na,S,29,NaCrS2,Cr3+,mp-5693,0.3333 NaCrS2 + Na -> 0.6667 Na2S + 0.3333 Cr,-0.877,NaCrS2 -> CrS2 + Na,-2.152,0.877,2.067,0.5 NaCrS2 + H2O -> H2S + 0.5 NaCrO2,H2S,1.0,1.0,0.402,0.0,0.402
+Na-M-S,Na,S,30,Na6Cd7S10,Cd2+,mp-1220798,0.02857 Na6Cd7S10 + Na -> 0.2857 Na2S + 0.2 Na3Cd,-0.434,0.1667 Na6Cd7S10 -> 0.5 CdS2 + 0.6667 CdS + Na,-2.796,0.965,1.547,0.1667 Na6Cd7S10 + H2O -> 0.5 H2S + 1.167 CdS + NaHO,H2S,0.5,1.0,0.368,0.0,0.368
+Na-M-S,Na,S,31,NaIn3S5,In3+,mp-1195769,0.06667 NaIn3S5 + Na -> 0.3333 Na2S + 0.2 Na2In,-0.734,NaIn3S5 -> 1.5 In2S3 + 0.5 S + Na,-2.137,1.771,2.216,0.3333 NaIn3S5 + H2O -> H2S + 0.3333 NaInS2 + 0.3333 In2O3,H2S,1.0,1.0,0.592,0.0,0.592
+Na-M-S,Na,S,32,NaInS2,In3+,mp-20289,0.2 NaInS2 + Na -> 0.4 Na2S + 0.2 Na2In,-0.664,NaInS2 -> 0.5 In2S3 + 0.5 S + Na,-2.117,1.138,2.216,0.4 NaInS2 + H2O -> 0.8 H2S + 0.2 In2O3 + 0.4 NaHO,H2S,0.8,1.0,0.732,0.0,0.732
+Na-M-S,Na,S,33,Na3InS3,In3+,mp-29375,0.2 Na3InS3 + Na -> 0.6 Na2S + 0.2 Na2In,-0.62,0.3333 Na3InS3 -> 0.1667 In2S3 + 0.5 S + Na,-2.386,1.005,1.704,0.5 Na3InS3 + H2O -> 0.5 H2S + 0.5 NaInS2 + NaHO,H2S,0.5,1.0,0.527,0.0,0.527
+Na-M-S,Na,S,34,Na5InS4,In3+,mp-29376,0.2 Na5InS4 + Na -> 0.8 Na2S + 0.2 Na2In,-0.602,0.2 Na5InS4 -> 0.1 In2S3 + 0.5 S + Na,-2.466,0.887,1.615,0.5 Na5InS4 + H2O -> 0.5 H2S + 0.5 Na3InS3 + NaHO,H2S,0.5,1.0,0.46,0.0,0.46
+Na-M-S,Na,S,35,Na4Ga2S5,Ga3+,mp-28773,0.1413 Na4Ga2S5 + Na -> 0.02174 Na7Ga13 + 0.7065 Na2S,-0.77,0.25 Na4Ga2S5 -> 0.25 Ga2S3 + 0.5 S + Na,-2.275,0.938,2.019,0.1667 Na4Ga2S5 + H2O -> 0.8333 H2S + 0.3333 NaGaO2 + 0.3333 NaHO,H2S,0.8333,1.0,0.525,0.0,0.525
+Na-M-S,Na,S,36,Na3GaS3,Ga3+,mp-561130,0.2826 Na3GaS3 + Na -> 0.02174 Na7Ga13 + 0.8478 Na2S,-0.749,0.3333 Na3GaS3 -> 0.1667 Ga2S3 + 0.5 S + Na,-2.369,0.792,1.654,Na3GaS3 + H2O -> 0.5 H2S + 0.5 Na4Ga2S5 + NaHO,H2S,0.5,1.0,0.489,0.0,0.489
+Na-M-S,Na,S,37,Na2Cu4S3,Cu+,mp-17625,0.25 Na2Cu4S3 + Na -> 0.75 Na2S + Cu,-1.281,0.5 Na2Cu4S3 -> 0.1667 Cu7S4 + 0.8333 CuS + Na,-2.843,1.318,1.717,1.75 Na2Cu4S3 + H2O -> H2S + Na3(CuS)4 + 0.25 Na2SO4 + 3 Cu,H2S,1.0,1.0,0.106,0.0,0.106
+Na-M-S,Na,S,38,Na4Cu2S3,Cu+,mp-28789,0.5 Na4Cu2S3 + Na -> 1.5 Na2S + Cu,-1.114,0.25 Na4Cu2S3 -> 0.25 CuS2 + 0.25 CuS + Na,-2.818,1.114,1.562,0.3571 Na4Cu2S3 + H2O -> 0.5 H2S + 0.1429 Na3(CuS)4 + 0.1429 Cu + NaHO,H2S,0.5,1.0,0.484,0.0,0.484
+Na-M-S,Na,S,39,Na2Si2S5,Si4+,mp-18104,0.1 Na2Si2S5 + Na -> 0.2 NaSi + 0.5 Na2S,-0.786,0.5 Na2Si2S5 -> SiS2 + 0.5 S + Na,-2.134,0.974,2.194,0.25 Na2Si2S5 + H2O -> H2S + 0.25 Na2S + 0.5 SiO2,H2S,1.0,1.0,-0.599,0.0,-0.599
+Na-M-S,Na,S,40,Na3AgS2,Ag+,mp-9634,0.6667 Na3AgS2 + Na -> 0.3333 NaAg2 + 1.333 Na2S,-0.901,0.3333 Na3AgS2 -> 0.1667 Ag2S + 0.5 S + Na,-2.522,1.197,1.679,0.3077 Na3AgS2 + H2O -> 0.5769 H2S + 0.03846 Na2SO4 + 0.3077 Ag + 0.8462 NaHO,H2S,0.5769,1.0,0.45,0.0,0.45
+Na-M-S,Na,S,41,NaAg3S2,Ag+,mp-16992,0.2222 NaAg3S2 + Na -> 0.3333 NaAg2 + 0.4444 Na2S,-1.066,NaAg3S2 -> 1.5 Ag2S + 0.5 S + Na,-2.39,1.566,1.874,0.6875 NaAg3S2 + H2O -> H2S + 0.0625 Na3AgS2 + 0.25 Na2SO4 + 2 Ag,H2S,1.0,1.0,0.127,0.0,0.127
+Na-M-S,Na,S,42,Na4Sn3S8,Sn4+,mp-29626,0.04301 Na4Sn3S8 + Na -> 0.03226 Na15Sn4 + 0.3441 Na2S,-0.726,0.25 Na4Sn3S8 -> 0.75 SnS2 + 0.5 S + Na,-2.315,1.729,1.969,0.5 Na4Sn3S8 + H2O -> H2S + 0.25 Na6Sn2S7 + 0.25 Na2SO4 + SnS,H2S,1.0,1.0,0.258,0.0,0.258
+Na-M-S,Na,S,43,Na6Sn2S7,Sn4+,mp-4907,0.06452 Na6Sn2S7 + Na -> 0.03226 Na15Sn4 + 0.4516 Na2S,-0.667,0.1667 Na6Sn2S7 -> 0.3333 SnS2 + 0.5 S + Na,-2.338,1.701,1.917,1.75 Na6Sn2S7 + H2O -> H2S + 0.25 Na2SO4 + 2.5 Na4SnS4 + SnS,H2S,1.0,1.0,0.286,0.0,0.286
+Na-M-S,Na,S,44,Na4SnS4,Sn4+,mp-29628,0.129 Na4SnS4 + Na -> 0.03226 Na15Sn4 + 0.5161 Na2S,-0.633,0.25 Na4SnS4 -> 0.25 SnS2 + 0.5 S + Na,-2.345,1.034,1.903,0.2222 Na4SnS4 + H2O -> 0.6111 H2S + 0.05556 Na2SO4 + 0.2222 SnS + 0.7778 NaHO,H2S,0.6111,1.0,0.593,0.0,0.593
+Na-M-S,Na,S,45,Na2HgS2,Hg2+,mp-28858,0.2143 Na2HgS2 + Na -> 0.4286 Na2S + 0.07143 Na8Hg3,-0.7,0.5 Na2HgS2 -> 0.1667 HgS4 + 0.3333 HgS + Na,-2.495,1.3,1.786,0.4 Na2HgS2 + H2O -> 0.7 H2S + 0.1 Na2SO4 + 0.4 Hg + 0.6 NaHO,H2S,0.7,1.0,0.421,0.0,0.421
+Na-M-S,Na,S,46,Na2Hg3S4,Hg2+,mp-505121,0.07143 Na2Hg3S4 + Na -> 0.2857 Na2S + 0.07143 Na8Hg3,-0.749,0.5 Na2Hg3S4 -> 0.1667 HgS4 + 1.333 HgS + Na,-2.483,1.644,1.809,0.375 Na2Hg3S4 + H2O -> H2S + 0.125 Na2HgS2 + 0.25 Na2SO4 + Hg,H2S,1.0,1.0,0.169,0.0,0.169
+Na-M-S,Na,S,47,Na2Ge2S5,Ge4+,mp-18568,0.1 Na2Ge2S5 + Na -> 0.5 Na2S + 0.2 NaGe,-1.057,0.5 Na2Ge2S5 -> GeS2 + 0.5 S + Na,-2.153,1.734,2.171,0.35 Na2Ge2S5 + H2O -> H2S + 0.25 Na2GeS3 + 0.05 Na4Ge9O20,H2S,1.0,1.0,0.415,0.0,0.415
+Na-M-S,Na,S,48,Na2GeS3,Ge4+,mp-4068,0.2 Na2GeS3 + Na -> 0.6 Na2S + 0.2 NaGe,-0.978,0.5 Na2GeS3 -> 0.5 GeS2 + 0.5 S + Na,-2.195,1.562,2.066,0.3333 Na2GeS3 + H2O -> H2S + 0.3333 Na2GeO3,H2S,1.0,1.0,0.441,0.0,0.441
+Na-M-S,Na,S,49,Na6Ge2S7,Ge4+,mp-27752,0.1 Na6Ge2S7 + Na -> 0.7 Na2S + 0.2 NaGe,-0.923,0.1667 Na6Ge2S7 -> 0.3333 GeS2 + 0.5 S + Na,-2.247,1.072,1.922,0.125 Na6Ge2S7 + H2O -> 0.875 H2S + 0.25 Na2GeO3 + 0.25 NaHO,H2S,0.875,1.0,0.504,0.0,0.504
+Na-M-S,Na,S,50,NaBiS2,Bi3+,mp-1221125,0.1667 NaBiS2 + Na -> 0.3333 Na2S + 0.1667 Na3Bi,-0.825,NaBiS2 -> BiS2 + Na,-2.29,1.147,2.21,0.5714 NaBiS2 + H2O -> 0.9286 H2S + 0.2143 Na2SO4 + 0.5714 Bi + 0.1429 NaHO,H2S,0.9286,1.0,0.689,0.0,0.689
+Na-M-S,Na,S,51,Na3B5S9,B3+,mp-29000,0.06349 Na3B5S9 + Na -> 0.01587 Na3B20 + 0.5714 Na2S,-1.084,0.3333 Na3B5S9 -> BS2 + 0.3333 B2S3 + Na,-2.344,1.304,2.156,0.141 Na3B5S9 + H2O -> H2S + 0.08974 Na3BS3 + 0.07692 Na2B8O13,H2S,1.0,1.0,-0.806,0.0,-0.806
+Na-M-S,Na,S,52,NaBS2,B3+,mp-15011,0.3175 NaBS2 + Na -> 0.01587 Na3B20 + 0.6349 Na2S,-1.077,NaBS2 -> BS2 + Na,-2.582,1.304,1.764,0.8462 NaBS2 + H2O -> H2S + 0.2308 Na3BS3 + 0.07692 Na2B8O13,H2S,1.0,1.0,-0.841,0.0,-0.841
+Na-M-S,Na,S,53,Na3BS3,B3+,mp-29976,0.3175 Na3BS3 + Na -> 0.01587 Na3B20 + 0.9524 Na2S,-0.964,0.3333 Na3BS3 -> 0.3333 BS2 + 0.3333 S + Na,-2.496,0.989,1.765,0.5833 Na3BS3 + H2O -> H2S + 0.08333 Na3B7O12 + 0.75 Na2S,H2S,1.0,1.0,-0.552,0.0,-0.552
+Na-M-S,Na,S,54,NaSbS2,Sb3+,mp-5414,0.1667 NaSbS2 + Na -> 0.3333 Na2S + 0.1667 Na3Sb,-0.907,NaSbS2 -> 0.5 Sb2S3 + 0.5 S + Na,-2.136,1.337,2.191,0.5714 NaSbS2 + H2O -> 0.9286 H2S + 0.2143 Na2SO4 + 0.5714 Sb + 0.1429 NaHO,H2S,0.9286,1.0,0.541,0.0,0.541
+Na-M-S,Na,S,55,Na3SbS3,Sb3+,mp-1193673,0.1667 Na3SbS3 + Na -> 0.5 Na2S + 0.1667 Na3Sb,-0.881,0.3333 Na3SbS3 -> 0.1667 Sb2S3 + 0.5 S + Na,-2.415,1.181,1.66,0.5 Na3SbS3 + H2O -> 0.5 H2S + 0.5 NaSbS2 + NaHO,H2S,0.5,1.0,0.494,0.0,0.494
+Na-M-S,Na,S,56,Na3SbS4,Sb5+,mp-10167,0.125 Na3SbS4 + Na -> 0.5 Na2S + 0.125 Na3Sb,-1.063,0.3333 Na3SbS4 -> 0.1667 Sb2S3 + 0.8333 S + Na,-2.241,1.574,1.66,Na3SbS4 + H2O -> H2S + 0.25 Na2SO4 + 0.75 Na3SbS3 + 0.25 NaSbS2,H2S,1.0,1.0,-0.151,0.0,-0.151
+Na-M-S,Na,S,57,Na2TeS3,Te4+,mp-1190141,0.1667 Na2TeS3 + Na -> 0.1667 Na2Te + 0.5 Na2S,-1.404,0.5 Na2TeS3 -> 1.5 S + 0.5 Te + Na,-1.701,1.415,2.421,0.4615 Na2TeS3 + H2O -> H2S + 0.1538 NaTe3 + 0.1346 Na2S + 0.25 Na2SO4,H2S,1.0,1.0,0.197,0.0,0.197
+Na-M-S,Na,S,58,NaAsS2,As3+,mp-5942,0.1667 NaAsS2 + Na -> 0.3333 Na2S + 0.1667 Na3As,-0.952,NaAsS2 -> AsS2 + Na,-2.304,2.131,2.295,0.875 NaAsS2 + H2O -> H2S + 0.25 Na2SO4 + 0.125 Na3AsS4 + 0.75 As,H2S,1.0,1.0,0.182,0.0,0.182
+Na-M-S,Na,S,59,Na3AsS3,As3+,mp-5830,0.1667 Na3AsS3 + Na -> 0.5 Na2S + 0.1667 Na3As,-0.891,0.3333 Na3AsS3 -> 0.3333 AsS2 + 0.3333 S + Na,-2.4,1.076,2.131,0.8333 Na3AsS3 + H2O -> 0.5 H2S + 0.5 Na3AsS4 + 0.3333 As + NaHO,H2S,0.5,1.0,0.06,0.0,0.06
+Na-M-S,Na,S,60,Na3AsS4,As5+,n/a_own_DFT,0.125 Na3AsS4 + Na -> 0.5 Na2S + 0.125 Na3As,-0.884,0.3333 Na3AsS4 -> 0.3333 AsS2 + 0.6667 S + Na,-1.73,1.076,2.668,0.2353 Na3AsS4 + H2O -> 0.7941 H2S + 0.1471 Na2SO4 + 0.2353 As + 0.4118 NaHO,H2S,0.7941,1.0,0.686,0.0,0.686
+Na-M-S,Na,S,61,NaPS3,P5+,mp-1189520,0.125 NaPS3 + Na -> 0.375 Na2S + 0.125 Na3P,-1.017,NaPS3 -> 0.25 P2S7 + 0.25 P2S5 + Na,-2.196,2.217,2.304,0.3333 NaPS3 + H2O -> H2S + 0.3333 NaPO3,H2S,1.0,1.0,-0.415,0.0,-0.415
+Na-M-S,Na,S,62,Na3PS4,P5+,mp-28782,0.125 Na3PS4 + Na -> 0.5 Na2S + 0.125 Na3P,-0.895,0.3333 Na3PS4 -> 0.1667 P2S7 + 0.1667 S + Na,-2.246,1.242,2.124,Na3PS4 + H2O -> H2S + Na3PS3O,H2S,1.0,1.0,-0.449,0.0,-0.449
+Na-M-S,Na,S,63,NaAuS,Au+,mp-1204074,0.3333 NaAuS + Na -> 0.3333 Na2Au + 0.3333 Na2S,-0.685,NaAuS -> 0.5 Au2S + 0.5 S + Na,-2.318,1.396,1.965,2.75 NaAuS + H2O -> H2S + 0.75 Na3AuS2 + 0.25 Na2SO4 + 2 Au,H2S,1.0,1.0,0.501,0.0,0.501
+Na-M-S,Na,S,64,Na7Au5S6,Au+,mp-28856,0.06667 Na7Au5S6 + Na -> 0.3333 Na2Au + 0.4 Na2S,-0.671,0.1429 Na7Au5S6 -> 0.3571 Au2S + 0.5 S + Na,-2.378,1.396,1.697,0.6875 Na7Au5S6 + H2O -> H2S + 1.437 Na3AuS2 + 0.25 Na2SO4 + 2 Au,H2S,1.0,1.0,0.497,0.0,0.497
+Na-M-S,Na,S,65,Na3AuS2,Au+,mp-15567,0.3333 Na3AuS2 + Na -> 0.3333 Na2Au + 0.6667 Na2S,-0.614,0.3333 Na3AuS2 -> 0.1667 Au2S + 0.5 S + Na,-2.456,1.035,1.697,0.5 Na3AuS2 + H2O -> 0.5 H2S + 0.5 NaAuS + NaHO,H2S,0.5,1.0,0.522,0.0,0.522
+Li-M-Cl,Li,Cl,1,Li3YCl6,Y3+,n/a_own_DFT,0.3333 Li3YCl6 + Li -> 2 LiCl + 0.3333 Y,-0.696,0.3333 Li3YCl6 -> 0.3333 YCl3 + 0.5 Cl2 + Li,-0.568,0.653,4.013,Li3YCl6 + H2O -> 2 HCl + 3 LiCl + YClO,HCl,2.0,1.0,0.886,-0.71432,0.1717
+Li-M-Cl,Li,Cl,2,Li3ErCl6,Er3+,mp-676361,0.3333 Li3ErCl6 + Li -> 2 LiCl + 0.3333 Er,-0.703,0.3333 Li3ErCl6 -> 0.3333 ErCl3 + 0.5 Cl2 + Li,-0.475,0.703,4.025,Li3ErCl6 + H2O -> 2 HCl + ErClO + 3 LiCl,HCl,2.0,1.0,0.842,-0.71432,0.1277
+Li-M-Cl,Li,Cl,3,Li2ZrCl6,Zr4+,n/a_own_DFT,0.25 Li2ZrCl6 + Li -> 1.5 LiCl + 0.25 Zr,-1.458,0.5 Li2ZrCl6 -> 0.5 ZrCl4 + 0.5 Cl2 + Li,-0.524,1.75,4.013,0.5 Li2ZrCl6 + H2O -> 2 HCl + LiCl + 0.5 ZrO2,HCl,2.0,1.0,0.632,-0.71432,-0.0823
+Li-M-Cl,Li,Cl,4,Li3ScCl6,Sc3+,mp-686004,0.3333 Li3ScCl6 + Li -> 2 LiCl + 0.3333 Sc,-0.876,0.3333 Li3ScCl6 -> 0.3333 ScCl3 + 0.5 Cl2 + Li,-0.527,0.91,4.013,0.6667 Li3ScCl6 + H2O -> 2 HCl + 2 LiCl + 0.3333 Sc2O3,HCl,2.0,1.0,0.9,-0.71432,0.1857
+Li-M-Cl,Li,Cl,5,Li4Mn3Cl10,Mn2+,mp-531376,0.1667 Li4Mn3Cl10 + Li -> 1.667 LiCl + 0.5 Mn,-2.043,0.25 Li4Mn3Cl10 -> 0.75 MnCl2 + 0.5 Cl2 + Li,-0.504,2.031,4.013,0.1667 Li4Mn3Cl10 + H2O -> HCl + 0.6667 LiCl + 0.5 Mn(HO)2,HCl,1.0,1.0,0.728,-0.35716,0.3708
+Li-M-Cl,Li,Cl,6,Li2BeCl4,Be2+,mp-1210835,0.5 Li2BeCl4 + Li -> 2 LiCl + 0.5 Be,-1.547,0.5 Li2BeCl4 -> 0.5 BeCl2 + 0.5 Cl2 + Li,-0.516,1.518,4.013,Li2BeCl4 + H2O -> 2 HCl + 2 LiCl + BeO,HCl,2.0,1.0,-0.033,-0.71432,-0.7473
+Li-M-Cl,Li,Cl,7,LiAlCl4,Al3+,mp-22983,0.2 LiAlCl4 + Li -> 0.2 Li2Al + 0.8 LiCl,-1.05,LiAlCl4 -> AlCl3 + 0.5 Cl2 + Li,-0.288,1.587,4.212,0.6667 LiAlCl4 + H2O -> 2 HCl + 0.6667 LiCl + 0.3333 Al2O3,HCl,2.0,1.0,0.383,-0.71432,-0.3313
+Li-M-Cl,Li,Cl,8,Li2ZnCl4,Zn2+,mp-23416,0.3333 Li2ZnCl4 + Li -> 0.3333 LiZn + 1.333 LiCl,-1.468,0.5 Li2ZnCl4 -> 0.5 ZnCl2 + 0.5 Cl2 + Li,-0.531,1.938,4.013,0.5 Li2ZnCl4 + H2O -> HCl + 0.5 ZnCl2 + LiHO,HCl,1.0,1.0,1.29,-0.35716,0.9328
+Li-M-Cl,Li,Cl,9,Li5CrCl8,Cr3+,mp-23361,0.3333 Li5CrCl8 + Li -> 2.667 LiCl + 0.3333 Cr,-2.202,0.2 Li5CrCl8 -> 0.2 CrCl3 + 0.5 Cl2 + Li,-0.518,2.149,4.013,Li5CrCl8 + H2O -> 2 HCl + CrClO + 5 LiCl,HCl,2.0,1.0,0.845,-0.71432,0.1307
+Li-M-Cl,Li,Cl,10,Li2CdCl4,Cd2+,mp-38008,0.2 Li2CdCl4 + Li -> 0.8 LiCl + 0.2 Li3Cd,-0.971,0.5 Li2CdCl4 -> 0.5 CdCl2 + 0.5 Cl2 + Li,-0.523,2.021,4.013,0.5 Li2CdCl4 + H2O -> HCl + 0.5 CdCl2 + LiHO,HCl,1.0,1.0,1.298,-0.35716,0.9408
+Li-M-Cl,Li,Cl,11,Li3InCl6,In3+,mp-676109,0.1364 Li3InCl6 + Li -> 0.8182 LiCl + 0.04545 Li13In3,-1.045,0.3333 Li3InCl6 -> 0.3333 InCl3 + 0.5 Cl2 + Li,-0.324,2.282,4.176,0.25 Li3InCl6 + H2O -> 1.25 HCl + 0.25 InClO + 0.75 LiHO,HCl,1.25,1.0,1.382,-0.44645,0.9355
+Li-M-Cl,Li,Cl,12,LiGaCl4,Ga3+,mp-28341,0.2 LiGaCl4 + Li -> 0.2 Li2Ga + 0.8 LiCl,-1.458,LiGaCl4 -> GaCl3 + 0.5 Cl2 + Li,-0.331,2.145,4.169,LiGaCl4 + H2O -> 2 HCl + GaClO + LiCl,HCl,2.0,1.0,1.209,-0.71432,0.4947
+Li-M-Cl,Li,Cl,13,Li2FeCl4,Fe2+,mp-676683,0.5 Li2FeCl4 + Li -> 2 LiCl + 0.5 Fe,-2.766,0.5 Li2FeCl4 -> 0.5 FeCl4 + Li,-1.213,2.655,4.141,Li2FeCl4 + H2O -> 2 HCl + FeO + 2 LiCl,HCl,2.0,1.0,0.295,-0.71432,-0.4193
+Li-M-Cl,Li,Cl,14,LiFeCl4,Fe3+,mp-1210931,0.3333 LiFeCl4 + Li -> 1.333 LiCl + 0.3333 Fe,-2.655,LiFeCl4 -> FeCl4 + Li,-0.359,2.655,4.141,LiFeCl4 + H2O -> 2 HCl + FeClO + LiCl,HCl,2.0,1.0,0.619,-0.71432,-0.0953
+Na-M-Cl,Na,Cl,1,K4NaCl5,K+,mp-1223916,0.25 K4NaCl5 + Na -> 1.25 NaCl + K,0.257,K4NaCl5 -> 4 KCl + 0.5 Cl2 + Na,-0.652,-0.287,3.756,K4NaCl5 + H2O -> HCl + 4 KCl + NaHO,HCl,1.0,1.0,1.759,-0.35716,1.4018
+Na-M-Cl,Na,Cl,2,K2NaCl3,K+,mp-1223818,0.5 K2NaCl3 + Na -> 1.5 NaCl + K,0.237,K2NaCl3 -> 2 KCl + 0.5 Cl2 + Na,-0.63,-0.287,3.756,K2NaCl3 + H2O -> HCl + 2 KCl + NaHO,HCl,1.0,1.0,1.781,-0.35716,1.4238
+Na-M-Cl,Na,Cl,3,KNaCl2,K+,mp-1223313,KNaCl2 + Na -> 2 NaCl + K,0.213,KNaCl2 -> KCl + 0.5 Cl2 + Na,-0.605,-0.287,3.756,KNaCl2 + H2O -> HCl + KCl + NaHO,HCl,1.0,1.0,1.806,-0.35716,1.4488
+Na-M-Cl,Na,Cl,4,KNa4Cl5,K+,mp-1223387,KNa4Cl5 + Na -> 5 NaCl + K,0.163,0.25 KNa4Cl5 -> 0.25 KCl + 0.5 Cl2 + Na,-0.562,-0.287,3.756,0.25 KNa4Cl5 + H2O -> HCl + 0.25 KCl + NaHO,HCl,1.0,1.0,1.849,-0.35716,1.4918
+Na-M-Cl,Na,Cl,5,Na3La5Cl18,La3+,mp-1173723,0.06667 Na3La5Cl18 + Na -> 1.2 NaCl + 0.3333 La,-0.422,0.3333 Na3La5Cl18 -> 1.667 LaCl3 + 0.5 Cl2 + Na,-0.61,0.407,3.756,0.2 Na3La5Cl18 + H2O -> 2 HCl + 0.6 NaCl + LaClO,HCl,2.0,1.0,1.328,-0.71432,0.6137
+Na-M-Cl,Na,Cl,6,NaTbCl4,Tb3+,mp-1209961,0.3333 NaTbCl4 + Na -> 1.333 NaCl + 0.3333 Tb,-0.578,NaTbCl4 -> TbCl3 + 0.5 Cl2 + Na,-0.47,0.6,3.847,0.6667 NaTbCl4 + H2O -> 2 HCl + 0.6667 NaCl + 0.3333 Tb2O3,HCl,2.0,1.0,1.385,-0.71432,0.6707
+Na-M-Cl,Na,Cl,7,Na3Ce5Cl18,Ce3+,mp-675238,0.06667 Na3Ce5Cl18 + Na -> 1.2 NaCl + 0.3333 Ce,-0.634,0.3333 Na3Ce5Cl18 -> 1.667 CeCl3 + 0.5 Cl2 + Na,-0.575,0.626,3.756,0.2 Na3Ce5Cl18 + H2O -> 2 HCl + CeClO + 0.6 NaCl,HCl,2.0,1.0,1.275,-0.71432,0.5607
+Na-M-Cl,Na,Cl,8,Na3Pr5Cl18,Pr3+,mp-676095,0.06667 Na3Pr5Cl18 + Na -> 1.2 NaCl + 0.3333 Pr,-0.577,0.3333 Na3Pr5Cl18 -> 1.667 PrCl3 + 0.5 Cl2 + Na,-0.657,0.552,3.756,0.2 Na3Pr5Cl18 + H2O -> 2 HCl + 0.6 NaCl + PrClO,HCl,2.0,1.0,1.302,-0.71432,0.5877
+Na-M-Cl,Na,Cl,9,Na3Nd5Cl18,Nd3+,mp-675555,0.06667 Na3Nd5Cl18 + Na -> 1.2 NaCl + 0.3333 Nd,-0.592,0.3333 Na3Nd5Cl18 -> 1.667 NdCl3 + 0.5 Cl2 + Na,-0.661,0.566,3.756,0.2 Na3Nd5Cl18 + H2O -> 2 HCl + NdClO + 0.6 NaCl,HCl,2.0,1.0,1.22,-0.71432,0.5057
+Na-M-Cl,Na,Cl,10,Na3Sm7Cl24,Sm3+,mp-673807,0.04762 Na3Sm7Cl24 + Na -> 1.143 NaCl + 0.3333 Sm,-0.635,0.3333 Na3Sm7Cl24 -> 2.333 SmCl3 + 0.5 Cl2 + Na,-0.202,0.635,4.25,0.1429 Na3Sm7Cl24 + H2O -> 2 HCl + SmClO + 0.4286 NaCl,HCl,2.0,1.0,1.034,-0.71432,0.3197
+Na-M-Cl,Na,Cl,11,Na2GdCl5,Gd3+,mp-1210500,0.3333 Na2GdCl5 + Na -> 1.667 NaCl + 0.3333 Gd,-0.618,0.5 Na2GdCl5 -> 0.5 GdCl3 + 0.5 Cl2 + Na,-0.516,0.769,3.838,3 Na2GdCl5 + H2O -> 2 HCl + 2 Na3GdCl6 + GdClO,HCl,2.0,1.0,0.853,-0.71432,0.1387
+Na-M-Cl,Na,Cl,12,Na3GdCl6,Gd3+,mp-33554,0.3333 Na3GdCl6 + Na -> 2 NaCl + 0.3333 Gd,-0.574,0.3333 Na3GdCl6 -> 0.3333 GdCl3 + 0.5 Cl2 + Na,-0.476,0.605,3.838,Na3GdCl6 + H2O -> 2 HCl + GdClO + 3 NaCl,HCl,2.0,1.0,1.253,-0.71432,0.5387
+Na-M-Cl,Na,Cl,13,NaDyCl4,Dy3+,mp-1210040,0.3333 NaDyCl4 + Na -> 1.333 NaCl + 0.3333 Dy,-0.585,NaDyCl4 -> DyCl3 + 0.5 Cl2 + Na,-0.449,0.612,3.878,1.5 NaDyCl4 + H2O -> 2 HCl + 0.5 Na3DyCl6 + DyClO,HCl,2.0,1.0,0.967,-0.71432,0.2527
+Na-M-Cl,Na,Cl,14,Na3DyCl6,Dy3+,mp-982980,0.3333 Na3DyCl6 + Na -> 2 NaCl + 0.3333 Dy,-0.572,0.3333 Na3DyCl6 -> 0.3333 DyCl3 + 0.5 Cl2 + Na,-0.49,0.572,3.786,Na3DyCl6 + H2O -> 2 HCl + DyClO + 3 NaCl,HCl,2.0,1.0,1.029,-0.71432,0.3147
+Na-M-Cl,Na,Cl,15,NaYCl4,Y3+,mp-1209960,0.3333 NaYCl4 + Na -> 1.333 NaCl + 0.3333 Y,-0.594,NaYCl4 -> YCl3 + 0.5 Cl2 + Na,-0.602,0.616,3.767,1.5 NaYCl4 + H2O -> 2 HCl + 0.5 Na3YCl6 + YClO,HCl,2.0,1.0,1.013,-0.71432,0.2987
+Na-M-Cl,Na,Cl,16,Na3YCl6,Y3+,mp-675104,0.3333 Na3YCl6 + Na -> 2 NaCl + 0.3333 Y,-0.563,0.3333 Na3YCl6 -> 0.3333 YCl3 + 0.5 Cl2 + Na,-0.523,0.593,3.767,Na3YCl6 + H2O -> 2 HCl + YClO + 3 NaCl,HCl,2.0,1.0,1.154,-0.71432,0.4397
+Na-M-Cl,Na,Cl,17,NaHoCl4,Ho3+,mp-1209968,0.3333 NaHoCl4 + Na -> 1.333 NaCl + 0.3333 Ho,-0.594,NaHoCl4 -> HoCl3 + 0.5 Cl2 + Na,-0.315,0.656,4.079,1.5 NaHoCl4 + H2O -> 2 HCl + 0.5 Na3HoCl6 + HoClO,HCl,2.0,1.0,1.041,-0.71432,0.3267
+Na-M-Cl,Na,Cl,18,Na3HoCl6,Ho3+,mp-29836,0.3333 Na3HoCl6 + Na -> 2 NaCl + 0.3333 Ho,-0.563,0.3333 Na3HoCl6 -> 0.3333 HoCl3 + 0.5 Cl2 + Na,-0.428,0.563,3.825,Na3HoCl6 + H2O -> 2 HCl + HoClO + 3 NaCl,HCl,2.0,1.0,1.179,-0.71432,0.4647
+Na-M-Cl,Na,Cl,19,NaErCl4,Er3+,mp-29083,0.3333 NaErCl4 + Na -> 1.333 NaCl + 0.3333 Er,-0.565,NaErCl4 -> ErCl3 + 0.5 Cl2 + Na,-0.215,0.574,4.23,1.5 NaErCl4 + H2O -> 2 HCl + 0.5 Na3ErCl6 + ErClO,HCl,2.0,1.0,1.116,-0.71432,0.4017
+Na-M-Cl,Na,Cl,20,Na3ErCl6,Er3+,mp-28542,0.3333 Na3ErCl6 + Na -> 2 NaCl + 0.3333 Er,-0.561,0.3333 Na3ErCl6 -> 0.3333 ErCl3 + 0.5 Cl2 + Na,-0.421,0.561,3.766,Na3ErCl6 + H2O -> 2 HCl + ErClO + 3 NaCl,HCl,2.0,1.0,1.136,-0.71432,0.4217
+Na-M-Cl,Na,Cl,21,Na3TmCl6,Tm3+,mp-1111504,0.3333 Na3TmCl6 + Na -> 2 NaCl + 0.3333 Tm,-0.162,0.3333 Na3TmCl6 -> 0.3333 TmCl3 + 0.5 Cl2 + Na,-0.072,0.162,4.428,0.2222 Na3TmCl6 + H2O -> 1.333 HCl + 0.1111 Tm2O3 + 0.6667 NaHO,HCl,1.333,1.0,1.931,-0.47609,1.4549
+Na-M-Cl,Na,Cl,22,NaScCl4,Sc3+,mp-29432,0.3333 NaScCl4 + Na -> 1.333 NaCl + 0.3333 Sc,-0.785,NaScCl4 -> ScCl3 + 0.5 Cl2 + Na,-0.513,0.853,3.783,0.6667 NaScCl4 + H2O -> 2 HCl + 0.6667 NaCl + 0.3333 Sc2O3,HCl,2.0,1.0,0.994,-0.71432,0.2797
+Na-M-Cl,Na,Cl,23,Na3ScCl6,Sc3+,mp-1189516,0.3333 Na3ScCl6 + Na -> 2 NaCl + 0.3333 Sc,-0.791,0.3333 Na3ScCl6 -> 0.3333 ScCl3 + 0.5 Cl2 + Na,-0.531,0.853,3.756,0.6667 Na3ScCl6 + H2O -> 2 HCl + 2 NaCl + 0.3333 Sc2O3,HCl,2.0,1.0,0.982,-0.71432,0.2677
+Na-M-Cl,Na,Cl,24,NaTaCl6,Ta5+,mp-28179,0.2 NaTaCl6 + Na -> 1.2 NaCl + 0.2 Ta,-1.982,NaTaCl6 -> TaCl5 + 0.5 Cl2 + Na,-0.431,2.148,3.906,0.4 NaTaCl6 + H2O -> 2 HCl + 0.4 NaCl + 0.2 Ta2O5,HCl,2.0,1.0,0.537,-0.71432,-0.1773
+Na-M-Cl,Na,Cl,25,Na3TiCl6,Ti3+,mp-29850,0.3333 Na3TiCl6 + Na -> 2 NaCl + 0.3333 Ti,-1.564,0.3333 Na3TiCl6 -> 0.3333 TiCl4 + 0.3333 Cl2 + Na,-1.247,1.5,2.109,0.6667 Na3TiCl6 + H2O -> 2 HCl + 0.3333 Ti2O3 + 2 NaCl,HCl,2.0,1.0,0.546,-0.71432,-0.1683
+Na-M-Cl,Na,Cl,26,Na2Mn3Cl8,Mn2+,mp-27126,0.1667 Na2Mn3Cl8 + Na -> 1.333 NaCl + 0.5 Mn,-1.978,0.5 Na2Mn3Cl8 -> 1.5 MnCl2 + 0.5 Cl2 + Na,-0.505,2.008,3.795,0.1875 Na2Mn3Cl8 + H2O -> HCl + 0.0625 Na6MnCl8 + 0.5 Mn(HO)2,HCl,1.0,1.0,0.741,-0.35716,0.3838
+Na-M-Cl,Na,Cl,27,Na2MnCl4,Mn2+,mp-27280,0.5 Na2MnCl4 + Na -> 2 NaCl + 0.5 Mn,-2.002,0.5 Na2MnCl4 -> 0.5 MnCl2 + 0.5 Cl2 + Na,-0.546,2.008,3.789,0.75 Na2MnCl4 + H2O -> HCl + 0.25 Na6MnCl8 + 0.5 Mn(HO)2,HCl,1.0,1.0,0.683,-0.35716,0.3258
+Na-M-Cl,Na,Cl,28,Na6MnCl8,Mn2+,mp-27125,0.5 Na6MnCl8 + Na -> 4 NaCl + 0.5 Mn,-1.919,0.1667 Na6MnCl8 -> 0.1667 MnCl2 + 0.5 Cl2 + Na,-0.508,1.919,3.789,0.5 Na6MnCl8 + H2O -> HCl + 3 NaCl + 0.5 Mn(HO)2,HCl,1.0,1.0,0.807,-0.35716,0.4498
+Na-M-Cl,Na,Cl,29,Na2BeCl4,Be2+,mp-1210352,0.5 Na2BeCl4 + Na -> 2 NaCl + 0.5 Be,-1.399,0.5 Na2BeCl4 -> 0.5 BeCl2 + 0.5 Cl2 + Na,-0.456,1.399,3.868,Na2BeCl4 + H2O -> 2 HCl + 2 NaCl + BeO,HCl,2.0,1.0,0.176,-0.71432,-0.5383
+Na-M-Cl,Na,Cl,30,NaNbCl6,Nb5+,mp-28178,0.2 NaNbCl6 + Na -> 1.2 NaCl + 0.2 Nb,-2.129,NaNbCl6 -> NbCl5 + 0.5 Cl2 + Na,-0.487,2.461,3.822,NaNbCl6 + H2O -> 2 HCl + NbCl3O + NaCl,HCl,2.0,1.0,0.573,-0.71432,-0.1413
+Na-M-Cl,Na,Cl,31,NaAlCl4,Al3+,mp-23363,0.3333 NaAlCl4 + Na -> 1.333 NaCl + 0.3333 Al,-1.5,NaAlCl4 -> AlCl3 + 0.5 Cl2 + Na,-0.206,1.5,4.243,0.6667 NaAlCl4 + H2O -> 2 HCl + 0.6667 NaCl + 0.3333 Al2O3,HCl,2.0,1.0,0.468,-0.71432,-0.2463
+Na-M-Cl,Na,Cl,32,Na2ZnCl4,Zn2+,mp-616461,0.4815 Na2ZnCl4 + Na -> 0.03704 NaZn13 + 1.926 NaCl,-1.764,0.5 Na2ZnCl4 -> 0.5 ZnCl2 + 0.5 Cl2 + Na,-0.44,1.803,3.893,0.3333 Na2ZnCl4 + H2O -> 1.333 HCl + 0.3333 ZnO + 0.6667 NaHO,HCl,1.333,1.0,1.917,-0.47609,1.4409
+Na-M-Cl,Na,Cl,33,Na3CrCl6,Cr3+,mp-28360,0.3333 Na3CrCl6 + Na -> 2 NaCl + 0.3333 Cr,-2.095,0.3333 Na3CrCl6 -> 0.3333 CrCl3 + 0.5 Cl2 + Na,-0.521,2.095,3.771,Na3CrCl6 + H2O -> 2 HCl + CrClO + 3 NaCl,HCl,2.0,1.0,1.033,-0.71432,0.3187
+Na-M-Cl,Na,Cl,34,Na6CdCl8,Cd2+,mp-28022,0.2 Na6CdCl8 + Na -> 1.6 NaCl + 0.2 Na3Cd,-0.805,0.1667 Na6CdCl8 -> 0.1667 CdCl2 + 0.5 Cl2 + Na,-0.51,1.913,3.788,0.5 Na6CdCl8 + H2O -> HCl + 3 NaCl + 0.5 Cd(HO)2,HCl,1.0,1.0,1.464,-0.35716,1.1068
+Na-M-Cl,Na,Cl,35,Na2CdCl4,Cd2+,mp-28658,0.2 Na2CdCl4 + Na -> 0.8 NaCl + 0.2 Na3Cd,-0.834,0.5 Na2CdCl4 -> 0.5 CdCl2 + 0.5 Cl2 + Na,-0.539,1.999,3.788,0.75 Na2CdCl4 + H2O -> HCl + 0.25 Na6CdCl8 + 0.5 Cd(HO)2,HCl,1.0,1.0,1.356,-0.35716,0.9988
+Na-M-Cl,Na,Cl,36,Na3InCl6,In3+,mp-23503,0.2 Na3InCl6 + Na -> 0.2 Na2In + 1.2 NaCl,-1.327,0.3333 Na3InCl6 -> 0.3333 InCl3 + 0.5 Cl2 + Na,-0.319,2.149,4.073,0.6667 Na3InCl6 + H2O -> 2 HCl + 2 NaCl + 0.3333 In2O3,HCl,2.0,1.0,1.659,-0.71432,0.9447
+Na-M-Cl,Na,Cl,37,NaGaCl4,Ga3+,mp-1190761,0.2826 NaGaCl4 + Na -> 0.02174 Na7Ga13 + 1.13 NaCl,-1.814,NaGaCl4 -> GaCl3 + 0.5 Cl2 + Na,-0.258,2.048,4.166,0.6667 NaGaCl4 + H2O -> 2 HCl + 0.6667 NaCl + 0.3333 Ga2O3,HCl,2.0,1.0,1.302,-0.71432,0.5877
+Na-M-Cl,Na,Cl,38,Na4AgCl5,Ag+,mp-1221198,0.6667 Na4AgCl5 + Na -> 0.3333 NaAg2 + 3.333 NaCl,-1.946,0.25 Na4AgCl5 -> 0.125 Ag2Cl3 + 0.4375 Cl2 + Na,-0.599,2.762,3.43,0.25 Na4AgCl5 + H2O -> HCl + 0.25 AgCl + NaHO,HCl,1.0,1.0,1.88,-0.35716,1.5228
+Na-M-Cl,Na,Cl,39,NaSbCl6,Sb5+,mp-28177,0.125 NaSbCl6 + Na -> 0.125 Na3Sb + 0.75 NaCl,-1.954,NaSbCl6 -> SbCl5 + 0.5 Cl2 + Na,-0.223,3.257,4.218,0.3846 NaSbCl6 + H2O -> 2 HCl + 0.07692 NaSb5O13 + 0.3077 NaCl,HCl,2.0,1.0,1.097,-0.71432,0.3827
