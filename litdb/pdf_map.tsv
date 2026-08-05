@@ -47,3 +47,9 @@ park2026_thiolene_sbr_binder_assb	thiol-ene click
 # ── 다물리 · ML ────────────────────────────────────────────────────
 lee2024_multiphysics_dem_fem_initial_pressure_assb	multiphysics modeling of the influence of initial pressure
 duquesnoy2023_ml_multiobjective_manufacturing_optimization	machine learning-assisted multi-objective optimization of batter
+#
+# ── 개념화학 (EXTERNAL) ──────────────────
+# 가드: 업로드된 '53. Sup3) …' (82 pp) 는 본문(22)+SI(60) 을 이어붙인 중복본이다.
+#   그걸 넣고 추출하면 본문 Fig. 1 이 Fig. S1 로 잡혀 S 번호가 오염된다(§14-12).
+#   아래 줄은 'Sup' 이 없는 본문 파일만 가리킨다 — 그림 51장은 이미 추출돼 있고 git 에 들어있다.
+mulks2024_hard_soft_electrons_holes	53. hard and soft electrons
