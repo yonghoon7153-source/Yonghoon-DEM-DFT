@@ -84,9 +84,26 @@
               {% if not s.fmt %}title="3D 파서 없음 — 다운로드해서 VESTA로 보세요"{% endif %}>{{ s.name }}</button>
       {% endfor %}
     </div>
+    {# 보기 조작 — VESTA 에서 늘 하는 것들(다면체·타일링·정면) 을 버튼으로 #}
+    <div id="v3d-ctrls" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px">
+      <span class="muted" style="font-size:.72rem">보기</span>
+      <button class="btn sm active" id="v3d-poly" onclick="v3dToggle('poly',this)"
+              title="PS₄ 사면체를 면으로 — argyrodite 골격이 이렇게 읽힌다">🔷 PS₄ 다면체</button>
+      <button class="btn sm active" id="v3d-cell" onclick="v3dToggle('cell',this)" title="단위셀 상자">▦ 셀</button>
+      <button class="btn sm" id="v3d-li" onclick="v3dToggle('li',this)" title="Li 를 숨기면 골격이 또렷하다">Li 숨기기</button>
+      <span style="width:8px"></span>
+      <button class="btn sm active" onclick="v3dRep(1)" id="v3d-r1">1×1×1</button>
+      <button class="btn sm" onclick="v3dRep(2)" id="v3d-r2" title="주기 반복을 보고 싶을 때">2×2×2</button>
+      <span style="width:8px"></span>
+      <button class="btn sm" onclick="v3dView('a')">a축</button>
+      <button class="btn sm" onclick="v3dView('b')">b축</button>
+      <button class="btn sm" onclick="v3dView('c')">c축</button>
+      <button class="btn sm" onclick="v3dView('iso')" title="살짝 비스듬히 — 깊이가 보인다">비스듬히</button>
+    </div>
     <div class="viewer3d" id="viewer"></div>
+    <div id="v3d-legend" class="v3d-legend"></div>
     <div class="struct-dl muted" style="font-size:.74rem;margin-top:8px">
-      cif = 단위셀 표시 · xyz = 원자만 · vasp(POSCAR)는 시도 후 실패 시 다운로드 · vesta는 다운로드 전용
+      cif = 단위셀 표시 · xyz = 원자만(격자 없음 → 타일링·셀 불가) · vasp(POSCAR) 지원 · vesta는 다운로드 전용
       &nbsp;·&nbsp; <a id="dl-struct" href="#" download>⬇ 현재 파일 다운로드</a>
     </div>
   </div>
@@ -480,7 +497,122 @@ function drawElf(){
     Plotly.newPlot('elf-chart',traces,layout,{responsive:true,displaylogo:false});
   }).catch(function(e){box.innerHTML='<span class="muted">차트 로드 실패</span>';});
 }
-let viewer;
+/* ── 3D 구조 뷰어 (3Dmol) — VESTA 스타일 ───────────────────────────────
+ * 1저자 지적(2026-08-06): "3D 구조가 구려 / argyrodite, primitive cell 처럼 보이게".
+ * 기본값(회색 공+막대, 1셀, 정면)으로는 argyrodite 골격이 안 읽힌다. 바꾼 것:
+ *   ① 원소 색·크기를 우리 house 팔레트 + 이온반경 비례로 (Li 작게, S 크게)
+ *   ② **PS₄ 사면체를 면으로** 그린다 — 이 계의 골격은 고립 PS₄ 이고, 그게 보여야
+ *      "argyrodite" 로 읽힌다 (3Dmol 은 다면체가 없어 addCustom 으로 4면을 직접 만든다)
+ *   ③ 기본 2×2×2 타일링 — 1셀만 보면 케이지가 잘려 덩어리로 보인다
+ *   ④ 비스듬한 시점 + 얕은 원근 — 정면은 겹쳐서 깊이가 죽는다
+ * ⚠ xyz 는 격자가 없다 → 타일링·셀 버튼은 자동으로 꺼진다.
+ */
+const V3D_COLOR = {Li:'#0d9488', P:'#7c3aed', S:'#c05621', Cl:'#65a30d',
+                   O:'#be123c', B:'#0284c7', N:'#2563eb', C:'#334155', H:'#94a3b8'};
+const V3D_RADIUS = {Li:0.34, P:0.42, S:0.62, Cl:0.62, O:0.52, B:0.36, N:0.5, C:0.5, H:0.25};
+let viewer, v3dModel, v3dCell = null, v3dName = '', v3dFmt = '';
+let v3dOpt = {poly:true, cell:true, li:true, rep:1, view:'iso'};
+
+function v3dHasCell(){ return !!v3dCell; }
+
+/* 격자 벡터 3개 — 3Dmol 은 modelData.cryst.matrix(3x3, 열 우선) 에 담아 둔다.
+   xyz 처럼 격자가 없으면 null (그땐 주기 이미지를 못 만든다). */
+function v3dLattice(){
+  try{
+    const c = viewer.getModel().modelData.cryst;
+    const e = c && c.matrix && c.matrix.elements;
+    if(!e) return null;
+    return [[e[0],e[1],e[2]],[e[3],e[4],e[5]],[e[6],e[7],e[8]]];
+  }catch(e){ return null; }
+}
+
+function v3dApply(){
+  if(!viewer || !v3dModel) return;
+  viewer.removeAllShapes();
+  const atoms = viewer.selectedAtoms({});
+
+  /* ⚠ 자동 결합(stick)을 쓰지 않는다. argyrodite 는 Li 가 60% 라 Li 결합까지 그리면
+     화면이 실뭉치가 된다(2026-08-06 실측). VESTA 로 그리는 방식 그대로:
+       · 골격 = PS₄ 사면체(면) + 그 안의 P–S 막대만
+       · Li · Cl = 결합 없는 구 (Cl 은 케이지 중심, Li 는 그 사이 — 이게 argyrodite 그림이다) */
+  viewer.setStyle({}, {sphere:{scale:0.001}});           // 기본을 지우고
+  Object.keys(V3D_COLOR).forEach(el=>{
+    viewer.setStyle({elem:el}, {sphere:{radius:V3D_RADIUS[el]||0.4, color:V3D_COLOR[el]}});
+  });
+  if(!v3dOpt.li) viewer.setStyle({elem:'Li'}, {sphere:{radius:0.001}});
+
+  /* PS₄ (또는 PO₄) — 중심 P 마다 가장 가까운 S/O 4개.
+     ⚠ **주기 이미지까지 봐야 한다.** 셀 경계의 P 는 파트너 S 가 옆 셀에 있어서,
+       셀 안만 뒤지면 사면체가 4개 중 1개만 그려진다 (2026-08-06 실측 — 그래서 '구려' 보였다).
+       격자를 아는 형식(cif·vasp)이면 ±1 셀 27개 평행이동을 같이 훑는다. */
+  const P = atoms.filter(a=>a.elem==='P'), X0 = atoms.filter(a=>a.elem==='S'||a.elem==='O');
+  const L = v3dLattice();                       // [[ax,ay,az],[bx..],[cx..]] 또는 null
+  const X = [];
+  if(L){
+    for(let i=-1;i<=1;i++) for(let j=-1;j<=1;j++) for(let k=-1;k<=1;k++){
+      const dx=i*L[0][0]+j*L[1][0]+k*L[2][0], dy=i*L[0][1]+j*L[1][1]+k*L[2][1],
+            dz=i*L[0][2]+j*L[1][2]+k*L[2][2];
+      X0.forEach(a=>X.push({x:a.x+dx, y:a.y+dy, z:a.z+dz, elem:a.elem}));
+    }
+  } else { X0.forEach(a=>X.push(a)); }
+  P.forEach(p=>{
+    const near = X.map(x=>({x, d:Math.hypot(x.x-p.x, x.y-p.y, x.z-p.z)}))
+                  .filter(o=>o.d < 2.9).sort((a,b)=>a.d-b.d).slice(0,4).map(o=>o.x);
+    if(near.length < 2) return;
+    near.forEach(x=>viewer.addCylinder({start:{x:p.x,y:p.y,z:p.z}, end:{x:x.x,y:x.y,z:x.z},
+                                        radius:0.11, color:V3D_COLOR.P, fromCap:1, toCap:1}));
+    if(v3dOpt.poly && near.length===4){
+      [[0,1,2],[0,1,3],[0,2,3],[1,2,3]].forEach(f=>viewer.addCustom({
+        vertexArr:f.map(i=>({x:near[i].x, y:near[i].y, z:near[i].z})),
+        normalArr:[], faceArr:[0,1,2], color:V3D_COLOR.P, opacity:0.62}));
+    }
+  });
+
+  if(v3dOpt.cell && v3dHasCell()){
+    try{ viewer.addUnitCell(v3dModel, {box:{color:'#64748b'}, alabel:'', blabel:'', clabel:''}); }catch(e){}
+  }
+  viewer.render();
+}
+
+function v3dCamera(){
+  if(!viewer) return;
+  viewer.zoomTo();
+  if(v3dOpt.view==='a'){ viewer.rotate(90,'y'); }
+  else if(v3dOpt.view==='b'){ viewer.rotate(90,'x'); }
+  else if(v3dOpt.view==='iso'){ viewer.rotate(-20,'x'); viewer.rotate(26,'y'); }
+  // 'c' = 그대로(정면)
+  viewer.zoom(0.88);
+  viewer.render();
+}
+
+function v3dToggle(k, btn){
+  v3dOpt[k] = !v3dOpt[k];
+  if(btn) btn.classList.toggle('active', k==='li' ? !v3dOpt[k] : v3dOpt[k]);
+  if(k==='li' && btn) btn.textContent = v3dOpt.li ? 'Li 숨기기' : 'Li 보이기';
+  v3dApply();
+}
+function v3dRep(n){
+  v3dOpt.rep = n;
+  ['v3d-r1','v3d-r2'].forEach(id=>{
+    const e=document.getElementById(id); if(e) e.classList.toggle('active', id==='v3d-r'+n);
+  });
+  if(v3dName) loadStruct(v3dName, v3dFmt);          // 타일링은 다시 읽어야 한다
+}
+function v3dView(v){ v3dOpt.view = v; if(viewer){ viewer.setView(v3dHome||undefined); } v3dCamera(); }
+let v3dHome = null;
+
+function v3dLegend(atoms){
+  const box = document.getElementById('v3d-legend');
+  if(!box) return;
+  const seen = {};
+  (atoms||[]).forEach(a=>{ seen[a.elem] = (seen[a.elem]||0)+1; });
+  const order = ['Li','P','S','Cl','O','B','N','C','H'].filter(e=>seen[e]);
+  box.innerHTML = order.map(e=>
+    '<span class="v3d-chip"><i style="background:'+(V3D_COLOR[e]||'#888')+'"></i>'+e+
+    ' <span class="muted">'+seen[e]+'</span></span>').join('') +
+    (v3dHasCell() ? '' : '<span class="muted" style="font-size:.72rem">· 격자 정보 없음(xyz) — 셀·타일링 꺼짐</span>');
+}
+
 function _dlNote(name,msg){
   var v=document.getElementById('viewer');
   if(v)v.innerHTML='<div class="muted" style="padding:28px;line-height:1.7">'+msg+
@@ -494,7 +626,7 @@ function loadStruct(name,fmt,btn){
   if(!fmt){_dlNote(name,'이 형식(.'+_cesc(name.split('.').pop())+')은 3D 파서가 없어요 — 다운로드해서 VESTA로 보세요.');return;}
   if(typeof $3Dmol==='undefined'){_dlNote(name,'3D 뷰어(3Dmol)를 불러오지 못했어요 — 네트워크/CDN 확인.');return;}
   fetch('/api/structure/'+encodeURIComponent(name)).then(r=>r.text()).then(txt=>{
-    if(!viewer)viewer=$3Dmol.createViewer('viewer',{backgroundColor:'white'});
+    if(!viewer)viewer=$3Dmol.createViewer('viewer',{backgroundColor:'#ffffff',antialias:true,orthographic:false});
     viewer.clear();
     try{
       viewer.addModel(txt, fmt);              // ⚠ 확장자별 실제 파서 (POSCAR를 xyz로 넘기던 버그 수정)
@@ -503,9 +635,25 @@ function loadStruct(name,fmt,btn){
       _dlNote(name,'이 파일을 3D로 파싱하지 못했어요 (형식 '+_cesc(fmt)+'). 다운로드해서 VESTA로 보세요.');
       return;
     }
-    viewer.setStyle({},{stick:{radius:.13},sphere:{scale:.27}});
-    if(fmt==='cif'||fmt==='vasp'){try{viewer.addUnitCell();}catch(e){}}
-    viewer.zoomTo();viewer.render();
+    v3dModel = viewer.getModel();
+    v3dName = name; v3dFmt = fmt;
+    // 격자가 있는 형식만 셀·타일링이 가능하다 (xyz 는 원자 좌표뿐)
+    v3dCell = (fmt==='cif'||fmt==='vasp') ? true : null;
+    var ctl = document.getElementById('v3d-ctrls');
+    if(ctl) ctl.querySelectorAll('#v3d-cell,#v3d-r1,#v3d-r2').forEach(function(b){
+      b.disabled = !v3dCell; b.style.opacity = v3dCell ? '' : .45; });
+    if(v3dCell && v3dOpt.rep > 1){
+      try{ viewer.replicateUnitCell(v3dOpt.rep, v3dOpt.rep, v3dOpt.rep, v3dModel); }catch(e){}
+    }
+    v3dApply();
+    viewer.zoomTo(); viewer.zoom(0.92);
+    v3dHome = viewer.getView();
+    v3dCamera();
+    v3dLegend(viewer.selectedAtoms({}));
+    /* ⚠ 첫 호출 때 modelData.cryst 가 아직 안 채워져 있을 때가 있다 — 그러면 주기 이미지를
+       못 만들어 **사면체가 4개 중 1개만** 그려진다(2026-08-06 실측: shapes 12 → 다시 부르면 36).
+       한 틱 뒤 한 번 더 그린다(먼저 removeAllShapes 하므로 중복 없음). */
+    setTimeout(()=>{ if(v3dCell && v3dLattice()) v3dApply(); }, 80);
   }).catch(()=>showToast('구조 로드 실패'));
 }
 {% set sv0 = (structures|selectattr('viewable')|list|first) %}

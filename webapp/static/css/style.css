@@ -216,7 +216,16 @@ textarea:focus-visible,[tabindex]:focus-visible,.tabs button:focus-visible{
 .tab-panel.active{display:block}
 
 /* figures / structure / chart */
-.viewer3d{width:100%;height:420px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);position:relative}
+/* 3D 구조 — 흰 배경이 정석(VESTA 관례)이라 테마와 무관하게 흰색, 대신 테두리로 정리.
+   높이를 키웠다: 420 px 에서는 2×2×2 타일링이 답답하다 (2026-08-06 1저자 "3D 가 구려"). */
+.viewer3d{width:100%;height:min(62vh,560px);min-height:380px;border:1px solid var(--border);
+  border-radius:var(--radius);background:#fff;position:relative;
+  box-shadow:inset 0 0 0 1px rgba(16,24,40,.03)}
+.v3d-legend{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:8px;font-size:.76rem}
+.v3d-chip{display:inline-flex;align-items:center;gap:5px;font-weight:600;color:var(--text2)}
+.v3d-chip i{width:11px;height:11px;border-radius:50%;display:inline-block;
+  box-shadow:0 0 0 1px rgba(16,24,40,.15)}
+#v3d-ctrls .btn.active{background:var(--brand-fill);color:var(--on-brand);border-color:transparent}
 .chart{width:100%;min-height:360px}
 
 /* pipeline flow (PDF INPUT→MODEL→OUTPUT 톤) */
