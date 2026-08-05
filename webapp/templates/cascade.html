@@ -482,6 +482,22 @@
     <div class="cal-t">⚠ 큐레이션 값 포함</div>
     <div class="cal-b" style="font-size:.8rem">{{ casc.themes.curation_disclaimer }}</div>
   </div>
+  {% if casc.themes.literature_disclaimer %}
+  {% set LD = casc.themes.literature_disclaimer %}
+  <div class="callout cal-warn" style="margin:0 0 12px">
+    <div class="cal-t">💧 문헌 소환값 축 (<span class="mono">dG_hyd_*_lit*</span> · 테마 «공기/수분 내성 (문헌 ΔG_hyd)»)</div>
+    <div class="cal-b" style="font-size:.8rem;line-height:1.65">
+      {{ LD['_']|bold }}<br>
+      <span class="muted">출처</span> {{ LD.source }}<br>
+      <span class="muted">계산 수준</span> {{ LD.level }}<br>
+      <span class="muted">조건</span> {{ LD.conditions }}<br>
+      <span class="muted">매칭</span> {{ LD.matching }}<br>
+      <span class="muted">커버리지</span> {{ LD.coverage|bold }}<br>
+      {{ LD.chloride_convention_warning|bold }}<br>
+      {{ LD.proxy_caveat|bold }}
+    </div>
+  </div>
+  {% endif %}
   <div class="card" style="margin-bottom:14px">
     <h3>🎯 테마 선택 <span class="muted" style="font-weight:400;font-size:.8rem">카드 체크 = 조합에 넣기 (2개 이상 권장) · 칩 클릭 = 분자오비탈</span></h3>
     <div class="muted" style="font-size:.78rem;line-height:1.6">조합 규칙: <span class="mono">{{ casc.themes.combine_rule }}</span></div>
@@ -771,10 +787,20 @@ function tgThemeSel(tid){
 }
 function _fmt(v,nd){return (v==null||isNaN(v))?'—':(+v).toFixed(nd==null?3:nd);}
 function combineRows(){ // combined = (∏ norm)^(1/n) — themes.json combine_rule 그대로
-  return TDOP.map(function(d){var p=1;
-    selThemes.forEach(function(t){p*=Math.max(d.norm&&d.norm[t]!=null?d.norm[t]:0,0);});
-    return {d:d,combined:Math.pow(p,1/selThemes.length)};
-  }).sort(function(a,b){return b.combined-a.combined;});
+  // ⚠ norm 이 null 인 축(= 그 도펀트에 대한 **판정 없음**)은 0 으로 깔면 안 된다.
+  //   0 은 "가장 나쁨" 이라 기하평균에서 그 도펀트를 말살하는데, 데이터가 없는 것은 나쁜 것이 아니다.
+  //   (air_stability_lit 은 [Zhu20] 표에 같은 산화수가 없는 12종이 null 이다.)
+  //   → 선택된 축 중 하나라도 null 이면 랭킹에서 **제외**하고, 몇 종이 왜 빠졌는지 표시한다.
+  var kept=[],dropped=[];
+  TDOP.forEach(function(d){
+    var miss=selThemes.filter(function(t){return !(d.norm&&d.norm[t]!=null);});
+    if(miss.length){dropped.push({dopant:d.dopant,miss:miss});return;}
+    var p=1;
+    selThemes.forEach(function(t){p*=Math.max(d.norm[t],0);});
+    kept.push({d:d,combined:Math.pow(p,1/selThemes.length)});
+  });
+  kept.sort(function(a,b){return b.combined-a.combined;});
+  return {rows:kept,dropped:dropped};
 }
 function renderCombine(){
   var hint=document.getElementById('combine-hint'),wrap=document.getElementById('combine-tbl-wrap'),
@@ -782,8 +808,8 @@ function renderCombine(){
   if(!wrap)return;
   if(!selThemes.length){hint.hidden=false;wrap.innerHTML='';sc.hidden=true;_tsDrawn=false;return;}
   hint.hidden=true;
-  var rows=combineRows();
-  if(selThemes.length===2&&window.Plotly){sc.hidden=false;drawThemeScatter(rows);}
+  var cr=combineRows(),rows=cr.rows,dropped=cr.dropped;
+  if(selThemes.length===2&&window.Plotly&&rows.length){sc.hidden=false;drawThemeScatter(rows);}
   else{sc.hidden=true;_tsDrawn=false;}
   var head='<th onclick="sortT(this,0)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">#</th><th onclick="sortT(this,1)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">dopant</th>'+
     '<th onclick="sortT(this,2)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">group</th><th onclick="sortT(this,3)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">combined</th>'+
@@ -797,7 +823,23 @@ function renderCombine(){
       selThemes.map(function(t){var raw=d[THEMES[t].metric_key];
         return '<td class="num" title="원값 '+_esc(THEMES[t].metric_key)+' = '+_fmt(raw)+'">'+_fmt(d.norm?d.norm[t]:null)+'</td>';}).join('')+'</tr>';
   }).join('');
-  wrap.innerHTML='<div class="tbl-scroll"><table class="data-table sortable" id="combine-tbl"><thead><tr>'+head+'</tr></thead><tbody>'+body+'</tbody></table></div>';
+  // 판정 없음으로 빠진 도펀트를 **반드시 눈에 보이게** 적는다 (조용한 절단 금지).
+  var note='';
+  if(dropped.length){
+    var byTheme={};
+    dropped.forEach(function(x){x.miss.forEach(function(t){(byTheme[t]=byTheme[t]||[]).push(x.dopant);});});
+    note='<p class="fig-note" style="margin:.5rem 0 0"><strong>⚠ 랭킹에서 제외 '+dropped.length+'종</strong>'+
+      ' — 선택한 축에 <strong>데이터가 없는</strong> 도펀트다. '+
+      '<em>데이터 없음 ≠ 나쁨</em> 이라 0 으로 깔지 않고 빼 둔다.<br>'+
+      Object.keys(byTheme).map(function(t){
+        return '<span style="color:var(--muted)">'+_esc(THEMES[t]?THEMES[t].icon+' '+THEMES[t].label:t)+
+          ' 결측 ('+byTheme[t].length+'): </span>'+_esc(byTheme[t].join(', '));
+      }).join('<br>')+'</p>';
+  }
+  if(!rows.length){
+    wrap.innerHTML='<p class="fig-note">선택한 축 조합에 데이터가 모두 있는 도펀트가 없다.</p>'+note;return;
+  }
+  wrap.innerHTML='<div class="tbl-scroll"><table class="data-table sortable" id="combine-tbl"><thead><tr>'+head+'</tr></thead><tbody>'+body+'</tbody></table></div>'+note;
 }
 function drawThemeScatter(rows){
   var t1=selThemes[0],t2=selThemes[1],m1=THEMES[t1],m2=THEMES[t2];
