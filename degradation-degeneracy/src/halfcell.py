@@ -14,17 +14,25 @@
 22p는 별도 측정한 half-cell OCV를 기준으로 fitting했다. 같은 성격의 기준을
 쓰려면 **전극 자체 화학량론에 대한 OCP 곡선**이 필요하다.
 
-이 모듈은 넓은 전압창(기본 2.0~4.4 V)·저율(0.02C) 시뮬레이션 1회로 그것을 뽑는다.
-전극 전위를 그 전극의 화학량론에 짝지어 저장하므로, 결과는 셀 용량 정규화와
-무관한 **half-cell OCV 테이블**이다.
+두 가지 방법을 제공한다.
 
-실측 확보 범위 (Chen2020_composite baseline):
-    PE  y = 0.251 ~ 0.928   (U 3.545 ~ 4.338 V)
-    NE  z = 0.001 ~ 0.998   (U -0.053 ~ 1.275 V)   ← 사실상 전 범위
+  method="ocp" (기본, 권장) — 파라미터셋의 OCP 함수를 직접 평가.
+      **화학량론 0~1 전 범위**를 얻는다. 복합 음극은 평형 조건으로 Gr·Si를 분배.
+  method="sim"              — 넓은 전압창 시뮬레이션에서 추출.
+      셀이 실제 지나간 구간만 (PE y 0.251~0.928) → 전 범위가 아니다.
 
-NE가 전 범위인 이유는 이 셀이 음극 제한이라 흑연이 먼저 바닥·천장에 닿기 때문이고,
-PE가 0.25 아래로 못 가는 것도 같은 이유다 (진짜 반쪽셀이라야 그 아래가 나온다).
-그래도 기존 기준보다 훨씬 넓어 α<1 영역을 덮는다.
+검증: 두 방법을 겹치는 구간에서 비교하면
+    PE 평균차 1.7 mV (최대 4.7)
+    NE 평균차 3.8 mV (z 0.02~0.98 구간; 끝단은 흑연 OCP 발산으로 큼)
+→ OCP 함수 평가가 시뮬레이션 결과를 정확히 재현한다.
+
+★ 이 기준으로 fitting하면 α·β가 논문 규약의 의미를 정확히 갖는다.
+  기준 조건 자체를 fitting한 결과가 그 증거다:
+      α_PE,ini = 1.465  →  셀이 PE 전 범위의 1/1.465 = 68.3% 사용
+                           (시뮬레이션 관측 0.251~0.928 = 67.7%와 일치)
+      β_PE,ini = -0.395 →  x=0에서 y = 0.395/1.465 = 0.270
+                           (baseline 17038/63104 = 0.270과 일치)
+      α_NE,ini = 1.029  →  NE는 전 범위의 97% 사용 (관측과 일치)
 ────────────────────────────────────────────────────────────────────────
 """
 
@@ -62,6 +70,69 @@ class HalfCellReference:
     def coverage(self) -> dict:
         return {"pe_min": float(self.y_pe.min()), "pe_max": float(self.y_pe.max()),
                 "ne_min": float(self.z_ne.min()), "ne_max": float(self.z_ne.max())}
+
+
+def _eval_ocp(fn, xs: np.ndarray) -> np.ndarray:
+    """pybamm OCP 함수를 점별 평가. (흑연 OCP는 심볼 연산이라 배열 입력 불가)"""
+    import pybamm
+
+    out = []
+    for xi in xs:
+        r = fn(pybamm.Scalar(float(xi)))
+        r = r.evaluate() if hasattr(r, "evaluate") else r
+        out.append(float(np.asarray(r).ravel()[0]))
+    return np.asarray(out)
+
+
+def compute_halfcell_from_ocp(cfg: dict, n_points: int = 400,
+                              branch: str = "delithiation") -> HalfCellReference:
+    """★ 진짜 full-range half-cell OCV — 파라미터셋의 OCP 함수를 직접 평가한다.
+
+    시뮬레이션 추출본은 셀이 실제로 지나간 구간(PE y 0.251~0.928)만 담지만,
+    OCP 함수는 화학량론 0~1 전 범위를 준다. 22p가 쓴 "provided half-cell OCV"와
+    같은 성격이며, 이래야 α·β가 논문 규약의 의미를 정확히 갖는다.
+
+    복합 음극(Gr+Si)은 **평형 조건**으로 푼다:
+      같은 전위 U에서 U_gr(x_gr) = U_si(x_si) = U 이므로 각 OCP를 역보간해
+      x_gr(U), x_si(U)를 얻고, 용량 가중 평균으로 z(U)를 만든다.
+        z = (Q_gr·x_gr + Q_si·x_si)/(Q_gr + Q_si),  Q = c_max·vf
+      (이 baseline에서 Gr 83.5%, Si 16.5%)
+
+    branch: Si는 히스테리시스가 있어 가지를 골라야 한다. grid 곡선이 최종 방전
+            스텝에서 추출되므로 기본값은 "delithiation"(방전 중 음극은 탈리튬화).
+    """
+    import pybamm
+
+    b = cfg["baseline"]
+    p = pybamm.ParameterValues(cfg["parameter_set"])
+    x = np.linspace(1e-4, 1 - 1e-4, n_points)
+
+    # ── 양극: 화학량론 그대로 ──
+    u_pe = _eval_ocp(p["Positive electrode OCP [V]"], x)
+
+    # ── 음극: Gr·Si 평형 분배 ──
+    si_key = {"delithiation": "Secondary: Negative electrode delithiation OCP [V]",
+              "lithiation": "Secondary: Negative electrode lithiation OCP [V]",
+              "mean": "Secondary: Negative electrode OCP [V]"}[branch]
+    u_gr = _eval_ocp(p["Primary: Negative electrode OCP [V]"], x)
+    u_si = _eval_ocp(p[si_key], x)
+
+    q_gr = b["ne_primary_max_conc"] * b["ne_primary_vf"]
+    q_si = b["ne_secondary_max_conc"] * b["ne_secondary_vf"]
+
+    u_grid = np.linspace(min(u_gr.min(), u_si.min()), max(u_gr.max(), u_si.max()),
+                         n_points * 2)
+    # OCP는 단조감소 → 역보간 위해 뒤집는다. 범위 밖은 포화(0 또는 1).
+    x_gr = np.interp(u_grid, u_gr[::-1], x[::-1], left=1.0, right=0.0)
+    x_si = np.interp(u_grid, u_si[::-1], x[::-1], left=1.0, right=0.0)
+    z = (q_gr * x_gr + q_si * x_si) / (q_gr + q_si)
+
+    y_s, u_p = _dedupe_sorted(x, u_pe)
+    z_s, u_n = _dedupe_sorted(z, u_grid)
+    ref = HalfCellReference(y_pe=y_s, u_pe=u_p, z_ne=z_s, u_ne=u_n)
+    log.info("half-cell(OCP 함수) 기준: PE y %.4f~%.4f, NE z %.4f~%.4f (Si 가지=%s)",
+             y_s.min(), y_s.max(), z_s.min(), z_s.max(), branch)
+    return ref
 
 
 def _dedupe_sorted(x: np.ndarray, y: np.ndarray) -> tuple:
@@ -120,17 +191,23 @@ def compute_halfcell_reference(cfg: dict, v_lo: float = 2.0, v_hi: float = 4.4,
 
 
 def get_halfcell_reference(cfg: dict, cache_dir: str | Path | None = None,
-                           force: bool = False, **kw) -> HalfCellReference:
-    """baseline 해시 키 캐시 → 미스 시 계산 (완방상태와 같은 정책)."""
+                           force: bool = False, method: str = "ocp",
+                           **kw) -> HalfCellReference:
+    """baseline 해시 키 캐시 → 미스 시 계산 (완방상태와 같은 정책).
+
+    method: "ocp" (기본) — 파라미터셋 OCP 함수 직접 평가, 화학량론 전 범위
+            "sim"        — 넓은 전압창 시뮬레이션 추출 (셀이 지나간 구간만)
+    """
     root = Path(cfg.get("_config_path", ".")).resolve().parent.parent
     d = Path(cache_dir) if cache_dir else root / ".cache" / "halfcell"
-    path = d / f"{baseline_hash(cfg)}.json"
+    path = d / f"{baseline_hash(cfg)}_{method}.json"
 
     if not force and path.exists():
         log.info("half-cell 기준 캐시 적중: %s", path)
         return HalfCellReference.from_dict(json.loads(path.read_text(encoding="utf-8")))
 
-    ref = compute_halfcell_reference(cfg, **kw)
+    ref = (compute_halfcell_from_ocp(cfg, **kw) if method == "ocp"
+           else compute_halfcell_reference(cfg, **kw))
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(ref.as_dict()), encoding="utf-8")
     log.info("half-cell 기준 캐시 저장: %s", path)
@@ -147,6 +224,8 @@ def main() -> None:
     ap.add_argument("--v-lo", type=float, default=2.0)
     ap.add_argument("--v-hi", type=float, default=4.4)
     ap.add_argument("--c-rate", type=float, default=0.02)
+    ap.add_argument("--method", default="ocp", choices=["ocp", "sim"],
+                    help="ocp=OCP 함수 직접 평가(전 범위) | sim=시뮬레이션 추출")
     ap.add_argument("--force", action="store_true")
     ap.add_argument("--plot", default=None, help="곡선 그림 저장 경로")
     ap.add_argument("--log-level", default="INFO")
@@ -156,8 +235,9 @@ def main() -> None:
                         format="%(asctime)s %(levelname)s %(name)s: %(message)s")
     cfg = load_config(args.config)
     validate_config(cfg)
-    ref = get_halfcell_reference(cfg, force=args.force, v_lo=args.v_lo,
-                                 v_hi=args.v_hi, c_rate=args.c_rate)
+    kw = ({} if args.method == "ocp"
+          else {"v_lo": args.v_lo, "v_hi": args.v_hi, "c_rate": args.c_rate})
+    ref = get_halfcell_reference(cfg, force=args.force, method=args.method, **kw)
     print(json.dumps(ref.coverage(), indent=2))
 
     if args.plot:
