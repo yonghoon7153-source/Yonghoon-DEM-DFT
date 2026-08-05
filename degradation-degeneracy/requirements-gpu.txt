@@ -2,6 +2,8 @@
 # 주의: PyBaMM DFN + composite phases는 JAX 백엔드에서 동작하지 않을 가능성이 높다.
 #       docs/03_ARCHITECTURE.md 6절 "GPU 현실론" 참조.
 
-jax[cuda12]>=0.4.30
+# ⚠ jax 0.10.0에서 jax.core.get_aval이 제거돼 pybamm 26.7과 API 불일치 (실측 확인).
+#   PyBaMM JAX 경로를 쓰려면 0.6.x로 고정할 것. 자세한 실측: docs/GPU_NOTES.md
+jax[cuda12]>=0.4.30,<0.8
 # surrogate 학습용 (Phase 7-4 이후)
 # torch --index-url https://download.pytorch.org/whl/cu121

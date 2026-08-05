@@ -17,7 +17,7 @@ __pycache__/
 # 산출 문서 (자동 생성)
 docs/ENV_REPORT.md
 docs/RESULTS.md
-docs/GPU_NOTES.md
+# GPU_NOTES.md는 Phase 7 산출물(실측 기록)이라 추적한다
 
 # OS / 편집기
 .DS_Store
