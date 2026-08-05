@@ -10,10 +10,10 @@ PyBaMM으로 정답을 아는 합성 데이터를 대량 생성하고,
 
 ---
 
-## 이 저장소는 아직 비어 있다
+## 진행 상태 — Phase 3까지 구현 완료 (2026-08-05)
 
-`reference/`의 원본 스크립트와 `docs/`의 설계 문서만 들어 있는 **시작 상태**다.
-구현은 `docs/04_PROMPTS.md`의 Phase 0부터 순차적으로 진행한다.
+`docs/PROGRESS.md` 참조. verify / baseline / sweep1d(32p 재현) / grid(병렬+resume)가
+동작한다. Phase 4(fitting)부터는 `docs/04_PROMPTS.md` 순서대로 진행.
 
 ---
 
@@ -30,17 +30,18 @@ docs/00_START_HERE.md 를 먼저 읽어라.
 ## 사람에게 — 빠른 시작
 
 ```bash
-# 1) 환경
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+# 1) 환경 (새 서버/GPU 서버 공통 — 원커맨드. 상세: docs/SETUP_GPU.md)
+./scripts/setup_env.sh            # V100 등 GPU는 자동 감지 (--gpu 강제 가능)
+source .venv/bin/activate
 
 # 2) 검증 (IDAKLU / composite DFN / GPU 확인)
-python scripts/verify_env.py
-
-# 3) 이후는 구현 진행에 따라
 ./run.sh --mode verify
+
+# 3) 실행
 ./run.sh --mode sweep1d --out results/sweep1d_v1        # 32p 재현
 ./run.sh --mode grid --config configs/grid_coarse.yaml --dry-run
+./run.sh --mode grid --config configs/grid_coarse.yaml --nproc $(nproc) --out results/grid_coarse_v1
+# 중단됐으면: 같은 명령 + --resume
 ```
 
 ---
