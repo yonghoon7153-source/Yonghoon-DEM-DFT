@@ -57,8 +57,12 @@ def bed_overlap(kit_dir, area, v_sph_sum):
     로 **한 줄에** 얻는다 (같은 정의, 측정 기반).  metrics 가 없으면 0 + 라벨.
     """
     import json
+    # 킷 바로 아래 + run_*/ 하위 (run_mpm.sh 는 실행마다 run_<태그>/ 에 metrics 를 남긴다)
+    cands = []
     for nm in ('mpm_metrics.json', 'mpm_payload.json'):
-        p = os.path.join(kit_dir, nm)
+        cands.append(os.path.join(kit_dir, nm))
+        cands += sorted(glob.glob(os.path.join(kit_dir, '*', nm)), reverse=True)
+    for p in cands:
         if not os.path.exists(p):
             continue
         try:
@@ -70,7 +74,10 @@ def bed_overlap(kit_dir, area, v_sph_sum):
         e = m.get('porosity_settled_pct') or m.get('porosity_mpm_pct')
         if h and e is not None:
             ov = v_sph_sum - float(h) * (1.0 - float(e) / 100.0) * area
-            return (max(0.0, float(ov)), f'{nm} (h {float(h):.3f}µm · ε_union {float(e):.3f}%)')
+            # ⚠ 겹침은 압밀 상태의 함수 — 다른 두께 목표에 쓰면 근사다.  무해한 이유:
+            #   목표는 도달점 유도용이고 곡선은 **실측 정착값**(json)으로 만든다.
+            return (max(0.0, float(ov)),
+                    f'{os.path.relpath(p, kit_dir)} (h {float(h):.3f}µm · ε_union {float(e):.3f}%)')
     return 0.0, None
 
 
