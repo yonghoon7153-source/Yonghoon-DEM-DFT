@@ -1081,6 +1081,156 @@ def _selftest_pnm():
     return 0 if ok else 1
 
 
+# ── Track-B (COMSOL 하이브리드) 파라미터 헬퍼 ───────────────────────────────────────────
+#    설계: AM 구 = 해상 기하 / SE = 연속체 / VGCF = 1D Edge / AM-AM 넥 = DEM δ (소성 미미).
+#    아래 셋은 payload → comsol_pkg 익스포트의 순수 계산 조각이다.
+
+def tau_from_solve(phi_cond, sigma_bulk, sigma_eff):
+    """복셀 Laplace 해 → 굴곡도.  **선형 관례** σ_eff = σ_bulk·φ/τ ⇒ τ = φ·σ_bulk/σ_eff.
+
+    ⚠ 관례 지뢰: build_tau_regime_db._tau_from_sigma 는 √(φ·σ/σ_eff) = **τ² 관례**다.
+    같은 구조가 선형 τ=4 ↔ √ 관례 2 로 두 배 다르게 읽힌다.  COMSOL 의 tortuosity 입력은
+    통상 선형(σ_eff = σ·ε/τ) → Track-B export 는 전부 이 함수로 통일하고 관례를 함께 적는다.
+    """
+    if not (phi_cond and sigma_bulk and sigma_eff) or min(phi_cond, sigma_bulk, sigma_eff) <= 0:
+        return None
+    return float(phi_cond) * float(sigma_bulk) / float(sigma_eff)
+
+
+def kdom_calibration(phi_full, tau_full, phi_geo, tau_geo):
+    """Track-B SE 연속체의 국소 전도도 배율 κ_dom/σ_bulk — ★ 이중계상 가드.
+
+    하이브리드 COMSOL 은 AM 구를 **기하로 해상**하므로 AM-장애물 굴곡도는 모델이 스스로
+    만든다.  측정 τ_full(전체 미세구조)을 그대로 SE 도메인 σ 에 먹이면 AM 몫이 **두 번**
+    걸린다.  모델이 측정 σ_eff 를 재현할 조건:
+        κ_dom·(φ_geo/τ_geo) = σ_bulk·(φ_full/τ_full)
+        ⇒ κ_dom/σ_bulk = (φ_full/τ_full) / (φ_geo/τ_geo)
+    φ_geo/τ_geo = "AM 여집합을 꽉 찬 SE 로 이상화" 한 같은 복셀 Laplace 해(한 번 더 푼 값).
+    반환은 대체로 (0,1]: 1 = AM 기하가 굴곡을 전부 설명(SE 내부 몫 0), 작을수록 SE
+    내부(넥·공극·입계) 몫이 크다.  >1 이면 규약/입력 불일치 신호이므로 호출부가 경고할 것.
+    """
+    if None in (phi_full, tau_full, phi_geo, tau_geo):
+        return None
+    if min(phi_full, tau_full, phi_geo, tau_geo) <= 0:
+        return None
+    return (float(phi_full) / float(tau_full)) / (float(phi_geo) / float(tau_geo))
+
+
+def am_surface_patches(sid, pid, n_am, reaction_sids=(5, 6), carbon_sids=(3, 4, 8),
+                       block_sids=(7,)):
+    """AM 표면 face walk — 입자별 이웃-상 분류 (Track-B per-particle coverage 벡터).
+
+    표면 face = AM 복셀(sid 1·2)과 비-AM 복셀이 맞닿는 격자면.  face 단위로 이웃 상을 세어
+    입자별 f_cov = 반응상 face / 전체 face 를 만든다.  기본 반응상 = SE(6)+SDCP(5) —
+    step4 의 BV 접촉면 규약(AM|SE·AM|SDCP)과 동일.  carbon 기본 = VGCF(3)+SuperP(4)+
+    SWCNT(8) = 전자 접점.  block 기본 = PTFE(7) — **개재 차단**: PTFE 가 AM|SE 사이에
+    끼면 점군 coverage(순수 거리)는 못 보지만 이 walk 는 이웃 sid 로 직접 잡는다.
+
+    ★ 점군 coverage 와 분업: 이 walk 는 위치·개재를 보고, 절대면적은 점군이 정확하다
+      (복셀 표면은 계단으로 ~1.5× 과대; **비율** f_cov 에선 분자·분모 상쇄).
+    ★ n_am 은 필수 인자 — pid.max()+1 추정은 마지막 입자가 표면에 안 잡히면 벡터가
+      짧아진다 (SuperP `_fid.max()+1` 전역 오프셋 버그 회귀 방지).  도메인 밖은 void.
+
+    Returns dict of [n_am] arrays: n_face, f_reaction, f_carbon, f_void, f_block.
+    """
+    sid = np.asarray(sid); pid = np.asarray(pid)
+    am = (sid == 1) | (sid == 2)
+    n_face = np.zeros(n_am, np.int64)
+    c_rxn = np.zeros(n_am, np.int64); c_carb = np.zeros(n_am, np.int64)
+    c_void = np.zeros(n_am, np.int64); c_blk = np.zeros(n_am, np.int64)
+    rxn, carb, blk = list(reaction_sids), list(carbon_sids), list(block_sids)
+    for ax in range(3):
+        for sgn in (+1, -1):
+            nb = np.zeros_like(sid)                       # 채우기 0 = 도메인 밖 → void
+            dst = [slice(None)] * 3; src = [slice(None)] * 3
+            if sgn > 0:
+                dst[ax], src[ax] = slice(0, -1), slice(1, None)
+            else:
+                dst[ax], src[ax] = slice(1, None), slice(0, -1)
+            nb[tuple(dst)] = sid[tuple(src)]
+            m = am & ~((nb == 1) | (nb == 2))             # AM 복셀의 비-AM 이웃 face
+            p, s = pid[m], nb[m]
+            ok = (p >= 0) & (p < n_am)
+            p, s = p[ok], s[ok]
+            np.add.at(n_face, p, 1)
+            np.add.at(c_rxn, p, np.isin(s, rxn).astype(np.int64))
+            np.add.at(c_carb, p, np.isin(s, carb).astype(np.int64))
+            np.add.at(c_void, p, (s == 0).astype(np.int64))
+            np.add.at(c_blk, p, np.isin(s, blk).astype(np.int64))
+    den = np.maximum(n_face, 1).astype(np.float64)
+    return {'n_face': n_face,
+            'f_reaction': c_rxn / den, 'f_carbon': c_carb / den,
+            'f_void': c_void / den, 'f_block': c_blk / den}
+
+
+def _selftest_trackb():
+    """Track-B 헬퍼 검증 — 관례·이중계상 가드·face walk (개재 차단 포함)."""
+    ok = True
+
+    def chk(name, cond, extra=''):
+        nonlocal ok
+        ok &= bool(cond)
+        print(f"  {'PASS' if cond else 'FAIL'}  {name}{(' — ' + extra) if extra else ''}")
+
+    # 선형 관례: 곧은 도체 φ=0.5, σ_eff=0.5σ → τ=1 정확
+    chk('τ 선형 관례: 직선 도체 τ=1', abs(tau_from_solve(0.5, 2.0, 1.0) - 1.0) < 1e-12)
+    t_lin = tau_from_solve(0.5, 1.0, 0.125)
+    chk('★ 관례 지뢰가 실재: 같은 해가 선형 τ=4 vs √ 관례 2', abs(t_lin - 4.0) < 1e-12
+        and abs(np.sqrt(0.5 * 1.0 / 0.125) - 2.0) < 1e-12)
+    chk('τ None-가드 (σ_eff=0 → 발산 대신 None)', tau_from_solve(0.5, 1.0, 0.0) is None)
+
+    # 이중계상 가드: AM 기하가 전부 설명하면 κ_dom = σ_bulk (배율 1)
+    chk('κ_dom: τ_full=τ_geo·φ 동일 → 배율 1', abs(kdom_calibration(0.4, 2.0, 0.4, 2.0) - 1.0) < 1e-12)
+    r = kdom_calibration(0.30, 3.0, 0.45, 1.5)            # SE 내부 몫이 남는 정상 케이스
+    chk('κ_dom < 1 (SE 내부 넥/공극 몫)', r is not None and 0 < r < 1, f'{r:.4f}')
+    chk('재현 항등식: κ_dom·(φg/τg) == σ·(φf/τf)',
+        abs(r * (0.45 / 1.5) - 1.0 * (0.30 / 3.0)) < 1e-15)
+    chk('κ_dom None-가드', kdom_calibration(None, 2.0, 0.4, 2.0) is None)
+
+    # face walk: 고립 AM 1복셀 = 6 face 전부 void
+    sid = np.zeros((5, 5, 5), np.int8); pid = np.full((5, 5, 5), -1, np.int32)
+    sid[2, 2, 2] = 1; pid[2, 2, 2] = 0
+    P = am_surface_patches(sid, pid, n_am=3)
+    chk('고립 AM 1복셀 → 6 face 전부 void', P['n_face'][0] == 6 and P['f_void'][0] == 1.0)
+    chk('★ n_am 명시 → 표면에 없는 입자도 벡터에 (SuperP 오프셋 회귀)',
+        len(P['n_face']) == 3 and P['n_face'][1] == 0 and P['n_face'][2] == 0)
+
+    # SE 가 한 면에 붙으면 f_reaction = 1/6;  SDCP(5) 도 반응상 (step4 규약)
+    sid2 = sid.copy(); sid2[3, 2, 2] = 6
+    chk('SE 인접 face → f_reaction 1/6',
+        abs(am_surface_patches(sid2, pid, 3)['f_reaction'][0] - 1 / 6) < 1e-12)
+    sid2[1, 2, 2] = 5
+    chk('SDCP 도 반응상 (AM|SDCP BV 규약)',
+        abs(am_surface_patches(sid2, pid, 3)['f_reaction'][0] - 2 / 6) < 1e-12)
+
+    # ★ PTFE 개재: AM|PTFE|SE 면 그 face 는 block 이지 reaction 이 아니다 (점군은 못 보는 것)
+    sid3 = sid.copy(); sid3[3, 2, 2] = 7; sid3[4, 2, 2] = 6
+    P3 = am_surface_patches(sid3, pid, 3)
+    chk('★ PTFE 개재 → block=1/6, reaction=0', abs(P3['f_block'][0] - 1 / 6) < 1e-12
+        and P3['f_reaction'][0] == 0.0)
+
+    # carbon face (VGCF sid3) + 도메인 경계 = void
+    sid4 = np.zeros((3, 3, 3), np.int8); pid4 = np.full((3, 3, 3), -1, np.int32)
+    sid4[0, 1, 1] = 2; pid4[0, 1, 1] = 1                  # 경계 위 AM_P, 입자 1
+    sid4[1, 1, 1] = 3                                      # VGCF 이웃
+    P4 = am_surface_patches(sid4, pid4, 3)
+    chk('경계 face = void · VGCF face = carbon (입자별 분리)',
+        P4['n_face'][1] == 6 and abs(P4['f_carbon'][1] - 1 / 6) < 1e-12
+        and abs(P4['f_void'][1] - 5 / 6) < 1e-12 and P4['n_face'][0] == 0)
+
+    # 두 입자 face 가 섞이지 않는다
+    sid5 = np.zeros((7, 3, 3), np.int8); pid5 = np.full((7, 3, 3), -1, np.int32)
+    sid5[1, 1, 1] = 1; pid5[1, 1, 1] = 0
+    sid5[5, 1, 1] = 2; pid5[5, 1, 1] = 2
+    sid5[2, 1, 1] = 6                                      # 입자 0 만 SE 접촉
+    P5 = am_surface_patches(sid5, pid5, 3)
+    chk('입자별 독립 집계', abs(P5['f_reaction'][0] - 1 / 6) < 1e-12
+        and P5['f_reaction'][2] == 0.0 and P5['n_face'][2] == 6)
+
+    print('TRACK-B SELFTEST', 'PASS' if ok else 'FAIL')
+    return 0 if ok else 1
+
+
 def _selftest_temp():
     """σ_ion(T) 규약 — STEP3 표면에서 se_material 위임이 실제로 성립하는지 (bitwise + 배수표)."""
     ok = True
@@ -1147,10 +1297,14 @@ if __name__ == '__main__':
                          'seed 0, vox 0.4) — reproduces the review-anchored numbers + monotonicity')
     ap.add_argument('--selftest-temp', action='store_true',
                     help='σ_ion(T) 규약 검증 (se_material 위임: T=None bitwise / 25 °C / 문서 배수표)')
+    ap.add_argument('--selftest-trackb', action='store_true',
+                    help='Track-B 헬퍼 검증 (τ 선형 관례 · κ_dom 이중계상 가드 · AM face walk)')
     se_material.temperature_argparse(ap)   # --temp-c / --ea-ion-ev (both default None)
     a = ap.parse_args()
     if a.selftest_temp:
         sys.exit(_selftest_temp())
+    if a.selftest_trackb:
+        sys.exit(_selftest_trackb())
     if a.temp_c is not None:               # resolve + report the SE ionic σ this run would use
         _p = temperature_provenance(a.temp_c, a.ea_ion_ev)
         print(f"σ_ion(SE) @ {a.temp_c:.1f} °C = {sigma_ion_se_S_cm(a.temp_c, a.ea_ion_ev):.6g} S/cm "
