@@ -117,6 +117,30 @@ def check():
     return papers, missing
 
 
+CMP_DFT = LITDB / "comparison_vs_ours.md"
+CMP_DEM = LITDB / "comparison_vs_ours_DEM.md"
+
+
+def check_comparison(papers):
+    """비교문서 편입률 — **트랙별로** 센다.
+
+    ⚠ 통째로 세면 "159편 중 98편 미언급" 같은 오해가 나온다(2026-08-06 실측).
+      comparison_vs_ours.md 는 **DFT 물성축** 문서라 DEM 논문이 들어갈 자리가 없고,
+      DEM 논문은 comparison_vs_ours_DEM.md 가 받는다. 축이 다른 걸 한 분모로 세면
+      '안 한 일'이 부풀어 보인다.
+    """
+    dft_md = CMP_DFT.read_text(encoding="utf-8") if CMP_DFT.exists() else ""
+    dem_md = CMP_DEM.read_text(encoding="utf-8") if CMP_DEM.exists() else ""
+    out = {}
+    for track, doc, name in (("dft", dft_md, CMP_DFT.name), ("dem", dem_md, CMP_DEM.name)):
+        want = [p for p in papers if p["track"] == track]
+        # 자기 축 문서에 없고 **다른 축 문서에도** 없으면 진짜 미편입
+        other = dem_md if track == "dft" else dft_md
+        miss = [p for p in want if p["id"] not in doc and p["id"] not in other]
+        out[track] = {"doc": name, "n": len(want), "miss": miss}
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--check", action="store_true", help="점검만 (파일 안 씀)")
@@ -132,6 +156,17 @@ def main():
         print(f"   [{p['track']}] {p['id']}")
     if len(missing) > 30:
         print(f"   … 외 {len(missing)-30}편")
+
+    cmp_ = check_comparison(papers)
+    print("\n=== 비교문서 편입 (트랙별 — 축이 다르므로 분모를 섞지 않는다)")
+    for track, r in cmp_.items():
+        done = r["n"] - len(r["miss"])
+        print(f"   {track.upper():3} {done:3}/{r['n']:<3} → {r['doc']}"
+              + (f"   미편입 {len(r['miss'])}편" if r["miss"] else "   ✅ 전부 편입"))
+        for p in r["miss"][:12]:
+            print(f"        {p['id']}")
+        if len(r["miss"]) > 12:
+            print(f"        … 외 {len(r['miss'])-12}편")
     return 1 if missing else 0
 
 

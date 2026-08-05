@@ -2,6 +2,12 @@
 
 > 기준값: `our_dft_baseline.md`. **각 주장마다 [출처 논문] 명시.** digest 있는 논문은 `papers/<slug>.md` 링크.
 > 사용법: 새 논문 digest 시 해당 축 표에 행 1개 추가(+출처). 산화 Q&A는 맨 아래 §Q&A 로그.
+>
+> **범위** — 이 문서는 **DFT 물성축**(이온전도도·산화안정성·기계·전자구조·계면·도핑)이다.
+> DEM·MPM 논문은 축이 달라 여기 들어갈 자리가 없고 **`comparison_vs_ours_DEM.md`** 가 받는다.
+> ⚠ 두 문서를 한 분모로 세면 "159편 중 98편 미언급" 같은 **가짜 미결**이 나온다(2026-08-06).
+> 편입률은 트랙별로만 센다 — `python3 tools/litdb/build_index.py --check` 가 그렇게 찍는다.
+> **현재: DFT 트랙 64/64 편입 (2026-08-06).**
 
 ## 📑 Reference key (출처 약칭)
 | 약칭 | 논문 (저자·년·저널) | digest/status | 유형 |
@@ -9,6 +15,8 @@
 | **[Zuo]** | Zuo 2022 Angew — 양극 계면 chlorination | ✅ `papers/zuo2022_chlorination_cathode_interface.md` | exp |
 | **[Qian26]** | Qian/Dean/Kochetkov/Chen/Huang/**Nazar** 2026 Angew (e9983580) — **SE 입자 유기(데칸산) 표면코팅**: 수분(39 % RH 2 h σ 91 %) + 양극(무코팅 NCM85 150cyc 96 %) + 음극(대칭셀 1000 h) 동시. **[Adeli]/[Zuo]와 동일 Waterloo/Nazar 그룹** | ✅ `papers/qian2026_decanoate_coating_lpscl_moisture_interface.md` | exp + DFT보조(슬랩 표면E·분자흡착) |
 | **[LiGaF]** | Yaru Li/**Dabing Li**/**Yang Li**/Zhang/Qi/**Li-Zhen Fan** (**USTB — [Fan26] 리뷰·[Li25] CuBr₂와 같은 연구실**), "**Dual-Functional Ga/F Co-Doped Argyrodite Sulfide Electrolytes for ASSLBs**" (**Energy Mater. Adv. 2026;7:0227**, DOI 10.34133/energymatadv.0227, 출판 2026-04-27) — `Li₅.₅₊₂ₓP₁₋ₓGaₓS₄.₅Cl₁.₅₋₃ₓF₃ₓ` x=4 %(=Li₅.₅₈P₀.₉₆Ga₀.₀₄S₄.₅Cl₁.₃₈F₀.₁₂), host=[Yang25]와 동일 Li₅.₅PS₄.₅Cl₁.₅. **한 염 두 도펀트 5번째**([Taklu]CuCl→[Liu23]MgF₂→[Li25]CuBr₂→[Yang25]La₂O₃→본편 GaF₃), 자기 선행 = **InF₃**(ref[4] AEM 2024, [Fan26]이 인용한 그것) | ✅ `papers/liyaru_gaf3_codoping_argyrodite.md` **(본문+SI 통합)** | exp + DFT보조(SE 슬랩 NEB·Li 금속 슬랩 NEB·H₂O 흡착E·이성분 DOS) |
+| **[Cronau]** | Cronau/Szabo/König/Wassermann/**Roling** 2021 ACS Energy Lett. 6, 3072 — "How to Measure a Reliable Ionic Conductivity? **The Stack Pressure Dilemma** of Microcrystalline Sulfide SE" (Marburg, Viewpoint 6 pp). 황화물 SE **6종 × 3 결정도 클래스**(비정질/유리세라믹/**미세결정**)를 stack pressure 0–500 MPa 로 스윕 — **미세결정만 50–250 MPa 에 두 번째 압력 의존 구간**(입자 간 gap 을 닫는 데 추가 압력이 필요) | ✅ `papers/cronau2021_stack_pressure_ionic_conductivity.md` | exp (측정법) |
+| **[Trevi]** | Trevisanello/Ruess/Conforto/Richter/**Janek** 2021 Adv. Energy Mater. 11, 2003400 — 다결정(PC) vs 단결정(SC) **NCM811**: 입자 균열·활성표면적(Kr-BET)·Li 확산. ⚠ **액체전해질 셀**(1 M LiPF₆ EC:DEC) — ASSB 아님 | ✅ `papers/trevisanello2021_sc_pc_ncm_cracking_diffusion.md` | exp |
 | **[Ke]** | Ke 2025 ESM — MgClO 음극 혼성 도핑 | ✅ `papers/ke2025_orbital_hybridization_mgclo.md` | exp+DFT |
 | **[WangYO]** | Dewen Wang/Chong Liu(공동1)/**Xiangfeng Liu** 2025 Angew **VIP** (64, e202501411) — **Y₂O₃ 공도핑 argyrodite "electronic localization"** (UCAS·CSNS, **외부**): LPSC(=comp1)→**Li6.1P0.95Y0.05S4.925O0.075Cl**(본문 "S4.25O0.75"는 오타; Y@P4b 주장+O@S16e). σ ~2.75→**3.53 mS/cm**·Ea ~0.375→**0.34**·σ_e 6.33e-7→**1.55e-7**(⚠베이스라인이 타 문헌 pristine 대비 60–200×)·H₂S ~0.47→~0.30 cm³/g·CCD 0.7→**1.5**·대칭셀 **>4800 h**·LCO/Li-In 0.5C 1300cyc "100%"(LiDFOB-coated 별도 catholyte·저활용). 계면 Li₂S 21.3→9.9%/Li₃P 9.0→3.6%+**Li₂O 528.5 eV**(XPS depth+SIMS 3D+DRT). 기전=ELF/PDOS **d–p 혼성**+Madelung −166.51→−175.07 eV/atom(LOBSTER; COHP/COBI 계산 명시 후 미제시). ⚠**BVSE 1.11→0.61 eV "절반"을 σ 서사로 — 자기 실측 Ea(0.375/0.34)와 3× 불일치**; Y@P4b(형성E 2배열+constrained Rietveld)는 우리 M³⁺ cascade site-rule(26/26 **Li_24g**)과 정면 충돌. **[2차 픽셀 패스 2026-08-04]** 세 축이 새로 정해짐: **①축 D(전자구조) ✓✓ 정합** — 그들 Fig 5e PBE PDOS가 우리 **comp1 gap 2.066**(그림 실측 ≈2.07)·**VBM=S 3p 독점**(P-p는 S-p의 2%)·**LPSOCl의 O 2p 매몰**(O-p 무게 82%가 E<−2 eV)을 전부 독립 확인 → 우리 세 결과의 외부 교차검증 카드(단 DOS-threshold 판독이라 절대값 인용·db 편입 금지); **②그 대가로 논문 본문의 "p–p hybridization at the Fermi level"은 자기 그림에 반박됨**(p–p 결합상태는 −4.4 eV) — PDOS를 정성 그림으로만 쓰면 생기는 오류의 교보재; **③축 A(이온) ✓ 우리 쪽과 방향 일치** — σ 1.29×/ΔEa 0.040 eV는 **σ₀ 3.6× 감소**를 요구해 그들 "carrier 증가·채널 확장" 설명과 모순이고, 오히려 우리 cascade(M³⁺는 Li 이동도 거의 불변·Nd blocking 0.52×)와 같은 방향. **[3차 SI 실물 패스 2026-08-04]** 네 축이 더 정해짐: **④축 D(전자수송) — "σ_e 4× 감소"는 정의 의존**(Fig S9/S10 실측: 비 22×→1.8×, 기울기 기준은 **YO가 1.8× 높아 역전**; 보고값 재현 불가) → 우리 쪽 "베이스라인 이상 = 시료 품질 의심" **철회**(실측치는 [Li25] 1.02e-8·[Taklu] 8.75e-9와 같은 자릿수), 대신 **σ_e를 단일값으로 인용 금지**; **⑤site-rule 위상 변화 — 그들 Y@P 근거가 방법론적으로 무효**(조성이 다른 두 모델의 원자당 원자화E 비교, 전하 보상 없음) → **우리 cascade M³⁺ = Li_24g 를 반증하는 외부 계산은 존재하지 않는다**; 대립은 "우리 UMA 결과 vs 그들 constrained Rietveld"만 남고 검증 계산의 가치는 상승; **⑥축 A(이온) 재확인 — Fig S11 전셀 BVSE 등가면이 도핑 후 79.9→76.3 %로 감소**(빈 공간 1.67×) → 2차의 σ₀ 3.6× 감소와 **두 번째 독립 증거**, 우리 cascade(M³⁺는 이동도 거의 불변·Nd blocking)와 같은 방향; **⑦축 E(계면) 유지 — Fig S17 파이 각도 실측으로 Li₂S 21.3→9.9 % 헤드라인 확정**(합 110.3 %의 범인은 "89 %" 라벨) → 계면 XPS/SIMS 정량은 이 논문에서 **믿고 쓸 수 있는 부분**으로 확정. 기타: SI 안에 DFT 구조가 3개(O 자리 Cl/S·개수 2/5)라 우리 LPSOCl(O@S)과의 비교는 **방향성까지만** 유효; Li6.16P0.92In0.08S4.88O0.12Cl(AFM 2024)이 **같은 일반식의 선행 설계**; 우리 자기교정 1건(Fig S15 = LPSC 조기 단락 아님, 96 h 안정 후 종료) | ✅ `papers/wang2025_electronic_localization_yo_argyrodite.md` (§18·§19) | exp+DFT/BVSE보조 |
 | **[GG]** | Gil-González 2022 ESM — constrained ESW (구속) | ✅ `papers/gilgonzalez2022_synergistic_cl_constricted_esw.md` | DFT+exp |
@@ -443,6 +451,28 @@
 | **γ_SE(표면에너지) 외부 검증 — 우리 `adhesion.json` γ_SE는 UMA melt-quench 비정질 표면, 외부 대조군 0이었음** | **[Qian26]** ⭐ **부분 해소** — VASP PBE 520 eV·pymatgen 슬랩으로 **LPSCl 저지수 표면E 6종 공개**(Table S2): **(010) Li₅SCl 0.40 J/m²(최저)** · 010-Li 0.44 · 011-Li₄S₂ 0.48 · 010-S 0.70 · 010-Li₇SCl 0.72 | 우리 γ_SE **comp1 1.211 / comp2 1.189 / comp3 0.565 / comp4 0.450 / comp5 0.470 J/m²** — **Li-결손(Cl-rich) 조성이 그들 0.40–0.5 밴드에 안착**(comp1만 3× 높음), 그들도 **Li 과잉 종단(Li₇SCl 0.72) > Li 결손(Li₅SCl 0.40)** = 우리 "공공이 표면E를 낮춘다"와 **같은 부호**. **보강책**: `adhesion_v5`(crystalline slab MQA, in_progress)에 **(010) Li₅SCl 종단 명시 포함** → 우리 비정질 표면이 결정질 최저면보다 비싼 게 물리인지 방법 artifact인지 판정. ⚠ 방법 3중 상이(PBE-DFT 결정질 vs UMA 비정질·종단 정의·비화학량론 μ 처리 유무) → **"검증됨" 금지, 같은 자릿수·같은 방향까지만** |
 | **Zr 포함 hull (할라이드 코팅 LIC/LYC/LZC dual-compatibility 정량)** | **[Cha]** ⭐ (LZC=Li₂ZrCl₆ vs NCM/LPSCl 6계면) | Zr 추가 chemsys(Cl-Li-Zr-…)로 `GrandPotentialInterfacialReactivity` voltage-resolved — 왜 Zr⁴⁺만 견디고 In/Y는 분해하나 in-silico 재현 |
 | **양극(NCM/LCO) 반응성 게이트 — cascade에 ΔE_rxt(vs 양극) 열 없음** (만충/반충 SOC-resolved 포함) | **[Xiao19]** Filter 4(&#124;ΔE_rxt&#124;<0.1 eV/atom vs LPS+만충 NCM)·Table S2/S3, **[Rich16]** eq 2/4, [Cha] dual-compat | pymatgen InterfaceReactions로 cascade CSV에 **ΔE_rxt(vs LCO) 열 추가**(우리 hull 내 즉시 가능; 정답지=Xiao LPSCl/LCO **−339/−493 meV/atom** 재현) → 이후 Ni/Co/Mn chemsys 확장으로 NCM·만충/반충까지 — 도핑이 양극 반응성을 개선/악화하는지 cascade 축으로 편입 |
+
+---
+
+## I. 🔎 출처 재귀속 — *우리가 써 온 숫자를 원문에서 되짚은 결과*
+
+> 이 축은 **물성 비교가 아니라 인용 감사**다. 우리 생산식·baseline 에 주석으로 달려 있던
+> 출처를 PDF 실물로 되짚었더니 **숫자와 논문이 어긋난** 사례를 모은다.
+> `/benchmarks` 의 **덱 정정 원장**(외부 자료가 틀린 경우)·**판정 이력**(우리 판정이 틀린 경우)과
+> 같은 계열이고, 여기는 **"출처 라벨이 틀린 경우"** 다.
+> ⚠ 셋 다 공통 규율 — **값을 지우지 않고 라벨을 고친다.** 값 자체가 합리적일 수 있고,
+> 그때 문제는 "틀린 값"이 아니라 **"근거가 없는 값"** 이다.
+
+| 우리가 쓰던 것 | 붙어 있던 출처 | 원문 실물 | 판정 | 조치 |
+|---|---|---|---|---|
+| `σ_grain = 3.0 mS/cm` ("Cronau 2022 Li₆PS₅Cl **single-crystal**") | **[Cronau]** | ⛔ 그 숫자가 **논문에 없다.** 단결정을 **측정한 적이 없고**("single crystal" 단어 자체가 논문에 없음), 측정한 argyrodite 는 **Li₆PS₅Br**(Cl 아님). 연도도 2021(2022 아님, DOI 1c01299 동일) | **오귀속 — 라벨만 부정확, 값은 방어 가능** | 라벨을 *"LPSCl grain-interior 프로젝트 채택값 — 근거: Cronau **2021** µC-Li₆PS₅**Br** 고압 plateau 2.0–2.4 mS/cm + cold-press/소결 LPSCl 문헌 1–6 종합. ⚠ 단결정 직접측정 아님"* 으로. `lpscl_electrolyte_params.md` 의 "single-crystal digit NOT verified (proxy)" 플래그는 이로써 **닫힌다** |
+| `Cronau(r_SE)` sub-µm 3-시그모이드 (breakpoint 0.5/0.3/0.1/0.03 µm, plateau 1.0/0.90/0.65/0.33) | **[Cronau]** | ⚠ 논문이 다루는 축은 **결정도 클래스 × stack pressure** 이지 **반경**이 아니다. breakpoint 수치는 논문에서 **도출된 적이 없다** | **느슨한 귀속 — 방향만 지지** | 인자를 **재명명**: 방향(미세결정·sub-µm → σ↓)만 [Cronau] 근거, **수치는 프로젝트 채택값**으로 분리 표기 |
+| `σ_S = 10 / σ_P = 5 mS/cm` (NCM 단결정이 다결정의 2배라는 **전자**전도 엔드포인트) | **[Trevi]** | ⛔ 이 논문은 **σ_e 를 SC/PC 로 측정한 적이 없다.** 본문·SI·표·그림 어디에도 숫자로 없다. 잰 것은 **D_Li · BET 활성표면적 · R_ct** 뿐이고 전부 **액체전해질 셀** | **오귀속 (논문은 이 질문에 무관)** | σ_AM 엔드포인트를 **material-specific INPUT 으로 전환**(LOCKED 해제). "SC vs PC 전자전도 방향"은 **이 논문 밖에서** 결정할 열린 문제로 남긴다 |
+| `NCM(r) = 1/(1+(r/2 µm)^1.5)` (입자크기·내부 GB 보정) | **[Trevi]** | ✅ 방향은 지지 — 단 **기구가 다르다**: PC 는 1차 충전부터 균열 → **액체가 균열로 침투** → 활성표면적↑·R_ct↓ 로 **겉보기 D_Li 가 1자릿수 이상 뛴다**. 침투 효과를 빼면 **본질 D_Li 는 SC·PC 동일** | **부분 정당화 — 단 '전자전도'가 아니라 '확산·동역학'** | 인자의 물리를 *전자전도*가 아니라 *확산 경로 단축·유효 표면적*으로 다시 쓴다. ⚠ **ASSB 전사 주의**: 이 논문의 셀은 **액체전해질**이라 "균열→침투→표면적↑" 이 그대로 성립하지 않는다(고체는 균열에 스며들지 못한다) |
+
+**이 축이 주는 규율 한 줄** — *숫자를 인용할 때 "누가 말했나"가 아니라 **"그 논문이 그 양을 실제로 쟀나"** 를 확인한다.*
+두 건 모두 **저자·연도는 맞는데 그 논문이 그 물리량을 측정하지 않은** 형태였다 — 서지가 맞다는 것이
+값의 근거가 되지 않는다.
 
 ---
 
