@@ -260,8 +260,47 @@ def _emit_call(chain) -> str:
     return '.'.join(parts) + ';'
 
 
+#: 한 part 메서드가 담을 최대 "문장" 수 (주석/공백은 바이트코드 0 이라 세지 않는다).
+#  JVM 은 메서드당 Code 속성을 65,535 바이트로 제한한다 (JVMS §4.7.3).  이 생성기의 문장은
+#  대략 40–90 B/문장(배열 인자가 있는 set 이 제일 큼) → 300 문장 ≈ 12–27 KB 로 넉넉히 안쪽.
+#  ★ 왜 필요한가: real_14(스피어 457) 는 한 메서드에 9,737 문장이 되어 javac 이
+#  "code too large" 로 거부한다 — comsol batch 는 java 를 내부 컴파일하므로 모델이 아예
+#  안 열린다.  스피어 수에 선형으로 늘어나므로 분할은 선택이 아니라 필수.
+_MAX_STMTS_PER_PART = 300
+
+#: 클래스 하나의 constant pool 은 65,535 엔트리다 (JVMS §4.1).  실측(real_14, 스피어 457):
+#  CP 12,349 = 스피어당 ≈ 27 엔트리 → 한 클래스에 담을 수 있는 스피어는 약 2,400 개.
+#  (예전 수동 모델 ≈1,767 구는 아슬아슬하게 그 아래였다.)  넘어가면 javac 이
+#  "too many constants" 로 거부한다 — part 분할로는 못 푼다(CP 는 클래스 단위).
+_CP_ENTRIES_PER_SPHERE = 27.0
+_SPHERE_SOFT_CAP = 1800          # 경고 (CP ≈ 74 %)
+_SPHERE_HARD_CAP = int(65535 / _CP_ENTRIES_PER_SPHERE)   # ≈ 2427 — 이 위는 컴파일 실패 예상
+
+
+def _split_steps(steps, limit: int = _MAX_STMTS_PER_PART):
+    """IR 스텝을 part 별로 쪼갠다.  주석/공백 경계에서 끊어 문맥이 흩어지지 않게 하고,
+    tryblock 은 통째로 한 part 안에 둔다 (블록 중간 분할은 문법이 깨진다)."""
+    parts, cur, cost = [], [], 0
+    for st in steps:
+        boundary = st[0] in ('comment', 'blank')
+        if cur and ((cost >= limit and boundary) or cost >= 2 * limit):
+            parts.append(cur)
+            cur, cost = [], 0
+        cur.append(st)
+        if st[0] == 'call':
+            cost += 1
+        elif st[0] == 'tryblock':
+            cost += 2 + sum(1 for s in st[2] if s[0] == 'call')
+    if cur:
+        parts.append(cur)
+    return parts
+
+
 def render_java(steps, header_comment: str, class_name: str = 'model_build') -> str:
-    """IR → COMSOL java model file 텍스트 (public static Model run() 골격)."""
+    """IR → COMSOL java model file 텍스트.
+
+    골격: `public static Model run()` 이 모델을 만들고 `partN(model)` 들을 순서대로 호출.
+    분할 이유는 _MAX_STMTS_PER_PART 주석 참조 (메서드 64 KB 한도)."""
     L = []
     L.append('/*')
     for ln in header_comment.splitlines():
@@ -274,8 +313,18 @@ def render_java(steps, header_comment: str, class_name: str = 'model_build') -> 
     L.append('')
     L.append(f'public class {class_name} ' + '{')
     L.append('')
+
+    parts = _split_steps(steps)
+    L.append('  // 모델 조립은 partN(model) 로 쪼개져 있다 — JVM 메서드 Code 한도(64 KB) 때문.')
+    L.append(f'  // 문장 {sum(1 for s in steps if s[0] == "call")} 개 → part {len(parts)} 개.')
+    L.append('  // 순서가 곧 빌드 순서다 (기하 → 선택 → 재료 → 물리 → 메시 → 스터디).')
     L.append('  public static Model run() {')
     L.append('    Model model = ModelUtil.create("Model");')
+    for i in range(len(parts)):
+        L.append(f'    part{i}(model);')
+    L.append('    return model;')
+    L.append('  }')
+    L.append('')
 
     def emit(sts, ind):
         for st in sts:
@@ -297,10 +346,12 @@ def render_java(steps, header_comment: str, class_name: str = 'model_build') -> 
             else:
                 raise ValueError(f'IR 스텝 미지원: {st[0]}')
 
-    emit(steps, '    ')
-    L.append('    return model;')
-    L.append('  }')
-    L.append('')
+    for i, part in enumerate(parts):
+        L.append(f'  private static void part{i}(Model model) ' + '{')
+        emit(part, '    ')
+        L.append('  }')
+        L.append('')
+
     L.append('  public static void main(String[] args) {')
     L.append('    run();')
     L.append('  }')
@@ -328,8 +379,34 @@ def _pname(sid: str) -> str:
     return re.sub(r'[^0-9A-Za-z]', '_', sid)
 
 
-def build_steps(pkg: dict):
-    """패키지 → (IR 스텝, TODO(trackb) 목록, 컨텍스트).  모든 수치는 여기서 java 로 구워진다."""
+def _protrusion(spheres, Lx, Ly, Lz):
+    """박스 밖으로 삐져나온 스피어 통계 (클립 판단·README 표용).
+
+    구형 캡 체적 = π·h²·(3r−h)/3, h = 평면 밖으로 나간 깊이.  두 면을 동시에 넘는
+    극단(작은 박스)은 캡을 단순 합산해 과대평가하나, 판단(=0 인가 아닌가)에는 영향 없다."""
+    n_lat = n_z = n_any = 0
+    v_out = v_tot = 0.0
+    for s in spheres:
+        r = float(s['r'])
+        d = (r - float(s['x']), float(s['x']) + r - Lx,
+             r - float(s['y']), float(s['y']) + r - Ly,
+             r - float(s['z']), float(s['z']) + r - Lz)
+        lat, zz = any(v > 0 for v in d[:4]), any(v > 0 for v in d[4:])
+        n_lat += lat; n_z += zz; n_any += (lat or zz)
+        for h in d:
+            h = min(max(h, 0.0), 2.0 * r)
+            v_out += math.pi * h * h * (3.0 * r - h) / 3.0
+        v_tot += 4.0 / 3.0 * math.pi * r ** 3
+    box = Lx * Ly * Lz
+    return {'n_lat': n_lat, 'n_z': n_z, 'n_any': n_any, 'v_out_um3': v_out,
+            'pct_of_am': 100.0 * v_out / v_tot if v_tot > 0 else 0.0,
+            'pct_of_box': 100.0 * v_out / box if box > 0 else 0.0}
+
+
+def build_steps(pkg: dict, clip: str = 'auto'):
+    """패키지 → (IR 스텝, TODO(trackb) 목록, 컨텍스트).  모든 수치는 여기서 java 로 구워진다.
+
+    clip: 'auto'(삐져나온 구가 있으면 클립) | 'on' | 'off' — RVE 클립 절 참조."""
     steps, todos = [], []
     se, echem, spheres = pkg['se'], pkg['echem'], pkg['spheres']
 
@@ -507,6 +584,46 @@ def build_steps(pkg: dict):
         CALL(('component', ('comp1',)), ('geom', ('geom1',)), ('feature', (f'sph{k}',)),
              ('set', ('r', s['r'])))
     BLANK()
+
+    # ── RVE 클립: 박스 밖으로 삐져나온 구 잘라내기 ──
+    # STEP3 복셀 래스터화는 박스를 벗어난 구 재료를 그냥 버린다(크롭).  java 기하가 그대로
+    # 두면 (a) 박스 밖 AM 캡이 별도 도메인으로 남아 재료/물리 미배정 + 메시 낭비, (b) z 로
+    # 관통한 구는 플레이튼 면(selTop/selBot)을 뚫어 adjAM∩selTop 이 비어 AM-집전체 접촉이
+    # 통째로 누락된다.  → 박스와 교집합을 취해 STEP3 크롭 규약과 같은 RVE 로 맞춘다.
+    prot = _protrusion(spheres, Lx, Ly, Lz)
+    do_clip = (clip == 'on') or (clip == 'auto' and prot['n_any'] > 0)
+    if do_clip and spheres:
+        C(f"★ RVE 클립 (STEP3 크롭 규약 일치): 박스 밖 스피어 {prot['n_any']}개"
+          f"(측면 {prot['n_lat']} / z {prot['n_z']}) · 밖 체적 {prot['v_out_um3']:.1f} µm³ ="
+          f" AM 총체적의 {prot['pct_of_am']:.2f}% (박스체적 대비 {prot['pct_of_box']:.2f}%)."
+          '\nz 관통 구를 안 자르면 플레이튼 면이 뚫려 adjAM∩selTop 이 비고 AM-집전체 BC 가'
+          '\n통째로 누락된다.  intbnd=on → 겹침 렌즈 분할(넥)은 클립 후에도 보존.'
+          '\n⚠ 주기 킷이면 박스를 넘어간 부분의 반대편 이미지는 복원하지 않는다 (java Block ='
+          '\n절연벽 — se_domain.periodic_xy 경고와 같은 한계).  --clip off 로 끌 수 있다.')
+        CALL(('component', ('comp1',)), ('geom', ('geom1',)), ('create', ('blkc', 'Block')))
+        CALL(('component', ('comp1',)), ('geom', ('geom1',)), ('feature', ('blkc',)),
+             ('set', ('size', ('D[]', [Lx, Ly, Lz]))))
+        CALL(('component', ('comp1',)), ('geom', ('geom1',)), ('feature', ('blkc',)),
+             ('set', ('pos', ('D[]', [0.0, 0.0, 0.0]))))
+        CALL(('component', ('comp1',)), ('geom', ('geom1',)), ('feature', ('blkc',)),
+             ('label', ('clip box (RVE) — intersected away, blk1 이 SE 모체',)))
+        CALL(('component', ('comp1',)), ('geom', ('geom1',)), ('create', ('uniAM', 'Union')))
+        CALL(('component', ('comp1',)), ('geom', ('geom1',)), ('feature', ('uniAM',)),
+             ('set', ('input', ('S[]', [f'sph{k}' for k in range(len(spheres))]))))
+        CALL(('component', ('comp1',)), ('geom', ('geom1',)), ('feature', ('uniAM',)),
+             ('set', ('intbnd', True)))
+        CALL(('component', ('comp1',)), ('geom', ('geom1',)), ('create', ('clipAM', 'Intersection')))
+        CALL(('component', ('comp1',)), ('geom', ('geom1',)), ('feature', ('clipAM',)),
+             ('set', ('input', ('S[]', ['uniAM', 'blkc']))))
+        CALL(('component', ('comp1',)), ('geom', ('geom1',)), ('feature', ('clipAM',)),
+             ('set', ('intbnd', True)))
+        BLANK()
+    elif prot['n_any'] > 0:
+        C(f"⚠ 클립 꺼짐(--clip off) — 박스 밖 스피어 {prot['n_any']}개가 그대로 남는다:"
+          f" AM 체적 {prot['pct_of_am']:.2f}% 가 전극 밖 도메인이 되고, z 관통 {prot['n_z']}개는"
+          '\n플레이튼 면을 뚫어 AM-집전체 접촉(adjAM∩selTop)이 누락된다.  STEP3(크롭)과 비교 불가.')
+        BLANK()
+
     C('★ form UNION (기본 finalize): 겹치는 AM 구의 합집합이 DEM δ 렌즈 넥을 기하로 생성.'
       '\n⚠ 기하 정밀화(심화리뷰): 렌즈 목(waist) 반경 = √(2R*δ) = **√2 × a_hertz** (면적 2×)'
       '\n— Holm 표(g=2σa_hertz) 대비 넥 전류 ~×1.4 상회가 기하적 기대값 (real_14 587접촉'
@@ -769,8 +886,27 @@ def build_steps(pkg: dict):
     BLANK()
     CALL(('label', (f"comsol_pkg_{pkg['case']} (trackb hybrid v1)",)))
 
+    # ── 규모 가드: java 클래스 constant-pool 한도 (part 분할로는 못 푸는 벽) ──
+    n_sph = len(spheres)
+    if n_sph >= _SPHERE_SOFT_CAP:
+        est_cp = int(n_sph * _CP_ENTRIES_PER_SPHERE)
+        msg = (f'AM 스피어 {n_sph} 개 → java 클래스 constant pool 추정 {est_cp:,}/65,535 '
+               f'({100 * est_cp / 65535:.0f} %).  ')
+        if n_sph >= _SPHERE_HARD_CAP:
+            msg += (f'★ 한도 초과 예상 — javac 이 "too many constants" 로 거부한다. '
+                    f'클래스 분할(part 로는 못 푼다 — CP 는 클래스 단위) 또는 MPh 경로'
+                    f'(--mph, java 컴파일 없음)를 써야 한다.')
+        else:
+            msg += f'한도({_SPHERE_HARD_CAP:,} 스피어)에 근접 — 더 큰 침대는 MPh 경로 권장.'
+        pkg['warnings'].append(msg)
+        C('⚠ ' + msg.replace('  ', ' '))
+        TODO('스피어 수가 CP 한도를 넘으면 model_build_partN.java 로 클래스를 쪼개거나 '
+             'MPh(--mph) 런타임 경로로 우회 — 지금은 경고만 (T16)')
+
     ctx = {'Lx': Lx, 'Ly': Ly, 'Lz': Lz, 'se_sigma_S_m': se_sigma_S_m,
-           'se_sigma_origin': se_sigma_origin, 'cls_sigma': cls_sigma}
+           'se_sigma_origin': se_sigma_origin, 'cls_sigma': cls_sigma,
+           'clip_mode': clip, 'clipped': bool(do_clip and spheres), 'protrusion': prot,
+           'n_spheres': n_sph, 'cp_est': int(n_sph * _CP_ENTRIES_PER_SPHERE)}
     return steps, todos, ctx
 
 
@@ -831,6 +967,73 @@ def write_readme(pkg: dict, ctx: dict, todos, out_dir: Path, java_name: str = 'm
     for w in pkg['warnings']:
         md.append(f'- ⚠ {w}')
     md.append('')
+
+    # ── §0: 예전 수동 .mph 에서 실제로 터졌던 두 함정 (실행 전에 읽는다) ──
+    _np_ = len(pkg['spheres'])
+    md.append('## 0) 먼저 읽을 것 — 예전 수동 모델에서 실제로 터진 두 함정')
+    md.append('')
+    md.append('### 0-1) 길이 단위 — 이 java 는 이미 맞춰져 있다 (수동 스케일다운 금지)')
+    md.append('')
+    md.append('예전 수동 모델은 LIGGGHTS dump 값을 그대로 넣어 `sph.set("r","0.0025")` 처럼 '
+              '**단위 없는 수**를 썼다.  COMSOL 은 그것을 기하 길이단위(기본 **m**)로 읽으므로 '
+              '2.5 mm 구가 50 mm 박스에 놓인 **1000× 확대 모델**이 된다.  물리는 스케일-불변이 '
+              '아니다 — 확산·BV·시간상수가 전부 어긋난다.')
+    md.append('')
+    md.append('이 파일은 그 문제를 **생성 시점에 닫아 두었다**:')
+    md.append('')
+    md.append('- `geom1.lengthUnit("µm")` 를 **어떤 기하 feature 보다 먼저** 선언 → 이후 모든 '
+              '`pos`/`r`/`size` 의 맨수는 µm.')
+    md.append(f'- 좌표·반지름은 python 이 LU(=mm)×1000 → µm 로 변환해 구웠다 '
+              f'(박스 {ctx["Lx"]:.4g}×{ctx["Ly"]:.4g}×{ctx["Lz"]:.4g} µm, '
+              f'반지름 실측 범위 그대로).')
+    md.append('- `L_x`/`L_y`/`L_z` 등 파라미터는 `"50[um]"` 처럼 **단위를 명시**해 기하 단위와 '
+              '무관하게 안전하다.')
+    md.append('')
+    md.append('⇒ **손으로 다시 스케일다운하지 말 것.**  값을 고칠 일이 생기면 java 가 아니라 '
+              '`comsol_pkg` 에서 고치고 재생성한다 (이 파일의 모든 수치는 패키지에서 구워진다).')
+    md.append('')
+    md.append('### 0-2) 솔버 — 스피어가 많으면 Direct/PARDISO 는 메모리로 죽는다')
+    md.append('')
+    md.append(f'이 모델은 AM 스피어 **{_np_}** 개를 해상한다.  예전 수동 모델(≈1767 구)은 '
+              'Direct(PARDISO)에서 *"out-of-core 불가"* 로 실패했다 — 3D 전도 문제의 '
+              'LU 분해는 메모리가 자유도에 초선형으로 늘어 수만~수십만 DOF 를 넘기면 '
+              '데스크톱 RAM 을 넘긴다.')
+    md.append('')
+    md.append('⇒ **반복 솔버(Iterative)** 를 쓴다.  전도(라플라스형)에는 표준 처방이 있다:')
+    md.append('')
+    md.append('| 항목 | 권장 |')
+    md.append('|---|---|')
+    md.append('| Linear solver | **Iterative** (Conjugate Gradients) |')
+    md.append('| Preconditioner | **AMG**(Algebraic Multigrid) — 기하 다중격자(GMG)는 이 '
+              '비정형 넥 기하에서 조립이 잘 안 된다 |')
+    md.append('| 상대공차 | 1e-3 (전도 σ_eff 용) → 필요시 1e-6 |')
+    md.append('| Direct 를 꼭 써야 하면 | MUMPS + out-of-core, 그래도 스피어 수를 줄여야 함 |')
+    md.append('')
+    md.append('COMSOL GUI: Study ▸ Solver Configurations ▸ Stationary Solver ▸ '
+              '(우클릭) Iterative → Preconditioner 를 AMG 로.  '
+              '`ec`/`ec2` 는 서로 결합돼 있지 않으니 각각 따로 반복 솔버로 두면 된다.')
+    md.append('')
+    md.append('_참고_: 예전 모델의 `Error 1` 은 무시해도 되는 것으로 확인됨(사용자 확인) — '
+              '위 두 항목이 실제 병목이었다.')
+    md.append('')
+    md.append('### 0-3) java 컴파일 한도 — 이미 분할해 두었다')
+    md.append('')
+    _cp = ctx.get('cp_est') or 0
+    md.append(f'`comsol batch` 는 이 java 를 **내부에서 javac 으로 컴파일**한다.  스피어를 '
+              f'해상하면 문장이 수천 개가 되어 JVM 의 두 한도에 걸린다:')
+    md.append('')
+    md.append('| 한도 | 값 | 이 모델 | 대응 |')
+    md.append('|---|---|---|---|')
+    md.append(f'| 메서드당 바이트코드 (JVMS §4.7.3) | 65,535 B | 최대 part ≈ 25 KB (38 %) | '
+              f'**해결됨** — `run()` 이 `partN(model)` 로 분할 (실측: 미분할이면 '
+              f'`code too large` 로 컴파일 실패) |')
+    md.append(f'| 클래스당 constant pool (JVMS §4.1) | 65,535 | 추정 **{_cp:,}** '
+              f'({100 * _cp / 65535:.0f} %) | 스피어당 ≈ 27 엔트리 → 한 클래스 상한 '
+              f'≈ **{_SPHERE_HARD_CAP:,} 스피어**.  그 위는 클래스 분할 또는 `--mph` 경로 |')
+    md.append('')
+    md.append('⇒ 지금 규모(스피어 ' + f'{ctx.get("n_spheres", 0)}' + ')는 두 한도 모두 안쪽이다. '
+              'java 를 손으로 합치지 말 것 (분할이 곧 컴파일 가능 조건).')
+    md.append('')
     md.append('## 1) .mph 생성 (라이선스 머신, 1커맨드)')
     md.append('')
     md.append('```bash')
@@ -871,7 +1074,39 @@ def write_readme(pkg: dict, ctx: dict, todos, out_dir: Path, java_name: str = 'm
               'finalize 후 접촉 수 검산 |')
     md.append('| `BallSelection` condition/입력명 | Unknown property | inside↔somevertex 등 값 교체 |')
     md.append('| `InterpolationCurve` table | Unknown property | Polygon 폴백 (VGCF 절 주석 참조) |')
+    if ctx.get('clipped'):
+        md.append('| `uniAM`/`clipAM` (RVE 클립) | Unknown property `intbnd` | 그 두 줄만 삭제 '
+                  '(기본값 on) — 클립 자체는 유지 (§3-0) |')
     md.append('')
+
+    # ── §3-0: RVE 클립 (박스 밖 스피어) ──
+    _pr = ctx.get('protrusion') or {}
+    if _pr.get('n_any'):
+        md.append('### 3-0) RVE 클립 — 박스 밖으로 삐져나온 스피어')
+        md.append('')
+        md.append(f'DEM 침대는 이 박스를 조금 넘는다: **{_pr["n_any"]}/{len(pkg["spheres"])}** 개가 '
+                  f'박스 밖으로 나가 있다 (측면 {_pr["n_lat"]} · z {_pr["n_z"]}), '
+                  f'밖 체적 {_pr["v_out_um3"]:.1f} µm³ = AM 총체적의 **{_pr["pct_of_am"]:.2f} %** '
+                  f'(박스 체적 대비 {_pr["pct_of_box"]:.2f} %).')
+        md.append('')
+        if ctx.get('clipped'):
+            md.append('→ 이 java 는 **클립했다** (`uniAM` = 스피어 합집합, `clipAM` = 박스와 '
+                      '교집합; `--clip off` 로 끌 수 있다).  이유 둘:')
+            md.append('')
+            md.append(f'1. **STEP3 규약 일치** — 복셀 래스터화는 박스를 벗어난 재료를 버린다(크롭). '
+                      f'클립하지 않으면 COMSOL 은 AM 을 {_pr["pct_of_am"]:.2f} % 더 많이 가진 '
+                      '다른 물체가 되어 σ 대조(§4)가 성립하지 않는다.')
+            md.append(f'2. **플레이튼 BC** — z 로 관통한 **{_pr["n_z"]}** 개가 박스 상/하면을 뚫으면 '
+                      '그 자리에 AM 면이 없어 `adjAM ∩ selTop` 이 비고 **AM-집전체 접촉이 통째로 '
+                      '누락**된다.  클립하면 잘린 단면이 정확히 플레이튼 평면에 놓여 접촉 패치가 된다.')
+            md.append('')
+            md.append('한계: 주기 킷이라면 넘어간 부분의 **반대편 이미지는 복원하지 않는다** '
+                      '(java Block = 절연벽).  이는 `se_domain.periodic_xy` 경고와 같은 한계이며, '
+                      '측면 절연벽 대조를 위해서는 STEP3 도 절연-벽으로 재런해야 한다.')
+        else:
+            md.append('→ `--clip off` 로 **클립하지 않았다**.  위 두 문제(σ 대조 불성립 · '
+                      'AM-집전체 접촉 누락)가 그대로 남으니 §4 대조 전에 반드시 확인할 것.')
+        md.append('')
     md.append('### 3-1) repair tolerance — 이 패키지의 실측 표 (tol 하나로는 불가능)')
     md.append('')
     _cs = pkg['contacts']
@@ -1030,11 +1265,11 @@ def run_mph(pkg: dict, steps, out_dir: Path) -> int:
 
 # ───────────────────────────── 메인 빌드 ─────────────────────────────
 
-def build(pkg_dir: Path, out_dir: Path | None = None) -> dict:
+def build(pkg_dir: Path, out_dir: Path | None = None, clip: str = 'auto') -> dict:
     pkg = load_pkg(Path(pkg_dir))
     out_dir = Path(out_dir) if out_dir else pkg['dir']
     out_dir.mkdir(parents=True, exist_ok=True)
-    steps, todos, ctx = build_steps(pkg)
+    steps, todos, ctx = build_steps(pkg, clip=clip)
     java_text = render_java(steps, _header_comment(pkg))
     java_path = out_dir / 'model_build.java'
     java_path.write_text(java_text, encoding='utf-8')
@@ -1219,6 +1454,49 @@ def selftest() -> int:
         ok('17) sigma_bulk_source 라벨이 출처 주석에 병기 (킷 측정값 아님 명시)',
            'default_25C_const' in jf and '킷 측정값 아님' in jf)
 
+    # ── 18) 메서드 분할: JVM 64 KB Code 한도 (미분할이면 javac 이 실제로 거부한다) ──
+    big = [('call', [('component', ('comp1',)), ('geom', ('geom1',)),
+                     ('feature', (f'sph{i}',)), ('set', ('pos', ('D[]', [1.0, 2.0, 3.0])))])
+           for i in range(2000)]
+    jbig = render_java(big, 'split test')
+    n_parts = jbig.count('private static void part')
+    ok(f'18) 대형 모델 자동 분할 (문장 2000 → part {n_parts} 개, run() 이 순서대로 호출)',
+       n_parts >= 4 and all(f'part{i}(model);' in jbig for i in range(n_parts))
+       and jbig.index('part0(model);') < jbig.index('private static void part0'))
+    _mx = max(len(p) for p in _split_steps(big))
+    ok(f'18b) part 당 문장 상한 준수 (최대 {_mx} ≤ {2 * _MAX_STMTS_PER_PART})',
+       _mx <= 2 * _MAX_STMTS_PER_PART)
+    _tb = [('call', [('param', ()), ('set', ('a', 'b'))])] * 700 + \
+          [('tryblock', 'x', [('call', [('study', ('std1',)), ('run', ())])])]
+    ok('18c) tryblock 은 part 중간에서 쪼개지지 않는다',
+       all(sum(1 for s in p if s[0] == 'tryblock') <= 1 for p in _split_steps(_tb))
+       and render_java(_tb, 't').count('try {') == 1)
+
+    # ── 19) RVE 클립: 박스 밖 스피어 통계 + on/off ──
+    _sp = [{'id': 'a', 'x': 1.0, 'y': 5.0, 'z': 5.0, 'r': 2.0, 'cls': 'AM_P'},   # x 로 삐져나감
+           {'id': 'b', 'x': 5.0, 'y': 5.0, 'z': 5.0, 'r': 2.0, 'cls': 'AM_P'}]   # 안쪽
+    _pr = _protrusion(_sp, 10.0, 10.0, 10.0)
+    _cap_exact = math.pi * 1.0 ** 2 * (3 * 2.0 - 1.0) / 3.0        # h=1, r=2 → π·5/3
+    ok(f'19) _protrusion: 삐져나온 구 {_pr["n_any"]}/2 · 캡 체적 {_pr["v_out_um3"]:.4f} '
+       f'(해석해 {_cap_exact:.4f})',
+       _pr['n_any'] == 1 and _pr['n_lat'] == 1 and _pr['n_z'] == 0
+       and abs(_pr['v_out_um3'] - _cap_exact) < 1e-9)
+    ok('19b) 박스 안에만 있으면 클립 안 함 (auto)',
+       _protrusion(_sp[1:], 10.0, 10.0, 10.0)['n_any'] == 0)
+
+    pk_clip = load_pkg(_write_synth_pkg(root, with_fibre=False))
+    j_on = render_java(build_steps(pk_clip, clip='on')[0], 'clip on')
+    j_off = render_java(build_steps(pk_clip, clip='off')[0], 'clip off')
+    ok('19c) --clip on → uniAM/clipAM 생성, off → 미생성',
+       '"clipAM", "Intersection"' in j_on and '"uniAM", "Union"' in j_on
+       and 'clipAM' not in j_off)
+
+    # ── 20) 단위 사슬: lengthUnit 이 기하 feature 보다 먼저 (맨수 = µm 보장) ──
+    ok('20) lengthUnit("µm") 가 첫 기하 feature 보다 앞',
+       ('lengthUnit' in j_on) and j_on.index('lengthUnit(') < j_on.index('"blk1", "Block"'))
+    ok('20b) 길이 파라미터는 [um] 단위 명시 (기하 단위와 무관하게 안전)',
+       'model.param().set("L_x", "' in j_on and '[um]"' in j_on)
+
     n_pass = sum(1 for _, c in checks if c)
     print(f'\nselftest {n_pass}/{len(checks)} PASS')
     return 0 if n_pass == len(checks) else 1
@@ -1235,6 +1513,10 @@ def main():
     ap.add_argument('--mph', action='store_true',
                     help='MPh(pymph)로 같은 빌드를 라이브 재생해 .mph 저장 (COMSOL 설치 머신 전용; '
                          '미설치면 안내 후 종료)')
+    ap.add_argument('--clip', choices=('auto', 'on', 'off'), default='auto',
+                    help='박스 밖으로 삐져나온 AM 스피어를 RVE 로 잘라낸다 (STEP3 복셀 크롭 규약과 '
+                         '일치).  auto=삐져나온 게 있으면 클립 (기본), off=원본 그대로(플레이튼 '
+                         '관통 시 AM-집전체 접촉 누락 주의)')
     ap.add_argument('--selftest', action='store_true', help='합성 패키지로 자기검증')
     a = ap.parse_args()
 
@@ -1242,7 +1524,7 @@ def main():
         sys.exit(selftest())
     if not a.pkg_dir:
         ap.error('pkg_dir 필요 (또는 --selftest)')
-    res = build(Path(a.pkg_dir), Path(a.out) if a.out else None)
+    res = build(Path(a.pkg_dir), Path(a.out) if a.out else None, clip=a.clip)
     if a.mph:
         sys.exit(run_mph(res['pkg'], res['steps'],
                          Path(a.out) if a.out else res['pkg']['dir']))
