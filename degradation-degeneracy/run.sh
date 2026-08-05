@@ -223,6 +223,7 @@ case "$MODE" in
     FIT_ARGS+=(--reference "$REFERENCE")
     [[ -n "$LIMIT" ]] && FIT_ARGS+=(--limit "$LIMIT")
     [[ "$REFERENCE" == "halfcell" && "$BOUNDS_PRESET" == "expanded" ]] && FIT_ARGS[3]="halfcell"
+    [[ "$RESUME" == "true" ]] && FIT_ARGS+=(--resume)
     exec python -m src.fitting "${FIT_ARGS[@]}"
     ;;
 

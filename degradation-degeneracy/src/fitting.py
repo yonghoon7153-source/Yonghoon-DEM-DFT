@@ -31,6 +31,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import logging
 from dataclasses import dataclass, field
 
@@ -359,7 +360,8 @@ def _fit_one(task: dict) -> list[dict]:
 def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
             bounds_preset: str, n_restarts: int, nproc: int,
             use_noisy: bool = True, limit: int | None = None,
-            base_config: str | None = None, reference: str = "grid") -> dict:
+            base_config: str | None = None, reference: str = "grid",
+            resume: bool = False) -> dict:
     """grid 결과 전체에 fitting 수행 → fits.parquet."""
     import time
     from pathlib import Path
@@ -412,7 +414,8 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
             "bounds_preset": bounds_preset, "n_restarts": n_restarts,
             "inventory": inv, "reference": reference, "halfcell": hc_dict,
             "p_ini": p_ini,
-            "seed": abs(hash(cond_id)) % (2**31),
+            # hash()는 프로세스마다 소금이 달라 재현 불가 → sha1 기반 결정적 seed
+            "seed": int(hashlib.sha1(cond_id.encode()).hexdigest()[:8], 16),
         })
     if limit:
         tasks = tasks[:limit]
@@ -429,23 +432,49 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
         for t in tasks:
             t["p_ini"] = p_ini
 
+    from src.io import (acquire_run_lock, load_completed, mark_completed,
+                        merge_chunks, release_run_lock, save_chunk)
+
+    # ── resume: 완료 조건 건너뛰기 (grid와 같은 정책, fit 전용 파일 사용) ──
+    done = load_completed(out_dir, "fit_completed.jsonl") if resume else set()
+    todo = [t for t in tasks if t["cond_id"] not in done]
+    if resume and done:
+        log.info("fit resume: %d개 완료 확인, %d개 남음", len(done), len(todo))
+
     log.info("fitting: %d조건 × %d목적함수 × %d restart (nproc=%d)",
-             len(tasks), len(objectives), n_restarts, nproc)
+             len(todo), len(objectives), n_restarts, nproc)
+    acquire_run_lock(out_dir, ".fit.lock")
     t0 = time.perf_counter()
-    with tqdm(total=len(tasks), desc="fit", unit="cond") as bar, \
-            Parallel(n_jobs=nproc, backend="loky") as parallel:
-        out = []
-        step = max(1, min(200, len(tasks)))
-        for s in range(0, len(tasks), step):
-            chunk = tasks[s:s + step]
-            for rows in parallel(delayed(_fit_one)(t) for t in chunk):
-                out.extend(rows)
-            bar.update(len(chunk))
+    n_done = 0
+    try:
+        with Parallel(n_jobs=nproc, backend="loky") as parallel:
+            step = max(1, min(100, len(todo)))
+            chunk_idx = 0
+            for s in range(0, len(todo), step):
+                chunk = todo[s:s + step]
+                rows = []
+                for rr in parallel(delayed(_fit_one)(t) for t in chunk):
+                    rows.extend(rr)
+                # ★ 청크 즉시 저장 — 5시간 실행이 죽어도 여기까지는 남는다
+                save_chunk(pd.DataFrame(rows), out_dir, chunk_idx,
+                           subdir="fit_chunks")
+                chunk_idx += 1
+                for t in chunk:
+                    mark_completed(out_dir, t["cond_id"], "fit_completed.jsonl")
+                n_done += len(chunk)
+                el = time.perf_counter() - t0
+                # tqdm은 파일 리다이렉트 시 버퍼링으로 안 보인다 → 로그로 진행률
+                log.info("fit 진행: %d/%d (%.0f%%) — %.1f s/cond, 남은 예상 %.0f분",
+                         n_done, len(todo), 100 * n_done / len(todo),
+                         el / n_done, el / n_done * (len(todo) - n_done) / 60)
+    finally:
+        release_run_lock(out_dir, ".fit.lock")
     elapsed = time.perf_counter() - t0
 
-    fits = pd.DataFrame(out)
-    path = out_dir / "fits.parquet"
-    fits.to_parquet(path, index=False)
+    # 이전 실행분(resume)까지 합쳐 병합. 같은 (cond_id, objective, ...)는 최신만.
+    path = merge_chunks(out_dir, "fits.parquet", subdir="fit_chunks",
+                        keys=("cond_id", "objective", "reference", "bounds_preset"))
+    fits = pd.read_parquet(path)
 
     write_manifest(out_dir, base_manifest("", extra={
         "run_type": "fit", "input": str(in_dir),
@@ -479,6 +508,8 @@ def main() -> None:
     ap.add_argument("--bounds", default="expanded", help="expanded | original_33p")
     ap.add_argument("--n-restarts", dest="n_restarts", type=int, default=None)
     ap.add_argument("--nproc", type=int, default=multiprocessing.cpu_count())
+    ap.add_argument("--resume", action="store_true",
+                    help="fit_completed.jsonl 기반 재개 (청크 단위 저장)")
     ap.add_argument("--reference", default="grid", choices=["grid", "halfcell"],
                     help="grid=기준 셀 창(유도식 환산) | halfcell=전 범위 반쪽셀(21p 식)")
     ap.add_argument("--clean", action="store_true", help="노이즈 없는 곡선으로 fitting")
@@ -511,6 +542,7 @@ def main() -> None:
         n_restarts=args.n_restarts or int(fcfg.get("n_restarts", 5)),
         nproc=args.nproc, use_noisy=not args.clean, limit=args.limit,
         base_config=args.base_config, reference=args.reference,
+        resume=args.resume,
     )
     print(json.dumps(summary, ensure_ascii=False, indent=2))
 

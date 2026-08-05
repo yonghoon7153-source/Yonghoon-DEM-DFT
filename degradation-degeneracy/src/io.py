@@ -36,30 +36,32 @@ def git_info(repo_dir: str | Path | None = None) -> dict:
         return {"git_commit": "unavailable", "git_dirty": None}
 
 
-def save_chunk(df: pd.DataFrame, out_dir: str | Path, chunk_idx: int) -> Path:
+def save_chunk(df: pd.DataFrame, out_dir: str | Path, chunk_idx: int,
+               subdir: str = "chunks") -> Path:
     """청크 저장. 파일명에 PID를 넣어 프로세스 간 덮어쓰기를 막는다.
 
     같은 out_dir에 두 프로세스가 붙으면 각자 chunk_idx를 독립적으로 세기 때문에
     이름이 겹쳐 서로의 결과를 덮어쓴다 (완료 표시는 남고 곡선만 사라지는 손실).
     """
-    out = Path(out_dir) / "chunks"
+    out = Path(out_dir) / subdir
     out.mkdir(parents=True, exist_ok=True)
     path = out / f"chunk_{chunk_idx:05d}_{os.getpid()}.parquet"
     df.to_parquet(path, index=False)
     return path
 
 
-def chunk_files(out_dir: str | Path) -> list[Path]:
+def chunk_files(out_dir: str | Path, subdir: str = "chunks") -> list[Path]:
     """청크 파일을 **생성 순서(mtime)** 로 정렬해 반환. 뒤쪽이 최신.
 
     이름순이 아니라 mtime순인 이유: 프로세스마다 chunk_idx가 독립이라
     이름 정렬로는 시간 순서를 알 수 없다.
     """
-    files = list((Path(out_dir) / "chunks").glob("chunk_*.parquet"))
+    files = list((Path(out_dir) / subdir).glob("chunk_*.parquet"))
     return sorted(files, key=lambda p: (p.stat().st_mtime_ns, p.name))
 
 
-def merge_chunks(out_dir: str | Path, name: str = "curves.parquet") -> Path | None:
+def merge_chunks(out_dir: str | Path, name: str = "curves.parquet",
+                 subdir: str = "chunks", keys: tuple = ("cond_id",)) -> Path | None:
     """chunks/*.parquet → 단일 parquet 병합.
 
     같은 조건이 여러 청크에 있으면(같은 디렉터리에 --resume 없이 재실행한 경우)
@@ -67,7 +69,7 @@ def merge_chunks(out_dir: str | Path, name: str = "curves.parquet") -> Path | No
     같은 조건을 여러 번 세게 된다.
     """
     out_dir = Path(out_dir)
-    files = chunk_files(out_dir)
+    files = chunk_files(out_dir, subdir)
     if not files:
         return None
     parts = []
@@ -77,9 +79,10 @@ def merge_chunks(out_dir: str | Path, name: str = "curves.parquet") -> Path | No
         parts.append(part)
     df = pd.concat(parts, ignore_index=True)
 
-    if "cond_id" in df.columns:
-        # 조건별 최신 청크만 유지 (부분 행이 아니라 블록 단위로 선택)
-        newest = df.groupby("cond_id")["_chunk"].transform("max")
+    kk = [k for k in keys if k in df.columns]
+    if kk:
+        # 키별 최신 청크만 유지 (부분 행이 아니라 블록 단위로 선택)
+        newest = df.groupby(kk)["_chunk"].transform("max")
         df = df[df["_chunk"] == newest].reset_index(drop=True)
     df = df.drop(columns="_chunk")
 
@@ -102,13 +105,13 @@ def _pid_alive(pid: int) -> bool:
     return True
 
 
-def acquire_run_lock(out_dir: str | Path) -> Path:
+def acquire_run_lock(out_dir: str | Path, name: str = ".run.lock") -> Path:
     """출력 디렉터리 실행 잠금. 이미 살아있는 실행이 있으면 RuntimeError.
 
     같은 --out에 두 프로세스가 붙으면 청크가 서로 덮이고 집계가 어긋난다.
     죽은 프로세스가 남긴 lock은 자동으로 정리한다.
     """
-    path = Path(out_dir) / ".run.lock"
+    path = Path(out_dir) / name
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.exists():
         try:
@@ -126,8 +129,8 @@ def acquire_run_lock(out_dir: str | Path) -> Path:
     return path
 
 
-def release_run_lock(out_dir: str | Path) -> None:
-    path = Path(out_dir) / ".run.lock"
+def release_run_lock(out_dir: str | Path, name: str = ".run.lock") -> None:
+    path = Path(out_dir) / name
     try:
         if path.exists() and path.read_text(encoding="utf-8").split()[0] == str(os.getpid()):
             path.unlink()
@@ -167,8 +170,8 @@ def manifest_path(out_dir: str | Path) -> Path:
     return Path(out_dir) / "manifest.yaml"
 
 
-def completed_path(out_dir: str | Path) -> Path:
-    return Path(out_dir) / "completed.jsonl"
+def completed_path(out_dir: str | Path, name: str = "completed.jsonl") -> Path:
+    return Path(out_dir) / name
 
 
 def write_manifest(out_dir: str | Path, payload: dict) -> Path:
@@ -200,14 +203,15 @@ def base_manifest(cfg_hash: str, extra: dict | None = None) -> dict:
     return m
 
 
-def mark_completed(out_dir: str | Path, cond_id: str) -> None:
-    """완료 조건을 completed.jsonl에 append (resume용, 청크 flush 후 호출)."""
-    with open(completed_path(out_dir), "a", encoding="utf-8") as f:
+def mark_completed(out_dir: str | Path, cond_id: str,
+                   name: str = "completed.jsonl") -> None:
+    """완료 조건을 jsonl에 append (resume용, 청크 flush 후 호출)."""
+    with open(completed_path(out_dir, name), "a", encoding="utf-8") as f:
         f.write(json.dumps({"cond_id": cond_id}) + "\n")
 
 
-def load_completed(out_dir: str | Path) -> set[str]:
-    path = completed_path(out_dir)
+def load_completed(out_dir: str | Path, name: str = "completed.jsonl") -> set[str]:
+    path = completed_path(out_dir, name)
     if not path.exists():
         return set()
     done = set()
