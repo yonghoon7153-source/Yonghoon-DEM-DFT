@@ -70,6 +70,27 @@ GAP_LIT = {"LiF": 14, "MgF2": 12, "CaF2": 12, "AlF3": 11, "ScF3": 10, "YF3": 10,
 # ml-13: 원소 심볼만으로 키를 잡으면 산화수가 무시돼 SnO2(Sn(IV))·Sb2O5(Sb(V))·In2O3(In(III))가
 # Pearson 이 Sn(II)/Sb(III) 에 주는 borderline 등급을 물려받는다. Pearson 상 Sn(IV)·Sb(V)·In(III)은
 # hard acid 다. → (원소, 산화수) 로 키를 잡아 로스터가 늘어도 잘못된 등급을 조용히 상속하지 못하게.
+# ⚠⚠ **이 등급의 이름과 근거가 부정확하다 — 2026-08-05 [Zhu20] SI 로 검산해서 확인.**
+#   `air_hsab` 라는 이름은 "HSAB 로 공기안정을 판정한다" 는 뜻인데, 실제 구동변수는
+#   **soft/hard 가 아니라 oxophilicity**(양이온이 S 대신 O 를 얼마나 원하나)다.
+#   증거: 같은 원소가 산화수로 뒤집힌다(Sb³⁺ +0.535 ↔ Sb⁵⁺ −0.167, Δ0.70 eV) — HSAB 로는
+#   설명 안 되고 산물 산화물의 안정성으로는 설명된다. Zn²⁺(+1.081) > Ag⁺(+1.040) 도 마찬가지.
+#
+#   **검산 결과 (36종 중 산화수까지 맞춰 대조 가능한 35종)**: 맞음 26 · **어긋남 9**.
+#   어긋난 9종이 **전부 같은 방향** — 우리가 0.2(비보호)로 깎았는데 문헌은 보호적:
+#     In³⁺ +0.599 · Sn⁴⁺ +0.441 · Ba²⁺ +0.422 · Na⁺ +0.416 · Ge⁴⁺ +0.412 ·
+#     Ga³⁺ +0.362 · Sr²⁺ +0.359 · Ca²⁺ +0.264 (CaO·CaF₂)
+#   즉 이 등급은 **Cu/Ag/Zn 밖의 양이온을 체계적으로 과소평가**한다.
+#   ⚠ 특히 **In³⁺** — 문헌(InF₃ 치환 아지로다이트)이 효과를 보고하는 계열인데 우리 등급은 최하다.
+#
+#   ✅ 반대로 **산화수를 키로 쓴 결정(ml-13)은 검산으로 정당화됐다**:
+#     Sb₂O₅→Sb⁵⁺ −0.167 · TiO₂→Ti⁴⁺ −0.304 · ZrO₂ −0.459 · SiO₂ −0.847 · B₂O₃ −0.901
+#     전부 우리 0.2 등급과 일치. 원소 심볼만 썼으면 Sb 를 borderline 으로 잘못 올렸을 것이다.
+#
+#   → **처방은 `open_items` #12**: [Zhu20] 레시피로 ΔG_hyd 를 직접 계산해 이 정성 등급을
+#     대체한다. 그전까지 이 열은 **Cu/Ag/Zn 계열 식별용**으로만 쓰고, 낮은 등급을
+#     "공기 불안정" 으로 읽지 말 것(= 판정 없음).
+#   상세: kb/open_items.md #13 · db/properties/zhu2020_si_hydrolysis_energies.csv
 HSAB_SOFT_OX = {("Cu", 1), ("Cu", 2), ("Ag", 1)}
 HSAB_BORDERLINE_OX = {("Zn", 2), ("Ni", 2), ("Co", 2), ("Sn", 2), ("Sb", 3), ("In", 1)}
 
@@ -172,7 +193,11 @@ def main():
             "disorder_std": fnum(l5.get("tier2_li_li_disorder_std")),
             "mass_per_cation": round(fmass / ncat, 2) if ncat else None,
             "cost_tier": cost_tier_of(cat, comp),
+            # ⚠ 이름 정정 진행 중 — 실제 구동변수는 HSAB softness 가 아니라 oxophilicity 다.
+            #   기존 키(air_hsab)는 하위호환으로 남기고, 뜻이 맞는 이름을 같이 낸다.
+            #   소비자(codoping_ml.py·webapp)를 옮긴 뒤 air_hsab 를 뺄 것 — open_items #13.
             "air_hsab": round(air, 2),
+            "air_protect_tier": round(air, 2),
             "E_GPa": fnum(r.get("E_GPa")), "pugh": fnum(r.get("pugh")),
             "de": fnum(r.get("de")),
         })
@@ -329,7 +354,10 @@ def main():
         "combine_rule": "combined = (∏ norm_i)^(1/n) 기하평균 — 한 테마라도 바닥이면 종합도 바닥 (AND 의미).",
         "source_files": ["cascade_v23_ranked.csv", "oxidation_stability_cascade.csv",
                          "cascade_v23_litransport.csv"],
-        "curation_disclaimer": ("cost_tier(가격 등급)·gap_lit_eV(문헌 전형 갭)·air_hsab(HSAB 등급)는 "
+        "curation_disclaimer": ("cost_tier(가격 등급)·gap_lit_eV(문헌 전형 갭)·air_hsab(정성 보호 등급 — "
+                                "⚠ 이름과 달리 HSAB 로는 절반만 설명된다. [Zhu20] SI 대조 결과 36종 중 9종이 "
+                                "어긋나며 전부 과소평가 방향(In³⁺·Sn⁴⁺·Ba²⁺·Na⁺·Ge⁴⁺·Ga³⁺·Sr²⁺·Ca²⁺). "
+                                "낮은 등급을 '공기 불안정'으로 읽지 말 것 — open_items #13)는 "
                                 "큐레이션 값 — 우리 계산/절대시세 아님. litdb 앵커: zhu2020, taklu2021, li2025."),
         "themes": T,
         "dopants": rows,
