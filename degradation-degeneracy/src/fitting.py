@@ -20,7 +20,7 @@
 
     LAM_PE = 1 − α_PE·r
     LAM_NE = 1 − α_NE·r
-    LLI    = 1 − (α_PE + β_PE − β_NE)·r
+    LLI    = 1 − r·[w_PE·α_PE + w_NE·α_NE + κ·(β_NE − β_PE)]   ← src/inventory.py 유도
 
 ⚠ α = 1.00 은 곧 LAM = 1 − r = **용량손실과 같음**을 뜻한다.
    33p의 lb = [1.00, …]는 이 지점을 하한으로 못 박으므로,
@@ -78,18 +78,30 @@ def window_shortfall(p, x_min: float = 0.0, x_max: float = 1.0) -> float:
 
 # ---------------------------------------------------------------- 역환산
 
-def to_degradation_modes(p, r: float = 1.0, convention: str = "paper") -> dict:
+def to_degradation_modes(p, r: float = 1.0, convention: str = "derived",
+                         w_pe: float | None = None, w_ne: float | None = None,
+                         kappa: float | None = None) -> dict:
     """α·β → LAM_PE / LAM_NE / LLI.
 
     convention:
-      "paper"  — 21p 식 (용량비 r 반영). 기본값.
-      "code"   — 원본 슬라이더 식 LLI = (1−α_PE) + (β_PE − β_NE), r 미반영.
-                 (합성 데이터 역검증으로 어느 쪽이 정답을 복원하는지 확인한다)
+      "derived" — ★ 기본값. 전하 보존으로 유도한 식 (src/inventory.py 참조)
+                    LLI = 1 − r·[w_PE·α_PE + w_NE·α_NE + κ·(β_NE − β_PE)]
+                  w_pe·w_ne·kappa 가 필요하며, reference_inventory()로 구한다.
+      "paper"   — 21p 식. 가중치(w_PE=1,w_NE=0,κ=1)도 다르고 β 항 부호도 반대다.
+      "code"    — 원본 슬라이더 식 (r 미반영).
+
+    합성 격자 95조건 평균 |오차|: derived 0.012 / paper 0.128 / code 0.200
     """
     a_pe, b_pe, a_ne, b_ne = p
     lam_pe = 1.0 - a_pe * r
     lam_ne = 1.0 - a_ne * r
-    if convention == "paper":
+
+    if convention == "derived":
+        if w_pe is None or w_ne is None or kappa is None:
+            raise ValueError("derived 규약에는 w_pe·w_ne·kappa가 필요합니다 "
+                             "(src.inventory.reference_inventory 사용)")
+        lli = 1.0 - r * (w_pe * a_pe + w_ne * a_ne + kappa * (b_ne - b_pe))
+    elif convention == "paper":
         lli = 1.0 - (a_pe + b_pe - b_ne) * r
     elif convention == "code":
         lli = (1.0 - a_pe) + (b_pe - b_ne)
@@ -261,6 +273,9 @@ def _fit_one(task: dict) -> list[dict]:
         J = make_objective(target, model_fn, weights, scales, obj_cfg, shortfall)
         res = fit(J, task["init"], task["lb"], task["ub"],
                   n_restarts=task["n_restarts"], seed=task["seed"])
+        inv = task["inventory"]
+        derived = to_degradation_modes(res.p, task["r"], "derived",
+                                       inv["w_pe"], inv["w_ne"], inv["kappa"])
         paper = to_degradation_modes(res.p, task["r"], "paper")
         code = to_degradation_modes(res.p, task["r"], "code")
         rows.append({
@@ -273,8 +288,9 @@ def _fit_one(task: dict) -> list[dict]:
             "any_bound_active": res.any_bound_active,
             "n_restarts": res.n_restarts, "n_restarts_agree": res.n_restarts_agree,
             "p_spread": res.p_spread, "J_spread": res.J_spread,
-            "lam_pe_hat": paper["lam_pe"], "lam_ne_hat": paper["lam_ne"],
-            "lli_hat": paper["lli"], "lli_hat_code": code["lli"],
+            "lam_pe_hat": derived["lam_pe"], "lam_ne_hat": derived["lam_ne"],
+            "lli_hat": derived["lli"],            # ★ 유도식 (기본)
+            "lli_hat_21p": paper["lli"], "lli_hat_code": code["lli"],
             "bounds_preset": task["bounds_preset"],
         })
     return rows
@@ -282,7 +298,8 @@ def _fit_one(task: dict) -> list[dict]:
 
 def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
             bounds_preset: str, n_restarts: int, nproc: int,
-            use_noisy: bool = True, limit: int | None = None) -> dict:
+            use_noisy: bool = True, limit: int | None = None,
+            base_config: str | None = None) -> dict:
     """grid 결과 전체에 fitting 수행 → fits.parquet."""
     import time
     from pathlib import Path
@@ -304,6 +321,12 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
     q_ref = float(ref["q_mah"].iloc[0])
     log.info("reference: Q=%.1f mAh, %d점", q_ref, len(ref_x))
 
+    # LLI 환산 상수 (전하 보존 유도식) — 메인에서 1회 계산해 워커에 값만 전달
+    from src.config import load_config as _load
+    from src.inventory import reference_inventory
+    base_cfg = _load(base_config or "configs/base.yaml")
+    inv = reference_inventory(base_cfg, q_ref / 1000.0).as_dict()
+
     v_col = "v_full_noisy" if (use_noisy and "v_full_noisy" in df.columns) else "v_full"
     tasks = []
     for cond_id, g in df.groupby("cond_id", sort=False):
@@ -319,6 +342,7 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
             "ref_full": ref_full, "obj_cfg": obj_cfg, "objectives": objectives,
             "init": bounds["init"], "lb": bounds["lb"], "ub": bounds["ub"],
             "bounds_preset": bounds_preset, "n_restarts": n_restarts,
+            "inventory": inv,
             "seed": abs(hash(cond_id)) % (2**31),
         })
     if limit:
@@ -347,7 +371,7 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
         "n_conditions": len(tasks), "objectives": list(objectives),
         "bounds_preset": bounds_preset, "bounds": bounds,
         "n_restarts": n_restarts, "target_column": v_col,
-        "q_ref_mah": q_ref, "elapsed_s": round(elapsed, 1),
+        "q_ref_mah": q_ref, "lli_inventory_constants": inv, "elapsed_s": round(elapsed, 1),
         "fits_parquet": str(path),
     }))
     log.info("fitting 완료: %d행, %.1fs → %s", len(fits), elapsed, path)
@@ -366,6 +390,8 @@ def main() -> None:
     ap.add_argument("--in", dest="in_dir", required=True, help="grid 결과 디렉터리")
     ap.add_argument("--out", default=None, help="기본: --in 과 동일")
     ap.add_argument("--objectives-config", default="configs/objectives.yaml")
+    ap.add_argument("--base-config", default="configs/base.yaml",
+                    help="LLI 환산 상수(재고 분배) 계산용 물리 baseline")
     ap.add_argument("--objective", default=None,
                     help="콤마 목록. 기본: objectives.yaml 전체")
     ap.add_argument("--bounds", default="expanded", help="expanded | original_33p")
@@ -400,6 +426,7 @@ def main() -> None:
         bounds_preset=args.bounds,
         n_restarts=args.n_restarts or int(fcfg.get("n_restarts", 5)),
         nproc=args.nproc, use_noisy=not args.clean, limit=args.limit,
+        base_config=args.base_config,
     )
     print(json.dumps(summary, ensure_ascii=False, indent=2))
 

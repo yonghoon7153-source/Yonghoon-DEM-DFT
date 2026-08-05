@@ -182,3 +182,51 @@ def test_dqdv_peak_weighting_applied(refs, obj_cfg):
     assert feats.peak_weight.max() == pytest.approx(
         obj_cfg["dqdv"]["peak_weight"], abs=1e-9)
     assert (feats.peak_weight == 1.0).any()
+
+
+# ---------------------------------------------------------------- LLI 환산식
+
+def test_derived_lli_requires_constants():
+    with pytest.raises(ValueError, match="w_pe"):
+        to_degradation_modes([1.1, 0, 1.05, 0], 0.9, "derived")
+
+
+def test_derived_lli_differs_from_21p_by_beta_sign():
+    """★ 21p 식은 유도식의 특수해가 아니다 — β 항의 부호가 반대다.
+
+    유도식(w_PE=1, w_NE=0, κ=1) :  1 − r·(α_PE − β_PE + β_NE)
+    21p 식                      :  1 − r·(α_PE + β_PE − β_NE)
+    합성 데이터에서는 유도식 쪽 부호가 맞다 (|오차| 0.076 vs 0.128).
+    원본 코드 주석의 "기존 부호가 반대였음"과도 같은 지점을 가리킨다.
+    """
+    p, r = [1.12, -0.04, 1.06, 0.02], 0.87
+    got = to_degradation_modes(p, r, "derived", w_pe=1.0, w_ne=0.0, kappa=1.0)
+    ref = to_degradation_modes(p, r, "paper")
+    beta_term = r * (p[1] - p[3])
+    assert got["lli"] == pytest.approx(ref["lli"] + 2 * beta_term, abs=1e-12)
+
+
+def test_reference_inventory_weights_sum_to_one(cfg):
+    from src.inventory import reference_inventory
+
+    inv = reference_inventory(cfg, q_ref_ah=5.72)
+    assert inv.w_pe + inv.w_ne == pytest.approx(1.0, abs=1e-12)
+    assert 0 < inv.w_pe < inv.w_ne              # 이 셀은 재고 대부분이 음극에
+    assert inv.kappa == pytest.approx(5.72 / inv.n_total_ah, abs=1e-12)
+
+
+def test_derived_lli_recovers_truth_on_synthetic(cfg):
+    """★ 참값 (LAM, LLI)로 만든 α·β에서 유도식이 LLI를 정확히 되돌린다."""
+    from src.inventory import reference_inventory
+
+    inv = reference_inventory(cfg, q_ref_ah=5.72)
+    for lam_pe, lam_ne, lli, r in [(0.0, 0.0, 0.0, 1.0), (0.05, 0.15, 0.10, 0.86),
+                                   (0.10, 0.05, 0.20, 0.75)]:
+        a_pe, a_ne = (1 - lam_pe) / r, (1 - lam_ne) / r
+        # 유도식을 만족하도록 β 차이를 역산 → 되돌렸을 때 lli가 나와야 함
+        d_beta = ((1 - lli) / r - inv.w_pe * a_pe - inv.w_ne * a_ne) / inv.kappa
+        got = to_degradation_modes([a_pe, 0.0, a_ne, d_beta], r, "derived",
+                                   inv.w_pe, inv.w_ne, inv.kappa)
+        assert got["lam_pe"] == pytest.approx(lam_pe, abs=1e-12)
+        assert got["lam_ne"] == pytest.approx(lam_ne, abs=1e-12)
+        assert got["lli"] == pytest.approx(lli, abs=1e-12)
