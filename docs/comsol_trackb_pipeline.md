@@ -95,6 +95,35 @@ comsol_pkg_<case>/
 편향 — 합성 실측) · §F1 sigma_bulk **의도적 null 보존** (mixed 이온상 자기모순 패키지 차단) ·
 provenance.reason 서브딕트 **전달** (java TODO 가 사유를 잃던 것) 외 8건.
 
+### 심화 적대리뷰 (max-effort 3렌즈, 2026-08-05 — 15건 전부 실행-확증, 전부 반영)
+
+**병합 런타임 렌즈** — 병합본 payload 를 실제 3회 관통(mixed/uniform/퇴화), τ_full·kdom
+손계산 일치, 기존 키 **md5 동일**(additive 확증), except 3경로 생존.  잡은 것:
+- ★ **수정끼리의 크래시**: 1차 수정 (b)"부재/None 항목" 문구 × (c)reason 전달 → java 주석의
+  bare `None` 토큰을 §F1 누출가드가 오탐 → **SDCP 킷 전부 mph 생성 불가**.  수정 = 문구
+  "부재(null)" + mph 쪽 패키지-텍스트 무해화 벨트 + 회귀 selftest.  원조 재현체(kitM_pkg)
+  재실행으로 해소 확인.
+- hasattr 프리체크의 error-trackb 가 "구세대" 분기로 빠져 **25 °C 상수를 거짓 라벨로 주입**
+  → error 게이트 신설(실패 런 = 값 미산출이 정직).
+- 이온 n_dof=0 퇴화 → trackb 스텁으로 "재실행" 오진 차단.
+
+**물리 렌즈** — 전부 수치화:
+- **복셀 계단 편향**: τ_geo 가 매끈-구 대비 계통 상향 → κ_dom **+13~16 % @vox 0.4**
+  (0.5: +17~21 / 0.33: +9~12; 해상도 시리즈 실측).  단일구는 −0.5~−2.3 %뿐 — 조밀 입자간
+  협착 채널이 증폭.  ⇒ 처방 = **geo-probe 2-런 재규격** (README §4 프로토콜: kdom 에
+  σ_bulk 를 넣어 1회 → κ_dom′ = σ_bulk²·(φf/τf)/σ_probe — 모델 자신의 D_geo 로 편향 소거).
+- **periodic ↔ 절연벽**: D_geo **+5.1 %** 실측 → trackb 가 periodic_xy 기록, pkg 경고.
+- **온도 이중적용**: σ_bulk 는 이미 T-스케일 (60 °C 재적용 = ×22.9 오류) →
+  sigma_declared_at_T_C 필드 + conventions §6 + java 경고.
+- **collector 규약**: java 기하절단 vs STEP3 crown-band = **−0.8 %** (작음 — 실측으로 종결).
+- **렌즈 목반경 = √(2R*δ) = √2·a_hertz** (면적 2×) → Holm 표 대비 ~×1.4 상회가 기하적
+  기대값 (587접촉 실측 평균 1.405).  conventions §8 택1 강제.
+- κ_dom 은 z-스칼라 — B2 국소 분포는 균질화 오차 상속 (docstring·conventions §7 명시).
+
+**계약 렌즈** — 사후수정 5곳 재검 + selftest 갭: 신규 분기들이 미커버였음 →
+export 29→**33** / mph 20→**23** (키-실재-None·에러런·자기서술 필드·None-토큰 회귀·
+both-null 전달·폴백 라벨 소비).  sigma_bulk_source 를 java/README 출처 주석에 병기.
+
 ---
 
 ## 5. ★ "이 mesh, repair 없이 들어가나?" — 판정 (real_14 실측 기반)
@@ -112,24 +141,29 @@ provenance.reason 서브딕트 **전달** (java TODO 가 사유를 잃던 것) �
 ### ①의 두 병리 (real_14, 457구, rasterize 규약 gap≤0.10µm — 2026-08-05 실측)
 
 **병리 A — sliver 렌즈**: 겹침 접촉 587개, δ 0.2~711 nm (중앙 70 nm).
-렌즈 반각 0.4°~29.4° (중앙 7.8°), **반각 <5° 가 161개** — UNION 이 만드는 예리한 이음새가
-메셔의 고전적 실패 지점.  → COMSOL geometry finalize 의 상대 repair tolerance 로 대부분
-흡수 가능 (기본값이 δ_min 0.2 nm 를 삼킬 수 있음 — 그건 그 접촉의 소멸이므로 확인 필요).
+렌즈 반각 0.4°~29.4° (중앙 7.8°), **반각 <5° 가 161개**.
+★ **선례로 해결됨 (2026-08-05 사용자 확인)**: 예전 AM 메시 작업에서 정확히 이 방식 —
+좌표를 java 스크립트로 넣어 COMSOL 내장 프리미티브로 직접 생성 → **겹치는 부분 repair →
+mesh 를 더 fine 하게 → 오류 없이 완주**.  즉 A 는 리스크가 아니라 **검증된 절차**다.
+남은 일 = 그 옛 스크립트에서 repair tolerance 값·메시 설정을 수확해 생성기 기본값으로
+박는 것 (T15).  단서 하나: repair 가 δ_min 0.2 nm 급 극소 겹침 접촉을 **삼켜서 없앨** 수
+있으므로 finalize 후 접촉 수 검산은 유지.
 
-**병리 B — 칼날 틈 (더 심각)**: **근접-비접촉 72쌍** (gap 0.1~95 nm).
-- 메시: SE 도메인에 두께 ~0.1 nm~ 의 칼날 틈 → 요소 aspect ~10³⁻⁴:1 → 메시 폭발/실패.
-- ★ **물리 불일치가 더 큰 문제**: 이 72쌍은 rasterize 가 1.2·vox 브릿지로 **전기적으로
-  연결**하는 접촉들이다 (DEM econn 규약 gap≤0.10µm = 접촉).  매끈 java 기하에선 **개회로**
-  — B1 σ_e 대조가 시작부터 다른 회로를 비교하게 된다.
+**병리 B — 칼날 틈 (선례가 커버하지 않는 부분)**: **근접-비접촉 72쌍** (gap 0.1~95 nm).
+옛 워크플로는 겹침(δ>0) 기하였다면 이 병리를 만난 적이 없다.  두 갈래 다 함정:
+- repair tol < gap → **개회로 유지** (rasterize 는 1.2·vox 브릿지로 전기 연결하는 접촉들
+  — DEM econn 규약 gap≤0.10µm = 접촉) + SE 도메인 칼날틈 요소 aspect ~10³⁻⁴:1 메시 폭발.
+- repair tol > gap 로 **스냅** → 돌긴 돈다.  그러나 점접촉 특이점: FEM 점접촉 컨덕턴스는
+  국소 요소 크기에 비례 → **mesh 를 조일수록 σ_e 가 계속 흘러내린다** (수렴 안 함).
+  "오류 없이 돈다" ≠ "σ 가 수렴한다" — B1 정량 대조가 메시-의존이 된다.
 
-### 처방 (TODO(trackb) 등록)
+### 처방 (역할 분담 — 사용자 선례 반영)
 
-1. **브릿지 실린더** (표준 DEM→FEM 관행, 권장): 659 접촉 전부에 반지름
-   `max(a_hertz, a_floor)` 실린더를 UNION.  `a_floor ≈ 1.2·vox 상당 (~0.15-0.2 µm)` 로
-   잡으면 **STEP3 rasterize 브릿지 규약과 정합** — 두 모델이 같은 회로를 보게 된다.
-   am_am_contacts.csv 가 a_hertz 를 이미 실으므로 생성기 쪽 루프 하나.
-2. repair tolerance 명시 설정 + "δ<tol 접촉 소멸 검사" 를 README 디버깅 절에.
-3. (기각) 반지름 일괄 팽창 — AM_S +2.5 % 반지름 = 부피 +7.7 %, porosity 를 깨므로 안 씀.
+| 문제 | 처방 | 출처 |
+|---|---|---|
+| sliver (A) | **repair + fine mesh** — 옛 스크립트 절차 그대로, tol·메시 설정 수확 (T15) | 사용자 실증 |
+| 연결성+넥 면적 (B) | **브릿지 실린더** (T2): 659 접촉에 r = max(a_hertz, a_floor≈1.2·vox) UNION — STEP3 rasterize 와 같은 회로 + 물리적 넥 면적 = **수렴하는 σ** | am_am_contacts.csv 의 a_hertz 재사용 |
+| (기각) 반지름 일괄 팽창 | AM_S +2.5 % 반지름 = 부피 +7.7 % → porosity 파괴 | — |
 
 ---
 
@@ -150,7 +184,8 @@ java σ_eff ↔ STEP3 대조가 B1 인데, 순수 field-spreading 차이만 남�
 | # | 항목 | 위치 | 상태 |
 |---|---|---|---|
 | T1 | 실킷 1회 스모크 (trackb 성공경로) | 다음 킷 런 자동 | 대기 |
-| T2 | **브릿지 실린더** (72 개회로 + sliver 완화, a_floor=1.2vox 정합) | build_comsol_mph | **신규·우선** |
+| T2 | **브릿지 실린더** (72 개회로 연결 + 물리적 넥 면적 = 수렴 σ; a_floor=1.2vox 정합) | build_comsol_mph | **신규·우선** |
+| T15 | **옛 AM-메시 java 스크립트 수확** — repair tolerance 값·메시 설정·생성 루프 관례를 생성기 기본값으로 (sliver 는 이 절차로 실증 해결됨) | 사용자 제공 대기 | **신규** |
 | T3 | COMSOL 첫 batch 왕복 — feature 명 확정 (fin/setSolveFor/BallSelection/InterpolationCurve) | 라이선스 머신 | 대기 |
 | T4 | B1 판정: java σ_eff ↔ STEP3 (comparability §6 통제 후) | README §4 표 | 대기 |
 | T5 | B2 BV 결합 (f_cov 파라미터·경계선택 준비됨, i0 앵커 선행) | build_comsol_mph | 대기 |
@@ -161,8 +196,9 @@ java σ_eff ↔ STEP3 대조가 B1 인데, 순수 field-spreading 차이만 남�
 | T10 | I_1C 규약 문서화 → electrochem 전류값 | conventions §6 | 대기 |
 | T11 | 고립 AM 클러스터 특이계 (퍼콜 라벨로 ec 제외 or 미소 컨덕턴스) | build_comsol_mph | 대기 |
 | T12 | 스키마 v1.1: f_cov_source 에 absent_placeholder / sigma_bulk_source 문서화 | 스키마 | 대기 |
-| T13 | 심화리뷰 findings 반영 (진행 중 wf_bab2ae8f) | 전체 | 진행 |
+| T13 | 심화리뷰 findings 15건 반영 | 전체 | **완료** (위 절) |
 | T14 | 교수님 회신 1페이지 (§5 판정 포함) | 문서 | 대기 |
+| T16 | B2 전 τ_x/τ_y 병기 솔브 — κ_dom z-스칼라 한계의 이방성 정량 | payload | 대기 |
 
 ## 8. 함정 대장 (한 줄씩)
 

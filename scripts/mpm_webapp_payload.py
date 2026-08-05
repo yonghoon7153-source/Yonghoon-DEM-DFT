@@ -1103,7 +1103,15 @@ def main():
                             _cnt = np.bincount(_sidc.ravel().astype(np.int64), minlength=len(_sig3i))
                             _tb.update({'tau_convention': 'linear: sigma_eff = sigma_bulk*phi/tau',
                                         'crop_nz': int(_nzc),
-                                        'phi_denominator': 'cropped_total_voxels'})
+                                        'phi_denominator': 'cropped_total_voxels',
+                                        # 심화리뷰 physics: pkg 가 자기 BC·해상도·온도를 말해야
+                                        # B1 비교조건이 판별된다 (periodic↔절연벽 D_geo +5.1% /
+                                        # vox 계단 → κ_dom +13~16% @0.4 / σ 는 T-스케일 후 solve)
+                                        'periodic_xy': bool(a.periodic),
+                                        'vox_um': float(a.step3_vox),
+                                        'sigma_declared_at_T_C': (
+                                            float(a.temp_c) if getattr(a, 'temp_c', None)
+                                            is not None else None)})
                             # φ_full = 이온 전도상 복셀 분율.  전도집합 = σ_i>0 이고 격자에 실재하는
                             # sid — 테이블에 σ>0 이어도 복셀 0개면 solve 에 없다 (부재상으로
                             # mixed_phase 오탐하지 않기 위해 실재만 센다)
@@ -1187,6 +1195,12 @@ def main():
                             step3['trackb'] = {**_tb, 'error': f'{type(_e_tb).__name__}: {_e_tb}'}
                             print(f'  ⚠ Track-B failed ({type(_e_tb).__name__}: {_e_tb}) — '
                                   'step3.trackb.error 기록, STEP3 결과는 유지')
+                elif not a.no_trackb:
+                    # 심화리뷰 minor: 이온 n_dof=0 (SE 미퍼콜 퇴화) — trackb 키가 아예 없으면
+                    # exporter 가 "구세대 trackb 부재 → 재실행" 으로 오진한다.  재실행해도 같으니
+                    # 원인을 스텁으로 명시 (§F1 정직 null 관례)
+                    step3['trackb'] = {'reason': 'ionic solve n_dof=0 (SE non-percolating) — '
+                                                 'trackb undefined; 재실행으로 해소되지 않음'}
                 # ── STEP3 열전도 (σ_thermal, 多상 k) — 同 sid3 격자 재사용, ∇·(k∇T)=0 (σ_e/σ_ion과 동일 솔버) ──
                 if not a.no_thermal:
                     try:

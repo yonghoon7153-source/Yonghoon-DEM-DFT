@@ -421,9 +421,17 @@ def build_se_domain(kit, trackb, notes):
             d['sigma_bulk_ion_S_cm'] = None
             _mx = (trackb.get('mixed_phase') or {}).get('reason') if isinstance(
                 trackb.get('mixed_phase'), dict) else None
-            d['reason'] = ('sigma_bulk_ion: writer 가 의도적으로 null 기록 — '
+            # append (리뷰: = 대입은 위의 'trackb 부분실패' 마커를 지운다 — kd-None 분기와 관례 통일)
+            d['reason'] = (((d.get('reason') + ' | ') if d.get('reason') else '')
+                           + 'sigma_bulk_ion: writer 가 의도적으로 null 기록 — '
                            + (_mx or 'trackb 사유 미기재') + ' (§F1: 상수 대입 금지)')
             notes.append('se_domain: sigma_bulk_ion null 유지 (writer 의도 존중, §F1)')
+        elif trackb.get('error'):
+            # 리뷰 major: hasattr 프리체크의 error-trackb 도 키-부재다 — 여기서 상수를 주입하면
+            # "구세대" 거짓 라벨로 25°C 상수가 SE 재료로 흐른다.  실패 런 = 값 미산출이 정직.
+            d['reason'] = (((d.get('reason') + ' | ') if d.get('reason') else '')
+                           + 'trackb 실패 런(error 실재) — sigma_bulk 미산출, 상수 미주입 (§F1)')
+            notes.append('se_domain: trackb 실패 런 → sigma_bulk null (구세대 아님, 상수 미주입)')
         else:
             d['sigma_bulk_ion_S_cm'] = float(SIGMA_ION_SE_S_CM_25C)
             d['sigma_bulk_source'] = 'default_25C_const'    # manifest note 에만 의존하지 않게
@@ -451,8 +459,25 @@ def build_se_domain(kit, trackb, notes):
         _miss = [k for k in ('kdom_ratio', 'tau_full', 'tau_geo', 'phi_full', 'phi_geo')
                  if trackb.get(k) is None]
         d['reason'] = (d.get('reason') or '') + (
-            f" | κ_dom 산출 불가 — 부재/None 항목: {', '.join(_miss)} (§F1: null)")
+            f" | κ_dom 산출 불가 — 부재(null) 항목: {', '.join(_miss)} (§F1: null)")
     d['mixed_phase'] = trackb.get('mixed_phase')
+    # ── 심화리뷰 physics 반영: BC·해상도·온도를 pkg 가 자기서술 (없으면 B1 비교조건 판별 불가) ──
+    #   periodic_xy: τ/κ_dom 이 주기-BC 산출이면 java 절연벽과 D_geo 가 +5.1% 어긋난다 (실측).
+    #   vox_um: 복셀 계단이 τ_geo 를 계통 상향 → κ_dom +13~16% @vox0.4 (해상도 시리즈 실측)
+    #           — README 의 geo-probe 2-런 재규격 프로토콜이 이 값을 소거한다.
+    #   sigma_declared_at_T_C: σ_bulk 는 이미 이 온도의 값 — COMSOL 에서 Arrhenius 재적용 금지.
+    for _k in ('periodic_xy', 'vox_um', 'sigma_declared_at_T_C'):
+        if trackb.get(_k) is not None:
+            d[_k] = trackb[_k]
+    if d.get('periodic_xy'):
+        notes.append('⚠ periodic 킷 — java Block 은 절연벽: B1 은 절연-벽 STEP3 재런과만 비교 '
+                     '(D_geo 주기↔절연 +5.1% 실측)')
+    # B1 대조표 자기완결화: STEP3 유효 σ 를 pkg 에 동봉 (README §4 의 "STEP3 열" 원천)
+    _st3 = m.get('step3') or {}
+    _ref = {k: _st3.get(k) for k in ('sigma_e_eff_S_cm', 'sigma_ion_eff_S_cm')
+            if _st3.get(k) is not None}
+    if _ref:
+        d['step3_reference'] = _ref
     if kd_src:
         notes.append(f'se_domain: kdom_ratio 출처 = {kd_src}')
     return d
@@ -625,7 +650,34 @@ Tabor 0.26 µm (payload coverage_* 키).
 a1_pressure_provenance 확인).  porosity 관례: **mpm = union / dem = eps_sphere** — 관례가
 다른 porosity 를 한 표에서 짝지어 비교 금지 (se_domain.porosity_convention 이 라벨).
 
-## 6. I_1C 규약 — TODO
+## 6. 온도 — σ 는 이미 선언 온도의 값 (Arrhenius 재적용 금지)
+
+--temp-c 킷은 payload 가 SE σ_ion 을 Arrhenius 로 스케일한 뒤 solve 한다 → 이 패키지의
+sigma_bulk_ion_S_cm·κ_dom 은 **이미 그 온도의 값**이다 (se_domain.sigma_declared_at_T_C 가
+선언; 없으면 T_ref 25 °C 규약).  electrochem.json 의 T_C 는 BV/열역학용 온도 파라미터일 뿐
+— **COMSOL 재료에 σ(T) Arrhenius 를 다시 걸면 이중적용**이다 (60 °C 재적용 시 ×22.9 오류).
+
+## 7. κ_dom 의 두 한계 (심화리뷰 2026-08-05 실측)
+
+(a) **복셀 계단 편향**: τ_geo 는 복셀화된 AM 여집합에서 측정 → 매끈-구 대비 계통 상향 →
+κ_dom 이 vox 0.4 µm 기준 **+13~16 % 과대** (0.5: +17~21 % / 0.33: +9~12 %; 해상도 시리즈
+실측, se_domain.vox_um 참조).  ⇒ COMSOL 이 README §4 기대치(σ_bulk·φ_full/τ_full)를
++10~20 % 상회하는 것이 "정상"이며, README 의 **geo-probe 2-런 프로토콜**(kdom_S_m 에
+σ_bulk 를 넣어 1회 → κ_dom' = σ_bulk²·(φ_full/τ_full)/σ_eff_probe 재규격)이 이 편향을
+모델 자신의 D_geo 로 소거한다.
+(b) **z-스칼라 캘리브레이션**: κ_dom 은 z-관통 유효전도 하나로만 맞춘 등방 상수다 —
+일축 300 MPa 압밀 미세구조의 in-plane↔z 이방성, 구 주변 국소 spreading, graded-z 불균질은
+검증 밖.  B1(총량 σ) 은 성립하나 **B2(BV 국소 분포)는 이 균질화 오차를 상속**한다.
+TODO(trackb): B2 전 τ_x/τ_y 병기 솔브로 이방성 정량.
+
+## 8. 렌즈 기하 vs Holm 표 — 택1 (이중계상 금지)
+
+form UNION 이 만드는 겹침-렌즈의 목(waist) 반경은 **√(2R*δ) = √2 × a_hertz** (면적 2×).
+따라서 렌즈를 기하로 해상하는 소비자에게 am_am_contacts 의 g_holm 표는 **검증 전용**이다 —
+집중소자로 추가하면 이중계상.  Holm 대조 시 COMSOL 넥 전류가 ~×1.4 상회하는 것이 기하적
+기대값 (real_14 587 접촉 실측 a_lens/a_hertz 평균 1.405).
+
+## 9. I_1C 규약 — TODO
 
 TODO(trackb): I_1C(면적용량 × rate → 전류) 규약 문서화 미결 — x100 창을 넓히면 I_1C 재계산
 (전류 ~9%↑) 이슈 포함 (docs/step4_assb_window_review.md).  COMSOL 갈바노 BC 의 전류값은
@@ -857,6 +909,55 @@ def _selftest():
             chk('per_particle 길이 불일치 → SystemExit', False, '에러 없이 통과함')
         except SystemExit as e:
             chk('per_particle 길이 불일치 → SystemExit', '재배열 금지' in str(e), str(e))
+
+        # ── 심화리뷰 회귀 (2026-08-05): §F1 신규 분기 4종 고정 ──────────────────────────
+        # 킷 D: mixed 이온상 = sigma_bulk 키-실재-None + kdom_ratio 실재 → null 유지·κ 연동·상수 금지
+        kitD = os.path.join(td, 'kitD'); os.makedirs(kitD)
+        shutil.copy2(os.path.join(kitA, 'am_scaffold.csv'), os.path.join(kitD, 'am_scaffold.csv'))
+        tbD = dict(tbA)
+        tbD.update({'sigma_bulk_ion_S_cm': None, 'tau_full': None, 'kdom_ratio': 0.25,
+                    'mixed_phase': {'sigma_by_sid_S_cm': {'SDCP': 0.001, 'SE': 0.003},
+                                    'reason': 'unequal sigma_ion'}})
+        json.dump({'step3': {'trackb': tbD}}, open(os.path.join(kitD, 'mpm_metrics.json'), 'w'))
+        sedD = json.load(open(os.path.join(
+            td, 'pkgD', 'se_domain.json'))) if False else None
+        export(kitD, os.path.join(td, 'pkgD'))
+        sedD = json.load(open(os.path.join(td, 'pkgD', 'se_domain.json')))
+        chk('D(§F1 critical 그 자체): 키-실재-None → null 유지 + κ_dom null 연동 + 상수 미주입',
+            sedD['sigma_bulk_ion_S_cm'] is None and sedD['kappa_dom_S_cm'] is None
+            and 'sigma_bulk_source' not in sedD and 'unequal sigma_ion' in (sedD['reason'] or ''))
+        chk("D: reason 에 'None' 단독 토큰 없음 (java §F1 가드 오탐 크래시 체인 회귀)",
+            'None' not in (sedD['reason'] or ''))
+        # 킷 E2: hasattr 프리체크 실산출 = trackb {'error': ...} → 구세대 오진·상수 주입 금지
+        kitE2 = os.path.join(td, 'kitE2'); os.makedirs(kitE2)
+        shutil.copy2(os.path.join(kitA, 'am_scaffold.csv'), os.path.join(kitE2, 'am_scaffold.csv'))
+        json.dump({'step3': {'trackb': {'error': 'AttributeError: step3_sigma 에 Track-B 헬퍼 부재'}}},
+                  open(os.path.join(kitE2, 'mpm_metrics.json'), 'w'))
+        export(kitE2, os.path.join(td, 'pkgE2'))
+        sedE2 = json.load(open(os.path.join(td, 'pkgE2', 'se_domain.json')))
+        manE2 = json.load(open(os.path.join(td, 'pkgE2', 'manifest.json')))
+        chk('E2(에러런): 상수 미주입 + 부분실패 표면화 (구세대 거짓 라벨 차단)',
+            sedE2['sigma_bulk_ion_S_cm'] is None and 'sigma_bulk_source' not in sedE2
+            and '실패' in (sedE2['reason'] or '')
+            and any('부분실패' in n for n in manE2['notes'])
+            # '구세대' 부분문자열 검사는 자충수("구세대 아님" 에 걸림) — 폴백 노트 자체로 판정
+            and not any('SIGMA_ION_SE_S_CM_25C' in n for n in manE2['notes']))
+        # 킷 F: 신규 자기서술 필드 passthrough (periodic 경고 포함)
+        kitF = os.path.join(td, 'kitF'); os.makedirs(kitF)
+        shutil.copy2(os.path.join(kitA, 'am_scaffold.csv'), os.path.join(kitF, 'am_scaffold.csv'))
+        tbF = dict(tbA)
+        tbF.update({'periodic_xy': True, 'vox_um': 0.4, 'sigma_declared_at_T_C': 60.0})
+        json.dump({'step3': {'trackb': tbF,
+                             'sigma_e_eff_S_cm': 1.23, 'sigma_ion_eff_S_cm': 0.00044}},
+                  open(os.path.join(kitF, 'mpm_metrics.json'), 'w'))
+        export(kitF, os.path.join(td, 'pkgF'))
+        sedF = json.load(open(os.path.join(td, 'pkgF', 'se_domain.json')))
+        manF = json.load(open(os.path.join(td, 'pkgF', 'manifest.json')))
+        chk('F: periodic/vox/T 자기서술 + periodic 경고 note + step3_reference 동봉',
+            sedF.get('periodic_xy') is True and sedF.get('vox_um') == 0.4
+            and sedF.get('sigma_declared_at_T_C') == 60.0
+            and any('절연-벽 STEP3' in n for n in manF['notes'])
+            and sedF.get('step3_reference', {}).get('sigma_e_eff_S_cm') == 1.23)
 
     print(f'\nselftest: {n_ok[0]} PASS / {n_bad[0]} FAIL')
     return 0 if n_bad[0] == 0 else 1

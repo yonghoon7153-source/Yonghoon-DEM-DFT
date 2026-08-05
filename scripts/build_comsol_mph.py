@@ -8,7 +8,7 @@
 
 물리 결정(2026-08-05 사용자 확정 — 변경 금지):
   · AM 구 = 해상 기하 / SE = 연속체(κ_dom) / VGCF = 1D Edge(단면 π(0.075µm)²) /
-    AM-AM 넥 = DEM δ Hertz 탄성 → form UNION 이 겹침 렌즈를 기하로 자연 생성 /
+    AM-AM 넥 = DEM δ → form UNION 렌즈 (목반경 √(2R*δ)=√2·a_hertz, 면적 2×Hertz) /
     PTFE = 기하 금지(차단 효과는 κ_dom·f_cov 에 이미 반영).
   · ★ single-ion: LPSCl t⁺≈1 → 농도분극이 물리적으로 없다.  DFN 류 인터페이스 금지.
   · κ_dom 이중계상 가드: 하이브리드는 AM 을 기하로 해상하므로 SE 연속체 전도도는
@@ -384,6 +384,9 @@ def build_steps(pkg: dict):
         origin_txt = ('kappa_dom (= sigma_bulk*(phi_full/tau_full)/(phi_geo/tau_geo), '
                       'AM-장애물 굴곡도 이중계상 제거 완료)' if se_sigma_origin == 'kappa_dom'
                       else 'sigma_bulk 폴백')
+        if se.get('sigma_bulk_source'):
+            # 심화리뷰: 25°C 상수 폴백 출처가 java/README 에서 소실되던 것 — 킷 측정값 아님을 명시
+            origin_txt += f" [σ_bulk={se['sigma_bulk_source']} — 킷 측정값 아님]"
         C('SE 연속체 이온 전도도 [S/m] — 출처: ' + origin_txt)
         C(f'tau 관례: {TAU_CONVENTION}  (√=τ² 관례와 혼동 금지 — 같은 해가 τ=4 ↔ 2 로 갈린다)')
         if se_sigma_origin == 'sigma_bulk_fallback':
@@ -401,7 +404,9 @@ def build_steps(pkg: dict):
         mp = se.get('mixed_phase')
         if isinstance(mp, dict) and mp.get('reason'):
             reason += f" (mixed_phase.reason: {mp['reason']})"
-        TODO(f'kdom_S_m — 패키지에 null, reason: {reason}.  SE 재료가 비어 ec2 는 솔브 불가')
+        TODO('kdom_S_m — 패키지에 null, reason: '
+             + __import__('re').sub(r'\b(None|NaN|nan)\b', 'null', str(reason))
+             + '.  SE 재료가 비어 ec2 는 솔브 불가')
     if se.get('kdom_ratio') is not None and float(se['kdom_ratio']) > 1.0:
         C(f"경고: kdom_ratio = {float(se['kdom_ratio']):.4g} > 1 — 규약/입력 불일치 신호"
           '\n(AM-장애물 굴곡도보다 좋은 유효전도?).  익스포터 로그 확인.')
@@ -421,13 +426,21 @@ def build_steps(pkg: dict):
     C('── electrochem.json (B2 BV 준비 파라미터; null 은 §F1 에 따라 파라미터 미생성) ──')
     prov = echem.get('provenance') if isinstance(echem.get('provenance'), dict) else {}
 
+    def _pkg_text(txt):
+        # 심화리뷰 critical 벨트: 패키지-유래 문자열(reason 등)에 bare None/NaN 토큰이 있으면
+        # java 주석에 실린 뒤 §F1 누출가드가 생성기 버그로 오인해 전체 빌드가 죽는다
+        # (실증: exporter 의 "부재/None 항목" 문구 → SDCP 킷 전부 mph 생성 불가).
+        # 가드의 목적은 **값** 누출 검출이므로 인용문의 토큰은 무해화해 전달한다.
+        import re as _re
+        return _re.sub(r'\b(None|NaN|nan)\b', 'null', str(txt))
+
     def _reason_for(key):
         # ★ 익스포터 실형태 최우선 (리뷰 critical): comsol_export build_electrochem 은 사유를
         #   provenance['reason'] = {필드명: str} 서브딕트로 기록한다.  이 경로가 빠지면 실제
         #   패키지의 §F1 TODO 전부가 "사유 없음" 으로 나가 java 가 패키지에 대한 거짓 진술을 한다.
         rd = prov.get('reason')
         if isinstance(rd, dict) and rd.get(key):
-            return str(rd[key])
+            return _pkg_text(rd[key])
         ent = prov.get(key)
         if isinstance(ent, dict) and ent.get('reason'):
             return str(ent['reason'])
@@ -448,6 +461,9 @@ def build_steps(pkg: dict):
         CALL(('param', ()), ('set', ('T_cell', f'{t_c + 273.15:.9g}[K]',
                                      f'cell temperature (electrochem.T_C = {t_c:.6g} degC)')))
         C('파라미터는 제작압 P·위 온도에 갇힌 값 — 다른 (P,T) 로 외삽 금지 (conventions.md)')
+        C('★ kdom_S_m/σ_bulk 는 **이미 선언 온도의 값** (payload 가 T-스케일 후 solve) —'
+          '\nCOMSOL 재료에 σ(T) Arrhenius 를 다시 걸면 이중적용 (60°C 재적용 = ×22.9 오류).'
+          '\nse_domain.sigma_declared_at_T_C 가 선언 온도 (없으면 T_ref 25°C 규약).')
     else:
         TODO(f'T_cell — 패키지에 T_C null, reason: {_reason_for("T_C")}')
     if echem.get('ocp_csv'):
@@ -488,7 +504,11 @@ def build_steps(pkg: dict):
         CALL(('component', ('comp1',)), ('geom', ('geom1',)), ('feature', (f'sph{k}',)),
              ('set', ('r', s['r'])))
     BLANK()
-    C('★ form UNION (기본 finalize): 겹치는 AM 구의 합집합이 DEM δ 렌즈 = Hertz 탄성 넥을'
+    C('★ form UNION (기본 finalize): 겹치는 AM 구의 합집합이 DEM δ 렌즈 넥을 기하로 생성.'
+      '\n⚠ 기하 정밀화(심화리뷰): 렌즈 목(waist) 반경 = √(2R*δ) = **√2 × a_hertz** (면적 2×)'
+      '\n— Holm 표(g=2σa_hertz) 대비 넥 전류 ~×1.4 상회가 기하적 기대값 (real_14 587접촉'
+      '\n실측 a_lens/a_hertz 평균 1.405).  g_holm 표는 검증 전용, 소자 추가 금지 (conventions §8).'
+      '\n(구 표현 "= Hertz 탄성 넥" 은'
       '\n기하로 자연 생성한다 (2026-08-05 결정 — NCM 140 GPa ≫ SE 1.35 GPa 라 AM 소성 미미,'
       '\nAM-AM 은 DEM δ 탄성 그대로).  union 은 겹침 렌즈를 별도 도메인으로 분할해 컨포멀'
       '\n메시를 만든다 — assembly 로 바꾸면 넥이 끊긴다(금지).')
@@ -602,7 +622,10 @@ def build_steps(pkg: dict):
 
     # ═══════════ Mesh ═══════════
     C('Mesh — 기본 physics-controlled, autoMeshSize=4 (Normal).  δ 렌즈(넥) 근방은 곡률'
-      '\n세분이 자동으로 잡지만, 넥 병목 해상이 부족하면 4→3(→2) 로 낮춘다 (README 디버깅 절).')
+      '\n세분이 자동으로 잡지만, 넥 병목 해상이 부족하면 4→3(→2) 로 낮춘다 (README 디버깅 절).'
+      '\n★ 선례 (2026-08-05 사용자): 좌표→java 생성 + 겹침 repair + fine mesh 로 오류 없이'
+      '\n완주한 AM-메시 워크플로가 이미 있다 — sliver(겹침 이음새)는 그 절차가 실증 해결.'
+      '\nTODO(trackb): 그 스크립트의 repair tolerance·메시 설정을 수확해 여기 기본값으로 (T15).')
     CALL(('component', ('comp1',)), ('mesh', ()), ('create', ('mesh1',)))
     CALL(('component', ('comp1',)), ('mesh', ('mesh1',)), ('autoMeshSize', (4,)))
     BLANK()
@@ -693,6 +716,10 @@ def build_steps(pkg: dict):
       '\n없으면 javac 컴파일 에러라 try 이전에 실패한다.  NoSuchMethod 컴파일 실패 시 이'
       '\ntry 블록 두 개를 통째로 삭제 — 두 물리는 비결합이라 같이 풀려도 σ_eff 는 동일.')
     todos.append('setSolveFor / activate — COMSOL 버전에 따라 study step API 확인 (첫 실행)')
+    todos.append('TODO(trackb) T2 — 브릿지 실린더: am_am_contacts.csv 의 각 접촉에 '
+                 'r=max(a_hertz, 1.2·vox상당) Cylinder 를 UNION.  근접-비접촉(gap>0) 접촉이 '
+                 '매끈 기하에서 개회로가 되는 것을 닫고(rasterize 1.2vox 브릿지와 같은 회로), '
+                 '점접촉-스냅의 메시-의존 σ 대신 물리적 넥 면적으로 수렴시킨다')
     CALL(('study', ()), ('create', ('std1',)))
     CALL(('study', ('std1',)), ('create', ('stat1', 'Stationary')))
     steps.append(('tryblock', 'std1 setSolveFor', [
@@ -793,8 +820,11 @@ def write_readme(pkg: dict, ctx: dict, todos, out_dir: Path, java_name: str = 'm
     md.append(f'- 구성: AM 스피어 {len(pkg["spheres"])} (P {n_p} / S {n_s}) · AM-AM 접촉 '
               f'{len(pkg["contacts"])} · VGCF 섬유 {len(pkg["fibres"])} · '
               f'box {ctx["Lx"]:.4g}×{ctx["Ly"]:.4g}×{ctx["Lz"]:.4g} µm')
+    _sbsrc = (se or {}).get('sigma_bulk_source')
     md.append(f'- SE 연속체 σ: {fmt(ctx["se_sigma_S_m"], " S/m")} (출처 '
-              f'{ctx["se_sigma_origin"] or "null — TODO"}) · τ 관례 `{TAU_CONVENTION}`')
+              f'{ctx["se_sigma_origin"] or "null — TODO"}'
+              + (f'; σ_bulk={_sbsrc} — 킷 측정값 아님' if _sbsrc else '')
+              + f') · τ 관례 `{TAU_CONVENTION}`')
     for w in pkg['warnings']:
         md.append(f'- ⚠ {w}')
     md.append('')
@@ -834,6 +864,10 @@ def write_readme(pkg: dict, ctx: dict, todos, out_dir: Path, java_name: str = 'm
     md.append('| `fin`.set("action","union") | Unknown property | 줄 삭제 (union 이 기본값) |')
     md.append('| `setSolveFor` | NoSuchMethod **컴파일** 에러 (try 로 못 잡음) | try 블록 두 개 삭제 — 비결합 물리라 같이 풀려도 동일 |')
     md.append('| `autoMeshSize(4)` | 넥 병목 미해상 (σ_e 과소) | 4→3(→2) 로 낮춤 — 요소수 급증 주의 |')
+    md.append('| repair tolerance | tol > δ_min(0.2nm급) 이면 극소-겹침 접촉이 **삼켜져 소멸** / '
+              'tol > gap 스냅이면 근접-비접촉이 **점접촉**이 됨 — 돌긴 도나 점접촉 컨덕턴스는 '
+              '요소크기 비례라 **σ_e 가 메시-의존(비수렴)** | 옛 AM-메시 워크플로의 tol 사용(T15) '
+              '+ finalize 후 접촉 수 검산 + 근접-비접촉 72쌍류는 브릿지 실린더(T2)로 물리 면적 부여 |')
     md.append('| `BallSelection` condition/입력명 | Unknown property | inside↔somevertex 등 값 교체 |')
     md.append('| `InterpolationCurve` table | Unknown property | Polygon 폴백 (VGCF 절 주석 참조) |')
     md.append('| VGCF Edge 전류 feature | 미정 (버전/모듈) | TODO(trackb) — 첫 실행 시 확정 |')
@@ -846,10 +880,30 @@ def write_readme(pkg: dict, ctx: dict, todos, out_dir: Path, java_name: str = 'm
     md.append('')
     md.append('| 채널 | COMSOL (S/cm) | STEP3 (S/cm) | 비고 |')
     md.append('|---|---|---|---|')
-    md.append('| σ_e (AM 망) | _실행 후 기입_ | — (패키지에 STEP3 σ_e 미포함) | AM-AM 넥 = union δ 렌즈 |')
+    _ref = (se.get('step3_reference') or {})
+    _se_ref = _ref.get('sigma_e_eff_S_cm')
+    md.append('| σ_e (AM 망) | _실행 후 기입_ | ' + (fmt(_se_ref) if _se_ref is not None
+              else '— (metrics 에 step3.sigma_e_eff 부재)') +
+              ' | ⚠ 혼입원 3: ① collector 규약(기하절단 vs STEP3 crown-band, −0.8% 하한 실측) '
+              '② 근접-비겹침 72쌍류 개회로 — 브릿지(T2) 전 σ_e 대조 무효 '
+              '③ 첨가제 킷은 STEP3 가 carbon 포함 — **AM-only(SBE) STEP3 런과만** 대조 |')
     md.append(f'| σ_ion (SE 연속체) | _실행 후 기입_ | {fmt(sig_ion_step3)} '
               f'(= σ_bulk·φ_full/τ_full = {fmt(se.get("sigma_bulk_ion_S_cm"))}·'
-              f'{fmt(se.get("phi_full"))}/{fmt(se.get("tau_full"))}) | κ_dom 이중계상 가드 검증 |')
+              f'{fmt(se.get("phi_full"))}/{fmt(se.get("tau_full"))}) | κ_dom 이중계상 가드 검증.  '
+              f'⚠ 복셀 계단 편향으로 COMSOL 이 이 기대치를 **+10~20% 상회하는 것이 정상** '
+              f'(vox {fmt(se.get("vox_um"), "µm")} 기준, conventions §7) |')
+    md.append('')
+    md.append('### geo-probe 2-런 재규격 (κ_dom 복셀 편향 소거 — 권장)')
+    md.append('')
+    md.append('1. `kdom_S_m` 파라미터에 **σ_bulk×100** (= sigma_bulk_ion_S_cm ×100 S/m) 를 넣고')
+    md.append('   std2(이온) 만 재솔브 → `σ_eff_probe` 기록 (모델 자신의 AM-장애물 기하 응답).')
+    md.append('2. `κ_dom\' = σ_bulk² · (φ_full/τ_full) / σ_eff_probe` 로 재설정 후 본 솔브.')
+    md.append('   (선형성: σ_eff ∝ 도메인 σ.  복셀-τ_geo 대신 모델 자신의 D_geo 를 쓰므로')
+    md.append('   계단 편향 +13~16%@vox0.4 가 정의상 소거된다.)')
+    if se.get('periodic_xy'):
+        md.append('')
+        md.append('⚠ **periodic 킷**: STEP3 τ/κ 는 x,y 주기-BC 산출 — 이 java Block 은 절연벽.')
+        md.append('   B1 은 절연-벽 STEP3 재런과만 비교 (D_geo 주기↔절연 +5.1% 실측).')
     md.append('')
     md.append(f'- porosity: {fmt(se.get("porosity_pct"), "%")} ({se.get("porosity_convention") or "—"})'
               f' · thickness: {fmt(se.get("thickness_um"), " µm")} · kdom_ratio: '
@@ -1080,6 +1134,48 @@ def selftest() -> int:
         except ImportError:
             guard_ok = guard_ok and ('MPh' in proc.stdout)
         ok('--mph 가드: 미설치 안내 + 비정상종료 아님', guard_ok)
+
+        # ── 심화리뷰 회귀 3종 (2026-08-05) ─────────────────────────────────────────────
+        # 15) mixed-크래시 회귀: se_domain κ/σ_bulk 모두 null + reason 에 bare 'None' 토큰
+        #     (수정 전 exporter 실산출 형태) — §F1 누출가드가 오탐해 SDCP 킷 전부 빌드 불가였다.
+        import shutil as _sh
+        pkg_m = pkg_a.parent / 'pkg_mixed_regr'
+        if pkg_m.exists():
+            _sh.rmtree(pkg_m)
+        _sh.copytree(pkg_a, pkg_m)
+        _sed = json.loads((pkg_m / 'se_domain.json').read_text())
+        _sed.update({'kappa_dom_S_cm': None, 'kappa_dom_S_m': None, 'sigma_bulk_ion_S_cm': None,
+                     'kdom_ratio': None,
+                     'reason': 'trackb 부분실패 | κ_dom 산출 불가 — 부재/None 항목: kdom_ratio, '
+                               'tau_full (§F1: null)',
+                     'mixed_phase': {'reason': 'unequal sigma_ion (MIX-R)'}})
+        (pkg_m / 'se_domain.json').write_text(json.dumps(_sed, ensure_ascii=False))
+        out_m = pkg_a.parent / 'mph_mixed_regr'
+        try:
+            build(pkg_m, out_m)
+            jm = (out_m / 'model_build.java').read_text()
+            ok("15) mixed-크래시 회귀: 'None' 토큰 reason 도 빌드 완주 (무해화 벨트)",
+               'null 항목' in jm)                       # 토큰이 null 로 무해화되어 실림
+            # 16) both-null κ: se_domain.reason 최우선 + mixed_phase.reason 병기 + matSE 미생성
+            ok('16) both-null κ TODO: se_domain.reason 전달 + mixed 병기 + SE 재료 미생성',
+               'trackb 부분실패' in jm and 'MIX-R' in jm and '"matSE"' not in jm)
+        except Exception as _e:
+            ok('15) mixed-크래시 회귀: 빌드 완주', False)
+            ok('16) both-null κ TODO 전달', False)
+        # 17) sigma_bulk_source 폴백 라벨이 java 출처 주석에 실린다 (25°C 상수 출처 소실 방지)
+        pkg_f = pkg_a.parent / 'pkg_fallback_regr'
+        if pkg_f.exists():
+            _sh.rmtree(pkg_f)
+        _sh.copytree(pkg_a, pkg_f)
+        _sef = json.loads((pkg_f / 'se_domain.json').read_text())
+        _sef.update({'kappa_dom_S_cm': None, 'kappa_dom_S_m': None, 'kdom_ratio': None,
+                     'sigma_bulk_ion_S_cm': 0.003, 'sigma_bulk_source': 'default_25C_const'})
+        (pkg_f / 'se_domain.json').write_text(json.dumps(_sef, ensure_ascii=False))
+        out_f = pkg_a.parent / 'mph_fallback_regr'
+        build(pkg_f, out_f)
+        jf = (out_f / 'model_build.java').read_text()
+        ok('17) sigma_bulk_source 라벨이 출처 주석에 병기 (킷 측정값 아님 명시)',
+           'default_25C_const' in jf and '킷 측정값 아님' in jf)
 
     n_pass = sum(1 for _, c in checks if c)
     print(f'\nselftest {n_pass}/{len(checks)} PASS')

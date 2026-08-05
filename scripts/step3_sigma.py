@@ -1108,6 +1108,11 @@ def kdom_calibration(phi_full, tau_full, phi_geo, tau_geo):
     φ_geo/τ_geo = "AM 여집합을 꽉 찬 SE 로 이상화" 한 같은 복셀 Laplace 해(한 번 더 푼 값).
     반환은 대체로 (0,1]: 1 = AM 기하가 굴곡을 전부 설명(SE 내부 몫 0), 작을수록 SE
     내부(넥·공극·입계) 몫이 크다.  >1 이면 규약/입력 불일치 신호이므로 호출부가 경고할 것.
+    ⚠ 한계 (심화리뷰 2026-08-05): 이 배율은 z-관통 유효전도 **스칼라 하나**로만 맞춘다 —
+    일축 압밀 미세구조의 in-plane↔z 이방성, 구 주변 국소 spreading, graded-z 불균질은
+    검증 밖.  B1(총량 σ) 성립 / B2(BV 국소 분포)는 균질화 오차 상속 → B2 전 τ_x/τ_y
+    병기 솔브로 이방성 정량 (TODO(trackb)).  복셀 계단 편향(+13~16% @vox0.4)은
+    소비자 측 geo-probe 2-런 재규격으로 소거 (comsol_pkg conventions §7).
     """
     if None in (phi_full, tau_full, phi_geo, tau_geo):
         return None
