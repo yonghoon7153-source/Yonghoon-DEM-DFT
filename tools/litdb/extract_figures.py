@@ -1173,6 +1173,11 @@ def main():
 
     meta, skipped = extract(a.pdf, a.slug, dpi=a.dpi, dry=a.dry, maxpx=a.maxpx)
     _report(a.slug, meta, skipped, a.dry)
+    if not a.dry:
+        # ⚠ --inbox --run 경로만 이걸 부르고 있었다 — 논문 하나를 --slug/--pdf 로 자르면
+        #   litdb/figures/_sources.json 이 그 논문만 빠진 채 낡는다 (2026-08-05 발견).
+        #   웹앱 배지는 figures.json 을 직접 읽어 영향 없지만, 출처 색인은 어긋난다.
+        _write_sources_index()
     return 0
 
 
