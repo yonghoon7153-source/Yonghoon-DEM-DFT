@@ -276,6 +276,46 @@ Sb₂O₅→Sb⁵⁺ −0.167 · TiO₂→Ti⁴⁺ −0.304 · ZrO₂ −0.459 �
 - **낮은 등급을 "공기 불안정"으로 읽지 않는다** — 그건 판정이 아니라 **판정 없음**이다.
 - 이 열로 도펀트를 **탈락시키지 않는다**(9종이 부당하게 깎여 있다).
 
+### 14. 🟡 **화학→역학 다리: ΔV_rxn × C_ij (그리고 Griffith K_IC)** (2026-08-05 신설)
+
+**어디서 나왔나** — 심사 중인 리뷰 §3.5 검토(`kb/reviews/ECERD2600097_review_notes.md` Q18–Q22).
+원고는 *"분해 산물의 몰부피 차이 → 인장응력 → 미세균열 → 입자 파단 → 단락"* 사슬을 **전부 정성으로만**
+쓴다. 그 사슬의 재료 상수를 **우리가 이미 갖고 있다** — 새 대형 계산 없이 조립만 하면 된다.
+
+**세 조각 (전부 repo 안에 있음)**
+
+| 조각 | 소스 | 등급 | 상태 |
+|---|---|---|---|
+| ① 0 V 환원 산물 집합 (Li₃P·Li₂S·LiCl) | `db/properties/oxidation_stability.json` 계보 · `sei_products.json` | ★ grand-potential | ✅ 있음 |
+| ② 탄성상수 full Cij + B₀ | `elastic.json` `dft_0K_relaxed_ion_stress_strain_full_Cij` · `eos.json` | ★ paper-grade DFT (E_VRH 가 실험 ~23 GPa 와 일치) | ✅ 있음 |
+| ③ 표면에너지 γ | `adhesion.json` `surface_energies` (`two_gamma`) | ⚠ **UMA 슬랩** — 같은 파일에 vacuum 아티팩트 이력 | ✅ 있음(등급 낮음) |
+
+**할 일**
+1. **ΔV_rxn 산출** — ①의 균형 반응식에 MP 셀부피를 넣어 *소모 SE 1 몰당* ΔV 를 낸다.
+   ⚠ **정규화 기준을 열 이름에 박는다**(per f.u. / per atom / per anion), 그리고
+   **음극에서 소모되는 Li 금속 부피를 포함한 값과 제외한 값을 둘 다** 낸다 — **부호가 갈리는 자리**다.
+2. **응력 스케일** σ ≈ B·ε_v, ε_v = ΔV/V. ②의 B₀ 와 도핑계 B₀(`cascade_v23_champions.csv`
+   `eos_B0_GPa`)로 범위를 낸다.
+3. **Griffith 경로** G_c ≈ 2γ, **K_IC = √(E·G_c)** → 임계 결함 크기 a_c = K_IC²/(πσ²).
+   ⚠ **이상취성이라 실제 인성의 하한**이고 γ 가 UMA 라 **자릿수 주장까지만**.
+4. 산출물: `db/properties/interface_volume_stress.json` + Origin-ready CSV, 하우스 스타일 그림 1장.
+
+**스코핑 결과 (⚠ 확정 아님 — 이 항목을 실제로 할 이유)**
+- ②③ 로 낸 LPSCl 이상취성 **K_IC ≈ 0.2 MPa·m^½ 급**.
+- 원고 **§5.1 이 인용하는 K_IC 는 0.2–0.4 MPa·m^½ 급**
+  (`litdb/papers/miao2023_role_of_interfaces_solid_state_batteries.md` 대조).
+  → 우리 값이 **그 구간 하단**에 앉는다. 이상취성이 하한이어야 한다는 기대와 **부호가 맞는다.**
+- 그 K_IC 를 원고의 **임계 입자크기 ~3 μm** 에 되먹이면 필요한 국소 인장응력이 **수십 MPa 급**,
+  이를 B₀ 로 나누면 **부피 불일치 ~0.3 %** 면 충분하다는 계산이 나온다.
+  ★ **방향 주의 — 이건 원고를 반박하지 않고 지지한다**(기전이 매우 쉽게 성립).
+
+**규율**
+- γ 가 UMA 이므로 **문헌 K_IC 와의 근접성을 검증 논거로 쓰지 않는다** (`litdb` 소환값과 섞지 않기).
+- **μm 급 입자 역학은 우리 셀(nm)로 못 다룬다.** 우리가 대는 건 **재료 상수**이고 입자 스케일은
+  DEM/연속체 몫 — 이 경계를 흐리지 않는다.
+- b2o3_champion 전단은 **withheld** 상태(`kb/results/b2o3_elastic_analysis_2026_07_03.md`) —
+  도핑계 G 를 쓰려면 재측정이 먼저다.
+
 ## 📄 PDF 확보 대기 (원전 미보유 — 웹/재인용 딱지 상태)
 
 | # | 서지 | DOI | 왜 필요한가 |
