@@ -140,6 +140,26 @@ def main():
     else:
         print("   → 소수 원자가 번갈아 1위 = 그 원자들끼리 결합한 국소 모드일 가능성.")
 
+    # ── 1b) ★ 문턱 위 원자 **수** — 다체 이완의 올바른 진행 지표 ──────────
+    # ⚠⚠ 2026-08-06 교훈: `max|F|` 스칼라만 보면 **1위를 지는 원자가 바뀔 때마다** 톱니가
+    #   생겨서 "평탄역/정체" 로 오독한다. 실제로는 개별 원자가 순조롭게 내려가고 있었다.
+    #   자유 원자가 24개면 어느 하나는 늘 튀어 있다 — 그게 정상이다.
+    #   **문턱 위 개수**는 그 착시가 없다. 이게 줄면 수렴 중, 눌러앉으면 진짜 문제.
+    print(f"\n①b 문턱({a.thr:g}) 위 원자 수 — max 하나보다 이게 진행을 정직하게 보여준다")
+    nab = [sum(1 for v in s.values() if v >= a.thr) for s in steps]
+    print("   " + " ".join(f"{v:2d}" for v in nab[-min(len(nab), 22):]) + f"   (자유 {n_free}개 중)")
+    if len(nab) >= 6:
+        half = len(nab) // 2
+        e0 = sum(nab[:half]) / half
+        e1 = sum(nab[half:]) / (len(nab) - half)
+        if e1 < e0 * 0.85:
+            print(f"   ✅ **줄고 있다** (전반 평균 {e0:.1f} → 후반 {e1:.1f}) — 수렴 중이다. "
+                  "max 의 톱니는 1위 교체 때문이지 정체가 아니다.")
+        elif e1 > e0 * 1.15:
+            print(f"   ⛔ **늘고 있다** ({e0:.1f} → {e1:.1f}) — 발산 의심.")
+        else:
+            print(f"   ⚠ **평평하다** ({e0:.1f} → {e1:.1f}) — 여기서부터가 진짜 정체다.")
+
     # ── 2) 상위 원자의 힘·좌표 궤적 ────────────────────────────────────────
     top = [i for i, _ in cnt.most_common(a.top)]
     print(f"\n② 상위 {len(top)}개 원자의 힘 궤적 (최근 {a.steps}스텝)")
@@ -161,7 +181,14 @@ def main():
             # 부호 반전 횟수 = 왕복의 지표
             d = [zs[k + 1] - zs[k] for k in range(len(zs) - 1)]
             flips = sum(1 for k in range(len(d) - 1) if d[k] * d[k + 1] < 0)
-            tag = ("  ⚠ **왕복**" if flips >= len(d) * 0.5 and amp > 1e-3 else "")
+            # 방향전환이 거의 없으면 **왕복이 아니라 단조 표류**다 — 즉 계가 아직
+            # 한 방향으로 가고 있다는 뜻이고, 그건 정체가 아니라 진행이다.
+            if flips >= len(d) * 0.5 and amp > 1e-3:
+                tag = "  ⚠ **왕복** (이중우물/BFGS 요동)"
+            elif flips <= 1 and amp > 5e-3:
+                tag = "  ▶ **단조 표류** — 아직 이완 중(정체 아님)"
+            else:
+                tag = ""
             print(f"   atom {i:4d} Δz {amp:.4f} Å · 방향전환 {flips}/{len(d)-1}{tag}")
             print(f"        " + " ".join(f"{z:.4f}" for z in zs))
     else:
