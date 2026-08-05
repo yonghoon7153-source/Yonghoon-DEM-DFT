@@ -90,6 +90,16 @@ def make_deck(text, tag_old, tag_new, p_deck, mpa_old=0.0, mpa_new=0.0):
                 ln = pat.sub(lambda m: f'{mpa_new:g}{m.group(1)}', ln)
             lines.append(ln)
         out = '\n'.join(lines)
+    # ★ 헤더가 자기 압력을 밝히게 한다.  원본 주석에 "300 MPa" 같은 문자열이 아예 없는 덱이
+    #   흔한데(real_14 이 그렇다 — 헤더에 압력 언급 자체가 없다), 그러면 생성본 셋이 겉보기에
+    #   구분되지 않아 나중에 파일을 잘못 짚는다.  압력·원본·불변항을 한 블록으로 맨 위에 박는다.
+    if mpa_new > 0:
+        out = (f'# ===== 압력 스윕 생성본 (make_pressure_sweep_decks.py) =====\n'
+               f'#   P = {mpa_new:g} MPa   (덱 단위 target_press = {_fmt_like("0.000", p_deck)};'
+               f'  규약 Scale r×1000 · E×0.001 · P×0.001)\n'
+               f'#   원본 {mpa_old:g} MPa 덱에서 **P 와 출력 태그만** 변경.\n'
+               f'#   시드 · 재료(property/global) · 접촉법칙 · press_speed · dt · 삽입조건 전부\n'
+               f'#   불변 — 압력 효과와 패킹/rate 효과를 섞지 않기 위함.\n') + out
     return out
 
 
@@ -206,7 +216,12 @@ def _selftest():
         'variable target_press equal 0.600' in pr)
 
     same = make_deck(deck, 'SE_heckel_300', 'SE_heckel_300', 0.300, 300.0, 300.0)
-    chk('같은 압력·같은 태그면 바이트 동일', same == deck)
+    chk('같은 압력·같은 태그면 본문 바이트 동일 (헤더만 추가)', same.endswith(deck))
+    chk('★ 생성본 헤더가 자기 압력을 밝힌다 (원본에 MPa 문자열이 없어도)',
+        'P = 600 MPa' in out600 and 'target_press = 0.600' in out600)
+    chk('헤더가 불변항을 명시 (시드/재료/rate)', '시드' in out600 and 'press_speed' in out600)
+    chk('헤더는 전부 주석 — LIGGGHTS 파싱에 영향 없음',
+        all(l.startswith('#') for l in out600.split('\n')[:5]))
 
     # ★ 태그 끝 숫자가 압력일 때만 떼어낸다.  `real_14` 의 14 는 케이스 번호다 —
     #   그걸 압력으로 오인해 떼면 real_100/real_300 이 되어 케이스 정체성이 사라진다.
