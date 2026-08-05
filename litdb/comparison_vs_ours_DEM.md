@@ -93,6 +93,38 @@
 >   구조·절차만 가져온다.
 
 ## A. 압밀 / porosity (E_SE 강성이 floor를 정한다)
+
+> ⭐ **2026-08-05 추가 — [Famprikis19] (Nature Materials 2019 리뷰, `papers/famprikis2019_fundamentals_inorganic_sse.md`) 가 이 축에 준 것**
+> **DEM 을 하지 않는다(단어 0회). Bruggeman·tortuosity 식도 없다. 기공률·상대밀도·성형압·입경 수치도 없다.**
+> 그럼에도 **DEM 이 왜 필요한지를 가장 권위 있는 형태로 정의해 놓은 문헌**이라 여기 기록한다.
+> - **정량은 딱 2개**: 복합양극 SE 부피분율 **< 50 %**(에너지밀도 + **전자 percolation**) / **> 25 %**(**이온 percolation** 한계 회피) — 둘 다 **ref 68 = [Bielefeld19]**(우리 digest 보유). 그리고 **"이 문턱은 입도(분포)의 함수이며, 입자가 작을수록 전자·이온 문턱이 둘 다 낮아지고 전하이동 유효면적이 커진다"**(refs 68,74,76). ⇒ **우리 DEM 조성 sweep 의 경계조건으로 바로 사용 가능한 유일한 정량 제약.**
+> - **ASR = t/σ** 이고 *"계면 임피던스 기여는 **복합체 단위부피당 이온접촉 면적** 에만 의존한다"*(ref 68) ⇒ **접촉면적을 계산하는 일 = 계면 임피던스를 계산하는 일.** 단 리뷰가 trade-off 를 명시: **"바로 그 접촉면적이 사이클 중 저항성 계면 형성·열화에 노출되는 면적"**.
+> - **기공률 ↓ ⇒ 전도도 ↑**, 기구는 **grain–grain / particle–particle 접촉 강화** — **산화물(ref 55 = Kim 2016, hot-pressed LLZO **상대밀도↔기계물성**)·황화물(ref 58 = [Sakuda13], 우리 digest 보유) 양쪽에서 확인**. 기공은 **tortuous 경로 + 불균일 전류밀도**를 낳는다(단어만, 식 없음).
+> - **`Fig. 1` 캡션이 기공률을 "비활성 부피"로 명시**: *"inactive volume (solid electrolyte, current collectors, **porosity**) should be minimized"*.
+> - **황화물·보로하이드라이드는 연질이라 상온에서도 치밀화 가능**, 산화물은 소결 필요. **냉간가압이 랩 표준이나 스케일업·경질 산화물엔 제한적**(ref 118 Schnell). SPS 는 미세구조 정밀제어의 기준이나 **비용상 금지적**(refs 51,117). → `Fig. 7` 의 **'Pellet-type'(건식·냉간가압) vs 'Sheet-type'(슬러리)** 두 종착점이 우리 DEM 시나리오 분기와 정확히 대응.
+> - 균열 전파 제어 인자 = **입경(ref 55)·기공률·기존 균열(ref 12)·기공 연결성(ref 137 Shen/Hatzell, 싱크로트론 토모그래피)** — **기공 연결성은 DEM 출력 그 자체**.
+> - **Li 금속 항복강도 ~0.8 MPa**(ref 144 = Masias 2019, 탄성·**소성·크리프** 전부) 이고 금속음극은 **MPa 급 압축응력** 하 ⇒ **Li 는 항상 소성 영역** = DEM Li 접촉모델의 σ_y 앵커.
+>
+> **★ 가장 중요한 한 줄 (포지셔닝)** — `Fig. 2` 의 방법 스팬 바를 보면 **NMR·MD 는 Å–nm 에서 끝나고 그 위는 곧바로 `Continuum modelling`·`Impedance spectroscopy` 로 점프한다. µm 입자 스케일의 이산(discrete) 역학 방법이 사다리에 없다.**
+> 그런데 같은 그림의 **Device(mm) 칸에는 `Contact area` 가 서술자로 그려져 있다.** continuum 은 접촉면적을 **입력으로 받는** 방법이지 **만들어내는** 방법이 아니다.
+> ⇒ **DEM 이 정확히 그 빈칸이다. 우리 repo 이름(DEM-DFT)의 정당화가 이 그림 한 장으로 끝난다** — DFT 가 왼쪽 끝(E_hop·E/G·γ·ESW), DEM 이 가운데(패킹·기공률·접촉면적·배위수), continuum/EIS 가 오른쪽. **deck 표지 슬라이드 1순위.**
+> ⚠ 정직하게: 2019년에는 SSB DEM 문헌이 거의 없었다(우리 litdb DEM 논문 대부분 2020–2026). **리뷰의 오류가 아니라 연대적 공백** — 그래서 *"Famprikis 2019 가 정의한 빈칸을 2020년대 DEM 이 메웠다"* 는 서사가 성립한다.
+>
+> **DEM 입력 파라미터 조달 현황** (digest §6.2 전체 표):
+> | 입력 | 조달처 | 상태 |
+> |---|---|---|
+> | 법선강성 k_n (∝E) | 우리 `elastic.json` relaxed-ion **E_VRH 22.06(comp1)/27.66(modelc) GPa** ↔ 리뷰 소환 실측 **E ≈ 20 GPa**(ref 108) | ✅ 자급 + 외부 앵커 일치 |
+> | 접선강성 k_t (∝G) | 우리 **G_VRH 8.13 GPa** ↔ 리뷰 소환 **G ≈ 7 GPa** | ✅ 자급 + 일치 |
+> | 점착 Δγ (JKR/DMT) | 우리 `adhesion.json` **γ_SE 1.211 / W_ad 1.107±0.027 J/m²** ↔ 리뷰 **γ_xfc 정의만(수치 0)** | ⚠ 정의 일치, 문헌 수치 없음 |
+> | pull-off 응력 σ_adh | 리뷰 = **개념 + 계면저항과의 상관 실증(ref 107)**, 수치 없음 | ⚠ 우리 W_ad→σ_adh 환산 미수행 |
+> | Li 소성 σ_y | **0.8 MPa** (ref 144) | ⚠ **외부 조달 완료** |
+> | SE 입자 σ_y | 없음 | ❌ 공백 |
+> | 파쇄 판정 K_Ic | **리뷰에 수치 0** ("**미세구조 의존 → 실험으로만 결정**") | ❌ 공백 (litdb 유일 소환값 = [Fan26] 0.2–0.4 MPa·m¹ᐟ²) |
+> | 마찰계수 µ | 리뷰에 **언급조차 없음** | ❌ 이 리뷰 밖 |
+> | 혼합 제약 φ_SE | **25 % ≤ φ_SE ≤ 50 %** (ref 68) | ✅ **바로 사용 가능** |
+>
+> **조달 추천 (전부 litdb 미보유, 우선순위순)**: ① **ref 75** Froboese …**Kwade** 2019 *JES* 166, A318 — ASSB 전극의 **미세구조↔이온전도도**(tortuosity 실측) ② **ref 137** Shen, Dixit, Xiao, **Hatzell** 2018 *ACS EL* 3, 1056 — **기공 연결성↔덴드라이트, X-ray 토모그래피** ③ **ref 144** Masias 2019 *JMS* 54, 2585 — **Li 금속 탄성·소성·크리프** ④ **ref 55** Kim 2016 *JACerS* 99, 1367 — **상대밀도↔기계물성**(hot-pressed LLZO) ⑤ **ref 108** McGrogan 2017 *AEM* 7, 1602011 — E/G 실측 원전(시편 밀도 확인용).
+
 - 문헌: Varkey(halide E=10.58) separator floor **21 %** / cathode **37 %** @350 MPa (강체 구, <20 % "추구 안 함").
 - 우리: LPSCl pure-SE **~10 %** @300, real_14 **15.6 %** — 같은 압력 **약 2× 더 치밀**.
 - ★ **porosity 앵커 출처 확정(Minnmann 2021 JES PDF 직접 확인, digest `docs/lit_minnmann2021_jes_charge_transport_bottlenecks.md`):**

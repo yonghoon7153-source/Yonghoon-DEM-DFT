@@ -392,7 +392,8 @@ Conclusions: 물질탐색 · 계면 캐릭터라이제이션 · **공정/역학 
 > **우리 clamped-ion: E_VRH = 52.31, G_VRH = 20.12 GPa → 실측의 2.4–2.9배**
 
 - **E 차 +10 %, G 차 +16 %.** 반면 clamped-ion 은 **2.4×(E)·2.9×(G)** 어긋난다.
-- 이는 `elastic.json` 의 `vacancy_paradox_role` 주석("clamped-ion 이 experiment ~23 GPa 대비 2.3× 과대")을 **또 하나의 독립 문헌으로 확인** 한 것이고, **[Torii](full-DFT PBE-D3 relaxed-ion)** 과 **[Deng16](PBEsol ordered relaxed-ion)** 에 이어 **세 번째 외부 앵커** 다. 게다가 앞의 둘은 **계산**, 이번은 **실측(나노인덴테이션)** 이라 성격이 다르다.
+- 이는 `elastic.json` 의 `vacancy_paradox_role` 주석("clamped-ion 이 experiment ~23 GPa 대비 2.3× 과대")을 **또 하나의 독립 문헌으로 확인** 한 것이고, **[Torii](full-DFT PBE-D3 relaxed-ion)** 과 **[Deng16](PBEsol ordered relaxed-ion)** 에 이어 **네 번째 외부 앵커** 다.
+- ⚠ **"첫 실측 앵커" 라고 쓰면 틀린다** — `elastic.json` `vs_experiment` 가 이미 *"E_VRH 22.06 matches literature LPSCl (~23 GPa, e.g. He et al.); G_VRH 8.13 matches ~8 GPa expt"* 를 갖고 있다. 이번 값의 새로움은 **"또 하나의, 재료가 다른(유리) 독립 실측이 같은 자리를 가리킨다"** 는 데 있다.
 - ⚠ **정직한 유보 3가지**: ① 재료가 다르다 — **Li₂S–P₂S₅ 유리** vs 우리 **결정질 argyrodite Li₆PS₅Cl**. ② 실측값은 **hot-press 시편의 값** 이라 **잔류 기공·GB 가 포함** → 진짜 단결정 값보다 **낮게** 나올 수 있다(즉 우연히 우리 값과 가까워졌을 여지). ③ 리뷰는 이 값을 **"≈"** 로만 인용하고 오차·시편 밀도를 안 준다. **∴ "우리 값이 실험으로 검증됐다" 라고 쓰지 말고, "같은 자릿수·같은 E/G 비(2.7–2.9)에 있고 clamped-ion 은 배제된다" 까지만.**
 - 참고로 E/G 비: 실측 20/7 = **2.86**, 우리 relaxed 22.06/8.13 = **2.71**, 우리 clamped 52.31/20.12 = **2.60**. 비율은 셋 다 비슷하므로 **판별력은 절대값에 있다.**
 
@@ -476,7 +477,7 @@ Conclusions: 물질탐색 · 계면 캐릭터라이제이션 · **공정/역학 
 
 | # | 항목 | 이 논문 (소환값·ref) | 우리 | 판정 / 이유 |
 |---|---|---|---|---|
-| 1 | **E (thiophosphate)** | **≈ 20 GPa** (glass, 나노인덴테이션, ref 108) | **relaxed-ion E_VRH comp1 22.06 / modelc 27.66 GPa** (PBE, full C_ij) | ✅✅ **정합(+10 %)**. **clamped-ion 52.31 은 2.4× 어긋나 배제** → `vacancy_paradox_role` 의 **세 번째 외부 앵커, 첫 실측 앵커**. ⚠ 재료 다름(유리 vs 결정 argyrodite), 시편 기공 포함 가능 → "검증됐다" 금지 |
+| 1 | **E (thiophosphate)** | **≈ 20 GPa** (glass, 나노인덴테이션, ref 108) | **relaxed-ion E_VRH comp1 22.06 / modelc 27.66 GPa** (PBE, full C_ij) | ✅✅ **정합(+10 %)**. **clamped-ion 52.31 은 2.4× 어긋나 배제** → `vacancy_paradox_role` 의 **네 번째 외부 앵커**([Deng16]·[Torii] 계산 + `elastic.json` 이 이미 갖고 있던 실측 ~23 GPa(He et al.)에 더해). ⚠ 재료 다름(유리 vs 결정 argyrodite), 시편 기공 포함 가능 → "검증됐다" 금지 |
 | 2 | **G** | **≈ 7 GPa** (동 ref 108) | **G_VRH comp1 8.13 GPa** | ✅ **정합(+16 %)**. clamped 20.12 은 2.9× |
 | 3 | **E/G 비** | 20/7 = **2.86** | relaxed 2.71 / clamped 2.60 | ⚠ **판별력 없음** — 비율은 셋 다 비슷. 판별은 **절대값**에서만 |
 | 4 | **산화물 기준점** | garnet **E 150 / G 60 GPa** (ref 147) | 우리 계열 없음 | ✅ 스펙트럼 고정: 우리 argyrodite 는 **가장 무른 끝**(20–28 GPa). CAM(산화물, E 150–200) 과의 변형 불일치 서사와 일치 |
@@ -503,7 +504,7 @@ Conclusions: 물질탐색 · 계면 캐릭터라이제이션 · **공정/역학 
 
 1. **★ `Fig. 2` 를 우리 캠페인 전체 지도로 쓴다.** 왼쪽 끝(Å)=DFT(E_hop, E/G, γ, ESW), 가운데(µm)=**DEM**(접촉면적·기공률·패킹), 오른쪽(mm–cm)=continuum/EIS. **리뷰가 `Contact area` 라는 서술자를 그려 놓고 그것을 만들 방법을 사다리에 안 넣었다** → 우리 repo 이름(DEM-DFT)의 존재 이유가 이 그림 한 장으로 정당화된다. **deck 표지 슬라이드 1순위.**
 2. **★ 기계 축의 공백도를 `Fig. 6` 위에 그린다.** 네 라벨 중 **E_SE/G_SE = elastic.json ✅**, **γ_xfc/σ_adh = adhesion.json ⚠(정의만 대응)**, **ε_electrochemical = cascade `anneal_dV_pct` ⚠**, **K_Ic = ❌ 공백**. 이 그림 하나로 "우리가 어디까지 왔고 무엇이 남았나"를 리뷰어에게 보여줄 수 있고, **K_Ic 공백은 리뷰 자신이 "실험으로만 가능" 이라고 면책** 해 준다.
-3. **★ relaxed-ion 판정의 실측 앵커를 확보했다.** [Deng16](계산)·[Torii](계산)에 이어 **[McGrogan via Famprikis](실측 E 20 / G 7 GPa)** — 계산 2 + 실측 1 로 **clamped-ion 2.4× 과대** 진단이 3중으로 굳는다. 원고 §mechanics 의 방어 문장으로 바로 쓸 수 있다(단 유리 vs 결정 유보 명기).
+3. **★ relaxed-ion 판정에 독립 실측 앵커가 하나 더 붙었다.** [Deng16](계산)·[Torii](계산)·`elastic.json` 기존 실측 메모(~23 GPa, He et al.)에 이어 **[McGrogan via Famprikis](실측 E 20 / G 7 GPa, Li₂S–P₂S₅ 유리)** — **clamped-ion 2.4× 과대** 진단이 4중으로 굳는다. 원고 §mechanics 의 방어 문장으로 쓸 수 있다(단 **유리 vs 결정** 유보 명기).
 4. **음이온 IP 사다리를 axis ① 문장에 박는다.** "Li₆PS₅Cl 의 산화 상한은 **사다리에서 가장 낮은 S²⁻ 가 pin** 한다(Famprikis 2019, ref 65 = Richards 2016). Cl⁻ 은 S²⁻ 보다 훨씬 위이므로 Cl 증량은 onset 을 옮기지 못하고 **분해량·산물·계면** 을 바꾼다" — 우리 comp1/modelc onset 동일(2.256 V) 결과의 **기전 설명문**이 그대로 완성된다.
 5. **NE/Haven 규율에 각주를 단다.** 리뷰가 "강하게 상관된 이동에서는 Eq.(3) 타당성이 논쟁 중"이라고 명시하므로, 우리 MSD→NE σ 에는 **"H_R=1 은 근사, 협동 hop 이 우세한 아르지로다이트에서는 계통오차 방향 미상"** 각주를 붙이는 것이 정직하고 방어적이다.
 6. **새 계산 아이디어 — prefactor σ₀.** Eq.(2)로 보면 Cl-rich 의 이득은 Ea 뿐 아니라 **ν₀(포논/Debye)·ΔS_m** 에도 걸린다. 우리는 이미 phonon/ε∞ 라인이 있으므로 **comp1 vs modelc 의 Debye 진동수 비교** 를 붙이면 "Ea 만 보는" 현 서사에 두 번째 다리가 생긴다(Kraft ref 29 와 직결).
