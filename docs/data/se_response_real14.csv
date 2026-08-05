@@ -4,6 +4,11 @@
 # 정본: scripts/am_load_balance_jam.py REAL14_SE_CURVE (phi_se_local 색인)
 # phi_se_local = V_SE/(A*h - V_AM);  V_AM 46679.9 um^3 · V_SE 17190.8 · A 2500 um^2
 # eps_union = 1 - 25.170/h  (union 관례; DEM eps_sphere 와 h 30.28 에서 1.251 %p 차)
+# ★ 출처 (2026-08-05 확인): 11점 = 신규 배치 10점 + 별도 재현 런 1점.
+#   배치 10점 = se_curve/se_e{2010,1881,1775,1671,1557,1087,913,746,573,393}.json
+#               (se_batch.log: 14:34→19:00, 각 EXIT=0, wall 1440~1768 s)
+#   나머지 1점 phi 0.6707 = se_curve/se_repro_1297.json (eps 12.97, t 28.925, sigma 0.1157)
+#   ⇒ 런은 갈렸지만 조건은 동일 (n_grid 384 · sub 160 · hold · periodic) — 곡선은 균질.
 # ★ 옛 5점 폐기: 실행조건(--sub/--frames) 복구 불가 + 재현 시 sigma 가 계통 +8~19% 상향
 # ★ 곡선 성질: phi<~0.58 무응력(jamming 전) / phi>~0.81 sigma_y=0.30 포화 (max 0.2771)
 #   => SE 단독으로 target 0.30 GPa 도달 원리적 불가 = 하중분담 항이 필수인 물리적 근거
