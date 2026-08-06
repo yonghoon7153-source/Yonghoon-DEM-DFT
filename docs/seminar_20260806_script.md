@@ -11,6 +11,9 @@ Yonghoon An · Division of Materials Science & Engineering, Hanyang University
   ⇒ ① 전문용어는 **쓰기 전에 한 줄로 풀어준다** ② 슬라이드마다 "그래서 뭐?"를 한 문장으로
   ③ **Defense 부록(Appendix B)** 을 두껍게 — 예상 질문 40개 + 답변.
 - **분량**: 본편 15 + Appendix A(기술 백업) + **Appendix B(Defense Q&A)**
+- **용어·기호 규약 + 레퍼런스**: `docs/seminar_20260806_glossary.md` (별도)
+  — ★ 그 문서 §0 에 **기호 충돌 4건**(τ 규약 2개 공존 · φ 3중 의미 · σ 전도도↔응력 ·
+  P 압력↔대입자)이 정리돼 있다.  **발표 전 반드시 확정**할 것.
 
 ---
 
