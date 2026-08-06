@@ -56,11 +56,21 @@ def main():
                 res[name] = {"status": "skipped", "reason": "no Li in phase"}
                 continue
 
-            entries = mpr.get_entries_in_chemsys(els)
+            # ⚠⚠ thermo_type 을 **고정**한다 (2026-08-06). MP 기본이 GGA_GGA+U 에서
+            #   GGA_GGA+U_R2SCAN 혼합 껍질로 바뀌었는데, 섞인 껍질에서 E_hull 이
+            #   터무니없이 나왔다(실측: Li2S 0.1139, LiNdO2 **3.8787** eV/atom —
+            #   MP 페이지의 0.008 과 완전히 다르다). 한 종류로 통일해야 껍질이 성립한다.
+            entries = mpr.get_entries_in_chemsys(
+                els, additional_criteria={"thermo_types": ["GGA_GGA+U"]})
             pd = PhaseDiagram(entries)
-            tgt = [e for e in entries if e.entry_id and mid in str(e.entry_id)]
+            # ⚠ `mid in str(entry_id)` 는 **부분문자열 매칭**이라 mp-1153 이 mp-11530 에도
+            #   걸린다. material_id 로 정확히 맞춘다.
+            def _mid(e):
+                return str(getattr(e, "data", {}).get("material_id", "")) or \
+                    str(e.entry_id).split("-GGA")[0].split("-R2SCAN")[0]
+            tgt = [e for e in entries if _mid(e) == mid]
             if not tgt:
-                # mp-id 로 못 잡으면 조성으로 (같은 조성의 최저 엔트리)
+                print(f"  ⚠ {mid} 를 엔트리에서 못 찾았다 — 같은 조성의 최저 엔트리로 대체")
                 tgt = sorted([e for e in entries
                               if e.composition.reduced_formula == comp.reduced_formula],
                              key=lambda e: pd.get_e_above_hull(e))
@@ -86,15 +96,26 @@ def main():
                 res[name] = {"status": "never_stable", "e_above_hull": float(ehull),
                              "material_id": mid}
                 continue
-            lo, hi = float(vs[stable].min()), float(vs[stable].max())
-            gaps = np.where(np.diff(stable.astype(int)) != 0)[0]
-            print(f"  안정 구간 **{lo:.2f} – {hi:.2f} V** vs Li/Li⁺   "
-                  f"(E_hull {ehull:.4f} eV/atom, 구간 {len(gaps)//2 + 1}개)")
-            print(f"  → 이 상은 **{hi:.2f} V 이하로 내려가면 나타나고**, "
-                  f"{lo:.2f} V 아래에서는 더 환원된 상으로 넘어간다"
-                  if lo > 0 else
-                  f"  → **{hi:.2f} V 이하 전 구간에서 안정** (Li 금속 전위까지 버틴다)")
+            # ⚠ min/max 만 쓰면 구간이 끊겨 있어도 하나로 뭉뚱그려진다 — 연속 구간별로 낸다
+            segs, i = [], 0
+            while i < len(stable):
+                if stable[i]:
+                    j = i
+                    while j + 1 < len(stable) and stable[j + 1]:
+                        j += 1
+                    segs.append((float(vs[i]), float(vs[j])))
+                    i = j + 1
+                else:
+                    i += 1
+            lo, hi = segs[0][0], segs[-1][1]
+            txt = " , ".join(f"{x:.2f}–{y:.2f}" for x, y in segs)
+            print(f"  안정 구간 **{txt} V** vs Li/Li⁺   (E_hull {ehull:.4f} eV/atom)")
+            print(f"  → **{hi:.2f} V 이하 전 구간에서 안정** (Li 금속 전위까지 버틴다)"
+                  if lo <= 1e-9 and len(segs) == 1 else
+                  f"  → {hi:.2f} V 이하로 내려가면 나타나고, {lo:.2f} V 아래에서는 "
+                  f"더 환원된 상으로 넘어간다")
             res[name] = {"status": "ok", "material_id": mid,
+                         "stable_segments_V": segs,
                          "stable_V_min": lo, "stable_V_max": hi,
                          "e_above_hull_eV_per_atom": float(ehull),
                          "chemsys": "-".join(els)}
@@ -102,7 +123,9 @@ def main():
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     json.dump({
         "property": "sei_formation_voltage",
-        "method": ("Grand-potential phase diagram (pymatgen) over Materials Project entries. "
+        "method": ("Grand-potential phase diagram (pymatgen) over Materials Project entries "
+                   "(**thermo_types=GGA_GGA+U 로 고정** — 혼합 R2SCAN 껍질에서 E_hull 이 "
+                   "터무니없이 나왔다). "
                    "μ_Li 를 훑으며 그 상이 볼록껍질 위에 있는 전위 구간을 찾는다. "
                    "V(vs Li/Li+) = −(μ_Li − μ_Li⁰)/e."),
         "warning": ("에너지는 **MP(PBE/PBE+U, MP 보정)** 값이다 — 우리 QE 계산과 섞지 말 것. "
