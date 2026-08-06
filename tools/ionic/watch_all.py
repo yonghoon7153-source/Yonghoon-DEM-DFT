@@ -164,7 +164,12 @@ JOBS = [
                                        "/data/work/runs/sdcp_v2/slab_relax/scf_u0.out"),
      # SDCP v2 1단계 — 깨끗한 (104) 슬랩 표면 이완 (48원자 1x1, 아래 2층 고정).
      # 이게 끝나야 E_bind 의 기준점이 생긴다. 종결 = BFGS 수렴.
-     "done_marker": ("Final scf calculation at the relaxed structure",
+     # ⚠⚠ **순수 `relax` 는 "Final scf calculation" 을 안 찍는다** — vc-relax 전용 문자열이다.
+     #   그것만 보게 해 뒀더니 2026-08-06 에 **JOB DONE(2d6h) 로 정상 종료한 런**이
+     #   ⓪ 생존판정과 맨 아래 집계에서 ⛔ 로 잡혔고, 그 재기동 명령은 scf_u0 부터 다시 돌며
+     #   **relax.out 을 덮어쓴다**. 53시간이 날아갈 뻔했다. → 표식을 여러 개 받는다.
+     "done_marker": (("End of BFGS Geometry Optimization", "bfgs converged in",
+                      "Final scf calculation at the relaxed structure"),
                      "표면 이완 완료 — --harvest 로 1x4 복제"),
      "done": [], "proc": ("pw.x",), "tmux": "lnorelax",
      "start": "tmux new -s lnorelax -d 'H=/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/"
@@ -192,8 +197,10 @@ def verdict(j):
     #   기다렸다가 알리고 끝). done 을 파일로만 판정하면 완주한 런이 ⛔ 죽음이 된다(실측).
     dm = j.get("done_marker")
     if dm and lm and not done:
+        marks = dm[0] if isinstance(dm[0], (tuple, list)) else (dm[0],)
         try:
-            if any(dm[0] in ln for ln in open(j["log"], errors="ignore")):
+            txt_ = open(j["log"], errors="ignore").read()
+            if any(m in txt_ for m in marks):
                 return f"✅ 완료 — {dm[1]}", False
         except OSError:
             pass
