@@ -2383,6 +2383,14 @@ def dashboard_highlights() -> list:
                     "→ Phase-B 재정의: ΔE_extract = E(추출 기하) − E(물리흡착 기하). 같은 조성·셀·원자수라 "
                     "**E_slab·E_mol 이 필요 없고 좌표일치 가드도 필요 없다** — 기준항이 전부 상쇄되는, "
                     "훨씬 잘 정의된 계산이다. ΔE<0 이면 진짜 열화 기구, >0 이면 UMA 과대평가. "
+                    "◆ 계산 자원: **gabia(48 GB A6000) 한 장으로는 불가**가 7개 조합 실측으로 확정됐다 — "
+                    "크래시 자리가 newq→cegterg→becmod 로 계속 앞으로 옮겨갔고(계 전체가 카드보다 크다는 신호), "
+                    "방어 가능한 최저 설정(진공 11 Å·wfc 50·rho 360·ppcg)에서도 peak 47.6 GB 로 실패했다. "
+                    "필요량 55–60 GB 급. → **VASP 외주 패키지로 전환**(tools/sdcp/qe_to_vasp.py): "
+                    "QE scf.in 6개를 POSCAR/INCAR/KPOINTS 로 변환하고 표준 사양(진공 16 Å·k 2×2×1·ENCUT 520)을 "
+                    "복원했다. run.sh 하나로 순차 실행·resume·결과 산출까지 되고, README_외주.md 가 같이 간다. "
+                    "⚠ 변환 중 버그 2개를 보내기 전에 잡았다 — QE 의 '+0.300' 부호를 정규식이 놓쳐 AFM 시드가 "
+                    "절반 유실됐고, POSCAR 에 Ni 블록이 둘로 쪼개졌다. 지금은 Ni up/down 개수를 매번 검증한다. "
                     "상세: kb/projects/sdcp_phaseB_direction_2026_08_06.md"})
     ce = _cascade_by_element()
     top = None
