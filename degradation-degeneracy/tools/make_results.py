@@ -54,13 +54,22 @@ def _conclusion(cmp_res: dict, summary: dict) -> list[str]:
     base, imp = "pocv_dvdq", "pocv_dvdq_dqdv"
     if base in tbl.index and imp in tbl.index:
         b, i = tbl.loc[base], tbl.loc[imp]
+        d = float(i["degenerate_frac"]) - float(b["degenerate_frac"])
+        # ★ 방향을 숫자에서 읽는다. "줄었다"를 고정하면 늘었을 때 거짓말이 된다.
+        if d < -0.02:
+            verdict = f"**{_pct(abs(d))}p 줄어든다** — 34p 개선안의 실측 이득이다."
+        elif d > 0.02:
+            verdict = (f"오히려 **{_pct(d)}p 늘어난다.** 34p 개선안이 이 격자에서는 "
+                       f"이득을 주지 못한다.")
+        else:
+            verdict = ("**사실상 변화가 없다**(차이 2%p 이내). 즉 34p의 dQ/dV 추가는 "
+                       "이 합성 격자에서 최종 오차를 측정 가능하게 줄이지 못한다.")
         lines.append(
-            f"1. **dQ/dV 항을 넣으면 degeneracy가 {_pct(b['degenerate_frac'])} → "
-            f"{_pct(i['degenerate_frac'])}로 준다** "
+            f"1. dQ/dV 항을 넣으면 degeneracy가 {_pct(b['degenerate_frac'])} → "
+            f"{_pct(i['degenerate_frac'])}로 {verdict} "
             f"(평균 |오차| {_pp(b['mean_abs_err'])} → {_pp(i['mean_abs_err'])}, "
             f"PE-NE 상쇄 {_pct(b['pe_ne_antisym_frac'])} → "
-            f"{_pct(i['pe_ne_antisym_frac'])}). "
-            f"33p 기존 목적함수 대비 34p 개선안의 실측 효과다.")
+            f"{_pct(i['pe_ne_antisym_frac'])})")
     elif base in tbl.index:
         lines.append(f"1. 기존 목적함수({base})의 degeneracy는 "
                      f"{_pct(tbl.loc[base, 'degenerate_frac'])}다.")
@@ -125,9 +134,14 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     summary = _load(in_dir / "degeneracy_summary.yaml") or {}
     manifest = _load(in_dir / "manifest.yaml") or {}
     wsweep = _load(in_dir / "wsweep" / "weight_sweep.yaml")
-    hess = next((_load(p) for p in sorted(in_dir.glob("hessian_*.parquet"))), None)
+    hess_by_obj = {}
+    for hp in sorted(in_dir.glob("hessian_*.parquet")):
+        d = _load(hp)
+        if d is not None and len(d):
+            hess_by_obj[hp.stem.replace("hessian_", "")] = d
+    hess = next(iter(hess_by_obj.values()), None)
 
-    from tools.compare_objectives import to_markdown
+    from tools.compare_objectives import OBJ_ORDER as OBJ_ORDER_LOCAL, to_markdown
 
     tbl = pd.DataFrame(cmp_res["table"])
     tbl_noise = pd.DataFrame(cmp_res.get("table_by_noise", []))
@@ -226,28 +240,46 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
         P.append("- **거짓 분리율**: 참값은 같은데 다르다고 답한 비율 (반대 방향 오류).\n")
 
     # ── Hessian ──
-    if hess is not None and len(hess):
-        P.append("## 곡률 진단 (Hessian)\n")
+    if hess_by_obj:
+        P.append("## 곡률 진단 (Hessian) — 최적화와 무관한 측정\n")
         P.append("최적점에서 목적함수의 2차 미분. 최소 고윳값 방향으로는 파라미터를 "
-                 "움직여도 곡선이 거의 안 변한다 = 데이터가 그 조합을 구분하지 못한다.\n")
-        P.append(f"- 조건수 중앙값: **{hess['condition_number'].median():.3g}**")
-        P.append(f"- flat direction score 중앙값: "
-                 f"**{hess['flat_direction_score'].median():.2g}** (0에 가까울수록 평평)")
-        if "pe_ne_coupled" in hess.columns:
-            P.append(f"- **α_PE·α_NE가 같은 부호로 묶인 조건: "
-                     f"{_pct(hess['pe_ne_coupled'].mean())}** — "
-                     f"\"PE와 NE를 함께 움직여도 곡선이 안 변한다\"가 성립하는 비율. "
-                     f"22p에서 LAM_PE ≈ LAM_NE가 나온 것이 물리가 아니라 수학일 수 "
-                     f"있다는 직접 증거다.")
+                 "움직여도 곡선이 거의 안 변한다 = **데이터가 그 조합을 구분하지 "
+                 "못한다**. multi-start 지표와 달리 optimizer가 어떻게 헤맸는지와 "
+                 "무관하므로, \"dQ/dV가 정보를 더 주는가\"에는 이쪽이 더 깨끗한 답이다.\n")
+        P.append("| objective | n | 조건수(중앙값) | flat score | α_PE·α_NE 결합 |")
+        P.append("|---|---|---|---|---|")
+        for o in (list(OBJ_ORDER_LOCAL) + sorted(set(hess_by_obj) - set(OBJ_ORDER_LOCAL))):
+            d = hess_by_obj.get(o)
+            if d is None:
+                continue
+            coup = (_pct(d["pe_ne_coupled"].mean())
+                    if "pe_ne_coupled" in d.columns else "—")
+            P.append(f"| {o} | {len(d)} | {d['condition_number'].median():.3g} | "
+                     f"{d['flat_direction_score'].median():.2g} | {coup} |")
         P.append("")
+        P.append("- **조건수**가 작을수록 최적점이 잘 정의돼 있다. 목적함수 간 비교에서 "
+                 "이 값이 크게 낮아지면 그 항이 실제로 정보를 더한다는 뜻이다.")
+        P.append("- **α_PE·α_NE 결합** — 평평한 방향에서 두 전극이 같은 부호로 묶여 "
+                 "있는 비율. 높으면 \"PE와 NE를 함께 움직여도 곡선이 안 변한다\"는 "
+                 "뜻이고, 22p에서 LAM_PE ≈ LAM_NE가 나온 것이 물리가 아니라 수학이라는 "
+                 "직접 증거가 된다.\n")
 
     # ── multi-start (F21) ──
-    ms = (summary or {}).get("multistart") or {}
+    # ★ F21b: 목적함수 간 비교는 무작위 restart끼리만 해야 공정하다.
+    #   warm start 지점(restart 0)이 섞이면 dQ/dV 계열이 인위적으로
+    #   multimodal 쪽으로 쏠린다.
+    fair = (summary or {}).get("multistart_random_only")
+    ms = fair or (summary or {}).get("multistart") or {}
     ms_rows = {k: v for k, v in ms.items() if not k.startswith("_")}
     if ms_rows:
         P.append("## multi-start 진단 — 진짜 degeneracy와 최적화 난이도의 구분\n")
         P.append("같은 조건을 여러 초기값에서 다시 풀었을 때 어떻게 갈리는지를 봅니다. "
                  "**두 실패 모드는 처방이 정반대**라 반드시 나눠야 합니다.\n")
+        if fair:
+            P.append("> 아래 표는 **무작위 restart끼리만** 비교한 것입니다(F21b). "
+                     "dQ/dV 목적함수는 첫 restart에 매끄러운 해를 초기값으로 받으므로, "
+                     "그것을 포함하면 최적 J에 닿는 restart가 정의상 하나뿐이 되어 "
+                     "항상 multimodal로 찍힙니다.\n")
         P.append("| objective | n | **flat valley** | multimodal | unique min |")
         P.append("|---|---|---|---|---|")
         for o, d in ms_rows.items():
@@ -261,6 +293,15 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
                  "**최적화 난이도**입니다. 좋은 초기값을 주면 사라집니다 "
                  "(dQ/dV 항이 이 경우였습니다 — 아래 참조).")
         P.append("- **unique min** — 해가 유일. 문제 없음.\n")
+        worst = max(ms_rows.items(), key=lambda kv: kv[1].get("multimodal_frac", 0))
+        if worst[1].get("multimodal_frac", 0) > 0.9:
+            P.append(f"> ⚠ **`{worst[0]}`의 multimodal이 "
+                     f"{_pct(worst[1]['multimodal_frac'])}로 극단적입니다.** "
+                     f"flat valley 판정은 restart 2개 이상이 같은 J에 닿아야 성립하므로, "
+                     f"이렇게 지형이 울퉁불퉁하면 flat valley가 있어도 **관측되지 "
+                     f"않습니다.** 이 목적함수의 낮은 flat valley 값을 "
+                     f"\"degeneracy가 적다\"로 읽으면 안 됩니다 — "
+                     f"최적화와 무관한 곡률(Hessian) 쪽을 보세요.\n")
         P.append("> ⚠ `degeneracy_summary.yaml`의 `restart_conditioned` 블록에 있는 "
                  "`agree_frac`과 `p_spread`는 인용하지 마세요. adaptive 조기 종료 때문에 "
                  "`agree_frac`은 restart를 5까지 간 조건에서 **정의상 0**이고, "
