@@ -68,7 +68,9 @@ MAGTOL=${MAGTOL:-2.0}
 DIAG=${DIAG:-}                 # 대각화 작업배열이 문제일 때만 (ppcg). newd OOM 엔 안 듣는다
 ECUTWFC=${ECUTWFC:-60}         # Ry
 ECUTRHO=${ECUTRHO:-480}        # Ry — newd OOM 의 실질 손잡이 (ngm ∝ ecutrho^1.5)
-REAL_SPACE=${REAL_SPACE:-}     # 1 = augmentation 을 실공간에서 (newd 메모리 절감)
+# ⛔ REAL_SPACE 는 이 빌드에서 newq OOM 에 도움이 안 된다 (2026-08-06 실측 — 오히려 악화).
+#    진단용으로만 남긴다. 기본은 끔.
+REAL_SPACE=${REAL_SPACE:-}
 GAP=${GAP:-15.0}               # 생성기 --min_image_gap 과 **같은 수** (v2 사고 재발 방지)
 CMARG=${CMARG:-1.0}
 STAGE=${1:-all}
@@ -179,11 +181,13 @@ oom_advice(){
   ts "                         메모리 ∝ ngm ∝ ecutrho^1.5. **대각화 옵션(ppcg)은 여길 안 건드린다.**"
   ts "        cegterg/david  = 대각화 작업배열. 이때는 DIAG=ppcg 가 듣는다."
   ts "    사다리(newd 에서 터졌을 때):"
-  ts "      ① REAL_SPACE=1 …    augmentation 을 실공간에서 → newd 메모리 대폭 절감"
-  ts "                          ⚠ GPU 빌드 지원 여부 미확인 — 탐침으로 확인할 것"
-  ts "      ② ECUTRHO=400 …     ngm 이 0.76배 (480→400). 더 필요하면 360(0.65배)"
-  ts "                          ⚠ USPP 라 8×ecutwfc 가 기본값 — 낮추면 augmentation 정확도가 떨어진다"
-  ts "      ③ CPU 빌드 pw.x     호스트 RAM. 느리지만 끝은 난다"
+  ts "      ① ECUTRHO=400 …     newq 의 qgm(ngm×nij) 이 ngm∝ecutrho^1.5 로 준다."
+  ts "                          480→400 은 0.76배, →360 은 0.65배, →320 은 0.54배."
+  ts "                          ⚠ USPP 라 8×ecutwfc 가 기본 — 6× 아래는 augmentation 정확도를 의심할 것"
+  ts "      ② 셀/계 축소        c 는 못 줄인다(15 Å 게이트). 슬랩 면적을 줄이려면 Phase-A 부터 다시."
+  ts "      ⛔ REAL_SPACE=1 은 **쓰지 말 것** — 2026-08-06 실측: 이 GPU 빌드에서 newq 를 우회하지"
+  ts "         않는다. 실공간 테이블에 28 GB 를 먼저 먹고 같은 newq 에서 더 빨리 죽었다."
+  ts "      ⛔ CPU 빌드도 답이 아니다 — 호스트 가용 RAM 이 31 GB 로 GPU 49 GB 보다 작다(실측)."
   ts "    ⚠⚠ 어느 손잡이를 쓰든 **6개 job 전부 같은 값**이어야 한다 — 우리가 내는 값은 전부"
   ts "       차이(E_ads·Δ·ΔE_extract)라, 설정이 같기만 하면 내부적으로는 일관된다."
   ts "    이력: 2026-07-21 은 SCF 3회차의 대형 할당, 오늘은 초기화 newq 에서 즉사."

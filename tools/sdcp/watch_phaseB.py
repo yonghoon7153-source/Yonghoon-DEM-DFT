@@ -178,10 +178,13 @@ for j in JOBS:
             w = d.get("where", "")
             print(f"       → c 축소는 답이 아니다(15 Å 게이트). 터진 자리: {w or '?'}")
             if "newd" in w or "newq" in w:
-                print("          newd/newq = augmentation charge 를 조밀 G-격자에 까는 자리다.")
-                print("          **대각화 옵션(ppcg)은 여길 안 건드린다.** 사다리:")
-                print("            REAL_SPACE=1 MAXSTEP=5 bash tools/sdcp/run_phaseB_sdcp_v3.sh probe")
-                print("            ECUTRHO=400  MAXSTEP=5 bash tools/sdcp/run_phaseB_sdcp_v3.sh probe")
+                print("          newd/newq = augmentation charge 를 조밀 G-격자에 까는 자리.")
+                print("          단일 최대 할당이 qgm(ngm × projector쌍) 이고 ngm ∝ ecutrho^1.5 다.")
+                print("          **ppcg(대각화)도 real_space 도 여길 안 건드린다** — ecutrho 뿐이다:")
+                print("            ECUTRHO=400 MAXSTEP=5 bash tools/sdcp/run_phaseB_sdcp_v3.sh probe   # 0.76배")
+                print("            ECUTRHO=360 MAXSTEP=5 bash tools/sdcp/run_phaseB_sdcp_v3.sh probe   # 0.65배")
+                print("          ⛔ REAL_SPACE=1 은 쓰지 말 것 — 실공간 테이블에 28 GB 를 먼저 먹고")
+                print("             같은 newq 에서 더 빨리 죽는다 (2026-08-06 실측)")
             else:
                 print("          대각화 작업배열이면 DIAG=ppcg 가 듣는다:")
                 print("            DIAG=ppcg MAXSTEP=5 bash tools/sdcp/run_phaseB_sdcp_v3.sh probe")
