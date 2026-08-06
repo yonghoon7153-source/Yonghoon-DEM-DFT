@@ -107,8 +107,16 @@ for tag in sys.argv[2:]:
 print(f"{zmax:.2f}")
 PYZ
 ) || { ts "⛔ pose zmax 계산 실패"; exit 1; }
-C=$(awk -v z="$ZMAX" -v g="$GAP" -v m="$CMARG" 'BEGIN{printf "%.3f", z + g + m}')
-ts "pose zmax=$ZMAX Å → c=$C Å (이미지 간격 $GAP Å + 여유 $CMARG Å)"
+# ⚠⚠ 슬랩 바닥이 z=0 이 아니다 (우리 슬랩은 z=12.0 부터). 다음 이미지의 슬랩 바닥은
+#   c + zmin_slab 에 있으므로 필요한 c 는 zmax + GAP + 여유 − **zmin_slab** 이다.
+#   2026-08-06 이전 판은 zmin_slab 을 안 빼서 c 를 34.4 대신 46.4 로 잡았고(간격 28 Å),
+#   셀이 35% 부풀어 48 GB GPU 에서 newq 가 OOM 으로 죽었다.
+ZMIN=$("$UMA_PY" -c "
+from ase.io import read; import sys
+print('%.3f' % read('$SLABREF').positions[:,2].min())") || { ts "⛔ 슬랩 바닥 계산 실패"; exit 1; }
+C=$(awk -v z="$ZMAX" -v g="$GAP" -v m="$CMARG" -v b="$ZMIN" 'BEGIN{printf "%.3f", z + g + m - b}')
+ts "pose zmax=$ZMAX · 슬랩 바닥 $ZMIN Å → c=$C Å"
+ts "   (실제 이미지 간격 = 천장까지 $(awk -v c=$C -v z=$ZMAX 'BEGIN{printf "%.1f", c-z}') + 바닥 오프셋 $ZMIN = $GAP+$CMARG Å)"
 
 # 슬랩 기준은 **freeze_frac 0.85 로 이완한 맨 슬랩**이다. 셀만 c 로 맞춘다.
 SLABC="$OUT/slab_ref_c${C%.*}.vasp"

@@ -693,14 +693,22 @@ def main():
             #   (sdcp_phaseB_complex_doped.vasp) 가 무검사 통과한 전례가 있다.
             c_new = slab_atoms.cell.array[2][2]
             zmax = atoms.positions[:, 2].max()
-            gap = c_new - zmax
+            # ⚠⚠ 2026-08-06 수정 — 옛 식은 gap = c − zmax 였는데, 그건 **슬랩 바닥이 z=0** 일
+            #   때만 맞다. 우리 슬랩은 z=12.0 부터 시작한다. 다음 이미지의 슬랩 바닥은
+            #   c + zmin_slab 에 있으므로 실제 간격은 (c − zmax) + zmin_slab 이다.
+            #   그 12 Å 을 안 세는 바람에 필요한 c 를 34.4 대신 46.4 로 잡았고, 셀 부피가
+            #   35% 부풀어 48 GB GPU 에서 newq 가 OOM 으로 죽었다.
+            zmin_slab = float(slab_atoms.positions[:, 2].min())
+            gap = (c_new - zmax) + zmin_slab
             if gap < a.min_image_gap:
                 raise SystemExit(
                     f"⛔ {name}: 수직 이미지 간격 {gap:.2f} A < {a.min_image_gap} A — "
                     f"분자 꼭대기(z {zmax:.2f})가 다음 슬랩 이미지와 너무 가깝다.\n"
                     f"   E_bind 가 한 표면이 아니라 두 표면 몫이 된다 (2026-07-17 철회 사유).\n"
-                    f"   → Phase-A 를 --cz {zmax + a.min_image_gap + 1:.0f} 이상으로 다시 돌 것.")
-            print(f"  [gap-ok] {name}: 수직 이미지 간격 {gap:.1f} A ≥ {a.min_image_gap} A")
+                    f"   → 셀 c 를 {zmax + a.min_image_gap + 1 - zmin_slab:.1f} A 이상으로 키울 것 "
+                    f"(슬랩 바닥 z={zmin_slab:.2f} 만큼은 이미 벌어 놓은 셈이다).")
+            print(f"  [gap-ok] {name}: 수직 이미지 간격 {gap:.1f} A ≥ {a.min_image_gap} A "
+                  f"(천장까지 {c_new - zmax:.1f} + 슬랩 바닥 오프셋 {zmin_slab:.1f})")
             # ⚠⚠ 슬랩 좌표 일치 — 원소 기호만 보던 것을 좌표까지 본다 (리뷰 §2-1).
             #   복합체 속 슬랩이 독립 슬랩과 다른 기하면 E_bind 에 슬랩 이완에너지
             #   (0.1-1 eV)가 통째로 섞인다 — 판정하려는 차이가 0.04 eV 규모다.
