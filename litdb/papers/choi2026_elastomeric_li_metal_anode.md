@@ -6,7 +6,9 @@
 > 단일-서랍 규칙(CLAUDE.md)에 따라 이관 — 그전까지 DFT webapp 목록에 안 떴다.
 
 
-> elements: Au F H Li N Ni O P
+
+
+> elements: F H Li N Ni O P
 > methods: dft, functional, kpoint, pseudo
 
 **인용:** Sungha Choi§, Donghyeon Nam§, Geon Choi§, Seonho Lee, Seungeun Paik, Yongkwon Song,

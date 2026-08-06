@@ -1,8 +1,6 @@
 # Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte — Anderson/McCalla (Adv. Energy Mater. 2024)
 
 > slug `anderson2024_llzo_comprehensive_dopant_screening` · DOI `10.1002/aenm.202304025` · type `exp (HT combinatorial synthesis + PXRD/Rietveld + EIS + DC σ_e + CV-ESW + CCD; 자체 계산 0)` · PDF 본문 `0d1f9207-51.…pdf`(12 pp) + SI `911157c5-51._Sup…pdf`(17 pp) · digested `2026-07-28` · **2차 패스(본문 그림 픽셀 독립 검증) `2026-08-04` → §19** · **3차 패스(SI PDF 직접 재판독, §19.5 확정) `2026-08-04` → §20** · status ✅ (본문 12 pp + SI 17 pp 전수 정독, **3중 검증 완료**)
-> elements: Li, La, Zr, O, B, Al, Fe, Zn, Ga, Na, K, Ca, Rb, Sr, Y, Ag, Cs, Ba, Pr, Nd, Sm, Gd, Tb, Dy, Ho, Er, Tm, Yb, Lu, Bi, Mg, Si, P, Sc, Ti, V, Cr, Mn, Co, Ni, Cu, Ge, Se, Nb, Mo, Ru, Rh, Pd, Cd, In, Sn, Ce, Eu, Hf, Ta, W, Re, Ir, Pt, Au, Tl, Pb, Te
-> methods: ESW
 >
 > **저자** Ethan Anderson, Elliot Zolfaghar, Antranik Jonderian, Rustam Z. Khaliullin, **Eric McCalla\*** — Department of Chemistry, **McGill University**, Montreal H3A 0B8, Canada
 > Received 2023-11-24 · Revised 2024-01-29 · Published online **2024-04-16** · Adv. Energy Mater. **2024**, 14, 2304025
@@ -31,6 +29,10 @@
 > 5. ✅ **핵심 긍정 결과는 더 단단해졌다**: 예측 site가 3자리 중 cubic% 1위 = **49/51 (96 %)**.
 >    반면 서술자 *크기* 는 cubic%를 전혀 예측 못 한다(**ρ ≈ 0**), BV↔DFT 자리 일치율은 **51 %**(§19.4).
 > 6. ✅ **§3e의 "5컷 순차 게이트 → 생존자 0"이 SI 표로 재실행돼 그대로 재현**: 59 → 19 → 6 → **1(Ga)** → **0**(§20.5).
+
+
+> elements: Al B C Cl F Ga H La Li N Nd O P S Sc Ta W Zr
+> methods: bandgap, bvse, cohp, dft, esw, functional, md, mlip
 
 ---
 

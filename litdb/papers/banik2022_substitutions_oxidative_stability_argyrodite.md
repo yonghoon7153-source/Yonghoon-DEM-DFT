@@ -4,6 +4,8 @@
 > **저자**: Ananya Banik,ᵃ Yunsheng Liu,ᵇ Saneyuki Ohno,ᶜ Yannik Rudel,ᵃ Alberto Jiménez-Solano,ᵈ Andrei Gloskovskii,ᵉ Nella M. Vargas-Barbosa,ᶠ **Yifei Mo,ᵇ\* and Wolfgang G. Zeier**ᵃ,ᶠ\* — ᵃUniv. Münster · ᵇUniv. Maryland (Mo group) · ᶜKyushu Univ. · ᵈMPI-FKF Stuttgart · ᵉDESY · ᶠHelmholtz-Institut Münster (IEK-12). 교신 yfmo@umd.edu, wzeier@uni-muenster.de
 > **[외부]** — Münster(Zeier)·Maryland(Mo)·Kyushu(Ohno). **우리 그룹(한양대/J-W Lee/Y.M.Lee/Cho/Kang/Cha) 아님.** ⚠ **핵심**: Yifei Mo = 우리 grand-potential 방법(Mo–Ong–Ceder 2012)의 *원저자*이고, Zeier = argyrodite 분야 표준 실험실. 즉 **우리 방법론 계보의 본가가, 우리 axis_1 결론(치환은 S-limited 산화 onset을 못 옮긴다)을 독립적으로 동일 도구로 발표**한 논문.
 
+
+
 > elements: B Cl Ge I Li O P S Sc Si
 > methods: bandgap, cohp, dft, elf, esw, functional, md, mlip, pdos
 

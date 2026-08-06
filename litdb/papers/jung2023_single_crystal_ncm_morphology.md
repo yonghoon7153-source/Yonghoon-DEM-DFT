@@ -17,6 +17,8 @@
 > > *결정성(SC vs PC) 의존 파괴역치* 항을 실험으로 정당화한다. (3) **PC 입계·내부공극 = Li⁺/전자 ambipolar 확산
 > > 병목**, SC monolith = 자유 확산 → 우리 **σ_electronic Trevisanello NCM(r) 내부-GB 보정항**의 실험적 근거.
 
+
+
 > elements: Li
 
 ---

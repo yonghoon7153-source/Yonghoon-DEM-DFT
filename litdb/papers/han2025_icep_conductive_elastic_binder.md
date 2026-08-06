@@ -8,6 +8,8 @@
 > 압밀/porosity 데이터 없음.** 우리에겐 **바인더 물성 앵커**(SDCP 전도성 바인더 모델링 / A3 `--coh` / W2 binder-σ 클래스 /
 > coat-vs-fibril 시딩)로 소비하는 논문. 절대값 전이는 각 행의 caveat 준수.
 
+
+
 > elements: F Li Mn O P
 > methods: dft
 

@@ -6,6 +6,8 @@
 > `kb/reviews/ECERD2600097_review_notes.md`. 이 digest 는 *원고가 무엇을 말하는가*,
 > 그쪽은 *우리가 그걸 어떻게 읽었는가* 다.
 
+
+
 > elements: B Br C Cl Cu F Fe Ge H I In Li N Nb O P S Y
 > methods: bvse, dft, elf, esw, functional, md, mlip, pdos
 

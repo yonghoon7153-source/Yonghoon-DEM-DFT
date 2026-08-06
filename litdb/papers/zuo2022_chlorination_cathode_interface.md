@@ -3,6 +3,8 @@
 > slug `zuo2022_chlorination_cathode_interface` · DOI `10.1002/anie.202213228` · type `exp (+ DFT 보조)` · PDF `d0102fe3-Angew…Zuo….pdf` · digested `2026-06-23` · status ✅
 > **저자**: Tong-Tong Zuo, Felix Walther, Jun Hao Teo, Raffael Rueß, Yubo Wang, Marcus Rohnke, Daniel Schröder, Linda F. Nazar, Jürgen Janek (Giessen / KIT / Braunschweig / Waterloo) · 62, e202213228
 
+
+
 > elements: Cl Co Li O P S
 > methods: dft, esw
 

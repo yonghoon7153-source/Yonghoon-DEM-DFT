@@ -1,11 +1,13 @@
 # Computational Screening of Cathode Coatings for Solid-State Batteries — Xiao/Miara/Wang/Ceder (Joule 2019)
 
 > slug `xiao2019_cathode_coating_screening` · DOI `10.1016/j.joule.2019.02.006` · type `DFT (HT-screening + NEB, 실험 0)` · PDF **`litdb/inbox/37. Computational Screening of Cathode Coatings for Solid-State Batteries.pdf`(본문 25 pp)** + **`litdb/inbox/37. Sup1) Computational Screening of Cathode Coatings for Solid-State Batteries.pdf`(정식 SI 단독본 10 pp: Fig S1·Table S1–S6 — 2026-08-03 실물 확보·전수 추출)** + **`litdb/inbox/37. Sup2) …pdf`(35 pp = 본문 25 + SI 10 합본; 신규 내용 0 — 2026-08-03 페이지 단위 실물 대조)** (inbox #37) · **사용자 분류 폴더 `DFT`** · digested `2026-07-28` · **본문 독립 재검증 `2026-08-03`(§14)** · **SI 독립 재검증 `2026-08-03`(§15 Sup2 / §16 Sup1 = Table S1 106행 전수·Fig S1 그래픽)** · status ✅
-> elements: Li, P, S, Cl, O, F, H, B, Ti, Zr, Nb, Ta, La, Cs, Ba, Ge, Ni, Co, Mn, Fe
-> methods: DFT, NEB, ESW
 > **저자**: Yihan Xiao¹², Lincoln J. Miara³, Yan Wang³, **Gerbrand Ceder***¹²⁴ — ¹UC Berkeley MSE, ²LBNL Materials Sciences Division, ³**Advanced Materials Lab, Samsung Research America**(3 Van de Graaff Dr, Burlington MA 01803), ⁴Lead Contact · Joule 3, 1252–1275 (Received 2018-11-21 / Revised 2019-02-09 / Accepted 2019-02-19 / **Published 2019-03-21**, 호수 날짜 2019-05-15) · Open Access CC BY-NC-ND · **본문 전문 실물 확인 완료**
 > **연구비**: 주 재원 = **Samsung Advanced Institute of Technology(SAIT)**, 보조 = Materials Project Program(KC23MP, DOE BES DE-AC02-05CH11231). 계산자원 NERSC + XSEDE(ACI-1548562). ⚠ SAIT는 **연구비 출처이지 저자 소속이 아님**(Miara·Wang 소속은 Samsung Research America).
 > ⚠ 이해상충 명시: "Some of the co-authors have patents filed on some coating compositions."
+
+
+> elements: Al B Cl Co Cr Cs F Fe H Li Nb O P S Si Ta Ti Zr
+> methods: arrhenius, bandgap, bvse, dft, esw, functional, md, mlip, neb, pseudo
 
 ---
 

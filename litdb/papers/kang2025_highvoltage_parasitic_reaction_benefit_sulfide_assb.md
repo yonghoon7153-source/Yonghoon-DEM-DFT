@@ -4,6 +4,8 @@
 > **저자**: Junhee Kang†, Yeokyung Lee†, Youngjin Bae, **Jong-Won Lee** (corresponding) — Hanyang University, Dept. of Materials Science & Engineering + Dept. of Battery Engineering (†동등기여). Chem. Commun. **2025, 61, 16850–16853**. Received 30 Jul 2025, Accepted 26 Sep 2025.
 > **[우리 그룹]** = 안용훈 그룹 계보(한양대 황화물 argyrodite SE). Kim ICCF / Kim conductive-agent / intertwined-review digest와 동일 태그.
 
+
+
 > elements: Cl Co Li Nd Ni O P S
 > methods: bandgap, dft, esw, functional, kpoint, md
 

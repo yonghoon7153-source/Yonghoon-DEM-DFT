@@ -31,6 +31,8 @@
 > 🔑 **이 논문이 우리 db 의 철회값을 판정한다** — `db/properties/external_benchmarks_symposium_2026.json`
 > 의 `csp_metastable_conductivity` 에서 2026-07-28 철회했던 값 3개의 진짜 출처가 여기다.
 
+
+
 > elements: Li Nb Ni O P S Si
 > methods: bvse, dft, md, msd
 

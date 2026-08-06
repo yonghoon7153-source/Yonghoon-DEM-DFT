@@ -11,8 +11,6 @@
 > 5.74 MB · **26 pp** · 네이티브 텍스트 레이어 보유 → 전문 재판독. 업로드본(`ff478144`)과 **동일 판본**.
 > **⚠ SI(Sup) 파일은 이번 투입분에도 없다** — §19 미해결 목록 그대로 유효 (게다가 프리프린트 자체의
 > "Supplementary data … can be found online at:" **링크가 공란**이다 → §21 N8).
-> elements: Li, P, S, Cl
-> methods: DFT, AIMD, MD, MLIP
 >
 > **저자** Ji Seon Kim^a, Ji Hoon Kim^a, Byeongsun Jun^b, Yong Jun Jang^b, **Sang Uck Lee^a\*** —
 > ^a 성균관대 화학공학 · ^b **현대자동차 (화성)** · 교신 `suleechem@skku.edu`
@@ -30,6 +28,10 @@
 > 그리고 **덱 값 중 D 두 개의 자릿수가 틀렸다** (§14).
 > 🔑 **`papers/kim2024_mtp_argyrodite_disorder_gb.md` 의 직계 후속** — 그 논문이 이 논문의 ref [35]이고,
 > functional(optB88-vdW)·하이퍼파라미터(R_cut/lev_max)·벌크 D 기준값(1.6e-7)을 전부 거기서 상속한다.
+
+
+> elements: Cl Li P S
+> methods: arrhenius, bader, cohp, dft, dos, elf, esw, functional, kpoint, md, mlip, msd, neb, pdos, pseudo
 
 ---
 

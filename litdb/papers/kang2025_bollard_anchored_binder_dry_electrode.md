@@ -5,7 +5,9 @@
 > ⚠ **동명 구분**: 제1저자 **Jihyeon Kang (중앙대 Chung-Ang)** ≠ 랩 자체논문의 **Junhee Kang (한양대, `kang2025_toughened_bimodal_nca_lzo`)** — 다른 사람, 다른 논문.
 > 데이터 CSV: `docs/data/kang2025_bollard_binder_anchors.csv`
 
-> elements: C F Li Na O P
+
+
+> elements: C F Li Na O
 > methods: dft, mlip
 
 ## 1. 한 줄 요약

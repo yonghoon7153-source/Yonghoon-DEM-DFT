@@ -8,8 +8,6 @@
 >   재현 코드 `tools/litdb/jun2022_esi_verify.py`(Table S1/S2/S3 전수 재계산) · `tools/litdb/jun2022_esi_figS3_extract.py`(Fig S3a 마커 복원·지수 재피팅).
 >   → **본문·ESI 양쪽이 모두 실물 대조를 마쳤다.** 이제 이 digest 에 미검증 구간은 없다.
 >
-> elements: Li, P, S, Cl, Br, I
-> methods: DFT, AIMD
 >
 > **저자** **Byeongsun Jun**¹ · **Sang Uck Lee**¹'²* — ¹한양대(ERICA, 안산) 바이오나노학과 · ²한양대 응용화학과 / Center for Bionano Intelligence Education and Research
 > 지원: NRF 기초연구 2021R1A2B5B01002879 · 창의소재디스커버리 2018M3D1A1058714 · **계산자원 KISTI (KSC-2021-CRE-0017)**
@@ -37,6 +35,10 @@
 >
 > ⚠ **표기 주의**: 이 논문의 **4c ≡ Kraft/Adeli/우리 4d**(cage 중심 tetrahedral void). de Klerk 2016과 같은 관례.
 > 이하 digest 는 **논문 표기(4a/4c)를 그대로** 쓰되, 우리 db 와 대조할 때만 "4c(=우리 4d)"로 병기한다.
+
+
+> elements: B Cl I Li O P S
+> methods: arrhenius, bandgap, bvse, dft, functional, kpoint, md, mlip, msd, neb, pseudo
 
 ---
 

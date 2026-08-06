@@ -7,8 +7,6 @@
 > · **2026-08-04 SI(24 pp) 실물 독립 검증 완료 — §20** (자기철회/정정 3건 · 신규 적발 21건 ·
 >   Fig S1–S12 + Table S1–S2 전수 재판독 300–900 dpi · **MSD 원자료 40궤적 전수 전사**. ⚠ 본문 실물은 이번 회차에 없음 → §19 승계)
 >
-> elements: Li, Si, Ge, Sn, S, P, Cl, Br, O, Na, Y, Al
-> methods: DFT, AIMD, MD, MLIP, phonon
 >
 > **저자** Ji Hoon Kim¹, Ji Seon Kim¹, Yong Hui Kim¹, **Byeongsun Jun²**, **Yong Jun Jang²**, **Sang Uck Lee**¹*
 > — ¹성균관대 화학공학 · **²현대자동차 (화성)**
@@ -22,6 +20,10 @@
 > ⚠ **우리 문제설정과 다른 축이다.** `kb/projects/symposium_2026_competitive_analysis.md` §"하지 않기로 하는 것"에서
 > **CSP는 명시적으로 하지 않기로 한 것**이다(우리는 host 고정 개질). 이 digest의 목적은 "따라하기"가 아니라
 > **(a) 덱 수치 정정 (b) 이식 가능/불가능 항목의 확정** 이다. §9–§11에 그 판정을 몰아뒀다.
+
+
+> elements: Al Au B Bi Br Cl Ge Li Mn Na O P Pt S Se Si Sn Y
+> methods: arrhenius, bader, bvse, cohp, dft, dos, elf, esw, functional, kpoint, md, mlip, msd, neb, pdos, phonon, pseudo
 
 ---
 

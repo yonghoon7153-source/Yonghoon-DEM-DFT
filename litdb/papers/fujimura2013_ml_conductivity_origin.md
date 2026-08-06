@@ -1,9 +1,11 @@
 # Accelerated Materials Design of Lithium Superionic Conductors Based on First-Principles Calculations and Machine Learning Algorithms — Fujimura & Seko et al. (Adv. Energy Mater. 2013)
 
 > slug `fujimura2013_ml_conductivity_origin` · DOI `10.1002/aenm.201300060` · type `DFT+AIMD(FPMD)+ML(SVR); 자체 실험 0 — 실험 σ 95점은 문헌 소환 라벨` · PDF **본문 `litdb/inbox/42. Accelerated Materials Design of Lithium Superionic Conductors Based on First-Principles Calculations and Machine Learning Algorithms.pdf`(6 pp = 980–985)** · **SI 미보유**(Fig S1/S2·FPMD 시간규모·SA 상세·변수 유의도는 n/a) · (inbox #42) · **사용자 분류 폴더 `DFT`** · digested `2026-07-28` · **본문 실물 독립 검증 `2026-08-03`(§14 — 전문 텍스트 추출 + Fig 1/2/3/4 이미지 판독(600–700 dpi 크롭 4매); 교정 6건·신규 적발 5건·미결 0)** · status ✅ **(본문 실물 대조 완료 — SI만 미보유)**
-> elements: Li, O, Zn, Mg, Al, Ga, Si, Ge, P, As
-> methods: DFT, AIMD
 > **저자**: Koji Fujimura⁺ / **Atsuto Seko**⁺(공동1저자, [†] equal) / Yukinori Koyama / Akihide Kuwabara / Ippei Kishida / Kazuki Shitara / Craig A. J. Fisher / Hiroki Moriwake / **Isao Tanaka***(교신, tanaka@cms.mtl.kyoto-u.ac.jp) — Kyoto Univ. 재료공학 + JFCC(Japan Fine Ceramics Center) 나노구조연구소 + Osaka City Univ. 기계공학 · Communication · Received 2013-01-16 / online 2013-04-19 · MEXT Grant-in-Aid(Challenging Exploratory Research)
+
+
+> elements: Al B Ge Li Mg O P Si Zn
+> methods: arrhenius, bvse, dft, functional, md, mlip, msd, pseudo
 
 ---
 

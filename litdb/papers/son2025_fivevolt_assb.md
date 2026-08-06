@@ -5,6 +5,8 @@
 > **소속 판정**: **[외부]** — Yonsei(정윤석)·Dongguk(남경완)·KAIST(서동화) 중심. **우리 그룹(한양대 Jong-Won Lee / Yong Min Lee / Kuk Young Cho 계보) 아님**. ⚠ Yonsei = 우리 그룹 동반 [KimICCF]/[KimCA]의 Yong Min Lee와 *같은 학교지만 다른 그룹*(정윤석 ≠ 이용민) → "우리 그룹"으로 태그 금지.
 > Nature Energy 10, 1334–1346 (2025년 11월호). Received 2024-07-30, Accepted 2025-08-11.
 
+
+
 > elements: Cl Co F Li Mn Nb Ni O P S Ti Y Zr
 > methods: arrhenius, dft, esw, functional, md, mlip, msd, pseudo
 

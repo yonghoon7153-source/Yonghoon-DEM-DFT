@@ -4,6 +4,8 @@
 > slug `choi2025_mlip_cu_taxn_interfacial_adhesion` · DOI `10.1021/acsaelm.5c02157` · type `MLIP (SevenNet) + DFT(VASP) reference + SMD` · PDF `82ea256b/422126c7-17….pdf` · digested `2026-06-26` · status ✅ · 태그 **[외부·methods·다른재료(반도체 interconnect)]**
 > **저자**: Jeong Min Choi, Jaehoon Kim (공동1저자), Ji-Hwan Lee, Won-Joon Son, **Seungwu Han*** (Seoul National Univ. MSE/RIAM + KIAS; Samsung Semiconductor R&D CSE Team) · ACS Appl. Electron. Mater. 2025, 7, 11165–11179 · Received 2025-10-13, Published 2025-12-03
 
+
+
 > elements: Li N Nd O Ta
 > methods: adhesion, bandgap, dft, elastic, functional, kpoint, md, mlip, msd, pseudo
 

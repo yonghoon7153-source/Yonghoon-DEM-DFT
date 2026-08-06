@@ -1,9 +1,11 @@
 # Elastic Properties of Alkali Superionic Conductor Electrolytes from First Principles Calculations — Deng et al. (J. Electrochem. Soc. 2016)
 
 > slug `deng2016_elastic_superionic_electrolytes_dft` · DOI `10.1149/2.0061602jes` · type `DFT (elastic full tensor, 23 SICEs)` · PDF `litdb/inbox/34. Elastic Properties….pdf` (**inbox #34, 사용자 분류 `DFT`**; 최초 digest는 업로드본 "35." 명명 — 동일 논문) · digested `2026-07-28` · **실물 감사 `2026-07-28`** (본문 9 pp = IOP 표지+A67–A74; Table I–III·methods·observations·discussion 전값 digest 일치 — 논문 자체의 LLTO E 262.4(Table II)/262.5(Table III) 반올림 불일치까지 표별 정확; §4.5 인용문 1건 교정 "two neighboring 48h"; **SI(PBE/optB88 전체값) 여전히 미보유 확정**) · status ✅ · **[외부]**
-> elements: Li, Na, P, S, Cl, Br, I, O, Si, Ge, Sn, Ti, Zr, Nb, Ta, La
-> methods: DFT, elastic
 > **저자**: Zhi Deng, Zhenbin Wang, Iek-Heng Chu, Jian Luo, **Shyue Ping Ong*** — **UC San Diego NanoEngineering** (Ong 그룹 = pymatgen/Materials Project 계열; *우리 한양/J-W Lee/Y.M.Lee 아님 → [외부]*). J. Electrochem. Soc. **163**(2) A67–A74 (2016). Submitted 2015-08-31 / revised 2015-10-12 / published 2015-11-05. NSF DMREF 1436976 · XSEDE.
+
+
+> elements: Br Cl I La Li Na O P S Ti Zr
+> methods: dft, dos, elastic, functional, md, mlip, neb, pseudo
 
 ---
 

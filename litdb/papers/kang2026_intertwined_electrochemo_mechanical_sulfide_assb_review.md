@@ -4,6 +4,8 @@
 > **저자**: **Junhee Kang**ᵃ, **Hong Rim Shin**ᵃ, **Yeokyung Lee**ᵃ, **Jong-Won Lee**\*ᵃᵇ — ᵃ Division of Materials Science and Engineering, **Hanyang University** (222 Wangsimni-ro, Seongdong-gu, Seoul 04763, Korea); ᵇ Department of Battery Engineering, Hanyang University. 교신 jongwonlee@hanyang.ac.kr.
 > *Chem. Commun.* **2026**, 62, 10277–10294 (18 pp). Received 6 Nov 2025 / Accepted 24 Apr 2026. 지원: NRF Korea RS-2025-25441254, RS-2025-25418010.
 
+
+
 > elements: B Cl F H Li N Nd Ni O P S
 > methods: bandgap, dft, esw, functional, md, phonon
 

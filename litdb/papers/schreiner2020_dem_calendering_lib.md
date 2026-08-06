@@ -12,7 +12,9 @@
 > - **본 논문 Schreiner 2020 (TU Munich, Institut für Werkzeugmaschinen und Betriebswissenschaften iwb)** = ★ *기계·생산공학(machine/process)* 초점. **상용 EDEM** + **EEPA** + **Bonding**, 그리고 **공정 파라미터를 *예측*하는 USER TOOL**(압력·온도·압연속도·calender 사양 → 목표 전극물성). 본문이 Sangrós [15]를 "전도도-DEM peer"로, Schreiner et al. [17](2019, *자기 그룹의 NMC622 calendering 선행*)을 직접 인용 — **즉 같은 NMC622 calendering 라인의 *공정-설계 확장*판**.
 > ⇒ 4편이 모두 **rigid 구 + CONTACT 탄소성 + bond, 형상소성 없음, 액체전해질 LIB, porosity=GOOD** = frame[5] 분업의 *네 번째 독립 확인*. 본 논문의 *유일한 진짜 lead* = **공정-파라미터 예측 도구(USER TOOL)** — 우리(와 Sangrós/Ngandjong/Lyu)가 *물성*에 집중하는 동안 이들은 *생산공정 설정*을 예측한다.
 
-> elements: B Li
+
+
+> elements: Li
 > methods: elastic
 
 ---

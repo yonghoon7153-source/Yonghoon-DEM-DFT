@@ -6,7 +6,9 @@
 > 단일-서랍 규칙(CLAUDE.md)에 따라 이관 — 그전까지 DFT webapp 목록에 안 떴다.
 
 
-> elements: Li P
+
+
+> elements: Li
 > methods: dft
 
 **인용:** Rakhwi Hong†, Jingyu Choi†, Jaejin Lim, Seungyeop Choi, Dongyoon Kang, Wonseok Yang,

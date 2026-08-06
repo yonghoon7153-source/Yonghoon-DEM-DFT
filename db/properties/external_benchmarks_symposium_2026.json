@@ -508,7 +508,7 @@
      "confidence": "★ 소환값"
     },
     {
-     "quantity": "LiPON E vs Li 금속 E",
+     "quantity": "LiPON shear G vs Li 금속 shear G",
      "value": "31 vs 3.4",
      "unit": "GPa",
      "condition": "[Miao23] 이 Monroe–Newman 기준(G_buffer ≥ 2·G_Li)의 실증으로 든 짝",
@@ -822,7 +822,7 @@
    }
   ]
  },
- "updated": "2026-08-05",
+ "updated": "2026-08-06",
  "changelog": [
   {
    "date": "2026-08-03",

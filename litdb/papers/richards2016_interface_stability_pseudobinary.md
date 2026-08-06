@@ -1,11 +1,13 @@
 # Interface Stability in Solid-State Batteries — Richards/Miara/Wang/Kim/Ceder (Chem. Mater. 2016)
 
 > slug `richards2016_interface_stability_pseudobinary` · DOI `10.1021/acs.chemmater.5b04082` · type `DFT (grand-potential + pseudo-binary 계면 열역학; 실험 0)` · PDF **본문 `litdb/inbox/39. Interface Stability in Solid-State Batteries.pdf`(8 pp — 2026-08-03 실물 확보)** + **SI `litdb/inbox/39. Sup) Interface Stability in Solid-State Batteries.pdf`(19 pp — 2026-08-03 실물 확보, `cm5b04082_si_001`)** (인박스 파일번호 39) · **사용자 분류 폴더 `DFT`** · digested `2026-07-28` · **본문 실물 독립 재검증 `2026-08-03`(§18 — Fig 1c/2/4 픽셀 정량 전표 신규, 교정 1건)** · **SI 실물 전수 검증 `2026-08-03`(§19 — Tables S1–S9 343행 + Figs S1–S7 벡터 정확 판독 259쌍, 불일치 0, 교정 2건)** · status ✅ **(본문·SI 모두 실물 대조 완료 — digest 완결)**
-> elements: Li, P, S, Cl, O, N, F, Br, I, H, B, Ge, Sn, Ti, Zr, La, Nb, Al, Mg, Zn, Y, In, Cd, Mn, Co, Ni, Fe, V
-> methods: DFT, ESW
 > **저자**: William D. Richards,† Lincoln J. Miara,‡ Yan Wang,† Jae Chul Kim,† **Gerbrand Ceder***,†,¶,§ (†MIT · ‡Samsung Advanced Institute of Technology–USA · ¶UC Berkeley · §LBNL) · *Chem. Mater.* 2016, 28, 266−273 · Received 2015-10-20 / **Revised 2015-12-02** / Published 2015-12-07 · 교신 gceder@berkeley.edu · refs 59
 > **연구비**: **Samsung Advanced Institute of Technology(SAIT) 단독 지원** + 계산자원 XSEDE(NSF **ACI-1053575**). 이해상충 없음 선언. ⚠ 공저자 Miara·Y.Wang이 SAIT 소속 = **자금원과 저자 소속이 같은 산업 지원 연구**(결론 자체는 순수 열역학이라 편향 여지는 작지만, "SAIT 계열 3부작 [Rich16]·[Xiao19]·[Ong13]"의 공통 배경으로 기록).
 > 첫 페이지 실물 대조 완료 — 과제 메모의 예상 정체(Richards, Chem. Mater. 28, 266, DOI 10.1021/acs.chemmater.5b04082)와 **일치**.
+
+
+> elements: Al B Br Cl Co F Fe Ge H Li Mn N Ni O P S Ti V
+> methods: cohp, dft, esw, functional, md, mlip, neb, pseudo
 
 ---
 

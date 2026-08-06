@@ -17,7 +17,9 @@
 > 62:37/72:27/82:17 ↔ 우리 φ_SE 매핑). (3) **활성화에너지(온도 스윕 30/45/60 °C)·전하전달 R_ct·이중층 C_dl =
 > 우리가 *전혀* 안 갖는 축** → T-의존 σ + R_ct 가 우리 *constriction-only* 솔버가 못 잡는 실험 과정임을 명시.
 
-> elements: Cl Li Nb O S Zr
+
+
+> elements: Cl Li Nb O Zr
 > methods: arrhenius
 
 ---

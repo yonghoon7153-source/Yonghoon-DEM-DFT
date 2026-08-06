@@ -3,6 +3,8 @@
 > slug `dyre2004_hopping_models_ion_conduction_noncrystals` · arXiv `cond-mat/0407083` (no journal DOI; this is the short proceedings/lecture companion to the full review **Rev. Mod. Phys. 72 (2000) 873**) · type `theory/review (analytic + Monte-Carlo lattice hopping simulation)` · PDF `82ea256b-…12._Hopping_models…noncrystals.pdf` (mixed into the `82ea256b` upload folder) · digested `2026-06-26` · status ✅ (filed as **[외부] / theory framework**)
 > **저자**: Jeppe C. Dyre, Thomas B. Schrøder — Department of Mathematics and Physics (IMFUFA), Roskilde University, DK-4000 Roskilde, Denmark (dyre@ruc.dk)
 
+
+
 > elements: Li O S
 > methods: arrhenius, bader, bvse, cohp, dft, kpoint, md, mlip, msd, neb
 

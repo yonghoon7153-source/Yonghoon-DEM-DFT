@@ -4,6 +4,8 @@
 > **저자**: Xiaoyu Liu, Zhijian Liu, Hao Yang, Piao Qing, Weifeng Wei, Xiaobo Ji, **Yuejiao Chen***, **Libao Chen*** (Central South University, Changsha — State Key Lab of Powder Metallurgy + College of Chemistry) · Adv. Mater. Interfaces 2022, **9, 2200011** (Received 2022-01-03, Published 2022-03-03)
 > **⚠ 논문 정체**: argyrodite/황화물 SE 논문 **아님**. **리튬 금속 음극(Li metal anode) + 집전체(Cu) 위 lithiophobic 코팅(h-BN)** 논문. 우리 캠페인의 *새 축*. 보관·digest 이유 = **DFT Li-흡착E 방법론을 우리 VGCF+h-BN ORCA 프로젝트가 재사용**하기 위함(§10).
 
+
+
 > elements: B Li N O P
 > methods: adhesion, bandgap, dft, functional, md, mlip, neb, pseudo
 

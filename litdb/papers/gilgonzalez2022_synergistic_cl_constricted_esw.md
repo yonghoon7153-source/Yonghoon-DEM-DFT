@@ -3,6 +3,8 @@
 > slug `gilgonzalez2022_synergistic_cl_constricted_esw` · DOI `10.1016/j.ensm.2021.12.008` · type `DFT(AIMD + constrained-ensemble) + exp` · PDF `89e5cdc5…Synergistic…pdf` (+ SI docx `06043fdc`) · digested `2026-06-23` · status ✅
 > **저자**: Eva Gil-González, Luhan Ye, Yichao Wang, Zulipiya Shadike, Zhenming Xu, Enyuan Hu, **Xin Li*** (Harvard SEAS + Brookhaven) · ESM 45 (2022) 484–493
 
+
+
 > elements: Cl Li P S
 > methods: arrhenius, bandgap, dft, esw, md, pseudo
 

@@ -3,7 +3,9 @@
 
 > slug `wet_processing_resolved_am_ssb_cathode_manufacturing` · DOI `10.1016/j.ensm.2024.103747` · type `DEM (LAMMPS, multisphere resolved-AM; wet-process slurry→dry→calender; exp 밀도/porosity 보정) + GeoDict 연속체 σ_ionic/σ_e` · PDF `WetProcessing_ResolvedAM_SSB_CathodeManufacturing_Simulation.pdf` · digested `2026-06-26` · status ✅
 
-> elements: B Li
+
+
+> elements: Li
 > methods: elastic
 
 ---

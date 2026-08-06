@@ -1,11 +1,13 @@
 # Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Batteries — Qian et al. (Angew. Chem. Int. Ed. 2026)
 
 > slug `qian2026_decanoate_coating_lpscl_moisture_interface` · DOI `10.1002/anie.9983580` (Angew. Chem. Int. Ed. 2026, e9983580 — ⚠ 비정상 DOI 번호 체계, early-view 플레이스홀더 의심) · type `exp (코팅·전기화학) + DFT 보조(분자 conformer + 슬랩 표면E + 흡착 결합E)` · PDF `inbox/44. Enabling Moisture…pdf` (본문 12 pp) + `inbox/44. Sup) Enabling Moisture…pdf` (SI: Methods + Fig S1–S16 + Table S1–S4) · digested `2026-08-03` · 태그 **[외부]** · 사용자 분류 폴더 `DFT` · status ✅
-> elements: Li, P, S, Cl, C, O, H, Ni, Co, Mn, In
-> methods: DFT, XPS, ToF-SIMS, FTIR, XRD, EIS, CV, cryo-TEM, FIB-SEM, EDX
 > **저자**: Lanting Qian, Cameron Dean, Ivan Kochetkov, Hengning Chen, Yangyang Huang, **Linda F. Nazar\*** (lfnazar@uwaterloo.ca) — Department of Chemistry, Waterloo Institute of Nanotechnology, **University of Waterloo**, Ontario, Canada.
 > Received 2026-01-03 / Revised 2026-05-11 / Accepted 2026-05-20. Open access (CC-BY). SI 원본 파일명 `anie73015-sup-0001-SuppMat.docx`.
 > **그룹 계보**: **Nazar = [Adeli] (adeli2019 halide substitution) 교신저자와 동일**, **[Zuo] (zuo2022) 공저자**. Ivan Kochetkov는 [Adeli] 공저자와 동일 인물. → 우리 litdb 안에서 **Waterloo/Nazar 라인 3번째 논문**이자, **[Adeli] 조성축(Cl-rich) → [Zuo] 계면축 → 본 논문 코팅축**으로 이어지는 같은 그룹의 세 번째 레버.
+
+
+> elements: B C Cl Co H Hf Li Nb O P S Zr
+> methods: bader, cohp, dft, esw, functional, kpoint, mlip, pdos, pseudo
 
 ---
 

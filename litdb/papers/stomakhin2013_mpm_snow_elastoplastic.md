@@ -9,8 +9,7 @@
 > 압축경화·압축성 cap-유사) vs 우리 **von Mises J2**(등적) 구성식 대조; ④ F_P ↔ 우리 누적소성변형 Σdg.
 > Frame[5]: MPM = 우리의 **역학/morphology 절반**(연속체 소성 엔진).
 
-> elements: I
-> methods: elastic
+
 
 ---
 

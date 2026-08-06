@@ -22,6 +22,8 @@
 > 설계는 우리가 이미 채우고**, **cycling/operando 시간축은 우리도 공유하는 gap** 이다 (frame[5]: 정직한
 > 분업 + 우리 contribution 위치).
 
+
+
 > elements: Cl Co Li O P S
 > methods: arrhenius, bandgap
 

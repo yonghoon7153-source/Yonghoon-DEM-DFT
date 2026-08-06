@@ -5,7 +5,9 @@
 
 > ★ **이것은 calendering(압연) DEM 두 편(`sangros2019_*`, `ngandjong2021_*`)과 *공정 위치가 다르다*.** Sangrós/Ngandjong = **습식 슬러리·건조·압연**(전극을 누르는 densification). 본 논문 = 그보다 **앞 단계인 *건식 혼합(dry high-intensity mixing)*** — LFP+CB+SE 입자를 고속 회전 믹서에서 충돌·전단시켜 **heteroaggregate(이종응집체)** 를 만드는 **mechanofusion/aggregation 공정**을 DEM으로 시뮬한다. 즉 cold-press(우리)·calendering(LIB)이 *압밀*이라면 본 논문은 *그 전의 입자-조립(mixing)*. 그리고 본 논문의 **방법론적 핵심 = "coarse-graining(입자 크기 26.65× 확대로 입자수 격감) + force-scaling(거친 입자의 접촉력을 f²로 스케일해 원래 입자의 응력·충돌당 에너지가 보존되게)"** 인데, 이 **force-scaling이 우리 18× E-연화와 같은 "DEM 접촉력/강성을 인위적으로 조정하는" 부류**라 §A/§B에서 두 철학을 직접 비교한다.
 
-> elements: B Cl I In Li O P S
+
+
+> elements: Cl I In Li O P S
 
 ---
 

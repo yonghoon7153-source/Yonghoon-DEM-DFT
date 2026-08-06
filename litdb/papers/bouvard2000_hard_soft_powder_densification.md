@@ -2,7 +2,9 @@
 
 > slug `bouvard2000_hard_soft_powder_densification` · DOI `10.1016/S0032-5910(99)00293-4` · type `exp+theory(review)` · PDF `Bouvard_2000_PowderTech_Densification_of_hard_and_soft_powder_mixtures.pdf` · digested `2026-06-23` · status ✅
 
-> elements: Al B Ti
+
+
+> elements: B Ti
 
 ## 1. 한 줄 요약
 경(rigid, 비변형) 입자 + 연(plastic/visco-plastic, 변형) 입자 혼합물의 가압 압밀을 **연상 항복응력 vs 압력**으로 두 체제로 나눈 리뷰 — **(A) 저압(σ_y_soft ≫ P): 재배열 지배, 경입자 多가 오히려 유리; (B) 고압(연입자 변형 지배): 경입자가 압밀을 방해**하고, 경입자가 **작을수록·각질일수록·percolating할수록** 더 심하게 방해. 우리 **SE(연)+AM(경)** 복합체의 porosity-vs-조성 (Furnas/dip) 이야기의 **물리적 원형(prototype)** — 단 소재는 금속·세라믹, 압밀은 HIP/die-press 고온이라 절대값 전이 불가, 추세·메커니즘만 차용.

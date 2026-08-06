@@ -2,7 +2,9 @@
 
 > slug `schneider2023_particle_size_pressure_transport` · DOI `10.1002/aenm.202203873` · type `DEM+FVA(continuum) + exp(EIS) + AIMD` · PDF `Schneider_2023_AdvEnergyMater_ParticleSize_Pressure_TransportProperties_FastConductor.pdf` · digested `2026-06-26` · status ✅
 
-> elements: B Li Na P S Si
+
+
+> elements: Li Na P S Si
 > methods: md, msd
 
 ---

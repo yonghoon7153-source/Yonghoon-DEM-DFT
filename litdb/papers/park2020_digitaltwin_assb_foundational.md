@@ -6,6 +6,8 @@
 > `docs/lit_park2020_digitaltwin_assb_foundational.md` 에서 논문 에이전트가 작성. 단일-서랍 규칙(CLAUDE.md)에 따라 이관.
 
 
+
+
 > elements: Li Nb O S
 
 **인용:** Joonam Park, Kyu Tae Kim, Dae Yang Oh, Dahee Jin, Dohwan Kim, **Yoon Seok Jung\***, **Yong Min Lee\***,

@@ -4,6 +4,8 @@
 > **저자**: Le Shi, Ao Xu, **Tianshou Zhao\*** (metzhao@ust.hk) · Dept. of Mechanical & Aerospace Engineering, **HKUST** (홍콩과기대), Clear Water Bay, Kowloon, Hong Kong · *ACS Appl. Mater. Interfaces* **2017, 9, 1987–1994** · Received 2016-11-14 / Published 2016-12-22 · 지원 RGC HK Project 16213414
 > ⚠ **비-argyrodite·신규 프로젝트(h-BN@VGCF / Li-metal anode / ORCA)의 DFT 방법론 핵심 레퍼런스**. 우리 LPSCl 캠페인 물성(comp1/modelc)과 **직접 수치 비교 대상 아님** — §7 참조.
 
+
+
 > elements: B Li N O
 > methods: bandgap, dft, dos, elastic, functional, md, mlip, neb, pdos, pseudo
 

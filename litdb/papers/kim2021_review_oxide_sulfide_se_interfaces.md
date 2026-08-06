@@ -3,6 +3,8 @@
 > slug `kim2021_review_oxide_sulfide_se_interfaces` · DOI `10.1002/aenm.202002689` · type `review (DFT+exp 종합)` · PDF `4229e857…SolidState_Li_Metal_Batteries…pdf` (+ SI `98afe5b4…`) · digested `2026-06-23` · status ✅
 > **저자**: **Kun Joong Kim, Moran Balaish** (공동 1저자), Masaki Wadaguchi (NGK Spark Plug), Lingping Kong, **Jennifer L. M. Rupp\*** (MIT, Dept. Materials Science & Eng. + EECS; Electrochemical Materials Lab) · Adv. Energy Mater. **11** (2021) 2002689, **63 페이지 리뷰** · Received 20 Aug / Revised 22 Sep / Published 9 Nov 2020 · © Wiley-VCH
 
+
+
 > elements: Al Br C Cl Co F Ge H I La Li N O P S Si Ti Zr
 > methods: bandgap, dft, elastic, esw, functional, md, pdos
 

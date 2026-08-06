@@ -22,6 +22,8 @@
 > ±몇 %p 오차의 **추세(TREND)** 일 뿐 정밀 stated 값이 아니다. + 소재는 **75Li₂S·25P₂S₅ glass** (Li₃PS₄ 조성의 *유리*,
 > glass-ceramic 아님), **우리 LPSCl argyrodite(Li₆PS₅Cl) 아님.** 자세한 판정은 §11.
 
+
+
 > elements: Co Li O P S Zr
 > methods: dft, elastic
 

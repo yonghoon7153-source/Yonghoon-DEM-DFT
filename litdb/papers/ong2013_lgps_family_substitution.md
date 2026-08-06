@@ -1,10 +1,12 @@
 # Phase stability, electrochemical stability and ionic conductivity of the Li₁₀±₁MP₂X₁₂ (M = Ge, Si, Sn, Al or P, and X = O, S or Se) family of superionic conductors — Ong/Mo/Richards/Miara/Lee/Ceder (Energy Environ. Sci. 2013)
 
 > slug `ong2013_lgps_family_substitution` · DOI `10.1039/c2ee23355j` · type `DFT+AIMD (순수 계산, 실험 0)` · PDF **본문 `litdb/inbox/43. Phase stability, electrochemical stability and ionic conductivity of the Li10±1MP2X12 …pdf`(9 pp = 148–156)** · **ESI 미보유**(논문이 참조하는 ESI는 별도 파일 — 안정상 전체 목록·이완 구조 상세·σ 환산식은 n/a) · (inbox #43) · **사용자 분류 폴더 `DFT`** · digested `2026-07-28` · **본문 실물 독립 검증 `2026-08-03`(§18 — 전문 텍스트 추출 + Fig 1–5·Eq 1–2 이미지 판독, Fig 2 DOS 3패널 픽셀 디지타이즈; 교정 5건·신규 적발 9건·미결 3건)** · status ✅ **(본문 실물 대조 완료 — ESI만 미보유)**
-> elements: Li, Ge, Si, Sn, Al, P, S, O, Se
-> methods: DFT, AIMD, DOS, ESW
 > **저자**: Shyue Ping Ong, Yifei Mo, William Davidson Richards (MIT DMSE) · Lincoln Miara, Hyo Sug Lee (Samsung SAIT, Cambridge MA) · **Gerbrand Ceder*** (MIT) · Energy Environ. Sci. 2013, **6**, 148–156 · Received 2012-06-15 / Accepted 2012-10-01 / Published online 2012-10-02
 > 자금: Samsung SAIT + TeraGrid(PSC)·NERSC(DOE DE-AC02-05CH11231)
+
+
+> elements: Al Ge Li O P S Se Si Sn
+> methods: arrhenius, bandgap, bvse, cohp, dft, dos, esw, functional, md, mlip, msd, pseudo
 
 ---
 

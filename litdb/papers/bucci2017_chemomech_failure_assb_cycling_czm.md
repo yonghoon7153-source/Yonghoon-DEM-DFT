@@ -22,6 +22,8 @@
 > 우리 E_eff=1.35(DEM)/1.53(MPM) 은 **압밀-bed 유효 모듈러스**(granular 럼핑 프록시).  "compliant SE 가 더 깨진다"(real-15)와
 > 우리 "softened E_eff=1.35"(effective) 는 **다른 층위** — §우리-대비에서 정밀 구분.
 
+
+
 > elements: La Li O P S
 > methods: elastic
 

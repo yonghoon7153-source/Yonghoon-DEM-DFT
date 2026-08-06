@@ -4,7 +4,9 @@
 > **저자**: Zhihui Ma, **Ping Li** (교신, *lstlbing@126.com*), Jie Shi, Feng Sun, Yidi Fu, Zhen Wang, Yixing Fang, Junmei Han, **Xuanhui Qu** · *J. Mater. Chem. A* **2024, 12, 27011–27021**
 > **소속**: **USTB(北京科技大学)** Beijing Advanced Innovation Center for Materials Genome Engineering, Inst. Adv. Materials & Tech. · **외부 그룹 (≠ 우리 한양/Jong-Won Lee/Y.M.Lee/Cho/Cha/Kang)**
 
-> elements: Br Cl Cu F H I Li O P S Sb Sn
+
+
+> elements: Br Cl Cu H I Li O P S Sb Sn
 > methods: arrhenius, bader, bandgap, cohp, dft, dos, elf, esw, functional, md, mlip, msd, neb, pdos, pseudo
 
 ---

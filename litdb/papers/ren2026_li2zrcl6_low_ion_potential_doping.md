@@ -2,13 +2,15 @@
 
 > slug `ren2026_li2zrcl6_low_ion_potential_doping` · DOI `10.22541/authorea.15005774/v1` · type `exp + DFT/AIMD/NEB/phonon` ·
 > 본문 PDF `80a8e6ce` (Authorea 표지 2 pp + 원고 29 pp = 31 pp) + **SI `205249ff`.docx**(Fig S1–S20 캡션 · Table S1–S6 · eq 1–5 · ref 1–19) 전문 정독 · digested `2026-07-28` · **2차 패스(본문 그림 픽셀 독립 검증) `2026-08-04` → §20** · status ✅
-> elements: Li, Zr, Cl, Er, Nd
-> methods: DFT, AIMD, NEB, phonon, XPS, Raman
 >
 > **저자** Yuan Ren\*(교신, `yuanren@imust.edu.cn`), Dewang Fu, Wenke Feng, Yixiao Zhai, Anning Song, Pan Zhang, Chengyu Zhang, Yan Li, Chao Zhang
 > — **Inner Mongolia University of Science & Technology**(内蒙古科技大学, Baotou 014010), School of Mechanical Engineering (Chao Zhang만 School of Life Science and Technology)
 > 자금: NSFC **52162033** · 내몽고 청년과기인재 NJYT24004 · 내몽고자연과학기금 2024LHMS05050 · JG2025034C · 2024QNJS006
 > Posted **2026-07-07**, Authorea. Wiley 원고 템플릿("Article category: Full Paper / Subcategory: Lithium Ion Batteries", Received/Revised/Published online **공란**).
+
+
+> elements: Al B Cl Er In Li Mo Nb Nd O P S Sc Ta Y Zr
+> methods: bader, bandgap, bvse, cohp, dft, dos, elf, esw, functional, kpoint, md, mlip, msd, neb, phonon, pseudo
 
 ---
 

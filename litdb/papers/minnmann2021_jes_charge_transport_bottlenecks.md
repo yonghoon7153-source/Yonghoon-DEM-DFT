@@ -16,6 +16,8 @@
 > 왔으나, 2022 리뷰 digest가 그게 거기 없음을 증명했고 → 실제 1차 측정값은 **여기(2021 JES)** 에 있다.
 > 우리 소재계(NCM-622 + LPSCl)의 EIS-TLM 1차 측정 = Bazzoun/Lee와 더불어 우리가 가진 **최강 실험 앵커**.
 
+
+
 > elements: Li P S
 > methods: dft
 

@@ -1,11 +1,13 @@
 # Origin of Outstanding Stability in the Lithium Solid Electrolyte Materials: Insights from Thermodynamic Analyses Based on First-Principles Calculations — Zhu/He/Mo (ACS Appl. Mater. Interfaces 2015)
 
 > slug `zhu2015_esw_grand_potential_origin` · DOI `10.1021/acsami.5b07517` · type `DFT (MP-hull thermodynamics, 실험 0)` · PDF **본문 `litdb/inbox/38. Origin of Outstanding Stability … .pdf`(9 pp)** + **SI `litdb/inbox/38. Sup) Origin of Outstanding Stability … .pdf`(10 pp — 2026-08-03 실물 확보)** (inbox #38) · **사용자 분류 폴더 `DFT`** · digested `2026-07-28` · **본문 독립 재검증 `2026-08-03`(§17)** · **SI 실물 정독·전수 검증 `2026-08-03`(§18 — Table S1/S2 13종/S3 5종 전값)** · status ✅ **완결(본문+SI 모두 실물 대조 완료)**
-> elements: Li, P, S, Cl, O, Ge, I, N, F, Zr, La, Ti, Al, Si, Nb, Ta, Zn
-> methods: DFT, ESW
 > **저자**: Yizhou Zhu, Xingfeng He, **Yifei Mo*** (†UMD MSE, ‡UMD Energy Research Center, College Park MD 20742) · ACS AMI 2015, 7, 23685−23693 · Received 2015-08-13 / Accepted 2015-10-06 / Published 2015-10-06 · 교신 yfmo@umd.edu · refs 51
 > **연구비**: US DOE EERE **DE-EE0006860**; 계산자원 UMD supercomputing + XSEDE(**TG-DMR130142**). 이해상충 없음 선언. 사사에 **Chunsheng Wang·Fudong Han**(UMD) — 곧 본문이 "실험 정합"의 근거로 드는 ref 12(Han/Gao/**Zhu**/Gaskell/Wang, Adv. Mater. 2015)의 저자들이고 **1저자 Zhu 본인이 그 실험 논문 공저자** → 정합 주장은 *독립* 검증이 아니다(§15).
 > ⚠ 서지 교정: 과제 메모의 DOI `10.1021/acsami.5b01004`는 오기 — PDF 실물 각 페이지 풋터가 **`10.1021/acsami.5b07517`** (본문·SI 모두 확인).
+
+
+> elements: Al Cl Co F Ge I La Li N Nb O P S Si Ta Ti Zn Zr
+> methods: bader, cohp, dft, dos, esw, functional, kpoint, md, mlip, neb, pseudo
 
 ---
 

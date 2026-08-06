@@ -2,10 +2,12 @@
 
 > slug `zhu2020_air_stable_se_design_principles` · DOI `10.1002/anie.202007621` · type `DFT (database thermodynamics, 실험 0)` · PDF `litdb/inbox/30. Angew Chem Int Ed - 2020 - Zhu - ….pdf` + **SI PDF** `30. anie202007621-sup-0001-misc_information.pdf` + **★ SI xlsx `anie_202007621_sm_miscellaneous_information.xlsx` 확보·전수 전사 완료 (2026-08-05)** (본문 5 pp Communication + SI 5 pp: Methods 2 pp·Fig S1·S2·refs + xlsx 6 시트 269 화합물) · digested `2026-07-17` (SI PDF 반영 2026-07-17 · **SI xlsx 전사 + 그림 재판독 2026-08-05** · **본문 재투입 #54 + 그림 기계판독 2026-08-06 → §14**) · status ✅ · 사용자 분류 `DFT`
 > **검증 이력**: 1차 digest 2026-07-17(본문+SI PDF) · 2차 SI xlsx 전수 전사 + 그림 재판독 2026-08-05(§3b, 염화물 오프셋 오류 적발) · **3차 본문 재투입(#54) 중복 판정 + 그림 픽셀 검산 2026-08-06(§14 — 신규 내용 0건, 그러나 `Fig. 3` 색인 누락 복구 · Fig 2 x축 서술 정정 · Cr⁶⁺ 미해결 항목 해소)** · **4차 SI 재투입(#54 Sup) 2026-08-06(§15 — 텍스트 신규 0건, 그러나 ✅ 마지막 미판독 그림 `Fig S2` 해소[= Fig 2 의 겹침 없는 판, 막대 46/52/64+1/14 기계 검산] · 🔴 pseudopotential 목록↔계산대상 불일치 신규 적발 · 🔴 재추출 가드 방향 반전)** — **이 논문은 본문·SI·xlsx·그림 5장 전부 소진, 안 본 그림 0장**
-> elements: S, Cl, O, H, Li, Be, B, Na, Al, Si, P, K, Ca, Sc, Ti, V, Cr, Mn, Fe, Cu, Zn, Ga, Ge, As, Sr, Y, Zr, Nb, Ag, Cd, In, Sn, Sb, Te, Ba, La, Ce, Pr, Nd, Sm, Gd, Tb, Dy, Ho, Er, Tm, Hf, Ta, W, Au, Hg, Pb, Bi
-> methods: DFT, ESW
 > **저자**: Yizhou Zhu*(UMD→Northwestern) · **Yifei Mo***(UMD) — **🔑 우리 grand-potential ESW 방법의 원저자 그룹**(Zhu/He/Mo ACS AMI 2015 · JMCA 2016 = 이 논문 ref [2] = 우리 ESW 계보의 그 논문) + **[Banik]의 Mo와 동일 인물**. Angew 2020, 59, 17472–17476 (Energy Storage Hot Paper).
 > **저장소 전사본**: `db/properties/zhu2020_si_hydrolysis_energies.csv` (binary 99행) · `db/properties/zhu2020_si_redox_reactions.csv` (ternary 170행) — **문헌 소환값, 우리 계산 아님**(헤더에 명시).
+
+
+> elements: As B Cl Cr Cu Fe H In Li Na Nd O P S Sb Sn Y Zr
+> methods: bader, cohp, dft, dos, esw, functional, kpoint, md, mlip, neb, pseudo
 
 ---
 

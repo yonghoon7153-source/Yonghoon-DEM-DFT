@@ -2,8 +2,6 @@
 
 > slug `miao2023_role_of_interfaces_solid_state_batteries` · DOI `10.1002/adma.202206402` · type **review (문헌 컴파일 — 자체 계산·실험 0)** · PDF `663eb3cf-56._Role_of_Interfaces_in_SolidState_Batteries.pdf` (21 pp, 본문 15 pp + refs 266) · digested `2026-08-05` · status ✅
 > **로컬 원본** = `litdb/inbox/56. Role of Interfaces in Solid-State Batteries.pdf` (**inbox #56 · 사용자 분류 폴더 `DFT`**) — 업로드본과 동일 파일. **재투입 검증 `2026-08-06`**: 21쪽 텍스트 전문 재전사 + 그림 6장(fig_1–fig_6) 재추출·**재열람**. 본문 수치·표 3개·Figure 6장 모두 일치, 신규 사실 없음. 유일한 정정 = **Fig. 2a 반원 귀속**(아래 §7 표) — 고압 곡선에 반원이 있는 게 아니라 **없다**.
-> elements: Li, P, S, Cl, Br, I, O, N, F, B, Al, Si, Ge, Sn, In, Ti, Zr, Y, La, Nb, Ta, W, Ag, Mg, Zn, Cu, Co, Ni, Mn
-> methods: EIS, STEM, HRTEM, EELS, ALD, ESW
 
 > 🔗 **왜 지금 이 논문인가 (두 축)**
 > ① **같은 그룹의 3년 전 리뷰다.** 교신저자 **Ce-Wen Nan**(Tsinghua)이 우리가 심사 중인 원고
@@ -12,6 +10,10 @@
 > **무엇을 빠뜨렸고**·어디서 다르게 설명하는지. 리뷰어 노트 `kb/reviews/ECERD2600097_review_notes.md`의
 > **B5·B1·B4·B2**가 이 논문으로 근거를 얻는다.
 > ② **우리 T3(Li‖LPSCl 반응 MD) 공백**과 정면으로 닿는다 → §11.3.
+
+
+> elements: Al B Br C Cl Co F Fe H La Li N Nb O P S Ti Y
+> methods: arrhenius, bandgap, bvse, cohp, dft, elastic, esw, functional, md, mlip, pdos
 
 ---
 

@@ -2,6 +2,8 @@
 
 > slug `lee2025_corolling_dryprocess_lpscl_ptfe` · DOI `10.1038/s41467-025-59363-4` · type `exp` (실험, no DEM/MPM) · PDF `Lee_2025_NatCommun_corolling_dryprocess_LPSCl_PTFE.pdf` (main) + `..._Sup.pdf` (SI 40 p) · digested `2026-06-24` · status ✅ · Open Access CC-BY
 
+
+
 > elements: Li
 
 ## 1. 한 줄 요약

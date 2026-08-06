@@ -1,10 +1,12 @@
 # Hard and soft electrons and holes — Mulks (Chem, Cell Press, 2024)
 
 > slug `mulks2024_hard_soft_electrons_holes` · DOI `10.1016/j.chempr.2024.06.013` · type `theory/DFT (분자, 주기계 아님)` · PDF `1572305d-53._Hard_and_soft_electrons_and_holes.pdf` (+SI `c7ffc0a4`.xlsx, `c247bf09`.pdf, `8eb8cb54`.pdf) · digested `2026-08-05` · **재검증 `2026-08-06`**(Table 1 산술 전수 대조 → 오타 4건 + 머리글 오류 확정, §14b) · status ✅
-> elements: C, H, N, O, S, Cl, Li, Si, K, Zn
-> methods: DFT
 > **저자**: **Florian F. Mulks** — *단독 저자* (Institute of Organic Chemistry, RWTH Aachen University, Landoltweg 1, 52074 Aachen, Germany; lead contact `ff@mulks.ac`). Chem **10**, 2724–2744 (September 12, 2024). Received Jan 6 2024 / Revised Mar 31 2024 / Accepted Jun 12 2024 / Published (online) Jul 8 2024. Open Access CC BY 4.0. 데이터셋 ioChem-BD `10.19061/iochem-bd-6-328`.
 > ⚠ **인용 표기 주의**: "Mulks **et al.**" 이 아니라 **"Mulks"** — 저자 1명이다 (fan2026 리뷰 §3.1 ref [80] 표기 정정 대상).
+
+
+> elements: Cl F H Li O S
+> methods: bader, bandgap, bvse, cohp, dft, dos, elf, esw, functional, kpoint, md, mlip, neb, pdos, pseudo
 
 ---
 

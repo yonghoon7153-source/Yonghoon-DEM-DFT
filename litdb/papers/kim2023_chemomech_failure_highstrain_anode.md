@@ -26,6 +26,8 @@
 > 이 논문 = **양극 외부 원인**(음극 strain 이 *밀어넣는* 응력).  **둘 다 같은 결과(NCA 입계 균열·pulverization)
 > 를 *다른 origin* 에서** → 우리 fracture 모델이 흡수해야 할 균열 driver 가 *최소 둘*임을 못 박는다.
 
+
+
 > elements: Li
 
 ---

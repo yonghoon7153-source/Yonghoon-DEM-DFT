@@ -1,9 +1,11 @@
 # High-throughput computational screening for solid-state Li-ion conductors — Kahle/Marcolongo/Marzari (Energy Environ. Sci. 2020)
 
 > slug `kahle2020_ht_aimd_screening` · DOI `10.1039/c9ee02457c` · type `DFT + pinball-MD(HT surrogate) + FPMD(BOMD) 스크리닝 (자체 실험 0)` · PDF **본문 `litdb/inbox/41. High-throughput computational screening for solid-state Li-ion conductors.pdf`(21 pp)** + **SI `litdb/inbox/41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf`(35 pp: §1–6·Fig S1–S121·Table S1–S5 — 2026-08-03 인박스 실물 확보)** (inbox #41→#46) · **사용자 분류 폴더 `DFT`** · digested `2026-07-28` · **본문 실물 독립 재검증 `2026-08-03`(§14 — 깔때기 21수치·Table 1 49셀·Fig 1/3/4/5/7/10/13/15/16/17 이미지 판독·Appendix A.1–A.9+B; 교정 9건·정밀화 12건)** · **SI 실물 독립 검증 `2026-08-03`(§15 — Table S1–S5 883셀·Fig legend 704 D값·Fig S1/S2/S3 이미지 판독; 인용 대조 불일치 0, 미결 3건 전부 종결, 신규 적발 3건)** · status ✅ **(본문·SI 양쪽 실물 대조 완료 — 미결 없음)**
-> elements: Li, S, P, Cl, Br, I, F, O, N, Se, Ge, Ta, Ga, Cs, Re, Ti
-> methods: DFT, AIMD, MD
 > **저자**: Leonid Kahle*, Aris Marcolongo(‡현 IBM Research-Zurich), **Nicola Marzari** (EPFL THEOS·NCCR MARVEL) · EES 2020, **13**, 928–948 · Received 2019-07-31 / Accepted 2020-01-08 / Published 2020-01-10 · **첫 페이지 실물 확인 완료**(과제 메모 서지와 일치) · 데이터: Materials Cloud Archive **DOI 10.24435/materialscloud:2019.0077/v1** · 도구: AiiDA·SAMOS(github lekah/samos)·supercellor(github lekah/supercellor)
+
+
+> elements: Al B Br Cl Cs Ga Ge I In Li N Nb O P S Si Ta Ti
+> methods: arrhenius, bader, cohp, dft, dos, functional, md, mlip, msd, neb, pseudo
 
 ---
 

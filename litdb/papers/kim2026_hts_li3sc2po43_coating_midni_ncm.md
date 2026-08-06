@@ -9,8 +9,6 @@
 > (**inbox #1-Sup** · **사용자 분류 폴더 `이상욱`** · 21 pp, 네이티브 텍스트 레이어 보유 → eq1–8 원식 판독 + Fig S1–S7 이미지 판독
 > + **Table S1 88행 전수 기계 재입력 → 깔때기 6단계 필터 코드 재현**).
 > 결과: **교정 6건 · 신규 11건**. 재입력본은 `db/properties/kim2026_tableS1_88_candidates.csv` 로 등록.
-> elements: Li, Sc, P, O, S, Cl, Ni, Co, Mn, B, Ca, Mg, H
-> methods: DFT, AIMD, MD, MLIP, ESW
 >
 > **저자** Ji Hoon Kim¹, Seunghyun Lee²'³'⁴*, **Sang Uck Lee**¹* — ¹성균관대 화학공학 · ²'³'⁴한양대 ERICA
 > 투고 2026-04-17 · 수리 2026-05-18 · 온라인 2026-06-05 · 과제 MOTIE P0022336
@@ -19,6 +17,10 @@
 > 🔑 **위시리스트 1순위였던 바로 그 논문.** 심포지엄 덱(`litdb/talks/lee2026_skku_mlip_materials_design.md`)
 > 슬라이드 13 "Cathode interface RXN — Screening Coating Materials" 의 정본.
 > **우리 cascade + M6 의 직접 대조군**이고, 아래 §9에서 **우리 M6 판정을 뒤집는다**.
+
+
+> elements: B Ca Cl Co F H Li Mg Mn Na Nb Ni O P Rb S Sc Ti
+> methods: arrhenius, bandgap, bvse, dft, esw, functional, md, mlip, msd, pseudo
 
 ---
 

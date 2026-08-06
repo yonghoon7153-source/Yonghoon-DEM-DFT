@@ -2,11 +2,13 @@
 
 > slug `li2024_inf3_argyrodite_ultrathin_film` · **Adv. Energy Mater. 2024, 14(47), 2402929** · DOI **10.1002/aenm.202402929** (Wiley-VCH; Received **2024-07-04** · Revised **2024-09-22** · Published online **2024-10-10**) · type `exp (도핑·전기화학·필름·풀셀) + DFT 보조 (자리 형성E · 슬랩 CI-NEB · Li 금속 슬랩 CI-NEB · H₂O/유기용매 흡착E · PDOS)` · PDF **본문 12 pp** + **SI docx**(Methods + Fig S1–S34 + Table S1–S4) · digested `2026-08-05` · 태그 **[외부]** · status ✅**(본문+SI 완결)**
 > **재투입 검증 `2026-08-06`** — 같은 논문이 `litdb/inbox/55. A Versatile InF 3 Substituted Argyrodite Sulﬁde ElectrolyteToward Ultrathin Films for All-Solid-State Lithium Batteries.pdf` (**inbox #55 · 사용자 분류 폴더 `DFT`**) 로 재투입돼 **본문 12 pp 전문(PyMuPDF 59.8 k자) 재추출 + `Fig. 1`–`Fig. 6` 전 6 장 이미지 재판독**. → **§14** (교정 **1**(⑥ 철회) · 신규 적발 **4**(⑯–⑲) · 출처 정밀화 **1** · 신규 판독 그림 **2**(`Fig. 5`·`Fig. 6`)). ⚠ **SI 는 이번 재투입에 없다**(원 digest 의 docx SI 가 유일 출처 — Fig S1–S34·Table S1–S4 항목은 재검증 대상 아님).
-> elements: Li, P, S, Cl, F, In, O, Co, Fe, Si
-> methods: DFT, NEB, DOS, PDOS, XPS, Raman
 > **저자**: **Dabing Li**†, **Xinyu Liu**†, **Yang Li**, Xiaoxue Zhao, Meng Wu, Xiang Qi, Lei Gao, **Li-Zhen Fan\*** (fanlizhen@ustb.edu.cn) — Beijing Advanced Innovation Center for Materials Genome Engineering / Beijing Key Lab for Advanced Energy Materials and Technologies, **University of Science and Technology Beijing (USTB)**. (†공동 1저자)
 > **자금**: National Key R&D Program of China (2023YFB2503902) · NSFC (U21A2080) · Beijing NSF (Z200011)
 > **데이터 공개**: *"available on request … not publicly available due to **privacy or ethical restrictions**"* ⚠ 순수 재료 논문에 privacy/ethical 사유는 부적절한 상투구 — **[GaF₃] 후속편에 그대로 복사돼 있다**
+
+
+> elements: B Br C Cl Cu F Fe Ga H In La Li Mg O P S
+> methods: arrhenius, bader, bvse, cohp, dft, dos, elf, esw, functional, kpoint, md, mlip, msd, neb, pdos, phonon, pseudo
 
 ---
 

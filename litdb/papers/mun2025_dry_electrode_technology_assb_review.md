@@ -3,6 +3,8 @@
 
 > slug `mun2025_dry_electrode_technology_assb_review` · DOI `10.1002/adma.202506123` · type `review (exp/process; no DEM/MPM/FEM)` · PDF `Mun_2025_AdvMater_DryElectrodeTechnology_ASSB_Review.pdf` (21 p, main only) · digested `2026-06-26` · status ✅ · Open Access CC BY-NC (© 2025 The Authors, Adv. Mater. / Wiley-VCH)
 
+
+
 > elements: C Cl F Li Na O P S Si
 > methods: elastic
 

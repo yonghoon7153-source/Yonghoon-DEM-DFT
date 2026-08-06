@@ -8,8 +8,6 @@
 > · **SI(27 pp) 실물 독립 검증 2026-08-04 → §21** (inbox #49 Sup · 사용자 분류 폴더 `DFT`) — **교정 9 · 신규 4 · Q1·Q3·Q4 종결**.
 >   재현 코드 `tools/litdb/zhou2026_si_verify.py` (Fig 3-11 16패널 σ(T) 복원 · Fig 6 축 선형성 · Fig 8 XPS · Fig 15 · Table S3/S4 재검산).
 >
-> elements: Li, Si, Ge, Sn, Ti, W, P, S
-> methods: DFT, AIMD, NEB, ELF, XPS, Raman
 >
 > ⛔⛔ **2026-08-04 본문 실물 검증의 머리기사 두 개 (§20.1–20.2)**
 > **① 헤드라인 13.24 mS cm⁻¹ 은 25 °C 가 아니라 30 °C 데이터점이다.** Fig 2a 의 측정은 10 °C 격자라
@@ -39,6 +37,10 @@
 > 🔑 **`lee2024_multicomponent_argyrodite_mixed_oxidation_mtp.md` 의 자매편이자 정확한 대척점** —
 > lee2024 = *혼합 산화수*로 다성분화(계산 84구조), Zhou2026 = *동일 산화수(전부 4+)*로 다성분화(실험 10조성).
 > **같은 조합폭발 문제를 "엔트로피"라는 다른 언어로 공략한다.**
+
+
+> elements: Br Cl Ge I Li O P S Sb Si Sn Ti W
+> methods: arrhenius, bader, bvse, cohp, dft, dos, elf, esw, functional, kpoint, md, mlip, msd, neb, pdos, phonon, pseudo
 
 ---
 

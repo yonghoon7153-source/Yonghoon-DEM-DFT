@@ -6,6 +6,8 @@
 > 기반 digest.  본문 §2–6(전체 수식·알고리즘 11개)은 미열람 → 방법 수식 디테일은 Stomakhin 2013
 > (`papers/stomakhin2013_*`)·우리 코드로 보완.  변종 분류·contact·fracture·응용·코드·비교는 intro에서 stated.
 
+
+
 > elements: C
 
 ## 1. 한 줄 요약

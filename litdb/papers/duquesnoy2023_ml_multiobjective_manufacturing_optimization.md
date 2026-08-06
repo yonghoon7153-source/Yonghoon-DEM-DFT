@@ -2,6 +2,8 @@
 
 > slug `duquesnoy2023_ml_multiobjective_manufacturing_optimization` · DOI `10.1016/j.ensm.2022.12.040` · type `mixed (CGMD+DEM physics-sim + SISSO ML + Bayesian multi-objective optimization + exp 검증)` · PDF `Duquesnoy_2023_EnergyStorageMater_ML_MultiObjective_ManufacturingOptimization_main.pdf` (+ `_SI.pdf`) · digested `2026-07-10` · status ✅
 
+
+
 > elements: C I
 > methods: md
 

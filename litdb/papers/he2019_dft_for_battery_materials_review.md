@@ -4,7 +4,9 @@
 > **저자**: Qiu He, Bin Yu, Zhaohuai Li, **Yan Zhao\*** (State Key Lab of Silicate Materials for Architectures / Advanced Tech for Materials Synthesis & Processing, **Wuhan University of Technology**; Y. Zhao also at Inst. of Technological Sciences, **Wuhan University**), *Energy Environ. Mater.* **2019**, *2*, 264–279. Received 2019-08-09, published 2019-10-15.
 > **태그**: `[외부]` `methods-review`. **argyrodite 논문 아님 — DFT-for-batteries 방법론 백본 리뷰.** [우리 그룹] 아님(중국 Wuhan). 물성 4축 직접 수치비교 대상 아님(=우리 *방법*의 표준 정당화 문헌). comparison_vs_ours에는 "methods-provenance" 1줄로만.
 
-> elements: Bi Co F Fe H Li Mg Mn Mo N Na Ni O P S Si V Zn
+
+
+> elements: Bi Co F Fe H Li Mg Mn Mo N Na Ni O S Si Sn V Zn
 > methods: arrhenius, bader, bandgap, bvse, cohp, dft, dos, elastic, elf, esw, functional, md, mlip, msd, neb, pdos, phonon, pseudo
 
 ---

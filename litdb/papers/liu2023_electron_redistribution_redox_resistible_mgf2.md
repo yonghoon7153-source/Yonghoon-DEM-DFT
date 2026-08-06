@@ -3,6 +3,8 @@
 > slug `liu2023_electron_redistribution_redox_resistible_mgf2` · DOI `10.1002/anie.202302655` · type `exp + DFT(VASP/PBE)` · PDF `da9a7f39…Electron_Redistribution…pdf` (+ SI `6488e8eb…`) · digested `2026-06-23` · status ✅
 > **저자**: Chong Liu, Butian Chen, **Tianran Zhang***, Jicheng Zhang, Ruoyu Wang, Jian Zheng, Qianjiang Mao, **Xiangfeng Liu*** (Center of Materials Science & Optoelectronics Eng., **University of Chinese Academy of Sciences (UCAS)**, Beijing) · Angew. Chem. Int. Ed. **62** (2023) e202302655 · Received 21 Feb / Accepted 29 Mar 2023
 
+
+
 > elements: Cl F Li Mg O P S
 > methods: arrhenius, bandgap, cohp, dft, elf, functional, md, pdos, pseudo
 

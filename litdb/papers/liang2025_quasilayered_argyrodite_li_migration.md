@@ -4,7 +4,9 @@
 > **저자**: Shipeng Liang, Mingzi Sun, Haitao Yu, Xiao Wu, Zhiguo Xing, Jiahao Kou, **Bolong Huang** (교신, b.h@cityu.edu.hk). 소속: CAS Center for Excellence in Nanoscience / Beijing Institute of Nanoenergy and Nanosystems (CAS) + School of Nanoscience and Engineering, Univ. of CAS (Beijing) + **Dept. of Chemistry, City University of Hong Kong (CityU)**. Small **2025, 21, 2502078**. Received 17 Feb 2025, revised 7 Apr 2025, published 22 Apr 2025.
 > **태그**: `[외부]` — Bolong Huang (CityU HK / CAS Beijing) 그룹. **순수 이론(DFT/AIMD/NEB/wavefunction)**, 실험 0. *argyrodite 논문이 맞으나 우리와 다른 구조 분지(quasi-layered P2mm)를 다룸* — §7·§10에서 구조 차이를 반드시 명시. (inter-cage 에이전트가 "진짜 quasi-layered Li-migration 논문"으로 flag.)
 
-> elements: C Cl F Ge I K Li P S Se Sn
+
+
+> elements: C Cl Ge I K Li P S Se Sn
 > methods: arrhenius, bandgap, bvse, dft, dos, elf, functional, kpoint, md, mlip, msd, neb, pdos, pseudo
 
 ---

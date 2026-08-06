@@ -4,8 +4,6 @@
 > *Rare Met.* 2025, **44**(4), 2366–2378 · 본문 13 pp + **SI(업로드 .docx = Supporting Information 실물)** · digested `2026-07-28` · status ✅ (본문 + SI Note S1–S3 + Table S1 전문 정독)
 > · **2026-08-04 본문(13 pp) 실물 독립 검증 완료 — §20** (자기정정 3건 · 신규 적발 15건 ·
 >   **Fig 4·5d MSD 8패널 픽셀 전수 판독**으로 σ 서열·antisite 하락이 600 K 데이터에 **없음**을 확인)
-> elements: Li, Y, Cl, Ge, P, S
-> methods: DFT, AIMD
 >
 > **저자** Ji Hoon Kim¹, Byeongsun Jun², Yong Jun Jang², **Chi Ho Lee**³*, **Sang Uck Lee**¹*
 > ¹성균관대 화학공학(suleechem@skku.edu) · ²현대자동차 (Hwasung/Suwon) · ³Texas A&M Artie McFerrin ChemE (cmsholee@tamu.edu)
@@ -16,6 +14,10 @@
 > `kb/open_items.md` 이상욱 랩 위시리스트 **6순위(낮음, "CSP 보조")**. 따라서 이 digest는
 > **물성값 수확이 아니라 방법론·구조 개념 수확**이 목적이고, **모든 수치는 우리 물성 4축에 수치로 편입 금지**다
 > (`litdb/INDEX.md` ⚠EXTERNAL 규율 준용).
+
+
+> elements: Cl Er Li P S Sc Y Yb Zr
+> methods: arrhenius, bader, bandgap, bvse, cohp, dft, elf, esw, functional, kpoint, md, mlip, msd, neb, phonon, pseudo
 
 ---
 

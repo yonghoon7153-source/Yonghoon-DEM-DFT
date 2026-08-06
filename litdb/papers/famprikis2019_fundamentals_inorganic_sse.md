@@ -1,9 +1,11 @@
 # Fundamentals of inorganic solid-state electrolytes for batteries — Famprikis / Canepa / Dawson / Islam* / Masquelier* (Nature Materials 2019, 18, 1278–1291)
 
 > slug `famprikis2019_fundamentals_inorganic_sse` · DOI `10.1038/s41563-019-0431-3` · type `review (자체 계산·실험 0)` · PDF `litdb/inbox/56. Fundamentals of inorganic solid-state electrolytes for batteries.pdf` (최초 digest 시 임시본 `79dcf62a-56._Fundamentals_…pdf` — 동일 파일) · digested `2026-08-05` · **재투입 검증 `2026-08-06`**(inbox #56 · 분류 DFT — §17) · status ✅
-> elements: Li, Na, Mg, H, B, N, O, F, Si, P, S, Cl, Ge, Br, I, Al, Ti, Zr, Ag, Sn, La, In, Co, Ni, Mn
-> methods: DFT, AIMD, MD, MLIP, ESW, XPS, Raman, elastic
 > **저자**: Theodosios Famprikis (Amiens LRCS/UPJV + Bath), Pieremanuele Canepa (Bath → NUS), James A. Dawson (Bath/Newcastle), **M. Saiful Islam\*** (Bath), **Christian Masquelier\*** (Amiens/RS2E) · 본문 11 pp · 그림 7 + 표 1 + Box 1 · refs 151 · Received 2018-10-31 / Published 2019-08-19
+
+
+> elements: Ag Al B Br C Cl F Ge H I Li N Na O P S Sn Ti
+> methods: adhesion, arrhenius, bader, bandgap, bvse, cobi, cohp, dft, dos, elastic, elf, esw, functional, kpoint, md, mlip, msd, neb, pdos, phonon
 
 ---
 

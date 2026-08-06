@@ -1,9 +1,11 @@
 # Mechanochemical Synthesis: A Tool to Tune Cation Site Disorder and Ionic Transport Properties of Li₃MCl₆ (M = Y, Er) Superionic Conductors — Schlem et al. (Adv. Energy Mater. 2020)
 
 > slug `schlem2020_li3mcl6_cation_site_disorder` · DOI `10.1002/aenm.201903719` · type `exp + DFT 보조(정적 defect-model만)` · PDF 본문 실물 `litdb/inbox/36. Mechanochemical Synthesis….pdf` (**inbox #36, 사용자 분류 `DFT` 태그** — 자체 VASP-PBE 정적 DFT 보유라 분류 정합, 단 exp-dominant·DFT보조임에 유의; 최초 digest는 업로드 쌍 `dbe52075` 본문 + `32a189c2` SI 15 pp) · digested `2026-07-28` · **본문 실물 감사 `2026-07-28`** (10 pp 전문 + Fig 3–7 렌더 대조: σ 1.7(1)×10⁻⁵/3.1(5)×10⁻⁴·무질서 2.5(1)/9.9(2) %·**Fig 5 에너지 4값(−247.74/−247.67/−247.80/−246.21 eV)**·Fig 6d Ea 0.41→0.49·Fig 7a,b 상관·Fig 3b BM ~88 %·Fig 4b 면적 ~5.4–6.3 Å²·DFT 셋업(VASP·PBE·PAW·520 eV·3×3×3 k·1×1×2 셀·실험격자·힘<10⁻⁴)·합성/EIS/XRD/PDF 파라미터 **전값 digest와 일치**; [새] 본문 **Eq (1) mc1/mc2 라벨 뒤바뀜** + λ 본문 표기 0.5594 Å — §0 감사 노트) · **SI 실물 감사 `2026-08-03`** (SI 실물 = `litdb/inbox/36. Sup) Mechanochemical Synthesis….pdf`, **inbox #36 Sup, 사용자 분류 `DFT`**, **파일 16 pp = Wiley 표지 1 + 내부 S1–S15**; Table S1–S10·Fig S1–S13 **전값 일치**(S1 몰비 1.92/1.43·S2 무질서 8값·S3 구속·S4 σ/Ea 8행·S5–S10 격자·점유·z·Biso·Rwp/Rexp/GOF·LiCl wt%·Fig S4 Rw 14.8/16.8/14.2/8.7/28.5·Fig S1 Rw 27.0·Fig S2b strain 1.75/1.52/~0.92·Fig S13 축 5.85–6.20 Å²·2.3/6.3/7.7/88 %) · **[새] 5건**: ① **Fig S13의 앰풀·1 h Ea가 Fig 6d/Table S4와 뒤바뀜**(S13: 2.3 %→0.4845·6.3 %→0.4935 ↔ 본문: 앰풀 0.4925 > 1 h 0.4845) → 인쇄된 S13만으로는 Ea–면적 상관 비단조 ② Fig S4 캡션 상호참조 오류("phase fraction … see **Table S2**" → 실제 **Table S1**) ③ Fig S2b 축 라벨 "Slope (Strain) / 10³" 지수부호 오기(값 1.75 = 1.75×10⁻³) ④ Table S9 불확실도 표기 충돌(Y2 **0.8269(3)** = ±0.0003 ↔ Table S2 17.3(3) % = ±0.3 %) ⑤ Fig S1a에 **Li₃YCl₆ 1 min 시료**(Table S2·S4에 없는 5번째 시료)·λ **0.5594075 Å** 출처 확정 · **[논지 강화]** Y 계열도 **무질서 축에서는 σ·Ea 4점 단조**(§6.6·§10-3 재범위화) — §0b 감사 노트) · status ✅**(본문+SI 실물 완결)**
-> elements: Li, Y, Er, Cl
-> methods: DFT
 > **저자**: Roman Schlem, Sokseiha Muy, Nils Prinz, Ananya Banik, Yang Shao-Horn, Mirijam Zobel, **Wolfgang G. Zeier*** (JLU Giessen 물리화학·LaMa / MIT DMSE / Univ. Bayreuth) · *Adv. Energy Mater.* 2020, **10**, 1903719 · 접수 2019-11-12, online 2019-12-17 · **Open Access CC-BY**
+
+
+> elements: Cl Er Li P S Y
+> methods: bvse, cohp, dft, dos, functional, kpoint, md, mlip, neb, pdos, pseudo
 
 ---
 

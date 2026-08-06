@@ -50,12 +50,12 @@
 
 | 우리 말 | 표준어 | 주의 | 근거 |
 |---|---|---|---|
-| "확산영역 게이트" | **diffusive-regime criterion** — log-log MSD 기울기 β = d log⟨r²⟩/d log t → 1 | 이게 없으면 **케이지 구간의 기울기를 D 로 착각**한다 | `kahle2020_ht_aimd_screening` (EES 2020) |
+| "확산영역 게이트" | **diffusive-regime criterion** — log-log MSD 기울기 β = d log⟨r²⟩/d log t → 1 | 이게 없으면 **케이지 구간의 기울기를 D 로 착각**한다 | ⚠ 2026-08-06 정정: **β 판정과 0.8 문턱은 우리 것**이다(`tools/ionic/msd_diffusive_check.py`). Kahle 이 한 것은 창 길이 검증·블록분산·자동수렴이므로 그쪽을 근거로 대면 "Kahle 에 그런 기준 없다"로 반박된다 |
 | "게이트 실패" | **sub-diffusive (caged) regime** | β < 0.8 이면 D 가 정의되지 않는다 | 동일 |
 | "σ" | **Nernst–Einstein conductivity, σ_NE (Haven ratio = 1 가정)** | ⚠ **상관 운동이 있으면 H_R ≠ 1.** 아지로다이트는 협동 홉의 전형이라 **σ_NE 는 근사** | `famprikis2019_fundamentals_inorganic_sse` (Nat. Mater. 2019) — Eq.(3) 타당성 논쟁 명시 |
 | "Ea" | **activation energy from Arrhenius fit of D(T)** | 온도점·창·시드 수를 같이 적어야 값이 성립 | `kahle2020_…` |
 | "MLIP-MD" | **machine-learned interatomic potential molecular dynamics** | 모델명·버전·task 를 반드시 (우리: UMA-s-1p1, task=omat) | ⚠ 원전 미보유(UMA/FAIRChem) |
-| "prefactor" | **Arrhenius prefactor D₀ = z n a₀² ν₀ exp(ΔS_m/k_B)** | ⚠ **연질 골격은 Ea 를 낮추지만 ν₀·ΔS_m 을 낮춰 D₀ 를 깎는다** — Ea 만 보면 안 된다 | `famprikis2019_…` Eq.(2) |
+| "prefactor" | **Arrhenius prefactor D₀ = (1/6) z a₀² ν₀ exp(ΔS_m/k_B)** ⚠ 2026-08-06 정정: 캐리어 밀도 n 은 **σ₀ 식에만** 들어간다(σ₀ = z(nq²/k_B)e^{ΔS_m/k_B}α₀²ν₀). n 을 남기면 차원이 m⁻¹s⁻¹ 가 되어 D₀(m²/s)가 아니다 | ⚠ **연질 골격은 Ea 를 낮추지만 ν₀·ΔS_m 을 낮춰 D₀ 를 깎는다** — Ea 만 보면 안 된다 | `famprikis2019_…` Eq.(2) |
 
 > ⛔ **σ 절대값 인용 금지** (CLAUDE.md). 비율도 **멀티시드 판정만**.
 > 근거는 우리 실측(단일시드 1.33× 철회, 2026-07-09) + 문헌(그룹 간 재현성 1자릿수 산포,
@@ -68,7 +68,7 @@
 | 우리 말 | 표준어 | 주의 | 근거 |
 |---|---|---|---|
 | "탄성계수" | **elastic constants C_ij → VRH average (E, G, B)** | clamped-ion vs **relaxed-ion** 구분 필수 — 우리 계에서 clamped 는 실험의 ~2.3배 | `deng2016_elastic_superionic_electrolytes_dft` (JES 2016) · `famprikis2019_…` |
-| "B₀" | **bulk modulus from Birch–Murnaghan EOS fit** | ⚠ **B_VRH(harmonic)와 다른 양** — 둘 다 보고하되 섞지 말 것 | Birch, *Phys. Rev.* 71, 809 (1947) — 사용자 6월 덱에 이미 인용 |
+| "B₀" | **bulk modulus from Birch–Murnaghan EOS fit** | ⚠ **B_VRH(harmonic)와 다른 양** — 둘 다 보고하되 섞지 말 것 | Birch, *Phys. Rev.* 71, 809 (1947) ⚠ **원전 미보유** (덱에 인용한 것은 실물 보유가 아니다 — 이 파일의 규율 위반이었다, 2026-08-06 정정) |
 | "연성/취성" | **Pugh's ratio B/G** (> 1.75 ductile) | ⚠ **금속 경험칙**이다. 이온성 세라믹에 그대로 적용하면 안 되고, 아지로다이트의 실용적 "무름"은 **분말 압축 성형성**이지 단결정 연성이 아니다 | Pugh, *Phil. Mag.* 45, 823 (1954) — ⚠ 원전 미보유 |
 | "이방성" | **Zener anisotropy A = 2C₄₄/(C₁₁−C₁₂)** | ⚠ 셀이 완전 입방이 아니면 **triplet 마다 값이 다르다.** A−1 의 부호를 triplet 명시 없이 인용 금지 (`elastic.json` `_Zener_A_convention`) | — |
 | "파괴인성" | **fracture toughness K_IC** | ⚠⚠ **탄성계수와 다른 급의 양이고 우리는 못 낸다.** 치밀도·입경·불순물·기공에 강하게 의존하는 **시편 물성**이라 실험 결정 | `famprikis2019_…` (명시) |

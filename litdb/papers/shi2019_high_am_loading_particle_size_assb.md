@@ -14,6 +14,8 @@
 
 > 데이터 CSV: `docs/data/shi2019_am_loading.csv` (이 digest 전용 — λ·로딩·porosity·용량·utilization 정밀 수치, stated vs digitized 구분).
 
+
+
 > elements: Co Li Mn O S Zr
 
 ---

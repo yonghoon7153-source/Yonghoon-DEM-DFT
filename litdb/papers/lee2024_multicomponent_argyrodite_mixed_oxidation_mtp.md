@@ -4,8 +4,6 @@
 > *J. Mater. Chem. A* **2024, 12, 7272–7278** · 투고 2024-01-16 / 수리 2024-02-16 / 게재 2024-02-19 ·
 > 본문 7 pp + ESI 29 pp · digested 2026-07-28 · status ✅✅ (본문 + ESI **양쪽 다 실물 독립 검증 완료**)
 >
-> elements: Li, P, S, Cl, Br, I, Si, Ge, Sn, Sb, W, Mo
-> methods: DFT, MLIP, MD, AIMD
 >
 > 🔁 **본문 실물 독립 검증 2026-08-04 → §11** (`litdb/inbox/2. Design of multicomponent argyrodite…potentials.pdf`
 > — **inbox #2 · 사용자 분류 폴더 `이상욱`**; 네이티브 텍스트 레이어 보유 → 본문 7 pp 전문 재판독 +
@@ -25,6 +23,10 @@
 >
 > 🔑 **덱에 없던 논문** — 서지 검색 중 발견해 우선순위 2위로 승격했던 그것.
 > **우리 co-doping 캠페인과 정면으로 같은 문제설정**(다성분 치환 + 교호작용 + 합성가능성 필터).
+
+
+> elements: Br Cl Ge I Li Mo O P S Sb Si Sn W
+> methods: arrhenius, bader, dft, esw, functional, kpoint, md, mlip, msd
 
 ---
 

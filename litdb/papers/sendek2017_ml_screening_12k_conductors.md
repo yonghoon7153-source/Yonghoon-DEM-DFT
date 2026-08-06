@@ -1,9 +1,11 @@
 # Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials — Sendek/Yang/Cubuk/Duerloo/Cui/Reed (Energy Environ. Sci. 2017)
 
 > slug `sendek2017_ml_screening_12k_conductors` · DOI `10.1039/c6ee02697d` · type `DFT-DB screening + 통계학습(LR) + DFT-MD 검증 1건 (자체 실험 0)` · PDF **본문 `litdb/inbox/40. Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf`(15 pp — 2026-08-03 인박스 실물 확보)** + **SI `litdb/inbox/40. Sup) Holistic computational structure screening of more than 12 000 candidates for solid lithium-ion conductor materials.pdf`(31 pp: §S1–S5 · Table S1–S4 · Fig S1–S5 · SI 참고문헌 22건 — 2026-08-03 인박스 실물 확보)** (inbox #40) · **사용자 분류 폴더 `DFT`** · digested `2026-07-28` · **본문 실물 독립 재검증 `2026-08-03`(§16 — 표 3종 332값 + Fig 1–4 실물 대조, 불일치 0, 교정 2건·정밀화 7건)** · **SI 실물 독립 검증 `2026-08-03`(§17 — Table S1–S4 1,822셀 + Fig S1–S5 이미지 판독, 교정 3건·미결 3건 전부 해소)** · status ✅ **(본문·SI 양쪽 실물 대조 완료 — 인박스 미보유 구간 없음)**
-> elements: Li, B, S, Se, Cl, Br, I, N, O, H, F, P, Si, Ge, Sn, Pb, In, Mg, Sr, Ba, K, Rb, Cs, Sm, Nd, Dy, Ho, Er, Bi, Sb, As, Te
-> methods: DFT, AIMD, MD, ESW
 > **저자**: Austin D. Sendek(Stanford Applied Physics), Qian Yang(Stanford ICME), Ekin D. Cubuk, Karel-Alexander N. Duerloo, **Yi Cui**, **Evan J. Reed***(Stanford MSE) · EES 2017, **10**, 306–320 · Received 2016-09-15 / Accepted 2016-12-01 / Published online 2016-12-01 · **첫 페이지 실물 확인 완료**(과제 메모 서지와 일치)
+
+
+> elements: Al As B Br Cl Er F Ge H In Li Mg N O P S Se Si
+> methods: bandgap, bvse, dft, esw, functional, md, mlip, msd, neb, pseudo
 
 ---
 

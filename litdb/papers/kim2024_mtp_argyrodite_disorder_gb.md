@@ -1,9 +1,11 @@
 # Highly reliable and large-scale simulations of promising argyrodite solid-state electrolytes using a machine-learned moment tensor potential — Kim et al. (Nano Energy 2024)
 
 > slug `kim2024_mtp_argyrodite_disorder_gb` · DOI `10.1016/j.nanoen.2024.109436` · type `MLIP(MTP)-MD + DFT/AIMD` · PDF 본문 실물 `litdb/inbox/35. Highly reliable and large-scale simulations….pdf` (**inbox #35, 사용자 분류 `DFT` 태그**; 최초 digest는 업로드 쌍 `82ea256b/9a0b0c9b` 본문 + `82ea256b/cacf7ea8` SI 28 pp) · digested `2026-07-28` · **본문 실물 감사 `2026-07-28`** (10 pp 전문 대조: Table 1 6배열×4방법 전값·Table 2·GB 격자상수(학습 10.2795/22.9857/45.9713·프로덕션 30/68/135 Å)·D_GB 5.4e-8 vs bulk 1.8e-7·PS₄ 고정 −50 %/−18 %·Table S3 소환값 3.4e-7→1.6e-7·E:F:S 100:1:0.01·Fig 2 캡션 350–700 K 불일치까지 **digest와 전값 일치**; 추가 발견 = 본문 §2.5 자체에 힘 MAE "**0.1 meV/Å**" 단위 오기(Fig S2/S3 축 오기의 본문판)) · **SI 실물 감사 `2026-07-28`** (SI 실물 = `litdb/inbox/35. Sup) Highly reliable and large-scale simulations….pdf`, **inbox #35 Sup, 사용자 분류 `DFT`**, **28 pp** — 업로드본(cacf7ea8, 28 pp)과 동일 판본; Table S1–S3·Fig S1–S13·Eq S1–S12 **전값 일치**, Fig S2/S3 힘 단위 오기 실물 재확인(S2=축 라벨, S3=inset), I조성 Ea 복제 실물에서도 동일, [새] SI 내부 상호참조 오류 2건(Note S4→"Table S3" 오지칭·Note S3→"Eqn. S8" 오지칭) — §3a 감사 노트) · status ✅
-> elements: Li, P, S, Cl, Br, I
-> methods: DFT, AIMD, MD, MLIP
 > **저자**: Ji Hoon Kim (성균관대 화공), Byeongsun Jun·Yong Jun Jang·Sun Ho Choi·Seong Hyeon Choi·Sung Man Cho·Yong-Gu Kim (**현대자동차**), **Byung-Hyun Kim (한양대 ERICA 안산, 응용화학)**, **Sang Uck Lee*** (성균관대) — Nano Energy 124 (2024) 109436 (2023-09-29 접수, 2024-03-02 온라인). ⚠ 한양대 공저자가 있으나 **[우리 그룹] 아님**(ERICA 응용화학·이상억 그룹 라인).
+
+
+> elements: Cl Li P S
+> methods: arrhenius, bader, dft, functional, md, mlip, msd, phonon, pseudo
 
 ---
 

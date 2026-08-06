@@ -16,6 +16,8 @@
 > 장애물*.  (3) **같은 modified-TLM 분해 = Kim 2025 의 자매 방법론** + **Bielefeld 2020(바인더가 SE 망 차단)의
 > 실험 카운터파트** + **AcceleDomain(Kim 2024 AFM, 카본 부피점유)와 짝** → 랩의 "**도전제는 양날의 검**" 테제.
 
+
+
 > elements: C Cl Li O S Zr
 
 ---

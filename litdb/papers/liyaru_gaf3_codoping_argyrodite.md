@@ -1,10 +1,12 @@
 # Dual-Functional Ga/F Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries — Yaru Li et al. (USTB, Li-Zhen Fan 그룹) · **본문+SI 통합 digest**
 
 > slug `liyaru_gaf3_codoping_argyrodite` · **Energy Mater. Adv. 2026;7:Article 0227** · DOI **10.34133/energymatadv.0227** (AAAS/BIT Press, CC BY 4.0; Submitted 2025-03-31 · Revised 2025-08-03 · Accepted 2025-08-11 · **Published 2026-04-27**) · type `exp (도핑·전기화학) + DFT 보조 (슬랩 NEB · Li 금속 슬랩 NEB · H₂O 흡착E · 이성분 DOS)` · PDF **본문 13 pp** `inbox/45. Dual-Functional GaF Co-Doped Argyrodite…pdf` + **SI 24 pp** (Methods + Fig S1–S27 + Table S1–S3) · digested `2026-08-03` (SI-only 1차 → **본문 확보 후 통합 업그레이드 같은 날**) · 태그 **[외부]** · 사용자 분류 폴더 `DFT` · status ✅**(본문+SI 완결)**
-> elements: Li, P, S, Cl, F, Ga, Ni, Co, Mn, O
-> methods: DFT, NEB, DOS, XPS, Raman
 > **저자**: Yaru Li, **Dabing Li**, **Yang Li**, Yanling Zhang, Xiang Qi, **Li-Zhen Fan\*** (fanlizhen@ustb.edu.cn) — Institute for Advanced Materials and Technology, **University of Science and Technology Beijing (USTB)**.
 > **그룹 계보 🔑**: 교신 **Li-Zhen Fan = [Fan26] 황화물 ASSB 안정성 리뷰(ECER-D-26-00097)의 교신저자와 동일**. 공저 **Yang Li = 그 리뷰의 제1저자이자 [Li25] CuBr₂ 논문 제1저자**, **Dabing Li = 그 리뷰의 공저이자 본 논문 ref [4](InF₃-치환 argyrodite, Adv. Energy Mater. 2024) 제1저자**. 즉 이 논문은 **우리가 이미 digest한 [Fan26]·[Li25]와 같은 연구실의 세 번째 논문**이고, 계보상 **InF₃(2024) → GaF₃(본편)** 로 이어지는 "**MX₃ 단일 염 = 3가 양이온 + 할로겐 동시 공급**" 시리즈의 다음 칸이다.
+
+
+> elements: B Br Cl Cu F Ga H In Li Mg O P S Sc Sn Y
+> methods: arrhenius, bader, bvse, cohp, dft, dos, elf, esw, functional, kpoint, md, mlip, msd, neb, pdos, pseudo
 
 ---
 

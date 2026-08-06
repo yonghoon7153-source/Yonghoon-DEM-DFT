@@ -3,7 +3,7 @@
 > slug `thorntonning1998_adhesive_elastoplastic_contact` · DOI `10.1016/S0032-5910(98)00099-0` · type `DEM (contact-LAW theory)` · PDF `ThorntonNing_1998_PowderTech_StickBounce_AdhesiveElastoPlasticSpheres.pdf` · digested `2026-06-26` · status ✅
 > ★★ **WISHLIST Tier-1 #14 (③) = "경로 A"의 핵심 LAW.** 우리 현재 모델(Luding 2008 `hooke/hysteresis`, `papers/luding2008_*`)이 **갖지 못한 항복압 캡 p_y**를 이 논문이 가진다. **Varkey 2026(`papers/varkey2026_*`)이 base 접촉모델로 쓰는 바로 그 LAW**이며, So 2021(`papers/so2021_*`) H-cap·Tabor H≈3σ_y와 같은 발상. → 우리 18× E-연화를 *real E + 항복 캡*으로 대체하는 직접 경로(`elasto_plastic_feasibility.md` 경로 A).
 
-> elements: P
+
 
 ---
 

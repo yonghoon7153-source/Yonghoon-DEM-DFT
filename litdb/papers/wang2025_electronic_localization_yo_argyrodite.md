@@ -1,9 +1,11 @@
 # Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries — Dewen Wang / Chong Liu (Angew. Chem. Int. Ed. 2025, VIP)
 
 > slug `wang2025_electronic_localization_yo_argyrodite` · DOI `10.1002/anie.202501411` · type `exp + DFT/BVSE 보조` · PDF 본문 `2c40956f(11 pp)` ≡ inbox `52.` + **SI `459bf7a1(34 pp)` ≡ inbox `52. Sup)`** (사용자 분류 폴더 `DFT`) · digested `2026-08-04` · **2차 패스(본문 그림 픽셀 독립 검증) `2026-08-04` → §18** · **3차 패스(SI 34 pp 실물 독립 검증 — 신규 8 · 자기교정 2 · 완화 1) `2026-08-04` → §19** · status ✅
-> elements: Li, P, S, Cl, Y, O
-> methods: DFT, BVSE, DOS, PDOS, ELF, LOBSTER, XPS, Raman
 > **저자**: Dewen Wang⁺, Chong Liu⁺(공동1저자), Ruoyu Wang, Tianran Zhang, Butian Chen, Tenghui Wang, Qi Lu, Wen Yin(CSNS 동관), **Xiangfeng Liu***(UCAS 베이징) · Angew 2025, 64, e202501411 (2025-01-17 접수 → 03-09 온라인, VIP)
+
+
+> elements: Bi Cl H In Li O P S Sn Y
+> methods: arrhenius, bader, bandgap, bvse, cobi, cohp, dft, dos, elf, esw, functional, kpoint, md, mlip, neb, pdos, pseudo
 
 ---
 

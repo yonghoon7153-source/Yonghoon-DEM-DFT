@@ -4,6 +4,8 @@
 > slug `tailored_cathode_microstructure_low_pressure_assb` · DOI `10.1021/acsenergylett.4c03256` · type **mixed (exp + LAMMPS granular DEM + FIB-SEM tortuosity)** · PDF `TailoredCathodeMicrostructure_LowPressure_LongCycleLife_ASSB.pdf` · digested `2026-06-26` · status ✅
 > ACS Energy Lett. **2025**, *10*, 966–974. Received 2024-11-24 / Accepted 2025-01-22 / Published 2025-01-25.
 
+
+
 > elements: Cl Li P S
 
 ---

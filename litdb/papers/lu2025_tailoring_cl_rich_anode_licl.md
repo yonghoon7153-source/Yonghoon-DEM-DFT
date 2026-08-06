@@ -3,7 +3,9 @@
 > slug `lu2025_tailoring_cl_rich_anode_licl` · DOI `10.1016/j.cej.2025.160455` · type `exp + DFT(VASP/PBE)` · PDF `2e34de4d…Tailoring…anode.pdf` (+ SI `ea9b5cb6…Sup…`) · digested `2026-06-23` · status ✅
 > **저자**: Shijie Lu, Yuxiang Zhang, Xinyu Zhang, Tianwen Yang, Haijian Lv, Zihan Li, **Daobin Mu*** (School of Materials Science & Engineering, **Beijing Institute of Technology**) · Chem. Eng. J. **507** (2025) 160455 · Received 7 Nov 2024 / Accepted 8 Feb 2025
 
-> elements: Br Cl F I Li P S
+
+
+> elements: Br Cl I Li P S
 > methods: bader, bandgap, dft, elastic, esw, functional, kpoint, md, neb, pdos, pseudo
 
 ---

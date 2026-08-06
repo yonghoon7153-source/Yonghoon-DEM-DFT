@@ -6,6 +6,8 @@
 > `docs/lit_lim2025_virtual_calendering_framework.md` 에서 논문 에이전트가 작성. 단일-서랍 규칙(CLAUDE.md)에 따라 이관.
 
 
+
+
 > elements: F Li P
 
 **인용:** **Jaejin Lim**¹²†, Jihun Song³†, Kyung-Geun Kim³, Jin Kyo Koo⁴, **Hyobin Lee**², Dongyoon Kang¹²,

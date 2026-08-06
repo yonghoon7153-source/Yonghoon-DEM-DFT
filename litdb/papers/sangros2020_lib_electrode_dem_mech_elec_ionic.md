@@ -3,6 +3,8 @@
 
 > slug `sangros2020_lib_electrode_dem_mech_elec_ionic` · DOI `10.1002/ente.201900180` · type `DEM (+ analytic homogenization, exp 검증)` · PDF `SangrosGimenez_2020_EnergyTech_LIBElectrode_DEM_MechElecIonic.pdf` · digested `2026-06-26` · status ✅
 
+
+
 > elements: Li
 
 ---

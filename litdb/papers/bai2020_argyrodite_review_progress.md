@@ -4,6 +4,8 @@
 > **저자**: **Xiangtao Bai**, Yi Duan, Weidong Zhuang, Rong Yang, Jiantao Wang (**China Automotive Battery Research Institute Co., Ltd., Beijing** + **General Research Institute for Nonferrous Metals, Beijing**) · J. Mater. Chem. A **8** (2020) 25663–25686 · Received 29 Aug 2020 / Accepted 17 Nov 2020 · © RSC
 > **태그: [외부]** — 한양대(Hanyang) 우리 연구실 아님(중국 자동차배터리연구원/유색금속연구원, Beijing). **kim2021(Rupp AEM, oxide vs sulfide 일반) ≠ 본 리뷰**(argyrodite 전용). 우리 litdb의 **두 번째 리뷰 digest**이자 **유일한 argyrodite-전용 field-map**.
 
+
+
 > elements: Br Cl H I Li Nd O P S Si
 > methods: arrhenius, bandgap, bvse, dft, elastic, esw, functional, md, mlip, msd, pseudo
 

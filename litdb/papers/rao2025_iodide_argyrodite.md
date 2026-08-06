@@ -4,6 +4,8 @@
 > **저자**: Adwitiya Rao, Jacob Rempel, Ming Jiang, Parvin Adeli, Chae-Ho Yim, Mohamed Houache, Yaser Abu-Lebdeh, **Chandra Veer Singh** (교신) · J. Mater. Chem. C, 2025, **13**, 10733–10739
 > **소속**: Univ. of Toronto (MSE + Mech. Eng., Singh group) + Anhui Univ. (Hefei) + Univ. of Waterloo + **NRC Canada** (Abu-Lebdeh). **외부 그룹 (≠ 우리 한양/Jong-Won Lee/Y.M.Lee/Cho/Cha/Kang)**
 
+
+
 > elements: Br Cl Co Fe I Li O P S
 > methods: arrhenius, bader, bandgap, bvse, dft, esw, functional, kpoint, md, mlip, msd, pseudo
 

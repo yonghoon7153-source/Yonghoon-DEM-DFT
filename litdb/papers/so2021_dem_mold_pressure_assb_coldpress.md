@@ -2,6 +2,8 @@
 
 > slug `so2021_dem_mold_pressure_assb_coldpress` · DOI `10.1016/j.jpowsour.2021.230344` · type `DEM` · PDF `So_2021_JPS_DEM_mold_pressure_ASSB_cold_pressing.pdf` · digested `2026-06-23` · status ✅
 
+
+
 > elements: Li P S
 > methods: elastic
 

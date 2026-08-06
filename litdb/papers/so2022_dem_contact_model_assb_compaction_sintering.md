@@ -2,6 +2,8 @@
 
 > slug `so2022_dem_contact_model_assb_compaction_sintering` · DOI `10.1016/j.mex.2022.101857` (원논문 `10.1016/j.jpowsour.2022.231279`) · type `DEM` (methods/접촉모델 정의서) · PDF `So_2022_MethodsX_DEM_ContactModel_ASSB_Compaction_Sintering.pdf` · digested `2026-06-26` · status ✅ · OPEN ACCESS (CC BY)
 
+
+
 > elements: Co Li O P S
 > methods: elastic
 

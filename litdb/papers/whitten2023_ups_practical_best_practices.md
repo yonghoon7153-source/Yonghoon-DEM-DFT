@@ -4,6 +4,8 @@
 > **저자**: James E. Whitten (단독, Dept. of Chemistry, University of Massachusetts Lowell, MA, USA) · Applied Surface Science Advances **13** (2023) 100384 · open access CC BY-NC-ND
 > **태그**: `[외부]` `methods` — UPS(자외선 광전자분광) 실전 best-practice 튜토리얼. **argyrodite 논문 아님 · 우리 그룹 아님 · 재료 수치 비교 대상 아님.** 보관 이유 = UPS는 우리 DFT가 계산하는 **VBM·일함수(Φ)·이온화에너지(IE)** 를 *실험으로 재는 바로 그 기법*. "우리 계산값을 어떻게 측정하나"의 레퍼런스/치트시트.
 
+
+
 > elements: Cl Li Nd O P S Ti
 > methods: bandgap, dft, dos, esw, functional, pdos
 

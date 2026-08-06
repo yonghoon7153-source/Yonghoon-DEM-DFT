@@ -3,6 +3,8 @@
 > slug `torii2025_lpscl_mechanical_anisotropy_dft` · DOI `10.1021/acs.jpcc.5c05116` · type `DFT (elastic + stress–strain + Bader)` · PDF `82ea256b/d3aed469-21._firstprinciples…LPSCl…` · digested `2026-06-26` · status ✅ · **[외부]**
 > **저자**: Masato Torii, Yuki Okita, Kota Motohashi, Atsushi Sakuda*, Akitoshi Hayashi — **Osaka Metropolitan University**, Dept. Applied Chemistry, Sakai. (Sakuda/Hayashi 그룹. *우리 한양/J-W Lee/Y.M.Lee/Cho/Kang/Cha 아님 → [외부]*.) · J. Phys. Chem. C 2025, 129, 17882−17891 · Open Access CC-BY · Received 2025-07-23, Published 2025-09-17.
 
+
+
 > elements: Cl Li P S
 > methods: bader, dft, elastic, eos, functional, kpoint, md, mlip, pseudo
 

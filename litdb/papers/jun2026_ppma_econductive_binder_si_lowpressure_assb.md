@@ -4,6 +4,8 @@
 > **저자**: Seunggoo Jun¹·⁴ / Minseok Jeong¹·⁴ (**공동 1저자**), Boyeong Jang, Seong-hyeon Jung, Young Joon Park, Yong Bae Song, Jisoo Park, Seungyun Jo, Du Yeol Ryu, Hanvin Kim², Sungkyung Kim², Jaewoo Lee², **Jeonghun Kim**¹·³†, **Yoon Seok Jung**¹·³† — ¹Yonsei 화공생명, ²**SK On**, ³Yonsei 배터리공학과. Nature Communications (2026) 17:156 (Received 2025-04-18 / Accepted 2025-11-18 / Published 2025-12-05, open access CC BY-NC-ND).
 > ⚠ **[외부]** — **[Son](five-volt ASSB, Nat. Energy 2025)과 같은 Yonsei 정윤석(Yoon Seok Jung) 그룹** (우리 한양대 J-W. Lee 라인 아님).
 
+
+
 > elements: C Cl F H Li O P S
 > methods: (a) p2 깃발 결과에 **일부러 비현실 조건(50 mpa)을 같이 적어** p3 갭의 씨앗으로 씀. (b) p3의 열화모드 열거는 **first, dft, esw, finally** 신호어로 구조화. (c) 자기 그룹 선행(ref 33)을 p3 모드①의 해법으로 심어 "우리는 이 문제의 연속 연구자"임을 표시. (d) p4의 기능배분 문장은 **성분→기능 1:1 대응**의 한 문장 — 논문 전체의 논증 지도 역할., functional, md, mlip, second
 

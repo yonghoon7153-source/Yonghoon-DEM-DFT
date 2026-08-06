@@ -2,6 +2,8 @@
 
 > slug `minnmann2024_microstructure_porosity_visualization` · DOI `10.1149/1945-7111/ad510e` · type `exp` (FIB-SEM 토모 + EIS-TLM + 사이클; 보조 flux/random-walk τ 시뮬) · PDF `Minnmann_2024_JES_CompositeCathodeMicrostructure_Porosity_Visualization.pdf` · digested `2026-06-26` · status ✅
 
+
+
 > elements: I Li O P S
 > methods: msd
 

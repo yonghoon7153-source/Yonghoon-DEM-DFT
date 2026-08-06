@@ -2,6 +2,8 @@
 
 > slug `bazzoun2025_dem_parameter_sensitivity_assb_cathode` · DOI `10.1016/j.electacta.2025.146536` · type `DEM` · PDF `Bazzoun_2025_ElectrochimActa_DEM_ParameterSensitivity_ASSBCathode.pdf` · digested `2026-06-26` · status ✅
 
+
+
 > elements: Li
 > methods: elastic
 

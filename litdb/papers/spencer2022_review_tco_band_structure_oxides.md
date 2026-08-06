@@ -2,8 +2,6 @@
 
 > slug `spencer2022_review_tco_band_structure_oxides` · DOI `10.1063/5.0078037` · type `review (문헌 메타집계; 자체 실험·계산 0)` ·
 > 본문 **100 pp** (011315-1 ~ -100) + Appendix A/B + refs (~1085) · digested 2026-07-28 · **본문 실물 재검증 2026-08-03 (§15)** · status ✅
-> elements: Ga, Al, In, Zn, Sn, Cd, Ni, Cu, Sc, O
-> methods: DFT, DOS, PDOS, phonon, Raman, XPS, elastic
 > PDF 5분할(초판, 스캔): `b4d89393`(1-24) / `4f8681ba`(25-49) / `e92d9cf6`(50-74) / `665907c1`(75-99) / `925cc792`(100-126)
 > **⚠ 초판은 스캔 PDF — pdftotext/pypdf 추출 0 bytes, 전부 이미지 판독.**
 > **✅ 2026-08-03: 같은 논문의 네이티브 텍스트 PDF(`inbox/46. …pdf`, 127 pp) 재판독 완료 → §13 판독불가 11/12 해소 · 신규 오류 9건 · 신규 관찰 4건 · 초판 자체교정 1건. §15 참조.**
@@ -16,6 +14,10 @@
 > **Sc₂O₃(1위)·In₂O₃(4위)·Ga₂O₃(8위)·Al₂O₃(9위)·ZnO(29)·SnO₂(30)·NiO(46)·CuO↔Cu₂O(47)**.
 > 우리가 `gap_lit_eV`라는 **출처 미상 큐레이션 값**으로 들고 있던 칸의 **실험 원전 모음**이다.
 > 추출표 → `db/properties/oxide_literature_properties_spencer2022.json`
+
+
+> elements: Al Cr Cu F Ga H Hf In Li Ni O Sc Sn Sr Ti V Zn Zr
+> methods: bandgap, dft, dos, elastic, functional, kpoint, mlip, pdos, phonon
 
 ---
 
