@@ -367,3 +367,61 @@ DIAG=ppcg GAP=12 ECUTWFC=50 ECUTRHO=400 bash tools/sdcp/run_phaseB_sdcp_v3.sh
 - **1×2 슬랩** — 분자 면내 폭이 6.53 × 6.94 Å 이라 1×2(9.14 Å)에서 여백 2.61 Å 로
   자기 이미지와 vdW 접촉 이하가 된다. 게다가 Li 추출 농도가 2배(2/24 vs 2/48)가 되어
   Ni⁴⁺ 농도도 2배 — **ΔE_extract 를 체계적으로 편향시킨다.** 비용 문제가 아니라 다른 답이다.
+
+---
+
+## 2026-08-06 (밤) — **결론: 이 계는 48 GB GPU 한 장으로 계산할 수 없다**
+
+### 실측 전수 (gabia, A6000 49.14 GB, QE 7.4.1 GPU, 단일 프로세스)
+
+| DIAG | 진공 | wfc/rho | QE 견적 | 실측 peak | 죽은 자리 | 도달 |
+|---|---|---|---|---|---|---|
+| david | 15 Å* | 60/480 | — | — | `newd_gpu/newq_gpu` | it 0 |
+| david + `real_space` | 15 Å* | 60/480 | — | 33.8 GB | `newq_gpu` (더 빨리) | it 0 |
+| david | 15 Å* | 60/400 | **69.30** | 45.6 GB | `cegterg` (Davidson) | it 0 |
+| ppcg | 12 Å | 60/400 | **57.16** | — | (파일 삭제 사고로 유실) | — |
+| ppcg | 12 Å | 50/400 | **49.97** | ~44 GB | `cegterg` | **it 1** |
+| ppcg | 10 Å | 50/400 | **46.56** | 47.6 GB | `becmod` (β-projector) | **it 1** |
+| ppcg | 10 Å | 50/360 | **42.35** | **47.6 GB** | — | **it 1** |
+
+\* 이 시점의 "15 Å" 은 셀 게이트 버그로 실제 28 Å 이었다(아래 ① 참조).
+
+### 읽는 법 — 두 가지 사실
+
+**① 크래시 자리가 계속 앞으로 옮겨간다.** `newq` → `cegterg` → `becmod`.
+배열 하나가 문제였다면 그것만 고치면 끝났을 것이다. 자리가 옮겨간다는 것은
+**계 전체가 이 카드보다 크다**는 뜻이고, 손잡이 하나당 2–3 GB 를 벌어도 다음 배열에서
+다시 걸린다.
+
+**② QE 견적은 하한이다.** `Estimated max dynamical RAM per process >` 42.35 GB 인 런의
+실측 peak 이 **47.6 GB** 였고 그래도 죽었다. 견적과 실제의 간극이 ~5 GB 이며,
+**견적이 가용보다 최소 5 GB 낮아야** 완주를 기대할 수 있다. 42.35 는 그 기준을 통과했는데도
+실패했으므로, 이 계의 진짜 요구량은 **55–60 GB 급**으로 봐야 한다.
+
+### 필요 자원
+- **80 GB급 GPU 1장** (A100 80GB / H100), 또는
+- **다중 GPU 평면파 분산** — `mpirun -np N pw.x -nk 1` 로 ngm·npw 가 랭크당 1/N.
+  `tools/sdcp/sbatch_phaseB_v3_kisti.sh` 가 4 GPU 기준으로 이미 작성돼 있다.
+
+⚠ 자원이 생기면 **컷오프를 표준 60/480 으로 되돌린다.** 50/360 은 이 카드에 맞추려던
+값이지 물리적 판단이 아니었다. (다만 50/360 도 pseudo 하한 47/326 위이므로 규격 위반은 아니다.)
+
+### 오늘 확정되어 그대로 재사용할 것
+```
+자세 3개 (전부 phaseA_top1free, freeze_frac 0.85)
+  물리흡착  doped   doped_sulfonate_down_r0_g20      변위 0.30 Å · UMA −0.325
+  Li 추출   doped   doped_sulfonate_down_r180_g20    변위 2.35 Å · UMA −1.267
+  물리흡착  neutral neutral_sulfonate_down_r180_g22  변위 0.48 Å · UMA −0.252
+  (neutral 추출 없음 — 108/108 에서 UMA 가 경로를 못 찾았다. 그 자체가 결과)
+슬랩 기준  slabref_085/slab_ref_relaxed.xyz  (같은 0.85 프로토콜)
+셀 게이트  c = zmax(분자) + GAP + 여유 − zmin(슬랩)   ← 슬랩 바닥 오프셋을 반드시 뺀다
+공통 설정  U(Ni 3d) 6.2 ortho-atomic · AFM inplane(슬랩 시드 승계) · seed_radical S:0.5
+          · no_fsm · degauss 0.03 mv · local-TF β 0.03 · D3 · tprnfor .false.
+          · slab_coord_tol 해제(표면 재배열은 흡착의 일부, 변위 2.07 Å 로 보고)
+```
+
+### ⚠ 과학은 이미 끝나 있다
+Phase-B 는 **확인 단계**이지 발견 단계가 아니다. 발견은 MLIP 재스캔에서 이미 나왔다:
+**doped 는 표면 Li 를 뽑고(2.35 Å 이동, 술폰산 O 에 1.94–1.98 Å 배위, 216 자세 중 9개
+독립 재현), neutral 은 108/108 에서 안 뽑는다.** DFT+U 는 UMA 가 Ni³⁺→Ni⁴⁺ 산화 대가를
+안 물었는지를 판정할 뿐이다. 오늘 못 돌렸다고 결과가 없는 것이 아니다.
