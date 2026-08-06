@@ -3088,7 +3088,9 @@ def md_to_html(md: str) -> str:
     """
     import html as _h
     import re as _re
-    out, in_tbl, in_ul = [], False, False
+    out = []
+    para, quote, li, code = [], [], [], []      # 여러 줄에 걸친 블록의 누적 버퍼
+    in_tbl, lst, fence = False, None, None      # lst: None|'ul'|'ol' · fence: None|언어
 
     def inline(t):
         t = _h.escape(t)
@@ -3097,46 +3099,105 @@ def md_to_html(md: str) -> str:
         t = _re.sub(r"(?<!\*)\*([^*]+)\*(?!\*)", r"<em>\1</em>", t)
         return t
 
-    def close():
-        nonlocal in_tbl, in_ul
+    # ⚠ 문단은 **줄 단위가 아니라 블록 단위**로 합쳐서 inline 을 건다 (2026-08-06).
+    #   줄마다 처리하면 `**굵게**` 가 줄바꿈을 넘는 순간 여는 별표를 못 닫아 원문에
+    #   `**` 가 그대로 노출된다 — 우리 kb 문서는 문장 중간에서 줄을 접으므로 흔하다.
+    #   합칠 때는 공백으로 잇는다(마크다운의 soft line break 관례. 우리 문서도 어절
+    #   경계에서 접으므로 이게 맞다).
+    def flush_para():
+        if para:
+            out.append("<p>" + inline(" ".join(para)) + "</p>"); para.clear()
+
+    def flush_quote():
+        if quote:
+            out.append("<blockquote>" + inline(" ".join(quote)) + "</blockquote>"); quote.clear()
+
+    def flush_li():
+        if li:
+            out.append("<li>" + inline(" ".join(li)) + "</li>"); li.clear()
+
+    def flush_list():
+        nonlocal lst
+        flush_li()
+        if lst:
+            out.append(f"</{lst}>"); lst = None
+
+    def flush_tbl():
+        nonlocal in_tbl
         if in_tbl:
             out.append("</tbody></table></div>"); in_tbl = False
-        if in_ul:
-            out.append("</ul>"); in_ul = False
+
+    def close():
+        flush_para(); flush_quote(); flush_list(); flush_tbl()
 
     for ln in md.splitlines():
         st = ln.rstrip()
+
+        # ── 코드 펜스 — 안쪽은 아무것도 해석하지 않는다 (파이프라인 ASCII 그림용)
+        m = _re.match(r"^\s*```\s*(\S*)\s*$", st)
+        if m:
+            if fence is None:
+                close(); fence = m.group(1) or ""; code.clear()
+            else:
+                cls = f' class="lang-{_h.escape(fence)}"' if fence else ""
+                out.append(f"<pre{cls}><code>" + _h.escape("\n".join(code)) + "</code></pre>")
+                fence = None
+            continue
+        if fence is not None:
+            code.append(ln.rstrip("\n")); continue
+
+        # ── 표
         if _re.match(r"^\|.*\|$", st):
             cells = [c.strip() for c in st.strip("|").split("|")]
             if all(_re.fullmatch(r":?-{2,}:?", c) for c in cells):
                 continue                                  # 구분행
             if not in_tbl:
-                close()
+                flush_para(); flush_quote(); flush_list()
                 out.append('<div class="tbl-scroll"><table class="data-table"><tbody>')
                 in_tbl = True
                 out.append("<tr>" + "".join(f"<th>{inline(c)}</th>" for c in cells) + "</tr>")
             else:
                 out.append("<tr>" + "".join(f"<td>{inline(c)}</td>" for c in cells) + "</tr>")
             continue
-        if in_tbl:
-            close()
+        flush_tbl()
+
+        # ── 제목
         m = _re.match(r"^(#{1,4})\s+(.*)$", st)
         if m:
             close(); n = len(m.group(1))
             out.append(f"<h{min(n+1,5)}>{inline(m.group(2))}</h{min(n+1,5)}>"); continue
-        if st.startswith("> "):
-            close(); out.append(f'<blockquote>{inline(st[2:])}</blockquote>'); continue
-        m = _re.match(r"^\s*[-*]\s+(.*)$", st)
+
+        # ── 인용 (연속 줄은 한 blockquote 로 합친다)
+        if st.startswith(">"):
+            flush_para(); flush_list()
+            quote.append(st[1:].lstrip()); continue
+        flush_quote()
+
+        # ── 목록 — 불릿과 **번호 목록** 둘 다
+        m = _re.match(r"^(\s*)([-*]|\d+[.)])\s+(.*)$", st)
         if m:
-            if not in_ul:
-                close(); out.append("<ul>"); in_ul = True
-            out.append(f"<li>{inline(m.group(1))}</li>"); continue
-        if in_ul:
-            close()
-        if st.startswith("---"):
-            out.append("<hr>"); continue
+            kind = "ul" if m.group(2) in ("-", "*") else "ol"
+            flush_para()
+            if lst != kind:
+                flush_list(); out.append(f"<{kind}>"); lst = kind
+            else:
+                flush_li()
+            li.append(m.group(3)); continue
+
+        # ── 목록 항목의 접힌 줄 (들여쓴 채 이어지는 본문)
+        if lst and li and st.startswith((" ", "\t")) and st.strip():
+            li.append(st.strip()); continue
+
+        # ── 수평선 · 빈 줄
+        if _re.fullmatch(r"-{3,}", st.strip()):
+            close(); out.append("<hr>"); continue
         if not st.strip():
-            continue
-        out.append(f"<p>{inline(st)}</p>")
+            close(); continue
+
+        flush_list()
+        para.append(st.strip())
+
+    if fence is not None:                                  # 닫히지 않은 펜스도 살려서 낸다
+        out.append("<pre><code>" + _h.escape("\n".join(code)) + "</code></pre>")
     close()
     return "\n".join(out)

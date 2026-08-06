@@ -285,9 +285,10 @@ textarea:focus-visible,[tabindex]:focus-visible,.tabs button:focus-visible{
 .doc table{border-collapse:collapse;width:100%;font-size:.84rem;margin:14px 0}
 .doc th,.doc td{border:1px solid var(--border);padding:7px 10px;text-align:left}
 .doc th{background:var(--bg);font-weight:700}
-.doc code{background:var(--bg);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:.86em}
-.doc pre{background:#0e1a2b;color:#e4e6f0;padding:16px;border-radius:var(--radius-sm);overflow:auto}
-.doc pre code{background:none;color:inherit}
+.doc code,.sem-doc code{background:var(--bg);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:.86em}
+/* 코드 펜스 — 세미나 문서의 파이프라인 ASCII 그림이 여기 탄다 (2026-08-06) */
+.doc pre,.sem-doc pre{background:#0e1a2b;color:#e4e6f0;padding:16px;border-radius:var(--radius-sm);overflow:auto}
+.doc pre code,.sem-doc pre code{background:none;color:inherit;white-space:pre;font-size:.82rem;line-height:1.45}
 .doc a{color:var(--accent)}
 
 /* responsive */
