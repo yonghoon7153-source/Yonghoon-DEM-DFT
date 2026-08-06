@@ -3,41 +3,77 @@
 
 {% block content %}
 <style>
-  .sem-head { display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:6px; }
+  /* 앱 다크 테마(style.css 의 --bg/--card/--accent …)를 그대로 쓴다.
+     ★ 전에 흰 카드를 하드코딩해 앱의 밝은 글자색이 상속돼 회색-on-흰색이 됐다. */
+  .sem-head { display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:4px; }
   .sem-head h1 { margin:0; }
-  .sem-sub { color:#6b7280; font-size:.92rem; }
-  .sem-tabs { display:flex; gap:6px; margin:14px 0 10px; flex-wrap:wrap; }
-  .sem-tabs button { padding:7px 14px; border:1px solid #d3d8de; background:#fff; cursor:pointer;
-                     border-radius:6px; font-size:.9rem; color:#374151; }
-  .sem-tabs button.on { background:#1f4e79; color:#fff; border-color:#1f4e79; font-weight:600; }
-  .sem-bar { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:10px; }
-  .sem-bar input[type=search] { flex:1 1 260px; padding:7px 10px; border:1px solid #d3d8de;
-                                border-radius:6px; font-size:.9rem; }
-  .sem-meta { color:#6b7280; font-size:.82rem; }
-  .sem-doc { background:#fff; border:1px solid #e3e7ec; border-radius:8px; padding:20px 26px;
-             max-height:72vh; overflow:auto; line-height:1.65; font-size:.93rem; }
-  .sem-doc h1 { font-size:1.35rem; color:#1f4e79; border-bottom:2px solid #1f4e79;
-                padding-bottom:6px; margin:0 0 14px; }
-  .sem-doc h2 { font-size:1.12rem; color:#1f4e79; margin:22px 0 8px; }
-  .sem-doc h3 { font-size:1.0rem; color:#2e74b5; margin:16px 0 6px; }
-  .sem-doc table { border-collapse:collapse; margin:10px 0; font-size:.86rem; width:100%; }
-  .sem-doc th { background:#dce6f1; color:#1f4e79; }
-  .sem-doc th, .sem-doc td { border:1px solid #cbd5e1; padding:5px 8px; text-align:left;
+  .sem-sub { color:var(--dim); font-size:.9rem; }
+
+  .sem-tabs { display:flex; gap:8px; margin:14px 0 10px; flex-wrap:wrap; align-items:center; }
+  .sem-tabs button { padding:7px 14px; border:1px solid var(--border); background:var(--card);
+                     color:var(--dim); cursor:pointer; border-radius:7px; font-size:.9rem;
+                     font-family:var(--font); transition:all .12s; }
+  .sem-tabs button:hover { color:var(--text); border-color:var(--accent); }
+  .sem-tabs button.on { background:var(--accent); color:#0f1117; border-color:var(--accent);
+                        font-weight:600; }
+
+  .sem-bar { display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:10px; }
+  .sem-bar input[type=search] { flex:1 1 280px; padding:8px 12px; border:1px solid var(--border);
+        border-radius:7px; font-size:.9rem; background:var(--bg2); color:var(--text);
+        font-family:var(--font); }
+  .sem-bar input[type=search]:focus { outline:none; border-color:var(--accent); }
+  .sem-meta { color:var(--dim); font-size:.82rem; font-family:var(--mono); }
+
+  .sem-toc { background:var(--bg2); border:1px solid var(--border); border-radius:8px;
+             padding:10px 14px; margin-bottom:12px; font-size:.85rem;
+             max-height:130px; overflow:auto; }
+  .sem-toc a { color:var(--accent); text-decoration:none; margin-right:16px; white-space:nowrap;
+               line-height:1.9; }
+  .sem-toc a:hover { color:var(--accent-hover); text-decoration:underline; }
+
+  .sem-doc { background:var(--card); border:1px solid var(--border); border-radius:10px;
+             padding:22px 28px; max-height:70vh; overflow:auto;
+             line-height:1.72; font-size:.92rem; color:var(--text); }
+  .sem-doc h1 { font-size:1.32rem; color:var(--accent); margin:0 0 16px; padding-bottom:8px;
+                border-bottom:1px solid var(--border); }
+  .sem-doc h2 { font-size:1.1rem;  color:var(--accent); margin:26px 0 9px; }
+  .sem-doc h3 { font-size:.99rem;  color:var(--accent-hover); margin:18px 0 7px; }
+  .sem-doc h4 { font-size:.94rem;  color:var(--text); margin:14px 0 6px; }
+  .sem-doc p  { margin:8px 0; }
+  .sem-doc strong { color:#fff; }
+  .sem-doc em { color:var(--dim); }
+
+  .sem-doc table { border-collapse:collapse; margin:12px 0; font-size:.85rem; width:100%; }
+  .sem-doc th { background:rgba(108,140,255,.14); color:var(--accent-hover); font-weight:600; }
+  .sem-doc th, .sem-doc td { border:1px solid var(--border); padding:6px 9px; text-align:left;
                              vertical-align:top; }
-  .sem-doc code { background:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:.86em; }
-  .sem-doc pre { background:#f7f8fa; border:1px solid #e3e7ec; border-radius:6px; padding:10px 12px;
-                 overflow:auto; }
-  .sem-doc blockquote { border-left:3px solid #2e74b5; background:#f5f9fd; margin:10px 0;
-                        padding:8px 14px; color:#334155; }
-  .sem-doc hr { border:0; border-top:1px solid #e3e7ec; margin:20px 0; }
-  .sem-doc mark { background:#fde68a; }
-  .sem-doc .warn { color:#b00020; font-weight:600; }
-  .sem-toc { background:#f8fafc; border:1px solid #e3e7ec; border-radius:8px; padding:12px 16px;
-             margin-bottom:12px; font-size:.86rem; max-height:150px; overflow:auto; }
-  .sem-toc a { color:#2e74b5; text-decoration:none; margin-right:14px; white-space:nowrap; }
-  .sem-toc a:hover { text-decoration:underline; }
-  .sem-err { background:#fff4f4; border:1px solid #f3c2c2; color:#b00020; border-radius:8px;
-             padding:14px 18px; }
+  .sem-doc tbody tr:nth-child(even) { background:rgba(255,255,255,.022); }
+
+  .sem-doc code { background:var(--bg2); color:var(--accent-hover); padding:1px 6px;
+                  border-radius:4px; font-family:var(--mono); font-size:.85em; }
+  .sem-doc pre { background:var(--bg); border:1px solid var(--border); border-radius:7px;
+                 padding:12px 14px; overflow:auto; font-family:var(--mono); font-size:.82rem;
+                 color:var(--text); line-height:1.6; }
+  .sem-doc pre code { background:none; color:inherit; padding:0; }
+
+  .sem-doc blockquote { border-left:3px solid var(--accent); background:rgba(108,140,255,.07);
+                        margin:12px 0; padding:9px 15px; color:var(--text); border-radius:0 6px 6px 0; }
+  .sem-doc ul { margin:8px 0; padding-left:22px; }
+  .sem-doc li { margin:4px 0; }
+  .sem-doc hr { border:0; border-top:1px solid var(--border); margin:22px 0; }
+  .sem-doc mark { background:rgba(251,191,36,.32); color:#fde68a; border-radius:3px;
+                  padding:0 2px; }
+  .sem-doc .warn { color:var(--yellow); font-weight:600; }
+
+  .sem-err { background:rgba(248,113,113,.10); border:1px solid var(--red); color:var(--red);
+             border-radius:8px; padding:14px 18px; }
+
+  /* 스크롤바도 테마에 맞춘다 (밝은 기본 스크롤바가 다크에서 튄다) */
+  .sem-doc::-webkit-scrollbar, .sem-toc::-webkit-scrollbar { width:9px; height:9px; }
+  .sem-doc::-webkit-scrollbar-track, .sem-toc::-webkit-scrollbar-track { background:var(--bg2); }
+  .sem-doc::-webkit-scrollbar-thumb, .sem-toc::-webkit-scrollbar-thumb {
+      background:var(--border); border-radius:5px; }
+  .sem-doc::-webkit-scrollbar-thumb:hover { background:var(--dim); }
 </style>
 
 <div class="sem-head">
