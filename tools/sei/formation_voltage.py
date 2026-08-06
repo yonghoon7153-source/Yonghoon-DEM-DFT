@@ -66,8 +66,13 @@ def main():
             # ⚠ `mid in str(entry_id)` 는 **부분문자열 매칭**이라 mp-1153 이 mp-11530 에도
             #   걸린다. material_id 로 정확히 맞춘다.
             def _mid(e):
-                return str(getattr(e, "data", {}).get("material_id", "")) or \
-                    str(e.entry_id).split("-GGA")[0].split("-R2SCAN")[0]
+                # ⚠ `.get(k, "") ` 는 **키가 있고 값이 None 이면 None 을 준다**(기본값이 아니라).
+                #   그러면 str(None) == "None" 이 truthy 라 모든 엔트리가 "None" 이 됐다
+                #   (2026-08-06: 전 항목에서 "mp-XXXX 를 못 찾았다" 가 뜬 원인).
+                raw = (getattr(e, "data", None) or {}).get("material_id")
+                if raw:
+                    return str(raw)
+                return str(e.entry_id).split("-GGA")[0].split("-R2SCAN")[0]
             tgt = [e for e in entries if _mid(e) == mid]
             if not tgt:
                 print(f"  ⚠ {mid} 를 엔트리에서 못 찾았다 — 같은 조성의 최저 엔트리로 대체")
