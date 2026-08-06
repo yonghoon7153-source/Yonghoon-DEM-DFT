@@ -82,6 +82,12 @@ def scan(j):
         "E": float(et[-1]) * RY if et else None,
         "cpu": re.findall(r"total cpu time spent up to now is\s+([\d.]+) secs", tx),
         "mtime": os.path.getmtime(o),
+        # ⚠ pw.x 가 초기화에서 죽으면 iteration 이 0개인 채 scf.out 만 남는다.
+        #   그 경우 '아직 안 돌았다'와 구분이 안 되므로 에러 신호를 같이 물고 온다.
+        "oom": bool(re.search(r"cufftPlanMany|cfft3d_gpu|[Ii]nsufficient.*memory"
+                              r"|out of memory|CUDA.*alloc", tx)),
+        "err": bool(re.search(r"Error in routine|%%%%%%|stopping \.\.\.", tx)),
+        "tail": [l for l in tx.splitlines() if l.strip()][-14:],
     }
 
 
@@ -156,6 +162,19 @@ for j in JOBS:
                       " (mixing_beta·ndim 또는 U-ramp 재검토)")
         except (ValueError, IndexError):
             pass
+    # ── 초기화 사망 — iteration 이 0개인데 프로세스도 없으면 시작하자마자 죽은 것이다
+    if not d["it"] and not d["conv"] and not pw:
+        why = ("**GPU 메모리 초과(OOM)**" if d["oom"] else
+               "**QE 에러**" if d["err"] else "**iteration 0개 · 프로세스 없음**")
+        print(f"       ⛔⛔ {why} — SCF 를 한 번도 못 돌았다. scf.out 꼬리:")
+        for ln in d["tail"]:
+            print("         " + ln[:110])
+        if d["oom"]:
+            print("       → c 축소는 답이 아니다(15 Å 게이트). DIAG=ppcg 로 한 단 내려갈 것:")
+            print("          DIAG=ppcg MAXSTEP=5 bash tools/sdcp/run_phaseB_sdcp_v3.sh probe")
+        elif d["err"]:
+            print("       → 입력 문제다. 위 'Error in routine' 줄의 루틴 이름이 원인을 가리킨다")
+        continue
     if d["E"] is not None:
         print(f"       E = {d['E']:.4f} eV")
 
