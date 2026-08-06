@@ -774,7 +774,7 @@ def main():
             "  #   is it still a radical on -SO3, or anion + Ni2+ (charge transfer)?\n"
             "  #   (review S5.A-11: this is the core physics -- measure it, don't assume)\n"
         )
-    print(f"\nwrote 5 inputs + meta.json + README_harvest.txt under {a.out}", flush=True)
+    print(f"\nwrote {len(jobs)} inputs + meta.json + README_harvest.txt under {a.out}", flush=True)
 
 
 if __name__ == "__main__":

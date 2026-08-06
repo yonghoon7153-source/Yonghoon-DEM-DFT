@@ -215,6 +215,13 @@ run_one(){
   [ -s "$OUT/$j/scf.out" ] && mv "$OUT/$j/scf.out" "$OUT/$j/scf.out.$(date +%m%d_%H%M)"
   ts "▶ $j 시작"
   ( cd "$OUT/$j" && $MPIRUN -np 1 --oversubscribe "$QE" -nk 1 -in scf.in > scf.out 2>&1 )
+  # ⚠ scf.out 이 없으면 pw.x 가 아예 안 돌았거나 파일이 지워진 것이다. doctor 를 부르면
+  #   FileNotFoundError 로 죽는다 — 그리고 그걸 '미수렴'으로 읽으면 안 된다 (2026-08-06).
+  if [ ! -s "$OUT/$j/scf.out" ]; then
+    ts "⛔ $j — scf.out 이 없다. pw.x 가 실행되지 않았거나 실행 중 파일이 지워졌다."
+    ts "   (⚠ 돌아가는 중에 scf.out 을 rm 하면 이렇게 된다 — 실측 사고 2026-08-06)"
+    return 3
+  fi
   if is_oom "$OUT/$j/scf.out"; then ts "✗ $j — OOM"; oom_advice; return 2; fi
   if grep -aq "convergence has been achieved" "$OUT/$j/scf.out"; then
     ts "✓ $j 수렴 — $(grep -a '!.*total energy' "$OUT/$j/scf.out" | tail -1)"
@@ -257,8 +264,21 @@ if [ "$STAGE" = probe ]; then
   gen || { ts "⛔ 입력 생성 실패"; exit 1; }
   run_one complex_doped_extr; rc=$?
   [ "$rc" = 2 ] && { ts "⛔ 이 셀은 현재 설정으로 안 들어간다."; exit 2; }
-  ts "✅ 탐침 통과 — c=$C Å 가 메모리에 들어간다. 본 계산으로 가도 된다."
-  grep -a "Estimated max dynamical RAM\|per-process dynamical memory" "$OUT/complex_doped_extr/scf.out" | tail -3
+  [ "$rc" = 3 ] && { ts "⛔ 탐침 판정 불가 — 산출물이 없다. 다시 돌릴 것."; exit 3; }
+  # ⚠⚠ '미수렴(rc=1)이 아니면 통과' 로 판정하면 안 된다 — 아무것도 안 돌아도 통과가 된다.
+  #   통과의 정의는 **SCF 반복이 실제로 한 번이라도 돌았고 OOM 이 없었다** 이다.
+  F="$OUT/complex_doped_extr/scf.out"
+  NIT=$(grep -ac "iteration #" "$F" 2>/dev/null || echo 0)
+  EST=$(grep -a "Estimated max dynamical RAM" "$F" 2>/dev/null | tail -1)
+  ts "  QE 견적: ${EST:-(없음)}"
+  if [ "$NIT" -lt 1 ]; then
+    ts "⛔ 탐침 실패 — SCF 반복이 0회다. 메모리가 초기화 단계에서 이미 부족하다."
+    ts "   위 견적 줄과 scf.out 꼬리를 보고 사다리를 한 단 더 내릴 것."
+    tail -12 "$F"; exit 4
+  fi
+  ts "✅ 탐침 통과 — SCF 반복 ${NIT}회 완주. c=$C Å · ecutwfc $ECUTWFC · ecutrho $ECUTRHO"
+  ts "   본 계산은 **같은 환경변수 네 개를 전부** 붙여서 돌릴 것:"
+  ts "     DIAG=$DIAG GAP=$GAP ECUTWFC=$ECUTWFC ECUTRHO=$ECUTRHO bash tools/sdcp/run_phaseB_sdcp_v3.sh"
   exit 0
 fi
 
