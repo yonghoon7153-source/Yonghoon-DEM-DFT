@@ -1,0 +1,505 @@
+{
+ "slug": "fan2026_sulfide_assb_stability_review_ECERD2600097",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-06",
+ "sources": [
+  "260805_ECER-D-26-00097.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 87,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic illustration of the key challenges faced by sulfide-based ASSBs at both the electrolyte intrinsic properties and electrode interfaces.",
+   "bbox": [
+    84.0,
+    73.6,
+    514.3,
+    351.1
+   ],
+   "w": 1794,
+   "h": 1157,
+   "dpi": 300,
+   "src": "260805_ECER-D-26-00097.pdf",
+   "blank": 0.293
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 88,
+   "file": "fig_2.png",
+   "caption": "Figure 2. a) Schematic diagrams of liquid LIBs and ASSBs [1]. b) The operating principle of conventional lithium batteries [42]. c) Comparative analysis of performance characteristics among various SEs and d) ionic conductivity of representative SEs [50,57].",
+   "bbox": [
+    84.0,
+    66.9,
+    514.4,
+    339.3
+   ],
+   "w": 1794,
+   "h": 1136,
+   "dpi": 300,
+   "src": "260805_ECER-D-26-00097.pdf",
+   "blank": 0.482
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 89,
+   "file": "fig_3.png",
+   "caption": "Figure 3. a) Adsorption configurations and corresponding adsorption energies of H2O on the surfaces of sulfide SEs [81]. b) Effects of different cations on the hydrolysis reaction energy of sulfide SEs and cation selectivity guidance chart [84]. c) Vapor deposition method for constructing ultrathin superhydrophobic layers on sulfide SE surfaces [87]. d) Ionic conductivity of 1-undecanethiol-coated sulfide SEs as a function of exposure time [86].",
+   "bbox": [
+    84.0,
+    71.2,
+    514.4,
+    384.3
+   ],
+   "w": 1794,
+   "h": 1306,
+   "dpi": 300,
+   "src": "260805_ECER-D-26-00097.pdf",
+   "blank": 0.724
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 90,
+   "file": "fig_4.png",
+   "caption": "Figure 4. a) Variation in Ion Conductivity of Li7P3S11 SE following exposure to different organic solvents [92]. b) Mechanism of interaction between organic solvents of different polarities and SEs [24]. c) InF3-modified sulfide SE enhances solvent stability [97].",
+   "bbox": [
+    84.0,
+    73.4,
+    514.4,
+    335.7
+   ],
+   "w": 1794,
+   "h": 1094,
+   "dpi": 300,
+   "src": "260805_ECER-D-26-00097.pdf",
+   "blank": 0.721
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 91,
+   "file": "fig_5.png",
+   "caption": "Figure 5. a) Decomposition temperatures of different SEs and commercial liquid electrolytes [101]. b)Time-sequential snapshots of AIMD simulations on the interface structure of Li and tetrahedra in LGPS structure [107]. c) Sequential images of SE/Li sample as a function of time during heating (from 200 to 400 °C) [99]. d) Phase diagram composed of Th0 values of sulfide SEs for all Li/P/S ratios. The common sulfide SEs are scattered as black dots in the phase diagram. e) Thermal stability parameter Th' values of Li3PS4 modified by doping, where the values are marked below each element symbol for the whole Periodic Table. f) Schematic illustration of the new theoretical paradigm and rule between the thermal stability of a SE and its structure. [109]",
+   "bbox": [
+    84.0,
+    70.6,
+    514.4,
+    275.5
+   ],
+   "w": 1794,
+   "h": 854,
+   "dpi": 300,
+   "src": "260805_ECER-D-26-00097.pdf",
+   "blank": 0.59
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 92,
+   "file": "fig_6.png",
+   "caption": "Figure 6. a) Schematic energy diagram of the CAM particles and sulfide SE [114]. b) Evolution of chemical potential across the SEs in contact with an anode and a cathode [21]. c) Large-potential phase diagram of LPSCl [33]. d) Electrochemical stability window of SE in various categories (sulfides, oxides, nitrides, chlorides) [33]. e) Electrochemical stability windows of common solid electrolytes [22].",
+   "bbox": [
+    84.0,
+    69.4,
+    514.4,
+    292.5
+   ],
+   "w": 1794,
+   "h": 930,
+   "dpi": 300,
+   "src": "260805_ECER-D-26-00097.pdf",
+   "blank": 0.517
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 93,
+   "file": "fig_7.png",
+   "caption": "Figure 7. a) A schematic illustration of the gaps between lab-level SEs pellet and large- scale SEs sheet [124]. b) Preparation of dry-processed sulfur-based SE membranes using TPA via solvent-free fusion technology [127]. c) Fabrication of sulfide SE membranes via PTFE dry processing [129]. d) Schematic diagram of an SE film composed of SE, adhesive, support material, and substrate [56].",
+   "bbox": [
+    84.0,
+    71.1,
+    514.4,
+    260.0
+   ],
+   "w": 1794,
+   "h": 788,
+   "dpi": 300,
+   "src": "260805_ECER-D-26-00097.pdf",
+   "blank": 0.596
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 94,
+   "file": "fig_8.png",
+   "caption": "Figure 8. a) Schematic diagram of the two distinct failure routes of different sulfide SEs with NCM [132]. b) Illustration of electrochemical operating windows for LPSCl, Li-S, and Li-ion chemistries [134]. c) Interfacial formation and chemical-mechanical processes of nickel-rich layered oxide cathodes and sulfide electrolytes [136]. d) Global schemes summarizing LPSCl electrochemical and chemical reactivity during charge [137].",
+   "bbox": [
+    84.0,
+    66.1,
+    514.4,
+    277.6
+   ],
+   "w": 1794,
+   "h": 882,
+   "dpi": 300,
+   "src": "260805_ECER-D-26-00097.pdf",
+   "blank": 0.545
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 95,
+   "file": "fig_9.png",
+   "caption": "Figure 9. a) The schematic diagram of the microstructure of composite cathodes [143]. b) Schematic illustration of ionic and electronic conduction percolation within a cathode composite of LiNbO3-coated NCM with a sulfide SE, and bare NCM with a chloride SE [145]. c) Volumetric occupation diagram and scheme illustrating the effect of carbon additive on three-compositional elements [147]. d) Schematic illustrations of high-load layer-graded electrodes [149].",
+   "bbox": [
+    84.0,
+    71.1,
+    514.4,
+    275.7
+   ],
+   "w": 1794,
+   "h": 853,
+   "dpi": 300,
+   "src": "260805_ECER-D-26-00097.pdf",
+   "blank": 0.5
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 96,
+   "file": "fig_10.png",
+   "caption": "Figure 10. a) 3D contour plots for different composites show the SOC and electrolyte current density at the end of the discharging process. Distribution of active and inactive NCM particles in the composites. Contour plot of average von Mises stress in NCM and SE in the composite after discharging with a cut-off voltage of 3 V [150]. b) Schematic illustration of morphological structural changes in a composite electrode by pressure application [151]. c) Example for the three-layer cathode structure resulting in a gradient of NCM and LPSCl. Simulated and experimental effective electronic and ionic conductivity of composites with different weight fractions of NCM [152]. d) Schematic illustration of the effect of micromorphology on mechanical pressure. Cross-sectional SEM images of the LRMO cathodes in the pristine state and after 100 cycles. [153]",
+   "bbox": [
+    84.0,
+    70.0,
+    514.4,
+    401.5
+   ],
+   "w": 1794,
+   "h": 1382,
+   "dpi": 300,
+   "src": "260805_ECER-D-26-00097.pdf",
+   "blank": 0.506
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 97,
+   "file": "fig_11.png",
+   "caption": "Figure 11. a) Schematic illustration of a bare NCM composite cathode, and an NCM@LPSCl composite cathode [154]. b) Li2CO3 coating suppresses the space charge effect and interfacial side reactions with the sulfide SE [155]. c) Schematic of the LATPO‐coating construction process on the LCO surface [156]. d) Schematics of functional LiPON coating on NCM cathode with the simulation result of current density distribution for uncoated and coated cathodes within electrolyte [157].",
+   "bbox": [
+    84.0,
+    67.0,
+    514.4,
+    308.0
+   ],
+   "w": 1794,
+   "h": 1005,
+   "dpi": 300,
+   "src": "260805_ECER-D-26-00097.pdf",
+   "blank": 0.447
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 98,
+   "file": "fig_12.png",
+   "caption": "Figure 12. a) 3D schematic of the ASSBs. SEM images (upper) and corresponding digital images of surface morphologies of the cast cathode, the PVDF fiber network electro spun on the cathode and the FPG electrolyte fabricated on the cathode [158]. b) Schematic illustration of \"polymer-patched inorganic\" coating protocol surpassing the typical interface engineering [159]. c) Schematic illustration of the role of PEDOT modification [160]. d) Synchrotron X-ray computed tomography reconstruction with volume rendering shows the 3D images and volume fraction of composite cathodes after cycling [161].",
+   "bbox": [
+    84.0,
+    72.4,
+    514.4,
+    445.7
+   ],
+   "w": 1794,
+   "h": 1557,
+   "dpi": 300,
+   "src": "260805_ECER-D-26-00097.pdf",
+   "blank": 0.445
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 99,
+   "file": "fig_13.png",
+   "caption": "Figure 13. a) Structural formula and ion transport pathway of a new iron-based halide Li1.3Fe1.2Cl4 cathode material [163]. b) Structural model of new iron based halide Li2FeCl4 cathode material [164]. c) Illustration of the structure evolution of Li2−2xFe1+xCl4 during the lithiation/delithiation process [165].",
+   "bbox": [
+    84.0,
+    71.9,
+    514.4,
+    306.1
+   ],
+   "w": 1794,
+   "h": 977,
+   "dpi": 300,
+   "src": "260805_ECER-D-26-00097.pdf",
+   "blank": 0.461
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 100,
+   "file": "fig_14.png",
+   "caption": "Figure 14. a) The stacking of anions in the original FeCl3 and the phase evolution of the positive electrode during charge and discharge processes [166]. b) Specific capacity and gravimetric energy density of specific metal chloride CAMs through conversion reactions [167]. c) Comparison of Cl element with transition metal elements Co, Mn, and Ni in world reserves and prices [168].",
+   "bbox": [
+    84.0,
+    67.2,
+    514.4,
+    276.7
+   ],
+   "w": 1794,
+   "h": 873,
+   "dpi": 300,
+   "src": "260805_ECER-D-26-00097.pdf",
+   "blank": 0.62
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 101,
+   "file": "fig_15.png",
+   "caption": "Figure 15. a) Low-cost Li-free cathodes with high energy density (>1200 Wh kg−1) [169]. b) Role and evolution of FeS2 cathode microstructure in argyrodite-based ASSBs [171]. c) Schematic illustration of cathode microstructure evolution during charging [173]. d) Schematic illustration the evolution of the cathode microstructure during charging for a conventional Li2S cathode and the proposed Li2SexS1−x composite cathode [174].",
+   "bbox": [
+    84.0,
+    71.8,
+    514.4,
+    306.2
+   ],
+   "w": 1794,
+   "h": 977,
+   "dpi": 300,
+   "src": "260805_ECER-D-26-00097.pdf",
+   "blank": 0.564
+  },
+  {
+   "key": "f16",
+   "kind": "figure",
+   "label": "16",
+   "page": 102,
+   "file": "fig_16.png",
+   "caption": "Figure 16. a) Schematics of dendrite initiation at the interface of electrolyte/anode [176]. b) Operando X-Ray Computed Tomography virtual cross-sections during plating of a Li/LPSCl/Li cell showing the development of a dendrite crack from initiation through propagation to complete short circuit [177]. c) Simulation of lithium dendrite nucleation at interfaces [178].",
+   "bbox": [
+    84.0,
+    68.3,
+    514.4,
+    511.2
+   ],
+   "w": 1794,
+   "h": 1847,
+   "dpi": 300,
+   "src": "260805_ECER-D-26-00097.pdf",
+   "blank": 0.437
+  },
+  {
+   "key": "f17",
+   "kind": "figure",
+   "label": "17",
+   "page": 103,
+   "file": "fig_17.png",
+   "caption": "Figure 17. a) The key factors for the initiation and propagation of lithium dendrites during battery cycling [180]. b) Schematic of the processes at the interface of SE/Lithium. [181]. c) Normalized potential distribution within polycrystalline materials. d) Distribution of lithium ions in polycrystalline materials during dendrite penetration [182].",
+   "bbox": [
+    84.0,
+    70.3,
+    514.4,
+    416.9
+   ],
+   "w": 1794,
+   "h": 1446,
+   "dpi": 300,
+   "src": "260805_ECER-D-26-00097.pdf",
+   "blank": 0.505
+  },
+  {
+   "key": "f18",
+   "kind": "figure",
+   "label": "18",
+   "page": 104,
+   "file": "fig_18.png",
+   "caption": "Figure 18. a) SEM images of pores at the interface and dendrites within electrolyte [184]. b) Schematics of the lithium growth mechanism within cracks [185]. c) Diagram of electrode interface volume change during the cycling and evolution of voids at the Lithium/sulfide interface [186].",
+   "bbox": [
+    84.0,
+    72.1,
+    514.4,
+    273.9
+   ],
+   "w": 1794,
+   "h": 842,
+   "dpi": 300,
+   "src": "260805_ECER-D-26-00097.pdf",
+   "blank": 0.514
+  },
+  {
+   "key": "f19",
+   "kind": "figure",
+   "label": "19",
+   "page": 105,
+   "file": "fig_19.png",
+   "caption": "Figure 19. a) Schematic of Lithium/LPSCl interface cycled at an overall current density above the critical current for stripping [188]. b) Li deintercalation under stacking force applied by the atomic force microscope cantilever, and the dynamic equilibrium between pore surface adsorption, atom diffusion, and interfacial stripping [189]. c) Schematic illustration of the Li/sulfide interface showing different contact conditions under higher/ lower stack pressure [190]. d) Deformation mechanism maps of pure lithium: their application in determining stack pressure for ASSBs [191].",
+   "bbox": [
+    84.0,
+    66.6,
+    514.4,
+    402.1
+   ],
+   "w": 1794,
+   "h": 1399,
+   "dpi": 300,
+   "src": "260805_ECER-D-26-00097.pdf",
+   "blank": 0.449
+  },
+  {
+   "key": "f20",
+   "kind": "figure",
+   "label": "20",
+   "page": 106,
+   "file": "fig_20.png",
+   "caption": "Figure 20. a) Schematic of the relationship between electronics/crystal properties, thermodynamics/ kinetics, and electrochemical energy storage properties of graphite anodes [192]. b) Interface reactions of amorphous carbon or crystalline carbon with sulfide SEs [195]. c) Schematic illustration of the synthesis process for a novel anode [197].",
+   "bbox": [
+    84.0,
+    66.9,
+    514.4,
+    261.3
+   ],
+   "w": 1794,
+   "h": 811,
+   "dpi": 300,
+   "src": "260805_ECER-D-26-00097.pdf",
+   "blank": 0.677
+  },
+  {
+   "key": "f21",
+   "kind": "figure",
+   "label": "21",
+   "page": 107,
+   "file": "fig_21.png",
+   "caption": "Figure 21. a) Time-series cross-sectional X-Ray Computed Tomography image slices from different locations at the silicon/LPSCl interface showing the delithiation and relithiation processes [200]. b) Limiting factors causing poor kinetic performances of Si anodes at particle, interface, and electrode levels [201].",
+   "bbox": [
+    84.0,
+    69.1,
+    514.4,
+    199.3
+   ],
+   "w": 1794,
+   "h": 543,
+   "dpi": 300,
+   "src": "260805_ECER-D-26-00097.pdf",
+   "blank": 0.419
+  },
+  {
+   "key": "f22",
+   "kind": "figure",
+   "label": "22",
+   "page": 108,
+   "file": "fig_22.png",
+   "caption": "Figure 22. a) Comparison of the main performance parameters and interface influence of graphite, Li, and Al metal as anode materials [204]. b) Schematic of a composite electrode design compared with an all-electrochemically active electrode design, and illustration of the delithiation process of an all-electrochemical-active μ-LixSi electrode [207]. c) Schematics showing dealloyed metals/Si using a liquid electrolyte and an SE at low and high stack pressures [210]. d) Schematic of the Si anode compared with the Li4.4Si-nSi anode design. Performance comparison graph of the cell-level energy densities. Structure evolution investigation during the cycling process [211].",
+   "bbox": [
+    84.0,
+    70.2,
+    514.4,
+    526.2
+   ],
+   "w": 1794,
+   "h": 1901,
+   "dpi": 300,
+   "src": "260805_ECER-D-26-00097.pdf",
+   "blank": 0.445
+  },
+  {
+   "key": "f23",
+   "kind": "figure",
+   "label": "23",
+   "page": 109,
+   "file": "fig_23.png",
+   "caption": "Figure 23. a) Schematic representation and comparison of anode-free ASSBs and commercial LIBs. Interrelationship between influencing factors of anode-free ASSBs- mutually reinforcing [213]. b) Microstructural evolution determined via post-mortem analysis of the Ag/SE/Li cell [214]. c) Integrated protocol and scheme of different cell configurations at fully charged and discharged states [216].",
+   "bbox": [
+    84.0,
+    71.2,
+    512.6,
+    353.6
+   ],
+   "w": 1786,
+   "h": 1178,
+   "dpi": 300,
+   "src": "260805_ECER-D-26-00097.pdf",
+   "blank": 0.485
+  },
+  {
+   "key": "f24",
+   "kind": "figure",
+   "label": "24",
+   "page": 110,
+   "file": "fig_24.png",
+   "caption": "Figure 24. a) Strategy of electron redistribution through Mg and F co-doping to suppress interfacial redox reactions between LPSCl and Li [217]. b) Metal halide CuBr2 promotes electron redistribution at the anode interface [218]. c) Correlation between configurational entropy calculated from the specific occupancies of the anion sublattice shown in panel and ionic conductivity [68]. d) Schematic diagram of the ASSBs with the highlighted fluorinated interface layer [221]. e) Regenerated solid interfaces enhance the stability of anode interfaces [222]. f) Working principles of dynamically adaptive interphases in improving the cyclic performance of ASSBs in the stripping state [41].",
+   "bbox": [
+    84.0,
+    72.0,
+    514.4,
+    383.6
+   ],
+   "w": 1794,
+   "h": 1299,
+   "dpi": 300,
+   "src": "260805_ECER-D-26-00097.pdf",
+   "blank": 0.441
+  },
+  {
+   "key": "f25",
+   "kind": "figure",
+   "label": "25",
+   "page": 111,
+   "file": "fig_25.png",
+   "caption": "Figure 25. a) The mechanism of resisting Li dendrites of the dielectric phase-induced multifunctional layer. Li+ concentration distributions of the final phase morphologies [225]. b) The lithiation process of electrolytes reacting with lithium metal and the distribution of elements at the interface [227]. c) Schematic illustration and characterization of Li3N interface layers [228]. d) Treatment process of lithium metal using MPDMS as a chemical agent and schematic illustrations of lithium metal surface after cycling [229]. e) Schematic illustrations of structure and Li plating behavior for artificial SEI layers [230].",
+   "bbox": [
+    84.0,
+    66.5,
+    514.4,
+    402.2
+   ],
+   "w": 1794,
+   "h": 1400,
+   "dpi": 300,
+   "src": "260805_ECER-D-26-00097.pdf",
+   "blank": 0.443
+  },
+  {
+   "key": "f26",
+   "kind": "figure",
+   "label": "26",
+   "page": 112,
+   "file": "fig_26.png",
+   "caption": "Figure 26. a) Schematic illustration of the pretreated processes for the formation of a LiF-rich SEI layer between the Li metal and the SEs [231]. b) Schematic diagram of the synthesis procedure of PHI@Li [233]. c) Schematic of the preparation of the LiI layer on the Li metal surface through a chemical iodine vapor deposition method and its application in ASSBs [234]. d) Illustration of in situ formation of the LixMg/LiF/polymer (lithiophilic-lithiophobic) SE interphase [235]. e) Schematic illustrations of the surface chemistry route to prepare the alloy-protected Li anodes based on (de)solvation mechanism and adsorption mechanism [236]. f) LiF/LiAl gradient interface and element distribution [237].",
+   "bbox": [
+    84.0,
+    69.1,
+    514.4,
+    355.1
+   ],
+   "w": 1794,
+   "h": 1192,
+   "dpi": 300,
+   "src": "260805_ECER-D-26-00097.pdf",
+   "blank": 0.509
+  }
+ ]
+}

@@ -186,6 +186,13 @@
    "79dcf62a-56._Fundamentals_of_inorganic_solidstate_electrolytes_for_batteries.pdf"
   ]
  },
+ "fan2026_sulfide_assb_stability_review_ECERD2600097": {
+  "figures": 26,
+  "generated": "2026-08-06",
+  "pdfs": [
+   "260805_ECER-D-26-00097.pdf"
+  ]
+ },
  "fujimura2013_ml_conductivity_origin": {
   "figures": 4,
   "generated": "2026-08-05",
@@ -953,11 +960,13 @@
   ]
  },
  "zhu2020_air_stable_se_design_principles": {
-  "figures": 4,
-  "generated": "2026-08-05",
+  "figures": 5,
+  "generated": "2026-08-06",
   "pdfs": [
    "944d0e44-55._Materials_Design_Principles_for_AirStable_LithiumSodium_Solid_Electrolytes.pdf",
-   "ae64797e-55._Sup_Materials_Design_Principles_for_AirStable_LithiumSodium_SolidElectrolytes.pdf"
+   "ae64797e-55._Sup_Materials_Design_Principles_for_AirStable_LithiumSodium_SolidElectrolytes.pdf",
+   "54. Materials Design Principles for Air-Stable LithiumSodium Solid Electrolytes.pdf",
+   "54. Sup) Materials Design Principles for Air-Stable LithiumSodium SolidElectrolytes.pdf"
   ]
  },
  "zuo2022_chlorination_cathode_interface": {

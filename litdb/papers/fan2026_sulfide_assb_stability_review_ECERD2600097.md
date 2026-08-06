@@ -1,6 +1,10 @@
 # Stability Issues in Sulfide-Based All-Solid-State Batteries: From Material Properties to Electrode Interfaces — Yang Li / … / Hong Liu* / Ce-Wen Nan / Li-Zhen Fan* (Electrochemical Energy Reviews, **미출판 manuscript draft ECER-D-26-00097**)
 
-> slug `fan2026_sulfide_assb_stability_review_ECERD2600097` · DOI **없음(미출판; draft 내 placeholder "10.1002/((please add manuscript number))" — EER은 Springer인데 Wiley prefix가 박혀 있는 템플릿 잔재)** · type **review (문헌 컴파일, 자체 계산/실험 0)** · PDF 4분할 `653a4e87-ECERD2600097___1.pdf`(30p) + `eb8d18d5-…___2.pdf`(30p) + `5d14fe59-…___3.pdf`(30p) + `38482998-…___4.pdf`(23p) — **총 113 pp, 전 페이지 정독** · digested `2026-07-16` · status ✅ · **📌 우선순위 must-read (INDEX 최상단)**
+> slug `fan2026_sulfide_assb_stability_review_ECERD2600097` · DOI **없음(미출판; draft 내 placeholder "10.1002/((please add manuscript number))" — EER은 Springer인데 Wiley prefix가 박혀 있는 템플릿 잔재)** · type **review (문헌 컴파일, 자체 계산/실험 0)** · **총 113 pp, 전 페이지 정독** · digested `2026-07-16` · **재정독 `2026-08-06` (Revision 라운드)** · status ✅ · **📌 우선순위 must-read (INDEX 최상단)**
+>
+> **PDF 이력** — ① 초판 digest 근거: 4분할 `653a4e87-ECERD2600097___1.pdf`(30p) + `eb8d18d5-…___2.pdf`(30p) + `5d14fe59-…___3.pdf`(30p) + `38482998-…___4.pdf`(23p).
+> ② **Revision 라운드 원본: `litdb/inbox/260805_ECER-D-26-00097.pdf`** — Editorial Manager 병합 단일본 113 pp (PDF 생성 2026-06-21, 사용자 주석 2026-08-06).
+> **판본 동일성 확인 완료 → digest 를 새로 만들지 않고 이 파일을 갱신한다** (근거는 §17.1).
 
 > 🔗 **리비전 노트 따로 있음** — 1저자가 심사 리비전 중 건진 문장·우리 해석·지적 후보는
 > `kb/reviews/ECERD2600097_review_notes.md`. 이 digest 는 *원고가 무엇을 말하는가*,
@@ -10,6 +14,8 @@
 
 > elements: B Br C Cl Cu F Fe Ge H I In Li N Nb O P S Y
 > methods: bvse, dft, elf, esw, functional, md, mlip, pdos
+> folder: **Revision** (사용자 분류 — 심사 리비전 라운드 자료. 같은 라운드의 우리 쪽 산출물은 `kb/reviews/`)
+> figures: **26/26 크로핑 완료** → `litdb/figures/fan2026_sulfide_assb_stability_review_ECERD2600097/fig_1..26.png` (2026-08-06, 본문 26 · SI 0)
 
 ## 0. 이 digest를 읽는 법
 - 이 논문은 **황화물 ASSB "안정성" 전 분야의 field-map 리뷰** (본문 56 pp + 참고문헌 239개 + Figure 26개). [Bai](argyrodite 전용)·[Rupp](oxide/sulfide 광역)·[Kang](우리 그룹 electrochemo-mechanical)에 이은 **네 번째 리뷰 좌표계** — 이번 것은 "**안정성 축**"으로 짠 지도이며, 우리 캠페인(자유-S 산화 서사·B₂O₃/O 도핑·음극 SEI json)이 **여섯 칸에 동시에 꽂힌다** (§11).
@@ -96,7 +102,8 @@
 | 계면 3유형 | ① 열역학 안정 ② mixed ion–electron conductive(MCI: Li₂S·Li₄GeS₄·P₂Sₓ) ③ passivated(SEI형: 고 σ_ion·저 σ_e) — ③이 바람직 | §3.4 (ref 116 Wenzel) |
 | **2.5–4.1 V** | LPSCl–NCM 실작동 구간에서 산화분해 진행 관측 (Fig 8d, ref 137) | §4.1.2 |
 | Fig 6d 창 모음: **LiPON 0.7–1.1 V · LGPS 1.71–2.14 V · LLZO 0.05–2.91 V · Li₃YCl₆ 0.6–4.23 V**; 0 V 산물(Li₃P/Li₃N/Li₂O·Zr/Li₂O/La₂O₃·Y/LiCl)·5 V 산물(N₂O₅/P₂O₅/O₂·GeS₂/P₂S₅/S·La₂Zr₂O₇·Cl₂/YCl₃) | SE 4군 열역학 창 표준값(Zhu/Mo 계열) | Fig 6d (ref 33) |
-| Fig 6c LPSCl large-potential phase diagram | Li uptake per f.u. 계단: 저전압 Li₃P+Li₂S+LiCl(환원 최종) → Li₂S+P+LiCl → **안정창(~1.7–2.1)** → 산화측 Li₃PS₄+LiCl+S → P₂Sₓ+LiCl+S (⚠ 일부 라벨 저해상) | Fig 6c (ref 33) |
+| Fig 6c LPSCl large-potential phase diagram | Li uptake per f.u. 계단(**2026-08-06 그림 실측으로 판독 완료**): 0–0.87 V uptake≈8 **Li₃P+LiCl+Li₂S**(환원 최종) → ~1.35–1.72 V uptake≈5 **LiCl+Li₂S+P** → **uptake=0 평탄부 `figure-read ≈ 1.7–2.35 V` = LPSCl 고유 안정창** → ~2.35–2.65 V uptake≈−2 **Li₃PS₄** → ~2.65–3.3 V uptake≈−5 **P₂Sₓ+LiCl+S** | Fig 6c (ref 33) |
+| ⚠ **초판 digest 교정** | 이 칸에 적혀 있던 "안정창 ~1.7–2.1"은 **LGPS 값(Fig 6d)을 LPSCl 로 잘못 옮긴 것**. Fig 6c 의 LPSCl 상단 경계는 `figure-read ≈ 2.3–2.4 V` — **우리 grand-potential onset 2.256 V 와 오히려 더 가깝다**(§11 참조) | 2026-08-06 |
 | Fig 8b LPSCl 작동창 도식 | LPSCl 환원/산화 한계 박스(≈1.7–2.1)와 Li-ion/Li-S 화학의 전위영역 대비 | Fig 8b (ref 134 Tan) |
 
 ### 4.5 기계 안정성
@@ -243,16 +250,27 @@
 - **방법 스펙트럼 총평**: 리뷰는 DFT(ESW/흡착/서술자)+AIMD/MD(계면·덴드라이트)+연속체(미세구조·압력)를 **한 서사로 엮지만 자체 계산은 0** — 모든 수치는 원전 소환. 무질서 처리·functional 등 **계산 디테일은 일절 없음**(리뷰 특성상 n/a).
 
 ## 10. Figure set ★ (전 26개)
+
+> 🖼 **본 것 / 안 본 것 구분 (2026-08-06 Revision 라운드)** — 26장 전부 `litdb/figures/<slug>/` 에 크로핑되어 있다.
+> 그중 **실제 이미지를 Read 로 본 것 = Fig 3 · 5 · 6 · 8 · 17 · 24 (6장)**. 나머지 20장은 **캡션·본문 기반**이며
+> 아래 표에서 그 행들은 초판(2026-07-16) 서술 그대로다. 그림에서만 읽은 값은 `figure-read ≈` 로 표기했다.
+> 초판 digest 가 "⚠ 라벨 저해상"으로 남겨 뒀던 **Fig 5c·5e 는 이번에 판독됐다**(해당 행 참조).
+
 | Fig | 패널·내용 | 원전 | 우리가 쓸 점 |
 |---|---|---|---|
 | **1** | 리뷰 전체 도식: (a) 고유 특성(공기/용매 polar attack·전기화학/열폭주·기계 gas/break) (b) 황화물/양극(간극·균열·박리·부산물·Li⁺ 확산 차단) (c) 황화물/음극(dead Li·불균일 전류·부산물·덴드라이트·부피변화) | 자체 | 우리 발표 "안정성 3분할(고유/양극/음극)" 오프닝 프레임으로 차용 |
 | **2** | (a) 액체 LIB vs ASSB 구조 (b) 작동원리 (c) SE 6군 radar(이온선택성/산화·환원 안정성/화학·열·기계/집적/비용/ASR) (d) 대표 SE σ 산포(LGPS·LPS·argyrodite·thio-LISICON vs oxide vs polymer) | 1, 42, 50, 57 | σ 산포도(d) = 우리 서론 "황화물=액체급" 한 장 근거 |
 | **3** | 공기: (a) H₂O 흡착 LPSC −1.63/−1.54 vs LPSOCF −1.19/−1.11 eV (b) 가수분해 반응E 원소지도+환원안정 선택차트 (c) 기상증착 초소수층 (d) 티올 코팅 σ vs 노출 0→3일 | 81, 84, 87, 86 | (a)(b) = 우리 O-doping·free-S 서사의 실험/DFT 사촌; (b) Zhu-Mo 차트는 도핑 후보 선별에 직접 사용 가능 |
 | **4** | 용매: (a) Li₇P₃S₁₁ σ 보존율 vs donor number (b) 극성별 상호작용 기전 (c) InF₃-LPSCl 용매내성(E_ad −0.12 eV; PS₄→P₂S₆+Li₃P vs InS₄ 무분해) | 92, 24, 97 | 습식공정 스크리닝 기준(donor number)·우리 B–S 안정화와 동형 논리(강결합 단위=공격 면역) |
-| **5** | 열: (a) SE vs 액체 분해온도 (b) Li/LGPS AIMD 0→11.7 ps (c) SE/Li 가열 200→400 °C 발화 시퀀스(⚠ 라벨 저해상) (d) Th₀ 삼원상도 (e) Th′ 주기율표 (f) 열안정 새 패러다임 도식 | 101, 107, 99, 109 | **Th′ 서술자 = 우리 도핑 조성 열안정 스크리닝의 즉시 이식 후보**; AIMD 계면 프로토콜 참고 |
-| **6** | 전기화학: (a) CAM/황화물 에너지도 (b) SE 관통 화학퍼텐셜 진화 (c) LPSCl large-potential 상도(Li uptake 계단) (d) 4군 ESW(LiPON 0.7–1.1/LGPS 1.71–2.14/LLZO 0.05–2.91/Li₃YCl₆ 0.6–4.23 V + 0/5 V 산물) (e) SE 산화·환원 한계 산포 | 114, 21, 33, 22 | (c)(d) = 우리 grand-potential staircase의 문헌 표준 그림 — 발표 대조용 |
+| **5** 👁 | 열: (a) SE vs 액체 분해온도 산포(oxide>sulfide>polymer>CPE>liquid) (b) AIMD 2행 — **GeS₄ 사면체 0→1.668 ps · PS₄ 사면체 0→11.697 ps** 붕괴(Li/LGPS) (c) **SE/Li 가열 200→400 °C 5행 — 라벨 판독 완료** (d) Th₀ 삼원상도 (e) **Th′ 주기율표 + 식 판독 완료** (f) 열안정 새 패러다임 도식 | 101, 107, 99, 109 | **Th′ = 우리 도핑 조성 열안정 스크리닝의 즉시 이식 후보**([Wang22] 원전 digest 보유); AIMD 계면 프로토콜 참고 |
+| ↳ **5c 판독** (초판 "⚠ 라벨 저해상" 해소) | 발화 시험 5행: **Li₆PS₅Cl "No fire observed at 400 °C"** · **LiSiPSCl "No fire observed at 400 °C"** · **Li₃PS₄ "Burn during 300 °C~400 °C"** · **Li₇P₃S₁₁ "Burn during 300 °C~400 °C"** · **Li₄SnS₄ "React during 200 °C~300 °C"**(⚠ Sn 조성의 Li 아래첨자만 저해상 — Li₆SnS₄ 가능성 배제 못 함; 판정 내용은 무관) | ref 99 | 🔑 **아지로다이트(=우리 comp1 계열)가 Li–P–S 중 발화 내성 최상위** — [Wang22] 밀봉관 서열(Li₆PS₅Cl 800 °C)과 독립 증거로 정합. 안전성 슬라이드 소환값 |
+| ↳ **5e 판독** | 식: **Th′ = { [Li]%×312.5 + [P]%×346 } × 4 + E_doped + k (kJ/mol)**, "For thermal stability of doped Li₃PS₄ system"; 무도핑 기준 **P=S=641.75**(빨간 박스), **B 660.963 · Si 662.740 · Ge 659.382 · Sn 655.886 · O 644.882**, 할로겐(F/Cl/Br/I) 최하위 | ref 109 | ✅ 값은 **원전 digest `wang2022_…th_descriptor.md` 와 자릿수까지 일치** — 그림 판독이 아니라 원전 인용으로 쓸 것. **B(+19) ≫ O(+3) > 기준 ≫ Cl(−41)** = 우리 B₂O₃ 조성이 열축에서 유리하다는 문헌측 예측 |
+| **6** 👁 | 전기화학: (a) 공간전하 도식 + Li/SE/Li_xM_yO₂ 에너지도(V_OC·Φ·reduction/oxidation limit) (b) LUMO/HOMO 밴드정렬 3케이스(Stable / CEI-Unstable / Coating) (c) **LPSCl large-potential 상도 — `figure-read ≈ 1.7–2.35 V` 안정 평탄부**(§4.4 교정 참조) (d) 4군 ESW(LiPON 0.7–1.1 / LGPS 1.71–2.14 / LLZO 0.05–2.91 / Li₃YCl₆ 0.6–4.23 V + 0/5 V 산물) (e) 산화한계 vs 환원한계 2D 산포(Ideal·Sulfides·Garnets·LiPON·Perovskites·Antiperovskites·NASICON·Halides·Li₃N) | 114, 21, 33, 22 | (c)(d) = 우리 grand-potential staircase의 문헌 표준 그림 — 발표 대조용. **(e) 는 우리 onset/환원한계 2점을 그대로 얹을 수 있는 좌표평면** |
+| ↳ **Fig 6 결함 2건** (신규, 2026-08-06) | ① 캡션·이미지 모두 **패널 a–e 뿐인데 본문 §3.4 가 "(Figure 6f)" 를 인용**한다 → **dangling panel reference** ② 캡션 a)="CAM 입자와 황화물 SE 에너지도"·b)="음극/양극 접촉 시 SE 관통 화학퍼텐셜 진화"인데, **이미지의 화학퍼텐셜/공간전하 그림은 a) 쪽, 밴드정렬(HOMO/LUMO) 그림은 b) 쪽** — a↔b 설명이 서로 바뀐 것으로 보인다(판단 근거=이미지, 확정은 저자 확인 필요) | — | **리뷰 지적 후보** — §14·§17.3 |
 | **7** | 기계/공정: (a) 펠릿 >360 µm vs 시트 <50 µm 갭 (b) TPA 무용매 융착 막 (c) PTFE dry 공정 (d) SE 필름 4요소(SE/접착제/지지체/기판) | 124, 127, 129, 56 | 시트化 = [KimICCF] 문제의식과 동일; 무용매 공정 지도 |
-| **8** | 양극 실패: (a) GSR(~200 °C, O₂+황화물→SO₂+인산염) vs SSR(~300 °C, TM-O+황화물→TM-S+인산염) 2경로 (b) LPSCl 작동창 vs Li-S/Li-ion (c) NCM/황화물 interphase+접촉손실 → 비가역용량·R_SE/NCM (d) LPSCl-NMC 2.5–4.1 V 전기화학+화학 반응 글로벌 스킴(Li₃PS₄→P₂S₅→MSₓ/SOₓ) | 132, 134, 136, 137 | (d)의 단계별 산물 = 우리 산화 staircase·[Zuo] SIMS와 정렬; (a) 열폭주 2경로 분류 신규 어휘 |
+| **8** 👁 | 양극 실패: (a) GSR(~200 °C, `O₂ + Sulfides → SO₂(g) + Phosphate(s) + ΔH`) vs SSR(~300 °C, `TM-O + Sulfides → TM-S(s) + Phosphate(s) + ΔH`) 2경로 (b) LPSCl 작동창 vs Li-S/Li-ion (c) NCM/황화물 interphase+접촉손실 → 비가역용량·R_SE/NCM (d) LPSCl-NMC 2.5→4.1 V 반응 글로벌 스킴 | 132, 134, 136, 137 | (d)의 단계별 산물 = 우리 산화 staircase·[Zuo] SIMS와 정렬 |
+| ↳ **8a 판독** (신규) | 범례가 **어느 전해질이 어느 경로인지**를 지정한다: **LPS3/LPS7 (Li₃PS₄·Li₇P₃S₁₁) → GSR(기상 O₂ 매개, 200 °C)** · **LPSC/LGPS → SSR(고상 TM-O 매개, 300 °C)** | ref 132 | 🔑 **아지로다이트는 더 높은 온도의 고상 경로** — Fig 5c 발화 서열(LPSCl 무발화)과 같은 방향. 우리 LPSCl 캠페인의 열 서사에 직접 인용 가능 |
+| ↳ **8d 판독** (신규) | 계단: `Li₆PS₅Cl│NMC` → `Li₃PS₄ + LiCl│NMC` → `P₂S₅ + LiCl│NMC(MOₓ+Li₂O)` →(chemical) `P₂O₅ + LiCl│NMC(MSₓ)`; 앞 3단계는 "electrochemical reaction 2.5→4.1 V", 마지막만 "chemical reaction" | ref 137 | **LiCl 이 전 단계에서 살아남는다**는 점이 우리 grand-potential 산물열(Li₃PS₄·S·LiCl)과 정합 |
 | **9** | 복합양극: (a) CAM wt%×입경 grid의 이온/전자 채널 단절 (b) 코팅 NCM+황화물 vs bare NCM+염화물 percolation (c) 부피점유 삼원도+카본 효과 (d) 층상 gradient 전극(CA-H-L/균질/CA-L-H) | 143, 145, 147, 149 | (c) 0D 카본의 부피 잠식 = [KimCA]와 동일 결론 — 그룹 실험의 문헌 좌표 |
 | **10** | (a) 3D SOC·전류밀도·von Mises 콘투어(NCM 75/83/92 wt%) (b) 가압 형태변화(force line·void) (c) 3층 gradient 유효 σ_e/σ_ion sim vs exp (d) PC- vs SC-LRMO 분쇄/사이클 SEM(단결정=접촉 유지) | 150–153 | 미세구조 연속체 모델링 축 — 우리 DFT 밖, 그룹 실험과 연결 |
 | **11** | 코팅: (a) bare vs NCM@LPSCl(접촉손실/공극 vs 밀착/무공극) (b) Li₂CO₃ 피복률 3단(부족/적정/과잉→LPSC 분해) (c) LATPO@LCO 750 °C 표면반응 구축 (d) LiPON@NCM(양성자 소거·분해억제·전류밀도 시뮬) | 154–157 | 코팅 두께/피복률 "적정창" 개념 — [Sundar] 스크리닝과 접목 |
@@ -261,14 +279,16 @@
 | **14** | (a) FeCl₃ 적층+operando XRD 상진화 (b) 금속염화물 용량/에너지밀도 막대 (c) catholyte-free 개념+Cl 매장량/가격 vs Co·Ni·Mn | 166–168 | 저비용 CAM 방향 감각 |
 | **15** | (a) Li-free 변환양극 전위 vs 용량(>1200 Wh/kg) (b) FeS₂/argyrodite 전압곡선·미세구조 (c) 균질화 양극 충전 미세구조 진화 (d) Li₂S vs Li₂SeₓS₁₋ₓ | 169, 171, 173–174 | "cathode homogenization" = 혼성전도 단일상 개념 |
 | **16** | 덴드라이트: (a) 액체 vs SE 개시(전자누출·독립 dendrite·anode/GB-개시) (b) Li/LPSCl/Li operando XCT 균열 개시→전파→단락(0 s→60 min) (c) MD: LPSCl/SEI/Li, SEI 내 Li 클러스터 핵생성(g(r)) | 176–178 | (c) = **우리 anode_interface/SEI gap 서사의 MD 판** — "SEI 내부 전자침투→dead Li"의 원자 그림 |
-| **17** | (a) ionization-level traffic light(c-LPS/a-LPS vs Li₃PS₄ glass; +Li 0→3.33 삽입 진화) (b) SE/Li 공공확산·기공·adatom 도식 (c) 다결정 전위분포 (d) 덴드라이트 관통 중 Li⁺ 분포 t=0→0.8 ns | 180–182 | (a) **ionization level = 우리 SEI-gap(전자차단) 지표의 형제 서술자** — b2o3_sei_gaps.json과 직접 대조 후보 |
+| **17** 👁 | (a) ionization-level traffic light + SSE/SEI/Li 슬랩 + Li 삽입 0→0.83→1.67→2.50→2.67→3.33 구조열 (b) SE/Li 공공확산·기공·adatom·dislocation 도식 (c) 다결정 전위분포 V/V_max (d) 덴드라이트 관통 중 Li⁺ 분포 t=0→0.1→0.4→0.8 ns (236×234 Å) | 180–182 | (a) **ionization level = 우리 SEI-gap(전자차단) 지표의 형제 서술자** — b2o3_sei_gaps.json과 직접 대조 후보 |
+| ↳ **17a 판독** (신규 — 신호등 배정) | **IL > 0 = 덴드라이트 억제(빨강)**: c-LPS · a-LPS(heat-induced) · a-LPS(stress-induced) · **Li_xLPS(fully lithiated)**. **IL < 0 = 덴드라이트 성장(초록/노랑)**: **Li_xLPS(partially lithiated)** · **crack** · **GBs**. 기준선 = E_F of Li metal | ref 180 | 🔑 **"부분 리튬화 분해상·균열·입계가 위험, 완전 리튬화는 안전"** — 우리 SEI-gap 서열과 대조할 때 *산물 조성*뿐 아니라 **리튬화 정도·결함 유형**이 변수임을 시사. b2o3_sei_gaps 는 완전 화학량론 산물만 다루므로 **부분 리튬화 축이 우리 공백** |
 | **18** | (a) 계면 기공+SE 내 덴드라이트 SEM (b) 균열 내 Li 성장(diffusion creep·columnar) (c) 사이클 중 계면 부피변화(interphase↑/Li↓)·공극 형성/폐쇄 SEM | 184–186 | 공극-덴드라이트 결합의 실측 갤러리 |
 | **19** | (a) 임계전류 초과 탈리 공극→측면성장→차단 (b) AFM 스택압 하 void 수축/유지 상도(ζ vs P vs i) (c) 30 vs 5 MPa 계면 (d) **Li 변형기구 지도 → 최적 stack pressure 예측** | 188–191 | (d) = 압력 축의 정량 설계도구 — 우리 기계축(C축) 확장 후보 |
 | **20** | 흑연: (a) 전자구조→열역학/kinetics→성능 3층 프레임 (b) 비정질+결정 vs 결정 카본 SEI(Li₂S/LiCl/Li₃P/LiF) (c) MoON@Gr 합성(370→500 °C 질화) | 192, 195, 197 | 흑연 ASSB의 "계면 화학안정 > σ" 명제 |
 | **21** | Si: (a) Si/LPSCl XCT 시간열(수직균열·계면균열·delamination) (b) 입자/계면/전극 3-레벨 한계 | 200–201 | Si 음극 기계 실패 지도([Jun26] 바인더 문제의식과 연결) |
 | **22** | (a) 음극 3종 radar+표면 거칠기/침습성 (b) all-electrochem-active µ-LiₓSi 설계 (c) LE vs SE 저/고압 dealloying(φ vs σ/σ_y) (d) Li₄.₄Si-nSi 무균열 구조진화 | 204, 207, 210–211 | 합금 음극 압력-항복강도 매칭 개념 |
 | **23** | anode-free: (a) 에너지밀도 비교+실패인자 wheel (b) Ag/SE/Li 미세구조 진화(260 nm→~1 µm→300 nm) (c) Li/Cu·NMC/Li·NMC/Cu 충방전 상태+비가역 분해 프로토콜 | 213–214, 216 | CE 민감성·양극-음극 통합 분석 프레임 |
-| **24** | SE 개질: (a) **Mg/F 전자재분배(ΔE −2.0→−4.2)** (b) **CuBr₂ ELF** (c) 고엔트로피 ΔS_conf/R↔σ (d) F-rich 계면 gradient (e) LiI-rich 재생 계면 TEM (f) 동적 적응 interphase 탈리 4단계 | **217(=[Liu23]), 218(=[Li25])**, 68, 221–222, 41 | **우리 digest 2편이 리뷰 Figure로 등장** — 우리 캠페인이 이 리뷰 §5.2.2의 정중앙에 위치함을 증명 |
+| **24** 👁 | SE 개질: (a) **Mg/F 전자재분배** — LPSC 의 S-p 밴드가 E_F 아래 **ΔE≈2.0**, LPSC-MF 는 **ΔE≈4.2**(Mg-s 가 S-p 아래로); 우측에 `PS₄ + Li → PSₙ + Li₂Sₙ`(분해) vs `MgS₄ + Li → MgS₄-Li`(무분해) 대비 (b) **CuBr₂ ELF 등고선 + LiCl/LiBr 배위** (c) 고엔트로피 **x in Li₅.₅PS₄.₅Cl_xBr₁.₅₋ₓ** ↔ σ·ΔS_conf/R (d) Li@LPSCl₀.₃F₀.₃ / LPSCl / LCO 셀의 F-gradient 계면 (e) LiI-rich 계면 TEM+FFT (f) 탈리 4단계 ×2행(Li₃PS₄ vs Li₃.₂PS₄I₀.₂) | **217(=[Liu23]), 218(=[Li25])**, 68, 221–222, 41 | **우리 digest 2편이 리뷰 Figure로 등장** — 우리 캠페인이 이 리뷰 §5.2.2의 정중앙에 위치함을 증명 |
+| ↳ **24c 판독** (신규) | x축 = **Li₅.₅PS₄.₅Cl_xBr₁.₅₋ₓ (x=0→1.5)**, 좌축 σ 4→10 mS/cm, 우축 ΔS_conf/R 1.0→2.0. **σ 최대 `figure-read ≈ 9.6 mS/cm` at x≈0.8**(Br-rich↔Cl-rich 경계, ΔS_conf/R ≈ 2.0 최대), 양 끝(x=0 Br-only ≈4.2 / x=1.5 Cl-only ≈7.1)에서 하락 | ref 68 | 🔑 **호스트가 Li₅.₅PS₄.₅X₁.₅ = 우리 modelc(LPSCl1.6) 의 직계 사촌 조성.** "무질서(배열 엔트로피) 최대점에서 σ 최대"라는 명제는 **우리 disorder-ensemble 서사와 같은 축** — 단 우리 σ 는 비율 판정만 하므로 **절대값 대조 금지**, trend 만 |
 | **25** | SEI: (a) 유전상(LATP) 다기능층+Li⁺ 농도 위상장 (b) LiAl 합금화 원소분포 (c) Li₃N 계면층(SC vs SC-10Li₃N 무덴드라이트) (d) MPDMS 처리 인공 SEI (e) 유무기 나노필러/그래프트 폴리머 SEI | 225, 227–230 | 인공 SEI 설계 사다리 — 우리 SEI-gap 지표로 서열화 가능한 대상들 |
 | **26** | LiF/gradient: (a) LiFSI-DME 전처리 LiF-rich SEI (b) PHI@Li (c) 요오드 증기 LiI층 (d) LiₓMg/LiF/폴리머 lithiophilic-lithiophobic gradient (e) (de)solvation vs adsorption 합금보호 (f) LiF/LiAl gradient 3D 원소분포 | 231, 233–237 | LiF-rich = [KimICCF] LiF-SEI·우리 wide-gap 절연 SEI 패밀리의 문헌 본진 |
 
@@ -278,6 +298,7 @@
 | 리뷰의 칸 | 리뷰 내용 | 우리 결과 | 판정 |
 |---|---|---|---|
 | §3.4/4.1.1 산화 개시 = **S²⁻ 우선 산화**, 황화물 산화전위 ~2 V, LGPS 창 1.7–2.1 V | 정성 서술 + 표준 인용(refs 114/130) | grand-potential onset **2.256 V**(S²⁻-limited, comp1=modelc 동일) + **free-S site-PDOS ⟨3p⟩ −1.1 eV = "어느 S가 먼저"의 자리-분해 정량** | **✓✓ 재현+심화** — 리뷰가 "S²⁻ 우선"이라 말하는 것을 우리는 *free S(4d) vs PS₄ S*까지 분해; [Banik] S-pin과 3자 정합 |
+| ⭐ **Fig 6c 실측 = LPSCl 상단 경계 `figure-read ≈ 2.3–2.4 V`** (2026-08-06 신규) | 본문은 "황화물 산화전위 ~2 V"(§4.1.1)·"LGPS 1.7–2.1 V"(§3.4)만 말하고 **LPSCl 자체 값은 글로 안 준다** — 그림에만 있다 | 우리 grand-potential onset **2.256 V** (S²⁻-limited) | **✓✓ 정량 일치** — 리뷰가 인용한 같은 계보(ref 33 = Zhu/He/Mo grand-potential)의 **LPSCl 상도 상단이 우리 2.256 V 와 ±0.1 V 안에서 만난다**. 즉 우리 onset 은 "리뷰의 ~2 V 서술보다 높다"가 아니라 **리뷰가 인용한 원본 상도와 같은 값**이다 → 발표·리비전 회신에서 "우리 값이 문헌과 어긋난다"는 오해를 미리 차단하는 카드. ⚠ 인용 시 **"~2 V"는 본문 요약치, "≈2.3–2.4 V"는 Fig 6c 판독치**임을 명시 |
 | §3.1 공기 전략① "O 도핑 → P–O" + Fig 3a(ΔE_ad 완화) + HSAB | LPSC→LPSOCF ΔE_ad −1.63→−1.19 eV; ref 83 = **Li₅.₅PS₄.₅Cl₁.₅ O-doping**(우리 modelc 사촌 조성!) | LPSOCl gap **2.231 eV**(확장)+O 2p 매몰(깨끗한 엣지); ICOHP P–O 강결합(기존 baseline) | **✓ 같은 전략 칸** — 우리 O-doping은 리뷰 전략①의 전자구조 관측량(gap·엣지 청정도) 버전; 단 가수분해(H₂O/H₂S 기체)는 우리 0K hull 밖 — "우리가 H₂S 억제 계산" 주장 금지 |
 | §3.1/3.2 "격자 결합에너지 강화 → 공격 면역"(InF₃ 예) | E_ad −0.12 eV; InS₄ 무분해 vs PS₄ 분해 | **B–S 결합이 free-S를 −1.1→−2.15 eV로 안정화** = 같은 논리의 B₂O₃판 | **✓ 동형 기전 — 단 *논리 형태까지만* (2026-08-05 원전 대조로 한정)**: "취약 단위를 강결합으로 묶는다"는 같으나 **축이 다르다** — 취약점이 **P⁵⁺(친핵 공격)** vs **free-S²⁻(산화)**, 관측량이 **분자–표면 흡착E** vs **자리분해 PDOS ⟨3p⟩**, 그리고 **[Zhu20] 대기 축에서 In₂S₃ +0.599(9/46위) ↔ B₂S₃ −0.901(44/46위) = 정반대**. 우리 것은 자리-분해 PDOS라는 신규 관측량 (→ `papers/li2024_inf3_argyrodite_ultrathin_film.md` §8d) |
 | §5.2.2 SE 개질 → in-situ 전자절연 SEI (Fig 24a–b = [Liu23]/[Li25]) | 할로겐/F/LiI 도핑 → Li-halide/불화물 SEI(전자절연·이온전도) | `anode_interface_b2o3.json`·`b2o3_sei_gaps.json` = **B₂O₃ 유래 SEI 산물의 gap(전자차단성) 정량 서열** | **✓✓ 정중앙 적중** — 리뷰 §5.2.2의 설계 rubric(전자절연 SEI)을 우리는 *산물별 gap 수치*로 구현; Fig 24a/b가 우리 digest 2편의 그림이라 계보 직접 연결 |
@@ -286,7 +307,8 @@
 | A축(σ): 할로겐 도핑 σ↑·플럭스 균질화; 고엔트로피 ΔS_conf↔σ(Fig 24c) | 정성+σ 산포 | BVSE 채널부피 **3.32→4.74→6.73 %**(modelc→LPSOCl(+O)→B₂O₃)·UMA σ300 **b2o3/modelc 동등(멀티시드; 1.33× 철회)** — **B₂O₃는 σ를 깎지 않는(보존) 안정화 도핑** | **✓ trend 재현+반례 보유** — [Yang25] La-O(σ 0.65×)와 달리 우리 B₂O₃는 σ·안정 동시 개선 → 리뷰 미래방향①("intrinsic stability, 반응 구동력 축소")의 구체 실현 후보 |
 | §3.5 기계: E 10–30 GPa·K_IC 0.2–0.4·>3 µm 파쇄 | 범위 서술 | comp1 E_VRH 22.06 / modelc **27.66 GPa**(relaxed-ion) — 리뷰 범위 내 | **✓ 정합** — 단 K_IC·입경 효과는 우리 밖(H-리스트); relaxed vs clamped 구분은 리뷰에 없음(우리 vacancy-paradox가 더 세밀) |
 | §3.4 계면 3유형(안정/MCI/passivated) | Wenzel 분류 | interface_reactivity + SEI gap으로 우리 산물들을 ②vs③으로 분류 가능 | **✓ 분류 어휘 이식** — 우리 json 산물 라벨링에 "MCI vs passivating" 열 추가 가치 |
-| §3.3 열: Th₀/Th′ 서술자·계면 40–50 % 발열↓ | ref 109 서술자 | **미보유 축** — 우리 열안정 계산 없음 | **✗ 공백(H-리스트)** — Th′를 B₂O₃/O 조성에 계산하는 것이 저비용 확장 |
+| §3.3 열: Th₀/Th′ 서술자·계면 40–50 % 발열↓ | ref 109 서술자 | **미보유 축** — 우리 열안정 *계산* 없음 | **✗ 공백(H-리스트)** — Th′를 B₂O₃/O 조성에 계산하는 것이 저비용 확장 |
+| ↳ **열축 보강** (2026-08-06) | Fig 5c 발화 서열(**LPSCl·LiSiPSCl 400 °C 무발화 > Li₃PS₄·Li₇P₃S₁₁ 300–400 °C 발화 > Li₄SnS₄ 200–300 °C 반응**) + Fig 5e Th′ 지도(**B 660.96 · O 644.88 · 기준 641.75 · Cl 600.34**) + Fig 8a 경로 배정(**LPSCl/LGPS = 고온 SSR**) | 여전히 **우리 계산 0**. 다만 [Wang22] 원전 digest 가 Eq 5 를 우리 조성에 적용한 산수를 보유(**comp1 ≈683 > modelc ≈656 kJ/mol**, Li–Cl 항 부재 경고 포함) | **○ 부분 — "공백"에서 "문헌으로 방향은 잡힘"으로 격상.** 문헌 예측 요지: **아지로다이트 호스트는 열축 강자 / Cl-rich 는 열축 손해 / B 도핑은 열축 이득(O 보다 6배)**. ⚠ 전부 **소환값** — 우리 db 절대값과 섞지 말 것. 우리가 할 일은 Th′-ICOHP 재구성(§12③) |
 | gap 절대값 | (리뷰 gap 수치 없음) | comp1 2.066/modelc 2.099/**B₂O₃ 1.967**/LPSOCl 2.231 eV (PBE) | — PBE 과소+무질서 민감 → 문헌 절대 비교 금지, "wide-gap" 수준만. **B₂O₃ gap 1.967 = 소폭 협소**이나 free-S 안정화(−2.15)와 SEI gap이 실전 지표 — "gap 하나로 안정성 판정 금지"의 자기 사례 |
 
 ## 12. 적용 인사이트 (우리 연구에 어떻게)
@@ -304,7 +326,11 @@
 ## 14. 주의/한계 (비판적으로)
 - **미출판 draft** — 수치·그림·참고문헌이 게재 과정에서 바뀔 수 있음; DOI 없음; 인용은 원고번호로만.
 - **자체 데이터 0인 정성 리뷰** — 셀 성능 수치(유지율 %·CCD·사이클)가 본문에 사실상 없음. "종합 리뷰"지만 **전략 간 정량 비교표가 없다**는 점이 최대 약점(우리가 원전을 직접 파야 함). [Bai]·[Kang]보다 폭은 넓고 깊이는 얕음.
-- **draft 품질 문제**: ① Intro σ 단위 오타(10⁻³~10⁻² **mS**/cm — §2.2의 10⁻⁴~10⁻² S/cm와 모순) ② DOI placeholder가 Wiley prefix(10.1002)인데 EER은 Springer(템플릿 잔재) ③ refs 38=193 완전 중복(Oh, Angew 2022) ④ Fig 5c 조성 라벨·Fig 5e Th′ 식 판독 곤란 ⑤ 영문 어색("Machine" for mechanical 등).
+- **draft 품질 문제** (①–⑤ = 초판, ⑥–⑨ = 2026-08-06 Revision 라운드 신규): ① Intro σ 단위 오타(10⁻³~10⁻² **mS**/cm — §2.2의 10⁻⁴~10⁻² S/cm와 모순) ② DOI placeholder가 Wiley prefix(10.1002)인데 EER은 Springer(템플릿 잔재) ③ refs 38=193 완전 중복(Oh, Angew 2022) ④ ~~Fig 5c 조성 라벨·Fig 5e Th′ 식 판독 곤란~~ → **해소(§10 5c/5e 행)**; 단 원 raster 해상도가 낮아 **게재본에서 벡터 교체 요청**은 여전히 유효 ⑤ 영문 어색("Machine" for mechanical 등)
+  ⑥ **§3.4 본문이 존재하지 않는 패널 "Figure 6f" 를 인용**(캡션·이미지 모두 a–e 뿐) — dangling reference
+  ⑦ **Fig 6 캡션 a)/b) 설명이 이미지와 뒤바뀐 것으로 보임**(화학퍼텐셜/공간전하=a, HOMO-LUMO 정렬=b)
+  ⑧ **§3.4 본문의 그림↔ref 배정이 캡션과 불일치** — 본문 "(Figure 6a-b) [21,74,113]" · "(Figure 6c) [114]" vs 캡션 a)[114] · b)[21] · c)[33]. 특히 **LGPS 1.7–2.1 V 주장에 Figure 6c(=LPSCl 상도)를 붙인 것**은 근거 그림이 틀린 경우 (해당 값의 그림은 6d)
+  ⑨ **Figure 13 은 a)b)c) 패널이 캡션에 선언돼 있으나 본문은 "(Figure 13)" 통째로만 인용** — 패널별 지시 없음(경미)
 - **방법 의존성 무경고 인용**: ESW·흡착에너지·서술자 값들을 functional/무질서 처리 명시 없이 소환 — 절대값 이식 금지, 우리 baseline 규율(PBE gap 과소·onset은 S-limited·기계값은 relaxed/clamped 구분) 유지.
 - **우리 그룹(한양대 J-W Lee 계열) 문헌 미인용** — 시야 보정용: 이 리뷰의 계보는 USTB/Tsinghua(Fan-Nan) 중심.
 - 리뷰의 "황화물 CCD 높다/Li 증착 안정"(§2.3) 같은 우호 서술은 §5.1의 자체 내용(덴드라이트가 핵심 병목)과 긴장 — 선전 문구는 걸러 읽을 것.
@@ -313,7 +339,7 @@
 | 우선 | ref# | 논문 | 왜 |
 |---|---|---|---|
 | ★★★ | 109 | Wang S. et al., *InfoMat* 2022, 4, e12316 — "Improving thermal stability of sulfide SEs: an intrinsic theoretical paradigm" (**Th₀/Th′ 서술자**) — **✅ digest 완료 (2026-07-17): `wang2022_sulfide_thermal_stability_th_descriptor.md`** (⚠ 원논문 기호 Th/Th′; "Th₀"는 이 리뷰 표기. 교신 Fan Wu=IOP CAS ≠ 본 리뷰 Li-Zhen Fan/USTB. Eq 5 = {[Li]%×312.5+[P]%×346}×4+E_doped+k — Li–Cl 항 부재 주의) | 우리 열 축 공백을 채울 서술자; 도핑 조성 열안정 스크리닝 즉시 이식 |
-| ★★★ | 84 | Zhu & Mo, *Angew* 2020, 59, 17472 — 공기안정 SE 설계원리(가수분해 반응E 지도) | 우리 free-S/O-doping 공기 서사의 정량 원전(Fig 3b) |
+| ★★★ | 84 | Zhu & Mo, *Angew* 2020, 59, 17472 — 공기안정 SE 설계원리(가수분해 반응E 지도) — **✅ digest 완료: `papers/zhu2020_air_stable_se_design_principles.md`** | 우리 free-S/O-doping 공기 서사의 정량 원전(Fig 3b) |
 | ★★★ | 180 | Hao W. et al., *Angew* 2025, 64, e202500245 — "Origin of Li Dendrite Formation in Sulfide Electrolyte" (**ionization level**) | 우리 SEI-gap 지표의 형제 서술자 — 정식 벤치마크 대상 |
 | ★★ | 103 | Cao C. et al., *Cell Rep. Phys. Sci.* 2024, 5, 101909 — 황화물 산화열화 원자 기전 | 우리 축 B 메커니즘 심화(자리-분해 관점 비교) |
 | ★★ | 137 | Naillou P. et al., *ESM* 2025, 75, 104050 — LPSCl–NMC 반응성 직접 관찰(2.5–4.1 V) | 우리 onset·[Zuo]와 삼각측량할 최신 operando |
@@ -341,3 +367,75 @@
 - **GSR vs SSR**(Fig 8a): 열폭주 시 기상(O₂) 매개 gas-solid reaction(~200 °C) vs 고상(TM-O) solid-solid reaction(~300 °C) 경로.
 - **anode-free(Li-free)**: 음극 활물질 없이 집전체에 in-situ Li 증착 — CE에 극도로 민감.
 - **stack pressure window**: 접촉 유지(하한)와 GB Li 압출(상한) 사이의 조립 압력 적정 구간.
+
+---
+
+## 17. Revision 라운드 재정독 로그 (2026-08-06) 🔁
+
+> **분류 `Revision`** (사용자 지정 폴더). 입력 = `litdb/inbox/260805_ECER-D-26-00097.pdf`,
+> Editorial Manager 병합 단일본 **113 pp 전 페이지 정독**.
+> 이 절만 이번 라운드 산물이고, §1–16 은 초판(2026-07-16)에 이번 교정을 반영한 것이다.
+
+### 17.1 판본 동일성 검증 — **초판 digest 의 4분할 draft 와 같은 판본**
+
+새 digest 를 만들지 않고 기존 파일을 갱신한 근거. 다섯 개 지문(fingerprint)이 전부 일치한다.
+
+| 지문 | 초판 digest 기록 | 260805 PDF 실측 | 판정 |
+|---|---|---|---|
+| 총 페이지 | 113 pp (30+30+30+23) | **113 pp** (단일본) | 일치 |
+| 참고문헌 수 | 239 | **239** (번호 결번 0) | 일치 |
+| Figure 수 | 26 | **26** (캡션 p87–112) | 일치 |
+| Intro σ 단위 오타 | `10⁻³~10⁻² mS cm⁻¹` | **동일 문자열 잔존** | 일치 |
+| refs 38 ≡ 193 중복 | Oh, *Angew* 2022 | **양쪽 모두 Oh, Angew 61, e202201249** | 일치 |
+
+추가로 §2.2/§3.3/§3.4/§3.5/§4.2.1/§5.2.1 의 대표 수치(10⁻⁴~10⁻² S/cm · 400–500 °C · 200–300 °C ·
+40–50 % · 1.7–2.1 V · 0.2–0.4 MPa·m¹ᐟ² · 10–30 GPa · 1–2 → >3 mAh cm⁻² · ~300 %)가 모두 그대로다.
+Received/Revised/Published 는 여전히 공란, 원고번호에 **R1 접미사 없음**.
+
+⇒ **텍스트 개정본이 아니라 "같은 원고의 병합 PDF"**다. `Revision` 은 원고의 판본이 아니라
+**우리 쪽 작업 라운드**(1저자 리비전 지원 / `kb/reviews/` v1→v7 코멘트 갱신)를 가리키는 분류로 읽어야 한다.
+
+### 17.2 이 PDF 에만 있는 것 — 사용자 주석 41+2
+
+`260805_…pdf` 는 **사용자가 읽으며 표시한 작업본**이다 (PDF 생성 2026-06-21 / 수정 2026-08-06 10:11 KST).
+
+- **Highlight 41개 — 전부 pp.4–23 구간**, 즉 **Introduction ~ §3.5 Mechanical Stability**.
+  §4(양극)·§5(음극)·§6(전망)·참고문헌·그림 페이지에는 표시가 **하나도 없다**.
+  → `kb/reviews/Review_comment_section_3_v1..v7.docx` 가 **§3 전담**인 것과 정확히 일치한다.
+- **FreeText 2개 (한글)**: p6 **"계면문제"**(Intro 의 계면 불안정 문단 옆) · p14 **"여기부터"**(§3.1 Air Stability 시작점).
+  → 담당 범위의 **시작 표식**으로 읽힌다.
+- 하이라이트 전문은 `litdb/inbox/_56_highlights.txt` 에 추출해 뒀다(원문 그대로, 🔵 층).
+
+**하이라이트가 몰린 문장 = 리뷰 코멘트의 표적**이며, 이미 `kb/reviews/…review_notes.md` 의
+A 계열(A1–A60, 문장 단위 지적)과 같은 문장들이다. 예: p15 "P–S/M–S … lower bond energy and
+stronger polarizability"(A1 근처) · p18 "P⁵⁺ … relatively soft Lewis acids" · p19 "InF₃ … enhances
+lattice bond energy and reduces polarizability"(**A12·A13 의 표적**) · p21 "First-principles …
+narrower than the apparent electrochemical window".
+
+### 17.3 이번 라운드에 새로 잡은 것 (초판에 없던 지적·판독)
+
+| # | 무엇 | 근거 | 쓸 곳 |
+|---|---|---|---|
+| **R1** | **"Figure 6f" dangling reference** — §3.4 본문이 인용하는 패널이 캡션에도 이미지에도 없다 (Fig 6 = a–e) | 캡션 p92 + `fig_6.png` 실물 | **리비전 지적 (사실 오류, 반박 불가)** |
+| **R2** | **Fig 6 캡션 a)/b) 설명 뒤바뀜 의심** — 이미지의 화학퍼텐셜·공간전하 그림이 a), HOMO/LUMO 정렬이 b) | `fig_6.png` | 리비전 지적 (확인 요청형) |
+| **R3** | **§3.4 그림↔ref 배정 불일치** — 본문 "(Fig 6a-b)[21,74,113]"·"(Fig 6c)[114]" vs 캡션 a)[114]·b)[21]·c)[33]. **LGPS 1.7–2.1 V 에 붙인 그림이 6c(LPSCl 상도)로 틀렸다** (맞는 그림은 6d) | 본문 p21 + 캡션 p92 | **리비전 지적 (근거 그림 오지정)** |
+| **R4** | **Fig 6c 판독 → LPSCl 안정 평탄부 `≈1.7–2.35 V`** = 우리 onset 2.256 V 와 정합 | `fig_6.png` 확대 | **우리 §11 무기** (초판의 "~1.7–2.1" 표기 교정 완료) |
+| **R5** | **Fig 5c 라벨 판독 완료** — LPSCl·LiSiPSCl 400 °C 무발화 / Li₃PS₄·Li₇P₃S₁₁ 300–400 °C 발화 / Li₄SnS₄ 200–300 °C 반응 | `fig_5.png` | 우리 안전성 서사 소환값 |
+| **R6** | **Fig 5e Th′ 식·값 판독** — 값이 [Wang22] 원전 digest 와 자릿수까지 일치 (교차검증 성공) | `fig_5.png` + `wang2022_…md` | 열축 §11 보강 |
+| **R7** | **Fig 8a 경로 배정 판독** — LPS₃/LPS₇ = GSR(200 °C) vs **LPSCl/LGPS = SSR(300 °C)** | `fig_8.png` | 우리 LPSCl 열 서사 |
+| **R8** | **Fig 17a 신호등 배정 판독** — IL<0(위험) = **부분 리튬화 Li_xLPS · crack · GB**; IL>0(안전) = c-LPS·a-LPS·완전 리튬화 | `fig_17.png` | **우리 SEI-gap 지표의 공백 식별** — 부분 리튬화 축 미보유 |
+| **R9** | **Fig 24c 축 판독** — `Li₅.₅PS₄.₅Cl_xBr₁.₅₋ₓ`, σ 최대 ≈9.6 mS/cm at x≈0.8 = ΔS_conf/R 최대점 | `fig_24.png` | modelc 사촌 조성 · disorder 서사 |
+| **R10** | **Fig 13 패널 orphan** — 캡션에 a)b)c) 선언, 본문은 통째 인용만 | 자동 대조 | 경미 (편집 지적) |
+| **R11** | **그림 26장 전부 크로핑 완료** — 이전에는 0장이었다 (원고형 PDF 라 안 될 줄 알았으나, 이 원고는 **그림 1장 = 1페이지 + 같은 페이지 캡션** 구조라 추출기가 정상 동작) | `litdb/figures/<slug>/` | litdb 열람성 |
+
+> ⚠ **R1·R3 는 사실 오류**라 리비전 회신에서 강도 높게 쓸 수 있다. **R2 는 판단**이므로 확인 요청형으로.
+> 번호 체계상 이들은 `kb/reviews/ECERD2600097_review_notes.md` 의 **B 계열(구조 지적)** 에 붙일 후보다 —
+> 단 그쪽 B 계열은 "digest 기반·원고 확인 필요" 표시가 붙는데, **R1–R3 는 원고 실물로 확인 완료**이므로
+> 그 표시 없이 올릴 수 있다.
+
+### 17.4 이번 라운드에서 **하지 않은** 것 (정직 표시)
+
+- 그림 26장 중 **실제로 본 것은 6장**(3·5·6·8·17·24). 나머지 20장은 캡션·본문 기반 서술이다(§10 상단 주석).
+- **SI 없음** — 이 원고에는 SI 가 첨부되지 않았다(리뷰 논문이라 정상).
+- 239개 참고문헌의 **원전 대조는 안 했다**. 지금까지 원전을 확보·digest 한 것은
+  ref 80([Mulks24]) · 84([Zhu20]) · 97([LiInF]) · 109([Wang22]) 4편뿐 (§15 표 참조).
