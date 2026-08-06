@@ -56,8 +56,7 @@ def plot_degeneracy_map(df: pd.DataFrame, out_path, objective: str = "pocv_dvdq"
             if "recoverable" in r and not r["recoverable"]:
                 unrec[i, j] = True
 
-        cmap = plt.get_cmap("RdYlGn_r").copy()
-        cmap.set_bad("0.85")
+        cmap = plt.get_cmap("RdYlGn_r").with_extremes(bad="0.85")
         im = ax.pcolormesh(pe_vals, ne_vals, np.ma.masked_invalid(grid),
                            cmap=cmap, vmin=0, vmax=vmax, shading="nearest")
         # F1: 원리적 복원불가 영역을 해치로 (정답이 못 나오는 곳)

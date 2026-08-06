@@ -41,6 +41,10 @@ CLEAN="false"                     # true면 노이즈 없는 곡선으로 fittin
 LIMIT=""                          # 앞 N조건만 (스모크용)
 REFERENCE="grid"                  # grid (유도식) | halfcell (21p 식, 전 범위 반쪽셀)
 
+# 가중치 sweep (Phase 6)
+W_GRID=""                         # 비우면 0:2:0.25
+W_STRIDE="2"                      # 격자 솎기 (2면 축당 11→6값)
+
 # 실행 제어
 BACKEND="cpu"             # cpu | gpu
 NPROC="$(command -v nproc >/dev/null && nproc || echo 4)"
@@ -67,8 +71,9 @@ MODE
   fit        생성된 곡선에 alpha/beta fitting
   score      degeneracy 판정 및 지도 생성
   hessian    조건수 / 고윳값 분석
-  report     그림 + 표 생성
-  all        grid -> fit -> score -> report
+  wsweep     dQ/dV 가중치 탐색 (층화 표본)   ★ "튜닝 아니냐"에 대한 근거
+  report     목적함수 4종 비교표 + 그림 + docs/RESULTS.md
+  all        grid -> fit -> score -> hessian -> report
 
 열화 모드 축   (형식: 0:0.2:0.02 | 0,0.05,0.1 | 0.1 | none)
   --lli VAL              LLI 축
@@ -95,6 +100,11 @@ fitting
   --n-restarts N         multi-start 횟수 (degeneracy 진단용, 기본 5)
   --clean                노이즈 없는 곡선으로 fitting
   --limit N              앞 N조건만 (스모크용)
+
+가중치 sweep (--mode wsweep)
+  --w-grid VAL           0:2:0.25 (기본) 또는 0,0.5,1,2
+  --w-stride N           격자 솎기 간격. 2면 축당 11→6값 → 표본 6³×noise3
+                         전체 격자에 9가중치를 다 돌리면 CPU로 감당 안 됨
 
 실행 제어
   --backend B            cpu | gpu   (기본 cpu)
@@ -144,6 +154,8 @@ while [[ $# -gt 0 ]]; do
     --clean)         CLEAN="true"; shift ;;
     --limit)         LIMIT="$2"; shift 2 ;;
     --reference)     REFERENCE="$2"; shift 2 ;;
+    --w-grid)        W_GRID="$2"; shift 2 ;;
+    --w-stride)      W_STRIDE="$2"; shift 2 ;;
     --backend)       BACKEND="$2"; shift 2 ;;
     --nproc)         NPROC="$2"; shift 2 ;;
     --solver)        SOLVER="$2"; shift 2 ;;
@@ -237,13 +249,31 @@ case "$MODE" in
       --objective "${OBJECTIVE:-pocv_dvdq}" --log-level "$LOG_LEVEL"
     ;;
 
-  report)     # Phase 6
-    not_impl report
-    # exec python tools/compare_objectives.py --in "${IN_DIR:-$OUT}" --out "$OUT"
+  wsweep)     # Phase 6 — dQ/dV 가중치 탐색 (층화 표본)
+    WS_ARGS=(--in "${IN_DIR:-$OUT}" --nproc "$NPROC" --stride "$W_STRIDE"
+             --bounds "$BOUNDS_PRESET" --reference "$REFERENCE"
+             --log-level "$LOG_LEVEL")
+    [[ -n "$W_GRID" ]] && WS_ARGS+=(--w-grid "$W_GRID")
+    [[ "$N_RESTARTS" != "auto" ]] && WS_ARGS+=(--n-restarts "$N_RESTARTS")
+    [[ "$RESUME" == "true" ]] && WS_ARGS+=(--resume)
+    exec python -m src.weight_sweep "${WS_ARGS[@]}"
     ;;
 
-  all)        # Phase 6
-    not_impl all
+  report)     # Phase 6 — 비교표 + 그림 + RESULTS.md
+    D="${IN_DIR:-$OUT}"
+    python tools/compare_objectives.py --in "$D" --log-level "$LOG_LEVEL"
+    exec python tools/make_results.py --in "$D" --log-level "$LOG_LEVEL"
+    ;;
+
+  all)        # Phase 6 — grid -> fit -> score -> hessian -> report
+    D="$OUT"
+    RESUME_FLAG=()
+    [[ "$RESUME" == "true" ]] && RESUME_FLAG=(--resume)
+    "$0" --mode grid --config "$CONFIG" --nproc "$NPROC" --out "$D" "${RESUME_FLAG[@]}"
+    "$0" --mode fit --in "$D" --nproc "$NPROC" --bounds "$BOUNDS_PRESET" --reference "$REFERENCE" "${RESUME_FLAG[@]}"
+    "$0" --mode score --in "$D"
+    "$0" --mode hessian --in "$D"
+    exec "$0" --mode report --in "$D"
     ;;
 
   *)

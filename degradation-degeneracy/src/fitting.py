@@ -378,8 +378,11 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
             bounds_preset: str, n_restarts: int, nproc: int,
             use_noisy: bool = True, limit: int | None = None,
             base_config: str | None = None, reference: str = "grid",
-            resume: bool = False) -> dict:
+            resume: bool = False, subset: set | None = None) -> dict:
     """grid 결과 전체에 fitting 수행 → fits.parquet.
+
+    subset: 이 cond_id 집합만 fitting (Phase 6 가중치 sweep의 층화 표본용).
+            limit이 "앞 N개"인 것과 달리 격자 전체에 고르게 걸칠 수 있다.
 
     ★ 실행 잠금을 **함수 맨 앞에서** 잡는다 (리뷰 F19, 2026-08-06 실측 사고).
 
@@ -403,7 +406,7 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
     try:
         return _run_fit_locked(in_dir, out_dir, obj_cfg, objectives, bounds,
                                bounds_preset, n_restarts, nproc, use_noisy,
-                               limit, base_config, reference, resume)
+                               limit, base_config, reference, resume, subset)
     finally:
         release_run_lock(out_dir, ".fit.lock")
 
@@ -412,7 +415,7 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
                     bounds_preset: str, n_restarts: int, nproc: int,
                     use_noisy: bool = True, limit: int | None = None,
                     base_config: str | None = None, reference: str = "grid",
-                    resume: bool = False) -> dict:
+                    resume: bool = False, subset: set | None = None) -> dict:
     """run_fit 본체. 호출자가 이미 .fit.lock 을 보유한 상태여야 한다."""
     import time
     from pathlib import Path
@@ -476,6 +479,16 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
             # hash()는 프로세스마다 소금이 달라 재현 불가 → sha1 기반 결정적 seed
             "seed": int(hashlib.sha1(cond_id.encode()).hexdigest()[:8], 16),
         })
+    if subset is not None:
+        sub = set(subset)
+        missing = sub - {t["cond_id"] for t in tasks}
+        if missing:
+            log.warning("subset의 %d조건이 curves에 없음 (예: %s)",
+                        len(missing), sorted(missing)[:3])
+        tasks = [t for t in tasks if t["cond_id"] in sub]
+        if not tasks:
+            raise RuntimeError("subset과 겹치는 조건이 없음")
+        log.info("subset 적용: %d조건", len(tasks))
     if limit:
         tasks = tasks[:limit]
 
