@@ -71,6 +71,7 @@ def main():
         sys.exit(f"⛔ {a.scan} 에 complex_*.xyz 가 없다")
 
     groups = defaultdict(list)     # (tag, site_el) -> [(E, label, d)]
+    contacts = []                  # (tag, label, E, d_min, pair, site)
     nprob = 0
     for fp in files:
         label = os.path.basename(fp)[len("complex_"):-len(".xyz")]
@@ -91,6 +92,14 @@ def main():
         site = sym[cats[k]]
         tag = label.split("_")[0]                       # doped / neutral
         groups[(tag, site)].append((eb.get(label), label, float(d[k])))
+        # 전 쌍 최단 접촉 — "UMA 순위가 표면 접촉을 따라가나"를 보려고 따로 잰다
+        dmin, dpair = 1e9, ""
+        for m in mol:
+            dd = at.get_distances(m, list(range(a.nslab)), mic=True)
+            j = int(np.argmin(dd))
+            if dd[j] < dmin:
+                dmin, dpair = float(dd[j]), f"{sym[m]}···{sym[j]}"
+        contacts.append((tag, label, eb.get(label), dmin, dpair, site))
 
     if nprob:
         print(f"⚠ 원자수가 --nslab({a.nslab}) 이하인 파일 {nprob}개는 건너뜀")
@@ -130,6 +139,24 @@ def main():
               + " · ".join(f"{s} 는 {gaps[s]:+.3f} eV 불리 ({best[s]:+.3f})" for s in hi))
         if min(gaps.values()) < 0.05:
             print("     ⚠ 차이가 50 meV 미만 — UMA 순위로 자리를 가릴 수 있는 폭이 아니다.")
+
+    # ③ UMA 순위가 '표면 접촉'을 따라가나 — 안 따라가면 순위 자체가 표면 얘기가 아니다.
+    print("\n③ E_bind 가 표면 접촉거리를 따라가나  (분자↔슬랩 전 쌍 최단)")
+    for tag in sorted({c[0] for c in contacts}):
+        rows = [c for c in contacts if c[0] == tag and c[2] is not None]
+        if len(rows) < 5:
+            continue
+        E = np.array([r[2] for r in rows]); D = np.array([r[3] for r in rows])
+        r = float(np.corrcoef(E, D)[0, 1]) if E.std() > 0 and D.std() > 0 else float("nan")
+        print(f"   {tag:8s} n={len(rows):3d} · d_min {D.min():.2f}–{D.max():.2f} Å · "
+              f"상관 r(E_bind, d_min) = {r:+.2f}")
+        print("     " + ("· 상관을 낼 수 없다 (거리 또는 에너지가 전부 같다)" if np.isnan(r) else
+                         "· 더 가까울수록 더 붙는다 — 순위가 표면 상호작용을 반영한다"
+                         if r < -0.3 else
+                         "⚠ 상관이 약하다 — 순위가 표면 접촉이 아니라 다른 것(분자 변형·"
+                         "분산 접촉면적)에 끌려간다는 뜻. 자세 선택의 근거가 약해진다"))
+        for c in sorted(rows, key=lambda x: x[2])[:3]:
+            print(f"       {c[2]:+.3f} eV  d_min {c[3]:.2f} Å ({c[4]}) · {c[5]} 자리 · {c[1]}")
 
     print("\n⚠ 이 표는 '고정 슬랩(freeze_frac 1.0) + UMA' 기준의 자리 선호다.")
     print("   Ni 자리 결합은 표면 재배열을 동반하는 일이 많아 고정 슬랩이 불리하게 작용할 수 있고,")
