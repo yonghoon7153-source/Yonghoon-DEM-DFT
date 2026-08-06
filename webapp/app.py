@@ -3615,6 +3615,67 @@ def _litdb_mod():
     return importlib.import_module('litdb_sync')
 
 
+# ══════════════════════ 연구 세미나 (대본 · 용어집 · 덱) ══════════════════════
+#  발표 준비물을 리포에서 바로 읽는다.  파일이 정본이고 웹앱은 뷰어일 뿐이라,
+#  대본을 고치면 새로고침만으로 반영된다 (별도 DB·복사본 없음 = 어긋날 여지 없음).
+_SEMINAR_DOCS = {
+    'script':   ('docs/seminar_20260806_script.md',   '슬라이드 대본 + Defense Q&A'),
+    'glossary': ('docs/seminar_20260806_glossary.md', '용어·기호 규약 + 레퍼런스'),
+    'guide':    ('docs/pipeline_step1_to_step5_guide.md', 'STEP1–5 파이프라인 가이드'),
+}
+_SEMINAR_DECK = 'docs/seminar/seminar_20260806.pptx'
+
+
+def _repo_path(rel):
+    """리포 루트 기준 경로 (webapp/ 의 부모).  경로 탈출은 거부한다."""
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    full = os.path.normpath(os.path.join(root, rel))
+    if not full.startswith(root + os.sep):
+        raise ValueError('경로 탈출 거부: ' + rel)
+    return full
+
+
+@app.route('/seminar')
+def seminar_page():
+    """연구 세미나 — 대본·용어집·덱을 한 화면에서."""
+    return render_template('seminar.html', active='seminar')
+
+
+@app.route('/api/seminar/doc/<key>')
+def api_seminar_doc(key):
+    """대본/용어집/가이드 원문 (markdown 그대로 — 프런트에서 렌더)."""
+    ent = _SEMINAR_DOCS.get(key)
+    if not ent:
+        return jsonify({'ok': False, 'error': f'알 수 없는 문서: {key}',
+                        'known': sorted(_SEMINAR_DOCS)}), 200
+    rel, label = ent
+    try:
+        path = _repo_path(rel)
+        with open(path, encoding='utf-8') as f:
+            text = f.read()
+    except FileNotFoundError:
+        return jsonify({'ok': False, 'error': f'{rel} 없음',
+                        'hint': 'git pull 후 다시 시도'}), 200
+    except Exception as e:
+        return jsonify({'ok': False, 'error': f'{type(e).__name__}: {e}'}), 200
+    return jsonify({'ok': True, 'key': key, 'label': label, 'path': rel,
+                    'bytes': len(text.encode('utf-8')), 'text': text})
+
+
+@app.route('/api/seminar/deck')
+def api_seminar_deck():
+    """생성된 pptx 내려받기.  없으면 만드는 법을 안내한다 (조용한 404 금지)."""
+    try:
+        path = _repo_path(_SEMINAR_DECK)
+    except ValueError as e:
+        return jsonify({'ok': False, 'error': str(e)}), 200
+    if not os.path.exists(path):
+        return jsonify({'ok': False, 'error': f'{_SEMINAR_DECK} 없음',
+                        'hint': 'node scripts/seminar_deck/build.js 로 생성'}), 200
+    return send_file(path, as_attachment=True,
+                     download_name=os.path.basename(_SEMINAR_DECK))
+
+
 @app.route('/litdb')
 def litdb_page():
     """논문 digest 통합 검색 — 전 브랜치의 litdb 카드 + 작업노트를 한 화면에서."""

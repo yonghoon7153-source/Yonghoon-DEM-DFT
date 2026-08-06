@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+{% block title %}연구 세미나{% endblock %}
+
+{% block content %}
+<style>
+  .sem-head { display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:6px; }
+  .sem-head h1 { margin:0; }
+  .sem-sub { color:#6b7280; font-size:.92rem; }
+  .sem-tabs { display:flex; gap:6px; margin:14px 0 10px; flex-wrap:wrap; }
+  .sem-tabs button { padding:7px 14px; border:1px solid #d3d8de; background:#fff; cursor:pointer;
+                     border-radius:6px; font-size:.9rem; color:#374151; }
+  .sem-tabs button.on { background:#1f4e79; color:#fff; border-color:#1f4e79; font-weight:600; }
+  .sem-bar { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:10px; }
+  .sem-bar input[type=search] { flex:1 1 260px; padding:7px 10px; border:1px solid #d3d8de;
+                                border-radius:6px; font-size:.9rem; }
+  .sem-meta { color:#6b7280; font-size:.82rem; }
+  .sem-doc { background:#fff; border:1px solid #e3e7ec; border-radius:8px; padding:20px 26px;
+             max-height:72vh; overflow:auto; line-height:1.65; font-size:.93rem; }
+  .sem-doc h1 { font-size:1.35rem; color:#1f4e79; border-bottom:2px solid #1f4e79;
+                padding-bottom:6px; margin:0 0 14px; }
+  .sem-doc h2 { font-size:1.12rem; color:#1f4e79; margin:22px 0 8px; }
+  .sem-doc h3 { font-size:1.0rem; color:#2e74b5; margin:16px 0 6px; }
+  .sem-doc table { border-collapse:collapse; margin:10px 0; font-size:.86rem; width:100%; }
+  .sem-doc th { background:#dce6f1; color:#1f4e79; }
+  .sem-doc th, .sem-doc td { border:1px solid #cbd5e1; padding:5px 8px; text-align:left;
+                             vertical-align:top; }
+  .sem-doc code { background:#f3f4f6; padding:1px 5px; border-radius:3px; font-size:.86em; }
+  .sem-doc pre { background:#f7f8fa; border:1px solid #e3e7ec; border-radius:6px; padding:10px 12px;
+                 overflow:auto; }
+  .sem-doc blockquote { border-left:3px solid #2e74b5; background:#f5f9fd; margin:10px 0;
+                        padding:8px 14px; color:#334155; }
+  .sem-doc hr { border:0; border-top:1px solid #e3e7ec; margin:20px 0; }
+  .sem-doc mark { background:#fde68a; }
+  .sem-doc .warn { color:#b00020; font-weight:600; }
+  .sem-toc { background:#f8fafc; border:1px solid #e3e7ec; border-radius:8px; padding:12px 16px;
+             margin-bottom:12px; font-size:.86rem; max-height:150px; overflow:auto; }
+  .sem-toc a { color:#2e74b5; text-decoration:none; margin-right:14px; white-space:nowrap; }
+  .sem-toc a:hover { text-decoration:underline; }
+  .sem-err { background:#fff4f4; border:1px solid #f3c2c2; color:#b00020; border-radius:8px;
+             padding:14px 18px; }
+</style>
+
+<div class="sem-head">
+  <h1>&#x1F5E3;&#xFE0F; 연구 세미나</h1>
+  <span class="sem-sub">대본 · 용어집 · 덱 — 파일이 정본이고 이 화면은 뷰어다 (고치면 새로고침으로 반영)</span>
+</div>
+
+<div class="sem-tabs" id="semTabs">
+  <button data-k="script"   class="on">&#x1F4C4; 슬라이드 대본 + Defense Q&amp;A</button>
+  <button data-k="glossary">&#x1F4D6; 용어 · 기호 규약</button>
+  <button data-k="guide">&#x1F9ED; 파이프라인 가이드</button>
+  <button id="semDeck" style="margin-left:auto">&#x1F4E5; 덱 (.pptx) 내려받기</button>
+</div>
+
+<div class="sem-bar">
+  <input type="search" id="semFind" placeholder="문서 안에서 찾기 (예: 순환논리, LOOCV, τ, σ_SDCP)">
+  <span class="sem-meta" id="semMeta"></span>
+</div>
+
+<div class="sem-toc" id="semToc" hidden></div>
+<div id="semBody"><div class="sem-doc">불러오는 중…</div></div>
+
+<script>
+(function () {
+  var body = document.getElementById('semBody'),
+      meta = document.getElementById('semMeta'),
+      toc  = document.getElementById('semToc'),
+      find = document.getElementById('semFind'),
+      cache = {}, cur = 'script';
+
+  function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  /* 최소 markdown 렌더 — 외부 라이브러리 없이(오프라인 안전).
+     표·제목·코드·인용·목록·강조만 처리하고 나머지는 그대로 둔다. */
+  function md(src) {
+    var out = [], lines = src.split('\n'), i = 0, hid = 0;
+    function inline(t) {
+      t = esc(t);
+      t = t.replace(/`([^`]+)`/g, '<code>$1</code>');
+      t = t.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      t = t.replace(/(^|[^*])\*([^*]+)\*/g, '$1<em>$2</em>');
+      t = t.replace(/(⚠[^<]{0,80})/g, '<span class="warn">$1</span>');
+      return t;
+    }
+    while (i < lines.length) {
+      var L = lines[i];
+      if (/^```/.test(L)) {                                   // 코드 블록
+        var buf = []; i++;
+        while (i < lines.length && !/^```/.test(lines[i])) buf.push(lines[i++]);
+        i++; out.push('<pre>' + esc(buf.join('\n')) + '</pre>'); continue;
+      }
+      if (/^\|/.test(L) && i + 1 < lines.length && /^\|[\s:|-]+\|/.test(lines[i+1])) {
+        var rows = [];                                        // 표
+        while (i < lines.length && /^\|/.test(lines[i])) rows.push(lines[i++]);
+        var head = rows[0].split('|').slice(1, -1),
+            rest = rows.slice(2).map(function (r) { return r.split('|').slice(1, -1); });
+        out.push('<table><thead><tr>' + head.map(function (c) {
+          return '<th>' + inline(c.trim()) + '</th>'; }).join('') + '</tr></thead><tbody>' +
+          rest.map(function (r) { return '<tr>' + r.map(function (c) {
+            return '<td>' + inline(c.trim()) + '</td>'; }).join('') + '</tr>'; }).join('') +
+          '</tbody></table>');
+        continue;
+      }
+      var h = L.match(/^(#{1,4})\s+(.*)$/);
+      if (h) { var id = 'h' + (hid++);
+        out.push('<h' + h[1].length + ' id="' + id + '">' + inline(h[2]) + '</h' + h[1].length + '>');
+        i++; continue; }
+      if (/^---+\s*$/.test(L)) { out.push('<hr>'); i++; continue; }
+      if (/^>\s?/.test(L)) { var q = [];
+        while (i < lines.length && /^>\s?/.test(lines[i])) q.push(lines[i++].replace(/^>\s?/, ''));
+        out.push('<blockquote>' + inline(q.join(' ')) + '</blockquote>'); continue; }
+      if (/^\s*[-*]\s+/.test(L) || /^\s*\d+\.\s+/.test(L)) { var li = [];
+        while (i < lines.length && (/^\s*[-*]\s+/.test(lines[i]) || /^\s*\d+\.\s+/.test(lines[i])
+               || /^\s{2,}\S/.test(lines[i]))) {
+          var m = lines[i].match(/^\s*(?:[-*]|\d+\.)\s+(.*)$/);
+          if (m) li.push('<li>' + inline(m[1]) + '</li>');
+          else if (li.length) li[li.length-1] = li[li.length-1].replace('</li>', ' ' + inline(lines[i].trim()) + '</li>');
+          i++;
+        }
+        out.push('<ul>' + li.join('') + '</ul>'); continue; }
+      if (!L.trim()) { i++; continue; }
+      out.push('<p>' + inline(L) + '</p>'); i++;
+    }
+    return out.join('\n');
+  }
+
+  function buildToc() {
+    var hs = body.querySelectorAll('h2');
+    if (!hs.length) { toc.hidden = true; return; }
+    toc.innerHTML = Array.prototype.map.call(hs, function (h) {
+      return '<a href="#' + h.id + '">' + h.textContent.replace(/^[#\s]*/, '') + '</a>';
+    }).join('');
+    toc.hidden = false;
+    toc.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        var t = document.getElementById(a.getAttribute('href').slice(1));
+        if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  }
+
+  function show(key) {
+    cur = key;
+    document.querySelectorAll('#semTabs button[data-k]').forEach(function (b) {
+      b.classList.toggle('on', b.dataset.k === key); });
+    if (cache[key]) { render(cache[key]); return; }
+    body.innerHTML = '<div class="sem-doc">불러오는 중…</div>';
+    fetch('/api/seminar/doc/' + key).then(function (r) { return r.json(); })
+      .then(function (j) { cache[key] = j; render(j); })
+      .catch(function (e) {
+        body.innerHTML = '<div class="sem-err">불러오기 실패: ' + esc(String(e)) + '</div>'; });
+  }
+
+  function render(j) {
+    if (!j.ok) {
+      body.innerHTML = '<div class="sem-err"><b>' + esc(j.error || '오류') + '</b>' +
+        (j.hint ? '<br><small>' + esc(j.hint) + '</small>' : '') + '</div>';
+      meta.textContent = ''; toc.hidden = true; return;
+    }
+    body.innerHTML = '<div class="sem-doc">' + md(j.text) + '</div>';
+    meta.textContent = j.path + '  ·  ' + (j.bytes / 1024).toFixed(0) + ' KB';
+    buildToc();
+    if (find.value) doFind();
+  }
+
+  function doFind() {
+    var q = find.value.trim();
+    var doc = body.querySelector('.sem-doc');
+    if (!doc || !cache[cur] || !cache[cur].ok) return;
+    doc.innerHTML = md(cache[cur].text);
+    if (!q) return;
+    var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'), n = 0;
+    (function walk(node) {
+      for (var c = node.firstChild; c; c = c.nextSibling) {
+        if (c.nodeType === 3 && re.test(c.nodeValue)) {
+          var sp = document.createElement('span');
+          sp.innerHTML = esc(c.nodeValue).replace(re, '<mark>$1</mark>');
+          n += (c.nodeValue.match(re) || []).length;
+          node.replaceChild(sp, c); c = sp;
+        } else if (c.nodeType === 1 && c.tagName !== 'MARK') walk(c);
+      }
+    })(doc);
+    meta.textContent = cache[cur].path + '  ·  "' + q + '" ' + n + '건';
+    var first = doc.querySelector('mark');
+    if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  document.querySelectorAll('#semTabs button[data-k]').forEach(function (b) {
+    b.addEventListener('click', function () { show(b.dataset.k); }); });
+  document.getElementById('semDeck').addEventListener('click', function () {
+    fetch('/api/seminar/deck').then(function (r) {
+      var ct = r.headers.get('content-type') || '';
+      if (ct.indexOf('json') >= 0) return r.json().then(function (j) {
+        alert((j.error || '덱을 찾을 수 없습니다') + (j.hint ? '\n\n' + j.hint : '')); });
+      window.location = '/api/seminar/deck';
+    });
+  });
+  var t; find.addEventListener('input', function () { clearTimeout(t); t = setTimeout(doFind, 220); });
+
+  show('script');
+})();
+</script>
+{% endblock %}
