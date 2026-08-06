@@ -215,8 +215,12 @@ def main():
         dz = d[:, 2]
         print(f"✓ 이완 완료 — 최대 원자 변위 {d.max():.3f} A (z 성분 최대 {dz.max():.3f} A)")
         print("  → db/structures/linio2_104_sym_1x4L4_relaxed.{vasp,xyz} (192원자)")
-        print("  ⚠ 다음: 이 1x4 로 단일점을 돌려 **최대 잔여력 < 0.05 eV/A** 인지 확인할 것.")
-        print("     크면 1x1 주기를 깨는 재구성이 있다는 뜻이고, 그때는 1x4 를 직접 이완해야 한다.")
+        print("  ⚠ 다음: 1x1 주기가 재구성을 막지 않았는지 확인한다 (UMA, 몇 분):")
+        print("     python3 tools/sdcp/check_replica_residual.py \\")
+        print("       --struct db/structures/linio2_104_sym_1x4L4_relaxed.vasp \\")
+        print(f"       --relax-in {os.path.join(a.harvest, 'relax.in')} --probe")
+        print("     ⚠ --relax-in 필수 — 고정 원자를 안 걸르면 얼려둔 기판의 잔여력이 판정을 먹는다.")
+        print("     ⚠ --probe 필수 — 단일점 힘만으로는 못 가른다(정확한 복제본은 대칭상 힘이 같다).")
         return
 
     if not a.out:
