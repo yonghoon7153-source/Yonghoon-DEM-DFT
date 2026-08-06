@@ -700,6 +700,35 @@ if want("sdcp"):
         elif not csv_done and "phaseA" in TMUX:
             print("      (아직 첫 자세 이완 중 — 슬랩/분자 기준 에너지 계산 포함)")
 
+    # ── 슬랩 이완 허용 탐침 — 물리흡착이냐 화학흡착이냐를 가른다 (Phase-B 설계를 정함) ──
+    # ⚠ freeze_frac 1.0(기본)은 좌표일치를 위해 슬랩을 통째로 얼린다. 그런데 화학흡착은
+    #   표면 원자가 딸려 올라오는 현상이라 얼린 상태로는 원리적으로 못 잡는다.
+    #   -> E_bind 가 깊어지면 Phase-B 에서 슬랩 상부를 풀어야 하고, 안 깊어지면
+    #      진짜 물리흡착이라 기존 설계를 유지한다. DFT+U 며칠을 태우기 전에 가른다.
+    _fl = os.path.join(H, "logs", "phaseA_freeslab.log")
+    if os.path.isfile(_fl):
+        try:
+            fl = open(_fl, errors="ignore").read().splitlines()
+        except OSError:
+            fl = []
+        got = [(float(m.group(1)), x.split()[0]) for x in fl
+               for m in [re.search(r"E_bind = ([+-][\d.]+)", x)]
+               if m and "NOT CONVERGED" not in x]
+        st = "▶ 진행" if "pafree" in TMUX else ("✅ 완료" if got else "⛔ 멈춤")
+        print(f"   ── 슬랩 이완 탐침 (freeze_frac 0.6)  {st} · {len(got)}/3 케이스")
+        for v, lab in sorted(got):
+            print(f"      {v:+.3f} eV  {lab}")
+        sd = [v for v, lab in got if "sulfonate" in lab]
+        if sd:
+            v = min(sd)
+            if v > -0.40:
+                print(f"      ✅ **얼린 게 문제가 아니었다** ({v:+.3f} vs 고정판 -0.258) "
+                      "= 진짜 물리흡착. Phase-B 는 freeze_frac 1.0 유지.")
+            else:
+                print(f"      ⛔ **깊어졌다** ({v:+.3f} vs 고정판 -0.258) = 표면 이완이 결합의 핵심. "
+                      "Phase-B 에서 슬랩 상부를 풀어야 하고 E_slab 기준도 같이 이완해야 한다.")
+        print("      ⚠ 이 산출물은 진단 전용 — 좌표일치가 깨져 Phase-B 입력으로 쓰지 않는다.")
+
     # ⚠ 옛 경로는 **한 줄만**. 재기동 안내를 찍으면 깨진 슬랩 위에서 GPU 를 태운다.
     if os.path.isdir("/data/work/runs/sdcp_linio2_binding/phaseB_v7c_slabfirst"):
         print("   ─ 옛 경로(phaseB_v7c_slabfirst)는 깨진 슬랩이라 폐기. 재기동하지 말 것.")
