@@ -39,7 +39,8 @@ def main():
 
     import numpy as np
     from mp_api.client import MPRester
-    from pymatgen.analysis.phase_diagram import PhaseDiagram, GrandPotentialPhaseDiagram
+    from pymatgen.analysis.phase_diagram import (PhaseDiagram, GrandPotentialPhaseDiagram,
+                                                 GrandPotPDEntry)
     from pymatgen.core import Composition, Element
 
     prov = json.load(open(PROV))
@@ -87,19 +88,44 @@ def main():
             ehull = pd.get_e_above_hull(t)
 
             mu0 = pd.el_refs[Element("Li")].energy_per_atom
-            vs, stable = np.arange(0.0, a.vmax + 1e-9, a.dv), []
+            # ⚠ 준안정상도 답을 낼 수 있다 — "껍질 위인가"(0/1) 대신 **얼마나 떠 있나**를 잰다.
+            #   그 값이 분해 구동력이고, 최소가 되는 전위가 "그나마 가장 생길 만한 전위"다.
+            #   분해 산물까지 같이 내면 "대신 무엇이 생기나" 가 나와 XPS 해석에 직접 쓰인다.
+            vs = np.arange(0.0, a.vmax + 1e-9, a.dv)
+            stable, edec, decomps = [], [], []
             for v in vs:
                 # V vs Li/Li+ 가 높을수록 μ_Li 가 낮다 (탈리튬 쪽)
-                gpd = GrandPotentialPhaseDiagram(entries, {Element("Li"): mu0 - v})
-                names = {e.original_entry.composition.reduced_formula
-                         for e in gpd.stable_entries}
-                stable.append(comp.reduced_formula in names)
-            stable = np.array(stable)
+                mu = {Element("Li"): mu0 - v}
+                gpd = GrandPotentialPhaseDiagram(entries, mu)
+                try:
+                    dec, eh = gpd.get_decomp_and_e_above_hull(
+                        GrandPotPDEntry(t, mu), allow_negative=True)
+                    prods = sorted({d.original_entry.composition.reduced_formula
+                                    for d in dec})
+                except Exception:
+                    eh, prods = float("nan"), []
+                edec.append(float(eh)); decomps.append(prods)
+                stable.append(abs(eh) < 1e-6)
+            stable, edec = np.array(stable), np.array(edec)
+
             if not stable.any():
+                k = int(np.nanargmin(edec))
                 print(f"  ⚠ 0–{a.vmax} V 어디서도 껍질 위에 없다 "
-                      f"(E_hull {ehull:.4f} eV/atom) — 준안정상이다.")
-                res[name] = {"status": "never_stable", "e_above_hull": float(ehull),
-                             "material_id": mid}
+                      f"(닫힌계 E_hull {ehull:.4f} eV/atom) — **준안정상**이다.")
+                print(f"  → 분해 구동력이 **최소가 되는 전위 {vs[k]:.2f} V** "
+                      f"(그때 {edec[k]:.4f} eV/atom 떠 있다)")
+                print(f"     그 전위에서 대신 생기는 상: {' + '.join(decomps[k]) or '?'}")
+                print(f"     0 V 에서는 {edec[0]:.4f} eV/atom, "
+                      f"{a.vmax:.1f} V 에서는 {edec[-1]:.4f} eV/atom")
+                res[name] = {"status": "metastable_everywhere",
+                             "material_id": mid,
+                             "e_above_hull_closed_eV_per_atom": float(ehull),
+                             "min_decomp_energy_eV_per_atom": float(edec[k]),
+                             "V_at_min_decomp": float(vs[k]),
+                             "decomposition_products_at_min": decomps[k],
+                             "decomp_energy_at_0V": float(edec[0]),
+                             "decomp_energy_at_vmax": float(edec[-1]),
+                             "chemsys": "-".join(els)}
                 continue
             # ⚠ min/max 만 쓰면 구간이 끊겨 있어도 하나로 뭉뚱그려진다 — 연속 구간별로 낸다
             segs, i = [], 0
@@ -119,8 +145,13 @@ def main():
                   if lo <= 1e-9 and len(segs) == 1 else
                   f"  → {hi:.2f} V 이하로 내려가면 나타나고, {lo:.2f} V 아래에서는 "
                   f"더 환원된 상으로 넘어간다")
+            i_hi = int(np.searchsorted(vs, hi)) + 1
+            prod_hi = decomps[min(i_hi, len(decomps) - 1)]
+            if hi < a.vmax - 1e-9:
+                print(f"     {hi:.2f} V 위에서는 → {' + '.join(prod_hi) or '?'} 로 분해")
             res[name] = {"status": "ok", "material_id": mid,
                          "stable_segments_V": segs,
+                         "decomposition_products_above_window": prod_hi,
                          "stable_V_min": lo, "stable_V_max": hi,
                          "e_above_hull_eV_per_atom": float(ehull),
                          "chemsys": "-".join(els)}
@@ -145,8 +176,13 @@ def main():
             print(f"{k:14s} {v['stable_V_min']:10.2f} – {v['stable_V_max']:<10.2f} "
                   f"{v['e_above_hull_eV_per_atom']:10.4f}")
         else:
-            print(f"{k:14s} {v.get('status'):>26s} "
-                  f"{v.get('e_above_hull', float('nan')):10.4f}")
+            e = v.get("e_above_hull_closed_eV_per_atom", v.get("e_above_hull", float("nan")))
+            extra = ""
+            if v.get("status") == "metastable_everywhere":
+                extra = (f"  (최소 분해구동력 {v['min_decomp_energy_eV_per_atom']:.4f} "
+                         f"@ {v['V_at_min_decomp']:.2f} V → "
+                         f"{'+'.join(v['decomposition_products_at_min'])})")
+            print(f"{k:14s} {v.get('status'):>26s} {e:10.4f}{extra}")
     print(f"\n→ {OUT}")
     return 0
 
