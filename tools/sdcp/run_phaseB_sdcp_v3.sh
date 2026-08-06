@@ -174,8 +174,9 @@ gen(){
       sed -i '/&ELECTRONS/a\    diago_david_ndim = 2' "$OUT/$j/scf.in"
     sed -i 's/^\s*[0-9] [0-9] [0-9] 0 0 0/  1 1 1 0 0 0/' "$OUT/$j/scf.in"
     # ⚠ 'K_POINTS gamma'(메모리 ~2배 절감)는 못 쓴다 — ortho-atomic Hubbard 와 미구현 충돌.
-    [ -n "$DIAG" ] && { grep -aq "diagonalization" "$OUT/$j/scf.in" || \
-      sed -i "/&ELECTRONS/a\\    diagonalization = '$DIAG'" "$OUT/$j/scf.in"; }
+    # ⚠ 생성기가 이미 diagonalization='david' 를 쓴다 — 줄을 **추가**하면 네임리스트에
+    #   같은 키가 두 번 들어간다. 반드시 **치환**해야 한다 (2026-08-06).
+    [ -n "$DIAG" ] && sed -i "s|diagonalization *= *'[^']*'|diagonalization = '$DIAG'|" "$OUT/$j/scf.in"
   done
 }
 
