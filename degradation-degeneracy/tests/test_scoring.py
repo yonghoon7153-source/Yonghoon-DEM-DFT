@@ -114,3 +114,78 @@ def test_eigen_analysis_detects_pe_ne_coupling():
     e = eigen_analysis(H)
     assert e["pe_ne_coupled"] is True
     assert abs(e["flat_vec_a_pe"]) > 0.3 and abs(e["flat_vec_a_ne"]) > 0.3
+
+
+# ---------------------------------------------------------------- F21 multi-start
+
+def _restart_row(cond, obj, restarts):
+    import json
+    return {"cond_id": cond, "objective": obj, "lli": 0.0, "lam_pe": 0.0,
+            "lam_ne": 0.0, "noise": 0.0, "restarts_json": json.dumps(restarts)}
+
+
+def test_multistart_flat_valley_is_same_J_different_p():
+    """★ 같은 J에 서로 다른 해 = degeneracy의 직접 증거."""
+    from src.scoring import multistart_diagnostics
+
+    df = pd.DataFrame([_restart_row("c0", "pocv_dvdq", [
+        ([1.00, 0.00, 1.00, 0.00], 0.010),
+        ([1.20, -0.20, 0.80, 0.20], 0.010),      # J 같음, p 멀다
+        ([0.90, 0.10, 1.10, -0.10], 0.010),
+    ])])
+    ms = multistart_diagnostics(df)
+    r = ms.iloc[0]
+    assert r["multistart_kind"] == "flat_valley"
+    assert r["n_near_J"] == 3
+    assert r["p_spread_near"] > 0.1
+
+
+def test_multistart_multimodal_is_different_J():
+    """J가 다른 국소최소 여럿 = 최적화 난이도이지 degeneracy가 아니다."""
+    from src.scoring import multistart_diagnostics
+
+    df = pd.DataFrame([_restart_row("c0", "pocv_dvdq_dqdv", [
+        ([1.00, 0.00, 1.00, 0.00], 0.000),
+        ([1.30, -0.30, 0.70, 0.30], 0.400),      # 훨씬 나쁜 J
+        ([1.40, -0.40, 0.60, 0.40], 0.500),
+    ])])
+    ms = multistart_diagnostics(df)
+    r = ms.iloc[0]
+    assert r["multistart_kind"] == "multimodal"
+    assert r["n_near_J"] == 1
+    assert r["p_spread_all"] > 0.1
+
+
+def test_multistart_unique_min():
+    from src.scoring import multistart_diagnostics
+
+    df = pd.DataFrame([_restart_row("c0", "pocv", [
+        ([1.000, 0.000, 1.000, 0.000], 0.001),
+        ([1.001, 0.001, 1.000, 0.000], 0.001),
+    ])])
+    assert multistart_diagnostics(df).iloc[0]["multistart_kind"] == "unique_min"
+
+
+def test_multistart_summary_separates_the_two_failure_modes():
+    """★ flat_valley와 multimodal을 뭉치면 처방이 반대가 된다."""
+    from src.scoring import multistart_diagnostics, multistart_summary
+
+    df = pd.DataFrame([
+        _restart_row("c0", "A", [([1.0, 0, 1.0, 0], 0.01),
+                                 ([1.3, -0.3, 0.7, 0.3], 0.01)]),   # flat
+        _restart_row("c1", "A", [([1.0, 0, 1.0, 0], 0.01),
+                                 ([1.3, -0.3, 0.7, 0.3], 0.01)]),   # flat
+        _restart_row("c2", "B", [([1.0, 0, 1.0, 0], 0.00),
+                                 ([1.3, -0.3, 0.7, 0.3], 0.50)]),   # multimodal
+    ])
+    s = multistart_summary(multistart_diagnostics(df))
+    assert s["A"]["flat_valley_frac"] == 1.0
+    assert s["A"]["multimodal_frac"] == 0.0
+    assert s["B"]["multimodal_frac"] == 1.0
+    assert s["B"]["flat_valley_frac"] == 0.0
+
+
+def test_multistart_missing_column_is_graceful():
+    from src.scoring import multistart_diagnostics
+
+    assert multistart_diagnostics(pd.DataFrame({"cond_id": ["a"]})).empty

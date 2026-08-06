@@ -143,6 +143,110 @@ def apply_bias_correction(df: pd.DataFrame, bias: pd.DataFrame,
     return out
 
 
+# ---------------------------------------------------------------- multi-start 진단
+
+def multistart_diagnostics(df: pd.DataFrame, j_tol: float = 1e-3,
+                           p_tol: float = 1e-2) -> pd.DataFrame:
+    """★ restarts_json에서 **해석 가능한** multi-start 지표를 다시 만든다 (F21).
+
+    fitting이 기록하던 두 지표는 그대로 쓰면 오독한다.
+
+      n_restarts_agree  adaptive 조기 종료 때문에, restart를 5까지 간 조건은
+                        "앞 두 번이 안 맞아서 계속 간" 조건이다. 따라서
+                        `agree >= n_restarts`는 **정의상 거짓**이다 (실측 0.0).
+                        측정이 아니라 동어반복이다.
+      p_spread          최적 J에 근접한 해들 사이의 퍼짐이라, 값이 0이면
+                        "해가 일치"가 아니라 **"최적 J에 도달한 게 하나뿐"** 이다.
+                        오히려 서로 다른 국소최소가 있다는 신호에 가깝다.
+
+    그래서 원본 (p, J) 목록에서 두 축을 분리해 다시 센다.
+
+      n_near_J       최적 J의 j_tol 이내에 든 restart 수
+      p_spread_all   **모든** restart의 최적해 대비 최대 거리
+      p_spread_near  n_near_J 안에서의 최대 거리
+
+    그리고 조건을 셋으로 나눈다 — 세 경우의 처방이 다르다.
+
+      unique_min   n_near_J == 전체, p_spread_near 작음
+                   → 해가 유일. 문제 없음
+      flat_valley  n_near_J >= 2, p_spread_near 큼
+                   → **같은 J에 서로 다른 해.** 이것이 degeneracy의 직접 증거다.
+                     데이터가 그 조합을 구분하지 못한다는 뜻
+      multimodal   n_near_J == 1, p_spread_all 큼
+                   → J가 다른 국소최소가 여럿. 데이터는 구분하지만
+                     최적화가 어렵다 = 초기값 문제 (F20의 dQ/dV가 이 경우)
+    """
+    import json as _json
+
+    if "restarts_json" not in df.columns:
+        log.warning("restarts_json 열이 없음 — multi-start 진단 생략")
+        return pd.DataFrame()
+
+    rows = []
+    for _, r in df.iterrows():
+        try:
+            rs = _json.loads(r["restarts_json"])
+        except (TypeError, ValueError):
+            continue
+        if not rs:
+            continue
+        ps = np.array([p for p, _ in rs], float)
+        js = np.array([j for _, j in rs], float)
+        ok = np.isfinite(js)
+        if not ok.any():
+            continue
+        ps, js = ps[ok], js[ok]
+        i_best = int(np.argmin(js))
+        p_best, j_best = ps[i_best], js[i_best]
+
+        near = np.abs(js - j_best) <= j_tol * max(1.0, abs(j_best))
+        d_all = np.max(np.abs(ps - p_best), axis=1)
+        spread_all = float(d_all.max())
+        spread_near = float(d_all[near].max())
+        n_near = int(near.sum())
+
+        if n_near >= 2 and spread_near > p_tol:
+            kind = "flat_valley"
+        elif n_near == 1 and spread_all > p_tol:
+            kind = "multimodal"
+        else:
+            kind = "unique_min"
+
+        rows.append({
+            "cond_id": r["cond_id"], "objective": r["objective"],
+            **{k: r[k] for k in ("lli", "lam_pe", "lam_ne", "noise")
+               if k in df.columns},
+            "n_restarts_total": int(len(js)), "n_near_J": n_near,
+            "p_spread_all": spread_all, "p_spread_near": spread_near,
+            "J_best": float(j_best), "J_worst": float(js.max()),
+            "multistart_kind": kind,
+        })
+    return pd.DataFrame(rows)
+
+
+def multistart_summary(ms: pd.DataFrame) -> dict:
+    """목적함수별 요약. flat_valley 비율이 degeneracy의 직접 증거다."""
+    if ms.empty:
+        return {}
+    out = {}
+    for o, g in ms.groupby("objective"):
+        counts = g["multistart_kind"].value_counts(normalize=True)
+        out[str(o)] = {
+            "n": int(len(g)),
+            # ★ 같은 J에 서로 다른 해 = 데이터가 구분 못 함
+            "flat_valley_frac": float(counts.get("flat_valley", 0.0)),
+            # J가 다른 국소최소 여럿 = 최적화 난이도 (초기값으로 해결 가능)
+            "multimodal_frac": float(counts.get("multimodal", 0.0)),
+            "unique_min_frac": float(counts.get("unique_min", 0.0)),
+            "median_p_spread_all": float(g["p_spread_all"].median()),
+            "median_n_restarts": float(g["n_restarts_total"].median()),
+        }
+    out["_해석"] = ("flat_valley = degeneracy의 직접 증거 (같은 J, 다른 해). "
+                   "multimodal = 최적화 난이도이지 degeneracy가 아니다 "
+                   "— 초기값을 주면 사라진다 (F20).")
+    return out
+
+
 # ---------------------------------------------------------------- 요약
 
 def summarize(df: pd.DataFrame, tol: float = DEFAULT_TOL) -> dict:
@@ -184,20 +288,27 @@ def summarize(df: pd.DataFrame, tol: float = DEFAULT_TOL) -> dict:
             for (o, n), g in rec.groupby(["objective", "noise"])
         }
 
-    # F4: multi-start 지표는 restart 수로 조건화해야만 의미가 있다
+    # F4/F21: multi-start 지표는 restart 수로 조건화해야만 의미가 있고,
+    # agree_frac은 조기 종료 때문에 n_restarts>2에서 정의상 0이 된다 (동어반복).
+    # 해석 가능한 지표는 multistart_diagnostics()가 restarts_json에서 다시 만든다.
     if "n_restarts" in rec.columns:
         out["restart_conditioned"] = {
             f"n_restarts={int(k)}": {
                 "n": int(len(g)),
                 "agree_frac": float((g["n_restarts_agree"] >= g["n_restarts"]).mean())
                 if "n_restarts_agree" in g.columns else None,
-                "median_p_spread": float(g["p_spread"].median())
+                "median_p_spread_nearJ": float(g["p_spread"].median())
                 if "p_spread" in g.columns else None,
             }
             for k, g in rec.groupby("n_restarts")
         }
-        out["_F4_주의"] = ("adaptive 조기 종료로 조건마다 검정력이 다르다. "
-                          "restart 불일치율을 전체 평균으로 보고하지 말 것.")
+        out["_F4_주의"] = (
+            "이 블록의 두 지표는 그대로 인용하지 말 것. "
+            "(1) agree_frac: adaptive 조기 종료로 n_restarts>2인 조건은 "
+            "'앞 두 번이 안 맞아서 계속 간' 조건이라 정의상 0이 된다 — 측정이 아니다. "
+            "(2) p_spread_nearJ=0은 '해가 일치'가 아니라 '최적 J에 도달한 restart가 "
+            "하나뿐'이라는 뜻이다. "
+            "해석은 아래 multistart 블록(flat_valley / multimodal)을 볼 것.")
 
     # F14: 격자 커버리지 공백
     if {"lli", "lam_pe"} <= set(df.columns):
@@ -240,6 +351,16 @@ def run_scoring(in_dir, out_dir=None, tol: float = DEFAULT_TOL,
     df.to_parquet(path, index=False)
 
     summary = summarize(df, tol)
+
+    # F21: restarts_json에서 해석 가능한 multi-start 지표를 다시 만든다.
+    # (재계산 없이 저장된 원본 (p, J)만으로 가능)
+    ms = multistart_diagnostics(df[df["recoverable"]] if "recoverable" in df else df)
+    if not ms.empty:
+        ms.to_parquet(out_dir / "multistart.parquet", index=False)
+        summary["multistart"] = multistart_summary(ms)
+        log.info("multi-start 진단: %s",
+                 {k: v for k, v in summary["multistart"].items()
+                  if not k.startswith("_")})
     (out_dir / "degeneracy_summary.yaml").write_text(
         yaml.safe_dump(summary, allow_unicode=True, sort_keys=False), encoding="utf-8")
 

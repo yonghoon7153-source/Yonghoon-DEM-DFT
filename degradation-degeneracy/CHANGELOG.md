@@ -231,3 +231,28 @@ pocv_dvdq 해(J=0.417)보다 2%만 낮게 평가하는데, 오차는 0.059 vs 0.
 수정: `--out`을 명시했는지 추적해서, 명시했으면 그대로 쓴다.
 추가로 `run_fit`이 시작 시 **입력/출력 디렉터리 절대경로를 로그에 찍는다** —
 같은 사고가 나면 첫 줄에서 보이게.
+
+### Phase 5 — multi-start 지표 재정의 (F21, 2026-08-06)
+
+fine 격자 요약에서 나온 두 숫자는 **그대로 인용하면 오독한다**.
+
+    n_restarts=5 → agree_frac 0.0,  median_p_spread 0.0
+
+- `agree_frac`: adaptive 조기 종료 때문에 restart를 5까지 간 조건은 "앞 두 번이
+  안 맞아서 계속 간" 조건이다. 따라서 `agree >= n_restarts`는 **정의상 거짓**이며
+  0.0은 측정이 아니라 동어반복이다.
+- `p_spread = 0`: "해가 일치"가 아니라 **"최적 J에 도달한 restart가 하나뿐"** 이라는
+  뜻이다. 오히려 서로 다른 국소최소가 있다는 신호에 가깝다.
+
+`restarts_json`에 restart별 (p, J) 원본을 남겨 뒀으므로(F4 대비) **재계산 없이**
+제대로 된 지표를 만들 수 있다. `multistart_diagnostics()`가 두 축을 분리한다.
+
+    unique_min   최적 J에 모든 restart가 모이고 해도 일치      → 문제 없음
+    flat_valley  같은 J인데 해가 서로 멀다                     → ★ degeneracy의 직접 증거
+    multimodal   J가 다른 국소최소 여럿                        → 최적화 난이도. 초기값으로 해결 (F20)
+
+두 실패 모드를 뭉치면 처방이 정반대가 된다. flat_valley는 데이터를 더 넣어야
+하고(측정 방식 변경), multimodal은 초기값만 주면 사라진다.
+
+`summarize()`의 `restart_conditioned` 블록은 하위호환으로 남기되, 인용하지 말라는
+경고를 `_F4_주의`에 명시했다.
