@@ -498,6 +498,13 @@ def main():
     ap.add_argument("--slab", required=True)
     ap.add_argument("--complex_doped", required=True)
     ap.add_argument("--complex_neutral", required=True)
+    # 2026-08-06: 같은 종의 **두 번째 기하**(Li 추출 상태)를 추가로 받는다.
+    #   ΔE_extract = E(추출) − E(물리흡착) 은 같은 조성·셀을 비교하므로 기준항이 전부
+    #   상쇄된다. kind 는 첫 번째와 동일하게 줘서 라디칼 시드·AFM 처리가 똑같이 걸린다.
+    ap.add_argument("--complex_doped2", default=None,
+                    help="doped 의 두 번째 기하 (예: Li 추출 상태) → complex_doped_extr")
+    ap.add_argument("--complex_neutral2", default=None,
+                    help="neutral 의 두 번째 기하 → complex_neutral_extr")
     ap.add_argument("--mol_doped", required=True)
     ap.add_argument("--mol_neutral", required=True)
     ap.add_argument("--pseudo_dir", default="/data/work/pseudo")
@@ -637,6 +644,12 @@ def main():
         ("mol_doped",       a.mol_doped,        "molecule_doped",   "gamma",  "pb_mold"),
         ("mol_neutral",     a.mol_neutral,      "molecule_neutral", "gamma",  "pb_moln"),
     ]
+    # 두 번째 기하는 **kind 를 첫 번째와 같게** 준다 — 라디칼 시드·AFM·게이트가 동일하게 걸려야
+    # ΔE_extract 에서 계통항이 상쇄된다. 디렉터리 이름과 prefix 만 다르다.
+    if a.complex_doped2:
+        jobs.append(("complex_doped_extr", a.complex_doped2, "complex_doped", a.kpts, "pb_cxde"))
+    if a.complex_neutral2:
+        jobs.append(("complex_neutral_extr", a.complex_neutral2, "complex_neutral", a.kpts, "pb_cxne"))
     meta = {"nat_slab": Nslab, "vdw": OPT["vdw"], "jobs": {}}
     for name, src, kind, kpts, prefix in jobs:
         if kind == "slab":
