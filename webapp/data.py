@@ -2363,17 +2363,25 @@ def dashboard_highlights() -> list:
     if e:
         hi.append({"t": "이온 전도 Ea (UMA)", "v": f"{L.get(e[0][1], e[0][1])} {e[0][0]} eV 최저",
                    "n": "Cl-rich가 Li 이동 유리 · ⚠멀티시드 판정(절대값 인용주의)"})
-    # SDCP Phase-A 완료 (2026-08-06) — 대시보드에 올리는 이유: 이 캠페인의 **판정 수치**가
-    # Δ 하나이고, 그 Δ 가 열잡음의 6.5배라는 사실이 Phase-B 착수 판단의 전부이기 때문이다.
-    # ⚠ UMA 값이다. 절대 E_ads 인용 금지 — 순위·차이만. 상세: kb/projects/sdcp_phaseB_direction_2026_08_06.md
-    hi.append({"t": "SDCP × LiNiO₂(104) — 라디칼이 더 붙나",
-               "v": "Δ = −0.170 eV (UMA)",
-               "n": "doped −0.258 (sulfonate r90) vs neutral −0.0879 (sulfonate r180), 216/216 수렴. "
-                    "열잡음 kT≈26 meV 의 6.5배라 부호는 뚜렷하나 화학결합 스케일은 아니다 — "
-                    "DFT+U(Phase-B)가 이 크기를 유지하는지가 판정. "
-                    "⚠ 슬랩을 풀면 −1.465 로 4배 깊어지는데 그건 흡착이 아니라 표면 Li⁺ 추출이다"
-                    "(Li 2개가 2.33/0.89 Å 이동해 sulfonate O 에 1.91–2.05 Å 배위) — UMA 는 "
-                    "Ni³⁺→Ni⁴⁺ 산화 대가를 안 물어 과대평가 가능. 별 트랙으로 DFT 재검."})
+    # SDCP (2026-08-06 저녁 갱신) — Phase-B 를 걸기 직전에 초기 자세를 실측해서 **보류**했다.
+    # 대시보드에 올리는 이유: 며칠짜리 DFT+U 를 멈춘 판단이고, 그 근거가 두 숫자(2.53 Å, 9 meV)로
+    # 끝나기 때문이다. ⚠ UMA 값이다. 절대 E_ads 인용 금지 — 순위·차이만.
+    # 상세: kb/projects/sdcp_phaseB_direction_2026_08_06.md
+    hi.append({"t": "SDCP × LiNiO₂(104) — Phase-B **착수 보류**",
+               "v": "자세에 화학결합 없음 · Li vs Ni 9 meV",
+               "n": "착수 직전 초기 자세를 실측(tools/sdcp/contact_map.py·site_preference.py, 새 계산 없음). "
+                    "① 두 챔피언 다 물리흡착 — 술폰산 O↔Li 가 doped 2.93 / neutral 2.53 Å 로 "
+                    "Li⁺–O 배위(1.90–2.20 Å)보다 0.3–0.9 Å 멀다. doped 는 최단 접촉이 H···Li⁺ 이고, "
+                    "O 가 0.4 Å 더 먼데 E_bind 는 3배 깊어 세기가 기하를 안 따라간다. "
+                    "② Ni 자리는 90개나 스캔됐는데 doped 의 Li vs Ni 격차가 **9 meV** — kT(26 meV)의 1/3이라 "
+                    "Phase-B 에 넣을 자세를 사실상 동전 던지기로 고르고 있었다(neutral 만 82 meV 로 갈림). "
+                    "③ 원인은 freeze_frac 1.0 — (104)는 Li·Ni 가 같은 높이(z 18.19)·같은 배위수(5)로 "
+                    "노출되므로 자리 선호는 전자적 문제인데, 슬랩을 얼리면 표면 Li 가 올라올 수 없어 "
+                    "진짜 Li–O 배위가 구조적으로 금지된다. freeze_frac 0.6 의 Li 추출(−1.465 eV)은 "
+                    "다른 아티팩트가 아니라 같은 물리의 반대쪽 극단이다. "
+                    "→ MLIP 단계에서 freeze_frac 0.85(최상단 층 48/192만 자유)로 재스캔 중. "
+                    "Li–O 가 1.9–2.2 Å 로 들어오고 Li/Ni 격차가 kT 를 넘으면 그때 Phase-B. "
+                    "Δ 는 E_slab 이 대수적으로 상쇄되므로 슬랩 기하 변경의 영향을 받지 않는다."})
     ce = _cascade_by_element()
     top = None
     for rows in ce.values():
