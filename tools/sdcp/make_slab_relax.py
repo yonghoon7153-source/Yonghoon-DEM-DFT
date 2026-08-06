@@ -31,6 +31,7 @@ AFM: R-3m LiNiO2 는 면내(G-type) 반강자성이다. 기존 파이프라인�
 """
 import argparse
 import os
+import re
 import sys
 
 import numpy as np
@@ -145,6 +146,56 @@ def write_relax(path, at, lab, fixed, kpts, prefix,
     open(path, "w").write("\n".join(L))
 
 
+def last_positions_from_relax_out(out_path, ref):
+    """relax.out 의 **마지막 ATOMIC_POSITIONS** 를 직접 읽는다.
+
+    ⚠⚠ ASE 의 `read(..., format="espresso-out")` 를 쓰면 안 된다 — 2026-08-06 실측:
+      `AssertionError: ((2, 0), 14)`. relax 의 중간 스텝은 verbosity='low' 에서
+      **밴드를 안 찍는데** ASE 파서는 고유값 블록이 있다고 가정한다(스핀 2채널 x k 0개).
+      우리가 필요한 건 좌표뿐이므로 직접 읽는 편이 안전하고 의존성도 없다.
+
+    셀은 **고정 셀 relax** 라 바뀌지 않으므로 기준 구조(ref, start.vasp)의 것을 그대로 쓴다.
+    ⚠ vc-relax 로 바꾸면 이 가정이 깨진다 — 그때는 CELL_PARAMETERS 도 읽어야 한다.
+    """
+    unit, blocks, cur, on = None, [], [], False
+    for line in open(out_path, errors="ignore"):
+        st = line.strip()
+        if st.startswith("ATOMIC_POSITIONS"):
+            if cur:
+                blocks.append(cur)
+            m = re.search(r"\(([a-z_]+)\)", st)
+            unit, cur, on = (m.group(1) if m else "angstrom"), [], True
+            continue
+        if on:
+            f = st.split()
+            if len(f) >= 4 and re.match(r"^[A-Z][a-z]?\d*$", f[0]):
+                try:
+                    cur.append((f[0], float(f[1]), float(f[2]), float(f[3])))
+                    continue
+                except ValueError:
+                    pass
+            on = False
+            if cur:
+                blocks.append(cur); cur = []
+    if cur:
+        blocks.append(cur)
+    if not blocks:
+        sys.exit(f"⛔ {out_path} 에서 ATOMIC_POSITIONS 를 못 찾았다")
+    last = blocks[-1]
+    if len(last) != len(ref):
+        sys.exit(f"⛔ 마지막 블록 원자수 {len(last)} != 기준 {len(ref)} — 쓰다 만 블록일 수 있다")
+    at = ref.copy()
+    pos = np.array([[x, y, z] for _, x, y, z in last], float)
+    if unit and unit.startswith("cryst"):
+        pos = pos @ np.array(ref.cell)
+    elif unit == "bohr":
+        pos = pos * 0.529177210903
+    at.set_positions(pos)
+    at.set_pbc(True)
+    print(f"   relax.out 에서 ATOMIC_POSITIONS {len(blocks)}블록 · 단위 ({unit}) · 마지막 사용")
+    return at
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--slab", default="db/structures/linio2_104_sym_1x4L4.vasp",
@@ -155,12 +206,14 @@ def main():
     a = ap.parse_args()
 
     if a.harvest:
-        rel = read(os.path.join(a.harvest, "relax.out"), format="espresso-out", index=-1)
+        ref = read(os.path.join(a.harvest, "start.vasp"))
+        rel = last_positions_from_relax_out(os.path.join(a.harvest, "relax.out"), ref)
         big = rel.repeat((1, 4, 1)); big.set_pbc(True)
         write("db/structures/linio2_104_sym_1x4L4_relaxed.vasp", big, format="vasp", direct=False)
         write("db/structures/linio2_104_sym_1x4L4_relaxed.xyz", big)
-        d = np.abs(rel.positions - read(os.path.join(a.harvest, "start.vasp")).positions)
-        print(f"✓ 이완 완료 — 최대 원자 변위 {d.max():.3f} A")
+        d = np.abs(rel.positions - ref.positions)
+        dz = d[:, 2]
+        print(f"✓ 이완 완료 — 최대 원자 변위 {d.max():.3f} A (z 성분 최대 {dz.max():.3f} A)")
         print("  → db/structures/linio2_104_sym_1x4L4_relaxed.{vasp,xyz} (192원자)")
         print("  ⚠ 다음: 이 1x4 로 단일점을 돌려 **최대 잔여력 < 0.05 eV/A** 인지 확인할 것.")
         print("     크면 1x1 주기를 깨는 재구성이 있다는 뜻이고, 그때는 1x4 를 직접 이완해야 한다.")
