@@ -142,6 +142,10 @@ def main():
     if a.freeze_frac >= 1.0 and not np.allclose(slab.positions, slab0.positions, atol=1e-8):
         raise SystemExit("⛔ 전체 고정인데 슬랩 좌표가 움직였다 — constraint 가 안 걸렸다")
     E_slab = slab.get_potential_energy()
+    # ⚠ 이완된 맨 슬랩을 **반드시 남긴다** (2026-08-06). 이게 없으면 나중에 "표면이 움직였나"를
+    #   판정할 기준선이 사라져서, 원본(DFT) 대비로 재게 되고 'UMA 자체 이완'과 '분자가 끌어당긴
+    #   몫'이 섞인다. freeze_frac<1.0 일 때는 이 파일이 E_bind 의 기준 구조 그 자체이기도 하다.
+    write(os.path.join(a.out, "slab_ref_relaxed.xyz"), slab)
     ztop = slab.positions[:, 2].max()
     print(f"E_slab = {E_slab:.4f} eV  (top z={ztop:.2f}, "
           f"{'frozen' if a.freeze_frac >= 1.0 else f'FIRE converged={conv_slab}'})", flush=True)
