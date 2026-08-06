@@ -9,10 +9,12 @@
 무엇을 보나
   0) **살아 있나** — 산출물이 하나도 없는데 프로세스도 없으면 착수 자체가 실패한 것이다.
      그 경우 로그 꼬리를 바로 찍어 준다(가장 흔한 실패가 '입력 생성 단계에서 죽음' 이다).
-  1) job 5개의 SCF 안쪽 — iteration · accuracy 궤적 · 자화 · 총에너지
-  2) ★ **AFM 대조** — 두 복합체가 다른 스핀 배열로 수렴하면 Δ 가 통째로 오염된다.
-     러너도 게이트를 걸지만, 사람이 **더 일찍** 보는 게 낫다.
-  3) Δ 와 개별 E_ads — ⚠ 신뢰도가 다르다(Δ ★★★ / 개별 ★☆☆)
+  1) 존재하는 job 의 SCF 안쪽 — iteration · accuracy 궤적 · 자화 · 총에너지
+     (job 목록은 고정이 아니다 — v2 5개 / v3 6개 / 탐침 1개를 자동 감지한다)
+  2) ★ **AFM 대조** — 복합체들이 다른 스핀 배열로 수렴하면 Δ 도 ΔE_extract 도 오염된다.
+     특히 doped 의 두 기하(물리흡착·추출)가 갈리면 ΔE_extract 는 추출이 아니라
+     **스핀 전이**를 재는 값이 된다. 러너도 막지만 사람이 더 일찍 보는 게 낫다.
+  3) 흡착에너지(E_ads·Δ)와 반응에너지(ΔE_rxn·ΔE_extract) — 둘은 다른 물리량이다
 """
 import glob
 import os
@@ -22,9 +24,18 @@ import sys
 from datetime import datetime
 
 RY = 13.605693
-PB = os.environ.get("PB", "/data/work/runs/sdcp_v2/phaseB")
-LOG = os.path.expanduser("~/logs/phaseB.log")
-JOBS = ("slab", "complex_doped", "complex_neutral", "mol_doped", "mol_neutral")
+# v3 가 있으면 그쪽을 본다 (v3 = 흡착에너지 + 반응에너지, job 6개)
+_DEF = ("/data/work/runs/sdcp_v2/phaseB_v3"
+        if os.path.isdir("/data/work/runs/sdcp_v2/phaseB_v3")
+        else "/data/work/runs/sdcp_v2/phaseB")
+PB = os.environ.get("PB", _DEF)
+LOG = os.path.expanduser(os.environ.get("LOG", "~/logs/phaseB_v3.log"
+                                        if PB.endswith("_v3") else "~/logs/phaseB.log"))
+# ⚠ 고정 목록이 아니다 — v2(5개)와 v3(6개)의 job 구성이 다르고, 탐침은 1개만 만든다.
+ALL_JOBS = ("slab", "complex_doped", "complex_doped_extr",
+            "complex_neutral", "complex_neutral_extr", "mol_doped", "mol_neutral")
+JOBS = tuple(j for j in ALL_JOBS
+             if os.path.isdir(os.path.join(PB, j))) or ALL_JOBS[:5]
 MAGTOL = float(os.environ.get("MAGTOL", "2.0"))
 BAR = "─" * 74
 
@@ -102,10 +113,12 @@ if not any_out:
     else:
         print("   · scf.in 도 없다 → **입력 생성 단계에서 죽었다**"
               " (phaseB_v7c_dft_binding.py 인자·경로·pseudo 확인)")
-    cs = os.path.join(PB, "slab_cshrink.vasp")
-    print(f"   · slab_cshrink.vasp {'있음' if os.path.isfile(cs) else '**없음** ← c-shrink 에서 죽었을 수도'}")
-    if "phaseB" not in tmux:
-        print("   · tmux 세션 phaseB 도 없다 — 프로세스가 끝났거나 시작을 못 했다")
+    # 셀 파일 이름이 판마다 다르다 — v2 는 slab_cshrink, v3 는 slab_ref_c<c>.vasp
+    cs = glob.glob(os.path.join(PB, "slab_cshrink.vasp")) + \
+        glob.glob(os.path.join(PB, "slab_ref_c*.vasp"))
+    print(f"   · 셀 파일 {os.path.basename(cs[0]) + ' 있음' if cs else '**없음** ← 셀 준비 단계에서 죽었을 수도'}")
+    if not any(t.startswith("pb") or "phaseB" in t for t in tmux):
+        print("   · Phase-B tmux 세션이 없다 — 프로세스가 끝났거나 시작을 못 했다")
     print(f"\n   로그 꼬리 ({LOG}):")
     if os.path.isfile(LOG):
         for ln in sh(f"tail -25 {LOG}").splitlines():
@@ -148,37 +161,58 @@ for j in JOBS:
 
 print(BAR)
 
-# ── 2) ★ AFM 대조 — Δ 를 지키는 장치 ────────────────────────────────────────
-md, mn = data["complex_doped"], data["complex_neutral"]
-if md and mn and md["am"] and mn["am"]:
-    a, b = float(md["am"][-1]), float(mn["am"][-1])
-    dm = abs(a - b)
-    ok = dm <= MAGTOL
-    print(f"★ AFM 대조 — doped {a:.2f} vs neutral {b:.2f} μB · 차 {dm:.2f} (허용 {MAGTOL})")
-    print("   " + ("✅ 같은 자기 상태로 가고 있다 — Δ 가 성립한다"
-                   if ok else
-                   "⛔⛔ **다른 자기 상태다. Δ 가 오염된다.** 러너가 멈출 것이고, "
-                   "이 상태의 Δ 는 쓰면 안 된다"))
+# ── 2) ★ AFM 대조 — 복합체 **전부**를 본다 ──────────────────────────────────
+#   ΔE_extract 는 같은 종의 두 기하 차이라, doped 물리흡착과 doped 추출이 다른 스핀
+#   상태로 수렴하면 그 차이는 추출이 아니라 **스핀 전이**가 된다. Δ 보다 더 민감하다.
+cx = [(j, float(data[j]["am"][-1])) for j in JOBS
+      if j.startswith("complex") and data[j] and data[j]["am"]]
+if len(cx) >= 2:
+    lo, hi = min(v for _, v in cx), max(v for _, v in cx)
+    print(f"★ AFM 대조 — 폭 {hi-lo:.2f} μB (허용 {MAGTOL})")
+    for j, v in cx:
+        print(f"    {j:22s} {v:6.2f} μB")
+    print("   " + ("✅ 같은 자기 상태로 가고 있다 — Δ·ΔE_extract 가 성립한다"
+                   if hi - lo <= MAGTOL else
+                   "⛔⛔ **다른 자기 상태다.** 특히 doped 의 두 기하가 갈리면 ΔE_extract 는 "
+                   "추출이 아니라 스핀 전이를 재는 값이 된다"))
+elif cx:
+    print(f"★ AFM 대조 — 아직 복합체 1개만 나왔다 ({cx[0][0]} {cx[0][1]:.2f} μB)")
 else:
-    print("★ AFM 대조 — 아직 두 복합체 자화가 다 안 나왔다 (이게 최대 리스크다)")
+    print("★ AFM 대조 — 아직 복합체 자화가 안 나왔다 (이게 최대 리스크다)")
 
-# ── 3) Δ 와 개별 E_ads ──────────────────────────────────────────────────────
+# ── 3) 흡착에너지 · 반응에너지 ──────────────────────────────────────────────
 E = {j: data[j]["E"] for j in JOBS if data[j] and data[j]["E"] is not None}
-need = ("complex_doped", "complex_neutral", "mol_doped", "mol_neutral")
-if all(k in E for k in need):
-    dlt = (E["complex_doped"] - E["complex_neutral"]) - (E["mol_doped"] - E["mol_neutral"])
-    print(f"\n★ Δ = E_ads(doped) − E_ads(neutral) = {dlt:+.4f} eV      (UMA 기준 −0.170)")
-    if "slab" in E:
-        for lab, cx, mo in (("doped", "complex_doped", "mol_doped"),
-                            ("neutral", "complex_neutral", "mol_neutral")):
-            print(f"    E_ads({lab:7s}) = {E[cx] - E['slab'] - E[mo]:+.4f} eV")
-    print("    ⚠ Δ 는 E_slab·k-오차가 상쇄돼 ★★★ · 개별 E_ads 는 Γ-only 와 전체고정이"
-          " 그대로 실려 ★☆☆ — 논문엔 조건 병기, 결론은 Δ 로")
-    if abs(dlt) < 0.026:
-        print("    ⛔ |Δ| 가 열잡음(kT≈26 meV) 수준 — UMA 자세 선택 자체를 못 믿는다는 뜻")
-    elif dlt > 0:
-        print("    ⛔ **부호가 UMA 와 반대다** — 'doped 가 더 잘 붙는다' 가설이 뒤집힌다")
-else:
-    left = [k for k in need if k not in E]
-    print(f"\n· Δ 계산 대기 — 남은 job: {', '.join(left)}")
+
+
+def ads(cx_, mol_):
+    if all(k in E for k in ("slab", cx_, mol_)):
+        return E[cx_] - E["slab"] - E[mol_]
+    return None
+
+
+ad = ads("complex_doped", "mol_doped")
+an = ads("complex_neutral", "mol_neutral")
+rx = ads("complex_doped_extr", "mol_doped")
+dx = (E["complex_doped_extr"] - E["complex_doped"]
+      if {"complex_doped_extr", "complex_doped"} <= set(E) else None)
+
+print()
+if ad is not None:
+    print(f"  E_ads(doped, 물리흡착)   = {ad:+.4f} eV   ← 흡착에너지")
+if an is not None:
+    print(f"  E_ads(neutral, 물리흡착) = {an:+.4f} eV   ← 흡착에너지")
+if None not in (ad, an):
+    print(f"  Δ = E_ads(d) − E_ads(n)  = {ad - an:+.4f} eV   (UMA −0.073)")
+    print("     ⚠ Δ 는 프로토콜 의존적이다 (얼린 −0.170 vs top1free −0.073) — 결론을 여기 걸지 말 것")
+if rx is not None:
+    print(f"\n  ΔE_rxn(doped)            = {rx:+.4f} eV   ← **반응**에너지 (흡착에너지 아님)")
+if dx is not None:
+    print(f"  ★ ΔE_extract(doped)      = {dx:+.4f} eV   (UMA −0.942)")
+    print("     기준항이 전부 상쇄되는 값이라 이 캠페인에서 제일 믿을 만하다.")
+    print("     " + ("→ DFT+U 에서도 추출이 유리 = **Li 스캐빈징 열화 기구 실재**" if dx < 0 else
+                     "→ DFT+U 에서는 추출이 불리 = UMA 가 Ni³⁺→Ni⁴⁺ 산화 대가를 안 문 것"))
+    print("     ⚠ 열역학이지 속도론이 아니다 — 장벽은 NEB 이 있어야 말한다")
+if ad is None and dx is None:
+    left = [j for j in JOBS if j not in E]
+    print(f"· 아직 계산 대기 — 남은 job: {', '.join(left) or '없음'}")
 print(BAR)
