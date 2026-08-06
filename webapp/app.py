@@ -421,13 +421,21 @@ def seminar():
     if not md.is_file():
         abort(404)
     deck = base / DECK_NAME
+
+    def doc(p):
+        """마크다운 파일 → (html, KB). 없으면 (None, 0) — 템플릿이 탭을 안 만든다."""
+        return ((D.md_to_html(p.read_text(encoding="utf-8")), os.path.getsize(p) // 1024)
+                if p.is_file() else (None, 0))
+
+    terms, terms_kb = doc(D.KB / "methodology" / "terminology_register.md")
+    guide, guide_kb = doc(D.ROOT / "docs" / "cascade_pipeline_guide.md")
     return render_template("seminar.html", active="seminar",
                            body=D.md_to_html(md.read_text(encoding="utf-8")),
+                           spec_kb=os.path.getsize(md) // 1024,
                            deck=(deck.name if deck.is_file() else None),
                            deck_size=(os.path.getsize(deck) // 1024 if deck.is_file() else 0),
-                           terms=D.md_to_html((D.KB / "methodology" / "terminology_register.md")
-                                              .read_text(encoding="utf-8"))
-                           if (D.KB / "methodology" / "terminology_register.md").is_file() else None)
+                           terms=terms, terms_kb=terms_kb,
+                           guide=guide, guide_kb=guide_kb)
 
 
 @app.route("/glossary")
