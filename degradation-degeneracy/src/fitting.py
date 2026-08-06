@@ -379,7 +379,41 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
             use_noisy: bool = True, limit: int | None = None,
             base_config: str | None = None, reference: str = "grid",
             resume: bool = False) -> dict:
-    """grid 결과 전체에 fitting 수행 → fits.parquet."""
+    """grid 결과 전체에 fitting 수행 → fits.parquet.
+
+    ★ 실행 잠금을 **함수 맨 앞에서** 잡는다 (리뷰 F19, 2026-08-06 실측 사고).
+
+    이전에는 curves.parquet 로드 → 태스크 구성 → (halfcell이면) p_ini
+    self-fitting 을 모두 마친 뒤에야 lock을 잡았다. 그 앞 구간이 무방비라
+    두 번째 프로세스가 검사를 그냥 통과한다.
+
+    실제 사고: PID 330053(04:17:13 시작)과 333299(04:38:48 시작)가 같은
+    --out=results/grid_fine_v1 에 동시에 붙어 32워커씩 총 64개가 16물리코어를
+    나눠 썼고(속도 반토막), 게다가 330053은 curves 재생성(04:37:56) **이전**의
+    옛 프레임(Q=5720) 곡선을 메모리에 들고 있어 fit_chunks 에 틀린 결과를
+    쌓고 있었다. 청크 병합은 mtime 최신 우선이므로 정상 결과를 덮어쓴다.
+    """
+    from pathlib import Path
+
+    from src.io import acquire_run_lock, release_run_lock
+
+    out_dir = Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    acquire_run_lock(out_dir, ".fit.lock")
+    try:
+        return _run_fit_locked(in_dir, out_dir, obj_cfg, objectives, bounds,
+                               bounds_preset, n_restarts, nproc, use_noisy,
+                               limit, base_config, reference, resume)
+    finally:
+        release_run_lock(out_dir, ".fit.lock")
+
+
+def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
+                    bounds_preset: str, n_restarts: int, nproc: int,
+                    use_noisy: bool = True, limit: int | None = None,
+                    base_config: str | None = None, reference: str = "grid",
+                    resume: bool = False) -> dict:
+    """run_fit 본체. 호출자가 이미 .fit.lock 을 보유한 상태여야 한다."""
     import time
     from pathlib import Path
 
@@ -470,8 +504,7 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
         for t in tasks:
             t["p_ini"] = p_ini
 
-    from src.io import (acquire_run_lock, load_completed, mark_completed,
-                        merge_chunks, release_run_lock, save_chunk)
+    from src.io import chunk_files, load_completed, mark_completed, merge_chunks, save_chunk
 
     # ── resume: 완료 조건 건너뛰기 ──
     # 리뷰 F18: 완료 파일명에 실행 서명(목적함수·기준·bound·타깃 열)을 넣는다.
@@ -481,6 +514,21 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
         sort_keys=True).encode()).hexdigest()[:8]
     completed_name = f"fit_completed_{run_sig}.jsonl"
     done = load_completed(out_dir, completed_name) if resume else set()
+    if resume and done:
+        # 리뷰 F19b: "완료 표시는 있는데 청크에 행이 없는" 조건은 완료로 믿지 않는다.
+        # 동시 실행 사고로 오염된 청크를 지우면 표시만 남아, resume이 그 조건을
+        # 영원히 건너뛴다 (결과가 조용히 비는 가장 위험한 실패 모드).
+        have: set[str] = set()
+        for f in chunk_files(out_dir, "fit_chunks"):
+            try:
+                have |= set(pd.read_parquet(f, columns=["cond_id"])["cond_id"])
+            except Exception:  # noqa: BLE001
+                continue
+        ghost = done - have
+        if ghost:
+            log.warning("완료 표시만 있고 결과 행이 없는 조건 %d개 → 완료 취소 후 재계산",
+                        len(ghost))
+            done &= have
     todo = [t for t in tasks if t["cond_id"] not in done]
     if resume and done:
         log.info("fit resume(sig=%s): %d개 완료 확인, %d개 남음",
@@ -488,32 +536,28 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
 
     log.info("fitting: %d조건 × %d목적함수 × %d restart (nproc=%d)",
              len(todo), len(objectives), n_restarts, nproc)
-    acquire_run_lock(out_dir, ".fit.lock")
     t0 = time.perf_counter()
     n_done = 0
-    try:
-        with Parallel(n_jobs=nproc, backend="loky") as parallel:
-            step = max(1, min(100, len(todo)))
-            chunk_idx = 0
-            for s in range(0, len(todo), step):
-                chunk = todo[s:s + step]
-                rows = []
-                for rr in parallel(delayed(_fit_one)(t) for t in chunk):
-                    rows.extend(rr)
-                # ★ 청크 즉시 저장 — 5시간 실행이 죽어도 여기까지는 남는다
-                save_chunk(pd.DataFrame(rows), out_dir, chunk_idx,
-                           subdir="fit_chunks")
-                chunk_idx += 1
-                for t in chunk:
-                    mark_completed(out_dir, t["cond_id"], completed_name)
-                n_done += len(chunk)
-                el = time.perf_counter() - t0
-                # tqdm은 파일 리다이렉트 시 버퍼링으로 안 보인다 → 로그로 진행률
-                log.info("fit 진행: %d/%d (%.0f%%) — %.1f s/cond, 남은 예상 %.0f분",
-                         n_done, len(todo), 100 * n_done / len(todo),
-                         el / n_done, el / n_done * (len(todo) - n_done) / 60)
-    finally:
-        release_run_lock(out_dir, ".fit.lock")
+    with Parallel(n_jobs=nproc, backend="loky") as parallel:
+        step = max(1, min(100, len(todo)))
+        chunk_idx = 0
+        for s in range(0, len(todo), step):
+            chunk = todo[s:s + step]
+            rows = []
+            for rr in parallel(delayed(_fit_one)(t) for t in chunk):
+                rows.extend(rr)
+            # ★ 청크 즉시 저장 — 5시간 실행이 죽어도 여기까지는 남는다
+            save_chunk(pd.DataFrame(rows), out_dir, chunk_idx,
+                       subdir="fit_chunks")
+            chunk_idx += 1
+            for t in chunk:
+                mark_completed(out_dir, t["cond_id"], completed_name)
+            n_done += len(chunk)
+            el = time.perf_counter() - t0
+            # tqdm은 파일 리다이렉트 시 버퍼링으로 안 보인다 → 로그로 진행률
+            log.info("fit 진행: %d/%d (%.0f%%) — %.1f s/cond, 남은 예상 %.0f분",
+                     n_done, len(todo), 100 * n_done / len(todo),
+                     el / n_done, el / n_done * (len(todo) - n_done) / 60)
     elapsed = time.perf_counter() - t0
 
     # 이전 실행분(resume)까지 합쳐 병합. 같은 (cond_id, objective, ...)는 최신만.
