@@ -189,3 +189,53 @@ def test_multistart_missing_column_is_graceful():
     from src.scoring import multistart_diagnostics
 
     assert multistart_diagnostics(pd.DataFrame({"cond_id": ["a"]})).empty
+
+
+# ---------------------------------------------------------------- F21b warm start 보정
+
+def _warm_row(objective, restarts):
+    import json
+    return {"cond_id": f"c_{objective}", "objective": objective, "recoverable": True,
+            "lli": 0.1, "lam_pe": 0.1, "lam_ne": 0.1, "noise": 0.0,
+            "restarts_json": json.dumps(restarts)}
+
+
+def test_skip_first_removes_warm_start_artifact():
+    """★ F21b — warm start 지점이 flat_valley 관측을 가리는 것을 보정한다.
+
+    restart 0만 최적이고 1~4가 제각각이면, 그대로는 항상 multimodal로 찍힌다.
+    무작위 restart끼리만 보면 그중 둘이 같은 J·다른 해라는 사실이 드러난다.
+    """
+    import pandas as pd
+
+    from src.scoring import multistart_diagnostics
+
+    restarts = [
+        ([1.00, 0.00, 1.00, 0.00], 0.0),      # warm start 지점 (유일한 최적)
+        ([1.20, -0.30, 1.05, -0.05], 0.5),    # 무작위 — 이 둘은 J가 같고
+        ([1.05, -0.05, 1.20, -0.30], 0.5),    # 해가 멀다 = flat valley
+        ([1.40, 0.20, 1.40, 0.20], 0.9),
+        ([0.80, -0.50, 0.80, -0.50], 1.3),
+    ]
+    df = pd.DataFrame([_warm_row("pocv_dvdq_dqdv", restarts)])
+
+    with_warm = multistart_diagnostics(df)
+    assert with_warm["multistart_kind"].iloc[0] == "multimodal"
+    assert with_warm["n_near_J"].iloc[0] == 1
+
+    random_only = multistart_diagnostics(df, skip_first=True)
+    assert random_only["multistart_kind"].iloc[0] == "flat_valley", \
+        "restart 0을 빼면 같은 J·다른 해가 보여야 한다"
+    assert random_only["n_near_J"].iloc[0] == 2
+
+
+def test_skip_first_drops_rows_with_too_few_restarts():
+    """restart가 2개뿐이면 0번을 빼고 나서 비교할 게 없다 → 제외."""
+    import pandas as pd
+
+    from src.scoring import multistart_diagnostics
+
+    df = pd.DataFrame([_warm_row("x", [([1.0, 0, 1.0, 0], 0.0),
+                                          ([1.1, 0, 1.1, 0], 0.4)])])
+    assert multistart_diagnostics(df, skip_first=True).empty
+    assert not multistart_diagnostics(df).empty

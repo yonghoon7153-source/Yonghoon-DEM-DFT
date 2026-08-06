@@ -146,7 +146,7 @@ def apply_bias_correction(df: pd.DataFrame, bias: pd.DataFrame,
 # ---------------------------------------------------------------- multi-start 진단
 
 def multistart_diagnostics(df: pd.DataFrame, j_tol: float = 1e-3,
-                           p_tol: float = 1e-2) -> pd.DataFrame:
+                           p_tol: float = 1e-2, skip_first: bool = False) -> pd.DataFrame:
     """★ restarts_json에서 **해석 가능한** multi-start 지표를 다시 만든다 (F21).
 
     fitting이 기록하던 두 지표는 그대로 쓰면 오독한다.
@@ -175,6 +175,14 @@ def multistart_diagnostics(df: pd.DataFrame, j_tol: float = 1e-3,
       multimodal   n_near_J == 1, p_spread_all 큼
                    → J가 다른 국소최소가 여럿. 데이터는 구분하지만
                      최적화가 어렵다 = 초기값 문제 (F20의 dQ/dV가 이 경우)
+
+    ★ skip_first — warm start 보정 (F21b, 필수).
+      F20 이후 dQ/dV 목적함수는 restart 0에만 좋은 초기값이 들어가고 1~4는
+      무작위다. 그러면 최적 J에 닿는 restart가 **정의상 하나뿐**이 되어
+      항상 multimodal로 분류되고, flat_valley는 관측 자체가 불가능해진다.
+      warm start를 받은 목적함수와 안 받은 목적함수를 그대로 비교하면
+      "dQ/dV가 flat valley를 없앴다"는 잘못된 결론이 나온다.
+      skip_first=True면 restart 0을 빼고 **무작위 restart끼리만** 비교한다.
     """
     import json as _json
 
@@ -196,6 +204,10 @@ def multistart_diagnostics(df: pd.DataFrame, j_tol: float = 1e-3,
         if not ok.any():
             continue
         ps, js = ps[ok], js[ok]
+        if skip_first:
+            ps, js = ps[1:], js[1:]      # restart 0 = warm start 지점
+            if len(js) < 2:
+                continue
         i_best = int(np.argmin(js))
         p_best, j_best = ps[i_best], js[i_best]
 
@@ -354,10 +366,22 @@ def run_scoring(in_dir, out_dir=None, tol: float = DEFAULT_TOL,
 
     # F21: restarts_json에서 해석 가능한 multi-start 지표를 다시 만든다.
     # (재계산 없이 저장된 원본 (p, J)만으로 가능)
-    ms = multistart_diagnostics(df[df["recoverable"]] if "recoverable" in df else df)
+    rec_df = df[df["recoverable"]] if "recoverable" in df else df
+    ms = multistart_diagnostics(rec_df)
     if not ms.empty:
         ms.to_parquet(out_dir / "multistart.parquet", index=False)
         summary["multistart"] = multistart_summary(ms)
+        # ★ F21b: warm start를 받은 목적함수는 restart 0만 좋은 초기값이라
+        #   최적 J에 닿는 게 하나뿐이 된다 → 항상 multimodal로 찍힌다.
+        #   목적함수 간 **공정 비교**는 무작위 restart끼리만 해야 한다.
+        ms_r = multistart_diagnostics(rec_df, skip_first=True)
+        if not ms_r.empty:
+            ms_r.to_parquet(out_dir / "multistart_random_only.parquet", index=False)
+            summary["multistart_random_only"] = multistart_summary(ms_r)
+            summary["multistart_random_only"]["_주의"] = (
+                "★ 목적함수 간 비교는 이 블록을 쓸 것. 위 multistart 블록은 "
+                "warm start 지점(restart 0)을 포함하므로, warm start를 받은 "
+                "목적함수(w_dqdv≠0)가 인위적으로 multimodal 쪽으로 쏠린다.")
         log.info("multi-start 진단: %s",
                  {k: v for k, v in summary["multistart"].items()
                   if not k.startswith("_")})
