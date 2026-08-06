@@ -55,7 +55,10 @@ for t in "${TARGETS[@]}"; do
   run 04_nscf_dos.in 04_nscf_dos.out || continue
   run 05_dos.in 05_dos.out "$DOSX" || true
   run 06_projwfc.in 06_projwfc.out "$PROJ" || true
-  ts "  완료 → $d"
+  fails=0
+  [ -s "$d/gap.json" ] || { ts "  ⚠ gap.json 없음 — 갭 추출 실패"; fails=$((fails+1)); }
+  ls "$d"/*.pdos_atm* >/dev/null 2>&1 || { ts "  ⚠ PDOS 없음 — projwfc 실패"; fails=$((fails+1)); }
+  [ "$fails" = 0 ] && ts "  ✅ 완료 → $d" || ts "  ⚠ $fails 개 산출 누락 (위 참조) → $d"
   cd - >/dev/null
 done
 

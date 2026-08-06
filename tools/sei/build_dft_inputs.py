@@ -139,6 +139,10 @@ def main():
             L = [f"&CONTROL", f"    calculation     = '{calc}'",
                  f"    prefix          = '{tag}'", "    outdir          = './tmp'",
                  f"    pseudo_dir      = '{a.pseudo_dir}'", "    tprnfor         = .true.",
+                 # ⚠ projwfc.x 는 **파동함수 파일**이 있어야 돈다. nscf 의 disk_io 기본값이
+                 #   낮으면 끝나고 지워져 projwfc 가 MPI_ABORT 로 죽는다(실측 2026-08-06:
+                 #   dos.x 는 됐는데 projwfc.x 만 실패). nscf 에서만 남긴다.
+                 ("    disk_io         = 'medium'" if calc == "nscf" else ""),
                  "    tstress         = .true." if calc == "vc-relax" else "", "/",
                  "&SYSTEM", "    ibrav           = 0", f"    nat             = {nat}",
                  f"    ntyp            = {ntyp}", f"    ecutwfc         = {ECUTWFC}",

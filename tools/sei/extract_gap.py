@@ -31,12 +31,33 @@ def main():
     nocc = int(round(nelec / (1 if spin else 2)))
 
     # k 점별 밴드 블록
-    blocks = re.findall(r"bands \(ev\):\s*\n\s*\n((?:\s*[-\d.]+[^\n]*\n)+)", t)
+    # ⚠ 정규식으로 한 방에 잡으려다 실패했다(2026-08-06). QE 판·verbosity 에 따라
+    #   "bands (ev):" 뒤 빈 줄 수와 들여쓰기가 달라진다. 형식에 안 휘둘리게
+    #   **줄 단위로** 판다: 표식을 만나면 그 뒤로 '숫자만 있는 줄'을 계속 모은다.
+    blocks, lines, i = [], t.splitlines(), 0
+    while i < len(lines):
+        if "bands (ev)" in lines[i]:
+            i += 1
+            vals = []
+            while i < len(lines):
+                ln = lines[i].strip()
+                if not ln:
+                    if vals:
+                        break          # 값을 모은 뒤의 빈 줄 = 블록 끝
+                    i += 1; continue   # 표식 직후의 빈 줄은 건너뛴다
+                try:
+                    vals += [float(x) for x in ln.split()]
+                except ValueError:
+                    break              # 숫자가 아닌 줄 = 블록 끝
+                i += 1
+            if vals:
+                blocks.append(vals)
+        else:
+            i += 1
     if not blocks:
-        sys.exit("⛔ 밴드 블록을 못 찾았다 (verbosity 가 낮으면 안 찍힌다)")
+        sys.exit("⛔ 밴드 블록을 못 찾았다 — scf.out 에 'bands (ev)' 가 있는지 확인할 것")
     vbm, cbm = -1e9, 1e9
-    for b in blocks:
-        e = [float(x) for x in b.split()]
+    for e in blocks:
         if len(e) < nocc + 1:
             continue
         vbm = max(vbm, e[nocc - 1])
