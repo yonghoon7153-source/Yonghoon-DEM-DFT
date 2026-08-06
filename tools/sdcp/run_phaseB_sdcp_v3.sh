@@ -33,6 +33,7 @@
 #   bash tools/sdcp/run_phaseB_sdcp_v3.sh probe   # 메모리 탐침 먼저 (권장)
 #   bash tools/sdcp/run_phaseB_sdcp_v3.sh         # 전체
 #   bash tools/sdcp/run_phaseB_sdcp_v3.sh complexes
+#   bash tools/sdcp/run_phaseB_sdcp_v3.sh gen        # 입력만 (VASP 변환용)
 #   DIAG=ppcg bash ...                            # OOM 사다리 2단
 # =============================================================================
 set -uo pipefail; set +H
@@ -257,6 +258,17 @@ magcheck(){
   ts "     ⚠ 특히 doped 물리흡착 vs 추출이 갈리면, 그 차이는 추출이 아니라 스핀 전이다."
   return 1
 }
+
+# ── gen 단계: **입력만 만들고 끝낸다** (pw.x 를 아예 안 띄운다) ──────────────
+#   왜 — VASP 변환(tools/sdcp/qe_to_vasp.py)은 scf.in 만 있으면 된다. 그런데 slab 단계를
+#   쓰면 pw.x 가 떠서 OOM 날 때까지 태운다. 변환용으로는 이 단계를 쓸 것.
+if [ "$STAGE" = gen ]; then
+  ts "═══ 입력 생성만 (pw.x 실행 안 함) ═══"
+  gen || { ts "⛔ 입력 생성 실패"; exit 1; }
+  ts "✅ 입력 생성 완료 → $OUT/*/scf.in"
+  ts "   VASP 패키지로:  python3 tools/sdcp/qe_to_vasp.py --src $OUT --out ${OUT%/*}/phaseB_vasp --zip"
+  exit 0
+fi
 
 # ── 0단계: 메모리 탐침 ──────────────────────────────────────────────────────
 if [ "$STAGE" = probe ]; then
