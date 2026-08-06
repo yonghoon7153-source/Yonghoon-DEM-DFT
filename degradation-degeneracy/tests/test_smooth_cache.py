@@ -15,11 +15,9 @@ import src.objective as O
 
 @pytest.fixture(autouse=True)
 def _clear_cache():
-    O._SMOOTH_CACHE.clear()
-    O._SMOOTH_CACHE_BYTES = 0
+    O._SMOOTH_KERNEL.clear()
     yield
-    O._SMOOTH_CACHE.clear()
-    O._SMOOTH_CACHE_BYTES = 0
+    O._SMOOTH_KERNEL.clear()
 
 
 @pytest.mark.parametrize("n", [23, 51, 100, 298, 299, 300])
@@ -40,14 +38,22 @@ def test_matrix_smoothing_matches_scipy(n, window, polyorder):
     assert np.max(np.abs(got - want)) < 1e-11 * scale
 
 
-def test_cache_is_reused_not_rebuilt():
-    y = np.cumsum(np.random.default_rng(0).normal(size=120))
-    O._smooth(y, 21, 3)
-    assert len(O._SMOOTH_CACHE) == 1
-    first = next(iter(O._SMOOTH_CACHE.values()))
-    O._smooth(y * 2.0, 21, 3)
-    assert len(O._SMOOTH_CACHE) == 1
-    assert next(iter(O._SMOOTH_CACHE.values())) is first, "행렬을 다시 만들었다"
+def test_kernel_is_shared_across_lengths():
+    """★ 가장자리 연산자는 n에 의존하지 않는다 — 길이가 달라도 캐시는 하나."""
+    rng = np.random.default_rng(0)
+    for n in (120, 200, 299, 300):
+        O._smooth(np.cumsum(rng.normal(size=n)), 21, 3)
+    assert len(O._SMOOTH_KERNEL) == 1, "길이마다 커널을 새로 만들었다"
+    O._smooth(np.cumsum(rng.normal(size=200)), 11, 2)
+    assert len(O._SMOOTH_KERNEL) == 2, "(창,차수)가 다르면 별도 커널이어야 한다"
+
+
+def test_kernel_memory_is_small():
+    """조밀 n×n(698 KB)이 아니라 띠(수 KB)여야 한다 — 대역폭이 병목이므로."""
+    O._smooth(np.cumsum(np.random.default_rng(0).normal(size=299)), 21, 3)
+    coef, top, bot, _ = next(iter(O._SMOOTH_KERNEL.values()))
+    total = coef.nbytes + top.nbytes + bot.nbytes
+    assert total < 20_000, f"커널이 {total}바이트 — 띠 구조가 깨졌다"
 
 
 def test_linearity_holds():
@@ -59,12 +65,12 @@ def test_linearity_holds():
     assert np.allclose(lhs, rhs, atol=1e-12)
 
 
-def test_falls_back_to_scipy_when_over_memory_limit(monkeypatch):
-    """상한을 넘으면 캐시를 포기하고 scipy로 간다 — 값은 그대로여야 한다."""
-    monkeypatch.setattr(O, "_SMOOTH_CACHE_LIMIT", 0)
+def test_can_be_disabled_and_matches_scipy(monkeypatch):
+    """캐시를 끄면 scipy 경로로 가고 값은 그대로여야 한다 (동등성 검증용 스위치)."""
+    monkeypatch.setattr(O, "_SMOOTH_CACHE_ENABLED", False)
     y = np.cumsum(np.random.default_rng(1).normal(size=150))
     got = O._smooth(y, 21, 3)
-    assert not O._SMOOTH_CACHE, "한도 0인데 캐시를 만들었다"
+    assert not O._SMOOTH_KERNEL, "꺼져 있는데 커널을 만들었다"
     assert np.allclose(got, savgol_filter(y, 21, 3), atol=1e-12)
 
 
@@ -81,8 +87,8 @@ def test_features_identical_to_scipy_path(n, monkeypatch):
     v = 4.2 - 1.5 * x + 0.05 * np.sin(18 * x)
 
     fast = O.compute_features(x, v, cfg, with_peaks=True)
-    O._SMOOTH_CACHE.clear()
-    monkeypatch.setattr(O, "_SMOOTH_CACHE_LIMIT", 0)      # scipy 경로 강제
+    O._SMOOTH_KERNEL.clear()
+    monkeypatch.setattr(O, "_SMOOTH_CACHE_ENABLED", False)   # scipy 경로 강제
     slow = O.compute_features(x, v, cfg, with_peaks=True)
 
     for name in ("dvdq", "dqdv"):
