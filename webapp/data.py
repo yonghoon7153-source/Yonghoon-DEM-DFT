@@ -2363,6 +2363,17 @@ def dashboard_highlights() -> list:
     if e:
         hi.append({"t": "이온 전도 Ea (UMA)", "v": f"{L.get(e[0][1], e[0][1])} {e[0][0]} eV 최저",
                    "n": "Cl-rich가 Li 이동 유리 · ⚠멀티시드 판정(절대값 인용주의)"})
+    # SDCP Phase-A 완료 (2026-08-06) — 대시보드에 올리는 이유: 이 캠페인의 **판정 수치**가
+    # Δ 하나이고, 그 Δ 가 열잡음의 6.5배라는 사실이 Phase-B 착수 판단의 전부이기 때문이다.
+    # ⚠ UMA 값이다. 절대 E_ads 인용 금지 — 순위·차이만. 상세: kb/projects/sdcp_phaseB_direction_2026_08_06.md
+    hi.append({"t": "SDCP × LiNiO₂(104) — 라디칼이 더 붙나",
+               "v": "Δ = −0.170 eV (UMA)",
+               "n": "doped −0.258 (sulfonate r90) vs neutral −0.0879 (sulfonate r180), 216/216 수렴. "
+                    "열잡음 kT≈26 meV 의 6.5배라 부호는 뚜렷하나 화학결합 스케일은 아니다 — "
+                    "DFT+U(Phase-B)가 이 크기를 유지하는지가 판정. "
+                    "⚠ 슬랩을 풀면 −1.465 로 4배 깊어지는데 그건 흡착이 아니라 표면 Li⁺ 추출이다"
+                    "(Li 2개가 2.33/0.89 Å 이동해 sulfonate O 에 1.91–2.05 Å 배위) — UMA 는 "
+                    "Ni³⁺→Ni⁴⁺ 산화 대가를 안 물어 과대평가 가능. 별 트랙으로 DFT 재검."})
     ce = _cascade_by_element()
     top = None
     for rows in ce.values():

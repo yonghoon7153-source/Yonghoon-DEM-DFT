@@ -13,8 +13,12 @@ SDCP 가 기능하려면 **라디칼 형태가 CAM 표면에 더 잘 붙어야**
 
 | 프로토콜 | doped | neutral | **Δ** |
 |---|---|---|---|
-| **freeze_frac 1.0** (슬랩 전체 고정) | −0.258 | ≈ −0.019 | **−0.24 eV** |
-| freeze_frac 0.6 (표면 2층 자유) | −1.465 | −0.335 | −1.13 eV |
+| **freeze_frac 1.0** (슬랩 전체 고정) | **−0.258** (sulfonate r90 g22) | **−0.0879** (sulfonate r180 g01) | **−0.170 eV** |
+| freeze_frac 0.6 (표면 2층 자유) | −1.465 (r180) | −0.335 (r270) | −1.13 eV |
+
+> ⚠ **Δ = −0.170 eV 는 열잡음(kT ≈ 26 meV)의 6.5배**다. 부호는 뚜렷하나 화학결합 스케일은 아니다.
+>   DFT+U 가 이 크기를 유지하는지가 판정의 전부다. (2026-08-06 정정 — 이전에 적힌 −0.24 는
+>   CSV 를 부분만 보고 낸 값이었다. neutral 최저는 −0.0879 이지 −0.019 가 아니다.)
 
 Phase-B 는 **얼린 판**의 Δ 를 DFT+U 로 재채점한다. 부호와 자릿수가 유지되면 가설이 선다.
 
@@ -75,7 +79,7 @@ doped 복합체와 neutral 복합체가 **다른 Ni 스핀 배열로 수렴하�
 
 **각 종의 실제 최저 자세**를 써야 Δ 가 의미 있다.
 - doped 챔피언 = `doped_sulfonate_down_r90_g22` (−0.258)
-- neutral 챔피언 = ⏳ **미확정** — `phaseA_v7c_results.csv` 에서 뽑을 것
+- neutral 챔피언 = **`neutral_sulfonate_down_r180_g01`** (−0.0879) ✅ 확정 2026-08-06
 - ⚠ 옛 러너는 neutral 을 `chelation_r0` 로 **고정**해 놓았다. 우리 스캔에선 neutral 최저가
   **sulfonate_down 계열**이라 그대로 쓰면 안 된다.
 
@@ -135,7 +139,8 @@ Phase-A 를 슬랩 자유로 풀었더니 **표면 Li 2개가 2.33 / 0.89 Å 이
 
 ## 6. 착수 전 체크리스트
 
-- [ ] neutral 챔피언 라벨 확정 (`sort -t, -k3 -g phaseA_v7c_results.csv | grep '^neutral' | head -3`)
+- [x] neutral 챔피언 확정 — `neutral_sulfonate_down_r180_g01` (−0.0879 eV)
+- [x] doped 챔피언 확정 — `doped_sulfonate_down_r90_g22` (−0.258 eV)  →  **Δ_UMA = −0.170 eV**
 - [ ] 새 러너 `run_phaseB_sdcp_v2.sh` — 경로·파일명만 교체, job 5개(slab·복합체2·분자2) 유지
 - [ ] c-shrink 후 **분자 위 진공이 충분한지** 확인 (옛 판정 기준 6.5 Å)
 - [ ] 두 복합체의 **초반 SCF 자화 일치**를 확인하고 나서 끝까지 돌린다
