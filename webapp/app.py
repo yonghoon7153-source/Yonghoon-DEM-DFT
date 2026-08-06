@@ -392,6 +392,23 @@ def api_paper(pid):
     return jsonify({"id": pid, "html": html, "figures": D.paper_figures(pid)})
 
 
+DECK_NAME = "Research_Seminar_2026_08_cascade.pptx"
+
+
+@app.route("/seminar/deck")
+def seminar_deck():
+    """세미나 pptx 내려받기.
+
+    ⚠ /api/file 로는 못 준다 — safe_repo_path 의 허용 뿌리가 docs·db·litdb/figures 라
+      kb/ 는 애초에 막혀 있다. 허용 목록을 넓히면 kb 전체(리뷰 노트 포함)가 열리므로,
+      이 파일 하나만 주는 전용 라우트를 판다. (2026-08-06 링크 404 수정)
+    """
+    p = D.KB / "seminars" / DECK_NAME
+    if not p.is_file():
+        abort(404)
+    return send_from_directory(p.parent, p.name, as_attachment=True, download_name=p.name)
+
+
 @app.route("/seminar")
 def seminar():
     """연구세미나 — spec(kb/seminars/*.md) 을 그대로 렌더한다.
@@ -403,7 +420,7 @@ def seminar():
     md = base / "cascade_seminar_2026_08_spec.md"
     if not md.is_file():
         abort(404)
-    deck = base / "Research_Seminar_2026_08_cascade.pptx"
+    deck = base / DECK_NAME
     return render_template("seminar.html", active="seminar",
                            body=D.md_to_html(md.read_text(encoding="utf-8")),
                            deck=(deck.name if deck.is_file() else None),
