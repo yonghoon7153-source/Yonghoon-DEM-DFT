@@ -15,7 +15,9 @@ __pycache__/
 .pytest_cache/
 
 # 산출 문서
-docs/ENV_REPORT.md          # 머신별 환경 보고 — 서버마다 달라지므로 추적하지 않는다
+# 머신별 환경 보고 — 서버마다 달라지므로 추적하지 않는다
+# (gitignore는 줄 끝 주석을 지원하지 않는다. 패턴 뒤에 붙이면 패턴이 망가진다)
+docs/ENV_REPORT.md
 # ★ docs/RESULTS.md 는 추적한다. 자동 생성이긴 하나 이 프로젝트의 **답**이고,
 #   어떤 격자·어떤 커밋에서 나온 결론인지 이력이 남아야 한다.
 # GPU_NOTES.md도 Phase 7 산출물(실측 기록)이라 추적한다
