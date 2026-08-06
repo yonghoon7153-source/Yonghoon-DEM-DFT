@@ -329,13 +329,7 @@ def write_scf(path, atoms, labels, kind, kpts, pseudo_dir, prefix):
         f"    ecutwfc         = {ECUTWFC}",
         f"    ecutrho         = {ECUTRHO}",
     ]
-    # ⚠ USPP/PAW 의 augmentation charge Q_ij 를 **실공간**에서 계산한다 (2026-08-06).
-    #   newd(newq_gpu) 는 Q_ij 를 조밀 G-격자 전체에 까느라 ngm 에 비례하는 큰 배열을
-    #   잡는데, 진공이 큰 셀(c 46 Å)에서 바로 그 자리가 OOM 으로 터졌다. 실공간 판은
-    #   원자 주변 구에서만 계산해 메모리를 크게 줄인다. 정확도는 약간 달라지므로
-    #   **6개 job 전부 같은 설정**으로 돌려야 차이값이 성립한다.
-    if OPT.get("real_space"):
-        sys_lines.append("    real_space      = .true.")
+
     # ⚠ 점유수 (리뷰 §2-6). 고립 분자에 smearing 0.03 Ry(0.41 eV) 를 쓰면 doped 의
     #   SOMO 가 E_F 에 걸려 **분수 점유**가 생길 수 있고 doped 쪽만 0.05-0.2 eV 편향된다.
     #   분자는 이산 준위라 'fixed' 가 물리적으로 옳다 (nspin=2 fixed 는 tot_magnetization
@@ -430,6 +424,12 @@ def write_scf(path, atoms, labels, kind, kpts, pseudo_dir, prefix):
     if OPT["scf_must_converge"] is not None:
         body.append(f"    scf_must_converge = {OPT['scf_must_converge']}")
     body.append("    diagonalization = 'david'")
+    # ⚠ real_space 는 **&ELECTRONS** 소속이다 (2026-08-06: &SYSTEM 에 넣어 read_namelists
+    #   에서 즉사했다). USPP/PAW 의 beta·augmentation 을 원자 주변 구에서 계산해
+    #   newd(newq_gpu) 가 조밀 G-격자 전체를 잡지 않게 한다 — c 46 Å 셀의 OOM 대책.
+    #   정확도가 약간 달라지므로 **job 전부 같은 설정**이어야 차이값이 성립한다.
+    if OPT.get("real_space"):
+        body.append("    real_space      = .true.")
     body.append("/")
     body.append("")
     body.append("ATOMIC_SPECIES")
