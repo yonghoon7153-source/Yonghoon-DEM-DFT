@@ -402,3 +402,34 @@ def test_warm_start_passes_smooth_solution_to_dqdv_objectives(monkeypatch):
     rows = F._fit_one({**task, "warm_start": False})
     assert seen[0] == seen[1] == task["init"], "--no-warm-start인데 물려받았다"
     assert all(not r["warm_started"] for r in rows)
+
+
+def test_results_doc_reports_multistart_and_warns_about_old_metrics(tmp_path):
+    """★ F21 — flat_valley/multimodal이 문서에 실리고, 옛 지표에 경고가 붙는가."""
+    import yaml
+
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d = tmp_path / "res"
+    d.mkdir()
+    _scored(_fits()).to_parquet(d / "degeneracy_map.parquet", index=False)
+    (d / "degeneracy_summary.yaml").write_text(yaml.safe_dump({
+        "multistart": {
+            "pocv_dvdq": {"n": 100, "flat_valley_frac": 0.42,
+                          "multimodal_frac": 0.10, "unique_min_frac": 0.48},
+            "pocv_dvdq_dqdv": {"n": 100, "flat_valley_frac": 0.05,
+                               "multimodal_frac": 0.70, "unique_min_frac": 0.25},
+            "_해석": "설명",
+        }}, allow_unicode=True), encoding="utf-8")
+
+    run_compare(d, d)
+    text = build(d, tmp_path / "RESULTS.md", repo_root=tmp_path).read_text(encoding="utf-8")
+
+    assert "multi-start 진단" in text
+    assert "flat valley" in text
+    assert "42%" in text and "70%" in text
+    # 옛 지표를 그대로 인용하지 말라는 경고가 반드시 함께 있어야 한다
+    assert "agree_frac" in text and "정의상 0" in text
+    # 설명 키(_해석)가 표에 행으로 새어나오면 안 된다
+    assert "| _해석 |" not in text

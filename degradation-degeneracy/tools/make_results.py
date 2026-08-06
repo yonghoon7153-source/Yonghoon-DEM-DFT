@@ -241,6 +241,32 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
                      f"있다는 직접 증거다.")
         P.append("")
 
+    # ── multi-start (F21) ──
+    ms = (summary or {}).get("multistart") or {}
+    ms_rows = {k: v for k, v in ms.items() if not k.startswith("_")}
+    if ms_rows:
+        P.append("## multi-start 진단 — 진짜 degeneracy와 최적화 난이도의 구분\n")
+        P.append("같은 조건을 여러 초기값에서 다시 풀었을 때 어떻게 갈리는지를 봅니다. "
+                 "**두 실패 모드는 처방이 정반대**라 반드시 나눠야 합니다.\n")
+        P.append("| objective | n | **flat valley** | multimodal | unique min |")
+        P.append("|---|---|---|---|---|")
+        for o, d in ms_rows.items():
+            P.append(f"| {o} | {d['n']} | **{_pct(d['flat_valley_frac'])}** | "
+                     f"{_pct(d['multimodal_frac'])} | {_pct(d['unique_min_frac'])} |")
+        P.append("")
+        P.append("- **flat valley** — 같은 J인데 해가 서로 멀다. "
+                 "**데이터가 그 조합을 구분하지 못한다는 직접 증거**입니다. "
+                 "초기값을 아무리 잘 줘도 사라지지 않고, 측정 방식을 바꿔야 줄어듭니다.")
+        P.append("- **multimodal** — J가 다른 국소최소가 여럿. degeneracy가 아니라 "
+                 "**최적화 난이도**입니다. 좋은 초기값을 주면 사라집니다 "
+                 "(dQ/dV 항이 이 경우였습니다 — 아래 참조).")
+        P.append("- **unique min** — 해가 유일. 문제 없음.\n")
+        P.append("> ⚠ `degeneracy_summary.yaml`의 `restart_conditioned` 블록에 있는 "
+                 "`agree_frac`과 `p_spread`는 인용하지 마세요. adaptive 조기 종료 때문에 "
+                 "`agree_frac`은 restart를 5까지 간 조건에서 **정의상 0**이고, "
+                 "`p_spread = 0`은 \"해가 일치\"가 아니라 \"최적 J에 도달한 restart가 "
+                 "하나뿐\"이라는 뜻입니다. 위 표가 그 자리를 대신합니다.\n")
+
     # ── 가중치 ──
     if wsweep:
         opt = wsweep.get("optimum", {})
