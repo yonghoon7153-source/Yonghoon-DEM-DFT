@@ -57,6 +57,7 @@ MAGTOL=${MAGTOL:-2.0}          # 두 복합체의 absolute magnetization 허용 
 #   15.0(2026-07-17 철회 이후 기준)이라, 러너가 만든 셀은 게이트를 통과할 수 없었다 —
 #   입력 생성 단계에서 100% 죽는 조합. 옛 slabfirst 러너의 6.5 를 그대로 베껴 온 탓이다.
 #   그래서 이제 이 값을 **생성기에 명시적으로 넘겨** 두 숫자가 갈라질 수 없게 한다.
+DIAG=${DIAG:-}                 # OOM 사다리 2단: 'ppcg' 등. 비우면 QE 기본(davidson)
 GAP=${GAP:-15.0}               # 분자 꼭대기 → 다음 슬랩 이미지 최소 간격 (Å)
 CMARG=${CMARG:-1.0}            # 게이트를 아슬아슬하게 스치지 않도록 얹는 여유 (Å)
 STAGE=${1:-all}
@@ -140,12 +141,30 @@ gen(){
     --report "$REPORT" --tprnfor "$TPRNFOR" \
     ${extra[@]+"${extra[@]}"} --out "$OUT" || return 1
   # OOM 대책 (옛 러너와 동일): 단일-k + david_ndim 2
+  #  ⚠ 'K_POINTS gamma'(감마 트릭, 메모리 ~2배 절감)는 **쓸 수 없다** — ortho-atomic
+  #    Hubbard 와 미구현 충돌(orthoUwfc). 2026-07-21 확인. 일반 k-mode 1점이 정답.
   for j in slab complex_doped complex_neutral; do
     [ -s "$OUT/$j/scf.in" ] || continue
     grep -aq diago_david_ndim "$OUT/$j/scf.in" || \
       sed -i '/&ELECTRONS/a\    diago_david_ndim = 2' "$OUT/$j/scf.in"
     sed -i 's/^\s*[0-9] [0-9] [0-9] 0 0 0/  1 1 1 0 0 0/' "$OUT/$j/scf.in"
+    # 사다리 2단: Davidson 보다 훨씬 가벼운 반복 대각화 (DIAG=ppcg 로 켠다)
+    if [ -n "$DIAG" ]; then
+      grep -aq "diagonalization" "$OUT/$j/scf.in" || \
+        sed -i "/&ELECTRONS/a\\    diagonalization = '$DIAG'" "$OUT/$j/scf.in"
+    fi
   done
+}
+
+# OOM 판별 — c 를 줄이는 건 이제 답이 아니다(15 Å 게이트). 다른 축으로 내려가야 한다.
+is_oom(){ grep -aqE "cufftPlanMany|cfft3d_gpu|[Ii]nsufficient.*memory|out of memory|CUDA.*alloc" "$1"; }
+oom_advice(){
+  ts "⛔⛔ GPU 메모리 초과(OOM). **c 축소는 선택지가 아니다** — 15 Å 이미지 간격이 물리 요구다."
+  ts "    사다리(위에서부터):"
+  ts "      ① DIAG=ppcg bash tools/sdcp/run_phaseB_sdcp_v2.sh ...   (Davidson→PPCG, 메모리 대폭 절감)"
+  ts "      ② ecutrho 480→400  — ⚠ 5개 job 전부 동일하게. Δ 는 살지만 절대값은 갈아엎어야 한다"
+  ts "      ③ CPU 빌드 pw.x (호스트 RAM). 느리지만 끝은 난다"
+  ts "    ⚠ 2026-07-21 이력: 이 카드에서 OOM 은 **SCF 3회차의 일회성 대형 할당**에서 터졌다."
 }
 
 run_one(){   # $1 = job dir
@@ -163,6 +182,9 @@ run_one(){   # $1 = job dir
   [ -s "$OUT/$j/scf.out" ] && mv "$OUT/$j/scf.out" "$OUT/$j/scf.out.$(date +%m%d_%H%M)"
   ts "▶ $j 시작"
   ( cd "$OUT/$j" && $MPIRUN -np 1 --oversubscribe "$QE" -nk 1 -in scf.in > scf.out 2>&1 )
+  if is_oom "$OUT/$j/scf.out"; then
+    ts "✗ $j — OOM"; oom_advice; return 2
+  fi
   if grep -aq "convergence has been achieved" "$OUT/$j/scf.out"; then
     ts "✓ $j 수렴 — $(grep -a '!.*total energy' "$OUT/$j/scf.out" | tail -1)"
   else
@@ -187,6 +209,26 @@ magcheck(){
   ts "     ⚠ 이 상태로 끝까지 돌려서 나온 Δ 는 **쓰면 안 된다.**"
   return 1
 }
+
+# ── 0단계(선택): 메모리 탐침 ────────────────────────────────────────────────
+#   왜 — c 를 36.94 → 46.44 로 키우면서 이 카드(48 GB A6000)에서 들어갈지가 미지수다.
+#   2026-07-21 이력상 OOM 은 **SCF 3회차**에서 터졌으므로 5스텝만 돌려도 판별된다.
+#   가장 큰 job(complex_doped) 을 먼저 찔러 본다 — 여기서 안 들어가면 나머지는 볼 것도 없다.
+#   ⚠ 버리는 계산이 아니다: 여기서 만든 charge-density 를 본 계산이 startingpot='file' 로 승계한다.
+if [ "$STAGE" = probe ]; then
+  ts "═══ 0단계: 메모리 탐침 (complex_doped, electron_maxstep=$MAXSTEP) ═══"
+  [ "$MAXSTEP" -le 10 ] || ts "⚠ MAXSTEP=$MAXSTEP — 탐침이면 MAXSTEP=5 로 주는 게 맞다"
+  gen || { ts "⛔ 입력 생성 실패"; exit 1; }
+  run_one complex_doped; rc=$?
+  if [ "$rc" = 2 ]; then
+    ts "⛔ 탐침 결과: 이 셀은 현재 설정으로 안 들어간다. 위 사다리대로 다시."
+    exit 2
+  fi
+  ts "✅ 탐침 통과 — c=$C Å 가 메모리에 들어간다. 본 계산으로 가도 된다:"
+  ts "     bash tools/sdcp/run_phaseB_sdcp_v2.sh        # MAXSTEP 기본 300"
+  grep -a "per-process dynamical memory\|Estimated max dynamical RAM" "$OUT/complex_doped/scf.out" | tail -3
+  exit 0
+fi
 
 # ── 1단계: 슬랩 (E_ads 개별값에 필요. Δ 에는 상쇄되지만 논문 수치라 낸다) ────
 if [ "$STAGE" = all ] || [ "$STAGE" = slab ]; then
