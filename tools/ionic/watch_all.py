@@ -649,9 +649,13 @@ if want("sdcp"):
         if done:
             print("   ✅ **이완 완료** — bfgs converged / End of BFGS"
                   + ("  ·  JOB DONE" if job_done else "  ⚠ JOB DONE 없음(마무리 중이거나 중단)"))
-            print("   ⛔ **재기동하지 말 것** — relax.out 을 덮어쓰면 결과가 사라진다. 다음:")
-            print(f"      python3 tools/sdcp/make_slab_relax.py --harvest {_V2}/slab_relax")
-            print("      (1x4 192원자로 복제 + 잔여력 검증 → 자세 탐색으로)")
+            print("   ⛔ **재기동하지 말 것** — relax.out 을 덮어쓰면 결과가 사라진다.")
+            # ⚠ '다음' 은 **단계를 알아야** 한다. harvest 가 이미 끝났는데도 harvest 를 권하면
+            #   화면이 진행을 못 따라가고, 사용자가 끝난 일을 다시 한다(2026-08-06 실측).
+            _HV = "db/structures/linio2_104_sym_1x4L4_relaxed.vasp"
+            if not os.path.isfile(os.path.join(REPO, _HV) if "REPO" in dir() else _HV):
+                print("   다음: 이완좌표를 1x4 로 복제한다")
+                print(f"      python3 tools/sdcp/make_slab_relax.py --harvest {_V2}/slab_relax")
         elif not alive_j:
             print("   ⛔ 죽었다(완료 표식 없음). ⚠ **아래를 그대로 붙이기 전에 두 가지를 먼저 한다**:")
             print(f"      1) cp {_V2}/slab_relax/relax.out{{,.bak}}   ← `> relax.out` 이 덮어쓴다")
