@@ -576,8 +576,12 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
         log.info("fit resume(sig=%s): %d개 완료 확인, %d개 남음",
                  run_sig, len(done), len(todo))
 
-    log.info("fitting: %d조건 × %d목적함수 × %d restart (nproc=%d)",
-             len(todo), len(objectives), n_restarts, nproc)
+    # ★ 입력/출력 디렉터리를 반드시 찍는다. run.sh가 --out을 조용히 --in으로
+    #   덮어써서 스모크 결과가 본 실행 디렉터리를 오염시킨 일이 있었다.
+    log.info("fitting: %d조건 × %d목적함수 × %d restart (nproc=%d, warm_start=%s)\n"
+             "         입력 %s\n         출력 %s",
+             len(todo), len(objectives), n_restarts, nproc, warm_start,
+             in_dir.resolve(), out_dir.resolve())
     t0 = time.perf_counter()
     n_done = 0
     with Parallel(n_jobs=nproc, backend="loky") as parallel:

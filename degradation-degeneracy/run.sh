@@ -55,6 +55,7 @@ DRY_RUN="false"
 
 # 출력
 OUT="results/run_$(date +%Y%m%d_%H%M%S)"
+OUT_SET="false"                   # --out을 사용자가 직접 줬는가
 TAG=""
 LOG_LEVEL="INFO"
 
@@ -163,7 +164,7 @@ while [[ $# -gt 0 ]]; do
     --resume)        RESUME="true"; shift ;;
     --dry-run)       DRY_RUN="true"; shift ;;
     --in)            IN_DIR="$2"; shift 2 ;;
-    --out)           OUT="$2"; shift 2 ;;
+    --out)           OUT="$2"; OUT_SET="true"; shift 2 ;;
     --tag)           TAG="$2"; shift 2 ;;
     --log-level)     LOG_LEVEL="$2"; shift 2 ;;
     -h|--help)       usage; exit 0 ;;
@@ -230,7 +231,13 @@ case "$MODE" in
     [[ "$REFERENCE" == "halfcell" && "$BOUNDS_PRESET" == "expanded" ]] && BOUNDS_PRESET="halfcell"
     FIT_ARGS=(--in "${IN_DIR:-$OUT}" --nproc "$NPROC"
               --bounds "$BOUNDS_PRESET" --log-level "$LOG_LEVEL")
-    [[ -n "$IN_DIR" ]] && FIT_ARGS+=(--out "$IN_DIR")
+    # ★ --out을 명시하면 그걸 쓴다. 예전엔 --in이 있으면 무조건 --in으로 덮어써서
+    #   사용자의 --out이 조용히 무시됐다 (스모크 결과가 본 실행 디렉터리를 오염시킴)
+    if [[ "$OUT_SET" == "true" ]]; then
+      FIT_ARGS+=(--out "$OUT")
+    elif [[ -n "$IN_DIR" ]]; then
+      FIT_ARGS+=(--out "$IN_DIR")
+    fi
     [[ -n "$OBJECTIVE" ]] && FIT_ARGS+=(--objective "$OBJECTIVE")
     [[ "$N_RESTARTS" != "auto" ]] && FIT_ARGS+=(--n-restarts "$N_RESTARTS")
     [[ "$CLEAN" == "true" ]] && FIT_ARGS+=(--clean)
