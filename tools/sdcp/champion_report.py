@@ -32,6 +32,8 @@ from ase.io import read
 LI_LO, LI_HI = 1.90, 2.20          # Li⁺–O 배위 기준
 FAR = 4.5                          # 이보다 멀면 '맨 표면' 대용으로 쓴다
 EJECT = 0.50                       # 이 이상 움직인 슬랩 원자는 이탈 후보
+CLEAR = 1.50                       # 이 이상이면 **명백한 추출** (층간격 2.09 Å 의 ~7할)
+                                   #   0.50–1.50 은 애매해서 비교쌍에 안 쓴다
 
 
 def main():
@@ -145,6 +147,42 @@ def main():
                 print("       (맨 표면 이완이 슬랩 기준 에너지를 낮춘 몫일 수 있다 — 아래 ⚠ 참고)")
             else:
                 print(f"    ✓ 표면이 분자 쪽으로 {d.max():.3f} Å 응답했다 (이탈은 없다)")
+
+    # ── ★ DFT 비교쌍 — ΔE_extract 를 오염 없이 재려면 **같은 스캔**에서 둘을 뽑아야 한다 ──
+    print("\n" + "═" * 76)
+    print("★ DFT+U 비교쌍 제안 — ΔE_extract = E(추출) − E(물리흡착)")
+    print("  ⚠ 두 기하를 **다른 스캔**에서 뽑으면 안 된다. phaseA(표면 DFT 고정)와")
+    print("     phaseA_top1free(표면 UMA 이완)를 섞으면 ΔE 에 'UMA 기하를 DFT 로 채점한 벌점'이")
+    print("     추출 쪽에만 붙는다. 같은 스캔 안에서 뽑아야 그 항이 상쇄된다.")
+    print(f"  판정: 슬랩 최대변위 < {EJECT} Å = 물리흡착 · > {CLEAR} Å = 명백한 추출"
+          f" (그 사이는 애매해서 안 쓴다)")
+
+    disp = {}
+    for lab, p in poses.items():
+        disp[lab] = float(np.linalg.norm(p["slab"] - base, axis=1).max())
+
+    for tag in sorted(by_tag):
+        labs = [lab for _, lab in by_tag[tag]]
+        ds = np.array([disp[l] for l in labs])
+        print(f"\n  ── {tag} (자세 {len(labs)}) — 슬랩 최대변위 분포")
+        print(f"     중앙값 {np.median(ds):.2f} · 90%p {np.percentile(ds,90):.2f} · "
+              f"최대 {ds.max():.2f} Å · "
+              f"물리흡착권(<{EJECT}) {int((ds<EJECT).sum())}개 · "
+              f"명백추출(>{CLEAR}) {int((ds>CLEAR).sum())}개")
+        phys = sorted((poses[l]["E"], l) for l in labs if disp[l] < EJECT)
+        extr = sorted((poses[l]["E"], l) for l in labs if disp[l] > CLEAR)
+        if phys:
+            print(f"     물리흡착 기준: {phys[0][1]}  E {phys[0][0]:+.3f} · 변위 {disp[phys[0][1]]:.2f} Å")
+        else:
+            print(f"     ⚠ 변위 {EJECT} Å 미만인 자세가 없다 — 이 종은 비교쌍을 못 만든다")
+        if extr:
+            print(f"     추출   기준: {extr[0][1]}  E {extr[0][0]:+.3f} · 변위 {disp[extr[0][1]]:.2f} Å")
+        else:
+            print(f"     ⚠ 변위 {CLEAR} Å 넘는 자세가 **하나도 없다**")
+            print(f"        → 이 종은 UMA 가 추출 경로를 아예 못 찾았다는 뜻이고, 그 자체가 결과다")
+        if phys and extr:
+            print(f"     ΔE_extract(UMA) = {extr[0][0] - phys[0][0]:+.3f} eV "
+                  f"← DFT+U 가 이 부호를 유지하는지가 판정")
 
     print("\n" + "─" * 76)
     print("⚠ 읽는 법")
