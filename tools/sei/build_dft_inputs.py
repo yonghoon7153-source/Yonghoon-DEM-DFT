@@ -66,7 +66,9 @@ def find_pseudos(pdir):
 def kmesh(cell, dens):
     import numpy as np
     b = 2 * np.pi * np.linalg.inv(cell).T
-    return [max(1, int(round(np.linalg.norm(v) / dens))) for v in b]
+    # ⚠ round 를 쓰면 비 1.35 가 1 로 내려가 그 축이 Γ-only 가 된다(실측: Nd2S3 [5,3,1]).
+    #   장축이라도 k=2 는 싸므로 ceil 로 올림해 안전하게 간다.
+    return [max(1, int(np.ceil(np.linalg.norm(v) / dens))) for v in b]
 
 
 def main():
