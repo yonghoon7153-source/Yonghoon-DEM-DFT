@@ -258,11 +258,22 @@ def reference_self_check(in_dir: Path, obj_cfg: dict) -> dict:
         try:
             J = _build_objective(obj_cfg, g, ref, obj_cfg["objectives"][name])
             j_truth = float(J(p_truth))
+            j_found = d["J_at_found"]
             d["J_at_truth"] = j_truth
-            d["_판정"] = ("(A) 최적화 실패 — 목적함수의 최소는 정답 쪽인데 못 찾았다"
-                         if j_truth <= d["J_at_found"] + 1e-12 else
-                         "★ (B/C) 목적함수가 정답보다 다른 점을 더 좋아한다 — "
-                         "무열화 셀을 무열화라고 못 한다")
+            err = max(abs(d["lam_pe_hat"]), abs(d["lam_ne_hat"]), abs(d["lli_hat"]))
+            d["abs_err_max"] = err
+            if err <= 1e-6:
+                d["_판정"] = "정상 — 정답을 찾았다"
+            elif j_truth <= j_found:
+                # ★ 목적함수의 최소는 정답인데 최적화가 못 갔다.
+                #   J 격차가 클수록 골짜기 입구가 좁다는 뜻이다.
+                d["_판정"] = (f"★ (A) 최적화 실패 — 정답에서 J={j_truth:.3g}인데 "
+                             f"J={j_found:.3g}에 멈췄다 (오차 {100 * err:.1f}%p). "
+                             f"목적함수는 무죄. 최소의 유인역(basin)이 좁다 "
+                             f"→ 초기값을 주면 해결될 수 있다")
+            else:
+                d["_판정"] = ("★ (B/C) 목적함수가 정답보다 다른 점을 더 좋아한다 — "
+                             "무열화 셀을 무열화라고 못 한다")
         except Exception as e:  # noqa: BLE001
             d["_판정"] = f"J 재구성 실패: {e}"
         out[name] = d

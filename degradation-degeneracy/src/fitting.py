@@ -330,11 +330,35 @@ def _fit_one(task: dict) -> list[dict]:
     def shortfall(p):
         return window_shortfall(p, x_lo, x_hi)
 
+    # ★ 계단식 초기값 (F20, 2026-08-06 실측).
+    #
+    #   dQ/dV 항이 들어간 목적함수는 **최소가 정답에 있는데도** 찾지 못한다.
+    #   무열화 조건 실측: J(정답)=0 인데 최적화는 J=0.402에서 멈추고
+    #   LAM_PE=-6.5%p 를 답했다. 300점 곡선의 dQ/dV는 뾰족한 이산 신호라
+    #   α가 조금만 움직여도 피크가 격자 칸을 넘으며 J가 불연속으로 튄다
+    #   → 전역최소의 유인역(basin)이 사실상 0폭.
+    #
+    #   그래서 **부드러운 항으로 먼저 풀고 그 해를 초기값으로 물려준다.**
+    #   임의 튜닝이 아니라 표준적인 다단계 적합이며, dQ/dV의 역할도 원래
+    #   "이미 가까운 해를 피크로 다듬는 것"이다.
+    #
+    #   순서는 objectives.yaml의 정의 순서(항이 하나씩 쌓이는 순서)를 따른다.
+    def _has_dqdv(w):
+        return float(w.get("w_dqdv", 0.0)) != 0.0
+
+    warm = bool(task.get("warm_start", True))
+    seed_p = None                      # 부드러운 항으로 얻은 해
+
     rows = []
     for name, weights in task["objectives"].items():
         J = make_objective(target, model_fn, weights, scales, obj_cfg, shortfall)
-        res = fit(J, task["init"], task["lb"], task["ub"],
+        init = task["init"]
+        if warm and _has_dqdv(weights) and seed_p is not None:
+            init = seed_p
+        res = fit(J, init, task["lb"], task["ub"],
                   n_restarts=task["n_restarts"], seed=task["seed"])
+        if warm and not _has_dqdv(weights) and np.all(np.isfinite(res.p)):
+            seed_p = list(map(float, res.p))    # 가장 최근의 매끄러운 해
         inv = task["inventory"]
         if task["reference"] == "halfcell":
             hc = to_modes_halfcell(res.p, task["p_ini"], task["r"])
@@ -370,6 +394,8 @@ def _fit_one(task: dict) -> list[dict]:
             "lli_hat": main_modes["lli"],
             "lli_hat_21p": paper["lli"], "lli_hat_code": code["lli"],
             "bounds_preset": task["bounds_preset"],
+            # F20: 이 목적함수가 매끄러운 해를 초기값으로 받았는가 (사후 감사용)
+            "warm_started": bool(warm and _has_dqdv(weights) and init is not task["init"]),
         })
     return rows
 
@@ -378,7 +404,8 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
             bounds_preset: str, n_restarts: int, nproc: int,
             use_noisy: bool = True, limit: int | None = None,
             base_config: str | None = None, reference: str = "grid",
-            resume: bool = False, subset: set | None = None) -> dict:
+            resume: bool = False, subset: set | None = None,
+            warm_start: bool = True) -> dict:
     """grid 결과 전체에 fitting 수행 → fits.parquet.
 
     subset: 이 cond_id 집합만 fitting (Phase 6 가중치 sweep의 층화 표본용).
@@ -406,7 +433,8 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
     try:
         return _run_fit_locked(in_dir, out_dir, obj_cfg, objectives, bounds,
                                bounds_preset, n_restarts, nproc, use_noisy,
-                               limit, base_config, reference, resume, subset)
+                               limit, base_config, reference, resume, subset,
+                               warm_start)
     finally:
         release_run_lock(out_dir, ".fit.lock")
 
@@ -415,7 +443,8 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
                     bounds_preset: str, n_restarts: int, nproc: int,
                     use_noisy: bool = True, limit: int | None = None,
                     base_config: str | None = None, reference: str = "grid",
-                    resume: bool = False, subset: set | None = None) -> dict:
+                    resume: bool = False, subset: set | None = None,
+                    warm_start: bool = True) -> dict:
     """run_fit 본체. 호출자가 이미 .fit.lock 을 보유한 상태여야 한다."""
     import time
     from pathlib import Path
@@ -475,7 +504,7 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
             "init": bounds["init"], "lb": bounds["lb"], "ub": bounds["ub"],
             "bounds_preset": bounds_preset, "n_restarts": n_restarts,
             "inventory": inv, "reference": reference, "halfcell": hc_dict,
-            "p_ini": p_ini,
+            "p_ini": p_ini, "warm_start": warm_start,
             # hash()는 프로세스마다 소금이 달라 재현 불가 → sha1 기반 결정적 seed
             "seed": int(hashlib.sha1(cond_id.encode()).hexdigest()[:8], 16),
         })
@@ -523,7 +552,7 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     # 리뷰 F18: 완료 파일명에 실행 서명(목적함수·기준·bound·타깃 열)을 넣는다.
     # 안 그러면 다른 --objective로 resume했을 때 새 목적함수가 조용히 누락된다.
     run_sig = hashlib.sha1(json.dumps(
-        [sorted(objectives), reference, bounds_preset, v_col],
+        [sorted(objectives), reference, bounds_preset, v_col, bool(warm_start)],
         sort_keys=True).encode()).hexdigest()[:8]
     completed_name = f"fit_completed_{run_sig}.jsonl"
     done = load_completed(out_dir, completed_name) if resume else set()
@@ -587,7 +616,7 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
         "n_conditions": len(tasks), "objectives": list(objectives),
         "bounds_preset": bounds_preset, "bounds": bounds,
         "n_restarts": n_restarts, "target_column": v_col, "reference": reference,
-        "p_ini": p_ini,
+        "p_ini": p_ini, "warm_start": warm_start,
         "q_ref_mah": q_ref, "lli_inventory_constants": inv, "elapsed_s": round(elapsed, 1),
         "fits_parquet": str(path),
     }))
@@ -620,6 +649,9 @@ def main() -> None:
                     help="grid=기준 셀 창(유도식 환산) | halfcell=전 범위 반쪽셀(21p 식)")
     ap.add_argument("--clean", action="store_true", help="노이즈 없는 곡선으로 fitting")
     ap.add_argument("--limit", type=int, default=None, help="앞 N조건만 (스모크용)")
+    ap.add_argument("--no-warm-start", dest="warm_start", action="store_false",
+                    help="dQ/dV 목적함수에 매끄러운 해를 초기값으로 물려주지 않는다 "
+                         "(F20 비교 실험용). 기본은 물려준다")
     ap.add_argument("--log-level", default="INFO")
     args = ap.parse_args()
 
@@ -648,7 +680,7 @@ def main() -> None:
         n_restarts=args.n_restarts or int(fcfg.get("n_restarts", 5)),
         nproc=args.nproc, use_noisy=not args.clean, limit=args.limit,
         base_config=args.base_config, reference=args.reference,
-        resume=args.resume,
+        resume=args.resume, warm_start=args.warm_start,
     )
     print(json.dumps(summary, ensure_ascii=False, indent=2))
 

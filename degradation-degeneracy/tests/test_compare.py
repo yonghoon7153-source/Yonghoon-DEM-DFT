@@ -348,3 +348,57 @@ def test_results_doc_conclusion_follows_the_number(tmp_path):
     assert "나와도 두 전극이 실제로" not in text
     # 실패가 반대 방향(거짓 분리)이라는 사실이 결론에 실려야 한다
     assert "없는 격차를 만들어낸다" in text
+
+
+# ---------------------------------------------------------------- F20 계단식 초기값
+
+def test_warm_start_passes_smooth_solution_to_dqdv_objectives(monkeypatch):
+    """★ F20 — dQ/dV 목적함수가 앞선 매끄러운 해를 초기값으로 받는가.
+
+    실측 근거: 무열화 조건에서 J(정답)=0 인데도 최적화가 J=0.402에 멈추고
+    LAM_PE=-6.5%p를 답했다. 최소의 유인역이 좁아서다.
+    """
+    import src.fitting as F
+
+    seen = []          # (objective 이름 순서대로) fit()에 들어간 init
+
+    def fake_fit(objective, init, lb, ub, **kw):
+        seen.append(list(map(float, init)))
+        # 매끄러운 목적함수는 (1,0,1,0)을 찾았다고 하자
+        p = np.array([1.0, 0.0, 1.0, 0.0])
+        return F.FitResult(p=p, J=0.0, converged=True, n_eval=1,
+                           bound_active=(False,) * 4, n_restarts=1,
+                           n_restarts_agree=1, restarts=[(p.tolist(), 0.0)])
+
+    monkeypatch.setattr(F, "fit", fake_fit)
+
+    n = 64
+    x = np.linspace(0, 1, n)
+    task = {
+        "cond_id": "t0", "x": x, "v_target": 4.0 - 1.0 * x, "q_mah": 100.0, "r": 1.0,
+        "truth": {"lli": 0.0, "lam_pe": 0.0, "lam_ne": 0.0, "noise": 0.0},
+        "ref_x": x, "ref_pe": 4.2 - 0.5 * x, "ref_ne": 0.2 + 0.5 * x,
+        "ref_full": 4.0 - 1.0 * x,
+        "obj_cfg": {"objectives": {}, "dqdv": {"window": 7, "polyorder": 2,
+                                               "peak_weight": 3.0,
+                                               "peak_prominence": 0.05,
+                                               "peak_halfwidth": 3}},
+        "objectives": {"pocv_dvdq": {"w_pocv": 1.0, "w_dvdq": 1.0, "w_dqdv": 0.0},
+                       "pocv_dvdq_dqdv": {"w_pocv": 1.0, "w_dvdq": 1.0, "w_dqdv": 1.0}},
+        "init": [1.03, -0.10, 1.08, -0.01],
+        "lb": [0.7, -0.6, 0.7, -0.6], "ub": [1.8, 0.4, 1.8, 0.4],
+        "bounds_preset": "expanded", "n_restarts": 1,
+        "inventory": {"w_pe": 0.29, "w_ne": 0.71, "kappa": 0.71},
+        "reference": "grid", "halfcell": None, "p_ini": None, "seed": 0,
+    }
+
+    rows = F._fit_one({**task, "warm_start": True})
+    assert seen[0] == task["init"], "첫 목적함수는 기본 초기값이어야 한다"
+    assert seen[1] == [1.0, 0.0, 1.0, 0.0], "dQ/dV 목적함수가 앞 해를 못 받았다"
+    assert {r["objective"]: r["warm_started"] for r in rows} == {
+        "pocv_dvdq": False, "pocv_dvdq_dqdv": True}
+
+    seen.clear()
+    rows = F._fit_one({**task, "warm_start": False})
+    assert seen[0] == seen[1] == task["init"], "--no-warm-start인데 물려받았다"
+    assert all(not r["warm_started"] for r in rows)
