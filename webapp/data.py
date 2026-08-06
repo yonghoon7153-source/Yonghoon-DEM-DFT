@@ -3071,3 +3071,64 @@ def paper_comment_search() -> dict[str, str]:
         if txt:
             parts.setdefault(slug, []).append(f"{k} {txt}")
     return {s: "¦".join(v).lower()[:9000] for s, v in parts.items()}
+
+def md_to_html(md: str) -> str:
+    """세미나/용어 문서를 페이지에 그대로 싣기 위한 **최소** 마크다운 렌더러.
+
+    ⚠ 범용 파서가 아니다 — 우리 kb 문서가 쓰는 문법(제목·표·불릿·인용·굵게·코드)만 처리한다.
+      외부 입력이 아니라 **repo 안의 우리 문서**만 넣으므로 escape 후 화이트리스트로 되살린다.
+    """
+    import html as _h
+    import re as _re
+    out, in_tbl, in_ul = [], False, False
+
+    def inline(t):
+        t = _h.escape(t)
+        t = _re.sub(r"`([^`]+)`", r"<code>\1</code>", t)
+        t = _re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", t)
+        t = _re.sub(r"(?<!\*)\*([^*]+)\*(?!\*)", r"<em>\1</em>", t)
+        return t
+
+    def close():
+        nonlocal in_tbl, in_ul
+        if in_tbl:
+            out.append("</tbody></table></div>"); in_tbl = False
+        if in_ul:
+            out.append("</ul>"); in_ul = False
+
+    for ln in md.splitlines():
+        st = ln.rstrip()
+        if _re.match(r"^\|.*\|$", st):
+            cells = [c.strip() for c in st.strip("|").split("|")]
+            if all(_re.fullmatch(r":?-{2,}:?", c) for c in cells):
+                continue                                  # 구분행
+            if not in_tbl:
+                close()
+                out.append('<div class="tbl-scroll"><table class="data-table"><tbody>')
+                in_tbl = True
+                out.append("<tr>" + "".join(f"<th>{inline(c)}</th>" for c in cells) + "</tr>")
+            else:
+                out.append("<tr>" + "".join(f"<td>{inline(c)}</td>" for c in cells) + "</tr>")
+            continue
+        if in_tbl:
+            close()
+        m = _re.match(r"^(#{1,4})\s+(.*)$", st)
+        if m:
+            close(); n = len(m.group(1))
+            out.append(f"<h{min(n+1,5)}>{inline(m.group(2))}</h{min(n+1,5)}>"); continue
+        if st.startswith("> "):
+            close(); out.append(f'<blockquote>{inline(st[2:])}</blockquote>'); continue
+        m = _re.match(r"^\s*[-*]\s+(.*)$", st)
+        if m:
+            if not in_ul:
+                close(); out.append("<ul>"); in_ul = True
+            out.append(f"<li>{inline(m.group(1))}</li>"); continue
+        if in_ul:
+            close()
+        if st.startswith("---"):
+            out.append("<hr>"); continue
+        if not st.strip():
+            continue
+        out.append(f"<p>{inline(st)}</p>")
+    close()
+    return "\n".join(out)

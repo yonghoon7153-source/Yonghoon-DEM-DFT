@@ -392,6 +392,27 @@ def api_paper(pid):
     return jsonify({"id": pid, "html": html, "figures": D.paper_figures(pid)})
 
 
+@app.route("/seminar")
+def seminar():
+    """연구세미나 — spec(kb/seminars/*.md) 을 그대로 렌더한다.
+
+    ⚠ pptx 와 **같은 단일 소스**를 본다. 덱을 고치면 여기도 따라오고, 반대도 같다.
+    """
+    import os
+    base = D.KB / "seminars"
+    md = base / "cascade_seminar_2026_08_spec.md"
+    if not md.is_file():
+        abort(404)
+    deck = base / "Research_Seminar_2026_08_cascade.pptx"
+    return render_template("seminar.html", active="seminar",
+                           body=D.md_to_html(md.read_text(encoding="utf-8")),
+                           deck=(deck.name if deck.is_file() else None),
+                           deck_size=(os.path.getsize(deck) // 1024 if deck.is_file() else 0),
+                           terms=D.md_to_html((D.KB / "methodology" / "terminology_register.md")
+                                              .read_text(encoding="utf-8"))
+                           if (D.KB / "methodology" / "terminology_register.md").is_file() else None)
+
+
 @app.route("/glossary")
 def glossary():
     gpapers = {g["id"]: D.glossary_papers(g["id"]) for g in G.GLOSSARY}

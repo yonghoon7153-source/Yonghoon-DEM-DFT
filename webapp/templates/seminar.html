@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Research Seminar · cascade{% endblock %}
+{% block content %}
+
+<h1>🎤 Research Seminar — DFT-based screening cascade</h1>
+<div class="muted" style="font-size:.85rem;margin-top:2px">
+  안용훈 · Battery Materials Lab · 2026-08 &nbsp;·&nbsp;
+  단일 소스 <span class="mono">kb/seminars/cascade_seminar_2026_08_spec.md</span>
+</div>
+
+<div class="callout" style="margin-top:12px;border-left:3px solid var(--accent)">
+  <b>이 페이지와 pptx 는 같은 spec 을 본다.</b> 슬라이드 내용·근거·예상질문이 여기 그대로 있고,
+  덱은 그 spec 에서 생성된다 — 한쪽만 고치면 어긋나므로 <b>spec 을 고친다</b>.
+</div>
+
+{% if deck %}
+<div class="card" style="margin-top:12px;padding:14px 18px">
+  <h3 style="margin:0 0 6px">📦 발표 파일</h3>
+  <a class="mono" href="/api/file/../kb/seminars/{{ deck }}">{{ deck }}</a>
+  <span class="muted" style="font-size:.8rem">· {{ deck_size }} KB · 35 파트 (본문 18 + Part 구분 + Appendix 6)</span>
+  <div class="muted" style="font-size:.8rem;margin-top:6px">
+    ⚠ 그림 4장은 speaker notes 로만 표시돼 있다 — DOS 겹침 · 아레니우스+MSD(β) ·
+    ICOHP 막대 · 스케일 사다리. 빈 플레이스홀더는 넣지 않았다.
+  </div>
+</div>
+{% endif %}
+
+<div class="tabs" style="margin-top:16px">
+  <button class="tab-btn sel" onclick="semTab('spec',this)">📋 Spec (슬라이드별)</button>
+  {% if terms %}<button class="tab-btn" onclick="semTab('terms',this)">🗣 용어 대장</button>{% endif %}
+</div>
+
+<div class="tab-panel" id="sem-spec">{{ body|safe }}</div>
+{% if terms %}<div class="tab-panel" id="sem-terms" hidden>{{ terms|safe }}</div>{% endif %}
+
+<script>
+function semTab(k, el){
+  ['spec','terms'].forEach(function(x){
+    var p=document.getElementById('sem-'+x); if(p) p.hidden = (x!==k);
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('.tabs .tab-btn'),
+    function(b){ b.classList.toggle('sel', b===el); });
+}
+</script>
+{% endblock %}
