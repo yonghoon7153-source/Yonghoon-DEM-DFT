@@ -79,16 +79,23 @@ def add_proton(at, nslab):
     return out, tgt
 
 
-def li_state(at, ref, nslab, tag):
-    """추출된 Li 가 아직 나와 있나 — 맨 슬랩 대비 변위로 판정."""
+def li_state(at, ref, nslab, tag, track=None):
+    """추출된 Li 가 아직 나와 있나.
+
+    ⚠⚠ **특정 원자를 추적해야 한다** (2026-08-06 실측 교훈). 옛 판은 매번 '최대 변위
+      원자'를 보고했는데, neutral 이완에서 추출된 Li 가 제자리로 돌아가자 **다른 원자가
+      최대**가 되어(Li92 0.52 Å) '중간값'으로 잘못 판정했다. 실제로는 추적 대상 Li44 가
+      2.36 → **0.04 Å** 로 완전히 복귀한, 훨씬 깨끗한 결과였다.
+    """
     sym = at.get_chemical_symbols()
     d = np.linalg.norm(at.positions[:nslab] - ref.positions[:nslab], axis=1)
-    i = int(np.argmax(d))
+    i = int(np.argmax(d)) if track is None else track
     mol = list(range(nslab, len(at)))
     dm = min(at.get_distance(i, m, mic=True) for m in mol)
-    print(f"  [{tag}] 최대 변위 원자 {sym[i]}{i} = {d[i]:.2f} Å · 분자까지 {dm:.2f} Å · "
+    lab = "추적" if track is not None else "최대 변위"
+    print(f"  [{tag}] {lab} 원자 {sym[i]}{i} = {d[i]:.2f} Å · 분자까지 {dm:.2f} Å · "
           f"0.5 Å 초과 {int((d > 0.5).sum())}개")
-    return d[i], sym[i], dm
+    return d[i], sym[i], dm, i
 
 
 def main():
@@ -110,7 +117,8 @@ def main():
     ref = read(a.slabref)
     at.set_cell(ref.cell); at.set_pbc(True)
     print(f"출발 기하: {src}  ({len(at)} 원자)")
-    li_state(at, ref, a.nslab, "출발(doped 추출)")
+    _, _, _, TRACK = li_state(at, ref, a.nslab, "출발(doped 추출)")
+    print(f"  → 이 원자({TRACK})를 끝까지 추적한다")
 
     print("\n① doped → neutral 로 양성자 되돌리기")
     neu, o_h = add_proton(at, a.nslab)
@@ -137,13 +145,13 @@ def main():
     ctl = at.copy(); ctl.set_constraint(fix); ctl.calc = calc
     ok_c = bool(FIRE(ctl, logfile=None).run(fmax=a.fmax, steps=a.steps))
     write(os.path.join(a.out, "relaxed_doped_extr.xyz"), ctl)
-    dc, sc, dmc = li_state(ctl, ref, a.nslab, f"doped 이완 (수렴 {ok_c})")
+    dc, sc, dmc, _ = li_state(ctl, ref, a.nslab, f"doped 이완 (수렴 {ok_c})", TRACK)
 
     print("\n③ 이완 — ★ 시험군(같은 자리, neutral 분자)")
     tst = neu.copy(); tst.set_constraint(fix); tst.calc = calc
     ok_t = bool(FIRE(tst, logfile=None).run(fmax=a.fmax, steps=a.steps))
     write(os.path.join(a.out, "relaxed_neutral_from_doped_extr.xyz"), tst)
-    dt, st, dmt = li_state(tst, ref, a.nslab, f"neutral 이완 (수렴 {ok_t})")
+    dt, st, dmt, _ = li_state(tst, ref, a.nslab, f"neutral 이완 (수렴 {ok_t})", TRACK)
 
     print("\n" + "─" * 72)
     print("★ 판정")
