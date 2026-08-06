@@ -52,6 +52,13 @@ export LD_LIBRARY_PATH=$H_MPI/lib:/data/apps/nvhpc/Linux_x86_64/24.11/compilers/
 DEGAUSS=${DEGAUSS:-0.03}; MIXNDIM=${MIXNDIM:-8}; MAXSTEP=${MAXSTEP:-300}
 SCF_MUST=${SCF_MUST:-.false.}; REPORT=${REPORT:-1}; TPRNFOR=${TPRNFOR:-.false.}
 MAGTOL=${MAGTOL:-2.0}          # 두 복합체의 absolute magnetization 허용 차이 (μB)
+# ⚠⚠ 진공(수직 이미지 간격) — **생성기 게이트와 같은 수여야 한다.**
+#   2026-08-06: 여기가 6.5 였다. phaseB_v7c_dft_binding.py 의 --min_image_gap 기본값은
+#   15.0(2026-07-17 철회 이후 기준)이라, 러너가 만든 셀은 게이트를 통과할 수 없었다 —
+#   입력 생성 단계에서 100% 죽는 조합. 옛 slabfirst 러너의 6.5 를 그대로 베껴 온 탓이다.
+#   그래서 이제 이 값을 **생성기에 명시적으로 넘겨** 두 숫자가 갈라질 수 없게 한다.
+GAP=${GAP:-15.0}               # 분자 꼭대기 → 다음 슬랩 이미지 최소 간격 (Å)
+CMARG=${CMARG:-1.0}            # 게이트를 아슬아슬하게 스치지 않도록 얹는 여유 (Å)
 STAGE=${1:-all}
 mkdir -p "$OUT"
 ts(){ echo "[$(date +%m-%d\ %H:%M:%S)] $*"; }
@@ -70,9 +77,10 @@ for f in "$SLAB0" "$SCAN/complex_$CX_D.xyz" "$SCAN/complex_$CX_N.xyz" \
   [ -s "$f" ] || { ts "⛔ 없음: $f"; exit 1; }
 done
 
-# ── c 축소: 진공을 줄여 비용을 낮춘다 (옛 판정 기준 = 이미지 간격 6.5 Å) ─────
-if [ ! -s "$OUT/slab_cshrink.vasp" ]; then
-  ZMAX=$("$UMA_PY" - "$SCAN" "$CX_D" "$CX_N" <<'PYZ'
+# ── c 설정: 진공은 **게이트와 같은 기준**으로 잡는다 ─────────────────────────
+#   c = (두 자세 중 더 높은 분자 꼭대기) + GAP + 여유.  진공을 줄이면 싸지지만,
+#   짧으면 E_bind 가 한 표면이 아니라 두 표면 몫이 된다(2026-07-17 철회 사유).
+ZMAX=$("$UMA_PY" - "$SCAN" "$CX_D" "$CX_N" <<'PYZ'
 import sys
 scan, zmax = sys.argv[1], 0.0
 for tag in sys.argv[2:]:
@@ -81,8 +89,24 @@ for tag in sys.argv[2:]:
 print(f"{zmax:.2f}")
 PYZ
 ) || { ts "⛔ pose zmax 계산 실패"; exit 1; }
-  C=$(awk -v z="$ZMAX" 'BEGIN{printf "%.3f", z + 6.5}')
-  ts "pose zmax=$ZMAX Å → c=$C Å (이미지 간격 6.5 Å)"
+C=$(awk -v z="$ZMAX" -v g="$GAP" -v m="$CMARG" 'BEGIN{printf "%.3f", z + g + m}')
+ts "pose zmax=$ZMAX Å → c=$C Å (이미지 간격 $GAP Å + 여유 $CMARG Å)"
+
+# ⚠ 기존 파일이 있어도 **기준 미달이면 버린다**. 안 그러면 옛 6.5 Å 짜리
+#   slab_cshrink.vasp 가 남아 있어 고쳐도 계속 같은 자리에서 죽는다 (2026-08-06 실측).
+if [ -s "$OUT/slab_cshrink.vasp" ]; then
+  "$UMA_PY" - "$OUT/slab_cshrink.vasp" "$C" <<'PYCHK' || rm -f "$OUT/slab_cshrink.vasp"
+import sys
+from ase.io import read
+have, want = read(sys.argv[1]).cell.array[2][2], float(sys.argv[2])
+if have + 1e-3 < want:
+    print(f"  ⚠ 기존 slab_cshrink.vasp c={have:.3f} Å < 필요 {want:.3f} Å — 버리고 다시 만든다")
+    raise SystemExit(1)
+print(f"  · slab_cshrink.vasp 재사용 (c={have:.3f} Å)")
+PYCHK
+fi
+
+if [ ! -s "$OUT/slab_cshrink.vasp" ]; then
   "$UMA_PY" - "$SLAB0" "$OUT/slab_cshrink.vasp" "$C" <<'PYC'
 import sys
 from ase.io import read, write
@@ -110,6 +134,7 @@ gen(){
     --mol_neutral "$MOLDIR/sdcp_v7c_neutral.xyz" \
     --ref_scf     "$REFSCF" \
     --afm_mode inplane --mol_vacuum 8 --pseudo_dir /data/work/pseudo \
+    --min_image_gap "$GAP" \
     --no_fsm --degauss "$DEGAUSS" --scf_must_converge "$SCF_MUST" \
     --electron_maxstep "$MAXSTEP" --seed_radical S:0.5 --mixing_ndim "$MIXNDIM" \
     --report "$REPORT" --tprnfor "$TPRNFOR" \

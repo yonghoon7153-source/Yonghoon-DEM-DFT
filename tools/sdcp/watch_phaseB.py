@@ -90,8 +90,15 @@ any_out = any(v for v in data.values())
 if not any_out:
     print("⛔ **산출물이 하나도 없다.**")
     inputs = glob.glob(os.path.join(PB, "*", "scf.in"))
-    if inputs:
-        print(f"   · scf.in 은 {len(inputs)}개 생성됨 → **입력은 만들었고 실행에서 죽었다**")
+    if len(inputs) >= len(JOBS):
+        print(f"   · scf.in {len(inputs)}개 다 있음 → **입력은 다 만들었고 pw.x 실행에서 죽었다**")
+    elif inputs:
+        # ⚠ 생성기는 job 순서대로 쓰다가 게이트에 걸리면 거기서 죽는다 —
+        #   '몇 개까지 썼나'가 곧 '어느 job 에서 걸렸나'다.
+        got = sorted(os.path.basename(os.path.dirname(p)) for p in inputs)
+        nxt = next((j for j in JOBS if j not in got), "?")
+        print(f"   · scf.in 이 {len(inputs)}/{len(JOBS)}개뿐 ({', '.join(got)}) → "
+              f"**입력 생성이 `{nxt}` 에서 멈췄다** (실행 전 단계)")
     else:
         print("   · scf.in 도 없다 → **입력 생성 단계에서 죽었다**"
               " (phaseB_v7c_dft_binding.py 인자·경로·pseudo 확인)")
