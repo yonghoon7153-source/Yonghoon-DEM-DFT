@@ -37,6 +37,20 @@ WORK = "/data/work/runs/sei_dft"
 PROV = "db/properties/sei_structures_provenance.json"
 
 
+def zval(path):
+    """UPF 헤더에서 z_valence. nbnd 를 정하려면 전자 수를 알아야 한다."""
+    import re
+    try:
+        head = open(path, errors="ignore").read(6000)
+    except OSError:
+        return None
+    m = re.search(r'z_valence\s*=\s*"?\s*([\d.]+)', head, re.I)
+    if m:
+        return float(m.group(1))
+    m = re.search(r"([\d.]+)\s+Z valence", head, re.I)      # UPF v1 텍스트 헤더
+    return float(m.group(1)) if m else None
+
+
 def find_pseudos(pdir):
     """pseudo 디렉터리에서 원소 → 파일명. ⚠ 없는 원소는 그대로 보고한다."""
     out = {}
@@ -103,6 +117,16 @@ def main():
         has_nd = "Nd" in els
         nat, ntyp = len(at), len(els)
 
+        # ⚠⚠ occupations='fixed' 인 nscf 는 QE 가 **nbnd = nelec/2 로 딱 맞춘다** —
+        #   전도대가 없어 CBM 을 못 본다. nbnd 를 명시해야 갭이 나온다 (2026-08-06).
+        zs = {e: zval(os.path.join(a.pseudo_dir, pool[e])) for e in els}
+        if any(v is None for v in zs.values()):
+            bad = [e for e, v in zs.items() if v is None]
+            print(f"\n⏭  {tag} — UPF 에서 z_valence 를 못 읽었다: {','.join(bad)}")
+            skipped.append(tag); continue
+        nelec = sum(zs[e] for e in at.get_chemical_symbols())
+        nbnd = int(nelec / 2 * 1.35) + 8      # 점유 + 넉넉한 빈 상태 (CBM·DOS 용)
+
         def block(calc, kpts, fixed, extra=""):
             occ = ("    occupations     = 'fixed'\n" if fixed else
                    f"    occupations     = 'smearing'\n    smearing        = 'mv'\n"
@@ -116,7 +140,9 @@ def main():
                  "    tstress         = .true." if calc == "vc-relax" else "", "/",
                  "&SYSTEM", "    ibrav           = 0", f"    nat             = {nat}",
                  f"    ntyp            = {ntyp}", f"    ecutwfc         = {ECUTWFC}",
-                 f"    ecutrho         = {ECUTRHO}", occ.rstrip(), "/",
+                 f"    ecutrho         = {ECUTRHO}",
+                 (f"    nbnd            = {nbnd}" if calc == "nscf" else ""),
+                 occ.rstrip(), "/",
                  "&ELECTRONS", "    conv_thr        = 1.0d-8",
                  "    mixing_beta     = 0.3", "    electron_maxstep = 200", "/"]
             if calc in ("relax", "vc-relax"):
@@ -156,7 +182,8 @@ def main():
                     + (f"U(Nd 4f)={a.nd_u} eV 를 걸었다(진단용)." if a.nd_u > 0
                        else "U 를 안 걸었다 → 진단용으로만 볼 것."))
         print(f"\n✓ {tag:26s} {nat:3d}원자 {'+'.join(els):14s} "
-              f"k scf {k_scf} / nscf {k_nscf}")
+              f"k scf {k_scf} / nscf {k_nscf} · 전자 {nelec:.0f} → nbnd {nbnd} "
+              f"(점유 {int(nelec/2)} + 빈 {nbnd - int(nelec/2)})")
         if note:
             print(note)
         made.append(tag)
