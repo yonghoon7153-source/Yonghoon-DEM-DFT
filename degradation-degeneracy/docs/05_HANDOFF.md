@@ -67,6 +67,16 @@ source .venv/bin/activate
 ./run.sh --mode sweep1d --out results/sweep1d_v1          # ★ 32p 그림 재현
 ./run.sh --mode grid --config configs/grid_coarse.yaml --dry-run   # 조건 수·예상시간만
 ./run.sh --mode grid --config configs/grid_fine.yaml --nproc 32 --out results/grid_fine_v1
+
+# ── 여기서부터가 채점 단계 ──
+./run.sh --mode fit     --in results/grid_fine_v1 --nproc 32   # α·β fitting (약 5시간)
+./run.sh --mode score   --in results/grid_fine_v1              # degeneracy 판정·지도
+./run.sh --mode hessian --in results/grid_fine_v1              # 곡률(flat direction) 진단
+./run.sh --mode report  --in results/grid_fine_v1              # 비교표 + docs/RESULTS.md
+./run.sh --mode wsweep  --in results/grid_fine_v1 --nproc 32   # 가중치 근거 (약 70분)
+
+./run.sh --mode all --config configs/grid_fine.yaml --nproc 32 --out results/final_v1
+#   grid → fit → score → hessian → report 를 한 번에
 ```
 
 **꼭 알아두실 것 세 가지**
@@ -76,6 +86,7 @@ source .venv/bin/activate
 | `--dry-run` | 실제 계산 전에 **조건 수 / 예상 시간 / 예상 용량**을 실측 기반으로 알려줍니다. 큰 격자는 항상 이것부터 |
 | `--resume` | 중간에 끊겨도 **완료된 조건은 건너뛰고** 이어서 갑니다. SSH 끊김·서버 재부팅 대비 |
 | `tmux` | 긴 실행은 반드시 `tmux new -s grid` 안에서. 안 그러면 SSH 끊길 때 같이 죽습니다 (실제로 한 번 겪었습니다) |
+| 동시 실행 금지 | 같은 `--out`에 두 개를 띄우면 막힙니다(`.run.lock` / `.fit.lock`). 막히기 전에 뚫린 적이 있어서 8절 아래 "실제로 겪은 사고들"에 남겨뒀습니다 |
 
 한 조건이 발산해도 **전체가 죽지 않습니다.** `failed.csv`에 사유를 남기고 계속 진행합니다.
 
@@ -262,17 +273,25 @@ PyBaMM을 GPU화하는 것(Phase 7-1, 실패 예상)과는 난이도가 전혀 �
 Phase 0  스캐폴딩·환경          ✅   V100 환경 검증 완료
 Phase 1  코어 리팩터링           ✅   완방상태 자동화, 전역 param 제거
 Phase 2  모드 중첩·32p 재현      ✅   원본 회귀 검증 통과
-Phase 3  조합 격자·병렬화        ✅   fine 격자 3,069조건 생성   ← 여기까지 완료
+Phase 3  조합 격자·병렬화        ✅   fine 격자 3,069조건 생성
+Phase 4  Fitting 이식           ✅   구현 완료. LLI 환산식 유도 정정 (아래 ★)
+Phase 5  degeneracy 판정·지도    ✅   구현 완료. coarse에서 검증
+Phase 6  목적함수 4종 비교        ✅   구현 완료. fine 결과 대기 중
+Phase 7  GPU 시도               ✅   7-1 판정 완료 → docs/GPU_NOTES.md
 ──────────────────────────────────
-Phase 4  Fitting 이식           ⬜   33p MATLAB → Python, 34p 목적함수
-Phase 5  degeneracy 판정·지도          ⬜   정답 vs 복원값 채점, Hessian
-Phase 6  목적함수 4종 비교        ⬜   ★ 최종 산출물
-Phase 7  GPU 시도               ⬜   선택. 실패해도 기록이 산출물
+남은 것: fine 격자 실행 결과를 채워 넣는 일 (계산만 돌면 됨)
+  ① Case 2 (grid 기준) fine fitting     — 진행 중, 2026-08-06 ETA 12:53
+  ② score → hessian → report            — ①이 끝나면 10분
+  ③ Case 1 (halfcell 기준) fine fitting — 별도 --out으로, 약 5시간
+  ④ 가중치 sweep                        — 약 70분
 ```
 
-여기서부터가 **실제로 질문에 답하는 부분**입니다. 지금까지(Phase 0~3)는
-"정답을 아는 시험문제 3,069개를 출제"한 것이고, Phase 4~6이 "그 문제를
-기존 fitting 코드에 풀려서 채점"하는 단계입니다.
+Phase 0~3이 "정답을 아는 시험문제 3,069개를 출제"한 것이고, Phase 4~6이
+"그 문제를 기존 fitting 코드에 풀려서 채점"하는 단계입니다. 코드는 전부
+들어갔고, 지금은 **채점 결과가 나오기를 기다리는 상태**입니다.
+
+테스트 120건이 통과 상태이며, 물리·수식을 건드린 변경은 모두 `CHANGELOG.md`에
+근거와 실측값을 함께 남겼습니다.
 
 ---
 
@@ -285,7 +304,63 @@ Phase 7  GPU 시도               ⬜   선택. 실패해도 기록이 산출물
 |---|---|
 | `src/fitting.py` | `windowed_curve(f_ref, x, α, β)` — **원본 코드 그대로 재사용** |
 | | `reconstruct(p)` — `p = [α_PE, β_PE, α_NE, β_NE]` → PE·NE·full cell 재구성 |
-| | `to_degradation_modes(p)` — `LAM_PE = 1−α_PE`, `LAM_NE = 1−α_NE`, `LLI = (1−α_PE)+(β_PE−β_NE)` (Birkl 2017 부호 규약, 원본 유지) |
+| | `to_degradation_modes(p, r, convention=...)` — ★ 아래 정정 참조 |
+
+#### ★ Phase 4에서 확인된 정정 — LAM·LLI 환산식
+
+**이 부분은 원본 코드와 결론이 달라졌습니다.** 합성 데이터에 정답이 있으니
+"어느 식이 정답을 복원하는가"를 직접 검증할 수 있었고, 그 결과입니다.
+
+**(1) α는 열화율이 아니라 용량비입니다.**
+
+x축이 "각 셀 자기 용량"으로 정규화돼 있으므로
+
+```
+    α_PE = (1 − LAM_PE) / r ,      r = Q_degraded / Q_reference
+```
+
+즉 `LAM_PE = 1 − α_PE`는 `r = 1`일 때만 맞습니다. 용량이 줄면 α > 1이 됩니다.
+합성 격자에서 참 α의 범위는 **0.92 ~ 1.39** 였습니다.
+
+여기서 따라오는 결론 하나가 중요합니다.
+
+> **α = 1.00 ⟺ LAM = 용량손실**
+
+33p 원본 bound는 `lb = [1.00, …]`로 α의 하한을 정확히 이 지점에 못 박습니다.
+최적화가 하한에 붙으면 **자동으로 `LAM_PE ≈ LAM_NE ≈ 용량손실`이 나옵니다.**
+22p 결과 패턴과 정확히 일치합니다. 그리고 합성 격자에서 33p bound 안에 정답이
+들어 있는 조건은 **17%뿐**이었습니다 — 나머지 83%는 원리적으로 복원 불가입니다.
+
+그래서 `--bounds original_33p`(원본)와 `--bounds expanded`(참값을 담는 범위)를
+둘 다 남겨 **비교 자체를 결과물로** 삼았습니다.
+
+**(2) LLI 환산식을 전하 보존에서 다시 유도했습니다.**
+
+원본식 `LLI = (1−α_PE) + (β_PE − β_NE)`와 21p식 둘 다 **정답을 복원하지
+못했습니다**(참값 LLI를 아는 조건에서 각각 0.128, 0.200 → 참값과 불일치).
+전하 보존으로 다시 유도한 결과:
+
+```
+    LLI = 1 − r·[ w_PE·α_PE + w_NE·α_NE + κ·(β_NE − β_PE) ]
+```
+
+같은 조건에서 오차 **0.012**로 떨어졌습니다. `w_PE`, `w_NE`, `κ`는 셀 형상에서
+자동 계산됩니다(`src/inventory.py`, 기준 셀에서 `w_PE=0.2909, w_NE=0.7091,
+κ=0.7057`). 21p식은 가중치와 β 부호가 **둘 다** 다릅니다.
+
+세 규약을 모두 계산해 나란히 저장합니다 — `lli_hat`(유도식), `lli_hat_21p`,
+`lli_hat_code`(원본). 어느 것을 쓸지는 보는 사람이 정할 수 있게 했습니다.
+
+**(3) 기준 곡선을 두 가지로 나눠 병행합니다.**
+
+| | 기준 | 비고 |
+|---|---|---|
+| **Case 1** | 전 범위 half-cell OCV를 PyBaMM OCP 함수에서 직접 추출 | 21p 논문 방식. `--reference halfcell` |
+| **Case 2** | 격자의 무열화 조건 곡선 | 유도식 방식. `--reference grid` (기본) |
+
+Case 1은 초기에 훨씬 나빴는데(LAM 오차 0.054/0.126) 원인이 세 가지였습니다 —
+테이블이 [0,1]로 정규화되지 않음, bound가 너무 좁음, 그리고 **NE 이력(hysteresis)
+분기가 한 테이블에 섞임**. 고친 뒤 0.018/0.018로 수렴했습니다.
 | `src/objective.py` | **34p 수식 그대로**: `J(p) = w_pocv·RMSE_pocv/scale + w_dvdq·RMSE_dvdq/scale + w_dqdv·RMSE^w_dqdv/scale` |
 | | dQ/dV 피크 가중 (33p "peak weight factor"), savgol 스무딩 (33p "peak smoothing") |
 
@@ -366,11 +441,53 @@ Phase 7  GPU 시도               ⬜   선택. 실패해도 기록이 산출물
 
 **가중치 최적화**: `w_dqdv`를 0~2로 훑어서 degeneracy 비율이 최소가 되는 조합을 찾습니다.
 *"가중치를 임의로 튜닝한 것 아니냐"* 는 질문에 대한 근거가 됩니다.
+전체 격자에 9가지 가중치를 다 돌리면 CPU로 감당이 안 돼서, 축마다 격자를 반으로
+성기게 잡은 **층화 표본**(6³×noise3)을 씁니다. 무작위 표본이 아니라 격자 구조를
+보존하므로 코너가 빠지지 않습니다.
 
-**`docs/RESULTS.md` 자동 생성** — 실행 조건, 비교표, 핵심 결론 3줄,
-그리고 22p 실험 조건의 degeneracy 여부 판정.
+**`docs/RESULTS.md` 자동 생성** — 숫자를 손으로 옮겨 적지 않습니다. 격자를 다시
+돌리면 문서도 다시 생성하면 됩니다.
 
-**실행**: `./run.sh --mode all --config configs/grid_fine.yaml --nproc 32 --out results/final_v1`
+#### ★ 22p 질문에 직접 답하는 지표 — 전극 격차 복원력
+
+Phase 6을 짜다가 발견한 함정입니다. **22p 근방 격자점은 참값 자체가
+`LAM_PE = LAM_NE`입니다.** 그러니 "그 근방에서 복원이 잘 됐다"는 22p를 옹호하는
+증거가 되지 못합니다. 물어야 할 것은 반대 방향입니다.
+
+> **참값이 뚜렷이 다를 때도 fitting이 둘을 같다고 말하는가?**
+
+`gap_analysis()`가 이걸 셉니다.
+
+| 지표 | 의미 |
+|---|---|
+| `gap_collapse_frac` | 참 격차 ≥6%p인데 복원 격차 <2%p로 답한 비율. **높으면 "두 전극이 비슷하다"는 관측 자체가 무의미해집니다** |
+| `shrinkage` | 복원 격차 / 참 격차. 1이면 그대로 복원, 0이면 전부 뭉갬 |
+| `false_split_frac` | 참값은 같은데 다르다고 답한 비율 (반대 방향 오류) |
+
+coarse 격자(F15 수정 전) 잠정치는 **예상과 반대 방향**이었습니다.
+
+```
+gap_collapse_frac = 2.2%     shrinkage = 0.95     false_split_frac = 63%
+```
+
+이 방법은 서로 다른 전극을 뭉개지 **않습니다.** 실패는 *없는 격차를 만들어내는*
+쪽으로 나타납니다. 이게 fine 격자에서도 유지되면, 22p의 `LAM_PE ≈ LAM_NE`를
+"구분을 못 해서 나온 값"으로 단정할 수 없다는 뜻이 됩니다.
+
+⚠ 단, `false_split` 판정 기준(2%p)이 F15 편향(~1.6%p)과 같은 크기라 63% 중
+상당 부분이 그 편향일 수 있습니다. **fine 재fit 결과로 확정할 부분입니다.**
+
+`tools/make_results.py`의 결론 문장은 이 숫자를 따라 분기합니다. 초안은 붕괴율과
+무관하게 "증거가 되지 못한다"를 고정 출력하게 돼 있었는데, 데이터가 반대로 나온
+지금 같은 경우 거짓 결론을 쓰게 됩니다. 양방향 모두 테스트로 고정해뒀습니다.
+
+**실행**:
+```bash
+./run.sh --mode score   --in results/grid_fine_v1
+./run.sh --mode hessian --in results/grid_fine_v1
+./run.sh --mode report  --in results/grid_fine_v1     # 비교표 + RESULTS.md
+./run.sh --mode wsweep  --in results/grid_fine_v1 --nproc 32
+```
 
 ---
 
@@ -428,6 +545,64 @@ Phase 5의 지도로 확정할 부분입니다.
 
 ---
 
+### 긴 실행을 돌릴 때 주의 — 실제로 겪은 사고들
+
+5시간짜리 실행이라 사고가 나면 비쌉니다. 겪은 것만 적습니다.
+
+**① 같은 `--out`에 두 프로세스가 붙었습니다 (2026-08-06)**
+
+```
+PID 330053  04:17:13 시작   ← curves.parquet 재생성(04:37:56) 이전
+PID 333299  04:38:48 시작   ← 재생성 이후 (정상)
+```
+
+32워커씩 총 64개가 16물리코어를 나눠 써서 속도가 **24.5분/청크**로 반토막
+났고(정상 11.8분), 더 나쁘게는 330053이 **재생성 전 옛 곡선**으로 fit_chunks에
+결과를 쌓고 있었습니다. 청크 병합은 mtime 최신 우선이라 그대로 두면 정상
+결과를 덮어씁니다.
+
+원인은 `run_fit`이 실행 잠금을 **본체 마지막**에 잡고 있었던 것입니다. 그
+앞 구간(curves 로드 → 3,069조건 태스크 구성 → halfcell이면 p_ini self-fitting)이
+무방비였습니다. 지금은 함수 맨 앞에서 잡습니다.
+
+- 잘못 뜬 쪽을 `kill`하고, 그 PID가 박힌 청크 파일을 지우면 복구됩니다
+  (청크 파일명에 PID가 들어갑니다)
+- **`--resume`을 쓸 때 주의**: 오염 청크를 지우면 "완료 표시는 있는데 결과 행이
+  없는" 조건이 생기고, resume이 그걸 영원히 건너뜁니다. 결과가 조용히 비는
+  가장 위험한 실패 모드라 지금은 코드가 걸러냅니다(경고 로그가 뜹니다)
+
+**② kill한 프로세스의 워커가 남습니다**
+
+`kill`(SIGTERM)로 부모를 죽이면 loky 워커 32개가 init에 입양돼 남을 수 있습니다.
+메모리를 잡고 있고 화면을 헷갈리게 합니다.
+
+```bash
+# 확인 — ppid가 1이면 고아
+ps -eo ppid,args | grep '[l]oky' | awk '{print $1}' | sort | uniq -c
+# 정리
+ps -eo pid,ppid,args | grep '[l]oky' | awk '$2==1 {print $1}' | xargs -r kill
+# 애초에 이렇게 죽이면 안 남습니다 (프로세스 그룹째)
+kill -- -$(ps -o pgid= -p <PID> | tr -d ' ')
+```
+
+**③ 명령을 붙여넣을 때 백슬래시 줄바꿈을 쓰지 마세요**
+
+터미널에 여러 줄 명령을 붙여넣다가 줄이 끊겨서 엉뚱한 작업이 뜬 일이 세 번
+있었습니다(한 번은 5.7시간짜리가 기본 설정으로 돌아갔습니다). **한 줄로** 쓰세요.
+
+**④ 진행률은 `scripts/watch_fit.sh`로 보세요**
+
+```bash
+watch -n 60 './scripts/watch_fit.sh results/grid_fine_v1 fit_case2_fixed.log'
+```
+
+속도를 **최근 3청크**로 계산합니다. fitting 자체 로그의 "남은 예상"은 전체
+평균이라, 위 ①처럼 초반에 느렸던 구간이 섞이면 실제보다 2배 가까이 늦게 나옵니다
+(실측: 로그 291분 vs 실제 166분). 그리고 `src.fitting`이 2개 이상이면 크게
+경고합니다 — ①을 그때 잡을 수 있었던 화면입니다.
+
+---
+
 ### 알려진 개선 여지 (지금은 급하지 않음)
 
 | 항목 | 내용 |
@@ -457,4 +632,27 @@ Phase 5의 지도로 확정할 부분입니다.
 | `docs/02_CODE_AUDIT.md` | 원본 코드 분석 |
 | `docs/03_ARCHITECTURE.md` | 구조 설계, GPU 현실론 |
 | `docs/04_PROMPTS.md` | Phase별 작업 계획 |
+| `docs/06_REVIEW_DECISIONS.md` | **적대적 리뷰 처리 대장 — 기각·유보 항목과 해석 규칙** |
+| `docs/07_LAM_LLI.md` | **LAM / LLI 정의 — 물리·수식·코드·흔한 오해** |
+| `docs/GPU_NOTES.md` | PyBaMM/DFN을 CUDA로 돌릴 수 있는가 (실측 판정) |
+| `docs/RESULTS.md` | 최종 결과 (자동 생성 — 계산이 끝나면 생깁니다) |
 | `CHANGELOG.md` | **물리 변경 이력 (근거 포함)** |
+
+---
+
+## 10. 결과를 읽을 때 지켜야 할 규칙
+
+적대적 리뷰에서 나온 것들입니다. 상세는 `docs/06_REVIEW_DECISIONS.md`에 있고,
+**코드가 이미 이대로 계산합니다** — 아래는 왜 그런지에 대한 설명입니다.
+
+| | 규칙 | 이유 |
+|---|---|---|
+| **F1** | 복원가능군(참 α ≥ 1)에서만 비율을 센다 | grid 기준에서 참 α<1인 조건은 재구성 창이 reference 범위를 벗어나 **원리적으로** 정답이 안 나옵니다. 게다가 이 벽은 box bound가 아니라 창 부족 벌점이 만드는 소프트 벽이라 `bound_active`에 안 잡힙니다 — 분리하지 않으면 "bound 문제 아님 → 진짜 물리"로 오판합니다 |
+| **F5** | 방법 바이어스를 뺀 보정 판정을 나란히 본다 | 판정 기준 2%p가 방법 자체의 계통 편향과 같은 크기일 수 있습니다. 실제로 F15 수정 전에는 편향이 1.6%p였습니다 |
+| **F10** | dQ/dV 계열은 노이즈 수준별로 따로 본다 | 노이즈에서 피크 가중이 희석됩니다. 노이즈 0 결과만 인용하면 과대평가입니다 |
+| **F4** | multi-start 불일치율을 전체 평균으로 보고하지 않는다 | adaptive 조기 종료로 조건마다 restart 수가 달라 검정력이 다릅니다. 실측으로 확인: `n_restarts=2 → 일치 100%`, `n_restarts=5 → 일치 0%`. 뭉쳐서 평균 내면 의미 없는 숫자가 됩니다 |
+| **F14** | 저LLI + 고LAM_PE 코너가 격자에 없다 | 완방 프레임 guard의 산물입니다. 고LAM_PE 결론은 고LLI가 동반된 조건에서만 검증된 것입니다 |
+| **F7** | 모두 합성 데이터 결과다 | 실제 셀의 모델 오차(SEI, 저항 분포)는 없습니다. 즉 이 값들은 degeneracy의 **하한**이며 실제는 더 나쁩니다 |
+
+`docs/RESULTS.md`는 이 규칙을 지킨 형태로 자동 생성되고, 한계 항목을 **결론
+바로 밑**에 붙입니다 — 결론만 떼어 인용되는 걸 막기 위해서입니다.
