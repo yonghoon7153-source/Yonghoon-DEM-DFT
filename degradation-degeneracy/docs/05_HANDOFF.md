@@ -585,12 +585,43 @@ ps -eo pid,ppid,args | grep '[l]oky' | awk '$2==1 {print $1}' | xargs -r kill
 kill -- -$(ps -o pgid= -p <PID> | tr -d ' ')
 ```
 
-**③ 명령을 붙여넣을 때 백슬래시 줄바꿈을 쓰지 마세요**
+**③ SSH가 끊기면 포그라운드 프로세스는 같이 죽습니다**
+
+V100 접속이 자주 끊깁니다. 포그라운드로 띄운 작업은 SIGHUP으로 함께 죽고,
+**아무 흔적도 안 남습니다** (로그도 traceback도 없이 그냥 사라짐). 실제로
+30조건 스모크가 이렇게 사라져서 코드 버그를 의심하느라 시간을 썼습니다.
+
+긴 작업은 **반드시 tmux 안에서**:
+
+```bash
+tmux new -s fit                       # 세션 시작
+./run.sh --mode fit --in results/grid_fine_v1 --nproc 32 2>&1 | tee fit.log
+# Ctrl+B 누르고 D 로 빠져나옴 (작업은 서버에서 계속 돎)
+tmux a -t fit                         # 다시 붙기
+tmux ls                               # 세션 목록
+```
+
+tmux 없이 급할 때:
+
+```bash
+setsid nohup ./run.sh --mode fit --in results/grid_fine_v1 --nproc 32 > fit.log 2>&1 < /dev/null & disown
+```
+
+접속하는 쪽 `~/.ssh/config`에 keepalive를 넣으면 끊김 자체가 줄어듭니다:
+
+```
+Host v100
+    ServerAliveInterval 30
+    ServerAliveCountMax 20
+    TCPKeepAlive yes
+```
+
+**④ 명령을 붙여넣을 때 백슬래시 줄바꿈을 쓰지 마세요**
 
 터미널에 여러 줄 명령을 붙여넣다가 줄이 끊겨서 엉뚱한 작업이 뜬 일이 세 번
 있었습니다(한 번은 5.7시간짜리가 기본 설정으로 돌아갔습니다). **한 줄로** 쓰세요.
 
-**④ 진행률은 `scripts/watch_fit.sh`로 보세요**
+**⑤ 진행률은 `scripts/watch_fit.sh`로 보세요**
 
 ```bash
 watch -n 60 './scripts/watch_fit.sh results/grid_fine_v1 fit_case2_fixed.log'
