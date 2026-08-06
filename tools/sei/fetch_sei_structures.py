@@ -44,7 +44,11 @@ def do_list(formulas):
             docs = m.materials.summary.search(formula=f, fields=fields)
             if not docs:
                 print("  (MP 에 없음)"); continue
-            docs = sorted(docs, key=lambda d: (d.energy_above_hull or 9e9))
+            # ⚠ `x or 9e9` 를 쓰면 **E_hull 이 0.0 일 때 falsy 라 9e9 로 밀려난다** —
+            #   바닥상태가 목록 맨 뒤로 가고 "관측 중 최저" 선택이 통째로 틀린다
+            #   (2026-08-06 실측: Li2S 가 Fm-3m 0.0 대신 Pnma 0.0615 로 뽑혔다).
+            docs = sorted(docs, key=lambda d: 9e9 if d.energy_above_hull is None
+                          else d.energy_above_hull)
             print(f"  {'mp-id':16s} {'공간군':12s} {'E_hull':>9s} {'원자':>5s}  실험확인")
             for d in docs[:8]:
                 exp = "✅ 관측" if not d.theoretical else "⚠ 예측만"
