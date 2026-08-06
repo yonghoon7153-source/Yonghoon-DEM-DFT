@@ -714,9 +714,22 @@ if want("sdcp"):
         got = [(float(m.group(1)), x.split()[0]) for x in fl
                for m in [re.search(r"E_bind = ([+-][\d.]+)", x)]
                if m and "NOT CONVERGED" not in x]
-        st = "▶ 진행" if "pafree" in TMUX else ("✅ 완료" if got else "⛔ 멈춤")
-        print(f"   ── 슬랩 이완 탐침 (freeze_frac 0.6)  {st} · {len(got)}/3 케이스")
-        for v, lab in sorted(got):
+        # ⚠ 세션 이름이 pafree / pafree2 … 로 늘어난다 — 정확일치로 보면 놓친다.
+        up = [t for t in TMUX if t.startswith("pafree")]
+        st = f"▶ 진행({','.join(up)})" if up else ("✅ 완료" if got else "⛔ 멈춤")
+        # 계획 케이스 수는 로그의 'N poses' 합에서 읽는다(탐침 3 → 전수 24 로 늘어남)
+        pl = sum(int(m.group(1)) for m in
+                 (re.search(r"= (\d+) poses", x) for x in fl) if m)
+        print(f"   ── 슬랩 이완 탐침 (freeze_frac 0.6)  {st} · {len(got)}"
+              + (f"/{pl}" if pl else "") + " 케이스")
+        # ⚠ E_slab 이완이 수렴 안 했으면 기준 에너지가 임의값이라 E_bind 가 통째로 무효다.
+        #   도구는 찍기만 하고 게이트를 안 걸므로 화면이 대신 본다.
+        for x in fl:
+            if x.startswith("E_slab") and "converged=" in x:
+                okc = "converged=True" in x
+                print(f"      {'✅' if okc else '⛔'} 맨 슬랩 이완 {x.split('(')[-1].rstrip(')')}"
+                      + ("" if okc else "  ← **기준 에너지 무효. 아래 값 전부 못 씀**"))
+        for v, lab in sorted(got)[:8]:
             print(f"      {v:+.3f} eV  {lab}")
         sd = [v for v, lab in got if "sulfonate" in lab]
         if sd:
@@ -725,8 +738,12 @@ if want("sdcp"):
                 print(f"      ✅ **얼린 게 문제가 아니었다** ({v:+.3f} vs 고정판 -0.258) "
                       "= 진짜 물리흡착. Phase-B 는 freeze_frac 1.0 유지.")
             else:
-                print(f"      ⛔ **깊어졌다** ({v:+.3f} vs 고정판 -0.258) = 표면 이완이 결합의 핵심. "
-                      "Phase-B 에서 슬랩 상부를 풀어야 하고 E_slab 기준도 같이 이완해야 한다.")
+                print(f"      ⚠ **깊어졌다** ({v:+.3f} vs 고정판 g00 -0.244, 같은 자리)")
+                print("         ⛔ 아직 '화학흡착' 이라고 부르면 안 된다 — 분자가 깨졌거나 표면에")
+                print("            삽입/반응했을 수도 있다(얼렸을 땐 막혀 있던 경로다). 먼저:")
+                print("            python3 tools/sdcp/check_adsorption_sanity.py --complex <xyz> \\")
+                print("              --mol .../sdcp_v7c_doped.xyz --slab db/structures/"
+                      "linio2_104_sym_1x4L4_relaxed.vasp")
         print("      ⚠ 이 산출물은 진단 전용 — 좌표일치가 깨져 Phase-B 입력으로 쓰지 않는다.")
 
     # ⚠ 옛 경로는 **한 줄만**. 재기동 안내를 찍으면 깨진 슬랩 위에서 GPU 를 태운다.
