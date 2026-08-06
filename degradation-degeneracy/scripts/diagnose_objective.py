@@ -28,10 +28,16 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import sys
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
+
+# run.sh 없이 직접 실행해도 src를 찾도록 (PYTHONPATH 미설정 대비)
+_ROOT = Path(__file__).resolve().parent.parent
+if str(_ROOT) not in sys.path:
+    sys.path.insert(0, str(_ROOT))
 
 log = logging.getLogger(__name__)
 
@@ -195,20 +201,74 @@ def cross_evaluate(in_dir: Path, obj_cfg: dict, base: str, test: str,
     }
 
 
-def reference_self_check(in_dir: Path) -> dict:
-    """무열화 조건(정답 전부 0)에서 각 목적함수의 오차. 0이어야 정상."""
+def reference_self_check(in_dir: Path, obj_cfg: dict) -> dict:
+    """★ 가장 깨끗한 시험 — 무열화 조건에서 각 목적함수가 정답을 내는가.
+
+    이 조건은 타깃 곡선이 곧 reference 곡선이므로 정답이 자명하다:
+    p = (α_PE, β_PE, α_NE, β_NE) = (1, 0, 1, 0), 그리고 J = 0.
+
+    그래서 **J(정답)과 J(찾은 해)를 직접 비교**할 수 있다. 이게 원인을 가른다.
+
+        J(정답) ≤ J(찾은 해)  →  목적함수의 최소는 정답인데 최적화가 못 찾았다 (A)
+        J(정답) >  J(찾은 해)  →  목적함수가 정답보다 다른 점을 더 좋아한다 (B/C)
+                                  = 그 목적함수는 무열화 셀조차 무열화라고 못 한다
+    """
+    from src.fitting import extract_reference
+
     fits = pd.read_parquet(in_dir / "fits.parquet")
+    curves = pd.read_parquet(in_dir / "curves.parquet")
     m = (fits["lli"] == 0) & (fits["lam_pe"] == 0) & (fits["lam_ne"] == 0)
     if "noise" in fits.columns:
         m &= fits["noise"] == 0
-    ref = fits[m]
-    if ref.empty:
+    ref_fits = fits[m]
+    if ref_fits.empty:
         return {"_주의": "무열화·무노이즈 조건이 fits에 없음"}
-    return {str(r["objective"]): {
-        "lam_pe_hat": float(r["lam_pe_hat"]), "lam_ne_hat": float(r["lam_ne_hat"]),
-        "lli_hat": float(r["lli_hat"]), "J": float(r["J"]),
-        "a_pe": float(r["a_pe"]), "a_ne": float(r["a_ne"]),
-    } for _, r in ref.iterrows()}
+
+    cid = str(ref_fits["cond_id"].iloc[0])
+    g = curves[curves["cond_id"] == cid].sort_values("x_norm")
+    ref_rows = extract_reference(curves)
+    ref = {"x": ref_rows["x_norm"].to_numpy(), "pe": ref_rows["v_pe"].to_numpy(),
+           "ne": ref_rows["v_ne"].to_numpy(), "full": ref_rows["v_full"].to_numpy(),
+           "v_col": "v_full_noisy" if "v_full_noisy" in curves.columns else "v_full",
+           "mode": str(fits["reference"].iloc[0]) if "reference" in fits else "grid"}
+    if ref["mode"] == "halfcell":
+        from src.config import load_config
+        from src.halfcell import get_halfcell_reference
+        ref["halfcell"] = get_halfcell_reference(load_config("configs/base.yaml")).as_dict()
+
+    # ★ p=(1,0,1,0)이 정답인 것은 grid 기준일 때뿐이다. halfcell 기준은 전 범위
+    #   테이블이라 무열화 셀도 α≠1, β≠0 이므로 이 시험을 적용하면 오탐이 난다.
+    if ref["mode"] != "grid":
+        return {"_주의": (f"reference={ref['mode']} 에서는 p=(1,0,1,0)이 정답이 아니다 "
+                         f"(전 범위 테이블 기준이라 무열화 셀도 α≠1). "
+                         f"이 시험은 --reference grid 결과에만 적용한다."),
+                **{str(r["objective"]): {
+                    "lam_pe_hat": float(r["lam_pe_hat"]),
+                    "lam_ne_hat": float(r["lam_ne_hat"]),
+                    "lli_hat": float(r["lli_hat"]), "J_at_found": float(r["J"]),
+                } for _, r in ref_fits.iterrows()}}
+
+    p_truth = np.array([1.0, 0.0, 1.0, 0.0])
+    out = {}
+    for _, r in ref_fits.iterrows():
+        name = str(r["objective"])
+        d = {"lam_pe_hat": float(r["lam_pe_hat"]), "lam_ne_hat": float(r["lam_ne_hat"]),
+             "lli_hat": float(r["lli_hat"]), "J_at_found": float(r["J"]),
+             "a_pe": float(r["a_pe"]), "a_ne": float(r["a_ne"])}
+        try:
+            J = _build_objective(obj_cfg, g, ref, obj_cfg["objectives"][name])
+            j_truth = float(J(p_truth))
+            d["J_at_truth"] = j_truth
+            d["_판정"] = ("(A) 최적화 실패 — 목적함수의 최소는 정답 쪽인데 못 찾았다"
+                         if j_truth <= d["J_at_found"] + 1e-12 else
+                         "★ (B/C) 목적함수가 정답보다 다른 점을 더 좋아한다 — "
+                         "무열화 셀을 무열화라고 못 한다")
+        except Exception as e:  # noqa: BLE001
+            d["_판정"] = f"J 재구성 실패: {e}"
+        out[name] = d
+    out["_기준"] = {"cond_id": cid, "p_truth": p_truth.tolist(),
+                   "_설명": "정답 p=(1,0,1,0), J=0 이어야 정상"}
+    return out
 
 
 def main() -> None:
@@ -233,7 +293,7 @@ def main() -> None:
     out = {
         "resolution": resolution_report(
             pd.read_parquet(in_dir / "curves.parquet"), obj_cfg),
-        "reference_self_check": reference_self_check(in_dir),
+        "reference_self_check": reference_self_check(in_dir, obj_cfg),
         "cross_evaluation": cross_evaluate(in_dir, obj_cfg, args.base, args.test,
                                            args.n_sample, args.seed),
     }

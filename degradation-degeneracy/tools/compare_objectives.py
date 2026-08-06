@@ -20,7 +20,13 @@ F14 저LLI·고LAM_PE 코너 공백을 각주로 붙인다.
 from __future__ import annotations
 
 import logging
+import sys
 from pathlib import Path
+
+# run.sh 없이 직접 실행해도 src/tools를 찾도록 (PYTHONPATH 미설정 대비)
+_ROOT = Path(__file__).resolve().parent.parent
+if str(_ROOT) not in sys.path:
+    sys.path.insert(0, str(_ROOT))
 
 import matplotlib
 
