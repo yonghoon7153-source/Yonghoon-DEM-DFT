@@ -116,11 +116,11 @@ def _build_objective(cfg, g, ref, weights):
 
 
 def cross_evaluate(in_dir: Path, obj_cfg: dict, base: str, test: str,
-                   n_sample: int, seed: int) -> dict:
+                   n_sample: int, seed: int, curves_dir: Path | None = None) -> dict:
     """★ 핵심 진단 — test 목적함수가 base의 해를 어떻게 평가하는가."""
     from src.fitting import extract_reference
 
-    curves = pd.read_parquet(in_dir / "curves.parquet")
+    curves = pd.read_parquet((curves_dir or in_dir) / "curves.parquet")
     fits = pd.read_parquet(in_dir / "fits.parquet")
 
     ref_rows = extract_reference(curves)
@@ -201,7 +201,8 @@ def cross_evaluate(in_dir: Path, obj_cfg: dict, base: str, test: str,
     }
 
 
-def reference_self_check(in_dir: Path, obj_cfg: dict) -> dict:
+def reference_self_check(in_dir: Path, obj_cfg: dict,
+                         curves_dir: Path | None = None) -> dict:
     """★ 가장 깨끗한 시험 — 무열화 조건에서 각 목적함수가 정답을 내는가.
 
     이 조건은 타깃 곡선이 곧 reference 곡선이므로 정답이 자명하다:
@@ -216,7 +217,7 @@ def reference_self_check(in_dir: Path, obj_cfg: dict) -> dict:
     from src.fitting import extract_reference
 
     fits = pd.read_parquet(in_dir / "fits.parquet")
-    curves = pd.read_parquet(in_dir / "curves.parquet")
+    curves = pd.read_parquet((curves_dir or in_dir) / "curves.parquet")
     m = (fits["lli"] == 0) & (fits["lam_pe"] == 0) & (fits["lam_ne"] == 0)
     if "noise" in fits.columns:
         m &= fits["noise"] == 0
@@ -284,7 +285,11 @@ def reference_self_check(in_dir: Path, obj_cfg: dict) -> dict:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description="목적함수 진단 (Phase 6)")
-    ap.add_argument("--in", dest="in_dir", required=True)
+    ap.add_argument("--in", dest="in_dir", required=True,
+                    help="fits.parquet이 있는 디렉터리")
+    ap.add_argument("--curves", dest="curves_dir", default=None,
+                    help="curves.parquet이 있는 디렉터리 (fit --out을 따로 준 경우). "
+                         "기본은 --in과 같은 곳")
     ap.add_argument("--base", default="pocv_dvdq", help="잘 나온 목적함수")
     ap.add_argument("--test", default="pocv_dvdq_dqdv", help="나빠진 목적함수")
     ap.add_argument("--n-sample", type=int, default=120)
@@ -299,14 +304,27 @@ def main() -> None:
     from src.config import load_config
 
     in_dir = Path(args.in_dir)
+    # curves는 --in에 없을 수 있다 (fit --out을 따로 준 경우). manifest에서 찾아본다.
+    cdir = Path(args.curves_dir) if args.curves_dir else in_dir
+    if not (cdir / "curves.parquet").exists():
+        man = in_dir / "manifest.yaml"
+        if man.exists():
+            import yaml
+            src = (yaml.safe_load(man.read_text(encoding="utf-8")) or {}).get("input")
+            if src and (Path(src) / "curves.parquet").exists():
+                cdir = Path(src)
+                log.info("curves.parquet을 manifest의 in_dir에서 찾음: %s", cdir)
+    if not (cdir / "curves.parquet").exists():
+        raise SystemExit(f"curves.parquet을 못 찾음 ({cdir}). --curves 로 지정하세요.")
+
     obj_cfg = load_config(args.config)
 
     out = {
         "resolution": resolution_report(
-            pd.read_parquet(in_dir / "curves.parquet"), obj_cfg),
-        "reference_self_check": reference_self_check(in_dir, obj_cfg),
+            pd.read_parquet(cdir / "curves.parquet"), obj_cfg),
+        "reference_self_check": reference_self_check(in_dir, obj_cfg, cdir),
         "cross_evaluation": cross_evaluate(in_dir, obj_cfg, args.base, args.test,
-                                           args.n_sample, args.seed),
+                                           args.n_sample, args.seed, cdir),
     }
     print(json.dumps(out, ensure_ascii=False, indent=2))
 
