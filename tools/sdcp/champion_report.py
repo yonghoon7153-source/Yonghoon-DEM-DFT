@@ -78,13 +78,21 @@ def main():
         sys.exit(f"⛔ {a.scan} 에서 읽을 자세가 없다")
 
     # ── 기준선: 분자가 먼 자세들의 슬랩 평균 = '맨 표면 이완' 대용 ──────────
+    ref_relaxed = os.path.join(a.scan, "slab_ref_relaxed.xyz")
     far = [p for p in poses.values() if p["dmin"] > FAR]
-    if far:
+    if os.path.isfile(ref_relaxed):
+        base = read(ref_relaxed).positions[:a.nslab].copy()
+        src = f"{os.path.basename(ref_relaxed)} — 같은 구속으로 이완한 맨 슬랩 (정본)"
+    elif far:
         base = np.mean([p["slab"] for p in far], axis=0)
         src = f"분자가 {FAR} Å 밖인 자세 {len(far)}개의 평균"
     else:
-        base = rpos[:a.nslab].copy()
-        src = "⚠ 먼 자세가 없어 **원본 DFT 슬랩**을 기준으로 씀 (UMA 자체 이완이 섞인다)"
+        # ⚠ 원본 DFT 슬랩을 기준으로 쓰면 UMA 자체 이완(실측 ~0.17 Å)이 섞인다.
+        #   추출은 소수 자세에서만 일어나므로 **전 자세의 원자별 중앙값**이 훨씬 나은
+        #   '맨 표면' 추정치다 — 중앙값은 소수의 큰 이탈에 안 흔들린다.
+        base = np.median(np.stack([p["slab"] for p in poses.values()]), axis=0)
+        src = (f"⚠ 이완된 맨 슬랩 파일도, 먼 자세도 없다 → **전 {len(poses)}개 자세의 "
+               f"원자별 중앙값**으로 대신함 (추출은 소수라 중앙값이 맨 표면에 가깝다)")
     base_shift = float(np.linalg.norm(base - rpos[:a.nslab], axis=1).max())
 
     print(f"스캔 {a.scan}   자세 {len(poses)}개")
