@@ -14,6 +14,8 @@ scale: 세 항의 크기를 맞추기 위한 정규화 상수.
 
 from __future__ import annotations
 
+import os
+
 from dataclasses import dataclass
 
 import numpy as np
@@ -25,6 +27,44 @@ INVALID_PENALTY = 50.0
 _MIN_VALID_FRAC = 0.5
 
 
+# ── savgol 행렬 캐시 (F22) ─────────────────────────────────────────────────
+#
+# 프로파일 실측: 한 조건 fitting 51초 중 **34초(66%)가 savgol_filter**였고,
+# 그 안의 16초는 가장자리 다항식 적합의 lstsq였다 (조건당 lstsq 12만 회).
+# scipy는 호출할 때마다 계수와 가장자리 적합을 다시 푼다.
+#
+# 그런데 savgol은 고정 길이 신호에 대해 **선형 연산자**다 — 즉 n×n 행렬 하나로
+# 표현된다. 단위행렬에 필터를 한 번 적용하면 그 행렬이 정확히 나온다
+# (근사가 아니다: 실측 최대오차 3.6e-14, 신호 스케일 21.8 → 기계 정밀도).
+#
+#   행렬 생성   3.5 ms (0.72 MB, n=299)
+#   scipy       392 us/회  →  행렬곱 13.6 us/회   = 29배
+#   9회만 쓰면 생성비용 회수
+#
+# ★ 이것이 "메모리를 써서 CPU를 줄이는" 지점이다. 실측 격자에서 (길이,창,차수)
+#   조합은 204종, 전부 담아도 워커당 69 MB다.
+_SMOOTH_CACHE: dict[tuple[int, int, int], np.ndarray] = {}
+_SMOOTH_CACHE_BYTES = 0
+# 워커당 상한. 넘으면 그때부터는 scipy를 그대로 쓴다 (느려질 뿐, 값은 같다)
+_SMOOTH_CACHE_LIMIT = int(os.environ.get("DD_SMOOTH_CACHE_MB", "256")) * 1024 ** 2
+
+
+def _smooth_matrix(n: int, w: int, polyorder: int):
+    """savgol 선형 연산자 M (M @ y == savgol_filter(y, w, polyorder)). 한도 초과면 None."""
+    global _SMOOTH_CACHE_BYTES
+    key = (n, w, polyorder)
+    M = _SMOOTH_CACHE.get(key)
+    if M is not None:
+        return M
+    if _SMOOTH_CACHE_LIMIT <= 0 or _SMOOTH_CACHE_BYTES + n * n * 8 > _SMOOTH_CACHE_LIMIT:
+        return None
+    # 단위행렬의 각 행 e_j를 필터링하면 M의 **열** j가 나온다 → 전치
+    M = np.ascontiguousarray(savgol_filter(np.eye(n), w, polyorder, axis=-1).T)
+    _SMOOTH_CACHE[key] = M
+    _SMOOTH_CACHE_BYTES += M.nbytes
+    return M
+
+
 def _smooth(y: np.ndarray, window: int, polyorder: int) -> np.ndarray:
     n = len(y)
     w = min(window, n if n % 2 else n - 1)
@@ -32,7 +72,10 @@ def _smooth(y: np.ndarray, window: int, polyorder: int) -> np.ndarray:
         return y
     if w % 2 == 0:
         w -= 1
-    return savgol_filter(y, w, polyorder)
+    M = _smooth_matrix(n, w, polyorder)
+    if M is None:
+        return savgol_filter(y, w, polyorder)
+    return M @ y
 
 
 def dqdv_on_grid(x: np.ndarray, v: np.ndarray, v_grid: np.ndarray,
