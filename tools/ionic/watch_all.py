@@ -181,6 +181,14 @@ JOBS = [
               "-in scf_u0.in > scf_u0.out 2>&1 && "
               "$H/bin/mpirun -np 1 --oversubscribe /data/apps/qe-7.4.1-gpu/bin/pw.x -nk 1 "
               "-in relax.in > relax.out 2>&1'"},
+    # SDCP v2 2단계 — 이완된 슬랩 위 자세 스캔(UMA). Phase-B DFT+U 로 넘길 상위 자세를 고른다.
+    {"key": "phaseA", "log": os.path.join(H, "logs", "phaseA.log"),
+     "done": ["/data/work/runs/sdcp_v2/phaseA/phaseA_v7c_results.csv"],
+     "proc": (), "tmux": "phaseA",
+     "start": "tmux new -s phaseA -d 'python3 tools/sdcp/phaseA_v7c_orient_scan.py "
+              "--slab db/structures/linio2_104_sym_1x4L4_relaxed.vasp "
+              "--moldir /data/work/runs/sdcp_linio2_binding/inputs/sdcp_v7c "
+              "--out /data/work/runs/sdcp_v2/phaseA 2>&1 | tee -a ~/logs/phaseA.log'"},
     {"key": "chain2", "log": os.path.join(H, "logs", "chain2.log"),
      # ⚠ 이 체인은 "GPU 해방 대기 → 알림" 이 전부고 READY_FOR_QE_AND_SLAB 가 **정상 종료**다.
      #   done 을 비워 뒀더니 완주한 런이 ⛔ 죽음으로 분류됐다 (실측 08-03).
@@ -659,6 +667,35 @@ if want("sdcp"):
             print("        /data/apps/qe-7.4.1-gpu/bin/pw.x -nk 1 -in relax.in > relax.out 2>&1'")
         if alive_j:
             live()
+    # ── Phase-A 자세 스캔 (이완 슬랩이 나온 뒤의 다음 단계) ───────────────
+    # ⚠ 결과 CSV 는 **끝에 한 번** 쓰이므로 진행은 로그로 센다(도구가 flush=True 로 찍는다).
+    _PA = "/data/work/runs/sdcp_v2/phaseA"
+    _palog = os.path.join(H, "logs", "phaseA.log")
+    if os.path.isfile(_palog):
+        try:
+            ll = open(_palog, errors="ignore").read().splitlines()
+        except OSError:
+            ll = []
+        plan = sum(int(m.group(1)) for m in
+                   (re.search(r"= (\d+) poses", x) for x in ll) if m)
+        cases = [x for x in ll if re.search(r"E_bind = [+-]", x)]
+        ncv = sum(1 for x in cases if "NOT CONVERGED" in x)
+        csv_done = os.path.isfile(os.path.join(_PA, "phaseA_v7c_results.csv"))
+        head = "✅ 완료" if csv_done else ("▶ 진행" if "phaseA" in TMUX else "⛔ 멈춤")
+        print(f"   ── Phase-A 자세 스캔  {head} · {len(cases)}"
+              + (f"/{plan}" if plan else "") + f" 케이스"
+              + (f" · ⚠ 미수렴 {ncv}" if ncv else ""))
+        eb = sorted((float(m.group(1)), x.split()[0]) for x in cases
+                    for m in [re.search(r"E_bind = ([+-][\d.]+)", x)]
+                    if m and "NOT CONVERGED" not in x)[:3]
+        for v, lab in eb:
+            print(f"      {v:+.3f} eV  {lab}")
+        if eb:
+            print("      ⚠ UMA E_bind 는 **순위용**이다 — 절대값 인용 금지. "
+                  "상위 3-5 자세를 전부 Phase-B DFT+U 로 재채점한다.")
+        elif not csv_done and "phaseA" in TMUX:
+            print("      (아직 첫 자세 이완 중 — 슬랩/분자 기준 에너지 계산 포함)")
+
     # ⚠ 옛 경로는 **한 줄만**. 재기동 안내를 찍으면 깨진 슬랩 위에서 GPU 를 태운다.
     if os.path.isdir("/data/work/runs/sdcp_linio2_binding/phaseB_v7c_slabfirst"):
         print("   ─ 옛 경로(phaseB_v7c_slabfirst)는 깨진 슬랩이라 폐기. 재기동하지 말 것.")
