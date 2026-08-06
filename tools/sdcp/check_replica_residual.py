@@ -170,6 +170,18 @@ def main():
     conv = np.linalg.norm(pr.get_forces()[free], axis=1).max()
     print(f"   이완 {opt.get_number_of_steps()}스텝 후 편차 {d2:.4f} Å "
           f"(자유 max|F| {conv:.4f} eV/Å)")
+    # ★ A) 의 잔여력을 해석하는 열쇠 — UMA 최소가 DFT+U 구조에서 얼마나 떨어져 있나.
+    #   A 가 크더라도 이 거리가 작으면 '두 모델이 사실상 같은 구조를 본다' 는 뜻이고,
+    #   A 의 값은 힘 스케일의 모델 차이일 뿐이다(구조 문제가 아니다).
+    drift = np.linalg.norm(pr.get_positions()[free] - at.get_positions()[free], axis=1)
+    print(f"   UMA 최소 ↔ DFT+U 구조 거리: 자유원자 최대 {drift.max():.4f} Å "
+          f"(평균 {drift.mean():.4f})")
+    if drift.max() < 0.05:
+        print("      → 두 모델이 사실상 같은 구조를 본다. A 의 잔여력은 힘 스케일 차이일 뿐이다.")
+    elif drift.max() < 0.15:
+        print("      → 약간 다른 최소. DFT+U 구조를 쓰는 데 지장 없다(우리 기준은 DFT+U).")
+    else:
+        print("      ⚠ 두 모델이 **다른 구조**를 본다 — 이 계에서 UMA 판정을 더 밀고 나가지 말 것.")
 
     print("\n판정")
     if opt.get_number_of_steps() >= a.steps:
