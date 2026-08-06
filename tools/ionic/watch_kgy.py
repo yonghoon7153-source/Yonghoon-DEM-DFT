@@ -117,6 +117,34 @@ def _beta_series(t, y, lo=2.0, hi=50.0):
     return (n * sxy - sx * sy) / den if abs(den) > 1e-30 else None
 
 
+def _ens_beta(mjs, lo=2.0, hi=50.0):
+    """여러 시드의 msd.json → **MSD 를 평균한 뒤** 그 곡선의 β.
+
+    ⚠ mean(β_i) 와 다른 양이다(β 는 로그 기울기라 비선형). 우리 규율은 앙상블 평균 쪽이다.
+    ⚠ 시드마다 times_ps 격자가 다르면 평균이 성립하지 않으므로 **길이가 같은 것만** 쓴다.
+    """
+    ts, ys = None, []
+    for mj in mjs:
+        if not mj:
+            continue
+        try:
+            d = json.load(open(mj))
+            t, y = d.get("times_ps"), d.get("msd_Li_A2")
+        except Exception:
+            continue
+        if not t or not y or len(t) != len(y):
+            continue
+        if ts is None:
+            ts = t
+        if len(t) != len(ts):
+            continue
+        ys.append(y)
+    if not ts or not ys:
+        return None
+    mean = [sum(col) / len(col) for col in zip(*ys)]
+    return _beta_series(ts, mean, lo, hi)
+
+
 def md_progress(d):
     """md.log 마지막 Time[ps] → (ps, 퍼센트). 못 읽으면 (None, None)."""
     f = os.path.join(d, "md.log")
@@ -344,13 +372,20 @@ for lab in SYSL:
             else:
                 marks.append(f"s{s}·")
         Ds = [cell[(lab, T, s)][0] for s in SEEDL if cell.get((lab, T, s))]
-        bs = [cell[(lab, T, s)][1] for s in SEEDL
-              if cell.get((lab, T, s)) and cell[(lab, T, s)][1] is not None]
-        tag = (f"{sum(Ds) / len(Ds):.2e} β{sum(bs) / len(bs):.2f}" if Ds and bs
-               else (f"{sum(Ds) / len(Ds):.2e}" if Ds else ""))
+        # ★★ 게이트는 **시드 MSD 를 평균한 곡선의 β** 로 건다 — 시드별 β 의 평균이 아니다.
+        #   β 는 log-log 기울기라 비선형이라서 β(mean MSD) ≠ mean(β_i) 다. 그리고
+        #   앙상블 평균은 통계를 늘려 β 를 1 쪽으로 올린다 — 그게 우리가 쓰는 판정량이다
+        #   (open_items #1: "modelc·b2o3 **3시드 평균** 검사 0.87/0.93/0.92 통과",
+        #    LPSOCl 600 K 는 "4시드 **앙상블 평균**에서 β 0.61 탈락").
+        #   ⚠ 시드별로 게이트를 걸어 통과한 것만 평균하면 **선택 편향**이 생긴다 —
+        #     D 가 큰 시드가 β 도 좋을 확률이 높아 D 를 위로 밀어 올린다.
+        bens = _ens_beta([_under(os.path.join(ARR, lab, f"T{T}_s{s}"), "msd.json")
+                          for s in SEEDL if cell.get((lab, T, s))])
+        tag = (f"{sum(Ds) / len(Ds):.2e} " + (f"β̄{bens:.2f}" if bens is not None else "β—")
+               if Ds else "")
         cells.append(f"{' '.join(marks)} {tag}".ljust(W))
     print(f"     {lab:9s}" + "".join(cells))
-print("     (s#✓ 게이트통과 · s#✗ 실패 · s#▶ 진행 · s#· 대기 · 값 = 시드평균 D, β)")
+print("     (s#✓/✗ = **시드별** 참고용 · β̄ = **3시드 MSD 평균 곡선**의 β = 실제 판정량)")
 
 for lab, T, s, ps, pct in live:
     if ps is None:
@@ -359,16 +394,26 @@ for lab, T, s, ps, pct in live:
         print(f"     ▶ 지금 {lab} T{T} s{s} — {ps:.1f}/{ARR_TOTAL_PS:.0f} ps ({pct:.0f}%)")
 
 # ── 게이트 요약 — comp1 에서 배운 것: 개수만 보면 못 쓸 숫자를 모으게 된다 ──
-bad = [f"{l}/T{t}s{s}(β{v[1]:.2f})" for (l, t, s), v in sorted(cell.items())
-       if v and v[1] is not None and not (0.8 <= v[1] <= 1.2)]
+# ⚠ 실패 집계도 **온도점 단위(앙상블 β)** 로 한다 — 아레니우스에 들어가는 것이 온도점이지
+#   개별 시드가 아니기 때문이다. 시드별 ✓/✗ 마크는 어느 시드가 튀는지 보라는 참고일 뿐.
+bad = []
+for lab in SYSL:
+    for T in (600, 700, 900):
+        got = [s for s in SEEDL if cell.get((lab, T, s))]
+        if len(got) < len(SEEDL):
+            continue                      # 시드가 다 모여야 앙상블 판정을 한다
+        be = _ens_beta([_under(os.path.join(ARR, lab, f"T{T}_s{s}"), "msd.json") for s in got])
+        if be is not None and not (0.8 <= be <= 1.2):
+            bad.append(f"{lab}/T{T}(β̄{be:.2f}, {len(got)}시드)")
 if n_done:
     if bad:
-        print(f"   ⛔ 게이트 실패 {len(bad)}/{n_done}: {', '.join(bad[:6])}"
+        print(f"   ⛔ 온도점 게이트 실패 {len(bad)}건: {', '.join(bad[:6])}"
               + (" …" if len(bad) > 6 else ""))
         print("      → 이 점들은 아레니우스에서 **뺀다**. 창을 옮겨 구제하지 않는다"
               "(comp1 1600 ps 에서 확인).")
     else:
-        print(f"   ✅ {n_done}/{n_done} 게이트 통과")
+        print("   ✅ 시드가 다 모인 온도점은 전부 앙상블 게이트 통과 "
+              "(시드 미완 온도점은 아직 판정 안 함)")
     if mto_seen:
         print("   ★ MTO(다중 시간원점) 감지 — 단일원점 대비 β 산포가 줄어드는지가 이번 판의 관전 포인트")
 

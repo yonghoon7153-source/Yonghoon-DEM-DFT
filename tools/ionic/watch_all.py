@@ -527,7 +527,14 @@ if want("sdcp"):
         etot = [float(m) for m in re.findall(r"^!\s+total energy\s+=\s+(-?[\d.]+)", txt, re.M)]
         forc = [float(m) for m in re.findall(r"Total force =\s+([\d.]+)", txt)]
         scfn = re.findall(r"convergence has been achieved in\s+(\d+) iterations", txt)
-        done = "Final scf calculation at the relaxed structure" in txt
+        # ⚠⚠ **순수 `relax` 는 "Final scf calculation" 을 안 찍는다** — 그건 vc-relax 전용이다.
+        #   relax 의 완료 표식은 `bfgs converged` + `End of BFGS Geometry Optimization` + `JOB DONE.`
+        #   이걸 몰라서 2026-08-06 에 **정상 종료(JOB DONE, 2d6h)한 계산을 '죽었다'** 로 찍고
+        #   relax.out 을 덮어쓰는 재기동 명령을 권했다. 하마터면 53시간을 날릴 뻔했다.
+        done = any(k in txt for k in ("Final scf calculation at the relaxed structure",
+                                      "End of BFGS Geometry Optimization",
+                                      "bfgs converged in"))
+        job_done = "JOB DONE." in txt
         cpu  = re.findall(r"total cpu time spent up to now is\s+([\d.]+) secs", txt)
         RY_EV = 13.605693
         NSTEP = 80          # relax.in 의 nstep — 표시/예산 경고가 같은 값을 본다
@@ -625,11 +632,17 @@ if want("sdcp"):
                       "(c) 믹싱/구속 재설계. 지금 상태로 더 기다리는 것은 답이 아니다.")
         # ── 다음 단계 ──────────────────────────────────────────────────
         if done:
-            print("   ✅ 이완 완료 → 다음:")
+            print("   ✅ **이완 완료** — bfgs converged / End of BFGS"
+                  + ("  ·  JOB DONE" if job_done else "  ⚠ JOB DONE 없음(마무리 중이거나 중단)"))
+            print("   ⛔ **재기동하지 말 것** — relax.out 을 덮어쓰면 결과가 사라진다. 다음:")
             print(f"      python3 tools/sdcp/make_slab_relax.py --harvest {_V2}/slab_relax")
             print("      (1x4 192원자로 복제 + 잔여력 검증 → 자세 탐색으로)")
         elif not alive_j:
-            print("   ⛔ 죽었다 — env 를 tmux 따옴표 **안쪽**에 넣어 재기동:")
+            print("   ⛔ 죽었다(완료 표식 없음). ⚠ **아래를 그대로 붙이기 전에 두 가지를 먼저 한다**:")
+            print(f"      1) cp {_V2}/slab_relax/relax.out{{,.bak}}   ← `> relax.out` 이 덮어쓴다")
+            print("      2) 이온스텝이 이미 쌓였으면 relax.in 에 마지막 ATOMIC_POSITIONS 를")
+            print("         스플라이스하고 restart_mode='restart' 로 — 처음부터 다시 돌리지 않는다")
+            print("      env 는 tmux 따옴표 **안쪽**에:")
             print("      tmux new -s lnorelax -d 'H=/data/apps/nvhpc/Linux_x86_64/24.11/"
                   "comm_libs/12.6/hpcx/hpcx-2.20/ompi; export PATH=$H/bin:$PATH OPAL_PREFIX=$H \\")
             print("        OMP_NUM_THREADS=1 CUDA_VISIBLE_DEVICES=0 OMPI_ALLOW_RUN_AS_ROOT=1 \\")
