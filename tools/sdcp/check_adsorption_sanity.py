@@ -117,6 +117,33 @@ def main():
         print("   ⚠ --slab-relaxed 를 주면 'UMA 가 원래 움직인 양' 과 '분자가 추가로 끌어당긴 양' 을")
         print("      가를 수 있다. 그게 없으면 위 최대값에 **둘이 섞여 있다**.")
 
+    # ── ③b ★ 누가 움직였나 — 평균은 작은데 최대가 크면 **몇 개만** 크게 움직인 것이다 ──
+    #   그건 균일한 표면 이완이 아니라 **원자 이탈**(예: Li 가 뽑혀 분자로 감)의 신호다.
+    #   그러면 E_bind 는 흡착에너지가 아니라 **추출/반응 에너지**이므로 이름을 바꿔야 한다.
+    ssl = sl_c.get_chemical_symbols()
+    top = np.argsort(dv_orig)[::-1][:6]
+    dm_atom = d.min(axis=1)                      # 각 슬랩 원자의 분자까지 최단거리
+    print(f"   ③b 가장 많이 움직인 슬랩 원자 (평균 {dv_orig.mean():.3f} vs 최대 "
+          f"{dv_orig.max():.3f} — 격차가 크면 이탈 의심)")
+    ejected = []
+    for i in top:
+        near_mol = dm_atom[i]
+        tag = ""
+        if dv_orig[i] > 0.5 and near_mol < 2.4:
+            tag = "  ⛔ **분자 쪽으로 이탈**"
+            ejected.append((ssl[i], dv_orig[i], near_mol))
+        elif dv_orig[i] > 0.5:
+            tag = "  ⚠ 크게 움직임(분자와는 멂)"
+        print(f"      {ssl[i]:2s}[{i}]  이동 {dv_orig[i]:.3f} Å · 분자까지 {near_mol:.2f} Å{tag}")
+    if ejected:
+        sp = ", ".join(f"{s}({dd:.2f} Å 이동, 분자와 {nn:.2f} Å)" for s, dd, nn in ejected)
+        print(f"   ⛔ **{len(ejected)}개 원자가 표면에서 분자로 끌려 나왔다**: {sp}")
+        print("      → 이건 '흡착' 이 아니라 **추출/배위 반응**이다. E_bind 를 흡착에너지로 부르지 말 것.")
+        print("      → 물리적으로는 더 중요한 현상일 수 있으나(예: Li+ 추출), 그렇다면")
+        print("         참여 이온의 산화상태·전하 이동을 봐야 하고 **UMA 로는 판정 못 한다**(DFT+U 필요).")
+    else:
+        print("   ✅ 크게 이탈한 원자 없음 — 균일한 표면 이완으로 읽힌다.")
+
     print("\n④ 반드시 로그에서 확인할 것")
     print("   grep -n 'E_slab' ~/logs/phaseA_freeslab.log   → 'FIRE converged=True' 여야 한다.")
     print("   False 면 기준 에너지가 임의값이고 E_bind 는 통째로 무효다.")
