@@ -746,6 +746,58 @@ if want("sdcp"):
                       "linio2_104_sym_1x4L4_relaxed.vasp")
         print("      ⚠ 이 산출물은 진단 전용 — 좌표일치가 깨져 Phase-B 입력으로 쓰지 않는다.")
 
+    # ── Phase-B (DFT+U) — Delta 판정. 무거운 런이라 SCF 안쪽까지 본다 ──────────
+    _PB = "/data/work/runs/sdcp_v2/phaseB"
+    if os.path.isdir(_PB):
+        RY = 13.605693
+        JOBS_B = ("slab", "complex_doped", "complex_neutral", "mol_doped", "mol_neutral")
+        st, mags, ens = {}, {}, {}
+        for j in JOBS_B:
+            o = os.path.join(_PB, j, "scf.out")
+            if not os.path.isfile(o):
+                st[j] = ("·", "", ""); continue
+            try:
+                tx = open(o, errors="ignore").read()
+            except OSError:
+                st[j] = ("?", "", ""); continue
+            conv = "convergence has been achieved" in tx
+            it = re.findall(r"iteration #\s*(\d+)", tx)
+            ac = re.findall(r"estimated scf accuracy\s*<\s*([\dEe.+-]+)", tx)
+            am = re.findall(r"absolute magnetization\s+=\s+([\d.]+)", tx)
+            et = re.findall(r"^!\s+total energy\s+=\s+(-?[\d.]+)", tx, re.M)
+            if am:
+                mags[j] = float(am[-1])
+            if et:
+                ens[j] = float(et[-1]) * RY
+            mark = "✅" if conv else ("▶" if alive("pw.x", exact=True) == "ALIVE" else "⛔")
+            st[j] = (mark, f"it {it[-1]}" if it else "",
+                     f"acc {float(ac[-1]):.1e}" if ac else "")
+        done = sum(1 for j in JOBS_B if st[j][0] == "✅")
+        print(f"   ── Phase-B (DFT+U) — Δ 판정  {done}/5 수렴")
+        for j in JOBS_B:
+            m, i, a = st[j]
+            e = f" · E {ens[j]:.3f} eV" if j in ens else ""
+            g = f" · mag {mags[j]:.2f} μB" if j in mags else ""
+            print(f"      {m} {j:16s} {i:8s} {a:11s}{g}{e}")
+        # ★ AFM 게이트를 화면에서도 본다 — 러너가 멈추기 전에 사람이 먼저 볼 수 있게
+        if "complex_doped" in mags and "complex_neutral" in mags:
+            dm = abs(mags["complex_doped"] - mags["complex_neutral"])
+            ok = dm <= 2.0
+            print(f"      {'✅' if ok else '⛔'} AFM 대조 — 두 복합체 자화 차 {dm:.2f} μB (허용 2.0)"
+                  + ("" if ok else "  ← **Δ 오염. 러너가 멈춘다**"))
+        need = ("complex_doped", "complex_neutral", "mol_doped", "mol_neutral")
+        if all(k in ens for k in need):
+            dlt = (ens["complex_doped"] - ens["complex_neutral"]) \
+                  - (ens["mol_doped"] - ens["mol_neutral"])
+            print(f"      ★ Δ = {dlt:+.4f} eV   (UMA 기준 −0.170)")
+            if "slab" in ens:
+                for lab, cx, mo in (("doped", "complex_doped", "mol_doped"),
+                                    ("neutral", "complex_neutral", "mol_neutral")):
+                    print(f"        E_ads({lab:7s}) = {ens[cx]-ens['slab']-ens[mo]:+.4f} eV")
+                print("        ⚠ 개별 E_ads 는 Γ-only·전체고정이 그대로 실린다(★☆☆). 결론은 Δ 로.")
+            if abs(dlt) < 0.026:
+                print("      ⛔ |Δ| 가 열잡음(kT≈26 meV) 수준 — UMA 자세 선택 자체를 못 믿는다는 뜻")
+
     # ⚠ 옛 경로는 **한 줄만**. 재기동 안내를 찍으면 깨진 슬랩 위에서 GPU 를 태운다.
     if os.path.isdir("/data/work/runs/sdcp_linio2_binding/phaseB_v7c_slabfirst"):
         print("   ─ 옛 경로(phaseB_v7c_slabfirst)는 깨진 슬랩이라 폐기. 재기동하지 말 것.")
