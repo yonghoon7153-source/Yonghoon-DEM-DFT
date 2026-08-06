@@ -329,6 +329,13 @@ def write_scf(path, atoms, labels, kind, kpts, pseudo_dir, prefix):
         f"    ecutwfc         = {ECUTWFC}",
         f"    ecutrho         = {ECUTRHO}",
     ]
+    # ⚠ USPP/PAW 의 augmentation charge Q_ij 를 **실공간**에서 계산한다 (2026-08-06).
+    #   newd(newq_gpu) 는 Q_ij 를 조밀 G-격자 전체에 까느라 ngm 에 비례하는 큰 배열을
+    #   잡는데, 진공이 큰 셀(c 46 Å)에서 바로 그 자리가 OOM 으로 터졌다. 실공간 판은
+    #   원자 주변 구에서만 계산해 메모리를 크게 줄인다. 정확도는 약간 달라지므로
+    #   **6개 job 전부 같은 설정**으로 돌려야 차이값이 성립한다.
+    if OPT.get("real_space"):
+        sys_lines.append("    real_space      = .true.")
     # ⚠ 점유수 (리뷰 §2-6). 고립 분자에 smearing 0.03 Ry(0.41 eV) 를 쓰면 doped 의
     #   SOMO 가 E_F 에 걸려 **분수 점유**가 생길 수 있고 doped 쪽만 0.05-0.2 eV 편향된다.
     #   분자는 이산 준위라 'fixed' 가 물리적으로 옳다 (nspin=2 fixed 는 tot_magnetization
@@ -508,6 +515,15 @@ def main():
     ap.add_argument("--mol_doped", required=True)
     ap.add_argument("--mol_neutral", required=True)
     ap.add_argument("--pseudo_dir", default="/data/work/pseudo")
+    ap.add_argument("--ecutwfc", type=float, default=ECUTWFC,
+                    help="파동함수 컷오프 [Ry]. ⚠ 바꾸면 6개 job 전부 같이 바꿔야 한다.")
+    ap.add_argument("--ecutrho", type=float, default=ECUTRHO,
+                    help="전하밀도 컷오프 [Ry]. USPP/PAW 라 기본 8×ecutwfc. "
+                         "OOM 사다리의 실질적 손잡이 — newq 메모리가 ngm∝ecutrho^1.5 로 준다. "
+                         "⚠ 너무 낮추면 augmentation charge 가 부정확해진다.")
+    ap.add_argument("--real_space", action="store_true",
+                    help="augmentation charge 를 실공간에서 계산 (newd 메모리 대폭 절감). "
+                         "⚠ GPU 빌드 지원 여부는 탐침으로 확인할 것.")
     ap.add_argument("--out", required=True)
     ap.add_argument("--kpts", default=KPTS_SLAB, help="slab/complex k-grid")
     ap.add_argument("--afm_mode", default="auto",
@@ -576,6 +592,13 @@ def main():
     OPT["electron_maxstep"] = a.electron_maxstep
     OPT["scf_must_converge"] = a.scf_must_converge
     OPT["seed_radical"] = a.seed_radical
+    OPT["real_space"] = a.real_space
+    globals()["ECUTWFC"], globals()["ECUTRHO"] = a.ecutwfc, a.ecutrho
+    if (a.ecutwfc, a.ecutrho) != (60.0, 480.0):
+        print(f"⚠ 컷오프 변경: ecutwfc {a.ecutwfc} · ecutrho {a.ecutrho} Ry "
+              f"(비 {a.ecutrho/a.ecutwfc:.1f}×) — **6개 job 전부 동일해야** 차이값이 성립한다.")
+    if a.real_space:
+        print("⚠ real_space = .true. — augmentation charge 를 실공간에서 계산한다.")
     OPT["mixing_ndim"] = a.mixing_ndim
     OPT["mixing_beta"] = a.mixing_beta
     OPT["startingpot"] = a.startingpot

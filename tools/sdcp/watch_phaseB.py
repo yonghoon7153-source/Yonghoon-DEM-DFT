@@ -84,8 +84,13 @@ def scan(j):
         "mtime": os.path.getmtime(o),
         # ⚠ pw.x 가 초기화에서 죽으면 iteration 이 0개인 채 scf.out 만 남는다.
         #   그 경우 '아직 안 돌았다'와 구분이 안 되므로 에러 신호를 같이 물고 온다.
-        "oom": bool(re.search(r"cufftPlanMany|cfft3d_gpu|[Ii]nsufficient.*memory"
-                              r"|out of memory|CUDA.*alloc", tx)),
+        # ⚠ 대소문자 무시 — 실측 메시지가 "Out of memory"/"CUDA_ERROR_OUT_OF_MEMORY"/
+        #   "cuMemAlloc" 였다. 소문자 패턴만 두면 OOM 을 놓치고 '미수렴'으로 잘못 읽는다.
+        "oom": bool(re.search(r"cufftPlanMany|cfft3d_gpu|cuMemAlloc|Accelerator Fatal Error"
+                              r"|insufficient.*memory|out.?of.?memory"
+                              r"|CUDA_ERROR_OUT_OF_MEMORY", tx, re.I)),
+        # 어느 루틴에서 터졌나 — 처방이 갈린다 (newd = augmentation, cegterg = 대각화)
+        "where": (re.findall(r"(?:File|Function):\s*(\S+)", tx) or [""])[0],
         "err": bool(re.search(r"Error in routine|%%%%%%|stopping \.\.\.", tx)),
         "tail": [l for l in tx.splitlines() if l.strip()][-14:],
     }
@@ -170,8 +175,16 @@ for j in JOBS:
         for ln in d["tail"]:
             print("         " + ln[:110])
         if d["oom"]:
-            print("       → c 축소는 답이 아니다(15 Å 게이트). DIAG=ppcg 로 한 단 내려갈 것:")
-            print("          DIAG=ppcg MAXSTEP=5 bash tools/sdcp/run_phaseB_sdcp_v3.sh probe")
+            w = d.get("where", "")
+            print(f"       → c 축소는 답이 아니다(15 Å 게이트). 터진 자리: {w or '?'}")
+            if "newd" in w or "newq" in w:
+                print("          newd/newq = augmentation charge 를 조밀 G-격자에 까는 자리다.")
+                print("          **대각화 옵션(ppcg)은 여길 안 건드린다.** 사다리:")
+                print("            REAL_SPACE=1 MAXSTEP=5 bash tools/sdcp/run_phaseB_sdcp_v3.sh probe")
+                print("            ECUTRHO=400  MAXSTEP=5 bash tools/sdcp/run_phaseB_sdcp_v3.sh probe")
+            else:
+                print("          대각화 작업배열이면 DIAG=ppcg 가 듣는다:")
+                print("            DIAG=ppcg MAXSTEP=5 bash tools/sdcp/run_phaseB_sdcp_v3.sh probe")
         elif d["err"]:
             print("       → 입력 문제다. 위 'Error in routine' 줄의 루틴 이름이 원인을 가리킨다")
         continue

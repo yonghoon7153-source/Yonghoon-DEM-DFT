@@ -65,7 +65,10 @@ export LD_LIBRARY_PATH=$H_MPI/lib:/data/apps/nvhpc/Linux_x86_64/24.11/compilers/
 DEGAUSS=${DEGAUSS:-0.03}; MIXNDIM=${MIXNDIM:-8}; MAXSTEP=${MAXSTEP:-300}
 SCF_MUST=${SCF_MUST:-.false.}; REPORT=${REPORT:-1}; TPRNFOR=${TPRNFOR:-.false.}
 MAGTOL=${MAGTOL:-2.0}
-DIAG=${DIAG:-}
+DIAG=${DIAG:-}                 # 대각화 작업배열이 문제일 때만 (ppcg). newd OOM 엔 안 듣는다
+ECUTWFC=${ECUTWFC:-60}         # Ry
+ECUTRHO=${ECUTRHO:-480}        # Ry — newd OOM 의 실질 손잡이 (ngm ∝ ecutrho^1.5)
+REAL_SPACE=${REAL_SPACE:-}     # 1 = augmentation 을 실공간에서 (newd 메모리 절감)
 GAP=${GAP:-15.0}               # 생성기 --min_image_gap 과 **같은 수** (v2 사고 재발 방지)
 CMARG=${CMARG:-1.0}
 STAGE=${1:-all}
@@ -77,6 +80,7 @@ exec 9>"$LOCK" || { echo "⛔ 락 파일을 못 연다"; exit 1; }
 command -v flock >/dev/null 2>&1 && { flock -n 9 || { ts "⛔ 이미 돈다 — 중단"; exit 0; }; }
 
 ts "═══ SDCP Phase-B v3 (E_ads + ΔE_rxn) ═══"
+ts "  수치 설정 ecutwfc $ECUTWFC · ecutrho $ECUTRHO Ry$([ -n "$REAL_SPACE" ] && echo ' · real_space')$([ -n "$DIAG" ] && echo " · diag=$DIAG")"
 ts "  슬랩 기준 $SLABREF"
 ts "  doped  물리흡착 $CX_D_PHYS"
 ts "  doped  추출     $CX_D_EXTR"
@@ -145,6 +149,7 @@ gen(){
     --ref_scf     "$REFSCF" \
     --afm_mode inplane --mol_vacuum 8 --pseudo_dir /data/work/pseudo \
     --min_image_gap "$GAP" \
+    --ecutwfc "$ECUTWFC" --ecutrho "$ECUTRHO" ${REAL_SPACE:+--real_space} \
     --no_fsm --degauss "$DEGAUSS" --scf_must_converge "$SCF_MUST" \
     --electron_maxstep "$MAXSTEP" --seed_radical S:0.5 --mixing_ndim "$MIXNDIM" \
     --report "$REPORT" --tprnfor "$TPRNFOR" \
@@ -164,11 +169,24 @@ gen(){
   done
 }
 
-is_oom(){ grep -aqE "cufftPlanMany|cfft3d_gpu|[Ii]nsufficient.*memory|out of memory|CUDA.*alloc" "$1"; }
+# ⚠ 대소문자 무시 — 2026-08-06 실측 메시지가 "Out of memory"/"CUDA_ERROR_OUT_OF_MEMORY"/
+#   "cuMemAlloc" 라서 소문자 패턴만 두면 OOM 을 못 잡고 '미수렴'으로 잘못 분류한다.
+is_oom(){ grep -aqiE "cufftPlanMany|cfft3d_gpu|cuMemAlloc|Accelerator Fatal Error|insufficient.*memory|out.?of.?memory|CUDA_ERROR_OUT_OF_MEMORY" "$1"; }
 oom_advice(){
   ts "⛔⛔ GPU 메모리 초과(OOM). **c 축소는 선택지가 아니다** — 15 Å 이미지 간격이 물리 요구다."
-  ts "    ① DIAG=ppcg bash tools/sdcp/run_phaseB_sdcp_v3.sh ...  ② ecutrho 480→400(6 job 전부)"
-  ts "    ③ CPU 빌드 pw.x. ⚠ 2026-07-21 이력: OOM 은 **SCF 3회차**의 대형 할당에서 터진다."
+  ts "    ⚠ 어느 루틴에서 터졌는지를 먼저 본다 — 처방이 달라진다:"
+  ts "        newd/newq_gpu  = USPP/PAW augmentation charge 를 조밀 G-격자에 까는 자리."
+  ts "                         메모리 ∝ ngm ∝ ecutrho^1.5. **대각화 옵션(ppcg)은 여길 안 건드린다.**"
+  ts "        cegterg/david  = 대각화 작업배열. 이때는 DIAG=ppcg 가 듣는다."
+  ts "    사다리(newd 에서 터졌을 때):"
+  ts "      ① REAL_SPACE=1 …    augmentation 을 실공간에서 → newd 메모리 대폭 절감"
+  ts "                          ⚠ GPU 빌드 지원 여부 미확인 — 탐침으로 확인할 것"
+  ts "      ② ECUTRHO=400 …     ngm 이 0.76배 (480→400). 더 필요하면 360(0.65배)"
+  ts "                          ⚠ USPP 라 8×ecutwfc 가 기본값 — 낮추면 augmentation 정확도가 떨어진다"
+  ts "      ③ CPU 빌드 pw.x     호스트 RAM. 느리지만 끝은 난다"
+  ts "    ⚠⚠ 어느 손잡이를 쓰든 **6개 job 전부 같은 값**이어야 한다 — 우리가 내는 값은 전부"
+  ts "       차이(E_ads·Δ·ΔE_extract)라, 설정이 같기만 하면 내부적으로는 일관된다."
+  ts "    이력: 2026-07-21 은 SCF 3회차의 대형 할당, 오늘은 초기화 newq 에서 즉사."
 }
 
 run_one(){
