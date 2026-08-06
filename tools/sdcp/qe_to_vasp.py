@@ -71,7 +71,7 @@ def parse_scf_in(path):
 
     # starting_magnetization(i) 는 **분율**이다 (n↑−n↓)/n_valence.
     smag = {}
-    for m in re.finditer(r"starting_magnetization\((\d+)\)\s*=\s*(-?[\d.]+)", txt):
+    for m in re.finditer(r"starting_magnetization\((\d+)\)\s*=\s*([+-]?[\d.]+)", txt):
         smag[int(m.group(1))] = float(m.group(2))
     order = []
     for ln in lines:
@@ -101,21 +101,48 @@ def write_job(d, data, name, kpts="2 2 1"):
     for i, s in enumerate(sym):
         groups.setdefault(s, []).append(i)
 
-    vasp_species, counts, idx_all, magmom = [], [], [], []
-    for lab, idxs in groups.items():
+    # ⚠⚠ QE 의 ATOMIC_POSITIONS 는 원소가 섞여 나온다 (실측: Li→Ni2→O→Ni1).
+    #   그대로 옮기면 POSCAR 에 Ni 블록이 **두 개**로 쪼개져 POTCAR 에도 Ni 를 두 번
+    #   넣어야 한다 — 동작은 하지만 실수 나기 딱 좋다. 같은 원소는 한 블록으로 모은다.
+    #   Ni1 → Ni2 순서는 유지해야 MAGMOM 의 ± 배열이 부격자와 맞는다.
+    el_order, el_labs = [], {}
+    for lab in groups:
         el = "Ni" if lab.startswith("Ni") else lab
-        if vasp_species and vasp_species[-1] == el:
-            counts[-1] += len(idxs)              # Ni1 뒤에 Ni2 가 오면 한 블록으로 합친다
-        else:
-            vasp_species.append(el); counts.append(len(idxs))
-        idx_all += idxs
-        # QE starting_magnetization 은 분율 — VASP MAGMOM 은 μB 다. 부호만 승계하고
-        # 크기는 물리값으로 준다(LiNiO2 의 Ni³⁺ 는 저스핀 d⁷ → ~1 μB).
-        f = data["mag"].get(lab, 0.0)
-        mu = (1.0 if f > 0 else -1.0) if abs(f) > 1e-8 else 0.0
-        if el != "Ni":
-            mu = 0.6 if abs(f) > 1e-8 else 0.0   # 라디칼 시드(S 등)는 작게
-        magmom += [mu] * len(idxs)
+        if el not in el_order:
+            el_order.append(el); el_labs[el] = []
+        el_labs[el].append(lab)
+
+    vasp_species, counts, idx_all, magmom = [], [], [], []
+    for el in el_order:
+        n = 0
+        for lab in el_labs[el]:
+            idxs = groups[lab]
+            idx_all += idxs; n += len(idxs)
+            # QE starting_magnetization 은 분율 — VASP MAGMOM 은 μB 다. 부호만 승계하고
+            # 크기는 물리값으로 준다(LiNiO2 의 Ni³⁺ 는 저스핀 d⁷ → ~1 μB).
+            f = data["mag"].get(lab, 0.0)
+            if el == "Ni":
+                mu = (1.0 if f > 0 else -1.0) if abs(f) > 1e-8 else 0.0
+            else:
+                mu = 0.6 if abs(f) > 1e-8 else 0.0   # 라디칼 시드(S 등)는 작게
+            magmom += [mu] * len(idxs)
+        vasp_species.append(el); counts.append(n)
+
+    # ── 자체 검증 — AFM 이 깨진 채로 나가면 외주 결과가 통째로 무의미해진다 ──────
+    n_ni = counts[vasp_species.index("Ni")] if "Ni" in vasp_species else 0
+    if n_ni:
+        ni_start = sum(counts[:vasp_species.index("Ni")])
+        ni_mu = magmom[ni_start:ni_start + n_ni]
+        up, dn, zero = sum(1 for m in ni_mu if m > 0), sum(1 for m in ni_mu if m < 0), \
+            sum(1 for m in ni_mu if m == 0)
+        if zero:
+            raise SystemExit(
+                f"⛔ {name}: Ni {zero}개의 MAGMOM 이 0 이다 — QE 의 starting_magnetization "
+                f"시드를 못 읽었다는 뜻이다. 이대로 보내면 AFM 이 깨져 결과가 무의미해진다.\n"
+                f"   scf.in 의 starting_magnetization 줄과 ATOMIC_SPECIES 순서를 확인할 것.")
+        if up != dn:
+            print(f"  ⚠ {name}: Ni up {up} / down {dn} — 비대칭 AFM 이다. 의도한 것인지 확인할 것.")
+        print(f"    AFM 확인: Ni {n_ni}개 = up {up} / down {dn}")
 
     with open(os.path.join(d, "POSCAR"), "w") as f:
         f.write(f"{name}  (from QE scf.in — Phase-B v3, 2026-08-06)\n1.0\n")
