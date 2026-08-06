@@ -164,7 +164,7 @@ def run_hessian(in_dir, out_dir=None, objective: str = "pocv_dvdq",
         except Exception as e:  # noqa: BLE001
             log.debug("Hessian 실패 %s: %s", r["cond_id"], e)
             continue
-        rows.append({"cond_id": r["cond_id"], "objective": objective,
+        rows.append({"cond_id": r["cond_id"], "objective": objective, "eps": eps,
                      **{k: r[k] for k in ("lli", "lam_pe", "lam_ne", "noise")
                         if k in r},
                      **res})
@@ -174,12 +174,17 @@ def run_hessian(in_dir, out_dir=None, objective: str = "pocv_dvdq",
     df.to_parquet(path, index=False)
 
     summary = {
-        "objective": objective, "n": int(len(df)),
+        "objective": objective, "n": int(len(df)), "eps": eps,
         "median_condition_number": float(df["condition_number"].median()),
         "median_flat_score": float(df["flat_direction_score"].median()),
         "pe_ne_coupled_frac": float(df["pe_ne_coupled"].mean()),
         "min_eigval_positive_frac": float(df["min_eigval_positive"].mean()),
     }
+    summary["_주의"] = (
+        "★ 조건수는 eps에 강하게 의존한다 (실측: pocv_dvdq_dqdv에서 "
+        "eps 1e-3/1e-4/1e-5 → 12.8/229/17381). 목적함수가 여러 스케일에서 "
+        "울퉁불퉁하면 Hessian이 수렴하지 않으므로, **절대값을 인용하지 말고 "
+        "같은 eps에서 목적함수끼리만 비교할 것.**")
     log.info("Hessian 요약: %s", summary)
     log.info("저장: %s", path)
     return summary

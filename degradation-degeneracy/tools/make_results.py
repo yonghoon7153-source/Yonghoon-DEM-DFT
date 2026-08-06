@@ -259,6 +259,16 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
         P.append("")
         P.append("- **조건수**가 작을수록 최적점이 잘 정의돼 있다. 목적함수 간 비교에서 "
                  "이 값이 크게 낮아지면 그 항이 실제로 정보를 더한다는 뜻이다.")
+        eps_vals = sorted({float(d["eps"].iloc[0]) for d in hess_by_obj.values()
+                           if "eps" in d.columns})
+        P.append(f"- ⚠ **조건수의 절대값은 인용하지 마세요.** 목적함수가 여러 스케일에서 "
+                 f"울퉁불퉁하면 수치 Hessian이 수렴하지 않습니다 — 실측에서 "
+                 f"`pocv_dvdq_dqdv`의 조건수가 eps 1e-3/1e-4/1e-5에 대해 "
+                 f"12.8 / 229 / 17381로 3자리수 넘게 변했습니다. "
+                 f"의미가 있는 것은 **같은 eps에서의 목적함수 간 순서**뿐입니다"
+                 + (f" (이 표는 eps={eps_vals[0]:g})." if len(eps_vals) == 1
+                    else f" (⚠ 이 표에 eps가 {eps_vals} 로 섞여 있습니다 — 다시 뽑으세요).")
+                 )
         P.append("- **α_PE·α_NE 결합** — 평평한 방향에서 두 전극이 같은 부호로 묶여 "
                  "있는 비율. 높으면 \"PE와 NE를 함께 움직여도 곡선이 안 변한다\"는 "
                  "뜻이고, 22p에서 LAM_PE ≈ LAM_NE가 나온 것이 물리가 아니라 수학이라는 "
