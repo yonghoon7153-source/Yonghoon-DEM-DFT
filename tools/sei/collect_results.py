@@ -32,6 +32,17 @@ OUT_JSON = "db/properties/sei_electronic.json"
 OUT_DIR = "db/properties/sei_dos"
 # 4f 를 원자가에 넣은 PBE 는 4f 준위를 E_F 근처에 놓아 갭을 닫는다 — 물리가 아니라 방법의 실패.
 ND_TAGS = ("nd2o3", "nd2s3", "lindo2")
+# 종결된 판정 — 회수기가 돌 때마다 다시 찍는다(기록이 재생성에 날아가지 않게).
+ND_VERDICT = (
+    "⛔ 폐기. 원인 확정(2026-08-07): 4f 를 원자가에 둔 PBE(+U) 의 SCF 해가 **금속**이다. "
+    "Nd₂O₃ 의 02_scf.out 이 'highest occupied/lowest unoccupied' 가 아니라 "
+    "'the Fermi energy is 11.4539 ev' 를 찍었고, 직전에 'failed to find Fermi energy: "
+    "reverting to bisection'(E_F 에 극도로 평평한 상태 = 4f 다중항) 경고가 떴다. "
+    "금속 해에 occupations='fixed' 를 강제한 결과가 VBM>CBM(−6.460 eV)이다 — 버그가 아니라 "
+    "**정의되지 않은 양을 억지로 읽은 것**. LiNdO₂ 는 scf accuracy 가 5.7e-6 Ry 에서 평탄 정체, "
+    "Nd₂S₃ 는 3.4e-4~6.3e-3 로 두 자릿수 출렁임 — iteration 을 더 줘도 안 닫히고 닫혀도 같은 "
+    "금속 해다. U 를 키우면 갭이 열리지만 그건 답이 나올 때까지 U 를 고르는 것이라 방어가 안 된다. "
+    "→ **Nd 상 갭은 MP frozen-4f 인용.** 상세: kb/projects/sei_products_2026_08_06.md")
 # projwfc 파일명:  <prefix>.pdos_atm#12(Li)_wfc#1(s)
 PDOS_RE = re.compile(r"\.pdos_atm#(\d+)\(([A-Za-z]+)\)_wfc#(\d+)\(([spdf])\)")
 
@@ -69,6 +80,17 @@ def main():
 
     tags = sorted(os.path.basename(d) for d in glob.glob(os.path.join(a.work, "*"))
                   if os.path.isdir(d))
+    # ⚠⚠ 기존 JSON 을 **덮어쓰기 전에** 읽는다 (2026-08-07).
+    #   이 회수기는 작업폴더를 훑어 JSON 을 새로 쓴다. 그런데 Nd 재계산 때 폴더를
+    #   옮기고 다시 만드는 바람에 gap.json 이 없는 종이 생겼고, 그대로 돌리면
+    #   **repo 의 판정 기록(status=rejected · do_not_cite)이 통째로 사라진다.**
+    #   → 이번 실행에서 못 본 종은 지우지 않고 `not_in_this_run` 을 달아 보존한다.
+    prev = {}
+    if os.path.isfile(OUT_JSON):
+        try:
+            prev = json.load(open(OUT_JSON, encoding="utf-8")).get("results", {})
+        except (OSError, ValueError):
+            prev = {}
     if not tags:
         sys.exit(f"⛔ {a.work} 에 작업 폴더가 없다")
 
@@ -152,12 +174,28 @@ def main():
                       f"Gap is the fixed-occ nscf value ({g['gap']:.3f} eV), not a DOS threshold.")
             g["files"]["pdos_csv"] = p; made.append(p)
             g["pdos_channels"] = keys
+        # ★ Nd 판정은 종결됐다(2026-08-07) — 회수기가 매번 다시 찍어 기록이 안 날아가게 한다.
+        if nd:
+            g["status"] = "rejected"
+            g["do_not_cite"] = ND_VERDICT
         res[t] = g
         mark = "⚠4f" if nd else "   "
         stale = "" if fresh or not g["files"] else "  ⚠ STALE 곡선 (05 미완주)"
         print(f"  ✓ {t:26s} gap {g['gap']:7.3f} eV {mark} "
               f"{'dos' if 'dos_csv' in g['files'] else '   '} "
               f"{'pdos' if 'pdos_csv' in g['files'] else '    '}{stale}")
+
+    # 이번 실행에서 못 본 종을 되살린다 (판정 기록 보존)
+    kept = []
+    for t, old in prev.items():
+        if t in res:
+            continue
+        old["not_in_this_run"] = ("이번 회수에서 작업폴더에 gap.json 이 없었다 — "
+                                  "옛 기록을 그대로 보존한다(지우지 않음).")
+        res[t] = old
+        kept.append(t)
+    if kept:
+        print(f"\n  ↺ 이번에 못 본 {len(kept)}종을 옛 기록으로 보존: {', '.join(kept)}")
 
     os.makedirs(os.path.dirname(OUT_JSON), exist_ok=True)
     json.dump({
