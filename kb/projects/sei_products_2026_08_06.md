@@ -286,6 +286,20 @@ grep -a "highest occupied\|lowest unoccupied\|Fermi" 03_nscf_gap.out | tail -3
 
 QE 가 직접 찍는 `highest occupied / lowest unoccupied` 와 우리 값이 다르면 파싱 버그다.
 
+**→ 닫혔다 (2026-08-07). 파싱은 정상이다.** QE 출력 원문:
+
+```
+highest occupied, lowest unoccupied level (ev):    16.1593    9.6995
+```
+
+우리 추출값 16.159 / 9.700 과 **소수 셋째 자리까지 일치**한다. 즉 `extract_gap.py` 의
+스핀분극 경로(↑(nelec+M)/2 · ↓(nelec−M)/2 채널별 읽기)는 맞게 동작한다.
+VBM > CBM 은 **QE 자신이 낸 결과**이고, 그건 이 SCF 가 도달한 상태가 물리적으로 성립하지
+않는다는 뜻이다 — 고정한 tot_magnetization=6 아래에서 ↑채널 점유 최상단이 ↓채널 비점유
+최하단보다 위에 있으면, 실제 계라면 전자가 ↑→↓ 로 넘어가 모멘트가 달라졌을 것이다.
+`occupations='fixed'` 가 그 이완을 막아 불가능한 상태에 가둔 것이다.
+→ Nd 판정(§최종 판정)은 그대로 유지된다. 도구는 무죄.
+
 ---
 
 **조치 (2026-08-07 재계산 착수 — 위 판정으로 종료)**

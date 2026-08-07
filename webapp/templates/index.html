@@ -37,6 +37,51 @@
 </div>
 {% endif %}
 
+{% if sei and sei.rows %}
+{# ── SEI 분해상 캠페인 (2026-08-07 완료) ─────────────────────────────────────
+   ⚠ 갭(우리 QE)과 형성전위(MP)는 **출처가 다르다.** 한 표에 나란히 두되 그 사실을
+     캡션에 박는다 — 섞어 인용하면 CLAUDE.md 문헌·db 분리 규율 위반이다. #}
+<div class="section-title">🧪 SEI 분해상 <span class="muted">— 전자 절연 × 형성 전위 (공동연구 요청)</span></div>
+<div class="card">
+  <div style="overflow-x:auto">
+  <table class="data-table">
+    <thead><tr>
+      <th>상</th><th class="num">Band gap (eV)</th>
+      <th class="num">안정 구간 (V vs Li/Li⁺)</th><th>구간 밖에서 →</th><th>읽는 법</th>
+    </tr></thead>
+    <tbody>
+    {% for r in sei.rows %}
+      <tr>
+        <td><b>{{ r.name }}</b> <span class="muted mono" style="font-size:.7rem">{{ r.mp }}</span></td>
+        <td class="num"{% if r.gap and r.gap < 2 %} style="color:#b91c1c;font-weight:700"{% endif %}>{{ '%.3f'|format(r.gap) }}</td>
+        <td class="num">{% if r.vlo is not none %}{{ '%.2f'|format(r.vlo) }} – {{ '%.2f'|format(r.vhi) }}{% else %}—{% endif %}</td>
+        <td class="mono" style="font-size:.75rem">{{ r.decomp or '—' }}</td>
+        <td class="muted" style="font-size:.74rem">
+          {%- if r.gap and r.gap < 2 %}★ <b>전자 절연의 약한 고리</b> — 전자가 새면 분해가 자기종결되지 않는다
+          {%- elif r.gap and r.gap >= 5 %}절연 우수
+          {%- else %}중간{% endif %}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% if sei.rejected %}
+  <div class="muted" style="font-size:.76rem;margin-top:10px;line-height:1.6">
+    ⛔ <b>제외 {{ sei.rejected|length }}종</b>:
+    {% for r in sei.rejected %}{{ r.name }}{{ ' · ' if not loop.last }}{% endfor %}
+    — 4f 를 원자가에 두는 PBE/PBE+U 로는 갭이 정의되지 않는다(두 번 시도, 서로 다른 방식으로 실패).
+    <b>MP frozen-4f 값을 인용할 것.</b>
+    <span class="mono" style="font-size:.92em">kb/projects/sei_products_2026_08_06.md §최종 판정</span>
+  </div>
+  {% endif %}
+  <div class="muted" style="font-size:.74rem;margin-top:10px">{{ sei.note|mdlite }}</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+    {% for f in sei.figs %}<a class="btn" href="/api/file/{{ f }}" target="_blank">🖼 {{ f.split('/')[-1] }}</a>{% endfor %}
+    {% for f in sei.csv %}<a class="btn" href="/api/file/{{ f }}" target="_blank">⤓ {{ f.split('/')[-1] }}</a>{% endfor %}
+  </div>
+</div>
+{% endif %}
+
 <div class="stat-grid" style="margin-top:20px">
   <div class="stat"><div class="num">{{ COMPS|length }}</div><div class="lbl">조성 / 프로젝트</div></div>
   <div class="stat"><div class="num">{{ b.properties|length }}</div><div class="lbl">post-processing 파일</div></div>

@@ -625,6 +625,54 @@ def canonical_status_for(cid: str) -> dict:
     return out
 
 
+def sei_summary() -> dict:
+    """SEI 분해상 캠페인 요약 — 갭 × 형성전위를 한 표로 (2026-08-07).
+
+    ⚠ 두 축의 출처가 **다르다**: 갭은 우리 QE(fixed-occ nscf 고유값), 형성전위는
+      MP(GGA/GGA+U) 대분배 위상도다. 한 표에 나란히 두되 화면에 그 사실을 적는다
+      — 섞어 인용하면 안 된다 (CLAUDE.md 문헌·db 분리 규율).
+    ⛔ Nd 3종의 갭은 status=rejected 다. 표에 값을 넣지 않고 사유만 남긴다.
+    """
+    import json as _j
+    gp = ROOT / "db" / "properties" / "sei_electronic.json"
+    vp = ROOT / "db" / "properties" / "sei_formation_voltage.json"
+    if not gp.is_file():
+        return {}
+    G = _j.loads(gp.read_text(encoding="utf-8"))
+    V = _j.loads(vp.read_text(encoding="utf-8")).get("results", {}) if vp.is_file() else {}
+    # tag(li3po4g_mp-2878) → 표시명 · 형성전위 키
+    NAME = {"licl": ("LiCl", "LiCl"), "li3po4": ("Li₃PO₄ (β)", "Li3PO4"),
+            "li3po4g": ("Li₃PO₄ (γ)", "Li3PO4g"), "li2o": ("Li₂O", "Li2O"),
+            "li2s": ("Li₂S", "Li2S"), "li3p": ("Li₃P", "Li3P"),
+            "lindo2": ("LiNdO₂", "LiNdO2"), "nd2o3": ("Nd₂O₃", "Nd2O3"),
+            "nd2s3": ("Nd₂S₃", "Nd2S3")}
+    rows, rejected = [], []
+    for tag, g in G.get("results", {}).items():
+        stem = tag.split("_mp")[0]
+        disp, vkey = NAME.get(stem, (stem, stem))
+        v = V.get(vkey, {})
+        r = {"tag": tag, "name": disp, "mp": "mp-" + tag.split("mp-")[-1],
+             "gap": None if g.get("status") == "rejected" else g.get("gap"),
+             "gap_rejected": g.get("status") == "rejected",
+             "why": g.get("do_not_cite") or g.get("dos_provenance_warning"),
+             "vlo": v.get("stable_V_min"), "vhi": v.get("stable_V_max"),
+             "vstatus": v.get("status"),
+             "decomp": " + ".join(v.get("decomposition_products_above_window")
+                                  or v.get("decomposition_products_at_min") or [])}
+        (rejected if r["gap_rejected"] else rows).append(r)
+    rows.sort(key=lambda x: -(x["gap"] or 0))
+    return {
+        "rows": rows, "rejected": rejected,
+        "gap_method": G.get("method", ""),
+        "figs": ["docs/figures/sei/sei_gap_ladder.png", "docs/figures/sei/sei_dos_pdos.png"],
+        "csv": ["db/properties/sei_gap_ladder_origin.csv",
+                "db/properties/sei_dos_panels_origin.csv"],
+        "note": ("갭 = **우리 QE** fixed-occ nscf 고유값 (PBE — 넓은 갭에서 30–50% 과소, "
+                 "**순위로만**). 형성전위 = **Materials Project** GGA/GGA+U 대분배 위상도. "
+                 "★ 출처가 다르므로 두 축의 절대값을 섞어 인용하지 말 것."),
+    }
+
+
 def canonical_status_all() -> dict:
     """(metric, system) → 배지. explorer 표처럼 전 조성을 한 번에 그리는 화면용."""
     out = {}

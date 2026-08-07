@@ -204,7 +204,8 @@ def index():
     na = {f"{c}|{k}": r for (c, k), r in D.NOT_APPLICABLE.items()}
     return render_template("index.html", active="home", b=b, cov=cov, NA=na,
                            oi=D.open_items_summary(),
-                           covstat=D.coverage_stats(cov), highlights=D.dashboard_highlights())
+                           covstat=D.coverage_stats(cov), highlights=D.dashboard_highlights(),
+                           sei=D.sei_summary())
 
 
 @app.route("/composition/<cid>")
