@@ -185,7 +185,7 @@ def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
             f"3. **22p 조건(LAM_PE≈LAM_NE≈13%, LLI≈17%) 근방 자체의 degeneracy는 "
             f"{_pct(v['degenerate_frac'])}**"
             f" — 최근접 {v['n_near']}개 조건의 평균 |오차| {_pp(v['mean_abs_err'])}, "
-            f"PE-NE 오차 상쇄 {_pct(anti)}, "
+            f"raw PE/NE 오차 반대부호 비율 {_pct(anti)}, "
             f"참 PE-NE 격차 {_pp(gap_t)} → 복원 격차 {_pp(gap_r)}. "
             f"⚠ 이 근방은 참값이 애초에 LAM_PE = LAM_NE인 격자점이므로, "
             f"여기서 복원이 잘 된다는 사실만으로는 22p 결과를 옹호할 수 없다 "
@@ -327,7 +327,7 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     P.append("## 22p 실험 조건 판정\n")
     P.append("*모두 `noise = 0` 조건이다. 노이즈가 있으면 값이 달라진다(F10) — `objective_comparison.yaml`의 `verdict_22p.noise` 참조.*\n")
     P.append("| objective | 근방 조건 | degeneracy | 평균 \\|err\\| | "
-             "err LAM_PE | err LAM_NE | PE-NE 상쇄 |")
+             "err LAM_PE | err LAM_NE | raw 반대부호 |")
     P.append("|---|---|---|---|---|---|---|")
     for o, v in cmp_res.get("verdict_22p", {}).items():
         if "error" in v:
@@ -336,7 +336,7 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
                  f"{_pp(v['mean_abs_err'])} | {_pp(v['mean_err_lam_pe'])} | "
                  f"{_pp(v['mean_err_lam_ne'])} | {_pct(v['pe_ne_antisym_frac'])} |")
     P.append("")
-    P.append("> ⚠ **`PE-NE 상쇄` 열을 degeneracy의 지문으로 읽지 마세요.** 이 열은 raw "
+    P.append("> ⚠ **`raw 반대부호` 열을 degeneracy의 지문으로 읽지 마세요.** 이 열은 raw "
              "오차의 부호가 반대인 비율일 뿐이고, 목적함수마다 전역 편향의 부호가 다르면 "
              "그 차이가 그대로 잡힙니다. 편향을 중심화하면 목적함수 간 순서가 뒤집힙니다. "
              "또 전압 민감도로 가중하지 않은 파라미터 오차 부호는 full-cell 곡선에서 "

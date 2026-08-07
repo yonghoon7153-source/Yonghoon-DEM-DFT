@@ -736,3 +736,34 @@ F26이 지우려던 계통 오프셋이 그대로 다시 생긴다.
   subset으로 제한. 평균 restart 수만 보면 겹치지 않는 두 모집단도 통과한다.
 
 테스트 182 → 184.
+
+## 4차 교차리뷰 대응 (2026-08-07, F42~F48)
+
+3차 회답에 대한 재검증에서 8건. 전부 타당했다.
+
+- **F43** `validate_provenance()`가 형식적 자기일관성만 봤다. 이제 (a) `input_sha256`의
+  파일을 **다시 해시해** 대조하고, (b) `run_spec`을 다시 해시해 `run_signature`와
+  맞추며, (c) `restarts_json`을 **첫 행이 아니라 모든 행** 검사한다.
+  ★ 리뷰가 **이 저장소의 테스트 fixture로 validator를 반증했다** — `_complete_artifact`가
+  가짜 digest(`aaaa1111`)와 임의 서명(`abcd1234`)을 넣고 "통과하는 artifact"라고
+  부르고 있었고, 실제로 통과했다. fixture를 진짜 입력 파일·진짜 해시로 다시 썼다.
+- **F42** manifest는 fitting이 **끝난 뒤** 쓰므로 git SHA와 입력 digest가 종료 시점
+  값이다. 긴 실행 도중 HEAD가 바뀌면 실제로 돌린 코드가 아닌 나중 커밋이 실행
+  SHA처럼 기록된다. `manifest_start.yaml`에 시작 시점 상태를 먼저 박고, 종료
+  manifest에 `start_provenance`와 `git_commit_changed_during_run`을 함께 적는다.
+- **F44** paired subset이 restart **개수**만 맞췄다. 33p가 `{1,2}`, 34p가 `{1,3}`이어도
+  통과한다. `restart_indices`를 보존하고 **index 집합 일치**를 요구한다.
+- **F44b** 전역(모든 목적함수 동시) 교집합은 결론 2가 요구하는 33p↔34p 비교를 과도하게
+  줄인다. 제3·제4 목적함수에서만 빠진 조건도 함께 제외되기 때문이다.
+  `pairwise` 블록을 목적함수 쌍마다 따로 낸다.
+- **F45** half-cell 캐시를 현재 작업 디렉터리에서 glob 했다. 실제 경로는 base config의
+  `_config_path`에서 계산한 **하나**다. `halfcell_cache_path()`를 만들어 서명·manifest가
+  실제 사용 경로를 그대로 쓴다.
+- **F46** `PE-NE 상쇄` 명칭이 22p 근방 문장과 표 헤더에 남아 있었다. 전부
+  `raw 반대부호`로 바꿨다 (핵심 결론 첫 줄만 고쳤던 F33b의 미완).
+- **F47** untracked 판정의 확장자 allowlist를 제거했다. `.toml`/`.ini`/데이터 캐시 같은
+  새 입력이 추가되면 다시 false clean이 된다. critical 디렉터리 아래는 전부 dirty로
+  세고 `__pycache__`·`.pyc`만 제외한다. positive test 5종 추가.
+- **F48** 문서 상단에 3차 SHA `7557c33`을 실제로 표기.
+
+테스트 185 → 189.

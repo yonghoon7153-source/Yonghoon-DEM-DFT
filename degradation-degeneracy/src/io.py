@@ -50,9 +50,13 @@ def git_info(repo_dir: str | Path | None = None, save_diff_to=None) -> dict:
         #   import되거나 읽히는 경로(src/tools/configs) 아래의 untracked
         #   code/config는 재현을 막으므로 dirty로 센다. 그 밖(다른 프로젝트
         #   산출물, venv 등)은 개수와 목록만 정보로 남긴다.
+        # ★ F47 — 확장자 allowlist 를 두면 `.toml`/`.ini`/`.cfg`/데이터 캐시 같은
+        #   새 입력이 추가될 때 조용히 false clean 이 된다. critical 디렉터리
+        #   아래는 **전부** dirty 로 센다 (캐시·바이트코드만 제외).
+        _SKIP = ("__pycache__/", ".pyc", ".pyo", ".ipynb_checkpoints/")
         crit = [u for u in untracked
                 if u.startswith(("src/", "tools/", "configs/", "scripts/"))
-                and u.endswith((".py", ".yaml", ".yml", ".json", ".sh", ".csv"))]
+                and not any(k in u for k in _SKIP)]
         info = {"git_commit": commit or "unknown",
                 "git_commit_short": commit[:8] if commit else "unknown",
                 "git_dirty": bool(dirty_txt) or bool(crit),
@@ -287,15 +291,21 @@ def base_manifest(cfg_hash: str, extra: dict | None = None,
 
 # ---------------------------------------------------------------- F38 provenance 검증
 
-def validate_provenance(run_dir) -> dict:
-    """★ F38 — 결과를 인용해도 되는 상태인지 **실제로** 검사한다.
+def validate_provenance(run_dir, repo_root=None) -> dict:
+    """★ F38/F43 — 결과를 인용해도 되는 상태인지 **실제로** 검사한다.
 
-    `run_sig` 열이 있는지만 보는 것으로는 부족하다. 임의의 문자열 하나를 넣어도
-    통과하므로, 혼합되거나 위조된 provenance에서 인용 금지 배너가 사라진다.
+    필드의 형식적 자기일관성만 보면 안 된다 (F43). 초판은
+      · `input_sha256` 값이 truthy 한지만 보고 **파일을 다시 해시하지 않았고**
+      · manifest 의 `run_signature` 와 fits 의 `run_sig` 문자열이 같은지만 보고
+        **`run_spec` 을 다시 해시해 대조하지 않았으며**
+      · `restarts_json` 의 **첫 행만** 형식을 확인했다.
+    그래서 양쪽을 같은 가짜 문자열로 맞춘 위조가 그대로 통과했다 — 실제로
+    이 저장소의 테스트 fixture(가짜 digest `aaaa1111`)가 통과하고 있었다.
 
-    반환: {"ok": bool, "checks": {이름: (통과, 사유)}, "fail": [실패한 이름]}
+    반환: {"ok": bool, "checks": {이름: "통과"|"실패 — 사유"}, "fail": [...], "reasons": [...]}
     """
     run_dir = Path(run_dir)
+    root = Path(repo_root) if repo_root else Path(__file__).resolve().parent.parent
     man = {}
     mp = run_dir / "manifest.yaml"
     if mp.exists():
@@ -306,19 +316,45 @@ def validate_provenance(run_dir) -> dict:
     checks["config_hash"] = (bool(man.get("config_hash")), "config_hash가 비어 있다")
     checks["clean_worktree"] = (man.get("git_dirty") is False,
                                 "dirty worktree 또는 실행 경로에 untracked 파일")
+
+    # ── 입력 digest: 값이 있는지가 아니라 **파일을 다시 해시해** 맞는지 ──
     digs = man.get("input_sha256") or {}
-    checks["입력_digest"] = (bool(digs) and all(v for v in digs.values()),
-                             "입력 파일 SHA가 비었거나 없다")
-    checks["run_signature_기록"] = (bool(man.get("run_signature")),
-                                    "manifest에 run_signature가 없다")
+    if not digs:
+        checks["입력_digest"] = (False, "input_sha256이 없다")
+    else:
+        bad = []
+        for path_s, dig in digs.items():
+            if not dig:
+                bad.append(f"{path_s}: digest 없음")
+                continue
+            cand = Path(path_s)
+            if not cand.is_absolute() and not cand.exists():
+                cand = root / path_s
+            if not cand.exists():
+                bad.append(f"{path_s}: 파일 없음")
+            elif file_digest(cand) != dig:
+                bad.append(f"{path_s}: 내용이 바뀜")
+        checks["입력_digest_재해시"] = (not bad, "; ".join(bad[:4]))
+
+    # ── run_spec 을 다시 해시해 run_signature 와 대조 ──
+    spec, sig_man = man.get("run_spec"), man.get("run_signature")
+    checks["run_signature_기록"] = (bool(sig_man), "manifest에 run_signature가 없다")
+    if not spec:
+        checks["run_spec_기록"] = (False, "manifest에 run_spec이 없다")
+    else:
+        recomputed = hashlib.sha1(
+            json.dumps(spec, sort_keys=True, default=str).encode()).hexdigest()[:12]
+        checks["run_signature_재계산"] = (
+            recomputed == str(sig_man),
+            f"run_spec을 다시 해시하면 {recomputed}인데 기록은 {sig_man}이다")
 
     fp = run_dir / "fits.parquet"
     if not fp.exists():
         checks["fits_존재"] = (False, "fits.parquet이 없다")
     else:
-        cols = pd.read_parquet(fp).columns
-        need = pd.read_parquet(fp, columns=[c for c in ("run_sig", "restarts_json")
-                                            if c in cols])
+        cols = list(pd.read_parquet(fp).columns)
+        want = [c for c in ("run_sig", "restarts_json") if c in cols]
+        need = pd.read_parquet(fp, columns=want) if want else pd.DataFrame()
         has_sig = "run_sig" in need.columns
         checks["행별_서명"] = (has_sig and not need["run_sig"].isna().any()
                                if has_sig else False,
@@ -326,19 +362,24 @@ def validate_provenance(run_dir) -> dict:
         uniq = sorted(need["run_sig"].dropna().unique()) if has_sig else []
         checks["단일_서명"] = (len(uniq) == 1, f"서명이 {len(uniq)}종이다")
         checks["manifest와_일치"] = (
-            bool(uniq) and str(uniq[0]) == str(man.get("run_signature")),
+            bool(uniq) and str(uniq[0]) == str(sig_man),
             "fits의 서명과 manifest의 run_signature가 다르다")
-        # restart 출처 — F25/F31이 저장하는 형식인가
-        src_ok = False
-        if "restarts_json" in need.columns and len(need):
-            try:
-                first = json.loads(need["restarts_json"].dropna().iloc[0])
-                src_ok = bool(first) and isinstance(first[0], dict) \
-                    and "source" in first[0]
-            except (ValueError, TypeError, IndexError):
-                src_ok = False
-        checks["restart_출처"] = (src_ok,
-                                  "restarts_json에 source가 없다 (F25/F31 이전 형식)")
+        # ── restart 출처: 첫 행이 아니라 **모든 행** ──
+        if "restarts_json" not in need.columns:
+            checks["restart_출처"] = (False, "restarts_json 열이 없다")
+        else:
+            n_legacy = 0
+            for v in need["restarts_json"].dropna():
+                try:
+                    rs = json.loads(v)
+                except (ValueError, TypeError):
+                    n_legacy += 1
+                    continue
+                if not rs or not isinstance(rs[0], dict) or "source" not in rs[0]:
+                    n_legacy += 1
+            checks["restart_출처"] = (
+                n_legacy == 0,
+                f"{n_legacy}행이 source 없는 옛 형식이다 (F25/F31 이전)")
 
     fail = [k for k, (ok, _) in checks.items() if not ok]
     # 통과한 검사에 실패 사유를 같이 실으면 전부 실패한 것처럼 읽힌다.

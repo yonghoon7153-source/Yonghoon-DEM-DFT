@@ -588,3 +588,126 @@ def test_paired_subset_declares_its_selection_bias(tmp_path):
     assert "_선택편향" in blk and "무작위 표본이 아니다" in blk["_선택편향"]
     # 제외율이 목적함수마다 다르다는 사실 자체가 경고문에 들어가야 한다
     assert blk["제외율_목적함수별"]["A"] != blk["제외율_목적함수별"]["B"]
+
+
+def test_untracked_critical_files_are_dirty_regardless_of_extension():
+    """★ F47 — critical 디렉터리 아래 untracked는 확장자와 무관하게 dirty.
+
+    확장자 allowlist를 두면 `.toml`/`.ini`/데이터 캐시 같은 새 입력이 추가될 때
+    조용히 false clean이 된다. positive case가 없어 이 구멍을 못 잡고 있었다.
+    """
+    import subprocess
+
+    import pytest as _pytest
+
+    from src.io import git_info
+
+    def _repo(tmp):
+        for cmd in (["git", "init", "-q"], ["git", "config", "user.email", "t@t"],
+                    ["git", "config", "user.name", "t"]):
+            subprocess.run(cmd, cwd=tmp, check=True, capture_output=True)
+        (tmp / "a.txt").write_text("one\n")
+        subprocess.run(["git", "add", "-A"], cwd=tmp, check=True, capture_output=True)
+        subprocess.run(["git", "commit", "-qm", "i"], cwd=tmp, check=True,
+                       capture_output=True)
+        return tmp
+
+    import tempfile
+    from pathlib import Path as _P
+
+    for rel in ("src/new.py", "configs/new.yaml", "src/data.toml",
+                "tools/x.ini", "scripts/y.cfg"):
+        with tempfile.TemporaryDirectory() as td:
+            repo = _repo(_P(td))
+            f = repo / rel
+            f.parent.mkdir(parents=True, exist_ok=True)
+            f.write_text("x\n")
+            info = git_info(repo)
+            assert info["git_dirty"] is True, f"{rel}이 dirty로 안 잡혔다 (F47)"
+            assert rel in info["git_untracked_critical"]
+
+    # 캐시·바이트코드는 제외돼야 한다
+    with tempfile.TemporaryDirectory() as td:
+        repo = _repo(_P(td))
+        f = repo / "src" / "__pycache__" / "m.cpython-311.pyc"
+        f.parent.mkdir(parents=True, exist_ok=True)
+        f.write_bytes(b"x")
+        assert git_info(repo)["git_dirty"] is False
+
+
+def test_paired_requires_identical_restart_index_sets():
+    """★ F44 — 개수가 같아도 index 집합이 다르면 paired가 아니다.
+
+    33p가 random {1,2}, 34p가 {1,3}이면 "같은 seed를 비교했다"가 아니다.
+    """
+    import json
+
+    import pandas as pd
+    import yaml
+
+    from src.scoring import run_scoring
+
+    def row(cond, obj, idxs):
+        rs = [_r([1.0, 0.0, 1.0, 0.0], 0.0, i=0, source="warm")]
+        rs += [_r([1.0 + 0.1 * k, 0.0, 1.0, 0.0], 0.5, i=k) for k in idxs]
+        return {"cond_id": cond, "objective": obj, "noise": 0.0,
+                "lli": 0.0, "lam_pe": 0.0, "lam_ne": 0.0,
+                "lli_hat": 0.0, "lam_pe_hat": 0.0, "lam_ne_hat": 0.0,
+                "r": 1.0, "a_pe": 1.0, "a_ne": 1.0, "reference": "grid",
+                "restarts_json": json.dumps(rs)}
+
+    # 개수는 둘 다 2, index 집합은 다르다
+    df = pd.DataFrame([row("c0", "A", [1, 2]), row("c0", "B", [1, 3])])
+    df.to_parquet(tmp_dir := __import__("tempfile").mkdtemp(), index=False) \
+        if False else None
+    import tempfile
+    from pathlib import Path as _P
+
+    d = _P(tempfile.mkdtemp())
+    df.to_parquet(d / "fits.parquet", index=False)
+    run_scoring(d)
+    blk = yaml.safe_load((d / "degeneracy_summary.yaml").read_text(encoding="utf-8")
+                         )["multistart_random_only"]
+    assert blk["n_common_conditions"] == 1
+    assert blk["n_paired_conditions"] == 0, "index 집합이 다른데 paired로 셌다 (F44)"
+    assert blk["pairwise"]["A__vs__B"]["n_paired"] == 0
+
+
+def test_pairwise_block_is_not_shrunk_by_third_objective():
+    """★ F44b — 제3 목적함수에서만 빠진 조건이 A↔B 비교를 줄이면 안 된다."""
+    import json
+    import tempfile
+    from pathlib import Path as _P
+
+    import pandas as pd
+    import yaml
+
+    from src.scoring import run_scoring
+
+    def row(cond, obj):
+        rs = [_r([1.0, 0.0, 1.0, 0.0], 0.0, i=0, source="warm"),
+              _r([1.1, 0.0, 1.1, 0.0], 0.5, i=1),
+              _r([1.2, 0.0, 1.2, 0.0], 0.6, i=2)]
+        return {"cond_id": cond, "objective": obj, "noise": 0.0,
+                "lli": 0.0, "lam_pe": 0.0, "lam_ne": 0.0,
+                "lli_hat": 0.0, "lam_pe_hat": 0.0, "lam_ne_hat": 0.0,
+                "r": 1.0, "a_pe": 1.0, "a_ne": 1.0, "reference": "grid",
+                "restarts_json": json.dumps(rs)}
+
+    rows = []
+    for i in range(40):                       # A·B는 40조건 공통
+        rows += [row(f"c{i}", "A"), row(f"c{i}", "B")]
+    for i in range(40, 45):                   # C는 전혀 다른 조건
+        rows.append(row(f"z{i}", "C"))
+
+    d = _P(tempfile.mkdtemp())
+    pd.DataFrame(rows).to_parquet(d / "fits.parquet", index=False)
+    run_scoring(d)
+    blk = yaml.safe_load((d / "degeneracy_summary.yaml").read_text(encoding="utf-8")
+                         )["multistart_random_only"]
+
+    assert blk["n_paired_conditions"] == 0        # 전역 교집합은 0
+    assert blk["pairwise"]["A__vs__B"]["n_paired"] == 40, \
+        "제3 목적함수 때문에 A↔B paired가 줄었다 (F44b)"
+    assert blk["pairwise"]["A__vs__B"]["비교가능"] is True
+    assert "_주의_전역교집합" in blk

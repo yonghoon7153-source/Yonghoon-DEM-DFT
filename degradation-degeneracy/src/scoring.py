@@ -23,6 +23,7 @@ F14 격자에 "저LLI + 고LAM_PE" 코너가 없다 (완방 프레임 guard의 �
 
 from __future__ import annotations
 
+import itertools
 import logging
 
 import numpy as np
@@ -226,10 +227,13 @@ def multistart_diagnostics(df: pd.DataFrame, j_tol: float = 1e-3,
             ps = np.array([d["p"] for d in rs], float)
             js = np.array([d["J"] for d in rs], float)
             source = np.array([d["source"] for d in rs], object)
+            idx = np.array([int(d.get("i", -1)) for d in rs], int)
+        if legacy:
+            idx = np.full(len(js), -1, int)
         ok = np.isfinite(js)
         if not ok.any():
             continue
-        ps, js, source = ps[ok], js[ok], source[ok]
+        ps, js, source, idx = ps[ok], js[ok], source[ok], idx[ok]
         n_dropped = 0
         if skip_first:
             if legacy:
@@ -241,9 +245,10 @@ def multistart_diagnostics(df: pd.DataFrame, j_tol: float = 1e-3,
                 #   비교하는 restart 집합의 성격이 목적함수마다 달라진다.
                 keep = source == "random"
                 n_dropped = int((~keep).sum())
-                ps, js = ps[keep], js[keep]
+                ps, js, idx = ps[keep], js[keep], idx[keep]
                 if len(js) < 2:
                     continue
+        idx_kept = idx
         i_best = int(np.argmin(js))
         p_best, j_best = ps[i_best], js[i_best]
 
@@ -272,6 +277,9 @@ def multistart_diagnostics(df: pd.DataFrame, j_tol: float = 1e-3,
             # 보정이 실제로 일어났는지를 말해주지 않는다.
             "n_nonrandom_dropped": n_dropped,
             "random_only": bool(skip_first and not legacy),
+            # ★ F44 — 개수만 맞추면 "같은 seed 를 비교했다"가 아니다. 최적화 예외로
+            #   빠진 index 가 목적함수마다 다를 수 있으므로 **index 집합**을 남긴다.
+            "restart_indices": ",".join(str(i) for i in sorted(idx_kept)),
         })
     if n_legacy:
         log.warning("multi-start: %d행이 옛 restarts 형식(출처 없음)이라 warm start "
@@ -437,20 +445,42 @@ def run_scoring(in_dir, out_dir=None, tol: float = DEFAULT_TOL,
             #   "비교가능"으로 판정한다. 공통 cond_id + 같은 restart 수인
             #   **paired subset**을 만들어 그것으로만 비교한다.
             if ok_random and {"objective", "cond_id"} <= set(ms_r.columns):
-                objs = sorted(ms_r["objective"].unique())
-                sets = {o: set(g["cond_id"]) for o, g in ms_r.groupby("objective")}
-                common = set.intersection(*sets.values()) if sets else set()
-                cnt = ms_r.set_index(["objective", "cond_id"])["n_restarts_total"]
-                paired = {c for c in common
-                          if len({int(cnt[(o, c)]) for o in objs}) == 1}
                 blk = summary["multistart_random_only"]
+                sets = {o: set(g["cond_id"]) for o, g in ms_r.groupby("objective")}
                 blk["n_conditions_per_objective"] = {o: len(v) for o, v in sets.items()}
-                blk["n_common_conditions"] = len(common)
+                # ★ F44 — restart **index 집합**까지 같아야 "같은 seed를 비교했다"가
+                #   된다. 개수만 맞추면 33p가 {1,2}, 34p가 {1,3}이어도 통과한다.
+                # ★ F44b — 전역 교집합은 결론 2가 요구하는 33p↔34p 비교를 과도하게
+                #   줄인다. 제3·제4 목적함수에서만 빠진 조건도 함께 제외되기 때문이다.
+                #   **목적함수 쌍마다** 따로 낸다.
+                key = ms_r.set_index(["objective", "cond_id"])["restart_indices"]
+                objs = sorted(sets)
+                pairs = {}
+                for a, b in itertools.combinations(objs, 2):
+                    common = sets[a] & sets[b]
+                    pr = {c for c in common if key[(a, c)] == key[(b, c)]}
+                    ent = {"n_common": len(common), "n_paired": len(pr),
+                           "비교가능": bool(len(pr) >= 30)}
+                    if pr:
+                        sub = ms_r[ms_r["cond_id"].isin(pr)
+                                   & ms_r["objective"].isin([a, b])]
+                        ent["summary"] = multistart_summary(sub)
+                    pairs[f"{a}__vs__{b}"] = ent
+                blk["pairwise"] = pairs
+                # 전역(모든 목적함수 동시) — 참고용
+                common_all = set.intersection(*sets.values()) if sets else set()
+                paired = {c for c in common_all
+                          if len({key[(o, c)] for o in objs}) == 1}
+                blk["n_common_conditions"] = len(common_all)
                 blk["n_paired_conditions"] = len(paired)
                 blk["제외율_목적함수별"] = {
                     o: round(1 - len(paired) / len(v), 4) if v else None
                     for o, v in sets.items()}
                 blk["비교가능"] = bool(len(paired) >= 30)
+                blk["_주의_전역교집합"] = (
+                    "`n_paired_conditions`·`비교가능`은 **모든 목적함수 동시** "
+                    "교집합이라 33p↔34p 비교에는 과도하게 엄격하다. 두 목적함수를 "
+                    "비교할 때는 `pairwise` 블록의 해당 항목을 쓸 것 (F44b).")
                 # ★ F41 — paired subset은 **무작위 표본이 아니다.** adaptive 조기
                 #   종료로 restart 2에서 멈춘 조건은 무작위 restart가 1개뿐이라
                 #   탈락하므로, 남는 것은 **네 목적함수 모두가 끝까지 간 조건**

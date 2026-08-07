@@ -487,7 +487,9 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     from joblib import Parallel, delayed
     from tqdm import tqdm
 
-    from src.io import base_manifest, file_digest, write_manifest
+    import yaml
+
+    from src.io import base_manifest, file_digest, git_info, write_manifest
 
     in_dir, out_dir = Path(in_dir), Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -509,8 +511,9 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     # ── Case 1: full-range half-cell OCV 기준 ──
     hc_dict, p_ini = None, None
     if reference == "halfcell":
-        from src.halfcell import get_halfcell_reference
+        from src.halfcell import get_halfcell_reference, halfcell_cache_path
         hc = get_halfcell_reference(base_cfg)
+        hc_used = halfcell_cache_path(base_cfg)     # F45: 실제로 쓴 캐시 하나
         cov = hc.coverage()
         # 리뷰 F11: to_modes_halfcell의 LLI 식은 테이블이 화학량론 전 범위일 때만
         # 성립한다 (sim 테이블 y_min=0.251이면 오프셋 ≈2.2Ah로 LLI가 조용히 틀림).
@@ -612,8 +615,8 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     #   수정해 inventory constants나 half-cell reference가 바뀌어도 서명이 그대로면
     #   resume이 옛 청크를 완료분으로 인정한다. obj_cfg도 두 섹션만 뽑지 말고
     #   resolved 전체를 넣는다 — 어느 키가 결과를 바꾸는지 미리 알 수 없다.
-    hc_paths = sorted(Path(".cache/halfcell").glob("*_ocp.json")) \
-        if reference == "halfcell" else []
+    # F45: glob 이 아니라 **실제로 쓴** 캐시 하나만
+    hc_paths = [hc_used] if reference == "halfcell" else []
     run_spec = {
         "sig_version": 2,
         "objectives": {k: objectives[k] for k in sorted(objectives)},   # 이름 + 가중치
@@ -630,6 +633,27 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     run_sig = hashlib.sha1(
         json.dumps(run_spec, sort_keys=True, default=str).encode()).hexdigest()[:12]
     completed_name = f"fit_completed_{run_sig}.jsonl"
+
+    # ★ F42 — manifest는 **끝난 뒤** 쓰므로 git SHA와 입력 digest가 종료 시점 값이다.
+    #   긴 실행 도중 worktree HEAD나 입력이 바뀌면, 실제로 돌린 코드가 아닌 나중
+    #   커밋이 실행 SHA처럼 기록된다. 그래서 시작 시점 상태를 먼저 박아 둔다.
+    start_prov = {
+        "started_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+        "run_signature": run_sig,
+        **git_info(Path(__file__).resolve().parent.parent),
+        "input_sha256": {str(x): file_digest(x) for x in
+                         [in_dir / "curves.parquet", base_config or "configs/base.yaml",
+                          *hc_paths] if x is not None},
+        "resume": bool(resume),
+        "_주의": ("실행 **시작** 시점의 상태다. manifest.yaml 은 종료 시점이므로 "
+                 "둘이 다르면 실행 도중 코드나 입력이 바뀐 것이다 (F42)."),
+    }
+    (out_dir / "manifest_start.yaml").write_text(
+        yaml.safe_dump(start_prov, allow_unicode=True, sort_keys=False),
+        encoding="utf-8")
+    log.info("실행 시작 provenance: git %s dirty=%s → %s",
+             start_prov.get("git_commit_short"), start_prov.get("git_dirty"),
+             out_dir / "manifest_start.yaml")
     done = load_completed(out_dir, completed_name) if resume else set()
     if resume and done:
         # 리뷰 F19b: "완료 표시는 있는데 청크에 행이 없는" 조건은 완료로 믿지 않는다.
@@ -715,14 +739,18 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     #   실제 obj_cfg 내용을 해시해 박고, 입력 curves와 config 파일의 SHA도 남긴다.
     cfg_h = hashlib.sha1(json.dumps(obj_cfg, sort_keys=True, default=str)
                          .encode()).hexdigest()[:12]
-    # halfcell 기준 캐시도 입력이다 — 이게 바뀌면 결과가 바뀐다
-    hc_cache = sorted(Path(".cache/halfcell").glob("*_ocp.json")) \
-        if reference == "halfcell" else []
+    # halfcell 기준 캐시도 입력이다 — 이게 바뀌면 결과가 바뀐다 (F45: 실제 경로)
+    hc_cache = list(hc_paths)
     write_manifest(out_dir, base_manifest(
         cfg_h, out_dir=out_dir,
         inputs=[in_dir / "curves.parquet", base_config, *hc_cache], extra={
         "run_type": "fit", "input": str(in_dir),
         "run_signature": run_sig, "run_spec": run_spec,
+        # F42: 시작 시점 provenance와 대조 (다르면 실행 도중 바뀐 것)
+        "start_provenance": start_prov,
+        "git_commit_changed_during_run": bool(
+            start_prov.get("git_commit") != git_info(
+                Path(__file__).resolve().parent.parent).get("git_commit")),
         "objectives_resolved": obj_cfg.get("objectives"),
         "n_conditions": len(tasks), "objectives": list(objectives),
         "bounds_preset": bounds_preset, "bounds": bounds,

@@ -469,3 +469,34 @@ def test_run_fit_signature_covers_restart_count(tmp_path):
         F.run_fit(in_dir, out, obj_cfg, objs, bounds, "expanded", nr, nproc=1)
         sigs.append(pd.read_parquet(out / "fits.parquet")["run_sig"].iloc[0])
     assert sigs[0] != sigs[1], "n_restarts가 서명에 없다 — 다른 실행이 섞인다"
+
+
+def test_start_provenance_is_written_before_fitting(tmp_path):
+    """★ F42 — manifest는 끝난 뒤 쓰므로 git SHA·입력 digest가 종료 시점 값이다.
+
+    긴 실행 도중 worktree HEAD가 바뀌면 실제로 돌린 코드가 아닌 나중 커밋이
+    실행 SHA처럼 기록된다. 시작 시점 상태를 따로 박아 둬야 대조할 수 있다.
+    """
+    import yaml
+
+    import src.fitting as F
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    out = tmp_path / "out"
+    obj_cfg = {"objectives": {}, "dqdv": {"window": 7, "polyorder": 2,
+                                          "peak_weight": 1.0},
+               "scaling": {"method": "reference_rmse"}}
+    bounds = {"init": [1.0, 0.0, 1.0, 0.0], "lb": [0.5, -1.0, 0.5, -1.0],
+              "ub": [2.0, 1.0, 2.0, 1.0]}
+    F.run_fit(in_dir, out, obj_cfg, {"a": {"w_pocv": 1.0}}, bounds, "expanded",
+              1, nproc=1)
+
+    sp = yaml.safe_load((out / "manifest_start.yaml").read_text(encoding="utf-8"))
+    assert sp["run_signature"]
+    assert "git_commit" in sp and "input_sha256" in sp
+    assert sp["input_sha256"], "시작 시점 입력 digest가 비었다"
+
+    man = yaml.safe_load((out / "manifest.yaml").read_text(encoding="utf-8"))
+    assert man["start_provenance"]["run_signature"] == sp["run_signature"]
+    # 실행 중 HEAD가 안 바뀌었으면 False여야 한다
+    assert man["git_commit_changed_during_run"] is False

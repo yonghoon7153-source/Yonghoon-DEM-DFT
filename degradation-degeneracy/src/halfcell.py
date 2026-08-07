@@ -190,6 +190,21 @@ def compute_halfcell_reference(cfg: dict, v_lo: float = 2.0, v_hi: float = 4.4,
     return ref
 
 
+def halfcell_cache_path(cfg: dict, cache_dir: str | Path | None = None,
+                        method: str = "ocp") -> Path:
+    """★ F45 — 실제로 쓰이는 캐시 경로. 서명·manifest가 이걸 그대로 써야 한다.
+
+    한때 fitting이 현재 작업 디렉터리의 `.cache/halfcell/*_ocp.json` 을 glob 했다.
+    실제 경로는 base config의 `_config_path` 에서 저장소 root 를 계산해 고른
+    **하나**이므로, 다른 작업 디렉터리나 외부 --base-config 를 쓰면 실제 사용
+    캐시가 서명에서 빠지고, 반대로 무관한 캐시까지 서명에 들어가 resume 을
+    불필요하게 막았다.
+    """
+    root = Path(cfg.get("_config_path", ".")).resolve().parent.parent
+    d = Path(cache_dir) if cache_dir else root / ".cache" / "halfcell"
+    return d / f"{baseline_hash(cfg)}_{method}.json"
+
+
 def get_halfcell_reference(cfg: dict, cache_dir: str | Path | None = None,
                            force: bool = False, method: str = "ocp",
                            **kw) -> HalfCellReference:
@@ -198,9 +213,7 @@ def get_halfcell_reference(cfg: dict, cache_dir: str | Path | None = None,
     method: "ocp" (기본) — 파라미터셋 OCP 함수 직접 평가, 화학량론 전 범위
             "sim"        — 넓은 전압창 시뮬레이션 추출 (셀이 지나간 구간만)
     """
-    root = Path(cfg.get("_config_path", ".")).resolve().parent.parent
-    d = Path(cache_dir) if cache_dir else root / ".cache" / "halfcell"
-    path = d / f"{baseline_hash(cfg)}_{method}.json"
+    path = halfcell_cache_path(cfg, cache_dir, method)
 
     if not force and path.exists():
         log.info("half-cell 기준 캐시 적중: %s", path)

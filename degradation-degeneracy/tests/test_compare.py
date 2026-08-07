@@ -778,17 +778,37 @@ def test_results_doc_carries_citation_block_without_provenance(tmp_path):
 
 
 def _complete_artifact(tmp_path):
-    """provenance 검사를 **실제로** 통과하는 artifact를 만든다.
+    """provenance 검사를 **실제로** 통과하는 artifact.
 
-    임의의 `run_sig` 문자열 하나로 배너가 사라지면 안 된다 (F38).
+    ★ F43 — 초판은 가짜 digest(`aaaa1111`)와 임의 서명(`abcd1234`)을 넣고
+      "통과하는 artifact"라고 불렀다. validator가 재해시를 안 했기 때문에
+      통과했던 것이고, 리뷰가 이 fixture로 validator를 반증했다.
+      지금은 진짜 입력 파일을 만들고, 그 digest를 기록하고, run_spec을 실제로
+      해시해 서명을 만든다.
     """
+    import hashlib
     import json
 
     import yaml
 
+    from src.io import file_digest
+
     d = Path(tmp_path) / "res"
     d.mkdir(parents=True, exist_ok=True)
-    sig = "sig000000001"
+
+    # 실제 입력 파일 두 개
+    curves = d / "curves.parquet"
+    _fits(objectives=("pocv_dvdq",)).to_parquet(curves, index=False)
+    cfg = d / "base.yaml"
+    cfg.write_text("dummy: 1\n", encoding="utf-8")
+
+    # run_spec 을 실제로 해시해 서명을 만든다
+    spec = {"sig_version": 2, "objectives": {"pocv_dvdq": {"w_pocv": 1.0}},
+            "reference": "grid", "curves_sha": file_digest(curves),
+            "base_config_sha": file_digest(cfg)}
+    sig = hashlib.sha1(
+        json.dumps(spec, sort_keys=True, default=str).encode()).hexdigest()[:12]
+
     df = _scored(_fits(objectives=("pocv_dvdq",)))
     df.to_parquet(d / "degeneracy_map.parquet", index=False)
     df = df.copy()
@@ -800,8 +820,8 @@ def _complete_artifact(tmp_path):
     (d / "degeneracy_summary.yaml").write_text(yaml.safe_dump({}), encoding="utf-8")
     (d / "manifest.yaml").write_text(yaml.safe_dump({
         "config_hash": "deadbeef1234", "git_dirty": False, "reproducible": True,
-        "run_signature": sig,
-        "input_sha256": {"curves.parquet": "aaaa1111", "configs/base.yaml": "bbbb2222"},
+        "run_signature": sig, "run_spec": spec,
+        "input_sha256": {str(curves): file_digest(curves), str(cfg): file_digest(cfg)},
     }), encoding="utf-8")
     return d, sig
 
