@@ -16,7 +16,8 @@
     "2026-08-07c": "Codex 3라운드 반영. resolve_error 를 status=source_error 로 내려 자동판정에서 빼고, live 를 요청마다(mtime 캐시) 다시 읽게 했다. comp1 단일시드 Ea 출처 배선 (li_transport.json) — 단 beta 6/6 탈락이라 provisional 유지.",
     "2026-08-07d": "Codex 4라운드 반영. ★ comp2 MD_Ea 항목이 **의미가 섞여 있었다** — 값 0.275 는 ordered single-champion baseline 인데 method_id/group 에 disorder-ensemble 을 붙여 뒀다. 둘을 별개 metric 으로 분리: MD_Ea_eV_ordered(0.2754597563, comp2_md_arrhenius.json) · MD_Ea_eV_disorder(0.1512±0.0676, comp2_disorder_ensemble.json d=0.50, n_config=3). d=1.00 은 게이트 FAIL 이라 등재하지 않는다. ⚠ 교훈: validator 가 provisional 무출처를 허용해 이 의미 오류를 못 잡았다 — 수치 대조는 method/value 의미 일치를 보증하지 않는다.",
     "2026-08-07e": "Codex 5라운드 method_id 수동 감사 반영. gap k 표기 정정(modelc k882 · b2o3 25irr-k · comp1 은 미확인이라 표기 제거). B0 comp1/modelc 을 eos.json 의 PRIMARY_paper_value(_v3) 로 재배선 — prefer=registry 우회 제거. ICOHP modelc 을 직접 원자료(bonds_modelc_k663.json, -5.9997)로. E_VRH 는 원자료가 comp1<->comp2 만 완전비교쌍이라 해 네 조성 단일 묶음을 쪼갰다. ★ validator 28/28 통과가 method_id 의미 일치를 보증하지 않는다는 걸 이 감사가 실증했다.",
-    "2026-08-07f": "Codex 6라운드 종료 + provenance 감사 항목 확대. comp1 뿐 아니라 gap 정본 4종 **전부** fixed-occ nscf 의 입력·출력이 repo 에 없다 — standard_dos 의 *_nscf.in 은 전부 tetrahedra_opt(DOS용)다. ⚠ 5라운드에 modelc method_id 를 k882 로 '정정' 한 것도 그 tetrahedra 파일이 근거였으므로 철회하고 표기를 뺐다 — 정정하면서 같은 종류의 오류를 반복했다. 값 자체는 의심하지 않는다(electronic.json 이 정본 기록). provenance_open 필드로 표시하고 kb/open_items.md 에 감사 항목으로 올린다."
+    "2026-08-07f": "Codex 6라운드 종료 + provenance 감사 항목 확대. comp1 뿐 아니라 gap 정본 4종 **전부** fixed-occ nscf 의 입력·출력이 repo 에 없다 — standard_dos 의 *_nscf.in 은 전부 tetrahedra_opt(DOS용)다. ⚠ 5라운드에 modelc method_id 를 k882 로 '정정' 한 것도 그 tetrahedra 파일이 근거였으므로 철회하고 표기를 뺐다 — 정정하면서 같은 종류의 오류를 반복했다. 값 자체는 의심하지 않는다(electronic.json 이 정본 기록). provenance_open 필드로 표시하고 kb/open_items.md 에 감사 항목으로 올린다.",
+    "2026-08-07g": "Codex 6라운드 후속 2건. ① provenance_open 문구 정정 — 'fixed-occ 입력이 없다' 가 아니라 **'계통별 실제 실행 입력·출력이 없다'** 가 정확하다. generic 템플릿 nscf_gap.in 은 존재하고 occupations='fixed' 다(방법은 repo 에 있다). 그 템플릿 주석이 modelc 에 6 6 2 를 제시하는 것도 DOS 용 8 8 2 로 정정하면 안 됐다는 근거가 된다. ② lpsocl 의 정본 파일은 electronic.json 이 아니라 lpsocl_dos_gap.json 이다 — 문구를 고쳤다."
   },
   "entries": [
     {
@@ -34,7 +35,7 @@
       ],
       "updated": "2026-06-16",
       "note": null,
-      "provenance_open": "⚠ **fixed-occ nscf 의 입력·출력이 repo 에 없다.** 값은 electronic.json 이 기록하고 있지만, 정본 규칙(fixed-occupations nscf 고유값만 인정)을 만족한 그 실행을 파일로 재현할 수 없다. tools/electronic/standard_dos/ 에 있는 *_nscf.in 은 전부 occupations='tetrahedra_opt' (DOS 용)이다 — 그걸 fixed-occ 근거로 쓰면 안 된다. 2026-08-07 Codex 6라운드가 comp1 에서 제기했고, 확인해 보니 modelc 도 같고 b2o3·lpsocl 은 .in 파일 자체가 없다. → kb/open_items.md 의 별도 데이터 감사 항목. comp1: electronic.json 이 kpts='170 irr (k888 nscf)' 라 적어 k888 은 강하게 시사되나 fixed-occ 입력 자체는 미확보."
+      "provenance_open": "⚠ **네 계통의 실제 실행 입력·출력이 repo 에 없다.** 값은 정본 파일이 기록하고 있지만, 정본 규칙(fixed-occupations nscf 고유값)을 만족한 그 실행을 파일로 재현할 수 없다. ★ generic 템플릿 `tools/electronic/standard_dos/nscf_gap.in` 은 존재하고 `occupations='fixed'` 다 — 즉 방법 자체는 repo 에 있다. 없는 건 **계통별 실행본**이다. 계통별로 남은 `*_nscf.in` 은 전부 `occupations='tetrahedra_opt'`(DOS 용)이라 fixed-occ 근거로 쓰면 안 된다. 2026-08-07 Codex 6라운드. → kb/open_items.md 의 별도 데이터 감사 항목. comp1: 정본 파일 electronic.json 이 kpts='170 irr (k888 nscf)' 라 적고, 템플릿 주석도 comp1(cubic) 에 8 8 8 을 제시한다 — k888 은 두 갈래로 뒷받침되나 실행본은 미확보."
     },
     {
       "system": "modelc",
@@ -51,7 +52,7 @@
       ],
       "updated": "2026-06-16",
       "note": null,
-      "provenance_open": "⚠ **fixed-occ nscf 의 입력·출력이 repo 에 없다.** 값은 electronic.json 이 기록하고 있지만, 정본 규칙(fixed-occupations nscf 고유값만 인정)을 만족한 그 실행을 파일로 재현할 수 없다. tools/electronic/standard_dos/ 에 있는 *_nscf.in 은 전부 occupations='tetrahedra_opt' (DOS 용)이다 — 그걸 fixed-occ 근거로 쓰면 안 된다. 2026-08-07 Codex 6라운드가 comp1 에서 제기했고, 확인해 보니 modelc 도 같고 b2o3·lpsocl 은 .in 파일 자체가 없다. → kb/open_items.md 의 별도 데이터 감사 항목. ⚠ 2026-08-07 5라운드에 method_id 를 k882 로 '정정' 했는데, 그 근거였던 modelc_nscf.in 이 tetrahedra_opt 였다 — **같은 종류의 오류를 정정하면서 반복했다.** electronic.json 은 kpts='68 irr' 만 적고 있어 k-mesh 를 단정할 수 없다. 표기를 다시 뺐다."
+      "provenance_open": "⚠ **네 계통의 실제 실행 입력·출력이 repo 에 없다.** 값은 정본 파일이 기록하고 있지만, 정본 규칙(fixed-occupations nscf 고유값)을 만족한 그 실행을 파일로 재현할 수 없다. ★ generic 템플릿 `tools/electronic/standard_dos/nscf_gap.in` 은 존재하고 `occupations='fixed'` 다 — 즉 방법 자체는 repo 에 있다. 없는 건 **계통별 실행본**이다. 계통별로 남은 `*_nscf.in` 은 전부 `occupations='tetrahedra_opt'`(DOS 용)이라 fixed-occ 근거로 쓰면 안 된다. 2026-08-07 Codex 6라운드. → kb/open_items.md 의 별도 데이터 감사 항목. ⚠ 5라운드에 method_id 를 k882 로 '정정' 했는데 근거였던 modelc_nscf.in 이 tetrahedra_opt 였다 — **정정하면서 같은 종류의 오류를 반복했다.** 철회했다. ★ 게다가 템플릿 주석은 modelc(rhombo) 에 **6 6 2** 를 제시한다 — DOS 용 8 8 2 와 다르다. electronic.json 은 kpts='68 irr' 만 적어 k-mesh 를 단정할 수 없다."
     },
     {
       "system": "b2o3",
@@ -68,7 +69,7 @@
       ],
       "updated": "2026-06-16",
       "note": null,
-      "provenance_open": "⚠ **fixed-occ nscf 의 입력·출력이 repo 에 없다.** 값은 electronic.json 이 기록하고 있지만, 정본 규칙(fixed-occupations nscf 고유값만 인정)을 만족한 그 실행을 파일로 재현할 수 없다. tools/electronic/standard_dos/ 에 있는 *_nscf.in 은 전부 occupations='tetrahedra_opt' (DOS 용)이다 — 그걸 fixed-occ 근거로 쓰면 안 된다. 2026-08-07 Codex 6라운드가 comp1 에서 제기했고, 확인해 보니 modelc 도 같고 b2o3·lpsocl 은 .in 파일 자체가 없다. → kb/open_items.md 의 별도 데이터 감사 항목. b2o3: electronic.json 이 kpts='25 irr (fixed-occ nscf)' 라 **fixed-occ 임을 명시**한다 — 넷 중 근거가 제일 강하다. 다만 입력 파일은 여전히 없다."
+      "provenance_open": "⚠ **네 계통의 실제 실행 입력·출력이 repo 에 없다.** 값은 정본 파일이 기록하고 있지만, 정본 규칙(fixed-occupations nscf 고유값)을 만족한 그 실행을 파일로 재현할 수 없다. ★ generic 템플릿 `tools/electronic/standard_dos/nscf_gap.in` 은 존재하고 `occupations='fixed'` 다 — 즉 방법 자체는 repo 에 있다. 없는 건 **계통별 실행본**이다. 계통별로 남은 `*_nscf.in` 은 전부 `occupations='tetrahedra_opt'`(DOS 용)이라 fixed-occ 근거로 쓰면 안 된다. 2026-08-07 Codex 6라운드. → kb/open_items.md 의 별도 데이터 감사 항목. b2o3: electronic.json 이 kpts='25 irr (fixed-occ nscf)' 로 **fixed-occ 임을 명시**한다 — 넷 중 근거가 제일 강하다."
     },
     {
       "system": "lpsocl",
@@ -84,7 +85,7 @@
         "dos_threshold_readout"
       ],
       "updated": "2026-07-16",
-      "provenance_open": "⚠ **fixed-occ nscf 의 입력·출력이 repo 에 없다.** 값은 electronic.json 이 기록하고 있지만, 정본 규칙(fixed-occupations nscf 고유값만 인정)을 만족한 그 실행을 파일로 재현할 수 없다. tools/electronic/standard_dos/ 에 있는 *_nscf.in 은 전부 occupations='tetrahedra_opt' (DOS 용)이다 — 그걸 fixed-occ 근거로 쓰면 안 된다. 2026-08-07 Codex 6라운드가 comp1 에서 제기했고, 확인해 보니 modelc 도 같고 b2o3·lpsocl 은 .in 파일 자체가 없다. → kb/open_items.md 의 별도 데이터 감사 항목. lpsocl: lpsocl_dos_gap.json 의 method 문구가 'nscf fixed-occ (gap from VBM/CBM eigenvalues, NO smearing)' 라고 적고 있어 방법은 명확하나, standard_dos/lpsocl/ 에 .in 이 없다."
+      "provenance_open": "⚠ **네 계통의 실제 실행 입력·출력이 repo 에 없다.** 값은 정본 파일이 기록하고 있지만, 정본 규칙(fixed-occupations nscf 고유값)을 만족한 그 실행을 파일로 재현할 수 없다. ★ generic 템플릿 `tools/electronic/standard_dos/nscf_gap.in` 은 존재하고 `occupations='fixed'` 다 — 즉 방법 자체는 repo 에 있다. 없는 건 **계통별 실행본**이다. 계통별로 남은 `*_nscf.in` 은 전부 `occupations='tetrahedra_opt'`(DOS 용)이라 fixed-occ 근거로 쓰면 안 된다. 2026-08-07 Codex 6라운드. → kb/open_items.md 의 별도 데이터 감사 항목. lpsocl: ⚠ 정본 파일은 electronic.json 이 아니라 **lpsocl_dos_gap.json** 이다(source_path 참조). 그 method 문구가 'nscf fixed-occ (gap from VBM/CBM eigenvalues, NO smearing)' 라 방법은 명확하나 실행본은 없다."
     },
     {
       "system": "comp2",

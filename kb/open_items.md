@@ -612,19 +612,28 @@ Q7·Q8은 재판독으로 신설)을 닫는다. **이 항목은 닫지 말 것.*
 
 ### N. 🔴 **gap 정본 4종의 fixed-occ nscf 입력·출력이 repo 에 없다** (2026-08-07 신규)
 
-**값을 의심하는 게 아니다** — comp1 2.066 / modelc 2.099 / b2o3 1.9671 / lpsocl 2.2309 은
-`electronic.json`·`lpsocl_dos_gap.json` 이 정본으로 기록하고 있다. 문제는 **재현성**이다.
+**값을 의심하는 게 아니다** — comp1 2.066 / modelc 2.099 / b2o3 1.9671 은 `electronic.json` 이,
+lpsocl 2.2309 는 **`lpsocl_dos_gap.json`** 이 정본으로 기록하고 있다(레지스트리 source_path 참조).
+문제는 **재현성**이다.
 
 우리 규율은 "갭은 **fixed-occupations nscf** 의 VBM/CBM 고유값만 인정" 인데,
-`tools/electronic/standard_dos/` 에 남아 있는 nscf 입력은 **전부 `occupations='tetrahedra_opt'`**
-(DOS 용)다. 즉 정본을 만든 그 실행을 파일로 되짚을 수 없다.
+**계통별 실행본**이 없다. 정확히 말하면:
+
+- ✅ **방법은 repo 에 있다** — `tools/electronic/standard_dos/nscf_gap.in` 이 generic
+  fixed-occ 템플릿이고 `occupations='fixed'` 다.
+- ⛔ **계통별로 남은 `*_nscf.in` 은 전부 `occupations='tetrahedra_opt'`(DOS 용)** 이라
+  fixed-occ 근거로 쓰면 안 된다.
+- ⛔ 그래서 정본을 만든 **그 실행**(입력·출력)을 파일로 되짚을 수 없다.
+
+★ 템플릿 주석이 결정적이다 — modelc(rhombo)에 **`6 6 2`** 를 제시한다.
+DOS 용 `8 8 2` 와 다르다. 즉 DOS 파일만 보고 method_id 를 정정하면 안 됐다.
 
 | 계 | standard_dos 의 nscf.in | electronic.json 의 kpts 기록 | 판정 |
 |---|---|---|---|
 | comp1 | `tetrahedra_opt` · k 8 8 8 | `170 irr (k888 nscf)` | k888 강하게 시사, 입력 미확보 |
-| modelc | `tetrahedra_opt` · k 8 8 2 | `68 irr` | k-mesh **단정 불가** |
+| modelc | `tetrahedra_opt` · k 8 8 2 | `68 irr` | k-mesh **단정 불가** (템플릿은 6 6 2 제시) |
 | b2o3 | (파일 없음) | `25 irr (fixed-occ nscf)` | **fixed-occ 명시** — 근거 제일 강함 |
-| lpsocl | (파일 없음) | method 문구에 fixed-occ 명시 | 방법은 명확, 입력 없음 |
+| lpsocl | (파일 없음) | `lpsocl_dos_gap.json` 의 method 에 fixed-occ 명시 | 방법은 명확, 실행본 없음 |
 
 ⚠ 2026-08-07 5라운드에 modelc 의 `method_id` 를 `k882` 로 "정정" 했는데, 그 근거가
 바로 저 tetrahedra 파일이었다 — **오류를 정정하면서 같은 종류의 오류를 반복했다.**
@@ -636,8 +645,9 @@ Q7·Q8은 재판독으로 신설)을 닫는다. **이 항목은 닫지 말 것.*
 3. 끝까지 없으면 **동일 조건으로 재계산**하거나, 그때까지 `provenance_open` 을 유지하고
    필요하면 status 를 낮춘다
 
-레지스트리 4개 항목에 `provenance_open` 필드로 표시해 뒀다
-(`db/properties/canonical_registry.json`). 화면 값은 그대로 쓰되 이 사실이 같이 남는다.
+레지스트리 4개 항목에 `provenance_open` 필드로 표시했고, **`validate_canonical.py` 가 매번 찍는다**
+(요약 줄 + 전용 경고 블록). 레지스트리·문서에만 있으면 검사를 돌려도 무경고 ✅ 라 놓친다
+— Codex 6라운드 후속 지적. 화면 값은 그대로 쓰되 이 사실이 같이 남는다.
 
 - 근거: Codex 6라운드 감사 (comp1) + 확인 결과 4종 전부로 확대
 

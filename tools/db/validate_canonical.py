@@ -37,12 +37,23 @@ def main():
 
     bad = C.validate(reg)
     wired = [e for e in ents if e.get("source_path")]
-    print(f"출처 배선 {len(wired)}/{len(ents)}  ·  대조 실패 {len(bad)}")
+    nprov = sum(1 for e in ents if e.get("provenance_open"))
+    print(f"출처 배선 {len(wired)}/{len(ents)}  ·  대조 실패 {len(bad)}"
+          + (f"  ·  ⚠ provenance_open {nprov}" if nprov else ""))
 
     if bad:
         print("\n⛔ 원자료와 어긋나는 항목")
         for e, why in bad:
             print(f"   {e.get('metric'):22s} {e.get('system'):18s} {why}")
+
+    # ★ provenance_open 은 수치 대조를 통과해도 남는 문제다 (2026-08-07 Codex 6라운드).
+    #   레지스트리·open_items 에만 있으면 validator 를 돌려도 무경고 ✅ 라 놓친다.
+    prov = [e for e in ents if e.get("provenance_open")]
+    if prov:
+        print(f"\n⚠ provenance_open {len(prov)}건: "
+              + ", ".join(f"{e.get('metric')}/{e.get('system')}" for e in prov))
+        print("   값은 정본 파일과 일치하지만 **그 값을 만든 실행을 파일로 재현할 수 없다.**")
+        print("   kb/open_items.md 의 데이터 감사 항목 참조 (회수 → 재계산 → 등급 하향).")
 
     pend = [e for e in ents if e.get("status") == "source_pending"]
     if pend:
