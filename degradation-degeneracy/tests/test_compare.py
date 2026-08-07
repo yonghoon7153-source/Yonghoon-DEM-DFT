@@ -137,11 +137,14 @@ def test_stratified_subset_stride_one_keeps_everything():
 # ---------------------------------------------------------------- 가중치 sweep
 
 def test_build_weight_objectives_varies_only_dqdv():
+    from src.weight_sweep import SEED_NAME
+
     objs = build_weight_objectives([0.0, 1.0, 2.0])
-    assert set(objs) == {obj_name(w) for w in (0.0, 1.0, 2.0)}
-    assert {o["w_pocv"] for o in objs.values()} == {1.0}
-    assert {o["w_dvdq"] for o in objs.values()} == {1.0}
-    assert sorted(o["w_dqdv"] for o in objs.values()) == [0.0, 1.0, 2.0]
+    reported = {k: v for k, v in objs.items() if k != SEED_NAME}
+    assert set(reported) == {obj_name(w) for w in (0.0, 1.0, 2.0)}
+    assert {o["w_pocv"] for o in reported.values()} == {1.0}
+    assert {o["w_dvdq"] for o in reported.values()} == {1.0}
+    assert sorted(o["w_dqdv"] for o in reported.values()) == [0.0, 1.0, 2.0]
 
 
 def test_sweep_summary_parses_w_from_objective_name():
@@ -482,3 +485,69 @@ def test_compare_cases_matches_row_counts():
             < res["grid"]["pocv_dvdq"]["mean_abs_err"])
     # halfcell 복원불가 0%가 측정이 아니라는 경고가 들어 있어야 한다
     assert "측정이 아니라" in res["_주의_복원불가"]
+
+
+def test_weight_sweep_gives_every_w_the_same_warm_start():
+    """★ F20b — w=0만 seed 제공자가 되어 초기값을 못 받으면 비교가 불공정하다.
+
+    실측에서 w=0만 86%, 나머지 22~33%였는데 그 차이가 dQ/dV 효과인지
+    초기값 차이인지 갈리지 않았다. 숨은 _seed를 따로 두어 해결한다.
+    """
+    from src.weight_sweep import SEED_NAME, build_weight_objectives
+
+    objs = build_weight_objectives([0.0, 1.0, 2.0])
+    assert list(objs)[0] == SEED_NAME, "seed가 맨 앞이어야 먼저 풀린다"
+    assert objs[SEED_NAME]["_warm"] is False, "seed 자신은 warm start를 안 받는다"
+    reported = {k: v for k, v in objs.items() if k != SEED_NAME}
+    assert len(reported) == 3
+    assert all(v["_warm"] is True for v in reported.values()), \
+        "보고 대상 w는 전부 같은 조건에서 초기값을 받아야 한다"
+
+
+def test_seed_objective_is_excluded_from_summary():
+    from src.weight_sweep import SEED_NAME, obj_name, sweep_summary
+
+    df = _fits(objectives=(SEED_NAME, obj_name(0.0), obj_name(1.0)))
+    s = sweep_summary(_scored(df))
+    assert SEED_NAME not in set(s["objective"]), "숨은 seed가 결과표에 새어나왔다"
+    assert set(s["w_dqdv"].unique()) == {0.0, 1.0}
+
+
+def test_warm_flag_overrides_default_rule(monkeypatch):
+    """_warm 플래그가 있으면 w_dqdv 값과 무관하게 그것을 따른다."""
+    import src.fitting as F
+
+    seen = []
+
+    def fake_fit(objective, init, lb, ub, **kw):
+        seen.append(list(map(float, init)))
+        p = np.array([1.0, 0.0, 1.0, 0.0])
+        return F.FitResult(p=p, J=0.0, converged=True, n_eval=1,
+                           bound_active=(False,) * 4, restarts=[(p.tolist(), 0.0)])
+
+    monkeypatch.setattr(F, "fit", fake_fit)
+    n = 64
+    x = np.linspace(0, 1, n)
+    task = {
+        "cond_id": "t", "x": x, "v_target": 4.0 - x, "q_mah": 100.0, "r": 1.0,
+        "truth": {"lli": 0.0, "lam_pe": 0.0, "lam_ne": 0.0, "noise": 0.0},
+        "ref_x": x, "ref_pe": 4.2 - 0.5 * x, "ref_ne": 0.2 + 0.5 * x,
+        "ref_full": 4.0 - x,
+        "obj_cfg": {"objectives": {}, "dqdv": {"window": 7, "polyorder": 2}},
+        # w_dqdv=0 인데 _warm=True → 초기값을 받아야 한다
+        "objectives": {"seed": {"w_pocv": 1.0, "w_dvdq": 1.0, "w_dqdv": 0.0,
+                                "_warm": False},
+                       "zero_but_warm": {"w_pocv": 1.0, "w_dvdq": 1.0,
+                                         "w_dqdv": 0.0, "_warm": True}},
+        "init": [1.03, -0.10, 1.08, -0.01],
+        "lb": [0.7, -0.6, 0.7, -0.6], "ub": [1.8, 0.4, 1.8, 0.4],
+        "bounds_preset": "expanded", "n_restarts": 1,
+        "inventory": {"w_pe": 0.29, "w_ne": 0.71, "kappa": 0.71},
+        "reference": "grid", "halfcell": None, "p_ini": None, "seed": 0,
+        "warm_start": True,
+    }
+    rows = F._fit_one(task)
+    assert seen[0] == task["init"]
+    assert seen[1] == [1.0, 0.0, 1.0, 0.0], "_warm=True인데 초기값을 못 받았다"
+    assert {r["objective"]: r["warm_started"] for r in rows} == {
+        "seed": False, "zero_but_warm": True}

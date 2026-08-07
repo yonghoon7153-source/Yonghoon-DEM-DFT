@@ -344,6 +344,17 @@ def _fit_one(task: dict) -> list[dict]:
     #
     #   순서는 objectives.yaml의 정의 순서(항이 하나씩 쌓이는 순서)를 따른다.
     def _has_dqdv(w):
+        """이 목적함수가 warm start를 받아야 하는가.
+
+        기본 규칙은 "dQ/dV 항이 있으면"이다. 다만 목적함수 집합에 따라 그 규칙이
+        **불공정한 비교**를 만든다 — 가중치 sweep에서 w_dqdv=0 하나만 seed 제공자가
+        되어 자기는 초기값을 못 받고 나머지는 다 받았다 (실측: w=0만 86%, 나머지
+        22~33%. dQ/dV 효과가 아니라 초기값 차이였다).
+        그래서 목적함수 정의에 `_warm`을 넣어 명시적으로 지정할 수 있게 한다.
+        """
+        v = w.get("_warm")
+        if v is not None:
+            return bool(v)
         return float(w.get("w_dqdv", 0.0)) != 0.0
 
     warm = bool(task.get("warm_start", True))

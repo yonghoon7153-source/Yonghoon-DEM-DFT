@@ -44,11 +44,27 @@ def obj_name(w: float) -> str:
     return f"wdqdv_{w:.2f}"
 
 
+SEED_NAME = "_seed"
+
+
 def build_weight_objectives(w_grid=DEFAULT_W_GRID, w_pocv: float = 1.0,
                             w_dvdq: float = 1.0) -> dict:
-    """w_dqdv만 바꾼 목적함수 집합. pocv·dvdq 가중치는 34p 정의대로 1.0 고정."""
-    return {obj_name(w): {"w_pocv": w_pocv, "w_dvdq": w_dvdq, "w_dqdv": float(w)}
-            for w in w_grid}
+    """w_dqdv만 바꾼 목적함수 집합. pocv·dvdq 가중치는 34p 정의대로 1.0 고정.
+
+    ★ 맨 앞에 숨은 `_seed` 목적함수를 둔다 (F20b).
+      warm start는 "매끄러운 해를 먼저 구해 물려준다"인데, 기본 규칙대로면
+      w_dqdv=0인 항목이 seed 제공자가 되어 **자기만 초기값을 못 받는다.**
+      그러면 w=0의 성적이 나빠지는 게 dQ/dV 효과인지 초기값 차이인지 갈리지 않는다
+      (실측: w=0만 86%, 나머지 22~33%).
+      숨은 seed를 따로 두고 **모든 w에 똑같이 물려주면** 비교가 공정해진다.
+      `_seed` 행은 집계에서 제외한다.
+    """
+    objs = {SEED_NAME: {"w_pocv": w_pocv, "w_dvdq": w_dvdq, "w_dqdv": 0.0,
+                        "_warm": False}}
+    objs.update({obj_name(w): {"w_pocv": w_pocv, "w_dvdq": w_dvdq,
+                               "w_dqdv": float(w), "_warm": True}
+                 for w in w_grid})
+    return objs
 
 
 # ---------------------------------------------------------------- 층화 표본
@@ -85,6 +101,7 @@ def sweep_summary(scored: pd.DataFrame, tol: float = 0.02) -> pd.DataFrame:
     from src.scoring import MODES
 
     df = scored[scored["recoverable"]] if "recoverable" in scored else scored
+    df = df[df["objective"] != SEED_NAME]      # 숨은 seed는 비교 대상이 아니다
     rows = []
     group_cols = ["objective"] + (["noise"] if "noise" in df.columns else [])
     for key, g in df.groupby(group_cols):
