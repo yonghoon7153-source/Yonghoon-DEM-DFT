@@ -1,3 +1,8 @@
+# ⚠ Render web service 는 공개 onrender.com 주소를 갖는다 (접근 제한 없음).
+#   그리고 persistent disk 가 없으면 기본 파일시스템은 재배포·재시작 때 초기화된다.
+#   → 이 배포는 **읽기 전용**이 맞다. 업로드·코멘트·이름변경·journal 기록은 app.py 가
+#     ALLOW_MUTATIONS 없이는 403 으로 막는다 (2026-08-07 Codex 리뷰 P1).
+#   로컬에서 쓰기를 켜려면:  ALLOW_MUTATIONS=1 python3 webapp/app.py
 services:
   - type: web
     name: dft-infra
@@ -7,3 +12,7 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: "3.12"
+      # 명시적으로 못 박아 둔다 — 나중에 누가 켜려면 여기를 고쳐야 하고,
+      # 그때 위 주석(인증 없음 · 파일시스템 휘발)을 반드시 읽게 된다.
+      - key: ALLOW_MUTATIONS
+        value: "0"

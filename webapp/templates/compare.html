@@ -24,6 +24,8 @@
   <div class="card">
     <h3>다축 프로파일 <span class="muted" style="font-weight:400;font-size:.8rem">— 정규화 레이더 (0–1, 열별 min–max)</span></h3>
     <div class="chart" id="cmpradar"></div>
+    {# 방법 불일치로 빠진 축을 조용히 감추지 않는다 — 왜 빠졌는지 남긴다 #}
+    <div class="muted" id="cmpradar-note" style="font-size:.72rem;margin-top:4px"></div>
     <div class="muted" style="font-size:.72rem;margin-top:4px">각 축은 선택 조성 내에서 0–1로 정규화 — 단위가 다른 물성의 상대 위치 비교용.</div>
   </div>
 </div>
@@ -32,6 +34,27 @@ const CANON={{ b.canonical|tojson }};
 const META={{ b.canonical_meta|tojson }};
 // ⚠ 튜플 키는 tojson 불가 → 라우트에서 'key|cid' 문자열로 평탄화해 넘긴다.
 const PROV={{ canonical_provisional|tojson }};
+// ★ 값 하나하나의 비교 묶음·상태·출처 (canonical_registry.json). 아래에서 **강제**에 쓴다.
+const CMETA={{ canonical_meta|tojson }};
+function cmeta(k,id){return CMETA[k+'|'+id]||{};}
+// 선택 조성 중 그 축에서 **제일 많은 조성이 속한 묶음**을 기본 비교군으로 삼는다.
+function domGroup(k,sel){
+  const cnt={};
+  sel.forEach(id=>{const m=cmeta(k,id); if(m.group&&m.status==='canonical')cnt[m.group]=(cnt[m.group]||0)+1;});
+  const ks=Object.keys(cnt); if(!ks.length)return null;
+  return ks.reduce((a,b)=>cnt[b]>cnt[a]?b:a);
+}
+// 그 묶음에 속하고 상태가 canonical 인 것만 남긴다. 나머지는 '왜 빠졌는지'와 함께 돌려준다.
+function splitByGroup(k,sel){
+  const g=domGroup(k,sel), keep=[], drop=[];
+  sel.forEach(id=>{
+    const v=CANON[k]&&CANON[k][id], m=cmeta(k,id);
+    if(v===undefined||v===null){return;}
+    if(g&&m.group===g&&m.status==='canonical')keep.push(id);
+    else drop.push({id:id,why:(m.status&&m.status!=='canonical')?m.status:(m.group?('다른 묶음: '+m.group):'묶음 미지정')});
+  });
+  return {group:g,keep:keep,drop:drop};
+}
 const COMPS={{ COMPS|tojson }};
 const KEYS=Object.keys(CANON);
 const KLAB={gap_eV:'Band gap (eV)',B0_GPa:'EOS B0 (GPa)',E_VRH_GPa:'E_VRH (GPa)',MD_Ea_eV:'MD Ea (eV)',ICOHP_PS:'ICOHP P–S (eV)'};
@@ -62,25 +85,48 @@ function setKey(k){activeKey=k;upd();}
 function _noPlotly(id){var e=document.getElementById(id);
   if(e)e.innerHTML='<span class="muted">차트 라이브러리(Plotly)를 불러오지 못했어요.</span>';}
 function drawChart(){
-  if(typeof Plotly==='undefined'){_noPlotly('chart');return;}
-  let sel=ids();
+  // ⚠ 가드가 찾던 id 가 'chart' 였는데 실제 컨테이너는 'cmpchart' 다 — 오프라인에서
+  //   안내문이 안 뜨던 원인 (2026-08-07 리뷰 P3).
+  if(typeof Plotly==='undefined'){_noPlotly('cmpchart');_noPlotly('cmpradar');return;}
+  const sp=splitByGroup(activeKey,ids());
+  const sel=sp.keep;
   let x=sel.map(id=>COMPS[id].label);
   let y=sel.map(id=>CANON[activeKey][id]??null);
   let colors=sel.map(id=>COMPS[id].color);
-  document.getElementById('cmp-caveat').textContent =
-    (activeKey==='MD_Ea_eV') ? '⚠ MD Ea 절대값 인용 금지 (UMA, 멀티시드 판정만 — CLAUDE.md). 게다가 시드 프로토콜이 조성마다 다름: comp1/modelc=단일 궤적, lpsocl=4-seed, comp2=3-seed(잠정) → 같은 프로토콜끼리만 비교.'
-    : (activeKey==='gap_eV') ? 'comp2 2.04는 잠정(legacy, eigenvalue 재확인중). 절대값은 PBE-level.'
-    : (META[activeKey]||'');
-  Plotly.newPlot('cmpchart',[{x:x,y:y,type:'bar',marker:{color:colors}}],
+  // ★ 무엇을 왜 뺐는지 화면에 남긴다. 조용히 빼면 "우리 조성이 없네"로 읽힌다.
+  let cav=(sp.group?('비교 묶음 ['+sp.group+'] 안에서만 그린다. '):'비교 가능한 묶음이 없다. ');
+  if(sp.drop.length)cav+='제외: '+sp.drop.map(d=>(COMPS[d.id]?COMPS[d.id].label:d.id)+'('+d.why+')').join(' · ')+'. ';
+  const u=sel.map(id=>cmeta(activeKey,id)).filter(m=>m.n_seed);
+  if(u.length)cav+='시드 수: '+sel.map(id=>{const m=cmeta(activeKey,id);return (COMPS[id]?COMPS[id].label:id)+(m.n_seed?' '+m.n_seed+'-seed':'');}).join(' · ')+'. ';
+  cav+=(activeKey==='MD_Ea_eV')?'⚠ σ 절대값 인용 금지 (UMA·Nernst–Einstein Haven=1). 오차막대가 겹치면 순위를 주장하지 말 것.'
+     :(activeKey==='gap_eV')?'⚠ fixed-occ nscf 고유값만 정본. DOS 문턱 판독은 ~0.3 eV 과소.'
+     :(META[activeKey]||'');
+  document.getElementById('cmp-caveat').textContent=cav;
+  // 오차막대가 있으면 같이 그린다 — 겹침을 눈으로 보게 하는 게 요점이다
+  const err=sel.map(id=>cmeta(activeKey,id).u??null);
+  const tr={x:x,y:y,type:'bar',marker:{color:colors}};
+  if(err.some(v=>v!==null&&v!==undefined))tr.error_y={type:'data',array:err.map(v=>v??0),visible:true};
+  Plotly.newPlot('cmpchart',[tr],
     Object.assign({margin:{t:16,b:40},font:plotlyFont(),yaxis:{title:KLAB[activeKey]||activeKey}},plotlyBG()),
     {responsive:true,displaylogo:false});
 }
 function drawRadar(){
+  if(typeof Plotly==='undefined'){_noPlotly('cmpradar');return;}
   let sel=ids();
-  // 선택 조성이 모두 값을 가진 축만 사용 (결측 축은 폴리곤을 왜곡 → 제외)
-  let uk=KEYS.filter(k=>sel.every(id=>CANON[k][id]!=null));
+  // ★ 축마다 **같은 비교 묶음** 안에서 선택 조성 전부가 canonical 값을 가질 때만 쓴다.
+  //   (2026-08-07 리뷰 P1) 예전엔 값이 있으면 그냥 넣어서, 단일시드 MD Ea 와 4-seed 값,
+  //   legacy DOS-문턱 갭과 fixed-occ 갭이 같은 폴리곤 위에 올라갔다.
+  const drops=[];
+  let uk=KEYS.filter(k=>{
+    const sp=splitByGroup(k,sel);
+    if(sp.keep.length===sel.length&&sel.length)return true;
+    if(sp.drop.length)drops.push((KSHORT[k]||k)+'←'+sp.drop.map(d=>(COMPS[d.id]?COMPS[d.id].label:d.id)).join(','));
+    return false;
+  });
+  const note=document.getElementById('cmpradar-note');
+  if(note)note.textContent=drops.length?('방법 불일치로 제외된 축: '+drops.join(' · ')):'';
   if(sel.length<2||uk.length<3){
-    document.getElementById('cmpradar').innerHTML='<div class="muted" style="padding:44px;text-align:center;line-height:1.7">레이더는 <b>2개 이상</b> 조성 + 공통 물성 <b>3축 이상</b>일 때 그려져요.<br><span style="font-size:.85em">현재 '+sel.length+'개 선택 · 공통축 '+uk.length+'개</span></div>';return;}
+    document.getElementById('cmpradar').innerHTML='<div class="muted" style="padding:44px;text-align:center;line-height:1.7">레이더는 <b>2개 이상</b> 조성 + <b>같은 방법으로 잰</b> 공통 물성 <b>3축 이상</b>일 때만 그려요.<br><span style="font-size:.85em">현재 '+sel.length+'개 선택 · 사용 가능한 공통축 '+uk.length+'개'+(drops.length?('<br>제외: '+_cmpEsc(drops.join(' · '))):'')+'</span></div>';return;}
   let norm={};
   uk.forEach(k=>{let vals=sel.map(id=>CANON[k][id]);let mn=Math.min(...vals),mx=Math.max(...vals);
     norm[k]=v=>(mx===mn?0.5:(v-mn)/(mx-mn));});

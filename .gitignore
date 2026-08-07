@@ -44,3 +44,7 @@ cycle_*.csv
 cycle_*.json
 rint_decomp.*
 docs/figures/mpm*_*.png
+
+# 코멘트 쓰기 락 (프로세스 간 flock 용, 내용 없음)
+db/file_comments.json.lock
+db/*.tmp*

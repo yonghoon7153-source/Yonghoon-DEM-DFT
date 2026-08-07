@@ -15,6 +15,47 @@ import glossary as G
 
 app = Flask(__name__)
 
+# ─────────────────────────────────────────────────────────────
+# 쓰기 API 잠금 (2026-08-07, Codex 코드리뷰 P1)
+#
+# 이 앱의 업로드·코멘트·이름변경·journal 기록은 **인증도 CSRF 보호도 없다.** 로컬
+# WSL 에서 혼자 쓸 땐 그게 편했지만, render.yaml 은 `type: web` 이라 공개
+# onrender.com 주소를 갖는다 — 아무나 POST 할 수 있었다. 실측으로 comment·journal·
+# upload 가 토큰 없이 200 으로 성공했다.
+#
+# ⚠ 게다가 Render 기본 파일시스템은 재배포·재시작 때 사라진다(persistent disk 없음).
+#   즉 원격에서 쓴 기록은 보안 문제와 별개로 **어차피 유실된다.** 그래서 기본값은
+#   "원격 = 읽기 전용" 이 맞다.
+#
+#   로컬에서 쓰기를 켜려면:  ALLOW_MUTATIONS=1 python3 webapp/app.py
+#   (RENDER 환경변수가 있으면 명시적으로 켜지 않는 한 항상 잠근다.)
+# ─────────────────────────────────────────────────────────────
+_ON_RENDER = bool(os.environ.get("RENDER") or os.environ.get("RENDER_SERVICE_ID"))
+ALLOW_MUTATIONS = os.environ.get("ALLOW_MUTATIONS", "").strip() in ("1", "true", "yes")
+READ_ONLY = not ALLOW_MUTATIONS
+
+
+def _guard_mutation():
+    """쓰기 라우트 앞에 건다. 잠겨 있으면 403 과 **켜는 방법**을 같이 준다."""
+    if not READ_ONLY:
+        return None
+    return jsonify({
+        "error": "읽기 전용 모드예요 — 이 서버에서는 저장이 꺼져 있어요.",
+        "why": ("공개 배포에는 인증이 없고, Render 기본 파일시스템은 재시작 때 초기화돼서 "
+                "어차피 기록이 남지 않아요."),
+        "how": "로컬에서 쓰려면 ALLOW_MUTATIONS=1 로 실행하세요.",
+        "on_render": _ON_RENDER,
+    }), 403
+
+
+@app.after_request
+def _sec_headers(resp):
+    # 저장형 XSS 방어를 파서 하나에만 기대지 않는다 (리뷰 P2).
+    resp.headers.setdefault("X-Content-Type-Options", "nosniff")
+    resp.headers.setdefault("Referrer-Policy", "same-origin")
+    resp.headers.setdefault("X-Frame-Options", "SAMEORIGIN")
+    return resp
+
 # ⚠ 입문/설명 본문에 **굵게**·`코드` 를 쓰는데 템플릿이 그대로 찍어서 별표가 노출됐다.
 #   전체 마크다운 파서를 붙일 자리가 아니므로 **굵게·코드·이스케이프만** 처리한다.
 #   ⚠ escape 를 먼저 해야 XSS 가 안 생긴다 (본문은 우리가 쓰지만 규율은 지킨다).
@@ -66,6 +107,11 @@ def md_html(text: str, extensions=("tables", "fenced_code")) -> str:
     litdb digest 는 논문 에이전트가 외부 PDF 를 요약해 쓰는 파일이라 입력이 100% 신뢰
     대상은 아니므로, 태그를 통째로 이스케이프하는 대신 파서 단계에서 raw HTML 만 끈다
     (표·코드블록 등 정상 마크다운 렌더는 그대로 유지된다).
+
+    ⚠ raw HTML 을 껐다고 끝이 아니다 (2026-08-07 리뷰 P2): 파서는 **URL scheme 을 안 본다**.
+      `[click](javascript:alert(1))` 이 그대로 `<a href="javascript:...">` 로 나갔다.
+      litdb digest 는 논문 에이전트가 외부 PDF 를 요약해 쓰는 파일이라 입력이 100% 신뢰
+      대상이 아니므로, 렌더 결과의 href/src 를 **허용 scheme 만 통과**시킨다.
     """
     if _md is None:
         return "<pre>" + (text or "") + "</pre>"
@@ -80,7 +126,30 @@ def md_html(text: str, extensions=("tables", "fenced_code")) -> str:
             md.inlinePatterns.deregister(name)
         except (KeyError, ValueError):
             pass
-    return md.convert(text or "")
+    return _sanitize_urls(md.convert(text or ""))
+
+
+# 허용 scheme — 나머지(javascript:, data:, vbscript: …)는 링크를 죽인다.
+_URL_ATTR = re.compile(r"""(?P<a>\b(?:href|src)\s*=\s*)(?P<q>["'])(?P<v>[^"']*)(?P=q)""", re.I)
+_URL_OK = re.compile(r"""^\s*(?:https?:|mailto:|/|\#|\./|\.\./|[\w.\-~%()가-힣][^:]*$)""", re.I)
+
+
+def _sanitize_urls(html: str) -> str:
+    """렌더된 HTML 의 href/src 를 허용 scheme 만 통과시킨다.
+
+    ⚠ 파서에서 raw HTML 을 껐다고 안전해지지 않는다 — 마크다운 링크 문법 자체가
+      `[x](javascript:alert(1))` 를 정상 링크로 만든다 (2026-08-07 리뷰 P2, 실측 확인).
+      스키마가 아닌 상대경로·앵커·한글 파일명은 그대로 살린다.
+    """
+    def _fix(m):
+        v = (m.group("v") or "").strip()
+        # &#106;avascript: 같은 엔티티 우회를 막으려면 먼저 푼다
+        import html as _h
+        plain = _h.unescape(v).replace("\t", "").replace("\n", "").replace("\r", "")
+        if _URL_OK.match(plain):
+            return m.group(0)
+        return f'{m.group("a")}{m.group("q")}#blocked-url{m.group("q")} data-blocked-url="1"'
+    return _URL_ATTR.sub(_fix, html)
 
 
 _BOLD_RE = re.compile(r"\*\*(.+?)\*\*", re.S)
@@ -166,8 +235,19 @@ def compare():
     bvse = D.bvse_shared()          # 3계 공유 BVSE (조성 prefix 로 안 잡히던 자료)
     # ⚠ CANONICAL_PROVISIONAL 은 (key, cid) 튜플 키라 |tojson 이 TypeError 를 낸다 → 문자열로 평탄화.
     prov = {f"{k}|{c}": r for (k, c), r in D.CANONICAL_PROVISIONAL.items()}
+    # ★ 2026-08-07 (리뷰 P1): 부제는 "같은 방법끼리만 유효"인데 구현은 값이 있으면 그냥 그렸다.
+    #   비교 묶음(comparison_group)과 상태를 같이 내려보내 **차트·레이더가 강제**하게 한다.
+    meta = {f"{k}|{c}": {"group": e.get("comparison_group"),
+                         "status": e.get("status"),
+                         "method": e.get("method_id"),
+                         "n_seed": e.get("n_seed"),
+                         "u": e.get("uncertainty"),
+                         "src": e.get("source_path"),
+                         "note": e.get("note")}
+            for (k, c), e in D.CANONICAL_ENTRY.items() if k and c}
     return render_template("compare.html", bvse=bvse, active="compare", b=b,
-                           canonical=D.canonical_table(), canonical_provisional=prov)
+                           canonical=D.canonical_table(), canonical_provisional=prov,
+                           canonical_meta=meta)
 
 
 @app.route("/cascade")
@@ -332,6 +412,9 @@ def api_file(rel):
 @app.route("/api/concept-upload/<cid>", methods=["POST"])
 def api_concept_upload(cid):
     """개념 문서 드래그 업로드. 저장 후 페이지 새로고침이 첨부를 다시 수집한다."""
+    g = _guard_mutation()
+    if g:
+        return g
     r = D.save_concept_upload(cid, request.files.getlist("file"))
     if r.get("error"):
         abort(404)
@@ -357,6 +440,9 @@ def api_comments(rel):
     if request.method == "GET":
         return jsonify({"rel": rel, "items": D.file_comments(rel),
                         "paper": _paper_cmt_index(rel)})
+    g = _guard_mutation()
+    if g:
+        return g
     d = request.get_json(silent=True) or {}
     r = D.add_file_comment(rel, str(d.get("text", "")), str(d.get("who", "")))
     return (jsonify(r), 400) if r.get("error") else jsonify(r)
@@ -365,6 +451,9 @@ def api_comments(rel):
 @app.route("/api/comments/<path:rel>", methods=["DELETE"])
 def api_comment_delete(rel):
     """?id=<cid> 로 한 건 삭제. path 에 넣으면 파일 경로와 섞여 파싱이 애매해진다."""
+    g = _guard_mutation()
+    if g:
+        return g
     r = D.del_file_comment(rel, request.args.get("id", ""))
     return (jsonify(r), 400) if r.get("error") else jsonify(r)
 
@@ -376,6 +465,9 @@ def api_file_rename():
     uploads 밖은 data.rename_upload 가 거절한다 (도구가 같은 이름으로 다시 만들어
     두 벌이 되는 걸 막는다) — 400 으로 사유를 그대로 돌려준다.
     """
+    g = _guard_mutation()
+    if g:
+        return g
     d = request.get_json(silent=True) or {}
     r = D.rename_upload(str(d.get("rel", "")), str(d.get("name", "")))
     return (jsonify(r), 400) if r.get("error") else jsonify(r)
@@ -532,6 +624,9 @@ def log():
 @app.route("/api/log", methods=["POST"])
 def api_log():
     from flask import request
+    g = _guard_mutation()
+    if g:
+        return g
     d = request.get_json(force=True, silent=True)
     if not isinstance(d, dict):          # 본문이 list/str/int 여도 500 대신 400
         return jsonify({"ok": False, "err": "body must be a JSON object"}), 400

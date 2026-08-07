@@ -193,6 +193,30 @@
   }
   raw = out.join('\n');
 
+  // ── 삽입 전 정화 (서버 _sanitize_urls 와 같은 규칙) ─────────────────────
+  function sanitizeHTML(h){
+    var d = document.createElement('div');
+    d.innerHTML = h;
+    // ① 스크립트·이벤트 핸들러·위험 요소 제거
+    d.querySelectorAll('script,iframe,object,embed,form,link,meta,base,style').forEach(function(e){e.remove();});
+    d.querySelectorAll('*').forEach(function(e){
+      Array.prototype.slice.call(e.attributes).forEach(function(a){
+        if (/^on/i.test(a.name)) e.removeAttribute(a.name);
+      });
+    });
+    // ② href/src 는 허용 scheme 만 (상대경로·앵커·한글 파일명은 통과)
+    var OK = /^\s*(?:https?:|mailto:|\/|#|\.\/|\.\.\/|[^:]*$)/i;
+    d.querySelectorAll('[href],[src]').forEach(function(e){
+      ['href','src'].forEach(function(k){
+        var v = e.getAttribute(k);
+        if (v !== null && !OK.test(v.replace(/[\t\n\r]/g,''))){
+          e.setAttribute(k, '#blocked-url'); e.setAttribute('data-blocked-url','1');
+        }
+      });
+    });
+    return d.innerHTML;
+  }
+
   // 3) 마크다운 → HTML
   marked.setOptions({ gfm:true, breaks:false, headerIds:true, mangle:false });
   var html = marked.parse(raw);
@@ -205,7 +229,11 @@
   function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   html = html.replace(new RegExp(L+'M(\\d+)'+R,'g'),             function(_,n){ return esc(maths[n]); });
 
-  box.innerHTML = html;
+  // ★ 삽입 전에 정화한다 (2026-08-07 리뷰 P2). 서버 md_html 은 raw HTML 을 끄고
+  //   href/src scheme 을 검사하는데, **이 경로는 브라우저 marked 라 그 방어를 안 거친다.**
+  //   개념 문서는 에이전트가 외부 PDF 를 요약해 쓰기도 하므로 같은 규칙을 여기도 건다.
+  //   DOMPurify 를 vendor 에 넣기 전까지의 최소 방어 — DOM 을 만들어 놓고 훑는다.
+  box.innerHTML = sanitizeHTML(html);
   }
 
   // mermaid 코드블록 → .mermaid div (marked·서버 fallback 공통)

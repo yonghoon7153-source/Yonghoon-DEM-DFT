@@ -1,0 +1,209 @@
+#!/usr/bin/env python3
+"""test_webapp.py — 리뷰(2026-08-07)의 완료 판정 기준을 **자동 검사**로 굳힌다.
+
+왜 이 파일인가
+  이 앱은 주석에 과거 회귀를 잔뜩 적어 두는데, 정작 같은 문제가 다시 생기는 걸 막는
+  코드는 없었다(리뷰 P2). 여기 담은 건 전부 **실제로 한 번 터졌던 것**들이다.
+
+    pytest webapp/tests/test_webapp.py -q
+    python3 webapp/tests/test_webapp.py          # pytest 없이도 돈다
+"""
+import io
+import json
+import os
+import re
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "webapp"))
+
+import app as A          # noqa: E402
+import canonical as C    # noqa: E402
+import data as D         # noqa: E402
+
+
+# ── 1) 정본 레지스트리 ↔ 원자료 ─────────────────────────────────────────────
+def test_registry_matches_sources():
+    """레지스트리 값이 source_path/source_key 가 가리키는 원자료와 같아야 한다."""
+    bad = C.validate(C.load_registry())
+    assert not bad, "원자료와 어긋남:\n" + "\n".join(
+        f"  {e.get('metric')}/{e.get('system')}: {w}" for e, w in bad)
+
+
+def test_no_hardcoded_canonical_numbers():
+    """정본 숫자가 data.py 로 되돌아오면 안 된다 — 그게 원래의 drift 원인이었다."""
+    src = (ROOT / "webapp" / "data.py").read_text(encoding="utf-8")
+    m = re.search(r"^CANONICAL\s*=\s*\{[^}]", src, re.M)
+    assert m is None, "data.py 에 CANONICAL 딕셔너리 리터럴이 다시 생겼다 — 레지스트리를 쓸 것"
+
+
+def test_canonical_entries_have_provenance():
+    """status=canonical 이면 반드시 출처와 비교 묶음이 있어야 한다."""
+    for e in C.load_registry()["entries"]:
+        if e.get("status") != "canonical":
+            continue
+        assert e.get("source_path") and e.get("source_key"), f"{e['metric']}/{e['system']} 출처 없음"
+        assert e.get("comparison_group"), f"{e['metric']}/{e['system']} comparison_group 없음"
+        assert e.get("method_id"), f"{e['metric']}/{e['system']} method_id 없음"
+
+
+# ── 2) 프로토콜 혼합 금지 (이번 리뷰의 핵심) ────────────────────────────────
+def test_md_ea_groups_are_separated():
+    """단일시드 앵커와 멀티시드 정본이 같은 비교 묶음에 있으면 안 된다."""
+    reg = C.load_registry()
+    multi = C.canonical_map(reg, "MD_Ea_eV", group="md-ea-multiseed-v1")
+    single = C.canonical_map(reg, "MD_Ea_eV_singleseed", group="md-ea-singleseed-anchor-v1")
+    assert set(multi) and set(single)
+    for e in C.entries(reg, "MD_Ea_eV", group="md-ea-multiseed-v1"):
+        assert (e.get("n_seed") or 0) >= 3, f"{e['system']} 이 멀티시드 묶음에 있는데 n_seed={e.get('n_seed')}"
+    # 옛 버그의 정확한 형태: modelc 단일시드 0.224 가 멀티시드 묶음에 섞여 있던 것
+    assert abs(multi.get("modelc", 0) - 0.197) < 1e-6, "modelc 멀티시드 값이 아니다"
+
+
+def test_dashboard_ea_card_is_protocol_honest():
+    """첫 화면 Ea 카드가 단일시드 값을 '멀티시드'라 부르면 안 된다."""
+    cards = [h for h in D.dashboard_highlights() if "Ea" in h["t"]]
+    assert cards, "Ea 카드가 없다"
+    txt = " ".join(cards[0][k] for k in ("t", "v", "n"))
+    assert "0.224" not in cards[0]["v"], "단일시드 0.224 가 다시 카드 값으로 올라왔다"
+    assert "멀티시드" in txt
+    # 오차막대가 겹치는 modelc/b2o3 를 두고 '최저'를 주장하면 안 된다
+    assert "구분 안 됨" in cards[0]["v"], "겹치는 오차막대인데 순위를 주장한다"
+
+
+def test_gap_card_excludes_legacy_group():
+    """갭 순위가 legacy DOS-문턱 값(comp2)을 같은 축에 올리면 안 된다."""
+    gm = D.canonical_comparable("gap_eV", "gap-fixedocc-eigenvalue-v1")
+    assert "comp2" not in gm
+    assert set(gm) == {"comp1", "modelc", "lpsocl", "b2o3"}
+
+
+def test_compare_page_ships_group_metadata():
+    """compare 화면이 강제할 수 있도록 묶음/상태가 실제로 내려가야 한다."""
+    b = A.app.test_client().get("/compare").get_data(as_text=True)
+    m = re.search(r"const CMETA=(\{.*?\});", b, re.S)
+    assert m, "CMETA 가 안 내려간다"
+    d = json.loads(m.group(1))
+    assert d["MD_Ea_eV|modelc"]["group"] == "md-ea-multiseed-v1"
+    assert d["gap_eV|comp2"]["group"] != d["gap_eV|comp1"]["group"], "legacy 갭이 정본과 같은 묶음이다"
+    assert "splitByGroup" in b, "묶음 강제 함수가 템플릿에 없다"
+
+
+def test_uma_forbidden_system_stays_na():
+    """UMA 금지 조성(Li3N)은 계산값으로 채워지면 안 된다 (CLAUDE.md)."""
+    na = {f"{c}|{k}" for (c, k) in D.NOT_APPLICABLE}
+    assert any("li3n" in x.lower() for x in na), "Li3N N/A 표시가 사라졌다"
+
+
+# ── 3) 라우트 · 데이터 스모크 ──────────────────────────────────────────────
+def _routes():
+    return sorted({r.rule for r in A.app.url_map.iter_rules()
+                   if "GET" in r.methods and "<" not in r.rule
+                   and not r.rule.startswith("/static")})
+
+
+def test_all_get_routes_200():
+    c = A.app.test_client()
+    bad = []
+    for u in _routes():
+        try:
+            if c.get(u).status_code != 200:
+                bad.append(u)
+        except Exception as ex:                      # 렌더 예외도 실패로 잡는다
+            bad.append(f"{u} ({ex})")
+    assert not bad, f"200 이 아닌 라우트: {bad}"
+
+
+def test_all_csv_parse():
+    import csv
+    bad = []
+    for p in list((ROOT / "db").rglob("*.csv")) + list((ROOT / "docs" / "figures").rglob("*.csv")):
+        try:
+            with open(p, encoding="utf-8", errors="ignore") as f:
+                list(csv.reader(f))
+        except Exception as ex:
+            bad.append(f"{p.relative_to(ROOT).as_posix()}: {ex}")
+    assert not bad, bad
+
+
+def test_no_literal_bold_markers_in_rendered_body():
+    """대시보드 카드의 '**' 가 그대로 보이던 회귀 (2026-08-07)."""
+    b = A.app.test_client().get("/").get_data(as_text=True)
+    body = re.sub(r"<script\b.*?</script>", "", b, flags=re.S)
+    body = re.sub(r"<[^>]*>", "", body)
+    assert "**" not in body, "대시보드에 처리 안 된 ** 가 남아 있다"
+
+
+# ── 4) 보안 · 동시성 · 경로 ────────────────────────────────────────────────
+def test_mutations_locked_by_default():
+    """인증이 없으므로 기본은 읽기 전용이어야 한다 (공개 Render 배포)."""
+    c = A.app.test_client()
+    assert A.READ_ONLY is True, "ALLOW_MUTATIONS 없이 쓰기가 열려 있다"
+    probes = [("POST", "/api/comments/db/properties/electronic.json", {"json": {"text": "x"}}),
+              ("DELETE", "/api/comments/db/properties/electronic.json?id=x", {}),
+              ("POST", "/api/log", {"json": {"kind": "note", "text": "x"}}),
+              ("POST", "/api/file-rename", {"json": {"rel": "a", "name": "b"}}),
+              ("POST", "/api/concept-upload/dft", {})]
+    for m, u, kw in probes:
+        assert c.open(u, method=m, **kw).status_code == 403, f"{m} {u} 가 안 막혔다"
+
+
+def test_markdown_blocks_dangerous_url_schemes():
+    """`[x](javascript:...)` 가 실행 가능한 href 로 남으면 안 된다 (리뷰 P2 실측)."""
+    for bad in ["[a](javascript:alert(1))", "[a](&#106;avascript:alert(1))",
+                "[a](data:text/html;base64,PHM+)", "[a](VBscript:msgbox(1))"]:
+        h = A.md_html(bad)
+        assert "blocked-url" in h and "javascript" not in h.lower(), h
+    for good in ["[a](https://x.com)", "[a](docs/f.png)", "[a](#sec)", "[a](docs/한글.pdf)"]:
+        assert "blocked-url" not in A.md_html(good), good
+
+
+def test_paths_are_posix():
+    """Windows 에서 역슬래시 경로가 기록돼 첨부가 사라지던 회귀 (리뷰 P2)."""
+    src = (ROOT / "webapp" / "data.py").read_text(encoding="utf-8")
+    assert not re.search(r"str\(\w[\w.]*\.relative_to\(ROOT\)\)", src), \
+        "str(...relative_to(ROOT)) 가 남아 있다 — .as_posix() 를 쓸 것"
+
+
+def test_comment_writes_survive_concurrency():
+    """gunicorn worker 2개에서 마지막 저장이 앞선 저장을 덮던 회귀 (40 요청 → 2 저장)."""
+    import multiprocessing as mp
+    rel = "db/properties/electronic.json"
+    before = len(D.file_comments(rel))
+    n = 24
+    with mp.Pool(6) as p:
+        rs = p.map(_cmt_worker, [(rel, i) for i in range(n)])
+    ok = [r for r in rs if r.get("ok")]
+    after = len(D.file_comments(rel))
+    ids = [r["item"]["id"] for r in ok]
+    try:
+        assert len(ok) == n, f"{len(ok)}/{n} 만 성공"
+        assert after - before == n, f"{after - before}/{n} 만 저장됐다"
+        assert len(set(ids)) == n, "코멘트 id 가 겹친다 — 삭제가 엉뚱한 걸 지운다"
+    finally:
+        for r in ok:
+            D.del_file_comment(rel, r["item"]["id"])
+
+
+def _cmt_worker(arg):
+    rel, i = arg
+    return D.add_file_comment(rel, f"pytest concurrency {i}", "pytest")
+
+
+if __name__ == "__main__":
+    fails = 0
+    for name, fn in sorted(globals().items()):
+        if not (name.startswith("test_") and callable(fn)):
+            continue
+        try:
+            fn()
+            print(f"  ✅ {name}")
+        except AssertionError as e:
+            fails += 1
+            print(f"  ⛔ {name}\n       {str(e)[:400]}")
+        except Exception as e:
+            fails += 1
+            print(f"  ⛔ {name} (예외) {type(e).__name__}: {str(e)[:300]}")
+    print(f"\n{'✅ 전부 통과' if not fails else f'⛔ 실패 {fails}건'}")
+    sys.exit(1 if fails else 0)

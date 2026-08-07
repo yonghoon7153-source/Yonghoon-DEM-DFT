@@ -1,0 +1,280 @@
+{
+  "schema": "canonical_registry/v1",
+  "_purpose": "화면 정본값의 단일 진실 원천. webapp/data.py 는 여기서만 읽고 숫자를 자체 보관하지 않는다.",
+  "_rules": [
+    "값 하나 = 항목 하나. 반드시 source_path + source_key 로 원자료를 가리킨다.",
+    "webapp/canonical.py 의 resolve() 가 그 경로를 따라가 값을 대조한다 (tools/db/validate_canonical.py).",
+    "★ comparison_group 이 같은 값끼리만 순위·비교·레이더에 함께 올린다. 프로토콜이 다르면 group 도 다르다.",
+    "status: canonical(정본) · provisional(잠정) · superseded(철회) · source_pending(출처 미배선).",
+    "prohibitions 는 CLAUDE.md 데이터 규율의 기계 판독 가능한 형태다."
+  ],
+  "_history": {
+    "2026-08-07": "Codex 코드리뷰 P1 대응으로 신설. 이전에는 webapp/data.py 의 CANONICAL 딕셔너리가 정본이었다. 이관 중 MD_Ea_eV 안에서 단일시드(comp1 0.253 / modelc 0.224)와 4-seed(lpsocl 0.287)가 한 딕셔너리에 섞여 있던 것을 발견 — 대시보드의 '최저값' 순위가 프로토콜을 넘나들고 있었다. group 을 나눠 분리했다."
+  },
+  "entries": [
+    {
+      "system": "comp1", "metric": "gap_eV", "value": 2.066, "unit": "eV",
+      "source_path": "db/properties/electronic.json",
+      "source_key": "/eigenvalue_gaps_v100_2026_06_16/comp1/gap_eV",
+      "method_id": "qe-uspp__fixed-occ-nscf-eigenvalue__k888",
+      "comparison_group": "gap-fixedocc-eigenvalue-v1",
+      "status": "canonical",
+      "prohibitions": ["dos_threshold_readout"],
+      "updated": "2026-06-16"
+    },
+    {
+      "system": "modelc", "metric": "gap_eV", "value": 2.099, "unit": "eV",
+      "source_path": "db/properties/electronic.json",
+      "source_key": "/eigenvalue_gaps_v100_2026_06_16/modelc/gap_eV",
+      "method_id": "qe-uspp__fixed-occ-nscf-eigenvalue__k888",
+      "comparison_group": "gap-fixedocc-eigenvalue-v1",
+      "status": "canonical",
+      "prohibitions": ["dos_threshold_readout"],
+      "updated": "2026-06-16"
+    },
+    {
+      "system": "b2o3", "metric": "gap_eV", "value": 1.9671, "unit": "eV",
+      "source_path": "db/properties/electronic.json",
+      "source_key": "/eigenvalue_gaps_v100_2026_06_16/b2o3/gap_eV",
+      "method_id": "qe-uspp__fixed-occ-nscf-eigenvalue__k888",
+      "comparison_group": "gap-fixedocc-eigenvalue-v1",
+      "status": "canonical",
+      "prohibitions": ["dos_threshold_readout"],
+      "updated": "2026-06-16"
+    },
+    {
+      "system": "lpsocl", "metric": "gap_eV", "value": 2.2309, "unit": "eV",
+      "source_path": "db/properties/lpsocl_dos_gap.json",
+      "source_key": "/gap_eV",
+      "method_id": "qe-uspp__fixed-occ-nscf-eigenvalue__standard_dos",
+      "comparison_group": "gap-fixedocc-eigenvalue-v1",
+      "status": "canonical",
+      "prohibitions": ["dos_threshold_readout"],
+      "updated": "2026-07-16"
+    },
+    {
+      "system": "comp2", "metric": "gap_eV", "value": 2.04, "unit": "eV",
+      "source_path": null, "source_key": null,
+      "method_id": "legacy-dos-threshold__unverified",
+      "comparison_group": "gap-legacy-dos-threshold",
+      "status": "source_pending",
+      "note": "legacy band_gaps 값. fixed-occ nscf 재확인 전까지 정본 4종과 같은 축에 올리지 않는다 — DOS 문턱 판독은 ~0.3 eV 과소.",
+      "prohibitions": ["compare_with_fixedocc_group"],
+      "updated": "2026-08-07"
+    },
+
+    {
+      "system": "comp1", "metric": "B0_GPa", "value": 26.23, "unit": "GPa",
+      "source_path": "db/properties/eos.json",
+      "source_key": "/results/[?id=comp1]/B0_GPa",
+      "tolerance": 0.05,
+      "method_id": "dft-bm3-eos__uspp",
+      "comparison_group": "b0-dft-bm3-v1",
+      "status": "canonical",
+      "note": "eos.json 은 26.2 로 한 자리 반올림 — 소수 둘째 자리 출처를 아직 못 찾아 tolerance 0.05 로 둔다.",
+      "updated": "2026-08-07"
+    },
+    {
+      "system": "comp2", "metric": "B0_GPa", "value": 25.8, "unit": "GPa",
+      "source_path": "db/properties/eos.json",
+      "source_key": "/results/[?id=comp2]/B0_GPa",
+      "method_id": "dft-bm3-eos__uspp",
+      "comparison_group": "b0-dft-bm3-v1",
+      "status": "canonical", "updated": "2026-08-07"
+    },
+    {
+      "system": "modelc", "metric": "B0_GPa", "value": 21.71, "unit": "GPa",
+      "source_path": "db/properties/eos.json",
+      "source_key": "/results/[?id=modelc]/B0_GPa",
+      "tolerance": 0.05,
+      "method_id": "dft-bm3-eos__uspp",
+      "comparison_group": "b0-dft-bm3-v1",
+      "status": "canonical",
+      "note": "eos.json 은 21.7 로 반올림 — 위 comp1 과 같은 사정.",
+      "updated": "2026-08-07"
+    },
+    {
+      "system": "lpsocl", "metric": "B0_GPa", "value": 24.71, "unit": "GPa",
+      "source_path": "db/properties/lpsocl_eos_dft_result.json",
+      "source_key": "/B0_GPa",
+      "method_id": "dft-bm3-eos__uspp",
+      "comparison_group": "b0-dft-bm3-v1",
+      "status": "canonical", "updated": "2026-07-16"
+    },
+    {
+      "system": "b2o3", "metric": "B0_GPa", "value": 24.48, "unit": "GPa",
+      "source_path": "db/properties/b2o3_eos_dft_result.json",
+      "source_key": "/B0_GPa",
+      "method_id": "dft-bm3-eos__uspp",
+      "comparison_group": "b0-dft-bm3-v1",
+      "status": "canonical", "updated": "2026-07-16"
+    },
+
+    {
+      "system": "comp1", "metric": "E_VRH_GPa", "value": 22.06, "unit": "GPa",
+      "source_path": "db/properties/elastic.json",
+      "source_key": "/dft_0K_relaxed_ion_stress_strain_full_Cij/results/[?id=comp1_v3]/E_VRH",
+      "method_id": "dft-0K-relaxed-ion__stress-strain-full-Cij",
+      "comparison_group": "elastic-dft-relaxedion-v1",
+      "status": "canonical", "updated": "2026-07-26"
+    },
+    {
+      "system": "modelc", "metric": "E_VRH_GPa", "value": 27.66, "unit": "GPa",
+      "source_path": "db/properties/elastic.json",
+      "source_key": "/dft_0K_relaxed_ion_stress_strain_full_Cij/results/[?id=modelc_v3]/E_VRH",
+      "method_id": "dft-0K-relaxed-ion__stress-strain-full-Cij",
+      "comparison_group": "elastic-dft-relaxedion-v1",
+      "status": "canonical", "updated": "2026-07-26"
+    },
+    {
+      "system": "lpsocl", "metric": "E_VRH_GPa", "value": 35.04, "unit": "GPa",
+      "source_path": "db/properties/elastic.json",
+      "source_key": "/dft_0K_relaxed_ion_stress_strain_full_Cij/results/[?id=lpsocl_v0]/E_VRH",
+      "method_id": "dft-0K-relaxed-ion__stress-strain-full-Cij",
+      "comparison_group": "elastic-dft-relaxedion-v1",
+      "status": "canonical", "updated": "2026-07-26"
+    },
+    {
+      "system": "comp2", "metric": "E_VRH_GPa", "value": 20.03, "unit": "GPa",
+      "source_path": "db/properties/elastic.json",
+      "source_key": "/dft_0K_relaxed_ion_stress_strain_full_Cij/results/[?id=comp2_v3]/E_VRH",
+      "method_id": "dft-0K-relaxed-ion__stress-strain-full-Cij",
+      "comparison_group": "elastic-dft-relaxedion-v1",
+      "status": "canonical", "updated": "2026-07-26"
+    },
+
+    {
+      "system": "modelc", "metric": "MD_Ea_eV", "value": 0.197, "uncertainty": 0.032, "unit": "eV",
+      "source_path": "db/properties/b2o3_vs_lpscl16_conductivity.csv",
+      "source_key": "/[?system=LPSCl1.6]/Ea_eV",
+      "n_seed": 3,
+      "method_id": "uma-s-1p1__600-800-1000K__3seed__msd2-50ps__NE-haven1",
+      "comparison_group": "md-ea-multiseed-v1",
+      "status": "canonical",
+      "prohibitions": ["absolute_sigma", "single_seed_ratio"],
+      "updated": "2026-07-09"
+    },
+    {
+      "system": "b2o3", "metric": "MD_Ea_eV", "value": 0.199, "uncertainty": 0.034, "unit": "eV",
+      "source_path": "db/properties/b2o3_vs_lpscl16_conductivity.csv",
+      "source_key": "/[?system=b2o3]/Ea_eV",
+      "n_seed": 3,
+      "method_id": "uma-s-1p1__600-800-1000K__3seed__msd2-50ps__NE-haven1",
+      "comparison_group": "md-ea-multiseed-v1",
+      "status": "canonical",
+      "prohibitions": ["absolute_sigma", "single_seed_ratio"],
+      "note": "modelc 와의 차이는 dEa = +0.002 +/- 0.047 — 같은 CSV 가 '구분 안 됨'이라고 적고 있다. 순위를 매기지 말 것.",
+      "updated": "2026-07-09"
+    },
+    {
+      "system": "lpsocl", "metric": "MD_Ea_eV", "value": 0.2867, "uncertainty": 0.024, "unit": "eV",
+      "source_path": "db/properties/lpsocl_md_arrhenius.json",
+      "source_key": "/Ea_eV_central",
+      "n_seed": 4,
+      "method_id": "uma-s-1p1__600-800-1000K__4seed__msd2-50ps__NE-haven1",
+      "comparison_group": "md-ea-multiseed-v1",
+      "status": "canonical",
+      "prohibitions": ["absolute_sigma", "single_seed_ratio"],
+      "note": "4-seed. modelc/b2o3 는 3-seed 지만 추정량(온도별 평균 -> 아레니우스 적합)이 같아 같은 group 으로 둔다 — 시드 수는 n_seed 로 드러낸다.",
+      "updated": "2026-07-27"
+    },
+    {
+      "system": "modelc", "metric": "MD_Ea_eV_singleseed", "value": 0.2235, "unit": "eV",
+      "source_path": "db/properties/lpsocl_md_arrhenius.json",
+      "source_key": "/anchors_same_window_singleseed/modelc_Ea_singleseed",
+      "n_seed": 1,
+      "method_id": "uma-s-1p1__600-800-1000K__1seed__msd2-50ps",
+      "comparison_group": "md-ea-singleseed-anchor-v1",
+      "status": "canonical",
+      "prohibitions": ["absolute_sigma", "cross_composition_ranking"],
+      "note": "deck 앵커. 같은 창의 단일 궤적끼리 짝지을 때만 쓴다.",
+      "updated": "2026-07-27"
+    },
+    {
+      "system": "b2o3", "metric": "MD_Ea_eV_singleseed", "value": 0.2234, "unit": "eV",
+      "source_path": "db/properties/lpsocl_md_arrhenius.json",
+      "source_key": "/anchors_same_window_singleseed/b2o3_Ea_singleseed",
+      "n_seed": 1,
+      "method_id": "uma-s-1p1__600-800-1000K__1seed__msd2-50ps",
+      "comparison_group": "md-ea-singleseed-anchor-v1",
+      "status": "canonical",
+      "prohibitions": ["absolute_sigma", "cross_composition_ranking"],
+      "updated": "2026-07-27"
+    },
+    {
+      "system": "comp1", "metric": "MD_Ea_eV_singleseed", "value": 0.253, "unit": "eV",
+      "source_path": null, "source_key": null,
+      "n_seed": 1,
+      "method_id": "uma-s-1p1__1seed__legacy-deck",
+      "comparison_group": "md-ea-singleseed-anchor-v1",
+      "status": "source_pending",
+      "prohibitions": ["absolute_sigma", "cross_composition_ranking"],
+      "note": "legacy 단일 궤적. 멀티시드 재계산 대기 — 그 전까지 조성 간 판정에 쓰지 않는다.",
+      "updated": "2026-08-07"
+    },
+    {
+      "system": "comp2", "metric": "MD_Ea_eV", "value": 0.275, "unit": "eV",
+      "source_path": null, "source_key": null,
+      "n_seed": 3,
+      "method_id": "uma-s-1p1__3seed__disorder-ensemble",
+      "comparison_group": "md-ea-comp2-disorder-provisional",
+      "status": "provisional",
+      "prohibitions": ["absolute_sigma", "cross_composition_ranking"],
+      "note": "800 K 시드 산포가 비물리(s3 800K 2.15e-6 < 자기 600K 2.44e-6). 300 K 외삽 시그마비 0.12-1.48x inconclusive. reseed s5/s6 권고.",
+      "updated": "2026-07-26"
+    },
+
+    {
+      "system": "lpsocl", "metric": "ICOHP_PS", "value": -6.04, "unit": "eV",
+      "source_path": "db/properties/lpsocl_icohp.json",
+      "source_key": "/bonds/P-S/ICOHP_total_eV_per_bond",
+      "method_id": "lobster__ext-basis__per-bond",
+      "comparison_group": "icohp-lobster-perbond-v1",
+      "status": "canonical", "updated": "2026-07-29"
+    },
+    {
+      "system": "b2o3", "metric": "ICOHP_PS", "value": -6.023, "unit": "eV",
+      "source_path": "db/properties/b2o3_icohp.json",
+      "source_key": "/bonds/P-S/ICOHP_total_eV_per_bond",
+      "method_id": "lobster__ext-basis__per-bond",
+      "comparison_group": "icohp-lobster-perbond-v1",
+      "status": "canonical", "updated": "2026-07-29"
+    },
+    {
+      "system": "modelc_nd_doped", "metric": "ICOHP_PS", "value": -5.976, "unit": "eV",
+      "source_path": "db/properties/nd_icohp.json",
+      "source_key": "/bonds/P-S/ICOHP_total_eV_per_bond",
+      "method_id": "lobster__ext-basis__per-bond",
+      "comparison_group": "icohp-lobster-perbond-v1",
+      "status": "canonical", "updated": "2026-07-29"
+    },
+    {
+      "system": "modelc", "metric": "ICOHP_PS", "value": -6.0, "unit": "eV",
+      "source_path": "db/properties/lpsocl_icohp.json",
+      "source_key": "/comparison_vs_family/P-S/modelc",
+      "method_id": "lobster__ext-basis__per-bond",
+      "comparison_group": "icohp-lobster-perbond-v1",
+      "status": "canonical",
+      "note": "자기 파일이 아니라 lpsocl 비교표에서 읽는다 — modelc 단독 icohp json 이 아직 없다.",
+      "updated": "2026-08-07"
+    },
+    {
+      "system": "comp1", "metric": "ICOHP_PS", "value": -5.938, "unit": "eV",
+      "source_path": null, "source_key": null,
+      "method_id": "lobster__ext-basis__per-bond",
+      "comparison_group": "icohp-lobster-perbond-v1",
+      "status": "source_pending",
+      "note": "nd_icohp.json 의 4.0 A cutoff 비교표에는 comp1 = -5.944 가 있어 0.006 eV 어긋난다 — cutoff 규약이 달라서로 보이나 미확인. 원 출처를 배선할 것.",
+      "updated": "2026-08-07"
+    },
+    {
+      "system": "comp2", "metric": "ICOHP_PS", "value": -5.913, "unit": "eV",
+      "source_path": null, "source_key": null,
+      "method_id": "lobster__ext-basis__per-bond",
+      "comparison_group": "icohp-lobster-perbond-v1",
+      "status": "source_pending",
+      "note": "comp2_icohp_origin.csv 가 있으나 per-bond 총합 키를 아직 확정 못 했다.",
+      "updated": "2026-08-07"
+    }
+  ]
+}

@@ -1,0 +1,157 @@
+"""canonical.py — 정본값의 **단일 진실 원천**을 db 에서 읽고 원자료와 대조한다.
+
+왜 만들었나 (2026-08-07 Codex 코드리뷰 P1)
+  화면 정본값이 `db/properties` 가 아니라 `data.py` 의 `CANONICAL` 딕셔너리에 **한 번 더**
+  하드코딩돼 있었다. 새 계산을 db 에 등록해도 이 딕셔너리를 손대지 않으면 화면은 그대로다
+  — 교차검증 도구에서 제일 위험한 형태의 조용한 drift.
+
+  ★ 그리고 리뷰가 짚은 것보다 한 겹 더 나쁜 게 있었다. `CANONICAL["MD_Ea_eV"]` 안에서
+    **프로토콜이 섞여 있었다**: comp1 0.253·modelc 0.224 는 단일 궤적인데 lpsocl 0.287 은
+    4-seed×3-T 다. 그러니 대시보드가 `sorted()` 로 고른 "최저값"은 라벨을 고쳐도 여전히
+    무효다 — 단일시드와 멀티시드를 한 줄에 세운 순위였다.
+    → 그래서 값마다 `comparison_group` 을 달고, **같은 group 안에서만** 순위·비교를 한다.
+
+무엇이 정본인가
+  db/properties/canonical_registry.json 의 entries. 각 항목은 원자료 위치를
+  (source_path, source_key) 로 가리키고, 이 모듈이 그걸 **따라가서 값이 맞는지 검사**한다.
+
+  from canonical import load_registry, canonical_map, validate
+  reg = load_registry()
+  canonical_map(reg, "gap_eV")                    # {"comp1": 2.066, ...}
+  canonical_map(reg, "MD_Ea_eV", group="md-ea-multiseed-v1")
+  validate(reg)                                   # [(entry, 문제) ...]
+"""
+from __future__ import annotations
+
+import csv
+import json
+import os
+import re
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+REGISTRY = ROOT / "db" / "properties" / "canonical_registry.json"
+
+# source_key 미니 문법 — 일부러 작게 유지한다. 못 읽는 표기는 조용히 넘기지 않고 오류로 낸다.
+#   JSON:  /a/b/c                     중첩 키
+#          /a/results[?id=comp1]/E_VRH   리스트에서 id==comp1 인 원소
+#   CSV:   [?system=LPSCl1.6]/Ea_eV   system 열이 그 값인 행의 Ea_eV 열
+_SEL = re.compile(r"^\[\?([^=\]]+)=([^\]]*)\]$")
+
+
+class ResolveError(Exception):
+    pass
+
+
+def _step(node, tok, where):
+    m = _SEL.match(tok)
+    if m:
+        k, want = m.group(1), m.group(2)
+        if not isinstance(node, list):
+            raise ResolveError(f"{where}: {tok} 는 리스트에만 쓸 수 있다 (실제 {type(node).__name__})")
+        for it in node:
+            if isinstance(it, dict) and str(it.get(k)) == want:
+                return it
+        raise ResolveError(f"{where}: {k}={want} 인 원소가 없다")
+    if isinstance(node, dict):
+        if tok not in node:
+            raise ResolveError(f"{where}: 키 '{tok}' 없음 (있는 키: {list(node)[:8]})")
+        return node[tok]
+    if isinstance(node, list):
+        try:
+            return node[int(tok)]
+        except (ValueError, IndexError):
+            raise ResolveError(f"{where}: 리스트 인덱스 '{tok}' 를 쓸 수 없다")
+    raise ResolveError(f"{where}: '{tok}' 아래로 못 들어간다 ({type(node).__name__})")
+
+
+def resolve(source_path: str, source_key: str):
+    """원자료에서 실제 값을 꺼낸다. 못 꺼내면 ResolveError — **조용히 None 을 주지 않는다.**"""
+    p = ROOT / source_path
+    if not p.is_file():
+        raise ResolveError(f"{source_path}: 파일 없음")
+    toks = [t for t in source_key.split("/") if t != ""]
+    if p.suffix.lower() == ".csv":
+        # ⚠ 우리 CSV 는 '#' 주석 줄이 섞여 있다(인용 금지 문구가 거기 산다). 걸러내고 읽는다.
+        with open(p, encoding="utf-8", errors="ignore") as f:
+            rows = [ln for ln in f if not ln.lstrip().startswith(("#", '"#'))]
+        node = list(csv.DictReader(rows))
+    else:
+        node = json.load(open(p, encoding="utf-8"))
+    for t in toks:
+        node = _step(node, t, source_path)
+    if isinstance(node, str):
+        # "0.287 +/- 0.024" 같은 서술형은 앞의 수만 받는다 (오차는 uncertainty 필드에 따로)
+        m = re.match(r"\s*(-?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?)", node)
+        if not m:
+            raise ResolveError(f"{source_path}:{source_key}: 문자열에서 수를 못 읽었다 ({node[:40]!r})")
+        return float(m.group(1))
+    if isinstance(node, bool) or node is None:
+        raise ResolveError(f"{source_path}:{source_key}: 수가 아니다 ({node!r})")
+    return float(node)
+
+
+def load_registry(path=None) -> dict:
+    p = Path(path) if path else REGISTRY
+    if not p.is_file():
+        return {"schema": "canonical_registry/v1", "entries": []}
+    return json.load(open(p, encoding="utf-8"))
+
+
+def validate(reg: dict) -> list:
+    """(entry, 문제) 목록. 빈 목록 = 레지스트리가 원자료와 일치한다."""
+    bad = []
+    for e in reg.get("entries", []):
+        sp, sk = e.get("source_path"), e.get("source_key")
+        if not sp or not sk:
+            # 출처가 없어도 되는 상태 = 애초에 "검증되지 않았다"고 화면에 밝히는 상태들.
+            # canonical 인데 출처가 없으면 그건 숨은 하드코딩이므로 실패로 잡는다.
+            if e.get("status") not in ("source_pending", "provisional", "superseded"):
+                bad.append((e, f"status={e.get('status')} 인데 source_path/source_key 가 없다 "
+                               f"— 정본은 반드시 원자료를 가리켜야 한다"))
+            continue
+        try:
+            got = resolve(sp, sk)
+        except ResolveError as ex:
+            bad.append((e, f"원자료를 못 따라간다 — {ex}"))
+            continue
+        tol = float(e.get("tolerance", 5e-4))
+        want = e.get("value")
+        if want is None or abs(got - float(want)) > tol:
+            bad.append((e, f"값 불일치 — 레지스트리 {want} vs 원자료 {got} (허용 ±{tol})"))
+    return bad
+
+
+def entries(reg, metric=None, group=None, status=("canonical",)):
+    out = []
+    for e in reg.get("entries", []):
+        if metric and e.get("metric") != metric:
+            continue
+        if group and e.get("comparison_group") != group:
+            continue
+        if status and e.get("status") not in status:
+            continue
+        out.append(e)
+    return out
+
+
+def canonical_map(reg, metric, group=None, status=("canonical",)) -> dict:
+    """{system: value} — 화면이 쓰는 형태.
+
+    ⚠ group 을 안 주면 **그 metric 의 모든 프로토콜이 섞인다.** 표시용으로는 괜찮지만
+      순위·최저값·레이더에는 반드시 group 을 지정할 것 (MD_Ea 가 정확히 그 사고를 냈다).
+    """
+    return {e["system"]: e["value"] for e in entries(reg, metric, group, status)}
+
+
+def groups_of(reg, metric) -> dict:
+    """{comparison_group: [entry...]} — 비교 가능한 묶음을 그대로 돌려준다."""
+    g = {}
+    for e in entries(reg, metric, status=None):
+        g.setdefault(e.get("comparison_group") or "ungrouped", []).append(e)
+    return g
+
+
+def index(reg) -> dict:
+    """(metric, system) → entry. 배지·툴팁이 상태/출처를 바로 꺼내 쓰기 위한 색인."""
+    return {(e.get("metric"), e.get("system")): e for e in reg.get("entries", [])}

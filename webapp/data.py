@@ -310,21 +310,65 @@ def index_metrics_by_comp(index: dict) -> dict:
         m.setdefault(cid, []).append(rec)
     return m
 
-# canonical 앵커값 (kb 나침반과 일치 — 사이트 상단 요약/비교용)
-CANONICAL = {
-    "gap_eV":     {"comp1": 2.066, "comp2": 2.04, "modelc": 2.099, "lpsocl": 2.2309, "b2o3": 1.9671},
-    "B0_GPa":     {"comp1": 26.23, "comp2": 25.8, "modelc": 21.71, "lpsocl": 24.71, "b2o3": 24.48},
-    # relaxed-ion USPP. comp2_v3 완료 2026-07-26 (elastic.json) — comp1과 동일 USPP·k444·cubic-52.
-    "E_VRH_GPa":  {"comp1": 22.06, "comp2": 20.03, "modelc": 27.66, "lpsocl": 35.04},
-    # UMA — ⚠절대값 인용주의. 시드 프로토콜이 조성마다 다르다(아래 CANONICAL_PROVISIONAL 참조):
-    #   comp1/modelc = 단일 궤적 deck 앵커 / lpsocl = 4-seed×3-T / comp2 = 3-seed(잠정).
-    "MD_Ea_eV":   {"comp1": 0.253, "modelc": 0.224, "lpsocl": 0.287},
-    "ICOHP_PS":   {"comp1": -5.938, "comp2": -5.913, "modelc": -6.000, "lpsocl": -6.04,
-                  # b2o3 는 db/properties/b2o3_icohp.json 에 값이 있는데 여기 없어서
-                  # metric 카드가 TODO 로 떴다(2026-07-29 감사). 같은 LOBSTER ext-basis 계열.
-                  "b2o3": -6.023,
-                   "modelc_nd_doped": -5.976},  # per_bond_json/lobster
-}
+# ─────────────────────────────────────────────────────────────
+# canonical 앵커값 — **db/properties/canonical_registry.json 이 유일한 원천이다.**
+#
+# 2026-08-07 (Codex 코드리뷰 P1) 이전에는 이 자리에 숫자가 하드코딩돼 있었다. 그러면
+# db 에 새 계산을 등록해도 화면이 안 바뀐다 — 교차검증 도구에서 제일 위험한 조용한 drift.
+#
+# ★ 이관하면서 리뷰가 짚은 것보다 한 겹 더 나쁜 걸 찾았다. 옛 `MD_Ea_eV` 딕셔너리 안에서
+#   **프로토콜이 섞여 있었다**: comp1 0.253·modelc 0.224 는 단일 궤적인데 lpsocl 0.287 은
+#   4-seed×3-T 였다. 대시보드가 `sorted()` 로 고른 "최저값"은 라벨을 고쳐도 무효였다 —
+#   단일시드와 멀티시드를 한 줄에 세운 순위였기 때문이다.
+#   → 지금은 metric 을 나눴다. `MD_Ea_eV` = 멀티시드 정본(modelc 0.197±0.032 ·
+#     b2o3 0.199±0.034 · lpsocl 0.2867±0.024), `MD_Ea_eV_singleseed` = 같은 창 단일 궤적 앵커.
+#     comp1 은 멀티시드 실행이 없으므로 `MD_Ea_eV` 에서 **빠지는 게 맞다**(빈칸 = 정직).
+#
+# ⚠ 값을 고치려면 이 파일이 아니라 레지스트리를 고친다. 그리고 반드시:
+#     python3 tools/db/validate_canonical.py
+#   가 통과해야 한다 — 레지스트리가 원자료(source_path/source_key)와 맞는지 검사한다.
+# ─────────────────────────────────────────────────────────────
+try:
+    import canonical as _C
+except ImportError:                                    # 도구가 webapp 밖에서 import 할 때
+    import sys as _sys
+    _sys.path.insert(0, str(ROOT / "webapp"))
+    import canonical as _C
+
+_REG = _C.load_registry()
+if not _REG.get("entries"):
+    raise RuntimeError(
+        "db/properties/canonical_registry.json 이 비었거나 없다 — 정본을 만들 수 없다. "
+        "이 파일에 숫자를 되돌려 넣지 말고 레지스트리를 복구할 것.")
+
+# 표시용 union (정본 + 잠정). 순위·비교에는 쓰지 말 것 — 아래 canonical_group() 참조.
+CANONICAL = {}
+for _e in _REG["entries"]:
+    if _e.get("value") is not None:
+        CANONICAL.setdefault(_e["metric"], {})[_e["system"]] = _e["value"]
+# (metric, system) → 항목 전체. 배지·툴팁·출처 링크·그룹 강제가 전부 여기서 나온다.
+CANONICAL_ENTRY = _C.index(_REG)
+
+
+def canonical_group(metric: str, system: str):
+    """이 값이 어느 비교 묶음에 속하나. 다르면 **같은 축에 올리면 안 된다.**"""
+    e = CANONICAL_ENTRY.get((metric, system))
+    return (e or {}).get("comparison_group")
+
+
+def canonical_comparable(metric: str, group: str = None, status=("canonical",)) -> dict:
+    """{system: value} — **같은 프로토콜끼리만**. 순위·최저값·레이더는 이걸 쓴다.
+
+    group 을 생략하면 그 metric 에서 항목이 제일 많은 그룹을 고른다(기본 비교 집합).
+    """
+    if group is None:
+        gs = _C.groups_of(_REG, metric)
+        gs = {k: [x for x in v if x.get("status") in status] for k, v in gs.items()}
+        gs = {k: v for k, v in gs.items() if v}
+        if not gs:
+            return {}
+        group = max(gs, key=lambda k: len(gs[k]))
+    return _C.canonical_map(_REG, metric, group=group, status=status)
 # 잠정/시드-프로토콜 표시 — (property, comp) : 사유. composition/explorer/compare 에서 '잠정' 배지·툴팁.
 CANONICAL_PROVISIONAL = {
     ("gap_eV", "comp2"): "잠정 — legacy band_gaps, fixed-occ nscf 재확인중 (eigenvalue canonical 아님)",
@@ -2351,18 +2395,52 @@ def cascade_for_element(sym: str) -> list:
 def dashboard_highlights() -> list:
     C, L = CANONICAL, {k: v["label"] for k, v in COMPOSITIONS.items()}
     hi = []
-    g = sorted(((v, cid) for cid, v in C["gap_eV"].items() if v is not None), reverse=True)
+    # ⚠ 순위는 **같은 비교 묶음 안에서만**. union 을 정렬하면 legacy DOS-문턱 판독(comp2)이
+    #   fixed-occ 정본과 같은 줄에 선다 (2026-08-07 리뷰 P1).
+    gm = canonical_comparable("gap_eV", "gap-fixedocc-eigenvalue-v1")
+    g = sorted(((v, cid) for cid, v in gm.items() if v is not None), reverse=True)
     if g:
         hi.append({"t": "Band gap", "v": f"{L.get(g[0][1], g[0][1])} {g[0][0]} eV",
-                   "n": "+O(LPSOCl)가 전자 절연 최강 · fixed-occ eigenvalue (comp2 잠정)"})
+                   "n": f"+O(LPSOCl)가 전자 절연 최강 · **fixed-occ nscf 고유값 {len(gm)}종 안에서의 순위**다. "
+                        "comp2(2.04)는 legacy DOS-문턱 판독이라 같은 축에 안 올린다 "
+                        "— DOS 문턱은 ~0.3 eV 과소평가한다."})
     hi.append({"t": "P–S 골격 vs Li–X 이온", "v": "ICOHP −6.0 ≫ −2.1 eV",
                "n": "강한 공유 골격 + 약한 이온결합 · comp2 Li–Br(−1.93)이 Li–Cl(−2.11)보다 약해 "
                     "격자 연화(E_VRH 22.06→20.03, B_VRH −18.2%) — 단 Pugh B/G는 3.14→2.79로 오히려 "
                     "감소라 '연성 이득'은 아님"})
-    e = sorted((v, cid) for cid, v in C["MD_Ea_eV"].items() if v is not None)
-    if e:
-        hi.append({"t": "이온 전도 Ea (UMA)", "v": f"{L.get(e[0][1], e[0][1])} {e[0][0]} eV 최저",
-                   "n": "Cl-rich가 Li 이동 유리 · ⚠멀티시드 판정(절대값 인용주의)"})
+    # ★ 2026-08-07 수정 (Codex 리뷰 P1 + 그보다 한 겹 더 나쁜 것).
+    #   옛 카드는 `sorted(CANONICAL["MD_Ea_eV"])` 로 modelc 0.224 를 "최저"로 뽑고
+    #   "⚠멀티시드 판정" 이라고 붙였다. 그런데 0.224 는 **단일 궤적 legacy 앵커**였고
+    #   같은 딕셔너리의 lpsocl 0.287 은 4-seed 값이었다 — 라벨만 틀린 게 아니라
+    #   **비교 자체가 프로토콜을 넘나들어서 무효**였다.
+    #   지금은 멀티시드 묶음 안에서만 읽고, 오차막대가 겹치면 순위를 매기지 않는다.
+    em = canonical_comparable("MD_Ea_eV", "md-ea-multiseed-v1")
+    if em:
+        rows = sorted(((v, cid) for cid, v in em.items() if v is not None))
+        ent = {cid: CANONICAL_ENTRY.get(("MD_Ea_eV", cid), {}) for _, cid in rows}
+        def _fmt(cid):
+            e_ = ent.get(cid, {}); u = e_.get("uncertainty")
+            return (f"{L.get(cid, cid)} {em[cid]:.3f}"
+                    + (f"±{u:.3f}" if u is not None else "")
+                    + (f" ({e_['n_seed']}-seed)" if e_.get("n_seed") else ""))
+        lo, hi_ = rows[0], rows[-1]
+        # 오차막대가 겹치는지 — 겹치면 "최저"라고 말하면 안 된다
+        u0 = ent.get(lo[1], {}).get("uncertainty") or 0.0
+        tied = [cid for v, cid in rows[1:]
+                if abs(v - lo[0]) <= (u0 + (ent.get(cid, {}).get("uncertainty") or 0.0))]
+        head = ("구분 안 됨: " + " ≈ ".join(_fmt(c) for c in [lo[1]] + tied)
+                if tied else f"{_fmt(lo[1])} 최저")
+        hi.append({
+            "t": "이온 전도 Ea (UMA) — **멀티시드 묶음 안에서만 비교**",
+            "v": head,
+            "n": " · ".join(_fmt(c) for _, c in rows)
+                 + ". ★ 이 카드는 **같은 시드 프로토콜(md-ea-multiseed-v1)** 만 세운다 — "
+                   "예전엔 단일 궤적 앵커(modelc 0.224)와 4-seed 값(lpsocl 0.287)을 한 줄에 세우고 "
+                   "'멀티시드 판정'이라 적었다(2026-08-07 수정). "
+                   "modelc vs b2o3 는 db 가 직접 **Δ=+0.002±0.047** 이라 적고 있으니 "
+                   "둘 사이 순위를 주장하면 안 된다. comp1 은 멀티시드 실행이 없어 **빠져 있다**. "
+                   "⚠ σ 절대값 인용 금지 (Nernst–Einstein, Haven=1). "
+                   "출처: db/properties/canonical_registry.json"})
     # SDCP (2026-08-06 저녁 갱신) — Phase-B 를 걸기 직전에 초기 자세를 실측해서 **보류**했다.
     # 대시보드에 올리는 이유: 며칠짜리 DFT+U 를 멈춘 판단이고, 그 근거가 두 숫자(2.53 Å, 9 meV)로
     # 끝나기 때문이다. ⚠ UMA 값이다. 절대 E_ads 인용 금지 — 순위·차이만.
@@ -2525,7 +2603,7 @@ def _auto_matched(cid: str) -> list[str]:
                 continue
             n = f.name.lower()
             if any(p in n for p in pats):
-                hits.append((f.stat().st_mtime, str(f.relative_to(ROOT))))
+                hits.append((f.stat().st_mtime, f.relative_to(ROOT).as_posix()))
     hits.sort(reverse=True)
     return [r for _m, r in hits[:_AUTO_MAX]]
 
@@ -2546,7 +2624,7 @@ def concept_attachments(cid: str) -> list[dict]:
     toks += [m.group(1) for m in _ATT_RE.finditer(md)]
     for tok in toks:
         # 문서가 `bv_path_annotated_*.png` 처럼 와일드카드로 적은 경우도 펼친다
-        rels = ([str(q.relative_to(ROOT)) for q in sorted(ROOT.glob(tok))]
+        rels = ([q.relative_to(ROOT).as_posix() for q in sorted(ROOT.glob(tok))]
                 if "*" in tok else [tok])
         for rel in rels:
             if rel in seen:
@@ -2611,7 +2689,7 @@ def _find_same_content(blob: bytes, name: str) -> str | None:
         if "uploads" in q.parts or not q.is_file() or q.stat().st_size != n:
             continue
         if hashlib.md5(q.read_bytes()).hexdigest() == h:
-            return str(q.relative_to(ROOT))
+            return q.relative_to(ROOT).as_posix()
     return None
 
 
@@ -2658,8 +2736,8 @@ def rename_upload(rel: str, newname: str) -> dict:
         return {"ok": True, "rel": rel, "name": src.name, "unchanged": True}
     if dst.exists():
         return {"error": f"같은 이름이 이미 있어요: {name}"}
-    old_rel = str(src.relative_to(ROOT))
-    new_rel = str(dst.relative_to(ROOT))
+    old_rel = src.relative_to(ROOT).as_posix()
+    new_rel = dst.relative_to(ROOT).as_posix()
     src.rename(dst)
     # 본문이 진실의 근원이므로 경로를 적어둔 문서도 같이 고친다
     touched = []
@@ -2670,7 +2748,7 @@ def rename_upload(rel: str, newname: str) -> dict:
             continue
         if old_rel in t:
             md.write_text(t.replace(old_rel, new_rel), encoding="utf-8")
-            touched.append(str(md.relative_to(ROOT)))
+            touched.append(md.relative_to(ROOT).as_posix())
     return {"ok": True, "rel": new_rel, "name": name, "docs": touched}
 
 
@@ -2706,7 +2784,7 @@ def save_concept_upload(cid: str, files) -> dict:
             k += 1
             q = updir / f"{stem}-{k}{ext}"
         q.write_bytes(blob)
-        saved.append(str(q.relative_to(ROOT)))
+        saved.append(q.relative_to(ROOT).as_posix())
     refs = saved + linked
     if refs:
         mdp = CONCEPTS / f"{cid}.md"
@@ -2746,7 +2824,7 @@ def gallery_files(q: str = "", kind: str = "", used: str = "",
             if f.suffix.lower() not in _UP_EXT:
                 continue
             k = _att_kind(str(f))
-            rel = str(f.relative_to(ROOT))
+            rel = f.relative_to(ROOT).as_posix()
             cmt_hit = False
             if q:
                 if ql not in rel.lower():
@@ -2766,7 +2844,7 @@ def gallery_files(q: str = "", kind: str = "", used: str = "",
             if used == "no" and cons:
                 continue
             out.append({"rel": rel, "name": f.name, "kind": k, "group": group,
-                        "dir": str(f.parent.relative_to(ROOT)), "concepts": cons,
+                        "dir": f.parent.relative_to(ROOT).as_posix(), "concepts": cons,
                         "comments": ccnt.get(rel, 0), "cmt_hit": cmt_hit,
                         "size_kb": round(st.st_size / 1024, 1), "mtime": int(st.st_mtime),
                         "day": _dt.datetime.fromtimestamp(st.st_mtime).strftime("%Y-%m-%d")})
@@ -3021,9 +3099,51 @@ def _load_comments() -> dict:
 
 
 def _save_comments(d: dict) -> None:
+    # ⚠ 임시파일에 쓰고 os.replace 로 갈아끼운다 — 쓰는 도중 죽어도 반쪽 JSON 이 안 남는다.
     COMMENTS_PATH.parent.mkdir(parents=True, exist_ok=True)
-    COMMENTS_PATH.write_text(json.dumps(d, ensure_ascii=False, indent=1, sort_keys=True),
-                             encoding="utf-8")
+    tmp = COMMENTS_PATH.with_suffix(COMMENTS_PATH.suffix + f".tmp{os.getpid()}")
+    tmp.write_text(json.dumps(d, ensure_ascii=False, indent=1, sort_keys=True),
+                   encoding="utf-8")
+    os.replace(tmp, COMMENTS_PATH)
+
+
+# ─────────────────────────────────────────────────────────────
+# 코멘트 쓰기 잠금 (2026-08-07, Codex 코드리뷰 P1)
+#
+# 저장이 read-modify-write 인데 잠금이 없었다. 배포는 gunicorn **worker 2개**라 동시에
+# 달면 나중 저장이 앞선 저장을 통째로 덮는다. 리뷰의 실측: 40건 요청 → 2건만 남음.
+#
+# ⚠ 스레드 락으론 부족하다 — gunicorn 은 다중 **프로세스**다. 프로세스 간에도 걸리는
+#   OS 파일 락(fcntl.flock)을 쓴다. 같은 호스트 안에서만 유효하다는 한계는 있지만
+#   우리 배포 형태(단일 인스턴스 다중 worker)에는 그게 정확히 맞다.
+#   여러 인스턴스로 늘릴 거면 그때는 SQLite WAL 이나 Postgres 로 가야 한다.
+# ─────────────────────────────────────────────────────────────
+import contextlib as _ctx
+
+_CMT_LOCK = None
+
+
+@_ctx.contextmanager
+def _comments_locked():
+    """읽기→수정→쓰기 전체를 한 임계구역으로 묶는다."""
+    global _CMT_LOCK
+    try:
+        import fcntl
+    except ImportError:                       # Windows — 락 없이 진행하되 조용히 넘어가지 않는다
+        fcntl = None
+    lock_path = COMMENTS_PATH.with_suffix(COMMENTS_PATH.suffix + ".lock")
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    f = open(lock_path, "a+")
+    try:
+        if fcntl is not None:
+            fcntl.flock(f.fileno(), fcntl.LOCK_EX)
+        yield
+    finally:
+        try:
+            if fcntl is not None:
+                fcntl.flock(f.fileno(), fcntl.LOCK_UN)
+        finally:
+            f.close()
 
 
 def file_comments(rel: str) -> list[dict]:
@@ -3040,32 +3160,43 @@ def add_file_comment(rel: str, text: str, who: str = "") -> dict:
     text = (text or "").strip()
     if not text:
         return {"error": "내용이 비어 있어요"}
-    d = _load_comments()
-    lst = d.setdefault(rel, [])
-    item = {"id": f"c{int(_dt.datetime.now().timestamp() * 1000)}",
-            "text": text[:2000],
-            "at": _dt.datetime.now().strftime("%Y-%m-%d %H:%M"),
-            "who": (who or "").strip()[:40]}
-    lst.append(item)
-    _save_comments(d)
-    return {"ok": True, "item": item, "n": len(lst)}
+    # ⚠ 읽기→수정→쓰기를 통째로 잠근다. 그리고 id 를 밀리초 타임스탬프로만 만들면
+    #   동시 요청이 같은 밀리초에 걸려 **id 가 겹친다**(삭제가 엉뚱한 걸 지운다).
+    #   락 안에서 기존 id 와 충돌하지 않을 때까지 뒤에 일련번호를 붙인다.
+    with _comments_locked():
+        d = _load_comments()
+        lst = d.setdefault(rel, [])
+        used = {c.get("id") for v in d.values() for c in v}
+        base = f"c{int(_dt.datetime.now().timestamp() * 1000)}"
+        cid, n = base, 0
+        while cid in used:
+            n += 1
+            cid = f"{base}-{n}"
+        item = {"id": cid,
+                "text": text[:2000],
+                "at": _dt.datetime.now().strftime("%Y-%m-%d %H:%M"),
+                "who": (who or "").strip()[:40]}
+        lst.append(item)
+        _save_comments(d)
+        return {"ok": True, "item": item, "n": len(lst)}
 
 
 def del_file_comment(rel: str, cid: str) -> dict:
     rel = (rel or "").lstrip("/")
-    d = _load_comments()
-    lst = d.get(rel)
-    if not lst:
-        return {"error": "코멘트가 없어요"}
-    keep = [c for c in lst if c.get("id") != cid]
-    if len(keep) == len(lst):
-        return {"error": "그 코멘트를 못 찾았어요"}
-    if keep:
-        d[rel] = keep
-    else:
-        d.pop(rel, None)                 # 빈 배열을 남기지 않는다
-    _save_comments(d)
-    return {"ok": True, "n": len(keep)}
+    with _comments_locked():
+        d = _load_comments()
+        lst = d.get(rel)
+        if not lst:
+            return {"error": "코멘트가 없어요"}
+        keep = [c for c in lst if c.get("id") != cid]
+        if len(keep) == len(lst):
+            return {"error": "그 코멘트를 못 찾았어요"}
+        if keep:
+            d[rel] = keep
+        else:
+            d.pop(rel, None)                 # 빈 배열을 남기지 않는다
+        _save_comments(d)
+        return {"ok": True, "n": len(keep)}
 
 
 def comment_counts() -> dict[str, int]:
