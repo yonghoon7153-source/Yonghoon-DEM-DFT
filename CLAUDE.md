@@ -726,8 +726,15 @@ readout=wallP**.
       σzz=0.09 (12× dilution).  `--readout sigzz` keeps the old one; both printed.
       (At static settling wallP→0 — use the porosity@target readout.)
   (2) **ν_SE=0.49 (stiff bulk)** — the 18× E softening softened the BULK too (ν=0.30→
-      K=1.27 GPa → ~20 % volumetric over-crush → 0 %).  ν=0.49 → **K=25.5 GPa ≈ real
-      LPSC bulk (24)**, μ=0.51 GPa soft shear = volume-preserving granular flow.
+      K=1.27 GPa → ~20 % volumetric over-crush → 0 %).  ν=0.49 → **K = E/(3(1−2ν)) = 25.5 GPa
+      ≈ our-DFT EOS B₀ 26.23 (−2.8 %)**, μ = E/(2(1+ν)) = 0.51 GPa soft shear
+      = volume-preserving granular flow.
+      ⚠ **K↔B₀ 로만 비교할 것** — 구 표기 "K 25.5 ≈ real LPSC bulk 24" 의 24는 **영률 E**
+      (Sakuda 2013) 라 비교 대상이 틀렸다 (값이 우연히 가까웠을 뿐).  우리 DFT 의
+      (E_VRH 22.06, B₀ 26.23) 쌍은 **ν = 0.360** 을 함축하고 그때 실제 μ = 8.11 GPa →
+      우리 μ 0.5134 는 **15.8배 연화** (기존 "18배" 는 ν=0.30 가정의 μ 9.23 기준).
+      ⚠ SDCP Methods SI 표의 "ν ≈ 0.3 (K ≈ 20, μ ≈ 9.2)" 는 우리 DFT(0.360)·Bazzoun(0.37)
+      과 어긋난다 — 문서 간 ν 정합 필요.
       ν-sweep: 0.45 (K=5.1)→0.00 %, 0.49 (K=25.5)→6.3 % ✓.  3D mirror of the 2D
       CORRECTION 1: only SHEAR softening is the granular proxy, bulk-softening was a
       side effect; SE bulk should be REAL.

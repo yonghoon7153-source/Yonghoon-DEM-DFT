@@ -611,9 +611,9 @@ function figbox(s, x, y, w, h, label) {
   ], { h: 0.35 });
   table(s, [
     ['Level', 'Value', 'What it means'],
-    ['Real bulk LPSCl', 'E = 24 GPa', 'measured single-crystal / dense-pellet modulus (literature)'],
+    ['Real bulk LPSCl', 'E = 24 GPa (Young)\nB0 = 26.2 GPa (bulk, our DFT)', 'E from literature; the bulk modulus B0 is the quantity to compare against K, and comes from our own equation-of-state calculation'],
     ['DEM effective', 'E_eff = 1.35 GPa', 'lumps rearrangement + grain-boundary sliding + micro-fracture that rigid spheres cannot do'],
-    ['MPM champion', 'E = 1.53 GPa, ν = 0.49\n(K = 25.5, µ = 0.51 GPa)', 'softening confined to SHEAR — bulk stiffness stays at the dense-solid value'],
+    ['MPM champion', 'E = 1.53 GPa, ν = 0.49\n(K = 25.5, µ = 0.51 GPa)', 'softening confined to SHEAR.  Bulk: our K 25.5 vs our DFT EOS B0 = 26.2 GPa (−2.8 %).  Shear: µ 0.51 vs the real 8.1 GPa = ~16x softer.  (Compare K to B0, never to E — different quantities.)'],
   ], { y: 1.42, w: 8.8, colW: [1.7, 2.1, 5.0], rowH: 0.52, fs: 10.5 });
   bullets(s, [
     { parts: [{ t: 'Why it is not a free fit — ' }, { t: 'three independent routes demand the same value', c: BLUE, b: true }, { t: ':' }] },
