@@ -130,9 +130,10 @@ def main():
             print(f"\n⏭  {tag} — UPF 에서 z_valence 를 못 읽었다: {','.join(bad)}")
             skipped.append(tag); continue
         nelec = sum(zs[e] for e in at.get_chemical_symbols())
-        nbnd = int(nelec / 2 * 1.35) + 8      # 점유 + 넉넉한 빈 상태 (CBM·DOS 용)
+        nbnd = int(nelec / 2 * 1.35) + 8      # 점유 + 넉넉한 빈 상태 (CBM 용)
+        nbnd_dos = int(nelec / 2 * 1.60) + 12  # DOS 용은 더 여유 (아래 &ELECTRONS 주석 참조)
 
-        def block(calc, kpts, fixed, extra="", nosym=False, verbose=False):
+        def block(calc, kpts, fixed, extra="", nosym=False, verbose=False, dos=False):
             occ = ("    occupations     = 'fixed'\n" if fixed else
                    f"    occupations     = 'smearing'\n    smearing        = 'mv'\n"
                    f"    degauss         = {DEGAUSS}\n")
@@ -157,13 +158,28 @@ def main():
                  "&SYSTEM", "    ibrav           = 0", f"    nat             = {nat}",
                  f"    ntyp            = {ntyp}", f"    ecutwfc         = {ECUTWFC}",
                  f"    ecutrho         = {ECUTRHO}",
-                 (f"    nbnd            = {nbnd}" if calc == "nscf" else ""),
+                 # ⚠ DOS 용 nscf 는 밴드를 더 준다. 제일 위 몇 밴드는 Davidson 이 항상
+                 #   제일 늦게 수렴하는데, 여유 밴드가 그 실패를 흡수한다(어차피 안 쓴다).
+                 (f"    nbnd            = {nbnd_dos if dos else nbnd}"
+                  if calc == "nscf" else ""),
                  # ⚠ projwfc.x 가 'Error in routine d_matrix (2)' 로 죽는다 — 대칭연산을
                  #   구면조화함수에 적용하는 회전행렬을 못 만든다. 표준 우회는 대칭 끄기.
                  ("    nosym           = .true." if nosym else ""),
                  ("    noinv           = .true." if nosym else ""),
                  occ.rstrip(), "/",
-                 "&ELECTRONS", "    conv_thr        = 1.0d-8",
+                 # ⚠⚠ DOS 용 nscf 만 문턱을 푼다 (2026-08-07 licl 04 단독 실패).
+                 #   증상: `c_bands (1): too many bands are not converged` → MPI_ABORT.
+                 #   원인: LiCl 은 갭 6.26 eV 짜리 이온결정이라 빈 전도대가 거의
+                 #   자유전자꼴이고, nosym 으로 k 점이 전 BZ 로 늘어난 상태에서
+                 #   conv_thr 1e-8(→ ethr ~1e-9)을 제일 위 밴드까지 요구하면 안 닫힌다.
+                 #   ★ 여기서 문턱을 푸는 게 **정당한 이유**: 이 단계 산출은 DOS **모양**뿐이고
+                 #     갭은 03 단계 고유값이 정본이다. DOS 의 degauss 0.007 Ry(≈0.095 eV)가
+                 #     이미 1e-6 Ry 보다 다섯 자리 굵다 — 정밀도가 남아돈다.
+                 #   ⛔ 03(갭) 단계는 **절대 안 푼다.** 그 값이 논문에 실린다.
+                 "&ELECTRONS",
+                 ("    conv_thr        = 1.0d-6" if dos else "    conv_thr        = 1.0d-8"),
+                 # Davidson 부분공간을 키우면 잘 안 닫히는 밴드가 닫힌다(기본 2 → 4).
+                 ("    diago_david_ndim = 4" if dos else ""),
                  "    mixing_beta     = 0.3", "    electron_maxstep = 200", "/"]
             if calc in ("relax", "vc-relax"):
                 L += ["&IONS", "/"]
@@ -191,7 +207,7 @@ def main():
             block("nscf", k_nscf, True, verbose=True))
         k_dos = kmesh(cell, KDENS_DOS)
         open(os.path.join(d, "04_nscf_dos.in"), "w").write(
-            block("nscf", k_dos, False, nosym=True))
+            block("nscf", k_dos, False, nosym=True, dos=True))
         open(os.path.join(d, "05_dos.in"), "w").write(
             f"&DOS\n  prefix = '{tag}'\n  outdir = './tmp'\n"
             f"  fildos = '{tag}.dos'\n  degauss = 0.007\n/\n")
