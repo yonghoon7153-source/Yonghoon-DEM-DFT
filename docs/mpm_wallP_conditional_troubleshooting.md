@@ -512,3 +512,47 @@ production 경로 = webapp [MPM input 변환] → `mpm_input_from_case.py` → `
 
 이 3점을 `--am-load-frac` 에 걸어 MPM 을 같은 3압력에 돌리면 **DEM 두께(33.02 / 27.72 / 23.47 µm)
 와 직접 대조** 가능 → wallP conditional 의 **첫 다압력 검증**.  (지금까지는 단일압력 corner 런 대기.)
+
+## ⚠ 다압력 검증 1차 시도 = **설계 오류로 무효** (2026-08-07 저녁)
+
+실측 f_AM 으로 `--am-load-frac` 을 걸어 P=100/300/600 을 돌렸다.  P100 결과가 겉보기엔
+좋았다 — **MPM 두께 32.826 µm vs DEM 33.024 = Δ −0.6 %**.  그런데 json 진단이 그것을
+**무효**로 만든다:
+
+```
+stop_mode               hard_floor      ← 응력이 아니라 AM-잼 floor 에서 멈춤
+settled_over_target     0.0127          ← 정착 응력 / 목표 = 1.3 %
+porosity_at_target_pct  None            ← 목표 압력에 도달한 적 없음
+porosity_settled_pct    24.146  vs floor 24.72
+final_stress_GPa        0.0013  vs SE 목표 0.0483 (2.7 %)
+```
+
+`mpm3d_compaction.py` 의 주석이 이미 기준을 적어뒀다 — *"settled_over_target 이 1 근처가
+아니면 '목표 압력 상태' 라고 부르면 안 된다"*.
+
+### 원인: 스캐폴드와 floor 를 **같은 상태**에서 가져왔다
+
+- `--floor-porosity` ← 그 압력의 DEM porosity(ε_union)
+- `--am-scaffold` / `--se-dump` ← **같은 압력의 DEM 최종 상태**
+
+⇒ 베드가 **시작부터 floor 에 앉아 있다.**  AM 은 얼어 있으므로 플래튼이 내려갈 여지가 없고
+하드 AM-잼 정지가 즉시 걸린다.  DEM 두께가 되돌아온 것은 **DEM 값을 넣어 DEM 값이 나온
+것**이지 예측이 아니다.  Δ −0.6 % 를 일치로 인용하면 **순환 논증**이다.
+
+### 이것은 `--am-load-frac` 에 대한 판정이 **아니다**
+
+이번 런은 그 조건을 시험한 것이 아니라 **시험할 수 없는 배치**였다.  실측 f_AM
+(0.517 / 0.675 / 0.620)은 그대로 유효하고, 그 조건이 쓰일 자리는 "MPM 이 DEM floor 를
+지나쳐 과압축하는 corner" 이지 **이미 floor 에 앉은 베드**가 아니다.
+
+### 올바른 설계 (데이터 대기)
+
+스캐폴드를 **압축 전(느슨한) 상태**에서 뽑고 목표 압력까지 압축시켜야 DEM 두께가 **진짜
+예측 대상**이 된다.  현재 받은 덤프는 각 압력의 **최종 상태뿐**이라 불가능하다.
+→ 필요한 것: `restart_after_settling` 직후 또는 압축 **중간 프레임**의 atom 덤프
+(덱은 `dump dmp_atom ... 5000` 으로 5000 스텝마다 쓰고 있으므로 `post_real_14_P*/` 에
+남아 있을 것이다).
+
+⚠ 러너 `scripts/run_wallp_multiP.sh` 의 요약 출력이 `porosity None` 으로 나온 것은 키
+이름 오류다 (`porosity_pct` → 실제는 `porosity_settled_pct`).  배치 실행 중에는 bash 가
+스크립트를 바이트 오프셋으로 이어 읽으므로 **고치지 않고** 다음 런 전에 반영한다.
