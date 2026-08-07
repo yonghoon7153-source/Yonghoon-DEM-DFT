@@ -146,15 +146,18 @@ def main():
                  #   낮으면 끝나고 지워져 projwfc 가 MPI_ABORT 로 죽는다(실측 2026-08-06:
                  #   dos.x 는 됐는데 projwfc.x 만 실패). nscf 에서만 남긴다.
                  ("    disk_io         = 'medium'" if calc == "nscf" else ""),
+                 # ⚠⚠ verbosity 는 **&CONTROL 소속**이다. &SYSTEM 에 넣어 9/9 가
+                 #   read_namelists 에서 즉사했다 (2026-08-07). real_space 를 &ELECTRONS 대신
+                 #   &SYSTEM 에 넣어 같은 사고를 낸 게 하루 전이다 — 네임리스트 소속을
+                 #   추측하지 말고 확인할 것.
+                 #   k 점이 100개를 넘으면 QE 는 verbosity='low' 에서 밴드를 아예 안 찍는다
+                 #   (실측: li2o k 1098개 → 'bands (ev)' 0개 → 갭 추출 전멸).
+                 ("    verbosity       = 'high'" if verbose else ""),
                  "    tstress         = .true." if calc == "vc-relax" else "", "/",
                  "&SYSTEM", "    ibrav           = 0", f"    nat             = {nat}",
                  f"    ntyp            = {ntyp}", f"    ecutwfc         = {ECUTWFC}",
                  f"    ecutrho         = {ECUTRHO}",
                  (f"    nbnd            = {nbnd}" if calc == "nscf" else ""),
-                 # ⚠⚠ k 점이 100개를 넘으면 QE 는 verbosity='low' 에서 **밴드를 아예 안 찍는다**
-                 #   (실측 2026-08-06: li2o k 1098개 → 'bands (ev)' 0개 → 갭 추출 전멸).
-                 #   갭용 nscf 에는 반드시 verbosity='high' 를 준다.
-                 ("    verbosity       = 'high'" if verbose else ""),
                  # ⚠ projwfc.x 가 'Error in routine d_matrix (2)' 로 죽는다 — 대칭연산을
                  #   구면조화함수에 적용하는 회전행렬을 못 만든다. 표준 우회는 대칭 끄기.
                  ("    nosym           = .true." if nosym else ""),
