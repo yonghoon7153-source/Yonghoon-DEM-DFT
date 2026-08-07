@@ -534,16 +534,23 @@ function figbox(s, x, y, w, h, label) {
               { t: ' — index by channel width instead:  ' },
               { t: 'sigma proportional to d_h^-0.54,  R2 = 0.935', b: true },
               { t: '.  A new electrode then needs only its d_h, not a new five-point curve.' }] },
-    { parts: [{ t: '4. ' }, { t: 'Not a grid artefact', c: BLUE, b: true },
-              { t: ' — refining the grid ' }, { t: 'strengthens', b: true },
-              { t: ' the effect (+5-10 %): an unresolved constriction simply vanishes and lets material through.  So -0.54 is a ' },
-              { t: 'lower bound', b: true }, { t: ' on the magnitude.' }] },
+    { parts: [{ t: '4. ' }, { t: 'Not a grid artefact — refining makes it stronger', c: BLUE, b: true },
+              { t: '.  Three grids (1.18 / 1.77 / 2.65 cells across the narrowest channel) give ' },
+              { t: '1.70 -> 1.87 -> 2.03', b: true },
+              { t: ', monotonic.  An unresolved constriction simply vanishes and lets material through, so coarse grids ' },
+              { t: 'under-report', b: true }, { t: ' the effect.  Reported as a ' },
+              { t: 'lower bound: |slope| >= 0.66', b: true }, { t: '.' }] },
   ], { x: 5.00, y: 1.95, w: 4.5, h: 2.55, size: 10 });
-  takeaway(s, 'A rejected assumption became a mechanism, a descriptor, and a convergence check — that is a result.', 4.62);
+  takeaway(s, 'Sensitivity scales with cells-per-channel: >= 3.5 cells moves only 4 % under a 2.25x refinement, 1.2 cells moves 24 % — a pre-run check we now apply to every bed.', 4.62);
   s.addNotes('Q: "전이가 기각됐으면 지금까지 결과가 다 틀린 것 아니냐" — 아닙니다. 기각된 것은 '
-    + '곡선을 다른 전극에 옮기는 것이고, 각 전극에서 직접 계산한 값은 무관합니다. '
+    + '곡선을 다른 전극에 옮기는 것이고, 각 전극에서 직접 계산한 값은 무관합니다.\n'
     + '4번은 제 사전 예상이 부호부터 틀렸던 경우입니다 — 미해상이면 뻣뻣해질 줄 알았는데 '
-    + '실제로는 협착이 격자에서 사라져 오히려 무릅니다. 그래서 정밀화가 효과를 키웁니다.');
+    + '실제로는 협착이 격자에서 사라져 오히려 무릅니다.\n'
+    + 'Q: "그럼 지수 −0.66 이 참값이냐" — 아닙니다. 세 격자의 증분이 +0.170, +0.163 로 거의 '
+    + '안 줄어 겉보기 수렴차수가 0.10 입니다. 즉 아직 수렴 전이고, 하한으로만 보고합니다. '
+    + '완전 해상하려면 n_grid ~900 이 필요한데 384 조차 35 GB 로 V100 을 넘습니다.\n'
+    + 'Q: "그럼 기준곡선도 못 믿는 것 아니냐" — 아닙니다. 민감도는 채널당 셀 수의 함수이고, '
+    + '기준곡선은 3.56~5.41 셀에서 쟀습니다. 그 밴드에서는 2.25배 정밀화에 4 % 만 움직입니다.');
 }
 
 /* ═══════════════════ 15. Future plan ═══════════════════ */
