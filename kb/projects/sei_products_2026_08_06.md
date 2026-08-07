@@ -147,7 +147,57 @@ LiNdO₂ 는 0–5 V **어디서도 껍질 위에 없고**, 가장 덜 불안정
 - **`.get(k, "")` 의 함정**: 키가 있고 값이 `None` 이면 기본값이 아니라 `None` 을 돌려준다.
   `str(None) == "None"` 이 truthy 라 전 엔트리가 "None" 으로 매칭돼 전부 대체 경로를 탔다.
 
+---
+
+## 갭 결과 (2026-08-07, gabia · fixed-occ nscf 고유값)
+
+9종 × 6단계(vc-relax → scf → fixed-occ nscf(gap) → nscf(DOS k) → dos → projwfc) 중
+**8/9 완주** (licl 은 04 단계만 실패 — 아래 참조).
+
+| 상 | mp-id | VBM (eV) | CBM (eV) | **gap (eV)** | 판정 |
+|---|---|---|---|---|---|
+| LiCl | mp-22905 | 1.576 | 7.836 | **6.260** | 절연체 |
+| Li₃PO₄ (β) | mp-13725 | 2.892 | 8.804 | **5.912** | 절연체 |
+| Li₃PO₄ (γ) | mp-2878 | 2.757 | 8.578 | **5.821** | 절연체 |
+| Li₂O | mp-1960 | 2.795 | 7.780 | **4.986** | 절연체 |
+| Li₂S | mp-1153 | 2.243 | 5.681 | **3.438** | 절연체 |
+| Li₃P | mp-736 | 3.252 | 3.961 | **0.709** | ★ 좁은 갭 |
+| Nd₂S₃ | mp-438 | 10.881 | 10.860 | −0.021 | ⚠ 4f 인공물 |
+| Nd₂O₃ | mp-2763 | 13.816 | 13.794 | −0.022 | ⚠ 4f 인공물 |
+| LiNdO₂ | mp-1222355 | 12.131 | 12.103 | −0.028 | ⚠ 4f 인공물 |
+
+### 읽는 법
+- **SEI 의 임무는 Li⁺ 통과 · 전자 차단**이다. 이 축에서 **Li₃P(0.709 eV)만 한 자릿수
+  좁다** — 전자가 새면 전해질 분해가 자기종결(self-limiting)되지 않는다.
+  Li₃PO₄·LiCl·Li₂O 는 5–6 eV 급이라 이 역할에 맞는다.
+- **Li₃PO₄ 다형체 차이는 0.09 eV 뿐**(β 5.912 vs γ 5.821). 갭 축에서는 다형체 선택이
+  결론을 안 바꾼다. (⚠ 확산장벽 축에서는 다르다 — NEB 는 γ 로 간다.)
+- 형성전위 표와 합쳐 읽으면: Li₃P 는 **0.85 V 아래**(깊은 환원)에서만 생기는데
+  하필 그게 **전자 절연이 제일 나쁜 상**이다. NdO 도핑이 Li₃P 를 줄이고 Li–O–P 를
+  늘렸다는 XPS 관측이 왜 유리한 방향인지가 두 축의 교집합에서 나온다.
+
+### ⚠⚠ Nd 계 3종의 음수 갭은 물리가 아니다
+Nd 의 4f 를 원자가에 넣은 PBE 는 4f 준위를 페르미 근처에 놓아 갭을 닫는다.
+−0.02 eV 는 "금속"이 아니라 **방법의 알려진 실패**다. 세 상이 전부 −0.02 근처로
+같은 값을 내는 것 자체가 신호(4f 밴드가 갭을 메운 것).
+→ **진단용으로만 남기고**, Nd 상의 갭은 **MP 의 frozen-4f 값을 인용**한다.
+→ 논문/보고에 이 세 숫자를 갭으로 실으면 안 된다.
+
+### ⚠ PBE 갭은 넓은 갭 절연체에서 30–50% 과소
+실험값과 나란히 놓지 말 것. **순위**(LiCl > Li₃PO₄ > Li₂O > Li₂S ≫ Li₃P)로만 쓴다.
+
+### licl 04 단계(DOS용 nscf) 단독 실패
+갭(03)은 **6.260 eV 로 이미 나와 있다** — 정본 값은 확보됐고, 못 얻은 건 DOS/PDOS 그림뿐이다.
+전 조성을 다시 돌리지 않도록 `redo_stages.sh` 에 `TAG=` 를 넣었다:
+```bash
+grep -a -A15 'Error in routine\|%%%%' /data/work/runs/sei_dft/licl_mp-22905/04_*.out | head -40
+TAG=licl bash tools/sei/redo_stages.sh 04 05 06
+tmux new -s seidft -d "bash tools/sei/run_sei_dft.sh 2>&1 | tee -a ~/logs/sei_dft.log"
+```
+
 ## 진행 상태 (갱신)
 - [x] 구조 9종 · [x] BVSE(이종 비교 불가 판정) · [x] **형성 전위**
-- [ ] 갭 + DOS/PDOS — QE scf → fixed-occ nscf → dos/projwfc
+- [x] **갭 8/9** (licl 은 갭 확보 · DOS/PDOS 만 재실행 대기)
+- [ ] DOS/PDOS 그림 (house style + Origin CSV) → `db/properties/` 등록
+- [ ] `db/properties/electronic.json` 에 SEI 갭 등재 (Nd 3종은 제외 — 4f 인공물)
 - [ ] NEB — Li₂S · Li₃P · Li₃PO₄(γ) + 가능하면 Li₂O · LiCl

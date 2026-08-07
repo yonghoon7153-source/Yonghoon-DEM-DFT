@@ -3,7 +3,7 @@
 {% block content %}
 <div class="page-header">
   <div><h1>🧬 원소 치환 서베이 — Nd 중심 54편</h1>
-    <div class="sub">{{ d.description }} ·
+    <div class="sub">{{ d.description|mdlite }} ·
       원문 <span class="mono">{{ d.source_md }}</span></div></div>
 </div>
 
@@ -13,7 +13,7 @@
 
 <!-- 우리 화학과의 거리 -->
 <h2 style="margin-top:26px;font-size:1rem">우리 화학과의 거리</h2>
-<div class="muted" style="font-size:.8rem;margin-top:4px">{{ d.our_chemistry_first }}</div>
+<div class="muted" style="font-size:.8rem;margin-top:4px">{{ d.our_chemistry_first|mdlite }}</div>
 <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
 {% for cls, lab in LAB.items() %}
   {% set n = d.counts_by_system_class.get(cls, 0) %}
@@ -72,7 +72,7 @@
     <td class="mono">{{ r.year }}</td>
     <td style="font-size:.8rem;max-width:380px">{{ r.title }}
       <div class="muted mono" style="font-size:.68rem">{{ r.journal or '' }}{% if r.doi %} · {{ r.doi }}{% endif %}</div></td>
-    <td style="font-size:.75rem;max-width:300px" class="muted">{{ (r.material or '')[:130] }}</td>
+    <td style="font-size:.75rem;max-width:300px" class="muted">{{ (r.material or '')[:130]|mdlite }}</td>
     <td class="mono" style="text-align:center">{{ r.n_not_discussed }}</td>
   </tr>
   {% endfor %}

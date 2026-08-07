@@ -85,7 +85,7 @@
     <span class="tbadge tb-{{ p.track }}">{{ 'DFT' if p.track=='dft' else 'DEM' }}</span>
     {# ⚠ [:38] 하드 컷은 한글 낱말 중간에서 잘려 "…실험 없" 처럼 보인다.
      .ptype 에 이미 ellipsis 가 있으니 CSS 에 맡긴다. #}
-    {% if p.type %}<span class="ptype" title="{{ p.type }}" style="min-width:0">{{ p.type }}</span>{% endif %}
+    {% if p.type %}<span class="ptype" title="{{ p.type }}" style="min-width:0">{{ p.type|mdlite }}</span>{% endif %}
     {# PDF 에서 잘라둔 그림이 있는 논문 표시 (tools/litdb/extract_figures.py) #}
     <span class="figmatch" title="제목이 아니라 그림 캡션에서 찾았어요" style="display:none;flex:none;
       background:#fef9c3;color:#854d0e;border-radius:5px;padding:1px 6px;font-size:.67rem;font-weight:700">🔍 캡션</span>
@@ -139,7 +139,7 @@
      onclick="openPaper('{{ t.id }}')" onkeydown="_kbd(event)"
      tabindex="0" role="button" style="cursor:pointer;padding:16px 18px">
   <div class="paper-top"><span class="tbadge" style="background:#fef9c3;color:#854d0e">TALK</span>
-    {% if t.session %}<span class="ptype" title="{{ t.session }}" style="min-width:0">{{ t.session }}</span>{% endif %}</div>
+    {% if t.session %}<span class="ptype" title="{{ t.session }}" style="min-width:0">{{ t.session|mdlite }}</span>{% endif %}</div>
   <div style="font-weight:600;font-size:.9rem;line-height:1.4;margin-top:7px">{{ t.title_html|safe }}</div>
   {% if t.speaker %}<div class="muted" style="font-size:.76rem;margin-top:4px">{{ t.speaker }}</div>{% endif %}
   {% if t.pis %}<div style="margin-top:5px">{% for k in t.pis %}<span title="{{ PI[k].en }} · {{ PI[k].aff }}"

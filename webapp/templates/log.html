@@ -37,7 +37,8 @@
     {% if e.comp %}<span class="badge b-canon">{{ COMPS.get(e.comp,{}).get('label', e.comp) }}</span>{% endif %}
     <span class="mono muted" style="font-size:.72rem;margin-left:auto">{{ e.ts }}</span>
   </div>
-  <div style="margin-top:6px;font-size:.9rem;white-space:pre-wrap;line-height:1.55">{{ e.text }}</div>
+  {# ⚠ 로그 본문은 마크다운 섞인 평문 — 그냥 찍으면 별표가 노출된다 (2026-08-07) #}
+  <div style="margin-top:6px;font-size:.9rem;white-space:pre-wrap;line-height:1.55">{{ e.text|mdlite }}</div>
 </div>
 {% else %}
 <div class="card"><span class="muted">아직 기록이 없어요 — 위에서 첫 기록을 추가하세요.</span></div>

@@ -218,7 +218,7 @@
           <span class="fn-g-cnt">{{ st.n_in }} → <b>{{ st.n_pass }}</b>{% if st.n_fail %} <span class="fn-drop">−{{ st.n_fail }}</span>{% endif %}</span>
         </div>
         <div class="fn-g-body">
-          <div><span class="fn-l">지표</span><span class="mono">{{ g.metric }}</span></div>
+          <div><span class="fn-l">지표</span><span class="mono">{{ g.metric|mdlite }}</span></div>
           <div><span class="fn-l">임계값</span><code>{{ g.threshold }}</code></div>
           <div><span class="fn-l">근거</span>{{ g.threshold_basis|bold }}</div>
           {% if g.engine %}<div><span class="fn-l">엔진</span>{{ g.engine|bold }}</div>{% endif %}
@@ -510,7 +510,7 @@
         <span class="tc-icon">{{ th.icon }}</span><span class="tc-label">{{ th.label }}</span>
       </label>
       <div class="tc-q">{{ th.question }}</div>
-      <div class="tc-metric mono">{{ th.metric }}</div>
+      <div class="tc-metric mono">{{ th.metric|mdlite }}</div>
       <div class="tc-top">
         {% for dp in th.top[:5] %}
           {% if dp in mo_db %}<button type="button" class="th-chip mo-chip" title="클릭 → 분자오비탈" onclick="openMO('{{ dp }}')">{{ dp }} ⚛</button>

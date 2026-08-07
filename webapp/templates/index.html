@@ -16,9 +16,11 @@
 <div class="grid grid-3">
 {% for h in highlights %}
 <div class="card find-card">
-  <div class="fc-t">{{ h.t }}</div>
-  <div class="fc-v">{{ h.v }}</div>
-  <div class="fc-n">{{ h.n }}</div>
+  {# ⚠ 카드 본문은 db/JSON·data.py 에서 오는 **마크다운 섞인 평문**이다. 그냥 찍으면
+     별표가 그대로 보인다(2026-08-07 1저자 신고). mdlite = escape 후 **굵게**·`코드`만 승격. #}
+  <div class="fc-t">{{ h.t|mdlite }}</div>
+  <div class="fc-v">{{ h.v|mdlite }}</div>
+  <div class="fc-n">{{ h.n|mdlite }}</div>
 </div>
 {% endfor %}
 </div>
@@ -28,8 +30,8 @@
 <div class="grid grid-3">
 {% for s in oi.sections %}
 <div class="card find-card">
-  <div class="fc-t">{{ s.title }}</div>
-  {% for it in s["items"] %}<div class="fc-n" style="margin-top:4px">· {{ it }}</div>{% endfor %}
+  <div class="fc-t">{{ s.title|mdlite }}</div>
+  {% for it in s["items"] %}<div class="fc-n" style="margin-top:4px">· {{ it|mdlite }}</div>{% endfor %}
 </div>
 {% endfor %}
 </div>

@@ -18,10 +18,34 @@ app = Flask(__name__)
 # ⚠ 입문/설명 본문에 **굵게**·`코드` 를 쓰는데 템플릿이 그대로 찍어서 별표가 노출됐다.
 #   전체 마크다운 파서를 붙일 자리가 아니므로 **굵게·코드·이스케이프만** 처리한다.
 #   ⚠ escape 를 먼저 해야 XSS 가 안 생긴다 (본문은 우리가 쓰지만 규율은 지킨다).
+#   ⚠ `.+?` 는 개행을 안 넘는다 — db JSON 의 긴 문장은 소스에서 줄이 접혀 있어서
+#     `**` 가 줄바꿈을 넘는 순간 그대로 노출된다. re.S 를 걸어 블록 전체를 본다
+#     (md_to_html 의 문단 병합과 같은 이유. 2026-08-07).
+#   ⚠⚠ 그런데 re.S 만 걸면 **데이터로 들어 있는 별표**가 짝을 훔쳐 간다 — 실측:
+#     저널 55번 항목의 `globstar(**) 지원` 이 300자 뒤의 진짜 `**` 와 짝지어져
+#     문장 한 덩어리가 통째로 굵어졌다. 그래서 두 가지 가드를 건다.
+#       ① 코드 스팬을 **먼저** 빼돌린다 — `` `**` `` 안의 별표는 데이터다.
+#       ② 굵게 구간은 여는 별표 뒤/닫는 별표 앞이 공백이 아니어야 하고(마크다운 규칙),
+#          MAXB 자를 넘으면 짝짓기를 포기한다. 우리 문장의 강조는 한 절을 안 넘는다.
+#       ③ 여는 별표 바로 뒤가 **닫는 문장부호**(`) ] , . ;` 등)면 강조가 아니다 —
+#          `globstar(**)` 가 정확히 그 꼴이다. 강조는 항상 내용어로 시작한다.
+_MDL_MAXB = 300
+_MDL_BOLD = re.compile(r"\*\*(?![\s)\]}>,.;:!?])(.{1,%d}?)(?<![\s([{<])\*\*" % _MDL_MAXB, re.S)
+_MDL_CODE = re.compile(r"`([^`]+)`")
+
+
 def _mdlite(text: str) -> Markup:
-    s = escape(text or "")
-    s = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", str(s))
-    s = re.sub(r"`([^`]+)`", r'<code class="mono">\1</code>', s)
+    s = str(escape(text or ""))
+    spans = []                                   # ① 코드 스팬 격리
+
+    def _stash(m):
+        spans.append(m.group(1))
+        return "\x00%d\x00" % (len(spans) - 1)
+
+    s = _MDL_CODE.sub(_stash, s)
+    s = _MDL_BOLD.sub(r"<strong>\1</strong>", s)
+    s = re.sub(r"\x00(\d+)\x00",
+               lambda m: '<code class="mono">%s</code>' % spans[int(m.group(1))], s)
     return Markup(s)
 
 
