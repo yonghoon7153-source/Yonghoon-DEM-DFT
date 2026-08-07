@@ -89,6 +89,58 @@ all 4 full cells are **SOC100 (charged, Ewe 3.61–3.67 V)** — the filename `1
 spread → representative, not final (see re-experiment note).  Adding cells + re-running
 `eis_archive.py` → `eis_fit.py` updates the mean automatically ("유동적으로 열어둔" 대표값).
 
+### ⚠ n=4 → n=6 (2026-08-07): the auto-mean now spans TWO CELL BUILDS — do not anchor it
+Re-running the fits after the `260728` cells landed moved the mean **49.8 → 100.46 Ω·cm²**.
+That doubling is **not scatter**; the arithmetic separates cleanly:
+
+| group | cells | R_s (Ω·cm²) | R1 = R_int | R_w | rmse % |
+|---|---|---|---|---|---|
+| **A** `260719_*_only_full` | 4 | 6.8–13.8 (mean 9.7) | 24.2 / 30.4 / 65.9 / 78.7 → **49.8** | 0.0–135.8 | 2.6–**13.0** |
+| **B** `260728_No2_55_70` | 2 | 96.8–147.3 (mean 122) | 200.6 / 203.0 → **201.8** | 81.0 / 90.3 | **1.4–3.3** |
+
+`(4×49.8 + 2×201.8)/6 = 100.46` — the new mean is just B entering the average.
+- **R_s differs 12.6×** between the groups ⇒ different cell builds, not repeat scatter.
+- **Fit quality splits the same way**: B reproduces R1 to **1.2 %** (200.6 vs 203.0) at rmse
+  1.4–3.3 %; A reaches rmse 13 % and leaves **R_w unidentified (0.0 ↔ 135.8)**, i.e. the
+  arc/tail split is at a local minimum, so A's R1 spread is partly a fit artifact.
+- ⇒ report **two anchors** (A ≈ 50 n=4 ⚠fit-limited, B ≈ 202 n=2 best-fit), never the pooled
+  mean.  `docs/data/rint_eis_anchors.csv:lab_sus_pristine` still carries the A-only value 50
+  while `summary_means.csv` now says 100.46 — the "auto-updating" note makes that silent.
+
+### ⚠ C_dl from Brug is OUT OF DOMAIN at these CPE exponents — withdraw the anchor
+`C_dl` over the 6 full cells spans **2.7 → 1460 µF/cm² (541×)** in three per-cell clusters.
+This is arithmetic, not physics: Brug `C = Q^(1/α)·R^((1−α)/α)` has exponents **3.33 and 2.33**
+at the measured `CPE_a ≈ 0.30–0.34`.  Back-solving two endpoint cells at α = 0.30:
+
+```
+A#01  Q≈1.70e-2  R≈22.9 Ω   → C 1422 µF/cm²
+B#02  Q≈7.9e-4   R≈152.9 Ω  → C    4.3 µF/cm²
+      Q  21.5× ↓ → ^3.33 = 2.7e4× ↓ ;  R 6.7× ↑ → ^2.33 = 84× ↑ ;  net 321× ↓  (obs. 331×)
+```
+
+So the spread is **how each fit split the arc between Q and R**, amplified by two large opposing
+powers — not a double-layer difference.  Brug is derived for surface-distributed capacitance at
+α ≳ 0.7; α ≈ 0.3 is below even Warburg (0.5) and signals **distributed transport**, so the single
+R‖CPE is first-pass for **R1 itself** (hence for R_int *and* σ_e), exactly as the σ_e note above
+flags.  **TLM refit is the fix.**  Until then: no C_dl number (§F1 — record the reason, not a mean).
+
+### σ_e: the STEP3 comparison set was mismatched (carbon), not a model gap
+These cells are **AM:SE:VGCF:PTFE = 80:18:1:1**; the STEP3 numbers they were compared against
+(SBE 1.979 / DBE 3.002 mS/cm) come from the SDCP campaign beds at **70:27:3:1** — **3× the VGCF**.
+Carbon is a percolating additive, so 1 % vs 3 % can move σ_e by an order of magnitude on its own.
+The measured 0.092–0.292 mS/cm (n=9, median 0.140) is therefore **not yet a discrepancy**.
+→ Valid test = run STEP3 at **80:18:1:1 with SC AM** and check it lands in that band; that would
+be the first ABSOLUTE experimental validation of the σ_e law (all prior σ_e checks were trends).
+⚠ Also unresolved by the n=9 set: every σ_e uses the **L = 45 µm default** (no
+`thickness_overrides.json` present) → ±11 % only, so L is not the explanation either.
+
+### Poly vs single-crystal — one new cell points AGAINST our locked direction
+The new pure-**Poly** symmetric cell gives **σ_e = 0.2924 mS/cm vs 0.1278 for the 8 SC cells (2.3×)**.
+Our locked endpoints are σ_S(single) = 10 > σ_P(poly) = 5 mS/cm, i.e. the opposite ordering; this
+agrees instead with `Oh #266 (poly > single)` already flagged in the A1 backlog.  **n = 1 and a
+different build** → too weak to act on, and the 5:5 blend effect already fails to reproduce across
+batches (No1 0.14→0.093 ↓ vs No2 0.115→0.152 ↑).  **One more Poly cell would decide it.**
+
 ## Parser (external, not vendored)
 `.mpr` is decoded with **[galvani](https://github.com/echemdata/galvani)** (GPL-3.0).  We
 deliberately do **not** copy galvani into this repo (license hygiene); `scripts/eis_archive.py`
