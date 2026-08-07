@@ -72,6 +72,10 @@ for R in "${RUNS[@]}"; do
   TGPA=$(python3 -c "print($P/1000.0)")
   SETG=$(python3 -c "print(round($P/1000.0*(1-$FAM),4))")
   NAME="wallp_P${P}"
+  # ★ 낡은 산출물을 먼저 지운다.  안 지우면 배치가 시작조차 못 했을 때 watch 가 이전
+  #   실패 런의 로그를 **현재 상태로** 보여준다 (2026-08-07 실제 발생: 옛 kit_real14
+  #   경로 에러가 새 런의 상태처럼 찍혔다).  이 둘은 이 러너만 쓰는 재생성 산출물이다.
+  rm -f "$OUT/${NAME}.json" "$OUT/${NAME}.log"
   echo "=== $NAME  target ${TGPA} GPa · f_AM ${FAM} → SE목표 ${SETG} GPa · floor ${FLOOR}% · DEM두께 ${HDEM}µm  $(date +%H:%M:%S)"
   [ "$DRY" = 1 ] && { echo "  (dry-run)"; continue; }
   t0=$SECONDS
