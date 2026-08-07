@@ -384,8 +384,9 @@ for lab in SYSL:
         # ⚠ 시드가 다 안 모인 β̄ 는 **판정량이 아니다** — 화면에 n 을 붙여 잠정임을 못박는다.
         #   (2026-08-07: 1시드 β̄ 를 확정값으로 읽을 뻔했다. 규율은
         #    kb/methodology/beta_gate_seed_policy.md)
-        _nb = len([s for s in SEEDS
-                   if _under(os.path.join(ARR, lab, f"T{T}_s{s}"), "msd.json")])
+        # bens 가 쓴 것과 **같은 판정**으로 센다 (msd.json 존재가 아니라 cell 등재 여부) —
+        # 두 곳이 다른 기준을 쓰면 n 과 β̄ 가 어긋난다.
+        _nb = len([s for s in SEEDL if cell.get((lab, T, s))])
         _bt = (f"β̄{bens:.2f}" + ("" if _nb >= 3 else f"(n={_nb}!)")) if bens is not None else "β—"
         tag = (f"{sum(Ds) / len(Ds):.2e} " + _bt
                if Ds else "")
