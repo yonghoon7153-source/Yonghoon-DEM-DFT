@@ -181,7 +181,7 @@
       "method": "fixed-occupation nscf eigenvalues (NOT DOS threshold)",
       "warning": "PBE gap; systematically 30-50% underestimated for wide-gap insulators",
       "artifact_4f": true,
-      "do_not_cite": "Nd 4f in valence (PBE) closes the gap — method artifact, not physics. Cite MP frozen-4f values instead.",
+      "do_not_cite": "⛔ 폐기. 2026-08-07 두 번 시도해 둘 다 실패했다. ① nspin=1: 4f³ 가 7겹 다중항에 분수 점유 → 정의상 금속(gap −0.02 eV). ② nspin=2 + U(6 eV): Nd₂O₃(5원자)만 SCF 수렴했고 그마저 VBM 16.159 > CBM 9.700 이라는 물리적으로 불가능한 값(gap −6.460). LiNdO₂(16원자)·Nd₂S₃(20원자)는 vc-relax 의 전자 SCF 가 200 iteration 안에 수렴 실패(모멘트는 가정대로 고정됐다 — 12.00 / 23.95 μB). 셀이 커질수록 악화 = 4f 를 원자가에 둔 탓. → **Nd 상 갭은 MP frozen-4f 값을 인용한다.** 이 숫자는 어떤 형태로도 갭으로 쓰지 말 것.",
       "files": {
         "dos_csv": "db/properties/sei_dos/lindo2_mp-1222355_dos.csv",
         "pdos_csv": "db/properties/sei_dos/lindo2_mp-1222355_pdos.csv"
@@ -196,7 +196,8 @@
         "O_p",
         "O_s"
       ],
-      "dos_chain_complete": true
+      "dos_chain_complete": true,
+      "status": "rejected"
     },
     "nd2o3_mp-2763": {
       "tag": "nd2o3_mp-2763",
@@ -212,7 +213,7 @@
       "method": "fixed-occupation nscf eigenvalues (NOT DOS threshold)",
       "warning": "PBE gap; systematically 30-50% underestimated for wide-gap insulators",
       "artifact_4f": true,
-      "do_not_cite": "Nd 4f in valence (PBE) closes the gap — method artifact, not physics. Cite MP frozen-4f values instead.",
+      "do_not_cite": "⛔ 폐기. 2026-08-07 두 번 시도해 둘 다 실패했다. ① nspin=1: 4f³ 가 7겹 다중항에 분수 점유 → 정의상 금속(gap −0.02 eV). ② nspin=2 + U(6 eV): Nd₂O₃(5원자)만 SCF 수렴했고 그마저 VBM 16.159 > CBM 9.700 이라는 물리적으로 불가능한 값(gap −6.460). LiNdO₂(16원자)·Nd₂S₃(20원자)는 vc-relax 의 전자 SCF 가 200 iteration 안에 수렴 실패(모멘트는 가정대로 고정됐다 — 12.00 / 23.95 μB). 셀이 커질수록 악화 = 4f 를 원자가에 둔 탓. → **Nd 상 갭은 MP frozen-4f 값을 인용한다.** 이 숫자는 어떤 형태로도 갭으로 쓰지 말 것.",
       "files": {
         "dos_csv": "db/properties/sei_dos/nd2o3_mp-2763_dos.csv",
         "pdos_csv": "db/properties/sei_dos/nd2o3_mp-2763_pdos.csv"
@@ -225,7 +226,8 @@
         "O_p",
         "O_s"
       ],
-      "dos_chain_complete": true
+      "dos_chain_complete": true,
+      "status": "rejected"
     },
     "nd2s3_mp-438": {
       "tag": "nd2s3_mp-438",
@@ -241,7 +243,7 @@
       "method": "fixed-occupation nscf eigenvalues (NOT DOS threshold)",
       "warning": "PBE gap; systematically 30-50% underestimated for wide-gap insulators",
       "artifact_4f": true,
-      "do_not_cite": "Nd 4f in valence (PBE) closes the gap — method artifact, not physics. Cite MP frozen-4f values instead.",
+      "do_not_cite": "⛔ 폐기. 2026-08-07 두 번 시도해 둘 다 실패했다. ① nspin=1: 4f³ 가 7겹 다중항에 분수 점유 → 정의상 금속(gap −0.02 eV). ② nspin=2 + U(6 eV): Nd₂O₃(5원자)만 SCF 수렴했고 그마저 VBM 16.159 > CBM 9.700 이라는 물리적으로 불가능한 값(gap −6.460). LiNdO₂(16원자)·Nd₂S₃(20원자)는 vc-relax 의 전자 SCF 가 200 iteration 안에 수렴 실패(모멘트는 가정대로 고정됐다 — 12.00 / 23.95 μB). 셀이 커질수록 악화 = 4f 를 원자가에 둔 탓. → **Nd 상 갭은 MP frozen-4f 값을 인용한다.** 이 숫자는 어떤 형태로도 갭으로 쓰지 말 것.",
       "files": {
         "dos_csv": "db/properties/sei_dos/nd2s3_mp-438_dos.csv",
         "pdos_csv": "db/properties/sei_dos/nd2s3_mp-438_pdos.csv"
@@ -254,7 +256,9 @@
         "S_p",
         "S_s"
       ],
-      "dos_chain_complete": true
+      "dos_chain_complete": true,
+      "status": "rejected"
     }
-  }
+  },
+  "nd_verdict_2026_08_07": "Nd 3종(LiNdO₂·Nd₂O₃·Nd₂S₃)의 갭은 우리 QE 계산으로 정의되지 않는다. 인용은 MP frozen-4f. 상세: kb/projects/sei_products_2026_08_06.md §최종 판정. Li 계 6종의 갭은 정상이며 그대로 인용 가능하다."
 }
