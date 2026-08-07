@@ -13,11 +13,12 @@
 
   전체 11×11×11×noise3 = 3,993   →   표본 6×6×6×noise3 = 648 (guard 통과분만)
 
-restart도 5 → 2로 줄인다. 여기서 필요한 건 조건별 정밀 최적해가 아니라
-**가중치 간 상대 비교**이고, 같은 restart 수를 모든 가중치에 똑같이 적용하므로
-비교는 공정하다 (F4: restart 수가 섞이면 안 되는 이유와 같은 논리).
+★ restart를 줄이면 안 된다 (F20c). 비용을 아끼려 5 → 2로 낮췄더니, 같은
+목적함수·같은 조건에서 본 실행 17% vs sweep 92%가 나왔다. `pocv_dvdq`는
+unique_min이 39%뿐이라 **restart가 여러 번 필요한 목적함수**이고, 2번으로는
+나쁜 국소최소에 자주 갇힌다. 비용은 층화 표본으로만 아낀다.
 
-  648조건 × 9가중치 × 2restart ≈ 1.2만 최적화 ≈ 70분 (32워커 기준)
+  468조건 × 9가중치 × 5restart ≈ 2.1만 최적화 ≈ 75분 (32워커 기준)
 
 리뷰 규칙
 ─────────
@@ -44,27 +45,28 @@ def obj_name(w: float) -> str:
     return f"wdqdv_{w:.2f}"
 
 
-SEED_NAME = "_seed"
+SEED_NAME = "_seed"      # 과거 산출물 호환용 (더는 만들지 않는다)
 
 
 def build_weight_objectives(w_grid=DEFAULT_W_GRID, w_pocv: float = 1.0,
                             w_dvdq: float = 1.0) -> dict:
     """w_dqdv만 바꾼 목적함수 집합. pocv·dvdq 가중치는 34p 정의대로 1.0 고정.
 
-    ★ 맨 앞에 숨은 `_seed` 목적함수를 둔다 (F20b).
-      warm start는 "매끄러운 해를 먼저 구해 물려준다"인데, 기본 규칙대로면
-      w_dqdv=0인 항목이 seed 제공자가 되어 **자기만 초기값을 못 받는다.**
-      그러면 w=0의 성적이 나빠지는 게 dQ/dV 효과인지 초기값 차이인지 갈리지 않는다
-      (실측: w=0만 86%, 나머지 22~33%).
-      숨은 seed를 따로 두고 **모든 w에 똑같이 물려주면** 비교가 공정해진다.
-      `_seed` 행은 집계에서 제외한다.
+    ★ warm start를 쓰지 않는다 (F20c). 이유는 두 번의 실패로 확인했다.
+
+      1차: 기본 규칙(dQ/dV 항이 있으면 warm start)이면 w=0 하나만 seed
+           제공자가 되어 자기는 초기값을 못 받는다 → w=0만 86%, 나머지 22~33%.
+      2차: 숨은 `_seed`를 앞에 둬서 모두에게 물려줬는데 **결과가 한 자리도
+           안 바뀌었다.** seed의 목적함수가 w=0의 것과 동일하므로, w=0은
+           자기 최적해를 자기 초기값으로 받은 셈이라 아무 이득이 없다.
+
+      즉 warm start는 **지형이 거친 목적함수에만 이득**이라, 어떻게 주더라도
+      w=0과 w>0 사이의 비대칭이 남는다. 가중치를 고르는 실험에서 그 비대칭은
+      곧 결론을 바꾸므로, 아예 끄고 모두 같은 출발선에 세운다.
+      (run_weight_sweep이 warm_start=False로 호출한다)
     """
-    objs = {SEED_NAME: {"w_pocv": w_pocv, "w_dvdq": w_dvdq, "w_dqdv": 0.0,
-                        "_warm": False}}
-    objs.update({obj_name(w): {"w_pocv": w_pocv, "w_dvdq": w_dvdq,
-                               "w_dqdv": float(w), "_warm": True}
-                 for w in w_grid})
-    return objs
+    return {obj_name(w): {"w_pocv": w_pocv, "w_dvdq": w_dvdq, "w_dqdv": float(w)}
+            for w in w_grid}
 
 
 # ---------------------------------------------------------------- 층화 표본
@@ -190,7 +192,7 @@ def write_optimized_config(out_path, opt: dict, w_pocv: float = 1.0,
 # ---------------------------------------------------------------- 실행
 
 def run_weight_sweep(in_dir, out_dir=None, w_grid=DEFAULT_W_GRID,
-                     stride: int = 2, n_restarts: int = 2, nproc: int = 8,
+                     stride: int = 2, n_restarts: int = 5, nproc: int = 8,
                      bounds_preset: str = "expanded", reference: str = "grid",
                      tol: float = 0.02, resume: bool = False,
                      objectives_config: str = "configs/objectives.yaml",
@@ -219,9 +221,11 @@ def run_weight_sweep(in_dir, out_dir=None, w_grid=DEFAULT_W_GRID,
     log.info("가중치 sweep: %d조건 × %d가중치 × %drestart",
              len(subset), len(objectives), n_restarts)
 
+    # ★ warm_start=False — 모든 w를 같은 출발선에 (F20c)
     run_fit(in_dir, out_dir, obj_cfg, objectives, bounds, bounds_preset,
             n_restarts, nproc, use_noisy=True, base_config=base_config,
-            reference=reference, resume=resume, subset=set(subset))
+            reference=reference, resume=resume, subset=set(subset),
+            warm_start=False)
 
     fits = pd.read_parquet(out_dir / "fits.parquet")
     scored = classify_recoverability(add_error_columns(fits, tol))
@@ -236,16 +240,18 @@ def run_weight_sweep(in_dir, out_dir=None, w_grid=DEFAULT_W_GRID,
     # ★ seed 목적함수가 실제로 쓰였는지 기록한다 (F20b).
     #   안 쓰인 결과는 w=0만 warm start를 못 받아 **공정 비교가 아니다**.
     #   실측으로 그 상태의 결과를 한 번 보고서에 실을 뻔했다.
-    used_seed = SEED_NAME in objectives
+    used_seed = SEED_NAME in objectives     # 구버전 산출물 판별용
     (out_dir / "weight_sweep.yaml").write_text(
         yaml.safe_dump({"w_grid": list(map(float, w_grid)),
                         "n_conditions": len(subset), "stride": stride,
                         "n_restarts": n_restarts,
                         "seed_objective_used": bool(used_seed),
+                        "warm_start": False,
                         "optimum": opt}
-                       | ({} if used_seed else {"_경고": (
-                           "seed 목적함수 없이 실행됐다 — w=0만 warm start를 못 받아 "
-                           "다른 w와 공정 비교가 되지 않는다. w=0 행을 인용하지 말 것.")}),
+                       | ({"_경고": (
+                           "구버전: warm start가 켜진 채 실행됐다 — w=0만 초기값 이득을 "
+                           "못 받아 다른 w와 공정 비교가 되지 않는다. w=0 행을 인용하지 "
+                           "말 것.")} if used_seed else {}),
                        allow_unicode=True, sort_keys=False), encoding="utf-8")
     write_optimized_config("configs/objectives_optimized.yaml", opt)
 
@@ -267,7 +273,7 @@ def main() -> None:
                     help="쉼표 목록 또는 start:stop:step (기본 0:2:0.25)")
     ap.add_argument("--stride", type=int, default=2,
                     help="격자 솎기 간격 (2면 축당 11→6값)")
-    ap.add_argument("--n-restarts", type=int, default=2)
+    ap.add_argument("--n-restarts", type=int, default=5)
     ap.add_argument("--nproc", type=int, default=8)
     ap.add_argument("--bounds", default="expanded")
     ap.add_argument("--reference", default="grid")

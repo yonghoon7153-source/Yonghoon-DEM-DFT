@@ -487,24 +487,29 @@ def test_compare_cases_matches_row_counts():
     assert "측정이 아니라" in res["_주의_복원불가"]
 
 
-def test_weight_sweep_gives_every_w_the_same_warm_start():
-    """★ F20b — w=0만 seed 제공자가 되어 초기값을 못 받으면 비교가 불공정하다.
+def test_weight_sweep_uses_no_warm_start():
+    """★ F20c — 가중치 비교에서는 warm start를 아예 끈다.
 
-    실측에서 w=0만 86%, 나머지 22~33%였는데 그 차이가 dQ/dV 효과인지
-    초기값 차이인지 갈리지 않았다. 숨은 _seed를 따로 두어 해결한다.
+    warm start는 지형이 거친 목적함수에만 이득이라, 어떤 방식으로 주더라도
+    w=0과 w>0 사이에 비대칭이 남는다 (숨은 seed를 줘도 w=0은 자기 최적해를
+    자기 초기값으로 받는 셈이라 이득이 0이었다 — 실측으로 한 자리도 안 바뀜).
     """
-    from src.weight_sweep import SEED_NAME, build_weight_objectives
+    import inspect
+
+    from src.weight_sweep import SEED_NAME, build_weight_objectives, run_weight_sweep
 
     objs = build_weight_objectives([0.0, 1.0, 2.0])
-    assert list(objs)[0] == SEED_NAME, "seed가 맨 앞이어야 먼저 풀린다"
-    assert objs[SEED_NAME]["_warm"] is False, "seed 자신은 warm start를 안 받는다"
-    reported = {k: v for k, v in objs.items() if k != SEED_NAME}
-    assert len(reported) == 3
-    assert all(v["_warm"] is True for v in reported.values()), \
-        "보고 대상 w는 전부 같은 조건에서 초기값을 받아야 한다"
+    assert SEED_NAME not in objs, "더는 숨은 seed를 만들지 않는다"
+    assert all("_warm" not in v for v in objs.values()), \
+        "warm start 플래그가 남아 있으면 w마다 조건이 달라진다"
+
+    src = inspect.getsource(run_weight_sweep)
+    assert "warm_start=False" in src, "sweep은 warm start를 꺼야 공정하다"
+    assert inspect.signature(run_weight_sweep).parameters["n_restarts"].default == 5, \
+        "restart 2는 부족하다 — 같은 목적함수가 본 실행 17% vs sweep 92%였다"
 
 
-def test_seed_objective_is_excluded_from_summary():
+def test_legacy_seed_rows_are_excluded_from_summary():
     from src.weight_sweep import SEED_NAME, obj_name, sweep_summary
 
     df = _fits(objectives=(SEED_NAME, obj_name(0.0), obj_name(1.0)))
