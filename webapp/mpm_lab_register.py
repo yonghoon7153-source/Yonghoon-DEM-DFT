@@ -23,9 +23,9 @@ Flask 의존성 없음(순수 stdlib + 선택적 requests).  webapp/app.py 와 �
     # V100 계산 스크립트 끝에 붙이는 훅 예시
     python webapp/mpm_lab_register.py --payload out/mpm_payload.json \
         --name "DBE_2C_N10"  --dest /shared/dem/webapp/mpm_lab
-    # 또는 Render 원격 webapp 로 직접 push
+    # 또는 실행중인 webapp 으로 HTTP push (파일시스템 접근이 없을 때)
     python webapp/mpm_lab_register.py --payload out/mpm_payload.json \
-        --name "DBE_2C_N10"  --url https://dem-analyzer.onrender.com/mpm-lab/upload
+        --name "DBE_2C_N10"  --url http://localhost:5002/mpm-lab/upload
 """
 from __future__ import annotations
 

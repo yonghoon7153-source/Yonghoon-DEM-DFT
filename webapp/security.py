@@ -2,9 +2,15 @@
 # -*- coding: utf-8 -*-
 """공개 배포용 인증 게이트 — 쓰기·삭제·고비용 계산을 막는다 (코드리뷰 F-01).
 
-현재 `render.yaml` 은 `gunicorn --bind 0.0.0.0` 인 일반 web service 인데 인증·인가·CSRF
-방어가 전혀 없었다.  외부에서 `/upload`, `/analyze`, `/delete`, archive 변경/삭제,
+배경: `render.yaml` (gunicorn `--bind 0.0.0.0`) 로 공개 배포돼 있었고 인증·인가·CSRF
+방어가 전혀 없었다 — 외부에서 `/upload`, `/analyze`, `/delete`, archive 변경/삭제,
 predictor 학습까지 그대로 호출됐고 서버는 Supabase **service-role key** 를 쥐고 있다.
+
+★ 2026-08-07: 사용자가 **클라우드 배포를 폐지**해 `render.yaml` 을 삭제했다 (웹앱은 로컬
+`run_dem5002.sh` :5002 전용).  그래서 지금 이 게이트는 릴리스 블로커 해소가 아니라
+**심층 방어**다 — 기본은 OFF 라 로컬 사용에 마찰이 없고, LAN 노출·ngrok·재배포처럼
+누군가 다시 열었을 때만 켜면 된다.  (같은 Phase A 의 F-06 경로 봉쇄와 F-15 XSS 수정은
+배포 여부와 무관하게 **로컬에서도 유효**하다.)
 
 ═══ 설계: 사설망은 그대로, 공개 배포는 fail-closed ═══════════════════════════════
 연구용 로컬 실행을 매번 로그인시키면 쓸모가 떨어지고, 그렇다고 공개 배포에서 열어두면
@@ -15,8 +21,8 @@ predictor 학습까지 그대로 호출됐고 서버는 Supabase **service-role 
   (미설정)               → 게이트 OFF.  로컬·사설망 기존 동작 그대로 + 기동 시 경고 1줄.
   WEBAPP_AUTH_TOKEN=…    → 이 토큰으로 로그인/Bearer 인증.
 
-`render.yaml` 이 REQUIRE_AUTH=1 을 박고 토큰은 대시보드 secret 으로 두므로, 토큰을
-넣기 전까지 공개 인스턴스는 **읽기 전용**이 된다.
+다시 클라우드로 올릴 때는 배포 설정에 `WEBAPP_REQUIRE_AUTH=1` 을 넣고 토큰은 그 플랫폼의
+secret 으로 둘 것.  토큰을 넣기 전까지 인스턴스는 **읽기 전용**이 된다 (fail-closed).
 
 ═══ CSRF: 토큰 주입 대신 Origin 검사 ════════════════════════════════════════════
 UI 의 쓰기는 100+ 개 `fetch()` 에 흩어져 있어 CSRF 토큰을 전부 배선하면 변경 범위가

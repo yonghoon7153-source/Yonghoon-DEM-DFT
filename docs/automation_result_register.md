@@ -6,7 +6,7 @@
 | 층 | 내용 | 상태 | 근거/사용법 |
 |----|------|------|-------------|
 | **① 동적 로딩 = db변경→사이트 자동반영** | 요청마다 데이터 폴더 스캔 | ✅ 상시 | `app.py:_mpm_lab_list()`·`list_cases()` — 폴더만 떨구면 다음 새로고침에 뜸 |
-| **② push→Render 자동배포 (CD)** | 커밋 → 사이트 갱신 | ✅ 설정됨 | `render.yaml` (gunicorn). Render 대시보드에서 repo 연결 시 자동 |
+| **② push→클라우드 자동배포 (CD)** | 커밋 → 사이트 갱신 | ❌ **폐지 (2026-08-07)** | Render 배포는 사용하지 않기로 결정 → `render.yaml` 삭제.  웹앱은 **로컬 실행**(`run_dem5002.sh`, :5002).  다시 배포하려면 `webapp/security.py` 의 인증 게이트를 켤 것(WEBAPP_REQUIRE_AUTH=1 + 토큰) |
 | **③ 결과회수 자동화** | 원격 계산완료 → db 등록 훅 | ✅ **이번에 추가** | `webapp/mpm_lab_register.py` (아래) |
 | **④ Trust 게이트 자동 배지** | 수렴·잔차·물리범위 → 배지 | ✅ DEM 있음 / MPM은 등록시 데이터 임베드 | `_build_trust_card`(DEM Stage-E) + 등록 훅이 `meta.trust` 채움 |
 
@@ -28,9 +28,9 @@ Flask 무의존(순수 stdlib + 선택 requests).  `/mpm-lab/upload` 라우트�
 python webapp/mpm_lab_register.py --payload out/mpm_payload.json \
     --name "DBE_2C_N10" --dest /shared/dem/webapp/mpm_lab
 
-# ⓑ 실행중 원격 webapp 으로 HTTP push (Render 등 — 파일시스템 접근 불가)
+# ⓑ 실행중 webapp 으로 HTTP push (파일시스템 접근이 없을 때)
 python webapp/mpm_lab_register.py --payload out/mpm_payload.json \
-    --name "DBE_2C_N10" --url https://dem-analyzer.onrender.com/mpm-lab/upload
+    --name "DBE_2C_N10" --url http://localhost:5002/mpm-lab/upload
 
 # ⓒ 로컬 등록 후 원격 호스트로 rsync(ssh) — V100 → webapp 호스트
 python webapp/mpm_lab_register.py --payload out/mpm_payload.json \
