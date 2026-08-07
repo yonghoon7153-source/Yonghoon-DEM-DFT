@@ -53,11 +53,33 @@ def read_one(d):
         "tot_charge": ("+1 (Li+ vacancy)" if "tot_charge      = 1.0" in inp
                        or "tot_charge = 1.0" in inp else "0 (⚠ 중성 공공 — 정공 오염 주의)"),
     })
-    # ③ 정·역 대칭성 — 공공 매개 홉은 대칭 자리라 거의 같아야 한다
+    # ③ 정·역 대칭성 — ★ **끝점이 대칭적으로 같을 때만** 이 검사가 유효하다.
+    #   실측(2026-08-07 spglib): Li₂S 는 Li 궤도 1개(Fm-3m, Wyckoff c)라 정=역이어야 하지만,
+    #   Li₃P(P6₃/mmc, b+f)·Li₃PO₄γ(Pnma, d+c)는 **Li 자리가 두 종류**라 정≠역이 정상이다.
+    #   그 차이는 버그가 아니라 **두 Li 자리의 에너지 차**다. 이걸 모르고 일괄로 걸면
+    #   멀쩡한 결과를 의심스럽다고 잘못 판정한다 — 입력 단계에서 기록한 meta.json 을 읽는다.
+    meta = {}
+    mp = os.path.join(d, "meta.json")
+    if os.path.isfile(mp):
+        try:
+            meta = json.load(open(mp, encoding="utf-8"))
+        except (OSError, ValueError):
+            meta = {}
+    eqv = meta.get("endpoints_symmetry_equivalent")
+    r["endpoints_symmetry_equivalent"] = eqv
+    r["li_orbits"] = meta.get("li_orbits")
+    r["supercell"] = meta.get("supercell")
+    r["min_cell_A"] = meta.get("min_cell_A")
     if r["Ea_forward_eV"] is not None and r["Ea_backward_eV"] is not None:
-        asym = abs(r["Ea_forward_eV"] - r["Ea_backward_eV"])
+        f_, b_ = r["Ea_forward_eV"], r["Ea_backward_eV"]
+        asym = abs(f_ - b_)
         r["asymmetry_eV"] = asym
-        r["symmetric"] = asym < 0.02
+        # ★ 장거리 수송에 걸리는 유효 장벽 = 안장점 − **가장 낮은 자리** = max(정, 역).
+        #   대칭 홉이면 둘이 같으니 자동으로 맞고, 비대칭 홉이면 이게 물리적으로 맞는 값이다.
+        r["Ea_effective_eV"] = max(f_, b_)
+        r["site_energy_diff_eV"] = asym if eqv is False else None
+        # 대칭이어야 하는 경우에만 게이트를 건다
+        r["symmetric"] = (asym < 0.02) if eqv else None
     checks = []
     if not conv:
         checks.append("경로 미수렴 — nstep_path 를 늘려 이어서 돌릴 것")
@@ -65,7 +87,10 @@ def read_one(d):
         checks.append("CI 가 꺼져 있다 — 장벽이 이미지 격자만큼 과소평가된다")
     if r.get("symmetric") is False:
         checks.append(f"정·역 장벽이 {r['asymmetry_eV']:.3f} eV 어긋난다 — "
-                      f"끝점 하나가 다른 국소최소로 흘렀을 수 있다")
+                      f"이 상은 Li 자리가 한 종류라 같아야 한다 "
+                      f"(끝점 하나가 다른 국소최소로 흘렀을 수 있다)")
+    if eqv is None and os.path.isfile(mp) is False:
+        checks.append("meta.json 이 없어 대칭 판정을 못 한다 — 생성기를 다시 돌릴 것")
     if "tot_charge" in r and r["tot_charge"].startswith("0"):
         checks.append("중성 공공이라 원자가띠에 정공이 생긴다 — tot_charge=+1 로 다시 걸 것")
     r["blocking_checks"] = checks
@@ -82,18 +107,24 @@ def main():
         print(f"⛔ {a.work} 에 작업 폴더가 없다 — build_neb_inputs.py 부터")
         return 1
     res = {}
-    print(f"{'상':12s} {'상태':12s} {'Ea→(eV)':>9s} {'Ea←(eV)':>9s} {'비대칭':>8s} {'스텝':>5s}  판정")
+    print(f"{'상':12s} {'상태':12s} {'Ea→':>8s} {'Ea←':>8s} {'유효Ea':>8s} {'끝점':>6s} {'스텝':>5s}  판정")
     for d in dirs:
         r = read_one(d)
         res[r["tag"]] = r
-        f = r.get("Ea_forward_eV"); b = r.get("Ea_backward_eV"); s = r.get("asymmetry_eV")
+        f = r.get("Ea_forward_eV"); b = r.get("Ea_backward_eV")
+        ef = r.get("Ea_effective_eV"); eq = r.get("endpoints_symmetry_equivalent")
         print(f"{r['tag']:12s} {r['status']:12s} "
-              f"{(f'{f:.4f}' if f is not None else '—'):>9s} "
-              f"{(f'{b:.4f}' if b is not None else '—'):>9s} "
-              f"{(f'{s:.4f}' if s is not None else '—'):>8s} "
+              f"{(f'{f:.4f}' if f is not None else '—'):>8s} "
+              f"{(f'{b:.4f}' if b is not None else '—'):>8s} "
+              f"{(f'{ef:.4f}' if ef is not None else '—'):>8s} "
+              f"{('대칭' if eq else ('비대칭' if eq is False else '?')):>6s} "
               f"{r.get('n_path_steps', 0):5d}  "
               + ("✅ 인용 가능" if r.get("citable") else
-                 ("⚠ " + " · ".join(r.get("blocking_checks") or ["진행 중"]))[:70]))
+                 ("⚠ " + " · ".join(r.get("blocking_checks") or ["진행 중"]))[:64]))
+        if r.get("site_energy_diff_eV"):
+            print(f"{'':12s} └ Li 자리 두 종류 {r.get('li_orbits', {}).get('wyckoffs')} — "
+                  f"정·역 차 {r['site_energy_diff_eV']:.3f} eV 는 **자리 에너지 차**다(정상). "
+                  f"수송 장벽은 유효Ea 를 쓴다")
     ok = [r for r in res.values() if r.get("citable")]
     if ok:
         os.makedirs(os.path.dirname(OUT), exist_ok=True)

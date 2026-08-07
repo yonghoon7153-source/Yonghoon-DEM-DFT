@@ -75,6 +75,35 @@ def kmesh(cell, dens=0.03):
     return [max(1, int(np.ceil(r / dens))) for r in rec]
 
 
+def li_orbits(at0):
+    """원본(슈퍼셀 아님) 셀에서 Li 가 **몇 종류 자리**에 있는지.
+
+    ★ 이게 왜 필요한가 (2026-08-07): 공공 매개 홉의 정·역 장벽이 같아야 하는 건
+      **끝점 두 자리가 대칭적으로 같을 때뿐**이다. 실측:
+        Li₂S     Fm-3m    Li 궤도 1개 (Wyckoff c)        → 대칭 · 정=역 이어야 한다
+        Li₃P     P6₃/mmc  Li 궤도 2개 (b, f)             → **비대칭이 정상**
+        Li₃PO₄γ  Pnma     Li 궤도 2개 (d, c)             → **비대칭이 정상**
+      이걸 모르고 "정·역 차 < 0.02 eV" 를 일괄로 걸면 멀쩡한 Li₃P·Li₃PO₄ 결과를
+      의심스럽다고 잘못 판정한다. 그래서 궤도 수를 입력 단계에서 기록해 둔다.
+    """
+    try:
+        import spglib
+    except ImportError:
+        return None
+    try:
+        cell = (at0.cell.array, at0.get_scaled_positions(), at0.get_atomic_numbers())
+        d = spglib.get_symmetry_dataset(cell, symprec=1e-3)
+        eq = d.equivalent_atoms if hasattr(d, "equivalent_atoms") else d["equivalent_atoms"]
+        wy = d.wyckoffs if hasattr(d, "wyckoffs") else d["wyckoffs"]
+        sg = d.international if hasattr(d, "international") else d["international"]
+        li = [i for i, z in enumerate(at0.get_atomic_numbers()) if z == 3]
+        orb = sorted({(int(eq[i]), wy[i]) for i in li})
+        return {"spacegroup": str(sg), "n_li_orbits": len(orb),
+                "wyckoffs": [w for _, w in orb]}
+    except Exception:
+        return None
+
+
 def pick_hop(at, min_sep=None):
     """공공 자리 A 와 그리로 뛸 Li B 를 고른다.
 
@@ -123,11 +152,13 @@ def build(tag, path, disp, a, pool):
     nelec_vac = nelec_full - z_li - 1.0
     nat = len(at) - 1
 
+    orb = li_orbits(at0)
     info = {"tag": tag, "disp": disp, "rep": rep, "nat": nat,
             "cell": at.cell.array.copy(), "els": els,
             "hop_d": hop["d"], "nelec": nelec_vac,
             "L": at.cell.lengths().round(2).tolist(),
-            "kpts": kmesh(at.cell.array, a.kdens)}
+            "kpts": kmesh(at.cell.array, a.kdens),
+            "li_orbits": orb}
     if a.plan:
         return info
 
@@ -198,6 +229,19 @@ def build(tag, path, disp, a, pool):
         body.append("  %16.10f %16.10f %16.10f" % tuple(v))
     body += ["END_ENGINE_INPUT", "END", ""]
     open(os.path.join(d, "neb.in"), "w").write("\n".join(body))
+    # ★ 회수기가 대칭 게이트를 켤지 말지 여기서 판단한다 (위 li_orbits 주석 참조).
+    import json as _j
+    _j.dump({"tag": tag, "disp": disp, "supercell": list(rep), "nat": nat,
+             "hop_distance_A": hop["d"], "nelec": nelec_vac,
+             "tot_charge": 1.0, "num_of_images": a.images,
+             "min_cell_A": min(info["L"]), "kpts": info["kpts"],
+             "li_orbits": orb,
+             "endpoints_symmetry_equivalent": (orb or {}).get("n_li_orbits") == 1,
+             "arrival_err_A": info["arrival_err"],
+             "_note": ("endpoints_symmetry_equivalent=false 면 정·역 장벽이 다른 게 정상이다 "
+                       "— 그 차이는 두 Li 자리의 에너지 차다. 장거리 수송에 걸리는 유효 장벽은 "
+                       "max(정, 역) 이다(가장 낮은 자리에서 안장점까지).")},
+            open(os.path.join(d, "meta.json"), "w"), ensure_ascii=False, indent=2)
 
     # 사람이 눈으로 검산할 수 있게 두 끝 이미지를 구조 파일로도 남긴다
     from ase import Atoms
@@ -249,6 +293,13 @@ def main():
               f"(공공 1개 제거) · 셀 {r['L']} Å")
         print(f"     최근접 Li–Li 홉 {r['hop_d']:.3f} Å · 전자 {r['nelec']:.0f} "
               f"· k {r['kpts']} · 이미지 {a.images}")
+        o = r.get("li_orbits")
+        if o:
+            eqv = o["n_li_orbits"] == 1
+            print(f"     대칭 {o['spacegroup']} · Li 자리 {o['n_li_orbits']}종 "
+                  f"{o['wyckoffs']} → 끝점 "
+                  + ("**대칭 동등** (정=역 장벽이어야 한다)" if eqv else
+                     "**비대칭** (정≠역이 정상 — 두 자리의 에너지 차다)"))
         if "arrival_err" in r:
             ok = r["arrival_err"] < 1e-6
             print(f"     끝점 검산: 뛴 Li 가 공공 자리에 도달 "
