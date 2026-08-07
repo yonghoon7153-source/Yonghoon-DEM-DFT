@@ -1,0 +1,67 @@
+{
+  "case": "260421_215049_95e259",
+  "n_AM": 2380,
+  "n_SE": 158706,
+  "dem_porosity_pct": 14.993674440011073,
+  "dem_thickness_um": 112.70899999999999,
+  "dem_coverage_AM_P_mean": 22.049457749397817,
+  "dem_coverage_AM_S_mean": 21.076816607640144,
+  "dem_e_se_eff_gpa": 1.35,
+  "se_ratio_vs_1p35": 1.0,
+  "mpm_e_se_gpa": 1.53,
+  "mpm_nu_se": 0.49,
+  "mpm_K_se_gpa": 25.5,
+  "mpm_mu_se_gpa": 0.5134,
+  "press_gpa": 0.3,
+  "target_porosity": 0.1499,
+  "lateral_box": 0.05,
+  "mpm_n_grid": 256,
+  "mpm_est_points": 89226085,
+  "step4_crates": [],
+  "step4_charge_crates": [],
+  "step4_chain": false,
+  "step4_r_int_ohm_cm2": null,
+  "step4_am_electro_split": null,
+  "am_material_class_mode": "sdcp_mono_amp",
+  "a1_pressure_provenance": {
+    "P_fab_MPa": 300.0,
+    "P_operating_MPa": 90.0,
+    "mode": "two_stage_save_load_state",
+    "arms": [
+      "servo",
+      "hold"
+    ],
+    "unload_implemented": "platen_rises_to_target_then_protocol",
+    "verify": "\uac01 \u2461\ub2e8 metrics JSON \uc758 state_provenance.unload_status \uc640 P_achieved_MPa \ub97c \ud655\uc778\ud560 \uac83 \u2014 P_this_stage_role \uc774 *_NOT_REACHED \ub85c \ub05d\ub098\uba74 \uadf8 \ub7f0\uc740 \uad6c\ub3d9\uc555\uc5d0 \ub3c4\ub2ec\ud558\uc9c0 \ubabb\ud55c \uac83 (\uc81c\uc791\uc555 \ud615\uc0c1\uc774\ubbc0\ub85c \uc575\ucee4\ub85c \uc4f0\uba74 \uc548 \ub428)",
+    "plastic_history_restored": true,
+    "rate_dependence": "NOT_MODELLED_rate_independent_J2",
+    "T_C": null,
+    "T_dependence": "NOT_MODELLED"
+  },
+  "temperature_provenance": {
+    "T_C": 60.0,
+    "T_ref_C": 25.0,
+    "Ea_ion_eV": 0.41,
+    "T_dependence": "ARRHENIUS",
+    "sigma_ion_T_factor": 4.785100624794255,
+    "sigma_e_T_dependence": "NOT_MODELLED",
+    "convention": "sigma*T = sigma0*exp(-Ea/(kB*T))  [Kraft 2017 eq 5]",
+    "Ea_band_eV": {
+      "ma2024": 0.29,
+      "reisacher2023": 0.41,
+      "kraft2017": 0.46
+    },
+    "trust": "T_ref=25 \u00b0C is OUR CONVENTION, not an anchor \u2014 Cronau \u03c3_grain=3.0 mS/cm is a single RT point with no Arrhenius (docs/temp_pressure_capability.md T1-b). Ea is a BAND 0.29-0.46 eV (1.8x wide = x2.47..x4.44 at 30->60 \u00b0C); single-value reporting is forbidden \u2014 sweep EA_ION_EV_BAND. sigma_ion only: i0 / D_s / OCP dU/dT / SE hardness carry NO Arrhenius (no anchor, F1) \u2014 a T-swept run is NOT a full-physics temperature sweep.",
+    "applied_to": [
+      "run_mpm.sh: mpm_webapp_payload.py --temp-c (STEP3 \u03c3_ion \ubcf5\uc140 \uc194\ube0c + step4_grid.npz \u03c3 \ud14c\uc774\ube14)",
+      "run_mpm.sh: step4_dyn.py --temp-k 333.15 --i0-temp-scale (0 \uac1c STEP4 \ud638\ucd9c) \u2014 \u03c3_ion \uc740 \uadf8\ub9ac\ub4dc\uc758 60 \u00b0C, i0 \ub294 kim2025 R_ct(T) \uc575\ucee4\ub85c \u00d76.2545 (RT \uc804\uc778\uc790 \ud3ec\ud568), BV \uc5f4\uc804\uc555 f=F/RT \ub3c4 60 \u00b0C.  \u2605\ub450 \ud50c\ub798\uadf8\ub294 **\ud55c \uc30d**\uc774\ub2e4: --temp-k \ub2e8\ub3c5 = \ubd80\ud638\uc5ed\uc804(\u00a73-3\u2460), --i0-temp-scale \ub2e8\ub3c5 = \ubc30\uc218 1.0 \uc778\ub370 kinetics_T_scaling \ub9cc \ucc0d\ud788\ub294 \uac70\uc9d3 \ub77c\ubca8.  \u26a0\ucf54\ud305\uacc4 E\u2090 \ub294 \ub2e4\ub984(kim2025 LNO \ube44-Arrhenius \u2014 \uc575\ucee4\ub294 uncoated)"
+    ],
+    "not_applied_to": {
+      "STEP1/2 MPM \uc555\ubc00": "SE \uacbd\ub3c4 H(T)/\u03c3_y(T) \uc575\ucee4 \uc5c6\uc74c (\u00a7F1) \u2192 \ud615\uc0c1\uc740 25 \u00b0C \uac12",
+      "STEP4 kinetics (D_s/OCP\ub9cc)": "D_s(T) / OCP dU/dT \uc575\ucee4 \uc5c6\uc74c (\u00a7F1) \u2192 25 \u00b0C \uc0c1\uc218.  \u2605i0 \uc640 BV \uc5f4\uc804\uc555\uc740 \uc608\uc678 \u2014 kim2025 R_ct(T) \uc575\ucee4\uac00 \uc788\uc5b4 --temp-k + --i0-temp-scale \ud55c \uc30d\uc73c\ub85c \ubc18\uc601\ub41c\ub2e4 (i0 \uc575\ucee4\uac00 \uc0dd\uae30\uae30 \uc804\uc5d0\ub294 --temp-k \ub97c \uad7d\uc9c0 \uc54a\uc558\ub2e4: f=F/RT \ub9cc \uc6c0\uc9c1\uc774\uba74 \ubc18\uc751 \uacfc\uc804\uc555 \ubd80\ud638\uac00 \uc2e4\ud5d8\uacfc \ubc18\ub300, \u00a73-3\u2460)",
+      "\u03c3_e / \u03ba": "ohmic \uc740 T-\ubb34\uad00 (Reisacher, \uc815\uc131) \u2014 \uc0c1\uc218\uac00 \uc624\ud788\ub824 \uc815\ud569",
+      "STEP5 \uc5f4\ud654\uc728": "Arrhenius \uc575\ucee4 0\uac74 (\u00a7F1) \u2014 Joule v2 \ub294 E\u2090-free \uc720\uc9c0"
+    },
+    "injected_by": "webapp/app.py mpm_input_package (&tempc=)"
+  }
+}
