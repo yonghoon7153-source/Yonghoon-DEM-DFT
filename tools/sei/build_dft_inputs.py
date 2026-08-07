@@ -31,7 +31,10 @@ import os
 import sys
 
 ECUTWFC, ECUTRHO = 60.0, 480.0        # Ry — USPP/PAW 기준 (pseudo 요구 최대 47/326 위)
-KDENS_SCF, KDENS_NSCF = 0.30, 0.15    # Å⁻¹ 간격 — nscf 를 2배 조밀하게
+KDENS_SCF, KDENS_NSCF = 0.30, 0.15    # Å⁻¹ 간격 — 갭용 nscf 를 2배 조밀하게
+# ⚠ DOS/PDOS 용 nscf 는 **대칭을 끄고**(projwfc 의 d_matrix 회피) 돌아야 하는데,
+#   그러면 k 점이 전부 명시적으로 풀려 폭증한다. 갭만큼 조밀할 필요도 없으므로 성기게.
+KDENS_DOS = 0.28
 DEGAUSS = 0.01                        # Ry — scf 만 (nscf 는 fixed)
 WORK = "/data/work/runs/sei_dft"
 PROV = "db/properties/sei_structures_provenance.json"
@@ -129,7 +132,7 @@ def main():
         nelec = sum(zs[e] for e in at.get_chemical_symbols())
         nbnd = int(nelec / 2 * 1.35) + 8      # 점유 + 넉넉한 빈 상태 (CBM·DOS 용)
 
-        def block(calc, kpts, fixed, extra=""):
+        def block(calc, kpts, fixed, extra="", nosym=False, verbose=False):
             occ = ("    occupations     = 'fixed'\n" if fixed else
                    f"    occupations     = 'smearing'\n    smearing        = 'mv'\n"
                    f"    degauss         = {DEGAUSS}\n")
@@ -148,6 +151,14 @@ def main():
                  f"    ntyp            = {ntyp}", f"    ecutwfc         = {ECUTWFC}",
                  f"    ecutrho         = {ECUTRHO}",
                  (f"    nbnd            = {nbnd}" if calc == "nscf" else ""),
+                 # ⚠⚠ k 점이 100개를 넘으면 QE 는 verbosity='low' 에서 **밴드를 아예 안 찍는다**
+                 #   (실측 2026-08-06: li2o k 1098개 → 'bands (ev)' 0개 → 갭 추출 전멸).
+                 #   갭용 nscf 에는 반드시 verbosity='high' 를 준다.
+                 ("    verbosity       = 'high'" if verbose else ""),
+                 # ⚠ projwfc.x 가 'Error in routine d_matrix (2)' 로 죽는다 — 대칭연산을
+                 #   구면조화함수에 적용하는 회전행렬을 못 만든다. 표준 우회는 대칭 끄기.
+                 ("    nosym           = .true." if nosym else ""),
+                 ("    noinv           = .true." if nosym else ""),
                  occ.rstrip(), "/",
                  "&ELECTRONS", "    conv_thr        = 1.0d-8",
                  "    mixing_beta     = 0.3", "    electron_maxstep = 200", "/"]
@@ -174,8 +185,10 @@ def main():
         open(os.path.join(d, "02_scf.in"), "w").write(block("scf", k_scf, False))
         # ★ 갭의 정본 — fixed occupations + 조밀 k. nbnd 를 넉넉히 줘 CBM 을 잡는다
         open(os.path.join(d, "03_nscf_gap.in"), "w").write(
-            block("nscf", k_nscf, True, extra=""))
-        open(os.path.join(d, "04_nscf_dos.in"), "w").write(block("nscf", k_nscf, False))
+            block("nscf", k_nscf, True, verbose=True))
+        k_dos = kmesh(cell, KDENS_DOS)
+        open(os.path.join(d, "04_nscf_dos.in"), "w").write(
+            block("nscf", k_dos, False, nosym=True))
         open(os.path.join(d, "05_dos.in"), "w").write(
             f"&DOS\n  prefix = '{tag}'\n  outdir = './tmp'\n"
             f"  fildos = '{tag}.dos'\n  degauss = 0.007\n/\n")
@@ -188,8 +201,8 @@ def main():
                     + (f"U(Nd 4f)={a.nd_u} eV 를 걸었다(진단용)." if a.nd_u > 0
                        else "U 를 안 걸었다 → 진단용으로만 볼 것."))
         print(f"\n✓ {tag:26s} {nat:3d}원자 {'+'.join(els):14s} "
-              f"k scf {k_scf} / nscf {k_nscf} · 전자 {nelec:.0f} → nbnd {nbnd} "
-              f"(점유 {int(nelec/2)} + 빈 {nbnd - int(nelec/2)})")
+              f"k scf {k_scf} / gap {k_nscf} / dos {kmesh(cell, KDENS_DOS)} (nosym) · "
+              f"전자 {nelec:.0f} → nbnd {nbnd} (점유 {int(nelec/2)} + 빈 {nbnd - int(nelec/2)})")
         if note:
             print(note)
         made.append(tag)
