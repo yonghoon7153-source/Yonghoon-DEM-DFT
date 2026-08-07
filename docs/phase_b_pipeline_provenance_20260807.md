@@ -5,7 +5,7 @@
 | | |
 |---|---|
 | 구현 브랜치 | **`claude/stoic-knuth-NObVQ`** |
-| 구현 커밋 | **`57d94fb7`** (Phase B) |
+| 구현 커밋 | Phase B **`57d94fb7`** · Phase A **`HEAD`** (아래 참조) |
 | 변경 | 6 파일 · **+889 / −344** |
 
 ```
@@ -36,7 +36,7 @@ Codex 코드리뷰(`Codex/dem-mpm-crosscheck @ d9880b73`, 2026-08-07) 의 **Phas
 소유 선언 파일: `webapp/pipeline_service.py`(신규) · `webapp/app.py`(pipeline/analyze
 wrapper/retry/batch 경로) · `webapp/test_pipeline_provenance.py`(신규) ·
 `webapp/templates/{index,single}.html`(아래 ⑤ 때문에 **범위 확장**).
-Phase A(F-01/F-06 인증·path containment)는 **맡지 않았다** — 배포 모델 결정 대기.
+Phase A(F-01/F-06/F-15)는 **이어서 같은 브랜치에 구현했다** — 이 문서 하단 절 참조.
 
 ---
 
@@ -155,8 +155,8 @@ templates/{index,single}.html <script>        블록별 node --check OK
 
 ## 남은 위험 (이번에 **안** 고친 것)
 
-1. **F-01/F-06 (Phase A)** — 공개 Render 라면 릴리스 블로커.  인증 없이 `/delete`,
-   archive 변경, predictor 학습이 호출된다.  archive path containment 누락도 그대로.
+1. ~~F-01/F-06 (Phase A)~~ → **하단 Phase A 절에서 해소**.  다만 rate limit·업로드
+   제한·읽기 개방은 여전히 남아 있다 (그 절의 "안 덮은 것" 참조).
 2. **F-07** batch/predictor 상태가 프로세스 로컬 — workers=2 에서 불일치.
 3. **F-08** Supabase 재귀/pagination 삭제, rename/move 원격 미갱신, MPM lab 영속성.
 4. **F-09** startup restore 가 worker 마다 중복 실행 + 비원자적 다운로드.
