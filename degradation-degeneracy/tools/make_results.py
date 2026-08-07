@@ -186,13 +186,11 @@ def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
             f"여기서 복원이 잘 된다는 사실만으로는 22p 결과를 옹호할 수 없다 "
             f"(위 2번이 답이다).")
 
-    coup = summary.get("hessian_pe_ne_coupled_frac")
-    if coup is not None:
-        lines.append(
-            f"{len(lines) + 1}. **평평한 방향이 PE-NE 결합인 조건은 {_pct(coup)}다.** "
-            f"22p 패턴이 \"PE와 NE를 함께 움직여도 곡선이 안 변해서\" 생겼다는 가설의 "
-            f"직접적인 음성 결과다 — 목적함수가 잘 정의되지 않은 방향은 있지만, "
-            f"그 방향이 두 전극의 동반 이동은 아니다.")
+    # ★ F33 — Hessian은 결론에서 뺐다. `pe_ne_coupled`는 평평한 방향에서 α_PE와
+    #   α_NE가 **같은 부호**인지를 세는데, 22p 가설(한쪽 과대·다른쪽 과소)은
+    #   LAM에서 부호가 반대이고 α = (1−LAM)/r 이므로 α에서도 반대다. 즉 지표가
+    #   묻는 질문이 가설과 다르다. (반대부호 방향도 재보니 0.0~0.5%였지만,
+    #   eps 미수렴·안장점 혼입 때문에 어느 쪽으로도 근거가 못 된다.)
 
     ur = cmp_res.get("unrecoverable_frac", 0.0)
     lines.append(
@@ -229,6 +227,31 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     P.append("# RESULTS — full-cell 곡선으로 LAM_PE와 LAM_NE를 분리할 수 있는가\n")
     P.append("> 이 파일은 `tools/make_results.py`가 결과 파일에서 자동 생성한다. "
              "직접 수정하지 말 것.\n")
+
+    # ★ F35 — provenance가 없는 artifact에서 생성됐으면 문서 맨 위에 인용 금지
+    #   배너를 박는다. 회답을 별도 문서에만 두면 저장소를 여는 사람은 철회 전
+    #   결론을 먼저 본다.
+    repro = manifest.get("reproducible")
+    has_src = bool(fits is not None and "run_sig" in getattr(fits, "columns", []))
+    if repro is not True or not has_src:
+        why = []
+        if not manifest.get("config_hash"):
+            why.append("`config_hash`가 비어 있음")
+        if manifest.get("git_dirty"):
+            why.append("dirty worktree에서 실행됨")
+        if not has_src:
+            why.append("restart 출처(F25/F31)와 실행 서명(F32)이 없는 옛 형식")
+        P.append(
+            "> # ⛔ 인용 금지\n"
+            "> \n"
+            f"> 이 문서는 **재현 정보가 갖춰지지 않은 artifact**에서 생성됐습니다"
+            f"({', '.join(why) if why else 'provenance 불충분'}). "
+            "우도비, half-cell 목적함수 비교, PE-NE 상쇄, multi-start, Hessian 수치를 "
+            "인용하지 마십시오.\n"
+            "> \n"
+            "> 방향성 관측(예: half-cell 기준이 grid 기준보다 오차가 작다)까지만 "
+            "참고하고, **정확한 비율과 p-value는 clean 재실행 후에** 쓰십시오. "
+            "경위와 철회 목록은 `docs/08_REVIEW_RESPONSE.md`에 있습니다.\n")
     P.append(f"생성: {datetime.now(timezone.utc).astimezone().strftime('%Y-%m-%d %H:%M %Z')}  ")
     P.append(f"입력: `{in_dir}`  ")
     if manifest:
@@ -265,7 +288,11 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
              "같은 크기일 수 있어, 바이어스를 뺀 보정 판정을 표에 나란히 뒀다. "
              "두 값이 크게 다르면 그 목적함수의 결론은 약하다.")
     P.append("- 모두 **합성 데이터** 결과다. 실제 셀의 모델 오차(SEI, 저항 분포 등)는 "
-             "여기에 없다. 즉 이 값들은 degeneracy의 **하한**이다 — 실제는 더 나쁘다.\n")
+             "여기에 없다. 합성 truth 생성이 LLI를 양·음극 초기농도에 일률적으로 "
+             "적용하는 **한 가지 규약**에 조건부이기도 하다 (SEI·plating·전극별 "
+             "endpoint 이동은 같은 총 inventory loss에서도 다른 곡선을 만든다). "
+             "실제 셀이 더 나쁠지 나을지는 **증명되지 않았다** — 복잡성이 추가 "
+             "정보를 만들 수도, 없앨 수도 있다.\n")
 
     # ── 비교표 ──
     P.append("## 목적함수 4종 비교\n")
@@ -305,9 +332,11 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
                  f"{_pp(v['mean_abs_err'])} | {_pp(v['mean_err_lam_pe'])} | "
                  f"{_pp(v['mean_err_lam_ne'])} | {_pct(v['pe_ne_antisym_frac'])} |")
     P.append("")
-    P.append("`err LAM_PE`와 `err LAM_NE`의 **부호가 반대**면, 한쪽을 과대평가한 만큼 "
-             "다른 쪽을 과소평가해 full-cell 곡선에서 상쇄된 것이다 — degeneracy의 "
-             "특징적 지문이다.\n")
+    P.append("> ⚠ **`PE-NE 상쇄` 열을 degeneracy의 지문으로 읽지 마세요.** 이 열은 raw "
+             "오차의 부호가 반대인 비율일 뿐이고, 목적함수마다 전역 편향의 부호가 다르면 "
+             "그 차이가 그대로 잡힙니다. 편향을 중심화하면 목적함수 간 순서가 뒤집힙니다. "
+             "또 전압 민감도로 가중하지 않은 파라미터 오차 부호는 full-cell 곡선에서 "
+             "실제로 상쇄되는 양을 재지 않습니다.\n")
 
     # ── 전극 격차 복원력 ──
     gaps = cmp_res.get("gap_analysis") or {}
@@ -350,23 +379,39 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
                      "우도비를 다시 센 것이다 (`pocv_dvdq`, noise=0, 복원가능군). "
                      "값이 한 자릿수에서 수십까지 움직이면, 특정 조합의 값은 "
                      "**측정이 아니라 선택**이다.\n")
-            tols = sorted({s["tol"] for s in sens})
-            gts = sorted({s["gap_thresh"] for s in sens})
-            P.append("| 참 격차 ≥ \\ 동일 판정 < | "
-                     + " | ".join(_pp(t, 0) for t in tols) + " |")
-            P.append("|---" * (len(tols) + 1) + "|")
-            look = {(s["gap_thresh"], s["tol"]): s for s in sens}
-            for gt in gts:
-                cells = []
-                for t in tols:
-                    s = look.get((gt, t))
-                    cells.append("—" if s is None else
-                                 ("∞" if not np.isfinite(s["likelihood_ratio"])
-                                  else f"{s['likelihood_ratio']:.1f}"))
-                P.append(f"| **{_pp(gt, 0)}** | " + " | ".join(cells) + " |")
-            P.append("")
-            P.append("각 칸의 분자·분모(조건 수 포함)는 `objective_comparison.yaml`의 "
-                     "`gap_sensitivity`에 있다. 표의 최댓값을 대표값으로 쓰지 말 것.\n")
+            for same_def, title in (("lt_tol", "참값 \"같다\" = 참 격차 < tol"),
+                                    ("exact_zero", "참값 \"같다\" = 참 격차 정확히 0")):
+                rows = [r for r in sens if r.get("same_def") == same_def]
+                if not rows:
+                    continue
+                P.append(f"**{title}**\n")
+                tols = sorted({r["tol"] for r in rows})
+                gts = sorted({r["gap_thresh"] for r in rows})
+                P.append("| 참 격차 ≥ \\ 동일 판정 < | "
+                         + " | ".join(_pp(t, 0) for t in tols) + " |")
+                P.append("|---" * (len(tols) + 1) + "|")
+                look = {(r["gap_thresh"], r["tol"]): r for r in rows}
+                for gt in gts:
+                    cells = []
+                    for t in tols:
+                        r = look.get((gt, t))
+                        if r is None:
+                            cells.append("—")
+                        elif not np.isfinite(r["likelihood_ratio"]):
+                            cells.append(f"∞ (0/{r['n_wide']})")
+                        else:
+                            # 분자/분모를 같이 — 표본 1~2개짜리 칸을 가리지 않는다
+                            cells.append(
+                                f"{r['likelihood_ratio']:.1f}"
+                                f"<br><sub>{r['n_same_called_same']}/{r['n_same']}"
+                                f" ÷ {r['n_wide_called_same']}/{r['n_wide']}</sub>")
+                    P.append(f"| **{_pp(gt, 0)}** | " + " | ".join(cells) + " |")
+                P.append("")
+            P.append("각 칸은 `우도비` 아래에 `분자/분모 ÷ 분자/분모`를 함께 적었다. "
+                     "`∞`는 넓은 격차군에서 붕괴가 0건이라는 뜻이며, 요약 통계의 "
+                     "min/max 범위에서는 제외되므로 개수를 "
+                     "`gap_analysis.lr_sensitivity_n_infinite`로 따로 센다. "
+                     "표의 최댓값을 대표값으로 쓰지 말 것.\n")
 
         # ★ F29 — 전체 격자에서의 같은 지표
         gaps_all = cmp_res.get("gap_analysis_all_conditions") or {}
@@ -388,12 +433,18 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
 
     # ── Hessian ──
     if hess_by_obj:
-        P.append("## 곡률 진단 (Hessian) — 최적화와 무관한 측정\n")
-        P.append("최적점에서 목적함수의 2차 미분. 최소 고윳값 방향으로는 파라미터를 "
-                 "움직여도 곡선이 거의 안 변한다 = **데이터가 그 조합을 구분하지 "
-                 "못한다**. optimizer가 어떻게 헤맸는지와 무관한 국소 지표라는 점이 "
-                 "장점이지만, **목적함수가 비매끄러우면 곡률 자체가 잘 정의되지 "
-                 "않는다** — 아래 두 경고를 반드시 함께 볼 것.\n")
+        P.append("## 곡률 진단 (Hessian) — 참고용, 결론 근거 아님\n")
+        P.append("> ⚠⚠ **이 절의 수치를 식별성(degeneracy) 근거로 인용하지 마세요.** "
+                 "적대적 리뷰에서 세 가지가 확인됐습니다 (F33). ① 목적함수가 보간·미분·"
+                 "peak 연산을 포함해 비매끄러운데 절대 step `eps` 하나를 모든 파라미터에 "
+                 "씁니다 — 34p 조건수 중앙값이 eps=1e-3/1e-4/1e-5에서 12.8/229/17381로 "
+                 "움직입니다. 수렴하지 않았다는 뜻입니다. ② `min_eigval_positive`가 "
+                 "100%가 아닌 만큼은 최적점이 아니라 **안장점**에서 곡률을 잰 것인데 "
+                 "flat score와 결합 판정은 그대로 집계됩니다. ③ `α_PE·α_NE 결합`은 "
+                 "**같은 부호**를 세는데, 22p 가설(한쪽 과대·다른쪽 과소)은 α에서 부호가 "
+                 "**반대**입니다 — 지표가 묻는 질문이 가설과 다릅니다.\n")
+        P.append("최적점에서 목적함수의 2차 미분입니다. 아래는 진단 참고로만 두고, "
+                 "결론이나 optimizer 방어 문장에 쓰지 않습니다.\n")
         P.append("| objective | n | 조건수(중앙값) | flat score | 최소고윳값>0 | α_PE·α_NE 결합 |")
         P.append("|---|---|---|---|---|---|")
         for o in (list(OBJ_ORDER_LOCAL) + sorted(set(hess_by_obj) - set(OBJ_ORDER_LOCAL))):
@@ -491,8 +542,9 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
                      f"flat valley 판정은 restart 2개 이상이 같은 J에 닿아야 성립하므로, "
                      f"이렇게 지형이 울퉁불퉁하면 flat valley가 있어도 **관측되지 "
                      f"않습니다.** 이 목적함수의 낮은 flat valley 값을 "
-                     f"\"degeneracy가 적다\"로 읽으면 안 됩니다 — "
-                     f"최적화와 무관한 곡률(Hessian) 쪽을 보세요.\n")
+                     f"\"degeneracy가 적다\"로 읽으면 안 됩니다. "
+                     f"(예전에는 여기서 Hessian을 대안으로 안내했으나, 그 지표도 eps 미수렴·"
+                     f"안장점 혼입·가설과 다른 부호 규약으로 근거가 되지 못합니다 — F33.)\n")
         P.append("> ⚠ `degeneracy_summary.yaml`의 `restart_conditioned` 블록에 있는 "
                  "`agree_frac`과 `p_spread`는 인용하지 마세요. adaptive 조기 종료 때문에 "
                  "`agree_frac`은 restart를 5까지 간 조건에서 **정의상 0**이고, "

@@ -1,5 +1,22 @@
 # RESULTS — full-cell 곡선으로 LAM_PE와 LAM_NE를 분리할 수 있는가
 
+> # ⛔ 인용 금지 — 폐기된 문서
+
+> 이 문서는 **F25~F35 수정 전 artifact**에서 생성됐습니다(`config_hash` 비어 있음,
+> dirty worktree, restart 출처·실행 서명 없음). 다음을 인용하지 마십시오.
+>
+> - 우도비 46:1 및 그에 딸린 결론 문장 — **철회됨** (임계가 만든 국소 봉우리)
+> - half-cell 목적함수 비교표(100% / 99%) — `p_ini` 버그로 무효
+> - PE-NE 상쇄 68% → 48% — **철회됨** (전역 편향의 산물)
+> - `multistart_random_only` 블록 — best restart를 버리고 있었음
+> - Hessian coupling 해석 — 가설과 반대 부호를 셈
+> - "합성 결과는 실제 degeneracy의 하한" — 증명되지 않음
+>
+> 방향성 관측(half-cell 기준이 grid 기준보다 오차가 작다)까지만 참고하고,
+> **정확한 비율과 p-value는 clean 재실행 후에** 쓰십시오.
+> 경위와 철회 목록: `docs/08_REVIEW_RESPONSE.md`
+
+
 > 이 파일은 `tools/make_results.py`가 결과 파일에서 자동 생성한다. 직접 수정하지 말 것.
 
 생성: 2026-08-07 15:09 KST  

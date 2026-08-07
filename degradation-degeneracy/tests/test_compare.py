@@ -747,3 +747,54 @@ def test_antisym_and_population_caveats_ride_with_conclusion_1(tmp_path):
 
     assert "상쇄를 줄였다'로 읽지 마세요" in text
     assert "전체 격자 (복원불가군 포함)" in text, "전체군 표가 빠지면 F29를 볼 수 없다"
+
+
+def test_results_doc_carries_citation_block_without_provenance(tmp_path):
+    """★ F35 — provenance 없는 artifact로 만든 문서는 맨 위에 인용 금지 배너.
+
+    회답을 별도 문서에만 두면 저장소를 여는 사람은 철회 전 결론을 먼저 본다.
+    """
+    import yaml
+
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d = tmp_path / "res"
+    d.mkdir()
+    _scored(_fits(objectives=("pocv_dvdq",))).to_parquet(
+        d / "degeneracy_map.parquet", index=False)
+    (d / "degeneracy_summary.yaml").write_text(yaml.safe_dump({}), encoding="utf-8")
+    (d / "manifest.yaml").write_text(
+        yaml.safe_dump({"config_hash": "", "git_dirty": True, "reproducible": False}),
+        encoding="utf-8")
+
+    run_compare(d, d)
+    text = build(d, tmp_path / "RESULTS.md", repo_root=tmp_path).read_text(encoding="utf-8")
+
+    head = text[:1200]
+    assert "인용 금지" in head, "배너가 문서 맨 위에 없다"
+    assert "config_hash" in head and "dirty" in head
+    assert "08_REVIEW_RESPONSE.md" in head
+
+
+def test_results_doc_has_no_banner_when_provenance_complete(tmp_path):
+    """반대로 provenance가 갖춰지면 배너가 붙으면 안 된다 (양방향 고정)."""
+    import yaml
+
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d = tmp_path / "res"
+    d.mkdir()
+    df = _scored(_fits(objectives=("pocv_dvdq",)))
+    df.to_parquet(d / "degeneracy_map.parquet", index=False)
+    df["run_sig"] = "abcd1234"
+    df.to_parquet(d / "fits.parquet", index=False)
+    (d / "degeneracy_summary.yaml").write_text(yaml.safe_dump({}), encoding="utf-8")
+    (d / "manifest.yaml").write_text(
+        yaml.safe_dump({"config_hash": "deadbeef", "git_dirty": False,
+                        "reproducible": True}), encoding="utf-8")
+
+    run_compare(d, d)
+    text = build(d, tmp_path / "RESULTS.md", repo_root=tmp_path).read_text(encoding="utf-8")
+    assert "인용 금지" not in text

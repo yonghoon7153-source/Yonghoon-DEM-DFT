@@ -200,8 +200,9 @@ def _warm_row(objective, restarts):
             "restarts_json": json.dumps(restarts)}
 
 
-def _r(p, J, i, warm=False):
-    return {"p": p, "J": J, "i": i, "warm": warm}
+def _r(p, J, i, source="random"):
+    """restart 한 개. source는 warm / base_init / random 중 하나 (F31)."""
+    return {"p": p, "J": J, "i": i, "source": source, "warm": source == "warm"}
 
 
 def test_skip_first_removes_warm_start_artifact():
@@ -218,7 +219,7 @@ def test_skip_first_removes_warm_start_artifact():
     from src.scoring import multistart_diagnostics
 
     restarts = [                                  # J 오름차순 = 저장 순서
-        _r([1.00, 0.00, 1.00, 0.00], 0.0, i=0, warm=True),   # warm (유일한 최적)
+        _r([1.00, 0.00, 1.00, 0.00], 0.0, i=0, source="warm"),   # warm (유일한 최적)
         _r([1.20, -0.30, 1.05, -0.05], 0.5, i=2),            # 이 둘은 J가 같고
         _r([1.05, -0.05, 1.20, -0.30], 0.5, i=1),            # 해가 멀다 = flat valley
         _r([1.40, 0.20, 1.40, 0.20], 0.9, i=3),
@@ -234,7 +235,8 @@ def test_skip_first_removes_warm_start_artifact():
     assert random_only["multistart_kind"].iloc[0] == "flat_valley", \
         "warm 지점을 빼면 같은 J·다른 해가 보여야 한다"
     assert random_only["n_near_J"].iloc[0] == 2
-    assert bool(random_only["warm_dropped"].iloc[0])
+    assert bool(random_only["random_only"].iloc[0])
+    assert int(random_only["n_nonrandom_dropped"].iloc[0]) == 1
 
 
 def test_warm_is_found_by_flag_not_position():
@@ -249,7 +251,7 @@ def test_warm_is_found_by_flag_not_position():
 
     restarts = [
         _r([1.00, 0.00, 1.00, 0.00], 0.0, i=3),              # best (무작위)
-        _r([1.30, -0.30, 1.30, -0.30], 0.5, i=0, warm=True),  # warm — 중간에 있다
+        _r([1.30, -0.30, 1.30, -0.30], 0.5, i=0, source="warm"),  # warm — 중간에 있다
         _r([1.31, -0.31, 1.31, -0.31], 0.5, i=1),
     ]
     df = pd.DataFrame([_warm_row("pocv_dvdq_dqdv", restarts)])
@@ -277,17 +279,17 @@ def test_legacy_restarts_are_not_silently_corrected(caplog):
     with caplog.at_level(logging.WARNING):
         out = multistart_diagnostics(df, skip_first=True)
     assert out["n_restarts_total"].iloc[0] == 3, "옛 형식에서는 아무것도 버리면 안 된다"
-    assert not bool(out["warm_dropped"].iloc[0])
+    assert not bool(out["random_only"].iloc[0])
     assert "F25" in caplog.text
 
 
-def test_too_few_restarts_after_dropping_warm():
-    """warm을 빼고 나서 비교할 게 1개뿐이면 제외."""
+def test_too_few_restarts_after_dropping_nonrandom():
+    """무작위가 아닌 것을 빼고 나서 비교할 게 1개뿐이면 제외."""
     import pandas as pd
 
     from src.scoring import multistart_diagnostics
 
-    df = pd.DataFrame([_warm_row("x", [_r([1.0, 0, 1.0, 0], 0.0, 0, warm=True),
+    df = pd.DataFrame([_warm_row("x", [_r([1.0, 0, 1.0, 0], 0.0, 0, source="warm"),
                                        _r([1.1, 0, 1.1, 0], 0.4, 1)])])
     assert multistart_diagnostics(df, skip_first=True).empty
     assert not multistart_diagnostics(df).empty
@@ -452,3 +454,57 @@ def test_dirty_ignores_unrelated_untracked_files(tmp_path):
 
     (repo / "a.txt").write_text("two\n")            # 추적 파일 수정
     assert git_info(repo)["git_dirty"] is True
+
+
+def test_random_only_excludes_deterministic_base_init():
+    """★ F31 — restart 0은 warm이 아니어도 무작위가 아니다.
+
+    warm만 제거하면 warm을 받은 목적함수는 restart 0이 빠지고, 안 받은
+    목적함수는 공통 결정론적 초기값(base_init)이 그대로 남는다. 비교하는
+    restart 집합의 성격이 목적함수마다 달라져 "무작위끼리만"이 성립하지 않는다.
+    """
+    import pandas as pd
+
+    from src.scoring import multistart_diagnostics
+
+    # warm을 안 받은 목적함수: restart 0이 base_init
+    cold = [_r([1.00, 0.0, 1.00, 0.0], 0.0, i=0, source="base_init"),
+            _r([1.20, -0.2, 1.20, -0.2], 0.5, i=1),
+            _r([1.21, -0.21, 1.21, -0.21], 0.5, i=2)]
+    df = pd.DataFrame([_warm_row("pocv_dvdq", cold)])
+
+    out = multistart_diagnostics(df, skip_first=True)
+    assert out["n_restarts_total"].iloc[0] == 2, "base_init이 남았다 (F31)"
+    assert int(out["n_nonrandom_dropped"].iloc[0]) == 1
+    assert out["J_best"].iloc[0] == 0.5, "base_init의 J가 최적으로 남아 있다"
+
+
+def test_random_only_flags_unequal_restart_counts(tmp_path):
+    """★ F31 — 목적함수마다 남은 무작위 restart 수가 다르면 비교 불가로 표시."""
+    import json
+
+    import pandas as pd
+    import yaml
+
+    from src.scoring import run_scoring
+
+    def row(cond, obj, n_rand):
+        rs = [_r([1.0, 0.0, 1.0, 0.0], 0.0, i=0, source="warm")]
+        rs += [_r([1.0 + 0.1 * k, 0.0, 1.0, 0.0], 0.5, i=k) for k in range(1, n_rand + 1)]
+        return {"cond_id": cond, "objective": obj, "noise": 0.0,
+                "lli": 0.0, "lam_pe": 0.0, "lam_ne": 0.0,
+                "lli_hat": 0.0, "lam_pe_hat": 0.0, "lam_ne_hat": 0.0,
+                "r": 1.0, "a_pe": 1.0, "a_ne": 1.0, "reference": "grid",
+                "restarts_json": json.dumps(rs)}
+
+    # A는 무작위 4개, B는 2개 — adaptive 조기 종료가 만드는 상황
+    df = pd.DataFrame([row(f"c{i}", "A", 4) for i in range(3)]
+                      + [row(f"d{i}", "B", 2) for i in range(3)])
+    df.to_parquet(tmp_path / "fits.parquet", index=False)
+
+    run_scoring(tmp_path)
+    s = yaml.safe_load((tmp_path / "degeneracy_summary.yaml").read_text(encoding="utf-8"))
+    blk = s["multistart_random_only"]
+    assert blk["random_only_적용"] is True
+    assert blk["비교가능"] is False, "restart 수가 2배 차이인데 비교가능으로 나왔다"
+    assert "검정력" in blk["_주의"]

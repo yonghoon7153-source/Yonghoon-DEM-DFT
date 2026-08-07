@@ -357,3 +357,44 @@ python -m tools.check_sweep_consistency --sweep results/grid_fine_v2/wsweep --ma
 
 관련 문서: `CHANGELOG.md`(F25~F30 상세), `docs/06_REVIEW_DECISIONS.md`(이전 리뷰
 대장), `docs/RESULTS.md`(자동 생성 — 재실행 후 갱신 예정).
+
+---
+
+## 11. 2차 리뷰 회답 (2026-08-07, F31~F35)
+
+1차 회답(`cb23274`)에 대한 재리뷰에서 **차단 항목 5건**이 나왔고, 전부 맞았습니다.
+아래를 고친 뒤에야 재실행에 착수합니다.
+
+| # | 지적 | 판정 | 조치 |
+|---|---|---|---|
+| 1 | pristine `p_ini`가 본 fitting과 다른 optimizer protocol | ✅ | **F26b** — 실행 로그에서 독립적으로 먼저 잡음. 목적함수 dict 전체를 한 task로 넘겨 warm start 연쇄를 본 fitting과 일치시킴. 실측: `dqdv_only` 원점이 단독 `1.5708` vs 연쇄 `1.4849`로 갈렸음 |
+| 2 | resume signature가 결과 혼합을 못 막음 | ✅ | **F32** — 서명에 가중치·수치 bounds·`n_restarts`·dqdv/scaling 설정·base config·curves SHA를 포함. 행마다 `run_sig`를 박고, 병합 시 서명이 둘 이상이면 **실패시킴** |
+| 3 | 철회한 Hessian 해석이 생성기에 남음 | ✅ | **F33** — 핵심 결론에서 제거, 절 제목을 "참고용, 결론 근거 아님"으로 강등, "최적화와 무관" 표현 삭제, multistart 경고의 Hessian 유도 제거. "실제 degeneracy의 하한"과 "degeneracy 특징적 지문"도 삭제 |
+| 4 | F28의 "정확히 0"과 구현 불일치 | ✅ | **F34** — `same_def`를 `lt_tol`/`exact_zero` 둘 다 계산해 표를 나란히 냄. `lr_is_local_spike`를 **이웃 한 칸**(gap±1, tol±1) 중앙값 기준으로 변경. `∞` 개수를 `lr_sensitivity_n_infinite`로 별도 표기. 각 칸에 분자/분모 병기 |
+| 5 | "random-only"가 실제로는 random-only가 아님 | ✅ | **F31** — restart 출처를 `warm` / `base_init` / `random` 3종으로 기록하고, random-only는 `source == "random"`만 사용. `warm_dropped`(형식 판정) → `n_nonrandom_dropped`(실제 개수). 목적함수 간 남은 restart 수 편차를 재서 `비교가능` 플래그로 표기 |
+
+추가로 **F35** — `RESULTS.md` 맨 위에 인용 금지 배너를 생성기에 넣었습니다.
+provenance가 갖춰지면 배너가 사라지도록 양방향 테스트로 고정했습니다.
+
+### 지적 6·7에 대한 답
+
+- **6 (provenance 미완)**: untracked 파일을 dirty 판정에서 뺀 것은 의도적입니다 —
+  사용자 저장소 루트에 다른 프로젝트 산출물이 상시 20여 개 있어, 그대로 두면
+  모든 실행이 영구히 dirty로 찍혀 플래그가 무의미해집니다. 대신
+  `git_untracked_count`로 개수를 남깁니다. half-cell 캐시는 이제 `input_sha256`에
+  포함됩니다. 청크별 서명은 행 단위 `run_sig`로 대체했고, 병합 시 혼합을
+  **에러로** 막습니다.
+- **7 (RESULTS.md 인용 금지 + 자기모순)**: 배너를 넣었고, "6.6% vs 61.9%는 인용
+  가능"을 **철회**합니다. provenance 기준을 적용한다면 정확한 비율과 p-value도
+  재실행 전에는 쓸 수 없습니다. 방향성 관측으로만 남깁니다.
+
+### 이번에도 같은 교훈
+
+리뷰의 *"현재 테스트는 실행 동작 대신 소스 문자열만 검사한다"* 가 정확합니다.
+F26b 테스트도 처음엔 `_fit_one`을 monkeypatch한 뒤 그 fake를 호출하는 껍데기였고,
+`_run_fit_locked`을 지나지 않았습니다. 지금은 합성 `curves.parquet`으로
+`run_fit`을 실제로 태워 `run_sig`가 설정 변화에 반응하는지 확인합니다
+(`test_run_fit_records_run_signature_and_blocks_mixed_resume`,
+`test_run_fit_signature_covers_restart_count`).
+
+테스트 174 → 182.

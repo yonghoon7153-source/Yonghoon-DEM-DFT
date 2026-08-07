@@ -64,7 +64,9 @@ def git_info(repo_dir: str | Path | None = None, save_diff_to=None) -> dict:
 
 
 def file_digest(path) -> str | None:
-    """입력 파일의 SHA-256 (앞 16자). 재현성 검증용."""
+    """입력 파일의 SHA-256 (앞 16자). 재현성 검증용. 없으면 None."""
+    if path is None:
+        return None
     p = Path(path)
     if not p.exists() or not p.is_file():
         return None
@@ -256,7 +258,7 @@ def base_manifest(cfg_hash: str, extra: dict | None = None,
         **git_info(repo, save_diff_to=diff_path),
     }
     if inputs:
-        m["input_sha256"] = {str(p): file_digest(p) for p in inputs}
+        m["input_sha256"] = {str(p): file_digest(p) for p in inputs if p is not None}
     if extra:
         m.update(extra)
     # 재현 가능성을 스스로 판정해 적어 둔다 — 읽는 쪽이 놓치지 않게

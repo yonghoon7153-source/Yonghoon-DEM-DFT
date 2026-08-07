@@ -232,9 +232,14 @@ def fit(objective, init, lb, ub, n_restarts: int = 1, seed: int = 0,
     n_max = max(1, n_restarts)
     for k in range(n_max):
         x0 = init if k == 0 else rng.uniform(lb, ub)
+        # ★ F31 — restart 0은 무작위가 아니다. warm start를 받았으면 "warm",
+        #   아니면 공통 결정론적 초기값이라 "base_init"이다. 둘을 뭉치면
+        #   "무작위 restart끼리만" 비교가 성립하지 않는다 — warm을 받은
+        #   목적함수만 restart 0이 빠지고, 나머지는 base_init이 남는다.
+        src = ("warm" if warm_init else "base_init") if k == 0 else "random"
         try:
             x, f, ok, nfev = _minimize_until_stable(objective, x0, bounds, method)
-            results.append((x, f, ok, nfev, k, bool(warm_init and k == 0)))
+            results.append((x, f, ok, nfev, k, src))
         except Exception as e:  # noqa: BLE001
             log.debug("restart %d 실패: %s", k, e)
         # 적응적 multi-start: 앞의 두 번이 같은 해로 모이면 더 돌릴 이유가 없다.
@@ -252,7 +257,7 @@ def fit(objective, init, lb, ub, n_restarts: int = 1, seed: int = 0,
     # ★ J 오름차순 정렬 — 그래서 인덱스는 더 이상 restart 순서가 아니다.
     #   출처(restart index, warm 여부)는 튜플 안에 같이 실려 보존된다 (F25).
     results.sort(key=lambda t: t[1])
-    p_best, J_best, ok, _, _, _ = results[0]
+    p_best, J_best, ok, _, _, _ = results[0]      # (p, J, ok, nfev, i, source)
     nfev = sum(t[3] for t in results)     # 리뷰 F17: 전체 restart의 평가 수 합
 
     # 최적해와 J가 사실상 같은데 p가 다른 해 = 평평한 골짜기
@@ -266,10 +271,12 @@ def fit(objective, init, lb, ub, n_restarts: int = 1, seed: int = 0,
         bound_active=_bound_active(p_best, lb, ub),
         n_restarts=len(results), n_restarts_agree=agree,
         p_spread=spread, J_spread=j_spread,
-        # F25: (p, J)만 적으면 warm/random 출처가 사라진다. dict로 바꿔 인덱스와
-        # warm 여부를 같이 남긴다. 옛 형식 [(p, J), ...]도 읽는 쪽에서 받는다.
-        restarts=[{"p": p.tolist(), "J": J, "i": k, "warm": w}
-                  for p, J, _, _, k, w in results],
+        # F25/F31: (p, J)만 적으면 출처가 사라진다. dict로 바꿔 restart 인덱스와
+        # 출처(warm / base_init / random)를 같이 남긴다.
+        # 옛 형식 [(p, J), ...]도 읽는 쪽에서 받는다.
+        restarts=[{"p": p.tolist(), "J": J, "i": k, "source": s,
+                   "warm": s == "warm"}
+                  for p, J, _, _, k, s in results],
     )
 
 
@@ -480,7 +487,7 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     from joblib import Parallel, delayed
     from tqdm import tqdm
 
-    from src.io import base_manifest, write_manifest
+    from src.io import base_manifest, file_digest, write_manifest
 
     in_dir, out_dir = Path(in_dir), Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -593,11 +600,25 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     from src.io import chunk_files, load_completed, mark_completed, merge_chunks, save_chunk
 
     # ── resume: 완료 조건 건너뛰기 ──
-    # 리뷰 F18: 완료 파일명에 실행 서명(목적함수·기준·bound·타깃 열)을 넣는다.
-    # 안 그러면 다른 --objective로 resume했을 때 새 목적함수가 조용히 누락된다.
-    run_sig = hashlib.sha1(json.dumps(
-        [sorted(objectives), reference, bounds_preset, v_col, bool(warm_start)],
-        sort_keys=True).encode()).hexdigest()[:8]
+    # 리뷰 F18: 완료 파일명에 실행 서명을 넣는다. 안 그러면 다른 --objective로
+    # resume했을 때 새 목적함수가 조용히 누락된다.
+    #
+    # ★ F32 — 서명에 **결과를 바꾸는 모든 설정**이 들어가야 한다. 예전에는
+    #   목적함수 *이름*·reference·bounds preset·타깃 열·warm_start만 넣어서,
+    #   같은 이름으로 가중치나 restart 수만 바꾸고 --resume하면 옛 청크가
+    #   재사용됐다. 그러면 서로 다른 설정의 행이 섞인 결과가 새 manifest 아래
+    #   생성되어, manifest 하나만 봐서는 검출할 수 없다.
+    run_spec = {
+        "objectives": {k: objectives[k] for k in sorted(objectives)},   # 이름 + 가중치
+        "reference": reference, "bounds_preset": bounds_preset,
+        "bounds": bounds, "v_col": v_col, "warm_start": bool(warm_start),
+        "n_restarts": n_restarts,
+        "dqdv": obj_cfg.get("dqdv"), "scaling": obj_cfg.get("scaling"),
+        "base_config": str(base_config),
+        "curves_sha": file_digest(in_dir / "curves.parquet"),
+    }
+    run_sig = hashlib.sha1(
+        json.dumps(run_spec, sort_keys=True, default=str).encode()).hexdigest()[:12]
     completed_name = f"fit_completed_{run_sig}.jsonl"
     done = load_completed(out_dir, completed_name) if resume else set()
     if resume and done:
@@ -636,6 +657,10 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
             rows = []
             for rr in parallel(delayed(_fit_one)(t) for t in chunk):
                 rows.extend(rr)
+            # ★ F32 — 행마다 실행 서명을 박는다. 병합 단계에서 서로 다른 설정의
+            #   청크가 섞였는지 검출할 수 있어야 한다 (manifest 하나만 보면 못 잡는다).
+            for r in rows:
+                r["run_sig"] = run_sig
             # ★ 청크 즉시 저장 — 5시간 실행이 죽어도 여기까지는 남는다
             save_chunk(pd.DataFrame(rows), out_dir, chunk_idx,
                        subdir="fit_chunks")
@@ -659,14 +684,32 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
             raise RuntimeError("청크도 기존 fits.parquet도 없음 — 실행된 조건이 없습니다")
     fits = pd.read_parquet(path)
 
+    # ★ F32 — 서로 다른 설정의 청크가 섞였으면 여기서 죽는다. 조용히 섞인 결과를
+    #   새 manifest 아래 내보내는 것이 가장 위험하다 (읽는 쪽이 검출할 수 없다).
+    if "run_sig" in fits.columns:
+        sigs = sorted(str(s) for s in fits["run_sig"].dropna().unique())
+        if len(sigs) > 1:
+            raise RuntimeError(
+                f"서로 다른 실행 설정의 결과가 섞였습니다: {sigs}. "
+                f"--resume이 다른 설정의 청크를 재사용했을 수 있습니다. "
+                f"{out_dir}/fit_chunks 를 비우고 처음부터 다시 돌리세요 (F32).")
+        if sigs and sigs[0] != run_sig:
+            log.warning("기존 fits.parquet의 서명(%s)이 이번 실행(%s)과 다릅니다 — "
+                        "전부 resume-완료라 재계산이 없었다면 정상입니다.",
+                        sigs[0], run_sig)
+
     # F30: config_hash를 비워 두면 어떤 목적함수 정의로 돌았는지 남지 않는다.
     #   실제 obj_cfg 내용을 해시해 박고, 입력 curves와 config 파일의 SHA도 남긴다.
     cfg_h = hashlib.sha1(json.dumps(obj_cfg, sort_keys=True, default=str)
                          .encode()).hexdigest()[:12]
+    # halfcell 기준 캐시도 입력이다 — 이게 바뀌면 결과가 바뀐다
+    hc_cache = sorted(Path(".cache/halfcell").glob("*_ocp.json")) \
+        if reference == "halfcell" else []
     write_manifest(out_dir, base_manifest(
         cfg_h, out_dir=out_dir,
-        inputs=[in_dir / "curves.parquet", base_config], extra={
+        inputs=[in_dir / "curves.parquet", base_config, *hc_cache], extra={
         "run_type": "fit", "input": str(in_dir),
+        "run_signature": run_sig, "run_spec": run_spec,
         "objectives_resolved": obj_cfg.get("objectives"),
         "n_conditions": len(tasks), "objectives": list(objectives),
         "bounds_preset": bounds_preset, "bounds": bounds,

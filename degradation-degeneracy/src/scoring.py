@@ -213,24 +213,34 @@ def multistart_diagnostics(df: pd.DataFrame, j_tol: float = 1e-3,
             continue
         if not rs:
             continue
-        legacy = not isinstance(rs[0], dict)
+        legacy = not isinstance(rs[0], dict) or "source" not in rs[0]
         if legacy:
-            ps = np.array([p for p, _ in rs], float)
-            js = np.array([j for _, j in rs], float)
-            warm = np.zeros(len(js), bool)
+            if isinstance(rs[0], dict):
+                ps = np.array([d["p"] for d in rs], float)
+                js = np.array([d["J"] for d in rs], float)
+            else:
+                ps = np.array([p for p, _ in rs], float)
+                js = np.array([j for _, j in rs], float)
+            source = np.array(["unknown"] * len(js), object)
         else:
             ps = np.array([d["p"] for d in rs], float)
             js = np.array([d["J"] for d in rs], float)
-            warm = np.array([bool(d.get("warm")) for d in rs], bool)
+            source = np.array([d["source"] for d in rs], object)
         ok = np.isfinite(js)
         if not ok.any():
             continue
-        ps, js, warm = ps[ok], js[ok], warm[ok]
+        ps, js, source = ps[ok], js[ok], source[ok]
+        n_dropped = 0
         if skip_first:
             if legacy:
                 n_legacy += 1        # 출처를 모른다 → 아무것도 버리지 않는다
             else:
-                keep = ~warm
+                # ★ F31 — "warm만 제거"로는 부족하다. restart 0은 warm이 아니어도
+                #   공통 결정론적 초기값(base_init)이라 무작위가 아니다. warm을 받은
+                #   목적함수만 restart 0이 빠지고 나머지는 base_init이 남으면,
+                #   비교하는 restart 집합의 성격이 목적함수마다 달라진다.
+                keep = source == "random"
+                n_dropped = int((~keep).sum())
                 ps, js = ps[keep], js[keep]
                 if len(js) < 2:
                     continue
@@ -258,7 +268,10 @@ def multistart_diagnostics(df: pd.DataFrame, j_tol: float = 1e-3,
             "p_spread_all": spread_all, "p_spread_near": spread_near,
             "J_best": float(j_best), "J_worst": float(js.max()),
             "multistart_kind": kind,
-            "warm_dropped": bool(skip_first and not legacy),
+            # F31: 실제로 몇 개를 버렸는지 기록한다. "형식이 새것이면 True"는
+            # 보정이 실제로 일어났는지를 말해주지 않는다.
+            "n_nonrandom_dropped": n_dropped,
+            "random_only": bool(skip_first and not legacy),
         })
     if n_legacy:
         log.warning("multi-start: %d행이 옛 restarts 형식(출처 없음)이라 warm start "
@@ -411,20 +424,32 @@ def run_scoring(in_dir, out_dir=None, tol: float = DEFAULT_TOL,
         if not ms_r.empty:
             ms_r.to_parquet(out_dir / "multistart_random_only.parquet", index=False)
             summary["multistart_random_only"] = multistart_summary(ms_r)
-            # ★ F25: 옛 산출물은 restart 출처가 없어 보정 자체가 불가능하다.
+            # ★ F25/F31: 옛 산출물은 restart 출처가 없어 보정 자체가 불가능하다.
             #   그 사실을 요약에 박아, 읽는 쪽이 무효인 줄 모르고 인용하지 못하게 한다.
-            dropped = bool(ms_r["warm_dropped"].any()) if "warm_dropped" in ms_r else False
-            summary["multistart_random_only"]["warm_start_보정_적용"] = dropped
+            ok_random = bool(ms_r["random_only"].all()) if "random_only" in ms_r else False
+            summary["multistart_random_only"]["random_only_적용"] = ok_random
+            if "n_nonrandom_dropped" in ms_r:
+                summary["multistart_random_only"]["평균_제외_restart수"] = \
+                    float(ms_r["n_nonrandom_dropped"].mean())
+            # F31: 목적함수마다 남은 무작위 restart 수가 다르면 검정력이 달라
+            #   비교 자체가 성립하지 않는다 (F4와 같은 함정).
+            if ok_random and "objective" in ms_r:
+                per_obj = ms_r.groupby("objective")["n_restarts_total"].mean()
+                spread = float(per_obj.max() - per_obj.min())
+                summary["multistart_random_only"]["restart수_목적함수간_편차"] = spread
+                summary["multistart_random_only"]["비교가능"] = bool(spread < 0.5)
             summary["multistart_random_only"]["_주의"] = (
-                "★ 목적함수 간 비교는 이 블록을 쓸 것. 위 multistart 블록은 "
-                "warm start 지점을 포함하므로, warm start를 받은 "
-                "목적함수(w_dqdv≠0)가 인위적으로 multimodal 쪽으로 쏠린다."
-                if dropped else
-                "⚠ 무효 — 이 fits.parquet은 restart 출처(warm 여부)를 저장하지 않은 "
-                "옛 형식이라 warm start 보정을 하지 못했습니다. restarts_json이 J "
-                "오름차순이라 위치로 추정하면 warm이 아니라 best restart를 버립니다. "
-                "이 블록을 인용하지 마세요 — 출처를 저장하는 현재 코드로 재fit해야 "
-                "복구됩니다 (F25).")
+                "★ 목적함수 간 비교는 이 블록을 쓸 것 — source == 'random'인 restart만 "
+                "남긴다. 위 multistart 블록은 warm start 지점과 공통 결정론적 초기값을 "
+                "포함하므로, warm start를 받은 목적함수(w_dqdv≠0)가 인위적으로 "
+                "multimodal 쪽으로 쏠린다. 단 `비교가능`이 false면 목적함수마다 남은 "
+                "무작위 restart 수가 달라(adaptive 조기 종료) 검정력이 다르므로 "
+                "그대로 비교하지 말 것."
+                if ok_random else
+                "⚠ 무효 — 이 fits.parquet은 restart 출처를 저장하지 않은 옛 형식이라 "
+                "보정을 하지 못했습니다. restarts_json이 J 오름차순이라 위치로 "
+                "추정하면 warm이 아니라 best restart를 버립니다. 이 블록을 인용하지 "
+                "마세요 — 출처를 저장하는 현재 코드로 재fit해야 복구됩니다 (F25/F31).")
         log.info("multi-start 진단: %s",
                  {k: v for k, v in summary["multistart"].items()
                   if not k.startswith("_")})

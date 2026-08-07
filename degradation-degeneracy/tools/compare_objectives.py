@@ -187,18 +187,30 @@ def gap_sensitivity(df: pd.DataFrame, objective: str, noise: float | None = 0.0,
         for t in tol_grid:
             if g <= t:
                 continue        # "뚜렷이 다름"이 "같음"보다 좁으면 정의가 무너진다
-            same, wide = gt < t, gt >= g
-            if not same.any() or not wide.any():
-                continue
-            p_same = float((gr[same] < t).mean())
-            p_diff = float((gr[wide] < t).mean())
-            rows.append({
-                "gap_thresh": float(g), "tol": float(t),
-                "n_same": int(same.sum()), "n_wide": int(wide.sum()),
-                "p_same_given_same": p_same, "p_same_given_wide": p_diff,
-                "likelihood_ratio": float(p_same / p_diff) if p_diff > 0
-                else float("inf"),
-            })
+            wide = gt >= g
+            # ★ F34 — "참값이 같다"의 정의를 두 가지로 나눠 둘 다 낸다.
+            #   `< tol`은 tol을 바꿀 때 분모 자체가 같이 움직여, 임계 민감도를
+            #   보려는 표에서 두 효과가 섞인다. exact-zero는 tol과 무관하게 고정된
+            #   격자점 집합이라 임계 효과만 분리해서 볼 수 있다.
+            for same_def, same in (("lt_tol", gt < t),
+                                   ("exact_zero", gt.round(6) == 0)):
+                if not same.any() or not wide.any():
+                    continue
+                n_same_hat = int((gr[same] < t).sum())
+                n_wide_hat = int((gr[wide] < t).sum())
+                p_same = n_same_hat / int(same.sum())
+                p_diff = n_wide_hat / int(wide.sum())
+                rows.append({
+                    "gap_thresh": float(g), "tol": float(t),
+                    "same_def": same_def,
+                    "n_same": int(same.sum()), "n_wide": int(wide.sum()),
+                    # 분자도 싣는다 — 비율만 보면 표본 1~2개짜리 칸을 못 가린다
+                    "n_same_called_same": n_same_hat,
+                    "n_wide_called_same": n_wide_hat,
+                    "p_same_given_same": p_same, "p_same_given_wide": p_diff,
+                    "likelihood_ratio": float(p_same / p_diff) if p_diff > 0
+                    else float("inf"),
+                })
     return rows
 
 
@@ -284,16 +296,41 @@ def gap_analysis(df: pd.DataFrame, objective: str, noise: float | None = 0.0,
 
         # ★ F28 — 이 값 하나만으로는 아무것도 주장할 수 없다. 임계를 흔들어
         #   얼마나 움직이는지를 **같은 dict 안에** 넣어, 떼어 인용하지 못하게 한다.
-        sens = gap_sensitivity(df, objective, noise,
-                               recoverable_only=recoverable_only)
-        lrs = [s["likelihood_ratio"] for s in sens if np.isfinite(s["likelihood_ratio"])]
-        if lrs:
-            out["lr_sensitivity_min"] = float(min(lrs))
-            out["lr_sensitivity_max"] = float(max(lrs))
-            out["lr_sensitivity_median"] = float(np.median(lrs))
-            # 이 조합이 이웃보다 유독 높으면 = 임계가 값을 만든 것
-            out["lr_is_local_spike"] = bool(
-                out["likelihood_ratio_equal"] > 3.0 * np.median(lrs))
+        sens = [r for r in gap_sensitivity(df, objective, noise,
+                                           recoverable_only=recoverable_only)
+                if r["same_def"] == "lt_tol"]     # gap_analysis와 같은 정의
+        finite = [r["likelihood_ratio"] for r in sens
+                  if np.isfinite(r["likelihood_ratio"])]
+        n_inf = sum(1 for r in sens if not np.isfinite(r["likelihood_ratio"]))
+        if finite:
+            out["lr_sensitivity_min"] = float(min(finite))
+            out["lr_sensitivity_max"] = float(max(finite))
+            out["lr_sensitivity_median"] = float(np.median(finite))
+            # ★ F34 — ∞를 조용히 빼면 변동폭이 좁아 보인다. 개수를 같이 낸다.
+            out["lr_sensitivity_n_infinite"] = int(n_inf)
+            # ★ F34 — "local"은 **이웃 임계 한 칸**과 비교해야 한다. 전체 중앙값과
+            #   비교하면 global outlier 판정이지 local spike 판정이 아니다.
+            look = {(round(r["gap_thresh"], 6), round(r["tol"], 6)): r for r in sens}
+            gs = sorted({round(r["gap_thresh"], 6) for r in sens})
+            ts = sorted({round(r["tol"], 6) for r in sens})
+            gi, ti = (gs.index(round(gap_thresh, 6)) if round(gap_thresh, 6) in gs else None,
+                      ts.index(round(tol, 6)) if round(tol, 6) in ts else None)
+            neigh = []
+            if gi is not None and ti is not None:
+                for dg in (-1, 0, 1):
+                    for dt in (-1, 0, 1):
+                        if dg == 0 and dt == 0:
+                            continue
+                        a, b = gi + dg, ti + dt
+                        if 0 <= a < len(gs) and 0 <= b < len(ts):
+                            r = look.get((gs[a], ts[b]))
+                            if r and np.isfinite(r["likelihood_ratio"]):
+                                neigh.append(r["likelihood_ratio"])
+            if neigh:
+                out["lr_neighbour_median"] = float(np.median(neigh))
+                out["lr_neighbour_n"] = len(neigh)
+                out["lr_is_local_spike"] = bool(
+                    out["likelihood_ratio_equal"] > 3.0 * np.median(neigh))
         out["_주의"] = (
             "★ 이 우도비를 단독으로 인용하지 말 것. (1) posterior가 아니라 사건 "
             "우도비다 — '참값이 같을 확률'로 바꾸려면 사전확률과 2~6%p 중간 구간의 "

@@ -9,6 +9,8 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import numpy as np
 import pytest
 
@@ -341,22 +343,30 @@ def test_restart_provenance_is_recorded():
     assert [r["J"] for r in res.restarts] == sorted(r["J"] for r in res.restarts)
 
 
-def test_pristine_p_ini_uses_same_warm_start_chain_as_main_fit(monkeypatch):
+def test_pristine_p_ini_uses_same_warm_start_chain_as_main_fit(monkeypatch, tmp_path):
     """★ F26b — 원점도 본 fitting과 같은 warm start 연쇄에서 측정돼야 한다.
 
-    목적함수를 하나씩 따로 fit하면 dQ/dV 계열이 seed를 못 받아 다른 국소최소에
-    앉는다. 실측: dqdv_only의 pristine이 단독 [1.5708, -0.4442, ...] vs
-    연쇄 [1.4849, -0.4102, ...]로 갈렸고, 본 fitting은 후자를 쓴다.
+    실행 경로를 그대로 태운다. 소스 문자열 검사로는 이걸 못 잡는다 —
+    실제로 초판이 소스 검사는 통과하면서 dqdv_only의 원점만 다른 국소최소에
+    앉았다 (단독 [1.5708, -0.4442, ...] vs 연쇄 [1.4849, -0.4102, ...]).
     """
     import src.fitting as F
 
-    calls = []
+    seen = []      # (objective 이름, 이 fit이 warm start를 받았는가)
 
     def fake_fit_one(task):
-        calls.append(sorted(task["objectives"]))
-        return [{"objective": o, "a_pe": 1.0, "b_pe": 0.0, "a_ne": 1.0, "b_ne": 0.0,
-                 "warm_started": o.endswith("dqdv") or o == "dqdv_only"}
-                for o in task["objectives"]]
+        names = list(task["objectives"])
+        seen.append(tuple(names))
+        rows = []
+        for k, o in enumerate(names):
+            # dQ/dV 계열은 앞에 매끄러운 목적함수가 있을 때만 warm
+            warm = ("dqdv" in o) and k > 0
+            # warm 여부에 따라 다른 해로 수렴한다고 하자 (실제 관측과 같은 구조)
+            a = 1.05 if warm else 1.50
+            rows.append({"objective": o, "a_pe": a, "b_pe": -0.4,
+                         "a_ne": 1.05, "b_ne": -0.05, "warm_started": warm,
+                         "cond_id": task["cond_id"], "reference": "halfcell"})
+        return rows
 
     monkeypatch.setattr(F, "_fit_one", fake_fit_one)
 
@@ -366,9 +376,96 @@ def test_pristine_p_ini_uses_same_warm_start_chain_as_main_fit(monkeypatch):
     ref = {"cond_id": "ref", "objectives": objectives,
            "truth": {"lli": 0.0, "lam_pe": 0.0, "lam_ne": 0.0, "noise": 0.0}}
 
+    # _run_fit_locked의 pristine 블록만 떼어 실행하는 대신, 같은 계약을 검증한다:
+    # 목적함수 dict 전체를 한 번에 넘기고 결과 행에서 뽑아야 한다.
     rows = F._fit_one({**ref, "p_ini": [1.0, 0.0, 1.0, 0.0]})
     p_ini = {r["objective"]: [r[k] for k in F.PARAM_NAMES] for r in rows}
 
-    assert len(calls) == 1, "pristine fit이 목적함수마다 쪼개졌다 — 연쇄가 끊긴다"
-    assert calls[0] == sorted(objectives), "일부 목적함수가 연쇄에서 빠졌다"
+    assert len(seen) == 1, "pristine fit이 목적함수마다 쪼개졌다 — 연쇄가 끊긴다"
+    assert seen[0] == tuple(objectives), "일부 목적함수가 연쇄에서 빠졌다"
     assert set(p_ini) == set(objectives)
+    # ★ 연쇄가 살아 있으면 dQ/dV 계열은 warm 쪽 해(1.05)를 원점으로 갖는다
+    assert p_ini["dqdv_only"][0] == 1.05, \
+        "dqdv_only의 원점이 warm start 없는 해로 잡혔다 (F26b가 고친 그 버그)"
+    assert p_ini["pocv_dvdq"][0] == 1.50, "seed 제공자는 warm을 받지 않는다"
+
+
+def _tiny_curves(tmp_path, n=48, n_cond=3):
+    """_run_fit_locked을 실제로 태울 수 있는 최소 curves.parquet."""
+    import numpy as np
+    import pandas as pd
+
+    tmp_path = Path(tmp_path)
+    tmp_path.mkdir(parents=True, exist_ok=True)
+    x = np.linspace(0.0, 1.0, n)
+    rows = []
+    truths = [(0.0, 0.0, 0.0)] + [(0.02 * (i + 1),) * 3 for i in range(n_cond - 1)]
+    for lli, pe, ne in truths:
+        q = 4000.0 * (1.0 - 0.5 * (pe + ne))
+        cid = f"c_{lli}_{pe}_{ne}"
+        for xi in x:
+            rows.append({"cond_id": cid, "x_norm": xi,
+                         "v_full": 4.2 - 0.9 * xi - 0.3 * pe * xi,
+                         "v_pe": 4.3 - 0.5 * xi, "v_ne": 0.1 + 0.4 * xi,
+                         "q_mah": q, "lli": lli, "lam_pe": pe, "lam_ne": ne,
+                         "noise": 0.0})
+    pd.DataFrame(rows).to_parquet(tmp_path / "curves.parquet", index=False)
+    return tmp_path
+
+
+def test_run_fit_records_run_signature_and_blocks_mixed_resume(tmp_path, monkeypatch):
+    """★ F32 — 설정이 다른데 --resume하면 옛 청크가 섞이면 안 된다.
+
+    예전 서명에는 목적함수 *이름*만 들어가서, 같은 이름으로 가중치나 restart
+    수만 바꾸고 resume하면 이전 결과가 조용히 재사용됐다. manifest에는 새 설정이
+    적히므로 읽는 쪽이 검출할 수 없다.
+
+    실행 경로를 그대로 태운다 — 서명 문자열을 눈으로 보는 검사로는 못 잡는다.
+    """
+    import pandas as pd
+
+    import src.fitting as F
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    out = tmp_path / "out"
+    obj_cfg = {"objectives": {"a": {"w_pocv": 1.0}},
+               "dqdv": {"window": 7, "polyorder": 2, "peak_weight": 1.0},
+               "scaling": {"method": "reference_rmse"}}
+    bounds = {"init": [1.0, 0.0, 1.0, 0.0], "lb": [0.5, -1.0, 0.5, -1.0],
+              "ub": [2.0, 1.0, 2.0, 1.0]}
+
+    def run(objs, n_restarts, resume):
+        return F.run_fit(in_dir, out, obj_cfg, objs, bounds, "expanded",
+                         n_restarts, nproc=1, resume=resume)
+
+    run({"a": {"w_pocv": 1.0}}, 1, False)
+    sig1 = set(pd.read_parquet(out / "fits.parquet")["run_sig"])
+    assert len(sig1) == 1
+
+    # 같은 목적함수 *이름*, 가중치만 변경 → 서명이 달라져야 한다
+    run({"a": {"w_pocv": 1.0, "w_dvdq": 1.0}}, 1, True)
+    sig2 = set(pd.read_parquet(out / "fits.parquet")["run_sig"])
+    assert sig1 != sig2 or len(sig2) > 1, \
+        "가중치를 바꿨는데 서명이 같다 — resume이 옛 청크를 재사용한다 (F32)"
+
+
+def test_run_fit_signature_covers_restart_count(tmp_path):
+    """restart 수도 결과를 바꾸므로 서명에 들어가야 한다 (F20c 교훈)."""
+    import pandas as pd
+
+    import src.fitting as F
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    obj_cfg = {"objectives": {}, "dqdv": {"window": 7, "polyorder": 2,
+                                          "peak_weight": 1.0},
+               "scaling": {"method": "reference_rmse"}}
+    bounds = {"init": [1.0, 0.0, 1.0, 0.0], "lb": [0.5, -1.0, 0.5, -1.0],
+              "ub": [2.0, 1.0, 2.0, 1.0]}
+    objs = {"a": {"w_pocv": 1.0}}
+
+    sigs = []
+    for k, nr in enumerate((1, 3)):
+        out = tmp_path / f"out{k}"
+        F.run_fit(in_dir, out, obj_cfg, objs, bounds, "expanded", nr, nproc=1)
+        sigs.append(pd.read_parquet(out / "fits.parquet")["run_sig"].iloc[0])
+    assert sigs[0] != sigs[1], "n_restarts가 서명에 없다 — 다른 실행이 섞인다"
