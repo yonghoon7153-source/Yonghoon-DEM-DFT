@@ -335,19 +335,98 @@ except ImportError:                                    # 도구가 webapp 밖에
     _sys.path.insert(0, str(ROOT / "webapp"))
     import canonical as _C
 
-_REG = _C.load_registry()
-if not _REG.get("entries"):
+if not _C.registry().get("entries"):
     raise RuntimeError(
         "db/properties/canonical_registry.json 이 비었거나 없다 — 정본을 만들 수 없다. "
         "이 파일에 숫자를 되돌려 넣지 말고 레지스트리를 복구할 것.")
 
-# 표시용 union (정본 + 잠정). 순위·비교에는 쓰지 말 것 — 아래 canonical_group() 참조.
-CANONICAL = {}
-for _e in _REG["entries"]:
-    if _e.get("value") is not None:
-        CANONICAL.setdefault(_e["metric"], {})[_e["system"]] = _e["value"]
-# (metric, system) → 항목 전체. 배지·툴팁·출처 링크·그룹 강제가 전부 여기서 나온다.
-CANONICAL_ENTRY = _C.index(_REG)
+
+# ⚠ 전역 상수로 만들면 **import 때 한 번**이라, 오래 사는 gunicorn worker 에서
+#   db 를 고쳐도 재시작 전까지 화면이 안 바뀐다 (2026-08-07 Codex 3라운드 실측).
+#   → 매번 mtime 캐시를 통해 읽는다. 파일이 안 바뀌었으면 캐시라 사실상 공짜다.
+class _LazyMap(dict):
+    """`CANONICAL[...]` 이라는 기존 사용법을 유지하면서 매 접근마다 최신을 읽는다."""
+
+    def _now(self):
+        m = {}
+        for e in _C.registry()["entries"]:
+            if e.get("value") is not None:
+                m.setdefault(e["metric"], {})[e["system"]] = e["value"]
+        return m
+
+    def __getitem__(self, k):
+        return self._now()[k]
+
+    def get(self, k, d=None):
+        return self._now().get(k, d)
+
+    def __iter__(self):
+        return iter(self._now())
+
+    def keys(self):
+        return self._now().keys()
+
+    def items(self):
+        return self._now().items()
+
+    def values(self):
+        return self._now().values()
+
+    def __len__(self):
+        return len(self._now())
+
+    def __contains__(self, k):
+        return k in self._now()
+
+    def __repr__(self):
+        return repr(self._now())
+
+
+# 표시용 union (정본 + 잠정 + 미검토). 순위·비교에는 쓰지 말 것 — canonical_comparable() 참조.
+CANONICAL = _LazyMap()
+
+
+def canonical_entry_index():
+    """(metric, system) → 항목 전체. 배지·툴팁·출처 링크·그룹 강제가 여기서 나온다."""
+    return _C.index(_C.registry())
+
+
+class _LazyIndex(dict):
+    """CANONICAL_ENTRY 도 같은 이유로 지연 평가한다."""
+
+    def __getitem__(self, k):
+        return canonical_entry_index()[k]
+
+    def get(self, k, d=None):
+        return canonical_entry_index().get(k, d)
+
+    def items(self):
+        return canonical_entry_index().items()
+
+    def keys(self):
+        return canonical_entry_index().keys()
+
+    def values(self):
+        return canonical_entry_index().values()
+
+    def __iter__(self):
+        return iter(canonical_entry_index())
+
+    def __len__(self):
+        return len(canonical_entry_index())
+
+    def __contains__(self, k):
+        return k in canonical_entry_index()
+
+
+CANONICAL_ENTRY = _LazyIndex()
+
+# ★ 자동판정(순위·차트·레이더)에서 **반드시 빠지는** 상태들.
+#   unreviewed_drift = 원자료가 바뀌었는데 아직 검토 안 됨
+#   source_error     = 원자료를 못 읽어 레지스트리 값이 stale 일 수 있음
+#   나머지(provisional·source_pending·superseded)도 정본이 아니다.
+NON_CANONICAL_STATUS = ("unreviewed_drift", "source_error", "provisional",
+                        "source_pending", "superseded")
 
 
 def canonical_group(metric: str, system: str):
@@ -361,14 +440,15 @@ def canonical_comparable(metric: str, group: str = None, status=("canonical",)) 
 
     group 을 생략하면 그 metric 에서 항목이 제일 많은 그룹을 고른다(기본 비교 집합).
     """
+    reg = _C.registry()
     if group is None:
-        gs = _C.groups_of(_REG, metric)
+        gs = _C.groups_of(reg, metric)
         gs = {k: [x for x in v if x.get("status") in status] for k, v in gs.items()}
         gs = {k: v for k, v in gs.items() if v}
         if not gs:
             return {}
         group = max(gs, key=lambda k: len(gs[k]))
-    return _C.canonical_map(_REG, metric, group=group, status=status)
+    return _C.canonical_map(reg, metric, group=group, status=status)
 # 잠정/시드-프로토콜 표시 — (property, comp) : 사유. composition/explorer/compare 에서 '잠정' 배지·툴팁.
 CANONICAL_PROVISIONAL = {
     ("gap_eV", "comp2"): "잠정 — legacy band_gaps, fixed-occ nscf 재확인중 (eigenvalue canonical 아님)",
@@ -510,6 +590,55 @@ def canonical_values(cid: str) -> dict:
     for (k, c), val in CANONICAL_PROVISIONAL_VALUES.items():
         if c == cid and out.get(k) is None:
             out[k] = val
+    return out
+
+
+# 상태 배지 표시안 — compare.html 의 SLAB 과 같은 어휘를 쓴다(화면마다 다른 말 금지).
+_STATUS_BADGE = {
+    "unreviewed_drift": ("미검토", "#b45309", "#fef3c7",
+                         "원자료가 바뀌었는데 아직 검토 전이다. 순위·차트·레이더에서 제외됨."),
+    "source_error":     ("출처오류", "#b91c1c", "#fee2e2",
+                         "원자료를 못 읽었다 — 이 값은 stale 일 수 있다. 자동판정 제외."),
+    "provisional":      ("잠정", "#7c3aed", "#f3e8ff", "정본이 아니다 — 자동판정 제외."),
+    "source_pending":   ("출처미배선", "#6b7280", "#f3f4f6",
+                         "원자료를 아직 못 가리킨다 — 검증되지 않은 값이다."),
+    "superseded":       ("철회", "#b91c1c", "#fee2e2", "철회된 값이다."),
+}
+
+
+def canonical_status_for(cid: str) -> dict:
+    """조성 하나의 metric 별 상태 배지. 정본이면 항목이 없다(배지도 없다)."""
+    out = {}
+    for (metric, system), e in CANONICAL_ENTRY.items():
+        if system != cid:
+            continue
+        st = e.get("status")
+        b = _STATUS_BADGE.get(st)
+        if not b:
+            continue
+        why = b[3]
+        if e.get("blocking_gate"):
+            why = f"게이트 미통과: {e['blocking_gate']}. " + why
+        if e.get("note"):
+            why += " " + e["note"]
+        out[metric] = {"status": st, "label": b[0], "fg": b[1], "bg": b[2], "why": why[:400]}
+    return out
+
+
+def canonical_status_all() -> dict:
+    """(metric, system) → 배지. explorer 표처럼 전 조성을 한 번에 그리는 화면용."""
+    out = {}
+    for (metric, system), e in CANONICAL_ENTRY.items():
+        b_ = _STATUS_BADGE.get(e.get("status"))
+        if not b_:
+            continue
+        why = b_[3]
+        if e.get("blocking_gate"):
+            why = f"게이트 미통과: {e['blocking_gate']}. " + why
+        if e.get("note"):
+            why += " " + e["note"]
+        out[(metric, system)] = {"status": e.get("status"), "label": b_[0],
+                                 "fg": b_[1], "bg": b_[2], "why": why[:400]}
     return out
 
 
@@ -3103,12 +3232,37 @@ def _load_comments() -> dict:
 
 
 def _save_comments(d: dict) -> None:
-    # ⚠ 임시파일에 쓰고 os.replace 로 갈아끼운다 — 쓰는 도중 죽어도 반쪽 JSON 이 안 남는다.
+    """임시파일에 쓰고 os.replace 로 갈아끼운다 — 쓰는 도중 죽어도 반쪽 JSON 이 안 남는다.
+
+    ⚠⚠ Windows 에서 `os.replace` 는 대상 파일을 **누가 잠깐 열고만 있어도**
+      `PermissionError [WinError 5]` 를 낸다 (백신·인덱서·에디터). 우리 락은 별도
+      `.lock` 파일에 걸리므로 그런 외부 handle 까지는 못 막는다.
+      실측(2026-08-07 Codex 3라운드): 12프로세스 × 100건을 10회 돌려 6회 실패,
+      합계 992/1000. 락은 멀쩡했고(임계구역 동시 진입 1) 실패는 전부 이 지점이었다.
+      → 짧은 backoff 로 제한 재시도한다. POSIX 에서는 애초에 안 나는 경로다.
+    """
+    import time
     COMMENTS_PATH.parent.mkdir(parents=True, exist_ok=True)
     tmp = COMMENTS_PATH.with_suffix(COMMENTS_PATH.suffix + f".tmp{os.getpid()}")
     tmp.write_text(json.dumps(d, ensure_ascii=False, indent=1, sort_keys=True),
                    encoding="utf-8")
-    os.replace(tmp, COMMENTS_PATH)
+    delay, last = 0.005, None
+    for _ in range(8):                       # 총 ~0.6 s. 그 이상 걸리면 진짜 문제다
+        try:
+            os.replace(tmp, COMMENTS_PATH)
+            return
+        except PermissionError as ex:        # Windows 일시 점유
+            last = ex
+            time.sleep(delay)
+            delay = min(delay * 2, 0.2)
+        except OSError as ex:
+            last = ex
+            break
+    try:
+        tmp.unlink()                         # 실패했으면 임시파일을 남기지 않는다
+    except OSError:
+        pass
+    raise last
 
 
 # ─────────────────────────────────────────────────────────────
@@ -3186,20 +3340,59 @@ def _comments_locked(timeout=10.0):
         return
 
     # 최후 수단 — mkdir 은 원자적이다 (이미 있으면 FileExistsError)
+    # ⚠ 첫 판은 stale lock 을 못 풀었다 (2026-08-07 Codex 3라운드): 프로세스가 hard kill
+    #   되면 .lock.d 가 남고, 이후 모든 요청이 timeout 으로 죽는다. → owner 정보를 남기고,
+    #   충분히 오래된 lock 은 **주인이 살아 있는지 확인한 뒤에만** 회수한다.
     d = lock_path.with_suffix(lock_path.suffix + ".d")
+    own = d / "owner"
+    STALE = max(timeout * 3, 30.0)
+
+    def _alive(pid):
+        try:
+            os.kill(pid, 0)                  # 신호 0 = 존재 확인만
+            return True
+        except ProcessLookupError:
+            return False
+        except PermissionError:
+            return True                      # 남의 프로세스지만 살아 있다
+        except OSError:
+            return True                      # 판단 불가면 살아 있다고 본다(회수 안 함)
+
     t0 = time.monotonic()
     while True:
         try:
             d.mkdir()
+            try:
+                own.write_text(f"{os.getpid()} {time.time()}", encoding="utf-8")
+            except OSError:
+                pass
             break
         except FileExistsError:
+            # 주인이 죽었고 충분히 오래됐으면 회수한다
+            try:
+                pid_s, ts_s = own.read_text(encoding="utf-8").split()
+                if time.time() - float(ts_s) > STALE and not _alive(int(pid_s)):
+                    own.unlink(missing_ok=True)
+                    d.rmdir()
+                    continue
+            except (OSError, ValueError):
+                # owner 파일이 없다 = mkdir 직후 크래시. 나이를 디렉터리 mtime 으로 본다.
+                try:
+                    if time.time() - d.stat().st_mtime > STALE:
+                        d.rmdir()
+                        continue
+                except OSError:
+                    pass
             if time.monotonic() - t0 > timeout:
-                raise TimeoutError("코멘트 락을 못 잡았다 (mkdir 폴백)")
+                raise TimeoutError(
+                    f"코멘트 락을 못 잡았다 (mkdir 폴백). stale 이면 {STALE:.0f}s 뒤 자동 회수되고, "
+                    f"급하면 {d} 를 지워라")
             time.sleep(0.01)
     try:
         yield
     finally:
         try:
+            own.unlink(missing_ok=True)      # owner 를 먼저 지워야 rmdir 이 성공한다
             d.rmdir()
         except OSError:
             pass

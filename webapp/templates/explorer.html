@@ -70,6 +70,11 @@
                   onclick="citeVal('{{ c.label }}','{{ label }}','{{ v }}','{{ unit }}',this.dataset.method)"
                   title="클릭 → 인용 복사&#10;{{ canonical_meta.get(key,'') }}{% if prov %}&#10;⚠ {{ prov }}{% endif %}">{{ v }}</button>
           {%- if prov %} <span class="badge b-prov" title="{{ prov }}">잠정</span>{% endif %}
+          {#- ★ 레지스트리 status 배지 (2026-08-07 Codex 3라운드). 표에서 값을 숨기진 않지만
+              정본이 아니면 반드시 보이게 한다 — 여기 값이 정렬·인용 복사 대상이라서다. -#}
+          {%- set st = canonical_status.get((key, cid)) %}
+          {%- if st %} <span class="badge" style="color:{{ st.fg }};background:{{ st.bg }}"
+            title="{{ st.why }}">{{ st.label }}</span>{% endif %}
           {% else %}<span class="cell-todo">TODO</span>{% endif %}
         </td>
       {% endfor %}

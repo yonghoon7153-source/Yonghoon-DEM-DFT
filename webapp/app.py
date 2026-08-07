@@ -224,6 +224,7 @@ def composition(cid):
         cascade_dopant=dop, cascade_meta=D.CASCADE_META,
         cascade_rows=D.cascade_rows_for(dop) if dop else None,
         canonical=D.canonical_values(cid),
+        canonical_status=D.canonical_status_for(cid),
         canonical_meta=D.CANONICAL_META,
         canonical_provisional={k: r for (k, c), r in D.CANONICAL_PROVISIONAL.items() if c == cid},
         canonical_na={k: r for (k, c), r in D.CANONICAL_NA.items() if c == cid})
@@ -288,6 +289,7 @@ def explorer():
     return render_template("explorer.html", active="explorer",
                            canonical=D.canonical_table(), canonical_meta=D.CANONICAL_META,
                            canonical_provisional=D.CANONICAL_PROVISIONAL,
+                           canonical_status=D.canonical_status_all(),
                            comp_elements=D.COMP_ELEMENTS,
                            categories=D.CATEGORIES,
                            extra=extra, extra_meta=D.EXTRA_META,

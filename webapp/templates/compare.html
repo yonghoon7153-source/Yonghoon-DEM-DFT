@@ -37,6 +37,21 @@ const PROV={{ canonical_provisional|tojson }};
 // ★ 값 하나하나의 비교 묶음·상태·출처 (canonical_registry.json). 아래에서 **강제**에 쓴다.
 const CMETA={{ canonical_meta|tojson }};
 function cmeta(k,id){return CMETA[k+'|'+id]||{};}
+// 자동판정에서 빠진 값의 사유를 배지로 — 숨기지 않고 '왜' 를 붙인다.
+const SLAB={unreviewed_drift:['미검토','#b45309','#fef3c7'],
+            source_error:['출처오류','#b91c1c','#fee2e2'],
+            provisional:['잠정','#7c3aed','#f3e8ff'],
+            source_pending:['출처미배선','#6b7280','#f3f4f6'],
+            superseded:['철회','#b91c1c','#fee2e2']};
+function statusBadge(m){
+  const s=SLAB[m.status]; if(!s)return '';
+  let t=m.note||'';
+  if(m.status==='unreviewed_drift')t='원자료가 바뀌었는데 아직 검토 전이다. 순위·차트·레이더에서 제외됨.';
+  if(m.status==='source_error')t='원자료를 못 읽었다 — 이 값은 stale 일 수 있다. 자동판정 제외.';
+  if(m.blocking_gate)t=('게이트 미통과: '+m.blocking_gate+'. ')+t;
+  return '<span class="badge" style="color:'+s[1]+';background:'+s[2]+
+         '" title="'+_cmpEsc(t)+'">'+s[0]+'</span>';
+}
 // 선택 조성 중 그 축에서 **제일 많은 조성이 속한 묶음**을 기본 비교군으로 삼는다.
 function domGroup(k,sel){
   const cnt={};
@@ -68,9 +83,14 @@ function upd(){
   KEYS.forEach(k=>{
     t+='<tr><td title="'+_cmpEsc(META[k]||'')+'"><b>'+_cmpEsc(KLAB[k]||k)+'</b><div class="mm muted" style="font-size:.68rem">'+_cmpEsc(META[k]||'')+'</div></td>';
     sel.forEach(id=>{
-      let v=CANON[k][id], pr=PROV[k+'|'+id];
+      let v=CANON[k][id], pr=PROV[k+'|'+id], m=cmeta(k,id);
       let cell=(v!==undefined&&v!==null)?_cmpEsc(''+v):'<span class="muted">TODO</span>';
       if(v!==undefined&&v!==null&&pr)cell+=' <span class="badge b-prov" title="'+_cmpEsc(pr)+'">잠정</span>';
+      // ★ 표에도 상태를 찍는다 (2026-08-07 Codex 3라운드). 차트·레이더에서만 빼면
+      //   "표에 있으니 정본이겠지" 로 읽혀 정렬·인용에 그대로 쓰인다.
+      if(v!==undefined&&v!==null&&m.status&&m.status!=='canonical'){
+        cell+=' '+statusBadge(m);
+      }
       t+='<td class="num">'+cell+'</td>';});
     t+='</tr>';
   });

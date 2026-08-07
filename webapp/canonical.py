@@ -65,9 +65,15 @@ def _step(node, tok, where):
     raise ResolveError(f"{where}: '{tok}' 아래로 못 들어간다 ({type(node).__name__})")
 
 
-def resolve(source_path: str, source_key: str):
-    """원자료에서 실제 값을 꺼낸다. 못 꺼내면 ResolveError — **조용히 None 을 주지 않는다.**"""
-    p = ROOT / source_path
+def resolve(source_path: str, source_key: str, root=None):
+    """원자료에서 실제 값을 꺼낸다. 못 꺼내면 ResolveError — **조용히 None 을 주지 않는다.**
+
+    ⚠ `root` 는 **테스트 전용**이다. 이게 없으면 회귀 테스트가 추적 중인 정본 파일
+      (db/properties/*.json)을 직접 고쳤다 뺐다 해야 하는데, hard kill·전원 손실처럼
+      finally 가 안 도는 중단에서 **정본이 오염된 채 남는다** (2026-08-07 Codex 3라운드).
+      root 를 임시 디렉터리로 주면 fixture 가 repo 밖에서 완결된다.
+    """
+    p = (Path(root) if root else ROOT) / source_path
     if not p.is_file():
         raise ResolveError(f"{source_path}: 파일 없음")
     toks = [t for t in source_key.split("/") if t != ""]
@@ -91,7 +97,7 @@ def resolve(source_path: str, source_key: str):
     return float(node)
 
 
-def load_registry(path=None, live=True) -> dict:
+def load_registry(path=None, live=True, root=None) -> dict:
     """레지스트리를 읽고, **원자료 값으로 덮어쓴다**(live=True).
 
     ★ 2026-08-07 Codex 재검증의 지적: 첫 판은 레지스트리에 `value` 를 **복제**해 두고
@@ -101,8 +107,10 @@ def load_registry(path=None, live=True) -> dict:
         레지스트리의 `value` 는 이제 "마지막으로 확인한 값"(기대치)이고, 원자료가 우선이다.
         어긋나면 `value_drift` 에 기록해 화면·검사가 볼 수 있게 남긴다.
 
-    ⚠ 원자료를 못 읽으면 **레지스트리 값으로 떨어지되 조용히 넘어가지 않는다**
-      (`resolve_error` 를 남긴다). 파일 하나가 깨져 사이트 전체가 죽는 건 더 나쁘다.
+    ⚠ 원자료를 못 읽으면 레지스트리 값으로 떨어지되 **status 를 `source_error` 로 내린다**
+      (2026-08-07 Codex 3라운드). 첫 판은 `resolve_error` 만 적고 status 는 canonical 로
+      뒀는데, 화면 순위는 validator 를 안 돌리므로 **stale 값이 계속 정본으로 쓰였다.**
+      사이트가 죽는 것보다는 낫지만, 검증 안 된 값이 정본 자리에 남는 건 더 나쁘다.
     """
     p = Path(path) if path else REGISTRY
     if not p.is_file():
@@ -115,9 +123,10 @@ def load_registry(path=None, live=True) -> dict:
         if not (sp and sk):
             continue
         try:
-            got = resolve(sp, sk)
+            got = resolve(sp, sk, root)
         except ResolveError as ex:
             e["resolve_error"] = str(ex)
+            e["status"] = "source_error"      # ← 자동판정에서 반드시 빠진다
             continue
         want = e.get("value")
         tol = float(e.get("tolerance", 5e-4))
@@ -140,7 +149,46 @@ def load_registry(path=None, live=True) -> dict:
     return reg
 
 
-def validate(reg: dict) -> list:
+# ─────────────────────────────────────────────────────────────
+# 실행 중 갱신 (2026-08-07 Codex 3라운드)
+#
+# 첫 판의 live 는 **프로세스 시작 시 한 번**이었다 — data.py 가 import 때 _REG 를 만들고
+# 라우트가 그 전역을 그대로 넘겼다. 그래서 gunicorn worker 가 오래 살아 있으면 db 를 고쳐도
+# 재시작 전에는 화면이 안 바뀐다. "db 한 곳만 고치면 갱신" 이 반쪽이었다.
+#   → 레지스트리 + **참조하는 모든 원자료**의 mtime 을 합쳐 캐시 키로 쓴다.
+#     파일이 하나라도 바뀌면 다시 읽는다. stat 몇 번이라 요청마다 해도 싸다.
+#     (이 앱은 원래 "db 를 요청마다 읽는다" 가 설계 전제다.)
+# ─────────────────────────────────────────────────────────────
+_CACHE = {"key": None, "reg": None}
+
+
+def _mtime_key(path=None, root=None) -> tuple:
+    p = Path(path) if path else REGISTRY
+    keys = [(str(p), p.stat().st_mtime_ns if p.is_file() else 0)]
+    try:
+        raw = json.load(open(p, encoding="utf-8")) if p.is_file() else {"entries": []}
+    except (OSError, ValueError):
+        return tuple(keys)
+    for sp in sorted({e.get("source_path") for e in raw.get("entries", []) if e.get("source_path")}):
+        f = (Path(root) if root else ROOT) / sp
+        keys.append((sp, f.stat().st_mtime_ns if f.is_file() else 0))
+    return tuple(keys)
+
+
+def registry(path=None, root=None) -> dict:
+    """캐시된 레지스트리. **원자료가 바뀌면 자동으로 다시 읽는다.**
+
+    화면 코드는 `load_registry()` 대신 이걸 쓴다 — 그래야 오래 사는 worker 에서도
+    db 수정이 다음 요청에 반영된다.
+    """
+    k = (_mtime_key(path, root), str(path), str(root))
+    if _CACHE["key"] != k:
+        _CACHE["reg"] = load_registry(path, root=root)
+        _CACHE["key"] = k
+    return _CACHE["reg"]
+
+
+def validate(reg: dict, root=None) -> list:
     """(entry, 문제) 목록. 빈 목록 = 레지스트리가 원자료와 일치한다."""
     bad = []
     for e in reg.get("entries", []):
@@ -173,7 +221,7 @@ def validate(reg: dict) -> list:
                                f"— 정본은 반드시 원자료를 가리켜야 한다"))
             continue
         try:
-            got = resolve(sp, sk)
+            got = resolve(sp, sk, root)
         except ResolveError as ex:
             bad.append((e, f"원자료를 못 따라간다 — {ex}"))
             continue

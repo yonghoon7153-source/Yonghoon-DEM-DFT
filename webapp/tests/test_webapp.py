@@ -81,32 +81,115 @@ def test_md_ea_beta_gate_blocks_canonical():
     assert "lpsocl" not in C.canonical_map(reg, "MD_Ea_eV", group="md-ea-multiseed-v1")
 
 
-def test_source_edit_propagates_to_screen():
-    """"db 한 곳만 고치면 화면이 갱신된다" 를 **실제로** 확인한다.
+def _fixture_registry(tmp, gap=2.2309):
+    """repo 밖 임시 root 에 원자료 + 레지스트리를 만든다.
 
-    첫 판은 레지스트리에 value 를 복제해 두고 대조는 validator 에서만 했다 —
-    그러면 이 주장이 성립하지 않는다는 Codex 재검증 지적을 코드로 고정한다.
-    드리프트가 나면 (a) 화면은 새 값을 쓰고 (b) 순위에서 빠지고 (c) validator 가 실패해야 한다.
+    ⚠ 왜 fixture 인가 (2026-08-07 Codex 3라운드): 첫 판은 추적 중인 정본
+      `db/properties/lpsocl_dos_gap.json` 을 직접 고쳤다 `finally` 로 되돌렸다.
+      정상 종료·일반 예외에서는 복구되지만 **hard kill·전원 손실에서는 정본이 오염된 채
+      남는다.** 게다가 다음 실행이 오염된 파일을 backup 으로 덮어써 복구 기준까지 잃는다.
+      → 이제 fixture 가 repo 밖에서 완결된다. 정본 파일은 **읽지도 쓰지도 않는다.**
     """
     import json as _j
-    import shutil as _sh
-    p = ROOT / "db" / "properties" / "lpsocl_dos_gap.json"
-    bak = p.with_suffix(p.suffix + ".testbak")
-    _sh.copy(p, bak)
-    try:
-        d = _j.loads(p.read_text(encoding="utf-8"))
-        d["gap_eV"] = 2.9999
-        p.write_text(_j.dumps(d, ensure_ascii=False, indent=2), encoding="utf-8")
-        reg = C.load_registry()
-        e = [x for x in reg["entries"] if (x["metric"], x["system"]) == ("gap_eV", "lpsocl")][0]
-        assert abs(e["value"] - 2.9999) < 1e-6, "원자료를 고쳤는데 화면 값이 안 따라온다"
+    src = tmp / "db" / "properties"
+    src.mkdir(parents=True, exist_ok=True)
+    (src / "fake_gap.json").write_text(_j.dumps({"gap_eV": gap}), encoding="utf-8")
+    regp = tmp / "registry.json"
+    regp.write_text(_j.dumps({"schema": "canonical_registry/v1", "entries": [
+        {"system": "lpsocl", "metric": "gap_eV", "value": 2.2309, "unit": "eV",
+         "source_path": "db/properties/fake_gap.json", "source_key": "/gap_eV",
+         "method_id": "test", "comparison_group": "gap-fixedocc-eigenvalue-v1",
+         "status": "canonical"},
+        {"system": "comp1", "metric": "gap_eV", "value": 2.066, "unit": "eV",
+         "source_path": "db/properties/fake_gap2.json", "source_key": "/gap_eV",
+         "method_id": "test", "comparison_group": "gap-fixedocc-eigenvalue-v1",
+         "status": "canonical"},
+    ]}), encoding="utf-8")
+    (src / "fake_gap2.json").write_text(_j.dumps({"gap_eV": 2.066}), encoding="utf-8")
+    return regp
+
+
+def test_source_edit_propagates_to_screen():
+    """"db 한 곳만 고치면 화면이 갱신된다" 를 임시 fixture 로 검증한다.
+
+    드리프트가 나면 (a) 값은 새 값을 쓰고 (b) 순위에서 빠지고 (c) validator 가 실패한다.
+    """
+    import json as _j
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        tmp = Path(td)
+        regp = _fixture_registry(tmp)
+        reg = C.load_registry(regp, root=tmp)
+        e = [x for x in reg["entries"] if x["system"] == "lpsocl"][0]
+        assert abs(e["value"] - 2.2309) < 1e-6 and e["status"] == "canonical"
+
+        (tmp / "db" / "properties" / "fake_gap.json").write_text(
+            _j.dumps({"gap_eV": 2.9999}), encoding="utf-8")
+        reg = C.load_registry(regp, root=tmp)
+        e = [x for x in reg["entries"] if x["system"] == "lpsocl"][0]
+        assert abs(e["value"] - 2.9999) < 1e-6, "원자료를 고쳤는데 값이 안 따라온다"
         assert e["status"] == "unreviewed_drift", "미검토 드리프트 표시가 없다"
         assert "lpsocl" not in C.canonical_map(reg, "gap_eV",
                                                group="gap-fixedocc-eigenvalue-v1"), \
             "미검토 값이 순위 집합에 남아 있다"
-        assert C.validate(reg), "드리프트인데 validator 가 통과한다"
-    finally:
-        _sh.move(str(bak), str(p))
+        assert C.validate(reg, root=tmp), "드리프트인데 validator 가 통과한다"
+
+
+def test_source_error_drops_out_of_canonical():
+    """★ 원자료를 못 읽으면 stale 값이 정본 자리에 남으면 안 된다 (Codex 3라운드).
+
+    첫 판은 resolve_error 만 적고 status 는 canonical 로 뒀다. 화면 순위는 validator 를
+    안 돌리므로 stale 값이 계속 정본으로 쓰였다.
+    """
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        tmp = Path(td)
+        regp = _fixture_registry(tmp)
+        (tmp / "db" / "properties" / "fake_gap.json").unlink()   # 원자료를 없앤다
+        reg = C.load_registry(regp, root=tmp)
+        e = [x for x in reg["entries"] if x["system"] == "lpsocl"][0]
+        assert e["status"] == "source_error", f"status 가 {e['status']} 다 — 자동판정에 남는다"
+        assert "lpsocl" not in C.canonical_map(reg, "gap_eV",
+                                               group="gap-fixedocc-eigenvalue-v1")
+        assert C.validate(reg, root=tmp), "원자료를 못 읽는데 validator 가 통과한다"
+
+
+def test_running_process_sees_source_change():
+    """★ 오래 사는 worker 에서도 db 수정이 다음 요청에 반영돼야 한다 (Codex 3라운드).
+
+    첫 판은 data.py 가 import 때 _REG 를 한 번 만들어, 재시작 전에는 안 바뀌었다.
+    """
+    import json as _j
+    import time as _t
+    p = ROOT / "db" / "properties" / "canonical_registry.json"
+    before = D.CANONICAL["gap_eV"]["lpsocl"]
+    k0 = C._mtime_key()
+    # 실제 파일은 안 건드리고, mtime 캐시 키가 원자료를 **포함**하는지만 확인한다
+    srcs = {sp for e in _j.loads(p.read_text(encoding="utf-8"))["entries"]
+            if (sp := e.get("source_path"))}
+    keyed = {k for k, _ in k0}
+    assert srcs <= keyed, f"캐시 키가 원자료를 안 본다 — 빠진 것: {srcs - keyed}"
+    assert D.CANONICAL["gap_eV"]["lpsocl"] == before
+    # CANONICAL 이 전역 스냅샷이 아니라 매번 읽는지
+    assert type(D.CANONICAL).__name__ == "_LazyMap", "CANONICAL 이 다시 정적 딕셔너리가 됐다"
+
+
+def test_non_canonical_status_is_visible_on_screen():
+    """★ 자동판정에서 뺐어도 표·카드에는 **왜 빠졌는지**가 보여야 한다 (Codex 3라운드).
+
+    차트에서만 빼면 "표에 있으니 정본이겠지" 로 읽혀 정렬·인용에 그대로 쓰인다.
+    """
+    c = A.app.test_client()
+    cmp_ = c.get("/compare").get_data(as_text=True)
+    assert "statusBadge" in cmp_ and "unreviewed_drift" in cmp_, "compare 표에 상태 배지가 없다"
+    exp = c.get("/explorer").get_data(as_text=True)
+    assert "canonical_status" in (ROOT / "webapp" / "templates" / "explorer.html")\
+        .read_text(encoding="utf-8"), "explorer 표에 상태 배지가 없다"
+    # 실제로 비정본이 있는 조성 카드에 배지가 뜨는지 (comp2 gap = provisional)
+    comp = c.get("/composition/comp2").get_data(as_text=True)
+    assert "잠정" in comp
+    st = D.canonical_status_for("comp2")
+    assert "gap_eV" in st and st["gap_eV"]["status"] != "canonical"
 
 
 def test_dashboard_ea_card_is_protocol_honest():
@@ -232,6 +315,41 @@ def test_comment_writes_survive_concurrency():
     finally:
         for r in ok:
             D.del_file_comment(rel, r["item"]["id"])
+
+
+def test_comment_writes_survive_heavy_concurrency():
+    """★ 100건 반복 스트레스 (2026-08-07 Codex 3라운드).
+
+    24건 1회로는 Windows 의 os.replace PermissionError 간헐 실패를 못 잡았다
+    (실측: 12프로세스 x 100건 x 10회 → 6회 실패, 합계 992/1000).
+    ⚠ 추적 중인 db/file_comments.json 을 쓰지 않도록 **임시 경로로 갈아끼운다** —
+      실패해도 repo 파일이 오염되지 않는다.
+    """
+    import multiprocessing as mp
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        old = D.COMMENTS_PATH
+        try:
+            D.COMMENTS_PATH = Path(td) / "file_comments.json"
+            rel = "db/properties/electronic.json"
+            n = 100
+            with mp.Pool(8) as p:
+                rs = p.map(_cmt_worker_tmp, [(str(D.COMMENTS_PATH), rel, i) for i in range(n)])
+            ok = [r for r in rs if r and r.get("ok")]
+            saved = len(D.file_comments(rel))
+            ids = [r["item"]["id"] for r in ok]
+            errs = {str(r.get("error"))[:80] for r in rs if not (r and r.get("ok"))}
+            assert len(ok) == n, f"{len(ok)}/{n} 만 성공 · 오류 {errs}"
+            assert saved == n, f"{saved}/{n} 만 저장됐다 (os.replace 재시도 확인)"
+            assert len(set(ids)) == n, "코멘트 id 가 겹친다"
+        finally:
+            D.COMMENTS_PATH = old
+
+
+def _cmt_worker_tmp(arg):
+    path, rel, i = arg
+    D.COMMENTS_PATH = Path(path)          # 자식 프로세스에도 임시 경로를 심는다
+    return D.add_file_comment(rel, f"pytest heavy {i}", "pytest")
 
 
 def _cmt_worker(arg):
