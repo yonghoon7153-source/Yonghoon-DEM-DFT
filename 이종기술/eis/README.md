@@ -93,13 +93,18 @@ spread → representative, not final (see re-experiment note).  Adding cells + r
 Re-running the fits after the `260728` cells landed moved the mean **49.8 → 100.46 Ω·cm²**.
 That doubling is **not scatter**; the arithmetic separates cleanly:
 
-| group | cells | R_s (Ω·cm²) | R1 = R_int | R_w | rmse % |
-|---|---|---|---|---|---|
-| **A** `260719_*_only_full` | 4 | 6.8–13.8 (mean 9.7) | 24.2 / 30.4 / 65.9 / 78.7 → **49.8** | 0.0–135.8 | 2.6–**13.0** |
-| **B** `260728_No2_55_70` | 2 | 96.8–147.3 (mean 122) | 200.6 / 203.0 → **201.8** | 81.0 / 90.3 | **1.4–3.3** |
+| group | cells | electrode | R_s (Ω·cm²) | R1 = R_int | R_w | rmse % |
+|---|---|---|---|---|---|---|
+| **A** `260719_*_only_full` | 4 | **pure small SC** | 6.8–13.8 (mean 9.7) | 24.2 / 30.4 / 65.9 / 78.7 → **49.8** | 0.0–135.8 | 2.6–**13.0** |
+| **B** `260728_No2_55_70um_full` | 2 | **5:5 poly:small blend** | 96.8–147.3 (mean 122) | 200.6 / 203.0 → **201.8** | 81.0 / 90.3 | **1.4–3.3** |
 
 `(4×49.8 + 2×201.8)/6 = 100.46` — the new mean is just B entering the average.
-- **R_s differs 12.6×** between the groups ⇒ different cell builds, not repeat scatter.
+- Per the filename taxonomy above, `only` vs `55_70um` is **not a repeat of the same electrode**:
+  A is pure small single-crystal, B is the **5:5 poly:small blend**.  So the pooled mean also
+  **violates its own anchor row's label** — `rint_eis_anchors.csv:lab_sus_pristine` declares
+  `cathode = NCM811_SC`, which is group A only.
+- **R_s differs 12.6×** between the groups, consistent with different electrodes rather than
+  repeat scatter (blend electrode + its own pressing history, not measurement noise).
 - **Fit quality splits the same way**: B reproduces R1 to **1.2 %** (200.6 vs 203.0) at rmse
   1.4–3.3 %; A reaches rmse 13 % and leaves **R_w unidentified (0.0 ↔ 135.8)**, i.e. the
   arc/tail split is at a local minimum, so A's R1 spread is partly a fit artifact.
