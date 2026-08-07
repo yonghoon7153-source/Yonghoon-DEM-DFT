@@ -381,11 +381,20 @@ for lab in SYSL:
         #     D 가 큰 시드가 β 도 좋을 확률이 높아 D 를 위로 밀어 올린다.
         bens = _ens_beta([_under(os.path.join(ARR, lab, f"T{T}_s{s}"), "msd.json")
                           for s in SEEDL if cell.get((lab, T, s))])
-        tag = (f"{sum(Ds) / len(Ds):.2e} " + (f"β̄{bens:.2f}" if bens is not None else "β—")
+        # ⚠ 시드가 다 안 모인 β̄ 는 **판정량이 아니다** — 화면에 n 을 붙여 잠정임을 못박는다.
+        #   (2026-08-07: 1시드 β̄ 를 확정값으로 읽을 뻔했다. 규율은
+        #    kb/methodology/beta_gate_seed_policy.md)
+        _nb = len([s for s in SEEDS
+                   if _under(os.path.join(ARR, lab, f"T{T}_s{s}"), "msd.json")])
+        _bt = (f"β̄{bens:.2f}" + ("" if _nb >= 3 else f"(n={_nb}!)")) if bens is not None else "β—"
+        tag = (f"{sum(Ds) / len(Ds):.2e} " + _bt
                if Ds else "")
         cells.append(f"{' '.join(marks)} {tag}".ljust(W))
     print(f"     {lab:9s}" + "".join(cells))
-print("     (s#✓/✗ = **시드별** 참고용 · β̄ = **3시드 MSD 평균 곡선**의 β = 실제 판정량)")
+print("     (s#✓/✗ = **시드별** 참고용, 판정에 안 쓴다 · β̄ = **시드 MSD 평균 곡선**의 β = 판정량)")
+print("     ⚠ β̄(n=k!) 는 시드 k개뿐인 **잠정값** — 3시드 미만은 판정에 쓰지 않는다")
+print("     ⚠ 시드 추가 규칙: kb/methodology/beta_gate_seed_policy.md — 정지 규칙을 먼저")
+print("        선언하고, 추가한 시드는 **전부** 평균에 넣는다. '통과할 때까지 다시' 는 금지.")
 
 for lab, T, s, ps, pct in live:
     if ps is None:
