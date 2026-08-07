@@ -26,9 +26,18 @@ dlnσ/dφ 로 공통 φ 에 맞춘 뒤 적합한다 (128 비교에 쓴 것과 �
 풀려면 n_grid ≈ 900 이 필요해 이 방법으로는 도달 불가.  ⇒ **기울기는 항상 하한으로,
 쓰는 해상도를 명시해서** 보고한다.  R² (=접히는가) 만이 해상도에 걸쳐 뜻이 있다.
 
+═══ ★ 재하율 선택이 φ 선택보다 먼저다 (--mach) ══════════════════════════════════
+한 킷에 **옛 기하-규칙 런**(vmax=0.008·높이 → 두꺼운 kit_ps 침대에서 V/c_P ≈ 0.105)과
+**--platen-mach 런**(0.03)이 같은 φ 에 겹쳐 있을 수 있다.  φ 로만 고르면 킷마다 다른
+재하율이 뽑혀 조성 신호에 관성이 섞인다 — 2026-08-07 에 192 corpus 에서 실제로
+**3.49 배 섞임**이 나왔고 재하율 게이트가 적합을 거부했다.
+→ 섞인 해상도에서는 **`--mach 0.03`** 으로 쓸 런을 먼저 고른다.  무엇이 있는지는
+  `--list` 로 본다 (적합 없이 킷별 후보점 φ·σ·V/c_P·파일명을 나열).
+
 사용:
   python3 scripts/fit_dh_collapse.py --dir ~/Yonghoon-DEM-DFT/se_curve \\
       --kit-root ~/Yonghoon-DEM-DFT --n-grid 288 --phi 0.72 --slope-grid 192
+  python3 scripts/fit_dh_collapse.py --n-grid 192 --mach 0.03 --list     # 섞임 진단
   python3 scripts/fit_dh_collapse.py --selftest
 """
 from __future__ import annotations
@@ -156,6 +165,14 @@ def local_dlnsigma_dphi(points, phi0):
     return float((ys[j] - ys[j - 1]) / dx) if abs(dx) > 1e-9 else None
 
 
+def _rate_ok(mach, target, tol=None):
+    """두 재하율이 '같다'고 볼 수 있는가 (RATE_TOL_RATIO 비율 안)."""
+    tol = RATE_TOL_RATIO if tol is None else tol
+    if mach is None or target is None or mach <= 0 or target <= 0:
+        return False
+    return max(mach, target) / min(mach, target) <= tol
+
+
 def loglog_fit(d_h, sigma):
     """log σ = a + b·log d_h → (b, a, R², resid_sd, LOO_maxΔb).
 
@@ -188,6 +205,11 @@ def main(argv=None):
                     help='φ 보정용 국소기울기를 잴 해상도 (φ 3점이 있는 쪽)')
     ap.add_argument('--void-free', action='store_true',
                     help='V_free 에서 SE 를 빼 잔여공극으로 (기울기·R² 는 불변)')
+    ap.add_argument('--mach', type=float, default=None,
+                    help='이 V/c_P 인 런만 쓴다 (한 킷에 옛 기하-규칙 런과 --platen-mach 런이 '
+                         '섞여 있을 때 필수 — φ 만 보고 고르면 재하율이 섞인다)')
+    ap.add_argument('--list', dest='list_points', action='store_true',
+                    help='적합 없이 킷별 후보점(φ·σ·V/c_P·파일)만 나열 — 섞임 진단용')
     ap.add_argument('--allow-rate-mismatch', action='store_true')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
@@ -199,10 +221,32 @@ def main(argv=None):
         d = os.path.join(a.kit_root, k)
         _kit_dir_cache[k] = d if os.path.isdir(d) else os.path.join(a.dir, k)
 
+    # ── 진단 나열 (--list) ────────────────────────────────────────────────────
+    if a.list_points:
+        print(f'══ 후보점 나열 — n_grid {a.n_grid}'
+              + (f' · --mach {a.mach} 통과 여부 표시' if a.mach else '') + ' ══')
+        for k in kits:
+            pts = load_kit_points(a.dir, k, a.n_grid)
+            print(f'  {k}  ({len(pts)}점)')
+            for phi, sig, mach, f in pts:
+                mk = ''
+                if a.mach is not None:
+                    mk = ('  ✓' if (mach is not None and _rate_ok(mach, a.mach)) else '  ✗ 재하율')
+                print(f'     φ {phi:.4f}  σ {sig:8.4f}  V/c_P '
+                      + (f'{mach:.4f}' if mach is not None else '  없음') + f'  {f}{mk}')
+        return 0
+
     print(f'══ d_h 색인 적합 — n_grid {a.n_grid} · 공통 φ {a.phi} ══')
-    rows, missing = [], []
+    rows, missing, dropped = [], [], 0
     for k in kits:
         pts = load_kit_points(a.dir, k, a.n_grid)
+        # ★ 재하율 선택은 φ 선택보다 먼저 — 한 킷에 옛 기하-규칙 런(두꺼운 침대서 V/c_P
+        #   ≈0.105)과 --platen-mach 런(0.03)이 같이 있으면, φ 로만 고르면 킷마다 다른
+        #   재하율이 뽑혀 조성 신호에 관성이 섞인다 (2026-08-07 192 에서 실제 발생: 3.49배).
+        if a.mach is not None:
+            keep = [p for p in pts if p[2] is not None and _rate_ok(p[2], a.mach)]
+            dropped += len(pts) - len(keep)
+            pts = keep
         if not pts:
             missing.append(k)
             continue
@@ -212,8 +256,11 @@ def main(argv=None):
         rows.append({'kit': k, 'phi': phi, 'sigma_raw': sig, 'mach': mach, 'file': f,
                      'd_h_um': d_h_at_phi(v_se, s_am, a.phi, include_se=not a.void_free),
                      'S_AM': s_am, 'V_SE': v_se})
+    if dropped:
+        print(f'   --mach {a.mach}: 재하율이 다른 {dropped}점 제외 (옛 기하-규칙 런)')
     if missing:
-        print(f'   ⚠ json 없음: {", ".join(missing)}')
+        print('   ⚠ 쓸 점 없음: ' + ', '.join(missing)
+              + (f'  ← --mach {a.mach} 인 런이 이 킷엔 없다' if a.mach is not None else ''))
     if len(rows) < 3:
         print('   ★ 점이 3개 미만 — 적합 불가')
         return 1
@@ -317,6 +364,17 @@ def _selftest():
        abs(np.exp(k * phi_l) * np.exp(k * (phi_t - phi_l)) - np.exp(k * phi_t)) < 1e-9)
     ok('12) PHI_TOL 은 실측 착지 어긋남(0.7577 vs 0.7429 = 0.0148)을 잡는다',
        (0.7577 - 0.7429) > PHI_TOL)
+    # 13-15) 재하율 선택 (--mach) — 192 에서 실제로 3.49배 섞여 있었다
+    ok('13) _rate_ok: 0.030 vs 0.0300 통과 · 0.030 vs 0.1048 거부',
+       _rate_ok(0.0300, 0.03) and not _rate_ok(0.1048, 0.03))
+    ok('14) _rate_ok: mach 없음/0 이하는 통과시키지 않는다',
+       not _rate_ok(None, 0.03) and not _rate_ok(0.0, 0.03) and not _rate_ok(0.03, None))
+    # 한 킷에 옛 기하-규칙 런과 0.03 런이 같은 φ 에 겹쳐 있을 때 올바른 쪽을 고르는가
+    mixed = [(0.7200, 9.99, 0.1048, 'old'), (0.7201, 0.50, 0.0300, 'new')]
+    picked_phi_only = mixed[int(np.argmin([abs(p - 0.72) for p, *_ in mixed]))][3]
+    kept = [p for p in mixed if _rate_ok(p[2], 0.03)]
+    ok('15) φ 로만 고르면 옛 런을 집지만 --mach 로 거르면 0.03 런이 남는다',
+       picked_phi_only == 'old' and len(kept) == 1 and kept[0][3] == 'new')
     print(f'\nselftest: {n[0]}/{n[1]} PASS')
     return 0 if n[0] == n[1] else 1
 
