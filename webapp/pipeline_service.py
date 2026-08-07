@@ -203,6 +203,8 @@ def snapshot_network(results_dir, case_id=''):
     if not os.path.exists(os.path.join(results_dir, NETWORK_BASELINE_REQUIRED)):
         return None
     prov = read_network_provenance(results_dir)
+    if prov.get('provenance_state') == 'invalid':
+        return None                       # ★ RV-06: 검증 불가 → fail-closed (legacy 아님)
     if prov.get('network_run_id') and prov.get('solver_status') != 'success':
         return None                       # 실패한 세대는 보존하지 않는다 → solver 재실행
     items = []
@@ -257,12 +259,20 @@ def stamp_network_provenance(results_dir, run_id, inputs=None, solver_status='su
 
 def read_network_provenance(results_dir):
     """network 산출물의 세대.  도장이 없으면(옛 산출물) run_id=None."""
-    try:
-        with open(os.path.join(results_dir, PROVENANCE_FILE)) as f:
-            return json.load(f)
-    except (OSError, ValueError):
+    path = os.path.join(results_dir, PROVENANCE_FILE)
+    if not os.path.exists(path):
         return {'network_run_id': None, 'code_sha': None, 'solver_status': 'unknown',
+                'provenance_state': 'missing',
                 'note': 'pre-provenance artifact (도장 이전 세대)'}
+    try:
+        d = json.load(open(path))
+        d.setdefault('provenance_state', 'valid')
+        return d
+    except (OSError, ValueError) as e:
+        # ★ RV-06: 파일이 **있는데 못 읽는** 것은 '도장 이전' 이 아니라 **검증 불가**다.
+        #   옛 코드는 둘을 같은 fallback 으로 돌려 손상 도장을 legacy 로 오인 → preserve.
+        return {'network_run_id': None, 'code_sha': None, 'solver_status': 'unreadable',
+                'provenance_state': 'invalid', 'note': f'provenance 손상: {e}'}
 
 
 def atomic_write_json(path, obj):
@@ -298,30 +308,62 @@ class StageOutcome(dict):
 _RUNNER = subprocess.run
 
 
+def _stat_sig(results_dir, patterns):
+    """기대 산출물들의 (경로 → (mtime_ns, size)) 지문.  신선도 판정용."""
+    sig = {}
+    for rel in patterns:
+        for p in glob.glob(os.path.join(results_dir, rel)):
+            try:
+                s = os.stat(p)
+                sig[p] = (s.st_mtime_ns, s.st_size)
+            except OSError:
+                pass
+    return sig
+
+
 def run_stage(name, cmd, *, cwd=None, required=False, expects=(), results_dir=None,
-              runner=None):
+              runner=None, fresh=False, verify=None):
     """subprocess 한 단계를 계약과 함께 실행한다.
 
     required : 실패하면 파이프라인 전체가 failed
     expects  : 이 단계가 만들어야 하는 파일들 (results_dir 기준 상대경로).
                rc 가 0 이어도 이게 없으면 실패로 본다 — network CLI 는 물리망이
                없을 때 **파일을 안 쓰고도 exit 0** 이 될 수 있다 (리뷰 F-05/F-12).
+    fresh    : ★ RV-02.  expects 의 **존재**만 보면, results 를 지우지 않는 경로
+               (retry/batch)에서 solver 가 rc=0 으로 아무것도 안 써도 **옛 산출물이
+               새 성공 세대로 재도장**된다 (Codex 재검증에서 동적 재현).  fresh=True 면
+               실행 전후의 (mtime_ns, size) 지문을 비교해 **실제로 새로 쓰였는지**를 본다.
+    verify   : ★ RV-01.  파일 존재만으로는 증거가 안 되는 단계용 (Stage E 는 별도 파일이
+               아니라 full_metrics.json **안의 키**를 만든다).  `verify(results_dir)` 가
+               False 를 돌리면 실패로 본다.
     runner   : 테스트에서 가짜 실행기를 주입하기 위한 훅.
     """
+    before = _stat_sig(results_dir, expects) if (fresh and results_dir) else None
     try:
         res = (runner or _RUNNER)(cmd, capture_output=True, text=True, timeout=None, cwd=cwd)
         rc, out, err = res.returncode, res.stdout, res.stderr
     except Exception as e:                       # noqa: BLE001 — 실행 자체 실패도 단계 실패
         rc, out, err = 1, '', f'{type(e).__name__}: {e}'
-    missing = []
+    missing, stale, verify_failed = [], [], False
     if results_dir:
         for rel in expects:
             hits = glob.glob(os.path.join(results_dir, rel))
             if not hits:
                 missing.append(rel)
-    ok = (rc == 0) and not missing
+        if fresh and before is not None:
+            after = _stat_sig(results_dir, expects)
+            # 실행 전에 있던 파일이 하나도 안 바뀌었고 새로 생긴 것도 없다 → 안 쓴 것이다.
+            if before and after == before:
+                stale = sorted(os.path.basename(k) for k in before)
+    if verify is not None:
+        try:
+            verify_failed = not bool(verify(results_dir))
+        except Exception:                                   # noqa: BLE001
+            verify_failed = True
+    ok = (rc == 0) and not missing and not stale and not verify_failed
     return StageOutcome(step=name, stdout=out, stderr=err, rc=rc, ok=ok,
-                        required=required, missing_outputs=missing)
+                        required=required, missing_outputs=missing,
+                        stale_outputs=stale, verify_failed=verify_failed)
 
 
 def summarize(stages):

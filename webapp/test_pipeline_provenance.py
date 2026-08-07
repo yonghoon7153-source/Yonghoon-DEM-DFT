@@ -225,7 +225,7 @@ def main():
         os.makedirs(webapp.app.config['RESULTS_FOLDER'], exist_ok=True)
         res_dir = os.path.join(tmp, 'results', 'case1')
 
-        def make_runner(contact_rc):
+        def make_runner(contact_rc, stage_e_writes=True):
             """parse/contact/network/StageE 산출물을 흉내내는 가짜 실행기."""
             calls = []
 
@@ -247,6 +247,12 @@ def main():
                 elif script == 'network_conductivity.py':
                     with open(os.path.join(res_dir, 'network_conductivity.json'), 'w') as f:
                         json.dump({'sigma_full_mScm': 5.0}, f)
+                elif script == 'run_network_full_corrections.py' and stage_e_writes:
+                    fm = os.path.join(res_dir, 'full_metrics.json')
+                    d = json.load(open(fm)) if os.path.exists(fm) else {}
+                    d['sigma_full_mScm_stage_e'] = 9.0
+                    with open(fm, 'w') as f:
+                        json.dump(d, f)
                 return subprocess.CompletedProcess(cmd, rc, '', '')
             _r.calls = calls
             return _r
@@ -280,6 +286,14 @@ def main():
         out = webapp.run_pipeline('case1', 'standard', '1:AM,3:SE', 1000)
         chk('T2b) ★ contact rc=0 이어도 기대 산출물이 없으면 failed',
             out.get('status') == 'failed')
+
+        # R1 (Codex 재검증 RV-01): Stage E rc=0 인데 아무것도 안 쓰면 done 금지
+        shutil.rmtree(res_dir, ignore_errors=True)
+        ps._RUNNER = make_runner(contact_rc=0, stage_e_writes=False)
+        out = webapp.run_pipeline('case1', 'standard', '1:AM,3:SE', 1000)
+        chk('R1) ★ Stage E rc=0 인데 무산출 → partial (done 금지)',
+            out.get('status') == 'partial'
+            and any('Stage E' in s for s in out.get('failed_stages', [])))
     finally:
         ps._RUNNER = prev_runner
         for k, v in prev_env.items():

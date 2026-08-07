@@ -2872,7 +2872,10 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
                 st = _ps.run_stage('Network Solver (both modes)', cmd, required=True,
                                    # ★ rc=0 이어도 파일이 없으면 실패다: network CLI 는 물리망이
                                    #   없거나 결과 dict 가 비면 파일을 안 쓰고도 exit 0 이 된다.
-                                   expects=('network_conductivity.json',),
+                                   # ★ RV-02: retry/batch 는 results 를 지우지 않으므로
+                                   #   **존재**만 보면 옛 산출물이 새 성공 세대로 재도장된다
+                                   #   → fresh 로 실제로 새로 쓰였는지까지 본다.
+                                   expects=('network_conductivity.json',), fresh=True,
                                    results_dir=results_dir, runner=runner)
         except _ps.LockUnavailable as _lk:
             st = _ps.StageOutcome(step='Network Solver (LOCK 미획득 — 미실행)', stdout='',
@@ -2910,10 +2913,23 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
         log.append({'step': 'Network Merge', 'stdout': '', 'stderr': str(_e), 'rc': 1})
 
     # ── Stage E — 위에서 확정된 baseline 위에서만 돈다 ──
+    #   ★ RV-01 (Codex 재검증): 옛 호출은 expects/results_dir 이 없어 **rc=0 이고 아무것도
+    #     안 써도 성공**이었다.  앱이 subprocess 뒤에 직접 쓰는 stage_e_run_id 는 solver 가
+    #     산출물을 만들었다는 증거가 아니라 오히려 무산출 실행을 성공처럼 도장한다.
+    #     → full_metrics.json 이 이 단계에서 **실제로 바뀌었는지**(fresh) + stage_e 키가
+    #       실제로 있는지(verify) 를 둘 다 요구한다.
+    def _stage_e_wrote(rd):
+        try:
+            with open(os.path.join(rd, 'full_metrics.json')) as _f:
+                return any('_stage_e' in k for k in json.load(_f))
+        except Exception:                                          # noqa: BLE001
+            return False
+
     st = _ps.run_stage('Stage E (literature-grounded grain corrections)',
                        [sys.executable, os.path.join(scripts, 'run_network_full_corrections.py'),
                         os.path.basename(results_dir), '--quiet'],
-                       required=False, runner=runner)
+                       required=False, runner=runner, results_dir=results_dir,
+                       expects=('full_metrics.json',), fresh=True, verify=_stage_e_wrote)
     stages.append(st)
     log.append(st)
 
@@ -5294,6 +5310,9 @@ def batch_rerun_physics():
                          + ', '.join(s.get('step', '?') for s in _bfailed)})
             except Exception as e:
                 _batch_status['failures'].append({'cid': c['cid'], 'err': str(e)[:200]})
+            finally:
+                # ★ RV-03: done 증가는 **케이스마다 정확히 한 번**.  내 CB-04 교체가
+                #   성공 경로의 증가를 삼켜 성공/실패 모두 done=0 이 됐다 (Codex 재현).
                 _batch_status['done'] += 1
         _batch_status['running'] = False
         _batch_status['current'] = '(done)'
