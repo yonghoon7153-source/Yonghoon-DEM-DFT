@@ -346,3 +346,22 @@ eps 민감도를 봤더니 **Hessian이 수렴하지 않았다.**
   - RESULTS.md는 표에 eps가 섞여 있으면 경고를 띄운다
 
 물리·수식 변경 없음. 해석 규칙 추가.
+
+### 운영 — 계산 결과 백업 경로 (2026-08-07)
+
+`.gitignore`가 `results/`와 `*.parquet`을 통째로 제외해서, fitting 결과가
+**서버에만 존재**하는 상태였다. V100 컨테이너가 회수되면 14시간어치 계산이
+사라진다.
+
+`artifacts/`를 추적 대상으로 열고 `scripts/archive_results.sh`가 **재생성
+비용이 큰 것만** 골라 넣도록 했다.
+
+    남긴다   fits.parquet (조건당 4~10초 × 3,069 = 시간 단위)
+             manifest.yaml (어떤 커밋·설정에서 나왔는지)
+             *_summary.yaml, objective_comparison.*, figures/*.png
+    버린다   curves.parquet (19 MB, 재생성 5~8분)
+             degeneracy_map (fits에서 몇 초)
+             chunks/, fit_chunks/, completed.jsonl (중간 상태)
+
+fits.parquet만 있으면 score·hessian·report는 전부 몇 초 안에 복원된다.
+실측: coarse 실행 하나가 392 KB.

@@ -1,6 +1,14 @@
 # 결과물 — 용량이 크므로 커밋하지 않는다
 results/
 *.parquet
+
+# ★ 단 artifacts/ 는 추적한다.
+#   scripts/archive_results.sh 가 **재생성 비용이 큰 것만** 골라 넣는다:
+#   fits.parquet(시간 단위 계산) · manifest · 요약 yaml · 그림.
+#   curves.parquet(재생성 5~8분)과 중간 청크는 넣지 않는다.
+#   이게 없으면 계산 결과가 서버에만 존재해서, 컨테이너가 회수되면 사라진다.
+!artifacts/
+!artifacts/**
 *.h5
 *.hdf5
 .cache/
