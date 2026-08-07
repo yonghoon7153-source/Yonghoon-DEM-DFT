@@ -133,13 +133,27 @@ def inventory(dirs):
 
 
 def check(paths):
-    """받아 온 후보 UPF 하나(들)를 설치 전에 판별한다 — 경로 A 의 필수 단계."""
-    ok = False
+    """받아 온 후보 UPF 하나(들)를 설치 전에 판별한다 — 경로 A 의 필수 단계.
+
+    ⚠ **없는 파일과 못 읽은 z_valence 를 구분한다 (2026-08-07 실측).** zval() 은
+      OSError 를 삼키고 None 을 주므로, 경로 오타를 'frozen-4f 가 아니다' 로 오인
+      보고했다. 없는 건 없다고 말해야 한다 — 측정 실패로 위장시키면 안 된다.
+    """
+    ok, missing = False, 0
     for p in paths:
+        if not os.path.isfile(p):
+            missing += 1
+            print(f"  {p}")
+            print(f"      ⛔ **파일이 없다** — 판정 아님. 경로를 확인할 것"
+                  + ("  (‘/경로/후보.UPF’ 는 예시 자리표시자다)" if "경로" in p else ""))
+            continue
         z = zval(p)
         kind, why = classify(z)
         ok |= kind == "frozen-4f"
         print(f"  {os.path.basename(p):52s} z={str(z):>6s}  {kind:14s} {why}")
+    if missing == len(paths):
+        print("\n⛔ 판정할 파일이 하나도 없었다. (frozen-4f 여부를 말한 게 아니다)")
+        return False
     if ok:
         print("\n✅ frozen-4f 다. pseudo 디렉터리에 넣은 뒤 **--inventory 로 다시** 확인할 것")
         print("   — 넣는 것만으로는 부족하다(알파벳 선택 규칙).")
