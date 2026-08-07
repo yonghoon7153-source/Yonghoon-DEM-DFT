@@ -46,7 +46,30 @@ def _load(path: Path):
     return None
 
 
-def _conclusion(cmp_res: dict, summary: dict) -> list[str]:
+def _warm_start_asymmetry(fits) -> str | None:
+    """dQ/dV 계열만 warm start를 받았는지 실측한다 (F20d).
+
+    받았다면 34p 개선안이 **유리한 조건에서도** 33p를 못 이겼다는 뜻이라,
+    "dQ/dV가 오차를 못 줄인다"는 결론이 보수적이 된다. 반대로 이 비대칭을
+    적어두지 않으면 "초기값 덕에 나온 값 아니냐"는 반론에 답할 수 없다.
+    """
+    if fits is None or "warm_started" not in getattr(fits, "columns", []):
+        return None
+    w = fits.groupby("objective")["warm_started"].mean()
+    base, imp = "pocv_dvdq", "pocv_dvdq_dqdv"
+    if base not in w.index or imp not in w.index:
+        return None
+    if not (w[imp] > 0.5 and w[base] < 0.5):
+        return None
+    return (f"   ⓘ 이 비교에서 dQ/dV 계열은 매끄러운 해를 초기값으로 받고"
+            f"(`pocv_dvdq_dqdv` 중 {_pct(w[imp])}), `pocv_dvdq`는 그 시드 제공자라 "
+            f"받지 않는다({_pct(w[base])}). 즉 34p 개선안은 **초기값에서 유리한 "
+            f"조건인데도** 33p를 이기지 못했다 — 위 결론은 그만큼 보수적이다. "
+            f"warm start를 빼면 dQ/dV 쪽이 optimizer 실패로 훨씬 나빠지는데, "
+            f"그건 목적함수의 정보량이 아니라 최적화 난이도다(F20d).")
+
+
+def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
     """핵심 결론 3줄 — 숫자에서 직접 만든다."""
     tbl = pd.DataFrame(cmp_res["table"]).set_index("objective")
     lines = []
@@ -70,6 +93,9 @@ def _conclusion(cmp_res: dict, summary: dict) -> list[str]:
             f"(평균 |오차| {_pp(b['mean_abs_err'])} → {_pp(i['mean_abs_err'])}, "
             f"PE-NE 상쇄 {_pct(b['pe_ne_antisym_frac'])} → "
             f"{_pct(i['pe_ne_antisym_frac'])})")
+        note = _warm_start_asymmetry(fits)
+        if note:
+            lines.append(note)
     elif base in tbl.index:
         lines.append(f"1. 기존 목적함수({base})의 degeneracy는 "
                      f"{_pct(tbl.loc[base, 'degenerate_frac'])}다.")
@@ -146,6 +172,7 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     summary = _load(in_dir / "degeneracy_summary.yaml") or {}
     manifest = _load(in_dir / "manifest.yaml") or {}
     wsweep = _load(in_dir / "wsweep" / "weight_sweep.yaml")
+    fits = _load(in_dir / "fits.parquet")
     hess_by_obj = {}
     for hp in sorted(in_dir.glob("hessian_*.parquet")):
         d = _load(hp)
@@ -179,7 +206,7 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
 
     # ── 결론 ──
     P.append("## 핵심 결론\n")
-    for line in _conclusion(cmp_res, summary):
+    for line in _conclusion(cmp_res, summary, fits):
         P.append(line + "\n")
 
     # ── 한계 (결론 바로 밑) ──
@@ -401,11 +428,23 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
             P.append(f"- noise={n}: 최적 w = {d.get('w_dqdv')} "
                      f"({_pct(d.get(opt.get('metric')), 1)}, n={d.get('n')})")
         P.append(f"\n{opt.get('_주의', '')}\n")
-        if wsweep.get("warm_start", True):
-            P.append("> ⚠ **이 sweep은 `w=0` 행을 인용할 수 없습니다.** seed 목적함수 없이 "
-                     "실행돼, `w=0`만 warm start를 못 받고 나머지는 받았습니다. "
-                     "`w=0`이 유독 나쁘게 나오는 것은 dQ/dV 효과가 아니라 초기값 차이입니다 "
-                     "(F20b). `w ≥ 0.25`끼리의 비교만 유효합니다.\n")
+        # ★ sweep의 optimizer 설정이 본 실행과 다르면 이 절 전체를 인용할 수 없다.
+        #   경고 문구는 weight_sweep.yaml이 스스로 달아 두므로 그대로 옮긴다 (F20d).
+        if wsweep.get("_경고"):
+            P.append(f"> ⚠ **이 sweep의 최적 w를 인용하지 마세요.** {wsweep['_경고']}\n")
+        elif not wsweep.get("warm_start", True) or wsweep.get("n_restarts", 0) < 5:
+            P.append(f"> ⚠ **이 sweep은 본 실행과 optimizer 설정이 다릅니다** "
+                     f"(warm_start={wsweep.get('warm_start')}, "
+                     f"n_restarts={wsweep.get('n_restarts')}). 가중치가 아니라 최적화 "
+                     f"난이도를 잰 값일 수 있습니다 — `tools/check_sweep_consistency.py`로 "
+                     f"본 실행과 대조한 뒤 인용하세요 (F20d).\n")
+        else:
+            P.append(f"> sweep은 본 실행과 같은 설정으로 돌렸습니다 "
+                     f"(warm_start={wsweep.get('warm_start')}, "
+                     f"n_restarts={wsweep.get('n_restarts')}). `w=0`은 `pocv_dvdq`와, "
+                     f"`w=1`은 `pocv_dvdq_dqdv`와 정의가 같으므로 위 표의 두 끝점은 "
+                     f"목적함수 비교표와 일치해야 합니다 — "
+                     f"`tools/check_sweep_consistency.py`가 확인합니다.\n")
         P.append("결과: `configs/objectives_optimized.yaml`\n")
 
     # ── 그림 ──

@@ -523,3 +523,47 @@ w=0은 자기 최적해를 자기 초기값으로 받은 셈이었다. 이득이
 
 구버전 산출물은 `weight_sweep.yaml`의 `warm_start` 필드로 판별되며,
 `make_results`가 "w=0 행을 인용하지 말 것" 경고를 자동으로 붙인다.
+
+### F20d — 가중치 sweep의 warm start를 본 실행과 맞춤 (2026-08-07)
+
+**증상**: restart 5로 재실행한 sweep에서 최적 w가 `0.5 → 0.0`으로 뒤집히고,
+`w=1.0`의 보정 degeneracy가 90.3%로 나왔다. 그런데 같은 문서의 목적함수
+비교표에서는 정의가 동일한 `pocv_dvdq_dqdv`가 24%다.
+
+**진단** (`tools/check_sweep_consistency.py`, 계산 없이 parquet만 비교):
+
+```
+공통 468조건            sweep    본 실행
+w=0 J중앙값             0.1440   0.1440    ← 소수점까지 일치 (대조군)
+w=0 degeneracy          58.23%   58.23%
+w=1 J중앙값             0.4060   0.3261    ← sweep이 더 나쁨
+w=1 평균|err|           6.17%p   2.48%p
+w=1에서 sweep의 J가 더 큰 조건 비율: 51.7% (반대는 2.1%)
+```
+
+`w=0 ≡ pocv_dvdq`, `w=1 ≡ pocv_dvdq_dqdv`로 가중치 정의가 글자 그대로 같으므로
+결과도 같아야 한다. w=0만 일치하고 w=1이 계통적으로 나쁜 것은 **sweep이 warm
+start를 끈 채 돌아 dQ/dV 항을 못 푼 것**이다 (F20에서 확인한 현상).
+
+**원인**: F20c에서 "모두 같은 출발선에 세우는 것이 공정하다"고 보고
+`warm_start=False`로 고정했다. 공정의 기준을 잘못 잡았다 — 모두에게 똑같이 주는
+것이 아니라 **본 실행이 쓰는 설정 그대로** 재야 같은 문서 안에서 말이 맞는다.
+w=0은 본 실행에서도 seed 제공자라 warm start를 안 받으므로, 켜면 두 실행의 구조가
+정확히 일치한다 (위 표에서 w=0이 소수점까지 같은 것이 그 증거).
+
+F20c 주석의 *"숨은 seed로 물려줬는데 결과가 한 자리도 안 바뀌었다"* 는 틀린
+관찰이었다. 당시 `n_restarts=2`라 warm start를 줘도 어차피 못 풀던 상태였다.
+
+**조치**
+- `run_weight_sweep(warm_start=True)` 기본값. `--no-warm-start`는 진단용으로만 남김
+- `build_weight_objectives`: w_grid에 0.0이 있으면 그것이 seed 제공자(맨 앞).
+  없을 때만 숨은 `_seed`를 끼운다
+- `weight_sweep.yaml`이 설정 이탈 시 `_경고`를 스스로 기록하고,
+  `make_results.py`가 그 경고를 RESULTS.md에 그대로 싣는다
+- `tools/check_sweep_consistency.py` 신설 — 계산 없이 본 실행과 대조
+- 테스트 3건: 기본값 고정 / seed 제공자 위치 / 경고 분기
+
+**부수 확인**: 본 실행에서 dQ/dV 계열만 warm start를 받는데도 `pocv_dvdq`(62%)를
+못 이겼다(63%). **유리한 조건을 주고도 비긴 것**이므로 "dQ/dV가 오차를 못 줄인다"는
+결론은 보수적이다. `make_results.py`가 `warm_started` 열을 실측해 이 문장을
+결론에 자동으로 붙인다.

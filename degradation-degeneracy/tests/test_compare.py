@@ -487,26 +487,52 @@ def test_compare_cases_matches_row_counts():
     assert "측정이 아니라" in res["_주의_복원불가"]
 
 
-def test_weight_sweep_uses_no_warm_start():
-    """★ F20c — 가중치 비교에서는 warm start를 아예 끈다.
+def test_weight_sweep_matches_main_run_optimizer_settings():
+    """★ F20d — sweep의 optimizer 설정은 본 실행과 같아야 한다.
 
-    warm start는 지형이 거친 목적함수에만 이득이라, 어떤 방식으로 주더라도
-    w=0과 w>0 사이에 비대칭이 남는다 (숨은 seed를 줘도 w=0은 자기 최적해를
-    자기 초기값으로 받는 셈이라 이득이 0이었다 — 실측으로 한 자리도 안 바뀜).
+    "모두 같은 출발선"이 공정하다고 보고 warm start를 껐다가 틀렸다. sweep의
+    양 끝점은 본 실행의 목적함수와 정의가 같으므로(w=0 ≡ pocv_dvdq,
+    w=1 ≡ pocv_dvdq_dqdv) 결과가 일치해야 하는데, 끄면 w>0만 어긋난다
+    (실측: w=1의 J중앙값 0.406 vs 0.326, 51.7%의 조건에서 sweep이 더 큼).
     """
     import inspect
 
-    from src.weight_sweep import SEED_NAME, build_weight_objectives, run_weight_sweep
+    from src.weight_sweep import run_weight_sweep
 
-    objs = build_weight_objectives([0.0, 1.0, 2.0])
-    assert SEED_NAME not in objs, "더는 숨은 seed를 만들지 않는다"
-    assert all("_warm" not in v for v in objs.values()), \
-        "warm start 플래그가 남아 있으면 w마다 조건이 달라진다"
+    sig = inspect.signature(run_weight_sweep).parameters
+    assert sig["warm_start"].default is True, \
+        "sweep을 warm start 없이 돌리면 가중치가 아니라 최적화 난이도를 잰다"
+    assert sig["n_restarts"].default == 5, \
+        "restart 2는 부족하다 — 같은 목적함수가 본 실행 17% vs sweep 92%였다"
+    assert "warm_start=warm_start" in inspect.getsource(run_weight_sweep), \
+        "인자를 받고도 run_fit에 넘기지 않으면 설정이 무시된다"
+
+
+def test_seed_objective_only_when_w_grid_lacks_zero():
+    """warm start의 seed 제공자는 w=0이다. 없을 때만 숨은 seed를 끼운다."""
+    from src.weight_sweep import SEED_NAME, build_weight_objectives
+
+    with_zero = build_weight_objectives([0.0, 1.0, 2.0])
+    assert SEED_NAME not in with_zero, "w=0이 있으면 seed는 군더더기다"
+    assert next(iter(with_zero)) == obj_name(0.0), \
+        "seed 제공자가 맨 앞이어야 뒤의 w들이 그 해를 물려받는다"
+
+    without_zero = build_weight_objectives([0.5, 1.0])
+    assert next(iter(without_zero)) == SEED_NAME, \
+        "w=0이 없으면 seed 제공자가 없어 아무도 warm start를 못 받는다"
+    assert without_zero[SEED_NAME]["w_dqdv"] == 0.0
+
+
+def test_sweep_yaml_warns_when_settings_diverge(tmp_path, monkeypatch):
+    """설정이 본 실행과 다르면 결과 파일이 스스로 경고를 달아야 한다."""
+    import inspect
+
+    from src.weight_sweep import run_weight_sweep
 
     src = inspect.getsource(run_weight_sweep)
-    assert "warm_start=False" in src, "sweep은 warm start를 꺼야 공정하다"
-    assert inspect.signature(run_weight_sweep).parameters["n_restarts"].default == 5, \
-        "restart 2는 부족하다 — 같은 목적함수가 본 실행 17% vs sweep 92%였다"
+    assert "if not warm_start:" in src, "warm start를 끈 실행에 경고가 없다"
+    assert "elif n_restarts < 5:" in src, "restart 부족 실행에 경고가 없다"
+    assert '"_경고"' in src
 
 
 def test_legacy_seed_rows_are_excluded_from_summary():

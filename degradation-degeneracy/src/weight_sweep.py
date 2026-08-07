@@ -13,12 +13,24 @@
 
   전체 11×11×11×noise3 = 3,993   →   표본 6×6×6×noise3 = 648 (guard 통과분만)
 
-★ restart를 줄이면 안 된다 (F20c). 비용을 아끼려 5 → 2로 낮췄더니, 같은
-목적함수·같은 조건에서 본 실행 17% vs sweep 92%가 나왔다. `pocv_dvdq`는
-unique_min이 39%뿐이라 **restart가 여러 번 필요한 목적함수**이고, 2번으로는
-나쁜 국소최소에 자주 갇힌다. 비용은 층화 표본으로만 아낀다.
+★ optimizer 설정을 본 실행과 다르게 두면 안 된다. 비용을 아끼거나 "공정하게"
+하려고 건드렸다가 두 번 틀렸고, 두 번 다 **가중치가 아니라 최적화 난이도를
+재는** 결과가 나왔다.
+
+  F20c  restart 5 → 2 로 낮춤: 같은 목적함수·같은 조건에서 본 실행 17% vs
+        sweep 92%. `pocv_dvdq`는 unique_min이 39%뿐이라 restart가 여러 번
+        필요한 목적함수이고, 2번으로는 나쁜 국소최소에 자주 갇힌다.
+  F20d  warm start를 끔("모두 같은 출발선"): w>0만 초기값을 잃어 dQ/dV 항을
+        못 푼다. w=1의 J중앙값 0.406 vs 본 실행 0.326, 51.7%의 조건에서 더
+        크고 평균|err| 6.17 vs 2.48%p. 최적 w가 0.5 → 0.0으로 뒤집혔다.
+
+비용은 **층화 표본으로만** 아낀다. optimizer는 건드리지 않는다.
 
   468조건 × 9가중치 × 5restart ≈ 2.1만 최적화 ≈ 75분 (32워커 기준)
+
+sweep의 양 끝점은 본 실행의 목적함수와 정의가 같으므로(w=0 ≡ pocv_dvdq,
+w=1 ≡ pocv_dvdq_dqdv) **결과가 일치해야 한다.** `tools/check_sweep_consistency.py`
+가 이걸 계산 없이 확인한다. 돌리고 나면 반드시 통과시킬 것.
 
 리뷰 규칙
 ─────────
@@ -45,28 +57,42 @@ def obj_name(w: float) -> str:
     return f"wdqdv_{w:.2f}"
 
 
-SEED_NAME = "_seed"      # 과거 산출물 호환용 (더는 만들지 않는다)
+SEED_NAME = "_seed"      # w_grid에 0.0이 없을 때만 끼우는 숨은 seed 제공자
 
 
 def build_weight_objectives(w_grid=DEFAULT_W_GRID, w_pocv: float = 1.0,
                             w_dvdq: float = 1.0) -> dict:
     """w_dqdv만 바꾼 목적함수 집합. pocv·dvdq 가중치는 34p 정의대로 1.0 고정.
 
-    ★ warm start를 쓰지 않는다 (F20c). 이유는 두 번의 실패로 확인했다.
+    ★ warm start를 **본 실행과 똑같이** 켠 채로 돌린다 (F20d).
 
-      1차: 기본 규칙(dQ/dV 항이 있으면 warm start)이면 w=0 하나만 seed
-           제공자가 되어 자기는 초기값을 못 받는다 → w=0만 86%, 나머지 22~33%.
-      2차: 숨은 `_seed`를 앞에 둬서 모두에게 물려줬는데 **결과가 한 자리도
-           안 바뀌었다.** seed의 목적함수가 w=0의 것과 동일하므로, w=0은
-           자기 최적해를 자기 초기값으로 받은 셈이라 아무 이득이 없다.
+    한때 "모두 같은 출발선"이 공정하다고 보고 껐다가 틀렸다. sweep의 양 끝점은
+    본 실행의 목적함수와 정의가 글자 그대로 같으므로(w=0 ≡ pocv_dvdq,
+    w=1 ≡ pocv_dvdq_dqdv) **같은 답이 나와야** 하는데, 끄면 w=1만 어긋난다.
 
-      즉 warm start는 **지형이 거친 목적함수에만 이득**이라, 어떻게 주더라도
-      w=0과 w>0 사이의 비대칭이 남는다. 가중치를 고르는 실험에서 그 비대칭은
-      곧 결론을 바꾸므로, 아예 끄고 모두 같은 출발선에 세운다.
-      (run_weight_sweep이 warm_start=False로 호출한다)
+      tools/check_sweep_consistency.py 실측 (공통 468조건)
+        w=0 : J중앙값 0.1440 = 0.1440,  degeneracy 58.23% = 58.23%   (일치)
+        w=1 : J중앙값 0.4060 > 0.3261,  51.7%의 조건에서 sweep의 J가 더 큼
+              평균|err| 6.17%p vs 2.48%p
+
+    즉 warm start를 끈 sweep이 잰 것은 가중치의 가치가 아니라 **"dQ/dV 항은
+    좋은 초기값 없이는 optimizer가 못 푼다"** 였다(F20에서 이미 확인한 현상).
+    그 상태로 최적 w를 고르면 정보량이 아니라 최적화 난이도를 고르게 된다.
+
+    공정의 기준은 "모두에게 똑같이"가 아니라 **"본 실행이 쓰는 설정 그대로"** 다.
+    본 실행에서 `pocv_dvdq`는 seed 제공자라 warm start를 못 받고 dQ/dV 계열만
+    받는데, sweep도 w=0이 seed 제공자가 되어 정확히 같은 구조가 된다.
+    (w=0이 자기 해를 자기 초기값으로 받는 건 이득이 아니므로 비대칭이 아니다 —
+     위 실측에서 w=0이 본 실행과 소수점까지 일치하는 것이 그 증거다.)
+
+    w_grid에 0.0이 없으면 seed 제공자가 없으므로 숨은 `_seed`를 앞에 끼운다.
     """
-    return {obj_name(w): {"w_pocv": w_pocv, "w_dvdq": w_dvdq, "w_dqdv": float(w)}
+    objs = {obj_name(w): {"w_pocv": w_pocv, "w_dvdq": w_dvdq, "w_dqdv": float(w)}
             for w in w_grid}
+    if not any(float(w) == 0.0 for w in w_grid):
+        # dict는 삽입 순서를 지키므로 맨 앞이 곧 seed 제공자가 된다
+        return {SEED_NAME: {"w_pocv": w_pocv, "w_dvdq": w_dvdq, "w_dqdv": 0.0}} | objs
+    return objs
 
 
 # ---------------------------------------------------------------- 층화 표본
@@ -196,7 +222,8 @@ def run_weight_sweep(in_dir, out_dir=None, w_grid=DEFAULT_W_GRID,
                      bounds_preset: str = "expanded", reference: str = "grid",
                      tol: float = 0.02, resume: bool = False,
                      objectives_config: str = "configs/objectives.yaml",
-                     base_config: str = "configs/base.yaml") -> dict:
+                     base_config: str = "configs/base.yaml",
+                     warm_start: bool = True) -> dict:
     from pathlib import Path
 
     import yaml
@@ -221,11 +248,12 @@ def run_weight_sweep(in_dir, out_dir=None, w_grid=DEFAULT_W_GRID,
     log.info("가중치 sweep: %d조건 × %d가중치 × %drestart",
              len(subset), len(objectives), n_restarts)
 
-    # ★ warm_start=False — 모든 w를 같은 출발선에 (F20c)
+    # ★ warm_start는 본 실행과 같은 값이어야 한다 (F20d). 끄면 w>0만 optimizer
+    #   실패에 빠져, sweep이 가중치가 아니라 최적화 난이도를 재게 된다.
     run_fit(in_dir, out_dir, obj_cfg, objectives, bounds, bounds_preset,
             n_restarts, nproc, use_noisy=True, base_config=base_config,
             reference=reference, resume=resume, subset=set(subset),
-            warm_start=False)
+            warm_start=warm_start)
 
     fits = pd.read_parquet(out_dir / "fits.parquet")
     scored = classify_recoverability(add_error_columns(fits, tol))
@@ -237,21 +265,29 @@ def run_weight_sweep(in_dir, out_dir=None, w_grid=DEFAULT_W_GRID,
     summary.to_csv(out_dir / "weight_sweep_summary.csv", index=False)
     opt = pick_optimum(summary)
 
-    # ★ seed 목적함수가 실제로 쓰였는지 기록한다 (F20b).
-    #   안 쓰인 결과는 w=0만 warm start를 못 받아 **공정 비교가 아니다**.
-    #   실측으로 그 상태의 결과를 한 번 보고서에 실을 뻔했다.
-    used_seed = SEED_NAME in objectives     # 구버전 산출물 판별용
+    # ★ optimizer 설정을 결과에 박아 둔다 (F20b/F20d). 이 sweep은 본 실행과
+    #   설정이 같을 때만 인용할 수 있고, 그걸 읽는 쪽이 확인할 수 있어야 한다.
+    used_seed = SEED_NAME in objectives
+    warn = None
+    if not warm_start:
+        warn = ("warm start가 꺼진 채 실행됐다 — w>0만 초기값을 잃어 optimizer가 "
+                "dQ/dV 항을 못 푼다. 실측으로 w=1의 J중앙값이 본 실행보다 크고"
+                "(0.406 vs 0.326, 51.7%의 조건에서 더 큼) 평균|err|이 6.17 vs "
+                "2.48%p였다. 이 결과의 최적 w를 인용하지 말 것 — 가중치가 아니라 "
+                "최적화 난이도를 고른 값이다. tools/check_sweep_consistency.py로 "
+                "본 실행과 대조할 수 있다.")
+    elif n_restarts < 5:
+        warn = (f"n_restarts={n_restarts}로 실행됐다 — pocv_dvdq는 unique_min이 "
+                "39%뿐이라 restart가 부족하면 나쁜 국소최소에 갇힌다(F20c). "
+                "최적 w를 인용하지 말 것.")
     (out_dir / "weight_sweep.yaml").write_text(
         yaml.safe_dump({"w_grid": list(map(float, w_grid)),
                         "n_conditions": len(subset), "stride": stride,
                         "n_restarts": n_restarts,
                         "seed_objective_used": bool(used_seed),
-                        "warm_start": False,
+                        "warm_start": bool(warm_start),
                         "optimum": opt}
-                       | ({"_경고": (
-                           "구버전: warm start가 켜진 채 실행됐다 — w=0만 초기값 이득을 "
-                           "못 받아 다른 w와 공정 비교가 되지 않는다. w=0 행을 인용하지 "
-                           "말 것.")} if used_seed else {}),
+                       | ({"_경고": warn} if warn else {}),
                        allow_unicode=True, sort_keys=False), encoding="utf-8")
     write_optimized_config("configs/objectives_optimized.yaml", opt)
 
@@ -279,6 +315,9 @@ def main() -> None:
     ap.add_argument("--reference", default="grid")
     ap.add_argument("--tol", type=float, default=0.02)
     ap.add_argument("--resume", action="store_true")
+    ap.add_argument("--no-warm-start", dest="warm_start", action="store_false",
+                    help="warm start를 끈다. 본 실행과 설정이 달라져 최적 w를 "
+                         "인용할 수 없게 되므로 진단 목적으로만 쓸 것 (F20d)")
     ap.add_argument("--log-level", default="INFO")
     args = ap.parse_args()
 
@@ -296,7 +335,8 @@ def main() -> None:
 
     opt = run_weight_sweep(args.in_dir, args.out, w_grid, args.stride,
                            args.n_restarts, args.nproc, args.bounds,
-                           args.reference, args.tol, args.resume)
+                           args.reference, args.tol, args.resume,
+                           warm_start=args.warm_start)
     print(json.dumps(opt, ensure_ascii=False, indent=2, default=str))
 
 
