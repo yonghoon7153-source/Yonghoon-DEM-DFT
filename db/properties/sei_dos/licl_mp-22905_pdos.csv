@@ -1,4 +1,4 @@
-# licl_mp-22905 PDOS summed by element+orbital (QE projwfc.x). Columns are states/eV. VBM 1.576 eV. Gap is the fixed-occ nscf value (6.260 eV), not a DOS threshold.
+# licl_mp-22905 PDOS summed by element+orbital (QE projwfc.x). Columns are states/eV. VBM 1.576 eV. Gap is the fixed-occ nscf value (6.260 eV), not a DOS threshold. ⚠ STALE: 위와 동일 — 재실행 후 교체할 것.
 E_eV,E_minus_VBM_eV,Cl_p,Cl_s,Li_p,Li_s
 -42.208,-43.7836,1.192e-05,1.848e-07,5.32e-05,0.00493388
 -42.198,-43.7736,2.224e-05,3.452e-07,9.92e-05,0.00918592

@@ -1,4 +1,4 @@
-# licl_mp-22905 total DOS (QE dos.x, degauss 0.007 Ry). VBM 1.576 / CBM 7.836 / gap 6.260 eV from fixed-occ nscf eigenvalues. DO NOT read the gap off this curve (smearing underestimates ~0.3 eV).
+# licl_mp-22905 total DOS (QE dos.x, degauss 0.007 Ry). VBM 1.576 / CBM 7.836 / gap 6.260 eV from fixed-occ nscf eigenvalues. DO NOT read the gap off this curve (smearing underestimates ~0.3 eV). ⚠ STALE: 이 곡선은 04_nscf_dos 가 실패한 실행 폴더에 남아 있던 이전 실행의 산출물이다. 갭(6.260 eV, 03 단계)은 무관하게 유효. 재실행 후 교체할 것.
 E_eV,E_minus_VBM_eV,DOS_states_per_eV,integrated_DOS_states
 -42.208,-43.7836,0.004984,4.984e-05
 -42.198,-43.7736,0.009307,0.0001429

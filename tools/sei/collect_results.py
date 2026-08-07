@@ -87,6 +87,25 @@ def main():
                                 "not physics. Cite MP frozen-4f values instead.")
         g["files"] = {}
 
+        # ⚠⚠ **곡선 파일은 실패한 실행에서도 살아남는다** (2026-08-07 licl).
+        #   redo_stages.sh 는 `.out` 만 지우고 `.dos`/`.pdos_atm#*` 는 그대로 둔다.
+        #   그래서 04 가 죽어 05·06 이 아예 안 돌았는데도 **옛 실행의 곡선**이 폴더에 남아
+        #   회수기가 그걸 집어 갔다(실물: licl DOS 는 물리적으로는 멀쩡했지만 다른 04 설정
+        #   에서 나온 것이었다). 이제 05·06 의 JOB DONE 을 확인하고, 아니면 stale 로 찍는다.
+        def done(stem):
+            p = os.path.join(d, stem + ".out")
+            try:
+                return "JOB DONE" in open(p, errors="ignore").read()
+            except OSError:
+                return False
+        fresh = done("04_nscf_dos") and done("05_dos")
+        g["dos_chain_complete"] = fresh
+        if not fresh:
+            g["dos_provenance_warning"] = (
+                "05_dos.out 에 JOB DONE 이 없다 — 이 폴더의 .dos/.pdos 는 **이전 실행**의 "
+                "잔존물일 수 있다(설정이 다른 04 에서 나왔을 수 있음). 갭은 03 단계 값이라 "
+                "영향 없지만, **DOS/PDOS 곡선은 재실행 후 다시 회수할 것.**")
+
         # ── total DOS (dos.x): E, dos, int_dos ──────────────────────────────
         dosf = glob.glob(os.path.join(d, "*.dos"))
         if dosf:
@@ -134,10 +153,11 @@ def main():
             g["files"]["pdos_csv"] = p; made.append(p)
             g["pdos_channels"] = keys
         res[t] = g
-        mark = "⚠4f" if nd else "  "
-        print(f"  ✓ {t:26s} gap {g['gap']:7.3f} eV {mark}  "
+        mark = "⚠4f" if nd else "   "
+        stale = "" if fresh or not g["files"] else "  ⚠ STALE 곡선 (05 미완주)"
+        print(f"  ✓ {t:26s} gap {g['gap']:7.3f} eV {mark} "
               f"{'dos' if 'dos_csv' in g['files'] else '   '} "
-              f"{'pdos' if 'pdos_csv' in g['files'] else ''}")
+              f"{'pdos' if 'pdos_csv' in g['files'] else '    '}{stale}")
 
     os.makedirs(os.path.dirname(OUT_JSON), exist_ok=True)
     json.dump({
@@ -155,9 +175,14 @@ def main():
     }, open(OUT_JSON, "w"), ensure_ascii=False, indent=2)
 
     ok = [t for t, g in res.items() if not g["artifact_4f"]]
+    stale = [t for t, g in res.items() if g["files"] and not g["dos_chain_complete"]]
     print(f"\n→ {OUT_JSON}  ({len(res)}종 · 인용가능 {len(ok)}종)")
     print(f"→ {OUT_DIR}/  CSV {len(made)}개 (Origin-ready)")
     print("⚠ db/properties/electronic.json 등재는 **인용가능 6종만** — Nd 3종은 제외.")
+    if stale:
+        print(f"\n⚠⚠ 곡선 출처 불명 {len(stale)}종: {', '.join(stale)}")
+        print("   05_dos 가 이번 실행에서 안 끝났다 — 폴더에 남아 있던 **옛 곡선**을 집었을 수 있다.")
+        print("   갭은 03 단계 값이라 무관하지만, 그림용 DOS/PDOS 는 재실행 뒤 다시 회수할 것.")
     return 0
 
 

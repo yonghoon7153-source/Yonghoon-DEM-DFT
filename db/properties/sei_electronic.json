@@ -29,7 +29,8 @@
         "Li_s",
         "O_p",
         "O_s"
-      ]
+      ],
+      "dos_chain_complete": true
     },
     "li2s_mp-1153": {
       "tag": "li2s_mp-1153",
@@ -54,7 +55,8 @@
         "Li_s",
         "S_p",
         "S_s"
-      ]
+      ],
+      "dos_chain_complete": true
     },
     "li3p_mp-736": {
       "tag": "li3p_mp-736",
@@ -79,7 +81,8 @@
         "Li_s",
         "P_p",
         "P_s"
-      ]
+      ],
+      "dos_chain_complete": true
     },
     "li3po4_mp-13725": {
       "tag": "li3po4_mp-13725",
@@ -106,7 +109,8 @@
         "O_s",
         "P_p",
         "P_s"
-      ]
+      ],
+      "dos_chain_complete": true
     },
     "li3po4g_mp-2878": {
       "tag": "li3po4g_mp-2878",
@@ -133,7 +137,8 @@
         "O_s",
         "P_p",
         "P_s"
-      ]
+      ],
+      "dos_chain_complete": true
     },
     "licl_mp-22905": {
       "tag": "licl_mp-22905",
@@ -158,7 +163,9 @@
         "Cl_s",
         "Li_p",
         "Li_s"
-      ]
+      ],
+      "dos_chain_complete": false,
+      "dos_provenance_warning": "04_nscf_dos 가 `c_bands: too many bands are not converged` 로 죽어 05·06 이 이번 실행에서 안 돌았다. 이 폴더의 .dos/.pdos 는 **이전 실행**의 잔존물이다 — 곡선 자체는 물리적으로 멀쩡하나(갭 구간 DOS ~1e-5, 다른 8종과 같은 수준) 04 설정이 나머지와 다를 수 있다. **갭 6.260 eV 는 03 단계 값이라 영향 없음.** 그림용 DOS/PDOS 는 patch_dos_nscf.py 적용 후 재실행해서 다시 회수할 것."
     },
     "lindo2_mp-1222355": {
       "tag": "lindo2_mp-1222355",
@@ -188,7 +195,8 @@
         "Nd_s",
         "O_p",
         "O_s"
-      ]
+      ],
+      "dos_chain_complete": true
     },
     "nd2o3_mp-2763": {
       "tag": "nd2o3_mp-2763",
@@ -216,7 +224,8 @@
         "Nd_s",
         "O_p",
         "O_s"
-      ]
+      ],
+      "dos_chain_complete": true
     },
     "nd2s3_mp-438": {
       "tag": "nd2s3_mp-438",
@@ -244,7 +253,8 @@
         "Nd_s",
         "S_p",
         "S_s"
-      ]
+      ],
+      "dos_chain_complete": true
     }
   }
 }
