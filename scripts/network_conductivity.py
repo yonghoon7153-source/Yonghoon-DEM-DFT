@@ -70,6 +70,27 @@ SIGMA_AM_ELECTRONIC = 0.05  # S/cm (50 mS/cm, NCM811 grain interior, discharged)
 NCM_AM_REF_R = 2.0       # µm reference radius (corpus-fit; r0)
 NCM_AM_GB_EXPONENT = 1.5  # GB-reduction exponent β (corpus-fit; Trevisanello-spirit direction)
 
+
+def _sigma_status(v):
+    """σ 값의 **상태**.  숫자 필드가 truthy 로 0 을 None 에 접는 것을 보완한다 (F-12).
+
+      'valid_zero'   — 실제로 0 이다 (퍼콜 경로 없음).  물리적으로 유효한 값이며 실패가 아니다.
+      'computed'     — 0 이 아닌 값이 계산됐다.
+      'not_computed' — 값이 없다 (None/NaN) = 풀지 못했거나 실행되지 않았다.
+
+    ⚠ 숫자 필드(`sigma_*`)는 하위호환을 위해 0 을 None 으로 내보내는 옛 규약을 유지한다.
+      '0 인가 실패인가' 를 물을 때는 **이 상태 필드**를 볼 것.
+    """
+    if v is None:
+        return 'not_computed'
+    try:
+        f = float(v)
+    except (TypeError, ValueError):
+        return 'not_computed'
+    if f != f:                       # NaN
+        return 'not_computed'
+    return 'valid_zero' if f == 0.0 else 'computed'
+
 def sigma_AM_relative(r_um, particle_type):
     """Relative σ_AM vs grain interior (crystallinity/GB factor; corpus-fit,
     Trevisanello-spirit direction — see A1 note above, NOT a Trevisanello σ_e formula).
@@ -1009,6 +1030,14 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
         'sigma_full_mScm': round(sigma_full * sigma_bulk * 1000, 6) if sigma_full else None,
         'sigma_bulk_net_mScm': round(sigma_cf * sigma_bulk * 1000, 6) if sigma_cf else None,
         'sigma_constr_net_mScm': round(sigma_constr_net * sigma_bulk * 1000, 6) if sigma_constr_net else None,
+        # ── ★ F-12 sentinel: 위 숫자 필드는 `if x` (truthy) 라 **물리적 0 이 None 으로
+        #    접힌다** — 계산 실패·미실행과 구별할 수 없다.  숫자 필드의 동작은 바꾸지
+        #    않는다 (이 리포는 σ=0 퍼콜-없음 케이스를 UI 에서 '—' 로 보여주는 것을
+        #    의도하고 있고, 바꾸면 코퍼스가 흔들린다).  대신 **상태 필드를 더해**
+        #    valid_zero / computed 를 구별할 수 있게 한다 — 이 필드가 판정의 정본이다.
+        'sigma_full_status': _sigma_status(sigma_full),
+        'sigma_bulk_net_status': _sigma_status(sigma_cf),
+        'sigma_constr_net_status': _sigma_status(sigma_constr_net),
         'sigma_bruggeman': round(sigma_bruggeman, 8),
         'sigma_bruggeman_mScm': round(sigma_bruggeman * sigma_bulk * 1000, 6),
     }
@@ -1237,6 +1266,11 @@ if __name__ == '__main__':
             with open(out_path, 'w') as f:
                 json.dump(res, f, indent=2)
             print(f"\nResults saved: {out_path}")
+        else:
+            # ★ F-12/F-05: 결과가 없으면 **파일을 안 쓰고도 exit 0** 이 됐다 — 호출부가
+            #   rc 만 보면 성공으로 읽는다.  stderr 로 알리고 아래에서 nonzero 로 끝낸다.
+            sys.stderr.write(f'[network] {cm}: 결과 없음 — 출력 파일을 쓰지 않았습니다 '
+                             f'(물리망 부재 또는 solve 실패).\n')
 
     # Dual-view JSON (when both modes ran): elastic vs plastic side-by-side
     if len(per_mode_results) == 2 and all(per_mode_results.values()):
@@ -1270,3 +1304,10 @@ if __name__ == '__main__':
         with open(legacy_path, 'w') as f:
             json.dump(per_mode_results['hertzian'], f, indent=2)
         print(f"Legacy-compat:    {legacy_path}")
+
+    # ★ F-12: 요청한 모드 중 하나라도 결과를 못 낸 경우 **nonzero 로 끝낸다**.
+    #   옛 동작은 exit 0 이라, 파일이 없는데도 호출부가 성공으로 읽었다.
+    _empty = [cm for cm, r in per_mode_results.items() if not r]
+    if _empty:
+        sys.stderr.write(f'[network] 결과를 내지 못한 모드: {", ".join(_empty)}\n')
+        sys.exit(1)          # ★ 모듈 레벨(`if __name__`)이라 return 이 아니라 sys.exit

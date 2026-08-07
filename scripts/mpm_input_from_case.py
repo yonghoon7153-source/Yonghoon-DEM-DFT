@@ -20,6 +20,8 @@ import math
 import os
 import re
 
+import press_units                      # 압력 단위 규약 (F-11)
+
 
 def expand_sched(seq, warn=print):
     """★Zive Loop 전개: {'k':'l','to':T,'n':N} = [T..직전] 블록을 총 N회 반복 ("Go to step T, N cycles").
@@ -90,6 +92,10 @@ def main():
                     help='anchors-CSV scenario key of the selected collector — run_mpm.sh의 payload 호출에 '
                          '전달돼 selected에 pristine 짝값(시간-일관 BOL)이 병기됨.  ⚠ 리뷰 CRITICAL 재발 '
                          '방지: webapp이 이 플래그를 보내므로 여기서 안 받으면 킷 생성이 argparse 500으로 죽음.')
+    ap.add_argument('--seed', type=int, default=3,
+                    help='MPM RNG seed — ★ F-13: 생성되는 run_mpm.sh 에 **명시적으로 굽는다**. '
+                         '옛 킷은 --seed 를 안 적어 mpm3d 의 코드 기본값에 의존했고, 그 값이 '
+                         '바뀌면 같은 킷이 다른 morphology 를 냈다 (재현성 계약 구멍).')
     ap.add_argument('--step3-vox', type=float, default=0.4,
                     help='STEP3 σ-solve voxel size (µm) baked into run_mpm.sh.  0.4 default (σ 검증값); '
                          '0.25/0.2 = finer necks/SDCP-channels for the current-density FIELD figure '
@@ -321,14 +327,11 @@ def main():
         ip = json.load(open(ipp))
     # per-case pressing pressure → MPM --target-gpa (material E_SE/σ_y stay the CALIBRATED
     # MPM champion, NOT read from the DEM — frame[4]: MPM is calibrated independently).
-    if ip.get('target_pressure_MPa') is not None:
-        press_gpa = float(ip['target_pressure_MPa']) / 1000.0
-    elif ip.get('target_press_sim') is not None:
-        tp = float(ip['target_press_sim'])
-        press_gpa = tp if tp < 10 else tp / 1000.0          # sim 0.30 = 0.30 GPa = 300 MPa
-    else:
-        press_gpa = 0.30
-    press_gpa = round(press_gpa, 4)
+    # ★ F-11 (네 번째 자리): 여기에도 값 크기 heuristic(`tp < 10`)이 있었다.  압력 단위는
+    #   **필드 이름**이 정한다 — scripts/press_units.py 가 정본이고 세 곳이 이미 그것을 쓴다.
+    _mpa = press_units.target_pressure_mpa(ip)
+    press_gpa = round((_mpa / 1000.0) if _mpa is not None else 0.30, 4)
+    mpm_seed = int(a.seed)                      # ★ F-13: run_mpm.sh 에 명시적으로 굽는다
 
     # which atom types are SE?  from the type_map — SE is NOT always type 3 (a no-AM_S case is
     # "1:AM_P,2:SE").  Fallback to the legacy type-3 convention if no map.
@@ -561,6 +564,8 @@ def main():
             'plastic_history_restored': True,
             'rate_dependence': 'NOT_MODELLED_rate_independent_J2',
             'T_C': None, 'T_dependence': 'NOT_MODELLED'}
+    # ★ F-13: 이 킷이 어느 seed 로 돌도록 구워졌는지 provenance 에 남긴다.
+    prov['mpm_seed'] = int(a.seed)
     json.dump(prov, open(os.path.join(a.out, 'mpm_input.json'), 'w'), indent=2)
 
     # Stage-1 carbon: append the additive flags to the compaction step if a recipe was given,
@@ -966,7 +971,7 @@ PSIG=(); [ "${{MPM_PERIODIC_SIGMA:-0}}" = "1" ] && {{ PSIG=(--periodic); echo "[
 python3 "$SCR/mpm3d_compaction.py" \\
   --am-scaffold "$KIT/am_scaffold.csv" --se-dump "$KIT/se_scaffold.csv" --periodic \\
   --lateral-box {box_x} --n-grid {n_grid_mpm} --arch cuda --gpu-mem 28 --protocol hold --frames 150 \\
-  --e-se {e_se_mpm} --nu-se {nu_se_mpm} --target-gpa {press_gpa} \\
+  --e-se {e_se_mpm} --nu-se {nu_se_mpm} --target-gpa {press_gpa} --seed {mpm_seed} \\
   --save-se se_dump.npy --save-dg se_dump_dg.npy --save-eps se_dump_eps.npy --save-metrics mpm_metrics.json{add_flags} "${{FRAC[@]}}" \\
   || {{ echo "[run_mpm] STEP 1 (compaction) FAILED — see the trace above.  NOT running the payload: it would"; \\
         echo "          rebuild mpm_payload.json from the STALE se_dump.npy of a PREVIOUS run and report a"; \\

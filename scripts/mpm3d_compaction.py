@@ -3077,6 +3077,10 @@ def main(argv):
             #   기존 SE 응답곡선 5점의 --sub / --frames / --compact-to 를 되찾을 수 없었다.  n_grid·
             #   periodic·protocol 은 기록되는데 서브스텝·프레임·목표가 빠져 있어서, "그 곡선이 어떤
             #   조건이었나" 에 답할 방법이 없었고 곡선 전체가 재생성 대상이 됐다.  같은 일을 막는다.
+            # ★ F-13: seed 를 metrics 에 남긴다.  웹앱이 만든 run_mpm.sh 이 --seed 를
+            #   명시하지 않아 코드 기본값에 의존했고, 그 값이 바뀌면 같은 킷이 다른
+            #   morphology 를 냈다 (재현성 계약 구멍).  이제 실제로 쓴 값을 기록한다.
+            'seed': int(args.seed),
             'sub': int(args.sub),
             'frames_budget': int(args.frames),
             'compact_to_pct': (float(args.compact_to) if args.compact_to > 0 else None),
