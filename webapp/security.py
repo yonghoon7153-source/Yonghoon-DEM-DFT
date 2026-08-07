@@ -45,7 +45,27 @@ from flask import abort, jsonify, redirect, render_template_string, request, ses
 #: 인증 없이도 허용되는 경로 접두 (로그인 자체와 정적 파일).
 _EXEMPT_PREFIXES = ('/login', '/logout', '/static/', '/healthz', '/favicon.ico')
 
-#: GET 이지만 **상태를 바꾸거나 비싼** 경로 — 리뷰 F-16 이 지적한 것들.
+#: GET 이지만 **상태를 바꾸거나 비싼** 경로 — 리뷰 F-16 / 교차검증 CB-05.
+#:
+#: ★ **endpoint 이름**으로 건다 (경로 prefix 가 아니라).  `/results/<case_id>/mpm-input`
+#:   같은 파라미터 라우트는 prefix 로 못 잡고, `/results/` 로 잡으면 단순 조회까지
+#:   과보호된다.  endpoint 는 정확하고 라우트 파라미터에 영향받지 않는다.
+#:
+#: ⚠ 수동 목록은 새 route 가 생기면 **반드시 다시 빠진다** (Codex CB-05 지적).
+#:   그래서 `test_security_phase_a.py` 가 app.py 를 **AST 로 전수 스캔**해서
+#:   subprocess 를 도는 GET-only 라우트가 전부 여기 있는지 검사한다 — 목록이 아니라
+#:   그 테스트가 실제 방어선이다.
+_PROTECTED_GET_ENDPOINTS = frozenset({
+    'predictor_train',          # 고비용 학습 + 메모리 상태 변경
+    'mpm_input_package',        # MPM kit 생성 subprocess + ZIP
+    'scaling_report',           # 리포트 생성 subprocess + 파일 생성
+    'api_eis_fig',              # figure 계산/임시 산출물
+    'serve_3d_data',            # lazy cache write
+    'serve_archive_3d_data',    # lazy cache write
+    'serve_2d_export_zip',      # export 생성
+})
+
+#: 경로 prefix 로도 거는 것 (파라미터가 없는 단순 경로).
 _PROTECTED_GETS = ('/predictor/train',)
 
 _WRITE_METHODS = ('POST', 'PUT', 'PATCH', 'DELETE')
@@ -97,6 +117,9 @@ def _is_protected(req):
     if path.startswith(_EXEMPT_PREFIXES):
         return False
     if req.method in _WRITE_METHODS:
+        return True
+    ep = getattr(getattr(req, 'url_rule', None), 'endpoint', None)
+    if ep and ep in _PROTECTED_GET_ENDPOINTS:
         return True
     return any(path.startswith(g) for g in _PROTECTED_GETS)
 
@@ -161,11 +184,14 @@ def init_security(app):
         return redirect('/login')
 
     if not required:
-        print('[Security] ⚠ 인증 OFF — 사설망/로컬 전용 가정. 공개 배포라면 '
-              'WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN 을 설정하세요.')
+        # ★ CB-06: 기동 로그는 **ASCII 만** 쓴다.  Windows 기본 콘솔(CP949)에서 '⚠' 이
+        #   UnicodeEncodeError 를 내 app import 자체가 죽었다 (Codex 재현).
+        print('[Security] WARNING: auth OFF - local/private only. '
+              'For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.')
     elif not token:
-        print('[Security] ★ REQUIRE_AUTH=1 인데 WEBAPP_AUTH_TOKEN 이 없습니다 — '
-              '쓰기·계산이 전부 503 으로 잠깁니다 (fail-closed).')
+        print('[Security] LOCKED: REQUIRE_AUTH=1 but WEBAPP_AUTH_TOKEN is unset - '
+              'all writes/compute return 503 (fail-closed).')
     else:
-        print('[Security] 인증 ON (세션 쿠키 SameSite=Strict + Bearer, 쓰기에 Origin 검사).')
+        print('[Security] auth ON (session cookie SameSite=Strict + Bearer, '
+              'Origin check on writes).')
     return required, bool(token)

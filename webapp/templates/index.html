@@ -552,6 +552,13 @@ async function runAnalysis(caseId, forceNetwork, alreadyStarted) {
           const sd = await sr.json();
           if (sd.status === 'done') {
             clearInterval(poll);
+            // ★ CB-08: partial(선택 단계 실패)을 done 과 구별해 보여준다.  옛 코드는
+            //   meta 에만 있고 API 로 안 나가서 화면에서는 완전 성공과 똑같아 보였다.
+            if (sd.pipeline_status === 'partial') {
+              const fs = (sd.failed_stages || []).join(', ') || '일부 단계';
+              log.innerHTML += '<p class="log-error">⚠ <strong>부분 완료</strong> — 실패한 선택 단계: '
+                             + fs + ' (baseline 은 생성됨)</p>';
+            }
             log.innerHTML += '<p class="log-ok"><strong>✅ 분석 완료! 새로고침합니다...</strong></p>';
             setTimeout(() => location.reload(), 1000);
           } else if (sd.status === 'error') {

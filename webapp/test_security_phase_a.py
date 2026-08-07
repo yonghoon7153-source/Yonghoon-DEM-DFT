@@ -105,6 +105,45 @@ def main():
         req is True and not tok)
     os.environ['WEBAPP_AUTH_TOKEN'] = prev
 
+    # ══ ★ T9 (Codex CB-05) — route map 전수 검사 ══
+    #   수동 prefix 목록은 새 route 가 생기면 반드시 다시 빠진다.  app.py 를 AST 로 훑어
+    #   **subprocess 를 도는 GET-only 라우트**를 전부 찾아, 그것들이 보호 목록에 있는지
+    #   검사한다.  목록이 아니라 이 테스트가 실제 방어선이다.
+    import ast as _ast
+    _src = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'app.py'),
+                encoding='utf-8').read()
+    unprotected = []
+    for _n in _ast.walk(_ast.parse(_src)):
+        if not isinstance(_n, _ast.FunctionDef):
+            continue
+        _methods, _has_route = None, False
+        for _d in _n.decorator_list:
+            if isinstance(_d, _ast.Call) and getattr(_d.func, 'attr', '') == 'route':
+                _has_route = True
+                for _kw in _d.keywords:
+                    if _kw.arg == 'methods' and isinstance(_kw.value, (_ast.List, _ast.Tuple)):
+                        _methods = [e.value for e in _kw.value.elts
+                                    if isinstance(e, _ast.Constant)]
+        if not _has_route:
+            continue
+        _m = [x.upper() for x in (_methods or ['GET'])]
+        if 'GET' not in _m or any(w in _m for w in ('POST', 'PUT', 'PATCH', 'DELETE')):
+            continue                       # 쓰기 메서드가 있으면 이미 보호됨
+        _runs = any(isinstance(x, _ast.Call) and isinstance(x.func, _ast.Attribute)
+                    and x.func.attr in ('run', 'Popen', 'check_output', 'call')
+                    and getattr(x.func.value, 'id', '') == 'subprocess'
+                    for x in _ast.walk(_n))
+        if _runs and _n.name not in sec._PROTECTED_GET_ENDPOINTS:
+            unprotected.append(_n.name)
+    chk('T9) ★ subprocess 를 도는 GET-only 라우트가 전부 보호 목록에 있다'
+        + (f'  ← 누락: {unprotected}' if unprotected else ''), not unprotected)
+
+    #   실제 요청으로도 확인 (미인증 → 401/302, subprocess 도달 금지)
+    for _ep, _url in (('scaling_report', '/scaling-report'),
+                      ('mpm_input_package', '/results/nope/mpm-input')):
+        chk(f'T9b) 미인증 {_url} 차단',
+            webapp.app.test_client().get(_url).status_code in (302, 401))
+
     # ══ F-15: group.html 에 이스케이프 안 된 보간이 남았는가 ══
     g = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
                           'templates', 'group.html'), encoding='utf-8').read()

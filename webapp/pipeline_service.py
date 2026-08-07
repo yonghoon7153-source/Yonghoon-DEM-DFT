@@ -236,11 +236,20 @@ def restore_network(snapshot_dir, results_dir):
     return n
 
 
-def stamp_network_provenance(results_dir, run_id, inputs=None, solver_status='success'):
-    """network 산출물에 세대 도장을 찍는다."""
+def stamp_network_provenance(results_dir, run_id, inputs=None, solver_status='success',
+                             argv=None):
+    """network 산출물에 세대 도장을 찍는다.
+
+    ★ CB-07 (Codex): 결과를 **실제로 바꾸는** 인자가 빠져 있었다 — `type_map`, `scale`,
+      `contact_mode`.  code_sha 와 입력 digest 만으로는 같은 결과를 재현할 수 없다.
+      argv 로 받아 함께 남긴다.
+    """
     prov = {'network_run_id': run_id, 'code_sha': code_sha(),
             'stamped_at': time.strftime('%Y-%m-%dT%H:%M:%S'),
             'solver_status': solver_status,
+            'solver': 'network_conductivity.py',
+            'argv': dict(argv or {}),
+            'units_contract': 'sim_to_real_v1',
             'input_digests': inputs or {}}
     atomic_write_json(os.path.join(results_dir, PROVENANCE_FILE), prov)
     return prov

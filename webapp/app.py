@@ -2883,8 +2883,9 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
         # ⚠ 실패해도 도장은 남긴다 (무엇이 언제 실패했는지의 기록).  단 CB-02 이후
         #   snapshot_network() 가 solver_status!='success' 인 세대는 보존하지 않으므로,
         #   이 도장이 다음 재분석에서 preserve 를 유발하지 않는다.
-        _ps.stamp_network_provenance(results_dir, run_id, inputs,
-                                     'success' if st.ok else 'failed')
+        _ps.stamp_network_provenance(
+            results_dir, run_id, inputs, 'success' if st.ok else 'failed',
+            argv={'type_map': type_map, 'scale': scale, 'contact_mode': 'both'})
         prov = {'network_run_id': run_id}
 
     # ── baseline σ 를 full_metrics 로 머지 (이제 양 분기가 같은 목록을 쓴다) ──
@@ -2923,6 +2924,11 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
                 fm_data = json.load(_f)
             fm_data['stage_e_parent_network_run_id'] = prov.get('network_run_id')
             fm_data['stage_e_status'] = 'success' if st.ok else 'failed'
+            # ★ CB-07: "어느 Stage E 코드가 그 baseline 을 변환했는가" 를 복원할 수 있게
+            #   Stage E 자신의 세대도 새긴다 (preserve 경로는 옛 baseline 위에서 **현재**
+            #   Stage E 코드를 돌리므로 parent id 만으로는 부족하다).
+            fm_data['stage_e_run_id'] = _ps.new_run_id()
+            fm_data['stage_e_code_sha'] = _ps.code_sha()
             _ps.atomic_write_json(fm_json, fm_data)
     except Exception:                                              # noqa: BLE001
         pass
@@ -5039,7 +5045,12 @@ def analyze_status(case_id):
     if os.path.exists(meta_file):
         with open(meta_file) as f:
             meta = json.load(f)
-        return jsonify({'status': meta.get('status', 'unknown')})
+        # ★ CB-08: partial 은 meta 에만 있고 API 로는 안 나가서 UI 가 done 과 구별하지
+        #   못했다.  실패 단계까지 함께 돌려준다.
+        return jsonify({'status': meta.get('status', 'unknown'),
+                        'pipeline_status': meta.get('pipeline_status'),
+                        'failed_stages': meta.get('failed_stages', []),
+                        'network_run_id': meta.get('network_run_id')})
     return jsonify({'status': 'unknown'})
 
 @app.route('/analyze-cancel/<case_id>', methods=['POST'])
@@ -5080,120 +5091,67 @@ def retry_network(case_id):
         meta = json.load(f)
 
     def _run_net():
-        import time as _time
-        net_status = 'not_run'
-        net_error_msg = ''
+        """★ CB-04: solver/merge/Stage E 를 자체 구현하지 않고 **중앙 helper** 를 쓴다.
+
+        옛 구현의 문제 (Codex 교차검증):
+          • 새 `network_run_id` 를 만들지 않고 도장도 찍지 않았다 → 옛
+            `network_run_id == stage_e_parent_network_run_id` 가 그대로 남아 **같아
+            보이지만 실제 baseline/Stage E 는 새 세대**인 stale-equality false-green.
+          • merge key 목록을 **따로 하드코딩**해 `_NET_MERGE_KEYS` 와 drift.
+          • Stage E 에 rc/기대 산출물 계약이 없었다.
+          • `failed` / `no_output` / `error` 여도 마지막에 `status='done'` 을 적었다.
+        """
+        results_dir = get_results_dir(case_id)
+        atoms_csv = os.path.join(results_dir, 'atoms.csv')
+        contacts_csv = os.path.join(results_dir, 'contacts.csv')
         meta['status'] = 'network_solving'
-        meta['network_solver_status'] = 'waiting'
-        with open(meta_file, 'w') as f:
-            json.dump(meta, f, indent=2)
+        meta['network_solver_status'] = 'running'
+        _ps.atomic_write_json(meta_file, meta)
 
-        print(f"  [Network Retry] Waiting for lock ({case_id})...")
-        # 프로세스간 파일 lock (F-03) — threading.Semaphore 는 Gunicorn workers=2 에서
-        # 서로를 모른다.  run_pipeline 쪽과 같은 lock 을 잡으므로 진짜 1개로 직렬화된다.
-        # ★ CB-03: 못 잡으면 solver 를 **돌리지 않고** 상태로 남긴다 (fail-open 금지).
-        with _ps.network_lock():
-            print(f"  [Network Retry] Lock acquired ({case_id})")
-            meta['network_solver_status'] = 'running'
-            with open(meta_file, 'w') as f:
-                json.dump(meta, f, indent=2)
-            try:
-                atoms_csv = os.path.join(results_dir, 'atoms.csv')
-                contacts_csv = os.path.join(results_dir, 'contacts.csv')
-                if not os.path.exists(atoms_csv) or not os.path.exists(contacts_csv):
-                    net_status = 'no_input'
-                    net_error_msg = f"Missing CSV files"
-                else:
-                    _t0 = _time.time()
-                    net_cmd = [sys.executable, os.path.join(app.config['SCRIPTS_FOLDER'], 'network_conductivity.py'),
-                               atoms_csv, contacts_csv, '-o', results_dir,
-                               '-t', meta.get('type_map', '1:AM,2:SE'), '-s', str(meta.get('scale', 1000)),
-                               '--contact-mode', 'both']
-                    net_result = subprocess.run(net_cmd, capture_output=True, text=True, timeout=None)
-                    _elapsed = _time.time() - _t0
-                    print(f"  [Network Retry] Finished in {_elapsed:.1f}s, rc={net_result.returncode}")
-                    if net_result.stdout:
-                        print(f"  [Network Retry] stdout:\n{net_result.stdout[-500:]}")
-                    if net_result.returncode != 0:
-                        net_status = 'failed'
-                        net_error_msg = net_result.stderr[-500:] if net_result.stderr else 'No stderr'
-                        print(f"  [Network Retry] FAILED: {net_error_msg}")
-                    else:
-                        net_status = 'success'
-                    # Merge into full_metrics.json
-                    net_json = os.path.join(results_dir, 'network_conductivity.json')
-                    met_json = os.path.join(results_dir, 'full_metrics.json')
-                    if os.path.exists(net_json) and os.path.exists(met_json):
-                        with open(net_json) as _nf:
-                            net_data = json.load(_nf)
-                        with open(met_json) as _mf:
-                            met_data = json.load(_mf)
-                        for k in ['sigma_full', 'sigma_full_mScm', 'sigma_bulk_net',
-                                  'sigma_bulk_net_mScm', 'R_brug_over_full', 'bulk_resistance_fraction',
-                                  'electronic_sigma_full_mScm', 'electronic_R_brug',
-                                  'electronic_active_fraction', 'electronic_percolating_fraction',
-                                  'thermal_sigma_full_mScm', 'thermal_R_brug',
-                              'sigma_bruggeman', 'sigma_bruggeman_mScm', 'R_bruggeman_over_full']:
-                            if k in net_data and net_data[k] is not None:
-                                met_data[k] = net_data[k]
-                        met_data = _merge_dual_into_metrics(results_dir, met_data)
-                        met_data = _refresh_post_network_warnings(met_data)
-                        met_data['network_solver_status'] = net_status
-                        # AM-AM contact mechanics backfill (retry path)
-                        try:
-                            sys.path.insert(0, app.config['SCRIPTS_FOLDER'])
-                            from backfill_am_metrics import calc_am_am_stats, calc_am_am_paths
-                            am_stats = calc_am_am_stats(atoms_csv, contacts_csv,
-                                                        meta.get('type_map', '1:AM,2:SE'),
-                                                        scale=meta.get('scale', 1000))
-                            if am_stats:
-                                for k, v in am_stats.items():
-                                    met_data[k] = v
-                                print(f"  [AM-AM] Backfilled (retry): CN={am_stats.get('am_am_cn',0):.2f}")
-                            try:
-                                path_stats = calc_am_am_paths(atoms_csv, contacts_csv,
-                                                              meta.get('type_map', '1:AM,2:SE'),
-                                                              scale=meta.get('scale', 1000))
-                                if path_stats:
-                                    for k, v in path_stats.items():
-                                        met_data[k] = v
-                                    print(f"  [AM-AM] Paths (retry): Gd={path_stats.get('am_gb_density_mean',0):.2f}")
-                            except Exception as _pe:
-                                print(f"  [AM-AM] Path analysis failed: {_pe}")
-                        except Exception as _e:
-                            print(f"  [AM-AM] Backfill failed: {_e}")
-                        with open(met_json, 'w') as _mf:
-                            json.dump(met_data, _mf, indent=2, default=str)
-                        # Stage E refresh — the network solver just rewrote
-                        # the baseline σ_* keys, so Stage E σ_*_stage_e and
-                        # the validation_flags self-report card must be
-                        # regenerated to stay in sync.  Same call shape as
-                        # /analyze and archive_reanalyze.
-                        try:
-                            subprocess.run([sys.executable,
-                                             os.path.join(app.config['SCRIPTS_FOLDER'],
-                                                          'run_network_full_corrections.py'),
-                                             case_id, '--quiet'],
-                                            capture_output=True, text=True,
-                                            timeout=None)
-                        except Exception as _se:
-                            print(f"  [Stage E] retry-network refresh failed: {_se}")
-                    elif net_status == 'success':
-                        net_status = 'no_output'
-            except subprocess.TimeoutExpired:
-                net_status = 'timeout'
-                net_error_msg = 'Timed out after 3600s'
-            except Exception as e:
-                net_status = 'error'
-                net_error_msg = str(e)
-            meta['network_solver_status'] = net_status
-            if net_error_msg:
-                meta['network_solver_error'] = net_error_msg
-            meta['status'] = 'done'
-            with open(meta_file, 'w') as f:
-                json.dump(meta, f, indent=2)
-            print(f"  [Network Retry] Done ({case_id}), status={net_status}")
+        if not (os.path.exists(atoms_csv) and os.path.exists(contacts_csv)):
+            meta['network_solver_status'] = 'no_input'
+            meta['network_solver_error'] = (f'atoms.csv={os.path.exists(atoms_csv)}, '
+                                            f'contacts.csv={os.path.exists(contacts_csv)}')
+            meta['status'] = 'error'
+            _ps.atomic_write_json(meta_file, meta)
+            print(f"  [Network Retry] 입력 없음 — solver 미실행 ({case_id})")
+            return
 
+        _log = []
+        stages, run_id = _network_and_stage_e(
+            results_dir, app.config['SCRIPTS_FOLDER'], atoms_csv, contacts_csv,
+            meta.get('type_map', '1:AM,2:SE'), meta.get('scale', 1000), _log,
+            preserve_network=False)
+        status, failed = _ps.summarize(stages)
+
+        # AM-AM 접촉역학 backfill (retry 고유 — helper 뒤에 얹는다)
+        try:
+            sys.path.insert(0, app.config['SCRIPTS_FOLDER'])
+            from backfill_am_metrics import calc_am_am_paths, calc_am_am_stats
+            fm = os.path.join(results_dir, 'full_metrics.json')
+            if os.path.exists(fm):
+                with open(fm) as _f:
+                    met_data = json.load(_f)
+                for _fn, _tag in ((calc_am_am_stats, 'CN'), (calc_am_am_paths, 'Gd')):
+                    try:
+                        st = _fn(atoms_csv, contacts_csv, meta.get('type_map', '1:AM,2:SE'),
+                                 scale=meta.get('scale', 1000))
+                        if st:
+                            met_data.update(st)
+                    except Exception as _be:                       # noqa: BLE001
+                        print(f"  [AM-AM] {_tag} backfill 실패 (retry): {_be}")
+                _ps.atomic_write_json(fm, met_data)
+        except Exception as _be:                                   # noqa: BLE001
+            print(f"  [AM-AM] backfill 건너뜀 (retry): {_be}")
+
+        meta['network_run_id'] = run_id
+        meta['pipeline_status'] = status
+        meta['failed_stages'] = [s.get('step') for s in failed]
+        meta['network_solver_status'] = 'failed' if status == 'failed' else 'success'
+        meta['status'] = 'error' if status == 'failed' else 'done'   # ★ 실패를 done 으로 올리지 않는다
+        meta['analysis_log'] = _log
+        _ps.atomic_write_json(meta_file, meta)
+        print(f"  [Network Retry] {status}  run_id={run_id}  ({case_id})")
     def _run_net_guarded():
         # ★ CB-03: lock 미획득(LockUnavailable)은 solver 를 돌리지 않았다는 뜻이므로
         #   'done' 이 아니라 상태로 남긴다.  다른 예외도 스레드가 조용히 죽어 케이스가
@@ -5310,97 +5268,30 @@ def batch_rerun_physics():
                                 '-t', type_map, '-s', scale],
                                capture_output=True, text=True, timeout=None)
 
-                # 2) Network solver in BOTH modes. Idempotent for Hertzian
-                #    (our solver patch only adds R_film when contact_mode ==
-                #    'physics', so Hertzian σ is unchanged) but it guarantees
-                #    that network_conductivity_{hertzian,physics,dual}.json +
-                #    legacy network_conductivity.json are all rewritten fresh
-                #    — no stale pre-patch data slipping into the merge.
-                with _ps.network_lock():          # 프로세스간 파일 lock (F-03)
-                    subprocess.run([sys.executable, os.path.join(scripts, 'network_conductivity.py'),
-                                    c['atoms'], c['contacts'], '-o', c['results_dir'],
-                                    '-t', type_map, '-s', scale,
-                                    '--contact-mode', 'both'],
-                                   capture_output=True, text=True, timeout=None)
-
-                # 3) Merge BOTH Hertzian and Physics keys back into full_metrics.json.
-                #    analyze_contacts.py rewrites the file from scratch in step 1,
-                #    so we MUST repopulate both baseline (sigma_full_mScm, etc.)
-                #    and _physics-suffixed keys here, or those fields end up as None.
-                hertz_json = os.path.join(c['results_dir'], 'network_conductivity_hertzian.json')
-                phys_json  = os.path.join(c['results_dir'], 'network_conductivity_physics.json')
-                legacy_json = os.path.join(c['results_dir'], 'network_conductivity.json')
-                met_json   = os.path.join(c['results_dir'], 'full_metrics.json')
-                hertz_data = {}
-                phys_data  = {}
-                if os.path.exists(hertz_json):
-                    try: hertz_data = json.load(open(hertz_json))
-                    except Exception: pass
-                elif os.path.exists(legacy_json):
-                    # Fallback: legacy file = Hertzian result
-                    try: hertz_data = json.load(open(legacy_json))
-                    except Exception: pass
-                if os.path.exists(phys_json):
-                    try: phys_data = json.load(open(phys_json))
-                    except Exception: pass
-                if os.path.exists(met_json) and (hertz_data or phys_data):
-                    with open(met_json) as _mf: met_data = json.load(_mf)
-                    hertz_keys = ['sigma_full', 'sigma_full_mScm', 'sigma_bulk_net',
-                                  'sigma_bulk_net_mScm', 'R_brug_over_full',
-                                  'bulk_resistance_fraction', 'electronic_sigma_full_mScm',
-                                  'electronic_R_brug', 'electronic_active_fraction',
-                                  'electronic_percolating_fraction',
-                                  'thermal_sigma_full_mScm', 'thermal_R_brug',
-                                  'sigma_bruggeman', 'sigma_bruggeman_mScm',
-                                  'R_bruggeman_over_full']
-                    for k in hertz_keys:
-                        if k in hertz_data and hertz_data[k] is not None:
-                            met_data[k] = hertz_data[k]
-                    phys_remap = [
-                        ('sigma_full',            'sigma_full_physics'),
-                        ('sigma_full_mScm',       'sigma_full_mScm_physics'),
-                        ('sigma_bulk_net',        'sigma_bulk_net_physics'),
-                        ('sigma_bulk_net_mScm',   'sigma_bulk_net_mScm_physics'),
-                        ('R_brug_over_full',      'R_brug_over_full_physics'),
-                        ('bulk_resistance_fraction',
-                                                  'bulk_resistance_fraction_physics'),
-                        ('electronic_sigma_full_mScm',
-                                                  'electronic_sigma_full_mScm_physics'),
-                        ('thermal_sigma_full_mScm',
-                                                  'thermal_sigma_full_mScm_physics'),
-                    ]
-                    for src, dst in phys_remap:
-                        if src in phys_data and phys_data[src] is not None:
-                            met_data[dst] = phys_data[src]
-                    if phys_data:
-                        met_data['physics_resistance_model'] = phys_data.get(
-                            'resistance_model', 'maxwell+film')
-                        met_data['physics_solver_at'] = datetime.now().strftime(
-                            '%Y-%m-%d %H:%M:%S')
-                    # --contact-mode=both writes network_conductivity_dual.json
-                    # freshly, so _merge_dual_into_metrics picks up consistent
-                    # Hertzian+Physics pair here without stale leftovers.
-                    met_data = _merge_dual_into_metrics(c['results_dir'], met_data)
-                    with open(met_json, 'w') as f: json.dump(met_data, f, indent=2, default=str)
-
-                # 4) Physics coverage + path-physics metrics (read-modify-write,
-                #    preserves everything above).
-                subprocess.run([sys.executable, os.path.join(scripts, 'coverage_physics_vs_hertzian.py'),
+                # 2) Coverage 먼저 (read-modify-write, 아래 helper 가 그 위에 얹는다).
+                #    ★ CB-04: 옛 batch 는 solver → 커스텀 merge → coverage → Stage E 순서로
+                #    **자체 구현**했다.  이제 main pipeline 과 같은
+                #    contact → coverage → _network_and_stage_e 순서를 쓴다 (F-17 drift 제거).
+                subprocess.run([sys.executable,
+                                os.path.join(scripts, 'coverage_physics_vs_hertzian.py'),
                                 '--case-dir', c['case_dir']],
                                capture_output=True, text=True, timeout=None)
 
-                # 5) Stage E refresh — writes σ_ionic/σ_e/κ _stage_e keys +
-                #    validation_flags self-report card.  Idempotent (overwrites
-                #    previous Stage E with fresh-baseline-derived corrections).
-                #    Same call shape as the /analyze pipeline; without this the
-                #    Trust card stays blank and the /audit dashboard shows the
-                #    case as 'no-stage-e' after a batch rerun.
-                subprocess.run([sys.executable,
-                                 os.path.join(scripts, 'run_network_full_corrections.py'),
-                                 c['cid'], '--quiet'],
-                               capture_output=True, text=True, timeout=None)
-
-                _batch_status['done'] += 1
+                # 3) Network solver + merge + Stage E — **중앙 helper**.
+                #    옛 구현은 새 run_id 를 만들지 않고 도장도 찍지 않아, 옛
+                #    network_run_id == stage_e_parent_network_run_id 가 그대로 남아
+                #    **같아 보이지만 실제로는 새 세대**인 stale-equality false-green 이 됐다.
+                #    merge key 도 따로 하드코딩돼 _NET_MERGE_KEYS 와 drift 했다.
+                _blog = []
+                _bstages, _brun_id = _network_and_stage_e(
+                    c['results_dir'], scripts, c['atoms'], c['contacts'],
+                    type_map, scale, _blog, preserve_network=False)
+                _bstatus, _bfailed = _ps.summarize(_bstages)
+                if _bstatus == 'failed':
+                    # ★ 옛 batch 는 subprocess rc 를 아예 안 봐서 실패도 done 으로 셌다.
+                    _batch_status['failures'].append(
+                        {'cid': c['cid'], 'err': 'network/StageE 실패: '
+                         + ', '.join(s.get('step', '?') for s in _bfailed)})
             except Exception as e:
                 _batch_status['failures'].append({'cid': c['cid'], 'err': str(e)[:200]})
                 _batch_status['done'] += 1
