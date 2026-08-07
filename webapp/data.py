@@ -463,9 +463,11 @@ CANONICAL_PROVISIONAL = {
         "300 K 외삽 σ비는 0.12–1.48× inconclusive → 확정값 취급 금지 (reseed s5/s6 권고)",
 }
 # CANONICAL 에 넣기엔 품질 플래그가 붙었지만 db엔 등록된 값 (사이트 표시는 PROVISIONAL 사유와 함께).
-CANONICAL_PROVISIONAL_VALUES = {
-    ("MD_Ea_eV", "comp2"): 0.275,
-}
+# ⚠ 여기에 숫자를 다시 넣지 말 것 — 정본은 db/properties/canonical_registry.json 이다.
+#   2026-08-07 (Codex 5라운드): `("MD_Ea_eV","comp2"): 0.275` 가 남아 있어서, 레지스트리에서
+#   ordered/disorder 로 쪼갠 뒤에도 화면에 **옛 0.275 가 계속 나왔다.** 레지스트리 이관의
+#   전형적인 잔재다. 잠정값도 레지스트리의 status=provisional 로 표현한다.
+CANONICAL_PROVISIONAL_VALUES = {}
 # (metric, comp) : 사유 — 이 값은 '아직 안 한 것'이 아니라 '하면 안 되거나 정의되지 않는 것'.
 # composition/explorer 에서 TODO 가 아니라 'N/A' 로 렌더된다.
 CANONICAL_NA = {
@@ -478,6 +480,30 @@ CANONICAL_NA = {
     ("B0_GPa", "vgcf_hbn"): "슬랩 — 주기 벌크 EOS 정의 안 됨",
     ("E_VRH_GPa", "vgcf_hbn"): "슬랩 — 벌크 탄성텐서 정의 안 됨",
 }
+# ── metric 표시 메타 — 화면 세 곳(compare/explorer/composition)이 각자 하드코딩하던 것.
+#   레지스트리에 metric 이 늘면(ordered/disorder 처럼) 화면이 자동으로 따라와야 한다
+#   (2026-08-07 Codex 5라운드: 새 두 metric 이 label·unit 없이 렌더됐다).
+_METRIC_LABEL = {
+    "gap_eV": ("Band gap", "eV", "gap"),
+    "B0_GPa": ("EOS B₀", "GPa", "B₀"),
+    "E_VRH_GPa": ("E_VRH", "GPa", "E_VRH"),
+    "MD_Ea_eV": ("MD Ea", "eV", "MD Ea"),
+    "MD_Ea_eV_ordered": ("MD Ea (ordered)", "eV", "Ea-ord"),
+    "MD_Ea_eV_disorder": ("MD Ea (disorder d=0.50)", "eV", "Ea-dis"),
+    "MD_Ea_eV_singleseed": ("MD Ea (단일시드 앵커)", "eV", "Ea-1seed"),
+    "ICOHP_PS": ("ICOHP P–S", "eV", "ICOHP"),
+}
+
+
+def metric_meta() -> dict:
+    """레지스트리에 있는 **모든** metric 의 (label, unit, short). 없으면 metric 이름 그대로."""
+    out = {}
+    for m in sorted({e.get("metric") for e in _C.registry()["entries"] if e.get("metric")}):
+        lab, unit, short = _METRIC_LABEL.get(m, (m, "", m))
+        out[m] = {"label": lab, "unit": unit, "short": short}
+    return out
+
+
 CANONICAL_META = {
     "gap_eV":    "fixed-occ eigenvalue (DOS-threshold 금지) · comp2는 잠정(legacy, 재확인중)",
     "B0_GPa":    "DFT BM3 EOS",
@@ -486,6 +512,11 @@ CANONICAL_META = {
                  "시드 프로토콜 혼재: comp1/modelc=단일 궤적(오차막대 없음), lpsocl=4-seed×3-T, "
                  "comp2=3-seed(잠정) — 조성 간 비교는 같은 프로토콜끼리만",
     "ICOHP_PS":  "LOBSTER all-PAW ext-basis (comp2 = comp2_icohp_origin.csv, 2026-07-25 커밋)",
+    "MD_Ea_eV_ordered":    "UMA 3-seed · **ordered single-champion baseline** — disorder ensemble 과 "
+                           "다른 계산이다(원자료가 'anion disorder 를 샘플링하지 않았다'고 명시)",
+    "MD_Ea_eV_disorder":   "UMA 3-**config** · anion disorder d=0.50 · 게이트 통과했으나 config 산포 45% "
+                           "— 'ordered 보다 낮다'까지만, 값 정밀 인용 금지",
+    "MD_Ea_eV_singleseed": "UMA 단일 궤적 deck 앵커 — 같은 창의 단일 궤적끼리만 짝짓는다",
 }
 
 # ── 세부 분석 열 (explorer '더 보기') ────────────────────────────────────
@@ -586,7 +617,9 @@ def analysis_matrix() -> dict:
 def canonical_values(cid: str) -> dict:
     """조성 하나의 canonical 값 — 잠정값(CANONICAL_PROVISIONAL_VALUES)도 채워 넣는다.
     잠정값은 템플릿에서 CANONICAL_PROVISIONAL 사유와 '잠정' 배지를 달고 렌더된다."""
-    out = {k: v.get(cid) for k, v in CANONICAL.items()}
+    idx = CANONICAL_ENTRY
+    out = {k: _display(v.get(cid), (idx.get((k, cid)) or {}).get("uncertainty"))
+           for k, v in CANONICAL.items()}
     for (k, c), val in CANONICAL_PROVISIONAL_VALUES.items():
         if c == cid and out.get(k) is None:
             out[k] = val
@@ -690,11 +723,38 @@ def canonical_status_all() -> dict:
     return out
 
 
+def _display(value, unc=None):
+    """표시용 반올림. **저장은 정밀, 화면은 유효자릿수** (2026-08-07 Codex 5라운드 권고).
+
+    오차막대가 있으면 **그 자릿수에 맞춘다** — 0.2754597563 ± 0.0327 을 그대로 찍으면
+    있지도 않은 정밀도를 주장하는 셈이다. 오차가 없으면 소수 4자리로 자른다.
+    """
+    if value is None:
+        return None
+    try:
+        v = float(value)
+    except (TypeError, ValueError):
+        return value
+    if unc:
+        try:
+            import math
+            d = max(0, -int(math.floor(math.log10(abs(float(unc))))) + 1)
+            return round(v, min(d, 6))
+        except (TypeError, ValueError, OverflowError):
+            pass
+    r = round(v, 4)
+    return int(r) if r == int(r) and abs(r) >= 1 else r
+
+
 def canonical_table() -> dict:
-    """explorer/compare 표용 — CANONICAL 전체 + 잠정값 병합."""
-    out = {k: dict(v) for k, v in CANONICAL.items()}
+    """explorer/compare 표용 — CANONICAL 전체 + 잠정값 병합. **표시용으로 반올림한다.**"""
+    idx = CANONICAL_ENTRY
+    out = {}
+    for k, v in CANONICAL.items():
+        out[k] = {c: _display(val, (idx.get((k, c)) or {}).get("uncertainty"))
+                  for c, val in v.items()}
     for (k, c), val in CANONICAL_PROVISIONAL_VALUES.items():
-        out.setdefault(k, {}).setdefault(c, val)
+        out.setdefault(k, {}).setdefault(c, _display(val))
     return out
 
 
@@ -3332,6 +3392,71 @@ import contextlib as _ctx
 _CMT_LOCK = None
 
 
+def process_alive(pid) -> bool:
+    """PID 가 살아 있나. **판단 불가면 '살아 있다'** 로 본다(회수 안 함 = 안전한 쪽).
+
+    ⚠⚠ POSIX 관례인 `os.kill(pid, 0)` 을 **Windows 에서 쓰면 안 된다** (2026-08-07
+      Codex 4라운드). CPython 의 Windows 구현은 sig 가 CTRL_C_EVENT/CTRL_BREAK_EVENT 가
+      아니면 `TerminateProcess(handle, sig)` 로 간다 — 즉 `os.kill(pid, 0)` 은
+      **존재 확인이 아니라 종료 요청**이다. stale lock 을 검사하다 살아 있는 주인
+      프로세스를 죽일 수 있었다. 실제 사고는 아직 없지만 설계상 가능했다.
+      → Windows 는 OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION) +
+        WaitForSingleObject(0) 로 **읽기만** 한다.
+    """
+    if os.name == "nt":
+        # ⚠⚠ 2차 수정 (2026-08-07 Codex 5라운드 Windows 실기).
+        #   1차는 PROCESS_QUERY_LIMITED_INFORMATION 만 열고 WaitForSingleObject 를
+        #   불렀는데, **그 권한에는 SYNCHRONIZE 가 없어서** Wait 가
+        #   WAIT_FAILED(0xFFFFFFFF, GetLastError=5) 를 돌려준다. 코드는
+        #   "WAIT_TIMEOUT 아니면 죽음" 으로 봐서 **살아 있는 주인의 lock 을 뺏었다.**
+        #   실기 확인:
+        #     QUERY_LIMITED 만  → Wait = WAIT_FAILED, GetLastError 5
+        #     GetExitCodeProcess → STILL_ACTIVE (0x103)   ← 이건 된다
+        #     SYNCHRONIZE 포함  → Wait = WAIT_TIMEOUT      ← 이것도 된다
+        #   → 둘 다 쓴다: SYNCHRONIZE 를 같이 요청하고, Wait 가 실패하면
+        #     GetExitCodeProcess 로 떨어진다. **어느 단계든 판단 불가면 '살아 있다'.**
+        try:
+            import ctypes
+            from ctypes import wintypes
+            k32 = ctypes.WinDLL("kernel32", use_last_error=True)
+            PROCESS_QUERY_LIMITED_INFORMATION, SYNCHRONIZE = 0x1000, 0x00100000
+            ERROR_INVALID_PARAMETER = 87
+            WAIT_TIMEOUT, WAIT_FAILED, STILL_ACTIVE = 0x102, 0xFFFFFFFF, 259
+            k32.OpenProcess.restype = wintypes.HANDLE
+            k32.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
+            h = k32.OpenProcess(
+                PROCESS_QUERY_LIMITED_INFORMATION | SYNCHRONIZE, False, int(pid))
+            if not h:                     # SYNCHRONIZE 가 거부되면 조회 권한만으로 재시도
+                h = k32.OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, False, int(pid))
+            if not h:
+                # 그런 PID 가 아예 없을 때만 "죽었다". 나머지(권한 거부 등)는 살아 있다.
+                return ctypes.get_last_error() != ERROR_INVALID_PARAMETER
+            try:
+                rc = k32.WaitForSingleObject(h, 0) & 0xFFFFFFFF
+                if rc == WAIT_TIMEOUT:
+                    return True           # 아직 안 끝났다
+                if rc != WAIT_FAILED:
+                    return False          # WAIT_OBJECT_0 = 끝났다
+                # Wait 가 실패했다(권한 부족 등) — 종료코드로 다시 본다
+                code = wintypes.DWORD()
+                if k32.GetExitCodeProcess(h, ctypes.byref(code)):
+                    return code.value == STILL_ACTIVE
+                return True               # 그것도 안 되면 회수하지 않는다
+            finally:
+                k32.CloseHandle(h)
+        except Exception:
+            return True                   # ctypes 가 안 되면 회수하지 않는다
+    try:
+        os.kill(pid, 0)                  # POSIX 에서는 이게 존재 확인 관례가 맞다
+        return True
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True                      # 남의 프로세스지만 살아 있다
+    except OSError:
+        return True                      # 판단 불가면 살아 있다고 본다(회수 안 함)
+
+
 @_ctx.contextmanager
 def _comments_locked(timeout=10.0):
     """읽기→수정→쓰기 전체를 한 임계구역으로 묶는다.
@@ -3398,51 +3523,6 @@ def _comments_locked(timeout=10.0):
     own = d / "owner"
     STALE = max(timeout * 3, 30.0)
 
-    def _alive(pid):
-        """PID 가 살아 있나. **판단 불가면 '살아 있다'** 로 본다(회수 안 함 = 안전한 쪽).
-
-        ⚠⚠ POSIX 관례인 `os.kill(pid, 0)` 을 **Windows 에서 쓰면 안 된다** (2026-08-07
-          Codex 4라운드). CPython 의 Windows 구현은 sig 가 CTRL_C_EVENT/CTRL_BREAK_EVENT 가
-          아니면 `TerminateProcess(handle, sig)` 로 간다 — 즉 `os.kill(pid, 0)` 은
-          **존재 확인이 아니라 종료 요청**이다. stale lock 을 검사하다 살아 있는 주인
-          프로세스를 죽일 수 있었다. 실제 사고는 아직 없지만 설계상 가능했다.
-          → Windows 는 OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION) +
-            WaitForSingleObject(0) 로 **읽기만** 한다.
-        """
-        if os.name == "nt":
-            try:
-                import ctypes
-                from ctypes import wintypes
-                k32 = ctypes.WinDLL("kernel32", use_last_error=True)
-                PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
-                ERROR_INVALID_PARAMETER, ERROR_ACCESS_DENIED = 87, 5
-                WAIT_TIMEOUT = 0x00000102
-                k32.OpenProcess.restype = wintypes.HANDLE
-                h = k32.OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, False, int(pid))
-                if not h:
-                    err = ctypes.get_last_error()
-                    if err == ERROR_INVALID_PARAMETER:
-                        return False          # 그런 PID 가 없다 = 죽었다
-                    if err == ERROR_ACCESS_DENIED:
-                        return True           # 존재하지만 권한이 없다 = 살아 있다
-                    return True               # 판단 불가 → 회수하지 않는다
-                try:
-                    # 시그널 없이 상태만 본다. 아직 안 끝났으면 WAIT_TIMEOUT.
-                    return k32.WaitForSingleObject(h, 0) == WAIT_TIMEOUT
-                finally:
-                    k32.CloseHandle(h)
-            except Exception:
-                return True                   # ctypes 가 안 되면 회수하지 않는다
-        try:
-            os.kill(pid, 0)                  # POSIX 에서는 이게 존재 확인 관례가 맞다
-            return True
-        except ProcessLookupError:
-            return False
-        except PermissionError:
-            return True                      # 남의 프로세스지만 살아 있다
-        except OSError:
-            return True                      # 판단 불가면 살아 있다고 본다(회수 안 함)
-
     t0 = time.monotonic()
     while True:
         try:
@@ -3456,7 +3536,7 @@ def _comments_locked(timeout=10.0):
             # 주인이 죽었고 충분히 오래됐으면 회수한다
             try:
                 pid_s, ts_s = own.read_text(encoding="utf-8").split()
-                if time.time() - float(ts_s) > STALE and not _alive(int(pid_s)):
+                if time.time() - float(ts_s) > STALE and not process_alive(int(pid_s)):
                     own.unlink(missing_ok=True)
                     d.rmdir()
                     continue

@@ -17,8 +17,10 @@
 </div>
 
 <!-- canonical metric badges -->
-{% set units = {'gap_eV':'eV','B0_GPa':'GPa','E_VRH_GPa':'GPa','MD_Ea_eV':'eV','ICOHP_PS':'eV'} %}
-{% set labels = {'gap_eV':'Band gap','B0_GPa':'EOS B0','E_VRH_GPa':'E_VRH','MD_Ea_eV':'MD Ea','ICOHP_PS':'ICOHP P–S'} %}
+{# ⚠ 하드코딩하면 레지스트리에 metric 이 늘어도 label·unit 이 빈칸으로 렌더된다
+   (2026-08-07 Codex 5라운드 실측). data.metric_meta() 에서 만든다. #}
+{% set units = {} %}{% set labels = {} %}
+{% for k, mm in MM.items() %}{% set _ = units.update({k: mm.unit}) %}{% set _ = labels.update({k: mm.label}) %}{% endfor %}
 <div class="metrics-row">
 {% for key, val in canonical.items() %}
   {% set prov = canonical_provisional.get(key) %}

@@ -72,8 +72,10 @@ function splitByGroup(k,sel){
 }
 const COMPS={{ COMPS|tojson }};
 const KEYS=Object.keys(CANON);
-const KLAB={gap_eV:'Band gap (eV)',B0_GPa:'EOS B0 (GPa)',E_VRH_GPa:'E_VRH (GPa)',MD_Ea_eV:'MD Ea (eV)',ICOHP_PS:'ICOHP P–S (eV)'};
-const KSHORT={gap_eV:'gap',B0_GPa:'B₀',E_VRH_GPa:'E_VRH',MD_Ea_eV:'MD Ea',ICOHP_PS:'ICOHP'};
+// ⚠ 하드코딩하면 레지스트리에 metric 이 늘어도 이름이 안 나온다 (2026-08-07 Codex 5라운드).
+const MM={{ metric_meta|tojson }};
+const KLAB={},KSHORT={};
+Object.keys(MM).forEach(function(k){KLAB[k]=MM[k].label+(MM[k].unit?' ('+MM[k].unit+')':'');KSHORT[k]=MM[k].short;});
 let activeKey='E_VRH_GPa';
 function _cmpEsc(s){return (s+'').replace(/[&<>"']/g,function(m){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];});}
 function ids(){return [...document.querySelectorAll('.card input[type=checkbox]:checked')].map(x=>x.value);}

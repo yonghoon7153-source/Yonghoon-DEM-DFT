@@ -14,7 +14,8 @@
     "2026-08-07": "Codex 코드리뷰 P1 대응으로 신설. 이전에는 webapp/data.py 의 CANONICAL 딕셔너리가 정본이었다. 이관 중 MD_Ea_eV 안에서 단일시드(comp1 0.253 / modelc 0.224)와 4-seed(lpsocl 0.287)가 한 딕셔너리에 섞여 있던 것을 발견 — 대시보드의 '최저값' 순위가 프로토콜을 넘나들고 있었다. group 을 나눠 분리했다.",
     "2026-08-07b": "Codex 재검증 반영. ★ LPSOCl MD_Ea 를 canonical→provisional 로 내렸다 — 600 K beta 0.615 게이트 탈락 점을 포함한 3점 적합이고 kb/open_items.md 가 인용 보류라 적고 있는데 첫 판에서 대조를 빠뜨렸다. comp1 ICOHP 원 출처 배선(-5.9381; bonds.json·nd_icohp.json 의 -5.944 는 낡은 요약 drift). comp2 ICOHP·gap 출처 배선(gap 은 legacy 유지).",
     "2026-08-07c": "Codex 3라운드 반영. resolve_error 를 status=source_error 로 내려 자동판정에서 빼고, live 를 요청마다(mtime 캐시) 다시 읽게 했다. comp1 단일시드 Ea 출처 배선 (li_transport.json) — 단 beta 6/6 탈락이라 provisional 유지.",
-    "2026-08-07d": "Codex 4라운드 반영. ★ comp2 MD_Ea 항목이 **의미가 섞여 있었다** — 값 0.275 는 ordered single-champion baseline 인데 method_id/group 에 disorder-ensemble 을 붙여 뒀다. 둘을 별개 metric 으로 분리: MD_Ea_eV_ordered(0.2754597563, comp2_md_arrhenius.json) · MD_Ea_eV_disorder(0.1512±0.0676, comp2_disorder_ensemble.json d=0.50, n_config=3). d=1.00 은 게이트 FAIL 이라 등재하지 않는다. ⚠ 교훈: validator 가 provisional 무출처를 허용해 이 의미 오류를 못 잡았다 — 수치 대조는 method/value 의미 일치를 보증하지 않는다."
+    "2026-08-07d": "Codex 4라운드 반영. ★ comp2 MD_Ea 항목이 **의미가 섞여 있었다** — 값 0.275 는 ordered single-champion baseline 인데 method_id/group 에 disorder-ensemble 을 붙여 뒀다. 둘을 별개 metric 으로 분리: MD_Ea_eV_ordered(0.2754597563, comp2_md_arrhenius.json) · MD_Ea_eV_disorder(0.1512±0.0676, comp2_disorder_ensemble.json d=0.50, n_config=3). d=1.00 은 게이트 FAIL 이라 등재하지 않는다. ⚠ 교훈: validator 가 provisional 무출처를 허용해 이 의미 오류를 못 잡았다 — 수치 대조는 method/value 의미 일치를 보증하지 않는다.",
+    "2026-08-07e": "Codex 5라운드 method_id 수동 감사 반영. gap k 표기 정정(modelc k882 · b2o3 25irr-k · comp1 은 미확인이라 표기 제거). B0 comp1/modelc 을 eos.json 의 PRIMARY_paper_value(_v3) 로 재배선 — prefer=registry 우회 제거. ICOHP modelc 을 직접 원자료(bonds_modelc_k663.json, -5.9997)로. E_VRH 는 원자료가 comp1<->comp2 만 완전비교쌍이라 해 네 조성 단일 묶음을 쪼갰다. ★ validator 28/28 통과가 method_id 의미 일치를 보증하지 않는다는 걸 이 감사가 실증했다."
   },
   "entries": [
     {
@@ -24,13 +25,14 @@
       "unit": "eV",
       "source_path": "db/properties/electronic.json",
       "source_key": "/eigenvalue_gaps_v100_2026_06_16/comp1/gap_eV",
-      "method_id": "qe-uspp__fixed-occ-nscf-eigenvalue__k888",
+      "method_id": "qe-uspp__fixed-occ-nscf-eigenvalue",
       "comparison_group": "gap-fixedocc-eigenvalue-v1",
       "status": "canonical",
       "prohibitions": [
         "dos_threshold_readout"
       ],
-      "updated": "2026-06-16"
+      "updated": "2026-06-16",
+      "note": "k 메쉬 표기를 method_id 에서 뺐다 — modelc/b2o3 가 k888 이 아니었으므로 comp1 도 원 입력으로 확인하기 전에는 단정하지 않는다(2026-08-07)."
     },
     {
       "system": "modelc",
@@ -39,13 +41,14 @@
       "unit": "eV",
       "source_path": "db/properties/electronic.json",
       "source_key": "/eigenvalue_gaps_v100_2026_06_16/modelc/gap_eV",
-      "method_id": "qe-uspp__fixed-occ-nscf-eigenvalue__k888",
+      "method_id": "qe-uspp__fixed-occ-nscf-eigenvalue__k882",
       "comparison_group": "gap-fixedocc-eigenvalue-v1",
       "status": "canonical",
       "prohibitions": [
         "dos_threshold_readout"
       ],
-      "updated": "2026-06-16"
+      "updated": "2026-06-16",
+      "note": "⚠ method_id 의 k 표기를 k888 → k882 로 정정(2026-08-07 Codex 5라운드). 실제 nscf 는 tools/electronic/standard_dos/modelc/modelc_nscf.in 의 `8 8 2` 다."
     },
     {
       "system": "b2o3",
@@ -54,13 +57,14 @@
       "unit": "eV",
       "source_path": "db/properties/electronic.json",
       "source_key": "/eigenvalue_gaps_v100_2026_06_16/b2o3/gap_eV",
-      "method_id": "qe-uspp__fixed-occ-nscf-eigenvalue__k888",
+      "method_id": "qe-uspp__fixed-occ-nscf-eigenvalue__25irr-k",
       "comparison_group": "gap-fixedocc-eigenvalue-v1",
       "status": "canonical",
       "prohibitions": [
         "dos_threshold_readout"
       ],
-      "updated": "2026-06-16"
+      "updated": "2026-06-16",
+      "note": "⚠ method_id 의 k 표기를 k888 → 25irr-k 로 정정(2026-08-07). 원자료 b2o3_dos_gap.json 의 method 가 'fixed-occ nscf 25 irr k' 라고 적고 있다."
     },
     {
       "system": "lpsocl",
@@ -96,17 +100,15 @@
     {
       "system": "comp1",
       "metric": "B0_GPa",
-      "value": 26.23,
+      "value": 26.233,
       "unit": "GPa",
       "source_path": "db/properties/eos.json",
-      "source_key": "/results/[?id=comp1]/B0_GPa",
-      "tolerance": 0.05,
-      "method_id": "dft-bm3-eos__uspp",
+      "source_key": "/results/[?id=comp1_v3]/B0_GPa",
+      "method_id": "dft-bm3-eos__uspp__paper-grade",
       "comparison_group": "b0-dft-bm3-v1",
       "status": "canonical",
-      "note": "eos.json 은 26.2 로 한 자리 반올림 — 소수 둘째 자리 출처를 아직 못 찾아 tolerance 0.05 로 둔다. ⚠ prefer=registry: 원자료가 반올림 사본이라 live resolve 를 쓰면 자릿수가 준다. 정밀 출처를 배선하면 이 표식을 지울 것.",
-      "updated": "2026-08-07",
-      "prefer": "registry"
+      "note": "★ 정밀 정본을 찾았다(2026-08-07 Codex 5라운드): eos.json 의 id=comp1_v3 가 note='PRIMARY_paper_value' 다. 이전엔 반올림 사본(id=comp1, 'confirmed')을 가리켜 prefer=registry 우회를 썼는데 이제 필요 없다.",
+      "updated": "2026-08-07"
     },
     {
       "system": "comp2",
@@ -126,14 +128,12 @@
       "value": 21.71,
       "unit": "GPa",
       "source_path": "db/properties/eos.json",
-      "source_key": "/results/[?id=modelc]/B0_GPa",
-      "tolerance": 0.05,
-      "method_id": "dft-bm3-eos__uspp",
+      "source_key": "/results/[?id=modelc_v3]/B0_GPa",
+      "method_id": "dft-bm3-eos__uspp__paper-grade",
       "comparison_group": "b0-dft-bm3-v1",
       "status": "canonical",
-      "note": "eos.json 은 21.7 로 반올림 — 위 comp1 과 같은 사정. ⚠ prefer=registry: 원자료가 반올림 사본이라 live resolve 를 쓰면 자릿수가 준다. 정밀 출처를 배선하면 이 표식을 지울 것.",
-      "updated": "2026-08-07",
-      "prefer": "registry"
+      "note": "★ 정밀 정본을 찾았다(2026-08-07 Codex 5라운드): eos.json 의 id=modelc_v3 가 note='PRIMARY_paper_value' 다. 이전엔 반올림 사본(id=modelc, 'confirmed')을 가리켜 prefer=registry 우회를 썼는데 이제 필요 없다.",
+      "updated": "2026-08-07"
     },
     {
       "system": "lpsocl",
@@ -167,9 +167,10 @@
       "source_path": "db/properties/elastic.json",
       "source_key": "/dft_0K_relaxed_ion_stress_strain_full_Cij/results/[?id=comp1_v3]/E_VRH",
       "method_id": "dft-0K-relaxed-ion__stress-strain-full-Cij",
-      "comparison_group": "elastic-dft-relaxedion-v1",
+      "comparison_group": "elastic-dft-relaxedion-comp1comp2-v1",
       "status": "canonical",
-      "updated": "2026-07-26"
+      "updated": "2026-07-26",
+      "note": "★ elastic.json 이 comp2 를 'comp1 과 유일한 완전비교쌍' 이라 적고 있다(USPP·ecut 52/520·k444·cubic-52 동일). 그래서 이 둘만 한 묶음이다."
     },
     {
       "system": "modelc",
@@ -179,9 +180,10 @@
       "source_path": "db/properties/elastic.json",
       "source_key": "/dft_0K_relaxed_ion_stress_strain_full_Cij/results/[?id=modelc_v3]/E_VRH",
       "method_id": "dft-0K-relaxed-ion__stress-strain-full-Cij",
-      "comparison_group": "elastic-dft-relaxedion-v1",
+      "comparison_group": "elastic-dft-relaxedion-modelc-standalone",
       "status": "canonical",
-      "updated": "2026-07-26"
+      "updated": "2026-07-26",
+      "note": "⚠ 설정이 comp1/comp2 쌍과 동일하다는 근거가 원자료에 없다 — 네 조성을 한 묶음으로 자동 순위화하면 안 된다(2026-08-07 Codex 5라운드). 같은 설정임을 확인하면 comp1/comp2 묶음으로 합칠 것."
     },
     {
       "system": "lpsocl",
@@ -191,9 +193,10 @@
       "source_path": "db/properties/elastic.json",
       "source_key": "/dft_0K_relaxed_ion_stress_strain_full_Cij/results/[?id=lpsocl_v0]/E_VRH",
       "method_id": "dft-0K-relaxed-ion__stress-strain-full-Cij",
-      "comparison_group": "elastic-dft-relaxedion-v1",
+      "comparison_group": "elastic-dft-relaxedion-lpsocl-standalone",
       "status": "canonical",
-      "updated": "2026-07-26"
+      "updated": "2026-07-26",
+      "note": "⚠ 설정이 comp1/comp2 쌍과 동일하다는 근거가 원자료에 없다 — 네 조성을 한 묶음으로 자동 순위화하면 안 된다(2026-08-07 Codex 5라운드). 같은 설정임을 확인하면 comp1/comp2 묶음으로 합칠 것."
     },
     {
       "system": "comp2",
@@ -203,9 +206,10 @@
       "source_path": "db/properties/elastic.json",
       "source_key": "/dft_0K_relaxed_ion_stress_strain_full_Cij/results/[?id=comp2_v3]/E_VRH",
       "method_id": "dft-0K-relaxed-ion__stress-strain-full-Cij",
-      "comparison_group": "elastic-dft-relaxedion-v1",
+      "comparison_group": "elastic-dft-relaxedion-comp1comp2-v1",
       "status": "canonical",
-      "updated": "2026-07-26"
+      "updated": "2026-07-26",
+      "note": "★ elastic.json 이 comp2 를 'comp1 과 유일한 완전비교쌍' 이라 적고 있다(USPP·ecut 52/520·k444·cubic-52 동일). 그래서 이 둘만 한 묶음이다."
     },
     {
       "system": "modelc",
@@ -437,15 +441,16 @@
     {
       "system": "modelc",
       "metric": "ICOHP_PS",
-      "value": -6.0,
+      "value": -5.9997,
       "unit": "eV",
-      "source_path": "db/properties/lpsocl_icohp.json",
-      "source_key": "/comparison_vs_family/P-S/modelc",
-      "method_id": "lobster__ext-basis__per-bond",
+      "source_path": "db/properties/per_bond_json/bonds_modelc_k663.json",
+      "source_key": "/icohp_per_bond_type_eV/P-S/icohp_eV",
+      "method_id": "lobster__ext-basis__per-bond__k663",
       "comparison_group": "icohp-lobster-perbond-v1",
       "status": "canonical",
-      "note": "자기 파일이 아니라 lpsocl 비교표에서 읽는다 — modelc 단독 icohp json 이 아직 없다.",
-      "updated": "2026-08-07"
+      "note": "직접 산출 원자료로 바꿨다(2026-08-07 Codex 5라운드). 이전엔 lpsocl 비교표의 복사값(-6.0)을 읽었다 — 원값은 -5.9997 이다.",
+      "updated": "2026-08-07",
+      "tolerance": 0.0006
     },
     {
       "system": "comp1",
@@ -471,7 +476,7 @@
       "method_id": "lobster__ext-basis__per-bond",
       "comparison_group": "icohp-lobster-perbond-v1",
       "status": "canonical",
-      "note": null,
+      "note": "⚠ source 인 comp2_icohp_origin.csv 에는 **방법 정보가 없다** (값만 있다). 방법 근거는 db/compositions/comp2.json 의 ICOHP 절이다 — 값과 방법의 출처가 갈려 있으므로 인용할 때 둘 다 봐야 한다 (2026-08-07 Codex 5라운드).",
       "updated": "2026-08-07"
     }
   ]

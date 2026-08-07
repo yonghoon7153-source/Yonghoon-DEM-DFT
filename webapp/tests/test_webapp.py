@@ -412,16 +412,67 @@ def test_alive_check_is_not_os_kill_on_windows():
     (실행 중 프로세스를 죽여 볼 수는 없으므로 구조로 검사한다).
     """
     src = (ROOT / "webapp" / "data.py").read_text(encoding="utf-8")
-    i = src.find("def _alive(")
-    assert i > 0, "_alive() 가 사라졌다"
-    body = src[i:i + 2600]
+    i = src.find("def process_alive(")
+    assert i > 0, "process_alive() 가 사라졌다"
+    body = src[i:i + 4200]
     assert 'os.name == "nt"' in body, "_alive() 에 Windows 분기가 없다"
     nt = body[body.index('os.name == "nt"'):]
     nt = nt[:nt.index("os.kill(")] if "os.kill(" in nt else nt
-    assert "OpenProcess" in nt and "WaitForSingleObject" in nt, \
-        "Windows 분기가 OpenProcess/WaitForSingleObject 를 안 쓴다"
+    assert "OpenProcess" in nt, "Windows 분기가 OpenProcess 를 안 쓴다"
     # os.kill 은 Windows 분기 **밖**에만 있어야 한다
     assert "os.kill" not in nt, "Windows 분기 안에서 os.kill 을 쓴다 — 프로세스를 죽인다"
+    # ★ 2차 (Codex 5라운드 Windows 실기): QUERY_LIMITED 만으로는 Wait 가 WAIT_FAILED 다.
+    #   구조 검사가 함수 존재만 봐서 이 런타임 권한 오류를 못 잡았다 — 이제 조합을 본다.
+    assert "SYNCHRONIZE" in nt, "OpenProcess 에 SYNCHRONIZE 가 없다 — Wait 가 WAIT_FAILED 난다"
+    assert "GetExitCodeProcess" in nt and "STILL_ACTIVE" in nt, \
+        "Wait 실패 시 GetExitCodeProcess 폴백이 없다"
+    assert "WAIT_FAILED" in nt, "WAIT_FAILED 를 구분하지 않는다 — 살아 있는 주인을 죽음으로 오판한다"
+
+
+def test_alive_treats_unknown_as_alive():
+    """★ 판단 불가는 **항상 '살아 있다'** 로 떨어져야 한다 (2026-08-07 Codex 5라운드).
+
+    1차 Windows 수정이 실패한 지점이 정확히 이거다: PROCESS_QUERY_LIMITED_INFORMATION
+    만 열면 WaitForSingleObject 가 **WAIT_FAILED(0xFFFFFFFF)** 를 주는데, 코드가
+    "WAIT_TIMEOUT 아니면 죽음" 으로 봐서 **살아 있는 주인의 lock 을 뺏었다.**
+    가짜 kernel32 로 다섯 경우를 다 태운다.
+    """
+    import ctypes as _ct
+    import types
+    real_windll = getattr(_ct, "WinDLL", None)
+    old_name = os.name
+    #  Wait 반환      GetExitCode 성공?  종료코드   기대 alive
+    cases = [
+        ("wait_timeout",              0x102,      True,  259, True),
+        ("wait_object_0",             0x000,      True,    0, False),
+        ("wait_failed + STILL_ACTIVE", 0xFFFFFFFF, True,  259, True),   # ← 회귀 지점
+        ("wait_failed + exited",      0xFFFFFFFF, True,    0, False),
+        ("wait_failed + 조회 실패",     0xFFFFFFFF, False,   0, True),   # 판단 불가
+    ]
+    for name, wait_rc, gec_ok, code, want in cases:
+        class _OP:                       # OpenProcess 는 restype/argtypes 대입을 받는다
+            restype = None
+            argtypes = None
+
+            def __call__(self, *a, **k):
+                return 1234              # 널이 아닌 핸들
+
+        fake = types.SimpleNamespace(
+            OpenProcess=_OP(),
+            WaitForSingleObject=lambda h, t, _r=wait_rc: _r,
+            CloseHandle=lambda h: 1,
+            GetExitCodeProcess=(lambda h, ref, _c=code, _ok=gec_ok:
+                                (setattr(ref._obj, "value", _c), 1 if _ok else 0)[1]),
+        )
+        os.name = "nt"
+        _ct.WinDLL = lambda n, use_last_error=False, _f=fake: _f
+        try:
+            got = D.process_alive(999999)
+            assert got is want, f"{name}: alive={got} · 기대={want}"
+        finally:
+            os.name = old_name
+            if real_windll is not None:
+                _ct.WinDLL = real_windll
 
 
 def test_comp2_ordered_and_disorder_are_separate():
@@ -444,6 +495,52 @@ def test_comp2_ordered_and_disorder_are_separate():
     # d=1.00 은 게이트 FAIL 이라 등재하면 안 된다
     assert not any(abs((e.get("value") or 0) - 0.3775) < 1e-9 for e in reg["entries"]), \
         "게이트 FAIL 인 d=1.00 이 레지스트리에 있다"
+
+
+def test_new_metrics_reach_all_screens():
+    """★ 레지스트리에 metric 이 늘면 화면 셋이 자동으로 따라와야 한다 (Codex 5라운드).
+
+    ordered/disorder 로 쪼갠 뒤에도 (a) explorer 는 새 두 metric 을 아예 안 보여줬고
+    (b) composition 카드는 label·unit 이 빈칸이었고 (c) compare 는 **옛 0.275 를 같이**
+    보여줬다. 원인은 세 템플릿이 metric 목록을 각자 하드코딩한 것이었다.
+    """
+    import json as _j
+    mm = D.metric_meta()
+    for k in ("MD_Ea_eV_ordered", "MD_Ea_eV_disorder"):
+        assert k in mm and mm[k]["label"] and mm[k]["unit"], f"{k} 의 label/unit 이 없다"
+    c = A.app.test_client()
+    exp = c.get("/explorer").get_data(as_text=True)
+    assert mm["MD_Ea_eV_ordered"]["label"] in exp, "explorer 에 ordered metric 이 없다"
+    assert mm["MD_Ea_eV_disorder"]["label"] in exp, "explorer 에 disorder metric 이 없다"
+    comp = c.get("/composition/comp2").get_data(as_text=True)
+    assert mm["MD_Ea_eV_ordered"]["label"] in comp, "composition 카드에 label 이 없다"
+    cmp_ = c.get("/compare").get_data(as_text=True)
+    canon = _j.loads(re.search(r"const CANON=(\{.*?\});", cmp_, re.S).group(1))
+    assert canon.get("MD_Ea_eV", {}).get("comp2") is None, \
+        "옛 MD_Ea_eV comp2(0.275) 가 화면에 남아 있다 — 하드코딩 잔재"
+    assert "MD_Ea_eV_ordered" in canon and "MD_Ea_eV_disorder" in canon
+
+
+def test_no_hardcoded_metric_lists_in_templates():
+    """metric 목록이 템플릿으로 되돌아오면 안 된다 — 그게 위 회귀의 원인이었다."""
+    for name in ("explorer.html", "composition.html", "compare.html"):
+        t = (ROOT / "webapp" / "templates" / name).read_text(encoding="utf-8")
+        assert "MM" in t, f"{name} 이 metric_meta(MM)를 안 쓴다"
+        assert "'gap_eV','Band gap'" not in t and "'gap_eV':'eV'" not in t, \
+            f"{name} 에 metric 하드코딩이 되살아났다"
+
+
+def test_evrh_group_respects_source_pairing():
+    """★ elastic.json 이 comp1↔comp2 만 완전비교쌍이라 한다 (Codex 5라운드).
+
+    네 조성을 한 묶음으로 자동 순위화하면 method_id 가 맞아도 의미상 틀린다.
+    """
+    reg = C.load_registry()
+    g = {e["system"]: e["comparison_group"] for e in C.entries(reg, "E_VRH_GPa", status=None)}
+    assert g.get("comp1") == g.get("comp2"), "comp1↔comp2 가 같은 묶음이 아니다"
+    for other in ("modelc", "lpsocl"):
+        assert g.get(other) != g.get("comp1"), \
+            f"{other} 가 comp1/comp2 완전비교쌍 묶음에 섞여 있다"
 
 
 def test_status_badge_is_not_duplicated():

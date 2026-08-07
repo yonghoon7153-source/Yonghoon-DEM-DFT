@@ -1,12 +1,11 @@
 {% extends "base.html" %}
 {% block title %}Property Explorer{% endblock %}
 {% block content %}
-{% set props = [
-  ('gap_eV','Band gap','eV'),
-  ('B0_GPa','EOS B₀','GPa'),
-  ('E_VRH_GPa','E_VRH','GPa'),
-  ('MD_Ea_eV','MD Ea','eV'),
-  ('ICOHP_PS','ICOHP P–S','eV')] %}
+{# ⚠ metric 목록을 여기 하드코딩하면 레지스트리에 metric 이 늘어도 화면이 안 따라온다
+   (2026-08-07 Codex 5라운드: ordered/disorder 두 metric 이 explorer 에 아예 안 나왔다).
+   data.metric_meta() 가 레지스트리에서 만들어 준다. #}
+{% set props = [] %}
+{% for k, mm in MM.items() %}{% set _ = props.append((k, mm.label, mm.unit)) %}{% endfor %}
 {# 세부 분석 열 — canonical 앵커와 **다른 그룹**이다. 빈칸은 TODO 가 아니라 '—'
    (그 계에 그 분석을 안 했거나 정의가 다르다는 뜻). #}
 {% set xprops = [
