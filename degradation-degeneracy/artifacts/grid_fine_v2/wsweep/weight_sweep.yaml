@@ -1,0 +1,33 @@
+w_grid:
+- 0.0
+- 0.25
+- 0.5
+- 0.75
+- 1.0
+- 1.25
+- 1.5
+- 1.75
+- 2.0
+n_conditions: 468
+stride: 2
+n_restarts: 2
+optimum:
+  metric: degenerate_frac_corrected
+  per_noise:
+    0.0:
+      w_dqdv: 1.0
+      degenerate_frac_corrected: 0.22784810126582278
+      n: 79
+    0.001:
+      w_dqdv: 0.25
+      degenerate_frac_corrected: 0.21518987341772153
+      n: 79
+    0.005:
+      w_dqdv: 0.75
+      degenerate_frac_corrected: 0.26582278481012656
+      n: 79
+  w_star_mean_over_noise: 0.5
+  value_at_w_star: 0.2573839662447257
+  value_at_w1: 0.2742616033755274
+  noise_levels_agree: false
+  _주의: 노이즈 수준별 최적 w가 다르면 단일 값 채택은 근거가 약하다. 실험 노이즈 수준을 먼저 특정할 것.

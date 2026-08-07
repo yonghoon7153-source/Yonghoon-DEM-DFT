@@ -1,0 +1,257 @@
+tolerance: 0.02
+n_rows_total: 12276
+n_rows_recoverable: 12276
+unrecoverable_frac: 0.0
+by_objective:
+  dqdv_only:
+    n: 3069
+    degenerate_frac: 0.9990224828934506
+    mean_abs_err: 0.0689043179050253
+    mean_abs_err_lam_pe: 0.05389014750456724
+    mean_abs_err_lam_ne: 0.03714906896507586
+    mean_abs_err_lli: 0.028042394079272025
+    pe_ne_antisym_frac: 0.8670576735092864
+    degenerate_frac_corrected: 0.3675464320625611
+    bound_active_frac: 0.0032583903551645487
+  pocv:
+    n: 3069
+    degenerate_frac: 0.9954382535027696
+    mean_abs_err: 0.08534211070428549
+    mean_abs_err_lam_pe: 0.029192452079637277
+    mean_abs_err_lam_ne: 0.08531757720612809
+    mean_abs_err_lli: 0.0073557586993857295
+    pe_ne_antisym_frac: 0.01270772238514174
+    degenerate_frac_corrected: 0.5659824046920822
+    bound_active_frac: 0.01270772238514174
+  pocv_dvdq:
+    n: 3069
+    degenerate_frac: 0.37438905180840665
+    mean_abs_err: 0.024027321205509947
+    mean_abs_err_lam_pe: 0.01454988577521007
+    mean_abs_err_lam_ne: 0.02036005626646733
+    mean_abs_err_lli: 0.007001093024264126
+    pe_ne_antisym_frac: 0.31671554252199413
+    degenerate_frac_corrected: 0.31606386445096124
+    bound_active_frac: 0.00032583903551645487
+  pocv_dvdq_dqdv:
+    n: 3069
+    degenerate_frac: 0.9811013359400457
+    mean_abs_err: 0.04330235861995923
+    mean_abs_err_lam_pe: 0.04034824548968762
+    mean_abs_err_lam_ne: 0.016197019481467824
+    mean_abs_err_lli: 0.016688465661150537
+    pe_ne_antisym_frac: 0.693385467579016
+    degenerate_frac_corrected: 0.1573802541544477
+    bound_active_frac: 0.00032583903551645487
+overall_recoverable:
+  n: 12276
+  degenerate_frac: 0.8374877810361682
+  mean_abs_err: 0.05539402710869499
+  mean_abs_err_lam_pe: 0.03449518271227556
+  mean_abs_err_lam_ne: 0.039755930479784776
+  mean_abs_err_lli: 0.014771927866018105
+  pe_ne_antisym_frac: 0.47246660149885955
+  degenerate_frac_corrected: 0.351743238840013
+  bound_active_frac: 0.004154447702834799
+by_objective_noise:
+  dqdv_only|noise=0.0:
+    n: 1023
+    degenerate_frac: 0.9980449657869013
+    mean_abs_err: 0.060109669732710716
+    mean_abs_err_lam_pe: 0.054475257019326616
+    mean_abs_err_lam_ne: 0.027455826567912702
+    mean_abs_err_lli: 0.024191435722430064
+    pe_ne_antisym_frac: 0.8651026392961877
+    degenerate_frac_corrected: 0.3147605083088954
+    bound_active_frac: 0.0009775171065493646
+  dqdv_only|noise=0.001:
+    n: 1023
+    degenerate_frac: 1.0
+    mean_abs_err: 0.06939080083702068
+    mean_abs_err_lam_pe: 0.0538077964669234
+    mean_abs_err_lam_ne: 0.03642806176265609
+    mean_abs_err_lli: 0.02955627228468299
+    pe_ne_antisym_frac: 0.884652981427175
+    degenerate_frac_corrected: 0.30009775171065495
+    bound_active_frac: 0.0039100684261974585
+  dqdv_only|noise=0.005:
+    n: 1023
+    degenerate_frac: 0.9990224828934506
+    mean_abs_err: 0.07721248314534453
+    mean_abs_err_lam_pe: 0.0533873890274517
+    mean_abs_err_lam_ne: 0.04756331856465877
+    mean_abs_err_lli: 0.03037947423070302
+    pe_ne_antisym_frac: 0.8514173998044966
+    degenerate_frac_corrected: 0.48778103616813295
+    bound_active_frac: 0.004887585532746823
+  pocv|noise=0.0:
+    n: 1023
+    degenerate_frac: 0.9951124144672532
+    mean_abs_err: 0.08286633212786922
+    mean_abs_err_lam_pe: 0.028540844548694818
+    mean_abs_err_lam_ne: 0.0828461181494656
+    mean_abs_err_lli: 0.00719433588401063
+    pe_ne_antisym_frac: 0.010752688172043012
+    degenerate_frac_corrected: 0.5777126099706745
+    bound_active_frac: 0.010752688172043012
+  pocv|noise=0.001:
+    n: 1023
+    degenerate_frac: 0.9951124144672532
+    mean_abs_err: 0.08765531537081339
+    mean_abs_err_lam_pe: 0.030593886917567207
+    mean_abs_err_lam_ne: 0.08763345793819798
+    mean_abs_err_lli: 0.007646218080223899
+    pe_ne_antisym_frac: 0.009775171065493646
+    degenerate_frac_corrected: 0.5650048875855328
+    bound_active_frac: 0.01466275659824047
+  pocv|noise=0.005:
+    n: 1023
+    degenerate_frac: 0.9960899315738025
+    mean_abs_err: 0.08550468461417385
+    mean_abs_err_lam_pe: 0.028442624772649805
+    mean_abs_err_lam_ne: 0.0854731555307207
+    mean_abs_err_lli: 0.007226722133922661
+    pe_ne_antisym_frac: 0.017595307917888565
+    degenerate_frac_corrected: 0.555229716520039
+    bound_active_frac: 0.01270772238514174
+  pocv_dvdq|noise=0.0:
+    n: 1023
+    degenerate_frac: 0.37732160312805474
+    mean_abs_err: 0.02329599730661532
+    mean_abs_err_lam_pe: 0.014631693433863805
+    mean_abs_err_lam_ne: 0.01946684034765319
+    mean_abs_err_lli: 0.00690809126633057
+    pe_ne_antisym_frac: 0.3196480938416422
+    degenerate_frac_corrected: 0.3118279569892473
+    bound_active_frac: 0.0
+  pocv_dvdq|noise=0.001:
+    n: 1023
+    degenerate_frac: 0.3704789833822092
+    mean_abs_err: 0.022256605036718523
+    mean_abs_err_lam_pe: 0.013976766612762787
+    mean_abs_err_lam_ne: 0.018784596208973332
+    mean_abs_err_lli: 0.006537126256419027
+    pe_ne_antisym_frac: 0.3020527859237537
+    degenerate_frac_corrected: 0.3098729227761486
+    bound_active_frac: 0.0
+  pocv_dvdq|noise=0.005:
+    n: 1023
+    degenerate_frac: 0.375366568914956
+    mean_abs_err: 0.026529361273196012
+    mean_abs_err_lam_pe: 0.015041197279003618
+    mean_abs_err_lam_ne: 0.02282873224277546
+    mean_abs_err_lli: 0.007558061550042781
+    pe_ne_antisym_frac: 0.3284457478005865
+    degenerate_frac_corrected: 0.32649071358748777
+    bound_active_frac: 0.0009775171065493646
+  pocv_dvdq_dqdv|noise=0.0:
+    n: 1023
+    degenerate_frac: 0.9931573802541545
+    mean_abs_err: 0.04442901215053311
+    mean_abs_err_lam_pe: 0.04190154433647884
+    mean_abs_err_lam_ne: 0.015314053793487124
+    mean_abs_err_lli: 0.01729531193816527
+    pe_ne_antisym_frac: 0.7116324535679375
+    degenerate_frac_corrected: 0.11339198435972629
+    bound_active_frac: 0.0
+  pocv_dvdq_dqdv|noise=0.001:
+    n: 1023
+    degenerate_frac: 0.9912023460410557
+    mean_abs_err: 0.04402220051647551
+    mean_abs_err_lam_pe: 0.04151467331793868
+    mean_abs_err_lam_ne: 0.014880862690707234
+    mean_abs_err_lli: 0.016949746784807266
+    pe_ne_antisym_frac: 0.7057673509286413
+    degenerate_frac_corrected: 0.11436950146627566
+    bound_active_frac: 0.0
+  pocv_dvdq_dqdv|noise=0.005:
+    n: 1023
+    degenerate_frac: 0.9589442815249267
+    mean_abs_err: 0.041455863192869036
+    mean_abs_err_lam_pe: 0.03762851881464534
+    mean_abs_err_lam_ne: 0.018396141960209115
+    mean_abs_err_lli: 0.01582033826047908
+    pe_ne_antisym_frac: 0.6627565982404692
+    degenerate_frac_corrected: 0.24437927663734116
+    bound_active_frac: 0.0009775171065493646
+restart_conditioned:
+  n_restarts=2:
+    n: 2446
+    agree_frac: 1.0
+    median_p_spread_nearJ: 1.0817794748874121e-07
+  n_restarts=5:
+    n: 9830
+    agree_frac: 0.0
+    median_p_spread_nearJ: 0.0
+_F4_주의: '이 블록의 두 지표는 그대로 인용하지 말 것. (1) agree_frac: adaptive 조기 종료로 n_restarts>2인 조건은
+  ''앞 두 번이 안 맞아서 계속 간'' 조건이라 정의상 0이 된다 — 측정이 아니다. (2) p_spread_nearJ=0은 ''해가 일치''가
+  아니라 ''최적 J에 도달한 restart가 하나뿐''이라는 뜻이다. 해석은 아래 multistart 블록(flat_valley / multimodal)을
+  볼 것.'
+coverage_gap:
+  max_lam_pe_at_low_lli: 0.08
+  max_lam_pe_overall: 0.2
+  _주의: 완방 프레임 guard 때문에 저LLI 영역에 고LAM_PE 조건이 없다. 고LAM_PE 결론은 고LLI 동반 조건에서만 검증된 것.
+multistart:
+  dqdv_only:
+    n: 3069
+    flat_valley_frac: 0.03225806451612903
+    multimodal_frac: 0.8905180840664711
+    unique_min_frac: 0.0772238514173998
+    median_p_spread_all: 1.676545512464872
+    median_n_restarts: 5.0
+  pocv:
+    n: 3069
+    flat_valley_frac: 0.024437927663734114
+    multimodal_frac: 0.09905506679700228
+    unique_min_frac: 0.8765070055392636
+    median_p_spread_all: 0.6282412918524489
+    median_n_restarts: 5.0
+  pocv_dvdq:
+    n: 3069
+    flat_valley_frac: 0.017595307917888565
+    multimodal_frac: 0.34050179211469533
+    unique_min_frac: 0.6419028999674161
+    median_p_spread_all: 1.4141947824052465
+    median_n_restarts: 5.0
+  pocv_dvdq_dqdv:
+    n: 3069
+    flat_valley_frac: 0.016291951775822745
+    multimodal_frac: 0.7601824698598892
+    unique_min_frac: 0.22352557836428805
+    median_p_spread_all: 1.5798757517220723
+    median_n_restarts: 5.0
+  _해석: flat_valley = degeneracy의 직접 증거 (같은 J, 다른 해). multimodal = 최적화 난이도이지 degeneracy가
+    아니다 — 초기값을 주면 사라진다 (F20).
+multistart_random_only:
+  dqdv_only:
+    n: 3008
+    flat_valley_frac: 0.03789893617021277
+    multimodal_frac: 0.9148936170212766
+    unique_min_frac: 0.04720744680851064
+    median_p_spread_all: 1.499999999998475
+    median_n_restarts: 4.0
+  pocv:
+    n: 1667
+    flat_valley_frac: 0.029394121175764846
+    multimodal_frac: 0.4409118176364727
+    unique_min_frac: 0.5296940611877624
+    median_p_spread_all: 1.4680769052548253
+    median_n_restarts: 4.0
+  pocv_dvdq:
+    n: 2298
+    flat_valley_frac: 0.018276762402088774
+    multimodal_frac: 0.7262837249782419
+    unique_min_frac: 0.2554395126196693
+    median_p_spread_all: 1.4642790056439012
+    median_n_restarts: 4.0
+  pocv_dvdq_dqdv:
+    n: 2857
+    flat_valley_frac: 0.009100455022751138
+    multimodal_frac: 0.9579978998949947
+    unique_min_frac: 0.03290164508225411
+    median_p_spread_all: 1.462421678647373
+    median_n_restarts: 4.0
+  _해석: flat_valley = degeneracy의 직접 증거 (같은 J, 다른 해). multimodal = 최적화 난이도이지 degeneracy가
+    아니다 — 초기값을 주면 사라진다 (F20).
+  _주의: ★ 목적함수 간 비교는 이 블록을 쓸 것. 위 multistart 블록은 warm start 지점(restart 0)을 포함하므로, warm
+    start를 받은 목적함수(w_dqdv≠0)가 인위적으로 multimodal 쪽으로 쏠린다.

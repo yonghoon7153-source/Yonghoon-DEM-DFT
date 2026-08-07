@@ -243,9 +243,17 @@ gap_analysis:
     n_zero_gap_true: 98
     gap_collapse_frac: 0.06938775510204082
     mean_true_gap_wide: 0.0989387755102041
+    min_true_gap_wide: 0.06
     mean_recovered_gap_wide: 0.103067444345958
     shrinkage: 1.0527782282879357
+    collapse_requires_gap_err: 0.039999999999999994
+    gap_err_median: 0.022074487961263628
+    gap_err_p99: 0.11280185293292457
+    collapse_measurable: true
     false_split_frac: 0.5306122448979592
+    likelihood_ratio_equal: 6.764705882352941
+    _주의: 우도비와 붕괴율은 gap_thresh·tol 선택에 의존한다. 붕괴로 세려면 격차 오차가 최소 4%p여야 하는데 실측 분포가 그보다
+      작으면 낮은 붕괴율은 측정이 아니라 임계 설정의 결과다 — collapse_measurable 을 함께 볼 것.
   pocv_dvdq:
     objective: pocv_dvdq
     noise: 0.0
@@ -255,9 +263,17 @@ gap_analysis:
     n_zero_gap_true: 98
     gap_collapse_frac: 0.00816326530612245
     mean_true_gap_wide: 0.0989387755102041
+    min_true_gap_wide: 0.06
     mean_recovered_gap_wide: 0.10464893336736633
     shrinkage: 1.059527225502002
+    collapse_requires_gap_err: 0.039999999999999994
+    gap_err_median: 0.026314410395144303
+    gap_err_p99: 0.05690942929492919
+    collapse_measurable: true
     false_split_frac: 0.6224489795918368
+    likelihood_ratio_equal: 46.24999999999999
+    _주의: 우도비와 붕괴율은 gap_thresh·tol 선택에 의존한다. 붕괴로 세려면 격차 오차가 최소 4%p여야 하는데 실측 분포가 그보다
+      작으면 낮은 붕괴율은 측정이 아니라 임계 설정의 결과다 — collapse_measurable 을 함께 볼 것.
   pocv_dvdq_dqdv:
     objective: pocv_dvdq_dqdv
     noise: 0.0
@@ -267,9 +283,17 @@ gap_analysis:
     n_zero_gap_true: 98
     gap_collapse_frac: 0.00816326530612245
     mean_true_gap_wide: 0.0989387755102041
+    min_true_gap_wide: 0.06
     mean_recovered_gap_wide: 0.10805750342177818
     shrinkage: 1.1005366314940042
+    collapse_requires_gap_err: 0.039999999999999994
+    gap_err_median: 0.020662285933095104
+    gap_err_p99: 0.0925345309994904
+    collapse_measurable: true
     false_split_frac: 0.5408163265306123
+    likelihood_ratio_equal: 56.24999999999999
+    _주의: 우도비와 붕괴율은 gap_thresh·tol 선택에 의존한다. 붕괴로 세려면 격차 오차가 최소 4%p여야 하는데 실측 분포가 그보다
+      작으면 낮은 붕괴율은 측정이 아니라 임계 설정의 결과다 — collapse_measurable 을 함께 볼 것.
   dqdv_only:
     objective: dqdv_only
     noise: 0.0
@@ -279,9 +303,17 @@ gap_analysis:
     n_zero_gap_true: 98
     gap_collapse_frac: 0.04081632653061224
     mean_true_gap_wide: 0.0989387755102041
+    min_true_gap_wide: 0.06
     mean_recovered_gap_wide: 0.10438639814053484
     shrinkage: 1.0899377889660626
+    collapse_requires_gap_err: 0.039999999999999994
+    gap_err_median: 0.01760955118978899
+    gap_err_p99: 0.15120875882246465
+    collapse_measurable: true
     false_split_frac: 0.5408163265306123
+    likelihood_ratio_equal: 11.25
+    _주의: 우도비와 붕괴율은 gap_thresh·tol 선택에 의존한다. 붕괴로 세려면 격차 오차가 최소 4%p여야 하는데 실측 분포가 그보다
+      작으면 낮은 붕괴율은 측정이 아니라 임계 설정의 결과다 — collapse_measurable 을 함께 볼 것.
 figures:
   gap_pocv: results/grid_fine_v2/figures/gap_recovery_pocv.png
   gap_pocv_dvdq: results/grid_fine_v2/figures/gap_recovery_pocv_dvdq.png
@@ -290,4 +322,5 @@ figures:
   noise_0: results/grid_fine_v2/figures/objective_panel_noise0.png
   noise_0.001: results/grid_fine_v2/figures/objective_panel_noise0.001.png
   noise_0.005: results/grid_fine_v2/figures/objective_panel_noise0.005.png
+  weight_curve: results/grid_fine_v2/figures/weight_sweep.png
 unrecoverable_frac: 0.5190615835777126
