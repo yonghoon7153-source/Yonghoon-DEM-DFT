@@ -207,6 +207,88 @@ def main():
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 
+    # ══ 3c) ★ T1/T2 (Codex CB-01) — run_pipeline **전체**를 가짜 실행기로 태운다 ══
+    #   개별 단계가 아니라 전체 경로를 봐야 "필수 단계 실패가 done 이 되지 않는다" 를
+    #   검증할 수 있다.  옛 구현은 network/Stage E 두 단계만 계약에 넣어, contact 가
+    #   rc=1 이어도 status='done' 이 됐다 (Codex 가 동적 재현).
+    tmp = tempfile.mkdtemp(prefix='pt1_')
+    prev_env = {k: os.environ.get(k) for k in
+                ('WEBAPP_UPLOAD_FOLDER', 'WEBAPP_RESULTS_FOLDER')}
+    prev_runner = ps._RUNNER
+    try:
+        up = os.path.join(tmp, 'uploads', 'case1')
+        os.makedirs(up)
+        for f in ('atom_1.liggghts', 'contact_1.liggghts'):
+            open(os.path.join(up, f), 'w').write('x')
+        webapp.app.config['UPLOAD_FOLDER'] = os.path.join(tmp, 'uploads')
+        webapp.app.config['RESULTS_FOLDER'] = os.path.join(tmp, 'results')
+        os.makedirs(webapp.app.config['RESULTS_FOLDER'], exist_ok=True)
+        res_dir = os.path.join(tmp, 'results', 'case1')
+
+        def make_runner(contact_rc):
+            """parse/contact/network/StageE 산출물을 흉내내는 가짜 실행기."""
+            calls = []
+
+            def _r(cmd, **kw):
+                calls.append(cmd)
+                script = os.path.basename(str(cmd[1])) if len(cmd) > 1 else ''
+                os.makedirs(res_dir, exist_ok=True)
+                rc = 0
+                if script == 'parse_liggghts.py':
+                    for f in ('atoms.csv', 'contacts.csv'):
+                        open(os.path.join(res_dir, f), 'w').write('a\n')
+                elif script in ('analyze_contacts.py', 'analyze_contacts_bimodal.py'):
+                    rc = contact_rc
+                    if contact_rc == 0:
+                        for f in ('full_metrics.json', 'atoms_analyzed.csv',
+                                  'contacts_analyzed.csv'):
+                            open(os.path.join(res_dir, f), 'w').write(
+                                '{}' if f.endswith('.json') else 'a\n')
+                elif script == 'network_conductivity.py':
+                    with open(os.path.join(res_dir, 'network_conductivity.json'), 'w') as f:
+                        json.dump({'sigma_full_mScm': 5.0}, f)
+                return subprocess.CompletedProcess(cmd, rc, '', '')
+            _r.calls = calls
+            return _r
+
+        # T1: contact rc=1 → 필수 단계 실패 → status='failed' (done 금지)
+        shutil.rmtree(res_dir, ignore_errors=True)
+        ps._RUNNER = make_runner(contact_rc=1)
+        out = webapp.run_pipeline('case1', 'standard', '1:AM,3:SE', 1000)
+        chk('T1) ★ contact rc=1 → status=failed (done 아님)',
+            out.get('status') == 'failed' and out.get('success') is False
+            and any('Contact' in s for s in out.get('failed_stages', [])))
+
+        # T2: 전부 성공 → done
+        shutil.rmtree(res_dir, ignore_errors=True)
+        ps._RUNNER = make_runner(contact_rc=0)
+        out = webapp.run_pipeline('case1', 'standard', '1:AM,3:SE', 1000)
+        chk('T2) 전부 성공하면 done', out.get('status') == 'done')
+
+        # T2b: contact 가 rc=0 인데 기대 산출물을 안 쓰면? → 역시 실패여야 한다
+        shutil.rmtree(res_dir, ignore_errors=True)
+        r = make_runner(contact_rc=0)
+        _orig = r
+
+        def _r_nofile(cmd, **kw):
+            script = os.path.basename(str(cmd[1])) if len(cmd) > 1 else ''
+            if script in ('analyze_contacts.py', 'analyze_contacts_bimodal.py'):
+                _orig.calls.append(cmd)
+                return subprocess.CompletedProcess(cmd, 0, '', '')   # rc=0, 파일 없음
+            return _orig(cmd, **kw)
+        ps._RUNNER = _r_nofile
+        out = webapp.run_pipeline('case1', 'standard', '1:AM,3:SE', 1000)
+        chk('T2b) ★ contact rc=0 이어도 기대 산출물이 없으면 failed',
+            out.get('status') == 'failed')
+    finally:
+        ps._RUNNER = prev_runner
+        for k, v in prev_env.items():
+            if v is None:
+                os.environ.pop(k, None)
+            else:
+                os.environ[k] = v
+        shutil.rmtree(tmp, ignore_errors=True)
+
     # ══ 4) 단계 계약 요약기 ══
     S = ps.StageOutcome
     chk('13) 선택 단계만 실패 → partial',

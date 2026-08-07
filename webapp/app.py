@@ -2832,7 +2832,7 @@ def _refresh_post_network_warnings(met_data):
 
 def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map, scale,
                          log, preserve_network=False, network_snapshot=None,
-                         runner=subprocess.run):
+                         runner=None):
     """network baseline → (복원) → Stage E 를 **한 곳에서** 수행한다.
 
     코드리뷰 F-02 / F-03 / F-17 대응.  옛 구조의 문제:
@@ -3034,20 +3034,23 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
         # Normal path: parse LIGGGHTS dumps
         cmd = [sys.executable, os.path.join(scripts, 'parse_liggghts.py')]
         cmd += atom_files + contact_files + mesh_files + input_files + ['-o', results_dir]
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=None)
-        log.append({'step': 'Parse', 'stdout': result.stdout, 'stderr': result.stderr, 'rc': result.returncode})
-        if result.returncode != 0:
-            return {'error': f'Parse failed: {result.stderr}', 'log': log}
+        _st = _ps.run_stage('Parse', cmd, required=True,
+                            expects=('atoms.csv', 'contacts.csv', ), results_dir=results_dir)
+        stages.append(_st); log.append(_st)
+        if not _st.ok:
+            return {'error': f'Parse failed: {_st["stderr"]}', 'status': 'failed', 'log': log,
+                    'failed_stages': [_st['step']]}
     elif has_pre_atoms_only and contact_files:
         # Hybrid: atoms.csv (pre-copied into results_dir above) + contact_*.liggghts.
         # parse_liggghts detects the existing atoms.csv and skips atom parsing.
         cmd = [sys.executable, os.path.join(scripts, 'parse_liggghts.py')]
         cmd += contact_files + mesh_files + input_files + ['-o', results_dir]
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=None)
-        log.append({'step': 'Parse (hybrid: atoms.csv + contact LIGGGHTS)',
-                    'stdout': result.stdout, 'stderr': result.stderr, 'rc': result.returncode})
-        if result.returncode != 0:
-            return {'error': f'Hybrid parse failed: {result.stderr}', 'log': log}
+        _st = _ps.run_stage('Parse (hybrid: atoms.csv + contact LIGGGHTS)', cmd, required=True,
+                            expects=('atoms.csv', 'contacts.csv', ), results_dir=results_dir)
+        stages.append(_st); log.append(_st)
+        if not _st.ok:
+            return {'error': f'Hybrid parse failed: {_st["stderr"]}', 'status': 'failed',
+                    'log': log, 'failed_stages': [_st['step']]}
     else:
         # CSV fallback: copy pre-parsed CSVs into results_dir
         import shutil as _sh
@@ -3062,16 +3065,17 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
         cmd = [sys.executable, os.path.join(scripts, 'analyze_contacts_bimodal.py'),
                atoms_csv, contacts_csv, '-o', results_dir,
                '-t', type_map, '-s', str(scale)]
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=None)
-        log.append({'step': 'Bimodal Contact Analysis', 'stdout': result.stdout, 'stderr': result.stderr, 'rc': result.returncode})
+        _st = _ps.run_stage('Bimodal Contact Analysis', cmd, required=True,
+                            expects=('full_metrics.json', 'atoms_analyzed.csv', 'contacts_analyzed.csv', ), results_dir=results_dir)
+        stages.append(_st); log.append(_st)
 
         # Step 2b: Dual-mode coverage + AM-SE/SE-SE totals (Hertzian vs Physics).
         # Writes coverage_AM_*_mean_physics, area_AM전체_SE_total_physics,
         # area_SE_SE_total_physics into full_metrics.json + coverage_per_am.csv.
         cmd = [sys.executable, os.path.join(scripts, 'coverage_physics_vs_hertzian.py'), case_id]
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=None)
-        log.append({'step': 'Coverage Physics vs Hertzian', 'stdout': result.stdout,
-                    'stderr': result.stderr, 'rc': result.returncode})
+        _st = _ps.run_stage('Coverage Physics vs Hertzian', cmd, required=False,
+                            expects=(), results_dir=results_dir)
+        stages.append(_st); log.append(_st)
 
         # Step 2c-2d: Network baseline (또는 보존 복원) → Stage E.
         #   ★ 한 곳(_network_and_stage_e)에서만 수행한다 — 옛 구조는 bimodal 과 standard 가
@@ -3088,10 +3092,9 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
             dual_cmd = [sys.executable,
                         os.path.join(scripts, 'recompute_porosity_dual.py'),
                         '--dir', results_dir]
-            dual_res = subprocess.run(dual_cmd, capture_output=True, text=True, timeout=None)
-            log.append({'step': 'Dual porosity (sphere-sum / union / overlap)',
-                        'stdout': dual_res.stdout, 'stderr': dual_res.stderr,
-                        'rc': dual_res.returncode})
+            _st = _ps.run_stage('Dual porosity (sphere-sum / union / overlap)', dual_cmd, required=False,
+                                expects=(), results_dir=results_dir)
+            stages.append(_st); log.append(_st)
         except Exception as _e:
             log.append({'step': 'Dual porosity (sphere-sum / union / overlap)',
                         'stdout': '', 'stderr': str(_e), 'rc': 1})
@@ -3099,43 +3102,48 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
         # Step 3: Basic figures
         cmd = [sys.executable, os.path.join(scripts, 'generate_figures_bimodal.py'),
                results_dir, '-o', figures_dir, '-s', str(scale)]
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=None)
-        log.append({'step': 'Basic Figures', 'stdout': result.stdout, 'stderr': result.stderr, 'rc': result.returncode})
+        _st = _ps.run_stage('Basic Figures', cmd, required=False,
+                            expects=(), results_dir=results_dir)
+        stages.append(_st); log.append(_st)
 
         # Step 4: Advanced
         atoms_analyzed = os.path.join(results_dir, 'atoms_analyzed.csv')
         contacts_analyzed = os.path.join(results_dir, 'contacts_analyzed.csv')
         cmd = [sys.executable, os.path.join(scripts, 'advanced_analysis_bimodal.py'),
                atoms_analyzed, contacts_analyzed, '-o', results_dir, '-s', str(scale)]
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=None)
-        log.append({'step': 'Advanced Analysis', 'stdout': result.stdout, 'stderr': result.stderr, 'rc': result.returncode})
+        _st = _ps.run_stage('Advanced Analysis', cmd, required=False,
+                            expects=(), results_dir=results_dir)
+        stages.append(_st); log.append(_st)
 
         cmd = [sys.executable, os.path.join(scripts, 'generate_advanced_figures_bimodal.py'),
                results_dir, '-o', figures_dir, '-s', str(scale)]
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=None)
-        log.append({'step': 'Advanced Figures', 'stdout': result.stdout, 'stderr': result.stderr, 'rc': result.returncode})
+        _st = _ps.run_stage('Advanced Figures', cmd, required=False,
+                            expects=(), results_dir=results_dir)
+        stages.append(_st); log.append(_st)
 
         # Step 5: Bimodal specific
         cmd = [sys.executable, os.path.join(scripts, 'bimodal_specific_analysis.py'),
                atoms_analyzed, contacts_analyzed, '-o', results_dir, '-s', str(scale)]
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=None)
-        log.append({'step': 'Bimodal Specific', 'stdout': result.stdout, 'stderr': result.stderr, 'rc': result.returncode})
+        _st = _ps.run_stage('Bimodal Specific', cmd, required=False,
+                            expects=(), results_dir=results_dir)
+        stages.append(_st); log.append(_st)
 
     else:
         # Standard mode
         cmd = [sys.executable, os.path.join(scripts, 'analyze_contacts.py'),
                atoms_csv, contacts_csv, '-o', results_dir,
                '-t', type_map, '-s', str(scale)]
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=None)
-        log.append({'step': 'Contact Analysis', 'stdout': result.stdout, 'stderr': result.stderr, 'rc': result.returncode})
+        _st = _ps.run_stage('Contact Analysis', cmd, required=True,
+                            expects=('full_metrics.json', 'atoms_analyzed.csv', 'contacts_analyzed.csv', ), results_dir=results_dir)
+        stages.append(_st); log.append(_st)
 
         # Dual-mode coverage + AM-SE/SE-SE totals (Hertzian vs Physics).
         # Populates *_mean_physics and area_*_total_physics keys in
         # full_metrics.json + coverage_per_am.csv (COMSOL-ready).
         cmd = [sys.executable, os.path.join(scripts, 'coverage_physics_vs_hertzian.py'), case_id]
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=None)
-        log.append({'step': 'Coverage Physics vs Hertzian', 'stdout': result.stdout,
-                    'stderr': result.stderr, 'rc': result.returncode})
+        _st = _ps.run_stage('Coverage Physics vs Hertzian', cmd, required=False,
+                            expects=(), results_dir=results_dir)
+        stages.append(_st); log.append(_st)
 
         # Network baseline (또는 보존 복원) → Stage E — bimodal 과 **같은 함수**를 쓴다.
         _net_stages, _net_run_id = _network_and_stage_e(
@@ -3149,31 +3157,33 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
             dual_cmd = [sys.executable,
                         os.path.join(scripts, 'recompute_porosity_dual.py'),
                         '--dir', results_dir]
-            dual_res = subprocess.run(dual_cmd, capture_output=True, text=True, timeout=None)
-            log.append({'step': 'Dual porosity (sphere-sum / union / overlap)',
-                        'stdout': dual_res.stdout, 'stderr': dual_res.stderr,
-                        'rc': dual_res.returncode})
+            _st = _ps.run_stage('Dual porosity (sphere-sum / union / overlap)', dual_cmd, required=False,
+                                expects=(), results_dir=results_dir)
+            stages.append(_st); log.append(_st)
         except Exception as _e:
             log.append({'step': 'Dual porosity (sphere-sum / union / overlap)',
                         'stdout': '', 'stderr': str(_e), 'rc': 1})
 
         cmd = [sys.executable, os.path.join(scripts, 'generate_figures.py'),
                results_dir, '-o', figures_dir, '-s', str(scale)]
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=None)
-        log.append({'step': 'Basic Figures', 'stdout': result.stdout, 'stderr': result.stderr, 'rc': result.returncode})
+        _st = _ps.run_stage('Basic Figures', cmd, required=False,
+                            expects=(), results_dir=results_dir)
+        stages.append(_st); log.append(_st)
 
         atoms_analyzed = os.path.join(results_dir, 'atoms_analyzed.csv')
         contacts_analyzed = os.path.join(results_dir, 'contacts_analyzed.csv')
 
         cmd = [sys.executable, os.path.join(scripts, 'advanced_analysis.py'),
                atoms_analyzed, contacts_analyzed, '-o', results_dir, '-s', str(scale)]
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=None)
-        log.append({'step': 'Advanced Analysis', 'stdout': result.stdout, 'stderr': result.stderr, 'rc': result.returncode})
+        _st = _ps.run_stage('Advanced Analysis', cmd, required=False,
+                            expects=(), results_dir=results_dir)
+        stages.append(_st); log.append(_st)
 
         cmd = [sys.executable, os.path.join(scripts, 'generate_advanced_figures.py'),
                results_dir, '-o', figures_dir, '-s', str(scale)]
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=None)
-        log.append({'step': 'Advanced Figures', 'stdout': result.stdout, 'stderr': result.stderr, 'rc': result.returncode})
+        _st = _ps.run_stage('Advanced Figures', cmd, required=False,
+                            expects=(), results_dir=results_dir)
+        stages.append(_st); log.append(_st)
 
     # ── Auto-DB hook ─────────────────────────────────────────────────────
     # Trigger an incremental rebuild of docs/db/metrics_master.csv so the

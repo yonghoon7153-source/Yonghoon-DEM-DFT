@@ -283,8 +283,14 @@ class StageOutcome(dict):
         return bool(self.get('ok'))
 
 
+#: 기본 실행기.  ★ 모듈 속성으로 두는 이유: 기본값을 def 시점에 바인딩하면 테스트가
+#: 파이프라인 **전체**(run_pipeline)를 가짜 subprocess 로 돌릴 수 없다 — Codex 요청 T1
+#: ("contact rc=1 이면 pipeline failed")은 개별 단계가 아니라 전체 경로를 태워야 한다.
+_RUNNER = subprocess.run
+
+
 def run_stage(name, cmd, *, cwd=None, required=False, expects=(), results_dir=None,
-              runner=subprocess.run):
+              runner=None):
     """subprocess 한 단계를 계약과 함께 실행한다.
 
     required : 실패하면 파이프라인 전체가 failed
@@ -294,7 +300,7 @@ def run_stage(name, cmd, *, cwd=None, required=False, expects=(), results_dir=No
     runner   : 테스트에서 가짜 실행기를 주입하기 위한 훅.
     """
     try:
-        res = runner(cmd, capture_output=True, text=True, timeout=None, cwd=cwd)
+        res = (runner or _RUNNER)(cmd, capture_output=True, text=True, timeout=None, cwd=cwd)
         rc, out, err = res.returncode, res.stdout, res.stderr
     except Exception as e:                       # noqa: BLE001 — 실행 자체 실패도 단계 실패
         rc, out, err = 1, '', f'{type(e).__name__}: {e}'
