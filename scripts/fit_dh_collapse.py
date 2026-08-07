@@ -39,11 +39,42 @@ import json
 import os
 import sys
 
-import numpy as np
-
 _HERE = os.path.dirname(os.path.abspath(__file__))
 if _HERE not in sys.path:
     sys.path.insert(0, _HERE)
+
+
+def _reexec_in_venv():
+    """numpy 가 없으면 venv 의 python 으로 **자기 자신을 재실행**한다.
+
+    ★ 왜: run_se_curve_batch.sh 는 venv 를 자동 탐색하는데 이 스크립트를 손으로 부를 땐
+      안 그래서, 배치가 6.6 시간 돌아 끝난 직후 `ModuleNotFoundError: numpy` 로 판정이
+      한 사이클 밀렸다 (2026-08-07 실제 발생).  분석 도구는 런 직후에 부르는 물건이라
+      그 순간의 마찰이 제일 비싸다.
+    _DEM_VENV_REEXEC 로 한 번만 시도한다 (venv 에도 numpy 가 없으면 무한루프 방지).
+    """
+    if os.environ.get('_DEM_VENV_REEXEC'):
+        return
+    here = os.path.dirname(_HERE)
+    cands = [os.path.join(here, 'venv', 'bin', 'python3'),
+             os.path.expanduser('~/Yonghoon-DEM-DFT/venv/bin/python3'),
+             os.path.expanduser('~/.venv/bin/python3')]
+    for py in cands:
+        if os.path.exists(py) and os.path.realpath(py) != os.path.realpath(sys.executable):
+            os.environ['_DEM_VENV_REEXEC'] = '1'
+            sys.stderr.write(f'· numpy 없음 → venv 로 재실행: {py}\n')
+            try:
+                os.execv(py, [py] + sys.argv)
+            except OSError:
+                del os.environ['_DEM_VENV_REEXEC']
+
+
+try:
+    import numpy as np
+except ModuleNotFoundError:
+    _reexec_in_venv()
+    sys.exit('★ numpy 를 못 찾았습니다 — venv 를 활성화하고 다시 실행하세요:\n'
+             '    . venv/bin/activate   (또는 . ~/Yonghoon-DEM-DFT/venv/bin/activate)')
 
 #: 다섯 대조군 — 두께 ±1.4 % · SE/solid ±0.5 %p 로 맞춘 채 P:S 만 다르다.
 KITS_DEFAULT = ('kit_ps_0_10', 'kit_ps_3_7', 'kit_ps_5_5', 'kit_ps_7_3', 'kit_ps_10_0')
