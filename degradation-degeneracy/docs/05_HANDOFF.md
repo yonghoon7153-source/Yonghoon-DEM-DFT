@@ -744,7 +744,8 @@ tmux 없이 급할 때는 **`scripts/bg.sh`** 를 쓰세요. 위 `setsid nohup �
 한 줄로 감싼 것인데, 세 가지를 더 합니다.
 
 ```bash
-./scripts/bg.sh ./run.sh --mode fit --in results/grid_fine_v2 --nproc 32
+./scripts/bg.sh fit ./run.sh --mode fit --in results/grid_fine_v2 --nproc 32
+#              └ 로그 이름 (생략 가능 — 명령과 --mode 값으로 자동 작명)
 #   → 로그 파일 경로를 찍어주고
 #   → 3초 뒤 실제로 살아있는지 확인해서 알려주고
 #   → src.fitting / src.grid / src.weight_sweep 가 이미 돌고 있으면 아예 시작을 거부합니다 (①의 재발 방지)

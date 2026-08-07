@@ -7,6 +7,10 @@
 #    ./scripts/bg.sh hc     ./run.sh --mode fit --in results/halfcell_v1 --reference halfcell --nproc 32
 #             └ 로그 이름   └ 실행할 명령 그대로
 #
+#    로그 이름은 생략해도 된다 (명령과 --mode 값에서 자동으로 짓는다):
+#    ./scripts/bg.sh ./run.sh --mode wsweep --in results/grid_fine_v2 --nproc 32
+#      → run_wsweep.log
+#
 #  왜 필요한가
 #  ───────────
 #  포그라운드 프로세스는 SSH가 끊기면 SIGHUP으로 함께 죽는다. 그것도 로그도
@@ -26,13 +30,28 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
-if [[ $# -lt 2 ]]; then
-  echo "사용: ./scripts/bg.sh <로그이름> <명령...>" >&2
+if [[ $# -lt 1 ]]; then
+  echo "사용: ./scripts/bg.sh [로그이름] <명령...>" >&2
   echo "예:   ./scripts/bg.sh wsweep ./run.sh --mode wsweep --in results/grid_fine_v2 --nproc 32" >&2
+  echo "      ./scripts/bg.sh ./run.sh --mode wsweep --in results/grid_fine_v2   # 로그이름 생략 가능" >&2
   exit 1
 fi
 
-NAME="$1"; shift
+# 로그 이름은 생략할 수 있다. 첫 인자가 실행할 명령처럼 보이면 그렇게 본다.
+#   생략을 지원하는 이유: 안 하면 명령의 첫 토큰이 로그 이름으로 먹히고 남은
+#   `--mode ...`가 nohup에 넘어가 "unrecognized option"으로 죽는다. 실제로 겪었다.
+if [[ "$1" == */* || "$1" == .* ]] || command -v -- "$1" >/dev/null 2>&1; then
+  NAME="$(basename -- "$1")"; NAME="${NAME%.sh}"
+  # `--mode fit` 같은 게 있으면 붙여서 로그가 구분되게 한다
+  for ((i = 1; i <= $#; i++)); do
+    if [[ "${!i}" == "--mode" ]]; then
+      j=$((i + 1)); [[ $j -le $# ]] && NAME="${NAME}_${!j}"
+      break
+    fi
+  done
+else
+  NAME="$1"; shift
+fi
 LOG="${NAME%.log}.log"
 
 # 같은 로그로 이미 뭔가 돌고 있으면 막는다 (동시 실행은 CPU를 반씩 나눠 쓴다)
@@ -44,7 +63,7 @@ if pgrep -f 'src\.(fitting|grid|weight_sweep)' >/dev/null 2>&1; then
   exit 2
 fi
 
-setsid nohup "$@" > "$LOG" 2>&1 < /dev/null &
+setsid nohup -- "$@" > "$LOG" 2>&1 < /dev/null &
 PID=$!
 disown 2>/dev/null || true
 
