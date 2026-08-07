@@ -423,3 +423,32 @@ def test_file_digest_changes_with_content(tmp_path):
     p.write_bytes(b"b")
     assert d1 != file_digest(p)
     assert file_digest(tmp_path / "missing") is None
+
+
+def test_dirty_ignores_unrelated_untracked_files(tmp_path):
+    """★ F30 — untracked 파일 때문에 모든 실행이 dirty로 찍히면 안 된다.
+
+    재현을 막는 건 **추적 중인 파일의 수정**이다. 저장소 루트에 다른 프로젝트
+    산출물이 널려 있다고 해서 이 실행이 재현 불가능해지는 건 아니다.
+    (실측: 사용자 저장소 루트에 untracked 20여 개가 상시 존재)
+    """
+    import subprocess
+
+    from src.io import git_info
+
+    repo = tmp_path / "r"
+    repo.mkdir()
+    for cmd in (["git", "init", "-q"], ["git", "config", "user.email", "t@t"],
+                ["git", "config", "user.name", "t"]):
+        subprocess.run(cmd, cwd=repo, check=True, capture_output=True)
+    (repo / "a.txt").write_text("one\n")
+    subprocess.run(["git", "add", "-A"], cwd=repo, check=True, capture_output=True)
+    subprocess.run(["git", "commit", "-qm", "i"], cwd=repo, check=True, capture_output=True)
+
+    (repo / "unrelated.zip").write_bytes(b"x")      # 다른 프로젝트 산출물
+    info = git_info(repo)
+    assert info["git_dirty"] is False, "untracked 파일이 dirty로 잡혔다"
+    assert info["git_untracked_count"] == 1         # 정보로는 남는다
+
+    (repo / "a.txt").write_text("two\n")            # 추적 파일 수정
+    assert git_info(repo)["git_dirty"] is True

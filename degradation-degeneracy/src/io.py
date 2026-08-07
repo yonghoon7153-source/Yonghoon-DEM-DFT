@@ -35,12 +35,21 @@ def git_info(repo_dir: str | Path | None = None, save_diff_to=None) -> dict:
         commit = subprocess.run(["git", "rev-parse", "HEAD"],
                                 capture_output=True, text=True, cwd=cwd,
                                 timeout=10).stdout.strip()
-        dirty_txt = subprocess.run(["git", "status", "--porcelain"],
+        # ★ dirty = **추적 중인 파일의 수정**만. 무관한 untracked 파일(다른
+        #   프로젝트 산출물, venv 등)까지 세면 모든 실행이 영구히 dirty로 찍혀
+        #   플래그가 무의미해진다. untracked는 정보로만 남긴다.
+        dirty_txt = subprocess.run(["git", "status", "--porcelain",
+                                    "--untracked-files=no"],
                                    capture_output=True, text=True, cwd=cwd,
                                    timeout=10).stdout.strip()
+        untracked = subprocess.run(["git", "ls-files", "--others",
+                                    "--exclude-standard"],
+                                   capture_output=True, text=True, cwd=cwd,
+                                   timeout=10).stdout.split()
         info = {"git_commit": commit or "unknown",
                 "git_commit_short": commit[:8] if commit else "unknown",
-                "git_dirty": bool(dirty_txt)}
+                "git_dirty": bool(dirty_txt),
+                "git_untracked_count": len(untracked)}
         if dirty_txt and save_diff_to is not None:
             diff = subprocess.run(["git", "diff", "HEAD"], capture_output=True,
                                   text=True, cwd=cwd, timeout=30).stdout
