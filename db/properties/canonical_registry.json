@@ -7,7 +7,8 @@
     "★ comparison_group 이 같은 값끼리만 순위·비교·레이더에 함께 올린다. 프로토콜이 다르면 group 도 다르다.",
     "status: canonical(정본) · provisional(잠정) · superseded(철회) · source_pending(출처 미배선).",
     "prohibitions 는 CLAUDE.md 데이터 규율의 기계 판독 가능한 형태다.",
-    "prefer:'registry' 는 **원자료가 반올림 사본일 때만** 쓰는 예외다. 기본은 원자료를 live 로 읽어 db 수정이 화면에 바로 반영되게 한다."
+    "prefer:'registry' 는 **원자료가 반올림 사본일 때만** 쓰는 예외다. 기본은 원자료를 live 로 읽어 db 수정이 화면에 바로 반영되게 한다.",
+    "★ **수치 대조는 의미 일치를 보증하지 않는다.** 새 항목을 넣을 때 method_id 가 그 source_path 안의 계산을 실제로 서술하는지 사람이 읽고 확인한다 — comp2 가 값은 맞는데 method_id 가 다른 계산(disorder ensemble)을 가리켰다(2026-08-07 Codex 4라운드)."
   ],
   "_history": {
     "2026-08-07": "Codex 코드리뷰 P1 대응으로 신설. 이전에는 webapp/data.py 의 CANONICAL 딕셔너리가 정본이었다. 이관 중 MD_Ea_eV 안에서 단일시드(comp1 0.253 / modelc 0.224)와 4-seed(lpsocl 0.287)가 한 딕셔너리에 섞여 있던 것을 발견 — 대시보드의 '최저값' 순위가 프로토콜을 넘나들고 있었다. group 을 나눠 분리했다.",
