@@ -209,6 +209,16 @@ def main():
                     "이는 방법의 실패지 금속성이 아니다(artifact_4f) — 인용은 MP frozen-4f 값으로."),
         "source_dir": a.work,
         "collected": datetime.now().strftime("%Y-%m-%d"),
+        # ⚠⚠ 최상위 판정 키를 **매번 다시 쓴다** (2026-08-07 재발 수정).
+        #   앞선 판에서 항목별 do_not_cite 만 되박고 이 키는 안 썼더니, 회수기를 돌릴
+        #   때마다 최상위 판정문이 조용히 사라졌다 — 실측으로 확인(diff 에 `-` 만 남음).
+        #   항목 보존(prev)은 `results` 안만 훑으므로 최상위 키를 못 살린다.
+        "nd_verdict_2026_08_07": (
+            "Nd 3종의 갭은 우리 QE 계산으로 **정의되지 않는다** — 못 낸 게 아니라 PBE+U 해가 "
+            "금속이라 fixed-occ 갭이라는 양이 성립하지 않는다. 인용은 MP frozen-4f. "
+            "상세: kb/projects/sei_products_2026_08_06.md §진단이 끝났다. "
+            "Li 계 6종의 갭은 정상이며 그대로 인용 가능하다. "
+            "재계산 경로는 tools/sei/nd_frozen4f.py --plan (frozen-4f PP 확보)."),
         "results": res,
     }, open(OUT_JSON, "w"), ensure_ascii=False, indent=2)
 
