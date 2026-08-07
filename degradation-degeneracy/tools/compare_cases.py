@@ -65,10 +65,12 @@ def compare(grid_fits: Path, halfcell_fits: Path, tol: float = 0.02) -> dict:
     prov = {}
     for tag, fp in (("grid", Path(grid_fits)), ("halfcell", Path(halfcell_fits))):
         run_dir = fp.parent if fp.is_file() else fp
-        v = validate_provenance(run_dir)
-        prov[tag] = {"run_dir": str(run_dir), "ok": v["ok"], "fail": v["fail"],
-                     "fits_sha256": file_digest(
-                         fp if fp.is_file() else run_dir / "fits.parquet"),
+        scored_file = fp if fp.is_file() else run_dir / "fits.parquet"
+        # F59: **실제로 채점한 파일**을 검증 대상으로 넘긴다
+        v = validate_provenance(run_dir, fits_path=scored_file)
+        prov[tag] = {"run_dir": str(run_dir), "scored_file": str(scored_file),
+                     "ok": v["ok"], "fail": v["fail"],
+                     "fits_sha256": file_digest(scored_file),
                      "manifest_sha256": file_digest(run_dir / "manifest.yaml")}
 
     # ① 공통 조건 ② grid 기준에서 복원가능한 조건만

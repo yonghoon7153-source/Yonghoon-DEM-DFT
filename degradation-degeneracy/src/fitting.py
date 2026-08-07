@@ -490,8 +490,8 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
 
     import yaml
 
-    from src.io import (base_manifest, file_digest, git_info, source_digest,
-                        write_manifest)
+    from src.io import (base_manifest, env_fingerprint, file_digest, git_info,
+                        seal_inputs, source_digest, write_manifest)
 
     in_dir, out_dir = Path(in_dir), Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -506,6 +506,16 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     _attempts.mkdir(exist_ok=True)
     _gi0 = git_info(Path(__file__).resolve().parent.parent)
     _src0 = source_digest()
+    _env0 = env_fingerprint()
+    # ★ F58 — half-cell 캐시를 **읽기 전에** 경로를 계산해 함께 봉인한다.
+    #   예전에는 get_halfcell_reference() 로 읽은 **뒤에** 해시해서, 읽기와 해시
+    #   사이에 파일이 바뀌지 않았음을 증명하지 못했다. 캐시 경로 계산은 base
+    #   config 의 baseline 해시만 쓰므로 여기서 미리 할 수 있다.
+    _hc_pre = None
+    if reference == "halfcell":
+        from src.config import load_config as _lc
+        from src.halfcell import halfcell_cache_path as _hcp
+        _hc_pre = _hcp(_lc(base_config or "configs/base.yaml"))
     # 같은 초에 두 번 시작해도 겹치지 않게 기존 시도 수를 붙인다
     _n_prev = len(list(_attempts.glob("manifest_start_*.yaml")))
     attempt_id = f"{time.strftime('%Y%m%dT%H%M%S')}_{os.getpid()}_{_n_prev:03d}"
@@ -515,9 +525,12 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
         "resume": bool(resume),
         "source_digest": _src0,
         **_gi0,
-        "input_sha256": {str(x): file_digest(x) for x in
-                         [in_dir / "curves.parquet",
-                          base_config or "configs/base.yaml"] if x is not None},
+        "env": _env0,
+        # ★ F56 — 여기서 **한 번만** 봉인하고 run_spec·종료 manifest가 이 map을
+        #   그대로 재사용한다. 세 곳에서 따로 해시하면 셋이 어긋나도 아무도 모른다.
+        "input_sha256": seal_inputs(
+            [in_dir / "curves.parquet", base_config or "configs/base.yaml", _hc_pre]),
+        "halfcell_cache": str(_hc_pre) if _hc_pre else None,
         "_주의": ("실행 **시작** 시점 상태다 (입력 로드·self-fit 이전). "
                  "manifest.yaml 은 종료 시점이므로 둘이 다르면 실행 도중 코드나 "
                  "입력이 바뀐 것이다 (F42/F51). half-cell 캐시 digest 는 기준 곡선을 "
@@ -556,12 +569,13 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
         from src.halfcell import get_halfcell_reference, halfcell_cache_path
         hc = get_halfcell_reference(base_cfg)
         hc_used = halfcell_cache_path(base_cfg)     # F45: 실제로 쓴 캐시 하나
-        # F51: 기준 곡선을 고른 직후, pristine self-fit **전에** attempt 파일 보강
-        start_prov["input_sha256"][str(hc_used)] = file_digest(hc_used)
-        start_prov["halfcell_cache"] = str(hc_used)
-        (_attempts / f"manifest_start_{attempt_id}.yaml").write_text(
-            yaml.safe_dump(start_prov, allow_unicode=True, sort_keys=False),
-            encoding="utf-8")
+        # F58: 시작 봉인에 이미 들어 있어야 한다. 다르면 읽기 전후로 바뀐 것이다.
+        if str(hc_used) != str(_hc_pre):
+            raise RuntimeError(
+                f"half-cell 캐시 경로가 시작 봉인과 다릅니다: {_hc_pre} vs {hc_used}")
+        if start_prov["input_sha256"].get(str(hc_used)) != file_digest(hc_used):
+            raise RuntimeError(
+                f"half-cell 캐시가 읽는 사이에 바뀌었습니다: {hc_used} (F58)")
         cov = hc.coverage()
         # 리뷰 F11: to_modes_halfcell의 LLI 식은 테이블이 화학량론 전 범위일 때만
         # 성립한다 (sim 테이블 y_min=0.251이면 오프셋 ≈2.2Ah로 LLI가 조용히 틀림).
@@ -669,7 +683,7 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     run_spec = {
         # ★ F49 — 코드 identity 를 서명에 넣는다. 없으면 코드만 바꾸고 resume 했을 때
         #   서로 다른 코드의 행이 같은 서명으로 섞이고 병합 검사를 통과한다.
-        "sig_version": 3,
+        "sig_version": 4,
         "git_commit": _gi.get("git_commit"),
         "git_dirty": _gi.get("git_dirty"),
         "source_digest": source_digest(),
@@ -679,10 +693,16 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
         "n_restarts": n_restarts,
         "obj_cfg": obj_cfg,                      # resolved 전체
         "base_config": str(base_config),
-        "base_config_sha": file_digest(base_config or "configs/base.yaml"),
         "inventory": inv,                        # base config에서 유도된 상수
-        "curves_sha": file_digest(in_dir / "curves.parquet"),
-        "halfcell_sha": {p.name: file_digest(p) for p in hc_paths},
+        "env": _env0,                            # F55: dependency fingerprint
+        # ★ F56 — 시작 봉인 map을 그대로 쓴다 (재해시하지 않는다)
+        "sealed_inputs": start_prov["input_sha256"],
+        "curves_sha": start_prov["input_sha256"].get(str(in_dir / "curves.parquet")),
+        "base_config_sha": start_prov["input_sha256"].get(
+            str(base_config or "configs/base.yaml")),
+        "halfcell_sha": (start_prov["input_sha256"].get(str(_hc_pre))
+                         if _hc_pre else None),
+        "halfcell_cache": str(_hc_pre) if _hc_pre else None,
     }
     run_sig = hashlib.sha1(
         json.dumps(run_spec, sort_keys=True, default=str).encode()).hexdigest()[:12]
@@ -777,7 +797,7 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     hc_cache = list(hc_paths)
     write_manifest(out_dir, base_manifest(
         cfg_h, out_dir=out_dir,
-        inputs=[in_dir / "curves.parquet", base_config, *hc_cache], extra={
+        inputs=None, sealed=start_prov["input_sha256"], extra={
         "run_type": "fit", "input": str(in_dir),
         "run_signature": run_sig, "run_spec": run_spec,
         # F42/F51: 시작 시점과 대조 (다르면 실행 도중 바뀐 것)

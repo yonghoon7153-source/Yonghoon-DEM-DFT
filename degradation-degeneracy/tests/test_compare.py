@@ -771,51 +771,70 @@ def test_results_doc_carries_citation_block_without_provenance(tmp_path):
     run_compare(d, d)
     text = build(d, tmp_path / "RESULTS.md", repo_root=tmp_path).read_text(encoding="utf-8")
 
-    head = text[:1200]
-    assert "인용 금지" in head, "배너가 문서 맨 위에 없다"
-    assert "config_hash" in head and "dirty" in head
-    assert "08_REVIEW_RESPONSE.md" in head
+    assert "인용 금지" in text[:400], "배너가 문서 맨 위에 없다"
+    # 실패 사유가 길어질 수 있으므로 본문 전체에서 확인한다
+    assert "config_hash" in text and "clean_worktree" in text
+    assert "08_REVIEW_RESPONSE.md" in text
+    # F56/F57: 새 검사들도 실패 목록에 나와야 한다
+    for k in ("run_spec_schema", "시작_provenance", "start_파일_존재"):
+        assert k in text, f"{k} 검사가 배너에 없다"
 
 
 def _complete_artifact(tmp_path):
     """provenance 검사를 **실제로** 통과하는 artifact.
 
-    ★ F43 — 초판은 가짜 digest(`aaaa1111`)와 임의 서명(`abcd1234`)을 넣고
-      "통과하는 artifact"라고 불렀다. validator가 재해시를 안 했기 때문에
-      통과했던 것이고, 리뷰가 이 fixture로 validator를 반증했다.
-      지금은 진짜 입력 파일을 만들고, 그 digest를 기록하고, run_spec을 실제로
-      해시해 서명을 만든다.
+    ★ F43/F50/F56/F57 — 이 fixture 는 세 번 깨졌다. 매번 validator 를 강화하자
+      "통과한다고 부르던 것"이 실제로는 통과하면 안 되는 것이었음이 드러났다.
+      지금은 진짜 입력 파일 · 진짜 해시 · 시작 봉인 map · 디스크의 start/attempt
+      파일까지 갖춘다.
     """
     import hashlib
     import json
 
     import yaml
 
-    from src.io import file_digest
+    from src.io import env_fingerprint, file_digest, seal_inputs, source_digest
 
     d = Path(tmp_path) / "res"
     d.mkdir(parents=True, exist_ok=True)
 
-    # 실제 입력 파일 두 개
-    curves = d / "curves.parquet"      # 이름이 필수 입력 판정에 쓰인다 (F50)
+    curves = d / "curves.parquet"       # 이름이 필수 입력 판정에 쓰인다 (F50)
     _fits(objectives=("pocv_dvdq",)).to_parquet(curves, index=False)
     cfg = d / "base.yaml"              # 〃
     cfg.write_text("dummy: 1\n", encoding="utf-8")
 
-    # run_spec 을 실제로 해시해 서명을 만든다
-    # F50: run_spec 필수 키 스키마를 실제로 만족해야 한다
-    spec = {"sig_version": 3, "objectives": {"pocv_dvdq": {"w_pocv": 1.0}},
-            "reference": "grid", "bounds": {"init": [1.0, 0.0, 1.0, 0.0]},
+    sealed = seal_inputs([curves, cfg])          # F56: 한 번만 봉인
+    src = source_digest()
+    env = env_fingerprint()
+    attempt_id = "20260807T000000_1_000"
+
+    spec = {"sig_version": 4, "objectives": {"pocv_dvdq": {"w_pocv": 1.0}},
+            "reference": "grid", "bounds_preset": "expanded",
+            "bounds": {"init": [1.0, 0.0, 1.0, 0.0]}, "v_col": "v_full",
             "n_restarts": 5, "warm_start": True, "obj_cfg": {"objectives": {}},
-            "curves_sha": file_digest(curves), "base_config_sha": file_digest(cfg),
-            "git_commit": "0" * 40, "git_dirty": False,
-            "source_digest": "aabbccdd11223344"}
+            "inventory": {"w_pe": 0.3, "w_ne": 0.7, "kappa": 0.7},
+            "env": env, "sealed_inputs": sealed,
+            "curves_sha": sealed[str(curves)],
+            "base_config_sha": sealed[str(cfg)],
+            "git_commit": "0" * 40, "git_dirty": False, "source_digest": src}
     sig = hashlib.sha1(
         json.dumps(spec, sort_keys=True, default=str).encode()).hexdigest()[:12]
 
-    df = _scored(_fits(objectives=("pocv_dvdq",)))
-    df.to_parquet(d / "degeneracy_map.parquet", index=False)
-    df = df.copy()
+    start = {"attempt_id": attempt_id, "started_at": "2026-08-07T00:00:00",
+             "resume": False, "source_digest": src, "env": env,
+             "git_commit": "0" * 40, "git_dirty": False,
+             "input_sha256": sealed}
+    (d / "manifest_start.yaml").write_text(
+        yaml.safe_dump(start, allow_unicode=True, sort_keys=False), encoding="utf-8")
+    (d / "attempts").mkdir(exist_ok=True)
+    (d / "attempts" / f"manifest_start_{attempt_id}.yaml").write_text(
+        yaml.safe_dump(start, allow_unicode=True, sort_keys=False), encoding="utf-8")
+
+    _scored(_fits(objectives=("pocv_dvdq",))).to_parquet(
+        d / "degeneracy_map.parquet", index=False)
+    # fits.parquet 은 **채점 전** 원본이어야 한다 — 채점 열이 이미 있으면
+    # 하류의 apply_bias_correction 이 merge 충돌로 죽는다
+    df = _fits(objectives=("pocv_dvdq",)).copy()
     df["run_sig"] = sig
     df["restarts_json"] = json.dumps(
         [{"p": [1.0, 0.0, 1.0, 0.0], "J": 0.0, "i": 0, "source": "base_init"},
@@ -825,12 +844,11 @@ def _complete_artifact(tmp_path):
     (d / "manifest.yaml").write_text(yaml.safe_dump({
         "config_hash": "deadbeef1234", "git_dirty": False, "reproducible": True,
         "run_signature": sig, "run_spec": spec,
-        # F42/F51: 시작 provenance와 실행 중 불변 플래그
-        "start_provenance": {"attempt_id": "20260807T000000_1",
-                             "source_digest": spec["source_digest"]},
+        "start_provenance": start, "attempt_id": attempt_id,
         "git_commit_changed_during_run": False,
         "source_digest_changed_during_run": False,
-        "input_sha256": {str(curves): file_digest(curves), str(cfg): file_digest(cfg)},
+        "inputs_changed_during_run": False,
+        "input_sha256": sealed, "input_sha256_source": "sealed_at_start",
     }), encoding="utf-8")
     return d, sig
 
@@ -1021,3 +1039,118 @@ def test_banner_flags_legacy_case_comparison_without_provenance(tmp_path):
     text = build(d, tmp_path / "R.md", repo_root=tmp_path).read_text(encoding="utf-8")
     assert "인용 금지" in text[:1500]
     assert "비교입력_provenance_없음" in text
+
+
+def test_validator_rejects_non_canonical_scored_file(tmp_path):
+    """★ F59 — 검증 대상과 채점 대상이 달라선 안 된다.
+
+    compare가 alternate.parquet을 채점하면서 검증은 fits.parquet에 했더니,
+    파일 인자 하나로 degeneracy를 94.4% → 0%로 바꾸고도 통과했다.
+    """
+    import pandas as pd
+
+    from src.io import validate_provenance
+
+    d, _ = _complete_artifact(tmp_path)
+    assert validate_provenance(d)["ok"]
+
+    alt = d / "alternate.parquet"
+    pd.read_parquet(d / "fits.parquet").to_parquet(alt, index=False)
+    r = validate_provenance(d, fits_path=alt)
+    assert "채점파일_정본" in r["fail"], "정본이 아닌 파일을 채점해도 통과했다 (F59)"
+
+
+def test_compare_cases_validates_the_file_it_scores(tmp_path):
+    """★ F59 — compare_cases가 실제 채점 파일을 검증 대상으로 넘겨야 한다."""
+    import pandas as pd
+
+    from tools.compare_cases import compare
+
+    g, _ = _complete_artifact(tmp_path / "g")
+    h, _ = _complete_artifact(tmp_path / "h")
+    alt = h / "alternate.parquet"
+    df = pd.read_parquet(h / "fits.parquet").copy()
+    # 복원값을 참값 쪽으로 크게 당긴다 (degeneracy가 확 낮아지는 조작)
+    for k in ("lam_pe", "lam_ne", "lli"):
+        df[f"{k}_hat"] = df[k] + (df[f"{k}_hat"] - df[k]) * 0.01
+    df.to_parquet(alt, index=False)
+
+    res = compare(g / "fits.parquet", alt)
+    assert res["provenance"]["halfcell"]["scored_file"] == str(alt)
+    assert res["provenance_ok"] is False, \
+        "정본이 아닌 파일을 채점했는데 provenance_ok가 참이다 (F59)"
+
+
+def test_report_revalidates_compared_artifacts_at_generation(tmp_path):
+    """★ F60 — 저장된 ok를 믿으면 stale·변조 artifact가 녹색으로 통과한다."""
+    import yaml
+
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d, _ = _complete_artifact(tmp_path)
+    h, _ = _complete_artifact(tmp_path / "h")
+    run_compare(d, d)
+
+    # 만들 당시엔 유효했다고 봉인해 두고
+    (d / "case_comparison.yaml").write_text(yaml.safe_dump({
+        "grid": {}, "provenance_ok": True,
+        "provenance": {
+            "grid": {"run_dir": str(d), "scored_file": str(d / "fits.parquet"),
+                     "ok": True, "fail": []},
+            "halfcell": {"run_dir": str(h), "scored_file": str(h / "fits.parquet"),
+                         "ok": True, "fail": []}},
+    }), encoding="utf-8")
+    # 그 뒤 half-cell manifest를 무효화한다
+    m = yaml.safe_load((h / "manifest.yaml").read_text(encoding="utf-8"))
+    m["config_hash"] = ""
+    (h / "manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+
+    text = build(d, tmp_path / "R.md", repo_root=tmp_path).read_text(encoding="utf-8")
+    assert "인용 금지" in text[:400], \
+        "봉인된 ok만 믿고 stale artifact를 통과시켰다 (F60)"
+
+
+def test_report_requires_both_tags_and_top_level_flag(tmp_path):
+    """★ F60 — tag 누락이나 provenance_ok=False도 배너를 유지해야 한다."""
+    import yaml
+
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d, _ = _complete_artifact(tmp_path)
+    run_compare(d, d)
+    (d / "case_comparison.yaml").write_text(yaml.safe_dump({
+        "grid": {}, "provenance_ok": False,
+        "provenance": {"grid": {"run_dir": str(d),
+                                "scored_file": str(d / "fits.parquet"),
+                                "ok": True, "fail": []}},
+    }), encoding="utf-8")
+
+    text = build(d, tmp_path / "R2.md", repo_root=tmp_path).read_text(encoding="utf-8")
+    assert "인용 금지" in text[:400]
+    assert "비교입력_tag불완전" in text and "비교입력_provenance_ok_아님" in text
+
+
+def test_validator_rejects_null_valued_restart_entries(tmp_path):
+    """★ F61 — 키만 있고 값이 전부 null인 restart도 거부해야 한다."""
+    import json
+
+    import pandas as pd
+
+    from src.io import validate_provenance
+
+    d, _ = _complete_artifact(tmp_path)
+    f = pd.read_parquet(d / "fits.parquet")
+    f["restarts_json"] = json.dumps([{"p": None, "J": None, "i": None,
+                                      "source": None}])
+    f.to_parquet(d / "fits.parquet", index=False)
+    assert "restart_출처" in validate_provenance(d)["fail"]
+
+    # 허용 enum 밖의 source, 음수 index, 길이가 다른 p도 거부
+    for bad in ([{"p": [1.0, 0, 1.0, 0], "J": 0.0, "i": 0, "source": "hmm"}],
+                [{"p": [1.0, 0, 1.0, 0], "J": 0.0, "i": -1, "source": "random"}],
+                [{"p": [1.0, 0, 1.0], "J": 0.0, "i": 0, "source": "random"}]):
+        f["restarts_json"] = json.dumps(bad)
+        f.to_parquet(d / "fits.parquet", index=False)
+        assert "restart_출처" in validate_provenance(d)["fail"], bad

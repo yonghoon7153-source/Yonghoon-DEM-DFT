@@ -243,6 +243,32 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     #   전이적 입력이므로 그 검증 결과를 합친다 (compare_cases 가 봉인해 둔다).
     cc = _load(in_dir / "case_comparison.yaml") or {}
     cc_prov = cc.get("provenance") or {}
+    # ★ F60 — 저장된 `ok` 를 믿으면 stale·변조 artifact 가 녹색으로 통과한다.
+    #   **지금 시점에 직접 다시 검증**하고 digest 도 재계산해 대조한다.
+    from src.io import file_digest as _fd
+    for tag, v in list(cc_prov.items()):
+        rd, sf = v.get("run_dir"), v.get("scored_file")
+        now = validate_provenance(rd, fits_path=sf) if rd else {"ok": False, "fail": ["run_dir 없음"]}
+        if not now["ok"]:
+            v["ok"] = False
+            v["fail"] = now["fail"]
+            v["_재검증"] = "생성 시점 재검증 실패"
+        elif sf and v.get("fits_sha256") and _fd(sf) != v["fits_sha256"]:
+            v["ok"] = False
+            v["fail"] = ["fits_digest_불일치"]
+            v["_재검증"] = "봉인된 digest와 현재 파일이 다르다"
+    # tag 집합·최상위 플래그도 강제한다
+    if cc and set(cc_prov) != {"grid", "halfcell"}:
+        prov["ok"] = False
+        prov["fail"] = list(prov["fail"]) + ["비교입력_tag불완전"]
+        prov["reasons"] = list(prov["reasons"]) + [
+            f"provenance tag가 {sorted(cc_prov)}다 (grid·halfcell 필요)"]
+        prov["checks"]["비교입력_tag불완전"] = f"실패 — {sorted(cc_prov)}"
+    if cc and cc.get("provenance_ok") is not True:
+        prov["ok"] = False
+        prov["fail"] = list(prov["fail"]) + ["비교입력_provenance_ok_아님"]
+        prov["reasons"] = list(prov["reasons"]) + ["case_comparison.provenance_ok가 참이 아니다"]
+        prov["checks"]["비교입력_provenance_ok_아님"] = "실패"
     for tag, v in cc_prov.items():
         if not v.get("ok"):
             prov["ok"] = False
@@ -576,7 +602,7 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
 
     # ── 기준 곡선 비교 (Case 1 vs Case 2) ──
     case = _load(in_dir / "case_comparison.yaml")
-    if case and "grid" in case:
+    if case and {"grid", "halfcell"} <= set(case):
         from tools.compare_cases import to_markdown as case_md
         P.append("## 기준 곡선 비교 — Case 1 (전 범위 half-cell) vs Case 2 (격자 곡선)\n")
         P.append("목적함수를 바꾸는 것과 **기준 곡선을 바꾸는 것** 중 어느 쪽이 큰지.\n")

@@ -102,6 +102,40 @@ def source_digest(root=None, dirs=("src", "tools", "configs")) -> str:
     return h.hexdigest()[:16]
 
 
+def env_fingerprint() -> dict:
+    """★ F55 — 결과를 만드는 것은 저장소 파일만이 아니다.
+
+    fitting 은 SciPy `minimize`·NumPy·pandas·joblib 에 의존하고, requirements 는
+    하한만 둔다. 같은 source tree 라도 SciPy 버전이 다르면 다른 최적화 결과가
+    나올 수 있는데, `source_digest` 만으로는 그 축을 못 잡는다.
+    (5차 리뷰: runtime-only 변형으로 같은 `run_sig` 혼합이 재현됐다.)
+    """
+    import platform
+    import sys
+
+    out = {"python": sys.version.split()[0],
+           "platform": platform.platform(),
+           "machine": platform.machine()}
+    for name in ("numpy", "scipy", "pandas", "joblib", "pyarrow", "pybamm",
+                 "matplotlib", "yaml"):
+        try:
+            m = __import__(name)
+            out[name] = str(getattr(m, "__version__", "unknown"))
+        except Exception:  # noqa: BLE001
+            out[name] = "absent"
+    return out
+
+
+def seal_inputs(paths) -> dict:
+    """★ F56 — 입력을 **한 번만** 해시해 봉인하고 그 map 을 끝까지 재사용한다.
+
+    예전에는 시작·run_spec·종료에서 각각 따로 해시해 세 세트가 생겼고, validator 가
+    셋 사이의 일치를 확인하지 않았다. 그래서 fitting 후 curves 를 바꿔도
+    "행은 옛 곡선, manifest 는 새 곡선"인 artifact 가 통과했다.
+    """
+    return {str(x): file_digest(x) for x in paths if x is not None}
+
+
 def file_digest(path) -> str | None:
     """입력 파일의 SHA-256 (앞 16자). 재현성 검증용. 없으면 None."""
     if path is None:
@@ -284,7 +318,7 @@ def write_manifest(out_dir: str | Path, payload: dict) -> Path:
 
 
 def base_manifest(cfg_hash: str, extra: dict | None = None,
-                  out_dir=None, inputs=None) -> dict:
+                  out_dir=None, inputs=None, sealed: dict | None = None) -> dict:
     """★ F30 — 재현에 필요한 것을 전부 적는다.
 
     `config_hash: ''`, `git_dirty: true`만 남은 manifest는 provenance가 아니다.
@@ -303,8 +337,19 @@ def base_manifest(cfg_hash: str, extra: dict | None = None,
         "python": platform.python_version(),
         **git_info(repo, save_diff_to=diff_path),
     }
-    if inputs:
+    # ★ F56 — `sealed` 이 오면 **재해시하지 않고 시작 봉인 map 을 그대로** 쓴다.
+    #   종료 시점에 다시 해시하면, 실행 중 입력이 바뀌었을 때 "행은 옛 입력에서
+    #   계산됐는데 manifest 는 새 입력"인 artifact 가 만들어진다.
+    if sealed is not None:
+        m["input_sha256"] = dict(sealed)
+        m["input_sha256_source"] = "sealed_at_start"
+        # 종료 시점 값도 따로 기록해 대조할 수 있게 한다
+        m["input_sha256_at_end"] = {k: file_digest(k) for k in sealed}
+        m["inputs_changed_during_run"] = bool(
+            m["input_sha256_at_end"] != m["input_sha256"])
+    elif inputs:
         m["input_sha256"] = {str(p): file_digest(p) for p in inputs if p is not None}
+        m["input_sha256_source"] = "hashed_at_end"
     if extra:
         m.update(extra)
     # 재현 가능성을 스스로 판정해 적어 둔다 — 읽는 쪽이 놓치지 않게
@@ -324,7 +369,32 @@ def base_manifest(cfg_hash: str, extra: dict | None = None,
 
 # ---------------------------------------------------------------- F38 provenance 검증
 
-def validate_provenance(run_dir, repo_root=None) -> dict:
+_RESTART_SOURCES = {"warm", "base_init", "random"}
+
+
+def _restart_ok(e) -> bool:
+    """restart 원소 하나의 타입·유한성 검사 (F61).
+
+    키 존재만 보면 `{"p": null, "J": null, "i": null, "source": null}` 이 통과한다.
+    손상된 multi-start 기록을 인용 가능으로 승인하게 된다.
+    """
+    import math
+
+    if not isinstance(e, dict):
+        return False
+    p_, j_, i_, s_ = e.get("p"), e.get("J"), e.get("i"), e.get("source")
+    if not isinstance(p_, list) or len(p_) != 4:
+        return False
+    if not all(isinstance(v, (int, float)) and math.isfinite(v) for v in p_):
+        return False
+    if not isinstance(j_, (int, float)) or not math.isfinite(j_):
+        return False
+    if not isinstance(i_, int) or isinstance(i_, bool) or i_ < 0:
+        return False
+    return s_ in _RESTART_SOURCES
+
+
+def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
     """★ F38/F43 — 결과를 인용해도 되는 상태인지 **실제로** 검사한다.
 
     필드의 형식적 자기일관성만 보면 안 된다 (F43). 초판은
@@ -363,12 +433,31 @@ def validate_provenance(run_dir, repo_root=None) -> dict:
                                 f"필수 입력이 없다: {missing_kind}")
 
     # ── run_spec 필수 키 ──
-    need_keys = ["sig_version", "objectives", "reference", "bounds", "n_restarts",
-                 "warm_start", "obj_cfg", "curves_sha", "base_config_sha",
-                 "git_commit", "source_digest"]
-    missing_key = [k for k in need_keys if k not in spec0]
+    need_keys = ["sig_version", "objectives", "reference", "bounds", "bounds_preset",
+                 "n_restarts", "warm_start", "v_col", "obj_cfg", "inventory",
+                 "curves_sha", "base_config_sha", "git_commit", "source_digest",
+                 "env", "sealed_inputs"]
+    if ref == "halfcell":
+        need_keys += ["halfcell_sha", "halfcell_cache"]
+    missing_key = [k for k in need_keys if k not in spec0 or spec0.get(k) is None]
     checks["run_spec_schema"] = (not missing_key,
-                                 f"run_spec에 필수 키가 없다: {missing_key}")
+                                 f"run_spec에 필수 키가 없거나 비었다: {missing_key}")
+    # ★ F58 — 존재만 보면 안 된다. 버전 값도 확인한다.
+    checks["sig_version"] = (spec0.get("sig_version") == 4,
+                             f"sig_version이 {spec0.get('sig_version')}이다 (4 필요)")
+
+    # ★ F56 — 시작 봉인 / run_spec / 종료 / 현재 파일 **네 곳이 모두 같아야** 한다.
+    sp0 = man.get("start_provenance") or {}
+    sealed_start = sp0.get("input_sha256") or {}
+    sealed_spec = spec0.get("sealed_inputs") or {}
+    cross = []
+    if sealed_start and sealed_spec and sealed_start != sealed_spec:
+        cross.append("시작 봉인 ≠ run_spec.sealed_inputs")
+    if sealed_start and digs and sealed_start != digs:
+        cross.append("시작 봉인 ≠ 종료 manifest.input_sha256")
+    if man.get("inputs_changed_during_run"):
+        cross.append("실행 도중 입력 파일이 바뀌었다")
+    checks["입력봉인_교차일치"] = (not cross, "; ".join(cross))
     # ── 코드 identity: 서명에 들어 있고 dirty가 아니어야 한다 (F49) ──
     checks["코드_identity"] = (
         bool(spec0.get("source_digest")) and spec0.get("git_dirty") is False,
@@ -378,6 +467,27 @@ def validate_provenance(run_dir, repo_root=None) -> dict:
     sp = man.get("start_provenance") or {}
     checks["시작_provenance"] = (bool(sp.get("attempt_id")),
                                  "start_provenance가 없다 (F51 이전 실행)")
+    # ★ F57 — nested 사본만 보면, archive 과정에서 독립 start/attempt 파일을
+    #   빠뜨린 artifact 도 통과한다. 파일을 **실제로 읽어** 대조한다.
+    msp = run_dir / "manifest_start.yaml"
+    att = run_dir / "attempts" / f"manifest_start_{sp.get('attempt_id')}.yaml"
+    if not msp.exists():
+        checks["start_파일_존재"] = (False, "manifest_start.yaml 파일이 없다")
+    else:
+        disk = yaml.safe_load(msp.read_text(encoding="utf-8")) or {}
+        checks["start_파일_존재"] = (True, "")
+        checks["attempt_파일_존재"] = (
+            att.exists(), f"attempts/manifest_start_{sp.get('attempt_id')}.yaml 없다")
+        if att.exists():
+            a = yaml.safe_load(att.read_text(encoding="utf-8")) or {}
+            checks["attempt_파일_일치"] = (
+                a.get("attempt_id") == sp.get("attempt_id")
+                and a.get("source_digest") == sp.get("source_digest")
+                and (a.get("input_sha256") or {}) == (sp.get("input_sha256") or {}),
+                "attempt 파일과 manifest의 start_provenance가 다르다")
+        checks["start_파일_일치"] = (
+            disk.get("source_digest") == sp.get("source_digest"),
+            "manifest_start.yaml과 manifest의 start_provenance가 다르다")
     # ★ F50b — 판정 기준은 **실제로 돌아간 코드가 바뀌었는가**(source_digest)다.
     #   `git_commit` 은 문서만 커밋해도 바뀌므로 그것까지 실패로 보면 무해한
     #   변경에 발목이 잡힌다 (실측: 실행 중 회답 문서를 커밋했더니 걸렸다).
@@ -423,7 +533,13 @@ def validate_provenance(run_dir, repo_root=None) -> dict:
             recomputed == str(sig_man),
             f"run_spec을 다시 해시하면 {recomputed}인데 기록은 {sig_man}이다")
 
-    fp = run_dir / "fits.parquet"
+    # ★ F59 — 검증 대상과 채점 대상이 달라선 안 된다. compare 가 임의 parquet 을
+    #   채점하면서 검증은 run_dir/fits.parquet 에 했더니, 파일 인자 하나로
+    #   degeneracy 를 94.4% → 0% 로 바꾸고도 통과했다.
+    fp = Path(fits_path) if fits_path else run_dir / "fits.parquet"
+    checks["채점파일_정본"] = (
+        fp.resolve() == (run_dir / "fits.parquet").resolve(),
+        f"채점 대상이 정본이 아니다: {fp}")
     if not fp.exists():
         checks["fits_존재"] = (False, "fits.parquet이 없다")
     else:
@@ -456,9 +572,8 @@ def validate_provenance(run_dir, repo_root=None) -> dict:
                 except (ValueError, TypeError):
                     n_bad += 1
                     continue
-                if not rs or not all(
-                        isinstance(e, dict) and {"p", "J", "i", "source"} <= set(e)
-                        for e in rs):
+                # ★ F61 — 키 존재만 보면 값이 전부 null 이어도 통과한다.
+                if not rs or not all(_restart_ok(e) for e in rs):
                     n_bad += 1
             checks["restart_출처"] = (
                 n_bad == 0 and n_null == 0,
