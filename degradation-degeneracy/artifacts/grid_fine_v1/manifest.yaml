@@ -1,0 +1,62 @@
+timestamp: '2026-08-06T12:50:27'
+config_hash: ''
+pybamm_version: 26.7.1.0
+platform: Linux-5.15.0-130-generic-x86_64-with-glibc2.35
+python: 3.10.12
+git_commit: c4a05553
+git_dirty: true
+run_type: fit
+protocol_unified: charge_first
+solver: IDAKLUSolver
+nproc: 32
+chunk_size: 200
+n_conditions: 3069
+n_resume_skipped: 3990
+discharged_state:
+  ne_primary: 36.64970365763882
+  ne_secondary: 3446.0841935406315
+  pe: 58439.87386449178
+n_ok: 3
+n_failed: 0
+n_completed_total: 3993
+n_failed_total: 924
+n_curves_total: 3069
+elapsed_s: 29471.3
+curves_parquet: results/grid_fine_v1/curves.parquet
+finished: '2026-08-06T04:37:57'
+input: results/grid_fine_v1
+objectives:
+- pocv
+- pocv_dvdq
+- pocv_dvdq_dqdv
+- dqdv_only
+bounds_preset: expanded
+bounds:
+  init:
+  - 1.03
+  - -0.1
+  - 1.08
+  - -0.01
+  lb:
+  - 0.7
+  - -0.6
+  - 0.7
+  - -0.6
+  ub:
+  - 1.8
+  - 0.4
+  - 1.8
+  - 0.4
+n_restarts: 5
+target_column: v_full_noisy
+q_ref_mah: 5621.073220520553
+fits_parquet: results/grid_fine_v1/fits.parquet
+reference: grid
+p_ini: null
+lli_inventory_constants:
+  n_pe_ah: 2.3577068144188655
+  n_ne_ah: 5.747602547811476
+  q_ref_ah: 5.621073220520553
+  w_pe: 0.2908842474792466
+  w_ne: 0.7091157525207533
+  kappa: 0.6935050803506653

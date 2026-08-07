@@ -1,0 +1,207 @@
+tolerance: 0.02
+n_rows_total: 12276
+n_rows_recoverable: 5904
+unrecoverable_frac: 0.5190615835777126
+by_objective:
+  dqdv_only:
+    n: 1476
+    degenerate_frac: 0.9031165311653117
+    mean_abs_err: 0.07988377961090128
+    mean_abs_err_lam_pe: 0.03791128820876916
+    mean_abs_err_lam_ne: 0.071230321812024
+    mean_abs_err_lli: 0.03874095447936937
+    pe_ne_antisym_frac: 0.2222222222222222
+    degenerate_frac_corrected: 0.9234417344173442
+    alpha_wall_frac: 0.026422764227642278
+    bound_active_frac: 0.011517615176151762
+  pocv:
+    n: 1476
+    degenerate_frac: 0.7784552845528455
+    mean_abs_err: 0.04740802437764155
+    mean_abs_err_lam_pe: 0.024366491494477494
+    mean_abs_err_lam_ne: 0.04061028236929642
+    mean_abs_err_lli: 0.01593915210782914
+    pe_ne_antisym_frac: 0.29200542005420055
+    degenerate_frac_corrected: 0.6673441734417345
+    alpha_wall_frac: 0.08401084010840108
+    bound_active_frac: 0.006775067750677507
+  pocv_dvdq:
+    n: 1476
+    degenerate_frac: 0.6212737127371274
+    mean_abs_err: 0.024671500699666195
+    mean_abs_err_lam_pe: 0.01885165138790962
+    mean_abs_err_lam_ne: 0.01340801905666838
+    mean_abs_err_lli: 0.015845945912553255
+    pe_ne_antisym_frac: 0.676829268292683
+    degenerate_frac_corrected: 0.15176151761517614
+    alpha_wall_frac: 0.11246612466124661
+    bound_active_frac: 0.0
+  pocv_dvdq_dqdv:
+    n: 1476
+    degenerate_frac: 0.8719512195121951
+    mean_abs_err: 0.06572402393270292
+    mean_abs_err_lam_pe: 0.05729644447306248
+    mean_abs_err_lam_ne: 0.030466515067062022
+    mean_abs_err_lli: 0.04527387955906335
+    pe_ne_antisym_frac: 0.35365853658536583
+    degenerate_frac_corrected: 0.94579945799458
+    alpha_wall_frac: 0.07317073170731707
+    bound_active_frac: 0.0
+overall_recoverable:
+  n: 5904
+  degenerate_frac: 0.7936991869918699
+  mean_abs_err: 0.05442183215522799
+  mean_abs_err_lam_pe: 0.0346064688910547
+  mean_abs_err_lam_ne: 0.03892878457626271
+  mean_abs_err_lli: 0.02894998301470378
+  pe_ne_antisym_frac: 0.3861788617886179
+  degenerate_frac_corrected: 0.6720867208672087
+  alpha_wall_frac: 0.07401761517615175
+  bound_active_frac: 0.004573170731707317
+by_objective_noise:
+  dqdv_only|noise=0.0:
+    n: 492
+    degenerate_frac: 0.8902439024390244
+    mean_abs_err: 0.07828366577285498
+    mean_abs_err_lam_pe: 0.03994841483787365
+    mean_abs_err_lam_ne: 0.06728875847513659
+    mean_abs_err_lli: 0.03935256996321465
+    pe_ne_antisym_frac: 0.19308943089430894
+    degenerate_frac_corrected: 0.9227642276422764
+    alpha_wall_frac: 0.026422764227642278
+    bound_active_frac: 0.018292682926829267
+  dqdv_only|noise=0.001:
+    n: 492
+    degenerate_frac: 0.9065040650406504
+    mean_abs_err: 0.07830855948913913
+    mean_abs_err_lam_pe: 0.03803799502803769
+    mean_abs_err_lam_ne: 0.06964676739032084
+    mean_abs_err_lli: 0.03885965740080091
+    pe_ne_antisym_frac: 0.21747967479674796
+    degenerate_frac_corrected: 0.9349593495934959
+    alpha_wall_frac: 0.026422764227642278
+    bound_active_frac: 0.012195121951219513
+  dqdv_only|noise=0.005:
+    n: 492
+    degenerate_frac: 0.9126016260162602
+    mean_abs_err: 0.08305911357070973
+    mean_abs_err_lam_pe: 0.03574745476039617
+    mean_abs_err_lam_ne: 0.07675543957061458
+    mean_abs_err_lli: 0.03801063607409254
+    pe_ne_antisym_frac: 0.25609756097560976
+    degenerate_frac_corrected: 0.9126016260162602
+    alpha_wall_frac: 0.026422764227642278
+    bound_active_frac: 0.0040650406504065045
+  pocv|noise=0.0:
+    n: 492
+    degenerate_frac: 0.782520325203252
+    mean_abs_err: 0.04783813438447219
+    mean_abs_err_lam_pe: 0.024660694089669522
+    mean_abs_err_lam_ne: 0.04070090890235661
+    mean_abs_err_lli: 0.01591935830887246
+    pe_ne_antisym_frac: 0.2865853658536585
+    degenerate_frac_corrected: 0.6402439024390244
+    alpha_wall_frac: 0.09959349593495935
+    bound_active_frac: 0.01016260162601626
+  pocv|noise=0.001:
+    n: 492
+    degenerate_frac: 0.782520325203252
+    mean_abs_err: 0.04605783490242356
+    mean_abs_err_lam_pe: 0.023887392882594796
+    mean_abs_err_lam_ne: 0.039407327069097116
+    mean_abs_err_lli: 0.015821521162212675
+    pe_ne_antisym_frac: 0.28252032520325204
+    degenerate_frac_corrected: 0.6849593495934959
+    alpha_wall_frac: 0.07926829268292683
+    bound_active_frac: 0.0020325203252032522
+  pocv|noise=0.005:
+    n: 492
+    degenerate_frac: 0.7703252032520326
+    mean_abs_err: 0.04832810384602891
+    mean_abs_err_lam_pe: 0.024551387511168164
+    mean_abs_err_lam_ne: 0.04172261113643552
+    mean_abs_err_lli: 0.01607657685240229
+    pe_ne_antisym_frac: 0.30691056910569103
+    degenerate_frac_corrected: 0.676829268292683
+    alpha_wall_frac: 0.07317073170731707
+    bound_active_frac: 0.008130081300813009
+  pocv_dvdq|noise=0.0:
+    n: 492
+    degenerate_frac: 0.5975609756097561
+    mean_abs_err: 0.02378843589253361
+    mean_abs_err_lam_pe: 0.01911932519927842
+    mean_abs_err_lam_ne: 0.01213181239276292
+    mean_abs_err_lli: 0.015993643183839727
+    pe_ne_antisym_frac: 0.7052845528455285
+    degenerate_frac_corrected: 0.12195121951219512
+    alpha_wall_frac: 0.1016260162601626
+    bound_active_frac: 0.0
+  pocv_dvdq|noise=0.001:
+    n: 492
+    degenerate_frac: 0.6239837398373984
+    mean_abs_err: 0.024529450469019026
+    mean_abs_err_lam_pe: 0.018392664068893668
+    mean_abs_err_lam_ne: 0.013533177502213427
+    mean_abs_err_lli: 0.01572427588437276
+    pe_ne_antisym_frac: 0.6849593495934959
+    degenerate_frac_corrected: 0.1402439024390244
+    alpha_wall_frac: 0.10569105691056911
+    bound_active_frac: 0.0
+  pocv_dvdq|noise=0.005:
+    n: 492
+    degenerate_frac: 0.6422764227642277
+    mean_abs_err: 0.025696615737445954
+    mean_abs_err_lam_pe: 0.019042964895556774
+    mean_abs_err_lam_ne: 0.014559067275028792
+    mean_abs_err_lli: 0.01581991866944729
+    pe_ne_antisym_frac: 0.6402439024390244
+    degenerate_frac_corrected: 0.19308943089430894
+    alpha_wall_frac: 0.13008130081300814
+    bound_active_frac: 0.0
+  pocv_dvdq_dqdv|noise=0.0:
+    n: 492
+    degenerate_frac: 0.8780487804878049
+    mean_abs_err: 0.06601880435446736
+    mean_abs_err_lam_pe: 0.05750475034173519
+    mean_abs_err_lam_ne: 0.029052736633252807
+    mean_abs_err_lli: 0.04541922330067487
+    pe_ne_antisym_frac: 0.38414634146341464
+    degenerate_frac_corrected: 0.9410569105691057
+    alpha_wall_frac: 0.07113821138211382
+    bound_active_frac: 0.0
+  pocv_dvdq_dqdv|noise=0.001:
+    n: 492
+    degenerate_frac: 0.8821138211382114
+    mean_abs_err: 0.06746237389639988
+    mean_abs_err_lam_pe: 0.059158440475298904
+    mean_abs_err_lam_ne: 0.03317251794801115
+    mean_abs_err_lli: 0.04642609833283265
+    pe_ne_antisym_frac: 0.3638211382113821
+    degenerate_frac_corrected: 0.9390243902439024
+    alpha_wall_frac: 0.06910569105691057
+    bound_active_frac: 0.0
+  pocv_dvdq_dqdv|noise=0.005:
+    n: 492
+    degenerate_frac: 0.8556910569105691
+    mean_abs_err: 0.06369089354724154
+    mean_abs_err_lam_pe: 0.05522614260215336
+    mean_abs_err_lam_ne: 0.02917429061992212
+    mean_abs_err_lli: 0.043976317043682524
+    pe_ne_antisym_frac: 0.3130081300813008
+    degenerate_frac_corrected: 0.9573170731707317
+    alpha_wall_frac: 0.07926829268292683
+    bound_active_frac: 0.0
+restart_conditioned:
+  n_restarts=2:
+    n: 145
+    agree_frac: 1.0
+    median_p_spread: 0.0006342065969162647
+  n_restarts=5:
+    n: 5759
+    agree_frac: 0.0
+    median_p_spread: 0.0
+_F4_주의: adaptive 조기 종료로 조건마다 검정력이 다르다. restart 불일치율을 전체 평균으로 보고하지 말 것.
+coverage_gap:
+  max_lam_pe_at_low_lli: 0.08
+  max_lam_pe_overall: 0.2
+  _주의: 완방 프레임 guard 때문에 저LLI 영역에 고LAM_PE 조건이 없다. 고LAM_PE 결론은 고LLI 동반 조건에서만 검증된 것.
