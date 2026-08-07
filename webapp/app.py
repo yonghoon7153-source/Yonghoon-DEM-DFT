@@ -30,6 +30,12 @@ try:
 except ImportError:                                # gunicorn 은 webapp/ 안에서 app:app 로 뜬다
     import pipeline_service as _ps
 
+# ★ PD-01 (Codex): 이 import 가 **빠진 채로 푸시됐다** — _inject_input_params 가
+#   _press_units 를 호출해 NameError 였고, 내 회귀는 `import app` 만 해서 함수 본문을
+#   타지 않아 못 잡았다.  아래 R-PD1 회귀가 실제로 그 함수를 호출한다.
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'scripts'))
+import press_units as _press_units                 # noqa: E402  (압력 단위 규약 — F-11)
+
 #: network_conductivity.json → full_metrics.json 으로 옮기는 σ 키들.
 #: ⚠ 이 목록은 원래 analyze() **지역 변수**였는데 run_pipeline 이 그것을 참조해
 #:   (2912/3020/3030) 매 실행마다 NameError 로 죽고 있었다 — bimodal 쪽은
@@ -2876,8 +2882,15 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
                 #     실행시키면, 실행 후 파일이 존재한다는 사실 자체가 "이번 실행이 만들었다".
                 #     실패하면 되돌려 **이전 성공 세대를 그대로 보존**한다.
                 _stash = _ps.stash_network(results_dir)
+                # ★ RR3-02 (Codex): 성공 계약이 legacy 한 파일뿐이라, solver 가 그것만
+                #   쓰고 rc=0 이면 stash 전체를 버려 **완전한 옛 세대를 잃고 부분 세대를
+                #   게시**했다.  --contact-mode both 는 네 JSON 을 다 만들어야 완전하다
+                #   (소스 주석도 '하나라도 빠지면 Physics 컬럼이 사라진다' 고 적고 있다).
                 st = _ps.run_stage('Network Solver (both modes)', cmd, required=True,
-                                   expects=('network_conductivity.json',),
+                                   expects=('network_conductivity.json',
+                                            'network_conductivity_hertzian.json',
+                                            'network_conductivity_physics.json',
+                                            'network_conductivity_dual.json'),
                                    results_dir=results_dir, runner=runner)
                 if st.ok:
                     _ps.drop_stash(_stash)
@@ -2893,6 +2906,9 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
         if st.ok:
             # ★ RR2-01: active 도장은 **성공했을 때만** 갱신한다.
             _ps.stamp_network_provenance(results_dir, run_id, inputs, 'success', argv=_argv)
+            # ★ RR3-05: attempt 는 '가장 최근 시도(성공/실패 모두)' 라고 적어놨으므로
+            #   성공에도 갱신한다 — 안 그러면 옛 실패가 영원히 '최근 시도' 로 남는다.
+            _ps.record_network_attempt(results_dir, run_id, 'success', argv=_argv)
             prov = {'network_run_id': run_id}
         else:
             # 실패 시도는 **분리된 파일**에 남긴다 — active baseline ID 를 차지하면
@@ -2957,11 +2973,38 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
         except Exception:                                          # noqa: BLE001
             return False
 
+    # ★ RR3-01 (Codex): verify 가 '_stage_e 키가 **하나라도** 있으면 참' 이라, 옛 키가
+    #   남아 있으면 rc=0·무산출 실행도 성공으로 도장됐다 (RV-01 재발).  network 와 같은
+    #   **인과 판정**을 쓴다: 실행 전에 옛 Stage E 키를 걷어내고, 실행 후 다시 생겼는지 본다.
+    #   실패하면 걷어낸 키를 되돌려 이전 세대를 보존한다.
+    #   ⚠ 최종형은 Stage E 스크립트 자신이 per-run manifest 를 쓰는 것 — 키 집합이 늘면
+    #     이 격리도 drift 한다.  그것은 스크립트 인터페이스 변경이라 별도 작업이다.
+    _se_saved = {}
+    try:
+        if os.path.exists(fm_json):
+            with open(fm_json) as _f:
+                _fmd = json.load(_f)
+            _se_saved = {k: v for k, v in _fmd.items() if '_stage_e' in k}
+            if _se_saved:
+                for k in _se_saved:
+                    _fmd.pop(k, None)
+                _ps.atomic_write_json(fm_json, _fmd)
+    except Exception:                                              # noqa: BLE001
+        _se_saved = {}
+
     st = _ps.run_stage('Stage E (literature-grounded grain corrections)',
                        [sys.executable, os.path.join(scripts, 'run_network_full_corrections.py'),
                         os.path.basename(results_dir), '--quiet'],
                        required=False, runner=runner, results_dir=results_dir,
                        expects=('full_metrics.json',), verify=_stage_e_wrote)
+    if not st.ok and _se_saved:
+        try:                                                       # 이전 Stage E 세대 복구
+            with open(fm_json) as _f:
+                _fmd = json.load(_f)
+            _fmd.update(_se_saved)
+            _ps.atomic_write_json(fm_json, _fmd)
+        except Exception:                                          # noqa: BLE001
+            pass
     stages.append(st)
     log.append(st)
 

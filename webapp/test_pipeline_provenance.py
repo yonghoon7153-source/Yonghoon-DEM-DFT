@@ -57,8 +57,11 @@ class FakeRunner:
             rc = self.net_rc
             if self.net_writes:
                 # 새 solver 는 새 σ 를 쓴다 — 보존 경로에서 이게 나타나면 안 된다.
-                with open(os.path.join(self.results_dir, 'network_conductivity.json'), 'w') as f:
-                    json.dump({'sigma_full_mScm': 999.0}, f)
+                # ★ RR3-02: contact-mode both 는 **네 JSON** 을 다 만들어야 완전한 세대다.
+                for _n in ('network_conductivity.json', 'network_conductivity_hertzian.json',
+                           'network_conductivity_physics.json', 'network_conductivity_dual.json'):
+                    with open(os.path.join(self.results_dir, _n), 'w') as f:
+                        json.dump({'sigma_full_mScm': 999.0}, f)
             out = 'fake solver'
         elif script == 'run_network_full_corrections.py':
             rc = self.stage_e_rc
@@ -75,8 +78,10 @@ class FakeRunner:
 def _seed_case(d, sigma=1.0):
     """기존 세대의 network 산출물 + full_metrics 를 심는다."""
     os.makedirs(d, exist_ok=True)
-    with open(os.path.join(d, 'network_conductivity.json'), 'w') as f:
-        json.dump({'sigma_full_mScm': sigma}, f)
+    for _n in ('network_conductivity.json', 'network_conductivity_hertzian.json',
+               'network_conductivity_physics.json', 'network_conductivity_dual.json'):
+        with open(os.path.join(d, _n), 'w') as f:
+            json.dump({'sigma_full_mScm': sigma}, f)
     with open(os.path.join(d, 'full_metrics.json'), 'w') as f:
         json.dump({'porosity': 15.6}, f)
     ps.stamp_network_provenance(d, 'OLDRUN-0001', {'atoms.csv': 'deadbeef'})
@@ -192,6 +197,9 @@ def main():
             ps.snapshot_network(res, 'c') is None)
 
         # baseline 은 있지만 도장이 failed 인 경우도 보존 금지
+        for _n in ('network_conductivity.json', 'network_conductivity_hertzian.json',
+                   'network_conductivity_physics.json', 'network_conductivity_dual.json'):
+            open(os.path.join(res, _n), 'w').write('{}')
         with open(os.path.join(res, 'network_conductivity.json'), 'w') as f:
             json.dump({'sigma_full_mScm': 1.0}, f)
         ps.stamp_network_provenance(res, 'RID-FAILED', {}, 'failed')
@@ -249,8 +257,11 @@ def main():
                             open(os.path.join(res_dir, f), 'w').write(
                                 '{}' if f.endswith('.json') else 'a\n')
                 elif script == 'network_conductivity.py':
-                    with open(os.path.join(res_dir, 'network_conductivity.json'), 'w') as f:
-                        json.dump({'sigma_full_mScm': 5.0}, f)
+                    for _n in ('network_conductivity.json', 'network_conductivity_hertzian.json',
+                               'network_conductivity_physics.json',
+                               'network_conductivity_dual.json'):
+                        with open(os.path.join(res_dir, _n), 'w') as f:
+                            json.dump({'sigma_full_mScm': 5.0}, f)
                 elif script == 'run_network_full_corrections.py' and stage_e_writes:
                     fm = os.path.join(res_dir, 'full_metrics.json')
                     d = json.load(open(fm)) if os.path.exists(fm) else {}
@@ -341,8 +352,11 @@ def main():
                             open(os.path.join(_d, f), 'w').write(
                                 '{}' if f.endswith('.json') else 'a\n')
                 elif sc == 'network_conductivity.py':
-                    json.dump({'sigma_full_mScm': 3.0},
-                              open(os.path.join(_d, 'network_conductivity.json'), 'w'))
+                    for _n in ('network_conductivity.json',
+                               'network_conductivity_hertzian.json',
+                               'network_conductivity_physics.json',
+                               'network_conductivity_dual.json'):
+                        json.dump({'sigma_full_mScm': 3.0}, open(os.path.join(_d, _n), 'w'))
                 elif sc == 'run_network_full_corrections.py':
                     fm = os.path.join(_d, 'full_metrics.json')
                     dd = json.load(open(fm)) if os.path.exists(fm) else {}
@@ -413,6 +427,24 @@ def main():
             and fm.get('stale_after_failed_retry') is True)
         chk('P3) ★ network 실패 후 Stage E 를 실행하지 않는다',
             'run_network_full_corrections.py' not in fr.calls)
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+    # ══ 3f) ★ R-PD1 (Codex PD-01) — 함수를 **실제로 호출**하는 회귀 ══
+    #   `import app` 만 하는 테스트는 함수 본문을 타지 않아 NameError 를 못 잡는다.
+    #   실제로 _press_units import 가 빠진 채 푸시됐고 그렇게 통과했다.
+    tmp = tempfile.mkdtemp(prefix='pd1_')
+    try:
+        rd = os.path.join(tmp, 'r')
+        os.makedirs(rd)
+        for label, ip, want in (
+                ('MPa 2.5 가 2500 이 되지 않는다', {'target_pressure_MPa': 2.5}, 2.5),
+                ('덱 0.30 → 300 MPa', {'target_press_sim': 0.30}, 300.0),
+                ('sim=0 이 MPa 로 새지 않는다',
+                 {'target_press_sim': 0, 'target_pressure_MPa': 7}, 0.0)):
+            json.dump(ip, open(os.path.join(rd, 'input_params.json'), 'w'))
+            got = webapp._inject_input_params({}, rd).get('_input_target_press_MPa')
+            chk(f'R-PD1) ★ {label} (got {got})', got == want)
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 

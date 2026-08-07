@@ -1096,7 +1096,7 @@ echo "          (오래된 run_* 폴더는 디스크 차면 지워도 됨 — �
                'fi\n'
                'COMMON=(--am-scaffold "$KIT/am_scaffold.csv" --se-dump "$KIT/se_scaffold.csv" --periodic\n'
                '        --lateral-box __BOX__ --n-grid __NG__ --arch cuda --gpu-mem 28 --protocol hold --frames 150\n'
-               '        --e-se __ESE__ --nu-se __NUSE__ --target-gpa __PRESS__)\n'
+               '        --e-se __ESE__ --nu-se __NUSE__ --target-gpa __PRESS__ --seed __SEED__)\n'
                'run_one() { local lab="$1"; shift; echo "=== A-1 앵커: $lab ==="; '
                'python3 "$SCR/mpm3d_compaction.py" "${COMMON[@]}" "$@" --save-metrics "$OUT/m_${lab}.json" '
                '|| { echo "FAIL $lab — 위 트레이스"; exit 1; }; }\n'
@@ -1143,7 +1143,7 @@ echo "          (오래된 run_* 폴더는 디스크 차면 지워도 됨 — �
                  'fi\n'
                  'COMMON=(--am-scaffold "$KIT/am_scaffold.csv" --se-dump "$KIT/se_scaffold.csv" --periodic\n'
                  '        --lateral-box __BOX__ --n-grid __NG__ --arch cuda --gpu-mem 28 --frames 150\n'
-                 '        --e-se __ESE__ --nu-se __NUSE__)\n'
+                 '        --e-se __ESE__ --nu-se __NUSE__ --seed __SEED__)\n'
                  'STATE="$OUT/fab_state.npz"\n'
                  '# ── ① 제작 (fabrication) — 제작압 __PRESS__ GPa, LIGGGHTS 변위-정지 규약(hold) ──\n'
                  'echo "=== A-1 ① 제작압 압밀 __PRESSMPA__ MPa → 소성이력 저장 ==="\n'
@@ -1192,7 +1192,8 @@ echo "          (오래된 run_* 폴더는 디스크 차면 지워도 됨 — �
     if a.op_pressure_mpa is None:
         a1 = (a1_tmpl.replace('__BOX__', f'{box_x}').replace('__NG__', f'{n_grid_mpm}')
               .replace('__ESE__', f'{e_se_mpm}').replace('__NUSE__', f'{nu_se_mpm}')
-              .replace('__PRESS__', f'{press_gpa}'))
+              .replace('__PRESS__', f'{press_gpa}')
+              .replace('__SEED__', f'{mpm_seed}'))      # ★ PD-03: A-1 도 같은 seed
     else:
         _op_gpa = round(float(a.op_pressure_mpa) / 1000.0, 5)
         if _op_gpa >= press_gpa:
@@ -1201,6 +1202,7 @@ echo "          (오래된 run_* 폴더는 디스크 차면 지워도 됨 — �
         a1 = (a1_2stage.replace('__BOX__', f'{box_x}').replace('__NG__', f'{n_grid_mpm}')
               .replace('__ESE__', f'{e_se_mpm}').replace('__NUSE__', f'{nu_se_mpm}')
               .replace('__PRESSMPA__', f'{press_gpa * 1000:g}').replace('__PRESS__', f'{press_gpa}')
+              .replace('__SEED__', f'{mpm_seed}')      # ★ PD-03: A-1 도 같은 seed
               .replace('__OPMPA__', f'{a.op_pressure_mpa:g}').replace('__OPGPA__', f'{_op_gpa}'))
     ap1 = os.path.join(a.out, 'run_a1_anchors.sh')
     open(ap1, 'w').write(a1); os.chmod(ap1, 0o755)
