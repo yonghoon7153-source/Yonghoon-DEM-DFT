@@ -79,8 +79,23 @@ def main():
     ap.add_argument("--pattern", default="db/structures/sei_*.vasp")
     ap.add_argument("--pseudo_dir", default="/data/work/pseudo")
     ap.add_argument("--work", default=WORK)
-    ap.add_argument("--nd_u", type=float, default=0.0,
-                    help="Nd 4f 에 U [eV] (진단용. 0 = 안 걺)")
+    # ⚠⚠ 2026-08-07 진단으로 밝혀진 것: Nd 3종의 갭이 −0.02 eV 로 닫힌 건
+    #   "PBE 가 4f 에 약해서"가 **아니라 스핀분극을 안 켠 탓**이 크다.
+    #   Nd³⁺ = 4f³ 인데 nspin=1 이면 전자 3개가 7겹 f 다중항에 **분수 점유**로 퍼진다
+    #   → 부분점유 밴드 = 정의상 금속. 게다가 occupations='fixed' 는 nocc=nelec/2 번째
+    #   밴드까지 채우므로 VBM·CBM 이 **같은 평평한 f 다중항 안**에서 잡혀 갭이 0 이 된다.
+    #   실측 증거: 화학이 전혀 다른 세 상이 −0.021/−0.022/−0.028 로 7 meV 안에서 일치했고,
+    #   E_F ±0.5 eV DOS 의 95~96% 가 Nd_f 였다(peak 49/106/243 states/eV = 평평한 밴드).
+    #   ★ 우리 Nd₂O₃@LPSCl1.6 계산은 nspin=2 + starting_magnetization + Hubbard U 를
+    #     썼고(tools/nd/build_lobster_nd.py), 거기선 빈 4f 가 +1.77 eV 에 구경꾼으로 앉아
+    #     갭 1.632 eV 가 살아남았다. 같은 처방을 여기에도 준다.
+    ap.add_argument("--nd_spin", action="store_true", default=True,
+                    help="Nd 계에 nspin=2 + starting_magnetization (기본 켬)")
+    ap.add_argument("--no_nd_spin", dest="nd_spin", action="store_false")
+    ap.add_argument("--nd_mag", type=float, default=0.3,
+                    help="Nd starting_magnetization (4f³ 국소모멘트 씨앗)")
+    ap.add_argument("--nd_u", type=float, default=6.0,
+                    help="Nd 4f 에 U [eV] (0 = 안 걺). 기본 6.0 — 란타나이드 4f 통상값")
     a = ap.parse_args()
 
     from ase.io import read
@@ -130,8 +145,14 @@ def main():
             print(f"\n⏭  {tag} — UPF 에서 z_valence 를 못 읽었다: {','.join(bad)}")
             skipped.append(tag); continue
         nelec = sum(zs[e] for e in at.get_chemical_symbols())
-        nbnd = int(nelec / 2 * 1.35) + 8      # 점유 + 넉넉한 빈 상태 (CBM 용)
-        nbnd_dos = int(nelec / 2 * 1.60) + 12  # DOS 용은 더 여유 (아래 &ELECTRONS 주석 참조)
+        # Nd 계는 스핀분극 + U 로 간다 (아래 --nd_spin 주석). n_nd 는 tot_magnetization 용.
+        n_nd = at.get_chemical_symbols().count("Nd")
+        spinpol = bool(has_nd and a.nd_spin and n_nd)
+        # ⚠ nspin=2 + tot_magnetization 이면 다수스핀 점유가 (nelec+M)/2 로 늘어난다.
+        #   여유를 그만큼 더 준다 — 안 그러면 CBM 을 못 본다.
+        pad = (3 * n_nd) // 2 if spinpol else 0
+        nbnd = int(nelec / 2 * 1.35) + 8 + pad      # 점유 + 넉넉한 빈 상태 (CBM 용)
+        nbnd_dos = int(nelec / 2 * 1.60) + 12 + pad  # DOS 용은 더 여유 (&ELECTRONS 주석)
 
         def block(calc, kpts, fixed, extra="", nosym=False, verbose=False, dos=False):
             occ = ("    occupations     = 'fixed'\n" if fixed else
@@ -165,6 +186,15 @@ def main():
                  # ⚠ projwfc.x 가 'Error in routine d_matrix (2)' 로 죽는다 — 대칭연산을
                  #   구면조화함수에 적용하는 회전행렬을 못 만든다. 표준 우회는 대칭 끄기.
                  ("    nosym           = .true." if nosym else ""),
+                 # ★ Nd 4f³ 는 스핀분극 없이는 분수 점유가 되어 갭이 정의되지 않는다
+                 #   (위 --nd_spin 주석 참조). 씨앗 모멘트를 Nd 종에만 준다.
+                 ("    nspin           = 2" if spinpol else ""),
+                 (f"    starting_magnetization({els.index('Nd') + 1}) = {a.nd_mag}"
+                  if spinpol else ""),
+                 # ⚠ QE 는 `occupations='fixed'` + `nspin=2` 조합에서 tot_magnetization 을
+                 #   **요구한다**(없으면 read_namelists 에서 즉사). Nd³⁺ = 4f³ 이므로
+                 #   홀전자 3개 × Nd 개수. 이 값이 곧 ↑/↓ 점유 밴드 수를 가른다.
+                 (f"    tot_magnetization = {3 * n_nd}" if (spinpol and fixed) else ""),
                  ("    noinv           = .true." if nosym else ""),
                  occ.rstrip(), "/",
                  # ⚠⚠ DOS 용 nscf 만 문턱을 푼다 (2026-08-07 licl 04 단독 실패).
@@ -216,12 +246,22 @@ def main():
             f"  filpdos = '{tag}'\n  degauss = 0.007\n  ngauss = 0\n/\n")
         note = ""
         if has_nd:
-            note = ("  ⚠ Nd 4f 가 valence 다 — PBE 만으로는 갭이 무의미하다. "
-                    + (f"U(Nd 4f)={a.nd_u} eV 를 걸었다(진단용)." if a.nd_u > 0
-                       else "U 를 안 걸었다 → 진단용으로만 볼 것."))
+            note = "  ⚠ Nd 4f 가 valence 다 — "
+            if spinpol and a.nd_u > 0:
+                note += (f"nspin=2 · M_tot={3 * n_nd} μB · U(Nd 4f)={a.nd_u} eV. "
+                         "2026-08-07 이전 실행(스핀 없음·U 없음)의 −0.02 eV 는 "
+                         "**분수 점유 인공물**이었다 — 이 설정이 그걸 고친다.")
+            elif spinpol:
+                note += f"nspin=2 · M_tot={3 * n_nd} μB, U 없음 → 갭 과소 가능."
+            else:
+                note += ("**스핀분극 없음** → 4f³ 가 분수 점유가 되어 갭이 정의되지 않는다. "
+                         "이 설정의 갭은 인용 금지(진단용).")
         print(f"\n✓ {tag:26s} {nat:3d}원자 {'+'.join(els):14s} "
               f"k scf {k_scf} / gap {k_nscf} / dos {kmesh(cell, KDENS_DOS)} (nosym) · "
-              f"전자 {nelec:.0f} → nbnd {nbnd} (점유 {int(nelec/2)} + 빈 {nbnd - int(nelec/2)})")
+              f"전자 {nelec:.0f} → nbnd {nbnd} "
+              + (f"(점유 ↑{int((nelec + 3*n_nd)/2)}/↓{int((nelec - 3*n_nd)/2)}, M={3*n_nd} μB)"
+                 if spinpol else
+                 f"(점유 {int(nelec/2)} + 빈 {nbnd - int(nelec/2)})"))
         if note:
             print(note)
         made.append(tag)

@@ -1,0 +1,9 @@
+# SEI decomposition phase band gaps — fixed-occ nscf eigenvalues (QE/PBE, ours).
+# NOT Materials Project values; do not mix with tools/figures/plot_nd_sei_gaps.py.
+phase,material_id,VBM_eV,CBM_eV,gap_eV,verdict
+li3p,mp-736,3.252,3.961,0.709,좁은 갭
+li2s,mp-1153,2.243,5.681,3.438,절연체
+li2o,mp-1960,2.795,7.780,4.986,절연체
+li3po4g,mp-2878,2.757,8.578,5.821,절연체
+li3po4,mp-13725,2.892,8.804,5.912,절연체
+licl,mp-22905,1.576,7.836,6.260,절연체

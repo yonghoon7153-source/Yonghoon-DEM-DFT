@@ -27,15 +27,27 @@ def main():
     nelec = float(m.group(1))
     ms = re.search(r"number of Kohn-Sham states\s*=\s*(\d+)", t)
     nbnd = int(ms.group(1)) if ms else None
+    # ⚠⚠ 스핀분극 계에서 `nocc = nelec` 은 틀렸다 (2026-08-07 Nd 재계산 준비 중 발견).
+    #   nspin=2 는 두 스핀 채널이 **각자** 점유 밴드 수를 갖는다:
+    #       nocc_up = (nelec + M)/2 ,  nocc_dn = (nelec − M)/2   (M = tot_magnetization)
+    #   QE 출력은 `------ SPIN UP ------` 뒤에 전 k 점 블록, 그 다음 SPIN DOWN 이 온다.
+    #   두 채널을 각자 nocc 로 읽고 VBM = max(양쪽), CBM = min(양쪽) 으로 합친다.
+    #   (합치는 게 맞는 이유: 갭은 계 전체의 것이지 채널별이 아니다.)
     spin = "SPIN UP" in t
-    nocc = int(round(nelec / (1 if spin else 2)))
+    mm = re.search(r"total magnetization\s*=\s*(-?[\d.]+)\s*Bohr mag/cell", t)
+    magn = float(mm.group(1)) if mm else 0.0
+    nocc_up = int(round((nelec + magn) / 2)) if spin else int(round(nelec / 2))
+    nocc_dn = int(round((nelec - magn) / 2)) if spin else nocc_up
+    nocc = nocc_up          # 아래 진단 출력·JSON 용 (스핀 없으면 nelec/2 그대로)
 
     # k 점별 밴드 블록
     # ⚠ 정규식으로 한 방에 잡으려다 실패했다(2026-08-06). QE 판·verbosity 에 따라
     #   "bands (ev):" 뒤 빈 줄 수와 들여쓰기가 달라진다. 형식에 안 휘둘리게
     #   **줄 단위로** 판다: 표식을 만나면 그 뒤로 '숫자만 있는 줄'을 계속 모은다.
-    blocks, lines, i = [], t.splitlines(), 0
+    blocks, lines, i, chan = [], t.splitlines(), 0, 0   # chan: 0=up(또는 무스핀) · 1=down
     while i < len(lines):
+        if "SPIN DOWN" in lines[i]:
+            chan = 1
         if "bands (ev)" in lines[i]:
             i += 1
             vals = []
@@ -51,28 +63,37 @@ def main():
                     break              # 숫자가 아닌 줄 = 블록 끝
                 i += 1
             if vals:
-                blocks.append(vals)
+                blocks.append((chan, vals))
         else:
             i += 1
     if not blocks:
         sys.exit("⛔ 밴드 블록을 못 찾았다 — scf.out 에 'bands (ev)' 가 있는지 확인할 것")
-    vbm, cbm = -1e9, 1e9
-    for e in blocks:
-        if len(e) < nocc + 1:
+    vbm, cbm, short = -1e9, 1e9, 0
+    for ch, e in blocks:
+        no = nocc_dn if ch else nocc_up
+        if no < 1 or len(e) < no + 1:
+            short += 1
             continue
-        vbm = max(vbm, e[nocc - 1])
-        cbm = min(cbm, e[nocc])
+        vbm = max(vbm, e[no - 1])
+        cbm = min(cbm, e[no])
+    if vbm < -1e8 or cbm > 1e8:
+        sys.exit("⛔ VBM/CBM 을 못 잡았다 — nbnd 가 점유 밴드보다 크지 않다. nbnd 를 늘릴 것.")
+    if short:
+        print(f"    ⚠ 밴드가 모자란 k 블록 {short}/{len(blocks)}개를 건너뛰었다 — nbnd 확인")
     gap = cbm - vbm
     verdict = ("금속/반금속 (겹침)" if gap <= 0.02 else
                "좁은 갭" if gap < 1.0 else "절연체")
     print(f"  VBM {vbm:.3f} · CBM {cbm:.3f} · **gap {gap:.3f} eV** ({verdict})")
-    print(f"    (전자 {nelec:.0f} · 점유 밴드 {nocc} · nbnd {nbnd} · k점 {len(blocks)}"
+    print(f"    (전자 {nelec:.0f} · 점유 밴드 "
+          + (f"↑{nocc_up}/↓{nocc_dn} (M={magn:.2f} μB)" if spin else str(nocc))
+          + f" · nbnd {nbnd} · 블록 {len(blocks)}"
           + (" · spin-polarized" if spin else "") + ")")
-    if nbnd and nocc >= nbnd:
+    if nbnd and max(nocc_up, nocc_dn) >= nbnd:
         print("    ⚠ nbnd 가 점유 밴드 수와 같거나 작다 — CBM 을 못 봤다. nbnd 를 늘릴 것.")
     json.dump({"tag": a.tag, "vbm": vbm, "cbm": cbm, "gap": gap, "verdict": verdict,
                "nelec": nelec, "n_occ_bands": nocc, "nbnd": nbnd, "nk": len(blocks),
-               "spin_polarized": spin,
+               "spin_polarized": spin, "total_magnetization_bohr": magn,
+               "n_occ_up": nocc_up, "n_occ_dn": nocc_dn,
                "method": "fixed-occupation nscf eigenvalues (NOT DOS threshold)",
                "warning": "PBE gap; systematically 30-50% underestimated for wide-gap insulators"},
               open(a.json, "w"), ensure_ascii=False, indent=2)
