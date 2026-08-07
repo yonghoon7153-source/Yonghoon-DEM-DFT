@@ -16,8 +16,43 @@ import threading
 from datetime import datetime
 from pathlib import Path
 
-# Network solver semaphore: only 1 at a time to prevent OOM
-_network_solver_lock = threading.Semaphore(1)
+# Network solver serialization → pipeline_service.network_lock() (파일 lock).
+# ⚠ 옛 `_network_solver_lock = threading.Semaphore(1)` 은 제거했다 (코드리뷰 F-03):
+#   프로세스 로컬이라 Gunicorn workers=2 에서 서로를 모르는데다, **정상 경로의 solver
+#   호출은 애초에 그 lock 밖**이었다 (run_pipeline 안에서 돌았고, wrapper 의 lock 블록은
+#   solver 가 파일을 못 썼을 때만 도달하는 사실상 죽은 코드였다).  남겨두면 "직렬화되고
+#   있다"는 잘못된 안심을 준다.  이제 세 호출부(run_pipeline · retry · batch)가 모두
+#   같은 파일 lock 을 잡는다.  ⚠ 파일 lock 은 **한 호스트 안에서만** 유효하다 —
+#   다중 호스트로 가면 Redis/DB lease 가 필요하다.
+
+try:
+    from . import pipeline_service as _ps          # package import
+except ImportError:                                # gunicorn 은 webapp/ 안에서 app:app 로 뜬다
+    import pipeline_service as _ps
+
+#: network_conductivity.json → full_metrics.json 으로 옮기는 σ 키들.
+#: ⚠ 이 목록은 원래 analyze() **지역 변수**였는데 run_pipeline 이 그것을 참조해
+#:   (2912/3020/3030) 매 실행마다 NameError 로 죽고 있었다 — bimodal 쪽은
+#:   `except Exception: pass` 가 통째로 삼켜 무증상이었다.  즉 run_pipeline 의 머지는
+#:   한 번도 동작한 적이 없고 σ 는 오직 wrapper 의 Step 5 로만 들어갔다.  모듈 전역으로
+#:   올려 양쪽이 같은 목록을 쓰게 한다.
+_NET_MERGE_KEYS = [
+    'sigma_full', 'sigma_full_mScm', 'sigma_bulk_net',
+    'sigma_bulk_net_mScm', 'R_brug_over_full', 'bulk_resistance_fraction',
+    'electronic_sigma_full_mScm', 'electronic_R_brug',
+    'electronic_active_fraction', 'electronic_percolating_fraction',
+    'thermal_sigma_full_mScm', 'thermal_R_brug',
+    'sigma_bruggeman', 'sigma_bruggeman_mScm', 'R_bruggeman_over_full',
+    # Physics-mode (Tabor + volume) baselines — required for the Stage E Physics
+    # column.  Without merging these the UI 4-col layout shows '—' Physics even
+    # when the solver successfully computed both modes.
+    'sigma_full_physics', 'sigma_full_mScm_physics',
+    'sigma_bulk_net_physics', 'sigma_bulk_net_mScm_physics',
+    'electronic_sigma_full_mScm_physics',
+    'thermal_sigma_full_mScm_physics',
+    'bulk_resistance_fraction_physics',
+    'R_brug_over_full_physics',
+]
 
 # Load .env file if exists (for local development)
 _env_path = os.path.join(os.path.dirname(__file__), '.env')
@@ -2761,8 +2796,106 @@ def _refresh_post_network_warnings(met_data):
     return met_data
 
 
-def run_pipeline(case_id, mode, type_map, scale=1000):
-    """Run the DEM analysis pipeline for a case."""
+def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map, scale,
+                         log, preserve_network=False, network_snapshot=None,
+                         runner=subprocess.run):
+    """network baseline → (복원) → Stage E 를 **한 곳에서** 수행한다.
+
+    코드리뷰 F-02 / F-03 / F-17 대응.  옛 구조의 문제:
+      • bimodal 과 standard 두 분기가 같은 순서를 각자 구현해 drift 가 생겼다.
+      • "network 보존" 재분석이 실제로는 solver 를 **돌린 뒤** 그 결과로 Stage E 를 만들고,
+        그 다음에야 옛 network 파일을 덮어써서 baseline 과 Stage E 의 **세대가 섞였다**.
+      • solver 호출이 어떤 lock 밖에 있었다.
+
+    여기서 고정하는 순서:
+      preserve=True  → **solver 호출 0회**, 스냅샷을 먼저 복원 → 그 baseline 으로 Stage E.
+      preserve=False → 파일 lock 을 잡고 solver 1회 → provenance 도장 → 그것으로 Stage E.
+    어느 쪽이든 Stage E 는 **화면에 실제로 남을 baseline** 을 본다.
+
+    → (stages, network_run_id)
+    """
+    stages = []
+    fm_json = os.path.join(results_dir, 'full_metrics.json')
+
+    if preserve_network:
+        n = _ps.restore_network(network_snapshot, results_dir)
+        prov = _ps.read_network_provenance(results_dir)
+        stages.append(_ps.StageOutcome(
+            step='Network (PRESERVED — solver not called)',
+            stdout=f'restored {n} artefact(s); network_run_id={prov.get("network_run_id")}',
+            stderr='', rc=0, ok=True, required=False, missing_outputs=[]))
+        log.append(stages[-1])
+    else:
+        inputs = {os.path.basename(p): _ps.file_digest(p) for p in (atoms_csv, contacts_csv)}
+        run_id = _ps.new_run_id()
+        cmd = [sys.executable, os.path.join(scripts, 'network_conductivity.py'),
+               atoms_csv, contacts_csv, '-o', results_dir,
+               '-t', type_map, '-s', str(scale), '--contact-mode', 'both']
+        with _ps.network_lock() as got:
+            if not got:
+                log.append({'step': 'Network lock', 'stdout': '',
+                            'stderr': 'lock 미획득 — 직렬화 없이 진행', 'rc': 0})
+            st = _ps.run_stage('Network Solver (both modes)', cmd, required=True,
+                               # ★ rc=0 이어도 파일이 없으면 실패다: network CLI 는 물리망이
+                               #   없거나 결과 dict 가 비면 파일을 안 쓰고도 exit 0 이 된다.
+                               expects=('network_conductivity.json',),
+                               results_dir=results_dir, runner=runner)
+        stages.append(st)
+        log.append(st)
+        _ps.stamp_network_provenance(results_dir, run_id, inputs,
+                                     'success' if st.ok else 'failed')
+        prov = {'network_run_id': run_id}
+
+    # ── baseline σ 를 full_metrics 로 머지 (이제 양 분기가 같은 목록을 쓴다) ──
+    try:
+        net_json = os.path.join(results_dir, 'network_conductivity.json')
+        if os.path.exists(net_json) and os.path.exists(fm_json):
+            with open(net_json) as _f:
+                net_data = json.load(_f)
+            with open(fm_json) as _f:
+                fm_data = json.load(_f)
+            for k in _NET_MERGE_KEYS:
+                if k in net_data and net_data[k] is not None:
+                    fm_data[k] = net_data[k]
+            fm_data = _merge_dual_into_metrics(results_dir, fm_data)
+            fm_data = _refresh_post_network_warnings(fm_data)
+            fm_data['network_solver_status'] = 'success'
+            fm_data['network_run_id'] = prov.get('network_run_id')
+            _ps.atomic_write_json(fm_json, fm_data)
+            log.append({'step': 'Network Merge', 'stdout': f'{len(_NET_MERGE_KEYS)} σ-keys',
+                        'stderr': '', 'rc': 0})
+    except Exception as _e:                                        # noqa: BLE001
+        log.append({'step': 'Network Merge', 'stdout': '', 'stderr': str(_e), 'rc': 1})
+
+    # ── Stage E — 위에서 확정된 baseline 위에서만 돈다 ──
+    st = _ps.run_stage('Stage E (literature-grounded grain corrections)',
+                       [sys.executable, os.path.join(scripts, 'run_network_full_corrections.py'),
+                        os.path.basename(results_dir), '--quiet'],
+                       required=False, runner=runner)
+    stages.append(st)
+    log.append(st)
+
+    # ★ Stage E 가 어느 baseline 세대를 봤는지 새긴다 — 나중에 둘이 어긋나면 바로 보인다.
+    try:
+        if os.path.exists(fm_json):
+            with open(fm_json) as _f:
+                fm_data = json.load(_f)
+            fm_data['stage_e_parent_network_run_id'] = prov.get('network_run_id')
+            fm_data['stage_e_status'] = 'success' if st.ok else 'failed'
+            _ps.atomic_write_json(fm_json, fm_data)
+    except Exception:                                              # noqa: BLE001
+        pass
+    return stages, prov.get('network_run_id')
+
+
+def run_pipeline(case_id, mode, type_map, scale=1000,
+                 preserve_network=False, network_snapshot=None):
+    """Run the DEM analysis pipeline for a case.
+
+    preserve_network : True 면 network solver 를 **호출하지 않고** network_snapshot 을
+                       복원해 그 baseline 으로 Stage E 를 만든다 (코드리뷰 F-02).
+    network_snapshot : pipeline_service.snapshot_network() 가 만든 임시 디렉터리.
+    """
     # Clear pyc cache to ensure latest code runs
     import glob as globmod
     scripts_dir = os.path.join(os.path.dirname(__file__), '..', 'scripts')
@@ -2847,6 +2980,10 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
                 return {'error': 'atom_*.liggghts 또는 contact_*.liggghts 파일을 찾을 수 없습니다 (CSV fallback도 없음).'}
 
     log = []
+    #: 단계 계약 수집 — 필수 단계가 실패하면 status='failed' 로 내린다 (코드리뷰 F-05).
+    #: 옛 코드는 parse 만 검사하고 나머지 rc 는 로그에만 넣은 뒤 무조건 success 를 반환해,
+    #: full_metrics 가 없어도 케이스가 'done' 이 됐다.
+    stages = []
 
     # Step 1: Parse (atom + contact + mesh) — skip if CSV already exists
     atoms_csv = os.path.join(results_dir, 'atoms.csv')
@@ -2895,54 +3032,14 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
         log.append({'step': 'Coverage Physics vs Hertzian', 'stdout': result.stdout,
                     'stderr': result.stderr, 'rc': result.returncode})
 
-        # Step 2c: Network solver (both contact modes) → sigma_*_mScm
-        cmd = [sys.executable, os.path.join(scripts, 'network_conductivity.py'),
-               atoms_csv, contacts_csv, '-o', results_dir,
-               '-t', type_map, '-s', str(scale),
-               '--contact-mode', 'both']
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=None)
-        log.append({'step': 'Network Solver (both modes)', 'stdout': result.stdout,
-                    'stderr': result.stderr, 'rc': result.returncode})
-        try:
-            net_json = os.path.join(results_dir, 'network_conductivity.json')
-            fm_json  = os.path.join(results_dir, 'full_metrics.json')
-            if os.path.exists(net_json) and os.path.exists(fm_json):
-                with open(net_json) as _f: net_data = json.load(_f)
-                with open(fm_json)  as _f: fm_data  = json.load(_f)
-                for k in _NET_MERGE_KEYS:
-                    if k in net_data and net_data[k] is not None:
-                        fm_data[k] = net_data[k]
-                fm_data = _merge_dual_into_metrics(results_dir, fm_data)
-                fm_data = _refresh_post_network_warnings(fm_data)
-                fm_data['network_solver_status'] = (
-                    'success' if result.returncode == 0 else 'failed')
-                with open(fm_json, 'w') as _f:
-                    json.dump(fm_data, _f, indent=2, default=str)
-        except Exception:
-            pass
-
-        # Step 2d: Stage E — Literature-grounded full grain corrections
-        # (mirrors Standard mode pipeline at line ~2024). Auto-applies
-        # size/crystallinity factors per channel:
-        #   σ_ionic : SE σ_grain(r_SE) — Cronau 2022 (size-invariant ≥ 0.3 μm)
-        #   σ_e     : AM crystallinity (Trevisanello 2021) AM_S=1.0, AM_P=0.65
-        #   κ       : AM crystallinity (Wang 2022) AM_S=1.0, AM_P=0.50
-        # Includes 7-Layer defence + Bruggeman fallback when solver is
-        # numerically unstable. Writes *_stage_e + stage_e_source into
-        # full_metrics.json so the UI Stage E section auto-populates.
-        try:
-            stage_e_cmd = [sys.executable,
-                            os.path.join(scripts, 'run_network_full_corrections.py'),
-                            os.path.basename(results_dir), '--quiet']
-            stage_e_result = subprocess.run(stage_e_cmd, capture_output=True,
-                                              text=True, timeout=None)
-            log.append({'step': 'Stage E (literature-grounded grain corrections)',
-                        'stdout': stage_e_result.stdout,
-                        'stderr': stage_e_result.stderr,
-                        'rc': stage_e_result.returncode})
-        except Exception as _e:
-            log.append({'step': 'Stage E (literature-grounded grain corrections)',
-                        'stdout': '', 'stderr': str(_e), 'rc': 1})
+        # Step 2c-2d: Network baseline (또는 보존 복원) → Stage E.
+        #   ★ 한 곳(_network_and_stage_e)에서만 수행한다 — 옛 구조는 bimodal 과 standard 가
+        #     같은 순서를 각자 구현했고, "보존" 재분석이 solver 를 돌린 뒤 그 결과로 Stage E 를
+        #     만들고서야 옛 network 를 덮어써 baseline/Stage E 세대가 섞였다 (F-02/F-17).
+        _net_stages, _net_run_id = _network_and_stage_e(
+            results_dir, scripts, atoms_csv, contacts_csv, type_map, scale, log,
+            preserve_network=preserve_network, network_snapshot=network_snapshot)
+        stages.extend(_net_stages)
 
         # Step 2e: Dual porosity (sphere-sum + union + overlap%) — auto-compute
         # so the UI shows ε_sphere / ε_union / overlap without a manual rerun.
@@ -2999,59 +3096,11 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
         log.append({'step': 'Coverage Physics vs Hertzian', 'stdout': result.stdout,
                     'stderr': result.stderr, 'rc': result.returncode})
 
-        # Network solver (ionic + electronic + thermal, both contact modes).
-        # Writes sigma_full_mScm, sigma_bulk_net_mScm, electronic_*, thermal_*
-        # into network_conductivity_*.json, then merges into full_metrics.json
-        # so the analysis-summary tab Network Solver section auto-populates.
-        cmd = [sys.executable, os.path.join(scripts, 'network_conductivity.py'),
-               atoms_csv, contacts_csv, '-o', results_dir,
-               '-t', type_map, '-s', str(scale),
-               '--contact-mode', 'both']
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=None)
-        log.append({'step': 'Network Solver (both modes)', 'stdout': result.stdout,
-                    'stderr': result.stderr, 'rc': result.returncode})
-        # Merge network_conductivity.json → full_metrics.json
-        try:
-            net_json = os.path.join(results_dir, 'network_conductivity.json')
-            fm_json  = os.path.join(results_dir, 'full_metrics.json')
-            if os.path.exists(net_json) and os.path.exists(fm_json):
-                with open(net_json) as _f: net_data = json.load(_f)
-                with open(fm_json)  as _f: fm_data  = json.load(_f)
-                for k in _NET_MERGE_KEYS:
-                    if k in net_data and net_data[k] is not None:
-                        fm_data[k] = net_data[k]
-                fm_data = _merge_dual_into_metrics(results_dir, fm_data)
-                fm_data = _refresh_post_network_warnings(fm_data)
-                fm_data['network_solver_status'] = (
-                    'success' if result.returncode == 0 else 'failed')
-                with open(fm_json, 'w') as _f:
-                    json.dump(fm_data, _f, indent=2, default=str)
-                log.append({'step': 'Network Solver Merge',
-                            'stdout': f'merged {len(_NET_MERGE_KEYS)} σ-keys',
-                            'stderr': '', 'rc': 0})
-        except Exception as _e:
-            log.append({'step': 'Network Solver Merge',
-                        'stdout': '', 'stderr': str(_e), 'rc': 1})
-
-        # Stage E — Literature-grounded full grain corrections
-        # Auto-applies size/crystallinity factors per channel:
-        #   σ_ionic : SE σ_grain(r_SE) — Cronau 2022 (size-invariant ≥ 0.3 μm)
-        #   σ_e     : AM crystallinity (Trevisanello 2021) AM_S=1.0, AM_P=0.65
-        #   κ       : AM crystallinity (Wang 2022) AM_S=1.0, AM_P=0.50
-        #            SE size-invariant (sulfide already glassy)
-        try:
-            stage_e_cmd = [sys.executable,
-                            os.path.join(scripts, 'run_network_full_corrections.py'),
-                            os.path.basename(results_dir), '--quiet']
-            stage_e_result = subprocess.run(stage_e_cmd, capture_output=True,
-                                              text=True, timeout=None)
-            log.append({'step': 'Stage E (literature-grounded grain corrections)',
-                        'stdout': stage_e_result.stdout,
-                        'stderr': stage_e_result.stderr,
-                        'rc': stage_e_result.returncode})
-        except Exception as _e:
-            log.append({'step': 'Stage E (literature-grounded grain corrections)',
-                        'stdout': '', 'stderr': str(_e), 'rc': 1})
+        # Network baseline (또는 보존 복원) → Stage E — bimodal 과 **같은 함수**를 쓴다.
+        _net_stages, _net_run_id = _network_and_stage_e(
+            results_dir, scripts, atoms_csv, contacts_csv, type_map, scale, log,
+            preserve_network=preserve_network, network_snapshot=network_snapshot)
+        stages.extend(_net_stages)
 
         # Step 2e: Dual porosity (sphere-sum + union + overlap%) — auto-compute
         # so the UI shows ε_sphere / ε_union / overlap without a manual rerun.
@@ -3106,7 +3155,14 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
         log.append({'step': 'Auto-DB Rebuild (background)',
                     'stdout': '', 'stderr': str(e), 'rc': 1})
 
-    return {'success': True, 'log': log}
+    # ── 단계 계약 판정 (F-05) ───────────────────────────────────────────────
+    #   done    = 필수 단계 전부 성공
+    #   partial = 선택 단계만 실패 (예: Stage E 실패 — baseline 은 살아 있다)
+    #   failed  = 필수 단계 실패 (network 미산출 등) → 케이스를 done 으로 올리지 않는다
+    status, failed_stages = _ps.summarize(stages)
+    return {'success': status != 'failed', 'status': status, 'log': log,
+            'network_run_id': locals().get('_net_run_id'),
+            'failed_stages': [s.get('step') for s in failed_stages]}
 
 def generate_report(case_id, case_name='', notes=''):
     """Generate markdown report from analysis results."""
@@ -4811,252 +4867,95 @@ def analyze(case_id):
     meta['status'] = 'running'
     with open(meta_file, 'w') as f:
         json.dump(meta, f, indent=2)
-
-    _NET_MERGE_KEYS = ['sigma_full', 'sigma_full_mScm', 'sigma_bulk_net',
-                      'sigma_bulk_net_mScm', 'R_brug_over_full', 'bulk_resistance_fraction',
-                      'electronic_sigma_full_mScm', 'electronic_R_brug',
-                      'electronic_active_fraction', 'electronic_percolating_fraction',
-                      'thermal_sigma_full_mScm', 'thermal_R_brug',
-                      'sigma_bruggeman', 'sigma_bruggeman_mScm', 'R_bruggeman_over_full',
-                      # Physics-mode (Tabor + volume) baselines — required for
-                      # Stage E Physics column. Without merging these, the UI
-                      # 4-col layout shows '—' Physics even when the solver
-                      # successfully computed both modes.
-                      'sigma_full_physics', 'sigma_full_mScm_physics',
-                      'sigma_bulk_net_physics', 'sigma_bulk_net_mScm_physics',
-                      'electronic_sigma_full_mScm_physics',
-                      'thermal_sigma_full_mScm_physics',
-                      'bulk_resistance_fraction_physics',
-                      'R_brug_over_full_physics']
+    # (σ 키 목록은 모듈 전역 _NET_MERGE_KEYS 로 승격 — run_pipeline 이 지역 사본을
+    #  참조해 NameError 로 죽던 문제를 없앤다)
 
     def _run():
         results_dir = get_results_dir(case_id)
         net_json_path = os.path.join(results_dir, 'network_conductivity.json')
 
-        # ── Step 1: Backup network results before clearing ──
-        #   Skipped when force_network=True so the solver is forced to re-run
-        #   with the current code (e.g. after 3-stage CG/ILU/spsolve fix).
-        #
-        #   BUG FIX (this commit): previously only network_conductivity.json was
-        #   backed up → every non-force reanalyze silently wiped the dual
-        #   results (*_dual.json, *_physics.json, raw edge/node dumps) causing
-        #   the Physics column to disappear from the UI. Now the entire set of
-        #   network-solver artefacts is snapshotted and restored.
-        import tempfile
-        _net_backup_dir = None
-        _NET_BACKUP_GLOBS = (
-            'network_conductivity.json',
-            'network_conductivity_dual.json',
-            'network_conductivity_hertzian.json',
-            'network_conductivity_physics.json',
-            'network_summary.csv',
-            'network_raw_*',            # per-contact edge dumps (hertzian_ionic/...)
-        )
-        if not force_network:
-            to_backup = []
-            for pat in _NET_BACKUP_GLOBS:
-                to_backup += globmod.glob(os.path.join(results_dir, pat))
-            if to_backup:
-                _net_backup_dir = tempfile.mkdtemp(prefix=f'net_bk_{case_id}_')
-                for src in to_backup:
-                    rel = os.path.relpath(src, results_dir)
-                    dst = os.path.join(_net_backup_dir, rel)
-                    os.makedirs(os.path.dirname(dst) or _net_backup_dir, exist_ok=True)
-                    if os.path.isdir(src):
-                        shutil.copytree(src, dst)
-                    else:
-                        shutil.copy2(src, dst)
-                print(f"  [Reanalysis] Network backup saved ({len(to_backup)} items) ({case_id})")
+        # ── Step 1: network 산출물 스냅샷 (results_dir 를 지우기 **전에**) ──
+        #   ★ 코드리뷰 F-02.  옛 흐름은 백업 → 삭제 → run_pipeline(solver 재실행 + 그
+        #     결과로 Stage E) → 옛 network 복원 순서라, full_metrics 안에서 baseline 은
+        #     옛 세대, Stage E 는 방금 푼 새 세대가 됐다.  이제 스냅샷을 run_pipeline
+        #     **안으로** 넘겨 Stage E 보다 먼저 복원시키고, solver 는 아예 호출하지 않는다.
+        preserve = not force_network
+        snap = _ps.snapshot_network(results_dir, case_id) if preserve else None
+        if force_network:
+            print(f"  [Reanalysis] force_network=True → solver 재실행 ({case_id})")
+        elif snap:
+            print(f"  [Reanalysis] network 보존 — solver 호출 안 함 ({case_id})")
         else:
-            print(f"  [Reanalysis] force_network=True → skipping network backup ({case_id})")
+            print(f"  [Reanalysis] 보존할 network 없음 → solver 최초 실행 ({case_id})")
 
-        # ── Step 2: Clear & re-run contact analysis ──
+        # ── Step 2: results_dir 재생성 후 파이프라인 (network/Stage E 포함) ──
         if os.path.exists(results_dir):
             shutil.rmtree(results_dir)
         os.makedirs(results_dir, exist_ok=True)
-        result = run_pipeline(case_id, meta['mode'], meta['type_map'], meta.get('scale', 1000))
+        try:
+            result = run_pipeline(case_id, meta['mode'], meta['type_map'],
+                                  meta.get('scale', 1000),
+                                  preserve_network=bool(preserve and snap),
+                                  network_snapshot=snap)
+        finally:
+            if snap:
+                shutil.rmtree(snap, ignore_errors=True)
 
-        # ── Step 3: Restore network backup (skipped on force) ──
-        if _net_backup_dir and os.path.isdir(_net_backup_dir):
-            os.makedirs(results_dir, exist_ok=True)
-            for name in os.listdir(_net_backup_dir):
-                src = os.path.join(_net_backup_dir, name)
-                dst = os.path.join(results_dir, name)
-                if os.path.isdir(src):
-                    if os.path.exists(dst):
-                        shutil.rmtree(dst)
-                    shutil.copytree(src, dst)
-                else:
-                    shutil.copy2(src, dst)
-            shutil.rmtree(_net_backup_dir, ignore_errors=True)
-            print(f"  [Reanalysis] Network backup restored ({case_id})")
-
-        # ── Step 4: Handle contact analysis result ──
-        if not result.get('success'):
-            meta['status'] = 'done' if os.path.exists(net_json_path) else 'error'
-            meta['network_solver_status'] = 'success' if os.path.exists(net_json_path) else 'not_run'
-            meta['analysis_log'] = result.get('log', [])
-            with open(meta_file, 'w') as f:
-                json.dump(meta, f, indent=2)
-            print(f"  [Reanalysis] Contact analysis failed, network={'preserved' if os.path.exists(net_json_path) else 'none'} ({case_id})")
-            return
-
-        meta['status'] = 'done'
+        # ── Step 3: 단계 계약대로 상태 확정 (F-05) ──
+        #   옛 코드는 parse 만 검사하고 나머지는 무조건 success → full_metrics 가 없어도
+        #   케이스가 'done' 이 됐다.  이제 failed/partial/done 을 구분해 올린다.
+        status = result.get('status') or ('done' if result.get('success') else 'failed')
+        meta['pipeline_status'] = status
+        meta['failed_stages'] = result.get('failed_stages', [])
         meta['analysis_log'] = result.get('log', [])
-        with open(meta_file, 'w') as f:
-            json.dump(meta, f, indent=2)
-
-        # ── Step 5: Merge network results into new full_metrics ──
-        if os.path.exists(net_json_path):
-            met_json = os.path.join(results_dir, 'full_metrics.json')
-            if os.path.exists(met_json):
-                with open(net_json_path) as _nf:
-                    net_data = json.load(_nf)
-                with open(met_json) as _mf:
-                    met_data = json.load(_mf)
-                for k in _NET_MERGE_KEYS:
-                    if k in net_data and net_data[k] is not None:
-                        met_data[k] = net_data[k]
-                met_data = _merge_dual_into_metrics(results_dir, met_data)
-                met_data = _refresh_post_network_warnings(met_data)
-                met_data['network_solver_status'] = 'success'
-                with open(met_json, 'w') as _mf:
-                    json.dump(met_data, _mf, indent=2, default=str)
-            meta['network_solver_status'] = 'success'
-            meta['status'] = 'done'
-            with open(meta_file, 'w') as f:
-                json.dump(meta, f, indent=2)
-            print(f"  [Reanalysis] Done — network SKIPPED, metrics merged ({case_id})")
-            generate_report(case_id, meta.get('name', ''))
+        meta['network_run_id'] = result.get('network_run_id')
+        meta['network_solver_status'] = (
+            'preserved' if (preserve and snap)
+            else ('success' if os.path.exists(net_json_path) else 'not_run'))
+        meta['status'] = 'error' if status == 'failed' else 'done'
+        _ps.atomic_write_json(meta_file, meta)
+        if status == 'failed':
+            print(f"  [Reanalysis] FAILED — 필수 단계 실패: {meta['failed_stages']} ({case_id})")
             return
+        if status == 'partial':
+            print(f"  [Reanalysis] PARTIAL — 선택 단계 실패: {meta['failed_stages']} ({case_id})")
 
-        # ── Step 6: No previous network results → run network solver ──
         generate_report(case_id, meta.get('name', ''))
 
-        # Semaphore: only 1 network solver at a time to prevent OOM crash
-        meta['status'] = 'network_solving'
-        meta['network_solver_status'] = 'waiting'
-        with open(meta_file, 'w') as f:
-            json.dump(meta, f, indent=2)
-
-        net_status = 'not_run'
-        net_error_msg = ''
-        print(f"  [Network] Waiting for lock ({case_id})...")
-        with _network_solver_lock:
-            print(f"  [Network] Lock acquired, starting solver ({case_id})")
-            meta['network_solver_status'] = 'running'
-            with open(meta_file, 'w') as f:
-                json.dump(meta, f, indent=2)
-            try:
-                atoms_csv = os.path.join(results_dir, 'atoms.csv')
-                contacts_csv = os.path.join(results_dir, 'contacts.csv')
-                if not os.path.exists(atoms_csv) or not os.path.exists(contacts_csv):
-                    net_status = 'no_input'
-                    net_error_msg = f"Missing: atoms.csv={os.path.exists(atoms_csv)}, contacts.csv={os.path.exists(contacts_csv)}"
-                    print(f"  Network solver skipped: {net_error_msg}")
-                else:
-                    import time as _time
-                    _t0 = _time.time()
-                    net_cmd = [sys.executable, os.path.join(app.config['SCRIPTS_FOLDER'], 'network_conductivity.py'),
-                               atoms_csv, contacts_csv, '-o', results_dir,
-                               '-t', meta['type_map'], '-s', str(meta.get('scale', 1000)),
-                               '--contact-mode', 'both']
-                    print(f"  [Network] CMD: {' '.join(net_cmd)}")
-                    net_result = subprocess.run(net_cmd, capture_output=True, text=True, timeout=None)
-                    _elapsed = _time.time() - _t0
-                    print(f"  [Network] Finished in {_elapsed:.1f}s, returncode={net_result.returncode}")
-                    if net_result.stdout:
-                        print(f"  [Network] stdout (last 500):\n{net_result.stdout[-500:]}")
-                    if net_result.returncode != 0:
-                        net_status = 'failed'
-                        net_error_msg = net_result.stderr[-500:] if net_result.stderr else 'No stderr'
-                        print(f"  Network solver FAILED: {net_error_msg}")
-                    else:
-                        net_status = 'success'
-                    # Merge into full_metrics.json
-                    net_json = os.path.join(results_dir, 'network_conductivity.json')
-                    met_json = os.path.join(results_dir, 'full_metrics.json')
-                    if os.path.exists(net_json) and os.path.exists(met_json):
-                        with open(net_json) as _nf:
-                            net_data = json.load(_nf)
-                        with open(met_json) as _mf:
-                            met_data = json.load(_mf)
-                        for k in _NET_MERGE_KEYS:
-                            if k in net_data and net_data[k] is not None:
-                                met_data[k] = net_data[k]
-                        met_data = _merge_dual_into_metrics(results_dir, met_data)
-                        met_data = _refresh_post_network_warnings(met_data)
-                        met_data['network_solver_status'] = net_status
-                        with open(met_json, 'w') as _mf:
-                            json.dump(met_data, _mf, indent=2, default=str)
-                        print(f"  [Network] Merged keys into full_metrics.json (incl. physics dual)")
-                    elif net_status == 'success':
-                        net_status = 'no_output'
-            except Exception as e:
-                net_status = 'error'
-                net_error_msg = str(e)
-                import traceback
-                print(f"  Network solver error: {e}")
-                traceback.print_exc()
-            meta['network_solver_status'] = net_status
-            if net_error_msg:
-                meta['network_solver_error'] = net_error_msg
-            meta['status'] = 'done'
-            with open(meta_file, 'w') as f:
-                json.dump(meta, f, indent=2)
-            print(f"  [Network] Lock released ({case_id}), status={net_status}")
-
-        # ── Step 7: Stage E — literature-grounded grain corrections ──
-        # Mirrors the archive-reanalyze pipeline (line ~2540) so that EVERY
-        # analysis path — new upload, 재분석, 재분석(NET) — applies Stage E.
-        # Without this, cases analysed via /analyze had no *_stage_e σ values
-        # and the 종합 등급 'Stage E 보정 적용' axis flagged them B-.
-        #   σ_ionic : Cronau 2022 SE-size factor (×1.0 for r_SE ≥ 0.5 μm)
-        #   σ_e     : Trevisanello 2021 AM-crystallinity × size
-        #   κ       : Wang 2022 phonon GB-scatter
-        # Idempotent — re-running just overwrites *_stage_e keys.
+        # ── Step 4: publish 후 점검 ──
+        #   network/Stage E 자체는 run_pipeline 이 이미 **한 번만** 수행했다.  옛 Step 6-7 은
+        #   같은 일을 두 번째로 하던 중복이라 제거했다 (리뷰 F-17) — 남기면 force 경로에서
+        #   solver 가 두 번 돈다.
+        scripts_dir = app.config['SCRIPTS_FOLDER']
         try:
-            scripts_dir = app.config['SCRIPTS_FOLDER']
-            stage_e_cmd = [sys.executable,
-                            os.path.join(scripts_dir, 'run_network_full_corrections.py'),
-                            os.path.basename(results_dir), '--quiet']
-            _se = subprocess.run(stage_e_cmd, capture_output=True,
-                                  text=True, timeout=None)
-            print(f"  [Stage E] rc={_se.returncode} ({case_id})")
-            if _se.returncode != 0 and _se.stderr:
-                print(f"  [Stage E] stderr (last 300): {_se.stderr[-300:]}")
-            # POST-CHECK: verify Stage E populated all 3 channels in BOTH
-            # contact modes (Hertz + Physics).  If any channel-mode missing,
-            # log a warning so user can see in case list (Stage-E-P badge).
-            # Common missed case: thermal_sigma_full_mScm_stage_e_physics fell
-            # through silently when physics-mode solver returned None.
-            try:
-                fm_path = os.path.join(results_dir, 'full_metrics.json')
-                if os.path.exists(fm_path):
-                    with open(fm_path) as _f:
-                        _fm = json.load(_f)
-                    _missing = []
-                    for _k in ('sigma_full_mScm_stage_e_physics',
-                                'electronic_sigma_full_mScm_stage_e_physics',
-                                'thermal_sigma_full_mScm_stage_e_physics'):
-                        if not _fm.get(_k):
-                            _missing.append(_k.replace('_stage_e_physics', '').replace('_full_mScm', ''))
-                    if _missing:
-                        print(f"  [Stage E] ⚠ Physics-mode incomplete: {', '.join(_missing)} "
-                              f"({case_id}) — will show 'Stage-E-P ⚠' badge in case list")
-            except Exception as _exc:
-                print(f"  [Stage E post-check] {type(_exc).__name__}: {_exc}")
-            # Refresh validation flags self-report card after Stage E.
-            # backfill_validation_flags.py takes case NAMES as positional args.
-            bf_cmd = [sys.executable,
-                       os.path.join(scripts_dir, 'backfill_validation_flags.py'),
-                       os.path.basename(results_dir)]
-            try:
-                subprocess.run(bf_cmd, capture_output=True, text=True, timeout=None)
-            except Exception:
-                pass   # backfill is best-effort
-        except Exception as _se_e:
-            print(f"  [Stage E] FAILED ({case_id}): {_se_e}")
+            fm_path = os.path.join(results_dir, 'full_metrics.json')
+            if os.path.exists(fm_path):
+                with open(fm_path) as _f:
+                    _fm = json.load(_f)
+                # ⚠ 0 과 missing 을 구별한다 (리뷰 F-12): 물리적 0 은 유효한 값이다.
+                _missing = [_k.replace('_stage_e_physics', '').replace('_full_mScm', '')
+                            for _k in ('sigma_full_mScm_stage_e_physics',
+                                       'electronic_sigma_full_mScm_stage_e_physics',
+                                       'thermal_sigma_full_mScm_stage_e_physics')
+                            if _fm.get(_k) is None]
+                if _missing:
+                    print(f"  [Stage E] ⚠ Physics-mode incomplete: {', '.join(_missing)} "
+                          f"({case_id}) — 케이스 목록에 'Stage-E-P ⚠' 배지")
+                # baseline 과 Stage E 의 세대가 어긋나면 즉시 드러나게 한다 (F-02 회귀 감시).
+                if (_fm.get('network_run_id')
+                        and _fm.get('stage_e_parent_network_run_id') != _fm.get('network_run_id')):
+                    print(f"  [Stage E] ★ provenance 불일치 — baseline "
+                          f"{_fm.get('network_run_id')} vs Stage E parent "
+                          f"{_fm.get('stage_e_parent_network_run_id')} ({case_id})")
+        except Exception as _exc:
+            print(f"  [Stage E post-check] {type(_exc).__name__}: {_exc}")
+        try:
+            subprocess.run([sys.executable,
+                            os.path.join(scripts_dir, 'backfill_validation_flags.py'),
+                            os.path.basename(results_dir)],
+                           capture_output=True, text=True, timeout=None)
+        except Exception:
+            pass   # backfill is best-effort
 
         # Sync results + updated meta to Supabase
         storage_sync.sync_dir_to_remote(case_dir, f'uploads/{case_id}')
@@ -5094,17 +4993,26 @@ def analyze_status(case_id):
 
 @app.route('/analyze-cancel/<case_id>', methods=['POST'])
 def analyze_cancel(case_id):
-    """Cancel running analysis by setting status to done."""
+    """⚠ 계산을 **멈추지 않는다** — 목록 표시만 '대기 해제' 로 바꾼다 (코드리뷰 F-04).
+
+    실제로는 daemon thread 와 subprocess 가 계속 돌고, 끝나면 결과·meta 를 덮어쓰고
+    Supabase 까지 동기화한다.  옛 구현은 status 를 'done' 으로 적어 **완료처럼** 보이게
+    했는데, 그러면 (a) 사용자가 취소됐다고 믿고 (b) 나중에 진짜 결과가 덮어써서 상태가
+    말없이 바뀐다.  진짜 취소를 넣기 전까지는 이름과 상태를 사실에 맞춘다:
+    별도 상태 'detached' 로 적어 '아직 돌고 있다' 를 숨기지 않는다.
+    (진짜 취소 = job ID + subprocess process group + 단계 경계마다 cancel 플래그 확인.)
+    """
     meta_file = os.path.join(get_case_dir(case_id), 'meta.json')
     if os.path.exists(meta_file):
         with open(meta_file) as f:
             meta = json.load(f)
         if meta.get('status') in ('running', 'network_solving'):
-            meta['status'] = 'done'
-            meta['network_solver_status'] = meta.get('network_solver_status', 'cancelled')
-            with open(meta_file, 'w') as f:
-                json.dump(meta, f, indent=2)
-            return jsonify({'ok': True, 'msg': 'Cancelled'})
+            meta['status'] = 'detached'
+            meta['detached_note'] = ('사용자가 대기를 해제했습니다. 계산은 백그라운드에서 '
+                                     '계속되며, 끝나면 결과가 갱신됩니다.')
+            _ps.atomic_write_json(meta_file, meta)
+            return jsonify({'ok': True, 'stopped': False, 'status': 'detached',
+                            'msg': '대기만 해제했습니다 — 계산은 계속 진행됩니다.'})
     return jsonify({'ok': False, 'msg': 'Not running'})
 
 @app.route('/retry-network/<case_id>', methods=['POST'])
@@ -5130,7 +5038,9 @@ def retry_network(case_id):
             json.dump(meta, f, indent=2)
 
         print(f"  [Network Retry] Waiting for lock ({case_id})...")
-        with _network_solver_lock:
+        # 프로세스간 파일 lock (F-03) — threading.Semaphore 는 Gunicorn workers=2 에서
+        # 서로를 모른다.  run_pipeline 쪽과 같은 lock 을 잡으므로 진짜 1개로 직렬화된다.
+        with _ps.network_lock():
             print(f"  [Network Retry] Lock acquired ({case_id})")
             meta['network_solver_status'] = 'running'
             with open(meta_file, 'w') as f:
@@ -5331,7 +5241,7 @@ def batch_rerun_physics():
                 #    that network_conductivity_{hertzian,physics,dual}.json +
                 #    legacy network_conductivity.json are all rewritten fresh
                 #    — no stale pre-patch data slipping into the merge.
-                with _network_solver_lock:
+                with _ps.network_lock():          # 프로세스간 파일 lock (F-03)
                     subprocess.run([sys.executable, os.path.join(scripts, 'network_conductivity.py'),
                                     c['atoms'], c['contacts'], '-o', c['results_dir'],
                                     '-t', type_map, '-s', scale,

@@ -1571,6 +1571,13 @@ async function retryNetwork() {
           clearInterval(poll);
           status.textContent = '✅ 완료! 새로고침합니다...';
           setTimeout(() => location.reload(), 1000);
+        } else if (sd.status === 'error') {
+          clearInterval(poll);
+          status.textContent = '❌ 분석 실패 — 케이스 로그를 확인하세요';
+        } else if (sd.status === 'detached') {
+          // 취소는 계산을 멈추지 않는다 (서버 F-04) — 폴링만 놓는다.
+          clearInterval(poll);
+          status.textContent = '⏸ 대기만 해제했습니다 — 계산은 계속됩니다 (완료 후 새로고침)';
         }
       }, 5000);
     } else {

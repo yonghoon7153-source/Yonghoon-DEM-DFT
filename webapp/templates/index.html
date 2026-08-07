@@ -557,6 +557,11 @@ async function runAnalysis(caseId, forceNetwork, alreadyStarted) {
           } else if (sd.status === 'error') {
             clearInterval(poll);
             log.innerHTML += '<p class="log-error">❌ 분석 실패</p>';
+          } else if (sd.status === 'detached') {
+            // 취소는 계산을 멈추지 않는다 (서버 F-04) — 폴링만 놓고 사실대로 알린다.
+            clearInterval(poll);
+            log.innerHTML += '<p>⏸ 대기만 해제했습니다 — 계산은 백그라운드에서 계속됩니다. '
+                           + '끝나면 새로고침 시 반영됩니다.</p>';
           } else if (sd.status === 'network_solving') {
             // Update status text once
             if (!log.dataset.netShown) {
