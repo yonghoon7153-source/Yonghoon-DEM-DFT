@@ -1,0 +1,250 @@
+{
+  "property": "sei_electronic",
+  "method": "QE PBE. vc-relax → scf → **fixed-occupation nscf** (갭은 이 단계 고유값) → nscf(DOS k-mesh) → dos.x → projwfc.x.",
+  "gap_rule": "갭은 fixed-occ nscf 의 VBM/CBM 고유값만 정본이다. DOS 문턱 판독 금지 (~0.3 eV 과소 — CLAUDE.md 데이터 규율).",
+  "warning": "PBE 갭은 넓은 갭 절연체에서 30–50% 과소평가된다. 실험값과 나란히 놓지 말고 **순위**로만 쓸 것. Nd 계 3종은 4f 를 원자가에 넣은 탓에 갭이 닫히는데 이는 방법의 실패지 금속성이 아니다(artifact_4f) — 인용은 MP frozen-4f 값으로.",
+  "source_dir": "/data/work/runs/sei_dft",
+  "collected": "2026-08-07",
+  "results": {
+    "li2o_mp-1960": {
+      "tag": "li2o_mp-1960",
+      "vbm": 2.7945,
+      "cbm": 7.7805,
+      "gap": 4.986,
+      "verdict": "절연체",
+      "nelec": 12.0,
+      "n_occ_bands": 6,
+      "nbnd": 16,
+      "nk": 1098,
+      "spin_polarized": false,
+      "method": "fixed-occupation nscf eigenvalues (NOT DOS threshold)",
+      "warning": "PBE gap; systematically 30-50% underestimated for wide-gap insulators",
+      "artifact_4f": false,
+      "files": {
+        "dos_csv": "db/properties/sei_dos/li2o_mp-1960_dos.csv",
+        "pdos_csv": "db/properties/sei_dos/li2o_mp-1960_pdos.csv"
+      },
+      "pdos_channels": [
+        "Li_p",
+        "Li_s",
+        "O_p",
+        "O_s"
+      ]
+    },
+    "li2s_mp-1153": {
+      "tag": "li2s_mp-1153",
+      "vbm": 2.2434,
+      "cbm": 5.6813,
+      "gap": 3.4379000000000004,
+      "verdict": "절연체",
+      "nelec": 12.0,
+      "n_occ_bands": 6,
+      "nbnd": 16,
+      "nk": 595,
+      "spin_polarized": false,
+      "method": "fixed-occupation nscf eigenvalues (NOT DOS threshold)",
+      "warning": "PBE gap; systematically 30-50% underestimated for wide-gap insulators",
+      "artifact_4f": false,
+      "files": {
+        "dos_csv": "db/properties/sei_dos/li2s_mp-1153_dos.csv",
+        "pdos_csv": "db/properties/sei_dos/li2s_mp-1153_pdos.csv"
+      },
+      "pdos_channels": [
+        "Li_p",
+        "Li_s",
+        "S_p",
+        "S_s"
+      ]
+    },
+    "li3p_mp-736": {
+      "tag": "li3p_mp-736",
+      "vbm": 3.2521,
+      "cbm": 3.9613,
+      "gap": 0.7092,
+      "verdict": "좁은 갭",
+      "nelec": 28.0,
+      "n_occ_bands": 14,
+      "nbnd": 26,
+      "nk": 76,
+      "spin_polarized": false,
+      "method": "fixed-occupation nscf eigenvalues (NOT DOS threshold)",
+      "warning": "PBE gap; systematically 30-50% underestimated for wide-gap insulators",
+      "artifact_4f": false,
+      "files": {
+        "dos_csv": "db/properties/sei_dos/li3p_mp-736_dos.csv",
+        "pdos_csv": "db/properties/sei_dos/li3p_mp-736_pdos.csv"
+      },
+      "pdos_channels": [
+        "Li_p",
+        "Li_s",
+        "P_p",
+        "P_s"
+      ]
+    },
+    "li3po4_mp-13725": {
+      "tag": "li3po4_mp-13725",
+      "vbm": 2.8919,
+      "cbm": 8.804,
+      "gap": 5.912100000000001,
+      "verdict": "절연체",
+      "nelec": 76.0,
+      "n_occ_bands": 38,
+      "nbnd": 59,
+      "nk": 100,
+      "spin_polarized": false,
+      "method": "fixed-occupation nscf eigenvalues (NOT DOS threshold)",
+      "warning": "PBE gap; systematically 30-50% underestimated for wide-gap insulators",
+      "artifact_4f": false,
+      "files": {
+        "dos_csv": "db/properties/sei_dos/li3po4_mp-13725_dos.csv",
+        "pdos_csv": "db/properties/sei_dos/li3po4_mp-13725_pdos.csv"
+      },
+      "pdos_channels": [
+        "Li_p",
+        "Li_s",
+        "O_p",
+        "O_s",
+        "P_p",
+        "P_s"
+      ]
+    },
+    "li3po4g_mp-2878": {
+      "tag": "li3po4g_mp-2878",
+      "vbm": 2.7568,
+      "cbm": 8.5779,
+      "gap": 5.8210999999999995,
+      "verdict": "절연체",
+      "nelec": 152.0,
+      "n_occ_bands": 76,
+      "nbnd": 110,
+      "nk": 60,
+      "spin_polarized": false,
+      "method": "fixed-occupation nscf eigenvalues (NOT DOS threshold)",
+      "warning": "PBE gap; systematically 30-50% underestimated for wide-gap insulators",
+      "artifact_4f": false,
+      "files": {
+        "dos_csv": "db/properties/sei_dos/li3po4g_mp-2878_dos.csv",
+        "pdos_csv": "db/properties/sei_dos/li3po4g_mp-2878_pdos.csv"
+      },
+      "pdos_channels": [
+        "Li_p",
+        "Li_s",
+        "O_p",
+        "O_s",
+        "P_p",
+        "P_s"
+      ]
+    },
+    "licl_mp-22905": {
+      "tag": "licl_mp-22905",
+      "vbm": 1.5756,
+      "cbm": 7.8359,
+      "gap": 6.2603,
+      "verdict": "절연체",
+      "nelec": 40.0,
+      "n_occ_bands": 20,
+      "nbnd": 35,
+      "nk": 35,
+      "spin_polarized": false,
+      "method": "fixed-occupation nscf eigenvalues (NOT DOS threshold)",
+      "warning": "PBE gap; systematically 30-50% underestimated for wide-gap insulators",
+      "artifact_4f": false,
+      "files": {
+        "dos_csv": "db/properties/sei_dos/licl_mp-22905_dos.csv",
+        "pdos_csv": "db/properties/sei_dos/licl_mp-22905_pdos.csv"
+      },
+      "pdos_channels": [
+        "Cl_p",
+        "Cl_s",
+        "Li_p",
+        "Li_s"
+      ]
+    },
+    "lindo2_mp-1222355": {
+      "tag": "lindo2_mp-1222355",
+      "vbm": 12.1311,
+      "cbm": 12.1027,
+      "gap": -0.028399999999999537,
+      "verdict": "금속/반금속 (겹침)",
+      "nelec": 116.0,
+      "n_occ_bands": 58,
+      "nbnd": 86,
+      "nk": 136,
+      "spin_polarized": false,
+      "method": "fixed-occupation nscf eigenvalues (NOT DOS threshold)",
+      "warning": "PBE gap; systematically 30-50% underestimated for wide-gap insulators",
+      "artifact_4f": true,
+      "do_not_cite": "Nd 4f in valence (PBE) closes the gap — method artifact, not physics. Cite MP frozen-4f values instead.",
+      "files": {
+        "dos_csv": "db/properties/sei_dos/lindo2_mp-1222355_dos.csv",
+        "pdos_csv": "db/properties/sei_dos/lindo2_mp-1222355_pdos.csv"
+      },
+      "pdos_channels": [
+        "Li_p",
+        "Li_s",
+        "Nd_d",
+        "Nd_f",
+        "Nd_p",
+        "Nd_s",
+        "O_p",
+        "O_s"
+      ]
+    },
+    "nd2o3_mp-2763": {
+      "tag": "nd2o3_mp-2763",
+      "vbm": 13.8159,
+      "cbm": 13.7941,
+      "gap": -0.02179999999999893,
+      "verdict": "금속/반금속 (겹침)",
+      "nelec": 46.0,
+      "n_occ_bands": 23,
+      "nbnd": 39,
+      "nk": 126,
+      "spin_polarized": false,
+      "method": "fixed-occupation nscf eigenvalues (NOT DOS threshold)",
+      "warning": "PBE gap; systematically 30-50% underestimated for wide-gap insulators",
+      "artifact_4f": true,
+      "do_not_cite": "Nd 4f in valence (PBE) closes the gap — method artifact, not physics. Cite MP frozen-4f values instead.",
+      "files": {
+        "dos_csv": "db/properties/sei_dos/nd2o3_mp-2763_dos.csv",
+        "pdos_csv": "db/properties/sei_dos/nd2o3_mp-2763_pdos.csv"
+      },
+      "pdos_channels": [
+        "Nd_d",
+        "Nd_f",
+        "Nd_p",
+        "Nd_s",
+        "O_p",
+        "O_s"
+      ]
+    },
+    "nd2s3_mp-438": {
+      "tag": "nd2s3_mp-438",
+      "vbm": 10.8808,
+      "cbm": 10.8595,
+      "gap": -0.021300000000000097,
+      "verdict": "금속/반금속 (겹침)",
+      "nelec": 184.0,
+      "n_occ_bands": 92,
+      "nbnd": 132,
+      "nk": 48,
+      "spin_polarized": false,
+      "method": "fixed-occupation nscf eigenvalues (NOT DOS threshold)",
+      "warning": "PBE gap; systematically 30-50% underestimated for wide-gap insulators",
+      "artifact_4f": true,
+      "do_not_cite": "Nd 4f in valence (PBE) closes the gap — method artifact, not physics. Cite MP frozen-4f values instead.",
+      "files": {
+        "dos_csv": "db/properties/sei_dos/nd2s3_mp-438_dos.csv",
+        "pdos_csv": "db/properties/sei_dos/nd2s3_mp-438_pdos.csv"
+      },
+      "pdos_channels": [
+        "Nd_d",
+        "Nd_f",
+        "Nd_p",
+        "Nd_s",
+        "S_p",
+        "S_s"
+      ]
+    }
+  }
+}
