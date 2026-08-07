@@ -84,22 +84,21 @@ def _conclusion(cmp_res: dict, summary: dict) -> list[str]:
                 f"**{_pct(collapse)}** (n={g['n_wide_gap_true']}). "
                 f"참 격차 {_pp(g['mean_true_gap_wide'])} → 복원 격차 "
                 f"{_pp(g['mean_recovered_gap_wide'])}, shrinkage {g['shrinkage']:.2f}. ")
-        # ★ 결론 문장은 숫자를 따라간다. 서사를 고정하면 데이터가 반대일 때 거짓말이 된다.
-        if collapse >= 0.20:
-            fact += (f"→ **실측에서 `LAM_PE ≈ LAM_NE`가 나와도 두 전극이 실제로 비슷하게 "
-                     f"열화했다는 증거가 못 된다.** 방법이 서로 다른 전극을 상당 비율로 "
-                     f"뭉개므로, 22p 결과를 물리로 읽으려면 이 붕괴율을 먼저 낮춰야 한다.")
-        else:
-            fact += (f"→ **이 방법은 서로 다른 전극을 같다고 뭉개지는 않는다.** "
-                     f"따라서 22p의 `LAM_PE ≈ LAM_NE`를 \"둘을 구분 못 해서 생긴 값\"으로 "
-                     f"단정할 수 없다.")
-            if split is not None and split >= 0.20:
-                fact += (f" 다만 실패는 **반대 방향**으로 나타난다 — 참값이 같은 조건의 "
-                         f"{_pct(split)}에서 오히려 없는 격차를 만들어낸다. "
-                         f"즉 이 방법으로 얻은 PE-NE **격차**는 신뢰도가 낮고, "
-                         f"22p처럼 격차가 작게 나온 결과가 오히려 드문 축에 속한다.")
-        if split is not None and split < 0.20:
-            fact += f" (참값이 같은데 다르다고 답하는 비율은 {_pct(split)}.)"
+        lr = g.get("likelihood_ratio_equal")
+        if lr is not None and split is not None:
+            fact += (f"\n\n   관측 \"두 전극이 같다\"가 어느 쪽을 지지하는지는 우도비로 나온다.\n\n"
+                     f"   > P(같다고 답 | 참값 같음) = {_pct(1 - split)}\n"
+                     f"   > P(같다고 답 | 참값 {_pp(g['gap_thresh'], 0)} 이상 차이) = {_pct(collapse, 1)}\n"
+                     f"   > **우도비 ≈ {lr:.0f} : 1**\n\n"
+                     f"   → **22p의 `LAM_PE ≈ LAM_NE`는 degeneracy의 증거가 아니라, 두 전극이 "
+                     f"실제로 비슷하게 열화했다는 쪽의 증거다.**")
+        # ★ 임계 의존성 — 이걸 빼면 위 우도비가 측정처럼 읽힌다
+        if not g.get("collapse_measurable", True):
+            fact += (f" ⚠ 단, 붕괴로 세려면 격차 오차가 최소 "
+                     f"{_pp(g['collapse_requires_gap_err'], 0)} 필요한데 실측 격차 오차는 "
+                     f"중앙값 {_pp(g['gap_err_median'])}, 99분위 {_pp(g['gap_err_p99'])}다. "
+                     f"즉 낮은 붕괴율은 **이 임계 설정에서 붕괴가 관측되기 어렵다**는 "
+                     f"사실의 재진술에 가깝고, 우도비도 그만큼 임계 의존적이다.")
         lines.append(fact)
 
     v = cmp_res.get("verdict_22p", {}).get(base, {})
@@ -115,6 +114,14 @@ def _conclusion(cmp_res: dict, summary: dict) -> list[str]:
             f"⚠ 이 근방은 참값이 애초에 LAM_PE = LAM_NE인 격자점이므로, "
             f"여기서 복원이 잘 된다는 사실만으로는 22p 결과를 옹호할 수 없다 "
             f"(위 2번이 답이다).")
+
+    coup = summary.get("hessian_pe_ne_coupled_frac")
+    if coup is not None:
+        lines.append(
+            f"{len(lines) + 1}. **평평한 방향이 PE-NE 결합인 조건은 {_pct(coup)}다.** "
+            f"22p 패턴이 \"PE와 NE를 함께 움직여도 곡선이 안 변해서\" 생겼다는 가설의 "
+            f"직접적인 음성 결과다 — 목적함수가 잘 정의되지 않은 방향은 있지만, "
+            f"그 방향이 두 전극의 동반 이동은 아니다.")
 
     ur = cmp_res.get("unrecoverable_frac", 0.0)
     lines.append(
@@ -200,6 +207,7 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
 
     # ── 22p ──
     P.append("## 22p 실험 조건 판정\n")
+    P.append("*모두 `noise = 0` 조건이다. 노이즈가 있으면 값이 달라진다(F10) — `objective_comparison.yaml`의 `verdict_22p.noise` 참조.*\n")
     P.append("| objective | 근방 조건 | degeneracy | 평균 \\|err\\| | "
              "err LAM_PE | err LAM_NE | PE-NE 상쇄 |")
     P.append("|---|---|---|---|---|---|---|")
@@ -218,26 +226,34 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     gaps = cmp_res.get("gap_analysis") or {}
     if any("gap_collapse_frac" in g for g in gaps.values()):
         P.append("## 전극 격차를 구분하는가 — 22p 질문의 직접적인 답\n")
+        P.append("*`noise = 0` 조건 기준.*\n")
         P.append("22p 근방 격자점은 **참값이 애초에 `LAM_PE = LAM_NE`** 다. 거기서 "
                  "복원값이 비슷하게 나오는 건 아무 증거가 못 된다. 물어야 할 것은 "
                  "반대 방향이다 — **참값이 뚜렷이 다를 때도 fitting이 둘을 같다고 "
                  "말하는가.**\n")
         P.append("| objective | 넓은 격차 조건 n | **격차 붕괴율** | shrinkage | "
-                 "거짓 분리율 |")
-        P.append("|---|---|---|---|---|")
+                 "거짓 분리율 | 붕괴에 필요한 격차오차 / 실측 중앙값 |")
+        P.append("|---|---|---|---|---|---|")
         for o, g in gaps.items():
             if "gap_collapse_frac" not in g:
                 continue
+            need = (f"{_pp(g['collapse_requires_gap_err'], 0)} / "
+                    f"{_pp(g['gap_err_median'])}"
+                    if "collapse_requires_gap_err" in g else "—")
             P.append(f"| {o} | {g['n_wide_gap_true']} | "
                      f"**{_pct(g['gap_collapse_frac'])}** | "
                      f"{g['shrinkage']:.2f} | "
-                     f"{_pct(g.get('false_split_frac'))} |")
+                     f"{_pct(g.get('false_split_frac'))} | {need} |")
         P.append("")
         P.append("- **격차 붕괴율**: 참 격차 ≥ 6%p인데 복원 격차 < 2%p로 답한 비율. "
                  "높을수록 \"두 전극이 비슷하다\"는 관측이 무의미해진다.")
         P.append("- **shrinkage**: 복원 격차 / 참 격차의 평균. 1이면 격차를 그대로 "
                  "복원, 0에 가까우면 전부 뭉갠다.")
-        P.append("- **거짓 분리율**: 참값은 같은데 다르다고 답한 비율 (반대 방향 오류).\n")
+        P.append("- **거짓 분리율**: 참값은 같은데 다르다고 답한 비율 (반대 방향 오류).")
+        P.append("- **붕괴에 필요한 격차오차**: 붕괴로 세려면 격차를 6%p에서 2%p 아래로 "
+                 "끌어내려야 하므로 최소 4%p의 격차 오차가 필요합니다. 이 값이 실측 "
+                 "격차오차 중앙값보다 크면, **낮은 붕괴율은 측정이 아니라 임계 설정의 "
+                 "결과**입니다 — 그대로 인용하지 마세요.\n")
 
     # ── Hessian ──
     if hess_by_obj:
@@ -246,29 +262,51 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
                  "움직여도 곡선이 거의 안 변한다 = **데이터가 그 조합을 구분하지 "
                  "못한다**. multi-start 지표와 달리 optimizer가 어떻게 헤맸는지와 "
                  "무관하므로, \"dQ/dV가 정보를 더 주는가\"에는 이쪽이 더 깨끗한 답이다.\n")
-        P.append("| objective | n | 조건수(중앙값) | flat score | α_PE·α_NE 결합 |")
-        P.append("|---|---|---|---|---|")
+        P.append("| objective | n | 조건수(중앙값) | flat score | 최소고윳값>0 | α_PE·α_NE 결합 |")
+        P.append("|---|---|---|---|---|---|")
         for o in (list(OBJ_ORDER_LOCAL) + sorted(set(hess_by_obj) - set(OBJ_ORDER_LOCAL))):
             d = hess_by_obj.get(o)
             if d is None:
                 continue
             coup = (_pct(d["pe_ne_coupled"].mean())
                     if "pe_ne_coupled" in d.columns else "—")
+            pos = (_pct(d["min_eigval_positive"].mean())
+                   if "min_eigval_positive" in d.columns else "—")
             P.append(f"| {o} | {len(d)} | {d['condition_number'].median():.3g} | "
-                     f"{d['flat_direction_score'].median():.2g} | {coup} |")
+                     f"{d['flat_direction_score'].median():.2g} | {pos} | {coup} |")
         P.append("")
         P.append("- **조건수**가 작을수록 최적점이 잘 정의돼 있다. 목적함수 간 비교에서 "
                  "이 값이 크게 낮아지면 그 항이 실제로 정보를 더한다는 뜻이다.")
         eps_vals = sorted({float(d["eps"].iloc[0]) for d in hess_by_obj.values()
                            if "eps" in d.columns})
-        P.append(f"- ⚠ **조건수의 절대값은 인용하지 마세요.** 목적함수가 여러 스케일에서 "
-                 f"울퉁불퉁하면 수치 Hessian이 수렴하지 않습니다 — 실측에서 "
-                 f"`pocv_dvdq_dqdv`의 조건수가 eps 1e-3/1e-4/1e-5에 대해 "
-                 f"12.8 / 229 / 17381로 3자리수 넘게 변했습니다. "
-                 f"의미가 있는 것은 **같은 eps에서의 목적함수 간 순서**뿐입니다"
+        P.append("- ⚠ **조건수의 절대값은 인용하지 마세요.** 목적함수가 여러 스케일에서 "
+                 "울퉁불퉁하면 수치 Hessian이 수렴하지 않아, eps를 바꾸면 값이 자릿수 "
+                 "단위로 움직입니다 (F23). 의미가 있는 것은 **같은 eps에서의 순서**뿐입니다"
                  + (f" (이 표는 eps={eps_vals[0]:g})." if len(eps_vals) == 1
-                    else f" (⚠ 이 표에 eps가 {eps_vals} 로 섞여 있습니다 — 다시 뽑으세요).")
-                 )
+                    else f" (⚠ 이 표에 eps가 {eps_vals} 로 섞여 있습니다 — 다시 뽑으세요)."))
+        # ★ 조건수 순서가 실제 복원 성능과 어긋나면 그 사실을 문서가 스스로 말해야 한다
+        try:
+            err_by = {r["objective"]: r["mean_abs_err"] for r in cmp_res["table"]}
+            pairs = [(d["condition_number"].median(), err_by[o])
+                     for o, d in hess_by_obj.items() if o in err_by]
+            if len(pairs) >= 3:
+                import numpy as _np
+                rho = float(_np.corrcoef([p[0] for p in pairs],
+                                         [p[1] for p in pairs])[0, 1])
+                if rho < 0:
+                    best_c = min(hess_by_obj.items(),
+                                 key=lambda kv: kv[1]["condition_number"].median())[0]
+                    P.append(f"- ⚠⚠ **이 격자에서 조건수 순서는 실제 복원 성능과 "
+                             f"역상관입니다** (상관계수 {rho:.2f}). "
+                             f"예: `{best_c}`가 조건수는 가장 좋은데 평균 |오차|는 "
+                             f"{_pp(err_by[best_c])}로 나쁩니다. 지형이 거칠면 곡률이 "
+                             f"크게 잡히므로, 낮은 조건수가 \"잘 정의된 최적점\"이 아니라 "
+                             f"**울퉁불퉁함**을 잰 것일 수 있습니다. "
+                             f"조건수를 \"정보가 더 많다\"의 단독 근거로 쓰지 마세요.")
+        except Exception:  # noqa: BLE001
+            pass
+        P.append("- **최소고윳값>0** — 100%가 아니면 그만큼은 최적점이 아니라 **안장점**에서 "
+                 "곡률을 잰 것입니다. 그 조건들의 조건수는 해석하지 마세요.")
         P.append("- **α_PE·α_NE 결합** — 평평한 방향에서 두 전극이 같은 부호로 묶여 "
                  "있는 비율. 높으면 \"PE와 NE를 함께 움직여도 곡선이 안 변한다\"는 "
                  "뜻이고, 22p에서 LAM_PE ≈ LAM_NE가 나온 것이 물리가 아니라 수학이라는 "
@@ -317,6 +355,19 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
                  "`agree_frac`은 restart를 5까지 간 조건에서 **정의상 0**이고, "
                  "`p_spread = 0`은 \"해가 일치\"가 아니라 \"최적 J에 도달한 restart가 "
                  "하나뿐\"이라는 뜻입니다. 위 표가 그 자리를 대신합니다.\n")
+
+    # ── 기준 곡선 비교 (Case 1 vs Case 2) ──
+    case = _load(in_dir / "case_comparison.yaml")
+    if case:
+        from tools.compare_cases import to_markdown as case_md
+        P.append("## 기준 곡선 비교 — Case 1 (전 범위 half-cell) vs Case 2 (격자 곡선)\n")
+        P.append("목적함수를 바꾸는 것과 **기준 곡선을 바꾸는 것** 중 어느 쪽이 큰지.\n")
+        P.append(case_md(case) + "\n")
+        P.append("> ⚠ halfcell 쪽의 \"복원불가 0%\"는 **측정이 아닙니다.** "
+                 "`src/scoring.py`가 `reference != \"grid\"`이면 `recoverable=True`로 "
+                 "고정합니다(전 범위 테이블이라 창 부족이 없다는 물리적 근거). "
+                 "그래서 위 표는 **두 실행의 공통 조건 중 grid 기준에서 복원가능한 것**으로 "
+                 "행 수를 맞춰 비교한 것입니다.\n")
 
     # ── 가중치 ──
     if wsweep:

@@ -190,16 +190,43 @@ def gap_analysis(df: pd.DataFrame, objective: str, noise: float | None = 0.0,
     }
     if len(wide):
         w_gr = wide["pe_ne_gap_recovered"]
+        gap_err = (w_gr - wide["pe_ne_gap_true"]).abs()
+        # ★ 임계값 의존성을 함께 낸다 (리뷰 지적).
+        #   붕괴로 세려면 격차를 gap_thresh 아래에서 tol 아래로 끌어내려야 하므로,
+        #   **최소 (gap_thresh − tol) 만큼의 격차 오차**가 필요하다.
+        #   그 값이 실측 격차 오차 분포보다 크면, 낮은 붕괴율은 측정이 아니라
+        #   "오차 스케일 < 임계 간격"의 재진술이다.
+        required = float(gap_thresh - tol)
         out.update({
             # ★ 참값이 다른데 같다고 말하는 비율
             "gap_collapse_frac": float((w_gr < tol).mean()),
             "mean_true_gap_wide": float(wide["pe_ne_gap_true"].mean()),
+            "min_true_gap_wide": float(wide["pe_ne_gap_true"].min()),
             "mean_recovered_gap_wide": float(w_gr.mean()),
             "shrinkage": float((w_gr / wide["pe_ne_gap_true"]).mean()),
+            "collapse_requires_gap_err": required,
+            "gap_err_median": float(gap_err.median()),
+            "gap_err_p99": float(gap_err.quantile(0.99)),
+            "collapse_measurable": bool(gap_err.quantile(0.99) >= required),
         })
     if len(same):
         out["false_split_frac"] = float(
             (same["pe_ne_gap_recovered"] >= tol).mean())
+
+    # ★ 22p 질문의 답을 우도비로 (리뷰 지적).
+    #   관측 "두 전극이 같다"가 어느 가설을 더 지지하는가.
+    #     P(같다고 답 | 참값 같음)      = 1 − false_split
+    #     P(같다고 답 | 참값 크게 다름) = gap_collapse
+    if "false_split_frac" in out and out.get("gap_collapse_frac") is not None:
+        p_same = 1.0 - out["false_split_frac"]
+        p_diff = out["gap_collapse_frac"]
+        out["likelihood_ratio_equal"] = (
+            float(p_same / p_diff) if p_diff > 0 else float("inf"))
+        out["_주의"] = (
+            "우도비와 붕괴율은 gap_thresh·tol 선택에 의존한다. "
+            f"붕괴로 세려면 격차 오차가 최소 {100 * (gap_thresh - tol):.0f}%p여야 하는데 "
+            "실측 분포가 그보다 작으면 낮은 붕괴율은 측정이 아니라 임계 설정의 결과다 "
+            "— collapse_measurable 을 함께 볼 것.")
     return out
 
 

@@ -187,6 +187,20 @@ def run_hessian(in_dir, out_dir=None, objective: str = "pocv_dvdq",
         "같은 eps에서 목적함수끼리만 비교할 것.**")
     log.info("Hessian 요약: %s", summary)
     log.info("저장: %s", path)
+
+    # ★ degeneracy_summary.yaml에도 올린다 — 결론에서 쓰려면 한 곳에 있어야 한다.
+    #   "평평한 방향이 PE-NE 결합인가"는 22p 가설의 직접적인 검정이라 표에만 두면 묻힌다.
+    ds = out_dir / "degeneracy_summary.yaml"
+    if ds.exists():
+        import yaml
+        try:
+            doc = yaml.safe_load(ds.read_text(encoding="utf-8")) or {}
+            doc["hessian_pe_ne_coupled_frac"] = summary["pe_ne_coupled_frac"]
+            doc["hessian_eps"] = eps
+            ds.write_text(yaml.safe_dump(doc, allow_unicode=True, sort_keys=False),
+                          encoding="utf-8")
+        except Exception as e:  # noqa: BLE001
+            log.warning("degeneracy_summary.yaml 갱신 실패: %s", e)
     return summary
 
 

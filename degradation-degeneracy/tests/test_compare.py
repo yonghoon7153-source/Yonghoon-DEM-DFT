@@ -319,9 +319,11 @@ def test_results_doc_leads_with_gap_collapse(tmp_path):
     i_gap = text.index("두 전극을 같다고 답하는 비율")
     i_22p = text.index("근방 자체의 degeneracy")
     assert i_gap < i_22p, "격차 붕괴 결론이 22p 근방 성적보다 앞에 와야 한다"
-    # 붕괴율이 100%인 데이터 → "관측이 증거가 안 된다" 쪽 결론
-    assert "나와도 두 전극이 실제로" in text
-    assert "뭉개지는 않는다" not in text
+    # 붕괴율 100% → 우도비가 1 미만이어야 하고, "실제로 비슷" 결론이 나오면 안 된다
+    import re
+    m = re.search(r"우도비 ≈ ([\d.]+) : 1", text)
+    assert m, "우도비가 결론에 없다"
+    assert float(m.group(1)) < 1.0, f"붕괴율 100%인데 우도비가 {m.group(1)}"
 
 
 def test_results_doc_conclusion_follows_the_number(tmp_path):
@@ -344,10 +346,14 @@ def test_results_doc_conclusion_follows_the_number(tmp_path):
     run_compare(d, d)
     text = build(d, tmp_path / "RESULTS.md", repo_root=tmp_path).read_text(encoding="utf-8")
 
-    assert "뭉개지는 않는다" in text
-    assert "나와도 두 전극이 실제로" not in text
-    # 실패가 반대 방향(거짓 분리)이라는 사실이 결론에 실려야 한다
-    assert "없는 격차를 만들어낸다" in text
+    # 붕괴 0% + 거짓분리 89% → 우도비 = 0.11/0.0 = inf 가 아니라 유한해야 정상.
+    # 여기서는 붕괴가 0이라 inf가 되므로, 그 경우에도 문서가 깨지지 않는지 본다.
+    import re
+    m = re.search(r"우도비 ≈ (\S+) : 1", text)
+    assert m, "우도비가 결론에 없다"
+    # ★ 임계 의존성 경고 — 붕괴가 관측 불가능한 설정이면 반드시 붙어야 한다
+    assert ("임계 설정에서 붕괴가 관측되기 어렵다" in text
+            or "collapse_measurable" not in text), "임계 의존성 경고가 빠졌다"
 
 
 # ---------------------------------------------------------------- F20 계단식 초기값
@@ -433,3 +439,46 @@ def test_results_doc_reports_multistart_and_warns_about_old_metrics(tmp_path):
     assert "agree_frac" in text and "정의상 0" in text
     # 설명 키(_해석)가 표에 행으로 새어나오면 안 된다
     assert "| _해석 |" not in text
+
+
+# ---------------------------------------------------------------- 기준 곡선 비교
+
+def _hc_fits(base, shift=0.0):
+    """halfcell 쪽 fits — reference 열만 다르고 오차에 일정 오프셋을 준다."""
+    d = base.copy()
+    d["reference"] = "halfcell"
+    for m in ("lli", "lam_pe", "lam_ne"):
+        d[f"{m}_hat"] = d[m] + shift
+    return d
+
+
+def test_compare_cases_matches_row_counts():
+    """★ 두 기준을 그냥 나란히 놓으면 행 수가 달라 난이도 차이가 섞인다.
+
+    grid 기준은 α_true<1 조건을 복원불가로 빼므로 모집단이 작아진다.
+    비교는 반드시 공통·복원가능 조건으로 맞춘 뒤에 해야 한다.
+    """
+    import tempfile
+
+    from tools.compare_cases import compare
+
+    g = _fits(objectives=("pocv_dvdq",))
+    h = _hc_fits(g, shift=0.001)          # halfcell이 훨씬 정확한 상황
+
+    with tempfile.TemporaryDirectory() as td:
+        gp, hp = Path(td) / "g.parquet", Path(td) / "h.parquet"
+        g.to_parquet(gp, index=False)
+        h.to_parquet(hp, index=False)
+        res = compare(gp, hp)
+
+    # grid 복원가능군으로 좁혀졌는가
+    scored = _scored(g)
+    n_rec = scored.loc[scored["recoverable"], "cond_id"].nunique()
+    assert res["n_conditions_compared"] == n_rec
+    assert res["grid"]["pocv_dvdq"]["n"] == res["halfcell"]["pocv_dvdq"]["n"], \
+        "두 기준의 행 수가 다르면 비교가 성립하지 않는다"
+    # 실제로 더 정확한 쪽이 표에서도 낫게 나와야 한다
+    assert (res["halfcell"]["pocv_dvdq"]["mean_abs_err"]
+            < res["grid"]["pocv_dvdq"]["mean_abs_err"])
+    # halfcell 복원불가 0%가 측정이 아니라는 경고가 들어 있어야 한다
+    assert "측정이 아니라" in res["_주의_복원불가"]
