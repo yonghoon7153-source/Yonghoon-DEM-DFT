@@ -51,8 +51,25 @@ def _scored(fits_path: Path, tol: float) -> pd.DataFrame:
 
 
 def compare(grid_fits: Path, halfcell_fits: Path, tol: float = 0.02) -> dict:
+    """★ F52 — 두 artifact **모두** provenance를 검증하고 digest를 봉인한다.
+
+    이 표는 두 실행의 비교인데, `make_results.py` 의 배너는 주 입력 디렉터리
+    하나만 검사한다. 그래서 검증된 grid + **검증 안 된 half-cell** 로 만든
+    비교표가 녹색 배너 아래 실릴 수 있었다. 여기서 양쪽을 직접 확인하고
+    결과 yaml 에 박아, 읽는 쪽이 전이적 입력까지 추적할 수 있게 한다.
+    """
+    from src.io import file_digest, validate_provenance
+
     g = _scored(grid_fits, tol)
     h = _scored(halfcell_fits, tol)
+    prov = {}
+    for tag, fp in (("grid", Path(grid_fits)), ("halfcell", Path(halfcell_fits))):
+        run_dir = fp.parent if fp.is_file() else fp
+        v = validate_provenance(run_dir)
+        prov[tag] = {"run_dir": str(run_dir), "ok": v["ok"], "fail": v["fail"],
+                     "fits_sha256": file_digest(
+                         fp if fp.is_file() else run_dir / "fits.parquet"),
+                     "manifest_sha256": file_digest(run_dir / "manifest.yaml")}
 
     # ① 공통 조건 ② grid 기준에서 복원가능한 조건만
     common = set(g["cond_id"]) & set(h["cond_id"])
@@ -69,7 +86,15 @@ def compare(grid_fits: Path, halfcell_fits: Path, tol: float = 0.02) -> dict:
             "pe_ne_antisym_frac": float(x["pe_ne_antisym"].mean()),
         } for o, x in df.groupby("objective")}
 
+    provenance_ok = all(v["ok"] for v in prov.values())
     return {
+        "provenance": prov,
+        "provenance_ok": provenance_ok,
+        "_주의_provenance": (
+            "두 artifact 모두 provenance 검증을 통과했다."
+            if provenance_ok else
+            "⚠ 인용 금지 — 비교에 쓰인 artifact 중 provenance 검증에 실패한 것이 "
+            f"있다: { {k: v['fail'] for k, v in prov.items() if not v['ok']} }"),
         "n_conditions_total": int(g["cond_id"].nunique()),
         "n_conditions_common": len(common),
         "n_conditions_compared": len(keep),

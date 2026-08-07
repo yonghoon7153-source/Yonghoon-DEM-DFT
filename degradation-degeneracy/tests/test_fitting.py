@@ -492,11 +492,44 @@ def test_start_provenance_is_written_before_fitting(tmp_path):
               1, nproc=1)
 
     sp = yaml.safe_load((out / "manifest_start.yaml").read_text(encoding="utf-8"))
-    assert sp["run_signature"]
-    assert "git_commit" in sp and "input_sha256" in sp
-    assert sp["input_sha256"], "시작 시점 입력 digest가 비었다"
+    assert sp["attempt_id"] and sp["source_digest"]
+    assert "git_commit" in sp and sp["input_sha256"], "시작 시점 입력 digest가 비었다"
+    # attempt별 사본도 남아야 한다
+    att = sorted((out / "attempts").glob("manifest_start_*.yaml"))
+    assert len(att) == 1
 
     man = yaml.safe_load((out / "manifest.yaml").read_text(encoding="utf-8"))
-    assert man["start_provenance"]["run_signature"] == sp["run_signature"]
-    # 실행 중 HEAD가 안 바뀌었으면 False여야 한다
+    assert man["start_provenance"]["attempt_id"] == sp["attempt_id"]
     assert man["git_commit_changed_during_run"] is False
+    assert man["source_digest_changed_during_run"] is False
+
+
+def test_start_manifest_is_not_overwritten_by_resume(tmp_path):
+    """★ F51 — resume이 최초 시도의 시작 provenance를 덮어쓰면 안 된다.
+
+    덮어쓰면 최초 chunk를 만든 시점의 증거가 사라지고 마지막 시도만
+    "시작"으로 남는다.
+    """
+    import yaml
+
+    import src.fitting as F
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    out = tmp_path / "out"
+    obj_cfg = {"objectives": {}, "dqdv": {"window": 7, "polyorder": 2,
+                                          "peak_weight": 1.0},
+               "scaling": {"method": "reference_rmse"}}
+    bounds = {"init": [1.0, 0.0, 1.0, 0.0], "lb": [0.5, -1.0, 0.5, -1.0],
+              "ub": [2.0, 1.0, 2.0, 1.0]}
+    objs = {"a": {"w_pocv": 1.0}}
+
+    F.run_fit(in_dir, out, obj_cfg, objs, bounds, "expanded", 1, nproc=1)
+    first = yaml.safe_load((out / "manifest_start.yaml").read_text(encoding="utf-8"))
+    F.run_fit(in_dir, out, obj_cfg, objs, bounds, "expanded", 1, nproc=1, resume=True)
+    again = yaml.safe_load((out / "manifest_start.yaml").read_text(encoding="utf-8"))
+
+    assert again["attempt_id"] == first["attempt_id"], \
+        "resume이 최초 시작 provenance를 덮어썼다 (F51)"
+    assert first["resume"] is False
+    att = sorted((out / "attempts").glob("manifest_start_*.yaml"))
+    assert len(att) == 2, "시도마다 별도 attempt 파일이 남아야 한다"

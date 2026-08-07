@@ -767,3 +767,48 @@ F26이 지우려던 계통 오프셋이 그대로 다시 생긴다.
 - **F48** 문서 상단에 3차 SHA `7557c33`을 실제로 표기.
 
 테스트 185 → 189.
+
+## 5차 교차리뷰 대응 (2026-08-07, F49~F53)
+
+4차 회답에 대한 재검증에서 8건. 전부 타당했다. **제 논증이 하나 반박됐다.**
+
+- **F49** `run_sig`에 코드 identity가 없어, **코드만 바꾸고 같은 output에 resume하면
+  서로 다른 코드의 행이 같은 서명으로 섞이고 병합 검사를 통과한다.** 리뷰가 3조건
+  반례로 재현했다(OLD_CODE 행 + NEW_CODE 행이 같은 `run_sig` 79f2e9c798ee로 병합,
+  validator `ok=True`). `git_commit`·`git_dirty`·`source_digest`(src/tools/configs
+  전체 내용 해시)를 `run_spec`에 넣고 `sig_version`을 3으로 올렸다.
+- **F50** validator가 "무엇이 반드시 있어야 하는지"를 정의하지 않았다.
+  reference별 필수 입력(curves·base config·halfcell 캐시), `run_spec` 필수 키 11종,
+  시작/종료 provenance 일치, 실행 중 코드 불변을 검사한다.
+  ★ `restarts_json`을 `.dropna()`로 걸러 **전부 null이어도 통과**했고 배열의
+  `rs[0]`만 봐서 **두 번째 원소부터 source가 없어도 통과**했다. 둘 다 고쳤다.
+- **F51** `manifest_start.yaml`이 curves 로드·inventory 계산·half-cell 캐시 로드·
+  **pristine p_ini fitting**(모든 후속 fit의 기준점을 정하는 실제 최적화) **뒤에**
+  기록되고 있었다. 함수 맨 앞으로 옮겼다. 그리고 resume마다 덮어쓰던 것을
+  `attempts/manifest_start_<id>.yaml`로 시도별 보존하고 대표 파일은 최초 것만 남긴다.
+- **F52** `compare_cases.py`가 grid와 half-cell 양쪽 fits를 읽으면서 어느 쪽도
+  provenance 검증을 하지 않았다. 양쪽을 검증해 `case_comparison.yaml`에
+  digest와 판정을 봉인한다.
+- **F52b** RESULTS 배너가 **주 입력 디렉터리 하나만** 검사했다. 검증된 grid +
+  검증 안 된 half-cell로 만든 비교표가 녹색 배너 아래 실릴 수 있었다.
+  비교 입력의 판정을 배너 판정에 합치고, 표 위에 artifact별 provenance를 싣는다.
+- **F53** Windows에서 없는 PID에 `os.kill(pid, 0)`이 `ProcessLookupError`가 아니라
+  `OSError [WinError 87]`을 낸다. 안 잡아서 stale lock을 영영 회수하지 못했다.
+  WinError 87만 "죽음"으로 보고 나머지는 안전하게 "살아 있음"으로 처리한다.
+
+### 제 논증이 틀렸던 것
+
+4차 회답에서 `halfcell_v2`의 시작 SHA를 이렇게 논증했다.
+
+> "7557c33을 실행 중 push했으니, HEAD가 움직였다면 종료 기록이 7557c33이어야 한다.
+>  3c1109f로 남았으니 실행 내내 HEAD가 거기 있었다."
+
+**틀렸다.** push는 실행 worktree의 HEAD를 움직이지 않는다. pull해야 움직이고,
+그건 artifact 밖의 사실이다. 따라서 이 논증은 artifact-internal proof가 아니다.
+`restarts_json.source`도 "F31 이후 계통"이라는 정황일 뿐 정확한 HEAD를 확정하지
+못한다(cherry-pick·dirty source·사후 변환을 구별하지 못한다).
+
+`halfcell_v2`의 "인용 가능 승격"을 **철회**하고 quarantine으로 되돌린다.
+F49~F53을 갖춘 clean SHA에서 fresh output으로 재실행해야 한다.
+
+테스트 189 → 195.

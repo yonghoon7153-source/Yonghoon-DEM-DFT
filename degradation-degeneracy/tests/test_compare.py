@@ -797,15 +797,19 @@ def _complete_artifact(tmp_path):
     d.mkdir(parents=True, exist_ok=True)
 
     # 실제 입력 파일 두 개
-    curves = d / "curves.parquet"
+    curves = d / "curves.parquet"      # 이름이 필수 입력 판정에 쓰인다 (F50)
     _fits(objectives=("pocv_dvdq",)).to_parquet(curves, index=False)
-    cfg = d / "base.yaml"
+    cfg = d / "base.yaml"              # 〃
     cfg.write_text("dummy: 1\n", encoding="utf-8")
 
     # run_spec 을 실제로 해시해 서명을 만든다
-    spec = {"sig_version": 2, "objectives": {"pocv_dvdq": {"w_pocv": 1.0}},
-            "reference": "grid", "curves_sha": file_digest(curves),
-            "base_config_sha": file_digest(cfg)}
+    # F50: run_spec 필수 키 스키마를 실제로 만족해야 한다
+    spec = {"sig_version": 3, "objectives": {"pocv_dvdq": {"w_pocv": 1.0}},
+            "reference": "grid", "bounds": {"init": [1.0, 0.0, 1.0, 0.0]},
+            "n_restarts": 5, "warm_start": True, "obj_cfg": {"objectives": {}},
+            "curves_sha": file_digest(curves), "base_config_sha": file_digest(cfg),
+            "git_commit": "0" * 40, "git_dirty": False,
+            "source_digest": "aabbccdd11223344"}
     sig = hashlib.sha1(
         json.dumps(spec, sort_keys=True, default=str).encode()).hexdigest()[:12]
 
@@ -821,6 +825,11 @@ def _complete_artifact(tmp_path):
     (d / "manifest.yaml").write_text(yaml.safe_dump({
         "config_hash": "deadbeef1234", "git_dirty": False, "reproducible": True,
         "run_signature": sig, "run_spec": spec,
+        # F42/F51: 시작 provenance와 실행 중 불변 플래그
+        "start_provenance": {"attempt_id": "20260807T000000_1",
+                             "source_digest": spec["source_digest"]},
+        "git_commit_changed_during_run": False,
+        "source_digest_changed_during_run": False,
         "input_sha256": {str(curves): file_digest(curves), str(cfg): file_digest(cfg)},
     }), encoding="utf-8")
     return d, sig
@@ -877,3 +886,129 @@ def test_results_doc_has_no_banner_when_provenance_complete(tmp_path):
     text = build(d, tmp_path / "RESULTS.md", repo_root=tmp_path).read_text(encoding="utf-8")
     assert "인용 금지" not in text
     assert "provenance 검증 통과" in text
+
+
+def test_validator_requires_mandatory_inputs_and_schema(tmp_path):
+    """★ F50 — 존재하는 임의 파일 하나·최소 spec으로는 통과하면 안 된다."""
+    import yaml
+
+    from src.io import validate_provenance
+
+    d, sig = _complete_artifact(tmp_path)
+
+    # ① 필수 입력(curves) 누락 — 다른 실제 파일만 남긴다
+    m = yaml.safe_load((d / "manifest.yaml").read_text(encoding="utf-8"))
+    keep = {k: v for k, v in m["input_sha256"].items() if "base.yaml" in k}
+    m2 = dict(m, input_sha256=keep)
+    (d / "manifest.yaml").write_text(yaml.safe_dump(m2), encoding="utf-8")
+    assert "필수_입력_존재" in validate_provenance(d)["fail"]
+
+    # ② run_spec 필수 키 누락 (self-consistent 최소 spec)
+    import hashlib
+    import json
+
+    d2, _ = _complete_artifact(tmp_path / "b")
+    m = yaml.safe_load((d2 / "manifest.yaml").read_text(encoding="utf-8"))
+    tiny = {"reference": "grid"}
+    m["run_spec"] = tiny
+    m["run_signature"] = hashlib.sha1(
+        json.dumps(tiny, sort_keys=True, default=str).encode()).hexdigest()[:12]
+    import pandas as _pd
+    f = _pd.read_parquet(d2 / "fits.parquet")
+    f["run_sig"] = m["run_signature"]
+    f.to_parquet(d2 / "fits.parquet", index=False)
+    (d2 / "manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+    fail = validate_provenance(d2)["fail"]
+    assert "run_spec_schema" in fail and "코드_identity" in fail
+
+
+def test_validator_rejects_null_and_partial_restart_arrays(tmp_path):
+    """★ F50 — `.dropna()` 때문에 전부 null이어도 통과했고, `rs[0]`만 봤다."""
+    import json
+
+    import pandas as pd
+
+    from src.io import validate_provenance
+
+    d, _ = _complete_artifact(tmp_path)
+
+    # ① 전부 null
+    f = pd.read_parquet(d / "fits.parquet")
+    f["restarts_json"] = None
+    f.to_parquet(d / "fits.parquet", index=False)
+    assert "restart_출처" in validate_provenance(d)["fail"], \
+        "restarts_json이 전부 null인데 통과했다 (F50)"
+
+    # ② 첫 원소만 source 있고 두 번째는 없음
+    f["restarts_json"] = json.dumps(
+        [{"p": [1.0, 0, 1.0, 0], "J": 0.0, "i": 0, "source": "random"},
+         {"p": [1.1, 0, 1.1, 0], "J": 0.5, "i": 1}])
+    f.to_parquet(d / "fits.parquet", index=False)
+    assert "restart_출처" in validate_provenance(d)["fail"], \
+        "배열 뒤쪽 원소에 source가 없는데 통과했다 (F50)"
+
+
+def test_validator_rejects_code_change_during_run(tmp_path):
+    """★ F49/F50 — 실행 도중 코드가 바뀐 artifact는 인용 불가."""
+    import yaml
+
+    from src.io import validate_provenance
+
+    d, _ = _complete_artifact(tmp_path)
+    m = yaml.safe_load((d / "manifest.yaml").read_text(encoding="utf-8"))
+    m["source_digest_changed_during_run"] = True
+    (d / "manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+    assert "실행중_코드불변" in validate_provenance(d)["fail"]
+
+    # 시작 provenance 자체가 없으면(F51 이전 실행) 그것도 실패
+    d2, _ = _complete_artifact(tmp_path / "c")
+    m = yaml.safe_load((d2 / "manifest.yaml").read_text(encoding="utf-8"))
+    del m["start_provenance"]
+    (d2 / "manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+    assert "시작_provenance" in validate_provenance(d2)["fail"]
+
+
+def test_banner_stays_when_compared_artifact_fails_provenance(tmp_path):
+    """★ F52b — 비교에 쓰인 half-cell artifact가 실패하면 배너가 남아야 한다.
+
+    배너가 주 입력만 검사하면, 검증된 grid + 검증 안 된 half-cell로 만든
+    비교표가 녹색 배너 아래 실린다.
+    """
+    import yaml
+
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d, _ = _complete_artifact(tmp_path)
+    run_compare(d, d)
+
+    # half-cell 쪽이 실패했다고 봉인된 비교 결과
+    (d / "case_comparison.yaml").write_text(yaml.safe_dump({
+        "provenance": {
+            "grid": {"run_dir": str(d), "ok": True, "fail": []},
+            "halfcell": {"run_dir": "results/halfcell_x", "ok": False,
+                         "fail": ["행별_서명"]},
+        },
+        "provenance_ok": False,
+    }), encoding="utf-8")
+
+    text = build(d, tmp_path / "R.md", repo_root=tmp_path).read_text(encoding="utf-8")
+    assert "인용 금지" in text[:1500], "비교 입력이 실패했는데 배너가 사라졌다 (F52b)"
+    assert "비교입력_halfcell" in text
+
+
+def test_banner_flags_legacy_case_comparison_without_provenance(tmp_path):
+    """F52 이전에 만든 case_comparison.yaml도 인용 불가로 잡아야 한다."""
+    import yaml
+
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d, _ = _complete_artifact(tmp_path)
+    run_compare(d, d)
+    (d / "case_comparison.yaml").write_text(
+        yaml.safe_dump({"common": {"n": 10}}), encoding="utf-8")
+
+    text = build(d, tmp_path / "R.md", repo_root=tmp_path).read_text(encoding="utf-8")
+    assert "인용 금지" in text[:1500]
+    assert "비교입력_provenance_없음" in text

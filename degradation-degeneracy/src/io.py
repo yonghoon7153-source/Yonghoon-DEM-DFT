@@ -76,6 +76,32 @@ def git_info(repo_dir: str | Path | None = None, save_diff_to=None) -> dict:
         return {"git_commit": "unavailable", "git_dirty": None}
 
 
+def source_digest(root=None, dirs=("src", "tools", "configs")) -> str:
+    """★ F49 — 실제로 import되는 source tree의 내용 해시.
+
+    `run_sig` 에 코드 identity 가 없으면, **코드만 바꾸고 같은 output 에 resume 했을
+    때 서로 다른 코드로 만든 행이 같은 서명 아래 섞이고 병합 검사를 통과한다.**
+    (2026-08-07 5차 리뷰가 3조건 반례로 재현했다: OLD_CODE 행과 NEW_CODE 행이
+    같은 `run_sig` 79f2e9c798ee 로 병합되고 validator 가 ok=True 를 냈다.)
+
+    git commit 만으로는 dirty 실행을 못 잡으므로 파일 내용을 직접 해시한다.
+    """
+    root = Path(root) if root else Path(__file__).resolve().parent.parent
+    h = hashlib.sha256()
+    for d in dirs:
+        base = root / d
+        if not base.exists():
+            continue
+        for f in sorted(base.rglob("*")):
+            if not f.is_file() or "__pycache__" in f.parts:
+                continue
+            if f.suffix in (".pyc", ".pyo"):
+                continue
+            h.update(str(f.relative_to(root)).encode())
+            h.update(f.read_bytes())
+    return h.hexdigest()[:16]
+
+
 def file_digest(path) -> str | None:
     """입력 파일의 SHA-256 (앞 16자). 재현성 검증용. 없으면 None."""
     if path is None:
@@ -153,6 +179,13 @@ def _pid_alive(pid: int) -> bool:
         return False
     except PermissionError:
         return True   # 살아 있으나 다른 사용자 소유
+    except OSError as e:
+        # ★ F53 — Windows 는 없는 PID 에 대해 ProcessLookupError 가 아니라
+        #   `OSError [WinError 87] 매개 변수가 틀립니다` 를 낸다. 안 잡으면
+        #   예외가 그대로 올라와 stale lock 을 영영 회수하지 못한다.
+        #   WinError 87 = 그런 PID 없음 → 죽었다. 그 밖은 **판단 불가 → 살아 있다**
+        #   (모르는 상태에서 남의 lock 을 뺏는 것보다 안전하다).
+        return getattr(e, "winerror", None) != 87
     cmdline = Path(f"/proc/{pid}/cmdline")
     if cmdline.exists():   # PID 재사용 오탐 방지 (Linux)
         cmd = cmdline.read_text(errors="ignore").replace("\x00", " ")
@@ -317,8 +350,43 @@ def validate_provenance(run_dir, repo_root=None) -> dict:
     checks["clean_worktree"] = (man.get("git_dirty") is False,
                                 "dirty worktree 또는 실행 경로에 untracked 파일")
 
-    # ── 입력 digest: 값이 있는지가 아니라 **파일을 다시 해시해** 맞는지 ──
+    # ── F50: 무엇이 **반드시** 있어야 하는지부터 정한다 ──
+    #   임의 파일 하나만 있어도 통과하던 문제. reference 별 필수 입력을 못 박는다.
+    spec0 = man.get("run_spec") or {}
+    ref = str(spec0.get("reference") or man.get("reference") or "grid")
     digs = man.get("input_sha256") or {}
+    need_kinds = ["curves.parquet", "base.yaml"] + (
+        ["_ocp.json"] if ref == "halfcell" else [])
+    missing_kind = [k for k in need_kinds
+                    if not any(k in str(x) for x in digs)]
+    checks["필수_입력_존재"] = (not missing_kind,
+                                f"필수 입력이 없다: {missing_kind}")
+
+    # ── run_spec 필수 키 ──
+    need_keys = ["sig_version", "objectives", "reference", "bounds", "n_restarts",
+                 "warm_start", "obj_cfg", "curves_sha", "base_config_sha",
+                 "git_commit", "source_digest"]
+    missing_key = [k for k in need_keys if k not in spec0]
+    checks["run_spec_schema"] = (not missing_key,
+                                 f"run_spec에 필수 키가 없다: {missing_key}")
+    # ── 코드 identity: 서명에 들어 있고 dirty가 아니어야 한다 (F49) ──
+    checks["코드_identity"] = (
+        bool(spec0.get("source_digest")) and spec0.get("git_dirty") is False,
+        "run_spec에 source_digest가 없거나 dirty 실행이다")
+
+    # ── 시작/종료 provenance 대조 (F42/F51) ──
+    sp = man.get("start_provenance") or {}
+    checks["시작_provenance"] = (bool(sp.get("attempt_id")),
+                                 "start_provenance가 없다 (F51 이전 실행)")
+    checks["실행중_코드불변"] = (
+        man.get("git_commit_changed_during_run") is False
+        and man.get("source_digest_changed_during_run") is False,
+        "실행 도중 git commit 또는 source가 바뀌었다")
+    checks["시작종료_서명일치"] = (
+        not sp or sp.get("source_digest") == spec0.get("source_digest"),
+        "시작 시점 source_digest가 run_spec과 다르다")
+
+    # ── 입력 digest: 값이 있는지가 아니라 **파일을 다시 해시해** 맞는지 ──
     if not digs:
         checks["입력_digest"] = (False, "input_sha256이 없다")
     else:
@@ -337,7 +405,7 @@ def validate_provenance(run_dir, repo_root=None) -> dict:
         checks["입력_digest_재해시"] = (not bad, "; ".join(bad[:4]))
 
     # ── run_spec 을 다시 해시해 run_signature 와 대조 ──
-    spec, sig_man = man.get("run_spec"), man.get("run_signature")
+    spec, sig_man = spec0, man.get("run_signature")
     checks["run_signature_기록"] = (bool(sig_man), "manifest에 run_signature가 없다")
     if not spec:
         checks["run_spec_기록"] = (False, "manifest에 run_spec이 없다")
@@ -368,18 +436,27 @@ def validate_provenance(run_dir, repo_root=None) -> dict:
         if "restarts_json" not in need.columns:
             checks["restart_출처"] = (False, "restarts_json 열이 없다")
         else:
-            n_legacy = 0
-            for v in need["restarts_json"].dropna():
+            # ★ F50 — `.dropna()` 를 쓰면 **전부 null 이어도 통과**한다. 그리고
+            #   `rs[0]` 만 보면 두 번째 원소부터 source 가 없어도 통과한다.
+            #   모든 행 · 모든 원소를 본다.
+            n_bad, n_null = 0, 0
+            for v in need["restarts_json"]:
+                if v is None or (isinstance(v, float) and pd.isna(v)):
+                    n_null += 1
+                    continue
                 try:
                     rs = json.loads(v)
                 except (ValueError, TypeError):
-                    n_legacy += 1
+                    n_bad += 1
                     continue
-                if not rs or not isinstance(rs[0], dict) or "source" not in rs[0]:
-                    n_legacy += 1
+                if not rs or not all(
+                        isinstance(e, dict) and {"p", "J", "i", "source"} <= set(e)
+                        for e in rs):
+                    n_bad += 1
             checks["restart_출처"] = (
-                n_legacy == 0,
-                f"{n_legacy}행이 source 없는 옛 형식이다 (F25/F31 이전)")
+                n_bad == 0 and n_null == 0,
+                f"{n_bad}행이 형식 위반, {n_null}행이 비어 있다 "
+                f"(모든 원소가 p·J·i·source 를 가져야 한다)")
 
     fail = [k for k, (ok, _) in checks.items() if not ok]
     # 통과한 검사에 실패 사유를 같이 실으면 전부 실패한 것처럼 읽힌다.

@@ -239,6 +239,25 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     # 열 존재 여부만 보면 임의의 문자열 하나로 배너가 사라진다 (F38).
     from src.io import validate_provenance
     prov = validate_provenance(in_dir)
+    # ★ F52b — 배너는 주 입력만 보면 안 된다. 비교표에 쓰인 half-cell artifact도
+    #   전이적 입력이므로 그 검증 결과를 합친다 (compare_cases 가 봉인해 둔다).
+    cc = _load(in_dir / "case_comparison.yaml") or {}
+    cc_prov = cc.get("provenance") or {}
+    for tag, v in cc_prov.items():
+        if not v.get("ok"):
+            prov["ok"] = False
+            prov["fail"] = list(prov["fail"]) + [f"비교입력_{tag}"]
+            prov["reasons"] = list(prov["reasons"]) + [
+                f"{v.get('run_dir')} 가 provenance 검증 실패: {v.get('fail')}"]
+            prov["checks"][f"비교입력_{tag}"] = f"실패 — {v.get('fail')}"
+        else:
+            prov["checks"][f"비교입력_{tag}"] = "통과"
+    if cc and not cc_prov:
+        prov["ok"] = False
+        prov["fail"] = list(prov["fail"]) + ["비교입력_provenance_없음"]
+        prov["reasons"] = list(prov["reasons"]) + [
+            "case_comparison.yaml에 provenance 블록이 없다 (F52 이전 산출물)"]
+        prov["checks"]["비교입력_provenance_없음"] = "실패 — F52 이전 산출물"
     if not prov["ok"]:
         P.append(
             "> # ⛔ 인용 금지\n"
@@ -557,10 +576,21 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
 
     # ── 기준 곡선 비교 (Case 1 vs Case 2) ──
     case = _load(in_dir / "case_comparison.yaml")
-    if case:
+    if case and "grid" in case:
         from tools.compare_cases import to_markdown as case_md
         P.append("## 기준 곡선 비교 — Case 1 (전 범위 half-cell) vs Case 2 (격자 곡선)\n")
         P.append("목적함수를 바꾸는 것과 **기준 곡선을 바꾸는 것** 중 어느 쪽이 큰지.\n")
+        # F52: 두 artifact의 provenance 판정을 표 바로 위에 싣는다
+        cp = case.get("provenance") or {}
+        if cp:
+            P.append("| artifact | 경로 | provenance |")
+            P.append("|---|---|---|")
+            for tag, v in cp.items():
+                st = "✅ 통과" if v.get("ok") else f"⛔ 실패 — {v.get('fail')}"
+                P.append(f"| {tag} | `{v.get('run_dir')}` | {st} |")
+            P.append("")
+        else:
+            P.append("> ⚠ 이 비교표에는 provenance 봉인이 없습니다 (F52 이전 산출물).\n")
         P.append(case_md(case) + "\n")
         P.append("> ⚠ halfcell 쪽의 \"복원불가 0%\"는 **측정이 아닙니다.** "
                  "`src/scoring.py`가 `reference != \"grid\"`이면 `recoverable=True`로 "

@@ -480,6 +480,7 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
                     resume: bool = False, subset: set | None = None,
                     warm_start: bool = True) -> dict:
     """run_fit 본체. 호출자가 이미 .fit.lock 을 보유한 상태여야 한다."""
+    import os
     import time
     from pathlib import Path
 
@@ -489,9 +490,50 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
 
     import yaml
 
-    from src.io import base_manifest, file_digest, git_info, write_manifest
+    from src.io import (base_manifest, file_digest, git_info, source_digest,
+                        write_manifest)
 
     in_dir, out_dir = Path(in_dir), Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    # ★ F51 — 시작 provenance를 **어떤 입력 로드·캐시 로드·self-fit 보다도 먼저**
+    #   기록한다. 예전에는 run_sig 계산 뒤에 썼는데, halfcell 실행에서는 그보다
+    #   앞에 curves 로드·inventory 계산·half-cell 캐시 로드·pristine p_ini fitting
+    #   (모든 후속 fit 의 기준점을 정하는 실제 최적화)이 이미 끝나 있었다.
+    # ★ 그리고 resume 마다 **덮어쓰지 않는다.** 덮어쓰면 최초 chunk 를 만든 시점의
+    #   provenance 가 사라지고 마지막 시도만 "시작"으로 남는다.
+    _attempts = out_dir / "attempts"
+    _attempts.mkdir(exist_ok=True)
+    _gi0 = git_info(Path(__file__).resolve().parent.parent)
+    _src0 = source_digest()
+    # 같은 초에 두 번 시작해도 겹치지 않게 기존 시도 수를 붙인다
+    _n_prev = len(list(_attempts.glob("manifest_start_*.yaml")))
+    attempt_id = f"{time.strftime('%Y%m%dT%H%M%S')}_{os.getpid()}_{_n_prev:03d}"
+    start_prov = {
+        "attempt_id": attempt_id,
+        "started_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+        "resume": bool(resume),
+        "source_digest": _src0,
+        **_gi0,
+        "input_sha256": {str(x): file_digest(x) for x in
+                         [in_dir / "curves.parquet",
+                          base_config or "configs/base.yaml"] if x is not None},
+        "_주의": ("실행 **시작** 시점 상태다 (입력 로드·self-fit 이전). "
+                 "manifest.yaml 은 종료 시점이므로 둘이 다르면 실행 도중 코드나 "
+                 "입력이 바뀐 것이다 (F42/F51). half-cell 캐시 digest 는 기준 곡선을 "
+                 "고른 뒤 attempt 파일에 추가된다."),
+    }
+    (_attempts / f"manifest_start_{attempt_id}.yaml").write_text(
+        yaml.safe_dump(start_prov, allow_unicode=True, sort_keys=False),
+        encoding="utf-8")
+    _first = out_dir / "manifest_start.yaml"
+    if not _first.exists():          # 최초 시도만 대표로 남긴다 (덮어쓰지 않음)
+        _first.write_text(
+            yaml.safe_dump(start_prov, allow_unicode=True, sort_keys=False),
+            encoding="utf-8")
+    log.info("실행 시작 provenance: git %s dirty=%s src %s → %s",
+             _gi0.get("git_commit_short"), _gi0.get("git_dirty"), _src0,
+             _attempts / f"manifest_start_{attempt_id}.yaml")
     out_dir.mkdir(parents=True, exist_ok=True)
     df = pd.read_parquet(in_dir / "curves.parquet")
 
@@ -514,6 +556,12 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
         from src.halfcell import get_halfcell_reference, halfcell_cache_path
         hc = get_halfcell_reference(base_cfg)
         hc_used = halfcell_cache_path(base_cfg)     # F45: 실제로 쓴 캐시 하나
+        # F51: 기준 곡선을 고른 직후, pristine self-fit **전에** attempt 파일 보강
+        start_prov["input_sha256"][str(hc_used)] = file_digest(hc_used)
+        start_prov["halfcell_cache"] = str(hc_used)
+        (_attempts / f"manifest_start_{attempt_id}.yaml").write_text(
+            yaml.safe_dump(start_prov, allow_unicode=True, sort_keys=False),
+            encoding="utf-8")
         cov = hc.coverage()
         # 리뷰 F11: to_modes_halfcell의 LLI 식은 테이블이 화학량론 전 범위일 때만
         # 성립한다 (sim 테이블 y_min=0.251이면 오프셋 ≈2.2Ah로 LLI가 조용히 틀림).
@@ -617,8 +665,14 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     #   resolved 전체를 넣는다 — 어느 키가 결과를 바꾸는지 미리 알 수 없다.
     # F45: glob 이 아니라 **실제로 쓴** 캐시 하나만
     hc_paths = [hc_used] if reference == "halfcell" else []
+    _gi = git_info(Path(__file__).resolve().parent.parent)
     run_spec = {
-        "sig_version": 2,
+        # ★ F49 — 코드 identity 를 서명에 넣는다. 없으면 코드만 바꾸고 resume 했을 때
+        #   서로 다른 코드의 행이 같은 서명으로 섞이고 병합 검사를 통과한다.
+        "sig_version": 3,
+        "git_commit": _gi.get("git_commit"),
+        "git_dirty": _gi.get("git_dirty"),
+        "source_digest": source_digest(),
         "objectives": {k: objectives[k] for k in sorted(objectives)},   # 이름 + 가중치
         "reference": reference, "bounds_preset": bounds_preset,
         "bounds": bounds, "v_col": v_col, "warm_start": bool(warm_start),
@@ -634,26 +688,6 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
         json.dumps(run_spec, sort_keys=True, default=str).encode()).hexdigest()[:12]
     completed_name = f"fit_completed_{run_sig}.jsonl"
 
-    # ★ F42 — manifest는 **끝난 뒤** 쓰므로 git SHA와 입력 digest가 종료 시점 값이다.
-    #   긴 실행 도중 worktree HEAD나 입력이 바뀌면, 실제로 돌린 코드가 아닌 나중
-    #   커밋이 실행 SHA처럼 기록된다. 그래서 시작 시점 상태를 먼저 박아 둔다.
-    start_prov = {
-        "started_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
-        "run_signature": run_sig,
-        **git_info(Path(__file__).resolve().parent.parent),
-        "input_sha256": {str(x): file_digest(x) for x in
-                         [in_dir / "curves.parquet", base_config or "configs/base.yaml",
-                          *hc_paths] if x is not None},
-        "resume": bool(resume),
-        "_주의": ("실행 **시작** 시점의 상태다. manifest.yaml 은 종료 시점이므로 "
-                 "둘이 다르면 실행 도중 코드나 입력이 바뀐 것이다 (F42)."),
-    }
-    (out_dir / "manifest_start.yaml").write_text(
-        yaml.safe_dump(start_prov, allow_unicode=True, sort_keys=False),
-        encoding="utf-8")
-    log.info("실행 시작 provenance: git %s dirty=%s → %s",
-             start_prov.get("git_commit_short"), start_prov.get("git_dirty"),
-             out_dir / "manifest_start.yaml")
     done = load_completed(out_dir, completed_name) if resume else set()
     if resume and done:
         # 리뷰 F19b: "완료 표시는 있는데 청크에 행이 없는" 조건은 완료로 믿지 않는다.
@@ -746,11 +780,14 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
         inputs=[in_dir / "curves.parquet", base_config, *hc_cache], extra={
         "run_type": "fit", "input": str(in_dir),
         "run_signature": run_sig, "run_spec": run_spec,
-        # F42: 시작 시점 provenance와 대조 (다르면 실행 도중 바뀐 것)
+        # F42/F51: 시작 시점과 대조 (다르면 실행 도중 바뀐 것)
         "start_provenance": start_prov,
+        "attempt_id": attempt_id,
+        "attempts_dir": "attempts",
         "git_commit_changed_during_run": bool(
-            start_prov.get("git_commit") != git_info(
-                Path(__file__).resolve().parent.parent).get("git_commit")),
+            start_prov.get("git_commit")
+            != git_info(Path(__file__).resolve().parent.parent).get("git_commit")),
+        "source_digest_changed_during_run": bool(_src0 != source_digest()),
         "objectives_resolved": obj_cfg.get("objectives"),
         "n_conditions": len(tasks), "objectives": list(objectives),
         "bounds_preset": bounds_preset, "bounds": bounds,
