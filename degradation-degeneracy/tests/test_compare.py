@@ -601,3 +601,28 @@ def test_no_warning_when_sample_sizes_match(tmp_path):
     run_compare(d, d)
     text = build(d, tmp_path / "R.md", repo_root=tmp_path).read_text(encoding="utf-8")
     assert "표본 수가 목적함수마다 다릅니다" not in text
+
+
+def test_threshold_caveat_always_in_conclusion(tmp_path):
+    """★ 임계 의존성은 붕괴가 '관측 가능'해도 결론에 실려야 한다.
+
+    표에만 두면 결론만 떼어 인용될 때 빠진다.
+    """
+    import yaml
+
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d = tmp_path / "res"
+    d.mkdir()
+    df = pd.concat([_gap_fits(collapse=False), _fits(objectives=("pocv_dvdq",))],
+                   ignore_index=True)
+    _scored(df).to_parquet(d / "degeneracy_map.parquet", index=False)
+    (d / "degeneracy_summary.yaml").write_text(yaml.safe_dump({}), encoding="utf-8")
+
+    run_compare(d, d)
+    text = build(d, tmp_path / "R.md", repo_root=tmp_path).read_text(encoding="utf-8")
+
+    head = text[:text.index("## 목적함수 4종 비교")]      # 결론 구간만
+    assert "임계 설정에 의존한다" in head
+    assert "격차 오차가 필요한데" in head

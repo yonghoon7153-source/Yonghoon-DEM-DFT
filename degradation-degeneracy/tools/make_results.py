@@ -92,13 +92,18 @@ def _conclusion(cmp_res: dict, summary: dict) -> list[str]:
                      f"   > **우도비 ≈ {lr:.0f} : 1**\n\n"
                      f"   → **22p의 `LAM_PE ≈ LAM_NE`는 degeneracy의 증거가 아니라, 두 전극이 "
                      f"실제로 비슷하게 열화했다는 쪽의 증거다.**")
-        # ★ 임계 의존성 — 이걸 빼면 위 우도비가 측정처럼 읽힌다
-        if not g.get("collapse_measurable", True):
-            fact += (f" ⚠ 단, 붕괴로 세려면 격차 오차가 최소 "
-                     f"{_pp(g['collapse_requires_gap_err'], 0)} 필요한데 실측 격차 오차는 "
-                     f"중앙값 {_pp(g['gap_err_median'])}, 99분위 {_pp(g['gap_err_p99'])}다. "
-                     f"즉 낮은 붕괴율은 **이 임계 설정에서 붕괴가 관측되기 어렵다**는 "
-                     f"사실의 재진술에 가깝고, 우도비도 그만큼 임계 의존적이다.")
+        # ★ 임계 의존성은 **항상** 싣는다. 표에만 두면 결론만 인용될 때 빠진다.
+        if "collapse_requires_gap_err" in g:
+            fact += (f"\n\n   ⚠ 이 숫자들은 임계 설정에 의존한다. 붕괴로 세려면 격차를 "
+                     f"{_pp(g['gap_thresh'], 0)}에서 {_pp(g['tol'], 0)} 아래로 끌어내려야 하므로 "
+                     f"최소 {_pp(g['collapse_requires_gap_err'], 0)}의 격차 오차가 필요한데, "
+                     f"실측 격차 오차는 중앙값 {_pp(g['gap_err_median'])}·"
+                     f"99분위 {_pp(g['gap_err_p99'])}다. ")
+            fact += ("붕괴가 원리적으로 관측 가능한 범위이긴 하나, 낮은 붕괴율의 상당 부분은 "
+                     "**오차 스케일이 임계 간격보다 작다**는 사실에서 온다."
+                     if g.get("collapse_measurable", True) else
+                     "즉 낮은 붕괴율은 **이 임계 설정에서 붕괴가 관측되기 어렵다**는 사실의 "
+                     "재진술에 가깝고, 우도비도 그만큼 임계 의존적이다.")
         lines.append(fact)
 
     v = cmp_res.get("verdict_22p", {}).get(base, {})
@@ -260,8 +265,9 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
         P.append("## 곡률 진단 (Hessian) — 최적화와 무관한 측정\n")
         P.append("최적점에서 목적함수의 2차 미분. 최소 고윳값 방향으로는 파라미터를 "
                  "움직여도 곡선이 거의 안 변한다 = **데이터가 그 조합을 구분하지 "
-                 "못한다**. multi-start 지표와 달리 optimizer가 어떻게 헤맸는지와 "
-                 "무관하므로, \"dQ/dV가 정보를 더 주는가\"에는 이쪽이 더 깨끗한 답이다.\n")
+                 "못한다**. optimizer가 어떻게 헤맸는지와 무관한 국소 지표라는 점이 "
+                 "장점이지만, **목적함수가 비매끄러우면 곡률 자체가 잘 정의되지 "
+                 "않는다** — 아래 두 경고를 반드시 함께 볼 것.\n")
         P.append("| objective | n | 조건수(중앙값) | flat score | 최소고윳값>0 | α_PE·α_NE 결합 |")
         P.append("|---|---|---|---|---|---|")
         for o in (list(OBJ_ORDER_LOCAL) + sorted(set(hess_by_obj) - set(OBJ_ORDER_LOCAL))):
@@ -275,8 +281,8 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
             P.append(f"| {o} | {len(d)} | {d['condition_number'].median():.3g} | "
                      f"{d['flat_direction_score'].median():.2g} | {pos} | {coup} |")
         P.append("")
-        P.append("- **조건수**가 작을수록 최적점이 잘 정의돼 있다. 목적함수 간 비교에서 "
-                 "이 값이 크게 낮아지면 그 항이 실제로 정보를 더한다는 뜻이다.")
+        P.append("- **조건수**는 매끄러운 목적함수라면 작을수록 최적점이 잘 정의돼 "
+                 "있다는 뜻이다. 다만 그 해석은 아래 조건이 모두 만족될 때만 쓸 수 있다.")
         eps_vals = sorted({float(d["eps"].iloc[0]) for d in hess_by_obj.values()
                            if "eps" in d.columns})
         P.append("- ⚠ **조건수의 절대값은 인용하지 마세요.** 목적함수가 여러 스케일에서 "
