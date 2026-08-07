@@ -173,3 +173,84 @@ templates/{index,single}.html <script>        블록별 node --check OK
   않고 `full_metrics.json` 의 두 run_id 가 같은지
 - `force_network=True` 1회 후 두 run_id 가 **함께** 새 값으로 바뀌는지
 - 필수 단계를 일부러 깨뜨렸을 때 케이스가 `done` 이 되지 않는지
+
+---
+
+# Phase A 구현 기록 — 인증 게이트 · archive containment · XSS (2026-08-07, 이어서)
+
+같은 브랜치 `claude/stoic-knuth-NObVQ`.  소유 파일 추가: `webapp/security.py`(신규) ·
+`webapp/app.py`(경로 헬퍼 + 게이트 설치) · `webapp/templates/group.html` · `render.yaml` ·
+`webapp/test_security_phase_a.py`(신규).
+
+## F-01 — 인증: 사설망은 그대로, 공개 배포는 fail-closed
+
+배포 모델이 확정되지 않아 **환경변수로 두 모드를 가르는** 설계로 갔다.
+
+| | 게이트 | 결과 |
+|---|---|---|
+| `WEBAPP_REQUIRE_AUTH` 미설정 | OFF | 로컬·사설망 **기존 동작 그대로** + 기동 시 경고 1줄 |
+| `=1` + 토큰 있음 | ON | 쓰기·고비용 GET 에 인증 요구 |
+| `=1` + **토큰 없음** | ON | 쓰기가 전부 **503** (열지 않고 **잠근다**) |
+
+`render.yaml` 이 `REQUIRE_AUTH=1` 을 박고 `WEBAPP_AUTH_TOKEN` 은 `sync: false` (대시보드
+secret) 이므로, **토큰을 넣기 전까지 공개 인스턴스는 읽기 전용**이다 — 의도된 동작.
+
+- 보호 대상: `POST/PUT/PATCH/DELETE` 전부 + 고비용 GET(`/predictor/train` — 리뷰 F-16 이
+  지적한 "GET 이 상태를 바꾼다")
+- 면제: `/login` `/logout` `/static/` `/healthz` `/favicon.ico`
+- 인증 수단: 세션 쿠키(로그인 폼) **또는** `Authorization: Bearer` / `X-Auth-Token`
+- 토큰 비교는 `hmac.compare_digest` (타이밍 공격 회피)
+
+### CSRF — 토큰 주입 대신 Origin 검사
+
+UI 의 쓰기는 100+ 개 `fetch()` 에 흩어져 있어 CSRF 토큰을 전부 배선하면 변경 범위가 과도하다.
+OWASP 표준 대안을 썼다: **`SameSite=Strict` + `HttpOnly` 쿠키** + 상태 변경 시
+**Origin/Referer 의 host == 요청 host** 검사.  Bearer 요청(CLI)은 브라우저가 자동으로
+붙이지 않으므로 면제.  → 템플릿 변경 0줄.
+
+## F-06 — archive containment + 표시이름/저장경로 분리
+
+보호되지 않은 `os.path.join(ARCHIVE_FOLDER, 사용자입력)` 이 **8곳**이었다
+(group case 목록·플롯·리포트·파라미터 비교 등).  `_safe_path()` 는 있었지만 archive CRUD
+에서만 쓰였다.  → 단일 헬퍼 `_archive_join()` 으로 전부 통일.
+
+- `_contained_join` 과 달리 **디렉터리를 만들지 않는다** — 조회가 유령 디렉터리를 만드는
+  F-16 을 여기서 되풀이하지 않기 위해.
+- `_slugify_case_name()` 신설: 옛 코드는 사용자가 정한 `meta['name']` 을 그대로 archive
+  경로에 썼고 이름에는 경로 문자 검증이 없었다.  **경로에는 slug, 표시 이름은 meta 에만.**
+
+## F-15 — group.html 저장형 XSS
+
+`c.name` · `w.name` · `w.msg` · `p.title` · `p.description` · `p.origin_tip` 이 escaping
+없이 `innerHTML` 템플릿 리터럴에 들어갔다.  케이스 이름은 업로드·rename 으로 **임의
+문자열**이 되므로 공개 업로드와 겹치면 저장형 injection 경로다.
+
+- `escHtml()` 헬퍼(텍스트·따옴표 속성 양쪽 안전, `'` 포함) → **18곳** 적용
+- ★ 더 나쁜 것: `onclick="openPlotModal(this.src, '${p.title}')"` = **HTML 속성 안의 JS
+  문자열**.  HTML escaping 만으로는 새므로 **인라인 핸들러를 없애고** `addEventListener`
+  클로저로 바꿨다 (2곳).  URL 성분은 `encodeURIComponent`.
+- 감사: 보간이 들어간 인라인 이벤트 핸들러 **0건** (테스트로 고정)
+
+## 검증
+
+```
+webapp/test_security_phase_a.py               25/25 PASS  (신규)
+webapp/test_pipeline_provenance.py            18/18 PASS  (Phase B, 회귀 없음)
+webapp/test_predictor_ui_and_sigma_grain.py   ALL PASS
+app import OK · 138 routes (+3: /login /logout /healthz)
+render.yaml YAML OK
+```
+
+리뷰 §6.3 이 요구한 입력을 그대로 넣는다 — `../` · `..\` · `../../etc` · `/etc` ·
+`C:\Windows` · UNC `\\server\share` · `a/../../…` · `./../…` **8종 전부 400**,
+케이스 이름의 경로 문자는 slug 에서 제거, 교차 출처 쓰기 403, 미인증 쓰기 401.
+
+## ⚠ Phase A 에서 **안** 덮은 것
+
+1. **rate limit · 동시 실행 제한 · 업로드 개수/형식 제한** (`MAX_CONTENT_LENGTH` 는 2 GB 그대로).
+   리뷰 권장 3·4 번.  진짜 경계는 배포 ingress 가 낫다.
+2. **읽기는 열려 있다** — 게이트는 쓰기·고비용 계산만 막는다.  데이터 자체를 비공개로
+   하려면 전 경로 인증이 필요하다 (한 줄 변경이지만 **정책 결정**이라 안 했다).
+3. `_safe_path()` 기반 archive CRUD 는 그대로 뒀다 (이미 containment 가 있었다).
+   장기적으로 `_archive_join()` 으로 일원화하는 게 맞다.
+4. F-07~F-13 은 Phase C/D 소관 — 위 Phase B 절의 "남은 위험" 참조.

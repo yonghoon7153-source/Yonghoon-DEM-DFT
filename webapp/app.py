@@ -361,6 +361,40 @@ def _contained_join(base, sub):
         abort(400, 'invalid case id')
     return d
 
+def _archive_join(rel, *, must_exist=False):
+    """archive 루트 **안으로만** 해석한다.  벗어나면 400 (코드리뷰 F-06).
+
+    ★ 왜 필요한가: `_safe_path()` 는 archive CRUD 에만 쓰였고, group 계열
+    (`/group/archive-cases` 의 `folder`, `archive:<rel>` case id) 은 사용자 입력을
+    `os.path.join(archive_root, ...)` 으로 **직접** 붙여 `archive:../../...` 로 루트
+    밖의 `full_metrics.json` 을 읽을 수 있었다.  모든 archive 입력이 이 함수를 지난다.
+
+    `_contained_join` 과 달리 **디렉터리를 만들지 않는다** — 조회가 유령 디렉터리를
+    만드는 F-16 을 여기서 되풀이하지 않기 위해서다.
+    """
+    base = os.path.realpath(app.config['ARCHIVE_FOLDER'])
+    target = os.path.realpath(os.path.join(base, str(rel)))
+    if target != base and not target.startswith(base + os.sep):
+        abort(400, 'invalid archive path')
+    if must_exist and not os.path.exists(target):
+        abort(404, 'archive path not found')
+    return target
+
+
+def _slugify_case_name(name, fallback='case'):
+    """표시 이름 → **저장 경로용 slug** (F-06).
+
+    옛 코드는 사용자가 정한 `meta['name']` 을 그대로 `os.path.join(dst, name)` 에 썼다.
+    이름에는 경로 문자 검증이 없어(업로드·rename 어디에도) archive 저장 위치가 루트를
+    벗어날 수 있었다.  표시 이름은 meta 에만 두고 **경로에는 이 slug 만** 쓴다.
+    """
+    import re as _re
+    s = _re.sub(r'[^0-9A-Za-z가-힣._-]+', '_', str(name or '')).strip('._-')
+    s = _re.sub(r'_{2,}', '_', s)
+    # '.' / '..' / 빈 문자열은 경로로 쓸 수 없다
+    return s[:120] if s and s not in ('.', '..') else fallback
+
+
 def get_case_dir(case_id):
     d = _contained_join(app.config['UPLOAD_FOLDER'], case_id)
     os.makedirs(d, exist_ok=True)
@@ -5673,7 +5707,7 @@ def group():
             # Handle archive: prefix
             if cid.startswith('archive:'):
                 archive_rel = cid[len('archive:'):]
-                case_path = os.path.join(app.config['ARCHIVE_FOLDER'], archive_rel)
+                case_path = _archive_join(archive_rel)
                 meta_file = os.path.join(case_path, 'meta.json')
                 metrics_path = os.path.join(case_path, 'full_metrics.json')
                 case_name = os.path.basename(archive_rel)
@@ -5854,7 +5888,7 @@ def group_archive_cases():
     if folder == '(최상위)':
         base = archive_root
     else:
-        base = os.path.join(archive_root, folder)
+        base = _archive_join(folder)          # F-06: 사용자 query 를 직접 붙이지 않는다
     if not os.path.isdir(base):
         return jsonify({'cases': []})
 
@@ -5895,7 +5929,7 @@ def group_plots():
     for cid in selected:
         if cid.startswith('archive:'):
             archive_rel = cid[len('archive:'):]
-            case_path = os.path.join(app.config['ARCHIVE_FOLDER'], archive_rel)
+            case_path = _archive_join(archive_rel)
             metrics_path = os.path.join(case_path, 'full_metrics.json')
             case_name = os.path.basename(archive_rel)
         else:
@@ -5930,7 +5964,7 @@ def group_plots():
     surviving = set()
     for cid in selected:
         if cid.startswith('archive:'):
-            case_path = os.path.join(app.config['ARCHIVE_FOLDER'], cid[len('archive:'):])
+            case_path = _archive_join(cid[len('archive:'):])
         else:
             case_path = get_results_dir(cid)
         if os.path.exists(os.path.join(case_path, 'full_metrics.json')):
@@ -6005,7 +6039,7 @@ def group_plots():
     fit_corpus_paths = []
     for cid in request.form.getlist('fit_corpus_cases'):
         if cid.startswith('archive:'):
-            mp = os.path.join(app.config['ARCHIVE_FOLDER'], cid[len('archive:'):], 'full_metrics.json')
+            mp = os.path.join(_archive_join(cid[len('archive:'):]), 'full_metrics.json')
         else:
             mp = os.path.join(get_results_dir(cid), 'full_metrics.json')
         if os.path.exists(mp):
@@ -6048,7 +6082,7 @@ def group_param_options():
     keys = set()
     for cid in selected:
         if cid.startswith('archive:'):
-            case_path = os.path.join(app.config['ARCHIVE_FOLDER'], cid[len('archive:'):])
+            case_path = _archive_join(cid[len('archive:'):])
         else:
             case_path = get_results_dir(cid)
         fm = os.path.join(case_path, 'full_metrics.json')
@@ -6155,7 +6189,7 @@ def group_report():
     for cid in selected:
         if cid.startswith('archive:'):
             archive_rel = cid[len('archive:'):]
-            case_path = os.path.join(app.config['ARCHIVE_FOLDER'], archive_rel)
+            case_path = _archive_join(archive_rel)
             meta_file = os.path.join(case_path, 'meta.json')
             metrics_path = os.path.join(case_path, 'full_metrics.json')
             name = os.path.basename(archive_rel)
@@ -9223,7 +9257,12 @@ def _save_case_to_archive(case_id, folder=''):
     dst = _safe_path(folder) if folder else _archive_root()
     if not dst:
         return None, '잘못된 경로입니다.'
-    save_dir = os.path.join(dst, case_name)
+    # ★ F-06: 표시 이름과 저장 경로를 분리한다.  옛 코드는 사용자가 정한 meta['name'] 을
+    #   그대로 경로에 썼는데, 업로드·rename 어디에도 경로 문자 검증이 없어 archive 저장
+    #   위치가 루트를 벗어날 수 있었다.  경로에는 slug 만, 표시 이름은 meta 에만.
+    slug = _slugify_case_name(case_name, fallback=case_id)
+    save_dir = _archive_join(os.path.join(os.path.relpath(dst, _archive_root()), slug)
+                             if dst != _archive_root() else slug)
     if os.path.exists(save_dir):
         save_dir = save_dir + '_' + datetime.now().strftime('%H%M%S')
     shutil.copytree(results_dir, save_dir, dirs_exist_ok=True)
@@ -10031,7 +10070,7 @@ def group_fitting_report():
     for cid in selected:
         if cid.startswith('archive:'):
             archive_rel = cid[len('archive:'):]
-            case_path = os.path.join(app.config['ARCHIVE_FOLDER'], archive_rel)
+            case_path = _archive_join(archive_rel)
             metrics_path = os.path.join(case_path, 'full_metrics.json')
             case_name = os.path.basename(archive_rel)
         else:
@@ -10340,6 +10379,23 @@ def predictor_export():
                          download_name='predictor_training_data.csv')
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
+@app.route('/healthz')
+def healthz():
+    """배포 헬스체크 — 인증 게이트 면제 경로 (상태를 바꾸지 않는다)."""
+    return jsonify({'ok': True})
+
+
+# ── 인증 게이트 설치 (코드리뷰 F-01) ────────────────────────────────────────────
+#   모든 라우트가 등록된 **뒤에** 설치한다 (before_request 는 순서와 무관하지만,
+#   /login·/logout 이름 충돌을 여기서 바로 확인할 수 있다).
+#   WEBAPP_REQUIRE_AUTH 미설정 = 사설망/로컬 가정으로 기존 동작 유지.
+try:
+    from . import security as _sec
+except ImportError:
+    import security as _sec
+_AUTH_ON, _AUTH_HAS_TOKEN = _sec.init_security(app)
 
 
 if __name__ == '__main__':

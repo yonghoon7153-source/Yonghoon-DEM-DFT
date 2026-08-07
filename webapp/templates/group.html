@@ -333,6 +333,16 @@
 
 {% block scripts %}
 <script>
+// ── XSS 방어 (코드리뷰 F-15) ────────────────────────────────────────────────
+// 케이스 이름·경고문·플롯 메타는 업로드/rename 으로 **임의 문자열**이 될 수 있는데
+// 여태 escaping 없이 innerHTML 템플릿 리터럴에 들어갔다.  공개 업로드와 겹치면
+// 저장형 script injection 경로다.  텍스트/속성 양쪽에 안전한 최소 escaper 를 쓴다.
+// (`'` 도 이스케이프해야 홑따옴표 속성·인라인 핸들러에서 새지 않는다.)
+function escHtml(v) {
+  return String(v == null ? '' : v)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
 // Source switching (Dashboard / Archive)
 function switchSource(btn, panelId) {
   btn.closest('.tabs').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -355,11 +365,11 @@ async function loadArchiveCases(folder) {
     div.innerHTML = `
       <span class="order-num"></span>
       <span class="group-badge"></span>
-      <input type="hidden" name="cases" value="${c.id}" disabled>
+      <input type="hidden" name="cases" value="${escHtml(c.id)}" disabled>
       <div class="case-label">
-        <strong>${c.name}</strong>
-        <span class="badge">${c.ps_ratio || ''}</span>
-        ${c.warning_count ? `<span class="badge badge-warning" title="${(c.warning_msgs||[]).join('\n')}">⚠ ${c.warning_count}</span>` : ''}
+        <strong>${escHtml(c.name)}</strong>
+        <span class="badge">${escHtml(c.ps_ratio || '')}</span>
+        ${c.warning_count ? `<span class="badge badge-warning" title="${escHtml((c.warning_msgs||[]).join('\n'))}">⚠ ${escHtml(c.warning_count)}</span>` : ''}
       </div>`;
     // Add to CASE_WARNINGS for warnings box
     if (c.warning_count && c.warning_msgs) {
@@ -405,8 +415,8 @@ function updateWarningsBox() {
   box.style.display = '';
   list.innerHTML = warnings.map(w =>
     `<div class="case-warn-item case-warn-${w.severity}">
-      <span class="case-warn-name">${w.name}</span>
-      <span class="case-warn-msg">${w.msg}</span>
+      <span class="case-warn-name">${escHtml(w.name)}</span>
+      <span class="case-warn-msg">${escHtml(w.msg)}</span>
     </div>`
   ).join('');
 }
@@ -927,7 +937,7 @@ function refreshFocusPicker() {
       const lbl = document.createElement('label');
       lbl.className = 'focus-checkbox';
       lbl.style.cssText = 'font-size:.74rem;display:inline-flex;align-items:center;gap:5px;padding:3px 7px;border:1px solid var(--border);border-radius:5px;cursor:pointer;background:var(--bg-2)';
-      lbl.innerHTML = `<input type="checkbox" class="focus-checkbox-input" value="${String(id).replace(/"/g,'&quot;')}" ${prev.has(id)?'checked':''}> ${nm}`;
+      lbl.innerHTML = `<input type="checkbox" class="focus-checkbox-input" value="${escHtml(id)}" ${prev.has(id)?'checked':''}> ${escHtml(nm)}`;
       row.appendChild(lbl);
     });
     sec.appendChild(row);
@@ -1138,9 +1148,11 @@ async function generatePlots() {
           const cell = document.createElement('div');
           cell.className = 'plot-cell';
           cell.innerHTML = `
-            <div class="plot-cell-label" style="color:${GROUP_COLORS[e.pgIdx % GROUP_COLORS.length]}">${e.pgName}</div>
-            <img src="/group/plot-image/${e.session}/${e.plot.file}" alt="${e.plot.title}"
-                 onclick="openPlotModal(this.src, '${e.plot.title}')" style="width:100%;cursor:pointer">`;
+            <div class="plot-cell-label" style="color:${GROUP_COLORS[e.pgIdx % GROUP_COLORS.length]}">${escHtml(e.pgName)}</div>
+            <img src="/group/plot-image/${encodeURIComponent(e.session)}/${encodeURIComponent(e.plot.file)}"
+                 alt="${escHtml(e.plot.title)}" class="plot-open" style="width:100%;cursor:pointer">`;
+          const _im = cell.querySelector('.plot-open');   // F-15: 인라인 핸들러 대신 클로저
+          if (_im) _im.addEventListener('click', () => openPlotModal(_im.src, e.plot.title));
           row.appendChild(cell);
         });
         // Fill empty cells if some groups don't have this plot
@@ -1155,10 +1167,10 @@ async function generatePlots() {
         const desc = document.createElement('div');
         desc.className = 'plot-info';
         desc.innerHTML = `
-          <h4>${firstPlot.title}</h4>
-          <p class="plot-desc">${firstPlot.description.replace(/\\n/g,'<br>').replace(/\n/g,'<br>')}</p>
-          <details class="plot-origin"><summary>Origin 설정</summary><pre>${firstPlot.origin_tip}</pre></details>
-          ${firstPlot.csv ? entries.map((e,idx) => `<a href="/group/plot-image/${e.session}/${firstPlot.csv}" class="btn btn-sm btn-dl" style="margin-top:10px" download>${entries.length>1 ? e.pgName+' ' : ''}CSV</a>`).join(' ') : ''}`;
+          <h4>${escHtml(firstPlot.title)}</h4>
+          <p class="plot-desc">${escHtml(firstPlot.description).replace(/\\n/g,'<br>').replace(/\n/g,'<br>')}</p>
+          <details class="plot-origin"><summary>Origin 설정</summary><pre>${escHtml(firstPlot.origin_tip)}</pre></details>
+          ${firstPlot.csv ? entries.map((e,idx) => `<a href="/group/plot-image/${encodeURIComponent(e.session)}/${encodeURIComponent(firstPlot.csv)}" class="btn btn-sm btn-dl" style="margin-top:10px" download>${entries.length>1 ? escHtml(e.pgName)+' ' : ''}CSV</a>`).join(' ') : ''}`;
         row.appendChild(desc);
 
         grid.appendChild(row);
@@ -1192,17 +1204,25 @@ function createPlotItem(session, p) {
                                        title: 'σ_electronic Stage 22 outliers (Trevisanello-locked)' },
   };
   const outlierMeta = OUTLIER_PLOTS[p.file];
+  // ★ F-15: 인라인 onclick 에 값을 문자열로 끼워넣지 않는다 — 그건 **HTML 속성 안의 JS
+  //   문자열**이라 HTML escaping 만으로는 새고, 따옴표 하나로 임의 코드가 실행된다.
+  //   마크업은 escHtml 로, 핸들러는 클로저로 붙인다.
+  const _desc = escHtml(p.description).replace(/\\n/g, '<br>').replace(/\n/g, '<br>');
   item.innerHTML = `
-    <img src="/group/plot-image/${session}/${p.file}" alt="${p.title}"
-         onclick="openPlotModal(this.src, '${p.title}')">
+    <img src="/group/plot-image/${encodeURIComponent(session)}/${encodeURIComponent(p.file)}"
+         alt="${escHtml(p.title)}" class="plot-open">
     <div class="plot-info">
-      <h4>${p.is_focus ? '↳ ' : ''}${p.title}</h4>
-      <p class="plot-desc">${p.description.replace(/\\n/g,'<br>').replace(/\n/g,'<br>')}</p>
-      <details class="plot-origin"><summary>Origin 설정</summary><pre>${p.origin_tip}</pre></details>
-      ${outlierMeta ? `<button class="btn btn-sm btn-primary" style="margin-top:10px"
-          onclick="showOutlierPopup('${session}','${outlierMeta.json}','${outlierMeta.title}')">📋 outlier 케이스·이유 보기</button>` : ''}
-      ${p.csv ? `<a href="/group/plot-image/${session}/${p.csv}" class="btn btn-sm btn-dl" style="margin-top:10px" download>CSV 다운로드</a>` : ''}
+      <h4>${p.is_focus ? '↳ ' : ''}${escHtml(p.title)}</h4>
+      <p class="plot-desc">${_desc}</p>
+      <details class="plot-origin"><summary>Origin 설정</summary><pre>${escHtml(p.origin_tip)}</pre></details>
+      ${outlierMeta ? `<button class="btn btn-sm btn-primary plot-outlier-btn" style="margin-top:10px">📋 outlier 케이스·이유 보기</button>` : ''}
+      ${p.csv ? `<a href="/group/plot-image/${encodeURIComponent(session)}/${encodeURIComponent(p.csv)}" class="btn btn-sm btn-dl" style="margin-top:10px" download>CSV 다운로드</a>` : ''}
     </div>`;
+  const _img = item.querySelector('.plot-open');
+  if (_img) _img.addEventListener('click', () => openPlotModal(_img.src, p.title));
+  const _ob = item.querySelector('.plot-outlier-btn');
+  if (_ob) _ob.addEventListener('click',
+    () => showOutlierPopup(session, outlierMeta.json, outlierMeta.title));
   return item;
 }
 
