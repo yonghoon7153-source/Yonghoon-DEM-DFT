@@ -165,6 +165,44 @@ def local_dlnsigma_dphi(points, phi0):
     return float((ys[j] - ys[j - 1]) / dx) if abs(dx) > 1e-9 else None
 
 
+def _mach_filter(pts, mach):
+    """target 재하율인 점만 남긴다 (mach=None 이면 그대로).
+
+    ★ **적합점과 보정용 slope-grid 점 양쪽에** 걸어야 한다.  한쪽에만 걸었더니 오염된
+      곡선에서 국소기울기를 재 보정이 통째로 망가졌다 (스모크에서 R² 1.000 → 0.033).
+    """
+    if mach is None:
+        return list(pts)
+    return [p for p in pts if p[2] is not None and _rate_ok(p[2], mach)]
+
+
+def select_at_phi(pts, phi0):
+    """킷의 점들에서 공통 φ0 의 σ 를 얻는다 → dict(phi, sigma, mach, file, method).
+
+    ★ φ0 를 **감싸는 점이 있으면 보간**한다 — 이게 원래 분석이 한 것이고, 최근접 점을
+      집는 것보다 항상 낫다 (같은 정보를 제대로 쓰는 것; 외부 기울기도 필요 없다).
+      2026-08-07 에 최근접-집기로 192 를 재현하려다 착지 φ 가 0.051 벌어진 채 적합돼
+      기울기가 −0.543 → −0.389 로 무너진 적이 있다.
+    감싸지 못하면(외삽) 최근접 점을 돌려주고 method='nearest' 로 표시 → 호출부가
+      국소기울기 보정을 건다.
+
+    보간은 **σ 에 대해 선형**이다 (ln σ 아님).  기존 정본 값(0.700/0.546/0.492/0.374)이
+    이 규약으로 만들어졌고 그대로 재현된다.  ln-보간을 쓰면 값이 <1 % 움직이는데
+    이는 잔차 sd(≈9 %) 한참 안쪽이라 결론에 영향이 없다.
+    """
+    ps = [p for p, *_ in pts]
+    if len(pts) >= 2 and min(ps) <= phi0 <= max(ps):
+        ss = [s for _, s, _, _ in pts]
+        j = int(np.clip(np.searchsorted(ps, phi0), 1, len(ps) - 1))
+        ms = [m for _, _, m, _ in pts if m is not None]
+        return {'phi': float(phi0), 'sigma': float(np.interp(phi0, ps, ss)),
+                'mach': (float(np.median(ms)) if ms else None),
+                'file': f'{pts[j - 1][3]}|{pts[j][3]}', 'method': 'interp'}
+    i = int(np.argmin([abs(p - phi0) for p in ps]))
+    phi, sig, mach, f = pts[i]
+    return {'phi': phi, 'sigma': sig, 'mach': mach, 'file': f, 'method': 'nearest'}
+
+
 def _rate_ok(mach, target, tol=None):
     """두 재하율이 '같다'고 볼 수 있는가 (RATE_TOL_RATIO 비율 안)."""
     tol = RATE_TOL_RATIO if tol is None else tol
@@ -243,17 +281,16 @@ def main(argv=None):
         # ★ 재하율 선택은 φ 선택보다 먼저 — 한 킷에 옛 기하-규칙 런(두꺼운 침대서 V/c_P
         #   ≈0.105)과 --platen-mach 런(0.03)이 같이 있으면, φ 로만 고르면 킷마다 다른
         #   재하율이 뽑혀 조성 신호에 관성이 섞인다 (2026-08-07 192 에서 실제 발생: 3.49배).
-        if a.mach is not None:
-            keep = [p for p in pts if p[2] is not None and _rate_ok(p[2], a.mach)]
-            dropped += len(pts) - len(keep)
-            pts = keep
+        n0 = len(pts)
+        pts = _mach_filter(pts, a.mach)
+        dropped += n0 - len(pts)
         if not pts:
             missing.append(k)
             continue
-        i = int(np.argmin([abs(p - a.phi) for p, *_ in pts]))
-        phi, sig, mach, f = pts[i]
+        sel = select_at_phi(pts, a.phi)
         _v_am, v_se, _A, s_am = bed_geometry(_kit_dir_cache[k])
-        rows.append({'kit': k, 'phi': phi, 'sigma_raw': sig, 'mach': mach, 'file': f,
+        rows.append({'kit': k, 'phi': sel['phi'], 'sigma_raw': sel['sigma'],
+                     'mach': sel['mach'], 'file': sel['file'], 'method': sel['method'],
                      'd_h_um': d_h_at_phi(v_se, s_am, a.phi, include_se=not a.void_free),
                      'S_AM': s_am, 'V_SE': v_se})
     if dropped:
@@ -277,32 +314,37 @@ def main(argv=None):
     if len(ms) < len(rows):
         print(f'   ⚠ {len(rows) - len(ms)}개 json 에 platen_mach 없음 (구 산출물)')
 
-    # ── φ 보정 ────────────────────────────────────────────────────────────────
-    phis = [r['phi'] for r in rows]
-    spread = max(phis) - min(phis)
-    print(f'   착지 φ {min(phis):.4f}..{max(phis):.4f}  (폭 {spread:.4f}, 문턱 {PHI_TOL})')
+    # ── φ 정렬: 감싼 킷은 이미 보간돼 φ0 위, 외삽 킷만 국소기울기로 보정 ──────────
+    n_interp = sum(1 for r in rows if r['method'] == 'interp')
+    print(f'   φ {a.phi} 도달: 보간 {n_interp} · 외삽(최근접) {len(rows) - n_interp}')
     corrected = False
-    if spread > PHI_TOL:
-        print(f'   → 흩어짐 — g{a.slope_grid} 국소기울기로 φ {a.phi} 에 맞춘다')
-        for r in rows:
-            sl = local_dlnsigma_dphi(load_kit_points(a.dir, r['kit'], a.slope_grid), a.phi)
-            r['slope'] = sl
-            if sl is None:
-                r['sigma'] = r['sigma_raw']
-                print(f"      ⚠ {r['kit']}: g{a.slope_grid} 점 부족 — 보정 못 함 (생값 사용)")
-            else:
-                r['sigma'] = r['sigma_raw'] * float(np.exp(sl * (a.phi - r['phi'])))
-                corrected = True
-    else:
-        print('   → 문턱 안 — 보정 없이 생값으로 적합')
-        for r in rows:
-            r['slope'], r['sigma'] = None, r['sigma_raw']
+    for r in rows:
+        r['slope'] = None
+        r['sigma'] = r['sigma_raw']
+    outs = [r for r in rows if r['method'] != 'interp']
+    if outs:
+        off = max(abs(r['phi'] - a.phi) for r in outs)
+        print(f'   외삽 킷 착지 어긋남 최대 {off:.4f} (문턱 {PHI_TOL})'
+              + (f' → g{a.slope_grid} 국소기울기로 보정' if off > PHI_TOL else ' → 문턱 안, 생값'))
+        if off > PHI_TOL:
+            for r in outs:
+                sl = local_dlnsigma_dphi(
+                    _mach_filter(load_kit_points(a.dir, r['kit'], a.slope_grid), a.mach), a.phi)
+                r['slope'] = sl
+                if sl is None:
+                    print(f"      ⚠ {r['kit']}: g{a.slope_grid} 에 점이 부족해 보정 못 함 "
+                          f"(생값 — 이 점은 φ {r['phi']:.4f} 의 값이다)")
+                else:
+                    r['sigma'] = r['sigma_raw'] * float(np.exp(sl * (a.phi - r['phi'])))
+                    corrected = True
 
-    hdr = f'   {"kit":>14}{"착지φ":>9}{"σ_raw":>10}{"σ_corr":>10}{"d_h(nm)":>10}{"dlnσ/dφ":>10}'
+    hdr = (f'   {"kit":>14}{"φ":>9}{"방법":>8}{"σ_raw":>10}{"σ_use":>10}'
+           f'{"d_h(nm)":>10}{"dlnσ/dφ":>10}')
     print(hdr)
     for r in sorted(rows, key=lambda z: z['d_h_um']):
         sl = '     —   ' if r['slope'] is None else f"{r['slope']:9.2f}"
-        print(f"   {r['kit']:>14}{r['phi']:9.4f}{r['sigma_raw']:10.4f}"
+        mth = '보간' if r['method'] == 'interp' else '최근접'
+        print(f"   {r['kit']:>14}{r['phi']:9.4f}{mth:>8}{r['sigma_raw']:10.4f}"
               f"{r['sigma']:10.4f}{r['d_h_um'] * 1000:10.1f}{sl}")
 
     # ── 적합 ──────────────────────────────────────────────────────────────────
@@ -375,6 +417,30 @@ def _selftest():
     kept = [p for p in mixed if _rate_ok(p[2], 0.03)]
     ok('15) φ 로만 고르면 옛 런을 집지만 --mach 로 거르면 0.03 런이 남는다',
        picked_phi_only == 'old' and len(kept) == 1 and kept[0][3] == 'new')
+    # 16-18) select_at_phi — 감싸면 보간, 아니면 최근접.  ★ 정본 값 재현을 고정한다.
+    ok('16) 감싸면 보간 (σ 선형) · 감싼 두 파일을 출처로 남긴다',
+       (lambda s: s['method'] == 'interp' and abs(s['sigma'] - 0.15) < 1e-12
+        and s['file'] == 'a|b' and s['phi'] == 0.65)(
+           select_at_phi([(0.60, 0.10, 0.03, 'a'), (0.70, 0.20, 0.03, 'b')], 0.65)))
+    ok('17) 감싸지 못하면(외삽) 최근접 — 호출부가 국소기울기로 보정한다',
+       (lambda s: s['method'] == 'nearest' and s['phi'] == 0.70)(
+           select_at_phi([(0.60, 0.10, 0.03, 'a'), (0.70, 0.20, 0.03, 'b')], 0.90)))
+    # 실측 192 (0.03 런) → 정본 0.700/0.546/0.492/0.374 · 적합 −0.542/0.933
+    real = {'ps_0_10': ([(0.6924, 0.6254), (0.7577, 0.8019), (0.8552, 0.8605)], 500.7, 0.700),
+            'ps_3_7': ([(0.6946, 0.5204), (0.7603, 0.5860), (0.8586, 0.8131)], 620.3, 0.546),
+            'ps_5_5': ([(0.6920, 0.4518), (0.7572, 0.5456), (0.8547, 0.8123)], 744.5, 0.492),
+            'ps_10_0': ([(0.6800, 0.3339), (0.7429, 0.3974), (0.8378, 0.6764)], 1458.1, 0.374)}
+    got = {k: select_at_phi([(p, s, 0.03, 'f') for p, s in v[0]], 0.72)['sigma']
+           for k, v in real.items()}
+    fr = loglog_fit([v[1] for v in real.values()], [got[k] for k in real])
+    mixed2 = [(0.66, 0.5, 0.03, 'new'), (0.72, 9.9, 0.1048, 'old'), (0.81, 1.5, 0.03, 'new2')]
+    ok('19) _mach_filter 는 slope-grid 에도 걸려야 한다 (안 걸면 오염된 기울기를 잰다)',
+       abs(local_dlnsigma_dphi(mixed2, 0.72)
+           - local_dlnsigma_dphi(_mach_filter(mixed2, 0.03), 0.72)) > 1.0
+       and len(_mach_filter(mixed2, 0.03)) == 2 and len(_mach_filter(mixed2, None)) == 3)
+    ok('18) 실측 192 점 → 정본 σ(0.72) 4값 재현 + 적합 −0.542/R²0.933',
+       all(abs(got[k] - v[2]) < 0.001 for k, v in real.items())
+       and abs(fr[0] + 0.542) < 0.002 and abs(fr[2] - 0.933) < 0.002)
     print(f'\nselftest: {n[0]}/{n[1]} PASS')
     return 0 if n[0] == n[1] else 1
 
