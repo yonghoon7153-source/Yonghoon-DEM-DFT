@@ -733,8 +733,11 @@ readout=wallP**.
       (Sakuda 2013) 라 비교 대상이 틀렸다 (값이 우연히 가까웠을 뿐).  우리 DFT 의
       (E_VRH 22.06, B₀ 26.23) 쌍은 **ν = 0.360** 을 함축하고 그때 실제 μ = 8.11 GPa →
       우리 μ 0.5134 는 **15.8배 연화** (기존 "18배" 는 ν=0.30 가정의 μ 9.23 기준).
-      ⚠ SDCP Methods SI 표의 "ν ≈ 0.3 (K ≈ 20, μ ≈ 9.2)" 는 우리 DFT(0.360)·Bazzoun(0.37)
-      과 어긋난다 — 문서 간 ν 정합 필요.
+      ⚠ ν=0.3 자체는 **DEM 접촉모델 입력값**이라 무해하다 (E* 에만 들어가는 2차 인자 —
+      0.30→0.360 시 E* +3.8~4.5 %, 겹침 δ −3 % = 18배 연화 앞에서 무시 가능).
+      문제는 **그 값에서 K·μ 를 유도해 "물성"으로 적을 때**다: SDCP Methods SI 표의
+      "ν ≈ 0.3 (K ≈ 20, μ ≈ 9.2)" 에서 K 20 은 우리 DFT B₀ 26.23 과 24 % 어긋난다.
+      ⇒ **물성 행은 DFT 쌍 (B₀ 26.23, ν 0.360, μ 8.11), ν 0.3 은 DEM 설정에만** 두고 분리.
       ν-sweep: 0.45 (K=5.1)→0.00 %, 0.49 (K=25.5)→6.3 % ✓.  3D mirror of the 2D
       CORRECTION 1: only SHEAR softening is the granular proxy, bulk-softening was a
       side effect; SE bulk should be REAL.
