@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # =============================================================================
-#  archive_results.sh — 재생성 비용이 큰 산출물만 저장소에 남긴다
+#  archive_results.sh — 계산 결과를 **외부 clone에서 검증 가능한** 형태로 남긴다
 #
 #  사용:
-#    ./scripts/archive_results.sh                      # 기본 3개 실행 보관
-#    ./scripts/archive_results.sh results/halfcell_v1  # 특정 실행만
+#    ./scripts/archive_results.sh                      # 기본 실행 보관
+#    ./scripts/archive_results.sh results/halfcell_v3  # 특정 실행만
 #
 #  왜 필요한가
 #  ───────────
@@ -12,25 +12,36 @@
 #  기본값이지만, 그 결과 **계산 결과가 서버에만 존재**하게 된다.
 #  V100 컨테이너가 회수되면 fitting 14시간이 사라진다.
 #
-#  무엇을 남기고 무엇을 버리는가 — 기준은 "재생성 비용"이다.
+#  ★ F62 — 무엇을 남길지의 기준이 바뀌었다
+#  ───────────────────────────────────────
+#  초판의 기준은 "재생성 비용"이었다. 그래서 curves.parquet(재생성 5~8분)을
+#  버렸다. 그런데 validate_provenance 는 봉인된 입력을 **다시 해시**한다 (F56).
+#  재생성한 curves는 바이트가 달라서 digest가 안 맞는다 — 재생성으로 대체할 수
+#  없다. manifest_start.yaml 과 attempts/ 도 마찬가지로 검증기가 디스크에서
+#  직접 읽는다 (F57). half-cell 캐시는 .cache/ 가 gitignore라 저장소에 아예 없다.
 #
-#    fits.parquet          ★ 남긴다. 조건당 4~10초 × 3,069조건 = 시간 단위.
-#                            이것만 있으면 score/hessian/report는 몇 초다
-#    manifest.yaml         ★ 남긴다. 어떤 커밋·설정에서 나왔는지의 근거
-#    *_summary.yaml        ★ 남긴다. 작고, 보고서가 읽는다
-#    objective_comparison  ★ 남긴다. 최종 비교표
-#    figures/*.png         ★ 남긴다. 작고 보고에 바로 쓴다
+#  즉 기준은 이제 "**clone 한 사람이 이 결과를 검증할 수 있는가**"다.
+#  검증에 필요한 것은 비용과 무관하게 전부 남긴다.
 #
-#    curves.parquet        버린다. 19 MB이고 재생성이 5~8분이다
-#    degeneracy_map        버린다. fits에서 몇 초면 다시 나온다
-#    chunks/ fit_chunks/   버린다. 병합 결과가 fits.parquet에 있다
-#    completed.jsonl       버린다. resume 상태일 뿐
+#    fits.parquet          ★ 조건당 4~10초 × 3,069조건 = 시간 단위
+#    manifest.yaml         ★ 서명·run_spec·입력 digest
+#    manifest_start.yaml   ★ F57 — 검증기가 디스크에서 읽어 대조한다
+#    attempts/*.yaml       ★ F57 — attempt_id 별 시작 기록
+#    curves.parquet        ★ F56 — 재생성 불가(바이트가 달라진다). 19 MB지만 남긴다
+#    inputs/*_ocp.json     ★ half-cell 캐시. .gitignore 때문에 동봉해야 한다
+#    *_summary.yaml, 비교표, figures/*.png    작고 보고서가 읽는다
+#
+#    degeneracy_map / chunks / completed.jsonl   버린다 (fits에서 재생성)
+#
+#  복원 — 묶음은 보관 형태이고, 검증은 복원한 뒤에 한다:
+#    python -m tools.archive_bundle restore artifacts/halfcell_v3
 # =============================================================================
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
+PY="${PYTHON:-python3}"
 DEST="artifacts"
 RUNS=("$@")
 if [[ ${#RUNS[@]} -eq 0 ]]; then
@@ -38,7 +49,8 @@ if [[ ${#RUNS[@]} -eq 0 ]]; then
 fi
 
 mkdir -p "$DEST"
-total=0
+n_ok=0
+n_bad=0
 
 for run in "${RUNS[@]}"; do
   name="$(basename "$run")"
@@ -47,46 +59,42 @@ for run in "${RUNS[@]}"; do
     continue
   fi
   out="$DEST/$name"
-  mkdir -p "$out"
 
-  n=0
-  for f in fits.parquet manifest.yaml degeneracy_summary.yaml \
-           objective_comparison.yaml objective_comparison.csv \
-           objective_comparison_by_noise.csv weight_sweep.yaml \
-           weight_sweep_summary.csv; do
-    [[ -f "$run/$f" ]] && { cp -p "$run/$f" "$out/"; n=$((n+1)); }
-  done
-  # hessian은 목적함수마다 파일이 따로다
-  for f in "$run"/hessian_*.parquet; do
-    [[ -f "$f" ]] && { cp -p "$f" "$out/"; n=$((n+1)); }
-  done
-  # 가중치 sweep은 하위 디렉터리에 있다
-  if [[ -d "$run/wsweep" ]]; then
-    mkdir -p "$out/wsweep"
-    for f in "$run"/wsweep/weight_sweep*.{yaml,csv} "$run"/wsweep/fits.parquet; do
-      [[ -f "$f" ]] && { cp -p "$f" "$out/wsweep/"; n=$((n+1)); }
-    done
-  fi
-  if [[ -d "$run/figures" ]]; then
-    mkdir -p "$out/figures"
-    cp -p "$run"/figures/*.png "$out/figures/" 2>/dev/null && \
-      n=$((n + $(ls -1 "$run"/figures/*.png 2>/dev/null | wc -l)))
-  fi
+  printf '\n── %s ──\n' "$name"
+  "$PY" -m tools.archive_bundle bundle "$run" "$out"
 
-  sz=$(du -sh "$out" | cut -f1)
-  printf '%-28s 파일 %2d개  %s\n' "$name" "$n" "$sz"
-  total=$((total+n))
+  # 원본 실행이 애초에 인용 가능한 상태였는지도 같이 남긴다.
+  # (묶음 자체는 경로가 달라 여기서 검증할 수 없다 — 복원 후에 한다)
+  "$PY" - "$run" "$out" <<'PYEOF'
+import json, sys
+from pathlib import Path
+from src.io import validate_provenance
+run, out = sys.argv[1], Path(sys.argv[2])
+v = validate_provenance(run)
+(out / "provenance.json").write_text(
+    json.dumps(v, ensure_ascii=False, indent=2), encoding="utf-8")
+print(f"  원본 provenance: {'통과' if v['ok'] else '실패 — ' + ', '.join(v['fail'][:4])}")
+PYEOF
+
+  if "$PY" -m tools.archive_bundle check "$out" | sed 's/^/  /'; then
+    n_ok=$((n_ok+1))
+  else
+    n_bad=$((n_bad+1))
+  fi
+  printf '  용량 %s\n' "$(du -sh "$out" | cut -f1)"
 done
 
-printf '\n합계 %d개 파일, %s\n' "$total" "$(du -sh "$DEST" | cut -f1)"
+printf '\n검증 가능 %d개, 불완전 %d개, 합계 %s\n' \
+  "$n_ok" "$n_bad" "$(du -sh "$DEST" | cut -f1)"
 cat <<'EOF'
 
 다음:
   git add artifacts && git commit -m "chore(artifacts): 계산 결과 보관" && git push
 
-복원하려면 (fits.parquet만 있으면 채점 이후는 전부 재생성된다):
-  mkdir -p results/grid_fine_v2
-  cp artifacts/grid_fine_v2/fits.parquet results/grid_fine_v2/
-  ./run.sh --mode grid --config configs/grid_fine.yaml --nproc 32 --out results/grid_fine_v2  # curves 재생성 5~8분
-  ./run.sh --mode score --in results/grid_fine_v2
+clone 한 쪽에서 복원 + 검증:
+  python -m tools.archive_bundle restore artifacts/halfcell_v3
+  python -c "from src.io import validate_provenance; import json; \
+             print(json.dumps(validate_provenance('results/halfcell_v3'), \
+             ensure_ascii=False, indent=2))"
+  ./run.sh --mode score --in results/halfcell_v3     # 채점 이후는 몇 초다
 EOF

@@ -1154,3 +1154,51 @@ def test_validator_rejects_null_valued_restart_entries(tmp_path):
         f["restarts_json"] = json.dumps(bad)
         f.to_parquet(d / "fits.parquet", index=False)
         assert "restart_출처" in validate_provenance(d)["fail"], bad
+
+
+def test_archive_bundle_roundtrip_validates(tmp_path):
+    """★ F62 — 보관 묶음을 복원하면 provenance 검증을 통과해야 한다.
+
+    검증기를 세 라운드에 걸쳐 강화하는 동안 archive 스크립트는 그대로였다.
+    그 결과 `manifest_start.yaml` · `attempts/` · `curves.parquet` 이 빠진
+    묶음만 저장소에 남았고, **clone 한 사람은 결과를 검증할 수 없었다.**
+    재생성으로도 못 때운다 — curves를 다시 만들면 바이트가 달라 digest가 깨진다.
+    """
+    from src.io import validate_provenance
+    from tools.archive_bundle import bundle, check, restore
+
+    d, _ = _complete_artifact(tmp_path)
+    assert validate_provenance(d)["ok"], validate_provenance(d)["fail"]
+
+    out = tmp_path / "artifacts" / "run"
+    res = bundle(d, out)
+    assert not res["missing"], res["missing"]
+    assert check(out)["ok"], check(out)["missing"]
+
+    # 원본을 지워도 묶음만으로 복원·검증이 되어야 한다
+    import shutil
+    shutil.rmtree(d)
+    r = restore(out, run_dir=d)
+    assert Path(r["run_dir"]) == d
+    v = validate_provenance(d)
+    assert v["ok"], v["fail"]
+
+
+def test_archive_bundle_check_catches_missing_start_files(tmp_path):
+    """★ F62 — 옛 archive 방식(요약+fits만)은 '검증 불가'로 걸려야 한다."""
+    from tools.archive_bundle import bundle, check
+
+    d, _ = _complete_artifact(tmp_path)
+    out = tmp_path / "artifacts" / "run"
+    bundle(d, out)
+
+    for victim in ("manifest_start.yaml", "curves.parquet"):
+        (out / victim).unlink()
+        res = check(out)
+        assert not res["ok"] and any(victim in m for m in res["missing"]), res
+        bundle(d, out)          # 되돌려 놓고 다음 항목
+
+    import shutil
+    shutil.rmtree(out / "attempts")
+    res = check(out)
+    assert not res["ok"] and any("attempts/" in m for m in res["missing"]), res

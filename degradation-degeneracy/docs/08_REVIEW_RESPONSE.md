@@ -2,7 +2,8 @@
 
 > **리뷰 기준 커밋**: `1790a9cc`
 > **1차 회답**: `cb23274` (F25~F30) / **2차 회답**: `3c1109f` (F31~F35) /
-> **3차 회답**: `7557c33` (F36~F40) / **4차 회답**: 이 문서 (F42~F48)
+> **3차 회답**: `7557c33` (F36~F40) / **4차 회답**: `261ba00` (F42~F48) /
+> **5차 회답**: `94433e0` (F49~F53) / **6차 회답**: 이 문서 §15 (F55~F62)
 > **회답일**: 2026-08-07
 > **한 줄**: 코드·데이터로 검증 가능한 지적 9건을 전부 재계산했고, **하나도
 > 반박되지 않았습니다.** 버그 4건을 고쳤고, 핵심 결론 문구 2개를 철회합니다.
@@ -638,3 +639,90 @@ F49~F53을 갖춘 clean SHA에서 fresh output으로 재실행합니다(진행 �
   그 전까지 결론 2는 "현재 비대칭 pipeline에서 관측된 값"으로만 씁니다.
 - 결론 1 철회 유지, 결론 3은 pipeline 수준 표현 유지이며 **정량값은 재실행 결과가
   provenance를 통과할 때까지 인용 보류**입니다.
+
+---
+
+## 15. 6차 리뷰 회답 (F55~F62)
+
+> **리뷰 기준 커밋**: `94433e0b` / **회답 커밋**: `ff0ed7bb` + 이 문서
+> **결과**: 7건 + 추가 1건, **전부 유효**했습니다. 반박한 것은 없습니다.
+
+### 이번 라운드의 성격 — 검증기가 자기 테스트에 속았습니다
+
+가장 아픈 지적은 방법 자체였습니다. 리뷰어가 **이 저장소의 테스트 fixture
+(`_complete_artifact`)를 그대로 써서** `validate_provenance` 를 통과시켰습니다.
+제가 "위조를 잡는다"고 세 라운드에 걸쳐 강화한 검증기가, 정작 **기록끼리
+일관되기만 하면 통과**하는 상태였다는 뜻입니다.
+
+원인은 하나로 모입니다. 검증 대상이 **디스크의 실물이 아니라 manifest 안의
+필드**였습니다. manifest는 실행이 스스로 쓴 것이므로, 그것끼리 맞춰보는 것은
+자기증명입니다. 이번 수정의 방향은 전부 "**밖에 있는 것과 대조하라**"입니다.
+
+### 항목별 조치
+
+| # | 지적 | 조치 |
+|---|---|---|
+| 1 | 같은 커밋·같은 입력이라도 라이브러리 버전이 다르면 다른 답이 나오는데 서명에 없다 | **F55** — `env_fingerprint()`. python/platform/machine + numpy·scipy·pandas·joblib·pyarrow·pybamm·matplotlib·yaml 버전을 `run_spec["env"]` 와 시작 provenance에 기록. 환경이 다르면 서명이 갈린다 |
+| 2 | 입력을 시작·종료에 따로 해시해 그 사이 교체를 못 잡는다 | **F56** — `seal_inputs()` 로 시작 시점에 한 번만 봉인하고 `run_spec`·`base_manifest` 가 그 map을 재사용. 종료 시 재해시해 `input_sha256_at_end` / `inputs_changed_during_run` 기록. 검증기에 `입력봉인_교차일치`(시작 봉인 = run_spec = 종료 = 현재 파일, 네 곳) 추가 |
+| 3 | 검증기가 manifest 안의 nested 사본만 보고 디스크의 start/attempt 파일을 안 읽는다 | **F57** — `manifest_start.yaml` 과 `attempts/manifest_start_<attempt_id>.yaml` 을 디스크에서 직접 읽어 대조 (`start_파일_존재`·`attempt_파일_존재`·`attempt_파일_일치`·`start_파일_일치`) |
+| 4 | half-cell 캐시를 읽은 **뒤에** 해시해서, 읽는 순간과 해시하는 순간 사이가 비어 있다 | **F58** — 캐시 경로를 `get_halfcell_reference()` **호출 전에** 계산해 봉인. 경로나 digest가 바뀌면 예외. `reference=="halfcell"` 이면 `halfcell_sha`·`halfcell_cache` 가 `run_spec` 필수 키. `sig_version` 4로 올리고 **값 자체를** 검사 |
+| 5 | `compare` 가 임의 parquet을 채점하면서 검증은 `run_dir/fits.parquet` 에 한다 | **F59** — `validate_provenance(..., fits_path=)` + `채점파일_정본` 검사. 파일 인자 하나로 degeneracy를 94.4% → 0% 로 바꾸고도 통과하던 경로를 막음 |
+| 6 | 배너가 `case_comparison.yaml` 안의 기록만 믿는다 | **F60** — `make_results` 가 비교 산출물 두 개를 **보고서 생성 시점에 다시** 검증하고 `fits_sha256` 을 재계산. tag 집합이 `{grid, halfcell}` 이고 `provenance_ok is True` 일 때만 case 절을 낸다 |
+| 7 | restart 원소가 키만 있고 값이 전부 null이어도 통과 | **F61** — `_restart_ok()` 로 원소마다 `p`(길이 4 유한 실수)·`J`(유한 실수)·`i`(비음 정수)·`source`(enum)를 검사. 주신 반례 3종을 테스트로 고정 |
+| 추가 | **보관된 artifact를 clone 한 쪽에서는 검증할 수 없다** | **F62** — 아래 별도 |
+
+### F62 — 검증기를 강화하는 동안 보관 방식은 그대로였습니다
+
+이게 이번 라운드에서 제일 부끄러운 항목입니다.
+
+`archive_results.sh` 초판의 기준은 "재생성 비용"이었습니다. 그래서
+`curves.parquet` 을 "재생성 5~8분"이라고 버렸습니다. 그런데 F56 이후
+검증기는 봉인된 입력을 **다시 해시**합니다. 재생성한 curves는 바이트가 달라
+digest가 맞지 않습니다 — **재생성으로 대체할 수 없습니다.** 같은 이유로
+`manifest_start.yaml` 과 `attempts/` 도 빠져 있었고(F57이 디스크에서 읽습니다),
+half-cell 캐시는 `.cache/` 가 gitignore라 저장소에 아예 없었습니다.
+
+정리하면, **인용 가능성을 판정하는 장치는 계속 조였는데 그 판정에 필요한 재료는
+저장소에 남기지 않고 있었습니다.**
+
+조치:
+
+- `tools/archive_bundle.py` 신설 — `bundle` / `check` / `restore`
+  - `bundle`: 검증 필수 파일 + `run_dir` 밖의 봉인 입력을 `inputs/` 에 동봉하고
+    원래 경로를 `restore_map.yaml` 에 기록
+  - `check`: 묶음이 검증에 필요한 파일을 다 가졌는지 (해시가 아니라 **존재**)
+  - `restore`: 원래 경로로 되돌린다. 묶음은 보관 형태이고 경로가 다르므로,
+    **검증은 복원 후에** 한다
+- `archive_results.sh` 가 보관 시점에 원본 실행을 검증해 `provenance.json` 으로
+  같이 남기고, 묶음이 불완전하면 "검증 불가"로 표시
+- `artifacts/README.md` — 지금 들어 있는 세 묶음(`grid_fine_v1`·`grid_fine_v2`·
+  `halfcell_v1`)이 **전부 검증 불가**임을 명시. 실행 자체가 F26/F51/F58 이전이고,
+  묶는 방식도 옛 기준이었습니다. 이력으로만 남깁니다
+
+테스트 **195 → 205**.
+
+### 재실행 전략을 바꿉니다
+
+여섯 라운드 연속으로 유효한 결함이 나왔고, 그때마다 약 10시간의 재실행이
+날아갔습니다. 이번 수정으로 `run_spec` 필수 키가 또 늘어(`env`·`sealed_inputs`·
+`halfcell_sha`) **지금 돌던 `halfcell_v3` 산출물은 새 검증기를 통과하지 못합니다.**
+중단했습니다.
+
+그래서 순서를 바꿉니다.
+
+1. 코드를 먼저 수렴시킨다 (이 커밋)
+2. **"이제 돌려도 된다"는 확인을 리뷰에서 받는다** ← 지금 여기
+3. 그 다음에 clean worktree · fresh output 으로 `halfcell_v3` → `grid_fine_v3`
+   → sweep 을 한 번에 돌린다
+4. `archive_results.sh` 로 묶고, **복원 후 `validate_provenance` 통과를 확인한 뒤**
+   `artifacts/` 에 커밋한다
+5. `docs/RESULTS.md` 상단의 인용 금지 배너가 사라지는지 확인한다
+
+배너가 사라지기 전까지 결론 1은 철회 상태, 결론 2는 "현재 비대칭 pipeline에서
+관측된 값", 결론 3은 pipeline 수준 표현이며 **정량값은 전부 인용 보류**입니다.
+
+### 아직 안 한 것
+
+- **동일 seed · 동일 restart budget · early-stop off 인 paired 재실행.**
+  여섯 라운드째 미실시입니다. 이게 없으면 목적함수의 내재적 성능을 말할 수 없습니다
+- `pairwise` 기반 1,242 재산출, 새 generator로 `RESULTS.md` 재생성 — 3번 이후

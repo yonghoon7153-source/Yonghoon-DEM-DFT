@@ -812,3 +812,68 @@ F26이 지우려던 계통 오프셋이 그대로 다시 생긴다.
 F49~F53을 갖춘 clean SHA에서 fresh output으로 재실행해야 한다.
 
 테스트 189 → 195.
+
+## 6차 교차리뷰 대응 (2026-08-07, F55~F62)
+
+5차 회답에 대한 재검증에서 7건 + 추가 1건. **전부 타당했다.**
+
+가장 아픈 지적은 방법 자체였다. 리뷰가 **이 저장소의 테스트 fixture
+(`_complete_artifact`)를 그대로 써서** `validate_provenance`를 통과시켰다. 세
+라운드에 걸쳐 "위조를 잡는다"고 강화한 검증기가, 실제로는 **기록끼리 일관되기만
+하면 통과**하는 상태였다. 원인은 하나다 — 검증 대상이 디스크의 실물이 아니라
+manifest 안의 필드였다. manifest는 실행이 스스로 쓴 것이므로 그것끼리 맞춰보는
+것은 자기증명이다. 이번 수정은 전부 "밖에 있는 것과 대조하라" 방향이다.
+
+- **F55** 같은 커밋·같은 입력이라도 라이브러리 버전이 다르면 답이 달라지는데
+  서명에 없었다. `env_fingerprint()` — python/platform/machine + numpy·scipy·
+  pandas·joblib·pyarrow·pybamm·matplotlib·yaml 버전을 `run_spec["env"]`와 시작
+  provenance에 기록한다.
+- **F56** 입력을 시작·종료에 **따로** 해시해서 그 사이 교체를 못 잡았다.
+  `seal_inputs()`로 시작 시점에 한 번만 봉인하고 `run_spec`·`base_manifest`가
+  그 map을 재사용한다. 종료 시 재해시해 `input_sha256_at_end` /
+  `inputs_changed_during_run`을 남기고, 검증기가 시작 봉인 · `run_spec` · 종료
+  manifest · 현재 파일 **네 곳을 교차 대조**한다.
+- **F57** 검증기가 manifest 안의 nested 사본만 봤다. `manifest_start.yaml`과
+  `attempts/manifest_start_<attempt_id>.yaml`을 **디스크에서 직접 읽어** 대조한다.
+- **F58** half-cell 캐시를 `get_halfcell_reference()`로 **읽은 뒤에** 해시해서,
+  읽는 순간과 해시하는 순간 사이가 비어 있었다. 경로를 호출 **전에** 계산해
+  봉인하고, 경로나 digest가 바뀌면 예외. `reference=="halfcell"`이면
+  `halfcell_sha`·`halfcell_cache`가 `run_spec` 필수 키. `sig_version`을 4로 올리고
+  존재만이 아니라 **값 자체를** 검사한다.
+- **F59** `compare`가 임의 parquet을 채점하면서 검증은 `run_dir/fits.parquet`에
+  했다. 파일 인자 하나로 degeneracy를 94.4% → 0%로 바꾸고도 통과했다.
+  `validate_provenance(..., fits_path=)` + `채점파일_정본` 검사.
+- **F60** 배너가 `case_comparison.yaml` 안의 기록만 믿었다. `make_results`가 비교
+  산출물 두 개를 **보고서 생성 시점에 다시** 검증하고 `fits_sha256`을 재계산한다.
+  tag 집합이 `{grid, halfcell}`이고 `provenance_ok is True`일 때만 case 절을 낸다.
+- **F61** restart 원소가 키만 있고 값이 전부 null이어도 통과했다. `_restart_ok()`로
+  `p`(길이 4 유한 실수)·`J`(유한 실수)·`i`(비음 정수)·`source`(enum)를 검사한다.
+
+### F62 — 검증기를 조이는 동안 보관 방식은 그대로였다
+
+`archive_results.sh` 초판의 기준은 "재생성 비용"이었다. 그래서 `curves.parquet`을
+"재생성 5~8분"이라며 버렸다. 그런데 F56 이후 검증기는 봉인된 입력을 **다시
+해시**한다. 재생성한 curves는 바이트가 달라 digest가 맞지 않는다 — **재생성으로
+대체할 수 없다.** 같은 이유로 `manifest_start.yaml`·`attempts/`도 빠져 있었고
+(F57이 디스크에서 읽는다), half-cell 캐시는 `.cache/`가 gitignore라 저장소에 아예
+없었다. 즉 **인용 가능성을 판정하는 장치는 계속 조였는데, 그 판정에 필요한 재료는
+저장소에 남기지 않고 있었다.**
+
+- `tools/archive_bundle.py` 신설 — `bundle`(검증 필수 파일 + `run_dir` 밖의 봉인
+  입력을 `inputs/`에 동봉하고 원래 경로를 `restore_map.yaml`에 기록) /
+  `check`(묶음의 완비 여부) / `restore`(원래 경로로 복원).
+  묶음은 보관 형태이고 경로가 다르므로 **검증은 복원 후에** 한다.
+- `archive_results.sh`가 보관 시점에 원본 실행을 검증해 `provenance.json`으로
+  같이 남기고, 묶음이 불완전하면 "검증 불가"로 표시한다.
+- `artifacts/README.md` — 지금 들어 있는 `grid_fine_v1`·`grid_fine_v2`·
+  `halfcell_v1` 세 묶음이 **전부 검증 불가**임을 명시했다. 실행 자체가
+  F26/F51/F58 이전이고 묶는 방식도 옛 기준이었다. 이력으로만 남긴다.
+
+### 재실행 전략 변경
+
+여섯 라운드 연속으로 유효한 결함이 나왔고 매번 약 10시간의 재실행이 날아갔다.
+이번 수정으로 `run_spec` 필수 키가 또 늘어(`env`·`sealed_inputs`·`halfcell_sha`)
+돌던 `halfcell_v3` 산출물은 새 검증기를 통과하지 못한다. 중단했다.
+앞으로는 **코드를 수렴시키고 → "돌려도 된다"는 확인을 받은 뒤 → 재실행**한다.
+
+테스트 195 → 205.
