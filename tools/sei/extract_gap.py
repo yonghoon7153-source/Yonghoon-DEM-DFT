@@ -83,6 +83,17 @@ def main():
     gap = cbm - vbm
     verdict = ("금속/반금속 (겹침)" if gap <= 0.02 else
                "좁은 갭" if gap < 1.0 else "절연체")
+    # ⚠⚠ 스핀분극 fixed-occ 에서 VBM 이 CBM 보다 **크게** 위면 그건 밴드 겹침이 아니라
+    #   **점유수가 전하밀도와 어긋난 것**이다 (2026-08-07 nd2o3: −6.460 eV, VBM 16.159 >
+    #   CBM 9.700). scf 는 모멘트를 자유롭게 찾는데 nscf 가 다른 tot_magnetization 을
+    #   강제하면 정확히 이 꼴이 난다. 숫자를 그대로 내보내면 "반금속" 으로 오독된다.
+    if spin and gap < -0.5:
+        verdict = "⛔ 무효 — 스핀 점유수 불일치 (겹침 아님)"
+        print(f"  ⛔ VBM 이 CBM 보다 {-gap:.3f} eV 위다. 물리적 겹침이 아니라 "
+              f"↑/↓ 점유수가 전하밀도와 어긋난 것이다.")
+        print(f"     02_scf.out 의 수렴 모멘트를 03 에 옮기고 다시 돌릴 것:")
+        print(f"       python3 tools/sei/sync_magnetization.py <작업폴더>")
+        print(f"       TAG=<tag> bash tools/sei/redo_stages.sh 03 04 05 06")
     print(f"  VBM {vbm:.3f} · CBM {cbm:.3f} · **gap {gap:.3f} eV** ({verdict})")
     print(f"    (전자 {nelec:.0f} · 점유 밴드 "
           + (f"↑{nocc_up}/↓{nocc_dn} (M={magn:.2f} μB)" if spin else str(nocc))

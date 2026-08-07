@@ -48,6 +48,10 @@ for t in "${TARGETS[@]}"; do
       --targets 02_scf.in 03_nscf_gap.in 04_nscf_dos.in || { ts "  ✗ 기하 승계 실패"; continue; }
 
   run 02_scf.in 02_scf.out || continue
+  # ⚠ 스핀분극 계는 scf 가 **자기 모멘트를 스스로 찾는데**(smearing), 03 은 fixed 라
+  #   tot_magnetization 을 고정해야 한다. 생성기가 가정한 3xN_Nd 와 scf 수렴값이 다르면
+  #   전하밀도와 점유수가 어긋나 VBM > CBM 이 나온다 (2026-08-07 nd2o3: gap -6.460 eV).
+  python3 "$REPO/tools/sei/sync_magnetization.py" "$d" || ts "  ⚠ 모멘트 동기화 실패"
   run 03_nscf_gap.in 03_nscf_gap.out || continue
   python3 "$REPO/tools/sei/extract_gap.py" --nscf 03_nscf_gap.out --tag "$t" \
       --json "$d/gap.json" || ts "  ⚠ 갭 추출 실패"
