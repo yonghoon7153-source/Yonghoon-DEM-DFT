@@ -34,45 +34,130 @@ def read_atoms(atom):
     return np.asarray(xyz, float), np.asarray(rad, float)
 
 
+def _lens_volume(dist, ra, rb):
+    """두 구가 dist 만큼 떨어져 있을 때 겹침(렌즈) 부피.  벡터화."""
+    dist = np.asarray(dist, float)
+    out = np.zeros_like(dist)
+    full = dist <= np.abs(ra - rb)                      # 작은 구가 통째로 들어감
+    out[full] = (4.0 / 3.0) * math.pi * np.minimum(ra, rb)[full] ** 3
+    m = (~full) & (dist < ra + rb) & (dist > 0)
+    d, A, B = dist[m], ra[m], rb[m]
+    out[m] = (math.pi * (A + B - d) ** 2
+              * (d ** 2 + 2 * d * B - 3 * B ** 2 + 2 * d * A + 6 * A * B - 3 * A ** 2)
+              / (12.0 * d))
+    return out
+
+
+def _pairs_within(qa, qb, cutoff, box, same):
+    """cutoff 안의 (ia, ib) 쌍 — numpy 전용 셀리스트.  x·y 주기, z 비주기.
+
+    ★ scipy 를 안 쓴다 (클라우드 컨테이너에 없고, 리포 규약도 numpy 전용).
+    same=True 면 같은 배열이므로 ib > ia 만 남겨 중복을 지운다.
+    """
+    na, nb = len(qa), len(qb)
+    if na == 0 or nb == 0:
+        return np.empty(0, np.int64), np.empty(0, np.int64)
+    h = float(cutoff)
+    nx = max(1, int(box // h))
+    hx = box / nx                                        # x·y 는 주기라 정확히 나눠 쓴다
+    z0 = min(qa[:, 2].min(), qb[:, 2].min())
+
+    def cell(q):
+        cx = np.mod(np.floor(q[:, 0] / hx).astype(np.int64), nx)
+        cy = np.mod(np.floor(q[:, 1] / hx).astype(np.int64), nx)
+        cz = np.floor((q[:, 2] - z0) / h).astype(np.int64) + 1     # dz=-1 이 음수가 안 되게
+        return cx, cy, cz
+
+    ax, ay, az = cell(qa)
+    bx, by, bz = cell(qb)
+    nz = int(max(az.max(), bz.max())) + 3
+
+    def key(cx, cy, cz):
+        return (cx * nx + cy) * nz + cz
+
+    bkey = key(bx, by, bz)
+    order = np.argsort(bkey, kind='stable')
+    bkey_s = bkey[order]
+    ia_all, ib_all = [], []
+    ar = np.arange(na)
+    for dx in (-1, 0, 1):
+        for dy in (-1, 0, 1):
+            for dz in (-1, 0, 1):
+                tk = key(np.mod(ax + dx, nx), np.mod(ay + dy, nx), az + dz)
+                lo = np.searchsorted(bkey_s, tk, 'left')
+                hi = np.searchsorted(bkey_s, tk, 'right')
+                cnt = hi - lo
+                tot = int(cnt.sum())
+                if tot == 0:
+                    continue
+                ia = np.repeat(ar, cnt)
+                base = np.repeat(np.cumsum(cnt) - cnt, cnt)
+                ib = order[np.repeat(lo, cnt) + (np.arange(tot) - base)]
+                ia_all.append(ia)
+                ib_all.append(ib)
+    if not ia_all:
+        return np.empty(0, np.int64), np.empty(0, np.int64)
+    ia = np.concatenate(ia_all)
+    ib = np.concatenate(ib_all)
+    keep = (ib > ia) if same else np.ones(len(ia), bool)
+    return ia[keep], ib[keep]
+
+
 def lens_from_geometry(xyz, rad, box=BOX):
     """겹침 렌즈 부피를 **atom 덤프 좌표만으로** 계산 (contact 덤프 불요).
 
     강체구이므로 LIGGGHTS 의 접촉 δ = rᵢ+rⱼ−dist 는 정확히 기하값이다 → 두 경로가
     같은 값을 줘야 하고, 둘 다 있는 압력점에서 그걸 교차검증한다.
     ★ 덱이 `boundary p p f` 이므로 x·y 는 **주기경계**다.  최소상 이미지를 안 쓰면
-      경계층 접촉(≈ 2 r/L ≈ 2 %)을 통째로 놓친다.  z 는 비주기 → 큰 boxsize 로 무력화.
+      경계층 접촉(≈ 2 r/L ≈ 2 %)을 통째로 놓친다.  z 는 비주기.
+
+    ★ **반지름 클래스로 쪼개 푼다** (2026-08-07).  옛 구현은 cutoff 를 2·r_max 하나로
+      잡았는데, 복합 베드(AM_P 6 / AM_S 2 / SE 0.5 µm)에서는 r_max=6 이라 SE-SE 후보쌍이
+      4천만 개를 넘어 사실상 못 돌았다.  쌍의 진짜 cutoff 는 rᵢ+rⱼ 이므로 클래스별로
+      나눠 걸면 **결과는 같고**(selftest 가 브루트포스와 대조) 후보쌍이 수만 개로 줄어든다.
     """
-    from scipy.spatial import cKDTree
     if len(xyz) < 2:
         return 0.0
-    rmax = float(rad.max())
-    q = xyz.copy()
+    q = np.asarray(xyz, float).copy()
+    rad = np.asarray(rad, float)
     q[:, 0] %= box
     q[:, 1] %= box
-    z0 = q[:, 2].min()
-    q[:, 2] -= z0
-    zbig = float(q[:, 2].max()) + 20.0 * rmax          # z 방향 되말림을 막는 여유
-    tree = cKDTree(q, boxsize=[box, box, zbig])
+    classes = np.unique(rad)
+    idx = {c: np.flatnonzero(rad == c) for c in classes}
     V = 0.0
-    for i, j in tree.query_pairs(2.0 * rmax):
-        ra, rb = float(rad[i]), float(rad[j])
-        d = q[i] - q[j]
-        d[0] -= box * round(d[0] / box)                # 최소상 이미지 (x, y)
-        d[1] -= box * round(d[1] / box)
-        dist = float(np.sqrt((d ** 2).sum()))
-        if dist >= ra + rb:
-            continue
-        if dist <= abs(ra - rb):                        # 완전 포함
-            V += (4.0 / 3.0) * math.pi * min(ra, rb) ** 3
-            continue
-        V += (math.pi * (ra + rb - dist) ** 2
-              * (dist ** 2 + 2 * dist * rb - 3 * rb ** 2 + 2 * dist * ra
-                 + 6 * ra * rb - 3 * ra ** 2) / (12.0 * dist))
+    for m, ca in enumerate(classes):
+        for cb in classes[m:]:
+            same = (ca == cb)
+            A, B = idx[ca], idx[cb]
+            ia, ib = _pairs_within(q[A], q[B], ca + cb, box, same)
+            if len(ia) == 0:
+                continue
+            d = q[A[ia]] - q[B[ib]]
+            d[:, 0] -= box * np.round(d[:, 0] / box)     # 최소상 이미지 (x, y)
+            d[:, 1] -= box * np.round(d[:, 1] / box)
+            dist = np.sqrt((d ** 2).sum(1))
+            sel = dist < ca + cb
+            if not sel.any():
+                continue
+            V += float(_lens_volume(dist[sel],
+                                    np.full(int(sel.sum()), ca),
+                                    np.full(int(sel.sum()), cb)).sum())
     return float(V)
 
 
-def lens_from_contacts(contacts, r_se=R_SE):
-    """옛 경로 — contact 덤프의 δ 로 렌즈 부피.  덤프가 있을 때만."""
+def lens_from_contacts(contacts, r_se=R_SE, rad_by_id=None):
+    """옛 경로 — contact 덤프의 δ 로 렌즈 부피.  덤프가 있을 때만 (기하 경로의 교차검증).
+
+    컬럼 규약 (`compute pair/gran/local pos id force force_normal force_tangential
+    torque contactArea delta contactPoint` = 26열):
+      [0:6] pos1,pos2 · [6:9] id1,id2,periodic · [9:12] force · [12:15] f_n ·
+      [15:18] f_t · [18:21] torque · [21] contactArea · [22] **delta** · [23:26] contactPoint
+
+    ★ rad_by_id (id → 반지름) 를 주면 **다분산에서도 정확**하다.  안 주면 옛 동작
+      (모든 접촉이 반지름 r_se 인 등반지름 SE)으로 떨어지는데, 이는 복합 베드
+      (AM_P 6 / AM_S 2 / SE 0.5 µm)에서 **틀린 값**을 준다 — AM 이 낀 접촉의 렌즈를
+      SE 반지름으로 계산하기 때문.  복합에서는 반드시 rad_by_id 를 넘길 것.
+    """
     V = 0.0
     for cf in (contacts or []):
         with open(cf) as f:
@@ -81,9 +166,18 @@ def lens_from_contacts(contacts, r_se=R_SE):
                 p = line.split()
                 if len(p) < 23: continue
                 try: d = float(p[22])
-                except: continue
-                if 0 < d < 2*r_se:
-                    V += (math.pi/12.0)*d**2*(6.0*r_se - d)
+                except ValueError: continue
+                if d <= 0: continue
+                if rad_by_id is None:
+                    ra = rb = r_se
+                else:
+                    try:
+                        ra = rad_by_id[int(float(p[6]))]; rb = rad_by_id[int(float(p[7]))]
+                    except (KeyError, ValueError):
+                        continue
+                if d >= ra + rb: continue
+                V += float(_lens_volume(np.array([ra + rb - d]),
+                                        np.array([ra]), np.array([rb]))[0])
     return V
 
 
@@ -227,6 +321,47 @@ def _selftest():
     Ds = [1 - math.exp(-(K0*p + A0)) for p in Ps]
     f = heckel(Ps, Ds)
     chk('심어둔 Heckel 직선에서 P_y 회수', abs(f['Py_MPa'] - 850) < 1e-6 and f['r2'] > 0.999)
+
+    # ★ 셀리스트(numpy) ↔ O(N²) 브루트포스 — 다분산·주기경계에서 같은 값을 줘야 한다.
+    #   scipy cKDTree 를 numpy 셀리스트로 바꾸고 반지름-클래스 블로킹을 넣었으므로
+    #   (복합 베드에서 옛 cutoff=2·r_max 는 후보쌍 4천만 개로 사실상 못 돌았다)
+    #   "결과 불변" 을 여기서 못 박는다.
+    def _brute(xyz, rad, box=BOX):
+        q = np.asarray(xyz, float).copy(); q[:, 0] %= box; q[:, 1] %= box
+        V = 0.0
+        for i in range(len(q)):
+            for j in range(i + 1, len(q)):
+                d = q[i] - q[j]
+                d[0] -= box * round(d[0] / box); d[1] -= box * round(d[1] / box)
+                dist = float(np.sqrt((d ** 2).sum()))
+                if dist >= rad[i] + rad[j]:
+                    continue
+                V += float(_lens_volume(np.array([dist]),
+                                        np.array([rad[i]]), np.array([rad[j]]))[0])
+        return V
+
+    rng = np.random.default_rng(7)
+    for nm, radset in (('단분산', [R]), ('이분산', [R, 4 * R]), ('삼분산', [R, 4 * R, 12 * R])):
+        n = 250
+        xyz = np.column_stack([rng.uniform(0, BOX, n), rng.uniform(0, BOX, n),
+                               rng.uniform(0, 0.02, n)])
+        rr = rng.choice(radset, n)
+        a, b = lens_from_geometry(xyz, rr), _brute(xyz, rr)
+        chk(f'★ 셀리스트 == 브루트포스 ({nm}, 주기경계)', abs(a - b) <= 1e-12 * max(b, 1e-30))
+
+    # ★ contact 경로의 다분산 정확성 — rad_by_id 없이는 AM 낀 접촉을 SE 반지름으로 계산한다
+    import tempfile, os as _os
+    ra, rb, delta = 12 * R, 4 * R, 0.2 * R
+    line = (' '.join(['0'] * 6) + ' 1 2 0 ' + ' '.join(['0'] * 12)
+            + f' 0 {delta:.17g} 0 0 0\n')
+    fh = tempfile.NamedTemporaryFile('w', suffix='.txt', delete=False)
+    fh.write('ITEM: ENTRIES x\n' + line); fh.close()
+    want = _lens_volume(np.array([ra + rb - delta]), np.array([ra]), np.array([rb]))[0]
+    got = lens_from_contacts([fh.name], rad_by_id={1: ra, 2: rb})
+    bad = lens_from_contacts([fh.name])                     # 옛 동작 (등반지름 R_SE)
+    _os.unlink(fh.name)
+    chk('★ contact 경로: rad_by_id 로 다분산 렌즈가 정확', abs(got - want) < 1e-15 * max(want, 1))
+    chk('★ rad_by_id 없으면 복합에서 틀린다 (그래서 넘겨야 한다)', abs(bad - want) > 0.5 * want)
 
     print(f'selftest: {ok}/{ok + len(fail)} PASS' + (f'   FAILED: {fail}' if fail else ''))
     return 0 if not fail else 1
