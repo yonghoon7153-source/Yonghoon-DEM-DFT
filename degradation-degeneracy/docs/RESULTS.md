@@ -2,7 +2,7 @@
 
 > 이 파일은 `tools/make_results.py`가 결과 파일에서 자동 생성한다. 직접 수정하지 말 것.
 
-생성: 2026-08-07 10:19 KST  
+생성: 2026-08-07 11:01 KST  
 입력: `results/grid_fine_v2`  
 git: `075a1450` (dirty)  
 
