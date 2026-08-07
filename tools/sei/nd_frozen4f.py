@@ -36,6 +36,12 @@ Z_VALENCE_4F = (13.0, 16.0)  # 4f-in-valence 기대 구간
 OUT = "db/properties/nd_gap_reference_mp.json"
 # repo 안에서 Nd 갭이 필요한 상 (frozen-4f 가 생기면 전부 우리 값으로 바뀔 수 있는 것들)
 ND_PHASES = ["Nd2O3", "Nd2S3", "LiNdO2", "NdPO4", "NdOCl", "NdCl3", "NdS"]
+# ⚠⚠ **검증 표적은 "MP 에서 제일 안정한 것" 이 아니라 "우리가 계산할 바로 그 구조" 다.**
+#   (2026-08-07 실측) 조성만으로 고르면 Nd₂O₃ 가 mp-1045(Ia-3, 40원자)로 잡히는데,
+#   우리 db/structures 의 실물은 mp-2763(5원자)이다. 다형체가 다르면 갭도 다르므로
+#   그대로 두면 **다른 구조끼리 비교**하게 된다 — 표적이 아니라 오답지가 된다.
+#   → db/structures/sei_*.vasp 에 실물이 있는 상은 그 ID 로 **고정**한다.
+PINNED = {"Nd2O3": "mp-2763", "Nd2S3": "mp-438", "LiNdO2": "mp-1222355"}
 PSEUDO_DIRS = ["/data/work/pseudo",
                "/scratch/x3430a02/kgy/manuscript_support/pseudo",
                os.path.expanduser("~/pseudo")]
@@ -162,14 +168,32 @@ def reference(api_key):
             docs = sorted(docs, key=lambda d: 9e9 if d.energy_above_hull is None
                           else d.energy_above_hull)
             obs = [d for d in docs if not d.theoretical] or docs
-            b = obs[0]
+            stable = obs[0]
+            # ★ 우리 실물이 있는 상은 그 ID 로 고정한다 (PINNED 주석 참조).
+            pin = PINNED.get(f)
+            b = next((d for d in docs if d.material_id == pin), None) if pin else None
+            if pin and b is None:
+                print(f"  ⛔ {f}: 고정 ID {pin} 를 MP 조회 결과에서 못 찾았다 — "
+                      f"가장 안정한 것으로 대체하되 **검증 표적으로 쓰지 말 것**")
+            b = b or stable
             out[f] = {"material_id": b.material_id, "spacegroup": b.symmetry.symbol,
                       "band_gap_eV": b.band_gap, "nsites": b.nsites,
                       "e_above_hull": b.energy_above_hull,
-                      "theoretical": bool(b.theoretical)}
+                      "theoretical": bool(b.theoretical),
+                      "pinned_to_our_structure": bool(pin and b.material_id == pin)}
+            mark = " ★고정" if out[f]["pinned_to_our_structure"] else ""
             print(f"  {f:9s} {b.material_id:14s} {b.symmetry.symbol:12s} "
                   f"gap {b.band_gap:6.3f} eV  {b.nsites:3d}원자  "
-                  + ("⚠ 예측만" if b.theoretical else "✅ 관측"))
+                  + ("⚠ 예측만" if b.theoretical else "✅ 관측") + mark)
+            # ⚠ 고정한 것이 MP 최안정과 다르면 **그 사실 자체를 남긴다.** 우리 계는
+            #   준안정 다형체일 수 있고, 그러면 "MP 값과 다르다" 가 오류가 아니라 정보다.
+            if b.material_id != stable.material_id:
+                out[f]["mp_most_stable"] = {
+                    "material_id": stable.material_id, "spacegroup": stable.symmetry.symbol,
+                    "band_gap_eV": stable.band_gap, "nsites": stable.nsites,
+                    "e_above_hull": stable.energy_above_hull}
+                print(f"    ↳ ⚠ MP 최안정은 {stable.material_id} ({stable.symmetry.symbol}, "
+                      f"{stable.nsites}원자, gap {stable.band_gap:.3f}) — **다형체가 다르다**")
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     json.dump({
         "property": "nd_gap_reference_mp",
