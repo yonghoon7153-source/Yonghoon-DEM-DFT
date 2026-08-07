@@ -139,3 +139,39 @@ OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
 | MLIP speed | similar (FP32 bound) | similar |
 
 Expected usage: **MLIP + small/medium DFT** on new server, large DFT (adhesion 820-atom) continues on KISTI.
+
+## ⚠ QE 추가 도구를 빌드할 때 — mpifort 가 gfortran 을 부른다 (2026-08-07 실측)
+
+`neb.x` 를 만들려고 `make neb` 를 했더니 이렇게 죽었다:
+
+```
+gfortran: error: unrecognized command-line option '-fast'
+gfortran: error: unrecognized command-line option '-cuda'
+gfortran: error: unrecognized debug output level 'pu=cc86,cuda12.6'
+```
+
+원인은 **PATH**다. 기본 `which mpifort` 가 `/usr/bin/mpifort` = GNU Fortran 13.3.0 을
+가리키는데, QE-GPU 는 NVHPC(`nvfortran`)로 빌드돼 있어 `make.inc` 의 플래그가
+NVHPC 전용이다. gfortran 이 그걸 못 알아듣는다.
+
+**빌드 전에 반드시 이 환경을 복원한다** (run_sei_dft.sh 가 실행 시 쓰는 것과 같은 것):
+
+```bash
+NVHPC=/data/apps/nvhpc/Linux_x86_64/24.11
+export PATH=$NVHPC/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin:$NVHPC/compilers/bin:$PATH
+export OPAL_PREFIX=$NVHPC/comm_libs/12.6/hpcx/hpcx-2.20/ompi
+export LD_LIBRARY_PATH=$NVHPC/compilers/lib:/usr/local/cuda-12.6/lib64:$LD_LIBRARY_PATH
+
+which mpifort                       # hpcx 경로여야 한다
+mpifort --version | head -1         # nvfortran 이어야 한다
+```
+
+⚠ **QE-GPU 빌드에 `neb.x` 가 처음부터 없다.** `bin/` 은 `PW/src`·`PP/src` 로 가는
+심볼릭 링크 모음인데 NEB 은 빌드 대상에 안 들어 있었다. `libpw.a` 는 이미 있으므로
+`make neb` 는 NEB 모듈만 컴파일한다(2~5분).
+
+⚠ 판정 기준: `make.inc` 의 `MPIF90` 이 원래 빌드에 쓴 컴파일러다. 그게 지금 PATH 에서
+잡히는지가 전부다 —
+```bash
+grep -E "^(MPIF90|F90|CC|LD)\s*=" /data/apps/qe-7.4.1-gpu/make.inc
+```
