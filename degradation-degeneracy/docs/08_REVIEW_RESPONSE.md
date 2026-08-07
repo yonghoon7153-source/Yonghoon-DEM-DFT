@@ -448,3 +448,128 @@ F26b 테스트도 처음엔 `_fit_one`을 monkeypatch한 뒤 그 fake를 호출�
   안 바뀌고 multi-start 진단과 provenance만 복구됩니다.
 
 테스트 182 → 184.
+
+---
+
+## 13. 4차 리뷰 회답 (F42~F48)
+
+> **검증 대상**: `7557c33` / **회답 커밋**: `9b9d223d`
+> **판정**: 8건 전부 타당. 전부 조치했습니다. 반박 없습니다.
+
+### 가장 아픈 지적 — 리뷰가 제 테스트로 제 validator를 반증했습니다
+
+발견 1이 정확합니다. `validate_provenance()`가 provenance의 **진위**가 아니라
+필드의 형식적 자기일관성만 봤습니다. 그 증거로 리뷰가 **이 저장소의 fixture**를
+들었습니다 — `_complete_artifact()`가 존재하지 않는 파일의 가짜 digest
+(`aaaa1111`, `bbbb2222`)와 임의 서명(`sig000000001`)을 넣고 "provenance 검사를
+실제로 통과하는 artifact"라고 부르고 있었고, 실제로 통과했습니다.
+테스트 이름은 "forged signature 거부"인데 정작 자기일관적 위조를 통과시켰습니다.
+
+강화한 validator를 붙이자 **그 fixture가 즉시 깨졌습니다.** 진짜 입력 파일을
+만들고, 그 digest를 기록하고, `run_spec`을 실제로 해시해 서명을 만드는 형태로
+다시 썼습니다.
+
+### 항목별 조치
+
+| # | 지적 | 조치 |
+|---|---|---|
+| 1 | F38이 가짜 digest·자기일관 위조를 통과 | **F43** — 입력 파일을 **다시 해시**해 대조, `run_spec`을 **다시 해시**해 `run_signature`와 대조, `restarts_json`을 **첫 행이 아니라 모든 행** 검사. 검사 항목 9 → 10 |
+| 2 | manifest가 **종료 시점** git·입력을 기록 | **F42** — `manifest_start.yaml`에 시작 시점 git SHA·dirty·입력 digest를 먼저 기록. 종료 manifest에 `start_provenance`와 `git_commit_changed_during_run`을 병기 |
+| 3 | paired가 restart **개수**만 일치 | **F44** — `restart_indices`를 보존하고 **index 집합 일치**를 요구. `{1,2}` vs `{1,3}`은 이제 paired가 아님 |
+| 4 | 전역 교집합이 33p↔34p 비교를 과도하게 축소 | **F44b** — `pairwise` 블록을 **목적함수 쌍마다** 생성. 전역 값에는 `_주의_전역교집합`을 붙여 쌍대 비교에 쓰지 못하게 함 |
+| 5 | half-cell 캐시를 CWD에서 glob | **F45** — `halfcell_cache_path()` 신설. 서명·manifest가 `get_halfcell_reference()`와 **같은 규칙으로 고른 경로 하나**를 씀 |
+| 6 | `PE-NE 상쇄` 명칭 잔존 | **F46** — 22p 근방 문장·표 헤더·`compare_objectives` 헤더까지 전부 `raw 반대부호`로. `rg 'PE-NE 상쇄' tools/*.py src/*.py` = 0 |
+| 7 | F37 확장자 allowlist | **F47** — allowlist 제거. critical 디렉터리 아래는 전부 dirty(`__pycache__`·`.pyc`만 제외). `src/new.py`·`configs/new.yaml`·`src/data.toml`·`tools/x.ini`·`scripts/y.cfg` positive test 5종 추가 |
+| 8 | 문서 3차 SHA 미표기 | **F48** — 상단에 `7557c33` 명시 |
+
+테스트 **185 → 189**.
+
+### `halfcell_v2` 판정 — 6개 조건 중 1번이 artifact 안에서 닫혔습니다
+
+강화된 validator로 `results/halfcell_v2`를 다시 검사했습니다. **10개 전부 통과**
+(재해시 포함):
+
+```
+manifest_존재 · config_hash · clean_worktree · 입력_digest_재해시 ·
+run_signature_기록 · run_signature_재계산 · 행별_서명 · 단일_서명 ·
+manifest와_일치 · restart_출처   →  ok: true
+```
+
+시작 SHA(조건 1)는 **artifact 내부 증거로 성립합니다.**
+
+```
+manifest.git_commit = 3c1109f5968f...     ← 종료 시점(20:22)에 기록됨
+restart_출처 통과 → restarts_json 에 source 존재 → 코드 ≥ 3c1109f (F31)
+7557c33 은 실행 중 push 됐고 3c1109f 의 자식
+∴ HEAD 가 움직였다면 종료 기록이 7557c33 이어야 하는데 3c1109f 다
+∴ 실행 내내 HEAD = 3c1109f
+```
+
+즉 "종료 시점 SHA를 실행 SHA처럼 쓰는" 문제가 이 실행에서는 발생하지 않았음이
+**두 방향에서** 확인됩니다(코드 하한 ≥ 3c1109f, 종료 상한 = 3c1109f).
+다만 지적하신 구조적 결함은 그대로 유효하므로 F42로 고쳤고, 앞으로의 실행은
+`manifest_start.yaml`로 직접 증명됩니다.
+
+`input_sha256`에 실제 사용 파일 3개가 기록돼 있고 전부 재해시 일치했습니다:
+`results/grid_fine_v2/curves.parquet`, `configs/base.yaml`,
+`.cache/halfcell/a8e262f7d6aa4beb_ocp.json`.
+
+**따라서 `halfcell_v2`는 폐기하지 않고 인용 가능 상태로 승격합니다.**
+계산을 살린 판단에 동의해 주신 부분에 대한 근거도 이것으로 채웠습니다.
+
+### 새 실측 결과 — F26/F26b가 end-to-end로 검증됐습니다
+
+3차 회답에서 "기존 artifact에 사후 적용한 값이지 새 실행 경로를 검증한 것이
+아니다"라고 지적하신 부분입니다. 재실행 결과가 사후 적용치와 일치했습니다
+(공통 1,476조건, grid 기준 복원가능군).
+
+| objective | 사후 적용 예상 | 재실행 실측 |
+|---|---:|---:|
+| pOCV only | 59.5% | **59%** |
+| 33p | 6.6% | **7%** |
+| 34p | 10.0% | **10%** |
+| dQ/dV only | 99.8% | **100%** |
+
+Case 1 vs Case 2 (각 칸 = halfcell / grid):
+
+| objective | degeneracy | 바이어스 보정 | 평균 \|err\| |
+|---|---|---|---|
+| 33p | 7% / 62% | 6% / 15% | 1.4%p / 2.5%p |
+| 34p | 10% / 63% | 5% / 24% | 1.4%p / 2.4%p |
+
+⚠ 자기정정: 전체 3,069조건에서는 34p가 33p보다 나아 보였으나(보정 15.1% vs
+31.6%), 공통 1,476조건에서는 raw가 33p 우세(7% vs 10%), 보정이 34p 근소 우세
+(6% vs 5%)로 **raw와 보정의 방향이 다릅니다.** 사실상 동률로 읽는 것이 맞고,
+"기준 곡선이 목적함수의 우열까지 뒤집는다"는 제 추측은 이 표로 지지되지 않습니다.
+
+### F40/F44의 실제 paired 수 (3차 리뷰의 미확인 항목)
+
+`halfcell_v2`에서 나온 값입니다.
+
+```
+n_common_conditions   1242
+n_paired_conditions   1242      (전역, F44 index 일치 적용 전 수치)
+목적함수별 조건 수      dqdv_only 3008 · pocv 1667 · pocv_dvdq 2298 · 34p 2857
+제외율                 25.5% ~ 58.7%
+```
+
+여기서 **제가 먼저 문제를 하나 발견해 F41로 기록했습니다.** paired subset은
+무작위 표본이 아닙니다 — adaptive 조기 종료로 restart 2에서 멈춘 조건은 무작위
+restart가 1개뿐이라 탈락하므로, 남는 것은 **네 목적함수 모두가 끝까지 간 조건**
+= 모두에게 어려웠던 조건입니다. **결과(최적화 난이도)로 선택된 집합**이라
+격자 전체로 일반화할 수 없습니다. 제외율이 목적함수마다 두 배 넘게 차이나는
+것이 그 증거이고, `_선택편향` 필드로 요약에 박고 테스트로 고정했습니다.
+
+flat_valley는 1.6~3.5%로 넷이 사실상 같습니다. 다만 34p의 multimodal이 95.1%라
+**flat valley가 있어도 관측되지 않는** 상태이므로, 34p의 낮은 flat_valley를
+"degeneracy가 적다"로 읽으면 안 됩니다(기존 경고 유지).
+
+### 남은 것
+
+- **Case 2 재fit 진행 중** (`results/grid_fine_v3`). 이게 끝나야 `RESULTS.md`의
+  인용 금지 배너가 사라집니다. 현재 배너는 `grid_fine_v2`가 F25 이전 artifact라
+  정상적으로 유지되고 있습니다.
+- **동일 seed·동일 restart budget·early-stop off paired 재실행**은 아직입니다.
+  그 전까지 결론 2는 "현재 비대칭 pipeline에서 관측된 값"으로만 씁니다 —
+  이 제한은 그대로 유효합니다.
+- 결론 1은 철회 상태 유지, 결론 3은 pipeline 수준 표현 유지입니다.
