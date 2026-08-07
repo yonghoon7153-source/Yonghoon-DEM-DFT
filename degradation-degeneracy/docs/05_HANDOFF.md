@@ -5,7 +5,10 @@
 > 이식하고, 아무 머신에서나 **명령 한 줄로** 같은 환경이 재현되게 만들어 뒀습니다.
 > 물리 수식과 파라미터는 그대로입니다. 바꾼 것은 아래 §5에 전부 적어 뒀습니다.
 
-작성일: 2026-08-05 / 대상 브랜치: `claude/zip-git-gpu-setup-vdqdtd`
+작성일: 2026-08-05 / **최종 갱신: 2026-08-07** / 대상 브랜치: `claude/zip-git-gpu-setup-vdqdtd`
+
+> **2026-08-07 기준 상태**: Phase 0~7이 전부 끝났고 fine 격자 채점 결과가 나왔습니다.
+> 결론 세 줄은 §8-0에, 전체 수치는 `docs/RESULTS.md`에 있습니다.
 
 ---
 
@@ -66,14 +69,18 @@ source .venv/bin/activate
 ./run.sh --mode baseline                                  # 완방상태 산출·캐시
 ./run.sh --mode sweep1d --out results/sweep1d_v1          # ★ 32p 그림 재현
 ./run.sh --mode grid --config configs/grid_coarse.yaml --dry-run   # 조건 수·예상시간만
-./run.sh --mode grid --config configs/grid_fine.yaml --nproc 32 --out results/grid_fine_v1
+./run.sh --mode grid --config configs/grid_fine.yaml --nproc 32 --out results/grid_fine_v2
 
 # ── 여기서부터가 채점 단계 ──
-./run.sh --mode fit     --in results/grid_fine_v1 --nproc 32   # α·β fitting (약 5시간)
-./run.sh --mode score   --in results/grid_fine_v1              # degeneracy 판정·지도
-./run.sh --mode hessian --in results/grid_fine_v1              # 곡률(flat direction) 진단
-./run.sh --mode report  --in results/grid_fine_v1              # 비교표 + docs/RESULTS.md
-./run.sh --mode wsweep  --in results/grid_fine_v1 --nproc 32   # 가중치 근거 (약 70분)
+./run.sh --mode fit     --in results/grid_fine_v2 --nproc 32   # α·β fitting (3시간 17분)
+./run.sh --mode score   --in results/grid_fine_v2              # degeneracy 판정·지도
+./run.sh --mode hessian --in results/grid_fine_v2              # 곡률(flat direction) 진단
+./run.sh --mode wsweep  --in results/grid_fine_v2 --nproc 32   # 가중치 근거 (약 70분)
+./run.sh --mode report  --in results/grid_fine_v2 --compare results/halfcell_v1
+#   비교표 + docs/RESULTS.md.  --compare 를 주면 Case 1 vs Case 2 절이 같이 들어갑니다
+
+# Case 1 (전 범위 half-cell 기준) 은 --reference 만 바꿔 별도 --out 으로 돌립니다
+./run.sh --mode fit --in results/grid_fine_v2 --out results/halfcell_v1 --reference halfcell --nproc 32
 
 ./run.sh --mode all --config configs/grid_fine.yaml --nproc 32 --out results/final_v1
 #   grid → fit → score → hessian → report 를 한 번에
@@ -107,15 +114,33 @@ src/
   sweep.py      1D sweep (32p)                         ← 원본 L129-216
   curves.py     곡선 추출·dV/dQ·dQ/dV                  ← 원본 L265-351
   grid.py       ★ 조합 격자 + 병렬                     (신규 — 이번 작업의 핵심)
-  io.py         parquet 저장·manifest                  ← 원본 xlsx export 대체
+  io.py         parquet 저장·manifest·실행 잠금        ← 원본 xlsx export 대체
+
+  # ── 채점 단계 (Phase 4~6, 전부 신규) ──
+  objective.py    목적함수 4종 + savgol 밴드 캐시(F22)
+  fitting.py      α·β fitting, 다중 restart, 청크·resume, warm start(F20)
+  scoring.py      degeneracy 판정 · 복원가능군 분류(F1) · multi-start 진단(F21)
+  hessian.py      최적점 곡률 · flat direction
+  weight_sweep.py w_dqdv 훑기 → configs/objectives_optimized.yaml
 
 tools/
-  plot_sweep1d.py    32p 6-panel 그림                  ← 원본 L304-318
-  interactive_ab.py  α·β 슬라이더 UI                   ← 원본 L321-436 (그대로 분리)
+  plot_sweep1d.py       32p 6-panel 그림               ← 원본 L304-318
+  interactive_ab.py     α·β 슬라이더 UI                ← 원본 L321-436 (그대로 분리)
   plot_grid_summary.py  격자 용량 지도                 (신규)
+  compare_objectives.py 목적함수 4종 비교표 · 격차 복원 분석 · 그림
+  compare_cases.py      Case 1(halfcell) vs Case 2(grid), 표본 맞춤 비교
+  make_results.py       ★ docs/RESULTS.md 자동 생성 (자기 감시형 — §10 참조)
+
+scripts/
+  setup_env.sh          새 머신 환경 구축 한 줄
+  bg.sh                 SSH 끊겨도 살아남게 백그라운드 실행 (중복 실행 거부 포함)
+  watch_fit.sh          진행률·ETA — 최근 3청크 기준
+  archive_results.sh    results/ → artifacts/ (다시 만들기 비싼 것만)
+  diagnose_objective.py 목적함수 자체 진단 (피크 해상도 실측, 기준곡선 자기검사)
 
 configs/           물리 baseline·격자·목적함수 정의 (yaml)
-tests/             회귀 검증 56개
+tests/             회귀·단위 검증 163개
+artifacts/         ★ 계산 결과 백업 (저장소에 포함 — §9-1)
 reference/         ★ 원본 스크립트 원본 그대로 (수정 금지 — 비교 기준)
 ```
 
@@ -191,7 +216,7 @@ python tools/interactive_ab.py --in results/sweep1d_v1
 자동 테스트로 만들었습니다.
 
 ```bash
-python -m pytest tests/ -v -m "not slow"   # 56개, 수 초
+python -m pytest tests/ -v -m "not slow"   # 160개, 수 초
 python -m pytest tests/ -v -m slow         # 3개, 약 20초 (실제 solve 포함)
 ```
 
@@ -267,6 +292,62 @@ PyBaMM을 GPU화하는 것(Phase 7-1, 실패 예상)과는 난이도가 전혀 �
 
 ---
 
+## 8-0. 결론 — 지금 나온 답 (2026-08-07)
+
+전체 수치와 단서는 `docs/RESULTS.md`(자동 생성)에 있습니다. 여기는 세 줄 요약입니다.
+모두 **복원가능군(F1)에서만**, **fine 격자 3,069조건**을 채점한 값입니다.
+
+**① 22p의 `LAM_PE ≈ LAM_NE`는 degeneracy의 증거가 아닙니다 — 오히려 반대입니다.**
+
+물어야 할 것은 "22p 근방에서 복원이 잘 되나"가 아니라 **"참값이 뚜렷이 다를 때도
+fitting이 둘을 같다고 답하는가"** 입니다. 답은 거의 아니오였습니다.
+
+```
+P(같다고 답 | 참값이 같음)          = 38%
+P(같다고 답 | 참값이 6%p 이상 차이) = 0.8%      (n=245)
+────────────────────────────────────────────
+우도비 ≈ 46 : 1  →  "실제로 비슷하게 열화했다" 쪽
+```
+
+격차 붕괴율 1%, shrinkage 1.06 (참 격차 9.9%p → 복원 격차 10.5%p).
+Hessian의 `α_PE·α_NE 결합`도 **0%** 입니다 — 평평한 방향에서 두 전극이 묶여 있지
+않다는 뜻이고, "22p는 수학적 상쇄"라는 가설의 직접적인 반증입니다.
+
+⚠ 단, 이 숫자들은 **임계 설정에 의존**합니다. 붕괴로 세려면 격차를 6%p에서 2%p
+아래로 끌어내려야 하므로 최소 4%p의 격차 오차가 필요한데, 실측 격차 오차는
+중앙값 2.6%p·99분위 5.7%p입니다. 낮은 붕괴율의 상당 부분은 **오차 스케일이 임계
+간격보다 작다**는 사실에서 옵니다. 그대로 인용하지 마시고 이 문장을 같이 쓰세요.
+
+**② 34p의 dQ/dV 추가는 최종 오차를 줄이지 못했습니다 (62% → 63%).**
+
+| objective | n | degeneracy | (바이어스 보정) | 평균 \|err\| | PE-NE 상쇄 |
+|---|---|---|---|---|---|
+| pOCV only | 1476 | 78% | 67% | 4.7%p | 29% |
+| **pOCV + dV/dQ (33p 기존)** | 1476 | **62%** | 15% | **2.5%p** | 68% |
+| **pOCV + dV/dQ + dQ/dV (34p)** | 1476 | **63%** | 24% | **2.4%p** | 48% |
+| dQ/dV only | 1476 | 77% | 64% | 4.9%p | 22% |
+
+차이가 2%p 이내라 **사실상 동률**입니다. 다만 PE-NE 상쇄가 68% → 48%로 줄어든
+것은 실제 개선입니다 — 오차의 *총량*은 같은데 *상쇄 지문*이 옅어졌습니다.
+
+**③ 진짜 큰 변수는 목적함수가 아니라 기준 곡선이었습니다.**
+
+공통 1,476조건(grid 기준 복원가능군으로 행 수를 맞춤), 각 칸 = **Case 1 halfcell / Case 2 grid**:
+
+| objective | degeneracy | 평균 \|err\| |
+|---|---|---|
+| **pOCV + dV/dQ (33p 기존)** | **7% / 62%** | **1.4%p / 2.5%p** |
+| pOCV + dV/dQ + dQ/dV (34p) | 99% / 63% | 3.9%p / 2.4%p |
+
+전 범위 half-cell OCV를 기준으로 쓰면 degeneracy가 62% → 7%로 떨어집니다.
+**목적함수를 바꾸는 것보다 기준 곡선을 제대로 잡는 쪽이 압도적으로 큽니다.**
+
+> ⚠ Case 1의 `+dQ/dV` 99%는 degeneracy가 아니라 **calibration 문제**로 보입니다.
+> LAM_PE에 거의 일정한 −4.1%p 오프셋이 걸려 있고(보정하면 6%), 원인은
+> `to_modes_halfcell`의 `p_ini` 정규화로 좁혀졌습니다. 미해결 항목입니다.
+
+---
+
 ## 8. 전체 로드맵 — 지금까지 된 것과 앞으로 할 것
 
 ```
@@ -274,24 +355,39 @@ Phase 0  스캐폴딩·환경          ✅   V100 환경 검증 완료
 Phase 1  코어 리팩터링           ✅   완방상태 자동화, 전역 param 제거
 Phase 2  모드 중첩·32p 재현      ✅   원본 회귀 검증 통과
 Phase 3  조합 격자·병렬화        ✅   fine 격자 3,069조건 생성
-Phase 4  Fitting 이식           ✅   구현 완료. LLI 환산식 유도 정정 (아래 ★)
-Phase 5  degeneracy 판정·지도    ✅   구현 완료. coarse에서 검증
-Phase 6  목적함수 4종 비교        ✅   구현 완료. fine 결과 대기 중
+Phase 4  Fitting 이식           ✅   LLI 환산식 유도 정정 (아래 ★)
+Phase 5  degeneracy 판정·지도    ✅   fine 격자로 확정
+Phase 6  목적함수 4종 비교        ✅   ★ 완료 → docs/RESULTS.md, §8-0
 Phase 7  GPU 시도               ✅   7-1 판정 완료 → docs/GPU_NOTES.md
 ──────────────────────────────────
-남은 것: fine 격자 실행 결과를 채워 넣는 일 (계산만 돌면 됨)
-  ① Case 2 (grid 기준) fine fitting     — 진행 중, 2026-08-06 ETA 12:53
-  ② score → hessian → report            — ①이 끝나면 10분
-  ③ Case 1 (halfcell 기준) fine fitting — 별도 --out으로, 약 5시간
-  ④ 가중치 sweep                        — 약 70분
+실행 완료한 계산
+  ① Case 2 (grid 기준) fine fitting     ✅  results/grid_fine_v2  (3시간 17분)
+  ② score → hessian → report            ✅  docs/RESULTS.md 자동 생성
+  ③ Case 1 (halfcell 기준) fine fitting ✅  results/halfcell_v1   (5시간 42분)
+  ④ 가중치 sweep                        ✅  468조건 × 9가중치 × restart 5
+
+남은 것 (전부 선택 사항 — 결론에는 영향 없음)
+  · Case 1 `+dQ/dV`의 −4.1%p 오프셋 원인 규명 (calibration, §8-0 ③ 각주)
+  · Case 1 쪽 Hessian (지금은 Case 2만)
+  · bound 좁히기 실험
 ```
 
 Phase 0~3이 "정답을 아는 시험문제 3,069개를 출제"한 것이고, Phase 4~6이
-"그 문제를 기존 fitting 코드에 풀려서 채점"하는 단계입니다. 코드는 전부
-들어갔고, 지금은 **채점 결과가 나오기를 기다리는 상태**입니다.
+"그 문제를 기존 fitting 코드에 풀려서 채점"하는 단계였습니다. **채점까지 끝났고
+결과는 §8-0과 `docs/RESULTS.md`에 있습니다.**
 
-테스트 120건이 통과 상태이며, 물리·수식을 건드린 변경은 모두 `CHANGELOG.md`에
+테스트 163건이 통과 상태이며, 물리·수식을 건드린 변경은 모두 `CHANGELOG.md`에
 근거와 실측값을 함께 남겼습니다.
+
+### 계산 비용 (V100 32코어 실측)
+
+| 단계 | 시간 | 비고 |
+|---|---|---|
+| fine 격자 생성 (3,069조건) | 5~8분 | PyBaMM DFN, IDAKLU |
+| fitting v1 | 8시간+ | 9.6 s/조건 |
+| **fitting v2** | **3시간 17분** | **3.9 s/조건** — warm start(F20) + savgol 캐시(F22) |
+| score / hessian / report | 각 1~10분 | |
+| 가중치 sweep | 약 70분 | 층화 표본 468조건 |
 
 ---
 
@@ -380,7 +476,7 @@ Case 1은 초기에 훨씬 나빴는데(LAM 오차 0.054/0.126) 원인이 세 �
 **검증**: α=1, β=0을 넣으면 reference와 정확히 일치(항등) / 일부러 α_PE=0.9로 만든
 곡선에서 0.9를 복원 / bound에 붙으면 플래그가 켜짐.
 
-**실행**: `./run.sh --mode fit --in results/grid_fine_v1 --n-restarts 5`
+**실행**: `./run.sh --mode fit --in results/grid_fine_v2 --n-restarts 5`
 **산출**: `fits.parquet` (조건별 복원값 + 수렴 정보 + restart별 결과)
 
 ---
@@ -411,7 +507,7 @@ Case 1은 초기에 훨씬 나빴는데(LAM 오차 0.054/0.126) 원인이 세 �
 그리고 여기에 **22p 실험 조건(LAM_PE≈13%, LAM_NE≈13%, LLI≈17%)을 마커로 찍습니다.**
 → *"우리 실험 조건이 degeneracy 영역 안에 있는가"* 에 그림 하나로 답합니다.
 
-**실행**: `./run.sh --mode score --in results/grid_fine_v1` / `--mode hessian`
+**실행**: `./run.sh --mode score --in results/grid_fine_v2` / `--mode hessian`
 **산출**: `degeneracy_map.parquet`, `figures/degeneracy_map.png`
 
 ---
@@ -428,22 +524,32 @@ Case 1은 초기에 훨씬 나빴는데(LAM 오차 0.054/0.126) 원인이 세 �
 | `pocv_dvdq_dqdv` | **개선안 (34p)** |
 | `dqdv_only` | dQ/dV만 |
 
-나오는 표:
+**나온 표** (fine 격자, 복원가능군 1,476조건 — 전문은 `docs/RESULTS.md`):
 
 ```
-| objective        | degeneracy 비율 | 평균 |err| | PE-NE 상쇄 비율 |
-|------------------|----------|-----------|----------------|
-| pocv             |    ?%    |     ?     |       ?        |
-| pocv_dvdq        |    ?%    |     ?     |       ?        |   ← 기존
-| pocv_dvdq_dqdv   |    ?%    |     ?     |       ?        |   ← 34p 개선
-| dqdv_only        |    ?%    |     ?     |       ?        |
+| objective        | degeneracy | 평균 |err| | PE-NE 상쇄 |
+|------------------|------------|-----------|------------|
+| pocv             |    78%     |   4.7%p   |    29%     |
+| pocv_dvdq        |    62%     |   2.5%p   |    68%     |   ← 기존 33p
+| pocv_dvdq_dqdv   |    63%     |   2.4%p   |    48%     |   ← 34p 개선
+| dqdv_only        |    77%     |   4.9%p   |    22%     |
 ```
+
+→ **dQ/dV 추가로 degeneracy 비율은 안 줄었습니다(62%→63%).** 대신 PE-NE 상쇄가
+68%→48%로 줄었습니다. 즉 34p는 "오차를 줄인다"가 아니라 **"상쇄 지문을 옅게
+한다"** 로 보고해야 정확합니다.
 
 **가중치 최적화**: `w_dqdv`를 0~2로 훑어서 degeneracy 비율이 최소가 되는 조합을 찾습니다.
 *"가중치를 임의로 튜닝한 것 아니냐"* 는 질문에 대한 근거가 됩니다.
 전체 격자에 9가지 가중치를 다 돌리면 CPU로 감당이 안 돼서, 축마다 격자를 반으로
-성기게 잡은 **층화 표본**(6³×noise3)을 씁니다. 무작위 표본이 아니라 격자 구조를
-보존하므로 코너가 빠지지 않습니다.
+성기게 잡은 **층화 표본**(6³×noise3, 468조건)을 씁니다. 무작위 표본이 아니라 격자
+구조를 보존하므로 코너가 빠지지 않습니다.
+
+결과: 노이즈 평균 최적 **`w_dqdv = 0.5`**(보정 degeneracy 25.7%), 기본값 1.0은 27.4%.
+다만 **노이즈 수준별 최적값이 갈립니다** — noise 0에서 1.0, 0.001에서 0.25,
+0.005에서 0.75. 단일 값을 채택하려면 실험 노이즈 수준을 먼저 특정해야 합니다.
+`pick_optimum`이 `noise_levels_agree` 플래그로 이걸 매번 알려줍니다.
+산출물은 `configs/objectives_optimized.yaml`.
 
 **`docs/RESULTS.md` 자동 생성** — 숫자를 손으로 옮겨 적지 않습니다. 격자를 다시
 돌리면 문서도 다시 생성하면 됩니다.
@@ -464,29 +570,39 @@ Phase 6을 짜다가 발견한 함정입니다. **22p 근방 격자점은 참값
 | `shrinkage` | 복원 격차 / 참 격차. 1이면 그대로 복원, 0이면 전부 뭉갬 |
 | `false_split_frac` | 참값은 같은데 다르다고 답한 비율 (반대 방향 오류) |
 
-coarse 격자(F15 수정 전) 잠정치는 **예상과 반대 방향**이었습니다.
+**fine 격자 확정치** (`pocv_dvdq`, noise=0, n=245) — coarse 잠정치와 방향이 같고
+더 강했습니다.
 
 ```
-gap_collapse_frac = 2.2%     shrinkage = 0.95     false_split_frac = 63%
+gap_collapse_frac = 1%     shrinkage = 1.06     false_split_frac = 62%
 ```
 
 이 방법은 서로 다른 전극을 뭉개지 **않습니다.** 실패는 *없는 격차를 만들어내는*
-쪽으로 나타납니다. 이게 fine 격자에서도 유지되면, 22p의 `LAM_PE ≈ LAM_NE`를
-"구분을 못 해서 나온 값"으로 단정할 수 없다는 뜻이 됩니다.
+쪽으로 나타납니다. 그래서 22p의 `LAM_PE ≈ LAM_NE`를 "구분을 못 해서 나온 값"으로
+단정할 수 없습니다. 우도비로 정리하면 **46 : 1로 "실제로 비슷하게 열화했다" 쪽**
+입니다 (§8-0 ①).
 
-⚠ 단, `false_split` 판정 기준(2%p)이 F15 편향(~1.6%p)과 같은 크기라 63% 중
-상당 부분이 그 편향일 수 있습니다. **fine 재fit 결과로 확정할 부분입니다.**
+⚠ **임계 의존성 — 이 문장을 빼고 인용하지 마세요.** 붕괴로 세려면 격차를 6%p에서
+2%p 아래로 끌어내려야 하니 최소 4%p의 격차 오차가 필요한데, 실측 격차 오차는
+중앙값 2.6%p·99분위 5.7%p입니다. 붕괴가 원리적으로 관측 가능한 범위이긴 하나,
+낮은 붕괴율의 상당 부분은 **오차 스케일이 임계 간격보다 작다**는 사실에서 옵니다.
+`objective_comparison.yaml`의 `collapse_requires_gap_err` / `gap_err_median` /
+`collapse_measurable`이 이걸 매번 같이 출력합니다.
+
+⚠ `false_split` 판정 기준(2%p)도 방법 편향과 같은 크기일 수 있습니다. 그래서 표에
+바이어스 보정치를 나란히 둡니다 (F5).
 
 `tools/make_results.py`의 결론 문장은 이 숫자를 따라 분기합니다. 초안은 붕괴율과
 무관하게 "증거가 되지 못한다"를 고정 출력하게 돼 있었는데, 데이터가 반대로 나온
 지금 같은 경우 거짓 결론을 쓰게 됩니다. 양방향 모두 테스트로 고정해뒀습니다.
 
-**실행**:
+**실행** (실제로 돌린 명령):
 ```bash
-./run.sh --mode score   --in results/grid_fine_v1
-./run.sh --mode hessian --in results/grid_fine_v1
-./run.sh --mode report  --in results/grid_fine_v1     # 비교표 + RESULTS.md
-./run.sh --mode wsweep  --in results/grid_fine_v1 --nproc 32
+./run.sh --mode score   --in results/grid_fine_v2
+./run.sh --mode hessian --in results/grid_fine_v2
+./run.sh --mode wsweep  --in results/grid_fine_v2 --nproc 32
+# Case 1(halfcell)과 나란히 비교해서 RESULTS.md 생성
+./run.sh --mode report  --in results/grid_fine_v2 --compare results/halfcell_v1
 ```
 
 ---
@@ -508,21 +624,33 @@ gap_collapse_frac = 2.2%     shrinkage = 0.95     false_split_frac = 63%
 
 ---
 
-### 최종적으로 답하게 되는 질문 5개
+### 최종적으로 답하게 되는 질문 5개 — **답이 나왔습니다**
 
-1. 기존 fitting 코드는 어떤 (LAM_PE, LAM_NE, LLI) 조합에서 정답을 복원하는가?
-2. degeneracy가 발생하는 영역은 파라미터 공간의 몇 %인가?
-3. **22p의 실험 조건은 그 degeneracy 영역 안에 있는가?**
-4. **34p의 dQ/dV 추가가 degeneracy 영역을 얼마나 줄이는가? (X% → Y%)**
-5. 목적함수 가중치의 최적 조합은?
+| | 질문 | 답 (2026-08-07, fine 격자) |
+|---|---|---|
+| 1 | 어떤 (LAM_PE, LAM_NE, LLI)에서 정답을 복원하는가? | 격자의 **52%는 grid 기준에서 원리적으로 복원 불가**(참 α<1 → 재구성 창 부족). 나머지 복원가능군 1,476조건에서 `pocv_dvdq` 평균 \|err\| **2.5%p** |
+| 2 | degeneracy 영역은 몇 %인가? | **62%** (`pocv_dvdq`, 바이어스 보정 시 15%) |
+| 3 | **22p 조건이 그 영역 안에 있는가?** | **근방 자체의 degeneracy는 12%** 로 낮습니다. 다만 그 근방은 참값이 애초에 `LAM_PE=LAM_NE`라 증거가 못 됩니다 — 아래 ★ 참조 |
+| 4 | **dQ/dV가 degeneracy를 얼마나 줄이는가?** | **62% → 63%. 줄이지 못했습니다.** 대신 PE-NE 상쇄가 68% → 48%로 줄었습니다 |
+| 5 | 가중치 최적 조합은? | 노이즈 평균 **`w_dqdv = 0.5`**(25.7%), 기본값 1.0은 27.4%. 단 노이즈 수준별로 최적값이 갈림 |
 
-**4번이 가장 중요합니다.** 이 숫자가 나오면 34p 수정을 "기능을 추가했다"가 아니라
-**"degeneracy 영역을 X%에서 Y%로 줄였다"** 로 정량 보고할 수 있습니다.
+★ **3번은 질문 자체를 바꿔야 했습니다.** 22p 근방은 참값이 `LAM_PE = LAM_NE`인
+격자점이라, 거기서 복원이 잘 됐다는 사실은 22p를 옹호하지도 반박하지도 못합니다.
+방향을 뒤집어 **"참값이 뚜렷이 다를 때도 같다고 답하는가"** 를 물었더니 0.8%였고,
+우도비 **46 : 1로 "실제로 비슷하게 열화했다"** 쪽이 나왔습니다 (§8-0 ①).
 
-그리고 3번의 답이 "그렇다"로 나오면, 22p의 `LAM_PE ≈ LAM_NE ≈ 13%`는
-**물리가 아니라 fitting의 한계**라는 결론이 되고, 지도교수님 지적에 대한
-정면 답변이 됩니다. Part 1의 정성 데이터(7p·9p·14p·19p)와 COMSOL 결과(28p,
-NCM LAM ≈ 0%)가 모두 NE 편향을 가리키는 것과도 앞뒤가 맞게 됩니다.
+**즉 당초 가설 — "22p는 물리가 아니라 fitting의 한계" — 은 이 합성 격자에서
+지지되지 않습니다.** 4번도 마찬가지로, 34p 수정을 "degeneracy 영역을 X%에서 Y%로
+줄였다"로는 보고할 수 없습니다. 정직하게 보고할 수 있는 것은 두 가지입니다.
+
+1. dQ/dV는 오차 총량을 줄이지 않지만 **PE-NE 상쇄 지문을 68% → 48%로 옅게** 한다.
+2. **기준 곡선을 전 범위 half-cell로 바꾸면 degeneracy가 62% → 7%** 로 떨어진다
+   (§8-0 ③). 목적함수 튜닝보다 이쪽이 압도적으로 크다.
+
+⚠ 이 결론들은 **합성 데이터의 하한**입니다 (F7). 실제 셀의 모델 오차(SEI, 저항
+분포)는 여기에 없으므로, Part 1의 정성 데이터(7p·9p·14p·19p)나 COMSOL 결과(28p,
+NCM LAM ≈ 0%)와 어긋나는 부분은 "합성 격자에서는 degeneracy로 설명되지 않는다"
+까지만 말합니다. 실측 셀에서도 그렇다는 뜻은 아닙니다.
 
 ---
 
@@ -541,7 +669,12 @@ LAM_NE를 0에서 0.20까지 **4배 늘려도 용량이 28 mAh(0.7%)밖에 안 �
 → 고LLI 영역에서 **LAM_NE는 full-cell 곡선에 거의 흔적을 남기지 않습니다.**
 fitting이 이 영역에서 LAM_NE를 제대로 복원할 가능성은 낮고, 그게 바로 degeneracy입니다.
 22p의 조건(LLI≈17%)이 정확히 이 영역에 있다는 점이 중요합니다.
-Phase 5의 지도로 확정할 부분입니다.
+
+**→ 채점 결과, 이 징후는 그대로 이어지지 않았습니다.** 용량(스칼라 하나)만 보면
+LAM_NE가 거의 안 보이는 것이 맞지만, fitting은 곡선의 **형상 전체**(dV/dQ 포함)를
+씁니다. 참값이 6%p 이상 다른 조건에서 두 전극을 같다고 답한 비율은 0.8%였습니다
+(§8-0 ①). 즉 **"용량이 안 변한다 ⇒ 복원 불가"는 성립하지 않습니다.** 이 표는
+직관의 출발점이었을 뿐이고, 결론은 §8-0을 보세요.
 
 ---
 
@@ -595,16 +728,20 @@ V100 접속이 자주 끊깁니다. 포그라운드로 띄운 작업은 SIGHUP�
 
 ```bash
 tmux new -s fit                       # 세션 시작
-./run.sh --mode fit --in results/grid_fine_v1 --nproc 32 2>&1 | tee fit.log
+./run.sh --mode fit --in results/grid_fine_v2 --nproc 32 2>&1 | tee fit.log
 # Ctrl+B 누르고 D 로 빠져나옴 (작업은 서버에서 계속 돎)
 tmux a -t fit                         # 다시 붙기
 tmux ls                               # 세션 목록
 ```
 
-tmux 없이 급할 때:
+tmux 없이 급할 때는 **`scripts/bg.sh`** 를 쓰세요. 위 `setsid nohup … & disown`을
+한 줄로 감싼 것인데, 세 가지를 더 합니다.
 
 ```bash
-setsid nohup ./run.sh --mode fit --in results/grid_fine_v1 --nproc 32 > fit.log 2>&1 < /dev/null & disown
+./scripts/bg.sh ./run.sh --mode fit --in results/grid_fine_v2 --nproc 32
+#   → 로그 파일 경로를 찍어주고
+#   → 3초 뒤 실제로 살아있는지 확인해서 알려주고
+#   → src.fitting / src.grid / src.weight_sweep 가 이미 돌고 있으면 아예 시작을 거부합니다 (①의 재발 방지)
 ```
 
 접속하는 쪽 `~/.ssh/config`에 keepalive를 넣으면 끊김 자체가 줄어듭니다:
@@ -624,13 +761,43 @@ Host v100
 **⑤ 진행률은 `scripts/watch_fit.sh`로 보세요**
 
 ```bash
-watch -n 60 './scripts/watch_fit.sh results/grid_fine_v1 fit_case2_fixed.log'
+watch -n 10 './scripts/watch_fit.sh results/grid_fine_v2 <bg.sh가 찍어준 로그파일>'
 ```
 
 속도를 **최근 3청크**로 계산합니다. fitting 자체 로그의 "남은 예상"은 전체
 평균이라, 위 ①처럼 초반에 느렸던 구간이 섞이면 실제보다 2배 가까이 늦게 나옵니다
 (실측: 로그 291분 vs 실제 166분). 그리고 `src.fitting`이 2개 이상이면 크게
 경고합니다 — ①을 그때 잡을 수 있었던 화면입니다.
+
+**⑥ 잠금 코드가 `src.weight_sweep`을 몰라서 살아있는 잠금을 지웠습니다**
+
+`.fit.lock`은 안에 적힌 PID가 죽었으면 "고아 잠금"으로 보고 지웁니다. 그런데 그
+판정 함수(`_pid_alive`)가 `src.grid`와 `src.fitting`만 알고 있어서, **정상적으로
+돌고 있던 sweep 프로세스를 죽은 것으로 판정**하고 잠금을 지웠습니다. 결과적으로
+sweep 두 개가 같은 디렉터리에 겹쳐 돌았습니다. `watch_fit.sh`도 같은 이유로
+"프로세스 없음"을 띄웠습니다.
+
+지금은 진입점 목록을 한 곳(`src/io.py`의 `_RUN_ENTRYPOINTS`)에 모아 두고,
+**`run.sh`를 파싱해서 거기 등장하는 `python -m src.*` 가 전부 목록에 있는지
+검사하는 테스트**를 걸어 뒀습니다. 새 실행 모드를 추가하면 테스트가 먼저 깨집니다.
+
+**⑦ sweep 결과가 "warm start 때문"인 줄 알았는데 restart 수 때문이었습니다**
+
+가중치 sweep에서 `w_dqdv = 0` 만 degeneracy 86%로 튀었습니다. warm start 시딩이
+`w=0`에게만 불리하게 걸린 것으로 두 번 진단했는데 **두 번 다 틀렸습니다.** 진짜
+원인은 `n_restarts = 2` 였습니다. 같은 목적함수·같은 237조건으로 대조하니
+**restart 2에서 86%(보정 17.3%), restart 5에서 91.7% 보정** — 즉 sweep이 잰 것은
+가중치의 효과가 아니라 **restart 부족이었습니다.**
+
+지금 sweep은 `warm_start=False` + `n_restarts=5`로 고정하고, 실제 사용한 값을
+`weight_sweep.yaml`의 `seed_objective_used` / `warm_start` 필드에 기록합니다.
+`make_results.py`는 옛 warm-start sweep 결과를 읽으면 경고를 붙입니다.
+
+> **교훈**: 목적함수를 비교할 때는 optimizer 설정(restart 수, 초기값, 조기 종료)이
+> 모든 조건에서 **동일한지** 부터 확인하세요. 이 프로젝트에서 가장 오래 헤맨
+> 오진 두 건(⑦, 그리고 dQ/dV가 "나쁘다"고 나온 건)이 전부 여기서 나왔습니다.
+> 후자는 `J_at_truth = 0.0` vs `J_at_found = 0.402` — degeneracy가 아니라
+> **optimizer가 정답 근처에 가지도 못한 것**이었고, warm start로 해결됐습니다.
 
 ---
 
@@ -639,7 +806,25 @@ watch -n 60 './scripts/watch_fit.sh results/grid_fine_v1 fit_case2_fixed.log'
 | 항목 | 내용 |
 |---|---|
 | 노이즈 축 중복 | fine 격자 3,993조건 중 **물리적으로 다른 건 1,331개**입니다. 노이즈는 solve 후에 더하는 후처리인데 지금은 노이즈 값마다 같은 시뮬레이션을 3번 돌립니다. 정리하면 격자 생성이 **3배 빨라집니다** |
-| 곡선 저장량 | 조건당 300점만 저장 중. Phase 4에서 dQ/dV 피크 해상도가 부족하면 늘려야 할 수 있습니다 |
+| 곡선 저장량 | 조건당 300점만 저장 중. `scripts/diagnose_objective.py --mode resolution`이 dQ/dV 피크의 실제 FWHM을 재서 부족한지 알려줍니다 (설정값이 아니라 실측 폭입니다) |
+| Case 1 calibration | `+dQ/dV`에서 LAM_PE에 −4.1%p 오프셋. `to_modes_halfcell`의 `p_ini` 정규화로 좁혀졌으나 미해결 |
+| ~~목적함수 JAX/GPU화~~ | **기각.** F22(savgol 밴드 캐시)로 CPU에서 목표를 넘겼습니다 — fitting이 9.6 → 3.9 s/조건. 남은 병목은 연산이 아니라 **메모리 대역폭**이라 GPU로 옮겨도 이득이 작습니다. 근거는 `docs/GPU_NOTES.md` |
+
+#### F22 실측 (참고 — 왜 GPU가 필요 없어졌는지)
+
+Savitzky–Golay는 선형 연산자라 행렬로 미리 뽑아 캐시할 수 있습니다. 처음엔 조밀
+행렬로 캐시했는데 V100 32워커에서 **1.65배**밖에 안 나왔습니다(단일 스레드에서는
+2.6배). 32워커가 각자 698 KB 행렬을 들고 메모리 대역폭을 갉아먹고 있었습니다.
+띠(banded) 표현으로 바꾸니 캐시가 **698 KB → 3.4 KB (203배)** 로 줄면서 병목이
+사라졌습니다.
+
+```
+scipy savgol_filter   387 µs
+조밀 행렬 캐시         18.1 µs
+띠 표현 캐시           13.2 µs      (scipy 대비 오차 1.3e-13 — 수치적으로 동일)
+```
+
+`DD_SMOOTH_CACHE=0` 으로 끄면 scipy 경로로 돌아갑니다 (동치성 검증용).
 
 ---
 
@@ -666,8 +851,35 @@ watch -n 60 './scripts/watch_fit.sh results/grid_fine_v1 fit_case2_fixed.log'
 | `docs/06_REVIEW_DECISIONS.md` | **적대적 리뷰 처리 대장 — 기각·유보 항목과 해석 규칙** |
 | `docs/07_LAM_LLI.md` | **LAM / LLI 정의 — 물리·수식·코드·흔한 오해** |
 | `docs/GPU_NOTES.md` | PyBaMM/DFN을 CUDA로 돌릴 수 있는가 (실측 판정) |
-| `docs/RESULTS.md` | 최종 결과 (자동 생성 — 계산이 끝나면 생깁니다) |
+| `docs/RESULTS.md` | ★ **최종 결과 — 자동 생성, 손으로 고치지 말 것** |
 | `CHANGELOG.md` | **물리 변경 이력 (근거 포함)** |
+
+---
+
+## 9-1. 결과 백업 — 서버가 날아가도 남는 것
+
+계산 결과는 `results/`에 쌓이는데 이건 git에서 제외돼 있습니다(수 GB). 대신
+**다시 만들기 비싼 것만** 골라 저장소에 넣어 뒀습니다.
+
+```bash
+./scripts/archive_results.sh          # results/ → artifacts/ 로 복사
+git add artifacts && git commit -m "backup: ..." && git push -u origin claude/zip-git-gpu-setup-vdqdtd
+```
+
+| 들어가는 것 | 이유 |
+|---|---|
+| `fits.parquet` | 3~6시간짜리. 이게 핵심입니다 |
+| `manifest.yaml` | git commit·config 해시·환경 — 재현의 근거 |
+| `degeneracy_summary.yaml`, `objective_comparison.yaml`, `wsweep/` | 채점 결과 |
+| `figures/` | 그림 |
+
+| 빼는 것 | 이유 |
+|---|---|
+| `curves.parquet` | 5~8분이면 다시 만듭니다. 대신 용량이 큽니다 |
+| `fit_chunks/` | `fits.parquet`으로 이미 병합돼 있습니다 |
+
+현재 `artifacts/`에 **19 MB** — `grid_fine_v1`, `grid_fine_v2`(Case 2 최종),
+`halfcell_v1`(Case 1) 셋이 들어 있고 GitHub에 올라가 있습니다.
 
 ---
 
@@ -684,6 +896,34 @@ watch -n 60 './scripts/watch_fit.sh results/grid_fine_v1 fit_case2_fixed.log'
 | **F4** | multi-start 불일치율을 전체 평균으로 보고하지 않는다 | adaptive 조기 종료로 조건마다 restart 수가 달라 검정력이 다릅니다. 실측으로 확인: `n_restarts=2 → 일치 100%`, `n_restarts=5 → 일치 0%`. 뭉쳐서 평균 내면 의미 없는 숫자가 됩니다 |
 | **F14** | 저LLI + 고LAM_PE 코너가 격자에 없다 | 완방 프레임 guard의 산물입니다. 고LAM_PE 결론은 고LLI가 동반된 조건에서만 검증된 것입니다 |
 | **F7** | 모두 합성 데이터 결과다 | 실제 셀의 모델 오차(SEI, 저항 분포)는 없습니다. 즉 이 값들은 degeneracy의 **하한**이며 실제는 더 나쁩니다 |
+| **F21** | multi-start는 **무작위 restart끼리만** 비교한다 | dQ/dV 목적함수는 첫 restart에 매끄러운 해를 초기값으로 받습니다(warm start). 그걸 섞으면 최적 J에 닿는 restart가 정의상 하나뿐이 되어 항상 multimodal로 찍힙니다. `degeneracy_summary.yaml`에서 **`multistart_random_only` 블록**을 보세요 |
+| **F23** | Hessian 조건수의 **절대값을 인용하지 않는다** | 목적함수가 여러 스케일에서 울퉁불퉁하면 수치 Hessian이 수렴하지 않아 eps를 바꾸면 값이 자릿수 단위로 움직입니다. 의미 있는 것은 **같은 eps에서의 순서**뿐입니다 |
 
 `docs/RESULTS.md`는 이 규칙을 지킨 형태로 자동 생성되고, 한계 항목을 **결론
 바로 밑**에 붙입니다 — 결론만 떼어 인용되는 걸 막기 위해서입니다.
+
+### 제가 틀렸다가 리뷰에서 뒤집힌 것 두 개 ★
+
+인용하기 전에 반드시 아세요. 둘 다 **한 번은 제 입으로 잘못 보고했던** 것입니다.
+
+**(a) "Case 1은 복원불가가 0%" 는 측정값이 아닙니다.**
+
+`src/scoring.py`의 `classify_recoverability`가 `reference != "grid"` 이면
+`recoverable = True` 로 **하드코딩**합니다. 전 범위 half-cell 테이블이라 창 부족이
+없다는 물리적 근거는 있지만, 재 본 적은 없습니다. 그래서 §8-0 ③의 Case 1 / Case 2
+비교표는 **두 실행의 공통 조건 중 grid 기준에서 복원가능한 것**으로 행 수를 맞춰
+계산했습니다 (`tools/compare_cases.py`). 행 수를 안 맞추면 "Case 1이 좋다"가
+표본이 달라서 생긴 착시일 수 있습니다.
+
+**(b) 조건수가 낮다고 "정보가 더 많다"고 말하면 안 됩니다.**
+
+이 격자에서 **조건수 순서와 실제 복원 오차는 역상관**입니다(상관계수 −0.12).
+`dqdv_only`가 조건수는 제일 좋은데(98.8) 평균 |오차|는 제일 나쁩니다(4.9%p).
+지형이 거칠면 곡률이 크게 잡히므로, 낮은 조건수가 "잘 정의된 최적점"이 아니라
+**울퉁불퉁함**을 잰 것일 수 있습니다. `make_results.py`가 상관계수를 매번 직접
+계산해서 역상관이면 경고를 자동으로 붙입니다.
+
+> 이 두 건이 `make_results.py`를 **자기 감시형**으로 바꾼 계기입니다. 지금 이
+> 스크립트는 조건수 역상관, eps 혼용, 표본 수 불일치, 임계에 의해 결정된 붕괴율,
+> 노이즈 수준별 최적 w 불일치, 옛 warm-start sweep — 여섯 가지를 **결과를 보고
+> 스스로 판단해서** 경고로 붙입니다. 결론 문장의 방향도 숫자에서 읽습니다.
