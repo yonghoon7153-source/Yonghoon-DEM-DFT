@@ -551,3 +551,53 @@ def test_warm_flag_overrides_default_rule(monkeypatch):
     assert seen[1] == [1.0, 0.0, 1.0, 0.0], "_warm=True인데 초기값을 못 받았다"
     assert {r["objective"]: r["warm_started"] for r in rows} == {
         "seed": False, "zero_but_warm": True}
+
+
+def test_results_doc_warns_when_multistart_sample_sizes_differ(tmp_path):
+    """★ F4 — restart 0을 뺀 뒤 표본 수가 목적함수마다 달라지면 경고해야 한다.
+
+    실측 halfcell: pocv 1667 vs dqdv_only 3008 — 두 배 차이인데 같은 표에
+    나란히 놓이면 소수점 차이를 읽게 된다.
+    """
+    import yaml
+
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d = tmp_path / "res"
+    d.mkdir()
+    _scored(_fits()).to_parquet(d / "degeneracy_map.parquet", index=False)
+    (d / "degeneracy_summary.yaml").write_text(yaml.safe_dump({
+        "multistart_random_only": {
+            "pocv": {"n": 1667, "flat_valley_frac": 0.03,
+                     "multimodal_frac": 0.44, "unique_min_frac": 0.53},
+            "pocv_dvdq": {"n": 3008, "flat_valley_frac": 0.02,
+                          "multimodal_frac": 0.91, "unique_min_frac": 0.07},
+        }}, allow_unicode=True), encoding="utf-8")
+
+    run_compare(d, d)
+    text = build(d, tmp_path / "R.md", repo_root=tmp_path).read_text(encoding="utf-8")
+    assert "표본 수가 목적함수마다 다릅니다" in text
+    assert "1667" in text and "3008" in text
+
+
+def test_no_warning_when_sample_sizes_match(tmp_path):
+    import yaml
+
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d = tmp_path / "res"
+    d.mkdir()
+    _scored(_fits()).to_parquet(d / "degeneracy_map.parquet", index=False)
+    (d / "degeneracy_summary.yaml").write_text(yaml.safe_dump({
+        "multistart_random_only": {
+            "pocv": {"n": 1000, "flat_valley_frac": 0.03,
+                     "multimodal_frac": 0.44, "unique_min_frac": 0.53},
+            "pocv_dvdq": {"n": 1020, "flat_valley_frac": 0.02,
+                          "multimodal_frac": 0.91, "unique_min_frac": 0.07},
+        }}, allow_unicode=True), encoding="utf-8")
+
+    run_compare(d, d)
+    text = build(d, tmp_path / "R.md", repo_root=tmp_path).read_text(encoding="utf-8")
+    assert "표본 수가 목적함수마다 다릅니다" not in text

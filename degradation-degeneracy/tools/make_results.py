@@ -328,6 +328,17 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
                      "dQ/dV 목적함수는 첫 restart에 매끄러운 해를 초기값으로 받으므로, "
                      "그것을 포함하면 최적 J에 닿는 restart가 정의상 하나뿐이 되어 "
                      "항상 multimodal로 찍힙니다.\n")
+            # ★ F4 검정력 편향 — restart 0을 빼고 2개 미만이 남으면 그 조건은 제외되는데,
+            #   adaptive 조기 종료로 restart 수가 조건마다 달라 목적함수별 n이 어긋난다.
+            ns = {k: v.get("n") for k, v in ms_rows.items() if v.get("n")}
+            if ns and max(ns.values()) - min(ns.values()) > 0.1 * max(ns.values()):
+                lo = min(ns, key=ns.get)
+                P.append(f"> ⚠ **표본 수가 목적함수마다 다릅니다** "
+                         f"({min(ns.values())}~{max(ns.values())}, 최소는 `{lo}`). "
+                         f"adaptive 조기 종료로 restart 수가 조건마다 다르고, "
+                         f"restart 0을 뺀 뒤 2개 미만이면 그 조건이 빠지기 때문입니다. "
+                         f"**서로 다른 모집단을 비교하는 것**이므로 소수점 차이는 "
+                         f"읽지 마세요 (F4).\n")
         P.append("| objective | n | **flat valley** | multimodal | unique min |")
         P.append("|---|---|---|---|---|")
         for o, d in ms_rows.items():
