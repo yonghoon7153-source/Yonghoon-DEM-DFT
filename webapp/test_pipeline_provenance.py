@@ -303,6 +303,68 @@ def main():
                 os.environ[k] = v
         shutil.rmtree(tmp, ignore_errors=True)
 
+    # ══ 3d) ★ R5/R6 (Codex RV-04) — archive 재분석도 helper·계약 안에 있는가 ══
+    #   옛 archive 경로는 parse/contact/coverage/StageE 를 raw subprocess 로 따로 돌리고
+    #   모든 rc 를 무시한 뒤 무조건 'done' 을 썼고, **network solver 를 아예 안 불렀다**.
+    import time as _time
+    for _label, _contact_rc, _want_status, _want_net in (
+            ('R5) ★ archive contact rc=1 → error · network solver 0회', 1, 'error', 0),
+            ('R6) archive 정상 → done · network solver 1회', 0, 'done', 1)):
+        tmp = tempfile.mkdtemp(prefix='par_')
+        try:
+            arc = os.path.join(tmp, 'archive')
+            case = os.path.join(arc, 'c1')
+            os.makedirs(case)
+            for f in ('atom_1.liggghts', 'contact_1.liggghts'):
+                open(os.path.join(case, f), 'w').write('x')
+            json.dump({'mode': 'standard', 'type_map': '1:AM,3:SE', 'scale': 1000},
+                      open(os.path.join(case, 'meta.json'), 'w'))
+            webapp.app.config['ARCHIVE_FOLDER'] = arc
+            calls = []
+
+            def _ar(cmd, _rc=_contact_rc, _calls=calls, _d=case, **kw):
+                _calls.append(os.path.basename(str(cmd[1])) if len(cmd) > 1 else '')
+                sc = _calls[-1]
+                rc = 0
+                if sc == 'parse_liggghts.py':
+                    for f in ('atoms.csv', 'contacts.csv'):
+                        open(os.path.join(_d, f), 'w').write('a\n')
+                elif sc in ('analyze_contacts.py', 'analyze_contacts_bimodal.py'):
+                    rc = _rc
+                    if _rc == 0:
+                        for f in ('full_metrics.json', 'atoms_analyzed.csv',
+                                  'contacts_analyzed.csv'):
+                            open(os.path.join(_d, f), 'w').write(
+                                '{}' if f.endswith('.json') else 'a\n')
+                elif sc == 'network_conductivity.py':
+                    json.dump({'sigma_full_mScm': 3.0},
+                              open(os.path.join(_d, 'network_conductivity.json'), 'w'))
+                elif sc == 'run_network_full_corrections.py':
+                    fm = os.path.join(_d, 'full_metrics.json')
+                    dd = json.load(open(fm)) if os.path.exists(fm) else {}
+                    dd['sigma_full_mScm_stage_e'] = 6.0
+                    json.dump(dd, open(fm, 'w'))
+                return subprocess.CompletedProcess(cmd, rc, '', '')
+
+            ps._RUNNER = _ar
+            webapp.app.test_client().post('/archive/reanalyze/c1')
+            sf = os.path.join(case, '.reanalyze_status')
+            for _ in range(100):                       # 스레드 완료 폴링 (최대 10 s)
+                if os.path.exists(sf) and open(sf).read().split('\n')[0] != 'running':
+                    break
+                _time.sleep(0.1)
+            head = open(sf).read().split('\n')[0].strip() if os.path.exists(sf) else '?'
+            n_net = calls.count('network_conductivity.py')
+            ok = (head == _want_status and n_net == _want_net)
+            if _contact_rc == 0 and ok:
+                fm = json.load(open(os.path.join(case, 'full_metrics.json')))
+                ok = (fm.get('network_run_id')
+                      and fm.get('network_run_id') == fm.get('stage_e_parent_network_run_id'))
+            chk(_label + f'  (status={head}, net={n_net})', ok)
+        finally:
+            ps._RUNNER = prev_runner if 'prev_runner' in dir() else subprocess.run
+            shutil.rmtree(tmp, ignore_errors=True)
+
     # ══ 4) 단계 계약 요약기 ══
     S = ps.StageOutcome
     chk('13) 선택 단계만 실패 → partial',

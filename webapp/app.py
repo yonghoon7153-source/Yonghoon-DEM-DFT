@@ -9294,53 +9294,83 @@ def archive_reanalyze(folder):
         f.write('running')
 
     def _run():
+        """★ RV-04 (Codex 재검증): archive 재분석이 helper·단계 계약 **밖**에 있었다.
+
+        옛 구현은 parse/contact/coverage/Stage E 를 raw subprocess 로 따로 구현하고
+        **모든 rc 를 무시**한 뒤 status 파일에 무조건 'done' 을 썼다.  더구나
+        **network solver 를 한 번도 부르지 않아** baseline σ 가 갱신되지 않은 채
+        Stage E 만 다시 돌았다 (Codex 가 contact rc=1 로 동적 재현: scripts 4개 호출,
+        network_solver_calls=0, helper_calls=0, status='done').
+
+        이제 main pipeline 과 같은 순서·같은 계약을 쓴다:
+          parse(required) → contact(required) → coverage(optional) → _network_and_stage_e
+        """
         scripts = app.config['SCRIPTS_FOLDER']
         mode = meta.get('mode', 'standard')
         type_map = meta.get('type_map', '1:AM,2:SE')
         scale = meta.get('scale', 1000)
+        stages, log = [], []
 
         for pyc in globmod.glob(os.path.join(scripts, '__pycache__', '*.pyc')):
             os.remove(pyc)
 
+        def _finish(status, failed):
+            """status 파일에 **사실**을 쓴다 — 옛 코드는 무조건 done 이었다."""
+            payload = {'status': status,
+                       'failed_stages': [s.get('step') for s in failed]}
+            with open(status_file, 'w') as f:
+                # 옛 폴러가 'done'/'running' 문자열을 읽으므로 첫 줄은 그 규약을 지킨다.
+                f.write(('done' if status in ('done', 'partial') else 'error')
+                        + '\n' + json.dumps(payload, ensure_ascii=False))
+
         cmd = [sys.executable, os.path.join(scripts, 'parse_liggghts.py')]
         cmd += atom_files + contact_files + mesh_files + input_files + ['-o', target]
-        subprocess.run(cmd, capture_output=True, text=True, timeout=None)
+        st = _ps.run_stage('Parse (archive)', cmd, required=True, results_dir=target,
+                           expects=('atoms.csv', 'contacts.csv'))
+        stages.append(st); log.append(st)
+        if not st.ok:
+            _finish(*_ps.summarize(stages))
+            return
 
         atoms_csv = os.path.join(target, 'atoms.csv')
         contacts_csv = os.path.join(target, 'contacts.csv')
         script = 'analyze_contacts_bimodal.py' if mode == 'bimodal' else 'analyze_contacts.py'
-        cmd = [sys.executable, os.path.join(scripts, script),
-               atoms_csv, contacts_csv, '-o', target,
-               '-t', type_map, '-s', str(scale)]
-        subprocess.run(cmd, capture_output=True, text=True, timeout=None)
+        st = _ps.run_stage(
+            'Contact Analysis (archive)',
+            [sys.executable, os.path.join(scripts, script), atoms_csv, contacts_csv,
+             '-o', target, '-t', type_map, '-s', str(scale)],
+            required=True, results_dir=target,
+            expects=('full_metrics.json', 'atoms_analyzed.csv', 'contacts_analyzed.csv'))
+        stages.append(st); log.append(st)
+        if not st.ok:
+            # ★ 필수 단계가 실패하면 network/Stage E 를 돌리지 않는다 (옛 코드는 계속 갔다).
+            _finish(*_ps.summarize(stages))
+            return
 
-        # Dual-mode (Hertzian vs Physics) coverage + path-hop metrics.
-        # Uses --case-dir because archive layouts can be nested under
-        # webapp/archive/<category>/<case>, so find_case_dir(basename) may fail.
-        cmd = [sys.executable, os.path.join(scripts, 'coverage_physics_vs_hertzian.py'),
-               '--case-dir', target]
-        subprocess.run(cmd, capture_output=True, text=True, timeout=None)
+        # coverage 는 --case-dir 를 쓴다 (archive 는 webapp/archive/<category>/<case> 로
+        # 중첩될 수 있어 leaf 이름으로는 못 찾는다).  optional.
+        st = _ps.run_stage(
+            'Coverage Physics vs Hertzian (archive)',
+            [sys.executable, os.path.join(scripts, 'coverage_physics_vs_hertzian.py'),
+             '--case-dir', target],
+            required=False, results_dir=target)
+        stages.append(st); log.append(st)
 
-        # Stage E (literature-grounded grain corrections) — MUST run after
-        # analyze_contacts so the baseline σ_* keys exist for Cronau /
-        # Trevisanello / Wang multipliers to scale against.  Same call shape
-        # as the /analyze pipeline (line ~2291).  Auto-writes σ_*_stage_e
-        # AND the validation_flags self-report card → Trust card on the
-        # single.html page header is populated immediately.
+        # ★ network baseline + Stage E — main/retry/batch 와 **같은 helper**.
+        #   옛 archive 경로에는 network solver 호출 자체가 없었다.
         try:
-            stage_e_cmd = [sys.executable,
-                            os.path.join(scripts, 'run_network_full_corrections.py'),
-                            os.path.basename(target), '--quiet']
-            subprocess.run(stage_e_cmd, capture_output=True, text=True,
-                            timeout=None)
-        except Exception:
-            # Non-fatal — case still has baseline metrics; the audit script
-            # will surface this as 'no-stage-e' later.
-            pass
+            _ns, _rid = _network_and_stage_e(target, scripts, atoms_csv, contacts_csv,
+                                             type_map, scale, log, preserve_network=False)
+            stages.extend(_ns)
+        except _ps.LockUnavailable as _lk:
+            stages.append(_ps.StageOutcome(
+                step='Network Solver (archive, LOCK 미획득 — 미실행)', stdout='',
+                stderr=str(_lk), rc=1, ok=False, required=True, missing_outputs=[]))
 
-        with open(status_file, 'w') as f:
-            f.write('done')
-
+        status, failed = _ps.summarize(stages)
+        _finish(status, failed)
+        print(f"  [Archive Reanalyze] {status} ({folder})"
+              + (f" 실패: {[s.get('step') for s in failed]}" if failed else ''))
     thread = threading.Thread(target=_run, daemon=True)
     thread.start()
     return jsonify({'success': True, 'status': 'running'})
@@ -9353,8 +9383,21 @@ def archive_reanalyze_status(folder):
         return jsonify({'status': 'unknown'})
     status_file = os.path.join(target, '.reanalyze_status')
     if os.path.exists(status_file):
+        # ★ RV-04: 형식이 '<status>\n<json detail>' 로 바뀌었다.  첫 줄은 옛 폴러 규약
+        #   ('running'/'done'/'error')을 그대로 지키고, 둘째 줄에 pipeline_status 와
+        #   실패 단계를 실어 UI 가 partial 을 done 과 구별할 수 있게 한다 (CB-08 과 같은 취지).
         with open(status_file) as f:
-            return jsonify({'status': f.read().strip()})
+            raw = f.read()
+        head, _, detail = raw.partition('\n')
+        out = {'status': head.strip() or 'unknown'}
+        if detail.strip():
+            try:
+                d = json.loads(detail)
+                out['pipeline_status'] = d.get('status')
+                out['failed_stages'] = d.get('failed_stages', [])
+            except ValueError:
+                pass
+        return jsonify(out)
     return jsonify({'status': 'done'})
 
 
