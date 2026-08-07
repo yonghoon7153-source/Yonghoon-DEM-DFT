@@ -365,3 +365,24 @@ eps 민감도를 봤더니 **Hessian이 수렴하지 않았다.**
 
 fits.parquet만 있으면 score·hessian·report는 전부 몇 초 안에 복원된다.
 실측: coarse 실행 하나가 392 KB.
+
+### 운영 — lock 진입점 목록 누락 (F24, 2026-08-07)
+
+`_pid_alive()`가 `src.grid`와 `src.fitting`만 살아 있는 실행으로 인정했다.
+가중치 sweep은 `python -m src.weight_sweep`으로 뜨므로 이 검사를 통과하지
+못했고, 그 결과 **살아 있는 실행의 lock이 stale로 판정돼 삭제**됐다.
+F19에서 lock을 맨 앞으로 옮겨 막았던 동시 실행이 다른 경로로 다시 뚫린 것이다.
+
+실측: 09:29 시작한 sweep(nproc=32) 위에 09:33 진단용 sweep(nproc=4)이
+같은 `--out`으로 겹쳐 떴다. 두 실행의 청크가 섞였고, 표본 n=4짜리 결과가
+`configs/objectives_optimized.yaml`을 덮어썼다.
+
+수정:
+  - `_RUN_ENTRYPOINTS`로 목록을 상수화하고 `src.weight_sweep` 추가
+  - `scripts/watch_fit.sh`도 같은 패턴을 보게 수정 (sweep이 돌고 있어도
+    "프로세스 없음"으로 오표시하던 문제)
+  - 테스트가 `run.sh`의 `python -m src.*` 호출을 파싱해 목록과 대조한다
+    — 새 진입점을 만들면 테스트가 먼저 깨진다
+
+교훈: 같은 사실("이 실행이 살아 있는가")을 서로 다른 세 곳(lock 검사,
+감시 스크립트, bg.sh 가드)이 각자 판단하고 있었다. 상수 하나로 모았다.

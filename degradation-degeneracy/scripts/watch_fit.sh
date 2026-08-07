@@ -27,11 +27,12 @@ printf '%s   run=%s\n' "$(date '+%F %T')" "$RUN_DIR"
 hr
 
 # ── 프로세스 ──────────────────────────────────────────────────────────
-mapfile -t PIDS < <(pgrep -f 'src\.fitting' 2>/dev/null)
+# src.weight_sweep도 fitting을 수행한다 — 빼면 '프로세스 없음'으로 오표시된다
+mapfile -t PIDS < <(pgrep -f 'src\.(fitting|weight_sweep)' 2>/dev/null)
 if [[ ${#PIDS[@]} -eq 0 ]]; then
   printf '프로세스 없음 — 완료했거나 죽었음\n'
 elif [[ ${#PIDS[@]} -gt 1 ]]; then
-  printf '\n!!! 경고: src.fitting 프로세스가 %d개다 !!!\n' "${#PIDS[@]}"
+  printf '\n!!! 경고: 계산 프로세스가 %d개다 !!!\n' "${#PIDS[@]}"
   printf '같은 --out에 둘이 붙으면 CPU를 나눠 쓰고 청크가 서로 덮인다.\n'
   printf '시작 시각이 curves.parquet 재생성보다 이른 쪽을 죽일 것:\n\n'
   ps -o pid,lstart,etime -p "$(IFS=,; echo "${PIDS[*]}")" 2>/dev/null

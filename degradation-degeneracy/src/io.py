@@ -102,9 +102,16 @@ def _pid_alive(pid: int) -> bool:
     cmdline = Path(f"/proc/{pid}/cmdline")
     if cmdline.exists():   # PID 재사용 오탐 방지 (Linux)
         cmd = cmdline.read_text(errors="ignore").replace("\x00", " ")
-        # 리뷰 F13: fit lock(.fit.lock)도 이 함수를 쓰므로 fitting 프로세스도 인정
-        return any(m in cmd for m in ("src.grid", "src.fitting"))
+        # 리뷰 F13/F24: 이 목록이 실제 진입점과 어긋나면 **살아 있는 실행의 lock을
+        # stale로 오판해 지운다** → 같은 --out에 두 프로세스가 붙는다.
+        # weight_sweep은 `python -m src.weight_sweep`으로 뜨므로 반드시 포함해야
+        # 한다 (2026-08-07 실측: 빠져 있어서 sweep 위에 sweep이 겹쳤다).
+        return any(m in cmd for m in _RUN_ENTRYPOINTS)
     return True
+
+
+# 계산을 수행하는 진입점 모듈. lock 판정과 감시 스크립트가 같은 목록을 봐야 한다.
+_RUN_ENTRYPOINTS = ("src.grid", "src.fitting", "src.weight_sweep")
 
 
 def acquire_run_lock(out_dir: str | Path, name: str = ".run.lock") -> Path:

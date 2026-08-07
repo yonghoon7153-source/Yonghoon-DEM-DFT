@@ -239,3 +239,49 @@ def test_skip_first_drops_rows_with_too_few_restarts():
                                           ([1.1, 0, 1.1, 0], 0.4)])])
     assert multistart_diagnostics(df, skip_first=True).empty
     assert not multistart_diagnostics(df).empty
+
+
+# ---------------------------------------------------------------- F24 lock 진입점
+
+def test_run_entrypoints_cover_every_module_that_fits():
+    """★ F24 — lock 판정 목록이 실제 진입점과 어긋나면 살아 있는 실행의 lock을
+    stale로 오판해 지운다 → 같은 --out에 두 프로세스가 붙는다.
+
+    2026-08-07 실측: src.weight_sweep이 빠져 있어서 sweep 위에 sweep이 겹쳤다.
+    새 진입점을 만들면 이 테스트가 먼저 깨지게 둔다.
+    """
+    import pathlib
+
+    from src.io import _RUN_ENTRYPOINTS
+
+    root = pathlib.Path(__file__).resolve().parent.parent
+    # run.sh가 `python -m <module>` 로 띄우는 모듈 = 계산 진입점
+    launched = set()
+    for line in (root / "run.sh").read_text(encoding="utf-8").splitlines():
+        if "python -m src." in line:
+            mod = line.split("python -m ")[1].split()[0]
+            launched.add(mod)
+
+    # fitting을 수행하는 것만 lock 대상 (baseline/sweep1d 등 단발성은 제외)
+    need = {m for m in launched if m in {"src.grid", "src.fitting", "src.weight_sweep"}}
+    missing = need - set(_RUN_ENTRYPOINTS)
+    assert not missing, (
+        f"run.sh가 띄우는데 _RUN_ENTRYPOINTS에 없는 모듈: {missing}. "
+        f"이대로면 그 실행의 lock이 stale로 오판돼 동시 실행이 뚫린다.")
+
+
+def test_pid_alive_recognises_weight_sweep(monkeypatch, tmp_path):
+    """weight_sweep 프로세스를 '살아 있음'으로 인정해야 lock이 지켜진다."""
+    import src.io as IO
+
+    cmdline = tmp_path / "cmdline"
+    cmdline.write_text("python\x00-m\x00src.weight_sweep\x00--in\x00results/x")
+
+    class _P:
+        def __init__(self, *a): pass
+        def exists(self): return True
+        def read_text(self, **kw): return cmdline.read_text()
+
+    monkeypatch.setattr(IO.os, "kill", lambda *a: None)
+    monkeypatch.setattr(IO, "Path", lambda *a: _P())
+    assert IO._pid_alive(12345) is True
