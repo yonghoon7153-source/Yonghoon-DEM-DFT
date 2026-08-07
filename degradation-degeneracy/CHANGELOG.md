@@ -672,3 +672,21 @@ dirty patch가 없다. parquet은 재집계할 수 있어도 그 숫자를 만�
 바꿔도 한 자리도 안 변한다. 다만 case 변경에는 좌표 원점·정규화·bounds·`p_ini`가
 함께 들어가므로 **"곡선 범위 때문"이 아니라 "reference 생성 pipeline 때문"** 으로
 좁혀 적는다. 단일 원인 귀속은 ablation 없이 성립하지 않는다.
+
+### F26b — pristine 원점도 본 fitting과 같은 warm start 연쇄에서 (2026-08-07)
+
+F26을 적용한 첫 실행 로그에서 잡았다. 목적함수별 pristine을 **하나씩 따로**
+fit했더니 warm start 연쇄가 끊겨, `dqdv_only`만 다른 국소최소에 앉았다.
+
+```
+                단독 fit(F26 초판)                 연쇄 fit(본 fitting과 동일)
+dqdv_only       1.5708, -0.4442, 1.0204, -0.0184   1.4849, -0.4102, 1.0507, -0.0507
+```
+
+`halfcell_v1`의 pristine 행을 보면 `pocv_dvdq_dqdv`와 `dqdv_only`가
+`warm_started=True`다. 즉 본 fitting은 연쇄 쪽 값을 쓰는데 원점만 단독 값이
+되어, **원점과 데이터 점이 서로 다른 optimizer 프로토콜에서 측정**된다.
+F26이 지우려던 계통 오프셋이 그대로 다시 생긴다.
+
+조치: `_fit_one`에 목적함수 dict 전체를 한 번에 넘기고 결과 행에서 목적함수별
+`p_ini`를 뽑는다. 비용도 4번 → 1번으로 준다. 테스트로 "쪼개면 실패"를 고정.

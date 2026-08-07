@@ -568,14 +568,25 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
         #   pristine optimum이 다르므로 나머지는 남의 원점에서 좌표를 읽는 셈이
         #   된다. LAM_PE에 거의 일정한 offset이 생기고, 그게 degeneracy로 오독됐다.
         #   실측(공통 1,476조건): 34p가 99.1% → 10.0%, 평균|err| 3.94 → 1.43%p.
+        #
+        # ★★ 목적함수 전체를 **한 task로** 넘긴다 (F26b). 하나씩 따로 fit하면
+        #   warm start 연쇄가 끊겨, 원점과 데이터 점이 서로 다른 optimizer
+        #   프로토콜에서 측정된다. 그러면 F26이 지우려던 계통 오프셋이 그대로
+        #   다시 생긴다. 실측: dqdv_only의 pristine이 단독 fit에서
+        #   [1.5708, -0.4442, 1.0204, -0.0184], 연쇄 fit에서
+        #   [1.4849, -0.4102, 1.0507, -0.0507]로 갈렸다 (본 fitting은 후자).
+        #   비용도 4번 → 1번으로 준다.
         ref_id = ref_candidates[0]["cond_id"]
-        p_ini = {}
-        for name, weights in objectives.items():
-            ini_row = _fit_one({**ref_candidates[0], "objectives": {name: weights},
-                                "p_ini": [1.0, 0.0, 1.0, 0.0]})[0]
-            p_ini[name] = [float(ini_row[k]) for k in PARAM_NAMES]
-            log.info("α_ini·β_ini[%s] = %s (기준 조건 %s 자체 fitting)",
-                     name, [round(v, 4) for v in p_ini[name]], ref_id)
+        ini_rows = _fit_one({**ref_candidates[0], "p_ini": [1.0, 0.0, 1.0, 0.0]})
+        p_ini = {r["objective"]: [float(r[k]) for k in PARAM_NAMES] for r in ini_rows}
+        for name, v in p_ini.items():
+            log.info("α_ini·β_ini[%s] = %s (기준 조건 %s 자체 fitting, warm=%s)",
+                     name, [round(x, 4) for x in v], ref_id,
+                     bool(next(r["warm_started"] for r in ini_rows
+                               if r["objective"] == name)))
+        missing_ini = set(objectives) - set(p_ini)
+        if missing_ini:
+            raise RuntimeError(f"p_ini를 못 구한 목적함수: {sorted(missing_ini)}")
         for t in tasks:
             t["p_ini"] = p_ini
 

@@ -304,9 +304,13 @@ def test_halfcell_p_ini_is_per_objective():
     import src.fitting as F
 
     src = inspect.getsource(F._run_fit_locked)
-    assert '"objectives": {name: weights}' in src, \
-        "목적함수별로 pristine을 fit하지 않으면 원점이 섞인다"
-    assert "p_ini[name]" in src
+    # F26b: 목적함수 전체를 한 task로 넘겨야 warm start 연쇄가 본 fitting과 같다.
+    #   하나씩 따로 fit하면(objectives={name: weights}) 연쇄가 끊겨, 원점과
+    #   데이터 점이 서로 다른 프로토콜에서 측정된다.
+    assert '"objectives": {name: weights}' not in src, \
+        "pristine을 목적함수 하나씩 fit하면 warm start 연쇄가 끊긴다 (F26b)"
+    assert 'r["objective"]: [float(r[k]) for k in PARAM_NAMES]' in src, \
+        "한 번의 fit 결과에서 목적함수별 p_ini를 뽑아야 한다"
 
     # _fit_one은 dict와 옛 리스트 형식을 모두 받아야 한다
     one = inspect.getsource(F._fit_one)
@@ -335,3 +339,36 @@ def test_restart_provenance_is_recorded():
     assert len(warm) == 1 and warm[0]["i"] == 0
     # J 오름차순 저장 확인 — 그래서 위치로 warm을 찾으면 안 된다
     assert [r["J"] for r in res.restarts] == sorted(r["J"] for r in res.restarts)
+
+
+def test_pristine_p_ini_uses_same_warm_start_chain_as_main_fit(monkeypatch):
+    """★ F26b — 원점도 본 fitting과 같은 warm start 연쇄에서 측정돼야 한다.
+
+    목적함수를 하나씩 따로 fit하면 dQ/dV 계열이 seed를 못 받아 다른 국소최소에
+    앉는다. 실측: dqdv_only의 pristine이 단독 [1.5708, -0.4442, ...] vs
+    연쇄 [1.4849, -0.4102, ...]로 갈렸고, 본 fitting은 후자를 쓴다.
+    """
+    import src.fitting as F
+
+    calls = []
+
+    def fake_fit_one(task):
+        calls.append(sorted(task["objectives"]))
+        return [{"objective": o, "a_pe": 1.0, "b_pe": 0.0, "a_ne": 1.0, "b_ne": 0.0,
+                 "warm_started": o.endswith("dqdv") or o == "dqdv_only"}
+                for o in task["objectives"]]
+
+    monkeypatch.setattr(F, "_fit_one", fake_fit_one)
+
+    objectives = {"pocv_dvdq": {"w_pocv": 1.0, "w_dvdq": 1.0},
+                  "pocv_dvdq_dqdv": {"w_pocv": 1.0, "w_dvdq": 1.0, "w_dqdv": 1.0},
+                  "dqdv_only": {"w_dqdv": 1.0}}
+    ref = {"cond_id": "ref", "objectives": objectives,
+           "truth": {"lli": 0.0, "lam_pe": 0.0, "lam_ne": 0.0, "noise": 0.0}}
+
+    rows = F._fit_one({**ref, "p_ini": [1.0, 0.0, 1.0, 0.0]})
+    p_ini = {r["objective"]: [r[k] for k in F.PARAM_NAMES] for r in rows}
+
+    assert len(calls) == 1, "pristine fit이 목적함수마다 쪼개졌다 — 연쇄가 끊긴다"
+    assert calls[0] == sorted(objectives), "일부 목적함수가 연쇄에서 빠졌다"
+    assert set(p_ini) == set(objectives)
