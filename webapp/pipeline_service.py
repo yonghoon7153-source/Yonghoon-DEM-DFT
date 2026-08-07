@@ -68,8 +68,11 @@ NETWORK_ARTIFACT_GLOBS = (
 #:   (Codex 교차검증 CB-02 에서 동적 재현됨.)
 NETWORK_BASELINE_REQUIRED = 'network_conductivity.json'
 
-#: network 산출물의 세대를 식별하는 파일.
+#: network 산출물의 세대를 식별하는 파일 (**게시된 active baseline** 을 가리킨다).
 PROVENANCE_FILE = 'network_provenance.json'
+
+#: 가장 최근 **시도** (성공/실패 모두).  active 와 분리한다 — RR2-01.
+ATTEMPT_FILE = 'network_attempt.json'
 
 _LOCK_NAME = 'dem_network_solver.lock'
 
@@ -273,6 +276,67 @@ def read_network_provenance(results_dir):
         #   옛 코드는 둘을 같은 fallback 으로 돌려 손상 도장을 legacy 로 오인 → preserve.
         return {'network_run_id': None, 'code_sha': None, 'solver_status': 'unreadable',
                 'provenance_state': 'invalid', 'note': f'provenance 손상: {e}'}
+
+
+def stash_network(results_dir, case_id=''):
+    """기존 network 산출물을 **옆으로 치운다** → solver 가 빈 자리에 쓴다.  → stash dir | None
+
+    ★ RR2-02 (Codex 2회차): `fresh=(mtime_ns, size)` 는 인과 증거가 아니다.
+      metadata-only touch 만으로 통과하고(내용 불변인데 success), 반대로 결정론적 solver 가
+      byte-identical 결과를 다시 써도 stale 로 **거부**한다(가용성 문제).
+      해시도 단독으로는 안 된다 — 정상 재계산이 같은 해시를 내면 구별할 수 없다.
+
+    그래서 판정을 stat/해시 비교가 아니라 **인과**로 바꾼다: lock 안에서 기존 산출물을
+    치우고 빈 자리에 실행시키면, 실행 후 파일이 **존재한다는 사실 자체**가 "이번 실행이
+    만들었다" 는 증거다.  실패하면 치워둔 것을 되돌려 **이전 성공 세대를 그대로 보존**한다.
+    (최종형인 per-run 임시 디렉터리 + manifest + atomic publish 로 가는 중간 단계이고,
+     Codex 가 제안한 그 중간형이다.)
+    """
+    items = []
+    for pat in NETWORK_ARTIFACT_GLOBS:
+        items += glob.glob(os.path.join(results_dir, pat))
+    if not items:
+        return None
+    st = tempfile.mkdtemp(prefix=f'net_stash_{case_id}_')
+    for src in items:
+        shutil.move(src, os.path.join(st, os.path.basename(src)))
+    return st
+
+
+def restore_stash(stash_dir, results_dir):
+    """치워둔 산출물을 되돌린다 (실행 실패 시).  → 되돌린 개수."""
+    if not stash_dir or not os.path.isdir(stash_dir):
+        return 0
+    n = 0
+    for name in os.listdir(stash_dir):
+        dst = os.path.join(results_dir, name)
+        if os.path.exists(dst):
+            (shutil.rmtree if os.path.isdir(dst) else os.remove)(dst)
+        shutil.move(os.path.join(stash_dir, name), dst)
+        n += 1
+    shutil.rmtree(stash_dir, ignore_errors=True)
+    return n
+
+
+def drop_stash(stash_dir):
+    """치워둔 것을 버린다 (실행 성공 시)."""
+    if stash_dir:
+        shutil.rmtree(stash_dir, ignore_errors=True)
+
+
+def record_network_attempt(results_dir, run_id, status, reason='', argv=None):
+    """**실패 시도**를 active provenance 와 **분리해** 기록한다 (RR2-01).
+
+    옛 코드는 실패에도 `network_provenance.json` 을 새 run_id 로 덮어써서, 실패 시도의 ID 가
+    `full_metrics.network_run_id` 와 `stage_e_parent_network_run_id` 까지 차지했다 —
+    게시된 baseline 은 옛 성공 세대인데 ID 는 실패 시도를 가리키는 모순.
+    이제 active 도장은 **성공했을 때만** 갱신하고, 시도는 이 별도 파일에 남긴다.
+    """
+    atomic_write_json(os.path.join(results_dir, ATTEMPT_FILE), {
+        'network_attempt_run_id': run_id, 'solver_status': status,
+        'reason': reason, 'code_sha': code_sha(),
+        'attempted_at': time.strftime('%Y-%m-%dT%H:%M:%S'), 'argv': dict(argv or {}),
+    })
 
 
 def atomic_write_json(path, obj):

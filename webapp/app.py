@@ -2848,6 +2848,7 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
     → (stages, network_run_id)
     """
     stages = []
+    attempt_failed = False
     fm_json = os.path.join(results_dir, 'full_metrics.json')
 
     if preserve_network:
@@ -2868,27 +2869,56 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
         #   그대로 실행해(fail-open) OOM 방지라는 목적 자체가 무너졌다.
         try:
             with _ps.network_lock():
+                # ★ RR2-02 (Codex 2회차): stat 지문(fresh)은 인과 증거가 아니다 —
+                #   metadata-only touch 만으로 통과하고, 결정론적 solver 가 byte-identical
+                #   결과를 다시 써도 stale 로 거부한다.  해시도 단독으로는 같은 이유로 부족.
+                #   → 판정을 **인과**로 바꾼다: 기존 산출물을 lock 안에서 치우고 **빈 자리**에
+                #     실행시키면, 실행 후 파일이 존재한다는 사실 자체가 "이번 실행이 만들었다".
+                #     실패하면 되돌려 **이전 성공 세대를 그대로 보존**한다.
+                _stash = _ps.stash_network(results_dir)
                 st = _ps.run_stage('Network Solver (both modes)', cmd, required=True,
-                                   # ★ rc=0 이어도 파일이 없으면 실패다: network CLI 는 물리망이
-                                   #   없거나 결과 dict 가 비면 파일을 안 쓰고도 exit 0 이 된다.
-                                   # ★ RV-02: retry/batch 는 results 를 지우지 않으므로
-                                   #   **존재**만 보면 옛 산출물이 새 성공 세대로 재도장된다
-                                   #   → fresh 로 실제로 새로 쓰였는지까지 본다.
-                                   expects=('network_conductivity.json',), fresh=True,
+                                   expects=('network_conductivity.json',),
                                    results_dir=results_dir, runner=runner)
+                if st.ok:
+                    _ps.drop_stash(_stash)
+                else:
+                    _ps.restore_stash(_stash, results_dir)      # 옛 성공 세대 복구
         except _ps.LockUnavailable as _lk:
             st = _ps.StageOutcome(step='Network Solver (LOCK 미획득 — 미실행)', stdout='',
                                   stderr=str(_lk), rc=1, ok=False, required=True,
                                   missing_outputs=['network lock'])
         stages.append(st)
         log.append(st)
-        # ⚠ 실패해도 도장은 남긴다 (무엇이 언제 실패했는지의 기록).  단 CB-02 이후
-        #   snapshot_network() 가 solver_status!='success' 인 세대는 보존하지 않으므로,
-        #   이 도장이 다음 재분석에서 preserve 를 유발하지 않는다.
-        _ps.stamp_network_provenance(
-            results_dir, run_id, inputs, 'success' if st.ok else 'failed',
-            argv={'type_map': type_map, 'scale': scale, 'contact_mode': 'both'})
-        prov = {'network_run_id': run_id}
+        _argv = {'type_map': type_map, 'scale': scale, 'contact_mode': 'both'}
+        if st.ok:
+            # ★ RR2-01: active 도장은 **성공했을 때만** 갱신한다.
+            _ps.stamp_network_provenance(results_dir, run_id, inputs, 'success', argv=_argv)
+            prov = {'network_run_id': run_id}
+        else:
+            # 실패 시도는 **분리된 파일**에 남긴다 — active baseline ID 를 차지하면
+            #   게시된 것은 옛 성공 세대인데 ID 는 실패 시도를 가리키는 모순이 된다.
+            _ps.record_network_attempt(results_dir, run_id, 'failed',
+                                       reason=(st.get('stderr') or '')[-300:], argv=_argv)
+            prov = _ps.read_network_provenance(results_dir)     # 복구된 옛 세대(있으면)
+            attempt_failed = True
+
+    # ★ RR2-01: network 필수 단계가 실패했으면 **merge 도 Stage E 도 하지 않는다**.
+    #   옛 코드는 실패 후에도 옛 baseline 을 머지하고 full_metrics 에 success 를 쓴 뒤
+    #   Stage E 까지 돌려, 실패 시도 ID 가 parent/active 로 기록됐다.
+    if attempt_failed:
+        try:
+            if os.path.exists(fm_json):
+                with open(fm_json) as _f:
+                    fm_data = json.load(_f)
+                fm_data['network_solver_status'] = 'failed'
+                fm_data['last_network_attempt_run_id'] = run_id
+                fm_data['stale_after_failed_retry'] = bool(prov.get('network_run_id'))
+                _ps.atomic_write_json(fm_json, fm_data)
+        except Exception:                                          # noqa: BLE001
+            pass
+        log.append({'step': 'Network Merge / Stage E', 'rc': 1, 'stdout': '',
+                    'stderr': 'network 실패 → merge·Stage E 미실행 (게시본은 이전 세대 유지)'})
+        return stages, prov.get('network_run_id')
 
     # ── baseline σ 를 full_metrics 로 머지 (이제 양 분기가 같은 목록을 쓴다) ──
     try:
@@ -2904,7 +2934,10 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
             fm_data = _merge_dual_into_metrics(results_dir, fm_data)
             fm_data = _refresh_post_network_warnings(fm_data)
             fm_data['network_solver_status'] = 'success'
-            fm_data['network_run_id'] = prov.get('network_run_id')
+            fm_data['network_run_id'] = prov.get('network_run_id')          # 하위호환
+            fm_data['active_network_run_id'] = prov.get('network_run_id')   # RR2-01
+            fm_data['last_network_attempt_run_id'] = prov.get('network_run_id')
+            fm_data.pop('stale_after_failed_retry', None)
             _ps.atomic_write_json(fm_json, fm_data)
             log.append({'step': 'Network Merge', 'stdout': f'{len(_NET_MERGE_KEYS)} σ-keys',
                         'stderr': '', 'rc': 0})
@@ -2928,7 +2961,7 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
                        [sys.executable, os.path.join(scripts, 'run_network_full_corrections.py'),
                         os.path.basename(results_dir), '--quiet'],
                        required=False, runner=runner, results_dir=results_dir,
-                       expects=('full_metrics.json',), fresh=True, verify=_stage_e_wrote)
+                       expects=('full_metrics.json',), verify=_stage_e_wrote)
     stages.append(st)
     log.append(st)
 
@@ -5276,31 +5309,45 @@ def batch_rerun_physics():
                 # rendered on-the-fly by the webapp template using the stored
                 # σ values, so order here does not affect that.
 
-                # 1) Structure summary (τ_Dij, CN, coverage_hertz, path_hop_hertz, ...)
+                # 1) 구조 요약 (contact) — **required 계약**.
+                #    ★ R3 (Codex 2회차): 앞선 커밋 메시지는 "batch contact 도 required
+                #      run_stage 로 감쌌다" 고 적었지만 **실제 diff 에는 없었다** — 교체 범위가
+                #      이 호출 앞에서 끝났고 나는 의도만 적고 확인하지 않았다.  Codex 가 diff 로
+                #      잡았다.  이제 실제로 계약 안에 넣고, 실패하면 아래 단계를 건너뛴다.
+                _bstages = []
                 ac_script = 'analyze_contacts_bimodal.py' if mode == 'bimodal' else 'analyze_contacts.py'
-                subprocess.run([sys.executable, os.path.join(scripts, ac_script),
-                                c['atoms'], c['contacts'], '-o', c['results_dir'],
-                                '-t', type_map, '-s', scale],
-                               capture_output=True, text=True, timeout=None)
+                _cst = _ps.run_stage(
+                    'Contact Analysis (batch)',
+                    [sys.executable, os.path.join(scripts, ac_script),
+                     c['atoms'], c['contacts'], '-o', c['results_dir'],
+                     '-t', type_map, '-s', scale],
+                    required=True, results_dir=c['results_dir'],
+                    expects=('full_metrics.json', 'atoms_analyzed.csv',
+                             'contacts_analyzed.csv'))
+                _bstages.append(_cst)
+                if not _cst.ok:
+                    _batch_status['failures'].append(
+                        {'cid': c['cid'], 'err': 'contact 실패 — network/StageE 미실행: '
+                         + (_cst.get('stderr') or '')[-160:]})
+                    continue                      # ★ finally 에서 done 은 증가한다
 
-                # 2) Coverage 먼저 (read-modify-write, 아래 helper 가 그 위에 얹는다).
-                #    ★ CB-04: 옛 batch 는 solver → 커스텀 merge → coverage → Stage E 순서로
-                #    **자체 구현**했다.  이제 main pipeline 과 같은
-                #    contact → coverage → _network_and_stage_e 순서를 쓴다 (F-17 drift 제거).
-                subprocess.run([sys.executable,
-                                os.path.join(scripts, 'coverage_physics_vs_hertzian.py'),
-                                '--case-dir', c['case_dir']],
-                               capture_output=True, text=True, timeout=None)
-
+                # 2) Coverage (optional) — read-modify-write, 아래 helper 가 그 위에 얹는다.
+                #    main pipeline 과 같은 contact → coverage → helper 순서 (F-17 drift 제거).
+                _bstages.append(_ps.run_stage(
+                    'Coverage Physics vs Hertzian (batch)',
+                    [sys.executable, os.path.join(scripts, 'coverage_physics_vs_hertzian.py'),
+                     '--case-dir', c['case_dir']],
+                    required=False, results_dir=c['results_dir']))
                 # 3) Network solver + merge + Stage E — **중앙 helper**.
                 #    옛 구현은 새 run_id 를 만들지 않고 도장도 찍지 않아, 옛
                 #    network_run_id == stage_e_parent_network_run_id 가 그대로 남아
                 #    **같아 보이지만 실제로는 새 세대**인 stale-equality false-green 이 됐다.
                 #    merge key 도 따로 하드코딩돼 _NET_MERGE_KEYS 와 drift 했다.
                 _blog = []
-                _bstages, _brun_id = _network_and_stage_e(
+                _ns, _brun_id = _network_and_stage_e(
                     c['results_dir'], scripts, c['atoms'], c['contacts'],
                     type_map, scale, _blog, preserve_network=False)
+                _bstages.extend(_ns)          # ★ 덮어쓰면 contact/coverage 단계가 버려진다
                 _bstatus, _bfailed = _ps.summarize(_bstages)
                 if _bstatus == 'failed':
                     # ★ 옛 batch 는 subprocess rc 를 아예 안 봐서 실패도 done 으로 셌다.

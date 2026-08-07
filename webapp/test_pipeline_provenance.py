@@ -181,8 +181,12 @@ def main():
         fr = FakeRunner(res, net_rc=0, net_writes=False)     # 파일 안 씀 = 실패
         webapp._network_and_stage_e(res, '/scripts', 'a.csv', 'c.csv', '1:AM,3:SE', 1000, [],
                                     preserve_network=False, runner=fr)
-        chk('T3a) 실패해도 도장은 남는다 (무엇이 실패했는지의 기록)',
-            os.path.exists(os.path.join(res, ps.PROVENANCE_FILE))
+        # ★ RR2-01 로 계약이 바뀌었다: 실패는 **active 도장을 차지하지 않고**
+        #   분리된 attempt 파일에 남는다.  옛 계약(실패도 PROVENANCE_FILE 을 덮음)은
+        #   게시본은 옛 성공 세대인데 ID 는 실패 시도를 가리키는 모순을 만들었다.
+        chk('T3a) ★ 실패는 attempt 파일에 남고 active 도장을 덮지 않는다',
+            os.path.exists(os.path.join(res, ps.ATTEMPT_FILE))
+            and not os.path.exists(os.path.join(res, ps.PROVENANCE_FILE))
             and not os.path.exists(os.path.join(res, 'network_conductivity.json')))
         chk('T3b) ★ 그 상태는 snapshot 자격이 없다 (baseline 부재)',
             ps.snapshot_network(res, 'c') is None)
@@ -364,6 +368,53 @@ def main():
         finally:
             ps._RUNNER = prev_runner if 'prev_runner' in dir() else subprocess.run
             shutil.rmtree(tmp, ignore_errors=True)
+
+    # ══ 3e) ★ P1~P3 (Codex 2회차) — 인과 판정과 active/attempt 분리 ══
+    tmp = tempfile.mkdtemp(prefix='pp1_')
+    try:
+        res = os.path.join(tmp, 'r')
+        _seed_case(res, sigma=1.0)                       # 옛 성공 세대 + OLDRUN 도장
+        old_sha = _sha(os.path.join(res, 'network_conductivity.json'))
+
+        class TouchOnly:
+            """내용은 안 쓰고 **mtime 만** 앞으로 옮기는 runner (metadata-only touch)."""
+
+            def __init__(self):
+                self.calls = []
+
+            def __call__(self, cmd, **kw):
+                self.calls.append(os.path.basename(str(cmd[1])) if len(cmd) > 1 else '')
+                for f in ('network_conductivity.json', 'full_metrics.json'):
+                    p2 = os.path.join(res, f)
+                    if os.path.exists(p2):
+                        st2 = os.stat(p2)
+                        os.utime(p2, ns=(st2.st_atime_ns + 10 ** 9, st2.st_mtime_ns + 10 ** 9))
+                return subprocess.CompletedProcess(cmd, 0, '', '')
+
+        fr = TouchOnly()
+        stages, rid = webapp._network_and_stage_e(
+            res, '/scripts', 'a.csv', 'c.csv', '1:AM,3:SE', 1000, [],
+            preserve_network=False, runner=fr)
+        net = [s2 for s2 in stages if 'Network Solver' in s2.get('step', '')][0]
+        chk('P2) ★ metadata-only touch 는 성공으로 인정되지 않는다', not net.ok)
+        chk('P2b) 옛 baseline 이 바이트 그대로 복구된다',
+            _sha(os.path.join(res, 'network_conductivity.json')) == old_sha)
+        prov = ps.read_network_provenance(res)
+        chk('P1) ★ active 도장은 이전 성공 세대(OLDRUN)를 유지한다',
+            prov.get('network_run_id') == 'OLDRUN-0001'
+            and prov.get('solver_status') == 'success')
+        chk('P1b) 실패 시도는 분리 파일에 기록된다',
+            os.path.exists(os.path.join(res, ps.ATTEMPT_FILE))
+            and json.load(open(os.path.join(res, ps.ATTEMPT_FILE)))
+            .get('network_attempt_run_id') not in (None, 'OLDRUN-0001'))
+        fm = json.load(open(os.path.join(res, 'full_metrics.json')))
+        chk('P1c) ★ full_metrics 가 success 라고 쓰지 않는다',
+            fm.get('network_solver_status') == 'failed'
+            and fm.get('stale_after_failed_retry') is True)
+        chk('P3) ★ network 실패 후 Stage E 를 실행하지 않는다',
+            'run_network_full_corrections.py' not in fr.calls)
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
 
     # ══ 4) 단계 계약 요약기 ══
     S = ps.StageOutcome
