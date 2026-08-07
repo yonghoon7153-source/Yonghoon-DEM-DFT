@@ -118,6 +118,7 @@ fitting
 출력
   --config PATH          기본 configs/base.yaml
   --in PATH              (fit/score/report) 입력 결과 디렉터리
+  --compare PATH         (report) halfcell 기준 결과 — Case 1 vs Case 2 절 추가
   --out PATH             출력 디렉터리
   --tag STR              실행 태그 (manifest에 기록)
   --log-level L          DEBUG | INFO | WARNING
@@ -135,6 +136,7 @@ EOF
 
 # ---------------------------------------------------------------- parse
 IN_DIR=""
+COMPARE_DIR=""
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --mode)          MODE="$2"; shift 2 ;;
@@ -164,6 +166,7 @@ while [[ $# -gt 0 ]]; do
     --resume)        RESUME="true"; shift ;;
     --dry-run)       DRY_RUN="true"; shift ;;
     --in)            IN_DIR="$2"; shift 2 ;;
+    --compare)       COMPARE_DIR="$2"; shift 2 ;;
     --out)           OUT="$2"; OUT_SET="true"; shift 2 ;;
     --tag)           TAG="$2"; shift 2 ;;
     --log-level)     LOG_LEVEL="$2"; shift 2 ;;
@@ -269,6 +272,10 @@ case "$MODE" in
   report)     # Phase 6 — 비교표 + 그림 + RESULTS.md
     D="${IN_DIR:-$OUT}"
     python tools/compare_objectives.py --in "$D" --log-level "$LOG_LEVEL"
+    # --compare 를 주면 기준 곡선 비교(Case 1 vs Case 2) 절도 함께 만든다
+    if [[ -n "$COMPARE_DIR" ]]; then
+      python tools/compare_cases.py --grid "$D" --halfcell "$COMPARE_DIR"         --log-level "$LOG_LEVEL"
+    fi
     exec python tools/make_results.py --in "$D" --log-level "$LOG_LEVEL"
     ;;
 
