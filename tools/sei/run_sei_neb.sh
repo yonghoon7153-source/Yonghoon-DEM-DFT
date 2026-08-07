@@ -23,6 +23,21 @@ export OMPI_ALLOW_RUN_AS_ROOT=1 OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
 export LD_LIBRARY_PATH=$H_MPI/lib:/data/apps/nvhpc/Linux_x86_64/24.11/compilers/lib:/usr/local/cuda-12.6/lib64
 ts(){ echo "[$(date +%H:%M:%S)] $*"; }
 
+# ⚠⚠ 바이너리를 **미리** 확인한다 (2026-08-07 실측). neb.x 가 없으면 mpirun 이
+#   "unable to launch ... could not access or execute" 만 남기고 조용히 끝나는데,
+#   러너는 'convergence achieved' 가 없다는 이유로 "경로 미수렴" 이라고 보고했다.
+#   → 2시간을 아무것도 안 돌고 흘려보냈다. 없는 건 없다고 즉시 말해야 한다.
+if [ ! -x "$NEB" ]; then
+  ts "⛔ neb.x 를 찾을 수 없거나 실행 권한이 없다: $NEB"
+  ts "   QE-GPU 빌드에 neb.x 가 안 들어간 경우가 흔하다(pw.x/dos.x/projwfc.x 만 빌드)."
+  ts "   확인:"
+  ts "     ls -la $(dirname "$NEB")/ | grep -iE 'neb|pw\.x|path'"
+  ts "     find /data/apps -name 'neb.x' -type f 2>/dev/null"
+  ts "   빌드가 필요하면 QE 소스에서:  make neb   (pw.x 가 이미 있으면 몇 분이면 된다)"
+  ts "   다른 경로에 있으면:  NEB=/경로/neb.x bash tools/sei/run_sei_neb.sh li2s"
+  exit 1
+fi
+
 LOCK=/tmp/sei_neb.lock; exec 9>"$LOCK"
 command -v flock >/dev/null && { flock -n 9 || { ts "⛔ 이미 돈다"; exit 0; }; }
 
@@ -52,6 +67,12 @@ for t in "${TARGETS[@]}"; do
   nat=$(grep -a -m1 "nat" neb.in | grep -oE "[0-9]+")
   ts "  ▶ neb.x (원자 ${nat:-?})  — 진행은 neb.out 의 'activation energy' 줄로 본다"
   $MPIRUN -np 1 --oversubscribe "$NEB" -inp neb.in > neb.out 2>&1
+  # ⚠ mpirun 실행 실패는 '미수렴' 이 아니다 — 아예 안 돈 것이다. 구분해서 말한다.
+  if grep -aqE "unable to launch|could not access or execute|command not found" neb.out; then
+    ts "  ⛔ neb.x 실행 자체가 실패했다 (계산이 안 돌았다):"
+    sed -n '1,8p' neb.out | sed 's/^/       /'
+    cd - >/dev/null; break
+  fi
   if grep -aq "neb: convergence achieved" neb.out; then
     ts "  ✅ 수렴"
     grep -a "activation energy" neb.out | tail -2

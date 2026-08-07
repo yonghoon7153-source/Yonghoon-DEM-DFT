@@ -39,6 +39,16 @@ def read_one(d):
     inp = ""
     if os.path.isfile(os.path.join(d, "neb.in")):
         inp = open(os.path.join(d, "neb.in"), errors="ignore").read()
+    # ⚠ 실행 자체가 실패한 경우를 **미수렴과 구분**한다 (2026-08-07 실측).
+    #   neb.x 가 없어 mpirun 이 못 띄웠는데 회수기가 "경로 미수렴 — nstep_path 를 늘려"
+    #   라고 안내해, 2시간 동안 안 돌고 있는 걸 눈치채지 못했다.
+    if re.search(r"unable to launch|could not access or execute|command not found", t):
+        r.update({"status": "launch_failed",
+                  "blocking_checks": ["⛔ neb.x 실행 자체가 실패했다 — 계산이 안 돌았다. "
+                                      "바이너리 경로·실행권한을 볼 것 (NEB=... 로 지정 가능)"],
+                  "citable": False,
+                  "launch_error": "\n".join(t.splitlines()[:8])})
+        return r
     acts = _ACT.findall(t)
     fwd = [float(v) for k, v in acts if k == "->"]
     bwd = [float(v) for k, v in acts if k == "<-"]
@@ -82,7 +92,8 @@ def read_one(d):
         r["symmetric"] = (asym < 0.02) if eqv else None
     checks = []
     if not conv:
-        checks.append("경로 미수렴 — nstep_path 를 늘려 이어서 돌릴 것")
+        checks.append("경로 미수렴 — nstep_path 를 늘려 이어서 돌릴 것" if acts
+                      else "아직 에너지가 안 나왔다 — 시작 직후이거나 첫 SCF 중")
     if r.get("CI_scheme") in (None, "no-CI"):
         checks.append("CI 가 꺼져 있다 — 장벽이 이미지 격자만큼 과소평가된다")
     if r.get("symmetric") is False:
