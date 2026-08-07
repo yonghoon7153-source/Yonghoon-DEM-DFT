@@ -1,0 +1,4 @@
+P_MPa,thickness_um,N_particles,eps_sphere_pct,eps_union_pct,D_sphere,D_union,overlap_pct_of_solid,phi_AM_P,phi_AM_S,phi_SE,SE_over_solid,f_AM_measured,f_AM_normal_only,share_SE_SE,share_AM_SE,f_AM_hertz_estimator,n_contacts
+100,33.024,31880,24.37,24.72,0.7563,0.7528,0.46,0.395,0.162,0.199,0.264,0.517,0.497,0.066,0.417,0.676,90235
+300,27.724,31884,9.91,11.39,0.9009,0.8861,1.65,0.470,0.193,0.238,0.264,0.675,0.671,0.087,0.238,0.870,129530
+600,23.474,31837,-5.01,0.69,1.0501,0.9931,5.43,0.555,0.215,0.280,0.267,0.620,0.620,0.095,0.284,0.841,155522
