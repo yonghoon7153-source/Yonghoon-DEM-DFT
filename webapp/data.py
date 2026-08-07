@@ -707,6 +707,68 @@ def sei_summary() -> dict:
     }
 
 
+def canonical_provenance_flags() -> dict:
+    """(metric, system) → 출처 경고. **status 와 별개다.**
+
+    ★ 왜 별도인가 (2026-08-07 Codex 6라운드 후속): `provenance_open` 은 **값이 틀렸다는
+      뜻이 아니다** — 값은 정본 파일과 일치한다. 다만 그 값을 만든 실행을 파일로 재현할 수
+      없다. 그래서 status 를 내리면 안 되고(순위·차트에서 빼면 과잉), 대신 **눈에 보이는
+      표식**만 붙인다. validator 만 고치고 화면을 안 고치면 사이트에서는 여전히 무경고다.
+    """
+    out = {}
+    for (metric, system), e in CANONICAL_ENTRY.items():
+        po = e.get("provenance_open")
+        if po:
+            out[(metric, system)] = {"why": str(po)[:500]}
+    return out
+
+
+def sei_axes() -> dict:
+    """협업자 요청 3축의 진행 상태. **뭐가 됐고 뭐가 남았나**를 대시보드가 직접 말한다."""
+    import json as _j
+    gp = ROOT / "db" / "properties" / "sei_electronic.json"
+    vp = ROOT / "db" / "properties" / "sei_formation_voltage.json"
+    np_ = ROOT / "db" / "properties" / "sei_neb.json"
+    n_gap = 0
+    if gp.is_file():
+        try:
+            n_gap = sum(1 for v in _j.loads(gp.read_text(encoding="utf-8"))
+                        .get("results", {}).values()
+                        if v.get("status") != "rejected" and v.get("gap") is not None)
+        except (OSError, ValueError):
+            pass
+    n_v = 0
+    if vp.is_file():
+        try:
+            n_v = sum(1 for v in _j.loads(vp.read_text(encoding="utf-8"))
+                      .get("results", {}).values() if v.get("status") == "ok")
+        except (OSError, ValueError):
+            pass
+    neb = {}
+    if np_.is_file():
+        try:
+            neb = _j.loads(np_.read_text(encoding="utf-8")).get("results", {})
+        except (OSError, ValueError):
+            neb = {}
+    n_neb = sum(1 for v in neb.values() if v.get("citable"))
+    return {"axes": [
+        {"n": "① Li⁺ 확산장벽", "state": ("완료" if n_neb >= 3 else "진행 중"),
+         "done": n_neb >= 3,
+         "detail": (f"DFT CI-NEB {n_neb}/3 인용 가능 (Li₂S · Li₃P · Li₃PO₄γ)" if neb else
+                    "DFT CI-NEB 계산 중 (Li₂S · Li₃P · Li₃PO₄γ)"),
+         "why": ("BVSE 는 화학계를 넘나드는 비교에 못 쓴다 — 하필 Figure 5 의 주인공 "
+                 "Li₂S(BVS 1.56)·LiCl(2.74)이 못 쓰는 쪽이고 Li₃P 는 파라미터가 없다. "
+                 "그래서 NEB 이 대안이 아니라 유일한 경로다.")},
+        {"n": "② 형성 전위", "state": "완료", "done": True,
+         "detail": f"{n_v}종 + 분해 산물 (MP 대분배 위상도)",
+         "why": "열역학적 안정 구간이지 생성 속도가 아니다 — '이 전위 밖에서는 존재할 수 없다'로 읽는다."},
+        {"n": "③ 밴드갭 + DOS/PDOS", "state": "완료", "done": True,
+         "detail": f"{n_gap}종 (fixed-occ nscf 고유값) + Origin CSV·그림",
+         "why": "⛔ Nd 3종은 제외 — 4f 를 원자가에 둔 PBE(+U) 의 SCF 해가 금속이라 "
+                "fixed-occ 갭이 정의되지 않는다. MP frozen-4f 인용."},
+    ], "neb": neb}
+
+
 def canonical_status_all() -> dict:
     """(metric, system) → 배지. explorer 표처럼 전 조성을 한 번에 그리는 화면용."""
     out = {}

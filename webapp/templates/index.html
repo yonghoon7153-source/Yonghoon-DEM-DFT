@@ -41,7 +41,21 @@
 {# ── SEI 분해상 캠페인 (2026-08-07 완료) ─────────────────────────────────────
    ⚠ 갭(우리 QE)과 형성전위(MP)는 **출처가 다르다.** 한 표에 나란히 두되 그 사실을
      캡션에 박는다 — 섞어 인용하면 CLAUDE.md 문헌·db 분리 규율 위반이다. #}
-<div class="section-title">🧪 SEI 분해상 <span class="muted">— 전자 절연 × 형성 전위 (공동연구 요청)</span></div>
+<div class="section-title">🧪 SEI 분해상 <span class="muted">— 공동연구 요청 3축</span></div>
+{% if sei_axes and sei_axes.axes %}
+{# 요청받은 축이 뭐가 됐고 뭐가 남았나 — 이걸 안 보여주면 "갭만 했나" 로 읽힌다 #}
+<div class="grid grid-3" style="margin-bottom:14px">
+{% for a in sei_axes.axes %}
+  <div class="card find-card" style="border-left:3px solid {{ '#15803d' if a.done else '#b45309' }}">
+    <div class="fc-t">{{ a.n }}
+      <span class="badge" style="color:{{ '#15803d' if a.done else '#b45309' }};
+        background:{{ '#dcfce7' if a.done else '#fef3c7' }}">{{ a.state }}</span></div>
+    <div class="fc-v" style="font-size:.86rem">{{ a.detail }}</div>
+    <div class="fc-n">{{ a.why|mdlite }}</div>
+  </div>
+{% endfor %}
+</div>
+{% endif %}
 <div class="card">
   <div style="overflow-x:auto">
   <table class="data-table">

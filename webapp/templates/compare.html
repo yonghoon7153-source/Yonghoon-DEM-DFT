@@ -36,6 +36,9 @@ const META={{ b.canonical_meta|tojson }};
 const PROV={{ canonical_provisional|tojson }};
 // ★ 값 하나하나의 비교 묶음·상태·출처 (canonical_registry.json). 아래에서 **강제**에 쓴다.
 const CMETA={{ canonical_meta|tojson }};
+// ★ provenance_open — 값이 틀린 게 아니라 **그 값을 만든 실행을 재현할 수 없다**는 표식.
+//   status 를 안 내리므로 순위에는 남는다 (2026-08-07 Codex 6라운드 후속).
+const CPROV={{ canonical_prov|tojson }};
 function cmeta(k,id){return CMETA[k+'|'+id]||{};}
 // 자동판정에서 빠진 값의 사유를 배지로 — 숨기지 않고 '왜' 를 붙인다.
 const SLAB={unreviewed_drift:['미검토','#b45309','#fef3c7'],
@@ -94,6 +97,9 @@ function upd(){
         if(m.status&&m.status!=='canonical')cell+=' '+statusBadge(m);
         else if(pr)cell+=' <span class="badge b-prov" title="'+_cmpEsc(pr)+'">잠정</span>';
         // 등록 묶음 ID 를 셀 툴팁에 — 같은 metric 이라도 묶음이 다르면 비교하면 안 된다
+        const po=CPROV[k+'|'+id];
+        if(po)cell+=' <span class="badge" style="color:#0369a1;background:#e0f2fe" title="'
+          +_cmpEsc('출처 미확보: '+po.why)+'">출처⚠</span>';
         if(m.group)cell='<span title="등록 묶음 ['+_cmpEsc(m.group)+']'
           +(m.method?'&#10;method: '+_cmpEsc(m.method):'')+'">'+cell+'</span>';
       }

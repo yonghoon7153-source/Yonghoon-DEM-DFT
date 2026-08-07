@@ -74,6 +74,11 @@
           {%- if st %} <span class="badge" style="color:{{ st.fg }};background:{{ st.bg }}"
             title="{{ st.why }}">{{ st.label }}</span>
           {%- elif prov %} <span class="badge b-prov" title="{{ prov }}">잠정</span>{% endif %}
+          {#- ★ provenance_open 은 **값이 틀렸다는 뜻이 아니다** — 그 값을 만든 실행을 파일로
+              재현할 수 없다는 뜻이다. status 를 안 내리므로 순위엔 남고, 표식만 붙인다. -#}
+          {%- set po = canonical_prov.get((key, cid)) %}
+          {%- if po %} <span class="badge" style="color:#0369a1;background:#e0f2fe"
+            title="출처 미확보: {{ po.why }}">출처⚠</span>{% endif %}
           {% else %}<span class="cell-todo">TODO</span>{% endif %}
         </td>
       {% endfor %}

@@ -205,7 +205,7 @@ def index():
     return render_template("index.html", active="home", b=b, cov=cov, NA=na,
                            oi=D.open_items_summary(),
                            covstat=D.coverage_stats(cov), highlights=D.dashboard_highlights(),
-                           sei=D.sei_summary())
+                           sei=D.sei_summary(), sei_axes=D.sei_axes())
 
 
 @app.route("/composition/<cid>")
@@ -226,6 +226,7 @@ def composition(cid):
         cascade_rows=D.cascade_rows_for(dop) if dop else None,
         canonical=D.canonical_values(cid),
         canonical_status=D.canonical_status_for(cid), MM=D.metric_meta(),
+        canonical_prov={k: v for (k, c), v in D.canonical_provenance_flags().items() if c == cid},
         canonical_meta=D.CANONICAL_META,
         canonical_provisional={k: r for (k, c), r in D.CANONICAL_PROVISIONAL.items() if c == cid},
         canonical_na={k: r for (k, c), r in D.CANONICAL_NA.items() if c == cid})
@@ -249,7 +250,9 @@ def compare():
             for (k, c), e in D.CANONICAL_ENTRY.items() if k and c}
     return render_template("compare.html", bvse=bvse, active="compare", b=b,
                            canonical=D.canonical_table(), canonical_provisional=prov,
-                           canonical_meta=meta, metric_meta=D.metric_meta())
+                           canonical_meta=meta, metric_meta=D.metric_meta(),
+                           canonical_prov={f'{k}|{c}': v for (k, c), v in
+                                           D.canonical_provenance_flags().items()})
 
 
 @app.route("/cascade")
@@ -291,6 +294,7 @@ def explorer():
                            canonical=D.canonical_table(), canonical_meta=D.CANONICAL_META,
                            canonical_provisional=D.CANONICAL_PROVISIONAL,
                            canonical_status=D.canonical_status_all(), MM=D.metric_meta(),
+                           canonical_prov=D.canonical_provenance_flags(),
                            comp_elements=D.COMP_ELEMENTS,
                            categories=D.CATEGORIES,
                            extra=extra, extra_meta=D.EXTRA_META,

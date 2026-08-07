@@ -546,6 +546,35 @@ def test_comparison_group_id_is_visible():
     assert st["MD_Ea_eV_ordered"]["why"].startswith("등록 묶음 [")
 
 
+def test_provenance_open_is_visible_on_screen():
+    """★ provenance_open 을 validator 만 찍으면 **사이트에서는 여전히 무경고**다.
+
+    2026-08-07 Codex 6라운드 후속 지적. status 는 canonical 그대로여야 하고
+    (값이 틀린 게 아니다 — 순위에서 빼면 과잉), 대신 눈에 보이는 표식이 있어야 한다.
+    """
+    flags = D.canonical_provenance_flags()
+    assert flags, "provenance_open 항목이 하나도 안 잡힌다"
+    # status 는 안 내려간다 — 순위에는 남아야 한다
+    gm = D.canonical_comparable("gap_eV", "gap-fixedocc-eigenvalue-v1")
+    assert set(gm) == {"comp1", "modelc", "lpsocl", "b2o3"}, \
+        "provenance_open 이 순위에서 값을 빼 버렸다 — 과잉이다"
+    c = A.app.test_client()
+    for u in ("/compare", "/explorer", "/composition/comp1"):
+        assert "출처⚠" in c.get(u).get_data(as_text=True), f"{u} 에 출처 표식이 없다"
+
+
+def test_sei_axes_reflect_campaign_state():
+    """대시보드가 요청 3축의 상태를 직접 말해야 한다 — 안 그러면 '갭만 했나' 로 읽힌다."""
+    ax = D.sei_axes()["axes"]
+    assert len(ax) == 3
+    names = " ".join(a["n"] for a in ax)
+    assert "확산장벽" in names and "형성 전위" in names and "밴드갭" in names
+    done = {a["n"]: a["done"] for a in ax}
+    assert done["② 형성 전위"] and done["③ 밴드갭 + DOS/PDOS"], "완료 축이 완료로 안 뜬다"
+    body = A.app.test_client().get("/").get_data(as_text=True)
+    assert "공동연구 요청 3축" in body and "확산장벽" in body
+
+
 def test_no_hardcoded_metric_lists_in_templates():
     """metric 목록이 템플릿으로 되돌아오면 안 된다 — 그게 위 회귀의 원인이었다."""
     for name in ("explorer.html", "composition.html", "compare.html"):
