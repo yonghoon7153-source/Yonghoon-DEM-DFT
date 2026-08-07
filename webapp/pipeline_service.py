@@ -55,7 +55,13 @@ NETWORK_ARTIFACT_GLOBS = (
     'network_conductivity_dual.json',
     'network_conductivity_hertzian.json',
     'network_conductivity_physics.json',
-    'network_summary.csv',
+    # ★ RC4-03 (Codex 4회차): 'network_summary.csv' 는 여기 **있으면 안 된다** —
+    #   그 파일은 network solver 가 아니라 **analyze_contacts.py 가** 쓴다
+    #   (analyze_contacts.py:295, 무조건 실행되는 경로).  glob 에 들어 있으면
+    #     ① stash 경로: contact 가 쓴 새 summary 를 치웠다가 solver 가 안 만드니
+    #        성공 시 drop_stash 로 **지워버린다** (내가 stash 를 넣으며 만든 실데이터 손상)
+    #     ② preserve 경로: snapshot 의 **옛** summary 가 새 contact summary 를 덮는다
+    #   → contact 단계의 필수 산출물로 옮겼다.
     'network_raw_*',
     'network_provenance.json',
 )
@@ -75,6 +81,19 @@ PROVENANCE_FILE = 'network_provenance.json'
 ATTEMPT_FILE = 'network_attempt.json'
 
 _LOCK_NAME = 'dem_network_solver.lock'
+
+#: ★ RC4-02 (Codex 4회차): Stage E 가 `full_metrics.json` 에 쓰는 **관리 대상 키 전부**.
+#:   옛 격리는 이름에 `_stage_e` 가 들어간 키만 걷어내서, 아래 비격리 키들이 남아
+#:   partial 실행(보정값 하나만 쓰고 끝)이 옛 metadata 와 섞인 채 성공이 됐다.
+#:   실측 예: 25 ℃ 재실행 뒤에도 옛 60 ℃ `stage_e_temperature_provenance` 가 남았다.
+#:
+#:   ⚠ `thermal_sigma_full_mScm[_physics]` 는 **격리하지 않는다** — Stage E 가 치유하긴
+#:     하지만 baseline network 산출물이기도 해서, 걷어내면 baseline 을 지우게 된다.
+#:     (그 이중 소유 자체가 최종형 manifest 에서 정리해야 할 대상이다.)
+def is_stage_e_key(k: str) -> bool:
+    return ('_stage_e' in k or k.startswith('stage_e_')
+            or k in ('fracture_aware_method_full', 'validation_flags'))
+
 
 
 def new_run_id() -> str:

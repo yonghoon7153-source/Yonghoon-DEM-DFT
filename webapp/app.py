@@ -2984,7 +2984,10 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
         if os.path.exists(fm_json):
             with open(fm_json) as _f:
                 _fmd = json.load(_f)
-            _se_saved = {k: v for k, v in _fmd.items() if '_stage_e' in k}
+            # ★ RC4-02: '_stage_e' 문자열 포함이 아니라 **관리 키 전부**를 격리한다
+            #   (stage_e_source · stage_e_factors_used · validation_flags · 온도
+            #    provenance · wrapper provenance 등이 전부 새고 있었다).
+            _se_saved = {k: v for k, v in _fmd.items() if _ps.is_stage_e_key(k)}
             if _se_saved:
                 for k in _se_saved:
                     _fmd.pop(k, None)
@@ -2997,14 +3000,6 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
                         os.path.basename(results_dir), '--quiet'],
                        required=False, runner=runner, results_dir=results_dir,
                        expects=('full_metrics.json',), verify=_stage_e_wrote)
-    if not st.ok and _se_saved:
-        try:                                                       # 이전 Stage E 세대 복구
-            with open(fm_json) as _f:
-                _fmd = json.load(_f)
-            _fmd.update(_se_saved)
-            _ps.atomic_write_json(fm_json, _fmd)
-        except Exception:                                          # noqa: BLE001
-            pass
     stages.append(st)
     log.append(st)
 
@@ -3013,8 +3008,18 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
         if os.path.exists(fm_json):
             with open(fm_json) as _f:
                 fm_data = json.load(_f)
+            if not st.ok:
+                # ★ RC4-01: 실패 시에는 값만 되돌리는 게 아니라 **wrapper provenance 도**
+                #   옛 것을 유지한다.  옛 코드는 값은 옛 세대인데 parent/run/code 를 새
+                #   시도로 바꿔, 게시된 값과 도장이 다른 세대를 가리켰다.
+                for _k, _v in _se_saved.items():
+                    fm_data[_k] = _v
+                fm_data['stage_e_status'] = 'failed_restored_previous'
+                fm_data['stage_e_attempt_parent_network_run_id'] = prov.get('network_run_id')
+                _ps.atomic_write_json(fm_json, fm_data)
+                return stages, prov.get('network_run_id')   # st 는 위에서 stages 에 들어갔다
             fm_data['stage_e_parent_network_run_id'] = prov.get('network_run_id')
-            fm_data['stage_e_status'] = 'success' if st.ok else 'failed'
+            fm_data['stage_e_status'] = 'success'
             # ★ CB-07: "어느 Stage E 코드가 그 baseline 을 변환했는가" 를 복원할 수 있게
             #   Stage E 자신의 세대도 새긴다 (preserve 경로는 옛 baseline 위에서 **현재**
             #   Stage E 코드를 돌리므로 parent id 만으로는 부족하다).
@@ -3163,7 +3168,8 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
                atoms_csv, contacts_csv, '-o', results_dir,
                '-t', type_map, '-s', str(scale)]
         _st = _ps.run_stage('Bimodal Contact Analysis', cmd, required=True,
-                            expects=('full_metrics.json', 'atoms_analyzed.csv', 'contacts_analyzed.csv', ), results_dir=results_dir)
+                            expects=('full_metrics.json', 'atoms_analyzed.csv', 'contacts_analyzed.csv',
+                                     'network_summary.csv'), results_dir=results_dir)
         stages.append(_st); log.append(_st)
 
         # Step 2b: Dual-mode coverage + AM-SE/SE-SE totals (Hertzian vs Physics).
@@ -3231,7 +3237,8 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
                atoms_csv, contacts_csv, '-o', results_dir,
                '-t', type_map, '-s', str(scale)]
         _st = _ps.run_stage('Contact Analysis', cmd, required=True,
-                            expects=('full_metrics.json', 'atoms_analyzed.csv', 'contacts_analyzed.csv', ), results_dir=results_dir)
+                            expects=('full_metrics.json', 'atoms_analyzed.csv', 'contacts_analyzed.csv',
+                                     'network_summary.csv'), results_dir=results_dir)
         stages.append(_st); log.append(_st)
 
         # Dual-mode coverage + AM-SE/SE-SE totals (Hertzian vs Physics).
@@ -5366,7 +5373,7 @@ def batch_rerun_physics():
                      '-t', type_map, '-s', scale],
                     required=True, results_dir=c['results_dir'],
                     expects=('full_metrics.json', 'atoms_analyzed.csv',
-                             'contacts_analyzed.csv'))
+                             'contacts_analyzed.csv', 'network_summary.csv'))
                 _bstages.append(_cst)
                 if not _cst.ok:
                     _batch_status['failures'].append(
@@ -9429,7 +9436,8 @@ def archive_reanalyze(folder):
             [sys.executable, os.path.join(scripts, script), atoms_csv, contacts_csv,
              '-o', target, '-t', type_map, '-s', str(scale)],
             required=True, results_dir=target,
-            expects=('full_metrics.json', 'atoms_analyzed.csv', 'contacts_analyzed.csv'))
+            expects=('full_metrics.json', 'atoms_analyzed.csv', 'contacts_analyzed.csv',
+                     'network_summary.csv'))
         stages.append(st); log.append(st)
         if not st.ok:
             # ★ 필수 단계가 실패하면 network/Stage E 를 돌리지 않는다 (옛 코드는 계속 갔다).

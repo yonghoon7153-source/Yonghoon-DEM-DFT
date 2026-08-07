@@ -253,7 +253,7 @@ def main():
                     rc = contact_rc
                     if contact_rc == 0:
                         for f in ('full_metrics.json', 'atoms_analyzed.csv',
-                                  'contacts_analyzed.csv'):
+                                  'contacts_analyzed.csv', 'network_summary.csv'):
                             open(os.path.join(res_dir, f), 'w').write(
                                 '{}' if f.endswith('.json') else 'a\n')
                 elif script == 'network_conductivity.py':
@@ -348,7 +348,7 @@ def main():
                     rc = _rc
                     if _rc == 0:
                         for f in ('full_metrics.json', 'atoms_analyzed.csv',
-                                  'contacts_analyzed.csv'):
+                                  'contacts_analyzed.csv', 'network_summary.csv'):
                             open(os.path.join(_d, f), 'w').write(
                                 '{}' if f.endswith('.json') else 'a\n')
                 elif sc == 'network_conductivity.py':
@@ -445,6 +445,49 @@ def main():
             json.dump(ip, open(os.path.join(rd, 'input_params.json'), 'w'))
             got = webapp._inject_input_params({}, rd).get('_input_target_press_MPa')
             chk(f'R-PD1) ★ {label} (got {got})', got == want)
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+    # ══ 3f) ★ RC4-01/02/03 (Codex 4회차) ══
+    tmp = tempfile.mkdtemp(prefix='rc4_')
+    try:
+        res = os.path.join(tmp, 'r')
+        _seed_case(res, sigma=1.0)
+        # 옛 Stage E 세대 + 비격리 metadata + 옛 wrapper provenance
+        fmp = os.path.join(res, 'full_metrics.json')
+        d0 = json.load(open(fmp))
+        d0.update({'sigma_full_mScm': 1.0, 'sigma_full_mScm_stage_e': 2.0,
+                   'stage_e_source': 'OLD', 'validation_flags': {'x': 1},
+                   'stage_e_temperature_provenance': '60C',
+                   'stage_e_parent_network_run_id': 'OLDRUN-0001',
+                   'stage_e_run_id': 'OLDSE', 'stage_e_status': 'success'})
+        json.dump(d0, open(fmp, 'w'))
+        # contact 가 쓴 summary (network 소유가 아니다)
+        open(os.path.join(res, 'network_summary.csv'), 'w').write('a,b\n')
+
+        class NetOkStageENoWrite(FakeRunner):
+            def __call__(self, cmd, **kw):
+                if os.path.basename(str(cmd[1])) == 'run_network_full_corrections.py':
+                    self.calls.append(cmd)
+                    return subprocess.CompletedProcess(cmd, 0, '', '')   # rc=0, 무산출
+                return super().__call__(cmd, **kw)
+
+        fr = NetOkStageENoWrite(res)
+        webapp._network_and_stage_e(res, '/scripts', 'a.csv', 'c.csv', '1:AM,3:SE', 1000, [],
+                                    preserve_network=False, runner=fr)
+        fm = json.load(open(fmp))
+        chk('RC4-03) ★ network 성공이 contact 의 network_summary.csv 를 지우지 않는다',
+            os.path.exists(os.path.join(res, 'network_summary.csv')))
+        chk('RC4-02) ★ 비격리 metadata 도 격리·복원된다 (stage_e_source/온도/검증카드)',
+            fm.get('stage_e_source') == 'OLD'
+            and fm.get('stage_e_temperature_provenance') == '60C'
+            and fm.get('validation_flags') == {'x': 1})
+        chk('RC4-01) ★ Stage E 실패 시 wrapper provenance 도 옛 것을 유지한다',
+            fm.get('stage_e_parent_network_run_id') == 'OLDRUN-0001'
+            and fm.get('stage_e_run_id') == 'OLDSE'
+            and fm.get('stage_e_status') == 'failed_restored_previous'
+            and fm.get('stage_e_attempt_parent_network_run_id') not in (None, 'OLDRUN-0001'))
+        chk('RC4-01b) 옛 보정값도 그대로', fm.get('sigma_full_mScm_stage_e') == 2.0)
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 
