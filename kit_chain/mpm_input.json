@@ -1,0 +1,32 @@
+{
+  "case": "260421_215235_ab3785",
+  "n_AM": 4587,
+  "n_SE": 158760,
+  "dem_porosity_pct": 18.898601340732355,
+  "dem_thickness_um": 116.81099999999999,
+  "dem_coverage_AM_P_mean": null,
+  "dem_coverage_AM_S_mean": 17.26117564481711,
+  "dem_e_se_eff_gpa": 1.35,
+  "se_ratio_vs_1p35": 1.0,
+  "mpm_e_se_gpa": 1.53,
+  "mpm_nu_se": 0.49,
+  "mpm_K_se_gpa": 25.5,
+  "mpm_mu_se_gpa": 0.5134,
+  "press_gpa": 0.3,
+  "target_porosity": 0.189,
+  "lateral_box": 0.05,
+  "mpm_n_grid": 256,
+  "mpm_est_points": 89256444,
+  "step4_crates": [],
+  "step4_charge_crates": [],
+  "step4_chain": true,
+  "step4_r_int_ohm_cm2": 50.0,
+  "step4_am_electro_split": {
+    "mode": "mono_scalar",
+    "class": "sc",
+    "d_s": 3e-15,
+    "am_split_um": 3.5,
+    "sigma_e_am": "AM_S=10mS/cm"
+  },
+  "am_material_class_mode": "size_absolute"
+}

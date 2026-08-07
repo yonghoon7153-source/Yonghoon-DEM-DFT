@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# MPM/DEM 대용량 실행물 — 재생성 가능, 저장소에 넣지 않는다
+venv/
+kit_ps_*/
+kit_VGCF1_PTFE1_sched/
+run_VGCF1_PTFE1_*/

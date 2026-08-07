@@ -1,0 +1,7 @@
+{
+ "c_max_mol_m3": 63104.0,
+ "x_at_charged": 0.2638452245913298,
+ "x_at_discharged": 0.853974674630047,
+ "stoich_window_source": "pybamm get_min_max_stoichiometries (positional y_100/y_0)",
+ "provenance": "pybamm 26.7.1.0 ParameterValues(\"Chen2020\") — Chen et al. 2020 (LG M50, NMC811) positive electrode OCP + c_max; §F1: 기계 추출(수기 수치 0)"
+}
