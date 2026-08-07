@@ -31,6 +31,8 @@ from __future__ import annotations
 import csv
 import math
 import os
+
+import press_units
 import statistics as _stat
 from typing import Any, Iterable
 
@@ -1326,13 +1328,10 @@ def map_input_params(ip: dict | None, meta: dict | None) -> dict:
                 inj[k_dst] = float(v) * float(scale)
         except (TypeError, ValueError):
             continue
-    tp = ip.get('target_press_sim') or ip.get('target_pressure_MPa')
-    try:
-        if tp is not None:
-            inj['_input_target_press_MPa'] = (float(tp) * 1000 if float(tp) < 10
-                                              else float(tp))
-    except (TypeError, ValueError):
-        pass
+    # ★ F-11: 값 크기 heuristic 제거 — press_units 가 필드 이름으로 판정한다.
+    _tp = press_units.target_pressure_mpa(ip)
+    if _tp is not None:
+        inj['_input_target_press_MPa'] = _tp
     if meta.get('mode'):
         inj['_meta_mode'] = meta['mode']
     if meta.get('ps_ratio'):

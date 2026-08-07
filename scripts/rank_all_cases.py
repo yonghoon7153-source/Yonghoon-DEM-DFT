@@ -6,6 +6,8 @@ Output: docs/full_ranking.csv  +  console summary by capacity tier.
 """
 import csv
 import os
+
+import press_units
 import sys
 from pathlib import Path
 
@@ -71,13 +73,10 @@ def csv_row_to_metrics(row):
             except (TypeError, ValueError):
                 pass
 
-    # Target pressure
-    tp = ip.get('target_press_sim')
-    if tp is not None:
-        try:
-            m['_input_target_press_MPa'] = float(tp) * 1000 if float(tp) < 10 else float(tp)
-        except (TypeError, ValueError):
-            pass
+    # 제작 목표압 → MPa.  ★ F-11: press_units 가 필드 이름으로 단위를 정한다.
+    _tp = press_units.target_pressure_mpa(ip)
+    if _tp is not None:
+        m['_input_target_press_MPa'] = _tp
 
     # Meta (mode + ps_ratio for bimodal detection)
     m['_meta_mode'] = row.get('meta__mode') or None

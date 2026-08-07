@@ -679,13 +679,12 @@ def _inject_input_params(metrics, results_dir):
                 inj[k_dst] = float(v) * float(scale)
         except (TypeError, ValueError):
             continue
-    # Target sintering pressure (sim → MPa via × 1000 historical convention)
-    tp = ip.get('target_press_sim') or ip.get('target_pressure_MPa')
-    try:
-        if tp is not None:
-            inj['_input_target_press_MPa'] = float(tp) * 1000 if float(tp) < 10 else float(tp)
-    except (TypeError, ValueError):
-        pass
+    # 제작(소결) 목표압 → MPa.  ★ F-11: 필드 이름이 단위를 정한다 — 값 크기로 추정하던
+    #   옛 heuristic(`< 10 이면 ×1000`)은 target_pressure_MPa 에 10 미만을 넣으면 1000 배로
+    #   파손했고, 그 구간이 하필 ASSB 운전 스택압(0.2~5 MPa)이다.  scripts/press_units.py 참조.
+    _tp = _press_units.target_pressure_mpa(ip)
+    if _tp is not None:
+        inj['_input_target_press_MPa'] = _tp
     # Mode + ps_ratio from meta.json (for bimodal vs standard detection)
     meta_path = os.path.join(os.path.dirname(results_dir),
                               os.path.basename(results_dir).replace('webapp/results','webapp/uploads')
