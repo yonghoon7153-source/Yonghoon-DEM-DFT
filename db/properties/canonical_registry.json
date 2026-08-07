@@ -12,7 +12,8 @@
   "_history": {
     "2026-08-07": "Codex 코드리뷰 P1 대응으로 신설. 이전에는 webapp/data.py 의 CANONICAL 딕셔너리가 정본이었다. 이관 중 MD_Ea_eV 안에서 단일시드(comp1 0.253 / modelc 0.224)와 4-seed(lpsocl 0.287)가 한 딕셔너리에 섞여 있던 것을 발견 — 대시보드의 '최저값' 순위가 프로토콜을 넘나들고 있었다. group 을 나눠 분리했다.",
     "2026-08-07b": "Codex 재검증 반영. ★ LPSOCl MD_Ea 를 canonical→provisional 로 내렸다 — 600 K beta 0.615 게이트 탈락 점을 포함한 3점 적합이고 kb/open_items.md 가 인용 보류라 적고 있는데 첫 판에서 대조를 빠뜨렸다. comp1 ICOHP 원 출처 배선(-5.9381; bonds.json·nd_icohp.json 의 -5.944 는 낡은 요약 drift). comp2 ICOHP·gap 출처 배선(gap 은 legacy 유지).",
-    "2026-08-07c": "Codex 3라운드 반영. resolve_error 를 status=source_error 로 내려 자동판정에서 빼고, live 를 요청마다(mtime 캐시) 다시 읽게 했다. comp1 단일시드 Ea 출처 배선 (li_transport.json) — 단 beta 6/6 탈락이라 provisional 유지."
+    "2026-08-07c": "Codex 3라운드 반영. resolve_error 를 status=source_error 로 내려 자동판정에서 빼고, live 를 요청마다(mtime 캐시) 다시 읽게 했다. comp1 단일시드 Ea 출처 배선 (li_transport.json) — 단 beta 6/6 탈락이라 provisional 유지.",
+    "2026-08-07d": "Codex 4라운드 반영. ★ comp2 MD_Ea 항목이 **의미가 섞여 있었다** — 값 0.275 는 ordered single-champion baseline 인데 method_id/group 에 disorder-ensemble 을 붙여 뒀다. 둘을 별개 metric 으로 분리: MD_Ea_eV_ordered(0.2754597563, comp2_md_arrhenius.json) · MD_Ea_eV_disorder(0.1512±0.0676, comp2_disorder_ensemble.json d=0.50, n_config=3). d=1.00 은 게이트 FAIL 이라 등재하지 않는다. ⚠ 교훈: validator 가 provisional 무출처를 허용해 이 의미 오류를 못 잡았다 — 수치 대조는 method/value 의미 일치를 보증하지 않는다."
   },
   "entries": [
     {
@@ -353,21 +354,48 @@
     },
     {
       "system": "comp2",
-      "metric": "MD_Ea_eV",
-      "value": 0.275,
+      "metric": "MD_Ea_eV_ordered",
+      "value": 0.2754597563,
+      "uncertainty": 0.0327434522,
       "unit": "eV",
-      "source_path": null,
-      "source_key": null,
+      "tolerance": 1e-09,
+      "source_path": "db/properties/comp2_md_arrhenius.json",
+      "source_key": "/Ea_eV_perseed_mean",
       "n_seed": 3,
-      "method_id": "uma-s-1p1__3seed__disorder-ensemble",
-      "comparison_group": "md-ea-comp2-disorder-provisional",
+      "method_id": "uma-s-1p1__600-800-1000K__3seed__msd2-50ps__ordered-champion",
+      "comparison_group": "md-ea-comp2-ordered-provisional",
       "status": "provisional",
       "prohibitions": [
         "absolute_sigma",
         "cross_composition_ranking"
       ],
-      "note": "800 K 시드 산포가 비물리(s3 800K 2.15e-6 < 자기 600K 2.44e-6). 300 K 외삽 시그마비 0.12-1.48x inconclusive. reseed s5/s6 권고.",
-      "updated": "2026-07-26"
+      "note": "★ 이건 **ordered single-champion baseline** 이지 disorder ensemble 이 아니다. 2026-08-07 Codex 4라운드가 잡았다 — 레지스트리 첫 판이 이 값에 method_id=disorder-ensemble 을 붙여 두 개념을 섞었다. 원자료가 직접 '이 계산은 anion disorder mechanism 을 샘플링하지 않았다'고 적고 있다. 정밀 원자료를 저장하고 화면에서만 반올림한다(표시 0.275±0.033).",
+      "updated": "2026-08-07"
+    },
+    {
+      "system": "comp2",
+      "metric": "MD_Ea_eV_disorder",
+      "value": 0.1512,
+      "uncertainty": 0.0676,
+      "unit": "eV",
+      "source_path": "db/properties/comp2_disorder_ensemble.json",
+      "source_key": "/levels/d0.50/Ea_eV",
+      "n_config": 3,
+      "method_id": "uma-s-1p1__600-800-1000K__3config__msd2-50ps__anion-disorder-d0.50",
+      "comparison_group": "md-ea-comp2-disorder-d050",
+      "status": "provisional",
+      "prohibitions": [
+        "absolute_sigma",
+        "cross_composition_ranking",
+        "quote_value_precisely"
+      ],
+      "gate_detail": {
+        "rule": "beta on MSD, 2-50 ps, pass 0.8-1.2",
+        "verdict": "PASS — 개별 9/9 (β 0.81–1.12) + 온도별 평균 3/3 (β 0.92/1.00/0.97)",
+        "source": "db/properties/comp2_disorder_ensemble.json"
+      },
+      "note": "anion disorder d=0.50, config 3개. 게이트는 통과했지만 **config 산포 45%** 다 — 원자료가 직접 \"'ordered(0.276) 보다 낮다' 까지만 말하고 값 자체를 정밀 인용하지 말 것\" 이라고 적고 있다. ⚠ n_seed 가 아니라 **n_config** 다(시드가 아니라 무질서 배치를 샘플링). ⛔ d=1.00 (0.3775) 은 게이트 FAIL(개별 8/9 케이지) 이라 같은 항목에 섞지 않는다.",
+      "updated": "2026-08-01"
     },
     {
       "system": "lpsocl",

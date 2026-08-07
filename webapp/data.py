@@ -3399,8 +3399,42 @@ def _comments_locked(timeout=10.0):
     STALE = max(timeout * 3, 30.0)
 
     def _alive(pid):
+        """PID 가 살아 있나. **판단 불가면 '살아 있다'** 로 본다(회수 안 함 = 안전한 쪽).
+
+        ⚠⚠ POSIX 관례인 `os.kill(pid, 0)` 을 **Windows 에서 쓰면 안 된다** (2026-08-07
+          Codex 4라운드). CPython 의 Windows 구현은 sig 가 CTRL_C_EVENT/CTRL_BREAK_EVENT 가
+          아니면 `TerminateProcess(handle, sig)` 로 간다 — 즉 `os.kill(pid, 0)` 은
+          **존재 확인이 아니라 종료 요청**이다. stale lock 을 검사하다 살아 있는 주인
+          프로세스를 죽일 수 있었다. 실제 사고는 아직 없지만 설계상 가능했다.
+          → Windows 는 OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION) +
+            WaitForSingleObject(0) 로 **읽기만** 한다.
+        """
+        if os.name == "nt":
+            try:
+                import ctypes
+                from ctypes import wintypes
+                k32 = ctypes.WinDLL("kernel32", use_last_error=True)
+                PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
+                ERROR_INVALID_PARAMETER, ERROR_ACCESS_DENIED = 87, 5
+                WAIT_TIMEOUT = 0x00000102
+                k32.OpenProcess.restype = wintypes.HANDLE
+                h = k32.OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, False, int(pid))
+                if not h:
+                    err = ctypes.get_last_error()
+                    if err == ERROR_INVALID_PARAMETER:
+                        return False          # 그런 PID 가 없다 = 죽었다
+                    if err == ERROR_ACCESS_DENIED:
+                        return True           # 존재하지만 권한이 없다 = 살아 있다
+                    return True               # 판단 불가 → 회수하지 않는다
+                try:
+                    # 시그널 없이 상태만 본다. 아직 안 끝났으면 WAIT_TIMEOUT.
+                    return k32.WaitForSingleObject(h, 0) == WAIT_TIMEOUT
+                finally:
+                    k32.CloseHandle(h)
+            except Exception:
+                return True                   # ctypes 가 안 되면 회수하지 않는다
         try:
-            os.kill(pid, 0)                  # 신호 0 = 존재 확인만
+            os.kill(pid, 0)                  # POSIX 에서는 이게 존재 확인 관례가 맞다
             return True
         except ProcessLookupError:
             return False

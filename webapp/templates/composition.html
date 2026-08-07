@@ -25,12 +25,14 @@
   {% if val is not none %}
   <div class="metric" title="{{ canonical_meta[key] }}{% if prov %}&#10;⚠ {{ prov }}{% endif %}">
     <div class="mv">{{ val }}<span style="font-size:.55em;color:var(--dim)"> {{ units[key] }}</span></div>
-    <div class="ml">{{ labels[key] }}{% if prov %} <span class="badge b-prov" title="{{ prov }}">잠정</span>{% endif %}
-      {%- set st = canonical_status.get(key) %}
-      {#- ★ 레지스트리 status 를 카드에도 찍는다 (2026-08-07 Codex 3라운드).
-          차트에서만 빼면 "카드에 있으니 정본이겠지" 로 읽혀 그대로 인용된다. -#}
+    {%- set st = canonical_status.get(key) %}
+    {#- ★ 상태 배지는 **하나만** (2026-08-07 Codex 4라운드). 레지스트리 status 와 옛
+        CANONICAL_PROVISIONAL 이 겹쳐 '잠정' 이 두 번 찍혔다. 레지스트리가 단일 진실
+        원천이므로 그쪽 우선, 없을 때만 PROV. -#}
+    <div class="ml">{{ labels[key] }}
       {%- if st and st.status != 'canonical' %} <span class="badge" style="color:{{ st.fg }};background:{{ st.bg }}"
-        title="{{ st.why }}">{{ st.label }}</span>{% endif %}</div>
+        title="{{ st.why }}">{{ st.label }}</span>
+      {%- elif prov %} <span class="badge b-prov" title="{{ prov }}">잠정</span>{% endif %}</div>
     <div class="mm" title="{{ canonical_meta[key] }}">{{ canonical_meta[key] }}</div>
     {%- if prov %}<div class="mm mm-prov" title="{{ prov }}">⚠ {{ prov }}</div>{% endif %}
   </div>

@@ -85,11 +85,12 @@ function upd(){
     sel.forEach(id=>{
       let v=CANON[k][id], pr=PROV[k+'|'+id], m=cmeta(k,id);
       let cell=(v!==undefined&&v!==null)?_cmpEsc(''+v):'<span class="muted">TODO</span>';
-      if(v!==undefined&&v!==null&&pr)cell+=' <span class="badge b-prov" title="'+_cmpEsc(pr)+'">잠정</span>';
-      // ★ 표에도 상태를 찍는다 (2026-08-07 Codex 3라운드). 차트·레이더에서만 빼면
-      //   "표에 있으니 정본이겠지" 로 읽혀 정렬·인용에 그대로 쓰인다.
-      if(v!==undefined&&v!==null&&m.status&&m.status!=='canonical'){
-        cell+=' '+statusBadge(m);
+      // ★ 상태 배지는 **하나만** 붙인다 (2026-08-07 Codex 4라운드).
+      //   레지스트리 status 와 옛 CANONICAL_PROVISIONAL 이 겹쳐 '잠정' 이 두 번 찍혔다.
+      //   레지스트리가 단일 진실 원천이므로 그쪽을 우선하고, 없을 때만 PROV 로 떨어진다.
+      if(v!==undefined&&v!==null){
+        if(m.status&&m.status!=='canonical')cell+=' '+statusBadge(m);
+        else if(pr)cell+=' <span class="badge b-prov" title="'+_cmpEsc(pr)+'">잠정</span>';
       }
       t+='<td class="num">'+cell+'</td>';});
     t+='</tr>';
