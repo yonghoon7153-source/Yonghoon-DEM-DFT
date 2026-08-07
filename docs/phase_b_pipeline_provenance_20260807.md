@@ -1,5 +1,34 @@
 # Phase B 구현 기록 — network/Stage E 세대 분리 (2026-08-07)
 
+## 회답 좌표 (Codex 교차검증은 **이 브랜치**에서)
+
+| | |
+|---|---|
+| 구현 브랜치 | **`claude/stoic-knuth-NObVQ`** |
+| 구현 커밋 | **`57d94fb7`** (Phase B) |
+| 변경 | 6 파일 · **+889 / −344** |
+
+```
+ webapp/app.py                                | 598 ++++++-------------   (pipeline·wrapper·retry·batch)
+ webapp/pipeline_service.py                   | 274 +++++++++            (신규)
+ webapp/test_pipeline_provenance.py           | 203 +++++++++            (신규 회귀)
+ webapp/templates/index.html                  |   5 +                    (detached 폴링 — 범위 확장)
+ webapp/templates/single.html                 |   7 +                    (detached + error 폴링)
+ docs/phase_b_pipeline_provenance_20260807.md | 146 +++++++              (이 문서)
+```
+
+### ⚠ 리뷰 기준 브랜치와 다르다 — 검증 대상을 먼저 맞출 것
+
+리뷰가 적은 기준 `Codex/dem-mpm-crosscheck @ d9880b73` 은 **origin 에 없다**
+(`git ls-remote --heads origin` 에 `crosscheck` 없음; `git cat-file -t d9880b73` →
+*Not a valid object name*).  즉 그 브랜치는 로컬이거나 다른 remote 에 있고, 나는 볼 수 없다.
+
+- 나는 **`claude/stoic-knuth-NObVQ` 의 실제 코드로** F-01/F-02/F-03/F-05 를 재현 확인했고
+  (아래 표), 수정도 그 위에 올렸다.  줄번호는 리뷰와 다를 수 있으나 **결함은 동일**하다.
+- ⇒ 교차검증은 `Codex/dem-mpm-crosscheck` 가 아니라 **`claude/stoic-knuth-NObVQ`**
+  에서 해야 한다.  두 브랜치를 합칠 계획이면 **누가 먼저 merge 할지**를 정하고 나서
+  `webapp/app.py` 를 만지는 게 안전하다 (리뷰 §7 의 충돌 1순위 파일).
+
 Codex 코드리뷰(`Codex/dem-mpm-crosscheck @ d9880b73`, 2026-08-07) 의 **Phase B** 담당분.
 리뷰 원문은 이 리포에 없다 — 전사 과정에서 남의 문서가 미묘하게 달라지는 것을 피하려고
 **원본 소유자가 커밋**하는 쪽으로 남긴다.  여기서는 finding ID 로만 참조한다.
