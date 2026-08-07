@@ -245,7 +245,7 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
             "> \n"
             "> 이 문서는 **재현 정보가 갖춰지지 않은 artifact**에서 생성됐습니다. "
             "실패한 검사: "
-            + ", ".join(f"`{k}`({prov['checks'][k]['why']})" for k in prov["fail"])
+            + ", ".join(f"`{k}` — {r}" for k, r in zip(prov["fail"], prov["reasons"]))
             + ".\n> \n"
             "> 우도비, half-cell 목적함수 비교, raw PE/NE 부호 통계, multi-start, "
             "Hessian 수치를 인용하지 마십시오.\n"

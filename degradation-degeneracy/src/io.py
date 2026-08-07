@@ -341,8 +341,10 @@ def validate_provenance(run_dir) -> dict:
                                   "restarts_json에 source가 없다 (F25/F31 이전 형식)")
 
     fail = [k for k, (ok, _) in checks.items() if not ok]
-    return {"ok": not fail, "checks": {k: {"pass": ok, "why": why}
-                                       for k, (ok, why) in checks.items()},
+    # 통과한 검사에 실패 사유를 같이 실으면 전부 실패한 것처럼 읽힌다.
+    return {"ok": not fail,
+            "checks": {k: "통과" if ok else f"실패 — {why}"
+                       for k, (ok, why) in checks.items()},
             "fail": fail,
             "reasons": [checks[k][1] for k in fail]}
 
