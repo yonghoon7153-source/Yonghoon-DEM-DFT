@@ -960,6 +960,15 @@ def test_validator_rejects_code_change_during_run(tmp_path):
     (d / "manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
     assert "실행중_코드불변" in validate_provenance(d)["fail"]
 
+    # F50b: git commit만 바뀌고 source가 그대로면 실패가 아니다 (문서 커밋 등)
+    d3, _ = _complete_artifact(tmp_path / "d")
+    m = yaml.safe_load((d3 / "manifest.yaml").read_text(encoding="utf-8"))
+    m["git_commit_changed_during_run"] = True
+    (d3 / "manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+    r = validate_provenance(d3)
+    assert r["ok"], f"문서 커밋 때문에 실패했다: {r['fail']}"
+    assert "_참고_git이동" in r["checks"]
+
     # 시작 provenance 자체가 없으면(F51 이전 실행) 그것도 실패
     d2, _ = _complete_artifact(tmp_path / "c")
     m = yaml.safe_load((d2 / "manifest.yaml").read_text(encoding="utf-8"))

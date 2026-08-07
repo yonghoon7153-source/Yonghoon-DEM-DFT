@@ -378,10 +378,17 @@ def validate_provenance(run_dir, repo_root=None) -> dict:
     sp = man.get("start_provenance") or {}
     checks["시작_provenance"] = (bool(sp.get("attempt_id")),
                                  "start_provenance가 없다 (F51 이전 실행)")
+    # ★ F50b — 판정 기준은 **실제로 돌아간 코드가 바뀌었는가**(source_digest)다.
+    #   `git_commit` 은 문서만 커밋해도 바뀌므로 그것까지 실패로 보면 무해한
+    #   변경에 발목이 잡힌다 (실측: 실행 중 회답 문서를 커밋했더니 걸렸다).
+    #   git commit 변경은 아래 별도 항목에 정보로만 남긴다.
     checks["실행중_코드불변"] = (
-        man.get("git_commit_changed_during_run") is False
-        and man.get("source_digest_changed_during_run") is False,
-        "실행 도중 git commit 또는 source가 바뀌었다")
+        man.get("source_digest_changed_during_run") is False,
+        "실행 도중 src/tools/configs 내용이 바뀌었다")
+    if man.get("git_commit_changed_during_run"):
+        # 코드가 그대로면 실패는 아니지만, 읽는 쪽이 알아야 한다
+        checks["_참고_git이동"] = (
+            True, "실행 중 git commit이 바뀌었으나 source_digest는 그대로다")
     checks["시작종료_서명일치"] = (
         not sp or sp.get("source_digest") == spec0.get("source_digest"),
         "시작 시점 source_digest가 run_spec과 다르다")
