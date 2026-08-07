@@ -716,3 +716,23 @@ F26이 지우려던 계통 오프셋이 그대로 다시 생긴다.
 
 테스트 174 → 182. 실행 경로를 실제로 태우는 통합 테스트 2건 추가
 (합성 curves.parquet으로 `run_fit`을 돌려 서명이 설정 변화에 반응하는지 확인).
+
+## 3차 교차리뷰 대응 (2026-08-07, F36~F40)
+
+2차 회답에 대한 재검증에서 차단 8건. 전부 타당했다.
+
+- **F36** run signature에 `sig_version`·`base_config_sha`·`halfcell_sha`·resolved
+  `obj_cfg` 전체·유도 inventory 상수를 포함. 경로 문자열만 넣으면 같은
+  `configs/base.yaml`을 수정해도 서명이 그대로라 resume이 옛 청크를 인정한다.
+  병합 검사도 경고 → **예외**로 강화 (서명 없음/null 행/2종 이상/현재와 불일치).
+- **F37** untracked를 전부 무시하면 false clean이 된다. `src/`·`tools/`·`configs/`·
+  `scripts/` 아래 코드·설정 untracked는 dirty로 센다.
+- **F38** `validate_provenance()` 신설 — 9개 검사(manifest·config_hash·clean·입력
+  digest·run_signature·행별 서명·단일 서명·manifest 일치·restart source).
+  `run_sig` 열 존재만 보던 배너 판정을 대체. 위조 provenance를 잡는 테스트 5종 추가.
+- **F39** "34p가 유리한 조건인데도 못 이겼으니 보수적" 문장 삭제. warm start가
+  목적함수를 단조롭게 개선한다는 보장이 없으므로 방향을 단정할 수 없다.
+- **F40** random-only 목적함수 비교를 공통 `cond_id` ∩ 동일 restart 수의 paired
+  subset으로 제한. 평균 restart 수만 보면 겹치지 않는 두 모집단도 통과한다.
+
+테스트 182 → 184.

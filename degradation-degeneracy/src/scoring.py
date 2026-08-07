@@ -431,20 +431,38 @@ def run_scoring(in_dir, out_dir=None, tol: float = DEFAULT_TOL,
             if "n_nonrandom_dropped" in ms_r:
                 summary["multistart_random_only"]["평균_제외_restart수"] = \
                     float(ms_r["n_nonrandom_dropped"].mean())
-            # F31: 목적함수마다 남은 무작위 restart 수가 다르면 검정력이 달라
-            #   비교 자체가 성립하지 않는다 (F4와 같은 함정).
-            if ok_random and "objective" in ms_r:
-                per_obj = ms_r.groupby("objective")["n_restarts_total"].mean()
-                spread = float(per_obj.max() - per_obj.min())
-                summary["multistart_random_only"]["restart수_목적함수간_편차"] = spread
-                summary["multistart_random_only"]["비교가능"] = bool(spread < 0.5)
+            # ★ F40 — 평균 restart 수가 같아도 **조건 집합이 다르면** 비교가
+            #   성립하지 않는다. adaptive 조기 종료 때문에 탈락하는 cond_id가
+            #   목적함수마다 다르므로, 평균만 보면 완전히 다른 모집단을
+            #   "비교가능"으로 판정한다. 공통 cond_id + 같은 restart 수인
+            #   **paired subset**을 만들어 그것으로만 비교한다.
+            if ok_random and {"objective", "cond_id"} <= set(ms_r.columns):
+                objs = sorted(ms_r["objective"].unique())
+                sets = {o: set(g["cond_id"]) for o, g in ms_r.groupby("objective")}
+                common = set.intersection(*sets.values()) if sets else set()
+                cnt = ms_r.set_index(["objective", "cond_id"])["n_restarts_total"]
+                paired = {c for c in common
+                          if len({int(cnt[(o, c)]) for o in objs}) == 1}
+                blk = summary["multistart_random_only"]
+                blk["n_conditions_per_objective"] = {o: len(v) for o, v in sets.items()}
+                blk["n_common_conditions"] = len(common)
+                blk["n_paired_conditions"] = len(paired)
+                blk["제외율_목적함수별"] = {
+                    o: round(1 - len(paired) / len(v), 4) if v else None
+                    for o, v in sets.items()}
+                blk["비교가능"] = bool(len(paired) >= 30)
+                if paired:
+                    ms_p = ms_r[ms_r["cond_id"].isin(paired)]
+                    ms_p.to_parquet(out_dir / "multistart_paired.parquet", index=False)
+                    blk["paired"] = multistart_summary(ms_p)
             summary["multistart_random_only"]["_주의"] = (
                 "★ 목적함수 간 비교는 이 블록을 쓸 것 — source == 'random'인 restart만 "
                 "남긴다. 위 multistart 블록은 warm start 지점과 공통 결정론적 초기값을 "
                 "포함하므로, warm start를 받은 목적함수(w_dqdv≠0)가 인위적으로 "
                 "multimodal 쪽으로 쏠린다. 단 `비교가능`이 false면 목적함수마다 남은 "
                 "무작위 restart 수가 달라(adaptive 조기 종료) 검정력이 다르므로 "
-                "그대로 비교하지 말 것."
+                "그대로 비교하지 말 것 — `paired` 블록(공통 cond_id + 동일 restart 수)만 "
+                "목적함수 간 비교에 쓸 수 있다."
                 if ok_random else
                 "⚠ 무효 — 이 fits.parquet은 restart 출처를 저장하지 않은 옛 형식이라 "
                 "보정을 하지 못했습니다. restarts_json이 J 오름차순이라 위치로 "

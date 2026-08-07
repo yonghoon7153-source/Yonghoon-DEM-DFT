@@ -777,24 +777,83 @@ def test_results_doc_carries_citation_block_without_provenance(tmp_path):
     assert "08_REVIEW_RESPONSE.md" in head
 
 
-def test_results_doc_has_no_banner_when_provenance_complete(tmp_path):
-    """반대로 provenance가 갖춰지면 배너가 붙으면 안 된다 (양방향 고정)."""
+def _complete_artifact(tmp_path):
+    """provenance 검사를 **실제로** 통과하는 artifact를 만든다.
+
+    임의의 `run_sig` 문자열 하나로 배너가 사라지면 안 된다 (F38).
+    """
+    import json
+
     import yaml
 
+    d = Path(tmp_path) / "res"
+    d.mkdir(parents=True, exist_ok=True)
+    sig = "sig000000001"
+    df = _scored(_fits(objectives=("pocv_dvdq",)))
+    df.to_parquet(d / "degeneracy_map.parquet", index=False)
+    df = df.copy()
+    df["run_sig"] = sig
+    df["restarts_json"] = json.dumps(
+        [{"p": [1.0, 0.0, 1.0, 0.0], "J": 0.0, "i": 0, "source": "base_init"},
+         {"p": [1.1, 0.0, 1.1, 0.0], "J": 0.5, "i": 1, "source": "random"}])
+    df.to_parquet(d / "fits.parquet", index=False)
+    (d / "degeneracy_summary.yaml").write_text(yaml.safe_dump({}), encoding="utf-8")
+    (d / "manifest.yaml").write_text(yaml.safe_dump({
+        "config_hash": "deadbeef1234", "git_dirty": False, "reproducible": True,
+        "run_signature": sig,
+        "input_sha256": {"curves.parquet": "aaaa1111", "configs/base.yaml": "bbbb2222"},
+    }), encoding="utf-8")
+    return d, sig
+
+
+def test_provenance_validator_rejects_forged_signature(tmp_path):
+    """★ F38 — `run_sig` 열이 있기만 하면 통과하던 판정을 실제 검사로 바꾼다."""
+    import pandas as pd
+    import yaml
+
+    from src.io import validate_provenance
+
+    d, sig = _complete_artifact(tmp_path)
+    assert validate_provenance(d)["ok"], validate_provenance(d)["fail"]
+
+    # ① manifest와 다른 서명
+    f = pd.read_parquet(d / "fits.parquet")
+    f["run_sig"] = "other0000000"
+    f.to_parquet(d / "fits.parquet", index=False)
+    assert "manifest와_일치" in validate_provenance(d)["fail"]
+
+    # ② 서명이 둘 이상
+    f.loc[f.index[:5], "run_sig"] = sig
+    f.to_parquet(d / "fits.parquet", index=False)
+    assert "단일_서명" in validate_provenance(d)["fail"]
+
+    # ③ 일부 행이 null
+    f["run_sig"] = sig
+    f.loc[f.index[:3], "run_sig"] = None
+    f.to_parquet(d / "fits.parquet", index=False)
+    assert "행별_서명" in validate_provenance(d)["fail"]
+
+    # ④ 옛 restarts 형식 (source 없음)
+    f["run_sig"] = sig
+    f["restarts_json"] = "[[[1.0, 0.0, 1.0, 0.0], 0.0]]"
+    f.to_parquet(d / "fits.parquet", index=False)
+    assert "restart_출처" in validate_provenance(d)["fail"]
+
+    # ⑤ 입력 digest 누락
+    d2, _ = _complete_artifact(tmp_path / "b")
+    m = yaml.safe_load((d2 / "manifest.yaml").read_text(encoding="utf-8"))
+    m["input_sha256"] = {}
+    (d2 / "manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+    assert "입력_digest" in validate_provenance(d2)["fail"]
+
+
+def test_results_doc_has_no_banner_when_provenance_complete(tmp_path):
+    """반대로 provenance가 **실제로** 갖춰지면 배너가 붙으면 안 된다."""
     from tools.compare_objectives import run_compare
     from tools.make_results import build
 
-    d = tmp_path / "res"
-    d.mkdir()
-    df = _scored(_fits(objectives=("pocv_dvdq",)))
-    df.to_parquet(d / "degeneracy_map.parquet", index=False)
-    df["run_sig"] = "abcd1234"
-    df.to_parquet(d / "fits.parquet", index=False)
-    (d / "degeneracy_summary.yaml").write_text(yaml.safe_dump({}), encoding="utf-8")
-    (d / "manifest.yaml").write_text(
-        yaml.safe_dump({"config_hash": "deadbeef", "git_dirty": False,
-                        "reproducible": True}), encoding="utf-8")
-
+    d, _ = _complete_artifact(tmp_path)
     run_compare(d, d)
     text = build(d, tmp_path / "RESULTS.md", repo_root=tmp_path).read_text(encoding="utf-8")
     assert "인용 금지" not in text
+    assert "provenance 검증 통과" in text

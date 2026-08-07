@@ -46,10 +46,19 @@ def git_info(repo_dir: str | Path | None = None, save_diff_to=None) -> dict:
                                     "--exclude-standard"],
                                    capture_output=True, text=True, cwd=cwd,
                                    timeout=10).stdout.split()
+        # ★ F37 — untracked를 **전부** 무시하면 false clean이 된다. 실행에 실제로
+        #   import되거나 읽히는 경로(src/tools/configs) 아래의 untracked
+        #   code/config는 재현을 막으므로 dirty로 센다. 그 밖(다른 프로젝트
+        #   산출물, venv 등)은 개수와 목록만 정보로 남긴다.
+        crit = [u for u in untracked
+                if u.startswith(("src/", "tools/", "configs/", "scripts/"))
+                and u.endswith((".py", ".yaml", ".yml", ".json", ".sh", ".csv"))]
         info = {"git_commit": commit or "unknown",
                 "git_commit_short": commit[:8] if commit else "unknown",
-                "git_dirty": bool(dirty_txt),
-                "git_untracked_count": len(untracked)}
+                "git_dirty": bool(dirty_txt) or bool(crit),
+                "git_dirty_tracked": bool(dirty_txt),
+                "git_untracked_count": len(untracked),
+                "git_untracked_critical": crit[:50]}
         if dirty_txt and save_diff_to is not None:
             diff = subprocess.run(["git", "diff", "HEAD"], capture_output=True,
                                   text=True, cwd=cwd, timeout=30).stdout
@@ -268,9 +277,74 @@ def base_manifest(cfg_hash: str, extra: dict | None = None,
             "이 산출물은 그대로 재현할 수 없다. "
             + ("config_hash가 비어 있다. " if not cfg_hash else "")
             + ("작업 트리가 dirty 상태였다 (diff는 run_dirty.patch). "
-               if m.get("git_dirty") else "")
+               if m.get("git_dirty_tracked") else "")
+            + (f"실행 경로에 커밋되지 않은 파일이 있었다: "
+               f"{m.get('git_untracked_critical')}. "
+               if m.get("git_untracked_critical") else "")
             + "인용하려면 clean commit에서 재생성할 것.")
     return m
+
+
+# ---------------------------------------------------------------- F38 provenance 검증
+
+def validate_provenance(run_dir) -> dict:
+    """★ F38 — 결과를 인용해도 되는 상태인지 **실제로** 검사한다.
+
+    `run_sig` 열이 있는지만 보는 것으로는 부족하다. 임의의 문자열 하나를 넣어도
+    통과하므로, 혼합되거나 위조된 provenance에서 인용 금지 배너가 사라진다.
+
+    반환: {"ok": bool, "checks": {이름: (통과, 사유)}, "fail": [실패한 이름]}
+    """
+    run_dir = Path(run_dir)
+    man = {}
+    mp = run_dir / "manifest.yaml"
+    if mp.exists():
+        man = yaml.safe_load(mp.read_text(encoding="utf-8")) or {}
+
+    checks: dict[str, tuple[bool, str]] = {}
+    checks["manifest_존재"] = (bool(man), "manifest.yaml이 없다")
+    checks["config_hash"] = (bool(man.get("config_hash")), "config_hash가 비어 있다")
+    checks["clean_worktree"] = (man.get("git_dirty") is False,
+                                "dirty worktree 또는 실행 경로에 untracked 파일")
+    digs = man.get("input_sha256") or {}
+    checks["입력_digest"] = (bool(digs) and all(v for v in digs.values()),
+                             "입력 파일 SHA가 비었거나 없다")
+    checks["run_signature_기록"] = (bool(man.get("run_signature")),
+                                    "manifest에 run_signature가 없다")
+
+    fp = run_dir / "fits.parquet"
+    if not fp.exists():
+        checks["fits_존재"] = (False, "fits.parquet이 없다")
+    else:
+        cols = pd.read_parquet(fp).columns
+        need = pd.read_parquet(fp, columns=[c for c in ("run_sig", "restarts_json")
+                                            if c in cols])
+        has_sig = "run_sig" in need.columns
+        checks["행별_서명"] = (has_sig and not need["run_sig"].isna().any()
+                               if has_sig else False,
+                               "run_sig 열이 없거나 비어 있는 행이 있다")
+        uniq = sorted(need["run_sig"].dropna().unique()) if has_sig else []
+        checks["단일_서명"] = (len(uniq) == 1, f"서명이 {len(uniq)}종이다")
+        checks["manifest와_일치"] = (
+            bool(uniq) and str(uniq[0]) == str(man.get("run_signature")),
+            "fits의 서명과 manifest의 run_signature가 다르다")
+        # restart 출처 — F25/F31이 저장하는 형식인가
+        src_ok = False
+        if "restarts_json" in need.columns and len(need):
+            try:
+                first = json.loads(need["restarts_json"].dropna().iloc[0])
+                src_ok = bool(first) and isinstance(first[0], dict) \
+                    and "source" in first[0]
+            except (ValueError, TypeError, IndexError):
+                src_ok = False
+        checks["restart_출처"] = (src_ok,
+                                  "restarts_json에 source가 없다 (F25/F31 이전 형식)")
+
+    fail = [k for k, (ok, _) in checks.items() if not ok]
+    return {"ok": not fail, "checks": {k: {"pass": ok, "why": why}
+                                       for k, (ok, why) in checks.items()},
+            "fail": fail,
+            "reasons": [checks[k][1] for k in fail]}
 
 
 def mark_completed(out_dir: str | Path, cond_id: str,

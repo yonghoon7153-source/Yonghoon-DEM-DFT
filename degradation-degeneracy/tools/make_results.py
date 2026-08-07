@@ -48,11 +48,13 @@ def _load(path: Path):
 
 
 def _warm_start_asymmetry(fits) -> str | None:
-    """dQ/dV 계열만 warm start를 받았는지 실측한다 (F20d).
+    """dQ/dV 계열만 warm start를 받았는지 실측한다 (F20d/F39).
 
-    받았다면 34p 개선안이 **유리한 조건에서도** 33p를 못 이겼다는 뜻이라,
-    "dQ/dV가 오차를 못 줄인다"는 결론이 보수적이 된다. 반대로 이 비대칭을
-    적어두지 않으면 "초기값 덕에 나온 값 아니냐"는 반론에 답할 수 없다.
+    한때 "34p가 유리한 조건인데도 못 이겼으니 결론이 보수적"이라고 썼다가
+    내렸다. 그 논리는 warm start가 목적함수를 **단조롭게** 개선할 때만
+    성립하는데, 비볼록 문제에서 특정 seed가 항상 더 좋은 basin으로 데려간다는
+    보장이 없다. adaptive 조기 종료와 겹치면 평가 budget도 달라진다.
+    지금은 "protocol이 다르다"는 사실만 적고 방향은 판단하지 않는다.
     """
     if fits is None or "warm_started" not in getattr(fits, "columns", []):
         return None
@@ -62,12 +64,15 @@ def _warm_start_asymmetry(fits) -> str | None:
         return None
     if not (w[imp] > 0.5 and w[base] < 0.5):
         return None
-    return (f"   ⓘ 이 비교에서 dQ/dV 계열은 매끄러운 해를 초기값으로 받고"
-            f"(`pocv_dvdq_dqdv` 중 {_pct(w[imp])}), `pocv_dvdq`는 그 시드 제공자라 "
-            f"받지 않는다({_pct(w[base])}). 즉 34p 개선안은 **초기값에서 유리한 "
-            f"조건인데도** 33p를 이기지 못했다 — 위 결론은 그만큼 보수적이다. "
-            f"warm start를 빼면 dQ/dV 쪽이 optimizer 실패로 훨씬 나빠지는데, "
-            f"그건 목적함수의 정보량이 아니라 최적화 난이도다(F20d).")
+    return (f"   ⚠ **두 목적함수의 optimizer protocol이 다릅니다.** dQ/dV 계열은 "
+            f"매끄러운 해를 초기값으로 받고(`pocv_dvdq_dqdv` 중 {_pct(w[imp])}), "
+            f"`pocv_dvdq`는 그 시드 제공자라 받지 않습니다({_pct(w[base])}). "
+            f"adaptive 조기 종료까지 겹치면 평가 budget도 달라집니다. "
+            f"따라서 위 수치는 **현재 pipeline에서 관측된 값**이지 목적함수의 "
+            f"정보량 비교가 아닙니다. 어느 쪽이 유리한지도 단정할 수 없습니다 — "
+            f"비볼록 문제에서 특정 seed가 항상 더 좋은 basin으로 데려간다는 보장이 "
+            f"없기 때문입니다. 정보량을 비교하려면 동일 seed·동일 restart budget·"
+            f"early stop off의 paired 재실행이 필요합니다.")
 
 
 def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
@@ -92,13 +97,13 @@ def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
             f"1. dQ/dV 항을 넣으면 degeneracy가 {_pct(b['degenerate_frac'])} → "
             f"{_pct(i['degenerate_frac'])}로 {verdict} "
             f"(평균 |오차| {_pp(b['mean_abs_err'])} → {_pp(i['mean_abs_err'])}, "
-            f"PE-NE 상쇄 {_pct(b['pe_ne_antisym_frac'])} → "
-            f"{_pct(i['pe_ne_antisym_frac'])})")
+            f"raw PE/NE 오차 반대부호 비율 {_pct(b['pe_ne_antisym_frac'])} → "
+            f"{_pct(i['pe_ne_antisym_frac'])} — **물리적 상쇄로 해석 불가**)")
         # ★ pe_ne_antisym은 raw 오차의 **부호**만 센다. 목적함수마다 전역 편향의
         #   부호가 다르면 그 차이가 곧바로 "상쇄"로 잡힌다. 실측에서 편향을 빼면
         #   방향이 뒤집혔다(70.5→52.6% raw vs 33.1→42.9% 중심화). 인과로 읽지 말 것.
         lines.append(
-            "   ⓘ **PE-NE 상쇄 수치를 '34p가 상쇄를 줄였다'로 읽지 마세요.** 이 지표는 "
+            "   ⓘ **위 반대부호 비율을 '34p가 상쇄를 줄였다'로 읽지 마세요.** 이 지표는 "
             "raw 오차의 부호만 세는데, 목적함수마다 전역 편향의 부호가 달라 그 차이가 "
             "그대로 잡힙니다. 목적함수별 평균편향을 뺀 뒤 다시 세면 방향이 뒤집힙니다. "
             "전압 민감도로 가중하지 않은 파라미터 오차 부호는 full-cell 곡선에서 실제로 "
@@ -231,27 +236,26 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     # ★ F35 — provenance가 없는 artifact에서 생성됐으면 문서 맨 위에 인용 금지
     #   배너를 박는다. 회답을 별도 문서에만 두면 저장소를 여는 사람은 철회 전
     #   결론을 먼저 본다.
-    repro = manifest.get("reproducible")
-    has_src = bool(fits is not None and "run_sig" in getattr(fits, "columns", []))
-    if repro is not True or not has_src:
-        why = []
-        if not manifest.get("config_hash"):
-            why.append("`config_hash`가 비어 있음")
-        if manifest.get("git_dirty"):
-            why.append("dirty worktree에서 실행됨")
-        if not has_src:
-            why.append("restart 출처(F25/F31)와 실행 서명(F32)이 없는 옛 형식")
+    # 열 존재 여부만 보면 임의의 문자열 하나로 배너가 사라진다 (F38).
+    from src.io import validate_provenance
+    prov = validate_provenance(in_dir)
+    if not prov["ok"]:
         P.append(
             "> # ⛔ 인용 금지\n"
             "> \n"
-            f"> 이 문서는 **재현 정보가 갖춰지지 않은 artifact**에서 생성됐습니다"
-            f"({', '.join(why) if why else 'provenance 불충분'}). "
-            "우도비, half-cell 목적함수 비교, PE-NE 상쇄, multi-start, Hessian 수치를 "
-            "인용하지 마십시오.\n"
+            "> 이 문서는 **재현 정보가 갖춰지지 않은 artifact**에서 생성됐습니다. "
+            "실패한 검사: "
+            + ", ".join(f"`{k}`({prov['checks'][k]['why']})" for k in prov["fail"])
+            + ".\n> \n"
+            "> 우도비, half-cell 목적함수 비교, raw PE/NE 부호 통계, multi-start, "
+            "Hessian 수치를 인용하지 마십시오.\n"
             "> \n"
             "> 방향성 관측(예: half-cell 기준이 grid 기준보다 오차가 작다)까지만 "
             "참고하고, **정확한 비율과 p-value는 clean 재실행 후에** 쓰십시오. "
             "경위와 철회 목록은 `docs/08_REVIEW_RESPONSE.md`에 있습니다.\n")
+    else:
+        P.append("> ✅ provenance 검증 통과 — "
+                 + ", ".join(f"`{k}`" for k in prov["checks"]) + "\n")
     P.append(f"생성: {datetime.now(timezone.utc).astimezone().strftime('%Y-%m-%d %H:%M %Z')}  ")
     P.append(f"입력: `{in_dir}`  ")
     if manifest:

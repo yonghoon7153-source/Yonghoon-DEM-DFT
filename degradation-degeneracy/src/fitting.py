@@ -608,14 +608,24 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     #   같은 이름으로 가중치나 restart 수만 바꾸고 --resume하면 옛 청크가
     #   재사용됐다. 그러면 서로 다른 설정의 행이 섞인 결과가 새 manifest 아래
     #   생성되어, manifest 하나만 봐서는 검출할 수 없다.
+    # ★ F36 — 경로 문자열이 아니라 **내용**을 넣는다. 같은 `configs/base.yaml`을
+    #   수정해 inventory constants나 half-cell reference가 바뀌어도 서명이 그대로면
+    #   resume이 옛 청크를 완료분으로 인정한다. obj_cfg도 두 섹션만 뽑지 말고
+    #   resolved 전체를 넣는다 — 어느 키가 결과를 바꾸는지 미리 알 수 없다.
+    hc_paths = sorted(Path(".cache/halfcell").glob("*_ocp.json")) \
+        if reference == "halfcell" else []
     run_spec = {
+        "sig_version": 2,
         "objectives": {k: objectives[k] for k in sorted(objectives)},   # 이름 + 가중치
         "reference": reference, "bounds_preset": bounds_preset,
         "bounds": bounds, "v_col": v_col, "warm_start": bool(warm_start),
         "n_restarts": n_restarts,
-        "dqdv": obj_cfg.get("dqdv"), "scaling": obj_cfg.get("scaling"),
+        "obj_cfg": obj_cfg,                      # resolved 전체
         "base_config": str(base_config),
+        "base_config_sha": file_digest(base_config or "configs/base.yaml"),
+        "inventory": inv,                        # base config에서 유도된 상수
         "curves_sha": file_digest(in_dir / "curves.parquet"),
+        "halfcell_sha": {p.name: file_digest(p) for p in hc_paths},
     }
     run_sig = hashlib.sha1(
         json.dumps(run_spec, sort_keys=True, default=str).encode()).hexdigest()[:12]
@@ -686,17 +696,20 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
 
     # ★ F32 — 서로 다른 설정의 청크가 섞였으면 여기서 죽는다. 조용히 섞인 결과를
     #   새 manifest 아래 내보내는 것이 가장 위험하다 (읽는 쪽이 검출할 수 없다).
-    if "run_sig" in fits.columns:
-        sigs = sorted(str(s) for s in fits["run_sig"].dropna().unique())
-        if len(sigs) > 1:
-            raise RuntimeError(
-                f"서로 다른 실행 설정의 결과가 섞였습니다: {sigs}. "
-                f"--resume이 다른 설정의 청크를 재사용했을 수 있습니다. "
-                f"{out_dir}/fit_chunks 를 비우고 처음부터 다시 돌리세요 (F32).")
-        if sigs and sigs[0] != run_sig:
-            log.warning("기존 fits.parquet의 서명(%s)이 이번 실행(%s)과 다릅니다 — "
-                        "전부 resume-완료라 재계산이 없었다면 정상입니다.",
-                        sigs[0], run_sig)
+    # ★ F36 — 경고가 아니라 **실패**시킨다. 서명이 하나뿐이어도 현재 실행과
+    #   다르면 옛 결과가 새 manifest 아래 통과한다. null 행도 dropna에 숨는다.
+    if "run_sig" not in fits.columns:
+        raise RuntimeError(
+            f"{path}에 run_sig 열이 없습니다 — F32 이전 형식입니다. "
+            f"{out_dir}/fit_chunks 를 비우고 처음부터 다시 돌리세요.")
+    n_null = int(fits["run_sig"].isna().sum())
+    sigs = sorted(str(s) for s in fits["run_sig"].dropna().unique())
+    if n_null or len(sigs) != 1 or sigs[0] != run_sig:
+        raise RuntimeError(
+            f"실행 서명이 이번 실행과 일치하지 않습니다 "
+            f"(서명 {sigs or '없음'}, 미기록 행 {n_null}, 이번 실행 {run_sig}). "
+            f"다른 설정의 결과가 섞였거나 옛 형식입니다. "
+            f"{out_dir}/fit_chunks 를 비우고 처음부터 다시 돌리세요 (F36).")
 
     # F30: config_hash를 비워 두면 어떤 목적함수 정의로 돌았는지 남지 않는다.
     #   실제 obj_cfg 내용을 해시해 박고, 입력 curves와 config 파일의 SHA도 남긴다.

@@ -508,3 +508,42 @@ def test_random_only_flags_unequal_restart_counts(tmp_path):
     assert blk["random_only_적용"] is True
     assert blk["비교가능"] is False, "restart 수가 2배 차이인데 비교가능으로 나왔다"
     assert "검정력" in blk["_주의"]
+
+
+def test_random_only_requires_matched_condition_sets(tmp_path):
+    """★ F40 — 평균 restart 수가 같아도 조건 집합이 다르면 비교 불가.
+
+    adaptive 조기 종료로 탈락하는 cond_id가 목적함수마다 다르다. 평균만 보면
+    **완전히 겹치지 않는 두 모집단**도 "비교가능"으로 통과한다.
+    """
+    import json
+
+    import pandas as pd
+    import yaml
+
+    from src.scoring import run_scoring
+
+    def row(cond, obj, n_rand):
+        rs = [_r([1.0, 0.0, 1.0, 0.0], 0.0, i=0, source="warm")]
+        rs += [_r([1.0 + 0.1 * k, 0.0, 1.0, 0.0], 0.5, i=k)
+               for k in range(1, n_rand + 1)]
+        return {"cond_id": cond, "objective": obj, "noise": 0.0,
+                "lli": 0.0, "lam_pe": 0.0, "lam_ne": 0.0,
+                "lli_hat": 0.0, "lam_pe_hat": 0.0, "lam_ne_hat": 0.0,
+                "r": 1.0, "a_pe": 1.0, "a_ne": 1.0, "reference": "grid",
+                "restarts_json": json.dumps(rs)}
+
+    # 평균 restart 수는 똑같이 3인데 cond_id가 전혀 겹치지 않는다
+    df = pd.DataFrame([row(f"a{i}", "A", 3) for i in range(5)]
+                      + [row(f"b{i}", "B", 3) for i in range(5)])
+    df.to_parquet(tmp_path / "fits.parquet", index=False)
+
+    run_scoring(tmp_path)
+    blk = yaml.safe_load(
+        (tmp_path / "degeneracy_summary.yaml").read_text(encoding="utf-8")
+    )["multistart_random_only"]
+
+    assert blk["n_common_conditions"] == 0, "겹치는 조건이 없어야 유효한 테스트"
+    assert blk["비교가능"] is False, \
+        "조건 집합이 전혀 안 겹치는데 비교가능으로 통과했다 (F40)"
+    assert "제외율_목적함수별" in blk
