@@ -5,6 +5,7 @@
   "warning": "PBE 갭은 넓은 갭 절연체에서 30–50% 과소평가된다. 실험값과 나란히 놓지 말고 **순위**로만 쓸 것. Nd 계 3종은 4f 를 원자가에 넣은 탓에 갭이 닫히는데 이는 방법의 실패지 금속성이 아니다(artifact_4f) — 인용은 MP frozen-4f 값으로.",
   "source_dir": "/data/work/runs/sei_dft",
   "collected": "2026-08-07",
+  "nd_verdict_2026_08_07": "Nd 3종의 갭은 우리 QE 계산으로 **정의되지 않는다** — 못 낸 게 아니라 PBE+U 해가 금속이라 fixed-occ 갭이라는 양이 성립하지 않는다. 인용은 MP frozen-4f. 상세: kb/projects/sei_products_2026_08_06.md §진단이 끝났다. Li 계 6종의 갭은 정상이며 그대로 인용 가능하다. 재계산 경로는 tools/sei/nd_frozen4f.py --plan (frozen-4f PP 확보).",
   "results": {
     "li2o_mp-1960": {
       "tag": "li2o_mp-1960",
@@ -17,6 +18,9 @@
       "nbnd": 16,
       "nk": 1098,
       "spin_polarized": false,
+      "total_magnetization_bohr": 0.0,
+      "n_occ_up": 6,
+      "n_occ_dn": 6,
       "method": "fixed-occupation nscf eigenvalues (NOT DOS threshold)",
       "warning": "PBE gap; systematically 30-50% underestimated for wide-gap insulators",
       "artifact_4f": false,
@@ -24,13 +28,13 @@
         "dos_csv": "db/properties/sei_dos/li2o_mp-1960_dos.csv",
         "pdos_csv": "db/properties/sei_dos/li2o_mp-1960_pdos.csv"
       },
+      "dos_chain_complete": true,
       "pdos_channels": [
         "Li_p",
         "Li_s",
         "O_p",
         "O_s"
-      ],
-      "dos_chain_complete": true
+      ]
     },
     "li2s_mp-1153": {
       "tag": "li2s_mp-1153",
@@ -43,6 +47,9 @@
       "nbnd": 16,
       "nk": 595,
       "spin_polarized": false,
+      "total_magnetization_bohr": 0.0,
+      "n_occ_up": 6,
+      "n_occ_dn": 6,
       "method": "fixed-occupation nscf eigenvalues (NOT DOS threshold)",
       "warning": "PBE gap; systematically 30-50% underestimated for wide-gap insulators",
       "artifact_4f": false,
@@ -50,13 +57,13 @@
         "dos_csv": "db/properties/sei_dos/li2s_mp-1153_dos.csv",
         "pdos_csv": "db/properties/sei_dos/li2s_mp-1153_pdos.csv"
       },
+      "dos_chain_complete": true,
       "pdos_channels": [
         "Li_p",
         "Li_s",
         "S_p",
         "S_s"
-      ],
-      "dos_chain_complete": true
+      ]
     },
     "li3p_mp-736": {
       "tag": "li3p_mp-736",
@@ -69,6 +76,9 @@
       "nbnd": 26,
       "nk": 76,
       "spin_polarized": false,
+      "total_magnetization_bohr": 0.0,
+      "n_occ_up": 14,
+      "n_occ_dn": 14,
       "method": "fixed-occupation nscf eigenvalues (NOT DOS threshold)",
       "warning": "PBE gap; systematically 30-50% underestimated for wide-gap insulators",
       "artifact_4f": false,
@@ -76,13 +86,13 @@
         "dos_csv": "db/properties/sei_dos/li3p_mp-736_dos.csv",
         "pdos_csv": "db/properties/sei_dos/li3p_mp-736_pdos.csv"
       },
+      "dos_chain_complete": true,
       "pdos_channels": [
         "Li_p",
         "Li_s",
         "P_p",
         "P_s"
-      ],
-      "dos_chain_complete": true
+      ]
     },
     "li3po4_mp-13725": {
       "tag": "li3po4_mp-13725",
@@ -95,6 +105,9 @@
       "nbnd": 59,
       "nk": 100,
       "spin_polarized": false,
+      "total_magnetization_bohr": 0.0,
+      "n_occ_up": 38,
+      "n_occ_dn": 38,
       "method": "fixed-occupation nscf eigenvalues (NOT DOS threshold)",
       "warning": "PBE gap; systematically 30-50% underestimated for wide-gap insulators",
       "artifact_4f": false,
@@ -102,6 +115,7 @@
         "dos_csv": "db/properties/sei_dos/li3po4_mp-13725_dos.csv",
         "pdos_csv": "db/properties/sei_dos/li3po4_mp-13725_pdos.csv"
       },
+      "dos_chain_complete": true,
       "pdos_channels": [
         "Li_p",
         "Li_s",
@@ -109,8 +123,7 @@
         "O_s",
         "P_p",
         "P_s"
-      ],
-      "dos_chain_complete": true
+      ]
     },
     "li3po4g_mp-2878": {
       "tag": "li3po4g_mp-2878",
@@ -123,6 +136,9 @@
       "nbnd": 110,
       "nk": 60,
       "spin_polarized": false,
+      "total_magnetization_bohr": 0.0,
+      "n_occ_up": 76,
+      "n_occ_dn": 76,
       "method": "fixed-occupation nscf eigenvalues (NOT DOS threshold)",
       "warning": "PBE gap; systematically 30-50% underestimated for wide-gap insulators",
       "artifact_4f": false,
@@ -130,6 +146,7 @@
         "dos_csv": "db/properties/sei_dos/li3po4g_mp-2878_dos.csv",
         "pdos_csv": "db/properties/sei_dos/li3po4g_mp-2878_pdos.csv"
       },
+      "dos_chain_complete": true,
       "pdos_channels": [
         "Li_p",
         "Li_s",
@@ -137,8 +154,7 @@
         "O_s",
         "P_p",
         "P_s"
-      ],
-      "dos_chain_complete": true
+      ]
     },
     "licl_mp-22905": {
       "tag": "licl_mp-22905",
@@ -151,6 +167,9 @@
       "nbnd": 35,
       "nk": 35,
       "spin_polarized": false,
+      "total_magnetization_bohr": 0.0,
+      "n_occ_up": 20,
+      "n_occ_dn": 20,
       "method": "fixed-occupation nscf eigenvalues (NOT DOS threshold)",
       "warning": "PBE gap; systematically 30-50% underestimated for wide-gap insulators",
       "artifact_4f": false,
@@ -158,14 +177,46 @@
         "dos_csv": "db/properties/sei_dos/licl_mp-22905_dos.csv",
         "pdos_csv": "db/properties/sei_dos/licl_mp-22905_pdos.csv"
       },
+      "dos_chain_complete": true,
       "pdos_channels": [
         "Cl_p",
         "Cl_s",
         "Li_p",
         "Li_s"
+      ]
+    },
+    "nd2o3_mp-2763": {
+      "tag": "nd2o3_mp-2763",
+      "vbm": 16.1593,
+      "cbm": 9.6995,
+      "gap": -6.459800000000001,
+      "verdict": "금속/반금속 (겹침)",
+      "nelec": 46.0,
+      "n_occ_bands": 23,
+      "nbnd": 42,
+      "nk": 252,
+      "spin_polarized": true,
+      "total_magnetization_bohr": 0.0,
+      "n_occ_up": 23,
+      "n_occ_dn": 23,
+      "method": "fixed-occupation nscf eigenvalues (NOT DOS threshold)",
+      "warning": "PBE gap; systematically 30-50% underestimated for wide-gap insulators",
+      "artifact_4f": true,
+      "do_not_cite": "⛔ 폐기. 원인 확정(2026-08-07): 4f 를 원자가에 둔 PBE(+U) 의 SCF 해가 **금속**이다. Nd₂O₃ 의 02_scf.out 이 'highest occupied/lowest unoccupied' 가 아니라 'the Fermi energy is 11.4539 ev' 를 찍었고, 직전에 'failed to find Fermi energy: reverting to bisection'(E_F 에 극도로 평평한 상태 = 4f 다중항) 경고가 떴다. 금속 해에 occupations='fixed' 를 강제한 결과가 VBM>CBM(−6.460 eV)이다 — 버그가 아니라 **정의되지 않은 양을 억지로 읽은 것**. LiNdO₂ 는 scf accuracy 가 5.7e-6 Ry 에서 평탄 정체, Nd₂S₃ 는 3.4e-4~6.3e-3 로 두 자릿수 출렁임 — iteration 을 더 줘도 안 닫히고 닫혀도 같은 금속 해다. U 를 키우면 갭이 열리지만 그건 답이 나올 때까지 U 를 고르는 것이라 방어가 안 된다. → **Nd 상 갭은 MP frozen-4f 인용.** 상세: kb/projects/sei_products_2026_08_06.md",
+      "files": {
+        "dos_csv": "db/properties/sei_dos/nd2o3_mp-2763_dos.csv",
+        "pdos_csv": "db/properties/sei_dos/nd2o3_mp-2763_pdos.csv"
+      },
+      "dos_chain_complete": true,
+      "pdos_channels": [
+        "Nd_d",
+        "Nd_f",
+        "Nd_p",
+        "Nd_s",
+        "O_p",
+        "O_s"
       ],
-      "dos_chain_complete": false,
-      "dos_provenance_warning": "04_nscf_dos 가 `c_bands: too many bands are not converged` 로 죽어 05·06 이 이번 실행에서 안 돌았다. 이 폴더의 .dos/.pdos 는 **이전 실행**의 잔존물이다 — 곡선 자체는 물리적으로 멀쩡하나(갭 구간 DOS ~1e-5, 다른 8종과 같은 수준) 04 설정이 나머지와 다를 수 있다. **갭 6.260 eV 는 03 단계 값이라 영향 없음.** 그림용 DOS/PDOS 는 patch_dos_nscf.py 적용 후 재실행해서 다시 회수할 것."
+      "status": "rejected"
     },
     "lindo2_mp-1222355": {
       "tag": "lindo2_mp-1222355",
@@ -197,37 +248,8 @@
         "O_s"
       ],
       "dos_chain_complete": true,
-      "status": "rejected"
-    },
-    "nd2o3_mp-2763": {
-      "tag": "nd2o3_mp-2763",
-      "vbm": 13.8159,
-      "cbm": 13.7941,
-      "gap": -0.02179999999999893,
-      "verdict": "금속/반금속 (겹침)",
-      "nelec": 46.0,
-      "n_occ_bands": 23,
-      "nbnd": 39,
-      "nk": 126,
-      "spin_polarized": false,
-      "method": "fixed-occupation nscf eigenvalues (NOT DOS threshold)",
-      "warning": "PBE gap; systematically 30-50% underestimated for wide-gap insulators",
-      "artifact_4f": true,
-      "do_not_cite": "⛔ 폐기. 원인이 확정됐다(2026-08-07): 4f 를 원자가에 둔 PBE+U 의 SCF 해가 **금속**이다 — Nd₂O₃ 의 02_scf.out 이 'highest occupied/lowest unoccupied' 가 아니라 'the Fermi energy is 11.4539 ev' 를 찍었고, 그 직전에 'failed to find Fermi energy: reverting to bisection'(E_F 에 극도로 평평한 상태 = 4f 다중항) 경고가 떴다. 금속 해에 occupations='fixed' 를 강제한 결과가 VBM>CBM 이다 — 버그가 아니라 **정의되지 않은 양을 억지로 읽은 것**. LiNdO₂ 는 scf accuracy 가 5.7e-6 Ry 에서 평탄 정체, Nd₂S₃ 는 3.4e-4~6.3e-3 로 두 자릿수 출렁임 — 둘 다 iteration 을 더 줘도 안 닫히고, 닫혀도 같은 금속 해다. U 를 키우면 언젠가 갭이 열리지만 그건 답이 나올 때까지 U 를 고르는 것이라 방어가 안 된다. → **MP frozen-4f 인용.**",
-      "files": {
-        "dos_csv": "db/properties/sei_dos/nd2o3_mp-2763_dos.csv",
-        "pdos_csv": "db/properties/sei_dos/nd2o3_mp-2763_pdos.csv"
-      },
-      "pdos_channels": [
-        "Nd_d",
-        "Nd_f",
-        "Nd_p",
-        "Nd_s",
-        "O_p",
-        "O_s"
-      ],
-      "dos_chain_complete": true,
-      "status": "rejected"
+      "status": "rejected",
+      "not_in_this_run": "이번 회수에서 작업폴더에 gap.json 이 없었다 — 옛 기록을 그대로 보존한다(지우지 않음)."
     },
     "nd2s3_mp-438": {
       "tag": "nd2s3_mp-438",
@@ -257,8 +279,8 @@
         "S_s"
       ],
       "dos_chain_complete": true,
-      "status": "rejected"
+      "status": "rejected",
+      "not_in_this_run": "이번 회수에서 작업폴더에 gap.json 이 없었다 — 옛 기록을 그대로 보존한다(지우지 않음)."
     }
-  },
-  "nd_verdict_2026_08_07": "Nd 3종의 갭은 우리 QE 계산으로 **정의되지 않는다** — 못 낸 게 아니라 PBE+U 해가 금속이라 fixed-occ 갭이라는 양이 성립하지 않는다. 인용은 MP frozen-4f. 상세: kb/projects/sei_products_2026_08_06.md §진단이 끝났다. Li 계 6종의 갭은 정상이며 그대로 인용 가능하다."
+  }
 }
