@@ -395,6 +395,75 @@ Sb₂O₅→Sb⁵⁺ −0.167 · TiO₂→Ti⁴⁺ −0.304 · ZrO₂ −0.459 �
   clamped-ion 52.31 / 20.12 는 2.4–2.9 × 어긋나 배제된다.
   ⚠ **유리 vs 결정 아지로다이트**라 *"실험이 검증했다"* 는 금지 — *"같은 자리, clamped 배제"* 까지만.
 
+
+### N. 🔴 **gap 정본 4종의 계통별 fixed-occ 실행 입력·출력 미확보** (2026-08-07 신규)
+
+**값을 의심하는 게 아니다** — comp1 2.066 / modelc 2.099 / b2o3 1.9671 은 `electronic.json` 이,
+lpsocl 2.2309 는 **`lpsocl_dos_gap.json`** 이 정본으로 기록하고 있다(레지스트리 source_path 참조).
+문제는 **재현성**이다.
+
+우리 규율은 "갭은 **fixed-occupations nscf** 의 VBM/CBM 고유값만 인정" 인데,
+**계통별 실행본**이 없다. 정확히 말하면:
+
+- ✅ **방법은 repo 에 있다** — `tools/electronic/standard_dos/nscf_gap.in` 이 generic
+  fixed-occ 템플릿이고 `occupations='fixed'` 다.
+- ⛔ **계통별로 남은 `*_nscf.in` 은 전부 `occupations='tetrahedra_opt'`(DOS 용)** 이라
+  fixed-occ 근거로 쓰면 안 된다.
+- ⛔ 그래서 정본을 만든 **그 실행**(입력·출력)을 파일로 되짚을 수 없다.
+
+★ 템플릿 주석이 결정적이다 — modelc(rhombo)에 **`6 6 2`** 를 제시한다.
+DOS 용 `8 8 2` 와 다르다. 즉 DOS 파일만 보고 method_id 를 정정하면 안 됐다.
+
+| 계 | standard_dos 의 nscf.in | electronic.json 의 kpts 기록 | 판정 |
+|---|---|---|---|
+| comp1 | `tetrahedra_opt` · k 8 8 8 | `170 irr (k888 nscf)` | k888 강하게 시사, 입력 미확보 |
+| modelc | `tetrahedra_opt` · k 8 8 2 | `68 irr` | k-mesh **단정 불가** (템플릿은 6 6 2 제시) |
+| b2o3 | (파일 없음) | `25 irr (fixed-occ nscf)` | **fixed-occ 명시** — 근거 제일 강함 |
+| lpsocl | (파일 없음) | `lpsocl_dos_gap.json` 의 method 에 fixed-occ 명시 | 방법은 명확, 실행본 없음 |
+
+⚠ 2026-08-07 5라운드에 modelc 의 `method_id` 를 `k882` 로 "정정" 했는데, 그 근거가
+바로 저 tetrahedra 파일이었다 — **오류를 정정하면서 같은 종류의 오류를 반복했다.**
+철회하고 k 표기를 다시 뺐다.
+
+**닫는 방법 (순서대로)**
+1. 실제 fixed-occ 입력·출력을 찾는다 (gabia `/data/work/` · kgy · KISTI 스크래치)
+2. 없으면 백업에서 회수
+3. 끝까지 없으면 **동일 조건으로 재계산**하거나, 그때까지 `provenance_open` 을 유지하고
+   필요하면 status 를 낮춘다
+
+레지스트리 4개 항목에 `provenance_open` 필드로 표시했고, **`validate_canonical.py` 가 매번 찍는다**
+(요약 줄 + 전용 경고 블록). 레지스트리·문서에만 있으면 검사를 돌려도 무경고 ✅ 라 놓친다
+— Codex 6라운드 후속 지적. 화면 값은 그대로 쓰되 이 사실이 같이 남는다.
+
+- 근거: Codex 6라운드 감사 (comp1) + 확인 결과 4종 전부로 확대
+
+
+### O. 🟡 **Nd 갭 — frozen-4f PP 를 확보하면 Nd 축 7종이 우리 값이 된다** (2026-08-07 신규)
+
+**지금 상태**: Nd 상 갭은 전부 **MP 소환값**이다. 우리 계산은 두 번 실패했고 원인은 확정됐다 —
+4f 를 원자가에 둔 PBE(+U) 의 SCF 해가 **금속**이라 fixed-occ 갭이라는 양이 성립하지 않는다
+(`kb/projects/sei_products_2026_08_06.md` §최종 판정).
+
+**⚠ 이건 "숫자 하나" 가 아니다.** repo 안에서 MP 갭에 의존하는 Nd 상이 7종이다 —
+NdPO₄ 5.55 · NdOCl 4.77 · NdCl₃ 4.30 · LiNdO₂ 4.21 · Nd₂O₃ 3.81 · Nd₂S₃ 1.79 · NdS 0.00
+(`tools/figures/plot_nd_sei_gaps.py` 하드코딩). 여기에 Nd₂O₃@LPSCl1.6 도핑 라인,
+cascade Nd 후보, `nd_icohp.json` 이 얹힌다. **PP 하나로 축 전체가 살아난다.**
+
+**닫는 방법**: `tools/sei/nd_frozen4f.py --plan` (0단계 인벤토리 → 확보 경로 A/B/C →
+Nd₂O₃ 1단계 검증 → 나머지 → 등재). 판별 기준은 **z_valence** — frozen-4f ≈ 11 vs
+4f-in-valence ≈ 14 (지금 우리 것). MP 의 VASP `Nd_3` 가 전자다.
+
+**⛔ 함정 (도구에 가드 넣음)**: `build_dft_inputs.find_pseudos` 는 pseudo 디렉터리에서
+**파일명 알파벳 첫 번째를 조용히 고른다**(`setdefault`). 새 PP 를 넣기만 하면
+`Nd.paw.z_14…` 가 그대로 이겨서 **똑같은 금속 해**가 나온다. `--inventory` 가
+'◀ 실제로 뽑힘' 을 찍고 frozen-4f 가 아니면 ⛔⛔ 경고한다.
+
+**중단 기준**: 1단계(Nd₂O₃) 불합격 + 원인 30분 내 미해결 → MP 인용 유지, 보류로 기록.
+⚠ **U 를 돌려 가며 갭이 열릴 때까지 맞추지 않는다** — frozen-4f 는 애초에 U 가 필요 없는 게 요점.
+
+**등재 시 규칙**: 새 `comparison_group` = `gap-fixedocc-frozen4f-v1`. Li 계 6종(4f 무관)과
+PP 계열이 달라 **같은 묶음이 아니다**.
+
 ## 📄 PDF 확보 대기 (원전 미보유 — 웹/재인용 딱지 상태)
 
 | # | 서지 | DOI | 왜 필요한가 |
@@ -609,45 +678,4 @@ Q7·Q8은 재판독으로 신설)을 닫는다. **이 항목은 닫지 말 것.*
 
 ## ✅ 닫힌 항목
 - (여기로 이동)
-
-### N. 🔴 **gap 정본 4종의 계통별 fixed-occ 실행 입력·출력 미확보** (2026-08-07 신규)
-
-**값을 의심하는 게 아니다** — comp1 2.066 / modelc 2.099 / b2o3 1.9671 은 `electronic.json` 이,
-lpsocl 2.2309 는 **`lpsocl_dos_gap.json`** 이 정본으로 기록하고 있다(레지스트리 source_path 참조).
-문제는 **재현성**이다.
-
-우리 규율은 "갭은 **fixed-occupations nscf** 의 VBM/CBM 고유값만 인정" 인데,
-**계통별 실행본**이 없다. 정확히 말하면:
-
-- ✅ **방법은 repo 에 있다** — `tools/electronic/standard_dos/nscf_gap.in` 이 generic
-  fixed-occ 템플릿이고 `occupations='fixed'` 다.
-- ⛔ **계통별로 남은 `*_nscf.in` 은 전부 `occupations='tetrahedra_opt'`(DOS 용)** 이라
-  fixed-occ 근거로 쓰면 안 된다.
-- ⛔ 그래서 정본을 만든 **그 실행**(입력·출력)을 파일로 되짚을 수 없다.
-
-★ 템플릿 주석이 결정적이다 — modelc(rhombo)에 **`6 6 2`** 를 제시한다.
-DOS 용 `8 8 2` 와 다르다. 즉 DOS 파일만 보고 method_id 를 정정하면 안 됐다.
-
-| 계 | standard_dos 의 nscf.in | electronic.json 의 kpts 기록 | 판정 |
-|---|---|---|---|
-| comp1 | `tetrahedra_opt` · k 8 8 8 | `170 irr (k888 nscf)` | k888 강하게 시사, 입력 미확보 |
-| modelc | `tetrahedra_opt` · k 8 8 2 | `68 irr` | k-mesh **단정 불가** (템플릿은 6 6 2 제시) |
-| b2o3 | (파일 없음) | `25 irr (fixed-occ nscf)` | **fixed-occ 명시** — 근거 제일 강함 |
-| lpsocl | (파일 없음) | `lpsocl_dos_gap.json` 의 method 에 fixed-occ 명시 | 방법은 명확, 실행본 없음 |
-
-⚠ 2026-08-07 5라운드에 modelc 의 `method_id` 를 `k882` 로 "정정" 했는데, 그 근거가
-바로 저 tetrahedra 파일이었다 — **오류를 정정하면서 같은 종류의 오류를 반복했다.**
-철회하고 k 표기를 다시 뺐다.
-
-**닫는 방법 (순서대로)**
-1. 실제 fixed-occ 입력·출력을 찾는다 (gabia `/data/work/` · kgy · KISTI 스크래치)
-2. 없으면 백업에서 회수
-3. 끝까지 없으면 **동일 조건으로 재계산**하거나, 그때까지 `provenance_open` 을 유지하고
-   필요하면 status 를 낮춘다
-
-레지스트리 4개 항목에 `provenance_open` 필드로 표시했고, **`validate_canonical.py` 가 매번 찍는다**
-(요약 줄 + 전용 경고 블록). 레지스트리·문서에만 있으면 검사를 돌려도 무경고 ✅ 라 놓친다
-— Codex 6라운드 후속 지적. 화면 값은 그대로 쓰되 이 사실이 같이 남는다.
-
-- 근거: Codex 6라운드 감사 (comp1) + 확인 결과 4종 전부로 확대
 
