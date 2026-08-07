@@ -91,17 +91,79 @@ def resolve(source_path: str, source_key: str):
     return float(node)
 
 
-def load_registry(path=None) -> dict:
+def load_registry(path=None, live=True) -> dict:
+    """레지스트리를 읽고, **원자료 값으로 덮어쓴다**(live=True).
+
+    ★ 2026-08-07 Codex 재검증의 지적: 첫 판은 레지스트리에 `value` 를 **복제**해 두고
+      원자료 대조는 validator 에서만 했다. 그러면 "원자료 한 곳만 고치면 화면이 갱신된다"
+      가 성립하지 않는다 — db 를 고쳐도 화면은 그대로고 검사만 실패한다.
+      → 이제 로드할 때 source_path/source_key 를 **실제로 따라가** 그 값을 쓴다.
+        레지스트리의 `value` 는 이제 "마지막으로 확인한 값"(기대치)이고, 원자료가 우선이다.
+        어긋나면 `value_drift` 에 기록해 화면·검사가 볼 수 있게 남긴다.
+
+    ⚠ 원자료를 못 읽으면 **레지스트리 값으로 떨어지되 조용히 넘어가지 않는다**
+      (`resolve_error` 를 남긴다). 파일 하나가 깨져 사이트 전체가 죽는 건 더 나쁘다.
+    """
     p = Path(path) if path else REGISTRY
     if not p.is_file():
         return {"schema": "canonical_registry/v1", "entries": []}
-    return json.load(open(p, encoding="utf-8"))
+    reg = json.load(open(p, encoding="utf-8"))
+    if not live:
+        return reg
+    for e in reg.get("entries", []):
+        sp, sk = e.get("source_path"), e.get("source_key")
+        if not (sp and sk):
+            continue
+        try:
+            got = resolve(sp, sk)
+        except ResolveError as ex:
+            e["resolve_error"] = str(ex)
+            continue
+        want = e.get("value")
+        tol = float(e.get("tolerance", 5e-4))
+        e["value_from_source"] = got
+        if want is not None and abs(got - float(want)) > tol:
+            # ★ 원자료가 레지스트리 기대치를 넘어 바뀌었다 = **새 계산이 들어왔다.**
+            #   화면은 원자료를 따라간다(그래야 "db 한 곳만 고치면 갱신"이 성립).
+            #   대신 status 를 내려 **순위·레이더에서 자동으로 빠지게** 하고 validator 를
+            #   실패시킨다 — 사람이 레지스트리를 갱신하며 검토해야 정본으로 돌아온다.
+            #   이게 "조용한 drift" 와 "조용한 채택" 을 둘 다 막는 유일한 배치다.
+            e["value"] = got
+            e["value_drift"] = {"registry": want, "source": got}
+            e["status"] = "unreviewed_drift"
+        elif e.get("prefer") == "registry":
+            # ⚠ 원자료가 **반올림된 사본**인 예외 (eos.json 26.2 vs 정본 26.23).
+            #   정밀한 원 출처를 배선하기 전까지만 쓰는 표식이고, 이유를 note 에 적는다.
+            pass
+        else:
+            e["value"] = got          # ★ 기본: db 를 고치면 화면이 따라온다
+    return reg
 
 
 def validate(reg: dict) -> list:
     """(entry, 문제) 목록. 빈 목록 = 레지스트리가 원자료와 일치한다."""
     bad = []
     for e in reg.get("entries", []):
+        # ⚠ live 로드가 이미 원자료를 채택하고 어긋남을 value_drift 에 적어 뒀다면,
+        #   아래 수치 대조는 (값을 덮어썼으므로) 통과해 버린다 — 여기서 먼저 잡는다.
+        #   이게 없으면 "화면은 새 값을 쓰는데 검사는 통과" 라는 최악의 조합이 된다.
+        if e.get("value_drift"):
+            d = e["value_drift"]
+            bad.append((e, f"원자료가 바뀌었다 — 레지스트리 {d['registry']} vs 원자료 {d['source']}. "
+                           f"화면은 원자료를 쓰지만 검토 전까지 순위·레이더에서 빠진다. "
+                           f"검토 후 레지스트리 value 를 갱신할 것"))
+            continue
+        if e.get("resolve_error"):
+            bad.append((e, f"원자료를 못 읽었다 — {e['resolve_error']}"))
+            continue
+        # ★ 값이 원자료와 맞아도 **판정 게이트를 통과 못 했으면 정본이 아니다** (2026-08-07).
+        #   LPSOCl MD_Ea 가 정확히 그 경우였다 — 숫자는 db 와 일치하는데 600 K 의
+        #   β=0.615 가 Fickian 게이트(0.8–1.2)를 못 넘어 kb/open_items.md 가 인용 보류로
+        #   묶어 둔 값이었다. 첫 판에서 이 대조를 빠뜨려 canonical 로 올렸고 Codex 가 잡았다.
+        #   → 수치 대조와 **별개 축**으로 검사한다.
+        if e.get("status") == "canonical" and e.get("blocking_gate"):
+            bad.append((e, f"게이트 미통과({e['blocking_gate']})인데 status=canonical 이다 "
+                           f"— 값이 맞아도 정본이 될 수 없다"))
         sp, sk = e.get("source_path"), e.get("source_key")
         if not sp or not sk:
             # 출처가 없어도 되는 상태 = 애초에 "검증되지 않았다"고 화면에 밝히는 상태들.

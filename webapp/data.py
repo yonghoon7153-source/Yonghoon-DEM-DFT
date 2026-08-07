@@ -3124,26 +3124,81 @@ _CMT_LOCK = None
 
 
 @_ctx.contextmanager
-def _comments_locked():
-    """읽기→수정→쓰기 전체를 한 임계구역으로 묶는다."""
-    global _CMT_LOCK
-    try:
-        import fcntl
-    except ImportError:                       # Windows — 락 없이 진행하되 조용히 넘어가지 않는다
-        fcntl = None
+def _comments_locked(timeout=10.0):
+    """읽기→수정→쓰기 전체를 한 임계구역으로 묶는다.
+
+    ⚠ Windows 에는 fcntl 이 없다. 첫 판은 "없으면 그냥 진행" 이었는데, 그러면 Windows
+      로컬에서 잠금이 **조용히 사라진다** — Codex 재검증에서 24 요청 중 16 저장으로 재현됐다.
+      → msvcrt.locking 으로 대체한다. 그것도 없으면 **디렉터리 생성 락**으로 떨어진다
+        (mkdir 은 POSIX·Windows 양쪽에서 원자적이라 최후 수단으로 쓸 만하다).
+      어느 경우에도 "락 없이 진행" 은 하지 않는다.
+    """
+    import time
     lock_path = COMMENTS_PATH.with_suffix(COMMENTS_PATH.suffix + ".lock")
     lock_path.parent.mkdir(parents=True, exist_ok=True)
-    f = open(lock_path, "a+")
     try:
-        if fcntl is not None:
+        import fcntl
+    except ImportError:
+        fcntl = None
+    try:
+        import msvcrt
+    except ImportError:
+        msvcrt = None
+
+    if fcntl is not None:
+        f = open(lock_path, "a+")
+        try:
             fcntl.flock(f.fileno(), fcntl.LOCK_EX)
+            yield
+        finally:
+            try:
+                fcntl.flock(f.fileno(), fcntl.LOCK_UN)
+            finally:
+                f.close()
+        return
+
+    if msvcrt is not None:
+        # msvcrt.locking 은 락이 잡혀 있으면 즉시 OSError 를 낸다 — 직접 재시도한다.
+        f = open(lock_path, "a+b")
+        f.seek(0)
+        t0 = time.monotonic()
+        while True:
+            try:
+                msvcrt.locking(f.fileno(), msvcrt.LK_NBLCK, 1)
+                break
+            except OSError:
+                if time.monotonic() - t0 > timeout:
+                    f.close()
+                    raise TimeoutError("코멘트 락을 못 잡았다 (Windows msvcrt)")
+                time.sleep(0.01)
+        try:
+            yield
+        finally:
+            try:
+                f.seek(0)
+                msvcrt.locking(f.fileno(), msvcrt.LK_UNLCK, 1)
+            finally:
+                f.close()
+        return
+
+    # 최후 수단 — mkdir 은 원자적이다 (이미 있으면 FileExistsError)
+    d = lock_path.with_suffix(lock_path.suffix + ".d")
+    t0 = time.monotonic()
+    while True:
+        try:
+            d.mkdir()
+            break
+        except FileExistsError:
+            if time.monotonic() - t0 > timeout:
+                raise TimeoutError("코멘트 락을 못 잡았다 (mkdir 폴백)")
+            time.sleep(0.01)
+    try:
         yield
     finally:
         try:
-            if fcntl is not None:
-                fcntl.flock(f.fileno(), fcntl.LOCK_UN)
-        finally:
-            f.close()
+            d.rmdir()
+        except OSError:
+            pass
 
 
 def file_comments(rel: str) -> list[dict]:

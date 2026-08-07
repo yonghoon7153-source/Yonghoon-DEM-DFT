@@ -61,6 +61,54 @@ def test_md_ea_groups_are_separated():
     assert abs(multi.get("modelc", 0) - 0.197) < 1e-6, "modelc 멀티시드 값이 아니다"
 
 
+def test_md_ea_beta_gate_blocks_canonical():
+    """★ n_seed 만 보면 β 게이트 탈락을 못 잡는다 (2026-08-07 Codex 재검증).
+
+    LPSOCl 은 4-seed 라 n_seed 검사는 통과하는데, 600 K β=0.615 가 Fickian 게이트를
+    못 넘어 kb/open_items.md 가 인용 보류로 묶어 둔 값이다. 숫자가 db 와 맞아도
+    정본이 아니다 — 게이트를 별도 축으로 검사한다.
+    """
+    reg = C.load_registry()
+    for e in reg["entries"]:
+        if e.get("blocking_gate"):
+            assert e.get("status") != "canonical", \
+                f"{e['metric']}/{e['system']} 이 게이트({e['blocking_gate']}) 미통과인데 canonical 이다"
+    lp = [e for e in reg["entries"]
+          if (e["metric"], e["system"]) == ("MD_Ea_eV", "lpsocl")]
+    assert lp and lp[0]["status"] != "canonical", "LPSOCl Ea 가 다시 canonical 로 올라왔다"
+    assert lp[0].get("gate_detail", {}).get("beta_600K", 1.0) < 0.8, "β 근거가 사라졌다"
+    # 순위·레이더 집합에서 자동으로 빠져야 한다
+    assert "lpsocl" not in C.canonical_map(reg, "MD_Ea_eV", group="md-ea-multiseed-v1")
+
+
+def test_source_edit_propagates_to_screen():
+    """"db 한 곳만 고치면 화면이 갱신된다" 를 **실제로** 확인한다.
+
+    첫 판은 레지스트리에 value 를 복제해 두고 대조는 validator 에서만 했다 —
+    그러면 이 주장이 성립하지 않는다는 Codex 재검증 지적을 코드로 고정한다.
+    드리프트가 나면 (a) 화면은 새 값을 쓰고 (b) 순위에서 빠지고 (c) validator 가 실패해야 한다.
+    """
+    import json as _j
+    import shutil as _sh
+    p = ROOT / "db" / "properties" / "lpsocl_dos_gap.json"
+    bak = p.with_suffix(p.suffix + ".testbak")
+    _sh.copy(p, bak)
+    try:
+        d = _j.loads(p.read_text(encoding="utf-8"))
+        d["gap_eV"] = 2.9999
+        p.write_text(_j.dumps(d, ensure_ascii=False, indent=2), encoding="utf-8")
+        reg = C.load_registry()
+        e = [x for x in reg["entries"] if (x["metric"], x["system"]) == ("gap_eV", "lpsocl")][0]
+        assert abs(e["value"] - 2.9999) < 1e-6, "원자료를 고쳤는데 화면 값이 안 따라온다"
+        assert e["status"] == "unreviewed_drift", "미검토 드리프트 표시가 없다"
+        assert "lpsocl" not in C.canonical_map(reg, "gap_eV",
+                                               group="gap-fixedocc-eigenvalue-v1"), \
+            "미검토 값이 순위 집합에 남아 있다"
+        assert C.validate(reg), "드리프트인데 validator 가 통과한다"
+    finally:
+        _sh.move(str(bak), str(p))
+
+
 def test_dashboard_ea_card_is_protocol_honest():
     """첫 화면 Ea 카드가 단일시드 값을 '멀티시드'라 부르면 안 된다."""
     cards = [h for h in D.dashboard_highlights() if "Ea" in h["t"]]
