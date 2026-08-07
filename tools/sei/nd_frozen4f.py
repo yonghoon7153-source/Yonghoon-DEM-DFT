@@ -223,6 +223,57 @@ def reference(api_key):
     return out
 
 
+def polymorphs(api_key, phases=None):
+    """조성별로 **모든** MP 항목을 찍는다 — 하드코딩 값이 어느 다형체에서 왔는지 가린다.
+
+    왜 (2026-08-07): `plot_nd_sei_gaps.py` 의 하드코딩 7종 중 2종이 고정 ID 조회와
+    안 맞았다(Nd₂S₃ 1.79 vs mp-438 0.760, NdPO₄ 5.55 vs mp-3584 5.679). 그 파일은
+    material_id 를 안 남겼으므로, **형제 다형체 중에 그 값이 있는지**가 유일한 단서다.
+      · 있으면 → 다형체 선택이 달랐던 것. ID 를 박고 어느 쪽을 쓸지 정하면 끝난다.
+      · 없으면 → 그 숫자의 출처가 MP 가 아니다. 그건 더 큰 문제고 따로 추적해야 한다.
+    """
+    from mp_api.client import MPRester
+    fields = ["material_id", "formula_pretty", "symmetry", "band_gap",
+              "energy_above_hull", "theoretical", "nsites"]
+    # 하드코딩 값(그림) — 일치하는 다형체가 있으면 표시한다
+    HARD = {"Nd2O3": 3.81, "Nd2S3": 1.79, "LiNdO2": 4.21, "NdPO4": 5.55,
+            "NdOCl": 4.77, "NdCl3": 4.30, "NdS": 0.00}
+    out = {}
+    with MPRester(api_key) as m:
+        for f in (phases or ND_PHASES):
+            docs = m.materials.summary.search(formula=f, fields=fields)
+            if not docs:
+                print(f"  ⏭ {f}: MP 에 없음")
+                continue
+            docs = sorted(docs, key=lambda d: 9e9 if d.energy_above_hull is None
+                          else d.energy_above_hull)
+            tgt = HARD.get(f)
+            print(f"\n  ══ {f}  (다형체 {len(docs)}개, e_above_hull 오름차순) "
+                  f"— 그림 하드코딩 {tgt}")
+            rows, hit = [], False
+            for d in docs:
+                # 그림 값은 소수 둘째 자리까지라 그 자리에서 맞춘다
+                same = tgt is not None and abs(round(d.band_gap, 2) - tgt) < 0.005
+                hit |= same
+                rows.append({"material_id": d.material_id,
+                             "spacegroup": d.symmetry.symbol, "band_gap_eV": d.band_gap,
+                             "nsites": d.nsites, "e_above_hull": d.energy_above_hull,
+                             "theoretical": bool(d.theoretical),
+                             "matches_hardcoded": bool(same)})
+                print(f"     {d.material_id:14s} {d.symmetry.symbol:12s} "
+                      f"gap {d.band_gap:6.3f}  {d.nsites:3d}원자  "
+                      f"hull {0.0 if d.energy_above_hull is None else d.energy_above_hull:6.3f}  "
+                      + ("⚠예측" if d.theoretical else "✅관측")
+                      + ("   ★ 그림 값과 일치" if same else ""))
+            if tgt is not None and not hit:
+                print(f"     ⛔ **{tgt} 와 맞는 다형체가 없다** — 이 숫자의 출처는 MP 가 "
+                      f"아니거나 값이 갱신됐다. 그림에서 그대로 쓰면 안 된다.")
+            out[f] = rows
+    print("\n판정 요령: ★ 가 붙으면 다형체 선택 문제 — ID 를 박고 어느 쪽을 쓸지 정하면 닫힌다.")
+    print("           ⛔ 가 붙으면 출처 문제 — 그 값을 그림에서 내리거나 출처를 찾아야 한다.")
+    return out
+
+
 PLAN = """
 ═══ Nd frozen-4f 경로 — 단계별 계획 ═══════════════════════════════════════
 
@@ -307,10 +358,13 @@ def main():
     ap.add_argument("--check", nargs="+", metavar="UPF",
                     help="받아 온 후보 UPF 를 설치 전에 판별")
     ap.add_argument("--reference", action="store_true", help="검증 표적(MP 갭)을 받아 저장")
+    ap.add_argument("--polymorphs", nargs="*", metavar="상", default=None,
+                    help="조성별 전 다형체를 찍어 그림 하드코딩 값의 출처를 가린다 "
+                         "(인자 없으면 7종 전부)")
     ap.add_argument("--plan", action="store_true", help="단계별 계획·비용·중단 기준")
     ap.add_argument("--pseudo_dirs", nargs="*", default=PSEUDO_DIRS)
     a = ap.parse_args()
-    if not (a.inventory or a.check or a.reference or a.plan):
+    if not (a.inventory or a.check or a.reference or a.plan or a.polymorphs is not None):
         a.plan = True
     if a.inventory:
         inventory(a.pseudo_dirs)
@@ -323,6 +377,12 @@ def main():
             sys.exit("⛔ MP_API_KEY 가 없다.  export MP_API_KEY=...  (⚠ 파일에 넣지 말 것)")
         print("검증 표적 — MP 의 Nd 상 밴드갭")
         reference(key)
+    if a.polymorphs is not None:
+        key = os.environ.get("MP_API_KEY")
+        if not key:
+            sys.exit("⛔ MP_API_KEY 가 없다.  export MP_API_KEY=...  (⚠ 파일에 넣지 말 것)")
+        print("조성별 전 다형체 — 그림 하드코딩 값의 출처 규명")
+        polymorphs(key, a.polymorphs or None)
     if a.plan:
         print(PLAN)
     return 0
