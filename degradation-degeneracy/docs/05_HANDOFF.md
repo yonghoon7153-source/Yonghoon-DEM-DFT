@@ -364,7 +364,7 @@ Phase 7  GPU 시도               ✅   7-1 판정 완료 → docs/GPU_NOTES.md
   ① Case 2 (grid 기준) fine fitting     ✅  results/grid_fine_v2  (3시간 17분)
   ② score → hessian → report            ✅  docs/RESULTS.md 자동 생성
   ③ Case 1 (halfcell 기준) fine fitting ✅  results/halfcell_v1   (5시간 42분)
-  ④ 가중치 sweep                        ✅  468조건 × 9가중치 × restart 5
+  ④ 가중치 sweep                        ⏳  restart 5로 재실행 중 (아래 ⑦ 참조)
 
 남은 것 (전부 선택 사항 — 결론에는 영향 없음)
   · Case 1 `+dQ/dV`의 −4.1%p 오프셋 원인 규명 (calibration, §8-0 ③ 각주)
@@ -545,11 +545,17 @@ Case 1은 초기에 훨씬 나빴는데(LAM 오차 0.054/0.126) 원인이 세 �
 성기게 잡은 **층화 표본**(6³×noise3, 468조건)을 씁니다. 무작위 표본이 아니라 격자
 구조를 보존하므로 코너가 빠지지 않습니다.
 
-결과: 노이즈 평균 최적 **`w_dqdv = 0.5`**(보정 degeneracy 25.7%), 기본값 1.0은 27.4%.
-다만 **노이즈 수준별 최적값이 갈립니다** — noise 0에서 1.0, 0.001에서 0.25,
-0.005에서 0.75. 단일 값을 채택하려면 실험 노이즈 수준을 먼저 특정해야 합니다.
-`pick_optimum`이 `noise_levels_agree` 플래그로 이걸 매번 알려줍니다.
-산출물은 `configs/objectives_optimized.yaml`.
+⏳ **현재 `docs/RESULTS.md`에 실린 sweep 숫자는 잠정치입니다** — `n_restarts = 2`로
+돌린 것이라 아래 ⑦의 함정에 걸려 있습니다. `warm_start=False` + `n_restarts=5`로
+재실행 중이고, 끝나면 `--mode report`를 다시 돌려 갱신합니다.
+
+잠정치(restart 2): 노이즈 평균 최적 **`w_dqdv = 0.5`**(보정 degeneracy 25.7%),
+기본값 1.0은 27.4%. 다만 **노이즈 수준별 최적값이 갈립니다** — noise 0에서 1.0,
+0.001에서 0.25, 0.005에서 0.75. 단일 값을 채택하려면 실험 노이즈 수준을 먼저
+특정해야 합니다. `pick_optimum`이 `noise_levels_agree` 플래그로 이걸 매번
+알려줍니다. 산출물은 `configs/objectives_optimized.yaml`.
+
+**이 절의 숫자만 미확정이고, §8-0의 결론 세 건은 sweep과 무관하게 확정입니다.**
 
 **`docs/RESULTS.md` 자동 생성** — 숫자를 손으로 옮겨 적지 않습니다. 격자를 다시
 돌리면 문서도 다시 생성하면 됩니다.
@@ -632,7 +638,7 @@ gap_collapse_frac = 1%     shrinkage = 1.06     false_split_frac = 62%
 | 2 | degeneracy 영역은 몇 %인가? | **62%** (`pocv_dvdq`, 바이어스 보정 시 15%) |
 | 3 | **22p 조건이 그 영역 안에 있는가?** | **근방 자체의 degeneracy는 12%** 로 낮습니다. 다만 그 근방은 참값이 애초에 `LAM_PE=LAM_NE`라 증거가 못 됩니다 — 아래 ★ 참조 |
 | 4 | **dQ/dV가 degeneracy를 얼마나 줄이는가?** | **62% → 63%. 줄이지 못했습니다.** 대신 PE-NE 상쇄가 68% → 48%로 줄었습니다 |
-| 5 | 가중치 최적 조합은? | 노이즈 평균 **`w_dqdv = 0.5`**(25.7%), 기본값 1.0은 27.4%. 단 노이즈 수준별로 최적값이 갈림 |
+| 5 | 가중치 최적 조합은? | ⏳ **미확정.** 잠정치는 노이즈 평균 `w_dqdv = 0.5`(25.7%), 기본값 1.0은 27.4%. 단 restart 2로 돌린 값이라 재실행 중이고, 노이즈 수준별로 최적값도 갈립니다 |
 
 ★ **3번은 질문 자체를 바꿔야 했습니다.** 22p 근방은 참값이 `LAM_PE = LAM_NE`인
 격자점이라, 거기서 복원이 잘 됐다는 사실은 22p를 옹호하지도 반박하지도 못합니다.
