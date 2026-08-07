@@ -254,3 +254,46 @@ render.yaml YAML OK
 3. `_safe_path()` 기반 archive CRUD 는 그대로 뒀다 (이미 containment 가 있었다).
    장기적으로 `_archive_join()` 으로 일원화하는 게 맞다.
 4. F-07~F-13 은 Phase C/D 소관 — 위 Phase B 절의 "남은 위험" 참조.
+
+---
+
+## 협업 계약(AGENTS.md) 관련 신고 · 정정 (2026-08-07 저녁)
+
+`Codex/dem-mpm-crosscheck` 를 fetch 해 확인한 결과:
+
+- 그 브랜치 = 내 `1d0f9984` + **커밋 1개**(`d9880b73`, `AGENTS.md` 62 줄만).
+  `webapp/app.py` 는 **손대지 않았다** → **리뷰가 읽은 app.py 는 내 파일 그대로**이고,
+  내가 줄번호로 한 재현 확인이 리뷰가 본 코드와 **같은 코드**였다.  충돌 위험 0
+  (리베이스 모의 clean).
+
+### 내가 계약을 어긴 것
+
+- **force-push 1회**: Phase B 커밋 메시지에 백틱이 bash 명령치환으로 해석돼 한 줄이
+  깨진 것을 `--amend` 로 고치며 `git push -f` 를 썼다.  계약은 `--force-with-lease` 만
+  허용한다.  **Codex 영향 없음**(그쪽 base 가 그 커밋보다 앞).  이후 `--force-with-lease`.
+
+### 내가 잘못 신고한 것 (정정)
+
+- 처음에 "계약서의 Codex worktree 경로가 실제와 다르다" 고 적었는데 **틀렸다**.
+  `…/Yonghoon-DEM-DFT-codex-dem-mpm` 은 실제로 존재하고 `Codex/dem-mpm-crosscheck`
+  에 정확히 붙어 있다.  실제 문제는 **다른 worktree(`…-codex`)에 서 있었던 것**이다.
+
+### ★ 새로 발견한 실제 위험 — 대소문자 ref 붕괴
+
+`/mnt/c` 는 NTFS 라 **ref 이름의 대소문자를 구분하지 않는다**.  실측:
+`git status` 는 `codex/zip-git-gpu-setup-vdqdtd`, `git log` 는 같은 커밋에
+`Codex/zip-git-gpu-setup-vdqdtd` 를 함께 보여준다 = 두 이름이 **한 ref 로 붕괴**.
+지금은 같은 커밋이라 무해하지만 `codex/dem-mpm-crosscheck` 를 만들면
+`Codex/dem-mpm-crosscheck` 를 **덮는다**.  이 상태에서 `--force-with-lease` 는
+"내가 아는 ref" 기준이라 방어가 되지 않는다.
+→ 계약에 **브랜치 접두를 하나(`Codex/`)로 고정**하는 조항 권고.
+
+### 오늘 실제로 난 사고 (재발 방지)
+
+체크아웃된 브랜치를 확인하지 않고 `git rebase origin/claude/stoic-knuth-NObVQ` 를 실행해,
+의도한 `Codex/dem-mpm-crosscheck` 가 아니라 **당시 체크아웃돼 있던
+`codex/zip-git-gpu-setup-vdqdtd`** 가 리베이스됐다(`.gitignore`/`README.md` add/add 충돌).
+`push` 는 `&&` 체인이라 실행되지 않아 원격은 무사.  **원인은 내가 체크아웃 상태를 확인하지
+않고 한 줄 명령을 준 것.**
+→ 계약 §"클로드 작업하고 왔어" 에 **`git rev-parse --abbrev-ref HEAD` 로 대상 브랜치
+확인** 을 1번 앞에 추가 권고.
