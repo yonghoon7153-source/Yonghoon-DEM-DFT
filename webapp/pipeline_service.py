@@ -60,6 +60,14 @@ NETWORK_ARTIFACT_GLOBS = (
     'network_provenance.json',
 )
 
+#: ★ 보존이 **의미를 가지려면 반드시 있어야 하는** baseline 산출물 (CB-02).
+#:   옛 구현은 NETWORK_ARTIFACT_GLOBS 중 **하나라도** 있으면 스냅샷을 만들었는데,
+#:   force 경로가 solver 실패에도 도장(`network_provenance.json`)을 남기므로
+#:   **실패 도장 하나만으로 스냅샷이 생겨** 다음 기본 재분석이 preserve 를 골랐다.
+#:   → solver 0회 + baseline 없음 + status='done' 으로 **영구 false-done**.
+#:   (Codex 교차검증 CB-02 에서 동적 재현됨.)
+NETWORK_BASELINE_REQUIRED = 'network_conductivity.json'
+
 #: network 산출물의 세대를 식별하는 파일.
 PROVENANCE_FILE = 'network_provenance.json'
 
@@ -99,20 +107,32 @@ def file_digest(path, chunk=1 << 20) -> str:
 
 # ─────────────────────────────── 프로세스간 lock ───────────────────────────────
 
+class LockUnavailable(RuntimeError):
+    """network lock 을 못 잡았다 — solver 를 **실행하지 않는다** (CB-03)."""
+
+
 @contextlib.contextmanager
-def network_lock(timeout=None, lock_dir=None):
+def network_lock(timeout=None, lock_dir=None, require=True):
     """network solver 직렬화 — **프로세스를 가로질러** 동작하는 파일 lock.
 
     threading.Semaphore 는 Gunicorn workers=2 에서 서로를 모른다 (F-03).
-    POSIX 는 fcntl.flock, Windows 는 msvcrt.locking 을 쓰고, 둘 다 없으면 경고 후
-    통과시킨다 (lock 없이 죽는 것보다 낫다 — 대신 stderr 에 남긴다).
+    POSIX 는 fcntl.flock, Windows 는 msvcrt.locking 을 쓴다.
+
+    ★ CB-03 (Codex 교차검증): 옛 구현은 lock 을 **못 잡아도 그냥 yield** 했고 호출부가
+      그 값을 무시해 solver 를 그대로 돌렸다 = **fail-open**.  OOM 방지라는 목적 자체가
+      무너진다.  이제 기본이 `require=True` 이고 **획득 실패 시 LockUnavailable 을
+      던진다** — 호출부는 그것을 단계 실패로 기록하고 solver 를 실행하지 않는다.
+      (Windows msvcrt 는 무기한 대기가 없으므로 non-blocking 재시도 + 실제 timeout.)
+      `require=False` 는 진단·테스트 전용.
     """
     path = os.path.join(lock_dir or tempfile.gettempdir(), _LOCK_NAME)
     fh = open(path, 'a+b')
     acquired = False
+    mode = None
     try:
         try:
             import fcntl
+            mode = 'flock'
             if timeout is None:
                 fcntl.flock(fh.fileno(), fcntl.LOCK_EX)
                 acquired = True
@@ -130,10 +150,23 @@ def network_lock(timeout=None, lock_dir=None):
         except ImportError:
             try:
                 import msvcrt
-                msvcrt.locking(fh.fileno(), msvcrt.LK_LOCK, 1)
-                acquired = True
-            except Exception:
-                sys.stderr.write('[pipeline] ⚠ 파일 lock 미지원 — network 직렬화 없이 진행\n')
+                mode = 'msvcrt'
+                deadline = time.time() + (timeout if timeout is not None else 3600.0)
+                while True:
+                    try:
+                        msvcrt.locking(fh.fileno(), msvcrt.LK_NBLCK, 1)
+                        acquired = True
+                        break
+                    except OSError:
+                        if time.time() >= deadline:
+                            break
+                        time.sleep(0.5)
+            except ImportError:
+                mode = None
+        if not acquired and require:
+            raise LockUnavailable(
+                f'network lock 미획득 (backend={mode or "없음"}, path={path}). '
+                'solver 를 실행하지 않는다 — 동시 실행은 OOM 위험이다.')
         yield acquired
     finally:
         if acquired:
@@ -153,11 +186,25 @@ def network_lock(timeout=None, lock_dir=None):
 # ───────────────────────────── network 산출물 세대 ─────────────────────────────
 
 def snapshot_network(results_dir, case_id=''):
-    """network 산출물을 임시 디렉터리로 스냅샷.  없으면 None.
+    """보존할 **성공한** network 세대를 임시 디렉터리로 스냅샷.  없으면 None.
 
     results_dir 을 지우기 **전에** 호출한다.  복원은 Stage E **전에** 한다 —
     그래야 Stage E 가 실제로 남을 baseline 을 보고 계산한다 (F-02).
+
+    ★ CB-02 (Codex 교차검증에서 동적 재현): 보존 자격을 **두 가지로 좁힌다**.
+      ① baseline 파일(`network_conductivity.json`)이 실제로 있어야 한다.
+      ② 도장이 있으면 `solver_status == 'success'` 여야 한다.
+    옛 구현은 glob 중 하나만 맞아도 스냅샷을 만들었고, force 경로가 **실패에도 도장을
+    남기므로** 실패 도장 하나로 스냅샷이 생겨 다음 기본 재분석이 preserve 를 골랐다
+    → solver 0회 · baseline 없음 · status='done' 인 **영구 false-done**.
+    (도장 이전 legacy 산출물은 ①만 만족하면 보존을 허용한다 — 그 시절엔 성공한
+     산출물만 남았으므로.)
     """
+    if not os.path.exists(os.path.join(results_dir, NETWORK_BASELINE_REQUIRED)):
+        return None
+    prov = read_network_provenance(results_dir)
+    if prov.get('network_run_id') and prov.get('solver_status') != 'success':
+        return None                       # 실패한 세대는 보존하지 않는다 → solver 재실행
     items = []
     for pat in NETWORK_ARTIFACT_GLOBS:
         items += glob.glob(os.path.join(results_dir, pat))

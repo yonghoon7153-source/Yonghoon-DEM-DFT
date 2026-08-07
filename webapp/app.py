@@ -2865,17 +2865,24 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
         cmd = [sys.executable, os.path.join(scripts, 'network_conductivity.py'),
                atoms_csv, contacts_csv, '-o', results_dir,
                '-t', type_map, '-s', str(scale), '--contact-mode', 'both']
-        with _ps.network_lock() as got:
-            if not got:
-                log.append({'step': 'Network lock', 'stdout': '',
-                            'stderr': 'lock 미획득 — 직렬화 없이 진행', 'rc': 0})
-            st = _ps.run_stage('Network Solver (both modes)', cmd, required=True,
-                               # ★ rc=0 이어도 파일이 없으면 실패다: network CLI 는 물리망이
-                               #   없거나 결과 dict 가 비면 파일을 안 쓰고도 exit 0 이 된다.
-                               expects=('network_conductivity.json',),
-                               results_dir=results_dir, runner=runner)
+        # ★ CB-03: lock 을 못 잡으면 solver 를 **돌리지 않는다**.  옛 코드는 got=False 여도
+        #   그대로 실행해(fail-open) OOM 방지라는 목적 자체가 무너졌다.
+        try:
+            with _ps.network_lock():
+                st = _ps.run_stage('Network Solver (both modes)', cmd, required=True,
+                                   # ★ rc=0 이어도 파일이 없으면 실패다: network CLI 는 물리망이
+                                   #   없거나 결과 dict 가 비면 파일을 안 쓰고도 exit 0 이 된다.
+                                   expects=('network_conductivity.json',),
+                                   results_dir=results_dir, runner=runner)
+        except _ps.LockUnavailable as _lk:
+            st = _ps.StageOutcome(step='Network Solver (LOCK 미획득 — 미실행)', stdout='',
+                                  stderr=str(_lk), rc=1, ok=False, required=True,
+                                  missing_outputs=['network lock'])
         stages.append(st)
         log.append(st)
+        # ⚠ 실패해도 도장은 남긴다 (무엇이 언제 실패했는지의 기록).  단 CB-02 이후
+        #   snapshot_network() 가 solver_status!='success' 인 세대는 보존하지 않으므로,
+        #   이 도장이 다음 재분석에서 preserve 를 유발하지 않는다.
         _ps.stamp_network_provenance(results_dir, run_id, inputs,
                                      'success' if st.ok else 'failed')
         prov = {'network_run_id': run_id}
@@ -5074,6 +5081,7 @@ def retry_network(case_id):
         print(f"  [Network Retry] Waiting for lock ({case_id})...")
         # 프로세스간 파일 lock (F-03) — threading.Semaphore 는 Gunicorn workers=2 에서
         # 서로를 모른다.  run_pipeline 쪽과 같은 lock 을 잡으므로 진짜 1개로 직렬화된다.
+        # ★ CB-03: 못 잡으면 solver 를 **돌리지 않고** 상태로 남긴다 (fail-open 금지).
         with _ps.network_lock():
             print(f"  [Network Retry] Lock acquired ({case_id})")
             meta['network_solver_status'] = 'running'
@@ -5176,7 +5184,30 @@ def retry_network(case_id):
                 json.dump(meta, f, indent=2)
             print(f"  [Network Retry] Done ({case_id}), status={net_status}")
 
-    thread = threading.Thread(target=_run_net, daemon=True)
+    def _run_net_guarded():
+        # ★ CB-03: lock 미획득(LockUnavailable)은 solver 를 돌리지 않았다는 뜻이므로
+        #   'done' 이 아니라 상태로 남긴다.  다른 예외도 스레드가 조용히 죽어 케이스가
+        #   'network_solving' 에 영원히 머무는 것을 막는다.
+        try:
+            _run_net()
+        except _ps.LockUnavailable as _lk_e:
+            meta['network_solver_status'] = 'lock_unavailable'
+            meta['network_solver_error'] = str(_lk_e)
+            meta['status'] = 'error'
+            _ps.atomic_write_json(meta_file, meta)
+            print(f"  [Network Retry] LOCK 미획득 — solver 미실행 ({case_id})")
+        except Exception as _e:                                   # noqa: BLE001
+            import traceback
+            traceback.print_exc()
+            meta['network_solver_status'] = 'error'
+            meta['network_solver_error'] = f'{type(_e).__name__}: {_e}'
+            meta['status'] = 'error'
+            try:
+                _ps.atomic_write_json(meta_file, meta)
+            except Exception:
+                pass
+
+    thread = threading.Thread(target=_run_net_guarded, daemon=True)
     thread.start()
     return jsonify({'success': True, 'status': 'started'})
 

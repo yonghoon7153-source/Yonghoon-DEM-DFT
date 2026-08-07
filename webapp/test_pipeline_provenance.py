@@ -168,6 +168,45 @@ def main():
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 
+    # ══ 3b) ★ T3 (Codex CB-02) — 실패 도장만 남은 상태는 보존 자격이 없다 ══
+    #   force 경로는 solver 가 실패해도 provenance 를 남긴다.  옛 구현은 glob 중 하나만
+    #   맞아도 snapshot 을 만들어, **그 실패 도장 하나로** 다음 기본 재분석이 preserve 를
+    #   골랐다 → solver 0회 + baseline 없음 + done = 영구 false-done.
+    tmp = tempfile.mkdtemp(prefix='pt3_')
+    try:
+        res = os.path.join(tmp, 'results')
+        os.makedirs(res)
+        with open(os.path.join(res, 'full_metrics.json'), 'w') as f:
+            json.dump({}, f)
+        fr = FakeRunner(res, net_rc=0, net_writes=False)     # 파일 안 씀 = 실패
+        webapp._network_and_stage_e(res, '/scripts', 'a.csv', 'c.csv', '1:AM,3:SE', 1000, [],
+                                    preserve_network=False, runner=fr)
+        chk('T3a) 실패해도 도장은 남는다 (무엇이 실패했는지의 기록)',
+            os.path.exists(os.path.join(res, ps.PROVENANCE_FILE))
+            and not os.path.exists(os.path.join(res, 'network_conductivity.json')))
+        chk('T3b) ★ 그 상태는 snapshot 자격이 없다 (baseline 부재)',
+            ps.snapshot_network(res, 'c') is None)
+
+        # baseline 은 있지만 도장이 failed 인 경우도 보존 금지
+        with open(os.path.join(res, 'network_conductivity.json'), 'w') as f:
+            json.dump({'sigma_full_mScm': 1.0}, f)
+        ps.stamp_network_provenance(res, 'RID-FAILED', {}, 'failed')
+        chk('T3c) ★ 도장이 failed 면 baseline 이 있어도 보존 금지',
+            ps.snapshot_network(res, 'c') is None)
+        ps.stamp_network_provenance(res, 'RID-OK', {}, 'success')
+        snap = ps.snapshot_network(res, 'c')
+        chk('T3d) success 도장 + baseline 이면 보존한다', snap is not None)
+        if snap:
+            shutil.rmtree(snap, ignore_errors=True)
+        # 도장 이전 legacy(도장 없음 + baseline 있음)는 보존 허용
+        os.unlink(os.path.join(res, ps.PROVENANCE_FILE))
+        snap = ps.snapshot_network(res, 'c')
+        chk('T3e) 도장 이전 legacy 산출물은 baseline 이 있으면 보존', snap is not None)
+        if snap:
+            shutil.rmtree(snap, ignore_errors=True)
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
     # ══ 4) 단계 계약 요약기 ══
     S = ps.StageOutcome
     chk('13) 선택 단계만 실패 → partial',
@@ -188,9 +227,21 @@ def main():
             ps.read_network_provenance(tmp).get('network_run_id') is None)
         with ps.network_lock(lock_dir=tmp) as got1:
             chk('17) 파일 lock 획득', got1 is True)
-            with ps.network_lock(timeout=1, lock_dir=tmp) as got2:
-                # 같은 프로세스의 flock 은 재획득되므로 '거부'를 단정하지 않는다.
-                chk('18) 재진입이 예외 없이 처리된다', got2 in (True, False))
+            # ★ T8 (Codex CB-03): 두 번째 경쟁자는 lock 을 못 잡고, 그때 **solver 를
+            #   돌리지 않고 예외를 던져야** 한다.  옛 테스트는 True/False 를 모두
+            #   통과시켜 fail-open 을 놓쳤다.  flock 은 file-description 단위라
+            #   같은 프로세스의 두 번째 open() 도 실제로 막힌다.
+            raised = False
+            try:
+                with ps.network_lock(timeout=1, lock_dir=tmp):
+                    pass
+            except ps.LockUnavailable:
+                raised = True
+            chk('18) ★ lock 미획득 → LockUnavailable (fail-open 아님)', raised)
+            got3 = None
+            with ps.network_lock(timeout=1, lock_dir=tmp, require=False) as g:
+                got3 = g
+            chk('19) require=False 는 진단용으로 False 를 돌려준다', got3 is False)
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 
