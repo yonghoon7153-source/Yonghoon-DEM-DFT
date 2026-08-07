@@ -233,10 +233,19 @@ def run_weight_sweep(in_dir, out_dir=None, w_grid=DEFAULT_W_GRID,
     summary.to_csv(out_dir / "weight_sweep_summary.csv", index=False)
     opt = pick_optimum(summary)
 
+    # ★ seed 목적함수가 실제로 쓰였는지 기록한다 (F20b).
+    #   안 쓰인 결과는 w=0만 warm start를 못 받아 **공정 비교가 아니다**.
+    #   실측으로 그 상태의 결과를 한 번 보고서에 실을 뻔했다.
+    used_seed = SEED_NAME in objectives
     (out_dir / "weight_sweep.yaml").write_text(
         yaml.safe_dump({"w_grid": list(map(float, w_grid)),
                         "n_conditions": len(subset), "stride": stride,
-                        "n_restarts": n_restarts, "optimum": opt},
+                        "n_restarts": n_restarts,
+                        "seed_objective_used": bool(used_seed),
+                        "optimum": opt}
+                       | ({} if used_seed else {"_경고": (
+                           "seed 목적함수 없이 실행됐다 — w=0만 warm start를 못 받아 "
+                           "다른 w와 공정 비교가 되지 않는다. w=0 행을 인용하지 말 것.")}),
                        allow_unicode=True, sort_keys=False), encoding="utf-8")
     write_optimized_config("configs/objectives_optimized.yaml", opt)
 

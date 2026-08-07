@@ -401,6 +401,11 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
             P.append(f"- noise={n}: 최적 w = {d.get('w_dqdv')} "
                      f"({_pct(d.get(opt.get('metric')), 1)}, n={d.get('n')})")
         P.append(f"\n{opt.get('_주의', '')}\n")
+        if not wsweep.get("seed_objective_used", True):
+            P.append("> ⚠ **이 sweep은 `w=0` 행을 인용할 수 없습니다.** seed 목적함수 없이 "
+                     "실행돼, `w=0`만 warm start를 못 받고 나머지는 받았습니다. "
+                     "`w=0`이 유독 나쁘게 나오는 것은 dQ/dV 효과가 아니라 초기값 차이입니다 "
+                     "(F20b). `w ≥ 0.25`끼리의 비교만 유효합니다.\n")
         P.append("결과: `configs/objectives_optimized.yaml`\n")
 
     # ── 그림 ──
