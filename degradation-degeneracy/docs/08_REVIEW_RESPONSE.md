@@ -573,3 +573,68 @@ flat_valley는 1.6~3.5%로 넷이 사실상 같습니다. 다만 34p의 multimod
   그 전까지 결론 2는 "현재 비대칭 pipeline에서 관측된 값"으로만 씁니다 —
   이 제한은 그대로 유효합니다.
 - 결론 1은 철회 상태 유지, 결론 3은 pipeline 수준 표현 유지입니다.
+
+---
+
+## 14. 5차 리뷰 회답 (F49~F53)
+
+> **검증 대상**: `261ba004` (코드 `9b9d223d`) / **회답 커밋**: 아래 §14 끝 참조
+> **판정**: 8건 전부 타당. 전부 조치했습니다. **그리고 제 논증 하나가 반박됐습니다.**
+
+### 먼저 — 제가 틀린 것을 철회합니다
+
+4차 회답 §13에서 `halfcell_v2`의 시작 SHA를 이렇게 논증했습니다.
+
+> "`7557c33`을 실행 중 push했으니, HEAD가 움직였다면 종료 기록이 `7557c33`이어야
+> 한다. `3c1109f`로 남았으니 실행 내내 HEAD가 거기 있었다."
+
+**틀렸습니다.** 지적하신 대로 **push는 실행 worktree의 HEAD를 움직이지 않습니다.**
+HEAD는 그 worktree에서 pull/checkout해야 움직이고, 그건 artifact 밖의 사실입니다.
+따라서 이 논증은 artifact-internal proof가 아닙니다. `restarts_json.source` 역시
+"F31 이후 계통"이라는 정황일 뿐, cherry-pick·dirty source·사후 변환을 구별하지
+못한다는 지적도 맞습니다.
+
+**`halfcell_v2`의 "인용 가능 승격"을 철회하고 quarantine으로 되돌립니다.**
+F49~F53을 갖춘 clean SHA에서 fresh output으로 재실행합니다(진행 중).
+
+### 항목별 조치
+
+| # | 지적 | 조치 |
+|---|---|---|
+| 1 | 다른 코드의 resume 결과가 한 `run_sig`로 섞이고 validator도 통과 | **F49** — `git_commit`·`git_dirty`·`source_digest`(src/tools/configs 전체 내용 해시)를 `run_spec`에 넣고 `sig_version=3`. 코드가 바뀌면 서명이 바뀌므로 resume이 즉시 실패 |
+| 2 | F43이 필수 입력·spec schema를 정의하지 않음 | **F50** — reference별 필수 입력(curves·base config·halfcell 캐시), `run_spec` 필수 키 11종, 시작/종료 일치, 실행 중 코드 불변을 검사 |
+| 2 | `.dropna()`로 **전부 null이어도 통과**, `rs[0]`만 검사 | **F50** — 모든 행·모든 원소가 `p·J·i·source`를 갖는지 확인. 지적하신 두 반례를 테스트로 고정 |
+| 3 | start manifest가 self-fit보다 늦고 resume 시 덮어씀 | **F51** — 함수 맨 앞(curves 로드·inventory·half-cell 캐시·pristine `p_ini` fitting **이전**)으로 이동. `attempts/manifest_start_<id>.yaml`로 시도별 보존, 대표 파일은 최초 것만 |
+| 4 | 시작 SHA 추론은 증명이 아니고 artifact도 미공개 | **인정** — 위 철회. artifact는 재실행 후 `artifacts/`에 커밋 |
+| 5 | 배너가 비교에 쓰인 half-cell artifact를 검사하지 않음 | **F52** — `compare_cases.py`가 양쪽 provenance를 검증하고 digest를 `case_comparison.yaml`에 봉인. **F52b** — 배너 판정에 비교 입력을 합산하고, 표 위에 artifact별 판정을 표시 |
+| 6 | 1,242는 F44 적용 **전** 수치 | **인정** — 재실행 후 `pairwise['pocv_dvdq__vs__pocv_dvdq_dqdv']`로 제출 |
+| 7 | 커밋된 RESULTS는 수정 전 generator 산출물 | **인정** — 재실행 후 새 generator로 재생성 |
+| 8 | Windows `os.kill`이 `OSError [WinError 87]` | **F53** — WinError 87만 "죽음", 나머지는 안전하게 "살아 있음"으로 |
+
+테스트 **189 → 195**.
+
+### 발견 1이 가장 컸습니다
+
+`run_sig`에 코드 identity가 없다는 지적, 그리고 3조건 반례로 직접 재현해 주신 것
+(OLD_CODE 행 + NEW_CODE 행이 같은 `79f2e9c798ee`로 병합되고 `ok=True`)이 정확합니다.
+제가 F32/F36에서 "설정"만 넣고 "코드"를 빼놨습니다. 서명의 목적이 *"이 행들이 같은
+조건에서 나왔는가"* 인데, 코드가 조건의 일부라는 걸 두 라운드 동안 놓쳤습니다.
+
+`source_digest()`는 git commit이 아니라 **파일 내용을 직접 해시**합니다. commit만
+넣으면 dirty 실행을 못 잡기 때문입니다.
+
+### 발견 2의 두 구멍은 제 완료 주장과 정면으로 어긋났습니다
+
+§12에서 "`restarts_json`을 **첫 행이 아니라 모든 행** 검사한다"고 적었는데,
+`.dropna()`가 앞에 있어서 **전부 null이면 검사 대상이 0행**이었습니다. 그리고
+각 배열에서는 여전히 `rs[0]`만 봤습니다. 둘 다 제 문장이 구현보다 넓었습니다.
+
+### 남은 것
+
+- **재실행 진행 중**: `halfcell_v3` → `grid_fine_v3` → sweep (약 10시간).
+  clean worktree, fresh output, resume 미사용으로 시작했습니다.
+- 끝나면 `artifacts/`에 커밋해 외부에서 재검산 가능하게 하겠습니다(발견 4).
+- **동일 seed·동일 restart budget·early-stop off paired 재실행**은 여전히 미실시입니다.
+  그 전까지 결론 2는 "현재 비대칭 pipeline에서 관측된 값"으로만 씁니다.
+- 결론 1 철회 유지, 결론 3은 pipeline 수준 표현 유지이며 **정량값은 재실행 결과가
+  provenance를 통과할 때까지 인용 보류**입니다.
