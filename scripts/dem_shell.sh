@@ -20,9 +20,19 @@ export DEM_WEB="${DEM_WEB:-/home/yonghoon/dem-web}"
 export DEM_BRANCH="${DEM_BRANCH:-claude/stoic-knuth-NObVQ}"
 export DEM_RUN="${DEM_RUN:-$HOME/run_dem5002.sh}"
 
-# 매 fit 마다 다시 만들어지는 산출물 — pull 을 막으면 버려도 된다 (데이터 아님).
-# ★ 이 목록에 없는 파일은 절대 자동으로 버리지 않는다.
-DEM_REGEN_PATHS=('이종기술/eis/' '.gitignore')
+# ★ 스크립트가 매번 새로 쓰는 산출물만 — pull 을 막으면 버려도 된다.
+#   이 목록에 없는 파일은 절대 자동으로 버리지 않는다.
+#
+#   ⚠ 2026-08-06 정정: 전에는 '이종기술/eis/' 전체를 넣었는데 **너무 넓었다**.
+#      그 밑에는 버리면 안 되는 것이 둘 있다 —
+#        eis/raw/        BioLogic 원본 .mpr  (측정 원본, 재생성 불가)
+#        eis/extracted/  정리된 CSV.  galvani(.mpr 파서)를 리포에 넣지 않기로 했으므로
+#                        이게 있어야 파서 없이도 아카이브를 쓸 수 있다 (의도적 커밋 대상;
+#                        eis_archive.py 상단 주석 참조).
+#      실제로 재생성되는 것은 아래 둘뿐이다:
+#        eis_archive.py → eis/eis_catalog.csv
+#        eis_fit.py     → eis/fits/{eis_fit_results.csv, summary_means.csv, eis_fits.png}
+DEM_REGEN_PATHS=('이종기술/eis/eis_catalog.csv' '이종기술/eis/fits/' '.gitignore')
 
 # ★ 반드시 함수 정의 **앞**에 있어야 한다.  대화형 셸은 alias 를 함수 정의보다 먼저
 #   전개하므로, 같은 이름의 alias 가 남아 있으면  alias dem='cd ~/dem-web'  →
