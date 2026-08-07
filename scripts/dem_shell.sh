@@ -24,6 +24,12 @@ export DEM_RUN="${DEM_RUN:-$HOME/run_dem5002.sh}"
 # ★ 이 목록에 없는 파일은 절대 자동으로 버리지 않는다.
 DEM_REGEN_PATHS=('이종기술/eis/' '.gitignore')
 
+# ★ 반드시 함수 정의 **앞**에 있어야 한다.  대화형 셸은 alias 를 함수 정의보다 먼저
+#   전개하므로, 같은 이름의 alias 가 남아 있으면  alias dem='cd ~/dem-web'  →
+#   `cd ~/dem-web() {` 가 되어  "syntax error near unexpected token `('" 로 죽는다
+#   (2026-08-06 실제 발생 — 파일·인코딩 문제가 아니었다).
+unalias dem 2>/dev/null || true
+
 dem() {
   local force=0 run=1 arg
   for arg in "$@"; do
