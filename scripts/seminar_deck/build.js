@@ -490,27 +490,60 @@ function figbox(s, x, y, w, h, label) {
               { t: '; the ' }, { t: 'shape (√N) is labelled ASSUMED', c: RED, b: true },
               { t: ' — one endpoint cannot distinguish √N from linear.  A tool decides it once ≥ 4 experimental points exist.' }] },
   ], { x: 0.55, y: 2.82, w: 8.9, h: 0.42, size: 10.5 });
-  s.addText([{ text: '(b)  ★ The SE response curve does not transfer between electrodes  (new, Aug 2026)',
-               options: { bold: true, color: NAVY, fontSize: 12 } }],
-            { x: 0.6, y: 3.30, w: 8.8, h: 0.26, fontFace: BFONT, margin: 0 });
-  table(s, [
-    ['SE packing fraction φ', '0.700', '0.754', '0.851', '0.905'],
-    ['σ(other bed) / σ(reference)', '2.96×', '2.83×', '3.65×', '3.83×'],
-  ], { x: 0.6, y: 3.62, w: 4.6, colW: [2.2, 0.6, 0.6, 0.6, 0.6], rowH: 0.26, fs: 10 });
-  s.addText([{ text: 'Mechanism:  ', options: { bold: true, color: NAVY, fontSize: 10.5 } },
-             { text: 'von Mises caps only the shape-changing stress — ', options: { color: DARK, fontSize: 10.5 } },
-             { text: 'not the pressure', options: { color: RED, fontSize: 10.5, bold: true } },
-             { text: '.  The reference bed stops at 0.278 GPa (< σ_y 0.30) = still flowing into voids; the other reaches ',
-               options: { color: DARK, fontSize: 10.5 } },
-             { text: '1.012 GPa (3.4 × σ_y)', options: { color: RED, fontSize: 10.5, bold: true } },
-             { text: ' = pressurised because it cannot reach the remaining voids.  ⇒ the same φ hides a missing degree of freedom: ',
-               options: { color: DARK, fontSize: 10.5 } },
-             { text: 'whether the residual void is reachable', options: { color: NAVY, fontSize: 10.5, bold: true } },
-             { text: '.', options: { color: DARK, fontSize: 10.5 } }],
-            { x: 5.35, y: 3.58, w: 4.15, h: 0.95, fontFace: BFONT, valign: 'top',
-              lineSpacing: 13, margin: 0 });
-  takeaway(s, 'Reporting a rejected assumption is a result: it located a degree of freedom the index could not carry.', 4.62);
-  s.addNotes('먼저 말하는 게 중요합니다. 한계를 숨기면 질문에서 무너지고, 먼저 내면 대화가 됩니다.');
+  figbox(s, 0.6, 3.32, 8.8, 1.18,
+         'contact-mechanical ~2 % vs chemical CEI ~98 % — three-way split of the fade');
+  takeaway(s, 'The magnitude is anchored to experiment; the shape stays labelled ASSUMED until four cycle points exist.', 4.62);
+  s.addNotes('열화의 98 % 가 화학이라는 것이 결론입니다. 접촉 2 % 는 반드시 "하한"이라고 '
+    + '말해야 합니다 — OTHER 가 모델 밖에 있습니다.');
+}
+
+/* ═══════ 15. R9 — a rejected assumption, traced to its cause ═══════ */
+{
+  const s = frame('Results and discussion', 'this work, Aug 2026 — rejection → mechanism → descriptor → grid check');
+  bullets(s, [
+    { h: 'A rejected assumption, traced to its cause — and then to a one-number fix' },
+    { parts: [{ t: 'We indexed the SE stress response by ' }, { t: 'phi = V_SE /(A*h - V_AM)', b: true },
+              { t: ' ("how full is the SE\u2019s own space") and assumed one curve would serve every electrode.  Measured at matched loading rate, ' },
+              { t: 'it does not: 2.96 - 3.83x at the same phi', c: RED, b: true }, { t: '.' }] },
+  ], { h: 0.80 });
+  s.addChart(p.ChartType.line, [
+    { name: 'sigma at phi = 0.72', labels: ['501', '620', '745', '916', '1458'],
+      values: [0.7001, 0.5457, 0.4921, 0.4671, 0.3743] },
+  ], { x: 0.55, y: 1.95, w: 4.3, h: 2.50, showTitle: true,
+       title: 'One geometric descriptor collapses the composition effect',
+       titleFontSize: 10.5, titleColor: NAVY, chartColors: [NAVY],
+       lineSize: 2.5, lineDataSymbolSize: 8, showLegend: false, showValue: true,
+       dataLabelPosition: 't', dataLabelFontSize: 9, dataLabelColor: DARK,
+       catAxisTitle: 'channel width  d_h = V_free / S_AM   (nm)', showCatAxisTitle: true,
+       catAxisTitleFontSize: 9, valAxisTitle: 'sigma (GPa)', showValAxisTitle: true,
+       valAxisTitleFontSize: 9, catAxisLabelColor: '595959', valAxisLabelColor: '595959',
+       catAxisLabelFontSize: 9, valAxisLabelFontSize: 9,
+       valGridLine: { color: 'E0E0E0', size: 0.5 }, catGridLine: { style: 'none' } });
+  bullets(s, [
+    { parts: [{ t: '1. ' }, { t: 'Mechanism', c: BLUE, b: true },
+              { t: ' — von Mises caps only the shape-changing stress, ' },
+              { t: 'not the pressure', c: RED, b: true },
+              { t: '.  One bed stops at 0.278 GPa (below the 0.30 yield) = still flowing into voids; the other reaches ' },
+              { t: '1.012 GPa (3.4x yield)', c: RED, b: true },
+              { t: ' = pressurised, unable to reach the remaining voids.' }] },
+    { parts: [{ t: '2. ' }, { t: 'The cause is composition, not thickness', c: BLUE, b: true },
+              { t: ' — five beds matched to +/-1.4 % in thickness, only the particle-size ratio varied, give ' },
+              { t: '1.87x', b: true }, { t: ', ' }, { t: 'perfectly monotonic', b: true },
+              { t: ' in that ratio (by chance about 7e-5).' }] },
+    { parts: [{ t: '3. ' }, { t: 'The fix', c: BLUE, b: true },
+              { t: ' — index by channel width instead:  ' },
+              { t: 'sigma proportional to d_h^-0.54,  R2 = 0.935', b: true },
+              { t: '.  A new electrode then needs only its d_h, not a new five-point curve.' }] },
+    { parts: [{ t: '4. ' }, { t: 'Not a grid artefact', c: BLUE, b: true },
+              { t: ' — refining the grid ' }, { t: 'strengthens', b: true },
+              { t: ' the effect (+5-10 %): an unresolved constriction simply vanishes and lets material through.  So -0.54 is a ' },
+              { t: 'lower bound', b: true }, { t: ' on the magnitude.' }] },
+  ], { x: 5.00, y: 1.95, w: 4.5, h: 2.55, size: 10 });
+  takeaway(s, 'A rejected assumption became a mechanism, a descriptor, and a convergence check — that is a result.', 4.62);
+  s.addNotes('Q: "전이가 기각됐으면 지금까지 결과가 다 틀린 것 아니냐" — 아닙니다. 기각된 것은 '
+    + '곡선을 다른 전극에 옮기는 것이고, 각 전극에서 직접 계산한 값은 무관합니다. '
+    + '4번은 제 사전 예상이 부호부터 틀렸던 경우입니다 — 미해상이면 뻣뻣해질 줄 알았는데 '
+    + '실제로는 협착이 격자에서 사라져 오히려 무릅니다. 그래서 정밀화가 효과를 키웁니다.');
 }
 
 /* ═══════════════════ 15. Future plan ═══════════════════ */
@@ -522,7 +555,7 @@ function figbox(s, x, y, w, h, label) {
   table(s, [
     ['Item', 'Needs', 'Gives'],
     ['PyBaMM matched-condition parity', 'one GPU day', 'defensible → bullet-proof'],
-    ['σ(φ): composition vs thickness', '4 comp. × 3 pts', 'two-variable extension σ(φ, h)'],
+    ['σ(φ, d_h) exponent at finer grid', 'n_grid 288 (~4 h)', 'converged value (now bounded: |slope| ≥ 0.54)'],
     ['COMSOL hybrid export', 'bridge geometry', 'share results in COMSOL users’ language'],
   ], { x: 0.6, y: 1.46, w: 4.35, colW: [1.85, 1.05, 1.45], rowH: 0.36, fs: 9.5 });
   s.addText([{ text: '②  Awaiting anchors — we do not pretend to know',
