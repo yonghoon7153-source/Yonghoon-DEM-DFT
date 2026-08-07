@@ -451,6 +451,18 @@ def run_scoring(in_dir, out_dir=None, tol: float = DEFAULT_TOL,
                     o: round(1 - len(paired) / len(v), 4) if v else None
                     for o, v in sets.items()}
                 blk["비교가능"] = bool(len(paired) >= 30)
+                # ★ F41 — paired subset은 **무작위 표본이 아니다.** adaptive 조기
+                #   종료로 restart 2에서 멈춘 조건은 무작위 restart가 1개뿐이라
+                #   탈락하므로, 남는 것은 **네 목적함수 모두가 끝까지 간 조건**
+                #   = 모두에게 어려웠던 조건이다. 결과(최적화 난이도)로 선택된
+                #   집합이라 격자 전체로 일반화할 수 없다.
+                blk["_선택편향"] = (
+                    f"paired subset은 무작위 표본이 아니다 — adaptive 조기 종료를 "
+                    f"겪지 않은(=모든 목적함수가 끝까지 간) 조건만 남는다. "
+                    f"목적함수별 제외율이 "
+                    f"{min(blk['제외율_목적함수별'].values()):.0%}~"
+                    f"{max(blk['제외율_목적함수별'].values()):.0%}로 크게 다르다는 것이 "
+                    f"그 증거다. 여기서 잰 비율을 격자 전체로 일반화하지 말 것.")
                 if paired:
                     ms_p = ms_r[ms_r["cond_id"].isin(paired)]
                     ms_p.to_parquet(out_dir / "multistart_paired.parquet", index=False)

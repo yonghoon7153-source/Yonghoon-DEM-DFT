@@ -547,3 +547,44 @@ def test_random_only_requires_matched_condition_sets(tmp_path):
     assert blk["비교가능"] is False, \
         "조건 집합이 전혀 안 겹치는데 비교가능으로 통과했다 (F40)"
     assert "제외율_목적함수별" in blk
+
+
+def test_paired_subset_declares_its_selection_bias(tmp_path):
+    """★ F41 — paired subset은 결과(최적화 난이도)로 선택된 집합이다.
+
+    조기 종료를 겪은 조건이 탈락하므로 "모두에게 어려웠던 조건"만 남는다.
+    그 사실이 요약에 남아야 격자 전체로 일반화하는 오독을 막는다.
+    """
+    import json
+
+    import pandas as pd
+    import yaml
+
+    from src.scoring import run_scoring
+
+    def row(cond, obj, n_rand):
+        rs = [_r([1.0, 0.0, 1.0, 0.0], 0.0, i=0, source="warm")]
+        rs += [_r([1.0 + 0.1 * k, 0.0, 1.0, 0.0], 0.5, i=k)
+               for k in range(1, n_rand + 1)]
+        return {"cond_id": cond, "objective": obj, "noise": 0.0,
+                "lli": 0.0, "lam_pe": 0.0, "lam_ne": 0.0,
+                "lli_hat": 0.0, "lam_pe_hat": 0.0, "lam_ne_hat": 0.0,
+                "r": 1.0, "a_pe": 1.0, "a_ne": 1.0, "reference": "grid",
+                "restarts_json": json.dumps(rs)}
+
+    # A는 전 조건이 끝까지 가고, B는 절반이 조기 종료(무작위 1개 → 탈락)
+    rows = []
+    for i in range(40):
+        rows.append(row(f"c{i}", "A", 4))
+        rows.append(row(f"c{i}", "B", 4 if i < 20 else 1))
+    pd.DataFrame(rows).to_parquet(tmp_path / "fits.parquet", index=False)
+
+    run_scoring(tmp_path)
+    blk = yaml.safe_load(
+        (tmp_path / "degeneracy_summary.yaml").read_text(encoding="utf-8")
+    )["multistart_random_only"]
+
+    assert blk["n_paired_conditions"] == 20
+    assert "_선택편향" in blk and "무작위 표본이 아니다" in blk["_선택편향"]
+    # 제외율이 목적함수마다 다르다는 사실 자체가 경고문에 들어가야 한다
+    assert blk["제외율_목적함수별"]["A"] != blk["제외율_목적함수별"]["B"]
