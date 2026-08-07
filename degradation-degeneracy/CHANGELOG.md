@@ -567,3 +567,108 @@ F20c 주석의 *"숨은 seed로 물려줬는데 결과가 한 자리도 안 바�
 못 이겼다(63%). **유리한 조건을 주고도 비긴 것**이므로 "dQ/dV가 오차를 못 줄인다"는
 결론은 보수적이다. `make_results.py`가 `warm_started` 열을 실측해 이 문장을
 결론에 자동으로 붙인다.
+
+## 적대적 교차리뷰 대응 (2026-08-07, 기준 커밋 1790a9cc)
+
+외부 리뷰가 제기한 15건 중 코드·데이터로 검증 가능한 9건을 전부 재계산했고,
+**하나도 반박되지 않았다.** 아래는 그 조치다. 상세는 `docs/08_REVIEW_RESPONSE.md`.
+
+### F25 — restart 출처 소실로 multi-start 진단이 무효였다
+
+`fit()`이 `restarts`를 **J 오름차순으로 정렬해** 저장하는데, `multistart_diagnostics`의
+`skip_first=True`는 "첫 항목 = warm start"로 보고 그걸 버렸다. 실제로는
+**best restart를 버리고 있었다.** `degeneracy_summary.yaml`의
+`multistart_random_only` 블록 전체가 무효다.
+
+- restart마다 `{"p", "J", "i", "warm"}`을 저장 (`fit(warm_init=...)`)
+- `skip_first`는 이제 **flag로** 거른다. 출처가 없는 옛 형식은 보정을 **생략하고
+  경고**한다 — 위치로 추정하면 조용히 틀린 값이 나오므로
+- 요약에 `warm_start_보정_적용` 필드를 넣어, 무효인 블록을 모르고 인용하지 못하게 함
+- **기존 artifact로는 복구 불가.** 재fit이 필요하다
+
+### F26 — half-cell `p_ini`를 목적함수 하나로 전부 덮어썼다
+
+pristine 조건을 `pocv_dvdq`로 **한 번만** fit해 모든 목적함수에 주입했다.
+목적함수마다 pristine optimum이 다르므로 나머지는 남의 원점에서 좌표를 읽은 셈이다.
+
+목적함수별 pristine fit (artifacts/halfcell_v1 실측):
+
+| objective | α_PE | β_PE | α_NE | β_NE |
+|---|---|---|---|---|
+| pocv | 1.51409 | −0.41920 | 1.12157 | −0.11930 |
+| pocv_dvdq | 1.47598 | −0.40844 | 1.06166 | −0.05826 |
+| pocv_dvdq_dqdv | 1.51873 | −0.42200 | 1.06265 | −0.05949 |
+| dqdv_only | 1.48489 | −0.41018 | 1.05073 | −0.05073 |
+
+목적함수별 원점으로 다시 변환하면 (공통 1,476조건):
+
+| objective | 공통 p_ini | 목적함수별 p_ini |
+|---|---|---|
+| pOCV only | 99.5% | **59.5%** |
+| 33p | 6.6% | 6.6% (원점 제공자라 불변) |
+| 34p | 99.1% | **10.0%** (평균\|err\| 3.94 → 1.43%p) |
+| dQ/dV only | 99.9% | 99.8% |
+
+**미해결로 남겨뒀던 Case 1의 LAM_PE −4.1%p 오프셋이 이것이었다** (−3.83 → −1.09%p).
+`docs/RESULTS.md`의 halfcell 100%/99% 표와 "reference 효과가 모든 목적함수에 공통"이라는
+일반화는 철회한다. 33p의 7% vs 62%는 33p가 원점 제공자여서 그대로 유지된다.
+
+### F27 — `recoverable` 판정이 행별이 아니라 프레임 전체였다
+
+`(out["reference"] != "grid").any()` — halfcell 행이 하나만 섞여도 grid 행까지
+전부 복원가능이 됐다. 비교표의 분모가 소리 없이 늘어나는 실패다. 행별
+`np.where`로 바꾸고, halfcell의 `True`가 측정이 아니라 가정임을
+`recoverable_measured` 열로 남긴다.
+
+### F28 — 우도비 46:1은 임계가 만든 국소 봉우리다
+
+계산 방향(분자·분모)은 뒤집히지 않았다. 재계산으로 `46.25`가 그대로 나온다.
+문제는 그 값이 **특정 임계 조합에서만** 나온다는 것이다 (복원가능군, noise=0, 33p):
+
+```
+참 격차 cutoff  ≥2%p → 2.3   ≥4%p → 4.5   ≥6%p → 46.4
+복원 동일 임계  <1%p → 22.3  <2%p → 46.4  <3%p → 15.2  <4%p → 9.2
+전체 격자에서는 3.69
+```
+
+- `gap_sensitivity()` 신설 — 임계 2차원 표를 항상 함께 낸다
+- `gap_analysis`가 `lr_sensitivity_min/max/median`과 `lr_is_local_spike`를 자기 dict에 넣어,
+  떼어 인용하지 못하게 한다
+- `n_zero_gap_true` → `n_small_gap_true` (조건은 "<tol"이지 "정확히 0"이 아니었다).
+  정확히 0인 수는 `n_exact_zero_gap_true`로 따로
+- **결론 문구 철회**: "22p는 degeneracy가 아니라 실제로 비슷하게 열화했다는 증거" →
+  "이 합성 격자의 복원가능군에서, 참 격차가 뚜렷한 조건이 '같다'로 붕괴하는 일은
+  드물었다". posterior가 아님·부분집단 조건화·임계 의존 세 제약을 결론에 상시 부착
+
+### F29 — 복원가능군 조건화가 결론 2의 방향을 바꾼다
+
+| objective | 전체 격자 | 복원가능군 | 복원불가군 |
+|---|---|---|---|
+| 33p | 74.1% | 61.9% | 85.3% |
+| 34p | 71.9% | 63.3% | 80.0% |
+
+복원가능군에서는 33p가 1.4%p 낫고 **전체 격자에서는 34p가 2.2%p 낫다.**
+`comparison_table(recoverable_only=False)`를 추가해 전체군 표를 항상 병기하고,
+`population_sensitivity.direction_flips`로 뒤집힘을 스스로 판정해 경고한다.
+
+또한 `pe_ne_antisym`(68→48%)은 raw 오차의 **부호**만 세므로 목적함수별 전역 편향의
+부호차를 그대로 상쇄로 잡는다. 중심화하면 **33.1% → 42.9%로 방향이 뒤집힌다**
+(33p 오차상관 +0.754, 34p −0.287). "34p가 상쇄를 줄였다"는 인과 해석을 철회하고,
+그 경고를 결론에 붙였다.
+
+### F30 — artifact provenance가 없었다
+
+`grid_fine_v2`·`halfcell_v1` 둘 다 `config_hash: ''` + `git_dirty: true`였고
+dirty patch가 없다. parquet은 재집계할 수 있어도 그 숫자를 만든 코드가 남아 있지 않다.
+
+- `base_manifest(cfg_hash, out_dir=, inputs=)` — dirty diff를 `run_dirty.patch`로 저장,
+  입력 파일 SHA-256 기록, `reproducible` 플래그와 `_주의` 자동 부착
+- fitting은 실제 `obj_cfg` 내용을 해시해 `config_hash`에 넣는다 (빈 문자열이 아니라)
+- `git_commit`을 full SHA로
+
+### 유지되는 결론
+
+`pocv_dvdq`의 halfcell 6.6% vs grid 61.9%(McNemar p≈1e-202)는 목적함수별 `p_ini`로
+바꿔도 한 자리도 안 변한다. 다만 case 변경에는 좌표 원점·정규화·bounds·`p_ini`가
+함께 들어가므로 **"곡선 범위 때문"이 아니라 "reference 생성 pipeline 때문"** 으로
+좁혀 적는다. 단일 원인 귀속은 ablation 없이 성립하지 않는다.

@@ -10,6 +10,7 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 import json
 import os
 import platform
@@ -21,19 +22,48 @@ import pandas as pd
 import yaml
 
 
-def git_info(repo_dir: str | Path | None = None) -> dict:
-    """현재 git commit / dirty 여부. git이 없어도 죽지 않는다."""
+def git_info(repo_dir: str | Path | None = None, save_diff_to=None) -> dict:
+    """현재 git commit / dirty 여부. git이 없어도 죽지 않는다.
+
+    ★ F30 — dirty 실행이면 **diff를 같이 남긴다.**
+      `git_dirty: true`만 적혀 있으면 그 산출물을 만든 코드가 세상에 없다.
+      결과 parquet은 재집계할 수 있어도 독립 연구자가 같은 숫자를 만들 수 없어
+      인용 근거로 못 쓴다. 실제로 grid_fine_v2·halfcell_v1이 그 상태였다.
+    """
     cwd = str(repo_dir) if repo_dir else None
     try:
-        commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"],
+        commit = subprocess.run(["git", "rev-parse", "HEAD"],
                                 capture_output=True, text=True, cwd=cwd,
                                 timeout=10).stdout.strip()
-        dirty = bool(subprocess.run(["git", "status", "--porcelain"],
-                                    capture_output=True, text=True, cwd=cwd,
-                                    timeout=10).stdout.strip())
-        return {"git_commit": commit or "unknown", "git_dirty": dirty}
+        dirty_txt = subprocess.run(["git", "status", "--porcelain"],
+                                   capture_output=True, text=True, cwd=cwd,
+                                   timeout=10).stdout.strip()
+        info = {"git_commit": commit or "unknown",
+                "git_commit_short": commit[:8] if commit else "unknown",
+                "git_dirty": bool(dirty_txt)}
+        if dirty_txt and save_diff_to is not None:
+            diff = subprocess.run(["git", "diff", "HEAD"], capture_output=True,
+                                  text=True, cwd=cwd, timeout=30).stdout
+            p = Path(save_diff_to)
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text(diff, encoding="utf-8")
+            info["git_dirty_diff"] = str(p.name)
+            info["git_dirty_files"] = dirty_txt.splitlines()[:50]
+        return info
     except Exception:  # noqa: BLE001
         return {"git_commit": "unavailable", "git_dirty": None}
+
+
+def file_digest(path) -> str | None:
+    """입력 파일의 SHA-256 (앞 16자). 재현성 검증용."""
+    p = Path(path)
+    if not p.exists() or not p.is_file():
+        return None
+    h = hashlib.sha256()
+    with open(p, "rb") as f:
+        for blk in iter(lambda: f.read(1 << 20), b""):
+            h.update(blk)
+    return h.hexdigest()[:16]
 
 
 def save_chunk(df: pd.DataFrame, out_dir: str | Path, chunk_idx: int,
@@ -196,19 +226,39 @@ def write_manifest(out_dir: str | Path, payload: dict) -> Path:
     return path
 
 
-def base_manifest(cfg_hash: str, extra: dict | None = None) -> dict:
+def base_manifest(cfg_hash: str, extra: dict | None = None,
+                  out_dir=None, inputs=None) -> dict:
+    """★ F30 — 재현에 필요한 것을 전부 적는다.
+
+    `config_hash: ''`, `git_dirty: true`만 남은 manifest는 provenance가 아니다.
+    out_dir을 주면 dirty diff를 `run_dirty.patch`로 같이 저장하고, inputs를
+    주면 입력 파일의 SHA-256을 기록한다.
+    """
     import pybamm
 
+    repo = Path(__file__).resolve().parent.parent
+    diff_path = Path(out_dir) / "run_dirty.patch" if out_dir else None
     m = {
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S"),
         "config_hash": cfg_hash,
         "pybamm_version": pybamm.__version__,
         "platform": platform.platform(),
         "python": platform.python_version(),
-        **git_info(Path(__file__).resolve().parent.parent),
+        **git_info(repo, save_diff_to=diff_path),
     }
+    if inputs:
+        m["input_sha256"] = {str(p): file_digest(p) for p in inputs}
     if extra:
         m.update(extra)
+    # 재현 가능성을 스스로 판정해 적어 둔다 — 읽는 쪽이 놓치지 않게
+    m["reproducible"] = bool(cfg_hash) and not m.get("git_dirty", True)
+    if not m["reproducible"]:
+        m["_주의"] = (
+            "이 산출물은 그대로 재현할 수 없다. "
+            + ("config_hash가 비어 있다. " if not cfg_hash else "")
+            + ("작업 트리가 dirty 상태였다 (diff는 run_dirty.patch). "
+               if m.get("git_dirty") else "")
+            + "인용하려면 clean commit에서 재생성할 것.")
     return m
 
 

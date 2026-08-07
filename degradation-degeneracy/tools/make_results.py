@@ -20,6 +20,7 @@ _ROOT = Path(__file__).resolve().parent.parent
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
+import numpy as np
 import pandas as pd
 import yaml
 
@@ -93,6 +94,24 @@ def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
             f"(평균 |오차| {_pp(b['mean_abs_err'])} → {_pp(i['mean_abs_err'])}, "
             f"PE-NE 상쇄 {_pct(b['pe_ne_antisym_frac'])} → "
             f"{_pct(i['pe_ne_antisym_frac'])})")
+        # ★ pe_ne_antisym은 raw 오차의 **부호**만 센다. 목적함수마다 전역 편향의
+        #   부호가 다르면 그 차이가 곧바로 "상쇄"로 잡힌다. 실측에서 편향을 빼면
+        #   방향이 뒤집혔다(70.5→52.6% raw vs 33.1→42.9% 중심화). 인과로 읽지 말 것.
+        lines.append(
+            "   ⓘ **PE-NE 상쇄 수치를 '34p가 상쇄를 줄였다'로 읽지 마세요.** 이 지표는 "
+            "raw 오차의 부호만 세는데, 목적함수마다 전역 편향의 부호가 달라 그 차이가 "
+            "그대로 잡힙니다. 목적함수별 평균편향을 뺀 뒤 다시 세면 방향이 뒤집힙니다. "
+            "전압 민감도로 가중하지 않은 파라미터 오차 부호는 full-cell 곡선에서 실제로 "
+            "상쇄되는 양을 재지도 않습니다.")
+        # ★ 모집단이 결론의 방향을 바꾸는지 — compare_objectives가 스스로 판정한 값
+        ps = cmp_res.get("population_sensitivity") or {}
+        if ps.get("direction_flips"):
+            lines.append(
+                f"   ⚠ **이 순위는 모집단에 따라 뒤집힙니다.** 복원가능군에서는 34p−33p = "
+                f"{_pp(ps['dqdv_minus_base_recoverable'])}인데 전체 격자에서는 "
+                f"{_pp(ps['dqdv_minus_base_all'])}입니다. 복원불가군(참 α<1)은 grid 기준에서 "
+                f"정답이 표현 불가능한 조건이라 제외에 근거가 있지만, **그 제외가 우열을 "
+                f"바꾸므로** 어느 모집단인지 없이 인용하면 안 됩니다.")
         note = _warm_start_asymmetry(fits)
         if note:
             lines.append(note)
@@ -112,12 +131,33 @@ def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
                 f"{_pp(g['mean_recovered_gap_wide'])}, shrinkage {g['shrinkage']:.2f}. ")
         lr = g.get("likelihood_ratio_equal")
         if lr is not None and split is not None:
-            fact += (f"\n\n   관측 \"두 전극이 같다\"가 어느 쪽을 지지하는지는 우도비로 나온다.\n\n"
-                     f"   > P(같다고 답 | 참값 같음) = {_pct(1 - split)}\n"
-                     f"   > P(같다고 답 | 참값 {_pp(g['gap_thresh'], 0)} 이상 차이) = {_pct(collapse, 1)}\n"
-                     f"   > **우도비 ≈ {lr:.0f} : 1**\n\n"
-                     f"   → **22p의 `LAM_PE ≈ LAM_NE`는 degeneracy의 증거가 아니라, 두 전극이 "
-                     f"실제로 비슷하게 열화했다는 쪽의 증거다.**")
+            fact += (f"\n\n   관측 \"두 전극이 같다\"가 어느 쪽을 지지하는지 **사건 우도비**로 보면\n\n"
+                     f"   > P(같다고 답 | 참 격차 < {_pp(g['tol'], 0)}) = {_pct(1 - split)}\n"
+                     f"   > P(같다고 답 | 참 격차 ≥ {_pp(g['gap_thresh'], 0)}) = {_pct(collapse, 1)}\n"
+                     f"   > 우도비 = {lr:.1f}")
+            # ★ 이 값을 결론으로 승격시키지 않는다. 아래 세 제약을 같은 문단에 붙인다.
+            lo, hi = g.get("lr_sensitivity_min"), g.get("lr_sensitivity_max")
+            med = g.get("lr_sensitivity_median")
+            fact += "\n\n   **이 값을 '두 전극이 실제로 비슷하다'로 읽을 수 없다.** 세 가지 때문이다.\n"
+            if lo is not None:
+                spike = g.get("lr_is_local_spike")
+                fact += (f"\n   1. **임계 의존** — 같은 데이터에서 (참격차, 동일판정) 임계를 "
+                         f"흔들면 우도비가 {lo:.1f}~{hi:.1f}(중앙값 {med:.1f})로 움직인다. "
+                         + ("현재 조합은 이웃보다 유독 높은 **국소 봉우리**다 — 이 값을 "
+                            "대표값으로 인용하면 사후선택이 된다. "
+                            if spike else "")
+                         + "아래 임계 민감도 표를 함께 볼 것.\n")
+            fact += ("\n   2. **posterior가 아님** — 이건 두 합성 가설 아래의 *사건* 우도비다. "
+                     "`P(참값이 같다 | fitting이 같다고 답함)`으로 바꾸려면 실제 셀 집단의 "
+                     "사전확률과, 여기서 버린 중간 격차 구간의 주변분포가 필요하다. "
+                     "격자점을 같은 빈도로 센 것은 실제 셀의 분포가 아니다.\n")
+            fact += (f"\n   3. **부분집단 조건화** — 복원가능군"
+                     f"(population={g.get('population', 'recoverable')})에서만 센 값이다. "
+                     "실제 셀이 그 부분집단에 속한다는 독립 근거가 없으면 적용할 수 없고, "
+                     "전체 격자에서는 값이 크게 달라진다(아래 표).\n")
+            fact += ("\n   → 지금 자료로 방어할 수 있는 문장은 하나뿐이다: **이 합성 격자의 "
+                     "복원가능군에서, 참 격차가 뚜렷한 조건이 '같다'로 붕괴하는 일은 드물었다.** "
+                     "22p가 물리인지 degeneracy인지는 이것만으로 판정되지 않는다.")
         # ★ 임계 의존성은 **항상** 싣는다. 표에만 두면 결론만 인용될 때 빠진다.
         if "collapse_requires_gap_err" in g:
             fact += (f"\n\n   ⚠ 이 숫자들은 임계 설정에 의존한다. 붕괴로 세려면 격차를 "
@@ -231,6 +271,21 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     P.append("## 목적함수 4종 비교\n")
     P.append("복원가능군(F1)만, 노이즈 전체 합산.\n")
     P.append(to_markdown(tbl) + "\n")
+    # ★ F29 — 복원가능군 제외가 결론을 만드는지 보이려면 전체군을 나란히 둔다.
+    tbl_all = pd.DataFrame(cmp_res.get("table_all_conditions") or [])
+    if len(tbl_all):
+        P.append("### 전체 격자 (복원불가군 포함)\n")
+        ps = cmp_res.get("population_sensitivity") or {}
+        P.append(
+            "복원불가군(참 α<1)은 grid 기준에서 정답이 재구성 창 밖이라 **원리적으로** "
+            "복원되지 않는 조건이다. 위 표에서 뺀 근거는 그것이다. 다만 그 제외가 "
+            "난이도와 무관하지 않으므로(저LLI에서 복원가능 비율이 훨씬 낮다) 전체군을 "
+            "같이 싣는다.\n")
+        if ps.get("direction_flips"):
+            P.append("> ⚠ **두 표에서 33p와 34p의 우열이 뒤집힙니다.** 결론 문장에 어느 "
+                     "모집단인지 반드시 함께 쓰세요.\n")
+        P.append(to_markdown(tbl_all) + "\n")
+
     if len(tbl_noise):
         P.append("### 노이즈 수준별 (F10)\n")
         P.append("dQ/dV의 이점은 노이즈에서 희석된다. 노이즈 0 결과만 인용하면 "
@@ -286,6 +341,50 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
                  "끌어내려야 하므로 최소 4%p의 격차 오차가 필요합니다. 이 값이 실측 "
                  "격차오차 중앙값보다 크면, **낮은 붕괴율은 측정이 아니라 임계 설정의 "
                  "결과**입니다 — 그대로 인용하지 마세요.\n")
+
+        # ★ F28 — 임계 2차원 민감도. 한 칸만 떼어 인용하지 못하게 표 전체를 싣는다.
+        sens = (cmp_res.get("gap_sensitivity") or {}).get("pocv_dvdq") or []
+        if sens:
+            P.append("### 임계 민감도 — 위 숫자를 인용하기 전에 볼 것\n")
+            P.append("같은 데이터에서 (참 격차 cutoff, 동일 판정 tol) 두 임계만 바꿔 "
+                     "우도비를 다시 센 것이다 (`pocv_dvdq`, noise=0, 복원가능군). "
+                     "값이 한 자릿수에서 수십까지 움직이면, 특정 조합의 값은 "
+                     "**측정이 아니라 선택**이다.\n")
+            tols = sorted({s["tol"] for s in sens})
+            gts = sorted({s["gap_thresh"] for s in sens})
+            P.append("| 참 격차 ≥ \\ 동일 판정 < | "
+                     + " | ".join(_pp(t, 0) for t in tols) + " |")
+            P.append("|---" * (len(tols) + 1) + "|")
+            look = {(s["gap_thresh"], s["tol"]): s for s in sens}
+            for gt in gts:
+                cells = []
+                for t in tols:
+                    s = look.get((gt, t))
+                    cells.append("—" if s is None else
+                                 ("∞" if not np.isfinite(s["likelihood_ratio"])
+                                  else f"{s['likelihood_ratio']:.1f}"))
+                P.append(f"| **{_pp(gt, 0)}** | " + " | ".join(cells) + " |")
+            P.append("")
+            P.append("각 칸의 분자·분모(조건 수 포함)는 `objective_comparison.yaml`의 "
+                     "`gap_sensitivity`에 있다. 표의 최댓값을 대표값으로 쓰지 말 것.\n")
+
+        # ★ F29 — 전체 격자에서의 같은 지표
+        gaps_all = cmp_res.get("gap_analysis_all_conditions") or {}
+        ga = gaps_all.get("pocv_dvdq") or {}
+        if "likelihood_ratio_equal" in ga and "likelihood_ratio_equal" in (
+                gaps.get("pocv_dvdq") or {}):
+            P.append("### 모집단을 바꾸면 (복원불가군 포함)\n")
+            P.append(f"| 모집단 | n(참격차 작음) | n(참격차 큼) | 붕괴율 | 우도비 |")
+            P.append("|---|---|---|---|---|")
+            for label, gg in (("복원가능군", gaps["pocv_dvdq"]), ("전체 격자", ga)):
+                P.append(f"| {label} | {gg.get('n_small_gap_true', '—')} | "
+                         f"{gg.get('n_wide_gap_true', '—')} | "
+                         f"{_pct(gg.get('gap_collapse_frac'))} | "
+                         f"{gg['likelihood_ratio_equal']:.1f} |")
+            P.append("")
+            P.append("복원가능군 조건화는 물리적 근거가 있지만(참 α<1이면 정답이 재구성 "
+                     "창 밖), **그 조건화가 우도비를 크게 바꾼다**는 사실은 결론과 같은 "
+                     "무게로 적어야 한다.\n")
 
     # ── Hessian ──
     if hess_by_obj:

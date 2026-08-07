@@ -55,9 +55,19 @@ def _order(objs) -> list:
 
 # ---------------------------------------------------------------- 표
 
-def comparison_table(df: pd.DataFrame, by_noise: bool = False) -> pd.DataFrame:
-    """목적함수별 핵심 지표. F1에 따라 복원가능군만."""
-    rec = df[df["recoverable"]] if "recoverable" in df.columns else df
+def comparison_table(df: pd.DataFrame, by_noise: bool = False,
+                     recoverable_only: bool = True) -> pd.DataFrame:
+    """목적함수별 핵심 지표. F1에 따라 기본은 복원가능군만.
+
+    ★ F29 — `recoverable_only=False`로 전체군도 반드시 같이 낸다. 실측에서
+      결론의 **방향이 모집단에 따라 뒤집힌다**:
+        복원가능군  33p 61.9% < 34p 63.3%   (33p가 낫다)
+        전체 격자   33p 74.1% > 34p 71.9%   (34p가 낫다)
+      복원불가군은 grid 기준에서 정답이 표현 불가능한 조건이므로 제외에 근거가
+      있지만, 그 제외가 결론을 만든다면 제외 사실 자체를 결론과 같은 무게로
+      적어야 한다.
+    """
+    rec = df[df["recoverable"]] if (recoverable_only and "recoverable" in df.columns) else df
     keys = ["objective"] + (["noise"] if by_noise and "noise" in rec.columns else [])
     rows = []
     for key, g in rec.groupby(keys):
@@ -148,8 +158,53 @@ def verdict_22p(df: pd.DataFrame, objective: str = "pocv_dvdq",
 
 # ---------------------------------------------------------------- 격차 붕괴
 
+def gap_sensitivity(df: pd.DataFrame, objective: str, noise: float | None = 0.0,
+                    gap_grid=(0.02, 0.04, 0.06, 0.08),
+                    tol_grid=(0.01, 0.02, 0.03, 0.04, 0.05),
+                    recoverable_only: bool = True) -> list[dict]:
+    """★ F28 — 우도비·붕괴율의 임계 2차원 민감도.
+
+    단일 (gap_thresh, tol) 조합의 값은 인용할 수 없다는 것이 리뷰의 결론이었다.
+    실측(pocv_dvdq, noise=0, 복원가능군)에서 우도비는
+
+        참격차 ≥2/4/6%p  →   2.3 / 4.5 / 46.4
+        복원동일 <1/2/3%p →  22.3 / 46.4 / 15.2
+
+    처럼 특정 지점에서만 치솟는다. 이웃 임계에서 한 자릿수인 값을 46:1로
+    인용하면 사후선택이 된다. 그래서 표 전체를 같이 낸다 — 한 칸만 떼어
+    쓰지 못하게 하는 것이 목적이다.
+    """
+    sub = df[df["objective"] == objective]
+    if noise is not None and "noise" in sub.columns:
+        sub = sub[sub["noise"] == noise]
+    if recoverable_only and "recoverable" in sub.columns:
+        sub = sub[sub["recoverable"]]
+    if sub.empty:
+        return []
+    gt, gr = sub["pe_ne_gap_true"], sub["pe_ne_gap_recovered"]
+    rows = []
+    for g in gap_grid:
+        for t in tol_grid:
+            if g <= t:
+                continue        # "뚜렷이 다름"이 "같음"보다 좁으면 정의가 무너진다
+            same, wide = gt < t, gt >= g
+            if not same.any() or not wide.any():
+                continue
+            p_same = float((gr[same] < t).mean())
+            p_diff = float((gr[wide] < t).mean())
+            rows.append({
+                "gap_thresh": float(g), "tol": float(t),
+                "n_same": int(same.sum()), "n_wide": int(wide.sum()),
+                "p_same_given_same": p_same, "p_same_given_wide": p_diff,
+                "likelihood_ratio": float(p_same / p_diff) if p_diff > 0
+                else float("inf"),
+            })
+    return rows
+
+
 def gap_analysis(df: pd.DataFrame, objective: str, noise: float | None = 0.0,
-                 gap_thresh: float = 0.06, tol: float = 0.02) -> dict:
+                 gap_thresh: float = 0.06, tol: float = 0.02,
+                 recoverable_only: bool = True) -> dict:
     """★ 22p 질문에 가장 직접적으로 답하는 지표.
 
     22p 근방 격자점은 참값이 애초에 LAM_PE = LAM_NE라서, 거기서 복원값이
@@ -174,7 +229,7 @@ def gap_analysis(df: pd.DataFrame, objective: str, noise: float | None = 0.0,
     sub = df[df["objective"] == objective]
     if noise is not None and "noise" in sub.columns:
         sub = sub[sub["noise"] == noise]
-    if "recoverable" in sub.columns:
+    if recoverable_only and "recoverable" in sub.columns:
         sub = sub[sub["recoverable"]]
     if sub.empty:
         return {"error": f"조건 없음 (objective={objective}, noise={noise})"}
@@ -185,8 +240,12 @@ def gap_analysis(df: pd.DataFrame, objective: str, noise: float | None = 0.0,
     out = {
         "objective": objective, "noise": noise,
         "gap_thresh": gap_thresh, "tol": tol,
+        "population": "recoverable" if recoverable_only else "all",
         "n_wide_gap_true": int(len(wide)),
-        "n_zero_gap_true": int(len(same)),
+        # ★ F28: 이 군은 "참 격차가 정확히 0"이 아니라 "< tol"이다. 옛 이름
+        #   n_zero_gap_true는 조건을 잘못 말해서 바꿨다.
+        "n_small_gap_true": int(len(same)),
+        "n_exact_zero_gap_true": int((gt.round(6) == 0).sum()),
     }
     if len(wide):
         w_gr = wide["pe_ne_gap_recovered"]
@@ -222,11 +281,29 @@ def gap_analysis(df: pd.DataFrame, objective: str, noise: float | None = 0.0,
         p_diff = out["gap_collapse_frac"]
         out["likelihood_ratio_equal"] = (
             float(p_same / p_diff) if p_diff > 0 else float("inf"))
+
+        # ★ F28 — 이 값 하나만으로는 아무것도 주장할 수 없다. 임계를 흔들어
+        #   얼마나 움직이는지를 **같은 dict 안에** 넣어, 떼어 인용하지 못하게 한다.
+        sens = gap_sensitivity(df, objective, noise,
+                               recoverable_only=recoverable_only)
+        lrs = [s["likelihood_ratio"] for s in sens if np.isfinite(s["likelihood_ratio"])]
+        if lrs:
+            out["lr_sensitivity_min"] = float(min(lrs))
+            out["lr_sensitivity_max"] = float(max(lrs))
+            out["lr_sensitivity_median"] = float(np.median(lrs))
+            # 이 조합이 이웃보다 유독 높으면 = 임계가 값을 만든 것
+            out["lr_is_local_spike"] = bool(
+                out["likelihood_ratio_equal"] > 3.0 * np.median(lrs))
         out["_주의"] = (
-            "우도비와 붕괴율은 gap_thresh·tol 선택에 의존한다. "
-            f"붕괴로 세려면 격차 오차가 최소 {100 * (gap_thresh - tol):.0f}%p여야 하는데 "
-            "실측 분포가 그보다 작으면 낮은 붕괴율은 측정이 아니라 임계 설정의 결과다 "
-            "— collapse_measurable 을 함께 볼 것.")
+            "★ 이 우도비를 단독으로 인용하지 말 것. (1) posterior가 아니라 사건 "
+            "우도비다 — '참값이 같을 확률'로 바꾸려면 사전확률과 2~6%p 중간 구간의 "
+            "주변분포가 필요하다. (2) gap_thresh·tol 선택에 크게 의존한다 "
+            f"(임계 격자 위 범위 {out.get('lr_sensitivity_min', float('nan')):.1f}"
+            f"~{out.get('lr_sensitivity_max', float('nan')):.1f}, "
+            f"중앙값 {out.get('lr_sensitivity_median', float('nan')):.1f}). "
+            f"(3) 복원가능군(population={out['population']})으로 조건화한 값이라, "
+            "실제 셀이 그 부분집단에 속한다는 독립 근거가 없으면 적용할 수 없다. "
+            "gap_sensitivity 표 전체와 함께 볼 것.")
     return out
 
 
@@ -358,6 +435,13 @@ def run_compare(in_dir, out_dir=None, tol: float = 0.02) -> dict:
     objs = _order(df["objective"].unique())
     verdicts = {o: verdict_22p(df, o) for o in objs}
     gaps = {o: gap_analysis(df, o, tol=tol) for o in objs}
+    # ★ F28/F29 — 복원가능군 조건화가 결론을 만들지 않았는지 보이려면 전체군을
+    #   같이 내야 한다. 실측에서 결론 2의 방향이 모집단에 따라 뒤집혔다
+    #   (복원가능군 33p 61.9 < 34p 63.3, 전체 격자 33p 74.1 > 34p 71.9).
+    gaps_all = {o: gap_analysis(df, o, tol=tol, recoverable_only=False) for o in objs}
+    sens = {o: gap_sensitivity(df, o) for o in objs}
+    tbl_all = comparison_table(df, recoverable_only=False)
+    tbl_all.to_csv(out_dir / "objective_comparison_all_conditions.csv", index=False)
 
     figs = {}
     for o in objs:
@@ -383,10 +467,30 @@ def run_compare(in_dir, out_dir=None, tol: float = 0.02) -> dict:
             log.warning("가중치 곡선 실패: %s", e)
 
     result = {"table": tbl.to_dict("records"),
+              "table_all_conditions": tbl_all.to_dict("records"),
               "table_by_noise": tbl_noise.to_dict("records"),
-              "verdict_22p": verdicts, "gap_analysis": gaps, "figures": figs,
+              "verdict_22p": verdicts, "gap_analysis": gaps,
+              "gap_analysis_all_conditions": gaps_all,
+              "gap_sensitivity": sens, "figures": figs,
               "unrecoverable_frac": float(1 - df["recoverable"].mean())
               if "recoverable" in df.columns else 0.0}
+    # ★ F29 — 모집단 선택이 결론의 방향을 바꾸는지 스스로 판정해 기록한다.
+    try:
+        a = tbl.set_index("objective")["degenerate_frac"]
+        b = tbl_all.set_index("objective")["degenerate_frac"]
+        d_rec = float(a["pocv_dvdq_dqdv"] - a["pocv_dvdq"])
+        d_all = float(b["pocv_dvdq_dqdv"] - b["pocv_dvdq"])
+        result["population_sensitivity"] = {
+            "dqdv_minus_base_recoverable": d_rec,
+            "dqdv_minus_base_all": d_all,
+            "direction_flips": bool(d_rec * d_all < 0),
+            "_주의": ("복원가능군과 전체 격자에서 33p·34p의 우열이 뒤집힌다. "
+                     "결론 2를 인용할 때 어느 모집단인지 반드시 함께 쓸 것."
+                     if d_rec * d_all < 0 else
+                     "두 모집단에서 방향이 같다."),
+        }
+    except KeyError:
+        pass
     (out_dir / "objective_comparison.yaml").write_text(
         yaml.safe_dump(result, allow_unicode=True, sort_keys=False, default_flow_style=False),
         encoding="utf-8")

@@ -288,3 +288,50 @@ def test_dqdv_linear_voltage_gives_constant_dqdv(obj_cfg):
     out = dqdv_on_grid(x, v, v_grid, window=21, polyorder=3)
     inner = out[np.isfinite(out)][10:-10]   # 경계 몇 점 제외
     np.testing.assert_allclose(inner, -1.0 / 1.5, rtol=5e-3)
+
+
+# ---------------------------------------------------------------- F26 목적함수별 p_ini
+
+def test_halfcell_p_ini_is_per_objective():
+    """★ F26 — pristine 원점을 목적함수마다 따로 잡아야 한다.
+
+    한때 pocv_dvdq 하나로 fit해 모든 목적함수에 주입했다. 목적함수마다 pristine
+    optimum이 다르므로 나머지는 남의 원점에서 좌표를 읽게 되고, LAM_PE에 거의
+    일정한 offset이 생긴다. 실측(공통 1,476조건): 34p가 99.1% → 10.0%.
+    """
+    import inspect
+
+    import src.fitting as F
+
+    src = inspect.getsource(F._run_fit_locked)
+    assert '"objectives": {name: weights}' in src, \
+        "목적함수별로 pristine을 fit하지 않으면 원점이 섞인다"
+    assert "p_ini[name]" in src
+
+    # _fit_one은 dict와 옛 리스트 형식을 모두 받아야 한다
+    one = inspect.getsource(F._fit_one)
+    assert "isinstance(_pi, dict)" in one
+
+
+def test_restart_provenance_is_recorded():
+    """★ F25 — restart 출처(index, warm)를 저장해야 사후 진단이 가능하다.
+
+    restarts는 J 오름차순으로 저장되므로 위치로는 warm을 찾을 수 없다.
+    """
+    import numpy as np
+
+    from src.fitting import fit
+
+    # 초기값이 최적이고, 무작위 restart는 그보다 나쁘게 되는 목적함수
+    def J(p):
+        return float(np.sum((np.asarray(p) - np.array([1.0, 0.0, 1.0, 0.0])) ** 2))
+
+    res = fit(J, [1.0, 0.0, 1.0, 0.0], [0.5, -1.0, 0.5, -1.0], [2.0, 1.0, 2.0, 1.0],
+              n_restarts=3, seed=0, adaptive=False, warm_init=True)
+
+    assert isinstance(res.restarts[0], dict), "옛 (p, J) 튜플 형식이 남아 있다"
+    assert {"p", "J", "i", "warm"} <= set(res.restarts[0])
+    warm = [r for r in res.restarts if r["warm"]]
+    assert len(warm) == 1 and warm[0]["i"] == 0
+    # J 오름차순 저장 확인 — 그래서 위치로 warm을 찾으면 안 된다
+    assert [r["J"] for r in res.restarts] == sorted(r["J"] for r in res.restarts)

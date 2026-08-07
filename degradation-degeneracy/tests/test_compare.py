@@ -288,7 +288,10 @@ def test_gap_analysis_reports_false_split():
         "r": 0.85, "a_pe": 1.0, "a_ne": 1.0, "reference": "grid",
     } for i in range(5)])
     g = gap_analysis(_scored(df), "pocv_dvdq")
-    assert g["n_zero_gap_true"] == 5
+    # F28: 이 군의 조건은 "참 격차 < tol"이지 "정확히 0"이 아니다 — 이름이 조건을
+    # 잘못 말하고 있어서 바꿨고, 정확히 0인 수는 따로 센다.
+    assert g["n_small_gap_true"] == 5
+    assert g["n_exact_zero_gap_true"] == 5
     assert g["false_split_frac"] == 1.0
 
 
@@ -324,9 +327,14 @@ def test_results_doc_leads_with_gap_collapse(tmp_path):
     assert i_gap < i_22p, "격차 붕괴 결론이 22p 근방 성적보다 앞에 와야 한다"
     # 붕괴율 100% → 우도비가 1 미만이어야 하고, "실제로 비슷" 결론이 나오면 안 된다
     import re
-    m = re.search(r"우도비 ≈ ([\d.]+) : 1", text)
+    m = re.search(r"우도비 = ([\d.]+)", text)
     assert m, "우도비가 결론에 없다"
     assert float(m.group(1)) < 1.0, f"붕괴율 100%인데 우도비가 {m.group(1)}"
+    # ★ F28 — 우도비를 결론으로 승격시키면 안 된다. 세 제약이 항상 붙어야 한다.
+    assert "실제로 비슷하게 열화했다" not in text, \
+        "우도비를 '실제로 비슷하다'는 결론으로 승격시켰다"
+    for must in ("임계 의존", "posterior가 아님", "부분집단 조건화"):
+        assert must in text, f"우도비 제약 '{must}'이 빠졌다"
 
 
 def test_results_doc_conclusion_follows_the_number(tmp_path):
@@ -349,14 +357,15 @@ def test_results_doc_conclusion_follows_the_number(tmp_path):
     run_compare(d, d)
     text = build(d, tmp_path / "RESULTS.md", repo_root=tmp_path).read_text(encoding="utf-8")
 
-    # 붕괴 0% + 거짓분리 89% → 우도비 = 0.11/0.0 = inf 가 아니라 유한해야 정상.
-    # 여기서는 붕괴가 0이라 inf가 되므로, 그 경우에도 문서가 깨지지 않는지 본다.
+    # 붕괴가 0이면 우도비가 inf가 되는데, 그 경우에도 문서가 깨지지 않아야 한다
     import re
-    m = re.search(r"우도비 ≈ (\S+) : 1", text)
-    assert m, "우도비가 결론에 없다"
+    assert re.search(r"우도비 = (\S+)", text), "우도비가 결론에 없다"
     # ★ 임계 의존성 경고 — 붕괴가 관측 불가능한 설정이면 반드시 붙어야 한다
     assert ("임계 설정에서 붕괴가 관측되기 어렵다" in text
             or "collapse_measurable" not in text), "임계 의존성 경고가 빠졌다"
+    # ★ F28 — 붕괴율이 낮게 나와도 '실제로 비슷하다'로 승격하면 안 된다
+    assert "실제로 비슷하게 열화했다" not in text
+    assert "방어할 수 있는 문장은 하나뿐" in text
 
 
 # ---------------------------------------------------------------- F20 계단식 초기값
@@ -657,3 +666,84 @@ def test_threshold_caveat_always_in_conclusion(tmp_path):
     head = text[:text.index("## 목적함수 4종 비교")]      # 결론 구간만
     assert "임계 설정에 의존한다" in head
     assert "격차 오차가 필요한데" in head
+
+
+# ---------------------------------------------------------------- F28/F29 리뷰 대응
+
+def _gap_frame(n_same=40, n_wide=40, collapse=2, split=10):
+    """참 격차가 0인 군과 큰 군을 섞은 합성 프레임."""
+    rows = []
+    for i in range(n_same):                      # 참 격차 0
+        gap_hat = 0.10 if i < split else 0.0     # split개는 거짓 분리
+        rows.append({"cond_id": f"z{i}", "objective": "pocv_dvdq", "noise": 0.0,
+                     "lli": 0.0, "lam_pe": 0.10, "lam_ne": 0.10, "lli_hat": 0.0,
+                     "lam_pe_hat": 0.10 + gap_hat, "lam_ne_hat": 0.10,
+                     "r": 0.80, "a_pe": 1.0, "a_ne": 1.0, "reference": "grid"})
+    for i in range(n_wide):                      # 참 격차 10%p
+        gap_hat = 0.0 if i < collapse else 0.10  # collapse개만 붕괴
+        rows.append({"cond_id": f"w{i}", "objective": "pocv_dvdq", "noise": 0.0,
+                     "lli": 0.0, "lam_pe": 0.15, "lam_ne": 0.05, "lli_hat": 0.0,
+                     "lam_pe_hat": 0.05 + gap_hat, "lam_ne_hat": 0.05,
+                     "r": 0.80, "a_pe": 1.0, "a_ne": 1.0, "reference": "grid"})
+    return _scored(pd.DataFrame(rows))
+
+
+def test_gap_sensitivity_surface_is_emitted():
+    """★ F28 — 우도비 하나만 내면 안 된다. 임계 격자 전체가 나와야 한다."""
+    from tools.compare_objectives import gap_sensitivity
+
+    rows = gap_sensitivity(_gap_frame(), "pocv_dvdq")
+    assert len(rows) >= 6
+    assert {"gap_thresh", "tol", "likelihood_ratio",
+            "p_same_given_same", "p_same_given_wide", "n_same", "n_wide"} <= set(rows[0])
+    # gap_thresh <= tol 조합은 정의가 무너지므로 나오면 안 된다
+    assert all(r["gap_thresh"] > r["tol"] for r in rows)
+
+
+def test_gap_analysis_carries_its_own_sensitivity_and_caveat():
+    """★ F28 — 우도비를 떼어 인용하지 못하게 경고와 범위를 같은 dict에 넣는다."""
+    from tools.compare_objectives import gap_analysis
+
+    g = gap_analysis(_gap_frame(), "pocv_dvdq")
+    assert "likelihood_ratio_equal" in g
+    for k in ("lr_sensitivity_min", "lr_sensitivity_max", "lr_sensitivity_median",
+              "lr_is_local_spike"):
+        assert k in g, f"{k}가 없으면 임계 의존성을 모르고 인용하게 된다"
+    assert "posterior가 아니라" in g["_주의"]
+    assert g["population"] == "recoverable"
+
+
+def test_comparison_table_can_report_all_conditions():
+    """★ F29 — 복원가능군 제외가 결론을 만드는지 보려면 전체군이 필요하다."""
+    from tools.compare_objectives import comparison_table
+
+    df = _gap_frame()
+    df.loc[df.index[:20], "recoverable"] = False
+    rec = comparison_table(df)
+    allc = comparison_table(df, recoverable_only=False)
+    assert int(allc["n"].sum()) > int(rec["n"].sum())
+
+
+def test_antisym_and_population_caveats_ride_with_conclusion_1(tmp_path):
+    """★ F29 — 33p·34p를 나란히 놓는 순간 두 경고가 결론에 붙어야 한다.
+
+    (a) PE-NE 상쇄는 raw 오차 부호만 세므로 전역 편향 부호차를 상쇄로 잡는다.
+        실측에서 편향을 빼면 방향이 뒤집혔다(70.5→52.6 raw vs 33.1→42.9 중심화).
+    (b) 복원가능군 조건화가 33p·34p의 우열을 뒤집는다면 그 사실도 함께 나와야 한다.
+    """
+    import yaml
+
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d = tmp_path / "res"
+    d.mkdir()
+    df = _fits(objectives=("pocv_dvdq", "pocv_dvdq_dqdv"))
+    _scored(df).to_parquet(d / "degeneracy_map.parquet", index=False)
+    (d / "degeneracy_summary.yaml").write_text(yaml.safe_dump({}), encoding="utf-8")
+
+    run_compare(d, d)
+    text = build(d, tmp_path / "RESULTS.md", repo_root=tmp_path).read_text(encoding="utf-8")
+
+    assert "상쇄를 줄였다'로 읽지 마세요" in text
+    assert "전체 격자 (복원불가군 포함)" in text, "전체군 표가 빠지면 F29를 볼 수 없다"

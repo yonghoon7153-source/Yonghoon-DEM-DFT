@@ -206,7 +206,7 @@ def _minimize_until_stable(objective, x0, bounds, method: str,
 
 def fit(objective, init, lb, ub, n_restarts: int = 1, seed: int = 0,
         method: str = "Nelder-Mead", agree_tol: float = 1e-3,
-        adaptive: bool = True) -> FitResult:
+        adaptive: bool = True, warm_init: bool = False) -> FitResult:
     """multi-start 최적화.
 
     ★ restart마다 다른 해에 수렴하면 그 자체가 degeneracy의 직접 증거다.
@@ -215,6 +215,12 @@ def fit(objective, init, lb, ub, n_restarts: int = 1, seed: int = 0,
 
     method 기본값이 Nelder-Mead인 이유: reference 곡선 보간이 조각선형이라
     L-BFGS-B의 수치 gradient가 무의미하다 (실측 α 오차 0.07 vs NM 0.00003).
+
+    ★ warm_init — restart 0의 초기값이 앞 목적함수에서 물려받은 해인가 (F25).
+      `restarts`를 J 오름차순으로 저장하므로 **순서만으로는 어느 것이 warm
+      start였는지 알 수 없다.** 인덱스로 추정하던 사후 진단은 실제로는 warm이
+      아니라 best restart를 버리고 있었다. 그래서 restart마다 출처를 같이
+      적는다 — 나중에 지표를 바꿔도 원본에서 다시 셀 수 있어야 한다.
     """
     lb = np.asarray(lb, float)
     ub = np.asarray(ub, float)
@@ -228,7 +234,7 @@ def fit(objective, init, lb, ub, n_restarts: int = 1, seed: int = 0,
         x0 = init if k == 0 else rng.uniform(lb, ub)
         try:
             x, f, ok, nfev = _minimize_until_stable(objective, x0, bounds, method)
-            results.append((x, f, ok, nfev))
+            results.append((x, f, ok, nfev, k, bool(warm_init and k == 0)))
         except Exception as e:  # noqa: BLE001
             log.debug("restart %d 실패: %s", k, e)
         # 적응적 multi-start: 앞의 두 번이 같은 해로 모이면 더 돌릴 이유가 없다.
@@ -243,8 +249,10 @@ def fit(objective, init, lb, ub, n_restarts: int = 1, seed: int = 0,
         nan = np.full(4, np.nan)
         return FitResult(nan, float("nan"), False, 0, (False,) * 4, n_restarts, 0)
 
+    # ★ J 오름차순 정렬 — 그래서 인덱스는 더 이상 restart 순서가 아니다.
+    #   출처(restart index, warm 여부)는 튜플 안에 같이 실려 보존된다 (F25).
     results.sort(key=lambda t: t[1])
-    p_best, J_best, ok, _ = results[0]
+    p_best, J_best, ok, _, _, _ = results[0]
     nfev = sum(t[3] for t in results)     # 리뷰 F17: 전체 restart의 평가 수 합
 
     # 최적해와 J가 사실상 같은데 p가 다른 해 = 평평한 골짜기
@@ -258,7 +266,10 @@ def fit(objective, init, lb, ub, n_restarts: int = 1, seed: int = 0,
         bound_active=_bound_active(p_best, lb, ub),
         n_restarts=len(results), n_restarts_agree=agree,
         p_spread=spread, J_spread=j_spread,
-        restarts=[(p.tolist(), J) for p, J, *_ in results],
+        # F25: (p, J)만 적으면 warm/random 출처가 사라진다. dict로 바꿔 인덱스와
+        # warm 여부를 같이 남긴다. 옛 형식 [(p, J), ...]도 읽는 쪽에서 받는다.
+        restarts=[{"p": p.tolist(), "J": J, "i": k, "warm": w}
+                  for p, J, _, _, k, w in results],
     )
 
 
@@ -366,13 +377,18 @@ def _fit_one(task: dict) -> list[dict]:
         init = task["init"]
         if warm and _has_dqdv(weights) and seed_p is not None:
             init = seed_p
+        warmed = init is not task["init"]
         res = fit(J, init, task["lb"], task["ub"],
-                  n_restarts=task["n_restarts"], seed=task["seed"])
+                  n_restarts=task["n_restarts"], seed=task["seed"],
+                  warm_init=warmed)
         if warm and not _has_dqdv(weights) and np.all(np.isfinite(res.p)):
             seed_p = list(map(float, res.p))    # 가장 최근의 매끄러운 해
         inv = task["inventory"]
+        # F26: p_ini는 목적함수별 dict. 옛 형식(공통 리스트)도 그대로 받는다.
+        _pi = task.get("p_ini")
+        p_ini_obj = _pi.get(name) if isinstance(_pi, dict) else _pi
         if task["reference"] == "halfcell":
-            hc = to_modes_halfcell(res.p, task["p_ini"], task["r"])
+            hc = to_modes_halfcell(res.p, p_ini_obj, task["r"])
             main_modes = hc
             extra = {"lli_hat_pe_basis": hc["lli_pe_basis"]}
         else:
@@ -381,7 +397,7 @@ def _fit_one(task: dict) -> list[dict]:
             extra = {}
         paper = to_degradation_modes(res.p, task["r"], "paper")
         code = to_degradation_modes(res.p, task["r"], "code")
-        p_ini = task.get("p_ini") or [float("nan")] * 4
+        p_ini = p_ini_obj or [float("nan")] * 4
         rows.append({
             **extra, "reference": task["reference"],
             **task["truth"],
@@ -547,13 +563,19 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
             raise RuntimeError(
                 "p_ini 기준 조건(lli=lam_pe=lam_ne=0, noise=0)이 태스크에 없음 "
                 "(--limit로 잘렸을 수 있음)")
-        ref_task = {**ref_candidates[0],
-                    "objectives": {"pocv_dvdq": objectives.get(
-                        "pocv_dvdq", {"w_pocv": 1.0, "w_dvdq": 1.0})}}
-        ini_row = _fit_one({**ref_task, "p_ini": [1.0, 0.0, 1.0, 0.0]})[0]
-        p_ini = [float(ini_row[k]) for k in PARAM_NAMES]
-        log.info("α_ini·β_ini = %s (기준 조건 %s 자체 fitting)",
-                 [round(v, 4) for v in p_ini], ref_task["cond_id"])
+        # ★ p_ini는 목적함수마다 따로 구한다 (F26).
+        #   한때 pocv_dvdq 하나로 fit해 모든 목적함수에 주입했는데, 목적함수마다
+        #   pristine optimum이 다르므로 나머지는 남의 원점에서 좌표를 읽는 셈이
+        #   된다. LAM_PE에 거의 일정한 offset이 생기고, 그게 degeneracy로 오독됐다.
+        #   실측(공통 1,476조건): 34p가 99.1% → 10.0%, 평균|err| 3.94 → 1.43%p.
+        ref_id = ref_candidates[0]["cond_id"]
+        p_ini = {}
+        for name, weights in objectives.items():
+            ini_row = _fit_one({**ref_candidates[0], "objectives": {name: weights},
+                                "p_ini": [1.0, 0.0, 1.0, 0.0]})[0]
+            p_ini[name] = [float(ini_row[k]) for k in PARAM_NAMES]
+            log.info("α_ini·β_ini[%s] = %s (기준 조건 %s 자체 fitting)",
+                     name, [round(v, 4) for v in p_ini[name]], ref_id)
         for t in tasks:
             t["p_ini"] = p_ini
 
@@ -626,8 +648,15 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
             raise RuntimeError("청크도 기존 fits.parquet도 없음 — 실행된 조건이 없습니다")
     fits = pd.read_parquet(path)
 
-    write_manifest(out_dir, base_manifest("", extra={
+    # F30: config_hash를 비워 두면 어떤 목적함수 정의로 돌았는지 남지 않는다.
+    #   실제 obj_cfg 내용을 해시해 박고, 입력 curves와 config 파일의 SHA도 남긴다.
+    cfg_h = hashlib.sha1(json.dumps(obj_cfg, sort_keys=True, default=str)
+                         .encode()).hexdigest()[:12]
+    write_manifest(out_dir, base_manifest(
+        cfg_h, out_dir=out_dir,
+        inputs=[in_dir / "curves.parquet", base_config], extra={
         "run_type": "fit", "input": str(in_dir),
+        "objectives_resolved": obj_cfg.get("objectives"),
         "n_conditions": len(tasks), "objectives": list(objectives),
         "bounds_preset": bounds_preset, "bounds": bounds,
         "n_restarts": n_restarts, "target_column": v_col, "reference": reference,

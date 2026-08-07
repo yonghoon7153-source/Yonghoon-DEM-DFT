@@ -82,23 +82,31 @@ def classify_recoverability(df: pd.DataFrame, atol: float = 1e-3) -> pd.DataFram
     "bound 문제 아님 → 진짜 물리"로 오판하게 된다.
     """
     out = df.copy()
-    if "reference" in out.columns and (out["reference"] != "grid").any():
-        # halfcell 기준은 전 범위 테이블이라 이 벽이 없다
-        out["alpha_true_pe"] = np.nan
-        out["alpha_true_ne"] = np.nan
-        out["recoverable"] = True
-        return out
+    # ★ 행별로 판정한다 (F27). 예전에는 `(reference != "grid").any()`로 프레임
+    #   전체를 봐서, grid 행과 halfcell 행을 붙여 넘기면 halfcell이 한 줄만
+    #   있어도 grid 행까지 전부 복원가능으로 바뀌었다. 조용한 모집단 변경이라
+    #   비교표의 분모가 소리 없이 늘어난다.
+    is_grid = (out["reference"] == "grid") if "reference" in out.columns \
+        else pd.Series(True, index=out.index)
 
-    out["alpha_true_pe"] = (1.0 - out["lam_pe"]) / out["r"]
-    out["alpha_true_ne"] = (1.0 - out["lam_ne"]) / out["r"]
-    out["recoverable"] = (out["alpha_true_pe"] >= 1.0 - atol) & \
-                         (out["alpha_true_ne"] >= 1.0 - atol)
+    out["alpha_true_pe"] = np.where(is_grid, (1.0 - out["lam_pe"]) / out["r"], np.nan)
+    out["alpha_true_ne"] = np.where(is_grid, (1.0 - out["lam_ne"]) / out["r"], np.nan)
+    # halfcell 기준은 전 범위 테이블이라 이 벽이 없다 → True로 둔다.
+    # ⚠ 이건 물리적 근거에 의한 **가정**이지 측정이 아니다. RESULTS.md가 이 사실을
+    #   같이 싣는다. halfcell 쪽 복원불가율을 "0%로 측정됐다"고 인용하면 안 된다.
+    out["recoverable"] = np.where(
+        is_grid,
+        (out["alpha_true_pe"] >= 1.0 - atol) & (out["alpha_true_ne"] >= 1.0 - atol),
+        True)
+    out["recoverable_measured"] = is_grid.to_numpy()
 
     # 실제로 벽에 붙었는지 (fitting.py가 기록한 플래그)
     for side in ("pe", "ne"):
         col = f"alpha_wall_{side}"
         if col not in out.columns:
-            out[col] = (out[f"a_{side}"] - 1.0).abs() < atol
+            out[col] = ((out[f"a_{side}"] - 1.0).abs() < atol
+                        if f"a_{side}" in out.columns
+                        else pd.Series(False, index=out.index))
     out["alpha_wall_any"] = out["alpha_wall_pe"] | out["alpha_wall_ne"]
     return out
 
@@ -176,13 +184,20 @@ def multistart_diagnostics(df: pd.DataFrame, j_tol: float = 1e-3,
                    → J가 다른 국소최소가 여럿. 데이터는 구분하지만
                      최적화가 어렵다 = 초기값 문제 (F20의 dQ/dV가 이 경우)
 
-    ★ skip_first — warm start 보정 (F21b, 필수).
+    ★ drop_warm — warm start 보정 (F21b, 필수).
       F20 이후 dQ/dV 목적함수는 restart 0에만 좋은 초기값이 들어가고 1~4는
       무작위다. 그러면 최적 J에 닿는 restart가 **정의상 하나뿐**이 되어
       항상 multimodal로 분류되고, flat_valley는 관측 자체가 불가능해진다.
       warm start를 받은 목적함수와 안 받은 목적함수를 그대로 비교하면
       "dQ/dV가 flat valley를 없앴다"는 잘못된 결론이 나온다.
-      skip_first=True면 restart 0을 빼고 **무작위 restart끼리만** 비교한다.
+
+    ★★ 옛 형식은 이 보정을 할 수 없다 (F25).
+      `restarts_json`을 **J 오름차순으로 정렬해서** 저장하므로, 위치는 restart
+      순서가 아니다. 그런데 예전 구현은 "첫 항목 = warm start"로 보고 그걸
+      버렸다 — 실제로는 **best restart를 버리고 있었다.** 지금은 restart마다
+      `{"i", "warm"}`을 같이 저장해 출처로 거른다. 출처가 없는 옛 산출물은
+      복구가 불가능하므로 보정을 **생략하고 경고**한다 (조용히 틀린 값을 내는
+      것보다 낫다).
     """
     import json as _json
 
@@ -190,7 +205,7 @@ def multistart_diagnostics(df: pd.DataFrame, j_tol: float = 1e-3,
         log.warning("restarts_json 열이 없음 — multi-start 진단 생략")
         return pd.DataFrame()
 
-    rows = []
+    rows, n_legacy = [], 0
     for _, r in df.iterrows():
         try:
             rs = _json.loads(r["restarts_json"])
@@ -198,16 +213,27 @@ def multistart_diagnostics(df: pd.DataFrame, j_tol: float = 1e-3,
             continue
         if not rs:
             continue
-        ps = np.array([p for p, _ in rs], float)
-        js = np.array([j for _, j in rs], float)
+        legacy = not isinstance(rs[0], dict)
+        if legacy:
+            ps = np.array([p for p, _ in rs], float)
+            js = np.array([j for _, j in rs], float)
+            warm = np.zeros(len(js), bool)
+        else:
+            ps = np.array([d["p"] for d in rs], float)
+            js = np.array([d["J"] for d in rs], float)
+            warm = np.array([bool(d.get("warm")) for d in rs], bool)
         ok = np.isfinite(js)
         if not ok.any():
             continue
-        ps, js = ps[ok], js[ok]
+        ps, js, warm = ps[ok], js[ok], warm[ok]
         if skip_first:
-            ps, js = ps[1:], js[1:]      # restart 0 = warm start 지점
-            if len(js) < 2:
-                continue
+            if legacy:
+                n_legacy += 1        # 출처를 모른다 → 아무것도 버리지 않는다
+            else:
+                keep = ~warm
+                ps, js = ps[keep], js[keep]
+                if len(js) < 2:
+                    continue
         i_best = int(np.argmin(js))
         p_best, j_best = ps[i_best], js[i_best]
 
@@ -232,7 +258,14 @@ def multistart_diagnostics(df: pd.DataFrame, j_tol: float = 1e-3,
             "p_spread_all": spread_all, "p_spread_near": spread_near,
             "J_best": float(j_best), "J_worst": float(js.max()),
             "multistart_kind": kind,
+            "warm_dropped": bool(skip_first and not legacy),
         })
+    if n_legacy:
+        log.warning("multi-start: %d행이 옛 restarts 형식(출처 없음)이라 warm start "
+                    "보정을 못 했습니다. 위치로 추정하면 warm이 아니라 best restart를 "
+                    "버리게 되므로 보정을 생략했습니다 — 이 결과의 "
+                    "multistart_random_only는 무효입니다 (F25). 재fit이 필요합니다.",
+                    n_legacy)
     return pd.DataFrame(rows)
 
 
@@ -378,10 +411,20 @@ def run_scoring(in_dir, out_dir=None, tol: float = DEFAULT_TOL,
         if not ms_r.empty:
             ms_r.to_parquet(out_dir / "multistart_random_only.parquet", index=False)
             summary["multistart_random_only"] = multistart_summary(ms_r)
+            # ★ F25: 옛 산출물은 restart 출처가 없어 보정 자체가 불가능하다.
+            #   그 사실을 요약에 박아, 읽는 쪽이 무효인 줄 모르고 인용하지 못하게 한다.
+            dropped = bool(ms_r["warm_dropped"].any()) if "warm_dropped" in ms_r else False
+            summary["multistart_random_only"]["warm_start_보정_적용"] = dropped
             summary["multistart_random_only"]["_주의"] = (
                 "★ 목적함수 간 비교는 이 블록을 쓸 것. 위 multistart 블록은 "
-                "warm start 지점(restart 0)을 포함하므로, warm start를 받은 "
-                "목적함수(w_dqdv≠0)가 인위적으로 multimodal 쪽으로 쏠린다.")
+                "warm start 지점을 포함하므로, warm start를 받은 "
+                "목적함수(w_dqdv≠0)가 인위적으로 multimodal 쪽으로 쏠린다."
+                if dropped else
+                "⚠ 무효 — 이 fits.parquet은 restart 출처(warm 여부)를 저장하지 않은 "
+                "옛 형식이라 warm start 보정을 하지 못했습니다. restarts_json이 J "
+                "오름차순이라 위치로 추정하면 warm이 아니라 best restart를 버립니다. "
+                "이 블록을 인용하지 마세요 — 출처를 저장하는 현재 코드로 재fit해야 "
+                "복구됩니다 (F25).")
         log.info("multi-start 진단: %s",
                  {k: v for k, v in summary["multistart"].items()
                   if not k.startswith("_")})
