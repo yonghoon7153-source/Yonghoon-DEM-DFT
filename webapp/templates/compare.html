@@ -93,6 +93,9 @@ function upd(){
       if(v!==undefined&&v!==null){
         if(m.status&&m.status!=='canonical')cell+=' '+statusBadge(m);
         else if(pr)cell+=' <span class="badge b-prov" title="'+_cmpEsc(pr)+'">잠정</span>';
+        // 등록 묶음 ID 를 셀 툴팁에 — 같은 metric 이라도 묶음이 다르면 비교하면 안 된다
+        if(m.group)cell='<span title="등록 묶음 ['+_cmpEsc(m.group)+']'
+          +(m.method?'&#10;method: '+_cmpEsc(m.method):'')+'">'+cell+'</span>';
       }
       t+='<td class="num">'+cell+'</td>';});
     t+='</tr>';
@@ -117,7 +120,20 @@ function drawChart(){
   let y=sel.map(id=>CANON[activeKey][id]??null);
   let colors=sel.map(id=>COMPS[id].color);
   // ★ 무엇을 왜 뺐는지 화면에 남긴다. 조용히 빼면 "우리 조성이 없네"로 읽힌다.
-  let cav=(sp.group?('비교 묶음 ['+sp.group+'] 안에서만 그린다. '):'비교 가능한 묶음이 없다. ');
+  //   ⚠ 2026-08-07 (Codex 6라운드): 선택한 값이 전부 provisional 이면 canonical 묶음이
+  //     없어 "비교 가능한 묶음이 없다" 만 떴다 — **그 값이 어느 묶음에 등록돼 있는지**는
+  //     안 보였다. ordered/disorder 처럼 의미를 나눠 놓고도 그 사실이 화면에 안 나온 것이다.
+  //     → 묶음이 없을 때는 각 값의 **등록 묶음 ID + 상태**를 그대로 보여 준다.
+  let cav;
+  if(sp.group){ cav='비교 묶음 ['+sp.group+'] 안에서만 그린다. '; }
+  else {
+    const reg=ids().map(id=>({id:id,m:cmeta(activeKey,id)})).filter(x=>x.m.group);
+    cav = reg.length
+      ? ('자동비교 제외 — canonical 묶음이 없다. 등록 묶음: '
+         + reg.map(x=>(COMPS[x.id]?COMPS[x.id].label:x.id)+' ['+x.m.group+']'
+                      +(x.m.status&&x.m.status!=='canonical'?' · '+x.m.status:'')).join(' · ') + '. ')
+      : '비교 가능한 묶음이 없다. ';
+  }
   if(sp.drop.length)cav+='제외: '+sp.drop.map(d=>(COMPS[d.id]?COMPS[d.id].label:d.id)+'('+d.why+')').join(' · ')+'. ';
   const u=sel.map(id=>cmeta(activeKey,id)).filter(m=>m.n_seed);
   if(u.length)cav+='시드 수: '+sel.map(id=>{const m=cmeta(activeKey,id);return (COMPS[id]?COMPS[id].label:id)+(m.n_seed?' '+m.n_seed+'-seed':'');}).join(' · ')+'. ';
@@ -147,7 +163,11 @@ function drawRadar(){
     return false;
   });
   const note=document.getElementById('cmpradar-note');
-  if(note)note.textContent=drops.length?('방법 불일치로 제외된 축: '+drops.join(' · ')):'';
+  if(note){
+    const gs=[...new Set(KEYS.flatMap(k=>ids().map(id=>cmeta(k,id).group)).filter(Boolean))];
+    note.textContent=(drops.length?('방법 불일치로 제외된 축: '+drops.join(' · ')+'. '):'')
+      + (gs.length?('선택 값의 등록 묶음: '+gs.join(' · ')):'');
+  }
   if(sel.length<2||uk.length<3){
     document.getElementById('cmpradar').innerHTML='<div class="muted" style="padding:44px;text-align:center;line-height:1.7">레이더는 <b>2개 이상</b> 조성 + <b>같은 방법으로 잰</b> 공통 물성 <b>3축 이상</b>일 때만 그려요.<br><span style="font-size:.85em">현재 '+sel.length+'개 선택 · 사용 가능한 공통축 '+uk.length+'개'+(drops.length?('<br>제외: '+_cmpEsc(drops.join(' · '))):'')+'</span></div>';return;}
   let norm={};

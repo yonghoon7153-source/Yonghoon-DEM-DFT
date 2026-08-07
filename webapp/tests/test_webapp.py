@@ -521,6 +521,31 @@ def test_new_metrics_reach_all_screens():
     assert "MD_Ea_eV_ordered" in canon and "MD_Ea_eV_disorder" in canon
 
 
+def test_comparison_group_id_is_visible():
+    """★ 의미를 나눠 놓고도 **어느 묶음인지**가 화면에 안 보이면 나눈 의미가 없다.
+
+    2026-08-07 Codex 6라운드: ordered/disorder 가 둘 다 provisional 이라 canonical
+    묶음이 없었고, /compare 는 "비교 가능한 묶음이 없다" 만 찍었다 — 등록 묶음 ID 는
+    어디에도 안 나왔다.
+    """
+    c = A.app.test_client()
+    G_ORD, G_DIS = "md-ea-comp2-ordered-provisional", "md-ea-comp2-disorder-d050"
+    # ① compare: 묶음이 없을 때 등록 묶음을 나열하는 분기가 있는지 + 셀 툴팁
+    cmp_ = c.get("/compare").get_data(as_text=True)
+    assert "등록 묶음" in cmp_, "compare 에 '등록 묶음' 표기가 없다"
+    assert G_ORD in cmp_ and G_DIS in cmp_, "compare 에 묶음 ID 가 안 내려간다"
+    # ② explorer · composition: 배지 툴팁에 묶음 ID
+    for u in ("/explorer", "/composition/comp2"):
+        t = c.get(u).get_data(as_text=True)
+        assert G_ORD in t, f"{u} 에 ordered 묶음 ID 가 없다"
+        assert G_DIS in t, f"{u} 에 disorder 묶음 ID 가 없다"
+    # ③ 데이터층: 배지에 group 이 실려 있는지
+    st = D.canonical_status_for("comp2")
+    assert st["MD_Ea_eV_ordered"]["group"] == G_ORD
+    assert st["MD_Ea_eV_disorder"]["group"] == G_DIS
+    assert st["MD_Ea_eV_ordered"]["why"].startswith("등록 묶음 [")
+
+
 def test_no_hardcoded_metric_lists_in_templates():
     """metric 목록이 템플릿으로 되돌아오면 안 된다 — 그게 위 회귀의 원인이었다."""
     for name in ("explorer.html", "composition.html", "compare.html"):

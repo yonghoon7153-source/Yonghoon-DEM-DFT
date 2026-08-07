@@ -649,12 +649,13 @@ def canonical_status_for(cid: str) -> dict:
         b = _STATUS_BADGE.get(st)
         if not b:
             continue
-        why = b[3]
+        why = (f"등록 묶음 [{e['comparison_group']}]. " if e.get("comparison_group") else "") + b[3]
         if e.get("blocking_gate"):
             why = f"게이트 미통과: {e['blocking_gate']}. " + why
         if e.get("note"):
             why += " " + e["note"]
-        out[metric] = {"status": st, "label": b[0], "fg": b[1], "bg": b[2], "why": why[:400]}
+        out[metric] = {"status": st, "label": b[0], "fg": b[1], "bg": b[2],
+                       "why": why[:400], "group": e.get("comparison_group")}
     return out
 
 
@@ -713,13 +714,16 @@ def canonical_status_all() -> dict:
         b_ = _STATUS_BADGE.get(e.get("status"))
         if not b_:
             continue
-        why = b_[3]
+        # ★ 등록 묶음 ID 를 툴팁 맨 앞에 (2026-08-07 Codex 6라운드) — 의미를 나눠 놓고도
+        #   그 사실이 화면에 안 보이면 나눈 의미가 없다.
+        why = (f"등록 묶음 [{e['comparison_group']}]. " if e.get("comparison_group") else "") + b_[3]
         if e.get("blocking_gate"):
             why = f"게이트 미통과: {e['blocking_gate']}. " + why
         if e.get("note"):
             why += " " + e["note"]
         out[(metric, system)] = {"status": e.get("status"), "label": b_[0],
-                                 "fg": b_[1], "bg": b_[2], "why": why[:400]}
+                                 "fg": b_[1], "bg": b_[2], "why": why[:400],
+                                 "group": e.get("comparison_group")}
     return out
 
 
