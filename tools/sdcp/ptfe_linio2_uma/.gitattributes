@@ -1,0 +1,10 @@
+.gitattributes text eol=lf
+.gitignore text eol=lf
+*.sh text eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.csv text eol=lf
+*.xyz text eol=lf
+*.vasp text eol=lf
+*.vasp -whitespace
+*.sha256 text eol=lf
