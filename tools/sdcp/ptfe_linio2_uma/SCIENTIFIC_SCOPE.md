@@ -7,7 +7,7 @@
 - Record post-relaxation F-Li/F-Ni/F-O distances, multi-F registry, convergence, and periodic-image clearance.
 - Preserve diversity across seven representative starting registries and three image-safe orientations instead of promoting a single MLIP minimum. This is not an exhaustive symmetry-orbit site enumeration.
 
-## What it cannot support
+## What the UMA stage cannot support by itself
 
 - Citable adsorption or binding energies.
 - Intrinsic Li-site versus Ni-site preference.
@@ -31,3 +31,19 @@ The first screen uses the 192-atom 1x4 slab and only three image-safe C10 azimut
 ## DFT handoff criterion
 
 Pass multiple manually confirmed, structurally distinct basins to DFT-D3. Automated basin labels are contact/orientation/height/RMSD diagnostics only, so the package preserves every eligible relaxed shortlist candidate for manual audit. The handoff also forces a same-azimuth/same-roll Li-top versus Ni-top rigid counterfactual pair for each fragment, so a missing Ni-relaxed UMA pose cannot silently remove the comparison axis. Use the same cell, k-mesh, bottom-half-fixed/top-half-free constraint, one-sided slab dipole correction (`LDIPOL=.TRUE.; IDIPOL=3`), U/dispersion convention, and multiple Ni magnetic starts. Every retained competitor must receive the same relaxation protocol. A preference is defensible only when DFT-relaxed basins remain distinct and their energy gap exceeds the combined magnetic-start spread, k-point shift, U/dispersion sensitivity, and an approximately 30 meV practical floor. For a citable adsorption energy, add a clean slab and isolated fragment computed with the matching reference protocol; those references cancel only when reranking poses of the same fragment.
+
+## Implemented VASP validation scope
+
+`vasp_stage.py` and `vasp_run.sh` implement the fixed-protocol validation after the UMA
+handoff. The all-candidate mode preserves 20 relaxed candidates and four matched
+counterfactuals when all 20 pass; otherwise it preserves every eligible relaxed candidate
+(at least three per fragment). It uses two documented magnetic initializations per surface structure and adds
+clean-slab and PAW-PBE+D3 gas references. It reclassifies Li/Ni registry from the final
+DFT CONTCAR as Li/Ni/O/mixed/other, blocks reactive/detached/cap-dominated structures,
+quarantines top-layer extraction/reconstruction relative to the matching clean slab, and performs a dynamic
+2x3x1 to 3x4x1 check.
+
+Even a numerical pass is conditional on the 1x4 fixed-coverage cell and the
+PBE+U(Ni=6.2 eV)+D3 protocol. It remains `MANUAL_MAGNETIC_AUDIT_REQUIRED` until local
+Ni moments and LDAU occupation matrices are inspected. A method-independent claim
+additionally needs U, dispersion, coverage, and slab-thickness sensitivity checks.

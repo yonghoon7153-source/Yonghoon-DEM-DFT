@@ -1,4 +1,4 @@
-# PTFE/LiNiO₂ UMA 자세 후보 검색
+# PTFE/LiNiO₂ UMA → VASP 검증 워크플로
 
 이 패키지는 ORCA에서 이완이 끝난 PTFE dimer와 C10을 LiNiO₂(104) 표면에 놓고, **DFT에 넘길 비반응 자세 후보를 줄이는 도구**야.
 
@@ -72,15 +72,37 @@ Gabia 명령은 [GABIA_COMMANDS_KO.md](GABIA_COMMANDS_KO.md)에 그대로 붙여
 
 자동 basin 라벨은 contact count·거리·chain 방향·높이와 1×4 병진을 고려한 원자별 주기 RMSD `≤0.75 Å`를 쓰는 **진단용 proxy**야. 이 라벨로 후보를 버리지는 않고 gate를 통과한 이완 후보를 전부 넘겨. 대칭 등가 구조를 서로 다르게 세거나 다른 구조를 합칠 수 있으므로, 물리적으로 독립인 basin 수는 구조를 직접 보고 다시 합치거나 확정해.
 
-## 다음 계산
+## VASP 검증 단계
 
-1차 스크리닝 뒤에는 다음을 따로 설계해.
+UMA screen 뒤의 VASP 단계도 이 패키지에 구현돼 있어. [VASP_README_KO.md](VASP_README_KO.md)에
+입력 규약, pilot 18개 template, full-eligible일 때 전체 54개 template, 실행기,
+dense-k 선택, 반환법을 적었어.
+가짜 산출물로 확인한 통과·차단 회귀시험은 [RELEASE_VALIDATION.md](RELEASE_VALIDATION.md)에
+따로 적었고, 실제 계산 결과와 섞지 않았어.
 
-- C10 짧은 셀 축 2배 확장 pilot로 자유 회전·coverage 민감도 확인
-- 같은 rigid atlas를 `omat`으로도 돌려 head별 후보의 합집합을 보존. 서버에 UMA-1.2가 실제 설치돼 있으면 `oc22`/`oc25`도 별도 검토
-- 구조적으로 다른 dimer 3개 이상 + C10 3개 이상을 VASP `DFT+U+D3`와 복수 Ni 자기 시작점으로 재채점
-- 동일 k-mesh·cell·constraint·dipole 보정(`LDIPOL=.TRUE.; IDIPOL=3`)을 쓰고, 경쟁 에너지 창 안의 후보는 전부 같은 top-layer relaxation protocol로 비교
-- 각 fragment의 matched Li-top/Ni-top counterfactual 쌍은 같은 azimuth·roll이므로 둘 다 동일 DFT protocol로 이완해 site와 orientation 효과가 섞이지 않게 비교
-- citable `E_ads`가 필요할 때만 같은 규약의 clean slab와 isolated fragment 기준항까지 함께 계산
+```bash
+./run.sh vasp-pilot
+# pilot 외주 결과를 검토한 뒤
+./run.sh vasp-all
+```
+
+전체판은 이완 후보 20개 중 geometry gate를 통과한 후보 전부와 matched Li/Ni
+counterfactual 4개를 보존하고, 각
+surface 구조를 `afm_balanced`와 `afm_net2`에서 독립 이완해. clean slab와 VASP-D3
+gas fragment도 같은 기준으로 계산하므로 다음 식을 실제로 만들 수 있어.
+
+```text
+E_ads = E_complex - E_clean_slab - E_fragment
+DeltaE_sampled(Ni-Li) = min E_Ni-contact - min E_Li-contact
+DeltaE_matched-start(Ni-Li) = min E_Ni-start - min E_Li-start
+```
+
+site는 시작 라벨로 판정하지 않고 최종 DFT `CONTCAR`의 multi-F/nearest-F registry로 다시
+분류해. Li/Ni 목표 registry가 유지되지 않으면 자동 차단하고, coarse `2x3x1` 뒤 경쟁 후보를
+`3x4x1`로 다시 계산해. 다만 수치 통과 뒤에도 Ni occupation/local moment의 수동
+감사는 필요하고, U·dispersion 민감도를 하지 않으면 `U=6.2/D3` 규약 조건부 결론이야.
+
+추가적인 C10 자유 회전과 coverage 민감도에는 짧은 셀 축 2배 확장 screen이 필요해.
+같은 rigid atlas의 다른 UMA head를 쓸 때도 head별 후보 합집합을 보존해야 해.
 
 Gabia A6000은 UMA 후보 검색에는 적합하지만, 206/224원자 LiNiO₂ 복합체 QE-DFT에는 메모리가 빠듯해. DFT는 KISTI나 외주 VASP로 보내는 게 맞아.

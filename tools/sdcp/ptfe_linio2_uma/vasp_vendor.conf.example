@@ -1,0 +1,7 @@
+# Copy to vendor.conf inside the generated VASP package and edit locally.
+# This file never contains a POTCAR and is safe to return.
+
+VASP_PP_PATH=/opt/vasp/potpaw_PBE.54
+VASP_CMD="mpirun -np 32 vasp_std"
+VASP_NCORE=4
+PYTHON_BIN=python3

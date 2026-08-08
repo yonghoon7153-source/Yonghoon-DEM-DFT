@@ -168,6 +168,18 @@ show_status(){
   nvidia-smi --query-gpu=name,memory.used,utilization.gpu --format=csv,noheader || true
 }
 
+prepare_vasp(){
+  local scope="$1" target="$OUT/vasp_${1}"
+  [[ -s "$RUN_OUT/DFT_HANDOFF.json" ]] || {
+    ts "STOP: UMA DFT_HANDOFF.json is missing; finish './run.sh screen' first."
+    return 1
+  }
+  "$UMA_PY" "$PACKAGE_DIR/vasp_stage.py" prepare \
+    --uma-out "$RUN_OUT" --vasp-out "$target" --scope "$scope"
+  ts "VASP $scope package ready: $target"
+  ts "Read: $target/VASP_README_KO.md"
+}
+
 case "$MODE" in
   check)
     verify_package
@@ -217,11 +229,21 @@ PY
     prepare_model_cache_manifest
     run_stage report --fmax "${FMAX:-0.05}" --steps "${STEPS:-200}"
     ;;
+  vasp-pilot)
+    verify_package
+    check_python
+    prepare_vasp pilot
+    ;;
+  vasp-all)
+    verify_package
+    check_python
+    prepare_vasp all
+    ;;
   status)
     show_status
     ;;
   *)
-    echo "Usage: $0 {check|plan|pilot|screen|report|status}" >&2
+    echo "Usage: $0 {check|plan|pilot|screen|report|status|vasp-pilot|vasp-all}" >&2
     echo "Optional env: UMA_PY, UMA_MODEL, UMA_TASK, OUT, FMAX, STEPS, PILOT_STEPS" >&2
     exit 2
     ;;

@@ -88,6 +88,33 @@ echo "screen PID $(cat "$OUT/screen.pid")"
 
 ## 5. 결과 묶기
 
+먼저 UMA 결과에서 VASP pilot 입력을 만들어.
+
+```bash
+cd "$APP"
+./run.sh vasp-pilot
+VASP_PILOT="$OUT/vasp_pilot"
+VASP_PILOT_TAR="$(dirname "$OUT")/$(basename "$OUT")_vasp_pilot_inputs.tar.gz"
+tar -C "$OUT" -czf "$VASP_PILOT_TAR" vasp_pilot
+sha256sum "$VASP_PILOT_TAR"
+```
+
+pilot VASP 결과를 검토한 뒤 전체 후보 입력은 다음으로 만들어.
+
+```bash
+cd "$APP"
+./run.sh vasp-all
+VASP_ALL="$OUT/vasp_all"
+VASP_ALL_TAR="$(dirname "$OUT")/$(basename "$OUT")_vasp_all_inputs.tar.gz"
+tar -C "$OUT" -czf "$VASP_ALL_TAR" vasp_all
+sha256sum "$VASP_ALL_TAR"
+```
+
+각 생성 폴더의 `VASP_README_KO.md`와 `vasp_vendor.conf.example`을 외주처에 같이
+보내. POTCAR는 라이선스 때문에 들어 있지 않고, 외주처가 자기 라이브러리에서 조립해.
+
+UMA 원자료 자체를 묶는 명령은 아래와 같아.
+
 POTCAR 같은 라이선스 파일은 이 계산에 없지만, 산출물을 통째로 회수하기 쉽게 묶어.
 
 ```bash
