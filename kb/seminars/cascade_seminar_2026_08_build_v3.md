@@ -678,3 +678,37 @@ flowchart LR
 - [ ] 빠진 원소 3개 암기 (A5b 마지막 답의 성립 조건 — pool_provenance 에서 확인)
 - [ ] PASTE 5곳 촬영 (VESTA 2 → 터미널 → webapp 2)
 - [ ] Codex 판 도착 시 3점 대조 (todo #37)
+
+
+---
+
+## 7. Codex 판 대조 로그 (2026-08-11) — 상호 채택 완료
+
+Codex 덱(24장, `Research_Seminar_2026_08_cascade_codex_revised.pptx` — repo 등재) + 보조자료
+20파일을 검산 후 병합. **Codex 주장 4건 전부 우리 CSV/JSON 으로 검증 통과** 후 채택.
+
+### Codex 에서 가져온 것 (v3.2 반영)
+| 채택 | 검산 | 들어간 곳 |
+|---|---|---|
+| ★ **120 게이트 순열 전수** — 최종 집합 순서 불변, waterfall 모양은 서사 | 우리 guide 366행에 정본 등재 확인 | S13 |
+| ★ **unique-kill 감사** — G2 탈락 4종(CoO·Fe₂O₃·MnO·NiO, late-TM)이 전부 G3 도 탈락 = unique kill 0 | scorecard CSV 검산 (4종 전부 Vox<2.14) | S13 |
+| ★ **산화-수송 트레이드오프의 계통성** — 산화 onset 개선 6종 전부 G4 탈락 | ox-transport CSV 검산 (6/6 G4_pass=0) | **S14b 신설** + 그림 채택 |
+| **x002/x005/x010 = campaign label** (canonical CSV 는 concentration=0.25 — 명목 x 미해결) | champions.csv 1행 검산 | S11 ⚠ 정정 + S18 그리드 단서 |
+| **G4 blocking<0.6 = 휴리스틱 (앵커 없음) · G5 = 랭킹 전용 → 물리적 끝은 11** | funnel JSON | S12·S13 |
+| **deep-DFT coverage 2/47** (B₂O₃·Nd₂O₃) 명시 | scorecard dagger | S23 |
+| **scorecard 47종 그림** (percentile + first-stop, no winner) | 그림 육안 | S15 — webapp PASTE 1곳 제거 |
+| **protocol matrix (allowed / do-not claim)** 형식 | — | A2b 신설 |
+| 보조자료 병합: CSV 4 + 그림 8 + 생성기 + 리뷰 문서 2 + ML 가이드 | — | repo (guide 는 병기: `cascade_pipeline_guide_codex_2026_08_11.md` — 우리 판 463줄 보존) |
+
+### 우리가 앞서는 것 (Codex 판에 줄 피드백)
+1. **제목이 cascade 지엽** — 사용자 판정으로 이미 기각된 프레임. 우리 우산 제목 유지.
+2. **DFT 기초 부재** — 청중 스펙("처음 보는 사람 다수") 위반. 우리 Part 2 유지.
+3. **철회 원장 5행·영수증 없음** — 우리 11행 + 전행 repo 영수증(오늘 SDCP DFT+U 등재 포함).
+   특히 **철회의 철회(+0.336 eV)** 서사가 Codex 판에 없다 — 그쪽 S15 는 아직 "UMA Li-transfer
+   사건" 서술에 머묾.
+4. **암기 장치 없음** — 지도/동사 니모닉은 우리 것.
+5. 대본 어체 — Codex 노트는 반말 메모체. 발표는 합니다체(우리 판).
+
+### 흡수 안 한 것
+- Codex `cascade_pipeline_guide.md` 재구성판 — 우리 2026-08-06 판을 덮으면 463줄 소실 → 병기.
+- `terminology_register.md` Codex 판 — 이중 정본 위험 → 미병합 (diff 270줄, 필요 시 별도 검토).
