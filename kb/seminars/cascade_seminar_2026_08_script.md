@@ -1,5 +1,9 @@
 # 🎙 Research Seminar 대본 — Screening cascade for sulfide SEs
 
+> ⚠⚠ **대체됨 (2026-08-10)** — `cascade_seminar_2026_08_build_v3.md` 가 이 파일을 대체한다.
+> v3 는 슬라이드 번호가 다르고(P1–P34), **대본이 슬라이드마다 내장**돼 있으며(🎙 블록),
+> 제목도 cascade 에서 전체 파이프라인으로 바뀌었다. 이 파일은 참고용으로만 남긴다.
+
 > 스펙: `kb/seminars/cascade_seminar_2026_08_spec_v2.md` (본문 19 + Appendix 6)
 > 목표 시간: **본문 35분 + Q&A 10분**. 슬라이드당 평균 110초.
 > 청중: 대학원생 · **처음 보는 사람 다수**. 용어는 처음 나올 때 반드시 풀어 준다.

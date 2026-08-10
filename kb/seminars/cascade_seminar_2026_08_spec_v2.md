@@ -1,5 +1,8 @@
 # 🎤 Research Seminar spec **v2** — Screening cascade for sulfide SEs
 
+> ⚠⚠ **대체됨 (2026-08-10)** — `cascade_seminar_2026_08_build_v3.md` (빌드시트: 그림 경로 +
+> 대본 + 페이지별 방어 내장) 가 이 spec 을 대체한다. 이 파일은 v2→v3 변경 근거 추적용.
+
 > **발표자** 안용훈 (Yonghoon An) · Division of Materials Science & Engineering, Hanyang University
 > **형식** 이가형 연구세미나 템플릿 승계 — 4:3 · 표지 "Research Seminar" · `Part N` 구분 ·
 > 섹션 헤더(navy bold) · `■` 대제목 / `·` 소제목 · 우상단 약어정의 + 참고문헌(이탤릭) ·
