@@ -97,12 +97,13 @@ function divider(partLabel, bigNum, title, sub, active, notes){
   return s;
 }
 
-// ═══ 1. COVER ═══════════════════════════════════════════════════════════════
+
 {
   const s=newSlide();
   s.addText("August 2026", {x:0.55, y:0.5, w:3, h:0.3, fontFace:"Arial", fontSize:11, color:MUT, margin:0});
   s.addText("Research Seminar", {x:0.55, y:1.35, w:8.9, h:0.7, fontFace:"Arial", fontSize:34, bold:true, color:NAVY, margin:0});
   s.addText("Self-Auditing Computational Screening of\nSulfide Solid Electrolytes", {x:0.55, y:2.5, w:8.9, h:1.3, fontFace:"Arial", fontSize:24, bold:true, color:INK, margin:0});
+  s.addText("An audited cascade: from 47-species screening to prospective co-doping labels", {x:0.55, y:4.62, w:8.9, h:0.3, fontFace:"Arial", fontSize:11, italic:true, color:MUT, margin:0});
   s.addText("— from DFT gates to dopant combinations", {x:0.55, y:3.8, w:8.9, h:0.4, fontFace:"Arial", fontSize:15, italic:true, color:MUT, margin:0});
   s.addText("Yonghoon An", {x:0.55, y:5.0, w:8.9, h:0.35, fontFace:"Arial", fontSize:15, bold:true, color:INK, margin:0});
   s.addText("Division of Materials Science & Engineering, Hanyang University\n(E-mail : yonghoon71@hanyang.ac.kr)", {x:0.55, y:5.38, w:8.9, h:0.6, fontFace:"Arial", fontSize:11, color:MUT, margin:0});
@@ -111,24 +112,6 @@ function divider(partLabel, bigNum, title, sub, active, notes){
   s.addText("HANYANG UNIVERSITY", {x:0.55, y:6.9, w:4, h:0.3, fontFace:"Arial", fontSize:10, bold:true, color:NAVY, margin:0});
   s.addNotes("재료공학과 안용훈입니다. 오늘은 황화물 고체전해질을 계산으로 스크리닝한 이야기인데, '무엇을 찾았나'만큼 '무엇을 저희 손으로 철회했나'를 같이 보여드리겠습니다. 철회 기록이 왜 숨길 일이 아니라 보여드릴 성과인지, 오늘 그걸 설득해 보겠습니다.\n[용어] sulfide solid electrolyte(황화물 고체전해질): 액체 전해질을 대체하는 이온전도성 고체. 우리 대상은 아지로다이트 Li6PS5Cl 계열.");
 }
-// ═══ 2. MAP ═════════════════════════════════════════════════════════════════
-{
-  const s=newSlide();
-  kickerTitle(s, "Roadmap", "One loop, six stops");
-  mapDiagram(s, 0.55, 3.0, 8.9, -1, true);
-  bullets(s,[
-    {t:"ASK → TOOLS → ORIGIN → SCREEN → COMBINE → VERIFY → (back)", b:true},
-    {t:"The last stop feeds the first ones — that returning arrow IS the method", color:RED, b:true},
-    {t:"Each part opens by lighting its stop on this map", sub:true},
-  ], 0.55, 1.5, 8.9, 1.2, 13);
-  s.addText("ask · measure · learn · gate · combine · doubt",
-    {x:0.55, y:6.3, w:8.9, h:0.35, fontFace:"Arial", fontSize:12, italic:true, color:NAVY, align:"center", margin:0});
-  s.addNotes("발표 전체가 이 한 바퀴입니다. 여섯 정거장 - 묻고, 재고, 배우고, 거르고, 엮고, 마지막에 의심합니다. 그리고 의심에서 나온 화살표가 다시 앞으로 돌아갑니다. 이 되돌아가는 화살표가 오늘 발표의 핵심 주장입니다. 각 Part 시작마다 이 지도에 지금 어디인지 표시하겠습니다.\n[Q] 왜 지도부터? -> 마지막 정거장(VERIFY)이 논지라서, 구조를 먼저 보여야 앞 다섯이 왜 필요한지 보입니다.");
-  footer(s);
-}
-// ═══ Part 1 ═════════════════════════════════════════════════════════════════
-divider("Part 1","1","ASK — why compute at all","Too many candidates, experiments are slow — and what makes a screen trustworthy",0,
- "1부. 문제 정의와 논지입니다.");
 { // S1
   const s=newSlide();
   kickerTitle(s,"Motivation","The screening problem","Sendek et al., EES 2017 · EIS = impedance spectroscopy");
@@ -136,7 +119,7 @@ divider("Part 1","1","ASK — why compute at all","Too many candidates, experime
   const bx=0.55, by=1.7;
   s.addShape(p.ShapeType.roundRect,{x:bx,y:by+1.05,w:1.5,h:0.6,rectRadius:0.06,fill:{color:NAVY}});
   s.addText("Li₆PS₅Cl\nhost",{x:bx,y:by+1.05,w:1.5,h:0.6,align:"center",valign:"middle",color:"FFFFFF",fontSize:10,bold:true,fontFace:"Arial",margin:0});
-  const knobs=["halogen species","halogen ratio","dopant (47)","dose x (3)"];
+  const knobs=["halogen species","halogen ratio","dopant (47)","campaign label (3)"];
   knobs.forEach((k,i)=>{
     const ky=by+i*0.72;
     s.addShape(p.ShapeType.line,{x:bx+1.5,y:by+1.35,w:0.55,h:ky+0.27-(by+1.35),line:{color:MUT,width:1}});
@@ -144,7 +127,7 @@ divider("Part 1","1","ASK — why compute at all","Too many candidates, experime
     s.addText(k,{x:bx+2.05,y:ky,w:1.75,h:0.54,align:"center",valign:"middle",color:NAVY,fontSize:9.5,fontFace:"Arial",margin:0});
   });
   s.addText("× multiplicative",{x:bx+2.05,y:by+3.0,w:1.75,h:0.3,fontSize:9.5,italic:true,color:RED,align:"center",fontFace:"Arial",margin:0});
-  caption(s,"Four independent knobs on one host — the space grows as a product",bx,by+3.45,3.35);
+  caption(s,"Four knobs on one host; the label knob is nominal, not a verified concentration",bx,by+3.45,3.35);
   // right bullets + mini funnel preview
   bullets(s,[
     {t:"One experiment = synthesis + XRD + EIS + cell ≈ weeks", b:true},
@@ -184,9 +167,20 @@ divider("Part 1","1","ASK — why compute at all","Too many candidates, experime
   s.addNotes("스크리닝 발표는 보통 '몇 개에서 몇 개를 찾았다'로 끝납니다. 더 어려운 질문은 '떨어져야 할 게 정말 떨어졌나'인데, 이걸 보고하는 발표가 드뭅니다. 저희는 그걸 표로 보여드리겠습니다 - 저희 판정 열한 건을 감사대에 올렸고 아홉 건을 철회했습니다. 그리고 이 열한 개 중 하나는 실제로 지난 세미나에서 결론으로 발표됐던 숫자입니다. 오늘 그 철회부터 보여드립니다.\n[Q 핵심 1합] 철회가 많다 = 부실? -> 철회 건수는 신뢰도의 반대 지표가 아니라 게이트 밀도의 지표입니다. 게이트 없는 파이프라인은 철회가 0건입니다 - 틀린 게 없어서가 아니라 못 찾아서입니다.\n[Q 핵심 2합 - 사후 명명 공격] '오류를 발견한 뒤에 게이트라고 이름 붙인 것 아닌가' -> 절반은 인정합니다. 오류가 규칙을 낳았습니다. 하지만 규칙이 코드에 박힌 뒤에는 사람이 아니라 규칙이 잡습니다: 7번(SDCP)은 'UMA는 전하 분리를 판정할 수 없다'를 사고 전에 미리 코드에 박아둔 규칙이 잡았고, 11번은 자동 감사기가 잡았고, 11건 중 6건이 지난 사흘간 돌던 게이트에서 나왔습니다.\n[EN] Isn't that a red flag? -> A pipeline with no gates reports zero retractions - not because nothing is wrong but because nothing is checked.");
   footer(s);
 }
-// ═══ Part 2 ═════════════════════════════════════════════════════════════════
-divider("Part 2","2","TOOLS — what they give, what they cannot","DFT and MLIP, each closed with “so what do we not trust”",1,
- "2부는 DFT 강의가 아닙니다. 뒤에 나올 게이트들이 왜 필요한지 물리로 정당화하는 것뿐입니다. 7분 안에 끝냅니다.");
+{
+  const s=newSlide();
+  kickerTitle(s, "Roadmap", "One loop, six stops");
+  mapDiagram(s, 0.55, 3.0, 8.9, -1, true);
+  bullets(s,[
+    {t:"ASK → TOOLS → ORIGIN → SCREEN → COMBINE → VERIFY → (back)", b:true},
+    {t:"The last stop feeds the first ones — that returning arrow IS the method", color:RED, b:true},
+    {t:"Each part opens by lighting its stop on this map", sub:true},
+  ], 0.55, 1.5, 8.9, 1.2, 13);
+  s.addText("ask · measure · learn · gate · combine · doubt",
+    {x:0.55, y:6.3, w:8.9, h:0.35, fontFace:"Arial", fontSize:12, italic:true, color:NAVY, align:"center", margin:0});
+  s.addNotes("발표 전체가 이 한 바퀴입니다. 여섯 정거장 - 묻고, 재고, 배우고, 거르고, 엮고, 마지막에 의심합니다. 그리고 의심에서 나온 화살표가 다시 앞으로 돌아갑니다. 이 되돌아가는 화살표가 오늘 발표의 핵심 주장입니다. 각 Part 시작마다 이 지도에 지금 어디인지 표시하겠습니다.\n[Q] 왜 지도부터? -> 마지막 정거장(VERIFY)이 논지라서, 구조를 먼저 보여야 앞 다섯이 왜 필요한지 보입니다.");
+  footer(s);
+}
 { // S3
   const s=newSlide();
   kickerTitle(s,"Tools · DFT","Where the approximation enters","He et al., EEM 2019 · XC = exchange–correlation");
@@ -252,9 +246,6 @@ divider("Part 2","2","TOOLS — what they give, what they cannot","DFT and MLIP,
   s.addNotes("[그림 단서] 이 그림의 피팅 음영은 표시용 창이고 정본 MSD 창은 2-50 ps 고정 - 질문 나오면 그렇게 답한다.\nDFT로 200 ps MD는 불가능합니다. 그래서 MLIP. 다만 저희 계에서 실측으로 확인된 한계가 셋: 전하 상태를 못 다루고(이게 Part 6에서 제일 비싼 교훈으로 돌아옵니다), 자기 상태를 못 고르고, 분산력이 훈련에 없습니다. Li3N에는 금지 - 결정론적 편향 확인. 원칙은 하나: MLIP는 스크리닝 대체 모델, 챔피언은 반드시 DFT 재검.\n[Q] MLIP 오차? -> 계/물성마다 달라 오차 '값'보다 실패 유형(전하/자기/분산)으로 관리 - 유형에 걸리는 질문은 MLIP로 안 닫습니다.\n[용어] omat: UMA 무기재료 헤드. deterministic bias: 시드를 바꿔도 같은 방향으로 틀리는 오차.");
   footer(s);
 }
-// ═══ Part 3 ═════════════════════════════════════════════════════════════════
-divider("Part 3","3","ORIGIN — where our axes came from","Li₆PS₅Cl vs Li₅.₄PS₄.₄Cl₁.₆: the lesson that designed the screen",2,
- "3부. 축 설계의 기원입니다. '결과 자랑'이 아니라 '이 결과가 축 설계를 바꿨다'가 요지.");
 { // S6
   const s=newSlide();
   kickerTitle(s,"Origin","The electronic structure barely moves","gap = fixed-occ eigenvalues · ICOHP: negative = bonding");
@@ -285,57 +276,29 @@ divider("Part 3","3","ORIGIN — where our axes came from","Li₆PS₅Cl vs Li�
   s.addNotes("바뀐 건 구조입니다. Cl이 늘면 전하 균형 때문에 Li 공공이 늘고, anti-site 무질서가 커져서 홉 네트워크가 열립니다. 왼쪽 그림이 그 네트워크인데요, 경로를 따라 늘어선 자리들이 전부 vacancy 자리입니다. 그래서 스크리닝 축을 전자 기술자가 아니라 구조 기술자로 세웠습니다. 전자절연은 게이트로만 씁니다. 이 한 장이 cascade의 설계 이유입니다.\n[Q] 무질서가 이득이라는 직접 증거 -> MD에서 공공 농도와 D의 동반 상승이 직접 증거입니다(beta 게이트 통과분만 인용). ⚠ BVSE 채널%는 여기서 근거로 쓰지 않는다 - 채널 부피는 D0쪽(prefactor) 지표라 Ea/σ 순위를 못 매긴다는 걸 저희 CSV 헤더에 직접 박아 뒀다(LPSOCl은 채널 +43%인데 Ea가 더 높음). '채널% 증가' 답변 금지.\n[용어] anti-site: 원소가 남의 자리(Cl-S)에 앉는 점결함. percolation: 경로가 셀 전체를 관통하게 이어지는 문턱 현상. empty-lattice proxy: 빈 격자에 Li 탐침 하나 - 지형 모양 기술용, 측정 Ea 아님(그림 하단 단서 그대로).");
   footer(s);
 }
-// ═══ Part 4 ═════════════════════════════════════════════════════════════════
-divider("Part 4","4","SCREEN — the field's way, then ours","47 dopants · 273 calculations · 5 gates · 14 axes — and why the funnel cannot close it",3,
- "4부가 제일 깁니다. 문헌 실물 2장 -> 우리 파이프라인 -> 게이트 -> 워터폴 -> 그리고 반박.");
-{ // S8 sendek
+{ // LINEAGE (closed 판에서 채택, 검증: 141행 실측)
   const s=newSlide();
-  kickerTitle(s,"Screen · the field","How the field screens ①: 12,831 → 21","Sendek et al., EES 2017, 10, 306");
-  img(s, REPO+"litdb/figures/sendek2017_ml_screening_12k_conductors/fig_1.png", 0.55,1.5,8.9,3.3,
-      "Two tracks: structure screening (12,831 candidates) + model building on 40 measured conductors (Sendek 2017)");
+  kickerTitle(s,"Screen · ours","Campaign lineage: 91 × 3 attempted slots → versioned 47-species snapshot","source: cascade_v23_champions.csv (141 rows verified)");
+  const flow=[["Curated roster","91 species"],["Attempted campaign","273 run slots (3 labels)"],["Versioned snapshot","141 records = 47 × 3"]];
+  flow.forEach((f,i)=>{
+    const fx=0.55+i*3.05;
+    s.addShape(p.ShapeType.roundRect,{x:fx,y:1.6,w:2.75,h:0.95,rectRadius:0.07,fill:{color:i===2?NAVY:LIGHT},line:{color:NAVY,width:1.25}});
+    s.addText([{text:f[0]+"\n",options:{bold:true,fontSize:11,breakLine:true}},{text:f[1],options:{fontSize:9.5}}],
+      {x:fx,y:1.6,w:2.75,h:0.95,align:"center",valign:"middle",color:i===2?"FFFFFF":NAVY,fontFace:"Arial",margin:0});
+    if(i<2) s.addShape(p.ShapeType.line,{x:fx+2.78,y:2.07,w:0.24,h:0,line:{color:MUT,width:1.75,endArrowType:"triangle"}});
+  });
   bullets(s,[
-    {t:"4 prerequisite gates (E_hull = 0 · gap ≥ 1 eV · V_ox ≥ 4 V · no TM) → 317; logistic classifier trained on 40 measured σ → 21 (0.16%)", b:true},
-    {t:"Their lesson: prerequisite gates cut harder than the conductivity screen (model alone leaves 1,408)", color:NAVY, b:true},
-    {t:"Remember “40” — our dopant pool is 47: same weight class, we inherit their small-sample defenses", color:RED, b:true},
-  ],0.55,5.05,8.9,1.5,11);
-  s.addNotes("실물부터. Sendek은 만이천여 종에서 전제조건 게이트 4개로 317, 실측 전도도 40종으로 훈련한 분류기로 21종. 교훈: 전도도 스크린보다 전제조건 게이트가 더 세게 거릅니다. 분류기만 쓰면 1,408종이 남아요. '40종 훈련셋'을 기억해 두세요 - 저희 47종과 체급이 같아 소표본 방어 절차를 계승합니다.\n[Q] 40개로 훈련한 모델을 믿나 -> LOOCV, 전수 조합 특징선택, X-randomization으로 방어했고 우리도 같은 절차(P24). 핵심은 '맞다'가 아니라 '방어 절차가 문서화됐다'.\n[용어] LOOCV: 표본 1개를 빼고 학습-예측을 전 표본 반복. 소표본 표준 검증.");
+    {t:"The 2026-06-25 canonical table holds 37 oxides + 10 fluorides; the other 44 species are absent from it", b:true},
+    {t:"x002/x005/x010 are campaign labels; conflicting concentration metadata means nominal x is unresolved", b:true, color:RED},
+    {t:"Absence is not physical rejection: no per-species failure manifest is versioned (only As₂S₃ ×3 is documented, n_structures = 0)", b:true},
+  ],0.55,2.85,8.9,1.7,11.5);
+  s.addShape(p.ShapeType.roundRect,{x:0.8,y:4.75,w:8.4,h:1.05,rectRadius:0.07,fill:{color:SOFT},line:{color:RED,width:1.25}});
+  s.addText("PROVENANCE BOUNDARY — the post-hoc gate audit starts from the 47-species table; it does not explain the 91→47 gap",
+    {x:1.0,y:4.75,w:8.0,h:1.05,fontSize:11.5,italic:true,color:RED,fontFace:"Arial",valign:"middle",margin:0});
+  s.addNotes("여기는 단위를 분리해서 말합니다. 273은 91종에 세 개 nominal label을 곱한 실행 슬롯입니다. versioned canonical table은 6월 25일 스냅샷으로 oxide 37 + fluoride 10, 47종의 141개 record만 담고 있습니다 - 141 = 47 x 3, 실측 확인했습니다. 나머지 44종이 물리적으로 탈락한 게 아니라 개별 실패 manifest가 없어 미분류입니다. 유일하게 문서화된 실패는 As2S3 세 슬롯(n_structures=0)뿐입니다. 그래서 273에서 47로 '걸러냈다'는 발견 서사는 쓰지 않습니다.\n[출처] Codex closed 판에서 채택, 141행은 champions.csv 로 재검산.");
   footer(s);
 }
-{ // S9 xiao + richards
-  const s=newSlide();
-  kickerTitle(s,"Screen · the field","How the field screens ②: thermodynamic gates at scale","Xiao et al., Joule 2019 · Richards et al., Chem. Mater. 2016");
-  img(s, REPO+"litdb/figures/xiao2019_cathode_coating_screening/fig_2.png", 0.55,1.55,4.6,2.9,
-      "Survivors per filter, by chemistry (Xiao 2019: 104,082 → 184)");
-  img(s, SCR+"richards_fig2_annot.png", 5.5,1.4,3.95,4.6,
-      "Stability windows by anion — sulfides are the narrow bars (Richards 2016; box added)");
-  bullets(s,[
-    {t:"Same skeleton everywhere: cheap gates first, expensive validation last", b:true},
-    {t:"The narrow sulfide windows (incl. Li₆PS₅Cl) are exactly why we hunt dopants", color:NAVY, b:true},
-  ],0.55,4.9,4.6,1.6,11);
-  s.addNotes("Ceder 계열 실물 둘. Xiao는 십만 종을 hull/안정창/반응성 게이트로 184까지. Richards의 오른쪽 그림 - 음이온별 안정창인데 황화물이 저 좁은 막대들입니다. Li6PS5Cl도 저기 있습니다. 이 좁은 창이 저희가 도펀트를 찾는 이유 그 자체. 구조는 어디나 같습니다: 싼 게이트 먼저, 비싼 검증 나중.\n[스킵라인] 'Xiao/Richards도 같은 깔때기 구조입니다 - 그림은 부록에'.\n[Q] 코팅 논문이 왜 비교되나 -> 대상은 다르지만 게이트 축/임계값 설계가 1:1 벤치마크. force-fit은 안 합니다.");
-  footer(s);
-}
-{ // S10 common + advantage
-  const s=newSlide();
-  kickerTitle(s,"Screen · the field","The common funnel, and the two boxes it rarely fills");
-  bullets(s,[
-    {t:"Rarely reported ①: failure rates of the gates themselves — false rejects invisible", b:true},
-    {t:"Rarely entered ②: single-dopant frame — combinations left unexplored", b:true},
-  ],0.55,1.5,8.9,1.0,12.5);
-  s.addTable([
-    [{text:"Ours",options:{bold:true,color:"FFFFFF",fill:{color:NAVY}}},{text:"Receipt",options:{bold:true,color:"FFFFFF",fill:{color:NAVY}}}],
-    ["Gate failure record — 11 self-retractions published","Part 6 of this talk"],
-    ["Combinatorial step — co-doping ML on top of ranking","Part 5"],
-    ["Provenance registry — 28/28 wired, drift-checked on every run","live validator"],
-    ["One repo: 188 property files · 164 literature digests · web app","reproducible"],
-  ],{x:0.55,y:2.8,w:8.9,fontFace:"Arial",fontSize:11,color:INK,border:{type:"solid",color:RULE,pt:0.75},
-     colW:[5.9,3.0],rowH:0.42,valign:"middle",margin:0.05});
-  bullets(s,[
-    {t:"Not “others don't verify” — the difference is publishing the failures and wiring the checks into the used path", i:true, color:MUT},
-  ],0.55,5.3,8.9,0.6,11);
-  s.addNotes("공통 구조에서 안 채워지는 칸이 둘. 게이트 자체의 실패율 - 잘못 떨어뜨린 걸 아무도 못 봅니다. 그리고 전부 단일 도펀트 프레임이라 조합이 못 들어옵니다. 저희가 채우려는 게 정확히 이 두 칸. 철회 기록 공개, 그리고 랭킹 위 co-doping 단계. 받치는 인프라 - 정본 레지스트리 28항목이 실시간 드리프트 검사.\n[Q] 남들도 내부 검증은 할 텐데 -> 맞습니다. 차이는 공개와 배선입니다. 우리는 철회를 지표로 발표하고, 검사기가 화면과 같은 경로를 봅니다.");
-  footer(s);
-}
+
 { // S11 our pipeline
   const s=newSlide();
   kickerTitle(s,"Screen · ours","Our pipeline: 273 run slots (91 × 3 labels) → 47 dopants with complete axes");
@@ -348,7 +311,7 @@ divider("Part 4","4","SCREEN — the field's way, then ours","47 dopants · 273 
       {x:tx,y:1.55,w:2.75,h:0.95,align:"center",valign:"middle",color:i===2?"FFFFFF":NAVY,fontFace:"Arial",margin:0});
     if(i<2) s.addShape(p.ShapeType.line,{x:tx+2.78,y:2.02,w:0.24,h:0,line:{color:MUT,width:1.75,endArrowType:"triangle"}});
   });
-  s.addText("91 curated compounds ran first (1–3 forms per dopant) → 47 dopants have all three axes populated; the other 44 fell to pipeline gaps, never counted as gate fails",
+  s.addText("cost architecture: cheap first, expensive last — the data lineage behind these counts is on the previous slide",
     {x:0.55,y:2.58,w:8.9,h:0.26,fontSize:9.5,italic:true,color:MUT,fontFace:"Arial",align:"center",margin:0});
   bullets(s,[
     {t:"⚠ x002/x005/x010 are campaign labels: the canonical CSV records concentration = 0.25, so nominal x is unresolved; every Δ is still referenced to the same undoped host cell", b:true, color:RED},
@@ -407,12 +370,25 @@ divider("Part 4","4","SCREEN — the field's way, then ours","47 dopants · 273 
   s.addNotes("발표에 나오는 화합물 전부를 한 장에 분류해 둔 로스터입니다. 전이금속 23, 주족 9, 알칼리토 6, 란타나이드 6, 알칼리 3 - 합쳐서 47이고, 진한 남색이 G4까지 통과한 11종, 단검 표시가 deep DFT까지 간 2종입니다. 아래 줄은 host 4계, SEI 분해상 9종(인용 가능 6 + Nd 3종은 MP 인용), co-doping 상위 4쌍입니다.\n[Q] 어느 게 최종 후보냐 -> 이 장은 후보 명단이 아니라 출연진 명단입니다. 판정은 각 파트에서.\n[Q] 빠진 원소는? -> A5b 마지막 문항 - Si/Sn/Zr 계는 있고, 예: P-site 치환계(Ge는 있음), S-site 계열(Se, Te), 그리고 Rb/Cs 같은 무거운 알칼리가 없습니다. pool_provenance 에 선정 이력.");
   footer(s);
 }
+{ // S8 sendek
+  const s=newSlide();
+  kickerTitle(s,"Screen · the field","How the field screens ①: 12,831 → 21","Sendek et al., EES 2017, 10, 306");
+  img(s, REPO+"litdb/figures/sendek2017_ml_screening_12k_conductors/fig_1.png", 0.55,1.5,8.9,3.3,
+      "Two tracks: structure screening (12,831 candidates) + model building on 40 measured conductors (Sendek 2017)");
+  bullets(s,[
+    {t:"4 prerequisite gates (E_hull = 0 · gap ≥ 1 eV · V_ox ≥ 4 V · no TM) → 317; logistic classifier trained on 40 measured σ → 21 (0.16%)", b:true},
+    {t:"Their lesson: prerequisite gates cut harder than the conductivity screen (model alone leaves 1,408)", color:NAVY, b:true},
+    {t:"Small-sample lesson, not dataset equivalence: our 47 in-host candidates need grouped CV and prospective labels", color:RED, b:true},
+  ],0.55,5.05,8.9,1.5,11);
+  s.addNotes("실물부터. Sendek은 만이천여 종에서 전제조건 게이트 4개로 317, 실측 전도도 40종으로 훈련한 분류기로 21종. 교훈: 전도도 스크린보다 전제조건 게이트가 더 세게 거릅니다. 분류기만 쓰면 1,408종이 남아요. '40종 훈련셋'을 기억해 두세요 - 저희 47종과 체급이 같아 소표본 방어 절차를 계승합니다.\n[Q] 40개로 훈련한 모델을 믿나 -> LOOCV, 전수 조합 특징선택, X-randomization으로 방어했고 우리도 같은 절차(P24). 핵심은 '맞다'가 아니라 '방어 절차가 문서화됐다'.\n[용어] LOOCV: 표본 1개를 빼고 학습-예측을 전 표본 반복. 소표본 표준 검증.");
+  footer(s);
+}
 { // S12 gates detail
   const s=newSlide();
   kickerTitle(s,"Screen · ours","Five gates: metric, threshold, and why","G4 lineage: Kahle et al. 2020 (HT-AIMD)");
   s.addTable([
     [{text:"Gate",options:{bold:true,color:"FFFFFF",fill:{color:NAVY}}},{text:"Metric",options:{bold:true,color:"FFFFFF",fill:{color:NAVY}}},{text:"Threshold",options:{bold:true,color:"FFFFFF",fill:{color:NAVY}}},{text:"Physical basis",options:{bold:true,color:"FFFFFF",fill:{color:NAVY}}},{text:"Lit. analog",options:{bold:true,color:"FFFFFF",fill:{color:NAVY}}}],
-    ["G1 structural","mean over x of Δe = E(doped)−E(host), UMA","Δe < 0  (zero = the host itself)","favorability vs the host — not an arbitrary cut","Xiao F2 · Sendek P1"],
+    ["G1 structural","mean over x of Δe = E(doped)−E(host), UMA","Δe < 0  (zero = the host itself)","favorability vs host; 47/47 pass → vacuous in this snapshot","Xiao F2 · Sendek P1"],
     ["G2 window","grand-potential ESW width","window ≥ 0.05 V","a window must exist at all","Zhu 2015 · Xiao F3"],
     ["G3 oxidation","oxidation onset (V vs Li)","V_ox ≥ 2.14 V  (= undoped host onset)","must not be worse than the host","Richards windows"],
     ["G4 transport","BVSE proxy (x005 label), min–max norm","norm > 0.3 AND blocking < 0.6*","the property we exist for","Kahle HT-AIMD"],
@@ -445,6 +421,19 @@ divider("Part 4","4","SCREEN — the field's way, then ours","47 dopants · 273 
   s.addNotes("문헌 방식 그대로 그리면 이렇게 됩니다. 이 깔때기를 감사하면 세 가지가 나옵니다. 첫째, 구조안정 47/47은 게이트가 세서가 아니라 풀이 안정 위주로 큐레이션된 결과 - 데이터 파일이 스스로 vacuous 플래그를 답니다. 둘째, 창 게이트 탈락 4종(late-TM 산화물)은 전부 산화 게이트에서도 떨어집니다 - unique kill 0, 중복 게이트. 셋째가 제일 중요한데, 다섯 게이트의 120개 순서를 전부 돌렸습니다. 최종 집합은 순서 불변입니다. waterfall 모양은 결과가 아니라 설명 순서입니다. 그리고 G4 blocking 컷은 휴리스틱, G5는 로스터 중앙값 정렬이라 물리적으로 방어 가능한 끝은 '1'이 아니라 G4 통과 11종입니다.\n[Q] WO3가 뭐가 좋았나 -> 다섯 게이트를 모두 통과한 유일 후보라는 사실뿐. G5 자체가 랭킹 전용이라 그 '1'을 후보 확정으로 안 씁니다.\n[출처] 120 순열: docs/cascade_pipeline_guide.md 366행(정본). unique kill: cascade_seminar_scorecard_47.csv 검산(G2 first-stop = CoO/Fe2O3/MnO/NiO, 전부 Vox<2.14).");
   footer(s);
 }
+{ // S14b — the trade-off is systematic (Codex 대조에서 채택)
+  const s=newSlide();
+  kickerTitle(s,"Screen · ours","The trade-off is systematic: six for six","source: cascade_seminar_oxidation_transport_47.csv");
+  img(s, REPO+"docs/figures/cascade/cascade_seminar_oxidation_transport_47.png", 0.55,1.5,6.2,4.7,
+      "All six oxidation-raising candidates stop at the same transport gate (static proxy; not conductivity)");
+  bullets(s,[
+    {t:"Every candidate that raises the oxidation onset (Cr₂O₃/Ga₂O₃/In₂O₃/Sc₂O₃ +0.22 V · B₂O₃ +0.18 · Y₂O₃ +0.14) fails G4", b:true, color:RED},
+    {t:"A dataset-level trade-off across all six — though not, by itself, proof that M–O bonding causes the blocking", b:true},
+    {t:"And it is why co-doping exists: these six are exactly the cathode-side halves of our top pairs (Cr₂O₃+HfO₂, Ga₂O₃+HfO₂, HfO₂+In₂O₃…)", b:true, color:NAVY},
+  ],6.95,1.6,2.55,4.6,10.5);
+  s.addNotes("한 장 더 - 이 충돌이 B2O3 하나의 불운이 아니라는 걸 보여드립니다. 산화 onset 을 host 위로 올린 후보가 여섯인데, 여섯 전부가 같은 수송 게이트에서 멈춥니다. 화학의 모양 자체가 이렇습니다 - 산화를 막는 강한 M-O 결합이 Li 경로도 막습니다. 그리고 이게 co-doping 이 존재하는 이유입니다. 이 여섯이 정확히 저희 상위 쌍의 양극측 절반입니다. Cr2O3+HfO2, Ga2O3+HfO2, HfO2+In2O3. 깔때기가 버린 후보들이 조합의 재료가 됩니다.\n[주의] G4는 정적 BVSE 프록시 - 전도도가 아니라 경로 위험 플래그. 그림 하단에 명기돼 있습니다.\n[출처] Codex 판 세미나 자료에서 채택, CSV 검산 완료(6/6 G4_pass=0).");
+  footer(s);
+}
 { // S14 why funnel fails
   const s=newSlide();
   kickerTitle(s,"Screen · ours","Why the funnel is the wrong endpoint for our question","Zhu et al., Angew. 2020 (hydrolysis map)");
@@ -453,7 +442,7 @@ divider("Part 4","4","SCREEN — the field's way, then ours","47 dopants · 273 
     {t:"② Sequential AND destroys complementarity:", b:true, color:NAVY},
     {t:"a weak-transport / superb-oxidation dopant dies at G4 — exactly the one most valuable when paired", sub:true},
     {t:"③ Axes really collide — our own data, three ways at once:", b:true, color:RED},
-    {t:"+B₂O₃: best MD free-energy barrier (PMF ΔF 0.16 eV @600 K, 4 systems) — yet the static transport axis rejects it, and air stability is worst-group (B₂S₃ hydrolysis −0.90 eV, 3rd-worst of 46 [Zhu20])", sub:true},
+    {t:"+B₂O₃ shows it three ways at once: best MD free-energy landscape (PMF 0.16 eV @600 K) · rejected by the static pathway proxy · provisional-worst on air axes (B₂S₃ hydrolysis −0.90, 3rd-worst of 46 [Zhu20])", sub:true},
     {t:"One composite score cannot represent this candidate — high is a lie, low is a lie", b:true},
     {t:"⇒ ranking stays multi-objective (14 axes); the next step is combination, not elimination", b:true, color:NAVY, gap:2},
   ],0.55,1.5,5.3,4.9,11);
@@ -462,51 +451,23 @@ divider("Part 4","4","SCREEN — the field's way, then ours","47 dopants · 273 
   s.addNotes("세 가지 이유. 첫째, 마지막 '1'은 화학이 아니라 임계값의 성질. 둘째가 핵심 - 순차 AND는 상보성을 구조적으로 파괴합니다. 수송이 약한데 산화안정이 뛰어난 후보는 수송 게이트에서 죽는데요, 그런 후보일수록 수송이 강한 후보와 짝지었을 때 제일 아깝습니다. 깔때기는 그 짝을 만들어 보기도 전에 버립니다. 셋째, 실제로 충돌합니다. 저희 B2O3는 수송 축 1등이면서, Zhu 그림 맨 아래 저 B3+ - 가수분해 -0.9로 공기안정 최악군. 이 후보를 점수 하나로 표현할 방법이 없습니다. 그래서 지우지 않고 엮는 쪽으로 갑니다.\n[Q] 다목적이면 결정 회피 아닌가 -> 용도가 축 가중을 정합니다. 드라이룸 공정이면 공기축 가중 다운. 결정권을 용도에 돌려주는 것.\n[EN] Isn't multi-objective just indecision? -> No - the application picks the weights; a funnel picks them for you, silently.\n[용어] PMF dF_perc: 시간평균 Li 밀도 자유에너지 지형의 퍼콜레이션 문턱(이 온도의 자유에너지, Ea 아님).");
   footer(s);
 }
-{ // S14b — the trade-off is systematic (Codex 대조에서 채택)
-  const s=newSlide();
-  kickerTitle(s,"Screen · ours","The trade-off is systematic: six for six","source: cascade_seminar_oxidation_transport_47.csv");
-  img(s, REPO+"docs/figures/cascade/cascade_seminar_oxidation_transport_47.png", 0.55,1.5,6.2,4.7,
-      "All six oxidation-raising candidates stop at the same transport gate (static proxy; not conductivity)");
-  bullets(s,[
-    {t:"Every candidate that raises the oxidation onset (Cr₂O₃/Ga₂O₃/In₂O₃/Sc₂O₃ +0.22 V · B₂O₃ +0.18 · Y₂O₃ +0.14) fails G4", b:true, color:RED},
-    {t:"This is not one unlucky dopant — it is the shape of the chemistry", b:true},
-    {t:"And it is why co-doping exists: these six are exactly the cathode-side halves of our top pairs (Cr₂O₃+HfO₂, Ga₂O₃+HfO₂, HfO₂+In₂O₃…)", b:true, color:NAVY},
-  ],6.95,1.6,2.55,4.6,10.5);
-  s.addNotes("한 장 더 - 이 충돌이 B2O3 하나의 불운이 아니라는 걸 보여드립니다. 산화 onset 을 host 위로 올린 후보가 여섯인데, 여섯 전부가 같은 수송 게이트에서 멈춥니다. 화학의 모양 자체가 이렇습니다 - 산화를 막는 강한 M-O 결합이 Li 경로도 막습니다. 그리고 이게 co-doping 이 존재하는 이유입니다. 이 여섯이 정확히 저희 상위 쌍의 양극측 절반입니다. Cr2O3+HfO2, Ga2O3+HfO2, HfO2+In2O3. 깔때기가 버린 후보들이 조합의 재료가 됩니다.\n[주의] G4는 정적 BVSE 프록시 - 전도도가 아니라 경로 위험 플래그. 그림 하단에 명기돼 있습니다.\n[출처] Codex 판 세미나 자료에서 채택, CSV 검산 완료(6/6 G4_pass=0).");
-  footer(s);
-}
-// ═══ Part 5 ═════════════════════════════════════════════════════════════════
-divider("Part 5","5","COMBINE — ranking to co-doping","Complementarity as the design variable — and an honest audit of the model",4,
- "5부. 다목적 랭킹 위에 조합을 얹습니다. R2 두 개를 정직하게 깝니다.");
-{ // S15 14 axes
-  const s=newSlide();
-  kickerTitle(s,"Combine","Ranking without a funnel: strengths trade across axes","source: cascade_seminar_scorecard_47.csv");
-  img(s, REPO+"docs/figures/cascade/cascade_seminar_scorecard_47.png", 0.55,1.45,8.9,3.35,
-      "Per-axis percentiles + first-stop gate — no composite score, no winner (live 14-theme view: web app /cascade)");
-  bullets(s,[
-    {t:"14 themes: oxidative · reduction · e⁻-insulation · transport · disorder · dose-robustness · lightweight · low-cost · soft · ductile · air ×2 · structural · balanced", sub:true},
-    {t:"Geometric mean = AND-like: one zero floors the composite  ·  Missing ≠ bad — excluded & flagged, never zero-filled", b:true, color:NAVY},
-  ],0.55,5.35,8.9,1.1,10.5);
-  s.addNotes("깔때기 대신 이렇게 둡니다. 축 열넷, 조합은 기하평균 - 한 축이 바닥이면 종합도 바닥인 AND 성질. 데이터 없는 축은 0이 아니라 제외 후 명시 - 0으로 깔면 '모름'이 '나쁨'으로 둔갑합니다. 축마다 챔피언이 다른 게 화면에서 바로 보입니다 - 그게 조합으로 가는 이유입니다.\n[용어] geometric mean: 곱의 n제곱근. 한 축의 0을 다른 축이 못 가려 줌.");
-  footer(s);
-}
 { // S16 co-doping
   const s=newSlide();
   kickerTitle(s,"Combine","Co-doping: complementarity as the design variable","synergy = max(joint-window gain, 0) × radius-match × stability");
   s.addTable([
-    [{text:"Pair",options:{bold:true,color:"FFFFFF",fill:{color:NAVY}}},{text:"joint window (V)",options:{bold:true,color:"FFFFFF",fill:{color:NAVY}}},{text:"vs best single",options:{bold:true,color:"FFFFFF",fill:{color:NAVY}}},{text:"radius match",options:{bold:true,color:"FFFFFF",fill:{color:NAVY}}},{text:"tag",options:{bold:true,color:"FFFFFF",fill:{color:NAVY}}}],
+    [{text:"Pair",options:{bold:true,color:"FFFFFF",fill:{color:NAVY}}},{text:"proxy joint window (V)",options:{bold:true,color:"FFFFFF",fill:{color:NAVY}}},{text:"vs best single",options:{bold:true,color:"FFFFFF",fill:{color:NAVY}}},{text:"radius match",options:{bold:true,color:"FFFFFF",fill:{color:NAVY}}},{text:"tag",options:{bold:true,color:"FFFFFF",fill:{color:NAVY}}}],
     [{text:"Cr₂O₃ + HfO₂",options:{bold:true}},"1.114",{text:"+0.360",options:{bold:true,color:RED}},"0.87","anode↔cathode"],
     ["Al₂O₃ + Cr₂O₃","0.984","+0.216","0.90","anode↔cathode"],
     ["HfO₂ + In₂O₃","1.114","+0.323","0.88","anode↔cathode"],
     ["Ga₂O₃ + HfO₂","1.114","+0.336","0.88","anode↔cathode"],
   ],{x:0.55,y:1.5,w:8.9,fontFace:"Arial",fontSize:10.5,color:INK,border:{type:"solid",color:RULE,pt:0.75},
      colW:[2.2,1.9,1.7,1.5,1.6],rowH:0.34,valign:"middle",margin:0.04});
-  s.addText("rows 1/3/4 share 1.114 V because the oxidation end is set by HfO₂ (common) — the reduction end is the partner's job",
+  s.addText("rows 1/3/4 share 1.114 V because HfO₂ supplies the common reduction edge; the Cr/Ga/In oxides supply the oxidation edge. All rows are end-member combinations — not explicit co-doped calculations",
     {x:0.55,y:3.28,w:8.9,h:0.24,fontSize:8.5,italic:true,color:MUT,fontFace:"Arial",margin:0});
   bullets(s,[
     {t:"Top pairs are ALL anode↔cathode — complementarity is doing the work", b:true, color:NAVY},
     {t:"Is it even makeable?  Three checks before believing:", b:true, gap:2},
-    {t:"① site competition — do Cr³⁺ and Hf⁴⁺ target the same host site?  (InF₃ precedent: In→P 4b, F→Cl 4a — different sites = the success pattern)", sub:true},
+    {t:"① site competition — literature-analogy sites: Cr³⁺ → Li_24g, Hf⁴⁺ amphoteric (P_4b or Li_24g) → same-site competition is a first-order risk (heuristic grades; unresolved until explicit structures)", sub:true},
     {t:"② charge arithmetic — M³⁺→P gives +2 Li, M⁴⁺→P gives +1 Li; the Li count must close", sub:true},
     {t:"③ co-substituted formation energy — needs the supercell calculation (next slide)", sub:true},
     {t:"File header, verbatim: “co-doping synergy HYPOTHESES (single-dopant proxy, not validated)”", i:true, color:RED, gap:2},
@@ -529,6 +490,7 @@ divider("Part 5","5","COMBINE — ranking to co-doping","Complementarity as the 
     {t:"v1→v2 method change: top-10 overlap 2/10 (Spearman 0.672) — pair ranking not stable across versions", b:true},
     {t:"Root cause: no co-doping labels; dopant–dopant chemistry (vacancy compensation, phase separation, interphases) absent from features", b:true},
     {t:"Small-sample defense (Sendek procedure, 40 ≈ 47): LOOCV · label-shuffle / X-randomization · applicability domain · dopant-level CV — they classify cross-material; we regress within-host", sub:true},
+    {t:"Inventory: 1,081 H0 hypotheses · 0 explicit pair structures · 0 pair UMA/DFT/experiment targets", b:true, color:RED},
     {t:"Showing only R² = 0.9998 would be a lie — we show both numbers", b:true, color:NAVY, gap:2},
   ],0.55,3.1,8.9,3.3,10.5);
   s.addNotes("이 모델의 두 단은 성적이 완전히 다릅니다. 1단 R2 0.9998 - 성공이 아닙니다. 타깃이 저희가 만든 합성 점수라 모델은 저희 공식을 해부한 것뿐. 이것만 보여드리면 거짓말. 진짜 숫자는 3단 - 쌍 천여 개 상호작용 항 R2 0.089. 거의 못 배웁니다. 누수 감사: 폴드 밖 재표준화로 3.4% - 무시 수준, 낮은 성적은 누수 탓이 아닙니다. 방법 한 판 바꾸니 top10 중 2개만 겹칩니다. 원인은 명확 - co-doping 라벨이 없고 도펀트끼리의 화학이 특징에 없습니다. 소표본 방어는 Sendek 계승 - 절차만.\n[Q] 0.089면 버려야 -> 예측기로는 그렇습니다. 가설 생성기로 격하해 쓰고, 상위 가설의 라벨 계산이 다음 단계. 숨기는 것보다 격하가 낫습니다.\n[Q] 왜 ridge/1-SE -> 47 표본 과적합 방지 최소 복잡도 + CV 최저점보다 한 단계 보수적인 관례.\n[용어] X-randomization: 라벨을 섞어 재학습 - 우연 적합 검사.");
@@ -557,9 +519,6 @@ divider("Part 5","5","COMBINE — ranking to co-doping","Complementarity as the 
   s.addNotes("라벨을 만드는 계획입니다. 상위 쌍부터 공동 치환 슈퍼셀 - 형성에너지, 자리 배정, Li 개수 닫힘. 그리고 비율 그리드. 지금 모델엔 비율 축이 아예 없습니다. 단일 도펀트 농도 3점을 쌍으로 확장하면 쌍당 9개 조성 - 비율 축의 최소 라벨. 성공하면 0.089가 움직이고 실패하면 상보성 가정이 기각 - 어느 쪽이든 배웁니다. ML 쪽은 TabPFN 벤치, dopant 단위 leave-one-out, 역설계 루프, 능동학습이 줄 서 있습니다.\n[스킵라인] '요지는 하나 - 라벨 없는 축은 계산으로 라벨을 만든다, 비율 축 포함.'\n[Q] TabPFN 왜 -> 소표본 표형 전용 사전학습 모델, 47 체급에 맞음. ridge 대비 이득은 벤치(M1)로 확인 후.\n[용어] leave-one-dopant-out: 행이 아니라 도펀트 단위로 빼는 CV - 같은 도펀트 다른 농도가 훈련에 남는 누수 차단.");
   footer(s);
 }
-// ═══ Part 6 ═════════════════════════════════════════════════════════════════
-divider("Part 6","6","VERIFY — what the gates actually did","11 audited verdicts — 9 retracted, one of them twice · one systematic bias · one provenance audit",5,
- "6부, 발표의 심장입니다. 여기서 시간을 씁니다.");
 { // S19 retraction table
   const s=newSlide();
   kickerTitle(s,"Verify","Retracted verdicts, and the gates that caught them");
@@ -571,9 +530,9 @@ divider("Part 6","6","VERIFY — what the gates actually did","11 audited verdic
     ["3","LPSOCl Ea 0.287 eV","600 K β = 0.61 (caged)","β-gate → on hold"],
     ["4","gaps read from DOS threshold","~0.3 eV under","fixed-occ eigenvalue rule"],
     ["5","air_hsab grades","wrong driver (softness ≠ oxophilicity)","[Zhu20] SI check — 9/35 off"],
-    ["6","SDCP E_ads −0.26 eV","frozen slab blocked relaxation","constraint variation → −1.27 (5×)"],
-    [{text:"7",options:{color:RED,bold:true}},{text:"the “Li-extraction” reading of −1.27",options:{color:RED}},"MLIP has no charge states",{text:"DFT+U → +0.34 eV",options:{bold:true,color:RED}}],
-    ["8","SDCP Δ “1.77 eV stronger”","poses not matched (rotation/site/contact)","matched-pose rule → 32 meV, confounded"],
+    ["6","SDCP frozen-slab UMA score −0.26 eV","frozen slab blocked relaxation","constraint variation → Li-transfer pose; not an E_ads"],
+    [{text:"7",options:{color:RED,bold:true}},{text:"the “Li-extraction” reading of −1.27/−1.465",options:{color:RED}},"MLIP lacks charge-state energetics",{text:"DFT+U endpoint +0.336/+0.340 eV; v2 recheck open",options:{bold:true,color:RED}}],
+    ["8","SDCP site/adsorption differences","9 meV, −32/−26 meV, +0.34 eV were conflated","matched-endpoint rule; site preference unresolved"],
     ["9","Nd gaps (3 phases)","quantity undefined (metallic SCF)","fixed-occ validity condition"],
     ["10","Nd₂S₃ gap 1.79 eV","metastable theoretical polymorph (mp-32586) picked","material-id pinning → 0.760 (obs. Pnma)"],
     ["11","4 canonical gaps","values fine — run files missing","provenance audit (Part 6 close)"],
@@ -589,7 +548,7 @@ divider("Part 6","6","VERIFY — what the gates actually did","11 audited verdic
   const steps=[
     ["① UMA, frozen slab (ff = 1.0)","E_ads = −0.26 eV","“weak physisorption”",LIGHT,NAVY],
     ["② unfreeze (0.85 / 0.6)","−1.27 / −1.465 eV — surface Li pulled out","“not adsorption — Li extraction”  (our previous deck)",SOFT,MUT],
-    ["③ DFT+U single points","dE_extract = +0.336 eV (sign holds at σ→0)","extraction is uphill — ② was an MLIP artifact","FFFFFF",RED],
+    ["③ DFT+U single points","dE_extract = +0.336 eV (sign holds at σ→0)","extraction is uphill (old-protocol endpoint; v2 recheck open)","FFFFFF",RED],
   ];
   steps.forEach((st,i)=>{
     const bx=0.55+i*3.05;
@@ -644,9 +603,6 @@ divider("Part 6","6","VERIFY — what the gates actually did","11 audited verdic
   s.addNotes("제일 불편한 장입니다. 규율은 '갭은 고정 점유수 고윳값만'인데, 정본 네 값을 만든 실행 파일을 못 찾았습니다. 남은 입력은 전부 DOS용. 값을 의심하는 게 아닙니다 - 재현 능력을 의심하는 겁니다. 값은 유지하되 플래그를 달고 검증기가 돌 때마다 경고를 찍게 했습니다. 처음엔 문서에만 적었는데 검사를 돌리면 초록불이 떴어요. 문서는 검사 경로가 아니니까. 검사하는 경로가 곧 쓰이는 경로여야 한다 - 이 감사의 교훈입니다.\n[Q] 재현 안 되면 -> 순서대로: 서버/백업 수색 -> 동일 조건 재계산 -> 그때까지 플래그 유지. 감사 항목으로 등록돼 절차가 돌고 있습니다.");
   footer(s);
 }
-// ═══ Conclusions ════════════════════════════════════════════════════════════
-divider("Closing","↺","Closing the loop","Deliverables · queued simulations · the scale ladder",5,
- "결론부입니다. 내놓은 것을 먼저, 그 다음 한 문장.");
 { // S23
   const s=newSlide();
   kickerTitle(s,"Conclusions","What we deliver, then the one sentence");
@@ -664,8 +620,8 @@ divider("Closing","↺","Closing the loop","Deliverables · queued simulations �
   s.addText("Screening is only as good as its gates — ours audited 11 of our own verdicts, retracted 9, one of them twice.",
     {x:0.85,y:4.6,w:8.3,h:1.15,fontSize:14.5,bold:true,color:"FFFFFF",fontFace:"Arial",align:"center",valign:"middle",margin:0});
   bullets(s,[
-    {t:"The funnel view exists (47→1) but is not the answer — AND kills complementarity", sub:true},
-    {t:"We do not do: K_IC, µm particle mechanics, space-charge quantification, absolute σ", sub:true},
+    {t:"Supported: relative screening · trade-offs · prospective hypotheses · the audit ledger itself", sub:true},
+    {t:"Not supported: a unique winner · 47/47 DFT validation · absolute σ · experimental proof", sub:true},
   ],0.55,5.95,8.9,0.8,10.5);
   s.addNotes("내놓은 걸 먼저 표로 - 기전 하나, 스크리닝과 다목적 랭킹, 조합 가설과 정직한 감사, SEI 갭 여섯에 NEB 하나, 인프라, 그리고 철회 열한 건의 기록. 그 위에 오늘의 한 문장: 스크리닝의 값어치는 게이트에 있다. 저희 게이트는 저희 자신의 판정 열한 건을 잡았고, 그중 하나는 두 번 잡았다.\n[Q] 실험 검증은 -> 아직. DFT 재검 2계열(B2O3/Nd2O3), 실험은 다음 단계. 그래서 절대값 표를 만들지 않고 순위/가설로만.");
   footer(s);
@@ -709,9 +665,6 @@ divider("Closing","↺","Closing the loop","Deliverables · queued simulations �
   s.addNotes("저희는 이 사다리의 왼쪽 두 칸에 있습니다. 재료 상수를 저희가 대면 입자 스케일은 DEM이 받습니다 - 그건 다른 발표의 주제. 오늘 발표는 처음 보여드린 지도를 한 바퀴 돈 것입니다. 마지막 정거장의 화살표가 앞으로 돌아간다는 것 - 그게 저희 파이프라인이 자기를 감사하는 방식입니다. 감사합니다.");
   footer(s);
 }
-// ═══ Appendix ═══════════════════════════════════════════════════════════════
-divider("Appendix","A","Defense material","terms · conditions · the 12 questions · references · ML backup",-1,
- "부록은 발표하지 않습니다. 질문 방어용.");
 function termSlide(kicker, title, rows, notes){
   const s=newSlide();
   kickerTitle(s,kicker,title);
@@ -741,7 +694,7 @@ termSlide("Appendix A2","Property terms",[
 ],"A2.");
 { // A2b protocol matrix (Codex 대조에서 채택)
   const s=newSlide();
-  kickerTitle(s,"Appendix A2b","Protocol matrix: the method tag sets the strongest allowed claim");
+  kickerTitle(s,"Appendix A3","Protocol matrix: the method tag sets the strongest allowed claim");
   const hdr=(t)=>({text:t,options:{bold:true,color:"FFFFFF",fill:{color:NAVY}}});
   s.addTable([
     [hdr("Tier / method"),hdr("Primary output"),hdr("Allowed claim"),hdr("Do not claim")],
@@ -759,7 +712,7 @@ termSlide("Appendix A2","Property terms",[
 }
 { // A3 transport terms + figs
   const s=newSlide();
-  kickerTitle(s,"Appendix A3","Transport terms, and the β-gate");
+  kickerTitle(s,"Appendix A4","Transport terms, and the β-gate");
   bullets(s,[
     {t:"MSD: ⟨r²(t)⟩; diffusive regime ⇔ slope 1 on log–log", b:true},
     {t:"β-gate: β = dlog⟨r²⟩/dlogt ∈ [0.8, 1.2] on the ensemble-averaged MSD — else the “D” is cage rattling", b:true, color:RED},
@@ -771,18 +724,21 @@ termSlide("Appendix A2","Property terms",[
   s.addNotes("A3. beta 게이트 정의식은 여기 있습니다 - 앙상블 평균 MSD에 적용한다는 게 요점(시드별 beta 평균이 아님). 오른쪽 그림은 모식도라고 제목에 박아 뒀습니다 - 실측 곡선 아님.\n[감사 이력] 원래 이 자리에 있던 Arrhenius 그림 2장은 철회값 0.253 eV와 절대 sigma 주석을 달고 있어 내렸다(자체 리뷰 F3). 재출력 전까지 모식도로 대체.");
   footer(s);
 }
-{ // A4
+{ // S15 14 axes
   const s=newSlide();
-  kickerTitle(s,"Appendix A4","Full calculation conditions (regenerate before the talk)");
-  s.addShape(p.ShapeType.roundRect,{x:0.55,y:1.6,w:8.9,h:4.6,rectRadius:0.08,fill:{color:SOFT},line:{color:MUT,width:1,dashType:"dash"}});
-  s.addText("PASTE TABLE\n\nper-composition: pseudopotentials · ecutwfc/ecutrho · k-mesh · cell · seeds · thermostat\nsource: canonical_registry.json + method docs (regenerate on talk day so it cannot go stale)",
-    {x:0.85,y:2.8,w:8.3,h:2.0,fontSize:11,color:MUT,align:"center",fontFace:"Arial",margin:0});
-  s.addNotes("A4. 발표 당일 registry에서 재생성 - 미리 만들면 stale해집니다.");
+  kickerTitle(s,"Appendix A5","Ranking without a funnel: strengths trade across axes","source: cascade_seminar_scorecard_47.csv");
+  img(s, REPO+"docs/figures/cascade/cascade_seminar_scorecard_47.png", 0.55,1.45,8.9,3.35,
+      "Per-axis percentiles + first-stop gate — no composite score, no winner (live 14-theme view: web app /cascade)");
+  bullets(s,[
+    {t:"14 themes: oxidative · reduction · e⁻-insulation · transport · disorder · dose-robustness · lightweight · low-cost · soft · ductile · air ×2 · structural · balanced", sub:true},
+    {t:"Geometric mean = AND-like: one zero floors the composite  ·  Missing ≠ bad — excluded & flagged, never zero-filled", b:true, color:NAVY},
+  ],0.55,5.35,8.9,1.1,10.5);
+  s.addNotes("깔때기 대신 이렇게 둡니다. 축 열넷, 조합은 기하평균 - 한 축이 바닥이면 종합도 바닥인 AND 성질. 데이터 없는 축은 0이 아니라 제외 후 명시 - 0으로 깔면 '모름'이 '나쁨'으로 둔갑합니다. 축마다 챔피언이 다른 게 화면에서 바로 보입니다 - 그게 조합으로 가는 이유입니다.\n[용어] geometric mean: 곱의 n제곱근. 한 축의 0을 다른 축이 못 가려 줌.");
   footer(s);
 }
 { // A5 Q12
   const s=newSlide();
-  kickerTitle(s,"Appendix A5","The 12 questions: first sentences to memorize");
+  kickerTitle(s,"Appendix A6","The 12 questions: first sentences to memorize");
   const hdr=(t)=>({text:t,options:{bold:true,color:"FFFFFF",fill:{color:NAVY}}});
   s.addTable([
     [hdr("Q"),hdr("First sentence of the answer")],
@@ -790,14 +746,14 @@ termSlide("Appendix A2","Property terms",[
     ["Why no absolute σ? ★","Cross-group reproducibility spans an order of magnitude; we retracted our own single-seed 1.33×."],
     ["Does MLIP replace DFT?","No — screening surrogate; champions return to DFT. Charge states failed us, measurably."],
     ["Experimentally validated?","Not yet — DFT re-checks on two systems; hence ranks and hypotheses, no absolute tables."],
-    ["Is WO₃ the answer?","It is the most-surviving, not the best — and we reject that frame anyway."],
+    ["Is WO₃ the answer?","It is the G5 top rank inside an 11-member heuristic shortlist — not a discovered winner."],
     ["Why U = 6.2?","Established lineage value, empirical; we fix it and quote same-U differences."],
-    ["R² = 0.089 — useless?","As a predictor yes; we demoted it to hypothesis generator and queued the labels."],
+    ["R² = 0.089 — useless?","As a predictor yes: pair-LOOCV 0.089, dopant-level CV negative — hypothesis generator only, labels queued."],
     ["11 retractions — can we trust you? ★","Gate density, not carelessness — and the follow-up: rules born from errors now run as code (see #7, pre-registered)."],
     ["Canonical values without run files?","Values pass live drift checks; the missing-provenance flag ships WITH them."],
     ["Why show the funnel at all?","Drawing it the field's way is what reveals where we diverge."],
-    ["Is co-doping even makeable?","Precedent lineage exists (InF₃→GaF₃); site/charge checks now, formation E queued."],
-    ["Can you predict the ratio?","Not yet — the ratio axis needs the {0.02,0.05,0.10}² label grid first."],
+    ["Is co-doping even makeable?","Not yet — explicit pair structures must resolve site, stoichiometry, charge closure, formation energy; the InF₃→GaF₃ lineage helps but does not decide."],
+    ["Can you predict the ratio?","Not yet — x002/x005/x010 are nominal labels; the ratio axis needs structure-defined prospective labels."],
   ],{x:0.55,y:1.45,w:8.9,fontFace:"Arial",fontSize:8.8,color:INK,border:{type:"solid",color:RULE,pt:0.75},
      colW:[2.9,6.0],rowH:0.36,valign:"middle",margin:0.03});
   s.addNotes("A5. 첫 문장만 외웁니다.");
@@ -805,25 +761,45 @@ termSlide("Appendix A2","Property terms",[
 }
 { // A5b — five hostile questions (자체 리뷰 F24)
   const s=newSlide();
-  kickerTitle(s,"Appendix A5b","Five harder questions from our own review");
+  kickerTitle(s,"Appendix A7","Five harder questions from our own review");
   const hdr=(t)=>({text:t,options:{bold:true,color:"FFFFFF",fill:{color:NAVY}}});
   s.addTable([
     [hdr("Q (who asks)"),hdr("First sentence of the answer")],
     ["Why must an electrolyte be an electronic insulator? (basics, on purpose)","If electrons leak, Li⁺ keeps reducing inside/at interfaces — SEI never self-limits and dendrite paths grow; ion-only transport is the defining condition."],
-    ["What IS Ea physically — where is the hill in the structure? (basics)","Not cage rattling but the inter-cage jump saddle; 4d-site disorder lowers that saddle — exactly what the β-gate separates."],
+    ["What IS Ea physically — where is the hill in the structure? (basics)","Operationally, Ea is the ln D vs 1/T slope after the β-gate confirms diffusion; β validates the regime — it does not locate a specific saddle."],
     ["“UMA is a validated standard” — validated on what, by how much?","Validated for relative ranking and structure reproduction on the LPSCl family (records in repo); absolutes are never quoted — that IS the acknowledged limit."],
     ["Will HfO₂ really enter the lattice in a 550 °C H₂S synthesis? Cost of Hf?","We don't know — that is why formation-energy and phase-separation checks are in the label plan, and synthesis/cost is the experimental team's call. Today it is a hypothesis."],
-    ["Name three elements NOT in your 47 — how does curation bias propagate?","Selection history is logged step-by-step (pool_provenance); we did not quantify bias propagation — which is exactly why pass counts are never used as discovery metrics."],
+    ["Why are 44 roster species absent from the canonical table?","The 47 is a versioned O/F snapshot; the missing 44 lack a per-species manifest, so bias propagation is unquantified — which blocks any discovery-rate claim from the 273-slot campaign."],
   ],{x:0.55,y:1.5,w:8.9,fontFace:"Arial",fontSize:9,color:INK,border:{type:"solid",color:RULE,pt:0.75},
      colW:[3.6,5.3],rowH:0.62,valign:"middle",margin:0.04});
-  s.addText("Note to self: have three excluded elements ready before the talk; the last answer needs them.",
+  s.addText("Note to self: the 44-absent answer must stay a provenance answer — never call them failures.",
     {x:0.55,y:5.6,w:8.9,h:0.3,fontSize:9.5,italic:true,color:RED,fontFace:"Arial",margin:0});
   s.addNotes("A5b. 자체 레드팀이 만든 5문항 - Q12에 없던 것들. 마지막 답은 빠진 원소 3개를 실제로 외워야 성립한다(발표 전 pool_provenance에서 확인).");
   footer(s);
 }
+{ // A7 ML backup
+  const s=newSlide();
+  kickerTitle(s,"Appendix A8","ML backup: the numbers behind Part 5");
+  const hdr=(t)=>({text:t,options:{bold:true,color:"FFFFFF",fill:{color:NAVY}}});
+  s.addTable([
+    [hdr("Item"),hdr("Value"),hdr("Note")],
+    ["stage-1 λ (1-SE)","0.0794","LOOCV residual σ = 0.0018 score units"],
+    ["stage-1 leakage audit","+3.4% σ_loo","fold-wise re-standardization only; not a pair-chemistry audit"],
+    ["stage-3 λ","39.8","weighted LOOCV R² = 0.089"],
+    ["stage-3 dopant-level CV","LODO −0.18 · L2DO −0.25","independent folds: R² < 0 (bias +0.34)"],
+    ["stage-3 residual","2.33 z-units","interactions unlearned"],
+    ["v1 top-40 Spearman","0.672","top-10 overlap 2/10"],
+    ["v1-unlisted pairs","synergy ≈ 0 (weight 0.1)","1,041 of 1,081 — weak approximation"],
+    ["assumptions","aggregate single-dopant features + quadratic terms","no dopant–dopant chemistry"],
+    ["verdict","hypothesis generator — NOT a property predictor","labels queued (dose grid)"],
+  ],{x:0.55,y:1.5,w:8.9,fontFace:"Arial",fontSize:9.5,color:INK,border:{type:"solid",color:RULE,pt:0.75},
+     colW:[2.6,2.6,3.7],rowH:0.42,valign:"middle",margin:0.04});
+  s.addNotes("A7. Part 5 뒤 숫자 백업.");
+  footer(s);
+}
 { // A6 refs
   const s=newSlide();
-  kickerTitle(s,"Appendix A6","References: only what we physically hold (litdb)");
+  kickerTitle(s,"Appendix A9","References: only what we physically hold (litdb)");
   bullets(s,[
     {t:"Sendek et al., Energy Environ. Sci. 2017, 10, 306 — 12,831-candidate ML screening", sub:true},
     {t:"Xiao et al., Joule 2019 — cathode-coating funnel (104,082 → 184)", sub:true},
@@ -838,26 +814,5 @@ termSlide("Appendix A2","Property terms",[
   s.addNotes("A6. 원전 미보유 목록이 핵심 - 기억으로 서지를 쓰지 않습니다.");
   footer(s);
 }
-{ // A7 ML backup
-  const s=newSlide();
-  kickerTitle(s,"Appendix A7","ML backup: the numbers behind Part 5");
-  const hdr=(t)=>({text:t,options:{bold:true,color:"FFFFFF",fill:{color:NAVY}}});
-  s.addTable([
-    [hdr("Item"),hdr("Value"),hdr("Note")],
-    ["stage-1 λ (1-SE)","0.0794","LOOCV residual σ = 0.0018 score units"],
-    ["stage-1 leakage audit","+3.4% σ_loo","fold-out re-standardization"],
-    ["stage-3 λ","39.8","weighted LOOCV R² = 0.089"],
-    ["stage-3 dopant-level CV","LODO −0.18 · L2DO −0.25","independent folds: R² < 0 (bias +0.34)"],
-    ["stage-3 residual","2.33 z-units","interactions unlearned"],
-    ["v1 top-40 Spearman","0.672","top-10 overlap 2/10"],
-    ["v1-unlisted pairs","synergy ≈ 0 (weight 0.1)","1,041 of 1,081 — weak approximation"],
-    ["assumptions","aggregate single-dopant features + quadratic terms","no dopant–dopant chemistry"],
-    ["verdict","hypothesis generator — NOT a property predictor","labels queued (dose grid)"],
-  ],{x:0.55,y:1.5,w:8.9,fontFace:"Arial",fontSize:9.5,color:INK,border:{type:"solid",color:RULE,pt:0.75},
-     colW:[2.6,2.6,3.7],rowH:0.42,valign:"middle",margin:0.04});
-  s.addNotes("A7. Part 5 뒤 숫자 백업.");
-  footer(s);
-}
-
 p.writeFile({fileName: REPO+"kb/seminars/Research_Seminar_2026_08_final.pptx"})
  .then(()=>console.log("WROTE deck, slides:", pageNo));

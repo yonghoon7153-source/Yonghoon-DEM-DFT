@@ -727,3 +727,28 @@ Codex 덱(24장, `Research_Seminar_2026_08_cascade_codex_revised.pptx` — repo 
   지시형 라벨(Memorize/Take-home/red-team) 제거. 템플릿(Arial·navy·푸터)은 이가형 승계 그대로.
 - 남은 손작업: PASTE 4곳(VESTA 2·터미널 1·webapp 1) · gabia 2파일 push(#33) ·
   빠진 원소 3개 확인 · 발표 길이 확정(실측 ~48분, 40분이면 ⏭ 4장 스킵).
+
+
+---
+
+## 9. TRUE FINAL (2026-08-11 저녁) — closed 패키지 상호 병합 완료
+
+Codex closed 패키지(29장 + 한국어 대본) 전량 감사 후, **closed 구조를 기반으로 잃은 것을
+복원**한 36장이 정본이다 (`Research_Seminar_2026_08_final.pptx`, 본문 27 + 부록 9, ~40분).
+
+**cascade 가 짧아졌다는 지적(사용자) 반영**: closed 는 cascade 6장이었음 → 복원 후 **8장**
+(lineage → tiers → roster → Sendek → gates → waterfall → trade-off → critique).
+
+**closed 에서 채택 (검산 후)**: campaign lineage 슬라이드(141=47×3 실측 검증, 37ox+10F,
+As₂S₃ 유일 문서화 실패) · SDCP 세 숫자 분리(9 meV / −32·−26 meV / +0.336 eV) 원장 6–8행 ·
+"v2 recheck open" 단서 · proxy-window 명명 + **edge 방향 교정(HfO₂=환원변 공급 — 우리 이전
+각주가 틀렸었음)** · 인과 헤지 3곳(S7·S14b·S14) · Q12/5문항 답변 정밀판 · 커버 부제.
+
+**closed 과잉주장 교정 1건**: "둘 다 Li_24g 점유" → 원천은 heuristic 등급이고 Hf⁴⁺는
+양쪽성(P_4b or Li_24g). "문헌-유추 자리, 미확정" 으로 이식.
+
+**closed 가 잃어서 복원한 것**: VERIFY 심장 3장(철회의 철회·Zhu 편향·provenance) ·
+roster(사용자 요청) · tiers/honesty header · S3 DFT 기초 · future plan · SEI 줄(결론 표).
+
+**등재**: closed 원본 + 대본 → `kb/seminars/codex_closed_2026_08_11/` (단축판으로 활용 가능 —
+발표 슬롯이 25–30분이면 closed 판, 40분+ 이면 final). 대본은 최종 덱 노트에 내장(한국어).
