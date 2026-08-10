@@ -38,7 +38,7 @@
 
 ## 재현성 메모
 
-- S15와 S20에서 이전 draft의 radar 그림은 제거했다. 선언돼 있던 `cascade_radar_axes_origin.csv`, `fig_cascade_radar.py`, `cascade_radar_*.png`가 저장소와 origin branch에 없어 재현할 수 없었기 때문이다.
+- S15와 S20에서 이전 draft의 radar 그림은 제거했다. 원자료·생성기·PNG는 origin commit `9ee411a3`의 `cascade_radar_axes_origin.csv`, `fig_cascade_radar.py`, `cascade_radar_*.png`로 재현 가능하다. 다만 최종본은 후보별 수치를 화면에서 바로 감사할 수 있는 canonical DB 표·카드를 선택했고, radar 복원은 발표 구성상의 선택 사항으로 남겼다.
 - S15는 실제 canonical CSV에서 읽을 수 있는 후보별 decision profile로 교체했다.
 - S20은 v1 heuristic과 v2 ML 순위를 분리해 표시하고, +0.360 V를 pair 계산값이 아닌 constructed proxy로 표기했다.
 - 외부 논문 그림은 해당 litdb figure 폴더의 `figures.json`과 crop을 함께 확인한 경우만 사용한다.

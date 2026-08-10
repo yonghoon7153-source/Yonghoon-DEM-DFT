@@ -248,7 +248,7 @@ DFT coverage는 2/47이고, 47개 dopant 평균값은 일반적인 discovery mod
 
 ## S27. Data source ledger
 
-이 장에는 발표 숫자를 다시 만들 때 직접 여는 정본 데이터 파일만 모았어요. 특히 attrition, gate funnel, scorecard, stability axes, co-doping v1·v2를 분리해 두었어요. 재현되지 않는 radar source는 최종본에서 제거했어요.
+이 장에는 발표 숫자를 다시 만들 때 직접 여는 정본 데이터 파일만 모았어요. 특히 attrition, gate funnel, scorecard, stability axes, co-doping v1·v2를 분리해 두었어요. Radar source는 origin commit `9ee411a3`에서 재현 가능하지만, 최종본은 수치를 직접 감사하기 쉬운 canonical 표·카드를 선택했어요.
 
 근거:
 
@@ -264,4 +264,3 @@ DFT coverage는 2/47이고, 47개 dopant 평균값은 일반적인 discovery mod
 - `docs/`
 - `kb/methodology/terminology_register.md`
 - `litdb/papers/`
-
