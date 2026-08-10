@@ -38,6 +38,7 @@ run_pipeline 안에서 돌고, wrapper 의 lock 블록은 solver 가 파일을 �
 from __future__ import annotations
 
 import contextlib
+import errno
 import glob
 import hashlib
 import json
@@ -358,8 +359,40 @@ def record_network_attempt(results_dir, run_id, status, reason='', argv=None):
     })
 
 
+#: `os.replace` 재시도 (Windows).  대기시간 0.02·0.04·0.08·0.16·0.32 s = 총 0.62 s.
+_REPLACE_RETRIES = 5
+_REPLACE_BACKOFF = 0.02
+
+
+def _replace_retry(tmp, path, retries=_REPLACE_RETRIES, sleep=None):
+    """`os.replace` — Windows 의 일시적 대상파일 점유에만 제한 재시도한다.
+
+    ★ Codex 가 **다른 워크스트림(DFT 대시보드)에서 실측**한 것을 이쪽에 옮긴 것이다:
+      Windows 12 프로세스 × 100 건 × 10 회에서 `os.replace()` 가
+      `PermissionError [WinError 5]` 로 간헐 실패해 **992/1000** 만 저장됐다.
+      락은 정상이었다(임계구역 동시성 1) — 백신·인덱서 같은 **외부 handle** 이 대상
+      파일을 잠깐 여는 것이라 우리 락으로는 막을 수 없다.  POSIX 의 rename 은 이런
+      이유로 실패하지 않으므로 이 재시도는 리눅스에선 사실상 no-op 이다.
+
+    ⚠ 재시도는 **PermissionError/EACCES 에만** 건다.  다른 OSError(경로 없음, 다른
+      파일시스템 등)는 재시도해도 낫지 않고 진짜 버그를 숨기므로 즉시 올린다.
+    """
+    for attempt in range(retries + 1):
+        try:
+            os.replace(tmp, path)
+            return attempt
+        except PermissionError:
+            if attempt >= retries:
+                raise
+        except OSError as e:
+            if e.errno != errno.EACCES or attempt >= retries:
+                raise
+        (sleep or time.sleep)(_REPLACE_BACKOFF * (2 ** attempt))
+    raise AssertionError('unreachable')            # pragma: no cover
+
+
 def atomic_write_json(path, obj):
-    """같은 디렉터리 temp → fsync → os.replace.  부분 쓰기/truncate 를 막는다 (F-10)."""
+    """같은 디렉터리 temp → fsync → os.replace(재시도).  부분 쓰기/truncate 를 막는다 (F-10)."""
     d = os.path.dirname(path) or '.'
     os.makedirs(d, exist_ok=True)
     fd, tmp = tempfile.mkstemp(dir=d, prefix='.tmp_', suffix='.json')
@@ -368,7 +401,7 @@ def atomic_write_json(path, obj):
             json.dump(obj, f, indent=2, default=str)
             f.flush()
             os.fsync(f.fileno())
-        os.replace(tmp, path)
+        _replace_retry(tmp, path)
     except Exception:
         with contextlib.suppress(OSError):
             os.unlink(tmp)

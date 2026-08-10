@@ -13,6 +13,7 @@ subprocess 는 전부 **가짜 실행기**로 바꿔 센다 — 실제 solver �
 
   python3 webapp/test_pipeline_provenance.py
 """
+import errno
 import hashlib
 import json
 import os
@@ -24,6 +25,14 @@ import tempfile
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import pipeline_service as ps          # noqa: E402
+
+
+def _mk_tmp(d, body):
+    """같은 디렉터리에 임시파일 하나 — _replace_retry 의 원본 인자용."""
+    fd, tmp = tempfile.mkstemp(dir=d, prefix='.tmp_', suffix='.json')
+    with os.fdopen(fd, 'w') as f:
+        f.write(body)
+    return tmp
 
 _ok, _fail = 0, []
 
@@ -509,6 +518,57 @@ def main():
             and not [f for f in os.listdir(tmp) if f.startswith('.tmp_')])
         chk('16) 도장 없는 옛 산출물 → run_id None (조용히 지어내지 않는다)',
             ps.read_network_provenance(tmp).get('network_run_id') is None)
+
+        # ══ T10 (Codex 실측 이관): Windows `os.replace` 간헐 PermissionError ══
+        # Codex 가 DFT 대시보드에서 12 프로세스 × 100 건 × 10 회를 돌려 992/1000 만
+        # 저장되는 것을 실측했다.  락은 정상이었고(임계구역 1) 원인은 외부 handle 의
+        # 일시 점유였다.  리눅스에서는 이 예외가 안 나므로 **주입해서** 경로를 검증한다.
+        slept = []
+        calls = [0]
+        real_replace = os.replace
+
+        def flaky_replace(src, dst, _fail=2):
+            calls[0] += 1
+            if calls[0] <= _fail:
+                raise PermissionError(13, 'Access is denied')
+            return real_replace(src, dst)
+
+        os.replace = flaky_replace
+        try:
+            p2 = os.path.join(tmp, 'retry.json')
+            n_attempt = ps._replace_retry(_mk_tmp(tmp, '{"v": 7}'), p2, sleep=slept.append)
+            chk('20) ★ PermissionError 2회 뒤 저장된다 (Windows 유실 992/1000 원인)',
+                json.load(open(p2)) == {'v': 7} and n_attempt == 2)
+            chk('21) 재시도 대기가 지수 backoff 다 (바쁜대기 아님)',
+                slept == [ps._REPLACE_BACKOFF, ps._REPLACE_BACKOFF * 2])
+            # 끝까지 실패하면 삼키지 않는다
+            calls[0] = 0
+            raised = False
+            try:
+                ps._replace_retry(_mk_tmp(tmp, '{}'), os.path.join(tmp, 'never.json'),
+                                  retries=1, sleep=lambda _s: None)
+            except PermissionError:
+                raised = True
+            chk('22) ★ 재시도를 다 써도 안 되면 올린다 (조용한 유실 금지)',
+                raised and not os.path.exists(os.path.join(tmp, 'never.json')))
+            # PermissionError 가 아닌 OSError 는 재시도하지 않는다 (진짜 버그를 숨기지 않게)
+            calls[0] = 0
+
+            def enoent_replace(src, dst):
+                calls[0] += 1
+                raise OSError(errno.ENOENT, 'no such file')
+
+            os.replace = enoent_replace
+            raised2 = False
+            try:
+                ps._replace_retry(_mk_tmp(tmp, '{}'), os.path.join(tmp, 'e.json'),
+                                  sleep=lambda _s: None)
+            except OSError:
+                raised2 = True
+            chk('23) ★ EACCES 아닌 OSError 는 재시도 없이 즉시 올린다',
+                raised2 and calls[0] == 1)
+        finally:
+            os.replace = real_replace
         with ps.network_lock(lock_dir=tmp) as got1:
             chk('17) 파일 lock 획득', got1 is True)
             # ★ T8 (Codex CB-03): 두 번째 경쟁자는 lock 을 못 잡고, 그때 **solver 를
