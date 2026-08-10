@@ -1,0 +1,15 @@
+SDCP x LiNiO2(104) Phase-B DFT+U — 결과  (Fri Aug  7 19:02:18 KST 2026)
+==================================================================
+mol_doped              TOTEN = -200.22266034       |mag| = 0.1753184
+mol_neutral            TOTEN = -205.30024260       |mag| = 0.0015407
+slab                   TOTEN = -935.34667506       |mag| = -0.0000490
+complex_doped          TOTEN = -1135.88975326      |mag| = 2.3783404
+complex_doped_extr     TOTEN = -1135.55410602      |mag| = 0.5177677
+complex_neutral        TOTEN = -1140.93494363      |mag| = 0.0191172
+
+E_ads(doped, physisorbed)   = -0.3204 eV
+E_ads(neutral, physisorbed) = -0.2880 eV
+Delta = E_ads(d)-E_ads(n)   = -0.0324 eV
+dE_rxn(doped)               = +0.0152 eV   (reaction, NOT adsorption)
+*** dE_extract(doped)       = +0.3356 eV   <-- KEY NUMBER
+    negative => Li extraction is thermodynamically favourable
