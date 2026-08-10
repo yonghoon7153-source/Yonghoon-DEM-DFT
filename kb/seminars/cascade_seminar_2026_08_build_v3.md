@@ -712,3 +712,18 @@ Codex 덱(24장, `Research_Seminar_2026_08_cascade_codex_revised.pptx` — repo 
 ### 흡수 안 한 것
 - Codex `cascade_pipeline_guide.md` 재구성판 — 우리 2026-08-06 판을 덮으면 463줄 소실 → 병기.
 - `terminology_register.md` Codex 판 — 이중 정본 위험 → 미병합 (diff 270줄, 필요 시 별도 검토).
+
+
+---
+
+## 8. FINAL 확정 (2026-08-11)
+
+- **정본 덱**: `Research_Seminar_2026_08_final.pptx` (46장). v3.pptx 는 트리에서 제거(이력 보존).
+  생성기: `kb/seminars/generate_seminar_deck_2026_08.js` (재생성: `node generate_seminar_deck_2026_08.js`).
+- Codex 2차 업로드는 1차와 **바이트 동일** — 신규 반영분 없음(1차 채택분이 전부).
+- **신설 S11b '출연진' 로스터**: 47종을 5족 분류(TM 23 · main 9 · alk.earth 6 · Ln 6 · alkali 3),
+  G4 통과 11종 남색 볼드, deep-DFT † 2종, 하단에 host 4계 + SEI 9상 + co-doping 4쌍.
+- **de-AI 패스**: 제목 em-dash 15건 제거, 대문자 강조(EVERY/INVARIANT/NOT…) 18건 완화,
+  지시형 라벨(Memorize/Take-home/red-team) 제거. 템플릿(Arial·navy·푸터)은 이가형 승계 그대로.
+- 남은 손작업: PASTE 4곳(VESTA 2·터미널 1·webapp 1) · gabia 2파일 push(#33) ·
+  빠진 원소 3개 확인 · 발표 길이 확정(실측 ~48분, 40분이면 ⏭ 4장 스킵).
