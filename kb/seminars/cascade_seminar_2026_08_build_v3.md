@@ -260,7 +260,7 @@ flowchart LR
 - **레이아웃**: 좌 Xiao 히스토그램 / 우 Richards 창 그림
 - **텍스트**:
   `■` How the field screens ② — thermodynamic gates at scale
-  `·` Xiao 2019 (coatings): **104,082 → 1,600 → 302 → 184** by hull/window/reactivity gates
+  `·` Xiao 2019 (coatings): **104,082 → 62,437 (gap/방사성) → 1,600 (hull) → 302 (window) → 184 (reactivity)**
   `·` Richards 2016: grand-potential **stability windows** by anion — sulfides are the **narrow yellow bars**
   `·` Same skeleton everywhere: **cheap gates first, expensive validation last**
 - 🖼 좌 ✅ `litdb/figures/xiao2019_cathode_coating_screening/fig_2.png` — 캡션: *"Survivors per filter, by chemistry class (Xiao 2019)"*
@@ -405,7 +405,7 @@ flowchart LR
   통과해야 믿을 수 있습니다. 두 이온이 같은 자리를 두고 싸우는지, 전하 산술이 닫히는지,
   그리고 공동 치환 형성에너지. 앞의 둘은 지금 데이터로 점검 가능하고 셋째가 계산이
   필요합니다. 파일 첫 줄에 저희가 '가설, 미검증'이라고 박아 둔 이유입니다."
-- 🛡 Q: "InF₃/GaF₃ 같은 실험 선례가 있나?" → A: "있습니다 — 아지로다이트 한 염 두 도펀트 계보(CuCl→MgF₂→CuBr₂→La₂O₃→InF₃→GaF₃)가 litdb 에 digest 로 있습니다. In³⁺→P 4b, F⁻→Cl 4a 처럼 **서로 다른 자리**로 들어가는 게 성공 패턴입니다."
+- 🛡 Q: "InF₃/GaF₃ 같은 실험 선례가 있나?" → A: "있습니다 — 아지로다이트 한 염 두 도펀트 계보가 litdb 에 digest 로 있습니다 — 연도순 CuCl(2021)→MgF₂(2023)→**InF₃(2024, 자리배정 원본)**→CuBr₂·La₂O₃(2025)→GaF₃(2026). In³⁺→P 4b, F⁻→Cl 4a 처럼 **서로 다른 자리**로 들어가는 게 성공 패턴입니다."
   · Q: "비율은?" → A: "다음 장에서 — 지금 모델엔 비율 축이 없다는 게 정직한 답입니다."
   · 용어: **joint window(합동 창)** — max(산화한계) − min(환원한계): 두 상이 양쪽을 각각 커버한다는 상보 가정.
 
@@ -636,3 +636,45 @@ flowchart LR
 4. webapp 스크린샷 2장(P13·P17) + 터미널 1장(P24) + VESTA 2~3장(P22) 촬영
 5. 리허설: Part 2 를 **7분 컷** / S14·S19·S20 에 합계 9분 확보 / 한 문장 3회(S2·S19·S23) 확인
 6. Codex 판 도착 시: **제목 · S14(WO₃ 처리) · S17(R² 프레이밍)** 3곳부터 대조
+
+
+---
+
+## 6. 리뷰 로그 (2026-08-10) — 2-리뷰어 사이클 1회전 완료
+
+독립 리뷰어 2: ①적대적 청중(교수 렌즈, 24건) ②수치·규율 감사관(20건). 발견 44건 →
+**수용 36 · 부분수용 4 · 반박 4**. 덱은 반영 완료(43장), 아래는 판정 요지.
+
+### 치명(P0)이었던 것과 처리
+| 발견 | 처리 |
+|---|---|
+| 감사 F1·F2 = 교수 F3: A3 부록 그림에 철회값 0.253 + 절대 σ 28 + "AIMD-MLIP" | **그림 2장 하차** → β-게이트 모식도(SCHEMATIC 명기)로 교체 |
+| 교수 F2 = 감사 F12: S7 그림이 "연다" 캡션 밑에 −15% 라벨 | 그림을 **정본 BV percolation path**(vacancy 자리 표시, MD Ea 0.197±0.032, proxy 단서 내장)로 교체 + "정적 채널은 −15% 준다, 이득은 동역학" 불릿 명시 |
+| 감사 F3: G2 를 전자절연 게이트로 오기술 (실제 = ESW 붕괴 ≥0.05 V; 전자절연은 진단 전용) | S4 사다리·S12 게이트 표 재작성 — G4 엔진 = BVSE, MD = 챔피언 검증으로 정정 |
+| 감사 F4: **dE_extract +0.336 의 원자료가 repo 에 없었음** | `runs/sdcp_phaseB_vasp_v1_2026_08_08/`(OUTCAR.gz 전량) + `db/properties/sdcp_phaseB_dftu_v1.json` 등재(fd9592f6) — 철회 표 7·8행의 영수증 실물화 |
+| 교수 F5: "사후 명명" 후속타 무방비 | 2단 답변을 S2 노트에 사전 배치(절반 인정 → 사전등록 #7 카드) |
+| 교수 F1: ⏱ 합계가 자기 시간예산(40분) 35% 초과 | **정직 재고지**: 풀 대본 ≈ 47분. 40분 제한이면 ⏭ 4장(S9·S10·S15·S24 후반) 스킵라인 + Part 2 압축(90초 컷)으로 ≈41분. 45분+ 세미나면 그대로. 슬라이드 삭제는 반박(아래) |
+
+### 주요 수치 정정 (감사관)
+- Nd₂S₃ 1.79 = **mp-32586**(I-42d, 예측만, hull+0.02) ★일치 확정 — open_items §O 등재
+- B₂O₃: "best transport axis" → **"best MD free-energy barrier @600 K — 정적 수송 축은 오히려 탈락"** (3중 충돌로 논지 강화). B₂S₃ 는 46종 중 **뒤에서 3번째**(−0.90)
+- 0.089 는 낙관치 — **LODO −0.18 / L2DO −0.25 병기 의무**(메타 JSON 명시) → S17·A7 반영
+- 273 방향: **273(91×3)이 먼저, 47 = 3축 완비 부분집합** — S11 제목·본문 교체
+- "6 of 11 in 3 days" → **"5 of 11 in 4 days"** (커밋 날짜로 입증 가능한 것만)
+- 철회 카운트 정직화: **11 감사 = 9 철회 · 1 보류 · 1 재현성 플래그** (헤드라인·지도·결론 문장 통일)
+- Li₂S NEB: "registered" → **"수렴(0.27, fwd=bwd) · 등재 동기화 중 · 셀 크기 단서"**
+- G1 47/47: "설계" → **"큐레이션된 풀의 반영(JSON 스스로 플래그)"**
+- Arrhenius 확장: 500 K 선행 → **700/900 K 선행**(08-06 결정 반영)
+
+### 반박(불수용) 4건과 사유
+1. **교수 F1 중 "슬라이드 4장 삭제"** — 사용자가 문헌 실물·꽉 찬 덱을 명시 요구. 스킵라인 방식으로 시간 해결.
+2. **교수 F4 "PASTE 5곳이 미완"** — 설계 계약임(사용자가 스크린샷만 붙이는 구조). 우선순위만 반영(VESTA 2 > 터미널 > webapp).
+3. **교수 F9 중 "HK/KS 이름 슬라이드에서 제거"** — 이름은 앵커로 유지, 대본만 90초 컷 + 미분 불연속 1분 백업 설명을 노트에 배치.
+4. **감사 F5 중 "0.27 숫자 자체 삭제"** — 수치는 실측 수렴값(collector 출력 실물). 등재 미동기 사실과 셀 단서를 병기하는 것으로 충분.
+
+### 남은 액션 (발표 전)
+- [ ] gabia: `sei_neb.json`·`nd_gap_reference_mp.json` push (todo #33) → S23 "syncing" 해소
+- [ ] `plot_nd_sei_gaps.py` 값 교체 1.79→0.760, 5.55→5.679 + material_id 7종 (todo #32)
+- [ ] 빠진 원소 3개 암기 (A5b 마지막 답의 성립 조건 — pool_provenance 에서 확인)
+- [ ] PASTE 5곳 촬영 (VESTA 2 → 터미널 → webapp 2)
+- [ ] Codex 판 도착 시 3점 대조 (todo #37)
