@@ -12,7 +12,8 @@ v2 → v3 (2026-08-12) — v2 는 NO-GO 였다. 실측으로 확인된 것만 �
   ② **4상 러너** (P0-F): pre(dipole off · LWAVE) → relax(ISTART=1) → static → dense.
      CHGCAR/WAVECAR 사슬은 fail-closed — 없으면 다음 상으로 안 넘어간다. dense 는
      **static** 의 CHGCAR 를 승계한다(v2 는 relax 것을 썼다).
-  ③ **범위** (2026-08-12 결정): tier1·tier2 **전 끝점 2 seed** = 86 잡. seed 1종 쌍은
+  ③ **범위** (2026-08-12 결정): tier1·tier2 **전 끝점 2 seed** = **82 systems · 259 VASP phase runs**
+     (pose 72×3상 216 + dense 20 + clean 7 + 기체 16). 잡 수와 실행 횟수를 병기한다. seed 1종 쌍은
      seed 산포를 ΔE 에서 못 걷어내 최종 판정에 못 쓴다. dense 는 tier1 전 pm1 끝점.
   ④ **수치 게이트를 판정에 연결** (P0-D): 상자 20↔24 Å 실패 → 그 조각 E_ads 를 만들지
      않는다(정본은 **box24**). dense-k 실패 → NUMERICALLY_UNRESOLVED. dense 누락도
@@ -52,6 +53,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -82,6 +84,8 @@ SEED_MAIN = "afm2424_pm1"                          # 판정 headline
 POTCAR_SPEC = {"Li": "Li_sv", "Ni": "Ni_pv", "O": "O", "S": "S", "C": "C", "F": "F",
                "H": "H", "B": "B", "P": "P", "Cl": "Cl", "Na": "Na_pv"}
 KMESH = {"relax": "2 3 1", "static": "3 4 1", "dense": "4 6 1"}   # a=18.3 > b=11.5 Å
+#: 분석기가 OUTCAR 되울림과 대조할 INCAR 태그 (프로토콜을 규정하는 것들)
+AUDIT_KEYS = ("ENCUT", "ISMEAR", "IVDW", "LREAL", "ISTART", "ICHARG", "LDIPOL")
 
 # ── INCAR 3종 — Codex §2.2 템플릿 + 실납품 승계값(U 6.2 · IVDW 11 · ENCUT 520) ──
 _COMMON = """GGA      = PE
@@ -461,20 +465,36 @@ def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
            **_ldau_lines(pos["species_order"])}
     tpls = {"pre": SLAB_PRE, "relax": SLAB_RELAX, "static": SLAB_STATIC,
             "dense": SLAB_STATIC}
+    if not prescf:
+        # ⚠ pre 를 빼면 relax 의 ISTART=1 이 읽을 WAVECAR 가 없다. VASP 는 조용히
+        #   처음부터 시작하므로 "승계했다" 는 기록만 남고 실제로는 안 한 게 된다.
+        tpls["relax"] = SLAB_RELAX.replace("ISTART   = 1", "ISTART   = 0") \
+                                  .replace("ICHARG   = 0", "ICHARG   = 2")
     phases = (["pre"] if prescf else []) + ["relax", "static"] + (["dense"] if dense else [])
+    kmesh, incar_exp = {}, {}
     for ph in phases:
         (jd / ph).mkdir(exist_ok=True)
-        (jd / ph / "INCAR").write_text(tpls[ph].format(**fmt))
+        txt = tpls[ph].format(**fmt)
+        (jd / ph / "INCAR").write_text(txt)
         km = KMESH["relax"] if ph == "pre" else KMESH[ph]
         (jd / ph / "KPOINTS").write_text(f"auto\n0\nGamma\n{km}\n0 0 0\n")
+        kmesh[ph] = km
+        # ⚠ 기대값을 손으로 적지 않고 **배포한 INCAR 을 되읽는다** — 손으로 적으면
+        #   템플릿을 고쳤을 때 조용히 어긋난다 (Codex P0-5).
+        incar_exp[ph] = {k: m.group(1) for k in AUDIT_KEYS
+                         for m in [re.search(rf"^{k}\s*=\s*(\S+)", txt, re.M)] if m}
     (jd / "run_job.sh").write_text(RUN_JOB)
     top = _top_cations(atoms, nslab, sym)
     rev = {i: k for k, i in enumerate(pos["order"])}      # 원본 → POSCAR 위치
     meta = {**pos, **extra_meta, "seed": seed_name, "nslab": nslab,
             "phases": phases, "zcom_frac": round(zcom, 4),
+            "kmesh": kmesh, "incar_expected": incar_exp,
             "magmom_poscar": [round(m, 3) for m in mag_poscar],
             "ni_sign_poscar_idx": {str(rev[i]): mag_orig[i] for i in range(nslab)
                                    if sym[i] == "Ni"},
+            "mol_sign_poscar_idx": {str(rev[i]): mag_orig[i]
+                                    for i in range(nslab, len(atoms))
+                                    if abs(mag_orig[i]) > 1e-9},
             "mol_poscar_idx": [k for k, i in enumerate(pos["order"]) if i >= nslab],
             "slab_li_poscar_idx": [k for k, i in enumerate(pos["order"])
                                    if i < nslab and sym[i] == "Li"],
@@ -528,12 +548,18 @@ def _emit_mol_job(jd: Path, frag: str, mol, margin: float) -> Dict[str, Any]:
            "com0": float(com[0]), "com1": float(com[1]), "com2": float(com[2]),
            "nupdown": 1 if open_shell else 0,
            "magmom": " ".join(f"{mags[i]:.3f}" for i in idx)}
+    kmesh, incar_exp = {}, {}
     for ph, tpl in (("relax", MOL_RELAX), ("static", MOL_STATIC)):
         (jd / ph).mkdir(exist_ok=True)
-        (jd / ph / "INCAR").write_text(tpl.format(**fmt))
+        txt = tpl.format(**fmt)
+        (jd / ph / "INCAR").write_text(txt)
         (jd / ph / "KPOINTS").write_text("gamma-only\n0\nGamma\n1 1 1\n0 0 0\n")
+        kmesh[ph] = "1 1 1"
+        incar_exp[ph] = {k: m.group(1) for k in AUDIT_KEYS
+                         for m in [re.search(rf"^{k}\s*=\s*(\S+)", txt, re.M)] if m}
     (jd / "run_job.sh").write_text(RUN_JOB)
     meta = {"kind": "mol_ref", "fragment": frag, "species_order": seen, "counts": counts,
+            "kmesh": kmesh, "incar_expected": incar_exp,
             "open_shell": open_shell, "box_margin_A": margin, "phases": ["relax", "static"],
             "box_A": [round(float(b), 2) for b in box],
             # ⚠ 기체 기준계도 결합 그래프를 감사해야 한다 — 없으면 그 검사가 꺼진다
@@ -627,6 +653,7 @@ def read_outcar(p):
         return None
     e = re.findall(r"energy\(sigma->0\)\s*=\s*(-?[\d.]+)", t)
     nions = re.search(r"NIONS\s*=\s*(\d+)", t)
+    nk = re.search(r"NKPTS\s*=\s*(\d+)", t)
     nelm = re.search(r"NELM\s*=\s*(\d+)", t)
     iters = re.findall(r"Iteration\s+\d+\(\s*(\d+)\)", t)
     ver = re.search(r"vasp\.([\w.]+)", t)
@@ -652,6 +679,7 @@ def read_outcar(p):
             "nelm_hit": bool(nelm and iters
                              and any(int(x) >= int(nelm.group(1)) for x in iters)),
             "nions": int(nions.group(1)) if nions else None,
+            "nkpts": int(nk.group(1)) if nk else None,
             "titels": [x.strip() for x in titels],
             "vasp_version": ver.group(1) if ver else None,
             "mag_total": float(mag[-1]) if mag else None,
@@ -822,9 +850,33 @@ def phase_gates(oc, ph, meta, spec, want_ionic=False):
         g.append(f"POTCAR_UNVERIFIED({ph} — TITEL 없음)")
     elif expect and got and len(got) != len(expect):
         g.append(f"POTCAR_COUNT({ph}: {len(got)}!={len(expect)})")
+    elif expect and got and got != expect:
+        # ⛔ 2026-08-12 — 옛 판은 여기서 변형 문자열을 **비교하지 않았고**, 뒤의 전역
+        #   검사도 "준중심 접미사가 있는가" 라는 boolean 만 봐서 Ni_pv→Ni_sv 가 경고로
+        #   통과했다. 고정 protocol 에서는 한 글자만 달라도 다른 Hamiltonian 이다.
+        g.append(f"POTCAR_VARIANT({ph}: {got}!={expect})")
     nat = sum(meta.get("counts", []) or [])
     if nat and oc["nions"] and oc["nions"] != nat:
         g.append(f"NIONS_MISMATCH({ph}: {oc['nions']}!={nat})")
+    # ── 이 상이 **선언한 대로** 돌았는지: k 점 수 + INCAR 되울림 (Codex P0-5) ──
+    #   dense 폴더에 static OUTCAR 를 복사해도 에너지만 맞으면 통과하던 구멍을 막는다.
+    #   ⚠ NKPTS 절대값은 대칭 축약(ISYM·시간반전) 때문에 예측이 불안정하다 —
+    #   상한(전체 격자 곱)만 여기서 보고, **상 사이 단조성**은 main() 에서 본다.
+    want_k = (meta.get("kmesh") or {}).get(ph)
+    if want_k:
+        prod = 1
+        for x in str(want_k).split():
+            prod *= int(x)
+        if not oc.get("nkpts"):
+            g.append(f"KMESH_UNVERIFIED({ph} — OUTCAR 에 NKPTS 없음)")
+        elif oc["nkpts"] > prod:
+            g.append(f"KMESH_MISMATCH({ph}: NKPTS {oc['nkpts']} > 격자 {want_k} 의 {prod})")
+    for k2, want in (meta.get("incar_expected") or {}).get(ph, {}).items():
+        got2 = (oc.get("incar_echo") or {}).get(k2)
+        if got2 is None:
+            g.append(f"INCAR_UNVERIFIED({ph}.{k2})")
+        elif str(got2).strip().upper().rstrip(".") != str(want).strip().upper().rstrip("."):
+            g.append(f"INCAR_MISMATCH({ph}.{k2}: {got2}!={want})")
     return g
 
 
@@ -863,6 +915,19 @@ def main():
         for ph in phases:
             rec["gates"] += phase_gates(ocs[ph], ph, meta, spec,
                                         want_ionic=(ph == "relax"))
+        # ★ 격자가 커지는 상 사이로 NKPTS 가 안 늘면 **같은 계산을 복사한 것**이다.
+        km = meta.get("kmesh") or {}
+        seq = [ph for ph in phases if ocs.get(ph) and ocs[ph].get("nkpts") and km.get(ph)]
+        for x, y in zip(seq, seq[1:]):
+            px = py = 1
+            for v in str(km[x]).split():
+                px *= int(v)
+            for v in str(km[y]).split():
+                py *= int(v)
+            if py > px and ocs[y]["nkpts"] <= ocs[x]["nkpts"]:
+                rec["gates"].append(
+                    f"KMESH_NOT_DENSER({y} NKPTS {ocs[y]['nkpts']} ≤ {x} {ocs[x]['nkpts']} "
+                    f"인데 격자는 {km[x]}→{km[y]} — 다른 상의 산출을 복사했나)")
         g2, info = geometry_audit(jd, meta)
         rec["gates"] += g2
         rec["geom"] = {k: v for k, v in info.items() if not k.startswith("_")}
@@ -883,30 +948,60 @@ def main():
                 rec["geom"]["free_fmax_eVA"] = round(fmax, 3)
                 if fmax > FORCE_TOL:
                     rec["gates"].append(f"FORCE_HIGH({fmax:.3f} eV/Å)")
-        # ── 자기상태 감사 (Codex P0-E) ──
+        # ── 자기상태 감사 (Codex P0-E · 2026-08-12 재작성) ──
         st = ocs.get("static")
         want_sign = meta.get("ni_sign_poscar_idx") or {}
+        mol_sign = meta.get("mol_sign_poscar_idx") or {}
         if st is not None and want_sign:
             mom = st.get("moments")
+            nions = st.get("nions")
+            # ★ 완결성부터 hard gate — 표가 짧으면 파싱된 것만 검사하고 나머지를
+            #   조용히 버리던 구멍이 있었다 (Ni 1개만 남겨도 통과했다).
             if not mom:
                 rec["gates"].append("MAGNETIC_UNVERIFIED(LORBIT 모멘트 표 없음)")
+            elif nions and len(mom) != nions:
+                rec["gates"].append(
+                    f"MAGNETIC_INCOMPLETE(모멘트 {len(mom)}행 ≠ NIONS {nions})")
+            elif max(int(k) for k in want_sign) >= len(mom):
+                rec["gates"].append(
+                    f"MAGNETIC_INCOMPLETE(Ni 인덱스가 모멘트 표 {len(mom)}행 밖)")
             else:
-                ni = {int(k): v for k, v in want_sign.items() if int(k) < len(mom)}
-                got_m = {i: mom[i] for i in ni}
-                small = [i for i, m in got_m.items() if abs(m) < MOM_MIN]
-                flip = [i for i, m in got_m.items() if ni[i] * m < 0]
+                ni = {int(k): float(v) for k, v in want_sign.items()}
+                got = {i: mom[i] for i in ni}
+                # ★ 전역 반전은 시간반전이라 **같은 상태**다 — 부호를 정규화해 비교하고,
+                #   진짜 문제인 **부분 반전**을 잡는다 (옛 판은 정반대였다).
+                agree = {sg: sum(1 for i, v in ni.items() if got[i] * sg * v > 0)
+                         for sg in (1.0, -1.0)}
+                sg = 1.0 if agree[1.0] >= agree[-1.0] else -1.0
+                flip = [i for i, v in ni.items() if got[i] * sg * v < 0]
+                small = [i for i, m in got.items() if abs(m) < MOM_MIN]
                 rec["geom"]["magnetic"] = {
-                    "n_ni": len(ni), "n_small": len(small), "n_sign_flipped": len(flip),
-                    "abs_mean_muB": round(sum(abs(m) for m in got_m.values())
-                                          / max(1, len(got_m)), 3),
+                    "n_ni": len(ni), "global_sign": sg, "n_partial_flip": len(flip),
+                    "n_small": len(small), "min_abs_muB": round(min(map(abs, got.values())), 3),
+                    "abs_mean_muB": round(sum(map(abs, got.values())) / len(got), 3),
                     "total_muB": st.get("mag_total")}
-                if small:
-                    rec["gates"].append(f"MOMENT_COLLAPSED({len(small)}개 |m|<{MOM_MIN})")
                 if flip:
-                    rec["geom"]["magnetic"]["note"] = (
-                        "시드 부호와 다른 Ni 가 있다 — 다른 자기 basin 으로 수렴했다")
-                if len(flip) == len(ni) and ni:
-                    rec["gates"].append("MAGNETIC_ALL_FLIPPED(전 Ni 부호 반전 — 같은 상태)")
+                    rec["gates"].append(
+                        f"MAGNETIC_PARTIAL_FLIP({len(flip)}/{len(ni)} Ni 가 시드 topology 와 "
+                        f"다르다 — 다른 자기 basin 이다)")
+                if sg < 0:
+                    # 전역 반전이면 **분자 라디칼도 같이** 뒤집혀야 같은 상태다.
+                    ms = {int(k): float(v) for k, v in mol_sign.items() if int(k) < len(mom)}
+                    notflip = [i for i, v in ms.items() if mom[i] * -1.0 * v <= 0]
+                    if ms and notflip:
+                        rec["gates"].append(
+                            f"MAGNETIC_RELATIVE_FLIP(Ni 는 전역 반전인데 라디칼 {len(notflip)}개는 "
+                            f"안 뒤집혔다 — 표면·라디칼 상대 스핀이 달라졌다)")
+                    else:
+                        rec["geom"]["magnetic"]["note"] = "전역 반전 — 시간반전이라 같은 상태"
+                # ⚠ MOM_MIN 은 보편 문턱이 아니다 (Ni 전하상태·공유결합성에 따라 낮을 수
+                #   있다). 전면 붕괴만 게이트로 잡고, 일부는 검토 표시로 남긴다.
+                if len(small) > 0.5 * len(ni):
+                    rec["gates"].append(
+                        f"MOMENT_COLLAPSED({len(small)}/{len(ni)} 이 |m|<{MOM_MIN} — 과반)")
+                elif small:
+                    rec["geom"]["magnetic"]["review"] = (
+                        f"{len(small)}개가 |m|<{MOM_MIN} — clean 슬랩 분포와 대조할 것")
         rec["ok"] = not rec["gates"]
         jobs[rel] = rec
 
@@ -923,18 +1018,14 @@ def main():
                         mixed = True
                     subs[e] = g
     potcar_warn = None
-    fatal_subs = {e: g for e, g in subs.items()
-                  if any(s in e for s in SEMICORE) != any(s in g for s in SEMICORE)
-                  or e.split("_")[0] != g.split("_")[0]}
+    # ⛔ 2026-08-12 — "일관되게 다르면 경고" 를 폐기한다. 고정 protocol 에서는
+    #   Ni_pv → Ni_sv 도 다른 가전자·projector 라 다른 Hamiltonian 이다. 한 글자라도
+    #   다르면 headline 에서 제외한다 (감도로 쓰려면 별도 protocol ID 로 분리).
     if subs:
         txt = ", ".join(f"{e}→{g}" for e, g in sorted(subs.items()))
-        if mixed or fatal_subs:
-            for r in jobs.values():
-                r["gates"].append(f"POTCAR_WRONG({txt})")
-                r["ok"] = False
-        else:
-            potcar_warn = (f"POTCAR 변형이 스펙과 **일관되게** 다르다: {txt} — 같은 원자가라 "
-                           f"내부 비교는 유효, 절대값 인용 시 기록할 것")
+        for r in jobs.values():
+            r["gates"].append(f"POTCAR_WRONG({txt}{' · 혼재' if mixed else ''})")
+            r["ok"] = False
 
     def E(job):
         r = jobs.get(job)
@@ -1033,6 +1124,20 @@ def main():
                         f"PAIR_COLLAPSED(분자 RMSD {rms:.2f} Å ≤ {RMSD_TOL} · {why})")
         de_main = rec["dE_by_seed"].get("afm2424_pm1")
         de_alt = rec["dE_by_seed"].get("afm2424_net4")
+        # ★ ΔE 만 비교하면, 두 pose 가 같은 방향으로 함께 움직이고 clean 은 안 움직인
+        #   경우 ΔE 는 그대로인데 E_ads 만 달라진다 (Codex P0-2).
+        ea_seed = {}
+        for sd in pm.get("seeds", []):
+            ec_s, em_s = eclean.get(sd), emol.get(frag)
+            eli_s = E(f"{pm['li_prefix']}__{sd}")
+            if ec_s is not None and em_s is not None and eli_s is not None:
+                ea_seed[sd] = eli_s - ec_s - em_s
+        if len(ea_seed) > 1:
+            spread = max(ea_seed.values()) - min(ea_seed.values())
+            rec["eads_seed_spread_meV"] = round(spread * 1000, 1)
+            if spread > SEED_TOL:
+                rec["gates"].append(
+                    f"BLOCKED_MAGNETIC_SENSITIVITY(E_ads seed 산포 {spread * 1000:.0f} meV > 10)")
         if de_main is not None and de_alt is not None \
                 and abs(de_main - de_alt) > SEED_TOL:
             rec["gates"].append(
@@ -1054,13 +1159,19 @@ def main():
                 ok_k = dk <= K_TOL
                 gate = {"dE_meV": round(dk * 1000, 1), "pass": ok_k}
                 # E_ads 자체의 k 수렴도 본다 (ΔE 만 보면 상쇄로 숨는다)
-                if eclean_dense is not None and emol.get(frag) is not None \
-                        and E(f"{pm['li_prefix']}__afm2424_pm1") is not None:
-                    ea_s = E(f"{pm['li_prefix']}__afm2424_pm1") \
-                        - eclean.get("afm2424_pm1", 0.0) - emol[frag]
-                    ea_d = dli - eclean_dense - emol[frag]
-                    gate["dEads_meV"] = round(abs(ea_d - ea_s) * 1000, 1)
-                    ok_k = ok_k and abs(ea_d - ea_s) <= K_TOL
+                if eclean_dense is not None and emol.get(frag) is not None:
+                    worst = 0.0
+                    for tag, pre, ed in (("Li", pm["li_prefix"], dli),
+                                         ("Ni", pm["ni_prefix"], dni)):
+                        es = E(f"{pre}__afm2424_pm1")
+                        if es is None:
+                            continue
+                        d = abs((ed - eclean_dense - emol[frag])
+                                - (es - eclean.get("afm2424_pm1", 0.0) - emol[frag]))
+                        gate[f"dEads_{tag}_meV"] = round(d * 1000, 1)
+                        worst = max(worst, d)
+                    gate["dEads_meV"] = round(worst * 1000, 1)
+                    ok_k = ok_k and worst <= K_TOL
                     gate["pass"] = ok_k
                 results["numerical_gates"][f"k_{pid}"] = gate
                 if not ok_k:
@@ -1083,6 +1194,16 @@ def main():
               if r["fragment"] == frag and "dE_Ni_minus_Li_eV" in r]
         n_planned = sum(1 for p in man["pairs"].values() if p["fragment"] == frag)
         expect_dirs = (man.get("contract_expected_pairs") or {}).get(frag)
+        # ★ 번들 **이전**에 잃은 방향까지 본다. n/n_planned 만 보면 계획 자체가 이미
+        #   줄어든 경우를 영원히 못 잡는다 (계획 3/3 = 100% 인데 원래 방향은 5개).
+        #   자리 스윕 방향(Li_top/Ni_top 이 애초에 없음)은 정의 밖이라 세지 않고,
+        #   Li_top/Ni_top 이 **있는데 부적격**인 방향만 손실로 센다.
+        aud = (man.get("pair_audit") or {}).get(frag) or {}
+        ex = aud.get("excluded_dirs") or {}
+        lost = {d: sorted(c) for d, c in ex.items()
+                if any(s.startswith(("Li_top", "Ni_top")) and "부적격" in s for s in c)}
+        nd = aud.get("n_down_dirs")
+        cov = (n_planned / nd) if nd else None
         if not dl:
             results["fragments"][frag] = {"n": 0, "n_planned": n_planned,
                                           "class": "NO_DATA"}
@@ -1093,7 +1214,11 @@ def main():
         side = 1 if med > 0 else -1
         fs = sum(1 for x in dl if x * side > 0) / n
         fe = sum(1 for x in dl if x * side > delta) / n
-        if expect_dirs and n_planned != expect_dirs:
+        # ★ 번들 이전에 방향을 잃었으면 **무조건 검열 등급**이다. n=3·계획=3 이라
+        #   coverage 100% 로 보여 ROBUST 까지 올라가던 경로를 막는다 (Codex P0-6).
+        if lost:
+            cls = "DIRECTION_CENSORED_%d_OF_%d" % (n_planned, nd or n_planned)
+        elif expect_dirs and n_planned != expect_dirs:
             cls = "CONTRACT_SHORT(계약 %d · 계획 %d)" % (expect_dirs, n_planned)
         elif n < 3:
             cls = "NO_VERDICT_n<3"
@@ -1107,16 +1232,6 @@ def main():
             cls = "SIGN_CONSISTENT_SMALL"
         else:
             cls = "UNRESOLVED_MIXED"
-        # ★ 번들 **이전**에 잃은 방향까지 본다. n/n_planned 만 보면 계획 자체가 이미
-        #   줄어든 경우를 영원히 못 잡는다 (계획 3/3 = 100% 인데 원래 방향은 5개).
-        #   자리 스윕 방향(Li_top/Ni_top 이 애초에 없음)은 정의 밖이라 세지 않고,
-        #   Li_top/Ni_top 이 **있는데 부적격**인 방향만 손실로 센다.
-        aud = (man.get("pair_audit") or {}).get(frag) or {}
-        ex = aud.get("excluded_dirs") or {}
-        lost = {d: sorted(c) for d, c in ex.items()
-                if any(s.startswith(("Li_top", "Ni_top")) and "부적격" in s for s in c)}
-        nd = aud.get("n_down_dirs")
-        cov = (n_planned / nd) if nd else None
         results["fragments"][frag] = {
             "n_directions": n, "n_planned": n_planned, "dE_list": dl,
             "median_eV": round(med, 4), "class": cls,
@@ -1185,8 +1300,9 @@ def main():
     for w in results["warnings"]:
         print(f"  ⚠ {w}")
     print(f"\n→ {out}")
-    if integrity["changed"]:
-        print(f"\n⛔ **입력 무결성 실패** {len(integrity['changed'])}건 — exit 2")
+    if integrity["changed"] or integrity["missing"]:
+        print(f"\n⛔ **입력 무결성 실패** — 변경 {len(integrity['changed'])} · "
+              f"사라짐 {len(integrity['missing'])} — exit 2 (삭제도 변조다)")
         return 2
     if missing:
         print(f"\n⛔ **필수 산출 미완 {len(missing)}건** (tier1/refs) — fail-closed, exit 2:")
@@ -1236,6 +1352,7 @@ POTCAR 는 미포함(라이선스) — `POTCAR_SPEC.txt` 변형 그대로. **Ni 
 ## 예상 비용 (참고)
 슬랩 relax(~220원자·DFT+U) 잡당 64코어 기준 수 시간~하루 + static 은 그 1/5 급,
 pre 는 SCF 한 번, dense 는 static 의 ~3배 k 점.
+**82 systems · 259 VASP phase runs** (pose 72×3상=216 · dense 20 · clean 7 · 기체 16).
 tier1 32잡 + refs 10잡이 1차 목표. 분자 기준계는 분 단위.
 
 ## 반송물 (잡마다 · 상마다)
@@ -1368,7 +1485,10 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         print(("  ⚠ " if a.allow_partial else "  ⛔ ") + msg)
 
     for tier, frags in TIERS.items():
-        req = tier == "tier1"
+        # 82잡을 이번 원샷의 **전체 범위**로 선언했으므로 tier2 도 필수다.
+        # (Codex P0-4 — required=False 면 tier2 가 전부 실패해도 wrapper 가 exit 0 이된다.)
+        req = True
+        tier1 = tier == "tier1"
         for frag in frags:
             if a.frags and frag not in a.frags:
                 continue
@@ -1401,7 +1521,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                 #   seed 1종 쌍은 seed 산포를 ΔE 에서 못 걷어내 최종 판정에 못 쓴다.
                 seeds = list(SEEDS_FULL)
                 # dense-k: tier1 은 **전 pm1 끝점**, tier2 는 탐침쌍만 (2026-08-12 결정)
-                dense = req or (p is probe)
+                dense = tier1 or (p is probe)
                 xyzs = {role: (run / f"{rec['label']}.xyz", rec)
                         for role, rec in (("Li", p["li"]), ("Ni", p["ni"]))}
                 miss = [r for r, (xp, _) in xyzs.items() if not xp.is_file()]

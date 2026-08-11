@@ -48,6 +48,9 @@ OUT_DEFAULT = REPO / "db" / "properties" / "afm_ledger.json"
 #: 부격자 배정 = 부호. 납품 계보 그대로 (위 docstring 참조).
 SIGN = {"Ni1": +1.0, "Ni2": -1.0}
 MATCH_TOL_A = 0.35          # 이완 잔차 허용. 이보다 멀면 "모르는 자리"로 실패시킨다.
+#: 최근접과 **차순위** 자리의 간격. 좁으면 잔차가 작아도 배정이 흔들린다
+#: (2026-08-12 Codex). 실측 이 슬랩은 2.728 Å 라 여유가 크다.
+MARGIN_MIN_A = 0.5
 
 
 # ── 3×3 선형대수 (numpy 없이) ────────────────────────────────────────────────
@@ -168,7 +171,8 @@ def _mic_A(fa, fb, cell):
     return best
 
 
-def build_ledger(qe: dict, slab: dict, element="Ni", tol=MATCH_TOL_A) -> dict:
+def build_ledger(qe: dict, slab: dict, element="Ni", tol=MATCH_TOL_A,
+                 margin_min=MARGIN_MIN_A) -> dict:
     """슬랩 원자 인덱스 → 부격자 라벨. 게이트를 통과하지 못하면 ValueError."""
     M = supercell_matrix(qe["cell"], slab["cell"])
     nrep = abs(round(det3([[float(x) for x in r] for r in M])))
@@ -179,19 +183,21 @@ def build_ledger(qe: dict, slab: dict, element="Ni", tol=MATCH_TOL_A) -> dict:
     sub_names = sorted({l for _f, l in ref})
 
     # 슬랩 원자를 QE 셀 분수좌표로 접는다: frac_qe = frac_slab · M
-    rows, worst = [], 0.0
+    rows, worst, thin = [], 0.0, None
+    use = [0] * len(ref)                       # QE 자리별 사용 횟수
     for i, s in enumerate(slab["syms"]):
         if s != element:
             continue
         fq = vecmat(slab["frac"][i], [[float(x) for x in r] for r in M])
-        best = (1e9, None)
-        for f, l in ref:
-            r = _mic_A(fq, f, qe["cell"])
-            if r < best[0]:
-                best = (r, l)
-        worst = max(worst, best[0])
-        rows.append({"slab_index": i, "sublattice": best[1] if best[0] <= tol else None,
-                     "residual_A": round(best[0], 4)})
+        ds = sorted((_mic_A(fq, f, qe["cell"]), k) for k, (f, _l) in enumerate(ref))
+        r0, k0 = ds[0]
+        margin = (ds[1][0] - r0) if len(ds) > 1 else float("inf")
+        thin = margin if thin is None else min(thin, margin)
+        worst = max(worst, r0)
+        if r0 <= tol:
+            use[k0] += 1
+        rows.append({"slab_index": i, "sublattice": ref[k0][1] if r0 <= tol else None,
+                     "residual_A": round(r0, 4), "margin_A": round(margin, 4)})
 
     bad = [r for r in rows if r["sublattice"] is None]
     if bad:
@@ -204,6 +210,16 @@ def build_ledger(qe: dict, slab: dict, element="Ni", tol=MATCH_TOL_A) -> dict:
         raise ValueError(f"부격자 개수가 안 맞는다 {counts} — AFM 이 성립하지 않는다")
     if len(rows) != nrep * len(ref):
         raise ValueError(f"{element} 개수 {len(rows)} ≠ QE {len(ref)} × 슈퍼셀 {nrep}")
+    # ★ 총개수만 맞으면 통과하던 구멍 (2026-08-12 Codex) — 같은 QE 자리를 두 번 쓰고
+    #   다른 자리를 놓쳐도 Ni1/Ni2 합계는 맞을 수 있다. 자리별 사용 횟수를 못 박는다.
+    off = {ref[k][1] + f"#{k}": u for k, u in enumerate(use) if u != nrep}
+    if off:
+        raise ValueError(f"QE 자리별 사용 횟수가 슈퍼셀 배수({nrep})와 다르다 {off} — "
+                         f"어떤 자리는 중복 배정되고 어떤 자리는 비었다")
+    # ★ 최근접과 차순위의 간격이 좁으면 배정이 흔들린다 — 잔차만으로는 못 잡는다.
+    if thin is not None and thin < margin_min:
+        raise ValueError(f"최근접-차순위 간격 최소 {thin:.3f} Å < {margin_min} — "
+                         f"자리 배정이 애매하다. tol 을 줄이거나 구조를 확인할 것")
 
     sign = [0.0] * len(slab["syms"])
     for r in rows:
@@ -211,6 +227,8 @@ def build_ledger(qe: dict, slab: dict, element="Ni", tol=MATCH_TOL_A) -> dict:
     net = sum(sign)
     return {"element": element, "supercell_matrix": M, "n_replicas": nrep,
             "counts": counts, "max_residual_A": round(worst, 4),
+            "min_second_nearest_margin_A": None if thin is None else round(thin, 4),
+            "qe_site_usage": {ref[k][1] + f"#{k}": u for k, u in enumerate(use)},
             "sign_convention": {k: SIGN[k] for k in sub_names if k in SIGN},
             "net_moment_muB": round(net, 6),
             "sign_by_slab_index": {str(r["slab_index"]): SIGN[r["sublattice"]]
@@ -366,6 +384,28 @@ def selftest() -> int:
     Path(td + "/n4").mkdir(parents=True, exist_ok=True)
     qp4 = _fake(td + "/n4", cq, [("O", 0.25, 0.25, 0.3)], "qe")
     fails(lambda: build_ledger(parse_qe(qp4), slab), "라벨이 없다", "N4 Ni 라벨 없음")
+    # N4b: 같은 QE 자리를 두 번 쓰고 다른 자리를 비워도 **총개수는 맞는다** (Codex 2026-08-12)
+    Path(td + "/n4b").mkdir(parents=True, exist_ok=True)
+    dup = [list(a) for a in sat]
+    k2 = next(i for i, a in enumerate(dup) if a[0] == "Ni" and a[4] == "Ni1"
+              and abs(a[2] - 0.25) < 1e-9)          # ref#2 의 j=0 복제본
+    dup[k2][1], dup[k2][2] = 0.5, 0.0               # ref#1 자리로 옮긴다 (Ni1 → Ni1)
+    dp = _fake(td + "/n4b", cs, [(a[0], a[1], a[2], a[3]) for a in dup], "poscar")
+    led_dup = None
+    try:
+        led_dup = build_ledger(qe, parse_poscar(dp))
+    except ValueError as e:
+        chk("사용 횟수" in str(e), f"N4b 자리 중복 배정 → 거부 ({str(e)[:52]})")
+    if led_dup is not None:
+        chk(False, f"N4b 자리 중복인데 통과 (counts={led_dup['counts']}) — 총개수만 본다")
+    # N4c: 최근접과 차순위가 0.3 Å 밖에 안 떨어진 QE (잔차는 0 이라 tol 로는 못 잡는다)
+    Path(td + "/n4c").mkdir(parents=True, exist_ok=True)
+    cq2 = [[4.0, 0, 0], [0, 4.0, 0], [0, 0, 12.0]]
+    q2 = [("Ni1", 0.0, 0.0, 0.5), ("Ni2", 0.075, 0.0, 0.5)]      # 0.3 Å 간격
+    qp2 = _fake(td + "/n4c", cq2, q2, "qe")
+    sp2 = _fake(td + "/n4c", cq2, [("Ni", 0.0, 0.0, 0.5), ("Ni", 0.075, 0.0, 0.5)], "poscar")
+    fails(lambda: build_ledger(parse_qe(qp2), parse_poscar(sp2)), "간격",
+          "N4c 최근접-차순위 0.3 Å")
     # N5: 지원하지 않는 단위를 조용히 넘기지 않는다
     Path(td + "/n5").mkdir(parents=True, exist_ok=True)
     p5 = Path(td + "/n5/bohr.in")
