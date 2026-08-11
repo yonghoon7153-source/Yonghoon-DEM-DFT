@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""watch_gabia.py — gabia 전체 상황판 (SEI DFT + SDCP + 재부팅 복구).
+"""watch_gabia.py — gabia 전체 상황판 (SEI DFT + 갭 + SDCP + **NEB** + 디스크).
 
     watch -n 120 python3 tools/sei/watch_gabia.py
+    python3 tools/sei/watch_gabia.py --selftest     # 서버 없이 파서 검증
 
 왜 이 화면인가
   2026-08-06 서버가 재부팅되면서 tmux 세션과 돌던 계산이 전부 죽었다. 그럴 때 제일
@@ -9,19 +10,34 @@
   **단계별 완료 매트릭스**를 먼저 띄운다 — 러너가 resume-safe 라 끝난 단계는 안 다시 돈다.
 
   ⚠ 갭은 03 단계(fixed-occ nscf)의 고유값이 정본이다. DOS 문턱 판독 금지.
+
+이 도구가 **못 하는 것**
+  · NEB 완주 시각을 예측하지 못한다 — 총 경로 스텝 수를 미리 알 수 없다.
+    대신 "오차 → 문턱" 과 "마지막 갱신" 으로 살아 있는지/줄고 있는지만 본다.
+  · 장벽을 인용하지 못한다. 수치 정본은 collect_neb.py 다 (게이트·전하 규약 포함).
+  · 원격에서 돌지 않는다 — gabia 안에서 실행하는 화면이다.
 """
 import glob
 import json
 import os
+import re
 import subprocess
 import sys
 from datetime import datetime
 
 SEI = os.environ.get("SEI", "/data/work/runs/sei_dft")
 SDCP_VASP = "/data/work/runs/sdcp_v2/phaseB_vasp"
+NEBW = os.environ.get("NEBW", "/data/work/runs/sei_neb_v2")
 STAGES = [("01_vcrelax", "vc-rlx"), ("02_scf", "scf"), ("03_nscf_gap", "gap"),
           ("04_nscf_dos", "dos-k"), ("05_dos", "dos"), ("06_projwfc", "pdos")]
 BAR = "─" * 76
+RY_EV = 13.605693122994
+#: 대칭 동등 끝점이 이보다 벌어지면 둘 중 하나가 미수렴이다 (실측: 미수렴 시 57 meV).
+#: etot_conv_thr 1e-4 Ry(=1.4 meV)·forc 여유를 감안한 값.
+EP_TOL_MEV = 5.0
+_ACT = re.compile(r"activation energy\s*\((->|<-)\)\s*=\s*(-?[\d.]+)\s*eV")
+_IMGROW = re.compile(r"^\s*\d+\s+(-?[\d.]+)\s+(-?[\d.]+)\s+([TF])\s*$", re.M)
+_TOTEN = re.compile(r"^!\s+total energy\s+=\s+(-?[\d.]+)\s+Ry", re.M)
 
 
 def sh(c):
@@ -48,11 +64,159 @@ def done(d, stem):
     return "▸"          # 시작은 했는데 안 끝났다 (재부팅으로 끊긴 것)
 
 
+def _toten_eV(p):
+    """pw.x 출력의 **마지막** '!    total energy' [eV]. 없으면 None."""
+    try:
+        t = open(p, errors="ignore").read()
+    except OSError:
+        return None
+    v = _TOTEN.findall(t)
+    return float(v[-1]) * RY_EV if v else None
+
+
+def neb_status(d):
+    """상(phase) 폴더 하나의 NEB 상태. 화면과 selftest 가 같은 함수를 쓴다.
+
+    끝점 축퇴 검사가 이 함수의 핵심이다 — **대칭 동등**(meta.json 의
+    endpoints_symmetry_equivalent)인데 두 끝점 에너지가 벌어지면 장벽이 아니라
+    미수렴을 보고 있는 것이다. 비대칭 상에서는 벌어지는 게 정상이라 검사하지 않는다.
+    """
+    r = {"tag": os.path.basename(d), "state": " ", "it": None, "err": None,
+         "thr": None, "ea": None, "ep_mark": "  ", "ep_dE_meV": None,
+         "eqv": None, "age_min": None, "alerts": []}
+    meta = {}
+    mp = os.path.join(d, "meta.json")
+    if os.path.isfile(mp):
+        try:
+            meta = json.load(open(mp, encoding="utf-8"))
+        except (OSError, ValueError):
+            r["alerts"].append(f"{r['tag']}: meta.json 손상 — 대칭 게이트를 못 켠다")
+    r["eqv"] = meta.get("endpoints_symmetry_equivalent")
+    r["thr"] = meta.get("path_thr")
+
+    # ── 끝점 ──
+    ei = _toten_eV(os.path.join(d, "ep_initial", "relax.out"))
+    ef = _toten_eV(os.path.join(d, "ep_final", "relax.out"))
+    r["ep_mark"] = ("✓" if ei is not None else "·") + ("✓" if ef is not None else "·")
+    if ei is not None and ef is not None:
+        r["ep_dE_meV"] = (ef - ei) * 1000.0
+        if r["eqv"] is True and abs(r["ep_dE_meV"]) > EP_TOL_MEV:
+            r["alerts"].append(
+                f"{r['tag']}: 끝점이 **대칭 동등**인데 {r['ep_dE_meV']:+.0f} meV 벌어졌다 "
+                f"(>{EP_TOL_MEV:.0f}) — 한쪽이 미수렴이다. NEB 장벽을 인용하지 말 것")
+
+    # ── 경로 ──
+    out = os.path.join(d, "neb.out")
+    if not os.path.isfile(out):
+        return r
+    try:
+        t = open(out, errors="ignore").read()
+    except OSError:
+        return r
+    r["age_min"] = (datetime.now().timestamp() - os.path.getmtime(out)) / 60.0
+    if re.search(r"unable to launch|could not access or execute|command not found", t):
+        r["state"] = "✗"
+        r["alerts"].append(f"{r['tag']}: neb.x 실행 자체가 실패했다 — 안 돌고 있다")
+        return r
+    if re.search(r"Error in routine|%%%%|MPI_ABORT", t):
+        r["state"] = "✗"
+        r["alerts"].append(f"{r['tag']}: neb.out 에 오류 — tail 을 볼 것")
+        return r
+    fwd = [float(v) for k, v in _ACT.findall(t) if k == "->"]
+    r["it"] = len(fwd)
+    r["ea"] = fwd[-1] if fwd else None
+    k = t.rfind("error (eV/A)")
+    if k > 0:
+        rows = _IMGROW.findall(t[k:])
+        free = [float(e) for _en, e, fz in rows if fz == "F"] or \
+               [float(e) for _en, e, _fz in rows]
+        r["err"] = max(free) if free else None
+    if "neb: convergence achieved" in t:
+        r["state"] = "✓"
+    elif fwd:
+        r["state"] = "▸"
+        # 30분 넘게 갱신이 없으면 죽은 것이다 (neb.x 는 이미지마다 SCF 를 찍는다)
+        if r["age_min"] is not None and r["age_min"] > 30:
+            r["alerts"].append(f"{r['tag']}: neb.out 이 {r['age_min']:.0f}분째 조용하다 "
+                               f"— 프로세스가 살아 있는지 확인할 것")
+    return r
+
+
+def selftest():
+    """양성 + **음성** 경로. 음성이 없으면 통과해도 아무것도 보증 못 한다."""
+    import shutil
+    import tempfile
+    td = tempfile.mkdtemp(prefix="watch_gabia_st_")
+    ok = True
+
+    def mk(tag, eqv, e_ini, e_fin, neb_body=None, thr=0.05):
+        d = os.path.join(td, tag)
+        for ep, e in (("ep_initial", e_ini), ("ep_final", e_fin)):
+            os.makedirs(os.path.join(d, ep), exist_ok=True)
+            if e is not None:
+                open(os.path.join(d, ep, "relax.out"), "w").write(
+                    f"!    total energy              =    {e / RY_EV:.8f} Ry\n")
+        json.dump({"endpoints_symmetry_equivalent": eqv, "path_thr": thr},
+                  open(os.path.join(d, "meta.json"), "w"))
+        if neb_body is not None:
+            open(os.path.join(d, "neb.out"), "w").write(neb_body)
+        return d
+
+    def chk(cond, msg):
+        nonlocal ok
+        print(("  ✓ " if cond else "  ✗ ") + msg)
+        ok &= bool(cond)
+
+    body = ("     activation energy (->) =   0.286745 eV\n"
+            "     activation energy (<-) =   0.286712 eV\n"
+            "     image        energy (eV)        error (eV/A)        frozen\n\n"
+            "         1     -1234.567890            0.001000            T\n"
+            "         2     -1234.500000            0.083000            F\n")
+    # 양성 ①: 대칭 동등 + 끝점 일치 + 진행 중
+    s = neb_status(mk("li2s", True, -100.0, -100.001, body))
+    chk(s["state"] == "▸" and s["it"] == 1 and abs(s["err"] - 0.083) < 1e-9
+        and not s["alerts"], f"대칭 동등·끝점 1 meV·진행중 → 경고 없음 ({s['alerts']})")
+    # 양성 ②: 수렴
+    s = neb_status(mk("li2o", True, -100.0, -100.0,
+                      body + "     neb: convergence achieved in 12 iterations\n"))
+    chk(s["state"] == "✓", "수렴 문자열 → ✓")
+    # 음성 ①: 대칭 동등인데 끝점 57 meV — 미수렴 (2026-08 실측 사고)
+    s = neb_status(mk("li2s_bad", True, -100.0, -100.057, body))
+    chk(any("대칭 동등" in x for x in s["alerts"]),
+        f"대칭 동등 + 끝점 57 meV → 경고 ({s['ep_dE_meV']:+.0f} meV)")
+    # 음성 ②: **비대칭**은 끝점이 벌어져도 정상 — 잘못된 경고를 내면 안 된다
+    s = neb_status(mk("li3nd", False, -100.0, -100.412, body))
+    chk(not s["alerts"], f"비대칭 + 끝점 412 meV → 경고 없음 (정상) ({s['alerts']})")
+    # 음성 ③: 실행 실패를 미수렴과 구분
+    s = neb_status(mk("li3p", False, None, None,
+                      "mpirun was unable to launch the specified application\n"))
+    chk(s["state"] == "✗" and any("실행 자체가 실패" in x for x in s["alerts"]),
+        "mpirun 실패 → ✗ (미수렴 아님)")
+    # 음성 ④: 끝점만 있고 neb 미착수 — 경고 없이 공백
+    s = neb_status(mk("licl", True, -100.0, -100.0, None))
+    chk(s["state"] == " " and s["it"] is None and not s["alerts"],
+        "neb.out 없음 → 미착수(공백) · 오경고 없음")
+    # 음성 ⑤: meta.json 손상 → 대칭 게이트를 켤 수 없다고 말해야 한다
+    d = mk("li3po4g", True, -100.0, -100.5, body)
+    open(os.path.join(d, "meta.json"), "w").write("{oops")
+    s = neb_status(d)
+    chk(any("meta.json 손상" in x for x in s["alerts"]) and s["eqv"] is None,
+        "meta.json 손상 → 경고 + 대칭 판정 보류")
+    shutil.rmtree(td, ignore_errors=True)
+    print("selftest PASS" if ok else "selftest FAIL")
+    return 0 if ok else 1
+
+
+if "--selftest" in sys.argv:
+    sys.exit(selftest())
+
 print("=" * 76)
 gpu = sh("nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total "
          "--format=csv,noheader,nounits").strip()
 tmux = [t.split(":")[0] for t in sh("tmux ls").splitlines() if t.strip()]
-pw = len([x for x in sh("pgrep -f 'pw.x|dos.x|projwfc.x'").split() if x])
+# ⚠ 대괄호 트릭 — 그냥 'pw.x' 로 쓰면 pgrep 을 띄운 sh 자신이 잡혀 **항상 ≥1** 이 된다.
+#   그러면 "0 이면 죽은 것" 판정이 영원히 안 걸린다 (2026-08-11 스모크 테스트에서 발견).
+pw = len([x for x in sh(r"pgrep -f '[p]w\.x|[d]os\.x|[p]rojwfc\.x'").split() if x])
 up = sh("uptime -p").strip() or sh("uptime").strip()
 print(f"gabia · {datetime.now():%m-%d %H:%M} · GPU {gpu or '?'} · "
       f"QE 프로세스 {pw} · tmux {' '.join(tmux) or '없음'}")
@@ -127,7 +291,42 @@ if os.path.isfile(z):
 else:
     print("③ SDCP VASP 외주 패키지 — 없음 (qe_to_vasp.py --zip 으로 생성)")
 
-# ── 4) 디스크 ──────────────────────────────────────────────────────────────
+print(BAR)
+
+# ── 4) SEI NEB ─────────────────────────────────────────────────────────────
+nebs = [neb_status(d) for d in
+        sorted(glob.glob(os.path.join(NEBW, "*"))) if os.path.isdir(d)]
+neb_pid = len([x for x in sh(r"pgrep -f '[n]eb\.x'").split() if x])
+if not nebs:
+    print(f"④ SEI NEB — {NEBW} 에 상 폴더가 없다 (build_neb_inputs.py 부터)")
+else:
+    print(f"④ SEI NEB — {NEBW}  · neb.x 프로세스 {neb_pid}"
+          f"   (✓수렴 ▸진행 ✗오류 공백 미착수)")
+    print(f"   {'상':11s}{'끝점':>5s} {'Δ끝점':>11s}  {'경로':>5s} {'오차→문턱':>13s}"
+          f" {'Ea→(eV)':>9s} {'갱신':>7s}")
+    for s in nebs:
+        # 대칭 동등이면 Δ끝점이 0 이어야 한다 / 비대칭이면 두 자리 에너지 차라 정상
+        if s["ep_dE_meV"] is None:
+            dep = "—"
+        elif s["eqv"] is True:
+            dep = f"{s['ep_dE_meV']:+.0f}mV{'✓' if abs(s['ep_dE_meV']) <= EP_TOL_MEV else '⛔'}"
+        else:
+            dep = f"{s['ep_dE_meV']:+.0f}mV·"          # · = 비대칭이라 검사 안 함
+        err = f"{s['err']:.3f}→{s['thr'] or 0.05:.2f}" if s["err"] is not None else "—"
+        it = f"{s['state']}it{s['it']}" if s["it"] else s["state"].strip() or "—"
+        ea = f"{s['ea']:.3f}" if s["ea"] is not None else "—"
+        age = f"{s['age_min']:.0f}분" if s["age_min"] is not None else "—"
+        print(f"   {s['tag']:11s}{s['ep_mark']:>5s} {dep:>11s}  "
+              f"{it:>5s} {err:>13s} {ea:>9s} {age:>7s}")
+    alerts = [a for s in nebs for a in s["alerts"]]
+    if alerts:
+        print()
+        for a in alerts:
+            print(f"   ⚠ {a}")
+    if neb_pid == 0 and any(s["state"] == "▸" for s in nebs):
+        print("   ⚠ ▸(진행중) 인데 neb.x 프로세스가 0 — 죽었다. tmux 세션을 확인할 것")
+
+# ── 5) 디스크 ──────────────────────────────────────────────────────────────
 df = sh("df -h /data | tail -1").split()
 if len(df) >= 5:
     print(f"\n디스크 /data  {df[2]} 사용 / {df[1]}  (여유 {df[3]}, {df[4]})")
