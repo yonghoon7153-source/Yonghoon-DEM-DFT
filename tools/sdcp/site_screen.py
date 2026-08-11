@@ -1791,8 +1791,28 @@ def cmd_dft_handoff(a) -> int:
         pairs.append((min(r["E_pose_eV"], q["E_pose_eV"]), dd, ro, r, q))
     if not pairs:
         sys.exit("⛔ 자격 있는 대조쌍이 없다 — DFT 로 넘길 반사실 대조가 성립하지 않는다")
-    pairs.sort(key=lambda t: t[0])
+
+    # ★ 2026-08-11 — 쌍 선택을 `min(E_Li, E_Ni)` 로만 하면 **한쪽 끝점만 매우 깊은 쌍**이
+    #   먼저 뽑힌다(Codex Round-2 지적). 실제로 그렇게 골랐더니 ptfe_c10 f0.85 에서
+    #   ΔE 중앙값 +0.041 인데 **부호가 반대인 −0.037 쌍**이 1순위로 나왔다.
+    #   DFT 는 비싸다 — 무엇을 대표로 보내는지 명시적으로 고른다.
+    dl = sorted(q["E_pose_eV"] - r["E_pose_eV"] for _e, _d, _r, r, q in pairs)
+    med = float(np.median(dl))
+    print(f"자격 있는 대조쌍 {len(pairs)}개 · ΔE(Ni−Li) 중앙값 {med:+.3f} eV")
+    for _e, dd, ro, r, q in sorted(pairs, key=lambda t: t[4]["E_pose_eV"] - t[3]["E_pose_eV"]):
+        de = q["E_pose_eV"] - r["E_pose_eV"]
+        mark = "  ← 중앙값과 부호 반대" if de * med < 0 else ""
+        print(f"   {dd}/r{int(ro):03d}  ΔE {de:+.3f}  (Li {r['E_pose_eV']:+.3f} · "
+              f"Ni {q['E_pose_eV']:+.3f}){mark}")
+
+    def key(t):
+        de = t[4]["E_pose_eV"] - t[3]["E_pose_eV"]
+        return {"median": abs(de - med),          # 대표 — 중앙값에 가장 가까운 쌍
+                "deepest": t[0],                  # 옛 방식 — 한쪽 끝점이 가장 깊은 쌍
+                "extreme": -abs(de - med)}[a.select]   # 양 끝 — 불일치를 DFT 로 검사
+    pairs.sort(key=key)
     pairs = pairs[:a.pairs]
+    print(f"→ 선택 기준 '{a.select}' 로 {len(pairs)}쌍 인계")
 
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     manifest: Dict[str, Any] = {
@@ -2034,7 +2054,10 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("dft-handoff", help="자격 대조쌍을 VASP 잡으로 (자기 초기값 2종)")
     p.add_argument("--dir", required=True, help="relax_f*.* 디렉터리")
     p.add_argument("--out", required=True)
-    p.add_argument("--pairs", type=int, default=1, help="상위 몇 쌍을 넘길지")
+    p.add_argument("--pairs", type=int, default=1, help="몇 쌍을 넘길지")
+    p.add_argument("--select", choices=("median", "deepest", "extreme"), default="median",
+                   help="median=중앙값 대표(기본) · deepest=한쪽 끝점이 가장 깊은 쌍 · "
+                        "extreme=중앙값에서 가장 먼 쌍(불일치 검사용)")
     p.add_argument("--nslab", type=int, default=192)
     p.add_argument("--freeze", type=float, default=0.5, help="DFT 에서 고정할 아래 비율")
     p.add_argument("--kmesh", default="2 2 1")
