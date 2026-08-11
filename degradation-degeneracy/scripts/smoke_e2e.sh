@@ -152,30 +152,54 @@ ls "$CACHE_DIR"/*_ocp_*.meta.yaml >/dev/null 2>&1 \
 "$PY" -m src.halfcell --config configs/base.yaml --method ocp --verify \
       --log-level WARNING >/dev/null \
   && ok "halfcell --verify (재생성 대조)" || bad "halfcell --verify 실패"
-# ★ 11차 발견 4 — **옛 meta 가 남아 있는 정상 운영 경로**. 코드가 바뀌면
-#   캐시 hit 이 옛 배열을 그대로 돌려주고 --verify 는 갱신하지 않으므로
-#   `코드_identity` 로 실패해야 하고, --force --verify 는 통과해야 한다.
+# ★ 11차 발견 4 / 12차 발견 4 — **옛 meta 가 남아 있는 정상 운영 경로**.
+#   이제 캐시 hit 판정이 코드·runtime identity 를 보므로, stale 캐시는 옛
+#   배열을 돌려주지 않고 **미스로 재계산**된다 (자기치유). 두 가지를 본다:
+#   ① 재계산으로 meta 가 현재 identity 로 갱신되는가
+#   ② 갱신 전 stale meta 는 validator 가 거부하는가 (봉인 스냅샷 경로 — 거기선
+#      재계산이 불가능하므로 fail-closed 여야 한다)
 _meta="$(ls "$CACHE_DIR"/*_ocp_*.meta.yaml | head -1)"
-cp "$_meta" "$_meta.bak"
 "$PY" - "$_meta" <<'PYEOF'
 import sys
 import yaml
 p = sys.argv[1]
 m = yaml.safe_load(open(p, encoding="utf-8"))
 m["source_digest"] = "stale0000000"          # 옛 커밋에서 만든 캐시로 위장
+m["env"] = {**(m.get("env") or {}), "pybamm": "0.0.0-other"}
 yaml.safe_dump(m, open(p, "w", encoding="utf-8"), allow_unicode=True)
 PYEOF
-_msg="$("$PY" -m src.halfcell --config configs/base.yaml --method ocp --verify \
-        --log-level ERROR 2>&1)"
-if [[ $? -ne 0 ]] && grep -q "force --verify" <<<"$_msg"; then
-  ok "옛 meta 캐시 → --verify 실패 + --force 안내 (11차 발견 4)"
-else
-  bad "stale meta 캐시가 --verify 를 통과했다"
-fi
+"$PY" - "$_meta" <<'PYEOF'
+import sys
+from pathlib import Path
+from src.config import load_config
+from src.halfcell import validate_halfcell_cache
+cfg = load_config("configs/base.yaml")
+cache = Path(sys.argv[1].replace(".meta.yaml", ".json"))
+v = validate_halfcell_cache(cfg, cache)
+need = {"코드_identity", "runtime_identity"}
+missing = need - set(v["fail"])
+print(f"   {'✅' if not missing else '❌'} stale meta → validator 거부 "
+      + (f"({sorted(need)})" if not missing else f"— {sorted(missing)} 통과함"))
+sys.exit(0 if not missing else 1)
+PYEOF
+[[ $? -eq 0 ]] || bad "stale meta 를 validator 가 거부하지 않았다 (12차 발견 4)"
+"$PY" -m src.halfcell --config configs/base.yaml --method ocp \
+      --log-level WARNING >/dev/null
+"$PY" - "$_meta" <<'PYEOF'
+import sys
+import yaml
+from src.io import env_fingerprint, source_digest
+m = yaml.safe_load(open(sys.argv[1], encoding="utf-8"))
+ok = (m.get("source_digest") == source_digest()
+      and (m.get("env") or {}).get("pybamm") == env_fingerprint()["pybamm"])
+print(f"   {'✅' if ok else '❌'} stale 캐시 → 미스로 재계산되어 meta 갱신 "
+      "(12차 발견 4 자기치유)")
+sys.exit(0 if ok else 1)
+PYEOF
+[[ $? -eq 0 ]] || bad "stale 캐시가 재계산되지 않았다"
 "$PY" -m src.halfcell --config configs/base.yaml --method ocp --force --verify \
       --log-level WARNING >/dev/null \
-  && ok "--force --verify 로 복구 (운영 명령)" || bad "--force --verify 실패"
-rm -f "$_meta.bak"
+  && ok "--force --verify (운영 명령)" || bad "--force --verify 실패"
 
 # ─────────────────────────────────────────────────────────────────── 4. fitting
 step "4. 같은 곡선을 두 기준으로 fitting"
