@@ -40,6 +40,12 @@ evidenceScope: multi-source-primary
    로 원리적으로 구분 불가 — 진본성 anchor 는 커밋되는 digest (commit-time byte
    identity) 이고, 독립 재실행·수치 대조는 별개다.
 
+## 작업 규율과의 연결
+원칙 6(fixture 가 진실을 가린다)은 외부 하네스의 TDD RED-first 규칙과 같은 구조다
+— 이 저장소에서는 `/finding` 절차로 강제한다. 원칙 2·3(자기신고 대신 외부 현실
+대조)의 작업 버전이 "신선한 증거 없이 완료 선언 금지"다. 출처와 채택 근거는
+[[agent-harness-patterns]].
+
 ## 한계
 - 이 원칙들은 위조 방어가 아니라 **정상 실행의 회귀·혼입 검출**이 1차 목적이다.
   형식적으로 완전한 위조는 경계 밖(원칙 7).

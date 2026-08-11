@@ -21,12 +21,15 @@ evidenceScope: multi-source-primary
 루프. [[degradation-degeneracy]] 에서 13 라운드 운영하며 정련된 절차.
 
 ## 루프
-1. **수정**: 직전 리뷰의 발견을 **코드로** 닫는다 (절차적 우회는 최후수단 —
+0. **자체 리뷰(선택)**: 요청 전 `/self-review` 로 다각 렌즈 적대적 탐색.
+   CONFIRMED 는 아래 1로 보낸다 ([[agent-harness-patterns]] 의 채택 항목).
+1. **수정**: 직전 리뷰의 발견을 **코드로** 닫는다 — `/finding` 절차(RED 테스트
+   먼저, fixture 감사) (절차적 우회는 최후수단 —
    리뷰어가 "코드 우선"을 권고했고 실제로 재실행 폐기를 줄였다). 원칙은
    [[provenance-fail-closed-verification]].
 2. **검증**: 전체 테스트 + strict smoke (dirty 완화 없음, clean 커밋에서) 통과.
    리뷰가 재현한 반례는 그대로 회귀 테스트로 고정한다.
-3. **push** 후 **리뷰 요청문** 작성:
+3. **push** 후 **리뷰 요청문** 작성 (`/gate-request`):
    - 대상 커밋 SHA 명시 (리뷰어는 exact HEAD 를 fetch 해 검증한다)
    - 발견별 대응 위치(파일·검사 이름)와 회귀 테스트 이름
    - 판단이 갈릴 수 있는 지점은 명시적 질문으로 (예: 자기치유 vs 명시적 거부)
