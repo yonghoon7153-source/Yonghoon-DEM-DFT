@@ -99,3 +99,25 @@ U-ramp 용 CHGCAR — LCHARG=.TRUE. 로 남기게는 해 뒀다, vibrational cor
 
 Q 마다 **동의/수정/반박** + 수정이면 정확한 INCAR/코드 라인. 번들은 아직 외주에
 안 보냈다 — 이 회신 반영 후 생성·발송한다.
+
+---
+
+# 부록 — 자체 리뷰(2026-08-11, 실행 검증 포함) 반영분
+
+우리 쪽 적대 리뷰가 먼저 끝났다. **실제 2026-08-08 외주 납품 OUTCAR(.gz) 3개로 분석기
+파서를 직접 돌려** 검증했고, 아래는 이미 고쳐서 커밋됐다 — 재지적 불필요:
+
+| # | 발견 | 조치 |
+|---|---|---|
+| P0-1 | CONTCAR 없으면 등록유지 게이트가 **무음으로 꺼짐** (ok=true 로 판정 진입) | `REGISTRY_UNVERIFIED` 게이트 신설 + README 에 OUTCAR+CONTCAR 필수 명기 |
+| P0-2 | 스펙 `Ni: Ni` 인데 실납품 TITEL 은 **Ni_pv** — 재사용 시 58잡 전부 MISMATCH 제외 | 스펙을 Ni_pv 로 (Phase-B 연속성) + 분석기가 "전 잡 일관 변형" 은 경고로 강등(혼합은 치명 유지) |
+| P1-1 | 0바이트 CONTCAR 하나가 분석기 전체를 IndexError 로 전멸 | try/except → None → 위 게이트로 합류 |
+| P1-2 | discover_pairs 가 프로토콜 지문 혼합을 무검사 통과 (verdict 는 하드 exit) | 지문 균질성 검사 + 깨진 JSON 관용 로드 |
+| P1-3 | SCF 실패 시 탈출로 없음 → 2차 왕복 확정 | README 에 사전 승인 사다리(ALGO=All → 믹싱 완화) + NOTES.txt 기록 의무 |
+| P1-4 | walltime·CHGCAR 보관·VASP 버전 지침 부재 | README 에 전부 추가. E_int/E_deform 은 범위 밖으로 명기 |
+| P2 | POSCAR leftover 원소가 헤더에서 증발(잠복) · 자세별 z-범위로 고정 평면이 어긋날 수 있음 · 반쪽 번들 잔존 · 고아 잡 · 0쌍 zip | 원소별 grouping · **공유 zcut**(clean 슬랩 기준, n_fixed 감사 내장) · 스테이징+원자적 rename · 쌍 xyz 선검사 · 0쌍 중단. OUTCAR.gz 지원, NELM 전 스텝 검사, vasp 버전 기록 추가 |
+
+파서 정합 실측: E0/NELM(세미콜론 줄)/TITEL/Iteration/magnetization 정규식 5종이 실물
+VASP 5.4.4 OUTCAR 에서 전부 정확. 분자 상자 이미지 분산 ≈ −1.0 meV (vac=14 Å, δ 대비 무시).
+
+→ 남은 것은 위 본문의 **물리 질문(Q1·Q2·Q3·Q5·Q6)** 이다. 코드 배선 쪽은 이중 검증됐다.

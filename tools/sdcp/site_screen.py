@@ -2070,19 +2070,27 @@ def _magmom_configs(atoms: Atoms, nslab: int, frag: str) -> Dict[str, List[float
     return out
 
 
-def _write_poscar(path: Path, atoms: Atoms, nslab: int, freeze_frac: float) -> Dict[str, Any]:
+def _write_poscar(path: Path, atoms: Atoms, nslab: int, freeze_frac: float,
+                  zcut=None) -> Dict[str, Any]:
     """종별로 묶고 Selective Dynamics 로 **아래 절반 고정 / 위 절반+분자 자유**.
 
     ⚠ UMA 단계의 구속을 그대로 승계하지 않는다 — DFT 는 표면 이완을 허용해야 한다.
+    ⚠⚠ 2026-08-11 자체검토 — order 밖 원소(leftover)가 좌표로는 적히는데 counts 루프가
+      order 만 돌아 종/개수 헤더에서 **사라졌다**. VASP 는 헤더 개수만 믿으므로 남는
+      좌표를 조용히 버리고 **다른 계를 계산**한다. 현 조각(Li/Ni/O/S/C/F/H)에선 미발현,
+      P·Na·B 가 들어오는 순간 터지는 잠복이라 원소별로 묶어 전부 센다.
+    ★ zcut 을 밖에서 주면 쌍·기준계 전 잡이 **같은 고정 평면**을 공유한다 — 자세마다
+      z-범위로 다시 재면 UMA 이완 후 표면이 뜬 자세에서 고정 원자 집합이 어긋난다.
     """
     order = ["Li", "Ni", "O", "S", "C", "F", "H"]
     sym = atoms.get_chemical_symbols()
+    order = order + sorted({x for x in sym if x not in order})
     idx: List[int] = []
     for el in order:
         idx += [i for i in range(len(atoms)) if sym[i] == el]
-    idx += [i for i in range(len(atoms)) if sym[i] not in order]
     z = atoms.positions[:nslab, 2]
-    zcut = z.min() + (z.max() - z.min()) * freeze_frac
+    if zcut is None:
+        zcut = z.min() + (z.max() - z.min()) * freeze_frac
     cell = atoms.cell.array
     frac = np.linalg.solve(cell.T, atoms.positions.T).T
     counts, seen = [], []

@@ -59,7 +59,11 @@ TIERS = {  # 판정 시급도 순 — tier1 이 이번 판의 목적(미해결 �
 }
 #: POTCAR 는 라이선스 때문에 못 넣는다 — **정확한 변형(variant)을 못 박는다.**
 #: 분석기가 OUTCAR 의 TITEL 을 읽어 이 표와 대조하고, 다르면 결과에 경고를 박는다.
-POTCAR_SPEC = {"Li": "Li_sv", "Ni": "Ni", "O": "O", "S": "S", "C": "C", "F": "F",
+#: ⚠ Ni 는 **Ni_pv** — 2026-08-08 같은 외주처 납품(OUTCAR TITEL `PAW_PBE Ni_pv`)과의
+#:   연속성이다. plain Ni 로 바꾸면 Phase-B 수치와 비교 불가가 되고, 스펙만 Ni 로 두면
+#:   외주처가 기존 세팅(Ni_pv)을 재사용하는 순간 **전 슬랩 잡이 POTCAR_MISMATCH** 로
+#:   회수에서 제외된다(자체검토 P0-2 — 58잡 돌리고 결과 0건이 되는 경로).
+POTCAR_SPEC = {"Li": "Li_sv", "Ni": "Ni_pv", "O": "O", "S": "S", "C": "C", "F": "F",
                "H": "H", "B": "B", "P": "P", "Cl": "Cl", "Na": "Na_pv"}
 
 MOL_INCAR = """SYSTEM = {system}
@@ -93,9 +97,21 @@ NCORE  = 4
 # ─────────────────────────────────────────────────────────────────────────────
 def discover_pairs(run_dir: Path) -> List[Dict[str, Any]]:
     """자격 있는 대조쌍을 방향마다 하나씩. [{dir, roll, li, ni, dE, n_rolls}]"""
-    rows = [json.loads(p.read_text()) for p in sorted(run_dir.glob("*.json"))
-            if not p.name.startswith("_")]
+    rows = []
+    for jp in sorted(run_dir.glob("*.json")):
+        if jp.name.startswith("_"):
+            continue
+        try:
+            rows.append(json.loads(jp.read_text()))
+        except ValueError:
+            print(f"  ⚠ 깨진 JSON 건너뜀 (죽은 런의 반쪽 파일?): {jp.name}")
     fs = [r for r in rows if r.get("ranking_eligible") and r.get("E_pose_eV") is not None]
+    # ⚠ verdict 와 같은 이유(자체검토 P1-2) — 지문이 섞인 디렉터리에서 쌍을 만들면
+    #   서로 다른 프로토콜의 에너지를 한 쌍으로 비교하게 된다. 균질성 검사.
+    fps = sorted({str(r.get("fingerprint")) for r in fs if r.get("fingerprint")})
+    if len(fps) > 1:
+        sys.exit(f"⛔ {run_dir} 에 프로토콜 지문이 {len(fps)}종 섞여 있다: {fps} — "
+                 f"regate/재실행으로 정리한 뒤 다시 만들 것")
     idx = {(r["site"], r["down_dir"], r["roll_deg"]): r for r in fs}
     by_dir: Dict[str, List[Tuple[float, float, dict, dict]]] = {}
     for (s, dd, ro), r in idx.items():
@@ -129,10 +145,10 @@ def _job_incar(system: str, els: List[str], mag_poscar: List[float]) -> str:
 
 def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
                    system: str, mag_name: str, kmesh: str,
-                   extra_meta: Dict[str, Any]) -> Dict[str, Any]:
+                   extra_meta: Dict[str, Any], zcut=None) -> Dict[str, Any]:
     """슬랩 계열 잡 하나 (pose 또는 clean). POSCAR 재정렬 → MAGMOM 재매핑 → 검산."""
     jd.mkdir(parents=True, exist_ok=True)
-    pos = SS._write_poscar(jd / "POSCAR", atoms, nslab, freeze)
+    pos = SS._write_poscar(jd / "POSCAR", atoms, nslab, freeze, zcut=zcut)
     mag_orig = SS._magmom_configs(atoms, nslab, frag)[mag_name]
     mag_poscar = [mag_orig[i] for i in pos["order"]]
     # ★ MAGMOM 순열 검산 — 0 아닌 모멘트는 Ni 이거나 (라디칼 씨앗이면) 분자 원자여야 한다.
@@ -172,12 +188,14 @@ def _emit_mol_job(jd: Path, frag: str, mol, vac: float = 14.0) -> Dict[str, Any]
         seed = [i for i in gi if at.get_chemical_symbols()[i] == "O"] or list(range(len(at)))
         for i in seed:
             mags[i] = round(1.0 / len(seed), 3)
+    # ⚠ 자체검토 P2 — leftover 를 원본 순서로 idx 에 붙이면서 counts 는 정렬 순회라
+    #   [Na,P,Na,S] 에서 헤더와 좌표가 어긋났다(다른 분자를 조용히 계산). 같은 순회로.
     order = ["Li", "Ni", "O", "S", "C", "F", "H"]
     sym = at.get_chemical_symbols()
-    idx = [i for el in order for i in range(len(at)) if sym[i] == el]
-    idx += [i for i in range(len(at)) if sym[i] not in order]
+    order_ext = order + sorted({x for x in sym if x not in order})
+    idx = [i for el in order_ext for i in range(len(at)) if sym[i] == el]
     counts, seen = [], []
-    for el in order + sorted({s for s in sym if s not in order}):
+    for el in order_ext:
         n = sum(1 for i in idx if sym[i] == el)
         if n:
             counts.append(n); seen.append(el)
@@ -212,54 +230,76 @@ ANALYZER = r'''#!/usr/bin/env python3
   ③ 자기 초기값 2종이 있으면 각자 낮은 쪽을 쓰고, 30 meV 넘게 갈리면 경고
   ④ POTCAR TITEL 이 스펙과 같은가 (다르면 결과에 경고 — 조용히 넘어가지 않는다)
 """
-import json, math, os, re, sys
+import gzip, json, math, os, re, sys
 from glob import glob
 
 DELTA = 0.030          # eV — 유한설계 분류의 실무 임계 (UMA 쪽과 같은 값·같은 규칙)
 MAG_TOL = 0.030        # eV — 자기 초기값 2종 불일치 경고
 
 
-def read_outcar(p):
+def _read_text(path):
+    """평문 또는 .gz — 2026-08-08 실납품이 OUTCAR.gz 였다. 둘 다 받는다."""
     try:
-        t = open(p, errors="ignore").read()
+        if os.path.isfile(path):
+            return open(path, errors="ignore").read()
+        if os.path.isfile(path + ".gz"):
+            return gzip.open(path + ".gz", "rt", errors="ignore").read()
     except OSError:
+        pass
+    return None
+
+
+def read_outcar(p):
+    t = _read_text(p)
+    if t is None:
         return None
     e = re.findall(r"energy\(sigma->0\)\s*=\s*(-?[\d.]+)", t)
     ionic = "reached required accuracy" in t
     nelm = re.search(r"NELM\s*=\s*(\d+)", t)
     iters = re.findall(r"Iteration\s+\d+\(\s*(\d+)\)", t)
-    nelm_hit = bool(nelm and iters and int(iters[-1]) >= int(nelm.group(1)))
+    # ⚠ 마지막 이온 스텝만 보면 **중간 스텝의 SCF 실패**가 통과한다 — 전 스텝 검사
+    nelm_hit = bool(nelm and iters and any(int(x) >= int(nelm.group(1)) for x in iters))
+    ver = re.search(r"vasp\.([\w.]+)", t)
     titels = re.findall(r"TITEL\s*=\s*(.+)", t)
     mag = re.findall(r"number of electron\s+[\d.]+\s+magnetization\s+(-?[\d.]+)", t)
     return {"E0": float(e[-1]) if e else None, "ionic_conv": ionic,
             "nelm_hit": nelm_hit, "titels": [x.strip() for x in titels],
+            "vasp_version": ver.group(1) if ver else None,
             "mag_total": float(mag[-1]) if mag else None}
 
 
 def read_contcar(p):
-    try:
-        L = open(p).read().splitlines()
-    except OSError:
+    """VASP CONTCAR 는 항상 Direct 로 나온다. 잘리거나 빈 파일이면 None —
+    잡 하나가 회수 전체를 죽이면 안 된다 (0바이트 CONTCAR 에서 IndexError 로
+    분석기가 전멸하던 것, 자체검토 P1-1)."""
+    t = _read_text(p)
+    if t is None:
         return None
-    scale = float(L[1].split()[0])
-    cell = [[float(x) * scale for x in L[i].split()[:3]] for i in (2, 3, 4)]
-    i = 5
-    if not L[i].split()[0].isdigit():
-        i += 1                                    # 종 이름 줄
-    counts = [int(x) for x in L[i].split()]
-    i += 1
-    if L[i].strip() and L[i].strip()[0] in "Ss":
-        i += 1                                    # Selective dynamics
-    direct = L[i].strip() and L[i].strip()[0] in "DdKk" and L[i].strip()[0] in "Dd"
-    i += 1
-    n = sum(counts)
-    pos = []
-    for k in range(n):
-        v = [float(x) for x in L[i + k].split()[:3]]
-        if direct:
-            v = [sum(v[j] * cell[j][ax] for j in range(3)) for ax in range(3)]
-        pos.append(v)
-    return {"cell": cell, "pos": pos}
+    try:
+        L = t.splitlines()
+        scale = float(L[1].split()[0])
+        cell = [[float(x) * scale for x in L[i].split()[:3]] for i in (2, 3, 4)]
+        i = 5
+        if not L[i].split()[0].isdigit():
+            i += 1                                    # 종 이름 줄
+        counts = [int(x) for x in L[i].split()]
+        i += 1
+        if L[i].strip() and L[i].strip()[0] in "Ss":
+            i += 1                                    # Selective dynamics
+        direct = bool(L[i].strip()) and L[i].strip()[0] in "Dd"
+        i += 1
+        n = sum(counts)
+        pos = []
+        for k in range(n):
+            v = [float(x) for x in L[i + k].split()[:3]]
+            if direct:
+                v = [sum(v[j] * cell[j][ax] for j in range(3)) for ax in range(3)]
+            else:
+                v = [x * scale for x in v]            # Cartesian 은 scale 을 좌표에도
+            pos.append(v)
+        return {"cell": cell, "pos": pos}
+    except Exception:
+        return None
 
 
 def mic_dist(a, b, cell):
@@ -336,10 +376,38 @@ def main():
                 rg = registry(jd, meta)
                 rec["registry_after_relax"] = rg
                 want = meta.get("role")
-                if rg and want and rg["nearest"] != want:
-                    rec["gates"].append(f"PAIR_MIGRATED:{want}->{rg['nearest']}")
+                if want:
+                    # ⛔ P0-1 — CONTCAR 가 없으면 등록유지 게이트가 **무음으로 꺼졌다**.
+                    #   검증 못 했으면 못 했다고 게이트를 박는다 (통과가 아니다).
+                    if rg is None:
+                        rec["gates"].append("REGISTRY_UNVERIFIED(CONTCAR 없음/파싱 실패)")
+                    elif rg["nearest"] != want:
+                        rec["gates"].append(f"PAIR_MIGRATED:{want}->{rg['nearest']}")
         rec["ok"] = not rec["gates"]
         jobs[os.path.relpath(jd, root).rstrip("/")] = rec
+
+    # ── POTCAR 변형: **전 잡이 일관되게** 스펙과 다른 경우는 치명 게이트가 아니라
+    #   경고다 (자체검토 P0-2 — 외주처가 기존 Ni_pv 세팅을 재사용하면 58잡 전부가
+    #   MISMATCH 로 제외되던 경로). 같은 원소가 잡마다 다른 변형이면(혼합) 치명 유지.
+    subs, mixed = {}, False
+    for r in jobs.values():
+        oc = r.get("outcar") or {}
+        expect = [spec.get(e, e) for e in r["meta"].get("species_order", [])]
+        got = [x.split()[1] if len(x.split()) > 1 else x for x in oc.get("titels") or []]
+        if expect and got and len(expect) == len(got):
+            for e, g in zip(expect, got):
+                if e != g:
+                    if e in subs and subs[e] != g:
+                        mixed = True
+                    subs[e] = g
+    potcar_warn = None
+    if subs and not mixed:
+        for r in jobs.values():
+            r["gates"] = [g for g in r["gates"] if not g.startswith("POTCAR_MISMATCH")]
+            r["ok"] = not r["gates"]
+        potcar_warn = ("POTCAR 변형이 스펙과 **일관되게** 다르다: "
+                       + ", ".join(f"{e}→{g}" for e, g in sorted(subs.items()))
+                       + " — 내부 비교(ΔE·E_ads)는 유효. 스펙과의 차이를 기록으로 남긴다")
 
     def emin(prefix):
         """자기 초기값 여러 개 중 수렴한 것들의 최저 E0 (+불일치 폭)."""
@@ -353,8 +421,11 @@ def main():
     results = {"delta_eV": delta, "pairs": {}, "fragments": {}, "e_ads": {},
                "warnings": [], "jobs": {j: {"ok": r["ok"], "gates": r["gates"],
                                             "E0": (r["outcar"] or {}).get("E0"),
+                                            "vasp_version": (r["outcar"] or {}).get("vasp_version"),
                                             "registry": r.get("registry_after_relax")}
                              for j, r in jobs.items()}}
+    if potcar_warn:
+        results["warnings"].append(potcar_warn)
     eclean, dclean, _ = emin(os.path.join("refs", "clean_slab"))
     emol = {}
     for f in man.get("fragments", []):
@@ -430,8 +501,7 @@ README = """# VASP 외주 요청 — SDCP/PTFE 자리 선호 + 흡착에너지 (
 
 ## 무엇을 계산하나
 LiNiO₂(104) 슬랩 위 분자 조각의 **자리 선호**(Li_top vs Ni_top)와 **흡착에너지**.
-UMA(MLIP) 스크리닝이 경향까지만 냈고(문서: MARGINAL_TENDENCY / SIGN_CONSISTENT_SMALL),
-DFT+U 가 최종 판정입니다.
+MLIP 스크리닝은 경향까지만 냈고, 이 DFT+U 가 최종 판정입니다.
 
 ## 실행 순서 (권장)
 1. `tier1/` 전부 (ptfe_c10 · ptfe_dimer — 이번 판의 목적)
@@ -439,38 +509,65 @@ DFT+U 가 최종 판정입니다.
 3. `tier2/` (sdcp 2종 — 여유 되면)
 
 각 잡 폴더에 POSCAR/INCAR/KPOINTS 가 있습니다. **POTCAR 만 붙이면 됩니다**
-(라이선스 문제로 미포함 — `POTCAR_SPEC.txt` 의 변형을 정확히 써 주세요.
-분석기가 OUTCAR 의 TITEL 을 대조합니다).
+(라이선스 문제로 미포함 — `POTCAR_SPEC.txt` 의 변형을 정확히. 특히 **Ni 는 Ni_pv** —
+2026-08-08 납품과 같은 변형입니다. 분석기가 OUTCAR TITEL 을 대조합니다).
+VASP 5.4.4 또는 6.x + **PBE PAW 5.4 세트**를 권장합니다.
+
+## 예상 비용 (참고)
+슬랩 잡(~220원자·DFT+U·이완) 1개당 64코어 기준 대략 **수 시간~하루**.
+tier1 20잡 + refs 6잡이 1차 목표입니다. 분자 기준계는 분 단위입니다.
 
 ## ⚠ 지켜야 결과가 성립하는 것
 - **INCAR 를 수정하지 말 것** — Li_top/Ni_top 쌍은 모든 설정이 같아야 ΔE 가 의미 있습니다.
-  (예외: NCORE/KPAR 등 병렬 설정은 자유)
-- `__afm_balanced` / `__afm_net4` 는 같은 구조의 **자기 초기값 2종**입니다. 둘 다 돌려 주세요
-  (대표 쌍에만 있습니다).
-- 발산/미수렴 잡은 그대로 두고 알려 주세요 — 설정을 바꿔 다시 돌리지 말아 주세요.
+  (예외 ①: NCORE/KPAR/NSIM 등 병렬 설정은 자유)
+  (예외 ② — **SCF 가 안 붙을 때만**, 사전 승인된 사다리를 순서대로:
+     1) `ALGO = All`   2) `AMIX = 0.1 · BMIX = 0.0001 · AMIX_MAG = 0.2 · BMIX_MAG = 0.0001`
+   무엇을 썼는지 그 잡 폴더에 `NOTES.txt` 로 남겨 주세요. 이걸로도 안 되면 그 잡은
+   중단하고 알려 주세요 — 다른 설정을 임의로 바꾸지 말아 주세요.)
+- `__afm_balanced` / `__afm_net4` 는 같은 구조의 **자기 초기값 2종**입니다(대표 쌍에만
+  있음). 둘 다 돌려 주세요.
+- 발산/미수렴 잡은 그대로 두고 알려 주세요.
+
+## 반송물 (잡마다)
+- **OUTCAR 와 CONTCAR — 둘 다 필수** (`.gz` 압축 그대로 보내셔도 됩니다. 분석기가 읽습니다).
+  CONTCAR 가 없으면 해당 잡은 "등록 미검증" 으로 판정에서 빠집니다.
+- vasprun.xml 은 선택. **CHGCAR/WAVECAR 는 반송 불필요** — CHGCAR 는 가능하면 그쪽에
+  보관해 주세요 (후속 U-ramp 가 필요해질 때 요청드릴 수 있습니다).
 
 ## 완주 후
 ```
 python3 analyze_results.py .
 ```
 이거 하나면 수렴 게이트 → 자리 유지 검사 → ΔE/E_ads/판정까지 전부 나옵니다
-(표준 라이브러리만 사용). `RESULTS.json` 과 화면 표를 회신해 주시면 됩니다.
-가능하면 각 잡의 `OUTCAR`(또는 최소 `OSZICAR`+`CONTCAR`)를 함께 보내 주세요.
+(표준 라이브러리만 사용). `RESULTS.json` 과 화면 표 + 위 반송물을 보내 주시면 됩니다.
+
+## 무결성 확인 (선택)
+MANIFEST.json 의 `files_sha256_16` 과 대조: `sha256sum <파일> | cut -c1-16`
+
+## 범위 밖 (미리 밝혀 둡니다)
+변형에너지 분해(E_int/E_deform — frozen-geometry 단일점)는 이번 요청 범위 밖입니다.
+필요해지면 별도로 요청드립니다.
 
 ## 프로토콜 (요약)
 PBE+U(Ni d, U=6.2 Dudarev) · D3 zero damping(IVDW=11) · ENCUT 520 · ISMEAR=0/0.05
-· 슬랩: 쌍극자 보정(IDIPOL=3) · 아래 {freeze_pct}% 고정(Selective dynamics)
-· 분자 기준계: Γ-only · U/쌍극자 없음 · 같은 범함수/분산
+· 슬랩: 쌍극자 보정(IDIPOL=3) · 공유 고정 평면 z ≤ {zcut_note} (Selective dynamics,
+아래 {freeze_pct}%) · 분자 기준계: Γ-only · U/쌍극자 없음 · 같은 범함수/분산/LREAL.
 자세한 근거·출처는 MANIFEST.json 에 있습니다.
 """
 
 
 # ─────────────────────────────────────────────────────────────────────────────
 def build_bundle(a) -> Path:
-    out = Path(a.out)
-    if out.exists() and any(out.iterdir()):
-        sys.exit(f"⛔ {out} 이 비어 있지 않다 — 옛 번들과 섞이면 안 된다. 새 경로를 줄 것")
-    out.mkdir(parents=True, exist_ok=True)
+    out_final = Path(a.out)
+    if out_final.exists() and any(out_final.iterdir()):
+        sys.exit(f"⛔ {out_final} 이 비어 있지 않다 — 옛 번들과 섞이면 안 된다. 새 경로를 줄 것")
+    # ★ 스테이징 (자체검토 P2) — MAGMOM 검산 등으로 중간에 죽으면 옛 코드는 반쪽 번들을
+    #   a.out 에 남겼고, 재실행은 '비어 있지 않다' 로 거부돼 수동 rm 을 강제했다.
+    #   임시 디렉터리에 다 만들고 끝에 원자적으로 rename 한다.
+    out = out_final.parent / (out_final.name + ".building")
+    if out.exists():
+        shutil.rmtree(out)
+    out.mkdir(parents=True)
     slab = SS.load_slab()
     nslab = a.nslab
 
@@ -480,7 +577,7 @@ def build_bundle(a) -> Path:
     except Exception:
         commit = "unknown"
     man: Dict[str, Any] = {
-        "created": "2026-08-11", "repo_commit": commit,
+        "created": __import__("datetime").date.today().isoformat(), "repo_commit": commit,
         "gate_version": SS.gate_version(), "freeze_frac_dft": a.freeze,
         "kmesh": a.kmesh, "nslab": nslab, "potcar_spec": {},
         "fragments": [], "pairs": {}, "refs": {},
@@ -492,6 +589,19 @@ def build_bundle(a) -> Path:
     n_jobs = 0
 
     from ase.io import read as ase_read
+    # ── 깨끗한 슬랩을 **먼저** 찾는다 — 전 잡이 공유할 고정 평면(zcut)을 여기서 정한다.
+    #   자세마다 자기 z-범위로 재면 UMA 이완 후 표면이 뜬 자세에서 고정 원자 집합이
+    #   어긋나고, 그 구속 차이가 쌍 ΔE 에 그대로 들어간다 (자체검토 P2 → 설계로 승격).
+    clean = None
+    for cp in sorted(Path(a.runs).glob(f"*/relax_f{a.freeze:.2f}/_clean_slab.vasp")):
+        clean = ase_read(cp); break
+    if clean is None:
+        clean = slab.copy()
+    _z = clean.positions[:, 2]
+    zcut = float(_z.min() + (_z.max() - _z.min()) * a.freeze)
+    man["z_cut_shared_A"] = round(zcut, 3)
+    slab_metas: List[Dict[str, Any]] = []
+
     for tier, frags in TIERS.items():
         if a.frags and not any(f in a.frags for f in frags):
             continue
@@ -517,36 +627,39 @@ def build_bundle(a) -> Path:
                       "uma_dE": p["dE_uma"], "uma_dir_median": p["dir_median_uma"],
                       "n_rolls_folded": p["n_rolls"], "magnetic_probe": p is probe,
                       "li_prefix": f"{tier}/{pid}__Litop", "ni_prefix": f"{tier}/{pid}__Nitop"}
-                for role, rec in (("Li", p["li"]), ("Ni", p["ni"])):
-                    xyz = run / f"{rec['label']}.xyz"
-                    if not xyz.is_file():
-                        print(f"  ⚠ {rec['label']}.xyz 없음 — 쌍 통째로 건너뜀")
-                        break
-                    cx = ase_read(xyz); cx.set_cell(slab.cell.array); cx.set_pbc(True)
+                # ⚠ 두 xyz 를 **먼저** 검사한다 — 옛 코드는 Li 쪽 잡을 이미 써 놓고
+                #   break 해서 고아 잡이 디스크에 남았다(외주처가 헛돈 돌린다).
+                xyzs = {role: (run / f"{rec['label']}.xyz", rec)
+                        for role, rec in (("Li", p["li"]), ("Ni", p["ni"]))}
+                miss = [r for r, (xp, _) in xyzs.items() if not xp.is_file()]
+                if miss:
+                    print(f"  ⚠ {pid}: {'/'.join(miss)} 쪽 xyz 없음 — 쌍 통째로 건너뜀")
+                    continue
+                for role, (xp, rec) in xyzs.items():
+                    cx = ase_read(xp); cx.set_cell(slab.cell.array); cx.set_pbc(True)
                     used_els |= set(cx.get_chemical_symbols())
                     for mg in mags:
-                        _emit_slab_job(out / tier / f"{pid}__{role}top__{mg}",
-                                       cx, nslab, a.freeze, frag,
-                                       f"{pid} {role}-top {mg}", mg, a.kmesh,
-                                       {"kind": "pose", "role": role, "pair_id": pid,
-                                        "fragment": frag, "source_pose": rec["label"],
-                                        "uma_E_pose_eV": rec["E_pose_eV"]})
+                        slab_metas.append(_emit_slab_job(
+                            out / tier / f"{pid}__{role}top__{mg}",
+                            cx, nslab, a.freeze, frag,
+                            f"{pid} {role}-top {mg}", mg, a.kmesh,
+                            {"kind": "pose", "role": role, "pair_id": pid,
+                             "fragment": frag, "source_pose": rec["label"],
+                             "uma_E_pose_eV": rec["E_pose_eV"]}, zcut=zcut))
                         n_jobs += 1
-                else:
-                    man["pairs"][pid] = pm
+                man["pairs"][pid] = pm
 
-    # ── 기준계 ① 깨끗한 슬랩 (같은 구속·양쪽 자기 초기값) ─────────────────────
-    clean = None
-    for frag in man["fragments"]:
-        cp = Path(a.runs) / frag / f"relax_f{a.freeze:.2f}" / "_clean_slab.vasp"
-        if cp.is_file():
-            clean = ase_read(cp); break
-    if clean is None:
-        clean = slab.copy()
+    if not man["pairs"]:
+        shutil.rmtree(out)
+        sys.exit("⛔ 자격 쌍이 0개다 — 번들을 만들지 않는다 "
+                 "(--runs/--freeze 경로와 relax 산출물을 확인할 것)")
+
+    # ── 기준계 ① 깨끗한 슬랩 (공유 zcut·양쪽 자기 초기값) ─────────────────────
     for mg in ("afm_balanced", "afm_net4"):
-        _emit_slab_job(out / "refs" / f"clean_slab__{mg}", clean, len(clean), a.freeze,
-                       man["fragments"][0] if man["fragments"] else "ptfe_c10",
-                       f"clean slab {mg}", mg, a.kmesh, {"kind": "clean_ref"})
+        slab_metas.append(_emit_slab_job(
+            out / "refs" / f"clean_slab__{mg}", clean, len(clean), a.freeze,
+            man["fragments"][0], f"clean slab {mg}", mg, a.kmesh,
+            {"kind": "clean_ref"}, zcut=zcut))
         n_jobs += 1
     man["refs"]["clean_slab"] = "refs/clean_slab__{afm_balanced,afm_net4}"
 
@@ -561,9 +674,18 @@ def build_bundle(a) -> Path:
         man["refs"][f"mol__{frag}"] = f"refs/mol__{frag}"
         n_jobs += 1
 
+    # ── 고정 원자 수 감사 — 공유 zcut 불변식이 깨졌으면 여기서 죽는 게 싸다
+    nfs = sorted({m["n_fixed"] for m in slab_metas})
+    if len(nfs) != 1:
+        shutil.rmtree(out)
+        sys.exit(f"⛔ 슬랩 잡들의 고정 원자 수가 갈린다 {nfs} — 쌍 ΔE 가 구속 차이로 "
+                 f"오염된다. 자세 z-범위를 확인할 것")
+    man["n_fixed_all_slab_jobs"] = nfs[0]
+
     man["potcar_spec"] = {e: POTCAR_SPEC.get(e, e) for e in sorted(used_els)}
     (out / "analyze_results.py").write_text(ANALYZER)
-    (out / "README_REQUEST.md").write_text(README.format(freeze_pct=int(a.freeze * 100)))
+    (out / "README_REQUEST.md").write_text(README.format(
+        freeze_pct=int(a.freeze * 100), zcut_note=f"{zcut:.3f} Å"))
     (out / "POTCAR_SPEC.txt").write_text(
         "# 원소 → POTCAR 변형 (PBE 5.4 권장). 이 순서가 아니라 각 잡 POSCAR 의 종 순서대로.\n"
         + "\n".join(f"{e:3s} {v}" for e, v in man["potcar_spec"].items()) + "\n")
@@ -577,15 +699,18 @@ def build_bundle(a) -> Path:
     man["files_sha256_16"] = files
     (out / "MANIFEST.json").write_text(json.dumps(man, indent=1, ensure_ascii=False))
 
-    zp = out.with_suffix(".zip")
+    if out_final.exists():
+        out_final.rmdir()                       # 위에서 '비어 있음' 을 확인했다
+    out.rename(out_final)
+    zp = out_final.with_suffix(".zip")
     with zipfile.ZipFile(zp, "w", zipfile.ZIP_DEFLATED) as z:
-        for p in sorted(out.rglob("*")):
-            if p.is_file():
-                z.write(p, p.relative_to(out.parent))
-    print(f"\n→ {out}  · 잡 {n_jobs}개 · 쌍 {len(man['pairs'])}개 · 조각 {man['fragments']}")
+        for q in sorted(out_final.rglob("*")):
+            if q.is_file():
+                z.write(q, q.relative_to(out_final.parent))
+    print(f"\n→ {out_final}  · 잡 {n_jobs}개 · 쌍 {len(man['pairs'])}개 · 조각 {man['fragments']}")
     print(f"→ {zp}  ({zp.stat().st_size / 1e6:.1f} MB)")
-    print("  ⚠ POTCAR 미포함(라이선스) — POTCAR_SPEC.txt 의 변형을 정확히 쓸 것")
-    return out
+    print("  ⚠ POTCAR 미포함(라이선스) — POTCAR_SPEC.txt 의 변형(Ni_pv 포함)을 정확히 쓸 것")
+    return out_final
 
 
 # ─────────────────────────────────────────────────────────────────────────────
