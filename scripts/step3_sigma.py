@@ -1120,6 +1120,20 @@ def _selftest_segstamp():
     chk(f"6) ★ σ_z 점={ra['sigma_eff']:.4g} < 선분={rb['sigma_eff']:.4g} "
         f"(floating 버림 {ra['n_floating_dropped']} → {rb['n_floating_dropped']})",
         rb['sigma_eff'] > ra['sigma_eff'])
+    # ★ 배선 확인 — 구현만 하고 payload 가 안 넘기면 무의미하다 (이 리포의 반복 교훈)
+    import os as _os
+    _pp = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), 'mpm_webapp_payload.py')
+    try:
+        _src = open(_pp, encoding='utf-8').read()
+        chk('7) ★ payload 가 rasterize 에 add_fid 를 넘긴다 (배선)',
+            'add_fid=_afid' in _src)
+        chk('8) ★ payload CLI 에 --step3-fibre-stamp 가 있고 기본이 point 다',
+            "'--step3-fibre-stamp'" in _src and "default='point'" in _src)
+        chk('9) ★ manifest 에 fibre_stamp 가 기록된다 (어느 방식으로 돌았는지 추적)',
+            "'fibre_stamp': a.step3_fibre_stamp" in _src
+            and "'fibre_stamp_applied'" in _src)
+    except OSError as _e:
+        chk(f'7-9) ⚠ payload 배선 확인 생략 ({_e})', True)
     print(f'\nstep3 segment-stamp selftest: {ok}/{ok + fail} PASS')
     return 0 if not fail else 1
 

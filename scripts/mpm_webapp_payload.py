@@ -415,6 +415,12 @@ def main():
                     'points into individual fibre polylines (additive_fibres) so the viewer can draw each fibre '
                     'as a line/rod instead of a point cloud.')
     ap.add_argument('--fibre-max', type=int, default=4000, help='max fibres carried as polylines (subsample)')
+    ap.add_argument('--step3-fibre-stamp', choices=('point', 'segment'), default='point',
+                    help='★SR-01: STEP3 에서 섬유 첨가제를 굽는 방식.  point(기본) = 현행 1-복셀 점 '
+                         '스탬프 — 실침대에서 섬유의 68.5-86.4%% 가 2.6-3.4 조각으로 **끊긴다** '
+                         '(6-face 솔버에서 전기적으로 분리).  segment = 같은 fid 점열을 경로로 보고 '
+                         '선분 순회 → 연결 구성상 보장 (--fibre npy 필요).  ⚠ 기본을 바꾸지 않은 것은 '
+                         'Δσ_e 크기를 아직 안 쟀기 때문 (docs/data/sr01_realbed_ab.csv)')
     ap.add_argument('--fibre-dia', default='', help='per-point relative fibre diameter npy (mpm3d '
                     '--save-fibre-dia): attach per-fibre median Ø to additive_fibres so the viewer renders '
                     'thickness (PTFE draw d∝√(V/L) — thin-long vs thick-short).')
@@ -784,6 +790,21 @@ def main():
         _s3st[comp] = rec
         return rec
 
+    # ★ SR-01: 섬유 id 를 STEP3 **전에** 읽는다 (뷰어용 로드는 훨씬 뒤라 그때는 늦다).
+    #   킷 run_mpm.sh 가 이미 --save-fibre 로 저장하므로 배선만 하면 된다.
+    _fid_all = None
+    _afid = None          # STEP3 가 안 돌아도 manifest 가 참조하므로 바깥에서 초기화
+    if getattr(a, 'fibre', '') and phase is not None:
+        try:
+            _fid_all = np.load(a.fibre)
+            if len(_fid_all) != len(se):
+                print(f'  ⚠ --fibre 길이 {len(_fid_all):,} ≠ SE 점 {len(se):,} → 선분 스탬프 비활성',
+                      flush=True)
+                _fid_all = None
+        except Exception as _e:                                # noqa: BLE001
+            print(f'  ⚠ --fibre 로드 실패 ({type(_e).__name__}) → 선분 스탬프 비활성', flush=True)
+            _fid_all = None
+
     step3 = None; je_am = None; jb_am = None; elec_field = None; ion_field = None; jrxn_am = None
     thermal_field = None                                     # STEP3 열류 |k∇T| 점군 (전자/이온 필드처럼)
     joule_field = None                                       # #29 STEP3 Joule 발열밀도 q∝|J|²/σ hot-spot 점군
@@ -801,11 +822,25 @@ def main():
                   else np.zeros(len(se), bool))            # conductive additives (PTFE 4 = insulator, default)
             _apts = (se[_m] - _off) * UM if _m.any() else None
             _aph = phase[_m] if _m.any() else None
+            # ── ★ SR-01: 섬유 첨가제를 **선분**으로 굽는 opt-in (기본 = 현행 점 스탬프) ──────
+            #   점-스탬프는 6-face 연결을 깬다 (실침대 실측: 섬유의 68.5–86.4 % 가 2.6–3.4 조각).
+            #   `--fibre` npy(킷이 --save-fibre 로 이미 저장) 를 주고 `--step3-fibre-stamp segment`
+            #   이면 같은 fid 의 점열을 경로로 보고 선분 순회로 굽는다 → 연결이 구성상 보장.
+            #   ⚠ **기본은 point** — Δσ_e 크기를 실측하기 전에 default 를 바꾸지 않는다.
+            _afid = None
+            if a.step3_fibre_stamp == 'segment':
+                if _fid_all is None:
+                    print('  ⚠ STEP3 --step3-fibre-stamp segment 인데 --fibre npy 가 없다 → '
+                          '점-스탬프로 진행 (킷의 --save-fibre 산출물을 --fibre 로 주세요)', flush=True)
+                elif _m.any():
+                    _afid = _fid_all[_m]
+                    print(f'  STEP3: 섬유 **선분 스탬프** ON — 도체점 {int(_m.sum()):,} · '
+                          f'섬유 {int(np.unique(_afid[_afid >= 0]).size):,}개', flush=True)
             _hi = ((SW[1] - SW[0]) * UM, (SW[1] - SW[0]) * UM, max((top - FLOOR) * UM, a.step3_vox))
             print('  STEP3: voxelizing conductive+SE grid (풀해상도 — 이후 전자/이온 CG 솔브, 침묵 수 분 정상)…', flush=True)
             _septs = (se[phase == 1] - _off) * UM if phase is not None else (se - _off) * UM
             sid3, pid3 = _s3.rasterize(_am_c, _am_r, t, _apts, _aph, (0.0, 0.0, 0.0), _hi, a.step3_vox,
-                                       se_pts=_septs)      # SE stamped (sid 6) → ionic solve on the same grid
+                                       se_pts=_septs, add_fid=_afid)   # SE stamped (sid 6) → ionic solve
             _sig3 = np.array([0.0, a.sigma_am_s, a.sigma_am_p, a.sigma_vgcf, a.sigma_superp, a.sigma_sdcp,
                               0.0, a.sigma_ptfe, a.sigma_swcnt])   # ELECTRONIC table: SE = e-insulator;
             #   idx7 = PTFE sensitivity hook (default 0 → sid7 미존재); idx8 = SWCNT sheath (A14, 도체)
@@ -1492,6 +1527,8 @@ def main():
             #   CPU 로 떨어져도 결과는 정상 수치라 로그 없이는 구분 불가였다.
             # ★ RC7-05: 이 전역 필드는 **마지막 solve** 만 담는다 → component 별
             #   `components[c]['backend']` 가 정본이고 여기는 하위호환 요약이다.
+            'fibre_stamp': a.step3_fibre_stamp,          # ★SR-01: point(현행) | segment
+            'fibre_stamp_applied': bool(_afid is not None),
             'backend_last_solve': dict(getattr(_s3, 'LAST_BACKEND', {}) or {}),
             'backend': dict(getattr(_s3, 'LAST_BACKEND', {}) or {}),   # 하위호환 별칭
         }
