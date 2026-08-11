@@ -775,3 +775,53 @@ grid v4 재생성(GO 이후)이 전제다.
 `python -m pytest tests -q` → **299 passed** · `./scripts/smoke_e2e.sh` → 전 구간 통과 ·
 `source_digest()` = `5e504288a5ebf66b` (LF canonical) ·
 `git ls-files --eol` RUN_SCOPE 전 파일 `w/lf`.
+
+---
+
+## 18. 14차 3차 리뷰 회답 (2026-08-12, 대상 `010aa0b4` → 수정 `9e6ceb1`)
+
+3차 리뷰 판정: pre-grid 차단점 2건(sweep 재현 명령) + 서술 2건. 전건 수정했다.
+
+| # | 발견 | 심각도 | 대응 |
+|---|---|---|---|
+| 1 | sweep 재현 명령의 출력이 `<main-fit>` 자체 — `run_weight_sweep` 은 명시된 `--out` 을 그대로 쓰고 생략 시에만 `<in>/wsweep` 을 기본값으로 한다 | 실행 실패 | `--out {in_dir}/wsweep` 으로 수정. 정본 위치는 smoke(`$GFIT/wsweep`)와 동일 |
+| 2 | 존재하지 않는 `--stride` 출력 (wrapper 는 `--w-stride`) | 실행 실패 | 옵션명 수정. **fixture 가 오류를 가리고 있었다** — `_wsweep_run` 의 `weight_sweep.yaml` 에 실제 producer 가 쓰는 `stride` 키가 없어 그 줄 자체가 생성되지 않았다. fixture 를 실물에 맞춰 채웠다 |
+| — | 회귀 | — | 재현 블록의 **모든 `./run.sh` 줄을 실제 wrapper 로 실행**해 `알 수 없는 인자` 가 없음을 확인하고(`--help` 로 파싱 직후 종료), sweep 줄의 정본 경로·옵션명을 고정 |
+| 3 | 제외 규칙이 digest·dirty 간 비대칭 (`_SKIP` 은 `.pyc` 를 이름 중간에도 제외) | 서술만 바뀜 | `is_scope_excluded()` 신설 — 캐시 디렉터리는 **경로 성분**, 바이트코드는 **suffix** 로만 판정하고 양쪽이 공유 |
+| 4 | half-cell 재현 명령이 nondefault protocol 을 복원하지 않음 | 서술만 바뀜 | `_fit_flags()` 로 fit 플래그 생성을 단일화하고 half-cell 기준 fit 에도 적용 (objective_order·n_restarts·clean·adaptive·warm_start) |
+
+검증 (`9e6ceb1f220bfafc57481d867123cfb062ffd6c4`, clean):
+`python -m pytest tests -q` → **302 passed** · `./scripts/smoke_e2e.sh` → 통과 ·
+`source_digest()` = `3de0596446abf364` · RUN_SCOPE `w/lf` 아닌 파일 0건.
+
+### 이번에 새로 **측정된** 운영 리스크 — strict smoke 의 간헐적 SIGABRT
+
+smoke 를 반복 실행하다 발견했다. 실패 시 시그니처가 항상 같다:
+
+```
+   ✅ 격리 복원 검증[results/_smoke/halfcell_fit]: 통과
+   ✅ 격리 복원 검증[results/_smoke/grid_fit]: 통과
+   ✅ 격리 복원 검증[results/_smoke/grid_fit/wsweep]: 통과
+terminate called without an active exception
+./scripts/smoke_e2e.sh: line 430: <pid> Aborted   "$PY" - "$ISO" "$HFIT" "$GFIT" <<'PYEOF'
+```
+
+**검사 3건이 모두 `통과` 를 출력한 뒤** 인터프리터 종료 시점에 죽는다 — 검증
+실패가 아니라 PyBaMM/CasADi 를 import 한 프로세스의 native teardown 크래시다.
+
+변경 전후 분리 측정 (각각 **새 worktree**, 캐시 상태 통제):
+
+| 커밋 | smoke 실패 | 시그니처 |
+|---|---|---|
+| `010aa0b` (3차 리뷰 대상, 변경 전) | **1 / 7** | 동일 — 같은 line 430, 검사 통과 후 abort |
+| `9e6ceb1` (HEAD) | 1 / 3 | 동일 |
+
+즉 **이번 diff 가 만든 회귀가 아니다** (동일 라인·동일 시그니처가 변경 전
+커밋에서도 재현). `validate_provenance` 단독 반복은 30/30 정상이라 검증 로직
+자체는 무관하다.
+
+미해결로 남긴다 — 판단이 필요하다. 후보 대응은 (a) 해당 validator heredoc 이
+종료 코드 확정 후 `os._exit()` 로 teardown 을 건너뛰기, (b) 근본 원인(스레드
+teardown) 규명. (a) 는 결정적이지만 **10시간 실행을 게이트하는 스크립트에서
+크래시를 가리는** 변경이라 리뷰 판단 없이 넣지 않았다. 게이트 증거로는 clean
+통과 실행을 쓰되, 이 flake 는 공개해 둔다.
