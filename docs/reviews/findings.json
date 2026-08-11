@@ -1,0 +1,132 @@
+{
+ "note": "리뷰 finding 단일 원장.  산문으로 상태를 적으면 다시 새어나간다 — scripts/check_review_findings.py 가 자기일관성을 강제하고 열린 항목을 뽑는다. ⚠ status=verified 는 **구현자와 다른 검증자**가 있어야 한다.",
+ "findings": [
+  {
+   "id": "RC6-01",
+   "severity": "P1",
+   "title": "11-key schema 가 NaN·잘못된 타입을 통과 + valid_null 계약 충돌",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
+   "claimed_fixed_sha": "7a3c44e3",
+   "evidence_tests": [
+    "webapp/test_pipeline_provenance.py::43-51"
+   ]
+  },
+  {
+   "id": "RC6-02",
+   "severity": "P1",
+   "title": "thermal 판정 전에 새 세대를 active success 로 게시 (stash 이미 폐기)",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
+   "claimed_fixed_sha": "0726edcb",
+   "evidence_tests": [
+    "webapp/test_pipeline_provenance.py::RC6-02",
+    "webapp/test_pipeline_provenance.py::RC6-02c"
+   ]
+  },
+  {
+   "id": "RC6-03",
+   "severity": "P1",
+   "title": "Physics mode 상태 미검사 — Physics 실패가 H 성공에 가림",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
+   "claimed_fixed_sha": "0726edcb",
+   "evidence_tests": [
+    "webapp/test_pipeline_provenance.py::RC6-03"
+   ]
+  },
+  {
+   "id": "RC6-04",
+   "severity": "P1",
+   "title": "Stage E 가 성공 경로에서 network 소유 raw thermal 을 덮어씀 (이중 소유)",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
+   "claimed_fixed_sha": "496bd99d",
+   "evidence_tests": [
+    "webapp/test_pipeline_provenance.py::52-54"
+   ]
+  },
+  {
+   "id": "RC6-04b",
+   "severity": "P1",
+   "title": "live pre-purge window — parent crash 시 purge 상태가 영구 active",
+   "status": "open",
+   "owner": "claude",
+   "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md"
+  },
+  {
+   "id": "RC6-05",
+   "severity": "P1",
+   "title": "fresh 가 부분 쓰기를 통과 + main/archive 배선 없음",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
+   "claimed_fixed_sha": "496bd99d",
+   "evidence_tests": [
+    "webapp/test_pipeline_provenance.py::RC6-05a",
+    "webapp/test_pipeline_provenance.py::RC6-05b"
+   ]
+  },
+  {
+   "id": "RC6-06",
+   "severity": "P1",
+   "title": "STEP3 electronic/ionic/pore/PNM/전체 실패가 무상태",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
+   "claimed_fixed_sha": "a31afe31",
+   "evidence_tests": [
+    "webapp/test_pipeline_provenance.py::55-58"
+   ]
+  },
+  {
+   "id": "RC6-07",
+   "severity": "P1",
+   "title": "Windows CP949 에서 실제 solver 가 첫 non-ASCII 로그에 종료",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
+   "claimed_fixed_sha": "0726edcb",
+   "evidence_tests": [
+    "webapp/test_pipeline_provenance.py::RC6-07a-e"
+   ]
+  },
+  {
+   "id": "RC6-08",
+   "severity": "P2",
+   "title": "--step3-gpu 가 CPU 로 fallback 돼도 실제 backend 미기록",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
+   "claimed_fixed_sha": "a31afe31",
+   "evidence_tests": [
+    "webapp/test_pipeline_provenance.py::59-60"
+   ]
+  },
+  {
+   "id": "RC6-Q7",
+   "severity": "P2",
+   "title": "projection clear 의 코퍼스 영향 미측정 (preflight scanner 없음)",
+   "status": "open",
+   "owner": "claude",
+   "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md"
+  },
+  {
+   "id": "RC6-Q8",
+   "severity": "P2",
+   "title": "리뷰 finding 이 큐에서 사라지는 프로세스 결함 (5회차 4일 누락)",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
+   "claimed_fixed_sha": "PENDING",
+   "evidence_tests": [
+    "scripts/check_review_findings.py --selftest"
+   ],
+   "decision_note": "원장·검사기는 만들었지만 \"정말 새어나가지 않는가\" 는 다음 라운드에서 이 원장이 실제로 참조될 때 증명된다."
+  }
+ ]
+}
