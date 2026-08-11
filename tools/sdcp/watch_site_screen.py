@@ -151,4 +151,8 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    except KeyboardInterrupt:          # Ctrl+C 는 정상 종료다 — traceback 을 뱉지 않는다
+        print("\n(감시 종료)")
+        sys.exit(0)
