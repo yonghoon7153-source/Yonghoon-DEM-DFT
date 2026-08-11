@@ -3,118 +3,269 @@
 
 {% block content %}
 <style>
-  /* 앱 다크 테마(style.css 의 --bg/--card/--accent …)를 그대로 쓴다.
-     ★ 전에 흰 카드를 하드코딩해 앱의 밝은 글자색이 상속돼 회색-on-흰색이 됐다. */
-  .sem-head { display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:4px; }
-  .sem-head h1 { margin:0; }
-  .sem-sub { color:var(--dim); font-size:.9rem; }
+  /* 앱 다크 테마(style.css --bg/--card/--accent …) 를 그대로 쓴다.
+     ★ 흰 카드를 하드코딩하면 앱의 밝은 글자색이 상속돼 회색-on-흰색이 된다 (전에 겪음). */
+  .sm-head { display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:2px; }
+  .sm-head h1 { margin:0; }
+  .sm-sub { color:var(--dim); font-size:.88rem; }
 
-  .sem-tabs { display:flex; gap:8px; margin:14px 0 10px; flex-wrap:wrap; align-items:center; }
-  .sem-tabs button { padding:7px 14px; border:1px solid var(--border); background:var(--card);
-                     color:var(--dim); cursor:pointer; border-radius:7px; font-size:.9rem;
-                     font-family:var(--font); transition:all .12s; }
-  .sem-tabs button:hover { color:var(--text); border-color:var(--accent); }
-  .sem-tabs button.on { background:var(--accent); color:#0f1117; border-color:var(--accent);
-                        font-weight:600; }
+  .sm-modes { display:flex; gap:8px; margin:14px 0 12px; flex-wrap:wrap; align-items:center; }
+  .sm-modes button { padding:7px 14px; border:1px solid var(--border); background:var(--card);
+        color:var(--dim); cursor:pointer; border-radius:7px; font-size:.9rem;
+        font-family:var(--font); transition:all .12s; }
+  .sm-modes button:hover { color:var(--text); border-color:var(--accent); }
+  .sm-modes button.on { background:var(--accent); color:#0f1117; border-color:var(--accent);
+        font-weight:600; }
 
-  .sem-bar { display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:10px; }
-  .sem-bar input[type=search] { flex:1 1 280px; padding:8px 12px; border:1px solid var(--border);
+  /* ── 슬라이드 콘솔 레이아웃: 왼쪽 목차 · 오른쪽 본문 ── */
+  .sm-wrap { display:grid; grid-template-columns:250px 1fr; gap:16px; align-items:start; }
+  @media (max-width:1100px) { .sm-wrap { grid-template-columns:1fr; } }
+
+  .sm-nav { background:var(--bg2); border:1px solid var(--border); border-radius:10px;
+        padding:8px; max-height:78vh; overflow:auto; position:sticky; top:12px; }
+  .sm-nav .it { display:block; width:100%; text-align:left; padding:7px 9px; border:0;
+        background:none; color:var(--dim); cursor:pointer; border-radius:6px;
+        font-family:var(--font); font-size:.83rem; line-height:1.35; border-left:2px solid transparent; }
+  .sm-nav .it:hover { background:rgba(255,255,255,.04); color:var(--text); }
+  .sm-nav .it.on { background:rgba(108,140,255,.14); color:var(--text); border-left-color:var(--accent); }
+  .sm-nav .it b { display:block; color:var(--accent-hover); font-size:.72rem; letter-spacing:.04em;
+        text-transform:uppercase; font-weight:600; margin-bottom:1px; }
+  .sm-nav .it .num { color:var(--dim); font-family:var(--mono); font-size:.7rem; margin-right:5px; }
+
+  .sm-main { min-width:0; }
+  .sm-card { background:var(--card); border:1px solid var(--border); border-radius:10px;
+        padding:20px 24px; margin-bottom:14px; }
+  .sm-kicker { color:var(--accent-hover); font-size:.76rem; font-weight:700; letter-spacing:.08em;
+        text-transform:uppercase; }
+  .sm-title { font-size:1.28rem; font-weight:650; margin:6px 0 4px; line-height:1.35; color:#fff; }
+  .sm-eyebrow { color:var(--dim); font-size:.8rem; font-family:var(--mono); margin-bottom:10px; }
+  .sm-lead p { margin:8px 0; line-height:1.72; font-size:.93rem; }
+
+  .sm-sec { font-size:.74rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase;
+        color:var(--dim); margin:18px 0 7px; }
+
+  table.sm-t { border-collapse:collapse; width:100%; font-size:.845rem; margin:4px 0 10px; }
+  table.sm-t th { background:rgba(108,140,255,.14); color:var(--accent-hover); font-weight:600; }
+  table.sm-t th, table.sm-t td { border:1px solid var(--border); padding:6px 9px; text-align:left;
+        vertical-align:top; }
+  table.sm-t tbody tr:nth-child(even) { background:rgba(255,255,255,.022); }
+  .sm-tw { overflow-x:auto; }
+
+  .sm-fig { background:var(--bg2); border:1px dashed var(--border); border-radius:8px;
+        padding:10px 14px; color:var(--dim); font-size:.83rem; margin:6px 0; }
+
+  /* 대본 — 발표 중 읽는 곳이라 가장 읽기 좋게 */
+  .sm-notes { background:var(--bg2); border:1px solid var(--border); border-radius:8px;
+        padding:14px 18px; line-height:1.85; font-size:.93rem; white-space:pre-wrap; }
+  .sm-notes.big { font-size:1.06rem; line-height:2.0; }
+
+  .sm-src a, .sm-src span { display:inline-block; background:var(--bg2); border:1px solid var(--border);
+        border-radius:6px; padding:3px 9px; margin:3px 6px 3px 0; font-family:var(--mono);
+        font-size:.76rem; color:var(--accent); }
+  .sm-src a:hover { border-color:var(--accent); color:var(--accent-hover); }
+  .sm-src span { color:var(--dim); }
+
+  /* 차트 — 외부 라이브러리 없이 막대만 (오프라인 안전) */
+  .sm-bar { display:grid; grid-template-columns:auto 1fr auto; gap:6px 10px; align-items:center;
+        font-size:.82rem; margin:4px 0 10px; }
+  .sm-bar .k { font-family:var(--mono); color:var(--dim); text-align:right; }
+  .sm-bar .v { font-family:var(--mono); color:var(--text); }
+  .sm-bar .b { height:10px; background:var(--accent); border-radius:3px; min-width:2px; }
+
+  .sm-flag { border-radius:8px; padding:11px 15px; margin:10px 0; font-size:.88rem; line-height:1.65; }
+  .sm-flag.warn { background:rgba(251,191,36,.10); border:1px solid var(--yellow); color:var(--yellow); }
+  .sm-flag.ok   { background:rgba(52,211,153,.09);  border:1px solid var(--green);  color:var(--green); }
+  .sm-flag b { color:inherit; }
+
+  .sm-bar2 { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:10px; }
+  .sm-bar2 input[type=search] { flex:1 1 260px; padding:8px 12px; border:1px solid var(--border);
         border-radius:7px; font-size:.9rem; background:var(--bg2); color:var(--text);
         font-family:var(--font); }
-  .sem-bar input[type=search]:focus { outline:none; border-color:var(--accent); }
-  .sem-meta { color:var(--dim); font-size:.82rem; font-family:var(--mono); }
+  .sm-bar2 input[type=search]:focus { outline:none; border-color:var(--accent); }
+  .sm-meta { color:var(--dim); font-size:.8rem; font-family:var(--mono); }
+  .sm-mini { padding:5px 11px; border:1px solid var(--border); background:var(--card);
+        color:var(--dim); cursor:pointer; border-radius:6px; font-size:.8rem; font-family:var(--font); }
+  .sm-mini:hover { color:var(--text); border-color:var(--accent); }
+  .sm-mini.on { background:var(--accent); color:#0f1117; border-color:var(--accent); font-weight:600; }
 
-  .sem-toc { background:var(--bg2); border:1px solid var(--border); border-radius:8px;
-             padding:10px 14px; margin-bottom:12px; font-size:.85rem;
-             max-height:130px; overflow:auto; }
-  .sem-toc a { color:var(--accent); text-decoration:none; margin-right:16px; white-space:nowrap;
-               line-height:1.9; }
-  .sem-toc a:hover { color:var(--accent-hover); text-decoration:underline; }
+  .sm-err { background:rgba(248,113,113,.10); border:1px solid var(--red); color:var(--red);
+        border-radius:8px; padding:14px 18px; }
+  .sm-hit { background:rgba(251,191,36,.32); color:#fde68a; border-radius:3px; padding:0 2px; }
 
-  .sem-doc { background:var(--card); border:1px solid var(--border); border-radius:10px;
-             padding:22px 28px; max-height:70vh; overflow:auto;
-             line-height:1.72; font-size:.92rem; color:var(--text); }
-  .sem-doc h1 { font-size:1.32rem; color:var(--accent); margin:0 0 16px; padding-bottom:8px;
-                border-bottom:1px solid var(--border); }
-  .sem-doc h2 { font-size:1.1rem;  color:var(--accent); margin:26px 0 9px; }
-  .sem-doc h3 { font-size:.99rem;  color:var(--accent-hover); margin:18px 0 7px; }
-  .sem-doc h4 { font-size:.94rem;  color:var(--text); margin:14px 0 6px; }
-  .sem-doc p  { margin:8px 0; }
-  .sem-doc strong { color:#fff; }
-  .sem-doc em { color:var(--dim); }
+  /* 문서 모드(기존 md 뷰어) — 그대로 유지 */
+  .sm-doc { background:var(--card); border:1px solid var(--border); border-radius:10px;
+        padding:22px 28px; max-height:72vh; overflow:auto; line-height:1.72; font-size:.92rem; }
+  .sm-doc h1 { font-size:1.3rem; color:var(--accent); margin:0 0 14px; padding-bottom:8px;
+        border-bottom:1px solid var(--border); }
+  .sm-doc h2 { font-size:1.08rem; color:var(--accent); margin:24px 0 8px; }
+  .sm-doc h3 { font-size:.98rem; color:var(--accent-hover); margin:16px 0 6px; }
+  .sm-doc h4 { font-size:.93rem; color:var(--text); margin:13px 0 5px; }
+  .sm-doc p { margin:8px 0; } .sm-doc strong { color:#fff; } .sm-doc em { color:var(--dim); }
+  .sm-doc table { border-collapse:collapse; margin:12px 0; font-size:.85rem; width:100%; }
+  .sm-doc th { background:rgba(108,140,255,.14); color:var(--accent-hover); font-weight:600; }
+  .sm-doc th, .sm-doc td { border:1px solid var(--border); padding:6px 9px; text-align:left;
+        vertical-align:top; }
+  .sm-doc tbody tr:nth-child(even) { background:rgba(255,255,255,.022); }
+  .sm-doc code { background:var(--bg2); color:var(--accent-hover); padding:1px 6px; border-radius:4px;
+        font-family:var(--mono); font-size:.85em; }
+  .sm-doc pre { background:var(--bg); border:1px solid var(--border); border-radius:7px;
+        padding:12px 14px; overflow:auto; font-family:var(--mono); font-size:.82rem; line-height:1.6; }
+  .sm-doc pre code { background:none; color:inherit; padding:0; }
+  .sm-doc blockquote { border-left:3px solid var(--accent); background:rgba(108,140,255,.07);
+        margin:12px 0; padding:9px 15px; border-radius:0 6px 6px 0; }
+  .sm-doc ul { margin:8px 0; padding-left:22px; } .sm-doc li { margin:4px 0; }
+  .sm-doc hr { border:0; border-top:1px solid var(--border); margin:20px 0; }
+  .sm-doc .warn { color:var(--yellow); font-weight:600; }
+  .sm-toc { background:var(--bg2); border:1px solid var(--border); border-radius:8px;
+        padding:10px 14px; margin-bottom:12px; font-size:.85rem; max-height:120px; overflow:auto; }
+  .sm-toc a { color:var(--accent); margin-right:16px; white-space:nowrap; line-height:1.9; }
 
-  .sem-doc table { border-collapse:collapse; margin:12px 0; font-size:.85rem; width:100%; }
-  .sem-doc th { background:rgba(108,140,255,.14); color:var(--accent-hover); font-weight:600; }
-  .sem-doc th, .sem-doc td { border:1px solid var(--border); padding:6px 9px; text-align:left;
-                             vertical-align:top; }
-  .sem-doc tbody tr:nth-child(even) { background:rgba(255,255,255,.022); }
-
-  .sem-doc code { background:var(--bg2); color:var(--accent-hover); padding:1px 6px;
-                  border-radius:4px; font-family:var(--mono); font-size:.85em; }
-  .sem-doc pre { background:var(--bg); border:1px solid var(--border); border-radius:7px;
-                 padding:12px 14px; overflow:auto; font-family:var(--mono); font-size:.82rem;
-                 color:var(--text); line-height:1.6; }
-  .sem-doc pre code { background:none; color:inherit; padding:0; }
-
-  .sem-doc blockquote { border-left:3px solid var(--accent); background:rgba(108,140,255,.07);
-                        margin:12px 0; padding:9px 15px; color:var(--text); border-radius:0 6px 6px 0; }
-  .sem-doc ul { margin:8px 0; padding-left:22px; }
-  .sem-doc li { margin:4px 0; }
-  .sem-doc hr { border:0; border-top:1px solid var(--border); margin:22px 0; }
-  .sem-doc mark { background:rgba(251,191,36,.32); color:#fde68a; border-radius:3px;
-                  padding:0 2px; }
-  .sem-doc .warn { color:var(--yellow); font-weight:600; }
-
-  .sem-err { background:rgba(248,113,113,.10); border:1px solid var(--red); color:var(--red);
-             border-radius:8px; padding:14px 18px; }
-
-  /* 스크롤바도 테마에 맞춘다 (밝은 기본 스크롤바가 다크에서 튄다) */
-  .sem-doc::-webkit-scrollbar, .sem-toc::-webkit-scrollbar { width:9px; height:9px; }
-  .sem-doc::-webkit-scrollbar-track, .sem-toc::-webkit-scrollbar-track { background:var(--bg2); }
-  .sem-doc::-webkit-scrollbar-thumb, .sem-toc::-webkit-scrollbar-thumb {
-      background:var(--border); border-radius:5px; }
-  .sem-doc::-webkit-scrollbar-thumb:hover { background:var(--dim); }
+  .sm-doc::-webkit-scrollbar, .sm-nav::-webkit-scrollbar { width:9px; height:9px; }
+  .sm-doc::-webkit-scrollbar-track, .sm-nav::-webkit-scrollbar-track { background:var(--bg2); }
+  .sm-doc::-webkit-scrollbar-thumb, .sm-nav::-webkit-scrollbar-thumb {
+        background:var(--border); border-radius:5px; }
 </style>
 
-<div class="sem-head">
+<div class="sm-head">
   <h1>&#x1F5E3;&#xFE0F; 연구 세미나</h1>
-  <span class="sem-sub">대본 · 용어집 · 덱 — 파일이 정본이고 이 화면은 뷰어다 (고치면 새로고침으로 반영)</span>
+  <span class="sm-sub">덱·대본·출처를 한 화면에서 — 파일이 정본이고 이 화면은 뷰어다</span>
 </div>
 
-<div class="sem-tabs" id="semTabs">
-  <button data-k="script"   class="on">&#x1F4C4; 슬라이드 대본 + Defense Q&amp;A</button>
-  <button data-k="glossary">&#x1F4D6; 용어 · 기호 규약</button>
-  <button data-k="guide">&#x1F9ED; 파이프라인 가이드</button>
-  <button id="semDeck" style="margin-left:auto">&#x1F4E5; 덱 (.pptx) 내려받기</button>
+<div class="sm-modes" id="smModes">
+  <button data-m="deck" class="on">&#x1F5C2;&#xFE0F; 슬라이드 (덱 + 대본)</button>
+  <button data-m="script">&#x1F4C4; 대본 원문</button>
+  <button data-m="glossary">&#x1F4D6; 용어 · 기호</button>
+  <button data-m="guide">&#x1F9ED; 파이프라인 가이드</button>
+  <button id="smDeckDl" style="margin-left:auto">&#x1F4E5; .pptx</button>
 </div>
 
-<div class="sem-bar">
-  <input type="search" id="semFind" placeholder="문서 안에서 찾기 (예: 순환논리, LOOCV, τ, σ_SDCP)">
-  <span class="sem-meta" id="semMeta"></span>
+<div class="sm-bar2">
+  <input type="search" id="smFind" placeholder="전체에서 찾기 (예: 순환, platen, SDCP, σ_e, one-way)">
+  <button class="sm-mini" id="smBig" title="발표용 큰 글씨">&#x1F50D; 대본 확대</button>
+  <span class="sm-meta" id="smMeta"></span>
 </div>
 
-<div class="sem-toc" id="semToc" hidden></div>
-<div id="semBody"><div class="sem-doc">불러오는 중…</div></div>
+<div id="smToc" class="sm-toc" hidden></div>
+<div id="smRoot"><div class="sm-card">불러오는 중…</div></div>
 
 <script>
 (function () {
-  var body = document.getElementById('semBody'),
-      meta = document.getElementById('semMeta'),
-      toc  = document.getElementById('semToc'),
-      find = document.getElementById('semFind'),
-      cache = {}, cur = 'script';
+  var root = document.getElementById('smRoot'),
+      meta = document.getElementById('smMeta'),
+      toc  = document.getElementById('smToc'),
+      find = document.getElementById('smFind'),
+      deckData = null, docCache = {}, mode = 'deck', cur = 0, big = false;
 
-  function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function esc(s) { return String(s == null ? '' : s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-  /* 최소 markdown 렌더 — 외부 라이브러리 없이(오프라인 안전).
-     표·제목·코드·인용·목록·강조만 처리하고 나머지는 그대로 둔다. */
+  function hi(s) {                        /* 검색어 강조 (esc 된 문자열 위에서) */
+    var q = find.value.trim();
+    if (!q) return s;
+    var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi');
+    return s.replace(re, '<span class="sm-hit">$1</span>');
+  }
+
+  /* ── 출처를 리포 경로면 링크로, 아니면(URL·기타) 그대로 ── */
+  function srcChip(s) {
+    var t = esc(s);
+    if (/^https?:\/\//.test(s)) return '<a href="' + t + '" target="_blank" rel="noopener">' + t + '</a>';
+    if (/^(docs|scripts|webapp)\//.test(s))
+      return '<a href="/api/seminar/file?p=' + encodeURIComponent(s) + '" target="_blank">' + t + '</a>';
+    return '<span>' + t + '</span>';
+  }
+
+  function tableHtml(rows) {
+    if (!rows || !rows.length) return '';
+    var head = rows[0], body = rows.slice(1);
+    /* 첫 행이 '| --- |' 스타일 구분행이면 건너뛴다 (덱 표엔 없지만 방어) */
+    return '<div class="sm-tw"><table class="sm-t"><thead><tr>' +
+      head.map(function (c) { return '<th>' + hi(esc(c)) + '</th>'; }).join('') +
+      '</tr></thead><tbody>' + body.map(function (r) {
+        return '<tr>' + r.map(function (c) { return '<td>' + hi(esc(c)) + '</td>'; }).join('') + '</tr>';
+      }).join('') + '</tbody></table></div>';
+  }
+
+  function chartHtml(ch) {
+    var vals = (ch.series[0] || {}).values || [], mx = Math.max.apply(null, vals.concat([0])) || 1;
+    var rows = ch.categories.map(function (c, i) {
+      var v = vals[i] == null ? 0 : vals[i];
+      return '<div class="k">' + esc(c) + '</div>' +
+             '<div class="b" style="width:' + (100 * v / mx).toFixed(1) + '%"></div>' +
+             '<div class="v">' + esc(v) + '</div>';
+    }).join('');
+    return (ch.title ? '<div class="sm-sec">' + esc(ch.title) + '</div>' : '') +
+           '<div class="sm-bar">' + rows + '</div>';
+  }
+
+  /* ★ 이 발표의 핵심 정정 두 개를 화면에서 놓치지 않게 슬라이드에 배지로 건다.
+     덱 본문에 이미 적혀 있지만, 발표 중 가장 중요한 문장이라 눈에 띄게 둔다. */
+  var FLAGS = {
+    5: { cls:'warn', html:'<b>⚠ 공개된 한계</b> — platen kinematic-stop 결함 확인됨. ' +
+         'scaffold hold 런의 <b>절대 porosity/thickness 주장은 재실행 전까지 사용 금지</b>.' },
+    6: { cls:'warn', html:'<b>⚠ 철회된 주장</b> — “독립 보정된 두 모델이 1 %p 이내 일치” 는 ' +
+         '<b>독립 교차검증이 아니다</b>. production MPM 은 DEM geometry 를 <b>단방향</b>으로 받는다.' },
+    12:{ cls:'ok',   html:'<b>✓ 방어 가능한 결과</b> — 같은 realized geometry 의 matched 비교. ' +
+         '단 σ_SDCP=250 S/cm 는 <b>측정 대기 가정</b>이고 0.4 µm 격자는 operational calibration 이다.' }
+  };
+
+  function slideHtml(s) {
+    var h = ['<div class="sm-card">'];
+    if (s.kicker) h.push('<div class="sm-kicker">' + hi(esc(s.kicker)) + '</div>');
+    if (s.title)  h.push('<div class="sm-title">' + hi(esc(s.title)) + '</div>');
+    /* extra = 덱의 method 부제·주석.  버리지 않고 보여준다 (추출기 규약과 같음). */
+    if (s.extra && s.extra.length)
+      h.push('<div class="sm-eyebrow">' + s.extra.map(function (e) { return hi(esc(e)); }).join(' · ') + '</div>');
+    var f = FLAGS[s.n];
+    if (f) h.push('<div class="sm-flag ' + f.cls + '">' + f.html + '</div>');
+    if (s.lead && s.lead.length)
+      h.push('<div class="sm-lead">' + s.lead.map(function (p) {
+        return '<p>' + hi(esc(p)) + '</p>'; }).join('') + '</div>');
+    (s.tables || []).forEach(function (t) { h.push(tableHtml(t)); });
+    (s.charts || []).forEach(function (c) { h.push(chartHtml(c)); });
+    (s.figure_slots || []).forEach(function (t) {
+      h.push('<div class="sm-fig">&#x1F5BC;&#xFE0F; ' + hi(esc(t)) + '</div>'); });
+    h.push('</div>');
+
+    if (s.notes) h.push('<div class="sm-card"><div class="sm-sec">대본 (speaker notes)</div>' +
+      '<div class="sm-notes' + (big ? ' big' : '') + '">' + hi(esc(s.notes)) + '</div></div>');
+    if (s.sources && s.sources.length) h.push('<div class="sm-card">' +
+      '<div class="sm-sec">출처 — 클릭하면 리포 원문</div><div class="sm-src">' +
+      s.sources.map(srcChip).join('') + '</div></div>');
+    return h.join('');
+  }
+
+  function navHtml() {
+    return '<div class="sm-nav">' + deckData.slides.map(function (s, i) {
+      var t = s.title || s.lead[0] || '(제목 없음)';
+      return '<button class="it' + (i === cur ? ' on' : '') + '" data-i="' + i + '">' +
+        (s.kicker ? '<b>' + esc(s.kicker) + '</b>' : '') +
+        '<span class="num">' + s.n + '.</span>' + esc(t) + '</button>';
+    }).join('') + '</div>';
+  }
+
+  function renderDeck() {
+    if (!deckData) { root.innerHTML = '<div class="sm-card">불러오는 중…</div>'; return; }
+    if (!deckData.ok) {
+      root.innerHTML = '<div class="sm-err"><b>' + esc(deckData.error) + '</b>' +
+        (deckData.hint ? '<br><small>' + esc(deckData.hint) + '</small>' : '') + '</div>';
+      return;
+    }
+    toc.hidden = true;
+    root.innerHTML = '<div class="sm-wrap">' + navHtml() +
+      '<div class="sm-main">' + slideHtml(deckData.slides[cur]) + '</div></div>';
+    root.querySelectorAll('.sm-nav .it').forEach(function (b) {
+      b.addEventListener('click', function () { cur = +b.dataset.i; renderDeck(); }); });
+    meta.textContent = deckData.deck + '  ·  ' + (cur + 1) + '/' + deckData.n_slides +
+      (find.value.trim() ? '  ·  "' + find.value.trim() + '" 검색중' : '');
+  }
+
+  /* ── 문서(md) 모드 — 기존 뷰어 유지 ── */
   function md(src) {
     var out = [], lines = src.split('\n'), i = 0, hid = 0;
     function inline(t) {
       t = esc(t);
       t = t.replace(/`([^`]+)`/g, '<code>$1</code>');
-      // 볼드를 먼저, 비탐욕 + 임의문자 — 볼드 안에 * 가 있어도 매치된다
-      // (예: "**모양은 *ASSUMED**" 같은 짝 어긋난 원문도 삼켜 화면에 ** 가 안 남는다)
       t = t.replace(/\*\*([\s\S]+?)\*\*/g, '<strong>$1</strong>');
       t = t.replace(/(^|[^*])\*([^*]+)\*/g, '$1<em>$2</em>');
       t = t.replace(/(⚠[^<]{0,80})/g, '<span class="warn">$1</span>');
@@ -122,13 +273,11 @@
     }
     while (i < lines.length) {
       var L = lines[i];
-      if (/^```/.test(L)) {                                   // 코드 블록
-        var buf = []; i++;
+      if (/^```/.test(L)) { var buf = []; i++;
         while (i < lines.length && !/^```/.test(lines[i])) buf.push(lines[i++]);
-        i++; out.push('<pre>' + esc(buf.join('\n')) + '</pre>'); continue;
-      }
+        i++; out.push('<pre>' + esc(buf.join('\n')) + '</pre>'); continue; }
       if (/^\|/.test(L) && i + 1 < lines.length && /^\|[\s:|-]+\|/.test(lines[i+1])) {
-        var rows = [];                                        // 표
+        var rows = [];
         while (i < lines.length && /^\|/.test(lines[i])) rows.push(lines[i++]);
         var head = rows[0].split('|').slice(1, -1),
             rest = rows.slice(2).map(function (r) { return r.split('|').slice(1, -1); });
@@ -137,8 +286,7 @@
           rest.map(function (r) { return '<tr>' + r.map(function (c) {
             return '<td>' + inline(c.trim()) + '</td>'; }).join('') + '</tr>'; }).join('') +
           '</tbody></table>');
-        continue;
-      }
+        continue; }
       var h = L.match(/^(#{1,4})\s+(.*)$/);
       if (h) { var id = 'h' + (hid++);
         out.push('<h' + h[1].length + ' id="' + id + '">' + inline(h[2]) + '</h' + h[1].length + '>');
@@ -147,109 +295,121 @@
       if (/^>\s?/.test(L)) { var q = [];
         while (i < lines.length && /^>\s?/.test(lines[i])) q.push(lines[i++].replace(/^>\s?/, ''));
         out.push('<blockquote>' + inline(q.join(' ')) + '</blockquote>'); continue; }
-      if (/^\s*[-*]\s+/.test(L) || /^\s*\d+\.\s+/.test(L)) { var li = [];
-        var raw = [];                      // 먼저 원문 조각으로 모으고, 다 모은 뒤 inline
+      if (/^\s*[-*]\s+/.test(L) || /^\s*\d+\.\s+/.test(L)) { var raw = [];
         while (i < lines.length && (/^\s*[-*]\s+/.test(lines[i]) || /^\s*\d+\.\s+/.test(lines[i])
                || /^\s{2,}\S/.test(lines[i]))) {
           var m = lines[i].match(/^\s*(?:[-*]|\d+\.)\s+(.*)$/);
           if (m) raw.push(m[1]);
-          else if (raw.length) raw[raw.length-1] += ' ' + lines[i].trim();   // 이어지는 줄
-          i++;
-        }
-        li = raw.map(function (t) { return '<li>' + inline(t) + '</li>'; });
-        out.push('<ul>' + li.join('') + '</ul>'); continue; }
+          else if (raw.length) raw[raw.length-1] += ' ' + lines[i].trim();
+          i++; }
+        out.push('<ul>' + raw.map(function (t) {
+          return '<li>' + inline(t) + '</li>'; }).join('') + '</ul>'); continue; }
       if (!L.trim()) { i++; continue; }
-      // 연속된 평문 줄을 한 문단으로 합친 뒤 inline 처리 —
-      // 이렇게 해야 줄바꿈을 걸친 **볼드**·`코드`가 닫힌다 (원문은 하드랩돼 있다)
       var para = [];
-      while (i < lines.length && lines[i].trim()
-             && !/^```/.test(lines[i]) && !/^\|/.test(lines[i])
-             && !/^#{1,4}\s/.test(lines[i]) && !/^---+\s*$/.test(lines[i])
-             && !/^>\s?/.test(lines[i])
+      while (i < lines.length && lines[i].trim() && !/^```/.test(lines[i]) && !/^\|/.test(lines[i])
+             && !/^#{1,4}\s/.test(lines[i]) && !/^---+\s*$/.test(lines[i]) && !/^>\s?/.test(lines[i])
              && !/^\s*[-*]\s+/.test(lines[i]) && !/^\s*\d+\.\s+/.test(lines[i])) {
-        para.push(lines[i].trim()); i++;
-      }
-      if (para.length) out.push('<p>' + inline(para.join(' ')) + '</p>');
-      else { out.push('<p>' + inline(L) + '</p>'); i++; }
+        para.push(lines[i].trim()); i++; }
+      out.push('<p>' + inline(para.length ? para.join(' ') : L) + '</p>');
+      if (!para.length) i++;
     }
     return out.join('\n');
   }
 
-  function buildToc() {
-    var hs = body.querySelectorAll('h2');
-    if (!hs.length) { toc.hidden = true; return; }
-    toc.innerHTML = Array.prototype.map.call(hs, function (h) {
-      return '<a href="#' + h.id + '">' + h.textContent.replace(/^[#\s]*/, '') + '</a>';
-    }).join('');
-    toc.hidden = false;
-    toc.querySelectorAll('a').forEach(function (a) {
-      a.addEventListener('click', function (e) {
-        e.preventDefault();
-        var t = document.getElementById(a.getAttribute('href').slice(1));
-        if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-    });
-  }
-
-  function show(key) {
-    cur = key;
-    document.querySelectorAll('#semTabs button[data-k]').forEach(function (b) {
-      b.classList.toggle('on', b.dataset.k === key); });
-    if (cache[key]) { render(cache[key]); return; }
-    body.innerHTML = '<div class="sem-doc">불러오는 중…</div>';
-    fetch('/api/seminar/doc/' + key).then(function (r) { return r.json(); })
-      .then(function (j) { cache[key] = j; render(j); })
-      .catch(function (e) {
-        body.innerHTML = '<div class="sem-err">불러오기 실패: ' + esc(String(e)) + '</div>'; });
-  }
-
-  function render(j) {
-    if (!j.ok) {
-      body.innerHTML = '<div class="sem-err"><b>' + esc(j.error || '오류') + '</b>' +
-        (j.hint ? '<br><small>' + esc(j.hint) + '</small>' : '') + '</div>';
-      meta.textContent = ''; toc.hidden = true; return;
-    }
-    body.innerHTML = '<div class="sem-doc">' + md(j.text) + '</div>';
+  function renderDoc(j) {
+    if (!j.ok) { root.innerHTML = '<div class="sm-err"><b>' + esc(j.error || '오류') + '</b>' +
+      (j.hint ? '<br><small>' + esc(j.hint) + '</small>' : '') + '</div>';
+      meta.textContent = ''; toc.hidden = true; return; }
+    root.innerHTML = '<div class="sm-doc">' + md(j.text) + '</div>';
     meta.textContent = j.path + '  ·  ' + (j.bytes / 1024).toFixed(0) + ' KB';
-    buildToc();
-    if (find.value) doFind();
+    var hs = root.querySelectorAll('h2');
+    if (hs.length) {
+      toc.innerHTML = Array.prototype.map.call(hs, function (h) {
+        return '<a href="#' + h.id + '">' + esc(h.textContent.replace(/^[#\s]*/, '')) + '</a>'; }).join('');
+      toc.hidden = false;
+      toc.querySelectorAll('a').forEach(function (a) {
+        a.addEventListener('click', function (e) { e.preventDefault();
+          var t = document.getElementById(a.getAttribute('href').slice(1));
+          if (t) t.scrollIntoView({ behavior:'smooth', block:'start' }); }); });
+    } else { toc.hidden = true; }
+    if (find.value.trim()) markDoc();
   }
 
-  function doFind() {
-    var q = find.value.trim();
-    var doc = body.querySelector('.sem-doc');
-    if (!doc || !cache[cur] || !cache[cur].ok) return;
-    doc.innerHTML = md(cache[cur].text);
-    if (!q) return;
-    var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'), n = 0;
+  function markDoc() {
+    var q = find.value.trim(), doc = root.querySelector('.sm-doc');
+    if (!doc || !q) return;
+    var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), n = 0;
     (function walk(node) {
       for (var c = node.firstChild; c; c = c.nextSibling) {
         if (c.nodeType === 3 && re.test(c.nodeValue)) {
           var sp = document.createElement('span');
-          sp.innerHTML = esc(c.nodeValue).replace(re, '<mark>$1</mark>');
+          sp.innerHTML = esc(c.nodeValue).replace(re, '<span class="sm-hit">$1</span>');
           n += (c.nodeValue.match(re) || []).length;
           node.replaceChild(sp, c); c = sp;
-        } else if (c.nodeType === 1 && c.tagName !== 'MARK') walk(c);
-      }
-    })(doc);
-    meta.textContent = cache[cur].path + '  ·  "' + q + '" ' + n + '건';
-    var first = doc.querySelector('mark');
-    if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else if (c.nodeType === 1 && !/sm-hit/.test(c.className || '')) walk(c);
+      } })(doc);
+    meta.textContent += '  ·  "' + q + '" ' + n + '건';
+    var f = doc.querySelector('.sm-hit');
+    if (f) f.scrollIntoView({ behavior:'smooth', block:'center' });
   }
 
-  document.querySelectorAll('#semTabs button[data-k]').forEach(function (b) {
-    b.addEventListener('click', function () { show(b.dataset.k); }); });
-  document.getElementById('semDeck').addEventListener('click', function () {
+  function show(m) {
+    mode = m;
+    document.querySelectorAll('#smModes button[data-m]').forEach(function (b) {
+      b.classList.toggle('on', b.dataset.m === m); });
+    if (m === 'deck') {
+      if (deckData) { renderDeck(); return; }
+      root.innerHTML = '<div class="sm-card">불러오는 중…</div>';
+      fetch('/api/seminar/slides').then(function (r) { return r.json(); })
+        .then(function (j) { deckData = j; renderDeck(); })
+        .catch(function (e) {
+          root.innerHTML = '<div class="sm-err">덱 불러오기 실패: ' + esc(e) + '</div>'; });
+      return;
+    }
+    toc.hidden = true;
+    if (docCache[m]) { renderDoc(docCache[m]); return; }
+    root.innerHTML = '<div class="sm-doc">불러오는 중…</div>';
+    fetch('/api/seminar/doc/' + m).then(function (r) { return r.json(); })
+      .then(function (j) { docCache[m] = j; renderDoc(j); })
+      .catch(function (e) {
+        root.innerHTML = '<div class="sm-err">불러오기 실패: ' + esc(e) + '</div>'; });
+  }
+
+  /* 검색: 덱 모드에선 **일치하는 슬라이드로 이동**한다 (강조만으론 못 찾는다) */
+  function doFind() {
+    if (mode !== 'deck') { show(mode); return; }
+    var q = find.value.trim().toLowerCase();
+    if (q && deckData && deckData.ok) {
+      var hay = function (s) { return JSON.stringify(s).toLowerCase(); };
+      var from = deckData.slides.slice(cur).findIndex(function (s) { return hay(s).indexOf(q) >= 0; });
+      var idx = from >= 0 ? cur + from
+                          : deckData.slides.findIndex(function (s) { return hay(s).indexOf(q) >= 0; });
+      if (idx >= 0) cur = idx;
+    }
+    renderDeck();
+  }
+
+  document.querySelectorAll('#smModes button[data-m]').forEach(function (b) {
+    b.addEventListener('click', function () { show(b.dataset.m); }); });
+  document.getElementById('smDeckDl').addEventListener('click', function () {
     fetch('/api/seminar/deck').then(function (r) {
       var ct = r.headers.get('content-type') || '';
       if (ct.indexOf('json') >= 0) return r.json().then(function (j) {
         alert((j.error || '덱을 찾을 수 없습니다') + (j.hint ? '\n\n' + j.hint : '')); });
-      window.location = '/api/seminar/deck';
-    });
-  });
-  var t; find.addEventListener('input', function () { clearTimeout(t); t = setTimeout(doFind, 220); });
+      window.location = '/api/seminar/deck'; }); });
+  document.getElementById('smBig').addEventListener('click', function () {
+    big = !big; this.classList.toggle('on', big); if (mode === 'deck') renderDeck(); });
+  var t; find.addEventListener('input', function () { clearTimeout(t); t = setTimeout(doFind, 240); });
 
-  show('script');
+  /* 발표 중 손이 키보드에 있다 — ←/→ 로 슬라이드 이동 (입력창에선 동작 안 함) */
+  document.addEventListener('keydown', function (e) {
+    if (mode !== 'deck' || !deckData || !deckData.ok) return;
+    if (/^(INPUT|TEXTAREA|SELECT)$/.test((e.target.tagName || '').toUpperCase())) return;
+    if (e.key === 'ArrowRight' && cur < deckData.n_slides - 1) { cur++; renderDeck(); }
+    else if (e.key === 'ArrowLeft' && cur > 0) { cur--; renderDeck(); }
+  });
+
+  show('deck');
 })();
 </script>
 {% endblock %}

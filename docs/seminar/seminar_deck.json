@@ -1,0 +1,673 @@
+{
+ "deck": "docs/seminar/seminar_20260806_DEM_MPM_SDCP_section.pptx",
+ "n_slides": 14,
+ "slides": [
+  {
+   "n": 1,
+   "kicker": "Part",
+   "title": "",
+   "lead": [],
+   "tables": [],
+   "charts": [],
+   "figure_slots": [],
+   "extra": [
+    "From packed particles to SDCP performance",
+    "A five-step, provenance-tracked workflow",
+    "HANYANG UNIVERSITY   Battery Materials Lab."
+   ],
+   "notes": "이 섹션은 다섯 개의 별개 시뮬레이션을 나열하는 것이 아니라, 하나의 미세구조가 다음 단계로 이어지는 계층적 workflow를 보여줍니다. DEM은 입자 골격과 접촉망을 만들고, MPM은 그 골격 사이의 고체전해질 소성 형상을 계산합니다. 그 다음 전자·이온·열 전달, 전기화학 응답, 사이클 열화 분해로 이어집니다. 핵심 메시지는 “같은 구조에 서로 다른 물리를 쌓아 올린다”입니다.",
+   "sources": [
+    "docs/pipeline_step1_to_step5_guide.md",
+    "docs/mpm_platen_kinematic_stop_defect.md"
+   ]
+  },
+  {
+   "n": 2,
+   "kicker": "Motivation",
+   "title": "The bottleneck is geometry, not a bulk property",
+   "lead": [
+    "Pressing changes contact area, voids, and particle damage. Carbon and binder occupy the electrolyte domain, while connected pathways determine whether intrinsic conductivity is actually usable. A common microstructure is therefore carried through every calculation."
+   ],
+   "tables": [
+    [
+     [
+      "Question",
+      "Recommended figure",
+      "Primary source"
+     ],
+     [
+      "What pressing changes",
+      "Pressed cross-section, Fig. 2h-i",
+      "Lee et al., Nat. Commun. (2025)"
+     ],
+     [
+      "Where percolation is lost",
+      "Workflow/cluster map, Fig. 1",
+      "Bielefeld et al., JPCC (2019)"
+     ],
+     [
+      "Why carbon can hurt Li+",
+      "Volume-occupation schematic, Fig. 1e",
+      "Kim et al., Adv. Funct. Mater. (2024)"
+     ],
+     [
+      "How bottlenecks reach cell scale",
+      "sigma and tortuosity, Fig. 2a-b",
+      "Minnmann et al., JES (2021)"
+     ]
+    ]
+   ],
+   "charts": [],
+   "figure_slots": [],
+   "extra": [
+    "Suggested literature figures"
+   ],
+   "notes": "소개 슬라이드에서는 물성표만으로는 설명할 수 없는 기하 병목을 먼저 보여줍니다. Lee 2025의 압밀 전·후 단면은 접촉이 생성되고 미세 void가 바뀌는 실험 영상입니다. Bielefeld 2019의 Figure 1은 AM과 SE를 배치한 뒤 이온·전자 percolation cluster를 판정하는 기존 구조 모델을 보여줍니다. Kim 2024 Figure 1e는 도전재가 SE domain을 차지하여 전자전도는 높이지만 이온 경로를 줄일 수 있음을 보여줍니다. Minnmann 2021 Figure 2a-b는 이온·전자 전도도와 tortuosity가 조성에 따라 어떻게 교차하는지를 실험으로 보여줍니다. 저작권 이슈를 피하기 위해 현재는 figure 후보만 표시했고, 사용 시 출처와 permission을 확인해야 합니다.",
+   "sources": [
+    "https://doi.org/10.1038/s41467-025-59363-4",
+    "https://doi.org/10.1021/acs.jpcc.8b11043",
+    "https://doi.org/10.1002/adfm.202409318",
+    "https://doi.org/10.1149/1945-7111/abf8d7"
+   ]
+  },
+  {
+   "n": 3,
+   "kicker": "Workflow",
+   "title": "Structure is created once; each solver adds a different observable",
+   "lead": [
+    "The hand-off is explicit and file-based. Every step consumes the artifacts and provenance of the previous step, while preserving its own units, solver settings, seed, and convergence evidence.",
+    "Each arrow is a saved artifact, not an untracked manual transfer."
+   ],
+   "tables": [
+    [
+     [
+      "STEP 1",
+      "DEM",
+      "pack + compact particles",
+      "atoms / contacts"
+     ],
+     [
+      "STEP 2",
+      "MPM",
+      "deform the SE continuum",
+      "shape / stress / strain"
+     ],
+     [
+      "STEP 3",
+      "transport",
+      "solve e-, Li+, and heat",
+      "sigma / current / Joule"
+     ],
+     [
+      "STEP 4",
+      "electrochemistry",
+      "advance CC/CV state",
+      "V-Q / reaction / eta"
+     ],
+     [
+      "STEP 5",
+      "degradation",
+      "decompose R_int(N)",
+      "contact / chemical / other"
+     ]
+    ]
+   ],
+   "charts": [],
+   "figure_slots": [],
+   "extra": [
+    "One geometry, five layers of physics"
+   ],
+   "notes": "전체 흐름은 구조 생성, 소성 형상, 전달, 충·방전, 열화의 다섯 단계입니다. STEP 1에서 입자 ID·종류·좌표·반경과 접촉쌍을 저장합니다. STEP 2는 그 좌표를 초기 scaffold로 읽어 SE material points의 소성 변형을 계산합니다. STEP 3은 변형된 형상을 grid로 변환하여 전자·이온·열 전도를 풀고, STEP 4는 그 grid 위에서 전기화학 상태를 시간적으로 진행시킵니다. STEP 5는 실험 R_int(N)을 contact, chemical, other로 분해합니다. 슬라이드의 중요한 포인트는 각 화살표가 수동 copy-paste가 아니라 CSV, JSON, NPY, NPZ 산출물로 닫혀 있다는 점입니다.",
+   "sources": [
+    "docs/pipeline_step1_to_step5_guide.md",
+    "scripts/mpm_input_from_case.py",
+    "webapp/templates/single.html"
+   ]
+  },
+  {
+   "n": 4,
+   "kicker": "STEP 1",
+   "title": "DEM creates the load-bearing particle scaffold",
+   "lead": [
+    "AM and Li6PS5Cl particles are settled, compressed by a platen, and equilibrated. Rigid-sphere contact mechanics captures rearrangement, overlap, force chains, and the explicit contact network."
+   ],
+   "tables": [
+    [
+     [
+      "Layer",
+      "What happens",
+      "Guard",
+      "Artifact"
+     ],
+     [
+      "Input",
+      "composition, PSD, pressure, seed",
+      "unit + scale contract",
+      "case parameters"
+     ],
+     [
+      "Pack",
+      "settle -> platen compression",
+      "pressure readout",
+      "particle dump"
+     ],
+     [
+      "Analyze",
+      "contacts, forces, clusters",
+      "dump completeness",
+      "contacts.csv"
+     ],
+     [
+      "Publish",
+      "case-level metrics",
+      "finite + provenance",
+      "atoms.csv / full_metrics.json"
+     ]
+    ]
+   ],
+   "charts": [],
+   "figure_slots": [
+    "FIGURE SLOT — webapp 3D particle bed + contact-force network"
+   ],
+   "extra": [
+    "LIGGGHTS / contact mechanics / seed"
+   ],
+   "notes": "STEP 1의 입력은 AM:SE 조성, 대·소입자 비율, 입경, 셀 크기, 제작압, random seed입니다. LIGGGHTS에서 입자를 적층하고 platen으로 압축한 뒤, 평형 상태의 particle/contact dump를 남깁니다. DEM이 잘하는 것은 각 입자의 접촉쌍, 접촉력, overlap, coordination, force chain, percolation을 명시적으로 보존하는 것입니다. 반면 구형 입자의 실제 flattening이나 grain-boundary flow는 표현하지 못합니다. 그 역할을 STEP 2가 담당합니다. 검증은 unit/scale, 제작압 readout, seed, dump 완결성, porosity/thickness의 실험 범위, Heckel 경향을 확인합니다. 산출물은 atoms.csv, contacts.csv, full_metrics.json, atoms_analyzed.csv, contacts_analyzed.csv입니다. STEP 2 scaffold 결함은 DEM으로 역전파되지 않으므로, STEP 1 DEM 코퍼스는 별도 자산으로 남습니다.",
+   "sources": [
+    "docs/pipeline_step1_to_step5_guide.md",
+    "scripts/analyze_contacts.py",
+    "webapp/app.py",
+    "docs/mpm_platen_kinematic_stop_defect.md"
+   ]
+  },
+  {
+   "n": 5,
+   "kicker": "STEP 2",
+   "title": "MPM adds plastic morphology to the DEM scaffold",
+   "lead": [
+    "DEM AM positions are frozen as the load-bearing scaffold; Li6PS5Cl is converted to material points and advanced by P2G/G2P with finite-deformation J2 plasticity. The intended readout is platen reaction pressure (wallP). A confirmed kinematic-stop defect currently invalidates strong absolute porosity/thickness claims from the scaffold hold runs."
+   ],
+   "tables": [
+    [
+     [
+      "Stage",
+      "Calculation",
+      "Artifact"
+     ],
+     [
+      "Handoff",
+      "DEM atoms + metrics -> GPU kit",
+      "input_params.json"
+     ],
+     [
+      "Deform",
+      "frozen AM + plastic SE",
+      "stress / plastic strain"
+     ],
+     [
+      "Export",
+      "deformed point cloud + raw metrics",
+      "se_dump.npy / mpm_metrics.json"
+     ]
+    ]
+   ],
+   "charts": [],
+   "figure_slots": [],
+   "extra": [
+    "MLS-MPM / J2 plasticity / GPU",
+    "Current scaffold hold protocol: absolute outputs require rerun"
+   ],
+   "notes": "STEP 2는 “DEM을 다시 MPM으로 만든다”가 아닙니다. webapp이 DEM case의 atoms.csv와 full_metrics.json을 읽어 GPU kit를 만들고, AM 좌표는 fixed scaffold로 사용합니다. SE는 material points로 변환되어 MLS-MPM의 particle-to-grid, grid update, grid-to-particle 순서를 타고, von Mises J2 plasticity로 응력을 projection합니다. 현재 모델 입력은 E=1.53 GPa, nu=0.49, sigma_y=0.30 GPa 계열입니다. 출력은 se_dump.npy, stress/strain dump, restart state, mpm_metrics.json, mpm_payload.json입니다. 다만 현재 production scaffold의 hold protocol은 platen이 너무 빨리 내려가고, wallP의 순간 crossing이 아니라 gap 산술에 가까운 위치에서 멈추는 결함이 확인됐습니다. 따라서 기존 scaffold porosity/thickness와 “300 MPa에 도달해 멈췄다”는 주장은 재실행 전까지 사용하면 안 됩니다. 이 제한을 슬라이드에 직접 밝힌 이유는 교차검증 주장을 정직하게 만들기 위해서입니다.",
+   "sources": [
+    "scripts/mpm_input_from_case.py",
+    "scripts/mpm3d_compaction.py",
+    "docs/mpm_platen_kinematic_stop_defect.md"
+   ]
+  },
+  {
+   "n": 6,
+   "kicker": "Validation",
+   "title": "Independent equations do not imply independent predictions",
+   "lead": [
+    "DEM and MPM use different state variables and numerical solvers. However, the production MPM scaffold receives DEM geometry, SE seed positions, pressure, and case-derived parameters. The former ~1 %p porosity agreement is therefore not an independent cross-validation."
+   ],
+   "tables": [
+    [
+     [
+      "Question",
+      "Current evidence-based answer"
+     ],
+     [
+      "Are the solvers different?",
+      "Yes: discrete contacts vs continuum plasticity"
+     ],
+     [
+      "Is the production geometry independent?",
+      "No: DEM scaffold is transferred one-way"
+     ],
+     [
+      "Does porosity agreement validate DEM?",
+      "No: inherited geometry + stop defect make it circular"
+     ],
+     [
+      "What remains defensible?",
+      "DEM-only assets; pure-SE/2D MPM; matched SBE-DBE relative transport"
+     ]
+    ]
+   ],
+   "charts": [],
+   "figure_slots": [],
+   "extra": [],
+   "notes": "이 슬라이드가 발표의 가장 중요한 정정입니다. DEM은 입자 운동과 접촉력을 풀고, MPM은 연속체 응력·변형을 푸므로 물리식과 solver는 다릅니다. 하지만 production scaffold는 DEM의 압축 완료 AM 좌표와 SE seed를 그대로 받습니다. 또한 case의 e_SE_eff를 MPM 물성 조정에 사용하고, 후속 voxel payload에 DEM target porosity가 전달되는 경로가 있습니다. 그러므로 “서로 독립적으로 보정된 두 모델이 1 %p 이내에서 만났다”는 기존 주장은 철회해야 합니다. 현재 방어 가능한 것은 DEM 코퍼스와 수송 triplet, DEM 입력이 없는 pure-SE/2D MPM 자산, 그리고 같은 realized geometry에서 비교한 SBE-DBE 상대 수송입니다. 진정한 교차검증으로 회복하려면 AM-as-material 형태로 DEM geometry 의존을 제거하거나, 하중분담을 먼저 측정·사전등록한 뒤 held-out case를 paired rerun해야 합니다.",
+   "sources": [
+    "docs/mpm_platen_kinematic_stop_defect.md",
+    "scripts/mpm_input_from_case.py",
+    "scripts/viz_mpm_continuum.py"
+   ]
+  },
+  {
+   "n": 7,
+   "kicker": "STEP 3",
+   "title": "The deformed geometry becomes three transport networks",
+   "lead": [
+    "The phase field is voxelized and the steady equation div(sigma grad(phi)) = 0 is solved for electronic, ionic, and thermal transport. Harmonic face conductance preserves series bottlenecks; current focusing and Joule loss are retained spatially."
+   ],
+   "tables": [
+    [
+     [
+      "Layer",
+      "Electronic",
+      "Ionic",
+      "Thermal"
+     ],
+     [
+      "Conductors",
+      "NCM / VGCF / SDCP",
+      "LPSCl / SDCP",
+      "all solid phases"
+     ],
+     [
+      "Solve",
+      "potential + current",
+      "potential + current",
+      "temperature flux proxy"
+     ],
+     [
+      "Check",
+      "percolation / residual",
+      "percolation / residual",
+      "finite / residual"
+     ],
+     [
+      "Output",
+      "sigma_e / focus",
+      "sigma_ion / paths",
+      "sigma_th / Joule map"
+     ]
+    ]
+   ],
+   "charts": [],
+   "figure_slots": [
+    "FIGURE SLOT — electron/ion current or Joule map from mpm-lab"
+   ],
+   "extra": [
+    "finite-volume transport / 0.4 um operational grid"
+   ],
+   "notes": "STEP 3에서는 MPM SE point cloud와 고정 AM, VGCF, PTFE, SDCP geometry를 grid로 rasterize합니다. 각 cell face의 conductance는 양쪽 물성의 harmonic mean으로 만들고, div(sigma grad phi)=0을 풀어 효과 전도도를 구합니다. 전자망에는 NCM, VGCF, SDCP가 들어가고, 이온망에는 LPSCl과 mixed conductor인 SDCP가 들어갑니다. PTFE는 두 망 모두에서 insulating입니다. 결과는 sigma_e, sigma_ion, sigma_thermal 외에도 current focusing, phase dissipation, Joule map, active-interface face 수, step4_grid.npz를 포함합니다. DEM 경로에는 각 접촉의 Holm constriction resistance를 사용하는 contact-network Kirchhoff solver가 있고, MPM 경로에는 voxel finite-volume solver가 있어 표현 방식이 다릅니다. 다만 0.4 um는 operational calibration이지 grid-converged 증명이 아니고, 접촉 constriction이 sub-voxel이므로 절대 sigma는 상한성이 있습니다. 따라서 이 발표에서는 같은 grid·같은 geometry의 SBE-DBE 상대비교를 주된 결과로 사용합니다.",
+   "sources": [
+    "scripts/step3_sigma.py",
+    "scripts/network_conductivity.py",
+    "docs/sdcp_318_base_sbe_dbe_comparison.md"
+   ]
+  },
+  {
+   "n": 8,
+   "kicker": "STEP 4",
+   "title": "Transport fields are converted into charge-discharge response",
+   "lead": [
+    "Electronic and ionic potentials are coupled to Butler-Volmer interfacial kinetics and spherical solid-state diffusion. CC/CV control advances the electrochemical state while recording where reaction and polarization accumulate."
+   ],
+   "tables": [
+    [
+     [
+      "Layer",
+      "Calculation",
+      "Output"
+     ],
+     [
+      "Field",
+      "phi_e + phi_ion + BV",
+      "reaction-face current"
+     ],
+     [
+      "Particle",
+      "20-shell diffusion",
+      "shell SOC / diffusion eta"
+     ],
+     [
+      "Cell",
+      "CC-CV state chaining",
+      "V-Q curve / cutoff capacity"
+     ]
+    ]
+   ],
+   "charts": [],
+   "figure_slots": [
+    "FIGURE SLOT: voltage and overpotential decomposition"
+   ],
+   "extra": [
+    "Butler-Volmer / particle diffusion / CC-CV"
+   ],
+   "notes": "STEP 4의 입력은 STEP 3의 step4_grid.npz, NCM811 OCP table, C-rate, CC/CV schedule, solid diffusion coefficient, exchange-current parameter, initial SOC입니다. 각 active face에서 전자·이온 potential 차와 OCP로 overpotential을 계산하고 Butler-Volmer 반응류를 구합니다. 활물질 입자 내부는 radial shell로 나누어 solid-state diffusion을 진행시킵니다. CC 구간에서는 주어진 전류를, CV 구간에서는 주어진 전압을 만족시키며 상태를 다음 time step으로 연결합니다. 출력은 voltage-capacity curve, cutoff capacity, reaction distribution, shell SOC, potential-depth profile, ohmic/kinetic/diffusion/Rint 과전압 분해입니다. 검증은 real OCP 파일 강제, KCL, current residual, energy/mass audit, SOC 범위입니다. SDCP 문서에는 2C CCCV 결과가 기록되어 있지만 tracked raw NPZ가 현재 저장소에 없으므로, 발표에서는 “documented run”으로 구분하고 raw-reproducible Step 3 결과와 동급으로 취급하지 않습니다.",
+   "sources": [
+    "scripts/step4_dyn.py",
+    "docs/pipeline_step1_to_step5_guide.md",
+    "docs/sdcp_318_base_sbe_dbe_comparison.md"
+   ]
+  },
+  {
+   "n": 9,
+   "kicker": "STEP 5",
+   "title": "Cycle degradation is an open decomposition, not repeated MPM",
+   "lead": [
+    "R_int(N) = R0 + dR_contact + dR_chemical + dR_other. Experimental endpoints constrain the total increase; mechanical and chemical submodels assign interpretable shares without pretending to be a first-principles lifetime prediction."
+   ],
+   "tables": [
+    [
+     [
+      "Channel",
+      "Evidence",
+      "Model",
+      "Meaning"
+     ],
+     [
+      "contact",
+      "CZM ledger",
+      "break / reconnect",
+      "mechanical loss"
+     ],
+     [
+      "chemical",
+      "endpoint residual",
+      "sqrt / linear / power",
+      "CEI / chemistry"
+     ],
+     [
+      "other",
+      "unexplained residual",
+      "explicit remainder",
+      "unmodeled loss"
+     ]
+    ],
+    [
+     [
+      "What it is",
+      "What it is not",
+      "Primary output",
+      "Gate"
+     ],
+     [
+      "endpoint-anchored",
+      "direct life prediction",
+      "R_int(N)",
+      "N=0 + endpoint"
+     ],
+     [
+      "mechanism split",
+      "repeated MPM",
+      "stacked shares",
+      "monotonicity"
+     ],
+     [
+      "what-if tool",
+      "validated mid-cycle shape",
+      "scenario curves",
+      ">=4 points for shape"
+     ]
+    ]
+   ],
+   "charts": [],
+   "figure_slots": [
+    "FIGURE SLOT — stacked contact / chemical / other trajectory from /step5"
+   ],
+   "extra": [
+    "contact ledger / chemical fade / endpoint anchoring"
+   ],
+   "notes": "STEP 5를 “MPM으로 수백 cycle을 반복해 수명을 예측한다”고 설명하면 틀립니다. 정본 공식은 R_int(N)=R_int,0 + DeltaR_contact + DeltaR_chemical + DeltaR_other입니다. contact 항은 AM-SE 접촉의 파단·재접촉·상대 저항을 ledger로 기록합니다. chemical 항은 실험의 전체 R_int 증가에서 contact 분을 빼고 남은 부분을 CEI/chemical fade로 배정합니다. 여기서도 설명되지 않는 부분은 other로 남겨 강제 적합을 막습니다. 모델은 N=0과 실험 endpoint를 만족해야 하고, 중간 shape은 sqrt, linear, power 후보 중 실험점이 충분할 때만 비교해야 합니다. 출력은 cycle별 R_int 곡선, contact/chemical/other stacked share, coating/SDCP what-if scenario입니다. 따라서 표현은 “lifetime prediction”보다 “endpoint-anchored degradation decomposition”이 정확합니다.",
+   "sources": [
+    "scripts/cycle_contact_ledger.py",
+    "scripts/b1_chem_fade.py",
+    "scripts/fit_rint_curve.py",
+    "webapp/templates/step5.html"
+   ]
+  },
+  {
+   "n": 10,
+   "kicker": "Implementation",
+   "title": "The webapp closes the hand-off loop",
+   "lead": [
+    "The local webapp analyzes DEM dumps, packages the case for GPU MPM, accepts the returned payload, and exposes morphology, transport, electrochemistry, and Step 5 views. The scientific STEP 1-5 labels are kept separate from internal script sub-step numbers."
+   ],
+   "tables": [
+    [
+     [
+      "User action",
+      "Route / script",
+      "Artifact",
+      "Next hand-off"
+     ],
+     [
+      "upload + analyze DEM",
+      "case analyzer",
+      "atoms / contacts / metrics",
+      "MPM kit"
+     ],
+     [
+      "download + run GPU kit",
+      "mpm-input / run_mpm.sh",
+      "se_dump / payload",
+      "mpm-lab"
+     ],
+     [
+      "inspect + scenario",
+      "mpm-lab / step5",
+      "maps / curves / ledger",
+      "report"
+     ]
+    ]
+   ],
+   "charts": [],
+   "figure_slots": [
+    "FIGURE SLOT — case page: MPM kit download -> payload upload -> mpm-lab viewer"
+   ],
+   "extra": [
+    "webapp routes + GPU kit + provenance artifacts"
+   ],
+   "notes": "실제 운영 순서는 다음과 같습니다. 먼저 LIGGGHTS dump를 webapp에 올리면 DEM 후처리가 atoms.csv, contacts.csv, full_metrics.json을 만듭니다. case 페이지의 /results/<case>/mpm-input에서 GPU kit ZIP을 다운로드하고, GPU에서 bash run_mpm.sh를 실행합니다. 그 결과 mpm_metrics.json과 mpm_payload.json을 다시 업로드하면 /mpm-lab에서 morphology, stress/strain, STEP 3 transport, STEP 4 결과를 볼 수 있습니다. /step5에서는 R_int decomposition을 따로 확인합니다. 여기서 주의할 것은 run_mpm.sh의 내부 “STEP 1/2”와 webapp DEM 후처리의 “Step 1-5”가 지금 발표하는 scientific STEP 1-5와 다르다는 점입니다. 슬라이드에서는 과학 workflow 번호만 사용하고, 내부 번호는 대본에서 명시적으로 구분합니다. 또한 run_id, code SHA, argv, units, seed, parent provenance를 각 산출물에 남겨 다음 단계의 세대를 추적합니다.",
+   "sources": [
+    "webapp/app.py",
+    "webapp/templates/single.html",
+    "webapp/templates/step5.html",
+    "scripts/mpm_input_from_case.py"
+   ]
+  },
+  {
+   "n": 11,
+   "kicker": "SDCP",
+   "title": "SDCP is explicit geometry, not an EMT correction",
+   "lead": [
+    "0.3 um SDCP spheres are seeded into the uncompacted shared scaffold. Their placement is carried through compaction, and SDCP is included in both the electronic and ionic transport networks. The preview contrasts dispersed singles with an aggregate-like hand-mix representation.",
+    "SBE and DBE share the same realized scaffold; their thickness is identical by construction."
+   ],
+   "tables": [
+    [
+     [
+      "Feature",
+      "Implementation"
+     ],
+     [
+      "Geometry",
+      "0.3 um spheres; 137,384 surviving points"
+     ],
+     [
+      "Placement",
+      "1.39 vol%; AM-anchored 44.4%; dispersion D=1.13"
+     ],
+     [
+      "Transport role",
+      "mixed conductor in both e- and Li+ networks"
+     ]
+    ]
+   ],
+   "charts": [],
+   "figure_slots": [],
+   "extra": [
+    "modeling preview - not an experimental micrograph"
+   ],
+   "notes": "SDCP를 단순히 “전체 전도도를 몇 퍼센트 올리는 유효매질 보정”으로 넣지 않았습니다. post-milling morphology를 대표하는 0.3 um sphere로 명시적으로 seeding하고, 압밀 전 scaffold에서 시작하여 같은 구조 안에서 이동·변형 후 수송에 사용했습니다. DBE 결과에서 생존 SDCP point는 137,384개, 부피비는 1.39 vol%, AM-anchored 비율은 44.4%, dispersion index는 1.13입니다. SDCP는 mixed conductor로 취급하여 전자망과 이온망 모두에 포함했습니다. 오른쪽 그림은 실험 SEM이 아니라 모델링 preview입니다. ball-mill/Thinky는 분산된 singles, hand-mix는 aggregate-like 분포를 대표합니다. SBE와 DBE는 같은 AM scaffold, 같은 VGCF seed, 같은 dilation schedule을 쓰며 두께 72.48 um가 동일한 것은 결과가 아니라 by construction입니다. 이 점을 명시해야 +52% 결과를 올바르게 해석할 수 있습니다.",
+   "sources": [
+    "docs/figures/sdcp_mixing_preview.png",
+    "docs/sdcp_318_base_sbe_dbe_comparison.md",
+    "docs/manuscript_sdcp_sigma_e_mechanism.md",
+    "docs/mpm_platen_kinematic_stop_defect.md"
+   ]
+  },
+  {
+   "n": 12,
+   "kicker": "SDCP",
+   "title": "Replacing half of PTFE with SDCP opens both networks",
+   "lead": [
+    "At the representative assumed sigma_SDCP = 250 S cm-1, the matched SBE -> DBE comparison gives a large electronic gain without the usual ionic penalty. These are properties of the same realized, geometry-pinned scaffold."
+   ],
+   "tables": [
+    [
+     [
+      "Metric",
+      "SBE",
+      "DBE / change"
+     ],
+     [
+      "sigma_e (S cm-1)",
+      "1.975",
+      "3.002 / +52.0%"
+     ],
+     [
+      "sigma_ion (S cm-1)",
+      "2.034e-4",
+      "2.147e-4 / +5.6%"
+     ],
+     [
+      "BV-active faces",
+      "425,349",
+      "503,915 / +18%"
+     ],
+     [
+      "R_geom (ohm cm2)",
+      "1.37e-5",
+      "9.05e-6 / -34%"
+     ]
+    ]
+   ],
+   "charts": [],
+   "figure_slots": [],
+   "extra": [
+    "case 260714_145738_778fa4 / voxel 0.4 um"
+   ],
+   "notes": "이 슬라이드가 SDCP 섹션의 “짜자잔” 결과입니다. 비교는 SBE 70:27:3:1과 DBE 70:27:3:0.5:0.5, 즉 PTFE의 절반을 SDCP로 치환한 조건입니다. 대표 SDCP 전자전도도를 250 S/cm로 가정했을 때 sigma_e는 1.975에서 3.002 S/cm로 52.0% 증가했습니다. 이온 전도도는 2.034e-4에서 2.147e-4 S/cm로 5.6% 증가했습니다. 절연 PTFE를 mixed-conducting SDCP로 바꾸었기 때문에 일반적인 전자 증가-이온 감소 trade-off가 나타나지 않은 것이 핵심입니다. BV-active face는 425,349에서 503,915로 18% 증가했고, geometric resistance는 1.37e-5에서 9.05e-6 ohm cm2로 34% 감소했습니다. 단, 250 S/cm는 실측완료값이 아니라 representative assumption이며 측정 대기입니다. 또한 SBE-DBE는 같은 realized geometry를 사용하므로 이 결과는 상대 수송 효과로 강하지만, 압밀 형상이 독립적으로 예측되었다는 증거가 아닙니다.",
+   "sources": [
+    "docs/sdcp_318_base_sbe_dbe_comparison.md",
+    "docs/data/sdcp318_sigma_sdcp_sweep/sweep_summary.csv"
+   ]
+  },
+  {
+   "n": 13,
+   "kicker": "Mechanism",
+   "title": "A small loss share can unlock a large conductivity gain",
+   "lead": [
+    "SDCP does not act as a simple parallel conductor. It bridges serial constrictions in the VGCF network: the effective conductivity rises while SDCP's dissipation share falls. This trend is consistent with bottleneck relief, not proportional bulk-current sharing."
+   ],
+   "tables": [
+    [
+     [
+      "sigma_SDCP (S cm-1)",
+      "sigma_e,eff / gain vs SBE"
+     ],
+     [
+      "15",
+      "1.990 / +0.8%"
+     ],
+     [
+      "50",
+      "2.485 / +25.8%"
+     ],
+     [
+      "150",
+      "2.874 / +45.5%"
+     ],
+     [
+      "250 -> 1,500",
+      "3.002 -> 3.227 / +52.0 -> +63.4%"
+     ]
+    ]
+   ],
+   "charts": [
+    {
+     "title": "SDCP conductivity sensitivity",
+     "categories": [
+      "15",
+      "50",
+      "150",
+      "250",
+      "1500"
+     ],
+     "series": [
+      {
+       "name": "",
+       "values": [
+        1.99,
+        2.485,
+        2.874,
+        3.002,
+        3.227
+       ]
+      }
+     ]
+    }
+   ],
+   "figure_slots": [],
+   "extra": [],
+   "notes": "메커니즘은 단순 병렬전도로 설명하기 어렵습니다. SDCP 전자전도도 가정을 15, 50, 150, 250, 1500 S/cm로 올리면 효과 sigma_e는 1.990, 2.485, 2.874, 3.002, 3.227 S/cm로 증가합니다. 반면 SDCP dissipation share는 19.6, 16.3, 10.0, 7.3, 1.7%로 감소합니다. 즉 SDCP가 전체 전류를 얼마나 많이 직접 운반하는지보다, VGCF 망의 직렬 bottleneck을 연결해 우회로를 만드는 것이 중요하다는 패턴입니다. 다만 dissipation share는 current share가 아니므로, “SDCP가 7.3% 전류만 흐른다”고 말하면 안 됩니다. 정확한 표현은 “작은 dissipation share에도 큰 sigma 증가가 나타났고, sigma_SDCP가 증가할수록 그 share가 감소했다. 이는 series-bottleneck relief와 일관된다”입니다. 0.4 um 격자와 250 S/cm 물성 가정의 한계를 항상 함께 말합니다.",
+   "sources": [
+    "docs/data/sdcp318_sigma_sdcp_sweep/sweep_summary.csv",
+    "docs/manuscript_sdcp_sigma_e_mechanism.md"
+   ]
+  },
+  {
+   "n": 14,
+   "kicker": "Takeaways",
+   "title": "What the current evidence supports",
+   "lead": [
+    "1. DEM provides the explicit packing and contact network.",
+    "2. MPM adds plastic morphology through a one-way DEM scaffold coupling; it is not an independent validation arm.",
+    "3. STEP 3-5 convert the same structure into transport, electrochemical response, and endpoint-anchored degradation.",
+    "4. On one matched realized geometry, SDCP gives +52% sigma_e, +5.6% sigma_ion, +18% active faces, and -34% R_geom.",
+    "5. Absolute scaffold morphology awaits the platen-stop rerun; sigma_SDCP = 250 S cm-1 and the 0.4 um grid remain explicit assumptions."
+   ],
+   "tables": [],
+   "charts": [],
+   "figure_slots": [],
+   "extra": [
+    "The result is a transparent computational chain: strong relative SDCP evidence, visible limits, and reproducible artifacts."
+   ],
+   "notes": "마무리는 다섯 문장으로 정리합니다. 첫째, DEM은 packing과 접촉망을 명시적으로 만듭니다. 둘째, MPM은 서로 다른 물리식을 쓰지만 production에서 DEM geometry를 받는 one-way coupled model이므로 독립 validation이 아닙니다. 셋째, STEP 3-5는 같은 구조를 수송, 충·방전, 열화 해석으로 이어줍니다. 넷째, 같은 realized geometry의 matched SBE-DBE 비교에서 SDCP는 sigma_e +52%, sigma_ion +5.6%, active face +18%, R_geom -34%를 보였습니다. 다섯째, 절대 scaffold morphology는 platen-stop 결함 수정 후 재실행이 필요하고, sigma_SDCP=250 S/cm과 0.4 um grid는 가정으로 남습니다. 이렇게 강한 결과와 한계를 동시에 보이면, 발표의 신뢰도가 오히려 높아집니다.",
+   "sources": [
+    "docs/mpm_platen_kinematic_stop_defect.md",
+    "docs/sdcp_318_base_sbe_dbe_comparison.md",
+    "docs/data/sdcp318_sigma_sdcp_sweep/sweep_summary.csv"
+   ]
+  }
+ ],
+ "unclassified": 15,
+ "n_charts": 1,
+ "no_notes": []
+}

@@ -72,7 +72,7 @@ if os.path.exists(_env_path):
 
 from flask import (
     Flask, render_template, request, jsonify, send_from_directory,
-    redirect, url_for, send_file, make_response, abort,
+    redirect, url_for, send_file, make_response, abort, Response,
 )
 import storage_sync
 import predictor_engine
@@ -3900,7 +3900,17 @@ _SEMINAR_DOCS = {
     'glossary': ('docs/seminar_20260806_glossary.md', '용어·기호 규약 + 레퍼런스'),
     'guide':    ('docs/pipeline_step1_to_step5_guide.md', 'STEP1–5 파이프라인 가이드'),
 }
-_SEMINAR_DECK = 'docs/seminar/seminar_20260806.pptx'
+_SEMINAR_DECK = 'docs/seminar/seminar_20260806_DEM_MPM_SDCP_section.pptx'
+
+#: 덱에서 뽑아 둔 구조화 JSON (scripts/seminar_deck_extract.py 가 만든다).
+#: ★ 요청마다 pptx 를 파싱하지 않는다 — python-pptx 를 런타임 의존으로 만들지 않고,
+#:   발표 중 파싱 오류로 페이지가 죽지 않게.  덱이 바뀌면 추출기를 다시 돌린다.
+_SEMINAR_SLIDES = 'docs/seminar/seminar_deck.json'
+
+#: 출처 칩에서 열 수 있는 파일 — **화이트리스트 접두어**로만 (경로탈출은 _repo_path 가 막고,
+#: 여기서 다시 확장자·접두어를 좁힌다.  임의 파일 열람 창구가 되면 안 된다).
+_SEMINAR_SRC_PREFIX = ('docs/', 'scripts/', 'webapp/')
+_SEMINAR_SRC_EXT = ('.md', '.py', '.csv', '.json', '.html', '.sh', '.txt')
 
 
 def _repo_path(rel):
@@ -3937,6 +3947,48 @@ def api_seminar_doc(key):
         return jsonify({'ok': False, 'error': f'{type(e).__name__}: {e}'}), 200
     return jsonify({'ok': True, 'key': key, 'label': label, 'path': rel,
                     'bytes': len(text.encode('utf-8')), 'text': text})
+
+
+@app.route('/api/seminar/slides')
+def api_seminar_slides():
+    """덱 구조화 JSON — 슬라이드별 kicker/제목/리드/표/차트/대본/출처."""
+    try:
+        path = _repo_path(_SEMINAR_SLIDES)
+        with open(path, encoding='utf-8') as f:
+            data = json.load(f)
+    except FileNotFoundError:
+        return jsonify({'ok': False, 'error': f'{_SEMINAR_SLIDES} 없음',
+                        'hint': 'python3 scripts/seminar_deck_extract.py 로 생성'}), 200
+    except Exception as e:                                     # noqa: BLE001
+        return jsonify({'ok': False, 'error': f'{type(e).__name__}: {e}'}), 200
+    data['ok'] = True
+    return jsonify(data)
+
+
+@app.route('/api/seminar/file')
+def api_seminar_file():
+    """출처 칩 → 리포 원문 (평문).  화이트리스트 밖은 거부한다."""
+    raw = (request.args.get('p') or '').strip().replace('\\', '/')
+    # ★ 접두어 검사는 **정규화한 뒤에** 한다.  옛 코드는 원문 문자열로 검사해서
+    #   `docs/../CLAUDE.md` 가 통과했다 — 정규화하면 리포 루트라 _repo_path 도 막지 못하고
+    #   화이트리스트 밖 파일이 열렸다 (회귀 9 가 잡았다).  `..` 를 없앤 결과가 여전히
+    #   docs/·scripts/·webapp/ 아래여야 한다.
+    rel = os.path.normpath(raw).replace(os.sep, '/').lstrip('/')
+    if not rel.startswith(_SEMINAR_SRC_PREFIX) or not rel.endswith(_SEMINAR_SRC_EXT):
+        return Response('허용되지 않은 경로입니다: ' + raw, mimetype='text/plain; charset=utf-8',
+                        status=400)
+    try:
+        path = _repo_path(rel)
+    except ValueError:
+        # ★ 경로탈출은 '없음' 이 아니다 — 구분해서 보고해야 로그에서 시도가 보인다.
+        return Response('경로 탈출 거부: ' + raw, mimetype='text/plain; charset=utf-8', status=400)
+    try:
+        with open(path, encoding='utf-8', errors='replace') as f:
+            text = f.read()
+    except (FileNotFoundError, IsADirectoryError):
+        return Response(f'{rel} 없음 (git pull 후 다시 시도)',
+                        mimetype='text/plain; charset=utf-8', status=404)
+    return Response(text, mimetype='text/plain; charset=utf-8')
 
 
 @app.route('/api/seminar/deck')
