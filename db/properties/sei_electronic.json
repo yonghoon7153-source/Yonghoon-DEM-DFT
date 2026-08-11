@@ -281,6 +281,36 @@
       "dos_chain_complete": true,
       "status": "rejected",
       "not_in_this_run": "이번 회수에서 작업폴더에 gap.json 이 없었다 — 옛 기록을 그대로 보존한다(지우지 않음)."
+    },
+    "nd2o3_mp-2763_frozen4f": {
+      "tag": "nd2o3_mp-2763_frozen4f",
+      "vbm": 9.8839,
+      "cbm": 13.8318,
+      "gap": 3.9479,
+      "verdict": "절연체",
+      "nelec": 40.0,
+      "n_occ_bands": 20,
+      "nbnd": 21,
+      "nk": 126,
+      "spin_polarized": false,
+      "total_magnetization_bohr": 0.0,
+      "method": "fixed-occupation nscf eigenvalues (NOT DOS threshold)",
+      "method_id": "gap-fixedocc-frozen4f-v1",
+      "warning": "PBE gap; systematically 30-50% underestimated for wide-gap insulators",
+      "pseudo_Nd": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (z_valence 11 · 4f-in-core · PAW/PBE · sha256 18a3835e6437aa953c8a5b783aae1f5b8c83e48f0fa699f8992f6754bdc35101)",
+      "settings": "no spin, no U (4f 가 core 라 불필요) · ecut 60/480 · vc-relax→scf→fixed-occ nscf",
+      "source_dir": "/data/work/runs/sei_dft_frozen4f/nd2o3_mp-2763",
+      "collected": "2026-08-11",
+      "mp_reference_check": {
+        "mp_id": "mp-2763 (같은 구조 핀)",
+        "mp_band_gap_eV": 3.8118,
+        "ours_eV": 3.9479,
+        "delta_eV": 0.136,
+        "delta_pct": 3.6,
+        "verdict": "합격 — 같은 자릿수·같은 구조. 완전 일치는 기대하지 않음(코드 QE vs VASP · PP 계열 상이)"
+      },
+      "supersedes_note": "옛 nd2o3_mp-2763 항목(artifact_4f, z=14)은 방법 실패의 역사 기록으로 보존한다 — 인용은 이 frozen-4f 항목으로."
     }
-  }
+  },
+  "nd_verdict_2026_08_11": "★ frozen-4f 경로 개통: Nd.pbe-spdn-kjpaw_psl.1.0.0(z=11) 로 Nd₂O₃ 갭 3.948 eV 실측 — MP 같은 구조 3.812 eV 와 3.6% 차로 검증 합격. 2026-08-07 판정('우리 계산으로 정의되지 않는다')은 4f-in-valence PP 에 한정된 진술로 격하된다. 나머지 Nd 상은 같은 경로로 재계산 중."
 }

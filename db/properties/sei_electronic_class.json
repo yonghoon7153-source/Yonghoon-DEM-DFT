@@ -68,12 +68,22 @@
     },
     "nd2o3": {
       "class": "insulator",
-      "evidence": "declared",
-      "gap_eV": null,
-      "basis": "Nd₂O₃ 는 실험적으로 잘 알려진 넓은 갭 절연체이고 MP frozen-4f 참조값도 갭이 열려 있다 (db/properties/nd_gap_reference_mp.json).",
+      "evidence": "measured",
+      "gap_eV": 3.9479,
+      "method_id": "gap-fixedocc-frozen4f-v1",
+      "measured_2026_08_11": {
+        "vbm": 9.8839,
+        "cbm": 13.8318,
+        "gap_eV": 3.9479,
+        "source_dir": "/data/work/runs/sei_dft_frozen4f/nd2o3_mp-2763",
+        "pseudo_Nd": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (z=11, 4f-in-core, sha256 18a3835e…35101)",
+        "spin": "없음(불필요 — 4f 가 core)",
+        "hubbard_u": 0.0,
+        "wall_time": "체인 전체 ~3분 (스핀·U 부재의 실질 이점)",
+        "mp_check": "MP mp-2763(같은 구조 핀) 3.812 eV vs 우리 3.948 — +0.136 eV(3.6%), 합격"
+      },
       "history_2026_08_11": "이전 판정 undetermined/blocked — 4f-in-valence PP(z=14)로는 갭이 정의되지 않았다. 같은 4f 문제 (실측 −6.46 eV 는 ↑/↓ 점유수 불일치까지 겹친 값이라 더 무의미하다).",
-      "unblocked_by": "frozen-4f PP 확보: Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (z=11, sha256 18a3835e…35101) — PP_PIN 으로 파일명 고정 (tools/sei/build_*_inputs.py)",
-      "must_confirm": "fixed-occ nscf 로 갭을 실측하면 evidence 를 measured 로 올린다. ⚠ frozen-4f 검증 1단계(Nd₂O₃ 5원자)가 그 실측이다 — **새 WORK 디렉터리에서** 돌 것 (옛 z=14 산출물이 남은 폴더에서는 러너가 '이미 완료'로 건너뛴다)."
+      "unblocked_by": "frozen-4f PP 확보: Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (z=11, sha256 18a3835e…35101) — PP_PIN 으로 파일명 고정 (tools/sei/build_*_inputs.py)"
     },
     "nd2s3": {
       "class": "insulator",
