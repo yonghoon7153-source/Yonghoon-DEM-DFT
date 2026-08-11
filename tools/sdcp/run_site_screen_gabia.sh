@@ -109,9 +109,14 @@ atlas)
   cd "$REPO"
   # ⚠ `$SS inputs` 는 조각이 없으면 exit 2 를 낸다(의도된 검사). set -e 아래에서 그대로 두면
   #   여기서 스크립트가 통째로 죽어 atlas 가 안 돈다(2026-08-11 실측). 진단은 진단으로만 쓴다.
-  $SS inputs   2>&1 | tee "$LOG/inputs.txt"   || true
-  $SS sites    2>&1 | tee "$LOG/sites.txt"    || true
-  $SS selftest 2>&1 | tee "$LOG/selftest.txt" || true
+  # ⚠ `$SS inputs` 는 조각이 없으면 exit 2 를 낸다(의도된 검사) — 진단이므로 통과시킨다.
+  $SS inputs 2>&1 | tee "$LOG/inputs.txt" || true
+  $SS sites  2>&1 | tee "$LOG/sites.txt"  || true
+  # ★ selftest 는 다르다 — 게이트 회귀시험이 깨졌으면 **여기서 멈춰야** 한다.
+  #   예전엔 || true 라 실패해도 그냥 진행했다 (2026-08-11 Codex 지적, 채택).
+  if ! $SS selftest 2>&1 | tee "$LOG/selftest.txt"; then
+    echo "⛔ 게이트 자체검사 실패 — 스크리닝을 시작하지 않는다. 위 로그를 볼 것."; exit 1
+  fi
   $SS atlas --out "$RUN" 2>&1 | tee "$LOG/atlas.txt"
   echo; echo "→ 다음: bash tools/sdcp/run_site_screen_gabia.sh rigid"
   ;;

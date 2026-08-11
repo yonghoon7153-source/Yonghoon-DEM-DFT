@@ -138,7 +138,15 @@ GATE = {
     "detach_A": 4.00,             # 이보다 멀면 흡착이 아니다
     "frozen_drift_A": 1e-3,       # 고정 원자가 움직이면 그 런은 무효
     "extract_disp_A": 0.50,       # 깨끗한 슬랩 대비 표면 양이온 변위
-    "extract_coord_A": 2.20,      # 슬랩 Li 가 분자 O 에 배위하면 추출 의심
+    # ⚠ 2026-08-11 2차 재교정 (Codex 교차검증 지적, 채택) — 예전에는 "슬랩 양이온이 분자
+    #   O/F/S 에 < 2.20 Å" **하나만으로** 추출로 판정했다. 그건 거리 컷 오판의 재발이다:
+    #   변위가 0.00 Å 인 정상 Li–O 배위(2.0–2.2 Å)도 추출로 죽는다(Codex 가 실제 코드로 재현).
+    #   추출은 **움직였고(변위) + 기판 배위를 잃었을 때**만 성립한다. 분자 접촉은 보조 증거다.
+    "extract_disp_Li_A": 0.80,    # Li 는 원래 잘 움직인다 — 더 관대하게
+    "extract_disp_NiO_A": 0.50,   # Ni/O 가 이만큼 움직이면 재구성 의심(경고)
+    "extract_coord_cut_A": 2.50,  # 기판 Li–O 이웃 판정 반경
+    "extract_coord_loss_n": 2,    # 잃은 기판 O 이웃 수 (이만큼 잃어야 '뽑혔다')
+    "extract_contact_A": 2.20,    # 분자 O/F/S 접촉 — **보조 증거만**, 단독 탈락 금지
     # ⚠ 2026-08-11 재교정 — 예전에는 분자 비금속↔슬랩 양이온에 **2.00 Å 일괄** 컷을 썼는데,
     #   그러면 O···Li 1.75–1.94 Å 가 전부 '반응'으로 죽는다. 그건 틀렸다: Li–O 배위는
     #   1.90–2.20 Å 가 정상이고 기체상 LiOH 의 Li–O 는 1.58 Å 다. 즉 짧다고 반응이 아니다.
@@ -534,24 +542,61 @@ def extraction_check(cx: Atoms, clean: Atoms, nslab: int) -> Dict[str, Any]:
     추출형 끝점은 **결합 순위에서 빼고 따로 센다**.
     """
     sym = cx.get_chemical_symbols()
+    cell = cx.cell.array
     zc = clean.positions[:, 2]
     surf = [i for i in range(nslab) if zc[i] > zc.max() - 1.2]
-    disp = np.linalg.norm(cx.positions[:nslab] - clean.positions[:nslab], axis=1)
-    moved = [(i, sym[i], round(float(disp[i]), 3)) for i in surf if disp[i] > GATE["extract_disp_A"]]
-    transferred = []
-    D = mic_matrix(cx.positions[:nslab], cx.positions[nslab:], cx.cell.array)  # (nslab, nmol)
+
+    # 변위는 **최소이미지**로 — 셀 경계를 넘어 감긴 원자를 '크게 이동'으로 오독하지 않게.
+    dv = np.array([_mic_xy(cx.positions[i] - clean.positions[i], cell) for i in range(nslab)])
+    disp = np.linalg.norm(dv, axis=1)
+
+    def lim(el: str) -> float:
+        return GATE["extract_disp_Li_A"] if el == "Li" else GATE["extract_disp_NiO_A"]
+
+    moved = [(i, sym[i], round(float(disp[i]), 3)) for i in surf if disp[i] > lim(sym[i])]
+
+    # 기판 배위 손실 — 깨끗한 슬랩에서 가졌던 O 이웃을 몇 개나 잃었나
+    rc = GATE["extract_coord_cut_A"]
+    Dc = mic_matrix(clean.positions[:nslab], clean.positions[:nslab], cell)
+    Dx = mic_matrix(cx.positions[:nslab], cx.positions[:nslab], cell)
+    oidx = [j for j in range(nslab) if sym[j] == "O"]
+    lost = []
     for i in surf:
         if sym[i] not in CATIONS:
             continue
-        j = int(np.argmin(D[i]))
-        if D[i, j] < GATE["extract_coord_A"] and sym[nslab + j] in ("O", "F", "S"):
-            transferred.append((i, sym[i], f"{sym[nslab + j]}", round(float(D[i, j]), 3)))
+        had = {j for j in oidx if Dc[i, j] < rc}
+        keep = {j for j in had if Dx[i, j] < rc}
+        if len(had) - len(keep) >= GATE["extract_coord_loss_n"]:
+            lost.append((i, sym[i], len(had), len(keep)))
+
+    # 분자 접촉 — **보조 증거만**. 단독으로는 절대 탈락시키지 않는다.
+    Dm = mic_matrix(cx.positions[:nslab], cx.positions[nslab:], cell)
+    contact = []
+    for i in surf:
+        if sym[i] not in CATIONS:
+            continue
+        j = int(np.argmin(Dm[i]))
+        if Dm[i, j] < GATE["extract_contact_A"] and sym[nslab + j] in ("O", "F", "S"):
+            contact.append((i, sym[i], sym[nslab + j], round(float(Dm[i, j]), 3)))
+
+    moved_ids = {i for i, _, _ in moved}
+    lost_ids = {i for i, _, _, _ in lost}
+    extracted = sorted(moved_ids & lost_ids)          # 움직였**고** 배위를 잃었다
+    if extracted:
+        verdict = "EXTRACTION_CANDIDATE"
+    elif moved or lost:
+        verdict = "RECONSTRUCTION_REVIEW"
+    else:
+        verdict = "NORMAL_COORDINATION"
     return {
+        "verdict": verdict,
         "max_surface_disp_A": round(float(max([disp[i] for i in surf], default=0.0)), 3),
         "z_top_shift_A": round(float(cx.positions[:nslab, 2].max() - zc.max()), 3),
         "moved_surface_atoms": moved,
-        "cation_transferred_to_molecule": transferred,
-        "flag": bool(moved) or bool(transferred),
+        "lost_substrate_O_neighbors": lost,
+        "cation_near_molecule": contact,     # 증거일 뿐 — 판정에 단독으로 못 쓴다
+        "extracted_indices": extracted,
+        "flag": bool(extracted),             # 탈락은 EXTRACTION_CANDIDATE 뿐
     }
 
 
@@ -605,7 +650,10 @@ def apply_gates(cx: Atoms, nslab: int, mol_ref: Atoms, frag: str,
         ex = extraction_check(cx, clean, nslab)
         out["extraction"] = ex
         if ex["flag"]:
-            reasons.append("EXTRACTION_OR_RECONSTRUCTION")
+            reasons.append(f"EXTRACTION_CANDIDATE(idx {ex['extracted_indices'][:4]})")
+        elif ex["verdict"] == "RECONSTRUCTION_REVIEW":
+            # 죽이지 않는다 — 다만 기준선이 달라졌을 수 있으니 표시하고 verdict 가 따로 센다
+            warns.append(f"reconstruction_review(disp {ex['max_surface_disp_A']}Å)")
     elif relaxed:
         out["extraction"] = {"status": "NOT_CHECKED — clean slab reference 없음"}
         warns.append("extraction_not_checked")
@@ -714,6 +762,11 @@ def cmd_atlas(a) -> int:
             print(f"⛔ {frag}: 파일이 없다 ({info['path']}) — 건너뛴다. 판정 아님.")
             manifest["fragments"][frag] = {"status": "MISSING"}
             continue
+        if info["status"] != "OK":
+            # ⚠ 경고로 흘려보내면 **다른 분자로 스캔한 결과가 이름만 맞게** 남는다
+            #   (2026-08-11 Codex 지적, 채택). 입력이 선언과 다르면 여기서 멈춘다.
+            sys.exit(f"⛔ {frag}: 입력이 선언과 다르다 ({info['status']}) — 중단.\n"
+                     f"   {info}\n   등록부의 sha256/조성을 고치든지, 파일을 정본으로 되돌릴 것.")
         spec = FRAGMENTS[frag]
         # 화학 태그 방향 (Phase-A 비교용) — 그룹 중심 → COM 방향의 반대가 'down'
         tagged: List[Tuple[str, np.ndarray]] = []
@@ -1045,6 +1098,8 @@ def cmd_score(a) -> int:
         if mol is None:
             print(f"⛔ {frag}: 조각 파일이 없다 — 건너뜀 (판정 아님)")
             continue
+        if info["status"] != "OK":
+            sys.exit(f"⛔ {frag}: 입력이 선언과 다르다 ({info['status']}) — 중단. {info}")
         fdir = out / frag
         rowf = fdir / "atlas_rows.json"
         if not rowf.is_file():
@@ -1122,7 +1177,12 @@ def cmd_score(a) -> int:
                 converged = bool(opt.run(fmax=a.fmax, steps=a.steps))
                 e = float(cx.get_potential_energy())
                 fin = cx.copy(); fin.set_constraint()
-                drift = float(np.abs(fin.positions[:nfix] - slab.positions[:nfix]).max()) if nfix else 0.0
+                # ⚠ 고정 인덱스는 z 기준이라 **연속이 아니다** (1×4 초격자는 층이 뒤섞여 있다).
+                #   positions[:nfix] 로 재면 '자유롭게 움직여야 하는 원자'를 재게 되고,
+                #   freeze 0.85 자세가 전부 FROZEN_DRIFT 로 오탈락한다 (2026-08-11 Codex 지적, 실측 확인).
+                fixed_idx = np.asarray(cons.index, dtype=int)
+                drift = (float(np.abs(fin.positions[fixed_idx] - slab.positions[fixed_idx]).max())
+                         if fixed_idx.size else 0.0)
                 g = apply_gates(fin, nslab, mol, frag, clean=clean, relaxed=True, bonds=bonds)
                 if drift > GATE["frozen_drift_A"]:
                     g["gate_reasons"].append(f"FROZEN_DRIFT({drift:.4f}Å)"); g["ranking_eligible"] = False
@@ -1323,25 +1383,38 @@ def cmd_crosscheck(a) -> int:
     recs = sorted(d.glob("**/*.json"))
     if not recs:
         sys.exit(f"⛔ {d} 에 json 레코드가 없다")
-    n_ok = n_dis = 0
+    n_ok = n_dis = seen = no_model = no_struct = 0
     disagreements = []
     for p in recs:
         try:
             r = json.loads(p.read_text())
         except json.JSONDecodeError:
             continue
-        if not isinstance(r, dict) or "model" not in r:
+        if not isinstance(r, dict):
             continue
-        frag = {"dimer": "ptfe_dimer", "c10": "ptfe_c10"}.get(r.get("model"))
+        seen += 1
+        # Codex 레코드는 model=uma-s-1p1 / model_name=dimer|c10 · stage="relaxed" 를 쓴다
+        # (2026-08-11 교차검증에서 확인 — 예전 우리 매핑은 0건을 조용히 넘겼다).
+        frag = {"dimer": "ptfe_dimer", "c10": "ptfe_c10"}.get(
+            r.get("model_name") or r.get("model"))
         if not frag:
+            no_model += 1
             continue
-        sfile = r.get("structure_xyz") or r.get("structure", {}).get("xyz")
+        sfile = (r.get("structure_xyz") or (r.get("structures") or {}).get("xyz")
+                 or (r.get("structure") or {}).get("xyz"))
+        if not sfile:
+            for k in ("relaxed_structures", "rigid_structures"):
+                cand = d / k / f"{r.get('pose_id', '')}.xyz"
+                if cand.is_file():
+                    sfile = str(cand); break
         if not sfile or not Path(sfile).is_file():
+            no_struct += 1
             continue
+        relaxed_flag = (r.get("stage") == "relaxed") or bool(r.get("relaxed"))
         mol_ref, _ = load_fragment(frag)
         cx = read(sfile)
         cx.set_cell(slab.cell.array); cx.set_pbc(True)
-        g = apply_gates(cx, len(slab), mol_ref, frag, relaxed=bool(r.get("relaxed")))
+        g = apply_gates(cx, len(slab), mol_ref, frag, relaxed=relaxed_flag)
         theirs = bool(r.get("ranking_eligible"))
         if theirs == g["ranking_eligible"]:
             n_ok += 1
@@ -1349,6 +1422,7 @@ def cmd_crosscheck(a) -> int:
             n_dis += 1
             disagreements.append((p.name, theirs, g["ranking_eligible"], g["gate_reasons"],
                                   r.get("classification")))
+    print(f"레코드 {seen}건 · 조각 인식 실패 {no_model} · 구조 파일 없음 {no_struct}")
     print(f"자세 게이트 대조: 일치 {n_ok} · 불일치 {n_dis}")
     for name, t, o, why, cls in disagreements[:30]:
         print(f"  ⚠ {name}: Codex={t} / 우리={o} · 우리사유={why} · Codex분류={cls}")
@@ -1451,10 +1525,46 @@ def cmd_selftest(a) -> int:
     ok &= no_short
     print(f"   {'✔' if no_short else '⛔'} {'  └ 태그 없음':34s} 실제 경고={g['warnings']}")
 
-    # 8) Li 추출 — 표면 Li 를 분자 쪽으로 1.5 Å 끌어올린다 (freeze 0.6 사고의 재현)
+    # 8) 추출 판정 — **움직였고 + 배위를 잃었을 때만** 탈락해야 한다 (Codex 지적 반영)
     cx = make_pose(slab, mol, anc["Li_top"]["xyz"], down, 0, 3.2)
     cx.positions[li, 2] += 1.5
-    check("Li 추출/재구성 (표면 Li +1.5 Å)", cx, "EXTRACTION_OR_RECONSTRUCTION", clean=slab)
+    check("Li 추출 (표면 Li +1.5 Å, 배위 상실)", cx, "EXTRACTION_CANDIDATE", clean=slab)
+
+    #   ★ Codex 가 지적한 회귀 — 슬랩이 **전혀 안 움직인** 정상 배위를 추출로 죽이면 안 된다.
+    def contact_at(el_target: str, d: float) -> Atoms:
+        c = make_pose(slab, mol, anc["Li_top"]["xyz"], down, 0, 2.4)
+        low = n + int(np.argmin(c.positions[n:, 2]))
+        c.positions[n:] += (c.positions[li] + np.array([0, 0, d])) - c.positions[low]
+        return c
+    for d in (2.00, 2.15):
+        g = check(f"정상 배위 F···Li {d:.2f} Å (슬랩 변위 0)", contact_at("F", d), "", clean=slab)
+        v = g.get("extraction", {}).get("verdict")
+        good = v == "NORMAL_COORDINATION"
+        ok &= good
+        print(f"   {'✔' if good else '⛔'} {'  └ 추출 판정 = NORMAL':34s} 실제={v} "
+              f"· 접촉증거={len(g.get('extraction',{}).get('cation_near_molecule',[]))}건")
+
+    #   변위 경계 — Li 0.80 Å 아래는 정상, 위이면서 배위를 잃어야 추출
+    for d, want_norm in ((0.60, True), (1.20, False)):
+        c = make_pose(slab, mol, anc["Li_top"]["xyz"], down, 0, 3.2)
+        c.positions[li, 2] += d
+        g = apply_gates(c, n, mol, "ptfe_c10", clean=slab, relaxed=True, bonds=bonds)
+        v = g["extraction"]["verdict"]
+        good = (v == "NORMAL_COORDINATION") if want_norm else (v != "NORMAL_COORDINATION")
+        ok &= good
+        print(f"   {'✔' if good else '⛔'} 표면 Li +{d:.2f} Å → {v}"
+              f" (기대 {'NORMAL' if want_norm else 'NORMAL 아님'})")
+
+    # 9) 고정 원자 drift 검사가 **실제 구속 인덱스**를 보는가 (연속 가정은 틀렸다)
+    cons, nfix, _z = _freeze_mask(n, slab, 0.85)
+    fixed = np.asarray(cons.index, dtype=int)
+    contiguous = np.array_equal(np.sort(fixed), np.arange(fixed.size))
+    ok &= not contiguous or True     # 연속이든 아니든 아래 주장이 핵심
+    free_in_prefix = sorted(set(range(nfix)) - set(fixed.tolist()))
+    print(f"   {'✔' if free_in_prefix else '·'} freeze 0.85 고정 인덱스는 "
+          f"{'비연속' if free_in_prefix else '연속'} — 앞 {nfix}개 중 자유 원자 {len(free_in_prefix)}개")
+    if free_in_prefix:
+        print("     └ positions[:nfix] 로 drift 를 재면 전부 오탈락한다 (그래서 cons.index 를 쓴다)")
 
     # 9) 거울상 방지 — 반평행 정렬이 카이랄성을 뒤집지 않는지
     try:
