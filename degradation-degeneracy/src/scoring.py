@@ -391,17 +391,56 @@ def summarize(df: pd.DataFrame, tol: float = DEFAULT_TOL) -> dict:
 # ---------------------------------------------------------------- CLI
 
 def run_scoring(in_dir, out_dir=None, tol: float = DEFAULT_TOL,
-                fits_name: str = "fits.parquet") -> dict:
+                fits_name: str = "fits.parquet", allow_uncanonical: bool = False) -> dict:
+    """★ F69 — 채점 대상은 **정본 fits.parquet 뿐**이다.
+
+    예전에는 `--fits` 로 임의 parquet 을 받아 provenance 검사 없이
+    `degeneracy_map.parquet` 을 만들었다. 그 map 에서 `objective_comparison.yaml`
+    이 나오고 보고서가 그걸 그대로 읽으므로, **파일 인자 하나로 degeneracy 를
+    94% → 0% 로 바꾸고도 인용 금지 배너가 뜨지 않았다.** (리뷰가 실제로 재현)
+
+    `allow_uncanonical=True` 는 진단 전용이다. 이때는 산출물에 무효 표식을 박아
+    하류가 인용하지 못하게 한다.
+    """
     import json
     from pathlib import Path
 
     import yaml
 
+    from src.io import fits_seal, validate_provenance
+
     in_dir = Path(in_dir)
     out_dir = Path(out_dir) if out_dir else in_dir
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    df = pd.read_parquet(in_dir / fits_name)
+    fits_path = in_dir / fits_name
+    canonical = fits_path.resolve() == (in_dir / "fits.parquet").resolve()
+    if not canonical and not allow_uncanonical:
+        raise RuntimeError(
+            f"채점 대상이 정본이 아닙니다: {fits_path}\n"
+            f"  정본은 {in_dir / 'fits.parquet'} 하나뿐입니다. 임의 parquet 을 채점하면 "
+            f"그 숫자가 비교표와 보고서까지 그대로 흘러가고, provenance 배너는 "
+            f"정본만 보므로 검출되지 않습니다 (F69).\n"
+            f"  진단 목적이면 allow_uncanonical=True / --allow-uncanonical 을 쓰세요 "
+            f"(산출물에 무효 표식이 박힙니다).")
+
+    # ★ F69 — 정본이라도 **봉인과 일치하는지** 본다. 채점은 fits 를 그대로 읽으므로,
+    #   fitting 이후 파일이 바뀌었다면 채점 결과부터 이미 다른 숫자다.
+    seal_state = "정상"
+    if canonical:
+        v = validate_provenance(in_dir, fits_path=fits_path)
+        bad = [k for k in ("출력봉인_재계산", "조건집합_서명일치", "출력_완전성")
+               if k in v["fail"]]
+        if bad:
+            seal_state = f"봉인 불일치: {bad}"
+            log.warning("⚠ 채점 대상이 봉인과 어긋납니다 (%s) — 결과를 인용하지 마세요", bad)
+        elif "출력봉인_기록" in v["fail"]:
+            seal_state = "봉인 기록 없음 (F68 이전 산출물)"
+            log.warning("⚠ fits_seal 기록이 없는 옛 산출물입니다 — 결과를 인용하지 마세요")
+    else:
+        seal_state = f"정본 아님 (진단 전용): {fits_name}"
+
+    df = pd.read_parquet(fits_path)
     log.info("채점 대상: %d행 (조건 %d, 목적함수 %s)", len(df),
              df["cond_id"].nunique(), sorted(df["objective"].unique()))
 
@@ -417,6 +456,14 @@ def run_scoring(in_dir, out_dir=None, tol: float = DEFAULT_TOL,
     df.to_parquet(path, index=False)
 
     summary = summarize(df, tol)
+    # ★ F69 — 채점 산출물이 **무엇을 채점했는지** 스스로 밝힌다. 하류(비교표·보고서)가
+    #   이 표식을 보고 인용 여부를 판단할 수 있어야 한다.
+    summary["_채점원본"] = {
+        "fits": str(fits_path), "canonical": bool(canonical),
+        "fits_sha256": fits_seal(fits_path)["file_sha256"],
+        "봉인상태": seal_state,
+        "인용가능": bool(canonical and seal_state == "정상"),
+    }
 
     # F21: restarts_json에서 해석 가능한 multi-start 지표를 다시 만든다.
     # (재계산 없이 저장된 원본 (p, J)만으로 가능)
@@ -530,13 +577,17 @@ def main() -> None:
     ap.add_argument("--in", dest="in_dir", required=True)
     ap.add_argument("--out", default=None)
     ap.add_argument("--fits", default="fits.parquet", help="채점할 fits 파일명")
+    ap.add_argument("--allow-uncanonical", action="store_true",
+                    help="정본이 아닌 parquet 채점을 허용한다 (진단 전용 — "
+                         "산출물에 무효 표식이 박히고 보고서가 인용을 막는다)")
     ap.add_argument("--tol", type=float, default=DEFAULT_TOL)
     ap.add_argument("--log-level", default="INFO")
     args = ap.parse_args()
 
     logging.basicConfig(level=args.log_level,
                         format="%(asctime)s %(levelname)s %(name)s: %(message)s")
-    s = run_scoring(args.in_dir, args.out, args.tol, args.fits)
+    s = run_scoring(args.in_dir, args.out, args.tol, args.fits,
+                    allow_uncanonical=args.allow_uncanonical)
     print(json.dumps({k: v for k, v in s.items() if not k.startswith("_")},
                      ensure_ascii=False, indent=2, default=str))
 

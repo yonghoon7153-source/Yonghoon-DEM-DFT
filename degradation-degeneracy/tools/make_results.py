@@ -206,6 +206,67 @@ def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
     return lines
 
 
+def _recheck_derived(in_dir: Path, name: str) -> dict | None:
+    """★ F69 — 파생 YAML 의 숫자를 **fits 에서 다시 계산해** 대조한다.
+
+    보고서는 저장된 YAML 을 그대로 렌더한다. 그래서 비율 한 개만 고쳐도
+    (`0.944444 → 0.123456`) 보고서가 12% 를 싣고 인용 금지 배너는 뜨지 않았다.
+    저장된 `ok`·digest 는 자기신고이므로 믿지 않는다.
+
+    반환 None = 그 파일이 없음 (검사 대상 아님).
+    """
+    import math
+
+    y = _load(in_dir / name)
+    if not y:
+        return None
+    try:
+        if name == "case_comparison.yaml":
+            from tools.compare_cases import compare
+            prov = y.get("provenance") or {}
+            if set(prov) != {"grid", "halfcell"}:
+                return {"ok": False, "why": "provenance tag 가 불완전해 재계산할 수 없다"}
+            now = compare(Path(prov["grid"]["scored_file"]),
+                          Path(prov["halfcell"]["scored_file"]))
+            pairs = [(y.get(t, {}).get(o, {}).get(k), now.get(t, {}).get(o, {}).get(k))
+                     for t in ("grid", "halfcell")
+                     for o in (y.get(t) or {})
+                     for k in ("degenerate_frac", "degenerate_frac_corrected",
+                               "mean_abs_err")]
+        else:
+            # ★ map 이 아니라 **정본 fits 에서 다시 채점**해 대조한다.
+            #   degeneracy_map.parquet 자체가 변조된 경우까지 잡기 위해서다.
+            from tools.compare_cases import _scored
+            from tools.compare_objectives import run_compare
+            now = run_compare(in_dir, write=False,
+                              df=_scored(in_dir / "fits.parquet", 0.02))
+            pairs = _flat_pairs(y, now)
+    except Exception as e:  # noqa: BLE001
+        return {"ok": False, "why": f"재계산 실패: {e}"}
+
+    bad = [(a, b) for a, b in pairs
+           if a is None or b is None
+           or not math.isclose(float(a), float(b), rel_tol=1e-9, abs_tol=1e-12)]
+    return {"ok": not bad,
+            "why": "" if not bad else
+                   f"{len(bad)}개 값이 다르다 (예: 저장 {bad[0][0]} vs 재계산 {bad[0][1]})"}
+
+
+def _flat_pairs(saved, now, path=""):
+    """중첩 dict 의 **숫자만** 짝지어 뽑는다 (문자열 주석·경로는 제외)."""
+    out = []
+    if isinstance(saved, dict) and isinstance(now, dict):
+        for k in saved:
+            if isinstance(k, str) and k.startswith("_"):
+                continue          # 주석·주의 문구
+            if k in ("provenance", "provenance_ok", "공통_run_spec"):
+                continue
+            out += _flat_pairs(saved[k], now.get(k), f"{path}.{k}")
+    elif isinstance(saved, (int, float)) and not isinstance(saved, bool):
+        out.append((saved, now))
+    return out
+
+
 def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     in_dir, repo_root = Path(in_dir), Path(repo_root)
     cmp_res = _load(in_dir / "objective_comparison.yaml")
@@ -284,6 +345,40 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
         prov["reasons"] = list(prov["reasons"]) + [
             "case_comparison.yaml에 provenance 블록이 없다 (F52 이전 산출물)"]
         prov["checks"]["비교입력_provenance_없음"] = "실패 — F52 이전 산출물"
+
+    # ★ F69 — 저장된 **숫자**를 재계산해 대조한다.
+    #   F60 은 fits digest 만 다시 봤다. 그래서 `case_comparison.yaml` 의
+    #   `degenerate_frac: 0.944444 → 0.123456` 이나 `objective_comparison.yaml` 의
+    #   `94.44% → 12.3456%` 같은 **파생 숫자 변조**가 그대로 렌더됐고 배너도 없었다.
+    #   보고서가 렌더하는 값은 전부 fits 에서 다시 나와야 한다.
+    for name, why in (("case_comparison.yaml", "비교표"),
+                      ("objective_comparison.yaml", "목적함수 비교표")):
+        rc = _recheck_derived(in_dir, name)
+        if rc is None:
+            continue
+        prov["checks"][f"파생_{name}"] = "통과" if rc["ok"] else f"실패 — {rc['why']}"
+        if not rc["ok"]:
+            prov["ok"] = False
+            prov["fail"] = list(prov["fail"]) + [f"파생_{name}"]
+            prov["reasons"] = list(prov["reasons"]) + [
+                f"{why}({name})의 숫자가 fits 에서 재계산한 값과 다르다: {rc['why']}"]
+
+    # ★ F69 — 채점 자체가 정본에서 나왔는가. `--fits` 로 임의 parquet 을 채점하면
+    #   degeneracy 가 94% → 0% 로 바뀌는데 배너는 정본만 봤다.
+    _sm = _load(in_dir / "degeneracy_summary.yaml") or {}
+    _src = _sm.get("_채점원본")
+    if _sm and _src is not None and not _src.get("인용가능"):
+        prov["ok"] = False
+        prov["fail"] = list(prov["fail"]) + ["채점원본_비정본"]
+        prov["reasons"] = list(prov["reasons"]) + [
+            f"채점 대상이 인용 가능한 정본이 아니다: {_src.get('봉인상태')}"]
+        prov["checks"]["채점원본_비정본"] = f"실패 — {_src.get('봉인상태')}"
+    elif _sm and _src is None:
+        prov["ok"] = False
+        prov["fail"] = list(prov["fail"]) + ["채점원본_기록없음"]
+        prov["reasons"] = list(prov["reasons"]) + [
+            "degeneracy_summary.yaml 에 _채점원본 표식이 없다 (F69 이전 산출물)"]
+        prov["checks"]["채점원본_기록없음"] = "실패 — F69 이전 산출물"
     if not prov["ok"]:
         P.append(
             "> # ⛔ 인용 금지\n"

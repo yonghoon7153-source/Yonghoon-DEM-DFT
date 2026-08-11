@@ -1305,3 +1305,110 @@ def test_validator_rejects_forged_seal_record(tmp_path):
     assert "출력봉인_재계산" not in v["fail"]          # 기록은 맞췄으니 통과
     assert "조건집합_서명일치" in v["fail"], "서명된 조건 집합과의 대조가 없다"
     assert "출력_완전성" in v["fail"]
+
+
+# ────────────────────────────────────── F69: 파생 체인 (7차 게이트 리뷰 발견 7)
+#  F59/F60 은 Case 비교의 **한 입구**만 막았고, 실제 scoring → compare → report
+#  체인은 열려 있었다. 아래 셋 전부 리뷰가 실제로 재현해 보인 것이다.
+
+def test_scoring_rejects_uncanonical_fits(tmp_path):
+    """★ F69 — `--fits` 로 임의 parquet 을 채점할 수 없다.
+
+    반례: canonical `fits.parquet` 은 그대로 두고 `alternate.parquet` 의 hats 를
+    truth 로 조작한 뒤 `run_scoring(..., fits_name='alternate.parquet')` 를 돌리면
+    **objective degeneracy 가 94% → 0%** 가 되고 인용 금지 배너는 뜨지 않았다.
+    """
+    import pytest
+
+    from src.scoring import run_scoring
+
+    d, _ = _complete_artifact(tmp_path)
+    alt = _fits(objectives=("pocv_dvdq",)).copy()
+    for k in ("lli", "lam_pe", "lam_ne"):
+        alt[f"{k}_hat"] = alt[k]                     # 오차 0 — degeneracy 0%
+    alt.to_parquet(d / "alternate.parquet", index=False)
+
+    with pytest.raises(RuntimeError, match="정본"):
+        run_scoring(d, fits_name="alternate.parquet")
+
+    # 진단 목적으로 허용하면 산출물이 스스로 무효를 밝힌다
+    s = run_scoring(d, out_dir=tmp_path / "diag", fits_name="alternate.parquet",
+                    allow_uncanonical=True)
+    assert s["_채점원본"]["인용가능"] is False
+    assert not s["_채점원본"]["canonical"]
+
+
+def test_compare_cases_rejects_grid_grid(tmp_path):
+    """★ F69 — grid artifact 두 개를 넣으면 "기준 곡선 비교"가 아니다.
+
+    반례: 두 artifact 의 `run_spec.reference` 가 모두 `grid` 인데
+    `compare_cases.provenance_ok = True` 였고 인용 금지 배너도 없었다.
+    tag 가 **인자 순서**로만 붙었기 때문이다. 결론 3 전체가 이 전제 위에 있다.
+    """
+    from tools.compare_cases import compare
+
+    a, _ = _complete_artifact(tmp_path / "a")
+    b, _ = _complete_artifact(tmp_path / "b")      # 둘 다 reference: grid
+    res = compare(a / "fits.parquet", b / "fits.parquet")
+
+    assert res["provenance_ok"] is False
+    assert res["provenance"]["halfcell"]["reference_실제"] == "grid"
+    assert "reference_역할불일치" in res["provenance"]["halfcell"]["fail"]
+
+
+def test_compare_cases_flags_different_experiments(tmp_path):
+    """★ F69 — 서로 다른 curves·조건 집합의 두 표는 "기준 곡선 효과"가 아니다."""
+    import yaml
+
+    from tools.compare_cases import compare
+
+    a, _ = _complete_artifact(tmp_path / "a")
+    b, _ = _complete_artifact(tmp_path / "b")
+    m = yaml.safe_load((b / "manifest.yaml").read_text(encoding="utf-8"))
+    m["run_spec"]["reference"] = "halfcell"        # 역할은 맞춰 두고
+    m["run_spec"]["curves_sha"] = "다른곡선"        # 입력만 다르게
+    (b / "manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+
+    res = compare(a / "fits.parquet", b / "fits.parquet")
+    assert res["provenance_ok"] is False
+    assert res["공통_run_spec"]["curves_sha"]["일치"] is False
+    assert "인용 금지" in res["_주의_공통성"]
+
+
+def test_results_banner_catches_tampered_derived_yaml(tmp_path):
+    """★ F69 — 파생 YAML 의 **숫자**를 고치면 배너가 떠야 한다.
+
+    반례: `case_comparison.yaml` 의 `degenerate_frac: 0.944444 → 0.123456` 로
+    바꾸면 보고서가 **12% 를 그대로 렌더**하고 배너는 뜨지 않았다. F60 은
+    fits digest 만 다시 봤고 숫자는 재계산하지 않았기 때문이다.
+    """
+    import yaml
+
+    from tools.compare_cases import compare
+    from tools.make_results import build
+
+    d, _ = _complete_artifact(tmp_path)
+    h, _ = _complete_artifact(tmp_path / "h")
+    m = yaml.safe_load((h / "manifest.yaml").read_text(encoding="utf-8"))
+    m["run_spec"]["reference"] = "halfcell"
+    (h / "manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+
+    from tools.compare_objectives import run_compare
+    run_compare(d, d)
+
+    cc = compare(d / "fits.parquet", h / "fits.parquet")
+    (d / "case_comparison.yaml").write_text(
+        yaml.safe_dump(cc, allow_unicode=True), encoding="utf-8")
+    before = build(d, tmp_path / "R0.md", repo_root=tmp_path).read_text(encoding="utf-8")
+    assert "파생_case_comparison.yaml" not in before or "인용 금지" not in before[:600]
+
+    # 비율 하나만 고친다
+    tag = next(iter(cc["grid"]))
+    cc["grid"][tag]["degenerate_frac"] = 0.123456
+    (d / "case_comparison.yaml").write_text(
+        yaml.safe_dump(cc, allow_unicode=True), encoding="utf-8")
+    after = build(d, tmp_path / "R1.md", repo_root=tmp_path).read_text(encoding="utf-8")
+
+    assert "파생_case_comparison.yaml" in after, "변조된 파생 숫자를 잡지 못했다"
+    assert "인용 금지" in after[:600]
+    assert before != after

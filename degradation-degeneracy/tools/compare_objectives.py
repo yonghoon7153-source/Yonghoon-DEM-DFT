@@ -454,20 +454,30 @@ def plot_weight_curve(summary: pd.DataFrame, out_path,
 
 # ---------------------------------------------------------------- 실행
 
-def run_compare(in_dir, out_dir=None, tol: float = 0.02) -> dict:
+def run_compare(in_dir, out_dir=None, tol: float = 0.02,
+                write: bool = True, df: "pd.DataFrame | None" = None) -> dict:
+    """★ F69 — `write=False` / `df=` 는 **재검증용**이다.
+
+    보고서 생성 시점에 저장된 `objective_comparison.yaml` 의 숫자를 다시 계산해
+    대조하려면, 파일을 덮어쓰지 않고 같은 계산을 돌릴 수 있어야 한다. 그리고
+    `df` 를 직접 주면 `degeneracy_map.parquet` 이 아니라 **정본 fits 에서 다시
+    채점한 결과**로 대조할 수 있다 — map 자체가 변조된 경우까지 잡는다.
+    """
     import yaml
 
     in_dir = Path(in_dir)
     out_dir = Path(out_dir) if out_dir else in_dir
-    map_path = in_dir / "degeneracy_map.parquet"
-    if not map_path.exists():
-        raise SystemExit(f"{map_path} 없음 — 먼저 ./run.sh --mode score --in {in_dir}")
-    df = pd.read_parquet(map_path)
+    if df is None:
+        map_path = in_dir / "degeneracy_map.parquet"
+        if not map_path.exists():
+            raise SystemExit(f"{map_path} 없음 — 먼저 ./run.sh --mode score --in {in_dir}")
+        df = pd.read_parquet(map_path)
 
     tbl = comparison_table(df)
     tbl_noise = comparison_table(df, by_noise=True)
-    tbl.to_csv(out_dir / "objective_comparison.csv", index=False)
-    tbl_noise.to_csv(out_dir / "objective_comparison_by_noise.csv", index=False)
+    if write:
+        tbl.to_csv(out_dir / "objective_comparison.csv", index=False)
+        tbl_noise.to_csv(out_dir / "objective_comparison_by_noise.csv", index=False)
 
     objs = _order(df["objective"].unique())
     verdicts = {o: verdict_22p(df, o) for o in objs}
@@ -478,7 +488,8 @@ def run_compare(in_dir, out_dir=None, tol: float = 0.02) -> dict:
     gaps_all = {o: gap_analysis(df, o, tol=tol, recoverable_only=False) for o in objs}
     sens = {o: gap_sensitivity(df, o) for o in objs}
     tbl_all = comparison_table(df, recoverable_only=False)
-    tbl_all.to_csv(out_dir / "objective_comparison_all_conditions.csv", index=False)
+    if write:
+        tbl_all.to_csv(out_dir / "objective_comparison_all_conditions.csv", index=False)
 
     figs = {}
     for o in objs:
@@ -528,11 +539,12 @@ def run_compare(in_dir, out_dir=None, tol: float = 0.02) -> dict:
         }
     except KeyError:
         pass
-    (out_dir / "objective_comparison.yaml").write_text(
-        yaml.safe_dump(result, allow_unicode=True, sort_keys=False, default_flow_style=False),
-        encoding="utf-8")
-
-    print(to_markdown(tbl))
+    if write:
+        (out_dir / "objective_comparison.yaml").write_text(
+            yaml.safe_dump(result, allow_unicode=True, sort_keys=False,
+                           default_flow_style=False),
+            encoding="utf-8")
+        print(to_markdown(tbl))
     return result
 
 

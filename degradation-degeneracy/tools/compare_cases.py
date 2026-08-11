@@ -63,15 +63,44 @@ def compare(grid_fits: Path, halfcell_fits: Path, tol: float = 0.02) -> dict:
     g = _scored(grid_fits, tol)
     h = _scored(halfcell_fits, tol)
     prov = {}
+    specs = {}
     for tag, fp in (("grid", Path(grid_fits)), ("halfcell", Path(halfcell_fits))):
         run_dir = fp.parent if fp.is_file() else fp
         scored_file = fp if fp.is_file() else run_dir / "fits.parquet"
         # F59: **실제로 채점한 파일**을 검증 대상으로 넘긴다
         v = validate_provenance(run_dir, fits_path=scored_file)
+        mp = run_dir / "manifest.yaml"
+        man = (yaml.safe_load(mp.read_text(encoding="utf-8")) or {}) if mp.exists() else {}
+        spec = man.get("run_spec") or {}
+        specs[tag] = spec
+        # ★ F69 — tag 는 **인자 순서**로 붙는다. 실제 역할을 확인하지 않으면
+        #   grid artifact 두 개를 넣어도 "grid vs halfcell" 표가 나온다
+        #   (리뷰 실측: reference = grid/grid 인데 provenance_ok=True, 배너 없음).
+        #   이 비교의 결론 3 전체가 "기준 곡선이 다르다"는 전제 위에 있다.
+        actual = str(spec.get("reference") or man.get("reference") or "?")
+        role_ok = actual == tag
         prov[tag] = {"run_dir": str(run_dir), "scored_file": str(scored_file),
-                     "ok": v["ok"], "fail": v["fail"],
+                     "ok": bool(v["ok"] and role_ok),
+                     "fail": list(v["fail"]) + ([] if role_ok else ["reference_역할불일치"]),
+                     "reference_실제": actual, "reference_기대": tag,
                      "fits_sha256": file_digest(scored_file),
                      "manifest_sha256": file_digest(run_dir / "manifest.yaml")}
+
+    # ★ F69 — 같은 실험이어야 비교가 성립한다. 서로 다른 curves·목적함수 정의·
+    #   조건 집합에서 나온 두 표를 나란히 놓으면 "기준 곡선 효과"가 아니라
+    #   그냥 다른 두 실험이다.
+    shared, mismatch = {}, []
+    for key, label in (("curves_sha", "입력 곡선"),
+                       ("objectives", "목적함수 정의"),
+                       ("v_col", "타깃 열"),
+                       ("bounds_preset", "bounds preset"),
+                       ("condition_ids_sha256", "조건 집합")):
+        a, b = specs["grid"].get(key), specs["halfcell"].get(key)
+        shared[key] = {"grid": a, "halfcell": b, "일치": a == b}
+        if a != b:
+            mismatch.append(label)
+    # bounds preset 은 기준마다 달라야 정상이다 (halfcell 전용 preset 이 있다)
+    mismatch = [m for m in mismatch if m != "bounds preset"]
 
     # ① 공통 조건 ② grid 기준에서 복원가능한 조건만
     common = set(g["cond_id"]) & set(h["cond_id"])
@@ -88,10 +117,16 @@ def compare(grid_fits: Path, halfcell_fits: Path, tol: float = 0.02) -> dict:
             "pe_ne_antisym_frac": float(x["pe_ne_antisym"].mean()),
         } for o, x in df.groupby("objective")}
 
-    provenance_ok = all(v["ok"] for v in prov.values())
+    provenance_ok = all(v["ok"] for v in prov.values()) and not mismatch
     return {
         "provenance": prov,
         "provenance_ok": provenance_ok,
+        "공통_run_spec": shared,                  # F69
+        "_주의_공통성": (
+            "두 실행이 같은 곡선·목적함수·조건 집합을 썼다. 남는 차이는 기준 곡선뿐이다."
+            if not mismatch else
+            f"⚠ 인용 금지 — 두 실행이 다른 실험이다: {mismatch}. "
+            "이 표의 차이를 '기준 곡선 효과'로 읽을 수 없다"),
         "_주의_provenance": (
             "두 artifact 모두 provenance 검증을 통과했다."
             if provenance_ok else
