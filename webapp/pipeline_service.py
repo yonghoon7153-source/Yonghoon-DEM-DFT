@@ -424,6 +424,60 @@ def thermal_channel_verdict(net_data):
     return 'unknown', f'알 수 없는 상태: {st}'
 
 
+def network_content_verdict(results_dir, modes=('hertzian', 'physics'), strict=True):
+    """새로 만든 network 산출물의 **내용**을 판정한다 → (ok, reason).
+
+    ★ RC6-02 (Codex 6회차): 옛 게이트는 `run_stage` 의 **파일 존재**만 보고 stash 를
+      버린 뒤 active 를 success 로 찍었고, thermal 판정은 **그 뒤에** 했다.  그래서
+      required 단계가 실패했는데도 active provenance 는 success 이고 **옛 완전 세대는
+      이미 버려진** 상태가 재현됐다 (실측: σ 999 게시 · stash 없음).
+      → 내용 검증을 `run_stage(verify=…)` 로 **게이트 안**으로 옮긴다.  실패하면
+        기존 `restore_stash` 경로가 그대로 옛 세대를 되살린다.
+
+    ★ RC6-03: legacy(=hertzian 복사본) 하나만 보면 **Physics 실패가 H 성공에 가린다**.
+      두 mode 파일을 각각 본다.
+
+    strict=True (새로 만든 파일) 면 `unknown` 도 실패로 본다 — 방금 우리 solver 가
+    만든 파일에 상태가 없다는 것은 schema 위반이다.  옛 세대를 읽을 때(preserve)는
+    strict=False 로 두어 **소급 실패**를 만들지 않는다.
+    """
+    bad, seen = [], []
+    for mode in modes:
+        p = os.path.join(results_dir, f'network_conductivity_{mode}.json')
+        if not os.path.exists(p):
+            bad.append(f'{mode}: 파일 없음')
+            continue
+        try:
+            with open(p) as f:
+                data = json.load(f)
+        except (OSError, ValueError) as e:
+            bad.append(f'{mode}: 읽기 실패 ({type(e).__name__})')
+            continue
+        seen.append(mode)
+        v, why = thermal_channel_verdict(data)
+        if v == 'fail' or (strict and v == 'unknown'):
+            bad.append(f'{mode}.thermal={v} ({why})')
+    if not seen:
+        bad.append('per-mode 산출물이 하나도 없다')
+    return (not bad), ('; '.join(bad) if bad else 'ok: ' + ', '.join(seen))
+
+
+#: ★ RC6-07 (Codex 6회차, Windows 실측): 자식 프로세스의 출력 인코딩을 계약하지 않으면
+#:   **Windows 기본 CP949 에서 solver 가 첫 non-ASCII 로그에 죽는다**.
+#:     UnicodeEncodeError: 'cp949' codec can't encode character '\u2014'
+#:     network_conductivity.py:1092  →  rc=1, network JSON 0개
+#:   같은 입력을 `PYTHONUTF8=1` 로 돌리면 rc=0 에 네 파일이 다 나온다.  우리 solver 는
+#:   212 종의 non-ASCII (─ ★ ⚠ σ …) 를 21 곳에서 print 한다 — ASCII 로 줄이는 것은
+#:   현실적이지 않으므로 **인코딩을 계약**한다.
+#:   ⚠ 자식만 UTF-8 로 바꾸고 부모 decode 를 기본값(CP949)으로 두면 안 된다 — 양쪽을 함께.
+def utf8_subprocess_kwargs(env=None):
+    """subprocess 공통 인자 — 자식 stdio 를 UTF-8 로, 부모 decode 도 UTF-8 로 고정한다."""
+    e = dict(env if env is not None else os.environ)
+    e['PYTHONUTF8'] = '1'
+    e['PYTHONIOENCODING'] = 'utf-8'
+    return {'text': True, 'encoding': 'utf-8', 'errors': 'replace', 'env': e}
+
+
 def snapshot_keys(d, keys):
     """{key: {'present': bool, 'value': v}} — **없었다는 사실**까지 보존한다.
 
@@ -573,7 +627,8 @@ def run_stage(name, cmd, *, cwd=None, required=False, expects=(), results_dir=No
     """
     before = _stat_sig(results_dir, expects) if (fresh and results_dir) else None
     try:
-        res = (runner or _RUNNER)(cmd, capture_output=True, text=True, timeout=None, cwd=cwd)
+        res = (runner or _RUNNER)(cmd, capture_output=True, timeout=None, cwd=cwd,
+                                  **utf8_subprocess_kwargs())
         rc, out, err = res.returncode, res.stdout, res.stderr
     except Exception as e:                       # noqa: BLE001 — 실행 자체 실패도 단계 실패
         rc, out, err = 1, '', f'{type(e).__name__}: {e}'

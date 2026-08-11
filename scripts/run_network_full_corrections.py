@@ -495,8 +495,13 @@ def _run_solver(case_dir: Path, contacts_modified: pd.DataFrame, type_map_str: s
         #   미지정이면 리스트가 비어 cmd 가 예전과 동일 (bitwise 불변).
         cmd += _solver_temp_flags(temp_c, ea_ion_ev)
         try:
-            cp = subprocess.run(cmd, check=False, capture_output=True,
-                                  text=True, timeout=1800)
+            # ★ RC6-07: Windows CP949 에서 자식이 첫 non-ASCII 로그에 죽는다 (실측).
+            #   webapp 쪽 run_stage 와 **같은 계약**을 여기에도 건다 — 이 재솔브 경로가
+            #   막히면 rc=1 → None → weighted fallback 으로 조용히 흘러 Physics 검증까지
+            #   오염된다.  (두 곳이 같아야 해서 회귀가 양쪽 소스를 검사한다.)
+            _env = dict(os.environ, PYTHONUTF8='1', PYTHONIOENCODING='utf-8')
+            cp = subprocess.run(cmd, check=False, capture_output=True, text=True,
+                                  encoding='utf-8', errors='replace', env=_env, timeout=1800)
         except Exception:
             return None
         if cp.returncode != 0:

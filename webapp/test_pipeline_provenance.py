@@ -70,7 +70,7 @@ class FakeRunner:
                 for _n in ('network_conductivity.json', 'network_conductivity_hertzian.json',
                            'network_conductivity_physics.json', 'network_conductivity_dual.json'):
                     with open(os.path.join(self.results_dir, _n), 'w') as f:
-                        json.dump({'sigma_full_mScm': 999.0}, f)
+                        json.dump({'sigma_full_mScm': 999.0, 'thermal_status': 'computed'}, f)
             out = 'fake solver'
         elif script == 'run_network_full_corrections.py':
             rc = self.stage_e_rc
@@ -94,7 +94,7 @@ def _seed_case(d, sigma=1.0):
     for _n in ('network_conductivity.json', 'network_conductivity_hertzian.json',
                'network_conductivity_physics.json', 'network_conductivity_dual.json'):
         with open(os.path.join(d, _n), 'w') as f:
-            json.dump({'sigma_full_mScm': sigma}, f)
+            json.dump({'sigma_full_mScm': sigma, 'thermal_status': 'computed'}, f)
     with open(os.path.join(d, 'full_metrics.json'), 'w') as f:
         json.dump({'porosity': 15.6}, f)
     ps.stamp_network_provenance(d, 'OLDRUN-0001', {'atoms.csv': 'deadbeef'})
@@ -274,7 +274,7 @@ def main():
                                'network_conductivity_physics.json',
                                'network_conductivity_dual.json'):
                         with open(os.path.join(res_dir, _n), 'w') as f:
-                            json.dump({'sigma_full_mScm': 5.0}, f)
+                            json.dump({'sigma_full_mScm': 5.0, 'thermal_status': 'computed'}, f)
                 elif script == 'run_network_full_corrections.py' and stage_e_writes:
                     fm = os.path.join(res_dir, 'full_metrics.json')
                     d = json.load(open(fm)) if os.path.exists(fm) else {}
@@ -371,7 +371,8 @@ def main():
                                'network_conductivity_hertzian.json',
                                'network_conductivity_physics.json',
                                'network_conductivity_dual.json'):
-                        json.dump({'sigma_full_mScm': 3.0}, open(os.path.join(_d, _n), 'w'))
+                        json.dump({'sigma_full_mScm': 3.0, 'thermal_status': 'computed'},
+                                  open(os.path.join(_d, _n), 'w'))
                 elif sc == 'run_network_full_corrections.py':
                     fm = os.path.join(_d, 'full_metrics.json')
                     dd = json.load(open(fm)) if os.path.exists(fm) else {}
@@ -581,6 +582,84 @@ def main():
             'fresh=True' in _apy[_i:_i + 1200])
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
+
+    # ══ 3f) ★ RC6-02/03 (Codex 6회차): 내용 판정 **전에** active 를 게시하던 것 ══
+    #   옛 게이트는 파일 존재만 보고 stash 를 버린 뒤 success 를 찍었다.  실측 재현:
+    #   required 단계는 실패인데 active provenance=success, 옛 완전 세대는 이미 사라짐.
+    for _label, _mode_status, _want_ok in (
+            ('RC6-02) ★ H thermal=failed → 게시 차단·옛 세대 보존', {'hertzian': 'failed'}, False),
+            ('RC6-03) ★ Physics 만 failed 여도 차단 (H 성공에 가리지 않는다)',
+             {'physics': 'failed'}, False),
+            ('RC6-02c) 둘 다 computed → 정상 게시', {}, True)):
+        tmp = tempfile.mkdtemp(prefix='rc602_')
+        try:
+            res = os.path.join(tmp, 'r')
+            _seed_case(res, sigma=1.0)                       # 옛 **완전한** 세대
+            ps.stamp_network_provenance(res, 'OLDGEN', {'atoms.csv': 'x'}, 'success')
+
+            class _NR(FakeRunner):
+                def __call__(self, cmd, **kw):
+                    if os.path.basename(str(cmd[1])) == 'network_conductivity.py':
+                        self.calls.append(cmd)
+                        for _n, _m in (('network_conductivity_hertzian.json', 'hertzian'),
+                                       ('network_conductivity_physics.json', 'physics'),
+                                       ('network_conductivity.json', 'hertzian'),
+                                       ('network_conductivity_dual.json', 'hertzian')):
+                            json.dump({'sigma_full_mScm': 999.0,
+                                       'thermal_status': _mode_status.get(_m, 'computed'),
+                                       'thermal_status_reason': 'fixture'},
+                                      open(os.path.join(self.results_dir, _n), 'w'))
+                        return subprocess.CompletedProcess(cmd, 0, '', '')
+                    return super().__call__(cmd, **kw)
+
+            stages, _rid = webapp._network_and_stage_e(
+                res, '/scripts', 'a.csv', 'c.csv', '1:AM,3:SE', 1000, [],
+                preserve_network=False, runner=_NR(res))
+            prov = ps.read_network_provenance(res)
+            fm = json.load(open(os.path.join(res, 'full_metrics.json')))
+            if _want_ok:
+                chk(_label, prov.get('solver_status') == 'success'
+                    and fm.get('sigma_full_mScm') == 999.0)
+            else:
+                _net = [x for x in stages if 'Network Solver' in x.get('step', '')]
+                #   ⚠ 복구된 옛 provenance 가 solver_status='success' 라고 적는 것은 **옳다**
+                #     — 그 세대는 실제로 성공했다.  판정 기준은 "새 실패 세대가 게시됐는가".
+                chk(_label,
+                    _net and not _net[0]['ok'] and _net[0].get('verify_failed')  # 게이트가 막고
+                    and prov.get('network_run_id') == 'OLDGEN'                   # 옛 세대가 active
+                    and fm.get('sigma_full_mScm') != 999.0                       # 실패값 미게시
+                    and json.load(open(os.path.join(
+                        res, 'network_conductivity.json')))['sigma_full_mScm'] == 1.0)  # 파일 복구
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
+
+    # ══ 3g) ★ RC6-07 (Codex 6회차, Windows 실측): CP949 에서 solver 가 죽던 것 ══
+    #   자식 출력 인코딩을 계약하지 않으면 Windows 기본 CP949 에서 첫 non-ASCII 로그에
+    #   UnicodeEncodeError → rc=1 → network JSON 0개.  같은 입력이 PYTHONUTF8=1 이면 성공.
+    _kw = ps.utf8_subprocess_kwargs()
+    chk('RC6-07a) ★ 자식 env 가 UTF-8 로 강제된다',
+        _kw['env'].get('PYTHONUTF8') == '1' and _kw['env'].get('PYTHONIOENCODING') == 'utf-8')
+    chk('RC6-07b) ★ 부모 decode 도 UTF-8 (자식만 바꾸면 반쪽이다)',
+        _kw.get('encoding') == 'utf-8' and _kw.get('text') is True
+        and _kw.get('errors') == 'replace')
+    chk('RC6-07c) 기존 환경변수를 지우지 않는다 (PATH 등)',
+        'PATH' in _kw['env'] or not os.environ.get('PATH'))
+    #   run_stage 가 실제로 그 계약을 쓰는지 (구현≠배선)
+    _seen = {}
+
+    def _spy(cmd, **kw):
+        _seen.update(kw)
+        return subprocess.CompletedProcess(cmd, 0, '', '')
+    ps.run_stage('spy', ['x'], runner=_spy)
+    chk('RC6-07d) ★ run_stage 가 그 계약을 실제로 넘긴다 (배선)',
+        _seen.get('encoding') == 'utf-8'
+        and (_seen.get('env') or {}).get('PYTHONUTF8') == '1')
+    #   Stage E 재솔브 경로도 같은 계약이어야 한다 (여기가 막히면 fallback 으로 조용히 샌다)
+    _rnfc_src = open(os.path.join(os.path.dirname(os.path.dirname(
+        os.path.abspath(webapp.__file__))), 'scripts',
+        'run_network_full_corrections.py'), encoding='utf-8').read()
+    chk('RC6-07e) ★ Stage E 재솔브 subprocess 도 UTF-8 계약을 건다',
+        "PYTHONUTF8='1'" in _rnfc_src and "encoding='utf-8'" in _rnfc_src)
 
     # ══ 4) 단계 계약 요약기 ══
     S = ps.StageOutcome

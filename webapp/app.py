@@ -2886,12 +2886,29 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
                 #   쓰고 rc=0 이면 stash 전체를 버려 **완전한 옛 세대를 잃고 부분 세대를
                 #   게시**했다.  --contact-mode both 는 네 JSON 을 다 만들어야 완전하다
                 #   (소스 주석도 '하나라도 빠지면 Physics 컬럼이 사라진다' 고 적고 있다).
+                # ★ RC6-02/03 (Codex 6회차): 옛 게이트는 **파일 존재**만 보고 stash 를
+                #   버렸고 thermal 판정은 그 뒤에 했다 → required 실패인데 active 는
+                #   success 이고 옛 완전 세대는 이미 사라진 상태가 실측됐다.
+                #   내용 검증을 verify 로 **게이트 안에** 넣는다: 실패하면 아래
+                #   restore_stash 가 옛 세대를 그대로 되살린다.  두 mode 를 각각 본다
+                #   (legacy 하나만 보면 Physics 실패가 H 성공에 가린다).
+                _content_reason = ['']
+
+                def _verify_content(rd, _r=_content_reason):
+                    ok_, why = _ps.network_content_verdict(rd, strict=True)
+                    _r[0] = why
+                    return ok_
+
                 st = _ps.run_stage('Network Solver (both modes)', cmd, required=True,
                                    expects=('network_conductivity.json',
                                             'network_conductivity_hertzian.json',
                                             'network_conductivity_physics.json',
                                             'network_conductivity_dual.json'),
-                                   results_dir=results_dir, runner=runner)
+                                   results_dir=results_dir, runner=runner,
+                                   verify=_verify_content)
+                if not st.ok and st.get('verify_failed'):
+                    st['stderr'] = ((st.get('stderr') or '') +
+                                    '\n★ 내용 검증 실패 (게시 전 차단): ' + _content_reason[0])
                 if st.ok:
                     _ps.drop_stash(_stash)
                 else:
