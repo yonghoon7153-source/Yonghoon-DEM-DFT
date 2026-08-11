@@ -57,8 +57,13 @@ def load(path):
     return data.get('findings', []) if isinstance(data, dict) else list(data)
 
 
-def check(findings):
-    """→ 문제 목록 (빈 리스트면 원장이 자기일관적)."""
+def check(findings, repo_root=None):
+    """→ 문제 목록 (빈 리스트면 원장이 자기일관적).
+
+    `repo_root` 를 주면 `opened_in` 이 **실재하는 파일**인지도 본다 — 원장이 유령
+    문서를 가리키면 추적이 거기서 끊긴다 (실제로 RC6 원문이 붙여넣기라 리포에
+    없었다 → 원문을 보존해 해소).
+    """
     problems, seen = [], {}
     for i, f in enumerate(findings):
         where = f.get('id') or f'#{i}'
@@ -80,6 +85,9 @@ def check(findings):
             problems.append(f'{fid}: severity={f.get("severity")!r}')
         if not f.get('opened_in'):
             problems.append(f'{fid}: opened_in 없음 (어느 리뷰에서 나왔는지)')
+        elif repo_root and not os.path.exists(os.path.join(repo_root, f['opened_in'])):
+            problems.append(f'{fid}: opened_in 이 실재하지 않는다 ({f["opened_in"]}) — '
+                            '리뷰 원문을 리포에 보존할 것')
 
         for key in REQUIRED_BY_STATUS.get(st, ()):
             v = f.get(key)
@@ -115,7 +123,7 @@ def main(argv=None):
     if not os.path.exists(a.ledger):
         sys.exit(f'원장 없음: {a.ledger}')
     findings = load(a.ledger)
-    probs = check(findings)
+    probs = check(findings, repo_root=here)
 
     if not a.open:
         by = {}
@@ -192,7 +200,10 @@ def _selftest():
     here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     led = os.path.join(here, LEDGER_DEFAULT)
     if os.path.exists(led):
-        ok('14) ★ 실제 원장이 자기일관적이다', check(load(led)) == [])
+        ok('14) ★ 실제 원장이 자기일관적이다', check(load(led), repo_root=here) == [])
+        ok('15) ★ opened_in 이 유령 문서면 잡는다 (추적이 거기서 끊긴다)',
+           any('실재하지' in p for p in check(
+               [dict(base, opened_in='docs/reviews/nope.md')], repo_root=here)))
     else:
         print('  SKIP 14) 원장 파일 없음')
     print(f'\ncheck_review_findings selftest: {n[0]}/{n[1]} PASS')
