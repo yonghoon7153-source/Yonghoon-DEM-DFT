@@ -1,0 +1,6 @@
+kit,n_grid,vox_um,dx_mpm_um,point_step_um,lateral_um,thick_um,n_AM,n_SE,vgcf_wt_pct,n_fibres_recipe,n_fibres_seeded,n_fibres_measured,pts_per_fibre_median,order_check_failed,gap_tol,am_gaps_per_fibre_mean,fibres_with_am_gap_pct,point_broken_pct,point_mean_components,point_max_components,segment_broken_pct,segment_mean_components,point_cells_total,segment_cells_total,cells_ratio_seg_over_pt
+kit_ps_0_10,288,0.4,0.1735,0.1215,49.97,117.07,4587,158760,1.0,25838,400,397,46.0,0,2.0,1.491,75.82,86.4,3.433,11,72.54,2.212,6262,6762,1.08
+kit_ps_3_7,288,0.4,0.1736,0.1215,49.99,118.58,3262,158733,1.0,26320,400,390,43.5,0,2.0,1.151,62.56,82.05,3.11,11,58.97,1.938,6014,6484,1.078
+kit_ps_5_5,288,0.4,0.1736,0.1215,49.98,116.95,2380,158706,1.0,26209,400,376,46.0,0,2.0,0.941,53.46,77.66,2.939,11,49.2,1.723,5963,6433,1.079
+kit_ps_7_3,288,0.4,0.1735,0.1215,49.98,117.45,1498,158688,1.0,26696,400,360,46.0,0,2.0,0.767,43.61,75.56,2.936,11,41.11,1.594,5848,6350,1.086
+kit_ps_10_0,288,0.4,0.1732,0.1212,49.87,116.25,175,158730,1.0,26472,400,359,42.0,0,2.0,0.309,20.61,68.52,2.563,12,18.38,1.234,5776,6264,1.084
