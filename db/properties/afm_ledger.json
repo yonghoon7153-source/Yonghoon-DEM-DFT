@@ -23,6 +23,21 @@
   "Ni2": 24
  },
  "max_residual_A": 0.1372,
+ "min_second_nearest_margin_A": 2.7277,
+ "qe_site_usage": {
+  "Ni2#0": 4,
+  "Ni1#1": 4,
+  "Ni1#2": 4,
+  "Ni1#3": 4,
+  "Ni2#4": 4,
+  "Ni2#5": 4,
+  "Ni2#6": 4,
+  "Ni1#7": 4,
+  "Ni1#8": 4,
+  "Ni2#9": 4,
+  "Ni2#10": 4,
+  "Ni1#11": 4
+ },
  "sign_convention": {
   "Ni1": 1.0,
   "Ni2": -1.0
@@ -82,242 +97,290 @@
   {
    "slab_index": 1,
    "sublattice": "Ni2",
-   "residual_A": 0.0
+   "residual_A": 0.0,
+   "margin_A": 2.878
   },
   {
    "slab_index": 5,
    "sublattice": "Ni1",
-   "residual_A": 0.0
+   "residual_A": 0.0,
+   "margin_A": 2.878
   },
   {
    "slab_index": 9,
    "sublattice": "Ni1",
-   "residual_A": 0.0
+   "residual_A": 0.0,
+   "margin_A": 2.878
   },
   {
    "slab_index": 13,
    "sublattice": "Ni1",
-   "residual_A": 0.0
+   "residual_A": 0.0,
+   "margin_A": 2.878
   },
   {
    "slab_index": 17,
    "sublattice": "Ni2",
-   "residual_A": 0.0
+   "residual_A": 0.0,
+   "margin_A": 2.878
   },
   {
    "slab_index": 21,
    "sublattice": "Ni2",
-   "residual_A": 0.0
+   "residual_A": 0.0,
+   "margin_A": 2.878
   },
   {
    "slab_index": 25,
    "sublattice": "Ni2",
-   "residual_A": 0.0815
+   "residual_A": 0.0815,
+   "margin_A": 2.7322
   },
   {
    "slab_index": 29,
    "sublattice": "Ni1",
-   "residual_A": 0.0839
+   "residual_A": 0.0839,
+   "margin_A": 2.7277
   },
   {
    "slab_index": 33,
    "sublattice": "Ni1",
-   "residual_A": 0.078
+   "residual_A": 0.078,
+   "margin_A": 2.7373
   },
   {
    "slab_index": 37,
    "sublattice": "Ni2",
-   "residual_A": 0.1372
+   "residual_A": 0.1372,
+   "margin_A": 2.8583
   },
   {
    "slab_index": 41,
    "sublattice": "Ni2",
-   "residual_A": 0.1266
+   "residual_A": 0.1266,
+   "margin_A": 2.86
   },
   {
    "slab_index": 45,
    "sublattice": "Ni1",
-   "residual_A": 0.1325
+   "residual_A": 0.1325,
+   "margin_A": 2.86
   },
   {
    "slab_index": 49,
    "sublattice": "Ni2",
-   "residual_A": 0.0
+   "residual_A": 0.0,
+   "margin_A": 2.878
   },
   {
    "slab_index": 53,
    "sublattice": "Ni1",
-   "residual_A": 0.0
+   "residual_A": 0.0,
+   "margin_A": 2.878
   },
   {
    "slab_index": 57,
    "sublattice": "Ni1",
-   "residual_A": 0.0
+   "residual_A": 0.0,
+   "margin_A": 2.878
   },
   {
    "slab_index": 61,
    "sublattice": "Ni1",
-   "residual_A": 0.0
+   "residual_A": 0.0,
+   "margin_A": 2.878
   },
   {
    "slab_index": 65,
    "sublattice": "Ni2",
-   "residual_A": 0.0
+   "residual_A": 0.0,
+   "margin_A": 2.878
   },
   {
    "slab_index": 69,
    "sublattice": "Ni2",
-   "residual_A": 0.0
+   "residual_A": 0.0,
+   "margin_A": 2.878
   },
   {
    "slab_index": 73,
    "sublattice": "Ni2",
-   "residual_A": 0.0815
+   "residual_A": 0.0815,
+   "margin_A": 2.7322
   },
   {
    "slab_index": 77,
    "sublattice": "Ni1",
-   "residual_A": 0.0839
+   "residual_A": 0.0839,
+   "margin_A": 2.7277
   },
   {
    "slab_index": 81,
    "sublattice": "Ni1",
-   "residual_A": 0.078
+   "residual_A": 0.078,
+   "margin_A": 2.7373
   },
   {
    "slab_index": 85,
    "sublattice": "Ni2",
-   "residual_A": 0.1372
+   "residual_A": 0.1372,
+   "margin_A": 2.8583
   },
   {
    "slab_index": 89,
    "sublattice": "Ni2",
-   "residual_A": 0.1266
+   "residual_A": 0.1266,
+   "margin_A": 2.86
   },
   {
    "slab_index": 93,
    "sublattice": "Ni1",
-   "residual_A": 0.1325
+   "residual_A": 0.1325,
+   "margin_A": 2.86
   },
   {
    "slab_index": 97,
    "sublattice": "Ni2",
-   "residual_A": 0.0
+   "residual_A": 0.0,
+   "margin_A": 2.878
   },
   {
    "slab_index": 101,
    "sublattice": "Ni1",
-   "residual_A": 0.0
+   "residual_A": 0.0,
+   "margin_A": 2.878
   },
   {
    "slab_index": 105,
    "sublattice": "Ni1",
-   "residual_A": 0.0
+   "residual_A": 0.0,
+   "margin_A": 2.878
   },
   {
    "slab_index": 109,
    "sublattice": "Ni1",
-   "residual_A": 0.0
+   "residual_A": 0.0,
+   "margin_A": 2.878
   },
   {
    "slab_index": 113,
    "sublattice": "Ni2",
-   "residual_A": 0.0
+   "residual_A": 0.0,
+   "margin_A": 2.878
   },
   {
    "slab_index": 117,
    "sublattice": "Ni2",
-   "residual_A": 0.0
+   "residual_A": 0.0,
+   "margin_A": 2.878
   },
   {
    "slab_index": 121,
    "sublattice": "Ni2",
-   "residual_A": 0.0815
+   "residual_A": 0.0815,
+   "margin_A": 2.7322
   },
   {
    "slab_index": 125,
    "sublattice": "Ni1",
-   "residual_A": 0.0839
+   "residual_A": 0.0839,
+   "margin_A": 2.7277
   },
   {
    "slab_index": 129,
    "sublattice": "Ni1",
-   "residual_A": 0.078
+   "residual_A": 0.078,
+   "margin_A": 2.7373
   },
   {
    "slab_index": 133,
    "sublattice": "Ni2",
-   "residual_A": 0.1372
+   "residual_A": 0.1372,
+   "margin_A": 2.8583
   },
   {
    "slab_index": 137,
    "sublattice": "Ni2",
-   "residual_A": 0.1266
+   "residual_A": 0.1266,
+   "margin_A": 2.86
   },
   {
    "slab_index": 141,
    "sublattice": "Ni1",
-   "residual_A": 0.1325
+   "residual_A": 0.1325,
+   "margin_A": 2.86
   },
   {
    "slab_index": 145,
    "sublattice": "Ni2",
-   "residual_A": 0.0
+   "residual_A": 0.0,
+   "margin_A": 2.878
   },
   {
    "slab_index": 149,
    "sublattice": "Ni1",
-   "residual_A": 0.0
+   "residual_A": 0.0,
+   "margin_A": 2.878
   },
   {
    "slab_index": 153,
    "sublattice": "Ni1",
-   "residual_A": 0.0
+   "residual_A": 0.0,
+   "margin_A": 2.878
   },
   {
    "slab_index": 157,
    "sublattice": "Ni1",
-   "residual_A": 0.0
+   "residual_A": 0.0,
+   "margin_A": 2.878
   },
   {
    "slab_index": 161,
    "sublattice": "Ni2",
-   "residual_A": 0.0
+   "residual_A": 0.0,
+   "margin_A": 2.878
   },
   {
    "slab_index": 165,
    "sublattice": "Ni2",
-   "residual_A": 0.0
+   "residual_A": 0.0,
+   "margin_A": 2.878
   },
   {
    "slab_index": 169,
    "sublattice": "Ni2",
-   "residual_A": 0.0815
+   "residual_A": 0.0815,
+   "margin_A": 2.7322
   },
   {
    "slab_index": 173,
    "sublattice": "Ni1",
-   "residual_A": 0.0839
+   "residual_A": 0.0839,
+   "margin_A": 2.7277
   },
   {
    "slab_index": 177,
    "sublattice": "Ni1",
-   "residual_A": 0.078
+   "residual_A": 0.078,
+   "margin_A": 2.7373
   },
   {
    "slab_index": 181,
    "sublattice": "Ni2",
-   "residual_A": 0.1372
+   "residual_A": 0.1372,
+   "margin_A": 2.8583
   },
   {
    "slab_index": 185,
    "sublattice": "Ni2",
-   "residual_A": 0.1266
+   "residual_A": 0.1266,
+   "margin_A": 2.86
   },
   {
    "slab_index": 189,
    "sublattice": "Ni1",
-   "residual_A": 0.1325
+   "residual_A": 0.1325,
+   "margin_A": 2.86
   }
  ],
  "source_qe": "/home/user/Yonghoon-DEM-DFT/db/inputs/sdcp_v2/slab_relax/relax.in",
