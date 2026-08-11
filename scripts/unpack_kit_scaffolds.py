@@ -117,11 +117,20 @@ def main(argv=None):
         sys.exit(f'{a.archive} 에 `<kit>{_SEP}<member>` 파일이 없다 — 경로를 확인하세요.')
     n_json = len([f for f in os.listdir(a.out) if f.endswith('.json')])
     print(f'킷 {n} 개 · metrics json {n_json} 개 → {a.out}')
+    # ★ 아카이브가 푼 킷과 **원래 있던 디렉토리**를 구분해 찍는다.  옛 출력은 out 밑의
+    #   모든 디렉토리를 같은 표에 넣어, 복구된 볼륨에 남아 있던 킷(예: kit_real14)이
+    #   "2/7 — 뭔가 빠졌다" 처럼 보였다.  아카이브에 없는 것은 결손이 아니다.
+    from_archive = set(discover(a.archive))
     for kit in sorted(os.listdir(a.out)):
         d = os.path.join(a.out, kit)
-        if os.path.isdir(d):
-            have = [m for m in MEMBERS if os.path.exists(os.path.join(d, m))]
+        if not os.path.isdir(d):
+            continue
+        have = [m for m in MEMBERS if os.path.exists(os.path.join(d, m))]
+        if kit in from_archive:
             print(f'  {kit:<16} {len(have)}/{len(MEMBERS)}  ' + ' '.join(have))
+        else:
+            print(f'  {kit:<16} (아카이브 밖 — 원래 있던 디렉토리, 건드리지 않음)  '
+                  + ' '.join(have))
     if missing:
         print('\n⚠ 빠진 파일: ' + ', '.join(missing))
     print('\n재현:  python3 scripts/fit_dh_collapse.py --dir '
