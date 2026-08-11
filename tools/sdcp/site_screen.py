@@ -1669,6 +1669,180 @@ def cmd_selftest(a) -> int:
     return 0 if ok else 1
 
 
+# ── DFT+U 인계 ────────────────────────────────────────────────────────────────────
+#   UMA 는 후보를 제안하고 **판정은 DFT+U 가** 한다. 이 단계가 그 경계다.
+#   두 자기 초기값은 필수다 — Ni 자기상태가 다르게 수렴하면 ΔE 가 통째로 오염된다
+#   (2026-08-03 실측: U=6.2 를 바로 넣으면 FM 붕괴, 총자화 0 → +2.58).
+INCAR_TEMPLATE = """SYSTEM = {system}
+# 자리 선호 판정용 — Li_top / Ni_top 대조쌍은 **모든 설정이 같아야** 한다.
+ISTART = 0 ; ICHARG = 2
+PREC   = Accurate
+ENCUT  = 520
+EDIFF  = 1E-5
+EDIFFG = -0.02
+IBRION = 2 ; NSW = 200 ; ISIF = 2
+ISMEAR = 0 ; SIGMA = 0.05      # 자성 반도체 슬랩 — 가우시안. (분자도 ISMEAR=0)
+ALGO   = Normal
+LREAL  = Auto
+NELM   = 200
+
+# 스핀 · DFT+U (Dudarev)
+ISPIN  = 2
+LASPH  = .TRUE.                # DFT+U 에는 필수
+LDAU   = .TRUE. ; LDAUTYPE = 2
+LDAUL  = {ldaul}
+LDAUU  = {ldauu}
+LDAUJ  = {ldauj}
+LDAUPRINT = 2
+LMAXMIX = 4
+MAGMOM = {magmom}
+
+# 분산
+IVDW   = 11                    # D3(BJ)
+
+# 한쪽만 흡착한 슬랩 — 쌍극자 보정
+LDIPOL = .TRUE. ; IDIPOL = 3
+
+# 출력
+LORBIT = 11
+LWAVE  = .FALSE. ; LCHARG = .FALSE.
+NCORE  = 4
+"""
+
+
+def _magmom_configs(atoms: Atoms, nslab: int) -> Dict[str, str]:
+    """Ni 자기 초기값 2종. **어느 Ni 가 어느 부호인지 기록**해 재현 가능하게 한다.
+
+    ⚠ 이름은 실제 알짜값으로 붙인다. Ni 48개를 전부 ±2 로 두면 총합이 4k−96 이라
+      **4 의 배수만 가능**하다 — 'net2' 는 이 구성에서 만들 수 없다(그렇게 이름 붙이면 거짓말).
+      최소 비영 알짜는 +4 이고, 그게 두 번째 초기값이다.
+    """
+    sym = atoms.get_chemical_symbols()
+    ni = [i for i in range(nslab) if sym[i] == "Ni"]
+    order = sorted(ni, key=lambda i: (round(atoms.positions[i, 2], 2), atoms.positions[i, 0]))
+    out = {}
+    for name, flip in (("afm_balanced", 0), ("afm_net4", 1)):
+        mag = [0.0] * len(atoms)
+        for k, i in enumerate(order):
+            mag[i] = 2.0 if k % 2 == 0 else -2.0
+        if flip and len(order) >= 2:
+            mag[order[1]] = 2.0          # 한 자리를 뒤집으면 알짜가 0 → +4
+        out[name] = " ".join(f"{m:.1f}" for m in mag)
+    return out
+
+
+def _write_poscar(path: Path, atoms: Atoms, nslab: int, freeze_frac: float) -> Dict[str, Any]:
+    """종별로 묶고 Selective Dynamics 로 **아래 절반 고정 / 위 절반+분자 자유**.
+
+    ⚠ UMA 단계의 구속을 그대로 승계하지 않는다 — DFT 는 표면 이완을 허용해야 한다.
+    """
+    order = ["Li", "Ni", "O", "S", "C", "F", "H"]
+    sym = atoms.get_chemical_symbols()
+    idx: List[int] = []
+    for el in order:
+        idx += [i for i in range(len(atoms)) if sym[i] == el]
+    idx += [i for i in range(len(atoms)) if sym[i] not in order]
+    z = atoms.positions[:nslab, 2]
+    zcut = z.min() + (z.max() - z.min()) * freeze_frac
+    cell = atoms.cell.array
+    frac = np.linalg.solve(cell.T, atoms.positions.T).T
+    counts, seen = [], []
+    for el in order:
+        n = sum(1 for i in idx if sym[i] == el)
+        if n:
+            counts.append(n); seen.append(el)
+    lines = [f"site_screen DFT handoff (freeze<= {zcut:.3f} A)", "1.0"]
+    lines += [f"  {v[0]:.10f} {v[1]:.10f} {v[2]:.10f}" for v in cell]
+    lines += ["  " + "  ".join(seen), "  " + "  ".join(str(c) for c in counts),
+              "Selective dynamics", "Direct"]
+    nfix = 0
+    for i in idx:
+        fixed = i < nslab and atoms.positions[i, 2] <= zcut + 1e-9
+        nfix += fixed
+        f = "F  F  F" if fixed else "T  T  T"
+        lines.append(f"  {frac[i,0]:.10f} {frac[i,1]:.10f} {frac[i,2]:.10f}   {f}")
+    path.write_text("\n".join(lines) + "\n")
+    return {"species_order": seen, "counts": counts, "n_fixed": int(nfix),
+            "z_cut_A": round(float(zcut), 3),
+            "vasp_index_map_1based": {str(k + 1): int(i) for k, i in enumerate(idx)}}
+
+
+def cmd_dft_handoff(a) -> int:
+    """자격 있는 대조쌍을 **같은 프로토콜의 VASP 잡**으로 내보낸다."""
+    slab = load_slab()
+    nslab = a.nslab
+    d = Path(a.dir)
+    rows = [json.loads(p.read_text()) for p in sorted(d.glob("*.json"))
+            if not p.name.startswith("_")]
+    fs = [r for r in rows if r.get("ranking_eligible") and r.get("E_pose_eV") is not None]
+    if not fs:
+        sys.exit(f"⛔ {d} 에 순위 가능한 자세가 없다")
+
+    idx = {(r["site"], r["down_dir"], r["roll_deg"]): r for r in fs}
+    pairs = []
+    for (s, dd, ro), r in idx.items():
+        if s != "Li_top":
+            continue
+        q = idx.get(("Ni_top", dd, ro))
+        if not q:
+            continue
+        if r.get("nearest_cation") != "Li" or q.get("nearest_cation") != "Ni":
+            continue                                    # 자격 미달 — verdict 와 같은 규칙
+        pairs.append((min(r["E_pose_eV"], q["E_pose_eV"]), dd, ro, r, q))
+    if not pairs:
+        sys.exit("⛔ 자격 있는 대조쌍이 없다 — DFT 로 넘길 반사실 대조가 성립하지 않는다")
+    pairs.sort(key=lambda t: t[0])
+    pairs = pairs[:a.pairs]
+
+    out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
+    manifest: Dict[str, Any] = {
+        "source_run": str(d), "gate_version": gate_version(), "nslab": nslab,
+        "freeze_frac_dft": a.freeze, "kmesh": a.kmesh,
+        "protocol": "PBE+U(Ni 6.2, Dudarev) + D3(BJ) · LASPH · LDIPOL/IDIPOL=3 · ISMEAR=0 "
+                    "· 아래 절반 고정 · 자기 초기값 2종",
+        "why_two_magnetic_starts": "Ni 자기상태가 두 끝점에서 다르게 수렴하면 ΔE 가 통째로 "
+                                   "오염된다. 2026-08-03 에 U=6.2 즉시 투입으로 FM 붕괴를 겪었다.",
+        "jobs": {}, "pairs": [],
+    }
+    for _e, dd, ro, r, q in pairs:
+        pid = f"{dd}_r{int(ro):03d}"
+        manifest["pairs"].append({
+            "pair_id": pid, "down_dir": dd, "roll_deg": ro,
+            "uma_E_pose_Li": r["E_pose_eV"], "uma_E_pose_Ni": q["E_pose_eV"],
+            "uma_dE_Ni_minus_Li_eV": round(q["E_pose_eV"] - r["E_pose_eV"], 4),
+            "note": "UMA 값은 순위용이다 — DFT 결과와 같은 표에 놓지 말 것",
+        })
+        for role, rec in (("Li", r), ("Ni", q)):
+            xyz = d / f"{rec['label']}.xyz"
+            if not xyz.is_file():
+                print(f"  ⚠ {rec['label']}.xyz 없음 — 건너뜀"); continue
+            cx = read(xyz); cx.set_cell(slab.cell.array); cx.set_pbc(True)
+            for mag_name, magmom in _magmom_configs(cx, nslab).items():
+                jd = out / f"{pid}__{role}top__{mag_name}"
+                jd.mkdir(parents=True, exist_ok=True)
+                pos = _write_poscar(jd / "POSCAR", cx, nslab, a.freeze)
+                el = pos["species_order"]
+                (jd / "INCAR").write_text(INCAR_TEMPLATE.format(
+                    system=f"{pid} {role}-top {mag_name}",
+                    ldaul=" ".join("2" if e == "Ni" else "-1" for e in el),
+                    ldauu=" ".join("6.2" if e == "Ni" else "0.0" for e in el),
+                    ldauj=" ".join("0.0" for _ in el), magmom=magmom))
+                (jd / "KPOINTS").write_text(
+                    f"auto\n0\nGamma\n{a.kmesh}\n0 0 0\n")
+                manifest["jobs"][jd.name] = {
+                    "pair_id": pid, "role": role, "magnetic": mag_name,
+                    "source_pose": rec["label"], "uma_E_pose_eV": rec["E_pose_eV"],
+                    **pos}
+    (out / "HANDOFF_MANIFEST.json").write_text(json.dumps(manifest, indent=1, ensure_ascii=False))
+    print(f"→ {out}  · 대조쌍 {len(manifest['pairs'])}개 · 잡 {len(manifest['jobs'])}개")
+    for p in manifest["pairs"]:
+        print(f"   {p['pair_id']:22s} UMA ΔE(Ni−Li) {p['uma_dE_Ni_minus_Li_eV']:+.3f} eV")
+    print("   ⚠ POTCAR 은 넣지 않았다(라이선스) — 실행 측에서 Li Ni O S C F H 순서로 붙일 것")
+    print("   ⚠ 판정은 두 자기 초기값 중 **각각 더 낮은 쪽**끼리 비교한다. 국소 모멘트와")
+    print("      LDAU 점유행렬을 눈으로 확인하기 전에는 수치가 통과해도 조건부다.")
+    return 0
+
+
 def cmd_regate(a) -> int:
     """저장된 이완 구조에 **게이트만 다시 적용**한다 — GPU 재계산 없이.
 
@@ -1857,6 +2031,14 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--nslab", type=int, default=192)
     p.add_argument("--clean", default=None, help="기본: <dir>/_clean_slab.vasp")
 
+    p = sub.add_parser("dft-handoff", help="자격 대조쌍을 VASP 잡으로 (자기 초기값 2종)")
+    p.add_argument("--dir", required=True, help="relax_f*.* 디렉터리")
+    p.add_argument("--out", required=True)
+    p.add_argument("--pairs", type=int, default=1, help="상위 몇 쌍을 넘길지")
+    p.add_argument("--nslab", type=int, default=192)
+    p.add_argument("--freeze", type=float, default=0.5, help="DFT 에서 고정할 아래 비율")
+    p.add_argument("--kmesh", default="2 2 1")
+
     p = sub.add_parser("bundle", help="독립 재감사용 실행 묶음 내보내기")
     p.add_argument("--run", required=True)
     p.add_argument("--out", required=True, help="예: /tmp/site_screen_bundle.tar.gz")
@@ -1870,7 +2052,7 @@ def main() -> int:
         "inputs": cmd_inputs, "sites": cmd_sites, "atlas": cmd_atlas,
         "gate": cmd_gate, "verdict": cmd_verdict, "crosscheck": cmd_crosscheck,
         "bond-limits": cmd_bond_limits, "selftest": cmd_selftest, "score": cmd_score,
-        "bundle": cmd_bundle, "regate": cmd_regate,
+        "bundle": cmd_bundle, "regate": cmd_regate, "dft-handoff": cmd_dft_handoff,
     }[a.cmd](a)
 
 
