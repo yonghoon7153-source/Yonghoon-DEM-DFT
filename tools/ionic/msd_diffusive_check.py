@@ -284,40 +284,73 @@ def main():
             print(f"{tag:34s} {' '.join(cells)}   {max(t):.0f}")
             print(f"{'  └ c [Å²]':34s} {' '.join(ints)}")
             print(f"{'  └ m [Å²/ps]':34s} {' '.join(slps)}")
-            # ── 추세 판정 (숫자만 모아서) ──────────────────────────────────
-            bv = [loglog_slope(t, y, lo, hi) for lo, hi in WINS]
+            # ── 추세 통계 (⚠⚠ 2026-08-11 재검토로 **자동 판정 → 진단 제안** 격하) ──
+            #   MC 4000회 재검토 실측이 초판 규칙을 죽였다:
+            #   · 중첩창 6개의 유효 표본은 n_eff ≈ 3.2 (corr(2-50,10-50)=+0.97) —
+            #     Spearman 임계 ±0.6 은 iid 귀무에서도 한쪽당 9% 짜리다.
+            #   · 오분류율 8~13%. 특히 'sub-diffusion' 판정은 **느린 전이(D 는 존재,
+            #     창만 이르다) 대비 동전(47~50%)** — 처방이 정반대인 세 번째 모형을
+            #     초판이 아예 몰랐다 (제거 vs 창 이동).
+            #   · 초판 CAGE 분기는 c 를 아예 안 봤다 — 자기 문서("c 행이 가른다")와 모순.
+            #     lpsocl/T600 이 c=−4.85(비물리)로 CAGE 를 받은 게 그 구멍이다.
+            #   확정은 **MTO 곡선**으로만 한다. 아래는 제안이지 판정이 아니다.
+            bv0 = [loglog_slope(t, y, lo, hi) for lo, hi in WINS]
             lfv = [lin_fit(t, y, lo, hi) for lo, hi in WINS]
-            bv = [x for x in bv if x is not None]
-            mv = [x[0] for x in lfv if x is not None]
-            cv = [x[1] for x in lfv if x is not None]
-            if len(bv) >= 4 and len(mv) >= 4:
+            triples = [(w, b, lf) for w, b, lf in zip(WINS, bv0, lfv)
+                       if b is not None and lf is not None]
+            # 비물리 창(절편 c<0)은 추세에서 **버린다** — 순위 매길 대상이 아니다
+            valid = [(w, b, lf) for w, b, lf in triples if lf[1] >= 0]
+            n_drop = len(triples) - len(valid)
+            if len(valid) >= 4:
+                bv = [b for _w, b, _l in valid]
+                mv = [l[0] for _w, _b, l in valid]
+                cv = [l[1] for _w, _b, l in valid]
                 tb, tm, tc = _spearman(bv), _spearman(mv), _spearman(cv)
                 dm = 100.0 * (mv[-1] - mv[0]) / mv[0] if mv[0] else float("nan")
-                if tb > 0.6 and abs(dm) < 15:
-                    v = "**케이지 절편** → D 인용 가능"
-                elif abs(tb) < 0.45 and tm < -0.6 and tc > 0.6:
-                    v = "**진짜 sub-diffusion** → D 인용 금지"
+                # ★ 잔차 검정 — 재검토가 찾은 **실제로 갈리는 통계**. 각 창의 (c,m) 직선이
+                #   함의하는 log-log 기울기 β_imp 와 관측 β 의 최대 편차. cage 면 전 창
+                #   일치한다 (modelc/700 실측 |Δβ|≤0.025 · cage joint p=0.935).
+                dbmax = 0.0
+                for (lo_, hi_), b, (m_, c_, _r2) in valid:
+                    xx = [x for x in t if lo_ <= x <= hi_ and x > 0]
+                    yy = [c_ + m_ * x for x in xx]
+                    bi = loglog_slope(xx, yy, lo_, hi_)
+                    if bi is not None:
+                        dbmax = max(dbmax, abs(b - bi))
+                cage_like = tb > 0.6 and abs(dm) < 15 and dbmax <= 0.05
+                sub_like = abs(tb) < 0.45 and tm < -0.6 and tc > 0.6
+                if cage_like and not sub_like:
+                    v = f"케이지 절편 **시사** (잔차 |Δβ|max {dbmax:.3f} ≤ 0.05)"
+                elif sub_like and not cage_like:
+                    v = "sub-diffusion **또는 느린 전이** — 요약값으로 구분 불가(동전)"
                 else:
-                    v = "판별 불가 (꼬리 잡음) — MTO 필요"
-                trends.append((tag[:26], tb, dm, tm, tc, v))
+                    v = "판별 불가"
+                trends.append((tag[:26], tb, dm, tm, tc, dbmax, n_drop, v))
         print("  ⚠ 창을 늦추면 통계 점수는 줄어든다 — β 가 1 이어도 창 안 데이터가")
         print("    너무 적으면(점 3개 미만) '—' 로 나온다. tmax 가 창보다 작아도 마찬가지.")
         # ★★ 2026-08-11 — 눈으로 읽지 말고 **추세로 판정**한다. 실측에서 이 판정이
         #   β 게이트와 **반대로** 나오는 사례가 나왔다 (아래 trend_verdict 주석 참조).
         if trends:
             print()
-            print("  ═══ 추세 판정 (창 스캔의 β·m·c 를 Spearman 으로) ═══")
-            print(f"  {'case':26s} {'β추세':>6s} {'m변화%':>7s} {'m추세':>6s} {'c추세':>6s}  판정")
-            for tag, tb, dm, tm, tc, v in trends:
-                print(f"  {tag:26s} {tb:+6.2f} {dm:+7.1f} {tm:+6.2f} {tc:+6.2f}  {v}")
+            print("  ═══ 추세 **제안** (자동 판정 아님 — 2026-08-11 재검토로 격하) ═══")
+            print(f"  {'case':26s} {'β추세':>6s} {'m변화%':>7s} {'m추세':>6s} {'c추세':>6s} "
+                  f"{'|Δβ|max':>8s} {'제외창':>5s}  제안")
+            for tag, tb, dm, tm, tc, dbm, nd_, v in trends:
+                print(f"  {tag:26s} {tb:+6.2f} {dm:+7.1f} {tm:+6.2f} {tc:+6.2f} "
+                      f"{dbm:8.3f} {nd_:5d}  {v}")
             print()
-            print("  · **케이지 절편**  β 가 창 따라 단조 상승(+) · m 변화 <15% → MSD = c + 6Dt.")
-            print("    D 는 자유 절편 맞춤의 기울기라 무사하다. **β<0.8 이어도 인용 가능.**")
-            print("  · **진짜 sub-diffusion**  β 가 모든 창에서 평평 · m 단조 하락 · c 단조 증가")
-            print("    → 그때만 D 인용 금지. **β>0.8 이어도 금지다.**")
-            print("  ⛔ 그러므로 **β 값 하나로 통과/탈락을 정하면 안 된다** — 추세를 볼 것.")
+            print("  ⚠ 이 표는 **제안**이다 — MC 재검토 실측: 오분류 8~13%, 중첩창 n_eff≈3.2,")
+            print("    'sub-diffusion' 제안은 느린 전이(D 존재·창만 이르다) 대비 **동전**이다.")
+            print("    느린 전이면 처방이 정반대다: 점 제거가 아니라 **창 이동/연장**.")
+            print("  · 케이지 시사의 실근거는 Spearman 이 아니라 **잔차 검정**(|Δβ|max ≤ 0.05)이다.")
+            print("  ⛔ 아레니우스에서 점을 넣고 빼는 결정은 이 표로 하지 않는다 —")
+            print("    ① MTO 곡선으로 재판정 ② 그래도 애매하면 **세 계 같은 온도 집합** 유지가")
+            print("    점 제거보다 우선한다 (비대칭 가감은 Ea 비교를 통째로 깨뜨린다).")
         print()
-        print("  ★★ **β 행이 아니라 c 행이 판정을 가른다** (2026-08-11):")
+        print("  ★ c 행은 β 보다 정보가 많지만 **만능이 아니다** (2026-08-11 재검토 반영):")
+        print("    · cage vs 멱함수는 가르지만, 멱함수 vs **느린 전이**는 요약값으로 못 가른다.")
+        print("    · 단일 시간원점의 sd(c)는 iid-OLS 표준오차의 10~40배다 — c 의 창간 요동을")
+        print("      과해석하지 말 것. 확정은 MTO 곡선으로.")
         print("     · c 가 창 따라 **거의 상수** + m 도 상수 + β 만 1 로 올라감")
         print("       → 케이지 절편이다. MSD = c + 6Dt 로 이미 직선이고 **D 는 인용 가능**하다.")
         print("         (D 는 자유 절편 맞춤의 **기울기**에서 나오므로 c 에 오염되지 않는다.)")
