@@ -1844,37 +1844,56 @@ LDAUPRINT = 2
 LMAXMIX = 4
 MAGMOM = {magmom}
 
-# 분산
-IVDW   = 11                    # D3(BJ)
+# 분산 — ⚠ IVDW=11 은 **D3 zero damping** 이다. D3(BJ) 는 12 다.
+#   (우리 2026-08-08 외주 수령분 JSON 이 11 을 'D3(BJ)' 로 잘못 적어 뒀다 — 그 표기가 틀렸다.
+#    값은 그 실행과 맞추려고 11 을 유지한다. BJ 로 갈 거면 12 로 바꾸고 양쪽 다 바꿀 것.)
+IVDW   = 11
 
 # 한쪽만 흡착한 슬랩 — 쌍극자 보정
 LDIPOL = .TRUE. ; IDIPOL = 3
 
-# 출력
+# 출력 — ⚠ CHGCAR 를 남긴다. U-ramp 가 필요하면 ICHARG=1 로 승계해야 하는데
+#   LCHARG=.FALSE. 면 그 경로가 막힌다 (요청서가 U-ramp 를 허용하므로 켜 둔다).
 LORBIT = 11
-LWAVE  = .FALSE. ; LCHARG = .FALSE.
+LWAVE  = .FALSE. ; LCHARG = .TRUE.
 NCORE  = 4
 """
 
 
-def _magmom_configs(atoms: Atoms, nslab: int) -> Dict[str, str]:
-    """Ni 자기 초기값 2종. **어느 Ni 가 어느 부호인지 기록**해 재현 가능하게 한다.
+def _magmom_configs(atoms: Atoms, nslab: int, frag: str) -> Dict[str, List[float]]:
+    """자기 초기값 2종을 **원자 원본 순서**의 리스트로 돌려준다.
 
-    ⚠ 이름은 실제 알짜값으로 붙인다. Ni 48개를 전부 ±2 로 두면 총합이 4k−96 이라
-      **4 의 배수만 가능**하다 — 'net2' 는 이 구성에서 만들 수 없다(그렇게 이름 붙이면 거짓말).
-      최소 비영 알짜는 +4 이고, 그게 두 번째 초기값이다.
+    ⚠⚠ 문자열로 바로 만들면 안 된다 — POSCAR 는 종별로 재정렬되므로 **재매핑이 필요**하다.
+      2026-08-11 Codex 교차검증에서 실측: 48개 모멘트 중 36개가 Li·O 에 걸려 있었다
+      (원본은 층별로 뒤섞인 순서, POSCAR 는 Li48 Ni48 O96… 블록). 외주 입력이 통째로
+      틀어질 뻔했다. 그래서 반환형을 리스트로 바꾸고 호출부에서 POSCAR 순서로 옮긴다.
+
+    ⚠ 이름은 실제 알짜값이다. Ni 48개를 전부 ±2 로 두면 총합이 4k−96 이라 **4 의 배수만**
+      가능하다 — 'net2' 는 이 구성에서 만들 수 없다(그렇게 부르면 거짓말).
+    ⚠ 열린 껍질 조각(sdcp_doped 라디칼)은 분자 쪽에도 씨앗을 준다. 전부 0 으로 두면
+      doublet 이 닫힌 껍질로 붕괴할 수 있다 (Codex 지적, 채택).
     """
     sym = atoms.get_chemical_symbols()
     ni = [i for i in range(nslab) if sym[i] == "Ni"]
     order = sorted(ni, key=lambda i: (round(atoms.positions[i, 2], 2), atoms.positions[i, 0]))
-    out = {}
+    open_shell = "DOUBLET" in FRAGMENTS[frag]["electrons"].upper()
+    # 라디칼 씨앗 자리 — 분자부에서 술포네이트 O (없으면 분자 전체에 옅게)
+    seed: List[int] = []
+    if open_shell:
+        molpart = atoms[nslab:]
+        gi = group_indices(molpart, "SO3")
+        seed = [nslab + i for i in gi if molpart.get_chemical_symbols()[i] == "O"] \
+            or list(range(nslab, len(atoms)))
+    out: Dict[str, List[float]] = {}
     for name, flip in (("afm_balanced", 0), ("afm_net4", 1)):
         mag = [0.0] * len(atoms)
         for k, i in enumerate(order):
             mag[i] = 2.0 if k % 2 == 0 else -2.0
         if flip and len(order) >= 2:
             mag[order[1]] = 2.0          # 한 자리를 뒤집으면 알짜가 0 → +4
-        out[name] = " ".join(f"{m:.1f}" for m in mag)
+        for i in seed:                   # 라디칼 1개분(총 1 μB)을 씨앗 자리에 나눠 준다
+            mag[i] = round(1.0 / len(seed), 3)
+        out[name] = mag
     return out
 
 
@@ -1911,6 +1930,7 @@ def _write_poscar(path: Path, atoms: Atoms, nslab: int, freeze_frac: float) -> D
     path.write_text("\n".join(lines) + "\n")
     return {"species_order": seen, "counts": counts, "n_fixed": int(nfix),
             "z_cut_A": round(float(zcut), 3),
+            "order": [int(i) for i in idx],          # POSCAR 위치 k → 원본 인덱스
             "vasp_index_map_1based": {str(k + 1): int(i) for k, i in enumerate(idx)}}
 
 
@@ -1984,16 +2004,24 @@ def cmd_dft_handoff(a) -> int:
             if not xyz.is_file():
                 print(f"  ⚠ {rec['label']}.xyz 없음 — 건너뜀"); continue
             cx = read(xyz); cx.set_cell(slab.cell.array); cx.set_pbc(True)
-            for mag_name, magmom in _magmom_configs(cx, nslab).items():
+            frag_of = rec.get("fragment") or Path(a.dir).parent.name
+            for mag_name, mag_orig in _magmom_configs(cx, nslab, frag_of).items():
                 jd = out / f"{pid}__{role}top__{mag_name}"
                 jd.mkdir(parents=True, exist_ok=True)
                 pos = _write_poscar(jd / "POSCAR", cx, nslab, a.freeze)
                 el = pos["species_order"]
+                # ★★ POSCAR 는 종별로 재정렬된다 — MAGMOM 을 **그 순서로 옮긴다**.
+                #    안 옮기면 모멘트가 Ni 가 아닌 원자에 걸린다 (2026-08-11 실측: 48개 중 36개).
+                mag_poscar = [mag_orig[i] for i in pos["order"]]
+                nz_ok = all(cx.get_chemical_symbols()[pos["order"][k]] in ("Ni",)
+                            or abs(v) < 1e-9 or k >= sum(pos["counts"][:2])
+                            for k, v in enumerate(mag_poscar))
                 (jd / "INCAR").write_text(INCAR_TEMPLATE.format(
                     system=f"{pid} {role}-top {mag_name}",
                     ldaul=" ".join("2" if e == "Ni" else "-1" for e in el),
                     ldauu=" ".join("6.2" if e == "Ni" else "0.0" for e in el),
-                    ldauj=" ".join("0.0" for _ in el), magmom=magmom))
+                    ldauj=" ".join("0.0" for _ in el),
+                    magmom=" ".join(f"{m:.3f}" for m in mag_poscar)))
                 (jd / "KPOINTS").write_text(
                     f"auto\n0\nGamma\n{a.kmesh}\n0 0 0\n")
                 manifest["jobs"][jd.name] = {
