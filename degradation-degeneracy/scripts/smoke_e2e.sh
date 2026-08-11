@@ -36,8 +36,11 @@ fail=0
 # ★ dirty worktree 에서는 `clean_worktree`·`코드_identity` 가 정의상 실패한다.
 #   개발 중에 이 smoke 를 돌릴 수 있어야 하므로 그 둘만 제외하고, 대신 크게 경고한다.
 #   본 실행은 반드시 clean 커밋에서 시작해야 한다.
-DIRTY=0
-git diff --quiet HEAD 2>/dev/null || DIRTY=1
+#   ★ 판정은 **파이프라인과 같은 정의**를 써야 한다. `git diff --quiet HEAD` 는
+#   저장소 전체라, 같은 저장소의 다른 프로젝트(MPM/DEM)만 수정돼도 dirty 로
+#   찍혀 경고가 영구히 뜬다 — 실측으로 그렇게 됐다. src.io.git_info 는 F73 이후
+#   RUN_SCOPE 로 한정한다.
+DIRTY="$("$PY" -c 'from src.io import git_info; print(1 if git_info(".")["git_dirty"] else 0)' 2>/dev/null || echo 1)"
 export SMOKE_DIRTY="$DIRTY"
 
 step() { printf '\n\033[1m── %s ──\033[0m\n' "$1"; }
