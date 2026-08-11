@@ -602,6 +602,15 @@
    "DEM 논문/30. Advanced Materials - 2025 - Mun - Paving the Way for Next‐Generation All‐Solid‐State Batteries Dry Electrode Technology.pdf"
   ]
  },
+ "nam2026_primer_layer_dry_electrode_collector": {
+  "figures": 33,
+  "generated": "2026-08-11",
+  "pdfs": [
+   "이용민 교수님/3. Revisiting Primer Layer Design for Robust Dry Electrode-Current Collector Interfaces in Lithium-Ion Batteries.pdf",
+   "이용민 교수님/23. Sup) Revisiting Primer Layer Design for Robust Dry Electrode-Current Collector Interfaces in Lithium-Ion Batteries.pdf"
+  ],
+  "note": "세션 업로드본에서 추출 (본문 11p + SI 38p).  위 경로는 사용자 로컬 라이브러리 기준 표기이며 번호(3./23.)는 업로드 파일명에서 온 것이다 — 로컬 번호와 다르면 고칠 것."
+ },
  "ngandjong2021_dem_calendering_digital_twin": {
   "figures": 10,
   "generated": "2026-08-05",
