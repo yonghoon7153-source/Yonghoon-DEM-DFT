@@ -1587,12 +1587,46 @@ def cmd_verdict(a) -> int:
             print(f"   Li_top↔Ni_top 짝지은 대조쌍 {len(pairs)}개 · "
                   f"ΔE(Ni−Li) 중앙값 {np.median(dl):+.3f} eV · 범위 {min(dl):+.3f}…{max(dl):+.3f}")
             floor = max(GATE["decision_floor_eV"], float(np.std(dl)))
-            if abs(float(np.median(dl))) < floor:
+            med = float(np.median(dl))
+            # ★★ 2026-08-11 — 바닥을 **얼마나** 넘었는지를 안 보던 게 구멍이었다.
+            #   ptfe_c10 f0.85 가 중앙값 +0.031 vs 바닥 0.030 = **마진 1 meV** 로
+            #   "Li 우세" 판정을 받았다. 1 meV 는 UMA 로도 우리 표본으로도 잰 적 없는 양이다.
+            #   기준: 중앙값 자체의 불확실도(중앙값 표준오차 ≈ 1.25·σ/√n)보다 마진이
+            #   작으면 **넘은 게 아니다**. 임계값 근처에서 반올림으로 갈리는 판정을 막는다.
+            n_dir = len(dl)
+            se_med = 1.2533 * float(np.std(dl)) / max(1.0, n_dir ** 0.5)
+            margin = abs(med) - floor
+            # 부호 일관성 — 크기와 별개의 증거다. 크기는 작아도 방향이 다 같으면 실재를 시사하고,
+            # 크기가 커도 부호가 갈리면 방향 하나에 얹힌 것이다. 둘을 같이 보고한다.
+            npos = sum(1 for x in dl if x > 0)
+            try:
+                from math import comb
+                k = max(npos, n_dir - npos)
+                p_sign = min(1.0, 2.0 * sum(comb(n_dir, j) for j in range(k, n_dir + 1)) / 2 ** n_dir)
+            except Exception:
+                p_sign = None
+            sign_txt = (f"부호 {npos}/{n_dir} 양(Li 쪽)"
+                        + (f" · 부호검정 p={p_sign:.3f}" if p_sign is not None else ""))
+            if abs(med) < floor:
                 print(f"   → **가려지지 않았다** (|Δ| < 판정바닥 {floor:.3f} eV = max(30 meV, 쌍 편차))")
+                print(f"     {sign_txt}")
+                if p_sign is not None and p_sign <= 0.10:
+                    print(f"     ⚠ 크기는 바닥 아래인데 **부호는 일관**하다 — 작지만 실재하는 "
+                          f"차이일 수 있다. 표본(방향)을 늘리면 갈릴 자리다. 지금은 판정 안 한다.")
+            elif margin < se_med:
+                win = "Li" if med > 0 else "Ni"
+                print(f"   → ⚠ **판정 보류 (MARGINAL)** — 바닥 {floor:.3f} eV 를 "
+                      f"{margin * 1000:+.1f} meV 로 넘었는데 중앙값 자체의 표준오차가 "
+                      f"±{se_med * 1000:.1f} meV 다. 넘은 폭이 불확실도보다 작다.")
+                print(f"     {sign_txt} · 방향 {n_dir}개 → 중앙값은 {(n_dir + 1) // 2}번째 "
+                      f"방향 하나가 정한다. ⛔ '{win} 우세'로 인용하지 말 것.")
+                print(f"     해소: 독립 방향을 늘리거나(atlas --ndir↑) DFT+U 대조로 간다.")
             else:
-                win = "Li" if np.median(dl) > 0 else "Ni"
-                print(f"   → 이 프로토콜에서 {win} 우세 (판정바닥 {floor:.3f} eV 초과). "
+                win = "Li" if med > 0 else "Ni"
+                print(f"   → 이 프로토콜에서 {win} 우세 (바닥 {floor:.3f} eV 를 "
+                      f"{margin * 1000:+.1f} meV 초과 · 표준오차 ±{se_med * 1000:.1f} meV). "
                       f"열역학 판정 아님 — DFT+U 대조 필요.")
+                print(f"     {sign_txt}")
         else:
             print("   ⛔ 짝지은 Li/Ni 대조쌍이 없다 (레거시 스캔에는 자리 라벨이 없다).")
             # 짝이 없으면 **분포 비교**만 가능하다 — 교란되어 있음을 반드시 같이 적는다.

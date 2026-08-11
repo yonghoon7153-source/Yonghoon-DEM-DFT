@@ -59,9 +59,22 @@ def main():
                          "케이지 판정이 나왔을 때 '재계산 없이 구제 가능한가'를 가른다.")
     a = ap.parse_args()
 
-    files = sorted(_glob.glob(os.path.expanduser(a.glob)))
+    # ⚠⚠ 2026-08-11 — `recursive=True` 가 빠져 있었다. 그러면 `**` 가 재귀가 아니라
+    #   **한 단계**로만 동작해서, 캠페인이 실제로 쓰는 경로
+    #   `<계>/T700_s2/d0.00_cfg0/T700/msd.json` (두 단계 깊이)를 하나도 못 찾는다.
+    #   run_arrhenius_6pt.sh 가 '다음 단계'로 찍어 주는 명령이 바로 그 글롭이었고,
+    #   msd_refit_window.py 는 recursive=True 라 같은 글롭으로 21개를 찾았다 —
+    #   **도구마다 다른 답**이 나온 게 이 한 줄이다.
+    files = sorted(_glob.glob(os.path.expanduser(a.glob), recursive=True))
     if not files:
-        raise SystemExit(f"파일 없음: {a.glob}")
+        # 0개를 '파일 없음'으로만 끝내면 글롭 버그와 정말로 안 돈 것을 구분 못 한다.
+        loose = sorted(_glob.glob(os.path.expanduser(a.glob).split("**")[0] + "**/msd.json",
+                                  recursive=True)) if "**" in a.glob else []
+        msg = [f"파일 없음: {a.glob}"]
+        if loose:
+            msg.append(f"⚠ 같은 뿌리 아래 msd.json 은 {len(loose)}개 있다 — 글롭 패턴을 볼 것:")
+            msg += [f"    {p}" for p in loose[:3]]
+        raise SystemExit("\n".join(msg))
     lo, hi = a.window
 
     # ── 온도별 MSD 앙상블 평균 ────────────────────────────────────────────
