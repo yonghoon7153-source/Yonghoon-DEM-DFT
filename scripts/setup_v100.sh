@@ -47,12 +47,22 @@ if [ ! -f "$DATA/venv/bin/activate" ]; then
 fi
 # shellcheck disable=SC1091
 . "$DATA/venv/bin/activate"
-python3 -c "import numpy, taichi" 2>/dev/null || {
+# ★ scipy 를 빼먹으면 mpm3d 가 **16초 만에 죽는다** — `--se-dump` 경로가
+#   scipy.spatial.cKDTree 로 SE 셀을 가장 가까운 SE 구에 붙이는데(Voronoi id),
+#   거기엔 fallback 이 없다.  numpy+taichi 만 깔고 "준비 끝" 을 찍었던 것이 실수다.
+#   (scipy.ndimage 쪽은 fallback 이 있지만 fibre-buckle/drag 품질이 떨어진다.)
+python3 -c "import numpy, scipy, taichi" 2>/dev/null || {
   pip install -q -U pip
-  pip install -q numpy taichi || fail "pip install 실패"
+  pip install -q numpy scipy taichi || fail "pip install 실패"
 }
 ln -sfn "$DATA/venv" "$REPO/venv"                       # 러너 프리플라이트 1순위 경로
-echo "  $(python3 -c "import numpy, taichi; print('numpy', numpy.__version__, '· taichi', taichi.__version__)")"
+echo "  $(python3 -c "import numpy, scipy, taichi as t; print('numpy', numpy.__version__, '· scipy', scipy.__version__, '· taichi', t.__version__)")"
+# 실제 진입점을 import 해 본다 — 패키지 목록이 아니라 **이 코드가 뜨는지**가 증거다.
+python3 -c "
+import sys; sys.path.insert(0, '$REPO/scripts')
+from scipy.spatial import cKDTree            # mpm3d --se-dump 필수 경로
+import plan_se_curve_targets, analyze_se_curve_transfer   # 러너/판정기 의존
+print('  진입점 import OK (cKDTree · planner · transfer)')" || fail "진입점 import 실패"
 
 echo "═══ ④ 킷 스캐폴드 + 지표 보존본 복원 → $DATA/se_curve ═══"
 # 러너는 킷을 \$DATA/<kit> 또는 \$DATA/se_curve/<kit> 에서 찾는다 — 후자로 통일.
