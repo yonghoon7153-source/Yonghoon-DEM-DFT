@@ -249,6 +249,15 @@
       "evidence_tests": [
         "webapp/test_pipeline_provenance.py::RC7-07"
       ]
+    },
+    {
+      "id": "SR-01",
+      "severity": "P2",
+      "title": "STEP3 탄소 채널이 조각난 섬유 위에서 돈다 (점간격이 MPM dx 에 묶여 vox 0.4 서 91.7% 단절)",
+      "status": "open",
+      "owner": "claude",
+      "opened_in": "docs/reviews/selfreview_synthesis_vgcf_ptfe_se_grad_20260811.md",
+      "note": "자체 3각 적대리뷰 물리 렌즈 X3 (실제 solve_sigma_z 스탬프 실험).  첨가제 점 간격 0.7·dx_MPM ≈ 0.099µm 가 σ-격자와 무관하게 고정 + 1-복셀 6-conn 스탬프 → 10µm 직선 섬유가 vox 0.4 에서 91.7% 조각(평균 4.3), vox 0.2 에서 99.7%.  동일 설정 상대비교는 공통모드 생존(STEP3 v1 규약), 절대 'VGCF 퍼콜 망' 해석 불가.  후속: per-fibre stamped-component 진단 메트릭 + 실침대 세그먼트-vs-점 스탬프 A/B (탄소 단독망 실험은 상한 성격)."
     }
   ]
 }
