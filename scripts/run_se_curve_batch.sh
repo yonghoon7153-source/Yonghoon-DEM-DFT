@@ -55,6 +55,18 @@ done
   설치는 **venv 파이썬으로**: ~/Yonghoon-DEM-DFT/venv/bin/python3 -m pip install scipy (심링크: ln -sfn $DATA/venv $REPO/venv)" >&2; exit 1; }
 # shellcheck disable=SC1090
 . "$ACT" >/dev/null 2>&1
+# ── 준정적 게이트 (2026-08-11) ─────────────────────────────────────────────────
+#   mpm3d 는 이제 V/c_P > 0.01 이면 **거부**한다 (옛 코드는 print 경고만 했다).
+#   이 러너는 **상대 비교**가 목적이라 (같은 마하로 통일 → 공통모드 상쇄 = 등급 B)
+#   승인 플래그를 붙이되, 그 사실을 화면에 크게 알리고 결과 JSON 에도 기록되게 한다.
+#   ⚠ 절대값이 필요하면 --mach 0.01 로 다시 재야 한다 (실측 0.0306→0.01 에서 σ +4.8 %).
+QSFLAG=()
+if python3 -c "import sys; sys.exit(0 if float('$MACH') > 0.01 else 1)" 2>/dev/null; then
+  QSFLAG=(--allow-fast-platen)
+  echo "★ 준정적 한계 초과 (mach $MACH > 0.01) — --allow-fast-platen 으로 승인하고 진행한다."
+  echo "  이 배치의 결과는 **상대 비교 전용**이다 (결과 JSON 의 quasistatic_violation=true)."
+  echo "  절대값이 필요하면: --mach 0.01 (런타임 ~3x)"
+fi
 mkdir -p "$OUT"; cd "$OUT" || exit 1
 echo "venv: $ACT  ·  python: $(command -v python3)"
 echo "설정: n_grid $NGRID · sub $SUB · mach $MACH · gpu-mem $GPUMEM · φ $PHI"
@@ -76,7 +88,7 @@ for K in "${KIT_ARR[@]}"; do
     echo "=== $NAME  $(date +%H:%M:%S)"
     if [ "$DRY" = 1 ]; then echo "  (dry-run)"; continue; fi
     t0=$SECONDS
-    python3 -u "$REPO/scripts/mpm3d_compaction.py" --arch cuda --gpu-mem "$GPUMEM" --am-scaffold "$KDIR/am_scaffold.csv" --se-dump "$KDIR/se_scaffold.csv" --n-grid "$NGRID" --sub "$SUB" --print-every 20 --protocol hold --periodic --platen-mach "$MACH" --compact-to "$E" --save-metrics "xfer_${NAME}.json" > "xfer_${NAME}.log" 2>&1
+    python3 -u "$REPO/scripts/mpm3d_compaction.py" --arch cuda --gpu-mem "$GPUMEM" --am-scaffold "$KDIR/am_scaffold.csv" --se-dump "$KDIR/se_scaffold.csv" --n-grid "$NGRID" --sub "$SUB" --print-every 20 --protocol hold --periodic --platen-mach "$MACH" "${QSFLAG[@]}" --compact-to "$E" --save-metrics "xfer_${NAME}.json" > "xfer_${NAME}.log" 2>&1
     rc=$?; echo "  EXIT=$rc  wall=$((SECONDS-t0))s"
     if [ "$rc" -ne 0 ]; then
       rc_all=$rc; echo "  ── 실패 꼬리 ──"; tail -5 "xfer_${NAME}.log" | sed 's/^/  | /'

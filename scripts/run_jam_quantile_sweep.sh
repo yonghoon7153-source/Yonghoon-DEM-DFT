@@ -65,6 +65,18 @@ echo "설정: n_grid $NGRID · sub $SUB · mach $MACH · gpu-mem $GPUMEM"
 echo "사전등록: P{$PS} × q{$QS} 전부 · P600 사전제외(ε_union 0.69 % 축퇴)"
 echo "         jam 미발화/축퇴 = FAIL(제외 아님) · 지표는 두께 고정"
 
+# ── 준정적 게이트 (2026-08-11) ─────────────────────────────────────────────────
+#   mpm3d 는 이제 V/c_P > 0.01 이면 **거부**한다 (옛 코드는 print 경고만 했다).
+#   이 러너는 **상대 비교**가 목적이라 (같은 마하로 통일 → 공통모드 상쇄 = 등급 B)
+#   승인 플래그를 붙이되, 그 사실을 화면에 크게 알리고 결과 JSON 에도 기록되게 한다.
+#   ⚠ 절대값이 필요하면 --mach 0.01 로 다시 재야 한다 (실측 0.0306→0.01 에서 σ +4.8 %).
+QSFLAG=()
+if python3 -c "import sys; sys.exit(0 if float('$MACH') > 0.01 else 1)" 2>/dev/null; then
+  QSFLAG=(--allow-fast-platen)
+  echo "★ 준정적 한계 초과 (mach $MACH > 0.01) — --allow-fast-platen 으로 승인하고 진행한다."
+  echo "  이 배치의 결과는 **상대 비교 전용**이다 (결과 JSON 의 quasistatic_violation=true)."
+  echo "  절대값이 필요하면: --mach 0.01 (런타임 ~3x)"
+fi
 IFS=',' read -r -a P_ARR <<< "$PS"
 IFS=',' read -r -a Q_ARR <<< "$QS"
 rc_all=0; n_done=0; n_tot=$(( ${#P_ARR[@]} * ${#Q_ARR[@]} ))
@@ -90,7 +102,7 @@ for P in "${P_ARR[@]}"; do
     python3 -u "$REPO/scripts/mpm3d_compaction.py" --arch cuda --gpu-mem "$GPUMEM" \
       --am-scaffold "$AM" --se-dump "$SE" --n-grid "$NGRID" --sub "$SUB" \
       --print-every 20 --protocol hold --periodic --platen-mach "$MACH" \
-      --target-gpa "$TGPA" --am-jam --am-jam-quantile "$Q" \
+      --target-gpa "$TGPA" "${QSFLAG[@]}" --am-jam --am-jam-quantile "$Q" \
       --save-metrics "$OUT/${NAME}.json" > "$OUT/${NAME}.log" 2>&1
     rc=$?; echo "  EXIT=$rc  wall=$((SECONDS-t0))s"
     if [ "$rc" -ne 0 ]; then

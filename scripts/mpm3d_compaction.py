@@ -788,6 +788,12 @@ def parse_args(argv):
                     help='옛 servo(움직이는 플래튼에서 판독) 복원 — **옛 코퍼스 바이트 재현 전용**. '
                          '이 경로는 limit cycle 로 발진하며 final_stress_GPa 와 provenance 도장이 '
                          '--frames 절단 위상에 좌우된다는 것이 확인된 상태다(적대리뷰 S-1).')
+    ap.add_argument('--allow-fast-platen', action='store_true',
+                    help='준정적 한계(V/c_P ≤ 0.01) 위반을 **알고** 진행한다.  결과 JSON 에 '
+                         'quasistatic_violation / platen_mach 가 기록되어 그 값이 위반 조건에서 '
+                         '나왔음을 결과가 달고 다닌다.  같은 마하로 통일한 **상대 비교**는 '
+                         '공통모드 상쇄로 유효하지만(등급 B), **절대값**은 처방대로 '
+                         '--platen-mach 0.01 로 다시 재야 한다 (실측: 0.0306→0.01 에서 σ +4.8 %%).')
     ap.add_argument('--allow-unconverged-servo', action='store_true',
                     help='servo 가 밴드 안에서 수렴하지 못해도 계속 진행 (기본=중단).  실험 전용 — '
                          '산출물 state_provenance.servo_status 에 not_converged 가 박힌다.')
@@ -2396,11 +2402,34 @@ def main(argv):
                  '       얼린 AM 의 wallP 기여는 실측 0.0 % 이므로 정지 판독은 SE 만 보고, SE 는 실험 '
                  '공극률에서 목표의 12 % 뿐입니다 → 정지 조건이 성립하지 않습니다.\n'
                  '       진단 목적이면 --allow-unconverged-servo 를 함께 주세요.')
+    # ★★ 준정적 한계 = **게이트** (2026-08-11).  옛 코드는 print 한 줄로 경고만 하고
+    #    그대로 돌았다 — 그래서 V/c_P 0.03 런이 계속 나왔고, 결과에는 위반 흔적이 남지
+    #    않아 나중에 "이 값이 준정적이었나" 를 물으면 답할 수 없었다.
+    #    §25 가 freeze-probe 문턱에 세운 원칙("경고가 아니라 거부")을 여기에도 적용한다.
+    #    다만 **하드 거부는 아니다**: 처방(V/c_P ≤ 0.01~0.02)으로 내리면 런타임이 3~5×
+    #    늘어 진행 중인 검증(jam 스윕 등)이 통째로 멎는다.  대신
+    #      ① 명시적 승인 플래그가 없으면 **거부**하고
+    #      ② 승인하고 돌리면 그 사실을 **metrics JSON 에 박아** 결과가 위반을 달고 다니게 한다.
+    #    실측 크기: 같은 베드 0.0306 → 0.01 에서 σ +4.8 % (docs/se_curve_transfer_verdict §③).
+    _QS_LIMIT = 0.01
+    _qs_mach = _v_platen / _c_p
+    _qs_violation = bool(_qs_mach > _QS_LIMIT)
+    if _qs_violation and not args.allow_fast_platen:
+        sys.exit(
+            f'[platen] 준정적 한계 위반: V/c_P = {_qs_mach:.3f} > {_QS_LIMIT} '
+            f'(V/c_S = {_v_platen / _c_s:.2f}).\n'
+            '       docs/mpm_platen_kinematic_stop_defect.md §7-2 의 처방은 V/c_P ≤ 0.01~0.02 이고,\n'
+            '       그 위에서는 **베드 상태 자체가 rate-오염**된다 (판독만의 문제가 아니다).\n'
+            f'       실측 크기: 같은 베드 0.0306 → 0.01 에서 σ +4.8 %.\n'
+            '       ① 처방대로: --platen-mach 0.01  (런타임 ~3× — 절대값을 쓸 때 이쪽)\n'
+            '       ② 알고 진행: --allow-fast-platen  (결과 JSON 에 위반이 기록된다.\n'
+            '          같은 마하로 통일한 **상대 비교**는 공통모드 상쇄로 유효 — 등급 B)')
     if not args.quiet:
-        print(f"  [platen] v={_v_platen:.4f} box/t.u.  V/c_P={_v_platen / _c_p:.3f}  "
+        print(f"  [platen] v={_v_platen:.4f} box/t.u.  V/c_P={_qs_mach:.3f}  "
               f"V/c_S={_v_platen / _c_s:.2f}  step={vmax:.5f} box/frame"
               + ("  (--platen-mach)" if args.platen_mach > 0 else "  (기하 규칙 0.008·H)")
-              + ("   ⚠ 준정적 한계(V/c_P≤0.01) 초과" if _v_platen / _c_p > 0.01 else ""))
+              + (f"   ⚠ 준정적 한계(V/c_P≤{_QS_LIMIT}) 초과 — --allow-fast-platen 로 승인됨 "
+                 "(결과에 기록)" if _qs_violation else ""))
         if args.platen_mach <= 0:
             # ★ 크로스-베드 비교의 함정 (2026-08-06 실측으로 확인).  기하 규칙 vmax=0.008·(WALL0−FLOOR)
             #   은 재하 속도를 **베드 높이에 비례**시킨다 → 두께가 다른 두 베드를 비교하면 재료·해상도가
@@ -3046,6 +3075,17 @@ def main(argv):
             'um_box_um': round(float(um_box), 4) if um_box > 0 else None,   # µm per box unit (payload scale)
             'final_stress_GPa': round(float(p_end), 4), 'target_GPa': float(target),
             'am_load_frac': float(args.am_load_frac),
+            # ── ★ 준정적 조건 (2026-08-11) — "이 값이 준정적이었나" 를 결과가 스스로 말한다.
+            #    옛 코드는 위반을 print 로만 알려 산출물에 흔적이 없었고, 나중에 물으면
+            #    로그를 뒤져야 했다 (그리고 로그는 보존되지 않는다).
+            #    platen_mach 위반 런은 **상대 비교만** 유효하다 (공통모드 상쇄, 등급 B).
+            'platen_mach_VcP': round(float(_qs_mach), 4),
+            'platen_mach_VcS': round(float(_v_platen / _c_s), 4),
+            'quasistatic_limit_VcP': float(_QS_LIMIT),
+            'quasistatic_violation': bool(_qs_violation),
+            'quasistatic_note': ('V/c_P > 한계 — 베드 상태가 rate-오염됨. 같은 마하 통일 시 '
+                                 '상대비교는 유효(공통모드), 절대값은 --platen-mach 0.01 재측정 필요'
+                                 if _qs_violation else None),
             'am_jam': bool(args.am_jam),
             'am_jam_quantile': (float(args.am_jam_quantile) if args.am_jam else None),
             'am_jam_z_um': (round((am_jam_z - FLOOR) * um_box, 3)

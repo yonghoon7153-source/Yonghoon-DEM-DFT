@@ -66,6 +66,12 @@ mkdir -p "$OUT"
 echo "venv: $ACT · python: $(command -v python3)"
 echo "설정: n_grid $NGRID · sub $SUB · mach $MACH · gpu-mem $GPUMEM"
 
+# ── 준정적 게이트: 상대비교 목적이라 승인하고 진행하되 결과에 기록된다 (위 두 러너와 동일 규약)
+QSFLAG=()
+if python3 -c "import sys; sys.exit(0 if float('$MACH') > 0.01 else 1)" 2>/dev/null; then
+  QSFLAG=(--allow-fast-platen)
+  echo "★ 준정적 한계 초과 (mach $MACH > 0.01) — 승인하고 진행 (결과 JSON 에 기록)."
+fi
 rc_all=0
 for R in "${RUNS[@]}"; do
   IFS=':' read -r P FAM FLOOR HDEM <<< "$R"
@@ -85,7 +91,7 @@ for R in "${RUNS[@]}"; do
   echo "=== $NAME  target ${TGPA} GPa · f_AM ${FAM} → SE목표 ${SETG} GPa · floor ${FLOOR}% · DEM두께 ${HDEM}µm  $(date +%H:%M:%S)"
   [ "$DRY" = 1 ] && { echo "  (dry-run)"; continue; }
   t0=$SECONDS
-  python3 -u "$REPO/scripts/mpm3d_compaction.py" --arch cuda --gpu-mem "$GPUMEM" --am-scaffold "$AM" --se-dump "$SE" --n-grid "$NGRID" --sub "$SUB" --print-every 20 --protocol hold --periodic --platen-mach "$MACH" --target-gpa "$TGPA" --am-load-frac "$FAM" --floor-porosity "$FLOOR" --save-metrics "$OUT/${NAME}.json" > "$OUT/${NAME}.log" 2>&1
+  python3 -u "$REPO/scripts/mpm3d_compaction.py" --arch cuda --gpu-mem "$GPUMEM" --am-scaffold "$AM" --se-dump "$SE" --n-grid "$NGRID" --sub "$SUB" --print-every 20 --protocol hold --periodic --platen-mach "$MACH" "${QSFLAG[@]}" --target-gpa "$TGPA" --am-load-frac "$FAM" --floor-porosity "$FLOOR" --save-metrics "$OUT/${NAME}.json" > "$OUT/${NAME}.log" 2>&1
   rc=$?; echo "  EXIT=$rc  wall=$((SECONDS-t0))s"
   if [ "$rc" -ne 0 ]; then
     rc_all=$rc; echo "  ── 실패 꼬리 ──"; tail -8 "$OUT/${NAME}.log" | sed 's/^/  | /'
