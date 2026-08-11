@@ -25,6 +25,13 @@ set -uo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
+# run.sh 와 같은 규칙 — venv 밖에서 불러도 같은 인터프리터를 쓴다.
+# (system python 은 import 실패 → dirty 판정 fallback 으로 오탐된다)
+if [[ -d ".venv" && -z "${VIRTUAL_ENV:-}" ]]; then
+  # shellcheck disable=SC1091
+  source .venv/bin/activate
+fi
+
 PY="${PYTHON:-python3}"
 NPROC="${NPROC:-4}"
 BASE="results/_smoke"
