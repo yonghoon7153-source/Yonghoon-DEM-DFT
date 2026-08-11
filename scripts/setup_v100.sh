@@ -51,18 +51,26 @@ fi
 #   scipy.spatial.cKDTree 로 SE 셀을 가장 가까운 SE 구에 붙이는데(Voronoi id),
 #   거기엔 fallback 이 없다.  numpy+taichi 만 깔고 "준비 끝" 을 찍었던 것이 실수다.
 #   (scipy.ndimage 쪽은 fallback 이 있지만 fibre-buckle/drag 품질이 떨어진다.)
-python3 -c "import numpy, scipy, taichi" 2>/dev/null || {
+# ★ pandas 를 빼먹으면 **network_conductivity.py 가 아예 안 뜬다** — 그 파일이 import 하는
+#   analyze_contacts.py 첫 줄이 pandas 다 (2026-08-11 V100 실측: --selftest 가
+#   ModuleNotFoundError 로 즉사).  scipy 때와 **같은 종류의 결함**이고, 원인도 같다:
+#   아래 진입점 스모크가 MPM 쪽 경로만 보고 **DEM 접촉망 솔버 경로를 안 봤다**.
+python3 -c "import numpy, scipy, pandas, taichi" 2>/dev/null || {
   pip install -q -U pip
-  pip install -q numpy scipy taichi || fail "pip install 실패"
+  pip install -q numpy scipy pandas taichi || fail "pip install 실패"
 }
 ln -sfn "$DATA/venv" "$REPO/venv"                       # 러너 프리플라이트 1순위 경로
-echo "  $(python3 -c "import numpy, scipy, taichi as t; print('numpy', numpy.__version__, '· scipy', scipy.__version__, '· taichi', t.__version__)")"
+echo "  $(python3 -c "import numpy, scipy, pandas, taichi as t; print('numpy', numpy.__version__, '· scipy', scipy.__version__, '· pandas', pandas.__version__, '· taichi', t.__version__)")"
 # 실제 진입점을 import 해 본다 — 패키지 목록이 아니라 **이 코드가 뜨는지**가 증거다.
+#   ⚠ 두 파이프라인을 **둘 다** 봐야 한다 (CLAUDE.md frame[5]: 웹앱 접촉망 σ 와 킷 STEP3 는
+#     서로 다른 파이프라인이고, 한쪽만 보면 다른 쪽 결손이 조용히 남는다 — 실제로 그랬다).
 python3 -c "
 import sys; sys.path.insert(0, '$REPO/scripts')
 from scipy.spatial import cKDTree            # mpm3d --se-dump 필수 경로
 import plan_se_curve_targets, analyze_se_curve_transfer   # 러너/판정기 의존
-print('  진입점 import OK (cKDTree · planner · transfer)')" || fail "진입점 import 실패"
+import analyze_contacts, network_conductivity              # DEM 접촉망 σ 경로 (pandas 포함)
+print('  진입점 import OK (cKDTree · planner · transfer · contacts · network σ)')" \
+  || fail "진입점 import 실패"
 
 echo "═══ ④ 킷 스캐폴드 + 지표 보존본 복원 → $DATA/se_curve ═══"
 # 러너는 킷을 \$DATA/<kit> 또는 \$DATA/se_curve/<kit> 에서 찾는다 — 후자로 통일.
