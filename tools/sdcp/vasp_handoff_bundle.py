@@ -6,7 +6,7 @@ v2 → v3 (2026-08-12) — v2 는 NO-GO 였다. 실측으로 확인된 것만 �
      뒤 24 +1" 은 실제 Ni1/Ni2 부격자와 **24/48 일치**(= 동전 던지기)였다. 개수만 같았을
      뿐 납품 계보와 다른 자기 배치다. 이제 tools/sdcp/afm_ledger.py 가 QE 원본의 Ni1/Ni2
      를 슬랩(그 셀의 1×4×1 슈퍼셀)에 좌표로 매칭해 확정한다. **v2 로 만든 번들은 무효.**
-  ① **계약 고정** (P0-A): 조각·방향 수를 EXPECT_DIRS 로 못 박고, 조각/쌍/xyz/분자 ref 가
+  ① **계약 고정** (P0-A): 조각별 **대조쌍 수**를 EXPECT_PAIRS 로 못 박고, 조각/쌍/xyz/분자 ref 가
      빠지면 **번들을 만들지 않는다**. v2 는 조용히 건너뛰고 축소된 MANIFEST 를 새 정본으로
      만들어, ptfe_c10 전체가 빠져도 exit 0 이 가능했다.
   ② **4상 러너** (P0-F): pre(dipole off · LWAVE) → relax(ISTART=1) → static → dense.
@@ -67,10 +67,15 @@ import site_screen as SS                      # noqa: E402  (게이트·POSCAR·
 
 TIERS = {"tier1": ["ptfe_c10", "ptfe_dimer"],      # 이번 판의 목적 (미해결 경향 2건)
          "tier2": ["sdcp_neutral", "sdcp_doped"]}
-#: 캠페인 계약 — 조각별 **방향 수**. 실제와 다르면 번들을 만들지 않는다 (Codex P0-A).
-#: 축소된 MANIFEST 를 새 정본으로 만드는 것이 이 번들의 제일 비싼 실패 모드다.
 RMSD_TOL_CHK = 0.75    # selftest 에서 쓰는 사본 (분석기는 문자열 안에 있다)
-EXPECT_DIRS = {"ptfe_c10": 5, "ptfe_dimer": 3, "sdcp_neutral": 6, "sdcp_doped": 5}
+#: 캠페인 계약 — 조각별 **대조쌍(Li_top↔Ni_top) 수**. down_dir 수가 아니다.
+#: 실제와 다르면 번들을 만들지 않는다 (Codex P0-A) — 축소된 MANIFEST 를 새 정본으로
+#: 만드는 것이 이 번들의 제일 비싼 실패 모드다.
+#: ⚠ 2026-08-12 실측 정정 — Codex 리뷰의 sdcp_neutral=6 은 틀렸다. 그 조각은 down_dir 이
+#:   7개지만 fib08·fib11 은 **다른 자리 종류**(LiNi/LiO/NiO_bridge · O_top · hollow)를
+#:   훑은 자리-종류 스윕이라 Li_top↔Ni_top 대조쌍이 아예 없다. 대조쌍은 5개가 맞다.
+#:   빠진 데이터가 아니라 다른 실험이다 — 제외 사유는 MANIFEST.pair_audit 에 남는다.
+EXPECT_PAIRS = {"ptfe_c10": 5, "ptfe_dimer": 3, "sdcp_neutral": 5, "sdcp_doped": 5}
 SEEDS_FULL = ("afm2424_pm1", "afm2424_net4")       # tier1 전 끝점 · clean
 SEED_MAIN = "afm2424_pm1"                          # 판정 headline
 #: Ni_pv = 2026-08-08 실납품 TITEL 계보 (자체검토 P0-2)
@@ -267,7 +272,14 @@ exit $rc
 # ─────────────────────────────────────────────────────────────────────────────
 # 쌍 발견 — verdict 와 같은 자격 규칙 + 지문 균질성 (v1 승계)
 # ─────────────────────────────────────────────────────────────────────────────
-def discover_pairs(run_dir: Path) -> List[Dict[str, Any]]:
+def discover_pairs(run_dir: Path, audit: Optional[Dict[str, Any]] = None
+                   ) -> List[Dict[str, Any]]:
+    """자격 있는 Li_top↔Ni_top 대조쌍. audit 을 주면 **왜 빠졌는지**를 채워 준다.
+
+    ⚠ down_dir 수 ≠ 대조쌍 수. site-screen 은 일부 방향에서 자리 **종류**를 훑는다
+      (O_top·hollow·*_bridge). 그 방향엔 Li_top/Ni_top 자체가 없어 대조쌍이 안 나온다 —
+      누락이 아니라 다른 실험이다. 숫자만 보고 "빠졌다" 고 하지 않도록 사유를 남긴다.
+    """
     rows = []
     for jp in sorted(run_dir.glob("*.json")):
         if jp.name.startswith("_"):
@@ -299,6 +311,19 @@ def discover_pairs(run_dir: Path) -> List[Dict[str, Any]]:
         out.append({"dir": dd, "roll": int(ro), "li": r, "ni": q,
                     "dE_uma": round(de, 4), "n_rolls": len(lst),
                     "dir_median_uma": round(med, 4)})
+    if audit is not None:
+        seen: Dict[str, Dict[str, int]] = {}
+        for r in rows:
+            d = str(r.get("down_dir"))
+            key = str(r.get("site")) + ("" if r.get("ranking_eligible") else "(부적격)")
+            seen.setdefault(d, {})[key] = seen.setdefault(d, {}).get(key, 0) + 1
+        audit["n_down_dirs"] = len(seen)
+        audit["n_contrast_pairs"] = len(out)
+        audit["excluded_dirs"] = {d: c for d, c in sorted(seen.items())
+                                  if d not in by_dir}
+        audit["note"] = ("제외된 방향은 Li_top↔Ni_top 대조쌍이 없는 것이다 — 자리 종류를 "
+                         "훑은 방향이거나(O_top·hollow·*_bridge) 한쪽이 부적격인 경우다. "
+                         "누락이 아니라 대조쌍 정의 밖이다.")
     return out
 
 
@@ -1048,7 +1073,7 @@ def main():
         dl = [r["dE_Ni_minus_Li_eV"] for r in results["pairs"].values()
               if r["fragment"] == frag and "dE_Ni_minus_Li_eV" in r]
         n_planned = sum(1 for p in man["pairs"].values() if p["fragment"] == frag)
-        expect_dirs = (man.get("contract_expected_dirs") or {}).get(frag)
+        expect_dirs = (man.get("contract_expected_pairs") or {}).get(frag)
         if not dl:
             results["fragments"][frag] = {"n": 0, "n_planned": n_planned,
                                           "class": "NO_DATA"}
@@ -1291,14 +1316,15 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     # ⚠⚠ 옛 구현은 조각/쌍/xyz/분자 ref 가 없으면 **조용히 건너뛰고** 축소된 MANIFEST 를
     #   새 정본으로 만들었다. planned 에 안 들어가니 required_missing 도 못 잡는다 —
     #   ptfe_c10 전체가 빠져도 exit 0 이 가능했다. 이제 계약을 먼저 못 박고 대조한다.
-    expect = dict(EXPECT_DIRS)
+    expect = dict(EXPECT_PAIRS)
     if a.expect:
         expect = {}
         for kv in a.expect:
             k, _, v = kv.partition("=")
             expect[k] = int(v)
-    man["contract_expected_dirs"] = expect
+    man["contract_expected_pairs"] = expect
     man["allow_partial"] = bool(a.allow_partial)
+    man["pair_audit"] = {}
     viol: List[str] = []
 
     def bad(msg: str):
@@ -1314,18 +1340,25 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             if not run.is_dir():
                 bad(f"{frag}: {run} 없음")
                 continue
-            pairs = discover_pairs(run)
+            aud: Dict[str, Any] = {}
+            pairs = discover_pairs(run, audit=aud)
+            man["pair_audit"][frag] = aud
             if not pairs:
                 bad(f"{frag}: 자격 쌍 0개")
                 continue
             want = expect.get(frag)
             if want is not None and len(pairs) != want:
-                bad(f"{frag}: 방향 {len(pairs)}개 — 계약은 {want}개")
+                bad(f"{frag}: 대조쌍 {len(pairs)}개 — 계약은 {want}개 "
+                    f"(down_dir {aud.get('n_down_dirs')}개 · 제외 "
+                    f"{list(aud.get('excluded_dirs') or {})})")
             man["fragments"].append(frag)
             med_all = float(np.median([p["dE_uma"] for p in pairs]))
             probe = min(pairs, key=lambda p: abs(p["dE_uma"] - med_all))
-            print(f"■ {frag} ({tier}): 방향 {len(pairs)}개"
-                  + (f" (탐침: {probe['dir']}_r{probe['roll']:03d})"))
+            ex = aud.get("excluded_dirs") or {}
+            print(f"■ {frag} ({tier}): 대조쌍 {len(pairs)}개 / down_dir "
+                  f"{aud.get('n_down_dirs')}개 (탐침: {probe['dir']}_r{probe['roll']:03d})"
+                  + (f"\n    제외 {len(ex)}방향 (대조쌍 아님): "
+                     + "; ".join(f"{d}={list(c)}" for d, c in ex.items()) if ex else ""))
             for p in pairs:
                 pid = f"{frag}__{p['dir']}_r{p['roll']:03d}"
                 # 2026-08-12 범위 결정: **tier1·tier2 모두 전 끝점 2 seed** (86잡).
@@ -1554,9 +1587,9 @@ def selftest() -> int:
     SS.load_fragment = lambda f: (Atoms(symbols=mol_syms, positions=mol_at(3.0)),
                                   {"status": "OK"})
     SS.FRAGMENTS.setdefault("ptfe_dimer", {"electrons": "closed-shell singlet"})
-    global TIERS, EXPECT_DIRS
+    global TIERS, EXPECT_PAIRS
     TIERS = {"tier1": ["ptfe_dimer"], "tier2": []}
-    EXPECT_DIRS = {"ptfe_dimer": len(DIRS)}
+    EXPECT_PAIRS = {"ptfe_dimer": len(DIRS)}
     led = _synth_ledger(slab_at, nslab)
 
     ok = True
