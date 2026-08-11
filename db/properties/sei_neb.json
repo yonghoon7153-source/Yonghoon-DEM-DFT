@@ -61,8 +61,11 @@
       "Ea_effective_eV": 0.0,
       "site_energy_diff_eV": 0.0,
       "symmetric": null,
-      "blocking_checks": [],
-      "citable": true
+      "blocking_checks": [
+        "유효 장벽이 0.0000 eV — **0 은 측정이 아니다.** 경로 붕괴를 의심할 것: ① 끝점 두 개가 같은 구조인가 ② 움직이는 Li 가 실제로 이동했나 ③ 이미지 사이 최대 변위가 0 이 아닌가. neb.dat 와 끝점 좌표를 직접 볼 것",
+        "비등가 Li 자리(Wyckoff 2종)인데 자리 에너지 차가 0 이다 — 끝점 생성이 실제로 두 자리를 잡았는지 확인할 것"
+      ],
+      "citable": false
     },
     "li3po4g": {
       "tag": "li3po4g",
