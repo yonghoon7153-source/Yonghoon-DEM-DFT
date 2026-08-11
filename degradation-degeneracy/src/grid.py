@@ -210,9 +210,11 @@ def grid_run_spec(cfg: dict, conditions: list[Condition],
     """
     from src.io import env_fingerprint, source_digest
 
+    from src.runner import effective_solver
+
     cond_ids = sorted(c.cond_id for c in conditions)
     spec = {
-        "grid_sig_version": 3,   # 11차: replay_recipe 필수화
+        "grid_sig_version": 4,   # 12차: effective_solver 필수화
         "config_hash": config_hash(cfg),
         # extends 부모까지 — 최종 병합본 해시만으로도 내용은 고정되지만,
         # 어떤 파일들이 읽혔는지가 없으면 봉인·재검이 불가능하다 (발견 3)
@@ -240,6 +242,11 @@ def grid_run_spec(cfg: dict, conditions: list[Condition],
             "baseline": {k: float(v) for k, v in (cfg.get("baseline") or {}).items()},
             "guards": cfg.get("guards") or {},
         },
+        # ★ 12차 발견 2 — 요청(cfg.solver)이 아니라 **실제로 쓰인** solver 를
+        #   서명에 넣는다. IDAKLU 생성 실패 시 Casadi 로 조용히 fallback 하므로,
+        #   요청만 봉인하면 중단 후 resume 에서 backend 가 달라져도 같은 서명이
+        #   된다 — 서로 다른 solver 의 곡선이 한 artifact 에 섞인다.
+        "effective_solver": effective_solver(cfg),
         "source_digest": source_digest(),
         "env": env_fingerprint(),
     }

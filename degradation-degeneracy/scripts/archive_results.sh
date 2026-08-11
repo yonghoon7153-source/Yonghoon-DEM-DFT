@@ -59,6 +59,7 @@ n_ok=0
 n_bad=0
 n_missing=0
 n_want=${#RUNS[@]}
+promoted=()          # ★ 12차 발견 5-c — 이번에 검증·승격한 묶음만 index 에 넣는다
 
 for run in "${RUNS[@]}"; do
   name="$(basename "$run")"
@@ -144,8 +145,18 @@ PYEOF
   fi
 
   if [[ "$ok" == "1" ]]; then
-    rm -rf "$out"
-    mv "$cand" "$out"          # 전 검사 통과분만 승격 (원자적 교체)
+    # ★ 12차 — `rm -rf out && mv cand out` 은 두 명령 사이에 중단되면 기존
+    #   묶음이 사라진다. 옛 것을 먼저 옆으로 치우고, 새 것을 제자리에 놓은
+    #   **뒤에** 지운다 (중단돼도 둘 중 하나는 항상 남는다).
+    old=""
+    if [[ -d "$out" ]]; then
+      old="$DEST/.previous_$name.$$"
+      rm -rf "$old"
+      mv "$out" "$old"
+    fi
+    mv "$cand" "$out"
+    [[ -n "$old" ]] && rm -rf "$old"
+    promoted+=("$name")
     n_ok=$((n_ok+1))
     # ★ 10차 자체 확인 1 / 11차 발견 7 — 진본성 앵커는 **full 64자리**로 남긴다.
     #   payload 목록의 해시 하나가 묶음 전체를 고정한다. 아래 artifact_index.yaml
@@ -165,45 +176,78 @@ done
 #   목록으로 남긴다. RESULTS.md 의 앵커와 이 파일을 대조하면 된다.
 #   승격된 묶음이 하나도 없으면 쓰지 않는다 — 실패한 실행이 인덱스를 건드려
 #   "무엇이 근거인가"를 흐리면 안 된다.
-if [[ "$n_ok" -gt 0 ]]; then
-"$PY" - "$DEST" <<'PYEOF'
+if [[ "${#promoted[@]}" -gt 0 ]]; then
+"$PY" - "$DEST" "${promoted[@]}" <<'PYEOF'
 import hashlib, subprocess, sys
 from pathlib import Path
 import yaml
 from src.io import file_digest
-dest = Path(sys.argv[1])
+from tools.archive_bundle import artifact_kind
+dest, names = Path(sys.argv[1]), sys.argv[2:]
+
 def _sha(p):
     h = hashlib.sha256()
     h.update(Path(p).read_bytes())
     return h.hexdigest()
+
 runs = {}
-for b in sorted(d for d in dest.iterdir() if d.is_dir() and not d.name.startswith(".")):
+# ★ 12차 발견 5-c — 이번에 check→격리 복원→validator 를 통과해 **승격한** 것만
+#   싣는다 (예전엔 DEST 아래 모든 디렉터리를 무검증으로 순회했다).
+for name in names:
+    b = dest / name
     pi = b / "payload_sha256.yaml"
     if not pi.is_file():
         continue
-    ent = {"payload_index_sha256": _sha(pi)}
-    for name, key in (("fits.parquet", "fits_sha256"),
-                      ("curves.parquet", "curves_sha256")):
-        if (b / name).is_file():
-            ent[key] = file_digest(b / name, full=True)
+    kind = artifact_kind(b)
+    ent = {"artifact_kind": kind, "payload_index_sha256": _sha(pi)}
     rm = b / "restore_map.yaml"
-    if rm.is_file():
-        ent["run_dir"] = (yaml.safe_load(rm.read_text(encoding="utf-8")) or {}
-                          ).get("run_dir")
-    runs[b.name] = ent
+    meta = (yaml.safe_load(rm.read_text(encoding="utf-8")) or {}) if rm.is_file() else {}
+    ent["run_dir"] = meta.get("run_dir")
+    if (b / "fits.parquet").is_file():
+        ent["fits_sha256"] = file_digest(b / "fits.parquet", full=True)
+    # ★ 12차 발견 5-a — fit 묶음의 곡선은 root 가 아니라 `inputs/` 에 있다.
+    #   manifest 가 서명한 producer curves digest 를 싣고, 동봉된 bytes 를
+    #   **재해시해 같은지 확인**한 뒤에만 기록한다.
+    mp = b / "manifest.yaml"
+    man = (yaml.safe_load(mp.read_text(encoding="utf-8")) or {}) if mp.is_file() else {}
+    sealed_curves = ((man.get("run_spec") or {}).get("producer") or {}
+                     ).get("curves_sha256")
+    local = b / "curves.parquet"
+    if not local.is_file():
+        for arch_rel, orig in (meta.get("inputs") or {}).items():
+            if str(orig).endswith("curves.parquet"):
+                local = b / arch_rel
+                break
+    if local.is_file():
+        got = file_digest(local, full=True)
+        if kind == "grid_producer" or sealed_curves is None:
+            ent["curves_sha256"] = got
+        elif got == sealed_curves:
+            ent["curves_sha256"] = got
+        else:
+            ent["curves_sha256"] = None
+            ent["_경고"] = (f"동봉 곡선 digest {got[:16]} ≠ 봉인 "
+                           f"{str(sealed_curves)[:16]}")
+    else:
+        ent["curves_sha256"] = sealed_curves
+        ent["_주의_곡선"] = "곡선 bytes 가 이 묶음에 없다 (봉인 digest만 기록)"
+    runs[name] = ent
 try:
     commit = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True,
                             text=True, check=True).stdout.strip()
 except Exception:
     commit = None
 out = dest / "artifact_index.yaml"
+# ★ 12차 발견 5-b — 여기 적히는 SHA 는 **계산에 쓴 코드**의 commit 이다.
+#   이 파일 자신을 담을 artifact commit 은 아직 존재하지 않으므로 그 이름을
+#   쓸 수 없다 (artifact commit A → 이 index 를 갱신하는 commit B 순서).
 out.write_text(yaml.safe_dump(
-    {"_주의": ("이 목록이 커밋되는 순간 각 묶음의 bytes 가 저장소 이력에 고정된다. "
-             "RESULTS.md 의 앵커(fits/curves digest)와 여기 값이 같아야 그 보고서의 "
-             "근거 묶음이다 (11차 발견 7)."),
-     "artifact_commit": commit, "runs": runs},
+    {"_주의": ("RESULTS.md 의 앵커(fits/curves digest)와 여기 값이 같아야 그 보고서의 "
+             "근거 묶음이다. source_commit 은 **계산 코드**의 commit 이고, 이 묶음이 "
+             "실제로 담긴 commit 은 이 파일을 커밋한 다음 commit 이다 (12차 발견 5-b)."),
+     "source_commit": commit, "runs": runs},
     allow_unicode=True, sort_keys=False), encoding="utf-8")
-print(f"\n인덱스: {out} ({len(runs)}개 묶음, full 64자리 digest)")
+print(f"\n인덱스: {out} ({len(runs)}개 승격 묶음, full 64자리 digest)")
 PYEOF
 fi
 

@@ -436,9 +436,39 @@ def sign_producer(out_dir, df, n_infeasible=0):
     from src.grid import Condition, write_curves_manifest
     from src.io import append_failed, env_fingerprint, source_digest
 
+    import numpy as _np
+    import pandas as _pd
+
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     cfg = load_config("configs/base.yaml")
+
+    # ★ 12차 발견 1 — 관측 곡선도 **canonical condition identity** 를 가져야
+    #   한다 (7개 필드 단일값 + cond_id 재계산 일치 + 공통 x_norm 격자 +
+    #   조건별 행 수 == n_interp). fixture 가 이 invariant 를 갖추지 못하면
+    #   검사를 추가해도 아무것도 증명하지 못한다 — 리뷰가 예고한 그 지점이다.
+    df = df.copy()
+    for c, v in (("lam_pe_type", "de"), ("lam_ne_type", "de"), ("noise", 0.0)):
+        if c not in df.columns:
+            df[c] = v
+    keys = ["lli", "lam_pe", "lam_ne", "lam_pe_type", "lam_ne_type", "noise"]
+    id_map, seed_map = {}, {}
+    for i, key in enumerate(sorted(set(map(tuple, df[keys].to_numpy().tolist())))):
+        c = Condition(lli=float(key[0]), lam_pe=float(key[1]),
+                      lam_ne=float(key[2]), lam_pe_type=str(key[3]),
+                      lam_ne_type=str(key[4]), noise=float(key[5]),
+                      seed=42 + i)
+        id_map[key], seed_map[key] = c.cond_id, c.seed
+    _k = list(map(tuple, df[keys].to_numpy().tolist()))
+    df["cond_id"] = [id_map[t] for t in _k]
+    df["seed"] = [seed_map[t] for t in _k]
+    # 조건마다 같은 길이의 공통 x_norm 격자
+    _sizes = df.groupby("cond_id").size()
+    n_interp = int(_sizes.iloc[0])
+    if _sizes.nunique() == 1:
+        grid = _np.linspace(0.0, 1.0, n_interp)
+        df = _pd.concat([g.assign(x_norm=grid) for _, g in df.groupby("cond_id")],
+                        ignore_index=True)
 
     # guard 를 확실히 위반하는 조건들 (max_mode_value 밖) — 재평가에서 불능
     failed_conds = [Condition(lli=1.0 + i, lam_pe=0.0, lam_ne=0.0,
@@ -449,13 +479,20 @@ def sign_producer(out_dir, df, n_infeasible=0):
     cond_ids = sorted(set(df["cond_id"].astype(str)))
     intended = sorted(set(cond_ids) | set(failed))
 
-    spec = {"grid_sig_version": 3, "config_hash": "test", "config_files": [],
+    spec = {"grid_sig_version": 4, "config_hash": "test", "config_files": [],
             "protocol_unified": "charge_first", "parameter_set": "test",
             "noise_seed": 42,
+            # ★ 12차 발견 2 — 실제로 쓰인 solver 클래스·backend 버전
+            "effective_solver": {"requested": {"type": "test"},
+                                 "effective_class": "TestSolver",
+                                 "pybamm": "test", "pybammsolvers": "test",
+                                 "casadi": "test"},
             # ★ F83b — 의도 집합 서명은 관측 ∪ 실패 전체에서 나온다
             "condition_ids_sha256": _hl.sha256(
                 "\n".join(intended).encode()).hexdigest()[:16],
-            "n_conditions_intended": len(intended), "postprocess": None,
+            "n_conditions_intended": len(intended),
+            # ★ 12차 발견 1 — 조건별 행 수 검사가 이 값을 쓴다
+            "postprocess": {"n_interp": n_interp, "n_trim": 3},
             # ★ F82 — 완방상태가 격자의 물리 기준점이므로 서명에 들어간다
             "discharged_state": {"ne_primary": 36.6, "ne_secondary": 3446.1,
                                  "pe": 58439.9},
@@ -822,12 +859,14 @@ def _fake_halfcell_cache(tmp_path, branch="delithiation", n_points=400):
         "y_pe": y.tolist(), "u_pe": (4.3 - 1.2 * y).tolist(),
         "z_ne": y.tolist(), "u_ne": (0.05 + 0.35 * y).tolist(),
     }), encoding="utf-8")
-    from src.io import source_digest
+    from src.io import env_fingerprint, source_digest
     cache.with_name(cache.stem + ".meta.yaml").write_text(yaml.safe_dump({
         "recipe": {"method": "ocp", "n_points": n_points, "branch": branch},
         "baseline_hash": b, "recipe_hash": r, "cache_file": cache.name,
         # ★ 10차 — 코드 identity 도 검증 대상이다 (stale-code 캐시 거부)
         "source_digest": source_digest(),
+        # ★ 12차 발견 4 — 생성 runtime 도 대조된다
+        "env": env_fingerprint(),
     }), encoding="utf-8")
     return cache
 
@@ -1255,8 +1294,11 @@ def test_discharged_state_is_in_grid_signature(tmp_path):
     """
     from src.grid import Condition, grid_run_spec
 
-    cfg = {"_loaded_files": [], "parameter_set": "x", "postprocess": {},
-           "grid": {"noise_seed": 42}}
+    from src.config import load_config
+    # ★ 12차 발견 2 — 서명이 effective_solver 를 포함하므로 실제 solver 설정이
+    #   있는 config 를 쓴다 (요청만이 아니라 실제 클래스·backend 를 넣는다)
+    cfg = {**load_config("configs/base.yaml"), "_loaded_files": [],
+           "parameter_set": "x", "postprocess": {}, "grid": {"noise_seed": 42}}
     conds = [Condition(0.0, 0.0, 0.0, "de", "de", 0.0, 1)]
     a_spec, a_sig = grid_run_spec(cfg, conds,
                                   discharged={"ne_primary": 1.0}, discharged_sha="a")
@@ -1317,10 +1359,12 @@ def test_discharged_cache_rejects_foreign_baseline(tmp_path, monkeypatch):
 
     # identity·solver·코드·runtime 이 다 맞아도 비유한·음수 값이면 거부
     from src.io import env_fingerprint
+    from src.runner import effective_solver
     cache.write_text(json.dumps(
         {"ne_primary": -1.0, "ne_secondary": 2.0, "pe": 3.0,
          "baseline_hash": baseline_hash(cfg),
          "solver": cfg.get("solver"),
+         "effective_solver": effective_solver(cfg),
          "source_digest": source_digest(),
          "env": env_fingerprint()}), encoding="utf-8")
     with pytest.raises(RuntimeError, match="유효하지 않"):
@@ -1588,8 +1632,10 @@ def test_discharged_cache_rejects_foreign_runtime(tmp_path, monkeypatch):
     cfg = load_config("configs/base.yaml")
     cache = _cache_path(cfg, tmp_path)
     cache.parent.mkdir(parents=True, exist_ok=True)
+    from src.runner import effective_solver
     base = {"ne_primary": 1.0, "ne_secondary": 2.0, "pe": 3.0,
             "baseline_hash": baseline_hash(cfg), "solver": cfg.get("solver"),
+            "effective_solver": effective_solver(cfg),
             "source_digest": source_digest()}
 
     fresh = DischargedState(ne_primary=11.0, ne_secondary=22.0, pe=33.0)
@@ -1665,3 +1711,131 @@ def test_fit_validator_reverifies_sealed_producer(tmp_path):
         encoding="utf-8")
     v2 = validate_provenance(out)
     assert "곡선_producer_재검" in v2["fail"], v2["checks"]
+
+
+# ──────────────────────────────── 12차 게이트 리뷰
+
+def test_observed_curve_identity_and_completeness(tmp_path):
+    """★ 12차 발견 1 — 관측 곡선의 조건 label·행 완전성을 검증해야 한다.
+
+    반례(리뷰 실측): 한 조건의 `lli` 를 0.777 로 잘못 기록해도, 48점 곡선이
+    24점만 남아도 validator 가 ok=True 였다. fitting 은 그 label 을 truth 로
+    채점하므로 복원오차·degeneracy 의 분자·분모가 직접 달라진다.
+    """
+    import pandas as pd
+    import yaml
+
+    from src.io import file_digest, validate_curves_provenance
+
+    def _reseal(d):
+        """curves 를 고친 뒤 manifest digest 만 맞춘다 (다른 검사는 통과 상태)."""
+        mp = d / "curves_manifest.yaml"
+        m = yaml.safe_load(mp.read_text(encoding="utf-8"))
+        m["curves_sha256"] = file_digest(d / "curves.parquet", full=True)
+        mp.write_text(yaml.safe_dump(m, allow_unicode=True), encoding="utf-8")
+
+    # ① 정상 producer 는 새 검사를 전부 통과한다
+    ok_dir = _tiny_curves(tmp_path / "ok")
+    v = validate_curves_provenance(ok_dir)
+    assert v["ok"], v["fail"]
+    for k in ("관측조건_단일성", "관측조건_ID결합", "관측조건_행수",
+              "관측_x_norm_공통격자"):
+        assert k in v["checks"]
+
+    # ② truth 필드 오염 (label 과 물리조건이 어긋남)
+    d2 = _tiny_curves(tmp_path / "truth")
+    df = pd.read_parquet(d2 / "curves.parquet")
+    first = df["cond_id"].iloc[0]
+    df.loc[df["cond_id"] == first, "lli"] = 0.777
+    df.to_parquet(d2 / "curves.parquet", index=False)
+    _reseal(d2)
+    assert "관측조건_ID결합" in validate_curves_provenance(d2)["fail"]
+
+    # ③ 한 조건 안에서 truth 가 두 값 (병합 회귀)
+    d3 = _tiny_curves(tmp_path / "multi")
+    df = pd.read_parquet(d3 / "curves.parquet")
+    idx = df.index[df["cond_id"] == df["cond_id"].iloc[0]][:5]
+    df.loc[idx, "lam_pe"] = 0.5
+    df.to_parquet(d3 / "curves.parquet", index=False)
+    _reseal(d3)
+    assert "관측조건_단일성" in validate_curves_provenance(d3)["fail"]
+
+    # ④ 점 누락 (48 → 24)
+    d4 = _tiny_curves(tmp_path / "rows")
+    df = pd.read_parquet(d4 / "curves.parquet")
+    victim = df["cond_id"].iloc[0]
+    keep = ~((df["cond_id"] == victim) & (df.groupby("cond_id").cumcount() >= 24))
+    df[keep].to_parquet(d4 / "curves.parquet", index=False)
+    _reseal(d4)
+    f4 = validate_curves_provenance(d4)["fail"]
+    assert "관측조건_행수" in f4 and "관측_x_norm_공통격자" in f4, f4
+
+
+def test_grid_signature_and_cache_bind_effective_solver(tmp_path, monkeypatch):
+    """★ 12차 발견 2 — 요청 solver 가 같아도 **실제로 쓰인** backend 가 다르면
+    같은 서명이 되면 안 된다 (IDAKLU 실패 시 Casadi fallback)."""
+    import json
+
+    import src.baseline as bl
+    import src.grid as G
+    import src.runner as R
+    from src.baseline import DischargedState, _cache_path, get_discharged_state
+    from src.config import baseline_hash, load_config
+    from src.io import env_fingerprint, source_digest
+
+    cfg = load_config("configs/base.yaml")
+    conds = [G.Condition(0.0, 0.0, 0.0, "de", "de", 0.0, 1)]
+
+    spec_a, sig_a = G.grid_run_spec(cfg, conds, discharged={"ne_primary": 1.0},
+                                    discharged_sha="a")
+    assert spec_a["effective_solver"]["effective_class"]
+    assert spec_a["effective_solver"]["pybammsolvers"] != "absent"
+
+    # 같은 요청, 다른 실제 backend → 서명이 갈려야 한다
+    monkeypatch.setattr(R, "effective_solver",
+                        lambda c: {**spec_a["effective_solver"],
+                                   "effective_class": "CasadiSolver"})
+    spec_b, sig_b = G.grid_run_spec(cfg, conds, discharged={"ne_primary": 1.0},
+                                    discharged_sha="a")
+    assert spec_a["effective_solver"]["requested"] == \
+        spec_b["effective_solver"]["requested"], "요청 solver 는 같아야 한다"
+    assert sig_a != sig_b, "실제 solver 가 다른데 grid 서명이 같다 (12차 발견 2)"
+
+    # 완방 캐시도 실제 backend 가 다르면 미스로 재계산한다
+    cache = _cache_path(cfg, tmp_path)
+    cache.parent.mkdir(parents=True, exist_ok=True)
+    cache.write_text(json.dumps(
+        {"ne_primary": 1.0, "ne_secondary": 2.0, "pe": 3.0,
+         "baseline_hash": baseline_hash(cfg), "solver": cfg.get("solver"),
+         "effective_solver": {"effective_class": "CasadiSolver"},
+         "source_digest": source_digest(), "env": env_fingerprint()}),
+        encoding="utf-8")
+    fresh = DischargedState(ne_primary=11.0, ne_secondary=22.0, pe=33.0)
+    monkeypatch.setattr(bl, "compute_discharged_state",
+                        lambda c, solver=None: fresh)
+    assert get_discharged_state(cfg, cache_dir=tmp_path) == fresh
+
+
+def test_halfcell_cache_binds_runtime(tmp_path):
+    """★ 12차 발견 4 — half-cell meta 의 생성 runtime 을 기록만 하고 대조하지
+    않으면, 다른 runtime 의 캐시가 Case 1 좌표 원점이 된다."""
+    import yaml
+
+    from src.config import load_config
+    from src.halfcell import halfcell_meta_path, validate_halfcell_cache
+
+    cfg = load_config("configs/base.yaml")
+    cache = _fake_halfcell_cache(tmp_path)
+    v = validate_halfcell_cache(cfg, cache)
+    assert v["ok"], v["fail"]
+    assert "runtime_identity" in v["checks"]
+
+    mp = halfcell_meta_path(cache)
+    m = yaml.safe_load(mp.read_text(encoding="utf-8"))
+    m["env"] = {**m["env"], "pybamm": "0.0.0-other"}
+    mp.write_text(yaml.safe_dump(m, allow_unicode=True), encoding="utf-8")
+    assert "runtime_identity" in validate_halfcell_cache(cfg, cache)["fail"]
+
+    del m["env"]
+    mp.write_text(yaml.safe_dump(m, allow_unicode=True), encoding="utf-8")
+    assert "runtime_identity" in validate_halfcell_cache(cfg, cache)["fail"]

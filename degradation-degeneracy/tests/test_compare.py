@@ -35,7 +35,11 @@ def _fits(objectives=("pocv", "pocv_dvdq"), n_lli=3, seed=0, err_scale=0.05):
                             "lli_hat": lli + e[0], "lam_pe_hat": pe + e[1],
                             "lam_ne_hat": ne + e[2],
                             "r": 1.0 - 0.5 * (pe + ne) - 0.1 * lli,
-                            "a_pe": 1.0, "a_ne": 1.0,
+                            # ★ 12차 발견 3 — 끝점 대조는 네 parameter 를 전부
+                            #   본다 (a_pe·b_pe·a_ne·b_ne). 실제 fits 에는 항상
+                            #   있으므로 fixture 도 갖춘다.
+                            "a_pe": 1.0, "b_pe": 0.0,
+                            "a_ne": 1.0, "b_ne": 0.0,
                             # ★ 11차 발견 5 — 끝점 일치 확인이 J 를 비교한다.
                             #   목적함수별 결정적 값이라 sweep 끝점과 본 실행이
                             #   같은 값을 갖는다 (정의가 같으므로 그래야 맞다).
@@ -2294,7 +2298,9 @@ def test_check_sweep_consistency_cli_exits_nonzero(tmp_path, monkeypatch):
     monkeypatch.setattr(C, "run_check", lambda *a, **k: {
         "sweep_dir": "s", "main_dir": "m", "일치": False,
         "pairs": [{"sweep_objective": "wdqdv_0.00", "main_objective": "pocv_dvdq",
-                   "n_common": 0, "_오류": "한쪽에 해당 목적함수 행이 없다"}]})
+                   "n_sweep": 0, "n_main": 3, "n_common": 0, "일치": False,
+                   "_오류": "한쪽에 해당 목적함수 행이 없다",
+                   "판정": "불일치 — 비교할 행이 없다"}]})
     monkeypatch.setattr(sys, "argv", ["chk", "--sweep", "s", "--main", "m"])
     with pytest.raises(SystemExit) as e:
         C.main()
@@ -2313,3 +2319,62 @@ def test_canonical_input_key_is_posix(tmp_path):
     key = canonical_input_key(p, tmp_path)
     assert key == "res/sub/curves.parquet"
     assert "\\" not in key
+
+
+def test_sweep_endpoint_requires_exact_agreement(tmp_path):
+    """★ 12차 발견 3 — 끝점 판정은 다수결·5%p 허용이 아니라 **조건별 수치
+    동일성**이어야 한다.
+
+    반례(리뷰 실측): 49%의 조건에서 J 를 2% 키워도, 모든 lam_pe_hat 을 +10%p
+    옮겨도, 공통 조건이 0건이어도 "일치" 였다.
+    """
+    from tools.check_sweep_consistency import run_check
+
+    d, _ = _complete_artifact(tmp_path,
+                              objectives=("pocv_dvdq", "pocv_dvdq_dqdv"))
+    sub = _wsweep_run(d)
+    base = run_check(sub, d)
+    assert base["일치"], base["pairs"]
+
+    # ① 절반 조건의 J 를 2% 키운다 → 예전 임계(>50%)로는 통과했다
+    f = pd.read_parquet(sub / "fits.parquet")
+    half = f["cond_id"].isin(sorted(set(f["cond_id"]))[: len(set(f["cond_id"])) // 2])
+    f.loc[half, "J"] = f.loc[half, "J"] * 1.02
+    f.to_parquet(sub / "fits.parquet", index=False)
+    r1 = run_check(sub, d)
+    assert not r1["일치"]
+    assert any("J" in str(p.get("조건별_차이", {})) for p in r1["pairs"])
+
+    # ② 해(parameter)만 어긋난 경우 — J 는 같아도 잡아야 한다
+    f = pd.read_parquet(sub / "fits.parquet")
+    f["J"] = pd.read_parquet(d / "fits.parquet")["J"].to_numpy()[: len(f)]
+    f["lam_pe_hat"] = f["lam_pe_hat"] + 0.10
+    f.to_parquet(sub / "fits.parquet", index=False)
+    r2 = run_check(sub, d)
+    assert not r2["일치"], "해가 10%p 어긋났는데 일치로 판정했다"
+
+    # ③ 공통 조건 0건은 명시적 실패
+    f = pd.read_parquet(sub / "fits.parquet")
+    f["cond_id"] = "없는조건_" + f["cond_id"].astype(str)
+    f.to_parquet(sub / "fits.parquet", index=False)
+    r3 = run_check(sub, d)
+    assert not r3["일치"]
+    assert all(p["n_common"] == 0 for p in r3["pairs"])
+
+
+def test_sweep_endpoint_coverage_checked(tmp_path):
+    """★ 12차 발견 3 — sweep 조건이 서명된 수보다 적거나 본 실행에 없는 조건을
+    포함하면 "일부만 맞았다"를 일치로 볼 수 없다."""
+    from tools.check_sweep_consistency import run_check
+
+    d, _ = _complete_artifact(tmp_path,
+                              objectives=("pocv_dvdq", "pocv_dvdq_dqdv"))
+    sub = _wsweep_run(d)
+
+    f = pd.read_parquet(sub / "fits.parquet")
+    drop = sorted(set(f["cond_id"]))[:2]
+    f[~f["cond_id"].isin(drop)].to_parquet(sub / "fits.parquet", index=False)
+    r = run_check(sub, d)
+    assert not r["일치"]
+    assert any("서명된" in p["판정"] for p in r["pairs"]), \
+        [p["판정"] for p in r["pairs"]]

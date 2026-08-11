@@ -62,6 +62,27 @@ def solver_name(solver) -> str:
     return type(solver).__name__
 
 
+def effective_solver(cfg: dict) -> dict:
+    """★ 12차 발견 2 — **실제로 쓰이는** solver 의 identity.
+
+    `cfg["solver"]` 는 *요청*이다. `make_solver()` 는 IDAKLU 생성이 실패하면
+    조용히 CasadiSolver 로 fallback 하므로, 요청만 봉인하면 "IDAKLU rtol=1e-6
+    으로 만든 곡선"이라는 주장이 거짓일 수 있다. 실제 클래스와 backend 패키지
+    버전을 함께 남겨 완방상태 캐시·격자 서명에 넣는다.
+    """
+    import importlib.metadata as _md
+
+    s = make_solver(cfg)
+    out = {"requested": dict(cfg.get("solver") or {}),
+           "effective_class": solver_name(s)}
+    for pkg in ("pybamm", "pybammsolvers", "casadi"):
+        try:
+            out[pkg] = str(_md.version(pkg))
+        except Exception:  # noqa: BLE001
+            out[pkg] = "absent"
+    return out
+
+
 @dataclass
 class RunResult:
     """단일 solve 결과. solution은 곡선 추출 후 즉시 폐기할 것 (메모리)."""

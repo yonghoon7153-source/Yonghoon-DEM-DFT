@@ -101,7 +101,11 @@ from src.io import validate_curves_provenance
 # ★ 11차 발견 3 — 실패라벨 재검은 producer 가 서명한 replay_recipe 로 하므로
 #   호출자가 cfg 를 줄 필요가 없다. 실패 2건 격자라 이 경로가 실제로 돈다.
 v = validate_curves_provenance(sys.argv[1])
-need = {"실패목록_ID결합", "실패사유_불능재검", "실패사유_미검증"}
+need = {"실패목록_ID결합", "실패사유_불능재검", "실패사유_미검증",
+        # ★ 12차 발견 1·2 — 관측 곡선 invariant 와 실제 solver identity
+        "effective_solver_identity", "replay_recipe_schema",
+        "관측조건_단일성", "관측조건_ID결합", "관측조건_행수",
+        "관측_x_norm_공통격자"}
 missing = need - set(v["checks"])
 print(f"   {'✅' if v['ok'] and not missing else '❌'} producer 독립 검증 (F74): "
       + ("통과 (실패라벨 재검 포함)" if v["ok"] and not missing
@@ -260,6 +264,8 @@ meta = [k for k, v in blk.items()
 assert meta, ("multistart_random_only 에 메타 키가 없다 — 10차 발견 3 의 "
               "크래시 경로가 재현되지 않는 표본이다 (조건 수 확인)")
 text = build(sys.argv[1], sys.argv[2]).read_text(encoding="utf-8")
+# ★ 12차 발견 7 — paired 보고서는 자기 protocol 을 스스로 밝혀야 한다
+assert "공정 paired 비교" in text, "paired 보고서에 protocol 안내가 없다"
 head = text[:2000]
 if "인용 금지" not in head:
     print("   ✅ paired 보고서 생성 (n_restarts=3, pairwise 메타 키 포함)")
@@ -434,9 +440,31 @@ fi
 ARCH_TMP="$BASE/arch"
 mkdir -p "$ARCH_TMP"
 cp -a "$GFIT" "$BASE/keep_run"
-"$PY" -m tools.archive_bundle bundle "$GFIT" "$ARCH_TMP/grid_fit" >/dev/null \
-  && ok "기준 묶음 생성" || bad "기준 묶음 생성 실패"
-_before="$(sha256sum "$ARCH_TMP/grid_fit/payload_sha256.yaml" | cut -d' ' -f1)"
+# ★ 12차 — **wrapper 경로**로 정상 승격까지 검사한다 (예전 smoke 는 하위 bundle
+#   도구만 직접 불러 wrapper·artifact index 회귀를 고정하지 못했다).
+ARCHIVE_DEST="$ARCH_TMP" ./scripts/archive_results.sh "$GFIT" >/dev/null 2>&1 \
+  && ok "archive wrapper 정상 승격" || bad "archive wrapper 승격 실패"
+"$PY" - "$ARCH_TMP" "$GFIT" <<'PYEOF'
+import sys
+from pathlib import Path
+import yaml
+dest, run = Path(sys.argv[1]), Path(sys.argv[2])
+idx = yaml.safe_load((dest / "artifact_index.yaml").read_text(encoding="utf-8"))
+name = run.name
+assert set(idx["runs"]) == {name}, f"승격분만 실려야 한다: {sorted(idx['runs'])}"
+e = idx["runs"][name]
+assert e["artifact_kind"] == "fit"
+for k in ("payload_index_sha256", "fits_sha256", "curves_sha256"):
+    assert isinstance(e.get(k), str) and len(e[k]) == 64, f"{k}: {e.get(k)}"
+assert "_경고" not in e, e.get("_경고")
+assert len(idx["source_commit"]) == 40 and "artifact_commit" not in idx
+man = yaml.safe_load((run / "manifest.yaml").read_text(encoding="utf-8"))
+assert e["curves_sha256"] == man["run_spec"]["producer"]["curves_sha256"], \
+    "index 의 curves digest 가 봉인된 producer digest 와 다르다"
+print("   ✅ artifact_index: 승격분만·kind·64자리·봉인 곡선 digest 일치 (12차 발견 5)")
+PYEOF
+[[ $? -eq 0 ]] || bad "artifact_index 검사 실패 (12차 발견 5)"
+_before="$(sha256sum "$ARCH_TMP/$(basename "$GFIT")/payload_sha256.yaml" | cut -d' ' -f1)"
 "$PY" - "$GFIT" <<'PYEOF'
 import sys
 from pathlib import Path
@@ -446,10 +474,10 @@ df = pd.read_parquet(f)
 df["lam_pe_hat"] = df["lam_pe_hat"] + 0.5      # 봉인과 어긋나게 만든다
 df.to_parquet(f, index=False)
 PYEOF
-if "$PY" -m tools.archive_bundle bundle "$GFIT" "$ARCH_TMP/grid_fit" >/dev/null 2>&1; then
-  bad "봉인과 다른 bytes 를 그대로 묶었다 (11차 발견 6)"
+if ARCHIVE_DEST="$ARCH_TMP" ./scripts/archive_results.sh "$GFIT" >/dev/null 2>&1; then
+  bad "봉인과 다른 bytes 인데 wrapper 가 성공했다 (11차 발견 6)"
 else
-  _after="$(sha256sum "$ARCH_TMP/grid_fit/payload_sha256.yaml" | cut -d' ' -f1)"
+  _after="$(sha256sum "$ARCH_TMP/$(basename "$GFIT")/payload_sha256.yaml" | cut -d' ' -f1)"
   [[ "$_before" == "$_after" ]] \
     && ok "실패한 재보관이 기존 묶음을 보존 (11차 발견 6)" \
     || bad "실패한 재보관이 기존 묶음을 파괴했다"

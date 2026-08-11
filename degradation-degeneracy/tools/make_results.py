@@ -489,11 +489,11 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
             try:
                 from tools.check_sweep_consistency import run_check
                 _chk = run_check(in_dir / "wsweep", in_dir, tol=_ws_tol)
+                # ★ 12차 발견 3 — 판정은 조건 coverage + 조건별 수치 동일성이다
+                #   (다수결·5%p 허용이 아니다). checker 가 이미 그렇게 낸다.
                 _bad_pairs = [f"{p['sweep_objective']}↔{p['main_objective']}"
-                              f"({p.get('_오류') or p.get('판정', '')[:40]})"
-                              for p in _chk["pairs"]
-                              if p["n_common"] == 0
-                              or not str(p.get("판정", "")).startswith("일치")]
+                              f"({str(p.get('판정', ''))[:60]})"
+                              for p in _chk["pairs"] if not p.get("일치")]
                 if _bad_pairs:
                     sweep_vs_main.append(f"끝점 결과 불일치: {_bad_pairs}")
             except Exception as e:  # noqa: BLE001
@@ -519,6 +519,23 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     P.append("# RESULTS — full-cell 곡선으로 LAM_PE와 LAM_NE를 분리할 수 있는가\n")
     P.append("> 이 파일은 `tools/make_results.py`가 결과 파일에서 자동 생성한다. "
              "직접 수정하지 말 것.\n")
+    # ★ 12차 발견 7 — paired(공정) 실행에서 만든 보고서는 **어떤 protocol 의
+    #   결과인지**를 문서 스스로 밝혀야 한다. 기본 RESULTS 는 비대칭 pipeline
+    #   (adaptive 조기 종료 + warm start 연쇄) 결과라 결론 2 의 해석이 다르다.
+    _mopt0 = (manifest.get("run_spec") or {}).get("optimizer") or {}
+    _mspec0 = manifest.get("run_spec") or {}
+    if _mopt0.get("adaptive") is False and _mspec0.get("warm_start") is False:
+        P.append(
+            "> ## 이 문서의 protocol — 공정 paired 비교\n"
+            "> \n"
+            f"> `--no-adaptive --no-warm-start`, restart {_mspec0.get('n_restarts')}개 "
+            f"고정, 목적함수 {list(_mspec0.get('objective_order') or [])}.\n"
+            "> 모든 조건이 **같은 restart index 집합**을 끝까지 돌고, 목적함수 간 "
+            "warm start 연쇄가 없다 (F66/F86).\n"
+            "> \n"
+            "> 기본 `docs/RESULTS.md` 는 adaptive 조기 종료 + warm start 연쇄가 있는 "
+            "**비대칭 pipeline** 결과다. 목적함수 간 비교(결론 2)는 이 문서의 값을 "
+            "쓰고, 기본 문서의 multi-start 수치와 섞지 말 것.\n")
 
     # ★ F35 — provenance가 없는 artifact에서 생성됐으면 문서 맨 위에 인용 금지
     #   배너를 박는다. 회답을 별도 문서에만 두면 저장소를 여는 사람은 철회 전

@@ -176,6 +176,19 @@ def env_fingerprint() -> dict:
             out[name] = str(getattr(m, "__version__", "unknown"))
         except Exception:  # noqa: BLE001
             out[name] = "absent"
+    # ★ 12차 발견 2 — 수치를 실제로 만드는 solver backend 는 pybamm 과 **별도
+    #   배포판**이다 (pybammsolvers 가 IDAKLU 를, casadi 가 fallback 을 제공).
+    #   이 둘이 바뀌면 같은 pybamm 버전에서도 값이 달라질 수 있다. import 로는
+    #   버전을 못 얻는 패키지가 있어 metadata 로 읽는다.
+    import importlib.metadata as _md
+    for name in ("pybammsolvers", "casadi"):
+        try:
+            out[name] = str(_md.version(name))
+        except Exception:  # noqa: BLE001
+            try:
+                out[name] = str(getattr(__import__(name), "__version__", "unknown"))
+            except Exception:  # noqa: BLE001
+                out[name] = "absent"
     return out
 
 
@@ -586,6 +599,88 @@ def fits_seal(fits_path, cond_ids=None, objective_order=None) -> dict:
     return out
 
 
+#: 곡선 한 조건을 정의하는 identity 필드 (Condition 과 1:1)
+_COND_FIELDS = ("lli", "lam_pe", "lam_ne", "lam_pe_type", "lam_ne_type",
+                "noise", "seed")
+
+
+def _verify_observed_curves(curves_path: Path, spec: dict) -> dict:
+    """★ 12차 발견 1 — 관측 곡선의 condition identity 와 행 완전성.
+
+    검사:
+      · 조건마다 7개 identity 필드가 **단일값**이고 유한한가
+      · 그 값으로 만든 canonical `Condition.cond_id` 가 기록 ID 와 같은가
+      · 조건마다 행 수가 서명된 `postprocess.n_interp` 와 같은가
+      · `x_norm` 이 유한·중복없음이고 모든 조건이 **같은 격자**인가
+    """
+    import numpy as np
+
+    from src.grid import Condition
+
+    checks: dict[str, tuple[bool, str]] = {}
+    n_interp = ((spec.get("postprocess") or {}) or {}).get("n_interp")
+    try:
+        df = pd.read_parquet(curves_path,
+                             columns=["cond_id", "x_norm", *_COND_FIELDS])
+    except Exception as e:  # noqa: BLE001
+        checks["관측조건_스키마"] = (
+            False, f"곡선에 조건 identity 열이 없다 ({e}) — 12차 이전 형식이다. "
+                   f"곡선을 다시 생성해야 모집단을 증명할 수 있다")
+        return checks
+
+    bad_multi, bad_id, bad_rows, bad_x = [], [], [], []
+    ref_grid = None
+    for cid, g in df.groupby("cond_id", sort=True):
+        cid = str(cid)
+        uniq = {k: g[k].unique() for k in _COND_FIELDS}
+        if any(len(v) != 1 for v in uniq.values()):
+            bad_multi.append(
+                f"{cid}({[k for k, v in uniq.items() if len(v) != 1]})")
+            continue
+        vals = {k: v[0] for k, v in uniq.items()}
+        try:
+            cond = Condition(
+                lli=float(vals["lli"]), lam_pe=float(vals["lam_pe"]),
+                lam_ne=float(vals["lam_ne"]),
+                lam_pe_type=str(vals["lam_pe_type"]),
+                lam_ne_type=str(vals["lam_ne_type"]),
+                noise=float(vals["noise"]), seed=int(vals["seed"]))
+        except Exception as e:  # noqa: BLE001
+            bad_id.append(f"{cid}(조건 재구성 불가: {type(e).__name__})")
+            continue
+        if cond.cond_id != cid:
+            bad_id.append(f"{cid}(재계산 {cond.cond_id})")
+        if isinstance(n_interp, int) and len(g) != n_interp:
+            bad_rows.append(f"{cid}({len(g)}행, {n_interp} 필요)")
+        x = g["x_norm"].to_numpy(dtype=float)
+        if not np.all(np.isfinite(x)) or len(set(x.tolist())) != len(x):
+            bad_x.append(f"{cid}(비유한 또는 중복 x_norm)")
+            continue
+        xs = np.sort(x)
+        if ref_grid is None:
+            ref_grid = xs
+        elif len(xs) != len(ref_grid) or not np.allclose(xs, ref_grid,
+                                                         rtol=0.0, atol=1e-12):
+            bad_x.append(f"{cid}(다른 x_norm 격자)")
+
+    checks["관측조건_단일성"] = (
+        not bad_multi,
+        f"{len(bad_multi)}개 조건의 truth 필드가 한 값이 아니다: {bad_multi[:3]}")
+    checks["관측조건_ID결합"] = (
+        not bad_id,
+        f"{len(bad_id)}개 조건의 cond_id 가 그 행들의 물리조건에서 재계산한 "
+        f"canonical ID 와 다르다: {bad_id[:3]} — label 이 truth 와 어긋났다")
+    checks["관측조건_행수"] = (
+        isinstance(n_interp, int) and not bad_rows,
+        f"n_interp 가 서명에 없거나({n_interp}) 행 수가 다른 조건이 "
+        f"{len(bad_rows)}개다: {bad_rows[:3]}")
+    checks["관측_x_norm_공통격자"] = (
+        not bad_x,
+        f"{len(bad_x)}개 조건의 x_norm 이 비유한·중복이거나 공통 격자가 "
+        f"아니다: {bad_x[:3]}")
+    return checks
+
+
 def _verify_failed_reasons(d: Path, spec: dict, ds: dict) -> dict:
     """실패 행을 **서명된 recipe** 로 재검한다 (11차 발견 2·3).
 
@@ -704,9 +799,23 @@ def validate_curves_provenance(curves_dir, repo_root=None) -> dict:
     # ★ F82b/10차 발견 2-c — 버전과 필수 물리 필드를 강제한다. 예전에는
     #   discharged=None 으로 만든 spec 도, F82 이전 버전도 그대로 통과했다.
     checks["grid_sig_version"] = (
-        spec.get("grid_sig_version") == 3,
-        f"grid_sig_version이 {spec.get('grid_sig_version')}이다 (3 필요 — "
-        f"discharged_state·replay_recipe 미포함 형식)")
+        spec.get("grid_sig_version") == 4,
+        f"grid_sig_version이 {spec.get('grid_sig_version')}이다 (4 필요 — "
+        f"discharged_state·replay_recipe·effective_solver 미포함 형식)")
+    # ★ 12차 발견 2 — 실제로 쓰인 solver 가 서명에 있어야 한다.
+    _es = spec.get("effective_solver") or {}
+    checks["effective_solver_identity"] = (
+        bool(_es.get("effective_class")) and bool(_es.get("pybamm"))
+        and _es.get("pybammsolvers") is not None and _es.get("casadi") is not None,
+        f"effective_solver(실제 클래스·backend 버전)가 서명에 없다: {_es}")
+    # ★ 12차 발견 6 — replay_recipe 는 실패 건수와 무관하게 v4 의 필수 항목이다
+    #   (예전에는 n_failed>0 일 때만 검사해 실패 0건 producer 가 빠져나갔다).
+    _rr = spec.get("replay_recipe") or {}
+    checks["replay_recipe_schema"] = (
+        isinstance(_rr.get("baseline"), dict) and bool(_rr.get("baseline"))
+        and isinstance(_rr.get("guards"), dict),
+        f"replay_recipe(baseline·guards)가 없거나 형식이 아니다: "
+        f"{sorted(_rr) if _rr else None}")
     _ds = spec.get("discharged_state")
     import math as _math
     _ds_ok = (isinstance(_ds, dict)
@@ -782,6 +891,13 @@ def validate_curves_provenance(curves_dir, repo_root=None) -> dict:
         #   "3,069조건" 은 guard 통과분이므로, 실패 924개가 정확히 나머지임을
         #   failed.csv 를 **다시 읽어** 증명해야 한다.
         obs_ids = set(df["cond_id"].astype(str))
+        # ★ 12차 발견 1 — **관측 곡선 자체**의 identity·완전성을 검증한다.
+        #   지금까지 곡선에서 독립적으로 읽은 것은 cond_id·grid_run_sig 뿐이라,
+        #   조건 label 이 잘못 조립되거나(truth 필드 불일치) 점이 일부 누락돼도
+        #   (48점 → 24점) 통과했다 (리뷰 실측: 둘 다 ok=True). fitting 은 그
+        #   label 을 truth 로 채점하므로 복원오차·degeneracy 의 분자·분모가
+        #   직접 달라진다. 위조가 아니라 **정상 실행의 회귀**를 잡는 검사다.
+        checks.update(_verify_observed_curves(cp, spec))
         fail_ids = load_failed(d)
         if n_fail and not (d / "failed.csv").exists():
             checks["실패목록_존재"] = (False,

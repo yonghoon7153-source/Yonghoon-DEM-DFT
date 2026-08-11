@@ -272,9 +272,27 @@ def get_halfcell_reference(cfg: dict, cache_dir: str | Path | None = None,
     #   F64 이전에 만들어진 JSON 만 있으면, 안내대로 `python -m src.halfcell` 을
     #   돌려도 hit 로 즉시 반환해 meta 가 영영 생기지 않았다. miss 로 취급해
     #   캐시·meta 를 함께 다시 만든다.
+    # ★ 12차 발견 4 — 존재만 보고 반환하면, 다른 runtime·다른 코드로 만든 옛
+    #   캐시가 그대로 Case 1 의 좌표 원점이 된다. 완방상태와 같은 정책으로
+    #   결정 축(runtime·코드 identity)이 다르면 **미스로 취급해 재계산**한다.
     if not force and path.exists() and halfcell_meta_path(path).exists():
-        log.info("half-cell 기준 캐시 적중: %s", path)
-        return HalfCellReference.from_dict(json.loads(path.read_text(encoding="utf-8")))
+        _meta = yaml.safe_load(
+            halfcell_meta_path(path).read_text(encoding="utf-8")) or {}
+        from src.baseline import _ENV_KEYS
+        _now = {k: env_fingerprint().get(k) for k in _ENV_KEYS}
+        _old = {k: (_meta.get("env") or {}).get(k) for k in _ENV_KEYS}
+        if _old != _now:
+            log.warning("half-cell 캐시가 다른 runtime 에서 계산됨 (차이 %s) — "
+                        "미스로 취급해 재계산: %s",
+                        [k for k in _ENV_KEYS if _old.get(k) != _now.get(k)], path)
+        elif _meta.get("source_digest") != source_digest():
+            log.warning("half-cell 캐시가 다른 코드로 계산됨 (%s ≠ %s) — 미스로 "
+                        "취급해 재계산: %s", _meta.get("source_digest"),
+                        source_digest(), path)
+        else:
+            log.info("half-cell 기준 캐시 적중: %s", path)
+            return HalfCellReference.from_dict(
+                json.loads(path.read_text(encoding="utf-8")))
 
     ref = (compute_halfcell_from_ocp(cfg, **kw) if method == "ocp"
            else compute_halfcell_reference(cfg, **kw))
@@ -360,6 +378,18 @@ def validate_halfcell_cache(cfg: dict, cache_path: str | Path,
             f"meta {meta.get('source_digest')} ≠ 현재 {source_digest()} — "
             f"캐시 생성 후 코드가 바뀌었다. "
             f"python -m src.halfcell --config <base> --method <m> --force 로 재생성 (10차)")
+        # ★ 12차 발견 4 — 생성 runtime 을 **기록만** 하고 대조하지 않았다.
+        #   OCP 평가·보간은 NumPy/SciPy/PyBaMM 에 의존하므로, 다른 runtime 의
+        #   캐시가 hit 되면 Case 1 의 좌표 원점이 현재 환경이 만들 값과 달라진다.
+        from src.baseline import _ENV_KEYS
+        from src.io import env_fingerprint
+        _now = {k: env_fingerprint().get(k) for k in _ENV_KEYS}
+        _old = {k: (meta.get("env") or {}).get(k) for k in _ENV_KEYS}
+        checks["runtime_identity"] = (
+            _old == _now,
+            f"meta 의 생성 runtime 이 현재와 다르다 (차이: "
+            f"{[k for k in _ENV_KEYS if _old.get(k) != _now.get(k)]}) — "
+            f"--force --verify 로 재생성 (12차 발견 4)")
 
     doc = arrays_doc
     if doc is None and cache_path.exists():

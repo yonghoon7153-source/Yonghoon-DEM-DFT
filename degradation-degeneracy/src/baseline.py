@@ -38,9 +38,11 @@ PARAM_NAMES = {
 # config baseline 키 중 pybamm 파라미터로 직접 넘기지 않는 것
 _NON_PARAM_KEYS = {"pe_max_conc"}
 
-#: ★ 11차 발견 1 — 완방상태 값을 실제로 바꿀 수 있는 runtime 축.
-#: `platform` 문자열(커널 빌드 번호 등)은 값과 무관해 제외한다.
-_ENV_KEYS = ("python", "pybamm", "scipy", "numpy", "machine")
+#: ★ 11차 발견 1 / 12차 발견 2 — 완방상태 값을 바꿀 수 있는 runtime 축.
+#: solver backend 는 pybamm 과 별도 배포판이라 반드시 포함해야 하고(12차),
+#: platform 도 리뷰 요청대로 결정축에 넣는다 (libm/커널 차이).
+_ENV_KEYS = ("python", "platform", "machine", "pybamm", "pybammsolvers",
+             "casadi", "scipy", "numpy")
 
 
 @dataclass(frozen=True)
@@ -161,13 +163,22 @@ def get_discharged_state(
         #   완방상태 값이 달라질 수 있는데, 그 캐시가 hit 되면 격자 manifest 는
         #   **현재** env 를 기록해 "이 env 에서 만든 truth" 라는 주장이 거짓이
         #   된다. 결정에 쓰는 축만 본다 (platform 문자열 등은 제외).
+        # ★ 12차 발견 2 — 요청 solver 가 같아도 **실제로 쓰인** solver 가 다를 수
+        #   있다 (IDAKLU 생성 실패 시 Casadi fallback). 실제 클래스와 backend
+        #   패키지 버전도 대조한다.
         from src.io import env_fingerprint as _ef
         from src.io import source_digest as _sd
+        from src.runner import effective_solver as _eff
         _env_now = {k: _ef().get(k) for k in _ENV_KEYS}
         _env_old = {k: (data.get("env") or {}).get(k) for k in _ENV_KEYS}
+        _eff_now = _eff(cfg)
         if _env_old != _env_now:
             log.warning("완방상태 캐시가 다른 runtime 에서 계산됨 (%s ≠ %s) — "
                         "미스로 취급해 재계산: %s", _env_old, _env_now, path)
+        elif data.get("effective_solver") != _eff_now:
+            log.warning("완방상태 캐시가 다른 solver backend 로 계산됨 (%s ≠ %s) — "
+                        "미스로 취급해 재계산: %s",
+                        data.get("effective_solver"), _eff_now, path)
         elif data.get("source_digest") != _sd():
             log.warning("완방상태 캐시가 다른 코드로 계산됨 (%s ≠ %s) — 미스로 "
                         "취급해 재계산: %s", data.get("source_digest"), _sd(), path)
@@ -186,8 +197,11 @@ def get_discharged_state(
     if use_cache:
         path.parent.mkdir(parents=True, exist_ok=True)
         from src.io import env_fingerprint, source_digest
+        from src.runner import effective_solver
         payload = {**asdict(state), "baseline_hash": baseline_hash(cfg),
-                   "solver": cfg.get("solver"),          # F82b: 계산 recipe
+                   "solver": cfg.get("solver"),          # F82b: 요청 recipe
+                   # ★ 12차 발견 2 — 실제로 쓰인 solver 클래스·backend 버전
+                   "effective_solver": effective_solver(cfg),
                    "source_digest": source_digest(),
                    # ★ 11차 발견 1 — 생성 runtime. hit 판정에 쓰인다.
                    "env": env_fingerprint()}
