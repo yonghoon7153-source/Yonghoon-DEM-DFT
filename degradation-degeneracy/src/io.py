@@ -29,8 +29,33 @@ import yaml
 #:   (실측: `se_curve/xfer_*.json` 2개가 수정돼 있어 smoke 가 dirty 로 찍혔다)
 #:   범위 밖 수정은 `git_dirty_out_of_scope` 로 **정보로는 남긴다** — 판정을
 #:   느슨하게 하는 변경이므로 무엇을 뺐는지 보이지 않으면 안 된다.
+#: ★ 14차 2차 발견 5 — digest 범위(`_SCOPE_DIRS`/`_SCOPE_FILE_GLOBS`)와 **같은
+#:   matcher** 를 쓴다. 예전에는 digest 가 `requirements*.txt` 를 glob 으로 전부
+#:   읽는데 여기는 두 이름만 exact match 라, 새 `requirements-dev.txt` 가
+#:   digest 에는 들어가고 dirty 판정에는 안 들어갔다 ("RUN_SCOPE 와 1:1" 설명이
+#:   깨지는 지점). 표시용 문자열은 아래 RUN_SCOPE, 판정은 `in_run_scope()`.
 RUN_SCOPE = ("src/", "tools/", "configs/", "scripts/", "run.sh",
-             "requirements.txt", "requirements-gpu.txt")
+             "requirements*.txt")
+
+
+def in_run_scope(rel: str, scope: tuple = RUN_SCOPE) -> bool:
+    """저장소 상대경로가 RUN_SCOPE 안인가 (digest 범위와 동일 규칙).
+
+    `*` 가 있는 항목은 root 파일 glob, `/` 로 끝나면 디렉터리 접두사,
+    나머지는 정확한 파일명이다.
+    """
+    from fnmatch import fnmatch
+
+    for s in scope:
+        if s.endswith("/"):
+            if rel.startswith(s):
+                return True
+        elif "*" in s:
+            if "/" not in rel and fnmatch(rel, s):
+                return True
+        elif rel == s:
+            return True
+    return False
 
 
 def git_info(repo_dir: str | Path | None = None, save_diff_to=None,
@@ -75,10 +100,12 @@ def git_info(repo_dir: str | Path | None = None, save_diff_to=None,
         # ★ F47 — 확장자 allowlist 를 두면 `.toml`/`.ini`/`.cfg`/데이터 캐시 같은
         #   새 입력이 추가될 때 조용히 false clean 이 된다. critical 디렉터리
         #   아래는 **전부** dirty 로 센다 (캐시·바이트코드만 제외).
+        # ★ 14차 2차 발견 5 — 범위 판정을 digest 와 **같은 matcher** 로 한다.
+        #   예전에는 디렉터리 4개만 하드코딩해서, digest 가 읽는 root 파일
+        #   (`run.sh`·`requirements*.txt`)을 새로 만든 채 실행해도 clean 이었다.
         _SKIP = ("__pycache__/", ".pyc", ".pyo", ".ipynb_checkpoints/")
         crit = [u for u in untracked + ignored
-                if u.startswith(("src/", "tools/", "configs/", "scripts/"))
-                and not any(k in u for k in _SKIP)]
+                if in_run_scope(u, scope) and not any(k in u for k in _SKIP)]
         # ★ F73 — 수정된 tracked 파일을 **실행 범위 안/밖**으로 나눈다.
         #   경로는 `--name-only` 로 받는다. porcelain 을 문자열 슬라이싱하면
         #   상태 문자 폭·rename 표기·따옴표 때문에 첫 글자가 잘린다 (실측).
@@ -103,7 +130,7 @@ def git_info(repo_dir: str | Path | None = None, save_diff_to=None,
             return x[len(prefix):] if x.startswith(prefix) else None
 
         in_scope = [m for m in mod
-                    if (_l := _local(m)) is not None and _l.startswith(tuple(scope))]
+                    if (_l := _local(m)) is not None and in_run_scope(_l, scope)]
         out_scope = [m for m in mod if m not in in_scope]
         info = {"git_commit": commit or "unknown",
                 "git_commit_short": commit[:8] if commit else "unknown",
@@ -888,7 +915,11 @@ def _verify_noise_families(curves_path: Path, spec: dict, d: Path) -> dict:
     # 규칙 2 — failed.csv 의 condition payload 로 실패 family 좌표를 만든다.
     #   payload 파손·ID 불일치는 실패목록_ID결합이 fail-closed 로 잡으므로
     #   여기서는 파싱되는 행만 본다.
-    fail_fams: set[tuple] = set()
+    # ★ 14차 2차 발견 1 — noise 를 **버리지 않는다**. 예전에는 family `set` 으로
+    #   축약해서, noise {0, 0.001} 만 failed 이고 0.005 는 의도 집합에도 없는
+    #   family 가 통과했다 (리뷰 실측: ok=True, fail=[]). 그러면 의도·실패
+    #   조건 수와 noise 별 제외율이 달라져 인용 모집단의 근거가 무효가 된다.
+    fail_fams: dict[tuple, list[float]] = {}
     fp = d / "failed.csv"
     if fp.exists():
         import csv as _csv
@@ -896,13 +927,25 @@ def _verify_noise_families(curves_path: Path, spec: dict, d: Path) -> dict:
             for row in _csv.DictReader(f):
                 try:
                     c = json.loads(row.get("condition") or "{}")
-                    fail_fams.add(_famkey(c["lli"], c["lam_pe"], c["lam_ne"],
-                                          c["lam_pe_type"], c["lam_ne_type"]))
+                    key = _famkey(c["lli"], c["lam_pe"], c["lam_ne"],
+                                  c["lam_pe_type"], c["lam_ne_type"])
+                    fail_fams.setdefault(key, []).append(float(c["noise"]))
                 except Exception:  # noqa: BLE001
                     continue
-        split = sorted(set(fams) & fail_fams, key=repr)
+        split = sorted(set(fams) & set(fail_fams), key=repr)
     else:
         split = []
+
+    # 전부 failed 인 family 는 허용하되(관측 모집단에 없으므로 분할이 아니다),
+    # 그 family 도 서명된 noise 집합을 **정확히 한 번씩** 가져야 한다.
+    # 교차 family 는 위 분할 검사가 이미 실패시키므로 여기서 제외한다.
+    bad_fail_set = []
+    for key, noises in sorted(fail_fams.items(), key=repr):
+        if key in fams:
+            continue
+        got = sorted(noises)
+        if got != want:
+            bad_fail_set.append(f"{key}(noise {got} ≠ 서명 {want})")
 
     checks["관측_noise_family_완전성"] = (
         not bad_set,
@@ -913,6 +956,13 @@ def _verify_noise_families(curves_path: Path, spec: dict, d: Path) -> dict:
         f"{len(split)}개 family 가 observed 와 failed 에 걸쳐 있다: "
         f"{[repr(k) for k in split[:3]]} — 같은 truth 인데 noise 조건마다 "
         f"모집단이 다르면 degeneracy 분모가 어긋난다")
+    checks["실패_noise_family_완전성"] = (
+        not bad_fail_set,
+        f"{len(bad_fail_set)}개 fully-failed family 의 noise 집합이 서명된 "
+        f"{want} 와 다르다(누락 또는 중복): {bad_fail_set[:3]} — guard 불능은 "
+        f"noise 와 무관하므로 family 전체가 같은 판정을 받아야 한다. 어긋나면 "
+        f"의도·실패 조건 수와 noise 별 제외율이 달라져 인용 모집단의 근거가 "
+        f"무효다 (14차 2차 발견 1)")
     checks["관측_noise_family_q_mah"] = (
         not bad_q,
         f"{len(bad_q)}개 family 안에서 q_mah 가 1e-6 mAh 넘게 갈린다: "

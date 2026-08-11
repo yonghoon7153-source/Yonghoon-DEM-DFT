@@ -201,3 +201,44 @@ def test_source_tree_has_no_crlf():
         if b"\r\n" in f.read_bytes():
             bad.append(str(f.relative_to(root)))
     assert bad == [], f"CRLF 파일 발견: {bad}"
+
+
+def test_run_scope_matcher_shared_with_digest():
+    """★ 14차 2차 발견 5 — digest 범위와 dirty 범위가 같은 matcher 를 써야 한다.
+
+    digest 는 `requirements*.txt` 를 glob 으로 전부 읽는데 `RUN_SCOPE` 는
+    `requirements.txt`·`requirements-gpu.txt` 두 이름만 exact match 한다.
+    미래의 `requirements-dev.txt` 는 digest 에는 들어가고 dirty 판정에는 안
+    들어가 "RUN_SCOPE 와 1:1" 설명이 깨진다. 현재 tracked 파일에는 영향 없다.
+    """
+    from src.io import in_run_scope
+
+    for p in ("src/io.py", "tools/x.py", "configs/base.yaml", "scripts/go.sh",
+              "run.sh", "requirements.txt", "requirements-gpu.txt",
+              "requirements-dev.txt"):
+        assert in_run_scope(p), p
+    for p in ("docs/RESULTS.md", "wiki/x.md", "kit_a/run.py",
+              "src_extra/x.py", "requirements.md", "my-requirements.txt"):
+        assert not in_run_scope(p), p
+
+
+def test_untracked_requirements_counts_as_critical(tmp_path):
+    """★ 14차 2차 발견 5 — root 의 untracked/ignored requirements 파일도
+    critical 이어야 한다. digest 가 읽는 파일이 dirty 판정 밖이면, 그 파일을
+    새로 만든 채 실행해도 clean 으로 승인된다."""
+    import subprocess
+
+    from src.io import git_info
+
+    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True)
+    (tmp_path / "src").mkdir()
+    (tmp_path / "src" / "a.py").write_text("x = 1\n", encoding="utf-8")
+    subprocess.run(["git", "-C", str(tmp_path), "add", "-A"], check=True)
+    subprocess.run(["git", "-C", str(tmp_path), "-c", "user.email=t@t",
+                    "-c", "user.name=t", "commit", "-qm", "init"], check=True)
+    assert git_info(tmp_path)["git_dirty"] is False
+
+    (tmp_path / "requirements-dev.txt").write_text("pytest\n", encoding="utf-8")
+    info = git_info(tmp_path)
+    assert info["git_dirty"] is True, info
+    assert any("requirements-dev.txt" in c for c in info["git_untracked_critical"])

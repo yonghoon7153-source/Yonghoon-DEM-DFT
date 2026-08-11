@@ -98,9 +98,14 @@ def build_weight_objectives(w_grid=DEFAULT_W_GRID, w_pocv: float = 1.0,
     #   **w=0 seed 목적함수가 소리 없이 삭제**됐다 (`0.0 in w_grid` 라 숨은
     #   seed 도 안 끼워진다). 끝점 checker 는 남은 `wdqdv_0.00` 을 w=0 정의로
     #   대조하므로 붕괴를 못 본다. 충돌·중복·비유한·음수는 즉시 fail.
+    if not w_grid:
+        raise ValueError("w_grid 가 비어 있다 — 목적함수를 하나도 만들 수 없다")
     bad = [w for w in w_grid if not np.isfinite(w) or w < 0.0]
     if bad:
         raise ValueError(f"w_grid 값이 유한한 0 이상 실수가 아니다: {bad}")
+    # ★ 14차 2차 발견 3 — signed zero 는 `wdqdv_-0.00` 이라는 별도 이름을 만들어
+    #   진짜 seed 제공자(`wdqdv_0.00`)를 없앤다. 먼저 +0.0 으로 정규화한다.
+    w_grid = [0.0 if w == 0.0 else w for w in w_grid]
     if len(set(w_grid)) != len(w_grid):
         raise ValueError(f"w_grid 에 중복 값이 있다: {w_grid}")
     names = [obj_name(w) for w in w_grid]
@@ -110,6 +115,15 @@ def build_weight_objectives(w_grid=DEFAULT_W_GRID, w_pocv: float = 1.0,
             f"w_grid 값이 목적함수 이름과 1:1 이 아니다 — 이름 충돌 {dup}: "
             f"{w_grid}. 이름 해상도(소수 2자리)보다 촘촘한 격자는 지원하지 "
             f"않는다 (14차 발견 4: 충돌 시 w=0 seed 가 조용히 삭제됐다)")
+    # ★ 14차 2차 발견 3 — 충돌이 없어도 값이 자기 이름으로 **되읽히지** 않을 수
+    #   있다 (`[0.001]` → `wdqdv_0.00`). 하류 집계(`sweep_summary`)가 이름
+    #   suffix 를 float 으로 되읽으므로 요청 weight 와 보고 weight 가 갈린다.
+    _nort = [w for w in w_grid if float(obj_name(w).split("_")[-1]) != w]
+    if _nort:
+        raise ValueError(
+            f"w_grid 값이 목적함수 이름과 round-trip 하지 않는다: {_nort} — "
+            f"이름은 소수 2자리({obj_name(_nort[0])})라 그보다 촘촘한 값은 "
+            f"하류 집계에서 다른 weight 로 읽힌다 (14차 2차 발견 3)")
     objs = {obj_name(w): {"w_pocv": w_pocv, "w_dvdq": w_dvdq, "w_dqdv": float(w)}
             for w in w_grid}
     if not any(float(w) == 0.0 for w in w_grid):

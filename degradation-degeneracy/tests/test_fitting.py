@@ -2222,3 +2222,69 @@ def test_grid_run_spec_signs_canonical_guards():
     with pytest.raises(ValueError, match="guard"):
         grid_run_spec(cfg3, conds, discharged={"ne_primary": 1.0},
                       discharged_sha="a")
+
+
+def _guard_fail_conds(noises, lli=1.0, seed0=1000):
+    """한 family 를 통째로 실패시키는 guard 위반 조건들 (noise 만 다르다)."""
+    from src.grid import Condition
+    return [Condition(lli=lli, lam_pe=0.0, lam_ne=0.0,
+                      lam_pe_type="de", lam_ne_type="de",
+                      noise=float(n), seed=seed0 + i)
+            for i, n in enumerate(noises)]
+
+
+def test_fully_failed_family_noise_completeness(tmp_path):
+    """★ 14차 2차 발견 1 — **전부 failed 인 family** 도 서명된 noise 집합을
+    정확히 한 번씩 가져야 한다.
+
+    현재 구현은 failed 조건을 noise 를 버린 family `set` 으로 축약해서,
+    noise {0, 0.001} 만 failed 이고 0.005 는 의도 집합에도 없는 family 를
+    승인한다 (리뷰 실측: ok=True, fail=[]). 그러면 의도·실패 조건 수와
+    noise 별 제외율이 달라져 인용 모집단(3,069/924)의 근거가 무효가 된다.
+
+    family 전체가 failed 인 것 자체는 허용한다 — 관측 모집단에 남지 않으므로
+    observed/failed 분할이 아니다 (리뷰 Q1 답변).
+    """
+    from src.io import validate_curves_provenance
+
+    want = [0.0, 0.001, 0.005]
+    obs = _noise_family_df({n: 4000.0 for n in want}, {n: 4.2 for n in want})
+
+    # ① 완전한 fully-failed family → 통과해야 한다
+    ok = sign_producer(tmp_path / "ok", obs,
+                       failed_conds=_guard_fail_conds(want),
+                       spec_noise=want)
+    v = validate_curves_provenance(ok)
+    assert v["ok"], v["fail"]
+    assert "실패_noise_family_완전성" in v["checks"], sorted(v["checks"])
+
+    # ② noise 하나가 빠진 fully-failed family → 실패
+    miss = sign_producer(tmp_path / "miss", obs,
+                         failed_conds=_guard_fail_conds([0.0, 0.001]),
+                         spec_noise=want)
+    f = validate_curves_provenance(miss)["fail"]
+    assert "실패_noise_family_완전성" in f, f
+
+    # ③ 같은 noise 가 두 번 (seed 만 다른 중복) → 실패
+    dup = sign_producer(tmp_path / "dup", obs,
+                        failed_conds=_guard_fail_conds([0.0, 0.001, 0.001]),
+                        spec_noise=want)
+    f3 = validate_curves_provenance(dup)["fail"]
+    assert "실패_noise_family_완전성" in f3, f3
+
+    # ④ observed/failed 가 교차하는 family 는 여전히 artifact 실패이며,
+    #    fully-failed 검사가 그 자리를 **대신하지 않는다** (교차 family 는
+    #    fully-failed 가 아니므로 완전성 검사에서 제외된다).
+    #    자동 강등도 하지 않는다 — 실제 성공 곡선을 사후에 버리면 모집단이 바뀐다.
+    from src.grid import Condition
+    split = sign_producer(
+        tmp_path / "split",
+        _noise_family_df({0.0: 4000.0, 0.001: 4000.0}, {0.0: 4.2, 0.001: 4.2}),
+        failed_conds=[Condition(lli=0.02, lam_pe=0.02, lam_ne=0.02,
+                                lam_pe_type="de", lam_ne_type="de",
+                                noise=0.005, seed=2000)],
+        spec_noise=want)
+    f4 = validate_curves_provenance(split)["fail"]
+    assert "관측_noise_family_분할" in f4, f4
+    assert "실패_noise_family_완전성" not in f4, \
+        "교차 family 를 fully-failed 완전성 검사로 이중 계상했다"

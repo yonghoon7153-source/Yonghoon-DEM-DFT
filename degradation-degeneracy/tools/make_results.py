@@ -998,7 +998,9 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     # ★ 10차 발견 5 — 재계산본(_case_render)이 있으면 그것을 렌더한다.
     #   재계산이 불가능했던 경우에만 저장본을 쓰고, 그때는 배너가 이미 붉다.
     case = _case_render or _load(in_dir / "case_comparison.yaml")
-    if case and {"grid", "halfcell"} <= set(case):
+    # ★ 14차 2차 발견 4 — 재현 블록이 **렌더된 절과 같은 조건**으로 명령을 낸다
+    _case_rendered = bool(case and {"grid", "halfcell"} <= set(case))
+    if _case_rendered:
         from tools.compare_cases import to_markdown as case_md
         P.append("## 기준 곡선 비교 — Case 1 (전 범위 half-cell) vs Case 2 (격자 곡선)\n")
         P.append("목적함수를 바꾸는 것과 **기준 곡선을 바꾸는 것** 중 어느 쪽이 큰지.\n")
@@ -1126,7 +1128,37 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     P.append(" ".join(_fit))
     P.append(f"./run.sh --mode score --in {in_dir}")
     P.append(f"./run.sh --mode hessian --in {in_dir}")
-    P.append(f"./run.sh --mode report --in {in_dir}")
+    # ★ 14차 2차 발견 4 — 이 블록만 실행하면 **이 문서가 렌더한 절이 전부**
+    #   다시 나와야 한다. 예전에는 주 fit chain 만 있어서, sweep 절과
+    #   Case 1↔Case 2 절을 렌더하면서도 재실행하면 그 두 절이 생기지 않았다.
+    #   명령은 서명된 metadata(sweep run_spec, case_comparison.provenance)에서
+    #   만든다 — 자기신고 값으로 만들면 재현이 문서와 어긋난다.
+    if wsweep:
+        _sw = [f"./run.sh --mode wsweep --in {_curves_dir} --out {in_dir} "
+               f"--nproc $(nproc)"]
+        if _ws_wgrid:
+            _sw.append(f"--w-grid {','.join(str(w) for w in _ws_wgrid)}")
+        if wsweep.get("stride") is not None:
+            _sw.append(f"--stride {wsweep['stride']}")
+        if _ws_nres:
+            _sw.append(f"--n-restarts {_ws_nres}")
+        if (wspec_verified.get("optimizer") or {}).get("adaptive") is False:
+            _sw.append("--no-adaptive")
+        if _ws_warm is False:
+            _sw.append("--no-warm-start")
+        P.append(" ".join(_sw))
+    # Case 1 (전 범위 half-cell) 절을 렌더했으면 그 기준 실행까지 재현한다
+    _hc_dir = (((case.get("provenance") or {}).get("halfcell") or {}
+                ).get("run_dir") if _case_rendered else None)
+    if _hc_dir:
+        P.append("python -m src.halfcell --config configs/base.yaml "
+                 "--method ocp --force --verify")
+        P.append(f"./run.sh --mode fit   --in {_curves_dir} --out {_hc_dir} "
+                 f"--reference halfcell --nproc $(nproc)")
+        P.append(f"./run.sh --mode score --in {_hc_dir}")
+        P.append(f"./run.sh --mode report --in {in_dir} --compare {_hc_dir}")
+    else:
+        P.append(f"./run.sh --mode report --in {in_dir}")
     P.append("```\n")
     P.append("관련 문서: `docs/06_REVIEW_DECISIONS.md`(해석 규칙), "
              "`docs/07_LAM_LLI.md`(열화모드 정의), `docs/GPU_NOTES.md`(GPU 판정)\n")

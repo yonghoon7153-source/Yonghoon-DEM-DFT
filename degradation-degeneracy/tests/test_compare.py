@@ -2582,10 +2582,20 @@ def test_archive_records_computation_commit_and_promotion_is_fail_closed(tmp_pat
     성공(exit 0)으로 끝난다. 실패 시 후보를 제거하고 n_bad 로 계상해야 한다.
     """
     import os
+    import shutil
     import stat
     import subprocess
 
+    import pytest
     import yaml
+
+    # ★ 14차 2차 발견 6 — Windows native pytest 에는 bare `bash` 가 없어
+    #   FileNotFoundError 로 죽었다. shell wrapper 회귀는 POSIX shell 이 있는
+    #   환경에서만 의미가 있다 — 없으면 **명시적으로 skip** 한다 (조용한 통과가
+    #   아니라 "이 환경에서 검증되지 않았다"를 남긴다).
+    if shutil.which("bash") is None:
+        pytest.skip("bash 없음 — archive shell 회귀는 POSIX shell 환경에서만 "
+                    "실행된다 (Windows 는 Git Bash wrapper 실측으로 대체)")
 
     repo = Path(__file__).resolve().parent.parent
     d, _ = _complete_artifact(tmp_path)          # tmp_path/res
@@ -2624,3 +2634,82 @@ def test_archive_records_computation_commit_and_promotion_is_fail_closed(tmp_pat
         "candidate 가 기존 묶음 안으로 중첩됐다"
     assert (dest / "res" / "manifest.yaml").is_file(), \
         "실패 시 기존 묶음이 그대로 남아 있어야 한다"
+
+
+def test_build_weight_objectives_requires_name_round_trip():
+    """★ 14차 2차 발견 3 — 단일 값도 자기 이름과 exact round-trip 해야 한다.
+
+    충돌 검사는 "서로 다른 두 값이 같은 이름"만 본다. `[0.001]` 은 충돌이 없어
+    통과하지만 이름은 `wdqdv_0.00` 이고, 하류 집계(`sweep_summary:163`
+    `float(o.split("_")[-1])`)는 그 이름을 다시 float 으로 읽는다 — 요청 weight
+    0.001 과 보고 weight 0.00 이 갈린다. `-0.0` 은 `wdqdv_-0.00` 이 되어 진짜
+    `wdqdv_0.00` seed 제공자가 없어진다. 빈 격자도 시작 전에 거부한다.
+    """
+    import pytest
+
+    from src.weight_sweep import build_weight_objectives, obj_name
+
+    # 표현 불가능한 단일 값 — 충돌은 없지만 이름이 값을 잃는다
+    for bad in ([0.001], [1.001], [0.0, 0.125]):
+        with pytest.raises(ValueError, match="round-trip|표현|소수"):
+            build_weight_objectives(bad)
+
+    # signed zero 는 +0.0 으로 정규화 — seed 제공자 이름 계약 유지
+    objs = build_weight_objectives([-0.0, 1.0])
+    assert list(objs) == ["wdqdv_0.00", "wdqdv_1.00"], list(objs)
+    assert objs["wdqdv_0.00"]["w_dqdv"] == 0.0
+    assert not str(objs["wdqdv_0.00"]["w_dqdv"]).startswith("-")
+
+    # 빈 격자 거부
+    with pytest.raises(ValueError, match="비어|empty|하나"):
+        build_weight_objectives([])
+
+    # 기본 격자는 전부 정확히 표현된다 (계약이 실제로 성립하는지)
+    from src.weight_sweep import DEFAULT_W_GRID
+    for w in DEFAULT_W_GRID:
+        assert float(obj_name(w).split("_")[-1]) == w, w
+
+
+def test_reproduce_block_covers_every_rendered_section(tmp_path):
+    """★ 14차 2차 발견 4 — "재현" 블록만 실행하면 이 문서가 렌더한 절이 전부
+    다시 나와야 한다.
+
+    현재 블록에는 `--mode wsweep`, half-cell 준비(`--force --verify`),
+    half-cell 기준 fit·score, `report --compare <halfcell>` 이 없다. 그래서
+    sweep 절과 Case 1↔Case 2 비교 절을 렌더하면서도 명령대로 재실행하면
+    최적-weight 절과 기준 곡선 비교 절이 생기지 않는다.
+    """
+    import yaml
+
+    from tools.compare_cases import compare
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d, _ = _complete_artifact(tmp_path,
+                              objectives=("pocv_dvdq", "pocv_dvdq_dqdv"))
+    h, _ = _complete_artifact(tmp_path / "h",
+                              objectives=("pocv_dvdq", "pocv_dvdq_dqdv"))
+    sub = _wsweep_run(d)
+    mp = d / "manifest.yaml"
+    m = yaml.safe_load(mp.read_text(encoding="utf-8"))
+    m["input"] = "results/grid_curves_v4"
+    mp.write_text(yaml.safe_dump(m, allow_unicode=True, sort_keys=False),
+                  encoding="utf-8")
+
+    res = compare(d / "fits.parquet", h / "fits.parquet")
+    (d / "case_comparison.yaml").write_text(
+        yaml.safe_dump(res, allow_unicode=True), encoding="utf-8")
+    run_compare(d, d)
+    text = build(d, tmp_path / "R.md", repo_root=tmp_path).read_text(
+        encoding="utf-8")
+
+    # 렌더된 절 (전제 확인 — 이게 없으면 이 테스트가 무의미하다)
+    assert "가중치" in text and "기준 곡선 비교" in text
+
+    repro = text.split("## 재현")[1]
+    assert "--mode wsweep" in repro, "sweep 절을 렌더하면서 재현 명령에 wsweep 이 없다"
+    assert "src.halfcell" in repro and "--verify" in repro, \
+        "Case 1 절을 렌더하면서 half-cell 준비 명령이 없다"
+    assert "--reference halfcell" in repro, "half-cell 기준 fit 명령이 없다"
+    assert f"--compare {h}" in repro, \
+        "기준 곡선 비교 절을 만드는 report --compare 가 없다"
