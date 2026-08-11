@@ -580,15 +580,24 @@ def fits_seal(fits_path, cond_ids=None, objective_order=None) -> dict:
     return out
 
 
-def validate_curves_provenance(curves_dir, repo_root=None) -> dict:
+def validate_curves_provenance(curves_dir, repo_root=None, cfg=None) -> dict:
     """★ F74 — 곡선 producer 를 **독립적으로** 검증한다 (8차 리뷰 발견 1).
 
     검사: manifest 존재 · grid_run_spec/sig 존재 · **서명 재계산** · 시작 기록
     대조 · curves 재해시 · **모든 행의 grid_run_sig 일치** · 조건 집합 서명 대조 ·
-    생성 시점 clean · 실행 중 코드 불변.
+    의도 = 관측 ⊎ 실패 ID 분할(F83b) · 생성 시점 clean · 실행 중 코드 불변.
+    `cfg` 를 주면 failed.csv 의 "infeasible" 라벨을 guard 재평가로 재검한다
+    (10차 자체 확인 2) — fitting preflight 는 반드시 cfg 를 넘긴다.
 
     fitting 이 시작 전에 이걸 호출한다. 수제 parquet 은 `grid_run_sig` 열이
     없어서, 다른 config 의 resume 혼합은 행 서명이 갈려서 걸린다.
+
+    ★ 신뢰 경계 (10차 자체 확인 1): 이 검증이 증명하는 것은 기록↔bytes 의
+    **자기일관성**과 코드·설정·조건집합의 identity 다. curves_manifest 는
+    untracked 라, **값 변조 후 digest 일체를 재계산해 넣는 위조**는 여기서
+    구분할 수 없다 (형식적으로 완전한 기록이 되기 때문). 진본성의 앵커는
+    저장소 이력이다 — git 에 커밋되는 artifacts/ 묶음(payload_sha256)과
+    보고서에 렌더·커밋되는 digest 를 대조해야 진본성이 성립한다.
     """
     d = Path(curves_dir)
     checks: dict[str, tuple[bool, str]] = {}
@@ -599,6 +608,24 @@ def validate_curves_provenance(curves_dir, repo_root=None) -> dict:
     sig = man.get("grid_run_sig")
     checks["grid_spec_존재"] = (bool(spec) and bool(sig),
                                 "grid_run_spec/sig가 없다 (F74 이전 산출물)")
+    # ★ F82b/10차 발견 2-c — 버전과 필수 물리 필드를 강제한다. 예전에는
+    #   discharged=None 으로 만든 spec 도, F82 이전 버전도 그대로 통과했다.
+    checks["grid_sig_version"] = (
+        spec.get("grid_sig_version") == 2,
+        f"grid_sig_version이 {spec.get('grid_sig_version')}이다 (2 필요 — "
+        f"discharged_state 미포함 형식)")
+    _ds = spec.get("discharged_state")
+    import math as _math
+    _ds_ok = (isinstance(_ds, dict)
+              and all(isinstance(_ds.get(k), (int, float))
+                      and _math.isfinite(_ds.get(k)) and _ds.get(k) >= 0
+                      for k in ("ne_primary", "ne_secondary", "pe")))
+    checks["완방상태_서명"] = (
+        _ds_ok, f"discharged_state가 없거나 유효하지 않다: {_ds}")
+    _dsha = spec.get("discharged_state_sha")
+    checks["완방상태_digest"] = (
+        isinstance(_dsha, str) and len(_dsha) == 64,
+        f"discharged_state_sha가 full digest(64자)가 아니다: {_dsha}")
     if spec and sig:
         recomputed = hashlib.sha1(
             json.dumps(spec, sort_keys=True, default=str).encode()).hexdigest()[:12]
@@ -656,6 +683,81 @@ def validate_curves_provenance(curves_dir, repo_root=None) -> dict:
             isinstance(n_int, int) and isinstance(n_fail, int)
             and n_obs + n_fail == n_int,
             f"의도 {n_int} ≠ 관측 {n_obs} + 실패 {n_fail} — 조건이 조용히 빠졌다")
+        # ★ F83b/10차 발견 1 — **개수가 아니라 ID 집합**으로 분할을 검사한다.
+        #   개수만 세면, 관측 조건 하나를 다른 ID 로 바꿔치기해도 (의도 3 = 관측
+        #   3 + 실패 0) 통과했다 (리뷰 실측: replacement_condition, AFTER_OK=True).
+        #   "3,069조건" 은 guard 통과분이므로, 실패 924개가 정확히 나머지임을
+        #   failed.csv 를 **다시 읽어** 증명해야 한다.
+        obs_ids = set(df["cond_id"].astype(str))
+        fail_ids = load_failed(d)
+        if n_fail and not (d / "failed.csv").exists():
+            checks["실패목록_존재"] = (False,
+                f"n_failed_total={n_fail}인데 failed.csv가 없다")
+        else:
+            _rehash = hashlib.sha256(
+                "\n".join(sorted(fail_ids)).encode()).hexdigest()[:16]
+            checks["실패목록_재해시"] = (
+                _rehash == man.get("failed_ids_sha256"),
+                f"failed.csv 재해시 {_rehash} ≠ 기록 {man.get('failed_ids_sha256')}")
+            _union = hashlib.sha256(
+                "\n".join(sorted(obs_ids | fail_ids)).encode()).hexdigest()[:16]
+            _overlap = obs_ids & fail_ids
+            checks["조건집합_ID분할"] = (
+                not _overlap and _union == want and len(fail_ids) == (n_fail or 0),
+                f"관측∩실패 {len(_overlap)}건, (관측∪실패) 해시 {_union} ≠ "
+                f"의도 {want}, 실패 {len(fail_ids)} ≠ 기록 {n_fail} — "
+                f"ID 수준에서 분할이 성립하지 않는다")
+        # ★ 10차 자체 확인 2 — 분할이 ID 수준에서 맞아도 "실패" 라벨 자체가
+        #   위조면(= 풀리는 조건을 failed 로 재선언) 관측∪실패가 불변이라 전부
+        #   통과하고, 모집단(분모)이 공격자 선택으로 줄어든다 (리뷰 실측:
+        #   AFTER ok=True). guard 불능("infeasible:")은 결정적으로 재현
+        #   가능하므로, cfg 가 주어지면 failed.csv 의 조건을 build_overrides 로
+        #   재평가해 **정말 불능인지** 대조한다. fitting preflight 가 cfg 를
+        #   반드시 넘긴다 — cfg 없이 부른 검증은 이 재검을 하지 못한다.
+        if cfg is not None and (d / "failed.csv").exists():
+            import csv as _csv
+
+            from src.baseline import DischargedState as _DState
+            from src.modes import Baseline as _Bl
+            from src.modes import InfeasibleConditionError as _Infe
+            from src.modes import build_overrides as _bov
+            try:
+                _bl = _Bl.from_config(cfg)
+                _dst = _DState(**{k: float(_ds[k]) for k in
+                                  ("ne_primary", "ne_secondary", "pe")})
+            except Exception as e:  # noqa: BLE001
+                checks["실패사유_불능재검"] = (
+                    False, f"재검 준비 실패 (baseline/완방상태 구성 불가: {e})")
+            else:
+                _forged, _unver = [], []
+                with open(d / "failed.csv", newline="", encoding="utf-8") as f:
+                    for row in _csv.DictReader(f):
+                        if not str(row.get("reason") or "").startswith("infeasible"):
+                            _unver.append(row.get("cond_id"))
+                            continue
+                        try:
+                            c = json.loads(row.get("condition") or "{}")
+                            _bov(float(c["lli"]), float(c["lam_pe"]),
+                                 float(c["lam_ne"]),
+                                 str(c.get("lam_pe_type", "de")),
+                                 str(c.get("lam_ne_type", "de")),
+                                 _bl, _dst, cfg.get("guards", {}))
+                        except _Infe:
+                            continue          # 정말 불능 — 라벨이 참
+                        except Exception as e:  # noqa: BLE001
+                            _forged.append(f"{row.get('cond_id')}"
+                                           f"(기록 파손: {type(e).__name__})")
+                            continue
+                        _forged.append(str(row.get("cond_id")))
+                checks["실패사유_불능재검"] = (
+                    not _forged,
+                    f"guard 를 통과하는(=풀리는) 조건 {len(_forged)}건이 실패로 "
+                    f"계상돼 있다 — 모집단 임의 축소: {_forged[:3]}")
+                checks["실패사유_미검증"] = (
+                    not _unver,
+                    f"{len(_unver)}건의 실패 사유가 결정적 재검 불가다 (solver "
+                    f"실패 등): {_unver[:3]} — 봉인된 재실행 근거 없이 인용 "
+                    f"모집단에서 제외할 수 없다")
         checks["_참고_조건집합"] = (True, f"의도 {want} / 곡선 {got}")
 
     fail = [k for k, (ok, _) in checks.items() if not ok]
@@ -676,6 +778,14 @@ def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
       · `restarts_json` 의 **첫 행만** 형식을 확인했다.
     그래서 양쪽을 같은 가짜 문자열로 맞춘 위조가 그대로 통과했다 — 실제로
     이 저장소의 테스트 fixture(가짜 digest `aaaa1111`)가 통과하고 있었다.
+
+    ★ 신뢰 경계 (10차 자체 확인 1): 이 검증이 증명하는 것은 기록↔bytes 의
+    **자기일관성**과 코드·입력·조건집합의 identity 다. manifest 와 fits 는
+    untracked 라, **출력 값 변조 후 fits_seal 일체를 재계산해 넣는 위조**는
+    형식적으로 완전한 기록이 되어 여기서 구분할 수 없다 (10차 실측: *_hat
+    +0.5 변조 + reseal → 추가 실패 검사 0개). 진본성의 앵커는 저장소 이력이다
+    — git 에 커밋되는 artifacts/ 묶음(payload_sha256)과 보고서(RESULTS.md)에
+    렌더·커밋되는 fits digest 를 대조해야 진본성이 성립한다.
 
     반환: {"ok": bool, "checks": {이름: "통과"|"실패 — 사유"}, "fail": [...], "reasons": [...]}
     """

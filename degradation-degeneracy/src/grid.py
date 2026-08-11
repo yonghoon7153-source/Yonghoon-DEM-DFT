@@ -212,7 +212,7 @@ def grid_run_spec(cfg: dict, conditions: list[Condition],
 
     cond_ids = sorted(c.cond_id for c in conditions)
     spec = {
-        "grid_sig_version": 1,
+        "grid_sig_version": 2,   # F82b: discharged_state 필수화
         "config_hash": config_hash(cfg),
         # extends 부모까지 — 최종 병합본 해시만으로도 내용은 고정되지만,
         # 어떤 파일들이 읽혔는지가 없으면 봉인·재검이 불가능하다 (발견 3)
@@ -502,6 +502,18 @@ def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
         "failed_ids_sha256": hashlib.sha256(
             "\n".join(sorted(load_failed(out_dir))).encode()).hexdigest()[:16],
         "n_failed_total": n_failed_total,
+        # ★ 10차 자체 확인 3 — CLI 축 override 시 grid_config(=config 파일 축)는
+        #   실제 축과 다를 수 있다. 실제 조건에서 유도한 축을 함께 기록한다.
+        #   (조건 집합 자체는 grid_run_spec.condition_ids_sha256 이 서명한다)
+        "effective_axes": {
+            "lli": sorted({float(c.lli) for c in conditions}),
+            "lam_pe": sorted({float(c.lam_pe) for c in conditions}),
+            "lam_ne": sorted({float(c.lam_ne) for c in conditions}),
+            "noise": sorted({float(c.noise) for c in conditions}),
+        },
+        "_grid_config_주의": ("grid_config 는 config 파일 원본이다 — CLI 축 "
+                             "override 는 effective_axes 와 "
+                             "condition_ids_sha256 에만 반영된다 (10차)."),
     })
     log.info("grid 완료: ok=%d failed=%d (누적 곡선 %d) elapsed=%.1fs",
              n_ok, n_failed, n_done_total - n_failed_total, elapsed)
@@ -550,10 +562,16 @@ def main() -> None:
     cfg = load_config(args.config)
     validate_config(cfg)
 
+    # ★ 10차 자체 리뷰 — CLI 덮어쓰기는 **cfg 에 먼저 반영**한다. 예전에는 조건
+    #   생성만 CLI seed 를 쓰고, 서명(grid_run_spec)과 curves_manifest 는 config
+    #   의 seed(42)를 봉인했다 — 서명된 재현 기록이 거짓이 된다.
+    if args.noise_seed is not None:
+        cfg.setdefault("grid", {})["noise_seed"] = int(args.noise_seed)
+
     conds = conditions_from_config(cfg, cli={
         "lli": args.lli, "lam_pe": args.lam_pe, "lam_ne": args.lam_ne,
         "lam_pe_type": args.lam_pe_type, "lam_ne_type": args.lam_ne_type,
-        "noise": args.noise, "noise_seed": args.noise_seed,
+        "noise": args.noise,     # noise_seed 는 위에서 cfg 로 일원화했다
     })
     chunk = args.chunk_size or int(cfg.get("run", {}).get("chunk_size", 200))
 

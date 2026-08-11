@@ -130,24 +130,49 @@ def get_discharged_state(
         #   손상된 값이 그대로 격자 truth 의 기준이 됐다.
         want = baseline_hash(cfg)
         got = data.get("baseline_hash")
-        if got is not None and got != want:
+        # ★ F82b/10차 발견 2-a — hash 가 **없는** 캐시도 거부한다. `is not None`
+        #   조건이면 identity 필드가 아예 없는 옛/수제 캐시가 값 검사만으로
+        #   통과했다 (리뷰 실측: ACCEPTED_WITHOUT_BASELINE_HASH=True).
+        if got != want:
             raise RuntimeError(
-                f"완방상태 캐시가 다른 baseline 의 것입니다: {path}\n"
+                f"완방상태 캐시의 baseline identity 가 없거나 다릅니다: {path}\n"
                 f"  캐시 {got} ≠ 현재 {want}. --force 로 다시 계산하세요 (F82).")
-        vals = {k: data.get(k) for k in ("ne_primary", "ne_secondary", "pe")}
-        bad = [k for k, v in vals.items()
-               if not isinstance(v, (int, float)) or not math.isfinite(v) or v < 0]
-        if bad:
+        # ★ F82b/발견 2-b — baseline_hash 에는 solver 가 없다. IDAKLU rtol=1e-6
+        #   과 Casadi rtol=1e-3 이 같은 키를 가져, 다른 solver 로 계산한 상태를
+        #   현재 solver 의 결과처럼 재사용할 수 있었다. 계산 recipe(solver 설정)를
+        #   payload 에 넣고 읽을 때 대조한다.
+        if data.get("solver") != cfg.get("solver"):
             raise RuntimeError(
-                f"완방상태 캐시의 {bad} 값이 유효하지 않습니다: {path} (F82)")
-        log.info("완방상태 캐시 적중: %s", path)
-        return DischargedState(**vals)
+                f"완방상태 캐시가 다른 solver 설정으로 계산됐습니다: {path}\n"
+                f"  캐시 {data.get('solver')} ≠ 현재 {cfg.get('solver')}. "
+                f"--force 로 다시 계산하세요 (F82b).")
+        # ★ 10차 자체 리뷰 — 계산 **코드** identity 도 대조한다. solver 설정이
+        #   같아도 모델/파라미터 코드가 바뀌면 다른 물리값이 나온다. 완방상태는
+        #   격자 전체의 truth 기준점이라, stale 이면 모든 조건이 조용히 이동한다.
+        #   baseline/solver 불일치(위 raise)는 "다른 실험의 캐시"라 조사가 필요
+        #   하지만, 코드 변경은 일상이므로 **미스로 취급해 재계산**한다 — stale
+        #   값이 쓰이는 일은 없고, resume 중이면 격자 서명 가드(F82)가 잡는다.
+        from src.io import source_digest as _sd
+        if data.get("source_digest") == _sd():
+            vals = {k: data.get(k) for k in ("ne_primary", "ne_secondary", "pe")}
+            bad = [k for k, v in vals.items()
+                   if not isinstance(v, (int, float)) or not math.isfinite(v) or v < 0]
+            if bad:
+                raise RuntimeError(
+                    f"완방상태 캐시의 {bad} 값이 유효하지 않습니다: {path} (F82)")
+            log.info("완방상태 캐시 적중: %s", path)
+            return DischargedState(**vals)
+        log.warning("완방상태 캐시가 다른 코드로 계산됨 (%s ≠ %s) — 미스로 "
+                    "취급해 재계산: %s", data.get("source_digest"), _sd(), path)
 
     state = compute_discharged_state(cfg)
 
     if use_cache:
         path.parent.mkdir(parents=True, exist_ok=True)
-        payload = {**asdict(state), "baseline_hash": baseline_hash(cfg)}
+        from src.io import source_digest
+        payload = {**asdict(state), "baseline_hash": baseline_hash(cfg),
+                   "solver": cfg.get("solver"),          # F82b: 계산 recipe
+                   "source_digest": source_digest()}     # 정보 (판정엔 안 씀)
         path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
         log.info("완방상태 캐시 저장: %s", path)
     return state

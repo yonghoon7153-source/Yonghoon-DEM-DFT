@@ -1975,3 +1975,246 @@ def test_empty_saved_yaml_is_stale(tmp_path):
     out = build(d, tmp_path / "R1.md", repo_root=tmp_path).read_text(encoding="utf-8")
     assert "파생_stale_degeneracy_summary.yaml" in out
     assert "인용 금지" in out[:600]
+
+
+# ──────────────────────────────── 10차 게이트 리뷰 (Codex 9차-재실행-전 + 자체)
+
+def test_report_survives_multistart_meta_keys(tmp_path):
+    """★ 10차 발견 3 — n_restarts≥3 이면 `multistart_random_only` 블록에
+    `random_only_적용`(bool)·`평균_제외_restart수`(float)·`pairwise`(dict) 같은
+    메타 키가 생기는데, `_` 접두사만 거르던 렌더가 bool 에 `.get()` 을 불러
+    보고서 생성이 통째로 죽었다 (리뷰 실측: AttributeError). 목적함수 행의
+    스키마를 가진 dict 만 표에 올라야 한다."""
+    import json
+
+    import yaml
+
+    from src.io import fits_seal
+    from src.scoring import run_scoring
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d, _ = _complete_artifact(tmp_path, objectives=("pocv", "pocv_dvdq"))
+    # 무작위 restart 2개 이상 → random-only 공정 비교가 성립 → 메타 키가 생긴다
+    f = pd.read_parquet(d / "fits.parquet")
+    f["restarts_json"] = json.dumps(
+        [{"p": [1.0, 0.0, 1.0, 0.0], "J": 0.0, "i": 0, "source": "base_init"},
+         {"p": [1.1, 0.1, 1.1, 0.1], "J": 0.5, "i": 1, "source": "random"},
+         {"p": [1.6, 0.2, 1.2, 0.2], "J": 0.7, "i": 2, "source": "random"}])
+    f.to_parquet(d / "fits.parquet", index=False)
+    man = yaml.safe_load((d / "manifest.yaml").read_text(encoding="utf-8"))
+    man["fits_seal"] = fits_seal(d / "fits.parquet")
+    (d / "manifest.yaml").write_text(
+        yaml.safe_dump(man, allow_unicode=True, sort_keys=False), encoding="utf-8")
+
+    # 전제조건 — 재채점 요약에 비-dict 메타 키가 실제로 있어야 이 테스트가 유효
+    s = run_scoring(d, out_dir=tmp_path / "sc")
+    blk = s.get("multistart_random_only") or {}
+    assert any(not str(k).startswith("_") and not isinstance(v, dict)
+               for k, v in blk.items()), "메타 키 미생성 — 크래시 경로가 재현되지 않았다"
+
+    run_compare(d, d)
+    text = build(d, tmp_path / "R.md",
+                 repo_root=tmp_path).read_text(encoding="utf-8")   # 죽으면 안 된다
+    assert "multi-start 진단" in text
+    assert "| random_only_적용 |" not in text, "메타 키가 표 행으로 렌더됐다"
+    assert "| pairwise |" not in text
+
+
+def test_report_renders_recomputed_case_numbers(tmp_path):
+    """★ 10차 발견 5 — case 표의 `n_conditions_*` 를 999999 로 바꿔도 예전
+    재검산은 세 지표만 대조해 통과했고, 보고서가 999999 를 그대로 실었다.
+    이제 표는 재계산본에서 렌더되고 숫자 전체 대조로 stale 이 뜬다."""
+    import yaml
+
+    from tools.compare_cases import compare
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d, _ = _complete_artifact(tmp_path)
+    h, _ = _complete_artifact(tmp_path / "h")
+    m = yaml.safe_load((h / "manifest.yaml").read_text(encoding="utf-8"))
+    m["run_spec"]["reference"] = "halfcell"
+    (h / "manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+    run_compare(d, d)
+
+    cc = compare(d / "fits.parquet", h / "fits.parquet")
+    cc["n_conditions_compared"] = 999999          # 세 지표 밖이던 숫자
+    (d / "case_comparison.yaml").write_text(
+        yaml.safe_dump(cc, allow_unicode=True), encoding="utf-8")
+    text = build(d, tmp_path / "R.md", repo_root=tmp_path).read_text(encoding="utf-8")
+
+    assert "999999" not in text, "변조된 숫자가 보고서에 렌더됐다"
+    assert "파생_case_comparison.yaml" in text
+    assert "인용 금지" in text[:600]
+
+
+def _wsweep_run(d, objectives=("wdqdv_0.00", "wdqdv_1.00"),
+                optimizer=None, n_restarts=None, ws_extra=None):
+    """본 실행 artifact `d` 안에 provenance 를 갖춘 wsweep 하위 실행을 만든다.
+
+    manifest run_spec 을 sweep 목적함수로 바꾸고 서명·행 서명·fits_seal 을
+    다시 계산한다 — validator 가 실제로 통과하는 sweep 이어야 F88 대조 검사
+    자체를 테스트할 수 있다.
+    """
+    import hashlib
+    import json
+
+    import yaml
+
+    from src.io import fits_seal, snapshot_inputs
+    from src.scoring import (add_error_columns, apply_bias_correction,
+                             classify_recoverability, clean_bias)
+    from src.weight_sweep import pick_optimum, sweep_summary
+
+    sub = _nested_sweep(d)
+    man = yaml.safe_load((sub / "manifest.yaml").read_text(encoding="utf-8"))
+    spec = man["run_spec"]
+    spec["objectives"] = {o: {"w_pocv": 1.0, "w_dvdq": 1.0,
+                              "w_dqdv": float(o.split("_")[1])}
+                          for o in objectives}
+    spec["objective_order"] = list(objectives)
+    if optimizer:
+        spec["optimizer"] = {**spec["optimizer"], **optimizer}
+    if n_restarts is not None:
+        spec["n_restarts"] = n_restarts
+        spec["optimizer"]["n_restarts"] = n_restarts
+    sig = hashlib.sha1(json.dumps(spec, sort_keys=True, default=str)
+                       .encode()).hexdigest()[:12]
+
+    f = _fits(objectives=tuple(objectives))
+    f["run_sig"] = sig
+    idxs = (list(range(int(spec["optimizer"]["n_restarts"])))
+            if spec["optimizer"].get("adaptive") is False else [0, 1])
+    f["restarts_json"] = json.dumps(
+        [{"p": [1.0 + 0.1 * i, 0.0, 1.0, 0.0], "J": 0.1 * i, "i": i,
+          "source": "base_init" if i == 0 else "random"} for i in idxs])
+    f.to_parquet(sub / "fits.parquet", index=False)
+
+    man["run_signature"] = sig
+    man["run_spec"] = spec
+    man["fits_seal"] = fits_seal(sub / "fits.parquet")
+    (sub / "manifest.yaml").write_text(
+        yaml.safe_dump(man, allow_unicode=True, sort_keys=False), encoding="utf-8")
+    snapshot_inputs(man["input_sha256"], sub)
+
+    tol = 0.02
+    sw = classify_recoverability(add_error_columns(
+        pd.read_parquet(sub / "fits.parquet"), tol))
+    sw = apply_bias_correction(sw, clean_bias(sw), tol)
+    opt = pick_optimum(sweep_summary(sw, tol))
+    ws = {"w_grid": [float(o.split("_")[1]) for o in objectives],
+          "tol": tol,
+          "method": spec["optimizer"]["method"],
+          "adaptive": spec["optimizer"]["adaptive"],
+          "n_restarts": spec["n_restarts"],
+          "n_conditions": spec["n_conditions"],
+          "warm_start": spec["warm_start"],
+          "optimum": opt}
+    if ws_extra:
+        ws.update(ws_extra)
+    (sub / "weight_sweep.yaml").write_text(
+        yaml.safe_dump(ws, allow_unicode=True), encoding="utf-8")
+    return sub
+
+
+def test_sweep_settings_verified_against_main_spec(tmp_path):
+    """★ 10차 발견 4 — "본 실행과 같은 설정" 문장은 자기신고가 아니라
+    두 run_spec 의 대조로 판정한다."""
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    # ① 같은 설정 — 대조로 확인된 초록 문장
+    d, _ = _complete_artifact(tmp_path / "same")
+    _wsweep_run(d)
+    run_compare(d, d)
+    text = build(d, tmp_path / "R_same.md",
+                 repo_root=tmp_path).read_text(encoding="utf-8")
+    assert "같은 설정으로 돌렸습니다" in text
+    assert "설정이 다릅니다" not in text
+    assert "wsweep metadata 불일치" not in text
+
+    # ② sweep 이 실제로 다른 설정 (adaptive off·restart 3) — 자기신고는
+    #    spec 과 일치시켜 두므로(F88 은 통과) 본 실행과의 대조만 남는다
+    d2, _ = _complete_artifact(tmp_path / "diff")
+    _wsweep_run(d2, optimizer={"adaptive": False}, n_restarts=3)
+    run_compare(d2, d2)
+    text2 = build(d2, tmp_path / "R_diff.md",
+                  repo_root=tmp_path).read_text(encoding="utf-8")
+    assert "설정이 다릅니다" in text2
+    assert "같은 설정으로 돌렸습니다" not in text2
+
+
+def test_sweep_wgrid_selfreport_checked_against_spec(tmp_path):
+    """★ 10차 발견 4 — weight_sweep.yaml 의 w_grid 자기신고를 서명된 spec 의
+    목적함수 이름(wdqdv_X.XX)에서 재구성해 대조한다."""
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d, _ = _complete_artifact(tmp_path)
+    # 실제로는 {0, 1} 만 돌았는데 기록은 더 촘촘한 sweep 을 주장한다
+    _wsweep_run(d, ws_extra={"w_grid": [0.0, 0.5, 1.0]})
+    run_compare(d, d)
+    text = build(d, tmp_path / "R.md", repo_root=tmp_path).read_text(encoding="utf-8")
+
+    assert "wsweep metadata 불일치" in text
+    assert "인용 금지" in text[:600]
+
+
+def test_bundle_refuses_seal_mismatched_bytes(tmp_path):
+    """★ 10차 자체 리뷰 — 봉인 기록과 다른 bytes 는 **묶지 않는다.**
+
+    예전에는 실행 후 변조된 fits 도 현재 bytes 그대로 담아 payload 를
+    만들었으므로 check() 가 "온전"을 인증했고, 재보관(staging 교체)이 마지막
+    정상 묶음을 파괴했다.
+    """
+    import pytest
+
+    from tools.archive_bundle import bundle, check
+
+    d, _ = _complete_artifact(tmp_path)
+    out = tmp_path / "art"
+    bundle(d, out)
+    assert check(out)["ok"]
+
+    f = pd.read_parquet(d / "fits.parquet")
+    f["lam_pe_hat"] = f["lam_pe_hat"] + 0.5      # fits_seal 은 그대로 둔 변조
+    f.to_parquet(d / "fits.parquet", index=False)
+    with pytest.raises(RuntimeError, match="봉인 불일치"):
+        bundle(d, out)
+    assert check(out)["ok"], "실패한 재보관이 기존 정상 묶음을 파괴했다"
+
+
+def test_nested_external_inputs_restored(tmp_path):
+    """★ 10차 자체 리뷰 — nested 실행의 외부 봉인 입력은 최상위 `inputs/` 에
+    묶여야 restore 가 실제로 복원한다. 예전에는 `<bundle>/wsweep/inputs/` 에
+    떨어져 restore 가 절대 읽지 않는 죽은 사본이 됐다."""
+    import yaml
+
+    from src.io import canonical_input_key, file_digest
+    from tools.archive_bundle import bundle, restore
+
+    root = tmp_path
+    d, _ = _complete_artifact(root / "a", repo_root=root)
+    sub = _nested_sweep(d)
+    # sweep 에만 있는 외부 봉인 입력 (run_dir 밖)
+    ext = root / "a" / "ext_only_for_sweep.yaml"
+    ext.write_text("k: 1\n", encoding="utf-8")
+    m = yaml.safe_load((sub / "manifest.yaml").read_text(encoding="utf-8"))
+    m["input_sha256"][canonical_input_key(ext, root)] = file_digest(ext)
+    (sub / "manifest.yaml").write_text(
+        yaml.safe_dump(m, allow_unicode=True, sort_keys=False), encoding="utf-8")
+
+    out = tmp_path / "art"
+    bundle(d, out, repo_root=root)
+    assert (out / "inputs" / "ext_only_for_sweep.yaml").is_file(), \
+        "외부 입력이 최상위 inputs/ 에 없다"
+    assert not (out / "wsweep" / "inputs").exists(), \
+        "restore 가 읽지 않는 위치(wsweep/inputs)에 사본이 남았다"
+
+    iso = tmp_path / "iso"
+    res = restore(out, repo_root=iso)
+    assert res["ok"], res["conflict"]
+    restored = iso / canonical_input_key(ext, root)
+    assert restored.is_file() and restored.read_text(encoding="utf-8") == "k: 1\n", \
+        "복원본에 외부 입력이 없다 — 죽은 사본이었다"

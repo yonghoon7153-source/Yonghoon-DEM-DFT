@@ -78,8 +78,21 @@ def artifact_kind(run_dir: Path) -> str:
 
 
 def required_files(run_dir: Path) -> tuple:
-    return (REQUIRED_PRODUCER_FILES if artifact_kind(run_dir) == "grid_producer"
-            else REQUIRED_RUN_FILES)
+    if artifact_kind(run_dir) == "grid_producer":
+        req = REQUIRED_PRODUCER_FILES
+        # ★ 10차 발견 1 — 실패가 있는 격자는 failed.csv 없이는 F83b 분할
+        #   (의도 = 관측 ⊎ 실패, ID 재해시)을 복원 후 증명할 수 없다.
+        #   n_failed_total>0 이면 필수로 승격한다.
+        cm = Path(run_dir) / "curves_manifest.yaml"
+        try:
+            man = (yaml.safe_load(cm.read_text(encoding="utf-8")) or {}
+                   ) if cm.is_file() else {}
+        except Exception:  # noqa: BLE001 — 깨진 manifest 는 check 단계가 잡는다
+            man = {}
+        if man.get("n_failed_total"):
+            req = (*req, "failed.csv")
+        return req
+    return REQUIRED_RUN_FILES
 
 #: 검증에는 안 쓰이지만 재생성 비용이 커서 같이 남기는 것들
 KEEP_FILES = ("degeneracy_summary.yaml", "objective_comparison.yaml",
@@ -98,12 +111,18 @@ def _full(path) -> str | None:
 
 
 def _rel(p: Path, repo_root=None) -> str:
-    """저장소 root 기준 상대경로 문자열 (밖이면 절대경로 그대로)."""
+    """저장소 root 기준 상대경로 문자열 (밖이면 절대경로 그대로).
+
+    ★ 10차 자체 리뷰 — **POSIX 구분자로 정규화**한다. Windows 에서 만든 묶음의
+    restore_map 이 `results\\halfcell_v3` 로 적히면 Linux 에서 그 문자열이
+    통째로 한 파일명이 되어 복원이 불가능했다 (payload 키는 F80/9-c 에서 이미
+    고쳤는데 restore_map 은 남아 있었다).
+    """
     root = Path(repo_root) if repo_root else REPO_ROOT
     try:
-        return str(Path(p).resolve().relative_to(root.resolve()))
+        return Path(p).resolve().relative_to(root.resolve()).as_posix()
     except ValueError:
-        return str(Path(p).resolve())
+        return Path(p).resolve().as_posix()
 
 
 def sealed_inputs(run_dir: Path) -> dict[str, str]:
@@ -127,10 +146,17 @@ def nested_runs(run_dir: Path) -> list[Path]:
 
 
 def _copy_run(run_dir: Path, out_dir: Path,
-              repo_root=None) -> tuple[int, list[str], dict[str, str]]:
+              repo_root=None, inputs_root: Path | None = None
+              ) -> tuple[int, list[str], dict[str, str]]:
     """한 실행(run_dir)의 검증 필수 + 보관 파일을 out_dir 로 복사.
 
-    반환: (복사 수, 누락 목록, {archived_rel: original_repo_rel})
+    ★ 10차 자체 리뷰 — `inputs_root` 는 외부 봉인 입력이 놓일 위치다.
+    nested 실행(wsweep)에서 out_dir(=<bundle>/wsweep) 아래 `inputs/` 에 쓰면
+    restore 는 `<bundle>/inputs/` 만 읽으므로 **절대 복원되지 않는 사본**이
+    된다. bundle() 이 최상위 stage 를 넘겨 한곳에 모은다.
+
+    반환: (복사 수, 누락 목록, {archived_rel(bundle root 기준, POSIX):
+    original_repo_rel})
     """
     out_dir.mkdir(parents=True, exist_ok=True)
     copied, missing = 0, []
@@ -192,11 +218,20 @@ def _copy_run(run_dir: Path, out_dir: Path,
             missing.append(f"{path_s} (봉인 입력이 디스크에 없다)")
             continue
         rel = _rel(p, repo_root)
-        dst = out_dir / "inputs" / Path(rel).name
-        dst.parent.mkdir(exist_ok=True)
-        shutil.copy2(p, dst)
-        inputs_map[str(Path("inputs") / dst.name)] = rel
-        copied += 1
+        # ★ 10차 — 외부 입력은 bundle 최상위 inputs/ 에 모은다 (nested 포함).
+        #   같은 이름의 **다른 파일**이 오면 조용히 덮어쓰지 않고 digest 접두사로
+        #   구분한다 (예: 서로 다른 base.yaml 두 개).
+        base_inputs = (inputs_root or out_dir) / "inputs"
+        base_inputs.mkdir(parents=True, exist_ok=True)
+        dst = base_inputs / Path(rel).name
+        if dst.exists():
+            from src.io import file_digest as _fdig
+            if _fdig(dst) != _fdig(p):
+                dst = base_inputs / f"{str(_fdig(p))[:12]}_{Path(rel).name}"
+        if not dst.exists():
+            shutil.copy2(p, dst)
+            copied += 1
+        inputs_map[(Path("inputs") / dst.name).as_posix()] = rel
     return copied, missing, inputs_map
 
 
@@ -235,15 +270,30 @@ def bundle(run_dir, out_dir, repo_root=None) -> dict:
 
     nested = []
     for sub in nested_runs(run_dir):
-        n_c, n_m, n_i = _copy_run(sub, stage / sub.name, repo_root)
+        # ★ 10차 — 외부 입력은 **최상위** inputs/ 로 모은다. 예전에는
+        #   <bundle>/wsweep/inputs/ 에 떨어져 restore 가 절대 읽지 않았다.
+        n_c, n_m, n_i = _copy_run(sub, stage / sub.name, repo_root,
+                                  inputs_root=stage)
         copied += n_c
         missing += n_m
-        # 하위 실행의 외부 입력도 같은 map 에 모은다 (원래 경로가 키다)
         inputs_map.update(n_i)
         nested.append(sub.name)
 
+    # ★ 10차 자체 리뷰 — **봉인과 어긋난 bytes 는 묶지 않는다.** 예전에는 실행
+    #   후 변조된 fits/curves 도 현재 bytes 그대로 담아 payload 를 만들었으므로
+    #   check() 가 "온전"을 인증했고, 재보관이 마지막 정상 묶음을 staging 교체로
+    #   파괴했다. 불일치 발견 시 기존 묶음을 남기고 실패한다.
+    run_rel = _rel(run_dir, repo_root)
+    seal_bad = _seal_conflicts(stage, run_rel, nested, inputs_map)
+    if seal_bad:
+        shutil.rmtree(stage)
+        raise RuntimeError(
+            "봉인 불일치 — 이 실행 디렉터리는 기록과 다른 bytes 를 담고 있어 "
+            "묶지 않습니다 (기존 묶음은 그대로 둡니다):\n  "
+            + "\n  ".join(seal_bad))
+
     (stage / RESTORE_MAP).write_text(yaml.safe_dump(
-        {"run_dir": _rel(run_dir, repo_root), "inputs": inputs_map, "nested": nested},
+        {"run_dir": run_rel, "inputs": inputs_map, "nested": nested},
         allow_unicode=True, sort_keys=False), encoding="utf-8")
     (stage / PAYLOAD).write_text(yaml.safe_dump(
         _payload_map(stage), allow_unicode=True, sort_keys=False), encoding="utf-8")
@@ -253,6 +303,53 @@ def bundle(run_dir, out_dir, repo_root=None) -> dict:
     stage.rename(out_dir)
     return {"copied": copied, "external": sorted(inputs_map.values()),
             "missing": missing, "nested": nested}
+
+
+def _seal_conflicts(b: Path, run_rel: str, nested: list[str],
+                    inputs_map: dict[str, str]) -> list[str]:
+    """묶인 bytes 를 manifest 의 봉인 기록과 대조한다 (10차).
+
+    누락은 check() 의 몫이고, 여기서는 **존재하는데 digest 가 다른** 것만 잡는다
+    — 그것이 "변조된 산출물을 인증된 묶음으로 만드는" 통로였다.
+    """
+    from src.io import file_digest
+
+    bad: list[str] = []
+    rev: dict[str, str] = {}
+    for arch, orig in inputs_map.items():
+        rev.setdefault(orig, arch)
+    for sub in [""] + list(nested):
+        base = b / sub if sub else b
+        pre = f"{sub}/" if sub else ""
+        mp = base / "manifest.yaml"
+        man = (yaml.safe_load(mp.read_text(encoding="utf-8")) or {}
+               ) if mp.is_file() else {}
+        sub_rel = f"{run_rel}/{sub}" if sub else run_rel
+        for path_s, want in (man.get("input_sha256") or {}).items():
+            try:
+                inner = Path(path_s).relative_to(sub_rel)
+            except ValueError:
+                inner = None
+            src = (base / inner if inner is not None
+                   else (b / rev[path_s] if path_s in rev else None))
+            if src is None or not src.is_file():
+                continue
+            got = file_digest(src)
+            if got != want:
+                bad.append(f"{pre or ''}{path_s}: 봉인 {want} ≠ 현재 {got}")
+        seal = man.get("fits_seal") or {}
+        fp = base / "fits.parquet"
+        if seal.get("file_sha256") and fp.is_file() \
+                and _full(fp) != seal["file_sha256"]:
+            bad.append(f"{pre}fits.parquet: manifest.fits_seal 과 다르다")
+        cm = base / "curves_manifest.yaml"
+        if cm.is_file():
+            cman = yaml.safe_load(cm.read_text(encoding="utf-8")) or {}
+            cp = base / "curves.parquet"
+            if cman.get("curves_sha256") and cp.is_file() \
+                    and _full(cp) != cman["curves_sha256"]:
+                bad.append(f"{pre}curves.parquet: curves_manifest 와 다르다")
+    return bad
 
 
 def check(bundle_dir) -> dict:

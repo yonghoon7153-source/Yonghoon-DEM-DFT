@@ -390,8 +390,12 @@ def test_pristine_p_ini_uses_same_warm_start_chain_as_main_fit(monkeypatch, tmp_
     assert p_ini["pocv_dvdq"][0] == 1.50, "seed 제공자는 warm을 받지 않는다"
 
 
-def _tiny_curves(tmp_path, n=48, n_cond=3):
-    """_run_fit_locked을 실제로 태울 수 있는 최소 curves.parquet."""
+def _tiny_curves(tmp_path, n=48, n_cond=3, failed=()):
+    """_run_fit_locked을 실제로 태울 수 있는 최소 curves.parquet.
+
+    ★ 10차 발견 1 — `failed` 로 실패 조건 ID 를 주면 실제 형식의 failed.csv 와
+    의도 = 관측 ⊎ 실패 분할 기록(F83/F83b)까지 만든다.
+    """
     import numpy as np
     import pandas as pd
 
@@ -420,14 +424,17 @@ def _tiny_curves(tmp_path, n=48, n_cond=3):
     import yaml as _yaml
 
     from src.grid import write_curves_manifest
-    from src.io import env_fingerprint, source_digest
+    from src.io import append_failed, env_fingerprint, source_digest
     cond_ids = sorted(set(df["cond_id"]))
-    spec = {"grid_sig_version": 1, "config_hash": "test", "config_files": [],
+    failed = sorted(failed)
+    intended = sorted(set(cond_ids) | set(failed))
+    spec = {"grid_sig_version": 2, "config_hash": "test", "config_files": [],
             "protocol_unified": "charge_first", "parameter_set": "test",
             "noise_seed": 42,
+            # ★ F83b — 의도 집합 서명은 관측 ∪ 실패 전체에서 나온다
             "condition_ids_sha256": _hl.sha256(
-                "\n".join(cond_ids).encode()).hexdigest()[:16],
-            "n_conditions_intended": len(cond_ids), "postprocess": None,
+                "\n".join(intended).encode()).hexdigest()[:16],
+            "n_conditions_intended": len(intended), "postprocess": None,
             # ★ F82 — 완방상태가 격자의 물리 기준점이므로 서명에 들어간다
             "discharged_state": {"ne_primary": 36.6, "ne_secondary": 3446.1,
                                  "pe": 58439.9},
@@ -440,14 +447,22 @@ def _tiny_curves(tmp_path, n=48, n_cond=3):
     (tmp_path / "curves_manifest_start.yaml").write_text(_yaml.safe_dump(
         {"grid_run_sig": sig, "grid_run_spec": spec, "git_dirty": False,
          "resume": False}), encoding="utf-8")
+    for cid in failed:                       # 실제 기록 경로와 같은 형식
+        # ★ 10차 자체 확인 2 — 실패 라벨은 guard 재평가로 재검되므로, fixture
+        #   도 **정말 불능인** 조건(lli 범위 밖)을 기록해야 한다
+        append_failed(tmp_path, cid,
+                      {"cond_id": cid, "lli": 5.0, "lam_pe": 0.0, "lam_ne": 0.0,
+                       "lam_pe_type": "de", "lam_ne_type": "de", "noise": 0.0},
+                      "infeasible: lli=5.0 는 [0, 0.9] 밖 (test)")
     write_curves_manifest(tmp_path, {"parameter_set": "test", "grid": {"noise_seed": 42}},
                           conditions=cond_ids,
                           extra={"solver": "test", "grid_run_spec": spec,
                                  "grid_run_sig": sig, "n_curves": len(cond_ids),
                                  "source_digest_changed_during_run": False,
-                                 # ★ F83 — 의도 = 관측 ⊎ 실패 분할 (실패 0건)
-                                 "n_failed_total": 0,
-                                 "failed_ids_sha256": _hl.sha256(b"").hexdigest()[:16]})
+                                 # ★ F83 — 의도 = 관측 ⊎ 실패 분할
+                                 "n_failed_total": len(failed),
+                                 "failed_ids_sha256": _hl.sha256(
+                                     "\n".join(failed).encode()).hexdigest()[:16]})
     return tmp_path
 
 
@@ -785,9 +800,12 @@ def _fake_halfcell_cache(tmp_path, branch="delithiation", n_points=400):
         "y_pe": y.tolist(), "u_pe": (4.3 - 1.2 * y).tolist(),
         "z_ne": y.tolist(), "u_ne": (0.05 + 0.35 * y).tolist(),
     }), encoding="utf-8")
+    from src.io import source_digest
     cache.with_name(cache.stem + ".meta.yaml").write_text(yaml.safe_dump({
         "recipe": {"method": "ocp", "n_points": n_points, "branch": branch},
         "baseline_hash": b, "recipe_hash": r, "cache_file": cache.name,
+        # ★ 10차 — 코드 identity 도 검증 대상이다 (stale-code 캐시 거부)
+        "source_digest": source_digest(),
     }), encoding="utf-8")
     return cache
 
@@ -1226,14 +1244,14 @@ def test_discharged_state_is_in_grid_signature(tmp_path):
     assert a_sig != b_sig, "완방상태가 다른데 grid 서명이 같다 (F82)"
 
 
-def test_discharged_cache_rejects_foreign_baseline(tmp_path):
-    """★ F82 — 다른 baseline 의 완방상태 캐시를 그대로 쓰면 안 된다."""
+def test_discharged_cache_rejects_foreign_baseline(tmp_path, monkeypatch):
+    """★ F82/F82b — 다른·무명·다른-solver 완방상태 캐시를 쓰면 안 된다."""
     import json
 
     import pytest
 
     from src.baseline import _cache_path, get_discharged_state
-    from src.config import load_config
+    from src.config import baseline_hash, load_config
 
     cfg = load_config("configs/base.yaml")
     cache = _cache_path(cfg, tmp_path)
@@ -1241,11 +1259,235 @@ def test_discharged_cache_rejects_foreign_baseline(tmp_path):
     cache.write_text(json.dumps(
         {"ne_primary": 1.0, "ne_secondary": 2.0, "pe": 3.0,
          "baseline_hash": "다른baseline"}), encoding="utf-8")
-    with pytest.raises(RuntimeError, match="다른 baseline"):
+    with pytest.raises(RuntimeError, match="baseline identity"):
         get_discharged_state(cfg, cache_dir=tmp_path)
 
-    # 비유한·음수 값도 거부
+    # ★ F82b/10차 발견 2-a — identity 필드가 **없는** 캐시도 거부
     cache.write_text(json.dumps(
-        {"ne_primary": -1.0, "ne_secondary": 2.0, "pe": 3.0}), encoding="utf-8")
+        {"ne_primary": 1.0, "ne_secondary": 2.0, "pe": 3.0}), encoding="utf-8")
+    with pytest.raises(RuntimeError, match="baseline identity"):
+        get_discharged_state(cfg, cache_dir=tmp_path)
+
+    # ★ F82b/발견 2-b — 다른 solver 설정으로 계산된 캐시 거부
+    cache.write_text(json.dumps(
+        {"ne_primary": 1.0, "ne_secondary": 2.0, "pe": 3.0,
+         "baseline_hash": baseline_hash(cfg),
+         "solver": {"name": "casadi", "rtol": 1e-3}}), encoding="utf-8")
+    with pytest.raises(RuntimeError, match="다른 solver"):
+        get_discharged_state(cfg, cache_dir=tmp_path)
+
+    # ★ 10차 자체 리뷰 — 다른 **코드**로 계산된 캐시는 사용하지 않는다.
+    #   (조사가 필요한 baseline/solver 불일치와 달리 코드 변경은 일상이므로
+    #   미스로 취급해 재계산한다 — stale 값이 쓰이지 않는 것이 요점)
+    import src.baseline as bl
+    from src.io import source_digest
+    cache.write_text(json.dumps(
+        {"ne_primary": 1.0, "ne_secondary": 2.0, "pe": 3.0,
+         "baseline_hash": baseline_hash(cfg),
+         "solver": cfg.get("solver"),
+         "source_digest": "stale0000000"}), encoding="utf-8")
+    from src.baseline import DischargedState
+    fresh = DischargedState(ne_primary=11.0, ne_secondary=22.0, pe=33.0)
+    monkeypatch.setattr(bl, "compute_discharged_state",
+                        lambda c, solver=None: fresh)
+    got = get_discharged_state(cfg, cache_dir=tmp_path)
+    assert got == fresh, "stale-code 캐시가 재계산 없이 사용됐다 (10차)"
+
+    # identity·solver·코드가 맞아도 비유한·음수 값이면 거부
+    cache.write_text(json.dumps(
+        {"ne_primary": -1.0, "ne_secondary": 2.0, "pe": 3.0,
+         "baseline_hash": baseline_hash(cfg),
+         "solver": cfg.get("solver"),
+         "source_digest": source_digest()}), encoding="utf-8")
     with pytest.raises(RuntimeError, match="유효하지 않"):
         get_discharged_state(cfg, cache_dir=tmp_path)
+
+
+# ──────────────────────────────── 10차 게이트 리뷰 (Codex 9차-재실행-전 + 자체)
+
+def test_run_fit_seals_failed_list(tmp_path):
+    """★ 10차 발견 1 — 실패 목록(failed.csv)도 fitting 입력으로 봉인된다.
+
+    F83b 분할 검증이 failed.csv 재해시를 요구하므로, 실패가 있는 곡선을
+    이 파일 없이 fit 하면 "무엇이 모집단에서 빠졌는가"가 증명되지 않는다.
+    """
+    import yaml
+
+    import src.fitting as F
+
+    in_dir = _tiny_curves(tmp_path / "in", failed=("c_zz_fail",))
+    out = tmp_path / "out"
+    obj_cfg = {"objectives": {"a": {"w_pocv": 1.0}},
+               "dqdv": {"window": 7, "polyorder": 2, "peak_weight": 1.0},
+               "scaling": {"method": "reference_rmse"}}
+    bounds = {"init": [1.0, 0.0, 1.0, 0.0], "lb": [0.5, -1.0, 0.5, -1.0],
+              "ub": [2.0, 1.0, 2.0, 1.0]}
+    F.run_fit(in_dir, out, obj_cfg, {"a": {"w_pocv": 1.0}}, bounds,
+              "expanded", 1, nproc=1)
+
+    # 봉인 목록에 failed.csv 가 있다
+    man = yaml.safe_load((out / "manifest.yaml").read_text(encoding="utf-8"))
+    assert any(str(k).endswith("failed.csv") for k in man["input_sha256"]), \
+        "failed.csv 가 input_sha256 에 봉인되지 않았다"
+    # 검증 뷰(스냅샷 사본)에도 복사됐다 — F83b 재해시가 fit 시점 바이트로 성립
+    assert (out / "_inputs" / "_producer_view" / "failed.csv").is_file()
+
+
+def test_run_fit_rejects_missing_failed_list(tmp_path):
+    """★ 10차 발견 1 — n_failed>0 인데 failed.csv 가 없으면 fit 을 시작하지
+    않는다 (분할을 증명할 수 없는 producer)."""
+    import pytest
+
+    import src.fitting as F
+
+    in_dir = _tiny_curves(tmp_path / "in", failed=("c_zz_fail",))
+    (in_dir / "failed.csv").unlink()
+    obj_cfg = {"objectives": {"a": {"w_pocv": 1.0}},
+               "dqdv": {"window": 7, "polyorder": 2, "peak_weight": 1.0},
+               "scaling": {"method": "reference_rmse"}}
+    bounds = {"init": [1.0, 0.0, 1.0, 0.0], "lb": [0.5, -1.0, 0.5, -1.0],
+              "ub": [2.0, 1.0, 2.0, 1.0]}
+    with pytest.raises(RuntimeError, match="producer 검증 실패"):
+        F.run_fit(in_dir, tmp_path / "out", obj_cfg, {"a": {"w_pocv": 1.0}},
+                  bounds, "expanded", 1, nproc=1)
+
+
+def test_curves_validator_sig_v2_and_id_partition(tmp_path):
+    """★ 10차 발견 2 — 버전(F82b)·실패목록 재해시·ID 분할(F83b)을 강제한다."""
+    import hashlib
+
+    import pandas as pd
+    import yaml
+
+    from src.io import validate_curves_provenance
+
+    # ① 실패가 있는 producer 도 형식이 맞으면 통과한다
+    d = _tiny_curves(tmp_path / "ok", failed=("c_f1", "c_f2"))
+    v = validate_curves_provenance(d)
+    assert v["ok"], v["fail"]
+
+    # ② grid_sig_version 다운그레이드 → 버전 검사가 잡는다
+    d2 = _tiny_curves(tmp_path / "v1")
+    mp = d2 / "curves_manifest.yaml"
+    m = yaml.safe_load(mp.read_text(encoding="utf-8"))
+    m["grid_run_spec"]["grid_sig_version"] = 1
+    mp.write_text(yaml.safe_dump(m, allow_unicode=True), encoding="utf-8")
+    assert "grid_sig_version" in validate_curves_provenance(d2)["fail"]
+
+    # ③ failed.csv 바꿔치기 → 재해시가 잡는다
+    d3 = _tiny_curves(tmp_path / "swap_fail", failed=("c_f1",))
+    (d3 / "failed.csv").write_text(
+        "cond_id,condition,reason,timestamp\nc_other,{},x,t\n", encoding="utf-8")
+    assert "실패목록_재해시" in validate_curves_provenance(d3)["fail"]
+
+    # ④ 관측 조건 하나를 다른 ID 로 교체 (리뷰 실측: replacement_condition) —
+    #    개수는 그대로라 예전 분할 검사는 통과했다. ID 집합 검사가 잡는다.
+    d4 = _tiny_curves(tmp_path / "swap_obs")
+    df = pd.read_parquet(d4 / "curves.parquet")
+    first = df["cond_id"].iloc[0]
+    df.loc[df["cond_id"] == first, "cond_id"] = "replacement_condition"
+    df.to_parquet(d4 / "curves.parquet", index=False)
+    from src.io import file_digest
+    mp4 = d4 / "curves_manifest.yaml"
+    m4 = yaml.safe_load(mp4.read_text(encoding="utf-8"))
+    m4["curves_sha256"] = file_digest(d4 / "curves.parquet", full=True)
+    mp4.write_text(yaml.safe_dump(m4, allow_unicode=True), encoding="utf-8")
+    v4 = validate_curves_provenance(d4)
+    assert "조건집합_ID분할" in v4["fail"], v4["fail"]
+
+    # ⑤ n_failed>0 인데 failed.csv 가 없다 → 존재 검사가 잡는다
+    d5 = _tiny_curves(tmp_path / "no_fail_file", failed=("c_f1",))
+    (d5 / "failed.csv").unlink()
+    assert "실패목록_존재" in validate_curves_provenance(d5)["fail"]
+
+
+def test_fit_failfast_when_adaptive_off(monkeypatch):
+    """★ 10차 발견 6 — adaptive=False(공정 모드)에서 restart 예외를 조용히
+    건너뛰면 조건마다 restart 집합이 달라져 paired 비교의 전제가 무너진다."""
+    import numpy as np
+    import pytest
+
+    import src.fitting as F
+
+    calls = {"n": 0}
+
+    def boom(objective, x0, bounds, method):
+        calls["n"] += 1
+        if calls["n"] == 2:
+            raise ValueError("solver blew up")
+        return np.array([1.0, 0.0, 1.0, 0.0]), 0.1, True, 10
+
+    monkeypatch.setattr(F, "_minimize_until_stable", boom)
+
+    with pytest.raises(RuntimeError, match="공정"):
+        F.fit(lambda p: 0.0, [1, 0, 1, 0], [0.5, -1, 0.5, -1], [2, 1, 2, 1],
+              n_restarts=3, adaptive=False)
+
+    # adaptive=True 는 기존대로 건너뛴다 (진단용 관용 — 예산 완주 검사는 F86)
+    calls["n"] = 0
+    res = F.fit(lambda p: 0.0, [1, 0, 1, 0], [0.5, -1, 0.5, -1], [2, 1, 2, 1],
+                n_restarts=3, adaptive=True)
+    assert res.n_restarts == 2
+
+
+def test_halfcell_cache_rejects_stale_code(tmp_path):
+    """★ 10차 자체 리뷰 — 캐시 키(baseline+recipe)에 코드가 없어, OCP/해석
+    코드가 바뀐 뒤 옛 캐시가 재사용되면 Case 1 좌표 원점이 조용히 달라진다.
+    meta 의 source_digest 를 대조해 fail-closed 로 거부한다."""
+    import yaml
+
+    from src.config import load_config
+    from src.halfcell import halfcell_meta_path, validate_halfcell_cache
+
+    cfg = load_config("configs/base.yaml")
+    cache = _fake_halfcell_cache(tmp_path)
+    v = validate_halfcell_cache(cfg, cache)
+    assert v["ok"], v["fail"]
+
+    mp = halfcell_meta_path(cache)
+    m = yaml.safe_load(mp.read_text(encoding="utf-8"))
+    m["source_digest"] = "stale0000000"
+    mp.write_text(yaml.safe_dump(m), encoding="utf-8")
+    assert "코드_identity" in validate_halfcell_cache(cfg, cache)["fail"]
+
+    # source_digest 가 아예 없는 옛 meta 도 거부 (fail-closed)
+    del m["source_digest"]
+    mp.write_text(yaml.safe_dump(m), encoding="utf-8")
+    assert "코드_identity" in validate_halfcell_cache(cfg, cache)["fail"]
+
+
+def test_failed_label_must_be_truly_infeasible(tmp_path):
+    """★ 10차 자체 확인 2 — F83b ID 분할은 '풀리는 조건을 failed 로 재선언'
+    하면 관측∪실패가 불변이라 통과한다 (리뷰 실측: AFTER ok=True). cfg 를
+    주면 "infeasible" 라벨을 guard 재평가로 재검해 위조를 잡아야 한다."""
+    from src.config import load_config
+    from src.io import append_failed, validate_curves_provenance
+
+    cfg = load_config("configs/base.yaml")
+
+    # ① 정말 불능인 라벨 (fixture: lli=5.0) → cfg 재검 통과
+    d = _tiny_curves(tmp_path / "true_fail", failed=("c_forged",))
+    v = validate_curves_provenance(d, cfg=cfg)
+    assert v["ok"], v["fail"]
+    assert "실패사유_불능재검" in v["checks"]
+
+    # ② 풀리는 조건(lli=0.05)을 불능으로 재선언 → 잡는다
+    (d / "failed.csv").unlink()
+    append_failed(d, "c_forged",
+                  {"lli": 0.05, "lam_pe": 0.0, "lam_ne": 0.0,
+                   "lam_pe_type": "de", "lam_ne_type": "de"},
+                  "infeasible: forged")
+    v2 = validate_curves_provenance(d, cfg=cfg)
+    assert "실패사유_불능재검" in v2["fail"], v2["checks"]
+
+    # ③ 결정적 재검이 불가능한 사유(solver 실패)는 미검증으로 실패
+    (d / "failed.csv").unlink()
+    append_failed(d, "c_forged",
+                  {"lli": 0.05, "lam_pe": 0.0, "lam_ne": 0.0,
+                   "lam_pe_type": "de", "lam_ne_type": "de"},
+                  "solver: crashed")
+    v3 = validate_curves_provenance(d, cfg=cfg)
+    assert "실패사유_미검증" in v3["fail"], v3["checks"]
+
+    # ④ cfg 없으면 재검 자체가 없다 — 호출자는 문서화된 한계를 안다
+    assert "실패사유_불능재검" not in validate_curves_provenance(d)["checks"]

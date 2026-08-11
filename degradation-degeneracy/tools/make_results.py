@@ -228,11 +228,13 @@ def _recheck_derived(in_dir: Path, name: str) -> dict | None:
                 return {"ok": False, "why": "provenance tag 가 불완전해 재계산할 수 없다"}
             now = compare(Path(prov["grid"]["scored_file"]),
                           Path(prov["halfcell"]["scored_file"]))
-            pairs = [(y.get(t, {}).get(o, {}).get(k), now.get(t, {}).get(o, {}).get(k))
-                     for t in ("grid", "halfcell")
-                     for o in (y.get(t) or {})
-                     for k in ("degenerate_frac", "degenerate_frac_corrected",
-                               "mean_abs_err")]
+            # ★ 10차 발견 5 — 세 지표만 짝짓던 방식은 `n_conditions_common` 등
+            #   나머지 숫자의 변조(999999)를 그대로 통과시켰고, 보고서가 그 값을
+            #   렌더했다 (리뷰 실측). key 집합 + 숫자 **전체**를 대조하고,
+            #   호출 쪽이 재계산본을 렌더 원본으로 쓰도록 함께 돌려준다.
+            ok = _numbers_equal(y, now)
+            return {"ok": ok, "now": now,
+                    "why": "" if ok else "저장본 숫자가 fits 재계산과 다르다"}
         else:
             # ★ map 이 아니라 **정본 fits 에서 다시 채점**해 대조한다.
             #   degeneracy_map.parquet 자체가 변조된 경우까지 잡기 위해서다.
@@ -347,6 +349,9 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     saved_ws = _load(in_dir / "wsweep" / "weight_sweep.yaml")
 
     cmp_res, summary, wsweep = saved_cmp, saved_summary, saved_ws
+    # 10차 발견 4/5 — sweep 렌더·판정에 쓰는 검증 원본 (기본: 검증 불가 상태)
+    sweep_vs_main: list[str] | None = None   # None = 대조 자체를 못 했다
+    wspec_verified: dict = {}
     can_recompute = (in_dir / "fits.parquet").exists()
     if not can_recompute:
         # 정본이 없으면 재계산도 없다 — 저장본을 렌더하되 **인용 금지**를 강제한다
@@ -412,8 +417,40 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
                     _meta_bad.append(k)
             if saved_ws.get("n_conditions") != _wspec.get("n_conditions"):
                 _meta_bad.append("n_conditions")
+            # ★ 10차 발견 4 — 자기신고 w_grid 를 **서명된 spec 의 목적함수
+            #   이름**(wdqdv_X.XX)에서 재구성해 대조한다. 이름은 run_sig 에
+            #   들어가므로 위조하면 행 서명이 갈린다.
+            _w_names_want = {f"wdqdv_{float(w):.2f}"
+                             for w in (saved_ws.get("w_grid") or [])}
+            _w_names_got = {str(n) for n in (_wspec.get("objectives") or {})
+                            if str(n).startswith("wdqdv_")}
+            if _w_names_want != _w_names_got:
+                _meta_bad.append(
+                    f"w_grid(기록 {sorted(_w_names_want)} ≠ "
+                    f"spec {sorted(_w_names_got)})")
             if _meta_bad:
                 stale.append(f"wsweep metadata 불일치 ({_meta_bad})")
+            # ★ 10차 발견 4/F20d — "본 실행과 같은 설정" 문장을 **자기신고가
+            #   아니라 두 run_spec 의 대조**로 판정한다. 예전에는 weight_sweep.yaml
+            #   의 warm_start·n_restarts 만 보고 초록 문장을 실었다.
+            _mspec = manifest.get("run_spec") or {}
+            _mopt = _mspec.get("optimizer") or {}
+            sweep_vs_main = []
+            for k in ("method", "adaptive"):
+                if _mopt.get(k) != _wopt.get(k):
+                    sweep_vs_main.append(
+                        f"optimizer.{k}({_mopt.get(k)}≠{_wopt.get(k)})")
+            for k in ("n_restarts", "warm_start", "reference", "v_col",
+                      "bounds_preset"):
+                if _mspec.get(k) != _wspec.get(k):
+                    sweep_vs_main.append(
+                        f"{k}({_mspec.get(k)}≠{_wspec.get(k)})")
+            # tol — 보고서 전체 재계산이 0.02 를 쓰므로 sweep 도 같아야
+            # 이 절의 비율을 다른 절과 나란히 읽을 수 있다
+            _ws_tol = float(saved_ws.get("tol", 0.02))
+            if abs(_ws_tol - 0.02) > 1e-12:
+                sweep_vs_main.append(f"tol({_ws_tol}≠0.02)")
+            wspec_verified = _wspec       # 렌더는 서명된 spec 값으로 (발견 5)
         elif saved_ws:
             stale.append("wsweep/weight_sweep.yaml (fits.parquet 없음 — 재계산 불가)")
             wsweep = None
@@ -501,6 +538,7 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
             f"{s}의 저장본이 정본 fits 재계산과 다르다 — 보고서는 재계산 값을 "
             f"실었지만, 이 파일을 직접 읽는 소비자는 틀린 숫자를 본다"]
         prov["checks"][f"파생_stale_{s}"] = "실패 — 재계산과 불일치"
+    _case_render = None
     for name, why in (("case_comparison.yaml", "비교표"),):
         rc = _recheck_derived(in_dir, name)
         if rc is None:
@@ -511,6 +549,22 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
             prov["fail"] = list(prov["fail"]) + [f"파생_{name}"]
             prov["reasons"] = list(prov["reasons"]) + [
                 f"{why}({name})의 숫자가 fits 에서 재계산한 값과 다르다: {rc['why']}"]
+        # ★ 10차 발견 5 — 비교표 렌더 원본은 저장본이 아니라 **재계산본**이다.
+        #   저장본 렌더는 배너가 떠도 틀린 숫자(n_conditions 999999)를 실었다.
+        if name == "case_comparison.yaml" and rc.get("now"):
+            _case_render = rc["now"]
+            # ★ 10차 자체 리뷰 — provenance_ok(= 두 artifact 검증 ∧ MUST_MATCH
+            #   spec 일치)도 **재계산 값**으로 강제한다. 위의 검사는 저장본의
+            #   자기신고를 읽으므로 True 로 위조하면 spec 불일치가 배너를
+            #   피해 갔다.
+            if _case_render.get("provenance_ok") is not True:
+                prov["ok"] = False
+                prov["fail"] = list(prov["fail"]) + ["비교입력_재계산_불합격"]
+                prov["reasons"] = list(prov["reasons"]) + [
+                    "다시 계산한 case 비교의 provenance_ok 가 참이 아니다 "
+                    f"(artifact 검증 실패 또는 spec 불일치: "
+                    f"{_case_render.get('_주의_공통성', '')[:80]})"]
+                prov["checks"]["비교입력_재계산_불합격"] = "실패"
 
     # ★ F69 — 채점 자체가 정본에서 나왔는가. `--fits` 로 임의 parquet 을 채점하면
     #   degeneracy 가 94% → 0% 로 바뀌는데 배너는 정본만 봤다.
@@ -550,6 +604,14 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     if manifest:
         P.append(f"git: `{manifest.get('git_commit', '?')}`"
                  f"{' (dirty)' if manifest.get('git_dirty') else ''}  ")
+    # ★ 10차 자체 확인 1 — untracked 산출물의 진본성 앵커. manifest 의 seal 은
+    #   자기신고라 "값 변조 + 재봉인"을 구분하지 못한다. 이 문서가 커밋되면
+    #   아래 digest 가 저장소 이력에 남아, 이후 변조는 보고서 재생성 diff 로
+    #   드러난다 (fits: 지금 재계산 / curves: run_spec 에 봉인된 값).
+    if (in_dir / "fits.parquet").exists():
+        _spec_a = manifest.get("run_spec") or {}
+        P.append(f"앵커: fits `{_fd(in_dir / 'fits.parquet', full=True)[:16]}` · "
+                 f"curves(sealed) `{str(_spec_a.get('curves_sha'))[:16]}`  ")
     P.append("")
 
     # ── 질문 ──
@@ -794,7 +856,16 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     #   multimodal 쪽으로 쏠린다.
     fair = (summary or {}).get("multistart_random_only")
     ms = fair or (summary or {}).get("multistart") or {}
-    ms_rows = {k: v for k, v in ms.items() if not k.startswith("_")}
+    # ★ 10차 발견 3 — n_restarts≥3이면 이 블록에 목적함수 행 말고도
+    #   `random_only_적용`(bool)·`평균_제외_restart수`(float)·`pairwise`(dict)·
+    #   `paired`(중첩 summary) 같은 메타 키가 섞인다. `_` 접두사만 거르면
+    #   bool에 .get()을 불러 report 생성이 통째로 죽는다 (리뷰 실측:
+    #   AttributeError 'bool' object has no attribute 'get').
+    #   **목적함수 행의 스키마를 가진 dict만** 표에 올린다.
+    _ROW_KEYS = {"n", "flat_valley_frac", "multimodal_frac", "unique_min_frac"}
+    ms_rows = {k: v for k, v in ms.items()
+               if not k.startswith("_") and isinstance(v, dict)
+               and _ROW_KEYS <= set(v)}
     if ms_rows:
         P.append("## multi-start 진단 — 진짜 degeneracy와 최적화 난이도의 구분\n")
         P.append("같은 조건을 여러 초기값에서 다시 풀었을 때 어떻게 갈리는지를 봅니다. "
@@ -845,7 +916,9 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
                  "하나뿐\"이라는 뜻입니다. 위 표가 그 자리를 대신합니다.\n")
 
     # ── 기준 곡선 비교 (Case 1 vs Case 2) ──
-    case = _load(in_dir / "case_comparison.yaml")
+    # ★ 10차 발견 5 — 재계산본(_case_render)이 있으면 그것을 렌더한다.
+    #   재계산이 불가능했던 경우에만 저장본을 쓰고, 그때는 배너가 이미 붉다.
+    case = _case_render or _load(in_dir / "case_comparison.yaml")
     if case and {"grid", "halfcell"} <= set(case):
         from tools.compare_cases import to_markdown as case_md
         P.append("## 기준 곡선 비교 — Case 1 (전 범위 half-cell) vs Case 2 (격자 곡선)\n")
@@ -866,6 +939,9 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
         #   "기준 곡선 단독"이 아니라 pipeline 수준의 비교다.
         if case.get("_인과범위"):
             P.append(f"> ⚠ {case['_인과범위']}\n")
+        # ★ 10차 자체 리뷰 — 보정 계수의 추정 모집단 명시
+        if case.get("_주의_바이어스"):
+            P.append(f"> ⚠ {case['_주의_바이어스']}\n")
         P.append("> ⚠ halfcell 쪽의 \"복원불가 0%\"는 **측정이 아닙니다.** "
                  "`src/scoring.py`가 `reference != \"grid\"`이면 `recoverable=True`로 "
                  "고정합니다(전 범위 테이블이라 창 부족이 없다는 물리적 근거). "
@@ -875,11 +951,19 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     # ── 가중치 ──
     if wsweep:
         opt = wsweep.get("optimum", {})
+        # ★ 10차 발견 5 — 표본 수·restart·warm start 는 자기신고
+        #   (weight_sweep.yaml)가 아니라 **서명된 run_spec** 값을 렌더한다.
+        _ws_wgrid = (sorted(float(str(n).split("_", 1)[1])
+                            for n in (wspec_verified.get("objectives") or {})
+                            if str(n).startswith("wdqdv_"))
+                     or wsweep.get("w_grid"))
+        _ws_ncond = wspec_verified.get("n_conditions", wsweep.get("n_conditions"))
+        _ws_nres = wspec_verified.get("n_restarts", wsweep.get("n_restarts"))
+        _ws_warm = wspec_verified.get("warm_start", wsweep.get("warm_start"))
         P.append("## dQ/dV 가중치 — 임의 튜닝이 아니라는 근거\n")
-        P.append(f"`w_dqdv`를 {wsweep.get('w_grid')}로 훑어 degeneracy 비율이 "
+        P.append(f"`w_dqdv`를 {_ws_wgrid}로 훑어 degeneracy 비율이 "
                  f"최소가 되는 값을 찾았다 "
-                 f"(층화 표본 {wsweep.get('n_conditions')}조건, "
-                 f"restart {wsweep.get('n_restarts')}).\n")
+                 f"(층화 표본 {_ws_ncond}조건, restart {_ws_nres}).\n")
         P.append(f"- 노이즈 평균 최적: **w_dqdv = {opt.get('w_star_mean_over_noise')}** "
                  f"({opt.get('metric')} = {_pct(opt.get('value_at_w_star'), 1)}), "
                  f"기본값 w=1.0일 때 {_pct(opt.get('value_at_w1'), 1)}")
@@ -887,20 +971,25 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
             P.append(f"- noise={n}: 최적 w = {d.get('w_dqdv')} "
                      f"({_pct(d.get(opt.get('metric')), 1)}, n={d.get('n')})")
         P.append(f"\n{opt.get('_주의', '')}\n")
-        # ★ sweep의 optimizer 설정이 본 실행과 다르면 이 절 전체를 인용할 수 없다.
-        #   경고 문구는 weight_sweep.yaml이 스스로 달아 두므로 그대로 옮긴다 (F20d).
+        # ★ F20d — sweep 의 optimizer 설정이 본 실행과 다르면 이 절 전체를 인용할
+        #   수 없다. ★ 10차 발견 4 — 그 판정을 자기신고가 아니라 **두 run_spec 의
+        #   대조 결과**(sweep_vs_main)로 한다. None 은 대조 자체를 못 한 것이다.
         if wsweep.get("_경고"):
             P.append(f"> ⚠ **이 sweep의 최적 w를 인용하지 마세요.** {wsweep['_경고']}\n")
-        elif not wsweep.get("warm_start", True) or wsweep.get("n_restarts", 0) < 5:
-            P.append(f"> ⚠ **이 sweep은 본 실행과 optimizer 설정이 다릅니다** "
-                     f"(warm_start={wsweep.get('warm_start')}, "
-                     f"n_restarts={wsweep.get('n_restarts')}). 가중치가 아니라 최적화 "
+        elif sweep_vs_main is None:
+            P.append("> ⚠ **sweep과 본 실행의 설정 대조를 하지 못했습니다** "
+                     "(wsweep manifest/run_spec 없음). 같은 설정임이 증명되지 "
+                     "않았으므로 최적 w를 인용하지 마세요 (F20d).\n")
+        elif sweep_vs_main:
+            P.append(f"> ⚠ **이 sweep은 본 실행과 설정이 다릅니다** "
+                     f"({', '.join(sweep_vs_main)}). 가중치가 아니라 최적화 "
                      f"난이도를 잰 값일 수 있습니다 — `tools/check_sweep_consistency.py`로 "
                      f"본 실행과 대조한 뒤 인용하세요 (F20d).\n")
         else:
-            P.append(f"> sweep은 본 실행과 같은 설정으로 돌렸습니다 "
-                     f"(warm_start={wsweep.get('warm_start')}, "
-                     f"n_restarts={wsweep.get('n_restarts')}). `w=0`은 `pocv_dvdq`와, "
+            P.append(f"> sweep은 본 실행과 같은 설정으로 돌렸습니다 — 두 run_spec 의 "
+                     f"optimizer·warm_start·bounds·reference·v_col 대조로 확인 "
+                     f"(warm_start={_ws_warm}, restart {_ws_nres}). "
+                     f"`w=0`은 `pocv_dvdq`와, "
                      f"`w=1`은 `pocv_dvdq_dqdv`와 정의가 같으므로 위 표의 두 끝점은 "
                      f"목적함수 비교표와 일치해야 합니다 — "
                      f"`tools/check_sweep_consistency.py`가 확인합니다.\n")

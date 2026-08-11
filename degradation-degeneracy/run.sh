@@ -24,13 +24,9 @@ LAM_NE="none"
 LAM_PE_TYPE="de"          # de | li | both
 LAM_NE_TYPE="de"
 
-# 실험 조건
-C_RATE="0.05"
-V_UPPER="4.2"
-V_LOWER="2.5"
-
 # 노이즈
 NOISE="0"
+NOISE_SET="false"                 # --noise 를 사용자가 직접 줬는가
 NOISE_SEED="42"
 
 # fitting
@@ -50,7 +46,6 @@ W_STRIDE="2"                      # 격자 솎기 (2면 축당 11→6값)
 # 실행 제어
 BACKEND="cpu"             # cpu | gpu
 NPROC="$(command -v nproc >/dev/null && nproc || echo 4)"
-SOLVER="idaklu"           # idaklu | casadi
 CHUNK_SIZE="200"
 RESUME="false"
 DRY_RUN="false"
@@ -85,10 +80,8 @@ MODE
   --lam-pe-type T        de | li | both   (기본 de)
   --lam-ne-type T        de | li | both   (기본 de)
 
-실험 조건
-  --c-rate F             기본 0.05
-  --v-upper F            기본 4.2
-  --v-lower F            기본 2.5
+실험 조건 (c-rate·전압 창·solver 는 configs/*.yaml 로만 지정한다 —
+  CLI 로 받던 시절 파싱만 되고 전달되지 않는 버그가 있었다. 10차 자체 리뷰)
 
 노이즈
   --noise LIST           V 단위 gaussian, 예: 0,0.001,0.005
@@ -115,7 +108,6 @@ fitting
 실행 제어
   --backend B            cpu | gpu   (기본 cpu)
   --nproc N              병렬 프로세스 수 (기본: nproc)
-  --solver S             idaklu | casadi
   --chunk-size N         청크 저장 단위 (기본 200)
   --resume               중단 지점부터 재개
   --dry-run              조건 수 / 예상시간 / 예상용량만 출력 후 종료
@@ -160,10 +152,12 @@ while [[ $# -gt 0 ]]; do
     --lam-ne)        LAM_NE="$2"; shift 2 ;;
     --lam-pe-type)   LAM_PE_TYPE="$2"; shift 2 ;;
     --lam-ne-type)   LAM_NE_TYPE="$2"; shift 2 ;;
-    --c-rate)        C_RATE="$2"; shift 2 ;;
-    --v-upper)       V_UPPER="$2"; shift 2 ;;
-    --v-lower)       V_LOWER="$2"; shift 2 ;;
-    --noise)         NOISE="$2"; shift 2 ;;
+    # ★ 10차 자체 리뷰 — 아래 셋은 파싱만 되고 어디에도 전달되지 않았다.
+    #   "바꿨다고 믿었는데 안 바뀐" 실험이 가장 위험하므로 즉시 실패한다.
+    --c-rate|--v-upper|--v-lower)
+      echo "지원 안 함: $1 — configs/*.yaml 의 experiment/cell 블록으로 지정하세요" >&2
+      exit 1 ;;
+    --noise)         NOISE="$2"; NOISE_SET="true"; shift 2 ;;
     --noise-seed)    NOISE_SEED="$2"; shift 2 ;;
     --objective)     OBJECTIVE="$2"; shift 2 ;;
     --bounds)        BOUNDS_PRESET="$2"; shift 2 ;;
@@ -177,7 +171,10 @@ while [[ $# -gt 0 ]]; do
     --w-stride)      W_STRIDE="$2"; shift 2 ;;
     --backend)       BACKEND="$2"; shift 2 ;;
     --nproc)         NPROC="$2"; shift 2 ;;
-    --solver)        SOLVER="$2"; shift 2 ;;
+    --solver)
+      echo "지원 안 함: --solver — configs/*.yaml 의 solver 블록으로 지정하세요" >&2
+      echo "  (solver 는 완방상태 캐시·grid 서명에 봉인되므로 config 로만 바꿔야 한다)" >&2
+      exit 1 ;;
     --chunk-size)    CHUNK_SIZE="$2"; shift 2 ;;
     --resume)        RESUME="true"; shift ;;
     --dry-run)       DRY_RUN="true"; shift ;;
@@ -234,7 +231,9 @@ case "$MODE" in
     [[ "$LAM_PE" != "none" ]] && GRID_ARGS+=(--lam-pe "$LAM_PE")
     [[ "$LAM_NE" != "none" ]] && GRID_ARGS+=(--lam-ne "$LAM_NE")
     GRID_ARGS+=(--lam-pe-type "$LAM_PE_TYPE" --lam-ne-type "$LAM_NE_TYPE")
-    [[ "$NOISE" != "0" ]] && GRID_ARGS+=(--noise "$NOISE")
+    # ★ 10차 자체 리뷰 — `--noise 0` 을 명시해도 전달돼야 한다. 예전에는
+    #   "0 이면 생략"이라 config 의 noise 축이 조용히 대신 쓰였다.
+    [[ "$NOISE_SET" == "true" ]] && GRID_ARGS+=(--noise "$NOISE")
     GRID_ARGS+=(--noise-seed "$NOISE_SEED")
     [[ "$RESUME"  == "true" ]] && GRID_ARGS+=(--resume)
     [[ "$DRY_RUN" == "true" ]] && GRID_ARGS+=(--dry-run)

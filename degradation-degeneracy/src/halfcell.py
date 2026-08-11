@@ -319,6 +319,8 @@ def validate_halfcell_cache(cfg: dict, cache_path: str | Path,
     import numpy as np
     import yaml
 
+    from src.io import source_digest
+
     cache_path = Path(cache_path)
     checks: dict[str, tuple[bool, str]] = {}
     meta = meta_doc if meta_doc is not None else (
@@ -349,6 +351,15 @@ def validate_halfcell_cache(cfg: dict, cache_path: str | Path,
         checks["cache_file_일치"] = (
             meta.get("cache_file") == cache_path.name,
             f"meta.cache_file {meta.get('cache_file')} ≠ {cache_path.name}")
+        # ★ 10차 자체 리뷰 — 캐시 키(baseline+recipe)에 **코드**가 없다.
+        #   OCP 함수·해석 코드가 바뀐 뒤 옛 캐시를 재사용하면 Case 1 의 좌표
+        #   원점이 현재 코드가 만들 값과 조용히 달라진다. 생성 시점의
+        #   source_digest 를 대조하고, 다르면 재생성만이 답이다 (수 초).
+        checks["코드_identity"] = (
+            meta.get("source_digest") == source_digest(),
+            f"meta {meta.get('source_digest')} ≠ 현재 {source_digest()} — "
+            f"캐시 생성 후 코드가 바뀌었다. "
+            f"python -m src.halfcell --config <base> --method <m> --force 로 재생성 (10차)")
 
     doc = arrays_doc
     if doc is None and cache_path.exists():
@@ -417,8 +428,15 @@ def main() -> None:
         v = validate_halfcell_cache(cfg, path)
         fresh = (compute_halfcell_from_ocp(cfg, **kw) if args.method == "ocp"
                  else compute_halfcell_reference(cfg, **kw))
-        same = all(np.allclose(getattr(ref, k), getattr(fresh, k), atol=1e-9)
-                   for k in ("y_pe", "u_pe", "z_ne", "u_ne"))
+        # ★ 10차 — rtol 을 0 으로 **고정**한다. 기본 rtol=1e-5 는 4V 전압에서
+        #   ~40µV 의 슬랙이라 미세 변조가 통과한다. 같은 recipe 재생성은
+        #   결정론적이므로 절대오차 1e-9 만 허용하면 된다. 길이가 다르면
+        #   allclose 가 broadcast 예외로 죽으므로 shape 부터 본다.
+        same = all(
+            np.shape(getattr(ref, k)) == np.shape(getattr(fresh, k))
+            and np.allclose(getattr(ref, k), getattr(fresh, k),
+                            rtol=0.0, atol=1e-9)
+            for k in ("y_pe", "u_pe", "z_ne", "u_ne"))
         print(json.dumps({"구조검사": v["ok"], "구조검사_실패": v["fail"],
                           "재생성_배열일치": bool(same)}, ensure_ascii=False, indent=2))
         if not (v["ok"] and same):

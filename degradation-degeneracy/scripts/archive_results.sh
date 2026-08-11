@@ -123,6 +123,13 @@ PYEOF
   rm -rf "$iso"
 
   if [[ "$ok" == "1" ]]; then n_ok=$((n_ok+1)); else n_bad=$((n_bad+1)); fi
+  # ★ 10차 자체 확인 1 — 진본성 앵커. payload 목록의 해시 하나로 묶음 전체가
+  #   고정된다. 이 묶음이 git 에 커밋되는 순간 이 값이 저장소 이력에 남아,
+  #   이후의 "값 변조 + 재봉인"은 이력과의 대조로 드러난다. 리뷰 요청문에
+  #   이 값을 그대로 인용할 것.
+  [[ -f "$out/payload_sha256.yaml" ]] && \
+    printf '  진본성 앵커 bundle_sha256: %s\n' \
+      "$(sha256sum "$out/payload_sha256.yaml" | cut -c1-16)"
   printf '  용량 %s\n' "$(du -sh "$out" | cut -f1)"
 done
 

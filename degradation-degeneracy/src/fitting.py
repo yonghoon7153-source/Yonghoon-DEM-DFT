@@ -241,6 +241,16 @@ def fit(objective, init, lb, ub, n_restarts: int = 1, seed: int = 0,
             x, f, ok, nfev = _minimize_until_stable(objective, x0, bounds, method)
             results.append((x, f, ok, nfev, k, src))
         except Exception as e:  # noqa: BLE001
+            # ★ 10차 발견 6 — 공정 진단(paired, --no-adaptive)은 모든 조건이
+            #   **정확히 같은 restart index 집합**을 가져야 성립한다 (F86).
+            #   여기서 조용히 건너뛰면 그 조건만 집합이 줄어드는데, 사후
+            #   검증은 "누락"을 볼 뿐 원인을 모른다. adaptive 를 껐다는 것은
+            #   공정성이 목적이라는 뜻이므로 즉시 실패시킨다.
+            if not adaptive:
+                raise RuntimeError(
+                    f"restart {k} 실패 (adaptive=False 공정 모드): {e}\n"
+                    f"  공정 비교는 모든 조건이 같은 restart 집합을 요구합니다 — "
+                    f"조건을 조용히 빼면 비교불능 데이터가 됩니다 (F86)") from e
             log.debug("restart %d 실패: %s", k, e)
         # 적응적 multi-start: 앞의 두 번이 같은 해로 모이면 더 돌릴 이유가 없다.
         # 갈리는 조건(= degeneracy 후보)에서만 끝까지 돌려서 비용을 아낀다.
@@ -558,6 +568,13 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
         raise RuntimeError(
             f"곡선 시작 기록이 없습니다: {_prod_start}\n"
             f"  F74 이전 산출물입니다. 곡선을 다시 생성하세요 (./run.sh --mode grid ...)")
+    # ★ 10차 발견 1 — 실패 목록도 producer 기록의 일부다. F83b 분할 검증
+    #   (의도 = 관측 ⊎ 실패, **ID 집합**)이 failed.csv 재해시를 요구하므로,
+    #   실패가 있는 곡선을 이 파일 없이 fit 하면 "무엇이 모집단에서 빠졌는가"가
+    #   봉인되지 않는다. 있으면 curves 와 같은 방식으로 봉인·스냅샷한다.
+    _prod_failed = in_dir / "failed.csv"
+    if not _prod_failed.exists():
+        _prod_failed = None
 
     # ★ F74 — config 는 `extends` 로 부모를 재귀 로드한다. 최종 파일 하나만
     #   봉인하면 부모(base.yaml)를 바꿔도 통과한다 (8차 발견 3 반례:
@@ -604,6 +621,7 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
         "input_sha256": seal_inputs(
             [in_dir / "curves.parquet", *_cfg_deps,   # F74: extends 연쇄 전체
              _prod, _prod_start,           # F70/F74: producer 기록 + 시작 기록
+             _prod_failed,                 # 10차 발견 1: 실패 목록 (있을 때)
              _hc_pre, _hc_meta]),          # F64: recipe 기록도 함께 봉인
         "halfcell_cache": _ck(_hc_pre) if _hc_pre else None,
         "halfcell_recipe": _hc_recipe,
@@ -642,12 +660,30 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     _pv_dir.mkdir(parents=True, exist_ok=True)
     for _src, _name in ((_snap[_ck(in_dir / "curves.parquet")], "curves.parquet"),
                         (_snap[_ck(_prod)], "curves_manifest.yaml"),
-                        (_snap[_ck(_prod_start)], "curves_manifest_start.yaml")):
+                        (_snap[_ck(_prod_start)], "curves_manifest_start.yaml"),
+                        # 10차 발견 1 — 실패 목록도 검증 뷰에 포함해야
+                        # F83b 재해시가 fit 시점의 바이트로 증명된다
+                        *(((_snap[_ck(_prod_failed)], "failed.csv"),)
+                          if _prod_failed else ())):
         _dst = _pv_dir / _name
         if not _dst.exists() or file_digest(_dst) != file_digest(_src):
             import shutil as _sh
             _sh.copy2(_src, _dst)
-    _cv = validate_curves_provenance(_pv_dir)
+    # ★ F72/F74 — config 는 스냅샷 문서들로 `extends` 병합을 **재현**해 만든다.
+    #   `load_config(스냅샷 최종파일)` 은 부모를 디스크에서 다시 읽으므로 안 된다.
+    #   `_config_path` 만은 원래 위치를 유지한다 (경로 파생 전용 필드).
+    #   (10차 자체 확인 2 — producer 검증의 실패라벨 재검이 cfg 를 요구하므로
+    #   검증보다 먼저 만든다)
+    base_cfg = merge_config_docs([
+        yaml.safe_load(_snap[_ck(d)].read_text(encoding="utf-8")) or {}
+        for d in _cfg_deps])
+    base_cfg["_config_path"] = str(_bc_orig)
+    base_cfg["_loaded_files"] = [str(d) for d in _cfg_deps]
+
+    # ★ 10차 자체 확인 2 — cfg 를 넘겨 failed.csv 의 "infeasible" 라벨을
+    #   guard 재평가로 재검한다. 풀리는 조건을 failed 로 재선언해 모집단을
+    #   줄이는 위조가 ID 분할만으로는 잡히지 않기 때문이다.
+    _cv = validate_curves_provenance(_pv_dir, cfg=base_cfg)
     if not _cv["ok"]:
         raise RuntimeError(
             "곡선 producer 검증 실패 — 이 곡선으로 fitting 할 수 없습니다 (F74/F85):\n"
@@ -664,14 +700,6 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     # LLI 환산 상수 (전하 보존 유도식) — 메인에서 1회 계산해 워커에 값만 전달
     from src.config import load_config as _load
     from src.inventory import reference_inventory
-    # ★ F72/F74 — config 는 스냅샷 문서들로 `extends` 병합을 **재현**해 만든다.
-    #   `load_config(스냅샷 최종파일)` 은 부모를 디스크에서 다시 읽으므로 안 된다.
-    #   `_config_path` 만은 원래 위치를 유지한다 (경로 파생 전용 필드).
-    base_cfg = merge_config_docs([
-        yaml.safe_load(_snap[_ck(d)].read_text(encoding="utf-8")) or {}
-        for d in _cfg_deps])
-    base_cfg["_config_path"] = str(_bc_orig)
-    base_cfg["_loaded_files"] = [str(d) for d in _cfg_deps]
     inv = reference_inventory(base_cfg, q_ref / 1000.0).as_dict()
 
     # ── Case 1: full-range half-cell OCV 기준 ──

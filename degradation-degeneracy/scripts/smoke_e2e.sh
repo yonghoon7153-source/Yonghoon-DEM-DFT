@@ -53,6 +53,33 @@ bad()  { printf '   ❌ %s\n' "$1"; fail=$((fail+1)); }
 rm -rf "$BASE"
 mkdir -p "$BASE"
 
+# ─────────────────────────────────────── 0. 완방상태 캐시 (F82/F82b, 10차 발견 2)
+step "0. 완방상태 준비 — solver recipe 봉인·거부 (F82b)"
+"$PY" -m src.baseline --config configs/base.yaml --force --log-level WARNING >/dev/null \
+  && ok "baseline --force (재계산 + baseline_hash·solver 봉인)" \
+  || bad "완방상태 준비 실패"
+_dcache="$(ls .cache/discharged_state/*.json 2>/dev/null | head -1)"
+if [[ -n "$_dcache" ]]; then
+  cp "$_dcache" "$_dcache.bak"
+  "$PY" - "$_dcache" <<'PYEOF'
+import json, sys
+p = sys.argv[1]
+d = json.load(open(p, encoding="utf-8"))
+d["solver"] = {"name": "casadi", "rtol": 1e-3}      # 다른 recipe 로 위장
+json.dump(d, open(p, "w", encoding="utf-8"))
+PYEOF
+  _msg="$("$PY" -m src.baseline --config configs/base.yaml --log-level ERROR 2>&1)"
+  _rc=$?
+  if [[ "$_rc" -ne 0 ]] && grep -q "다른 solver" <<<"$_msg"; then
+    ok "다른 solver 로 계산된 캐시 거부 (F82b)"
+  else
+    bad "다른 solver 캐시가 거부되지 않았다 (rc=$_rc)"
+  fi
+  mv "$_dcache.bak" "$_dcache"
+else
+  bad "완방상태 캐시 파일이 없다"
+fi
+
 # ─────────────────────────────────────────────────────────────────── 1. 격자
 step "1. PyBaMM 합성 격자 (producer artifact)"
 ./run.sh --mode grid --lli 0,0.1 --lam-pe 0,0.1 --lam-ne 0,0.1 \
@@ -63,8 +90,11 @@ step "1. PyBaMM 합성 격자 (producer artifact)"
   || bad "producer 기록이 없다 (F70)"
 "$PY" - "$CURVES" <<'PYEOF'
 import sys
+from src.config import load_config
 from src.io import validate_curves_provenance
-v = validate_curves_provenance(sys.argv[1])
+# ★ 10차 자체 확인 2 — cfg 를 넘겨 실패라벨 guard 재검까지 태운다
+v = validate_curves_provenance(sys.argv[1],
+                               cfg=load_config("configs/grid_coarse.yaml"))
 print(f"   {'✅' if v['ok'] else '❌'} producer 독립 검증 (F74): "
       + ("통과" if v["ok"] else f"실패 — {v['fail']}"))
 sys.exit(0 if v["ok"] else 1)
@@ -105,6 +135,10 @@ step "3. half-cell 기준 준비 (봉인 가능한 별도 단계)"
 # 파일명은 `<baseline>_<method>_<recipe>.meta.yaml` — recipe 해시가 가운데 온다
 ls "$CACHE_DIR"/*_ocp_*.meta.yaml >/dev/null 2>&1 \
   && ok "recipe meta 사이드카 (F64)" || bad "recipe meta 가 없다"
+# ★ 10차 — 캐시가 recipe 대로 재생성되는지 대조까지 한다 (V100 prep 과 동일 경로)
+"$PY" -m src.halfcell --config configs/base.yaml --method ocp --verify \
+      --log-level WARNING >/dev/null \
+  && ok "halfcell --verify (재생성 대조)" || bad "halfcell --verify 실패"
 
 # ─────────────────────────────────────────────────────────────────── 4. fitting
 step "4. 같은 곡선을 두 기준으로 fitting"
@@ -169,6 +203,42 @@ print(f"   ✅ {len(by)}조건 × 2목적함수, 조건별 (index,source) 집합
 PYEOF
 [[ $? -eq 0 ]] || bad "paired 공정성 검사 실패"
 
+# ★ 10차 발견 3 — paired 도 채점 → 비교 → **보고서까지** 태운다. n_restarts≥3
+#   에서 multistart_random_only 블록에 pairwise·paired 메타 키가 생기는데,
+#   보고서 생성이 여기서 죽는 결함이 본 실행 직전까지 숨어 있었다.
+./run.sh --mode score --in "$BASE/paired" >/dev/null 2>&1 \
+  && ok "paired 채점" || bad "paired 채점 실패"
+"$PY" -m tools.compare_objectives --in "$BASE/paired" >/dev/null 2>&1 \
+  && ok "paired 목적함수 비교" || bad "paired 비교 실패"
+"$PY" - "$BASE/paired" "$BASE/RESULTS_PAIRED.md" <<'PYEOF'
+import os, re, sys
+from pathlib import Path
+import yaml
+from tools.make_results import build
+# 크래시 전제조건(무작위-전용 블록의 비-dict 메타 키)이 실제로 있는지 먼저 확인
+s = yaml.safe_load((Path(sys.argv[1]) / "degeneracy_summary.yaml")
+                   .read_text(encoding="utf-8")) or {}
+blk = s.get("multistart_random_only") or {}
+meta = [k for k, v in blk.items()
+        if not str(k).startswith("_") and not isinstance(v, dict)]
+assert meta, ("multistart_random_only 에 메타 키가 없다 — 10차 발견 3 의 "
+              "크래시 경로가 재현되지 않는 표본이다 (조건 수 확인)")
+text = build(sys.argv[1], sys.argv[2]).read_text(encoding="utf-8")
+head = text[:2000]
+if "인용 금지" not in head:
+    print("   ✅ paired 보고서 생성 (n_restarts=3, pairwise 메타 키 포함)")
+    sys.exit(0)
+names = set(re.findall(r"`([^`]+)`", head.split("인용하지")[0]))
+allowed = {"clean_worktree", "코드_identity"} \
+    if os.environ.get("SMOKE_DIRTY") == "1" else set()
+extra = {n for n in names if n not in allowed and not n.startswith("_")}
+if extra:
+    print(f"   ❌ paired 보고서 배너 — 허용 외 실패: {sorted(extra)}")
+    sys.exit(1)
+print("   ⚠ dirty 완화로 paired 배너 허용")
+PYEOF
+[[ $? -eq 0 ]] || bad "paired 보고서 생성 실패 (10차 발견 3)"
+
 # ────────────────────────────────────────────────────── 7. 채점 → 비교 → 보고서
 step "7. 채점 · 비교 · 보고서"
 for d in "$GFIT" "$HFIT"; do
@@ -183,10 +253,12 @@ ok "채점"
   && ok "기준 곡선 비교" || bad "기준 비교 실패"
 
 # ★ F81 — 실제 weight sweep 까지 돈다 (예전 smoke 는 sweep 을 전혀 안 돌았다)
-"$PY" -m src.weight_sweep --in "$CURVES" --out "$GFIT/wsweep" \
-      --w-grid 0,1 --stride 1 --n-restarts 2 --nproc "$NPROC" \
-      --log-level WARNING >/dev/null 2>&1 \
-  && ok "weight sweep (w∈{0,1})" || bad "weight sweep 실패"
+# ★ 10차 — 본 실행이 쓰는 **run.sh wrapper 경로**로 돈다. 모듈 직접 호출만
+#   태우면 wrapper 의 인자 전달(F79 --out 등) 회귀를 smoke 가 못 잡는다.
+./run.sh --mode wsweep --in "$CURVES" --out "$GFIT/wsweep" \
+         --w-grid 0,1 --w-stride 1 --n-restarts 2 --nproc "$NPROC" \
+         --log-level WARNING >/dev/null 2>&1 \
+  && ok "weight sweep (run.sh wrapper, w∈{0,1})" || bad "weight sweep 실패"
 "$PY" - "$GFIT/wsweep" <<'PYEOF'
 import sys
 import yaml
@@ -297,6 +369,14 @@ print(f"   ✅ 복원본 재채점: 정본 확인, digest {s['_채점원본']['f
 PYEOF
 [[ $? -eq 0 ]] || bad "복원본 재채점 실패"
 rm -rf "$ISO"
+
+# ★ F89/10차 — 보관 대상이 디스크에 없으면 **nonzero** 로 끝나야 한다.
+#   예전에는 기본 대상이 전부 없어도 "검증 가능 0개" + exit 0 이었다.
+if ./scripts/archive_results.sh "results/_smoke_missing_$$" >/dev/null 2>&1; then
+  bad "없는 보관 대상인데 archive_results.sh 가 성공(exit 0)했다 (F89)"
+else
+  ok "없는 보관 대상 → nonzero 종료 (F89)"
+fi
 
 # ────────────────────────────────────────────────────────────────── 마무리
 [[ -d "$STASH" ]] && cp -a "$STASH/." "$CACHE_DIR/" 2>/dev/null; rm -rf "$STASH"

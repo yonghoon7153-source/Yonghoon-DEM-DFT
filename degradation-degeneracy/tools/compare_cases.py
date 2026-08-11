@@ -130,6 +130,22 @@ def compare(grid_fits: Path, halfcell_fits: Path, tol: float = 0.02) -> dict:
     gg = g[g["cond_id"].isin(keep)]
     hh = h[h["cond_id"].isin(keep)]
 
+    # ★ 10차 자체 리뷰 — '(바이어스 보정)' 열의 계수를 **비교 모집단 안에서**
+    #   다시 추정한다. `_scored` 는 각 artifact 전체에서 보정하는데, halfcell
+    #   쪽은 scoring 이 recoverable=True 로 고정하므로 grid-복원불가 조건
+    #   (정본 격자의 ~절반)까지 bias 기저에 들어가 두 열이 서로 다른 모집단의
+    #   보정을 받았다 (리뷰 실측: dqdv_only corrected 25% → 같은-모집단 0%,
+    #   bias_err_lam_ne −1.79%p → +0.09%p). 모집단을 keep 으로 맞춘 뒤 계수를
+    #   다시 추정해야 "남는 차이는 기준 곡선"이라는 결론 전제가 성립한다.
+    from src.scoring import apply_bias_correction, clean_bias
+    _corr_cols = (["resid_" + k for k in ("lli", "lam_pe", "lam_ne")]
+                  + ["abs_resid_max", "degenerate_corrected"]
+                  + [c for c in gg.columns if c.startswith("bias_err_")])
+    gg = apply_bias_correction(gg.drop(columns=_corr_cols, errors="ignore"),
+                               clean_bias(gg), tol)
+    hh = apply_bias_correction(hh.drop(columns=_corr_cols, errors="ignore"),
+                               clean_bias(hh), tol)
+
     def block(df: pd.DataFrame) -> dict:
         return {o: {
             "n": int(len(x)),
@@ -170,6 +186,14 @@ def compare(grid_fits: Path, halfcell_fits: Path, tol: float = 0.02) -> dict:
         "n_conditions_compared": len(keep),
         "_모집단": ("두 실행의 공통 조건 중, grid 기준에서 복원가능으로 분류된 것만. "
                   "행 수를 맞춰야 기준 효과와 난이도 차이가 섞이지 않는다."),
+        # ★ 10차 자체 리뷰 — 보정 계수는 이 표의 **비교 모집단(keep) 안에서**
+        #   다시 추정한다 (위 재보정 블록). 전체-모집단 보정을 그대로 쓰면
+        #   halfcell 쪽 기저에 grid-복원불가 조건이 섞여 두 열이 비대칭이었다.
+        "_주의_바이어스": (
+            "'(바이어스 보정)' 열의 계수는 비교 모집단(공통 ∩ grid 복원가능)의 "
+            "noise=0 행에서 다시 추정한 값이다 — 각 artifact 파일에 저장된 "
+            "전체-모집단 보정과 다를 수 있다. halfcell 쪽 '복원가능'은 측정이 "
+            "아니라 고정값이므로(아래 참조) 기저는 keep 으로만 제한된다."),
         "_주의_복원불가": ("halfcell의 복원불가 0%는 측정이 아니라 scoring.py가 "
                         "reference != 'grid' 일 때 recoverable=True로 고정한 값이다. "
                         "결과로 인용하지 말 것."),
