@@ -124,7 +124,8 @@ def _solve_cg(L, b):
         return cg(L, b, tol=1e-8, maxiter=30000, M=Minv)
 
 
-def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_um=0.10, se_pts=None):
+def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_um=0.10, se_pts=None,
+              add_fid=None, fid_gap_tol=2.0):
     """Voxel σ-id grid: 0 = non-conductive, 1 = AM_S, 2 = AM_P, 3.. = additives (2,3,5 → 3,4,5).
     Also returns per-voxel AM particle index (-1 = not AM) for per-particle currents.
     am_t: 1 = AM_P, 2 = AM_S (LIGGGHTS type convention).  All coords in one frame (µm).
@@ -180,14 +181,68 @@ def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_
     # additive points: cell-stamp (carbon overwrites AM at shared cells — the higher-σ phase wins,
     # which is the physical series-shortcut at an anchored contact)
     if add_pts is not None and len(add_pts):
-        ijk = np.floor((add_pts - lo) / vox).astype(int)
-        ok = ((ijk >= 0) & (ijk < n)).all(1)
-        ijk, ph = ijk[ok], add_phase[ok]
+        # ── ★ SR-01 (2026-08-11): 섬유 첨가제의 **점-스탬프는 6-face 연결을 깬다** ──────────
+        #   점 간격이 MPM dx 에 묶여 σ-격자와 무관하게 고정돼 있어, 선이 복셀 경계를 비스듬히
+        #   지나면 연속한 두 점이 **face 를 공유하지 않는 대각 셀**에 찍힌다.  솔버는 6-face
+        #   conductance 를 쓰므로 그 조각들은 **전기적으로 분리**된다.
+        #   실침대 실측 (킷 5침대, VGCF 1 wt%, vox 0.4): 섬유의 **68.5–86.4 % 가 평균 2.6–3.4
+        #   조각**으로 끊긴다.  선분 스탬프로 바꾸면 단절이 18.4–72.5 % 로 내려가고, 남는 것은
+        #   **AM 이 섬유를 끊은 물리적 단절**과 ±4 %p 안에서 일치한다
+        #   (docs/data/sr01_realbed_ab.csv · scripts/sr01_realbed_ab.py).
+        #   ⚠ 점 재샘플링으로는 못 고친다 (0.02·vox 로 조여도 31 % 잔존) — Codex CR-01.
+        #   ⚠ 아티팩트 크기가 **AM 수에 강하게 의존**(+13.9~+50.1 %p) → 조성이 다른 침대끼리
+        #     비교하면 **차등 적용**된다 = 공통모드로 상쇄되지 않는다 (Codex CR-02).
+        #   ⇒ `add_fid` (섬유 id) 를 주면 **선분 스탬프**로 굽는다.  **기본은 현행 점 스탬프**
+        #     (opt-in) — Δσ_e 크기를 재기 전에 default 를 바꾸지 않는다.
+        if add_fid is not None and len(add_fid) == len(add_pts):
+            ijk, ph = _fibre_segment_ijk(add_pts, add_phase, add_fid, lo, vox, n, fid_gap_tol)
+        else:
+            ijk = np.floor((add_pts - lo) / vox).astype(int)
+            ok = ((ijk >= 0) & (ijk < n)).all(1)
+            ijk, ph = ijk[ok], add_phase[ok]
         for code, s in ((2, 3), (3, 4), (5, 5), (4, 7), (6, 8)):   # phase → sid (4=PTFE: sensitivity-
             m = ph == code                                  #   only; 6=SWCNT sheath A14 → sid 8)
             if m.any():
                 sid[ijk[m, 0], ijk[m, 1], ijk[m, 2]] = s
     return sid, pid
+
+
+def _fibre_segment_ijk(add_pts, add_phase, add_fid, lo, vox, n, gap_tol=2.0):
+    """섬유 점열 → **선분이 지나는 셀** (6-face 연결 보장).  → (ijk, phase)
+
+    ★ 같은 fid 의 연속 점을 경로로 보고 Amanatides–Woo 로 굽는다.  ⚠ 시더가 **AM 안 점을
+      드랍**하므로 간격이 `gap_tol·(중앙값 간격)` 을 넘으면 **끊는다** — 안 그러면 폴리라인이
+      AM 을 관통해 탄소를 AM 내부에 넣는다 (실측: 셀 수 1.7배 팽창).  남는 단절은 물리다.
+    """
+    from fibre_segment_raster import segment_cells          # 같은 scripts/ 안
+    P = np.asarray(add_pts, np.float64)
+    F = np.asarray(add_fid)
+    PH = np.asarray(add_phase)
+    out_ijk, out_ph = [], []
+    for f in np.unique(F):
+        m = F == f
+        Q = P[m]
+        if len(Q) == 0:
+            continue
+        ph_f = PH[m][0]
+        if len(Q) == 1:
+            out_ijk.append(np.floor((Q - lo) / vox).astype(int)); out_ph.append([ph_f]); continue
+        d = np.linalg.norm(np.diff(Q, axis=0), axis=1)
+        med = float(np.median(d)) if len(d) else 0.0
+        brk = (np.nonzero(d > gap_tol * med)[0] + 1) if med > 0 else np.array([], int)
+        for R in (np.split(Q, brk) if len(brk) else [Q]):
+            if len(R) == 1:
+                cc = np.floor((R - lo) / vox).astype(int)
+            else:
+                seg = [segment_cells(R[i] - lo, R[i + 1] - lo, vox) for i in range(len(R) - 1)]
+                cc = np.vstack(seg)
+            out_ijk.append(cc); out_ph.append(np.full(len(cc), ph_f))
+    if not out_ijk:
+        return np.zeros((0, 3), int), np.zeros(0, PH.dtype)
+    ijk = np.vstack(out_ijk).astype(int)
+    ph = np.concatenate(out_ph)
+    ok = ((ijk >= 0) & (ijk < n)).all(1)
+    return ijk[ok], ph[ok]
 
 
 def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, plate_band_um=None,
@@ -1019,6 +1074,56 @@ def _selftest_pore():
     return 0 if ok else 1
 
 
+def _selftest_segstamp():
+    """SR-01 opt-in 선분 스탬프 — 기본 경로 불변 + 연결 보장 + AM 관통 방지."""
+    from fibre_segment_raster import n_components_6face
+    ok = fail = 0
+
+    def chk(m, c):
+        nonlocal ok, fail
+        print(('  PASS  ' if c else '  FAIL  ') + m)
+        ok, fail = ok + (1 if c else 0), fail + (0 if c else 1)
+
+    vox = 0.4
+    lo, hi = np.zeros(3), np.array([20.0, 20.0, 20.0])
+    rng = np.random.default_rng(3)
+    step = 0.7 * 0.141                       # production 점 간격 규약
+    pts, fid, ph = [], [], []
+    for k in range(3):
+        d = rng.normal(size=3); d /= np.linalg.norm(d)
+        P = rng.uniform(4, 14, 3) + np.arange(int(10 / step))[:, None] * step * d
+        pts.append(P); fid += [k] * len(P); ph += [2] * len(P)     # phase 2 = VGCF
+    pts = np.vstack(pts); fid = np.array(fid); ph = np.array(ph)
+    z3 = (np.zeros((0, 3)), np.zeros(0), np.zeros(0, int))
+
+    sid_pt, _ = rasterize(*z3, pts, ph, lo, hi, vox)
+    sid_sg, _ = rasterize(*z3, pts, ph, lo, hi, vox, add_fid=fid)
+    cpt = np.argwhere(sid_pt == 3); csg = np.argwhere(sid_sg == 3)
+    chk(f'1) ★ 결함 재현: 점-스탬프 성분 {n_components_6face(cpt)} > 섬유 3개',
+        n_components_6face(cpt) > 3)
+    chk(f'2) ★ add_fid → 선분: 성분 {n_components_6face(csg)} = 섬유 3',
+        n_components_6face(csg) == 3)
+    chk(f'3) 셀 증가 {len(csg) / max(len(cpt), 1):.2f}배 < 1.6', len(csg) / max(len(cpt), 1) < 1.6)
+    sid_b, _ = rasterize(*z3, pts, ph, lo, hi, vox, add_fid=None)
+    chk('4) ★ add_fid=None 은 기존과 bitwise 동일 (opt-in 이 기본을 안 건드린다)',
+        np.array_equal(sid_pt, sid_b))
+    # AM 드랍으로 생긴 큰 간격은 **끊어야** 한다 (안 그러면 폴리라인이 AM 을 관통)
+    A = np.arange(0, 4, step)[:, None] * np.array([1, 0.3, 0.2])
+    P2 = np.vstack([A + np.array([2, 2, 2]), A + np.array([9, 4, 3.4])])
+    sid_g, _ = rasterize(*z3, P2, np.full(len(P2), 2), lo, hi, vox,
+                         add_fid=np.zeros(len(P2), int))
+    chk(f'5) ★ 큰 간격은 끊어 굽는다 (성분 {n_components_6face(np.argwhere(sid_g == 3))} = 2)',
+        n_components_6face(np.argwhere(sid_g == 3)) == 2)
+    # σ 로 읽었을 때의 크기 — 점 스탬프가 퍼콜을 잃는다
+    sg = np.zeros(9); sg[3] = 100.0
+    ra = solve_sigma_z(sid_pt, sg, vox); rb = solve_sigma_z(sid_sg, sg, vox)
+    chk(f"6) ★ σ_z 점={ra['sigma_eff']:.4g} < 선분={rb['sigma_eff']:.4g} "
+        f"(floating 버림 {ra['n_floating_dropped']} → {rb['n_floating_dropped']})",
+        rb['sigma_eff'] > ra['sigma_eff'])
+    print(f'\nstep3 segment-stamp selftest: {ok}/{ok + fail} PASS')
+    return 0 if not fail else 1
+
+
 def _selftest_swcnt():
     """A14 — phase-6(SWCNT sheath) rasterize 스탬프 + 전자-도체/이온-투명 배선 검증.
     리뷰 CRITICAL 재발 방지: phase→sid 맵 누락 시 점이 무음 drop되어 σ_e 효과가 0이 되는 버그."""
@@ -1311,6 +1416,8 @@ if __name__ == '__main__':
                     help='A13 pore-PNM checks (dumbbell 2-body/1-throat / closure / thin fallback)')
     ap.add_argument('--selftest-swcnt', action='store_true',
                     help='A14 SWCNT sheath 스탬프 검증 (phase6→sid8, 전자-도체/이온-투명 테이블)')
+    ap.add_argument('--selftest-segstamp', action='store_true',
+                    help='SR-01 opt-in 선분 스탬프 (기본 불변 + 연결 보장 + AM 관통 방지)')
     ap.add_argument('--integration', action='store_true',
                     help='run the committed real14 integration probe (AM-only vs +300 synthetic VGCF, '
                          'seed 0, vox 0.4) — reproduces the review-anchored numbers + monotonicity')
@@ -1341,6 +1448,8 @@ if __name__ == '__main__':
         sys.exit(_selftest_pnm())
     if a.selftest_swcnt:
         sys.exit(_selftest_swcnt())
+    if a.selftest_segstamp:
+        sys.exit(_selftest_segstamp())
     if a.integration:
         import os
         _csv = os.path.join(os.path.dirname(__file__), '..', 'docs/data/real14_am_scaffold.csv')
