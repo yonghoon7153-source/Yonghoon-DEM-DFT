@@ -2120,7 +2120,11 @@ def _wsweep_run(d, objectives=("wdqdv_0.00", "wdqdv_1.00"),
         pd.read_parquet(sub / "fits.parquet"), tol))
     sw = apply_bias_correction(sw, clean_bias(sw), tol)
     opt = pick_optimum(sweep_summary(sw, tol))
+    # ★ 14차 3차 — 실제 `run_weight_sweep` 이 쓰는 키를 그대로 갖춘다.
+    #   `stride` 가 빠져 있어서 재현 명령의 `--w-stride` 오류를 fixture 가
+    #   가렸다 (기본 sweep metadata 에는 항상 있다).
     ws = {"w_grid": [float(o.split("_")[1]) for o in objectives],
+          "stride": 2,
           "tol": tol,
           "method": spec["optimizer"]["method"],
           "adaptive": spec["optimizer"]["adaptive"],
@@ -2713,3 +2717,114 @@ def test_reproduce_block_covers_every_rendered_section(tmp_path):
     assert "--reference halfcell" in repro, "half-cell 기준 fit 명령이 없다"
     assert f"--compare {h}" in repro, \
         "기준 곡선 비교 절을 만드는 report --compare 가 없다"
+
+
+def test_reproduce_block_commands_parse_and_target_canonical_paths(tmp_path):
+    """★ 14차 3차 발견 1·2 — 재현 명령이 **실제 wrapper 를 통과**하고 정본
+    경로를 가리켜야 한다.
+
+    두 오류가 문자열 존재 검사(`"--mode wsweep" in text`)를 빠져나갔다.
+      · sweep 출력이 `<main-fit>/wsweep` 이 아니라 `<main-fit>` 자체 —
+        `run_weight_sweep` 은 명시된 `--out` 을 그대로 쓰고 생략 시에만
+        `<in>/wsweep` 을 기본값으로 한다. 보고서·strict smoke 가 소비하는
+        정본 위치는 `<main-fit>/wsweep` 이다.
+      · wrapper 옵션명은 `--w-stride` 인데 `--stride` 를 출력 — 실측
+        `./run.sh --mode wsweep --stride 2` → `알 수 없는 인자: --stride`, exit 1.
+    """
+    import os
+    import shutil
+    import subprocess
+
+    import pytest
+    import yaml
+
+    from tools.compare_cases import compare
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    if shutil.which("bash") is None:
+        pytest.skip("bash 없음 — wrapper parser 검증은 POSIX shell 에서만")
+
+    repo = Path(__file__).resolve().parent.parent
+    d, _ = _complete_artifact(tmp_path,
+                              objectives=("pocv_dvdq", "pocv_dvdq_dqdv"))
+    h, _ = _complete_artifact(tmp_path / "h",
+                              objectives=("pocv_dvdq", "pocv_dvdq_dqdv"))
+    _wsweep_run(d)
+    res = compare(d / "fits.parquet", h / "fits.parquet")
+    (d / "case_comparison.yaml").write_text(
+        yaml.safe_dump(res, allow_unicode=True), encoding="utf-8")
+    run_compare(d, d)
+    text = build(d, tmp_path / "R.md", repo_root=tmp_path).read_text(
+        encoding="utf-8")
+    repro = text.split("## 재현")[1].split("```")[1]
+
+    # ① sweep 출력은 정본 위치 <main-fit>/wsweep
+    #    (주 fit 의 `--out {in_dir}` 은 정상이므로 wsweep 줄로 한정해 본다)
+    _sw_line = next(ln for ln in repro.splitlines() if "--mode wsweep" in ln)
+    assert f"--out {d / 'wsweep'}" in _sw_line, _sw_line
+    assert f"--out {d} " not in _sw_line, "sweep 을 main fit 디렉터리에 쓰려 한다"
+    assert f"--in {d} " in _sw_line or f"--in {d}\n" in _sw_line + "\n", \
+        "sweep 입력은 곡선 디렉터리여야 한다 (smoke 정본과 동일)"
+
+    # ② 옵션명은 wrapper 가 실제로 받는 것이어야 한다
+    assert "--w-stride" in _sw_line, _sw_line
+    assert " --stride " not in repro, "존재하지 않는 --stride 를 출력한다"
+
+    # ③ 모든 ./run.sh 줄이 실제 wrapper 의 인자 파싱을 통과해야 한다.
+    #    (계산은 시키지 않는다 — 없는 입력으로 파싱 뒤 단계에서 죽는 것은 정상)
+    for line in repro.splitlines():
+        line = line.strip()
+        if not line.startswith("./run.sh"):
+            continue
+        argv = line.replace("$(nproc)", "1").split()[1:]
+        # `--help` 를 붙여 파싱 직후 종료시킨다 (계산은 시키지 않는다)
+        r = subprocess.run(["bash", str(repo / "run.sh"), *argv, "--help"],
+                           cwd=repo, capture_output=True, text=True,
+                           env={**os.environ})
+        assert "알 수 없는 인자" not in r.stderr, (line, r.stderr[:200])
+
+
+def test_halfcell_reproduce_command_carries_nondefault_flags(tmp_path):
+    """★ 14차 3차 발견 4 — half-cell 재현 명령도 그 artifact 의 **서명된**
+    nondefault 설정을 복원해야 한다.
+
+    현재 블록은 `--reference halfcell` 만 붙이고 objective_order·n_restarts·
+    clean/noisy target·adaptive·warm_start 를 읽지 않는다. 기본값으로 돈
+    half-cell 이면 숫자가 같지만, "렌더된 절과 같은 signed 조건을 재현한다"는
+    설명은 그때만 참이다.
+    """
+    import yaml
+
+    from tools.compare_cases import compare
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d, _ = _complete_artifact(tmp_path,
+                              objectives=("pocv_dvdq", "pocv_dvdq_dqdv"))
+    h, _ = _complete_artifact(tmp_path / "h",
+                              objectives=("pocv_dvdq", "pocv_dvdq_dqdv"))
+    # half-cell 쪽만 nondefault protocol 로 서명한다
+    hm = h / "manifest.yaml"
+    m = yaml.safe_load(hm.read_text(encoding="utf-8"))
+    m["run_spec"] = {**m["run_spec"], "n_restarts": 7, "warm_start": False,
+                     "v_col": "v_full",
+                     "optimizer": {**(m["run_spec"].get("optimizer") or {}),
+                                   "adaptive": False}}
+    hm.write_text(yaml.safe_dump(m, allow_unicode=True, sort_keys=False),
+                  encoding="utf-8")
+
+    res = compare(d / "fits.parquet", h / "fits.parquet")
+    (d / "case_comparison.yaml").write_text(
+        yaml.safe_dump(res, allow_unicode=True), encoding="utf-8")
+    run_compare(d, d)
+    text = build(d, tmp_path / "R.md", repo_root=tmp_path).read_text(
+        encoding="utf-8")
+    repro = text.split("## 재현")[1].split("```")[1]
+    hc_line = next(ln for ln in repro.splitlines()
+                   if "--reference halfcell" in ln)
+
+    assert "--n-restarts 7" in hc_line, hc_line
+    assert "--no-adaptive" in hc_line, hc_line
+    assert "--no-warm-start" in hc_line, hc_line
+    assert "--clean" in hc_line, hc_line

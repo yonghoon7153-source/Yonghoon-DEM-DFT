@@ -47,6 +47,32 @@ def _load(path: Path):
     return None
 
 
+def _fit_flags(rs: dict) -> list[str]:
+    """서명된 fit `run_spec` → `./run.sh --mode fit` 의 nondefault 플래그.
+
+    ★ 13차 발견 6 / 14차 발견 6 / 14차 3차 발견 4 — 재현 명령은 그 artifact 의
+    서명된 설정에서 만든다. 주 fit 과 half-cell 기준 fit 이 같은 규칙을 써야
+    "렌더된 절과 같은 signed 조건을 재현한다"가 두 쪽 모두에서 참이 된다.
+    """
+    out: list[str] = []
+    # clean fit(v_col == v_full)은 --clean 없이는 재현되지 않는다 (기본 noisy)
+    if rs.get("v_col") == "v_full":
+        out.append("--clean")
+    if rs.get("objective_order"):
+        out.append(f"--objective {','.join(rs['objective_order'])}")
+    if rs.get("reference") and rs["reference"] != "grid":
+        out.append(f"--reference {rs['reference']}")
+    if rs.get("bounds_preset") and rs["bounds_preset"] not in ("expanded",):
+        out.append(f"--bounds {rs['bounds_preset']}")
+    if rs.get("n_restarts"):
+        out.append(f"--n-restarts {rs['n_restarts']}")
+    if (rs.get("optimizer") or {}).get("adaptive") is False:
+        out.append("--no-adaptive")
+    if rs.get("warm_start") is False:
+        out.append("--no-warm-start")
+    return out
+
+
 def _warm_start_asymmetry(fits) -> str | None:
     """dQ/dV 계열만 warm start를 받았는지 실측한다 (F20d/F39).
 
@@ -1108,23 +1134,7 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     #   보고서를 보고 그대로 실행하면 다른 비대칭 pipeline 이 돌았다.
     _rs = manifest.get("run_spec") or {}
     _fit = [f"./run.sh --mode fit   --in {_curves_dir} --out {in_dir} "
-            f"--nproc $(nproc)"]
-    # ★ 14차 발견 6 — clean fit(v_col == v_full)은 --clean 없이는 재현되지
-    #   않는다 (기본은 v_full_noisy).
-    if _rs.get("v_col") == "v_full":
-        _fit.append("--clean")
-    if _rs.get("objective_order"):
-        _fit.append(f"--objective {','.join(_rs['objective_order'])}")
-    if _rs.get("reference") and _rs["reference"] != "grid":
-        _fit.append(f"--reference {_rs['reference']}")
-    if _rs.get("bounds_preset") and _rs["bounds_preset"] not in ("expanded",):
-        _fit.append(f"--bounds {_rs['bounds_preset']}")
-    if _rs.get("n_restarts"):
-        _fit.append(f"--n-restarts {_rs['n_restarts']}")
-    if (_rs.get("optimizer") or {}).get("adaptive") is False:
-        _fit.append("--no-adaptive")
-    if _rs.get("warm_start") is False:
-        _fit.append("--no-warm-start")
+            f"--nproc $(nproc)", *_fit_flags(_rs)]
     P.append(" ".join(_fit))
     P.append(f"./run.sh --mode score --in {in_dir}")
     P.append(f"./run.sh --mode hessian --in {in_dir}")
@@ -1134,12 +1144,18 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     #   명령은 서명된 metadata(sweep run_spec, case_comparison.provenance)에서
     #   만든다 — 자기신고 값으로 만들면 재현이 문서와 어긋난다.
     if wsweep:
-        _sw = [f"./run.sh --mode wsweep --in {_curves_dir} --out {in_dir} "
-               f"--nproc $(nproc)"]
+        # ★ 14차 3차 발견 1 — sweep 의 정본 위치는 `<main-fit>/wsweep` 이다.
+        #   `run_weight_sweep` 은 명시된 `--out` 을 그대로 쓰고 생략 시에만
+        #   `<in>/wsweep` 을 기본값으로 하므로, main fit 디렉터리를 주면
+        #   보고서·strict smoke 가 읽는 nested 구조가 재현되지 않는다.
+        # ★ 14차 3차 발견 2 — wrapper 옵션명은 `--w-stride` 다 (`--stride` 는
+        #   `알 수 없는 인자` 로 exit 1).
+        _sw = [f"./run.sh --mode wsweep --in {_curves_dir} "
+               f"--out {Path(in_dir) / 'wsweep'} --nproc $(nproc)"]
         if _ws_wgrid:
             _sw.append(f"--w-grid {','.join(str(w) for w in _ws_wgrid)}")
         if wsweep.get("stride") is not None:
-            _sw.append(f"--stride {wsweep['stride']}")
+            _sw.append(f"--w-stride {wsweep['stride']}")
         if _ws_nres:
             _sw.append(f"--n-restarts {_ws_nres}")
         if (wspec_verified.get("optimizer") or {}).get("adaptive") is False:
@@ -1153,8 +1169,15 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     if _hc_dir:
         P.append("python -m src.halfcell --config configs/base.yaml "
                  "--method ocp --force --verify")
-        P.append(f"./run.sh --mode fit   --in {_curves_dir} --out {_hc_dir} "
-                 f"--reference halfcell --nproc $(nproc)")
+        # ★ 14차 3차 발견 4 — half-cell 도 **그 artifact 의 서명된 run_spec** 에서
+        #   플래그를 만든다. `--reference halfcell` 만 붙이면 nondefault
+        #   protocol(restart 수·clean target·adaptive/warm off)이 복원되지 않아
+        #   Case 1 절이 다른 설정으로 다시 계산된다.
+        _hrs = (_load(Path(_hc_dir) / "manifest.yaml") or {}).get("run_spec") or {}
+        _hfit = [f"./run.sh --mode fit   --in {_curves_dir} --out {_hc_dir} "
+                 f"--nproc $(nproc)",
+                 *(_fit_flags({**_hrs, "reference": "halfcell"}))]
+        P.append(" ".join(_hfit))
         P.append(f"./run.sh --mode score --in {_hc_dir}")
         P.append(f"./run.sh --mode report --in {in_dir} --compare {_hc_dir}")
     else:

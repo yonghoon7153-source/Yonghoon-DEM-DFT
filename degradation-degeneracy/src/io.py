@@ -38,6 +38,26 @@ RUN_SCOPE = ("src/", "tools/", "configs/", "scripts/", "run.sh",
              "requirements*.txt")
 
 
+#: ★ 14차 3차 발견 3 — 제외 규칙의 **단일 출처**. digest 와 dirty 판정이 같은
+#:   파일 집합을 보려면 포함(`in_run_scope`)뿐 아니라 제외도 공유해야 한다.
+#:   예전 dirty 쪽 `_SKIP` 은 `.pyc` 를 이름 중간에 포함해도 제외해서,
+#:   `configs/model.pyconfig` 같은 실제 입력이 digest 에는 들어가고 dirty
+#:   판정에서는 빠질 수 있었다.
+_EXCLUDE_DIRS = ("__pycache__", ".ipynb_checkpoints")
+_EXCLUDE_SUFFIXES = (".pyc", ".pyo")
+
+
+def is_scope_excluded(rel: str) -> bool:
+    """캐시·바이트코드인가 (digest·dirty 공통 제외 규칙).
+
+    디렉터리는 **경로 성분 단위**로, 확장자는 **suffix 로만** 판정한다.
+    """
+    parts = PurePath(rel).parts
+    if any(p in _EXCLUDE_DIRS for p in parts):
+        return True
+    return PurePath(rel).suffix in _EXCLUDE_SUFFIXES
+
+
 def in_run_scope(rel: str, scope: tuple = RUN_SCOPE) -> bool:
     """저장소 상대경로가 RUN_SCOPE 안인가 (digest 범위와 동일 규칙).
 
@@ -103,9 +123,8 @@ def git_info(repo_dir: str | Path | None = None, save_diff_to=None,
         # ★ 14차 2차 발견 5 — 범위 판정을 digest 와 **같은 matcher** 로 한다.
         #   예전에는 디렉터리 4개만 하드코딩해서, digest 가 읽는 root 파일
         #   (`run.sh`·`requirements*.txt`)을 새로 만든 채 실행해도 clean 이었다.
-        _SKIP = ("__pycache__/", ".pyc", ".pyo", ".ipynb_checkpoints/")
         crit = [u for u in untracked + ignored
-                if in_run_scope(u, scope) and not any(k in u for k in _SKIP)]
+                if in_run_scope(u, scope) and not is_scope_excluded(u)]
         # ★ F73 — 수정된 tracked 파일을 **실행 범위 안/밖**으로 나눈다.
         #   경로는 `--name-only` 로 받는다. porcelain 을 문자열 슬라이싱하면
         #   상태 문자 폭·rename 표기·따옴표 때문에 첫 글자가 잘린다 (실측).
@@ -195,9 +214,8 @@ def source_digest(root=None, dirs=_SCOPE_DIRS,
         if not base.exists():
             continue
         for f in base.rglob("*"):
-            if not f.is_file() or "__pycache__" in f.parts:
-                continue
-            if f.suffix in (".pyc", ".pyo"):
+            # ★ 14차 3차 발견 3 — 제외 규칙을 dirty 판정과 공유한다
+            if not f.is_file() or is_scope_excluded(f.relative_to(root)):
                 continue
             entries.append((_digest_path_key(f.relative_to(root)), f))
     for g in file_globs:

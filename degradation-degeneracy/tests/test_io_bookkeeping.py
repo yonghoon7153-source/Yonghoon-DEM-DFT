@@ -242,3 +242,22 @@ def test_untracked_requirements_counts_as_critical(tmp_path):
     info = git_info(tmp_path)
     assert info["git_dirty"] is True, info
     assert any("requirements-dev.txt" in c for c in info["git_untracked_critical"])
+
+
+def test_scope_exclusion_helper_is_shared():
+    """★ 14차 3차 발견 3 — 제외 규칙도 digest 와 dirty 가 공유해야 한다.
+
+    dirty 쪽 `_SKIP` 은 `.pyc` 를 **이름 중간**에 포함해도 제외했고, digest 는
+    suffix 만 제외한다. 그래서 `configs/model.pyconfig` 같은 파일이 digest 파일
+    집합에는 들어가고 dirty 판정에서는 빠질 수 있다 (현재 HEAD 에는 없다).
+    """
+    from src.io import is_scope_excluded
+
+    # 캐시·바이트코드는 양쪽에서 제외
+    for p in ("src/__pycache__/io.cpython-311.pyc", "src/io.pyc", "src/io.pyo",
+              "tools/.ipynb_checkpoints/x.ipynb"):
+        assert is_scope_excluded(p), p
+    # 이름 중간에 `.pyc`/`.ipynb_checkpoints` 가 있는 실제 입력은 제외하지 않는다
+    for p in ("configs/model.pyconfig", "src/pycache_helper.py",
+              "tools/pyc_writer.py", "configs/ipynb_checkpoints_note.yaml"):
+        assert not is_scope_excluded(p), p
