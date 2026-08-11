@@ -23,6 +23,14 @@
 ⚠ 이 검사는 원장의 **자기일관성**만 본다.  "정말 고쳐졌는가" 는 회귀와 독립 검증자의
   몫이다 — 원장이 그것을 대신한다고 착각하면 안 된다.
 
+⚠ **아직 못 하는 것** (RC7-04 잔여, Codex 지적):
+  · evidence 는 **파일 실재**만 본다 — `file.py::RC6-02` 의 **selector 가 실제로 선택
+    가능한지**는 검사하지 않는다.  우리 테스트가 pytest 가 아니라 자체 `main()` 형식이라
+    그 문자열은 실행 대상이 아니다.  최종형은 evidence 를 자유문자열이 아니라
+    `{command, target_sha, expected_exit, selector}` 로 두고 **CI 가 실제 실행**하는 것.
+  · identity 를 코드로 좁혔을 뿐, 구현자가 `verified_by: codex` 라고 **쓰는 것 자체**는
+    막지 못한다.  그것은 branch protection / CODEOWNERS 의 몫이다.
+
   python3 scripts/check_review_findings.py            # 검사 + 열린 항목 출력
   python3 scripts/check_review_findings.py --open     # 열린 항목만 (리뷰 요청서용)
   python3 scripts/check_review_findings.py --selftest
@@ -33,7 +41,21 @@ import argparse
 import json
 import os
 import re
+import subprocess
 import sys
+
+# ★ RC7-04 (Codex): `--open` 이 Windows 기본 CP949 에서 세 번째 항목을 찍다 죽었다
+#   (UnicodeEncodeError, exit 1).  "열린 항목을 **항상** 화면에 뽑는다" 가 이 도구의
+#   존재 이유인데 기본 Windows 실행에서 그 계약이 성립하지 않았다.
+#   → stdout/stderr 를 UTF-8 로 재구성하고, 그것이 불가능한 환경에서는 대체문자로 떨어뜨린다
+#     (죽는 것보다 읽히는 것이 낫다).
+for _stream in ('stdout', 'stderr'):
+    _s = getattr(sys, _stream, None)
+    if _s is not None and hasattr(_s, 'reconfigure'):
+        try:
+            _s.reconfigure(encoding='utf-8', errors='replace')
+        except Exception:                                   # noqa: BLE001
+            pass
 
 LEDGER_DEFAULT = os.path.join('docs', 'reviews', 'findings.json')
 
@@ -42,6 +64,13 @@ LEDGER_DEFAULT = os.path.join('docs', 'reviews', 'findings.json')
 ID_RE = re.compile(r'^[A-Z][A-Z0-9]{0,4}-[A-Za-z0-9]{1,4}$')
 STATUSES = ('open', 'claimed_fixed', 'verified', 'wontfix')
 SEVERITIES = ('P1', 'P2', 'P3')
+
+#: ★ RC7-04: identity 를 자유문자열로 두면 **case 변형으로 자기검증 금지를 우회**한다
+#:   (Codex 실측: owner='claude' · verified_by='Claude' 가 통과했다).  정본 목록으로 좁힌다.
+ACTORS = ('claude', 'codex', 'user')
+
+#: git SHA 형식 (짧은 것도 허용하되 hex 여야 한다).
+SHA_RE = re.compile(r'^[0-9a-f]{7,40}$')
 
 #: 상태별로 **반드시** 있어야 하는 필드.  없으면 그 상태를 주장할 수 없다.
 REQUIRED_BY_STATUS = {
@@ -93,16 +122,48 @@ def check(findings, repo_root=None):
             v = f.get(key)
             if not v:
                 problems.append(f'{fid}: status={st} 인데 {key} 없음')
+        # ★ identity 는 정본 목록으로만 (RC7-04: case 변형 우회 차단)
+        for key in ('owner', 'verified_by'):
+            v = f.get(key)
+            if v is not None and v not in ACTORS:
+                problems.append(f'{fid}: {key}={v!r} 는 정본 actor 가 아니다 '
+                                f'(허용: {"/".join(ACTORS)}) — 대소문자 변형 우회 차단')
         # ★ 자기검증 금지 — 구현자와 검증자가 같으면 verified 로 닫을 수 없다.
-        if st == 'verified' and f.get('verified_by') and f.get('owner') \
-                and f['verified_by'] == f['owner']:
+        #   ⚠ 정규화해서 비교한다 (Codex 실측: 'claude' vs 'Claude' 가 통과했다).
+        _own = (f.get('owner') or '').strip().casefold()
+        _ver = (f.get('verified_by') or '').strip().casefold()
+        if st == 'verified' and _ver and _own and _ver == _own:
             problems.append(f'{fid}: verified_by == owner ({f["owner"]}) — '
                             '구현자 자신은 검증자가 될 수 없다')
+        # ★ SHA 는 형식 + (repo 가 있으면) **실재하는 커밋**이어야 한다 (RC7-04)
+        for key in ('claimed_fixed_sha', 'verified_sha'):
+            sha = f.get(key)
+            if not sha:
+                continue
+            if not SHA_RE.match(str(sha)):
+                problems.append(f'{fid}: {key}={sha!r} 가 SHA 형식이 아니다')
+            elif repo_root and not _commit_exists(repo_root, sha):
+                problems.append(f'{fid}: {key}={sha} 가 이 리포에 없는 커밋이다')
+        # ★ evidence 가 가리키는 **파일이 실재**해야 한다 (RC7-04: 유령 evidence 통과)
+        for ev in (f.get('evidence_tests') or []):
+            path = str(ev).split('::', 1)[0].split()[0] if ev else ''
+            if repo_root and path and not os.path.exists(os.path.join(repo_root, path)):
+                problems.append(f'{fid}: evidence 가 실재하지 않는다 ({ev})')
         # supersedes 가 가리키는 id 는 실재해야 한다
         for sup in (f.get('supersedes') or []):
             if sup not in {x.get('id') for x in findings}:
                 problems.append(f'{fid}: supersedes 대상 {sup} 이 원장에 없다')
     return problems
+
+
+def _commit_exists(repo_root, sha):
+    """그 SHA 가 이 리포의 **실재하는 커밋**인가 (RC7-04).  git 이 없으면 검사 생략."""
+    try:
+        r = subprocess.run(['git', '-C', repo_root, 'cat-file', '-e', f'{sha}^{{commit}}'],
+                           capture_output=True, timeout=10)
+        return r.returncode == 0
+    except Exception:                                       # noqa: BLE001
+        return True            # git 을 못 쓰는 환경에서 **거짓 실패**를 만들지 않는다
 
 
 def open_items(findings):
@@ -170,21 +231,23 @@ def _selftest():
     ok('4) 모르는 status 를 잡는다', any('status=' in p for p in check([dict(base, status='done')])))
     ok('5) ★ claimed_fixed 는 SHA + 회귀를 둘 다 요구한다',
        len([p for p in check([dict(base, status='claimed_fixed')])]) == 2)
+    # ★ SHA 형식 검사가 생긴 뒤로는 fixture 도 진짜 형태여야 한다 (fixture-drift 교정).
+    #   repo_root 를 안 주므로 **실재 검사는 생략**되고 형식만 본다.
     ok('6) 둘 다 있으면 통과',
-       check([dict(base, status='claimed_fixed', claimed_fixed_sha='abc',
+       check([dict(base, status='claimed_fixed', claimed_fixed_sha='0123abc',
                    evidence_tests=['t1'])]) == [])
     ok('7) ★ verified 는 검증자까지 요구한다',
        any('verified_by' in p for p in check([dict(base, status='verified',
-                                                   claimed_fixed_sha='a',
+                                                   claimed_fixed_sha='0123abc',
                                                    evidence_tests=['t'],
-                                                   verified_sha='b')])))
+                                                   verified_sha='abc0123')])))
     ok('8) ★ 자기검증(verified_by == owner)을 거부한다',
        any('검증자가 될 수 없다' in p for p in check([
-           dict(base, status='verified', claimed_fixed_sha='a', evidence_tests=['t'],
-                verified_sha='b', verified_by='claude')])))
+           dict(base, status='verified', claimed_fixed_sha='0123abc', evidence_tests=['t'],
+                verified_sha='abc0123', verified_by='claude')])))
     ok('9) 다른 검증자면 통과',
-       check([dict(base, status='verified', claimed_fixed_sha='a', evidence_tests=['t'],
-                   verified_sha='b', verified_by='codex')]) == [])
+       check([dict(base, status='verified', claimed_fixed_sha='0123abc',
+                   evidence_tests=['t'], verified_sha='abc0123', verified_by='codex')]) == [])
     ok('10) wontfix 는 사유를 요구한다',
        any('decision_note' in p for p in check([dict(base, status='wontfix')])))
     ok('11) opened_in 이 없으면 잡는다',
@@ -197,7 +260,26 @@ def _selftest():
            base, dict(base, id='RC6-02', status='verified'),
            dict(base, id='RC6-03', status='claimed_fixed')])] == ['RC6-01', 'RC6-03'])
 
+    # ══ RC7-04 (Codex 6→7회차): 검사기 자신이 통과시키던 손상 원장 ══
+    _corrupt = {'id': 'RC6-01', 'severity': 'P1', 'status': 'verified', 'owner': 'claude',
+                'opened_in': 'docs/reviews/x.md', 'verified_by': 'Claude',
+                'claimed_fixed_sha': 'not-a-sha', 'verified_sha': 'also-not-a-sha',
+                'evidence_tests': ['missing.py::ghost']}
+    _probs = check([_corrupt])
+    ok('16) ★ case 변형 자기검증 우회를 잡는다 (claude vs Claude)',
+       any('정본 actor' in p for p in _probs) and any('검증자가 될 수 없다' in p for p in _probs))
+    ok('17) ★ SHA 형식 위반을 잡는다 (not-a-sha)',
+       len([p for p in _probs if 'SHA 형식' in p]) == 2)
     here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    ok('18) ★ 유령 evidence 를 잡는다',
+       any('evidence 가 실재하지' in p for p in check([_corrupt], repo_root=here)))
+    ok('19) ★ 형식은 맞지만 리포에 없는 커밋을 잡는다',
+       any('없는 커밋' in p for p in check(
+           [dict(_corrupt, verified_by='codex', claimed_fixed_sha='deadbeef',
+                 verified_sha='cafebabe',
+                 evidence_tests=['webapp/test_pipeline_provenance.py'])], repo_root=here)))
+    ok('20) 정본 actor 세 개는 통과', set(ACTORS) == {'claude', 'codex', 'user'})
+
     led = os.path.join(here, LEDGER_DEFAULT)
     if os.path.exists(led):
         ok('14) ★ 실제 원장이 자기일관적이다', check(load(led), repo_root=here) == [])
