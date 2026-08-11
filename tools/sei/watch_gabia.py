@@ -35,6 +35,8 @@ RY_EV = 13.605693122994
 #: 대칭 동등 끝점이 이보다 벌어지면 둘 중 하나가 미수렴이다 (실측: 미수렴 시 57 meV).
 #: etot_conv_thr 1e-4 Ry(=1.4 meV)·forc 여유를 감안한 값.
 EP_TOL_MEV = 5.0
+#: 비대칭 상이라도 두 Li 자리 차가 이보다 크면 이완 미완/끝점 구성 오류를 먼저 의심한다.
+EP_BIG_MEV = 500.0
 _ACT = re.compile(r"activation energy\s*\((->|<-)\)\s*=\s*(-?[\d.]+)\s*eV")
 _IMGROW = re.compile(r"^\s*\d+\s+(-?[\d.]+)\s+(-?[\d.]+)\s+([TF])\s*$", re.M)
 _TOTEN = re.compile(r"^!\s+total energy\s+=\s+(-?[\d.]+)\s+Ry", re.M)
@@ -64,14 +66,23 @@ def done(d, stem):
     return "▸"          # 시작은 했는데 안 끝났다 (재부팅으로 끊긴 것)
 
 
-def _toten_eV(p):
-    """pw.x 출력의 **마지막** '!    total energy' [eV]. 없으면 None."""
+def relax_end(p):
+    """pw.x relax 출력 → (에너지 eV, 상태문자). 상태: ✓수렴 ▸진행/절단 ✗오류 ·없음.
+
+    ⚠ 마지막 '!  total energy' 만 읽으면 **이완이 안 끝난 잡도 값이 나온다** — 그 값으로
+      끝점 차를 재면 장벽이 아니라 미수렴을 재게 된다(2026-08-12 li3nd 2.07 eV 사례).
+      그래서 'End of BFGS Geometry Optimization' + 'JOB DONE' 을 같이 본다.
+    """
     try:
         t = open(p, errors="ignore").read()
     except OSError:
-        return None
+        return None, "·"
+    if re.search(r"Error in routine|%%%%|MPI_ABORT", t):
+        return None, "✗"
     v = _TOTEN.findall(t)
-    return float(v[-1]) * RY_EV if v else None
+    e = float(v[-1]) * RY_EV if v else None
+    done = "End of BFGS Geometry Optimization" in t and "JOB DONE" in t
+    return e, ("✓" if done else ("▸" if e is not None else "·"))
 
 
 def read_gap(path):
@@ -118,15 +129,27 @@ def neb_status(d):
     r["thr"] = meta.get("path_thr")
 
     # ── 끝점 ──
-    ei = _toten_eV(os.path.join(d, "ep_initial", "relax.out"))
-    ef = _toten_eV(os.path.join(d, "ep_final", "relax.out"))
-    r["ep_mark"] = ("✓" if ei is not None else "·") + ("✓" if ef is not None else "·")
+    ei, mi = relax_end(os.path.join(d, "ep_initial", "relax.out"))
+    ef, mf = relax_end(os.path.join(d, "ep_final", "relax.out"))
+    r["ep_mark"] = mi + mf
+    if "▸" in r["ep_mark"]:
+        r["alerts"].append(f"{r['tag']}: 끝점 이완이 **안 끝났다**(BFGS 미완/JOB DONE 없음) — "
+                           f"마지막 에너지는 수렴값이 아니다. Δ끝점을 믿지 말 것")
+    if "✗" in r["ep_mark"]:
+        r["alerts"].append(f"{r['tag']}: 끝점 relax.out 에 오류")
     if ei is not None and ef is not None:
         r["ep_dE_meV"] = (ef - ei) * 1000.0
-        if r["eqv"] is True and abs(r["ep_dE_meV"]) > EP_TOL_MEV:
+        ad = abs(r["ep_dE_meV"])
+        if r["eqv"] is True and ad > EP_TOL_MEV:
             r["alerts"].append(
                 f"{r['tag']}: 끝점이 **대칭 동등**인데 {r['ep_dE_meV']:+.0f} meV 벌어졌다 "
                 f"(>{EP_TOL_MEV:.0f}) — 한쪽이 미수렴이다. NEB 장벽을 인용하지 말 것")
+        # 비대칭이라도 크기는 본다 — 두 Li 자리의 에너지 차가 이 정도로 벌어지는 일은
+        # 드물다. 보통은 이완 미완이거나 끝점 구성이 잘못된 것이다 (판정이 아니라 확인 요청).
+        elif r["eqv"] is not True and ad > EP_BIG_MEV:
+            r["alerts"].append(
+                f"{r['tag']}: 비대칭이라 끝점 차는 정상이지만 {r['ep_dE_meV']:+.0f} meV 는 "
+                f"두 Li 자리 차로는 크다 (>{EP_BIG_MEV:.0f}) — 이완 완료·자리 배정을 확인할 것")
 
     # ── 경로 ──
     out = os.path.join(d, "neb.out")
@@ -156,9 +179,10 @@ def neb_status(d):
         r["err"] = max(free) if free else None
     if "neb: convergence achieved" in t:
         r["state"] = "✓"
-    elif fwd:
-        r["state"] = "▸"
-        # 30분 넘게 갱신이 없으면 죽은 것이다 (neb.x 는 이미지마다 SCF 를 찍는다)
+    else:
+        # ◦ = 돌기 시작했는데 첫 경로 스텝이 아직 안 나왔다 (이미지 7개 SCF 중).
+        #   미착수(공백)와 구분해야 한다 — 안 그러면 "안 걸렸나?" 하고 또 건다.
+        r["state"] = "▸" if fwd else "◦"
         if r["age_min"] is not None and r["age_min"] > 30:
             r["alerts"].append(f"{r['tag']}: neb.out 이 {r['age_min']:.0f}분째 조용하다 "
                                f"— 프로세스가 살아 있는지 확인할 것")
@@ -172,13 +196,15 @@ def selftest():
     td = tempfile.mkdtemp(prefix="watch_gabia_st_")
     ok = True
 
-    def mk(tag, eqv, e_ini, e_fin, neb_body=None, thr=0.05):
+    def mk(tag, eqv, e_ini, e_fin, neb_body=None, thr=0.05, converged=True):
         d = os.path.join(td, tag)
+        tail = ("     End of BFGS Geometry Optimization\n   JOB DONE.\n"
+                if converged else "")           # 없으면 = 이완이 아직 안 끝난 출력
         for ep, e in (("ep_initial", e_ini), ("ep_final", e_fin)):
             os.makedirs(os.path.join(d, ep), exist_ok=True)
             if e is not None:
                 open(os.path.join(d, ep, "relax.out"), "w").write(
-                    f"!    total energy              =    {e / RY_EV:.8f} Ry\n")
+                    f"!    total energy              =    {e / RY_EV:.8f} Ry\n" + tail)
         json.dump({"endpoints_symmetry_equivalent": eqv, "path_thr": thr},
                   open(os.path.join(d, "meta.json"), "w"))
         if neb_body is not None:
@@ -219,6 +245,20 @@ def selftest():
     s = neb_status(mk("licl", True, -100.0, -100.0, None))
     chk(s["state"] == " " and s["it"] is None and not s["alerts"],
         "neb.out 없음 → 미착수(공백) · 오경고 없음")
+    # 음성 ⑤-a: 끝점 이완이 안 끝났는데 마지막 에너지가 있다 (li3nd 2026-08-12 사례)
+    s = neb_status(mk("li3nd_trunc", False, -100.0, -102.072, body, converged=False))
+    chk(s["ep_mark"] == "▸▸" and any("안 끝났다" in x for x in s["alerts"]),
+        f"BFGS 미완 → ▸ + 경고 (mark={s['ep_mark']})")
+    # 음성 ⑤-b: 이완은 끝났지만 비대칭 차가 2.07 eV — 크기 자체를 확인하라고 해야 한다
+    s = neb_status(mk("li3nd_big", False, -100.0, -102.072, body))
+    chk(any("두 Li 자리 차로는 크다" in x for x in s["alerts"]),
+        f"비대칭 2072 meV → 확인 요청 ({s['ep_dE_meV']:+.0f} meV)")
+    # 양성: 비대칭 412 meV 는 문턱 아래라 조용해야 한다 (위 음성 ④ 와 짝)
+    s = neb_status(mk("li3nd_ok", False, -100.0, -100.412, body))
+    chk(not s["alerts"], f"비대칭 412 meV → 여전히 조용 ({s['alerts']})")
+    # 상태 ◦: neb.out 은 있는데 첫 경로 스텝 전 — 미착수와 구분해야 한다
+    s = neb_status(mk("li2s_scf", True, -100.0, -100.0, "     Self-consistent Calculation\n"))
+    chk(s["state"] == "◦" and not s["it"], f"neb 시작·에너지 전 → ◦ (state={s['state']!r})")
     # 음성 ⑤: meta.json 손상 → 대칭 게이트를 켤 수 없다고 말해야 한다
     d = mk("li3po4g", True, -100.0, -100.5, body)
     open(os.path.join(d, "meta.json"), "w").write("{oops")
@@ -356,7 +396,7 @@ if not nebs:
     print(f"④ SEI NEB — {NEBW} 에 상 폴더가 없다 (build_neb_inputs.py 부터)")
 else:
     print(f"④ SEI NEB — {NEBW}  · neb.x 프로세스 {neb_pid}"
-          f"   (✓수렴 ▸진행 ✗오류 공백 미착수)")
+          f"   (✓수렴 ▸진행 ◦SCF중 ✗오류 공백 미착수)")
     print(f"   {'상':11s}{'끝점':>5s} {'Δ끝점':>11s}  {'경로':>5s} {'오차→문턱':>13s}"
           f" {'Ea→(eV)':>9s} {'갱신':>7s}")
     for s in nebs:
@@ -368,7 +408,8 @@ else:
         else:
             dep = f"{s['ep_dE_meV']:+.0f}mV·"          # · = 비대칭이라 검사 안 함
         err = f"{s['err']:.3f}→{s['thr'] or 0.05:.2f}" if s["err"] is not None else "—"
-        it = f"{s['state']}it{s['it']}" if s["it"] else s["state"].strip() or "—"
+        it = (f"{s['state']}it{s['it']}" if s["it"]
+              else {"◦": "◦SCF", "✗": "✗", " ": "—"}.get(s["state"], s["state"]))
         ea = f"{s['ea']:.3f}" if s["ea"] is not None else "—"
         age = f"{s['age_min']:.0f}분" if s["age_min"] is not None else "—"
         print(f"   {s['tag']:11s}{s['ep_mark']:>5s} {dep:>11s}  "
