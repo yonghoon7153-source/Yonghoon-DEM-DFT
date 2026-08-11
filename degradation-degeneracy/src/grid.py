@@ -193,7 +193,9 @@ def _solve_condition(cfg: dict, cond: Condition, d_dict: dict,
     }
 
 
-def grid_run_spec(cfg: dict, conditions: list[Condition]) -> tuple[dict, str]:
+def grid_run_spec(cfg: dict, conditions: list[Condition],
+                  discharged: dict | None = None,
+                  discharged_sha: str | None = None) -> tuple[dict, str]:
     """★ F74 — 곡선 **계산**을 고정하는 서명 (8차 리뷰 발견 1).
 
     F70 의 `curves_manifest.yaml` 은 이미 존재하는 parquet 의 digest 와 호출자가
@@ -222,6 +224,13 @@ def grid_run_spec(cfg: dict, conditions: list[Condition]) -> tuple[dict, str]:
             "\n".join(cond_ids).encode()).hexdigest()[:16],
         "n_conditions_intended": len(cond_ids),
         "postprocess": cfg.get("postprocess"),
+        # ★ F82/9차 발견 1 — **완방상태가 곧 격자의 물리 기준점**이다. 모든 조건의
+        #   초기 농도가 여기서 나오므로, 이게 다르면 같은 (lli, lam_pe, lam_ne)
+        #   라도 다른 truth 다. 서명에 없으면 중단 후 캐시가 바뀐 채 resume 했을 때
+        #   **서로 다른 truth 의 행이 같은 서명 아래 섞인다** (리뷰 실측:
+        #   ROW_MEANS 6.0/3.0 혼재, ROW_SIGS 단일, VALIDATOR_OK=True).
+        "discharged_state": discharged,
+        "discharged_state_sha": discharged_sha,
         "source_digest": source_digest(),
         "env": env_fingerprint(),
     }
@@ -373,8 +382,11 @@ def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
     # ── 동시 실행 방지 (청크 덮어쓰기·집계 오염 차단) ──
     acquire_run_lock(out_dir)
 
-    # ── ★ F74: 실행 서명 + 시작 기록 + resume 가드 ──
-    g_spec, g_sig = grid_run_spec(cfg, conditions)
+    # ── ★ F74/F82: 실행 서명 + 시작 기록 + resume 가드 ──
+    from src.baseline import _cache_path as _dsp
+    from src.io import file_digest as _fd
+    g_spec, g_sig = grid_run_spec(cfg, conditions, discharged=d_dict,
+                                  discharged_sha=_fd(_dsp(cfg, None), full=True))
     start_rec = {"grid_run_sig": g_sig, "grid_run_spec": g_spec,
                  "started_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
                  "resume": bool(resume),
@@ -483,6 +495,13 @@ def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
         "grid_run_sig": g_sig,
         "source_digest_changed_during_run": bool(
             g_spec["source_digest"] != _sd()),
+        # ★ F83/9차 발견 4 — 의도한 조건집합이 **관측 ⊎ 실패**로 정확히 나뉘는지
+        #   검증기가 판정할 수 있게 실패 목록의 서명도 남긴다. 예전에는
+        #   n_curves 만 맞으면 통과해, 어려운 조건이 통째로 빠져도 검출되지 않았다
+        #   (리뷰 실측: INTENDED 3 / OBSERVED 2 / VALIDATOR_OK=True).
+        "failed_ids_sha256": hashlib.sha256(
+            "\n".join(sorted(load_failed(out_dir))).encode()).hexdigest()[:16],
+        "n_failed_total": n_failed_total,
     })
     log.info("grid 완료: ok=%d failed=%d (누적 곡선 %d) elapsed=%.1fs",
              n_ok, n_failed, n_done_total - n_failed_total, elapsed)

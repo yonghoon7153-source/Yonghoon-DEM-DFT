@@ -9,6 +9,7 @@
 from __future__ import annotations
 
 import json
+import math
 import logging
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -124,8 +125,23 @@ def get_discharged_state(
 
     if use_cache and not force and path.exists():
         data = json.loads(path.read_text(encoding="utf-8"))
+        # ★ F82/9차 발견 1 — 캐시가 **이 baseline 의 것인지** 읽기 전에 확인한다.
+        #   예전에는 파일 존재만 보고 그대로 신뢰해서, 다른 baseline 의 상태나
+        #   손상된 값이 그대로 격자 truth 의 기준이 됐다.
+        want = baseline_hash(cfg)
+        got = data.get("baseline_hash")
+        if got is not None and got != want:
+            raise RuntimeError(
+                f"완방상태 캐시가 다른 baseline 의 것입니다: {path}\n"
+                f"  캐시 {got} ≠ 현재 {want}. --force 로 다시 계산하세요 (F82).")
+        vals = {k: data.get(k) for k in ("ne_primary", "ne_secondary", "pe")}
+        bad = [k for k, v in vals.items()
+               if not isinstance(v, (int, float)) or not math.isfinite(v) or v < 0]
+        if bad:
+            raise RuntimeError(
+                f"완방상태 캐시의 {bad} 값이 유효하지 않습니다: {path} (F82)")
         log.info("완방상태 캐시 적중: %s", path)
-        return DischargedState(**{k: data[k] for k in ("ne_primary", "ne_secondary", "pe")})
+        return DischargedState(**vals)
 
     state = compute_discharged_state(cfg)
 

@@ -642,12 +642,21 @@ def validate_curves_provenance(curves_dir, repo_root=None) -> dict:
         want = spec.get("condition_ids_sha256")
         got = hashlib.sha256("\n".join(
             sorted(set(df["cond_id"].astype(str)))).encode()).hexdigest()[:16]
-        # infeasible 조건은 곡선이 없으므로 부분집합일 수 있다 — manifest 의
-        # 실측 곡선 수와 행 단위 조건 수가 맞는지로 완전성을 본다
+        n_obs = df["cond_id"].nunique()
         checks["곡선_조건수"] = (
-            man.get("n_curves") == df["cond_id"].nunique(),
-            f"manifest n_curves {man.get('n_curves')} ≠ 실제 {df['cond_id'].nunique()}")
-        checks["_참고_조건집합"] = (True, f"의도 {want} / 곡선 {got} (guard 제외분 차이 허용)")
+            man.get("n_curves") == n_obs,
+            f"manifest n_curves {man.get('n_curves')} ≠ 실제 {n_obs}")
+        # ★ F83/9차 발견 4 — 의도 = 관측 ⊎ 실패 **정확한 분할**을 강제한다.
+        #   예전에는 이 항목이 `_참고` 로만 남아, 어려운 조건이 통째로 빠지고
+        #   n_curves 를 맞춰 놓아도 통과했다 (INTENDED 3 / OBSERVED 2 / ok=True).
+        #   그러면 recovery·degeneracy 비율의 **모집단이 조용히 달라진다**.
+        n_int = spec.get("n_conditions_intended")
+        n_fail = man.get("n_failed_total")
+        checks["조건집합_분할"] = (
+            isinstance(n_int, int) and isinstance(n_fail, int)
+            and n_obs + n_fail == n_int,
+            f"의도 {n_int} ≠ 관측 {n_obs} + 실패 {n_fail} — 조건이 조용히 빠졌다")
+        checks["_참고_조건집합"] = (True, f"의도 {want} / 곡선 {got}")
 
     fail = [k for k, (ok, _) in checks.items() if not ok]
     return {"ok": not fail,
@@ -981,6 +990,28 @@ def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
                 n_bad == 0 and n_null == 0,
                 f"{n_bad}행이 형식 위반, {n_null}행이 비어 있다 "
                 f"(모든 원소가 p·J·i·source 를 가져야 한다)")
+            # ★ F86/9차 발견 7 — `adaptive=False` 는 "조기 종료 안 함"일 뿐,
+            #   개별 restart 가 예외로 실패하면 조용히 건너뛴다 (fitting.py 의
+            #   `except` → 다음 restart). 그러면 실제 index 가 [0,2,4] 처럼 줄어
+            #   **두 목적함수의 탐색 예산이 달라지고**, "fixed5" 라는 이름이
+            #   거짓이 된다. paired 진단의 전제가 여기서 무너진다.
+            _opt = spec0.get("optimizer") or {}
+            if _opt.get("adaptive") is False:
+                _n = int(_opt.get("n_restarts") or 0)
+                _want_idx = set(range(_n))
+                _short = 0
+                for v in need["restarts_json"]:
+                    try:
+                        rs = json.loads(v)
+                    except (ValueError, TypeError):
+                        _short += 1
+                        continue
+                    if {e.get("i") for e in rs} != _want_idx:
+                        _short += 1
+                checks["restart_예산_완주"] = (
+                    _short == 0 and _n > 0,
+                    f"{_short}행의 restart index 집합이 {sorted(_want_idx)}와 다르다 "
+                    f"— adaptive=False 인데 예산을 못 채웠다 (실패한 restart가 있다)")
 
     fail = [k for k, (ok, _) in checks.items() if not ok]
     # 통과한 검사에 실패 사유를 같이 실으면 전부 실패한 것처럼 읽힌다.

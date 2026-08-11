@@ -54,11 +54,17 @@ fi
 mkdir -p "$DEST"
 n_ok=0
 n_bad=0
+n_missing=0
+n_want=${#RUNS[@]}
 
 for run in "${RUNS[@]}"; do
   name="$(basename "$run")"
   if [[ ! -d "$run" ]]; then
-    printf '건너뜀 (없음): %s\n' "$run"
+    # ★ F89/9차 발견 10 — 기본 대상이 **전부 없어도** "검증 가능 0개, 불완전
+    #   0개" + exit 0 으로 끝났다. paired 나 producer 가 보관되지 않은 상태를
+    #   완료로 오인하게 된다. 요청한 artifact 가 없으면 실패다.
+    printf '없음 (보관 대상 누락): %s\n' "$run"
+    n_missing=$((n_missing+1))
     continue
   fi
   out="$DEST/$name"
@@ -120,8 +126,8 @@ PYEOF
   printf '  용량 %s\n' "$(du -sh "$out" | cut -f1)"
 done
 
-printf '\n검증 가능 %d개, 불완전 %d개, 합계 %s\n' \
-  "$n_ok" "$n_bad" "$(du -sh "$DEST" | cut -f1)"
+printf '\n요청 %d개 · 검증 가능 %d개 · 불완전 %d개 · 없음 %d개 · 합계 %s\n' \
+  "$n_want" "$n_ok" "$n_bad" "$n_missing" "$(du -sh "$DEST" | cut -f1)"
 cat <<'EOF'
 
 다음:
@@ -137,4 +143,4 @@ EOF
 
 # ★ F71/8-4 — 하나라도 불완전하면 nonzero. 조용히 성공하면 CI·스크립트가
 #   "보관됐다"고 믿는다.
-[[ "$n_bad" -eq 0 ]] || exit 1
+[[ "$n_bad" -eq 0 && "$n_missing" -eq 0 ]] || exit 1

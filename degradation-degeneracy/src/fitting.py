@@ -548,16 +548,16 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
             f"  곡선을 다시 생성하거나(./run.sh --mode grid ...), 옛 산출물이면 "
             f"인용 대상에서 제외하세요.")
     # ★ F74 — producer 를 **독립 검증**한다 (8차 발견 1). 자기기술 YAML 만으로는
-    #   수제 parquet 과 A/B config resume 혼합이 그대로 통과했다. 이제 spec 서명
-    #   재계산·행별 grid_run_sig·시작 기록·clean 여부까지 본다.
-    from src.io import validate_curves_provenance
-    _cv = validate_curves_provenance(in_dir)
-    if not _cv["ok"]:
-        raise RuntimeError(
-            "곡선 producer 검증 실패 — 이 곡선으로 fitting 할 수 없습니다 (F74):\n"
-            + "\n".join(f"  · {k}: {_cv['checks'][k]}" for k in _cv["fail"])
-            + "\n  곡선을 다시 생성하세요: ./run.sh --mode grid ...")
+    #   수제 parquet 과 A/B config resume 혼합이 그대로 통과했다.
+    #   ★ F85/9차 발견 2 — 검증은 **스냅샷을 뜬 뒤** 그 사본에 대해 한다.
+    #   live 입력을 먼저 검증하면, 검증 통과 후 seal 전에 입력이 갱신됐을 때
+    #   "검증한 것"과 "계산한 것"이 달라진다 (리뷰 실측: BEFORE_VALID=True,
+    #   AT_SEAL_VALID=False, FINAL_VALIDATOR_OK=True).
     _prod_start = in_dir / "curves_manifest_start.yaml"
+    if not _prod_start.exists():
+        raise RuntimeError(
+            f"곡선 시작 기록이 없습니다: {_prod_start}\n"
+            f"  F74 이전 산출물입니다. 곡선을 다시 생성하세요 (./run.sh --mode grid ...)")
 
     # ★ F74 — config 는 `extends` 로 부모를 재귀 로드한다. 최종 파일 하나만
     #   봉인하면 부모(base.yaml)를 바꿔도 통과한다 (8차 발견 3 반례:
@@ -634,6 +634,25 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     _prod_doc = yaml.safe_load(
         _snap[_ck(_prod)].read_text(encoding="utf-8")) or {}
     _prod_curves_sha = _prod_doc.get("curves_sha256")
+
+    # ★ F85 — 스냅샷 **사본**으로 producer 를 검증한다. 검증 대상과 계산 대상이
+    #   같은 바이트임이 구조적으로 보장된다.
+    from src.io import validate_curves_provenance
+    _pv_dir = out_dir / "_inputs" / "_producer_view"
+    _pv_dir.mkdir(parents=True, exist_ok=True)
+    for _src, _name in ((_snap[_ck(in_dir / "curves.parquet")], "curves.parquet"),
+                        (_snap[_ck(_prod)], "curves_manifest.yaml"),
+                        (_snap[_ck(_prod_start)], "curves_manifest_start.yaml")):
+        _dst = _pv_dir / _name
+        if not _dst.exists() or file_digest(_dst) != file_digest(_src):
+            import shutil as _sh
+            _sh.copy2(_src, _dst)
+    _cv = validate_curves_provenance(_pv_dir)
+    if not _cv["ok"]:
+        raise RuntimeError(
+            "곡선 producer 검증 실패 — 이 곡선으로 fitting 할 수 없습니다 (F74/F85):\n"
+            + "\n".join(f"  · {k}: {_cv['checks'][k]}" for k in _cv["fail"])
+            + "\n  곡선을 다시 생성하세요: ./run.sh --mode grid ...")
 
     ref = extract_reference(df)
     ref_x = ref["x_norm"].to_numpy()

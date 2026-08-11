@@ -281,9 +281,33 @@ def _flat_pairs(saved, now, path=""):
 
 
 def _numbers_equal(saved, now) -> bool:
-    """저장본과 재계산본의 숫자가 전부 일치하는가 (F77 stale 판정)."""
+    """저장본과 재계산본의 숫자가 전부 일치하는가 (F77 stale 판정).
+
+    ★ F87/9차 발견 8 — `_flat_pairs` 는 **저장본의 key 를 중심으로** 순회한다.
+    저장본이 빈 mapping 이면 비교할 쌍이 0개라 "일치"로 판정됐다. 표 숫자는
+    재계산본을 렌더하므로 직접 오염은 없지만, **저장본이 현재 fits 에 대응한다는
+    보장이 사라진다.** 양쪽 key 집합의 동일성을 먼저 본다.
+    """
     import math
 
+    def _keys(x, path=""):
+        out = set()
+        if isinstance(x, dict):
+            for k in x:
+                if isinstance(k, str) and (
+                        k.startswith("_") or k in ("provenance", "provenance_ok",
+                                                   "공통_run_spec", "figures")):
+                    continue
+                out.add(f"{path}.{k}")
+                out |= _keys(x[k], f"{path}.{k}")
+        elif isinstance(x, (list, tuple)):
+            out.add(f"{path}[len={len(x)}]")
+            for i, v in enumerate(x):
+                out |= _keys(v, f"{path}[{i}]")
+        return out
+
+    if _keys(saved) != _keys(now):
+        return False
     for a, b in _flat_pairs(saved, now):
         if a is None or b is None or isinstance(b, str):
             return False
@@ -336,7 +360,8 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
             # figures 는 계산 산출물이 아니라 그림 경로 목록 — 저장본에서만 온다
             if isinstance(saved_cmp, dict) and saved_cmp.get("figures"):
                 cmp_res["figures"] = saved_cmp["figures"]
-            if not _numbers_equal(saved_cmp, cmp_res):
+            if (in_dir / "objective_comparison.yaml").exists() \
+                    and not _numbers_equal(saved_cmp, cmp_res):
                 stale.append("objective_comparison.yaml")
         except Exception as e:  # noqa: BLE001
             cmp_res = saved_cmp
@@ -345,7 +370,10 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
             from src.scoring import run_scoring as _rs
             with tempfile.TemporaryDirectory() as _td:
                 summary = _rs(in_dir, out_dir=_td, tol=0.02)
-            if saved_summary and not _numbers_equal(saved_summary, summary):
+            # ★ F87 — `saved_summary` 가 빈 dict 면 falsy 라 **조건 자체를
+            #   건너뛰었다** — 발견 8 이 지적한 형태 그대로다. 파일 존재로 본다.
+            if (in_dir / "degeneracy_summary.yaml").exists() \
+                    and not _numbers_equal(saved_summary, summary):
                 stale.append("degeneracy_summary.yaml")
         except Exception as e:  # noqa: BLE001
             summary = saved_summary
@@ -366,6 +394,26 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
             except Exception as e:  # noqa: BLE001
                 stale.append(f"wsweep/weight_sweep.yaml (재계산 실패: {e})")
                 wsweep = None
+            # ★ F88/9차 발견 6 — sweep 은 **자기 provenance 를 갖는 실행**이다.
+            #   optimum 만 재계산하고 nested validator·metadata 대조를 안 하면,
+            #   보고서만으로 sweep 의 설정·표본 수·optimizer 조건을 확정할 수 없다.
+            from src.io import validate_provenance as _vp
+            _wv = _vp(in_dir / "wsweep")
+            if not _wv["ok"]:
+                stale.append(f"wsweep provenance ({_wv['fail'][:3]})")
+            _wman = _load(in_dir / "wsweep" / "manifest.yaml") or {}
+            _wspec = _wman.get("run_spec") or {}
+            _meta_bad = []
+            if saved_ws.get("n_restarts") != _wspec.get("n_restarts"):
+                _meta_bad.append("n_restarts")
+            _wopt = _wspec.get("optimizer") or {}
+            for k in ("method", "adaptive"):
+                if saved_ws.get(k) is not None and saved_ws.get(k) != _wopt.get(k):
+                    _meta_bad.append(k)
+            if saved_ws.get("n_conditions") != _wspec.get("n_conditions"):
+                _meta_bad.append("n_conditions")
+            if _meta_bad:
+                stale.append(f"wsweep metadata 불일치 ({_meta_bad})")
         elif saved_ws:
             stale.append("wsweep/weight_sweep.yaml (fits.parquet 없음 — 재계산 불가)")
             wsweep = None

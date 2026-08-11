@@ -428,6 +428,10 @@ def _tiny_curves(tmp_path, n=48, n_cond=3):
             "condition_ids_sha256": _hl.sha256(
                 "\n".join(cond_ids).encode()).hexdigest()[:16],
             "n_conditions_intended": len(cond_ids), "postprocess": None,
+            # ★ F82 — 완방상태가 격자의 물리 기준점이므로 서명에 들어간다
+            "discharged_state": {"ne_primary": 36.6, "ne_secondary": 3446.1,
+                                 "pe": 58439.9},
+            "discharged_state_sha": "0" * 64,
             "source_digest": source_digest(), "env": env_fingerprint()}
     sig = _hl.sha1(_json.dumps(spec, sort_keys=True, default=str)
                    .encode()).hexdigest()[:12]
@@ -440,7 +444,10 @@ def _tiny_curves(tmp_path, n=48, n_cond=3):
                           conditions=cond_ids,
                           extra={"solver": "test", "grid_run_spec": spec,
                                  "grid_run_sig": sig, "n_curves": len(cond_ids),
-                                 "source_digest_changed_during_run": False})
+                                 "source_digest_changed_during_run": False,
+                                 # ★ F83 — 의도 = 관측 ⊎ 실패 분할 (실패 0건)
+                                 "n_failed_total": 0,
+                                 "failed_ids_sha256": _hl.sha256(b"").hexdigest()[:16]})
     return tmp_path
 
 
@@ -1161,3 +1168,84 @@ def test_extends_parent_is_sealed(tmp_path):
         (cfgd / "parent.yaml").read_text(encoding="utf-8") + "\n# tampered\n",
         encoding="utf-8")
     assert "입력_digest_재해시" in validate_provenance(out)["fail"]
+
+
+def test_fixed_budget_requires_exact_restart_indices(tmp_path, monkeypatch):
+    """★ F86/9차 발견 7 — `--no-adaptive` 에서 restart 가 실패하면 예산을 못 채운다.
+
+    `adaptive=False` 는 "조기 종료 안 함"일 뿐이고, 개별 restart 가 예외를 내면
+    `fit()` 이 조용히 건너뛴다. 실제 index 가 `[0,2]` 처럼 줄어들면 두 목적함수의
+    탐색 예산이 달라져 **paired 진단의 전제 자체가 무너진다.** "fixed5" 라는
+    이름이 거짓이 되므로, validator 가 정확한 index 집합을 요구해야 한다.
+    """
+    import json
+
+    import pandas as pd
+    import yaml
+
+    import src.fitting as F
+    from src.io import fits_seal, validate_provenance
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    out = tmp_path / "o"
+    F.run_fit(in_dir, out, _obj_cfg_min(), {"aa": {"w_pocv": 1.0}},
+              _BOUNDS_MIN, "expanded", 3, nproc=1, adaptive=False)
+    assert validate_provenance(out)["checks"]["restart_예산_완주"] == "통과"
+
+    # 한 행의 restart 하나가 실패한 상황을 재현 (index 1 이 빠진다)
+    f = pd.read_parquet(out / "fits.parquet")
+    rs = json.loads(f.loc[f.index[0], "restarts_json"])
+    f.loc[f.index[0], "restarts_json"] = json.dumps(
+        [e for e in rs if e["i"] != 1])
+    f.to_parquet(out / "fits.parquet", index=False)
+    m = yaml.safe_load((out / "manifest.yaml").read_text(encoding="utf-8"))
+    m["fits_seal"] = fits_seal(out / "fits.parquet")
+    (out / "manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+
+    v = validate_provenance(out)
+    assert "restart_예산_완주" in v["fail"], v["checks"]
+
+
+def test_discharged_state_is_in_grid_signature(tmp_path):
+    """★ F82/9차 발견 1 — 완방상태가 서명에 들어가야 한다.
+
+    반례: chunk 저장 후 discharged-state 를 바꿔 resume 하면 서로 다른 truth 의
+    행이 **같은 grid 서명** 아래 들어갔다 (ROW_MEANS 6.0/3.0 혼재, ROW_SIGS 단일,
+    SPEC_HAS_DISCHARGED=False, VALIDATOR_OK=True).
+    """
+    from src.grid import Condition, grid_run_spec
+
+    cfg = {"_loaded_files": [], "parameter_set": "x", "postprocess": {},
+           "grid": {"noise_seed": 42}}
+    conds = [Condition(0.0, 0.0, 0.0, "de", "de", 0.0, 1)]
+    a_spec, a_sig = grid_run_spec(cfg, conds,
+                                  discharged={"ne_primary": 1.0}, discharged_sha="a")
+    b_spec, b_sig = grid_run_spec(cfg, conds,
+                                  discharged={"ne_primary": 2.0}, discharged_sha="b")
+    assert a_spec["discharged_state"] != b_spec["discharged_state"]
+    assert a_sig != b_sig, "완방상태가 다른데 grid 서명이 같다 (F82)"
+
+
+def test_discharged_cache_rejects_foreign_baseline(tmp_path):
+    """★ F82 — 다른 baseline 의 완방상태 캐시를 그대로 쓰면 안 된다."""
+    import json
+
+    import pytest
+
+    from src.baseline import _cache_path, get_discharged_state
+    from src.config import load_config
+
+    cfg = load_config("configs/base.yaml")
+    cache = _cache_path(cfg, tmp_path)
+    cache.parent.mkdir(parents=True, exist_ok=True)
+    cache.write_text(json.dumps(
+        {"ne_primary": 1.0, "ne_secondary": 2.0, "pe": 3.0,
+         "baseline_hash": "다른baseline"}), encoding="utf-8")
+    with pytest.raises(RuntimeError, match="다른 baseline"):
+        get_discharged_state(cfg, cache_dir=tmp_path)
+
+    # 비유한·음수 값도 거부
+    cache.write_text(json.dumps(
+        {"ne_primary": -1.0, "ne_secondary": 2.0, "pe": 3.0}), encoding="utf-8")
+    with pytest.raises(RuntimeError, match="유효하지 않"):
+        get_discharged_state(cfg, cache_dir=tmp_path)

@@ -102,6 +102,12 @@ def compare(grid_fits: Path, halfcell_fits: Path, tol: float = 0.02) -> dict:
                   ("optimizer", "optimizer 정책"),
                   ("base_config_sha", "base config"),
                   ("inventory", "inventory 상수"),
+                  # ★ F84/9차 발견 5 — objective **전처리** 설정. dQ/dV window 를
+                  #   7 과 11 로 달리한 두 fit 이 각각 validator 를 통과하고 case
+                  #   비교도 통과했다. 그러면 결론 3 의 차이가 기준 곡선이 아니라
+                  #   전처리 차이일 수 있다.
+                  ("obj_cfg", "objective 전처리 설정"),
+                  ("source_digest", "코드 identity"),
                   ("env", "실행 환경"),
                   ("condition_ids_sha256", "조건 집합"))
     #: reference 에 따라 달라야 정상인 것 — 단 그 사실이 인과 문구를 제한한다

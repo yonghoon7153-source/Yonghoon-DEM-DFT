@@ -316,7 +316,9 @@ def test_results_doc_leads_with_gap_collapse(tmp_path):
     df = pd.concat([_gap_fits(collapse=True), _fits(objectives=("pocv_dvdq",))],
                    ignore_index=True)
     _scored(df).to_parquet(d / "degeneracy_map.parquet", index=False)
-    (d / "degeneracy_summary.yaml").write_text(yaml.safe_dump({}), encoding="utf-8")
+    # ★ F87 — 빈 placeholder 를 쓰지 않는다. "존재하지만 내용 없음"은 이제
+    #   stale 로 잡히며, 그게 옳다 (저장본이 현재 fits 에 대응하지 않는다).
+    #   필요한 테스트는 run_scoring 을 직접 부른다.
 
     run_compare(d, d)
     text = build(d, tmp_path / "RESULTS.md", repo_root=tmp_path).read_text(encoding="utf-8")
@@ -352,7 +354,9 @@ def test_results_doc_conclusion_follows_the_number(tmp_path):
     df = pd.concat([_gap_fits(collapse=False), _fits(objectives=("pocv_dvdq",))],
                    ignore_index=True)
     _scored(df).to_parquet(d / "degeneracy_map.parquet", index=False)
-    (d / "degeneracy_summary.yaml").write_text(yaml.safe_dump({}), encoding="utf-8")
+    # ★ F87 — 빈 placeholder 를 쓰지 않는다. "존재하지만 내용 없음"은 이제
+    #   stale 로 잡히며, 그게 옳다 (저장본이 현재 fits 에 대응하지 않는다).
+    #   필요한 테스트는 run_scoring 을 직접 부른다.
 
     run_compare(d, d)
     text = build(d, tmp_path / "RESULTS.md", repo_root=tmp_path).read_text(encoding="utf-8")
@@ -658,7 +662,9 @@ def test_threshold_caveat_always_in_conclusion(tmp_path):
     df = pd.concat([_gap_fits(collapse=False), _fits(objectives=("pocv_dvdq",))],
                    ignore_index=True)
     _scored(df).to_parquet(d / "degeneracy_map.parquet", index=False)
-    (d / "degeneracy_summary.yaml").write_text(yaml.safe_dump({}), encoding="utf-8")
+    # ★ F87 — 빈 placeholder 를 쓰지 않는다. "존재하지만 내용 없음"은 이제
+    #   stale 로 잡히며, 그게 옳다 (저장본이 현재 fits 에 대응하지 않는다).
+    #   필요한 테스트는 run_scoring 을 직접 부른다.
 
     run_compare(d, d)
     text = build(d, tmp_path / "R.md", repo_root=tmp_path).read_text(encoding="utf-8")
@@ -740,7 +746,9 @@ def test_antisym_and_population_caveats_ride_with_conclusion_1(tmp_path):
     d.mkdir()
     df = _fits(objectives=("pocv_dvdq", "pocv_dvdq_dqdv"))
     _scored(df).to_parquet(d / "degeneracy_map.parquet", index=False)
-    (d / "degeneracy_summary.yaml").write_text(yaml.safe_dump({}), encoding="utf-8")
+    # ★ F87 — 빈 placeholder 를 쓰지 않는다. "존재하지만 내용 없음"은 이제
+    #   stale 로 잡히며, 그게 옳다 (저장본이 현재 fits 에 대응하지 않는다).
+    #   필요한 테스트는 run_scoring 을 직접 부른다.
 
     run_compare(d, d)
     text = build(d, tmp_path / "RESULTS.md", repo_root=tmp_path).read_text(encoding="utf-8")
@@ -763,7 +771,9 @@ def test_results_doc_carries_citation_block_without_provenance(tmp_path):
     d.mkdir()
     _scored(_fits(objectives=("pocv_dvdq",))).to_parquet(
         d / "degeneracy_map.parquet", index=False)
-    (d / "degeneracy_summary.yaml").write_text(yaml.safe_dump({}), encoding="utf-8")
+    # ★ F87 — 빈 placeholder 를 쓰지 않는다. "존재하지만 내용 없음"은 이제
+    #   stale 로 잡히며, 그게 옳다 (저장본이 현재 fits 에 대응하지 않는다).
+    #   필요한 테스트는 run_scoring 을 직접 부른다.
     (d / "manifest.yaml").write_text(
         yaml.safe_dump({"config_hash": "", "git_dirty": True, "reproducible": False}),
         encoding="utf-8")
@@ -869,7 +879,9 @@ def _complete_artifact(tmp_path, repo_root=None, objectives=("pocv_dvdq",)):
     # ★ F72 — 계산은 봉인한 바이트(스냅샷)만 읽는다. fixture 도 실제로 떠 둔다.
     from src.io import snapshot_inputs
     snapshot_inputs(sealed, d, repo_root=repo_root)
-    (d / "degeneracy_summary.yaml").write_text(yaml.safe_dump({}), encoding="utf-8")
+    # ★ F87 — 빈 placeholder 를 쓰지 않는다. "존재하지만 내용 없음"은 이제
+    #   stale 로 잡히며, 그게 옳다 (저장본이 현재 fits 에 대응하지 않는다).
+    #   필요한 테스트는 run_scoring 을 직접 부른다.
     (d / "manifest.yaml").write_text(yaml.safe_dump({
         "config_hash": "deadbeef1234", "git_dirty": False, "reproducible": True,
         "run_signature": sig, "run_spec": spec,
@@ -1870,9 +1882,10 @@ def test_restore_refuses_tampered_bundle(tmp_path):
     out = tmp_path / "art"
     bundle(d, out)
 
-    y = yaml.safe_load((out / "degeneracy_summary.yaml").read_text(encoding="utf-8")) or {}
+    y = yaml.safe_load(
+        (out / "curves_manifest.yaml").read_text(encoding="utf-8")) or {}
     y["tampered"] = 123
-    (out / "degeneracy_summary.yaml").write_text(yaml.safe_dump(y), encoding="utf-8")
+    (out / "curves_manifest.yaml").write_text(yaml.safe_dump(y), encoding="utf-8")
 
     res = restore(out, run_dir=tmp_path / "dest", repo_root=tmp_path)
     assert res["ok"] is False
@@ -1935,3 +1948,30 @@ def test_grid_producer_bundle_uses_producer_schema(tmp_path):
     assert check(out)["ok"], check(out)["missing"]
     assert (out / "curves.parquet").is_file()
     assert (out / "curves_manifest_start.yaml").is_file()
+
+
+def test_empty_saved_yaml_is_stale(tmp_path):
+    """★ F87/9차 발견 8 — 저장본이 빈 mapping 이면 stale 로 잡아야 한다.
+
+    `_flat_pairs` 는 저장본 key 를 중심으로 순회하므로 빈 문서는 비교할 쌍이
+    0개가 되어 "일치"로 판정됐다. 표 숫자는 재계산본을 렌더하니 직접 오염은
+    없지만, 저장본이 현재 fits 에 대응한다는 보장이 사라진다.
+    """
+    import yaml
+
+    from src.scoring import run_scoring
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d, _ = _complete_artifact(tmp_path)
+    run_compare(d, d)
+    run_scoring(d)
+    assert "인용 금지" not in build(
+        d, tmp_path / "R0.md", repo_root=tmp_path).read_text(encoding="utf-8")[:600]
+
+    # 저장본만 빈 mapping 으로 바꾼다 — 예전에는 falsy 라 조건 자체를 건너뛰어
+    # "일치"로 판정됐다
+    (d / "degeneracy_summary.yaml").write_text(yaml.safe_dump({}), encoding="utf-8")
+    out = build(d, tmp_path / "R1.md", repo_root=tmp_path).read_text(encoding="utf-8")
+    assert "파생_stale_degeneracy_summary.yaml" in out
+    assert "인용 금지" in out[:600]
