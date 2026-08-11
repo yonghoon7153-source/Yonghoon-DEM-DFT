@@ -317,10 +317,19 @@ def discover_pairs(run_dir: Path, audit: Optional[Dict[str, Any]] = None
             d = str(r.get("down_dir"))
             key = str(r.get("site")) + ("" if r.get("ranking_eligible") else "(부적격)")
             seen.setdefault(d, {})[key] = seen.setdefault(d, {}).get(key, 0) + 1
+        why: Dict[str, Dict[str, int]] = {}
+        for r in rows:
+            if r.get("ranking_eligible"):
+                continue
+            d = str(r.get("down_dir"))
+            for g in (r.get("gate_reasons") or ["(사유 미기록)"]):
+                why.setdefault(d, {})[str(g)] = why.setdefault(d, {}).get(str(g), 0) + 1
         audit["n_down_dirs"] = len(seen)
         audit["n_contrast_pairs"] = len(out)
         audit["excluded_dirs"] = {d: c for d, c in sorted(seen.items())
                                   if d not in by_dir}
+        # ★ 사유를 같이 남긴다 — 없으면 "왜 빠졌나" 를 볼 때마다 진단을 다시 돌려야 한다
+        audit["excluded_reasons"] = {d: why[d] for d in audit["excluded_dirs"] if d in why}
         audit["note"] = ("제외된 방향은 Li_top↔Ni_top 대조쌍이 없는 것이다 — 자리 종류를 "
                          "훑은 방향이거나(O_top·hollow·*_bridge) 한쪽이 부적격인 경우다. "
                          "누락이 아니라 대조쌍 정의 밖이다.")
@@ -1117,10 +1126,15 @@ def main():
             "note": ("PBE+U(6.2)+D3-zero fixed-protocol tendency — UMA 값과 같은 표 금지. "
                      "δ=%.3f eV." % delta)}
         if lost:
+            wr = aud.get("excluded_reasons") or {}
+            why = "; ".join(f"{d}: {', '.join(sorted(wr.get(d, {})))}" for d in sorted(lost))
+            results["fragments"][frag]["disqualified_reasons"] = \
+                {d: wr.get(d, {}) for d in lost}
             results["warnings"].append(
                 f"{frag}: down_dir {nd}개 중 {len(lost)}개가 **번들 이전에** 탈락했다 "
-                f"({', '.join(sorted(lost))}) — 계획 {n_planned}개는 이미 줄어든 수다. "
-                f"탈락 사유가 물리적으로 정당한지 확인하고 원고에 방향 수를 명시할 것")
+                f"— 계획 {n_planned}개는 이미 줄어든 수다. 사유: {why}. "
+                f"원고에는 '{nd}방향 중 {n_planned}방향 판정'과 그 사유를 함께 쓸 것 "
+                f"(CAP_ARTIFACT 는 조각 모델의 한계지 데이터 부족이 아니다)")
 
     # ── 필수 완결성 — static + **계획된 dense** 까지 (Codex P0-D) ────────────
     missing = []
