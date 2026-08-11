@@ -16,6 +16,7 @@ import os
 import platform
 import subprocess
 import time
+from collections import Counter
 from pathlib import Path
 
 import pandas as pd
@@ -157,8 +158,12 @@ def seal_inputs(paths, repo_root=None) -> dict:
             for x in paths if x is not None}
 
 
-def file_digest(path) -> str | None:
-    """입력 파일의 SHA-256 (앞 16자). 재현성 검증용. 없으면 None."""
+def file_digest(path, full: bool = False) -> str | None:
+    """파일의 SHA-256. 기본은 앞 16자 (재현성 검증용). 없으면 None.
+
+    `full=True` 는 출력 봉인용이다 (F68) — 인용되는 숫자를 지키는 값이므로
+    절단하지 않는다.
+    """
     if path is None:
         return None
     p = Path(path)
@@ -168,7 +173,7 @@ def file_digest(path) -> str | None:
     with open(p, "rb") as f:
         for blk in iter(lambda: f.read(1 << 20), b""):
             h.update(blk)
-    return h.hexdigest()[:16]
+    return h.hexdigest() if full else h.hexdigest()[:16]
 
 
 def save_chunk(df: pd.DataFrame, out_dir: str | Path, chunk_idx: int,
@@ -415,6 +420,56 @@ def _restart_ok(e) -> bool:
     return s_ in _RESTART_SOURCES
 
 
+def _sha256_lines(items) -> str:
+    return hashlib.sha256("\n".join(items).encode()).hexdigest()
+
+
+def fits_seal(fits_path, cond_ids=None, objective_order=None) -> dict:
+    """★ F68 — 출력 자체를 봉인한다.
+
+    여섯 라운드 동안 "인용 가능성"을 판정하는 장치를 강화하면서, 정작 인용되는
+    **숫자는 한 번도 검사하지 않았다.** validator 가 fits 에서 읽는 열은
+    `run_sig` 와 `restarts_json` 둘뿐이었다. 그래서 리뷰가 실제로 재현해 보인
+    조작들이 전부 `ok=True` 였다 — 값 변조(`lam_pe_hat=0.999`), 열 전체 이동
+    (`+0.5`), 행 삭제(3조건 → 1조건).
+
+    봉인 내용:
+      file_sha256   파일 전체. 한 바이트라도 바뀌면 깨진다
+      n_rows        행 삭제/추가를 잡는다
+      key_sha256    (cond_id, objective) 정렬 키 집합
+      cond_sha256   조건 집합 — run_spec.condition_ids_sha256 과 대조된다
+      n_conditions / n_objectives
+
+    `cond_ids`·`objective_order` 를 주면 **완전성**도 같이 계산한다: 기대 격자
+    (조건 × 목적함수)에 대해 missing/extra/duplicated 를 돌려준다. 이 셋이
+    비어 있지 않은 채로 봉인하면 분모가 조용히 달라진다.
+    """
+    import pandas as pd
+
+    fp = Path(fits_path)
+    df = pd.read_parquet(fp, columns=["cond_id", "objective"])
+    keys = [f"{c}|{o}" for c, o in zip(df["cond_id"].astype(str),
+                                       df["objective"].astype(str))]
+    conds = sorted(set(df["cond_id"].astype(str)))
+    objs = sorted(set(df["objective"].astype(str)))
+    seen = Counter(keys)
+    out = {
+        "file_sha256": file_digest(fp, full=True),
+        "n_rows": int(len(df)),
+        "key_sha256": _sha256_lines(sorted(keys)),
+        "cond_sha256": _sha256_lines(conds)[:16],
+        "n_conditions": len(conds),
+        "n_objectives": len(objs),
+        "objectives": objs,
+    }
+    if cond_ids is not None and objective_order is not None:
+        want = {f"{c}|{o}" for c in cond_ids for o in objective_order}
+        out["missing"] = sorted(want - set(keys))
+        out["extra"] = sorted(set(keys) - want)
+        out["duplicated"] = sorted(k for k, n in seen.items() if n > 1)
+    return out
+
+
 def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
     """★ F38/F43 — 결과를 인용해도 되는 상태인지 **실제로** 검사한다.
 
@@ -584,6 +639,41 @@ def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
     if not fp.exists():
         checks["fits_존재"] = (False, "fits.parquet이 없다")
     else:
+        # ── ★ F68 — 출력 봉인 재계산 ──
+        #   지금까지 validator 가 fits 에서 읽은 열은 `run_sig` 와 `restarts_json`
+        #   둘뿐이었다. 그래서 `lam_pe_hat = 0.999` 로 바꾸거나 열 전체에 `+0.5`
+        #   를 하거나 조건 행을 지워도 전부 `ok=True` 였다. 파일을 다시 해시하고
+        #   키 집합·행 수·완전성을 **기록이 아니라 실물에서** 다시 계산한다.
+        rec = man.get("fits_seal") or {}
+        if not rec:
+            checks["출력봉인_기록"] = (False, "manifest에 fits_seal이 없다 (F68 이전 산출물)")
+        else:
+            try:
+                now = fits_seal(fp, cond_ids=None, objective_order=None)
+            except Exception as e:  # noqa: BLE001
+                now = {}
+                checks["출력봉인_재계산"] = (False, f"fits를 읽지 못했다: {e}")
+            if now:
+                bad = [k for k in ("file_sha256", "n_rows", "key_sha256",
+                                   "cond_sha256", "n_conditions", "n_objectives")
+                       if rec.get(k) != now.get(k)]
+                checks["출력봉인_재계산"] = (
+                    not bad,
+                    "; ".join(f"{k}: 기록 {rec.get(k)} vs 실제 {now.get(k)}"
+                              for k in bad[:3]))
+                # 조건 집합이 **서명된 것과 같은가** — 행을 지우면 여기서 걸린다
+                checks["조건집합_서명일치"] = (
+                    now.get("cond_sha256") == spec0.get("condition_ids_sha256"),
+                    f"fits의 조건 집합 {now.get('cond_sha256')}가 "
+                    f"run_spec.condition_ids_sha256 {spec0.get('condition_ids_sha256')}와 다르다")
+                # (조건 × 목적함수) 격자가 빠짐없이 채워졌는가
+                _order = spec0.get("objective_order") or []
+                exp = int(spec0.get("n_conditions") or 0) * len(_order)
+                checks["출력_완전성"] = (
+                    bool(exp) and now.get("n_rows") == exp
+                    and sorted(now.get("objectives") or []) == sorted(_order),
+                    f"행이 {now.get('n_rows')}개다 "
+                    f"(조건 {spec0.get('n_conditions')} × 목적함수 {len(_order)} = {exp} 필요)")
         cols = list(pd.read_parquet(fp).columns)
         want = [c for c in ("run_sig", "restarts_json") if c in cols]
         need = pd.read_parquet(fp, columns=want) if want else pd.DataFrame()

@@ -804,6 +804,11 @@ def _complete_artifact(tmp_path):
     cfg.write_text("dummy: 1\n", encoding="utf-8")
 
     sealed = seal_inputs([curves, cfg])          # F56: 한 번만 봉인
+    # ★ F68 — 조건 집합 서명은 **실제 fits 의 조건**에서 나와야 한다.
+    #   하드코딩하면 그 자체가 위조 통로가 된다.
+    from src.io import _sha256_lines
+    _df0 = _fits(objectives=("pocv_dvdq",))
+    _conds = sorted(set(_df0["cond_id"].astype(str)))
     src = source_digest()
     env = env_fingerprint()
     attempt_id = "20260807T000000_1_000"
@@ -811,8 +816,8 @@ def _complete_artifact(tmp_path):
     spec = {"sig_version": 5, "objectives": {"pocv_dvdq": {"w_pocv": 1.0}},
             # ★ F67 — 계산을 고정하는 축들. 설정만으론 부족하다.
             "objective_order": ["pocv_dvdq"],
-            "condition_ids_sha256": hashlib.sha256(b"c0\nc1\nc2").hexdigest()[:16],
-            "n_conditions": 3, "selection": "full",
+            "condition_ids_sha256": _sha256_lines(_conds)[:16],
+            "n_conditions": len(_conds), "selection": "full",
             "optimizer": {"method": "Nelder-Mead", "adaptive": True,
                           "n_restarts": 5, "agree_tol": 1e-3,
                           "seed_scheme": "sha1(cond_id)[:8]"},
@@ -841,12 +846,16 @@ def _complete_artifact(tmp_path):
         d / "degeneracy_map.parquet", index=False)
     # fits.parquet 은 **채점 전** 원본이어야 한다 — 채점 열이 이미 있으면
     # 하류의 apply_bias_correction 이 merge 충돌로 죽는다
-    df = _fits(objectives=("pocv_dvdq",)).copy()
+    df = _df0.copy()
     df["run_sig"] = sig
     df["restarts_json"] = json.dumps(
         [{"p": [1.0, 0.0, 1.0, 0.0], "J": 0.0, "i": 0, "source": "base_init"},
          {"p": [1.1, 0.0, 1.1, 0.0], "J": 0.5, "i": 1, "source": "random"}])
     df.to_parquet(d / "fits.parquet", index=False)
+    # ★ F68 — 출력 봉인. fixture 도 실제 파일에서 계산해야 한다 (가짜 값을 넣으면
+    #   validator 가 다시 잡는다 — 지금까지 이 fixture 가 계속 그 역할을 했다).
+    from src.io import fits_seal
+    _seal = fits_seal(d / "fits.parquet")
     (d / "degeneracy_summary.yaml").write_text(yaml.safe_dump({}), encoding="utf-8")
     (d / "manifest.yaml").write_text(yaml.safe_dump({
         "config_hash": "deadbeef1234", "git_dirty": False, "reproducible": True,
@@ -856,6 +865,7 @@ def _complete_artifact(tmp_path):
         "source_digest_changed_during_run": False,
         "inputs_changed_during_run": False,
         "input_sha256": sealed, "input_sha256_source": "sealed_at_start",
+        "fits_seal": _seal,
     }), encoding="utf-8")
     return d, sig
 
@@ -1209,3 +1219,89 @@ def test_archive_bundle_check_catches_missing_start_files(tmp_path):
     shutil.rmtree(out / "attempts")
     res = check(out)
     assert not res["ok"] and any("attempts/" in m for m in res["missing"]), res
+
+
+# ─────────────────────────────────────────────── F68: 출력 봉인 (7차 게이트 리뷰)
+#  리뷰가 **실제로 재현해 보인** 조작들이다. 여섯 라운드 동안 "인용 가능성"을
+#  판정하는 장치를 강화하면서, 정작 인용되는 숫자는 한 번도 검사하지 않았다.
+
+def test_validator_rejects_tampered_fit_values(tmp_path):
+    """★ F68 — 복원값을 바꾸면 잡아야 한다.
+
+    반례: `lam_pe_hat = 0.999`, `lli_hat = -0.777`, `J = 12345` 로 바꿔도
+    `validator.ok = True`, `fail = []` 였다. LAM/LLI 복원값과 degeneracy 분류를
+    직접 바꿀 수 있으므로 결론 1~3의 **모든 정량값**을 바꿀 수 있다.
+    """
+    import pandas as pd
+
+    from src.io import validate_provenance
+
+    d, _ = _complete_artifact(tmp_path)
+    assert validate_provenance(d)["ok"], validate_provenance(d)["fail"]
+
+    f = pd.read_parquet(d / "fits.parquet")
+    f.loc[f.index[0], "lam_pe_hat"] = 0.999
+    f.loc[f.index[0], "lli_hat"] = -0.777
+    f.to_parquet(d / "fits.parquet", index=False)
+    v = validate_provenance(d)
+    assert not v["ok"] and "출력봉인_재계산" in v["fail"], v["checks"]
+
+
+def test_validator_rejects_column_wide_shift(tmp_path):
+    """★ F68 — 한 열 전체에 상수를 더하는 조작 (반례: `lam_pe_hat += 0.5`)."""
+    import pandas as pd
+
+    from src.io import validate_provenance
+
+    d, _ = _complete_artifact(tmp_path)
+    f = pd.read_parquet(d / "fits.parquet")
+    f["lam_pe_hat"] = f["lam_pe_hat"] + 0.5
+    f.to_parquet(d / "fits.parquet", index=False)
+    assert "출력봉인_재계산" in validate_provenance(d)["fail"]
+
+
+def test_validator_rejects_deleted_condition_rows(tmp_path):
+    """★ F68 — 행을 지우면 분모가 조용히 달라진다.
+
+    반례: `manifest.n_conditions = 3` 인데 fits 에서 두 조건을 지워 한 조건만
+    남겨도 통과했다. 조건 subset/union 이 바뀌어도 같은 서명을 재사용할 수 있어
+    결론 2의 분모와 sweep 최적값이 바뀔 수 있었다.
+    """
+    import pandas as pd
+
+    from src.io import validate_provenance
+
+    d, _ = _complete_artifact(tmp_path)
+    f = pd.read_parquet(d / "fits.parquet")
+    keep = sorted(set(f["cond_id"]))[:2]
+    f[f["cond_id"].isin(keep)].to_parquet(d / "fits.parquet", index=False)
+    v = validate_provenance(d)
+    for k in ("출력봉인_재계산", "조건집합_서명일치", "출력_완전성"):
+        assert k in v["fail"], f"{k}가 통과했다: {v['checks'][k]}"
+
+
+def test_validator_rejects_forged_seal_record(tmp_path):
+    """★ F68 — 봉인 **기록**을 파일에 맞춰 고쳐도 서명과 어긋나면 잡는다.
+
+    조작자가 fits 를 바꾸고 `fits_seal` 도 다시 계산해 넣으면 재계산 검사는
+    통과한다. 그러나 `condition_ids_sha256` 은 `run_spec` 안에 있고 그건
+    `run_signature` 로 해시돼 있으므로, 조건을 지우면 여기서 걸린다.
+    """
+    import pandas as pd
+    import yaml
+
+    from src.io import fits_seal, validate_provenance
+
+    d, _ = _complete_artifact(tmp_path)
+    f = pd.read_parquet(d / "fits.parquet")
+    keep = sorted(set(f["cond_id"]))[:2]
+    f[f["cond_id"].isin(keep)].to_parquet(d / "fits.parquet", index=False)
+
+    m = yaml.safe_load((d / "manifest.yaml").read_text(encoding="utf-8"))
+    m["fits_seal"] = fits_seal(d / "fits.parquet")       # 기록을 파일에 맞춘다
+    (d / "manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+
+    v = validate_provenance(d)
+    assert "출력봉인_재계산" not in v["fail"]          # 기록은 맞췄으니 통과
+    assert "조건집합_서명일치" in v["fail"], "서명된 조건 집합과의 대조가 없다"
+    assert "출력_완전성" in v["fail"]

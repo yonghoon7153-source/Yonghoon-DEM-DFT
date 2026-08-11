@@ -859,6 +859,24 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
             f"다른 설정의 결과가 섞였거나 옛 형식입니다. "
             f"{out_dir}/fit_chunks 를 비우고 처음부터 다시 돌리세요 (F36).")
 
+    # ★ F68 — **출력을 봉인한다.** 지금까지 여섯 라운드 동안 "인용 가능성"을
+    #   판정하는 장치를 만들면서, 정작 인용되는 **숫자 자체는 한 번도 검사하지
+    #   않았다.** validator 가 fits 에서 읽는 열은 `run_sig` 와 `restarts_json`
+    #   둘뿐이었다. 그래서 리뷰가 실제로 재현해 보인 것들이 전부 통과했다:
+    #     · `lam_pe_hat = 0.999`, `lli_hat = -0.777`, `J = 12345` 로 바꿔도 ok
+    #     · `lam_pe_hat` 전체에 `+0.5` 를 해도 ok
+    #     · `n_conditions = 3` 인데 fits 에서 두 조건을 지워도 ok
+    #   파일 전체를 해시하고, 행 수와 (조건 × 목적함수) 완전성까지 봉인한다.
+    from src.io import fits_seal
+    seal = fits_seal(path, cond_ids=_cond_ids, objective_order=list(objectives))
+    if seal["missing"] or seal["extra"] or seal["duplicated"]:
+        raise RuntimeError(
+            f"fits 가 (조건 × 목적함수) 격자를 채우지 못했습니다 — "
+            f"누락 {len(seal['missing'])}, 잉여 {len(seal['extra'])}, "
+            f"중복 {len(seal['duplicated'])} "
+            f"(예: {(seal['missing'] or seal['extra'] or seal['duplicated'])[:3]}). "
+            f"불완전한 결과를 봉인하면 분모가 조용히 달라집니다 (F68).")
+
     # F30: config_hash를 비워 두면 어떤 목적함수 정의로 돌았는지 남지 않는다.
     #   실제 obj_cfg 내용을 해시해 박고, 입력 curves와 config 파일의 SHA도 남긴다.
     cfg_h = hashlib.sha1(json.dumps(obj_cfg, sort_keys=True, default=str)
@@ -885,6 +903,8 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
         "p_ini": p_ini, "warm_start": warm_start,
         "q_ref_mah": q_ref, "lli_inventory_constants": inv, "elapsed_s": round(elapsed, 1),
         "fits_parquet": str(path),
+        "fits_seal": {k: v for k, v in seal.items()
+                      if k not in ("missing", "extra", "duplicated")},   # F68
     }))
     log.info("fitting 완료: %d행, %.1fs → %s", len(fits), elapsed, path)
     return {"n_rows": len(fits), "n_conditions": len(tasks),
