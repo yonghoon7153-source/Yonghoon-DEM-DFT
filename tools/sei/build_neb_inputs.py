@@ -39,6 +39,9 @@ import sys
 
 import numpy as np
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import electronic_class as EC          # noqa: E402  (금속/절연체 단일 출처)
+
 WORK = os.environ.get("WORK", "/data/work/runs/sei_neb")
 # 갭 계산과 **같은 사양**을 쓴다 — 다른 축과 섞어 쓸 수 있어야 한다
 ECUTWFC, ECUTRHO = 60.0, 480.0
@@ -51,6 +54,9 @@ TARGETS = {                       # tag → (구조 파일, 표시명)
     "licl":    ("db/structures/sei_licl_mp-22905.vasp", "LiCl"),
     # lindo2 는 Nd PP 가 frozen-4f 일 때만 열린다 (아래 게이트, todo #27)
     "lindo2":  ("db/structures/sei_lindo2_mp-1222355.vasp", "LiNdO2"),
+    # 2026-08-11 — Xu 2026 의 "Li–Nd alloy 계면상" 주장을 우리가 직접 잰다.
+    # ⚠ **금속**이라 전하 규약이 다르다 (아래 electronic_class 분기). 같은 Nd PP 게이트를 탄다.
+    "li3nd":   ("db/structures/sei_li3nd_mp-976264.vasp", "Li3Nd"),
 }
 DFT_WORK = "/data/work/runs/sei_dft"      # run_sei_dft.sh 의 vc-relax 산출물 (이완본 출처)
 
@@ -253,6 +259,13 @@ def protocol_hash(tag, a, q, kpts, nat, cell) -> str:
 
 def build(tag, path, disp, a, pool):
     from ase.io import read
+    # ★★ 2026-08-11 — **금속/절연체 분기가 제일 먼저다.** 전하 규약·smearing·회수기
+    #   차단이 전부 여기서 갈린다. 미등록 상은 추측하지 않고 막는다 (Li₃Nd 함정의 입구).
+    ecls = EC.get(tag)
+    why_blocked = EC.blocked_reason(tag)
+    if why_blocked and not a.ignore_electronic_class:
+        return {"tag": tag, "skip": f"electronic_class 게이트 — {why_blocked}"}
+    is_metal = ecls.get("class") == "metal"
     # ── 이완본 출발 (기본). --allow_unrelaxed 는 계획/디버그 전용 탈출구다 ──────
     relaxed_out = None
     if a.allow_unrelaxed:

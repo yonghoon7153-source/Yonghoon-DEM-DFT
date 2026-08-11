@@ -49,6 +49,11 @@ DEVICE=${DEVICE:-cuda}
 PY=${PY:-python3}
 test -f "$V0XYZ" || { echo "⛔ 없음: $V0XYZ — git pull 먼저"; exit 1; }
 test -f "$DRIVER" || { echo "⛔ 없음: $DRIVER"; exit 1; }
+# ⛔ 2026-08-11 사고 방지 — 러너만 최신이고 드라이버가 옛 판이면 MTO 없이 돌고,
+#   프레임이 없으면 소급 복구가 안 된다 (arrhenius_6pt 21 런이 그렇게 날아갔다).
+#   --supercell 도 같은 커밋에 들어 있으므로 이 검사가 그것까지 겸한다.
+grep -q "msd_multi_origin" "$DRIVER" || { echo "⛔ 드라이버에 MTO 가 없다 — 옛 판이다: $DRIVER"; exit 1; }
+grep -q '"--supercell"' "$DRIVER" || { echo "⛔ 드라이버에 --supercell 이 없다 — 옛 판이다: $DRIVER"; exit 1; }
 
 # ── 중복 실행 가드 (flock 만 쓴다 — pgrep 은 tmux 래퍼까지 세서 자기 자신에 걸린다) ──
 LOCK=${LOCK:-/tmp/comp1_supercell.lock}

@@ -45,6 +45,19 @@
 #   쓰인다 — 같은 MD 에서 산포가 ~2.9배 줄어든다(추가 비용·디스크 0, 합성시험 검증).
 #   기존 런은 프레임을 안 남겨서 소급 적용이 안 된다. 재적합 감사는 --mto 로 본다.
 #
+# ⛔⛔ **위 문단은 2026-08-11 에 거짓으로 드러났다 — 실제 21 런에 MTO 가 하나도 없다.**
+#   원인: kgy 는 다른 브랜치(claude/stoic-knuth-NObVQ)라 `tools/ionic/` 만 받아 갔고
+#   드라이버(`tools/modelc_v3/disorder_ensemble_diffusion.py`)는 MTO 추가(c8ad6a6c,
+#   2026-08-03) **이전 판**이 그대로 돌았다. 러너가 최신인 것과 드라이버가 최신인 것은
+#   다른 사건인데 헤더는 그걸 구분하지 않고 "쓰인다"고 단정했다.
+#   결과: 21 런의 β 는 전부 **단일 시간원점** 값이다. 하필 이 드라이버의 docstring 이
+#   "modelc 600 K 는 단일원점 2–50 창에서 β 0.76, 1–100 창에서 1.00" 을 인공물의
+#   **예시**로 들고 있는데, 이번에 탈락한 세 점이 0.76 / 0.76 / 0.79 다 — 같은 크기다.
+#   → **탈락 3점을 '케이지'로 읽으면 안 된다.** 추정기가 노이즈일 수 있다.
+#   ⚠ 프레임을 디스크에 안 남겨(--save_traj 없음) 소급 계산도 불가 — comp1 1600 ps 와
+#     같은 손실이다. 아래 두 가지로 재발을 막는다: (a) 드라이버 MTO 존재를 **실행 전에**
+#     검사하고 없으면 즉사 (b) --save_traj 로 프레임을 남긴다(런당 ~10 MB).
+#
 #   cd ~/Yonghoon-DEM-DFT && git pull && conda activate uma
 #   tmux new -s arr6 -d 'bash tools/ionic/run_arrhenius_6pt.sh 2>&1 | tee -a ~/logs/arr6.log'
 #   bash tools/ionic/run_arrhenius_6pt.sh modelc      # 한 계만
@@ -56,6 +69,14 @@ REPO="$(cd "$(dirname "$0")/../.." && pwd)"; cd "$REPO"
 # ⚠ QE 환경변수가 남아 있으면 torch 가 죽는다 (기존 러너와 동일한 처리)
 unset LD_LIBRARY_PATH OPAL_PREFIX 2>/dev/null || true
 DRIVER=$REPO/tools/modelc_v3/disorder_ensemble_diffusion.py
+# ⛔ 2026-08-11 재발 방지 — 러너만 최신이고 드라이버가 옛 판이면 MTO 없이 21 런이 돈다.
+#   그게 실제로 일어났고, 프레임을 안 남겨 소급 복구가 불가능했다. 실행 전에 막는다.
+grep -q "msd_multi_origin" "$DRIVER" 2>/dev/null || {
+  echo "⛔ 드라이버에 MTO(msd_multi_origin) 가 없다 — **옛 판이다**: $DRIVER"
+  echo "   러너만 받아 가면 이 사고가 난다. 드라이버도 같이 받을 것:"
+  echo "     git fetch origin claude/friendly-meitner-lldvar && \\"
+  echo "       git checkout FETCH_HEAD -- tools/ionic tools/modelc_v3"
+  exit 1; }
 OUTROOT=${OUTROOT:-$HOME/work/runs/arrhenius_6pt}
 DEVICE=${DEVICE:-cuda}
 SEEDS=${SEEDS:-"2 3 4"}          # 600 K 오차막대와 같은 시드 집합
@@ -130,7 +151,7 @@ while IFS='|' read -r LABEL XYZ; do
         --temperatures "$T" \
         --equilib_ps 5 --prod_ps "$P" \
         --timestep_fs 2.0 --friction 0.02 \
-        --save_fs 100 --fit_window_ps 2 50 \
+        --save_fs 100 --fit_window_ps 2 50 --save_traj \
         --seed "$S" \
         --uma_model uma-s-1p1 --uma_task omat --device "$DEVICE" \
         || ts "  ⚠ $LABEL T${T} s${S} 실패 — 나머지는 계속 간다"
