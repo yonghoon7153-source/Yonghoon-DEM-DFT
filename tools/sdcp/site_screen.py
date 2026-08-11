@@ -1288,10 +1288,30 @@ def cmd_score(a) -> int:
             continue
 
         # ── relax ──────────────────────────────────────────────────────────────
-        rigid = [json.loads(p.read_text()) for p in sorted((fdir / "rigid").glob("*.json"))
-                 if not p.name.startswith("_")]
+        # ★★ P0 (2026-08-11 Codex 교차검증) — 에너지 캐시와 **게이트 판정**이 같은 rigid JSON 에
+        #   묶여 있는데 계산 지문에서 gate 를 뺐다. 그래서 게이트를 고쳐도 rigid JSON 은
+        #   skip 되고, 그 안의 **옛 ranking_eligible** 이 shortlist 로 재진입했다.
+        #   → 판정은 **현재 atlas row** 에서 다시 가져오고, rigid 에서는 **에너지만** 재사용한다.
+        cur = {r["label"]: r for r in rows}      # rows = 지금 게이트로 eligible 한 것만
+        rigid, stale, orphan = [], 0, 0
+        for p in sorted((fdir / "rigid").glob("*.json")):
+            if p.name.startswith("_"):
+                continue
+            rec = _load_record(p)
+            if not isinstance(rec, dict) or rec.get("E_pose_eV") is None:
+                orphan += 1; continue
+            lab = rec.get("label")
+            if lab not in cur:                   # 현재 게이트에서 탈락했거나 아틀라스에 없다
+                stale += 1; continue
+            rigid.append({**cur[lab],            # 판정은 현재 것
+                          "E_pose_eV": rec["E_pose_eV"],
+                          "E_complex_eV": rec.get("E_complex_eV"),
+                          "energy_fingerprint": rec.get("fingerprint")})
         if not rigid:
-            print(f"⛔ {frag}: rigid 레코드가 없다 — rigid 먼저"); continue
+            print(f"⛔ {frag}: 현재 게이트에서 살아남은 rigid 레코드가 없다 — rigid 먼저"); continue
+        if stale or orphan:
+            print(f"  ※ {frag}: rigid 캐시 중 현재 게이트 탈락 {stale}개 · 에너지 없음 {orphan}개 제외 "
+                  f"(에너지만 재사용하고 판정은 현재 atlas 기준)")
         short = shortlist_with_matched_pairs(rigid, a.top_per_site, a.pairs)
         for ff in a.freeze:
             pr = proto_for(a.stage, ff)          # 계산 항목만 해시 — 게이트는 안 들어간다
