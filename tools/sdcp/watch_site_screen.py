@@ -53,7 +53,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--run", default=DEF_RUN)
     ap.add_argument("--loop", type=float, default=0, help="초 단위 반복 (0=1회)")
-    ap.add_argument("--freeze", nargs="*", default=["1.00", "0.85"])
+    # (--freeze 제거 — '1.0' vs '1.00' 문자열 함정. relax_f* 디렉터리를 직접 발견한다. 자체 리뷰 #9)
     a = ap.parse_args()
     run = Path(a.run)
 
@@ -64,40 +64,61 @@ def main() -> int:
         if not run.is_dir():
             print(f"⛔ {run} 이 없다"); return 2
         shortfall = 0        # 목표치에 못 미친 단계 수 — '완료'와 '정지'를 구분하려고 센다
+        relax_missing = 0    # rigid 는 됐는데 relax 디렉터리가 하나도 없는 조각 수
 
         for frag in PRIMARY:
             fdir = run / frag
             if not fdir.is_dir():
-                print(f"  {frag:14s} (없음)"); continue
+                # ★ 자체 리뷰 #2 — 없는 조각을 조용히 건너뛰면 '아무것도 없음'이 완료로 찍힌다
+                print(f"  {frag:14s} (없음 — 미시작)"); shortfall += 1; continue
             atlas = len(list(fdir.glob("*.xyz")))
             rigid = load_dir(fdir / "rigid")
-            line = f"  {frag:14s} atlas {atlas:4d} · rigid {len(rigid):4d}"
 
-            # relax 목표치 = rigid 에서 뽑는 shortlist 크기 (실제 함수를 그대로 써서 계산)
-            target = None
-            if rigid:
-                try:
-                    target = len(shortlist_with_matched_pairs([r for r, _ in rigid], 2, 5))
-                except Exception:
-                    target = None
-            for ff in a.freeze:
-                rd = fdir / f"relax_f{ff}"
+            # rigid 목표치 = atlas 통과 자세 수 (atlas_rows.json 이 정본)
+            rigid_target = None
+            try:
+                rigid_target = sum(1 for r in json.loads((fdir / "atlas_rows.json").read_text())
+                                   if r.get("ranking_eligible"))
+            except (OSError, json.JSONDecodeError):
+                pass
+            if rigid_target is None or len(rigid) < rigid_target:
+                shortfall += 1           # 목표를 모르는 것도 '완료 증명 불가'다
+            rt = f"/{rigid_target}" if rigid_target is not None else "/?"
+            line = f"  {frag:14s} atlas {atlas:4d} · rigid {len(rigid):4d}{rt}"
+
+            # relax 디렉터리는 실제로 존재하는 것을 발견한다 (이름 규약 하드코딩 금지)
+            relax_dirs = sorted(d for d in fdir.glob("relax_f*") if d.is_dir())
+            if not relax_dirs and rigid:
+                relax_missing += 1
+            for rd in relax_dirs:
                 rows = load_dir(rd)
                 n = len(rows)
-                tgt = f"/{target}" if target else ""
+                # relax 목표치 = score 가 남긴 이완 명단 (없으면 기본 파라미터로 추정하고 표시)
+                target, est = None, ""
+                try:
+                    target = len(json.loads((rd / "_shortlist.json").read_text()))
+                except (OSError, json.JSONDecodeError):
+                    if rigid:
+                        try:
+                            target = len(shortlist_with_matched_pairs([r for r, _ in rigid], 2, 5))
+                            est = "≈"
+                        except Exception:
+                            target = None
+                tgt = f"/{est}{target}" if target else "/?"
                 eta = ""
-                if target and n < target:
+                if target is None or n < target:
                     shortfall += 1
-                    if len(rows) >= 2:
+                    if len(rows) >= 2 and target:
                         ts = sorted(t for _, t in rows)
                         rate = (ts[-1] - ts[0]) / max(len(ts) - 1, 1)
                         eta = f" ETA {fmt_dt(rate * (target - n))}"
-                line += f" · f{ff} {n:3d}{tgt}{eta}"
+                line += f" · {rd.name.replace('relax_', '')} {n:3d}{tgt}{eta}"
             print(line)
 
             # 게이트 탈락 + 대조쌍 — relax 결과가 있을 때만 의미 있다
-            for ff in a.freeze:
-                rows = [r for r, _ in load_dir(fdir / f"relax_f{ff}")]
+            for rd in relax_dirs:
+                ff = rd.name.replace("relax_f", "")
+                rows = [r for r, _ in load_dir(rd)]
                 if not rows:
                     continue
                 bad = [r for r in rows if not r.get("ranking_eligible")]
@@ -132,10 +153,12 @@ def main() -> int:
             pass
         if running:
             print(running)
-        elif shortfall == 0:
+        elif shortfall == 0 and relax_missing == 0:
             print("  ✔ **완료** — 모든 단계가 목표치에 도달했고 실행 중인 job 이 없다")
+        elif shortfall == 0:
+            print(f"  ⚠ rigid 까지 완료 — relax 미시작 조각 {relax_missing}개 (완료 아님)")
         else:
-            print(f"  ⛔ score 가 안 돌고 있는데 목표에 못 미친 단계가 {shortfall}개 있다 — 중단됐다")
+            print(f"  ⛔ score 가 안 돌고 있는데 목표에 못 미친 단계가 {shortfall}개 있다 — 중단/미시작")
         logs = sorted((run / "logs").glob("relax_*.log")) + sorted((run / "logs").glob("rigid_*.log"))
         if logs:
             newest = max(logs, key=lambda p: p.stat().st_mtime)

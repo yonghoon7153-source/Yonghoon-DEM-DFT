@@ -428,6 +428,44 @@ def vertical_image_min(mp: np.ndarray, sp: np.ndarray, cell: np.ndarray) -> floa
     return best
 
 
+def _mic_full(vec: np.ndarray, cell: np.ndarray) -> np.ndarray:
+    """3차원 최소이미지 벡터 (기울어진 셀 대응)."""
+    frac = np.linalg.solve(cell.T, vec)
+    frac -= np.round(frac)
+    return frac @ cell
+
+
+def _unwrap_by_bonds(pos: np.ndarray, bonds: Sequence[Tuple[int, int, str]],
+                     cell: np.ndarray) -> np.ndarray:
+    """감긴(wrapped) 분자를 **결합 그래프를 따라** MIC 로 편다.
+
+    원자 0 기준의 통짜 MIC 는 쓰면 안 된다 — C10 장축(13.9 Å)이 b/2(5.8 Å)보다 길어
+    멀쩡한 구조를 접어 버린다. 결합 길이(≤1.9 Å)는 반쪽 셀보다 훨씬 짧으므로
+    이웃→이웃 MIC 는 항상 안전하고, 정상 구조에서는 무연산이다.
+    """
+    n = len(pos)
+    adj: Dict[int, List[int]] = {i: [] for i in range(n)}
+    for i, j, _lab in bonds:
+        if i < n and j < n:
+            adj[i].append(j); adj[j].append(i)
+    out = pos.copy()
+    seen = set()
+    for root in range(n):
+        if root in seen:
+            continue
+        seen.add(root)
+        stack = [root]
+        while stack:
+            i = stack.pop()
+            for j in adj[i]:
+                if j in seen:
+                    continue
+                seen.add(j)
+                out[j] = out[i] + _mic_full(pos[j] - pos[i], cell)
+                stack.append(j)
+    return out
+
+
 def bond_table(mol: Atoms) -> List[Tuple[int, int, str]]:
     sym = mol.get_chemical_symbols()
     D = mol.get_all_distances()
@@ -541,6 +579,13 @@ def contact_stats(cx: Atoms, nslab: int) -> Dict[str, Any]:
 
 
 def extraction_check(cx: Atoms, clean: Atoms, nslab: int) -> Dict[str, Any]:
+    # ★ 자체 리뷰 #5 — clean 과 복합체 앞 nslab 의 대응을 검증 없이 인덱스로 비교하면,
+    #   다르게 정렬된 슬랩이 들어왔을 때 **엉뚱한 원자끼리의 변위**로 대량 오판이 난다.
+    if (len(clean) < nslab
+            or clean.get_chemical_symbols()[:nslab] != cx.get_chemical_symbols()[:nslab]):
+        return {"verdict": "CLEAN_MISMATCH", "flag": False,
+                "note": "clean 슬랩이 복합체 앞 nslab 원자와 원소/순서가 다르다 — "
+                        "추출검사 불가 (판정 아님). 같은 정렬의 슬랩을 --clean 으로 줄 것."}
     """Li 추출 / 표면 재구성 격리 — 'freeze 0.6 의 −1.465 eV' 를 결합으로 오독한 사건의 재발 방지.
 
     VASP dE_extract = +0.336 eV(2026-08-08) 로 추출이 열역학적으로 불리함이 확인됐으므로,
@@ -619,16 +664,27 @@ def extraction_check(cx: Atoms, clean: Atoms, nslab: int) -> Dict[str, Any]:
 def apply_gates(cx: Atoms, nslab: int, mol_ref: Atoms, frag: str,
                 clean: Optional[Atoms] = None, relaxed: bool = False,
                 bonds: Optional[Sequence[Tuple[int, int, str]]] = None) -> Dict[str, Any]:
-    """모든 게이트를 한 번에. **판정 불가와 실패를 구분한다.**"""
+    """모든 게이트를 한 번에. **판정 불가와 실패를 구분한다.**
+
+    ⚠ 전제 — 원자 순서는 **슬랩 원본 순서가 먼저, 분자가 뒤**다. 종별로 재정렬된
+      POSCAR/CONTCAR(우리 _write_poscar 산출물 포함)를 직접 넣으면 안 된다.
+      cmd_gate 가 이 전제를 파일마다 검사한다 (자체 리뷰 #4).
+    """
     cell = cx.cell.array
     mp = cx.positions[nslab:]
     sp = cx.positions[:nslab]
     mol = cx[nslab:]
     mol.set_pbc(False)
+    bl = bond_table(mol_ref) if bonds is None else bonds
+    # VASP 류 출력은 좌표를 셀 안으로 감는다 — 감긴 분자는 결합 검사에서 전부 절단,
+    # 이미지 검사에서 자기 이미지와 거리 0 으로 오판된다. 결합 그래프를 따라 MIC 로 편
+    # 좌표(mpu)로 결합·이미지를 검사한다(정상 구조에는 무연산). 접촉은 MIC 라 무관.
+    mpu = _unwrap_by_bonds(mp, bl, cell)
+    mol.positions[:] = mpu
     stats = contact_stats(cx, nslab)
-    lat = lateral_image_min(mp, cell)
-    ver = vertical_image_min(mp, sp, cell)
-    bm = bond_metrics(mol, bond_table(mol_ref) if bonds is None else bonds)
+    lat = lateral_image_min(mpu, cell)
+    ver = vertical_image_min(mpu, sp, cell)
+    bm = bond_metrics(mol, bl)
     spec = FRAGMENTS[frag]
 
     reasons: List[str] = []
@@ -665,7 +721,9 @@ def apply_gates(cx: Atoms, nslab: int, mol_ref: Atoms, frag: str,
     if clean is not None:
         ex = extraction_check(cx, clean, nslab)
         out["extraction"] = ex
-        if ex["flag"]:
+        if ex["verdict"] == "CLEAN_MISMATCH":
+            warns.append("extraction_not_checked(clean_mismatch)")   # 판정 아님 — 크게 표시
+        elif ex["flag"]:
             reasons.append(f"EXTRACTION_CANDIDATE(idx {ex['extracted_indices'][:4]})")
         elif ex["verdict"] == "RECONSTRUCTION_REVIEW":
             # 죽이지 않는다 — 다만 기준선이 달라졌을 수 있으니 표시하고 verdict 가 따로 센다
@@ -1028,6 +1086,18 @@ def cmd_gate(a) -> int:
                 print(f"   ※ {f.name}: c={own[2,2]:.3f} Å (repo 슬랩 {ref[2,2]:.3f}) — **파일 셀을 쓴다**"
                       f" (셀을 갈아끼우면 없던 세로 이미지 위반이 생긴다)")
         cx.set_pbc(True)
+        # ★ 자체 리뷰 #4 — 순서 규약(슬랩 원본 순서 + 분자 뒤)을 파일마다 검사한다.
+        #   종별 재정렬된 POSCAR/CONTCAR(우리 _write_poscar 산출물 포함)가 들어오면
+        #   슬랩/분자 절단이 어긋나 게이트 전부가 조용히 쓰레기를 낸다.
+        sym_c = cx.get_chemical_symbols()
+        if sym_c[:nslab] != slab.get_chemical_symbols():
+            print(f"⛔ {f.name}: 앞 {nslab}개가 정본 슬랩 순서와 다르다 — 종별 정렬본은 직접 못 넣는다. "
+                  "건너뜀 (판정 아님)")
+            continue
+        if Counter(sym_c[nslab:]) != Counter(mol_ref.get_chemical_symbols()):
+            print(f"⛔ {f.name}: 분자부 조성 {dict(Counter(sym_c[nslab:]))} 이 기준 조각과 다르다 — "
+                  "건너뜀 (판정 아님)")
+            continue
         g = apply_gates(cx, nslab, mol_ref, a.frag, clean=clean, relaxed=a.relaxed)
         row = {"file": str(f), "label": f.stem, "fragment": a.frag, **g}
         row.update(parse_legacy_label(f.stem))
@@ -1047,7 +1117,10 @@ def cmd_gate(a) -> int:
             print(f"    {'⛔' if e.get('flag') else '⚠'} {e['verdict']}: 표면 최대변위 "
                   f"{e.get('max_surface_disp_A')} Å · z_top {e.get('z_top_shift_A', 0):+.3f} Å")
             print(f"       움직인 표면원자 {e.get('moved_surface_atoms')}")
-            print(f"       기판 O 이웃 상실 {e.get('lost_substrate_O_neighbors')}")
+            # (자체 리뷰 #6 — 옛 키 이름을 참조해 근거가 항상 None 으로 찍혔다)
+            print(f"       기판 O 배위수 감소 {e.get('lost_substrate_O_coordination')}")
+            if e.get("neighbor_swap_no_CN_loss"):
+                print(f"       면내 hop(배위 유지) {e.get('neighbor_swap_no_CN_loss')}")
             print(f"       분자 접촉(증거만) {e.get('cation_near_molecule')}")
         for r in g["gate_reasons"]:
             print(f"    ⛔ {r}")
@@ -1071,14 +1144,38 @@ def gate_version() -> str:
                                       "basin": BASIN_TOL}, sort_keys=True).encode()).hexdigest()[:12]
 
 
-def _protocol(a, stage: str) -> Dict[str, Any]:
-    p = {"tool": "site_screen.py", "stage": stage, "model": a.model, "task": a.task,
-         "gap_A": a.gap, "fmax": a.fmax, "steps": a.steps,
-         "freeze_frac": getattr(a, "freeze", None),
-         "slab_sha256": SLAB["sha256"]}
-    p["fingerprint"] = hashlib.sha256(json.dumps(p, sort_keys=True).encode()).hexdigest()[:16]
-    p["gate_version"] = gate_version()      # 기록만 — 재개 판정에는 안 쓴다
-    return p
+def make_protocol(*, stage: str, model: str, task: str, atlas_gap: Any, atlas_ndir: Any,
+                  fmax: float, steps: int, freeze_frac: Any) -> Dict[str, Any]:
+    """계산 프로토콜 + 지문.
+
+    ★ 2026-08-11 자체 리뷰 수정 — 이전 구현은 relax 단계에서 `dict(proto)` 를 통째로
+      재해시했는데, proto 에는 이미 `gate_version`(과 옛 fingerprint)이 들어 있었다.
+      게이트 임계를 한 글자만 고쳐도 relax 지문이 바뀌어 **GPU 이완이 전부 재실행**됐다 —
+      게이트/계산 분리를 만들어 놓고 스스로 깨뜨린 셈이다.
+      지금은 지문 입력을 **계산을 바꾸는 항목만** 담은 별도 dict 로 고정한다.
+      (gap/ndir 는 atlas manifest 값을 쓴다 — 구조의 출처는 atlas 이지 score 플래그가 아니다.)
+    ⚠ 지문 조리법이 바뀌었으므로 이 커밋 이전에 저장된 레코드는 재개 시 재계산된다(1회성)."""
+    base = {"tool": "site_screen.py", "stage": stage, "model": model, "task": task,
+            "atlas_gap_A": atlas_gap, "atlas_ndir": atlas_ndir,
+            "fmax": fmax, "steps": steps, "freeze_frac": freeze_frac,
+            "slab_sha256": SLAB["sha256"]}
+    fp = hashlib.sha256(json.dumps(base, sort_keys=True).encode()).hexdigest()[:16]
+    return {**base, "fingerprint": fp, "gate_version": gate_version()}
+
+
+def _load_record(path: Path) -> Optional[Dict[str, Any]]:
+    """죽은 런이 남긴 반쪽 JSON 은 '기록 없음'으로 취급한다 — 재개가 여기서 죽으면 안 된다."""
+    try:
+        return json.loads(path.read_text())
+    except (OSError, json.JSONDecodeError):
+        return None
+
+
+def _atomic_json(path: Path, payload: Any) -> None:
+    """임시 파일에 쓰고 rename — 도중에 죽어도 반쪽 파일이 본 이름을 차지하지 않는다."""
+    tmp = path.with_name(path.name + ".tmp")
+    tmp.write_text(json.dumps(payload, indent=1, ensure_ascii=False))
+    os.replace(tmp, path)
 
 
 def _guard_gpu() -> None:
@@ -1117,11 +1214,19 @@ def cmd_score(a) -> int:
     atlas = out / "atlas_manifest.json"
     if not atlas.is_file():
         sys.exit(f"⛔ {atlas} 가 없다 — atlas 를 먼저 돌릴 것")
+    mft = json.loads(atlas.read_text())
     calc = FAIRChemCalculator(pretrained_mlip.get_predict_unit(a.model, device=a.device),
                               task_name=a.task)
-    proto = _protocol(a, a.stage)
+
+    def proto_for(stage: str, ff: Any = None) -> Dict[str, Any]:
+        return make_protocol(stage=stage, model=a.model, task=a.task,
+                             atlas_gap=mft.get("gap_A"), atlas_ndir=mft.get("ndir"),
+                             fmax=a.fmax, steps=a.steps, freeze_frac=ff)
+
+    proto = proto_for(a.stage)
     print(f"프로토콜 {proto['fingerprint']} · {a.model}/{a.task} · stage={a.stage} "
-          f"· freeze={getattr(a, 'freeze', None)}")
+          f"· freeze={getattr(a, 'freeze', None)} · gate {proto['gate_version']}")
+    clean_cache: Dict[float, Any] = {}      # freeze → (e_slab, clean, cons, nfix, zcut) — 조각과 무관
 
     def sp(atoms: Atoms) -> float:
         atoms = atoms.copy(); atoms.calc = calc
@@ -1154,25 +1259,29 @@ def cmd_score(a) -> int:
         if a.stage == "rigid":
             sdir = fdir / "rigid"; sdir.mkdir(parents=True, exist_ok=True)
             e_slab = sp(slab)
-            (sdir / "_references.json").write_text(json.dumps(
-                {"E_slab_eV": e_slab, "E_mol_eV": e_mol, "protocol": proto,
-                 "note": "E_mol 은 ORCA 기하 그대로의 UMA SP — 조각 안에서 상수라 순위에서 상쇄된다."},
-                indent=1, ensure_ascii=False))
-            anchors = site_anchors(slab)
-            dirs = fibonacci_directions(a.ndir)
+            _atomic_json(sdir / "_references.json",
+                         {"E_slab_eV": e_slab, "E_mol_eV": e_mol, "protocol": proto,
+                          "note": "E_mol 은 ORCA 기하 그대로의 UMA SP — 조각 안에서 상수라 순위에서 상쇄된다."})
             done = 0
             for i, r in enumerate(rows, 1):
                 jf = sdir / f"{r['label']}.json"
-                if jf.is_file() and json.loads(jf.read_text()).get("fingerprint") == proto["fingerprint"]:
+                rec = _load_record(jf)
+                if rec and rec.get("fingerprint") == proto["fingerprint"]:
                     done += 1; continue
-                dvec = _dir_from_name(mol, FRAGMENTS[frag], dirs, r["down_dir"])
-                cx = make_pose(slab, mol, np.array(atlas_site_xyz(anchors, r["site"])),
-                               dvec, r["roll_deg"], a.gap)
+                # ★ 자체 리뷰 수정 — 예전엔 score 시점의 --gap/--ndir 로 자세를 **다시 생성**했다.
+                #   atlas 와 플래그가 어긋나면 게이트를 통과한 적 없는 기하를 조용히 채점하고,
+                #   relax 는 저장본을 읽어 rigid 와 다른 구조에서 출발했다. 이제 저장된
+                #   atlas 구조만 읽는다 — 구조의 정본은 atlas 산출물이다.
+                xyz = fdir / f"{r['label']}.xyz"
+                if not xyz.is_file():
+                    sys.exit(f"⛔ {xyz} 가 없다 — atlas 를 --dry-run 으로 돌렸다면 구조 없이 "
+                             "rigid 를 돌 수 없다. atlas 를 --dry-run 없이 다시 돌릴 것.")
+                cx = read(xyz)
+                cx.set_cell(slab.cell.array); cx.set_pbc(True)
                 e = sp(cx)
-                jf.write_text(json.dumps({**r, "E_complex_eV": e, "E_slab_eV": e_slab,
-                                          "E_mol_eV": e_mol, "E_pose_eV": e - e_slab - e_mol,
-                                          "fingerprint": proto["fingerprint"], "protocol": proto},
-                                         indent=1, ensure_ascii=False))
+                _atomic_json(jf, {**r, "E_complex_eV": e, "E_slab_eV": e_slab,
+                                  "E_mol_eV": e_mol, "E_pose_eV": e - e_slab - e_mol,
+                                  "fingerprint": proto["fingerprint"], "protocol": proto})
                 if i % 25 == 0:
                     print(f"  [{frag} rigid {i}/{len(rows)}]", flush=True)
             print(f"■ {frag} rigid 완료 (건너뜀 {done}/{len(rows)}) → {sdir}")
@@ -1185,25 +1294,29 @@ def cmd_score(a) -> int:
             print(f"⛔ {frag}: rigid 레코드가 없다 — rigid 먼저"); continue
         short = shortlist_with_matched_pairs(rigid, a.top_per_site, a.pairs)
         for ff in a.freeze:
-            a.freeze_current = ff
-            pr = dict(proto); pr["freeze_frac"] = ff
-            pr["fingerprint"] = hashlib.sha256(json.dumps(pr, sort_keys=True).encode()).hexdigest()[:16]
+            pr = proto_for(a.stage, ff)          # 계산 항목만 해시 — 게이트는 안 들어간다
             sdir = fdir / f"relax_f{ff:.2f}"; sdir.mkdir(parents=True, exist_ok=True)
-            cons, nfix, zcut = _freeze_mask(nslab, slab, ff)
-            # 같은 구속으로 이완한 **깨끗한 슬랩** — 기준에너지이자 추출검사의 대조군
-            cs = slab.copy(); cs.set_constraint(cons); cs.calc = calc
-            if ff < 1.0:
-                FIRE(cs, logfile=str(sdir / "_clean_slab.log")).run(fmax=a.fmax, steps=a.steps)
-            e_slab = float(cs.get_potential_energy())
-            clean = cs.copy(); clean.set_constraint()
+            # 깨끗한 슬랩은 (슬랩, freeze) 에만 의존한다 — 조각마다 다시 이완하면 GPU 낭비 (자체 리뷰 #8)
+            if ff not in clean_cache:
+                cons, nfix, zcut = _freeze_mask(nslab, slab, ff)
+                cs = slab.copy(); cs.set_constraint(cons); cs.calc = calc
+                if ff < 1.0:
+                    FIRE(cs, logfile=str(out / f"_clean_f{ff:.2f}.log")).run(fmax=a.fmax, steps=a.steps)
+                e_cs = float(cs.get_potential_energy())
+                cl = cs.copy(); cl.set_constraint()
+                clean_cache[ff] = (e_cs, cl, cons, nfix, zcut)
+            e_slab, clean, cons, nfix, zcut = clean_cache[ff]
             write(sdir / "_clean_slab.vasp", clean, format="vasp", direct=True)
-            (sdir / "_references.json").write_text(json.dumps(
-                {"E_slab_eV": e_slab, "E_mol_eV": e_mol, "freeze_frac": ff,
-                 "n_fixed": nfix, "z_cut_A": round(zcut, 3), "protocol": pr}, indent=1, ensure_ascii=False))
+            _atomic_json(sdir / "_references.json",
+                         {"E_slab_eV": e_slab, "E_mol_eV": e_mol, "freeze_frac": ff,
+                          "n_fixed": nfix, "z_cut_A": round(zcut, 3), "protocol": pr})
+            # watch 가 목표치를 추측하지 않도록 이완 대상 명단을 그대로 남긴다 (자체 리뷰 #9)
+            _atomic_json(sdir / "_shortlist.json", [r["label"] for r in short])
             print(f"■ {frag} relax freeze={ff} (고정 {nfix}/{nslab}, z≤{zcut:.2f} Å) · 대상 {len(short)}")
             for i, r in enumerate(short, 1):
                 jf = sdir / f"{r['label']}.json"
-                if jf.is_file() and json.loads(jf.read_text()).get("fingerprint") == pr["fingerprint"]:
+                rec = _load_record(jf)               # 반쪽 JSON 은 '없음'으로 — 재개가 죽으면 안 된다
+                if rec and rec.get("fingerprint") == pr["fingerprint"]:
                     continue
                 cx = read(fdir / f"{r['label']}.xyz") if (fdir / f"{r['label']}.xyz").is_file() else None
                 if cx is None:
@@ -1227,31 +1340,17 @@ def cmd_score(a) -> int:
                 if not converged:
                     g["gate_reasons"].append(f"NOT_CONVERGED(steps>{a.steps})"); g["ranking_eligible"] = False
                 write(sdir / f"{r['label']}.xyz", fin)
-                jf.write_text(json.dumps({**r, "freeze_frac": ff, "converged": converged,
-                                          "frozen_drift_A": drift, "E_complex_eV": e,
-                                          "E_slab_eV": e_slab, "E_mol_eV": e_mol,
-                                          "E_pose_eV": e - e_slab - e_mol,
-                                          **{k: v for k, v in g.items() if k != "bond"},
-                                          "bond_changes": g["bond"]["n_changes"],
-                                          "fingerprint": pr["fingerprint"], "protocol": pr},
-                                         indent=1, ensure_ascii=False))
+                _atomic_json(jf, {**r, "freeze_frac": ff, "converged": converged,
+                                  "frozen_drift_A": drift, "E_complex_eV": e,
+                                  "E_slab_eV": e_slab, "E_mol_eV": e_mol,
+                                  "E_pose_eV": e - e_slab - e_mol,
+                                  **{k: v for k, v in g.items() if k != "bond"},
+                                  "bond_changes": g["bond"]["n_changes"],
+                                  "fingerprint": pr["fingerprint"], "protocol": pr})
                 print(f"  [{i}/{len(short)}] {r['label']} E_pose {e - e_slab - e_mol:+.3f} eV "
                       f"{'✔' if g['ranking_eligible'] else '⛔ ' + ','.join(x.split('(')[0] for x in g['gate_reasons'])}",
                       flush=True)
     return 0
-
-
-def atlas_site_xyz(anchors: Dict[str, Dict[str, Any]], site: str) -> List[float]:
-    return list(anchors[site]["xyz"])
-
-
-def _dir_from_name(mol: Atoms, spec: Dict[str, Any], dirs: np.ndarray, name: str) -> np.ndarray:
-    if name.startswith("fib"):
-        return dirs[int(name[3:])]
-    gtag = spec["anchor_tag"][name]
-    gi = group_indices(mol, gtag)
-    v = mol.positions[gi].mean(axis=0) - mol.get_center_of_mass()
-    return v / np.linalg.norm(v)
 
 
 def shortlist_with_matched_pairs(rigid: List[Dict[str, Any]], top_per_site: int,
@@ -1679,6 +1778,40 @@ def cmd_selftest(a) -> int:
         ok = False
         print(f"   ⛔ 반평행 정렬: {e}")
 
+    # 10) ★ 게이트/계산 지문 분리 — 게이트 임계를 바꿔도 계산 지문은 그대로여야 한다
+    #     (자체 리뷰 #1: 예전엔 relax 가 gate_version 을 지문에 섞어 이완 전부가 재실행됐다)
+    def _fp():
+        return make_protocol(stage="relax", model="uma-s-1p1", task="omat",
+                             atlas_gap=2.4, atlas_ndir=12, fmax=0.05, steps=300,
+                             freeze_frac=0.85)
+    p1 = _fp()
+    _old = GATE["decision_floor_eV"]
+    GATE["decision_floor_eV"] = 0.999
+    p2 = _fp()
+    GATE["decision_floor_eV"] = _old
+    good = p1["fingerprint"] == p2["fingerprint"] and p1["gate_version"] != p2["gate_version"]
+    ok &= good
+    print(f"   {'✔' if good else '⛔'} 게이트 임계 변경 → 계산 지문 불변({p1['fingerprint'][:8]}) · "
+          f"gate_version 만 변경")
+
+    # 11) 감긴 분자 — 원자 하나를 +b 로 감아도 결합 검사가 절단으로 오판하면 안 된다
+    cxw = make_pose(slab, mol, anc["Li_top"]["xyz"], down, 0, 2.4)
+    wi = n + int(np.argmax(cxw.positions[n:, 2]))       # 분자 꼭대기 원자 하나를 감는다
+    cxw.positions[wi] += slab.cell.array[1]
+    g = check("주기 감김 (원자 하나 +b 병진)", cxw, "")
+    good = g["bond"]["n_changes"] == 0
+    ok &= good
+    print(f"   {'✔' if good else '⛔'}   └ 결합변화 {g['bond']['n_changes']} (감김을 펴서 검사)")
+
+    # 12) clean 불일치 — 다르게 정렬된 clean 은 오판 대신 '검사 불가'를 내야 한다
+    bad_clean = slab[list(range(1, n)) + [0]]           # 순서를 한 칸 민 슬랩
+    g = check("clean 순서 불일치 (오판 대신 미실시)", make_pose(slab, mol, anc["Li_top"]["xyz"], down, 0, 2.4),
+              "", relaxed=True, clean=bad_clean)
+    v = g.get("extraction", {}).get("verdict")
+    good = v == "CLEAN_MISMATCH" and any("clean_mismatch" in w for w in g["warnings"])
+    ok &= good
+    print(f"   {'✔' if good else '⛔'}   └ 판정={v} · 경고 표시됨")
+
     print(f"\n{'✔ 전부 통과' if ok else '⛔ 실패 있음'}")
     return 0 if ok else 1
 
@@ -2043,8 +2176,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--model", default="uma-s-1p1")
     p.add_argument("--task", default="omat", help="omat | oc20 — head 를 바꾸면 결과는 별도 계열")
     p.add_argument("--device", default="cuda")
-    p.add_argument("--gap", type=float, default=2.4)
-    p.add_argument("--ndir", type=int, default=12)
+    # (--gap/--ndir 제거 — 구조의 정본은 atlas 산출물이고 score 는 저장본만 읽는다. 자체 리뷰 #3)
     p.add_argument("--fmax", type=float, default=0.05)
     p.add_argument("--steps", type=int, default=300)
     p.add_argument("--freeze", nargs="*", type=float, default=[1.0, 0.85],

@@ -81,3 +81,4 @@ mulks2024_hard_soft_electrons_holes	53. hard and soft electrons
 #        본문 PDF 만으로는 되살릴 방법이 없다. (2026-08-06 실제로 지웠다가 git checkout 으로 복구.)
 #        ('--inbox --run --skip-done' 은 안전.)
 #   자동 매칭은 제목으로 잘 붙는다 — 수동 지정 줄 불필요.
+xu2026_ndo_codoping_argyrodite	ndo_lpscl1.7

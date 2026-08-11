@@ -1,0 +1,240 @@
+{
+ "slug": "xu2026_ndo_codoping_argyrodite",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-11",
+ "sources": [
+  "57. NdO_LPSCl1.7 Xu2026 NanoEnergy high-air-stability superionic.pdf",
+  "57. Sup) NdO_LPSCl1.7 Xu2026 NanoEnergy high-air-stability superionic.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Synthesis and electrochemical characterizations of Li5.3+2xP1-xNdxS4.3–1.5xO1.5xCl1.7 (x = 0, 0.025, 0.05, 0.075, 0.1) SSEs. a) Schematic synthesis of sulfide SSEs by conventional solid-phase reaction methods. b) Crystal structure model of LPSC-NdO electrolyte. c) Nyquist plots and d) Ionic conductivity of Li5.3+2xP1- xNdxS4.3–1.5xO1.5xCl1.7 SSEs. e) DC polarization curves of LPSC and LPSC-NdO electrolytes. f) Arrhenius plots of the temperature-dependent ionic conductivities of Li5.3+2xP1-xNdxS4.3–1.5xO1.5xCl1.7 SSEs with different doping contents. g) Activation energy of the Li5.3+2xP1-xNdxS4.3–1.5xO1.5xCl1.7 SSEs. 2",
+   "bbox": [
+    31.6,
+    309.7,
+    565.8,
+    702.1
+   ],
+   "w": 2227,
+   "h": 1636,
+   "dpi": 300,
+   "src": "57. NdO_LPSCl1.7 Xu2026 NanoEnergy high-air-stability superionic.pdf",
+   "blank": 0.769
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. a) XRD patterns of Li5.3+2xP1-xNdxS4.3–1.5xO1.5xCl1.7 electrolytes with detail comparison graph. b) Raman spectra of Li5.3+2xP1-xNdxS4.3–1.5xO1.5xCl1.7 elec­ trolytes with detail comparison. c)The XPS spectra of the LPSC-NdO electrolyte prior to cycling. d) SEM images for LPSC and LPSC-NdO electrolytes with corre­ sponding EDS mappings of S, P, Cl, O, Nd. 3",
+   "bbox": [
+    31.6,
+    269.1,
+    563.6,
+    711.7
+   ],
+   "w": 2218,
+   "h": 1845,
+   "dpi": 300,
+   "src": "57. NdO_LPSCl1.7 Xu2026 NanoEnergy high-air-stability superionic.pdf",
+   "blank": 0.619
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Interfacial stability of LPSC and LPSC-NdO with Li metal. CCD of a) Li/LPSC/Li and b) Li/LPSC-NdO/Li. c) Galvanostatic cycling performance of Li/LPSC/Li and Li/LPSC-NdO/Li at 1 mA cm−2. e) and f) Enlarged view of Li/LPSC/Li and Li/LPSC-NdO/Li at 1 mA cm−2. h) Variation of CCD at different doping levels. EIS of d) Li/ LPSC-NdO/Li and g) Li/LPSC/Li. The corresponding DRT transition result of i) Li/LPSC-NdO/Li and j) Li/LPSC/Li. penetration and repeated volume variation of the Li anode, while remaining nearly unchanged in LPSC-NdO cells, demonstrating that Nd/ O co-doping preserves intimate interfacial contact and maintains the structural integrity of the electrolyte framework. The mid-frequency peaks D2 and D3 (τ ≈10−6–10−1 s), attributed to the charge-transfer resistance at the Li/SSE interface and the ionic transport resistance across the solid electrolyte interphase respectively",
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    589.1
+   ],
+   "w": 2228,
+   "h": 2250,
+   "dpi": 300,
+   "src": "57. NdO_LPSCl1.7 Xu2026 NanoEnergy high-air-stability superionic.pdf",
+   "blank": 0.824
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Air Stability of LPSC and LPSC-NdO. a) H2S evolution curves of LPSC and LPSC-NdO upon exposure to air with 30% relative humidity for various durations. b) Electrochemical impedance spectra of the two electrolytes after 30 min of exposure to air with 30% relative humidity. c) Comparison of the ionic conductivities of the two electrolytes before and after 30 min of exposure to air with 30% relative humidity. d) and e) Raman spectra of LPSC and LPSC-NdO before and after exposure to air with 30% relative humidity. f) and g) X-ray diffraction patterns of LPSC and LPSC-NdO before and after exposure to air with 30% relative humidity. h) Elec­ trochemical impedance spectra of the two electrolytes after 60 min of exposure in a dry room (dew point: −30 ◦C). i) Comparison of the ionic conductivities of the two electrolytes before and after 60 min of exposure in a dry room (dew point: −30 ◦C",
+   "bbox": [
+    31.6,
+    161.5,
+    565.8,
+    673.4
+   ],
+   "w": 2227,
+   "h": 2134,
+   "dpi": 300,
+   "src": "57. NdO_LPSCl1.7 Xu2026 NanoEnergy high-air-stability superionic.pdf",
+   "blank": 0.887
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Electrochemical performance of all-solid-state batteries. a–c) Rate capability and corresponding charge–discharge profiles of LCO/LPSC-NdO/Li and LCO/ LPSC/Li cells. d–g) Long-term cycling performance and evolution of charge–discharge voltage profiles of the two cells at 1 C. h) Schematic diagram of the full-cell configuration. i, j) Electrochemical impedance spectra of the two cells before and after cycling. 7",
+   "bbox": [
+    31.6,
+    199.5,
+    565.8,
+    711.7
+   ],
+   "w": 2227,
+   "h": 2135,
+   "dpi": 300,
+   "src": "57. NdO_LPSCl1.7 Xu2026 NanoEnergy high-air-stability superionic.pdf",
+   "blank": 0.862
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Electrochemical performance of all-solid-state batteries. a) Rate capability of Ni90/LPSC-NdO/Li and Ni90/LPSC/Li cells at various C-rates. b) Charge- discharge voltage profiles of the Ni90/LPSC-NdO/Li cell. c) Charge-discharge voltage profiles of the Ni90/LPSC-NdO/Li cell at a 1 C rate. d) Cycling perfor­ mance at 1 C for cells assembled with the LPSC-NdO electrolyte and f) the LPSC electrolyte. e) Electrochemical impedance spectra of the cell with the LPSC-NdO electrolyte and g) the cell with the LPSC electrolyte, measured before and after cycling at 1 C. 8",
+   "bbox": [
+    31.6,
+    369.4,
+    565.7,
+    702.1
+   ],
+   "w": 2227,
+   "h": 1387,
+   "dpi": 300,
+   "src": "57. NdO_LPSCl1.7 Xu2026 NanoEnergy high-air-stability superionic.pdf",
+   "blank": 0.876
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Analysis of interfacial reaction. XPS spectra of the cycled interfaces between lithium anodes and LPSC/LPSC-NdO electrolytes: a) S 2p, b) P 2p, c) Cl 2p, and d) O 1 s and Nd 3d. e) Morphologies of lithium anodes after cycling with LPSC and LPSC-NdO electrolytes. f) Schematic illustrations of the interfacial mechanisms between lithium anodes and LPSC/LPSC-NdO electrolytes. 9",
+   "bbox": [
+    31.6,
+    419.8,
+    565.8,
+    711.7
+   ],
+   "w": 2227,
+   "h": 1217,
+   "dpi": 300,
+   "src": "57. NdO_LPSCl1.7 Xu2026 NanoEnergy high-air-stability superionic.pdf",
+   "blank": 0.661
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. SEM images for a) x=0.05,b) x=0.075 and c) x=0.1 electrolytes with corresponding EDS mappings of P, S, Cl, Nd, O.",
+   "bbox": [
+    84.0,
+    66.0,
+    514.3,
+    228.8
+   ],
+   "w": 1794,
+   "h": 679,
+   "dpi": 300,
+   "src": "57. Sup) NdO_LPSCl1.7 Xu2026 NanoEnergy high-air-stability superionic.pdf",
+   "blank": 0.228
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 4,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. The XPS spectra of the LPSC electrolyte prior to cycling:a) S 2p, b) P 2p and c) Cl 2p",
+   "bbox": [
+    84.0,
+    490.7,
+    503.2,
+    662.0
+   ],
+   "w": 1747,
+   "h": 715,
+   "dpi": 300,
+   "src": "57. Sup) NdO_LPSCl1.7 Xu2026 NanoEnergy high-air-stability superionic.pdf",
+   "blank": 0.889
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. CCD of a) Li/x=0.05/Li , b)Li/x=0.075/Li and c) Li/ x=0.1/Li.",
+   "bbox": [
+    84.0,
+    490.7,
+    481.3,
+    662.0
+   ],
+   "w": 1656,
+   "h": 715,
+   "dpi": 300,
+   "src": "57. Sup) NdO_LPSCl1.7 Xu2026 NanoEnergy high-air-stability superionic.pdf",
+   "blank": 0.883
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Comparison of the ionic conductivities of the two electrolytes before and after 12 hours of exposure in a dry room (dew point: -30 °C)",
+   "bbox": [
+    84.1,
+    492.4,
+    501.9,
+    678.5
+   ],
+   "w": 1742,
+   "h": 777,
+   "dpi": 300,
+   "src": "57. Sup) NdO_LPSCl1.7 Xu2026 NanoEnergy high-air-stability superionic.pdf",
+   "blank": 0.829
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 1,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Comparison of the sulfide solid-state electrolyte performance",
+   "bbox": [
+    85.1,
+    117.3,
+    496.4,
+    764.3
+   ],
+   "w": 1715,
+   "h": 2697,
+   "dpi": 300,
+   "src": "57. Sup) NdO_LPSCl1.7 Xu2026 NanoEnergy high-air-stability superionic.pdf",
+   "blank": 0.941
+  }
+ ]
+}
