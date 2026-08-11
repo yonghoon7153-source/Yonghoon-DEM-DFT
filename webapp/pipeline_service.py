@@ -521,24 +521,51 @@ RAW_THERMAL_KEYS = ('thermal_sigma_full_mScm', 'thermal_sigma_full_mScm_physics'
 _THERMAL_OK_STATES = frozenset({'computed', 'valid_zero', 'valid_null'})
 _THERMAL_FAIL_STATES = frozenset({'failed'})
 
+#: network solver 의 세 채널.  ★ RC7-02 (Codex 7회차): 게시 게이트가 **thermal 하나만**
+#:   검사했다 — electronic solver 는 예외를 잡아 print 만 하고 넘어가(RC5-03 이 thermal 에
+#:   대해 고친 바로 그 결함이 electronic 에 그대로 남아 있었다) σ_e 키가 통째로 빠진 채
+#:   provenance=success 로 게시됐다.  세 채널을 다 본다.
+NETWORK_CHANNELS = ('ionic', 'electronic', 'thermal')
 
-def thermal_channel_verdict(net_data):
-    """→ ('ok'|'fail'|'unknown', reason).  network JSON 의 thermal 채널 판정.
+#: ★ '값이 없다' 의 의미는 **채널마다 다르다** — 한 집합으로 묶으면 안 된다.
+#:   · electronic 의 no_result = AM 망 미퍼콜 = **물리적으로 옳은 답**
+#:     (CLAUDE.md Tier2: σ_e=0 AM-no-perc 1mAh_100_4·1mAh_8_S1~S4 = "—" 가 정답)
+#:   · ionic 의 no_result 도 마찬가지 (σ_i=0 SE-no-perc: 2mAh_real_16·8mAh_real_11)
+#:   · thermal 은 **전 접촉**을 쓰므로 망이 안 서면 거의 언제나 의심스럽다 → OK 로 두지 않는다
+#:     (기존 판정 유지 — 소급 변경 없음)
+_CHANNEL_OK_STATES = {
+    'ionic':      frozenset({'computed', 'valid_zero', 'valid_null', 'no_result'}),
+    'electronic': frozenset({'computed', 'valid_zero', 'valid_null', 'no_result',
+                             'not_applicable'}),
+    'thermal':    _THERMAL_OK_STATES,
+}
+_CHANNEL_FAIL_STATES = frozenset({'failed'})
+
+
+def channel_verdict(net_data, channel='thermal'):
+    """→ ('ok'|'fail'|'unknown', reason).  network JSON 의 한 채널 판정.
 
     'unknown' = 옛 산출물(상태 필드가 없는 세대).  **실패로 취급하지 않는다** — 옛
     데이터를 소급해서 실패로 만들면 재분석 없이는 못 고치는 케이스가 무더기로 생긴다.
     대신 그 사실을 그대로 돌려주어 호출부가 라벨을 붙일 수 있게 한다.
     """
+    if channel not in _CHANNEL_OK_STATES:
+        raise ValueError(f'알 수 없는 채널: {channel}')
     if not isinstance(net_data, dict):
         return 'unknown', 'network 결과 없음'
-    st = net_data.get('thermal_status')
+    st = net_data.get(f'{channel}_status')
     if st is None:
-        return 'unknown', '옛 세대 산출물 (thermal_status 이전)'
-    if st in _THERMAL_FAIL_STATES:
-        return 'fail', net_data.get('thermal_status_reason') or st
-    if st in _THERMAL_OK_STATES:
-        return 'ok', net_data.get('thermal_status_reason') or st
+        return 'unknown', f'옛 세대 산출물 ({channel}_status 이전)'
+    if st in _CHANNEL_FAIL_STATES:
+        return 'fail', net_data.get(f'{channel}_status_reason') or st
+    if st in _CHANNEL_OK_STATES[channel]:
+        return 'ok', net_data.get(f'{channel}_status_reason') or st
     return 'unknown', f'알 수 없는 상태: {st}'
+
+
+def thermal_channel_verdict(net_data):
+    """→ ('ok'|'fail'|'unknown', reason).  channel_verdict 의 thermal 별칭 (하위호환)."""
+    return channel_verdict(net_data, 'thermal')
 
 
 def network_content_verdict(results_dir, modes=('hertzian', 'physics'), strict=True):
@@ -557,6 +584,12 @@ def network_content_verdict(results_dir, modes=('hertzian', 'physics'), strict=T
     strict=True (새로 만든 파일) 면 `unknown` 도 실패로 본다 — 방금 우리 solver 가
     만든 파일에 상태가 없다는 것은 schema 위반이다.  옛 세대를 읽을 때(preserve)는
     strict=False 로 두어 **소급 실패**를 만들지 않는다.
+
+    ★ RC7-02 (Codex 7회차): 이 게이트는 **thermal 하나만** 봤다.  electronic solver 는
+      예외를 잡아 print 만 하고 넘어가므로 (RC5-03 이 thermal 에 대해 고친 결함이 그대로
+      남아 있었다) σ_e 키가 통째로 빠진 채 rc=0·파일 4개·thermal ok 로 **게시**됐다.
+      → `NETWORK_CHANNELS` 셋을 전부 본다.  단 '값이 없다' 의 의미가 채널마다 달라
+        OK 집합은 `_CHANNEL_OK_STATES` 로 채널별로 둔다 (AM/SE 미퍼콜은 정답이다).
     """
     bad, seen = [], []
     for mode in modes:
@@ -571,9 +604,10 @@ def network_content_verdict(results_dir, modes=('hertzian', 'physics'), strict=T
             bad.append(f'{mode}: 읽기 실패 ({type(e).__name__})')
             continue
         seen.append(mode)
-        v, why = thermal_channel_verdict(data)
-        if v == 'fail' or (strict and v == 'unknown'):
-            bad.append(f'{mode}.thermal={v} ({why})')
+        for ch in NETWORK_CHANNELS:
+            v, why = channel_verdict(data, ch)
+            if v == 'fail' or (strict and v == 'unknown'):
+                bad.append(f'{mode}.{ch}={v} ({why})')
     if not seen:
         bad.append('per-mode 산출물이 하나도 없다')
     return (not bad), ('; '.join(bad) if bad else 'ok: ' + ', '.join(seen))

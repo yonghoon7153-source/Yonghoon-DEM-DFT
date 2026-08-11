@@ -1099,7 +1099,18 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
                                 dump_raw_dir=dump_raw_dir, dump_tag=tag_ionic)
 
     results_el = None
-    if am_types:
+    #: ★ RC7-02 (Codex 7회차): 여기가 **RC5-03 이 thermal 에 대해 고친 결함이 그대로 남아
+    #:   있던 자리**다 — 예외를 잡아 print 만 하고 넘어가면, 아래 `if results_el:` 이 거짓이라
+    #:   electronic_* 키를 **아예 쓰지 않는다**.  그러면 downstream 에서
+    #:     ① AM 망 미퍼콜 (= 물리적으로 옳은 답, CLAUDE.md Tier2 "—")
+    #:     ② solver 예외 (= 소프트웨어 실패)
+    #:   가 **똑같이 "키 없음"** 으로 보이고, 게시 게이트는 thermal 만 보므로 ②가 그대로
+    #:   provenance=success 로 게시됐다.  ⇒ thermal 과 같은 규약으로 **항상 상태를 남긴다**.
+    el_status, el_reason = 'not_run', ''
+    if not am_types:
+        el_status = 'not_applicable'
+        el_reason = 'AM 타입이 없다 (전자망 자체가 존재하지 않는 베드)'
+    else:
         print("\n" + "="*60)
         print(f"ELECTRONIC CONDUCTIVITY (AM-AM network) — contact_mode={contact_mode}")
         print("="*60)
@@ -1110,7 +1121,11 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
                                            type_map=type_map,
                                            contact_mode=contact_mode,
                                            dump_raw_dir=dump_raw_dir, dump_tag=tag_el)
+            el_status = 'computed' if results_el else 'no_result'
+            if not results_el:
+                el_reason = 'run_decomposition returned no result (AM 망 미퍼콜 — 물리적으로 옳은 답)'
         except Exception as e:
+            el_status, el_reason = 'failed', f'{type(e).__name__}: {e}'
             print(f"  Electronic solver failed: {e}")
 
     results_th = None
@@ -1157,6 +1172,27 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
             results['electronic_n_edges']         = results_el.get('n_edges')
             results['electronic_active_fraction']      = results_el.get('active_fraction')
             results['electronic_percolating_fraction'] = results_el.get('percolating_fraction')
+            # 값이 실제로 0/None 이면 '계산됐고 답이 0' — 실패가 아니다 (thermal 과 같은 규약).
+            if results['electronic_sigma_full_mScm'] is None:
+                el_status, el_reason = 'valid_null', '솔버가 σ_e 를 None 으로 반환 (AM 망 미퍼콜)'
+            elif results['electronic_sigma_full_mScm'] == 0:
+                el_status, el_reason = 'valid_zero', '솔버가 σ_e=0 을 반환 (AM 망 미퍼콜)'
+        results['electronic_status'] = el_status
+        if el_reason:
+            results['electronic_status_reason'] = el_reason
+        # ── ionic 도 같은 규약으로 상태를 남긴다.  파일 자체가 results 가 있어야 쓰이므로
+        #    'failed' 는 여기 도달하지 않지만, **σ_i=0 / None 인 정상 케이스**
+        #    (SE 미퍼콜 — CLAUDE.md Tier2: 2mAh_real_16 · 8mAh_real_11)를 "실패 아님" 으로
+        #    명시해야 상위 게이트가 그것을 실패로 오인하지 않는다.
+        _si = results.get('sigma_full_mScm')
+        if _si is None:
+            results['ionic_status'] = 'valid_null'
+            results['ionic_status_reason'] = '솔버가 σ_ion 을 None 으로 반환 (SE 망 미퍼콜)'
+        elif _si == 0:
+            results['ionic_status'] = 'valid_zero'
+            results['ionic_status_reason'] = '솔버가 σ_ion=0 을 반환 (SE 망 미퍼콜)'
+        else:
+            results['ionic_status'] = 'computed'
         # ★ thermal 은 **항상** 상태를 남긴다 (위 주석 참조).  값이 없는 것과 못 낸 것을
         #   구분할 수 있어야 상위가 옳게 판단한다.
         if results_th:

@@ -38,6 +38,12 @@ def _mk_tmp(d, body):
 _ok, _fail = 0, []
 
 
+#: ★ RC7-02: 게시 게이트가 이제 세 채널을 다 본다 → 가짜 solver 도 실제 solver 와
+#:   같은 상태 집합을 써야 한다 (fixture 가 계약보다 느슨하면 회귀가 무력해진다).
+_ALL_CH_OK = {'ionic_status': 'computed', 'electronic_status': 'computed',
+              'thermal_status': 'computed'}
+
+
 def chk(name, cond):
     global _ok
     if cond:
@@ -71,7 +77,7 @@ class FakeRunner:
                 for _n in ('network_conductivity.json', 'network_conductivity_hertzian.json',
                            'network_conductivity_physics.json', 'network_conductivity_dual.json'):
                     with open(os.path.join(self.results_dir, _n), 'w') as f:
-                        json.dump({'sigma_full_mScm': 999.0, 'thermal_status': 'computed'}, f)
+                        json.dump({'sigma_full_mScm': 999.0, **_ALL_CH_OK}, f)
             out = 'fake solver'
         elif script == 'run_network_full_corrections.py':
             rc = self.stage_e_rc
@@ -102,7 +108,7 @@ def _seed_case(d, sigma=1.0):
     for _n in ('network_conductivity.json', 'network_conductivity_hertzian.json',
                'network_conductivity_physics.json', 'network_conductivity_dual.json'):
         with open(os.path.join(d, _n), 'w') as f:
-            json.dump({'sigma_full_mScm': sigma, 'thermal_status': 'computed'}, f)
+            json.dump({'sigma_full_mScm': sigma, **_ALL_CH_OK}, f)
     with open(os.path.join(d, 'full_metrics.json'), 'w') as f:
         json.dump({'porosity': 15.6}, f)
     ps.stamp_network_provenance(d, 'OLDRUN-0001', {'atoms.csv': 'deadbeef'})
@@ -295,7 +301,7 @@ def main():
                                'network_conductivity_physics.json',
                                'network_conductivity_dual.json'):
                         with open(os.path.join(res_dir, _n), 'w') as f:
-                            json.dump({'sigma_full_mScm': 5.0, 'thermal_status': 'computed'}, f)
+                            json.dump({'sigma_full_mScm': 5.0, **_ALL_CH_OK}, f)
                 elif script == 'run_network_full_corrections.py' and stage_e_writes:
                     _cl = list(cmd)
                     _t = (_cl[_cl.index('--case-dir') + 1]
@@ -395,7 +401,7 @@ def main():
                                'network_conductivity_hertzian.json',
                                'network_conductivity_physics.json',
                                'network_conductivity_dual.json'):
-                        json.dump({'sigma_full_mScm': 3.0, 'thermal_status': 'computed'},
+                        json.dump({'sigma_full_mScm': 3.0, **_ALL_CH_OK},
                                   open(os.path.join(_d, _n), 'w'))
                 elif sc == 'run_network_full_corrections.py':
                     _cl = list(cmd)
@@ -751,6 +757,8 @@ def main():
                                        ('network_conductivity.json', 'hertzian'),
                                        ('network_conductivity_dual.json', 'hertzian')):
                             json.dump({'sigma_full_mScm': 999.0,
+                                       'ionic_status': 'computed',
+                                       'electronic_status': 'computed',
                                        'thermal_status': _mode_status.get(_m, 'computed'),
                                        'thermal_status_reason': 'fixture'},
                                       open(os.path.join(self.results_dir, _n), 'w'))
@@ -918,6 +926,68 @@ def main():
         _ncsrc = open(os.path.join(os.path.dirname(os.path.dirname(
             os.path.abspath(webapp.__file__))), 'scripts',
             'network_conductivity.py'), encoding='utf-8').read()
+        # ══ RC7-02 (Codex 7회차): 게시 게이트가 **thermal 하나만** 봤다 ══
+        #   electronic solver 는 예외를 print 만 하고 넘어가 (RC5-03 이 thermal 에 대해
+        #   고친 결함이 그대로 남아 있었다) σ_e 키가 통째로 빠진 채 success 로 게시됐다.
+        _base = {'sigma_full_mScm': 5.0, 'ionic_status': 'computed',
+                 'electronic_status': 'computed', 'thermal_status': 'computed'}
+        chk('RC7-02a) ★ electronic 예외 → fail (옛 계약은 thermal 만 봐서 통과였다)',
+            ps.channel_verdict(dict(_base, electronic_status='failed',
+                                    electronic_status_reason='boom'), 'electronic')[0] == 'fail')
+        chk('RC7-02b) ★ AM 망 미퍼콜(no_result) 은 electronic 에서 **ok** — 물리적 정답',
+            ps.channel_verdict(dict(_base, electronic_status='no_result'), 'electronic')[0] == 'ok'
+            and ps.channel_verdict(dict(_base, electronic_status='valid_zero'),
+                                   'electronic')[0] == 'ok')
+        chk('RC7-02c) ★ AM 자체가 없는 베드(not_applicable) 도 ok (실패 아님)',
+            ps.channel_verdict(dict(_base, electronic_status='not_applicable'),
+                               'electronic')[0] == 'ok')
+        chk('RC7-02d) ★ SE 미퍼콜(σ_i=0) 은 ionic 에서 ok (CLAUDE.md Tier2 정답 케이스)',
+            ps.channel_verdict(dict(_base, ionic_status='valid_zero'), 'ionic')[0] == 'ok'
+            and ps.channel_verdict(dict(_base, ionic_status='no_result'), 'ionic')[0] == 'ok')
+        chk('RC7-02e) ★ thermal 의 no_result 는 여전히 ok 가 아니다 (전 접촉인데 망이 안 섬)',
+            ps.channel_verdict(dict(_base, thermal_status='no_result'), 'thermal')[0] != 'ok')
+        chk('RC7-02f) 옛 세대(채널 상태 없음)는 채널별로 unknown — 소급 실패 아님',
+            ps.channel_verdict({'sigma_full_mScm': 1.0}, 'electronic')[0] == 'unknown'
+            and ps.channel_verdict({'sigma_full_mScm': 1.0}, 'ionic')[0] == 'unknown')
+        def _raises(fn, exc):
+            try:
+                fn()
+            except exc:
+                return True
+            except Exception:
+                return False
+            return False
+        chk('RC7-02g) 알 수 없는 채널 이름은 조용히 통과하지 않는다',
+            _raises(lambda: ps.channel_verdict(_base, 'magnetic'), ValueError))
+        # 게시 게이트가 실제로 세 채널을 보는가 (판정 함수만 고치고 배선 안 한 전례가 있다)
+        _tmp2 = tempfile.mkdtemp()
+        try:
+            for _m in ('hertzian', 'physics'):
+                with open(os.path.join(_tmp2, f'network_conductivity_{_m}.json'), 'w') as _f:
+                    json.dump(dict(_base), _f)
+            chk('RC7-02h) 세 채널 정상 → 게이트 통과',
+                ps.network_content_verdict(_tmp2, strict=True)[0] is True)
+            with open(os.path.join(_tmp2, 'network_conductivity_physics.json'), 'w') as _f:
+                json.dump(dict(_base, electronic_status='failed',
+                               electronic_status_reason='boom'), _f)
+            _okg, _whyg = ps.network_content_verdict(_tmp2, strict=True)
+            chk('RC7-02i) ★ physics 의 electronic 실패가 게이트에서 잡힌다 (게시 차단)',
+                _okg is False and 'physics.electronic=fail' in _whyg)
+            with open(os.path.join(_tmp2, 'network_conductivity_physics.json'), 'w') as _f:
+                json.dump(dict(_base, ionic_status='failed'), _f)
+            chk('RC7-02j) ★ ionic 실패도 잡힌다',
+                ps.network_content_verdict(_tmp2, strict=True)[0] is False)
+        finally:
+            shutil.rmtree(_tmp2, ignore_errors=True)
+        chk('RC7-02k) ★ solver 가 electronic_status 를 **항상** 남긴다 (배선 확인)',
+            "results['electronic_status'] = el_status" in _ncsrc
+            and "el_status, el_reason = 'failed'" in _ncsrc)
+        chk('RC7-02l) ★ solver 가 ionic_status 도 남긴다',
+            "results['ionic_status'] = 'computed'" in _ncsrc)
+        _apy_ch = open(os.path.join(os.path.dirname(os.path.abspath(webapp.__file__)),
+                                    'app.py'), encoding='utf-8').read()
+        chk('RC7-02m) ★ app 이 세 채널을 판정 단계로 올린다 (배선)',
+            '_ps.NETWORK_CHANNELS' in _apy_ch and 'if _failed_ch:' in _apy_ch)
         chk('42) ★ solver 가 thermal_status 를 항상 남긴다 (배선 확인)',
             "results['thermal_status'] = th_status" in _ncsrc
             and "th_status, th_reason = 'failed'" in _ncsrc)
