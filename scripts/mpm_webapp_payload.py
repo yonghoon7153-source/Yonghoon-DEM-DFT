@@ -326,6 +326,38 @@ def _selftest_temperature():
     return 0 if ok else 1
 
 
+
+def finite_belt(obj, path='$', found=None):
+    """payload 안의 NaN/Inf 를 None 으로 바꾸고 **바꾼 경로를 돌려준다** → (clean, paths).
+
+    ★ RC7-01 (Codex 7회차): `json.dump` 기본값 allow_nan=True 는 RFC 8259 에 없는
+      `NaN` / `Infinity` **토큰**을 그대로 쓴다 → 브라우저 `JSON.parse` 가 payload 전체를
+      거부한다 (수 분짜리 STEP3 결과가 통째로 못 읽히는 형태의 실패).  이 파일은 곳곳에서
+      ad-hoc `np.nan_to_num` 을 걸어왔지만 한 군데만 빠져도 같은 일이 난다 ⇒ 쓰기 직전에
+      **한 번** 전수 검사한다.  조용히 고치지 않고 경로를 기록하는 것이 요점이다.
+    ⚠ np.float32 는 파이썬 float 의 서브클래스가 **아니다** — np.floating 도 함께 본다.
+    """
+    if found is None:
+        found = []
+    if isinstance(obj, (float, np.floating)):
+        v = float(obj)
+        if v != v or v in (float('inf'), float('-inf')):
+            found.append(path)
+            return None, found
+        return v, found
+    if isinstance(obj, dict):
+        out = {}
+        for k, v in obj.items():
+            out[k], found = finite_belt(v, f'{path}.{k}', found)
+        return out, found
+    if isinstance(obj, (list, tuple)):
+        out = []
+        for i, v in enumerate(obj):
+            w, found = finite_belt(v, f'{path}[{i}]', found)
+            out.append(w)
+        return out, found
+    return obj, found
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--scaffold', default='', help='AM scaffold CSV (type,x,y,z,r); omit for an SE-only '
@@ -727,15 +759,30 @@ def main():
     #   downstream 이 알 수 없었다 — DEM 접촉망 솔버에서 고친 것과 **같은 결함**이다.
     #   (그 결함이 양쪽 파이프라인에 따로 있었던 것이 CLAUDE.md frame[5] 경고의 실례다.)
     _s3st = {}                       # component → {'status': …, 'reason': …}
+    #: ★ RC7-01 (Codex 7회차): manifest 가 **표시된 component 들만** 보고 상태를 정했다.
+    #:   그래서 어떤 component 가 아예 실행되지 않아 `_s3st` 에 **없으면**, 남은 것들이
+    #:   전부 complete 인 한 top='complete' 가 나왔다 — "안 돈 것" 이 "다 됐다" 로 보였다.
+    #:   결손을 조용히 두지 않겠다는 manifest 자신의 목적과 정반대다.
+    #:   ⇒ **기대 집합을 선언**하고, 표시되지 않은 것은 `missing` 으로 채운다.
+    STEP3_EXPECTED = ('electronic', 'ionic', 'thermal', 'pore', 'pnm')
 
     def _s3mark(comp, status, reason=''):
         """STEP3 component 의 상태를 남긴다.  **결손을 조용히 두지 않는다.**
 
         status ∈ complete | not_solvable(물리적으로 정의 안 됨=정상) | failed(예외)
-                 | disabled(사용자가 끔) | skipped(선행 부재)
+                 | disabled(사용자가 끔) | skipped(선행 부재) | missing(표시 자체가 없음)
+
+        ★ RC7-05 (Codex 7회차): backend 는 모듈 전역 `LAST_BACKEND` 하나뿐이라 manifest 가
+          **마지막 solve 의 backend** 만 담았다 (electronic 은 GPU, ionic 은 CPU 로 떨어져도
+          하나만 보임).  → 표시 시점에 **component 별로 스냅샷**한다.
         """
-        _s3st[comp] = {'status': status, **({'reason': reason} if reason else {})}
-        return _s3st[comp]
+        rec = {'status': status, **({'reason': reason} if reason else {})}
+        _mod = _sys.modules.get('step3_sigma')
+        _bk = getattr(_mod, 'LAST_BACKEND', None) if _mod is not None else None
+        if status == 'complete' and isinstance(_bk, dict) and _bk.get('used'):
+            rec['backend'] = dict(_bk)
+        _s3st[comp] = rec
+        return rec
 
     step3 = None; je_am = None; jb_am = None; elec_field = None; ion_field = None; jrxn_am = None
     thermal_field = None                                     # STEP3 열류 |k∇T| 점군 (전자/이온 필드처럼)
@@ -1416,22 +1463,42 @@ def main():
     #    complete/partial/failed 를 상태들로 판정한다.  키 부재가 무엇을 뜻하는지
     #    downstream 이 **추측하지 않아도** 되게 만드는 것이 이 manifest 의 목적이다.
     if isinstance(step3, dict):
+        # ★ RC7-01: 표시되지 않은 기대 component 를 **missing 으로 채운 뒤** 판정한다.
+        #   (STEP3 를 아예 안 돌린 경우 = _s3st 가 비어 있음 → disabled 로 남긴다.
+        #    STEP3 는 돌았는데 일부가 표시조차 안 된 경우만 missing 이다.)
+        if _s3st:
+            for _c in STEP3_EXPECTED:
+                _s3st.setdefault(_c, {'status': 'missing',
+                                      'reason': '이 실행에서 상태 표시가 없었다 '
+                                                '(코드 경로가 건너뛰었거나 표시 누락)'})
         _sts = {c: v['status'] for c, v in _s3st.items()}
         if not _sts:
             _top = 'disabled'
-        elif '_step3' in _sts or 'failed' in _sts.values():
-            _top = 'failed' if _sts.get('_step3') == 'failed' else 'partial'
+        elif _sts.get('_step3') == 'failed':
+            _top = 'failed'
+        elif 'failed' in _sts.values() or 'missing' in _sts.values():
+            _top = 'partial'
         elif all(v == 'complete' for v in _sts.values()):
             _top = 'complete'
         else:
             _top = 'partial'
-        step3['manifest'] = {'schema_version': 1, 'status': _top, 'components': dict(_s3st),
-                             # ★ RC6-08: 요청한 backend 와 **실제로 쓴** backend.  CuPy 부재로
-                             #   CPU 로 떨어져도 결과는 정상 수치라 로그 없이는 구분 불가였다.
-                             'backend': dict(getattr(_s3, 'LAST_BACKEND', {}) or {})}
+        step3['manifest'] = {
+            'schema_version': 2,          # 1→2: missing 채움 + component 별 backend
+            'status': _top, 'components': dict(_s3st),
+            'expected': list(STEP3_EXPECTED),
+            'missing': sorted(c for c, v in _sts.items() if v == 'missing'),
+            'failed': sorted(c for c, v in _sts.items() if v == 'failed'),
+            # ★ RC6-08: 요청한 backend 와 **실제로 쓴** backend.  CuPy 부재로
+            #   CPU 로 떨어져도 결과는 정상 수치라 로그 없이는 구분 불가였다.
+            # ★ RC7-05: 이 전역 필드는 **마지막 solve** 만 담는다 → component 별
+            #   `components[c]['backend']` 가 정본이고 여기는 하위호환 요약이다.
+            'backend_last_solve': dict(getattr(_s3, 'LAST_BACKEND', {}) or {}),
+            'backend': dict(getattr(_s3, 'LAST_BACKEND', {}) or {}),   # 하위호환 별칭
+        }
     elif _s3st:
-        step3 = {'manifest': {'schema_version': 1, 'status': 'failed',
-                              'components': dict(_s3st)}}
+        step3 = {'manifest': {'schema_version': 2, 'status': 'failed',
+                              'components': dict(_s3st),
+                              'expected': list(STEP3_EXPECTED)}}
 
     particles = [{'id': int(i), 'type': name.get(int(t[i]), 'AM'),
                   'x': round(float((c[i, 0] - SW[0]) * UM), 3),
@@ -1657,8 +1724,23 @@ def main():
                        'target_porosity': a.target_porosity, 'target_coverage': a.target_coverage,
                        'smooth': a.smooth},
     }
+    # ── ★ RC7-01 (Codex 7회차): bare NaN 벨트 ─────────────────────────────────
+    #   이 파일은 곳곳에서 `np.nan_to_num(...)` 으로 NaN 을 막아왔지만 그것은 **ad-hoc**
+    #   이고, 한 군데라도 빠지면 `json.dump` 의 기본 allow_nan=True 가 RFC 8259 에 없는
+    #   `NaN` / `Infinity` **토큰을 그대로 쓴다** → 브라우저 `JSON.parse` 가 payload 전체를
+    #   거부한다 (수 분짜리 STEP3 결과가 통째로 못 읽히는 형태의 실패).
+    #   ⇒ 쓰기 직전에 **한 번** 전수 검사한다.  단 조용히 고치면 안 되므로 (그것이 이
+    #     리뷰가 계속 잡아온 실패 양식이다) 바꾼 자리를 **경로째 payload 에 기록**한다.
+    payload, _nonfinite = finite_belt(payload)
+    if _nonfinite:
+        payload['nonfinite_sanitized'] = {'count': len(_nonfinite),
+                                          'paths': _nonfinite[:50],
+                                          'note': 'NaN/Inf → null 로 치환 (bare NaN 은 JSON 이 아님). '
+                                                  '값이 null 인 자리는 계산이 안 된 것으로 읽을 것.'}
+        print(f'  ⚠ 비유한값 {len(_nonfinite)}개를 null 로 치환했다 (payload.nonfinite_sanitized 참조): '
+              + ', '.join(_nonfinite[:5]) + (' …' if len(_nonfinite) > 5 else ''), flush=True)
     with open(a.out, 'w') as fh:
-        json.dump(payload, fh)
+        json.dump(payload, fh, allow_nan=False)   # 벨트 뒤이므로 남아 있으면 **터뜨린다**
     import os
     _mp = mpm_metrics                                      # AUTHORITATIVE table values (sim porosity/
     #   thickness/SE-of-solid + converged plastic coverage vs rigid reference) — NOT the n_vox

@@ -44,6 +44,20 @@ _ALL_CH_OK = {'ionic_status': 'computed', 'electronic_status': 'computed',
               'thermal_status': 'computed'}
 
 
+def _boom(_x):
+    raise ValueError('bare NaN 토큰')
+
+
+def _raises2(fn, exc):
+    try:
+        fn()
+    except exc:
+        return True
+    except Exception:
+        return False
+    return False
+
+
 def chk(name, cond):
     global _ok
     if cond:
@@ -1046,13 +1060,95 @@ def main():
         chk('57) ★ 바깥 예외도 payload 에 흔적을 남긴다 (옛 코드는 print 뿐)',
             "_s3mark('_step3', 'failed'" in _pay)
         chk('58) ★ manifest 가 payload 에 실제로 박힌다 (배선)',
-            "step3['manifest'] = {'schema_version': 1" in _pay)
+            "'schema_version': 2," in _pay)
         chk('59) ★ RC6-08 실제 backend 를 기록한다 (요청≠실제일 수 있다)',
             'LAST_BACKEND' in _s3s and "LAST_BACKEND['used'] = 'cpu'" in _s3s
             and "LAST_BACKEND['used'] = 'gpu'" in _s3s
             and "fallback_reason" in _s3s)
         chk('60) ★ 그 backend 가 manifest 로 흘러간다 (배선)',
             "'backend': dict(getattr(_s3, 'LAST_BACKEND'" in _pay)
+
+        # ══ RC7-01 (Codex 7회차): manifest 가 **표시된 것만** 보고 complete 를 냈다 ══
+        #   component 가 아예 안 돌아 _s3st 에 없으면, 남은 것이 전부 complete 인 한
+        #   top='complete' 였다 — "안 돈 것" 이 "다 됐다" 로 보인다.
+        chk('RC7-01a) ★ 기대 component 집합이 선언돼 있다',
+            "STEP3_EXPECTED = ('electronic', 'ionic', 'thermal', 'pore', 'pnm')" in _pay)
+        chk('RC7-01b) ★ 표시 안 된 기대 component 를 missing 으로 채운다',
+            "_s3st.setdefault(_c, {'status': 'missing'" in _pay)
+        chk('RC7-01c) ★ missing 이 있으면 complete 가 될 수 없다',
+            "'failed' in _sts.values() or 'missing' in _sts.values()" in _pay)
+        chk('RC7-01d) manifest 가 missing·failed 목록을 명시적으로 싣는다',
+            "'missing': sorted(" in _pay and "'failed': sorted(" in _pay)
+        # 판정 로직을 실제로 돌려본다 (문자열 검사만으로는 계약을 못 지킨다)
+        def _top_of(marked, expected=('electronic', 'ionic', 'thermal', 'pore', 'pnm')):
+            st = dict(marked)
+            if st:
+                for c in expected:
+                    st.setdefault(c, {'status': 'missing'})
+            sts = {c: v['status'] for c, v in st.items()}
+            if not sts:
+                return 'disabled'
+            if sts.get('_step3') == 'failed':
+                return 'failed'
+            if 'failed' in sts.values() or 'missing' in sts.values():
+                return 'partial'
+            return 'complete' if all(v == 'complete' for v in sts.values()) else 'partial'
+        _all_ok = {c: {'status': 'complete'} for c in
+                   ('electronic', 'ionic', 'thermal', 'pore', 'pnm')}
+        chk('RC7-01e) 전부 complete → complete', _top_of(_all_ok) == 'complete')
+        _part = dict(_all_ok); _part.pop('ionic')
+        chk('RC7-01f) ★ ionic 이 아예 표시되지 않으면 partial (옛 계약은 complete)',
+            _top_of(_part) == 'partial')
+        chk('RC7-01g) not_solvable 은 정상 — complete 를 막지 않되 complete 도 아니다',
+            _top_of(dict(_all_ok, pnm={'status': 'not_solvable'})) == 'partial')
+        chk('RC7-01h) 바깥 예외는 failed 로 승격',
+            _top_of(dict(_all_ok, _step3={'status': 'failed'})) == 'failed')
+        chk('RC7-01i) STEP3 자체를 안 돌린 경우는 disabled (missing 으로 오염 금지)',
+            _top_of({}) == 'disabled')
+
+        # ══ RC7-01: bare NaN 벨트 — json.dump 기본값은 RFC 8259 밖 토큰을 쓴다 ══
+        chk('RC7-01j) ★ 쓰기 직전 전수 벨트가 있다',
+            'payload, _nonfinite = finite_belt(payload)' in _pay)
+        # ★ 문자열 검사가 아니라 **실제 함수**를 돌린다 (배선만 보면 계약을 못 지킨다)
+        try:
+            import numpy as _np
+            sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(
+                os.path.abspath(webapp.__file__))), 'scripts'))
+            from mpm_webapp_payload import finite_belt as _belt
+            _clean, _paths = _belt({'ok': 1.0, 'nan': float('nan'), 'inf': float('inf'),
+                                    'f32': _np.float32('nan'), 'i': 3, 'n': None,
+                                    'deep': {'l': [1.0, float('-inf'), 'txt']}})
+            chk('RC7-01j2) ★ 실제 벨트가 NaN·Inf·np.float32 를 전부 null 로 바꾼다',
+                _clean['nan'] is None and _clean['inf'] is None and _clean['f32'] is None
+                and _clean['deep']['l'] == [1.0, None, 'txt'])
+            chk('RC7-01j3) ★ 정상값·비-float 은 건드리지 않는다',
+                _clean['ok'] == 1.0 and _clean['i'] == 3 and _clean['n'] is None)
+            chk('RC7-01j4) ★ 바꾼 자리를 **경로째** 돌려준다 (조용한 치환 금지)',
+                sorted(_paths) == ['$.deep.l[1]', '$.f32', '$.inf', '$.nan'])
+            _ser = json.dumps(_clean, allow_nan=False)      # 남아 있으면 ValueError
+            chk('RC7-01j5) ★ 벨트 뒤엔 allow_nan=False 직렬화가 통과하고 금지 토큰이 없다',
+                'NaN' not in _ser and 'Infinity' not in _ser
+                and _raises2(lambda: json.dumps({'x': float('nan')}, allow_nan=False),
+                             ValueError))
+        except ImportError as _ie:
+            chk(f'RC7-01j2) ⚠ 벨트 실행 검증 생략 (import 실패: {_ie})', True)
+        chk('RC7-01k) ★ allow_nan=False 로 남아 있으면 조용히 넘어가지 않고 터진다',
+            'json.dump(payload, fh, allow_nan=False)' in _pay)
+        chk('RC7-01l) ★ 치환을 조용히 하지 않고 경로째 기록한다',
+            "payload['nonfinite_sanitized']" in _pay)
+        chk('RC7-01m) ★ np.float32 도 잡는다 (파이썬 float 서브클래스가 아니다)',
+            'np.floating' in _pay)
+        _bad = json.dumps({'a': float('nan')})           # 기본 json 이 내는 것
+        chk('RC7-01n) ★ 결함 재현: 기본 json.dump 는 bare NaN 토큰을 쓴다',
+            'NaN' in _bad and _raises2(lambda: json.loads(_bad, parse_constant=_boom), ValueError))
+
+        # ══ RC7-05: backend 가 전역 하나라 마지막 solve 만 표현됐다 ══
+        chk('RC7-05a) ★ component 별로 backend 를 스냅샷한다',
+            "rec['backend'] = dict(_bk)" in _pay)
+        chk('RC7-05b) ★ 전역 필드는 하위호환 별칭으로 라벨링됐다',
+            "'backend_last_solve'" in _pay)
+        chk('RC7-05c) 스냅샷은 complete 인 component 에만 (미실행에 backend 를 붙이지 않는다)',
+            "if status == 'complete' and isinstance(_bk, dict)" in _pay)
 
         chk('30) 11-키는 run_one 이 무조건 쓰는 집합과 같다 (개수 고정)',
             len(ps.STAGE_E_REQUIRED_KEYS) == 11
