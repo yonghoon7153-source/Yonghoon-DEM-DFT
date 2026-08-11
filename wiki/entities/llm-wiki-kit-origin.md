@@ -36,3 +36,4 @@ scope: n-a
 
 ## 관련 페이지·경로
 - 규칙 원본: wiki/SCHEMA.md · 원장 문화와의 접점: [[findings-ledger]]
+- 같은 논리(요약 압축 거부)의 운영판: [[context-compaction-policy]]

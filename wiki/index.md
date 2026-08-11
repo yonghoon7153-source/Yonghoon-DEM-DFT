@@ -2,7 +2,7 @@
 
 > 지식 지도.  모든 페이지가 타입별로 한 줄 요약과 함께 등록된다.
 > 규칙: `wiki/SCHEMA.md` · 점검: `python3 wiki/tools/lint.py`
-> Last updated: 2026-08-11 | Total pages: 20
+> Last updated: 2026-08-11 | Total pages: 21
 
 ## Concepts (핵심 개념 — 여러 세션에 걸쳐 반복 참조)
 
@@ -31,6 +31,7 @@
 - [[kit-run-protocol]] — V100 부트스트랩→worktree→게이트 배선→run_mpm→완료판정→A/B (드립 재발 방지).
 - [[adversarial-review-protocol]] — 3각 자체리뷰 + Codex 교차 + 원장 등재 + 수치는 하네스와 커밋.
 - [[litdb-canon-procedure]] — 정본 카드 조회/추가 워크트리 절차 (INDEX 먼저, 복사 금지).
+- [[context-compaction-policy]] — 50 %에 알리고 압축은 사람이. `autoCompactWindow` 금지 + 계기 3가드.
 
 ## Questions (열린 질문 — 자료가 올 때마다 근거 축적)
 
