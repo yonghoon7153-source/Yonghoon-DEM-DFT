@@ -4,44 +4,111 @@
 
 <div class="sem-head">
   <div>
-    <h1 style="margin:0">🎤 연구 세미나</h1>
+    <h1 style="margin:0">🎤 연구 세미나 — cascade</h1>
     <div class="muted" style="font-size:.82rem;margin-top:3px">
-      대본 · 용어집 · 파이프라인 — <b>파일이 정본이고 이 화면은 뷰어다</b>
-      (고치면 새로고침으로 반영)
+      정본은 <b>kb/seminars/ 의 파일</b>이고 이 화면은 뷰어다. 아래 진행표는 대본을
+      <b>파싱해서</b> 만든다 — 대본을 고치면 새로고침만으로 따라온다.
     </div>
   </div>
-  {% if deck %}
-  <a class="btn primary sm" href="/seminar/deck">📦 덱 (.pptx) 내려받기</a>
-  {% endif %}
+  <div class="sem-dl">
+    {% for d in decks %}
+    <a class="btn {{ 'primary' if d.primary else '' }} sm" href="/seminar/deck?v={{ d.key }}"
+       title="{{ d.name }}">📦 {{ '정본 덱' if d.primary else '다른 판' }}
+       <span class="mono" style="opacity:.7">{{ d.kb }} KB</span></a>
+    {% endfor %}
+  </div>
 </div>
+
+{% if decks %}
+<div class="muted mono" style="font-size:.72rem;margin-top:4px">
+  {% for d in decks %}{{ d.name }} — {{ d.note }}{% if not loop.last %} · {% endif %}{% endfor %}
+</div>
+{% endif %}
+
+{% if runsheet %}
+<div class="sem-run">
+  <div class="sem-run-top">
+    <b>진행표</b>
+    <span class="muted">본문 {{ n_body }}장 · 합계 <b>{{ total_min }}분 {{ total_sec }}초</b>
+      · 부록은 발표하지 않고 질문 때 띄운다</span>
+  </div>
+  <div class="sem-parts">
+    {% for p in runsheet %}
+    <div class="sem-part">
+      <div class="sem-part-h">
+        <span class="sem-badge">{{ p.letter }}</span>
+        <span class="sem-part-t">{{ p.title }}</span>
+      </div>
+      <div class="sem-part-m mono muted">{{ p.span }} · {{ p.minutes }}분
+        {%- if p.slides %} · {{ p.slides|length }}장{% endif %}</div>
+      <ul class="sem-slides">
+        {% for s in p.slides %}
+        <li>
+          <span class="mono sem-pid">{{ s.id }}</span>
+          <span class="sem-st">{{ s.title }}</span>
+          {% if s.stars %}<span class="sem-star" title="핵심 슬라이드">{{ '★' * s.stars }}</span>{% endif %}
+          {% if s.sec %}<span class="sem-sec mono">{{ s.sec }}s</span>
+          <i class="sem-bar" style="width:{{ (s.sec / 90 * 46)|round|int }}px"></i>{% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
 
 <div class="tabs" id="semtabs" style="margin-top:14px">
-  <button class="active" data-tab="spec" data-src="kb/seminars/cascade_seminar_2026_08_spec.md"
-          data-kb="{{ spec_kb }}">📄 슬라이드 대본 + Defense Q&amp;A</button>
-  {% if terms %}<button data-tab="terms" data-src="kb/methodology/terminology_register.md"
-          data-kb="{{ terms_kb }}">📖 용어 · 기호 규약</button>{% endif %}
-  {% if guide %}<button data-tab="guide" data-src="docs/cascade_pipeline_guide.md"
-          data-kb="{{ guide_kb }}">🧭 파이프라인 가이드</button>{% endif %}
+  {% for d in docs %}
+  <button {% if loop.first %}class="active"{% endif %} data-tab="{{ d.key }}"
+          data-src="{{ d.rel }}" data-kb="{{ d.kb }}" title="{{ d.note }}">{{ d.label }}</button>
+  {% endfor %}
 </div>
 
-<div class="sem-bar">
+<div class="sem-bar-row">
   <input id="semq" type="search" autocomplete="off"
-         placeholder="문서 안에서 찾기 (예: vacuous, β 게이트, trade-off, unique_kill)">
+         placeholder="문서 안에서 찾기 (예: β 게이트, trade-off, unique_kill, 철회)">
   <span class="mono muted" id="semsrc"></span>
 </div>
 <div class="muted" id="semhits" style="font-size:.78rem;min-height:1.1em;margin:2px 0 6px"></div>
 
 <nav class="sem-toc" id="semtoc"></nav>
 
-<div class="tab-panel active sem-doc" id="tab-spec">{{ body|safe }}</div>
-{% if terms %}<div class="tab-panel sem-doc" id="tab-terms">{{ terms|safe }}</div>{% endif %}
-{% if guide %}<div class="tab-panel sem-doc" id="tab-guide">{{ guide|safe }}</div>{% endif %}
+{% for d in docs %}
+<div class="tab-panel sem-doc {% if loop.first %}active{% endif %}" id="tab-{{ d.key }}">{{ d.html|safe }}</div>
+{% endfor %}
 
 <style>
 .sem-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
-.sem-bar{display:flex;gap:10px;align-items:center;margin-top:4px}
-.sem-bar input{flex:1;min-width:200px;padding:7px 11px;border:1px solid var(--border);
+.sem-dl{display:flex;gap:6px;flex-wrap:wrap}
+.sem-bar-row{display:flex;gap:10px;align-items:center;margin-top:4px}
+.sem-bar-row input{flex:1;min-width:200px;padding:7px 11px;border:1px solid var(--border);
   border-radius:var(--radius);background:var(--card);color:var(--text);font-size:.85rem}
+
+/* 진행표 */
+.sem-run{margin-top:14px;border:1px solid var(--border);border-radius:var(--radius);
+  background:var(--card);padding:12px 14px}
+.sem-run-top{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;font-size:.85rem;
+  margin-bottom:10px}
+.sem-run-top .muted{font-size:.78rem}
+.sem-parts{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.sem-part{border:1px solid var(--border);border-radius:var(--radius);padding:9px 10px;
+  background:var(--bg)}
+.sem-part-h{display:flex;gap:7px;align-items:center}
+.sem-badge{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;
+  border-radius:50%;background:var(--navy,#1f2937);color:#fff;font-size:.7rem;font-weight:700;
+  flex:0 0 auto}
+.sem-part-t{font-size:.82rem;font-weight:600;line-height:1.25}
+.sem-part-m{font-size:.7rem;margin:3px 0 6px}
+.sem-slides{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.sem-slides li{display:flex;align-items:center;gap:5px;font-size:.73rem;line-height:1.3}
+.sem-pid{color:var(--dim);flex:0 0 auto;min-width:26px}
+.sem-st{flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sem-star{color:#b45309;flex:0 0 auto;letter-spacing:-1px}
+.sem-sec{color:var(--dim);flex:0 0 auto;font-size:.66rem}
+.sem-bar{display:inline-block;height:4px;border-radius:2px;background:var(--brand-fill,#dbeafe);
+  border:1px solid var(--border);flex:0 0 auto}
+
 .sem-toc{display:flex;flex-wrap:wrap;gap:4px 14px;padding:10px 14px;margin:6px 0 14px;
   border:1px solid var(--border);border-radius:var(--radius);background:var(--card)}
 .sem-toc a{font-size:.78rem;color:var(--dim);text-decoration:none;white-space:nowrap}

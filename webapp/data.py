@@ -3866,3 +3866,72 @@ def md_to_html(md: str) -> str:
         out.append("<pre><code>" + _h.escape("\n".join(code)) + "</code></pre>")
     close()
     return "\n".join(out)
+
+
+# ── 세미나 진행표 ────────────────────────────────────────────────────────────────
+SEMINAR_DECK = "Research_Seminar_2026_08_cascade_release.pptx"   # 정본 29장
+SEMINAR_SCRIPT = "cascade_speaker_script_FINAL_ko.md"            # 29장 전수 대조본
+
+#: 세미나 탭 — (키, 라벨, 경로, 한 줄 설명). 파일이 없으면 탭을 만들지 않는다.
+SEMINAR_DOCS = [
+    ("script", "🎙 발표 대본", KB / "seminars" / SEMINAR_SCRIPT,
+     "29장 전수 대조 · 슬라이드별 초 배분 · 리허설 카드"),
+    ("qa", "🛡 Defense Q&A", KB / "seminars" / "Research_Seminar_2026_08_cascade_final_defense_QA_ko.md",
+     "예상 질문 24건과 방어 답변"),
+    ("terms", "📖 용어 · 기호", KB / "seminars" / "Research_Seminar_2026_08_cascade_final_terminology_symbols.md",
+     "기호 규약과 claim boundary"),
+    ("ledger", "🧾 출처 원장", KB / "seminars" / "Research_Seminar_2026_08_cascade_final_source_ledger.md",
+     "슬라이드별 정본 출처 — 숫자가 어디서 왔는지"),
+    ("pipeline", "🧭 파이프라인", ROOT / "docs" / "cascade_pipeline_guide_codex_2026_08_11.md",
+     "cascade 전체 절차"),
+    ("ml", "🤖 ML 통합", ROOT / "docs" / "cascade_ml_integration_guide.md",
+     "co-doping ML 과 acquisition"),
+]
+
+#: 다운로드 허용 덱 (경로 주입 차단 — 화이트리스트 밖은 404)
+SEMINAR_DECKS = {
+    "release": (SEMINAR_DECK, "정본 · 29장 (본문 21 + 부록 8)"),
+    "codex28": ("Research_Seminar_2026_08_cascade_final.pptx", "Codex final · 28장 (레이더 없음)"),
+}
+
+
+def seminar_runsheet(md: str) -> list[dict]:
+    """대본에서 Part/슬라이드 구조를 **파싱해서** 진행표를 만든다.
+
+    하드코딩하지 않는 이유 — 대본을 고치면 화면이 따라와야 한다. 어긋나면 그게 바로
+    "화면과 정본이 갈라진" 상태고, 우리가 제일 싫어하는 종류의 오류다.
+
+    형식:  `# Part A. 제목 (P1–P4, ≈4분)`  ·  `## P1. 제목 ⏱40 ★`
+    """
+    import re
+    parts: list[dict] = []
+    cur: dict | None = None
+    for line in md.splitlines():
+        m = re.match(r"^#\s+(Part\s+([A-Z])\.\s*(.+?))\s*$", line)
+        if m:
+            title = m.group(3)
+            rng = re.search(r"\(([^)]*)\)", title)          # 괄호가 끝이 아닐 수 있다
+            clean = re.sub(r"\s*\([^)]*\)\s*", " ", title).strip(" —·-")
+            cur = {"letter": m.group(2), "title": clean,
+                   "meta": rng.group(1) if rng else "", "slides": []}
+            parts.append(cur)
+            continue
+        if line.startswith("# ") and cur is not None:      # 부록·리허설 등 Part 밖 구획
+            cur = None
+            continue
+        m = re.match(r"^##\s+(P(\d+))\.\s*(.+?)\s*$", line)
+        if m and cur is not None:
+            t = m.group(3)
+            sec = re.search(r"⏱\s*(\d+)", t)
+            cur["slides"].append({
+                "id": m.group(1), "n": int(m.group(2)),
+                "title": re.sub(r"\s*[⏱★].*$", "", t).strip(),
+                "sec": int(sec.group(1)) if sec else None,
+                "stars": t.count("★"),
+            })
+    for p in parts:
+        tot = sum(s["sec"] or 0 for s in p["slides"])
+        p["seconds"] = tot
+        p["minutes"] = round(tot / 60.0, 1)
+        p["span"] = (f"{p['slides'][0]['id']}–{p['slides'][-1]['id']}" if p["slides"] else "")
+    return parts

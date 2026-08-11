@@ -609,6 +609,37 @@ def test_status_badge_is_not_duplicated():
     assert "else if(pr)cell+=" in cmp_, "compare 가 배지를 배타적으로 안 고른다"
 
 
+def test_seminar_points_at_files_that_exist():
+    """★ /seminar 이 **없는 덱**(Research_Seminar_2026_08_cascade.pptx)과 옛 spec 을 가리키고
+    있었다 — 다운로드 버튼이 조용히 사라진 상태였다 (2026-08-11 개편). 다시 어긋나지 않게 못 박는다."""
+    for key, (name, _note) in D.SEMINAR_DECKS.items():
+        assert (D.KB / "seminars" / name).is_file(), f"덱 화이트리스트 '{key}' 가 없는 파일을 가리킨다: {name}"
+    assert (D.KB / "seminars" / D.SEMINAR_SCRIPT).is_file(), "정본 대본이 없다"
+    live = [k for k, _l, p, _n in D.SEMINAR_DOCS if p.is_file()]
+    assert "script" in live, "대본 탭이 안 뜬다 — 경로가 어긋났다"
+    assert len(live) >= 4, f"세미나 문서 탭이 너무 적다: {live}"
+
+    c = A.app.test_client()
+    t = c.get("/seminar").get_data(as_text=True)
+    assert c.get("/seminar/deck?v=release").status_code == 200
+    assert c.get("/seminar/deck?v=../../etc/passwd").status_code == 404, "덱 키가 경로로 새면 안 된다"
+    for k in live:
+        assert f'data-tab="{k}"' in t, f"{k} 탭이 화면에 없다"
+
+
+def test_seminar_runsheet_tracks_the_script():
+    """진행표는 대본을 **파싱**해서 만든다 — 하드코딩하면 대본을 고쳤을 때 조용히 어긋난다."""
+    md = (D.KB / "seminars" / D.SEMINAR_SCRIPT).read_text(encoding="utf-8")
+    rs = D.seminar_runsheet(md)
+    assert len(rs) >= 4, f"Part 를 못 읽었다: {rs}"
+    assert all(p["slides"] for p in rs), "슬라이드가 비어 있는 Part 가 있다"
+    assert sum(p["seconds"] for p in rs) > 600, "초 배분을 못 읽었다 (⏱ 표기 확인)"
+    assert not any("(" in p["title"] for p in rs), f"Part 제목에 괄호 메타가 남았다: {[p['title'] for p in rs]}"
+    # 대본에 없는 Part 를 화면이 지어내지 않는지 — 개수가 정확히 같아야 한다
+    t = A.app.test_client().get("/seminar").get_data(as_text=True)
+    assert len(re.findall(r'class="sem-badge">([A-Z])<', t)) == len(rs)
+
+
 def _cmt_worker_tmp(arg):
     path, rel, i = arg
     D.COMMENTS_PATH = Path(path)          # 자식 프로세스에도 임시 경로를 심는다

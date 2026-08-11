@@ -515,9 +515,6 @@ def api_paper(pid):
     return jsonify({"id": pid, "html": html, "figures": D.paper_figures(pid)})
 
 
-DECK_NAME = "Research_Seminar_2026_08_cascade.pptx"
-
-
 @app.route("/seminar/deck")
 def seminar_deck():
     """세미나 pptx 내려받기.
@@ -525,8 +522,14 @@ def seminar_deck():
     ⚠ /api/file 로는 못 준다 — safe_repo_path 의 허용 뿌리가 docs·db·litdb/figures 라
       kb/ 는 애초에 막혀 있다. 허용 목록을 넓히면 kb 전체(리뷰 노트 포함)가 열리므로,
       이 파일 하나만 주는 전용 라우트를 판다. (2026-08-06 링크 404 수정)
+
+    ?v= 는 **화이트리스트 키**만 받는다 (D.SEMINAR_DECKS). 경로가 아니므로 주입이 성립하지 않는다.
     """
-    p = D.KB / "seminars" / DECK_NAME
+    key = request.args.get("v", "release")
+    entry = D.SEMINAR_DECKS.get(key)
+    if not entry:
+        abort(404)
+    p = D.KB / "seminars" / entry[0]
     if not p.is_file():
         abort(404)
     return send_from_directory(p.parent, p.name, as_attachment=True, download_name=p.name)
@@ -534,31 +537,42 @@ def seminar_deck():
 
 @app.route("/seminar")
 def seminar():
-    """연구세미나 — spec(kb/seminars/*.md) 을 그대로 렌더한다.
+    """연구세미나 — **정본 덱(29장)과 그 부속 문서**를 한 화면에 모은다.
 
-    ⚠ pptx 와 **같은 단일 소스**를 본다. 덱을 고치면 여기도 따라오고, 반대도 같다.
+    ⚠ 이 화면은 뷰어다. 정본은 kb/seminars/ 의 파일이고, 진행표는 대본을 **파싱해서**
+      만든다 — 하드코딩하면 대본을 고쳤을 때 화면이 조용히 어긋난다.
+      (2026-08-11 개편: 옛 spec·존재하지 않는 덱을 가리키고 있던 것을 정본으로 교체)
     """
     import os
     base = D.KB / "seminars"
-    md = base / "cascade_seminar_2026_08_spec.md"
-    if not md.is_file():
+
+    docs = []
+    for key, label, path, note in D.SEMINAR_DOCS:
+        if not path.is_file():
+            continue
+        docs.append({"key": key, "label": label, "note": note,
+                     "rel": str(path.relative_to(D.ROOT)),
+                     "kb": os.path.getsize(path) // 1024,
+                     "html": D.md_to_html(path.read_text(encoding="utf-8"))})
+    if not docs:
         abort(404)
-    deck = base / DECK_NAME
 
-    def doc(p):
-        """마크다운 파일 → (html, KB). 없으면 (None, 0) — 템플릿이 탭을 안 만든다."""
-        return ((D.md_to_html(p.read_text(encoding="utf-8")), os.path.getsize(p) // 1024)
-                if p.is_file() else (None, 0))
+    script_md = base / D.SEMINAR_SCRIPT
+    runsheet = D.seminar_runsheet(script_md.read_text(encoding="utf-8")) if script_md.is_file() else []
+    total_sec = sum(p["seconds"] for p in runsheet)
 
-    terms, terms_kb = doc(D.KB / "methodology" / "terminology_register.md")
-    guide, guide_kb = doc(D.ROOT / "docs" / "cascade_pipeline_guide.md")
+    decks = []
+    for key, (name, note) in D.SEMINAR_DECKS.items():
+        p = base / name
+        if p.is_file():
+            decks.append({"key": key, "name": name, "note": note,
+                          "kb": os.path.getsize(p) // 1024,
+                          "primary": key == "release"})
     return render_template("seminar.html", active="seminar",
-                           body=D.md_to_html(md.read_text(encoding="utf-8")),
-                           spec_kb=os.path.getsize(md) // 1024,
-                           deck=(deck.name if deck.is_file() else None),
-                           deck_size=(os.path.getsize(deck) // 1024 if deck.is_file() else 0),
-                           terms=terms, terms_kb=terms_kb,
-                           guide=guide, guide_kb=guide_kb)
+                           docs=docs, runsheet=runsheet,
+                           total_min=total_sec // 60, total_sec=total_sec % 60,
+                           n_body=sum(len(p["slides"]) for p in runsheet),
+                           decks=decks)
 
 
 @app.route("/glossary")
