@@ -1,0 +1,28 @@
+# ★ F71/8-5 — provenance 검증은 **raw bytes** 를 다시 해시한다.
+#
+# 저장소에 EOL 정책이 없으면 Windows clone(`core.autocrlf=true`)에서
+# `configs/base.yaml` 이 LF blob(5,498 B, sha256 26fe6c7c…) 과 다른 바이트
+# (5,620 B, 282c3727…)로 체크아웃된다. 그러면 Linux GPU 에서 만든 artifact 를
+# Windows clone 에서 검증할 때 `입력_digest_재해시` 가 실패한다.
+#
+# 검증 대상이 되는 텍스트는 전부 LF 로 고정한다. (묶음에는 exact bytes 를
+# 동봉하지만, 그건 archive 경로일 뿐이고 저장소 자체도 이식 가능해야 한다.)
+* text=auto eol=lf
+
+*.yaml   text eol=lf
+*.yml    text eol=lf
+*.py     text eol=lf
+*.sh     text eol=lf
+*.md     text eol=lf
+*.csv    text eol=lf
+*.json   text eol=lf
+*.txt    text eol=lf
+
+# 바이너리는 건드리지 않는다
+*.parquet binary
+*.png     binary
+*.h5      binary
+*.npy     binary
+*.npz     binary
+*.zip     binary
+*.gz      binary

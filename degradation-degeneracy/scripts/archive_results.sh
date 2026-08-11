@@ -36,7 +36,7 @@
 #  복원 — 묶음은 보관 형태이고, 검증은 복원한 뒤에 한다:
 #    python -m tools.archive_bundle restore artifacts/halfcell_v3
 # =============================================================================
-set -euo pipefail
+set -uo pipefail   # ★ 개별 실행 실패를 집계해야 하므로 -e 는 쓰지 않는다
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
@@ -45,7 +45,9 @@ PY="${PYTHON:-python3}"
 DEST="artifacts"
 RUNS=("$@")
 if [[ ${#RUNS[@]} -eq 0 ]]; then
-  RUNS=(results/grid_fine_v1 results/grid_fine_v2 results/halfcell_v1)
+  # ★ F71/8-4 — 기본 대상이 옛 v1/v2 여서, 새 실행을 묶으려던 사람이 무심코
+  #   실행하면 quarantine 산출물만 다시 묶였다. 현재 pipeline 의 구조를 따른다.
+  RUNS=(results/grid_curves_v3 results/grid_fit_v3 results/halfcell_fit_v3)
 fi
 
 mkdir -p "$DEST"
@@ -76,11 +78,29 @@ v = validate_provenance(run)
 print(f"  원본 provenance: {'통과' if v['ok'] else '실패 — ' + ', '.join(v['fail'][:4])}")
 PYEOF
 
-  if "$PY" -m tools.archive_bundle check "$out" | sed 's/^/  /'; then
-    n_ok=$((n_ok+1))
-  else
-    n_bad=$((n_bad+1))
-  fi
+  ok=1
+  "$PY" -m tools.archive_bundle check "$out" | sed 's/^/  /' || ok=0
+
+  # ★ F71 — **격리 복원 검증까지 자동으로 한다.** 원본 results/ 가 남아 있는
+  #   서버에서 restore→validate 하면 묶음을 전혀 확인하지 않고 원본을 다시
+  #   검증할 수 있다 (8-3). 빈 임시 root 에 풀어서 거기서 검증한다.
+  # 원래 상대경로 그대로 격리 root 안에 푼다 — 봉인된 입력 경로가 저장소 root
+  # 기준이므로 (F65), run_dir 을 임의로 바꾸면 재해시가 어긋난다.
+  iso="$(mktemp -d)"
+  if "$PY" -m tools.archive_bundle restore "$out" --repo-root "$iso" >/dev/null 2>&1 \
+     && "$PY" - "$iso" "$run" <<'PYEOF' | sed 's/^/  /'
+import sys
+from pathlib import Path
+from src.io import validate_provenance
+iso, run = Path(sys.argv[1]), sys.argv[2]
+v = validate_provenance(iso / run, repo_root=iso)
+print(f"격리 복원 검증: {'통과' if v['ok'] else '실패 — ' + ', '.join(v['fail'][:4])}")
+sys.exit(0 if v["ok"] else 1)
+PYEOF
+  then :; else ok=0; echo "  격리 복원 검증 실패"; fi
+  rm -rf "$iso"
+
+  if [[ "$ok" == "1" ]]; then n_ok=$((n_ok+1)); else n_bad=$((n_bad+1)); fi
   printf '  용량 %s\n' "$(du -sh "$out" | cut -f1)"
 done
 
@@ -96,5 +116,9 @@ clone 한 쪽에서 복원 + 검증:
   python -c "from src.io import validate_provenance; import json; \
              print(json.dumps(validate_provenance('results/halfcell_v3'), \
              ensure_ascii=False, indent=2))"
-  ./run.sh --mode score --in results/halfcell_v3     # 채점 이후는 몇 초다
+  ./run.sh --mode score --in results/halfcell_fit_v3   # 채점 이후는 몇 초다
 EOF
+
+# ★ F71/8-4 — 하나라도 불완전하면 nonzero. 조용히 성공하면 CI·스크립트가
+#   "보관됐다"고 믿는다.
+[[ "$n_bad" -eq 0 ]] || exit 1

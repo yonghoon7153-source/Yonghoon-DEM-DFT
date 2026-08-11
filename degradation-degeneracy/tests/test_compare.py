@@ -780,7 +780,7 @@ def test_results_doc_carries_citation_block_without_provenance(tmp_path):
         assert k in text, f"{k} 검사가 배너에 없다"
 
 
-def _complete_artifact(tmp_path):
+def _complete_artifact(tmp_path, repo_root=None):
     """provenance 검사를 **실제로** 통과하는 artifact.
 
     ★ F43/F50/F56/F57 — 이 fixture 는 세 번 깨졌다. 매번 validator 를 강화하자
@@ -793,7 +793,9 @@ def _complete_artifact(tmp_path):
 
     import yaml
 
-    from src.io import env_fingerprint, file_digest, seal_inputs, source_digest
+    from src.io import (canonical_input_key, env_fingerprint, file_digest,
+                        seal_inputs, source_digest)
+    _k = lambda p: canonical_input_key(p, repo_root)   # noqa: E731
 
     d = Path(tmp_path) / "res"
     d.mkdir(parents=True, exist_ok=True)
@@ -807,7 +809,7 @@ def _complete_artifact(tmp_path):
     prod = write_curves_manifest(d, {"parameter_set": "test", "grid": {"noise_seed": 42}},
                                  conditions=[], extra={"solver": "test"})
 
-    sealed = seal_inputs([curves, cfg, prod])    # F56: 한 번만 봉인
+    sealed = seal_inputs([curves, cfg, prod], repo_root=repo_root)
     # ★ F68 — 조건 집합 서명은 **실제 fits 의 조건**에서 나와야 한다.
     #   하드코딩하면 그 자체가 위조 통로가 된다.
     from src.io import _sha256_lines
@@ -830,9 +832,9 @@ def _complete_artifact(tmp_path):
             "n_restarts": 5, "warm_start": True, "obj_cfg": {"objectives": {}},
             "inventory": {"w_pe": 0.3, "w_ne": 0.7, "kappa": 0.7},
             "env": env, "sealed_inputs": sealed,
-            "curves_sha": sealed[str(curves)],
-            "base_config_sha": sealed[str(cfg)],
-            "producer_sha": sealed[str(prod)],
+            "curves_sha": sealed[_k(curves)],
+            "base_config_sha": sealed[_k(cfg)],
+            "producer_sha": sealed[_k(prod)],
             "producer": {"config_hash": "test", "solver": "test",
                          "curves_sha256": file_digest(curves, full=True)},
             "git_commit": "0" * 40, "git_dirty": False, "source_digest": src}
@@ -1419,3 +1421,190 @@ def test_results_banner_catches_tampered_derived_yaml(tmp_path):
     assert "파생_case_comparison.yaml" in after, "변조된 파생 숫자를 잡지 못했다"
     assert "인용 금지" in after[:600]
     assert before != after
+
+
+# ──────────────────────────── F71: archive fail-closed (7차 게이트 리뷰 발견 8)
+
+def _nested_sweep(run_dir):
+    """run_dir 안에 자기 manifest 를 가진 하위 실행(wsweep) 을 만든다."""
+    import shutil
+
+    sub = Path(run_dir) / "wsweep"
+    sub.mkdir(exist_ok=True)
+    for n in ("manifest.yaml", "manifest_start.yaml", "fits.parquet",
+              "curves.parquet", "base.yaml", "curves_manifest.yaml"):
+        if (Path(run_dir) / n).is_file():
+            shutil.copy2(Path(run_dir) / n, sub / n)
+    shutil.copytree(Path(run_dir) / "attempts", sub / "attempts", dirs_exist_ok=True)
+    return sub
+
+
+def test_bundle_includes_nested_sweep_provenance(tmp_path):
+    """★ F71/8-2 — 하위 sweep 의 manifest·start·attempts 가 묶음에 들어가야 한다.
+
+    반례: 초판은 `wsweep/` 에서 fits 와 요약만 복사했다. 복원된 sweep 은 14개
+    검사가 실패했는데 배너는 sweep provenance 를 합산하지 않아 조용히 지나갔다.
+    """
+    from tools.archive_bundle import bundle, check
+
+    d, _ = _complete_artifact(tmp_path)
+    _nested_sweep(d)
+
+    out = tmp_path / "art"
+    res = bundle(d, out)
+    assert res["nested"] == ["wsweep"], res
+    for n in ("manifest.yaml", "manifest_start.yaml", "fits.parquet"):
+        assert (out / "wsweep" / n).is_file(), n
+    assert (out / "wsweep" / "attempts").is_dir()
+    assert check(out)["ok"], check(out)["missing"]
+
+
+def test_bundle_staging_removes_stale_files(tmp_path):
+    """★ F71/8-4 — source 에서 사라진 파일이 옛 묶음에 남아 통과시키면 안 된다."""
+    from tools.archive_bundle import bundle, check
+
+    d, _ = _complete_artifact(tmp_path)
+    out = tmp_path / "art"
+    bundle(d, out)
+    assert (out / "fits.parquet").is_file()
+
+    (d / "fits.parquet").unlink()
+    res = bundle(d, out)
+    assert any("fits.parquet" in m for m in res["missing"]), res
+    assert not (out / "fits.parquet").exists(), "옛 묶음의 잔재가 남았다"
+    assert not check(out)["ok"]
+
+
+def test_check_detects_payload_tampering(tmp_path):
+    """★ F71 — 묶음 안에서 파일이 바뀌면 payload 재해시로 잡는다."""
+    import pandas as pd
+
+    from tools.archive_bundle import bundle, check
+
+    d, _ = _complete_artifact(tmp_path)
+    out = tmp_path / "art"
+    bundle(d, out)
+    assert check(out)["ok"]
+
+    f = pd.read_parquet(out / "fits.parquet")
+    f["lam_pe_hat"] = f["lam_pe_hat"] + 0.5
+    f.to_parquet(out / "fits.parquet", index=False)
+    res = check(out)
+    assert not res["ok"] and any("payload" in m for m in res["missing"]), res
+
+
+def test_restore_refuses_conflicting_existing_files(tmp_path):
+    """★ F71/8-3 — 기존 파일을 바이트 비교 없이 건너뛰면 안 된다.
+
+    반례: archive 의 fits 와 dest 의 fits 가 다른데(`lam_pe_hat += 0.321`)
+    restore 가 skip 처리했고, 그 뒤 validate 는 **원본**을 검증해 통과했다.
+    즉 "묶음을 검증했다"는 말이 거짓이었다.
+    """
+    import pandas as pd
+
+    from tools.archive_bundle import bundle, restore
+
+    d, _ = _complete_artifact(tmp_path)
+    out = tmp_path / "art"
+    bundle(d, out)
+
+    f = pd.read_parquet(d / "fits.parquet")
+    f["lam_pe_hat"] = f["lam_pe_hat"] + 0.321
+    f.to_parquet(d / "fits.parquet", index=False)
+
+    res = restore(out, run_dir=d, repo_root=tmp_path)
+    assert res["ok"] is False
+    assert any("fits.parquet" in c for c in res["conflict"]), res
+
+    res2 = restore(out, run_dir=d, force=True, repo_root=tmp_path)
+    assert res2["ok"] and any("fits.parquet" in w for w in res2["written"])
+
+
+def test_restore_blocks_path_traversal(tmp_path):
+    """★ F71/8-6 — restore_map 의 `..`·절대경로로 저장소 밖에 쓸 수 없다.
+
+    반례: `inputs/payload.txt: ../escaped.txt` 를 넣은 묶음이 repository root
+    **밖에** 파일을 썼다. 외부에서 받은 묶음에 restore 를 돌릴 수 있으므로
+    임의 쓰기는 그 자체로 결함이다.
+    """
+    import pytest
+    import yaml
+
+    from tools.archive_bundle import _safe_target, bundle
+
+    d, _ = _complete_artifact(tmp_path)
+    out = tmp_path / "art"
+    bundle(d, out)
+
+    meta = yaml.safe_load((out / "restore_map.yaml").read_text(encoding="utf-8"))
+    meta["inputs"] = {"inputs/payload.txt": "../escaped.txt"}
+    (out / "inputs").mkdir(exist_ok=True)
+    (out / "inputs" / "payload.txt").write_text("x", encoding="utf-8")
+    (out / "restore_map.yaml").write_text(yaml.safe_dump(meta), encoding="utf-8")
+
+    for bad in ("../escaped.txt", "/etc/passwd", "a/../../b"):
+        with pytest.raises(ValueError):
+            _safe_target(bad, tmp_path)
+    assert not (tmp_path.parent / "escaped.txt").exists()
+
+
+def test_bundle_includes_tracked_inputs_for_portability(tmp_path):
+    """★ F71/8-5 — git tracked 입력도 exact bytes 로 동봉한다.
+
+    저장소에 EOL 정책이 없으면 Windows clone 의 `configs/base.yaml` 은 LF blob 과
+    다른 바이트가 된다. validator 는 raw bytes 를 재해시하므로 Linux artifact 를
+    Windows clone 에서 검증하면 실패한다.
+    """
+    from tools.archive_bundle import bundle, check
+
+    d, _ = _complete_artifact(tmp_path)
+    out = tmp_path / "art"
+    bundle(d, out)
+    # 이 fixture 의 입력은 run_dir 안에 있으므로 이름 그대로 동봉된다
+    assert (out / "base.yaml").is_file()
+    assert (out / "curves.parquet").is_file()
+    assert (out / "curves_manifest.yaml").is_file()
+    assert check(out)["ok"], check(out)["missing"]
+
+    # 저장소 EOL 정책도 있어야 한다 (clone 시점의 바이트를 고정한다)
+    ga = Path(__file__).resolve().parent.parent / ".gitattributes"
+    assert ga.is_file() and "eol=lf" in ga.read_text(encoding="utf-8")
+
+
+def test_bundle_restores_and_validates_in_isolated_root(tmp_path):
+    """★ F71/8-1 — **다른 clone** 에서 복원해도 검증을 통과해야 한다.
+
+    반례: half-cell 캐시 경로가 절대경로로 봉인돼, relocated clone 에서
+    `입력_digest_재해시` 가 "파일 없음"으로 실패했다 (`bundle check = False`,
+    `relocated clone validate = False`). F65 로 봉인 키를 저장소 상대경로로
+    정규화했고, 여기서 그 왕복을 실제로 돌린다.
+
+    이 테스트가 `scripts/archive_results.sh` 가 매 보관마다 자동으로 하는 것과
+    같은 절차다 — 원본 `results/` 가 남은 서버에서 검증하면 묶음이 아니라
+    원본을 검증하게 되므로, 반드시 빈 root 에서 해야 한다.
+    """
+    import shutil
+
+    from src.io import validate_provenance
+    from tools.archive_bundle import bundle, check, restore
+
+    # 가짜 저장소 root 를 만들고 그 안에서 봉인한다 (경로가 전부 상대가 된다)
+    home = tmp_path / "repo_a"
+    (home / "results").mkdir(parents=True)
+    d, _ = _complete_artifact(home / "results", repo_root=home)
+    assert validate_provenance(d, repo_root=home)["checks"]["입력_digest_재해시"] == "통과"
+
+    out = tmp_path / "artifacts" / "run"
+    assert not bundle(d, out, repo_root=home)["missing"]
+    assert check(out)["ok"], check(out)["missing"]
+
+    # 완전히 다른 root 로 복원 — 원본은 지워서 "원본을 검증"할 여지를 없앤다
+    away = tmp_path / "repo_b"
+    away.mkdir()
+    res = restore(out, repo_root=away)
+    shutil.rmtree(home)
+
+    v = validate_provenance(res["run_dir"], repo_root=away)
+    for k in ("입력_digest_재해시", "출력봉인_재계산", "start_파일_존재",
+              "attempt_파일_존재", "producer_곡선일치", "조건집합_서명일치"):
+        assert v["checks"][k] == "통과", f"{k}: {v['checks'][k]}"

@@ -10,9 +10,21 @@
 
 ```bash
 python -m tools.archive_bundle restore artifacts/<run>
-python -c "from src.io import validate_provenance, json; \
-           print(validate_provenance('results/<run>'))"
+python -c "from src.io import validate_provenance; import json; \
+           print(json.dumps(validate_provenance('results/<run>'), ensure_ascii=False))"
 ./run.sh --mode score --in results/<run>      # 채점 이후는 몇 초다
+```
+
+⚠ **원본 `results/<run>` 이 남아 있는 서버에서는 이 검증이 무의미하다.** restore 가
+기존 파일을 만나면(내용이 같으면) 넘어가므로, 검증 대상이 묶음이 아니라 원본이
+된다. `scripts/archive_results.sh` 는 보관할 때마다 **빈 임시 root** 에 풀어
+거기서 검증한다 (F71). 손으로 확인하려면 같은 방식으로:
+
+```bash
+iso=$(mktemp -d)
+python -m tools.archive_bundle restore artifacts/<run> --repo-root "$iso"
+python -c "import sys; from src.io import validate_provenance; from pathlib import Path; \
+           print(validate_provenance(Path('$iso')/'results/<run>', repo_root='$iso'))"
 ```
 
 ## 지금 들어 있는 것의 상태 (2026-08-07)
