@@ -76,6 +76,32 @@ NETWORK_ARTIFACT_GLOBS = (
 #:   (Codex 교차검증 CB-02 에서 동적 재현됨.)
 NETWORK_BASELINE_REQUIRED = 'network_conductivity.json'
 
+#: ★ RC6-Q7: merge 키 정의를 **여기 한 곳**에 둔다.  app.py 와 preflight 스캐너가 각자
+#:   목록을 들고 있으면 스캔 결과가 production 과 어긋나 오히려 오도한다 (오늘 fixture-drift
+#:   를 여섯 번 겪었다 — 같은 실수를 정의 수준에서 막는다).
+NET_MERGE_KEYS = (
+    'sigma_full', 'sigma_full_mScm', 'sigma_bulk_net',
+    'sigma_bulk_net_mScm', 'R_brug_over_full', 'bulk_resistance_fraction',
+    'electronic_sigma_full_mScm', 'electronic_R_brug',
+    'electronic_active_fraction', 'electronic_percolating_fraction',
+    'thermal_sigma_full_mScm', 'thermal_R_brug',
+    'sigma_bruggeman', 'sigma_bruggeman_mScm', 'R_bruggeman_over_full',
+    # Physics-mode baselines — Stage E Physics 컬럼에 필요.
+    'sigma_full_physics', 'sigma_full_mScm_physics',
+    'sigma_bulk_net_physics', 'sigma_bulk_net_mScm_physics',
+    'electronic_sigma_full_mScm_physics',
+    'thermal_sigma_full_mScm_physics',
+    'bulk_resistance_fraction_physics',
+    'R_brug_over_full_physics',
+)
+
+#: ⚠ physics 키는 `network_conductivity_physics.json` 이 아니라 **dual 파일**에서
+#:   `<key>_physics` 로 미러링된다 (`_merge_dual_into_metrics`).  스캐너도 같은 경로를 밟아야 한다.
+NET_PHYSICS_MIRROR_KEYS = ('sigma_full', 'sigma_full_mScm',
+                           'sigma_bulk_net', 'sigma_bulk_net_mScm',
+                           'electronic_sigma_full_mScm', 'thermal_sigma_full_mScm',
+                           'R_brug_over_full', 'bulk_resistance_fraction')
+
 #: network 산출물의 세대를 식별하는 파일 (**게시된 active baseline** 을 가리킨다).
 PROVENANCE_FILE = 'network_provenance.json'
 

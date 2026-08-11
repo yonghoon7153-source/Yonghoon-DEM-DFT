@@ -42,23 +42,8 @@ import press_units as _press_units                 # noqa: E402  (압력 단위 
 #:   `except Exception: pass` 가 통째로 삼켜 무증상이었다.  즉 run_pipeline 의 머지는
 #:   한 번도 동작한 적이 없고 σ 는 오직 wrapper 의 Step 5 로만 들어갔다.  모듈 전역으로
 #:   올려 양쪽이 같은 목록을 쓰게 한다.
-_NET_MERGE_KEYS = [
-    'sigma_full', 'sigma_full_mScm', 'sigma_bulk_net',
-    'sigma_bulk_net_mScm', 'R_brug_over_full', 'bulk_resistance_fraction',
-    'electronic_sigma_full_mScm', 'electronic_R_brug',
-    'electronic_active_fraction', 'electronic_percolating_fraction',
-    'thermal_sigma_full_mScm', 'thermal_R_brug',
-    'sigma_bruggeman', 'sigma_bruggeman_mScm', 'R_bruggeman_over_full',
-    # Physics-mode (Tabor + volume) baselines — required for the Stage E Physics
-    # column.  Without merging these the UI 4-col layout shows '—' Physics even
-    # when the solver successfully computed both modes.
-    'sigma_full_physics', 'sigma_full_mScm_physics',
-    'sigma_bulk_net_physics', 'sigma_bulk_net_mScm_physics',
-    'electronic_sigma_full_mScm_physics',
-    'thermal_sigma_full_mScm_physics',
-    'bulk_resistance_fraction_physics',
-    'R_brug_over_full_physics',
-]
+# ★ RC6-Q7: 정의는 pipeline_service 한 곳에 있다 (사본을 두면 스캐너와 drift 한다).
+_NET_MERGE_KEYS = list(_ps.NET_MERGE_KEYS)
 
 # Load .env file if exists (for local development)
 _env_path = os.path.join(os.path.dirname(__file__), '.env')
@@ -609,10 +594,7 @@ def list_cases():
 
 # Keys mirrored from the physics-mode solution for dual-column display.
 # When the dual JSON is present, these are copied with a '_physics' suffix.
-_NET_PHYSICS_MIRROR_KEYS = ['sigma_full', 'sigma_full_mScm',
-                            'sigma_bulk_net', 'sigma_bulk_net_mScm',
-                            'electronic_sigma_full_mScm', 'thermal_sigma_full_mScm',
-                            'R_brug_over_full', 'bulk_resistance_fraction']
+_NET_PHYSICS_MIRROR_KEYS = list(_ps.NET_PHYSICS_MIRROR_KEYS)   # 정의는 pipeline_service
 
 
 def _pct_delta(h, p):
