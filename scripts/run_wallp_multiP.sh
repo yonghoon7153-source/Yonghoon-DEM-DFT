@@ -51,9 +51,15 @@ done
 ACT=""
 for A in "$REPO/venv/bin/activate" "$DATA/venv/bin/activate" "$HOME/.venv/bin/activate"; do
   [ -f "$A" ] || continue
-  ( . "$A" >/dev/null 2>&1; python3 -c "import numpy,taichi" ) 2>/dev/null && { ACT="$A"; break; }
+  # ★ scipy 도 본다.  빼면 mpm3d 가 --se-dump 의 cKDTree 에서 **16초 만에** 죽고,
+  #   러너는 그것을 점마다 반복한다 (실제로 3점 × 16s 를 두 번 태웠다).
+  #   ⚠ `pip install` 을 venv 밖에서 하면 ~/.local 에 깔리는데 venv 는 user-site 를
+  #     경로에 넣지 않는다 → 시스템 python 에선 import 되고 여기선 안 되는 상태가 된다.
+  #     그래서 검사는 반드시 **활성화한 그 python** 으로 한다 (아래가 그렇다).
+  ( . "$A" >/dev/null 2>&1; python3 -c "import numpy,scipy,taichi" ) 2>/dev/null && { ACT="$A"; break; }
 done
-[ -n "$ACT" ] || { echo "★★ ABORT: numpy+taichi 되는 venv 없음" >&2; exit 1; }
+[ -n "$ACT" ] || { echo "★★ ABORT: numpy+scipy+taichi 되는 venv 없음 (scipy 는 --se-dump 필수).
+  설치는 **venv 파이썬으로**: ~/Yonghoon-DEM-DFT/venv/bin/python3 -m pip install scipy" >&2; exit 1; }
 # shellcheck disable=SC1090
 . "$ACT" >/dev/null 2>&1
 mkdir -p "$OUT"
