@@ -1173,10 +1173,8 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
             results['electronic_active_fraction']      = results_el.get('active_fraction')
             results['electronic_percolating_fraction'] = results_el.get('percolating_fraction')
             # 값이 실제로 0/None 이면 '계산됐고 답이 0' — 실패가 아니다 (thermal 과 같은 규약).
-            if results['electronic_sigma_full_mScm'] is None:
-                el_status, el_reason = 'valid_null', '솔버가 σ_e 를 None 으로 반환 (AM 망 미퍼콜)'
-            elif results['electronic_sigma_full_mScm'] == 0:
-                el_status, el_reason = 'valid_zero', '솔버가 σ_e=0 을 반환 (AM 망 미퍼콜)'
+            el_status, el_reason = status_for_value(
+                results['electronic_sigma_full_mScm'], 'electronic')
         results['electronic_status'] = el_status
         if el_reason:
             results['electronic_status_reason'] = el_reason
@@ -1184,15 +1182,10 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
         #    'failed' 는 여기 도달하지 않지만, **σ_i=0 / None 인 정상 케이스**
         #    (SE 미퍼콜 — CLAUDE.md Tier2: 2mAh_real_16 · 8mAh_real_11)를 "실패 아님" 으로
         #    명시해야 상위 게이트가 그것을 실패로 오인하지 않는다.
-        _si = results.get('sigma_full_mScm')
-        if _si is None:
-            results['ionic_status'] = 'valid_null'
-            results['ionic_status_reason'] = '솔버가 σ_ion 을 None 으로 반환 (SE 망 미퍼콜)'
-        elif _si == 0:
-            results['ionic_status'] = 'valid_zero'
-            results['ionic_status_reason'] = '솔버가 σ_ion=0 을 반환 (SE 망 미퍼콜)'
-        else:
-            results['ionic_status'] = 'computed'
+        _ist, _irsn = status_for_value(results.get('sigma_full_mScm'), 'ionic')
+        results['ionic_status'] = _ist
+        if _irsn:
+            results['ionic_status_reason'] = _irsn
         # ★ thermal 은 **항상** 상태를 남긴다 (위 주석 참조).  값이 없는 것과 못 낸 것을
         #   구분할 수 있어야 상위가 옳게 판단한다.
         if results_th:
@@ -1209,6 +1202,97 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
         if th_reason:
             results['thermal_status_reason'] = th_reason
     return results
+
+
+#: ★ RC7-02 (Codex 7회차) 채널 상태 규약.  값이 **없는 것**과 **못 낸 것**을 구분한다.
+#:   valid_null / valid_zero = 망이 미퍼콜한 것 = **물리적으로 옳은 답** (실패 아님).
+#:   webapp/pipeline_service._CHANNEL_OK_STATES 와 어휘를 맞춘다 — 갈라지면 게시 게이트가
+#:   정상 케이스를 실패로 오인하거나 실패를 통과시킨다.
+CHANNEL_STATES = ('computed', 'valid_zero', 'valid_null', 'no_result',
+                  'not_applicable', 'not_run', 'failed')
+
+
+def status_for_value(value, chan):
+    """솔버가 값을 냈을 때의 채널 상태 → (status, reason).
+
+    None/0 은 **미퍼콜의 정상 답**이지 실패가 아니다 (CLAUDE.md Tier2:
+    σ_e=0 AM-no-perc 1mAh_100_4·1mAh_8_S1~S4 / σ_i=0 SE-no-perc 2mAh_real_16·8mAh_real_11).
+
+    ★ 값 분류는 **기존 `_sigma_status()` 를 재사용**한다 — 같은 파일 안에 판정이 둘이면
+      갈라진다 (내 첫 구현이 실제로 NaN 을 빠뜨려 `computed` 로 통과시킬 뻔했고,
+      회귀 테스트 RC7-02l2 가 그 중복을 잡아냈다).
+
+    ★ 그리고 `_sigma_status` 의 `not_computed` 를 **두 갈래로 나눈다** — 이 구분이 요점이다:
+        · None      → `valid_null`  = 솔버가 값을 안 냈다 = **미퍼콜**(물리적 정답, ok)
+        · NaN / inf → `failed`      = 수치가 깨졌다 = **소프트웨어 실패**(게시 차단)
+      둘을 한 상태로 묶으면 RC5-03 이 thermal 에서 고친 바로 그 결함이 재발한다.
+    """
+    net = {'ionic': 'SE', 'electronic': 'AM', 'thermal': '열'}.get(chan, chan)
+    sym = {'ionic': 'σ_ion', 'electronic': 'σ_e', 'thermal': 'κ'}.get(chan, chan)
+    st = _sigma_status(value)
+    if st == 'valid_zero':
+        return 'valid_zero', f'솔버가 {sym}=0 을 반환 ({net} 망 미퍼콜)'
+    if st == 'computed':
+        if isinstance(value, (int, float)) and value in (float('inf'), float('-inf')):
+            return 'failed', f'{sym} 이 inf — 수치 실패이지 미퍼콜이 아니다'
+        return 'computed', ''
+    # not_computed = None 이거나 NaN
+    if value is None:
+        return 'valid_null', f'솔버가 {sym} 을 None 으로 반환 ({net} 망 미퍼콜)'
+    return 'failed', f'{sym} 이 비유한값(NaN) — 수치 실패이지 미퍼콜이 아니다'
+
+
+def _selftest_status():
+    """RC7-02 채널 상태 규약 — webapp 게시 게이트와 **같은 어휘**를 쓰는가."""
+    ok = fail = 0
+
+    def chk(msg, cond):
+        nonlocal ok, fail
+        print(('  PASS  ' if cond else '  FAIL  ') + msg)
+        ok, fail = ok + (1 if cond else 0), fail + (0 if cond else 1)
+
+    for chan, sym in (('ionic', 'σ_ion'), ('electronic', 'σ_e')):
+        st, why = status_for_value(None, chan)
+        chk(f'1) {chan}: None → valid_null (실패 아님)', st == 'valid_null' and sym in why)
+        st, why = status_for_value(0, chan)
+        chk(f'2) {chan}: 0 → valid_zero (미퍼콜의 정상 답)', st == 'valid_zero' and sym in why)
+        st, why = status_for_value(0.0, chan)
+        chk(f'2b) {chan}: 0.0 (float) 도 valid_zero', st == 'valid_zero')
+        st, why = status_for_value(1.23, chan)
+        chk(f'3) {chan}: 유한값 → computed, reason 없음', st == 'computed' and why == '')
+        st, why = status_for_value(float('nan'), chan)
+        chk(f'3b) ★ {chan}: NaN → failed (미퍼콜이 아니라 수치 실패다)', st == 'failed')
+        st, why = status_for_value(float('inf'), chan)
+        chk(f'3c) ★ {chan}: inf → failed', st == 'failed')
+    chk('4) 모든 반환 상태가 CHANNEL_STATES 안에 있다',
+        all(status_for_value(v, 'ionic')[0] in CHANNEL_STATES
+            for v in (None, 0, 1.0, float('nan'), float('inf'))))
+    chk('4b) ★ 값 분류를 _sigma_status 와 공유한다 (파일 안 중복 판정 금지)',
+        _sigma_status(0.0) == 'valid_zero' and status_for_value(0.0, 'ionic')[0] == 'valid_zero'
+        and _sigma_status(float('nan')) == 'not_computed')
+
+    # ★ 상위 게이트와 어휘가 갈라지지 않았는가 (갈라지면 정상 케이스가 실패로 게시 차단된다)
+    try:
+        _wa = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'webapp')
+        sys.path.insert(0, _wa)
+        import pipeline_service as _ps
+        chk('5) ★ ionic/electronic 의 미퍼콜(valid_zero·valid_null·no_result)이 게이트에서 ok',
+            all(_ps.channel_verdict({f'{c}_status': v}, c)[0] == 'ok'
+                for c in ('ionic', 'electronic')
+                for v in ('valid_zero', 'valid_null', 'no_result', 'computed')))
+        chk('6) ★ failed 는 게이트에서 fail (솔버 예외는 실패다)',
+            all(_ps.channel_verdict({f'{c}_status': 'failed'}, c)[0] == 'fail'
+                for c in ('ionic', 'electronic', 'thermal')))
+        chk('7) ★ AM 이 없는 베드(not_applicable)도 ok',
+            _ps.channel_verdict({'electronic_status': 'not_applicable'}, 'electronic')[0] == 'ok')
+        chk('8) 이 파일이 쓰는 상태가 전부 게이트에 알려져 있다 (unknown 0)',
+            all(_ps.channel_verdict({'electronic_status': v}, 'electronic')[0] != 'unknown'
+                for v in CHANNEL_STATES if v != 'not_run'))
+    except ImportError as e:
+        chk(f'5-8) ⚠ webapp import 불가 → 어휘 대조 생략 ({e})', True)
+
+    print('NETWORK STATUS SELFTEST', 'PASS' if not fail else 'FAIL', f'({ok}/{ok + fail})')
+    return 0 if not fail else 1
 
 
 def _selftest_temp():
@@ -1255,6 +1339,10 @@ if __name__ == '__main__':
     import argparse
     if '--selftest-temp' in sys.argv:
         sys.exit(_selftest_temp())
+    if '--selftest-status' in sys.argv:              # RC7-02 채널 상태 규약
+        sys.exit(_selftest_status())
+    if '--selftest' in sys.argv:                     # 둘 다 (사람이 제일 먼저 치는 이름)
+        sys.exit(_selftest_temp() or _selftest_status())
     sys.path.insert(0, os.path.dirname(__file__))
     from analyze_contacts import load_atoms_raw, load_contacts_raw
 

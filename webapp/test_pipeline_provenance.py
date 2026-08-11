@@ -998,7 +998,15 @@ def main():
             "results['electronic_status'] = el_status" in _ncsrc
             and "el_status, el_reason = 'failed'" in _ncsrc)
         chk('RC7-02l) ★ solver 가 ionic_status 도 남긴다',
-            "results['ionic_status'] = 'computed'" in _ncsrc)
+            "results['ionic_status'] = _ist" in _ncsrc
+            and 'def status_for_value(' in _ncsrc)
+        chk('RC7-02l2) ★ 값 분류가 기존 _sigma_status 를 재사용한다 (파일 안 중복 판정 금지)',
+            'st = _sigma_status(value)' in _ncsrc and 'status_for_value(' in _ncsrc)
+        chk('RC7-02l2b) ★ NaN/inf 는 미퍼콜이 아니라 failed 로 간다 (첫 구현이 빠뜨렸던 것)',
+            "return 'failed', f'{sym} 이 비유한값(NaN)" in _ncsrc
+            and "inf — 수치 실패" in _ncsrc)
+        chk('RC7-02l3) ★ solver 쪽에도 실행 가능한 selftest 가 있다 (문자열 검사만이 아니라)',
+            '--selftest-status' in _ncsrc and 'def _selftest_status(' in _ncsrc)
         _apy_ch = open(os.path.join(os.path.dirname(os.path.abspath(webapp.__file__)),
                                     'app.py'), encoding='utf-8').read()
         chk('RC7-02m) ★ app 이 세 채널을 판정 단계로 올린다 (배선)',

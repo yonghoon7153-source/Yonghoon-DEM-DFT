@@ -55,7 +55,15 @@ ENTRYPOINTS = (
 
 
 def _local_modules(scripts_dir=SCRIPTS):
-    return {f[:-3] for f in os.listdir(scripts_dir) if f.endswith('.py')}
+    """리포 안의 모듈 = 로컬.  ★ scripts/ 뿐 아니라 **webapp/ 도 우리 코드**다 —
+    scripts 가 `sys.path` 에 webapp 를 끼워 `pipeline_service` 를 import 하는 자리가 있고
+    (network_conductivity 의 상태-어휘 대조), 그걸 외부 패키지로 세면 셋업이
+    `pip install pipeline_service` 를 시도하게 된다 (실측 오탐)."""
+    mods = {f[:-3] for f in os.listdir(scripts_dir) if f.endswith('.py')}
+    sib = os.path.join(os.path.dirname(scripts_dir), 'webapp')
+    if os.path.isdir(sib):
+        mods |= {f[:-3] for f in os.listdir(sib) if f.endswith('.py')}
+    return mods
 
 
 def _imports_of(path):
@@ -149,6 +157,8 @@ def _selftest():
         'pandas' in ext_nc)
     chk('10) ★ network_conductivity 가 networkx 를 요구한다 (V100 2차 결손)',
         'networkx' in ext_nc)
+    chk('10b) ★ webapp 모듈은 외부 패키지가 아니다 (pipeline_service 오탐 방지)',
+        'pipeline_service' not in ext_nc and 'pipeline_service' not in required())
     chk('11) 두 파이프라인이 ENTRYPOINTS 에 다 있다 (frame[5])',
         'network_conductivity' in ENTRYPOINTS and 'step3_sigma' in ENTRYPOINTS)
     req = required()
