@@ -87,7 +87,7 @@
 | σ₀ 분해 (우리 유도) | σ비 1.252 = exp(ΔEa/kT) **1.73** × **σ₀비 0.73** → 향상분 전부 Ea에서, **prefactor는 27% 감소** | 우리 x=0.2: 감소분의 지배 인자가 **D0 prefactor 0.65×** (Ea 불변) | **prefactor 감소 방향 일치** — 그들 "carrier 증가(+2Li/Nd)·채널 확장" 서사는 σ₀ 증가를 요구하므로 **자기 데이터와 모순** ([WangYO] ③과 동일 패턴) |
 | Ea | 0.292→0.278 (Δ−0.014 eV) | Track1 x=0.2: 0.224→0.227 (Δ+0.003) | 둘 다 \|Δ\|≤0.015 — "장벽 거의 불변" 수준. 그들 Δ−0.014는 fit 산포(오차 미보고) 대비 유의성 불명 |
 | σ_e | 4.2e-9→**9e-10** (4.7×↓) | PI 실험(DC 분극)도 Nd₂O₃ 도핑 시 감소; 우리 DFT는 **벌크 gap이 오히려 축소**(2.184→1.632 eV, Nd 5d) → 감소는 벌크가 아니라 **계면/percolation**(O-유래 Li₃PO₄ 5.73·NdPO₄ 5.55·Li₂O 5.24 eV 상이 입계 전자망 절단) | **독립 랩 외부 재현** — 우리 "σ_e 감소는 interphase 효과" 해석의 실험 지지 1건 추가. 그들은 감소 관찰만 하고 메커니즘 무설명 → 우리 해석이 채울 공간 |
-| 음극 SEI | Li₂O·LiCl·(Li–Nd alloy 주장)·Li₂S/Li₃P 억제 | grand-potential: 도핑 시 O-유래 **Li₂O(5.24)·Li₃PO₄(5.73)**·LiCl(6.65)가 전도성 Li₃P(0.70 eV) 대체 = 전자누출 차단 | **Li₂O·LiCl·Li₃P-억제 3항목 정합** (그들 XPS가 우리 SEI json의 실험판). **Li–Nd alloy는 우리 산물 목록에 없음** — MP에 Li–Nd 금속간화합물 부재(비혼화 경향)로 열역학적 의심 → §13-P2 검증 표적 |
+| 음극 SEI | Li₂O·LiCl·(Li–Nd alloy 주장)·Li₂S/Li₃P 억제 | grand-potential: 도핑 시 O-유래 **Li₂O(5.24)·Li₃PO₄(5.73)**·LiCl(6.65)가 전도성 Li₃P(0.70 eV) 대체 = 전자누출 차단 | **Li₂O·LiCl·Li₃P-억제 3항목 정합** (그들 XPS가 우리 SEI json의 실험판). **Li–Nd alloy 열역학적으로 배제** — P2 실행 완료: 껍질 위 안정상 0, 최근접 준안정 +0.197 eV/atom(theoretical), Li–La/Ce 도 0(경희토류 계통), 계면 63상 중 없음 (§11-(7)) |
 | gap | n/a (미측정) | Nd₂O₃@modelc **1.632 eV**(DFT+U, 120-atom/k661; matched 무도핑 2.184) — 4f 갭 무접촉, narrowing은 Nd 5d/호스트 이동 | 비교 불가 — 그들이 안 한 것. 우리 고유 축 |
 | 산화 onset/ESW | n/a | comp1=modelc **2.256 V** (S²⁻-limited) | 비교 불가 |
 | 대기(H₂S) | 1.55→0.67 cm³/g | **우리 축 밖** (0 K hull, 가수분해 미계산 — "우리가 H₂S 억제 계산" 금지) | 문헌 맥락은 [Zhu20] 열역학 지도(thiophosphate 과민·O/P–O 강화)로만 연결 |
@@ -149,7 +149,35 @@
 
 **(7) "Li–Nd alloy" 계면상 — 열역학·분광 양쪽에서 의심**
 - 유일 근거: 사이클 후 Nd 3d XPS(Fig. 7d)의 **~995 eV 소피크 하나** + 본문 "suggesting … the **plausible** formation of Li–Nd alloy"(자인된 추정). 참조 스펙트럼·기준물질 없음.
-- 열역학: Li–Nd 이원계는 안정 금속간화합물이 보고되어 있지 않다(상호 비혼화 경향; MP에도 Li–Nd 화합물 부재 — §13-P2에서 hull로 명시 검증). Nd³⁺→Nd⁰ 환원이 일어나더라도 산물은 "합금"이 아니라 Nd 금속 분산일 가능성.
+- 열역학: **✅ P2 실행 완료 (2026-08-11, gabia)** — `db/properties/li_nd_alloy_check.json`
+
+  | 계 | 이원화합물 | **껍질 위 안정** | 비고 |
+  |---|---:|---:|---|
+  | **Li–Nd** | **1** | **0** | 유일 후보 `mp-976264` Li₃Nd (Fm-3m) hull **+0.197 eV/atom**, **theoretical=True**(실험 미확인) |
+  | Li–La | 3 | **0** | 같은 경희토류 |
+  | Li–Ce | 2 | **0** | 같은 경희토류 |
+  | Li–Al (대조) | 12 | 4 | LiAl·Li₃Al₂·Li₉Al₄·Li₂Al |
+  | Li–Si (대조) | 13 | 4 | Li₁₅Si₄ 등 |
+  | Li–Mg (대조) | 76 | 2 | LiMg·LiMg₂ |
+
+  **계면 조건**(Li-Nd-P-S-Cl-O 볼록껍질, 안정상 63개) 안에도 **Li–Nd 이원상 없음**.
+
+  판정 `NO_STABLE_ALLOY`. 세 겹으로 강하다:
+  ① 껍질에서 **+0.197 eV/atom ≈ 7.6 kT(300 K)** — LiNdO₂의 +0.008 보다 24배 멀다.
+  ② MP 의 유일한 후보조차 **theoretical** — 실험적으로 보고된 Li–Nd 화합물이 없다.
+  ③ **Li–La·Li–Ce 도 0** 이고 Li–Al/Si/Mg 대조군은 정상 작동 → "Nd 만 DB 가 비었다"가
+     아니라 **경희토류 전체의 계통적 성질**이다(Li 과 비혼화).
+
+  ⚠ **이건 열역학 판정이다.** "XPS 995 eV 피크가 틀렸다"를 증명하지 않는다 — 동역학적
+  준안정상은 여전히 가능하다. 다만 **그 피크를 합금으로 귀속하려면 별도 근거가 필요**하고,
+  논문은 참조 스펙트럼·기준물질 없이 "plausible" 한 줄로 넘어갔다. 대안 귀속(Nd³⁺ 화합물의
+  3d 위성, 다른 원소와의 겹침)을 배제하지 않았다.
+
+- ★ **내적 긴장** — 합금은 금속상이다. 금속상을 품은 계면이 동시에 "전자 절연"이라는 주장은
+  스스로 충돌한다(고립 입자로 percolation 이 끊기면 양립 가능하지만, 논문은 그 조건을
+  제시하지 않았다). 게다가 합금이 열역학적으로 배제되면 그들이 실측한 **σ_e 4.7배 감소**는
+  오히려 우리 설명(O-유래 wide-gap 계면상 Li₂O·Li₃PO₄·LiCl 의 percolation 차단)이
+  더 자연스러워진다 — **이 판정은 그들 주장을 약화시키면서 우리 설명을 상대적으로 강화한다.**
 - 내적 긴장: 금속상(합금)이 포함된 계면을 "ionically conductive but **electronically insulating**"이라 주장(서론·§2.6) — 금속상이 연속이면 전자 차단과 모순, 불연속 분산이어야만 성립하는데 그 형상 증거 없음.
 - 사이클 후 계면 XPS의 시료 준비(박리? 스퍼터? 이송 중 공기 차단?)가 실험부에 없음 — 깊이·오염 통제 불명. Fig. 7f 모식도는 본문 스스로 "rational speculation".
 
@@ -196,7 +224,7 @@
 | 순위 | 과제 | 그들 주장 → 우리 판정 | 파이프라인 | 자산 겹침 | 서버·비용 |
 |---|---|---|---|---|---|
 | **P1** | **Nd 자리 대결: Track1(Nd@Li) vs Track2(Nd@P) formation energy** | "Nd³⁺→P⁵⁺"(무증거) → ΔE_form 정량으로 지지/반박 | UMA 프리스크린(배열 2–3개) → QE PBE(+U 8 eV·frozen-4f 병행) relax·total E | `modelc_nd_doped.json`에 Track2 설계 완료(128-atom, 예상 +1–3 eV/Nd)·Track1 relax **이미 완료** → **Track2 2–3배열만 신규** | gabia A6000: UMA 수 분 + DFT relax 배열당 ~12–24 h → **1–3일**. Paper#2 반박 데이터의 핵심 |
-| **P2** | **Li–Nd "alloy" 열역학 판정** | "Nd³⁺ 환원→Li–Nd alloy"(XPS 소피크) → Li–Nd 이원 hull에 화합물이 있는가 + Nd-도핑 SE의 0 V lithiation 산물에 Nd⁰/합금이 나오는가 | mp-api Li–Nd hull 조회 + 기존 grand-potential staircase(`sei_products.json` 2026-06-24) 재독 → 필요 시 run_nd_sei.sh 확장 | **거의 완성** — 우리 staircase에 Li–Nd 합금 없음(Li₂O·LiCl·Li₃P 대체 서사) | gabia(MP_API_KEY): **수 분–1 h**. 비용 최저·반박력 최고 |
+| ~~**P2**~~ ✅**완료** | **Li–Nd "alloy" 열역학 판정** | "Nd³⁺ 환원→Li–Nd alloy"(XPS 소피크) → Li–Nd 이원 hull에 화합물이 있는가 + Nd-도핑 SE의 0 V lithiation 산물에 Nd⁰/합금이 나오는가 | mp-api Li–Nd hull 조회 + 기존 grand-potential staircase(`sei_products.json` 2026-06-24) 재독 → 필요 시 run_nd_sei.sh 확장 | **완료(2026-08-11)** — NO_STABLE_ALLOY: hull +0.197 eV/atom·theoretical, Li–La/Ce 도 0(계통적), 계면 63상 중 없음. §11-(7) 참조 | gabia(MP_API_KEY): **수 분–1 h**. 비용 최저·반박력 최고 |
 | **P3** | **BVSE: Nd@Li vs Nd@P 배열의 Li 채널 %** | "채널 확장·steric barrier 감소" → 기하·정전기적으로 채널이 넓어지는지 막히는지 | tools/comp1_v3 BVSE(softBV R0: S 2.105/Cl 2.249/O 1.466, 원본 주기셀 정량 규율) — Track1 cfg141 vs Track2 relax 셀 | cascade bvs_li_proxy 0.92(Nd 상위)와 교차 | 로컬/kgy CPU: 셀당 **수십 분**. 그림 1장( channel% 비교) 즉시 산출 |
 | **P4** | **희석 농도 UMA-MD**: x≈0.025 상당(대형 셀 Nd 1–2개) 멀티시드 σ 비율 | "x=0.025에서 1.25×↑" → 희석 극대가 재현되는가, σ₀·Ea 분해는 | UMA-s-1p1 Langevin NVT·dt 2 fs·2–50 ps MSD 창·600/800/1000 K×3시드(표준 규율; 비율만 인용) | 우리 x=0.2 결과(0.52×)의 농도축 보완 — 그들과 유일하게 겹치는 미계산 영역 | gabia/kgy GPU: 3T×3seed×~200 ps, 대형 셀(≥300 atom) — **3–7일 벽시계**(순차). ⚠ UMA Nd-4f 전이성 캐비앳 병기 |
 | **P5** | **Track2 배열 fixed-occ gap**: Nd@P가 밴드엣지에 뭘 하나 | (그들 무주장 — 우리 보완) Nd@P면 Nd 5d/4f가 CBM/갭에 더 개입하는지 → 자리별 전자구조 지문 | QE scf+fixed-occ nscf(우리 canonical 레시피), PDOS | gap 1.632(Track1)·4f 무접촉 판정과 직접 비교 — "자리가 전자구조 지문을 남긴다"면 XPS/광학으로 실험 판정 제안 가능 | KISTI/gabia: relax 재활용 시 nscf **수 시간–1일** |
