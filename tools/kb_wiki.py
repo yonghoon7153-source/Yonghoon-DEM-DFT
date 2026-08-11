@@ -185,10 +185,15 @@ def cmd_lint():
     print(f"\nWARNINGS ({len(warnings)}):")
     for w in warnings:
         print(" ⚠", w)
+    # 레거시 깨진 경로는 **한 줄 요약만** — 소급 수정을 안 하므로 매번 20줄을 찍는 건
+    # 순수 낭비다(전체 출력의 85%였다). 목록이 필요하면 `lint --legacy`.
     if legacy_missing:
-        print(f"\n레거시 깨진 경로 {len(legacy_missing)}건 (참고용 상위 20 — 소급 수정 안 함):")
-        for x in legacy_missing[:20]:
-            print("  ·", x)
+        if "--legacy" in sys.argv:
+            print(f"\n레거시 깨진 경로 {len(legacy_missing)}건 (소급 수정 안 함):")
+            for x in legacy_missing:
+                print("  ·", x)
+        else:
+            print(f"\n레거시 깨진 경로 {len(legacy_missing)}건 (목록은 lint --legacy)")
     if not errors:
         print("\nRESULT: 0 errors")
     return 1 if errors else 0

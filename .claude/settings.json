@@ -6,5 +6,19 @@
     "refreshInterval": 10
   },
   "autoCompactEnabled": true,
-  "autoCompactWindow": 100000
+  "autoCompactWindow": 100000,
+
+  "skillOverrides": {
+    "algorithmic-art": "off",
+    "slack-gif-creator": "off",
+    "canvas-design": "off",
+    "theme-factory": "off",
+    "web-artifacts-builder": "off",
+    "brand-guidelines": "off",
+    "internal-comms": "off",
+    "mcp-builder": "off",
+    "keybindings-help": "off",
+    "session-start-hook": "off",
+    "morning": "off"
+  }
 }
