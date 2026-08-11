@@ -1839,3 +1839,99 @@ def test_compare_cases_scopes_causal_claim_to_pipeline(tmp_path):
     assert "bounds_preset" in res["reference별_허용차이"]
     assert "pipeline" in res["_인과범위"]
     assert "기준 곡선 단독" in res["_인과범위"]
+
+
+def test_archive_wrapper_style_provenance_json_survives_payload(tmp_path):
+    """★ F80/9-a — provenance.json 이 payload 를 깨지 않아야 한다.
+
+    반례: wrapper 가 bundle **뒤** 묶음 안에 provenance.json 을 추가해, 방금 만든
+    payload digest 목록과 즉시 어긋났다 — 정상 묶음을 스스로 무효화했다.
+    이제 wrapper 는 bundle 전에 원본 실행 디렉터리에 쓰고 KEEP_FILES 가 담는다.
+    """
+    import json
+
+    from tools.archive_bundle import bundle, check
+
+    d, _ = _complete_artifact(tmp_path)
+    (d / "provenance.json").write_text(json.dumps({"ok": True}), encoding="utf-8")
+    out = tmp_path / "art"
+    bundle(d, out)
+    assert (out / "provenance.json").is_file()
+    assert check(out)["ok"], check(out)["missing"]
+
+
+def test_restore_refuses_tampered_bundle(tmp_path):
+    """★ F80/9-d — 변조된 묶음(check 실패)은 direct restore 도 거부해야 한다."""
+    import yaml
+
+    from tools.archive_bundle import bundle, restore
+
+    d, _ = _complete_artifact(tmp_path)
+    out = tmp_path / "art"
+    bundle(d, out)
+
+    y = yaml.safe_load((out / "degeneracy_summary.yaml").read_text(encoding="utf-8")) or {}
+    y["tampered"] = 123
+    (out / "degeneracy_summary.yaml").write_text(yaml.safe_dump(y), encoding="utf-8")
+
+    res = restore(out, run_dir=tmp_path / "dest", repo_root=tmp_path)
+    assert res["ok"] is False
+    assert any("check 실패" in c for c in res["conflict"]), res
+
+
+def test_safe_target_rejects_prefix_sibling(tmp_path):
+    """★ F80/9-f — `/a` 가 `/ab/...` 에 매칭되는 접두사 버그."""
+    import pytest
+
+    from tools.archive_bundle import _safe_target
+
+    root = tmp_path / "a"
+    root.mkdir()
+    (tmp_path / "ab").mkdir()
+    # 형제 디렉터리 /ab 로 나가는 상대경로 — 문자열 startswith 로는 통과했다
+    with pytest.raises(ValueError):
+        _safe_target("../ab/x.txt", root)
+
+
+def test_payload_keys_are_posix(tmp_path):
+    """★ F80/9-c — payload 키는 OS 무관하게 POSIX 구분자여야 한다."""
+    import yaml
+
+    from tools.archive_bundle import bundle
+
+    d, _ = _complete_artifact(tmp_path)
+    out = tmp_path / "art"
+    bundle(d, out)
+    keys = list((yaml.safe_load(
+        (out / "payload_sha256.yaml").read_text(encoding="utf-8")) or {}))
+    assert any("attempts/" in k for k in keys)
+    assert not any("\\" in k for k in keys)
+
+
+def test_grid_producer_bundle_uses_producer_schema(tmp_path):
+    """★ F80/9-e — grid producer 는 fits 없이도 완비 묶음이어야 한다.
+
+    반례: REQUIRED_RUN_FILES 가 모든 artifact 에 fits.parquet 과
+    manifest_start.yaml 을 요구해 **정상 grid artifact 도 반드시 실패**했다
+    (기본 보관 대상에 grid_curves_v3 가 있는데도).
+    """
+    import pandas as pd
+    import yaml
+
+    from tools.archive_bundle import artifact_kind, bundle, check
+
+    # _tiny_curves 형식의 producer 디렉터리 (fit 없음)
+    import sys
+    sys.path.insert(0, str(Path(__file__).parent))
+    from test_fitting import _tiny_curves
+    d = _tiny_curves(tmp_path / "curves")
+    (d / "manifest.yaml").write_text(yaml.safe_dump(
+        {"run_type": "grid", "config_hash": "test"}), encoding="utf-8")
+    assert artifact_kind(d) == "grid_producer"
+
+    out = tmp_path / "art"
+    res = bundle(d, out)
+    assert not res["missing"], res["missing"]
+    assert check(out)["ok"], check(out)["missing"]
+    assert (out / "curves.parquet").is_file()
+    assert (out / "curves_manifest_start.yaml").is_file()

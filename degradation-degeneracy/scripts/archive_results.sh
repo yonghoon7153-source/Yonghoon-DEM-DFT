@@ -47,7 +47,8 @@ RUNS=("$@")
 if [[ ${#RUNS[@]} -eq 0 ]]; then
   # ★ F71/8-4 — 기본 대상이 옛 v1/v2 여서, 새 실행을 묶으려던 사람이 무심코
   #   실행하면 quarantine 산출물만 다시 묶였다. 현재 pipeline 의 구조를 따른다.
-  RUNS=(results/grid_curves_v3 results/grid_fit_v3 results/halfcell_fit_v3)
+  RUNS=(results/grid_curves_v3 results/grid_fit_v3 results/halfcell_fit_v3
+        results/paired_fixed5_v3)
 fi
 
 mkdir -p "$DEST"
@@ -63,20 +64,26 @@ for run in "${RUNS[@]}"; do
   out="$DEST/$name"
 
   printf '\n── %s ──\n' "$name"
-  "$PY" -m tools.archive_bundle bundle "$run" "$out"
 
-  # 원본 실행이 애초에 인용 가능한 상태였는지도 같이 남긴다.
-  # (묶음 자체는 경로가 달라 여기서 검증할 수 없다 — 복원 후에 한다)
-  "$PY" - "$run" "$out" <<'PYEOF'
+  # ★ F80/9-a — provenance.json 을 bundle **전에** 원본 실행 디렉터리에 쓴다.
+  #   예전에는 bundle 뒤 묶음 안에 추가해서, 방금 만든 payload digest 목록과
+  #   즉시 어긋나 **정상 묶음을 스스로 무효화**했다 (리뷰 실측).
+  #   KEEP_FILES 에 provenance.json 이 있으므로 bundle 이 알아서 담는다.
+  #   grid producer 는 fitting validator 가 아니라 곡선 validator 로 검증한다 (9-e).
+  "$PY" - "$run" <<'PYEOF'
 import json, sys
 from pathlib import Path
-from src.io import validate_provenance
-run, out = sys.argv[1], Path(sys.argv[2])
-v = validate_provenance(run)
-(out / "provenance.json").write_text(
+from src.io import validate_curves_provenance, validate_provenance
+from tools.archive_bundle import artifact_kind
+run = Path(sys.argv[1])
+v = (validate_curves_provenance(run) if artifact_kind(run) == "grid_producer"
+     else validate_provenance(run))
+(run / "provenance.json").write_text(
     json.dumps(v, ensure_ascii=False, indent=2), encoding="utf-8")
 print(f"  원본 provenance: {'통과' if v['ok'] else '실패 — ' + ', '.join(v['fail'][:4])}")
 PYEOF
+
+  "$PY" -m tools.archive_bundle bundle "$run" "$out"
 
   ok=1
   "$PY" -m tools.archive_bundle check "$out" | sed 's/^/  /' || ok=0
@@ -91,11 +98,20 @@ PYEOF
      && "$PY" - "$iso" "$run" <<'PYEOF' | sed 's/^/  /'
 import sys
 from pathlib import Path
-from src.io import validate_provenance
+from src.io import validate_curves_provenance, validate_provenance
+from tools.archive_bundle import artifact_kind, nested_runs
 iso, run = Path(sys.argv[1]), sys.argv[2]
-v = validate_provenance(iso / run, repo_root=iso)
-print(f"격리 복원 검증: {'통과' if v['ok'] else '실패 — ' + ', '.join(v['fail'][:4])}")
-sys.exit(0 if v["ok"] else 1)
+rd = iso / run
+bad = []
+for d in [rd] + nested_runs(rd):
+    v = (validate_curves_provenance(d) if artifact_kind(d) == "grid_producer"
+         else validate_provenance(d, repo_root=iso))
+    tag = d.name if d != rd else "본체"
+    print(f"격리 복원 검증[{tag}]: "
+          + ("통과" if v["ok"] else "실패 — " + ", ".join(v["fail"][:4])))
+    if not v["ok"]:
+        bad.append(tag)
+sys.exit(1 if bad else 0)
 PYEOF
   then :; else ok=0; echo "  격리 복원 검증 실패"; fi
   rm -rf "$iso"

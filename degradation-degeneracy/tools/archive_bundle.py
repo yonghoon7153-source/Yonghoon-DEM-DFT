@@ -56,6 +56,31 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 #: run_dir 안에서 **검증에 필요한** 파일. 하나라도 빠지면 validate_provenance가 깨진다.
 REQUIRED_RUN_FILES = ("manifest.yaml", "manifest_start.yaml", "fits.parquet")
 
+#: ★ F80/9-e — 곡선 producer 는 fitting artifact 가 아니다. fits·manifest_start
+#: 를 요구하면 **정상 grid artifact 도 반드시 실패**했다 (기본 대상에 grid 가
+#: 있는데도). 종류를 감지해 그에 맞는 스키마를 요구한다.
+REQUIRED_PRODUCER_FILES = ("manifest.yaml", "curves_manifest.yaml",
+                           "curves_manifest_start.yaml", "curves.parquet")
+
+
+def artifact_kind(run_dir: Path) -> str:
+    """'fit' | 'grid_producer' — manifest 의 `run_type` 으로 판정한다.
+
+    파일 유무로 판정하면 안 된다: fits.parquet 을 **지운** fit artifact 가
+    producer 로 오인돼, "fits 누락" 대신 엉뚱한 스키마로 검사된다 (구현 중 실측).
+    """
+    mp = Path(run_dir) / "manifest.yaml"
+    if mp.is_file():
+        man = yaml.safe_load(mp.read_text(encoding="utf-8")) or {}
+        if str(man.get("run_type")) == "grid":
+            return "grid_producer"
+    return "fit"
+
+
+def required_files(run_dir: Path) -> tuple:
+    return (REQUIRED_PRODUCER_FILES if artifact_kind(run_dir) == "grid_producer"
+            else REQUIRED_RUN_FILES)
+
 #: 검증에는 안 쓰이지만 재생성 비용이 커서 같이 남기는 것들
 KEEP_FILES = ("degeneracy_summary.yaml", "objective_comparison.yaml",
               "objective_comparison.csv", "objective_comparison_by_noise.csv",
@@ -111,12 +136,14 @@ def _copy_run(run_dir: Path, out_dir: Path,
     copied, missing = 0, []
 
     #   curves.parquet 은 19 MB지만 **재생성으로 대체할 수 없다** (바이트가 달라진다).
-    for name in (*REQUIRED_RUN_FILES, "curves.parquet", *KEEP_FILES):
+    req = required_files(run_dir)
+    for name in (*req, "curves.parquet", "curves_manifest_start.yaml", *KEEP_FILES):
         src = run_dir / name
         if src.is_file():
-            shutil.copy2(src, out_dir / name)
-            copied += 1
-        elif name in REQUIRED_RUN_FILES:
+            if not (out_dir / name).exists():
+                shutil.copy2(src, out_dir / name)
+                copied += 1
+        elif name in req:
             missing.append(f"{run_dir.name}/{name}")
 
     # attempts/ — F57이 attempt_id 별 파일을 실제로 읽는다
@@ -174,12 +201,17 @@ def _copy_run(run_dir: Path, out_dir: Path,
 
 
 def _payload_map(bundle_dir: Path) -> dict[str, str]:
-    """묶음 안 모든 파일의 full SHA-256 (payload 목록 자신은 제외)."""
+    """묶음 안 모든 파일의 full SHA-256 (payload 목록 자신은 제외).
+
+    ★ F80/9-c — 키는 **POSIX 구분자**로 정규화한다. `str(relative_to())` 는
+    Windows 에서 `attempts\\manifest_...` 를 만들어, Linux 에서 만든 묶음을
+    Windows 에서 check 하면 같은 파일이 두 키로 보여 실패했다.
+    """
     out = {}
     for f in sorted(bundle_dir.rglob("*")):
         if not f.is_file():
             continue
-        rel = str(f.relative_to(bundle_dir))
+        rel = f.relative_to(bundle_dir).as_posix()
         if rel == PAYLOAD:
             continue
         out[rel] = _full(f)
@@ -248,14 +280,16 @@ def check(bundle_dir) -> dict:
     for sub in [""] + list(meta.get("nested") or []):
         base = b / sub if sub else b
         pre = f"{sub}/" if sub else ""
-        missing += [pre + n for n in REQUIRED_RUN_FILES if not (base / n).is_file()]
+        kind = artifact_kind(base)
+        missing += [pre + n for n in required_files(base) if not (base / n).is_file()]
         mp = base / "manifest.yaml"
         man = (yaml.safe_load(mp.read_text(encoding="utf-8")) or {}) if mp.is_file() else {}
-        aid = (man.get("start_provenance") or {}).get("attempt_id")
-        if not aid:
-            missing.append(f"{pre}manifest.start_provenance.attempt_id (F51 이전 실행)")
-        elif not (base / "attempts" / f"manifest_start_{aid}.yaml").is_file():
-            missing.append(f"{pre}attempts/manifest_start_{aid}.yaml")
+        if kind == "fit":
+            aid = (man.get("start_provenance") or {}).get("attempt_id")
+            if not aid:
+                missing.append(f"{pre}manifest.start_provenance.attempt_id (F51 이전 실행)")
+            elif not (base / "attempts" / f"manifest_start_{aid}.yaml").is_file():
+                missing.append(f"{pre}attempts/manifest_start_{aid}.yaml")
 
         for path_s in (man.get("input_sha256") or {}):
             p = Path(path_s)
@@ -284,7 +318,14 @@ def _safe_target(rel: str, root: Path) -> Path:
     if p.is_absolute() or ".." in p.parts:
         raise ValueError(f"허용되지 않는 복원 경로: {rel}")
     out = (root / p).resolve()
-    if not str(out).startswith(str(root.resolve())):
+    # ★ F80/9-f — 문자열 startswith 는 `/a` 가 `/ab/...` 에 매칭되는 고전적
+    #   접두사 버그가 있고, Windows junction 으로도 우회됐다. 경로 의미론으로 본다.
+    try:
+        ok = out.is_relative_to(root.resolve())
+    except AttributeError:                      # py<3.9 없음 (우린 3.10+)
+        import os
+        ok = os.path.commonpath([str(out), str(root.resolve())]) == str(root.resolve())
+    if not ok:
         raise ValueError(f"허용 root 밖으로 나간다: {rel}")
     return out
 
@@ -299,6 +340,13 @@ def restore(bundle_dir, run_dir=None, force: bool = False,
     """
     b = Path(bundle_dir)
     root = Path(repo_root) if repo_root else REPO_ROOT
+    # ★ F80/9-d — 복원 전에 **payload 무결성을 강제**한다. 예전에는 변조된 묶음
+    #   (check=False)도 direct restore 가 통과시켰고, 복원본 validator 는 파생
+    #   YAML 을 안 보므로 변조가 최종 보고까지 흘러갈 수 있었다.
+    pre = check(b)
+    if not pre["ok"]:
+        return {"run_dir": None, "written": [], "conflict":
+                [f"check 실패: {m}" for m in pre["missing"]], "ok": False}
     rp = b / RESTORE_MAP
     meta = (yaml.safe_load(rp.read_text(encoding="utf-8")) or {}) if rp.is_file() else {}
     rd = str(meta.get("run_dir") or f"results/{b.name}")
@@ -341,14 +389,21 @@ def restore(bundle_dir, run_dir=None, force: bool = False,
     # ★ F72 — `_inputs/` 스냅샷은 **묶지 않고 복원 때 다시 만든다.**
     #   content-addressed 라 봉인된 입력에서 정확히 재생성되고(digest 검사 포함),
     #   묶음에 넣으면 curves.parquet 을 두 번 담게 된다 (19 MB → 38 MB).
+    # ★ F80/9-b — **nested 실행에도** 만든다. 최상위만 만들면 복원된 sweep 이
+    #   `입력_스냅샷` 에서 실패했다 (리뷰 실측: wsweep validate fail).
     from src.io import snapshot_inputs
-    man = yaml.safe_load((dest / "manifest.yaml").read_text(encoding="utf-8")) or {}
-    sealed = (man.get("start_provenance") or {}).get("input_sha256") or {}
-    if sealed and not conflict:
-        try:
-            snapshot_inputs(sealed, dest, repo_root=root)
-        except (RuntimeError, FileNotFoundError) as e:
-            conflict.append(f"_inputs 재생성 실패: {e}")
+    for sub in [None] + list(meta.get("nested") or []):
+        rd = dest / sub if sub else dest
+        mp2 = rd / "manifest.yaml"
+        if not mp2.is_file():
+            continue
+        man = yaml.safe_load(mp2.read_text(encoding="utf-8")) or {}
+        sealed = (man.get("start_provenance") or {}).get("input_sha256") or {}
+        if sealed and not conflict:
+            try:
+                snapshot_inputs(sealed, rd, repo_root=root)
+            except (RuntimeError, FileNotFoundError) as e:
+                conflict.append(f"{'wsweep ' if sub else ''}_inputs 재생성 실패: {e}")
 
     return {"run_dir": str(dest), "written": written, "conflict": conflict,
             "ok": not conflict}
