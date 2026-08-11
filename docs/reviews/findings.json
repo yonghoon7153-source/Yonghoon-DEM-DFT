@@ -131,9 +131,14 @@
    "id": "RC6-Q7",
    "severity": "P2",
    "title": "projection clear 의 코퍼스 영향 미측정 (preflight scanner 없음)",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
-   "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md"
+   "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
+   "claimed_fixed_sha": "ce6741b2",
+   "evidence_tests": [
+    "scripts/network_projection_preflight.py"
+   ],
+   "partial_note": "스캐너는 만들었으나 이 리포에는 tracked corpus 가 0 이라 실제 비율은 배포 머신에서 돌려야 나온다."
   },
   {
    "id": "RC6-Q8",
