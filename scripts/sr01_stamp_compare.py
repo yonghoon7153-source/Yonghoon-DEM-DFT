@@ -23,6 +23,7 @@ import argparse
 import csv
 import json
 import os
+import re
 import sys
 
 #: payload 안에서 STEP3 결과가 사는 자리 (mpm_webapp_payload: mpm_metrics['step3'] = step3).
@@ -35,6 +36,52 @@ _FIELDS = (
     ('n_floating_dropped', '부유 노드 버림',        False),
     ('cg_resid',           'CG 잔차',              False),
 )
+
+
+def extract_payload_cmd(text, out_name, stamp):
+    """킷 `run_mpm.sh` 본문 → payload 호출 **한 덩어리**를 뽑아 --out/스탬프를 바꾼 문자열.
+
+    ⚠ run_mpm.sh 가 실패 안내에서 권하는 sed 한 줄
+        sed -n '/mpm_webapp_payload/,/--out mpm_payload.json/p'
+    은 **틀렸다** (2026-08-11 실측).  sed 의 범위는 닫힌 뒤 다시 열린다: 아래쪽
+    오류 핸들러의 echo 가 그 sed 문구를 그대로 인쇄하느라 시작 패턴을 또 맞추고,
+    그 두 번째 범위는 끝 패턴을 만나지 못해 **파일 끝까지** 뱉는다 (ln -sfn ·
+    mpm_done.marker · DONE echo 까지 딸려 나온다 → arm B 가 latest_run 심링크를
+    갈아치우고 완료 마커를 찍는다).  그래서 여기서는 첫 범위에서 **끊는다**.
+    """
+    lines = text.splitlines()
+    start = None
+    for i, ln in enumerate(lines):
+        if ln.lstrip().startswith('python3') and 'mpm_webapp_payload' in ln:
+            start = i
+            break
+    if start is None:
+        raise SystemExit('ABORT — run_mpm.sh 에서 payload 호출부(python3 … mpm_webapp_payload)를 못 찾음')
+    end = None
+    for i in range(start, len(lines)):
+        if '--out ' in lines[i]:
+            end = i
+            break
+    if end is None:
+        raise SystemExit('ABORT — payload 호출부에서 --out 을 못 찾음')
+    body = lines[start:end + 1]
+    tail = body[-1]
+    if '--out mpm_payload.json' not in tail:
+        raise SystemExit(f'ABORT — 예상과 다른 --out 줄: {tail.strip()[:120]}')
+    tail = tail.replace('--out mpm_payload.json',
+                        f'--step3-fibre-stamp {stamp} --out {out_name}')
+    body[-1] = tail.rstrip().rstrip('\\').rstrip()      # 끝의 줄이음 제거 (EOF 에서 매달리지 않게)
+    joined = '\n'.join(body) + '\n'
+    # ★ payload 가 쓰는 **다른** 파일도 팔별로 갈라 놓는다.  안 그러면 두 팔이 같은
+    #   step4_grid.npz 에 겹쳐 쓰고, 마지막에 run_mpm.sh 가 만든 production 산출물까지
+    #   선분-팔의 것으로 바뀐다 (STEP4 를 나중에 돌리면 조용히 다른 베드의 격자를 읽는다).
+    joined = re.sub(r'(--save-step4-grid\s+)(\S+?)(\.npz\b)',
+                    lambda m: f'{m.group(1)}{m.group(2)}_{stamp}stamp{m.group(3)}', joined)
+    stray = [t for t in joined.split() if t.startswith('--save-') and t != '--save-step4-grid']
+    if stray:
+        sys.stderr.write(f'  ⚠ 팔별로 안 갈라 놓은 출력 플래그: {sorted(set(stray))} '
+                         '— 두 팔이 같은 파일에 겹쳐 씁니다.  extract_payload_cmd 를 확장하세요.\n')
+    return joined
 
 
 def dig(obj, path):
@@ -233,6 +280,39 @@ def _selftest():
         '12b) σ_A=0 여도 렌더가 죽지 않고 0 을 보여준다')
     chk(r5['sigma_e_eff_S_cm_B'] == 0.005, '13) σ_A=0 여도 B 값은 보존')
 
+    # ── 추출기: **실제 킷 스크립트**를 fixture 로 (합성 fixture 는 이 버그를 못 잡는다) ──
+    kit = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'docs', 'data',
+                       'kit_ps_scaffolds', 'kit_ps_7_3__run_mpm.sh')
+    if os.path.exists(kit):
+        txt = open(kit, encoding='utf-8').read()
+        cmd = extract_payload_cmd(txt, 'mpm_payload_segstamp.json', 'segment')
+        chk(cmd.lstrip().startswith('python3'), '14) 추출은 python3 로 시작')
+        chk('--step3-fibre-stamp segment' in cmd and 'mpm_payload_segstamp.json' in cmd,
+            '15) 스탬프·--out 치환')
+        # ★ sed 버그 재발 방지 — run_mpm.sh 꼬리가 딸려오면 arm B 가 latest_run 을 갈아치운다
+        for bad in ('ln -sfn', 'mpm_done.marker', 'STEP 2 (payload) FAILED', 'DONE $(date)'):
+            chk(bad not in cmd, f'16) ★ 꼬리 미포함: {bad!r}')
+        chk(cmd.count('mpm_webapp_payload') == 1, '17) 호출부는 정확히 1개')
+        chk(not cmd.rstrip().endswith('\\'), '18) 끝의 줄이음 제거 (EOF 매달림 방지)')
+        chk('mpm_payload.json' not in cmd.replace('mpm_payload_segstamp.json', ''),
+            '19) 원본 --out 이 남지 않음 (arm A 산출물 보호)')
+        # point 팔도 같은 덩어리에서 나와야 두 팔이 스탬프만 다르다
+        chk('step4_grid_segmentstamp.npz' in cmd,
+            '20) ★ step4 격자도 팔별로 갈라짐 (production step4_grid.npz 보호)')
+        cp = extract_payload_cmd(txt, 'mpm_payload_pointstamp.json', 'point')
+        ta, tb = cp.split(), cmd.split()
+        # 규칙으로 판정한다 (하드코딩 목록이 아니라) — 나중에 출력 플래그가 더 갈라져도 유효.
+        #   다른 토큰은 **앞 토큰이 출력 플래그이거나 --step3-fibre-stamp** 여야 한다.
+        #   즉 "두 팔은 어디에 쓰느냐와 어떻게 찍느냐만 다르다" 를 위치로 증명한다.
+        diff = [(i, x, y) for i, (x, y) in enumerate(zip(ta, tb)) if x != y]
+        bad = [(x, y) for i, x, y in diff
+               if not (i and (ta[i - 1] == '--step3-fibre-stamp'
+                              or ta[i - 1] == '--out' or ta[i - 1].startswith('--save-')))]
+        chk(len(ta) == len(tb) and diff and not bad,
+            f'21) ★ 두 팔의 차이는 스탬프/출력파일명뿐 (규칙위반 {bad})')
+    else:
+        print('  SKIP  14-20) 킷 fixture 없음 (docs/data/kit_ps_scaffolds/)')
+
     print(f'\nsr01_stamp_compare selftest: {ok}/{ok + fail} PASS')
     return 0 if fail == 0 else 1
 
@@ -244,10 +324,19 @@ def main(argv=None):
     ap.add_argument('b', nargs='?', help='arm B payload (선분 스탬프)')
     ap.add_argument('--label', default='', help='CSV/출력에 붙일 이름 (예: kit_ps_7_3)')
     ap.add_argument('--csv', default='', help='한 줄 append (헤더 자동)')
+    ap.add_argument('--extract-payload', default='',
+                    help='킷 run_mpm.sh 경로 → payload 호출부만 stdout 으로 (러너용).')
+    ap.add_argument('--out-name', default='mpm_payload_segstamp.json', help='--extract-payload 의 --out')
+    ap.add_argument('--stamp', default='segment', choices=('point', 'segment'),
+                    help='--extract-payload 가 박을 --step3-fibre-stamp')
     ap.add_argument('--selftest', action='store_true')
     x = ap.parse_args(argv)
     if x.selftest:
         return _selftest()
+    if x.extract_payload:
+        sys.stdout.write(extract_payload_cmd(
+            open(x.extract_payload, encoding='utf-8').read(), x.out_name, x.stamp))
+        return 0
     if not x.a or not x.b:
         ap.error('payload 두 개가 필요합니다 (또는 --selftest).')
     row, warn = compare(json.load(open(x.a, encoding='utf-8')),
