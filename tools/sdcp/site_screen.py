@@ -1288,6 +1288,16 @@ def cmd_verdict(a) -> int:
         by_site = defaultdict(list)
         for r in fs:
             by_site[r.get("site_from_geometry") or r["site"]].append(r)
+        # E_pose = E_complex − E_slab − E_mol(ORCA 기하). 분자가 표면에서 이완하면 **변형 몫**이
+        # 같이 들어간다 — 유연한 분자(SDCP)는 그게 커서 부호가 양수로 뒤집힐 수 있다.
+        # 같은 조각 안 순위에는 무해하지만(E_mol 이 상수), **부호를 '결합 안 됨'으로 읽으면 안 된다.**
+        lo = min(r["E_pose_eV"] for r in fs)
+        if lo > 0:
+            print(f"   ⚠ E_pose 최저가 양수({lo:+.3f}) — 이건 '결합 안 됨'이 아니라 **분자 변형 몫이"
+                  f" 상호작용보다 크다**는 뜻이다.")
+            print(f"     E_pose = E_complex − E_slab − E_mol(기체상 ORCA 기하) 이라 이완 중 분자가 휜"
+                  f" 대가가 함께 실린다.")
+            print(f"     같은 조각 안 순위·대조쌍 Δ 에는 상쇄돼 무해하다. **부호는 인용하지 말 것.**")
         print(f"   {'자리':16s} {'n':>4s} {'최저':>9s} {'중앙값':>9s} {'폭':>8s}")
         for s in sorted(by_site, key=lambda s: min(x["E_pose_eV"] for x in by_site[s])):
             E = sorted(x["E_pose_eV"] for x in by_site[s])
