@@ -36,6 +36,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import hashlib
 import json
 import math
@@ -138,7 +139,13 @@ GATE = {
     "frozen_drift_A": 1e-3,       # 고정 원자가 움직이면 그 런은 무효
     "extract_disp_A": 0.50,       # 깨끗한 슬랩 대비 표면 양이온 변위
     "extract_coord_A": 2.20,      # 슬랩 Li 가 분자 O 에 배위하면 추출 의심
-    "reactive_XM_A": 2.00,        # 분자 비금속 ↔ 슬랩 양이온이 이보다 짧으면 반응 영역
+    # ⚠ 2026-08-11 재교정 — 예전에는 분자 비금속↔슬랩 양이온에 **2.00 Å 일괄** 컷을 썼는데,
+    #   그러면 O···Li 1.75–1.94 Å 가 전부 '반응'으로 죽는다. 그건 틀렸다: Li–O 배위는
+    #   1.90–2.20 Å 가 정상이고 기체상 LiOH 의 Li–O 는 1.58 Å 다. 즉 짧다고 반응이 아니다.
+    #   원소쌍별 공유반지름 합의 비율로 바꾼다 — 융합급만 죽이고, 짧은 배위는 태그만 단다.
+    #   진짜 판별자는 거리 컷이 아니라 **추출/재구성 게이트**(깨끗한 슬랩 대조)다.
+    "reactive_frac": 0.80,        # d < 0.80 Σr_cov → 융합급, 탈락
+    "short_frac": 0.92,           # 0.80–0.92 Σr_cov → 짧은 접촉, 경고 태그 (DFT 확인 대상)
     "decision_floor_eV": 0.030,   # 이보다 작은 차이는 '가려지지 않았다'
 }
 # 결합 유지 임계: (형성, 절단, 과단축) — PTFE 3종은 Codex 값을 그대로 쓴다(교차검증 가능하게).
@@ -480,6 +487,21 @@ def contact_stats(cx: Atoms, nslab: int) -> Dict[str, Any]:
         if hit.size:
             per_cation[sym[c]] = min(per_cation.get(sym[c], np.inf), float(col[hit].min()))
     nearest_cation = min(per_cation, key=per_cation.get) if per_cation else None
+    # 원소쌍별 최단거리 → 공유반지름 합 대비 비율. 거리 게이트는 이걸로 판정한다.
+    msym = sym[nslab:]; ssym = sym[:nslab]
+    pair_min: Dict[str, float] = {}
+    for a_i, a_el in enumerate(msym):
+        col = D[a_i]
+        for b_j in np.nonzero(col < 3.6)[0]:
+            key = f"{a_el}-{ssym[b_j]}"
+            v = float(col[b_j])
+            if v < pair_min.get(key, np.inf):
+                pair_min[key] = v
+    ratios = {}
+    for key, v in pair_min.items():
+        e1, e2 = key.split("-")
+        s = COV.get(e1, 0.8) + COV.get(e2, 1.2)
+        ratios[key] = (round(v, 3), round(v / s, 3))
     return {
         "min_contact_A": round(dmin, 3), "min_contact_pair": pair,
         "min_contact_mol_index": mi, "min_contact_slab_index": si,
@@ -489,6 +511,7 @@ def contact_stats(cx: Atoms, nslab: int) -> Dict[str, Any]:
         "d_Ni_A": round(per_cation["Ni"], 3) if "Ni" in per_cation else None,
         "nearest_cation": nearest_cation,
         "site_from_geometry": (f"{nearest_cation}_contact" if nearest_cation else "no_cation_contact"),
+        "pair_min_A_and_ratio": ratios,
     }
 
 
@@ -554,9 +577,13 @@ def apply_gates(cx: Atoms, nslab: int, mol_ref: Atoms, frag: str,
             ("CAP_ARTIFACT(%s)" if relaxed else "cap_down_start(%s)") % stats["min_contact_pair"])
     if relaxed and stats["min_contact_A"] > GATE["detach_A"]:
         reasons.append(f"DETACHED({stats['min_contact_A']:.2f}Å>{GATE['detach_A']})")
-    if (stats["min_contact_slab_element"] in CATIONS
-            and stats["min_contact_A"] < GATE["reactive_XM_A"]):
-        reasons.append(f"REACTIVE_CONTACT({stats['min_contact_pair']} {stats['min_contact_A']:.2f}Å)")
+    # 거리 게이트는 원소쌍별 공유반지름 합 대비 비율로 본다 (일괄 2.00 Å 컷은 폐기 — Li–O 배위를
+    # 반응으로 오판했다). 융합급만 죽이고, 짧은 접촉은 태그를 달아 DFT 확인 대상으로 넘긴다.
+    for key, (d, ratio) in stats["pair_min_A_and_ratio"].items():
+        if ratio < GATE["reactive_frac"]:
+            reasons.append(f"REACTIVE_CONTACT({key} {d:.2f}Å = {ratio:.2f}Σr_cov)")
+        elif ratio < GATE["short_frac"]:
+            warns.append(f"short_contact({key} {d:.2f}Å = {ratio:.2f}Σr_cov)")
 
     out: Dict[str, Any] = {
         "image_lateral_A": round(lat, 3), "image_vertical_A": round(ver, 3),
@@ -734,6 +761,36 @@ def cmd_atlas(a) -> int:
     return 0
 
 
+def parse_legacy_label(stem: str) -> Dict[str, Any]:
+    """`complex_doped_sulfonate_down_r90_g22` → 방향·roll·격자점.
+
+    레거시 스캔은 자리를 라벨로 갖고 있지 않다(g## 는 격자점이지 Li/Ni 가 아니다).
+    그래서 `site` 는 **기하로 재분류한 것만** 쓰고, 시작 라벨은 g## 그대로 남긴다.
+    """
+    t = stem[len("complex_"):] if stem.startswith("complex_") else stem
+    parts = t.split("_")
+    out: Dict[str, Any] = {}
+    if parts and parts[0] in ("doped", "neutral"):
+        out["tag"] = parts.pop(0)
+    roll = grid = None
+    body = []
+    for p in parts:
+        if p.startswith("r") and p[1:].isdigit():
+            roll = float(p[1:])
+        elif p.startswith("g") and p[1:].isdigit():
+            grid = p
+        else:
+            body.append(p)
+    if body:
+        out["down_dir"] = "_".join(body)
+    if roll is not None:
+        out["roll_deg"] = roll
+    if grid:
+        out["site"] = grid          # 시작 격자점 — 자리 라벨이 아니다
+        out["site_label_kind"] = "legacy_grid_point (자리 아님)"
+    return out
+
+
 def cmd_gate(a) -> int:
     slab = load_slab()
     nslab = a.nslab
@@ -755,6 +812,22 @@ def cmd_gate(a) -> int:
     files = sorted(Path(a.path).glob(a.glob)) if Path(a.path).is_dir() else [Path(a.path)]
     if not files:
         sys.exit(f"⛔ {a.path} 에 {a.glob} 가 없다")
+    # 레거시 스캔 에너지 붙이기 (새 계산 없이 판정까지 가려고)
+    ecsv: Dict[str, float] = {}
+    if a.csv:
+        with open(a.csv) as fh:
+            rd = csv.DictReader(l for l in fh if not l.startswith("#"))
+            for r in rd:
+                if "label" not in r:
+                    print("⚠ CSV 에 label 열이 없다 — 에너지 결합 생략 "
+                          f"(열: {list(r.keys())})"); ecsv = {}; break
+                try:
+                    if int(r.get("converged", 1)):
+                        ecsv[r["label"]] = float(r["E_bind_eV"])
+                except (ValueError, KeyError, TypeError):
+                    pass
+        print(f"※ 레거시 에너지 {len(ecsv)}개 결합: {a.csv}")
+
     rows = []
     ref = slab.cell.array
     for f in files:
@@ -775,7 +848,13 @@ def cmd_gate(a) -> int:
                       f" (셀을 갈아끼우면 없던 세로 이미지 위반이 생긴다)")
         cx.set_pbc(True)
         g = apply_gates(cx, nslab, mol_ref, a.frag, clean=clean, relaxed=a.relaxed)
-        rows.append({"file": str(f), **g})
+        row = {"file": str(f), "label": f.stem, "fragment": a.frag, **g}
+        row.update(parse_legacy_label(f.stem))
+        lab = f.stem[len("complex_"):] if f.stem.startswith("complex_") else f.stem
+        if lab in ecsv:
+            row["E_pose_eV"] = ecsv[lab]
+            row["E_pose_source"] = f"legacy UMA E_bind ({os.path.basename(a.csv)}) — 순위용, 절대값 인용 금지"
+        rows.append(row)
         mark = "✔" if g["ranking_eligible"] else "⛔"
         print(f"{mark} {f.name}")
         print(f"    접촉 {g['min_contact_A']:.2f} Å ({g['min_contact_pair']}) · "
@@ -1067,7 +1146,26 @@ def cmd_verdict(a) -> int:
                 print(f"   → 이 프로토콜에서 {win} 우세 (판정바닥 {floor:.3f} eV 초과). "
                       f"열역학 판정 아님 — DFT+U 대조 필요.")
         else:
-            print("   ⛔ Li/Ni 짝지은 대조쌍이 하나도 없다 — 자리 선호를 말할 근거가 없다.")
+            print("   ⛔ 짝지은 Li/Ni 대조쌍이 없다 (레거시 스캔에는 자리 라벨이 없다).")
+            # 짝이 없으면 **분포 비교**만 가능하다 — 교란되어 있음을 반드시 같이 적는다.
+            li = [r["E_pose_eV"] for r in fs if r.get("nearest_cation") == "Li"]
+            ni = [r["E_pose_eV"] for r in fs if r.get("nearest_cation") == "Ni"]
+            if li and ni:
+                d = min(ni) - min(li)
+                sp = max(np.std(li), np.std(ni))
+                floor = max(GATE["decision_floor_eV"], float(sp))
+                print(f"   [짝 아님·분포 비교] Li 접촉 n={len(li)} 최저 {min(li):+.3f} · "
+                      f"Ni 접촉 n={len(ni)} 최저 {min(ni):+.3f} · Δ(Ni−Li) {d:+.3f} eV")
+                print(f"     자세 폭 σ={sp:.3f} eV → 판정바닥 {floor:.3f} eV")
+                if abs(d) < floor:
+                    print("     → **가려지지 않았다**")
+                else:
+                    print(f"     → 분포상 {'Li' if d > 0 else 'Ni'} 쪽이 낮다. 다만 두 집합은 "
+                          "**방향·roll·격자점이 서로 달라** 자리 이외의 요인이 섞여 있다 —")
+                    print("       이것만으로 자리 선호를 주장할 수 없다(짝지은 대조쌍이 필요).")
+            elif li or ni:
+                only = "Li" if li else "Ni"
+                print(f"   ⛔ {only} 접촉 자세만 점수가 있다 — 비교 자체가 성립하지 않는다.")
         print()
     return 0
 
@@ -1186,12 +1284,26 @@ def cmd_selftest(a) -> int:
           make_pose(slab, dm, anc["Li_top"]["xyz"], down, 0, 6.0), "DETACHED",
           relaxed=True, frag="ptfe_dimer", mref=dm)
 
-    # 7) 반응성 접촉 — F 를 Li 에 1.8 Å 까지 붙인다
-    cx = make_pose(slab, mol, anc["Li_top"]["xyz"], down, 0, 2.4)
+    # 7) 거리 게이트 재교정 검증 — 융합급만 죽고, 짧은 배위는 살아야 한다
     li = anc["Li_top"]["atoms"][0]
-    lowest = n + int(np.argmin(cx.positions[n:, 2]))
-    cx.positions[n:] += (cx.positions[li] + np.array([0, 0, 1.8])) - cx.positions[lowest]
-    check("반응성 접촉 (F···Li 1.8 Å)", cx, "REACTIVE_CONTACT")
+
+    def at_height(h: float) -> Atoms:
+        c = make_pose(slab, mol, anc["Li_top"]["xyz"], down, 0, 2.4)
+        low = n + int(np.argmin(c.positions[n:, 2]))
+        c.positions[n:] += (c.positions[li] + np.array([0, 0, h])) - c.positions[low]
+        return c
+
+    # F–Li: Σr_cov = 1.85 Å → 탈락 < 1.48 · 경고 < 1.70
+    check("융합급 접촉 (F···Li 1.35 Å < 0.80Σ)", at_height(1.35), "REACTIVE_CONTACT")
+    g = check("짧은 배위 (F···Li 1.60 Å) 는 죽이지 않는다", at_height(1.60), "")
+    ok_short = any(w.startswith("short_contact") for w in g["warnings"])
+    ok &= ok_short
+    print(f"   {'✔' if ok_short else '⛔'} {'  └ short_contact 태그가 붙는다':34s} "
+          f"실제 경고={g['warnings']}")
+    g = check("정상 배위 (F···Li 2.00 Å) 는 경고도 없다", at_height(2.00), "")
+    no_short = not any(w.startswith("short_contact") for w in g["warnings"])
+    ok &= no_short
+    print(f"   {'✔' if no_short else '⛔'} {'  └ 태그 없음':34s} 실제 경고={g['warnings']}")
 
     # 8) Li 추출 — 표면 Li 를 분자 쪽으로 1.5 Å 끌어올린다 (freeze 0.6 사고의 재현)
     cx = make_pose(slab, mol, anc["Li_top"]["xyz"], down, 0, 3.2)
@@ -1259,6 +1371,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--clean", default=None, help="깨끗한 슬랩 (추출 검사에 필요)")
     p.add_argument("--mol-ref", default=None,
                    help="결합 위상 기준 분자를 파일로 대체 (등록부 조각이 아직 없을 때)")
+    p.add_argument("--csv", default=None,
+                   help="레거시 스캔 결과 CSV (label,E_bind_eV,converged) — 자세에 에너지를 붙인다")
     p.add_argument("--relaxed", action="store_true", help="이완 후 구조로 취급(분리·추출 게이트 켜짐)")
     p.add_argument("--json", default=None)
 

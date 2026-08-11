@@ -73,13 +73,20 @@ fetch)
 # 새 계산 0 — 이미 있는 파일만 읽는다.
 gate085)
   cd "$REPO"
+  # 추출검사 대조군: 스캔이 **출발점으로 쓴 바로 그 슬랩**이면 변위 판정이 그대로 성립한다.
+  # (같은 구속으로 이완한 깨끗한 슬랩은 에너지 기준에 필요하지, 변위 기하 판정에는 이걸로 충분.)
   CLEAN=$(ls "$TOP1FREE"/slab*relax*.vasp "$TOP1FREE"/slab*.vasp 2>/dev/null | head -1 || true)
-  [ -n "$CLEAN" ] && echo "· 추출검사 대조 슬랩: $CLEAN" || echo "· 대조 슬랩 없음 → 추출검사는 '미실시'로 기록된다"
+  [ -z "$CLEAN" ] && CLEAN="$REPO/db/structures/linio2_104_sym_1x4L4_relaxed.vasp"
+  echo "· 추출검사 대조 슬랩: $CLEAN"
+  ECSV=$(ls "$TOP1FREE"/phaseA_v7c_results.csv "$TOP1FREE"/*results*.csv 2>/dev/null | head -1 || true)
+  [ -n "$ECSV" ] && echo "· 레거시 에너지표: $ECSV" || echo "· 에너지표 없음 → 게이트만 (판정 불가)"
   for t in doped neutral; do
     echo "═══ $t ═══"
     $SS gate "$TOP1FREE" --frag "sdcp_$t" --glob "complex_${t}_*.xyz" --relaxed \
-        ${CLEAN:+--clean "$CLEAN"} --json "$LOG/gate085_$t.json"
-  done 2>&1 | tee "$LOG/gate085.txt"
+        ${CLEAN:+--clean "$CLEAN"} ${ECSV:+--csv "$ECSV"} --json "$LOG/gate085_$t.json" \
+        > "$LOG/gate085_$t.txt" 2>&1
+    tail -4 "$LOG/gate085_$t.txt"
+  done
   echo; echo "── Ni 접촉이 있는 자세 요약 ──"
   python3 - "$LOG"/gate085_*.json <<'PY'
 import json, sys
@@ -88,11 +95,14 @@ for p in sys.argv[1:]:
     ni = [r for r in rows if r.get("d_Ni_A") is not None]
     ok = [r for r in rows if r.get("ranking_eligible")]
     print(f"{p.split('/')[-1]}: 자세 {len(rows)} · 게이트통과 {len(ok)} · **Ni 접촉 있는 자세 {len(ni)}**")
-    for r in sorted(ni, key=lambda r: r["d_Ni_A"])[:8]:
-        print(f"   Ni {r['d_Ni_A']:.2f} Å · Li {r['d_Li_A']} · {r['min_contact_pair']} {r['min_contact_A']:.2f} "
-              f"· {'통과' if r['ranking_eligible'] else ','.join(x.split('(')[0] for x in r['gate_reasons'])}"
-              f" · {r['file'].split('/')[-1]}")
+    from collections import Counter
+    print("   게이트 탈락 사유:", dict(Counter(x.split('(')[0] for r in rows for x in r['gate_reasons'])) or "없음")
+    print("   최근접 양이온 분포(통과분):", dict(Counter(r.get('nearest_cation') for r in ok)))
+    ne = sum(1 for r in rows if r.get('E_pose_eV') is not None)
+    print(f"   에너지 붙은 자세 {ne}/{len(rows)}")
 PY
+  echo; echo "── 자리 판정 (레거시 0.85 스캔, 짝 아님·분포 비교) ──"
+  $SS verdict "$LOG/gate085_doped.json" "$LOG/gate085_neutral.json" 2>&1 | tee "$LOG/verdict085.txt"
   ;;
 
 atlas)
