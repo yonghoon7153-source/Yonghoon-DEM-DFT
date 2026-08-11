@@ -1,4 +1,0 @@
-_주의: 이 목록이 커밋되는 순간 각 묶음의 bytes 가 저장소 이력에 고정된다. RESULTS.md 의 앵커(fits/curves digest)와
-  여기 값이 같아야 그 보고서의 근거 묶음이다 (11차 발견 7).
-artifact_commit: 4bff5919712deb8099016ecef5b521561769d71b
-runs: {}

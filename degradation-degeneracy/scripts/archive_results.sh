@@ -42,7 +42,10 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
 PY="${PYTHON:-python3}"
-DEST="artifacts"
+# ★ 11차 — 보관 위치는 override 가능하다. smoke 의 음성 테스트가 **tracked**
+#   artifacts/ 를 건드리면 worktree 가 dirty 가 되어 strict smoke 의 전제
+#   (clean 커밋에서 실행)를 스스로 깬다.
+DEST="${ARCHIVE_DEST:-artifacts}"
 RUNS=("$@")
 if [[ ${#RUNS[@]} -eq 0 ]]; then
   # ★ F71/8-4 — 기본 대상이 옛 v1/v2 여서, 새 실행을 묶으려던 사람이 무심코
@@ -160,6 +163,9 @@ done
 # ★ 11차 발견 7 — 어느 묶음이 어느 보고서의 근거인지 **자동으로 잇는다.**
 #   run 경로 ↔ payload index·fits·curves 의 full 64자리 digest 를 커밋되는
 #   목록으로 남긴다. RESULTS.md 의 앵커와 이 파일을 대조하면 된다.
+#   승격된 묶음이 하나도 없으면 쓰지 않는다 — 실패한 실행이 인덱스를 건드려
+#   "무엇이 근거인가"를 흐리면 안 된다.
+if [[ "$n_ok" -gt 0 ]]; then
 "$PY" - "$DEST" <<'PYEOF'
 import hashlib, subprocess, sys
 from pathlib import Path
@@ -199,6 +205,7 @@ out.write_text(yaml.safe_dump(
     allow_unicode=True, sort_keys=False), encoding="utf-8")
 print(f"\n인덱스: {out} ({len(runs)}개 묶음, full 64자리 digest)")
 PYEOF
+fi
 
 printf '\n요청 %d개 · 검증 가능 %d개 · 불완전 %d개 · 없음 %d개 · 합계 %s\n' \
   "$n_want" "$n_ok" "$n_bad" "$n_missing" "$(du -sh "$DEST" | cut -f1)"

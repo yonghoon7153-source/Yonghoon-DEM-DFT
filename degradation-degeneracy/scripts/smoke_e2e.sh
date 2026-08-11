@@ -414,10 +414,18 @@ rm -rf "$ISO"
 
 # ★ F89/10차 — 보관 대상이 디스크에 없으면 **nonzero** 로 끝나야 한다.
 #   예전에는 기본 대상이 전부 없어도 "검증 가능 0개" + exit 0 이었다.
-if ./scripts/archive_results.sh "results/_smoke_missing_$$" >/dev/null 2>&1; then
+if ARCHIVE_DEST="$BASE/arch_neg" ./scripts/archive_results.sh \
+     "results/_smoke_missing_$$" >/dev/null 2>&1; then
   bad "없는 보관 대상인데 archive_results.sh 가 성공(exit 0)했다 (F89)"
 else
   ok "없는 보관 대상 → nonzero 종료 (F89)"
+fi
+# ★ 11차 — smoke 는 tracked artifacts/ 를 건드리면 안 된다 (worktree 가
+#   dirty 가 되어 strict smoke 의 전제를 스스로 깬다)
+if git status --porcelain artifacts | grep -q .; then
+  bad "smoke 가 tracked artifacts/ 를 수정했다"
+else
+  ok "보관 음성 테스트가 tracked artifacts/ 를 건드리지 않음"
 fi
 
 # ★ 11차 발견 6 — **기존 정상 묶음이 있는 상태에서 원본이 깨지면**, wrapper 는
