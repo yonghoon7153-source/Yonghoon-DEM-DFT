@@ -2966,10 +2966,19 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
     #     산출물을 만들었다는 증거가 아니라 오히려 무산출 실행을 성공처럼 도장한다.
     #     → full_metrics.json 이 이 단계에서 **실제로 바뀌었는지**(fresh) + stage_e 키가
     #       실제로 있는지(verify) 를 둘 다 요구한다.
+    #   ★ RC5-01 (Codex 5회차): 옛 판정은 `any('_stage_e' in k)` 라 **이름에 _stage_e 가
+    #     든 임의 키 하나 + null 값**만으로 success 도장이 찍혔다 (garbage_stage_e: null 로
+    #     재현됨).  이제 run_one 이 무조건 쓰는 11-키 exact schema 를 요구한다
+    #     (pipeline_service.STAGE_E_REQUIRED_KEYS; None 은 없는 것으로 센다).
     def _stage_e_wrote(rd):
         try:
             with open(os.path.join(rd, 'full_metrics.json')) as _f:
-                return any('_stage_e' in k for k in json.load(_f))
+                miss = _ps.stage_e_missing_keys(json.load(_f))
+            if miss:
+                log.append({'step': 'Stage E Verify', 'rc': 1,
+                            'stdout': f'partial Stage E — 필수 키 {len(miss)}개 없음/None: '
+                                      + ', '.join(miss[:6]) + ('…' if len(miss) > 6 else '')})
+            return not miss
         except Exception:                                          # noqa: BLE001
             return False
 
@@ -6652,7 +6661,11 @@ def mpm_input_package(case_id):
             tmap = (json.load(open(meta_p)) or {}).get('type_map', '')
         except Exception:
             tmap = ''
-    cmd = ['python3', gen, '--results', results_dir, '--case', case_id, '--out', tmp]
+    # ★ F-18: bare 'python3' 은 Windows 에서 없어서 이 route 가 500 이었다 (Codex 5회차 실측
+    #   500 → 200).  sys.executable = **지금 webapp 을 돌리는 인터프리터** 라 플랫폼 무관하고,
+    #   venv 도 자동으로 맞는다.  ⚠ 리눅스에서는 bare python3 가 우연히 있어서 200 이 나오므로
+    #   회귀는 HTTP 코드가 아니라 **argv[0]** 을 봐야 한다 (Codex 지적).
+    cmd = [sys.executable, gen, '--results', results_dir, '--case', case_id, '--out', tmp]
     if tmap:
         cmd += ['--type-map', tmap]
     # optional conductive-additive recipe baked into run_mpm.sh (첨가제 적용 section)

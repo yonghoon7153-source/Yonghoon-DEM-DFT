@@ -77,7 +77,11 @@ class FakeRunner:
             fm = os.path.join(self.results_dir, 'full_metrics.json')
             data = json.load(open(fm)) if os.path.exists(fm) else {}
             # Stage E 는 **화면에 남아 있는 baseline** 을 읽어 파생값을 만든다.
+            # ★ RC5-01: 실제 run_one 은 정상 종료마다 11-키를 **무조건** 쓴다.  fixture 가
+            #   한 키만 쓰면 계약이 엄해질 때 거짓 실패한다 (Codex 의 fixture-drift 교훈).
             data['sigma_full_mScm_stage_e'] = (data.get('sigma_full_mScm') or 0) * 2
+            for _k in ps.STAGE_E_REQUIRED_KEYS:
+                data.setdefault(_k, 1.0)
             with open(fm, 'w') as f:
                 json.dump(data, f)
             out = 'fake stage e'
@@ -275,6 +279,8 @@ def main():
                     fm = os.path.join(res_dir, 'full_metrics.json')
                     d = json.load(open(fm)) if os.path.exists(fm) else {}
                     d['sigma_full_mScm_stage_e'] = 9.0
+                    for _k in ps.STAGE_E_REQUIRED_KEYS:      # RC5-01 exact schema
+                        d.setdefault(_k, 1.0)
                     with open(fm, 'w') as f:
                         json.dump(d, f)
                 return subprocess.CompletedProcess(cmd, rc, '', '')
@@ -370,6 +376,8 @@ def main():
                     fm = os.path.join(_d, 'full_metrics.json')
                     dd = json.load(open(fm)) if os.path.exists(fm) else {}
                     dd['sigma_full_mScm_stage_e'] = 6.0
+                    for _k in ps.STAGE_E_REQUIRED_KEYS:      # RC5-01 exact schema
+                        dd.setdefault(_k, 1.0)
                     json.dump(dd, open(fm, 'w'))
                 return subprocess.CompletedProcess(cmd, rc, '', '')
 
@@ -518,6 +526,41 @@ def main():
             and not [f for f in os.listdir(tmp) if f.startswith('.tmp_')])
         chk('16) 도장 없는 옛 산출물 → run_id None (조용히 지어내지 않는다)',
             ps.read_network_provenance(tmp).get('network_run_id') is None)
+
+        # ══ RC5-01 (Codex 5회차): partial Stage E 가 success 로 도장되던 것 ══
+        #   옛 판정 `any('_stage_e' in k)` 은 이름만 맞으면 통과했다.  Codex 가 동적으로
+        #   재현한 네 경우를 그대로 회귀로 고정한다.
+        full = {k: 1.0 for k in ps.STAGE_E_REQUIRED_KEYS}
+        chk('24) 완전한 11-키 → 통과', ps.stage_e_missing_keys(full) == ())
+        chk('25) ★ garbage_stage_e: null 하나만 → 거부 (옛 계약은 success 였다)',
+            len(ps.stage_e_missing_keys({'garbage_stage_e': None})) == len(ps.STAGE_E_REQUIRED_KEYS))
+        chk('26) ★ 필수 키가 있어도 값이 None 이면 없는 것으로 센다',
+            ps.stage_e_missing_keys(dict(full, sigma_full_mScm_stage_e=None))
+            == ('sigma_full_mScm_stage_e',))
+        chk('27) ★ stage_e_source 만 생성 → 거부 (partial)',
+            'sigma_full_mScm_stage_e' in ps.stage_e_missing_keys({'stage_e_source': {'a': 1}}))
+        chk('28) 아무 출력 없음 → 전부 누락', len(ps.stage_e_missing_keys({})) == 11)
+        chk('29) 진짜 0 은 유효값이라 통과한다 (None 만 거른다)',
+            ps.stage_e_missing_keys(dict(full, thermal_sigma_full_mScm_stage_e=0.0)) == ())
+        chk('30) 11-키는 run_one 이 무조건 쓰는 집합과 같다 (개수 고정)',
+            len(ps.STAGE_E_REQUIRED_KEYS) == 11
+            and all(ps.is_stage_e_key(k) for k in ps.STAGE_E_REQUIRED_KEYS))
+
+        # ══ F-18 (Codex 5회차): mpm-input route 가 bare 'python3' 라 Windows 에서 500 ══
+        #   ⚠ HTTP 코드로는 못 잡는다 — 리눅스엔 python3 가 있어서 200 이 나온다(false-green).
+        #   소스에서 **인터프리터 인자**를 직접 본다.
+        import ast as _ast
+        _src = open(os.path.join(os.path.dirname(os.path.abspath(webapp.__file__)),
+                                 'app.py'), encoding='utf-8').read()
+        _bare = []
+        for _n in _ast.walk(_ast.parse(_src)):
+            if not isinstance(_n, _ast.List) or not _n.elts:
+                continue
+            _h = _n.elts[0]
+            if isinstance(_h, _ast.Constant) and _h.value == 'python3':
+                _bare.append(_n.lineno)
+        chk('31) ★ webapp 이 subprocess 를 bare python3 로 띄우지 않는다 (F-18, Windows 500)',
+            not _bare or print(f'    bare python3 at lines {_bare}') )
 
         # ══ T10 (Codex 실측 이관): Windows `os.replace` 간헐 PermissionError ══
         # Codex 가 DFT 대시보드에서 12 프로세스 × 100 건 × 10 회를 돌려 992/1000 만

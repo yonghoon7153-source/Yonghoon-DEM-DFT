@@ -96,6 +96,47 @@ def is_stage_e_key(k: str) -> bool:
             or k in ('fracture_aware_method_full', 'validation_flags'))
 
 
+#: ★ RC5-01 (Codex 5회차): Stage E 성공 판정이 `any('_stage_e' in k)` 였다.  그래서
+#:   `garbage_stage_e: null` **한 개**만 있어도 새 parent/run/code-SHA 가 success 로
+#:   도장됐다 (Codex 동적 재현: garbage/null 둘 다 success, partial 실행이 안 닫힘).
+#:
+#:   → **exact schema** 로 바꾼다.  아래는 `run_network_full_corrections.run_one()` 이
+#:   정상 종료마다 **무조건** 쓰는 최소 집합이다 (전부 함수 최상위 4칸 들여쓰기 =
+#:   조건부 아님을 코드에서 확인).  loss 3필드·temperature provenance·thermal baseline
+#:   heal 은 조건부라 여기 넣지 않는다.
+#:
+#:   ⚠ 이것은 **중간형**이다.  최종형은 Stage E 스크립트가 per-run manifest(schema
+#:   version + 6-record 행렬 + digest)를 쓰고 앱이 그것을 검증하는 것 — 지금처럼 앱이
+#:   키 목록을 추측하면 스크립트가 바뀔 때 drift 한다.  그 전까지는 이 집합을 정본으로
+#:   두고, `run_one` 이 키를 늘리면 여기도 같이 늘린다.
+STAGE_E_REQUIRED_KEYS = (
+    'sigma_full_mScm_stage_e',
+    'sigma_full_mScm_stage_e_physics',
+    'electronic_sigma_full_mScm_stage_e',
+    'electronic_sigma_full_mScm_stage_e_physics',
+    'thermal_sigma_full_mScm_stage_e',
+    'thermal_sigma_full_mScm_stage_e_physics',
+    'stage_e_source',
+    'stage_e_factors_used',
+    'stage_e_fracture_stage_counts',
+    'fracture_aware_method_full',
+    'validation_flags',
+)
+
+
+def stage_e_missing_keys(full_metrics):
+    """정상 Stage E 가 반드시 남기는 키 중 **없는 것**을 돌려준다 (빈 튜플이면 완전).
+
+    ⚠ 값이 `None` 이면 **없는 것으로 본다**.  Codex 가 `sigma_full_mScm_stage_e: null`
+      하나로도 success 가 되는 것을 재현했다 — 키 존재만 보면 partial 이 안 닫힌다.
+      (진짜 0 은 `0.0` 이라 통과한다; None 만 거른다.)
+    """
+    if not isinstance(full_metrics, dict):
+        return STAGE_E_REQUIRED_KEYS
+    return tuple(k for k in STAGE_E_REQUIRED_KEYS
+                 if full_metrics.get(k) is None)
+
+
 
 def new_run_id() -> str:
     """세대 ID.  시간 접두사를 붙여 정렬하면 시간순이 된다."""
