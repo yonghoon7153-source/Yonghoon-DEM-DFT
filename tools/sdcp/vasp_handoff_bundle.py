@@ -1,6 +1,21 @@
 #!/usr/bin/env python3
 """vasp_handoff_bundle.py — VASP 외주 **원샷** 번들: 자세 쌍 + 기준계 + 회수 분석기 + zip.
 
+⛔⛔ 2026-08-11 Codex 재검토 **HOLD — 이 판(v1)으로 외주 발송 금지.**
+  v2 필수 반영 (kb/reviews/vasp_bundle_codex_reply_2026_08_11.md 체크리스트):
+   ① relax 만으로 끝냄 → **pre-SCF → relax(2×3×1) → final static(3×4×1 · LREAL=.FALSE. ·
+      EDIFF=1e-6) → 민감도(4×6×1 대표쌍)** 4상 러너. 에너지는 final static 에서만 회수.
+   ② afm_balanced 는 정본 계보가 아니다 → **tools/sdcp/ptfe_linio2_uma/vasp_stage.py 의
+      ni_afm_signs() 12-Ni 패턴 ×4** 를 기본 seed 로 (qe_afm24_24_pm1). afm_net4 는 탐사용.
+   ③ 자기 seed 는 tier1 **전 끝점 2종** + seed-매칭 ΔE (독립 min 금지) ·
+      |ΔE_s1−ΔE_s2| ≤ 10 meV 게이트 · 실패 시 BLOCKED_MAGNETIC_SENSITIVITY.
+   ④ 기체상: IDIPOL=4 + DIPOL(COM) · doped NUPDOWN=1 / closed NUPDOWN=0 ·
+      상자 span+20/+24 Å 2종 (|ΔE_mol| ≤ 10 meV 게이트).
+   ⑤ 기하 감사: 최근접 하나 → **결합 그래프 변화**(vasp_stage.py geometry_audit 재사용) ·
+      PAIR_COLLAPSED · 탈착 · 고정원자 drift · Ni 모멘트/LDAU 점유행렬 완결성.
+   ⑥ 잡 수 정정: pose 46 + refs 6 = **52** (요청문의 58 은 오산).
+  δ=30 meV 는 'practical indifference floor' 로 유지 (Codex 동의) + 수치 게이트 3종.
+
 왜 이 도구인가 (2026-08-11)
   기존 `site_screen.py dft-handoff` 는 자세 쌍(POSCAR/INCAR)만 내보냈다. 그러면:
     · **E_ads(흡착에너지)를 못 낸다** — 깨끗한 슬랩·기체상 분자 기준계 잡이 없다

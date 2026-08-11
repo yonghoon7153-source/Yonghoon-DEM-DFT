@@ -50,11 +50,16 @@ def zval(path):
         head = open(path, errors="ignore").read(6000)
     except OSError:
         return None
-    m = re.search(r'z_valence\s*=\s*"?\s*([\d.]+)', head, re.I)
+    # ⛔⛔ 2026-08-11 — 옛 정규식 `[\d.]+` 가 **과학표기를 잘랐다**. psl kjpaw UPF 는
+    #   z_valence="1.100000000000E+01" 로 쓰는데 E 앞에서 끊겨 Nd 가 **1.1 전자**가 됐다.
+    #   그 값이 nbnd 를 정하므로: lindo2 nbnd 51(필요 53)·nd2s3 62(필요 81) → 03/04 전멸.
+    #   nd2o3 는 nbnd 21 = 필요 21, **여유 0밴드**로 우연히 살았다 (값 3.948 은 유효하나
+    #   재실행으로 견고화할 것). build_neb_inputs.zval 은 처음부터 넓은 정규식이라 무사.
+    m = re.search(r'z_valence\s*=\s*"?\s*([\d.eEdD+-]+)', head, re.I)
     if m:
-        return float(m.group(1))
-    m = re.search(r"([\d.]+)\s+Z valence", head, re.I)      # UPF v1 텍스트 헤더
-    return float(m.group(1)) if m else None
+        return float(m.group(1).replace("D", "E").replace("d", "e"))
+    m = re.search(r"([\d.eEdD+-]+)\s+Z valence", head, re.I)  # UPF v1 텍스트 헤더
+    return float(m.group(1).replace("D", "E").replace("d", "e")) if m else None
 
 
 #: ⛔ PP 핀 — build_neb_inputs.py 의 PP_PIN 과 **같은 값이어야 한다**.

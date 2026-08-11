@@ -55,16 +55,26 @@
     },
     "li3nd": {
       "class": "metal",
-      "evidence": "declared",
+      "evidence": "measured",
       "gap_eV": null,
       "material_id": "mp-976264",
       "spacegroup": "Fm-3m",
       "e_above_hull_eV_per_atom": 0.197,
       "theoretical": true,
       "basis": "Li₃Nd 는 Li–희토류 금속간화합물이다 — 두 성분 모두 금속이고 전기음성도 차가 작아 이온 갭이 열릴 이유가 없다. Xu 2026 §2.6 이 주장하는 '전자 전도성 계면상' 이라는 것 자체가 금속이라는 주장이다.",
-      "must_confirm": "⚠ **DOS/PDOS 로 E_F 에 상태가 있는지 확인하기 전에는 NEB 을 걸지 않는다.** 확인되면 evidence 를 measured 로 올린다. 절차: kb/methodology/li3nd_metal_protocol_note_2026_08_11.md §4 ③단계.",
       "blocker": "Nd frozen-4f PP (todo #27) — LiNdO₂ 와 **같은 PP 를 공유한다**. 하나 확보하면 둘 다 열린다.",
-      "cite_with": "⚠ 장벽을 단독으로 내면 우리 P2 판정(Li–Nd 안정 ordered 상 0개, hull +0.197 eV/atom · theoretical)과 모순돼 보인다. 반드시 '설령 동역학적으로 생겼다 치더라도' 조건절과 hull 거리를 같이 쓴다."
+      "cite_with": "⚠ 장벽을 단독으로 내면 우리 P2 판정(Li–Nd 안정 ordered 상 0개, hull +0.197 eV/atom · theoretical)과 모순돼 보인다. 반드시 '설령 동역학적으로 생겼다 치더라도' 조건절과 hull 거리를 같이 쓴다.",
+      "measured_2026_08_11": {
+        "N_EF_states_per_eV": 5.324,
+        "E_F_eV": 4.168,
+        "N_EF_pm0p5eV_avg": 4.374,
+        "source": "/data/work/runs/sei_dft_frozen4f/li3nd_mp-976264 (vc-relax → nscf → dos.x)",
+        "pseudo_Nd": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (z=11 · 4f-in-core · sha256 18a3835e…35101)",
+        "pdos_channels": "Li s/s/p ×3 · Nd s/s/p/p/d — **Nd_f 채널 부재는 방법의 정의**(4f core)",
+        "reading": "E_F 에 상태가 뚜렷하다(5.3 states/eV — 경계값이 아니다). **itinerant 상태(Li-s/Nd-spd)만으로 금속**이므로, 4f 를 더해도 이 방향의 결론은 뒤집히지 않는다. 반대로 '갭이 열렸다' 는 결론은 이 방법으로는 낼 수 없었을 것이다 — 그 비대칭이 이 판정을 안전하게 만든다.",
+        "remaining_robustness": "⚠ NEB 착수 전 확인 항목(Codex): degauss 0.02→0.01→0.005 Ry 사다리에서 N(E_F) 유지 · k 조밀화에서 유지. DOS 는 6·6·6 nosym + degauss 0.007 로 이미 조밀한 편이다."
+      },
+      "neb_gate": "열림 — metal·measured. 남은 선행: NEB 스택 재리뷰 확인 + degauss/k 사다리."
     },
     "nd2o3": {
       "class": "insulator",
