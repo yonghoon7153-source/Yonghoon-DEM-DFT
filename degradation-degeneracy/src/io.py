@@ -17,7 +17,7 @@ import platform
 import subprocess
 import time
 from collections import Counter
-from pathlib import Path
+from pathlib import Path, PurePath
 
 import pandas as pd
 import yaml
@@ -129,7 +129,24 @@ def git_info(repo_dir: str | Path | None = None, save_diff_to=None,
         return {"git_commit": "unavailable", "git_dirty": None}
 
 
-def source_digest(root=None, dirs=("src", "tools", "configs")) -> str:
+# ★ 14차-2 — RUN_SCOPE (root CLAUDE.md 하드룰 3 과 1:1). 여기 파일이 바뀌면
+#   코드 identity 가 바뀌고 기존 산출물이 무효화된다.
+_SCOPE_DIRS = ("src", "tools", "configs", "scripts")
+_SCOPE_FILE_GLOBS = ("run.sh", "requirements*.txt")
+
+
+def _digest_path_key(rel) -> bytes:
+    """digest 에 들어가는 경로 키 — OS 무관 POSIX 정규형.
+
+    ★ 14차-2 — `str(relative_to(...))` 는 Windows 에서 `src\\io.py` 를 내
+    같은 Git blob 이 환경마다 다른 digest 를 얻었다 (리뷰어 실측:
+    POSIX 4fa3e2af0a2e8106 vs `\\` 구분자 7ac22c1055eae262).
+    """
+    return PurePath(rel).as_posix().encode("utf-8")
+
+
+def source_digest(root=None, dirs=_SCOPE_DIRS,
+                  file_globs=_SCOPE_FILE_GLOBS) -> str:
     """★ F49 — 실제로 import되는 source tree의 내용 해시.
 
     `run_sig` 에 코드 identity 가 없으면, **코드만 바꾸고 같은 output 에 resume 했을
@@ -138,20 +155,32 @@ def source_digest(root=None, dirs=("src", "tools", "configs")) -> str:
     같은 `run_sig` 79f2e9c798ee 로 병합되고 validator 가 ok=True 를 냈다.)
 
     git commit 만으로는 dirty 실행을 못 잡으므로 파일 내용을 직접 해시한다.
+
+    ★ 14차-2 — (1) 경로 키·정렬을 POSIX 정규형으로 통일해 OS 간 digest 를
+    일치시키고, (2) 범위를 RUN_SCOPE 전체(`scripts/`·`run.sh`·
+    `requirements*.txt` 포함)로 넓혔다 — 이전엔 실행 진입점을 바꿔도
+    digest 가 안 변하는 identity 구멍이 있었다.
     """
     root = Path(root) if root else Path(__file__).resolve().parent.parent
-    h = hashlib.sha256()
+    entries: list[tuple[bytes, Path]] = []
     for d in dirs:
         base = root / d
         if not base.exists():
             continue
-        for f in sorted(base.rglob("*")):
+        for f in base.rglob("*"):
             if not f.is_file() or "__pycache__" in f.parts:
                 continue
             if f.suffix in (".pyc", ".pyo"):
                 continue
-            h.update(str(f.relative_to(root)).encode())
-            h.update(f.read_bytes())
+            entries.append((_digest_path_key(f.relative_to(root)), f))
+    for g in file_globs:
+        for f in root.glob(g):
+            if f.is_file():
+                entries.append((_digest_path_key(f.relative_to(root)), f))
+    h = hashlib.sha256()
+    for key, f in sorted(entries):
+        h.update(key)
+        h.update(f.read_bytes())
     return h.hexdigest()[:16]
 
 
@@ -772,6 +801,130 @@ def _verify_observed_curves(curves_path: Path, spec: dict) -> dict:
     return checks
 
 
+#: ★ 14차 발견 1 — noise family 의 키. noise·seed 를 뺀 truth identity 다.
+_FAMILY_FIELDS = ("lli", "lam_pe", "lam_ne", "lam_pe_type", "lam_ne_type")
+
+
+def _verify_noise_families(curves_path: Path, spec: dict, d: Path) -> dict:
+    """★ 14차 발견 1 — noise family 교차 invariant.
+
+    noise 는 solve **이후에만** 얹히므로(`src/grid.py`: `add_noise(curves["v_full"],
+    ...)`) 같은 (lli, lam_pe, lam_ne, 유형) family 의 멤버는 clean truth 를
+    공유해야 한다. 조건별 검사(`_verify_observed_curves`)는 전부
+    `groupby("cond_id")` 안이라 **조건 사이** 갈림을 못 본다 — 리뷰 실측:
+    noise=0 멤버 q=4000·4.2V, noise=0.005 멤버 q=2000·3.2V 인 producer 가
+    ok=True 를 받았다. 그러면 같은 truth 를 놓고 noise 조건마다 다른 셀을
+    fitting 하게 되어 degeneracy 판별의 분자·분모가 함께 어긋난다.
+
+      1. family 마다 서명된 noise 집합(`spec.noise`)을 **정확히 한 번씩** 가진다
+      2. family 가 observed / failed 로 쪼개지면 실패
+      3. observed family 안 q_mah 최대 편차 ≤ 1e-6 mAh
+      4. x_norm 정렬 후 v_pe·v_ne·v_full pointwise 최대 편차 ≤ 1e-10 V
+         (실측 2-worker 샘플에서 셋 다 정확히 0 — 같은 solve 의 후처리라 결정적)
+    """
+    import numpy as np
+
+    checks: dict[str, tuple[bool, str]] = {}
+    want_noise = spec.get("noise")
+    ok_want = (isinstance(want_noise, (list, tuple)) and len(want_noise) > 0
+               and all(isinstance(v, (int, float)) and not isinstance(v, bool)
+                       and np.isfinite(v) for v in want_noise)
+               and len({float(v) for v in want_noise}) == len(want_noise))
+    checks["관측_noise_기대집합"] = (
+        ok_want,
+        f"grid_run_spec.noise 가 없거나 유한 실수의 중복 없는 목록이 아니다 "
+        f"({want_noise!r}) — family 완전성을 대조할 서명된 기준이 없다 "
+        f"(14차 발견 1, grid_sig_version 5 필수 항목)")
+    if not ok_want:
+        return checks
+    want = sorted(float(v) for v in want_noise)
+
+    cols = ["cond_id", "x_norm", *_FAMILY_FIELDS, "noise", "q_mah",
+            "v_pe", "v_ne", "v_full"]
+    try:
+        df = pd.read_parquet(curves_path, columns=cols)
+    except Exception as e:  # noqa: BLE001
+        checks["관측_noise_family_스키마"] = (
+            False, f"family 검증에 필요한 열을 읽지 못했다 ({e})")
+        return checks
+
+    def _famkey(lli, pe, ne, pt, nt):
+        return (float(lli), float(pe), float(ne), str(pt), str(nt))
+
+    fams: dict[tuple, list] = {}
+    for cid, g in df.groupby("cond_id", sort=True):
+        # 필드 단일성·유한성은 관측조건_단일성/ID결합이 이미 검사한다 — 여기서는
+        # 첫 행을 family 좌표로 쓴다 (재구성 불가면 그 검사가 실패한다).
+        try:
+            key = _famkey(*(g[k].iloc[0] for k in _FAMILY_FIELDS))
+            noise = float(g["noise"].iloc[0])
+        except Exception:  # noqa: BLE001 — 단일성 검사가 잡는다
+            continue
+        fams.setdefault(key, []).append((noise, str(cid), g))
+
+    bad_set, bad_q, bad_v = [], [], []
+    for key, members in sorted(fams.items(), key=repr):
+        noises = sorted(n for n, _, _ in members)
+        if noises != want:
+            bad_set.append(f"{key}(noise {noises} ≠ 서명 {want})")
+        qs = [float(g["q_mah"].iloc[0]) for _, _, g in members]
+        if max(qs) - min(qs) > 1e-6:
+            bad_q.append(f"{key}(q_mah 편차 {max(qs) - min(qs):.6g} mAh)")
+        arrs = []
+        for _, _, g in sorted(members, key=lambda t: t[0]):
+            gg = g.sort_values("x_norm")
+            arrs.append({c: gg[c].to_numpy(dtype=float)
+                         for c in ("v_pe", "v_ne", "v_full")})
+        base = arrs[0]
+        if any(len(a["v_full"]) != len(base["v_full"]) for a in arrs[1:]):
+            bad_v.append(f"{key}(멤버 간 행 수 불일치)")
+            continue
+        dev = max((float(np.max(np.abs(a[c] - base[c])))
+                   for a in arrs[1:] for c in ("v_pe", "v_ne", "v_full")),
+                  default=0.0)
+        if dev > 1e-10:
+            bad_v.append(f"{key}(max|Δv| = {dev:.3g} V)")
+
+    # 규칙 2 — failed.csv 의 condition payload 로 실패 family 좌표를 만든다.
+    #   payload 파손·ID 불일치는 실패목록_ID결합이 fail-closed 로 잡으므로
+    #   여기서는 파싱되는 행만 본다.
+    fail_fams: set[tuple] = set()
+    fp = d / "failed.csv"
+    if fp.exists():
+        import csv as _csv
+        with open(fp, newline="", encoding="utf-8") as f:
+            for row in _csv.DictReader(f):
+                try:
+                    c = json.loads(row.get("condition") or "{}")
+                    fail_fams.add(_famkey(c["lli"], c["lam_pe"], c["lam_ne"],
+                                          c["lam_pe_type"], c["lam_ne_type"]))
+                except Exception:  # noqa: BLE001
+                    continue
+        split = sorted(set(fams) & fail_fams, key=repr)
+    else:
+        split = []
+
+    checks["관측_noise_family_완전성"] = (
+        not bad_set,
+        f"{len(bad_set)}개 family 의 noise 집합이 서명된 {want} 와 다르다: "
+        f"{bad_set[:3]} — noise 축 표본이 조용히 달라졌다")
+    checks["관측_noise_family_분할"] = (
+        not split,
+        f"{len(split)}개 family 가 observed 와 failed 에 걸쳐 있다: "
+        f"{[repr(k) for k in split[:3]]} — 같은 truth 인데 noise 조건마다 "
+        f"모집단이 다르면 degeneracy 분모가 어긋난다")
+    checks["관측_noise_family_q_mah"] = (
+        not bad_q,
+        f"{len(bad_q)}개 family 안에서 q_mah 가 1e-6 mAh 넘게 갈린다: "
+        f"{bad_q[:3]} — noise 는 solve 이후에만 얹히므로 clean 용량은 "
+        f"family 안에서 같아야 한다")
+    checks["관측_noise_family_전압"] = (
+        not bad_v,
+        f"{len(bad_v)}개 family 안에서 clean 전압(v_pe·v_ne·v_full)이 "
+        f"1e-10 V 넘게 갈린다: {bad_v[:3]} — 같은 truth 의 solve 가 아니다")
+    return checks
+
+
 def _verify_failed_reasons(d: Path, spec: dict, ds: dict) -> dict:
     """실패 행을 **서명된 recipe** 로 재검한다 (11차 발견 2·3).
 
@@ -890,9 +1043,9 @@ def validate_curves_provenance(curves_dir, repo_root=None) -> dict:
     # ★ F82b/10차 발견 2-c — 버전과 필수 물리 필드를 강제한다. 예전에는
     #   discharged=None 으로 만든 spec 도, F82 이전 버전도 그대로 통과했다.
     checks["grid_sig_version"] = (
-        spec.get("grid_sig_version") == 4,
-        f"grid_sig_version이 {spec.get('grid_sig_version')}이다 (4 필요 — "
-        f"discharged_state·replay_recipe·effective_solver 미포함 형식)")
+        spec.get("grid_sig_version") == 5,
+        f"grid_sig_version이 {spec.get('grid_sig_version')}이다 (5 필요 — "
+        f"14차: 서명된 noise 집합 미포함 형식은 family 완전성을 대조할 수 없다)")
     # ★ 12차 발견 2 — 실제로 쓰인 solver 가 서명에 있어야 한다.
     _es = spec.get("effective_solver") or {}
     checks["effective_solver_identity"] = (
@@ -928,12 +1081,22 @@ def validate_curves_provenance(curves_dir, repo_root=None) -> dict:
             if _badv:
                 _why = f"baseline 값이 유한 실수가 아니다: {_badv[:3]}"
             else:
-                _badg = [k for k, v in _rg.items()
-                         if not isinstance(v, (int, float, bool))
-                         or (isinstance(v, (int, float)) and not isinstance(v, bool)
-                             and not _m.isfinite(v))]
-                if _badg:
-                    _why = f"guards 값이 스칼라가 아니다: {_badg[:3]}"
+                # ★ 14차 발견 5 — 예전 검사는 **아무 키나 허용하고 bool 도
+                #   통과**시켰다. 오타 키(`max_mode_valu`)는 replay 의
+                #   `g.get(키, 기본값)` 에서 조용히 무시돼 서명된 recipe 와
+                #   실제 재검 기준이 달랐다. canonical 3-key 정확 일치 +
+                #   bool 거부 + 물리 범위를 요구한다 (producer 는
+                #   `canonical_guards()` 로 채워 서명한다).
+                from src.modes import canonical_guards as _cg
+                if set(_rg) != {"max_mode_value", "max_porosity", "min_vf"}:
+                    _why = (f"guards 키 집합이 canonical 3-key 가 아니다: "
+                            f"{sorted(_rg)}")
+                else:
+                    try:
+                        if _cg(_rg) != {k: float(v) for k, v in _rg.items()}:
+                            _why = f"guards 값이 canonical 정규형이 아니다: {_rg}"
+                    except (ValueError, TypeError) as _e:
+                        _why = f"guards 가 유효하지 않다: {_e}"
     checks["replay_recipe_schema"] = (_why is None, _why or "")
     _ds = spec.get("discharged_state")
     import math as _math
@@ -1017,6 +1180,9 @@ def validate_curves_provenance(curves_dir, repo_root=None) -> dict:
         #   label 을 truth 로 채점하므로 복원오차·degeneracy 의 분자·분모가
         #   직접 달라진다. 위조가 아니라 **정상 실행의 회귀**를 잡는 검사다.
         checks.update(_verify_observed_curves(cp, spec))
+        # ★ 14차 발견 1 — 조건별 검사는 groupby(cond_id) 안이라 **조건 사이**
+        #   갈림을 못 본다. noise family 교차 invariant 는 별도 pass 로 검사한다.
+        checks.update(_verify_noise_families(cp, spec, d))
         fail_ids = load_failed(d)
         if n_fail and not (d / "failed.csv").exists():
             checks["실패목록_존재"] = (False,

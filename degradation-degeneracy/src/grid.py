@@ -30,7 +30,8 @@ from src.curves import add_noise, extract_curves
 from src.io import (acquire_run_lock, append_failed, base_manifest, chunk_files,
                     git_info, load_completed, load_failed, mark_completed,
                     merge_chunks, release_run_lock, save_chunk, write_manifest)
-from src.modes import Baseline, InfeasibleConditionError, build_overrides
+from src.modes import (Baseline, InfeasibleConditionError, build_overrides,
+                       canonical_guards)
 from src.runner import make_solver, run_one, solver_name
 
 log = logging.getLogger(__name__)
@@ -222,8 +223,12 @@ def grid_run_spec(cfg: dict, conditions: list[Condition],
 
     cond_ids = sorted(c.cond_id for c in conditions)
     spec = {
-        "grid_sig_version": 4,   # 12차: effective_solver 필수화
+        "grid_sig_version": 5,   # 12차: effective_solver 필수화 · 14차: noise 집합
         "config_hash": config_hash(cfg),
+        # ★ 14차 발견 1 — 의도한 noise 집합을 서명한다. validator 가 family
+        #   (lli, lam_pe, lam_ne, 유형)마다 이 집합이 정확히 한 번씩 있는지
+        #   대조한다 — 없으면 noise 축이 조용히 줄어도 잡을 기준이 없다.
+        "noise": sorted({float(c.noise) for c in conditions}),
         # extends 부모까지 — 최종 병합본 해시만으로도 내용은 고정되지만,
         # 어떤 파일들이 읽혔는지가 없으면 봉인·재검이 불가능하다 (발견 3)
         "config_files": [str(p) for p in cfg.get("_loaded_files", [])],
@@ -248,7 +253,9 @@ def grid_run_spec(cfg: dict, conditions: list[Condition],
         #   없었다. 서명된 recipe 만 쓰면 어느 경로에서 검증하든 같은 기준이다.
         "replay_recipe": {
             "baseline": {k: float(v) for k, v in (cfg.get("baseline") or {}).items()},
-            "guards": cfg.get("guards") or {},
+            # ★ 14차 발견 5 — canonical 3-key 로 채워 서명한다. 부분 guards 를
+            #   그대로 서명하면 코드 기본값이 바뀐 미래의 재검이 어긋난다.
+            "guards": canonical_guards(cfg.get("guards")),
         },
         # ★ 12차 발견 2 — 요청(cfg.solver)이 아니라 **실제로 쓰인** solver 를
         #   서명에 넣는다. IDAKLU 생성 실패 시 Casadi 로 조용히 fallback 하므로,

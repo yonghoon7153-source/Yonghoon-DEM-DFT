@@ -696,6 +696,15 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     P.append("## 핵심 결론\n")
     for line in _conclusion(cmp_res, summary, fits):
         P.append(line + "\n")
+    # ★ 14차 발견 6 — 비대칭 pipeline 보고서는 목적함수 간 비교(결론 2)의
+    #   인용 정본이 어디인지 스스로 밝혀야 한다. "paired 재실행이 필요하다"는
+    #   경고만으로는 독자가 그 문서를 찾을 수 없다.
+    if not (_mopt0.get("adaptive") is False and _mspec0.get("warm_start") is False):
+        P.append("   → **목적함수 간 비교(결론 2)의 인용 정본은 공정 paired "
+                 "보고서 `docs/RESULTS_PAIRED_FIXED5.md` 다** "
+                 "(`results/paired_fixed5_v4` 에서 생성). 위 1번은 비대칭 "
+                 "pipeline(adaptive 조기 종료 + warm start 연쇄)에서 관측된 "
+                 "값이므로 단독 인용하지 말 것.\n")
 
     # ── 한계 (결론 바로 밑) ──
     P.append("### 이 결론이 말하지 않는 것\n")
@@ -1083,13 +1092,25 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     P.append("```bash")
     P.append("./scripts/setup_env.sh && source .venv/bin/activate")
     P.append("./run.sh --mode verify")
+    # ★ 14차 발견 6 — 경로도 **이 산출물의 manifest 에서** 만든다. 예전에는
+    #   grid --out / fit --in 에 전부 in_dir(fit 산출물)를 써서, producer 와
+    #   fit 이 다른 디렉터리인 실제 배치(grid_curves_v4 → grid_fit_v4)에서
+    #   그대로 실행하면 fit 산출물 위에 곡선을 만들고 자기 자신을 입력으로
+    #   fit 하는 다른 pipeline 이 됐다. manifest.input 이 producer 경로다
+    #   (없는 옛 산출물은 in==out 실행이었으므로 in_dir 로 fallback).
+    _curves_dir = manifest.get("input") or str(in_dir)
     P.append(f"./run.sh --mode grid --config configs/grid_fine.yaml "
-             f"--nproc $(nproc) --out {in_dir}")
+             f"--nproc $(nproc) --out {_curves_dir}")
     # ★ 13차 발견 6 — 재현 명령을 **이 산출물의 run_spec 에서** 만든다.
     #   예전에는 항상 기본 fit 명령이라, paired(--no-adaptive --no-warm-start)
     #   보고서를 보고 그대로 실행하면 다른 비대칭 pipeline 이 돌았다.
     _rs = manifest.get("run_spec") or {}
-    _fit = [f"./run.sh --mode fit   --in {in_dir} --nproc $(nproc)"]
+    _fit = [f"./run.sh --mode fit   --in {_curves_dir} --out {in_dir} "
+            f"--nproc $(nproc)"]
+    # ★ 14차 발견 6 — clean fit(v_col == v_full)은 --clean 없이는 재현되지
+    #   않는다 (기본은 v_full_noisy).
+    if _rs.get("v_col") == "v_full":
+        _fit.append("--clean")
     if _rs.get("objective_order"):
         _fit.append(f"--objective {','.join(_rs['objective_order'])}")
     if _rs.get("reference") and _rs["reference"] != "grid":

@@ -93,6 +93,23 @@ def build_weight_objectives(w_grid=DEFAULT_W_GRID, w_pocv: float = 1.0,
     #   검출되지 않는다. **오름차순으로 정규화**해 seed 제공자(w=0)를 항상
     #   맨 앞에 둔다.
     w_grid = sorted(float(w) for w in w_grid)
+    # ★ 14차 발견 4 — 값↔이름은 1:1 이어야 한다. 이름이 `%.2f` 라
+    #   `[0, 0.001]` 이 전부 `wdqdv_0.00` 으로 접혀 dict 에서 뒤 값이 이기고
+    #   **w=0 seed 목적함수가 소리 없이 삭제**됐다 (`0.0 in w_grid` 라 숨은
+    #   seed 도 안 끼워진다). 끝점 checker 는 남은 `wdqdv_0.00` 을 w=0 정의로
+    #   대조하므로 붕괴를 못 본다. 충돌·중복·비유한·음수는 즉시 fail.
+    bad = [w for w in w_grid if not np.isfinite(w) or w < 0.0]
+    if bad:
+        raise ValueError(f"w_grid 값이 유한한 0 이상 실수가 아니다: {bad}")
+    if len(set(w_grid)) != len(w_grid):
+        raise ValueError(f"w_grid 에 중복 값이 있다: {w_grid}")
+    names = [obj_name(w) for w in w_grid]
+    if len(set(names)) != len(names):
+        dup = sorted({n for n in names if names.count(n) > 1})
+        raise ValueError(
+            f"w_grid 값이 목적함수 이름과 1:1 이 아니다 — 이름 충돌 {dup}: "
+            f"{w_grid}. 이름 해상도(소수 2자리)보다 촘촘한 격자는 지원하지 "
+            f"않는다 (14차 발견 4: 충돌 시 w=0 seed 가 조용히 삭제됐다)")
     objs = {obj_name(w): {"w_pocv": w_pocv, "w_dvdq": w_dvdq, "w_dqdv": float(w)}
             for w in w_grid}
     if not any(float(w) == 0.0 for w in w_grid):

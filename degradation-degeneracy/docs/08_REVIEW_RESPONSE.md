@@ -726,3 +726,27 @@ half-cell 캐시는 `.cache/` 가 gitignore라 저장소에 아예 없었습니�
 - **동일 seed · 동일 restart budget · early-stop off 인 paired 재실행.**
   여섯 라운드째 미실시입니다. 이게 없으면 목적함수의 내재적 성능을 말할 수 없습니다
 - `pairwise` 기반 1,242 재산출, 새 generator로 `RESULTS.md` 재생성 — 3번 이후
+
+---
+
+## 16. 14차 게이트 리뷰 회답 (2026-08-11, 발견 1~8)
+
+리뷰 대상 커밋 `393ac3db`. scope: 과학적 타당성 / 수치 재현성 / 실행 일관성
+(보안 제외). 전 발견을 RED-first 로 닫았다 — 수정 전 반례가 실제로 통과함을
+실측(또는 실패 테스트로 재현)한 뒤 고쳤다. 좌표·테스트 이름은
+`docs/GATE14_WORKING_STATE.md` §0 의 표가 정본이다.
+
+| # | 발견 | 대응 |
+|---|---|---|
+| 1 | 같은 truth family(lli·lam_pe·lam_ne·유형)의 noise 멤버가 다른 clean truth 여도 validator ok=True (반례 실측: q 4000 vs 2000, offset 4.2 vs 3.2 V) | `_verify_noise_families` 신설 — family 마다 서명된 noise 집합 정확 1회씩, observed/failed 분할 금지, q_mah ≤1e-6 mAh, v_pe/v_ne/v_full pointwise ≤1e-10 V. 기대 집합은 하드코딩이 아니라 **서명된 spec.noise** (grid_run_spec 에 신규 서명, `grid_sig_version` 4→5 필수화) |
+| 2 | `source_digest` 가 OS 경로 구분자·CRLF 로 갈리고(4fa3e2af/7ac22c10/808f19ea) RUN_SCOPE 6개 중 3개만 봄 | 경로 키·정렬을 POSIX 정규형으로(`_digest_path_key`), 범위를 `scripts/`·`run.sh`·`requirements*.txt` 까지 확대. `.as_posix()` 는 Linux digest 불변, 범위 확대는 digest 변경(계획된 `--force` 재생성으로 흡수). CRLF 0개 양성 테스트 추가 |
+| 3 | sweep 을 같은 27조건으로 줄이고 `n_conditions` 맞춘 뒤 digest 삭제 → "일치" | `condition_ids_sha256` 누락/빈값 즉시 fail, 양 끝점 digest == 서명 digest, `끝점_서명digest_일치` 를 최상위 verdict 에 포함 |
+| 4 | `build_weight_objectives([0, 0.001])` 이 `wdqdv_0.00` 하나로 붕괴, w=0 seed 조용히 삭제 | 값↔이름 1:1 강제 — 충돌·중복·비유한·음수 즉시 ValueError |
+| 5 | guards 검사가 아무 키나 허용, bool 통과, 오타 키는 replay 에서 조용히 기본값 대체 | `canonical_guards()` 단일 출처 (`GUARD_DEFAULTS` + 범위 0≤mode<1, 0<por≤1, 0<vf<1). producer 는 채워서 서명, validator 는 정확 3-key 요구, `build_overrides` 도 동일 정규화 |
+| 6 | 재현 명령이 fit 산출물 위에 곡선을 만들고 자기 자신을 fit 함; clean fit 인데 `--clean` 없음 | grid `--out` = manifest.input(producer), fit `--in` producer `--out` in_dir, `v_col=="v_full"` → `--clean`. 결론 2 인용 정본 `docs/RESULTS_PAIRED_FIXED5.md` 명시 |
+| 7 | archive 승격 첫 이동 실패 시 candidate 가 기존 묶음 안으로 중첩된 채 exit 0 | 첫 `mv` 검사 — 실패 시 후보 제거 + `n_bad` 계상 (fake mv 주입 회귀 테스트) |
+| 8 | `source_commit` 이 기록 시점 manifest 최상위 commit; "다음 commit" 문구 오류 | 계산 **시작** 커밋으로 (fit: `run_spec.git_commit`→`start_provenance`, grid: `curves_manifest_start.yaml`). 문구를 실제 단일 commit 워크플로에 맞게 수정 |
+
+검증: `python -m pytest tests -q` → **294 passed** (신규 12).
+`grid_sig_version` 5 필수화로 v4 이하 산출물은 인용 불가로 강등된다 —
+grid v4 재생성(GO 이후)이 전제다.

@@ -208,17 +208,29 @@ def run_check(sweep_dir, main_dir, pairs=DEFAULT_PAIRS, tol: float = 0.02) -> di
             p["일치"] = False
             p["판정"] = ("불일치 — 끝점끼리 조건 집합이 다르다 "
                         f"(digest {sorted(shas)}). " + str(p.get("판정", "")))
-    # 서명된 digest 가 있으면 그것과도 대조한다
-    if signed_sha and shas and next(iter(shas)) != signed_sha:
+    # ★ 14차 발견 3 — 서명된 digest 는 **필수**다. 예전에는 없으면 대조를
+    #   조용히 건너뛰어서, 두 끝점을 같은 절반 조건으로 줄이고 n_conditions 만
+    #   맞추면 "일치" 였다 (리뷰 실측: 54→27 축소 + digest 삭제 → 통과).
+    #   양 끝점의 digest 전부가 서명 digest 와 같아야 한다.
+    if not signed_sha:
         res["끝점_서명digest_일치"] = False
         for p in res["pairs"]:
             p["일치"] = False
-            p["판정"] = (f"불일치 — sweep 조건 digest {next(iter(shas))} ≠ 서명 "
+            p["판정"] = ("불일치 — sweep manifest run_spec 에 "
+                         "condition_ids_sha256 이 없거나 비어 있다. 서명된 조건 "
+                         "집합 없이 모집단 축소를 배제할 수 없다 (14차 발견 3). "
+                         + str(p.get("판정", "")))
+    elif shas != {signed_sha}:
+        res["끝점_서명digest_일치"] = False
+        for p in res["pairs"]:
+            p["일치"] = False
+            p["판정"] = (f"불일치 — sweep 조건 digest {sorted(shas)} ≠ 서명 "
                         f"{signed_sha}. " + str(p.get("판정", "")))
-    elif signed_sha:
+    else:
         res["끝점_서명digest_일치"] = True
     res["일치"] = (bool(res["pairs"]) and all(p.get("일치") for p in res["pairs"])
-                  and res["끝점_조건집합_동일"])
+                  and res["끝점_조건집합_동일"]
+                  and res["끝점_서명digest_일치"])
     return res
 
 

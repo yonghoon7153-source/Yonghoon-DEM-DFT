@@ -9,6 +9,8 @@ V100 실행에서 드러난 버그의 회귀 방지:
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pandas as pd
 
 from src.io import (append_failed, load_completed, load_failed, mark_completed,
@@ -127,3 +129,75 @@ def test_stale_lock_is_reclaimed(tmp_path):
     (tmp_path / ".run.lock").write_text("999999 2026-01-01T00:00:00\n")
     acquire_run_lock(tmp_path)               # 예외 없이 통과해야 함
     assert (tmp_path / ".run.lock").exists()
+
+
+# ---------------------------------------------------------------------------
+# ★ 14차 발견 2 — source_digest 경로 정규화 + RUN_SCOPE 정합
+# ---------------------------------------------------------------------------
+
+
+def test_digest_path_key_is_posix_normalized():
+    """★ 14차-2 — digest 경로 키는 OS 무관 POSIX 정규형이어야 한다.
+
+    반례 (리뷰어 실측): 같은 Git blob 인데 경로 구분자 때문에 digest 가 갈린다 —
+    POSIX `4fa3e2af0a2e8106` vs Windows `\\` 구분자 `7ac22c1055eae262`.
+    `str(PureWindowsPath("src/io.py"))` 는 `"src\\io.py"` 라 Linux 에서도 RED 다.
+    """
+    from pathlib import PureWindowsPath
+
+    from src.io import _digest_path_key
+
+    assert _digest_path_key(PureWindowsPath("src/io.py")) == b"src/io.py"
+    assert _digest_path_key("src/io.py") == b"src/io.py"
+
+
+def test_source_digest_covers_full_run_scope(tmp_path):
+    """★ 14차-2 — RUN_SCOPE 6개(src tools configs scripts run.sh requirements*.txt)
+    전부가 digest 에 들어가야 한다.
+
+    현재 기본값은 ("src","tools","configs") 3개뿐이라 `scripts/`·`run.sh`·
+    `requirements*.txt` 를 바꿔도 digest 가 안 변한다 → 코드 identity 구멍.
+    """
+    from src.io import source_digest
+
+    (tmp_path / "src").mkdir()
+    (tmp_path / "src" / "a.py").write_bytes(b"x = 1\n")
+    (tmp_path / "scripts").mkdir()
+    (tmp_path / "scripts" / "go.sh").write_bytes(b"echo hi\n")
+    (tmp_path / "run.sh").write_bytes(b"#!/bin/sh\n")
+    (tmp_path / "requirements.txt").write_bytes(b"numpy\n")
+
+    d0 = source_digest(root=tmp_path)
+    (tmp_path / "scripts" / "go.sh").write_bytes(b"echo bye\n")
+    d1 = source_digest(root=tmp_path)
+    assert d0 != d1, "scripts/ 변경이 digest 에 반영돼야 한다"
+
+    (tmp_path / "run.sh").write_bytes(b"#!/bin/bash\n")
+    d2 = source_digest(root=tmp_path)
+    assert d1 != d2, "run.sh 변경이 digest 에 반영돼야 한다"
+
+    (tmp_path / "requirements.txt").write_bytes(b"numpy\nscipy\n")
+    d3 = source_digest(root=tmp_path)
+    assert d2 != d3, "requirements*.txt 변경이 digest 에 반영돼야 한다"
+
+
+def test_source_tree_has_no_crlf():
+    """★ 14차-2 — RUN_SCOPE 텍스트 파일에 CRLF 가 0개여야 한다 (양성 검사).
+
+    리뷰어 실측: 실제 Windows worktree 의 잔존 CRLF 만으로 digest 가
+    `808f19ea5556d018` 으로 세 번째 갈래를 만들었다. `.gitattributes` 존재
+    확인(test_compare.py)만으로는 이미 들어온 CRLF 를 못 잡는다.
+    """
+    root = Path(__file__).resolve().parent.parent
+    bad = []
+    targets = [root / d for d in ("src", "tools", "configs", "scripts")]
+    files = [f for base in targets if base.exists()
+             for f in sorted(base.rglob("*")) if f.is_file()]
+    files += [f for f in [root / "run.sh"] if f.is_file()]
+    files += sorted(root.glob("requirements*.txt"))
+    for f in files:
+        if "__pycache__" in f.parts or f.suffix in (".pyc", ".pyo"):
+            continue
+        if b"\r\n" in f.read_bytes():
+            bad.append(str(f.relative_to(root)))
+    assert bad == [], f"CRLF 파일 발견: {bad}"

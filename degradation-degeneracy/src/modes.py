@@ -42,6 +42,52 @@ class InfeasibleConditionError(ValueError):
     """물리적으로 불가능한 조합 (guards 위반). grid에서 failed.csv로 기록."""
 
 
+#: ★ 14차 발견 5 — guard 의 canonical 키와 코드 기본값. build_overrides 의
+#: `g.get(키, 기본값)` 과 같은 값이어야 한다 — 여기가 그 단일 출처다.
+GUARD_DEFAULTS = {"max_mode_value": 0.9, "max_porosity": 0.95, "min_vf": 1e-4}
+
+#: 물리적으로 의미 있는 열린/닫힌 범위 — (하한, 하한포함, 상한, 상한포함)
+_GUARD_RANGES = {"max_mode_value": (0.0, True, 1.0, False),
+                 "max_porosity": (0.0, False, 1.0, True),
+                 "min_vf": (0.0, False, 1.0, False)}
+
+
+def canonical_guards(guards: dict | None) -> dict:
+    """guards 를 canonical 3-key 로 정규화한다 (14차 발견 5).
+
+    예전에는 producer 가 config 의 guards dict 를 그대로 서명하고 replay 는
+    `g.get(키, 기본값)` 을 썼다 — 오타 키(`max_mode_valu`)는 조용히 무시돼
+    서명된 recipe 와 실제 재검 기준이 달랐고, bool·범위 밖 값도 통과했다.
+    unknown 키·bool·비유한·범위 밖은 ValueError, 없는 known 키는 코드
+    기본값으로 채운다. **서명 전에** 호출해야 한다.
+    """
+    import math
+
+    g = dict(guards or {})
+    unknown = sorted(set(g) - set(GUARD_DEFAULTS))
+    if unknown:
+        raise ValueError(
+            f"알 수 없는 guard 키 {unknown} — canonical 키는 "
+            f"{sorted(GUARD_DEFAULTS)} 뿐이다. 오타 키는 replay 에서 조용히 "
+            f"무시되므로 서명 전에 거부한다 (14차 발견 5)")
+    out = {}
+    for k, default in GUARD_DEFAULTS.items():
+        v = g.get(k, default)
+        lo, lo_inc, hi, hi_inc = _GUARD_RANGES[k]
+        if (isinstance(v, bool) or not isinstance(v, (int, float))
+                or not math.isfinite(v)):
+            raise ValueError(f"guard {k} 값이 유한 실수가 아니다: {v!r}")
+        v = float(v)
+        if not ((v > lo or (lo_inc and v == lo))
+                and (v < hi or (hi_inc and v == hi))):
+            raise ValueError(
+                f"guard {k} = {v} 가 범위 "
+                f"{'[' if lo_inc else '('}{lo}, {hi}{']' if hi_inc else ')'} "
+                f"밖이다")
+        out[k] = v
+    return out
+
+
 @dataclass(frozen=True)
 class Baseline:
     """config baseline 절의 값 묶음 (완충 기준)."""
@@ -141,10 +187,12 @@ def build_overrides(lli: float, lam_pe: float, lam_ne: float,
       (실측: lli=1e-4 조건의 r=0.98264, lam_pe_hat=0.0158, lli_hat=0.0157)
       영 조건도 완방 농도를 명시해 모든 조건을 같은 프레임에 둔다.
     """
-    g = guards or {}
-    max_mode = float(g.get("max_mode_value", 0.9))
-    max_por = float(g.get("max_porosity", 0.95))
-    min_vf = float(g.get("min_vf", 1e-4))
+    # ★ 14차 발견 5 — 오타 키가 조용히 기본값으로 대체되지 않게 canonical
+    #   정규화를 거친다 (unknown 키·bool·범위 밖 → ValueError).
+    g = canonical_guards(guards)
+    max_mode = g["max_mode_value"]
+    max_por = g["max_porosity"]
+    min_vf = g["min_vf"]
 
     for name, v in (("lli", lli), ("lam_pe", lam_pe), ("lam_ne", lam_ne)):
         if not 0 <= v <= max_mode:

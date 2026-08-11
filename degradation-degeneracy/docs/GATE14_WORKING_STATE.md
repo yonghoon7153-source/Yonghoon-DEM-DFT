@@ -11,19 +11,23 @@
 
 ---
 
-## 0. 진행 상태
+## 0. 진행 상태 — **전건 수정 완료 (2026-08-11)**
 
-| # | 발견 | 상태 |
-|---|---|---|
-| 2 | `source_digest()` 경로 정규화 (POSIX) + RUN_SCOPE 정합 | **다음 작업** (설계 완료, 코드 미작성) |
-| 1 | noise family 교차 invariant (`_verify_observed_curves`) | 대기 (구조 조사 완료) |
-| 3 | sweep checker fail-closed (`tools/check_sweep_consistency.py:184-215`) | 대기 |
-| 4 | custom `w_grid` 충돌 (`src/weight_sweep.py:52-90`, `:350-355`) | 대기 |
-| 5 | guards → canonical 3-key recipe (`src/io.py:907-937`) | 대기 |
-| 6 | report reproduce command (`tools/make_results.py:1081-1108`) | 대기 |
-| 7·8 | archive fail-closed / source_commit (`scripts/archive_results.sh:170-175, 229-241, 283-290`) | 대기 (계산 후 archive 전) |
+| # | 발견 | 상태 | 수정 위치 / 테스트 |
+|---|---|---|---|
+| 2 | `source_digest()` POSIX 정규화 + RUN_SCOPE 정합 | ✅ | `src/io.py` `_digest_path_key`·`_SCOPE_DIRS`·`_SCOPE_FILE_GLOBS` / `tests/test_io_bookkeeping.py::test_digest_path_key_is_posix_normalized`·`test_source_digest_covers_full_run_scope`·`test_source_tree_has_no_crlf` |
+| 1 | noise family 교차 invariant | ✅ | `src/io.py` `_verify_noise_families` (validate_curves_provenance 에서 호출), `src/grid.py` spec 에 `noise` 서명 + `grid_sig_version` 4→**5** / `tests/test_fitting.py::test_noise_family_*` 4종 (반례 실측: 수정 전 ok=True) |
+| 3 | sweep checker digest fail-closed | ✅ | `tools/check_sweep_consistency.py` `run_check` (digest 누락/빈값 즉시 fail, `끝점_서명digest_일치` 최상위 verdict 포함) / `tests/test_compare.py::test_sweep_checker_requires_signed_condition_digest` |
+| 4 | `w_grid` 이름 충돌 | ✅ | `src/weight_sweep.py` `build_weight_objectives` (1:1·중복·비유한·음수 ValueError) / `tests/test_compare.py::test_build_weight_objectives_rejects_name_collisions_and_bad_values` |
+| 5 | guards canonical 3-key | ✅ | `src/modes.py` `GUARD_DEFAULTS`·`canonical_guards` (+`build_overrides` 적용), `src/grid.py` 서명 전 정규화, `src/io.py` `replay_recipe_schema` 강화 / `tests/test_fitting.py::test_replay_recipe_guards_must_be_canonical_3key`·`test_grid_run_spec_signs_canonical_guards` |
+| 6 | report reproduce command | ✅ | `tools/make_results.py` (manifest.input → grid `--out`/fit `--in`, in_dir → fit `--out`, v_col==v_full → `--clean`, 결론 2 정본 `docs/RESULTS_PAIRED_FIXED5.md` 명시) / `tests/test_compare.py::test_reproduce_commands_follow_manifest_paths_and_vcol` |
+| 7 | archive 첫 이동 fail-closed | ✅ | `scripts/archive_results.sh` (`mv out → .previous_` 실패 시 후보 제거 + n_bad) / `tests/test_compare.py::test_archive_records_computation_commit_and_promotion_is_fail_closed` (fake `mv` 주입) |
+| 8 | archive source_commit / 문구 | ✅ | `scripts/archive_results.sh` (fit: `run_spec.git_commit`→`start_provenance`, grid: `curves_manifest_start.yaml`; "다음 commit" 문구 수정) / 위와 같은 테스트 |
+| — | `src/modes.py:144-147` | ✅ | 발견 5 의 `canonical_guards` 적용으로 함께 해소 (오타 키 조용한 무시 제거) |
 
-1·2 는 **grid v4 생성 전 필수 blocker**. 3~6 은 같은 pre-run 커밋에 함께 권고. 7·8 은 계산 후 archive 전.
+전 발견 RED-first 로 진행 — 수정 전 실패(또는 반례 통과 실측)를 확인한 뒤 고침.
+`grid_sig_version` 5 필수화로 **v4 이하 manifest 는 validator 에서 거부**된다
+(기존 산출물 무효화 — GO 후 실행 순서가 이미 `--force` 재생성이므로 계획대로).
 
 ---
 

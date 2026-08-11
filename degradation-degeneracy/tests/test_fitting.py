@@ -420,7 +420,8 @@ def _tiny_curves(tmp_path, n=48, n_cond=3, n_failed=0):
     return sign_producer(tmp_path, pd.DataFrame(rows), n_infeasible=n_failed)
 
 
-def sign_producer(out_dir, df, n_infeasible=0):
+def sign_producer(out_dir, df, n_infeasible=0, failed_conds=None,
+                  spec_noise=None):
     """curves df 를 **실제 run_grid 형식의 producer artifact** 로 서명해 쓴다.
 
     ★ F74 — spec 서명·행별 grid_run_sig·시작 기록이 필요하고, ★ 11차 발견 2·3
@@ -496,17 +497,26 @@ def sign_producer(out_dir, df, n_infeasible=0):
     df = _pd.concat(_parts, ignore_index=True)
 
     # guard 를 확실히 위반하는 조건들 (max_mode_value 밖) — 재평가에서 불능
-    failed_conds = [Condition(lli=1.0 + i, lam_pe=0.0, lam_ne=0.0,
-                              lam_pe_type="de", lam_ne_type="de",
-                              noise=0.0, seed=1000 + i)
-                    for i in range(n_infeasible)]
+    # ★ 14차 발견 1 — family-split 테스트가 관측 family 소속 실패 조건을
+    #   주입할 수 있게 failed_conds 를 밖에서도 받는다.
+    if failed_conds is None:
+        failed_conds = [Condition(lli=1.0 + i, lam_pe=0.0, lam_ne=0.0,
+                                  lam_pe_type="de", lam_ne_type="de",
+                                  noise=0.0, seed=1000 + i)
+                        for i in range(n_infeasible)]
     failed = sorted(c.cond_id for c in failed_conds)
     cond_ids = sorted(set(df["cond_id"].astype(str)))
     intended = sorted(set(cond_ids) | set(failed))
 
-    spec = {"grid_sig_version": 4, "config_hash": "test", "config_files": [],
+    spec = {"grid_sig_version": 5, "config_hash": "test", "config_files": [],
             "protocol_unified": "charge_first", "parameter_set": "test",
             "noise_seed": 42,
+            # ★ 14차 발견 1 — 의도한 noise 집합을 producer 가 서명한다
+            #   (실제 grid_run_spec 과 동일: 의도 조건 = 관측 ∪ 실패 전체에서 유도)
+            "noise": (sorted(float(v) for v in spec_noise)
+                      if spec_noise is not None else
+                      sorted({float(v) for v in df["noise"].unique()}
+                             | {float(c.noise) for c in failed_conds})),
             # ★ 12차 발견 2 — 실제로 쓰인 solver 클래스·backend 버전
             "effective_solver": {"requested": {"type": "test"},
                                  "effective_class": "TestSolver",
@@ -2024,3 +2034,191 @@ def test_replay_recipe_schema_checks_keys(tmp_path):
         .encode()).hexdigest()[:12]
     mp.write_text(yaml.safe_dump(m, allow_unicode=True), encoding="utf-8")
     assert "replay_recipe_schema" in validate_curves_provenance(d)["fail"]
+
+
+# ──────────────────────────────── 14차 게이트 리뷰
+
+def _noise_family_df(q_by_noise, off_by_noise, n=8):
+    """한 (lli, lam_pe, lam_ne, 유형) family 를 noise 별로 만든다.
+
+    q_by_noise / off_by_noise: {noise: q_mah} / {noise: 전압 offset}.
+    조건별로는 완전히 내부 정합하다 — 갈림은 family 축에만 있다.
+    """
+    import numpy as np
+    import pandas as pd
+
+    x = np.linspace(0.0, 1.0, n)
+    rows = []
+    for noise in sorted(q_by_noise):
+        for xi in x:
+            rows.append({"x_norm": xi,
+                         "v_full": off_by_noise[noise] - 0.9 * xi,
+                         "v_ne": 0.1 + 0.4 * xi,
+                         "q_mah": q_by_noise[noise],
+                         "lli": 0.02, "lam_pe": 0.02, "lam_ne": 0.02,
+                         "noise": noise})
+    return pd.DataFrame(rows)
+
+
+def test_noise_family_divergent_clean_truth_fails(tmp_path):
+    """★ 14차 발견 1 — 같은 family 의 noise 멤버가 다른 clean truth 를 가지면
+    실패해야 한다.
+
+    반례(리뷰어): noise=0 멤버 q=4000·offset 4.2 V, noise=0.005 멤버 q=2000·
+    offset 3.2 V — 조건별 검사(단일성·ID결합·전압정합·noise재현)는 전부 내부
+    정합이라 **현재 validator 가 ok=True 를 낸다**. noise 는 solve 이후에만
+    얹히므로(src/grid.py: add_noise) clean 곡선·q_mah 는 family 안에서 같아야
+    한다. 허용오차: q_mah ≤ 1e-6 mAh · v_pe/v_ne/v_full pointwise ≤ 1e-10 V.
+    """
+    from src.io import validate_curves_provenance
+
+    # ① family 정합 producer → 통과하고 새 검사 키가 checks 에 있어야 한다
+    ok = sign_producer(tmp_path / "ok",
+                       _noise_family_df({0.0: 4000.0, 0.005: 4000.0},
+                                        {0.0: 4.2, 0.005: 4.2}))
+    v = validate_curves_provenance(ok)
+    assert v["ok"], v["fail"]
+    for k in ("관측_noise_기대집합", "관측_noise_family_완전성",
+              "관측_noise_family_분할", "관측_noise_family_q_mah",
+              "관측_noise_family_전압"):
+        assert k in v["checks"], sorted(v["checks"])
+
+    # ② 리뷰어 반례 — family 안 clean truth 갈림
+    bad = sign_producer(tmp_path / "bad",
+                        _noise_family_df({0.0: 4000.0, 0.005: 2000.0},
+                                         {0.0: 4.2, 0.005: 3.2}))
+    f = validate_curves_provenance(bad)["fail"]
+    assert "관측_noise_family_q_mah" in f, f
+    assert "관측_noise_family_전압" in f, f
+
+
+def test_noise_family_split_between_observed_and_failed_fails(tmp_path):
+    """★ 14차 발견 1 — family 가 observed / failed 로 쪼개지면 실패해야 한다.
+
+    한 noise 멤버만 실패로 빠지면 그 family 의 truth 는 관측 모집단에 남는데
+    noise 축 표본이 달라진다 — 같은 truth 인데 noise 조건마다 다른 모집단으로
+    fitting 되면 degeneracy 판별의 분모가 어긋난다.
+    """
+    from src.grid import Condition
+    from src.io import validate_curves_provenance
+
+    df = _noise_family_df({0.0: 4000.0, 0.001: 4000.0}, {0.0: 4.2, 0.001: 4.2})
+    split_fail = [Condition(lli=0.02, lam_pe=0.02, lam_ne=0.02,
+                            lam_pe_type="de", lam_ne_type="de",
+                            noise=0.005, seed=1000)]
+    d = sign_producer(tmp_path / "split", df, failed_conds=split_fail,
+                      spec_noise=[0.0, 0.001, 0.005])
+    f = validate_curves_provenance(d)["fail"]
+    assert "관측_noise_family_분할" in f, f
+
+
+def test_noise_family_missing_level_fails(tmp_path):
+    """★ 14차 발견 1 — 서명된 noise 집합의 level 이 family 에서 누락되면 실패.
+
+    반례: 어떤 family 가 {0.0, 0.001} 만 갖고 0.005 는 failed 에도 없다 —
+    의도 집합(condition_ids_sha256)은 producer 가 만든 그대로라 분할 검사는
+    통과한다. 서명된 noise 집합과 대조해야만 잡힌다.
+    """
+    from src.io import validate_curves_provenance
+
+    df = _noise_family_df({0.0: 4000.0, 0.001: 4000.0}, {0.0: 4.2, 0.001: 4.2})
+    d = sign_producer(tmp_path / "miss", df, spec_noise=[0.0, 0.001, 0.005])
+    f = validate_curves_provenance(d)["fail"]
+    assert "관측_noise_family_완전성" in f, f
+
+
+def test_noise_family_requires_signed_noise_set(tmp_path):
+    """★ 14차 발견 1 — spec 에 noise 집합이 없으면 fail-closed 여야 한다."""
+    import hashlib
+    import json
+
+    import yaml
+
+    from src.io import validate_curves_provenance
+
+    d = sign_producer(tmp_path / "nospec",
+                      _noise_family_df({0.0: 4000.0}, {0.0: 4.2}))
+    mp = d / "curves_manifest.yaml"
+    m = yaml.safe_load(mp.read_text(encoding="utf-8"))
+    del m["grid_run_spec"]["noise"]
+    m["grid_run_sig"] = hashlib.sha1(
+        json.dumps(m["grid_run_spec"], sort_keys=True, default=str)
+        .encode()).hexdigest()[:12]
+    mp.write_text(yaml.safe_dump(m, allow_unicode=True), encoding="utf-8")
+    assert "관측_noise_기대집합" in validate_curves_provenance(d)["fail"]
+
+
+def _retamper_recipe(d, guards):
+    """manifest 의 replay_recipe.guards 를 바꾸고 서명을 다시 계산한다."""
+    import hashlib
+    import json
+
+    import yaml
+
+    mp = d / "curves_manifest.yaml"
+    m = yaml.safe_load(mp.read_text(encoding="utf-8"))
+    m["grid_run_spec"]["replay_recipe"]["guards"] = guards
+    m["grid_run_sig"] = hashlib.sha1(
+        json.dumps(m["grid_run_spec"], sort_keys=True, default=str)
+        .encode()).hexdigest()[:12]
+    mp.write_text(yaml.safe_dump(m, allow_unicode=True), encoding="utf-8")
+
+
+def test_replay_recipe_guards_must_be_canonical_3key(tmp_path):
+    """★ 14차 발견 5 — guards 검사가 **아무 키나 허용하고 bool 도 통과**한다.
+
+    반례: `{"max_mode_valu": 0.5}` (오타 키) 를 서명하면 replay 는
+    `g.get("max_mode_value", 0.9)` 로 조용히 기본값을 쓴다 — 서명된 recipe 와
+    실제 재검 기준이 다른데 schema 검사는 통과. bool(True==1) 도 스칼라로
+    통과했다. canonical 3-key(max_mode_value·max_porosity·min_vf) 정확 일치,
+    bool 거부, 범위(0≤mode<1, 0<por≤1, 0<vf<1) 를 요구한다.
+    """
+    from src.io import validate_curves_provenance
+
+    d = _tiny_curves(tmp_path / "ok")
+    assert validate_curves_provenance(d)["ok"]
+
+    for bad in (
+        {"max_mode_valu": 0.9, "max_porosity": 0.95, "min_vf": 1e-4},  # 오타 키
+        {"max_mode_value": 0.9, "max_porosity": 0.95, "min_vf": 1e-4,
+         "extra": 1.0},                                                # 잉여 키
+        {"max_mode_value": 0.9, "max_porosity": 0.95},                 # 누락
+        {},                                                            # 전부 누락
+        {"max_mode_value": True, "max_porosity": 0.95, "min_vf": 1e-4},  # bool
+        {"max_mode_value": 1.0, "max_porosity": 0.95, "min_vf": 1e-4},   # ≥1
+        {"max_mode_value": 0.9, "max_porosity": 0.0, "min_vf": 1e-4},    # ≤0
+        {"max_mode_value": 0.9, "max_porosity": 1.5, "min_vf": 1e-4},    # >1
+        {"max_mode_value": 0.9, "max_porosity": 0.95, "min_vf": 1.0},    # ≥1
+        {"max_mode_value": 0.9, "max_porosity": 0.95, "min_vf": 0.0},    # ≤0
+    ):
+        d2 = _tiny_curves(tmp_path / f"bad_{hash(str(bad)) & 0xffff:x}")
+        _retamper_recipe(d2, bad)
+        f = validate_curves_provenance(d2)["fail"]
+        assert "replay_recipe_schema" in f, (bad, f)
+
+
+def test_grid_run_spec_signs_canonical_guards():
+    """★ 14차 발견 5 — producer 는 guards 를 canonical 3-key 로 채워 서명해야
+    한다 (없는 키를 코드 기본값으로 채운 뒤 서명). 안 그러면 부분 guards 를
+    서명한 producer 와 코드 기본값이 다른 미래 코드의 재검이 어긋난다."""
+    import pytest
+
+    from src.config import load_config
+    from src.grid import Condition, grid_run_spec
+
+    cfg = load_config("configs/base.yaml")
+    conds = [Condition(0.0, 0.0, 0.0, "de", "de", 0.0, 1)]
+
+    cfg2 = dict(cfg)
+    cfg2["guards"] = {"max_porosity": 0.95}          # 부분 지정
+    spec, _ = grid_run_spec(cfg2, conds, discharged={"ne_primary": 1.0},
+                            discharged_sha="a")
+    assert spec["replay_recipe"]["guards"] == {
+        "max_mode_value": 0.9, "max_porosity": 0.95, "min_vf": 1e-4}, \
+        "없는 guard 키는 코드 기본값으로 채워 서명해야 한다"
+
+    cfg3 = dict(cfg)
+    cfg3["guards"] = {"max_mode_valu": 0.5}          # 오타 → 조용히 무시 금지
+    with pytest.raises(ValueError, match="guard"):
+        grid_run_spec(cfg3, conds, discharged={"ne_primary": 1.0},
+                      discharged_sha="a")

@@ -2449,3 +2449,178 @@ def test_sweep_checker_is_fail_closed(tmp_path):
     assert not r["일치"], "manifest 없이 일치로 판정했다"
     mp.write_text(bak, encoding="utf-8")
     assert run_check(sub, d)["일치"], "복구 후 기준 상태로 돌아와야 한다"
+
+
+# ──────────────────────────────── 14차 게이트 리뷰
+
+def test_sweep_checker_requires_signed_condition_digest(tmp_path):
+    """★ 14차 발견 3 — 서명된 condition_ids_sha256 없이는 "일치"가 안 된다.
+
+    반례(리뷰어): 두 끝점을 **같은** 절반 조건으로 줄이고 run_spec.n_conditions
+    를 그 수로 고친 뒤 condition_ids_sha256 만 지우면 — 개수 검사·끝점 동일성
+    검사·조건별 수치 검사 전부 통과 → "일치". 축소된 모집단의 sweep 최적 w 가
+    본 실행 대표로 인용된다. digest 누락/빈값은 즉시 fail 이어야 하고, 양
+    끝점의 digest 가 서명 digest 와 같음이 최상위 verdict 에 들어가야 한다.
+    """
+    import yaml
+
+    from tools.check_sweep_consistency import run_check
+
+    d, _ = _complete_artifact(tmp_path,
+                              objectives=("pocv_dvdq", "pocv_dvdq_dqdv"))
+    sub = _wsweep_run(d)
+    base = run_check(sub, d)
+    assert base["일치"], base["pairs"]
+    assert base.get("끝점_서명digest_일치") is True, \
+        "정상 경로에서 digest 대조가 명시적으로 참이어야 한다"
+
+    # 두 끝점을 같은 절반 조건으로 축소하고 개수를 맞춘다
+    f = pd.read_parquet(sub / "fits.parquet")
+    conds = sorted(set(f["cond_id"]))
+    keep = conds[: len(conds) // 2]
+    f[f["cond_id"].isin(keep)].to_parquet(sub / "fits.parquet", index=False)
+    mp = sub / "manifest.yaml"
+    m = yaml.safe_load(mp.read_text(encoding="utf-8"))
+    m["run_spec"]["n_conditions"] = len(keep)
+    del m["run_spec"]["condition_ids_sha256"]
+    mp.write_text(yaml.safe_dump(m, allow_unicode=True, sort_keys=False),
+                  encoding="utf-8")
+    r = run_check(sub, d)
+    assert not r["일치"], "digest 없이 축소 모집단이 일치로 통과했다 (14차 발견 3)"
+
+    # 빈 문자열 digest 도 fail-closed
+    m["run_spec"]["condition_ids_sha256"] = ""
+    mp.write_text(yaml.safe_dump(m, allow_unicode=True, sort_keys=False),
+                  encoding="utf-8")
+    r2 = run_check(sub, d)
+    assert not r2["일치"], "빈 digest 를 일치로 판정했다"
+
+
+def test_build_weight_objectives_rejects_name_collisions_and_bad_values():
+    """★ 14차 발견 4 — `build_weight_objectives([0, 0.001])` 이 이름
+    `wdqdv_0.00` 하나로 붕괴하며 **w=0 seed 를 소리 없이 삭제**한다.
+
+    이름은 `%.2f` 라 0.001·0.004 가 전부 0.00 으로 접힌다 — dict 라 뒤 값이
+    이기고, `0.0 in w_grid` 라 숨은 seed 도 안 끼워져 w=0 끝점 자체가 없어진다.
+    끝점 검증(check_sweep_consistency)은 남은 `wdqdv_0.00` 을 w=0 정의로
+    대조하므로 붕괴가 검출되지 않는다. 요구: 값↔이름 1:1, 충돌·중복·비유한·
+    음수는 즉시 fail.
+    """
+    import numpy as np
+    import pytest
+
+    from src.weight_sweep import build_weight_objectives
+
+    # 정상 격자는 그대로 — 이름과 값이 1:1
+    objs = build_weight_objectives([0.0, 0.25, 1.0])
+    assert list(objs) == ["wdqdv_0.00", "wdqdv_0.25", "wdqdv_1.00"]
+
+    # 이름 충돌 (0.001 → "wdqdv_0.00") — 조용한 삭제 금지
+    with pytest.raises(ValueError, match="충돌|1:1"):
+        build_weight_objectives([0.0, 0.001])
+
+    # 같은 값 중복도 조용히 합쳐지면 안 된다
+    with pytest.raises(ValueError, match="중복|충돌|1:1"):
+        build_weight_objectives([0.0, 0.0, 1.0])
+
+    # 비유한·음수 fail-closed
+    with pytest.raises(ValueError, match="유한|음수|아니"):
+        build_weight_objectives([0.0, float("nan")])
+    with pytest.raises(ValueError, match="유한|음수|아니"):
+        build_weight_objectives([0.0, np.inf])
+    with pytest.raises(ValueError, match="유한|음수|아니"):
+        build_weight_objectives([-0.25, 0.0])
+
+
+def test_reproduce_commands_follow_manifest_paths_and_vcol(tmp_path):
+    """★ 14차 발견 6 — 재현 명령이 실제 실행의 경로·target 을 따라야 한다.
+
+    현재 명령은 grid `--out {in_dir}` / fit `--in {in_dir}` 라, 곡선 producer
+    와 fit 산출물이 다른 디렉터리인 실제 v4 배치(grid_curves_v4 →
+    grid_fit_v4)에서 그대로 실행하면 **fit 산출물 위에 곡선을 만들고 자기
+    자신을 입력으로 fit 하는 다른 pipeline** 이 된다. 또 `run_spec.v_col ==
+    "v_full"`(clean fit) 인데 `--clean` 이 없으면 noisy fit 이 재현된다.
+    목적함수 간 비교(결론 2)의 인용 정본 문서도 명시해야 한다.
+    """
+    import yaml
+
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d, _ = _complete_artifact(tmp_path)
+    mp = d / "manifest.yaml"
+    m = yaml.safe_load(mp.read_text(encoding="utf-8"))
+    m["input"] = "results/grid_curves_v4"        # 실제 fit 이 기록하는 키
+    mp.write_text(yaml.safe_dump(m, allow_unicode=True, sort_keys=False),
+                  encoding="utf-8")
+
+    run_compare(d, d)
+    text = build(d, tmp_path / "R.md", repo_root=tmp_path).read_text(
+        encoding="utf-8")
+
+    assert "--out results/grid_curves_v4" in text, \
+        "grid 재현 명령이 producer 경로(manifest.input)를 --out 으로 써야 한다"
+    assert f"--in results/grid_curves_v4 --out {d}" in text, \
+        "fit 재현 명령이 producer 를 --in, 현재 산출물을 --out 으로 써야 한다"
+    assert "--clean" in text, \
+        "run_spec.v_col == v_full 이면 --clean 이 재현 명령에 있어야 한다"
+    assert "RESULTS_PAIRED_FIXED5.md" in text, \
+        "목적함수 간 비교(결론 2)의 인용 정본 문서를 명시해야 한다"
+
+
+def test_archive_records_computation_commit_and_promotion_is_fail_closed(tmp_path):
+    """★ 14차 발견 7·8 — archive 의 source_commit 출처와 승격 fail-closed.
+
+    발견 8: artifact_index 의 `source_commit` 이 manifest **최상위**
+    `git_commit`(기록 시점)에서 나온다 — 계산을 고정하는 것은 서명된
+    `run_spec.git_commit`(시작 시점)이다. fixture manifest 는 최상위 키가
+    없어 현재 코드는 None 을 기록한다. "다음 commit" 문구도 실제 워크플로
+    (`git add artifacts && git commit` 한 번)와 어긋난다.
+
+    발견 7: 승격의 첫 이동(`mv out → .previous_`)이 실패해도 검사 없이
+    진행돼 `mv cand out` 이 **기존 묶음 안으로 candidate 를 중첩**시키고
+    성공(exit 0)으로 끝난다. 실패 시 후보를 제거하고 n_bad 로 계상해야 한다.
+    """
+    import os
+    import stat
+    import subprocess
+
+    import yaml
+
+    repo = Path(__file__).resolve().parent.parent
+    d, _ = _complete_artifact(tmp_path)          # tmp_path/res
+    dest = tmp_path / "arch"
+
+    def _run(env_extra=None):
+        env = {**os.environ, "ARCHIVE_DEST": str(dest), **(env_extra or {})}
+        return subprocess.run(
+            ["bash", str(repo / "scripts" / "archive_results.sh"), str(d)],
+            cwd=repo, env=env, capture_output=True, text=True)
+
+    # ① 정상 승격 — source_commit 은 서명된 run_spec.git_commit 이어야 한다
+    r1 = _run()
+    assert r1.returncode == 0, r1.stdout + r1.stderr
+    idx = yaml.safe_load((dest / "artifact_index.yaml").read_text(
+        encoding="utf-8"))
+    ent = idx["runs"]["res"]
+    assert ent["source_commit"] == "0" * 40, \
+        f"source_commit 은 계산 시작 커밋(run_spec.git_commit)이어야 한다: {ent}"
+    assert "다음 commit" not in str(idx.get("_주의", "")), \
+        "index 문구가 실제 워크플로(한 commit)와 어긋난다 (14차 발견 8)"
+
+    # ② 첫 이동 실패 주입 — fail-closed 여야 한다
+    fake = tmp_path / "bin"
+    fake.mkdir()
+    mv = fake / "mv"
+    mv.write_text("#!/bin/bash\n"
+                  "for a in \"$@\"; do case \"$a\" in *.previous_*)\n"
+                  "  echo 'mv: simulated failure' >&2; exit 1;; esac; done\n"
+                  "exec /bin/mv \"$@\"\n", encoding="utf-8")
+    mv.chmod(mv.stat().st_mode | stat.S_IEXEC)
+    r2 = _run({"PATH": f"{fake}:{os.environ['PATH']}"})
+    assert r2.returncode != 0, \
+        "첫 이동(mv out → .previous_)이 실패했는데 성공으로 끝났다 (14차 발견 7)"
+    assert not (dest / "res" / ".candidate_res").exists(), \
+        "candidate 가 기존 묶음 안으로 중첩됐다"
+    assert (dest / "res" / "manifest.yaml").is_file(), \
+        "실패 시 기존 묶음이 그대로 남아 있어야 한다"

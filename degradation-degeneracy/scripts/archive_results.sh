@@ -170,7 +170,15 @@ PYEOF
     if [[ -d "$out" ]]; then
       old="$DEST/.previous_$name.$$"
       rm -rf "$old"
-      mv "$out" "$old"
+      # ★ 14차 발견 7 — 첫 이동이 실패한 채 진행하면 뒤의 `mv cand out` 이
+      #   기존 묶음 **안으로** candidate 를 중첩시키고 성공(exit 0)으로 끝난다.
+      #   실패면 후보를 제거하고 n_bad 로 계상한다 (fail-closed).
+      if ! mv "$out" "$old"; then
+        echo "  기존 묶음 이동(mv) 실패 — 승격하지 않습니다 (기존 묶음 유지)" >&2
+        rm -rf "$cand"
+        n_bad=$((n_bad+1))
+        continue
+      fi
     fi
     if mv "$cand" "$out"; then
       [[ -n "$old" ]] && rm -rf "$old"
@@ -228,13 +236,22 @@ for name in names:
     ent = {"artifact_kind": kind, "payload_index_sha256": _sha(pi)}
     # ★ 13차 발견 7 — 이 산출물을 **계산한** commit (archive 시점 HEAD 가 아니라).
     #   grid producer 는 curves_manifest 가, fit 은 manifest 가 소유한다.
+    # ★ 14차 발견 8 — 그 commit 은 manifest **최상위** git_commit(기록 시점)이
+    #   아니라 **계산 시작 커밋**이다: fit 은 서명된 run_spec.git_commit /
+    #   start_provenance.git_commit, grid 는 curves_manifest_start.yaml 의
+    #   git_commit (시작 기록). 실행 도중 commit 이 움직인 경우는 별도 검사
+    #   (git_commit_changed_during_run)가 잡고, 여기는 시작 좌표를 앵커로 쓴다.
     _mm = b / "manifest.yaml"
     _man0 = (yaml.safe_load(_mm.read_text(encoding="utf-8")) or {}) if _mm.is_file() else {}
-    ent["source_commit"] = _man0.get("git_commit")
+    ent["source_commit"] = ((_man0.get("run_spec") or {}).get("git_commit")
+                            or (_man0.get("start_provenance") or {}).get("git_commit")
+                            or _man0.get("git_commit"))
     _cm0 = b / "curves_manifest.yaml"
     if _cm0.is_file():
         _cman0 = yaml.safe_load(_cm0.read_text(encoding="utf-8")) or {}
-        _cc = _cman0.get("git_commit")
+        _cs0 = b / "curves_manifest_start.yaml"
+        _cstart0 = (yaml.safe_load(_cs0.read_text(encoding="utf-8")) or {}) if _cs0.is_file() else {}
+        _cc = _cstart0.get("git_commit") or _cman0.get("git_commit")
         if kind == "grid_producer":
             ent["source_commit"] = _cc
         elif _cc and ent.get("source_commit") and _cc != ent["source_commit"]:
@@ -283,10 +300,15 @@ out = dest / "artifact_index.yaml"
 # ★ 12차 발견 5-b — 여기 적히는 SHA 는 **계산에 쓴 코드**의 commit 이다.
 #   이 파일 자신을 담을 artifact commit 은 아직 존재하지 않으므로 그 이름을
 #   쓸 수 없다 (artifact commit A → 이 index 를 갱신하는 commit B 순서).
+# ★ 14차 발견 8 — 문구 수정: 실제 워크플로는 `git add artifacts && git commit`
+#   **한 번**이라 index 와 묶음은 같은 commit 에 담긴다. 그 commit 의 이름은
+#   자기참조라 이 파일 안에 쓸 수 없다 — source_commit(계산 시작 코드 commit)
+#   과 혼동하지 말 것.
 out.write_text(yaml.safe_dump(
     {"_주의": ("RESULTS.md 의 앵커(fits/curves digest)와 여기 값이 같아야 그 보고서의 "
-             "근거 묶음이다. source_commit 은 **계산 코드**의 commit 이고, 이 묶음이 "
-             "실제로 담긴 commit 은 이 파일을 커밋한 다음 commit 이다 (12차 발견 5-b)."),
+             "근거 묶음이다. source_commit 은 **계산을 시작한 코드**의 commit 이다. "
+             "이 index 와 묶음 bytes 는 `git add artifacts` 로 함께 커밋되며, 그 "
+             "artifact commit 의 이름은 자기참조라 여기 쓸 수 없다 (12차 5-b·14차 8)."),
      "source_commit": commit, "runs": runs},
     allow_unicode=True, sort_keys=False), encoding="utf-8")
 print(f"\n인덱스: {out} ({len(runs)}개 승격 묶음, full 64자리 digest)")
