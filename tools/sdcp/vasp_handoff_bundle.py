@@ -69,6 +69,7 @@ TIERS = {"tier1": ["ptfe_c10", "ptfe_dimer"],      # 이번 판의 목적 (미�
          "tier2": ["sdcp_neutral", "sdcp_doped"]}
 #: 캠페인 계약 — 조각별 **방향 수**. 실제와 다르면 번들을 만들지 않는다 (Codex P0-A).
 #: 축소된 MANIFEST 를 새 정본으로 만드는 것이 이 번들의 제일 비싼 실패 모드다.
+RMSD_TOL_CHK = 0.75    # selftest 에서 쓰는 사본 (분석기는 문자열 안에 있다)
 EXPECT_DIRS = {"ptfe_c10": 5, "ptfe_dimer": 3, "sdcp_neutral": 6, "sdcp_doped": 5}
 SEEDS_FULL = ("afm2424_pm1", "afm2424_net4")       # tier1 전 끝점 · clean
 SEED_MAIN = "afm2424_pm1"                          # 판정 headline
@@ -545,6 +546,7 @@ BOX_TOL = 0.010           # eV — 기체상 상자 수렴
 K_TOL = 0.010             # eV — dense-k 민감도
 RMSD_TOL = 0.75           # Å — 두 끝점이 같은 basin 인가 (0.50/1.00 민감도도 같이 뽑는다)
 CONTACT_A = 3.0           # Å — 접촉 지문 반경
+FP_JACCARD = 0.80         # 접촉 지문 겹침 — 경계 원자 하나로 뒤집히지 않게 완전일치 대신
 RCOV = {"H": 0.31, "B": 0.84, "C": 0.76, "N": 0.71, "O": 0.66, "F": 0.57,
         "Na": 1.66, "P": 1.07, "S": 1.05, "Cl": 1.02, "Li": 1.28, "Ni": 1.24}
 BOND_F = 1.25             # 결합 = d < BOND_F × (r_i + r_j)
@@ -971,15 +973,23 @@ def main():
             if mol and len(a["pos"]) == len(b["pos"]):
                 rms = math.sqrt(sum(mic_dist(a["pos"][i], b["pos"][i], a["cell"]) ** 2
                                     for i in mol) / len(mol))
-                same_fp = (jli.get("_contact_fp") is not None
-                           and jli["_contact_fp"] == jni.get("_contact_fp"))
-                same_near = bool(rli and rni and rli["nearest"] == rni["nearest"])
-                rec["basin"] = {"mol_rmsd_A": round(rms, 3), "same_contact_fp": same_fp,
-                                "same_nearest": same_near,
-                                "sensitivity": {t: rms <= t for t in (0.50, 0.75, 1.00)}}
-                if rms <= RMSD_TOL and same_fp and same_near:
+                # ⚠ 최근접 **원소명**은 판정에 넣지 않는다 — 같으면 한쪽은 이미
+                #   PAIR_MIGRATED 라 완전 중복이다(Codex Q5). 접촉 지문은 원자 인덱스라
+                #   "같은 자리인가" 를 직접 답한다. 경계 원자 하나로 뒤집히지 않도록
+                #   완전일치 대신 Jaccard 를 쓴다.
+                fa = set(jli.get("_contact_fp") or [])
+                fb = set(jni.get("_contact_fp") or [])
+                jac = (len(fa & fb) / len(fa | fb)) if (fa or fb) else 0.0
+                rec["basin"] = {"mol_rmsd_A": round(rms, 3),
+                                "contact_jaccard": round(jac, 3),
+                                "same_nearest_element": bool(
+                                    rli and rni and rli["nearest"] == rni["nearest"]),
+                                "sensitivity": {str(t): rms <= t
+                                                for t in (0.50, 0.75, 1.00)}}
+                if rms <= RMSD_TOL and jac >= FP_JACCARD:
                     rec["gates"].append(
-                        f"PAIR_COLLAPSED(분자 RMSD {rms:.2f} Å ≤ {RMSD_TOL} · 접촉 지문 동일)")
+                        f"PAIR_COLLAPSED(분자 RMSD {rms:.2f} Å ≤ {RMSD_TOL} · "
+                        f"접촉 지문 Jaccard {jac:.2f} ≥ {FP_JACCARD})")
         de_main = rec["dE_by_seed"].get("afm2424_pm1")
         de_alt = rec["dE_by_seed"].get("afm2424_net4")
         if de_main is not None and de_alt is not None \
@@ -1460,9 +1470,10 @@ def _fake_phase(jd: Path, meta: Dict[str, Any], e_static: float,
             body += (f" POSITION      TOTAL-FORCE (eV/Angst)\n ---\n{frc}\n"
                      " reached required accuracy - stopping structural energy"
                      " minimisation\n")
-        if ph in ("static", "dense", "pre"):
-            body += f"  energy(sigma->0) =  {e_static:.6f}\n"
-            body += " number of electron  100.0000000 magnetization   0.0000\n" + mom
+        # ⚠ 실제 VASP 는 **모든 상**이 energy(sigma->0) 를 찍는다. relax 에만 안 쓰면
+        #   NO_ENERGY(relax) 가 전 잡에 걸려 selftest 가 아무것도 검증하지 못한다.
+        body += f"  energy(sigma->0) =  {e_static:.6f}\n"
+        body += " number of electron  100.0000000 magnetization   0.0000\n" + mom
         (jd / ph / "OUTCAR").write_text(body + ("" if truncate == ph else end))
     if "relax" in meta.get("phases", []):
         shutil.copy(jd / "POSCAR", jd / "relax" / "CONTCAR")
@@ -1676,17 +1687,28 @@ def selftest() -> int:
         f"N7 모멘트 붕괴 → MOMENT_COLLAPSED ({res['jobs'][mc_job]['gates']})")
     chk(len(res["integrity"]["changed"]) == 1, f"N9 INCAR 변조 → 무결성 1건 감지")
 
-    # ── 양성: 게이트에 안 걸린 쌍은 값이 정확히 복원돼야 한다 ──
-    de = res["pairs"]["ptfe_dimer__fib00_r000"].get("dE_Ni_minus_Li_eV")
+    # ── 양성: 게이트에 안 걸린 쌍은 값이 **정확히** 복원돼야 한다 ──
+    p0 = res["pairs"]["ptfe_dimer__fib00_r000"]
+    de = p0.get("dE_Ni_minus_Li_eV")
+    chk(de is not None and abs(de - truth["fib00"]) < 1e-6,
+        f"양성 ΔE 복원 fib00 = {de} (심은 값 {truth['fib00']})")
     kg = res["numerical_gates"].get("k_ptfe_dimer__fib00_r000")
     chk(kg is not None and abs(kg["dE_meV"] - 3.0) < 1e-6,
-        f"dense-k 게이트가 실제 3 meV 이동을 잡는다 ({kg})")
+        f"dense-k 게이트가 **한쪽만** 옮긴 3 meV 를 잡는다 ({kg})")
     chk(res["numerical_gates"].get("box_ptfe_dimer", {}).get("pass") is False,
         "N8 box24 없음 → 상자 게이트 **실패**로 기록 (옛 판은 항상 참이었다)")
     chk(not res["e_ads"], "상자 게이트 실패 → E_ads 를 만들지 않는다")
-    chk(de is None or isinstance(de, float), f"fib00 ΔE = {de}")
+    chk(bool(res["required_missing"]), f"N8 필수 누락 기록 {len(res['required_missing'])}건")
+    # ── PAIR_COLLAPSED 양성/음성 (새 basin 판정) ──
+    chk(any("PAIR_COLLAPSED" in g for g in res["pairs"]["ptfe_dimer__fib01_r000"]["gates"]),
+        "N1 두 끝점이 같은 자리로 → PAIR_COLLAPSED (RMSD+접촉지문)")
+    chk(not any("PAIR_COLLAPSED" in g for g in p0["gates"]),
+        f"떨어져 있는 정상 쌍엔 **안 걸린다** (RMSD {p0.get('basin', {}).get('mol_rmsd_A')} Å)")
+    chk((p0.get("basin") or {}).get("mol_rmsd_A", 0) > RMSD_TOL_CHK,
+        f"정상 쌍 분자 RMSD = {(p0.get('basin') or {}).get('mol_rmsd_A')} Å (> 0.75)")
     fr = res["fragments"]["ptfe_dimer"]
-    chk("class" in fr, f"조각 판정 = {fr['class']}")
+    chk(fr["class"] == "NO_VERDICT_n<3",
+        f"유효 1/계획 5 → n<3 게이트 선행 (실제 {fr['class']})")
     print("✔ selftest 전부 통과" if ok else "⛔ selftest 실패")
     return 0 if ok else 1
 
