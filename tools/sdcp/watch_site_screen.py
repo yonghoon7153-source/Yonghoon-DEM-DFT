@@ -63,6 +63,7 @@ def main() -> int:
         print(f"═══ site_screen  {run}   {time.strftime('%H:%M:%S')} ═══")
         if not run.is_dir():
             print(f"⛔ {run} 이 없다"); return 2
+        shortfall = 0        # 목표치에 못 미친 단계 수 — '완료'와 '정지'를 구분하려고 센다
 
         for frag in PRIMARY:
             fdir = run / frag
@@ -85,9 +86,10 @@ def main() -> int:
                 n = len(rows)
                 tgt = f"/{target}" if target else ""
                 eta = ""
-                if rows and target and n < target:
-                    ts = sorted(t for _, t in rows)
-                    if len(ts) >= 2:
+                if target and n < target:
+                    shortfall += 1
+                    if len(rows) >= 2:
+                        ts = sorted(t for _, t in rows)
                         rate = (ts[-1] - ts[0]) / max(len(ts) - 1, 1)
                         eta = f" ETA {fmt_dt(rate * (target - n))}"
                 line += f" · f{ff} {n:3d}{tgt}{eta}"
@@ -122,12 +124,18 @@ def main() -> int:
 
         # 프로세스 · 로그 · GPU
         print()
+        running = ""
         try:
-            ps = subprocess.run(["pgrep", "-fa", "site_screen.py score"],
-                                capture_output=True, text=True).stdout.strip()
-            print(ps if ps else "  (score 미실행)")
+            running = subprocess.run(["pgrep", "-fa", r"python.*site_screen\.py score"],
+                                     capture_output=True, text=True).stdout.strip()
         except FileNotFoundError:
             pass
+        if running:
+            print(running)
+        elif shortfall == 0:
+            print("  ✔ **완료** — 모든 단계가 목표치에 도달했고 실행 중인 job 이 없다")
+        else:
+            print(f"  ⛔ score 가 안 돌고 있는데 목표에 못 미친 단계가 {shortfall}개 있다 — 중단됐다")
         logs = sorted((run / "logs").glob("relax_*.log")) + sorted((run / "logs").glob("rigid_*.log"))
         if logs:
             newest = max(logs, key=lambda p: p.stat().st_mtime)
@@ -136,7 +144,8 @@ def main() -> int:
             print(f"  ── {newest.name} (마지막 갱신 {fmt_dt(age)} 전) ──")
             for t in tail:
                 print("   " + t[:150])
-            if age > 900:
+            # 로그 정체는 **실행 중일 때만** 이상 신호다. 끝난 job 의 로그는 당연히 안 는다.
+            if age > 900 and running:
                 print("  ⚠ 15분 넘게 로그가 안 늘었다 — 멈췄는지 확인할 것")
         try:
             g = subprocess.run(["nvidia-smi", "--query-gpu=memory.used,memory.total",
