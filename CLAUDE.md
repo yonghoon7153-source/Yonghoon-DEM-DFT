@@ -1,5 +1,17 @@
 # Project conventions for Claude Code sessions
 
+## ★ 지식 내비게이션 — `wiki/` (2026-08-11 신설)
+
+반복 참조 지식(개념·시스템·열린질문·논지)의 **항목화된 지도**.  "X 가 뭐더라" 는
+이 파일 전체를 뒤지기 전에 `wiki/index.md` 부터 본다 (docs/ 24편 분류표 포함).
+정본 서술은 여전히 이 파일과 docs/ — wiki 는 요약+포인터 층이다.
+Karpathy LLM-wiki 패턴(구요한 llm-wiki-kit v1.7)을 우리 규약으로 개조:
+**논문 = litdb 정본 소관**(위키는 `litdb-canon:<slug>` 참조만) · **모델-ID 금지를
+lint 가 오류로 강제** · anchored(§F1)/scope(등급 A/B) 품질축 · single-source 면
+confidence high 금지.  규칙 `wiki/SCHEMA.md` · 점검 `python3 wiki/tools/lint.py`
+(0 errors 유지) · 커맨드 `/wiki-ingest` `/wiki-query` `/wiki-verify` `/wiki-lint`
+`/wiki-status` `/wiki-wrap`.  `explored` 필드는 **사람만** 바꾼다.
+
 ## ★★★ DEM ↔ MPM Complementary Simulation Frame (FINALIZED 2026-06-07) ★★★
 
 This is the controlling epistemology for all compaction/transport work.
