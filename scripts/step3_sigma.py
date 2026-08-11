@@ -83,11 +83,22 @@ SID_NAME = {1: 'AM_S', 2: 'AM_P', 3: 'VGCF', 4: 'SuperP', 5: 'SDCP', 6: 'SE', 7:
 GPU_SOLVE = False
 
 
+#: ★ RC6-08 (Codex 6회차): 마지막 solve 의 **실제 backend**.  요청(GPU_SOLVE)과 실제가
+#:   다를 수 있는데(CuPy 부재 → CPU fallback) 옛 코드는 print 만 하고 반환 dict 에
+#:   backend/gpu_used/fallback_reason 이 전부 없었다 — 결과만 보면 GPU 로 푼 것인지
+#:   CPU 로 떨어진 것인지 **구분 불가**였다.  로그는 보존되지 않으므로 산출물에 남긴다.
+LAST_BACKEND = {'requested': None, 'used': None, 'fallback_reason': None}
+
+
 def _solve_cg(L, b):
     """Jacobi-preconditioned CG for the SPD Kirchhoff system L·φ = b.  GPU (CuPy) when GPU_SOLVE and
     the import succeeds, else scipy CPU — SAME matrix + tol (1e-8) → SAME φ (backend swap only).
-    Returns (phi: np.ndarray, info: int)."""
+    Returns (phi: np.ndarray, info: int).
+
+    ★ 실제로 쓴 backend 를 모듈 전역 `LAST_BACKEND` 에 남긴다 (RC6-08)."""
     diag = L.diagonal()
+    LAST_BACKEND.update(requested=('gpu' if GPU_SOLVE else 'cpu'),
+                        used=None, fallback_reason=None)
     if GPU_SOLVE:
         try:
             import cupy as cp
@@ -100,9 +111,12 @@ def _solve_cg(L, b):
                 xg, info = cg_gpu(Lg, bg, tol=1e-8, maxiter=30000, M=Mg)
             except TypeError:                              # newer CuPy renamed tol → rtol/atol
                 xg, info = cg_gpu(Lg, bg, rtol=1e-8, atol=0.0, maxiter=30000, M=Mg)
+            LAST_BACKEND['used'] = 'gpu'
             return cp.asnumpy(xg), int(info)
         except Exception as _e:
+            LAST_BACKEND['fallback_reason'] = f'{type(_e).__name__}: {_e}'
             print(f'    STEP3 GPU solve unavailable ({type(_e).__name__}: {_e}) → CPU fallback', flush=True)
+    LAST_BACKEND['used'] = 'cpu'
     Minv = sparse.diags(1.0 / diag)
     try:
         return cg(L, b, rtol=1e-8, maxiter=30000, M=Minv)

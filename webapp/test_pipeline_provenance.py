@@ -797,6 +797,28 @@ def main():
             'thermal_sigma_full_mScm_stage_e_estimate' in _apy2
             and 'baseline=유도추정' in _apy2)
 
+        # ══ RC6-06/08 (Codex 6회차): STEP3 component manifest · backend provenance ══
+        #   ⚠ 이 컨테이너엔 scipy 가 없어 STEP3 를 **실행**할 수 없다 → 소스 계약으로 건다.
+        #     (실행 검증은 GPU 머신 몫 — 그 한계를 회귀 이름에 남긴다.)
+        _sc = os.path.join(os.path.dirname(os.path.dirname(
+            os.path.abspath(webapp.__file__))), 'scripts')
+        _pay = open(os.path.join(_sc, 'mpm_webapp_payload.py'), encoding='utf-8').read()
+        _s3s = open(os.path.join(_sc, 'step3_sigma.py'), encoding='utf-8').read()
+        chk('55) ★ STEP3 component 상태 헬퍼가 있다 (thermal 만이 아니었다)',
+            'def _s3mark(' in _pay)
+        for _c in ('electronic', 'ionic', 'thermal', 'pore', 'pnm'):
+            chk(f'56) STEP3 {_c} 채널이 상태를 남긴다', f"_s3mark('{_c}'" in _pay)
+        chk('57) ★ 바깥 예외도 payload 에 흔적을 남긴다 (옛 코드는 print 뿐)',
+            "_s3mark('_step3', 'failed'" in _pay)
+        chk('58) ★ manifest 가 payload 에 실제로 박힌다 (배선)',
+            "step3['manifest'] = {'schema_version': 1" in _pay)
+        chk('59) ★ RC6-08 실제 backend 를 기록한다 (요청≠실제일 수 있다)',
+            'LAST_BACKEND' in _s3s and "LAST_BACKEND['used'] = 'cpu'" in _s3s
+            and "LAST_BACKEND['used'] = 'gpu'" in _s3s
+            and "fallback_reason" in _s3s)
+        chk('60) ★ 그 backend 가 manifest 로 흘러간다 (배선)',
+            "'backend': dict(getattr(_s3, 'LAST_BACKEND'" in _pay)
+
         chk('30) 11-키는 run_one 이 무조건 쓰는 집합과 같다 (개수 고정)',
             len(ps.STAGE_E_REQUIRED_KEYS) == 11
             and all(ps.is_stage_e_key(k) for k in ps.STAGE_E_REQUIRED_KEYS))

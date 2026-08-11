@@ -721,6 +721,22 @@ def main():
     # settings (σ hooks + vox recorded in metrics); absolute σ_e needs the DEM Stage-E contact-area
     # cross-calibration (sub-voxel constriction not modelled).  scripts/step3_sigma.py has the
     # analytic laminate/percolation self-tests that pin the assembly.
+    # ★★ RC6-06 (Codex 6회차) — STEP3 **component manifest** ★★
+    #   지금까지 thermal 만 상태를 남겼고 electronic/ionic/pore/pnm/reaction 은 무상태였다.
+    #   그래서 키 부재가 disabled / not_applicable / not_solvable / failed 중 무엇인지
+    #   downstream 이 알 수 없었다 — DEM 접촉망 솔버에서 고친 것과 **같은 결함**이다.
+    #   (그 결함이 양쪽 파이프라인에 따로 있었던 것이 CLAUDE.md frame[5] 경고의 실례다.)
+    _s3st = {}                       # component → {'status': …, 'reason': …}
+
+    def _s3mark(comp, status, reason=''):
+        """STEP3 component 의 상태를 남긴다.  **결손을 조용히 두지 않는다.**
+
+        status ∈ complete | not_solvable(물리적으로 정의 안 됨=정상) | failed(예외)
+                 | disabled(사용자가 끔) | skipped(선행 부재)
+        """
+        _s3st[comp] = {'status': status, **({'reason': reason} if reason else {})}
+        return _s3st[comp]
+
     step3 = None; je_am = None; jb_am = None; elec_field = None; ion_field = None; jrxn_am = None
     thermal_field = None                                     # STEP3 열류 |k∇T| 점군 (전자/이온 필드처럼)
     joule_field = None                                       # #29 STEP3 Joule 발열밀도 q∝|J|²/σ hot-spot 점군
@@ -753,6 +769,7 @@ def main():
                                       z_top_um=_ztop, z_bot_um=0.0, periodic_xy=a.periodic)
             if _res3.get('reason'):
                 print(f"  ⚠ STEP3 σ_e not solvable: {_res3['reason']}")
+                _s3mark('electronic', 'not_solvable', _res3['reason'])
                 step3 = {'sigma_e_eff_S_cm': 0.0, 'reason': _res3['reason'], 'vox_um': a.step3_vox}
             elif _res3['n_dof']:
                 je_am = np.nan_to_num(_s3.per_particle_current(_res3, sid3, pid3, _sig3, len(r)),
@@ -784,6 +801,7 @@ def main():
                               f"{_jhs['hot_frac_50']:.3f} (작을수록 집중) · conc {_jhs['conc_ratio']:.1f}× — 어디서 발열 몰리나")
                 _share = _s3.phase_current_share(_res3, sid3, _sig3)
                 _sname = _s3.SID_NAME
+                _s3mark('electronic', 'complete')
                 step3 = {'sigma_e_eff_S_cm': float(f"{_res3['sigma_eff']:.4g}"),
                          'vox_um': a.step3_vox, 'n_dof': _res3['n_dof'],
                          'k_plates': list(_res3.get('k_plates', ())),
@@ -1069,6 +1087,7 @@ def main():
                         'ionic': _phi_prof(_res3i)}.items() if v}
                     step3['phi_profile']['note'] = ('ΔV=1V 전도 솔브 층별 전도-복셀 평균 φ '
                                                     '(바닥판 φ=1, 꼭대기 φ=0; Oh2025 Fig4e 문법)')
+                    _s3mark('ionic', 'complete')
                     step3['sigma_ion_eff_S_cm'] = float(f"{_res3i['sigma_eff']:.4g}")
                     step3['ion_dissipation_share'] = {_s3.SID_NAME.get(k, str(k)): round(v, 4)
                                                       for k, v in _sharei.items()}
@@ -1199,6 +1218,8 @@ def main():
                     # 심화리뷰 minor: 이온 n_dof=0 (SE 미퍼콜 퇴화) — trackb 키가 아예 없으면
                     # exporter 가 "구세대 trackb 부재 → 재실행" 으로 오진한다.  재실행해도 같으니
                     # 원인을 스텁으로 명시 (§F1 정직 null 관례)
+                    _s3mark('ionic', 'not_solvable',
+                            'n_dof=0 (SE non-percolating)')     # ★ RC6-06: 채널 상태를 남긴다
                     step3['trackb'] = {'reason': 'ionic solve n_dof=0 (SE non-percolating) — '
                                                  'trackb undefined; 재실행으로 해소되지 않음'}
                 # ── STEP3 열전도 (σ_thermal, 多상 k) — 同 sid3 격자 재사용, ∇·(k∇T)=0 (σ_e/σ_ion과 동일 솔버) ──
@@ -1214,6 +1235,7 @@ def main():
                         step3['thermal'] = {
                             'k_eff_W_mK': _th['k_eff_W_mK'], 'n_dof': _th['n_dof'],
                             'cg_resid': _th['cg_resid'], 'temp_drop_share': _th.get('temp_drop_share'),
+                            'status': _s3mark('thermal', 'complete')['status'],
                             'k_table_provenance': _kprov,
                             'trust': ('k_eff = 문헌/ASSUMED k 입력의 복셀-solve 전파값 — 열전도 실험 앵커 없음(Kapitza '
                                       '무시 상한); 多상 k(全상 열통과, σ_e[AM만]/σ_ion[SE만] 단상과 다름); SE=Ketter2025'
@@ -1242,7 +1264,9 @@ def main():
                             # 물리적으로 풀 수 없는 것 = **정상 결과**.  실패와 구분되게 기록한다.
                             print(f"  ⚠ STEP3 thermal not solvable: {_th['reason']}")
                             step3['thermal'] = {
-                                'k_eff_W_mK': None, 'status': 'not_solvable',
+                                'k_eff_W_mK': None,
+                                'status': _s3mark('thermal', 'not_solvable',
+                                                  _th['reason'])['status'],
                                 'reason': _th['reason'],
                                 'trust': '열망이 형성되지 않아 k_eff 가 정의되지 않는다 — '
                                          '솔버 실패가 아니라 **구조의 답**이다.'}
@@ -1254,7 +1278,9 @@ def main():
                         #   §F1 정직 null 관례대로 **이유를 남긴 스텁**을 쓴다.
                         print(f"  ⚠ STEP3 thermal skip: {type(_e_th).__name__}: {_e_th}")
                         step3['thermal'] = {
-                            'k_eff_W_mK': None, 'status': 'failed',
+                            'k_eff_W_mK': None,
+                            'status': _s3mark('thermal', 'failed',
+                                              f'{type(_e_th).__name__}: {_e_th}')['status'],
                             'reason': f'{type(_e_th).__name__}: {_e_th}',
                             'trust': 'solver 예외로 미산출 — 열망 미형성(정상)과 구분되는 **실패**다. '
                                      '재실행으로 해소될 수 있다.'}
@@ -1281,6 +1307,8 @@ def main():
                                        periodic_xy=a.periodic)
                     step3['pore'] = {k: _rp[k] for k in ('eps_total_pct', 'eps_connected_pct',
                                                          'D_rel', 'tau', 'n_dof') if k in _rp}
+                    _s3mark('pore', 'not_solvable' if _rp.get('reason') else 'complete',
+                            _rp.get('reason', ''))
                     if _rp.get('reason'):
                         step3['pore']['reason'] = _rp['reason']
                     step3['pore']['resid'] = float(f"{_rp['resid']:.2g}")
@@ -1293,6 +1321,7 @@ def main():
                     #   실패해도 pore-τ 결과는 유지 (내부 try).
                     try:
                         _pnm = _s3.pore_pnm(sid3, a.step3_vox, z_top_um=_ztop, extra_solid_pts=_ppts)
+                        _s3mark('pnm', 'complete')
                         step3['pore']['pnm'] = _pnm
                         if not _pnm.get('reason'):
                             print(f"  STEP3 pore-PNM: {_pnm['n_pores']} bodies · r_eq med "
@@ -1375,6 +1404,35 @@ def main():
             import traceback as _tb
             print(f'  ⚠ STEP3 skipped ({type(_e).__name__}: {_e})')
             print('    ' + _tb.format_exc(limit=2).strip().replace(chr(10), chr(10) + '    '))
+            # ★ RC6-06: 옛 코드는 print 만 하고 payload 에 아무 흔적도 남기지 않아,
+            #   step3 가 통째로 없는 것이 "안 돌렸다" 인지 "죽었다" 인지 구분 불가였다.
+            _s3mark('_step3', 'failed', f'{type(_e).__name__}: {_e}')
+            if not isinstance(step3, dict):
+                step3 = {}
+            step3['status'] = 'failed'
+            step3['reason'] = f'{type(_e).__name__}: {_e}'
+    # ── ★ RC6-06: STEP3 manifest 를 payload 에 박는다 (배선 — 구현만으론 안 된다) ──
+    #    component 가 하나도 없으면 STEP3 를 아예 안 돌린 것(disabled)이고, 있으면
+    #    complete/partial/failed 를 상태들로 판정한다.  키 부재가 무엇을 뜻하는지
+    #    downstream 이 **추측하지 않아도** 되게 만드는 것이 이 manifest 의 목적이다.
+    if isinstance(step3, dict):
+        _sts = {c: v['status'] for c, v in _s3st.items()}
+        if not _sts:
+            _top = 'disabled'
+        elif '_step3' in _sts or 'failed' in _sts.values():
+            _top = 'failed' if _sts.get('_step3') == 'failed' else 'partial'
+        elif all(v == 'complete' for v in _sts.values()):
+            _top = 'complete'
+        else:
+            _top = 'partial'
+        step3['manifest'] = {'schema_version': 1, 'status': _top, 'components': dict(_s3st),
+                             # ★ RC6-08: 요청한 backend 와 **실제로 쓴** backend.  CuPy 부재로
+                             #   CPU 로 떨어져도 결과는 정상 수치라 로그 없이는 구분 불가였다.
+                             'backend': dict(getattr(_s3, 'LAST_BACKEND', {}) or {})}
+    elif _s3st:
+        step3 = {'manifest': {'schema_version': 1, 'status': 'failed',
+                              'components': dict(_s3st)}}
+
     particles = [{'id': int(i), 'type': name.get(int(t[i]), 'AM'),
                   'x': round(float((c[i, 0] - SW[0]) * UM), 3),
                   'y': round(float((c[i, 1] - SW[0]) * UM), 3),
