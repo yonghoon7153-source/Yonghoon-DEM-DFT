@@ -254,6 +254,12 @@ def arrhenius(Ts, Ds):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--v0_xyz", required=True)
+    ap.add_argument("--supercell", type=int, nargs=3, default=None, metavar=("NA", "NB", "NC"),
+                    help="V0 를 이 배수로 타일링한 뒤 MD 를 돈다 (예: 2 2 2). "
+                         "⚠ comp1 판정(2026-08-06)의 **남은 수**가 이것이다 — 62원자 셀에 "
+                         "Li 24개라 200 ps 는커녕 1600 ps 로도 600 K 가 β 0.37 로 케이지였다. "
+                         "시간이 아니라 **이온 수**를 늘려 MSD 앙상블 평균의 통계를 채운다. "
+                         "⚠ 비용은 원자 수에 대략 선형 — 2×2×2 는 8배다.")
     ap.add_argument("--label", required=True, help="comp1 or modelc")
     ap.add_argument("--out_root", required=True)
     ap.add_argument("--disorder_levels", type=float, nargs="+",
@@ -292,6 +298,25 @@ def main():
     out_root = Path(args.out_root)
     out_root.mkdir(parents=True, exist_ok=True)
     base = read(args.v0_xyz)
+    # ★ 2026-08-11 — 셀 확대. open_items #1 이 "시간으로는 못 닫는다 → 남은 수는 셀 확대"
+    #   로 닫혔고 그 실행 손잡이다. **타일링은 물리를 안 바꾼다** (같은 결정, 같은 밀도) —
+    #   바뀌는 건 MSD 를 평균낼 Li 개수뿐이다. 그래서 β 가 올라가면 그건 통계가 채워진
+    #   것이지 다른 계를 잰 게 아니다. 그 논증이 성립하려면 밀도가 같아야 하므로 검산한다.
+    sc = tuple(args.supercell) if args.supercell else (1, 1, 1)
+    if sc != (1, 1, 1):
+        n0 = len(base)
+        nli0 = sum(1 for s in base.get_chemical_symbols() if s == "Li")
+        rho0 = nli0 / base.get_volume()
+        base = base.repeat(sc)
+        nli = sum(1 for s in base.get_chemical_symbols() if s == "Li")
+        rho = nli / base.get_volume()
+        # 타일링이 밀도를 바꿨다면 xyz 에 격자가 없거나 pbc 가 꺼진 것이다 — 즉사시킨다
+        if abs(rho - rho0) / rho0 > 1e-9:
+            raise SystemExit(f"⛔ 타일링이 Li 밀도를 바꿨다 ({rho0:.6e} → {rho:.6e} Å⁻³) — "
+                             f"{args.v0_xyz} 에 격자가 없거나 pbc 가 꺼져 있다. 중단.")
+        print(f"[{args.label}] 셀 확대 {sc[0]}×{sc[1]}×{sc[2]}: "
+              f"{n0} → {len(base)} 원자 · Li {nli0} → {nli} · "
+              f"n_Li {rho * 1e24:.4e} cm⁻³ (불변 ✓)")
     free_S, cl_idx = identify_free_anions(base, args.p_s_cut)
     n_sites = len(free_S) + len(cl_idx)
     max_swaps = min(len(free_S), len(cl_idx))
@@ -354,6 +379,8 @@ def main():
             # incremental save (crash-safe)
             (out_root / "ensemble_results.json").write_text(json.dumps({
                 "label": args.label, "v0_xyz": args.v0_xyz,
+                "supercell": list(sc), "n_atoms": len(base),
+                "n_Li": sum(1 for s in base.get_chemical_symbols() if s == "Li"),
                 "free_anion_sites": n_sites, "temperatures": args.temperatures,
                 "equilib_ps": args.equilib_ps, "prod_ps": args.prod_ps,
                 "fit_window_ps": args.fit_window_ps,
@@ -377,6 +404,8 @@ def main():
 
     summary = {
         "label": args.label, "v0_xyz": args.v0_xyz,
+        "supercell": list(sc), "n_atoms": len(base),
+        "n_Li": sum(1 for s in base.get_chemical_symbols() if s == "Li"),
         "free_anion_sites": n_sites, "temperatures": args.temperatures,
         "equilib_ps": args.equilib_ps, "prod_ps": args.prod_ps,
         "fit_window_ps": args.fit_window_ps,
