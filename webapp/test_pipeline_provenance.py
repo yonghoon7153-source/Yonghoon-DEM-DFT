@@ -616,6 +616,29 @@ def main():
         chk('28) 아무 출력 없음 → 전부 누락', len(ps.stage_e_missing_keys({})) == 11)
         chk('29) 진짜 0 은 유효값이라 통과한다 (None 만 거른다)',
             ps.stage_e_missing_keys(dict(full, thermal_sigma_full_mScm_stage_e=0.0)) == ())
+        # ══ RC5-03 근본수정: thermal '없음' 을 **두 사건으로 갈라** 판정한다 ══
+        #   옛 코드는 퍼콜 미형성(정상)과 솔버 예외(실패)가 둘 다 "키 없음" 이라
+        #   상위가 판단할 근거가 없었다.  이제 solver 가 thermal_status 를 항상 남긴다.
+        chk('37) ★ 솔버 예외 → fail (재실행으로 고쳐야 하는 소프트웨어 실패)',
+            ps.thermal_channel_verdict({'thermal_status': 'failed',
+                                        'thermal_status_reason': 'boom'})[0] == 'fail')
+        chk('38) ★ 퍼콜 미형성(κ=0) → ok (물리적으로 옳은 답, 실패 아님)',
+            ps.thermal_channel_verdict({'thermal_status': 'valid_zero'})[0] == 'ok'
+            and ps.thermal_channel_verdict({'thermal_status': 'valid_null'})[0] == 'ok')
+        chk('39) 정상 계산 → ok',
+            ps.thermal_channel_verdict({'thermal_status': 'computed'})[0] == 'ok')
+        chk('40) ★ 옛 세대(상태 필드 없음) → unknown, **소급 실패로 만들지 않는다**',
+            ps.thermal_channel_verdict({'sigma_full_mScm': 1.0})[0] == 'unknown')
+        chk('41) 모르는 상태값도 unknown (조용히 ok 로 넘기지 않는다)',
+            ps.thermal_channel_verdict({'thermal_status': 'weird'})[0] == 'unknown')
+        # 솔버가 실제로 상태를 쓰는지 (계약이 코드에 있는지)
+        _ncsrc = open(os.path.join(os.path.dirname(os.path.dirname(
+            os.path.abspath(webapp.__file__))), 'scripts',
+            'network_conductivity.py'), encoding='utf-8').read()
+        chk('42) ★ solver 가 thermal_status 를 항상 남긴다 (배선 확인)',
+            "results['thermal_status'] = th_status" in _ncsrc
+            and "th_status, th_reason = 'failed'" in _ncsrc)
+
         chk('30) 11-키는 run_one 이 무조건 쓰는 집합과 같다 (개수 고정)',
             len(ps.STAGE_E_REQUIRED_KEYS) == 11
             and all(ps.is_stage_e_key(k) for k in ps.STAGE_E_REQUIRED_KEYS))

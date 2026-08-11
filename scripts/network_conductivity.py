@@ -1114,6 +1114,14 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
             print(f"  Electronic solver failed: {e}")
 
     results_th = None
+    #: ★ RC5-03 근본수정 (2026-08-11).  옛 코드는 예외를 잡아 print 만 하고 넘어갔고,
+    #:   아래 `if results_th:` 가 거짓이면 thermal 키를 **아예 쓰지 않았다**.  그래서
+    #:   서로 다른 두 사건이 downstream 에서 **똑같이 "키 없음"** 으로 보였다:
+    #:     ① 열망이 퍼콜하지 않음 → κ 가 없는 것이 **물리적으로 옳은 답**
+    #:     ② 솔버 예외 → **소프트웨어 실패** (값이 있어야 하는데 못 낸 것)
+    #:   구분이 불가능하니 상위에서 "누락을 실패로 볼까" 를 물어도 답할 수 없었다.
+    #:   ⇒ 이제 **항상 상태를 남긴다**.  누락이라는 상태 자체를 없앤다.
+    th_status, th_reason = 'not_run', ''
     try:
         print("\n" + "="*60)
         print(f"THERMAL CONDUCTIVITY (ALL contacts) — contact_mode={contact_mode}")
@@ -1125,7 +1133,11 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
                                        contact_mode=contact_mode,
                                        dump_raw_dir=dump_raw_dir, dump_tag=tag_th,
                                        is_thermal=True)
+        th_status = 'computed' if results_th else 'no_result'
+        if not results_th:
+            th_reason = 'run_decomposition returned no result (열망 미형성 가능)'
     except Exception as e:
+        th_status, th_reason = 'failed', f'{type(e).__name__}: {e}'
         print(f"  Thermal solver failed: {e}")
 
     # Merge electronic + thermal into ionic-centric dict (matches legacy schema)
@@ -1145,11 +1157,21 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
             results['electronic_n_edges']         = results_el.get('n_edges')
             results['electronic_active_fraction']      = results_el.get('active_fraction')
             results['electronic_percolating_fraction'] = results_el.get('percolating_fraction')
+        # ★ thermal 은 **항상** 상태를 남긴다 (위 주석 참조).  값이 없는 것과 못 낸 것을
+        #   구분할 수 있어야 상위가 옳게 판단한다.
         if results_th:
             results['thermal_sigma_full']      = results_th.get('sigma_full')
             results['thermal_sigma_full_mScm'] = results_th.get('sigma_full_mScm')
             results['thermal_R_brug']          = results_th.get('R_brug_over_full')
             results['thermal_bulk_frac']       = results_th.get('bulk_resistance_fraction')
+            # 값이 실제로 0/None 이면 '계산됐고 답이 0' 이라는 뜻 — 실패가 아니다.
+            if results['thermal_sigma_full_mScm'] is None:
+                th_status, th_reason = 'valid_null', '솔버가 κ 를 None 으로 반환 (열망 미퍼콜)'
+            elif results['thermal_sigma_full_mScm'] == 0:
+                th_status, th_reason = 'valid_zero', '솔버가 κ=0 을 반환 (열망 미퍼콜)'
+        results['thermal_status'] = th_status
+        if th_reason:
+            results['thermal_status_reason'] = th_reason
     return results
 
 

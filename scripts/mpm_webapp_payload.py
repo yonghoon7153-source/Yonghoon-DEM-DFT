@@ -1239,9 +1239,25 @@ def main():
                             print(f"  STEP3 κ_eff = {_th['k_eff_W_mK']} W/m·K  (多상 열전도, vox {a.step3_vox}µm, "
                                   f"resid {_th['cg_resid']})")
                         elif _th.get('reason'):
+                            # 물리적으로 풀 수 없는 것 = **정상 결과**.  실패와 구분되게 기록한다.
                             print(f"  ⚠ STEP3 thermal not solvable: {_th['reason']}")
+                            step3['thermal'] = {
+                                'k_eff_W_mK': None, 'status': 'not_solvable',
+                                'reason': _th['reason'],
+                                'trust': '열망이 형성되지 않아 k_eff 가 정의되지 않는다 — '
+                                         '솔버 실패가 아니라 **구조의 답**이다.'}
                     except (Exception, SystemExit) as _e_th:
+                        # ★ 2026-08-11: 옛 코드는 print 만 하고 `step3['thermal']` 을 **아예
+                        #   안 남겼다**.  그러면 downstream 에서 "열망이 안 풀리는 구조"(정상)와
+                        #   "솔버가 죽었다"(실패)가 **똑같이 키 없음**으로 보인다 — DEM 접촉망
+                        #   솔버에서 같은 결함(RC5-03)을 고치다가 여기도 같은 모양인 것을 찾았다.
+                        #   §F1 정직 null 관례대로 **이유를 남긴 스텁**을 쓴다.
                         print(f"  ⚠ STEP3 thermal skip: {type(_e_th).__name__}: {_e_th}")
+                        step3['thermal'] = {
+                            'k_eff_W_mK': None, 'status': 'failed',
+                            'reason': f'{type(_e_th).__name__}: {_e_th}',
+                            'trust': 'solver 예외로 미산출 — 열망 미형성(정상)과 구분되는 **실패**다. '
+                                     '재실행으로 해소될 수 있다.'}
                 # ★#30 — carbon(VGCF3/SuperP4/SWCNT8)↔SE(6) 3상 계면 면적 (kim2024 Fig3b: SE 분해 촉매면).
                 #   STEP5 VGCF-촉매 화학열화(b1_chem_fade carbon_se_area)의 구조 입력.  carbon 있을 때만 기록.
                 try:

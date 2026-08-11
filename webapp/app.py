@@ -2968,8 +2968,15 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
                                       f'메우지 않고 비웠다: ' + ', '.join(_dropped[:8])})
             else:
                 fm_data.pop('network_projection_dropped', None)
+            # ★ RC5-03 근본수정: 이제 solver 가 thermal 상태를 **항상** 남기므로
+            #   "퍼콜 안 해서 없다"(정상)와 "솔버가 죽어서 없다"(실패)를 구분할 수 있다.
+            #   옛 세대 산출물은 상태 필드가 없어 'unknown' 인데, **소급 실패로 만들지
+            #   않는다** — 재분석 없이 못 고치는 케이스가 무더기로 생긴다.
+            _tv, _treason = _ps.thermal_channel_verdict(net_data)
+            fm_data['thermal_channel_verdict'] = _tv
+            fm_data['thermal_channel_reason'] = _treason
             fm_data = _refresh_post_network_warnings(fm_data)
-            fm_data['network_solver_status'] = 'success'
+            fm_data['network_solver_status'] = ('thermal_failed' if _tv == 'fail' else 'success')
             fm_data['network_run_id'] = prov.get('network_run_id')          # 하위호환
             fm_data['active_network_run_id'] = prov.get('network_run_id')   # RR2-01
             fm_data['last_network_attempt_run_id'] = prov.get('network_run_id')
@@ -2977,6 +2984,17 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
             _ps.atomic_write_json(fm_json, fm_data)
             log.append({'step': 'Network Merge', 'stdout': f'{len(_NET_MERGE_KEYS)} σ-keys',
                         'stderr': '', 'rc': 0})
+            # ★ thermal 채널 판정을 **단계로** 올린다.  이제 solver 가 상태를 항상 남기므로
+            #   "퍼콜 미형성(정상)" 과 "솔버 예외(실패)" 가 구분된다 → 실패만 실패로 본다.
+            #   옛 세대('unknown')는 소급 실패시키지 않고 라벨만 남긴다.
+            _tst = _ps.StageOutcome(
+                step='Thermal channel verdict', stdout=f'{_tv}: {_treason}', stderr='',
+                rc=(1 if _tv == 'fail' else 0), ok=(_tv != 'fail'), required=True,
+                missing_outputs=[], stale_outputs=[], verify_failed=False)
+            stages.append(_tst)
+            log.append(_tst)
+            if _tv == 'fail':
+                return stages, prov.get('network_run_id')   # Stage E 를 돌리지 않는다
     except Exception as _e:                                        # noqa: BLE001
         log.append({'step': 'Network Merge', 'stdout': '', 'stderr': str(_e), 'rc': 1})
 

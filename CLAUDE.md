@@ -18,9 +18,14 @@ yielded ≈ 86%, plastic-dominant pattern matches SEM (vis_zoom ④).
 Outputs MPM uniquely provides: particle shape change, accumulated plastic
 strain, stress field, volume-preserving flow into voids, compaction
 mechanism visualization.
-LIMITS: MPM is a continuum — NO explicit contact network → cannot give
-transport σ.  2D ≠ 3D in absolute scale.  Single-anchor calibration → multi-
-pressure / springback validation pending.
+LIMITS: MPM is a continuum — NO explicit contact network → cannot give the
+**contact-network** transport σ (Holm 협착 per contact).  2D ≠ 3D in absolute
+scale.  Single-anchor calibration → multi-pressure / springback validation pending.
+★ 정정 2026-08-11 (사용자 지적): 옛 문장은 "cannot give transport σ" 였는데 **틀렸다** —
+  STEP3 (`scripts/voxel_conductivity.py` / `step3_sigma.py`) 가 MPM 상(phase) 격자 위에서
+  유한체적 ∇·(σ∇φ)=0 을 풀어 **σ_ion·σ_e·k_thermal 을 낸다** (그 파일 docstring 자신이
+  "gives the MPM a TRANSPORT readout (it had only mechanics)" 라고 적고 있다).
+  ⇒ 못 내는 것은 **접촉망 방식의 σ** 이지 σ 자체가 아니다.  §5 표 참조.
 
 **[2] DEM (hooke/hysteresis, no explicit plasticity)**
 Role: macroscopic compaction + contact-network transport solver.
@@ -60,8 +65,10 @@ tuning MPM σ_y to match DEM Heckel-derived σ_y_eff) is circular.
 
 **[5] Division of labor (complementary, both required)**
 DEM unique:
-  • Explicit particle contact network → ionic/electronic/thermal σ
+  • Explicit particle contact network → **접촉망 방식** ionic/electronic/thermal σ
     (Kirchhoff solver, Holm constriction, Stage-E)
+    ★ 2026-08-11: σ 자체는 MPM 도 낸다 (STEP3 복셀 FV).  DEM 고유는 **접촉 단위의**
+      협착 저항 — 접촉당 A(δ), 파괴 시 접촉 소실, Stage-E 소성면적 보정이 걸리는 자리.
   • Percolation, coverage, force chains, fracture (Auerbach)
   • Coverage of AM by SE (Stage-E shape-corrected)
 MPM unique:
@@ -76,6 +83,23 @@ Both:
    MPM CANNOT reproduce it at any calibration; belongs to the DEM-unique list above.)
 → DEM = TRANSPORT.  MPM = MECHANICS.  Both required; neither replaces
 the other; their agreement quantifies model trust.
+
+★★ 정정·정밀화 2026-08-11 — **σ 를 내는 솔버는 둘이다** (사용자 지적으로 발견) ★★
+위 한 줄("DEM = TRANSPORT")은 6월 시점 서술이고 STEP3 도입 후로는 **과하게 단순**하다.
+
+| | `scripts/network_conductivity.py` | `scripts/voxel_conductivity.py` · `step3_sigma.py` (STEP3) |
+|---|---|---|
+| 이산화 | DEM 구의 **접촉망** (접촉당 Holm 협착) | MPM **복셀 격자** (유한체적 ∇·(σ∇φ)=0) |
+| 입력 | LIGGGHTS 덤프 | MPM phase grid |
+| 채널 | ionic · electronic · thermal | ionic · electronic · thermal |
+| 실행 위치 | **웹앱 파이프라인** | **MPM 킷** (`run_mpm.sh`) |
+
+⇒ 정확한 문장: MPM 은 **접촉망이 없어 Holm-협착 기반 σ 를 못 낸다**.  그러나 복셀 FV 로
+  **독립적인 두 번째 σ** 를 내며, 그것이 frame[4] 교차검증의 상대다 (한쪽이 다른 쪽의
+  근사가 아니라 **다른 이산화의 독립 측정**).
+⚠ 둘은 **다른 파이프라인**이다 — 웹앱은 STEP3 를 부르지 않고, 킷의 run_mpm.sh 가 부른다.
+  그래서 웹앱 코드리뷰(Codex RC5 등)의 수정은 STEP3 에 자동 적용되지 않는다 — 실제로
+  2026-08-11 에 thermal 무음-결손 결함이 **양쪽에 따로** 있어 각각 고쳤다.
 
 ---
 
@@ -480,8 +504,10 @@ data + verdict: `docs/esse_calibration_2mAh_real_9.md` +
   "1.35/0.3" first-cut was the DEM-effective modulus, NOT the MPM champion — see
   frame [1] / champion §; mpm3d_compaction.py default = 1.53).
   CAVEAT: MPM is a continuum → NO explicit contact network → it validates
-  mechanics/porosity but does NOT replace DEM for transport σ (which needs the
-  Kirchhoff contact network).  DEM = transport, MPM = mechanics/porosity check.
+  mechanics/porosity but does NOT replace the DEM **contact-network** σ (Holm
+  협착 per contact).  ★ 정정 2026-08-11: "DEM = transport, MPM = mechanics" 는 이
+  시점(6월) 서술이다.  STEP3 복셀 FV 솔버 도입 후 MPM 도 σ_ion/σ_e/k 를 낸다 —
+  다른 이산화의 **독립 두 번째 측정**이지 DEM 접촉망 σ 의 대체가 아니다.  frame[5] 표 참조.
 
 ### ★ MPM cap/champion + dip resolution-invariance (TIMELOG 2026-06-07→08) ★
 Controlling record for the SE plastic-compaction physics.  DO NOT lose this to
@@ -812,7 +838,8 @@ the SE = the 36–41 % problem); (3) fixing forces the SE to bear the load and d
   wall_z/jamming geometry, not SE internal stress — confirmed by a coh sweep, all 16.7 %).
   Fixed gotchas: arm-guard off for scaffold (over-compressed dense beds), CFL-safe dt +
   boundary clamp (AM-as-material preset blew up at n_grid≥384), thickness printed in µm.
-- **Frame[5] capability division (concrete)**:  DEM-only = σ_ionic/e/thermal (Kirchhoff),
+- **Frame[5] capability division (concrete)**:  DEM-only = σ_ionic/e/thermal **접촉망**
+  (Kirchhoff/Holm; ★2026-08-11 정정 — 복셀 σ 는 STEP3 로 MPM 도 낸다),
   percolation, coordination, tortuosity, fracture (Auerbach), force-chains, conduction
   coverage (Tabor+B3), AM packing/Furnas-dip.  BOTH (independent cross-check) = porosity,
   thickness, Tabor/mechanical coverage, stress, composition, composition→porosity trend.

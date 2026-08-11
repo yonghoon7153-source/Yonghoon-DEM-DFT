@@ -396,6 +396,34 @@ STAGE_E_ATTEMPT_FILE = 'stage_e_attempt.json'
 RAW_THERMAL_KEYS = ('thermal_sigma_full_mScm', 'thermal_sigma_full_mScm_physics')
 
 
+#: thermal 채널 상태 → 이것이 **네트워크 단계 실패**인가.
+#:   ★ RC5-03 근본수정: "값이 없다" 를 한 덩어리로 보면 안 된다.  열망이 퍼콜하지 않아
+#:     κ 가 없는 것은 **물리적으로 옳은 답**이고, 솔버가 예외로 죽은 것은 **실패**다.
+#:     옛 코드는 둘을 구분할 수 없어 (둘 다 "키 없음") 상위가 판단할 근거가 없었다.
+#:     이제 solver 가 `thermal_status` 를 항상 남기므로 여기서 갈라 준다.
+_THERMAL_OK_STATES = frozenset({'computed', 'valid_zero', 'valid_null'})
+_THERMAL_FAIL_STATES = frozenset({'failed'})
+
+
+def thermal_channel_verdict(net_data):
+    """→ ('ok'|'fail'|'unknown', reason).  network JSON 의 thermal 채널 판정.
+
+    'unknown' = 옛 산출물(상태 필드가 없는 세대).  **실패로 취급하지 않는다** — 옛
+    데이터를 소급해서 실패로 만들면 재분석 없이는 못 고치는 케이스가 무더기로 생긴다.
+    대신 그 사실을 그대로 돌려주어 호출부가 라벨을 붙일 수 있게 한다.
+    """
+    if not isinstance(net_data, dict):
+        return 'unknown', 'network 결과 없음'
+    st = net_data.get('thermal_status')
+    if st is None:
+        return 'unknown', '옛 세대 산출물 (thermal_status 이전)'
+    if st in _THERMAL_FAIL_STATES:
+        return 'fail', net_data.get('thermal_status_reason') or st
+    if st in _THERMAL_OK_STATES:
+        return 'ok', net_data.get('thermal_status_reason') or st
+    return 'unknown', f'알 수 없는 상태: {st}'
+
+
 def snapshot_keys(d, keys):
     """{key: {'present': bool, 'value': v}} — **없었다는 사실**까지 보존한다.
 
