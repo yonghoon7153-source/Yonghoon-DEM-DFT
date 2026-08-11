@@ -4,7 +4,7 @@ created: 2026-08-11
 updated: 2026-08-11
 type: guide
 tags: [review, epistemology]
-sources: [docs/reviews/selfreview_synthesis_vgcf_ptfe_se_grad_20260811.md, docs/reviews/codex_review_verdict_20260811.md, docs/reviews/findings.json, CLAUDE.md]
+sources: [scripts/context_budget.py, docs/reviews/selfreview_synthesis_vgcf_ptfe_se_grad_20260811.md, docs/reviews/codex_review_verdict_20260811.md, docs/reviews/findings.json, CLAUDE.md]
 confidence: high
 explored: false
 verificationStatus: unverified
@@ -33,6 +33,20 @@ scope: n-a
    vector·시드·하네스가 리포에 없으면 증거등급 C — 인용 금지.
 5. **자기 오류 명시**: 자체리뷰가 못 잡은 자기 오류를 Codex 가 잡으면 그 표를
    리뷰 문서에 보존한다 (2026-08-11 실례: 밴드 오독·ESS 과장·재샘플 반증).
+
+## 수정 순서 — 재현 테스트가 먼저 (2026-08-11 채택)
+결함을 고치기 **전에** 그 결함을 재현하는 selftest 를 추가한다 (superpowers 의
+red-green 을 우리 selftest 문화에 맞춘 것).  실효가 확인된 사례:
+- 스탬프 도장 경로가 한 단계 얕아 `stamp_of` 가 **항상 None** 이던 것 → 6b 가 잡음.
+- `trace_deps` 가 importlib 경로 간선을 못 따라가 skimage 를 놓친 것 → 8b 가 잡음.
+- `context_budget` 이 여러 줄 경고를 문장 중간에서 **자르던** 것 → 5b 가 잡음.
+테스트 없이 고치면 "고쳤다" 와 "안 깨졌다" 를 구분할 수 없다.
+
+## 새로 만들기 전 사다리 (ponytail, 2026-08-11 채택)
+필요한가 → **이 리포에 이미 있나** → stdlib → 기존 의존 → 최소 구현.
+2번이 우리 급소다: `status_for_value()` 가 `_sigma_status()` 를 중복하며 NaN 처리를
+빠뜨린 것, 웹앱↔킷 두 파이프라인에 같은 결함이 따로 존재하는 것이 같은 뿌리다.
+리뷰에서 "이거 이미 있지 않나" 를 명시적으로 한 번 묻는다.
 
 ## 알려진 함정
 - 자체 3각 리뷰는 **남의 오류는 잘 잡고 자기 오류는 못 잡는다** — 독립 리뷰가
