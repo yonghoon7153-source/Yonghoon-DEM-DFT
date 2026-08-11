@@ -32,3 +32,6 @@ docs/db/
 이종기술/eis/fits/
 이종기술/eis/thickness_overrides.json
 litdb_cache/
+# litdb_promote --open 이 남기는 세션 표식 (--close 가 지운다).
+# 커밋되면 다른 세션이 남의 워크트리를 자기 것으로 오인한다.
+.litdb_promote_state.json
