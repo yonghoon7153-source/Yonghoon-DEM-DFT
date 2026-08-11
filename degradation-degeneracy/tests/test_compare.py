@@ -802,8 +802,12 @@ def _complete_artifact(tmp_path):
     _fits(objectives=("pocv_dvdq",)).to_parquet(curves, index=False)
     cfg = d / "base.yaml"              # 〃
     cfg.write_text("dummy: 1\n", encoding="utf-8")
+    # ★ F70 — 곡선 producer 기록 (upstream truth 봉인)
+    from src.grid import write_curves_manifest
+    prod = write_curves_manifest(d, {"parameter_set": "test", "grid": {"noise_seed": 42}},
+                                 conditions=[], extra={"solver": "test"})
 
-    sealed = seal_inputs([curves, cfg])          # F56: 한 번만 봉인
+    sealed = seal_inputs([curves, cfg, prod])    # F56: 한 번만 봉인
     # ★ F68 — 조건 집합 서명은 **실제 fits 의 조건**에서 나와야 한다.
     #   하드코딩하면 그 자체가 위조 통로가 된다.
     from src.io import _sha256_lines
@@ -828,6 +832,9 @@ def _complete_artifact(tmp_path):
             "env": env, "sealed_inputs": sealed,
             "curves_sha": sealed[str(curves)],
             "base_config_sha": sealed[str(cfg)],
+            "producer_sha": sealed[str(prod)],
+            "producer": {"config_hash": "test", "solver": "test",
+                         "curves_sha256": file_digest(curves, full=True)},
             "git_commit": "0" * 40, "git_dirty": False, "source_digest": src}
     sig = hashlib.sha1(
         json.dumps(spec, sort_keys=True, default=str).encode()).hexdigest()[:12]

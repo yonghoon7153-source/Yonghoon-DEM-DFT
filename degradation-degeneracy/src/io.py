@@ -331,12 +331,26 @@ def completed_path(out_dir: str | Path, name: str = "completed.jsonl") -> Path:
 
 
 def write_manifest(out_dir: str | Path, payload: dict) -> Path:
-    """manifest.yaml 기록 (기존 내용에 병합)."""
+    """manifest.yaml 기록 (기존 내용에 병합).
+
+    ★ F70 — 병합은 `existing.update()` 라 **얕다**. grid 와 fit 을 같은 디렉터리에
+    쓰면 fit manifest 가 grid 의 핵심 실행 필드(solver·protocol·조건 수)를 덮어써서,
+    나중에 보면 곡선을 누가 어떤 solver 로 만들었는지 알 수 없다. `run_type` 이
+    바뀌는 순간 이전 기록을 `manifest_<옛run_type>.yaml` 로 보존한다.
+    (곡선 provenance 의 정본은 `curves_manifest.yaml` 이며 이건 안전망이다.)
+    """
     path = manifest_path(out_dir)
     path.parent.mkdir(parents=True, exist_ok=True)
     existing = {}
     if path.exists():
         existing = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    old_t, new_t = existing.get("run_type"), payload.get("run_type")
+    if old_t and new_t and old_t != new_t:
+        keep = path.with_name(f"manifest_{old_t}.yaml")
+        if not keep.exists():
+            keep.write_text(yaml.safe_dump(existing, allow_unicode=True,
+                                           sort_keys=False), encoding="utf-8")
+        existing = {}          # 다른 실행의 필드를 물려받지 않는다
     existing.update(payload)
     path.write_text(yaml.safe_dump(existing, allow_unicode=True, sort_keys=False),
                     encoding="utf-8")
@@ -501,7 +515,7 @@ def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
     spec0 = man.get("run_spec") or {}
     ref = str(spec0.get("reference") or man.get("reference") or "grid")
     digs = man.get("input_sha256") or {}
-    need_kinds = ["curves.parquet", "base.yaml"] + (
+    need_kinds = ["curves.parquet", "base.yaml", "curves_manifest.yaml"] + (
         # ★ F64 — recipe 기록(.meta.yaml)도 봉인 대상이다. 배열만 있는 캐시는
         #   "어떤 branch·n_points 로 만들었는가"를 증명하지 못한다.
         ["_ocp.json", "_ocp.meta.yaml"] if ref == "halfcell" else [])
@@ -517,7 +531,10 @@ def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
                  "env", "sealed_inputs",
                  # ★ F67 — 설정이 아니라 **계산**을 고정하는 축들
                  "objective_order", "condition_ids_sha256", "n_conditions",
-                 "selection", "optimizer"]
+                 "selection", "optimizer",
+                 # ★ F70 — upstream truth. "어떤 parquet 을 fit 했다"만으로는
+                 #   'PyBaMM 합성 truth' 라는 이 연구의 전제가 봉인되지 않는다.
+                 "producer_sha", "producer"]
     if ref == "halfcell":
         # ★ F64 — 캐시 파일만이 아니라 그 파일을 만든 recipe 도 필수다
         need_keys += ["halfcell_sha", "halfcell_cache", "halfcell_meta_sha",
@@ -534,6 +551,20 @@ def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
                  if k not in _opt or _opt.get(k) is None]
     checks["optimizer_정책"] = (not _need_opt,
                                 f"optimizer 블록에 {_need_opt}가 없다")
+    # ★ F70 — producer 가 주장하는 curves digest 와 우리가 봉인한 curves 가 같은가.
+    #   producer 기록만 있고 다른 곡선을 읽었다면 전제가 성립하지 않는다.
+    _prod = spec0.get("producer") or {}
+    _cur_full = None
+    for k, v in (digs or {}).items():
+        if k.endswith("curves.parquet"):
+            cand = Path(k) if Path(k).is_absolute() else root / k
+            _cur_full = file_digest(cand, full=True) if cand.exists() else None
+    checks["producer_곡선일치"] = (
+        bool(_prod.get("curves_sha256")) and _cur_full is not None
+        and _prod.get("curves_sha256") == _cur_full,
+        f"producer가 기록한 곡선 {str(_prod.get('curves_sha256'))[:16]}과 "
+        f"실제 읽은 곡선 {str(_cur_full)[:16]}이 다르다")
+
     # ★ F67 — 목적함수 순서는 warm 연쇄를 바꾼다. 정렬된 dict 와 별개로 남아야 하고,
     #   두 표현이 같은 집합을 가리켜야 한다.
     _order = spec0.get("objective_order")

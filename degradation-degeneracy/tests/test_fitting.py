@@ -410,6 +410,10 @@ def _tiny_curves(tmp_path, n=48, n_cond=3):
                          "q_mah": q, "lli": lli, "lam_pe": pe, "lam_ne": ne,
                          "noise": 0.0})
     pd.DataFrame(rows).to_parquet(tmp_path / "curves.parquet", index=False)
+    # ★ F70 — 곡선 producer 기록. fitting 이 이걸 입력으로 봉인한다.
+    from src.grid import write_curves_manifest
+    write_curves_manifest(tmp_path, {"parameter_set": "test", "grid": {"noise_seed": 42}},
+                          conditions=list(range(n_cond)), extra={"solver": "test"})
     return tmp_path
 
 
@@ -814,3 +818,64 @@ def test_halfcell_recipe_substitution_changes_p_ini(tmp_path, monkeypatch):
                                        n_points=123), "o2")
     assert sp1["halfcell_recipe"] != sp2["halfcell_recipe"]
     assert s1 != s2, "recipe 가 다른데 서명이 같다 (F64)"
+
+
+def test_fit_requires_curves_producer_manifest(tmp_path):
+    """★ F70 — producer 기록 없는 곡선은 fit 하지 않는다.
+
+    반례(리뷰 발견 5): 손으로 만든 **비-PyBaMM** `curves.parquet` 도 실제 fit 후
+    validator 를 통과했다. 이 연구의 전제는 "정답을 아는 PyBaMM 합성 곡선"인데,
+    artifact 가 증명하는 것은 "어떤 parquet 을 fit 했다"뿐이었다.
+    """
+    import src.fitting as F
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    (in_dir / "curves_manifest.yaml").unlink()          # producer 기록만 제거
+
+    with pytest.raises(RuntimeError, match="producer"):
+        F.run_fit(in_dir, tmp_path / "o", _obj_cfg_min(), {"aa": {"w_pocv": 1.0}},
+                  _BOUNDS_MIN, "expanded", 1, nproc=1)
+
+
+def test_producer_curves_digest_must_match(tmp_path):
+    """★ F70 — producer 기록만 있고 **다른 곡선**을 읽었다면 전제가 깨진다."""
+    import yaml
+
+    import src.fitting as F
+    from src.io import validate_provenance
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    out = tmp_path / "o"
+    F.run_fit(in_dir, out, _obj_cfg_min(), {"aa": {"w_pocv": 1.0}},
+              _BOUNDS_MIN, "expanded", 1, nproc=1)
+    assert validate_provenance(out)["checks"]["producer_곡선일치"] == "통과"
+
+    # producer 가 주장하는 곡선 digest 만 바꾼다 (곡선 파일은 그대로)
+    m = yaml.safe_load(
+        (out / "manifest.yaml").read_text(encoding="utf-8"))
+    m["run_spec"]["producer"]["curves_sha256"] = "0" * 64
+    (out / "manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+    assert "producer_곡선일치" in validate_provenance(out)["fail"]
+
+
+def test_fit_manifest_does_not_clobber_grid_record(tmp_path):
+    """★ F70 — 같은 디렉터리에 grid→fit 을 써도 grid 기록이 남아야 한다.
+
+    `write_manifest` 는 `existing.update()` 로 얕게 병합한다. 그래서 fit manifest 가
+    grid 의 solver·protocol·조건 수를 덮어썼고, 나중에 보면 곡선을 누가 어떤
+    solver 로 만들었는지 알 수 없었다.
+    """
+    import yaml
+
+    from src.io import write_manifest
+
+    d = tmp_path / "d"
+    d.mkdir()
+    write_manifest(d, {"run_type": "grid", "solver": "IDAKLU", "n_conditions": 3069})
+    write_manifest(d, {"run_type": "fit", "n_conditions": 12})
+
+    now = yaml.safe_load((d / "manifest.yaml").read_text(encoding="utf-8"))
+    kept = yaml.safe_load((d / "manifest_grid.yaml").read_text(encoding="utf-8"))
+    assert now["run_type"] == "fit" and now["n_conditions"] == 12
+    assert "solver" not in now, "fit manifest 가 grid 필드를 물려받았다"
+    assert kept["solver"] == "IDAKLU" and kept["n_conditions"] == 3069

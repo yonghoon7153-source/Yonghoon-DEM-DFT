@@ -135,6 +135,15 @@ fitting
   ./run.sh --mode grid --config configs/grid_fine.yaml --nproc 32 --out results/final_v1
   ./run.sh --mode fit --in results/grid_fine_v1 --nproc 32
   ./run.sh --mode fit --in results/grid_fine_v1 --bounds original_33p --nproc 32
+
+  # ★ F70 — 권장 구조: 곡선 producer 와 fit 출력을 **분리**한다.
+  #   두 기준(Case 1/2)이 같은 바이트의 곡선을 읽어야 비교가 성립한다.
+  ./run.sh --mode grid --config configs/grid_fine.yaml --out results/grid_curves_v3
+  python -m src.halfcell --config configs/base.yaml --method ocp   # 반쪽셀 준비 (필수)
+  ./run.sh --mode fit --in results/grid_curves_v3 --out results/grid_fit_v3 \
+           --reference grid --nproc 32
+  ./run.sh --mode fit --in results/grid_curves_v3 --out results/halfcell_fit_v3 \
+           --reference halfcell --nproc 32
   ./run.sh --mode score --in results/final_v1
 EOF
 }

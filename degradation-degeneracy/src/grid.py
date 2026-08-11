@@ -28,8 +28,8 @@ from src.baseline import DischargedState, get_discharged_state
 from src.config import config_hash, load_config, validate_config
 from src.curves import add_noise, extract_curves
 from src.io import (acquire_run_lock, append_failed, base_manifest, chunk_files,
-                    load_completed, load_failed, mark_completed, merge_chunks,
-                    release_run_lock, save_chunk, write_manifest)
+                    git_info, load_completed, load_failed, mark_completed,
+                    merge_chunks, release_run_lock, save_chunk, write_manifest)
 from src.modes import Baseline, InfeasibleConditionError, build_overrides
 from src.runner import make_solver, run_one, solver_name
 
@@ -217,6 +217,55 @@ def _result_to_frame(r: dict, protocol_name: str) -> pd.DataFrame:
 
 # ---------------------------------------------------------------- 본체
 
+CURVES_MANIFEST = "curves_manifest.yaml"
+
+
+def write_curves_manifest(out_dir, cfg: dict, conditions=None, extra=None) -> Path:
+    """★ F70 — 곡선을 만든 쪽의 provenance를 **별도 파일**로 남긴다.
+
+    이 연구의 전제는 "정답을 아는 PyBaMM 합성 곡선"이다. 그런데 지금까지 fit
+    artifact 가 증명하는 것은 *"어떤 parquet 을 fit 했다"* 뿐이었다 — 손으로 만든
+    비-PyBaMM `curves.parquet` 도 실제 fit 후 validator 를 통과했다. 즉 **실험
+    전제 자체가 봉인되지 않았다.**
+
+    왜 `manifest.yaml` 이 아니라 별도 파일인가:
+    `write_manifest()` 는 `existing.update(payload)` 로 **얕게 병합**한다. grid 와
+    fit 을 같은 디렉터리에 쓰면 fit manifest 가 grid 의 핵심 필드를 덮어써서,
+    나중에 보면 곡선을 누가 어떤 solver·seed 로 만들었는지 알 수 없다.
+    이 파일은 fitting 이 건드리지 않고 **입력으로 봉인**한다.
+    """
+    import yaml
+
+    from src.io import env_fingerprint, file_digest, source_digest
+
+    out_dir = Path(out_dir)
+    curves = out_dir / "curves.parquet"
+    gc = cfg.get("grid", {}) if isinstance(cfg, dict) else {}
+    payload = {
+        "run_type": "grid_producer",
+        "producer_version": 1,
+        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S"),
+        "config_hash": config_hash(cfg),
+        "parameter_set": cfg.get("parameter_set"),
+        "protocol_unified": cfg.get(GRID_PROTOCOL_KEY, "charge_first"),
+        "grid_config": gc,
+        "noise_seed": int(gc.get("noise_seed", 42)),
+        "source_digest": source_digest(),
+        "env": env_fingerprint(),
+        **git_info(Path(__file__).resolve().parent.parent),
+        "curves_sha256": file_digest(curves, full=True),
+        "n_conditions": len(conditions) if conditions is not None else None,
+        "_주의": ("이 파일은 곡선을 만든 실행의 기록이다. fitting 은 이것을 "
+                 "**입력으로 봉인**하며 덮어쓰지 않는다 (F70)."),
+    }
+    if extra:
+        payload.update(extra)
+    p = out_dir / CURVES_MANIFEST
+    p.write_text(yaml.safe_dump(payload, allow_unicode=True, sort_keys=False),
+                 encoding="utf-8")
+    return p
+
+
 def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
              chunk_size: int, out_dir: str | Path,
              resume: bool = False, dry_run: bool = False) -> dict:
@@ -360,6 +409,12 @@ def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
         "elapsed_s": round(elapsed, 1),
         "curves_parquet": str(merged) if merged else None,
         "finished": time.strftime("%Y-%m-%dT%H:%M:%S"),
+    })
+    # ★ F70 — 곡선 producer 기록을 별도 파일로. fitting 이 이걸 봉인한다.
+    write_curves_manifest(out_dir, cfg, conditions, extra={
+        "solver": solver_name(make_solver(cfg)),
+        "n_curves": n_done_total - n_failed_total,
+        "elapsed_s": round(elapsed, 1),
     })
     log.info("grid 완료: ok=%d failed=%d (누적 곡선 %d) elapsed=%.1fs",
              n_ok, n_failed, n_done_total - n_failed_total, elapsed)

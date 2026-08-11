@@ -532,6 +532,23 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     #   예전에는 get_halfcell_reference() 로 읽은 **뒤에** 해시해서, 읽기와 해시
     #   사이에 파일이 바뀌지 않았음을 증명하지 못했다. 캐시 경로 계산은 base
     #   config 의 baseline 해시만 쓰므로 여기서 미리 할 수 있다.
+    # ★ F70 — 곡선 producer 기록을 **입력으로 봉인**한다.
+    #   이 연구의 전제는 "정답을 아는 PyBaMM 합성 곡선"인데, 지금까지 fit artifact
+    #   가 증명한 것은 "어떤 parquet 을 fit 했다"뿐이었다. 손으로 만든 비-PyBaMM
+    #   curves.parquet 도 실제 fit 후 validator 를 통과했다 (리뷰 실측).
+    from src.grid import CURVES_MANIFEST
+    _prod = in_dir / CURVES_MANIFEST
+    if not _prod.exists():
+        raise RuntimeError(
+            f"곡선 producer 기록이 없습니다: {_prod}\n"
+            f"  이 곡선을 누가·어떤 solver·어떤 noise seed 로 만들었는지 증명할 수 "
+            f"없으면, 'PyBaMM 합성 truth' 라는 이 연구의 전제 자체가 봉인되지 "
+            f"않습니다 (F70).\n"
+            f"  곡선을 다시 생성하거나(./run.sh --mode grid ...), 옛 산출물이면 "
+            f"인용 대상에서 제외하세요.")
+    _prod_doc = yaml.safe_load(_prod.read_text(encoding="utf-8")) or {}
+    _prod_curves_sha = _prod_doc.get("curves_sha256")
+
     _hc_pre, _hc_meta, _hc_recipe = None, None, None
     if reference == "halfcell":
         from src.config import load_config as _lc
@@ -570,6 +587,7 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
         #   그대로 재사용한다. 세 곳에서 따로 해시하면 셋이 어긋나도 아무도 모른다.
         "input_sha256": seal_inputs(
             [in_dir / "curves.parquet", base_config or "configs/base.yaml",
+             _prod,                        # F70: 곡선 producer 기록
              _hc_pre, _hc_meta]),          # F64: recipe 기록도 함께 봉인
         "halfcell_cache": _ck(_hc_pre) if _hc_pre else None,
         "halfcell_recipe": _hc_recipe,
@@ -773,6 +791,17 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
                               if _hc_meta else None),
         "halfcell_cache": _ck(_hc_pre) if _hc_pre else None,
         "halfcell_recipe": _hc_recipe,            # F64: 캐시를 만든 인자
+        # ★ F70 — upstream truth 를 서명에 잇는다. producer 기록의 digest 와,
+        #   그 기록이 주장하는 curves digest 가 우리가 읽은 것과 같은지.
+        "producer_sha": start_prov["input_sha256"].get(_ck(_prod)),
+        "producer": {
+            "config_hash": _prod_doc.get("config_hash"),
+            "solver": _prod_doc.get("solver"),
+            "protocol_unified": _prod_doc.get("protocol_unified"),
+            "noise_seed": _prod_doc.get("noise_seed"),
+            "source_digest": _prod_doc.get("source_digest"),
+            "curves_sha256": _prod_curves_sha,
+        },
     }
     run_sig = hashlib.sha1(
         json.dumps(run_spec, sort_keys=True, default=str).encode()).hexdigest()[:12]
