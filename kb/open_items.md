@@ -500,6 +500,41 @@ PP 계열이 달라 **같은 묶음이 아니다**.
 → 남은 일: `plot_nd_sei_gaps.py` 값 교체(1.79→0.760, 5.55→5.679) + 7종 전부 material_id
   주석 (todo #32). `db/properties/sei_products.json` 의 1.79 도 같이.
 
+### P. 🔴 **SDCP·PTFE 자리 선호 — "Li 를 선호한다"는 지금까지 판정된 적이 없다** (2026-08-11 신설)
+
+프로토콜 정본: `kb/methodology/site_preference_protocol_2026_08_11.md`
+도구: `tools/sdcp/site_screen.py` (게이트 회귀시험 11/11 통과) · 실행기 `run_site_screen_gabia.sh`
+
+**오늘 실측으로 확정된 것** (`site_screen.py gate`, repo 배포 자세 2종):
+
+| 자세 | 최근접 | Li | **Ni** | 이미지 가로/세로 | 결합변화 |
+|---|---|---|---|---|---|
+| `phaseB_doped_…_r90_g22` | H···Li 2.58 Å | 2.582 Å | **없음(>3.2 Å)** | 7.53 / 18.59 Å | 0 |
+| `phaseB_neutral_…_r180_g01` | O···Li 2.53 Å | 2.533 Å | **없음(>3.2 Å)** | 5.76 / 20.60 Å | 0 |
+
+기하 게이트는 전부 통과한다(2026-07 샌드위치와 다르다). 그러나 **3.2 Å 안에 Ni 접촉이 아예 없어**
+Li/Ni 경쟁이 자세 안에 담겨 있지 않다 → "Li 자리를 선호한다"는 **재본 적이 없다**가 정확하다.
+(todo #35 의 근거가 데이터로 확인됨.)
+
+**★ 별건 — 출처 불일치**: `db/structures/sdcp_poses_phaseB/` 는 freeze **1.0** 의 `r90_g22`/`r180_g01`
+인데, `db/properties/sdcp_phaseB_dftu_v1.json` 의 VASP 단일점은 freeze **0.85** 의 `r0_g20`/`r180_g22` 다.
+**구조 그림과 그 표를 한 자리에 올리면 안 된다.** 폴더 README 에 박아 뒀다. 0.85 기하는 repo 에 없다.
+
+**막혀 있는 것**: `sdcp_v7c_neutral.xyz`(C₁₁H₁₆O₆S₂, 35) · `sdcp_v7c_doped.xyz`(C₁₁H₁₅O₆S₂, 34)
+의 **기체상 ORCA 기하가 repo 에 없다** — gabia `$MOLDIR` 에만. 조성은 Phase-B 자세에서 분자를
+떼어 역확인했다. → `run_site_screen_gabia.sh fetch` 로 회수 후 sha 고정.
+
+**설계 요지** (하자 5개를 구조적으로 막음): 7자리 전수 × 피보나치 12방향 × roll 4 = 조각당 364 자세 ·
+**Li/Ni 대조쌍 강제 보존** · freeze **1.0 과 0.85 이중 프로토콜** · 세로 이미지 게이트(샌드위치 재발 방지) ·
+Li 추출 격리 · 판정 바닥 max(30 meV, 쌍 편차) · 검열(못 잼)과 패배를 분리.
+
+**Codex 교차검증 상태**: 슬랩·PTFE 조각 sha256 동일 / Li·Ni·O_top 앵커 좌표가 독립 구현끼리
+소수점까지 일치 / C10 가로이미지 문제를 양쪽이 독립 발견(Codex 는 azimuth 3개로 축소, 우리는 112건
+자동 탈락) / 표면 자리 등가성 결론 동일. 우리가 추가한 것 = 추출격리·이중 freeze·SDCP 지원·
+카이랄성 불변식·게이트 회귀시험. 아직 없는 것 = **basin 클러스터링(주기 RMSD)** — Codex 쪽을 이식할 것.
+
+---
+
 ## 📄 PDF 확보 대기 (원전 미보유 — 웹/재인용 딱지 상태)
 
 | # | 서지 | DOI | 왜 필요한가 |
