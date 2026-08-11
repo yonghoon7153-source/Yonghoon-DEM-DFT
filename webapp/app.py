@@ -1207,6 +1207,19 @@ def inject_stage_e_rows(tables, metrics):
         sigma_e_e_p = None
     raw_th   = metrics.get('thermal_sigma_full_mScm')
     raw_th_p = metrics.get('thermal_sigma_full_mScm_physics')
+    # ★ RC6-04: Stage E 는 더 이상 network 소유 raw 키를 덮어쓰지 않는다.  network 가
+    #   baseline 을 못 냈을 때의 역산 **추정치**는 별도 키에 있고, 화면은 그것을
+    #   **유도값이라고 표시하고** 쓴다 (옛 동작은 추정치를 raw 자리에 넣어 network
+    #   측정값처럼 보이게 했다).  추정치조차 없으면 종전대로 '—'.
+    _th_est   = metrics.get('thermal_sigma_full_mScm_stage_e_estimate')
+    _th_est_p = metrics.get('thermal_sigma_full_mScm_physics_stage_e_estimate')
+    th_from_estimate = False
+    if not (isinstance(raw_th, (int, float)) and raw_th and raw_th > 0) and \
+            isinstance(_th_est, (int, float)) and _th_est > 0:
+        raw_th, th_from_estimate = _th_est, True
+    if not (isinstance(raw_th_p, (int, float)) and raw_th_p and raw_th_p > 0) and \
+            isinstance(_th_est_p, (int, float)) and _th_est_p > 0:
+        raw_th_p, th_from_estimate = _th_est_p, True
     th_hertz_phantom = (
         not (isinstance(raw_th, (int, float)) and raw_th and raw_th > 0)
         or src_fb.get('sigma_thermal') == 'fallback_weighted_factor'
@@ -1332,7 +1345,8 @@ def inject_stage_e_rows(tables, metrics):
                              'electronic_sigma_full_mScm_physics',
                              src_e, src_e_p,
                              fmt='%.3f', unit='mS/cm'))
-    rows.append(_stage_e_row('σ_thermal (Stage E corrected)',
+    rows.append(_stage_e_row('σ_thermal (Stage E corrected)'
+                             + (' ⚠baseline=유도추정' if th_from_estimate else ''),
                              sigma_th_e, sigma_th_e_p,
                              'thermal_sigma_full_mScm',
                              'thermal_sigma_full_mScm_physics',
@@ -3251,6 +3265,11 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
                atoms_csv, contacts_csv, '-o', results_dir,
                '-t', type_map, '-s', str(scale)]
         _st = _ps.run_stage('Bimodal Contact Analysis', cmd, required=True,
+                                                        # ★ RC6-05 (Codex 6회차): batch 에만 fresh 를 걸었는데,
+                            #   main·archive 도 **results 를 지우지 않고 재실행**될 수 있어
+                            #   같은 stale 위험이 있다.  fresh-dir 에서는 before 가 비어
+                            #   거짓 실패가 나지 않는다 (실측 확인).
+                            fresh=True,
                             expects=('full_metrics.json', 'atoms_analyzed.csv', 'contacts_analyzed.csv',
                                      'network_summary.csv'), results_dir=results_dir)
         stages.append(_st); log.append(_st)
@@ -3320,6 +3339,11 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
                atoms_csv, contacts_csv, '-o', results_dir,
                '-t', type_map, '-s', str(scale)]
         _st = _ps.run_stage('Contact Analysis', cmd, required=True,
+                                                        # ★ RC6-05 (Codex 6회차): batch 에만 fresh 를 걸었는데,
+                            #   main·archive 도 **results 를 지우지 않고 재실행**될 수 있어
+                            #   같은 stale 위험이 있다.  fresh-dir 에서는 before 가 비어
+                            #   거짓 실패가 나지 않는다 (실측 확인).
+                            fresh=True,
                             expects=('full_metrics.json', 'atoms_analyzed.csv', 'contacts_analyzed.csv',
                                      'network_summary.csv'), results_dir=results_dir)
         stages.append(_st); log.append(_st)
@@ -9583,6 +9607,8 @@ def archive_reanalyze(folder):
             [sys.executable, os.path.join(scripts, script), atoms_csv, contacts_csv,
              '-o', target, '-t', type_map, '-s', str(scale)],
             required=True, results_dir=target,
+            # ★ RC6-05: archive 재분석도 기존 target 위에 다시 돈다 → fresh 필요.
+            fresh=True,
             expects=('full_metrics.json', 'atoms_analyzed.csv', 'contacts_analyzed.csv',
                      'network_summary.csv'))
         stages.append(st); log.append(st)

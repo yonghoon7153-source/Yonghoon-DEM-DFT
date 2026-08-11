@@ -682,9 +682,14 @@ def run_stage(name, cmd, *, cwd=None, required=False, expects=(), results_dir=No
                 missing.append(rel)
         if fresh and before is not None:
             after = _stat_sig(results_dir, expects)
-            # 실행 전에 있던 파일이 하나도 안 바뀌었고 새로 생긴 것도 없다 → 안 쓴 것이다.
-            if before and after == before:
-                stale = sorted(os.path.basename(k) for k in before)
+            # ★ RC6-05 (Codex 6회차): 옛 판정은 **전체 dict** 를 한 번에 비교해서
+            #   `after == before` 일 때만 stale 로 봤다 → 네 산출물 중 **하나만** 새로
+            #   써도 통과하고, 나머지 셋은 옛 것인 채로 새 성공 세대로 도장됐다
+            #   (Codex 동적 재현: ok=True, unchanged_old 3개).
+            #   → **파일별**로 본다: 실행 전에 있던 파일 중 지문이 그대로인 것은 전부
+            #     stale 이다.  (실행 전에 없던 파일은 새로 생긴 것이므로 신선하다.)
+            stale = sorted(os.path.basename(k) for k, v in before.items()
+                           if after.get(k) == v)
     if verify is not None:
         try:
             verify_failed = not bool(verify(results_dir))

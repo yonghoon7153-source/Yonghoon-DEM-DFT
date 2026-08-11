@@ -849,12 +849,40 @@ def run_one(case_dir: Path, temp_c=None, ea_ion_ev=None) -> tuple[str, bool, str
     # inverse of the framework's own σ_stage_e ≈ σ_baseline·Σ(g·f)/Σg relation.
     # Only thermal: electronic/ionic baseline=0 is genuine non-percolation
     # (single-phase, the guard correctly rejects) and must stay '—'.
+    #
+    # ★★ RC6-04 (Codex 6회차) — **network 소유 raw 키를 더 이상 덮어쓰지 않는다** ★★
+    #   옛 heal 은 역산값을 `thermal_sigma_full_mScm[_physics]` 에 **직접** 썼다.  그
+    #   필드는 network 소유인데 그 안에 Stage E 유도값이 들어가 이중 소유가 됐고, 같은
+    #   network_run_id 아래에서 component JSON(2.0)과 게시본(777)이 어긋나는 상태가
+    #   Codex 실측으로 재현됐다.  성공 경로라 rollback 도 없었다.
+    #
+    #   ★ 부수 발견 (2026-08-11): heal 된 baseline 으로 계산한 thermal loss% 는
+    #     **항등식**이다 — raw = σ_E/f_k 로 만든 뒤 loss = 1 − σ_E/raw = 1 − f_k 이므로
+    #     가중인자를 되읊을 뿐 정보가 0 이다.  raw 를 안 만들면 loss% 는 **정직하게
+    #     생략**되고, 그것이 옳다.
+    #
+    #   → 역산값은 **별도 estimate 키**에 provenance 와 함께 남긴다.  raw 는 건드리지
+    #     않는다 (network 가 못 냈으면 없는 것이 사실이다).  화면은 estimate 를
+    #     **유도값이라고 표시하고** 쓴다 (webapp `_stage_e_row` 쪽에서 라벨).
     if (not skip_kappa) and not (fm.get('thermal_sigma_full_mScm') or 0) > 0:
         _fk = factors.get('weighted_factor_kappa')
-        if sigma_th_e and sigma_th_e > 0 and _fk and _fk > 0:
-            fm['thermal_sigma_full_mScm'] = round(sigma_th_e / _fk, 6)
-        if sigma_th_e_p and sigma_th_e_p > 0 and _fk and _fk > 0:
-            fm['thermal_sigma_full_mScm_physics'] = round(sigma_th_e_p / _fk, 6)
+        if _fk and _fk > 0:
+            _est = {}
+            if sigma_th_e and sigma_th_e > 0:
+                _est['hertzian'] = round(sigma_th_e / _fk, 6)
+            if sigma_th_e_p and sigma_th_e_p > 0:
+                _est['physics'] = round(sigma_th_e_p / _fk, 6)
+            if _est:
+                fm['thermal_sigma_full_mScm_stage_e_estimate'] = _est.get('hertzian')
+                fm['thermal_sigma_full_mScm_physics_stage_e_estimate'] = _est.get('physics')
+                fm['thermal_baseline_estimate_provenance'] = {
+                    'source': 'stage_e_inverse_weighted_factor',
+                    'weighted_factor_kappa': float(_fk),
+                    'raw_present': bool(fm.get('thermal_sigma_full_mScm')),
+                    'note': ('network 가 thermal baseline 을 내지 못해 Stage E 보정값에서 '
+                             '역산한 **추정치**다.  network 측정값이 아니며, 이 값으로 '
+                             'loss%% 를 계산하면 가중인자를 되읊는 항등식이 된다.'),
+                }
 
     # Loss percentages (vs baseline σ_e_full / σ_th_full)
     # ⚠ 이온은 _at_T 로 **같은 온도**의 베이스라인과 비교해야 한다.  Stage-E 손실은 Cronau 입도

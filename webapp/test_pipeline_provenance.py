@@ -21,6 +21,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time as _time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -578,8 +579,12 @@ def main():
         chk('RR3-04b) ★ fresh=True 면 같은 상황이 실패한다 (stale 로 잡힌다)',
             _st_new.ok is False and _st_new.get('stale_outputs'))
         # 실제로 쓰면 통과해야 한다 (거짓 실패가 아님을 확인)
+        #   ★ RC6-05 이후: "실제로 새로 씀" = **네 개 전부**.  옛 writer 는 하나만 썼고
+        #     그때는 통과했다 — 그것이 바로 Codex 가 잡은 partial-write 통과다.
         def _writer(cmd, **kw):
-            open(os.path.join(rd, 'full_metrics.json'), 'w').write('{"a":1}')
+            for _f in ('full_metrics.json', 'atoms_analyzed.csv',
+                       'contacts_analyzed.csv', 'network_summary.csv'):
+                open(os.path.join(rd, _f), 'w').write('{"a":1}' if _f.endswith('.json') else 'new\n')
             return subprocess.CompletedProcess(cmd, 0, '', '')
         _st_w = ps.run_stage('c', ['x', 'y'], required=True, results_dir=rd,
                              runner=_writer, fresh=True,
@@ -587,6 +592,27 @@ def main():
                                       'contacts_analyzed.csv', 'network_summary.csv'))
         chk('RR3-04c) 실제로 새로 쓰면 통과한다 (fresh 가 거짓 실패를 내지 않는다)',
             _st_w.ok is True)
+        # ★ RC6-05: 4개 중 1개만 새로 쓰는 **부분 쓰기**는 이제 실패한다 (Codex 실측 재현)
+        for _f in ('full_metrics.json', 'atoms_analyzed.csv',
+                   'contacts_analyzed.csv', 'network_summary.csv'):
+            open(os.path.join(rd, _f), 'w').write('seed\n')
+        _time.sleep(0.01)
+
+        def _partial(cmd, **kw):
+            open(os.path.join(rd, 'full_metrics.json'), 'w').write('{"only":1}')
+            return subprocess.CompletedProcess(cmd, 0, '', '')
+        _st_p = ps.run_stage('c', ['x', 'y'], required=True, results_dir=rd,
+                             runner=_partial, fresh=True,
+                             expects=('full_metrics.json', 'atoms_analyzed.csv',
+                                      'contacts_analyzed.csv', 'network_summary.csv'))
+        chk('RC6-05a) ★ 부분 쓰기(1/4)가 실패하고 낡은 파일 3개를 지목한다',
+            _st_p.ok is False and len(_st_p['stale_outputs']) == 3
+            and 'full_metrics.json' not in _st_p['stale_outputs'])
+        # main·archive 경로도 배선됐는가 (batch 만 걸려 있던 것이 RC6-05 의 절반이다)
+        _apy3 = open(os.path.join(os.path.dirname(os.path.abspath(webapp.__file__)),
+                                  'app.py'), encoding='utf-8').read()
+        chk('RC6-05b) ★ contact 네 경로 전부 fresh 배선 (batch·bimodal·standard·archive)',
+            _apy3.count('fresh=True') >= 4)
         # batch 호출부가 실제로 그것을 쓰는지 (구현만 하고 배선 안 한 전례가 있다)
         _apy = open(os.path.join(os.path.dirname(os.path.abspath(webapp.__file__)),
                                  'app.py'), encoding='utf-8').read()
@@ -754,6 +780,22 @@ def main():
             and ps.stage_e_missing_keys(
                 dict(_full, electronic_sigma_full_mScm_stage_e=None),
                 null_ok_keys=('electronic_sigma_full_mScm_stage_e',)) == ())
+
+        # ══ RC6-04 (Codex 6회차): Stage E 가 network 소유 raw thermal 을 덮어쓰던 것 ══
+        _rn = open(os.path.join(os.path.dirname(os.path.dirname(
+            os.path.abspath(webapp.__file__))), 'scripts',
+            'run_network_full_corrections.py'), encoding='utf-8').read()
+        chk("52) ★ Stage E 가 raw thermal 키에 **직접 쓰지 않는다** (이중 소유 종료)",
+            "fm['thermal_sigma_full_mScm'] =" not in _rn
+            and "fm['thermal_sigma_full_mScm_physics'] =" not in _rn)
+        chk('53) ★ 역산값은 별도 estimate 키 + provenance 로 간다',
+            "thermal_sigma_full_mScm_stage_e_estimate" in _rn
+            and 'thermal_baseline_estimate_provenance' in _rn)
+        _apy2 = open(os.path.join(os.path.dirname(os.path.abspath(webapp.__file__)),
+                                  'app.py'), encoding='utf-8').read()
+        chk('54) ★ 화면이 estimate 를 **유도값이라 표시하고** 쓴다 (배선)',
+            'thermal_sigma_full_mScm_stage_e_estimate' in _apy2
+            and 'baseline=유도추정' in _apy2)
 
         chk('30) 11-키는 run_one 이 무조건 쓰는 집합과 같다 (개수 고정)',
             len(ps.STAGE_E_REQUIRED_KEYS) == 11
