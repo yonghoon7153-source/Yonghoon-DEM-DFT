@@ -137,7 +137,8 @@ GATE = {
     "image_vertical_min_A": 5.00, # 분자 ↔ 세로(진공 너머) 슬랩 이미지 — 2026-07 샌드위치 재발 방지
     "detach_A": 4.00,             # 이보다 멀면 흡착이 아니다
     "frozen_drift_A": 1e-3,       # 고정 원자가 움직이면 그 런은 무효
-    "extract_disp_A": 0.50,       # 깨끗한 슬랩 대비 표면 양이온 변위
+    # (구 "extract_disp_A": 0.50 은 폐기 — 아래 원소별 임계로 대체됐다. 죽은 키를 남겨 두면
+    #  JSON·문서에서 여전히 유효한 규약처럼 읽힌다.)
     # ⚠ 2026-08-11 2차 재교정 (Codex 교차검증 지적, 채택) — 예전에는 "슬랩 양이온이 분자
     #   O/F/S 에 < 2.20 Å" **하나만으로** 추출로 판정했다. 그건 거리 컷 오판의 재발이다:
     #   변위가 0.00 Å 인 정상 Li–O 배위(2.0–2.2 Å)도 추출로 죽는다(Codex 가 실제 코드로 재현).
@@ -1020,10 +1021,13 @@ def cmd_gate(a) -> int:
               f"Li {g['d_Li_A']} · Ni {g['d_Ni_A']} · 최근접양이온 {g['nearest_cation']}")
         print(f"    이미지 가로 {g['image_lateral_A']:.2f} / 세로 {g['image_vertical_A']:.2f} Å · "
               f"결합변화 {g['bond']['n_changes']}")
-        if g.get("extraction", {}).get("flag"):
-            e = g["extraction"]
-            print(f"    ⛔ 추출/재구성: 표면 최대변위 {e['max_surface_disp_A']} Å · "
-                  f"z_top {e['z_top_shift_A']:+.3f} Å · 이전 {e['cation_transferred_to_molecule']}")
+        e = g.get("extraction") or {}
+        if e.get("verdict") in ("EXTRACTION_CANDIDATE", "RECONSTRUCTION_REVIEW"):
+            print(f"    {'⛔' if e.get('flag') else '⚠'} {e['verdict']}: 표면 최대변위 "
+                  f"{e.get('max_surface_disp_A')} Å · z_top {e.get('z_top_shift_A', 0):+.3f} Å")
+            print(f"       움직인 표면원자 {e.get('moved_surface_atoms')}")
+            print(f"       기판 O 이웃 상실 {e.get('lost_substrate_O_neighbors')}")
+            print(f"       분자 접촉(증거만) {e.get('cation_near_molecule')}")
         for r in g["gate_reasons"]:
             print(f"    ⛔ {r}")
         for w in g["warnings"]:
