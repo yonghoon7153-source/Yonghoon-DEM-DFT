@@ -1,0 +1,70 @@
+figure,quantity,sample,x_label,x_value,value,unit,precision,note
+TableS2,sigma_e_model_input,NCM622,,,0.453,S_m-1,table_stated,GeoDict 전자전도 모델 입력 (ref 11)
+TableS2,sigma_e_model_input,CBD,,,375,S_m-1,table_stated,GeoDict 입력 (ref 12)
+TableS2,sigma_e_model_input,primer_layer,,,800,S_m-1,table_stated,GeoDict 입력 (ref 13 Entwistle 2022 리뷰)
+S8b,R_interface_electrode_collector,w/o_primer,,,32.0,mOhm_cm2,digitized_visual,오차막대 ±1.3
+S8b,R_interface_electrode_collector,S100,,,18.9,mOhm_cm2,digitized_visual,오차막대 ±0.3
+S8b,R_interface_electrode_collector,S75C25,,,20.3,mOhm_cm2,digitized_visual,오차막대 ±2.4
+S8b,R_interface_electrode_collector,S50C50,,,16.2,mOhm_cm2,digitized_visual,오차막대 ±3.9
+S8b,R_interface_electrode_collector,S25C75,,,15.9,mOhm_cm2,digitized_visual,오차막대 ±4.5
+S8b,R_interface_electrode_collector,C100,,,20.4,mOhm_cm2,digitized_visual,오차막대 ±4.7
+S8a,rho_bulk_electrode,w/o_primer,,,410,mOhm_cm,digitized_visual,전극 벌크 — 프라이머와 무관하게 동일
+S8a,rho_bulk_electrode,S100,,,435,mOhm_cm,digitized_visual,
+S8a,rho_bulk_electrode,S75C25,,,441,mOhm_cm,digitized_visual,
+S8a,rho_bulk_electrode,S50C50,,,425,mOhm_cm,digitized_visual,
+S8a,rho_bulk_electrode,S25C75,,,420,mOhm_cm,digitized_visual,
+S8a,rho_bulk_electrode,C100,,,404,mOhm_cm,digitized_visual,
+S7a,rho_bulk_primer_only,S100,theoretical_porosity_pct,75,136,mOhm_cm,digitized_visual,프라이머 단독 (전극 없음)
+S7a,rho_bulk_primer_only,S100,theoretical_porosity_pct,55,44.5,mOhm_cm,digitized_visual,
+S7a,rho_bulk_primer_only,S50C50,theoretical_porosity_pct,76,52.5,mOhm_cm,digitized_visual,
+S7a,rho_bulk_primer_only,S50C50,theoretical_porosity_pct,55,24.5,mOhm_cm,digitized_visual,
+S7a,rho_bulk_primer_only,C100,theoretical_porosity_pct,72,26.5,mOhm_cm,digitized_visual,
+S7a,rho_bulk_primer_only,C100,theoretical_porosity_pct,60,15.5,mOhm_cm,digitized_visual,
+S7b,R_interface_primer_only,S100,theoretical_porosity_pct,75,313,mOhm_cm2,digitized_visual,오차막대 상단 ~370
+S7b,R_interface_primer_only,S100,theoretical_porosity_pct,55,139,mOhm_cm2,digitized_visual,
+S7b,R_interface_primer_only,S50C50,theoretical_porosity_pct,76,112,mOhm_cm2,digitized_visual,
+S7b,R_interface_primer_only,S50C50,theoretical_porosity_pct,55,47,mOhm_cm2,digitized_visual,
+S7b,R_interface_primer_only,C100,theoretical_porosity_pct,72,116,mOhm_cm2,digitized_visual,
+S7b,R_interface_primer_only,C100,theoretical_porosity_pct,60,40,mOhm_cm2,digitized_visual,
+S7d,porosity_2D_image,S100,,,15,pct,figure_annotated,전극 내 프라이머 영역 2D 이미지 분석
+S7d,porosity_2D_image,S75C25,,,15,pct,figure_annotated,
+S7d,porosity_2D_image,S50C50,,,11,pct,figure_annotated,
+S7d,porosity_2D_image,S25C75,,,10,pct,figure_annotated,
+S7d,porosity_2D_image,C100,,,4,pct,figure_annotated,
+S10,relative_contact_area_AM_PL,S100,,,1.55,ratio,digitized_visual,C100 기준 정규화 (AFM 기반 3D 구조)
+S10,relative_contact_area_AM_PL,S50C50,,,1.72,ratio,digitized_visual,
+S10,relative_contact_area_AM_PL,C100,,,1.00,ratio,normalization_anchor,정의상 1
+S14b,R_film,w/o_primer,,,19.5,Ohm,digitized_visual,사이클 전 EIS — 셀 면적 미명시라 Ohm_cm2 환산 불가
+S14b,R_ct,w/o_primer,,,13.7,Ohm,digitized_visual,
+S14b,R_film,S100,,,8.2,Ohm,digitized_visual,
+S14b,R_ct,S100,,,6.0,Ohm,digitized_visual,
+S14b,R_film,S75C25,,,7.1,Ohm,digitized_visual,
+S14b,R_ct,S75C25,,,4.9,Ohm,digitized_visual,
+S14b,R_film,S50C50,,,8.1,Ohm,digitized_visual,
+S14b,R_ct,S50C50,,,4.55,Ohm,digitized_visual,
+S14b,R_film,S25C75,,,7.9,Ohm,digitized_visual,
+S14b,R_ct,S25C75,,,4.1,Ohm,digitized_visual,
+S14b,R_film,C100,,,9.5,Ohm,digitized_visual,
+S14b,R_ct,C100,,,6.4,Ohm,digitized_visual,
+S15a,DCIR_pristine,w/o_primer,SoC_pct,50,42,Ohm,digitized_visual,HPPC 3.75C 10s 방전펄스
+S15a,DCIR_pristine,S100,SoC_pct,50,23.5,Ohm,digitized_visual,
+S15a,DCIR_pristine,S75C25,SoC_pct,50,20,Ohm,digitized_visual,
+S15a,DCIR_pristine,S50C50,SoC_pct,50,17.5,Ohm,digitized_visual,
+S15a,DCIR_pristine,S25C75,SoC_pct,50,18,Ohm,digitized_visual,
+S15a,DCIR_pristine,C100,SoC_pct,50,25,Ohm,digitized_visual,
+S20a,DCIR_cycled,w/o_primer,SoC_pct,50,93.5,Ohm,digitized_visual,1C 장기 사이클 후 (사이클 수 SI 미명시)
+S20a,DCIR_cycled,S100,SoC_pct,50,51,Ohm,digitized_visual,
+S20a,DCIR_cycled,S75C25,SoC_pct,50,51.5,Ohm,digitized_visual,
+S20a,DCIR_cycled,S50C50,SoC_pct,50,40.5,Ohm,digitized_visual,
+S20a,DCIR_cycled,S25C75,SoC_pct,50,43,Ohm,digitized_visual,
+S20a,DCIR_cycled,C100,SoC_pct,50,53,Ohm,digitized_visual,
+S3c,peel_ultimate_force,w/o_primer,,,0.42,N,digitized_visual,⚠ 시편 폭 미명시 → N/m 정규화 불가 = G_c 아님
+S3c,peel_ultimate_force,S100,,,0.83,N,digitized_visual,
+S3c,peel_ultimate_force,S75C25,,,0.77,N,digitized_visual,
+S3c,peel_ultimate_force,S50C50,,,0.73,N,digitized_visual,
+S3c,peel_ultimate_force,S25C75,,,0.86,N,digitized_visual,
+S3c,peel_ultimate_force,C100,,,0.59,N,digitized_visual,
+Note1,capacity_retention_1C,S50C50_5um,,,89.4,pct,text_stated,두께 최적화 — 5um 최고
+Note1,capacity_retention_1C,S50C50_3um,,,85.4,pct,text_stated,
+Note1,capacity_retention_1C,S50C50_1um,,,85.2,pct,text_stated,
+Note1,capacity_retention_1C,commercial_C-Al_CC_1um,,,83.3,pct,text_stated,MTI Korea 상용 카본코팅 Al
