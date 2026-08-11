@@ -149,3 +149,24 @@ P3 = "PTFE 가 VGCF 를 끌어당긴다" 를 **형상이 아니라 섬유 중심
 - `CLAUDE.md` — `d_h/dx ≳ 3.5` 규칙(2026-08-07) · σ_e Stage 22.5 폼 동결 · §F1 날조 금지 규약
 - `litdb/comparison_vs_ours_DEM.md` (정본 브랜치) — §A–§F 축 규약, frame[5] 분업
 - `docs/digest_model_application_backlog.md` §F1 — "SuperP/PTFE 압력-형상 크기앵커 문헌 대기"
+
+
+---
+
+## §G. (추가 2026-08-11 저녁) 같은 라운드에 두 번째 계획서 — `--se-grad`
+
+**대상**: `docs/plan_se_grad_20260811.md` (Luan 2025 AFM, 400 Wh/kg graded 파우치 → Phase 5/A7).
+근거 digest 는 정본 브랜치 `litdb/papers/luan2025_graded_cathode_400whkg_pouch.md` 에 있다
+(이쪽은 원본 PDF 를 에이전트가 직접 읽고 만든 카드라 §C 같은 전사-검증 문제가 덜하다).
+
+**핵심 주장 (반박 대상)**:
+1. A7 의 `--poro-grad`(porosity 구배, Yoo/액체계) 와 Luan 의 조성 φ_SE 구배는 **다른 물리**다
+   — 따라서 새 노브 `--se-grad` 가 필요하다.
+2. 구배 번역이 둘로 갈라진다: **(a) φ_SE↕φ_AM 맞교환(porosity 균일) = Luan** vs
+   **(b) φ_SE↕porosity(AM 동결) = 킷 scaffold 가 만들 수 있는 것**.  (b) 에 Luan 순서-앵커를
+   적용하면 안 된다는 라벨 규약.
+3. 사전등록 검증 V1–V4 (순서 · rate 스케일링 · 두께 스케일링 · SE-lean trade-off) — 전부
+   순서/방향만 요구.
+
+**질문**: 계획서 §6 의 Q1–Q4.  특히 **Q1 (b형을 지금 하는 것이 앵커 혼동 리스크를 감수할
+가치가 있는가)** 와 **Q2 (2D synth 의 coverage/CN 핀과 구배의 우선순위 충돌)**.
