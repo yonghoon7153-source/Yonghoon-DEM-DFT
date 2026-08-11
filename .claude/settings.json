@@ -27,7 +27,5 @@
     "type": "command",
     "command": "$CLAUDE_PROJECT_DIR/.claude/statusline.sh",
     "padding": 2
-  },
-  "autoCompactEnabled": true,
-  "autoCompactWindow": 100000
+  }
 }
