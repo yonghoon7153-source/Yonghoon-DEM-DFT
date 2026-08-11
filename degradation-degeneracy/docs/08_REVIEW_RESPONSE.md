@@ -750,3 +750,28 @@ half-cell 캐시는 `.cache/` 가 gitignore라 저장소에 아예 없었습니�
 검증: `python -m pytest tests -q` → **294 passed** (신규 12).
 `grid_sig_version` 5 필수화로 v4 이하 산출물은 인용 불가로 강등된다 —
 grid v4 재생성(GO 이후)이 전제다.
+
+---
+
+## 17. 14차 2차 리뷰 회답 (2026-08-12, 대상 `0cd1999` → 수정 `3bb6541`)
+
+2차 리뷰 판정: pre-grid 차단점 1건(fully-failed family noise 완전성) + 같은
+커밋 권고 3건 + 계산 후 가능 2건. 차단점과 권고 3건, portability 1건을 닫았다.
+
+| # | 발견 | 심각도 | 대응 |
+|---|---|---|---|
+| 1 | fully-failed family 의 noise 집합을 검사하지 않는다 — failed 를 noise 없는 family `set` 으로 축약해, noise {0, 0.001} 만 failed 이고 0.005 는 의도 집합에도 없는 family 가 통과 (실측 `ok=True, fail=[]`) | 숫자가 바뀜 | `_verify_noise_families` 에서 failed 를 `family → [noise…]` multiset 으로 모으고, **fully-failed family 도 서명 noise 집합과 exact equality** 요구 (`실패_noise_family_완전성`). 교차 family 는 기존 `관측_noise_family_분할` 이 계속 실패시키고 이중 계상하지 않는다. 자동 강등 없음 (리뷰 Q1 답변대로 — 성공 곡선을 사후에 버리면 모집단이 바뀐다) |
+| 3 | `w_grid` 가 이름과 exact round-trip 하지 않아도 통과 (`[0.001]`→`wdqdv_0.00`, `-0.0`→`wdqdv_-0.00`) | 숫자가 바뀜 (custom grid 한정) | 충돌 검사 뒤에 `float(obj_name(w).split("_")[-1]) == w` 요구, signed zero 를 `+0.0` 으로 정규화, 빈 격자 거부. 근거: `sweep_summary:163` 이 이름 suffix 를 되읽는다 |
+| 4 | 재현 블록이 보고서 전체를 재생성하지 못한다 (wsweep·half-cell·`--compare` 없음) | 서술만 바뀜 | 리뷰 선택지 2 채택 — 렌더된 절과 **같은 조건**으로 `--mode wsweep`(서명된 sweep run_spec 의 w_grid·stride·restart·adaptive·warm), half-cell 준비 `--force --verify`, `--reference halfcell` fit·score, `report --compare <halfcell>` 까지 출력. 경로는 `case_comparison.provenance.halfcell.run_dir` 에서 |
+| 5 | digest 와 dirty scope 의 requirements matcher 불일치 | 서술만 바뀜 | `in_run_scope()` 신설 — `RUN_SCOPE` 를 `requirements*.txt` glob 으로 통일하고 tracked/untracked 판정 모두 이 함수를 쓴다. root 의 untracked `run.sh`·`requirements*.txt` 도 critical |
+| 6 | archive shell 회귀가 Windows native pytest 에서 실행 불가 | 사소 | `shutil.which("bash")` 없으면 명시 `pytest.skip` (조용한 통과가 아니라 미검증 표시) |
+| 2 | 기존 Windows worktree 의 잔존 CRLF 26개 | 서술만 바뀜 | 코드 수정 없음 — `.gitattributes` 는 기존 worktree bytes 를 소급하지 않는다. 교차 OS code-identity 검증은 **attributes 적용 후 fresh clone** 에서만 유효하다고 기록 (아래 §신뢰 경계) |
+
+계산 후로 미룬 것 (리뷰 동의 항목): paired 정본 문구를 실제 paired 보고서
+생성·provenance gate 와 연결(2차 발견 7), grid producer `source_commit` fallback
+을 `null/legacy` 로 엄격화(1차 Q5) — 둘 다 fresh v5 계획에서 비활성이다.
+
+검증 (`3bb6541c33653e76a0d62f62f6c818f3e9cb0fa8`, clean):
+`python -m pytest tests -q` → **299 passed** · `./scripts/smoke_e2e.sh` → 전 구간 통과 ·
+`source_digest()` = `5e504288a5ebf66b` (LF canonical) ·
+`git ls-files --eol` RUN_SCOPE 전 파일 `w/lf`.
