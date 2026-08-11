@@ -186,7 +186,12 @@ def main() -> None:
         return p if p.suffix == ".parquet" else p / "fits.parquet"
 
     res = compare(fits(args.grid), fits(args.halfcell), args.tol)
-    out = Path(args.out) if args.out else fits(args.grid).parent / "case_comparison.yaml"
+    # ★ 디렉터리를 줘도 받는다. 예전에는 그대로 write_text 해서
+    #   `IsADirectoryError` 로 죽었고, e2e smoke 가 이걸 잡았다.
+    out = Path(args.out) if args.out else fits(args.grid).parent
+    if out.is_dir() or not out.suffix:
+        out = out / "case_comparison.yaml"
+    out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(yaml.safe_dump(res, allow_unicode=True, sort_keys=False),
                    encoding="utf-8")
     print(to_markdown(res))

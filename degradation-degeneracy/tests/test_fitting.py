@@ -736,7 +736,7 @@ def _fake_halfcell_cache(tmp_path, branch="delithiation", n_points=400):
     d = Path(tmp_path) / "hc"
     d.mkdir(parents=True, exist_ok=True)
     y = np.linspace(1e-4, 1 - 1e-4, n_points)
-    cache = d / f"hc_{branch[:4]}{n_points}_ocp.json"   # `_ocp.json` 이름이 필수 입력 판정에 쓰인다
+    cache = d / f"base_ocp_{branch[:4]}{n_points}.json"   # 실제 규칙: <baseline>_<method>_<recipe>.json
     cache.write_text(json.dumps({
         "y_pe": y.tolist(), "u_pe": (4.3 - 1.2 * y).tolist(),
         "z_ne": y.tolist(), "u_ne": (0.05 + 0.35 * y).tolist(),

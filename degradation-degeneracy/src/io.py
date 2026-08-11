@@ -562,7 +562,12 @@ def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
     need_kinds = ["curves.parquet", "base.yaml", "curves_manifest.yaml"] + (
         # ★ F64 — recipe 기록(.meta.yaml)도 봉인 대상이다. 배열만 있는 캐시는
         #   "어떤 branch·n_points 로 만들었는가"를 증명하지 못한다.
-        ["_ocp.json", "_ocp.meta.yaml"] if ref == "halfcell" else [])
+        #   ★ 파일명은 `<baseline>_<method>_<recipe>.json` 이라 recipe 해시가
+        #     가운데 끼어든다. `_ocp.json` 으로 찾으면 **한 건도 안 걸린다** —
+        #     실제로 F64 직후 모든 half-cell 실행이 `필수_입력_존재` 에서 막혔고,
+        #     e2e smoke 가 이걸 잡았다 (단위 테스트의 fixture 는 이름을 직접
+        #     지어서 통과했다).
+        ["_ocp_", ".meta.yaml"] if ref == "halfcell" else [])
     missing_kind = [k for k in need_kinds
                     if not any(k in str(x) for x in digs)]
     checks["필수_입력_존재"] = (not missing_kind,
