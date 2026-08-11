@@ -33,14 +33,17 @@ GFIT="$BASE/grid_fit"
 HFIT="$BASE/halfcell_fit"
 
 fail=0
-# ★ dirty worktree 에서는 `clean_worktree`·`코드_identity` 가 정의상 실패한다.
-#   개발 중에 이 smoke 를 돌릴 수 있어야 하므로 그 둘만 제외하고, 대신 크게 경고한다.
-#   본 실행은 반드시 clean 커밋에서 시작해야 한다.
-#   ★ 판정은 **파이프라인과 같은 정의**를 써야 한다. `git diff --quiet HEAD` 는
-#   저장소 전체라, 같은 저장소의 다른 프로젝트(MPM/DEM)만 수정돼도 dirty 로
-#   찍혀 경고가 영구히 뜬다 — 실측으로 그렇게 됐다. src.io.git_info 는 F73 이후
-#   RUN_SCOPE 로 한정한다.
+# ★ F81/8차 발견 10 — smoke 는 기본이 **strict** 다. 어떤 provenance 실패도
+#   건너뛰지 않는다. 예전에는 repo 전체 dirty 판정 + 자동 완화가 겹쳐, V100 의
+#   무관한 se_curve 수정만으로 weakened mode 에 들어가 clean_worktree ·
+#   코드_identity · 코드_재계산을 건너뛰었다 — "통과" 가 실제 보장보다 강했다.
+#   개발 중 완화가 필요하면 **명시적으로** ALLOW_DIRTY=1 을 준다.
 DIRTY="$("$PY" -c 'from src.io import git_info; print(1 if git_info(".")["git_dirty"] else 0)' 2>/dev/null || echo 1)"
+if [[ "$DIRTY" == "1" && "${ALLOW_DIRTY:-0}" != "1" ]]; then
+  printf '\033[31m실행 범위(src/tools/configs/scripts)가 dirty 입니다.\n'
+  printf '커밋 후 다시 돌리세요. 개발 중 완화: ALLOW_DIRTY=1 %s\033[0m\n' "$0"
+  exit 1
+fi
 export SMOKE_DIRTY="$DIRTY"
 
 step() { printf '\n\033[1m── %s ──\033[0m\n' "$1"; }
@@ -58,6 +61,24 @@ step "1. PyBaMM 합성 격자 (producer artifact)"
 [[ -f "$CURVES/curves_manifest.yaml" ]] \
   && ok "curves_manifest.yaml (F70 producer 기록)" \
   || bad "producer 기록이 없다 (F70)"
+"$PY" - "$CURVES" <<'PYEOF'
+import sys
+from src.io import validate_curves_provenance
+v = validate_curves_provenance(sys.argv[1])
+print(f"   {'✅' if v['ok'] else '❌'} producer 독립 검증 (F74): "
+      + ("통과" if v["ok"] else f"실패 — {v['fail']}"))
+sys.exit(0 if v["ok"] else 1)
+PYEOF
+[[ $? -eq 0 ]] || bad "producer 검증 실패"
+
+# ★ F74 — 다른 config 로 resume 하면 서명 가드가 즉시 죽어야 한다
+_msg="$(./run.sh --mode grid --lli 0,0.05 --lam-pe 0 --lam-ne 0 --noise 0 \
+        --nproc 1 --resume --out "$CURVES" --log-level ERROR 2>&1)"
+if [[ $? -ne 0 ]] && grep -q "grid_run_sig" <<<"$_msg"; then
+  ok "다른 config 의 resume 혼합 차단 (F74)"
+else
+  bad "resume 혼합이 차단되지 않았다"
+fi
 
 # ───────────────────────────────────────────────── 2. cache-miss 는 멈춰야 한다
 step "2. half-cell 캐시 없음 → 안내하며 멈추는가 (F63)"
@@ -113,23 +134,40 @@ PYEOF
 [[ $? -eq 0 ]] || bad "provenance 검증 실패"
 
 # ───────────────────────────────────────────── 6. adaptive off (paired 실행 가능)
-step "6. --no-adaptive 가 실제로 도달하는가 (F66)"
+step "6. 공정 paired 실행 — 33p/34p 쌍 (F66/F81)"
 ./run.sh --mode fit --in "$CURVES" --out "$BASE/paired" --reference grid \
-         --objective pocv_dvdq --n-restarts 3 --no-adaptive --no-warm-start \
+         --objective pocv_dvdq,pocv_dvdq_dqdv --n-restarts 3 \
+         --no-adaptive --no-warm-start \
          --nproc "$NPROC" --log-level WARNING >/dev/null
 "$PY" - "$BASE/paired" <<'PYEOF'
 import json, sys
+import numpy as np
 import pandas as pd
 import yaml
 from pathlib import Path
 d = Path(sys.argv[1])
 spec = yaml.safe_load((d / "manifest.yaml").read_text(encoding="utf-8"))["run_spec"]
-n = {len(json.loads(v)) for v in pd.read_parquet(d / "fits.parquet")["restarts_json"]}
-assert spec["optimizer"]["adaptive"] is False, "서명에 adaptive=False 가 없다"
-assert n == {3}, f"restart 수가 갈린다: {sorted(n)}"
-print("   ✅ 모든 조건이 정확히 3 restart, 서명에 adaptive=False")
+assert spec["optimizer"]["adaptive"] is False
+assert spec["warm_start"] is False
+f = pd.read_parquet(d / "fits.parquet")
+objs = sorted(set(f["objective"]))
+assert objs == ["pocv_dvdq", "pocv_dvdq_dqdv"], objs
+by = {}
+for _, r in f.iterrows():
+    rs = json.loads(r["restarts_json"])
+    assert {e["i"] for e in rs} == {0, 1, 2}, "index 집합이 예산과 다르다"
+    assert all(np.isfinite(e["J"]) and all(np.isfinite(x) for x in e["p"])
+               for e in rs), "비유한 restart"
+    by.setdefault(r["cond_id"], {})[r["objective"]] = \
+        sorted((e["i"], e["source"]) for e in rs)
+for cid, m in by.items():
+    assert set(m) == {"pocv_dvdq", "pocv_dvdq_dqdv"}, f"조건 {cid}가 한쪽에만 있다"
+    assert m["pocv_dvdq"] == m["pocv_dvdq_dqdv"], \
+        f"조건 {cid}의 두 목적함수 restart (index,source)가 다르다"
+print(f"   ✅ {len(by)}조건 × 2목적함수, 조건별 (index,source) 집합 동일, "
+      "전부 3 restart·유한")
 PYEOF
-[[ $? -eq 0 ]] || bad "paired 실행 설정이 관철되지 않았다"
+[[ $? -eq 0 ]] || bad "paired 공정성 검사 실패"
 
 # ────────────────────────────────────────────────────── 7. 채점 → 비교 → 보고서
 step "7. 채점 · 비교 · 보고서"
@@ -144,44 +182,107 @@ ok "채점"
       --log-level ERROR >/dev/null 2>&1 \
   && ok "기준 곡선 비교" || bad "기준 비교 실패"
 
-"$PY" - "$GFIT" "$BASE/RESULTS.md" <<'PYEOF'
+# ★ F81 — 실제 weight sweep 까지 돈다 (예전 smoke 는 sweep 을 전혀 안 돌았다)
+"$PY" -m src.weight_sweep --in "$CURVES" --out "$GFIT/wsweep" \
+      --w-grid 0,1 --stride 1 --n-restarts 2 --nproc "$NPROC" \
+      --log-level WARNING >/dev/null 2>&1 \
+  && ok "weight sweep (w∈{0,1})" || bad "weight sweep 실패"
+"$PY" - "$GFIT/wsweep" <<'PYEOF'
 import sys
+import yaml
+from pathlib import Path
+y = yaml.safe_load((Path(sys.argv[1]) / "weight_sweep.yaml").read_text(encoding="utf-8"))
+need = [k for k in ("tol", "method", "adaptive", "fits_sha256",
+                    "subset_curves_sha") if k not in y]
+assert not need, f"weight_sweep.yaml 에 {need} 가 없다 (F79)"
+assert (Path(sys.argv[1]) / "objectives_optimized.yaml").is_file(), \
+    "optimized config 가 run 디렉터리에 없다 (F79)"
+print("   ✅ sweep 기록: tol·method·adaptive·digest 봉인, optimized 는 run 디렉터리에")
+PYEOF
+[[ $? -eq 0 ]] || bad "sweep 기록 검사 실패"
+
+"$PY" - "$GFIT" "$BASE/RESULTS.md" <<'PYEOF'
+import os, re, sys
 from pathlib import Path
 from tools.make_results import build
 text = build(sys.argv[1], sys.argv[2]).read_text(encoding="utf-8")
-import os
-if os.environ.get("SMOKE_DIRTY") == "1" and "clean_worktree" in text[:1200]:
-    print("   ⚠ dirty worktree 라 배너가 뜬다 — 본 실행은 clean 커밋에서 시작할 것")
-elif "인용 금지" in text[:800]:
-    head = text[:800].replace("\n", " ")
-    print(f"   ❌ 배너가 떴다: {head[:300]}")
+head = text[:2000]
+if "인용 금지" not in head:
+    print("   ✅ 인용 금지 배너 없음 — 전 구간 provenance 통과")
+    sys.exit(0)
+# ★ F81 — 예전 분기는 첫 1,200자에 clean_worktree 만 보이면 **다른 실패가 함께
+#   있어도** 성공 처리했다. 실패 검사 이름을 파싱해, ALLOW_DIRTY 에서 허용되는
+#   집합(clean_worktree·코드_identity)만 있는지 본다.
+names = set(re.findall(r"`([^`]+)`", head.split("인용하지")[0]))
+allowed = {"clean_worktree", "코드_identity"} \
+    if os.environ.get("SMOKE_DIRTY") == "1" else set()
+extra = {n for n in names if n not in allowed and not n.startswith("_")}
+if extra:
+    print(f"   ❌ 배너가 떴다 — 허용 외 실패: {sorted(extra)}")
     sys.exit(1)
-print("   ✅ 인용 금지 배너 없음 — 전 구간 provenance 통과")
+print("   ⚠ dirty 완화로 배너 허용 (실패가 clean_worktree·코드_identity 뿐)")
 PYEOF
 [[ $? -eq 0 ]] || bad "보고서에 인용 금지 배너가 떴다"
+
+# ★ F81 — 파생 YAML 변조가 보고서에서 걸리는가 (재계산 렌더 + stale 배너)
+"$PY" - "$GFIT" "$BASE/R_tamper.md" <<'PYEOF'
+import shutil, sys
+import yaml
+from pathlib import Path
+from tools.make_results import build
+d = Path(sys.argv[1])
+src = d / "objective_comparison.yaml"
+bak = src.with_suffix(".yaml.bak")
+shutil.copy2(src, bak)
+try:
+    y = yaml.safe_load(src.read_text(encoding="utf-8"))
+    y["table"][0]["degenerate_frac"] = 0.123456
+    src.write_text(yaml.safe_dump(y, allow_unicode=True), encoding="utf-8")
+    text = build(d, sys.argv[2]).read_text(encoding="utf-8")
+    assert "0.123456" not in text and "12.3456" not in text, "변조 값이 렌더됐다"
+    assert "파생_stale_objective_comparison.yaml" in text, "stale 배너가 없다"
+    print("   ✅ 파생 변조 → 재계산 렌더 + stale 배너 (F77)")
+finally:
+    shutil.copy2(bak, src)
+    bak.unlink()
+PYEOF
+[[ $? -eq 0 ]] || bad "파생 변조 검출 실패"
 
 # ───────────────────────────────────── 8. 보관 → 빈 격리 root 복원 → 검증 → 재채점
 step "8. 보관 → 격리 복원 → 검증 → 재채점"
 "$PY" -m tools.archive_bundle bundle "$HFIT" "$BASE/art" >/dev/null \
-  && ok "bundle" || bad "bundle 실패"
+  && ok "bundle (halfcell)" || bad "bundle 실패"
+"$PY" -m tools.archive_bundle bundle "$GFIT" "$BASE/art_g" >/dev/null \
+  && ok "bundle (grid + nested sweep)" || bad "grid bundle 실패"
 "$PY" -m tools.archive_bundle check "$BASE/art" >/dev/null \
   && ok "check" || bad "check 실패"
+"$PY" -m tools.archive_bundle check "$BASE/art_g" >/dev/null \
+  && ok "check (nested)" || bad "nested check 실패"
 
 ISO="$(mktemp -d)"
 "$PY" -m tools.archive_bundle restore "$BASE/art" --repo-root "$ISO" >/dev/null \
   && ok "격리 root 복원" || bad "복원 실패"
-"$PY" - "$ISO" "$HFIT" <<'PYEOF'
+"$PY" -m tools.archive_bundle restore "$BASE/art_g" --repo-root "$ISO" >/dev/null \
+  && ok "격리 복원 (grid+sweep)" || bad "grid 복원 실패"
+"$PY" - "$ISO" "$HFIT" "$GFIT" <<'PYEOF'
 import os, sys
 from pathlib import Path
 from src.io import validate_provenance
+from tools.archive_bundle import nested_runs
 SKIP = {"clean_worktree", "코드_identity", "코드_재계산"} \
     if os.environ.get("SMOKE_DIRTY") == "1" else set()
-iso, run = Path(sys.argv[1]), sys.argv[2]
-v = validate_provenance(iso / run, repo_root=iso)
-left = [f for f in v["fail"] if f not in SKIP]
-print(f"   {'✅' if not left else '❌'} 격리 복원본 검증: "
-      + ("통과" if not left else f"실패 — {left}"))
-sys.exit(0 if not left else 1)
+iso = Path(sys.argv[1])
+bad = 0
+for run in sys.argv[2:]:
+    rd = iso / run
+    for d in [rd] + nested_runs(rd):
+        v = validate_provenance(d, repo_root=iso)
+        left = [f for f in v["fail"] if f not in SKIP]
+        tag = f"{run}" + (f"/{d.name}" if d != rd else "")
+        print(f"   {'✅' if not left else '❌'} 격리 복원 검증[{tag}]: "
+              + ("통과" if not left else f"실패 — {left}"))
+        bad += 0 if not left else 1
+sys.exit(1 if bad else 0)
 PYEOF
 [[ $? -eq 0 ]] || bad "격리 복원본이 검증을 통과하지 못했다"
 
