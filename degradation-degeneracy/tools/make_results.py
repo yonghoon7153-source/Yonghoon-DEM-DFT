@@ -253,29 +253,122 @@ def _recheck_derived(in_dir: Path, name: str) -> dict | None:
 
 
 def _flat_pairs(saved, now, path=""):
-    """중첩 dict 의 **숫자만** 짝지어 뽑는다 (문자열 주석·경로는 제외)."""
+    """중첩 구조의 **숫자만** 짝지어 뽑는다 (문자열 주석·경로는 제외).
+
+    ★ F77 — list 를 건너뛰던 것이 발견 6 의 통로였다. `objective_comparison` 의
+    핵심 `table` 들이 전부 list of dict 라 변조가 통과했다. 길이가 다르면
+    (None, "길이불일치") 쌍을 넣어 반드시 실패하게 한다.
+    """
     out = []
     if isinstance(saved, dict) and isinstance(now, dict):
         for k in saved:
             if isinstance(k, str) and k.startswith("_"):
                 continue          # 주석·주의 문구
-            if k in ("provenance", "provenance_ok", "공통_run_spec"):
+            if k in ("provenance", "provenance_ok", "공통_run_spec", "figures"):
                 continue
             out += _flat_pairs(saved[k], now.get(k), f"{path}.{k}")
-    elif isinstance(saved, (int, float)) and not isinstance(saved, bool):
+    elif isinstance(saved, (list, tuple)):
+        if not isinstance(now, (list, tuple)) or len(saved) != len(now):
+            out.append((None, f"길이불일치@{path}"))
+        else:
+            for i, (a, b) in enumerate(zip(saved, now)):
+                out += _flat_pairs(a, b, f"{path}[{i}]")
+    elif isinstance(saved, bool):
+        out.append((int(saved), int(now) if isinstance(now, bool) else now))
+    elif isinstance(saved, (int, float)):
         out.append((saved, now))
     return out
 
 
+def _numbers_equal(saved, now) -> bool:
+    """저장본과 재계산본의 숫자가 전부 일치하는가 (F77 stale 판정)."""
+    import math
+
+    for a, b in _flat_pairs(saved, now):
+        if a is None or b is None or isinstance(b, str):
+            return False
+        try:
+            if not math.isclose(float(a), float(b), rel_tol=1e-9, abs_tol=1e-12):
+                return False
+        except (TypeError, ValueError):
+            return False
+    return True
+
+
 def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
+    """★ F77/8차 발견 6 — 보고서는 **정본 fits 에서 재계산한 값**을 렌더한다.
+
+    예전에는 저장된 YAML 을 그대로 렌더하고 재검산(`_recheck_derived`)은 dict
+    스칼라만 봤다. 핵심 표(`table`·`table_all_conditions`·`table_by_noise`)는
+    **list** 라 순회에서 빠졌고, `degeneracy_summary`·sweep 은 재검산 자체가
+    없었다. 리뷰 실측: `0.944→0.123456` 표 변조, `n_rows_recoverable→987654`,
+    `optimum w→123.456` 전부 녹색 보고서에 그대로 실렸다.
+
+    이제 렌더 원본이 재계산 결과이므로 저장 YAML 을 바꿔도 보고서 숫자는 안
+    바뀐다. 저장본이 재계산과 다르면(=stale/변조) 인용 금지 배너 사유에 싣는다 —
+    YAML 을 직접 읽는 다른 소비자가 있기 때문이다.
+    """
+    import math
+    import tempfile
+
     in_dir, repo_root = Path(in_dir), Path(repo_root)
-    cmp_res = _load(in_dir / "objective_comparison.yaml")
-    if cmp_res is None:
+    saved_cmp = _load(in_dir / "objective_comparison.yaml")
+    if saved_cmp is None:
         raise SystemExit(f"{in_dir}/objective_comparison.yaml 없음 — "
                          f"먼저 python tools/compare_objectives.py --in {in_dir}")
-    summary = _load(in_dir / "degeneracy_summary.yaml") or {}
+    stale: list[str] = []
+
+    saved_summary = _load(in_dir / "degeneracy_summary.yaml") or {}
     manifest = _load(in_dir / "manifest.yaml") or {}
-    wsweep = _load(in_dir / "wsweep" / "weight_sweep.yaml")
+    saved_ws = _load(in_dir / "wsweep" / "weight_sweep.yaml")
+
+    cmp_res, summary, wsweep = saved_cmp, saved_summary, saved_ws
+    can_recompute = (in_dir / "fits.parquet").exists()
+    if not can_recompute:
+        # 정본이 없으면 재계산도 없다 — 저장본을 렌더하되 **인용 금지**를 강제한다
+        stale.append("재계산_불가(fits.parquet 없음)")
+    else:
+        try:
+            from tools.compare_cases import _scored as _scored_fn
+            from tools.compare_objectives import run_compare as _rc
+            cmp_res = _rc(in_dir, write=False,
+                          df=_scored_fn(in_dir / "fits.parquet", 0.02))
+            # figures 는 계산 산출물이 아니라 그림 경로 목록 — 저장본에서만 온다
+            if isinstance(saved_cmp, dict) and saved_cmp.get("figures"):
+                cmp_res["figures"] = saved_cmp["figures"]
+            if not _numbers_equal(saved_cmp, cmp_res):
+                stale.append("objective_comparison.yaml")
+        except Exception as e:  # noqa: BLE001
+            cmp_res = saved_cmp
+            stale.append(f"objective_comparison.yaml (재계산 실패: {e})")
+        try:
+            from src.scoring import run_scoring as _rs
+            with tempfile.TemporaryDirectory() as _td:
+                summary = _rs(in_dir, out_dir=_td, tol=0.02)
+            if saved_summary and not _numbers_equal(saved_summary, summary):
+                stale.append("degeneracy_summary.yaml")
+        except Exception as e:  # noqa: BLE001
+            summary = saved_summary
+            stale.append(f"degeneracy_summary.yaml (재계산 실패: {e})")
+        if saved_ws and (in_dir / "wsweep" / "fits.parquet").exists():
+            try:
+                from src.scoring import (add_error_columns, apply_bias_correction,
+                                         classify_recoverability, clean_bias)
+                from src.weight_sweep import pick_optimum, sweep_summary
+                _tol = float(saved_ws.get("tol", 0.02))
+                _sw = classify_recoverability(add_error_columns(
+                    pd.read_parquet(in_dir / "wsweep" / "fits.parquet"), _tol))
+                _sw = apply_bias_correction(_sw, clean_bias(_sw), _tol)
+                opt_now = pick_optimum(sweep_summary(_sw, _tol))
+                if not _numbers_equal(saved_ws.get("optimum"), opt_now):
+                    stale.append("wsweep/weight_sweep.yaml")
+                wsweep = dict(saved_ws, optimum=opt_now)   # 렌더는 재계산 값으로
+            except Exception as e:  # noqa: BLE001
+                stale.append(f"wsweep/weight_sweep.yaml (재계산 실패: {e})")
+                wsweep = None
+        elif saved_ws:
+            stale.append("wsweep/weight_sweep.yaml (fits.parquet 없음 — 재계산 불가)")
+            wsweep = None
     fits = _load(in_dir / "fits.parquet")
     hess_by_obj = {}
     for hp in sorted(in_dir.glob("hessian_*.parquet")):
@@ -351,8 +444,16 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     #   `degenerate_frac: 0.944444 → 0.123456` 이나 `objective_comparison.yaml` 의
     #   `94.44% → 12.3456%` 같은 **파생 숫자 변조**가 그대로 렌더됐고 배너도 없었다.
     #   보고서가 렌더하는 값은 전부 fits 에서 다시 나와야 한다.
-    for name, why in (("case_comparison.yaml", "비교표"),
-                      ("objective_comparison.yaml", "목적함수 비교표")):
+    # ★ F77 — objective_comparison·summary·sweep 은 로드 시점에 재계산해
+    #   렌더 원본으로 삼았고, 저장본이 다르면 stale 로 이미 표시됐다.
+    for s in stale:
+        prov["ok"] = False
+        prov["fail"] = list(prov["fail"]) + [f"파생_stale_{s}"]
+        prov["reasons"] = list(prov["reasons"]) + [
+            f"{s}의 저장본이 정본 fits 재계산과 다르다 — 보고서는 재계산 값을 "
+            f"실었지만, 이 파일을 직접 읽는 소비자는 틀린 숫자를 본다"]
+        prov["checks"][f"파생_stale_{s}"] = "실패 — 재계산과 불일치"
+    for name, why in (("case_comparison.yaml", "비교표"),):
         rc = _recheck_derived(in_dir, name)
         if rc is None:
             continue

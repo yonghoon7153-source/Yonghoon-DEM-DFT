@@ -1752,3 +1752,50 @@ def test_validator_rejects_duplicate_swap_with_resealed_record(tmp_path):
 
     v = validate_provenance(d)
     assert not v["ok"], "중복 교체 + reseal 이 통과했다"
+
+
+def test_report_renders_recomputed_not_saved_yaml(tmp_path):
+    """★ F77/8차 발견 6 — 저장 YAML 을 바꿔도 보고서 숫자는 안 바뀌어야 한다.
+
+    반례 (전부 리뷰 실측, 배너 없음):
+      · objective table `0.944… → 0.123456` 이 그대로 렌더
+      · `degeneracy_summary.n_rows_recoverable → 987654` 렌더
+      · sweep `optimum w → 123.456` 렌더
+    `_flat_pairs` 가 list 를 건너뛰었고 summary·sweep 은 재검산 자체가 없었다.
+    """
+    import yaml
+
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d, _ = _complete_artifact(tmp_path)
+    run_compare(d, d)
+    from src.scoring import run_scoring
+    run_scoring(d)
+
+    base = build(d, tmp_path / "R0.md", repo_root=tmp_path).read_text(encoding="utf-8")
+    assert "인용 금지" not in base[:600], base[:600]
+
+    # ① list 안의 표 숫자 변조
+    y = yaml.safe_load((d / "objective_comparison.yaml").read_text(encoding="utf-8"))
+    orig = y["table"][0]["degenerate_frac"]
+    y["table"][0]["degenerate_frac"] = 0.123456
+    (d / "objective_comparison.yaml").write_text(
+        yaml.safe_dump(y, allow_unicode=True), encoding="utf-8")
+
+    # ② summary 변조
+    s = yaml.safe_load((d / "degeneracy_summary.yaml").read_text(encoding="utf-8"))
+    s["n_rows_recoverable"] = 987654
+    (d / "degeneracy_summary.yaml").write_text(
+        yaml.safe_dump(s, allow_unicode=True), encoding="utf-8")
+
+    out = build(d, tmp_path / "R1.md", repo_root=tmp_path).read_text(encoding="utf-8")
+    # 변조 값이 렌더되지 않고
+    assert "12.3456" not in out and "0.123456" not in out
+    assert "987654" not in out
+    # 배너가 뜬다
+    assert "인용 금지" in out[:600]
+    assert "파생_stale_objective_comparison.yaml" in out
+    assert "파생_stale_degeneracy_summary.yaml" in out
+    # 진짜 값은 여전히 실린다
+    assert f"{100 * orig:.0f}%" in out
