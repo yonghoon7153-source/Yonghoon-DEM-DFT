@@ -55,12 +55,20 @@ fi
 #   analyze_contacts.py 첫 줄이 pandas 다 (2026-08-11 V100 실측: --selftest 가
 #   ModuleNotFoundError 로 즉사).  scipy 때와 **같은 종류의 결함**이고, 원인도 같다:
 #   아래 진입점 스모크가 MPM 쪽 경로만 보고 **DEM 접촉망 솔버 경로를 안 봤다**.
-python3 -c "import numpy, scipy, pandas, taichi" 2>/dev/null || {
+# ★ 목록은 **코드에서 유도**한다 — 손으로 적으면 갈라진다 (2026-08-11 V100 에서 pandas →
+#   networkx 가 한 번에 하나씩 죽으며 드립이 됐다).  `scripts/trace_deps.py` 가 진입점의
+#   전이 import 를 정적으로 훑어 이 목록을 만들고, 아래 --check 가 갈라짐을 잡는다.
+PKGS="numpy scipy pandas networkx matplotlib pyamg taichi"
+python3 -c "import numpy, scipy, pandas, networkx, matplotlib, pyamg, taichi" 2>/dev/null || {
   pip install -q -U pip
-  pip install -q numpy scipy pandas taichi || fail "pip install 실패"
+  # shellcheck disable=SC2086
+  pip install -q $PKGS || fail "pip install 실패"
 }
 ln -sfn "$DATA/venv" "$REPO/venv"                       # 러너 프리플라이트 1순위 경로
-echo "  $(python3 -c "import numpy, scipy, pandas, taichi as t; print('numpy', numpy.__version__, '· scipy', scipy.__version__, '· pandas', pandas.__version__, '· taichi', t.__version__)")"
+echo "  $(python3 -c "import numpy, scipy, pandas, networkx, taichi as t; print('numpy', numpy.__version__, '· scipy', scipy.__version__, '· pandas', pandas.__version__, '· networkx', networkx.__version__, '· taichi', t.__version__)")"
+# ★ drift 가드: 위 손-목록이 **코드가 실제로 요구하는 것**을 덮는가.  부족하면 여기서 멈춘다.
+python3 "$REPO/scripts/trace_deps.py" --check "$(echo $PKGS | tr ' ' ',')" \
+  || fail "PKGS 가 코드 요구를 못 덮는다 — trace_deps.py 출력대로 PKGS 를 늘리세요"
 # 실제 진입점을 import 해 본다 — 패키지 목록이 아니라 **이 코드가 뜨는지**가 증거다.
 #   ⚠ 두 파이프라인을 **둘 다** 봐야 한다 (CLAUDE.md frame[5]: 웹앱 접촉망 σ 와 킷 STEP3 는
 #     서로 다른 파이프라인이고, 한쪽만 보면 다른 쪽 결손이 조용히 남는다 — 실제로 그랬다).
