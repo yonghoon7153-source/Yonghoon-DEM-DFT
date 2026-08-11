@@ -264,7 +264,7 @@
         "scripts/sr01_realbed_ab.py::selftest",
         "scripts/step3_sigma.py::--selftest-segstamp"
       ],
-      "claimed_fixed_sha": "PENDING"
+      "claimed_fixed_sha": "6e555cd2"
     },
     {
       "id": "SR-02",
