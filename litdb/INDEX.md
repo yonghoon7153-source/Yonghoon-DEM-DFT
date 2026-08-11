@@ -289,6 +289,7 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | `papers/minnmann2021_jes_charge_transport_bottlenecks.md` | Minnmann 2021 JES — 복합 양극 전하수송 병목 정량화 (EIS-TLM) ★ 우리 porosity/σ_ion/τ_ion 앵커의 진짜 출처 | DEM |
 | `papers/minnmann2022_designing_cathodes_solidstate.md` | Minnmann 2022 (Adv. Energy Mater. 12, 2201425) — "Designing Cathodes and Cathode Active Materials for Solid-St | DEM |
 | `papers/nam2026_dpe_microstructure_review.md` | Nam 2026 (Materials Horizons REVIEW, 13, 3149-3177) — 건식전극(DPE) 미세구조 엔지니어링 리뷰 ★ 우리 DEM+MPM 프로젝트의 FRAMEWORK/POS | DEM |
+| `papers/nam2026_primer_layer_dry_electrode_collector.md` | Nam 2026 (ACS Energy Lett. 6c01260) — 건식전극(DPE)↔집전체 계면을 지배하는 **Primer Layer 설계**(Super P/CNT 5조성) ★ 우리 **R_collector(N) 3-직렬 분해** + **j_peak ∝ A^−0.54 ≈ Holm ½ 독립 재현** | exp + FEM·digital-twin |
 | `papers/oh2026_bimodal_composite_cathode.md` | Oh 2026 (ACS Energy Letters 11, 2103-2114) — Bimodal 복합양극: 큰 다결정 + 작은 단결정 CAM → packing·porosity·tortuosity 최적 | experiment |
 | `papers/oh2026_carbon_coating_siox_ion_electron_balance.md` | Oh 2026 (Journal of Power Sources 689, 240698) — SiOx 탄소코팅 두께가 이온/전자 수송 BALANCE + 균일분산을 결정 | FEM·digital-twin |
 | `papers/park2026_ceramic_pp_separator.md` | Park 2026 (Chemical Engineering Journal 532 (2026) 174523, DOI 10.1016/j.cej.2026.174523) — 초박막 세라믹(Al₂O₃ 스퍼터) | DEM |
@@ -311,6 +312,7 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | `papers/kim2024_digital_twin_acsenergyletters.md` | **Kim 2024** (ACS Energy Lett. 9, 5225) — DT 모델링·시뮬 리뷰 | top-down/bottom-up **taxonomy 의 peer-reviewed 인용원**. "수십 µm 도메인에선 나노 물성을 effective property 로 뭉갠다"를 한계로 자인 |
 | `papers/lim2025_virtual_calendering_framework.md` | **Lim 2025** (Small 21, 2410485) — 가상 캘린더링 검증 | 우리 압축의 **방법론적 형제**(reconstruct-then-compress vs 우리 predict-from-powder). virtual↔actual 을 porosity·σ_e·τ·비표면적·접촉면적 **5축**으로 대조 + PNM + 응력/균열 부피% |
 | `papers/song2025_electrochemo_mechanical_microelectrode_ees.md` | **Song 2025** (EES 18, 3129) — 미세전극 electrochemo-mech DT | **단일입자·마이크로전극 실측**(Au ⌀10 µm) — 우리 최대 급소인 i0·D_s 앵커의 직접 해법. 바인더 점탄성(Perzyna+Ludwick) 정식 공개 |
+| `papers/nam2026_primer_layer_dry_electrode_collector.md` | **Nam 2026** (ACS Energy Lett. 6c01260) — primer layer 설계로 DPE↔집전체 계면 지배 | ★**계보 중 우리 `R_collector(N)` 에 가장 직접 맞물리는 편**. AFM 지형 → 3D DT → **ΔV=1 V Ohm 해**(= 우리 STEP3 복셀 FV 와 동형). **접착 345→586 N/m · Sq 70→198 nm · 탄성회복 61.5→93.5 % · 접촉면적 1.00/1.54/1.72 · 계면 j_peak/j̄ 1.62/1.30/1.20** ⇒ 내 회귀로 **j_peak ∝ A^(−0.54) = Holm ½ 독립 재현**(frame[4]). ⚠ **액체계 NCM622**·**SI 부재로 R 절대값 n/a**·**압축 역학 미시뮬(= 우리 MPM 자리)** |
 | `papers/choi2024_digital_twin_review_echem.md` | **Choi 2024** (E.Chem 매거진 총설) | positioning 용어 네이밍. ⚠ **비동료심사 매거진** — 논문 인용원으로 쓰지 말 것(peer-reviewed 는 Kim 2024) |
 | 🎤 `talks/lee2026_yonsei_dtbl_ai_electrode_digitaltwin.md` | **이용민 발표 덱** (2026 Korean Battery Symposium, 자료집 pp.259–278) | **이 계보의 2026년 자기 요약본 + 자기 한계 목록**. 위 4편의 논문을 한 장짜리 지도로 묶고, 논문에 없는 **DEM 슬러리 믹싱(2nd solvent 모세관)·OWRK 부착 실측·계산가속 과제**를 추가로 노출. ⚠ **덱 등급**(`talks/README.md`) — 수치 인용은 위 논문에서 |
 
