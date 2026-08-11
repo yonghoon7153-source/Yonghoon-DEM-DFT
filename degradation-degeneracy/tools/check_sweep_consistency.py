@@ -67,21 +67,42 @@ _EXACT_COLS = ("J", "a_pe", "b_pe", "a_ne", "b_ne",
                "lli_hat", "lam_pe_hat", "lam_ne_hat")
 
 
-def _max_dev(a: pd.DataFrame, b: pd.DataFrame, col: str) -> dict:
-    """조건별 |a-b| 의 최대·분위수와 대칭 tolerance 위반 수."""
-    if col not in a.columns or col not in b.columns:
-        return {"열없음": True}
-    x = a.set_index("cond_id")[col].astype(float)
-    y = b.set_index("cond_id")[col].astype(float).reindex(x.index)
-    ok = x.notna() & y.notna()
-    if not ok.any():
-        return {"n": 0, "max_abs": float("nan"), "n_violate": 0}
-    dev = (x[ok] - y[ok]).abs()
-    tol = _ATOL + _RTOL * pd.concat([x[ok].abs(), y[ok].abs()], axis=1).max(axis=1)
-    return {"n": int(ok.sum()), "max_abs": float(dev.max()),
-            "p99_abs": float(dev.quantile(0.99)),
-            "n_violate": int((dev > tol).sum()),
-            "worst_cond": str(dev.idxmax()) if len(dev) else None}
+def _ids_sha(ids) -> str:
+    """조건 ID 집합의 서명 (grid/fitting 과 같은 방식)."""
+    import hashlib
+    return hashlib.sha256("\n".join(sorted(map(str, ids)))
+                          .encode()).hexdigest()[:16]
+
+
+def _max_dev(merged: pd.DataFrame, col: str, n_common: int) -> dict:
+    """조건별 |sweep-main| 의 최대·분위수와 대칭 tolerance 위반 수.
+
+    ★ 13차 발견 2 — 이전 구현은 **양쪽이 not-null 인 행만** 비교해서:
+      · NaN 은 비교에서 빠져 `n=0, n_violate=0` → "일치"
+      · Inf 는 `dev=Inf`, `tol=Inf` 라 `Inf > Inf` 가 거짓 → "일치"
+    이제 **모든 값이 유한**하고 **비교 행 수 == n_common** 임을 먼저 요구한다.
+    """
+    xc, yc = f"{col}_sweep", f"{col}_main"
+    if xc not in merged.columns or yc not in merged.columns:
+        return {"열없음": True, "n_violate": 1}
+    x = merged[xc].astype(float)
+    y = merged[yc].astype(float)
+    n_finite = int((np.isfinite(x) & np.isfinite(y)).sum())
+    out = {"n": int(len(merged)), "n_finite": n_finite,
+           "n_nonfinite": int(len(merged) - n_finite)}
+    if n_finite != len(merged) or len(merged) != n_common:
+        out["n_violate"] = max(1, len(merged) - n_finite)
+        out["_사유"] = (f"비유한 {len(merged) - n_finite}행 또는 비교 행수 "
+                       f"{len(merged)} ≠ 공통 조건 {n_common}")
+        out["max_abs"] = float("nan")
+        return out
+    dev = (x - y).abs()
+    tol = _ATOL + _RTOL * pd.concat([x.abs(), y.abs()], axis=1).max(axis=1)
+    out.update({"max_abs": float(dev.max()),
+                "p99_abs": float(dev.quantile(0.99)),
+                "n_violate": int((dev > tol).sum()),
+                "worst_cond": str(merged["cond_id"].iloc[int(dev.values.argmax())])})
+    return out
 
 
 def compare_pair(sweep: pd.DataFrame, main: pd.DataFrame,
@@ -107,29 +128,46 @@ def compare_pair(sweep: pd.DataFrame, main: pd.DataFrame,
     common = sorted(sweep_ids & main_ids)
     missing_in_main = sorted(sweep_ids - main_ids)
     out = {"sweep_objective": sweep_obj, "main_objective": main_obj,
-           "n_sweep": len(sweep_ids), "n_main": len(main_ids),
+           "n_sweep": len(sweep_ids), "n_sweep_rows": int(len(a)),
+           "n_main": len(main_ids),
            "n_common": len(common),
            "n_sweep_missing_in_main": len(missing_in_main),
            "missing_ids_예시": missing_in_main[:5],
-           "expected_conditions": expected_conditions}
+           "expected_conditions": expected_conditions,
+           "sweep_ids_sha256": _ids_sha(sweep_ids)}
     reasons = []
     if not common:
         reasons.append("공통 조건 0건")
     if missing_in_main:
         reasons.append(f"sweep 조건 {len(missing_in_main)}건이 본 실행에 없다")
-    if expected_conditions is not None and len(sweep_ids) != expected_conditions:
+    # ★ 13차 발견 2 — 서명된 조건 수를 확인할 수 없으면 fail-closed
+    if expected_conditions is None:
+        reasons.append("sweep manifest/run_spec.n_conditions 가 없어 서명된 "
+                       "조건 집합을 확인할 수 없다")
+    elif len(sweep_ids) != expected_conditions:
         reasons.append(f"sweep 조건 수 {len(sweep_ids)} ≠ 서명된 "
                        f"{expected_conditions}")
+    # ★ 13차 발견 2 — (cond_id, objective) 는 정확히 한 행
+    if len(a) != len(sweep_ids):
+        reasons.append(f"sweep 에 중복 행이 있다 ({len(a)}행 / {len(sweep_ids)}조건)")
+    if len(b) != len(main_ids):
+        reasons.append(f"본 실행에 중복 행이 있다 ({len(b)}행 / {len(main_ids)}조건)")
 
-    if common:
+    if common and len(a) == len(sweep_ids) and len(b) == len(main_ids):
         a = _score(a[a["cond_id"].isin(common)], tol)
         b = _score(b[b["cond_id"].isin(common)], tol)
-        dev = {c: _max_dev(a, b, c) for c in _EXACT_COLS}
+        # ★ 13차 발견 2 — set/reindex 가 아니라 **검증된 one-to-one merge**
+        merged = a.merge(b, on="cond_id", how="inner",
+                         suffixes=("_sweep", "_main"), validate="one_to_one")
+        dev = {c: _max_dev(merged, c, len(common)) for c in _EXACT_COLS}
         out["조건별_차이"] = dev
+        out["n_compared"] = int(len(merged))
+        if len(merged) != len(common):
+            reasons.append(f"비교 행수 {len(merged)} ≠ 공통 조건 {len(common)}")
         bad = [c for c, v in dev.items()
                if v.get("열없음") or v.get("n_violate", 1) > 0]
         if bad:
-            reasons.append(f"조건별 수치가 다른 열: {bad}")
+            reasons.append(f"조건별 수치가 다르거나 비유한인 열: {bad}")
         # 설명 통계 (판정 기준 아님 — 12차 발견 3)
         out["_설명통계"] = {"sweep": _stats(a), "main": _stats(b)}
 
@@ -147,16 +185,40 @@ def run_check(sweep_dir, main_dir, pairs=DEFAULT_PAIRS, tol: float = 0.02) -> di
     sweep = pd.read_parquet(Path(sweep_dir) / "fits.parquet")
     main = pd.read_parquet(Path(main_dir) / "fits.parquet")
     # ★ 12차 발견 3 — 서명된 sweep 조건 수를 기준으로 coverage 를 본다
-    expected = None
+    expected, signed_sha = None, None
     mp = Path(sweep_dir) / "manifest.yaml"
     if mp.is_file():
-        expected = ((yaml.safe_load(mp.read_text(encoding="utf-8")) or {}
-                     ).get("run_spec") or {}).get("n_conditions")
+        _spec = ((yaml.safe_load(mp.read_text(encoding="utf-8")) or {}
+                  ).get("run_spec") or {})
+        expected = _spec.get("n_conditions")
+        signed_sha = _spec.get("condition_ids_sha256")
     res = {"sweep_dir": str(sweep_dir), "main_dir": str(main_dir),
            "tol_정책": {"atol": _ATOL, "rtol": _RTOL, "열": list(_EXACT_COLS)},
+           "expected_conditions": expected,
+           "signed_condition_ids_sha256": signed_sha,
            "pairs": [compare_pair(sweep, main, s, m, tol, expected)
                      for s, m in pairs]}
-    res["일치"] = bool(res["pairs"]) and all(p.get("일치") for p in res["pairs"])
+    # ★ 13차 발견 2 — 두 끝점의 **조건 집합이 서로 같아야** 한다. 각각이 main 의
+    #   서로 다른 절반이어도 pair 별로는 n_common 이 채워져 "일치" 가 됐다.
+    shas = {p.get("sweep_ids_sha256") for p in res["pairs"]
+            if p.get("sweep_ids_sha256")}
+    res["끝점_조건집합_동일"] = len(shas) <= 1
+    if len(shas) > 1:
+        for p in res["pairs"]:
+            p["일치"] = False
+            p["판정"] = ("불일치 — 끝점끼리 조건 집합이 다르다 "
+                        f"(digest {sorted(shas)}). " + str(p.get("판정", "")))
+    # 서명된 digest 가 있으면 그것과도 대조한다
+    if signed_sha and shas and next(iter(shas)) != signed_sha:
+        res["끝점_서명digest_일치"] = False
+        for p in res["pairs"]:
+            p["일치"] = False
+            p["판정"] = (f"불일치 — sweep 조건 digest {next(iter(shas))} ≠ 서명 "
+                        f"{signed_sha}. " + str(p.get("판정", "")))
+    elif signed_sha:
+        res["끝점_서명digest_일치"] = True
+    res["일치"] = (bool(res["pairs"]) and all(p.get("일치") for p in res["pairs"])
+                  and res["끝점_조건집합_동일"])
     return res
 
 

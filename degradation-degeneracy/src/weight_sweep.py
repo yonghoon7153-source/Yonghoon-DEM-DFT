@@ -87,6 +87,12 @@ def build_weight_objectives(w_grid=DEFAULT_W_GRID, w_pocv: float = 1.0,
 
     w_grid에 0.0이 없으면 seed 제공자가 없으므로 숨은 `_seed`를 앞에 끼운다.
     """
+    # ★ 13차 발견 5 — dict insertion order 가 곧 warm start 연쇄 순서다.
+    #   `[0.5, 0.0, 1.0]` 처럼 주면 w=0.5 가 seed 없이 먼저 풀려 중간 가중치만
+    #   불리해지고 최적 w 가 바뀐다. 끝점은 서로 일치해 checker 를 통과하므로
+    #   검출되지 않는다. **오름차순으로 정규화**해 seed 제공자(w=0)를 항상
+    #   맨 앞에 둔다.
+    w_grid = sorted(float(w) for w in w_grid)
     objs = {obj_name(w): {"w_pocv": w_pocv, "w_dvdq": w_dvdq, "w_dqdv": float(w)}
             for w in w_grid}
     if not any(float(w) == 0.0 for w in w_grid):

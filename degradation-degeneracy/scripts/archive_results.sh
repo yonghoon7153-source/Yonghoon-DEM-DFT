@@ -34,7 +34,7 @@
 #    degeneracy_map / chunks / completed.jsonl   버린다 (fits에서 재생성)
 #
 #  복원 — 묶음은 보관 형태이고, 검증은 복원한 뒤에 한다:
-#    python -m tools.archive_bundle restore artifacts/halfcell_v3
+#    python -m tools.archive_bundle restore artifacts/halfcell_fit_v4
 # =============================================================================
 set -uo pipefail   # ★ 개별 실행 실패를 집계해야 하므로 -e 는 쓰지 않는다
 
@@ -50,11 +50,29 @@ RUNS=("$@")
 if [[ ${#RUNS[@]} -eq 0 ]]; then
   # ★ F71/8-4 — 기본 대상이 옛 v1/v2 여서, 새 실행을 묶으려던 사람이 무심코
   #   실행하면 quarantine 산출물만 다시 묶였다. 현재 pipeline 의 구조를 따른다.
-  RUNS=(results/grid_curves_v3 results/grid_fit_v3 results/halfcell_fit_v3
-        results/paired_fixed5_v3)
+  # ★ 13차 발견 4 — 기본 대상이 v3 로 남아 있으면 새 v4 수치 대신 옛 묶음을
+  #   인용하게 된다 (계산 blocker 는 아니지만 최종 citation blocker).
+  RUNS=(results/grid_curves_v4 results/grid_fit_v4 results/halfcell_fit_v4
+        results/paired_fixed5_v4)
 fi
 
 mkdir -p "$DEST"
+# ★ 13차 발견 8 — 이전 실행이 중단되면 `.previous_*`/`.candidate_*` 가 남아
+#   다음 `git add artifacts` 에 옛 중복 묶음이 들어갈 수 있다. 시작 시 정리하되,
+#   본 묶음이 사라진 상태면 `.previous_*` 를 **복구**한다 (중단 내구성).
+for _prev in "$DEST"/.previous_*; do
+  [[ -e "$_prev" ]] || continue
+  _base="$(basename "$_prev")"; _base="${_base#.previous_}"; _base="${_base%.*}"
+  if [[ -d "$DEST/$_base" ]]; then
+    echo "정리: 중단된 실행의 잔여 $_prev 삭제"
+    rm -rf "$_prev"
+  else
+    echo "복구: 중단된 승격을 되돌립니다 $_prev → $DEST/$_base"
+    mv "$_prev" "$DEST/$_base"
+  fi
+done
+rm -rf "$DEST"/.candidate_*
+
 n_ok=0
 n_bad=0
 n_missing=0
@@ -154,8 +172,16 @@ PYEOF
       rm -rf "$old"
       mv "$out" "$old"
     fi
-    mv "$cand" "$out"
-    [[ -n "$old" ]] && rm -rf "$old"
+    if mv "$cand" "$out"; then
+      [[ -n "$old" ]] && rm -rf "$old"
+    else
+      # ★ 13차 발견 8 — 승격이 실패하면 옛 묶음을 되돌린다 (orphan 방지)
+      echo "  승격(mv) 실패 — 기존 묶음을 되돌립니다" >&2
+      [[ -n "$old" ]] && mv "$old" "$out"
+      rm -rf "$cand"
+      n_bad=$((n_bad+1))
+      continue
+    fi
     promoted+=("$name")
     n_ok=$((n_ok+1))
     # ★ 10차 자체 확인 1 / 11차 발견 7 — 진본성 앵커는 **full 64자리**로 남긴다.
@@ -200,6 +226,19 @@ for name in names:
         continue
     kind = artifact_kind(b)
     ent = {"artifact_kind": kind, "payload_index_sha256": _sha(pi)}
+    # ★ 13차 발견 7 — 이 산출물을 **계산한** commit (archive 시점 HEAD 가 아니라).
+    #   grid producer 는 curves_manifest 가, fit 은 manifest 가 소유한다.
+    _mm = b / "manifest.yaml"
+    _man0 = (yaml.safe_load(_mm.read_text(encoding="utf-8")) or {}) if _mm.is_file() else {}
+    ent["source_commit"] = _man0.get("git_commit")
+    _cm0 = b / "curves_manifest.yaml"
+    if _cm0.is_file():
+        _cman0 = yaml.safe_load(_cm0.read_text(encoding="utf-8")) or {}
+        _cc = _cman0.get("git_commit")
+        if kind == "grid_producer":
+            ent["source_commit"] = _cc
+        elif _cc and ent.get("source_commit") and _cc != ent["source_commit"]:
+            ent["_주의_producer_commit"] = _cc
     rm = b / "restore_map.yaml"
     meta = (yaml.safe_load(rm.read_text(encoding="utf-8")) or {}) if rm.is_file() else {}
     ent["run_dir"] = meta.get("run_dir")
@@ -232,11 +271,14 @@ for name in names:
         ent["curves_sha256"] = sealed_curves
         ent["_주의_곡선"] = "곡선 bytes 가 이 묶음에 없다 (봉인 digest만 기록)"
     runs[name] = ent
-try:
-    commit = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True,
-                            text=True, check=True).stdout.strip()
-except Exception:
-    commit = None
+# ★ 13차 발견 7 — `source_commit` 은 archive 실행 시점 HEAD 가 아니라 **각
+#   산출물을 계산한 commit** 이어야 한다. run 별 manifest.git_commit 을 싣고,
+#   전부 같을 때만 top-level 로 축약한다 (다르면 top-level 은 null).
+_commits = {n: e.get("source_commit") for n, e in runs.items()}
+_uniq = {c for c in _commits.values() if c}
+commit = next(iter(_uniq)) if len(_uniq) == 1 else None
+if len(_uniq) > 1:
+    print(f"  ⚠ 묶음마다 계산 commit 이 다릅니다: {_commits}", file=sys.stderr)
 out = dest / "artifact_index.yaml"
 # ★ 12차 발견 5-b — 여기 적히는 SHA 는 **계산에 쓴 코드**의 commit 이다.
 #   이 파일 자신을 담을 artifact commit 은 아직 존재하지 않으므로 그 이름을
@@ -259,11 +301,11 @@ cat <<'EOF'
   git add artifacts && git commit -m "chore(artifacts): 계산 결과 보관" && git push
 
 clone 한 쪽에서 복원 + 검증:
-  python -m tools.archive_bundle restore artifacts/halfcell_v3
+  python -m tools.archive_bundle restore artifacts/halfcell_fit_v4
   python -c "from src.io import validate_provenance; import json; \
-             print(json.dumps(validate_provenance('results/halfcell_v3'), \
+             print(json.dumps(validate_provenance('results/halfcell_fit_v4'), \
              ensure_ascii=False, indent=2))"
-  ./run.sh --mode score --in results/halfcell_fit_v3   # 채점 이후는 몇 초다
+  ./run.sh --mode score --in results/halfcell_fit_v4   # 채점 이후는 몇 초다
 EOF
 
 # ★ F71/8-4 — 하나라도 불완전하면 nonzero. 조용히 성공하면 CI·스크립트가

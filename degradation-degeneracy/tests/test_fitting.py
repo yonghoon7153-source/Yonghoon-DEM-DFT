@@ -408,9 +408,13 @@ def _tiny_curves(tmp_path, n=48, n_cond=3, n_failed=0):
         q = 4000.0 * (1.0 - 0.5 * (pe + ne))
         cid = f"c_{lli}_{pe}_{ne}"
         for xi in x:
+            # ★ 13차 발견 1 — v_full == v_pe - v_ne 가 성립해야 한다 (실제
+            #   producer 의 불변식). v_full 은 그대로 두고 pe 의존을 v_pe 로
+            #   옮겨 기존 fit 테스트의 곡선 모양을 보존한다.
+            v_full = 4.2 - 0.9 * xi - 0.3 * pe * xi
+            v_ne = 0.1 + 0.4 * xi
             rows.append({"cond_id": cid, "x_norm": xi,
-                         "v_full": 4.2 - 0.9 * xi - 0.3 * pe * xi,
-                         "v_pe": 4.3 - 0.5 * xi, "v_ne": 0.1 + 0.4 * xi,
+                         "v_full": v_full, "v_pe": v_full + v_ne, "v_ne": v_ne,
                          "q_mah": q, "lli": lli, "lam_pe": pe, "lam_ne": ne,
                          "noise": 0.0})
     return sign_producer(tmp_path, pd.DataFrame(rows), n_infeasible=n_failed)
@@ -462,13 +466,34 @@ def sign_producer(out_dir, df, n_infeasible=0):
     _k = list(map(tuple, df[keys].to_numpy().tolist()))
     df["cond_id"] = [id_map[t] for t in _k]
     df["seed"] = [seed_map[t] for t in _k]
-    # 조건마다 같은 길이의 공통 x_norm 격자
+    # 조건마다 같은 길이의 공통 x_norm 격자 (13차: 정확히 linspace(0,1,n))
     _sizes = df.groupby("cond_id").size()
     n_interp = int(_sizes.iloc[0])
     if _sizes.nunique() == 1:
         grid = _np.linspace(0.0, 1.0, n_interp)
         df = _pd.concat([g.assign(x_norm=grid) for _, g in df.groupby("cond_id")],
                         ignore_index=True)
+
+    # ★ 13차 발견 1 — 실제 producer 의 물리 열과 불변식을 갖춘다. 없으면
+    #   validator 가 "필수 열 없음" 으로 거부한다 (그게 맞다 — 이 fixture 가
+    #   물리 열을 안 만들어서 q_mah 혼합·전압 불일치·noise 위조가 통과했다).
+    from src.curves import add_noise
+    if "v_ne" not in df.columns:                 # fits 모양 프레임 (stand-in)
+        _x = df["x_norm"].to_numpy(dtype=float)
+        df["v_ne"] = 0.1 + 0.4 * _x
+        df["v_full"] = 4.2 - 0.9 * _x
+    df["v_pe"] = df["v_full"] + df["v_ne"]       # v_full == v_pe - v_ne 강제
+    if "q_mah" not in df.columns:
+        df["q_mah"] = 4000.0
+    df["protocol"] = "charge_first"              # spec.protocol_unified 와 일치
+    _parts = []
+    for _, g in df.groupby("cond_id", sort=False):
+        g = g.sort_values("x_norm")
+        g["v_full_noisy"] = add_noise(g["v_full"].to_numpy(dtype=float),
+                                      float(g["noise"].iloc[0]),
+                                      int(g["seed"].iloc[0]))
+        _parts.append(g)
+    df = _pd.concat(_parts, ignore_index=True)
 
     # guard 를 확실히 위반하는 조건들 (max_mode_value 밖) — 재평가에서 불능
     failed_conds = [Condition(lli=1.0 + i, lam_pe=0.0, lam_ne=0.0,
@@ -1839,3 +1864,163 @@ def test_halfcell_cache_binds_runtime(tmp_path):
     del m["env"]
     mp.write_text(yaml.safe_dump(m, allow_unicode=True), encoding="utf-8")
     assert "runtime_identity" in validate_halfcell_cache(cfg, cache)["fail"]
+
+
+# ──────────────────────────────── 13차 게이트 리뷰
+
+def _reseal_curves(d):
+    """curves.parquet 을 고친 뒤 manifest digest 만 맞춘다 (다른 검사는 통과 상태)."""
+    import yaml
+
+    from src.io import file_digest
+    mp = d / "curves_manifest.yaml"
+    m = yaml.safe_load(mp.read_text(encoding="utf-8"))
+    m["curves_sha256"] = file_digest(d / "curves.parquet", full=True)
+    mp.write_text(yaml.safe_dump(m, allow_unicode=True), encoding="utf-8")
+
+
+def test_observed_curves_check_physics_columns(tmp_path):
+    """★ 13차 발견 1 — 관측 곡선의 **물리 열**을 검증해야 한다 (결론이 바뀜).
+
+    반례(리뷰 실측): q_mah 가 조건 안에서 두 값이어도, v_full ≠ v_pe-v_ne 여도,
+    noise=0 인데 v_full_noisy 가 달라도, 전압에 NaN 이 있어도, noisy 열이 통째로
+    없어도, protocol 열이 없어도 validator 가 ok=True 였다.
+
+    이건 metadata 문제가 아니다:
+      · fitting 은 조건별 q_mah **첫 행**으로 r=q/q_ref 를 만든다 → 섞이면
+        같은 해에서도 LAM/LLI 가 0% ↔ 50% 로 바뀐다
+      · 목적함수는 비유한 target 점을 제외하고 계산한다 → "48행 완전" 을 통과한
+        곡선이 실제로는 28점으로 fit 된다
+      · v_full_noisy 가 없으면 fitting 이 조용히 v_full 로 fallback 한다 →
+        noise>0 조건 2,046건이 noiseless fitting 이 된다
+    """
+    import numpy as np
+    import pandas as pd
+    import yaml
+
+    from src.io import validate_curves_provenance
+
+    # ① 정상 producer 는 새 검사를 전부 통과한다
+    ok_dir = _tiny_curves(tmp_path / "ok")
+    v = validate_curves_provenance(ok_dir)
+    assert v["ok"], v["fail"]
+    for k in ("관측_필수열", "관측_q_mah", "관측_전압_유한",
+              "관측_전압_정합", "관측_noise_재현", "관측_protocol"):
+        assert k in v["checks"], f"{k} 검사가 없다"
+
+    def _mutate(name, fn):
+        d = _tiny_curves(tmp_path / name)
+        df = pd.read_parquet(d / "curves.parquet")
+        df = fn(df)
+        df.to_parquet(d / "curves.parquet", index=False)
+        _reseal_curves(d)
+        return validate_curves_provenance(d)["fail"]
+
+    # ② q_mah 가 조건 안에서 두 값 (r=q/q_ref 가 행 조립에 따라 달라진다)
+    def _mix_q(df):
+        first = df["cond_id"].iloc[0]
+        idx = df.index[df["cond_id"] == first][:5]
+        df.loc[idx, "q_mah"] = df.loc[idx, "q_mah"] * 0.5
+        return df
+    assert "관측_q_mah" in _mutate("qmix", _mix_q)
+
+    # ③ q_mah <= 0
+    def _zero_q(df):
+        df.loc[df["cond_id"] == df["cond_id"].iloc[0], "q_mah"] = 0.0
+        return df
+    assert "관측_q_mah" in _mutate("qzero", _zero_q)
+
+    # ④ 전압 NaN (목적함수가 조용히 그 점을 버린다)
+    def _nan_v(df):
+        idx = df.index[df["cond_id"] == df["cond_id"].iloc[0]][:20]
+        df.loc[idx, "v_full"] = np.nan
+        return df
+    assert "관측_전압_유한" in _mutate("vnan", _nan_v)
+
+    # ⑤ v_full != v_pe - v_ne (두 전극과 full-cell 이 같은 셀이 아니다)
+    def _bad_sum(df):
+        df.loc[df["cond_id"] == df["cond_id"].iloc[0], "v_full"] += 0.25
+        return df
+    assert "관측_전압_정합" in _mutate("vsum", _bad_sum)
+
+    # ⑥ noise 실현값 불일치 (noise=0 인데 noisy 가 다르다)
+    def _bad_noise(df):
+        df.loc[df["cond_id"] == df["cond_id"].iloc[0], "v_full_noisy"] += 0.65
+        return df
+    assert "관측_noise_재현" in _mutate("vnoise", _bad_noise)
+
+    # ⑦ noisy 열 자체가 없다 (fitting 이 v_full 로 조용히 fallback)
+    assert "관측_필수열" in _mutate("nonoisy", lambda df: df.drop(columns=["v_full_noisy"]))
+
+    # ⑧ protocol 열이 없다 / 서명과 다르다
+    assert "관측_필수열" in _mutate("noproto", lambda df: df.drop(columns=["protocol"]))
+
+    def _bad_proto(df):
+        df["protocol"] = "discharge_first"
+        return df
+    assert "관측_protocol" in _mutate("proto", _bad_proto)
+
+    # ⑨ x 격자가 0→1 linspace 가 아니다 (공통이기만 하면 통과했다)
+    d = _tiny_curves(tmp_path / "xshift")
+    df = pd.read_parquet(d / "curves.parquet")
+    n = int(df.groupby("cond_id").size().iloc[0])
+    shifted = np.linspace(0.2, 0.8, n)
+    df = pd.concat([g.assign(x_norm=shifted) for _, g in df.groupby("cond_id")],
+                   ignore_index=True)
+    df.to_parquet(d / "curves.parquet", index=False)
+    _reseal_curves(d)
+    assert "관측_x_norm_공통격자" in validate_curves_provenance(d)["fail"]
+
+
+def test_worker_actual_solver_must_match_signature(tmp_path, monkeypatch):
+    """★ 13차 발견 3 — 실제 solve 는 loky worker 안에서 일어난다 (숫자가 바뀜).
+
+    parent 가 probe 한 `effective_solver(cfg)` 만 서명에 들어가므로, 특정
+    worker 에서 IDAKLU constructor 가 실패해 Casadi 로 fallback 하면 **다른
+    solver 의 곡선이 parent 의 IDAKLU 서명 아래** 저장된다. worker 가 실제
+    사용한 identity 를 반환하고 main 이 전 조건을 대조해야 한다.
+    """
+    import pytest
+
+    import src.grid as G
+
+    # 워커가 반환한 identity 가 서명과 다르면 청크를 쓰기 전에 죽어야 한다
+    rows = [{"cond_id": "c1", "solver_identity": {"effective_class": "IDAKLUSolver"}},
+            {"cond_id": "c2", "solver_identity": {"effective_class": "CasadiSolver"}}]
+    with pytest.raises(RuntimeError, match="solver"):
+        G._assert_worker_solvers(rows, {"effective_class": "IDAKLUSolver"})
+
+    # identity 를 아예 안 실은 옛 워커 결과도 거부 (fail-closed)
+    with pytest.raises(RuntimeError, match="solver"):
+        G._assert_worker_solvers([{"cond_id": "c1"}],
+                                 {"effective_class": "IDAKLUSolver"})
+
+    # 전부 일치하면 통과
+    G._assert_worker_solvers(
+        [{"cond_id": "c1", "solver_identity": {"effective_class": "IDAKLUSolver"}}],
+        {"effective_class": "IDAKLUSolver"})
+
+
+def test_replay_recipe_schema_checks_keys(tmp_path):
+    """★ 13차 발견 9 — replay_recipe 가 존재만으로 통과하면 안 된다.
+
+    `baseline={"bogus": 1.0}` 같은 nonempty dict 도 v4 schema 주장을 만족한다고
+    판정됐다. Baseline 필수 키 집합·유한값·guards 형식을 실패 건수와 무관하게
+    검사해야 한다.
+    """
+    import json
+
+    import yaml
+
+    from src.io import validate_curves_provenance
+
+    d = _tiny_curves(tmp_path / "bogus")
+    mp = d / "curves_manifest.yaml"
+    m = yaml.safe_load(mp.read_text(encoding="utf-8"))
+    m["grid_run_spec"]["replay_recipe"] = {"baseline": {"bogus": 1.0}, "guards": {}}
+    import hashlib
+    m["grid_run_sig"] = hashlib.sha1(
+        json.dumps(m["grid_run_spec"], sort_keys=True, default=str)
+        .encode()).hexdigest()[:12]
+    mp.write_text(yaml.safe_dump(m, allow_unicode=True), encoding="utf-8")
+    assert "replay_recipe_schema" in validate_curves_provenance(d)["fail"]

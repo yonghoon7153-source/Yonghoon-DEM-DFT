@@ -2378,3 +2378,74 @@ def test_sweep_endpoint_coverage_checked(tmp_path):
     assert not r["일치"]
     assert any("서명된" in p["판정"] for p in r["pairs"]), \
         [p["판정"] for p in r["pairs"]]
+
+
+def test_sweep_checker_is_fail_closed(tmp_path):
+    """★ 13차 발견 2 — 끝점 "정확 일치" 가 NaN·Inf·중복·다른 조건집합을
+    승인했다 (결론이 바뀜).
+
+    리뷰 실측:
+      · sweep J = NaN → 비교 n=0, n_violate=0 → "일치"
+      · sweep J = Inf → dev=Inf, tol=Inf, Inf > Inf 가 거짓 → "일치"
+      · 두 끝점이 main 의 **서로 다른** 5조건씩 → 각각 n_common=5 → "일치"
+      · 같은 조건 행 중복(17행/16조건) → set 기반 개수 검사 통과
+      · sweep manifest 부재 → expected_conditions=None → 일치 판정 가능
+    """
+    import numpy as np
+
+    from tools.check_sweep_consistency import run_check
+
+    d, _ = _complete_artifact(tmp_path,
+                              objectives=("pocv_dvdq", "pocv_dvdq_dqdv"))
+    sub = _wsweep_run(d)
+    assert run_check(sub, d)["일치"], "기준 상태가 일치여야 이 테스트가 유효하다"
+
+    def _mutate(fn):
+        f = pd.read_parquet(sub / "fits.parquet")
+        f = fn(f)
+        f.to_parquet(sub / "fits.parquet", index=False)
+        r = run_check(sub, d)
+        return r
+
+    orig = pd.read_parquet(sub / "fits.parquet").copy()
+
+    def _restore():
+        orig.to_parquet(sub / "fits.parquet", index=False)
+
+    # ① NaN — 비교에서 조용히 빠지면 안 된다
+    r = _mutate(lambda f: f.assign(J=np.nan))
+    assert not r["일치"], "NaN J 를 일치로 판정했다"
+    _restore()
+
+    # ② Inf
+    r = _mutate(lambda f: f.assign(J=np.inf))
+    assert not r["일치"], "Inf J 를 일치로 판정했다"
+    _restore()
+
+    # ③ 행 중복 — (cond_id, objective) 는 정확히 한 행이어야 한다
+    def _dup(f):
+        return pd.concat([f, f.iloc[[0]]], ignore_index=True)
+    r = _mutate(_dup)
+    assert not r["일치"], "중복 행을 일치로 판정했다"
+    _restore()
+
+    # ④ 두 끝점이 서로 다른 조건집합 (각각은 main 의 부분집합)
+    def _split(f):
+        conds = sorted(set(f["cond_id"]))
+        half = len(conds) // 2
+        a = f[(f["objective"] == "wdqdv_0.00") & (f["cond_id"].isin(conds[:half]))]
+        b = f[(f["objective"] == "wdqdv_1.00") & (f["cond_id"].isin(conds[half:]))]
+        return pd.concat([a, b], ignore_index=True)
+    r = _mutate(_split)
+    assert not r["일치"], "두 끝점의 조건집합이 다른데 일치로 판정했다"
+    assert any("끝점" in p["판정"] or "조건" in p["판정"] for p in r["pairs"])
+    _restore()
+
+    # ⑤ sweep manifest 부재 → 서명된 조건집합을 확인할 수 없다 (fail-closed)
+    mp = sub / "manifest.yaml"
+    bak = mp.read_text(encoding="utf-8")
+    mp.unlink()
+    r = run_check(sub, d)
+    assert not r["일치"], "manifest 없이 일치로 판정했다"
+    mp.write_text(bak, encoding="utf-8")
+    assert run_check(sub, d)["일치"], "복구 후 기준 상태로 돌아와야 한다"

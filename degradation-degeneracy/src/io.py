@@ -604,21 +604,41 @@ _COND_FIELDS = ("lli", "lam_pe", "lam_ne", "lam_pe_type", "lam_ne_type",
                 "noise", "seed")
 
 
-def _verify_observed_curves(curves_path: Path, spec: dict) -> dict:
-    """★ 12차 발견 1 — 관측 곡선의 condition identity 와 행 완전성.
+#: ★ 13차 발견 1 — fitting 결과를 직접 결정하는 물리 열. 하나라도 없으면
+#: 곡선이 무엇을 재현하는지 증명되지 않는다 (특히 `v_full_noisy` 가 없으면
+#: fitting 이 경고 없이 `v_full` 로 fallback 해 격자의 2/3 가 noiseless 가 된다).
+_PHYS_COLS = ("protocol", "q_mah", "v_pe", "v_ne", "v_full", "v_full_noisy")
 
-    검사:
+
+def _verify_observed_curves(curves_path: Path, spec: dict) -> dict:
+    """★ 12차 발견 1 + 13차 발견 1 — 관측 곡선의 identity·완전성·**물리 정합**.
+
+    identity/완전성 (12차):
       · 조건마다 7개 identity 필드가 **단일값**이고 유한한가
       · 그 값으로 만든 canonical `Condition.cond_id` 가 기록 ID 와 같은가
       · 조건마다 행 수가 서명된 `postprocess.n_interp` 와 같은가
-      · `x_norm` 이 유한·중복없음이고 모든 조건이 **같은 격자**인가
+      · `x_norm` 이 정확히 `linspace(0, 1, n_interp)` 인가 (13차: 공통이기만
+        하면 통과하던 것을 절대 격자로 강화 — 축소된 창이 통과했다)
+
+    물리 정합 (13차 — 이게 없으면 LAM/LLI 가 0% ↔ 50% 로 바뀔 수 있다):
+      · 필수 물리 열 존재 (`_PHYS_COLS`)
+      · 조건별 `q_mah` 단일값·유한·양수 — fitting 이 첫 행으로 r=q/q_ref 를 만든다
+      · 모든 `v_*` 유한 — 목적함수가 비유한점을 조용히 버려 표본이 줄어든다
+      · `v_full == v_pe - v_ne` — 아니면 full-cell target 과 두 전극이 같은 셀이 아니다
+      · `v_full_noisy == add_noise(v_full, noise, seed)` — 같은 runtime 을 서명하므로
+        결정적으로 재계산 가능
+      · 조건별 `protocol` 단일값이며 `grid_run_spec.protocol_unified` 와 일치
+
+    행의 저장 순서는 강제하지 않는다 (fitting 이 조건별로 x_norm 정렬 후 쓴다).
     """
     import numpy as np
 
+    from src.curves import add_noise
     from src.grid import Condition
 
     checks: dict[str, tuple[bool, str]] = {}
     n_interp = ((spec.get("postprocess") or {}) or {}).get("n_interp")
+    want_proto = spec.get("protocol_unified")
     try:
         df = pd.read_parquet(curves_path,
                              columns=["cond_id", "x_norm", *_COND_FIELDS])
@@ -628,8 +648,22 @@ def _verify_observed_curves(curves_path: Path, spec: dict) -> dict:
                    f"곡선을 다시 생성해야 모집단을 증명할 수 있다")
         return checks
 
+    # ★ 13차 발견 1 — 물리 열은 **있는지부터** 본다. 없으면 뒤 검사를 할 수 없고,
+    #   그 자체가 실패다 (조용한 fallback 을 만드는 통로).
+    try:
+        phys = pd.read_parquet(curves_path, columns=["cond_id", *_PHYS_COLS])
+    except Exception as e:  # noqa: BLE001
+        checks["관측_필수열"] = (
+            False, f"필수 물리 열 {list(_PHYS_COLS)} 중 없는 것이 있다 ({e}) — "
+                   f"곡선이 무엇을 재현하는지 증명되지 않는다 (13차 발견 1)")
+        phys = None
+    else:
+        checks["관측_필수열"] = (True, "")
+
     bad_multi, bad_id, bad_rows, bad_x = [], [], [], []
-    ref_grid = None
+    bad_q, bad_vfin, bad_vsum, bad_noise, bad_proto = [], [], [], [], []
+    ref_grid = (np.linspace(0.0, 1.0, n_interp)
+                if isinstance(n_interp, int) and n_interp >= 1 else None)
     for cid, g in df.groupby("cond_id", sort=True):
         cid = str(cid)
         uniq = {k: g[k].unique() for k in _COND_FIELDS}
@@ -657,11 +691,45 @@ def _verify_observed_curves(curves_path: Path, spec: dict) -> dict:
             bad_x.append(f"{cid}(비유한 또는 중복 x_norm)")
             continue
         xs = np.sort(x)
+        # ★ 13차 발견 1 — "모든 조건이 같은 격자" 만으로는 부족하다. 전 조건이
+        #   함께 [0.2, 0.8] 로 줄어도 통과했다. 서명된 n_interp 의 0→1 절대
+        #   격자와 대조한다.
         if ref_grid is None:
-            ref_grid = xs
+            bad_x.append(f"{cid}(n_interp 가 서명에 없어 격자를 대조할 수 없다)")
         elif len(xs) != len(ref_grid) or not np.allclose(xs, ref_grid,
                                                          rtol=0.0, atol=1e-12):
-            bad_x.append(f"{cid}(다른 x_norm 격자)")
+            bad_x.append(f"{cid}(x_norm 이 linspace(0,1,{n_interp}) 가 아니다: "
+                         f"[{xs[0]:.6g}, {xs[-1]:.6g}])")
+
+        # ── 물리 정합 (13차 발견 1) ──
+        if phys is None:
+            continue
+        pg = phys[phys["cond_id"] == cid]
+        q = pg["q_mah"].to_numpy(dtype=float)
+        if len(set(q.tolist())) != 1 or not np.isfinite(q[0]) or q[0] <= 0:
+            bad_q.append(f"{cid}(고유값 {len(set(q.tolist()))}개, 첫값 {q[0]})")
+        pr = set(pg["protocol"].astype(str))
+        if len(pr) != 1 or (want_proto is not None
+                            and next(iter(pr)) != str(want_proto)):
+            bad_proto.append(f"{cid}({sorted(pr)} vs 서명 {want_proto})")
+        vs = {c: pg[c].to_numpy(dtype=float)
+              for c in ("v_pe", "v_ne", "v_full", "v_full_noisy")}
+        nonfinite = {c: int((~np.isfinite(a)).sum()) for c, a in vs.items()}
+        if any(nonfinite.values()):
+            bad_vfin.append(f"{cid}({ {c: n for c, n in nonfinite.items() if n} })")
+            continue          # 비유한이면 아래 정합 검사는 의미가 없다
+        d_sum = float(np.max(np.abs(vs["v_full"] - (vs["v_pe"] - vs["v_ne"]))))
+        if d_sum > 1e-12:
+            bad_vsum.append(f"{cid}(max|v_full-(v_pe-v_ne)| = {d_sum:.3g})")
+        # noise 실현값 재계산 — 저장 순서와 무관하게 x_norm 정렬 기준으로 본다
+        order = np.argsort(pg["x_norm"].to_numpy(dtype=float)) \
+            if "x_norm" in pg.columns else np.argsort(x)
+        _sig = float(vals["noise"])
+        _seed = int(vals["seed"])
+        want_noisy = add_noise(vs["v_full"][order], _sig, _seed)
+        d_noise = float(np.max(np.abs(vs["v_full_noisy"][order] - want_noisy)))
+        if d_noise > 1e-12:
+            bad_noise.append(f"{cid}(max|Δ| = {d_noise:.3g}, noise={_sig})")
 
     checks["관측조건_단일성"] = (
         not bad_multi,
@@ -676,8 +744,31 @@ def _verify_observed_curves(curves_path: Path, spec: dict) -> dict:
         f"{len(bad_rows)}개다: {bad_rows[:3]}")
     checks["관측_x_norm_공통격자"] = (
         not bad_x,
-        f"{len(bad_x)}개 조건의 x_norm 이 비유한·중복이거나 공통 격자가 "
-        f"아니다: {bad_x[:3]}")
+        f"{len(bad_x)}개 조건의 x_norm 이 비유한·중복이거나 "
+        f"linspace(0,1,n_interp) 가 아니다: {bad_x[:3]}")
+    # ── 13차 발견 1: 물리 정합 ──
+    if phys is not None:
+        checks["관측_q_mah"] = (
+            not bad_q,
+            f"{len(bad_q)}개 조건의 q_mah 가 단일값·유한·양수가 아니다: "
+            f"{bad_q[:3]} — fitting 은 첫 행으로 r=q/q_ref 를 만들므로 "
+            f"섞이면 LAM/LLI 환산이 통째로 달라진다")
+        checks["관측_전압_유한"] = (
+            not bad_vfin,
+            f"{len(bad_vfin)}개 조건에 비유한 전압이 있다: {bad_vfin[:3]} — "
+            f"목적함수가 그 점을 조용히 버려 실제 표본이 줄어든다")
+        checks["관측_전압_정합"] = (
+            not bad_vsum,
+            f"{len(bad_vsum)}개 조건에서 v_full ≠ v_pe - v_ne: {bad_vsum[:3]} — "
+            f"full-cell target 과 두 전극 곡선이 같은 합성 셀이 아니다")
+        checks["관측_noise_재현"] = (
+            not bad_noise,
+            f"{len(bad_noise)}개 조건의 v_full_noisy 가 "
+            f"add_noise(v_full, noise, seed) 와 다르다: {bad_noise[:3]}")
+        checks["관측_protocol"] = (
+            not bad_proto,
+            f"{len(bad_proto)}개 조건의 protocol 이 단일값이 아니거나 서명된 "
+            f"protocol_unified 와 다르다: {bad_proto[:3]}")
     return checks
 
 
@@ -810,12 +901,40 @@ def validate_curves_provenance(curves_dir, repo_root=None) -> dict:
         f"effective_solver(실제 클래스·backend 버전)가 서명에 없다: {_es}")
     # ★ 12차 발견 6 — replay_recipe 는 실패 건수와 무관하게 v4 의 필수 항목이다
     #   (예전에는 n_failed>0 일 때만 검사해 실패 0건 producer 가 빠져나갔다).
+    # ★ 13차 발견 9 — 존재만 보면 `baseline={"bogus": 1.0}` 도 통과한다.
+    #   Baseline 필수 키 **집합**과 유한 실수, guards 형식을 실패 건수와
+    #   무관하게 검사한다 (실패 0건 producer 도 v4 schema 를 주장한다).
     _rr = spec.get("replay_recipe") or {}
-    checks["replay_recipe_schema"] = (
-        isinstance(_rr.get("baseline"), dict) and bool(_rr.get("baseline"))
-        and isinstance(_rr.get("guards"), dict),
-        f"replay_recipe(baseline·guards)가 없거나 형식이 아니다: "
-        f"{sorted(_rr) if _rr else None}")
+    _rb = _rr.get("baseline")
+    _rg = _rr.get("guards")
+    _why = None
+    if not isinstance(_rb, dict) or not isinstance(_rg, dict):
+        _why = f"replay_recipe(baseline·guards)가 없거나 dict 가 아니다: {sorted(_rr) if _rr else None}"
+    else:
+        import math as _m
+        from dataclasses import fields as _dc_fields
+
+        from src.modes import Baseline as _Bl
+        _want = {f.name for f in _dc_fields(_Bl)}
+        _got = set(_rb)
+        if _got != _want:
+            _why = (f"baseline 키 집합이 Baseline 과 다르다 "
+                    f"(없음 {sorted(_want - _got)[:3]}, 잉여 {sorted(_got - _want)[:3]})")
+        else:
+            _badv = [k for k, v in _rb.items()
+                     if not isinstance(v, (int, float))
+                     or isinstance(v, bool)
+                     or not _m.isfinite(v)]
+            if _badv:
+                _why = f"baseline 값이 유한 실수가 아니다: {_badv[:3]}"
+            else:
+                _badg = [k for k, v in _rg.items()
+                         if not isinstance(v, (int, float, bool))
+                         or (isinstance(v, (int, float)) and not isinstance(v, bool)
+                             and not _m.isfinite(v))]
+                if _badg:
+                    _why = f"guards 값이 스칼라가 아니다: {_badg[:3]}"
+    checks["replay_recipe_schema"] = (_why is None, _why or "")
     _ds = spec.get("discharged_state")
     import math as _math
     _ds_ok = (isinstance(_ds, dict)

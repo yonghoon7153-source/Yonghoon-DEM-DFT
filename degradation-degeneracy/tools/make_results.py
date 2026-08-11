@@ -1085,7 +1085,24 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     P.append("./run.sh --mode verify")
     P.append(f"./run.sh --mode grid --config configs/grid_fine.yaml "
              f"--nproc $(nproc) --out {in_dir}")
-    P.append(f"./run.sh --mode fit   --in {in_dir} --nproc $(nproc)")
+    # ★ 13차 발견 6 — 재현 명령을 **이 산출물의 run_spec 에서** 만든다.
+    #   예전에는 항상 기본 fit 명령이라, paired(--no-adaptive --no-warm-start)
+    #   보고서를 보고 그대로 실행하면 다른 비대칭 pipeline 이 돌았다.
+    _rs = manifest.get("run_spec") or {}
+    _fit = [f"./run.sh --mode fit   --in {in_dir} --nproc $(nproc)"]
+    if _rs.get("objective_order"):
+        _fit.append(f"--objective {','.join(_rs['objective_order'])}")
+    if _rs.get("reference") and _rs["reference"] != "grid":
+        _fit.append(f"--reference {_rs['reference']}")
+    if _rs.get("bounds_preset") and _rs["bounds_preset"] not in ("expanded",):
+        _fit.append(f"--bounds {_rs['bounds_preset']}")
+    if _rs.get("n_restarts"):
+        _fit.append(f"--n-restarts {_rs['n_restarts']}")
+    if (_rs.get("optimizer") or {}).get("adaptive") is False:
+        _fit.append("--no-adaptive")
+    if _rs.get("warm_start") is False:
+        _fit.append("--no-warm-start")
+    P.append(" ".join(_fit))
     P.append(f"./run.sh --mode score --in {in_dir}")
     P.append(f"./run.sh --mode hessian --in {in_dir}")
     P.append(f"./run.sh --mode report --in {in_dir}")

@@ -155,6 +155,12 @@ def _solve_condition(cfg: dict, cond: Condition, d_dict: dict,
     각 워커는 자체 param을 생성하고(runner.build_param), 모델은 워커별
     1회 빌드 후 재사용된다(model.lru_cache). 반환은 picklable dict만.
     """
+    # ★ 13차 발견 3 — 이 워커가 **실제로** 쓴 solver identity. parent 의 probe 만
+    #   서명하면 워커별 fallback 을 검출할 수 없다. 모든 return 경로에 싣는다
+    #   (성공·실패 무관 — main 이 전 조건을 대조한다).
+    from src.runner import effective_solver as _eff_w
+    _solver_id = _eff_w(cfg)
+
     b = Baseline.from_config(cfg)
     d = DischargedState(**d_dict)
     guards = cfg.get("guards", {})
@@ -166,24 +172,26 @@ def _solve_condition(cfg: dict, cond: Condition, d_dict: dict,
                              cond.lam_pe_type, cond.lam_ne_type, b, d, guards)
     except InfeasibleConditionError as e:
         return {"cond": asdict(cond), "cond_id": cond.cond_id,
-                "error": f"infeasible: {e}", "elapsed_s": 0.0}
+                "error": f"infeasible: {e}", "elapsed_s": 0.0,
+                "solver_identity": _solver_id}
 
     res = run_one(cfg, ov, protocol_name)
     if not res.ok:
         return {"cond": asdict(cond), "cond_id": cond.cond_id,
-                "error": res.error, "elapsed_s": res.elapsed_s}
+                "error": res.error, "elapsed_s": res.elapsed_s,
+                "solver_identity": _solver_id}
 
     try:
         curves = extract_curves(res.solution, n_trim, n_interp)
     except Exception as e:  # noqa: BLE001
         return {"cond": asdict(cond), "cond_id": cond.cond_id,
                 "error": f"extract: {type(e).__name__}: {e}",
-                "elapsed_s": res.elapsed_s}
+                "elapsed_s": res.elapsed_s, "solver_identity": _solver_id}
 
     v_noisy = add_noise(curves["v_full"], cond.noise, cond.seed)
     return {
         "cond": asdict(cond), "cond_id": cond.cond_id, "error": None,
-        "elapsed_s": res.elapsed_s,
+        "elapsed_s": res.elapsed_s, "solver_identity": _solver_id,
         "q_mah": curves["q_mah"],
         "x_norm": curves["x_norm"].tolist(),
         "v_pe": curves["v_pe"].tolist(),
@@ -253,6 +261,34 @@ def grid_run_spec(cfg: dict, conditions: list[Condition],
     sig = hashlib.sha1(
         json.dumps(spec, sort_keys=True, default=str).encode()).hexdigest()[:12]
     return spec, sig
+
+
+def _assert_worker_solvers(results: list[dict], want: dict) -> None:
+    """★ 13차 발견 3 — **워커가 실제로 쓴** solver 가 서명과 같은지 확인한다.
+
+    실제 solve 는 loky worker 안에서 각자 `make_solver()` 를 호출한다. parent 가
+    probe 한 identity 만 서명에 들어가므로, 어느 워커에서 IDAKLU constructor 가
+    실패해 Casadi 로 fallback 하면 **다른 solver 의 곡선이 같은 서명 아래** 저장
+    된다. 청크를 쓰기 전에 전 조건을 대조하고, 하나라도 다르면 즉시 멈춘다.
+    identity 를 안 실은 결과(옛 워커)도 증명 불가이므로 실패다 (fail-closed).
+    """
+    want_key = {k: want.get(k) for k in ("effective_class", "pybamm",
+                                         "pybammsolvers", "casadi")}
+    bad, missing = [], []
+    for r in results:
+        got = r.get("solver_identity")
+        if not got:
+            missing.append(str(r.get("cond_id")))
+            continue
+        if {k: got.get(k) for k in want_key} != want_key:
+            bad.append(f"{r.get('cond_id')}({got.get('effective_class')})")
+    if missing or bad:
+        raise RuntimeError(
+            f"워커가 실제로 쓴 solver 가 서명과 다르거나 기록되지 않았습니다 "
+            f"(13차 발견 3): 불일치 {bad[:3]} / 미기록 {missing[:3]}\n"
+            f"  서명: {want_key}\n"
+            f"  같은 서명 아래 서로 다른 solver 의 곡선이 섞이면 합성 truth 가 "
+            f"무너집니다. 환경을 확인하고 처음부터 다시 생성하세요.")
 
 
 def _result_to_frame(r: dict, protocol_name: str,
@@ -467,6 +503,8 @@ def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
                     delayed(_solve_condition)(cfg, c, d_dict, protocol_name)
                     for c in chunk
                 )
+                # ★ 13차 발견 3 — 저장 **전에** 워커 solver 를 서명과 대조한다
+                _assert_worker_solvers(results, g_spec["effective_solver"])
                 frames = []
                 for r in results:
                     if r["error"] is not None:
