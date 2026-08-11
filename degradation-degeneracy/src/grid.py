@@ -212,7 +212,7 @@ def grid_run_spec(cfg: dict, conditions: list[Condition],
 
     cond_ids = sorted(c.cond_id for c in conditions)
     spec = {
-        "grid_sig_version": 2,   # F82b: discharged_state 필수화
+        "grid_sig_version": 3,   # 11차: replay_recipe 필수화
         "config_hash": config_hash(cfg),
         # extends 부모까지 — 최종 병합본 해시만으로도 내용은 고정되지만,
         # 어떤 파일들이 읽혔는지가 없으면 봉인·재검이 불가능하다 (발견 3)
@@ -231,6 +231,15 @@ def grid_run_spec(cfg: dict, conditions: list[Condition],
         #   ROW_MEANS 6.0/3.0 혼재, ROW_SIGS 단일, VALIDATOR_OK=True).
         "discharged_state": discharged,
         "discharged_state_sha": discharged_sha,
+        # ★ 11차 발견 3 — 실패 사유("infeasible:")를 **재평가**하는 데 필요한
+        #   물리·guard recipe 를 서명 안에 봉인한다. 예전에는 검증자가 호출자가
+        #   준 cfg 로 replay 해서, (a) cfg 를 안 주는 경로(archive·격리 복원)는
+        #   재검 자체를 건너뛰었고, (b) 준 cfg 가 producer 의 것과 같다는 보장도
+        #   없었다. 서명된 recipe 만 쓰면 어느 경로에서 검증하든 같은 기준이다.
+        "replay_recipe": {
+            "baseline": {k: float(v) for k, v in (cfg.get("baseline") or {}).items()},
+            "guards": cfg.get("guards") or {},
+        },
         "source_digest": source_digest(),
         "env": env_fingerprint(),
     }

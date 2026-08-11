@@ -189,12 +189,18 @@ def canonical_input_key(path, repo_root=None) -> str:
       · `archive_bundle` 은 restore map 을 상대경로로 적으므로 `check()` 의
         대조가 어긋나 완비된 묶음도 "검증 불가"로 나왔다.
     저장소 밖 경로는 어쩔 수 없이 절대경로로 남긴다 (그건 애초에 이식 불가다).
+
+    ★ 11차 발견 8 — 구분자를 **POSIX 로 정규화**한다. Windows 에서 만든 manifest
+    는 `a\\res\\curves.parquet` 를 키로 적었고, archive 의 restore_map/payload 는
+    (F80/9-c, 10차) POSIX 라 두 표기가 어긋나 묶음 검증이 실패했다 (리뷰 실측:
+    Windows 에서 nested bundle 테스트 2건 실패). 키는 어느 OS 에서 만들든 같아야
+    한다.
     """
     root = Path(repo_root) if repo_root else Path(__file__).resolve().parent.parent
     try:
-        return str(Path(path).resolve().relative_to(root.resolve()))
+        return Path(path).resolve().relative_to(root.resolve()).as_posix()
     except (ValueError, OSError):
-        return str(path)
+        return Path(path).as_posix()
 
 
 def seal_inputs(paths, repo_root=None) -> dict:
@@ -580,14 +586,101 @@ def fits_seal(fits_path, cond_ids=None, objective_order=None) -> dict:
     return out
 
 
-def validate_curves_provenance(curves_dir, repo_root=None, cfg=None) -> dict:
+def _verify_failed_reasons(d: Path, spec: dict, ds: dict) -> dict:
+    """실패 행을 **서명된 recipe** 로 재검한다 (11차 발견 2·3).
+
+    두 가지를 함께 본다.
+      1. ID↔물리조건 결합 — 행의 `condition` payload 로 `Condition.cond_id` 를
+         다시 만들어 CSV 의 `cond_id` 와 같아야 한다. 아니면 "그 ID 의 조건이
+         실패했다"가 증명되지 않는다 (payload 만 불능인 위조).
+      2. 불능성 재평가 — `infeasible:` 사유는 spec 의 `replay_recipe`
+         (baseline·guards) + 서명된 완방상태로 `build_overrides` 를 다시 돌려
+         정말 InfeasibleConditionError 가 나는지 확인한다.
+    결정적 재검이 불가능한 사유(solver 실패 등)는 fail-closed 로 남긴다.
+    """
+    import csv as _csv
+
+    from src.baseline import DischargedState as _DState
+    from src.grid import Condition as _Cond
+    from src.modes import Baseline as _Bl
+    from src.modes import InfeasibleConditionError as _Infe
+    from src.modes import build_overrides as _bov
+
+    checks: dict[str, tuple[bool, str]] = {}
+    recipe = (spec or {}).get("replay_recipe") or {}
+    if not recipe.get("baseline"):
+        checks["실패사유_recipe"] = (
+            False, "grid_run_spec 에 replay_recipe(baseline·guards)가 없다 — "
+                   "실패 라벨을 producer 기준으로 재검할 수 없다 (11차 발견 3)")
+        return checks
+    if not (d / "failed.csv").exists():
+        return checks                     # 존재 검사는 호출부가 이미 했다
+    try:
+        _bl = _Bl(**{k: float(v) for k, v in recipe["baseline"].items()})
+        _dst = _DState(**{k: float(ds[k])
+                          for k in ("ne_primary", "ne_secondary", "pe")})
+    except Exception as e:  # noqa: BLE001
+        checks["실패사유_recipe"] = (
+            False, f"서명된 recipe 로 baseline/완방상태를 구성하지 못했다: {e}")
+        return checks
+
+    _guards = recipe.get("guards") or {}
+    _forged, _unbound, _unver = [], [], []
+    with open(d / "failed.csv", newline="", encoding="utf-8") as f:
+        for row in _csv.DictReader(f):
+            cid = str(row.get("cond_id"))
+            try:
+                c = json.loads(row.get("condition") or "{}")
+                cond = _Cond(lli=float(c["lli"]), lam_pe=float(c["lam_pe"]),
+                             lam_ne=float(c["lam_ne"]),
+                             lam_pe_type=str(c["lam_pe_type"]),
+                             lam_ne_type=str(c["lam_ne_type"]),
+                             noise=float(c["noise"]), seed=int(c["seed"]))
+            except Exception as e:  # noqa: BLE001
+                _unbound.append(f"{cid}(payload 파손: {type(e).__name__})")
+                continue
+            if cond.cond_id != cid:
+                _unbound.append(f"{cid}(payload 의 canonical ID {cond.cond_id})")
+                continue
+            if not str(row.get("reason") or "").startswith("infeasible"):
+                _unver.append(cid)
+                continue
+            try:
+                _bov(cond.lli, cond.lam_pe, cond.lam_ne, cond.lam_pe_type,
+                     cond.lam_ne_type, _bl, _dst, _guards)
+            except _Infe:
+                continue                  # 정말 불능 — 라벨이 참
+            except Exception as e:  # noqa: BLE001
+                _unver.append(f"{cid}(재평가 예외: {type(e).__name__})")
+                continue
+            _forged.append(cid)
+    checks["실패목록_ID결합"] = (
+        not _unbound,
+        f"{len(_unbound)}행의 cond_id 가 그 행의 condition payload 에서 다시 "
+        f"계산한 canonical ID 와 다르다: {_unbound[:3]} — 그 ID 의 조건이 "
+        f"실패했다는 것이 증명되지 않는다 (11차 발견 2)")
+    checks["실패사유_불능재검"] = (
+        not _forged,
+        f"guard 를 통과하는(=풀리는) 조건 {len(_forged)}건이 실패로 계상돼 "
+        f"있다 — 모집단 임의 축소: {_forged[:3]}")
+    checks["실패사유_미검증"] = (
+        not _unver,
+        f"{len(_unver)}건의 실패 사유가 결정적 재검 불가다 (solver 실패 등): "
+        f"{_unver[:3]} — 봉인된 재실행 근거 없이 인용 모집단에서 제외할 수 없다")
+    return checks
+
+
+def validate_curves_provenance(curves_dir, repo_root=None) -> dict:
     """★ F74 — 곡선 producer 를 **독립적으로** 검증한다 (8차 리뷰 발견 1).
 
     검사: manifest 존재 · grid_run_spec/sig 존재 · **서명 재계산** · 시작 기록
     대조 · curves 재해시 · **모든 행의 grid_run_sig 일치** · 조건 집합 서명 대조 ·
-    의도 = 관측 ⊎ 실패 ID 분할(F83b) · 생성 시점 clean · 실행 중 코드 불변.
-    `cfg` 를 주면 failed.csv 의 "infeasible" 라벨을 guard 재평가로 재검한다
-    (10차 자체 확인 2) — fitting preflight 는 반드시 cfg 를 넘긴다.
+    의도 = 관측 ⊎ 실패 ID 분할(F83b) · **실패 행의 ID↔조건 결합과 불능성
+    재평가**(11차 발견 2·3, 서명된 `replay_recipe` 로) · 생성 시점 clean ·
+    실행 중 코드 불변.
+
+    호출자 cfg 를 받지 않는다 — 재검 기준은 producer 가 서명한 recipe 하나뿐
+    이라, archive·격리 복원 등 어느 경로에서 불러도 같은 판정이 나온다.
 
     fitting 이 시작 전에 이걸 호출한다. 수제 parquet 은 `grid_run_sig` 열이
     없어서, 다른 config 의 resume 혼합은 행 서명이 갈려서 걸린다.
@@ -611,9 +704,9 @@ def validate_curves_provenance(curves_dir, repo_root=None, cfg=None) -> dict:
     # ★ F82b/10차 발견 2-c — 버전과 필수 물리 필드를 강제한다. 예전에는
     #   discharged=None 으로 만든 spec 도, F82 이전 버전도 그대로 통과했다.
     checks["grid_sig_version"] = (
-        spec.get("grid_sig_version") == 2,
-        f"grid_sig_version이 {spec.get('grid_sig_version')}이다 (2 필요 — "
-        f"discharged_state 미포함 형식)")
+        spec.get("grid_sig_version") == 3,
+        f"grid_sig_version이 {spec.get('grid_sig_version')}이다 (3 필요 — "
+        f"discharged_state·replay_recipe 미포함 형식)")
     _ds = spec.get("discharged_state")
     import math as _math
     _ds_ok = (isinstance(_ds, dict)
@@ -707,57 +800,16 @@ def validate_curves_provenance(curves_dir, repo_root=None, cfg=None) -> dict:
                 f"관측∩실패 {len(_overlap)}건, (관측∪실패) 해시 {_union} ≠ "
                 f"의도 {want}, 실패 {len(fail_ids)} ≠ 기록 {n_fail} — "
                 f"ID 수준에서 분할이 성립하지 않는다")
-        # ★ 10차 자체 확인 2 — 분할이 ID 수준에서 맞아도 "실패" 라벨 자체가
-        #   위조면(= 풀리는 조건을 failed 로 재선언) 관측∪실패가 불변이라 전부
-        #   통과하고, 모집단(분모)이 공격자 선택으로 줄어든다 (리뷰 실측:
-        #   AFTER ok=True). guard 불능("infeasible:")은 결정적으로 재현
-        #   가능하므로, cfg 가 주어지면 failed.csv 의 조건을 build_overrides 로
-        #   재평가해 **정말 불능인지** 대조한다. fitting preflight 가 cfg 를
-        #   반드시 넘긴다 — cfg 없이 부른 검증은 이 재검을 하지 못한다.
-        if cfg is not None and (d / "failed.csv").exists():
-            import csv as _csv
-
-            from src.baseline import DischargedState as _DState
-            from src.modes import Baseline as _Bl
-            from src.modes import InfeasibleConditionError as _Infe
-            from src.modes import build_overrides as _bov
-            try:
-                _bl = _Bl.from_config(cfg)
-                _dst = _DState(**{k: float(_ds[k]) for k in
-                                  ("ne_primary", "ne_secondary", "pe")})
-            except Exception as e:  # noqa: BLE001
-                checks["실패사유_불능재검"] = (
-                    False, f"재검 준비 실패 (baseline/완방상태 구성 불가: {e})")
-            else:
-                _forged, _unver = [], []
-                with open(d / "failed.csv", newline="", encoding="utf-8") as f:
-                    for row in _csv.DictReader(f):
-                        if not str(row.get("reason") or "").startswith("infeasible"):
-                            _unver.append(row.get("cond_id"))
-                            continue
-                        try:
-                            c = json.loads(row.get("condition") or "{}")
-                            _bov(float(c["lli"]), float(c["lam_pe"]),
-                                 float(c["lam_ne"]),
-                                 str(c.get("lam_pe_type", "de")),
-                                 str(c.get("lam_ne_type", "de")),
-                                 _bl, _dst, cfg.get("guards", {}))
-                        except _Infe:
-                            continue          # 정말 불능 — 라벨이 참
-                        except Exception as e:  # noqa: BLE001
-                            _forged.append(f"{row.get('cond_id')}"
-                                           f"(기록 파손: {type(e).__name__})")
-                            continue
-                        _forged.append(str(row.get("cond_id")))
-                checks["실패사유_불능재검"] = (
-                    not _forged,
-                    f"guard 를 통과하는(=풀리는) 조건 {len(_forged)}건이 실패로 "
-                    f"계상돼 있다 — 모집단 임의 축소: {_forged[:3]}")
-                checks["실패사유_미검증"] = (
-                    not _unver,
-                    f"{len(_unver)}건의 실패 사유가 결정적 재검 불가다 (solver "
-                    f"실패 등): {_unver[:3]} — 봉인된 재실행 근거 없이 인용 "
-                    f"모집단에서 제외할 수 없다")
+        # ★ 10차 자체 확인 2 / 11차 발견 2·3 — 분할이 ID 수준에서 맞아도 "실패"
+        #   라벨 자체가 위조면(= 풀리는 조건을 failed 로 재선언) 관측∪실패가
+        #   불변이라 전부 통과하고, 모집단(분모)이 공격자 선택으로 줄어든다.
+        #   재검은 **서명된 replay_recipe** 로만 한다 (11차 발견 3: 호출자 cfg 에
+        #   의존하면 cfg 를 안 주는 경로가 재검을 통째로 건너뛰었다). 그리고
+        #   행의 `condition` payload 로 canonical cond_id 를 다시 만들어 CSV 의
+        #   `cond_id` 와 **결합**한다 (11차 발견 2: payload 는 진짜 불능인데 ID 는
+        #   다른 조건인 위조가 통과했다).
+        if n_fail:
+            checks.update(_verify_failed_reasons(d, spec, _ds))
         checks["_참고_조건집합"] = (True, f"의도 {want} / 곡선 {got}")
 
     fail = [k for k, (ok, _) in checks.items() if not ok]
@@ -906,6 +958,33 @@ def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
             elif file_digest(cand) != dig:
                 snap_bad.append(f"{Path(key).name}: 스냅샷 내용이 봉인과 다름")
     checks["입력_스냅샷"] = (not snap_bad, "; ".join(snap_bad[:3]))
+
+    # ★ 11차 발견 3 — producer 검증을 fit artifact 에서도 **독립적으로 재수행**
+    #   한다. 예전에는 fitting 이 시작 전에 한 번 보고 abort 여부에만 썼기에,
+    #   복원본을 검증하는 쪽은 곡선 모집단(실패 라벨 포함)을 전혀 확인하지
+    #   않았다. 스냅샷은 봉인된 바이트이고 restore 가 재생성하므로, 그 사본으로
+    #   같은 검증을 돌린다.
+    if not snap_bad and snap_dir.is_dir():
+        _need = ("curves.parquet", "curves_manifest.yaml",
+                 "curves_manifest_start.yaml", "failed.csv")
+        _pv = {Path(k).name: snap_dir / f"{str(v)[:12]}_{Path(k).name}"
+               for k, v in (sealed_start or {}).items()
+               if Path(k).name in _need}
+        if "curves.parquet" in _pv and "curves_manifest.yaml" in _pv:
+            import shutil as _sh
+            import tempfile as _tf
+            with _tf.TemporaryDirectory() as _td:
+                for _name, _src in _pv.items():
+                    _sh.copy2(_src, Path(_td) / _name)
+                _pcv = validate_curves_provenance(_td)
+            checks["곡선_producer_재검"] = (
+                _pcv["ok"],
+                f"봉인된 곡선 producer 가 검증에 실패한다: {_pcv['fail'][:4]} — "
+                f"이 fit 의 조건 모집단을 신뢰할 수 없다 (11차 발견 3)")
+        else:
+            checks["곡선_producer_재검"] = (
+                False, "봉인 입력에 curves/producer 기록이 없다 (F70 이전 산출물)")
+
     # ── 코드 identity: 서명에 들어 있고 dirty가 아니어야 한다 (F49) ──
     checks["코드_identity"] = (
         bool(spec0.get("source_digest")) and spec0.get("git_dirty") is False,

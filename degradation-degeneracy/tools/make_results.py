@@ -282,6 +282,23 @@ def _flat_pairs(saved, now, path=""):
     return out
 
 
+#: ★ 11차 발견 5 — 정의가 **글자 그대로 같은** sweep 끝점 ↔ 본 실행 목적함수.
+#: (`tools/check_sweep_consistency.DEFAULT_PAIRS` 와 같은 쌍)
+_ENDPOINT_PAIRS = (("wdqdv_0.00", "pocv_dvdq"),
+                   ("wdqdv_1.00", "pocv_dvdq_dqdv"))
+
+
+def _norm_weights(w):
+    """목적함수 가중치 dict 를 비교 가능한 정규형으로 (없는 항 = 0.0).
+
+    `pocv_dvdq` 는 `w_dqdv` 키가 아예 없고 `wdqdv_0.00` 은 `w_dqdv: 0.0` 을
+    명시한다 — 정의는 같은데 dict 는 다르다. 채워서 비교한다.
+    """
+    if not isinstance(w, dict):
+        return None
+    return {k: float(w.get(k, 0.0)) for k in ("w_pocv", "w_dvdq", "w_dqdv")}
+
+
 def _numbers_equal(saved, now) -> bool:
     """저장본과 재계산본의 숫자가 전부 일치하는가 (F77 stale 판정).
 
@@ -445,11 +462,42 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
                 if _mspec.get(k) != _wspec.get(k):
                     sweep_vs_main.append(
                         f"{k}({_mspec.get(k)}≠{_wspec.get(k)})")
+            # ★ 11차 발견 5 — **같은 실험인가**를 먼저 본다. 예전에는 optimizer
+            #   축만 봐서, sweep 이 아예 다른 곡선으로 돌아도(curves_sha 불일치)
+            #   "본 실행과 같은 설정" 초록 문장이 실렸다 (리뷰 실측).
+            for k in ("curves_sha", "producer_sha", "base_config_sha",
+                      "source_digest", "env", "inventory", "obj_cfg"):
+                if _mspec.get(k) != _wspec.get(k):
+                    sweep_vs_main.append(f"{k} 불일치")
+            # 끝점 목적함수의 **정의 동치** (이름이 아니라 가중치 dict)
+            for _wname, _mname in _ENDPOINT_PAIRS:
+                a = _norm_weights((_wspec.get("objectives") or {}).get(_wname))
+                b = _norm_weights((_mspec.get("objectives") or {}).get(_mname))
+                if a is None or b is None:
+                    sweep_vs_main.append(f"끝점 {_wname}↔{_mname} 한쪽이 없다")
+                elif a != b:
+                    sweep_vs_main.append(f"끝점 정의 {_wname}({a})≠{_mname}({b})")
             # tol — 보고서 전체 재계산이 0.02 를 쓰므로 sweep 도 같아야
             # 이 절의 비율을 다른 절과 나란히 읽을 수 있다
             _ws_tol = float(saved_ws.get("tol", 0.02))
             if abs(_ws_tol - 0.02) > 1e-12:
                 sweep_vs_main.append(f"tol({_ws_tol}≠0.02)")
+            # ★ 11차 발견 5 — 설정 대조만으로는 "같은 답을 낸다"가 증명되지
+            #   않는다. 정의가 같은 두 끝점을 **실제 결과로** 대조한다
+            #   (`tools/check_sweep_consistency.py`). 보고서가 "이 도구가
+            #   확인한다"고 써 왔지만 아무도 호출하지 않았다.
+            try:
+                from tools.check_sweep_consistency import run_check
+                _chk = run_check(in_dir / "wsweep", in_dir, tol=_ws_tol)
+                _bad_pairs = [f"{p['sweep_objective']}↔{p['main_objective']}"
+                              f"({p.get('_오류') or p.get('판정', '')[:40]})"
+                              for p in _chk["pairs"]
+                              if p["n_common"] == 0
+                              or not str(p.get("판정", "")).startswith("일치")]
+                if _bad_pairs:
+                    sweep_vs_main.append(f"끝점 결과 불일치: {_bad_pairs}")
+            except Exception as e:  # noqa: BLE001
+                sweep_vs_main.append(f"끝점 일치 확인 실패({type(e).__name__})")
             wspec_verified = _wspec       # 렌더는 서명된 spec 값으로 (발견 5)
         elif saved_ws:
             stale.append("wsweep/weight_sweep.yaml (fits.parquet 없음 — 재계산 불가)")
@@ -608,10 +656,15 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     #   자기신고라 "값 변조 + 재봉인"을 구분하지 못한다. 이 문서가 커밋되면
     #   아래 digest 가 저장소 이력에 남아, 이후 변조는 보고서 재생성 diff 로
     #   드러난다 (fits: 지금 재계산 / curves: run_spec 에 봉인된 값).
+    # ★ 11차 발견 7 — prefix 가 아니라 **full 64자리**를 싣는다. artifacts/
+    #   artifact_index.yaml 의 같은 키와 글자 그대로 대조할 수 있어야 한다.
     if (in_dir / "fits.parquet").exists():
         _spec_a = manifest.get("run_spec") or {}
-        P.append(f"앵커: fits `{_fd(in_dir / 'fits.parquet', full=True)[:16]}` · "
-                 f"curves(sealed) `{str(_spec_a.get('curves_sha'))[:16]}`  ")
+        P.append(f"앵커 fits_sha256: `{_fd(in_dir / 'fits.parquet', full=True)}`  ")
+        P.append(f"앵커 curves_sha256(sealed): "
+                 f"`{(_spec_a.get('producer') or {}).get('curves_sha256')}`  ")
+        P.append("(대조: `artifacts/artifact_index.yaml` — 두 값이 같은 묶음이 "
+                 "이 보고서의 근거다)  ")
     P.append("")
 
     # ── 질문 ──

@@ -38,6 +38,10 @@ PARAM_NAMES = {
 # config baseline 키 중 pybamm 파라미터로 직접 넘기지 않는 것
 _NON_PARAM_KEYS = {"pe_max_conc"}
 
+#: ★ 11차 발견 1 — 완방상태 값을 실제로 바꿀 수 있는 runtime 축.
+#: `platform` 문자열(커널 빌드 번호 등)은 값과 무관해 제외한다.
+_ENV_KEYS = ("python", "pybamm", "scipy", "numpy", "machine")
+
 
 @dataclass(frozen=True)
 class DischargedState:
@@ -152,8 +156,22 @@ def get_discharged_state(
         #   baseline/solver 불일치(위 raise)는 "다른 실험의 캐시"라 조사가 필요
         #   하지만, 코드 변경은 일상이므로 **미스로 취급해 재계산**한다 — stale
         #   값이 쓰이는 일은 없고, resume 중이면 격자 서명 가드(F82)가 잡는다.
+        # ★ 11차 발견 1 — runtime identity 도 같은 이유로 대조한다. 같은 코드·
+        #   config·solver dict 라도 PyBaMM/SciPy/solver backend 버전이 바뀌면
+        #   완방상태 값이 달라질 수 있는데, 그 캐시가 hit 되면 격자 manifest 는
+        #   **현재** env 를 기록해 "이 env 에서 만든 truth" 라는 주장이 거짓이
+        #   된다. 결정에 쓰는 축만 본다 (platform 문자열 등은 제외).
+        from src.io import env_fingerprint as _ef
         from src.io import source_digest as _sd
-        if data.get("source_digest") == _sd():
+        _env_now = {k: _ef().get(k) for k in _ENV_KEYS}
+        _env_old = {k: (data.get("env") or {}).get(k) for k in _ENV_KEYS}
+        if _env_old != _env_now:
+            log.warning("완방상태 캐시가 다른 runtime 에서 계산됨 (%s ≠ %s) — "
+                        "미스로 취급해 재계산: %s", _env_old, _env_now, path)
+        elif data.get("source_digest") != _sd():
+            log.warning("완방상태 캐시가 다른 코드로 계산됨 (%s ≠ %s) — 미스로 "
+                        "취급해 재계산: %s", data.get("source_digest"), _sd(), path)
+        else:
             vals = {k: data.get(k) for k in ("ne_primary", "ne_secondary", "pe")}
             bad = [k for k, v in vals.items()
                    if not isinstance(v, (int, float)) or not math.isfinite(v) or v < 0]
@@ -162,17 +180,17 @@ def get_discharged_state(
                     f"완방상태 캐시의 {bad} 값이 유효하지 않습니다: {path} (F82)")
             log.info("완방상태 캐시 적중: %s", path)
             return DischargedState(**vals)
-        log.warning("완방상태 캐시가 다른 코드로 계산됨 (%s ≠ %s) — 미스로 "
-                    "취급해 재계산: %s", data.get("source_digest"), _sd(), path)
 
     state = compute_discharged_state(cfg)
 
     if use_cache:
         path.parent.mkdir(parents=True, exist_ok=True)
-        from src.io import source_digest
+        from src.io import env_fingerprint, source_digest
         payload = {**asdict(state), "baseline_hash": baseline_hash(cfg),
                    "solver": cfg.get("solver"),          # F82b: 계산 recipe
-                   "source_digest": source_digest()}     # 정보 (판정엔 안 씀)
+                   "source_digest": source_digest(),
+                   # ★ 11차 발견 1 — 생성 runtime. hit 판정에 쓰인다.
+                   "env": env_fingerprint()}
         path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
         log.info("완방상태 캐시 저장: %s", path)
     return state

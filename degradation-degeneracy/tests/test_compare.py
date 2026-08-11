@@ -36,6 +36,10 @@ def _fits(objectives=("pocv", "pocv_dvdq"), n_lli=3, seed=0, err_scale=0.05):
                             "lam_ne_hat": ne + e[2],
                             "r": 1.0 - 0.5 * (pe + ne) - 0.1 * lli,
                             "a_pe": 1.0, "a_ne": 1.0,
+                            # ★ 11차 발견 5 — 끝점 일치 확인이 J 를 비교한다.
+                            #   목적함수별 결정적 값이라 sweep 끝점과 본 실행이
+                            #   같은 값을 갖는다 (정의가 같으므로 그래야 맞다).
+                            "J": 0.1 + 0.01 * oi,
                             "reference": "grid",
                         })
     return pd.DataFrame(rows)
@@ -810,16 +814,19 @@ def _complete_artifact(tmp_path, repo_root=None, objectives=("pocv_dvdq",)):
     d = Path(tmp_path) / "res"
     d.mkdir(parents=True, exist_ok=True)
 
-    curves = d / "curves.parquet"       # 이름이 필수 입력 판정에 쓰인다 (F50)
-    _fits(objectives=("pocv_dvdq",)).to_parquet(curves, index=False)
-    cfg = d / "base.yaml"              # 〃
+    cfg = d / "base.yaml"              # 이름이 필수 입력 판정에 쓰인다 (F50)
     cfg.write_text("dummy: 1\n", encoding="utf-8")
-    # ★ F70 — 곡선 producer 기록 (upstream truth 봉인)
-    from src.grid import write_curves_manifest
-    prod = write_curves_manifest(d, {"parameter_set": "test", "grid": {"noise_seed": 42}},
-                                 conditions=[], extra={"solver": "test"})
+    # ★ F70/F74 — 곡선 producer 기록 (upstream truth 봉인).
+    #   ★ 11차 발견 3 — fit artifact 의 validator 가 봉인된 producer 를 **다시
+    #   검증**하므로, fixture 도 서명·행별 sig·시작 기록·replay_recipe 를 갖춘
+    #   진짜 producer 여야 한다 (예전엔 solver 만 적힌 껍데기였다).
+    from tests.test_fitting import sign_producer
+    sign_producer(d, _fits(objectives=("pocv_dvdq",)))
+    curves = d / "curves.parquet"
+    prod = d / "curves_manifest.yaml"
+    prod_start = d / "curves_manifest_start.yaml"
 
-    sealed = seal_inputs([curves, cfg, prod], repo_root=repo_root)
+    sealed = seal_inputs([curves, cfg, prod, prod_start], repo_root=repo_root)
     # ★ F68 — 조건 집합 서명은 **실제 fits 의 조건**에서 나와야 한다.
     #   하드코딩하면 그 자체가 위조 통로가 된다.
     from src.io import _sha256_lines
@@ -829,8 +836,14 @@ def _complete_artifact(tmp_path, repo_root=None, objectives=("pocv_dvdq",)):
     env = env_fingerprint()
     attempt_id = "20260807T000000_1_000"
 
+    # ★ 11차 발견 5 — 끝점 동치 검사가 **가중치 정의**를 비교하므로 fixture 도
+    #   configs/objectives.yaml 의 실제 정의를 쓴다 (이름만 같으면 안 된다).
+    _W = {"pocv": {"w_pocv": 1.0},
+          "pocv_dvdq": {"w_pocv": 1.0, "w_dvdq": 1.0},
+          "pocv_dvdq_dqdv": {"w_pocv": 1.0, "w_dvdq": 1.0, "w_dqdv": 1.0},
+          "dqdv_only": {"w_dqdv": 1.0}}
     spec = {"sig_version": 5,
-            "objectives": {o: {"w_pocv": 1.0} for o in objectives},
+            "objectives": {o: _W.get(o, {"w_pocv": 1.0}) for o in objectives},
             # ★ F67 — 계산을 고정하는 축들. 설정만으론 부족하다.
             "objective_order": list(objectives),
             "condition_ids_sha256": _sha256_lines(_conds)[:16],
@@ -1936,7 +1949,7 @@ def test_grid_producer_bundle_uses_producer_schema(tmp_path):
     # _tiny_curves 형식의 producer 디렉터리 (fit 없음)
     import sys
     sys.path.insert(0, str(Path(__file__).parent))
-    from test_fitting import _tiny_curves
+    from tests.test_fitting import _tiny_curves
     d = _tiny_curves(tmp_path / "curves")
     (d / "manifest.yaml").write_text(yaml.safe_dump(
         {"run_type": "grid", "config_hash": "test"}), encoding="utf-8")
@@ -2124,8 +2137,11 @@ def test_sweep_settings_verified_against_main_spec(tmp_path):
     from tools.compare_objectives import run_compare
     from tools.make_results import build
 
-    # ① 같은 설정 — 대조로 확인된 초록 문장
-    d, _ = _complete_artifact(tmp_path / "same")
+    # ① 같은 설정 — 대조로 확인된 초록 문장.
+    #    ★ 11차 발견 5 — 끝점 두 개(w=0 ≡ pocv_dvdq, w=1 ≡ pocv_dvdq_dqdv)가
+    #    본 실행에 다 있어야 "같은 답을 낸다"를 실제로 확인할 수 있다.
+    d, _ = _complete_artifact(tmp_path / "same",
+                              objectives=("pocv_dvdq", "pocv_dvdq_dqdv"))
     _wsweep_run(d)
     run_compare(d, d)
     text = build(d, tmp_path / "R_same.md",
@@ -2136,7 +2152,8 @@ def test_sweep_settings_verified_against_main_spec(tmp_path):
 
     # ② sweep 이 실제로 다른 설정 (adaptive off·restart 3) — 자기신고는
     #    spec 과 일치시켜 두므로(F88 은 통과) 본 실행과의 대조만 남는다
-    d2, _ = _complete_artifact(tmp_path / "diff")
+    d2, _ = _complete_artifact(tmp_path / "diff",
+                               objectives=("pocv_dvdq", "pocv_dvdq_dqdv"))
     _wsweep_run(d2, optimizer={"adaptive": False}, n_restarts=3)
     run_compare(d2, d2)
     text2 = build(d2, tmp_path / "R_diff.md",
@@ -2218,3 +2235,81 @@ def test_nested_external_inputs_restored(tmp_path):
     restored = iso / canonical_input_key(ext, root)
     assert restored.is_file() and restored.read_text(encoding="utf-8") == "k: 1\n", \
         "복원본에 외부 입력이 없다 — 죽은 사본이었다"
+
+
+# ──────────────────────────────── 11차 게이트 리뷰
+
+def test_sweep_flags_different_curves_and_endpoints(tmp_path):
+    """★ 11차 발견 5 — optimizer 축만 보면 sweep 이 **다른 곡선**으로 돌아도
+    "본 실행과 같은 설정" 초록 문장이 실린다 (리뷰 실측: main/sweep curves_sha
+    가 다른데 배너 없음). 실험 identity 와 끝점 정의·결과까지 봐야 한다."""
+    import yaml
+
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d, _ = _complete_artifact(tmp_path, objectives=("pocv_dvdq",))
+    sub = _wsweep_run(d)
+    m = yaml.safe_load((sub / "manifest.yaml").read_text(encoding="utf-8"))
+    m["run_spec"]["curves_sha"] = "다른곡선"          # 다른 데이터로 돈 sweep
+    (sub / "manifest.yaml").write_text(
+        yaml.safe_dump(m, allow_unicode=True, sort_keys=False), encoding="utf-8")
+    run_compare(d, d)
+    text = build(d, tmp_path / "R.md", repo_root=tmp_path).read_text(encoding="utf-8")
+
+    assert "설정이 다릅니다" in text and "curves_sha 불일치" in text
+    assert "같은 설정으로 돌렸습니다" not in text
+
+
+def test_sweep_endpoint_definition_equality_checked(tmp_path):
+    """★ 11차 발견 5 — 끝점은 **이름이 아니라 가중치 정의**가 같아야 한다.
+    `wdqdv_0.00` 의 w_dqdv 를 몰래 바꾸면 w=0 ≡ pocv_dvdq 전제가 깨진다."""
+    import yaml
+
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d, _ = _complete_artifact(tmp_path, objectives=("pocv_dvdq",))
+    sub = _wsweep_run(d)
+    m = yaml.safe_load((sub / "manifest.yaml").read_text(encoding="utf-8"))
+    m["run_spec"]["objectives"]["wdqdv_0.00"]["w_dqdv"] = 0.3   # 이름만 w=0
+    (sub / "manifest.yaml").write_text(
+        yaml.safe_dump(m, allow_unicode=True, sort_keys=False), encoding="utf-8")
+    run_compare(d, d)
+    text = build(d, tmp_path / "R.md", repo_root=tmp_path).read_text(encoding="utf-8")
+
+    assert "끝점 정의" in text
+    assert "같은 설정으로 돌렸습니다" not in text
+
+
+def test_check_sweep_consistency_cli_exits_nonzero(tmp_path, monkeypatch):
+    """★ 11차 발견 5 — 불일치인데 exit 0 이면 파이프라인에 넣어도 아무것도
+    막지 못한다 (보고서는 이 도구가 확인한다고 써 왔다)."""
+    import sys
+
+    import pytest
+
+    import tools.check_sweep_consistency as C
+
+    monkeypatch.setattr(C, "run_check", lambda *a, **k: {
+        "sweep_dir": "s", "main_dir": "m", "일치": False,
+        "pairs": [{"sweep_objective": "wdqdv_0.00", "main_objective": "pocv_dvdq",
+                   "n_common": 0, "_오류": "한쪽에 해당 목적함수 행이 없다"}]})
+    monkeypatch.setattr(sys, "argv", ["chk", "--sweep", "s", "--main", "m"])
+    with pytest.raises(SystemExit) as e:
+        C.main()
+    assert e.value.code == 1
+
+
+def test_canonical_input_key_is_posix(tmp_path):
+    """★ 11차 발견 8 — 봉인 키는 어느 OS 에서 만들든 POSIX 여야 한다.
+    Windows 의 `a\\res\\curves.parquet` 는 archive 의 POSIX restore_map 과
+    어긋나 완비된 묶음도 복원 불가였다."""
+    from src.io import canonical_input_key
+
+    p = tmp_path / "res" / "sub" / "curves.parquet"
+    p.parent.mkdir(parents=True)
+    p.write_text("x", encoding="utf-8")
+    key = canonical_input_key(p, tmp_path)
+    assert key == "res/sub/curves.parquet"
+    assert "\\" not in key

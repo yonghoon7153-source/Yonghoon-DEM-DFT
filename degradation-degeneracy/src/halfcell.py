@@ -440,7 +440,16 @@ def main() -> None:
         print(json.dumps({"구조검사": v["ok"], "구조검사_실패": v["fail"],
                           "재생성_배열일치": bool(same)}, ensure_ascii=False, indent=2))
         if not (v["ok"] and same):
-            raise SystemExit("--verify 실패: 캐시가 recipe 재생성 결과와 다르다 (F74)")
+            # ★ 11차 발견 4 — 캐시 hit 은 옛 배열을 그대로 돌려주고 `--verify` 는
+            #   갱신하지 않는다. 코드가 바뀐 뒤 배열이 실제로 같아도
+            #   `코드_identity` 로 실패하므로, 운영 명령은 `--force --verify` 다.
+            hint = ("\n  캐시를 다시 만들고 검증하세요: "
+                    f"python -m src.halfcell --config {args.config} "
+                    f"--method {args.method} --force --verify"
+                    if (not args.force and v["fail"] == ["코드_identity"] and same)
+                    else "")
+            raise SystemExit(
+                f"--verify 실패: 캐시가 recipe 재생성 결과와 다르다 (F74){hint}")
 
     if args.plot:
         import matplotlib

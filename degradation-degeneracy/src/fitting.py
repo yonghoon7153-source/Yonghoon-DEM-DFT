@@ -680,10 +680,9 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     base_cfg["_config_path"] = str(_bc_orig)
     base_cfg["_loaded_files"] = [str(d) for d in _cfg_deps]
 
-    # ★ 10차 자체 확인 2 — cfg 를 넘겨 failed.csv 의 "infeasible" 라벨을
-    #   guard 재평가로 재검한다. 풀리는 조건을 failed 로 재선언해 모집단을
-    #   줄이는 위조가 ID 분할만으로는 잡히지 않기 때문이다.
-    _cv = validate_curves_provenance(_pv_dir, cfg=base_cfg)
+    # ★ 10차 자체 확인 2 / 11차 발견 3 — 실패 라벨 재검은 검증자가 producer 의
+    #   **서명된 replay_recipe** 로 수행한다 (호출자 cfg 를 넘기지 않는다).
+    _cv = validate_curves_provenance(_pv_dir)
     if not _cv["ok"]:
         raise RuntimeError(
             "곡선 producer 검증 실패 — 이 곡선으로 fitting 할 수 없습니다 (F74/F85):\n"

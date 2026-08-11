@@ -390,11 +390,11 @@ def test_pristine_p_ini_uses_same_warm_start_chain_as_main_fit(monkeypatch, tmp_
     assert p_ini["pocv_dvdq"][0] == 1.50, "seed 제공자는 warm을 받지 않는다"
 
 
-def _tiny_curves(tmp_path, n=48, n_cond=3, failed=()):
+def _tiny_curves(tmp_path, n=48, n_cond=3, n_failed=0):
     """_run_fit_locked을 실제로 태울 수 있는 최소 curves.parquet.
 
-    ★ 10차 발견 1 — `failed` 로 실패 조건 ID 를 주면 실제 형식의 failed.csv 와
-    의도 = 관측 ⊎ 실패 분할 기록(F83/F83b)까지 만든다.
+    ★ 10차 발견 1 — `n_failed` 를 주면 실제 형식의 failed.csv 와 의도 = 관측
+    ⊎ 실패 분할 기록(F83/F83b)까지 만든다 (실패 조건은 진짜 guard 위반).
     """
     import numpy as np
     import pandas as pd
@@ -413,22 +413,43 @@ def _tiny_curves(tmp_path, n=48, n_cond=3, failed=()):
                          "v_pe": 4.3 - 0.5 * xi, "v_ne": 0.1 + 0.4 * xi,
                          "q_mah": q, "lli": lli, "lam_pe": pe, "lam_ne": ne,
                          "noise": 0.0})
-    df = pd.DataFrame(rows)
-    # ★ F74 — producer 는 이제 spec 서명·행별 grid_run_sig·시작 기록까지 갖춰야
-    #   한다. fixture 도 실제 run_grid 가 쓰는 것과 같은 형식을 만든다.
-    #   (형식만 같은 위조는 여전히 가능하다 — 그 한계는 validate_curves_provenance
-    #   docstring 에 명시돼 있고, 깊은 증명은 smoke 의 실제 run_grid 가 담당한다)
+    return sign_producer(tmp_path, pd.DataFrame(rows), n_infeasible=n_failed)
+
+
+def sign_producer(out_dir, df, n_infeasible=0):
+    """curves df 를 **실제 run_grid 형식의 producer artifact** 로 서명해 쓴다.
+
+    ★ F74 — spec 서명·행별 grid_run_sig·시작 기록이 필요하고, ★ 11차 발견 2·3
+    이후로는 실패 행이 **canonical cond_id ↔ condition payload 결합**과
+    **서명된 replay_recipe 로 재평가 시 정말 불능**임을 만족해야 한다. 그래서
+    실패 조건은 임의 문자열이 아니라 진짜 guard 위반 Condition 에서 만든다.
+    (형식만 같은 위조는 여전히 가능하다 — 그 한계는 validate_curves_provenance
+    docstring 에 명시돼 있고, 깊은 증명은 smoke 의 실제 run_grid 가 담당한다)
+    """
     import hashlib as _hl
     import json as _json
+    from dataclasses import asdict
 
     import yaml as _yaml
 
-    from src.grid import write_curves_manifest
+    from src.config import load_config
+    from src.grid import Condition, write_curves_manifest
     from src.io import append_failed, env_fingerprint, source_digest
-    cond_ids = sorted(set(df["cond_id"]))
-    failed = sorted(failed)
+
+    out_dir = Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    cfg = load_config("configs/base.yaml")
+
+    # guard 를 확실히 위반하는 조건들 (max_mode_value 밖) — 재평가에서 불능
+    failed_conds = [Condition(lli=1.0 + i, lam_pe=0.0, lam_ne=0.0,
+                              lam_pe_type="de", lam_ne_type="de",
+                              noise=0.0, seed=1000 + i)
+                    for i in range(n_infeasible)]
+    failed = sorted(c.cond_id for c in failed_conds)
+    cond_ids = sorted(set(df["cond_id"].astype(str)))
     intended = sorted(set(cond_ids) | set(failed))
-    spec = {"grid_sig_version": 2, "config_hash": "test", "config_files": [],
+
+    spec = {"grid_sig_version": 3, "config_hash": "test", "config_files": [],
             "protocol_unified": "charge_first", "parameter_set": "test",
             "noise_seed": 42,
             # ★ F83b — 의도 집합 서명은 관측 ∪ 실패 전체에서 나온다
@@ -439,22 +460,23 @@ def _tiny_curves(tmp_path, n=48, n_cond=3, failed=()):
             "discharged_state": {"ne_primary": 36.6, "ne_secondary": 3446.1,
                                  "pe": 58439.9},
             "discharged_state_sha": "0" * 64,
+            # ★ 11차 발견 3 — 실패 라벨 재검 기준을 producer 가 서명한다
+            "replay_recipe": {
+                "baseline": {k: float(v) for k, v in cfg["baseline"].items()},
+                "guards": cfg.get("guards") or {}},
             "source_digest": source_digest(), "env": env_fingerprint()}
     sig = _hl.sha1(_json.dumps(spec, sort_keys=True, default=str)
                    .encode()).hexdigest()[:12]
+    df = df.copy()
     df["grid_run_sig"] = sig
-    df.to_parquet(tmp_path / "curves.parquet", index=False)
-    (tmp_path / "curves_manifest_start.yaml").write_text(_yaml.safe_dump(
+    df.to_parquet(out_dir / "curves.parquet", index=False)
+    (out_dir / "curves_manifest_start.yaml").write_text(_yaml.safe_dump(
         {"grid_run_sig": sig, "grid_run_spec": spec, "git_dirty": False,
          "resume": False}), encoding="utf-8")
-    for cid in failed:                       # 실제 기록 경로와 같은 형식
-        # ★ 10차 자체 확인 2 — 실패 라벨은 guard 재평가로 재검되므로, fixture
-        #   도 **정말 불능인** 조건(lli 범위 밖)을 기록해야 한다
-        append_failed(tmp_path, cid,
-                      {"cond_id": cid, "lli": 5.0, "lam_pe": 0.0, "lam_ne": 0.0,
-                       "lam_pe_type": "de", "lam_ne_type": "de", "noise": 0.0},
-                      "infeasible: lli=5.0 는 [0, 0.9] 밖 (test)")
-    write_curves_manifest(tmp_path, {"parameter_set": "test", "grid": {"noise_seed": 42}},
+    for c in failed_conds:                   # 실제 기록 경로와 같은 형식
+        append_failed(out_dir, c.cond_id, asdict(c),
+                      f"infeasible: lli={c.lli} 는 [0, 0.9] 밖 (test)")
+    write_curves_manifest(out_dir, {"parameter_set": "test", "grid": {"noise_seed": 42}},
                           conditions=cond_ids,
                           extra={"solver": "test", "grid_run_spec": spec,
                                  "grid_run_sig": sig, "n_curves": len(cond_ids),
@@ -463,7 +485,7 @@ def _tiny_curves(tmp_path, n=48, n_cond=3, failed=()):
                                  "n_failed_total": len(failed),
                                  "failed_ids_sha256": _hl.sha256(
                                      "\n".join(failed).encode()).hexdigest()[:16]})
-    return tmp_path
+    return out_dir
 
 
 def test_run_fit_records_run_signature_and_blocks_mixed_resume(tmp_path, monkeypatch):
@@ -1293,12 +1315,14 @@ def test_discharged_cache_rejects_foreign_baseline(tmp_path, monkeypatch):
     got = get_discharged_state(cfg, cache_dir=tmp_path)
     assert got == fresh, "stale-code 캐시가 재계산 없이 사용됐다 (10차)"
 
-    # identity·solver·코드가 맞아도 비유한·음수 값이면 거부
+    # identity·solver·코드·runtime 이 다 맞아도 비유한·음수 값이면 거부
+    from src.io import env_fingerprint
     cache.write_text(json.dumps(
         {"ne_primary": -1.0, "ne_secondary": 2.0, "pe": 3.0,
          "baseline_hash": baseline_hash(cfg),
          "solver": cfg.get("solver"),
-         "source_digest": source_digest()}), encoding="utf-8")
+         "source_digest": source_digest(),
+         "env": env_fingerprint()}), encoding="utf-8")
     with pytest.raises(RuntimeError, match="유효하지 않"):
         get_discharged_state(cfg, cache_dir=tmp_path)
 
@@ -1315,7 +1339,7 @@ def test_run_fit_seals_failed_list(tmp_path):
 
     import src.fitting as F
 
-    in_dir = _tiny_curves(tmp_path / "in", failed=("c_zz_fail",))
+    in_dir = _tiny_curves(tmp_path / "in", n_failed=1)
     out = tmp_path / "out"
     obj_cfg = {"objectives": {"a": {"w_pocv": 1.0}},
                "dqdv": {"window": 7, "polyorder": 2, "peak_weight": 1.0},
@@ -1340,7 +1364,7 @@ def test_run_fit_rejects_missing_failed_list(tmp_path):
 
     import src.fitting as F
 
-    in_dir = _tiny_curves(tmp_path / "in", failed=("c_zz_fail",))
+    in_dir = _tiny_curves(tmp_path / "in", n_failed=1)
     (in_dir / "failed.csv").unlink()
     obj_cfg = {"objectives": {"a": {"w_pocv": 1.0}},
                "dqdv": {"window": 7, "polyorder": 2, "peak_weight": 1.0},
@@ -1362,7 +1386,7 @@ def test_curves_validator_sig_v2_and_id_partition(tmp_path):
     from src.io import validate_curves_provenance
 
     # ① 실패가 있는 producer 도 형식이 맞으면 통과한다
-    d = _tiny_curves(tmp_path / "ok", failed=("c_f1", "c_f2"))
+    d = _tiny_curves(tmp_path / "ok", n_failed=2)
     v = validate_curves_provenance(d)
     assert v["ok"], v["fail"]
 
@@ -1375,7 +1399,7 @@ def test_curves_validator_sig_v2_and_id_partition(tmp_path):
     assert "grid_sig_version" in validate_curves_provenance(d2)["fail"]
 
     # ③ failed.csv 바꿔치기 → 재해시가 잡는다
-    d3 = _tiny_curves(tmp_path / "swap_fail", failed=("c_f1",))
+    d3 = _tiny_curves(tmp_path / "swap_fail", n_failed=1)
     (d3 / "failed.csv").write_text(
         "cond_id,condition,reason,timestamp\nc_other,{},x,t\n", encoding="utf-8")
     assert "실패목록_재해시" in validate_curves_provenance(d3)["fail"]
@@ -1396,7 +1420,7 @@ def test_curves_validator_sig_v2_and_id_partition(tmp_path):
     assert "조건집합_ID분할" in v4["fail"], v4["fail"]
 
     # ⑤ n_failed>0 인데 failed.csv 가 없다 → 존재 검사가 잡는다
-    d5 = _tiny_curves(tmp_path / "no_fail_file", failed=("c_f1",))
+    d5 = _tiny_curves(tmp_path / "no_fail_file", n_failed=1)
     (d5 / "failed.csv").unlink()
     assert "실패목록_존재" in validate_curves_provenance(d5)["fail"]
 
@@ -1459,35 +1483,185 @@ def test_halfcell_cache_rejects_stale_code(tmp_path):
 def test_failed_label_must_be_truly_infeasible(tmp_path):
     """★ 10차 자체 확인 2 — F83b ID 분할은 '풀리는 조건을 failed 로 재선언'
     하면 관측∪실패가 불변이라 통과한다 (리뷰 실측: AFTER ok=True). cfg 를
-    주면 "infeasible" 라벨을 guard 재평가로 재검해 위조를 잡아야 한다."""
-    from src.config import load_config
+    주면 "infeasible" 라벨을 guard 재평가로 재검해 위조를 잡아야 한다.
+
+    ★ 11차 발견 3 — 재검 기준은 호출자 cfg 가 아니라 producer 가 **서명한**
+    replay_recipe 다. cfg 를 넘길 수 없는 경로(archive·격리 복원)도 같은 판정을
+    받아야 하기 때문이다.
+    """
+    import hashlib
+    import json
+
+    import yaml
+
+    from src.grid import Condition
     from src.io import append_failed, validate_curves_provenance
 
-    cfg = load_config("configs/base.yaml")
+    def _rewrite_failed(d, cond, reason):
+        """failed.csv 를 한 행으로 갈아끼우고 분할 기록을 맞춘다."""
+        (d / "failed.csv").unlink()
+        append_failed(d, cond.cond_id, cond.__dict__ | {}, reason)
+        mp = d / "curves_manifest.yaml"
+        m = yaml.safe_load(mp.read_text(encoding="utf-8"))
+        m["failed_ids_sha256"] = hashlib.sha256(
+            cond.cond_id.encode()).hexdigest()[:16]
+        obs = sorted(set(pd.read_parquet(d / "curves.parquet")["cond_id"]))
+        m["grid_run_spec"]["condition_ids_sha256"] = hashlib.sha256(
+            "\n".join(sorted(obs + [cond.cond_id])).encode()).hexdigest()[:16]
+        m["grid_run_sig"] = hashlib.sha1(
+            json.dumps(m["grid_run_spec"], sort_keys=True, default=str)
+            .encode()).hexdigest()[:12]
+        mp.write_text(yaml.safe_dump(m, allow_unicode=True), encoding="utf-8")
+        sp = d / "curves_manifest_start.yaml"
+        s = yaml.safe_load(sp.read_text(encoding="utf-8"))
+        s["grid_run_spec"] = m["grid_run_spec"]
+        s["grid_run_sig"] = m["grid_run_sig"]
+        sp.write_text(yaml.safe_dump(s, allow_unicode=True), encoding="utf-8")
+        df = pd.read_parquet(d / "curves.parquet")
+        df["grid_run_sig"] = m["grid_run_sig"]
+        df.to_parquet(d / "curves.parquet", index=False)
+        from src.io import file_digest
+        m["curves_sha256"] = file_digest(d / "curves.parquet", full=True)
+        mp.write_text(yaml.safe_dump(m, allow_unicode=True), encoding="utf-8")
 
-    # ① 정말 불능인 라벨 (fixture: lli=5.0) → cfg 재검 통과
-    d = _tiny_curves(tmp_path / "true_fail", failed=("c_forged",))
-    v = validate_curves_provenance(d, cfg=cfg)
+    import pandas as pd
+
+    # ① 정말 불능인 라벨 (fixture: guard 밖 lli) → 재검 통과
+    d = _tiny_curves(tmp_path / "true_fail", n_failed=1)
+    v = validate_curves_provenance(d)
     assert v["ok"], v["fail"]
     assert "실패사유_불능재검" in v["checks"]
+    assert "실패목록_ID결합" in v["checks"]
 
     # ② 풀리는 조건(lli=0.05)을 불능으로 재선언 → 잡는다
-    (d / "failed.csv").unlink()
-    append_failed(d, "c_forged",
-                  {"lli": 0.05, "lam_pe": 0.0, "lam_ne": 0.0,
-                   "lam_pe_type": "de", "lam_ne_type": "de"},
-                  "infeasible: forged")
-    v2 = validate_curves_provenance(d, cfg=cfg)
+    feasible = Condition(lli=0.05, lam_pe=0.0, lam_ne=0.0, lam_pe_type="de",
+                         lam_ne_type="de", noise=0.0, seed=7)
+    _rewrite_failed(d, feasible, "infeasible: forged")
+    v2 = validate_curves_provenance(d)
     assert "실패사유_불능재검" in v2["fail"], v2["checks"]
 
-    # ③ 결정적 재검이 불가능한 사유(solver 실패)는 미검증으로 실패
-    (d / "failed.csv").unlink()
-    append_failed(d, "c_forged",
-                  {"lli": 0.05, "lam_pe": 0.0, "lam_ne": 0.0,
-                   "lam_pe_type": "de", "lam_ne_type": "de"},
-                  "solver: crashed")
-    v3 = validate_curves_provenance(d, cfg=cfg)
-    assert "실패사유_미검증" in v3["fail"], v3["checks"]
+    # ③ ★ 11차 발견 2 — payload 는 진짜 불능인데 cond_id 가 **다른 조건**이면
+    #    "그 ID 가 실패했다"가 증명되지 않는다 (ID↔조건 결합)
+    d3 = _tiny_curves(tmp_path / "unbound", n_failed=1)
+    fp = d3 / "failed.csv"
+    rows = fp.read_text(encoding="utf-8").splitlines()
+    head, row = rows[0], rows[1]
+    fp.write_text(head + "\n" + "999999999999" + row[row.index(","):] + "\n",
+                  encoding="utf-8")
+    v3 = validate_curves_provenance(d3)
+    assert "실패목록_ID결합" in v3["fail"], v3["checks"]
 
-    # ④ cfg 없으면 재검 자체가 없다 — 호출자는 문서화된 한계를 안다
-    assert "실패사유_불능재검" not in validate_curves_provenance(d)["checks"]
+    # ④ 결정적 재검이 불가능한 사유(solver 실패)는 미검증으로 실패
+    d4 = _tiny_curves(tmp_path / "solverfail", n_failed=1)
+    infeasible = Condition(lli=5.0, lam_pe=0.0, lam_ne=0.0, lam_pe_type="de",
+                           lam_ne_type="de", noise=0.0, seed=9)
+    _rewrite_failed(d4, infeasible, "solver: crashed")
+    v4 = validate_curves_provenance(d4)
+    assert "실패사유_미검증" in v4["fail"], v4["checks"]
+
+    # ⑤ ★ 11차 발견 3 — recipe 가 없는 producer 는 fail-closed (cfg 로 우회 불가)
+    d5 = _tiny_curves(tmp_path / "norecipe", n_failed=1)
+    mp = d5 / "curves_manifest.yaml"
+    m = yaml.safe_load(mp.read_text(encoding="utf-8"))
+    del m["grid_run_spec"]["replay_recipe"]
+    m["grid_run_sig"] = hashlib.sha1(
+        json.dumps(m["grid_run_spec"], sort_keys=True, default=str)
+        .encode()).hexdigest()[:12]
+    mp.write_text(yaml.safe_dump(m, allow_unicode=True), encoding="utf-8")
+    v5 = validate_curves_provenance(d5)
+    assert "실패사유_recipe" in v5["fail"], v5["checks"]
+
+
+# ──────────────────────────────── 11차 게이트 리뷰
+
+def test_discharged_cache_rejects_foreign_runtime(tmp_path, monkeypatch):
+    """★ 11차 발견 1 — 같은 코드·config·solver 라도 PyBaMM/SciPy 버전이 다르면
+    완방상태 값이 달라질 수 있다. 그 캐시가 hit 되면 격자 manifest 는 **현재**
+    env 를 기록해 "이 env 에서 만든 truth" 라는 주장이 거짓이 된다."""
+    import json
+
+    import src.baseline as bl
+    from src.baseline import DischargedState, _cache_path, get_discharged_state
+    from src.config import baseline_hash, load_config
+    from src.io import env_fingerprint, source_digest
+
+    cfg = load_config("configs/base.yaml")
+    cache = _cache_path(cfg, tmp_path)
+    cache.parent.mkdir(parents=True, exist_ok=True)
+    base = {"ne_primary": 1.0, "ne_secondary": 2.0, "pe": 3.0,
+            "baseline_hash": baseline_hash(cfg), "solver": cfg.get("solver"),
+            "source_digest": source_digest()}
+
+    fresh = DischargedState(ne_primary=11.0, ne_secondary=22.0, pe=33.0)
+    monkeypatch.setattr(bl, "compute_discharged_state",
+                        lambda c, solver=None: fresh)
+
+    # ① env 필드가 아예 없는 옛 캐시 → 미스
+    cache.write_text(json.dumps(base), encoding="utf-8")
+    assert get_discharged_state(cfg, cache_dir=tmp_path) == fresh
+
+    # ② 다른 PyBaMM 버전에서 만든 캐시 → 미스
+    cache.write_text(json.dumps(
+        {**base, "env": {**env_fingerprint(), "pybamm": "0.0.0-other"}}),
+        encoding="utf-8")
+    assert get_discharged_state(cfg, cache_dir=tmp_path) == fresh
+
+    # ③ 같은 runtime 이면 hit (재계산 없음)
+    cache.write_text(json.dumps(
+        {**base, "env": env_fingerprint()}), encoding="utf-8")
+    got = get_discharged_state(cfg, cache_dir=tmp_path)
+    assert (got.ne_primary, got.ne_secondary, got.pe) == (1.0, 2.0, 3.0)
+
+    # ④ 저장 경로가 env 를 남긴다
+    cache.unlink()
+    get_discharged_state(cfg, cache_dir=tmp_path)
+    assert json.loads(cache.read_text(encoding="utf-8"))["env"] == env_fingerprint()
+
+
+def test_fit_validator_reverifies_sealed_producer(tmp_path):
+    """★ 11차 발견 3 — fit artifact 의 validator 가 봉인된 producer 를 **독립적
+    으로 재검**해야 한다. 예전에는 fitting 이 시작 전 한 번 보고 abort 여부에만
+    썼기에, 복원본을 검증하는 쪽은 곡선 모집단을 전혀 확인하지 않았다."""
+    import yaml
+
+    import src.fitting as F
+    from src.io import validate_provenance
+
+    in_dir = _tiny_curves(tmp_path / "in", n_failed=1)
+    out = tmp_path / "out"
+    obj_cfg = {"objectives": {"a": {"w_pocv": 1.0}},
+               "dqdv": {"window": 7, "polyorder": 2, "peak_weight": 1.0},
+               "scaling": {"method": "reference_rmse"}}
+    bounds = {"init": [1.0, 0.0, 1.0, 0.0], "lb": [0.5, -1.0, 0.5, -1.0],
+              "ub": [2.0, 1.0, 2.0, 1.0]}
+    F.run_fit(in_dir, out, obj_cfg, {"a": {"w_pocv": 1.0}}, bounds,
+              "expanded", 1, nproc=1)
+
+    v = validate_provenance(out)
+    assert "곡선_producer_재검" in v["checks"]
+    assert "곡선_producer_재검" not in v["fail"], v["checks"]["곡선_producer_재검"]
+
+    # 봉인된 producer 스냅샷의 실패 목록을 위조하면 fit 쪽 검증이 잡아야 한다
+    man = yaml.safe_load((out / "manifest.yaml").read_text(encoding="utf-8"))
+    sealed = man["start_provenance"]["input_sha256"]
+    key = next(k for k in sealed if k.endswith("failed.csv"))
+    snap = out / "_inputs" / f"{str(sealed[key])[:12]}_failed.csv"
+    rows = snap.read_text(encoding="utf-8").splitlines()
+    snap.write_text(rows[0] + "\n" + "999999999999" + rows[1][rows[1].index(","):]
+                    + "\n", encoding="utf-8")
+    # 스냅샷 자체의 digest 도 맞춰 두면 입력_스냅샷 은 통과하고 producer 재검만 남는다
+    man2 = yaml.safe_load((out / "manifest.yaml").read_text(encoding="utf-8"))
+    from src.io import file_digest
+    new_dig = file_digest(snap)
+    snap.rename(out / "_inputs" / f"{str(new_dig)[:12]}_failed.csv")
+    for blk in (man2["start_provenance"]["input_sha256"],
+                man2["input_sha256"], man2["input_sha256_at_end"],
+                man2["run_spec"]["sealed_inputs"]):
+        blk[key] = new_dig
+    (out / "manifest.yaml").write_text(yaml.safe_dump(man2, allow_unicode=True),
+                                       encoding="utf-8")
+    (out / "manifest_start.yaml").write_text(
+        yaml.safe_dump(man2["start_provenance"], allow_unicode=True),
+        encoding="utf-8")
+    v2 = validate_provenance(out)
+    assert "곡선_producer_재검" in v2["fail"], v2["checks"]

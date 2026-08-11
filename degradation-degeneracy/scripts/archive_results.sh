@@ -76,7 +76,10 @@ for run in "${RUNS[@]}"; do
   #   즉시 어긋나 **정상 묶음을 스스로 무효화**했다 (리뷰 실측).
   #   KEEP_FILES 에 provenance.json 이 있으므로 bundle 이 알아서 담는다.
   #   grid producer 는 fitting validator 가 아니라 곡선 validator 로 검증한다 (9-e).
-  "$PY" - "$run" <<'PYEOF'
+  # ★ 11차 발견 6 — 원본이 검증에 실패하면 **거기서 이 run 은 실패**다. 예전에는
+  #   출력만 하고 계속 진행해, stale 원본으로 만든 묶음이 기존 정상 묶음을
+  #   덮어썼다 (리뷰 실측: wrapper exit 0 + 마지막 정상 archive 소실).
+  if ! "$PY" - "$run" <<'PYEOF'
 import json, sys
 from pathlib import Path
 from src.io import validate_curves_provenance, validate_provenance
@@ -87,21 +90,35 @@ v = (validate_curves_provenance(run) if artifact_kind(run) == "grid_producer"
 (run / "provenance.json").write_text(
     json.dumps(v, ensure_ascii=False, indent=2), encoding="utf-8")
 print(f"  원본 provenance: {'통과' if v['ok'] else '실패 — ' + ', '.join(v['fail'][:4])}")
+sys.exit(0 if v["ok"] else 1)
 PYEOF
+  then
+    echo "  → 원본이 인용 가능한 상태가 아니라 보관하지 않습니다 (기존 묶음 유지)"
+    n_bad=$((n_bad+1))
+    continue
+  fi
 
-  "$PY" -m tools.archive_bundle bundle "$run" "$out"
-
+  # ★ 11차 발견 6 — candidate 에 만들고 **전부 통과한 뒤에만** 교체한다.
+  #   bundle 종료 코드도 반드시 집계한다 (예전에는 무시하고 ok=1 로 시작했다).
+  cand="$DEST/.candidate_$name"
+  rm -rf "$cand"
   ok=1
-  "$PY" -m tools.archive_bundle check "$out" | sed 's/^/  /' || ok=0
+  "$PY" -m tools.archive_bundle bundle "$run" "$cand" || ok=0
+  [[ "$ok" == "1" ]] || echo "  bundle 실패 (봉인 불일치 등) — 기존 묶음 유지"
+
+  if [[ "$ok" == "1" ]]; then
+    "$PY" -m tools.archive_bundle check "$cand" | sed 's/^/  /' || ok=0
+  fi
 
   # ★ F71 — **격리 복원 검증까지 자동으로 한다.** 원본 results/ 가 남아 있는
   #   서버에서 restore→validate 하면 묶음을 전혀 확인하지 않고 원본을 다시
   #   검증할 수 있다 (8-3). 빈 임시 root 에 풀어서 거기서 검증한다.
   # 원래 상대경로 그대로 격리 root 안에 푼다 — 봉인된 입력 경로가 저장소 root
   # 기준이므로 (F65), run_dir 을 임의로 바꾸면 재해시가 어긋난다.
-  iso="$(mktemp -d)"
-  if "$PY" -m tools.archive_bundle restore "$out" --repo-root "$iso" >/dev/null 2>&1 \
-     && "$PY" - "$iso" "$run" <<'PYEOF' | sed 's/^/  /'
+  if [[ "$ok" == "1" ]]; then
+    iso="$(mktemp -d)"
+    if "$PY" -m tools.archive_bundle restore "$cand" --repo-root "$iso" >/dev/null 2>&1 \
+       && "$PY" - "$iso" "$run" <<'PYEOF' | sed 's/^/  /'
 import sys
 from pathlib import Path
 from src.io import validate_curves_provenance, validate_provenance
@@ -119,19 +136,69 @@ for d in [rd] + nested_runs(rd):
         bad.append(tag)
 sys.exit(1 if bad else 0)
 PYEOF
-  then :; else ok=0; echo "  격리 복원 검증 실패"; fi
-  rm -rf "$iso"
+    then :; else ok=0; echo "  격리 복원 검증 실패"; fi
+    rm -rf "$iso"
+  fi
 
-  if [[ "$ok" == "1" ]]; then n_ok=$((n_ok+1)); else n_bad=$((n_bad+1)); fi
-  # ★ 10차 자체 확인 1 — 진본성 앵커. payload 목록의 해시 하나로 묶음 전체가
-  #   고정된다. 이 묶음이 git 에 커밋되는 순간 이 값이 저장소 이력에 남아,
-  #   이후의 "값 변조 + 재봉인"은 이력과의 대조로 드러난다. 리뷰 요청문에
-  #   이 값을 그대로 인용할 것.
-  [[ -f "$out/payload_sha256.yaml" ]] && \
-    printf '  진본성 앵커 bundle_sha256: %s\n' \
-      "$(sha256sum "$out/payload_sha256.yaml" | cut -c1-16)"
-  printf '  용량 %s\n' "$(du -sh "$out" | cut -f1)"
+  if [[ "$ok" == "1" ]]; then
+    rm -rf "$out"
+    mv "$cand" "$out"          # 전 검사 통과분만 승격 (원자적 교체)
+    n_ok=$((n_ok+1))
+    # ★ 10차 자체 확인 1 / 11차 발견 7 — 진본성 앵커는 **full 64자리**로 남긴다.
+    #   payload 목록의 해시 하나가 묶음 전체를 고정한다. 아래 artifact_index.yaml
+    #   가 이 값을 커밋되는 형태로 모은다.
+    printf '  bundle payload_index_sha256: %s\n' \
+      "$(sha256sum "$out/payload_sha256.yaml" | cut -d' ' -f1)"
+    printf '  용량 %s\n' "$(du -sh "$out" | cut -f1)"
+  else
+    rm -rf "$cand"
+    n_bad=$((n_bad+1))
+    echo "  → 승격하지 않았습니다 (기존 묶음이 있으면 그대로 유지됩니다)"
+  fi
 done
+
+# ★ 11차 발견 7 — 어느 묶음이 어느 보고서의 근거인지 **자동으로 잇는다.**
+#   run 경로 ↔ payload index·fits·curves 의 full 64자리 digest 를 커밋되는
+#   목록으로 남긴다. RESULTS.md 의 앵커와 이 파일을 대조하면 된다.
+"$PY" - "$DEST" <<'PYEOF'
+import hashlib, subprocess, sys
+from pathlib import Path
+import yaml
+from src.io import file_digest
+dest = Path(sys.argv[1])
+def _sha(p):
+    h = hashlib.sha256()
+    h.update(Path(p).read_bytes())
+    return h.hexdigest()
+runs = {}
+for b in sorted(d for d in dest.iterdir() if d.is_dir() and not d.name.startswith(".")):
+    pi = b / "payload_sha256.yaml"
+    if not pi.is_file():
+        continue
+    ent = {"payload_index_sha256": _sha(pi)}
+    for name, key in (("fits.parquet", "fits_sha256"),
+                      ("curves.parquet", "curves_sha256")):
+        if (b / name).is_file():
+            ent[key] = file_digest(b / name, full=True)
+    rm = b / "restore_map.yaml"
+    if rm.is_file():
+        ent["run_dir"] = (yaml.safe_load(rm.read_text(encoding="utf-8")) or {}
+                          ).get("run_dir")
+    runs[b.name] = ent
+try:
+    commit = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True,
+                            text=True, check=True).stdout.strip()
+except Exception:
+    commit = None
+out = dest / "artifact_index.yaml"
+out.write_text(yaml.safe_dump(
+    {"_주의": ("이 목록이 커밋되는 순간 각 묶음의 bytes 가 저장소 이력에 고정된다. "
+             "RESULTS.md 의 앵커(fits/curves digest)와 여기 값이 같아야 그 보고서의 "
+             "근거 묶음이다 (11차 발견 7)."),
+     "artifact_commit": commit, "runs": runs},
+    allow_unicode=True, sort_keys=False), encoding="utf-8")
+print(f"\n인덱스: {out} ({len(runs)}개 묶음, full 64자리 digest)")
+PYEOF
 
 printf '\n요청 %d개 · 검증 가능 %d개 · 불완전 %d개 · 없음 %d개 · 합계 %s\n' \
   "$n_want" "$n_ok" "$n_bad" "$n_missing" "$(du -sh "$DEST" | cut -f1)"

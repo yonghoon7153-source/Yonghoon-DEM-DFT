@@ -141,6 +141,11 @@ def main() -> None:
         Path(a.json).write_text(json.dumps(res, ensure_ascii=False, indent=2),
                                 encoding="utf-8")
         print(f"저장: {a.json}")
+    # ★ 11차 발견 5 — 불일치는 **nonzero** 로 끝나야 한다. 예전에는 판정을
+    #   출력만 하고 0으로 끝나서, 이 도구를 파이프라인에 넣어도 아무것도 막지
+    #   못했다 (보고서는 "이 도구가 확인한다"고 써 왔다).
+    if not res["일치"]:
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

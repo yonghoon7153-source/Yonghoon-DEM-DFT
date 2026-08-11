@@ -146,14 +146,41 @@ ls "$CACHE_DIR"/*_ocp_*.meta.yaml >/dev/null 2>&1 \
 "$PY" -m src.halfcell --config configs/base.yaml --method ocp --verify \
       --log-level WARNING >/dev/null \
   && ok "halfcell --verify (재생성 대조)" || bad "halfcell --verify 실패"
+# ★ 11차 발견 4 — **옛 meta 가 남아 있는 정상 운영 경로**. 코드가 바뀌면
+#   캐시 hit 이 옛 배열을 그대로 돌려주고 --verify 는 갱신하지 않으므로
+#   `코드_identity` 로 실패해야 하고, --force --verify 는 통과해야 한다.
+_meta="$(ls "$CACHE_DIR"/*_ocp_*.meta.yaml | head -1)"
+cp "$_meta" "$_meta.bak"
+"$PY" - "$_meta" <<'PYEOF'
+import sys
+import yaml
+p = sys.argv[1]
+m = yaml.safe_load(open(p, encoding="utf-8"))
+m["source_digest"] = "stale0000000"          # 옛 커밋에서 만든 캐시로 위장
+yaml.safe_dump(m, open(p, "w", encoding="utf-8"), allow_unicode=True)
+PYEOF
+_msg="$("$PY" -m src.halfcell --config configs/base.yaml --method ocp --verify \
+        --log-level ERROR 2>&1)"
+if [[ $? -ne 0 ]] && grep -q "force --verify" <<<"$_msg"; then
+  ok "옛 meta 캐시 → --verify 실패 + --force 안내 (11차 발견 4)"
+else
+  bad "stale meta 캐시가 --verify 를 통과했다"
+fi
+"$PY" -m src.halfcell --config configs/base.yaml --method ocp --force --verify \
+      --log-level WARNING >/dev/null \
+  && ok "--force --verify 로 복구 (운영 명령)" || bad "--force --verify 실패"
+rm -f "$_meta.bak"
 
 # ─────────────────────────────────────────────────────────────────── 4. fitting
 step "4. 같은 곡선을 두 기준으로 fitting"
+# ★ 11차 발견 5 — sweep 끝점(w=0 ≡ pocv_dvdq, w=1 ≡ pocv_dvdq_dqdv) 일치
+#   검사를 실제로 태우려면 본 실행에 **두 끝점 목적함수가 모두** 있어야 한다.
+FIT_OBJ="pocv_dvdq,pocv_dvdq_dqdv"
 ./run.sh --mode fit --in "$CURVES" --out "$GFIT" --reference grid \
-         --objective pocv,pocv_dvdq --n-restarts 2 --nproc "$NPROC" --log-level WARNING >/dev/null \
+         --objective "$FIT_OBJ" --n-restarts 2 --nproc "$NPROC" --log-level WARNING >/dev/null \
   && ok "Case 2 (grid 기준)" || bad "grid fit 실패"
 ./run.sh --mode fit --in "$CURVES" --out "$HFIT" --reference halfcell \
-         --objective pocv,pocv_dvdq --n-restarts 2 --nproc "$NPROC" --log-level WARNING >/dev/null \
+         --objective "$FIT_OBJ" --n-restarts 2 --nproc "$NPROC" --log-level WARNING >/dev/null \
   && ok "Case 1 (half-cell 기준)" || bad "halfcell fit 실패"
 
 step "5. provenance — 두 산출물 모두 인용 가능한가"
@@ -279,6 +306,12 @@ assert (Path(sys.argv[1]) / "objectives_optimized.yaml").is_file(), \
 print("   ✅ sweep 기록: tol·method·adaptive·digest 봉인, optimized 는 run 디렉터리에")
 PYEOF
 [[ $? -eq 0 ]] || bad "sweep 기록 검사 실패"
+# ★ 11차 발견 5 — 끝점 결과 일치를 **도구로** 확인한다 (보고서가 이 도구를
+#   인용해 왔지만 아무도 호출하지 않았다). 불일치면 nonzero.
+"$PY" -m tools.check_sweep_consistency --sweep "$GFIT/wsweep" --main "$GFIT" \
+      >/dev/null 2>&1 \
+  && ok "sweep 끝점 ↔ 본 실행 일치 (check_sweep_consistency)" \
+  || bad "sweep 끝점이 본 실행과 다르다"
 
 "$PY" - "$GFIT" "$BASE/RESULTS.md" <<'PYEOF'
 import os, re, sys
@@ -384,6 +417,34 @@ if ./scripts/archive_results.sh "results/_smoke_missing_$$" >/dev/null 2>&1; the
 else
   ok "없는 보관 대상 → nonzero 종료 (F89)"
 fi
+
+# ★ 11차 발견 6 — **기존 정상 묶음이 있는 상태에서 원본이 깨지면**, wrapper 는
+#   실패로 끝나고 마지막 정상 묶음을 그대로 두어야 한다. 예전에는 stale 원본을
+#   그대로 묶어 정상 묶음을 덮어쓰고 exit 0 이었다.
+ARCH_TMP="$BASE/arch"
+mkdir -p "$ARCH_TMP"
+cp -a "$GFIT" "$BASE/keep_run"
+"$PY" -m tools.archive_bundle bundle "$GFIT" "$ARCH_TMP/grid_fit" >/dev/null \
+  && ok "기준 묶음 생성" || bad "기준 묶음 생성 실패"
+_before="$(sha256sum "$ARCH_TMP/grid_fit/payload_sha256.yaml" | cut -d' ' -f1)"
+"$PY" - "$GFIT" <<'PYEOF'
+import sys
+from pathlib import Path
+import pandas as pd
+f = Path(sys.argv[1]) / "fits.parquet"
+df = pd.read_parquet(f)
+df["lam_pe_hat"] = df["lam_pe_hat"] + 0.5      # 봉인과 어긋나게 만든다
+df.to_parquet(f, index=False)
+PYEOF
+if "$PY" -m tools.archive_bundle bundle "$GFIT" "$ARCH_TMP/grid_fit" >/dev/null 2>&1; then
+  bad "봉인과 다른 bytes 를 그대로 묶었다 (11차 발견 6)"
+else
+  _after="$(sha256sum "$ARCH_TMP/grid_fit/payload_sha256.yaml" | cut -d' ' -f1)"
+  [[ "$_before" == "$_after" ]] \
+    && ok "실패한 재보관이 기존 묶음을 보존 (11차 발견 6)" \
+    || bad "실패한 재보관이 기존 묶음을 파괴했다"
+fi
+rm -rf "$GFIT" && mv "$BASE/keep_run" "$GFIT"   # 변조본 폐기, 원본 복구
 
 # ────────────────────────────────────────────────────────────────── 마무리
 [[ -d "$STASH" ]] && cp -a "$STASH/." "$CACHE_DIR/" 2>/dev/null; rm -rf "$STASH"
