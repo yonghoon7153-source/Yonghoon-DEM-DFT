@@ -20,3 +20,8 @@ P_MPa,thickness_um,N_particles,eps_sphere_pct,eps_union_pct,D_sphere,D_union,ove
 #   f_AM 4점: 0.517/0.598/0.675/0.620 — P600 비단조 유지.  Hertz 추정기 0.789 = 실측의
 #   1.32× (기존 1.29–1.36× 밴드 안, 4점째 확증 — 추정기 사용 금지 재확인)
 #   렌즈 교차검증(기하 vs contact, rad_by_id): 차이 0.00 % ✓
+# ── per-atom AM-phase 백필 (2026-08-11, 같은-덤프 짝 규약) ───────────────────
+#   P100 0.7258 · P200 0.7676 · P300 0.7938 · P600 0.7625   (dem_am_load_fraction --atom-dump)
+#   contact AM-AM 과 같은 모양 (300 까지 상승, 600 꺾임).  브래킷: AM-AM ≤ 참 ≤ AM-phase.
+#   ⚠ troubleshooting 문서의 0.809 는 **원본 real_14 케이스 덤프**(atom_2060000) 값 —
+#   스윕 P300 덤프(atom_2440000)는 0.7938.  차 0.015 = 같은 덱 재실행 산포.  표를 섞지 말 것.

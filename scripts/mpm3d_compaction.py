@@ -488,9 +488,13 @@ def parse_args(argv):
     ap.add_argument('--target-gpa', type=float, default=0.30, help='servo platen target σzz (GPa)')
     ap.add_argument('--am-load-frac', type=float, default=0.0,
                     help='Tabor-style wallP CONDITIONAL (DEM-stress coupling, scaffold only).  Fraction '
-                         '[0,1) of the target axial load borne by the FROZEN AM skeleton (from DEM, e.g. '
-                         'von-Mises partition f_AM = phi_AM*sVM_AM / (phi_AM*sVM_AM + phi_SE*sVM_SE), '
-                         'volume fractions of SOLID).  The SE servo then stops when '
+                         '[0,1) of the target axial load borne by the FROZEN AM skeleton, MEASURED from DEM '
+                         'dumps via scripts/dem_am_load_fraction.py.  Two measured conventions BRACKET the '
+                         'truth (docstring there): contact AM-AM Love-Weber (lower) <= true <= per-atom '
+                         'AM-phase virial share (upper); real_14 P300 = 0.675 / 0.809.  (The old v0 '
+                         'von-Mises partition example was RETIRED — Eshelby stress concentration makes it '
+                         'fire in SE-rich where true f_AM~0; the Hertz geometric estimator is also banned, '
+                         'measured 1.30-1.36x over at 4 pressures.)  The SE servo then stops when '
                          'wallP_SE + f_AM*target >= target, i.e. SE bears only its share target*(1-f_AM) -- '
                          'the frozen AM cannot register on wallP, so without this the SE bears ALL the load '
                          'and over-compresses in SE-poor / AM-load-bearing corners (mono-large 10:0).  '
