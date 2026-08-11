@@ -452,6 +452,61 @@ elif not arr_up and not n_done:
     print("        bash tools/ionic/run_arrhenius_6pt.sh 2>&1 | tee -a ~/logs/arr6.log'")
 print(BAR)
 
+# ═══ ⑤ MTO 파일럿 — β 게이트 자체를 검정한다 ═══════════════════════════════
+# 왜: 2026-08-11 창 추세 판정에서 **게이트가 실제 진단과 어긋나는 사례**가 나왔다.
+#   modelc/700 β̄0.76 (탈락) → 실제 케이지 절편(D 인용 가능) · b2o3/700 β̄0.85 (통과)
+#   → 실제 sub-diffusion(D 금지). 7 온도점 중 3개는 꼬리 잡음으로 **판별 불가**다.
+#   그 3개를 가르려면 다중 시간원점(MTO)이 필요한데 21런엔 프레임이 없어 소급 불가 →
+#   3계 × 700 K × 1시드만 다시 돈다. 이번엔 MTO + --save_traj 가 들어간다.
+MTO = os.path.join(H, "work", "runs", "mto_pilot")
+MTO_PLAN = [(lab, 700, 2) for lab in SYSL]
+mto_up = "mtopilot" in tmux
+print("⑤ MTO 파일럿 — **β 게이트 자체를 검정한다** (3계 × 700 K × 1시드)")
+print("   판별 불가 3점(b2o3/900 · lpsocl/700 · lpsocl/900) 해소 + MTO 산포 실측 + 프레임 확보")
+if not os.path.isdir(MTO) and not mto_up:
+    print("   · 미착수:  tmux new -s mtopilot -d \"OUTROOT=$HOME/work/runs/mto_pilot "
+          "SEEDS=2 TEMP_PROD='700:200' bash tools/ionic/run_arrhenius_6pt.sh "
+          "2>&1 | tee -a ~/logs/mtopilot.log\"")
+else:
+    n_ok = 0
+    print(f"   {'계':10s} {'상태':>22s} {'β(STO)':>8s} {'β(MTO)':>8s} {'traj':>6s}")
+    for lab, T, sd in MTO_PLAN:
+        d = os.path.join(MTO, lab, f"T{T}_s{sd}")
+        mj = _under(d, "msd.json")
+        b_sto = b_mto = None
+        traj = "—"
+        if mj:
+            try:
+                j = json.load(open(mj))
+            except Exception:
+                j = {}
+            b_sto = beta(mj)
+            if "msd_Li_A2_mto" in j:
+                b_mto = _beta_series(j.get("times_ps_mto") or j.get("times_ps"),
+                                     j["msd_Li_A2_mto"])
+            tj = _under(d, "traj.xyz")
+            traj = "✔" if tj else "⛔"
+            st = "✅ 완료" + ("" if b_mto is not None else "  ⛔ MTO 없음!")
+            n_ok += 1
+        else:
+            lg = _under(d, "md.log")
+            ps, _ = md_progress(os.path.dirname(lg)) if lg else (None, None)
+            st = (f"▶ {ps:.0f}/205 ps ({100 * min(1, ps / 205):.0f}%)" if ps is not None
+                  else ("▶ 착수" if os.path.isdir(d) else "· 대기"))
+        print(f"   {lab:10s} {st:>22s} "
+              f"{(f'{b_sto:.3f}' if b_sto is not None else '—'):>8s} "
+              f"{(f'{b_mto:.3f}' if b_mto is not None else '—'):>8s} {traj:>6s}")
+    if n_ok >= len(MTO_PLAN):
+        print("   ▶ 다 끝났다. 추세 판정을 MTO 곡선으로 다시:")
+        print(f"      python3 tools/ionic/msd_diffusive_check.py --scan --average \\")
+        print(f"        --glob '{MTO}/*/T*_s*/**/msd.json'")
+        print("      · β(MTO) 가 β(STO) 와 **거의 같으면** → 게이트 탈락은 잡음이 아니었다")
+        print("      · 크게 다르면 → 단일원점 추정이 문제였다. 21런 전체를 재판정해야 한다")
+        print("      · 어느 쪽이든 traj 가 남았으니 홉 통계로 기구를 분해할 수 있다:")
+        print(f"        python3 tools/ionic/hops_per_ion.py --glob '{MTO}/*/**/traj.xyz'")
+    print("   ⚠ traj 열이 ⛔ 면 --save_traj 가 안 걸린 것 — 러너를 다시 받을 것")
+print(BAR)
+
 # ═══ ④ comp1 셀 확대 사다리 ═══════════════════════════════════════════════
 # 왜 이게 ①의 후속인가: ① 이 "시간으로는 못 닫는다"로 끝났고(1600 ps 로 600 K β 0.64→0.37),
 #   남은 가설이 **62원자 셀에 Li 24개라 표본이 없다** 하나다. 사다리로 그 가설을 검정한다.
@@ -462,7 +517,9 @@ SC_SEED = 2
 SC_TOTAL_PS = EQ_PS + 200.0
 sc_up = "c1sc" in tmux
 
-print("④ comp1 셀 확대 사다리 — ① 의 '남은 수' (시간이 아니라 **이온 수**)")
+print("④ comp1 셀 확대 사다리 — ⚠ **⑤ 뒤로 보류** (2026-08-11)")
+print("   이유: 케이지 절편 c 는 이온 수를 늘려도 안 줄어든다(진동 진폭이 정한다).")
+print("   사다리가 줄이는 건 β 의 **산포**뿐인데, 지금 문제는 산포가 아니라 β 라는 지표 자체다.")
 print("   기준선: 1×1×1 (52원자 · Li 24) 600 K β **0.64** · 1600 ps 로 늘리면 0.37 로 악화")
 if not os.path.isdir(SC) and not sc_up:
     print("   · 미착수:  conda activate uma && PY=$(which python3) && mkdir -p ~/logs")
