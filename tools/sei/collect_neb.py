@@ -60,8 +60,9 @@ def read_one(d):
         "Ea_backward_eV": bwd[-1] if bwd else None,
         "num_of_images": int(_IMG.search(inp).group(1)) if _IMG.search(inp) else None,
         "CI_scheme": _CI.search(inp).group(1) if _CI.search(inp) else None,
-        "tot_charge": ("+1 (Li+ vacancy)" if "tot_charge      = 1.0" in inp
-                       or "tot_charge = 1.0" in inp else "0 (⚠ 중성 공공 — 정공 오염 주의)"),
+        # ⚠ 전하는 meta.json 이 정본이다 — 입력 문자열 추론은 옛 규약을 되살릴 수 있다
+        "tot_charge_from_input": (re.search(r"tot_charge\s*=\s*(-?[\d.]+)", inp).group(1)
+                                  if re.search(r"tot_charge\s*=\s*(-?[\d.]+)", inp) else None),
     })
     # ③ 정·역 대칭성 — ★ **끝점이 대칭적으로 같을 때만** 이 검사가 유효하다.
     #   실측(2026-08-07 spglib): Li₂S 는 Li 궤도 1개(Fm-3m, Wyckoff c)라 정=역이어야 하지만,
@@ -78,6 +79,11 @@ def read_one(d):
     eqv = meta.get("endpoints_symmetry_equivalent")
     r["endpoints_symmetry_equivalent"] = eqv
     r["li_orbits"] = meta.get("li_orbits")
+    # ★ P0-4 — 전역 orbit 수가 아니라 **선택된 쌍**의 등가성으로 판정한다
+    r["pair_orbits"] = meta.get("pair_orbits")
+    r["global_n_li_orbits"] = meta.get("global_n_li_orbits")
+    r["neighbor_shells"] = meta.get("neighbor_shells")
+    r["protocol_hash"] = meta.get("protocol_hash")
     r["supercell"] = meta.get("supercell")
     r["min_cell_A"] = meta.get("min_cell_A")
     if r["Ea_forward_eV"] is not None and r["Ea_backward_eV"] is not None:
@@ -102,8 +108,19 @@ def read_one(d):
                       f"(끝점 하나가 다른 국소최소로 흘렀을 수 있다)")
     if eqv is None and os.path.isfile(mp) is False:
         checks.append("meta.json 이 없어 대칭 판정을 못 한다 — 생성기를 다시 돌릴 것")
-    if "tot_charge" in r and r["tot_charge"].startswith("0"):
-        checks.append("중성 공공이라 원자가띠에 정공이 생긴다 — tot_charge=+1 로 다시 걸 것")
+    # ★ 2026-08-11 전하 규약 정정 (Codex P0-1) — 옛 규약(+1)은 정공 2개라 무효다.
+    tc = meta.get("tot_charge")
+    r["vacancy_charge"] = meta.get("vacancy_charge")
+    if tc is not None and float(tc) > 0:
+        checks.append(f"tot_charge={tc} — **옛 규약(정공 2개)**이다. V_Li⁻ 는 −1 이다. "
+                      "build_neb_inputs.py 를 다시 돌려 재계산할 것")
+    # ★ P0-2 — vacancy 끝점이 이완되지 않았으면 장벽을 믿을 수 없다
+    if meta.get("endpoints_relaxed") is False:
+        checks.append("vacancy 끝점이 미이완이다 — 끝점이 경로 최고점이 되면 Ea 가 0 으로 "
+                      "붕괴한다. `run_sei_neb.sh endpoints <tag>` 먼저")
+    if meta.get("ci_scheme") == "no-CI":
+        checks.append("no-CI 단계다 — 장벽이 이미지 격자만큼 과소평가된다. "
+                      "수렴 후 --ci_scheme auto --restart 로 2단계를 돌릴 것")
     # ★ 2026-08-11 추가 — li3p 가 Ea=0.000 eV 로 `citable: true` 를 통과했다.
     #   장벽 0 은 측정이 아니라 **경로가 붕괴했다**는 신호다 (움직이는 Li 가 안 움직였거나
     #   두 끝점이 사실상 같은 구조이거나 안장점을 못 찾았거나).

@@ -1,50 +1,45 @@
 #!/usr/bin/env python3
-"""li_nd_alloy_check.py — "Li–Nd 합금이 음극 계면에 생긴다"는 주장을 열역학으로 판정한다.
+"""li_nd_alloy_check.py — **MP DB 감사**: 안정한 ordered Li–Nd 결정상이 등록돼 있는가.
 
-배경 (2026-08-11)
-  Xu 2026 (Nano Energy) 는 Nd–O 공도핑 argyrodite 의 음극 계면에 **Li–Nd alloy** 가 생겨
-  이온전도·전자절연 계면을 만든다고 주장한다. 근거는 XPS 995 eV 소피크 하나이고
-  본문이 스스로 "plausible" 이라고 적었다.
+★ 2026-08-11 역할 축소 (Codex 검토 채택)
+  초판은 이 도구를 "Li–Nd alloy 형성 여부 판정"으로 썼는데 **과했다**. 두 가지가 틀렸다:
+  ① 6원계 "interface" 계산이 그냥 closed convex hull 이었다 — Li 를 open reservoir 로 두지도,
+     μ_Li = Li metal 을 적용하지도 않았다. **0 V 계면 계산이 아니다.**
+  ② `ALLOY_EXISTS` / `NO_STABLE_ALLOY` 라는 이름이 고용체·비정질·준안정 나노상까지
+     포함하는 것처럼 읽힌다. DB 에 없는 것과 자연에 없는 것은 다르다.
 
-무엇을 묻나 — 세 가지를 분리한다
-  ① Li–Nd **이원계**에 껍질 위(hull) 안정상이 존재하나?
-  ② 존재하지 않는다면, 얼마나 멀리 떨어져 있나(최소 hull 거리)? 준안정도 없나?
-  ③ 음극 조건(μ_Li = Li 금속, 즉 0 V)에서 Li–Nd–S–P–Cl–O 계의 볼록껍질에
-     Li–Nd 이원상이 **등장하나**? — 실제 계면 조건은 이원계가 아니다.
+  → 이 도구는 이제 **"선택한 MP release 의 0 K hull 에 stable ordered Li–Nd 결정상이
+     등록돼 있는가"** 만 답한다. 그 이상은 말하지 않는다.
 
-⚠ 이 도구는 판정을 **대조군과 함께** 낸다. Li–Al·Li–Si(합금 확실) · Li–La·Li–Ce(같은
-  경희토류) 를 같이 조회해, "쿼리가 안 돌아서 0개" 와 "정말 없어서 0개" 를 구분한다.
-  대조군에서도 0 이 나오면 그건 판정이 아니라 도구 고장이다.
+⛔ 0 V 계면 산물은 이 도구가 아니라 **기존 open-Li 결과**를 인용할 것:
+     tools/oxidation/anode_interface_stability.py · db/properties/oxidation_stability.json
+   그쪽 예측(0 V): Li₂O + Li₃P + Li₂S + **NdP** + LiCl — Li–Nd 금속간화합물이 아니라 NdP 다.
+   Xu 2026 의 "Li–Nd alloy" 반박은 **그 결과가 주 근거**이고 이 감사는 보조다.
 
-⚠ MP(GGA/GGA+U) 에너지다. 우리 QE 값과 섞지 말 것. 상들 사이 비교에만 쓴다.
-⚠ 이 환경(원격 세션)에서는 MP API 가 프록시에 막힌다 — **gabia 에서 실행**할 것.
+⚠ MP(GGA/GGA+U) 0 K 값이다. 우리 QE 값과 섞지 말 것. 온도·엔트로피·준안정 경로는 다루지 않는다.
+⚠ 이 원격 환경은 MP API 가 프록시에 막힌다 — **gabia 에서 실행**할 것.
 
   export MP_API_KEY=...
   python3 tools/sei/li_nd_alloy_check.py
 """
 import argparse
+import datetime
 import json
 import os
 import sys
 
 OUT = "db/properties/li_nd_alloy_check.json"
-#: (계, 왜 대조군인가) — 합금이 확실한 계와 같은 족의 희토류를 섞는다
-CONTROLS = [
-    ("Li-Al", "합금 확실 (LiAl 등) — 쿼리 건전성 확인"),
-    ("Li-Si", "합금 확실 (Li15Si4 등) — 애노드 표준"),
-    ("Li-La", "같은 경희토류 — Nd 와 같은 거동을 기대"),
-    ("Li-Ce", "같은 경희토류"),
-    ("Li-Mg", "고용체계 — 화합물이 적은 쪽 대조"),
-]
+#: API 건전성 **양성 대조** — 여기서 안정상이 안 나오면 쿼리가 고장난 것이다.
+#: (Li–La/Ce/Mg 는 과학 비교군이지 양성 대조가 아니다 — 없어도 정상일 수 있다.)
+POSITIVE_CONTROLS = {"Li-Al": "LiAl", "Li-Si": "Li15Si4"}
+SCIENCE_COMPARISONS = ["Li-La", "Li-Ce", "Li-Mg"]
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default=OUT)
-    ap.add_argument("--interface_chemsys", default="Li-Nd-P-S-Cl-O",
-                    help="음극 계면 조건에서 볼 계 (③)")
-    ap.add_argument("--skip_interface", action="store_true",
-                    help="③ 을 건너뛴다 (6원계 조회는 무거울 수 있다)")
+    ap.add_argument("--thermo", default="GGA_GGA+U",
+                    help="thermo type 고정 — release 마다 우선순위가 달라질 수 있다")
     a = ap.parse_args()
 
     key = os.environ.get("MP_API_KEY")
@@ -52,20 +47,41 @@ def main():
         sys.exit("⛔ MP_API_KEY 가 없다.  export MP_API_KEY=...")
     from mp_api.client import MPRester
 
+    prov = {"utc": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
+            "thermo_type": a.thermo}
+    for mod in ("mp_api", "pymatgen", "emmet"):
+        try:
+            import importlib.metadata as md
+            prov[f"{mod}_version"] = md.version(mod if mod != "emmet" else "emmet-core")
+        except Exception:
+            prov[f"{mod}_version"] = "unknown"
+
     res = {"property": "li_nd_alloy_check",
-           "question": "Xu 2026 의 'Li–Nd alloy 가 음극 계면에 형성' 주장을 열역학으로 판정",
-           "warning": "MP(GGA/GGA+U) 에너지 — 우리 QE 값과 섞지 말 것. "
-                      "열역학 판정이지 동역학 판정이 아니다(준안정상은 실제로 생길 수 있다).",
-           "binary": {}, "controls": {}, "interface": None}
+           "scope": "MP DB 감사 — 선택한 release 의 0 K hull 에 stable ordered Li–Nd "
+                    "결정상이 등록돼 있는가. **형성 여부 판정이 아니다.**",
+           "not_this_tool": "0 V 계면 분해 산물은 tools/oxidation/anode_interface_stability.py "
+                            "· db/properties/oxidation_stability.json 을 인용할 것 "
+                            "(그 결과의 0 V 산물에는 NdP 가 있고 Li–Nd 금속간화합물은 없다).",
+           "warning": "MP(GGA/GGA+U) 0 K. 우리 QE 값과 섞지 말 것. 고용체·비정질·준안정 "
+                      "나노상·온도 효과는 이 감사의 범위 밖이다.",
+           "provenance": prov, "binary": {}, "positive_controls": {}, "science_comparisons": {}}
 
     with MPRester(key) as m:
+        try:
+            res["provenance"]["mp_database_version"] = m.get_database_version()
+        except Exception as exc:
+            res["provenance"]["mp_database_version"] = f"unavailable: {str(exc)[:80]}"
+
         def survey(cs):
             docs = m.materials.summary.search(
                 chemsys=cs, fields=["material_id", "formula_pretty", "symmetry",
                                     "energy_above_hull", "formation_energy_per_atom",
                                     "theoretical", "is_stable", "nsites"])
+            elems = set(cs.split("-"))
             rows = []
             for d in docs:
+                if d.formula_pretty in elems:          # 순물질은 '화합물'이 아니다
+                    continue
                 rows.append({
                     "material_id": d.material_id, "formula": d.formula_pretty,
                     "spacegroup": d.symmetry.symbol if d.symmetry else None,
@@ -77,96 +93,85 @@ def main():
                                      r["e_above_hull_eV_per_atom"]))
             return rows
 
-        # ① · ② Li–Nd 이원계
-        rows = survey("Li-Nd")
-        # 순물질(Li, Nd 단독)은 '화합물'이 아니다 — 이원 화합물만 센다
-        compounds = [r for r in rows
-                     if not (set(r["formula"]) & set("0123456789") == set()
-                             and r["formula"] in ("Li", "Nd"))]
-        binaries = [r for r in rows if r["formula"] not in ("Li", "Nd")]
-        stable_bin = [r for r in binaries if r["is_stable"]]
-        res["binary"] = {
-            "chemsys": "Li-Nd", "n_entries": len(rows), "n_binary_compounds": len(binaries),
-            "n_stable_binary_compounds": len(stable_bin),
-            "stable": stable_bin,
-            "closest_metastable": binaries[:5],
-            "entries": rows}
+        try:
+            binaries = survey("Li-Nd")
+        except Exception as exc:
+            sys.exit(f"⛔ Li-Nd 조회 실패 — 판정 아님: {str(exc)[:200]}")
+        stable = [r for r in binaries if r["is_stable"]]
+        res["binary"] = {"chemsys": "Li-Nd", "n_binary_compounds": len(binaries),
+                         "n_stable": len(stable), "stable": stable,
+                         "closest_metastable": binaries[:5], "entries": binaries}
 
-        # 대조군
-        for cs, why in CONTROLS:
-            r = survey(cs)
-            b = [x for x in r if x["formula"] not in cs.split("-")]
-            res["controls"][cs] = {
-                "why": why, "n_entries": len(r), "n_binary_compounds": len(b),
-                "n_stable_binary_compounds": sum(1 for x in b if x["is_stable"]),
-                "stable_formulas": [x["formula"] for x in b if x["is_stable"]][:10]}
-
-        # ③ 음극 조건 — Li 금속과 평형(μ_Li = μ_Li⁰)에서 볼록껍질에 무엇이 있나
-        if not a.skip_interface:
+        ctrl_fail = []
+        for cs, expect in POSITIVE_CONTROLS.items():
             try:
-                from pymatgen.analysis.phase_diagram import PhaseDiagram
-                els = a.interface_chemsys.split("-")
-                entries = m.get_entries_in_chemsys(els, additional_criteria={
-                    "thermo_types": ["GGA_GGA+U"]})
-                pd = PhaseDiagram(entries)
-                stable = [e.composition.reduced_formula for e in pd.stable_entries]
-                li_nd_only = sorted({f for f, e in
-                                     ((e.composition.reduced_formula, e) for e in pd.stable_entries)
-                                     if set(e.composition.chemical_system.split("-")) <= {"Li", "Nd"}
-                                     and len(set(e.composition.chemical_system.split("-"))) == 2})
-                res["interface"] = {
-                    "chemsys": a.interface_chemsys, "n_entries": len(entries),
-                    "n_stable_phases": len(stable),
-                    "stable_Li_Nd_binaries_on_hull": li_nd_only,
-                    "note": "볼록껍질 위에 Li–Nd 이원상이 있으면 그 계면에서 합금이 "
-                            "열역학적으로 생길 수 있다는 뜻이다. 비어 있으면 없다는 뜻."}
+                r = survey(cs)
             except Exception as exc:
-                res["interface"] = {"status": "failed", "error": str(exc)[:300],
-                                    "note": "판정 아님 — 조회 실패다"}
+                res["positive_controls"][cs] = {"status": "query_failed", "error": str(exc)[:120]}
+                ctrl_fail.append(cs); continue
+            st = [x["formula"] for x in r if x["is_stable"]]
+            ok = len(st) > 0
+            res["positive_controls"][cs] = {"expected_example": expect, "n_stable": len(st),
+                                            "stable_formulas": st[:10], "healthy": ok}
+            if not ok:
+                ctrl_fail.append(cs)
+
+        for cs in SCIENCE_COMPARISONS:
+            try:
+                r = survey(cs)
+            except Exception as exc:
+                res["science_comparisons"][cs] = {"status": "query_failed",
+                                                  "error": str(exc)[:120]}
+                continue
+            st = [x["formula"] for x in r if x["is_stable"]]
+            res["science_comparisons"][cs] = {"n_binary_compounds": len(r),
+                                              "n_stable": len(st), "stable_formulas": st[:10]}
 
     # ── 판정 ─────────────────────────────────────────────────────────────────
-    ctrl_ok = sum(1 for v in res["controls"].values() if v["n_stable_binary_compounds"] > 0)
     b = res["binary"]
-    if ctrl_ok == 0:
-        res["verdict"] = "TOOL_FAILURE"
-        res["verdict_text"] = ("⛔ 대조군에서도 안정 화합물이 0개다 — 쿼리가 고장난 것이지 "
-                               "판정이 아니다. Li–Nd 결과를 쓰면 안 된다.")
-    elif b["n_stable_binary_compounds"] > 0:
-        res["verdict"] = "ALLOY_EXISTS"
-        res["verdict_text"] = ("Li–Nd 이원계에 껍질 위 안정 화합물이 있다 — "
-                               "Xu 2026 의 합금 주장이 열역학적으로 가능하다.")
+    if ctrl_fail:
+        res["verdict"] = "QUERY_INCONCLUSIVE"
+        res["verdict_text"] = (f"⛔ 양성 대조 {ctrl_fail} 에서 안정상이 안 나왔다 — "
+                               "쿼리가 고장난 것이지 판정이 아니다. Li–Nd 결과를 쓰면 안 된다.")
+    elif b["n_stable"] > 0:
+        res["verdict"] = "STABLE_ORDERED_LI_ND_PHASE_IN_MP"
+        res["verdict_text"] = ("이 MP release 의 0 K hull 에 안정한 ordered Li–Nd 결정상이 "
+                               f"{b['n_stable']}개 등록돼 있다: "
+                               + ", ".join(r["formula"] for r in b["stable"]))
     else:
-        near = b["closest_metastable"][0]["e_above_hull_eV_per_atom"] if b["closest_metastable"] else None
-        res["verdict"] = "NO_STABLE_ALLOY"
+        near = b["closest_metastable"][0] if b["closest_metastable"] else None
+        # ⚠ 후보가 정말 0개일 때 포맷이 죽지 않게 (Codex 지적 — 이 도구가 확인하려는 바로 그 경로)
+        neartxt = (f"가장 가까운 준안정상은 {near['formula']}({near['material_id']}) "
+                   f"hull +{near['e_above_hull_eV_per_atom']:.3f} eV/atom"
+                   + (", theoretical(실험 보고 없음)" if near.get("theoretical") else "")
+                   if near else "Li–Nd 이원 화합물 엔트리 자체가 하나도 없다")
+        res["verdict"] = "NO_STABLE_ORDERED_LI_ND_PHASE_IN_MP"
         res["verdict_text"] = (
-            f"Li–Nd 이원계에 껍질 위 안정 화합물이 **없다** (대조군 {ctrl_ok}/{len(CONTROLS)} 계는 있다). "
-            f"가장 가까운 준안정상도 hull +{near:.3f} eV/atom. "
-            "→ 'Li–Nd alloy 형성'은 열역학적 근거가 약하다. "
-            "⚠ 단 이는 **열역학** 판정이다 — 동역학적으로 준안정상이 생길 여지는 남는다. "
-            "XPS 995 eV 소피크만으로는 어느 쪽도 확정 못 한다.")
+            f"이 MP release 의 0 K hull 에 안정한 ordered Li–Nd 결정상이 **없다**. {neartxt}. "
+            "같은 경희토류 Li–La·Li–Ce 도 같은 양상이면 계통적 성질로 읽을 수 있다. "
+            "⚠ 이것은 **DB 감사**다 — 고용체·비정질·준안정 나노상·동역학 경로를 배제하지 않고, "
+            "XPS 피크 귀속을 반증하지도 않는다. 0 V 계면 산물 주장은 open-Li 결과를 인용할 것.")
+    res["overall_status"] = ("ok" if res["verdict"] != "QUERY_INCONCLUSIVE" else "inconclusive")
 
     with open(a.out, "w", encoding="utf-8") as f:
         json.dump(res, f, ensure_ascii=False, indent=1)
 
-    print(f"=== Li–Nd 이원계 ===  엔트리 {b['n_entries']} · 이원화합물 {b['n_binary_compounds']} "
-          f"· **껍질 위 안정 {b['n_stable_binary_compounds']}**")
+    print(f"MP db {res['provenance'].get('mp_database_version')} · thermo {a.thermo} · "
+          f"mp_api {res['provenance'].get('mp_api_version')}")
+    print(f"=== Li–Nd === 이원화합물 {b['n_binary_compounds']} · **안정 {b['n_stable']}**")
     for r in b["closest_metastable"]:
         print(f"   {r['material_id']:14s} {r['formula']:10s} {str(r['spacegroup']):10s} "
               f"hull +{r['e_above_hull_eV_per_atom']:.4f}  theo={r['theoretical']}")
-    print("=== 대조군 (쿼리 건전성) ===")
-    for cs, v in res["controls"].items():
-        print(f"   {cs:7s} 이원화합물 {v['n_binary_compounds']:3d} · 안정 "
-              f"{v['n_stable_binary_compounds']:2d}  {','.join(v['stable_formulas'][:5])}")
-    if res["interface"]:
-        i = res["interface"]
-        if i.get("status") == "failed":
-            print(f"=== 계면 조건 === ⚠ 조회 실패 (판정 아님): {i['error'][:120]}")
-        else:
-            print(f"=== 계면 조건 ({i['chemsys']}) === 안정상 {i['n_stable_phases']}개 중 "
-                  f"**Li–Nd 이원상: {i['stable_Li_Nd_binaries_on_hull'] or '없음'}**")
+    print("=== 양성 대조 (쿼리 건전성 — 여기서 0 이면 판정 무효) ===")
+    for cs, v in res["positive_controls"].items():
+        print(f"   {cs:7s} 안정 {v.get('n_stable', '?')}  {','.join(v.get('stable_formulas', [])[:4])}"
+              f"  {'✔' if v.get('healthy') else '⛔'}")
+    print("=== 과학 비교군 (없어도 정상) ===")
+    for cs, v in res["science_comparisons"].items():
+        print(f"   {cs:7s} 이원화합물 {v.get('n_binary_compounds', '?')} · 안정 {v.get('n_stable', '?')}")
     print(f"\n판정: {res['verdict']}\n{res['verdict_text']}")
     print(f"\n→ {a.out}")
-    return 0 if res["verdict"] != "TOOL_FAILURE" else 2
+    return 0 if res["overall_status"] == "ok" else 2
 
 
 if __name__ == "__main__":

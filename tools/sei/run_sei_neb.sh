@@ -54,16 +54,48 @@ fi
 # 싼 것부터 — 원자 수 순서를 코드에 박아 둔다(알파벳 순이면 li3po4g 가 먼저 온다)
 # 2026-08-11 6종으로 확장. lindo2 는 frozen-4f PP 게이트가 열려야 입력이 생긴다(todo #27).
 ORDER=(li2s li2o licl li3p li3po4g lindo2)
+MODE=neb
+if [ "${1:-}" = "endpoints" ]; then MODE=endpoints; shift; fi
 TARGETS=("$@"); [ ${#TARGETS[@]} -eq 0 ] && TARGETS=("${ORDER[@]}")
+
+# ★ P0-2 (Codex) — vacancy 끝점을 먼저 이완한다. 미이완 끝점이 경로 최고점이 되면
+#   NEB 은 끝점을 고정하므로 내리막만 남아 Ea=0 이 나온다 (li3p 사고의 미해결 절반).
+if [ "$MODE" = endpoints ]; then
+  PW=${PW:-/data/apps/qe-7.4.1-gpu/bin/pw.x}
+  [ -x "$PW" ] || { ts "⛔ pw.x 없음: $PW"; exit 1; }
+  for t in "${TARGETS[@]}"; do
+    for ep in ep_initial ep_final; do
+      d="$WORK/$t/$ep"
+      [ -f "$d/relax.in" ] || { ts "⛔ 없음: $d/relax.in — build_neb_inputs.py 먼저"; continue; }
+      grep -aq "JOB DONE" "$d/relax.out" 2>/dev/null && { ts "  ✓ $t/$ep 이미 완료"; continue; }
+      ts "  ▶ $t/$ep relax"
+      ( cd "$d" && $MPIRUN -np 1 --oversubscribe "$PW" -in relax.in > relax.out 2>&1 )
+      if grep -aq "JOB DONE" "$d/relax.out"; then ts "  ✅ $t/$ep"; else
+        ts "  ✗ $t/$ep 실패 — 꼬리:"; tail -6 "$d/relax.out"; fi
+    done
+  done
+  ts "끝점 이완 끝 — build_neb_inputs.py 를 **다시 돌려** 이완 좌표를 승계시킬 것"
+  exit 0
+fi
 
 for t in "${TARGETS[@]}"; do
   d="$WORK/$t"
   [ -f "$d/neb.in" ] || { ts "⛔ 없음: $d/neb.in — build_neb_inputs.py 부터"; continue; }
   ts "═══ $t ═══"
   cd "$d" || continue
+  # ★ P0-3 (Codex) — 프로토콜이 바뀌었는데 옛 neb.out 을 '이미 수렴'으로 건너뛰면
+  #   새 meta.json 과 옛 에너지가 결합된다. 지문을 대조한다.
+  NEWH=$(python3 -c "import json,sys;print(json.load(open('meta.json')).get('protocol_hash',''))" 2>/dev/null)
+  OLDH=$(cat .protocol_hash 2>/dev/null || echo "")
+  if [ -n "$NEWH" ] && [ -n "$OLDH" ] && [ "$NEWH" != "$OLDH" ]; then
+    ts "  ⛔ 프로토콜 지문이 바뀌었다 ($OLDH -> $NEWH) — 옛 neb.out/tmp/prefix.path 를 재사용하지 않는다."
+    ts "     새 WORK 로 돌리거나 이 폴더의 neb.out·tmp·*.path 를 지우고 다시 걸 것."
+    cd - >/dev/null; continue
+  fi
   if grep -aq "neb: convergence achieved" neb.out 2>/dev/null; then
     ts "  ✓ 이미 수렴 — 건너뜀"; cd - >/dev/null; continue
   fi
+  [ -n "$NEWH" ] && echo "$NEWH" > .protocol_hash
   # ⚠ neb.x 는 재시작 파일(prefix.path)이 있으면 이어서 돈다. 지우지 말 것.
   nat=$(grep -a -m1 "nat" neb.in | grep -oE "[0-9]+")
   ts "  ▶ neb.x (원자 ${nat:-?})  — 진행은 neb.out 의 'activation energy' 줄로 본다"

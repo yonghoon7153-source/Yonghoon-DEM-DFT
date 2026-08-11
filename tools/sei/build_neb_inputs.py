@@ -33,6 +33,7 @@
 """
 import argparse
 import glob
+import json
 import os
 import sys
 
@@ -113,11 +114,31 @@ def li_orbits(at0):
         return None
 
 
-def pick_hop(at, min_sep=None):
+def orbit_map(at0):
+    """원본 셀의 원자 index → (orbit id, Wyckoff). spglib 없으면 None."""
+    try:
+        import spglib
+        cell = (at0.cell.array, at0.get_scaled_positions(), at0.get_atomic_numbers())
+        d = spglib.get_symmetry_dataset(cell, symprec=1e-3)
+        eq = d.equivalent_atoms if hasattr(d, "equivalent_atoms") else d["equivalent_atoms"]
+        wy = d.wyckoffs if hasattr(d, "wyckoffs") else d["wyckoffs"]
+        return {i: (int(eq[i]), wy[i]) for i in range(len(at0))}
+    except Exception:
+        return None
+
+
+def pick_hop(at, nat0=None, omap=None):
     """공공 자리 A 와 그리로 뛸 Li B 를 고른다.
 
     최근접 Li–Li 쌍을 쓴다 = **기본 홉**. 더 긴 경로는 이것들의 조합이므로 먼저 이걸 잰다.
     ⚠ 끝점은 감싼 좌표가 아니라 `pos[B] + 최소이미지 벡터` 로 만든다(위 함정 ①).
+
+    ★ 2026-08-11 (Codex 검토 P0-4) — **선택한 쌍의 등가성**을 기록한다.
+      구조 전체에 Li orbit 이 2종이라는 사실은 "선택된 A/B 가 비등가"라는 뜻이 **아니다**.
+      Li₃P 의 최단 2.512 Å 쌍은 실제로 f–f **동등자리**이고 b–f 는 2.741 Å 다.
+      옛 코드는 전역 orbit 수만 보고 비등가로 판정해 `site_energy_diff==0` 차단을
+      false positive 로 걸었다. 이제 쌍 자체의 orbit 을 본다.
+      (ASE repeat 는 블록 타일링이라 supercell index % nat0 = 원본 index.)
     """
     sym = at.get_chemical_symbols()
     li = [i for i, s in enumerate(sym) if s == "Li"]
@@ -131,9 +152,29 @@ def pick_hop(at, min_sep=None):
             if best is None or d < best[0]:
                 best = (d, i, j)
     d, A, B = best
-    # 최소이미지 변위 벡터 (B → A). ASE 의 get_distance(vector=True) 가 mic 을 처리한다.
     vec = at.get_distance(B, A, mic=True, vector=True)
-    return {"d": float(d), "vac": A, "hop": B, "vec": np.asarray(vec, float)}
+    out = {"d": float(d), "vac": A, "hop": B, "vec": np.asarray(vec, float),
+           "pair_orbits": None, "pair_equivalent": None}
+    if omap and nat0:
+        oa, ob = omap.get(A % nat0), omap.get(B % nat0)
+        out["pair_orbits"] = {"vac": list(oa) if oa else None,
+                              "hop": list(ob) if ob else None}
+        out["pair_equivalent"] = (oa is not None and ob is not None and oa[0] == ob[0])
+    # 같은 shell 의 다른 대칭구별 쌍이 있는지 — "전역 최단"이 대표가 아닐 수 있다는 경고용
+    if omap and nat0:
+        shells = {}
+        for n, i in enumerate(li):
+            for j in li[n + 1:]:
+                oi, oj = omap.get(i % nat0), omap.get(j % nat0)
+                if oi is None or oj is None:
+                    continue
+                k = tuple(sorted((oi[1], oj[1])))
+                shells.setdefault(k, []).append(round(float(D[i][j]), 4))
+        out["neighbor_shells"] = {f"{a}-{b}": {"d_min": min(v), "n": len(v)}
+                                  for (a, b), v in sorted(shells.items(), key=lambda t: min(t[1]))
+                                  if min(v) < min(D[i][j] for n, i in enumerate(li)
+                                                  for j in li[n + 1:]) * 1.35}
+    return out
 
 
 def load_relaxed(tag, path, relaxed_from):
@@ -193,6 +234,23 @@ def load_relaxed(tag, path, relaxed_from):
     return at, outp
 
 
+def protocol_hash(tag, a, q, kpts, nat, cell) -> str:
+    """입력 규약 지문 — 프로토콜이 바뀌면 옛 neb.out/tmp/prefix.path 를 재사용하면 안 된다.
+
+    ★ 2026-08-11 (Codex 검토 P0-3) — 같은 WORK 에 새 입력을 쓰면 runner 가 옛 neb.out 의
+      'convergence achieved' 만 보고 건너뛴다. 그러면 **새 meta.json 과 옛 에너지가 결합**된다.
+      기존 li2s 는 min_cell 8.02 인데 새 기본은 --min_l 10 이라 실제로 일어날 수 있었다.
+    """
+    import hashlib
+    payload = {"tag": tag, "ecutwfc": ECUTWFC, "ecutrho": ECUTRHO, "q": q,
+               "images": a.images, "path_thr": a.path_thr, "kpts": list(kpts),
+               "nat": nat, "min_l": a.min_l, "ci": a.ci_scheme,
+               "cell": [round(float(x), 6) for v in cell for x in v],
+               "vacancy_charge": a.vacancy_charge,
+               "endpoints_relaxed": not a.allow_unrelaxed_endpoints}
+    return hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()[:12]
+
+
 def build(tag, path, disp, a, pool):
     from ase.io import read
     # ── 이완본 출발 (기본). --allow_unrelaxed 는 계획/디버그 전용 탈출구다 ──────
@@ -223,7 +281,8 @@ def build(tag, path, disp, a, pool):
                     "skip": f"Nd PP 가 frozen-4f 가 아니다 (z_valence={zn}) — "
                             f"frozen-4f(z≈11) 확보 후 열 것 (todo #27)"}
 
-    hop = pick_hop(at)
+    omap = orbit_map(at0)
+    hop = pick_hop(at, nat0=len(at0), omap=omap)
     if hop is None:
         return {"tag": tag, "skip": "Li 가 2개 미만"}
 
@@ -279,6 +338,70 @@ def build(tag, path, disp, a, pool):
     os.makedirs(d, exist_ok=True)
     from ase.data import atomic_masses, atomic_numbers
 
+    # ★★ P0-2 (Codex) — vacancy **끝점 자체**를 먼저 이완해야 한다.
+    #   지금까지는 완전 벌크만 이완하고, Li 를 뺀 두 끝점은 **미이완**으로 NEB 에 넣었다.
+    #   미이완 끝점이 경로 최고점이 되면 NEB 은 끝점을 고정하므로 내리막만 남아 Ea=0 이 된다
+    #   — 그게 li3p 사고의 미해결 절반이다. 같은 셀·같은 q·같은 k·같은 PP 로 고정셀 relax.
+    ep_files, ep_ready = {}, True
+    for name, imgs in (("ep_initial", first), ("ep_final", last)):
+        epd = os.path.join(d, name)
+        os.makedirs(epd, exist_ok=True)
+        ep_files[name] = epd
+        rel = ["&CONTROL", "    calculation     = 'relax'",
+               f"    prefix          = '{tag}_{name}'", "    outdir          = './tmp'",
+               f"    pseudo_dir      = '{a.pseudo_dir}'",
+               "    tprnfor         = .true.", "    forc_conv_thr   = 1.0d-3", "/",
+               "&SYSTEM", "    ibrav           = 0", f"    nat             = {nat}",
+               f"    ntyp            = {len(els)}",
+               f"    ecutwfc         = {ECUTWFC}", f"    ecutrho         = {ECUTRHO}",
+               f"    tot_charge      = {q:.1f}",
+               "    occupations     = 'smearing'", "    smearing        = 'gaussian'",
+               "    degauss         = 0.005", "/",
+               "&ELECTRONS", "    conv_thr        = 1.0d-8",
+               "    mixing_beta     = 0.3", "    electron_maxstep = 200", "/",
+               "&IONS", "    ion_dynamics    = 'bfgs'", "/", "", "ATOMIC_SPECIES"]
+        for e in els:
+            rel.append(f"  {e:3s} {atomic_masses[atomic_numbers[e]]:8.3f}  {pool[e]}")
+        rel += ["", "ATOMIC_POSITIONS angstrom"]
+        for e, pp in imgs:
+            rel.append(f"  {e:3s} %16.10f %16.10f %16.10f" % tuple(pp))
+        rel += ["", "K_POINTS automatic", "  %d %d %d 0 0 0" % tuple(info["kpts"]),
+                "", "CELL_PARAMETERS angstrom"]
+        for v in at.cell.array:
+            rel.append("  %16.10f %16.10f %16.10f" % tuple(v))
+        open(os.path.join(epd, "relax.in"), "w").write("\n".join(rel) + "\n")
+        # 이미 이완된 게 있으면 그 좌표를 끝점으로 승계한다 (verified-carry)
+        outp = os.path.join(epd, "relax.out")
+        got = None
+        if os.path.isfile(outp):
+            txt = open(outp, errors="ignore").read()
+            if "JOB DONE" in txt and "Begin final coordinates" in txt:
+                blk = txt[txt.rfind("Begin final coordinates"):]
+                rows2 = []
+                import re as _re
+                mm = _re.search(r"ATOMIC_POSITIONS\s*\(?(\w+)", blk)
+                if mm:
+                    for l in blk[mm.end():].splitlines():
+                        pr = l.split()
+                        if len(pr) >= 4 and _re.match(r"^[A-Z][a-z]?\d*$", pr[0]):
+                            rows2.append((pr[0], [float(pr[1]), float(pr[2]), float(pr[3])]))
+                if len(rows2) == nat and mm.group(1).lower() == "angstrom":
+                    got = rows2
+        if got is None:
+            ep_ready = False
+        else:
+            if name == "ep_initial":
+                first = got
+            else:
+                last = got
+    info["endpoints_relaxed"] = ep_ready
+    if not ep_ready and not a.allow_unrelaxed_endpoints:
+        info["skip"] = ("vacancy 끝점 미이완 — 먼저 `bash tools/sei/run_sei_neb.sh endpoints "
+                        f"{tag}` 로 {tag}/ep_initial · ep_final 을 이완할 것. "
+                        "(강행하려면 --allow_unrelaxed_endpoints · li3p Ea=0 사고 참조)")
+        info["endpoint_inputs"] = ep_files
+        return info
+
     def block(imgs):
         s = "ATOMIC_POSITIONS angstrom\n"
         for e, p in imgs:
@@ -293,7 +416,9 @@ def build(tag, path, disp, a, pool):
             "  k_max           = 0.3", "  k_min           = 0.2",
             # CI = climbing image. 안장점을 직접 올라타므로 barrier 가 이미지 격자에
             # 안 걸린다 — 'auto' 는 첫 몇 스텝 뒤 최고점 이미지를 자동 지정한다.
-            "  CI_scheme       = 'auto'",
+            f"  CI_scheme       = '{a.ci_scheme}'",
+            (f"  restart_mode    = 'restart'" if a.ci_scheme != "no-CI" and a.restart
+             else "  restart_mode    = 'from_scratch'"),
             f"  path_thr        = {a.path_thr}",
             "/", "END_PATH_INPUT", "BEGIN_ENGINE_INPUT",
             "&CONTROL", "    calculation     = 'scf'",
@@ -323,16 +448,23 @@ def build(tag, path, disp, a, pool):
     body += ["END_ENGINE_INPUT", "END", ""]
     open(os.path.join(d, "neb.in"), "w").write("\n".join(body))
     # ★ 회수기가 대칭 게이트를 켤지 말지 여기서 판단한다 (위 li_orbits 주석 참조).
-    import json as _j
+    _j = json
     _j.dump({"tag": tag, "disp": disp, "supercell": list(rep), "nat": nat,
              "hop_distance_A": hop["d"], "nelec": nelec_vac,
+             "protocol_hash": protocol_hash(tag, a, q, info["kpts"], nat, at.cell.array),
+             "endpoints_relaxed": info.get("endpoints_relaxed"),
+             "ci_scheme": a.ci_scheme,
              "tot_charge": q, "vacancy_charge": a.vacancy_charge,
              "charge_convention": "QE: +1=전자 부족, -1=전자 추가. V_Li- 는 -1 이다. "
                                   "2026-08-11 이전 입력은 +1(정공 2개)이라 무효.",
              "num_of_images": a.images,
              "min_cell_A": min(info["L"]), "kpts": info["kpts"],
              "li_orbits": orb,
-             "endpoints_symmetry_equivalent": (orb or {}).get("n_li_orbits") == 1,
+             # ★ 전역 orbit 수가 아니라 **선택된 쌍**의 등가성 (Codex P0-4)
+             "endpoints_symmetry_equivalent": hop.get("pair_equivalent"),
+             "global_n_li_orbits": (orb or {}).get("n_li_orbits"),
+             "pair_orbits": hop.get("pair_orbits"),
+             "neighbor_shells": hop.get("neighbor_shells"),
              "arrival_err_A": info["arrival_err"],
              "geometry_source": info["geometry_source"],
              "_note": ("endpoints_symmetry_equivalent=false 면 정·역 장벽이 다른 게 정상이다 "
@@ -362,6 +494,13 @@ def main():
     ap.add_argument("--kdens", type=float, default=0.04,
                     help="k 밀도 [Å⁻¹] — 슈퍼셀이라 성기게 잡는다")
     ap.add_argument("--only", nargs="*", help="일부만")
+    ap.add_argument("--ci_scheme", choices=("no-CI", "auto"), default="no-CI",
+                    help="QE 권고: **no-CI 로 먼저 수렴**시킨 뒤 restart + auto. "
+                         "옛 기본값 auto 는 처음부터 CI 를 켠 것이라 권고와 어긋났다")
+    ap.add_argument("--restart", action="store_true",
+                    help="restart_mode='restart' (2단계 CI 에서 쓴다)")
+    ap.add_argument("--allow_unrelaxed_endpoints", action="store_true",
+                    help="⚠ vacancy 끝점 이완 없이 강행 — Ea=0 사고의 미해결 절반. 디버그 전용")
     ap.add_argument("--vacancy_charge", choices=("minus1", "neutral"), default="minus1",
                     help="minus1 = V_Li⁻ (닫힌 껍질, tot_charge=-1, 기본) · "
                          "neutral = V_Li⁰ (정공 1개, tot_charge=0). "
