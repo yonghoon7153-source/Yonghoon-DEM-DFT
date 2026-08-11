@@ -10,7 +10,10 @@
 
   python3 extract_gap.py --nscf 03_nscf_gap.out --tag li2o --json gap.json
 """
-import argparse, json, re, sys
+import argparse, json, os, re, sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import electronic_class as EC          # noqa: E402  (금속/절연체 단일 출처)
 
 
 def main():
@@ -19,6 +22,23 @@ def main():
     ap.add_argument("--tag", required=True)
     ap.add_argument("--json", required=True)
     a = ap.parse_args()
+    # ★★ 2026-08-11 — 금속으로 선언된 상은 **갭을 db 에 쓰지 않는다.**
+    #   fixed-occ nscf 는 금속에서도 숫자를 내는데, 그건 갭이 아니라
+    #   'nelec/2 번째 밴드와 그 다음 밴드의 차' 다. 판정만 남기고 값은 null 로 둔다.
+    ecls = EC.get(a.tag)
+    if ecls.get("class") == "metal":
+        print(f"  ⛔ {a.tag}: electronic_class=metal → 갭을 내지 않는다 (NOT_APPLICABLE). "
+              f"금속엔 VBM/CBM 이 없다.")
+        print(f"     근거: {ecls.get('evidence')} · {str(ecls.get('basis') or '')[:80]}")
+        json.dump({"tag": a.tag, "gap": None, "verdict": "NOT_APPLICABLE(metal)",
+                   "electronic_class": "metal",
+                   "electronic_class_evidence": ecls.get("evidence"),
+                   "reason": "금속에는 VBM/CBM 이 없다. fixed-occ nscf 가 내는 숫자는 "
+                             "갭이 아니므로 db 에 등재하지 않는다.",
+                   "registry": "db/properties/sei_electronic_class.json",
+                   "method": "gap stage skipped by electronic_class registry"},
+                  open(a.json, "w"), ensure_ascii=False, indent=2)
+        return 0
     t = open(a.nscf, errors="ignore").read()
 
     m = re.search(r"number of electrons\s*=\s*([\d.]+)", t)

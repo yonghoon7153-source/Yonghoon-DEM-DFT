@@ -309,6 +309,19 @@ def build(tag, path, disp, a, pool):
     #   ⚠ 그래서 기존 li2s 0.272 eV 는 정공 2개짜리 계산이다 — provisional 로 내린다.
     CHARGE = {"minus1": -1.0, "neutral": 0.0}      # V_Li⁻ (닫힌 껍질) / V_Li⁰ (정공 1개)
     q = CHARGE[a.vacancy_charge]
+    # ★★ 금속 분기 (2026-08-11, Li₃Nd 착수) — 위 전하 논리는 **넓은 갭 절연체 전용**이다.
+    #   근거였던 "중성 Li 를 빼면 원자가띠에 정공이 생겨 가짜 금속이 된다" 가 금속엔
+    #   적용되지 않는다: 금속은 애초에 원자가띠 정공이라는 개념이 없고, 공공을 만들어도
+    #   전도전자가 스스로 가려 준다. jellium 배경전하는 인위적 상수를 더할 뿐이다.
+    #   → 금속: tot_charge = 0 · Marzari–Vanderbilt smearing · degauss 를 키운다.
+    #   ⚠ 절연체에 mv 를 쓰면 안 된다(음의 점유수) — 그래서 분기이지 기본값 변경이 아니다.
+    smear, degauss = "gaussian", 0.005
+    if is_metal:
+        if a.vacancy_charge != "neutral":
+            print(f"   ⚠ {tag} 는 metal 이라 vacancy_charge 를 neutral(tot_charge=0) 로 "
+                  f"강제한다 (요청값 {a.vacancy_charge} 무시 — 금속에 jellium 은 틀렸다)")
+        q = 0.0
+        smear, degauss = "mv", 0.02
     nelec_full = sum(zval(os.path.join(a.pseudo_dir, pool[s])) or 0
                      for s in at.get_chemical_symbols())
     z_li = zval(os.path.join(a.pseudo_dir, pool["Li"])) or 3.0
@@ -368,8 +381,8 @@ def build(tag, path, disp, a, pool):
                f"    ntyp            = {len(els)}",
                f"    ecutwfc         = {ECUTWFC}", f"    ecutrho         = {ECUTRHO}",
                f"    tot_charge      = {q:.1f}",
-               "    occupations     = 'smearing'", "    smearing        = 'gaussian'",
-               "    degauss         = 0.005", "/",
+               "    occupations     = 'smearing'", f"    smearing        = '{smear}'",
+               f"    degauss         = {degauss}", "/",
                "&ELECTRONS", "    conv_thr        = 1.0d-8",
                "    mixing_beta     = 0.3", "    electron_maxstep = 200", "/",
                "&IONS", "    ion_dynamics    = 'bfgs'", "/", "", "ATOMIC_SPECIES"]
@@ -441,11 +454,12 @@ def build(tag, path, disp, a, pool):
             "&SYSTEM", "    ibrav           = 0", f"    nat             = {nat}",
             f"    ntyp            = {len(els)}",
             f"    ecutwfc         = {ECUTWFC}", f"    ecutrho         = {ECUTRHO}",
-            # ★ Li⁺ 를 뺐으므로 전자도 하나 적다. 중성으로 두면 원자가띠에 정공이 생겨
-            #   넓은 갭 절연체가 가짜 금속이 된다 (위 함정 ②).
+            # ★ 전하 규약은 electronic_class 로 갈린다 (위 금속 분기 참조):
+            #   절연체 → V_Li⁻ (tot_charge = −1) + jellium · gaussian smearing
+            #   금속   → 중성 공공 (tot_charge = 0) · mv smearing (jellium 은 틀리다)
             f"    tot_charge      = {q:.1f}",
-            "    occupations     = 'smearing'", "    smearing        = 'gaussian'",
-            "    degauss         = 0.005", "/",
+            "    occupations     = 'smearing'", f"    smearing        = '{smear}'",
+            f"    degauss         = {degauss}", "/",
             "&ELECTRONS", "    conv_thr        = 1.0d-8",
             "    mixing_beta     = 0.3", "    electron_maxstep = 200", "/",
             "", "ATOMIC_SPECIES"]
@@ -467,7 +481,10 @@ def build(tag, path, disp, a, pool):
              "protocol_hash": protocol_hash(tag, a, q, info["kpts"], nat, at.cell.array),
              "endpoints_relaxed": info.get("endpoints_relaxed"),
              "ci_scheme": a.ci_scheme,
-             "tot_charge": q, "vacancy_charge": a.vacancy_charge,
+             "tot_charge": q, "vacancy_charge": ("neutral" if is_metal else a.vacancy_charge),
+             "electronic_class": ecls.get("class"),
+             "electronic_class_evidence": ecls.get("evidence"),
+             "smearing": smear, "degauss": degauss,
              "charge_convention": "QE: +1=전자 부족, -1=전자 추가. V_Li- 는 -1 이다. "
                                   "2026-08-11 이전 입력은 +1(정공 2개)이라 무효.",
              "num_of_images": a.images,
@@ -577,8 +594,11 @@ def main():
     print("⚠ 돌리기 전에 initial.xyz / final.xyz 를 VESTA 로 열어 **경로가 셀을 가로지르지")
     print("  않는지** 눈으로 볼 것 — 주기 경계를 넘는 홉은 코드가 최소이미지로 폈지만,")
     print("  뛴 Li 가 다른 원자를 관통하는 경로면 중간 이미지가 무너진다.")
-    print("⚠ tot_charge=+1 (Li⁺ 공공) 이다. jellium 보정은 유한 셀 근사라 셀 크기 의존이 남는다")
-    print("  — 장벽의 **상 사이 비교**에는 쓰되 절대값은 셀 수렴을 확인하고 인용할 것.")
+    print("⚠ 전하 규약은 상의 electronic_class 로 갈린다 (db/properties/sei_electronic_class.json):")
+    print("   · insulator → tot_charge = −1 (V_Li⁻) + jellium. 유한 셀 근사가 남으므로")
+    print("     **상 사이 비교**에 쓰고 절대값은 셀 수렴 확인 뒤 인용할 것.")
+    print("   · metal     → tot_charge = 0 (중성 공공) · mv smearing. jellium 없음.")
+    print("   ⛔ 2026-08-11 이전의 tot_charge=+1 입력은 정공 2개짜리라 **무효**다.")
     return 0
 
 

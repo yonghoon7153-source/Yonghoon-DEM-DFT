@@ -109,11 +109,31 @@ def read_one(d):
     if eqv is None and os.path.isfile(mp) is False:
         checks.append("meta.json 이 없어 대칭 판정을 못 한다 — 생성기를 다시 돌릴 것")
     # ★ 2026-08-11 전하 규약 정정 (Codex P0-1) — 옛 규약(+1)은 정공 2개라 무효다.
+    #   ★★ 단, **차단 조건이 상의 electronic_class 로 갈린다** (Li₃Nd 착수):
+    #     insulator → V_Li⁻ (tot_charge = −1) 을 기대한다. +1 은 무효, 0 은 정공 1개.
+    #     metal     → 중성 공공 (tot_charge = 0) 이 **맞다.** 여기에 절연체 게이트를
+    #                 걸면 옳은 계산을 도구가 막는다 — 실제로 옛 코드가 그랬다.
     tc = meta.get("tot_charge")
+    ecls = meta.get("electronic_class")
     r["vacancy_charge"] = meta.get("vacancy_charge")
-    if tc is not None and float(tc) > 0:
-        checks.append(f"tot_charge={tc} — **옛 규약(정공 2개)**이다. V_Li⁻ 는 −1 이다. "
-                      "build_neb_inputs.py 를 다시 돌려 재계산할 것")
+    r["electronic_class"] = ecls
+    r["smearing"] = meta.get("smearing")
+    if ecls is None:
+        checks.append("meta.json 에 electronic_class 가 없다 — 옛 생성기다. "
+                      "금속/절연체에 따라 전하 규약이 다르므로 재생성할 것")
+    elif ecls == "metal":
+        if tc is not None and abs(float(tc)) > 1e-9:
+            checks.append(f"metal 인데 tot_charge={tc} — 금속에 jellium 배경전하는 "
+                          "물리적 근거가 없다. tot_charge=0 으로 재생성할 것")
+        if meta.get("smearing") not in (None, "mv", "m-v", "marzari-vanderbilt"):
+            checks.append(f"metal 인데 smearing={meta.get('smearing')} — 금속엔 mv 를 쓴다")
+        if meta.get("electronic_class_evidence") == "declared":
+            checks.append("electronic_class=metal 이 **선언만** 된 상태다 (evidence=declared). "
+                          "DOS/PDOS 로 E_F 상태를 확인하기 전에는 장벽을 인용하지 않는다")
+    else:                                     # insulator (또는 미상)
+        if tc is not None and float(tc) > 0:
+            checks.append(f"tot_charge={tc} — **옛 규약(정공 2개)**이다. V_Li⁻ 는 −1 이다. "
+                          "build_neb_inputs.py 를 다시 돌려 재계산할 것")
     # ★ P0-2 — vacancy 끝점이 이완되지 않았으면 장벽을 믿을 수 없다
     if meta.get("endpoints_relaxed") is False:
         checks.append("vacancy 끝점이 미이완이다 — 끝점이 경로 최고점이 되면 Ea 가 0 으로 "
@@ -173,8 +193,12 @@ def main():
         os.makedirs(os.path.dirname(OUT), exist_ok=True)
         json.dump({
             "property": "sei_li_migration_barrier_neb",
-            "method": ("QE CI-NEB (neb.x). 공공 매개 Li 홉, tot_charge=+1 (Li⁺ 공공, jellium). "
-                       "ecutwfc 60 / ecutrho 480 Ry — 갭 계산과 같은 사양."),
+            "method": ("QE CI-NEB (neb.x). 공공 매개 Li 홉. ecutwfc 60 / ecutrho 480 Ry "
+                       "— 갭 계산과 같은 사양. **전하 규약은 상의 electronic_class 로 갈린다**: "
+                       "insulator = V_Li⁻ (tot_charge −1) + jellium · gaussian smearing / "
+                       "metal = 중성 공공 (tot_charge 0) · mv smearing (jellium 없음). "
+                       "결과마다 electronic_class·tot_charge 를 같이 싣는다. "
+                       "⛔ 2026-08-11 이전의 tot_charge=+1 입력은 정공 2개라 무효."),
             "warning": ("⚠ jellium 보정은 유한 셀 근사다 — 절대값은 셀 수렴 확인 뒤 인용할 것. "
                         "**상 사이 비교**가 이 값의 용도다. "
                         "⛔ BVSE 프록시 값과 같은 표에 놓지 말 것(단위는 같아도 다른 양이다)."),

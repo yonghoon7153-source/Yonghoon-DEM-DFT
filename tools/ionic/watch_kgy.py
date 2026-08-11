@@ -439,6 +439,73 @@ elif not arr_up and not n_done:
     print("        bash tools/ionic/run_arrhenius_6pt.sh 2>&1 | tee -a ~/logs/arr6.log'")
 print(BAR)
 
+# ═══ ④ comp1 셀 확대 사다리 ═══════════════════════════════════════════════
+# 왜 이게 ①의 후속인가: ① 이 "시간으로는 못 닫는다"로 끝났고(1600 ps 로 600 K β 0.64→0.37),
+#   남은 가설이 **62원자 셀에 Li 24개라 표본이 없다** 하나다. 사다리로 그 가설을 검정한다.
+# ⚠ 한 점(2×2×2)만 보면 '올랐다/안 올랐다' 밖에 못 말한다. **단조 증가인지**가 판정이다.
+SC = os.path.join(H, "work", "runs", "comp1_supercell")
+LADDER = [("2x1x1", 104, 48), ("2x2x1", 208, 96), ("2x2x2", 416, 192)]
+SC_SEED = 2
+SC_TOTAL_PS = EQ_PS + 200.0
+sc_up = "c1sc" in tmux
+
+print("④ comp1 셀 확대 사다리 — ① 의 '남은 수' (시간이 아니라 **이온 수**)")
+print("   기준선: 1×1×1 (52원자 · Li 24) 600 K β **0.64** · 1600 ps 로 늘리면 0.37 로 악화")
+if not os.path.isdir(SC) and not sc_up:
+    print("   · 미착수:  conda activate uma && PY=$(which python3) && mkdir -p ~/logs")
+    print("     tmux new -s c1sc -d \"PY=$PY bash ~/Yonghoon-DEM-DFT/tools/ionic/"
+          "run_comp1_supercell.sh 2>&1 | tee -a ~/logs/c1sc.log\"")
+else:
+    print(f"   {'셀':8s} {'원자':>5s} {'Li':>4s} {'상태':>22s} {'β(2-50)':>9s} {'D':>10s}")
+    betas = []
+    for sc, nat, nli in LADDER:
+        d = os.path.join(SC, f"sc{sc}_s{SC_SEED}")
+        mj = _under(d, "msd.json")
+        b = D = None
+        if mj:
+            try:
+                j = json.load(open(mj)); D = j.get("D_Li_cm2_s")
+            except Exception:
+                j = {}
+            b = beta(mj)
+            st = "✅ 완료"
+        else:
+            lg = _under(d, "md.log")
+            ps, _ = md_progress(os.path.dirname(lg)) if lg else (None, None)
+            if ps is not None:
+                st = f"▶ {ps:.0f}/{SC_TOTAL_PS:.0f} ps ({100*min(1,ps/SC_TOTAL_PS):.0f}%)"
+            elif os.path.isdir(d):
+                st = "▶ 착수 (UMA 로드)"
+            else:
+                st = "· 대기"
+        if b is not None:
+            betas.append((nli, b))
+        print(f"   {sc:8s} {nat:5d} {nli:4d} {st:>22s} "
+              f"{(f'{b:.2f}' if b is not None else '—'):>9s} "
+              f"{(f'{D:.3e}' if D else '—'):>10s}")
+    # ── 판정: 기준선(Li 24, β 0.64)을 포함해 단조 증가인가 ──────────────────
+    pts = [(24, 0.64)] + sorted(betas)
+    if len(betas) >= 2:
+        mono = all(pts[i][1] <= pts[i + 1][1] + 0.03 for i in range(len(pts) - 1))
+        top = pts[-1]
+        print(f"   사다리 β: " + " → ".join(f"Li{n}:{b:.2f}" for n, b in pts))
+        if top[1] >= 0.80 and mono:
+            print("   ✅ **가설 성립** — 이온 수를 늘리니 β 가 올라 게이트를 넘었다. "
+                  "원인은 통계였다. → 800/1000 K 확장 후 comp1 Ea 재산출:")
+            print("      TEMPS='600 800 1000' LADDER='2x2x2' "
+                  "bash tools/ionic/run_comp1_supercell.sh")
+        elif not mono:
+            print("   ⚠ 단조가 아니다 — 표본 잡음일 수 있다. 마지막 칸까지 보고 말할 것.")
+        else:
+            print(f"   ⛔ **가설 기각 쪽** — Li {top[0]}개에서도 β {top[1]:.2f} 로 0.80 미달. "
+                  "셀 확대도 답이 아니다.")
+            print("      → MSD 경로를 접고 **홉 통계**로 간다 (Fickian MSD 가 필요 없다):")
+            print(f"         python3 tools/ionic/hops_per_ion.py --glob '{SC}/*/**/traj.xyz'")
+            print("      → open_items #1 에 그렇게 적고 comp1 Ea 는 인용 보류 유지.")
+    elif betas:
+        print("   · 아직 한 칸 — 사다리는 **두 칸 이상**이라야 경향을 말할 수 있다.")
+print(BAR)
+
 # ═══ 브랜치 상기 ═════════════════════════════════════════════════════════
 br = sh("git -C ~/Yonghoon-DEM-DFT branch --show-current").strip()
 if br and br != "claude/friendly-meitner-lldvar":

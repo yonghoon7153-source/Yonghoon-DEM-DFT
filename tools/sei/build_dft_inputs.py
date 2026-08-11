@@ -30,6 +30,9 @@ import json
 import os
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import electronic_class as EC          # noqa: E402  (금속/절연체 단일 출처)
+
 ECUTWFC, ECUTRHO = 60.0, 480.0        # Ry — USPP/PAW 기준 (pseudo 요구 최대 47/326 위)
 KDENS_SCF, KDENS_NSCF = 0.30, 0.15    # Å⁻¹ 간격 — 갭용 nscf 를 2배 조밀하게
 # ⚠ DOS/PDOS 용 nscf 는 **대칭을 끄고**(projwfc 의 d_matrix 회피) 돌아야 하는데,
@@ -129,6 +132,17 @@ def main():
         if any(e in missing for e in els):
             print(f"\n⏭  {tag} — pseudo 없음({','.join(e for e in els if e in missing)})")
             skipped.append(tag); continue
+
+        # ★★ 2026-08-11 — **금속에는 fixed-occ 갭 단계(03)를 만들지 않는다.**
+        #   금속엔 VBM/CBM 이 없는데 occupations='fixed' 는 nelec/2 번째까지 채우므로
+        #   "그 밴드와 다음 밴드의 차" 라는 **숫자가 나온다**. extract_gap.py 가 사후에
+        #   '금속/반금속' 이라 라벨을 붙이긴 하지만 그건 계산을 막지 않는다 —
+        #   그 숫자가 db 갭 표에 들어가면 그때는 못 잡는다. 아예 안 만든다.
+        ecls = EC.get(tag)
+        skip_gap = ecls.get("class") == "metal"
+        if ecls.get("class") == "unregistered":
+            print(f"\n⚠ {tag} 가 sei_electronic_class.json 에 없다 — 절연체로 **가정하지 않는다**. "
+                  f"레지스트리에 등록한 뒤 다시 돌릴 것 (금속이면 갭 단계가 무의미하다)")
 
         d = os.path.join(a.work, tag)
         os.makedirs(d, exist_ok=True)
@@ -233,8 +247,22 @@ def main():
         open(os.path.join(d, "01_vcrelax.in"), "w").write(block("vc-relax", k_scf, False))
         open(os.path.join(d, "02_scf.in"), "w").write(block("scf", k_scf, False))
         # ★ 갭의 정본 — fixed occupations + 조밀 k. nbnd 를 넉넉히 줘 CBM 을 잡는다
-        open(os.path.join(d, "03_nscf_gap.in"), "w").write(
-            block("nscf", k_nscf, True, verbose=True))
+        gap_in = os.path.join(d, "03_nscf_gap.in")
+        if skip_gap:
+            # 입력을 지우고 사유를 남긴다 — 옛 입력이 남아 있으면 러너가 그걸 돌린다
+            if os.path.isfile(gap_in):
+                os.remove(gap_in)
+            json.dump({"tag": tag, "gap": "NOT_APPLICABLE",
+                       "reason": "electronic_class=metal — 금속에는 VBM/CBM 이 없다. "
+                                 "fixed-occ nscf 는 숫자를 내지만 그 숫자는 갭이 아니다.",
+                       "electronic_class_evidence": ecls.get("evidence"),
+                       "do_instead": "04~06 (DOS/PDOS) 로 E_F 에 상태가 있는지 확인한다. "
+                                     "그게 금속 선언의 근거가 된다.",
+                       "registry": "db/properties/sei_electronic_class.json"},
+                      open(os.path.join(d, "03_GAP_NOT_APPLICABLE.json"), "w"),
+                      ensure_ascii=False, indent=2)
+        else:
+            open(gap_in, "w").write(block("nscf", k_nscf, True, verbose=True))
         k_dos = kmesh(cell, KDENS_DOS)
         open(os.path.join(d, "04_nscf_dos.in"), "w").write(
             block("nscf", k_dos, False, nosym=True, dos=True))
@@ -262,6 +290,10 @@ def main():
               + (f"(점유 ↑{int((nelec + 3*n_nd)/2)}/↓{int((nelec - 3*n_nd)/2)}, M={3*n_nd} μB)"
                  if spinpol else
                  f"(점유 {int(nelec/2)} + 빈 {nbnd - int(nelec/2)})"))
+        if skip_gap:
+            print(f"  ⛔ electronic_class=metal → **03(갭) 단계를 만들지 않았다.** "
+                  f"금속엔 VBM/CBM 이 없다 — 04~06 DOS/PDOS 로 E_F 상태를 본다. "
+                  f"사유: 03_GAP_NOT_APPLICABLE.json")
         if note:
             print(note)
         made.append(tag)
