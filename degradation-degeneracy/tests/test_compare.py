@@ -1612,3 +1612,51 @@ def test_bundle_restores_and_validates_in_isolated_root(tmp_path):
     for k in ("입력_digest_재해시", "출력봉인_재계산", "start_파일_존재",
               "attempt_파일_존재", "producer_곡선일치", "조건집합_서명일치"):
         assert v["checks"][k] == "통과", f"{k}: {v['checks'][k]}"
+
+
+def test_dirty_scope_ignores_unrelated_subproject(tmp_path):
+    """★ F73 — 저장소를 공유하는 **다른 프로젝트** 수정이 이 실행을 오염시키면 안 된다.
+
+    실측: V100 에서 `se_curve/xfer_kit_ps_7_3_*.json` 2개(MPM/DEM 쪽 산출물)가
+    수정돼 있어서 `git_dirty=True` 가 됐다. 그대로 본 실행을 돌리면 열 시간짜리
+    산출물이 전부 `clean_worktree` 실패로 인용 불가가 된다.
+
+    판정을 **느슨하게** 하는 변경이므로 두 가지를 함께 보장한다.
+      · 범위 안(src/tools/configs/scripts/run.sh/requirements) 수정은 여전히 dirty
+      · 범위 밖 수정도 `git_dirty_out_of_scope` 에 **반드시 기록**된다 (숨기지 않는다)
+    """
+    import subprocess
+
+    from src.io import git_info
+
+    repo = tmp_path / "mono"
+    (repo / "proj" / "src").mkdir(parents=True)
+    (repo / "other").mkdir()
+    for f, body in ((repo / "proj" / "src" / "a.py", "x = 1\n"),
+                    (repo / "other" / "b.json", '{"v": 1}\n')):
+        f.write_text(body, encoding="utf-8")
+
+    def git(*a, cwd=repo):
+        return subprocess.run(["git", *a], cwd=cwd, capture_output=True, text=True)
+
+    git("init", "-q")
+    git("config", "user.email", "t@t")
+    git("config", "user.name", "t")
+    git("add", "-A")
+    git("commit", "-qm", "init")
+
+    proj = repo / "proj"
+    assert git_info(proj)["git_dirty"] is False
+
+    # ① 다른 프로젝트만 수정 → 이 실행은 clean 이어야 한다
+    (repo / "other" / "b.json").write_text('{"v": 2}\n', encoding="utf-8")
+    g = git_info(proj)
+    assert g["git_dirty"] is False, g
+    assert g["git_dirty_repo_wide"] is True
+    assert any("other/b.json" in x for x in g["git_dirty_out_of_scope"]), g
+
+    # ② 이 프로젝트의 코드 수정 → 반드시 dirty
+    (proj / "src" / "a.py").write_text("x = 2\n", encoding="utf-8")
+    g = git_info(proj)
+    assert g["git_dirty"] is True
+    assert any("src/a.py" in x for x in g["git_dirty_files_in_scope"]), g

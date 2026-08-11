@@ -23,7 +23,18 @@ import pandas as pd
 import yaml
 
 
-def git_info(repo_dir: str | Path | None = None, save_diff_to=None) -> dict:
+#: ★ F73 — dirty 판정의 **범위**. 이 실행의 결과를 바꿀 수 있는 경로만 센다.
+#:   저장소가 다른 프로젝트(MPM/DEM)와 공유되므로, 저장소 전체로 판정하면
+#:   무관한 파일 하나 때문에 열 시간짜리 산출물이 전부 인용 불가가 된다.
+#:   (실측: `se_curve/xfer_*.json` 2개가 수정돼 있어 smoke 가 dirty 로 찍혔다)
+#:   범위 밖 수정은 `git_dirty_out_of_scope` 로 **정보로는 남긴다** — 판정을
+#:   느슨하게 하는 변경이므로 무엇을 뺐는지 보이지 않으면 안 된다.
+RUN_SCOPE = ("src/", "tools/", "configs/", "scripts/", "run.sh",
+             "requirements.txt", "requirements-gpu.txt")
+
+
+def git_info(repo_dir: str | Path | None = None, save_diff_to=None,
+             scope: tuple = RUN_SCOPE) -> dict:
     """현재 git commit / dirty 여부. git이 없어도 죽지 않는다.
 
     ★ F30 — dirty 실행이면 **diff를 같이 남긴다.**
@@ -58,13 +69,39 @@ def git_info(repo_dir: str | Path | None = None, save_diff_to=None) -> dict:
         crit = [u for u in untracked
                 if u.startswith(("src/", "tools/", "configs/", "scripts/"))
                 and not any(k in u for k in _SKIP)]
+        # ★ F73 — 수정된 tracked 파일을 **실행 범위 안/밖**으로 나눈다.
+        #   경로는 `--name-only` 로 받는다. porcelain 을 문자열 슬라이싱하면
+        #   상태 문자 폭·rename 표기·따옴표 때문에 첫 글자가 잘린다 (실측).
+        mod = [x for x in subprocess.run(
+            ["git", "diff", "--name-only", "HEAD"], capture_output=True,
+            text=True, cwd=cwd, timeout=10).stdout.splitlines() if x.strip()]
+        # ★ git 은 **저장소 root 기준** 경로를 준다. 이 프로젝트는 monorepo 의
+        #   하위 디렉터리이므로 그 접두사를 떼야 `src/` 로 매칭된다.
+        #   (실측: `src/io.py` 수정이 "범위 밖"으로 분류됐다)
+        prefix = subprocess.run(["git", "rev-parse", "--show-prefix"],
+                                capture_output=True, text=True, cwd=cwd,
+                                timeout=10).stdout.strip()
+
+        def _local(x: str) -> str | None:
+            if not prefix:
+                return x
+            return x[len(prefix):] if x.startswith(prefix) else None
+
+        in_scope = [m for m in mod
+                    if (_l := _local(m)) is not None and _l.startswith(tuple(scope))]
+        out_scope = [m for m in mod if m not in in_scope]
         info = {"git_commit": commit or "unknown",
                 "git_commit_short": commit[:8] if commit else "unknown",
-                "git_dirty": bool(dirty_txt) or bool(crit),
-                "git_dirty_tracked": bool(dirty_txt),
+                "git_dirty": bool(in_scope) or bool(crit),
+                "git_dirty_tracked": bool(in_scope),
+                "git_dirty_files_in_scope": in_scope[:50],
+                # 판정에는 안 넣지만 반드시 기록한다 — 뺀 것을 숨기지 않는다
+                "git_dirty_out_of_scope": out_scope[:50],
+                "git_dirty_repo_wide": bool(mod) or bool(crit),
+                "git_dirty_scope": list(scope),
                 "git_untracked_count": len(untracked),
                 "git_untracked_critical": crit[:50]}
-        if dirty_txt and save_diff_to is not None:
+        if in_scope and save_diff_to is not None:
             diff = subprocess.run(["git", "diff", "HEAD"], capture_output=True,
                                   text=True, cwd=cwd, timeout=30).stdout
             p = Path(save_diff_to)

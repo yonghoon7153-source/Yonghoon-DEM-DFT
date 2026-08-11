@@ -404,10 +404,13 @@ def test_git_info_saves_dirty_diff(tmp_path):
     for cmd in (["git", "init", "-q"], ["git", "config", "user.email", "t@t"],
                 ["git", "config", "user.name", "t"]):
         subprocess.run(cmd, cwd=repo, check=True, capture_output=True)
-    (repo / "a.txt").write_text("one\n")
+    # ★ F73 — dirty 판정은 **실행에 영향을 주는 경로**로 한정된다.
+    #   루트의 임의 파일은 이제 dirty 가 아니므로 src/ 아래에 둔다.
+    (repo / "src").mkdir()
+    (repo / "src" / "a.py").write_text("one\n")
     subprocess.run(["git", "add", "-A"], cwd=repo, check=True, capture_output=True)
     subprocess.run(["git", "commit", "-qm", "i"], cwd=repo, check=True, capture_output=True)
-    (repo / "a.txt").write_text("two\n")          # dirty로 만든다
+    (repo / "src" / "a.py").write_text("two\n")   # dirty로 만든다
 
     out = tmp_path / "run" / "run_dirty.patch"
     info = git_info(repo, save_diff_to=out)
@@ -443,16 +446,24 @@ def test_dirty_ignores_unrelated_untracked_files(tmp_path):
     for cmd in (["git", "init", "-q"], ["git", "config", "user.email", "t@t"],
                 ["git", "config", "user.name", "t"]):
         subprocess.run(cmd, cwd=repo, check=True, capture_output=True)
-    (repo / "a.txt").write_text("one\n")
+    (repo / "src").mkdir()
+    (repo / "src" / "a.py").write_text("one\n")
+    (repo / "other.json").write_text("{}\n")
     subprocess.run(["git", "add", "-A"], cwd=repo, check=True, capture_output=True)
     subprocess.run(["git", "commit", "-qm", "i"], cwd=repo, check=True, capture_output=True)
 
-    (repo / "unrelated.zip").write_bytes(b"x")      # 다른 프로젝트 산출물
+    (repo / "unrelated.zip").write_bytes(b"x")      # 다른 프로젝트 산출물 (untracked)
     info = git_info(repo)
     assert info["git_dirty"] is False, "untracked 파일이 dirty로 잡혔다"
     assert info["git_untracked_count"] == 1         # 정보로는 남는다
 
-    (repo / "a.txt").write_text("two\n")            # 추적 파일 수정
+    # ★ F73 — 추적 파일이라도 **범위 밖**이면 이 실행과 무관하다 (기록은 남긴다)
+    (repo / "other.json").write_text('{"v": 2}\n')
+    info = git_info(repo)
+    assert info["git_dirty"] is False, "무관한 하위 프로젝트가 dirty로 잡혔다"
+    assert any("other.json" in x for x in info["git_dirty_out_of_scope"]), info
+
+    (repo / "src" / "a.py").write_text("two\n")     # 범위 안 수정
     assert git_info(repo)["git_dirty"] is True
 
 
