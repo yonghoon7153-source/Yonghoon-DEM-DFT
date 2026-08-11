@@ -780,7 +780,7 @@ def test_results_doc_carries_citation_block_without_provenance(tmp_path):
         assert k in text, f"{k} 검사가 배너에 없다"
 
 
-def _complete_artifact(tmp_path, repo_root=None):
+def _complete_artifact(tmp_path, repo_root=None, objectives=("pocv_dvdq",)):
     """provenance 검사를 **실제로** 통과하는 artifact.
 
     ★ F43/F50/F56/F57 — 이 fixture 는 세 번 깨졌다. 매번 validator 를 강화하자
@@ -813,15 +813,16 @@ def _complete_artifact(tmp_path, repo_root=None):
     # ★ F68 — 조건 집합 서명은 **실제 fits 의 조건**에서 나와야 한다.
     #   하드코딩하면 그 자체가 위조 통로가 된다.
     from src.io import _sha256_lines
-    _df0 = _fits(objectives=("pocv_dvdq",))
+    _df0 = _fits(objectives=tuple(objectives))
     _conds = sorted(set(_df0["cond_id"].astype(str)))
     src = source_digest()
     env = env_fingerprint()
     attempt_id = "20260807T000000_1_000"
 
-    spec = {"sig_version": 5, "objectives": {"pocv_dvdq": {"w_pocv": 1.0}},
+    spec = {"sig_version": 5,
+            "objectives": {o: {"w_pocv": 1.0} for o in objectives},
             # ★ F67 — 계산을 고정하는 축들. 설정만으론 부족하다.
-            "objective_order": ["pocv_dvdq"],
+            "objective_order": list(objectives),
             "condition_ids_sha256": _sha256_lines(_conds)[:16],
             "n_conditions": len(_conds), "selection": "full",
             "optimizer": {"method": "Nelder-Mead", "adaptive": True,
@@ -1660,3 +1661,94 @@ def test_dirty_scope_ignores_unrelated_subproject(tmp_path):
     g = git_info(proj)
     assert g["git_dirty"] is True
     assert any("src/a.py" in x for x in g["git_dirty_files_in_scope"]), g
+
+
+def test_dirty_scope_bypasses_are_closed(tmp_path):
+    """★ F75/8차 발견 4 — F73 의 세 우회를 닫는다.
+
+    반례 (전부 리뷰 실측):
+      4-a  `git mv proj/src/a.py other/a.py` → rename 탐지가 새 경로만 줘서
+           실행 source 를 **삭제한** tracked 변경이 clean 승인
+      4-b  untracked `src/한글.py` → quoting("src/\355...") 때문에
+           `startswith("src/")` 실패 → clean
+      4-c  `.gitignore` 의 `*.parquet` 규칙에 걸린 `configs/lookup.parquet` →
+           untracked 목록에 아예 안 나와 clean. source_digest 는 내용을 해시해도
+           **clean clone 에는 그 파일이 없어** 재현이 불가능하다
+    """
+    import subprocess
+
+    from src.io import git_info
+
+    repo = tmp_path / "mono"
+    (repo / "proj" / "src").mkdir(parents=True)
+    (repo / "proj" / "configs").mkdir()
+    (repo / "other").mkdir()
+    (repo / "proj" / "src" / "a.py").write_text("x = 1\n", encoding="utf-8")
+    (repo / ".gitignore").write_text("*.parquet\n*.local\n", encoding="utf-8")
+
+    def git(*a):
+        return subprocess.run(["git", *a], cwd=repo, capture_output=True, text=True)
+
+    git("init", "-q")
+    git("config", "user.email", "t@t")
+    git("config", "user.name", "t")
+    git("add", "-A")
+    git("commit", "-qm", "init")
+
+    proj = repo / "proj"
+    assert git_info(proj)["git_dirty"] is False
+
+    # 4-a — 실행 범위 밖으로 rename
+    git("mv", "proj/src/a.py", "other/a.py")
+    g = git_info(proj)
+    assert g["git_dirty"] is True, f"rename-out 이 clean 으로 승인됐다: {g}"
+    git("mv", "other/a.py", "proj/src/a.py")     # 원복
+    assert git_info(proj)["git_dirty"] is False
+
+    # 4-b — 비ASCII untracked (critical 경로)
+    (proj / "src" / "한글.py").write_text("x = 1\n", encoding="utf-8")
+    g = git_info(proj)
+    assert g["git_dirty"] is True, f"한글 경로 untracked 가 clean 이다: {g}"
+    assert any("한글" in x for x in g["git_untracked_critical"]), g
+    (proj / "src" / "한글.py").unlink()
+
+    # 4-c — ignored 인데 실행 경로에 있는 입력
+    (proj / "configs" / "lookup.parquet").write_bytes(b"data")
+    (proj / "src" / "settings.local").write_text("k=v\n", encoding="utf-8")
+    g = git_info(proj)
+    assert g["git_dirty"] is True, f"ignored 실행 입력이 clean 이다: {g}"
+    assert any("lookup.parquet" in x for x in g["git_untracked_critical"]), g
+
+
+def test_validator_rejects_duplicate_swap_with_resealed_record(tmp_path):
+    """★ F76/8차 발견 5 — 한 조합을 다른 조합의 중복으로 바꾸고 봉인 기록까지
+    재계산해 넣어도 잡아야 한다.
+
+    반례: 2조건×2목적함수에서 ('c0','b') 를 ('c1','b') 중복으로 교체 + reseal →
+    KEYS 에 ('c1','b') 가 두 번, ('c0','b') 없음인데 VALID_AFTER_DUP_RESEAL=True.
+    조건 집합·행 수·objectives 집합이 전부 보존되기 때문이다.
+    """
+    import pandas as pd
+    import yaml
+
+    from src.io import fits_seal, validate_provenance
+
+    d, _ = _complete_artifact(tmp_path, objectives=("aa", "bb"))
+    assert validate_provenance(d)["ok"], validate_provenance(d)["fail"]
+
+    f = pd.read_parquet(d / "fits.parquet")
+    conds = sorted(set(f["cond_id"]))
+    c0, c1 = conds[0], conds[1]
+    # ('c0','bb') 행의 cond_id 를 c1 로 바꾼다 → ('c1','bb') 중복, ('c0','bb')
+    # 누락. c0 는 ('c0','aa') 로 여전히 존재하므로 **조건 집합은 보존**된다 —
+    # 리뷰 반례 그대로다.
+    i = f[(f["cond_id"] == c0) & (f["objective"] == "bb")].index[0]
+    f.loc[i, "cond_id"] = c1
+    f.to_parquet(d / "fits.parquet", index=False)
+
+    m = yaml.safe_load((d / "manifest.yaml").read_text(encoding="utf-8"))
+    m["fits_seal"] = fits_seal(d / "fits.parquet")       # 기록을 파일에 맞춘다
+    (d / "manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+
+    v = validate_provenance(d)
+    assert not v["ok"], "중복 교체 + reseal 이 통과했다"

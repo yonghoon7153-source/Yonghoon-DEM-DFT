@@ -54,10 +54,20 @@ def git_info(repo_dir: str | Path | None = None, save_diff_to=None,
                                     "--untracked-files=no"],
                                    capture_output=True, text=True, cwd=cwd,
                                    timeout=10).stdout.strip()
-        untracked = subprocess.run(["git", "ls-files", "--others",
-                                    "--exclude-standard"],
-                                   capture_output=True, text=True, cwd=cwd,
-                                   timeout=10).stdout.split()
+        # ★ F75/발견 4-b — `-z` 로 받는다. 기본 출력은 비ASCII 경로를
+        #   "src/\355\225\234..." 로 quoting 해서 `startswith("src/")` 가
+        #   실패했다 (한글 파일명 untracked 가 clean 으로 통과).
+        untracked = [x for x in subprocess.run(
+            ["git", "ls-files", "--others", "--exclude-standard", "-z"],
+            capture_output=True, text=True, cwd=cwd,
+            timeout=10).stdout.split("\0") if x]
+        # ★ F75/발견 4-c — **ignored 인데 실행 경로에 있는** 파일도 재현을 막는다.
+        #   source_digest 는 내용을 해시하지만, clean clone 에는 그 파일이 없어
+        #   재검증이 불가능하다 (반례: configs/lookup.parquet, src/settings.local).
+        ignored = [x for x in subprocess.run(
+            ["git", "ls-files", "--others", "--ignored", "--exclude-standard", "-z"],
+            capture_output=True, text=True, cwd=cwd,
+            timeout=10).stdout.split("\0") if x]
         # ★ F37 — untracked를 **전부** 무시하면 false clean이 된다. 실행에 실제로
         #   import되거나 읽히는 경로(src/tools/configs) 아래의 untracked
         #   code/config는 재현을 막으므로 dirty로 센다. 그 밖(다른 프로젝트
@@ -66,15 +76,20 @@ def git_info(repo_dir: str | Path | None = None, save_diff_to=None,
         #   새 입력이 추가될 때 조용히 false clean 이 된다. critical 디렉터리
         #   아래는 **전부** dirty 로 센다 (캐시·바이트코드만 제외).
         _SKIP = ("__pycache__/", ".pyc", ".pyo", ".ipynb_checkpoints/")
-        crit = [u for u in untracked
+        crit = [u for u in untracked + ignored
                 if u.startswith(("src/", "tools/", "configs/", "scripts/"))
                 and not any(k in u for k in _SKIP)]
         # ★ F73 — 수정된 tracked 파일을 **실행 범위 안/밖**으로 나눈다.
         #   경로는 `--name-only` 로 받는다. porcelain 을 문자열 슬라이싱하면
         #   상태 문자 폭·rename 표기·따옴표 때문에 첫 글자가 잘린다 (실측).
+        # ★ F75/발견 4-a — `--no-renames -z`. rename 탐지가 켜져 있으면
+        #   `--name-only` 가 **새 경로만** 줘서, 실행 범위 파일을 밖으로 rename
+        #   한 tracked 변경(git mv src/a.py other/)이 clean 으로 승인됐다.
+        #   -z 는 비ASCII quoting 도 막는다.
         mod = [x for x in subprocess.run(
-            ["git", "diff", "--name-only", "HEAD"], capture_output=True,
-            text=True, cwd=cwd, timeout=10).stdout.splitlines() if x.strip()]
+            ["git", "diff", "--name-only", "--no-renames", "-z", "HEAD"],
+            capture_output=True, text=True, cwd=cwd,
+            timeout=10).stdout.split("\0") if x.strip()]
         # ★ git 은 **저장소 root 기준** 경로를 준다. 이 프로젝트는 monorepo 의
         #   하위 디렉터리이므로 그 접두사를 떼야 `src/` 로 매칭된다.
         #   (실측: `src/io.py` 수정이 "범위 밖"으로 분류됐다)
@@ -913,6 +928,23 @@ def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
                     and sorted(now.get("objectives") or []) == sorted(_order),
                     f"행이 {now.get('n_rows')}개다 "
                     f"(조건 {spec0.get('n_conditions')} × 목적함수 {len(_order)} = {exp} 필요)")
+                # ★ F76/8차 발견 5 — 집합·행수·digest 로는 **정확한 곱집합**이
+                #   보장되지 않는다. 반례: ('c0','b') 행을 ('c1','b') 중복으로
+                #   바꾸고 fits_seal 을 재계산해 넣으면, 조건 집합 {c0,c1} 도
+                #   행 수도 그대로라 전부 통과했다. 관측된 조건 × 서명된
+                #   목적함수의 각 조합이 **정확히 한 번씩** 있는지 센다.
+                _kdf = pd.read_parquet(fp, columns=["cond_id", "objective"])
+                _seen = Counter(zip(_kdf["cond_id"].astype(str),
+                                    _kdf["objective"].astype(str)))
+                _conds_obs = sorted({c for c, _ in _seen})
+                _want = {(c, o) for c in _conds_obs for o in _order}
+                _dup = sorted(k for k, n in _seen.items() if n > 1)
+                _miss = sorted(_want - set(_seen))
+                _extra = sorted(set(_seen) - _want)
+                checks["출력_격자완전성"] = (
+                    not (_dup or _miss or _extra),
+                    f"중복 {len(_dup)} (예 {_dup[:2]}), 누락 {len(_miss)} "
+                    f"(예 {_miss[:2]}), 잉여 {len(_extra)} (예 {_extra[:2]})")
         cols = list(pd.read_parquet(fp).columns)
         want = [c for c in ("run_sig", "restarts_json") if c in cols]
         need = pd.read_parquet(fp, columns=want) if want else pd.DataFrame()
