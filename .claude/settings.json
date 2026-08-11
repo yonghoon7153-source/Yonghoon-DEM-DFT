@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "statusLine": {
+    "type": "command",
+    "command": "python3 tools/claude/statusline.py",
+    "refreshInterval": 10
+  },
+  "autoCompactEnabled": true,
+  "autoCompactWindow": 100000
+}
