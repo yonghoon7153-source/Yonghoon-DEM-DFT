@@ -19,7 +19,7 @@ set -uo pipefail
 REPO="${REPO:-/home/ubuntu/dem-stoic}"          # 코드 (worktree)
 DATA="${DATA:-/home/ubuntu/Yonghoon-DEM-DFT}"   # 킷 데이터 + 산출 디렉토리
 OUT="$DATA/se_curve"
-KITS=""; PHI="0.66,0.72,0.81"; NGRID=192; SUB=160; MACH=0.03; GPUMEM=8; TAG=""; DRY=0
+KITS=""; PHI="0.66,0.72,0.81"; NGRID=192; SUB=160; MACH=0.03; GPUMEM=8; TAG=""; DRY=0; SKIP=0
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -33,6 +33,11 @@ while [ $# -gt 0 ]; do
     --repo)    REPO="$2"; shift 2 ;;
     --data)    DATA="$2"; OUT="$2/se_curve"; shift 2 ;;
     --dry)     DRY=1; shift ;;
+    # ★ 이미 있는 (kit, n_grid, ε) 점은 건너뛴다.  적합기가 태그를 안 보고
+    #   `xfer_*<kit>_g<n>_e*.json` 으로 글롭하므로 **태그가 달라도 같은 점**이다
+    #   (fit_dh_collapse.load_kit_points).  기본 OFF — 조용히 건너뛰는 것이
+    #   기본이면 "다시 쟀는데 값이 그대로" 를 설명 못 한다.  GPU 시간이 비쌀 때 켠다.
+    --skip-existing) SKIP=1; shift ;;
     -h|--help) sed -n '2,22p' "$0"; exit 0 ;;
     *) echo "알 수 없는 인자: $1" >&2; exit 2 ;;
   esac
@@ -49,8 +54,14 @@ for A in "$REPO/scripts/activate_dem.sh" "$DATA/scripts/activate_dem.sh" \
   #   ⚠ `pip install` 을 venv 밖에서 하면 ~/.local 에 깔리는데 venv 는 user-site 를
   #     경로에 넣지 않는다 → 시스템 python 에선 import 되고 여기선 안 되는 상태가 된다.
   #     그래서 검사는 반드시 **활성화한 그 python** 으로 한다 (아래가 그렇다).
-  ( . "$A" >/dev/null 2>&1; python3 -c "import numpy,scipy,taichi" ) 2>/dev/null && { ACT="$A"; break; }
+  # ★ --dry 는 **계획만** 인쇄한다 (planner = numpy 만 필요).  taichi/scipy 를 요구하면
+  #   GPU 박스가 아닌 곳에서 계획을 못 세운다 — 실제로 그것 때문에 계획 검증을 못 했다.
+  _NEED="import numpy,scipy,taichi"; [ "$DRY" = 1 ] && _NEED="import numpy"
+  ( . "$A" >/dev/null 2>&1; python3 -c "$_NEED" ) 2>/dev/null && { ACT="$A"; break; }
 done
+if [ -z "$ACT" ] && [ "$DRY" = 1 ] && python3 -c "import numpy" 2>/dev/null; then
+  ACT="/dev/null"; echo "(dry-run: venv 없이 시스템 python 으로 계획만 인쇄 — 실행에는 scipy+taichi 필요)"
+fi
 [ -n "$ACT" ] || { echo "★★ ABORT: numpy+scipy+taichi 되는 venv 없음 (scipy 는 --se-dump 필수).
   설치는 **venv 파이썬으로**: ~/Yonghoon-DEM-DFT/venv/bin/python3 -m pip install scipy (심링크: ln -sfn $DATA/venv $REPO/venv)" >&2; exit 1; }
 # shellcheck disable=SC1090
@@ -108,6 +119,10 @@ for K in "${KIT_ARR[@]}"; do
     T=$(echo "$E" | tr -d .)
     NAME="${TAG:+${TAG}_}${K}_g${NGRID}_e${T}"
     echo "=== $NAME  $(date +%H:%M:%S)"
+    if [ "$SKIP" = 1 ]; then
+      EXIST=$(ls xfer_*"${K}"_g"${NGRID}"_e"${T}".json 2>/dev/null | head -1)
+      [ -n "$EXIST" ] && { echo "  SKIP — 이미 있음: $EXIST  (--skip-existing)"; continue; }
+    fi
     if [ "$DRY" = 1 ]; then echo "  (dry-run)"; continue; fi
     t0=$SECONDS
     python3 -u "$REPO/scripts/mpm3d_compaction.py" --arch cuda --gpu-mem "$GPUMEM" --am-scaffold "$KDIR/am_scaffold.csv" --se-dump "$KDIR/se_scaffold.csv" --n-grid "$NGRID" --sub "$SUB" --print-every 20 --protocol hold --periodic --platen-mach "$MACH" "${QSFLAG[@]}" --compact-to "$E" --save-metrics "xfer_${NAME}.json" > "xfer_${NAME}.log" 2>&1
