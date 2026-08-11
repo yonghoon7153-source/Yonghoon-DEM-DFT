@@ -385,9 +385,13 @@ def _fit_one(task: dict) -> list[dict]:
         if warm and _has_dqdv(weights) and seed_p is not None:
             init = seed_p
         warmed = init is not task["init"]
+        # ★ F66 — adaptive·method 를 task 로 받아 넘긴다. 예전에는 `fit()` 의
+        #   기본값(adaptive=True, Nelder-Mead)이 그대로 굳어 끌 방법이 없었다.
         res = fit(J, init, task["lb"], task["ub"],
                   n_restarts=task["n_restarts"], seed=task["seed"],
-                  warm_init=warmed)
+                  warm_init=warmed,
+                  adaptive=bool(task.get("adaptive", True)),
+                  method=str(task.get("method", "Nelder-Mead")))
         if warm and not _has_dqdv(weights) and np.all(np.isfinite(res.p)):
             seed_p = list(map(float, res.p))    # 가장 최근의 매끄러운 해
         inv = task["inventory"]
@@ -439,11 +443,25 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
             use_noisy: bool = True, limit: int | None = None,
             base_config: str | None = None, reference: str = "grid",
             resume: bool = False, subset: set | None = None,
-            warm_start: bool = True) -> dict:
+            warm_start: bool = True, adaptive: bool = True,
+            method: str = "Nelder-Mead",
+            halfcell_method: str = "ocp") -> dict:
     """grid 결과 전체에 fitting 수행 → fits.parquet.
 
     subset: 이 cond_id 집합만 fitting (Phase 6 가중치 sweep의 층화 표본용).
             limit이 "앞 N개"인 것과 달리 격자 전체에 고르게 걸칠 수 있다.
+
+    adaptive: ★ F66 — 적응적 조기 종료. 앞 두 restart 가 같은 해로 모이면 멈춘다.
+            기본은 켜짐(본 pipeline). **끄면** 모든 조건이 정확히 `n_restarts` 번을
+            돈다 — "동일 restart budget" paired 비교에 반드시 필요하다.
+            예전에는 `fit()` 에만 인자가 있고 `_fit_one`·CLI 로 전달되지 않아
+            **끌 방법이 아예 없었다.** 그래서 목적함수의 내재적 성능을 비교하는
+            공정 실험을 여섯 라운드 동안 실행하지 못했다.
+
+    method: optimizer. `configs/objectives.yaml` 의 `fitting.method` 가 이 값으로
+            들어온다. 한때 config 에 `L-BFGS-B` 라 적혀 있었지만 아무도 읽지 않아
+            실제로는 `Nelder-Mead` 로 돌았고, 그 config 가 서명에 통째로 들어가
+            **서명이 거짓을 기록**했다 (F66b).
 
     ★ 실행 잠금을 **함수 맨 앞에서** 잡는다 (리뷰 F19, 2026-08-06 실측 사고).
 
@@ -468,7 +486,7 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
         return _run_fit_locked(in_dir, out_dir, obj_cfg, objectives, bounds,
                                bounds_preset, n_restarts, nproc, use_noisy,
                                limit, base_config, reference, resume, subset,
-                               warm_start)
+                               warm_start, adaptive, method, halfcell_method)
     finally:
         release_run_lock(out_dir, ".fit.lock")
 
@@ -478,7 +496,9 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
                     use_noisy: bool = True, limit: int | None = None,
                     base_config: str | None = None, reference: str = "grid",
                     resume: bool = False, subset: set | None = None,
-                    warm_start: bool = True) -> dict:
+                    warm_start: bool = True, adaptive: bool = True,
+                    method: str = "Nelder-Mead",
+                    halfcell_method: str = "ocp") -> dict:
     """run_fit 본체. 호출자가 이미 .fit.lock 을 보유한 상태여야 한다."""
     import os
     import time
@@ -490,6 +510,7 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
 
     import yaml
 
+    from src.io import canonical_input_key as _ck
     from src.io import (base_manifest, env_fingerprint, file_digest, git_info,
                         seal_inputs, source_digest, write_manifest)
 
@@ -511,11 +532,30 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     #   예전에는 get_halfcell_reference() 로 읽은 **뒤에** 해시해서, 읽기와 해시
     #   사이에 파일이 바뀌지 않았음을 증명하지 못했다. 캐시 경로 계산은 base
     #   config 의 baseline 해시만 쓰므로 여기서 미리 할 수 있다.
-    _hc_pre = None
+    _hc_pre, _hc_meta, _hc_recipe = None, None, None
     if reference == "halfcell":
         from src.config import load_config as _lc
         from src.halfcell import halfcell_cache_path as _hcp
-        _hc_pre = _hcp(_lc(base_config or "configs/base.yaml"))
+        from src.halfcell import halfcell_meta_path as _hmp
+        _hc_pre = _hcp(_lc(base_config or "configs/base.yaml"), method=halfcell_method)
+        _hc_meta = _hmp(_hc_pre)
+        # ★ F63 — 캐시가 없으면 **여기서** 멈춘다.
+        #   F58 이 "읽기 전에 봉인"으로 바꾸면서, 캐시가 없는 fresh clone 은
+        #   digest=None 으로 봉인한 뒤 get_halfcell_reference() 가 캐시를 만들고,
+        #   그 직후 `None != 새 digest` 로 죽었다. 즉 **첫 실행이 항상 실패**했다.
+        #   (테스트가 전부 reference="grid" 라 205개를 통과하고도 못 잡았다.)
+        #   생성은 봉인할 수 없는 작업이므로 fitting 안에서 하지 않는다 —
+        #   provenance 를 갖춘 별도 준비 단계로 분리한다.
+        if not _hc_pre.exists() or not _hc_meta.exists():
+            raise RuntimeError(
+                f"half-cell 기준 캐시가 없습니다: {_hc_pre}\n"
+                f"  먼저 준비 단계를 실행하세요:\n"
+                f"    python -m src.halfcell --config "
+                f"{base_config or 'configs/base.yaml'} --method {halfcell_method}\n"
+                f"  (fitting 안에서 만들면 '무엇을 읽었는가'를 봉인할 수 없습니다 — F63)")
+        _hc_recipe = (yaml.safe_load(_hc_meta.read_text(encoding="utf-8")) or {}).get("recipe")
+        if not _hc_recipe:
+            raise RuntimeError(f"half-cell meta에 recipe가 없습니다: {_hc_meta} (F64)")
     # 같은 초에 두 번 시작해도 겹치지 않게 기존 시도 수를 붙인다
     _n_prev = len(list(_attempts.glob("manifest_start_*.yaml")))
     attempt_id = f"{time.strftime('%Y%m%dT%H%M%S')}_{os.getpid()}_{_n_prev:03d}"
@@ -529,8 +569,10 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
         # ★ F56 — 여기서 **한 번만** 봉인하고 run_spec·종료 manifest가 이 map을
         #   그대로 재사용한다. 세 곳에서 따로 해시하면 셋이 어긋나도 아무도 모른다.
         "input_sha256": seal_inputs(
-            [in_dir / "curves.parquet", base_config or "configs/base.yaml", _hc_pre]),
-        "halfcell_cache": str(_hc_pre) if _hc_pre else None,
+            [in_dir / "curves.parquet", base_config or "configs/base.yaml",
+             _hc_pre, _hc_meta]),          # F64: recipe 기록도 함께 봉인
+        "halfcell_cache": _ck(_hc_pre) if _hc_pre else None,
+        "halfcell_recipe": _hc_recipe,
         "_주의": ("실행 **시작** 시점 상태다 (입력 로드·self-fit 이전). "
                  "manifest.yaml 은 종료 시점이므로 둘이 다르면 실행 도중 코드나 "
                  "입력이 바뀐 것이다 (F42/F51). half-cell 캐시 digest 는 기준 곡선을 "
@@ -568,12 +610,12 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     if reference == "halfcell":
         from src.halfcell import get_halfcell_reference, halfcell_cache_path
         hc = get_halfcell_reference(base_cfg)
-        hc_used = halfcell_cache_path(base_cfg)     # F45: 실제로 쓴 캐시 하나
+        hc_used = halfcell_cache_path(base_cfg, method=halfcell_method)
         # F58: 시작 봉인에 이미 들어 있어야 한다. 다르면 읽기 전후로 바뀐 것이다.
         if str(hc_used) != str(_hc_pre):
             raise RuntimeError(
                 f"half-cell 캐시 경로가 시작 봉인과 다릅니다: {_hc_pre} vs {hc_used}")
-        if start_prov["input_sha256"].get(str(hc_used)) != file_digest(hc_used):
+        if start_prov["input_sha256"].get(_ck(hc_used)) != file_digest(hc_used):
             raise RuntimeError(
                 f"half-cell 캐시가 읽는 사이에 바뀌었습니다: {hc_used} (F58)")
         cov = hc.coverage()
@@ -604,6 +646,7 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
             "bounds_preset": bounds_preset, "n_restarts": n_restarts,
             "inventory": inv, "reference": reference, "halfcell": hc_dict,
             "p_ini": p_ini, "warm_start": warm_start,
+            "adaptive": adaptive, "method": method,          # F66
             # hash()는 프로세스마다 소금이 달라 재현 불가 → sha1 기반 결정적 seed
             "seed": int(hashlib.sha1(cond_id.encode()).hexdigest()[:8], 16),
         })
@@ -680,10 +723,34 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     # F45: glob 이 아니라 **실제로 쓴** 캐시 하나만
     hc_paths = [hc_used] if reference == "halfcell" else []
     _gi = git_info(Path(__file__).resolve().parent.parent)
+    # ★ F67 — 서명은 **설정**이 아니라 **계산**을 고정해야 한다.
+    #   지금까지 여섯 라운드 동안 붙인 것은 전부 "무엇을 설정했나"였고, 실제로
+    #   계산을 결정하는 축들 — 목적함수 **순서**, 실제 **조건 집합**, optimizer
+    #   **정책**, half-cell **좌표 원점** — 은 빠져 있었다. 그래서
+    #     · `--objective pocv,34p` 와 `34p,pocv` 가 같은 서명으로 병합되고
+    #       (warm 연쇄가 순서를 따르므로 결과가 다르다),
+    #     · `--limit`/`--subset` 으로 조건을 잘라도 같은 서명이 재사용되고,
+    #     · half-cell 의 `p_ini` 가 한 artifact 안에서 갈렸다.
+    _cond_ids = sorted(t["cond_id"] for t in tasks)
+    _cond_sha = hashlib.sha256(
+        "\n".join(_cond_ids).encode()).hexdigest()[:16]
+    _selection = ("subset" if subset is not None else
+                  "limit" if limit else "full")
     run_spec = {
         # ★ F49 — 코드 identity 를 서명에 넣는다. 없으면 코드만 바꾸고 resume 했을 때
         #   서로 다른 코드의 행이 같은 서명으로 섞이고 병합 검사를 통과한다.
-        "sig_version": 4,
+        "sig_version": 5,
+        # ── 무엇을 계산했나 (F67) ──
+        "objective_order": list(objectives),      # warm 연쇄가 이 순서를 따른다
+        "condition_ids_sha256": _cond_sha,
+        "n_conditions": len(_cond_ids),
+        "selection": _selection,
+        "p_ini": p_ini,                           # half-cell 좌표 원점 (grid면 None)
+        "optimizer": {                            # 실제로 쓴 정책 전부
+            "method": method, "adaptive": bool(adaptive),
+            "n_restarts": n_restarts, "agree_tol": 1e-3,
+            "seed_scheme": "sha1(cond_id)[:8]",
+        },
         "git_commit": _gi.get("git_commit"),
         "git_dirty": _gi.get("git_dirty"),
         "source_digest": source_digest(),
@@ -697,12 +764,15 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
         "env": _env0,                            # F55: dependency fingerprint
         # ★ F56 — 시작 봉인 map을 그대로 쓴다 (재해시하지 않는다)
         "sealed_inputs": start_prov["input_sha256"],
-        "curves_sha": start_prov["input_sha256"].get(str(in_dir / "curves.parquet")),
+        "curves_sha": start_prov["input_sha256"].get(_ck(in_dir / "curves.parquet")),
         "base_config_sha": start_prov["input_sha256"].get(
-            str(base_config or "configs/base.yaml")),
-        "halfcell_sha": (start_prov["input_sha256"].get(str(_hc_pre))
+            _ck(base_config or "configs/base.yaml")),
+        "halfcell_sha": (start_prov["input_sha256"].get(_ck(_hc_pre))
                          if _hc_pre else None),
-        "halfcell_cache": str(_hc_pre) if _hc_pre else None,
+        "halfcell_meta_sha": (start_prov["input_sha256"].get(_ck(_hc_meta))
+                              if _hc_meta else None),
+        "halfcell_cache": _ck(_hc_pre) if _hc_pre else None,
+        "halfcell_recipe": _hc_recipe,            # F64: 캐시를 만든 인자
     }
     run_sig = hashlib.sha1(
         json.dumps(run_spec, sort_keys=True, default=str).encode()).hexdigest()[:12]
@@ -845,6 +915,13 @@ def main() -> None:
                     help="grid=기준 셀 창(유도식 환산) | halfcell=전 범위 반쪽셀(21p 식)")
     ap.add_argument("--clean", action="store_true", help="노이즈 없는 곡선으로 fitting")
     ap.add_argument("--limit", type=int, default=None, help="앞 N조건만 (스모크용)")
+    # ★ F66 — 적응적 조기 종료를 끄는 경로. 이게 없어서 "동일 restart budget"
+    #   paired 비교를 여섯 라운드 동안 실행하지 못했다.
+    ap.add_argument("--no-adaptive", dest="adaptive", action="store_false",
+                    help="적응적 조기 종료를 끈다 — 모든 조건이 정확히 "
+                         "--n-restarts 번 돈다 (공정 비교용). 기본은 켜짐")
+    ap.add_argument("--halfcell-method", default="ocp", choices=["ocp", "sim"],
+                    help="half-cell 기준 캐시의 생성 방식 (F64: 서명에 들어간다)")
     ap.add_argument("--no-warm-start", dest="warm_start", action="store_false",
                     help="dQ/dV 목적함수에 매끄러운 해를 초기값으로 물려주지 않는다 "
                          "(F20 비교 실험용). 기본은 물려준다")
@@ -877,6 +954,9 @@ def main() -> None:
         nproc=args.nproc, use_noisy=not args.clean, limit=args.limit,
         base_config=args.base_config, reference=args.reference,
         resume=args.resume, warm_start=args.warm_start,
+        adaptive=args.adaptive,
+        method=str(fcfg.get("method", "Nelder-Mead")),   # F66b: config를 실제로 읽는다
+        halfcell_method=args.halfcell_method,
     )
     print(json.dumps(summary, ensure_ascii=False, indent=2))
 

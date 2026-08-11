@@ -808,7 +808,14 @@ def _complete_artifact(tmp_path):
     env = env_fingerprint()
     attempt_id = "20260807T000000_1_000"
 
-    spec = {"sig_version": 4, "objectives": {"pocv_dvdq": {"w_pocv": 1.0}},
+    spec = {"sig_version": 5, "objectives": {"pocv_dvdq": {"w_pocv": 1.0}},
+            # ★ F67 — 계산을 고정하는 축들. 설정만으론 부족하다.
+            "objective_order": ["pocv_dvdq"],
+            "condition_ids_sha256": hashlib.sha256(b"c0\nc1\nc2").hexdigest()[:16],
+            "n_conditions": 3, "selection": "full",
+            "optimizer": {"method": "Nelder-Mead", "adaptive": True,
+                          "n_restarts": 5, "agree_tol": 1e-3,
+                          "seed_scheme": "sha1(cond_id)[:8]"},
             "reference": "grid", "bounds_preset": "expanded",
             "bounds": {"init": [1.0, 0.0, 1.0, 0.0]}, "v_col": "v_full",
             "n_restarts": 5, "warm_start": True, "obj_cfg": {"objectives": {}},

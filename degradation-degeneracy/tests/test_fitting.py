@@ -533,3 +533,284 @@ def test_start_manifest_is_not_overwritten_by_resume(tmp_path):
     assert first["resume"] is False
     att = sorted((out / "attempts").glob("manifest_start_*.yaml"))
     assert len(att) == 2, "시도마다 별도 attempt 파일이 남아야 한다"
+
+
+# ─────────────────────────────────────────────────────────── 7차 게이트 리뷰
+#  아래는 리뷰어가 **실제로 재현해 보인 반례**들을 회귀 테스트로 고정한 것이다.
+#  205개를 통과한 코드가 전부 뚫렸으므로, 통과 개수가 아니라 이 반례들이
+#  기준이다.
+
+def _obj_cfg_min():
+    return {"objectives": {}, "dqdv": {"window": 7, "polyorder": 2,
+                                       "peak_weight": 1.0},
+            "scaling": {"method": "reference_rmse"}}
+
+
+_BOUNDS_MIN = {"init": [1.0, 0.0, 1.0, 0.0], "lb": [0.5, -1.0, 0.5, -1.0],
+               "ub": [2.0, 1.0, 2.0, 1.0]}
+
+
+def test_objective_order_changes_signature(tmp_path):
+    """★ F67 — 목적함수 **순서**가 warm 연쇄를 바꾸므로 서명도 갈려야 한다.
+
+    반례(리뷰 발견 1): `--objective pocv,34p` 와 `34p,pocv` 로 두 번 실행하면
+    warm start 여부가 조건마다 달라지는데 `run_sig` 가 `aa887654b59e` 로 **같아서**
+    resume 이 두 정책의 행을 한 파일에 병합하고 validator 도 통과했다.
+    half-cell 에서는 좌표 원점인 `p_ini` 까지 한 artifact 안에서 갈렸다.
+    """
+    import yaml
+
+    import src.fitting as F
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    a = {"w_pocv": 1.0}
+    b = {"w_pocv": 1.0, "w_dqdv": 1.0}
+
+    def sig(objs, out):
+        F.run_fit(in_dir, tmp_path / out, _obj_cfg_min(), objs, _BOUNDS_MIN,
+                  "expanded", 1, nproc=1)
+        man = yaml.safe_load(
+            (tmp_path / out / "manifest.yaml").read_text(encoding="utf-8"))
+        return man["run_signature"], man["run_spec"]["objective_order"]
+
+    s1, o1 = sig({"aa": a, "bb": b}, "o1")
+    s2, o2 = sig({"bb": b, "aa": a}, "o2")
+    assert o1 == ["aa", "bb"] and o2 == ["bb", "aa"]
+    assert s1 != s2, "목적함수 순서가 다른데 서명이 같다 (F67)"
+
+
+def test_condition_set_changes_signature(tmp_path):
+    """★ F67 — `--limit`/`--subset` 이 실제 계산 집합을 바꾸는데 서명에 없었다.
+
+    반례(리뷰 발견 2): `manifest.n_conditions = 3` 인 artifact 에서 fits 의 두
+    행을 지워 한 조건만 남겨도 `validator.ok = True` 였다.
+    """
+    import yaml
+
+    import src.fitting as F
+
+    in_dir = _tiny_curves(tmp_path / "in", n_cond=3)
+    objs = {"aa": {"w_pocv": 1.0}}
+
+    def spec(out, **kw):
+        F.run_fit(in_dir, tmp_path / out, _obj_cfg_min(), objs, _BOUNDS_MIN,
+                  "expanded", 1, nproc=1, **kw)
+        man = yaml.safe_load(
+            (tmp_path / out / "manifest.yaml").read_text(encoding="utf-8"))
+        return man["run_signature"], man["run_spec"]
+
+    s_full, sp_full = spec("full")
+    s_lim, sp_lim = spec("lim", limit=2)
+    assert sp_full["n_conditions"] == 3 and sp_lim["n_conditions"] == 2
+    assert sp_full["selection"] == "full" and sp_lim["selection"] == "limit"
+    assert sp_full["condition_ids_sha256"] != sp_lim["condition_ids_sha256"]
+    assert s_full != s_lim, "조건 집합이 다른데 서명이 같다 (F67)"
+
+
+def test_adaptive_off_is_reachable_and_signed(tmp_path):
+    """★ F66 — `--no-adaptive` 가 `fit()` 까지 도달하고 서명에도 남아야 한다.
+
+    이 경로가 없어서 "동일 restart budget" paired 비교를 여섯 라운드 동안
+    실행하지 못했다. `fit()` 에만 인자가 있고 `_fit_one` 이 넘기지 않았다.
+    """
+    import json
+
+    import pandas as pd
+    import yaml
+
+    import src.fitting as F
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    objs = {"aa": {"w_pocv": 1.0}}
+
+    def run(out, adaptive):
+        F.run_fit(in_dir, tmp_path / out, _obj_cfg_min(), objs, _BOUNDS_MIN,
+                  "expanded", 4, nproc=1, adaptive=adaptive)
+        man = yaml.safe_load(
+            (tmp_path / out / "manifest.yaml").read_text(encoding="utf-8"))
+        df = pd.read_parquet(tmp_path / out / "fits.parquet")
+        n = [len(json.loads(v)) for v in df["restarts_json"]]
+        return man["run_signature"], man["run_spec"]["optimizer"], n
+
+    s_on, opt_on, n_on = run("on", True)
+    s_off, opt_off, n_off = run("off", False)
+
+    assert opt_on["adaptive"] is True and opt_off["adaptive"] is False
+    assert s_on != s_off, "adaptive 정책이 다른데 서명이 같다 (F66)"
+    # 끄면 **모든** 조건이 정확히 n_restarts 번 돈다 — 이게 공정 비교의 전제다
+    assert set(n_off) == {4}, f"adaptive를 껐는데 restart 수가 갈린다: {sorted(set(n_off))}"
+    assert min(n_on) < 4, "adaptive가 켜졌는데 아무 조건도 조기 종료하지 않았다"
+
+
+def test_optimizer_method_is_read_from_config(tmp_path):
+    """★ F66b — config 의 `fitting.method` 가 실제로 optimizer 에 전달돼야 한다.
+
+    `configs/objectives.yaml` 에 `L-BFGS-B` 라 적혀 있었지만 아무도 읽지 않아
+    실제로는 Nelder-Mead 로 돌았다. 그런데 그 config 는 resolved 전체가
+    `run_spec.obj_cfg` 로 서명에 들어간다 — **서명이 거짓을 기록**했다.
+    """
+    import yaml
+
+    import src.fitting as F
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    objs = {"aa": {"w_pocv": 1.0}}
+    F.run_fit(in_dir, tmp_path / "o", _obj_cfg_min(), objs, _BOUNDS_MIN,
+              "expanded", 1, nproc=1, method="Powell")
+    man = yaml.safe_load(
+        (tmp_path / "o" / "manifest.yaml").read_text(encoding="utf-8"))
+    assert man["run_spec"]["optimizer"]["method"] == "Powell"
+
+    cfg = yaml.safe_load(Path("configs/objectives.yaml").read_text(encoding="utf-8"))
+    assert cfg["fitting"]["method"] == "Nelder-Mead", \
+        "config 의 method 가 실제 기본 optimizer 와 다르다 (F66b)"
+
+
+def test_halfcell_cache_key_includes_recipe():
+    """★ F64 — `branch`·`n_points` 가 다르면 캐시 경로도 달라져야 한다.
+
+    반례(리뷰 발견 4): 같은 경로에 `branch=lithiation, n_points=123` 으로 만든
+    곡선을 미리 넣어두면 fitting 이 그걸 쓰고도 통과했다. 실측으로 `p_ini[pocv]`
+    가 `[1.343, -0.325, 2.429, -0.100]` → `[1.628, -0.404, 1.500, -0.410]` 로
+    움직였다 — 좌표 원점이 바뀌므로 Case 1 의 모든 수치가 따라 바뀐다.
+    """
+    from src.halfcell import halfcell_cache_path, recipe_of
+
+    cfg = {"_config_path": "configs/base.yaml", "baseline": {"x": 1},
+           "parameter_set": "Chen2020_composite"}
+    base = halfcell_cache_path(cfg)
+    assert base != halfcell_cache_path(cfg, branch="lithiation")
+    assert base != halfcell_cache_path(cfg, n_points=123)
+    assert base == halfcell_cache_path(cfg, branch="delithiation", n_points=400)
+
+    r = recipe_of("ocp")
+    assert r == {"method": "ocp", "n_points": 400, "branch": "delithiation"}
+    with pytest.raises(ValueError):
+        recipe_of("ocp", nonexistent=1)      # 조용히 무시하면 서명에서 빠진다
+
+
+def test_halfcell_cold_cache_fails_with_instruction(tmp_path):
+    """★ F63 — 캐시가 없으면 **명확히** 멈춰야 한다 (조용한 생성 금지).
+
+    F58 이 "읽기 전 봉인"으로 바꾸면서, fresh clone 은 digest=None 으로 봉인한 뒤
+    캐시를 만들고 `None != 새 digest` 로 죽었다. 즉 **첫 실행이 항상 실패**했고,
+    테스트가 전부 `reference="grid"` 라 205개를 통과하고도 못 잡았다.
+    """
+    import src.fitting as F
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    cache = tmp_path / "empty_cache"
+    cache.mkdir()
+
+    def fake_path(cfg, cache_dir=None, method="ocp", **kw):
+        return cache / f"missing_{method}.json"
+
+    import src.halfcell as H
+    orig = H.halfcell_cache_path
+    H.halfcell_cache_path = fake_path
+    try:
+        with pytest.raises(RuntimeError, match="python -m src.halfcell"):
+            F.run_fit(in_dir, tmp_path / "o", _obj_cfg_min(),
+                      {"aa": {"w_pocv": 1.0}}, _BOUNDS_MIN, "expanded", 1,
+                      nproc=1, reference="halfcell")
+    finally:
+        H.halfcell_cache_path = orig
+
+
+def _fake_halfcell_cache(tmp_path, branch="delithiation", n_points=400):
+    """전 범위 half-cell 캐시 + recipe meta 를 만든다 (pybamm 없이).
+
+    ★ 이 저장소에는 `reference="halfcell"` 로 `run_fit` 을 실제로 태우는 테스트가
+      **하나도 없었다.** 그래서 F58 이 fresh clone 의 첫 실행을 깨뜨렸는데도
+      205개가 전부 통과했다. 커버리지의 구멍이 곧 회귀의 통로였다.
+    """
+    import json
+
+    import numpy as np
+    import yaml
+
+    d = Path(tmp_path) / "hc"
+    d.mkdir(parents=True, exist_ok=True)
+    y = np.linspace(1e-4, 1 - 1e-4, n_points)
+    cache = d / f"hc_{branch[:4]}{n_points}_ocp.json"   # `_ocp.json` 이름이 필수 입력 판정에 쓰인다
+    cache.write_text(json.dumps({
+        "y_pe": y.tolist(), "u_pe": (4.3 - 1.2 * y).tolist(),
+        "z_ne": y.tolist(), "u_ne": (0.05 + 0.35 * y).tolist(),
+    }), encoding="utf-8")
+    cache.with_name(cache.stem + ".meta.yaml").write_text(yaml.safe_dump({
+        "recipe": {"method": "ocp", "n_points": n_points, "branch": branch},
+        "baseline_hash": "test", "recipe_hash": "test",
+    }), encoding="utf-8")
+    return cache
+
+
+def test_halfcell_run_fit_end_to_end(tmp_path, monkeypatch):
+    """★ F63/F64 — half-cell 경로가 실제로 끝까지 돌고 provenance 를 갖추는가.
+
+    지금까지 검증한 것은 전부 `reference="grid"` 였다. 이 테스트가 없어서
+    "205개 통과"가 half-cell 이 아예 실행 불가인 상태를 가려 줬다.
+    """
+    import yaml
+
+    import src.fitting as F
+    import src.halfcell as H
+    from src.io import validate_provenance
+
+    cache = _fake_halfcell_cache(tmp_path)
+    monkeypatch.setattr(H, "halfcell_cache_path",
+                        lambda cfg, cache_dir=None, method="ocp", **kw: cache)
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    out = tmp_path / "o"
+    F.run_fit(in_dir, out, _obj_cfg_min(), {"aa": {"w_pocv": 1.0}},
+              {"init": [1.05, -0.05, 1.4, -0.4], "lb": [0.5, -1.5, 0.5, -1.5],
+               "ub": [3.0, 1.0, 3.0, 1.0]},
+              "halfcell", 1, nproc=1, reference="halfcell")
+
+    man = yaml.safe_load((out / "manifest.yaml").read_text(encoding="utf-8"))
+    spec = man["run_spec"]
+    # F64 — recipe 와 meta digest 가 서명에 있어야 한다
+    assert spec["halfcell_recipe"]["branch"] == "delithiation"
+    assert spec["halfcell_recipe"]["n_points"] == 400
+    assert spec["halfcell_sha"] and spec["halfcell_meta_sha"]
+    # F67 — half-cell 좌표 원점(p_ini)이 서명에 있어야 한다
+    assert set(spec["p_ini"]) == {"aa"} and len(spec["p_ini"]["aa"]) == 4
+
+    # clean_worktree·코드_identity 는 저장소 상태(dirty 여부)에 달렸으므로 제외하고,
+    # **half-cell 경로가 만들어 내는** 검사들이 실제로 통과하는지 본다.
+    v = validate_provenance(out)
+    for k in ("필수_입력_존재", "run_spec_schema", "sig_version",
+              "입력_digest_재해시", "입력봉인_교차일치", "optimizer_정책",
+              "목적함수_순서", "restart_출처", "manifest와_일치"):
+        assert v["checks"][k] == "통과", f"{k}: {v['checks'][k]}"
+
+
+def test_halfcell_recipe_substitution_changes_p_ini(tmp_path, monkeypatch):
+    """★ F64 — recipe 가 다르면 좌표 원점이 움직인다. 그게 서명에 남아야 한다.
+
+    반례(리뷰 발견 4): 같은 캐시 경로에 다른 recipe 의 곡선을 미리 넣어두면
+    fitting 이 그걸 쓰고도 통과했다. 이제 recipe 가 경로와 서명 양쪽에 들어간다.
+    """
+    import yaml
+
+    import src.fitting as F
+    import src.halfcell as H
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    bounds = {"init": [1.05, -0.05, 1.4, -0.4], "lb": [0.5, -1.5, 0.5, -1.5],
+              "ub": [3.0, 1.0, 3.0, 1.0]}
+
+    def run(cache, out):
+        monkeypatch.setattr(H, "halfcell_cache_path",
+                            lambda cfg, cache_dir=None, method="ocp", **kw: cache)
+        F.run_fit(in_dir, tmp_path / out, _obj_cfg_min(), {"aa": {"w_pocv": 1.0}},
+                  bounds, "halfcell", 1, nproc=1, reference="halfcell")
+        man = yaml.safe_load(
+            (tmp_path / out / "manifest.yaml").read_text(encoding="utf-8"))
+        return man["run_signature"], man["run_spec"]
+
+    s1, sp1 = run(_fake_halfcell_cache(tmp_path / "a"), "o1")
+    s2, sp2 = run(_fake_halfcell_cache(tmp_path / "b", branch="lithiation",
+                                       n_points=123), "o2")
+    assert sp1["halfcell_recipe"] != sp2["halfcell_recipe"]
+    assert s1 != s2, "recipe 가 다른데 서명이 같다 (F64)"

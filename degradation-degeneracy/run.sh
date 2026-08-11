@@ -38,6 +38,8 @@ OBJECTIVE=""                      # 비우면 objectives.yaml 전체 (4종)
 BOUNDS_PRESET="expanded"          # expanded | original_33p
 N_RESTARTS="auto"                 # auto = objectives.yaml 의 n_restarts
 CLEAN="false"                     # true면 노이즈 없는 곡선으로 fitting
+ADAPTIVE="true"                   # false면 모든 조건이 정확히 n_restarts 번 (F66)
+WARM_START="true"
 LIMIT=""                          # 앞 N조건만 (스모크용)
 REFERENCE="grid"                  # grid (유도식) | halfcell (21p 식, 전 범위 반쪽셀)
 
@@ -99,6 +101,9 @@ fitting
                          original_33p 는 33p 원본 bound. alpha 하한 1.00이
                          "LAM = 용량손실"을 강제하는지 비교하는 용도
   --n-restarts N         multi-start 횟수 (degeneracy 진단용, 기본 5)
+  --no-adaptive          적응적 조기 종료를 끈다 — 모든 조건이 정확히
+                         --n-restarts 번 돈다. **공정 paired 비교에 필수** (F66)
+  --no-warm-start        목적함수 간 warm start 연쇄를 끈다
   --clean                노이즈 없는 곡선으로 fitting
   --limit N              앞 N조건만 (스모크용)
 
@@ -154,6 +159,8 @@ while [[ $# -gt 0 ]]; do
     --objective)     OBJECTIVE="$2"; shift 2 ;;
     --bounds)        BOUNDS_PRESET="$2"; shift 2 ;;
     --n-restarts)    N_RESTARTS="$2"; shift 2 ;;
+    --no-adaptive)   ADAPTIVE="false"; shift ;;
+    --no-warm-start) WARM_START="false"; shift ;;
     --clean)         CLEAN="true"; shift ;;
     --limit)         LIMIT="$2"; shift 2 ;;
     --reference)     REFERENCE="$2"; shift 2 ;;
@@ -247,6 +254,8 @@ case "$MODE" in
     FIT_ARGS+=(--reference "$REFERENCE")
     [[ -n "$LIMIT" ]] && FIT_ARGS+=(--limit "$LIMIT")
     [[ "$RESUME" == "true" ]] && FIT_ARGS+=(--resume)
+    [[ "$ADAPTIVE" == "false" ]] && FIT_ARGS+=(--no-adaptive)
+    [[ "$WARM_START" == "false" ]] && FIT_ARGS+=(--no-warm-start)
     exec python -m src.fitting "${FIT_ARGS[@]}"
     ;;
 

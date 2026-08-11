@@ -126,14 +126,35 @@ def env_fingerprint() -> dict:
     return out
 
 
-def seal_inputs(paths) -> dict:
+def canonical_input_key(path, repo_root=None) -> str:
+    """★ F65 — 봉인 map 의 키를 **저장소 기준 상대경로**로 정규화한다.
+
+    예전에는 `str(path)` 를 그대로 썼다. `.cache/halfcell/*.json` 은 config 의
+    `_config_path` 에서 root 를 계산하므로 **절대경로**가 되고, 그 절대문자열이
+    manifest 에 박혔다. 그래서
+      · 다른 clone 으로 복원하면 `입력_digest_재해시` 가 "파일 없음"으로 실패하고,
+      · `archive_bundle` 은 restore map 을 상대경로로 적으므로 `check()` 의
+        대조가 어긋나 완비된 묶음도 "검증 불가"로 나왔다.
+    저장소 밖 경로는 어쩔 수 없이 절대경로로 남긴다 (그건 애초에 이식 불가다).
+    """
+    root = Path(repo_root) if repo_root else Path(__file__).resolve().parent.parent
+    try:
+        return str(Path(path).resolve().relative_to(root.resolve()))
+    except (ValueError, OSError):
+        return str(path)
+
+
+def seal_inputs(paths, repo_root=None) -> dict:
     """★ F56 — 입력을 **한 번만** 해시해 봉인하고 그 map 을 끝까지 재사용한다.
 
     예전에는 시작·run_spec·종료에서 각각 따로 해시해 세 세트가 생겼고, validator 가
     셋 사이의 일치를 확인하지 않았다. 그래서 fitting 후 curves 를 바꿔도
     "행은 옛 곡선, manifest 는 새 곡선"인 artifact 가 통과했다.
+
+    키는 저장소 기준 상대경로다 (F65). 같은 파일을 두 표기로 넘겨도 한 항목이 된다.
     """
-    return {str(x): file_digest(x) for x in paths if x is not None}
+    return {canonical_input_key(x, repo_root): file_digest(x)
+            for x in paths if x is not None}
 
 
 def file_digest(path) -> str | None:
@@ -426,7 +447,9 @@ def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
     ref = str(spec0.get("reference") or man.get("reference") or "grid")
     digs = man.get("input_sha256") or {}
     need_kinds = ["curves.parquet", "base.yaml"] + (
-        ["_ocp.json"] if ref == "halfcell" else [])
+        # ★ F64 — recipe 기록(.meta.yaml)도 봉인 대상이다. 배열만 있는 캐시는
+        #   "어떤 branch·n_points 로 만들었는가"를 증명하지 못한다.
+        ["_ocp.json", "_ocp.meta.yaml"] if ref == "halfcell" else [])
     missing_kind = [k for k in need_kinds
                     if not any(k in str(x) for x in digs)]
     checks["필수_입력_존재"] = (not missing_kind,
@@ -436,15 +459,33 @@ def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
     need_keys = ["sig_version", "objectives", "reference", "bounds", "bounds_preset",
                  "n_restarts", "warm_start", "v_col", "obj_cfg", "inventory",
                  "curves_sha", "base_config_sha", "git_commit", "source_digest",
-                 "env", "sealed_inputs"]
+                 "env", "sealed_inputs",
+                 # ★ F67 — 설정이 아니라 **계산**을 고정하는 축들
+                 "objective_order", "condition_ids_sha256", "n_conditions",
+                 "selection", "optimizer"]
     if ref == "halfcell":
-        need_keys += ["halfcell_sha", "halfcell_cache"]
+        # ★ F64 — 캐시 파일만이 아니라 그 파일을 만든 recipe 도 필수다
+        need_keys += ["halfcell_sha", "halfcell_cache", "halfcell_meta_sha",
+                      "halfcell_recipe", "p_ini"]
     missing_key = [k for k in need_keys if k not in spec0 or spec0.get(k) is None]
     checks["run_spec_schema"] = (not missing_key,
                                  f"run_spec에 필수 키가 없거나 비었다: {missing_key}")
     # ★ F58 — 존재만 보면 안 된다. 버전 값도 확인한다.
-    checks["sig_version"] = (spec0.get("sig_version") == 4,
-                             f"sig_version이 {spec0.get('sig_version')}이다 (4 필요)")
+    checks["sig_version"] = (spec0.get("sig_version") == 5,
+                             f"sig_version이 {spec0.get('sig_version')}이다 (5 필요)")
+    # ★ F67 — optimizer 정책은 서명에 있기만 하면 안 되고 완전해야 한다.
+    _opt = spec0.get("optimizer") or {}
+    _need_opt = [k for k in ("method", "adaptive", "n_restarts", "seed_scheme")
+                 if k not in _opt or _opt.get(k) is None]
+    checks["optimizer_정책"] = (not _need_opt,
+                                f"optimizer 블록에 {_need_opt}가 없다")
+    # ★ F67 — 목적함수 순서는 warm 연쇄를 바꾼다. 정렬된 dict 와 별개로 남아야 하고,
+    #   두 표현이 같은 집합을 가리켜야 한다.
+    _order = spec0.get("objective_order")
+    checks["목적함수_순서"] = (
+        isinstance(_order, list) and bool(_order)
+        and sorted(_order) == sorted(spec0.get("objectives") or {}),
+        "objective_order가 objectives와 다른 집합이다")
 
     # ★ F56 — 시작 봉인 / run_spec / 종료 / 현재 파일 **네 곳이 모두 같아야** 한다.
     sp0 = man.get("start_provenance") or {}

@@ -190,8 +190,39 @@ def compute_halfcell_reference(cfg: dict, v_lo: float = 2.0, v_hi: float = 4.4,
     return ref
 
 
+#: ★ F64 — **결과를 바꾸는** 생성 인자. 캐시 키와 meta 에 모두 들어가야 한다.
+#:   기본값은 `compute_halfcell_from_ocp` / `compute_halfcell_reference` 시그니처와
+#:   일치해야 하며, 여기 없는 인자를 추가하면 그 인자는 서명에서 빠진다.
+RECIPE_DEFAULTS = {
+    "ocp": {"n_points": 400, "branch": "delithiation"},
+    "sim": {"v_lo": 2.0, "v_hi": 4.4, "c_rate": 0.02},
+}
+
+
+def recipe_of(method: str = "ocp", **kw) -> dict:
+    """생성 인자를 기본값과 합쳐 **완전한** recipe 로 만든다."""
+    if method not in RECIPE_DEFAULTS:
+        raise ValueError(f"알 수 없는 method: {method} (가능: {list(RECIPE_DEFAULTS)})")
+    r = dict(RECIPE_DEFAULTS[method])
+    unknown = set(kw) - set(r)
+    if unknown:
+        # 조용히 무시하면 "서명에 없는데 결과는 바뀌는" 인자가 생긴다
+        raise ValueError(f"method={method}가 모르는 인자: {sorted(unknown)}")
+    r.update({k: v for k, v in kw.items() if v is not None})
+    return {"method": method, **r}
+
+
+def recipe_hash(cfg: dict, method: str = "ocp", **kw) -> str:
+    """baseline + recipe 를 함께 해시한다 (★ F64)."""
+    import hashlib
+
+    payload = {"baseline": baseline_hash(cfg), "recipe": recipe_of(method, **kw)}
+    return hashlib.sha1(
+        json.dumps(payload, sort_keys=True, default=str).encode()).hexdigest()[:12]
+
+
 def halfcell_cache_path(cfg: dict, cache_dir: str | Path | None = None,
-                        method: str = "ocp") -> Path:
+                        method: str = "ocp", **kw) -> Path:
     """★ F45 — 실제로 쓰이는 캐시 경로. 서명·manifest가 이걸 그대로 써야 한다.
 
     한때 fitting이 현재 작업 디렉터리의 `.cache/halfcell/*_ocp.json` 을 glob 했다.
@@ -199,21 +230,43 @@ def halfcell_cache_path(cfg: dict, cache_dir: str | Path | None = None,
     **하나**이므로, 다른 작업 디렉터리나 외부 --base-config 를 쓰면 실제 사용
     캐시가 서명에서 빠지고, 반대로 무관한 캐시까지 서명에 들어가 resume 을
     불필요하게 막았다.
+
+    ★ F64 — 키에 **recipe 해시**를 넣는다. 예전 키는 `baseline_hash + method`
+    뿐이라 `branch`(Si 히스테리시스 가지)나 `n_points` 가 달라도 같은 경로였다.
+    그래서 다른 recipe 로 만든 곡선을 같은 경로에 미리 넣어두면 fitting 이 그걸
+    쓰고도 검증을 통과했다 — 실측으로 `p_ini[pocv]` 가
+    `[1.343, -0.325, 2.429, -0.100]` → `[1.628, -0.404, 1.500, -0.410]` 로 움직였다.
+    좌표 원점이 바뀌므로 Case 1 의 모든 수치가 따라 바뀐다.
     """
     root = Path(cfg.get("_config_path", ".")).resolve().parent.parent
     d = Path(cache_dir) if cache_dir else root / ".cache" / "halfcell"
-    return d / f"{baseline_hash(cfg)}_{method}.json"
+    return d / f"{baseline_hash(cfg)}_{method}_{recipe_hash(cfg, method, **kw)}.json"
+
+
+def halfcell_meta_path(path: str | Path) -> Path:
+    """캐시 JSON 옆의 recipe 기록 파일. 캐시와 함께 봉인된다."""
+    p = Path(path)
+    return p.with_name(p.stem + ".meta.yaml")
 
 
 def get_halfcell_reference(cfg: dict, cache_dir: str | Path | None = None,
                            force: bool = False, method: str = "ocp",
                            **kw) -> HalfCellReference:
-    """baseline 해시 키 캐시 → 미스 시 계산 (완방상태와 같은 정책).
+    """baseline+recipe 해시 키 캐시 → 미스 시 계산 (완방상태와 같은 정책).
 
     method: "ocp" (기본) — 파라미터셋 OCP 함수 직접 평가, 화학량론 전 범위
             "sim"        — 넓은 전압창 시뮬레이션 추출 (셀이 지나간 구간만)
+
+    ★ F64 — 생성 시 `*.meta.yaml` 에 recipe·생성 코드·환경을 같이 남긴다.
+      배열 네 개만 저장하면 "이 숫자가 어떤 recipe 에서 나왔는가"를 파일만
+      보고 알 수 없고, 그러면 캐시를 바꿔치기해도 아무도 모른다.
     """
-    path = halfcell_cache_path(cfg, cache_dir, method)
+    import yaml
+
+    from src.io import env_fingerprint, source_digest
+
+    path = halfcell_cache_path(cfg, cache_dir, method, **kw)
+    recipe = recipe_of(method, **kw)
 
     if not force and path.exists():
         log.info("half-cell 기준 캐시 적중: %s", path)
@@ -223,7 +276,17 @@ def get_halfcell_reference(cfg: dict, cache_dir: str | Path | None = None,
            else compute_halfcell_reference(cfg, **kw))
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(ref.as_dict()), encoding="utf-8")
-    log.info("half-cell 기준 캐시 저장: %s", path)
+    halfcell_meta_path(path).write_text(yaml.safe_dump({
+        "recipe": recipe,
+        "baseline_hash": baseline_hash(cfg),
+        "recipe_hash": recipe_hash(cfg, method, **kw),
+        "parameter_set": cfg.get("parameter_set"),
+        "source_digest": source_digest(),
+        "env": env_fingerprint(),
+        "coverage": ref.coverage(),
+        "cache_file": path.name,
+    }, allow_unicode=True, sort_keys=False), encoding="utf-8")
+    log.info("half-cell 기준 캐시 저장: %s (recipe %s)", path, recipe)
     return ref
 
 
