@@ -979,17 +979,24 @@ def main():
                 #   완전일치 대신 Jaccard 를 쓴다.
                 fa = set(jli.get("_contact_fp") or [])
                 fb = set(jni.get("_contact_fp") or [])
-                jac = (len(fa & fb) / len(fa | fb)) if (fa or fb) else 0.0
+                if not fa and not fb:
+                    # ⚠ 양쪽 다 접촉이 없으면 지문은 **정보가 없다**. 빈 집합끼리 같다고
+                    #   해서도, 다르다고 해서도 안 된다 — RMSD 로만 판정하고 그렇게 적는다.
+                    #   (진짜 떠 있으면 DETACHED 가 따로 잡는다.)
+                    jac, fp_ok, why = None, True, "접촉 없음 — RMSD 로만"
+                else:
+                    jac = len(fa & fb) / len(fa | fb)
+                    fp_ok = jac >= FP_JACCARD
+                    why = f"접촉 지문 Jaccard {jac:.2f} ≥ {FP_JACCARD}"
                 rec["basin"] = {"mol_rmsd_A": round(rms, 3),
-                                "contact_jaccard": round(jac, 3),
+                                "contact_jaccard": None if jac is None else round(jac, 3),
                                 "same_nearest_element": bool(
                                     rli and rni and rli["nearest"] == rni["nearest"]),
                                 "sensitivity": {str(t): rms <= t
                                                 for t in (0.50, 0.75, 1.00)}}
-                if rms <= RMSD_TOL and jac >= FP_JACCARD:
+                if rms <= RMSD_TOL and fp_ok:
                     rec["gates"].append(
-                        f"PAIR_COLLAPSED(분자 RMSD {rms:.2f} Å ≤ {RMSD_TOL} · "
-                        f"접촉 지문 Jaccard {jac:.2f} ≥ {FP_JACCARD})")
+                        f"PAIR_COLLAPSED(분자 RMSD {rms:.2f} Å ≤ {RMSD_TOL} · {why})")
         de_main = rec["dE_by_seed"].get("afm2424_pm1")
         de_alt = rec["dE_by_seed"].get("afm2424_net4")
         if de_main is not None and de_alt is not None \
@@ -1519,8 +1526,10 @@ def selftest() -> int:
     mol_syms = ["C", "C", "F", "F", "F", "F"]
 
     def mol_at(y0):
-        return [[3.0, y0, 9.0], [4.4, y0, 9.0], [2.4, y0 - 0.8, 9.6],
-                [2.4, y0 + 0.8, 9.6], [5.0, y0 - 0.8, 9.6], [5.0, y0 + 0.8, 9.6]]
+        # ⚠ z 를 슬랩(6.0) 에서 2 Å 위로 둔다 — 3 Å 이상 띄우면 접촉 지문이 **양쪽 다
+        #   비어** Jaccard 경로가 통째로 안 돌아 PAIR_COLLAPSED 를 검증하지 못한다.
+        return [[3.0, y0, 8.0], [4.4, y0, 8.0], [2.4, y0 - 0.8, 8.6],
+                [2.4, y0 + 0.8, 8.6], [5.0, y0 - 0.8, 8.6], [5.0, y0 + 0.8, 8.6]]
 
     run = td / "runs" / "ptfe_dimer" / "relax_f0.85"
     run.mkdir(parents=True)
@@ -1656,7 +1665,9 @@ def selftest() -> int:
     p = out / nt_job / "static" / "OUTCAR"
     p.write_text(_re.sub(r" TITEL.*\n", "", p.read_text()))
     # N7 Ni 모멘트 붕괴 (전부 0)
-    mc_job = "tier1/ptfe_dimer__fib03_r000__Litop__afm2424_pm1"
+    # ⚠ fib03 pm1 에 심으면 N3(seed 불일치)의 pm1 에너지가 죽어 seed 비교 자체가 안 돈다
+    #   — 음성끼리 서로를 가린다. 이미 죽은 fib04 의 net4 잡에 심는다.
+    mc_job = "tier1/ptfe_dimer__fib04_r000__Litop__afm2424_net4"
     p = out / mc_job / "static" / "OUTCAR"
     p.write_text(_re.sub(r"(\d+\s+0\.000\s+0\.000\s+)(-?[\d.]+)(\s+)(-?[\d.]+)",
                          r"\g<1>0.000\g<3>0.000", p.read_text()))
