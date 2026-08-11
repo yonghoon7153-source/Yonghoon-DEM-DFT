@@ -338,6 +338,18 @@ def restore(bundle_dir, run_dir=None, force: bool = False,
         if src.is_file():
             _put(src, _safe_target(orig_rel, root))
 
+    # ★ F72 — `_inputs/` 스냅샷은 **묶지 않고 복원 때 다시 만든다.**
+    #   content-addressed 라 봉인된 입력에서 정확히 재생성되고(digest 검사 포함),
+    #   묶음에 넣으면 curves.parquet 을 두 번 담게 된다 (19 MB → 38 MB).
+    from src.io import snapshot_inputs
+    man = yaml.safe_load((dest / "manifest.yaml").read_text(encoding="utf-8")) or {}
+    sealed = (man.get("start_provenance") or {}).get("input_sha256") or {}
+    if sealed and not conflict:
+        try:
+            snapshot_inputs(sealed, dest, repo_root=root)
+        except (RuntimeError, FileNotFoundError) as e:
+            conflict.append(f"_inputs 재생성 실패: {e}")
+
     return {"run_dir": str(dest), "written": written, "conflict": conflict,
             "ok": not conflict}
 

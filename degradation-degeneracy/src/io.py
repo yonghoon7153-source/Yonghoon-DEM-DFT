@@ -158,6 +158,50 @@ def seal_inputs(paths, repo_root=None) -> dict:
             for x in paths if x is not None}
 
 
+def snapshot_inputs(sealed: dict, out_dir, repo_root=None) -> dict:
+    """★ F72 — 봉인한 **바이트 자체**를 실행 디렉터리에 복사하고, 계산은 그것만 읽는다.
+
+    F56 은 입력을 시작 시점에 한 번만 해시했다. 그러나 해시한 뒤 **읽기 전까지**
+    파일을 바꿀 수 있다. 리뷰가 `run_fit` 에서 실제로 재현했다:
+
+        봉인된 curves cond_id      = SEALED_A
+        pd.read_parquet 이 읽은 것 = ACTUALLY_READ_B   ← 사이에 교체
+        (읽은 직후 원본으로 복원)
+        start/current/manifest digest = 88c9ce154bc038e1  (전부 일치)
+        inputs_changed_during_run     = False
+        fits cond_id                  = ACTUALLY_READ_B
+        validator.ok                  = True
+
+    digest 를 몇 번 더 비교해도 이건 못 막는다 — 비교 시점과 읽기 시점이 다르기
+    때문이다. **해시한 바이트를 그대로 읽는 것**만이 답이다.
+
+    복사본은 `<out_dir>/_inputs/<digest12>_<파일명>` 에 content-addressed 로 둔다.
+    같은 내용이면 재사용하므로 resume 비용이 없다.
+
+    반환: {원래_키: 스냅샷_경로(Path)}
+    """
+    root = Path(repo_root) if repo_root else Path(__file__).resolve().parent.parent
+    snap_dir = Path(out_dir) / "_inputs"
+    snap_dir.mkdir(parents=True, exist_ok=True)
+    out = {}
+    for key, dig in sealed.items():
+        src = Path(key)
+        if not src.is_absolute():
+            src = root / key
+        dst = snap_dir / f"{str(dig)[:12]}_{src.name}"
+        if not dst.exists():
+            import shutil
+            shutil.copy2(src, dst)
+        got = file_digest(dst)
+        if got != dig:
+            # 복사 중에 바뀌었거나 원본이 이미 다른 것 — 계산을 시작하면 안 된다
+            raise RuntimeError(
+                f"입력 스냅샷이 봉인과 다릅니다: {key} (봉인 {dig}, 스냅샷 {got}). "
+                f"실행 중 입력이 바뀌고 있습니다 (F72).")
+        out[key] = dst
+    return out
+
+
 def file_digest(path, full: bool = False) -> str | None:
     """파일의 SHA-256. 기본은 앞 16자 (재현성 검증용). 없으면 None.
 
@@ -574,17 +618,41 @@ def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
         "objective_order가 objectives와 다른 집합이다")
 
     # ★ F56 — 시작 봉인 / run_spec / 종료 / 현재 파일 **네 곳이 모두 같아야** 한다.
+    #   ★ F72 — 예전에는 시작↔spec, 시작↔종료 **두 쌍**만 보고, 종료 시점 map
+    #   (`input_sha256_at_end`)의 내용은 보지 않은 채 `inputs_changed_during_run`
+    #   이라는 **manifest 안의 boolean 자기신고**를 믿었다. 그래서
+    #   `input_sha256_at_end={'forged': 'not-a-digest'}` 에 boolean 만 false 로
+    #   맞춰도 통과했다. 네 곳을 **각각 다시 계산해** 비교한다.
     sp0 = man.get("start_provenance") or {}
     sealed_start = sp0.get("input_sha256") or {}
     sealed_spec = spec0.get("sealed_inputs") or {}
+    sealed_end = man.get("input_sha256_at_end") or {}
     cross = []
     if sealed_start and sealed_spec and sealed_start != sealed_spec:
         cross.append("시작 봉인 ≠ run_spec.sealed_inputs")
     if sealed_start and digs and sealed_start != digs:
         cross.append("시작 봉인 ≠ 종료 manifest.input_sha256")
-    if man.get("inputs_changed_during_run"):
-        cross.append("실행 도중 입력 파일이 바뀌었다")
+    if sealed_start and sealed_end and dict(sealed_start) != dict(sealed_end):
+        cross.append(f"시작 봉인 ≠ 종료 재해시 (차이: "
+                     f"{sorted(set(sealed_start) ^ set(sealed_end))[:3] or '값'})")
+    if sealed_start and not sealed_end:
+        cross.append("input_sha256_at_end가 없다 (F56 이전 산출물)")
     checks["입력봉인_교차일치"] = (not cross, "; ".join(cross))
+
+    # ★ F72 — 계산이 **봉인한 바이트를 그대로** 읽었는가. digest 비교만으로는
+    #   해시 시점과 읽기 시점 사이의 교체를 못 막는다 (리뷰가 run_fit 에서 재현).
+    snap_dir = run_dir / "_inputs"
+    snap_bad = []
+    if not snap_dir.is_dir():
+        snap_bad.append("_inputs 스냅샷이 없다 (F72 이전 산출물)")
+    else:
+        for key, dig in (sealed_start or {}).items():
+            cand = snap_dir / f"{str(dig)[:12]}_{Path(key).name}"
+            if not cand.is_file():
+                snap_bad.append(f"{Path(key).name}: 스냅샷 없음")
+            elif file_digest(cand) != dig:
+                snap_bad.append(f"{Path(key).name}: 스냅샷 내용이 봉인과 다름")
+    checks["입력_스냅샷"] = (not snap_bad, "; ".join(snap_bad[:3]))
     # ── 코드 identity: 서명에 들어 있고 dirty가 아니어야 한다 (F49) ──
     checks["코드_identity"] = (
         bool(spec0.get("source_digest")) and spec0.get("git_dirty") is False,
@@ -605,16 +673,21 @@ def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
         checks["start_파일_존재"] = (True, "")
         checks["attempt_파일_존재"] = (
             att.exists(), f"attempts/manifest_start_{sp.get('attempt_id')}.yaml 없다")
+        # ★ F72 — 세 필드만 보면, 나머지가 어긋난 축약본이 통과한다. **전체 문서**를
+        #   비교한다 (리뷰: 축약된 start/attempt 파일로 통과가 재현됐다).
         if att.exists():
             a = yaml.safe_load(att.read_text(encoding="utf-8")) or {}
+            adiff = sorted(k for k in set(a) | set(sp) if a.get(k) != sp.get(k))
             checks["attempt_파일_일치"] = (
-                a.get("attempt_id") == sp.get("attempt_id")
-                and a.get("source_digest") == sp.get("source_digest")
-                and (a.get("input_sha256") or {}) == (sp.get("input_sha256") or {}),
-                "attempt 파일과 manifest의 start_provenance가 다르다")
+                not adiff, f"attempt 파일과 start_provenance가 다르다: {adiff[:4]}")
+        # 대표 start 파일은 **최초 시도**의 기록이라 attempt_id 등이 다를 수 있다.
+        # 그러나 코드·입력·환경은 같아야 한다 (다르면 다른 코드로 이어붙인 것이다).
+        sdiff = sorted(k for k in ("source_digest", "git_commit", "git_dirty",
+                                   "env", "input_sha256", "halfcell_recipe")
+                       if disk.get(k) != sp.get(k))
         checks["start_파일_일치"] = (
-            disk.get("source_digest") == sp.get("source_digest"),
-            "manifest_start.yaml과 manifest의 start_provenance가 다르다")
+            not sdiff,
+            f"manifest_start.yaml과 start_provenance의 {sdiff}가 다르다")
     # ★ F50b — 판정 기준은 **실제로 돌아간 코드가 바뀌었는가**(source_digest)다.
     #   `git_commit` 은 문서만 커밋해도 바뀌므로 그것까지 실패로 보면 무해한
     #   변경에 발목이 잡힌다 (실측: 실행 중 회답 문서를 커밋했더니 걸렸다).
@@ -629,6 +702,22 @@ def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
     checks["시작종료_서명일치"] = (
         not sp or sp.get("source_digest") == spec0.get("source_digest"),
         "시작 시점 source_digest가 run_spec과 다르다")
+
+    # ★ F72 — validator 가 `source_digest()` 를 **한 번도 다시 계산하지 않았다.**
+    #   기록된 문자열끼리만 맞춰봤으므로, 그 문자열이 실제 코드와 무관해도 통과했다.
+    #   같은 저장소·같은 commit·clean 상태일 때는 재계산해서 대조할 수 있다.
+    _now = git_info(root)
+    if (_now.get("git_commit") == spec0.get("git_commit")
+            and _now.get("git_dirty") is False):
+        checks["코드_재계산"] = (
+            source_digest(root) == spec0.get("source_digest"),
+            f"같은 commit·clean 인데 source_digest가 다르다 "
+            f"(현재 {source_digest(root)}, 기록 {spec0.get('source_digest')})")
+    else:
+        # 다른 commit 에서 검증 중이면 재계산이 불가능하다 — 사실만 남긴다
+        checks["_참고_코드재계산불가"] = (
+            True, f"검증 시점 commit({str(_now.get('git_commit'))[:8]})이 "
+                  f"기록({str(spec0.get('git_commit'))[:8]})과 달라 재계산을 건너뛴다")
 
     # ── 입력 digest: 값이 있는지가 아니라 **파일을 다시 해시해** 맞는지 ──
     if not digs:

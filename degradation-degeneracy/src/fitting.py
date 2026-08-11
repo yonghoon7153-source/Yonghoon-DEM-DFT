@@ -511,6 +511,7 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     import yaml
 
     from src.io import canonical_input_key as _ck
+    from src.io import snapshot_inputs
     from src.io import (base_manifest, env_fingerprint, file_digest, git_info,
                         seal_inputs, source_digest, write_manifest)
 
@@ -608,7 +609,10 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
              _gi0.get("git_commit_short"), _gi0.get("git_dirty"), _src0,
              _attempts / f"manifest_start_{attempt_id}.yaml")
     out_dir.mkdir(parents=True, exist_ok=True)
-    df = pd.read_parquet(in_dir / "curves.parquet")
+    # ★ F72 — 봉인한 **바이트 자체**를 스냅샷으로 떠서, 이후 계산은 그것만 읽는다.
+    #   digest 를 몇 번 더 비교해도 "해시한 시점"과 "읽는 시점" 사이는 못 막는다.
+    _snap = snapshot_inputs(start_prov["input_sha256"], out_dir)
+    df = pd.read_parquet(_snap[_ck(in_dir / "curves.parquet")])
 
     ref = extract_reference(df)
     ref_x = ref["x_norm"].to_numpy()
@@ -620,22 +624,26 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     # LLI 환산 상수 (전하 보존 유도식) — 메인에서 1회 계산해 워커에 값만 전달
     from src.config import load_config as _load
     from src.inventory import reference_inventory
-    base_cfg = _load(base_config or "configs/base.yaml")
+    # ★ F72 — config 도 스냅샷에서 읽는다. `_config_path` 만은 원래 위치를 유지한다
+    #   (경로 파생에만 쓰이는 필드라, 스냅샷 경로를 넣으면 저장소 root 계산이 깨진다).
+    _bc_orig = base_config or "configs/base.yaml"
+    base_cfg = _load(_snap[_ck(_bc_orig)])
+    base_cfg["_config_path"] = str(_bc_orig)
     inv = reference_inventory(base_cfg, q_ref / 1000.0).as_dict()
 
     # ── Case 1: full-range half-cell OCV 기준 ──
     hc_dict, p_ini = None, None
     if reference == "halfcell":
-        from src.halfcell import get_halfcell_reference, halfcell_cache_path
-        hc = get_halfcell_reference(base_cfg)
+        # ★ F72 — 캐시도 **스냅샷에서** 읽는다. get_halfcell_reference() 는 경로를
+        #   다시 계산해 원본을 읽으므로, 봉인과 읽기 사이가 다시 벌어진다.
+        #   여기서는 이미 F63 이 존재를 보장했으므로 바이트를 그대로 로드한다.
+        from src.halfcell import HalfCellReference, halfcell_cache_path
         hc_used = halfcell_cache_path(base_cfg, method=halfcell_method)
-        # F58: 시작 봉인에 이미 들어 있어야 한다. 다르면 읽기 전후로 바뀐 것이다.
         if str(hc_used) != str(_hc_pre):
             raise RuntimeError(
                 f"half-cell 캐시 경로가 시작 봉인과 다릅니다: {_hc_pre} vs {hc_used}")
-        if start_prov["input_sha256"].get(_ck(hc_used)) != file_digest(hc_used):
-            raise RuntimeError(
-                f"half-cell 캐시가 읽는 사이에 바뀌었습니다: {hc_used} (F58)")
+        hc = HalfCellReference.from_dict(
+            json.loads(_snap[_ck(hc_used)].read_text(encoding="utf-8")))
         cov = hc.coverage()
         # 리뷰 F11: to_modes_halfcell의 LLI 식은 테이블이 화학량론 전 범위일 때만
         # 성립한다 (sim 테이블 y_min=0.251이면 오프셋 ≈2.2Ah로 LLI가 조용히 틀림).

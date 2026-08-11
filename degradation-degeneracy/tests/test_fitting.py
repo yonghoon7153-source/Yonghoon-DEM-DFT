@@ -879,3 +879,90 @@ def test_fit_manifest_does_not_clobber_grid_record(tmp_path):
     assert now["run_type"] == "fit" and now["n_conditions"] == 12
     assert "solver" not in now, "fit manifest 가 grid 필드를 물려받았다"
     assert kept["solver"] == "IDAKLU" and kept["n_conditions"] == 3069
+
+
+def test_input_swap_between_seal_and_read_is_impossible(tmp_path, monkeypatch):
+    """★ F72 — 봉인과 읽기 사이에 입력을 바꿔치기할 수 없어야 한다.
+
+    반례(리뷰 발견 3): `run_fit` 에서 seal 직후·`pd.read_parquet` 직전에 curves 를
+    바꾸고 읽은 뒤 원복하면 —
+
+        봉인된 cond_id  = SEALED_A
+        실제 읽은 것    = ACTUALLY_READ_B
+        start/current/manifest digest = 전부 일치, inputs_changed = False
+        fits cond_id    = ACTUALLY_READ_B,   validator.ok = True
+
+    digest 를 몇 번 더 비교해도 못 막는다. 해시한 **바이트를 그대로** 읽어야 한다.
+    """
+    import shutil
+
+    import pandas as pd
+
+    import src.fitting as F
+    import src.io as IO
+    from src.io import validate_provenance
+
+    sealed_dir = _tiny_curves(tmp_path / "sealed", n_cond=3)
+    other_dir = _tiny_curves(tmp_path / "other", n_cond=4)      # 다른 조건 집합
+    sealed_ids = set(pd.read_parquet(sealed_dir / "curves.parquet")["cond_id"])
+    other_ids = set(pd.read_parquet(other_dir / "curves.parquet")["cond_id"])
+    assert sealed_ids != other_ids
+
+    # 봉인이 끝난 **직후** 원본을 다른 곡선으로 바꿔치기한다
+    real_snap = IO.snapshot_inputs
+
+    def swap_then_snapshot(sealed, out_dir, repo_root=None):
+        snap = real_snap(sealed, out_dir, repo_root)          # 봉인 바이트를 뜬 뒤
+        shutil.copy2(other_dir / "curves.parquet",            # 원본을 갈아치운다
+                     sealed_dir / "curves.parquet")
+        return snap
+
+    monkeypatch.setattr(IO, "snapshot_inputs", swap_then_snapshot)
+
+    out = tmp_path / "o"
+    F.run_fit(sealed_dir, out, _obj_cfg_min(), {"aa": {"w_pocv": 1.0}},
+              _BOUNDS_MIN, "expanded", 1, nproc=1)
+
+    fit_ids = set(pd.read_parquet(out / "fits.parquet")["cond_id"])
+    assert fit_ids <= sealed_ids, "바꿔치기된 곡선을 읽었다 (F72)"
+    assert not (fit_ids & (other_ids - sealed_ids))
+
+    # 원본이 바뀐 것 자체는 검증에서 드러나야 한다
+    v = validate_provenance(out)
+    assert "입력_digest_재해시" in v["fail"]
+    assert v["checks"]["입력_스냅샷"] == "통과", v["checks"]["입력_스냅샷"]
+
+
+def test_validator_rejects_forged_end_map_and_truncated_start(tmp_path):
+    """★ F72 — 종료 map 변조와 축약된 start 파일을 잡아야 한다.
+
+    반례: `input_sha256_at_end={'forged': 'not-a-digest'}` 에 boolean 만 false 로
+    맞추고, start/attempt 파일을 축약해도 validator 가 통과했다. 종료 map 은
+    내용을 보지 않고 `inputs_changed_during_run` 이라는 **자기신고**를 믿었고,
+    start/attempt 는 세 필드만 비교했기 때문이다.
+    """
+    import yaml
+
+    import src.fitting as F
+    from src.io import validate_provenance
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    out = tmp_path / "o"
+    F.run_fit(in_dir, out, _obj_cfg_min(), {"aa": {"w_pocv": 1.0}},
+              _BOUNDS_MIN, "expanded", 1, nproc=1)
+    assert validate_provenance(out)["checks"]["입력봉인_교차일치"] == "통과"
+
+    # ① 종료 map 만 위조 + boolean 은 정직한 척
+    m = yaml.safe_load((out / "manifest.yaml").read_text(encoding="utf-8"))
+    m["input_sha256_at_end"] = {"forged": "not-a-digest"}
+    m["inputs_changed_during_run"] = False
+    (out / "manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+    assert "입력봉인_교차일치" in validate_provenance(out)["fail"]
+
+    # ② start 파일 축약 (코드·입력 필드를 지운다)
+    m = yaml.safe_load((out / "manifest.yaml").read_text(encoding="utf-8"))
+    m["input_sha256_at_end"] = dict(m["input_sha256"])
+    (out / "manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+    (out / "manifest_start.yaml").write_text(
+        yaml.safe_dump({"attempt_id": m["attempt_id"]}), encoding="utf-8")
+    assert "start_파일_일치" in validate_provenance(out)["fail"]

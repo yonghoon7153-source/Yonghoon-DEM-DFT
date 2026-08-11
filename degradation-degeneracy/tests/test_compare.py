@@ -865,6 +865,9 @@ def _complete_artifact(tmp_path, repo_root=None):
     #   validator 가 다시 잡는다 — 지금까지 이 fixture 가 계속 그 역할을 했다).
     from src.io import fits_seal
     _seal = fits_seal(d / "fits.parquet")
+    # ★ F72 — 계산은 봉인한 바이트(스냅샷)만 읽는다. fixture 도 실제로 떠 둔다.
+    from src.io import snapshot_inputs
+    snapshot_inputs(sealed, d, repo_root=repo_root)
     (d / "degeneracy_summary.yaml").write_text(yaml.safe_dump({}), encoding="utf-8")
     (d / "manifest.yaml").write_text(yaml.safe_dump({
         "config_hash": "deadbeef1234", "git_dirty": False, "reproducible": True,
@@ -874,6 +877,7 @@ def _complete_artifact(tmp_path, repo_root=None):
         "source_digest_changed_during_run": False,
         "inputs_changed_during_run": False,
         "input_sha256": sealed, "input_sha256_source": "sealed_at_start",
+        "input_sha256_at_end": dict(sealed), "inputs_changed_during_run": False,
         "fits_seal": _seal,
     }), encoding="utf-8")
     return d, sig
