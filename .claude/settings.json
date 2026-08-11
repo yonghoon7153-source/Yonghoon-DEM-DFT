@@ -6,7 +6,6 @@
     "refreshInterval": 10
   },
   "autoCompactEnabled": true,
-  "autoCompactWindow": 100000,
 
   "skillOverrides": {
     "algorithmic-art": "off",

@@ -72,8 +72,10 @@
   (`kb_wiki.py lint` 은 레거시 49건을 한 줄로 — 목록은 `--legacy`. 이 한 건이 출력 81% 감소).
 
 ## 컨텍스트 절약 (2026-08-11)
-- 창은 `.claude/settings.json` 이 **50% 에서 자동 compact** (autoCompactWindow 100000),
-  상태줄에 사용률 상시 표시(`tools/claude/statusline.py`). 손으로 `/context` 볼 필요 없음.
+- 자동 compact 은 **기본값(실제 한계 근처)** 으로 둔다. `autoCompactWindow` 로 창을 좁혀
+  50% 발동을 걸었다가 **압축 루프**를 맞았다(2026-08-11 철회 — 요약+파일 재독이 곧바로
+  임계를 다시 넘겨 연속 3회 압축, 다른 브랜치 세션 사실상 정지). 다시 넣지 않는다.
+  대신 상태줄(`tools/claude/statusline.py`)이 사용률을 상시 표시 — 70%↑ 에서 손으로 `/compact`.
 - 읽기는 **부분 읽기 우선**: 큰 파일은 offset/limit, 검색은 head_limit.
   `kb/index.md`(25 KB)·`kb/open_items.md`(72 KB)는 **통째로 읽지 말고 grep**.
 - **방금 쓴 파일을 다시 읽지 않는다.** 만든 파일 내용을 답변에 다시 붙여넣지 않는다.

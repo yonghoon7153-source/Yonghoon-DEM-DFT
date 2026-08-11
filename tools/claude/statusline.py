@@ -5,8 +5,10 @@ Claude Code 가 stdin 으로 JSON 을 준다. 버전마다 필드 이름이 달�
 후보 경로를 여러 개 훑고, 못 찾으면 조용히 나머지 정보만 낸다
 (상태줄이 깨져서 아무것도 안 보이는 것보다 낫다).
 
-이 도구가 **못 하는 것**: 스스로 compact 를 걸지 못한다. 자동 compact 는
-settings.json 의 autoCompactWindow 가 하고, 이 스크립트는 표시·경고만 한다.
+이 도구가 **못 하는 것**: 스스로 compact 를 걸지 못한다 — 표시·경고만 한다.
+compact 시점은 Claude Code 기본값(실제 한계 근처)에 맡기고, 손으로 줄이고 싶으면
+경고를 보고 `/compact` 를 친다. settings.json 의 autoCompactWindow 로 임계를
+낮추는 방식은 압축 루프를 유발해 철회했다(2026-08-11).
 CLAUDE_STATUSLINE_DEBUG=1 로 실행하면 받은 JSON 을 /tmp 에 덤프한다.
 
 쓰기: settings.json 의 statusLine.command 로 등록.
@@ -16,8 +18,8 @@ import json
 import os
 import sys
 
-WARN_PCT = 50          # 이 이상이면 경고 (사용자 규칙)
-CRIT_PCT = 70
+WARN_PCT = 70          # 이 이상이면 손으로 /compact 를 권한다
+CRIT_PCT = 85          # 자동 compact 이 곧 걸릴 구간
 
 C = {"g": "\033[32m", "y": "\033[33m", "r": "\033[31m",
      "d": "\033[2m", "b": "\033[1m", "x": "\033[0m"}
@@ -125,8 +127,10 @@ def selftest():
     cases = [
         ("정상 40%", {"context": {"used_tokens": 80000, "total_tokens": 200000},
                       "model": {"display_name": "Opus"}}, ["ctx 40%", "80k/200k"], ["/compact"]),
-        ("경계 50% 경고", {"context": {"used_tokens": 100000, "total_tokens": 200000}},
-         ["ctx 50%", "/compact"], []),
+        ("경계 직전 69% 무경고", {"context": {"used_tokens": 138000, "total_tokens": 200000}},
+         ["ctx 69%"], ["/compact"]),
+        ("경계 70% 경고", {"context": {"used_tokens": 140000, "total_tokens": 200000}},
+         ["ctx 70%", "/compact"], []),
         ("대체 필드명", {"context": {"used": 150000, "max_tokens": 200000}},
          ["ctx 75%"], []),
         ("컨텍스트 정보 없음", {"model": {"id": "x"}}, ["ctx ?"], ["/compact"]),
