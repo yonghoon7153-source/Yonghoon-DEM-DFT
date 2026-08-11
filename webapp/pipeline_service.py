@@ -42,6 +42,7 @@ import errno
 import glob
 import hashlib
 import json
+import math
 import os
 import shutil
 import subprocess
@@ -124,17 +125,58 @@ STAGE_E_REQUIRED_KEYS = (
 )
 
 
-def stage_e_missing_keys(full_metrics):
-    """정상 Stage E 가 반드시 남기는 키 중 **없는 것**을 돌려준다 (빈 튜플이면 완전).
+#: 11-키 중 **유한한 수** 이어야 하는 여섯 (H/P × ionic/electronic/thermal).
+STAGE_E_NUMERIC_KEYS = STAGE_E_REQUIRED_KEYS[:6]
 
-    ⚠ 값이 `None` 이면 **없는 것으로 본다**.  Codex 가 `sigma_full_mScm_stage_e: null`
-      하나로도 success 가 되는 것을 재현했다 — 키 존재만 보면 partial 이 안 닫힌다.
-      (진짜 0 은 `0.0` 이라 통과한다; None 만 거른다.)
+#: **매핑(dict)** 이어야 하는 것들.  `stage_e_source='not-a-map'` 같은 손상을 잡는다.
+STAGE_E_MAPPING_KEYS = ('stage_e_source', 'stage_e_factors_used',
+                        'stage_e_fracture_stage_counts', 'validation_flags')
+
+#: 비어 있지 않은 **문자열** 이어야 하는 것.
+STAGE_E_STRING_KEYS = ('fracture_aware_method_full',)
+
+
+def stage_e_missing_keys(full_metrics, null_ok_keys=()):
+    """정상 Stage E 레코드의 **결손·손상** 목록 (빈 튜플이면 건전).
+
+    ⚠ 값이 `None` 이면 **없는 것으로 본다** — 키 존재만 보면 partial 이 안 닫힌다.
+      (진짜 0 은 `0.0` 이라 통과한다.)
+
+    ★ RC6-01 (Codex 6회차): 옛 구현은 `is None` 만 봐서 **손상 레코드를 완전으로**
+      판정했다.  Codex 재현 그대로:
+          sigma_full_mScm_stage_e = NaN      → 통과했다
+          stage_e_source = 'not-a-map'       → 통과했다
+          validation_flags = []              → 통과했다
+      → 타입·유한성까지 본다.  숫자 여섯은 **finite number**, 매핑 넷은 **dict**,
+        method 는 **비어 있지 않은 문자열**.  (bool 은 int 의 서브클래스라 명시 배제 —
+        `sigma=True` 가 숫자로 통과하면 안 된다.)
+
+    ★ `null_ok_keys`: network 가 **정당하게** `valid_null/valid_zero` 를 낸 채널
+      (열망 미퍼콜 등).  그 채널의 Stage E 값이 None 인 것은 **결손이 아니라 정합**이다.
+      이것이 Codex 가 지적한 "network 는 valid_null 을 정상으로 보는데 Stage E 는 결손으로
+      본다" 는 계약 충돌의 해소다 — 상류 상태를 알고 있을 때만 완화한다.
     """
     if not isinstance(full_metrics, dict):
         return STAGE_E_REQUIRED_KEYS
-    return tuple(k for k in STAGE_E_REQUIRED_KEYS
-                 if full_metrics.get(k) is None)
+    bad, ok_null = [], set(null_ok_keys or ())
+    for k in STAGE_E_REQUIRED_KEYS:
+        v = full_metrics.get(k)
+        if v is None:
+            if k not in ok_null:
+                bad.append(k)
+            continue
+        if k in STAGE_E_NUMERIC_KEYS:
+            if isinstance(v, bool) or not isinstance(v, (int, float)):
+                bad.append(f'{k}:타입({type(v).__name__})')
+            elif not math.isfinite(v):
+                bad.append(f'{k}:비유한({v})')
+        elif k in STAGE_E_MAPPING_KEYS:
+            if not isinstance(v, dict):
+                bad.append(f'{k}:매핑아님({type(v).__name__})')
+        elif k in STAGE_E_STRING_KEYS:
+            if not isinstance(v, str) or not v.strip():
+                bad.append(f'{k}:빈문자열/타입')
+    return tuple(bad)
 
 
 

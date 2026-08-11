@@ -80,8 +80,8 @@ class FakeRunner:
             # ★ RC5-01: 실제 run_one 은 정상 종료마다 11-키를 **무조건** 쓴다.  fixture 가
             #   한 키만 쓰면 계약이 엄해질 때 거짓 실패한다 (Codex 의 fixture-drift 교훈).
             data['sigma_full_mScm_stage_e'] = (data.get('sigma_full_mScm') or 0) * 2
-            for _k in ps.STAGE_E_REQUIRED_KEYS:
-                data.setdefault(_k, 1.0)
+            for _k, _v in _healthy_stage_e().items():
+                data.setdefault(_k, _v)
             with open(fm, 'w') as f:
                 json.dump(data, f)
             out = 'fake stage e'
@@ -102,6 +102,19 @@ def _seed_case(d, sigma=1.0):
 
 def _sha(p):
     return hashlib.sha256(open(p, 'rb').read()).hexdigest()
+
+
+def _healthy_stage_e(**over):
+    """실제 run_one 이 쓰는 **타입까지 맞춘** 건전한 Stage E 레코드 (RC6-01).
+
+    ★ fixture 가 전부 1.0 을 쓰면 타입 검증이 들어올 때 거짓 실패한다 — 그것이
+      fixture-drift 다.  숫자 여섯만 수, 매핑 넷은 dict, method 는 문자열.
+    """
+    d = {k: 1.0 for k in ps.STAGE_E_NUMERIC_KEYS}
+    d.update({k: {'fixture': 1} for k in ps.STAGE_E_MAPPING_KEYS})
+    d.update({k: 'fixture-method' for k in ps.STAGE_E_STRING_KEYS})
+    d.update(over)
+    return d
 
 
 def main():
@@ -279,8 +292,8 @@ def main():
                     fm = os.path.join(res_dir, 'full_metrics.json')
                     d = json.load(open(fm)) if os.path.exists(fm) else {}
                     d['sigma_full_mScm_stage_e'] = 9.0
-                    for _k in ps.STAGE_E_REQUIRED_KEYS:      # RC5-01 exact schema
-                        d.setdefault(_k, 1.0)
+                    for _k, _v in _healthy_stage_e().items():   # RC5-01/RC6-01 schema
+                        d.setdefault(_k, _v)
                     with open(fm, 'w') as f:
                         json.dump(d, f)
                 return subprocess.CompletedProcess(cmd, rc, '', '')
@@ -377,8 +390,8 @@ def main():
                     fm = os.path.join(_d, 'full_metrics.json')
                     dd = json.load(open(fm)) if os.path.exists(fm) else {}
                     dd['sigma_full_mScm_stage_e'] = 6.0
-                    for _k in ps.STAGE_E_REQUIRED_KEYS:      # RC5-01 exact schema
-                        dd.setdefault(_k, 1.0)
+                    for _k, _v in _healthy_stage_e().items():   # RC5-01/RC6-01 schema
+                        dd.setdefault(_k, _v)
                     json.dump(dd, open(fm, 'w'))
                 return subprocess.CompletedProcess(cmd, rc, '', '')
 
@@ -683,7 +696,7 @@ def main():
         # ══ RC5-01 (Codex 5회차): partial Stage E 가 success 로 도장되던 것 ══
         #   옛 판정 `any('_stage_e' in k)` 은 이름만 맞으면 통과했다.  Codex 가 동적으로
         #   재현한 네 경우를 그대로 회귀로 고정한다.
-        full = {k: 1.0 for k in ps.STAGE_E_REQUIRED_KEYS}
+        full = _healthy_stage_e()
         chk('24) 완전한 11-키 → 통과', ps.stage_e_missing_keys(full) == ())
         chk('25) ★ garbage_stage_e: null 하나만 → 거부 (옛 계약은 success 였다)',
             len(ps.stage_e_missing_keys({'garbage_stage_e': None})) == len(ps.STAGE_E_REQUIRED_KEYS))
@@ -717,6 +730,30 @@ def main():
         chk('42) ★ solver 가 thermal_status 를 항상 남긴다 (배선 확인)',
             "results['thermal_status'] = th_status" in _ncsrc
             and "th_status, th_reason = 'failed'" in _ncsrc)
+
+        # ══ RC6-01 (Codex 6회차): 손상 레코드를 완전으로 판정하던 것 ══
+        #   옛 구현은 `is None` 만 봐서 NaN·잘못된 타입이 전부 통과했다.
+        _full = _healthy_stage_e()
+        chk('43) 건전한 레코드는 통과', ps.stage_e_missing_keys(_full) == ())
+        chk('44) ★ NaN 을 잡는다 (옛 계약은 통과시켰다)',
+            ps.stage_e_missing_keys(dict(_full, sigma_full_mScm_stage_e=float('nan'))))
+        chk('45) ★ inf 도 잡는다',
+            ps.stage_e_missing_keys(dict(_full, thermal_sigma_full_mScm_stage_e=float('inf'))))
+        chk('46) ★ stage_e_source="not-a-map" 를 잡는다',
+            ps.stage_e_missing_keys(dict(_full, stage_e_source='not-a-map')))
+        chk('47) ★ validation_flags=[] 를 잡는다',
+            ps.stage_e_missing_keys(dict(_full, validation_flags=[])))
+        chk('48) ★ bool 이 숫자로 통과하지 않는다',
+            ps.stage_e_missing_keys(dict(_full, sigma_full_mScm_stage_e=True)))
+        chk('49) 빈 method 문자열을 잡는다',
+            ps.stage_e_missing_keys(dict(_full, fracture_aware_method_full='   ')))
+        chk('50) 진짜 0.0 은 여전히 유효 (valid_zero)',
+            ps.stage_e_missing_keys(dict(_full, sigma_full_mScm_stage_e=0.0)) == ())
+        chk('51) ★ null_ok_keys 로 valid_null 계약 충돌이 풀린다',
+            ps.stage_e_missing_keys(dict(_full, electronic_sigma_full_mScm_stage_e=None)) != ()
+            and ps.stage_e_missing_keys(
+                dict(_full, electronic_sigma_full_mScm_stage_e=None),
+                null_ok_keys=('electronic_sigma_full_mScm_stage_e',)) == ())
 
         chk('30) 11-키는 run_one 이 무조건 쓰는 집합과 같다 (개수 고정)',
             len(ps.STAGE_E_REQUIRED_KEYS) == 11
