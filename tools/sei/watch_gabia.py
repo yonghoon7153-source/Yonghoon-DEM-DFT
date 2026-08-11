@@ -74,6 +74,29 @@ def _toten_eV(p):
     return float(v[-1]) * RY_EV if v else None
 
 
+def read_gap(path):
+    """gap.json 하나 → (레코드, None) 또는 (None, 손상 사유).
+
+    ⚠ 2026-08-11 실측 — gap 이 **문자열**인 파일 하나가 정렬 키에서 TypeError 를 내
+      상황판 전체를 죽였다(③④ 가 아예 안 나옴). 감시 화면은 나쁜 데이터 한 줄에
+      죽으면 안 된다. 그렇다고 조용히 버리지도 않는다 — 손상은 손상이라고 띄운다.
+    """
+    tag = os.path.basename(os.path.dirname(path))
+    try:
+        d = json.load(open(path, encoding="utf-8"))
+    except (OSError, ValueError) as e:
+        return None, f"읽기 실패: {type(e).__name__}"
+    if not isinstance(d, dict):
+        return None, f"dict 가 아님: {type(d).__name__}"
+    try:
+        for k in ("vbm", "cbm", "gap"):
+            d[k] = float(d[k])
+    except (KeyError, TypeError, ValueError):
+        return None, f"수치 필드 손상: gap={d.get('gap')!r}"
+    d.setdefault("tag", tag)
+    return d, None
+
+
 def neb_status(d):
     """상(phase) 폴더 하나의 NEB 상태. 화면과 selftest 가 같은 함수를 쓴다.
 
@@ -202,6 +225,32 @@ def selftest():
     s = neb_status(d)
     chk(any("meta.json 손상" in x for x in s["alerts"]) and s["eqv"] is None,
         "meta.json 손상 → 경고 + 대칭 판정 보류")
+
+    # ── gap.json 파서 (2026-08-11 상황판 전체를 죽인 그 입력) ──
+    def gj(tag, body):
+        p = os.path.join(td, tag)
+        os.makedirs(p, exist_ok=True)
+        open(os.path.join(p, "gap.json"), "w").write(body)
+        return os.path.join(p, "gap.json")
+
+    r, why = read_gap(gj("ok", '{"tag":"li2s","vbm":1.0,"cbm":4.4,"gap":3.4,'
+                               '"verdict":"절연체"}'))
+    chk(r is not None and abs(r["gap"] - 3.4) < 1e-9, "정상 gap.json → 레코드")
+    # 음성 ⑥: gap 이 문자열 — 실측 크래시 재현. 정렬 가능한 float 이거나 손상이거나 둘 중 하나
+    r, why = read_gap(gj("strgap", '{"tag":"nd2o3","vbm":"?","cbm":"?","gap":"n/a"}'))
+    chk(r is None and "손상" in why, f"gap 이 문자열 → 손상 처리 ({why})")
+    # 음성 ⑦: 깨진 JSON / 필드 누락 / 리스트
+    chk(read_gap(gj("brk", "{oops"))[0] is None, "깨진 JSON → 손상 처리")
+    chk(read_gap(gj("nofield", '{"tag":"x"}'))[0] is None, "필드 누락 → 손상 처리")
+    chk(read_gap(gj("lst", "[1,2,3]"))[0] is None, "dict 아님 → 손상 처리")
+    # 정렬이 실제로 되는지 (크래시 지점 재현)
+    recs = [read_gap(gj("a", '{"vbm":0,"cbm":5,"gap":5.0}'))[0],
+            read_gap(gj("b", '{"vbm":0,"cbm":3,"gap":3.0}'))[0]]
+    try:
+        srt = [x["tag"] for x in sorted(recs, key=lambda x: -x["gap"])]
+        chk(srt == ["a", "b"], f"정렬 통과 (내림차순 {srt})")
+    except TypeError as e:
+        chk(False, f"정렬에서 TypeError — 실측 크래시 재발: {e}")
     shutil.rmtree(td, ignore_errors=True)
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
@@ -260,21 +309,27 @@ else:
 print(BAR)
 
 # ── 2) 갭 결산 ─────────────────────────────────────────────────────────────
-gaps = []
+# ⚠ 2026-08-11 실측 — gap 이 **문자열**인 gap.json 하나가 정렬 키에서 TypeError 를 내
+#   상황판 전체를 죽였다(③④ 가 아예 안 나옴). 감시 화면이 나쁜 데이터 한 줄에 죽으면
+#   안 된다 — 숫자가 아닌 레코드는 **버리지 말고 '손상' 로 따로 세워** 보여 준다.
+gaps, gaps_bad = [], []
 for j in sorted(glob.glob(os.path.join(SEI, "*", "gap.json"))):
-    try:
-        gaps.append(json.load(open(j)))
-    except Exception:
-        pass
-if gaps:
-    print(f"② 갭 (fixed-occ nscf 고유값 — DOS 문턱 아님)")
+    rec, why = read_gap(j)
+    (gaps if rec else gaps_bad).append(rec or (os.path.basename(os.path.dirname(j)), why))
+if gaps or gaps_bad:
+    print("② 갭 (fixed-occ nscf 고유값 — DOS 문턱 아님)")
     print(f"   {'상':26s} {'VBM':>8s} {'CBM':>8s} {'gap(eV)':>9s}  판정")
     for d in sorted(gaps, key=lambda x: -x["gap"]):
-        nd = "Nd" in d["tag"] or "nd2" in d["tag"]
+        nd = "Nd" in str(d["tag"]) or "nd2" in str(d["tag"])
         flag = "  ⚠ 4f valence — 진단용" if nd else ""
-        print(f"   {d['tag']:26s} {d['vbm']:8.3f} {d['cbm']:8.3f} "
-              f"{d['gap']:9.3f}  {d['verdict']}{flag}")
-    print("   ⚠ PBE 갭은 넓은 갭 절연체에서 30–50% 과소 — 실험값과 나란히 놓지 말 것")
+        print(f"   {str(d['tag']):26s} {d['vbm']:8.3f} {d['cbm']:8.3f} "
+              f"{d['gap']:9.3f}  {d.get('verdict', '?')}{flag}")
+    for tag, why in gaps_bad:
+        print(f"   {tag:26s} {'—':>8s} {'—':>8s} {'—':>9s}  ⛔ {why}")
+    if gaps:
+        print("   ⚠ PBE 갭은 넓은 갭 절연체에서 30–50% 과소 — 실험값과 나란히 놓지 말 것")
+    if gaps_bad:
+        print("   ⛔ 손상된 gap.json 은 03 단계(nscf)를 다시 돌려야 한다 — extract_gap.py 재실행")
 else:
     print("② 갭 — 아직 gap.json 이 없다")
 
