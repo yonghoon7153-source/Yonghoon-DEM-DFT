@@ -26,6 +26,12 @@ importlib 간선 누락(8b), 제약 문단 절단이 전부 이 순서에서 잡
 내린다 — **제약 문단은 원문 그대로 남기고, 하나라도 유실되면 도구가 거부한다.**
 ⚠ 산문 요약(caveman 류)은 금지 — 우리 가치는 한정어("하한", "relative-only",
 "DO NOT re-screen")에 있고 요약은 그것부터 깎는다.
+★ 실측(2026-08-11, 세션 누적 2.34M tok): **CLAUDE.md 는 1.9 % 로 레버가 아니다.**
+진짜 소비는 ⓐ Read 출력 32 %(그 중 PDF/이미지 9 건이 세션의 10 % — 텍스트 추출을
+먼저 쓰고 그림이 필요할 때만 렌더) ⓑ **Bash 입력 19 %**(내 heredoc — 긴 파이썬은
+scratchpad 파일로 쓰고 실행) ⓒ Bash 출력 17 %(`| tail`·Grep 로 잘라 받기).
+독립 호출은 한 번에 묶는다 (이 세션 Bash 1,302 회 = 왕복 봉투 비용).
+계기: `python3 scripts/context_meter.py` · 훅이 50 % 초과 시 자동 고지.
 
 ## ★★★ DEM ↔ MPM Complementary Simulation Frame (FINALIZED 2026-06-07) ★★★
 
