@@ -82,23 +82,78 @@ SID_NAME = {1: 'AM_S', 2: 'AM_P', 3: 'VGCF', 4: 'SuperP', 5: 'SDCP', 6: 'SE', 7:
 # CuPy/CUDA is unavailable, so it is always safe to leave on.
 GPU_SOLVE = False
 
+# ── SR-03: CPU CG 전처리 (기본 OFF = 현행 Jacobi 경로와 **bitwise 동일**) ─────────────────
+#   합성 침대 실측 (전자 채널 σ 대비 1e5, rtol 1e-8, scripts/sr03_precond_bench.py — STEP3 의
+#   **실제** solve_sigma_z 를 돌리며 전처리만 교체해 σ_eff 까지 비교):
+#       dof      61,592 │ 144,888 │ 486,963      Jacobi 시간  3.9 │ 15.6 │ 74.9 s
+#       Jacobi it 3,374 │   5,074 │   7,088      AMG 시간(빌드+) 4.5 │ 11.3 │ 51.0 s
+#       AMG    it   218 │     222 │     261      속도            0.87× │ 1.38× │ 1.47×
+#   ★ 채택 사유 ①은 속도가 아니라 **반복수 절벽**이다.  AMG 는 dof 를 7.9배 늘려도 218→261
+#     (평평)인데 Jacobi 는 3,374→7,088 로 자란다 (겉보기 dof^0.36; 구간지수는 0.48→0.28 로
+#     일정하지 않아 외삽은 어림값).  production 2.7 M dof 로 어림하면 Jacobi ≈1.3 만 회 =
+#     maxiter 30,000 의 절반 — 더 미세한 vox 나 더 높은 대비면 **미수렴("σ UNRELIABLE")**
+#     으로 떨어질 여지가 있고, 그때 잃는 것은 시간이 아니라 런 전체다.
+#   ⚠ 사유 ②(속도)는 **작다** — 실측 1.4–1.5×, 2.7 M 외삽 ≈2.4×.  벽시계의 진짜 치료는
+#     GPU(cupy)다.  AMG 를 "58 분 → 몇 분" 으로 팔지 말 것.  (실제 arm A 2.7 M dof 3,485 s
+#     는 위 합성 스케일링의 4.4배 — 실침대가 그만큼 더 어렵다는 뜻이고, 그렇다면 AMG 이득도
+#     2.4배보다 클 **것으로 보이나** 그것은 추론이지 측정이 아니다.)
+#   ★ 해-불변 확인 (채택의 조건): 같은 계를 두 전처리로 풀고 **σ_eff** 비교 — rtol 1e-8 에서
+#     0.0007–0.014 %, rtol 1e-10 에서 0.0001 %.  (‖Δφ‖_rel 은 1e-3 까지 벌어지지만 그 차이는
+#     전류를 안 나르는 약결합 영역에 살아 σ 로 넘어오지 않는다.)
+#   ⚠ 그래도 **A/B 두 팔은 같은 전처리여야 한다** — 0.01 % 는 작지만 Δσ_e 가 그보다 작을
+#     수 있다.  그래서 `LAST_BACKEND['precond']` 를 manifest 에 남기고 비교기가 검사한다.
+#   ⚠ v1 은 **CPU 경로 전용**.  GPU 경로는 이미 빠르고, GPU V-cycle 미러는 STEP4 에 선례가
+#     있으나(step4_dyn._gpu_vcycle_wrap) 여기 필요가 아직 측정되지 않았다.
+#   ⚠ 위는 **합성 침대**다 — 실침대(fibre/AM 분포)에서의 재확인은 SR-01 종료 후.
+AMG_SOLVE = False
+
 
 #: ★ RC6-08 (Codex 6회차): 마지막 solve 의 **실제 backend**.  요청(GPU_SOLVE)과 실제가
 #:   다를 수 있는데(CuPy 부재 → CPU fallback) 옛 코드는 print 만 하고 반환 dict 에
 #:   backend/gpu_used/fallback_reason 이 전부 없었다 — 결과만 보면 GPU 로 푼 것인지
 #:   CPU 로 떨어진 것인지 **구분 불가**였다.  로그는 보존되지 않으므로 산출물에 남긴다.
-LAST_BACKEND = {'requested': None, 'used': None, 'fallback_reason': None}
+#:   SR-03 로 `precond` 추가 — 전처리도 요청과 실제가 갈릴 수 있다(pyamg 부재 → Jacobi).
+LAST_BACKEND = {'requested': None, 'used': None, 'fallback_reason': None, 'precond': None}
+
+
+def _amg_M(L):
+    """pyamg smoothed-aggregation 전처리 (그래프-라플라시안 특화).  실패하면 None → Jacobi.
+
+    ★ 같은 패턴이 이미 리포에 있다 (`step4_dyn._amg_M`).  그 **코드**를 부르지 않은 이유는
+    의존 방향이다 — STEP4 가 STEP3 격자를 소비하므로 STEP3 → STEP4 import 는 역방향이고,
+    그 헬퍼는 step4 모듈 전역(GPU, MPM_S4_GPU_AMG)에 묶여 있어 STEP3 에서 부르면 STEP4 의
+    GPU 스위치가 STEP3 거동을 조용히 바꾼다.  패턴만 따르고 결합은 만들지 않는다."""
+    try:
+        import pyamg
+    except ImportError:
+        LAST_BACKEND['fallback_reason'] = 'pyamg 미설치 → Jacobi'
+        print('    ⚠ STEP3 AMG 요청됐으나 pyamg 미설치 → Jacobi-CG 로 진행 '
+              '(`python3 -m pip install pyamg`)', flush=True)
+        return None
+    try:
+        import time as _t
+        t0 = _t.time()
+        print(f'    STEP3 AMG 전처리 구축 중 (dof {L.shape[0]:,})…', flush=True)
+        ml = pyamg.smoothed_aggregation_solver(sparse.csr_matrix(L), max_coarse=500)
+        print(f'    STEP3 AMG 구축 완료 (levels {len(ml.levels)}, {_t.time() - t0:.0f}s) → CG',
+              flush=True)
+        return ml.aspreconditioner(cycle='V')
+    except Exception as _e:                                # noqa: BLE001 — 전처리 실패는 치명적이지 않다
+        LAST_BACKEND['fallback_reason'] = f'AMG build 실패 {type(_e).__name__}: {_e}'
+        print(f'    ⚠ STEP3 AMG 구축 실패 ({type(_e).__name__}: {_e}) → Jacobi-CG', flush=True)
+        return None
 
 
 def _solve_cg(L, b):
-    """Jacobi-preconditioned CG for the SPD Kirchhoff system L·φ = b.  GPU (CuPy) when GPU_SOLVE and
+    """Preconditioned CG for the SPD Kirchhoff system L·φ = b.  GPU (CuPy) when GPU_SOLVE and
     the import succeeds, else scipy CPU — SAME matrix + tol (1e-8) → SAME φ (backend swap only).
+    CPU preconditioner = Jacobi (default) or AMG when AMG_SOLVE (SR-03, 해-불변 측정 완료).
     Returns (phi: np.ndarray, info: int).
 
-    ★ 실제로 쓴 backend 를 모듈 전역 `LAST_BACKEND` 에 남긴다 (RC6-08)."""
+    ★ 실제로 쓴 backend·전처리를 모듈 전역 `LAST_BACKEND` 에 남긴다 (RC6-08 / SR-03)."""
     diag = L.diagonal()
     LAST_BACKEND.update(requested=('gpu' if GPU_SOLVE else 'cpu'),
-                        used=None, fallback_reason=None)
+                        used=None, fallback_reason=None, precond=None)
     if GPU_SOLVE:
         try:
             import cupy as cp
@@ -111,13 +166,16 @@ def _solve_cg(L, b):
                 xg, info = cg_gpu(Lg, bg, tol=1e-8, maxiter=30000, M=Mg)
             except TypeError:                              # newer CuPy renamed tol → rtol/atol
                 xg, info = cg_gpu(Lg, bg, rtol=1e-8, atol=0.0, maxiter=30000, M=Mg)
-            LAST_BACKEND['used'] = 'gpu'
+            LAST_BACKEND.update(used='gpu', precond='jacobi')   # v1: GPU 경로는 Jacobi 유지
             return cp.asnumpy(xg), int(info)
         except Exception as _e:
             LAST_BACKEND['fallback_reason'] = f'{type(_e).__name__}: {_e}'
             print(f'    STEP3 GPU solve unavailable ({type(_e).__name__}: {_e}) → CPU fallback', flush=True)
     LAST_BACKEND['used'] = 'cpu'
-    Minv = sparse.diags(1.0 / diag)
+    Minv = _amg_M(L) if AMG_SOLVE else None                # SR-03 opt-in; None → 현행 Jacobi
+    LAST_BACKEND['precond'] = 'amg' if Minv is not None else 'jacobi'
+    if Minv is None:
+        Minv = sparse.diags(1.0 / diag)
     try:
         return cg(L, b, rtol=1e-8, maxiter=30000, M=Minv)
     except TypeError:                                      # scipy < 1.12 has no rtol kwarg
@@ -1023,6 +1081,25 @@ def _selftest():
     r = solve_sigma_z(sid, sig_tab, 0.5)
     e = abs(r['sigma_eff'] - 1.0 / 36.0) < 1e-6
     ok &= e; print(f"column:   σ_eff={r['sigma_eff']:.6f}  (expect {1/36:.6f})  {'OK' if e else 'FAIL'}")
+    # 6) SR-03 AMG — 기본 OFF 이고, 켜도 **같은 σ** 를 내며, 실제로 쓴 전처리가 도장된다.
+    #    고대비(σ 1 : 1e4) 격자로 — 전처리가 갈릴 여지가 있는 조건에서 봐야 뜻이 있다.
+    global AMG_SOLVE
+    hi = np.array([0.0, 1.0, 1.0e4])
+    sid = np.ones((8, 8, 12), np.int8); sid[2:6, 2:6, :] = 2       # 고대비 관통 채널
+    e = (AMG_SOLVE is False)
+    ok &= e; print(f"amg-off:  기본 AMG_SOLVE={AMG_SOLVE}  (expect False = 현행 경로)  "
+                   f"{'OK' if e else 'FAIL'}")
+    sj = solve_sigma_z(sid, hi, 0.5)['sigma_eff']; pj = LAST_BACKEND['precond']
+    AMG_SOLVE = True
+    try:
+        sa = solve_sigma_z(sid, hi, 0.5)['sigma_eff']; pa = LAST_BACKEND['precond']
+    finally:
+        AMG_SOLVE = False
+    d = abs(sa - sj) / max(sj, 1e-30)
+    #   pyamg 부재 환경에서는 폴백해 precond='jacobi' 가 되고 σ 는 당연히 같다 — 그때도 통과.
+    e = d < 1e-6 and pj == 'jacobi' and pa in ('amg', 'jacobi')
+    ok &= e; print(f"amg-inv:  σ_eff {sj:.8g} → {sa:.8g}  Δ={d:.1e}  precond {pj}→{pa}  "
+                   f"(expect Δ<1e-6, 해-불변)  {'OK' if e else 'FAIL'}")
     print('SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
 

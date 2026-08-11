@@ -498,6 +498,15 @@ def main():
     ap.add_argument('--step3-gpu', action='store_true',
                     help='run the STEP3 Kirchhoff CG on GPU (CuPy cuSPARSE) — ~10-50× faster, esp. fine '
                          'vox; auto-falls back to scipy CPU if CuPy/CUDA missing (same σ either way).')
+    ap.add_argument('--step3-amg', action='store_true',
+                    help='STEP3 CPU CG 전처리를 Jacobi → AMG (pyamg smoothed-aggregation).  '
+                         '값은 반복수 절벽 회피: 합성 침대 실측(61.6k→487k dof)에서 Jacobi 는 '
+                         '3,374→7,088 it 로 자라고 AMG 는 218→261 로 평평하다 — 2.7M dof 어림 '
+                         'Jacobi ≈1.3만 it = maxiter 30,000 의 절반.  속도 이득은 작다(1.4–1.5×, '
+                         '2.7M 외삽 ≈2.4×) — 벽시계의 진짜 치료는 --step3-gpu 다.  σ_eff 는 '
+                         '전처리에 불변(rtol 1e-8 서 ≤0.014 %).  ⚠ A/B 두 팔은 **같은 전처리**여야 '
+                         '한다 — manifest backend.precond 에 남고 비교기가 검사한다.  '
+                         'pyamg 부재 시 Jacobi 폴백.')
     ap.add_argument('--i0-a-m2', type=float, default=2.0,
                     help='STEP4 exchange current density i0 (A/m², NCM|LPSCl 계면) — ⚠F1 literature hook '
                          '(Newman-typical 1-5 A/m²).  Sets the linearised BV conductance g=i0·F/RT.')
@@ -813,6 +822,7 @@ def main():
             import time as _time
             import step3_sigma as _s3
             _s3.GPU_SOLVE = a.step3_gpu                     # CuPy CG backend (auto CPU fallback)
+            _s3.AMG_SOLVE = a.step3_amg                     # SR-03: CPU 전처리 (기본 OFF=Jacobi)
             _t0 = _time.time()
             _off = np.array([SW[0], SW[0], FLOOR])
             _am_c = (c - _off) * UM

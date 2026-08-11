@@ -141,6 +141,23 @@ def backend_of(step3):
     return None
 
 
+def precond_of(step3):
+    """이 팔이 실제로 쓴 CG **전처리** ('jacobi'|'amg'|None).
+
+    ★ backend 만 봐서는 부족하다 (SR-03, 2026-08-11): `--step3-amg` 는 backend 를 바꾸지
+    않고 전처리만 바꾼다 — 두 팔이 cpu/cpu 로 일치해도 Jacobi↔AMG 면 통과해 버린다.
+    전처리 교체의 σ_eff 영향은 실측 ≤0.012 % (rtol 1e-8) 로 작지만, 우리가 재려는 Δσ_e 가
+    그보다 작을 수 있다 — 작다는 것이 곧 무해하다는 뜻은 아니다.  옛 payload 는 이 키가
+    없으므로(None) 그때는 조용히 넘어간다."""
+    if not isinstance(step3, dict):
+        return None
+    for p in (('manifest', 'backend_last_solve'), ('manifest', 'backend')):
+        got = dig(step3, p)
+        if isinstance(got, dict) and got.get('precond'):
+            return str(got['precond'])
+    return None
+
+
 def compare(pa, pb):
     """→ (행 dict, 경고 리스트).  A = 점(기준), B = 선분."""
     warn = []
@@ -172,6 +189,11 @@ def compare(pa, pb):
     if bea and beb and bea != beb:
         warn.append(f'solve backend 가 두 팔에서 다릅니다 ({bea} vs {beb}) — 같은 행렬·같은 rtol 이라 '
                     '수치는 같아야 하지만 그건 **가정**입니다.  한쪽 팔을 같은 backend 로 다시 도세요')
+    # ★ SR-03: 전처리도 갈릴 수 있다 (backend 는 둘 다 cpu 인데 Jacobi vs AMG)
+    pca, pcb = precond_of(sa), precond_of(sb)
+    if pca and pcb and pca != pcb:
+        warn.append(f'CG 전처리가 두 팔에서 다릅니다 ({pca} vs {pcb}) — σ_eff 영향은 실측 ≤0.012 % '
+                    '지만 재려는 Δ 가 그보다 작을 수 있습니다.  한쪽 팔을 같은 전처리로 다시 도세요')
     # 수렴 실패는 값 자체가 못 쓰는 것 — Δ 계산 전에 알린다
     for lab, s in (('A', sa), ('B', sb)):
         if s.get('unconverged') or (isinstance(s.get('cg_info'), int) and s.get('cg_info')):
@@ -179,7 +201,8 @@ def compare(pa, pb):
                         '— 그 σ 는 UNRELIABLE, Δ 인용 금지')
 
     row = {'label': '', 'stamp_A': ka or 'point?', 'stamp_B': kb or '?',
-           'vox_um': sa.get('vox_um'), 'backend_A': bea, 'backend_B': beb}
+           'vox_um': sa.get('vox_um'), 'backend_A': bea, 'backend_B': beb,
+           'precond_A': pca, 'precond_B': pcb}
     for key, _lab, rel in _FIELDS:
         va, vb = sa.get(key), sb.get(key)
         row[key + '_A'] = va
@@ -241,7 +264,8 @@ def render(row, warn):
 
 # ───────────────────────────── selftest ─────────────────────────────
 
-def _mk(sig, stamp, applied=True, n_dof=1000, vox=0.4, share=None, backend='cpu', cg_info=0):
+def _mk(sig, stamp, applied=True, n_dof=1000, vox=0.4, share=None, backend='cpu', cg_info=0,
+        precond='jacobi'):
     """★ 실제 payload 의 **중첩 그대로** 짓는다 (metrics.step3.manifest.fibre_stamp).
     평평하게 지으면 판독기가 도장을 못 찾는 것을 selftest 가 놓친다 — 실제로 처음
     구현이 한 단계 얕아서 stamp_of 가 항상 None 이었다 (2026-08-11)."""
@@ -251,7 +275,8 @@ def _mk(sig, stamp, applied=True, n_dof=1000, vox=0.4, share=None, backend='cpu'
         'cg_info': cg_info,
         'manifest': {'schema_version': 2, 'status': 'complete',
                      'fibre_stamp': stamp, 'fibre_stamp_applied': applied,
-                     'backend_last_solve': {'requested': 'gpu', 'used': backend}},
+                     'backend_last_solve': {'requested': 'gpu', 'used': backend,
+                                            'precond': precond}},
         'dissipation_share': share or {'AM_S': 0.6, 'VGCF': 0.4}}}}
 
 
@@ -289,6 +314,17 @@ def _selftest():
     chk(backend_of(a['metrics']['step3']) == 'cpu', '7b) backend 도장을 읽는다')
     _, w3b = compare(a, _mk(0.012, 'segment', backend='gpu'))
     chk(any('backend' in x for x in w3b), '7c) ★ backend 불일치 경고 (cpu vs gpu)')
+    # ★ SR-03: backend 는 같은데 전처리만 갈리는 경우 (--step3-amg 를 한쪽 팔에만 준 실수)
+    chk(precond_of(a['metrics']['step3']) == 'jacobi', '7p1) 전처리 도장을 읽는다')
+    _, w3d = compare(a, _mk(0.012, 'segment', precond='amg'))
+    chk(any('전처리' in x for x in w3d), '7p2) ★ 전처리 불일치 경고 (jacobi vs amg)')
+    _, w3e = compare(a, _mk(0.012, 'segment'))
+    chk(not any('전처리' in x for x in w3e), '7p3) 같은 전처리면 조용')
+    old = _mk(0.012, 'segment')
+    del old['metrics']['step3']['manifest']['backend_last_solve']['precond']
+    chk(precond_of(old['metrics']['step3']) is None and
+        not any('전처리' in x for x in compare(a, old)[1]),
+        '7p4) 옛 payload(전처리 키 없음)는 조용히 통과')
     _, w3c = compare(a, _mk(0.012, 'segment', cg_info=1))
     chk(any('미수렴' in x for x in w3c), '7d) ★ CG 미수렴이면 Δ 인용 금지 경고')
 
