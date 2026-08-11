@@ -130,10 +130,17 @@ def read_one(d):
         if meta.get("electronic_class_evidence") == "declared":
             checks.append("electronic_class=metal 이 **선언만** 된 상태다 (evidence=declared). "
                           "DOS/PDOS 로 E_F 상태를 확인하기 전에는 장벽을 인용하지 않는다")
-    else:                                     # insulator (또는 미상)
-        if tc is not None and float(tc) > 0:
-            checks.append(f"tot_charge={tc} — **옛 규약(정공 2개)**이다. V_Li⁻ 는 −1 이다. "
-                          "build_neb_inputs.py 를 다시 돌려 재계산할 것")
+    # ★ P1-10 — 옛 규약(+1) 진단은 **분기 밖에서 항상** 돈다. elif 안에 있으면
+    #   electronic_class 가 없는 옛 meta(=정확히 +1 을 쓰던 그 파일들)에서
+    #   "생성기가 옛것" 메시지에 가려 **진짜 이유(전자 2개 차이)가 안 보였다**.
+    if tc is not None and float(tc) > 0:
+        checks.append(f"tot_charge={tc} — **옛 규약(정공 2개)**이다. V_Li⁻ 는 −1 이다. "
+                      "build_neb_inputs.py 를 다시 돌려 재계산할 것")
+    # ★ P1-11 — insulator + tot_charge=0 (V_Li⁰, 정공 1개)은 파일럿용이지 정본이 아니다.
+    #   아무 게이트도 없으면 q=−1 결과들과 같은 표에 섞인다.
+    if ecls not in (None, "metal") and tc is not None and abs(float(tc)) < 1e-9:
+        checks.append("insulator 인데 tot_charge=0 (V_Li⁰, 정공 1개)이다 — 파일럿 값이다. "
+                      "정본은 V_Li⁻(−1) 이므로 같은 표에 섞지 말 것")
     # ★ P0-2 — vacancy 끝점이 이완되지 않았으면 장벽을 믿을 수 없다
     if meta.get("endpoints_relaxed") is False:
         checks.append("vacancy 끝점이 미이완이다 — 끝점이 경로 최고점이 되면 Ea 가 0 으로 "
@@ -189,7 +196,12 @@ def main():
                   f"정·역 차 {r['site_energy_diff_eV']:.3f} eV 는 **자리 에너지 차**다(정상). "
                   f"수송 장벽은 유효Ea 를 쓴다")
     ok = [r for r in res.values() if r.get("citable")]
-    if ok:
+    # ⛔⛔ 2026-08-11 자체검토 P0-6 — 옛 코드는 `if ok:` 일 때만 JSON 을 썼다.
+    #   그래서 새 게이트가 콘솔에서 li2s 를 막아도 **db 파일은 안 건드려**,
+    #   하류(원고·그림·비교표)는 철회된 0.272 eV 를 `citable: true` 로 계속 읽었다.
+    #   차단은 콘솔에만 있고 db 에는 없었다 = 제일 나쁜 조합이다.
+    #   → 항상 쓴다. citable 이 0건이면 최상위에 retracted 를 박는다.
+    if True:
         os.makedirs(os.path.dirname(OUT), exist_ok=True)
         json.dump({
             "property": "sei_li_migration_barrier_neb",
@@ -202,11 +214,15 @@ def main():
             "warning": ("⚠ jellium 보정은 유한 셀 근사다 — 절대값은 셀 수렴 확인 뒤 인용할 것. "
                         "**상 사이 비교**가 이 값의 용도다. "
                         "⛔ BVSE 프록시 값과 같은 표에 놓지 말 것(단위는 같아도 다른 양이다)."),
+            "n_citable": len(ok), "n_total": len(res),
+            "retracted": len(ok) == 0,
+            "retraction_reason": (None if ok else
+                                  "인용 가능한 결과가 0건이다. 각 결과의 blocking_checks 를 볼 것. "
+                                  "이 파일의 어떤 값도 인용하지 말 것."),
             "results": res,
         }, open(OUT, "w"), ensure_ascii=False, indent=2)
-        print(f"\n→ {OUT}  (인용 가능 {len(ok)}/{len(res)})")
-    else:
-        print("\n(아직 인용 가능한 결과가 없다 — JSON 을 쓰지 않았다)")
+        print(f"\n→ {OUT}  (인용 가능 {len(ok)}/{len(res)})"
+              + ("  ⛔ **retracted: true** 로 표기했다" if not ok else ""))
     print("⚠ 장벽은 **상 사이 비교**용이다. jellium 유한 셀 보정이 남아 있으니")
     print("  절대값을 실험과 나란히 놓기 전에 셀 크기 수렴을 확인할 것.")
     return 0

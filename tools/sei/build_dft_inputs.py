@@ -99,6 +99,9 @@ def main():
                     help="Nd starting_magnetization (4f³ 국소모멘트 씨앗)")
     ap.add_argument("--nd_u", type=float, default=6.0,
                     help="Nd 4f 에 U [eV] (0 = 안 걺). 기본 6.0 — 란타나이드 4f 통상값")
+    ap.add_argument("--diagnose_undetermined", action="store_true",
+                    help="⚠ electronic_class=undetermined 상도 갭 단계를 만든다 (진단 전용). "
+                         "그 숫자는 갭이 아니다 — db 에 넣지 말 것")
     a = ap.parse_args()
 
     from ase.io import read
@@ -139,10 +142,25 @@ def main():
         #   '금속/반금속' 이라 라벨을 붙이긴 하지만 그건 계산을 막지 않는다 —
         #   그 숫자가 db 갭 표에 들어가면 그때는 못 잡는다. 아예 안 만든다.
         ecls = EC.get(tag)
-        skip_gap = ecls.get("class") == "metal"
-        if ecls.get("class") == "unregistered":
+        ecl = ecls.get("class")
+        # ★ 자체검토 P1-8 — 레지스트리는 undetermined 를 "NEB·갭 **모두** 막는다" 라고
+        #   써 놨는데 코드는 metal 만 막고 있었다. 그래서 lindo2/nd2o3/nd2s3 이 여전히
+        #   03 을 만들고 gap.json 에 −0.02 eV 를 "금속/반금속(겹침)" 으로 남겼다 —
+        #   레지스트리가 "방법의 실패지 금속성이 아니다" 라고 못박은 바로 그 숫자다.
+        #   ⚠ 진단용으로 뽑고 싶으면 --diagnose_undetermined 로 명시적으로 켠다.
+        skip_gap = ecl == "metal" or (ecl == "undetermined" and not a.diagnose_undetermined)
+        skip_reason = {"metal": "electronic_class=metal — 금속엔 VBM/CBM 이 없다",
+                       "undetermined": "electronic_class=undetermined — "
+                                       + str(ecls.get("blocker", ""))[:160]}.get(ecl, "")
+        # ★ 자체검토 P1-9 — unregistered 를 경고만 하고 절연체처럼 진행하고 있었다.
+        #   로더 docstring("미등록을 조용히 절연체로 간주하지 않는다")과 어긋났고,
+        #   다른 소비자는 전부 차단하는데 여기만 통과였다. 실제 미등록 태그가 이미 있다
+        #   (sei_li3po4_mp-13725 → li3po4). 갭 단계만 막고 DOS 는 돌게 둔다.
+        if ecl == "unregistered":
             print(f"\n⚠ {tag} 가 sei_electronic_class.json 에 없다 — 절연체로 **가정하지 않는다**. "
-                  f"레지스트리에 등록한 뒤 다시 돌릴 것 (금속이면 갭 단계가 무의미하다)")
+                  f"갭 단계를 건너뛴다. 레지스트리에 등록한 뒤 다시 돌릴 것")
+            skip_gap = True
+            skip_reason = "레지스트리 미등록 — 금속/절연체를 추측하지 않는다"
 
         d = os.path.join(a.work, tag)
         os.makedirs(d, exist_ok=True)
@@ -253,8 +271,8 @@ def main():
             if os.path.isfile(gap_in):
                 os.remove(gap_in)
             json.dump({"tag": tag, "gap": "NOT_APPLICABLE",
-                       "reason": "electronic_class=metal — 금속에는 VBM/CBM 이 없다. "
-                                 "fixed-occ nscf 는 숫자를 내지만 그 숫자는 갭이 아니다.",
+                       "electronic_class": ecl,
+                       "reason": skip_reason or "electronic_class 게이트",
                        "electronic_class_evidence": ecls.get("evidence"),
                        "do_instead": "04~06 (DOS/PDOS) 로 E_F 에 상태가 있는지 확인한다. "
                                      "그게 금속 선언의 근거가 된다.",
@@ -291,9 +309,8 @@ def main():
                  if spinpol else
                  f"(점유 {int(nelec/2)} + 빈 {nbnd - int(nelec/2)})"))
         if skip_gap:
-            print(f"  ⛔ electronic_class=metal → **03(갭) 단계를 만들지 않았다.** "
-                  f"금속엔 VBM/CBM 이 없다 — 04~06 DOS/PDOS 로 E_F 상태를 본다. "
-                  f"사유: 03_GAP_NOT_APPLICABLE.json")
+            print(f"  ⛔ **03(갭) 단계를 만들지 않았다** — {skip_reason}")
+            print(f"     04~06 (DOS/PDOS) 는 그대로 돈다. 사유: 03_GAP_NOT_APPLICABLE.json")
         if note:
             print(note)
         made.append(tag)

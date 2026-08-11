@@ -27,7 +27,9 @@ ts(){ echo "[$(date +%H:%M:%S)] $*"; }
 #   "unable to launch ... could not access or execute" 만 남기고 조용히 끝나는데,
 #   러너는 'convergence achieved' 가 없다는 이유로 "경로 미수렴" 이라고 보고했다.
 #   → 2시간을 아무것도 안 돌고 흘려보냈다. 없는 건 없다고 즉시 말해야 한다.
-if [ ! -x "$NEB" ]; then
+MODE=neb
+case "${1:-}" in endpoints) MODE=endpoints; shift;; ci) MODE=ci; shift;; esac
+if [ "$MODE" = neb ] && [ ! -x "$NEB" ]; then
   ts "⛔ neb.x 를 찾을 수 없거나 실행 권한이 없다: $NEB"
   ts "   QE-GPU 빌드에 neb.x 가 안 들어간 경우가 흔하다(pw.x/dos.x/projwfc.x 만 빌드)."
   ts "   확인:"
@@ -38,6 +40,9 @@ if [ ! -x "$NEB" ]; then
   exit 1
 fi
 
+# ⛔ 2026-08-11 자체검토 P1-6 — 위 neb.x 검사는 **NEB 모드에만** 걸어야 한다.
+#   `endpoints` 는 pw.x 만 쓰는데, 정작 위 주석이 "QE-GPU 빌드에 neb.x 가 없는 경우가
+#   흔하다" 고 경고해 놓고 그 상황에서 끝점 이완조차 막고 있었다. 모드를 먼저 읽는다.
 LOCK=/tmp/sei_neb.lock; exec 9>"$LOCK"
 command -v flock >/dev/null && { flock -n 9 || { ts "⛔ 이미 돈다"; exit 0; }; }
 
@@ -53,9 +58,10 @@ fi
 
 # 싼 것부터 — 원자 수 순서를 코드에 박아 둔다(알파벳 순이면 li3po4g 가 먼저 온다)
 # 2026-08-11 6종으로 확장. lindo2 는 frozen-4f PP 게이트가 열려야 입력이 생긴다(todo #27).
-ORDER=(li2s li2o licl li3p li3po4g lindo2)
-MODE=neb
-if [ "${1:-}" = "endpoints" ]; then MODE=endpoints; shift; fi
+# ⚠ P1-5 — li3nd 가 빠져 있어 `run_sei_neb.sh` 도 `endpoints` 도 li3nd 를 안 건드렸다.
+#   ⛔ li3nd·lindo2 는 **Nd frozen-4f PP 가 있어야** 입력이 생긴다(todo #27) — 없으면
+#     build 단계에서 skip 되므로 여기 있어도 안전하다. 순서는 원자 수 오름차순.
+ORDER=(li2s li2o licl li3p li3nd li3po4g lindo2)
 TARGETS=("$@"); [ ${#TARGETS[@]} -eq 0 ] && TARGETS=("${ORDER[@]}")
 
 # ★ P0-2 (Codex) — vacancy 끝점을 먼저 이완한다. 미이완 끝점이 경로 최고점이 되면
@@ -78,6 +84,24 @@ if [ "$MODE" = endpoints ]; then
   exit 0
 fi
 
+# ★ P0-5 (자체검토) — 문서화된 2단계 CI 를 러너가 실제로 돌릴 수 있게 한다.
+#   QE 권고: no-CI 로 먼저 수렴 → restart + CI. 그런데 옛 코드는 (a) ci 가 지문에 들어가
+#   있어 재생성하면 거부당하고 (b) 안내가 "*.path 를 지우라" 인데 restart 는 바로 그
+#   prefix.path 가 있어야 돈다. → CI 를 지문에서 빼고, 여기서 neb.out 만 백업한다.
+if [ "$MODE" = ci ]; then
+  for t in "${TARGETS[@]}"; do
+    d="$WORK/$t"; [ -d "$d" ] || { ts "⛔ 없음: $d"; continue; }
+    grep -aq "neb: convergence achieved" "$d/neb.out" 2>/dev/null || {
+      ts "⛔ $t: 1단계(no-CI)가 아직 수렴 안 했다 — CI 로 못 넘어간다"; continue; }
+    ts "  ▶ $t: no-CI 수렴본을 백업하고 CI 단계 입력을 만든다"
+    mv "$d/neb.out" "$d/neb.out.noCI"          # ⚠ *.path 와 tmp 는 **남긴다** (restart 용)
+    ts "     이제 생성기를 CI 로 다시 돌릴 것 (같은 WORK):"
+    ts "       python3 tools/sei/build_neb_inputs.py --only $t --ci_scheme auto --restart"
+    ts "     그 뒤:  bash tools/sei/run_sei_neb.sh $t"
+  done
+  exit 0
+fi
+
 for t in "${TARGETS[@]}"; do
   d="$WORK/$t"
   [ -f "$d/neb.in" ] || { ts "⛔ 없음: $d/neb.in — build_neb_inputs.py 부터"; continue; }
@@ -92,10 +116,31 @@ for t in "${TARGETS[@]}"; do
     ts "     새 WORK 로 돌리거나 이 폴더의 neb.out·tmp·*.path 를 지우고 다시 걸 것."
     cd - >/dev/null; continue
   fi
-  if grep -aq "neb: convergence achieved" neb.out 2>/dev/null; then
-    ts "  ✓ 이미 수렴 — 건너뜀"; cd - >/dev/null; continue
+  # ⛔⛔ 2026-08-11 자체검토 P0-4 — **지문 없는 레거시 산출물**이 방어를 통과했다.
+  #   기존 /data/work/runs/sei_neb/li2s/ 에는 옛 규약(tot_charge=+1 · min_cell 8.02 ·
+  #   끝점 미이완) 수렴본이 있는데 .protocol_hash 는 없다. 그러면 OLDH="" 라 위 거부를
+  #   빠져나가고, 아래 '이미 수렴' 으로 **새 meta.json + 옛 에너지**가 결합된다 —
+  #   P0-3 이 막으려던 바로 그 조합이 하필 그게 일어날 수 있는 유일한 폴더에서 뚫렸다.
+  #   게다가 옛 코드는 지문 기록이 스킵 **뒤**라 그 폴더가 영구히 무장해제됐다.
+  if [ -z "$OLDH" ] && [ -s neb.out ]; then
+    ts "  ⛔ 지문 없는 옛 neb.out 이 있다 — **어느 프로토콜로 돈 것인지 알 수 없다**."
+    ts "     재사용하지 않는다. 옛 결과를 보존하려면 옮기고, 버리려면 지울 것:"
+    ts "       mv neb.out neb.out.legacy_pre20260811 && rm -rf tmp *.path"
+    cd - >/dev/null; continue
   fi
+  # ★ 지문은 **스킵 판정보다 먼저** 기록한다 (옛 코드는 뒤에 있어 영영 안 써졌다)
   [ -n "$NEWH" ] && echo "$NEWH" > .protocol_hash
+  # ★ P0-5 — CI 단계는 물리가 아니라 수렴 전략이라 지문에서 뺐다. 대신 여기 기록한다.
+  CIS=$(python3 -c "import json;print(json.load(open('meta.json')).get('ci_scheme',''))" 2>/dev/null)
+  [ -n "$CIS" ] && echo "$CIS" > .ci_stage
+  if grep -aq "neb: convergence achieved" neb.out 2>/dev/null; then
+    if [ "$CIS" = "no-CI" ]; then
+      ts "  ✓ no-CI 수렴 — 2단계(CI)로 가려면:  bash tools/sei/run_sei_neb.sh ci $t"
+    else
+      ts "  ✓ 이미 수렴 — 건너뜀"
+    fi
+    cd - >/dev/null; continue
+  fi
   # ⚠ neb.x 는 재시작 파일(prefix.path)이 있으면 이어서 돈다. 지우지 말 것.
   nat=$(grep -a -m1 "nat" neb.in | grep -oE "[0-9]+")
   ts "  ▶ neb.x (원자 ${nat:-?})  — 진행은 neb.out 의 'activation energy' 줄로 본다"

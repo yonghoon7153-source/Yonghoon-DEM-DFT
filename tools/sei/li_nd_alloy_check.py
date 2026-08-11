@@ -39,7 +39,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default=OUT)
     ap.add_argument("--thermo", default="GGA_GGA+U",
-                    help="thermo type 고정 — release 마다 우선순위가 달라질 수 있다")
+                    help="⚠ 기록 전용 — summary.search 는 thermo_type 인자를 받지 않는다. "
+                         "MP 의 summary 는 release 기본 thermo 를 쓴다")
     a = ap.parse_args()
 
     key = os.environ.get("MP_API_KEY")
@@ -47,8 +48,16 @@ def main():
         sys.exit("⛔ MP_API_KEY 가 없다.  export MP_API_KEY=...")
     from mp_api.client import MPRester
 
+    # ⛔ 2026-08-11 자체검토 P1-13 — 옛 코드는 `thermo_type: a.thermo` 를 기록했는데
+    #   실제 쿼리(`materials.summary.search`)는 thermo_type 인자를 **안 받는다**.
+    #   즉 JSON 이 적용되지도 않은 조건을 provenance 로 주장하고 있었다.
+    #   원고 근거로 쓰는 파일이라 이런 거짓말이 제일 위험하다. 이름으로 사실을 말한다.
     prov = {"utc": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
-            "thermo_type": a.thermo}
+            "thermo_type_requested_NOT_APPLIED": a.thermo,
+            "thermo_type_note": "materials.summary.search 는 thermo_type 을 받지 않는다 — "
+                                "이 결과는 해당 MP release 의 **기본 thermo** 로 계산된 "
+                                "energy_above_hull/is_stable 이다. 특정 thermo 를 고정하려면 "
+                                "m.thermo.search(..., thermo_types=[...]) 로 갈아탈 것."}
     for mod in ("mp_api", "pymatgen", "emmet"):
         try:
             import importlib.metadata as md
@@ -141,8 +150,10 @@ def main():
     else:
         near = b["closest_metastable"][0] if b["closest_metastable"] else None
         # ⚠ 후보가 정말 0개일 때 포맷이 죽지 않게 (Codex 지적 — 이 도구가 확인하려는 바로 그 경로)
+        _h = near.get("e_above_hull_eV_per_atom") if near else None
         neartxt = (f"가장 가까운 준안정상은 {near['formula']}({near['material_id']}) "
-                   f"hull +{near['e_above_hull_eV_per_atom']:.3f} eV/atom"
+                   + (f"hull +{_h:.3f} eV/atom" if isinstance(_h, (int, float))
+                      else "hull 값 없음")
                    + (", theoretical(실험 보고 없음)" if near.get("theoretical") else "")
                    if near else "Li–Nd 이원 화합물 엔트리 자체가 하나도 없다")
         res["verdict"] = "NO_STABLE_ORDERED_LI_ND_PHASE_IN_MP"
@@ -160,8 +171,10 @@ def main():
           f"mp_api {res['provenance'].get('mp_api_version')}")
     print(f"=== Li–Nd === 이원화합물 {b['n_binary_compounds']} · **안정 {b['n_stable']}**")
     for r in b["closest_metastable"]:
+        h = r["e_above_hull_eV_per_atom"]
         print(f"   {r['material_id']:14s} {r['formula']:10s} {str(r['spacegroup']):10s} "
-              f"hull +{r['e_above_hull_eV_per_atom']:.4f}  theo={r['theoretical']}")
+              + (f"hull +{h:.4f}" if isinstance(h, (int, float)) else "hull    N/A")
+              + f"  theo={r['theoretical']}")
     print("=== 양성 대조 (쿼리 건전성 — 여기서 0 이면 판정 무효) ===")
     for cs, v in res["positive_controls"].items():
         print(f"   {cs:7s} 안정 {v.get('n_stable', '?')}  {','.join(v.get('stable_formulas', [])[:4])}"

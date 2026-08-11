@@ -744,21 +744,33 @@ def sei_axes() -> dict:
                       .get("results", {}).values() if v.get("status") == "ok")
         except (OSError, ValueError):
             pass
-    neb = {}
+    neb, neb_retracted, neb_reason = {}, False, None
     if np_.is_file():
         try:
-            neb = _j.loads(np_.read_text(encoding="utf-8")).get("results", {})
+            _nj = _j.loads(np_.read_text(encoding="utf-8"))
+            neb = _nj.get("results", {})
+            # ⛔ 2026-08-11 — 이 파일은 철회될 수 있다 (전하 규약 오류 + 끝점 미이완).
+            #   철회본은 results 를 results_OLD_INVALID 로 옮겨 두므로 위 get 이 {} 가 되는데,
+            #   그러면 대시보드가 "계산 중" 이라고 **거짓말**을 한다. 철회는 철회라고 말한다.
+            neb_retracted = bool(_nj.get("retracted"))
+            neb_reason = _nj.get("retraction_reason")
         except (OSError, ValueError):
             neb = {}
     n_neb = sum(1 for v in neb.values() if v.get("citable"))
     return {"axes": [
-        {"n": "① Li⁺ 확산장벽", "state": ("완료" if n_neb >= 3 else "진행 중"),
-         "done": n_neb >= 3,
-         "detail": (f"DFT CI-NEB {n_neb}/3 인용 가능 (Li₂S · Li₃P · Li₃PO₄γ)" if neb else
-                    "DFT CI-NEB 계산 중 (Li₂S · Li₃P · Li₃PO₄γ)"),
+        {"n": "① Li⁺ 확산장벽",
+         "state": ("⛔ 철회 — 재계산 중" if neb_retracted else
+                   ("완료" if n_neb >= 6 else "진행 중")),
+         "done": (not neb_retracted) and n_neb >= 6,
+         "detail": ("⛔ 기존 NEB 결과 전건 철회 (2026-08-11) — 재계산 대기. "
+                    "협업자 요청 6종: Li₂O · Li₃PO₄γ · LiNdO₂ · LiCl · Li₂S · Li₃P"
+                    if neb_retracted else
+                    (f"DFT CI-NEB {n_neb}/6 인용 가능" if neb else
+                     "DFT CI-NEB 계산 중 (협업자 요청 6종)")),
          "why": ("BVSE 는 화학계를 넘나드는 비교에 못 쓴다 — 하필 Figure 5 의 주인공 "
                  "Li₂S(BVS 1.56)·LiCl(2.74)이 못 쓰는 쪽이고 Li₃P 는 파라미터가 없다. "
-                 "그래서 NEB 이 대안이 아니라 유일한 경로다.")},
+                 "그래서 NEB 이 대안이 아니라 유일한 경로다."
+                 + (f"  ⛔ 철회 사유: {str(neb_reason)[:400]}" if neb_retracted else ""))},
         {"n": "② 형성 전위", "state": "완료", "done": True,
          "detail": f"{n_v}종 + 분해 산물 (MP 대분배 위상도)",
          "why": "열역학적 안정 구간이지 생성 속도가 아니다 — '이 전위 밖에서는 존재할 수 없다'로 읽는다."},

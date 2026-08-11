@@ -16,6 +16,7 @@
   export MP_API_KEY=...                       # ⚠ 파일에 넣지 말 것
   python3 tools/sei/fetch_sei_structures.py --list
   python3 tools/sei/fetch_sei_structures.py --get Li2O=mp-1960 LiCl=mp-22905 ...
+  python3 tools/sei/fetch_sei_structures.py --get Li3Nd=mp-976264      # 금속 · theoretical
 """
 import argparse
 import json
@@ -23,7 +24,12 @@ import os
 import sys
 from datetime import datetime
 
-FORMULAS = ["Li2O", "Li2S", "LiCl", "Li3P", "Li3PO4", "LiNdO2"]
+# ⚠ Li3Nd 는 SEI 분해 산물이 아니라 **Xu 2026 §2.6 의 "Li–Nd alloy 계면상" 주장을
+#   우리가 직접 재기 위한** 대상이다 (2026-08-11 저자 요청). 다른 6종과 성격이 다르다:
+#   · **금속**이라 갭·NEB 규약이 갈린다 (db/properties/sei_electronic_class.json)
+#   · 우리 P2 감사에서 Li–Nd 안정 ordered 상은 0개, mp-976264 는 hull +0.197 eV/atom ·
+#     theoretical=True 다 — **실험 보고가 없는 예측 구조**임을 반드시 밝히고 인용한다.
+FORMULAS = ["Li2O", "Li2S", "LiCl", "Li3P", "Li3PO4", "LiNdO2", "Li3Nd"]
 OUTDIR = "db/structures"
 PROV = "db/properties/sei_structures_provenance.json"
 
@@ -91,6 +97,10 @@ def do_get(pairs):
                 "files": [f"{OUTDIR}/{base}.vasp", f"{OUTDIR}/{base}.cif"],
                 "source": "Materials Project (mp_api)", "fetched": datetime.now().strftime("%Y-%m-%d"),
             }
+            if d.theoretical:
+                prov[f]["theoretical_warning"] = (
+                    "⚠ 실험 보고가 없는 **예측 구조**다. 이 구조로 낸 값은 "
+                    "'MP 에 등록된 예측 구조 기준' 이라고 반드시 밝혀 인용한다.")
             flag = "⚠ 예측만" if d.theoretical else "✅ 관측"
             print(f"✓ {f:8s} {mid:14s} {d.symmetry.symbol:12s} {d.nsites:3d}원자 "
                   f"E_hull {d.energy_above_hull:.4f}  {flag}")

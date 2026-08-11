@@ -128,19 +128,37 @@ def main():
                 "잔존물일 수 있다(설정이 다른 04 에서 나왔을 수 있음). 갭은 03 단계 값이라 "
                 "영향 없지만, **DOS/PDOS 곡선은 재실행 후 다시 회수할 것.**")
 
+        # ⚠⚠ 2026-08-11 자체검토 P1-7 — electronic_class=metal/undetermined 상의
+        #   gap.json 은 `{"gap": null, "verdict": "NOT_APPLICABLE(metal)"}` 라 vbm/cbm 이
+        #   **없다**. 아래 CSV 들이 전부 `g["vbm"]` 로 에너지 영점을 잡으므로 KeyError 로
+        #   죽는다 — 그것도 그 WORK 의 **모든** 상에 대한 결산이 통째로 날아간다.
+        #   금속은 VBM 이 없으니 영점을 **E_F** 로 잡아야 맞다. 없으면 0 으로 두고 밝힌다.
+        _zero = g.get("vbm")
+        _zero_label = "VBM"
+        if _zero is None:
+            _zero = g.get("efermi", 0.0)
+            _zero_label = "E_F" if g.get("efermi") is not None else "0 (no reference)"
+        _gap_txt = (f"{g['gap']:.3f} eV" if g.get("gap") is not None
+                    else f"NOT_APPLICABLE ({g.get('verdict', 'metal/undetermined')})")
+
         # ── total DOS (dos.x): E, dos, int_dos ──────────────────────────────
         dosf = glob.glob(os.path.join(d, "*.dos"))
         if dosf:
             rows = read_cols(dosf[0], 3)
             if rows:
                 p = os.path.join(OUT_DIR, f"{t}_dos.csv")
-                write_csv(p, ["E_eV", "E_minus_VBM_eV", "DOS_states_per_eV",
-                              "integrated_DOS_states"],
-                          [[r[0], r[0] - g["vbm"], r[1], r[2]] for r in rows],
+                write_csv(p, ["E_eV", f"E_minus_{_zero_label.split()[0]}_eV",
+                              "DOS_states_per_eV", "integrated_DOS_states"],
+                          [[r[0], r[0] - _zero, r[1], r[2]] for r in rows],
                           f"{t} total DOS (QE dos.x, degauss 0.007 Ry). "
-                          f"VBM {g['vbm']:.3f} / CBM {g['cbm']:.3f} / gap {g['gap']:.3f} eV "
-                          f"from fixed-occ nscf eigenvalues. "
-                          f"DO NOT read the gap off this curve (smearing underestimates ~0.3 eV).")
+                          f"Energy zero = {_zero_label} ({_zero:.3f} eV). Gap: {_gap_txt}. "
+                          + ("Gap from fixed-occ nscf eigenvalues. "
+                             "DO NOT read the gap off this curve "
+                             "(smearing underestimates ~0.3 eV)."
+                             if g.get("gap") is not None else
+                             "This phase has no gap by declaration "
+                             "(db/properties/sei_electronic_class.json) — "
+                             "the curve is for E_F occupancy inspection only."))
                 g["files"]["dos_csv"] = p; made.append(p)
 
         # ── PDOS (projwfc): 원소·궤도로 합산 ────────────────────────────────
@@ -166,12 +184,15 @@ def main():
         if egrid and cols:
             keys = sorted(cols)
             p = os.path.join(OUT_DIR, f"{t}_pdos.csv")
-            write_csv(p, ["E_eV", "E_minus_VBM_eV"] + keys,
-                      [[egrid[i], egrid[i] - g["vbm"]] + [cols[k][i] for k in keys]
+            write_csv(p, ["E_eV", f"E_minus_{_zero_label.split()[0]}_eV"] + keys,
+                      [[egrid[i], egrid[i] - _zero] + [cols[k][i] for k in keys]
                        for i in range(len(egrid))],
                       f"{t} PDOS summed by element+orbital (QE projwfc.x). "
-                      f"Columns are states/eV. VBM {g['vbm']:.3f} eV. "
-                      f"Gap is the fixed-occ nscf value ({g['gap']:.3f} eV), not a DOS threshold.")
+                      f"Columns are states/eV. Energy zero = {_zero_label} ({_zero:.3f} eV). "
+                      f"Gap: {_gap_txt}"
+                      + ("" if g.get("gap") is not None else
+                         " — no gap by declaration; use this to check whether "
+                         "states exist at E_F and what fraction is Nd_f."))
             g["files"]["pdos_csv"] = p; made.append(p)
             g["pdos_channels"] = keys
         # ★ Nd 판정은 종결됐다(2026-08-07) — 회수기가 매번 다시 찍어 기록이 안 날아가게 한다.
@@ -181,7 +202,9 @@ def main():
         res[t] = g
         mark = "⚠4f" if nd else "   "
         stale = "" if fresh or not g["files"] else "  ⚠ STALE 곡선 (05 미완주)"
-        print(f"  ✓ {t:26s} gap {g['gap']:7.3f} eV {mark} "
+        print(f"  ✓ {t:26s} gap "
+              + (f"{g['gap']:7.3f} eV" if g.get("gap") is not None else "    N/A   ")
+              + f" {mark} "
               f"{'dos' if 'dos_csv' in g['files'] else '   '} "
               f"{'pdos' if 'pdos_csv' in g['files'] else '    '}{stale}")
 

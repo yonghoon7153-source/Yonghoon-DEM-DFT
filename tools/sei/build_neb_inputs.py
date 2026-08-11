@@ -240,7 +240,8 @@ def load_relaxed(tag, path, relaxed_from):
     return at, outp
 
 
-def protocol_hash(tag, a, q, kpts, nat, cell) -> str:
+def protocol_hash(tag, a, q, kpts, nat, cell, smear=None, degauss=None,
+                  ecls=None, pps=None) -> str:
     """입력 규약 지문 — 프로토콜이 바뀌면 옛 neb.out/tmp/prefix.path 를 재사용하면 안 된다.
 
     ★ 2026-08-11 (Codex 검토 P0-3) — 같은 WORK 에 새 입력을 쓰면 runner 가 옛 neb.out 의
@@ -248,11 +249,22 @@ def protocol_hash(tag, a, q, kpts, nat, cell) -> str:
       기존 li2s 는 min_cell 8.02 인데 새 기본은 --min_l 10 이라 실제로 일어날 수 있었다.
     """
     import hashlib
+    # ★ 2026-08-11 자체검토 P0-5 / P1-1 — 두 가지를 고쳤다.
+    #  P0-5: `ci` 를 지문에서 **뺀다**. 문서화된 2단계(no-CI 수렴 → restart+CI)가
+    #        지문을 바꿔 러너에게 거부당했고, 러너 안내대로 prefix.path 를 지우면
+    #        restart 자체가 깨진다. CI 단계는 물리(계·전하·격자)가 아니라 **수렴 전략**이다.
+    #        → 별도로 `.ci_stage` 파일에 기록한다.
+    #  P1-1: smearing/degauss/electronic_class/PP 파일명이 빠져 있었다. 실측 충돌:
+    #        `--vacancy_charge neutral` 이면 insulator(q=0,gaussian 0.005)와
+    #        metal(q=0,mv 0.02)의 지문이 **동일**했다. PP 를 frozen-4f 로 갈아끼워도
+    #        지문이 그대로였다(todo #27 이 오면 바로 물릴 함정).
     payload = {"tag": tag, "ecutwfc": ECUTWFC, "ecutrho": ECUTRHO, "q": q,
                "images": a.images, "path_thr": a.path_thr, "kpts": list(kpts),
-               "nat": nat, "min_l": a.min_l, "ci": a.ci_scheme,
+               "nat": nat, "min_l": a.min_l,
                "cell": [round(float(x), 6) for v in cell for x in v],
-               "vacancy_charge": a.vacancy_charge,
+               "smearing": smear, "degauss": degauss,
+               "electronic_class": (ecls or {}).get("class"),
+               "pseudos": dict(sorted((pps or {}).items())),
                "endpoints_relaxed": not a.allow_unrelaxed_endpoints}
     return hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()[:12]
 
@@ -263,7 +275,9 @@ def build(tag, path, disp, a, pool):
     #   차단이 전부 여기서 갈린다. 미등록 상은 추측하지 않고 막는다 (Li₃Nd 함정의 입구).
     ecls = EC.get(tag)
     why_blocked = EC.blocked_reason(tag)
-    if why_blocked and not a.ignore_electronic_class:
+    # ⚠ --plan(비용 산정)은 입력을 안 만드니 게이트를 걸지 않는다 — 막으면 li3nd 비용을
+    #   재 볼 수조차 없다. 다만 사유는 찍어서 "계획엔 있지만 지금은 못 돈다" 를 보이게 한다.
+    if why_blocked and not a.ignore_electronic_class and not a.plan:
         return {"tag": tag, "skip": f"electronic_class 게이트 — {why_blocked}"}
     is_metal = ecls.get("class") == "metal"
     # ── 이완본 출발 (기본). --allow_unrelaxed 는 계획/디버그 전용 탈출구다 ──────
@@ -397,12 +411,28 @@ def build(tag, path, disp, a, pool):
             rel.append("  %16.10f %16.10f %16.10f" % tuple(v))
         open(os.path.join(epd, "relax.in"), "w").write("\n".join(rel) + "\n")
         # 이미 이완된 게 있으면 그 좌표를 끝점으로 승계한다 (verified-carry)
+        # ★ 끝점 이완 지문 (자체검토 P1-4) — relax.in 은 매 실행 덮어써지는데 relax.out 은
+        #   그대로다. 원자 수만 같으면 **옛 설정(다른 q·k·PP)의 좌표가 조용히 승계**된다.
+        #   그러면 끝점과 경로가 다른 조건이 되는데, 그게 이번 리뷰의 1번 걱정이었다.
+        import hashlib as _hl
+        ep_sig = _hl.sha256(json.dumps(
+            {"q": q, "smear": smear, "degauss": degauss, "kpts": list(info["kpts"]),
+             "nat": nat, "ecut": [ECUTWFC, ECUTRHO],
+             "cell": [round(float(x), 6) for v in at.cell.array for x in v],
+             "pps": {e: pool[e] for e in els}}, sort_keys=True).encode()).hexdigest()[:12]
+        sigp = os.path.join(epd, ".ep_hash")
         outp = os.path.join(epd, "relax.out")
         got = None
-        if os.path.isfile(outp):
+        old_sig = open(sigp).read().strip() if os.path.isfile(sigp) else ""
+        if os.path.isfile(outp) and old_sig and old_sig != ep_sig:
+            print(f"   ⚠ {tag}/{name}: 끝점 이완 설정이 바뀌었다 ({old_sig} → {ep_sig}) "
+                  f"— 옛 relax.out 을 승계하지 않는다. 다시 이완할 것")
+        elif os.path.isfile(outp):
             txt = open(outp, errors="ignore").read()
             if "JOB DONE" in txt and "Begin final coordinates" in txt:
-                blk = txt[txt.rfind("Begin final coordinates"):]
+                i2 = txt.rfind("Begin final coordinates")
+                e2 = txt.find("End final coordinates", i2)
+                blk = txt[i2:e2 if e2 > 0 else len(txt)]
                 rows2 = []
                 import re as _re
                 mm = _re.search(r"ATOMIC_POSITIONS\s*\(?(\w+)", blk)
@@ -411,8 +441,15 @@ def build(tag, path, disp, a, pool):
                         pr = l.split()
                         if len(pr) >= 4 and _re.match(r"^[A-Z][a-z]?\d*$", pr[0]):
                             rows2.append((pr[0], [float(pr[1]), float(pr[2]), float(pr[3])]))
-                if len(rows2) == nat and mm.group(1).lower() == "angstrom":
+                # ⚠ 개수만 맞추면 **다른 상의 relax.out** 이나 종별 재정렬본이 통과해
+                #   좌표가 엉뚱한 원소에 붙는다. 심볼 열까지 대조한다 (P1-2).
+                if len(rows2) == nat and mm.group(1).lower() == "angstrom" \
+                        and [r[0] for r in rows2] == [e for e, _ in imgs]:
                     got = rows2
+                elif rows2:
+                    print(f"   ⚠ {tag}/{name}: relax.out 의 원자 목록이 입력과 다르다 "
+                          f"— 승계하지 않는다 (다른 계의 산출물이 섞였는지 볼 것)")
+        open(sigp, "w").write(ep_sig + "\n")
         if got is None:
             ep_ready = False
         else:
@@ -421,6 +458,24 @@ def build(tag, path, disp, a, pool):
             else:
                 last = got
     info["endpoints_relaxed"] = ep_ready
+    # ★ 자체검토 P1-3 — **이완 뒤에** 두 끝점이 아직 서로 다른 구조인지 본다.
+    #   끝점 이완에서 뛰는 Li 가 공공으로 굴러떨어지면(무장벽) first ≈ last 가 되어
+    #   Ea≈0 이 나온다 — collect_neb 가 사후에 잡는 그 붕괴를, 여기서 공짜로 잡는다.
+    #   ⚠ 옛 코드의 arrival_err 는 **이완 전** 좌표로 계산돼 meta 에 실렸다(provenance 거짓).
+    if ep_ready:
+        dmax = max(float(np.linalg.norm(np.asarray(f[1], float) - np.asarray(l[1], float)))
+                   for f, l in zip(first, last))
+        info["endpoint_displacement_max_A"] = dmax
+        if dmax < 0.5:
+            info["skip"] = (f"이완된 두 끝점이 사실상 같은 구조다 (최대 변위 {dmax:.3f} Å < 0.5) "
+                            f"— 뛰는 Li 가 이완 중 공공으로 굴러떨어졌을 수 있다. "
+                            f"NEB 을 걸면 Ea≈0 이 나온다. 끝점 좌표를 직접 볼 것: "
+                            f"{os.path.join(d, 'ep_initial')} · {os.path.join(d, 'ep_final')}")
+            return info
+        # 이완 후 좌표로 도달 검산을 다시 한다 (meta 에 실리는 값이 실제 끝점이어야 한다)
+        info["arrival_err_pre_relax"] = info.get("arrival_err")
+    else:
+        info["endpoint_displacement_max_A"] = None
     if not ep_ready and not a.allow_unrelaxed_endpoints:
         info["skip"] = ("vacancy 끝점 미이완 — 먼저 `bash tools/sei/run_sei_neb.sh endpoints "
                         f"{tag}` 로 {tag}/ep_initial · ep_final 을 이완할 것. "
@@ -478,7 +533,9 @@ def build(tag, path, disp, a, pool):
     _j = json
     _j.dump({"tag": tag, "disp": disp, "supercell": list(rep), "nat": nat,
              "hop_distance_A": hop["d"], "nelec": nelec_vac,
-             "protocol_hash": protocol_hash(tag, a, q, info["kpts"], nat, at.cell.array),
+             "protocol_hash": protocol_hash(tag, a, q, info["kpts"], nat, at.cell.array,
+                                            smear=smear, degauss=degauss, ecls=ecls,
+                                            pps={e: pool[e] for e in els}),
              "endpoints_relaxed": info.get("endpoints_relaxed"),
              "ci_scheme": a.ci_scheme,
              "tot_charge": q, "vacancy_charge": ("neutral" if is_metal else a.vacancy_charge),
@@ -496,6 +553,8 @@ def build(tag, path, disp, a, pool):
              "pair_orbits": hop.get("pair_orbits"),
              "neighbor_shells": hop.get("neighbor_shells"),
              "arrival_err_A": info["arrival_err"],
+             "arrival_err_is_pre_relax": ep_ready,
+             "endpoint_displacement_max_A": info.get("endpoint_displacement_max_A"),
              "geometry_source": info["geometry_source"],
              "_note": ("endpoints_symmetry_equivalent=false 면 정·역 장벽이 다른 게 정상이다 "
                        "— 그 차이는 두 Li 자리의 에너지 차다. 장거리 수송에 걸리는 유효 장벽은 "
@@ -539,6 +598,13 @@ def main():
                     help="vc-relax 산출물 뿌리 (기본: run_sei_dft.sh 의 WORK)")
     ap.add_argument("--allow_unrelaxed", action="store_true",
                     help="⚠ 비이완 MP 구조로 강행 — li3p Ea=0 사고의 원인. 디버그 전용")
+    # ⛔ 2026-08-11 자체검토 P0-1 — build() 가 이 인자를 참조하는데 정의가 없어서
+    #   **게이트가 걸리는 순간 AttributeError 로 죽었다**. 절연체는 short-circuit 으로
+    #   살아남고 lindo2 에서 처음 터져, 이번 분기의 주인공 두 상(lindo2·li3nd)만
+    #   깔끔한 skip 대신 traceback 이었다. 재현: --plan --only lindo2
+    ap.add_argument("--ignore_electronic_class", action="store_true",
+                    help="⚠ electronic_class 게이트 무시 — 디버그 전용. "
+                         "금속에 절연체 규약을 걸거나 4f 미해결 상을 강행하게 된다")
     ap.add_argument("--plan", action="store_true",
                     help="⚠ 비용만 보고 **입력을 만들지 않는다** (돌리기 전에 이걸 먼저)")
     a = ap.parse_args()

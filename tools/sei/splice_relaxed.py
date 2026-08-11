@@ -11,7 +11,7 @@
 
   python3 splice_relaxed.py --out 01_vcrelax.out --targets 02_scf.in 03_nscf_gap.in
 """
-import argparse, re, sys
+import argparse, os, re, sys
 
 
 def final_blocks(txt, nat):
@@ -46,7 +46,17 @@ def main():
         sys.exit("⛔ 'Begin final coordinates' 블록이 없거나 불완전하다 — "
                  "vc-relax 가 안 끝났다. 반쪽 기하를 쓰지 않고 중단한다.")
     cu, cb = cell; pu, pl = pos
+    missing = []
     for t in a.targets:
+        # ⛔ 2026-08-11 자체검토 P0-2 — 없는 타깃에서 FileNotFoundError 로 죽으면
+        #   러너의 `|| continue` 가 **그 상 전체를 01 직후 포기**한다. metal 상은
+        #   03(갭) 입력을 일부러 안 만들므로(build_dft_inputs) 정확히 이 경로를 탄다.
+        #   그러면 04~06(DOS/PDOS)이 안 돌고, 금속 확인 단계가 코드로 도달 불가해진다.
+        #   ⚠ 더 나쁜 건 02 는 이미 승계되고 04 는 안 된 **부분 승계** 상태로 남는 것이다.
+        if not os.path.isfile(t):
+            missing.append(t)
+            print(f"  ⏭ {t} 없음 — 건너뜀 (electronic_class=metal 이면 정상이다)")
+            continue
         s = open(t).read()
         s = re.sub(r"CELL_PARAMETERS[^\n]*\n(?:[^\n]*\n){3}",
                    f"CELL_PARAMETERS {cu}\n{cb}", s, count=1)
@@ -54,6 +64,8 @@ def main():
                    f"ATOMIC_POSITIONS {pu}\n" + "\n".join(pl) + "\n", s, count=1)
         open(t, "w").write(s)
         print(f"  기하 승계 → {t}")
+    if missing:
+        print(f"  ⚠ 승계 안 한 타깃 {len(missing)}개: {', '.join(missing)}")
     return 0
 
 

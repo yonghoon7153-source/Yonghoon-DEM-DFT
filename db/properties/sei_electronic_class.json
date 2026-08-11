@@ -5,7 +5,7 @@
   "classes": {
     "insulator": "갭이 열려 있다. Li 공공은 원자가띠에 정공을 만든다 → V_Li⁻ (tot_charge = −1) + jellium. 갭 단계 유효.",
     "metal": "E_F 에 상태가 있다. 공공을 만들어도 전도전자가 스스로 가려준다 → **중성 공공 (tot_charge = 0)** + 금속용 smearing. ⛔ 갭 단계는 NOT_APPLICABLE — 숫자가 나와도 db 갭 표에 넣지 않는다.",
-    "undetermined": "우리 계산으로는 아직 판정할 수 없다. ⛔ **금속 선언이 아니다.** NEB·갭 모두 막는다."
+    "undetermined": "우리 계산으로는 아직 판정할 수 없다. ⛔ **금속 선언이 아니다.** NEB·갭 **모두** 막는다 (갭은 --diagnose_undetermined 로만 진단 생성). DOS/PDOS 는 돈다."
   },
   "evidence_levels": {
     "measured": "우리 fixed-occ nscf 고유값으로 갭이 실측됐다 (db/properties/sei_electronic.json).",
@@ -83,10 +83,12 @@
     "reason": "Codex 착수전 검토 + Li₃Nd 우선 착수 결정 (저자 요청). kb/methodology/li3nd_metal_protocol_note_2026_08_11.md §5 의 코드 수정 목록 1번.",
     "consumers": [
       "tools/sei/electronic_class.py (로더)",
-      "tools/sei/build_neb_inputs.py (전하 규약·smearing 분기)",
+      "tools/sei/build_neb_inputs.py (전하 규약·smearing 분기 · protocol_hash)",
       "tools/sei/collect_neb.py (차단 조건 분기)",
       "tools/sei/build_dft_inputs.py (갭 단계 실행 여부)",
-      "tools/sei/extract_gap.py (db 등재 여부)"
+      "tools/sei/extract_gap.py (db 등재 여부)",
+      "tools/sei/collect_results.py (DOS/PDOS 에너지 영점 — gap=None 이면 E_F 기준)",
+      "tools/sei/run_sei_dft.sh (03 입력 부재 처리)"
     ]
   }
 }

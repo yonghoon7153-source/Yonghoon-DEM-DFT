@@ -52,9 +52,22 @@ for t in "${TARGETS[@]}"; do
   #   tot_magnetization 을 고정해야 한다. 생성기가 가정한 3xN_Nd 와 scf 수렴값이 다르면
   #   전하밀도와 점유수가 어긋나 VBM > CBM 이 나온다 (2026-08-07 nd2o3: gap -6.460 eV).
   python3 "$REPO/tools/sei/sync_magnetization.py" "$d" || ts "  ⚠ 모멘트 동기화 실패"
-  run 03_nscf_gap.in 03_nscf_gap.out || continue
-  python3 "$REPO/tools/sei/extract_gap.py" --nscf 03_nscf_gap.out --tag "$t" \
-      --json "$d/gap.json" || ts "  ⚠ 갭 추출 실패"
+  # ⛔ 2026-08-11 자체검토 P0-3 — 03 입력이 **없는 게 정상**인 경우가 생겼다:
+  #   electronic_class=metal 이면 build_dft_inputs 가 갭 단계를 아예 안 만든다
+  #   (금속엔 VBM/CBM 이 없는데 fixed-occ 는 숫자를 내기 때문). 옛 러너는 없는 입력으로
+  #   pw.x 를 띄워 실패 → `|| continue` → **04~06 까지 통째로 스킵**했다.
+  #   금속은 03 이후(DOS/PDOS)가 전부인데 거기서 끊겼다 = 금속 확인 경로가 막혔다.
+  if [ -f 03_nscf_gap.in ]; then
+    run 03_nscf_gap.in 03_nscf_gap.out || continue
+    python3 "$REPO/tools/sei/extract_gap.py" --nscf 03_nscf_gap.out --tag "$t" \
+        --json "$d/gap.json" || ts "  ⚠ 갭 추출 실패"
+  else
+    ts "  ⏭ 03(갭) 입력 없음 — electronic_class=metal 로 의도된 것인지 확인:"
+    [ -f 03_GAP_NOT_APPLICABLE.json ] \
+      && { ts "     ✔ 사유 파일 있음 → DOS/PDOS 로 E_F 상태를 본다"; \
+           cp 03_GAP_NOT_APPLICABLE.json "$d/gap.json"; } \
+      || ts "     ⚠ 사유 파일도 없다 — build_dft_inputs.py 를 다시 돌릴 것"
+  fi
 
   run 04_nscf_dos.in 04_nscf_dos.out || continue
   run 05_dos.in 05_dos.out "$DOSX" || true
@@ -77,7 +90,14 @@ if not rows:
     print("  (아직 gap.json 이 없다)"); raise SystemExit
 print(f"  {'상':26s} {'VBM':>8s} {'CBM':>8s} {'gap(eV)':>9s}  판정")
 for d in rows:
-    print(f"  {d['tag']:26s} {d['vbm']:8.3f} {d['cbm']:8.3f} {d['gap']:9.3f}  {d['verdict']}")
+    # ⚠ P1-7 — metal 은 gap.json 에 vbm/cbm 이 **없다**(NOT_APPLICABLE). 옛 코드는
+    #   KeyError 로 죽어 그 WORK 의 **모든** 상에 대한 결산 표가 통째로 날아갔다.
+    if d.get('gap') is None:
+        print(f"  {d.get('tag','?'):26s} {'—':>8s} {'—':>8s} {'—':>9s}  "
+              f"{d.get('verdict', 'NOT_APPLICABLE')}")
+        continue
+    print(f"  {d['tag']:26s} {d.get('vbm', float('nan')):8.3f} "
+          f"{d.get('cbm', float('nan')):8.3f} {d['gap']:9.3f}  {d['verdict']}")
 print("\n  ⚠ PBE 갭은 이 계열에서 30-50% 과소평가된다 — 실험값과 나란히 놓지 말 것.")
 print("  ⚠ 갭은 fixed-occ nscf 고유값이다. DOS 문턱 판독 금지.")
 PYS
