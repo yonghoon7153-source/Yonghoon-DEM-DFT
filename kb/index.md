@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-11 · managed-files: 200
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-11 · managed-files: 201
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -23,11 +23,12 @@
 - `kb/physics/vacancy_effects.md` — Vacancy Effects in Argyrodite
 - `kb/physics/vacancy_mechanism_corrected_2026_05_08.md` — Vacancy + Halogen Distribution → Adhesion: Corrected Mechanism
 
-## methodology/ (33)
+## methodology/ (34)
 - `kb/methodology/PHASE1_QUICKSTART_doping.md` — Phase 1 Quickstart Guide
 - `kb/methodology/adhesion_calibration_decision_2026_05_17.md` — Adhesion Calibration Decision — 2026-05-17
 - `kb/methodology/adhesion_energy.md` — Adhesion Energy (Wad) Calculation
 - `kb/methodology/adhesion_methods_comparison.md` — Adhesion Methods Comparison — v2 / v5 crystalline / MQA 500K
+- `kb/methodology/agent_toolkit_adoption_2026_08_11.md` — 외부 에이전트 툴킷 3종(ponytail · caveman · superpowers) 검토와 선별 채택 ○미열람
 - `kb/methodology/argyrodite_mechanical_pipeline.md` — Argyrodite Mechanical Properties — Multi-scale Computational Pipeline (v2)
 - `kb/methodology/b2o3_analysis_plan.md` — B₂O₃-doped champion — 추가 분석 plan (배위·결합·testable)
 - `kb/methodology/b2o3_doping_chemistry.md` — B2O3 Doping in LPSCl1.6 (BO-LPSC) — Chemistry Framework
