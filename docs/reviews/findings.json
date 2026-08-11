@@ -65,9 +65,14 @@
    "id": "RC6-04b",
    "severity": "P1",
    "title": "live pre-purge window — parent crash 시 purge 상태가 영구 active",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
-   "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md"
+   "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
+   "claimed_fixed_sha": "ac35f5a2",
+   "evidence_tests": [
+    "webapp/test_pipeline_provenance.py"
+   ],
+   "partial_note": "candidate publish 로 crash window 를 닫았다 (SIGKILL 실증). Stage E per-run manifest·composite pointer 는 여전히 최종형 과제."
   },
   {
    "id": "RC6-05",
