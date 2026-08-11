@@ -120,31 +120,6 @@ def main():
         raise SystemExit("\n".join(msg))
     lo, hi = a.window
 
-    # ── 온도별 MSD 앙상블 평균 ────────────────────────────────────────────
-    if a.average:
-        # ⚠ 시간 격자가 같아야 평균이 의미 있다. 다르면 짧은 쪽에 맞춰 자른다.
-        byT = {}
-        for f in files:
-            d = json.load(open(f))
-            t, y = d.get("times_ps"), d.get("msd_Li_A2")
-            if not t or not y:
-                continue
-            byT.setdefault(int(d.get("T_K", 0)), []).append((t, y, f))
-        print(f"온도별 MSD 앙상블 평균 (창 {lo}–{hi} ps)")
-        print(f"{'T (K)':>7s} {'n_runs':>7s} {'beta':>6s} {'MSD@hi':>9s}  판정")
-        for T in sorted(byT):
-            runs = byT[T]
-            n = min(len(t) for t, _, _ in runs)
-            tt = runs[0][0][:n]
-            yy = [sum(r[1][i] for r in runs) / len(runs) for i in range(n)]
-            b = loglog_slope(tt, yy, lo, hi)
-            m = max((v for u, v in zip(tt, yy) if u <= hi), default=float("nan"))
-            ok = b is not None and BETA_OK[0] <= b <= BETA_OK[1] and m >= MSD_MIN_A2
-            print(f"{T:7d} {len(runs):7d} {b if b is None else round(b,2):>6} "
-                  f"{m:9.1f}  {'✓ 확산' if ok else '⛔ 여전히 비확산'}")
-        print("  ⚠ 평균이 살아나도 **개별 런은 여전히 못 쓴다** — config 산포를 평균 뒤에")
-        print("    다시 낼 수 없으므로, 오차막대는 다른 방법(블록 평균 등)으로 내야 한다.")
-        print()
     def case_label(path, width=34):
         """⚠ 2026-08-11 — 옛 라벨은 `[-3:-1]` 이라 전부 `d0.00_cfg0/T700` 로 찍혔다.
         어느 계(modelc/lpsocl/b2o3)의 어느 시드인지가 **표에서 사라져** 탈락 8건이
@@ -158,6 +133,47 @@ def main():
             keep = keep[:-1]                                # T700_s2/T700 → T700_s2
         lab = "/".join(keep)
         return lab[-width:] if len(lab) > width else lab
+
+    # ── 계·온도별 MSD 앙상블 평균 ─────────────────────────────────────────
+    avg_curves = {}
+    if a.average:
+        # ⛔⛔ 2026-08-11 — 옛 코드는 **온도로만** 묶었다(`byT[T_K]`). 캠페인 글롭이
+        #   세 계를 한꺼번에 덮으므로 T700 에 modelc·lpsocl·b2o3 가 **같이 평균**됐다.
+        #   서로 다른 물질의 MSD 곡선을 평균한 것이라 그 값은 아무 뜻이 없다.
+        #   (한 계씩 글롭할 때만 우연히 맞았다.) → (계, T) 로 묶는다.
+        # ⚠ 시간 격자가 같아야 평균이 의미 있다. 다르면 짧은 쪽에 맞춰 자른다.
+        byST = {}
+        for f in files:
+            d = json.load(open(f))
+            t, y = d.get("times_ps"), d.get("msd_Li_A2")
+            if not t or not y:
+                continue
+            lab = case_label(f)
+            sysname = lab.split("/")[0] if "/" in lab else lab   # 계 이름
+            byST.setdefault((sysname, int(d.get("T_K", 0))), []).append((t, y, f))
+        print(f"계·온도별 MSD 앙상블 평균 (창 {lo}–{hi} ps)")
+        print(f"{'계':12s} {'T (K)':>7s} {'n_runs':>7s} {'beta':>6s} {'c [Å²]':>8s} "
+              f"{'MSD@hi':>9s}  판정")
+        for key in sorted(byST):
+            sysname, T = key
+            runs = byST[key]
+            n = min(len(t) for t, _, _ in runs)
+            tt = runs[0][0][:n]
+            yy = [sum(r[1][i] for r in runs) / len(runs) for i in range(n)]
+            avg_curves[f"{sysname}/T{T}_AVG{len(runs)}"] = (tt, yy)
+            b = loglog_slope(tt, yy, lo, hi)
+            lf = lin_fit(tt, yy, lo, hi)
+            m = max((v for u, v in zip(tt, yy) if u <= hi), default=float("nan"))
+            ok = b is not None and BETA_OK[0] <= b <= BETA_OK[1] and m >= MSD_MIN_A2
+            print(f"{sysname:12s} {T:7d} {len(runs):7d} "
+                  f"{b if b is None else round(b, 2):>6} "
+                  + (f"{lf[1]:8.2f}" if lf else f"{'—':>8s}")
+                  + f" {m:9.1f}  {'✓ 확산' if ok else '⛔ 여전히 비확산'}")
+        print("  ⚠ 평균이 살아나도 **개별 런은 여전히 못 쓴다** — config 산포를 평균 뒤에")
+        print("    다시 낼 수 없으므로, 오차막대는 다른 방법(블록 평균 등)으로 내야 한다.")
+        print("  ★ --scan 을 같이 주면 **이 평균 곡선으로** 창 스캔을 돈다 — 늦은 창의")
+        print("    통계가 √n 배 좋아져서 c 판별(케이지 vs sub-diffusion)이 실제로 가능해진다.")
+        print()
 
     print(f"창 {lo}–{hi} ps · β=1 확산 · β<{BETA_OK[0]} 케이지 · "
           f"창끝 MSD < {MSD_MIN_A2} Å² 면 통계 부족")
@@ -223,17 +239,25 @@ def main():
         if tmax_all > 250:
             print(f"(궤적 tmax {tmax_all:.0f} ps → 늦은 창 자동 추가: "
                   f"{', '.join(f'{l}-{h}' for l, h in WINS[6:])})")
-        print("\n창 스캔 — β 가 1 에 가까워지는 창이 있으면 재계산 없이 구제된다")
+        # ★ --average 를 같이 주면 **평균 곡선**으로 돈다. 늦은 창이 살아나는 유일한
+        #   공짜 수단이다 (개별 런은 lag 이 길어지면 유효 표본이 몇 개 안 남아 붕괴한다).
+        scan_items = ([(k, t, y) for k, (t, y) in sorted(avg_curves.items())]
+                      if avg_curves else None)
+        print("\n창 스캔 — β 가 1 에 가까워지는 창이 있으면 재계산 없이 구제된다"
+              + ("  **[시드 평균 곡선]**" if scan_items else ""))
         head = " ".join(f"{lo}-{hi}".rjust(8) for lo, hi in WINS)
         print(f"{'case':34s} {head}   tmax")
         print(f"{'':34s} " + " ".join(f"{'c=' + w:>8s}" for w in [])
               + "  (아래 줄: 각 창의 **절편 c [Å²]** — 상수면 케이지, 커지면 sub-diffusion)")
-        for f in files:
-            d = json.load(open(f))
-            t, y = d.get("times_ps"), d.get("msd_Li_A2")
-            if not t or not y:
-                continue
-            tag = case_label(f)
+        for _it in (scan_items if scan_items else files):
+            if scan_items:
+                tag, t, y = _it
+            else:
+                d = json.load(open(_it))
+                t, y = d.get("times_ps"), d.get("msd_Li_A2")
+                if not t or not y:
+                    continue
+                tag = case_label(_it)
             cells, ints, slps = [], [], []
             for lo, hi in WINS:
                 b = loglog_slope(t, y, lo, hi)
