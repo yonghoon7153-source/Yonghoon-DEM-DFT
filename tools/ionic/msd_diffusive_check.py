@@ -31,6 +31,49 @@ BETA_OK = (0.80, 1.20)
 MSD_MIN_A2 = 3.0            # 창 끝 MSD 하한 — 이보다 작으면 자리 이탈을 못 한 것
 
 
+def lin_fit(t, y, lo, hi):
+    """[lo,hi] 에서 MSD = c + m·t 를 자유 절편으로 맞춘다. (m, c, R²) 또는 None.
+
+    ★★ 2026-08-11 — **이 절편이 β 게이트의 정체다.**
+      고체 MSD 는 어느 계든 `MSD(t) = C + 6Dt` 꼴이다 (C = 케이지 진폭 + ballistic 잔재).
+      C > 0 이면 log-log 기울기 β 는 **자동으로 1 아래**로 내려간다 — 확산이 아니어서가
+      아니라 절편이 있어서다. 실측(db/properties/msd_3sys_200ps_origin.csv):
+
+        계·온도              절편 c    c/MSD@50    β      비고
+        B2O3 600 K           1.704 Å²   5.1 %     0.806
+        LPSCl1.6 600 K       2.336      7.6 %     0.868
+        **LPSOCl 600 K**     4.035     18.2 %     0.615   ← 게이트 탈락
+        LPSCl1.6 1000 K      1.952      1.4 %     0.924
+
+      β 가 c/MSD@50 에 거의 단조로 붙어 있고, **탈락한 곡선들의 직선 적합 R² 가
+      0.971–0.996** 이다 — MSD 가 직선이 아니어서 탈락한 게 아니다.
+      β=0.76 을 만드는 데 필요한 절편은 항상 창끝 MSD 의 ~7.4 % 다(크기 무관).
+
+      ⇒ **게이트 β<0.8 은 사실상 "절편이 창끝 MSD 의 ~6 % 를 넘는가" 를 재고 있다.**
+        그건 물리 판정이 아니라 **암묵적 표본 크기 요구**다. 그리고 D 는 이미
+        **자유 절편 직선 맞춤**의 기울기에서 나오므로 절편에 영향받지 않는다.
+
+      판별법: 창을 뒤로 밀면서 절편을 본다.
+        · 절편이 **상수**·기울기 불변·β 가 1 로 올라감 → 케이지 절편. **D 인용 가능**
+        · 절편이 **커지고** 기울기가 떨어지며 β 가 모든 창에서 그대로 → 진짜 sub-diffusion
+    """
+    pts = [(a, b) for a, b in zip(t, y) if lo <= a <= hi]
+    if len(pts) < 3:
+        return None
+    n = len(pts)
+    sx = sum(p[0] for p in pts); sy = sum(p[1] for p in pts)
+    sxx = sum(p[0] ** 2 for p in pts); sxy = sum(p[0] * p[1] for p in pts)
+    den = n * sxx - sx * sx
+    if abs(den) < 1e-30:
+        return None
+    m = (n * sxy - sx * sy) / den
+    c = (sy - m * sx) / n
+    ybar = sy / n
+    ss = sum((c + m * x - yy) ** 2 for x, yy in pts)
+    st = sum((yy - ybar) ** 2 for _, yy in pts)
+    return m, c, (1.0 - ss / st if st > 1e-30 else float("nan"))
+
+
 def loglog_slope(t, y, lo, hi):
     """[lo,hi] ps 구간의 log-log 기울기. 점이 3개 미만이면 None."""
     pts = [(math.log(a), math.log(b)) for a, b in zip(t, y)
@@ -131,8 +174,12 @@ def main():
         t, y = d.get("times_ps"), d.get("msd_Li_A2")
         D = d.get("D_Li_cm2_s")
         tag = case_label(f)
+        # ⚠ P1-6 — D 가 null 인 msd.json 하나만 있어도 옛 코드는 TypeError 로 죽어
+        #   **전수 게이트가 통째로** 날아갔다 (MD 가 중간에 죽으면 실제로 생긴다).
+        _f = (lambda v, sp: "—".rjust(len(sp.format(0)))
+              if v is None or v != v else sp.format(v))
         if not t or not y:
-            print(f"{tag:34s} {D:10.3e} {'—':>6s} {'—':>8s}  ⚠ MSD 배열 없음")
+            print(f"{tag:34s} {_f(D, '{:10.3e}')} {'—':>6s} {'—':>8s}  ⚠ MSD 배열 없음")
             continue
         b = loglog_slope(t, y, lo, hi)
         msd_hi = max((v for u, v in zip(t, y) if u <= hi), default=float("nan"))
@@ -148,7 +195,6 @@ def main():
         verdict = " · ".join(marks) if marks else "✓ 확산"
         if marks:
             bad.append((tag, verdict))
-        _f = lambda v, sp: "—".rjust(len(sp.format(0))) if v is None or v != v else sp.format(v)
         print(f"{tag:34s} {_f(D, '{:10.3e}')} {_f(b, '{:6.2f}')} "
               f"{_f(msd_hi, '{:8.1f}')}  {verdict}")
 
@@ -180,26 +226,48 @@ def main():
         print("\n창 스캔 — β 가 1 에 가까워지는 창이 있으면 재계산 없이 구제된다")
         head = " ".join(f"{lo}-{hi}".rjust(8) for lo, hi in WINS)
         print(f"{'case':34s} {head}   tmax")
+        print(f"{'':34s} " + " ".join(f"{'c=' + w:>8s}" for w in [])
+              + "  (아래 줄: 각 창의 **절편 c [Å²]** — 상수면 케이지, 커지면 sub-diffusion)")
         for f in files:
             d = json.load(open(f))
             t, y = d.get("times_ps"), d.get("msd_Li_A2")
             if not t or not y:
                 continue
             tag = case_label(f)
-            cells = []
+            cells, ints, slps = [], [], []
             for lo, hi in WINS:
                 b = loglog_slope(t, y, lo, hi)
-                cells.append("   —" .rjust(8) if b is None else f"{b:8.2f}")
+                cells.append("   —".rjust(8) if b is None else f"{b:8.2f}")
+                lf = lin_fit(t, y, lo, hi)
+                ints.append("   —".rjust(8) if lf is None else f"{lf[1]:8.2f}")
+                slps.append("   —".rjust(8) if lf is None else f"{lf[0]:8.3f}")
             print(f"{tag:34s} {' '.join(cells)}   {max(t):.0f}")
+            print(f"{'  └ c [Å²]':34s} {' '.join(ints)}")
+            print(f"{'  └ m [Å²/ps]':34s} {' '.join(slps)}")
         print("  ⚠ 창을 늦추면 통계 점수는 줄어든다 — β 가 1 이어도 창 안 데이터가")
         print("    너무 적으면(점 3개 미만) '—' 로 나온다. tmax 가 창보다 작아도 마찬가지.")
+        print()
+        print("  ★★ **β 행이 아니라 c 행이 판정을 가른다** (2026-08-11):")
+        print("     · c 가 창 따라 **거의 상수** + m 도 상수 + β 만 1 로 올라감")
+        print("       → 케이지 절편이다. MSD = c + 6Dt 로 이미 직선이고 **D 는 인용 가능**하다.")
+        print("         (D 는 자유 절편 맞춤의 **기울기**에서 나오므로 c 에 오염되지 않는다.)")
+        print("     · c 가 창 따라 **커지고** m 이 **떨어지며** β 가 모든 창에서 그대로")
+        print("       → 진짜 sub-diffusion 이다. 그때만 D 인용 금지가 맞다.")
+        print("     ⚠ R² 로는 둘을 못 가른다 — 두 모형 다 0.99 를 넘는다. c 를 볼 것.")
 
     print()
     if bad:
-        print(f"⛔ **{len(bad)}/{len(files)} 개가 확산 영역이 아니다 — 그 D 와 그걸 쓴 Ea 는 인용 금지.**")
+        # ⚠⚠ 2026-08-11 문구 정정 — "확산 영역이 아니다" 는 **β 가 말할 수 있는 것보다 세다**.
+        #   β<0.8 은 (a) 진짜 sub-diffusion 이거나 (b) MSD 절편이 창끝의 ~6% 를 넘은 것이다.
+        #   둘을 가르는 건 --scan 의 **c 행**이지 β 값이 아니다.
+        print(f"⚠ **{len(bad)}/{len(files)} 개가 선언한 창에서 Fickian scaling 을 입증하지 못했다.**")
         for tag, v in bad:
             print(f"   {tag}: {v}")
-        print("   처방: ① 창을 늦춘다(예: 10–50 ps) ② prod 를 늘린다 ③ 그 온도를 Arrhenius 에서 뺀다")
+        print("   ⛔ 여기서 곧바로 'D 인용 금지' 로 가지 말 것 — **--scan 의 c 행을 먼저 본다**:")
+        print("     · c 가 창 따라 상수면 케이지 절편이다. D 는 자유 절편 맞춤의 기울기라 무사하다.")
+        print("     · c 가 창 따라 커지면 그때가 진짜 sub-diffusion 이고 D 인용 금지가 맞다.")
+        print("   처방: ① --scan 으로 c 판별 ② 표본(이온 수·시간원점)을 늘린다 "
+              "③ 그래도 c 가 크면 그 온도를 Arrhenius 에서 뺀다")
         print("   ⚠ ③ 은 캠페인 규약(600/800/1000 3점)의 예외다 — 근거를 db 에 남길 것.")
     else:
         print(f"✅ {len(files)}개 전부 확산 영역 — D/Ea 인용 가능.")

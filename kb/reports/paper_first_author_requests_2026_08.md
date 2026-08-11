@@ -17,7 +17,7 @@
 | **2** | 그때의 **이온전도도 플롯** (0 °C · RT) | 🔴 **1번에 종속** — 게이트 통과 점이 없으면 못 그린다 | **§10** |
 | **3** | LPSOCl MSD plot | 🟡 도구 완성 · **데이터가 게이트 탈락** | §2 · §9 |
 | **4** | MLIP-MD vs AIMD 근본 차이 · AIMD 저온 가능? | ✅ 답변 완료 | §5 · §6 |
-| **5** | BVSE 정의 · BVSE 와 이온전도도 경향이 안 맞아도 되는 이유 | ✅ **§11 신규** | **§11** |
+| **5** | BVSE 정의 · BVSE 와 이온전도도 경향이 안 맞아도 되는 이유 | 🔴 **초판 철회 → 재작성 완료** (논증 부호·사실관계 둘 다 틀렸다) | **§11** |
 | **6** | PDOS 값 확인 + smoothing 통일 | ✅ 완료 | — |
 | **8** | Li migration barrier figure (BVSE) | ✅ 완료 | §11 참조 |
 | **9** | output log 에 site 별 energy screening 이 남아 있나 | ✅ **§12 신규** | **§12** |
@@ -633,6 +633,17 @@ O2→0 패치는 GUI 렌더 검증 후 적용 (`.vesta` 는 ASCII+CRLF 파싱이
 시드평균 곡선(β̄)으로 접으면 **온도점 3개가 탈락**: modelc/700 (0.76) · LPSOCl/700 (0.76) ·
 LPSOCl/900 (0.79).
 
+⚠ **집계 단위를 섞지 말 것.** §4-2 가 확립한 캠페인 규약은 **시드 앙상블 평균**이다.
+위 "5/9" 는 **런 단위** 카운트라 규약 단위가 아니다. 둘 다 싣는다:
+
+| 계 | 런 단위 탈락 | **온도점(시드평균) 단위 — 규약** |
+|---|---|---|
+| B₂O₃ | 1/6 | **0/2** — 새 온도점을 하나도 안 잃는다 |
+| LPSCl1.6 (modelc) | 2/6 | **1/2** (700 K β̄ 0.76) |
+| **LPSOCl** | 5/9 | **2/3** (700 K 0.76 · 900 K 0.79 — **600 K 는 통과**) |
+
+여전히 LPSOCl 이 최악이지만 그림이 꽤 다르다. 특히 **B₂O₃ 는 700·900 을 둘 다 쓸 수 있다.**
+
 ### 9-2. ⚠ "그건 표본이 적어서 생긴 잡음 아닌가" — **아니다. 검정했다**
 
 처음엔 잡음을 의심했다(β 0.74~0.79 가 임계 0.80 바로 아래에 몰려 있으니까).
@@ -646,9 +657,24 @@ LPSOCl/900 (0.79).
 | 25–100 | 1.008 | 0.77–1.26 | 10.5 % |
 | 50–200 | 1.004 | 0.76–1.26 | 10.5 % |
 
-**창 2–50 에서 이상적 확산은 β 0.8 아래를 1 % 밖에 안 밟는다.** 관측된 0.58–0.79 는
-전부 5퍼센타일 아래다 → **표본 부족이 아니라 진짜 sub-diffusion 이다.** 게이트가
-정상 작동한 것이고, 탈락 판정은 정당하다.
+**창 2–50 에서 이상적 확산은 β 0.8 아래를 1 % 밖에 안 밟는다** (400회 표본이라
+정확히는 "< 2 %"). 관측된 0.58–0.79 는 전부 5퍼센타일(0.86) 아래다
+→ **표본 부족만으로는 설명되지 않는다.**
+
+⚠⚠ **다만 여기서 두 걸음을 한 번에 가면 안 된다** (자체검토 지적):
+
+- **5퍼센타일 기준(0.86)과 게이트 임계(0.80)는 다른 기준이다.** 5퍼센타일 논리를
+  일관되게 적용하면 §9-1 표에서 0.86 미만이 **12개**다 (0.81·0.83·0.84 가 추가로 걸린다).
+  문서 자신의 논리대로면 8/21 이 아니라 12/21 이어야 한다 — 통과한 0.81·0.83·0.84 가
+  왜 "진짜" 가 아닌지 설명이 없다.
+- **귀무검정은 "참 β = 1" 만 기각한다.** "참 β 가 0.8 위인가 아래인가" 는 답하지 못한다.
+  21개 중 0.75–0.86 구간에 6개가 몰려 있고 단일원점 sd 가 0.09–0.13 이므로,
+  **그 6개의 개별 통과/탈락은 사실상 동전 던지기**다. (참 β 가 전부 0.85 라 해도
+  21개 중 8개 이상이 0.80 미만으로 측정될 확률 = **46 %**.)
+
+→ **정확한 진술**: 게이트는 β = 1(이상확산) 가설을 기각한다. 임계 0.80 근방(±0.06)의
+  개별 점 6개는 단일원점 추정 산포 안에 있으므로 **개별 통과/탈락을 물리로 읽으면
+  안 되고**, MTO 재측정 후 재판정한다.
 
 > ★ 부수적으로 이 표가 **늦은 창으로 구제하는 것**을 금지한다. 창 50–200 에서는
 > 이상적인 계도 10 % 가 β<0.8 이다 — 그 창의 β 로 "구제됐다" 고 말할 수 없다.
@@ -661,8 +687,25 @@ LPSOCl/900 (0.79).
 단정하고 있었다 — 러너가 최신인 것과 드라이버가 최신인 것은 다른 사건인데 구분을 안 했다.
 
 - `--save_traj` 도 없어 프레임이 디스크에 없다 → **소급 계산 불가** (comp1 1600 ps 와 동일 손실).
-- ⚠ **다만 이 사고는 8건 탈락의 원인이 아니다.** MTO 는 β 추정의 *분산*을 줄이지
-  *기댓값*을 올리지 않는다. MTO 가 있었어도 0.74 는 0.74 로 더 정확히 나왔을 뿐이다.
+- ⚠ **다만 이 사고는 8건 탈락의 원인이 아니다.** 자체검토가 시뮬레이션으로 확인했다
+  (27 Li · 200 ps · 창 2–50 · 독립 궤적 300개, sub-diffusion 기구 2종):
+
+  | 기구 | 단일원점 E[β] | MTO E[β] | Δ | sd 단일 → MTO | **P(β<0.8)** |
+  |---|---|---|---|---|---|
+  | 케이지+균질 홉 | 0.650 | 0.639 | **−0.010** | 0.111 → 0.027 | 92.7 % → **100 %** |
+  | 퀜치 장벽 무질서 | 0.756 | 0.740 | **−0.016** | 0.134 → 0.058 | 63.0 % → **85.0 %** |
+
+  ① 분산은 실제로 2.3–4.1배 준다 (§4-4 가 적어 둔 "2.9배↓" 와 같은 구간) ✔
+  ② 기댓값은 안 올라간다 — 오히려 미세하게 **내려간다**. 기구는 Jensen 편향이다
+     (E[log X] < log E[X] 이고 그 편향이 짧은 lag 에서 더 빨리 줄어 기울기를 눕힌다).
+  ③ **결정적: MTO 를 켰으면 탈락이 오히려 늘었을 것이다** (63 → 85 %).
+
+  → 정확한 문구: *"MTO 는 추정량의 분산을 ~3배 줄이고 기댓값은 오히려 미세하게 낮춘다.
+    귀무 시뮬레이션에서 MTO 는 게이트 탈락 비율을 63 % → 85 % 로 **올렸다**."*
+  ⚠ §4-4 는 "MTO-β ≥ 0.8 이면 해소" 라는 규칙을 못 박아 뒀는데, 그건 MTO 가 **개별 점**의
+    판정을 바꿀 수 있다는 전제다. 단일원점 sd 가 0.12 이므로 개별 점 하나(0.74)가
+    참 β=0.85 에서 나온 낮은 뽑기일 확률은 ~20 % — 무시 못 한다.
+    → **MTO 는 개별 점의 판정을 바꿀 수는 있으나, 8/21 이라는 집계를 뒤집지는 못한다.**
 - 재발 방지: 러너가 실행 전 드라이버의 `msd_multi_origin` 존재를 검사하고 없으면 즉사
   (`run_arrhenius_6pt.sh`), `--save_traj` 기본 활성 (런당 ~10 MB).
 
@@ -674,6 +717,20 @@ LPSOCl/900 (0.79).
 `recursive=True` 라 같은 글롭으로 21개를 찾았다 — 도구마다 다른 답이 나온 게 이 한 줄이다.
 (부수 버그: 결과표 `case` 열이 `[-3:-1]` 이라 21행 전부 `d0.00_cfg0/T700` 으로 찍혀
 어느 계·어느 시드인지가 사라졌다. 둘 다 수정.)
+
+### 9-9. ⚠ §4-4 의 LPSOCl 600 K 판정은 이 재실행으로 **대체된다**
+
+§4-4 는 LPSOCl 600 K 를 "4시드 앙상블 평균 β **0.61** 로 탈락" 으로 적어 뒀다.
+이번 재실행(3시드)은 **0.96 / 0.83 / 0.71** 이고 시드평균은 **통과**다 — 위 탈락
+온도점 3건 목록에 LPSOCl/600 이 없는 이유가 그것이다.
+
+⛔ **파급이 크다.** LPSOCl 헤드라인 Eₐ 0.287±0.024(그리고 "+90 meV" 주장)는 §4-4 가
+"케이지 오염된 600 K 점을 포함한 값" 이라며 유보를 걸어 둔 값인데, 그 유보의 근거였던
+β 0.61 이 사라졌다. 그렇다고 유보가 자동 해제되는 것도 아니다 — 옛 4시드와 새 3시드는
+다른 표본이고, 700/900 이 새로 탈락했으므로 **적합 집합 자체를 다시 정해야** 한다.
+
+→ **재적합 전까지 LPSOCl Eₐ 와 "+90 meV" 는 계속 인용 보류.**
+   `kb/open_items.md` 도 아직 옛 값(0.61 / 97 Å²)을 담고 있어 세 곳이 다른 이야기를 한다 — 같이 갱신할 것.
 
 ### 9-5. 그래서 요청 #1 에 대한 **현재 답**
 
@@ -715,10 +772,16 @@ Fickian MSD 가 필요 없다. 이제 `--save_traj` 로 프레임이 남아 가�
 > Diffusion coefficients were accepted only when the mean-squared displacement was in the
 > Fickian regime, quantified by the log–log slope β = d log MSD / d log t over the 2–50 ps
 > fitting window (acceptance 0.8 ≤ β ≤ 1.2). The threshold was validated against a null
-> distribution generated from ideal Brownian trajectories matched in ion count and
-> trajectory length, for which β = 1.01 (5–95 % 0.86–1.14) and only 1 % of realizations
-> fell below 0.8. Temperature points failing this gate were excluded from the Arrhenius
-> fit rather than rescued by shifting the fitting window.
+> distribution generated from ideal Brownian trajectories matched in ion count (27 Li) and
+> trajectory length, for which β = 1.01 (5–95 % 0.86–1.14) and fewer than 2 % of 400
+> realizations fell below 0.8. Temperature points failing this gate were excluded from the
+> Arrhenius fit rather than rescued by shifting the fitting window; points within the
+> single-time-origin estimator spread of the threshold (β = 0.80 ± 0.06) are reported as
+> unresolved pending re-measurement with multiple time origins.
+
+⚠ 위 초안의 "matched in ion count" 는 **27 Li 기준**이다 — B₂O₃ 셀은 128원자/Li 58 이라
+귀무 분산이 더 작다(그쪽 결론은 더 유의해질 뿐 방향은 안 바뀐다). 계별로 다시 돌리거나
+문구를 지금처럼 명시할 것.
 
 ---
 
@@ -743,13 +806,23 @@ CLAUDE.md 데이터 규율: **σ 는 Nernst–Einstein(Haven=1) 산출이라 절
 비율도 멀티시드 판정만** (단일시드 1.33× 를 철회한 사례가 있다 — SEMIFINAL 2026-07-09).
 0 °C·RT 값은 여기에 **외삽 오차가 하나 더 얹힌다**:
 
-| 온도 | 외삽 배율 (600 K 기준, Ea 0.2 eV) | 신뢰 |
-|---|---|---|
-| 300 K (RT) | ÷ 45 | 외삽 |
-| 273 K (0 °C) | ÷ 90 | 외삽 |
+~~| 온도 | 외삽 배율 (600 K 기준, Ea 0.2 eV) | ÷45 / ÷90 |~~
+⛔ 초판의 ÷45 / ÷90 은 **내부 불일치**였다 (각각 Ea 0.1968 / 0.1942 를 함의). 그리고 더
+중요한 건 **이 절의 주인공 LPSOCl 에 그 배율을 쓰면 5.7~8.6배 과소**라는 것이다.
+계별로 쪼갠다 (**D 배율** — σ 배율은 여기에 T/600 인자가 더 곱해진다):
 
-Ea 오차막대 ±0.03 eV 는 300 K 에서 σ 를 **±3.2배**로 벌린다. 즉 **σ(RT) 의 오차막대가
-값 자체보다 크다.** 점 하나로 찍으면 그 사실이 그림에서 사라진다.
+| 계 | Eₐ [eV] | D(600)/D(300 K) | D(600)/D(273 K) |
+|---|---|---|---|
+| LPSCl1.6 (modelc) | 0.197 | ÷ 45.2 | ÷ 96.0 |
+| B₂O₃ | 0.199 | ÷ 46.9 | ÷ 100.5 |
+| **LPSOCl** | **0.287** | **÷ 257.5** | **÷ 772.1** |
+
+⚠ σ 배율 ≠ D 배율이다: `σ = n q² D / (k_B T)` 라 **σ 비 = D 비 × (T/600)**.
+modelc 300 K 는 D 로 ÷45.2 지만 σ 로는 **÷22.6** 이다. 그림 축이 σ 인지 D 인지 명시할 것.
+
+Ea 오차막대 ±0.03 eV 는 300 K 에서 σ 를 위로 ×3.19, 아래로 ÷3.19 — **밴드 전체 폭 10.2배**다
+(273 K 는 ×3.58, 폭 12.8배). 즉 **σ(RT) 의 오차막대가 값 자체보다 크다.**
+점 하나로 찍으면 그 사실이 그림에서 사라진다.
 
 ### 10-4. 권고 — 그림 설계
 
@@ -766,89 +839,187 @@ Ea 오차막대 ±0.03 eV 는 300 K 에서 σ 를 **±3.2배**로 벌린다. 즉
 
 ---
 
-## 11. BVSE 의 정의 · BVSE 와 이온전도도가 **꼭 같은 방향일 필요가 없는 이유** (요청 #5, 2026-08-11)
+## 11. BVSE 의 정의 · BVSE 와 이온전도도 (요청 #5, 2026-08-11 · **2026-08-11 전면 재작성**)
 
-**요청**: BVSE 가 뭔지, 그리고 LPSCl1.6 vs LPSOCl 에서 **LPSOCl 이 σ 는 더 낮은데 BVSE 는
-더 좋게** 나오는 게 왜 모순이 아닌지.
+> ⛔⛔ **초판(2026-08-11 오전)의 §11-3 은 두 겹으로 틀렸다. 자체검토로 반증돼 철회한다.**
+>
+> **① 사실관계가 뒤집혀 있었다.** "LPSOCl 의 BVSE 장벽이 더 낮다" 를 전제로 논증을
+> 세웠는데, 우리 정본 3개가 전부 **더 높다**고 말한다 (§11-3 표 참조).
+>
+> **② 물리 논증의 부호가 반대였다.** "R₀ 가 짧아 O 주변에 깊은 우물이 생긴다" 고 썼는데,
+> `BVSE = (BVS−1)²` 는 **하한이 0** 이라 R₀ 로 우물을 깊게 만들 수 없다. 게다가 같은
+> 거리에서 O 는 S 보다 **5.62배 적게** 결합한다 — 우물이 아니라 언덕이다.
+>
+> 아래는 정본 데이터와 `kb/concepts/bvse.md` §7 에 맞춘 재작성판이다.
+> **초판 원고 초안 문장은 폐기한다** (특히 *"short Li–O R₀ creating deep local minima"*).
+
+**요청**: BVSE 가 뭔지, 그리고 LPSCl1.6 vs LPSOCl 에서 BVSE 와 σ 의 관계.
 
 ### 11-1. BVSE 가 재는 것 — 한 줄
 
 **Li⁺ 하나를 격자에 넣었을 때 "화학적으로 얼마나 편한 자리인가" 를 결합원자가로 점수 매긴 뒤,
 그 점수의 지도에서 가장 낮은 능선을 따라간 것.** 원자를 움직이지 않고, 온도도 없다.
 
-정의는 이렇다. 결합원자가 합(BVS)은 Li 가 주변 음이온과 이루는 결합의 세기 합이고,
-
 ```
-BVS(r) = Σ_j exp[(R₀ − r_j) / b]        b = 0.37 Å,  R₀ = softBV (Li–S 2.105 · Li–Cl 2.249 · Li–O 1.466)
+BVS(r) = Σ_j exp[(R₀ − r_j) / b]        b = 0.37 Å
 BVSE   = (BVS − 1)²                      ← Li⁺ 의 이상 원자가 1 에서 벗어난 정도
+softBV R₀:  Li–S 2.105 · Li–Cl 2.249 · Li–O 1.466 Å
 ```
 
-즉 **BVSE = 0 이면 그 지점이 Li⁺ 에게 "딱 맞는" 자리**다. 격자를 ~0.25 Å 격자로 훑어
-BVSE 지도를 만들고, 두 자리를 잇는 경로 중 최고점이 가장 낮은 것을 고르면 그게 "BVSE 장벽" 이다.
+**BVSE = 0 이면 그 지점이 Li⁺ 에게 "딱 맞는" 자리**다. ~0.25 Å 격자로 훑어 BVSE 지도를
+만들고, 두 자리를 잇는 경로 중 최고점이 가장 낮은 것이 "BVSE 장벽" 이다.
+
+⚠ **BVSE 는 0 이 하한이다.** 이건 뒤에서 중요해진다 — 어떤 음이온을 넣어도 우물이
+0 보다 깊어질 수 없다. R₀ 가 바꾸는 건 **BVS=1 등가면의 반지름**이지 우물의 깊이가 아니다.
+
+| | Li–O | Li–S | Li–Cl |
+|---|---|---|---|
+| R₀ [Å] | 1.466 | 2.105 | 2.249 |
+| BVS=1 반지름 (CN 4) = R₀ + b·ln4 | **1.979** | **2.618** | **2.762** |
+| BVS=1 지점의 기울기 −1/b [Å⁻¹] | −2.703 | −2.703 | −2.703 |
+
+**기울기와 곡률(2/b²)이 R₀ 와 무관하게 같다.** 즉 O 우물이 더 깊지도, 더 가파르지도 않다.
 
 ### 11-2. ⚠ BVSE 가 재지 **않는** 것 — 세 가지
 
-이게 질문의 핵심이다. BVSE 장벽과 σ 가 갈리는 이유가 전부 여기 있다.
+**① 격자가 안 움직인다 (rigid lattice).** 실제로는 Li 가 뛸 때 주변 음이온이 밀려나며
+병목을 넓혀 준다. 그 완화 에너지가 BVSE 엔 없다 → **일관되게 과대평가**하는데 그 폭이 계마다 다르다.
 
-**① 격자가 안 움직인다 (rigid lattice).**
-실제로 Li 가 뛸 때는 주변 음이온이 밀려나며 병목을 넓혀 준다. 그 완화 에너지가 BVSE 엔 없다.
-→ BVSE 는 **일관되게 장벽을 과대평가**하는데, 그 과대평가 폭이 계마다 다르다.
-   부드러운 골격(S²⁻ 많음)은 많이 완화되고, 딱딱한 골격(O²⁻ 많음)은 덜 완화된다.
+**② 캐리어 농도도, 자리 점유도 모른다.** `σ = n q² D / (k_B T)` 에서 n(캐리어 수)·상관계수가
+전부 BVSE 밖이다. BVSE 는 **경로 하나의 지형**만 본다.
 
-**② 캐리어 농도도, 자리 점유도 모른다.**
-```
-σ = n · q² · D / (k_B T)     ← n(캐리어 수)·상관계수가 전부 BVSE 밖이다
-```
-BVSE 는 **경로 하나의 지형**만 본다. 그 경로에 Li 가 몇 개 있는지, 빈자리가 있는지,
-서로 막고 있는지는 안 본다.
+**③ 3차원 연결성(percolation)을 보증하지 않는다.** 가장 낮은 능선이 한 방향으로만 뚫려
+있으면 값은 낮아도 거시 수송은 안 된다.
 
-**③ 3차원 연결성(percolation)을 보증하지 않는다.**
-가장 낮은 능선이 **한 방향으로만** 뚫려 있으면 그 값은 낮아도 거시 수송은 안 된다.
-BVSE 장벽 값 하나는 "제일 좋은 길" 이지 "그 길이 끝까지 이어지는가" 가 아니다.
+### 11-3. ✅ 실제 데이터 — **LPSOCl 의 BVSE 문턱은 더 낮지 않다. 더 높다**
 
-### 11-3. 우리 실측이 정확히 그 사례다 — LPSOCl
+정본 3개가 같은 방향을 가리킨다.
 
-| 계 | BVSE 장벽 | σ (MD·NE) | 방향 |
+**① `db/properties/bvse_cubic_approx/bvse_orig_vs_cubic.json`** (percolation onset, 고정격자)
+
+| | a | b | c | 채널부피 |
+|---|---|---|---|---|
+| modelc (LPSCl1.6) | 0.40 | 0.35 | **1.40** val² | 3.32 % |
+| **LPSOCl (+O)** | 0.55 | 0.35 | **2.05** val² | **4.74 %** |
+| 차 | +3칸 | 동일 | **+13칸** | **+43 %** |
+
+파일 원문: *"LPSOCl opens MORE channel volume (4.74 vs 3.32 %) **yet its c-axis percolation
+onset is HIGHER**"* — c축 차이는 격자 양자화(0.05)를 훨씬 넘어 인용 가능하다.
+
+**② `db/properties/bvse_bvlain_ev_4sys.json`** (eV 단위 bvlain)
+
+| | E_1D | E_2D | **E_3D** |
 |---|---|---|---|
-| LPSCl1.6 (modelc) | 상대적으로 높음 | 상대적으로 높음 | |
-| **LPSOCl (+O)** | **더 낮음(좋아 보임)** | **더 낮음(나쁨)** | ⚠ **반대** |
+| modelc | 0.2344 | 0.2441 | **0.4785** |
+| LPSOCl | 0.2246 | 0.2441 | **0.5664** |
 
-**왜 갈리는가 — O²⁻ 치환이 두 지표에 반대로 작용한다:**
+**E_3D 는 LPSOCl 이 +88 meV 더 높다.** E_2D 는 소수 4자리까지 동일. LPSOCl 이 낮은 건
+E_1D 하나(−10 meV)뿐인데, 같은 파일이 "음이온 2개 오배정만으로 E_1D 가 **244 meV**
+움직인다" 고 적어 뒀다 — 그 10 meV 는 구조모델 잡음의 1/24 이다.
+⚠ 그 파일 최상단에 `⚠_VERDICT_ranking_forbidden` 이 박혀 있다. **가족 내 순위 인용 금지**다.
 
-- **BVSE 에는 유리하게**: R₀(Li–O) = 1.466 Å 로 S·Cl(2.105·2.249)보다 훨씬 짧다.
-  Li–O 는 짧은 거리에서 BVS = 1 을 만족하므로 **O 주변에 BVSE 가 낮은 우물이 생긴다.**
-  경로 최고점을 낮추는 방향이다.
-- **σ 에는 불리하게**: 그 깊은 우물이 곧 **트랩**이다. Li 가 O 근처에 붙들리면
-  홉 빈도가 떨어진다. 게다가 O²⁻ 는 S²⁻ 보다 작고 딱딱해 골격 완화(①)를 줄인다.
+**③ `kb/concepts/bvse.md` §9** — 캠페인 정본 교리: *"modelc → LPSOCl: 채널부피 +43 %,
+실측 D 0.60× ↓, **O 트랩이 올린 문턱**"*.
 
-**독립 증거 — MD 쪽에서 같은 그림이 나온다.** LPSOCl 600 K 는 MSD 가 200 ps 에 97 Å² 로
-크기는 충분한데 β 0.61 로 탈락했다(§4-4). 크기가 아니라 **홉 통계**가 문제라는 뜻이고,
-"드물게 뛴다 = 트랩" 과 정합한다. 2026-08-11 확장 결과도 같다 — LPSOCl 이 9점 중 5점 탈락으로
-세 계 중 압도적으로 나쁘다(§9-1). **BVSE 가 낮은 그 계가 MD 에서는 제일 안 뛴다.**
+### 11-4. ✅ 그럼 무엇이 어긋나는가 — **채널부피(D₀) vs 문턱(Eₐ)**
 
-### 11-4. 그래서 원고에는 이렇게 쓴다
+역전은 "BVSE 장벽 vs σ" 가 아니라 **같은 BVSE 지도에서 뽑은 두 지표가 서로 다른 수송
+인자에 대응**하는 데서 온다 (`kb/concepts/bvse.md` §7):
+
+| BVSE 지표 | 수송 대응 | LPSOCl |
+|---|---|---|
+| 채널부피 % (3.32 → 4.74) | **D₀ (프리팩터)** — 자리·경로 수, 엔트로피 | ↑ 3.4× |
+| percolation 문턱 (c +13칸) | **Eₐ (활성화 에너지)** | ↑ +90 meV |
+
+```
+D(LPSOCl)/D(modelc) = 0.60  =  3.4 (D₀ 이득)  ×  0.18 (Eₐ +90 meV 의 볼츠만 벌칙)
+```
+
+> **"넓은 방이 더 생겼는데 방 사이 고개가 더 높아졌고, 지수함수가 이겼다."**
+
+이게 정답이고, 이미 우리 문서에 있고, 물리적으로 자기모순이 없다.
+
+### 11-5. ⛔ O 치환의 BVSE 기구 — 초판과 **부호가 반대**다
+
+초판은 *"O 가 과결합해서 깊은 우물을 판다"* 고 썼다. 실제는 정반대다.
+
+같은 거리에서 O 의 기여는 거리와 무관하게 상수배로 **작다**:
+```
+exp[(2.105 − 1.466)/0.37] = 5.62×   (O 가 S 보다 5.62배 적게 기여)
+exp[(2.249 − 1.466)/0.37] = 8.30×   (Cl 대비)
+```
+
+**황화물 골격 거리(CN 4, r = 2.618 Å)를 고정하고 S→O 치환**:
+
+| 조성 | BVS | BVSE | |
+|---|---|---|---|
+| 4S | 1.000 | 0.000 | 완벽 배위 |
+| 1O+3S | 0.794 | 0.042 | **under-bonded** |
+| 2O+2S | 0.589 | 0.169 | under-bonded |
+| 4O | 0.178 | 0.676 | under-bonded |
+
+**골격이 안 줄어들면 O 자리는 BVSE 가 올라간다 — 우물이 아니라 언덕이다.**
+
+O 가 BVSE 를 실제로 **낮추는 곳은 병목**이다. 병목은 Li 가 눌려 BVS ≫ 1 인 over-bonded
+지점이고, 거기서 O 는 과잉 결합가를 **덜어 준다**:
+
+| r = 2.20 Å (병목) | BVS | BVSE |
+|---|---|---|
+| 4S | 3.094 | 4.386 |
+| 2O+2S | 1.822 | 0.676 |
+| 3O+1S | 1.186 | **0.035** |
+
+→ 기구는 **"O 가 저결합해서 과결합을 해소한다"** 이지 "깊은 우물을 판다" 가 아니다.
+   (그리고 §11-3 대로 우리 계에서는 그 효과가 c축 문턱을 낮추지도 **못했다**.)
+
+### 11-6. 원고 문장 (재작성)
 
 > ⛔ **BVSE 장벽과 MD/NEB 장벽을 같은 표에 놓지 않는다.** 단위는 같아도 다른 양이다
-> (CLAUDE.md 데이터 규율). BVSE 는 **같은 화학계 안에서 자리·경로를 비교**하는 용도이고,
-> 화학이 바뀌면(S → O) R₀ 가 바뀌므로 **계 사이 절대 비교가 성립하지 않는다.**
-
-원고 문장 초안:
+> (CLAUDE.md 데이터 규율). 화학이 바뀌면 R₀ 자체가 바뀌므로 **계 사이 절대 비교가
+> 성립하지 않는다.**
 
 > Bond-valence site energy (BVSE) maps were used to identify Li⁺ migration pathways within
-> each composition. BVSE evaluates the deviation of the bond-valence sum from the ideal
-> value of unity on a rigid lattice and therefore captures the geometric and electrostatic
-> accessibility of a path, but not the lattice relaxation, carrier concentration, or
-> three-dimensional connectivity that determine macroscopic conductivity. Accordingly,
-> BVSE barriers are compared only within a composition and are not expected to rank
-> conductivities across compositions; the oxygen-substituted composition illustrates this,
-> showing a lower BVSE barrier — a consequence of the short Li–O R₀ creating deep local
-> minima — alongside a lower simulated conductivity, consistent with those minima acting
-> as trapping sites.
+> each composition. BVSE evaluates the deviation of the bond-valence sum from unity on a
+> rigid lattice, and therefore reports the geometric accessibility of a path but not the
+> lattice relaxation, carrier concentration, or three-dimensional connectivity that
+> determine macroscopic conductivity. Two quantities extracted from the same map correspond
+> to different transport factors: the low-energy channel volume tracks the diffusion
+> prefactor D₀, whereas the percolation threshold tracks the activation energy. Oxygen
+> substitution illustrates the distinction — it increases the accessible channel volume by
+> 43 % while simultaneously raising the c-axis percolation onset, and the simulated
+> diffusivity ratio D(LPSOCl)/D(LPSCl₁.₆) = 0.60 decomposes as 3.4 (prefactor gain) × 0.18
+> (Boltzmann penalty of the higher barrier). Because the anion substitution also changes the
+> softBV R₀ parameters themselves (Li–O 1.466 vs Li–S 2.105 Å), BVSE energies are compared
+> only within a composition and are not used to rank conductivities across compositions.
 
-### 11-5. 요청 #8 (Li migration barrier figure) 과의 관계
+⚠ **이 문단이 인용하는 "+90 meV" 는 아직 유보 중이다.** LPSOCl Eₐ 0.287±0.024 는 §4-4 가
+스스로 "케이지 오염된 600 K 점을 포함해 적합한 값" 이라고 단서를 단 값이고, §9 의 600 K
+재실행이 그 전제를 흔들었다(§9-9). **재적합 전에는 원고에 넣지 않는다.**
 
-그 그림은 **BVSE 기반**이므로 위 단서가 캡션에 반드시 들어가야 한다.
-"BVSE barrier (rigid lattice); not directly comparable to NEB or MD-derived activation energies."
+### 11-7. ⛔ 초판이 "독립 증거" 로 든 MD 논거도 철회한다
+
+초판은 *"LPSOCl 600 K 가 β 0.61 로 탈락한 것이 트랩을 지지한다"* 고 썼다. 두 가지가 틀렸다.
+
+1. **그 0.61 은 §9 의 재실행으로 대체됐다** (신 3시드 0.96 / 0.83 / 0.71 — 시드평균은 통과).
+2. **게이트 탈락과 낮은 σ 는 독립 관측이 아니다.** β<0.8 은 "창 안에서 홉이 충분히 안
+   일어났다" 는 뜻이고 그건 곧 낮은 D 다. 낮은 σ 도 낮은 D 다 — **같은 양을 두 번 읽고
+   서로를 증거라 부르는 구조**다.
+3. **β<1 은 "트랩" 을 특정하지 못한다.** sub-diffusion 기구는 최소 넷이다 — 단순히 낮은
+   홉 빈도 / **장벽 분포의 넓음**(무질서·CTRW) / 상관 back-hop / 유한크기. §9-2 의
+   귀무검정은 "참 β=1 인가" 만 기각할 뿐 기구를 못 고른다.
+4. 게다가 탈락 8건의 창끝 MSD 가 24–138 Å² (RMS ~12 Å = 격자 여러 칸)다. **그건 우물에
+   갇힌 게 아니다.**
+
+→ 원고에서 *"consistent with those minima acting as trapping sites"* 를 **뺀다.**
+   트랩을 주장하려면 홉 통계로 O 근처 Li 의 **체류시간 분포**를 직접 보여야 한다
+   (`tools/ionic/hops_per_ion.py` · `cage_jump_descriptors.py`). 지금 있는 건
+   "LPSOCl 이 느리다" 뿐이고 그건 이미 Eₐ 로 말했다.
+
+### 11-8. 요청 #8 (Li migration barrier figure) 과의 관계
+
+그 그림은 **BVSE 기반**이므로 캡션에 반드시:
+"BVSE barrier (rigid lattice); not directly comparable to NEB or MD-derived activation
+energies. Compared within a composition only."
 
 ---
 

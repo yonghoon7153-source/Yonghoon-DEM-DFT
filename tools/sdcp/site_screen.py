@@ -40,6 +40,7 @@ import csv
 import hashlib
 import json
 import math
+from math import comb
 import os
 import sys
 from collections import Counter, defaultdict
@@ -1586,7 +1587,21 @@ def cmd_verdict(a) -> int:
                       f"— 독립 표본 {len(dirs)}개짜리로 읽을 것")
             print(f"   Li_top↔Ni_top 짝지은 대조쌍 {len(pairs)}개 · "
                   f"ΔE(Ni−Li) 중앙값 {np.median(dl):+.3f} eV · 범위 {min(dl):+.3f}…{max(dl):+.3f}")
-            floor = max(GATE["decision_floor_eV"], float(np.std(dl)))
+            # ⛔⛔ 2026-08-11 자체검토 P0 — **σ=0 이면 MARGINAL 가드가 통째로 무력화된다.**
+            #   se_med 가 0 이 되어 `margin < se_med` 가 항상 거짓 → 곧바로 판정으로 간다.
+            #   재현: dl=[0.031,0.031,0.031] → 마진 +1 meV 인데 "Li 우세" — **이 커밋이
+            #   막으려던 바로 그 1 meV 판정**이다. 방향이 1개인 경우도 실제 데이터에 있다
+            #   (sdcp_doped f0.85 는 자격쌍 3개가 전부 fib07 = 방향 1개).
+            #   → 표본 하드게이트를 **판정보다 먼저** 둔다. 크기든 부호든 n<3 이면 검정 불가다.
+            if len(dl) < 3:
+                print(f"   ⛔ **판정 불가 — 독립 방향 {len(dl)}개** (3 미만). 크기도 부호도 "
+                      f"검정할 수 없다. 중앙값 {float(np.median(dl)):+.3f} eV 는 참고값일 뿐이다.")
+                print(f"     해소: atlas --ndir 를 늘려 독립 방향을 확보할 것.")
+                continue
+            # ⚠ ddof=1 (표본 표준편차). ddof=0 은 n=3~6 에서 se_med 를 최대 22% 과소평가해
+            #   **가드가 필요한 작은 표본에서 정확히 약해진다** (자체검토 실측).
+            sd = float(np.std(dl, ddof=1))
+            floor = max(GATE["decision_floor_eV"], sd)
             med = float(np.median(dl))
             # ★★ 2026-08-11 — 바닥을 **얼마나** 넘었는지를 안 보던 게 구멍이었다.
             #   ptfe_c10 f0.85 가 중앙값 +0.031 vs 바닥 0.030 = **마진 1 meV** 로
@@ -1594,39 +1609,102 @@ def cmd_verdict(a) -> int:
             #   기준: 중앙값 자체의 불확실도(중앙값 표준오차 ≈ 1.25·σ/√n)보다 마진이
             #   작으면 **넘은 게 아니다**. 임계값 근처에서 반올림으로 갈리는 판정을 막는다.
             n_dir = len(dl)
-            se_med = 1.2533 * float(np.std(dl)) / max(1.0, n_dir ** 0.5)
+            # ⚠ 1.2533·σ/√n 은 **정규분포 중앙값의 점근** 표준오차다. n=3~6 에서는:
+            #   · 정규면 5~15% 보수적(무해)
+            #   · **이봉이면 참값의 0.54배** — 방향에 따라 부호가 갈리는 바로 그 경우에
+            #     가드가 가장 약해진다. 그래서 하한을 깐다.
+            #   부트스트랩은 대안이 아니다 (n=5 면 재표본 중앙값이 4~5개 값밖에 안 나온다).
+            se_med = max(0.005, 1.2533 * sd / max(1.0, n_dir ** 0.5))
             margin = abs(med) - floor
+            # 순서통계 CI — 분포무관·소표본 정확. n=3 은 90% CI 가 **원리적으로 불가능**하다
+            #   (극단 2개를 써도 커버리지 75%). 그 사실 자체가 se_med 숫자보다 방어력이 크다.
+            ci_lo, ci_hi = float(min(dl)), float(max(dl))
+            ci_cov = 1.0 - 2.0 * 0.5 ** n_dir      # [x(1), x(n)] 의 정확 커버리지
             # 부호 일관성 — 크기와 별개의 증거다. 크기는 작아도 방향이 다 같으면 실재를 시사하고,
             # 크기가 커도 부호가 갈리면 방향 하나에 얹힌 것이다. 둘을 같이 보고한다.
+            # ⚠ 동점(정확히 0)은 부호검정에서 **버리고 n 을 줄이는** 게 표준이다.
+            #   dl 은 방향 중앙값이라 짝수 roll 의 대칭 조합에서 0.000 이 나올 수 있는데,
+            #   옛 코드는 `x > 0` 이라 그걸 음수로 셌다.
             npos = sum(1 for x in dl if x > 0)
+            nneg = sum(1 for x in dl if x < 0)
+            n_eff = npos + nneg
             try:
-                from math import comb
-                k = max(npos, n_dir - npos)
-                p_sign = min(1.0, 2.0 * sum(comb(n_dir, j) for j in range(k, n_dir + 1)) / 2 ** n_dir)
+                k = max(npos, nneg)
+                # ⚠ npos = n/2 (짝수 n)에서 raw 가 1 을 넘는 건 정상이다 — '작은 꼬리를 2배'
+                #   관례에서 중앙값이 양쪽 꼬리에 중복 계산된다. 정확 p 는 그때 1.0 이다.
+                p_sign = (min(1.0, 2.0 * sum(comb(n_eff, j) for j in range(k, n_eff + 1))
+                              / 2 ** n_eff) if n_eff else None)
+                # 단측 — 만장일치를 판정 요소로 쓰려면 이쪽이다 (n=5 만장일치 p1=0.031)
+                p1_sign = (sum(comb(n_eff, j) for j in range(k, n_eff + 1)) / 2 ** n_eff
+                           if n_eff else None)
             except Exception:
-                p_sign = None
-            sign_txt = (f"부호 {npos}/{n_dir} 양(Li 쪽)"
-                        + (f" · 부호검정 p={p_sign:.3f}" if p_sign is not None else ""))
+                p_sign = p1_sign = None
+            unanimous = n_eff >= 3 and (npos == n_eff or nneg == n_eff)
+            sign_txt = (f"부호 {npos}/{n_eff} 양(Li 쪽)"
+                        + (f" · 동점 {n_dir - n_eff}개 제외" if n_eff < n_dir else "")
+                        + (f" · 양측 p={p_sign:.3f}" if p_sign is not None else "")
+                        + ("  **만장일치**" if unanimous else ""))
+            ci_txt = (f"방향 순서통계 CI [{ci_lo:+.3f}, {ci_hi:+.3f}] eV "
+                      f"(정확 커버리지 {ci_cov * 100:.1f}%)"
+                      + ("  ⚠ n=3 은 90% CI 가 원리적으로 불가능하다" if n_dir == 3 else ""))
+            ci_excludes_zero = (ci_lo > 0) or (ci_hi < 0)
+            # ── 결합 규칙 (2026-08-11 자체검토) — 크기와 부호를 **같은 층**에 둔다 ────
+            #   크기 증거 = 순서통계 CI 가 0 을 배제 AND |중앙값| ≥ 판정바닥
+            #   부호 증거 = 만장일치 (n≥3). 둘은 서로 다른 종류의 증거라 따로 센다.
+            #   ⚠ 옛 규칙은 크기가 관문이고 부호는 주석이었는데, 부호가 더 강한 경우가
+            #     실제로 있다 (dimer 3/3 만장일치인데 크기는 바닥 아래).
+            ev_mag = ci_excludes_zero and abs(med) >= floor
+            ev_sign = unanimous
+            # ★★ 2026-08-11 (Codex 재리뷰 채택) — **유한 설계 분류**.
+            #   방향은 사전 선언된 atlas 설계지 무작위 표본이 아니다. 그러면 SE·p 를
+            #   population inference 처럼 쓰면 안 되고, 대신 **고정 실무 임계 δ=30 meV** 에
+            #   대한 ① 부호 일관성 ② 임계 초과 커버리지 를 따로 보고하는 게 정직하다.
+            #   (n=3~5 에서 정규 근사 SE 도 부트스트랩도 못 믿는다는 게 양쪽 검토의 결론.)
+            delta = GATE["decision_floor_eV"]
+            side = 1 if med > 0 else -1
+            frac_sign = (npos if side > 0 else nneg) / n_dir
+            frac_exceed = sum(1 for x in dl if side * x > delta) / n_dir
+            if frac_sign >= 0.8 and frac_exceed >= 0.8:
+                cls = "ROBUST_SCREENING"
+            elif frac_sign >= 0.8 and abs(med) > delta:
+                cls = "MARGINAL_TENDENCY"
+            elif frac_sign >= 0.8:
+                cls = "SIGN_CONSISTENT_SMALL"
+            else:
+                cls = "UNRESOLVED_MIXED"
+            print(f"     유한설계 분류 **{cls}** — 같은 부호 {frac_sign * 100:.0f}% · "
+                  f"|Δ|>{delta * 1000:.0f} meV 인 방향 {frac_exceed * 100:.0f}% "
+                  f"(δ 는 UMA 실무 해상도로 **고정**, n 과 무관)")
+            print(f"     {ci_txt}")
+            print(f"     {sign_txt}")
             if abs(med) < floor:
-                print(f"   → **가려지지 않았다** (|Δ| < 판정바닥 {floor:.3f} eV = max(30 meV, 쌍 편차))")
-                print(f"     {sign_txt}")
-                if p_sign is not None and p_sign <= 0.10:
-                    print(f"     ⚠ 크기는 바닥 아래인데 **부호는 일관**하다 — 작지만 실재하는 "
-                          f"차이일 수 있다. 표본(방향)을 늘리면 갈릴 자리다. 지금은 판정 안 한다.")
+                print(f"   → **가려지지 않았다** (|Δ| {abs(med):.3f} < 판정바닥 {floor:.3f} eV "
+                      f"= max(30 meV, 방향 표준편차 ddof=1))")
+                if ev_sign:
+                    print(f"     ⚠ 크기는 바닥 아래인데 **부호는 만장일치**다 — 작지만 실재하는 "
+                          f"차이일 수 있다. 방향을 늘리면 갈릴 자리다. 지금은 판정 안 한다.")
             elif margin < se_med:
                 win = "Li" if med > 0 else "Ni"
                 print(f"   → ⚠ **판정 보류 (MARGINAL)** — 바닥 {floor:.3f} eV 를 "
                       f"{margin * 1000:+.1f} meV 로 넘었는데 중앙값 자체의 표준오차가 "
                       f"±{se_med * 1000:.1f} meV 다. 넘은 폭이 불확실도보다 작다.")
-                print(f"     {sign_txt} · 방향 {n_dir}개 → 중앙값은 {(n_dir + 1) // 2}번째 "
-                      f"방향 하나가 정한다. ⛔ '{win} 우세'로 인용하지 말 것.")
+                print(f"     방향 {n_dir}개 → 중앙값은 {(n_dir + 1) // 2}번째 방향 하나가 정한다. "
+                      f"⛔ '{win} 우세'로 인용하지 말 것.")
+                print(f"     증거: 크기 {'✔' if ev_mag else '✗'} · 부호 {'✔' if ev_sign else '✗'}")
                 print(f"     해소: 독립 방향을 늘리거나(atlas --ndir↑) DFT+U 대조로 간다.")
             else:
                 win = "Li" if med > 0 else "Ni"
-                print(f"   → 이 프로토콜에서 {win} 우세 (바닥 {floor:.3f} eV 를 "
-                      f"{margin * 1000:+.1f} meV 초과 · 표준오차 ±{se_med * 1000:.1f} meV). "
-                      f"열역학 판정 아님 — DFT+U 대조 필요.")
-                print(f"     {sign_txt}")
+                if ev_mag and ev_sign:
+                    print(f"   → 이 프로토콜에서 **{win} 우세** — 크기·부호 **두 증거 모두** "
+                          f"(바닥 {floor:.3f} eV 를 {margin * 1000:+.1f} meV 초과 · "
+                          f"CI 가 0 배제 · 부호 만장일치). 열역학 판정 아님 — DFT+U 대조 필요.")
+                else:
+                    have = "크기" if ev_mag else "부호"
+                    lack = "부호(만장일치 아님)" if ev_mag else "크기(CI 가 0 을 포함)"
+                    print(f"   → ⚠ **판정 보류 (한쪽 증거만)** — {have} 증거는 있는데 "
+                          f"{lack} 증거가 없다. {win} 쪽이지만 인용하지 말 것.")
+                    print(f"     두 증거가 갈리는 건 방향 의존성이 남아 있다는 뜻이다 — "
+                          f"독립 방향을 늘리거나 DFT+U 대조로 간다.")
         else:
             print("   ⛔ 짝지은 Li/Ni 대조쌍이 없다 (레거시 스캔에는 자리 라벨이 없다).")
             # 짝이 없으면 **분포 비교**만 가능하다 — 교란되어 있음을 반드시 같이 적는다.

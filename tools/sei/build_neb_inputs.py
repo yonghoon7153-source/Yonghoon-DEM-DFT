@@ -73,15 +73,45 @@ def zval(upf):
     return float(m.group(1)) if m else None
 
 
+#: ⛔⛔ 2026-08-11 — **원소별 PP 를 이름으로 못 박는다.**
+#:   옛 코드는 `sorted(...)` + `setdefault` 라 **알파벳 첫 번째**를 조용히 골랐다.
+#:   실측: `Nd.paw.z_14.atompaw...` < `Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF` 이므로
+#:   frozen-4f(z=11) 를 pseudo 디렉터리에 **넣기만 하면 옛 z=14 가 그대로 이긴다.**
+#:   그러면 "frozen-4f 로 돌렸다" 고 믿으면서 4f-in-valence 결과를 얻는다 — 조용히 틀린다.
+#:   ⚠ 여기에 넣은 이름은 **정확히 그 파일만** 쓴다. 없으면 그 원소는 skip 된다.
+PP_PIN = {
+    # Nd frozen-4f (z_valence 11 · 4f in core) — QE PSLibrary
+    #   출처: pseudopotentials.quantum-espresso.org/legacy_tables/ps-library/nd
+    #   sha256 18a3835e6437aa953c8a5b783aae1f5b8c83e48f0fa699f8992f6754bdc35101
+    #   suggested cutoff 38 / 202 Ry  ⚠ 우리 표준 60/480 은 그 위라 안전
+    #   ⚠ Topsakal–Wentzcovitch z=14 계열과 **다른 PP** 다 — LiNdO₂·Li₃Nd 각각 검증 필요
+    "Nd": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF",
+}
+
+
 def find_pseudos(pdir):
     pool = {}
     if not os.path.isdir(pdir):
         return pool
-    for f in sorted(os.listdir(pdir)):
+    files = sorted(os.listdir(pdir))
+    for f in files:
         if not f.lower().endswith(".upf"):
             continue
         el = f.split(".")[0].split("_")[0].capitalize()
         pool.setdefault(el, f)
+    # ★ 핀이 있으면 알파벳 선택을 **덮어쓴다** (없으면 그 원소를 아예 뺀다 — 조용히
+    #   옛 PP 로 돌기보다 안 도는 게 낫다)
+    for el, want in PP_PIN.items():
+        if el not in pool:
+            continue
+        if want in files:
+            if pool[el] != want:
+                print(f"   ★ {el} PP 를 핀으로 교체: {pool[el]} → {want}")
+            pool[el] = want
+        else:
+            print(f"   ⛔ {el} 은 핀({want})이 pseudo 디렉터리에 없다 — "
+                  f"이 원소를 빼고 진행한다 (옛 {pool[el]} 로 조용히 돌지 않는다)")
+            pool.pop(el)
     return pool
 
 

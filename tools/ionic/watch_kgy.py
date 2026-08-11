@@ -496,28 +496,51 @@ else:
         print(f"   {sc:8s} {nat:5d} {nli:4d} {st:>22s} "
               f"{(f'{b:.2f}' if b is not None else '—'):>9s} "
               f"{(f'{D:.3e}' if D else '—'):>10s}")
-    # ── 판정: 기준선(Li 24, β 0.64)을 포함해 단조 증가인가 ──────────────────
-    pts = [(24, 0.64)] + sorted(betas)
-    if len(betas) >= 2:
-        mono = all(pts[i][1] <= pts[i + 1][1] + 0.03 for i in range(len(pts) - 1))
-        top = pts[-1]
-        print(f"   사다리 β: " + " → ".join(f"Li{n}:{b:.2f}" for n, b in pts))
-        if top[1] >= 0.80 and mono:
-            print("   ✅ **가설 성립** — 이온 수를 늘리니 β 가 올라 게이트를 넘었다. "
-                  "원인은 통계였다. → 800/1000 K 확장 후 comp1 Ea 재산출:")
-            print("      TEMPS='600 800 1000' LADDER='2x2x2' "
-                  "bash tools/ionic/run_comp1_supercell.sh")
-        elif not mono:
-            print("   ⚠ 단조가 아니다 — 표본 잡음일 수 있다. 마지막 칸까지 보고 말할 것.")
+    # ★★ 2026-08-11 판정 규칙 **전면 교체** (자체검토 P1-4 + Codex 재리뷰).
+    #   옛 규칙(칸별 +0.03 허용 단조성)은 실제로 돌려 보니 이렇게 틀렸다:
+    #     0.64 → 0.90 → 0.88 → 0.86 (계속 감소)  → "가설 성립" ⛔ 거짓
+    #     0.64 → 0.70 → 0.75 → 0.79 (교과서 단조) → "가설 기각" ⛔ 거짓
+    #   더 근본적으로 **β 의 중심은 이온 수에 안 움직인다** — 어떤 생성모형에서도.
+    #   N 은 분산만 줄인다 (실측: sd 0.090 → 0.032, 정확히 1/√8).
+    #   ⇒ 판정량을 "β 가 올라갔나" 에서 **"산포가 줄었나 · 중앙값이 어디에 머무나"** 로 바꾼다.
+    if betas:
+        import statistics as _st
+        by_sc = {}
+        for nli, b in betas:
+            by_sc.setdefault(nli, []).append(b)
+        print(f"   {'Li':>4s} {'n시드':>5s} {'β 중앙값':>9s} {'β sd':>7s}  해석")
+        for nli in sorted(by_sc):
+            v = by_sc[nli]
+            sd = _st.stdev(v) if len(v) > 1 else float("nan")
+            print(f"   {nli:4d} {len(v):5d} {_st.median(v):9.3f} "
+                  + (f"{sd:7.3f}" if len(v) > 1 else "      —")
+                  + ("  (시드 1개 — 산포를 못 잰다)" if len(v) < 2 else ""))
+        ks = sorted(by_sc)
+        if len(ks) >= 2 and all(len(by_sc[k]) >= 3 for k in (ks[0], ks[-1])):
+            m0, m1 = _st.median(by_sc[ks[0]]), _st.median(by_sc[ks[-1]])
+            s0, s1 = _st.stdev(by_sc[ks[0]]), _st.stdev(by_sc[ks[-1]])
+            sem = (s0 ** 2 / len(by_sc[ks[0]]) + s1 ** 2 / len(by_sc[ks[-1]])) ** 0.5
+            print(f"   Δ중앙값 {m1 - m0:+.3f} ± {sem:.3f} (양 끝 Li {ks[0]} → {ks[-1]}) · "
+                  f"sd {s0:.3f} → {s1:.3f}")
+            shrink = s1 / s0 if s0 > 0 else float("nan")
+            print(f"   sd 축소 {shrink:.2f}배 (이상적 독립 Li 면 √({ks[0]}/{ks[-1]}) = "
+                  f"{(ks[0] / ks[-1]) ** 0.5:.2f}배)")
+            if m1 >= 0.80 and abs(m1 - m0) > 2 * sem:
+                print("   ✅ 큰 셀에서 β 가 게이트를 넘고 이동이 유의하다 → "
+                      "finite-size/sampling 효과 지지. comp1 Ea 재산출로.")
+            elif m1 < 0.80 and shrink < 1.0:
+                print("   ⚠ **중앙값은 0.80 아래에 머물고 산포만 줄었다.**")
+                print("      ⛔ 이건 '셀 확대 실패' 가 아니라 **non-Fickian 을 더 정밀하게 잰 것**이다.")
+                print("      → 다음은 MSD 가 아니라 기구 분해:  --scan 의 c 행 · hops_per_ion.py")
+            elif abs(m1 - m0) > 2 * sem:
+                print("   ⚠ 중앙값이 불확실도를 넘어 이동했다 → 진짜 유한크기/형상 물리이거나 추정기 편향.")
+            else:
+                print("   · 아직 갈리지 않았다 (Δ가 표준오차 안) — 시드를 늘리거나 양 끝을 채울 것.")
         else:
-            print(f"   ⛔ **가설 기각 쪽** — Li {top[0]}개에서도 β {top[1]:.2f} 로 0.80 미달. "
-                  "셀 확대도 답이 아니다.")
-            print("      → MSD 경로를 접고 **홉 통계**로 간다 (Fickian MSD 가 필요 없다):")
-            print(f"         python3 tools/ionic/hops_per_ion.py --glob '{SC}/*/**/traj.xyz'")
-            print("      → open_items #1 에 그렇게 적고 comp1 Ea 는 인용 보류 유지.")
-    elif betas:
-        print("   · 아직 한 칸 — 사다리는 **두 칸 이상**이라야 경향을 말할 수 있다.")
-print(BAR)
+            print("   · 판정하려면 **양 끝 칸에 각각 3시드 이상** 필요하다 "
+                  "(시드 sd ≈ 0.107 · 기대 신호 0.16 — 같은 크기다).")
+        print("   ⛔ **β 단조성으로 판정하지 않는다** — 어떤 모형도 그걸 예측하지 않는다.")
+    print(BAR)
 
 # ═══ 브랜치 상기 ═════════════════════════════════════════════════════════
 br = sh("git -C ~/Yonghoon-DEM-DFT branch --show-current").strip()

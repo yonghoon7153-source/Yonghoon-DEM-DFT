@@ -180,7 +180,8 @@ def anneal_relax_config(atoms, calc, anneal_T, anneal_ps, dt_fs, friction, fmax,
     a = atoms.copy(); a.calc = calc
     E0 = float(a.get_potential_energy())
     MaxwellBoltzmannDistribution(a, temperature_K=anneal_T, rng=np.random.default_rng(seed))
-    md = Langevin(a, dt_fs * units.fs, temperature_K=anneal_T, friction=friction, logfile=None)
+    md = Langevin(a, dt_fs * units.fs, temperature_K=anneal_T, friction=friction,
+                  rng=np.random.default_rng(seed + 7919), logfile=None)   # ★ P1-3
     best = {"E": E0, "at": a.copy()}
 
     def _track(a=a, best=best):
@@ -211,9 +212,17 @@ def run_md(atoms, calc, T, equilib_ps, prod_ps, dt_fs, friction, save_fs,
     atoms = atoms.copy()
     atoms.calc = calc
     rng_seed = seed
+    # ⛔⛔ 2026-08-11 자체검토 P1-3 — 옛 코드는 아래 Langevin 에 rng 를 안 넘겼다.
+    #   ASE 는 rng=None 이면 **전역 np.random** 을 쓰는데 이 드라이버는 전역을 seed 하지
+    #   않는다(default_rng 는 전역을 안 건드린다). 즉 --seed 가 초기속도·disorder 만
+    #   고정하고 **thermostat 잡음은 매 실행 달랐다** → 궤적이 재현되지 않았다.
+    #   ⚠ 파급: kb/open_items.md 의 "comp1 s2 **같은 시드**, 200 → 1600 ps" 비교는
+    #     통제된 비교가 아니었다. 같은 시드라도 앞 50 ps 가 같을 수 없으므로
+    #     β 0.64 → 0.37 을 "시간을 늘리면 나빠진다" 의 근거로 쓸 수 없다 — 재검토 대상.
     MaxwellBoltzmannDistribution(atoms, temperature_K=T, rng=np.random.default_rng(rng_seed))
     dt = dt_fs * units.fs
     md = Langevin(atoms, dt, temperature_K=T, friction=friction,
+                  rng=np.random.default_rng(rng_seed),   # ★ P1-3 — 없으면 전역 RNG
                   logfile=str(out_dir / "md.log"))
     md.run(int(equilib_ps * 1000 / dt_fs))
     save_int = max(1, int(save_fs / dt_fs))
@@ -223,9 +232,9 @@ def run_md(atoms, calc, T, equilib_ps, prod_ps, dt_fs, friction, save_fs,
     D, t_ps, msd, extra = li_diffusion_from_frames(frames, save_fs, fit_window_ps)
     # ⚠ D_Li_cm2_s / times_ps / msd_Li_A2 의 정의는 **바꾸지 않는다** — 이미 나간 값들이
     #   그대로 재현돼야 한다. 다중 시간원점 곡선은 옆에 덧붙이기만 한다(창 감사용).
-    (out_dir / "msd.json").write_text(json.dumps(
-        {"T_K": T, "D_Li_cm2_s": D, "times_ps": t_ps, "msd_Li_A2": msd,
-         "fit_window_ps": list(fit_window_ps), **extra}, indent=2))
+    # ⚠ 2026-08-11 — traj 를 **msd.json 보다 먼저** 쓴다. 옛 순서에서는 그 사이에 죽으면
+    #   resume 이 msd.json 을 보고 건너뛰어 **traj 가 영영 안 생겼다** — --save_traj 를
+    #   넣은 목적(소급 MTO·홉 통계 복구)이 정확히 그 상황에서 깨진다.
     if save_traj:
         # full production trajectory (extended-xyz) for jump stats / Li-density
         # cube / van Hove. + sidecar meta so downstream tools auto-read save_fs.
@@ -233,6 +242,9 @@ def run_md(atoms, calc, T, equilib_ps, prod_ps, dt_fs, friction, save_fs,
         (out_dir / "aimd_results.json").write_text(json.dumps(
             {"T_K": T, "save_fs": save_fs, "n_frames": len(frames),
              "prod_ps": prod_ps, "dt_fs": dt_fs}, indent=2))
+    (out_dir / "msd.json").write_text(json.dumps(
+        {"T_K": T, "D_Li_cm2_s": D, "times_ps": t_ps, "msd_Li_A2": msd,
+         "fit_window_ps": list(fit_window_ps), **extra}, indent=2))
     return D
 
 

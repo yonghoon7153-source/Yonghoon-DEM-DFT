@@ -41,10 +41,17 @@ unset LD_LIBRARY_PATH OPAL_PREFIX 2>/dev/null || true   # QE env 잔재가 torch
 DRIVER=$REPO/tools/modelc_v3/disorder_ensemble_diffusion.py
 V0XYZ=${V0XYZ:-$REPO/db/structures/comp1_V0_k444.xyz}
 OUTROOT=${OUTROOT:-$HOME/work/runs/comp1_supercell}
-LADDER=${LADDER:-"2x1x1 2x2x1 2x2x2"}
+# ★★ 2026-08-11 설계 변경 (Codex 재리뷰 + 자체검토) — **1시드 사다리는 판정을 못 한다.**
+#   실측: 이 캠페인의 3시드 그룹 7개에서 pooled within-condition SD(β) = **0.1065** 인데
+#   사다리가 기대하는 신호는 0.64 → 0.80 = **0.16** 이다. 같은 크기다.
+#   → 4칸 × 1시드로는 신호와 시드 잡음을 못 가른다. **양 끝 셀 × 여러 시드**가 맞다.
+#     SE(Δβ) ≈ 0.1065·√(2/k).  k=3 → 0.087 (95% 반폭 0.17, 여전히 파일럿)
+#                              k=7 → 0.057 (0.16 신호를 80% 검정력으로 잡는다)
+#   ⚠ 기준선 β=0.64 는 **다른 런**에서 왔다 — 같은 파이프라인으로 1×1×1 을 다시 재야 한다.
+LADDER=${LADDER:-"1x1x1 2x2x2"}      # 기본 = 양 끝. 중간 칸은 끝이 갈린 뒤 채운다
 TEMPS=${TEMPS:-600}
 PRODPS=${PRODPS:-200}          # ⚠ 캠페인 표준. 시간을 늘리는 실험이 아니다 — 셀을 늘린다
-SEED=${SEED:-2}                # 사다리 1단계는 시드 하나로 본다(경향만 보면 된다)
+SEEDS=${SEEDS:-"2 3 4"}        # 600 K 오차막대와 같은 시드 집합
 DEVICE=${DEVICE:-cuda}
 PY=${PY:-python3}
 test -f "$V0XYZ" || { echo "⛔ 없음: $V0XYZ — git pull 먼저"; exit 1; }
@@ -66,27 +73,32 @@ mkdir -p "$OUTROOT"
 ts "comp1 셀 확대 사다리 — 사다리 [$LADDER] · T [$TEMPS] K · prod ${PRODPS} ps · seed $SEED"
 ts "V0 $V0XYZ → $OUTROOT"
 
+# ⚠ 싼 칸부터 · 시드 안쪽 루프 — 한 셀의 3시드가 먼저 모여야 그 칸을 판정할 수 있다
 for SC in $LADDER; do
   NA=${SC%%x*}; REST=${SC#*x}; NB=${REST%%x*}; NC=${REST##*x}
-  d="$OUTROOT/sc${SC}_s${SEED}"
-  # 드라이버는 resume-safe 라 msd.json 이 있으면 건너뛴다 — 사다리 칸마다 폴더를 나눈다
-  if [ -f "$d/ensemble_results.json" ] && grep -aq '"Ea_eV"\|"D_Li_cm2_s"' "$d/ensemble_results.json" 2>/dev/null; then
-    ts "  ✓ $SC 이미 있음 — 건너뜀 ($d)"
-    continue
-  fi
-  ts "═══ $SC  (${NA}×${NB}×${NC}) ═══"
-  mkdir -p "$d"
-  $PY "$DRIVER" \
-      --v0_xyz "$V0XYZ" --supercell "$NA" "$NB" "$NC" \
-      --label "comp1_sc${SC}" --out_root "$d" \
-      --disorder_levels 0.0 --n_configs 1 \
-      --temperatures $TEMPS \
-      --equilib_ps 5 --prod_ps "$PRODPS" --timestep_fs 2 --friction 0.02 \
-      --save_fs 100 --save_traj \
-      --fit_window_ps 2 50 \
-      --seed "$SEED" --device "$DEVICE" \
-    || { ts "  ⛔ $SC 실패 — 사다리를 여기서 멈춘다 (뒤가 더 비싸다)"; break; }
-  ts "  ✅ $SC 끝"
+  for SEED in $SEEDS; do
+    d="$OUTROOT/sc${SC}_s${SEED}"
+    # 드라이버는 resume-safe 라 msd.json 이 있으면 건너뛴다 — 칸·시드마다 폴더를 나눈다
+    if [ -f "$d/ensemble_results.json" ] && grep -aq '"Ea_eV"\|"D_Li_cm2_s"' "$d/ensemble_results.json" 2>/dev/null; then
+      ts "  ✓ $SC s$SEED 이미 있음 — 건너뜀"
+      continue
+    fi
+    ts "═══ $SC  (${NA}×${NB}×${NC})  seed $SEED ═══"
+    mkdir -p "$d"
+    # ⚠ 타일링 뒤 속도는 드라이버가 **원자별로 새로 뽑는다**(MaxwellBoltzmannDistribution
+    #   이 슈퍼셀에 적용됨) — 복제본이 한 덩어리로 움직이는 copy symmetry 는 없다. 확인함.
+    $PY "$DRIVER" \
+        --v0_xyz "$V0XYZ" --supercell "$NA" "$NB" "$NC" \
+        --label "comp1_sc${SC}" --out_root "$d" \
+        --disorder_levels 0.0 --n_configs 1 \
+        --temperatures $TEMPS \
+        --equilib_ps 5 --prod_ps "$PRODPS" --timestep_fs 2 --friction 0.02 \
+        --save_fs 100 --save_traj \
+        --fit_window_ps 2 50 \
+        --seed "$SEED" --device "$DEVICE" \
+      || { ts "  ⛔ $SC s$SEED 실패 — 여기서 멈춘다 (뒤가 더 비싸다)"; break 2; }
+    ts "  ✅ $SC s$SEED 끝"
+  done
 done
 
 ts "═══ 사다리 판정 ═══"
@@ -95,9 +107,18 @@ $PY "$REPO/tools/ionic/msd_diffusive_check.py" \
     --glob "$OUTROOT/*/**/msd.json" 2>/dev/null || \
   ts "  (msd_diffusive_check 인자가 다르면 아래로: msd_refit_window.py --glob '$OUTROOT/*/**/msd.json')"
 echo
-ts "판정 규칙 — 여기서 눈으로 읽지 말고 규칙대로 읽을 것:"
-echo "   · β 가 Li 24→48→96→192 에 따라 **단조 증가**하고 192 에서 ≥0.80 → 가설 성립."
-echo "     그때만 comp1 Ea 를 셀 확대본으로 다시 낸다(800/1000 K 확장 후)."
-echo "   · β 가 0.65 언저리에서 평평 → **가설 기각**. 셀 확대도 답이 아니다 —"
-echo "     open_items #1 에 그렇게 적고 comp1 Ea 는 계속 인용 보류로 둔다."
-echo "   ⛔ '192 만 통과' 는 애매하다 — 사다리 전체를 보고 말할 것."
+ts "판정 규칙 (2026-08-11 개정) — **단조성이 아니라 양 끝 비교 + 산포**로 읽는다:"
+echo "   시드 SD ≈ 0.107 이므로 시드 하나짜리 차이는 아무 뜻이 없다. 칸별 3시드 평균을 본다."
+echo
+echo "   ① 큰 셀 중앙값 β → 1 에 접근 **AND** 시드 산포 감소"
+echo "      → finite-sampling/finite-size 효과 지지. comp1 Ea 를 확대본으로 재산출."
+echo "   ② 중앙값은 <0.8 에 머물고 **산포만** 감소"
+echo "      → ⛔ 가설 기각이 아니다. **non-Fickian 동역학을 더 정밀하게 잰 것**이다."
+echo "        MSD 경로를 접고 홉 통계·van Hove 로 기구를 분해한다:"
+echo "          python3 tools/ionic/hops_per_ion.py --glob '$OUTROOT/*/**/traj.xyz'"
+echo "   ③ 중앙값이 불확실도를 넘어 이동 → 진짜 유한크기/형상 물리 (또는 추정기 편향)"
+echo "   ④ 중앙값도 산포도 불안정 → 집단 상관·비정상성·프로토콜 감사"
+echo
+echo "   ⚠ 이상적 독립 Li 라면 Li 24→192 에서 SD 가 1/√8 = 0.354배로 줄어야 한다."
+echo "     덜 줄면 **유효 독립 Li 수가 명목보다 작다**는 뜻이다 — 그 자체가 결과다."
+echo "   ⚠ 2x1x1→2x2x1→2x2x2 는 크기뿐 아니라 **형상비**도 바꾼다 — 크기 단독 실험이 아니다."

@@ -57,15 +57,37 @@ def zval(path):
     return float(m.group(1)) if m else None
 
 
+#: ⛔ PP 핀 — build_neb_inputs.py 의 PP_PIN 과 **같은 값이어야 한다**.
+#:   bulk(여기) → endpoint → NEB 가 서로 다른 PP 로 돌면 기하를 승계할 수 없다
+#:   (Codex 재리뷰: "open-4f+U bulk 좌표를 frozen-4f NEB 가 승계할 수 있다").
+PP_PIN = {"Nd": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF"}
+
+
 def find_pseudos(pdir):
-    """pseudo 디렉터리에서 원소 → 파일명. ⚠ 없는 원소는 그대로 보고한다."""
+    """pseudo 디렉터리에서 원소 → 파일명. ⚠ 없는 원소는 그대로 보고한다.
+
+    ⛔ 알파벳 첫 번째를 고르던 옛 동작은 함정이었다 — frozen-4f 를 넣어도
+      `Nd.paw.z_14...` 가 `Nd.pbe-spdn...` 보다 앞서서 옛 PP 가 계속 이긴다.
+    """
     out = {}
-    for f in sorted(os.listdir(pdir)):
+    files = sorted(os.listdir(pdir))
+    for f in files:
         if not f.lower().endswith((".upf",)):
             continue
         el = f.split(".")[0].split("_")[0]
         el = el[0].upper() + el[1:].lower() if len(el) > 1 else el.upper()
         out.setdefault(el, f)
+    for el, want in PP_PIN.items():
+        if el not in out:
+            continue
+        if want in files:
+            if out[el] != want:
+                print(f"   ★ {el} PP 를 핀으로 교체: {out[el]} → {want}")
+            out[el] = want
+        else:
+            print(f"   ⛔ {el} 핀({want})이 없다 — 이 원소를 뺀다 "
+                  f"(옛 {out[el]} 로 조용히 돌지 않는다)")
+            out.pop(el)
     return out
 
 
