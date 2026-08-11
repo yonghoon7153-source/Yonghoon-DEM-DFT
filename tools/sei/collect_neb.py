@@ -104,6 +104,21 @@ def read_one(d):
         checks.append("meta.json 이 없어 대칭 판정을 못 한다 — 생성기를 다시 돌릴 것")
     if "tot_charge" in r and r["tot_charge"].startswith("0"):
         checks.append("중성 공공이라 원자가띠에 정공이 생긴다 — tot_charge=+1 로 다시 걸 것")
+    # ★ 2026-08-11 추가 — li3p 가 Ea=0.000 eV 로 `citable: true` 를 통과했다.
+    #   장벽 0 은 측정이 아니라 **경로가 붕괴했다**는 신호다 (움직이는 Li 가 안 움직였거나
+    #   두 끝점이 사실상 같은 구조이거나 안장점을 못 찾았거나).
+    ea = r.get("Ea_effective_eV")
+    if ea is not None and ea < 0.01:
+        checks.append(f"유효 장벽이 {ea:.4f} eV — **0 은 측정이 아니다.** 경로 붕괴를 의심할 것: "
+                      f"① 끝점 두 개가 같은 구조인가 ② 움직이는 Li 가 실제로 이동했나 "
+                      f"③ 이미지 사이 최대 변위가 0 이 아닌가. neb.dat 와 끝점 좌표를 직접 볼 것")
+    if ea is not None and ea < 0:
+        checks.append(f"장벽이 음수({ea:.4f} eV) — 끝점이 안장점보다 높다. 입력이 잘못됐다")
+    # 비등가 끝점인데 자리 에너지 차가 정확히 0 인 것도 같은 종류의 신호다
+    if eqv is False and r.get("site_energy_diff_eV") is not None \
+            and abs(r["site_energy_diff_eV"]) < 1e-6:
+        checks.append("비등가 Li 자리(Wyckoff 2종)인데 자리 에너지 차가 0 이다 — "
+                      "끝점 생성이 실제로 두 자리를 잡았는지 확인할 것")
     r["blocking_checks"] = checks
     r["citable"] = conv and not checks
     return r
