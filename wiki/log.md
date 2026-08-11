@@ -29,3 +29,12 @@
 - 첫 적용: σ_e Stage 21(자체 SUPERSEDED 선언본) 전문 → docs/sigma_e_stage21_history.md.
   CLAUDE.md 44,127 → 41,317 tok (−6.4%), 제약 3문단 유실 0, 섹션 42개 불변.
 - guides/adversarial-review-protocol 에 "재현 테스트 먼저" + "만들기 전 사다리" 추가.
+
+## [2026-08-11] create | 컨텍스트 계기 자동화 (실측 usage 기반)
+- `scripts/context_meter.py` (selftest 11/11) + `.claude/hooks/context-meter.sh`
+  (UserPromptSubmit).  트랜스크립트 JSONL 의 `message.usage` 실측으로 점유율 계산 —
+  input + cache_creation + cache_read (★ output 은 이중계산이라 제외).
+- 46 MB 트랜스크립트를 **꼬리 512 KB 만** 읽어 39 ms (매 프롬프트 부담 없음).
+  꼬리에 usage 가 없으면 창을 2배씩 키워 재시도 (긴 도구-출력 한 줄 대응).
+- 임계 초과 시에만 한 줄 출력, 평소 조용.  자동 compact 는 **하지 않는다** — 압축은
+  한정어를 깎으므로(caveman 기각과 같은 논리) 판단은 사람이 한다.
