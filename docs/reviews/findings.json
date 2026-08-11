@@ -163,9 +163,14 @@
       "id": "RC7-01",
       "severity": "P1",
       "title": "STEP3 manifest 가 실패·미실행 component 를 누락하고도 complete (+ bare NaN)",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
-      "opened_in": "docs/reviews/codex_rc6_verification_20260811.md"
+      "opened_in": "docs/reviews/codex_rc6_verification_20260811.md",
+      "claimed_fixed_sha": "59cd8d19",
+      "evidence_tests": [
+        "webapp/test_pipeline_provenance.py::RC7-01a-n"
+      ],
+      "note": "STEP3_EXPECTED 선언 + 미표시 component 를 missing 으로 채운 뒤 판정 (missing 이면 complete 불가, schema v2) + finite_belt() 모듈함수로 쓰기 직전 전수 NaN/Inf 벨트 (경로 기록 후 allow_nan=False)."
     },
     {
       "id": "RC7-02",
@@ -210,17 +215,27 @@
       "id": "RC7-05",
       "severity": "P2",
       "title": "STEP3 backend 가 전역 LAST_BACKEND 라 마지막 solve 하나만 표현",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
-      "opened_in": "docs/reviews/codex_rc6_verification_20260811.md"
+      "opened_in": "docs/reviews/codex_rc6_verification_20260811.md",
+      "claimed_fixed_sha": "59cd8d19",
+      "evidence_tests": [
+        "webapp/test_pipeline_provenance.py::RC7-05a-c"
+      ],
+      "note": "_s3mark 가 표시 시점에 component 별 backend 스냅샷; 전역 LAST_BACKEND 는 backend_last_solve 하위호환 별칭으로 강등."
     },
     {
       "id": "RC7-06",
       "severity": "P2",
       "title": "Stage E estimate provenance 가 is_stage_e_key 관리 대상이 아니라 stale 잔존",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
-      "opened_in": "docs/reviews/codex_rc6_verification_20260811.md"
+      "opened_in": "docs/reviews/codex_rc6_verification_20260811.md",
+      "claimed_fixed_sha": "c61fafee",
+      "evidence_tests": [
+        "webapp/test_pipeline_provenance.py::RC7-06a-e"
+      ],
+      "note": "STAGE_E_EXTRA_OWNED_KEYS 로 명시 + run_one 의 fm[...] 대입 전수 스캔 drift 가드(미소유 키 0 강제).  가짜 키 주입으로 가드 유효성 확인."
     },
     {
       "id": "RC7-07",
