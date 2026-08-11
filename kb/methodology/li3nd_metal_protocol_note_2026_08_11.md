@@ -2,7 +2,7 @@
 title: "Li₃Nd 독자 계산 — 착수 전 프로토콜 점검 (금속 · frozen-4f)"
 tags: [methodology/sei, methodology/nd, neb, metal, protocol]
 date: 2026-08-11
-status: 착수 대기 (Codex NEB 리뷰 답 이후 · 코드 미수정)
+status: 코드 반영 완료(dbec05fb) · **재리뷰 대기** · PP 블로커로 착수 대기
 관련: kb/reviews/site_screen_codex_round3_request_2026_08_11.md · db/properties/li_nd_alloy_check.json
 ---
 
@@ -91,13 +91,41 @@ Li₃Nd 는 Nd 를 포함하므로 **frozen-4f PP 확보가 선행**이다.
 **③ 이 분기점이다.** 금속으로 확인되면 ④ 를 금속 프로토콜로, 뜻밖에 갭이 열리면
 기존 절연체 프로토콜로 간다. ③ 없이 ④ 를 걸면 어느 쪽이든 근거가 없다.
 
-## 5. 코드 수정 목록 (Codex NEB 리뷰 답과 **함께** 반영)
+## 5. 코드 수정 목록 — ✅ **전건 반영 완료 (2026-08-11, dbec05fb)**
 
-지금 손대지 않는다 — `build_neb_inputs.py`·`collect_neb.py` 가 리뷰 중이라 바꾸면
-리뷰 대상이 어긋난다. 답이 오면 6종 NEB 수정과 한 번에 넣는다.
+~~지금 손대지 않는다 — 리뷰 중이라 바꾸면 리뷰 대상이 어긋난다.~~
+→ Codex 회신이 왔고 저자가 Li₃Nd 를 우선으로 요청해, NEB P0 4건과 **한 번에** 넣었다.
 
-1. 상별 `electronic_class` 레지스트리 (metal / insulator) — 단일 출처 JSON
-2. `build_dft_inputs.py`: metal 이면 ③ fixed-occ 갭 단계를 건너뛰거나 `NOT_APPLICABLE` 표기
-3. `build_neb_inputs.py`: metal 이면 `tot_charge=0` + 금속 smearing
-4. `collect_neb.py`: `tot_charge=0` 차단을 **insulator 에만** 적용
-5. `extract_gap.py`: metal 선언 상은 갭을 db 에 쓰지 않고 판정만 남김
+| # | 내용 | 상태 |
+|---|---|---|
+| 1 | 상별 `electronic_class` 레지스트리 — 단일 출처 JSON | ✅ `db/properties/sei_electronic_class.json` + `tools/sei/electronic_class.py` |
+| 2 | `build_dft_inputs.py`: metal 이면 ③ 갭 단계 건너뜀 | ✅ 입력을 **아예 안 만들고** `03_GAP_NOT_APPLICABLE.json` 을 남긴다 |
+| 3 | `build_neb_inputs.py`: metal 이면 `tot_charge=0` + 금속 smearing | ✅ `mv` · `degauss 0.02` · jellium 없음 |
+| 4 | `collect_neb.py`: 전하 차단을 **insulator 에만** | ✅ metal 은 `tot_charge≠0` 을 오히려 차단 |
+| 5 | `extract_gap.py`: metal 은 갭을 db 에 안 씀 | ✅ `NOT_APPLICABLE(metal)` 만 기록 |
+
+★ 설계에서 **세 번째 class 를 추가**했다 (원 계획엔 metal/insulator 둘뿐이었다):
+
+> `undetermined` — 우리 계산으로 아직 판정 불가. ⛔ **금속 선언이 아니다.**
+> LiNdO₂·Nd₂O₃·Nd₂S₃ 가 여기 들어간다. 이들을 `metal` 로 분류했으면 NEB 이
+> **틀린 전하로** 돌았을 것이다 — 4f-in-valence 의 갭 0 은 방법의 실패지 금속성이 아니다.
+
+또 `evidence` 축을 뒀다 (`measured` / `declared` / `blocked`).
+Li₃Nd 는 `metal · declared` 라서 **DOS 로 E_F 상태를 확인하기 전에는 NEB 이 안 열린다**
+(§4 의 ③단계가 코드로 강제된다). 안 그러면 "금속이라 가정했더니 금속 답이 나왔다" 가 된다.
+
+## 6. ⛔ 실제 블로커 확인 (2026-08-11 gabia)
+
+```
+/data/work/pseudo
+  Nd.paw.z_14.atompaw.wentzcovitch.v1.2.upf   z = 14.0   4f-in-valence  ⛔
+⛔ 전부 4f-in-valence 다 → 확보 경로 A/B/C 중 고른다
+```
+
+**코드가 다 준비돼도 PP 없이는 입력이 안 나온다.** `build_neb_inputs.py` 의
+`z_valence > 12` 게이트가 Li₃Nd·LiNdO₂ 를 둘 다 막고 있다 (같은 PP 공유).
+
+→ **Li₃Nd 의 임계 경로는 NEB 규약이 아니라 todo #27 (Nd frozen-4f PP) 이다.**
+   `python3 tools/sei/nd_frozen4f.py --plan` 의 경로 A(기성품)/B(ld1.x)/C(VASP 외주).
+   우리 것이 Topsakal–Wentzcovitch RE PAW 계열이므로 **같은 세트의 z≈11 짝이 있는지**를
+   먼저 확인하는 게 A 의 첫 수다.

@@ -428,11 +428,24 @@ if n_done:
         print("   ★ MTO(다중 시간원점) 감지 — 단일원점 대비 β 산포가 줄어드는지가 이번 판의 관전 포인트")
 
 if n_done >= len(PLAN):
-    print("   ▶ 다 끝났다. 500 K 필요 prod 를 이 β 로 정하고 나서 걸 것:")
-    print("      python3 tools/ionic/msd_refit_window.py --mto \\")
+    # ★★ 2026-08-11 판정 — 여기서 500 K 를 안내하던 문구를 **철회**한다.
+    #   ① 21런 전수 게이트: 8/21 탈락 (lpsocl 9런 중 5런). 700/900 이 이미 뚫렸다.
+    #   ② 그 탈락이 잡음이 아님을 귀무분포로 확인 (beta_null_test.py):
+    #      이상 브라운 운동은 창 2-50 에서 β 1.006, 0.8 미만이 1.0% 뿐.
+    #   ③ 500 K@400 ps 는 홉 수(∝D·t) 로 600 K@200 ps 의 0.66배 — 그 600 K 가 이미 탈락한 계다.
+    #   ④ --mto 재적합은 **돌아가지 않는다**: 21런이 옛 드라이버로 돌아 MTO 가 없고
+    #      프레임(--save_traj)도 없어 소급 계산이 불가하다.
+    print("   ⛔ **500 K 를 걸지 않는다 (2026-08-11 판정).** 700/900 에서 이미 8/21 탈락이다:")
+    print("      · lpsocl 5/9 · modelc 2/6 · b2o3 1/6  (창 2-50, β<0.80)")
+    print("      · 잡음 아님을 확인: python3 tools/ionic/beta_null_test.py --n_li 27 "
+          "--n_frames 2001 --dt_ps 0.1")
+    print("        → 이상 브라운 운동도 창 2-50 에서 β 1.006, 0.8 미만은 1.0% 뿐")
+    print("      · 500 K@400 ps 는 홉 수로 600 K@200 ps 의 0.66배 — 더 어렵다")
+    print("      ⚠ --mto 재적합도 못 한다: 21런이 옛 드라이버(MTO 이전 판)로 돌았고")
+    print("        --save_traj 도 없어 프레임이 없다. 소급 계산 불가.")
+    print("   ▶ 대신 ④ 셀 확대 사다리를 본다 — 시간이 아니라 이온 수가 남은 축이다.")
+    print("      게이트 전수 재확인:  python3 tools/ionic/msd_diffusive_check.py --scan \\")
     print(f"        --glob '{ARR}/*/T*_s*/**/msd.json'")
-    print("      tmux new -s arr500 -d 'TEMP_PROD=\"500:<정한값>\" LPSOCL_EXTRA=\"\" \\")
-    print("        bash tools/ionic/run_arrhenius_6pt.sh 2>&1 | tee -a ~/logs/arr500.log'")
 elif not arr_up and not n_done:
     print("   · 미착수:")
     print("      tmux new -s arr6 -d 'TEMP_PROD=\"700:200 900:200\" \\")
