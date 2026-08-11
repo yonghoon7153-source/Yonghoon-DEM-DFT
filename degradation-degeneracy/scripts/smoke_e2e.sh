@@ -97,14 +97,16 @@ step "1. PyBaMM 합성 격자 (producer artifact)"
   || bad "producer 기록이 없다 (F70)"
 "$PY" - "$CURVES" <<'PYEOF'
 import sys
-from src.config import load_config
 from src.io import validate_curves_provenance
-# ★ 10차 자체 확인 2 — cfg 를 넘겨 실패라벨 guard 재검까지 태운다
-v = validate_curves_provenance(sys.argv[1],
-                               cfg=load_config("configs/grid_coarse.yaml"))
-print(f"   {'✅' if v['ok'] else '❌'} producer 독립 검증 (F74): "
-      + ("통과" if v["ok"] else f"실패 — {v['fail']}"))
-sys.exit(0 if v["ok"] else 1)
+# ★ 11차 발견 3 — 실패라벨 재검은 producer 가 서명한 replay_recipe 로 하므로
+#   호출자가 cfg 를 줄 필요가 없다. 실패 2건 격자라 이 경로가 실제로 돈다.
+v = validate_curves_provenance(sys.argv[1])
+need = {"실패목록_ID결합", "실패사유_불능재검", "실패사유_미검증"}
+missing = need - set(v["checks"])
+print(f"   {'✅' if v['ok'] and not missing else '❌'} producer 독립 검증 (F74): "
+      + ("통과 (실패라벨 재검 포함)" if v["ok"] and not missing
+         else f"실패 — {v['fail']} / 누락 {sorted(missing)}"))
+sys.exit(0 if v["ok"] and not missing else 1)
 PYEOF
 [[ $? -eq 0 ]] || bad "producer 검증 실패"
 
