@@ -249,6 +249,22 @@ def main():
         print(f"{'case':34s} {head}   tmax")
         print(f"{'':34s} " + " ".join(f"{'c=' + w:>8s}" for w in [])
               + "  (아래 줄: 각 창의 **절편 c [Å²]** — 상수면 케이지, 커지면 sub-diffusion)")
+        def _spearman(v):
+            vv = [x for x in v if x is not None]
+            if len(vv) < 4:
+                return 0.0
+            import statistics as _st
+            r = sorted(range(len(vv)), key=lambda i: vv[i])
+            rank = [0.0] * len(vv)
+            for pos, i in enumerate(r):
+                rank[i] = float(pos)
+            x = [float(i) for i in range(len(vv))]
+            mx, mr = _st.mean(x), _st.mean(rank)
+            num = sum((a - mx) * (b - mr) for a, b in zip(x, rank))
+            den = (sum((a - mx) ** 2 for a in x) * sum((b - mr) ** 2 for b in rank)) ** 0.5
+            return num / den if den > 1e-30 else 0.0
+
+        trends = []
         for _it in (scan_items if scan_items else files):
             if scan_items:
                 tag, t, y = _it
@@ -268,8 +284,38 @@ def main():
             print(f"{tag:34s} {' '.join(cells)}   {max(t):.0f}")
             print(f"{'  └ c [Å²]':34s} {' '.join(ints)}")
             print(f"{'  └ m [Å²/ps]':34s} {' '.join(slps)}")
+            # ── 추세 판정 (숫자만 모아서) ──────────────────────────────────
+            bv = [loglog_slope(t, y, lo, hi) for lo, hi in WINS]
+            lfv = [lin_fit(t, y, lo, hi) for lo, hi in WINS]
+            bv = [x for x in bv if x is not None]
+            mv = [x[0] for x in lfv if x is not None]
+            cv = [x[1] for x in lfv if x is not None]
+            if len(bv) >= 4 and len(mv) >= 4:
+                tb, tm, tc = _spearman(bv), _spearman(mv), _spearman(cv)
+                dm = 100.0 * (mv[-1] - mv[0]) / mv[0] if mv[0] else float("nan")
+                if tb > 0.6 and abs(dm) < 15:
+                    v = "**케이지 절편** → D 인용 가능"
+                elif abs(tb) < 0.45 and tm < -0.6 and tc > 0.6:
+                    v = "**진짜 sub-diffusion** → D 인용 금지"
+                else:
+                    v = "판별 불가 (꼬리 잡음) — MTO 필요"
+                trends.append((tag[:26], tb, dm, tm, tc, v))
         print("  ⚠ 창을 늦추면 통계 점수는 줄어든다 — β 가 1 이어도 창 안 데이터가")
         print("    너무 적으면(점 3개 미만) '—' 로 나온다. tmax 가 창보다 작아도 마찬가지.")
+        # ★★ 2026-08-11 — 눈으로 읽지 말고 **추세로 판정**한다. 실측에서 이 판정이
+        #   β 게이트와 **반대로** 나오는 사례가 나왔다 (아래 trend_verdict 주석 참조).
+        if trends:
+            print()
+            print("  ═══ 추세 판정 (창 스캔의 β·m·c 를 Spearman 으로) ═══")
+            print(f"  {'case':26s} {'β추세':>6s} {'m변화%':>7s} {'m추세':>6s} {'c추세':>6s}  판정")
+            for tag, tb, dm, tm, tc, v in trends:
+                print(f"  {tag:26s} {tb:+6.2f} {dm:+7.1f} {tm:+6.2f} {tc:+6.2f}  {v}")
+            print()
+            print("  · **케이지 절편**  β 가 창 따라 단조 상승(+) · m 변화 <15% → MSD = c + 6Dt.")
+            print("    D 는 자유 절편 맞춤의 기울기라 무사하다. **β<0.8 이어도 인용 가능.**")
+            print("  · **진짜 sub-diffusion**  β 가 모든 창에서 평평 · m 단조 하락 · c 단조 증가")
+            print("    → 그때만 D 인용 금지. **β>0.8 이어도 금지다.**")
+            print("  ⛔ 그러므로 **β 값 하나로 통과/탈락을 정하면 안 된다** — 추세를 볼 것.")
         print()
         print("  ★★ **β 행이 아니라 c 행이 판정을 가른다** (2026-08-11):")
         print("     · c 가 창 따라 **거의 상수** + m 도 상수 + β 만 1 로 올라감")
