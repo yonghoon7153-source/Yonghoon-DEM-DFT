@@ -20,8 +20,11 @@
   ① **주기 경계**: 뛰는 거리가 셀 경계를 넘으면 감싼 좌표(wrapped)를 그대로 끝점으로 쓰면
     NEB 이 셀을 한 바퀴 도는 엉뚱한 경로를 만든다. 끝점은 반드시
     `시작점 + 최소이미지 벡터` 로 쓴다 (감싸지 않은 좌표).
-  ② **전하**: 중성 Li 를 빼면 넓은 갭 절연체의 원자가띠에 정공이 생겨 계가 가짜 금속이 된다.
-    Li⁺ 를 빼는 게 맞다 → `tot_charge = +1` (jellium 보정). 닫힌 껍질이 유지된다.
+  ② **전하**: 중성 Li 를 빼면 넓은 갭 절연체의 원자가띠에 정공이 생긴다(V_Li⁰).
+    ★★ 2026-08-11 정정 — 그 정공을 없애려면 전자를 **더해야** 한다: `tot_charge = -1` (V_Li⁻).
+    옛 코드는 `+1`(전자를 하나 더 뺌)이라 정공이 **2개**가 됐다 — 의도와 전자 2개 차이.
+    QE 규약: +1 = 전자 부족, −1 = 전자 추가. (Codex 착수전 검토 P0-1, 전자 수 검산으로 확인)
+    ⚠ 기존 li2s 0.272 eV 는 옛 규약 산물이라 **provisional** 이다. q=0/−1 파일럿 후 재판정.
     ⚠ jellium 은 유한 셀 보정이 근사다 — 셀을 충분히 키워 공공-공공 상호작용을 줄인다.
 
   python3 tools/sei/build_neb_inputs.py --plan          # 비용만 먼저 본다 (실행 안 함)
@@ -224,14 +227,20 @@ def build(tag, path, disp, a, pool):
     if hop is None:
         return {"tag": tag, "skip": "Li 가 2개 미만"}
 
-    # 전자 수 = (완전 셀) − (뺀 Li 의 z_valence) − (tot_charge 1)
-    #   Li 원자를 지우면 QE 는 그 z_valence 만큼 전자를 뺀다 = 중성 Li 제거.
-    #   거기에 tot_charge=+1 로 전자를 하나 더 빼야 **Li⁺** 를 뺀 게 된다.
-    #   그래야 닫힌 껍질이 유지되고 원자가띠에 정공이 안 생긴다 (아래 함정 ②).
+    # ★★ 2026-08-11 부호 정정 (Codex 착수전 검토 P0-1) — 이전 규약이 **틀렸다**.
+    #   QE 규약: tot_charge = +1 → 전자 1개 **부족**, −1 → 1개 **추가**.
+    #   Li **원자**를 지우면 QE 가 z_valence(=3) 만큼 전자도 뺀다 → 셀은 중성이고,
+    #   이온 관점으로는 Li⁺ 가 빠지며 전자 1개가 남아 **원자가띠에 정공 1개** = V_Li⁰.
+    #   옛 코드는 이 정공을 없애려고 tot_charge=+1 로 전자를 **하나 더 뺐다** — 반대 방향이라
+    #   정공이 2개가 됐다. 닫힌 껍질 V_Li⁻ 를 원하면 전자를 **더해야** 한다(tot_charge = −1).
+    #   실측 검산(Li₂S 216전자 셀): 옛 212 vs 의도 214 → **전자 2개 차이**.
+    #   ⚠ 그래서 기존 li2s 0.272 eV 는 정공 2개짜리 계산이다 — provisional 로 내린다.
+    CHARGE = {"minus1": -1.0, "neutral": 0.0}      # V_Li⁻ (닫힌 껍질) / V_Li⁰ (정공 1개)
+    q = CHARGE[a.vacancy_charge]
     nelec_full = sum(zval(os.path.join(a.pseudo_dir, pool[s])) or 0
                      for s in at.get_chemical_symbols())
     z_li = zval(os.path.join(a.pseudo_dir, pool["Li"])) or 3.0
-    nelec_vac = nelec_full - z_li - 1.0
+    nelec_vac = nelec_full - z_li - q      # q=−1 이면 +1 개(정공 0) · q=0 이면 그대로(정공 1)
     nat = len(at) - 1
 
     orb = li_orbits(at0)
@@ -296,7 +305,7 @@ def build(tag, path, disp, a, pool):
             f"    ecutwfc         = {ECUTWFC}", f"    ecutrho         = {ECUTRHO}",
             # ★ Li⁺ 를 뺐으므로 전자도 하나 적다. 중성으로 두면 원자가띠에 정공이 생겨
             #   넓은 갭 절연체가 가짜 금속이 된다 (위 함정 ②).
-            "    tot_charge      = 1.0",
+            f"    tot_charge      = {q:.1f}",
             "    occupations     = 'smearing'", "    smearing        = 'gaussian'",
             "    degauss         = 0.005", "/",
             "&ELECTRONS", "    conv_thr        = 1.0d-8",
@@ -317,7 +326,10 @@ def build(tag, path, disp, a, pool):
     import json as _j
     _j.dump({"tag": tag, "disp": disp, "supercell": list(rep), "nat": nat,
              "hop_distance_A": hop["d"], "nelec": nelec_vac,
-             "tot_charge": 1.0, "num_of_images": a.images,
+             "tot_charge": q, "vacancy_charge": a.vacancy_charge,
+             "charge_convention": "QE: +1=전자 부족, -1=전자 추가. V_Li- 는 -1 이다. "
+                                  "2026-08-11 이전 입력은 +1(정공 2개)이라 무효.",
+             "num_of_images": a.images,
              "min_cell_A": min(info["L"]), "kpts": info["kpts"],
              "li_orbits": orb,
              "endpoints_symmetry_equivalent": (orb or {}).get("n_li_orbits") == 1,
@@ -350,6 +362,10 @@ def main():
     ap.add_argument("--kdens", type=float, default=0.04,
                     help="k 밀도 [Å⁻¹] — 슈퍼셀이라 성기게 잡는다")
     ap.add_argument("--only", nargs="*", help="일부만")
+    ap.add_argument("--vacancy_charge", choices=("minus1", "neutral"), default="minus1",
+                    help="minus1 = V_Li⁻ (닫힌 껍질, tot_charge=-1, 기본) · "
+                         "neutral = V_Li⁰ (정공 1개, tot_charge=0). "
+                         "⚠ 옛 규약 tot_charge=+1 은 정공 2개라 틀렸다 — 폐기됨")
     ap.add_argument("--relaxed_from", default=DFT_WORK,
                     help="vc-relax 산출물 뿌리 (기본: run_sei_dft.sh 의 WORK)")
     ap.add_argument("--allow_unrelaxed", action="store_true",
