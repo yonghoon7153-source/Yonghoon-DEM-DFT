@@ -1098,12 +1098,29 @@ def main():
             cls = "SIGN_CONSISTENT_SMALL"
         else:
             cls = "UNRESOLVED_MIXED"
+        # ★ 번들 **이전**에 잃은 방향까지 본다. n/n_planned 만 보면 계획 자체가 이미
+        #   줄어든 경우를 영원히 못 잡는다 (계획 3/3 = 100% 인데 원래 방향은 5개).
+        #   자리 스윕 방향(Li_top/Ni_top 이 애초에 없음)은 정의 밖이라 세지 않고,
+        #   Li_top/Ni_top 이 **있는데 부적격**인 방향만 손실로 센다.
+        aud = (man.get("pair_audit") or {}).get(frag) or {}
+        ex = aud.get("excluded_dirs") or {}
+        lost = {d: sorted(c) for d, c in ex.items()
+                if any(s.startswith(("Li_top", "Ni_top")) and "부적격" in s for s in c)}
+        nd = aud.get("n_down_dirs")
+        cov = (n_planned / nd) if nd else None
         results["fragments"][frag] = {
             "n_directions": n, "n_planned": n_planned, "dE_list": dl,
             "median_eV": round(med, 4), "class": cls,
+            "n_down_dirs": nd, "direction_coverage": None if cov is None else round(cov, 2),
+            "disqualified_dirs": lost,
             "read_as": "Li 우세 경향" if med > 0 else "Ni 우세 경향",
             "note": ("PBE+U(6.2)+D3-zero fixed-protocol tendency — UMA 값과 같은 표 금지. "
                      "δ=%.3f eV." % delta)}
+        if lost:
+            results["warnings"].append(
+                f"{frag}: down_dir {nd}개 중 {len(lost)}개가 **번들 이전에** 탈락했다 "
+                f"({', '.join(sorted(lost))}) — 계획 {n_planned}개는 이미 줄어든 수다. "
+                f"탈락 사유가 물리적으로 정당한지 확인하고 원고에 방향 수를 명시할 것")
 
     # ── 필수 완결성 — static + **계획된 dense** 까지 (Codex P0-D) ────────────
     missing = []
@@ -1136,9 +1153,14 @@ def main():
               + (f"  ⛔{';'.join(r['gates'])}" if r["gates"] else ""))
     print("\n=== 조각별 판정 ===")
     for f, r in results["fragments"].items():
-        print(f"  {f:14s} n={r.get('n_directions', 0)}/{r.get('n_planned', '?')}  중앙값 "
+        nd = r.get("n_down_dirs")
+        print(f"  {f:14s} n={r.get('n_directions', 0)}/{r.get('n_planned', '?')}"
+              + (f" (원래 방향 {nd})" if nd and nd != r.get("n_planned") else "")
+              + "  중앙값 "
               + (f"{r['median_eV']:+.3f} eV" if "median_eV" in r else "—")
-              + f"  → {r['class']}")
+              + f"  → {r['class']}"
+              + (f"  ⚠번들이전 탈락 {len(r['disqualified_dirs'])}방향"
+                 if r.get("disqualified_dirs") else ""))
     if results["e_ads"]:
         print("\n=== E_ads (pm1 seed · box24 기준계 · 음수 = 흡착 유리) ===")
         for pid, e in sorted(results["e_ads"].items()):
