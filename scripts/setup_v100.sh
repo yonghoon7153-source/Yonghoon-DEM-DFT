@@ -69,6 +69,26 @@ python3 -c "import numpy, scipy, pandas, networkx, matplotlib, pyamg, taichi, sk
   # shellcheck disable=SC2086
   pip install -q $PKGS || fail "pip install 실패"
 }
+# ── ★ cupy — optional 이지만 **없으면 비싸다** (2026-08-11 실사고) ───────────────────
+#   STEP3 σ 는 cupy 가 없으면 조용히 CPU 로 폴백한다.  답은 같지만 실측 2.7M dof 전자
+#   솔브가 **3,485 s (58분)/채널** 이다.  더 나쁜 것은 타이밍 — A/B 실험이 이미 돌기
+#   시작하면 두 팔이 같은 backend 여야 해서 **중간에 바꿀 수 없다**.  그래서 셋업 때 깐다.
+#   ⚠ 실패해도 셋업을 멈추지 않는다 (CPU 폴백이 정상 경로이므로).
+if ! python3 -c "import cupy" 2>/dev/null; then
+  CUDA_MAJ=$(nvidia-smi 2>/dev/null | sed -n 's/.*CUDA Version: *\([0-9]*\).*/\1/p' | head -1)
+  case "$CUDA_MAJ" in
+    12|13) CUPY_PKG=cupy-cuda12x ;;
+    11)    CUPY_PKG=cupy-cuda11x ;;
+    *)     CUPY_PKG="" ;;
+  esac
+  if [ -n "$CUPY_PKG" ]; then
+    echo "  cupy 설치 시도: $CUPY_PKG  (CUDA $CUDA_MAJ.x — 없으면 STEP3 가 채널당 ~1h)"
+    pip install -q "$CUPY_PKG" || echo "  ⚠ cupy 설치 실패 — CPU 폴백으로 진행 (STEP3 느림)"
+  else
+    echo "  ⚠ nvidia-smi 에서 CUDA 버전을 못 읽음 → cupy 건너뜀 (STEP3 는 CPU 폴백, 채널당 ~1h)"
+  fi
+  python3 -c "import cupy; print('  cupy', cupy.__version__, 'OK — STEP3 GPU 경로 활성')" 2>/dev/null || true
+fi
 ln -sfn "$DATA/venv" "$REPO/venv"                       # 러너 프리플라이트 1순위 경로
 echo "  $(python3 -c "import numpy, scipy, pandas, networkx, taichi as t; print('numpy', numpy.__version__, '· scipy', scipy.__version__, '· pandas', pandas.__version__, '· networkx', networkx.__version__, '· taichi', t.__version__)")"
 # ★ drift 가드: 위 손-목록이 **코드가 실제로 요구하는 것**을 덮는가.  부족하면 여기서 멈춘다.

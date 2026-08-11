@@ -24,8 +24,9 @@
 한계 (정직):
   · 정적 AST 스캔이라 **함수 안 지연 import 도, `'x.py'` 문자열 경로 로딩도** 잡지만,
     `importlib.import_module(f'{prefix}_{n}')` 처럼 이름이 런타임에 조립되는 것은 못 잡는다.
-  · optional 의존(cupy 처럼 없으면 CPU fallback)을 **구분하지 못한다** — `--optional` 목록으로
-    사람이 표시해 준다.
+  · optional 의존은 `OPTIONAL` 로 사람이 표시한다.  ★ 그리고 optional 중 **없으면 비싸게
+    무는 것**은 `COSTLY_OPTIONAL` 에 비용을 적어 표 아래 항상 인쇄한다 — "optional" 을
+    "안 깔아도 된다" 로 읽어 STEP3 를 58분 태운 실사고(2026-08-11) 때문이다.
   · 그러므로 이것은 **실제 import 스모크의 대체가 아니라 보완**이다.  셋업은 둘 다 해야 한다.
 
 사용:
@@ -46,6 +47,18 @@ SCRIPTS = os.path.dirname(os.path.abspath(__file__))
 
 #: 없어도 CPU/대체 경로로 도는 것 — 셋업이 필수로 강제하면 안 된다.
 OPTIONAL = frozenset({'cupy', 'cupyx', 'taichi', 'sklearn', 'skopt', 'pysisso', 'pybamm'})
+
+#: ★ optional 인데 **없으면 비싸게 무는** 것 (2026-08-11 실사고).
+#   optional 은 "없어도 답이 맞다" 는 **정확성** 판단이지 "안 깔아도 된다" 가 아니다.
+#   실제로 그렇게 읽고 cupy 를 건너뛰었다가 STEP3 전자 솔브가 CPU 에서 3,485 s (58분)
+#   걸렸고, 그때는 이미 A/B 가 돌고 있어 backend 를 바꿀 수 없었다 (두 팔이 같은
+#   backend 여야 하므로).  ⇒ 목록이 **비용도 말하게** 한다.
+COSTLY_OPTIONAL = {
+    'cupy': 'STEP3 σ CG 를 GPU 로. 없으면 CPU 폴백 — 실측 2.7M dof 전자 솔브 3,485 s '
+            '(58분)/채널. 킷 payload 를 돌릴 박스라면 **먼저 깔 것**. '
+            'CUDA major 에 맞춰 cupy-cuda11x / cupy-cuda12x.',
+    'taichi': 'MPM 압밀 자체가 taichi — 없으면 mpm3d 가 아예 안 뜬다 (킷 박스 필수).',
+}
 
 #: pip 로 **따로 설치하지 않는** import 이름 → 딸려 오는 모 패키지.
 #   ⚠ 이걸 안 빼면 셋업이 `pip install mpl_toolkits` 를 시도하고 실패한다 (그런 배포판은 없다).
@@ -242,6 +255,13 @@ def _selftest():
         'skimage' in ext_pl)
     chk('10d) ★ mpl_toolkits 는 pip 목록에 안 들어간다 (그런 배포판이 없다)',
         'mpl_toolkits' not in pip_names(sorted(ext_pl)) and 'matplotlib' in pip_names(sorted(ext_pl)))
+    # ★ 58분 사고의 회귀: cupy 가 비용 등급에 있고, payload 경로에서 실제로 걸리는가
+    chk('10e) ★ cupy 가 COSTLY_OPTIONAL 에 있다 (optional≠안 깔아도 됨)',
+        'cupy' in COSTLY_OPTIONAL and '58분' in COSTLY_OPTIONAL['cupy'])
+    chk('10f) ★ payload 추적에 cupy 가 잡힌다 (비용 안내가 실제로 뜬다)',
+        'cupy' in trace('mpm_webapp_payload')[1])
+    chk('10g) 비용 항목도 required 에는 안 들어간다 (CPU 머신 셋업 안 막음)',
+        'cupy' not in required())
     chk('11) 두 파이프라인이 ENTRYPOINTS 에 다 있다 (frame[5])',
         'network_conductivity' in ENTRYPOINTS and 'step3_sigma' in ENTRYPOINTS)
     req = required()
@@ -313,6 +333,14 @@ def main():
         print(f'  {e:30s} local {len(seen):3d}  필수 {req}'
               + (f'  ★{opt}' if opt else ''))
     print('\n필수 합집합:', ', '.join(pip_names(required(entries))))
+    # ★ optional 이라고 조용히 넘기지 않는다 — 비용을 항상 보여 준다.
+    shown = sorted({m for e in entries
+                    if os.path.exists(os.path.join(SCRIPTS, e + '.py'))
+                    for m in trace(e)[1] if m in COSTLY_OPTIONAL})
+    if shown:
+        print('\n★ optional 이지만 없으면 비싼 것 (정확성 ≠ 비용):')
+        for m in shown:
+            print(f'   {pip_names([m])[0]:16s} {COSTLY_OPTIONAL[m]}')
     print('pip install -q ' + ' '.join(pip_names(required(entries))))
 
 
