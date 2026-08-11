@@ -1116,15 +1116,41 @@ def cmd_verdict(a) -> int:
         for s in sorted(by_site, key=lambda s: min(x["E_pose_eV"] for x in by_site[s])):
             E = sorted(x["E_pose_eV"] for x in by_site[s])
             print(f"   {s:16s} {len(E):4d} {E[0]:+9.3f} {E[len(E)//2]:+9.3f} {E[-1]-E[0]:8.3f}")
-        # 검열 회계
-        cens = Counter()
-        for r in fr:
-            if not r.get("ranking_eligible"):
-                cens[(r["site"], (r.get("gate_reasons") or ["?"])[0].split("(")[0])] += 1
-        if cens:
-            print("   검열(게이트로 죽은 시작자리) — '졌다'가 아니라 '못 쟀다':")
-            for (s, why), n in sorted(cens.items()):
-                print(f"     {s:12s} {why:24s} {n}")
+        # 검열 회계 — 사유별 · **양이온별** · 그리고 '검열이 순위를 왜곡했나'
+        killed = [r for r in fr if not r.get("ranking_eligible")]
+        if killed:
+            by_reason = Counter((r.get("gate_reasons") or ["?"])[0].split("(")[0] for r in killed)
+            print("   검열(게이트로 죽은 자세) — '졌다'가 아니라 '못 쟀다':")
+            for why, n in by_reason.most_common():
+                sub = [r for r in killed if (r.get("gate_reasons") or ["?"])[0].startswith(why)]
+                cat = Counter(r.get("nearest_cation") for r in sub)
+                es = sorted(r["E_pose_eV"] for r in sub if r.get("E_pose_eV") is not None)
+                emin = f"{es[0]:+.3f}" if es else "—"
+                print(f"     {why:28s} {n:3d}  최근접양이온 {dict(cat)}  최저 {emin}")
+
+            # ★ 결정적 검사 — 검열된 자세가 살아남은 최저보다 낮으면 비교가 통째로 오염된다.
+            surv_min = {c: min((r["E_pose_eV"] for r in fs if r.get("nearest_cation") == c),
+                               default=None) for c in CATIONS}
+            print("   ▸ 검열이 순위를 왜곡했나 (검열된 자세 중 '살아남은 최저'보다 낮은 것):")
+            confounded = False
+            for c in CATIONS:
+                lo = surv_min[c]
+                sub = [r for r in killed if r.get("nearest_cation") == c
+                       and r.get("E_pose_eV") is not None]
+                if lo is None:
+                    print(f"     {c}: 살아남은 자세가 없다 — 이 양이온은 **비교 불가**")
+                    confounded = True
+                    continue
+                below = sorted(r["E_pose_eV"] for r in sub if r["E_pose_eV"] < lo)
+                mark = "⛔" if below else "·"
+                print(f"     {mark} {c}: 검열 {len(sub):3d}개 중 살아남은 최저({lo:+.3f})보다 낮은 것 "
+                      f"**{len(below)}개**" + (f" (최저 {below[0]:+.3f})" if below else ""))
+                confounded |= bool(below)
+            if confounded:
+                print("     ⛔ **검열이 한쪽 양이온의 강한 자세를 잘라냈다** — 아래 분포 비교는")
+                print("        자리 선호가 아니라 '어느 쪽이 더 많이 검열됐나'를 재고 있을 수 있다.")
+                print("        검열 사유가 물리적으로 정당해도(예: Li 추출) **비교의 근거는 되지 못한다** —")
+                print("        같은 자세로 짝지은 대조쌍으로만 판정할 것.")
         # 대조쌍
         pairs = []
         idx = {(r["site"], r["down_dir"], r["roll_deg"]): r for r in fs}
