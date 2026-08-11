@@ -58,8 +58,13 @@ fi
 # ★ 목록은 **코드에서 유도**한다 — 손으로 적으면 갈라진다 (2026-08-11 V100 에서 pandas →
 #   networkx 가 한 번에 하나씩 죽으며 드립이 됐다).  `scripts/trace_deps.py` 가 진입점의
 #   전이 import 를 정적으로 훑어 이 목록을 만들고, 아래 --check 가 갈라짐을 잡는다.
-PKGS="numpy scipy pandas networkx matplotlib pyamg taichi"
-python3 -c "import numpy, scipy, pandas, networkx, matplotlib, pyamg, taichi" 2>/dev/null || {
+# ★ 2026-08-11 밤 3차 결손: 킷 압밀(9분)이 끝난 **직후** payload 가
+#   `ModuleNotFoundError: No module named 'skimage'` 로 죽었다 (marching_cubes).
+#   trace_deps 도 그때는 못 잡았다 — payload 가 viz_mpm_continuum 을 **importlib +
+#   경로 문자열**로 로드해서 AST 가 간선을 못 따라갔기 때문이다.  그 구멍(_dyn_locals_of)도
+#   같이 고쳤고, 이제 이 목록이 코드에서 유도된 것과 일치한다 (아래 --check 가 감시).
+PKGS="numpy scipy pandas networkx matplotlib pyamg taichi scikit-image plotly"
+python3 -c "import numpy, scipy, pandas, networkx, matplotlib, pyamg, taichi, skimage, plotly" 2>/dev/null || {
   pip install -q -U pip
   # shellcheck disable=SC2086
   pip install -q $PKGS || fail "pip install 실패"

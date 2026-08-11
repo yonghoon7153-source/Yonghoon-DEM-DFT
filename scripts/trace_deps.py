@@ -11,9 +11,19 @@
 
   ⇒ 목록을 **코드에서 유도**한다.  손으로 적은 목록과 코드가 갈라지면 여기서 잡힌다.
 
+★ 2026-08-11 실측으로 드러난 구멍 (이 도구가 만들어진 바로 그날 밤):
+  킷 압밀이 끝나고 payload 가 `ModuleNotFoundError: No module named 'skimage'` 로 죽었다.
+  그런데 이 도구는 `mpm_webapp_payload` 의 필수 의존을 matplotlib/numpy/pyamg/scipy 로만
+  보고했다 — **skimage 가 목록에 없었다**.  원인: payload 가 `viz_mpm_continuum` 을 평범한
+  `import` 가 아니라 **경로 문자열 + importlib** 로 로드한다
+  (`p = os.path.join(os.path.dirname(__file__), 'viz_mpm_continuum.py')`).
+  AST 는 import 문만 보니 그 간선을 못 따라가고, 그 아래 skimage·plotly 를 통째로 놓쳤다.
+  ⇒ **`'<모듈>.py'` 꼴 문자열 상수도 로컬 간선으로 센다** (`_dyn_locals_of`).  정적 스캔이
+    문자열 경로 로딩까지는 따라갈 수 있다 — 못 따라가는 것은 이름이 **런타임 계산**될 때뿐.
+
 한계 (정직):
-  · 정적 AST 스캔이라 **함수 안 지연 import 도 잡지만**, `importlib.import_module(name)` 처럼
-    이름이 런타임에 정해지는 것은 못 잡는다.
+  · 정적 AST 스캔이라 **함수 안 지연 import 도, `'x.py'` 문자열 경로 로딩도** 잡지만,
+    `importlib.import_module(f'{prefix}_{n}')` 처럼 이름이 런타임에 조립되는 것은 못 잡는다.
   · optional 의존(cupy 처럼 없으면 CPU fallback)을 **구분하지 못한다** — `--optional` 목록으로
     사람이 표시해 준다.
   · 그러므로 이것은 **실제 import 스모크의 대체가 아니라 보완**이다.  셋업은 둘 다 해야 한다.
@@ -36,6 +46,11 @@ SCRIPTS = os.path.dirname(os.path.abspath(__file__))
 
 #: 없어도 CPU/대체 경로로 도는 것 — 셋업이 필수로 강제하면 안 된다.
 OPTIONAL = frozenset({'cupy', 'cupyx', 'taichi', 'sklearn', 'skopt', 'pysisso', 'pybamm'})
+
+#: pip 로 **따로 설치하지 않는** import 이름 → 딸려 오는 모 패키지.
+#   ⚠ 이걸 안 빼면 셋업이 `pip install mpl_toolkits` 를 시도하고 실패한다 (그런 배포판은 없다).
+#   모 패키지를 대신 넣어 주므로 의존이 사라지지는 않는다.
+BUNDLED = {'mpl_toolkits': 'matplotlib'}
 
 #: import 이름 → pip 패키지 이름 (다른 것만).
 PIP_NAME = {'skimage': 'scikit-image', 'sklearn': 'scikit-learn', 'PIL': 'pillow',
@@ -83,6 +98,38 @@ def _imports_of(path):
     return out
 
 
+def _dyn_locals_of(path):
+    """`'viz_mpm_continuum.py'` 같은 **문자열 상수**가 가리키는 모듈 이름들.
+
+    ★ importlib 로 경로 로딩하는 간선을 잇는다.  import 문이 없어도 그 파일의 의존은
+    런타임에 진짜로 필요하다 (2026-08-11 skimage 사고).
+
+    ⚠ 조건을 **두 개** 건다.  이 리포는 docstring·help·오류안내에서 다른 모듈의 파일명을
+    끊임없이 언급하므로, `'x.py'` 문자열을 전부 세면 그래프가 산문으로 뒤엉켜
+    "필수 의존" 이 부풀고 도구가 거짓말을 하게 된다 (실측: step3_sigma 가 payload 의
+    전 의존을 상속했다).
+      ① 파일이 실제로 **동적 로딩을 한다** (importlib / spec_from_file_location / SourceFileLoader)
+      ② 그 문자열이 **호출 인자**다 (`os.path.join(…, 'viz_mpm_continuum.py')`)
+    산문 언급은 ②에서 걸러지고, 동적 로딩을 안 하는 파일은 ①에서 통째로 걸러진다."""
+    try:
+        src = open(path, encoding='utf-8').read()
+        tree = ast.parse(src)
+    except (OSError, SyntaxError):
+        return set()
+    if not any(t in src for t in ('importlib', 'spec_from_file_location', 'SourceFileLoader')):
+        return set()
+    out = set()
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call):
+            continue
+        for arg in node.args:
+            if isinstance(arg, ast.Constant) and isinstance(arg.value, str):
+                v = arg.value
+                if v.endswith('.py') and '/' not in v and '\\' not in v:
+                    out.add(v[:-3])
+    return out
+
+
 def trace(entry, scripts_dir=SCRIPTS):
     """진입점 → (방문한 로컬 모듈, 외부 의존 set).  로컬을 따라 전이적으로 내려간다."""
     local = _local_modules(scripts_dir)
@@ -102,6 +149,10 @@ def trace(entry, scripts_dir=SCRIPTS):
                 q.append(name)
             elif name not in std:
                 ext.add(name)
+        # 문자열 경로로 로딩되는 로컬 모듈도 **같은 간선**으로 따라간다.
+        for name in _dyn_locals_of(p):
+            if name in local and name != m:
+                q.append(name)
     return seen, ext
 
 
@@ -115,7 +166,16 @@ def required(entries=ENTRYPOINTS, scripts_dir=SCRIPTS):
 
 
 def pip_names(mods):
-    return [PIP_NAME.get(m, m) for m in mods]
+    """import 이름 목록 → **설치 가능한** pip 이름 목록 (중복 제거, 순서 보존).
+
+    BUNDLED 는 모 패키지로 접고(mpl_toolkits→matplotlib), PIP_NAME 은 배포판 이름으로
+    바꾼다(skimage→scikit-image).  이 두 단계를 안 거치면 셋업 한 줄이 통째로 실패한다."""
+    out = []
+    for m in mods:
+        n = PIP_NAME.get(BUNDLED.get(m, m), BUNDLED.get(m, m))
+        if n not in out:
+            out.append(n)
+    return out
 
 
 def _selftest():
@@ -148,6 +208,22 @@ def _selftest():
         w('d.py', 'from e import q\n')
         w('e.py', 'from d import r\nimport scipy\n')
         chk('8) 순환 import 에서 무한루프에 안 빠진다', trace('d', tmp)[1] == {'scipy'})
+        # ★ 2026-08-11 skimage 사고의 회귀 — importlib 경로 로딩 간선
+        w('g.py', "import importlib.util\n"
+                  "def load():\n"
+                  "    p = os.path.join(os.path.dirname(__file__), 'h.py')\n"
+                  "    return importlib.util.spec_from_file_location('h', p)\n")
+        w('h.py', 'import skimage\n')
+        chk('8b) ★ importlib 경로 로딩 간선을 따라간다 (g→h→skimage)',
+            'skimage' in trace('g', tmp)[1])
+        # ⚠ 반대편: 산문에서 파일명을 언급만 하는 것은 간선이 아니다
+        w('i.py', '"""자세한 것은 h.py 를 보라."""\nprint("h.py 참조")\n')
+        chk('8c) ★ 산문·출력의 파일명 언급은 간선이 아니다 (그래프 부풀기 방지)',
+            'skimage' not in trace('i', tmp)[1])
+        # 동적 로딩을 안 하는 파일 안의 호출 인자 문자열도 간선이 아니다
+        w('j.py', "import os\nprint(os.path.join('x', 'h.py'))\n")
+        chk('8d) ★ importlib 을 안 쓰는 파일은 문자열을 안 따라간다',
+            'skimage' not in trace('j', tmp)[1])
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 
@@ -159,6 +235,13 @@ def _selftest():
         'networkx' in ext_nc)
     chk('10b) ★ webapp 모듈은 외부 패키지가 아니다 (pipeline_service 오탐 방지)',
         'pipeline_service' not in ext_nc and 'pipeline_service' not in required())
+    # ★ 2026-08-11 밤 실측 회귀: 킷 payload 가 skimage 결손으로 죽었는데 이 도구는
+    #   그것을 목록에 넣지 않았다 (viz_mpm_continuum 을 importlib 경로로 로드하기 때문).
+    _, ext_pl = trace('mpm_webapp_payload')
+    chk('10c) ★ payload 가 skimage 를 요구한다 (V100 3차 결손 = importlib 간선)',
+        'skimage' in ext_pl)
+    chk('10d) ★ mpl_toolkits 는 pip 목록에 안 들어간다 (그런 배포판이 없다)',
+        'mpl_toolkits' not in pip_names(sorted(ext_pl)) and 'matplotlib' in pip_names(sorted(ext_pl)))
     chk('11) 두 파이프라인이 ENTRYPOINTS 에 다 있다 (frame[5])',
         'network_conductivity' in ENTRYPOINTS and 'step3_sigma' in ENTRYPOINTS)
     req = required()
@@ -170,8 +253,23 @@ def _selftest():
     sv = os.path.join(os.path.dirname(SCRIPTS), 'scripts', 'setup_v100.sh')
     if os.path.exists(sv):
         txt = open(sv, encoding='utf-8').read()
-        missing = [m for m in req if m not in txt]
-        chk(f'14) ★ setup_v100.sh 가 필수 모듈을 전부 담고 있다 (누락: {missing})', not missing)
+        # ★ **pip 이름**으로 대조한다.  모듈 이름으로 대조하면 skimage↔scikit-image 가
+        #   영원히 어긋나고(설치는 맞는데 검사만 실패), mpl_toolkits 는 아예 설치 불가라
+        #   가드가 항상 빨간불이 되어 **아무도 안 보게 된다** (경보 피로).
+        missing = [m for m in pip_names(req) if m not in txt]
+        chk(f'14) ★ setup_v100.sh 가 필수 패키지를 전부 담고 있다 (누락: {missing})', not missing)
+    # ★ --check 자체의 회귀 (잠복 버그였다): 정확한 목록이 통과해야 하고,
+    #   모듈 이름으로 적어도 통과해야 하며, 진짜 빠졌을 때만 실패해야 한다.
+    import subprocess
+    _td = os.path.join(SCRIPTS, 'trace_deps.py')
+    _pip = ','.join(pip_names(required()))
+    _mod = ','.join(required())
+    for lab, lst, want in ((f'15) --check 가 pip 이름 목록을 통과시킨다', _pip, 0),
+                           (f'16) --check 가 모듈 이름 목록도 통과시킨다', _mod, 0),
+                           (f'17) ★ 진짜 빠지면 실패한다 (numpy 제거)',
+                            ','.join(n for n in pip_names(required()) if n != 'numpy'), 1)):
+        r = subprocess.run([sys.executable, _td, '--check', lst], capture_output=True, text=True)
+        chk(f'{lab} → rc={r.returncode} {r.stdout.strip()[:60]}', r.returncode == want)
 
     print(f'\ntrace_deps selftest: {ok}/{ok + fail} PASS')
     return fail == 0
@@ -189,10 +287,15 @@ def main():
         sys.exit(0 if _selftest() else 1)
     entries = [a.entry] if a.entry else list(ENTRYPOINTS)
     if a.check:
-        have = {x.strip() for x in a.check.split(',') if x.strip()}
-        miss = [m for m in required(entries) if m not in have]
+        # ★ 대조는 **pip 이름 공간**에서 한다 (2026-08-11 잠복 버그).  옛 코드는 모듈 이름
+        #   (skimage, mpl_toolkits) 을 셋업의 pip 목록(scikit-image, matplotlib) 과 직접
+        #   비교해서, 정확히 맞게 적어 둔 목록을 "부족" 이라 하고 그 이유로 **matplotlib 를
+        #   지목**했다 (mpl_toolkits 가 없다는 뜻이었는데 그렇게 안 보인다).  둘 다 pip
+        #   이름으로 접으면 모듈 이름으로 적든 pip 이름으로 적든 통과한다.
+        have = pip_names([x.strip() for x in a.check.split(',') if x.strip()])
+        miss = [n for n in pip_names(required(entries)) if n not in have]
         if miss:
-            print('✗ 부족: ' + ', '.join(pip_names(miss)))
+            print('✗ 부족: ' + ', '.join(miss))
             sys.exit(1)
         print('✓ 목록 충분')
         return
