@@ -119,9 +119,25 @@ _LOCK_NAME = 'dem_network_solver.lock'
 #:   ⚠ `thermal_sigma_full_mScm[_physics]` 는 **격리하지 않는다** — Stage E 가 치유하긴
 #:     하지만 baseline network 산출물이기도 해서, 걷어내면 baseline 을 지우게 된다.
 #:     (그 이중 소유 자체가 최종형 manifest 에서 정리해야 할 대상이다.)
+#: Stage E 가 소유하지만 **이름 규칙(`_stage_e` / `stage_e_`)에 안 걸리는** 키들.
+#:   ★ RC7-06 (Codex 7회차): `thermal_baseline_estimate_provenance` 가 여기 없어서
+#:     Stage E purge/재실행 때 **값(…_stage_e_estimate)만 걷히고 provenance 는 남았다**
+#:     → 새 세대의 payload 가 **없어진 추정치를 설명하는 옛 세대 provenance** 를 달고 있었다
+#:     (값과 도장이 다른 세대를 가리키는 것 = 이 작업 전체가 막으려던 바로 그 상태).
+#:   ⚠ 이 명시 목록은 **drift 자석**이다 — run_one 이 이름 규칙 밖의 키를 새로 쓰면 조용히
+#:     같은 결함이 재발한다.  그래서 회귀가 run_network_full_corrections.py 의 `fm[...] =`
+#:     대입을 전수 스캔해 소유되지 않은 키가 생기면 실패한다
+#:     (test_pipeline_provenance RC7-06c).
+STAGE_E_EXTRA_OWNED_KEYS = (
+    'fracture_aware_method_full',
+    'validation_flags',
+    'thermal_baseline_estimate_provenance',
+)
+
+
 def is_stage_e_key(k: str) -> bool:
     return ('_stage_e' in k or k.startswith('stage_e_')
-            or k in ('fracture_aware_method_full', 'validation_flags'))
+            or k in STAGE_E_EXTRA_OWNED_KEYS)
 
 
 #: ★ RC5-01 (Codex 5회차): Stage E 성공 판정이 `any('_stage_e' in k)` 였다.  그래서

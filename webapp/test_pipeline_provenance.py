@@ -17,6 +17,7 @@ import errno
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -1149,6 +1150,29 @@ def main():
             "'backend_last_solve'" in _pay)
         chk('RC7-05c) 스냅샷은 complete 인 component 에만 (미실행에 backend 를 붙이지 않는다)',
             "if status == 'complete' and isinstance(_bk, dict)" in _pay)
+
+        # ══ RC7-06 (Codex 7회차): Stage E 소유 판정이 **이름 규칙**만 봐서 결손 ══
+        #   thermal_baseline_estimate_provenance 는 `_stage_e` 도 `stage_e_` 도 아니라
+        #   purge 대상이 아니었다 → 값(…_stage_e_estimate)만 걷히고 provenance 는 남아
+        #   **없어진 추정치를 설명하는 옛 세대 도장**이 새 세대 payload 에 붙어 있었다.
+        chk('RC7-06a) ★ 결함 재현: 이름 규칙만으로는 provenance 키가 안 잡힌다',
+            '_stage_e' not in 'thermal_baseline_estimate_provenance'
+            and not 'thermal_baseline_estimate_provenance'.startswith('stage_e_'))
+        chk('RC7-06b) ★ 이제 Stage E 소유로 잡힌다 (purge/rollback 대상)',
+            ps.is_stage_e_key('thermal_baseline_estimate_provenance') is True)
+        # ★ drift 가드 — 명시 목록은 자석이다.  run_one 의 `fm[...] =` 를 전수 스캔해
+        #   소유되지 않은 키가 새로 생기면 **여기서 실패**한다 (같은 결함의 재발 차단).
+        _rnfc = open(os.path.join(os.path.dirname(os.path.dirname(
+            os.path.abspath(webapp.__file__))), 'scripts',
+            'run_network_full_corrections.py'), encoding='utf-8').read()
+        _written = sorted(set(re.findall(r"""\bfm\[\s*['"]([^'"]+)['"]\s*\]\s*=""", _rnfc)))
+        _unowned = [k for k in _written if not ps.is_stage_e_key(k)]
+        chk(f'RC7-06c) ★ run_one 이 쓰는 {len(_written)}개 키가 전부 Stage E 소유다 '
+            f'(미소유: {_unowned})', _written and not _unowned)
+        chk('RC7-06d) 스캐너가 실제로 키를 찾았다 (정규식이 죽어 공허하게 통과하지 않는다)',
+            len(_written) >= 15 and 'sigma_full_mScm_stage_e' in _written)
+        chk('RC7-06e) 명시 목록이 상수로 노출돼 있다 (다음 사람이 찾을 수 있게)',
+            'thermal_baseline_estimate_provenance' in ps.STAGE_E_EXTRA_OWNED_KEYS)
 
         chk('30) 11-키는 run_one 이 무조건 쓰는 집합과 같다 (개수 고정)',
             len(ps.STAGE_E_REQUIRED_KEYS) == 11
