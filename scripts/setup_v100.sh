@@ -63,8 +63,19 @@ python3 "$REPO/scripts/unpack_kit_scaffolds.py" \
 
 echo "═══ ⑤ alias dem (~/.bashrc, 멱등) ═══"
 LINE="alias dem='cd $REPO && . $DATA/venv/bin/activate'"
-grep -qxF "$LINE" ~/.bashrc 2>/dev/null || { sed -i "/^alias dem=/d" ~/.bashrc 2>/dev/null; echo "$LINE" >> ~/.bashrc; }
-echo "  $LINE"
+touch ~/.bashrc
+sed -i "/^alias dem=/d" ~/.bashrc 2>/dev/null
+# ★ 앞에 개행을 반드시 넣는다.  ~/.bashrc 의 마지막 줄에 개행이 없으면 `echo` 가 그
+#   줄 끝에 눌어붙어 (`fi` + `alias dem=...`) alias 가 통째로 무효가 된다 — 실제로
+#   겪었다: 스크립트는 성공을 찍었는데 `source ~/.bashrc` 후에도 command not found.
+printf '\n%s\n' "$LINE" >> ~/.bashrc
+# 실제로 그 셸에서 alias 가 서는지 검증한다 (썼다는 것만으로는 증거가 안 된다)
+if bash -ic 'alias dem' >/dev/null 2>&1; then
+  echo "  $LINE"
+else
+  echo "  ⚠ alias 를 썼지만 새 셸에서 서지 않는다 — ~/.bashrc 를 직접 확인하세요:"
+  echo "      tail -3 ~/.bashrc"
+fi
 
 echo "═══ ⑥ CUDA 스모크 (taichi 가 V100 을 실제로 잡는가) ═══"
 python3 - <<'PY' || fail "taichi CUDA 초기화 실패"
