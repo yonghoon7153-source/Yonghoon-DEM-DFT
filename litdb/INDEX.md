@@ -289,7 +289,7 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | `papers/minnmann2021_jes_charge_transport_bottlenecks.md` | Minnmann 2021 JES — 복합 양극 전하수송 병목 정량화 (EIS-TLM) ★ 우리 porosity/σ_ion/τ_ion 앵커의 진짜 출처 | DEM |
 | `papers/minnmann2022_designing_cathodes_solidstate.md` | Minnmann 2022 (Adv. Energy Mater. 12, 2201425) — "Designing Cathodes and Cathode Active Materials for Solid-St | DEM |
 | `papers/nam2026_dpe_microstructure_review.md` | Nam 2026 (Materials Horizons REVIEW, 13, 3149-3177) — 건식전극(DPE) 미세구조 엔지니어링 리뷰 ★ 우리 DEM+MPM 프로젝트의 FRAMEWORK/POS | DEM |
-| `papers/nam2026_primer_layer_dry_electrode_collector.md` | Nam 2026 (ACS Energy Lett. 6c01260) — 건식전극(DPE)↔집전체 계면을 지배하는 **Primer Layer 설계**(Super P/CNT 5조성) ★ 우리 **R_collector(N) 3-직렬 분해** + **j_peak ∝ A^−0.54 ≈ Holm ½ 독립 재현** | exp + FEM·digital-twin |
+| `papers/nam2026_primer_layer_dry_electrode_collector.md` | Nam 2026 (ACS Energy Lett. 6c01260) — 건식전극(DPE)↔집전체 계면을 지배하는 **Primer Layer 설계**(Super P/CNT 5조성) ★ 우리 **R_collector(N) 3-직렬 분해** + **j_peak ∝ A^−0.54 ≈ Holm ½ 독립 재현** | exp + FEM·digital-twin **· ★ SI(38p) 반영 2026-08-11: R_collector 절대값 32.0→15.9 mΩ·cm² 확보** |
 | `papers/oh2026_bimodal_composite_cathode.md` | Oh 2026 (ACS Energy Letters 11, 2103-2114) — Bimodal 복합양극: 큰 다결정 + 작은 단결정 CAM → packing·porosity·tortuosity 최적 | experiment |
 | `papers/oh2026_carbon_coating_siox_ion_electron_balance.md` | Oh 2026 (Journal of Power Sources 689, 240698) — SiOx 탄소코팅 두께가 이온/전자 수송 BALANCE + 균일분산을 결정 | FEM·digital-twin |
 | `papers/park2026_ceramic_pp_separator.md` | Park 2026 (Chemical Engineering Journal 532 (2026) 174523, DOI 10.1016/j.cej.2026.174523) — 초박막 세라믹(Al₂O₃ 스퍼터) | DEM |
