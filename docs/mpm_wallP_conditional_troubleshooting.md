@@ -50,7 +50,18 @@ servo 정지 조건을 바꿈 (구현 완료, `--am-load-frac`, commit 70fd236):
 
 ---
 
-## §4 DEM쪽 할 일 — **거의 없음 (재실행 불필요)** ★ (사용자 질문 직답)
+## §4 DEM쪽 할 일 — ⛔ **이 절의 결론은 실측으로 뒤집혔다** (정정 2026-08-11)
+
+> **정정 (Codex 적대리뷰 Q6).**  아래 §4 는 "overlap→Hertz 재구성으로 Love-Weber f_AM 을
+> 얻을 수 있으니 DEM 재실행/새 contact dump 가 불필요하다"고 결론냈다.  **실측이 이를
+> 기각했다**: Hertz 재구성 추정기는 4 압력에서 실측 대비 **1.30–1.36× 과대**이고 튜닝
+> 불가다 (이력의존 hooke/hysteresis 를 정적 스냅샷으로 재구성하기 때문 — 되돌릴 수 없는
+> 정보 손실).  ⇒ f_AM 실측에는 **contact dump**(`pair/gran/local`) 또는 **atom dump 의
+> `c_strs[3]`** 이 실제로 필요하다.  아래 본문은 그 판단이 어디서 어긋났는지 보이기 위한
+> **역사 기록**으로 남긴다 — 실행 지침으로 쓰지 말 것.
+> (실측 4점: AM-AM 0.517/0.598/0.675/0.620 · phase-virial 0.726/0.768/0.794/0.763.)
+
+### (역사) 원문 — DEM쪽 할 일 "거의 없음 (재실행 불필요)"
 - 우리 분석 파이프라인이 **이미 contact를 재구성**: `scripts/network_conductivity.py`의 `contact_map`은
   원자 dump(위치+반지름)에서 overlap(δ)+area를 pair별로 만듦(line ~189-207).  그리고 **per-particle von Mises
   stress를 이미 계산**(dashboard에 σVM 비 표시) → 이는 **per-contact 힘벡터 + branch 벡터가 이미 있다**는 뜻
@@ -85,14 +96,22 @@ a5(SE/sol 68%) gap −9.3~−10.8, a6(59%) −7.1~−9.6, a7(48%) −5.2~−6.7.
 ## §7 상태 체크리스트
 - [x] 진단·regime map (reliability doc) + 105 case 분류 CSV.
 - [x] wallP 조건부 `--am-load-frac` 구현 (Tabor식, opt-in, default off) — commit 70fd236.
-- [x] f_AM v0(von Mises) 결함 규명 (SE-rich Eshelby) → v1(Love-Weber) 설계 확정.
-- [x] DEM쪽 재실행 불필요 확인 (force vectors 이미 재구성).
+- [x] f_AM v0(von Mises) 결함 규명 (SE-rich Eshelby) → 폐기.
+- [~] ~~v1(Love-Weber) 단일 정본 확정~~ → **철회 2026-08-11**: 두 운용 규약(AM-AM ·
+      phase-virial = AM-AM + 0.5·AM-SE)이고 어느 쪽도 플래튼 반력 분율로 검증 안 됨.
+- [x] ~~DEM쪽 재실행 불필요 확인 (force vectors 이미 재구성)~~ → **기각 2026-08-11**:
+      Hertz 재구성 1.30–1.36× 과대(4압력) → contact dump 또는 c_strs[3] 이 실제로 필요.
 - [x] **_10 corner 런 (f_AM 0.86)** — ✅ **DONE 2026-06-26, 검증 성공** (n_grid 384, hold, kserver):
   porosity **15.9% (조건부 없음) → 25.25% (f_AM 0.86)**, DEM 28.34 → gap **12.4 → 3.1 (75% 닫힘)**.
   thickness 19.3µm, coverage AM_P 42/68% (rigid 38/65, 유지).  SE_target 0.042 GPa.  ⇒ frozen-AM 과압축 fix 검증.
-- [x] f_AM 출처 검증: 0.86 = DEM von Mises 독립유도(fit 아님) → MPM이 DEM 근처 재현 = cross-consistency.
-  잔차 +3.1%p = SE가 42MPa 몫만 받고 큰 void로 소성 flow한 증분(frame[5]; MPM = DEM_rigid − 소성증분, clamp가
-  못 하는 *계산*).
+- [⛔] ~~f_AM 출처 검증: 0.86 = DEM von Mises 독립유도(fit 아님)~~ → **무효 2026-08-11 (Codex Q6)**.
+  0.86 은 **폐기된 v0 von-Mises proxy** 값이다.  "fit 이 아니다"는 맞지만 그것이 값을 정당화하지는
+  않는다 — v0 는 Eshelby 응력집중 때문에 SE-rich 에서 0 이 되지 않는 **구조적 결함**으로 폐기됐고,
+  같은 결함이 _10 corner 에서도 크기를 알 수 없는 편향을 남긴다.  실측 두 규약은 real_14 에서
+  0.60–0.81 범위라 0.86 은 **그 위**다.
+  ⇒ **위 25.25 % / gap 3.1 결과는 폐기된 f_AM 으로 얻은 것이라 검증 증거가 아니다.**
+  corner 검증은 **0 / AM-AM / phase-virial 세 팔**로 다시 돌린다.  잔차 해석(소성 flow 증분)도
+  그 재실행 뒤에 다시 판단한다.
 - [x] sweep 0.75/0.60 — DONE (§8 table: 0.60→21.78, 0.75→23.56, MONOTONE).
 - [~] f_AM v1 Love-Weber extractor / [~] SE-rich f_AM≈0 (v1) / [~] reliability CSV am_load_frac 열
   — ⚠ **SUPERSEDED by §13 (2026-06-27)**: the conditional (and am-jam) were BOTH judged artifacts; production

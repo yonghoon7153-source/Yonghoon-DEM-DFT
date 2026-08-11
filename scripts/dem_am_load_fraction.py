@@ -1,17 +1,39 @@
 #!/usr/bin/env python3
-"""DEM AM-AM axial load fraction f_AM (Love-Weber) → MPM wallP conditional (--am-load-frac).
+"""DEM axial load partition f_AM → MPM wallP conditional (--am-load-frac).
 
-f_AM = σ_zz^(AM-AM contacts) / σ_zz^(all contacts) = the fraction of the axial (compression-z)
-load carried by the RIGID AM-AM contact network (Love-Weber granular stress, σ_ij = Σ f_i·l_j).
+★★ 정본 문장 (2026-08-11, Codex 적대리뷰 후 — 이 파일의 위·아래가 서로 다른 정본을
+   주장하던 것을 여기서 하나로 통일한다) ★★
 
-WHY this and not the per-atom von-Mises partition: a per-atom stress (von Mises or σ_zz) counts an
-AM particle's stress from ALL its contacts, and a stiff dispersed AM stress-concentrates (Eshelby)
-even when it carries NO axial skeleton load → the per-atom f_AM is > 0 in SE-rich (WRONG, would
-over-fire the wallP conditional and harm the SE-rich regime where the MPM is already correct).
-The AM-AM *contact-network* σ_zz is ~0 when AM does not percolate (few/no AM-AM contacts) and large
-when AM forms force chains (mono-large) → it AUTO-GATES: f_AM≈0 for SE-rich, large for the SE-poor
-mono-large corner.  Feed to `mpm3d_compaction.py --am-load-frac f_AM` so the SE servo bears only its
-(1−f_AM) share (Tabor-style wallP conditional, docs/mpm_wallP_conditional_troubleshooting.md).
+    von-Mises proxy 와 Hertz 재구성은 **폐기**되었다.  실측 AM-AM 접촉응력과 대칭
+    per-atom AM-phase virial 은 **두 개의 운용상 하중분담 규약**이며, 둘 중 어느
+    것도 아직 **정확한 플래튼 반력 분율로 검증되지 않았다**.
+
+두 규약:
+  • `f_AM_contact_AMAM`  = σ_zz^(AM-AM 접촉) / σ_zz^(모든 접촉)
+       = **rigid contact-network-only 규약** (Love-Weber, σ_ij = Σ f_i·l_j).
+         AM 이 퍼콜 안 하면 ~0 → SE-rich 에서 자동으로 안 켜진다.
+  • `f_AM_peratom_AMphase` = Σ_AM σzz_p / Σ_all σzz_p
+       = **symmetric phase-virial 규약**.  ⚠ 이것은 "frozen AM 이 흡수하는 AM-SE
+         하중 전체"가 **아니다** — pair virial 이 접촉을 두 입자에 반씩 나누므로
+         실측 4 압력에서 다음 항등식이 ±0.0005 로 성립한다:
+
+             f_phase = f_AM-AM + 0.5 · share_AM-SE
+             P100 0.7255 vs 0.7258 · P200 0.7675 vs 0.7676
+             P300 0.7940 vs 0.7938 · P600 0.7620 vs 0.7625
+
+         즉 AM-SE 접촉의 **절반**을 AM 쪽에 넣은 값이다.  그래서 "skeleton-spring 이
+         정확히 필요로 하는 값" 이라는 옛 서술은 성립하지 않는다 (그 옛 서술은
+         AM-SE 를 **전부** 넣는다는 뜻이었다).
+
+서보 보정이 실제로 필요로 하는 정본은 **경계 반력 분율**이다:
+    f_AM,wall = (플래튼 상단 반력 중 AM 경로가 전달한 몫) / (총 상단 반력)
+이 값은 아직 측정하지 않았다.  그때까지 위 두 규약은 **참값의 엄밀한 상·하한이
+아니라 운용상 민감도 구간**(operational sensitivity bounds)으로만 쓴다 — corner
+검증은 두 끝점 + f_AM=0 세 팔을 모두 돌려 보고한다.
+
+⚠ 자동 게이트 주의: AM-AM 규약은 퍼콜 게이트가 되지만, phase-virial 규약은 분산 AM 의
+  응력집중(Eshelby)까지 포함하므로 **자동 퍼콜 게이트가 아니다** (SE-rich 에서 0 이
+  되지 않는다).  SE-rich 에 켜면 과보정한다.
 
 The σ_zz ratio is scale/volume-free: per contact, F·l_z²/|l| with Hertz F=(4/3)E*√R*·δ^1.5; the
 relative pair-type stiffness E* (AM-AM ≫ SE-SE/AM-SE because E_AM=140 ≫ E_SE,eff=1.35 GPa) is what
@@ -136,9 +158,12 @@ def am_load_fraction(T, X, R, isSE):
 def am_load_fraction_peratom(atoms_path, type_map):
     """ACTUAL-FORCE cross-check: f_AM from the LIGGGHTS per-atom virial σ_zz (the SAME hooke/hysteresis
     stress the dashboard von Mises uses — NOT a Hertz reconstruction).  f_AM_peratom = Σ_AM V_p·σzz_p /
-    Σ_all V_p·σzz_p (V_p = atom volume).  This is the AM-PHASE axial-stress share (incl. the AM-SE part on
-    AM atoms), so it BRACKETS the Hertz AM-AM-only value from above (AM-AM-only ≤ true ≤ AM-phase-share):
-    the frozen-AM MPM misses the AM-AM skeleton load for sure, and partly the AM-SE load it absorbs.
+    Σ_all V_p·σzz_p (V_p = atom volume).  This is the AM-PHASE axial-stress share — the symmetric
+    phase-virial convention, which includes HALF of each AM-SE contact (f_phase = f_AM-AM +
+    0.5·share_AM-SE, verified to ±0.0005 on 4 pressures).  ⚠ The retired wording called the pair
+    (AM-AM, AM-phase) a proven bracket on the true value; it is not — neither convention has been
+    validated against the platen boundary reaction.  Treat the pair as operational sensitivity
+    bounds and report both.
     Needs atoms.csv with sigma_xx/yy/zz (LIGGGHTS compute stress/atom; present where the dashboard shows
     von-Mises ratios)."""
     import csv as _csv
@@ -166,8 +191,10 @@ def am_load_fraction_liggghts(atom_dump, contact_dump=None, se_types=(3,)):
     """★ ACTUAL-force f_AM from LIGGGHTS dumps (hooke/hysteresis, NOT Hertz reconstruction).
     atom_dump: 'ITEM: ATOMS id type ... c_strs[1] c_strs[2] c_strs[3] ...' (compute stress/atom; the
       dashboard von-Mises basis).  Robust by COLUMN NAME.  → per-atom AM-PHASE σ_zz virial share
-      = EXACTLY what the skeleton-spring needs (the frozen AM absorbs AM-SE load that never reaches the
-      SE wallP, so am_skel must cover AM-AM + AM-SE = the AM phase).  Needs ONLY the atom dump.
+      = the **symmetric phase-virial convention**.  ⚠ NOT "exactly what the skeleton-spring needs":
+      the pair virial splits each contact evenly, so this equals AM-AM + 0.5·(AM-SE), NOT AM-AM +
+      (AM-SE) as the retired wording claimed.  Verified identity on 4 pressures to ±0.0005 (module
+      docstring).  Needs ONLY the atom dump.
     se_types: which atom types are SE (NOT always {3} — a no-AM_S case dumps SE as type 2).  Pass the
       same se_types the scaffold split used so AM/SE classification is consistent.
     contact_dump (optional, diagnostic): 'ITEM: ENTRIES c_cpl[...]' from `compute pair/gran/local pos id
@@ -175,8 +202,12 @@ def am_load_fraction_liggghts(atom_dump, contact_dump=None, se_types=(3,)):
       is INPUT-SPECIFIC (positional); the indices below match input_real_14.liggghts
       (pos[1-6] id[7-8] force[9-11]→fz=c_cpl[11]; verified: Σ f_z·l_z == atom-virial total).  Other
       inputs may differ → cross-check Σ(f·l) vs atom virial; if mismatched, the force column moved.
-      NOT used for production f_AM (the atom-dump AM-phase share is; this is only the AM-AM cross-check).
-    real_14 result: Hertz(AM-AM) 0.847 OVER-estimates the actual AM-AM 0.670 (per-atom AM-phase 0.809)."""
+      This is the **contact-network-only convention** (the percolation-gating one), not a mere
+      cross-check: neither convention is established as the true platen-reaction fraction, so both
+      are reported and corner tests run both arms plus f_AM=0.
+    real_14 result: Hertz(AM-AM) 0.847 OVER-estimates the measured AM-AM 0.670 (phase-virial 0.809).
+    ⚠ 0.809 is the ORIGINAL real_14 dump (atom_2060000); the P300 sweep dump gives 0.7938 (re-run
+    scatter 0.015) — do not mix the two tables."""
     se = set(int(t) for t in se_types)
     al = open(atom_dump).readlines()
     hi = next(k for k, l in enumerate(al) if l.startswith('ITEM: ATOMS'))
@@ -243,13 +274,18 @@ def main():
         if v is None:
             print("  [atom-dump] no c_strs[3] (σzz) column — LIGGGHTS `compute stress/atom` not dumped here.")
         else:
-            print(f"f_AM = {v}   ← REAL per-atom AM-phase σ_zz share (hooke/hysteresis).  use --am-load-frac {v}")
-            print(f"  (se_types={se_types}; this is the AM-phase TOTAL the frozen AM bears = what the "
-                  f"skeleton-spring needs, NOT the Hertz AM-AM reconstruction)")
+            print(f"f_AM(phase-virial 규약) = {v}   ← per-atom AM-phase σ_zz share (hooke/hysteresis)")
+            print(f"  (se_types={se_types})  ⚠ 이것은 '정확한 값' 이 아니라 **두 운용 규약 중 하나**다.")
+            print(f"     항등식: f_phase = f_AM-AM + 0.5·share_AM-SE  (AM-SE 접촉의 절반만 AM 쪽)")
+            print(f"     서보가 정말 필요로 하는 것은 플래튼 **경계 반력** 분율이고 그건 미측정.")
+            print(f"     ⚠ phase-virial 은 분산 AM 응력집중을 포함 → **자동 퍼콜 게이트가 아니다**")
+            print(f"       (SE-rich 에 켜면 과보정).  corner 검증은 0 / AM-AM / AM-phase 세 팔 전부.")
         if r.get('f_AM_contact_AMAM') is not None:
-            print(f"  cross-check (AM-AM-only, real contact force) = {r['f_AM_contact_AMAM']}   "
-                  f"[Σf·l {r['contact_sigzz_total']} vs atom-virial {r['atom_virial_total']}: "
-                  f"match ⇒ column parse OK]")
+            print(f"  다른 규약 (AM-AM contact-network only) = {r['f_AM_contact_AMAM']}"
+                  f"   ← SE-rich 에서 ~0 이 되는 퍼콜-게이팅 규약")
+            print(f"  두 규약 사이 = **운용상 민감도 구간** (엄밀한 상·하한 아님)")
+            print(f"  [열 파싱 무결성: Σf·l {r['contact_sigzz_total']} vs atom-virial "
+                  f"{r['atom_virial_total']} 일치 ⇒ OK]")
         return r
     if a.atoms_sigzz:
         pa = am_load_fraction_peratom(a.atoms_sigzz, a.type_map)
@@ -258,7 +294,7 @@ def main():
         else:
             print(f"f_AM_peratom = {pa['f_AM_peratom']:.3f}   (ACTUAL hooke virial σ_zz, AM-phase share; "
                   f"n_AM {pa['n_AM']}, n_SE {pa['n_SE']})")
-            print("  vs Hertz AM-AM-only (--am/--se) → the two BRACKET the true f_AM (AM-AM-only ≤ true ≤ AM-phase-share)")
+            print("  ⚠ the (AM-AM, AM-phase) pair are operational sensitivity bounds, NOT a proven bracket")
         if not (a.am or a.atoms):
             return pa
     if a.atoms:

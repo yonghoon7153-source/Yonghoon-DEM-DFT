@@ -1,5 +1,12 @@
 # DEM–MPM 연계 준비상태 정리 + Codex 리뷰 요청 (2026-08-11)
 
+> ⛔ **이 문서의 §3·§4 초안은 리뷰에서 기각·수정되었다.**  회답과 확정 설계는
+> `docs/codex_dem_mpm_response_20260811.md` 를 볼 것.  요점:
+> §3 의 "jam 미발화·축퇴는 제외" 는 **post-treatment selection** 이라 **FAIL** 로 바뀌었고
+> (판정기 재작성, selftest 10/10), §4 는 "DEM-독립 예측" 이 아니라
+> **conditional closure test** 로 명칭·핀 목록이 고쳐졌다.  §2 의 f_AM 브래킷 주장도
+> 철회됐다 (phase = AM-AM + 0.5·AM-SE 항등식).  아래는 **리뷰에 제출한 원안** 이다.
+
 대상 독자: Codex (적대 리뷰).  요청: §6 의 질문 6개에 대한 검증·반박.
 검증 좌표: 브랜치 `claude/stoic-knuth-NObVQ`, 이 문서 포함 커밋까지의 상태.
 핵심 파일: `scripts/mpm3d_compaction.py` · `scripts/dem_am_load_fraction.py` ·

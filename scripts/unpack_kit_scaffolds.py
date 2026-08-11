@@ -34,7 +34,15 @@ ARCHIVE_DEFAULT = os.path.join('docs', 'data', 'kit_ps_scaffolds')
 METRICS_DEFAULT = os.path.join('docs', 'data', 'se_curve_metrics')
 
 #: 킷 하나가 갖춰야 하는 파일.  mpm_input.json 은 lateral_box(면적) 를 준다.
-MEMBERS = ('am_scaffold.csv', 'se_scaffold.csv', 'mpm_input.json')
+MEMBERS = ('am_scaffold.csv', 'se_scaffold.csv', 'mpm_input.json',
+           # ↓ 2026-08-11 추가.  첫 보존은 am/se+input 만 담았는데, 원본 킷에는
+           #   fracture_scaffold(취성→MPM crack-void, opt-in MPM_FRACTURE 입력)와
+           #   킷별로 **서로 다른** 러너 3종이 더 있었다 (5킷 해시 전부 다름 =
+           #   한 벌만 두면 안 된다).  am/se 보존본은 tar 원본과 10/10 바이트 일치 확인됨.
+           'fracture_scaffold.csv', 'run_mpm.sh', 'harvest.sh', 'run_a1_anchors.sh')
+
+#: 없어도 정상인 멤버 — 있으면 풀고, 없어도 '빠짐' 으로 보고하지 않는다.
+OPTIONAL = frozenset({'fracture_scaffold.csv', 'run_mpm.sh', 'harvest.sh', 'run_a1_anchors.sh'})
 
 _SEP = '__'
 
@@ -74,9 +82,13 @@ def unpack(archive, out, metrics=None, link_metrics=True):
         for member in MEMBERS:
             src = members.get(member)
             if src is None:
-                missing.append(f'{kit}/{member}')
+                if member not in OPTIONAL:
+                    missing.append(f'{kit}/{member}')
                 continue
-            _copy(src, os.path.join(kit_dir, member))
+            dst = os.path.join(kit_dir, member)
+            _copy(src, dst)
+            if member.endswith('.sh'):
+                os.chmod(dst, 0o755)          # 러너는 실행권한이 있어야 쓸 수 있다
     if link_metrics and metrics and os.path.isdir(metrics):
         # ★ 접두어로 거르지 않는다.  xfer_* 만 옮기면 d_h 적합의 **g192 기울기 보정**과
         #   jam/loose/wallp/se_e 소비처(summarize_jam_sweep 등)가 조용히 굶는다.
@@ -141,17 +153,20 @@ def _selftest():
         json.dump({'phi': 0.72}, open(os.path.join(met, 'xfer_res_kit_ps_0_10_g288_e1.json'), 'w'))
         json.dump({'thickness_um': 27.7}, open(os.path.join(met, 'jam_P300_q95.json'), 'w'))
 
+        REQUIRED = [m for m in MEMBERS if m not in OPTIONAL]
         found = discover(src)
         ok('1) 평평한 이름에서 (킷, 멤버) 를 뽑는다',
            set(found) == {'kit_ps_0_10', 'kit_ps_10_0'}
-           and set(found['kit_ps_0_10']) == set(MEMBERS))
+           and set(found['kit_ps_0_10']) == set(REQUIRED))
 
         cnt, missing = unpack(src, dst, met)
         ok('2) 킷 두 개를 풀었고 빠진 파일이 없다', cnt == 2 and not missing)
         p = os.path.join(dst, 'kit_ps_0_10', 'am_scaffold.csv')
         ok('3) ★ gz 가 풀려 평문 CSV 로 놓인다', os.path.exists(p) and open(p, 'rb').read() == body)
         ok('4) 킷 디렉토리 배치 = bed_volumes 가 기대하는 모양',
-           all(os.path.exists(os.path.join(dst, 'kit_ps_10_0', m)) for m in MEMBERS))
+           all(os.path.exists(os.path.join(dst, 'kit_ps_10_0', m)) for m in REQUIRED))
+        ok('4b) ★ 선택 멤버가 없어도 missing 으로 보고하지 않는다 (필수만 요구)',
+           not missing and set(OPTIONAL) & set(MEMBERS) == set(OPTIONAL))
         ok('5) mpm_input.json 은 gz 가 아니라 그대로 복사된다',
            json.load(open(os.path.join(dst, 'kit_ps_10_0', 'mpm_input.json')))['lateral_box'] == 100.0)
         ok('6) xfer json 이 같은 루트로 따라온다',
@@ -175,6 +190,28 @@ def _selftest():
         ok('8) 아카이브가 없으면 빈 dict (예외 아님)', discover('/nonexistent/xyz') == {})
         ok('9) 관계없는 파일은 무시한다',
            'README' not in discover(src) and len(discover(src)) == 2)
+
+        # ★ 선택 멤버가 **있으면** 풀리고, .sh 는 실행권한이 붙는다
+        src3 = tempfile.mkdtemp(prefix='kitarc3_')
+        dst3 = tempfile.mkdtemp(prefix='kitout3_')
+        try:
+            for m in ('am_scaffold.csv', 'se_scaffold.csv'):
+                with gzip.open(os.path.join(src3, f'kit_z{_SEP}{m}.gz'), 'wb') as f:
+                    f.write(body)
+            json.dump({}, open(os.path.join(src3, f'kit_z{_SEP}mpm_input.json'), 'w'))
+            with gzip.open(os.path.join(src3, f'kit_z{_SEP}fracture_scaffold.csv.gz'), 'wb') as f:
+                f.write(b'id,x\n1,0\n')
+            open(os.path.join(src3, f'kit_z{_SEP}run_mpm.sh'), 'w').write('#!/bin/sh\necho hi\n')
+            _c3, miss3 = unpack(src3, dst3, None)
+            fr = os.path.join(dst3, 'kit_z', 'fracture_scaffold.csv')
+            sh = os.path.join(dst3, 'kit_z', 'run_mpm.sh')
+            ok('10) ★ fracture_scaffold 가 있으면 풀린다 (취성→MPM 입력)',
+               not miss3 and os.path.exists(fr) and open(fr).read().startswith('id,x'))
+            ok('11) ★ 러너 .sh 는 실행권한이 붙는다 (안 붙으면 못 돌린다)',
+               os.path.exists(sh) and (os.stat(sh).st_mode & 0o111))
+        finally:
+            shutil.rmtree(src3, ignore_errors=True)
+            shutil.rmtree(dst3, ignore_errors=True)
     finally:
         for d in (src, dst, met):
             shutil.rmtree(d, ignore_errors=True)

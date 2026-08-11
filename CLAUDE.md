@@ -863,9 +863,16 @@ DEM 32.8%) → "다른 MPM porosity 믿을 수 있나 / porosity lock은 신뢰�
 - **FIX (진행중): Tabor식 wallP 조건부** (`docs/mpm_wallP_conditional_troubleshooting.md`, mpm3d_compaction.py
   `--am-load-frac`, commit 70fd236).  frozen AM이 wallP에 기여 0인 걸 DEM AM 하중분담 f_AM으로 보정: SE servo가
   `wallP_SE ≥ target·(1−f_AM)`에서 정지(SE는 자기 몫만).  DEM-rock clamp 아님(MPM이 보정된 BC서 porosity 계산 =
-  Tabor가 area를 cap하듯).  f_AM v0(von Mises)은 **SE-rich서 결함**(Eshelby, percolation gating 없음) → v1 production
-  = **Love-Weber σzz^AM-AM/σzz^total**(분산 SE-rich 자동 ~0).  ★ DEM 재실행 불필요: 파이프라인이 이미 contact force
-  재구성(von Mises 계산) → f_AM extractor만 추가.  corner에만 적용(production bimodal은 f_AM=0).  _10 corner 런 검증 대기.
+  Tabor가 area를 cap하듯).  f_AM v0(von Mises)은 **SE-rich서 결함**(Eshelby, percolation gating 없음) → 폐기.
+  ★★ 정정 2026-08-11 (Codex 적대리뷰 Q2/Q6): "v1 production = Love-Weber AM-AM 확정"은 **과한 서술**이었다.
+  두 **운용 규약**이 있고 어느 쪽도 정확한 플래튼 반력 분율로 검증되지 않았다 — (a) contact-network-only
+  `σzz^AM-AM/σzz^total`(SE-rich 자동 ~0 = 퍼콜 게이팅), (b) symmetric phase-virial `Σ_AM σzz_p/Σ_all`
+  = **(a) + 0.5·share_AM-SE**(4압력 실측 항등식 ±0.0005; 분산 AM 응력집중 포함 → **자동 게이트 아님**).
+  둘 사이는 **운용상 민감도 구간**(엄밀 상·하한 아님).  ★ "DEM 재실행 불필요(overlap→Hertz 재구성)"도 **철회**:
+  Hertz 추정기는 4압력에서 실측 대비 **1.30–1.36× 과대**(이력의존 hooke/hysteresis를 정적 스냅샷으로 재구성)
+  → 사용 금지.  실측엔 **contact dump**(`pair/gran/local`, AM-AM 규약) 또는 **atom dump c_strs[3]**(phase 규약)이
+  필요.  실측 4점: AM-AM 0.517/0.598/0.675/0.620 · phase 0.726/0.768/0.794/0.763 (P=100/200/300/600).
+  corner에만 적용(production bimodal은 f_AM=0).  _10 corner 런은 **0 / AM-AM / phase 세 팔**로 검증 대기.
 
 ### ★ MPM coverage PLASTIC vs RIGID — why the value is USABLE (2026-06-21) ★
 Closes the "값도 바뀌고" coverage saga.  Full record: docs/mpm_coverage_plastic_vs_rigid.md

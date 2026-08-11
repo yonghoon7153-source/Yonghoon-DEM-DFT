@@ -1,18 +1,28 @@
 #!/usr/bin/env python3
-"""Heckel fit for the pure-SE pressure series.
+"""Heckel fit for the DEM pressure series (pure-SE **and** composite beds).
 
 Reads heckel/manifest.json — a list of points:
   [{"P_MPa": 100, "plate_z": 0.0xxxx, "atom": "...", "contacts": ["...","..."]}, ...]
-(plate_z from each mesh_*.stl vertex; contacts optional → enables ε_union/D_union.)
+(plate_z from each mesh_*.stl vertex; contacts optional → cross-checks the geometric lens.)
 
 Computes per pressure:
   D_sphere = ΣV_sphere / V_box        (relative density, material-conserving)
   D_union  = (ΣV_sphere - ΣV_lens)/V_box   (geometric; <1 even when over-compressed)
-Fits Heckel:  ln(1/(1-D)) = K·P + A   → mean yield pressure P_y = 1/K,
-σ_y ≈ P_y/3.  Compares to LPSCl (σ_y≈0.30 GPa, H≈0.85 GPa).
+Fits Heckel:  ln(1/(1-D)) = K·P + A   → P_y = 1/K,  σ_y ≈ P_y/3.
 
-Verdict: linear fit (high R²) with P_y ≈ 0.85 GPa → elastic-softened DEM
-faithfully mimics LPSCl plasticity.  Curved / P_y far off → elastic limit.
+★★ P_y 해석 — 옛 판정문의 정정 (2026-08-11, Codex 적대리뷰 Q4) ★★
+옛 문장은 "P_y ≈ 0.85 GPa 면 LPSCl 소성을 충실히 흉내낸 것"이라 적었다.  **틀렸다.**
+E 를 18× 연화한 것이 이 DEM 의 설계이므로 P_y 가 단결정 H(850 MPa) 근처로 나오면
+오히려 연화가 안 걸린 것이다 (판정 게이트는 이미 고쳤는데 이 docstring 만 남아 있었다).
+
+  P_y 는 Li6PS5Cl 고유 항복압이 **아니라** 연화된 베드의
+  **effective compaction parameter** 다.  850/P_y = 연화 배수로만 읽는다.
+
+★ 지렛대 경고 (실측): D_union 이 1 에 가까운 고압점은 ln(1/(1-D)) 가 특이점 근처라
+  적합을 지배한다.  real_14 복합 4압력에서 leave-one-out:
+      전체 133.1 · −P100 116.1 · −P200 136.4 · −P300 133.1 · −**P600 258.1**
+  P600 (D_union 0.9931) 하나가 P_y 를 2배로 흔든다.  ⇒ **다압력 P_y 를 인용할 때는
+  leave-one-out 표를 함께** 낼 것.  1σ 구간은 회귀 전파값이지 95 % CI 가 아니다.
 """
 import json, math, os, sys
 import numpy as np
@@ -272,6 +282,27 @@ def main():
               f"P_y 가\n       500~1200 MPa 였다면 오히려 연화가 안 걸린 것.  "
               f"입도 재배열·GB 슬라이딩·미세파괴를\n       유효 탄성률에 뭉뚱그린 몫이 이 배수로 나타난다.")
         print(f"  VERDICT: {'✓ 선형 Heckel + 정량화된 연화' if lin else '⚠ 비선형 — 조사 필요'}")
+        # ★ leave-one-pressure-out — 고밀도점 지렛대를 **자동으로** 드러낸다 (Q4).
+        #   ln(1/(1−D)) 는 D→1 에서 발산하므로 한 점이 P_y 를 두 배로 흔들 수 있다.
+        if len(rows) >= 3:
+            print('\n  leave-one-pressure-out P_y — 한 점이 결론을 만들고 있지 않은지:')
+            worst = (0.0, None)
+            for k in range(len(rows)):
+                sub = [r for j, r in enumerate(rows) if j != k]
+                f2 = heckel([r['P'] for r in sub], [r['D_u'] for r in sub])
+                if not f2:
+                    continue
+                d = f2['Py_MPa'] - fu['Py_MPa']
+                flag = '  ← ★ 지렛대' if abs(d) > 0.5 * fu['Py_MPa'] else ''
+                print(f"    −P{rows[k]['P']:<4} (n={len(sub)})  P_y {f2['Py_MPa']:7.1f}"
+                      f"  R² {f2['r2']:.4f}   Δ {d:+7.1f}{flag}")
+                if abs(d) > abs(worst[0]):
+                    worst = (d, rows[k]['P'])
+            if worst[1] is not None and abs(worst[0]) > 0.5 * fu['Py_MPa']:
+                print(f"    ⚠ P{worst[1]} 하나가 P_y 를 {abs(worst[0]):.0f} MPa "
+                      f"({abs(worst[0]) / fu['Py_MPa']:.0%}) 움직인다 — P_y 를 단일값으로")
+                print(f"      인용하지 말고 **범위 병기**할 것 (D_union 이 1 에 가까운 점의 지렛대).")
+
     print("\nHeckel fit on D_sphere (flags over-compression where D≥1):")
     fs = heckel(P, [r['D_s'] for r in rows])
     if fs:
