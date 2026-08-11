@@ -134,14 +134,93 @@ def cmd_check(wt=None, verbose=True):
     return added, problems
 
 
-def cmd_close(message='', dry_run=False, allow_empty_index=False):
+def touched_slugs(wt):
+    """이번 작업에서 **건드린** 카드 슬러그 (추가 ∪ 수정).  → sorted list
+
+    ★ `added` 는 새 카드만 잡는다 — 기존 카드를 고친 경우(오늘 nam2026 SI 반영이 그랬다)
+      비어 있어서 아래 figure 검사가 안 걸린다.  status 를 직접 읽는다.
+    """
+    out = set()
+    for line in _run(['git', 'status', '--porcelain'], cwd=wt).stdout.splitlines():
+        path = line[3:].strip().strip('"')
+        if ' -> ' in path:                                   # rename
+            path = path.split(' -> ')[-1]
+        if path.startswith('litdb/papers/') and path.endswith('.md'):
+            out.add(os.path.basename(path)[:-3])
+    return sorted(out)
+
+
+def figures_missing(wt, slugs):
+    """figure 크로핑이 없는 슬러그 → list.  (litdb/figures/<slug>/figures.json 기준)"""
+    miss = []
+    for s in slugs:
+        j = os.path.join(wt, 'litdb', 'figures', s, 'figures.json')
+        try:
+            with open(j, encoding='utf-8') as f:
+                if not (json.load(f) or {}).get('figures'):
+                    miss.append(s)
+        except (OSError, ValueError):
+            miss.append(s)
+    return miss
+
+
+def run_extract_figures(wt, slug, pdfs, clean=True):
+    """tools/litdb/extract_figures.py 를 워크트리 안에서 돌린다 → True/False.
+
+    ★ 왜 promote 가 이걸 부르게 됐나 (2026-08-11): 카드를 정본에 넣는 통로는 이 스크립트인데
+      **figure 크로핑은 부르지 않아** 132편이 2026-08-05 배치로 만들어진 뒤 그 이후 digest 된
+      카드는 조용히 그림 없이 올라갔다 (nam2026 두 편이 그 사각지대였다).
+      "구현과 배선은 다르다" 가 이 리포의 반복 교훈이라 여기서 배선한다.
+    """
+    tool = os.path.join(wt, 'tools', 'litdb', 'extract_figures.py')
+    if not os.path.exists(tool):
+        print(f'  ⚠ extract_figures.py 없음: {tool}', file=sys.stderr)
+        return False
+    cmd = [sys.executable, tool, '--slug', slug]
+    for p in pdfs:
+        cmd += ['--pdf', os.path.abspath(p)]
+    if clean:
+        cmd.append('--clean')
+    r = _run(cmd, cwd=wt, check=False, quiet=True)
+    if r.returncode != 0:
+        tail = (r.stderr or r.stdout or '').strip().splitlines()[-6:]
+        print('  ✗ figure 추출 실패:\n    ' + '\n    '.join(tail), file=sys.stderr)
+        if 'PyMuPDF' in (r.stderr or '') or 'fitz' in (r.stderr or ''):
+            print('    → 이 컨테이너/머신에 PyMuPDF 가 없다.  `pip install pymupdf` '
+                  '(Ubuntu 24.04 WSL 은 venv: python3 -m venv ~/.venvs/litdb)', file=sys.stderr)
+        return False
+    n = len([x for x in os.listdir(os.path.join(wt, 'litdb', 'figures', slug))
+             if x.endswith('.png')]) if os.path.isdir(
+                 os.path.join(wt, 'litdb', 'figures', slug)) else 0
+    print(f'  ✓ figure 크로핑 {n}장 → litdb/figures/{slug}/')
+    return True
+
+
+def cmd_close(message='', dry_run=False, allow_empty_index=False, pdfs=(), figures_slug=''):
     wt = WT_DIR
     if not os.path.isdir(wt):
         raise SystemExit('워크트리 없음 — 먼저 --open')
     dirty = _run(['git', 'status', '--porcelain'], cwd=wt).stdout.strip()
     if not dirty:
         print('변경 없음 — 정리만 하고 종료'); cmd_cleanup(); return
+    # ── figure 크로핑: PDF 를 주면 여기서 돌린다 (배선) ──────────────────────
+    _touched = touched_slugs(wt)
+    if pdfs:
+        slug = figures_slug or (_touched[0] if len(_touched) == 1 else '')
+        if not slug:
+            raise SystemExit(f'✗ --pdf 를 줬는데 대상 슬러그가 모호하다: {_touched}\n'
+                             '  --figures-slug <slug> 으로 지정하세요.')
+        run_extract_figures(wt, slug, pdfs)
     added, problems = cmd_check(wt)
+    # ── figure 없는 카드는 **경고**한다 (막지는 않는다 — PDF 없이 쓰는 카드도 있다) ──
+    _fmiss = figures_missing(wt, _touched)
+    if _fmiss:
+        print('  ⚠ figure 크로핑 없는 카드: ' + ', '.join(_fmiss))
+        print('     webapp 이 본문의 "Fig. 3i,j" 인그레 옆에 그림을 못 띄운다.  PDF 가 있으면:')
+        for s in _fmiss:
+            print(f'       python3 scripts/litdb_promote.py --close --figures-slug {s} \\\n'
+                  f'           --pdf <본문.pdf> --pdf <SI.pdf> --message "…"')
+        print('     (PDF 가 없는 카드면 무시해도 된다 — 이건 경고이지 실패가 아니다.)')
     if problems:
         raise SystemExit('✗ 정본성 검사 실패 — 위 문제를 고친 뒤 다시 --close '
                          '(워크트리는 그대로 두었습니다)')
@@ -218,6 +297,32 @@ def _selftest():
     o4 = 'zz_selftest_good' in added and not problems
     ok &= o4
     print(f'  (4) 온전한 카드 통과: 문제 {len(problems)}건 → {"OK" if o4 else "FAIL"}')
+    # (6) 건드린 카드 감지 — `added` 는 새 카드만 잡아서 **수정**을 놓친다
+    t = touched_slugs(wt)
+    o6 = 'zz_selftest_good' in t
+    ok &= o6
+    print(f'  (6) 건드린 카드 감지: {t[:3]} → {"OK" if o6 else "FAIL"}')
+    # (7) figure 크로핑 유무 판정 — 있는 카드/없는 카드를 갈라야 한다
+    figdir = os.path.join(wt, 'litdb', 'figures')
+    have = [d for d in sorted(os.listdir(figdir))
+            if os.path.exists(os.path.join(figdir, d, 'figures.json'))] if os.path.isdir(figdir) else []
+    o7 = (figures_missing(wt, ['zz_selftest_good']) == ['zz_selftest_good']
+          and bool(have) and figures_missing(wt, have[:1]) == [])
+    ok &= o7
+    print(f'  (7) figure 유무 판정: 없는것=잡음 · 있는것({have[0] if have else "—"})=통과'
+          f' → {"OK" if o7 else "FAIL"}')
+    # (8) --pdf 를 줬는데 대상이 모호하면 거부해야 한다 (엉뚱한 카드에 그림 붙이기 방지)
+    open(os.path.join(wt, 'litdb', 'papers', 'zz_selftest_good2.md'), 'w',
+         encoding='utf-8').write(
+        '# Selftest Paper 2\n\n> slug `zz_selftest_good2` · type `DEM` · digested `2026-08-11`\n')
+    try:
+        cmd_close(message='x', pdfs=['/nonexistent.pdf'])
+        o8 = False
+    except SystemExit as e:
+        o8 = '모호' in str(e)
+    ok &= o8
+    os.remove(os.path.join(wt, 'litdb', 'papers', 'zz_selftest_good2.md'))
+    print(f'  (8) --pdf 대상 모호하면 거부: {"OK" if o8 else "FAIL"}')
     # (5) INDEX 미등재는 --close 가 막아야 한다
     try:
         cmd_close(message='selftest', dry_run=False)
@@ -243,6 +348,11 @@ def main():
     ap.add_argument('--message', default='', help='--close 커밋 메시지')
     ap.add_argument('--dry-run', action='store_true', help='--close 를 시늉만')
     ap.add_argument('--force', action='store_true', help='--open 시 기존 워크트리 재생성')
+    ap.add_argument('--pdf', action='append', default=[],
+                    help='--close 와 함께: 이 PDF 들로 figure 크로핑을 돌린다 (반복 가능). '
+                         'tools/litdb/extract_figures.py 를 부른다 — PyMuPDF 필요')
+    ap.add_argument('--figures-slug', default='',
+                    help='--pdf 대상 슬러그 (건드린 카드가 하나면 생략 가능)')
     ap.add_argument('--allow-empty-index', action='store_true',
                     help='--close 시 INDEX 등재 검사 생략 (권장 안 함)')
     a = ap.parse_args()
@@ -254,7 +364,8 @@ def main():
         _, pb = cmd_check()
         sys.exit(1 if pb else 0)
     elif a.close:
-        cmd_close(message=a.message, dry_run=a.dry_run, allow_empty_index=a.allow_empty_index)
+        cmd_close(message=a.message, dry_run=a.dry_run, allow_empty_index=a.allow_empty_index,
+                  pdfs=a.pdf, figures_slug=a.figures_slug)
     elif a.cleanup:
         cmd_cleanup()
     else:
