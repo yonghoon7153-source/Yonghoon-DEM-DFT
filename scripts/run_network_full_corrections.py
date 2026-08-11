@@ -1125,6 +1125,11 @@ def main() -> None:
     ap = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
                                   description=__doc__)
     ap.add_argument('cases', nargs='*', help='Specific case_ids (dir leaf) OR readable names with --name')
+    ap.add_argument('--case-dir', help='★ RC6-04b: **정확한 디렉터리 하나**를 대상으로 삼는다 '
+                                       '(results/archive 탐색을 하지 않는다).  candidate 디렉터리에서 '
+                                       'Stage E 를 돌린 뒤 검증을 통과한 것만 active 로 게시하는 '
+                                       'publish 흐름에 필요하다 — 옛 흐름은 active 파일을 먼저 purge 해서, '
+                                       '그 사이에 부모가 죽으면 그 상태가 영구 active 가 됐다.')
     ap.add_argument('--quiet', action='store_true', help='One line per case')
     ap.add_argument('--name', action='store_true',
                     help='Match positional args against meta.json["name"] (readable, e.g. '
@@ -1141,7 +1146,17 @@ def main() -> None:
         ap.error('--ea-ion-ev 는 --temp-c 와 함께만 의미가 있다 (온도 없이 Eₐ 만 주면 no-op) '
                  '— 조용히 무시하지 않고 여기서 멈춘다.')
 
-    all_cases = discover_case_dirs()
+    # ★ RC6-04b: --case-dir 은 **탐색을 건너뛴다**.  candidate 는 results/ 밖에 있을 수
+    #   있고(임시 디렉터리), 탐색에 걸리면 안 되기 때문이다.
+    if args.case_dir:
+        _cd = Path(args.case_dir)
+        if not (_cd / 'full_metrics.json').exists():
+            sys.exit(f'[stage-e] --case-dir 에 full_metrics.json 이 없다: {_cd}')
+        all_cases = [_cd]
+        if args.cases:
+            sys.exit('[stage-e] --case-dir 와 위치인자를 함께 쓸 수 없다 (대상이 둘이 된다)')
+    else:
+        all_cases = discover_case_dirs()
     if args.cases:
         # Accept either bare case IDs (`input_6mAh_real40_4`) or full/partial
         # paths (`webapp/archive/후막(6mAh)/input_6mAh_real40_4`). Compare on

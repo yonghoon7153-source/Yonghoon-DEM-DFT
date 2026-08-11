@@ -75,7 +75,14 @@ class FakeRunner:
             out = 'fake solver'
         elif script == 'run_network_full_corrections.py':
             rc = self.stage_e_rc
-            fm = os.path.join(self.results_dir, 'full_metrics.json')
+            # ★ RC6-04b: 실제 Stage E 는 `--case-dir` 로 지정된 **그 디렉터리**에 쓴다
+            #   (candidate publish 흐름).  fixture 가 results_dir 에 하드코딩하면 계약을
+            #   어기는 것이고, candidate 가 비어 검증이 실패한다 — fixture-drift 여덟 번째.
+            _target = self.results_dir
+            _c = list(cmd)
+            if '--case-dir' in _c:
+                _target = _c[_c.index('--case-dir') + 1]
+            fm = os.path.join(_target, 'full_metrics.json')
             data = json.load(open(fm)) if os.path.exists(fm) else {}
             # Stage E 는 **화면에 남아 있는 baseline** 을 읽어 파생값을 만든다.
             # ★ RC5-01: 실제 run_one 은 정상 종료마다 11-키를 **무조건** 쓴다.  fixture 가
@@ -290,7 +297,10 @@ def main():
                         with open(os.path.join(res_dir, _n), 'w') as f:
                             json.dump({'sigma_full_mScm': 5.0, 'thermal_status': 'computed'}, f)
                 elif script == 'run_network_full_corrections.py' and stage_e_writes:
-                    fm = os.path.join(res_dir, 'full_metrics.json')
+                    _cl = list(cmd)
+                    _t = (_cl[_cl.index('--case-dir') + 1]
+                          if '--case-dir' in _cl else res_dir)
+                    fm = os.path.join(_t, 'full_metrics.json')
                     d = json.load(open(fm)) if os.path.exists(fm) else {}
                     d['sigma_full_mScm_stage_e'] = 9.0
                     for _k, _v in _healthy_stage_e().items():   # RC5-01/RC6-01 schema
@@ -388,7 +398,10 @@ def main():
                         json.dump({'sigma_full_mScm': 3.0, 'thermal_status': 'computed'},
                                   open(os.path.join(_d, _n), 'w'))
                 elif sc == 'run_network_full_corrections.py':
-                    fm = os.path.join(_d, 'full_metrics.json')
+                    _cl = list(cmd)
+                    _t = (_cl[_cl.index('--case-dir') + 1]
+                          if '--case-dir' in _cl else _d)
+                    fm = os.path.join(_t, 'full_metrics.json')
                     dd = json.load(open(fm)) if os.path.exists(fm) else {}
                     dd['sigma_full_mScm_stage_e'] = 6.0
                     for _k, _v in _healthy_stage_e().items():   # RC5-01/RC6-01 schema
@@ -699,6 +712,65 @@ def main():
         'run_network_full_corrections.py'), encoding='utf-8').read()
     chk('RC6-07e) ★ Stage E 재솔브 subprocess 도 UTF-8 계약을 건다',
         "PYTHONUTF8='1'" in _rnfc_src and "encoding='utf-8'" in _rnfc_src)
+
+    # ══ 3h) ★ RC6-04b (Codex 6회차): pre-purge crash window ══
+    #   옛 흐름은 subprocess 전에 **active 위치의** full_metrics 에서 Stage E 키를 지워
+    #   게시했다 → 부모가 그 사이에 죽으면 그 상태가 영구 active.  실측 재현됨.
+    #   새 흐름은 candidate 에서 돌리고 통과한 것만 원자 게시한다.
+    tmp = tempfile.mkdtemp(prefix='c04b_')
+    try:
+        res = os.path.join(tmp, 'r')
+        os.makedirs(res)
+        fmp = os.path.join(res, 'full_metrics.json')
+        _seed = _healthy_stage_e(porosity=15.6, sigma_full_mScm=1.0)
+        json.dump(_seed, open(fmp, 'w'))
+        json.dump({'sigma_full_mScm': 1.0}, open(os.path.join(res, 'network_conductivity.json'), 'w'))
+        _n0 = sum(1 for k in json.load(open(fmp)) if ps.is_stage_e_key(k))
+
+        #  ① purge 도중에도 active 는 그대로여야 한다 (옛 흐름은 0 이 됐다)
+        _mid = {}
+        with ps.stage_e_candidate(res) as _c:
+            _c.purge_stage_e()
+            _mid = json.load(open(fmp))
+            # publish 하지 않고 빠져나온다 = 부모가 죽은 것과 같은 효과
+        chk('RC6-04b-a) ★ purge 도중에도 **active** 는 Stage E 키를 그대로 갖는다',
+            sum(1 for k in _mid if ps.is_stage_e_key(k)) == _n0 and _n0 == 11)
+        chk('RC6-04b-b) ★ publish 없이 빠져나가도 active 는 옛 세대 그대로 (crash 안전)',
+            sum(1 for k in json.load(open(fmp)) if ps.is_stage_e_key(k)) == _n0)
+
+        #  ② publish 하면 새 세대로 원자 교체
+        with ps.stage_e_candidate(res) as _c:
+            _c.purge_stage_e()
+            _cf = os.path.join(_c.dir, 'full_metrics.json')
+            _d2 = json.load(open(_cf))
+            _d2['sigma_full_mScm_stage_e'] = 42.0
+            json.dump(_d2, open(_cf, 'w'))
+            _c.publish()
+        chk('RC6-04b-c) publish 하면 새 값이 active 에 원자 교체된다',
+            json.load(open(fmp)).get('sigma_full_mScm_stage_e') == 42.0)
+        chk('RC6-04b-d) candidate 는 뒤에 남지 않는다',
+            not [x for x in os.listdir(res) if x.startswith(ps.STAGE_E_CANDIDATE_PREFIX)])
+
+        #  ③ 죽은 부모가 남긴 candidate 를 청소한다 (위생 — 정합성 문제는 아니다)
+        _stale = os.path.join(res, ps.STAGE_E_CANDIDATE_PREFIX + 'zombie')
+        os.makedirs(_stale)
+        os.utime(_stale, (0, 0))
+        chk('RC6-04b-e) 오래된 candidate 를 청소한다',
+            ps.sweep_stale_candidates(res) == 1 and not os.path.exists(_stale))
+
+        #  ④ 배선 확인 — app 이 실제로 candidate 흐름을 쓰는가 (구현≠배선)
+        _a = open(os.path.join(os.path.dirname(os.path.abspath(webapp.__file__)),
+                               'app.py'), encoding='utf-8').read()
+        chk('RC6-04b-f) ★ app 이 candidate 흐름과 --case-dir 를 실제로 쓴다 (배선)',
+            'stage_e_candidate(results_dir)' in _a and "'--case-dir', _cand.dir" in _a
+            and '_cand.publish()' in _a)
+        _rn = open(os.path.join(os.path.dirname(os.path.dirname(
+            os.path.abspath(webapp.__file__))), 'scripts',
+            'run_network_full_corrections.py'), encoding='utf-8').read()
+        chk('RC6-04b-g) Stage E 가 --case-dir 를 받는다 (탐색을 건너뛴다)',
+            "'--case-dir'" in _rn and 'args.case_dir' in _rn)
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
 
     # ══ 4) 단계 계약 요약기 ══
     S = ps.StageOutcome

@@ -546,6 +546,103 @@ def utf8_subprocess_kwargs(env=None):
     return {'text': True, 'encoding': 'utf-8', 'errors': 'replace', 'env': e}
 
 
+#: Stage E candidate 작업 디렉터리 접두어 (results 안에 두어 같은 파일시스템 = rename 원자성).
+STAGE_E_CANDIDATE_PREFIX = '.stage_e_candidate_'
+
+
+@contextlib.contextmanager
+def stage_e_candidate(results_dir):
+    """Stage E 를 **candidate 에서** 돌리고, 통과한 것만 active 로 원자 게시한다 (RC6-04b).
+
+    ★ 왜 필요한가 (Codex 6회차, 실측 재현): 옛 흐름은 subprocess 전에 **active 위치의**
+      `full_metrics.json` 에서 Stage E 키를 지워 게시했다.  그래서
+        · 정상 실행 중에도 reader 가 Stage E 키가 없는 중간 상태를 본다
+        · **부모가 purge 와 복원 사이에 죽으면 그 상태가 영구 active** 가 된다
+        · child 실패 rollback 은 그 parent crash 를 복구하지 못한다
+      (RR3-03 과 같은 뿌리.)
+
+    새 흐름 — **active 를 끝까지 건드리지 않는다**:
+        ① candidate 디렉터리를 만들고 active full_metrics 를 **복사**
+        ② candidate 안에서만 Stage E 키를 걷어낸다 (active 는 그대로)
+        ③ Stage E 를 `--case-dir <candidate>` 로 실행
+        ④ 검증 통과 → candidate 를 active 로 **원자 rename**
+           실패/예외/크래시 → active 는 처음부터 안 건드렸으므로 **그대로**
+
+    사용:
+        with stage_e_candidate(results_dir) as cand:
+            run_stage(..., cmd + ['--case-dir', cand.dir], ...)
+            if ok: cand.publish()          # 통과했을 때만
+        # publish 안 하면 candidate 는 버려지고 active 는 옛 세대 그대로
+
+    ⚠ candidate 는 `results_dir` **안에** 만든다 — `os.replace` 가 원자적이려면 같은
+      파일시스템이어야 한다 (/tmp 는 다른 마운트일 수 있다).
+    """
+    cand_dir = tempfile.mkdtemp(prefix=STAGE_E_CANDIDATE_PREFIX, dir=results_dir)
+    fm_src = os.path.join(results_dir, 'full_metrics.json')
+    fm_cand = os.path.join(cand_dir, 'full_metrics.json')
+
+    class _Cand:
+        dir = cand_dir
+        published = False
+
+        def purge_stage_e(self):
+            """candidate 안에서만 관리 키를 걷어낸다 → 걷어낸 것을 돌려준다."""
+            try:
+                with open(fm_cand) as f:
+                    d = json.load(f)
+            except (OSError, ValueError):
+                return {}
+            saved = {k: v for k, v in d.items() if is_stage_e_key(k)}
+            for k in saved:
+                d.pop(k, None)
+            atomic_write_json(fm_cand, d)
+            return saved
+
+        def publish(self):
+            """candidate 의 full_metrics 를 active 로 **원자적으로** 옮긴다."""
+            _replace_retry(fm_cand, fm_src)
+            self.published = True
+
+    try:
+        if os.path.exists(fm_src):
+            shutil.copy2(fm_src, fm_cand)
+        # candidate 에서도 Stage E 가 읽어야 하는 입력을 곁들인다 (읽기 전용 참조).
+        for aux in ('network_conductivity.json', 'network_conductivity_hertzian.json',
+                    'network_conductivity_physics.json', 'network_conductivity_dual.json',
+                    'atoms.csv', 'contacts.csv', 'input_params.json', 'meta.json',
+                    'mesh_info.json', 'contacts_analyzed.csv', 'atoms_analyzed.csv'):
+            src = os.path.join(results_dir, aux)
+            if os.path.exists(src):
+                with contextlib.suppress(OSError):
+                    os.symlink(os.path.abspath(src), os.path.join(cand_dir, aux))
+        yield _Cand()
+    finally:
+        shutil.rmtree(cand_dir, ignore_errors=True)
+
+
+def sweep_stale_candidates(results_dir, max_age_s=6 * 3600):
+    """부모가 죽어 남은 candidate 를 치운다 → 치운 개수.
+
+    ★ candidate 는 active 를 건드리지 않으므로 **남아 있어도 안전**하다 — 이 청소는
+      디스크 위생일 뿐 정합성 문제가 아니다 (그것이 이 설계의 요점이다).
+    """
+    n = 0
+    try:
+        for name in os.listdir(results_dir):
+            if not name.startswith(STAGE_E_CANDIDATE_PREFIX):
+                continue
+            p = os.path.join(results_dir, name)
+            try:
+                if time.time() - os.path.getmtime(p) > max_age_s:
+                    shutil.rmtree(p, ignore_errors=True)
+                    n += 1
+            except OSError:
+                pass
+    except OSError:
+        pass
+    return n
+
+
 def snapshot_keys(d, keys):
     """{key: {'present': bool, 'value': v}} — **없었다는 사실**까지 보존한다.
 

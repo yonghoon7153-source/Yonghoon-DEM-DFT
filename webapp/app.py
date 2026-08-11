@@ -3039,32 +3039,36 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
     #   실패하면 걷어낸 키를 되돌려 이전 세대를 보존한다.
     #   ⚠ 최종형은 Stage E 스크립트 자신이 per-run manifest 를 쓰는 것 — 키 집합이 늘면
     #     이 격리도 drift 한다.  그것은 스크립트 인터페이스 변경이라 별도 작업이다.
+    # ★★ RC6-04b (Codex 6회차, 실측 재현) — **active 를 먼저 purge 하지 않는다** ★★
+    #   옛 흐름은 subprocess 전에 **active 위치의** full_metrics 에서 Stage E 키를 지워
+    #   게시했다.  그래서 (a) 정상 실행 중에도 reader 가 중간 상태를 보고 (b) 부모가
+    #   purge 와 복원 사이에 죽으면 **그 상태가 영구 active** 가 됐다.  child 실패
+    #   rollback 은 parent crash 를 복구하지 못한다 (RR3-03 과 같은 뿌리).
+    #   → candidate 에서 돌리고 **검증을 통과한 것만** 원자 게시한다.  실패·크래시면
+    #     active 는 처음부터 안 건드렸으므로 그대로다.
+    _ps.sweep_stale_candidates(results_dir)          # 죽은 부모가 남긴 것 청소 (위생일 뿐)
     _se_saved, _raw_saved, _had_active = {}, {}, False
-    try:
-        if os.path.exists(fm_json):
-            with open(fm_json) as _f:
+    with _ps.stage_e_candidate(results_dir) as _cand:
+        try:
+            with open(os.path.join(_cand.dir, 'full_metrics.json')) as _f:
                 _fmd = json.load(_f)
-            # ★ RC4-02: '_stage_e' 문자열 포함이 아니라 **관리 키 전부**를 격리한다
-            #   (stage_e_source · stage_e_factors_used · validation_flags · 온도
-            #    provenance · wrapper provenance 등이 전부 새고 있었다).
+            # ★ RC4-02: '_stage_e' 문자열 포함이 아니라 **관리 키 전부**를 격리한다.
             _se_saved = {k: v for k, v in _fmd.items() if _ps.is_stage_e_key(k)}
             _had_active = bool(_se_saved)
-            # ★ RC5-02: raw thermal 은 격리하지 않는다 (Stage E 의 baseline 입력이므로)
-            #   — 하지만 Stage E 가 heal 로 덮어쓸 수 있어 **rollback 대상에는 넣는다**.
-            #   `{present, value}` 로 떠서 "원래 없던 키" 를 None 으로 되살리지 않는다.
+            # ★ RC5-02: raw thermal 은 격리하지 않되(baseline 입력) rollback 대상에는 넣는다.
             _raw_saved = _ps.snapshot_keys(_fmd, _ps.RAW_THERMAL_KEYS)
-            if _se_saved:
-                for k in _se_saved:
-                    _fmd.pop(k, None)
-                _ps.atomic_write_json(fm_json, _fmd)
-    except Exception:                                              # noqa: BLE001
-        _se_saved, _raw_saved, _had_active = {}, {}, False
+            _cand.purge_stage_e()                    # ← candidate 안에서만
+        except Exception:                            # noqa: BLE001
+            _se_saved, _raw_saved, _had_active = {}, {}, False
 
-    st = _ps.run_stage('Stage E (literature-grounded grain corrections)',
-                       [sys.executable, os.path.join(scripts, 'run_network_full_corrections.py'),
-                        os.path.basename(results_dir), '--quiet'],
-                       required=False, runner=runner, results_dir=results_dir,
-                       expects=('full_metrics.json',), verify=_stage_e_wrote)
+        st = _ps.run_stage('Stage E (literature-grounded grain corrections)',
+                           [sys.executable,
+                            os.path.join(scripts, 'run_network_full_corrections.py'),
+                            '--case-dir', _cand.dir, '--quiet'],
+                           required=False, runner=runner, results_dir=_cand.dir,
+                           expects=('full_metrics.json',), verify=_stage_e_wrote)
+        if st.ok:
+            _cand.publish()                          # ← 통과했을 때만 active 교체
     stages.append(st)
     log.append(st)
 
