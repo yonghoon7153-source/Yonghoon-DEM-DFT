@@ -502,8 +502,20 @@ def contact_stats(cx: Atoms, nslab: int) -> Dict[str, Any]:
         e1, e2 = key.split("-")
         s = COV.get(e1, 0.8) + COV.get(e2, 1.2)
         ratios[key] = (round(v, 3), round(v / s, 3))
+    # basin 서술자 — 자세가 '같은 골짜기'인지 판정하는 데 쓴다 (Codex 방식 이식·일반화).
+    # Codex 는 사슬축(azimuth/tilt)을 썼는데 SDCP 는 사슬이 없으므로 **관성 주축**으로 일반화한다.
+    mp = cx.positions[nslab:]
+    q = mp - mp.mean(axis=0)
+    axis = np.linalg.eigh(q.T @ q)[1][:, -1]
+    azim = math.degrees(math.atan2(float(axis[1]), float(axis[0]))) % 180.0
+    tilt = math.degrees(math.asin(min(1.0, abs(float(axis[2])))))
+    com_h = float(mp.mean(axis=0)[2] - zs.max())
+
     return {
         "min_contact_A": round(dmin, 3), "min_contact_pair": pair,
+        "axis_azimuth_deg_mod180": round(azim, 2),
+        "axis_tilt_from_plane_deg": round(tilt, 2),
+        "com_height_above_slab_A": round(com_h, 3),
         "min_contact_mol_index": mi, "min_contact_slab_index": si,
         "min_contact_slab_element": sym[si] if si >= 0 else None,
         "registry": dict(reg),
@@ -759,6 +771,100 @@ def cmd_atlas(a) -> int:
     if not grand:
         return 2
     return 0
+
+
+# ── basin 클러스터링 (Codex ptfe_linio2_uma 에서 이식·일반화) ─────────────────────
+#   왜 필요한가 — 자세 20개를 20개의 독립 후보로 세면 안 된다. 같은 골짜기에 굴러 들어간
+#   자세들은 하나다. 그걸 세지 않으면 "다양한 후보를 넘겼다"가 착각이 된다.
+#   1×4 초격자라 **b축 frac 0.25 병진은 같은 물리 자세**다 — 실측 확인(2026-08-11):
+#   등가 표면 원자들이 정확히 frac b +0.25 간격으로 반복한다. Codex 구현이 우리 셀에 그대로 맞다.
+BASIN_TOL = {
+    "count": 1,          # 접촉 개수 차
+    "dist_A": 0.60,      # 원소별 최단거리 차
+    "azimuth_deg": 35.0, # 주축 방위 차 (mod 180)
+    "tilt_deg": 20.0,    # 면 대비 기울기 차
+    "height_A": 0.75,    # COM 높이 차
+    "rmsd_A": 0.75,      # 분자 원자별 주기 RMSD
+}
+
+
+def molecule_rmsd_A(left: Atoms, right: Atoms, nslab: int) -> float:
+    """분자 부분의 원자별 RMSD. **1×4 b축 병진(0/¼/½/¾)을 다 시도해 최소를 취한다.**"""
+    if left.get_chemical_symbols() != right.get_chemical_symbols():
+        return float("inf")
+    cell = np.asarray(left.cell.array, float)
+    delta = np.asarray(right.positions[nslab:] - left.positions[nslab:], float)
+    frac = np.linalg.solve(cell.T, delta.T).T
+    best = np.inf
+    for shift in (0.0, 0.25, 0.5, 0.75):
+        f = frac.copy()
+        f[:, 1] -= shift
+        f[:, :2] -= np.round(f[:, :2])
+        cart = f @ cell
+        best = min(best, float(np.sqrt(np.mean(np.sum(cart * cart, axis=1)))))
+    return best
+
+
+def _pair_key(reg: Dict[str, Any], el: str) -> int:
+    return sum(v for k, v in (reg or {}).items() if k.endswith(f"-{el}"))
+
+
+def same_basin(a: Dict[str, Any], b: Dict[str, Any]) -> bool:
+    """서술자만으로 같은 골짜기인지 (구조 파일 없이 판정 — 진단용 proxy)."""
+    if a.get("nearest_cation") != b.get("nearest_cation"):
+        return False
+    for el in CATIONS:
+        if abs(_pair_key(a.get("registry"), el) - _pair_key(b.get("registry"), el)) > BASIN_TOL["count"]:
+            return False
+        da, db = a.get(f"d_{el}_A"), b.get(f"d_{el}_A")
+        if (da is None) != (db is None):
+            return False
+        if da is not None and abs(da - db) > BASIN_TOL["dist_A"]:
+            return False
+    az = abs(a.get("axis_azimuth_deg_mod180", 0.0) - b.get("axis_azimuth_deg_mod180", 0.0))
+    if min(az, 180.0 - az) > BASIN_TOL["azimuth_deg"]:
+        return False
+    if abs(a.get("axis_tilt_from_plane_deg", 0.0) - b.get("axis_tilt_from_plane_deg", 0.0)) > BASIN_TOL["tilt_deg"]:
+        return False
+    if abs(a.get("com_height_above_slab_A", 0.0) - b.get("com_height_above_slab_A", 0.0)) > BASIN_TOL["height_A"]:
+        return False
+    return True
+
+
+def cluster_basins(rows: Sequence[Dict[str, Any]], struct_dir: Optional[Path] = None,
+                   nslab: int = 192) -> List[List[Dict[str, Any]]]:
+    """서술자로 1차 묶고, 구조가 있으면 주기 RMSD 로 **더 묶는다**(합치기만, 쪼개지 않음).
+
+    ⚠ 자동 basin 라벨은 진단용 proxy 다 — 대칭 등가를 다르게 세거나 다른 것을 합칠 수 있다.
+    물리적으로 독립인 basin 수는 구조를 눈으로 보고 확정할 것 (Codex 와 같은 단서).
+    """
+    clusters: List[List[Dict[str, Any]]] = []
+    cache: Dict[str, Atoms] = {}
+
+    def load(r) -> Optional[Atoms]:
+        if struct_dir is None:
+            return None
+        lab = r.get("label")
+        if lab in cache:
+            return cache[lab]
+        p = struct_dir / f"{lab}.xyz"
+        if not p.is_file():
+            return None
+        cache[lab] = read(p)
+        return cache[lab]
+
+    for r in sorted(rows, key=lambda x: x.get("E_pose_eV") if x.get("E_pose_eV") is not None else 0.0):
+        placed = False
+        for cl in clusters:
+            head = cl[0]
+            if same_basin(head, r):
+                cl.append(r); placed = True; break
+            A, B = load(head), load(r)
+            if A is not None and B is not None and molecule_rmsd_A(A, B, nslab) <= BASIN_TOL["rmsd_A"]:
+                cl.append(r); placed = True; break
+        if not placed:
+            clusters.append([r])
+    return clusters
 
 
 def parse_legacy_label(stem: str) -> Dict[str, Any]:
@@ -1109,6 +1215,16 @@ def cmd_verdict(a) -> int:
         if not fs:
             print("   ⛔ 점수가 없다 — score 단계를 돌리지 않았다. **판정 아님**\n")
             continue
+        # basin 클러스터링 — 자세 n개가 실제로 몇 개의 골짜기인가
+        sdir = Path(a.rows[0]) if Path(a.rows[0]).is_dir() else None
+        cls = cluster_basins(fs, struct_dir=sdir)
+        print(f"   basin: 자세 {len(fs)} → **구별되는 골짜기 {len(cls)}개** "
+              f"(크기 {sorted((len(c) for c in cls), reverse=True)[:8]}…)"
+              + ("  [주기 RMSD 포함]" if sdir else "  [서술자만 — 구조 없음]"))
+        if len(cls) < max(3, len(fs) // 20):
+            print("     ⚠ 골짜기가 매우 적다 — 자세를 많이 만들어도 **같은 곳으로 굴러가고 있다.**")
+        print("     ※ 자동 basin 라벨은 진단용 proxy — 대칭 등가를 다르게 세거나 다른 것을 합칠 수 있다.")
+
         by_site = defaultdict(list)
         for r in fs:
             by_site[r.get("site_from_geometry") or r["site"]].append(r)
