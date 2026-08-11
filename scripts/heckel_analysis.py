@@ -14,16 +14,20 @@ Fits Heckel:  ln(1/(1-D)) = K·P + A   → mean yield pressure P_y = 1/K,
 Verdict: linear fit (high R²) with P_y ≈ 0.85 GPa → elastic-softened DEM
 faithfully mimics LPSCl plasticity.  Curved / P_y far off → elastic limit.
 """
-import json, math, sys
+import json, math, os, sys
 import numpy as np
 
 R_SE = 0.0005
 BOX = 0.05
 
 
-def read_atoms(atom):
-    """atom dump → (xyz[N,3], radius[N]).  Columns: id type x y z radius ..."""
-    xyz, rad = [], []
+def read_atoms(atom, with_ids=False):
+    """atom dump → (xyz[N,3], radius[N]).  Columns: id type x y z radius ...
+
+    `with_ids=True` 면 (xyz, rad, {id: radius}) 를 돌려준다 — contact 덤프의 id 쌍을
+    **실제 반지름**으로 되돌리는 데 쓴다 (복합 베드에서 필수, lens_from_contacts 참조).
+    """
+    xyz, rad, by_id = [], [], {}
     with open(atom) as f:
         for _ in range(9): next(f)
         for line in f:
@@ -31,7 +35,10 @@ def read_atoms(atom):
             if len(p) < 6: continue
             xyz.append((float(p[2]), float(p[3]), float(p[4])))
             rad.append(float(p[5]))
-    return np.asarray(xyz, float), np.asarray(rad, float)
+            if with_ids:
+                by_id[int(float(p[0]))] = float(p[5])
+    xyz, rad = np.asarray(xyz, float), np.asarray(rad, float)
+    return (xyz, rad, by_id) if with_ids else (xyz, rad)
 
 
 def _lens_volume(dist, ra, rb):
@@ -158,6 +165,11 @@ def lens_from_contacts(contacts, r_se=R_SE, rad_by_id=None):
       (AM_P 6 / AM_S 2 / SE 0.5 µm)에서 **틀린 값**을 준다 — AM 이 낀 접촉의 렌즈를
       SE 반지름으로 계산하기 때문.  복합에서는 반드시 rad_by_id 를 넘길 것.
     """
+    if isinstance(contacts, (str, bytes, os.PathLike)):
+        # ★ 문자열을 넘기면 파이썬이 **글자 단위로** 순회해 '/' 를 파일로 열려 든다.
+        #   조용히 0 을 돌려주거나 엉뚱한 예외를 내는 대신 여기서 세운다.
+        raise TypeError('lens_from_contacts 는 파일 **리스트** 를 받는다 '
+                        f'(문자열 하나를 받았다: {contacts!r}). [path] 로 감쌀 것.')
     V = 0.0
     for cf in (contacts or []):
         with open(cf) as f:
@@ -187,9 +199,13 @@ def vol_and_lens(atom, contacts, plate_z, geometric=True):
     V_lens 는 기본이 **기하 계산**(항상 가능) — contact 덤프는 교차검증용으로만 읽는다.
     옛 동작(contact 없으면 D_union=nan)이 4압력 중 3점을 못 쓰게 만들었다.
     """
-    xyz, rad = read_atoms(atom)
+    xyz, rad, by_id = read_atoms(atom, with_ids=True)
     V_sphere = float(((4.0/3.0)*math.pi*rad**3).sum())
-    V_c = lens_from_contacts(contacts) if contacts else 0.0
+    # ★ rad_by_id 를 반드시 넘긴다.  안 넘기면 lens_from_contacts 가 **모든 접촉을
+    #   반지름 r_SE 인 등반지름**으로 계산한다 — AM_P 6 / AM_S 2 / SE 0.5 µm 인 복합
+    #   베드에서는 틀린 값이고, 그 결과로 교차검증이 거짓 '불일치' 를 찍는다.
+    #   (lens_from_contacts docstring 이 요구하던 것을 호출부가 지키지 않고 있었다.)
+    V_c = lens_from_contacts(contacts, rad_by_id=by_id) if contacts else 0.0
     V_lens = lens_from_geometry(xyz, rad) if geometric else V_c
     return V_sphere, V_lens, BOX*BOX*plate_z, (V_c if contacts else float('nan'))
 
@@ -314,6 +330,48 @@ def _selftest():
     chk('D≥1 점은 fit 에서 빠진다', f is not None)
     f = heckel([100, 200, 300], [0.60, float('nan'), 0.80])
     chk('nan 점도 빠진다', f is not None and f['K'] > 0)
+
+    # ★ 문자열 contacts 는 즉시 세운다 (글자 단위 순회 → '/' 를 파일로 열던 실제 사고)
+    try:
+        lens_from_contacts('/some/path')
+        chk('★ 문자열 contacts → TypeError', False)
+    except TypeError:
+        chk('★ 문자열 contacts → TypeError', True)
+
+    # ★ vol_and_lens 가 rad_by_id 를 실제로 넘기는가 (다분산 교차검증 회귀).
+    #   AM(6R)-SE(R) 접촉 하나를 심고, contact 경로가 등반지름(r_SE)이 아니라
+    #   실제 반지름 쌍으로 렌즈를 재는지 기하 경로와 대조한다.
+    import tempfile as _tf, os as _os
+    _d = _tf.mkdtemp(prefix='hk_')
+    try:
+        ra, rb = 6 * R, R
+        dist = ra + rb - 0.4 * R                       # δ = 0.4R 겹침
+        atom = _os.path.join(_d, 'atom.liggghts')
+        with open(atom, 'w') as f:
+            f.write('ITEM: TIMESTEP\n0\nITEM: NUMBER OF ATOMS\n2\n'
+                    'ITEM: BOX BOUNDS pp pp ff\n0 0.05\n0 0.05\n-0.01 1\n'
+                    'ITEM: ATOMS id type x y z radius\n'
+                    f'1 1 0.02 0.02 0.01 {ra}\n'
+                    f'2 3 {0.02 + dist} 0.02 0.01 {rb}\n')
+        cont = _os.path.join(_d, 'contact.liggghts')
+        cols = ['0'] * 26
+        cols[0:6] = ['0.02', '0.02', '0.01', str(0.02 + dist), '0.02', '0.01']
+        cols[6:9] = ['1', '2', '0']
+        cols[22] = str(0.4 * R)                        # delta
+        with open(cont, 'w') as f:
+            f.write('ITEM: TIMESTEP\n0\nITEM: ENTRIES c\n' + ' '.join(cols) + '\n')
+        Vs, Vl, Vb, Vc = vol_and_lens(atom, [cont], 0.02)
+        chk('★ vol_and_lens 가 rad_by_id 로 다분산 렌즈를 잰다 (기하=contact)',
+            Vl > 0 and abs(Vc - Vl) / Vl < 1e-6)
+        # 옛 동작(등반지름 r_SE) 이었다면 크게 다르다 — 버그가 다시 오면 여기서 잡힌다
+        wrong = lens_from_contacts([cont])             # rad_by_id 없이 = r_SE 등반지름
+        # 이 기하(6R↔R, δ=0.4R)에서 등반지름 렌즈는 참값의 0.61배 = 39 % 오차.
+        # 교차검증 허용치(5 %)를 8배 넘는 크기면 감지선으로 충분하다.
+        chk('★ 등반지름 폴백은 다분산에서 틀린 값 (버그 재발 감지선)',
+            abs(wrong - Vl) / Vl > 0.2)
+    finally:
+        import shutil as _sh
+        _sh.rmtree(_d, ignore_errors=True)
 
     # 알려진 Heckel 직선을 심어두고 K/P_y 회수
     K0, A0 = 1.0/850.0, 0.5

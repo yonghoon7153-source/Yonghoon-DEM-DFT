@@ -25,10 +25,18 @@ import argparse
 import math
 import numpy as np
 
-try:
-    from scipy.spatial import cKDTree
-except ImportError:
-    raise SystemExit("dem_am_load_fraction needs scipy (cKDTree)")
+#: scipy 는 **Hertz 추정기 경로에서만** 필요하다 (이웃탐색).  옛 코드는 이것을 모듈
+#: 최상단에서 import 하고 실패하면 SystemExit 을 던져, scipy 없는 환경에서
+#: `am_load_fraction_liggghts` (= 실측 경로, 생산에 쓰는 값) 까지 같이 막았다.
+#: 하필 막힌 쪽이 **쓰는 값**이고 요구하던 쪽이 1.3배 과대라 안 쓰기로 한 추정기다.
+#: → 필요한 곳에서만 늦게 부른다.
+def _ckdtree():
+    try:
+        from scipy.spatial import cKDTree
+    except ImportError:
+        raise SystemExit('Hertz 추정기 경로에는 scipy(cKDTree) 가 필요하다.  '
+                         '실측 경로(--atom-dump/--contact-dump)는 scipy 없이 돈다.')
+    return cKDTree
 
 E_AM = 140.0     # GPa (NCM)
 E_SE = 1.35      # GPa (DEM EFFECTIVE / softened — the scaffold's equilibrium modulus)
@@ -80,12 +88,14 @@ def _sigzz_pairs(Xi, Ri, Xj, Rj, Estar, same):
         return 0.0, 0
     rmax_i, rmax_j = Ri.max(), Rj.max()
     if same:
+        cKDTree = _ckdtree()
         pairs = cKDTree(Xi).query_pairs(r=rmax_i + rmax_j, output_type='ndarray')
         if len(pairs) == 0:
             return 0.0, 0
         ii, jj = pairs[:, 0], pairs[:, 1]
         Xa, Ra, Xb, Rb = Xi[ii], Ri[ii], Xi[jj], Ri[jj]
     else:
+        cKDTree = _ckdtree()
         ta, tb = cKDTree(Xi), cKDTree(Xj)
         lol = ta.query_ball_tree(tb, r=rmax_i + rmax_j)
         ii = np.array([a for a, lst in enumerate(lol) for _ in lst], dtype=int)
