@@ -547,15 +547,31 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
             f"않습니다 (F70).\n"
             f"  곡선을 다시 생성하거나(./run.sh --mode grid ...), 옛 산출물이면 "
             f"인용 대상에서 제외하세요.")
-    _prod_doc = yaml.safe_load(_prod.read_text(encoding="utf-8")) or {}
-    _prod_curves_sha = _prod_doc.get("curves_sha256")
+    # ★ F74 — producer 를 **독립 검증**한다 (8차 발견 1). 자기기술 YAML 만으로는
+    #   수제 parquet 과 A/B config resume 혼합이 그대로 통과했다. 이제 spec 서명
+    #   재계산·행별 grid_run_sig·시작 기록·clean 여부까지 본다.
+    from src.io import validate_curves_provenance
+    _cv = validate_curves_provenance(in_dir)
+    if not _cv["ok"]:
+        raise RuntimeError(
+            "곡선 producer 검증 실패 — 이 곡선으로 fitting 할 수 없습니다 (F74):\n"
+            + "\n".join(f"  · {k}: {_cv['checks'][k]}" for k in _cv["fail"])
+            + "\n  곡선을 다시 생성하세요: ./run.sh --mode grid ...")
+    _prod_start = in_dir / "curves_manifest_start.yaml"
+
+    # ★ F74 — config 는 `extends` 로 부모를 재귀 로드한다. 최종 파일 하나만
+    #   봉인하면 부모(base.yaml)를 바꿔도 통과한다 (8차 발견 3 반례:
+    #   PARENT_SEALED=False, AFTER_PARENT_CHANGE_OK=True). 연쇄 전체를 봉인한다.
+    from src.config import config_dependencies, merge_config_docs
+    _bc_orig = base_config or "configs/base.yaml"
+    _cfg_deps = config_dependencies(_bc_orig)
 
     _hc_pre, _hc_meta, _hc_recipe = None, None, None
     if reference == "halfcell":
         from src.config import load_config as _lc
         from src.halfcell import halfcell_cache_path as _hcp
         from src.halfcell import halfcell_meta_path as _hmp
-        _hc_pre = _hcp(_lc(base_config or "configs/base.yaml"), method=halfcell_method)
+        _hc_pre = _hcp(_lc(_bc_orig), method=halfcell_method)
         _hc_meta = _hmp(_hc_pre)
         # ★ F63 — 캐시가 없으면 **여기서** 멈춘다.
         #   F58 이 "읽기 전에 봉인"으로 바꾸면서, 캐시가 없는 fresh clone 은
@@ -571,9 +587,8 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
                 f"    python -m src.halfcell --config "
                 f"{base_config or 'configs/base.yaml'} --method {halfcell_method}\n"
                 f"  (fitting 안에서 만들면 '무엇을 읽었는가'를 봉인할 수 없습니다 — F63)")
-        _hc_recipe = (yaml.safe_load(_hc_meta.read_text(encoding="utf-8")) or {}).get("recipe")
-        if not _hc_recipe:
-            raise RuntimeError(f"half-cell meta에 recipe가 없습니다: {_hc_meta} (F64)")
+        # recipe 내용은 **스냅샷에서** 읽는다 (F72 — 8차 발견 3: 선읽은 메모리
+        # 값이 run_spec 에 박혀, seal 직전 교체 시 SOLVER_A/B 불일치가 통과했다)
     # 같은 초에 두 번 시작해도 겹치지 않게 기존 시도 수를 붙인다
     _n_prev = len(list(_attempts.glob("manifest_start_*.yaml")))
     attempt_id = f"{time.strftime('%Y%m%dT%H%M%S')}_{os.getpid()}_{_n_prev:03d}"
@@ -587,8 +602,8 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
         # ★ F56 — 여기서 **한 번만** 봉인하고 run_spec·종료 manifest가 이 map을
         #   그대로 재사용한다. 세 곳에서 따로 해시하면 셋이 어긋나도 아무도 모른다.
         "input_sha256": seal_inputs(
-            [in_dir / "curves.parquet", base_config or "configs/base.yaml",
-             _prod,                        # F70: 곡선 producer 기록
+            [in_dir / "curves.parquet", *_cfg_deps,   # F74: extends 연쇄 전체
+             _prod, _prod_start,           # F70/F74: producer 기록 + 시작 기록
              _hc_pre, _hc_meta]),          # F64: recipe 기록도 함께 봉인
         "halfcell_cache": _ck(_hc_pre) if _hc_pre else None,
         "halfcell_recipe": _hc_recipe,
@@ -613,6 +628,12 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     #   digest 를 몇 번 더 비교해도 "해시한 시점"과 "읽는 시점" 사이는 못 막는다.
     _snap = snapshot_inputs(start_prov["input_sha256"], out_dir)
     df = pd.read_parquet(_snap[_ck(in_dir / "curves.parquet")])
+    # ★ F72/8차 발견 3 — producer 문서는 **스냅샷에서** 읽는다. 선읽은 메모리
+    #   값을 run_spec 에 쓰면, seal 직전 교체 시 기록과 봉인이 어긋난 채 통과한다
+    #   (리뷰 실측: RUN_SPEC_SOLVER=A, SEALED_SNAPSHOT_SOLVER=B, ok=True).
+    _prod_doc = yaml.safe_load(
+        _snap[_ck(_prod)].read_text(encoding="utf-8")) or {}
+    _prod_curves_sha = _prod_doc.get("curves_sha256")
 
     ref = extract_reference(df)
     ref_x = ref["x_norm"].to_numpy()
@@ -624,11 +645,14 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     # LLI 환산 상수 (전하 보존 유도식) — 메인에서 1회 계산해 워커에 값만 전달
     from src.config import load_config as _load
     from src.inventory import reference_inventory
-    # ★ F72 — config 도 스냅샷에서 읽는다. `_config_path` 만은 원래 위치를 유지한다
-    #   (경로 파생에만 쓰이는 필드라, 스냅샷 경로를 넣으면 저장소 root 계산이 깨진다).
-    _bc_orig = base_config or "configs/base.yaml"
-    base_cfg = _load(_snap[_ck(_bc_orig)])
+    # ★ F72/F74 — config 는 스냅샷 문서들로 `extends` 병합을 **재현**해 만든다.
+    #   `load_config(스냅샷 최종파일)` 은 부모를 디스크에서 다시 읽으므로 안 된다.
+    #   `_config_path` 만은 원래 위치를 유지한다 (경로 파생 전용 필드).
+    base_cfg = merge_config_docs([
+        yaml.safe_load(_snap[_ck(d)].read_text(encoding="utf-8")) or {}
+        for d in _cfg_deps])
     base_cfg["_config_path"] = str(_bc_orig)
+    base_cfg["_loaded_files"] = [str(d) for d in _cfg_deps]
     inv = reference_inventory(base_cfg, q_ref / 1000.0).as_dict()
 
     # ── Case 1: full-range half-cell OCV 기준 ──
@@ -642,8 +666,24 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
         if str(hc_used) != str(_hc_pre):
             raise RuntimeError(
                 f"half-cell 캐시 경로가 시작 봉인과 다릅니다: {_hc_pre} vs {hc_used}")
-        hc = HalfCellReference.from_dict(
-            json.loads(_snap[_ck(hc_used)].read_text(encoding="utf-8")))
+        _hc_meta_doc = yaml.safe_load(
+            _snap[_ck(_hc_meta)].read_text(encoding="utf-8")) or {}
+        _hc_recipe = _hc_meta_doc.get("recipe")
+        if not _hc_recipe:
+            raise RuntimeError(f"half-cell meta에 recipe가 없습니다: {_hc_meta} (F64)")
+        _hc_arrays = json.loads(_snap[_ck(hc_used)].read_text(encoding="utf-8"))
+        # ★ F74/8차 발견 2 — meta 의 선언을 전부 재계산해 대조한다. 예전에는
+        #   recipe 키 존재만 봐서, 임의 배열 + baseline_hash: FORGED 가 통과했다.
+        from src.halfcell import validate_halfcell_cache
+        _hv = validate_halfcell_cache(base_cfg, hc_used,
+                                      meta_doc=_hc_meta_doc, arrays_doc=_hc_arrays)
+        if not _hv["ok"]:
+            raise RuntimeError(
+                "half-cell 캐시 검증 실패 (F74):\n"
+                + "\n".join(f"  · {k}: {_hv['checks'][k]}" for k in _hv["fail"])
+                + "\n  캐시를 다시 만드세요: python -m src.halfcell --force"
+                + "\n  깊은 검증(배열 재생성 대조): python -m src.halfcell --verify")
+        hc = HalfCellReference.from_dict(_hc_arrays)
         cov = hc.coverage()
         # 리뷰 F11: to_modes_halfcell의 LLI 식은 테이블이 화학량론 전 범위일 때만
         # 성립한다 (sim 테이블 y_min=0.251이면 오프셋 ≈2.2Ah로 LLI가 조용히 틀림).

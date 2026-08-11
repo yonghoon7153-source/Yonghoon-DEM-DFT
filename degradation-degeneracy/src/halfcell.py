@@ -268,7 +268,11 @@ def get_halfcell_reference(cfg: dict, cache_dir: str | Path | None = None,
     path = halfcell_cache_path(cfg, cache_dir, method, **kw)
     recipe = recipe_of(method, **kw)
 
-    if not force and path.exists():
+    # ★ F74 — meta 없는 캐시 적중은 **적중이 아니다** (8차 리뷰 발견 2 부수).
+    #   F64 이전에 만들어진 JSON 만 있으면, 안내대로 `python -m src.halfcell` 을
+    #   돌려도 hit 로 즉시 반환해 meta 가 영영 생기지 않았다. miss 로 취급해
+    #   캐시·meta 를 함께 다시 만든다.
+    if not force and path.exists() and halfcell_meta_path(path).exists():
         log.info("half-cell 기준 캐시 적중: %s", path)
         return HalfCellReference.from_dict(json.loads(path.read_text(encoding="utf-8")))
 
@@ -290,6 +294,94 @@ def get_halfcell_reference(cfg: dict, cache_dir: str | Path | None = None,
     return ref
 
 
+def validate_halfcell_cache(cfg: dict, cache_path: str | Path,
+                            meta_doc: dict | None = None,
+                            arrays_doc: dict | None = None) -> dict:
+    """★ F74 — half-cell 캐시가 **선언된 recipe 로 만들어졌는지** 검증한다.
+
+    8차 리뷰 반례: 정식 경로에 임의 선형 JSON + `baseline_hash: FORGED,
+    recipe_hash: FORGED` meta 를 넣어도 fitting 은 meta 에 `recipe` 키가 있는지만
+    보고 통과했다 (`META_SOURCE=FORGED_SOURCE, VALIDATOR_OK=True`).
+
+    여기서는 meta 의 선언을 **전부 다시 계산해** 대조한다:
+      · baseline_hash == baseline_hash(cfg) 재계산
+      · recipe_hash   == recipe_hash(cfg, **recipe) 재계산
+      · cache_file    == 실제 파일명
+      · 배열: 네 키 존재 · 쌍 길이 일치 · 전부 유한 · 오름차순 · 전 범위 coverage
+
+    한계를 명시한다 — 해시를 올바르게 재계산해 넣고 배열만 바꾼 위조는 구조
+    검사로 못 잡는다. 그건 `python -m src.halfcell --verify` (재생성 대조) 가
+    잡으며, smoke 가 실제 pybamm 으로 그 경로를 돈다.
+
+    meta_doc/arrays_doc 을 주면 그 문서(스냅샷 바이트)를 검증한다 — 디스크를
+    다시 읽으면 봉인과 검증 사이가 또 벌어진다 (F72).
+    """
+    import numpy as np
+    import yaml
+
+    cache_path = Path(cache_path)
+    checks: dict[str, tuple[bool, str]] = {}
+    meta = meta_doc if meta_doc is not None else (
+        yaml.safe_load(halfcell_meta_path(cache_path).read_text(encoding="utf-8"))
+        if halfcell_meta_path(cache_path).exists() else None)
+
+    checks["meta_존재"] = (bool(meta), "recipe meta(.meta.yaml)가 없다")
+    if meta:
+        recipe = dict(meta.get("recipe") or {})
+        method = recipe.pop("method", None)
+        checks["recipe_존재"] = (bool(method), "meta에 recipe/method가 없다")
+        if method:
+            try:
+                want_r = recipe_hash(cfg, method, **recipe)
+                want_b = baseline_hash(cfg)
+            except Exception as e:  # noqa: BLE001
+                checks["해시_재계산"] = (False, f"recipe가 재계산 불가: {e}")
+            else:
+                checks["baseline_hash_재계산"] = (
+                    meta.get("baseline_hash") == want_b,
+                    f"meta {meta.get('baseline_hash')} ≠ 재계산 {want_b}")
+                checks["recipe_hash_재계산"] = (
+                    meta.get("recipe_hash") == want_r,
+                    f"meta {meta.get('recipe_hash')} ≠ 재계산 {want_r}")
+                checks["경로_recipe_일치"] = (
+                    cache_path.name == f"{want_b}_{method}_{want_r}.json",
+                    f"캐시 파일명 {cache_path.name}이 재계산 해시와 다르다")
+        checks["cache_file_일치"] = (
+            meta.get("cache_file") == cache_path.name,
+            f"meta.cache_file {meta.get('cache_file')} ≠ {cache_path.name}")
+
+    doc = arrays_doc
+    if doc is None and cache_path.exists():
+        doc = json.loads(cache_path.read_text(encoding="utf-8"))
+    if not doc:
+        checks["배열_존재"] = (False, "캐시 JSON을 읽지 못했다")
+    else:
+        keys = ("y_pe", "u_pe", "z_ne", "u_ne")
+        missing = [k for k in keys if k not in doc]
+        checks["배열_스키마"] = (not missing, f"키 누락: {missing}")
+        if not missing:
+            a = {k: np.asarray(doc[k], float) for k in keys}
+            checks["배열_길이"] = (
+                len(a["y_pe"]) == len(a["u_pe"]) and len(a["z_ne"]) == len(a["u_ne"])
+                and len(a["y_pe"]) > 10,
+                "쌍 길이 불일치 또는 점이 너무 적다")
+            checks["배열_유한"] = (
+                all(np.isfinite(a[k]).all() for k in keys), "비유한 값이 있다")
+            checks["배열_정렬"] = (
+                bool(np.all(np.diff(a["y_pe"]) > 0) and np.all(np.diff(a["z_ne"]) > 0)),
+                "화학량론 축이 오름차순이 아니다")
+            checks["전범위_coverage"] = (
+                a["y_pe"].min() <= 0.01 and a["y_pe"].max() >= 0.99
+                and a["z_ne"].min() <= 0.01 and a["z_ne"].max() >= 0.99,
+                f"전 범위가 아니다 (PE {a['y_pe'].min():.3f}~{a['y_pe'].max():.3f})")
+
+    fail = [k for k, (ok, _) in checks.items() if not ok]
+    return {"ok": not fail,
+            "checks": {k: "통과" if ok else f"실패 — {why}"
+                       for k, (ok, why) in checks.items()},
+            "fail": fail, "reasons": [checks[k][1] for k in fail]}
+
+
 def main() -> None:
     import argparse
 
@@ -303,6 +395,9 @@ def main() -> None:
     ap.add_argument("--method", default="ocp", choices=["ocp", "sim"],
                     help="ocp=OCP 함수 직접 평가(전 범위) | sim=시뮬레이션 추출")
     ap.add_argument("--force", action="store_true")
+    ap.add_argument("--verify", action="store_true",
+                    help="캐시를 recipe로 **다시 계산해** 배열까지 대조한다 (F74). "
+                         "구조·해시 검사가 못 잡는 배열 위조를 잡는 유일한 방법")
     ap.add_argument("--plot", default=None, help="곡선 그림 저장 경로")
     ap.add_argument("--log-level", default="INFO")
     args = ap.parse_args()
@@ -315,6 +410,19 @@ def main() -> None:
           else {"v_lo": args.v_lo, "v_hi": args.v_hi, "c_rate": args.c_rate})
     ref = get_halfcell_reference(cfg, force=args.force, method=args.method, **kw)
     print(json.dumps(ref.coverage(), indent=2))
+
+    if args.verify:
+        import numpy as np
+        path = halfcell_cache_path(cfg, method=args.method, **kw)
+        v = validate_halfcell_cache(cfg, path)
+        fresh = (compute_halfcell_from_ocp(cfg, **kw) if args.method == "ocp"
+                 else compute_halfcell_reference(cfg, **kw))
+        same = all(np.allclose(getattr(ref, k), getattr(fresh, k), atol=1e-9)
+                   for k in ("y_pe", "u_pe", "z_ne", "u_ne"))
+        print(json.dumps({"구조검사": v["ok"], "구조검사_실패": v["fail"],
+                          "재생성_배열일치": bool(same)}, ensure_ascii=False, indent=2))
+        if not (v["ok"] and same):
+            raise SystemExit("--verify 실패: 캐시가 recipe 재생성 결과와 다르다 (F74)")
 
     if args.plot:
         import matplotlib

@@ -75,11 +75,23 @@ def load_config(path: str | Path) -> dict:
     if parent_name:
         parent = load_config(path.parent / parent_name)
         cfg = _deep_merge(parent, raw)
+        # ★ F74 — `extends` 로 재귀 로드된 **부모 파일도 입력이다.** 봉인 목록이
+        #   최종 경로 하나만 알면, 부모(base.yaml)를 바꿔도 digest 가 그대로라
+        #   실행 결과가 바뀌었는데 검증이 통과한다 (8차 리뷰 발견 3 반례:
+        #   PARENT_SEALED=False, AFTER_PARENT_CHANGE_OK=True).
+        chain = list(parent.get("_loaded_files") or []) + [str(path)]
     else:
         cfg = raw
+        chain = [str(path)]
 
     cfg["_config_path"] = str(path)
+    cfg["_loaded_files"] = chain
     return cfg
+
+
+def config_dependencies(path: str | Path) -> list[Path]:
+    """★ F74 — 이 config 를 로드할 때 실제로 읽히는 파일 전부 (extends 연쇄 포함)."""
+    return [Path(p) for p in load_config(path).get("_loaded_files", [str(path)])]
 
 
 def validate_config(cfg: dict) -> None:
@@ -96,6 +108,21 @@ def validate_config(cfg: dict) -> None:
         raise ConfigError(
             f"config 필수 키 누락: {missing} (파일: {cfg.get('_config_path', '?')})"
         )
+
+
+def merge_config_docs(docs: list[dict]) -> dict:
+    """★ F74/F72 — 이미 읽은 문서들(스냅샷 바이트)로 `extends` 병합을 재현한다.
+
+    `load_config` 는 디스크에서 부모를 다시 읽는다. 스냅샷 이후에 그걸 부르면
+    봉인과 읽기 사이가 또 벌어진다. 병합 결과는 파일 **내용**에만 의존하므로,
+    스냅샷 문서를 부모→자식 순서로 넘기면 같은 config 가 나온다.
+    """
+    out: dict = {}
+    for d in docs:
+        d = dict(d or {})
+        d.pop("extends", None)
+        out = _deep_merge(out, d)
+    return out
 
 
 def config_hash(cfg: dict) -> str:

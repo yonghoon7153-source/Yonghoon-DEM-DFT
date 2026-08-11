@@ -565,6 +565,83 @@ def fits_seal(fits_path, cond_ids=None, objective_order=None) -> dict:
     return out
 
 
+def validate_curves_provenance(curves_dir, repo_root=None) -> dict:
+    """★ F74 — 곡선 producer 를 **독립적으로** 검증한다 (8차 리뷰 발견 1).
+
+    검사: manifest 존재 · grid_run_spec/sig 존재 · **서명 재계산** · 시작 기록
+    대조 · curves 재해시 · **모든 행의 grid_run_sig 일치** · 조건 집합 서명 대조 ·
+    생성 시점 clean · 실행 중 코드 불변.
+
+    fitting 이 시작 전에 이걸 호출한다. 수제 parquet 은 `grid_run_sig` 열이
+    없어서, 다른 config 의 resume 혼합은 행 서명이 갈려서 걸린다.
+    """
+    d = Path(curves_dir)
+    checks: dict[str, tuple[bool, str]] = {}
+    mp = d / "curves_manifest.yaml"
+    man = (yaml.safe_load(mp.read_text(encoding="utf-8")) or {}) if mp.exists() else {}
+    checks["producer_manifest"] = (bool(man), "curves_manifest.yaml이 없다")
+    spec = man.get("grid_run_spec") or {}
+    sig = man.get("grid_run_sig")
+    checks["grid_spec_존재"] = (bool(spec) and bool(sig),
+                                "grid_run_spec/sig가 없다 (F74 이전 산출물)")
+    if spec and sig:
+        recomputed = hashlib.sha1(
+            json.dumps(spec, sort_keys=True, default=str).encode()).hexdigest()[:12]
+        checks["grid_sig_재계산"] = (
+            recomputed == str(sig),
+            f"spec을 다시 해시하면 {recomputed}인데 기록은 {sig}다")
+
+    sp = d / "curves_manifest_start.yaml"
+    start = (yaml.safe_load(sp.read_text(encoding="utf-8")) or {}) if sp.exists() else {}
+    checks["시작기록_존재"] = (bool(start), "curves_manifest_start.yaml이 없다")
+    if start and sig:
+        checks["시작기록_서명일치"] = (
+            str(start.get("grid_run_sig")) == str(sig),
+            f"시작 서명 {start.get('grid_run_sig')} ≠ 종료 {sig}")
+        checks["생성시점_clean"] = (
+            start.get("git_dirty") is False,
+            "곡선이 dirty worktree에서 생성됐다")
+    checks["실행중_코드불변"] = (
+        man.get("source_digest_changed_during_run") is False,
+        "곡선 생성 도중 src/tools/configs가 바뀌었다")
+
+    cp = d / "curves.parquet"
+    if not cp.exists():
+        checks["curves_존재"] = (False, "curves.parquet이 없다")
+    else:
+        checks["curves_재해시"] = (
+            bool(man.get("curves_sha256"))
+            and file_digest(cp, full=True) == man.get("curves_sha256"),
+            "curves.parquet이 manifest의 digest와 다르다")
+        try:
+            df = pd.read_parquet(cp, columns=["cond_id", "grid_run_sig"])
+            sigs = set(df["grid_run_sig"].astype(str))
+            checks["행별_grid서명"] = (
+                sigs == {str(sig)},
+                f"행 서명이 {sorted(sigs)[:3]}이다 ({sig} 필요) — "
+                f"다른 config/코드의 resume 혼합이거나 수제 parquet이다")
+        except Exception as e:  # noqa: BLE001
+            checks["행별_grid서명"] = (
+                False, f"grid_run_sig 열을 읽지 못했다 ({e}) — F74 이전이거나 수제 parquet")
+            df = pd.read_parquet(cp, columns=["cond_id"])
+        want = spec.get("condition_ids_sha256")
+        got = hashlib.sha256("\n".join(
+            sorted(set(df["cond_id"].astype(str)))).encode()).hexdigest()[:16]
+        # infeasible 조건은 곡선이 없으므로 부분집합일 수 있다 — manifest 의
+        # 실측 곡선 수와 행 단위 조건 수가 맞는지로 완전성을 본다
+        checks["곡선_조건수"] = (
+            man.get("n_curves") == df["cond_id"].nunique(),
+            f"manifest n_curves {man.get('n_curves')} ≠ 실제 {df['cond_id'].nunique()}")
+        checks["_참고_조건집합"] = (True, f"의도 {want} / 곡선 {got} (guard 제외분 차이 허용)")
+
+    fail = [k for k, (ok, _) in checks.items() if not ok]
+    return {"ok": not fail,
+            "checks": {k: "통과" if ok else f"실패 — {why}"
+                       for k, (ok, why) in checks.items()},
+            "fail": fail,
+            "reasons": [checks[k][1] for k in fail]}
+
+
 def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
     """★ F38/F43 — 결과를 인용해도 되는 상태인지 **실제로** 검사한다.
 

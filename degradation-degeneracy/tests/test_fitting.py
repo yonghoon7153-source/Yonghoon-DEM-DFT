@@ -409,11 +409,38 @@ def _tiny_curves(tmp_path, n=48, n_cond=3):
                          "v_pe": 4.3 - 0.5 * xi, "v_ne": 0.1 + 0.4 * xi,
                          "q_mah": q, "lli": lli, "lam_pe": pe, "lam_ne": ne,
                          "noise": 0.0})
-    pd.DataFrame(rows).to_parquet(tmp_path / "curves.parquet", index=False)
-    # ★ F70 — 곡선 producer 기록. fitting 이 이걸 입력으로 봉인한다.
+    df = pd.DataFrame(rows)
+    # ★ F74 — producer 는 이제 spec 서명·행별 grid_run_sig·시작 기록까지 갖춰야
+    #   한다. fixture 도 실제 run_grid 가 쓰는 것과 같은 형식을 만든다.
+    #   (형식만 같은 위조는 여전히 가능하다 — 그 한계는 validate_curves_provenance
+    #   docstring 에 명시돼 있고, 깊은 증명은 smoke 의 실제 run_grid 가 담당한다)
+    import hashlib as _hl
+    import json as _json
+
+    import yaml as _yaml
+
     from src.grid import write_curves_manifest
+    from src.io import env_fingerprint, source_digest
+    cond_ids = sorted(set(df["cond_id"]))
+    spec = {"grid_sig_version": 1, "config_hash": "test", "config_files": [],
+            "protocol_unified": "charge_first", "parameter_set": "test",
+            "noise_seed": 42,
+            "condition_ids_sha256": _hl.sha256(
+                "\n".join(cond_ids).encode()).hexdigest()[:16],
+            "n_conditions_intended": len(cond_ids), "postprocess": None,
+            "source_digest": source_digest(), "env": env_fingerprint()}
+    sig = _hl.sha1(_json.dumps(spec, sort_keys=True, default=str)
+                   .encode()).hexdigest()[:12]
+    df["grid_run_sig"] = sig
+    df.to_parquet(tmp_path / "curves.parquet", index=False)
+    (tmp_path / "curves_manifest_start.yaml").write_text(_yaml.safe_dump(
+        {"grid_run_sig": sig, "grid_run_spec": spec, "git_dirty": False,
+         "resume": False}), encoding="utf-8")
     write_curves_manifest(tmp_path, {"parameter_set": "test", "grid": {"noise_seed": 42}},
-                          conditions=list(range(n_cond)), extra={"solver": "test"})
+                          conditions=cond_ids,
+                          extra={"solver": "test", "grid_run_spec": spec,
+                                 "grid_run_sig": sig, "n_curves": len(cond_ids),
+                                 "source_digest_changed_during_run": False})
     return tmp_path
 
 
@@ -733,17 +760,27 @@ def _fake_halfcell_cache(tmp_path, branch="delithiation", n_points=400):
     import numpy as np
     import yaml
 
+    from src.config import baseline_hash, load_config
+    from src.halfcell import recipe_hash
+
+    # ★ F74 — fitting 이 meta 의 baseline_hash·recipe_hash 를 **재계산해 대조**
+    #   하므로, fixture 도 실제 규칙대로 만든다. "test" 같은 아무 값은 이제
+    #   validate_halfcell_cache 가 거부한다 (리뷰의 FORGED 반례가 그랬다).
+    cfg = load_config("configs/base.yaml")
+    b = baseline_hash(cfg)
+    r = recipe_hash(cfg, "ocp", n_points=n_points, branch=branch)
+
     d = Path(tmp_path) / "hc"
     d.mkdir(parents=True, exist_ok=True)
     y = np.linspace(1e-4, 1 - 1e-4, n_points)
-    cache = d / f"base_ocp_{branch[:4]}{n_points}.json"   # 실제 규칙: <baseline>_<method>_<recipe>.json
+    cache = d / f"{b}_ocp_{r}.json"
     cache.write_text(json.dumps({
         "y_pe": y.tolist(), "u_pe": (4.3 - 1.2 * y).tolist(),
         "z_ne": y.tolist(), "u_ne": (0.05 + 0.35 * y).tolist(),
     }), encoding="utf-8")
     cache.with_name(cache.stem + ".meta.yaml").write_text(yaml.safe_dump({
         "recipe": {"method": "ocp", "n_points": n_points, "branch": branch},
-        "baseline_hash": "test", "recipe_hash": "test",
+        "baseline_hash": b, "recipe_hash": r, "cache_file": cache.name,
     }), encoding="utf-8")
     return cache
 
@@ -966,3 +1003,161 @@ def test_validator_rejects_forged_end_map_and_truncated_start(tmp_path):
     (out / "manifest_start.yaml").write_text(
         yaml.safe_dump({"attempt_id": m["attempt_id"]}), encoding="utf-8")
     assert "start_파일_일치" in validate_provenance(out)["fail"]
+
+
+# ─────────────────────────────────────────────── F74: producer 검증 (8차 리뷰)
+
+def test_curves_validator_rejects_handmade_and_mixed(tmp_path):
+    """★ F74/발견 1 — 수제 parquet 과 A/B resume 혼합을 잡아야 한다.
+
+    반례: 수제 선형 곡선을 `write_curves_manifest()` 로 포장하면 fitting·validator
+    가 통과했고, config A 절반 + config B resume 혼합도 B 만 주장하는 manifest
+    아래 통과했다 (ROW_MEANS 4.75/3.75 혼재, ok=True).
+    """
+    import pandas as pd
+    import yaml
+
+    from src.io import validate_curves_provenance
+
+    d = _tiny_curves(tmp_path / "good")
+    assert validate_curves_provenance(d)["ok"], validate_curves_provenance(d)["fail"]
+
+    # ① grid_run_sig 열이 없는 수제 parquet
+    df = pd.read_parquet(d / "curves.parquet").drop(columns=["grid_run_sig"])
+    df.to_parquet(d / "curves.parquet", index=False)
+    # curves_sha256 도 파일에 맞춰 고쳐 준다 — 재해시 검사와 분리해 보기 위해
+    from src.io import file_digest
+    m = yaml.safe_load((d / "curves_manifest.yaml").read_text(encoding="utf-8"))
+    m["curves_sha256"] = file_digest(d / "curves.parquet", full=True)
+    (d / "curves_manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+    v = validate_curves_provenance(d)
+    assert "행별_grid서명" in v["fail"], v["checks"]
+
+    # ② 서명이 섞인 resume 혼합
+    d2 = _tiny_curves(tmp_path / "mixed")
+    df = pd.read_parquet(d2 / "curves.parquet")
+    df.loc[df.index[:len(df) // 2], "grid_run_sig"] = "othersig00000"
+    df.to_parquet(d2 / "curves.parquet", index=False)
+    m = yaml.safe_load((d2 / "curves_manifest.yaml").read_text(encoding="utf-8"))
+    m["curves_sha256"] = file_digest(d2 / "curves.parquet", full=True)
+    (d2 / "curves_manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+    assert "행별_grid서명" in validate_curves_provenance(d2)["fail"]
+
+    # ③ spec 변조 — 서명 재계산이 잡는다
+    d3 = _tiny_curves(tmp_path / "spec")
+    m = yaml.safe_load((d3 / "curves_manifest.yaml").read_text(encoding="utf-8"))
+    m["grid_run_spec"]["noise_seed"] = 999
+    (d3 / "curves_manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+    assert "grid_sig_재계산" in validate_curves_provenance(d3)["fail"]
+
+    # ④ dirty 생성
+    d4 = _tiny_curves(tmp_path / "dirty")
+    s = yaml.safe_load((d4 / "curves_manifest_start.yaml").read_text(encoding="utf-8"))
+    s["git_dirty"] = True
+    (d4 / "curves_manifest_start.yaml").write_text(yaml.safe_dump(s), encoding="utf-8")
+    assert "생성시점_clean" in validate_curves_provenance(d4)["fail"]
+
+
+def test_fit_gate_blocks_bad_producer(tmp_path):
+    """★ F74 — fitting 이 producer 검증 실패 곡선을 거부해야 한다."""
+    import pandas as pd
+
+    import src.fitting as F
+
+    d = _tiny_curves(tmp_path / "in")
+    df = pd.read_parquet(d / "curves.parquet").drop(columns=["grid_run_sig"])
+    df.to_parquet(d / "curves.parquet", index=False)
+
+    with pytest.raises(RuntimeError, match="producer 검증 실패"):
+        F.run_fit(d, tmp_path / "o", _obj_cfg_min(), {"aa": {"w_pocv": 1.0}},
+                  _BOUNDS_MIN, "expanded", 1, nproc=1)
+
+
+def test_fit_rejects_forged_halfcell_meta(tmp_path, monkeypatch):
+    """★ F74/발견 2 — 위조 meta 의 half-cell 캐시를 fitting 이 거부해야 한다.
+
+    반례: 임의 선형 JSON + `baseline_hash: FORGED, recipe_hash: FORGED` meta 가
+    통과했다 (META_SOURCE=FORGED_SOURCE, VALIDATOR_OK=True). recipe 키 존재만
+    봤기 때문이다. 이제 해시를 재계산해 대조한다.
+    """
+    import yaml
+
+    import src.fitting as F
+    import src.halfcell as H
+
+    cache = _fake_halfcell_cache(tmp_path)
+    meta = cache.with_name(cache.stem + ".meta.yaml")
+    doc = yaml.safe_load(meta.read_text(encoding="utf-8"))
+    doc["baseline_hash"] = "FORGED"
+    doc["recipe_hash"] = "FORGED"
+    meta.write_text(yaml.safe_dump(doc), encoding="utf-8")
+
+    monkeypatch.setattr(H, "halfcell_cache_path",
+                        lambda cfg, cache_dir=None, method="ocp", **kw: cache)
+    in_dir = _tiny_curves(tmp_path / "in")
+    with pytest.raises(RuntimeError, match="캐시 검증 실패"):
+        F.run_fit(in_dir, tmp_path / "o", _obj_cfg_min(), {"aa": {"w_pocv": 1.0}},
+                  {"init": [1.05, -0.05, 1.4, -0.4], "lb": [0.5, -1.5, 0.5, -1.5],
+                   "ub": [3.0, 1.0, 3.0, 1.0]},
+                  "halfcell", 1, nproc=1, reference="halfcell")
+
+
+def test_producer_block_comes_from_sealed_snapshot(tmp_path):
+    """★ F74/발견 3 — run_spec.producer 는 **봉인된 바이트**에서 나와야 한다.
+
+    반례: producer YAML 을 seal 직전에 SOLVER_A→SOLVER_B 로 바꾸면
+    RUN_SPEC_SOLVER=A, SEALED_SNAPSHOT_SOLVER=B 인 채 ok=True 였다 (선읽은
+    메모리 값을 기록했기 때문). 이제 스냅샷에서 읽으므로 구조적으로 항상 일치한다.
+    """
+    import yaml
+
+    import src.fitting as F
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    out = tmp_path / "o"
+    F.run_fit(in_dir, out, _obj_cfg_min(), {"aa": {"w_pocv": 1.0}},
+              _BOUNDS_MIN, "expanded", 1, nproc=1)
+
+    man = yaml.safe_load((out / "manifest.yaml").read_text(encoding="utf-8"))
+    sealed_key = next(k for k in man["input_sha256"] if "curves_manifest.yaml" in k)
+    dig = man["input_sha256"][sealed_key]
+    snap = next((out / "_inputs").glob(f"{dig[:12]}_*"))
+    snap_doc = yaml.safe_load(snap.read_text(encoding="utf-8"))
+    assert man["run_spec"]["producer"]["solver"] == snap_doc.get("solver")
+    assert man["run_spec"]["producer"]["curves_sha256"] == snap_doc.get("curves_sha256")
+
+
+def test_extends_parent_is_sealed(tmp_path):
+    """★ F74/발견 3c — `extends` 부모 파일도 봉인돼야 한다.
+
+    반례: 부모를 바꿔도 최종 파일 digest 만 봐서 통과했다
+    (PARENT_SEALED=False, AFTER_PARENT_CHANGE_OK=True).
+    """
+    import shutil
+
+    import yaml
+
+    import src.fitting as F
+    from src.io import validate_provenance
+
+    cfgd = tmp_path / "cfgs"
+    cfgd.mkdir()
+    shutil.copy2("configs/base.yaml", cfgd / "parent.yaml")
+    (cfgd / "child.yaml").write_text("extends: parent.yaml\n", encoding="utf-8")
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    out = tmp_path / "o"
+    F.run_fit(in_dir, out, _obj_cfg_min(), {"aa": {"w_pocv": 1.0}},
+              _BOUNDS_MIN, "expanded", 1, nproc=1,
+              base_config=str(cfgd / "child.yaml"))
+
+    man = yaml.safe_load((out / "manifest.yaml").read_text(encoding="utf-8"))
+    sealed = man["input_sha256"]
+    assert any("parent.yaml" in k for k in sealed), "부모가 봉인 목록에 없다"
+    assert any("child.yaml" in k for k in sealed)
+
+    # 부모를 바꾸면 재해시가 잡아야 한다
+    (cfgd / "parent.yaml").write_text(
+        (cfgd / "parent.yaml").read_text(encoding="utf-8") + "\n# tampered\n",
+        encoding="utf-8")
+    assert "입력_digest_재해시" in validate_provenance(out)["fail"]

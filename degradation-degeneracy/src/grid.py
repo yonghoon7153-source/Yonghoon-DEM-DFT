@@ -193,9 +193,49 @@ def _solve_condition(cfg: dict, cond: Condition, d_dict: dict,
     }
 
 
-def _result_to_frame(r: dict, protocol_name: str) -> pd.DataFrame:
+def grid_run_spec(cfg: dict, conditions: list[Condition]) -> tuple[dict, str]:
+    """★ F74 — 곡선 **계산**을 고정하는 서명 (8차 리뷰 발견 1).
+
+    F70 의 `curves_manifest.yaml` 은 이미 존재하는 parquet 의 digest 와 호출자가
+    준 metadata 를 적는 **자기기술**이었다. 그래서
+      · 수제 선형 곡선을 이 함수로 포장해도 fitting·validator 가 통과했고,
+      · config A 로 절반, config B 로 resume 한 혼합 곡선이 B 만 주장하는
+        manifest 아래 통과했다 (리뷰 실측: ROW_MEANS 4.75/3.75 혼재, ok=True).
+
+    fitting 의 F49/F67 과 같은 해법을 쓴다 — 서명에 코드·설정·조건 집합을 넣고,
+    **모든 청크 행이 그 서명을 지닌 채** 저장되게 한다. 다른 서명의 resume 은
+    병합 전에 죽는다.
+    """
+    from src.io import env_fingerprint, source_digest
+
+    cond_ids = sorted(c.cond_id for c in conditions)
+    spec = {
+        "grid_sig_version": 1,
+        "config_hash": config_hash(cfg),
+        # extends 부모까지 — 최종 병합본 해시만으로도 내용은 고정되지만,
+        # 어떤 파일들이 읽혔는지가 없으면 봉인·재검이 불가능하다 (발견 3)
+        "config_files": [str(p) for p in cfg.get("_loaded_files", [])],
+        "protocol_unified": cfg.get(GRID_PROTOCOL_KEY, "charge_first"),
+        "parameter_set": cfg.get("parameter_set"),
+        "noise_seed": int((cfg.get("grid") or {}).get("noise_seed", 42)),
+        "condition_ids_sha256": hashlib.sha256(
+            "\n".join(cond_ids).encode()).hexdigest()[:16],
+        "n_conditions_intended": len(cond_ids),
+        "postprocess": cfg.get("postprocess"),
+        "source_digest": source_digest(),
+        "env": env_fingerprint(),
+    }
+    sig = hashlib.sha1(
+        json.dumps(spec, sort_keys=True, default=str).encode()).hexdigest()[:12]
+    return spec, sig
+
+
+def _result_to_frame(r: dict, protocol_name: str,
+                     grid_sig: str | None = None) -> pd.DataFrame:
     n = len(r["x_norm"])
     c = r["cond"]
+    if grid_sig is not None:
+        return _result_to_frame(r, protocol_name).assign(grid_run_sig=grid_sig)
     return pd.DataFrame({
         "cond_id": [r["cond_id"]] * n,
         "lli": [c["lli"]] * n,
@@ -333,6 +373,29 @@ def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
     # ── 동시 실행 방지 (청크 덮어쓰기·집계 오염 차단) ──
     acquire_run_lock(out_dir)
 
+    # ── ★ F74: 실행 서명 + 시작 기록 + resume 가드 ──
+    g_spec, g_sig = grid_run_spec(cfg, conditions)
+    start_rec = {"grid_run_sig": g_sig, "grid_run_spec": g_spec,
+                 "started_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+                 "resume": bool(resume),
+                 **git_info(Path(__file__).resolve().parent.parent)}
+    import yaml as _yaml
+    (out_dir / "curves_manifest_start.yaml").write_text(
+        _yaml.safe_dump(start_rec, allow_unicode=True, sort_keys=False),
+        encoding="utf-8") if not (out_dir / "curves_manifest_start.yaml").exists()         else None
+    # 기존 청크가 있으면 서명이 같아야 한다 — 다른 config/코드의 resume 혼합이
+    # 8차 리뷰에서 실제로 재현됐다 (A 절반 + B resume → B 만 주장, ok=True)
+    for old in chunk_files(out_dir):
+        try:
+            sigs = set(pd.read_parquet(old, columns=["grid_run_sig"])["grid_run_sig"])
+        except Exception:  # noqa: BLE001 — 열 자체가 없는 옛 형식
+            sigs = {"<서명 없음(F74 이전)>"}
+        if sigs != {g_sig}:
+            raise RuntimeError(
+                f"기존 청크의 grid_run_sig {sorted(sigs)}가 이번 실행 {g_sig}와 "
+                f"다릅니다. 다른 config/코드의 결과가 섞입니다 (F74). "
+                f"{out_dir}/chunks 를 비우고 처음부터 다시 돌리세요.")
+
     # ── manifest 초기화 ──
     write_manifest(out_dir, base_manifest(config_hash(cfg), extra={
         "run_type": "grid",
@@ -382,7 +445,7 @@ def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
                         _record_failure(r["cond_id"], r["cond"], r["error"])
                         n_failed += 1
                     else:
-                        frames.append(_result_to_frame(r, protocol_name))
+                        frames.append(_result_to_frame(r, protocol_name, g_sig))
                         n_ok += 1
                 if frames:
                     save_chunk(pd.concat(frames, ignore_index=True), out_dir, chunk_idx)
@@ -410,11 +473,16 @@ def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
         "curves_parquet": str(merged) if merged else None,
         "finished": time.strftime("%Y-%m-%dT%H:%M:%S"),
     })
-    # ★ F70 — 곡선 producer 기록을 별도 파일로. fitting 이 이걸 봉인한다.
+    # ★ F70/F74 — 곡선 producer 기록을 별도 파일로. fitting 이 이걸 봉인한다.
+    from src.io import source_digest as _sd
     write_curves_manifest(out_dir, cfg, conditions, extra={
         "solver": solver_name(make_solver(cfg)),
         "n_curves": n_done_total - n_failed_total,
         "elapsed_s": round(elapsed, 1),
+        "grid_run_spec": g_spec,
+        "grid_run_sig": g_sig,
+        "source_digest_changed_during_run": bool(
+            g_spec["source_digest"] != _sd()),
     })
     log.info("grid 완료: ok=%d failed=%d (누적 곡선 %d) elapsed=%.1fs",
              n_ok, n_failed, n_done_total - n_failed_total, elapsed)
