@@ -1118,6 +1118,7 @@ def cmd_verdict(a) -> int:
             print(f"   {s:16s} {len(E):4d} {E[0]:+9.3f} {E[len(E)//2]:+9.3f} {E[-1]-E[0]:8.3f}")
         # 검열 회계 — 사유별 · **양이온별** · 그리고 '검열이 순위를 왜곡했나'
         killed = [r for r in fr if not r.get("ranking_eligible")]
+        confounded = False
         if killed:
             by_reason = Counter((r.get("gate_reasons") or ["?"])[0].split("(")[0] for r in killed)
             print("   검열(게이트로 죽은 자세) — '졌다'가 아니라 '못 쟀다':")
@@ -1132,7 +1133,6 @@ def cmd_verdict(a) -> int:
             surv_min = {c: min((r["E_pose_eV"] for r in fs if r.get("nearest_cation") == c),
                                default=None) for c in CATIONS}
             print("   ▸ 검열이 순위를 왜곡했나 (검열된 자세 중 '살아남은 최저'보다 낮은 것):")
-            confounded = False
             for c in CATIONS:
                 lo = surv_min[c]
                 sub = [r for r in killed if r.get("nearest_cation") == c
@@ -1183,7 +1183,11 @@ def cmd_verdict(a) -> int:
                 print(f"   [짝 아님·분포 비교] Li 접촉 n={len(li)} 최저 {min(li):+.3f} · "
                       f"Ni 접촉 n={len(ni)} 최저 {min(ni):+.3f} · Δ(Ni−Li) {d:+.3f} eV")
                 print(f"     자세 폭 σ={sp:.3f} eV → 판정바닥 {floor:.3f} eV")
-                if abs(d) < floor:
+                if confounded:
+                    print(f"     → ⛔ **무효**. 위 검열 검사가 걸렸으므로 이 Δ 는 자리 선호가 아니다.")
+                    print(f"        방향({'Ni' if d < 0 else 'Li'} 낮음)을 인용하지 말 것 — 검열된 자세를")
+                    print(f"        되살리면 부호가 뒤집힐 수 있다.")
+                elif abs(d) < floor:
                     print("     → **가려지지 않았다**")
                 else:
                     print(f"     → 분포상 {'Li' if d > 0 else 'Ni'} 쪽이 낮다. 다만 두 집합은 "
