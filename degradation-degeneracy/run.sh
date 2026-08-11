@@ -281,9 +281,15 @@ case "$MODE" in
     WS_ARGS=(--in "${IN_DIR:-$OUT}" --nproc "$NPROC" --stride "$W_STRIDE"
              --bounds "$BOUNDS_PRESET" --reference "$REFERENCE"
              --log-level "$LOG_LEVEL")
+    # ★ F79 — 사용자의 --out 을 전달한다. 예전에는 무시돼서, F70 분리 구조
+    #   (curves 와 report 디렉터리가 다름)에서 report 가 읽는 위치에 sweep 을
+    #   만들 방법이 wrapper 에 없었다.
+    [[ "$OUT_SET" == "true" ]] && WS_ARGS+=(--out "$OUT")
     [[ -n "$W_GRID" ]] && WS_ARGS+=(--w-grid "$W_GRID")
     [[ "$N_RESTARTS" != "auto" ]] && WS_ARGS+=(--n-restarts "$N_RESTARTS")
     [[ "$RESUME" == "true" ]] && WS_ARGS+=(--resume)
+    [[ "$ADAPTIVE" == "false" ]] && WS_ARGS+=(--no-adaptive)
+    [[ "$WARM_START" == "false" ]] && WS_ARGS+=(--no-warm-start)
     exec python -m src.weight_sweep "${WS_ARGS[@]}"
     ;;
 

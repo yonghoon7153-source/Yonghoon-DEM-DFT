@@ -223,7 +223,8 @@ def run_weight_sweep(in_dir, out_dir=None, w_grid=DEFAULT_W_GRID,
                      tol: float = 0.02, resume: bool = False,
                      objectives_config: str = "configs/objectives.yaml",
                      base_config: str = "configs/base.yaml",
-                     warm_start: bool = True) -> dict:
+                     warm_start: bool = True, adaptive: bool = True,
+                     method: str | None = None) -> dict:
     from pathlib import Path
 
     import yaml
@@ -239,10 +240,23 @@ def run_weight_sweep(in_dir, out_dir=None, w_grid=DEFAULT_W_GRID,
 
     obj_cfg = load_config(objectives_config)
     bounds = obj_cfg["fitting"]["bounds_presets"][bounds_preset]
+    # ★ F79/8차 발견 8 — config 의 method 를 실제로 읽는다 (본 실행과 같은 경로).
+    #   예전에는 run_fit 기본값에 묵시적으로 의존했다 — "우연히 같을 뿐"이었다.
+    method = method or str(obj_cfg.get("fitting", {}).get("method", "Nelder-Mead"))
 
-    curves = pd.read_parquet(in_dir / "curves.parquet",
+    # ★ F79 — subset 을 정하는 read 도 봉인 대상이다. 예전에는 원본 curves 를
+    #   읽어 subset 을 정한 **뒤에야** run_fit 의 seal/snapshot 이 시작돼, 그
+    #   사이에 파일이 바뀌면 subset 과 계산이 다른 곡선에서 나왔다.
+    #   여기서 digest 를 뜨고, run_fit 이 봉인한 값과 대조해 fail-closed 한다.
+    from src.io import canonical_input_key, file_digest
+    curves_path = in_dir / "curves.parquet"
+    subset_curves_sha = file_digest(curves_path)
+    curves = pd.read_parquet(curves_path,
                              columns=["cond_id", "lli", "lam_pe", "lam_ne"])
     subset = stratified_subset(curves.drop_duplicates("cond_id"), stride)
+    if file_digest(curves_path) != subset_curves_sha:
+        raise RuntimeError(
+            "subset 계산 도중 curves.parquet 이 바뀌었습니다 (F79)")
 
     objectives = build_weight_objectives(w_grid)
     log.info("가중치 sweep: %d조건 × %d가중치 × %drestart",
@@ -253,7 +267,16 @@ def run_weight_sweep(in_dir, out_dir=None, w_grid=DEFAULT_W_GRID,
     run_fit(in_dir, out_dir, obj_cfg, objectives, bounds, bounds_preset,
             n_restarts, nproc, use_noisy=True, base_config=base_config,
             reference=reference, resume=resume, subset=set(subset),
-            warm_start=warm_start)
+            warm_start=warm_start, adaptive=adaptive, method=method)
+
+    # ★ F79 — run_fit 이 봉인한 곡선이 subset 을 정한 곡선과 같아야 한다
+    man = yaml.safe_load((out_dir / "manifest.yaml").read_text(encoding="utf-8"))
+    sealed_sha = (man.get("input_sha256") or {}).get(
+        canonical_input_key(curves_path))
+    if sealed_sha != subset_curves_sha:
+        raise RuntimeError(
+            f"subset 을 정한 곡선({subset_curves_sha})과 fitting 이 봉인한 "
+            f"곡선({sealed_sha})이 다릅니다 — 그 사이에 파일이 바뀌었습니다 (F79)")
 
     fits = pd.read_parquet(out_dir / "fits.parquet")
     scored = classify_recoverability(add_error_columns(fits, tol))
@@ -280,16 +303,25 @@ def run_weight_sweep(in_dir, out_dir=None, w_grid=DEFAULT_W_GRID,
         warn = (f"n_restarts={n_restarts}로 실행됐다 — pocv_dvdq는 unique_min이 "
                 "39%뿐이라 restart가 부족하면 나쁜 국소최소에 갇힌다(F20c). "
                 "최적 w를 인용하지 말 것.")
+    # ★ F79 — tol 은 최적 w 를 바꾸는데 기록되지 않았고, sweep 산출물과 fits 를
+    #   잇는 digest 도 없었다. 전부 박는다.
     (out_dir / "weight_sweep.yaml").write_text(
         yaml.safe_dump({"w_grid": list(map(float, w_grid)),
                         "n_conditions": len(subset), "stride": stride,
-                        "n_restarts": n_restarts,
+                        "n_restarts": n_restarts, "tol": float(tol),
+                        "method": method, "adaptive": bool(adaptive),
                         "seed_objective_used": bool(used_seed),
                         "warm_start": bool(warm_start),
+                        "subset_curves_sha": subset_curves_sha,
+                        "fits_sha256": file_digest(out_dir / "fits.parquet",
+                                                   full=True),
                         "optimum": opt}
                        | ({"_경고": warn} if warn else {}),
                        allow_unicode=True, sort_keys=False), encoding="utf-8")
-    write_optimized_config("configs/objectives_optimized.yaml", opt)
+    # ★ F79 — tracked config 를 실행이 덮어쓰면 worktree 가 dirty 가 되고,
+    #   "최적 가중치 채택"이라는 결정이 검토 없이 저장소에 들어간다.
+    #   run 디렉터리에 쓰고, configs/ 로의 승격은 사람이 커밋으로 한다.
+    write_optimized_config(str(out_dir / "objectives_optimized.yaml"), opt)
 
     log.info("가중치별 요약:\n%s", summary.round(4).to_string(index=False))
     log.info("최적 w_dqdv = %.2f (노이즈 평균 %s %.4f, w=1.0일 때 %.4f)",
@@ -315,6 +347,8 @@ def main() -> None:
     ap.add_argument("--reference", default="grid")
     ap.add_argument("--tol", type=float, default=0.02)
     ap.add_argument("--resume", action="store_true")
+    ap.add_argument("--no-adaptive", dest="adaptive", action="store_false",
+                    help="적응적 조기 종료를 끈다 (F66/F79 — 기록에 남는다)")
     ap.add_argument("--no-warm-start", dest="warm_start", action="store_false",
                     help="warm start를 끈다. 본 실행과 설정이 달라져 최적 w를 "
                          "인용할 수 없게 되므로 진단 목적으로만 쓸 것 (F20d)")
@@ -336,7 +370,7 @@ def main() -> None:
     opt = run_weight_sweep(args.in_dir, args.out, w_grid, args.stride,
                            args.n_restarts, args.nproc, args.bounds,
                            args.reference, args.tol, args.resume,
-                           warm_start=args.warm_start)
+                           warm_start=args.warm_start, adaptive=args.adaptive)
     print(json.dumps(opt, ensure_ascii=False, indent=2, default=str))
 
 

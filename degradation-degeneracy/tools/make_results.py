@@ -814,6 +814,10 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
         else:
             P.append("> ⚠ 이 비교표에는 provenance 봉인이 없습니다 (F52 이전 산출물).\n")
         P.append(case_md(case) + "\n")
+        # ★ F78 — 인과 문구의 범위. bounds 가 reference 별로 다르므로 이 표는
+        #   "기준 곡선 단독"이 아니라 pipeline 수준의 비교다.
+        if case.get("_인과범위"):
+            P.append(f"> ⚠ {case['_인과범위']}\n")
         P.append("> ⚠ halfcell 쪽의 \"복원불가 0%\"는 **측정이 아닙니다.** "
                  "`src/scoring.py`가 `reference != \"grid\"`이면 `recoverable=True`로 "
                  "고정합니다(전 범위 테이블이라 창 부족이 없다는 물리적 근거). "
@@ -852,7 +856,8 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
                      f"`w=1`은 `pocv_dvdq_dqdv`와 정의가 같으므로 위 표의 두 끝점은 "
                      f"목적함수 비교표와 일치해야 합니다 — "
                      f"`tools/check_sweep_consistency.py`가 확인합니다.\n")
-        P.append("결과: `configs/objectives_optimized.yaml`\n")
+        P.append("결과: 실행 디렉터리의 `wsweep/objectives_optimized.yaml` — "
+                 "configs/ 로의 승격은 검토 후 커밋으로 한다 (F79)\n")
 
     # ── 그림 ──
     figs = cmp_res.get("figures") or {}

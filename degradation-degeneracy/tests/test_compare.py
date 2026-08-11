@@ -1799,3 +1799,43 @@ def test_report_renders_recomputed_not_saved_yaml(tmp_path):
     assert "파생_stale_degeneracy_summary.yaml" in out
     # 진짜 값은 여전히 실린다
     assert f"{100 * orig:.0f}%" in out
+
+
+def test_compare_cases_rejects_different_optimizer_pipeline(tmp_path):
+    """★ F78/8차 발견 7 — optimizer 정책이 다른 두 실행은 "기준 곡선 효과"가
+    아니다. 예전 공통성 검사는 curves·objectives·v_col·조건집합만 봤다."""
+    import yaml
+
+    from tools.compare_cases import compare
+
+    a, _ = _complete_artifact(tmp_path / "a")
+    b, _ = _complete_artifact(tmp_path / "b")
+    m = yaml.safe_load((b / "manifest.yaml").read_text(encoding="utf-8"))
+    m["run_spec"]["reference"] = "halfcell"
+    m["run_spec"]["optimizer"] = dict(m["run_spec"]["optimizer"], adaptive=False)
+    (b / "manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+
+    res = compare(a / "fits.parquet", b / "fits.parquet")
+    assert res["provenance_ok"] is False
+    assert res["공통_run_spec"]["optimizer"]["일치"] is False
+    assert "optimizer 정책" in res["_주의_공통성"]
+
+
+def test_compare_cases_scopes_causal_claim_to_pipeline(tmp_path):
+    """★ F78 — bounds preset 이 다르면(설계상 그렇다) 인과 문구가 pipeline
+    수준으로 제한돼야 한다."""
+    import yaml
+
+    from tools.compare_cases import compare
+
+    a, _ = _complete_artifact(tmp_path / "a")
+    b, _ = _complete_artifact(tmp_path / "b")
+    m = yaml.safe_load((b / "manifest.yaml").read_text(encoding="utf-8"))
+    m["run_spec"]["reference"] = "halfcell"
+    m["run_spec"]["bounds_preset"] = "halfcell"
+    (b / "manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+
+    res = compare(a / "fits.parquet", b / "fits.parquet")
+    assert "bounds_preset" in res["reference별_허용차이"]
+    assert "pipeline" in res["_인과범위"]
+    assert "기준 곡선 단독" in res["_인과범위"]

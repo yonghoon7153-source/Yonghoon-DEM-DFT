@@ -89,18 +89,34 @@ def compare(grid_fits: Path, halfcell_fits: Path, tol: float = 0.02) -> dict:
     # ★ F69 — 같은 실험이어야 비교가 성립한다. 서로 다른 curves·목적함수 정의·
     #   조건 집합에서 나온 두 표를 나란히 놓으면 "기준 곡선 효과"가 아니라
     #   그냥 다른 두 실험이다.
+    # ★ F78/8차 발견 7 — reference 와 **명시적으로 허용한** 좌표계 필드만 다를
+    #   수 있다. 예전에는 curves·objectives·v_col·조건집합만 봐서, optimizer
+    #   정책·warm start·순서·base config·inventory·환경이 달라도 "남는 차이는
+    #   기준 곡선뿐"이라고 판정했다.
+    MUST_MATCH = (("curves_sha", "입력 곡선"),
+                  ("producer_sha", "곡선 producer"),
+                  ("objectives", "목적함수 정의"),
+                  ("objective_order", "목적함수 순서"),
+                  ("v_col", "타깃 열"),
+                  ("warm_start", "warm start"),
+                  ("optimizer", "optimizer 정책"),
+                  ("base_config_sha", "base config"),
+                  ("inventory", "inventory 상수"),
+                  ("env", "실행 환경"),
+                  ("condition_ids_sha256", "조건 집합"))
+    #: reference 에 따라 달라야 정상인 것 — 단 그 사실이 인과 문구를 제한한다
+    ALLOWED_DIFF = ("bounds_preset", "bounds", "p_ini",
+                    "halfcell_sha", "halfcell_meta_sha", "halfcell_cache",
+                    "halfcell_recipe", "reference")
     shared, mismatch = {}, []
-    for key, label in (("curves_sha", "입력 곡선"),
-                       ("objectives", "목적함수 정의"),
-                       ("v_col", "타깃 열"),
-                       ("bounds_preset", "bounds preset"),
-                       ("condition_ids_sha256", "조건 집합")):
+    for key, label in MUST_MATCH:
         a, b = specs["grid"].get(key), specs["halfcell"].get(key)
         shared[key] = {"grid": a, "halfcell": b, "일치": a == b}
         if a != b:
             mismatch.append(label)
-    # bounds preset 은 기준마다 달라야 정상이다 (halfcell 전용 preset 이 있다)
-    mismatch = [m for m in mismatch if m != "bounds preset"]
+    allowed_diff_seen = sorted(
+        k for k in ALLOWED_DIFF
+        if specs["grid"].get(k) != specs["halfcell"].get(k))
 
     # ① 공통 조건 ② grid 기준에서 복원가능한 조건만
     common = set(g["cond_id"]) & set(h["cond_id"])
@@ -123,10 +139,21 @@ def compare(grid_fits: Path, halfcell_fits: Path, tol: float = 0.02) -> dict:
         "provenance_ok": provenance_ok,
         "공통_run_spec": shared,                  # F69
         "_주의_공통성": (
-            "두 실행이 같은 곡선·목적함수·조건 집합을 썼다. 남는 차이는 기준 곡선뿐이다."
+            "두 실행이 곡선·목적함수·optimizer 정책·환경까지 동일하다."
             if not mismatch else
             f"⚠ 인용 금지 — 두 실행이 다른 실험이다: {mismatch}. "
             "이 표의 차이를 '기준 곡선 효과'로 읽을 수 없다"),
+        # ★ F78 — bounds preset 이 reference 별로 다른 것은 설계이지만, 그러면
+        #   이 표의 차이는 "기준 곡선 효과"가 아니라 **기준 곡선 + 전용 bounds 를
+        #   포함한 reference-specific pipeline 의 차이**다. 인과 문구를 그 수준
+        #   으로 제한해야 한다 (리뷰: "최소한 '두 pipeline 차이'라고 써야 한다").
+        "reference별_허용차이": allowed_diff_seen,
+        "_인과범위": (
+            "두 pipeline 은 reference 외에도 다음이 다르다: "
+            f"{allowed_diff_seen}. 이 표는 '기준 곡선 단독 효과'가 아니라 "
+            "**reference-specific fitting pipeline 의 차이**로 읽어야 한다."
+            if allowed_diff_seen else
+            "reference 외 모든 축이 동일하다 — 차이를 기준 곡선 효과로 읽을 수 있다."),
         "_주의_provenance": (
             "두 artifact 모두 provenance 검증을 통과했다."
             if provenance_ok else
