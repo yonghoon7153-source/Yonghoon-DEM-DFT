@@ -180,7 +180,7 @@
    "status": "claimed_fixed",
    "owner": "claude",
    "opened_in": "docs/reviews/codex_rc6_verification_20260811.md",
-   "claimed_fixed_sha": "PENDING",
+   "claimed_fixed_sha": "556db89f",
    "evidence_tests": [
     "scripts/check_review_findings.py"
    ],
