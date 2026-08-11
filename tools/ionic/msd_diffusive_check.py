@@ -102,15 +102,35 @@ def main():
         print("  ⚠ 평균이 살아나도 **개별 런은 여전히 못 쓴다** — config 산포를 평균 뒤에")
         print("    다시 낼 수 없으므로, 오차막대는 다른 방법(블록 평균 등)으로 내야 한다.")
         print()
+    def case_label(path, width=34):
+        """⚠ 2026-08-11 — 옛 라벨은 `[-3:-1]` 이라 전부 `d0.00_cfg0/T700` 로 찍혔다.
+        어느 계(modelc/lpsocl/b2o3)의 어느 시드인지가 **표에서 사라져** 탈락 8건이
+        어디 것인지 읽을 수가 없었다. 정보 없는 조각(d*_cfg*, 마지막 T* 중복)을 버린다."""
+        import re as _re
+        parts = path.split(os.sep)[:-1]                     # msd.json 제외
+        drop = _re.compile(r"^d\d+\.\d+_cfg\d+$")
+        keep = [p for p in parts[-4:] if not drop.match(p)]
+        if len(keep) >= 2 and keep[-1].lstrip("T").isdigit() \
+                and keep[-1].lstrip("T") in keep[-2]:
+            keep = keep[:-1]                                # T700_s2/T700 → T700_s2
+        lab = "/".join(keep)
+        return lab[-width:] if len(lab) > width else lab
+
     print(f"창 {lo}–{hi} ps · β=1 확산 · β<{BETA_OK[0]} 케이지 · "
           f"창끝 MSD < {MSD_MIN_A2} Å² 면 통계 부족")
+    # ⚠⚠ β<0.8 을 곧바로 '케이지' 로 읽지 말 것 — **창끝 MSD 를 같이 본다.**
+    #   2026-08-11 귀무분포 검정(tools/ionic/beta_null_test.py): 케이지가 0 인 이상
+    #   브라운 운동을 Li 27개·200 ps 로 재면 창 2–50 에서 β = 1.01 (5–95% 0.86–1.14),
+    #   0.8 미만이 **1.0%** 뿐이다. 즉 이 창의 β<0.8 은 표본 부족이 아니라 진짜다.
+    #   반면 늦은 창(50–200)에서는 이상 계도 10%가 0.8 아래로 떨어진다 — 그 창의
+    #   β 로 '구제' 판정을 하면 안 된다. 창마다 게이트의 신뢰도가 다르다.
     print(f"{'case':34s} {'D(cm2/s)':>10s} {'beta':>6s} {'MSD@hi':>8s}  판정")
     bad = []
     for f in files:
         d = json.load(open(f))
         t, y = d.get("times_ps"), d.get("msd_Li_A2")
         D = d.get("D_Li_cm2_s")
-        tag = "/".join(f.split(os.sep)[-3:-1])
+        tag = case_label(f)
         if not t or not y:
             print(f"{tag:34s} {D:10.3e} {'—':>6s} {'—':>8s}  ⚠ MSD 배열 없음")
             continue
@@ -165,7 +185,7 @@ def main():
             t, y = d.get("times_ps"), d.get("msd_Li_A2")
             if not t or not y:
                 continue
-            tag = "/".join(f.split(os.sep)[-3:-1])
+            tag = case_label(f)
             cells = []
             for lo, hi in WINS:
                 b = loglog_slope(t, y, lo, hi)
