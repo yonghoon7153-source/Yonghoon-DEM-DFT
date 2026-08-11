@@ -252,12 +252,24 @@
     },
     {
       "id": "SR-01",
-      "severity": "P2",
-      "title": "STEP3 탄소 채널이 조각난 섬유 위에서 돈다 (점간격이 MPM dx 에 묶여 vox 0.4 서 91.7% 단절)",
+      "severity": "P1",
+      "title": "STEP3 탄소 채널이 조각난 섬유 위에서 돈다 (point-stamp × 6-face — 등급/P3/첨가제 비교의 blocker)",
       "status": "open",
       "owner": "claude",
       "opened_in": "docs/reviews/selfreview_synthesis_vgcf_ptfe_se_grad_20260811.md",
-      "note": "자체 3각 적대리뷰 물리 렌즈 X3 (실제 solve_sigma_z 스탬프 실험).  첨가제 점 간격 0.7·dx_MPM ≈ 0.099µm 가 σ-격자와 무관하게 고정 + 1-복셀 6-conn 스탬프 → 10µm 직선 섬유가 vox 0.4 에서 91.7% 조각(평균 4.3), vox 0.2 에서 99.7%.  동일 설정 상대비교는 공통모드 생존(STEP3 v1 규약), 절대 'VGCF 퍼콜 망' 해석 불가.  후속: per-fibre stamped-component 진단 메트릭 + 실침대 세그먼트-vs-점 스탬프 A/B (탄소 단독망 실험은 상한 성격)."
+      "note": "자체 3각 리뷰 물리 X3 → **Codex 독립 재현 완료** (91.23% 단절·평균 4.21 components; 내 재현 95.7%/4.92 — box 크기 의존). ★ 원인 verified, **정확한 91.7%는 straight-fibre toy protocol 값**이고 production 정량은 pending (box 10→20→50µm 에서 86.6→91.2→94.6% 변동). ★★ Codex CR-02: '동일 설정 상대비교는 공통모드 생존' 은 **범위가 너무 넓다** — 공통모드는 **같은 fibre geometry 고정 + σ scalar 만 변경** 정도이고, grade 변경·P3 proximity·n_grid·curl/clipping·SBE↔DBE(VGCF 섬유 vs SDCP 입자)·raster origin 변경에서는 raster 오차가 **직접 달라진다** ⇒ grade/P3/첨가제 headline 비교의 **P1 blocker** 로 승격. ★ 해결책: point 재샘플링은 **원리적으로 불가**(0.35·vox 97.5% · 0.02·vox 30.7% 단절 — 대각 셀은 face 를 공유하지 않는다).  필요한 것은 ① polyline segment supercover + face bridge ② 직경-aware connected-tube rasterizer ③ (권장) 1D 섬유 G=σA/L + 3D AM 복셀 mixed-dimensional solver.  26-conn 라벨 변경은 답이 아니다(솔버는 6-face conductance).",
+      "evidence_tests": [
+        "docs/reviews/codex_review_verdict_20260811.md"
+      ]
+    },
+    {
+      "id": "SR-02",
+      "severity": "P2",
+      "title": "P3 실측 Δσ_e +22.3±23.1% (12시드) 의 raw·하네스가 커밋에 없어 독립 재현 불가",
+      "status": "open",
+      "owner": "claude",
+      "opened_in": "docs/reviews/selfreview_synthesis_vgcf_ptfe_se_grad_20260811.md",
+      "note": "Codex 지적: 자체리뷰가 인용한 수치의 raw vector·seed list·box/object count·하네스가 리포에 없다 → 증거등급 C.  교훈 = **자체리뷰 서브에이전트의 수치도 재현 가능한 형태로 커밋해야 한다** (RC6-Q8 '발견을 큐에서 잃지 않는다' 의 수치판).  P3 는 DROP 됐으므로 이 수치는 인용하지 않는다 — 항목은 프로세스 교훈으로 남긴다."
     }
   ]
 }

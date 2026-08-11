@@ -9,6 +9,11 @@
 
 ---
 
+> ## ★★ Codex 독립리뷰 판정 (2026-08-11) — 아래 본문은 그 판정으로 갱신됨
+> **G4 GO · G1 REDESIGN 후 GO · G2 현재안 HOLD(★ production dead path) · G3 HOLD.**
+> 내가 §6-Q2 에서 전제한 "coverage/**CN** 핀 충돌" 은 **전제가 틀렸다** — 2D generator 에
+> coordination/CN 계산도 핀도 **없다** (직접 확인: grep 0건).  coverage 만 있다.
+
 ## §0. 결론 요약
 
 **한다.  단 "구배" 는 하나가 아니라 둘이고, 우리 파이프라인마다 만들 수 있는 것이 다르다.**
@@ -61,7 +66,12 @@
 
 ## §3. 제안
 
-### **G1. 2D synth `--se-grad`** — (a)형, Phase 4/5 배선 (비용 낮음)
+### **G1. 2D synth `--se-grad`** — (a)형 · **REDESIGN 후 GO** (Codex)
+★ 재설계 요건: **band 별 AM/SE 면적과 P:S 를 직접 제어**하고, coverage carving·pore refill 등
+**모든 후처리 뒤 K-band profile 을 재측정**해 게이트한다.  우선순위(Codex Q2 답):
+ 1 hard 전역 AM/SE/void 총량 → 2 hard **realized** φ_SE(z)·φ_AM(z)·구배 부호/단조성 →
+ 3 hard band 별 AM_P:AM_S 비와 porosity → 4 soft coverage(readout) → 5 readout 연결성/CN
+둘을 동시에 못 맞추면 **조용히 구배를 평탄화하지 말고** `infeasible` / `gradient_degraded` 로 기록.
 - `synthesize_microstructure` 에 `se_grad ∈ [−1, 1]` 추가: φ_SE(z) 를
   `φ_SE·(1 + g·(z_n − 0.5))` 로 기울이고 **φ_AM(z) 가 역방향으로 보상** (porosity 균일 유지).
   **총 φ_SE·총 φ_AM 각각 고정** (`--poro-grad` 와 같은 게이트 + 마지막 pass UNGATED 폴백).
@@ -70,7 +80,23 @@
 - selftest: (i) g=0 → 기존 경로 **bitwise 동일** (§F1), (ii) g=±0.5 에서 총량 보존
   (|Δφ_tot| < 0.5 %p), (iii) 밴드 프로파일 단조, (iv) 부호 방향 (g>0 → 상단 φ_SE ↑).
 
-### **G2. 킷 scaffold `--se-grad`** — (b)형, **Luan 과 다른 노브임을 라벨에 박제** (비용 낮음)
+### ~~G2. 킷 scaffold `--se-grad`~~ → ⛔ **HOLD (Codex: production dead path)**
+★ **결정적 사실 (내가 직접 확인)**: production `run_mpm.sh` **10개 킷 전부 `--se-dump` 를
+넘긴다** → real-SE raster 경로를 탄다.  그런데 내 `prob(z)` 계획은 `--se-dump` **없을 때만**
+도는 uniform cell-fill `else` 분기에 들어간다 ⇒ **그대로 구현하면 production 킷에서 죽은 길**이다.
+그래도 하려면 **격리 계약**이 선행 (Codex):
+```yaml
+se_grad_mode: se_vs_porosity_fixed_AM
+source_geometry: synthetic_cell_fill      # --se-dump·--load-state 와 상호배타
+am_scaffold_frozen: true
+exchange_partner: void
+anchor_eligible: false                    # 일반 corpus/surrogate 등록 제외
+campaign_namespace: experimental_se_grad_b
+```
+비교 대상도 real-SE baseline 이 아니라 **같은 cell-fill sampler 의 명시적 `g=0`** 이어야 한다.
+아래 원안은 역사로만 남긴다.
+
+#### (원안) 킷 scaffold `--se-grad` — (b)형
 - 균일 cell-fill 의 `prob` 를 `prob(z) ∝ 1 + g·(z_n − 0.5)` 로 (정규화해 **총 SE 부피 불변**;
   clip ≥0; 한 z-슬라이스의 interstitial 용량 초과분은 이웃으로 재분배 — 재분배량 로그).
 - **정직 라벨 (필수)**: AM 동결이라 SE↕porosity 맞교환 = **(b)형**.  payload/mpm_metrics 에
@@ -79,7 +105,17 @@
 - 산출: STEP3 밴드별 σ_ion/σ_e/τ (기존 솔버가 자동으로 봄) → **σ_ion(z) 프로파일**.
 - selftest: g=0 bitwise 동일 · 총 SE 셀 수 보존 · z-프로파일 부호.
 
-### **G3. Luan 순서-앵커 검증 캠페인** — (a)형 3D, **DEM 선행 필요** (비용 높음 · 별도 승인)
+### **G3. Luan 순서-앵커 검증 캠페인** — ⛔ **HOLD (Codex)**.  선행 3건:
+ ① **wt%→vol% 변환 규약** — 현행 deck weight 는 **질량 레시피** 의미인데 Luan Table S1 의
+   φ_SE 는 **부피분율**이다.  밀도·porosity·carbon 포함여부를 명시해 wt%→vol%→template
+   count/weight 로 변환해야 한다.  **COMSOL 이상화 profile 을 그대로 넣으면 안 된다.**
+ ② **finite interface** — sharp step 은 limiting control 로만.  profile family =
+   `uniform` · `two_layer_sharp` · **`two_layer_mixed(width_um)`(primary)** · 같은 width 의
+   positive/reverse.  생성 직후·압밀 후 realized band profile 을 둘 다 기록.
+ ③ **실험 wt% 기반 profile 을 external-anchor primary** 로, COMSOL 0.1875/0.3125 는
+   **sensitivity arm** 으로 분리 — 이상화 profile 로 같은 논문의 순서를 맞추면 진폭까지
+   내부 모델에 맞춘 **약한 순환검증**이 된다.
+(원안)
 - 침대: **DEM 입력 생성기에 층상 조성** (2-층, Table S1 φ_SE 그대로) → 사용자 LIGGGHTS 실행
   → STEP1–4.  두께는 **≥ 65 µm** (효과가 나타나는 영역; §1).  ⚠ 100 µm 급 = n_grid 384 불가
   (V100 32 GB), 192 로 계획 + `d_h/dx ≳ 3.5` 사전 점검(스캐폴드 CSV 만으로 GPU-불요 계산).
@@ -102,12 +138,29 @@
 |---|---|---|---|
 | V1 | **순서**: positive > uniform > reverse | STEP4 delivered capacity (같은 컷오프) 순서 재현 | 실패 = 우리 이온-수송 표현의 구배 감도 결손 (frame[4] 정량 한계로 보고) |
 | V2 | **rate 스케일링**: 격차가 C-rate 와 함께 커짐 | 0.5 C vs 2 C 에서 V1 격차 단조 증가 (정성) | 실패 = 이득이 수송 기원이 아니라는 뜻 → V1 재해석 |
-| V3 | **두께 스케일링**: 30 µm 침대에선 격차 ≈ 0 | real_14 급 두께에서 V1 격차 < 노이즈 | 실패(얇은데 격차 큼) = 우리 모델이 구배를 과대반응 |
-| V4 | **trade-off**: positive 의 SE-lean 층 국소 과전압 ↑ | STEP4 층별 반응분포에서 SE-lean 밴드 η 상승 | 실패 = 층내 국소 이온부족 미표현 (frame[4]) |
+| V3 | ~~30 µm 에선 격차 ≈ 0~~ → **재설계 (Codex)**: 30 µm ≠ 1 mAh/cm² 다.  `ΔQ(30µm) < ΔQ(65µm)` + **독립 노이즈/등가 밴드**로.  같은 (a)형 조성·profile·scaffold family 에서 30/65/(105) µm × uniform/positive/reverse × paired seeds 필요 | |
+| V4 | ~~SE-lean 층 국소 과전압~~ → ⛔ **readout 전 HOLD (Codex SG-01)**: STEP3 는 **전역** σ_e/σ_ion/τ 만 낸다.  `phi_profile` 은 unit-ΔV layer potential 이지 국소 전도도가 아니고, STEP4 φ(z) 는 분포반응이 섞인 운전 전위라 σ(z) 로 환산 불가.  DRT 저항과 국소 η 를 같은 observable 로 보지 말 것 | |
 
 - **V1–V4 는 전부 순서/방향만 요구** — 절대값 요구 없음 (§F1).
-- G2(b형) 런에는 V1 을 **적용하지 않는다** (다른 노브).  G2 의 자체 검증 = 총량 보존 +
-  σ_ion(z) 가 φ_SE(z) 를 단조 추종하는지 (우리 스케일링 법칙의 국소 버전).
+- V1 은 **same total AM/SE · 같은 cutoff·grid · paired multi-seed** 조건에서만, **순서 확률과
+  CI** 로 보고 (Codex).  V2 는 **문헌이 준 0.1↔1 C 를 primary**, 0.5↔2 C 는 외삽 secondary.
+- G2(b형) 런에는 V1 을 **적용하지 않는다** (다른 노브).  ⚠ 그리고 "σ_ion(z) 가 φ_SE(z) 를
+  **단조 추종**" 을 code selftest 로 쓰면 안 된다 (Codex SG-04) — 실제 침대에서는
+  topology/percolation 때문에 **비단조가 물리적으로 가능**하다.  합성 slab 해석해 테스트와
+  실제 morphology 결과를 분리한다.
+
+### ★ 신규 구현 계약 (Codex SG-01~04) — G1/G2 착수 전 필수
+- **SG-01 band readout 부재**: 위 V4 참조.  face flux·Joule 기반 **band 저항 몫**,
+  band 반응 몫/활용률, 미퍼콜 band 는 `null + reason`, STEP4 band 전류가중 과전압 export.
+- **SG-02 `g=0 bitwise` 와 총량 보존이 섞였다**: 단순 `prob·w(z)` + clip 은 z 별 free
+  capacity·포화 때문에 **총 셀 수를 보존하지 않는다**.  → 옵션 미지정 `None` = 완전 legacy
+  (RNG 소비 포함) · 명시적 `g=0` = 새 campaign 의 uniform control · `g≠0` = 같은 uniform draw
+  의 target `N0` 를 **capacity-aware 무복원 가중표집**으로 재배치 (`ΣN_k=N0`, `N_k≤cap_k`,
+  포화/재분배 원장).  "geometry bitwise" 와 "provenance JSON bytewise" 를 구분해 약속.
+- **SG-03 provenance 가 STEP4 까지 자동 전달 안 됨**: CLI → MPM metrics/restart → payload
+  whitelist + STEP3 manifest → step4_grid → STEP4 params/result → webapp 등록/campaign 필터
+  전 경로에 mode·profile family·exchange partner·requested/realized profile·interface width·
+  seed·grid·scaffold digest·`anchor_eligible` 를 실어야 한다.
 
 ## §5. 하지 않는 것
 
@@ -131,10 +184,11 @@
   침대에 (b)형 구배를 걸어 **두께 축만 먼저** 보는 절충이 의미 있나? (노브가 달라 V1 과
   분리 보고해야 함.)
 
-## §7. 순서 (승인 시)
+## §7. 순서 (Codex 반영 최종)
 
-1. **G4** (문서 가드 — 무해, 즉시)
-2. **G1** (2D synth, selftest 포함) → 커밋
-3. **G2** (킷, 라벨 박제 + selftest) → 커밋 → V100 에서 (b)형 스모크 1건
-4. **G3** 은 Codex/사용자 리뷰 통과 + DEM 실행 일정 확정 후 별도 착수
+1. **G4** 문서 가드 (무해, 즉시) — **GO**
+2. **G1 재설계** — band-면적 제약 generator + 최종 profile 게이트 → 커밋
+3. **band transport/reaction readout + provenance end-to-end 배선** (SG-01·SG-03)
+4. **G2 는 격리 experimental mode 로만** — 보존/배선 스모크까지 (production 대조 금지)
+5. **G3 은 wt%→vol% 변환·finite interface·matched thickness 행렬이 준비된 뒤** 승인
 5. VGCF/PTFE 계획서의 3각 적대리뷰 결과가 나오면 **같은 종합 문서**에서 두 계획을 함께 판정
