@@ -967,10 +967,32 @@ if [ "${{MPM_FRACTURE:-0}}" = "1" ] && [ -f "$KIT/fracture_scaffold.csv" ]; then
   echo "[run_mpm] ★ MPM_FRACTURE=1 → 취성 crack-void 적용 (ASSUMED-FORM void; DEM 취성 위치 기반)"
 fi
 PSIG=(); [ "${{MPM_PERIODIC_SIGMA:-0}}" = "1" ] && {{ PSIG=(--periodic); echo "[run_mpm] ★ MPM_PERIODIC_SIGMA=1 → STEP3 σ 주기BC (bulk-RVE)"; }}
+# ── 준정적 재하율 규약 (2026-08-11) ────────────────────────────────────────────────────
+#   mpm3d 는 V/c_P > 0.01 이면 **거부**한다 (docs/mpm_platen_kinematic_stop_defect.md §7-2).
+#   기존 코퍼스는 전부 기하 규칙 vmax=0.008·(WALL0−FLOOR) 로 만들어졌고 두꺼운 전극일수록
+#   빨라진다 (실측 114 µm 침대 V/c_P≈0.105) → 그대로 두면 **모든 킷이 시작조차 못 한다**.
+#   기본값 = 그 규약을 유지하되 **--allow-fast-platen 으로 명시 승인**한다.  게이트의 목적
+#   ("위반을 결과가 달고 다니게 한다") 는 그대로 달성된다 — mpm_metrics.json 의
+#   quasistatic_violation=true / platen_mach_VcP 에 박혀 나온다 (등급 B: 같은 마하로 통일한
+#   **상대 비교**는 공통모드 상쇄로 유효, **절대값**은 아래 처방으로 다시 재야 한다).
+#   MPM_QUASISTATIC=1 → 처방대로 --platen-mach 0.01.  ⚠ 프레임당 하강폭이 마하비만큼 줄어
+#   --frames 도 같은 배수로 늘려야 하고(MPM_QS_FRAMES, 기본 1500) **런타임이 ~10× 된다**.
+#   ⚠⚠ 그렇게 만든 베드는 기존 코퍼스와 **재하율이 다른 별도 트랙**이다 — 섞어 쓰지 말 것.
+QS=(--allow-fast-platen)
+if [ "${{MPM_QUASISTATIC:-0}}" = "1" ]; then
+  QS=(--platen-mach 0.01 --frames "${{MPM_QS_FRAMES:-1500}}")
+  echo "[run_mpm] ★ MPM_QUASISTATIC=1 → --platen-mach 0.01 --frames ${{MPM_QS_FRAMES:-1500}} (준정적 처방)"
+  echo "[run_mpm]   런타임 ~10×.  ⚠ 기존 코퍼스(기하 규칙)와 재하율이 달라 직접 비교 금지 — 별도 트랙."
+else
+  echo "[run_mpm] 준정적: 기하 규칙 유지 + --allow-fast-platen (등급 B — 위반이 mpm_metrics.json 의"
+  echo "[run_mpm]   quasistatic_violation/platen_mach_VcP 에 기록됨).  절대값용 처방은 MPM_QUASISTATIC=1."
+fi
 # 1) plastic compaction of the REAL SE around the fixed AM scaffold (periodic x,y RVE = DEM 'boundary p p f')
+#    ★ "${{QS[@]}}" 가 --frames 를 덮어쓸 수 있도록 아래 기본 --frames 보다 **뒤에** 온다.
 python3 "$SCR/mpm3d_compaction.py" \\
   --am-scaffold "$KIT/am_scaffold.csv" --se-dump "$KIT/se_scaffold.csv" --periodic \\
   --lateral-box {box_x} --n-grid {n_grid_mpm} --arch cuda --gpu-mem 28 --protocol hold --frames 150 \\
+  "${{QS[@]}}" \\
   --e-se {e_se_mpm} --nu-se {nu_se_mpm} --target-gpa {press_gpa} --seed {mpm_seed} \\
   --save-se se_dump.npy --save-dg se_dump_dg.npy --save-eps se_dump_eps.npy --save-metrics mpm_metrics.json{add_flags} "${{FRAC[@]}}" \\
   || {{ echo "[run_mpm] STEP 1 (compaction) FAILED — see the trace above.  NOT running the payload: it would"; \\
@@ -1094,8 +1116,11 @@ echo "          (오래된 run_* 폴더는 디스크 차면 지워도 됨 — �
                '  echo "   PID $!     follow: tail -f $log"\n'
                '  exit 0\n'
                'fi\n'
+               # --allow-fast-platen: 준정적 게이트 명시 승인 (run_mpm.sh 와 **같은 규약** —
+               #   앵커는 N0 대비 상대 비교라 공통모드 상쇄, 위반은 각 m_*.json 에 기록된다).
                'COMMON=(--am-scaffold "$KIT/am_scaffold.csv" --se-dump "$KIT/se_scaffold.csv" --periodic\n'
                '        --lateral-box __BOX__ --n-grid __NG__ --arch cuda --gpu-mem 28 --protocol hold --frames 150\n'
+               '        --allow-fast-platen\n'
                '        --e-se __ESE__ --nu-se __NUSE__ --target-gpa __PRESS__ --seed __SEED__)\n'
                'run_one() { local lab="$1"; shift; echo "=== A-1 앵커: $lab ==="; '
                'python3 "$SCR/mpm3d_compaction.py" "${COMMON[@]}" "$@" --save-metrics "$OUT/m_${lab}.json" '
@@ -1141,8 +1166,11 @@ echo "          (오래된 run_* 폴더는 디스크 차면 지워도 됨 — �
                  '  echo "   PID $!     follow: tail -f $log"\n'
                  '  exit 0\n'
                  'fi\n'
+                 # --allow-fast-platen: run_mpm.sh 와 같은 준정적 규약 (제작↔구동 두 팔 모두 같은
+                 #   재하율이라 공통모드 상쇄; 위반은 m_fab/m_*.json 에 기록된다).
                  'COMMON=(--am-scaffold "$KIT/am_scaffold.csv" --se-dump "$KIT/se_scaffold.csv" --periodic\n'
                  '        --lateral-box __BOX__ --n-grid __NG__ --arch cuda --gpu-mem 28 --frames 150\n'
+                 '        --allow-fast-platen\n'
                  '        --e-se __ESE__ --nu-se __NUSE__ --seed __SEED__)\n'
                  'STATE="$OUT/fab_state.npz"\n'
                  '# ── ① 제작 (fabrication) — 제작압 __PRESS__ GPa, LIGGGHTS 변위-정지 규약(hold) ──\n'

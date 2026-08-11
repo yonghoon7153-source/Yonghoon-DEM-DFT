@@ -1,0 +1,269 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""SR-01 A/B 판독 — 점 스탬프 vs 선분 스탬프 payload 두 개를 읽어 **Δσ_e 를 낸다**.
+
+무엇을 재는가.  `scripts/sr01_realbed_ab.py` 는 실침대에서 **기하**를 쟀다 (섬유의 몇 %가
+1-복셀 점 스탬프의 코너-크로싱 때문에 6-연결이 끊기나 — 킷별 20.6~75.8 %).  그런데
+"끊긴다"에서 "σ_e 가 얼마나 틀리다"로 가는 다리는 **없다**: 끊긴 섬유가 어차피 전도
+백본이 아니었으면 σ_e 는 안 움직이고, 반대로 자기-조각남이 병렬 경로를 지워 과대평가일
+수도 과소평가일 수도 있다.  2026-08-11 자체리뷰·Codex 리뷰가 각각 부호를 **추론**했다가
+서로 반대 결론에 닿은 자리다.  ⇒ 부호는 재야 안다.  이 스크립트가 그 판독기다.
+
+왜 이 A/B 가 깨끗한가.  두 팔은 **같은 se_dump.npy·fibre.npy** 를 읽는다 — 압밀, 섬유
+시딩, 난수, 상 배정, 격자(step3_vox)가 전부 바이트로 동일하고 다른 것은 래스터화뿐이다.
+그래서 Δ 는 전부 스탬프 탓이다 (frame[4] 식으로 말하면 교란변수가 0인 대조).
+
+사용:
+    python3 scripts/sr01_stamp_compare.py A.json B.json [--label kit_ps_7_3] [--csv out.csv]
+    python3 scripts/sr01_stamp_compare.py --selftest
+"""
+from __future__ import annotations
+
+import argparse
+import csv
+import json
+import os
+import sys
+
+#: payload 안에서 STEP3 결과가 사는 자리 (mpm_webapp_payload: mpm_metrics['step3'] = step3).
+_STEP3_PATHS = (('metrics', 'step3'), ('step3',))
+
+#: 비교할 스칼라 — (키, 라벨, 상대변화를 볼 것인가)
+_FIELDS = (
+    ('sigma_e_eff_S_cm',   'σ_e_eff [S/cm]',      True),
+    ('n_dof',              '해 자유도 (전도 복셀)', True),
+    ('n_floating_dropped', '부유 노드 버림',        False),
+    ('cg_resid',           'CG 잔차',              False),
+)
+
+
+def dig(obj, path):
+    for k in path:
+        if not isinstance(obj, dict) or k not in obj:
+            return None
+        obj = obj[k]
+    return obj
+
+
+def step3_of(payload):
+    """payload dict → step3 dict.  자리를 못 찾으면 None (조용히 0 을 만들지 않는다)."""
+    for p in _STEP3_PATHS:
+        got = dig(payload, p)
+        if isinstance(got, dict):
+            return got
+    return None
+
+
+#: 스탬프 도장이 실제로 찍히는 자리 = `step3['manifest']` (mpm_webapp_payload:1520-1531).
+#   step3 바로 밑도 받아 준다 — 스키마가 평평해져도 판독기가 조용히 None 을 반환하면
+#   "팔 검증 없이 Δ 만 보고" 하게 되므로 (그게 이 스크립트가 막으려는 바로 그 사고다).
+_STAMP_PATHS = (('manifest', 'fibre_stamp'), ('fibre_stamp',))
+
+
+def stamp_of(step3):
+    """step3 dict → (스탬프 이름, 실제 적용 여부).  라벨이 아니라 **매니페스트**에서 읽는다."""
+    if not isinstance(step3, dict):
+        return None, None
+    for p in _STAMP_PATHS:
+        got = dig(step3, p)
+        if isinstance(got, str):
+            applied = None
+            for q in (p[:-1] + ('fibre_stamp_applied',),):
+                v = dig(step3, q)
+                if isinstance(v, bool):
+                    applied = v
+            return got, applied
+    return None, None
+
+
+def compare(pa, pb):
+    """→ (행 dict, 경고 리스트).  A = 점(기준), B = 선분."""
+    warn = []
+    sa, sb = step3_of(pa), step3_of(pb)
+    if sa is None or sb is None:
+        raise SystemExit('ABORT — payload 에서 step3 블록을 못 찾음 '
+                         f'(A={"OK" if sa else "없음"}, B={"OK" if sb else "없음"}).  '
+                         '--no-step3 로 돈 payload 는 비교 대상이 아닙니다.')
+    # ★ 라벨이 아니라 매니페스트로 팔을 검증한다.  --step3-fibre-stamp 를 줬어도 --fibre 가
+    #   없으면 payload 가 조용히 점 스탬프로 되돌아간다 (fibre_stamp_applied=False) —
+    #   그걸 못 보면 "Δ=0 → 스탬프 무관" 이라는 **정반대 결론**을 낸다.
+    ka, _aa = stamp_of(sa)
+    kb, ab = stamp_of(sb)
+    if ka is None or kb is None:
+        warn.append('스탬프 도장(step3.manifest.fibre_stamp)이 없습니다 — 배선 이전 payload 이거나 '
+                    'STEP3 가 실패한 런입니다.  어느 팔인지 **확인 불가**이므로 Δ 를 인용하지 마세요.')
+    if ka and ka != 'point':
+        warn.append(f'A 팔이 point 가 아닙니다: {ka}')
+    if kb != 'segment':
+        warn.append(f'B 팔이 segment 가 아닙니다: {kb!r}  ← --step3-fibre-stamp 가 안 먹었습니다')
+    if ab is False:
+        warn.append('B 팔의 fibre_stamp_applied=False — --fibre 가 없어 점 스탬프로 되돌아갔습니다 '
+                    '(Δ≈0 은 "스탬프 무관"이 아니라 "적용 안 됨"입니다)')
+    for k in ('vox_um',):
+        if sa.get(k) != sb.get(k):
+            warn.append(f'{k} 가 두 팔에서 다릅니다 ({sa.get(k)} vs {sb.get(k)}) — 공통모드 상쇄 깨짐')
+
+    row = {'label': '', 'stamp_A': ka or 'point?', 'stamp_B': kb or '?',
+           'vox_um': sa.get('vox_um')}
+    for key, _lab, rel in _FIELDS:
+        va, vb = sa.get(key), sb.get(key)
+        row[key + '_A'] = va
+        row[key + '_B'] = vb
+        if rel and isinstance(va, (int, float)) and isinstance(vb, (int, float)):
+            row[key + '_ratio'] = (float(vb) / float(va)) if va else None
+            row[key + '_pct'] = ((float(vb) / float(va) - 1.0) * 100.0) if va else None
+    # 소산 분담 (어느 상이 전류를 나르나) — 탄소 몫이 스탬프로 얼마나 바뀌나가 핵심
+    da, db = sa.get('dissipation_share') or {}, sb.get('dissipation_share') or {}
+    for ph in sorted(set(da) | set(db)):
+        row[f'share_{ph}_A'] = da.get(ph)
+        row[f'share_{ph}_B'] = db.get(ph)
+    return row, warn
+
+
+def render(row, warn):
+    out = []
+    sa = row.get('sigma_e_eff_S_cm_A')
+    sb = row.get('sigma_e_eff_S_cm_B')
+    out.append(f"SR-01 스탬프 A/B  —  {row.get('label') or '(무라벨)'}   "
+               f"[A={row['stamp_A']} · B={row['stamp_B']} · vox {row.get('vox_um')} µm]")
+    out.append('─' * 78)
+    for key, lab, rel in _FIELDS:
+        va, vb = row.get(key + '_A'), row.get(key + '_B')
+        line = f'  {lab:22s} A {va!s:>12s}   B {vb!s:>12s}'
+        if rel and row.get(key + '_pct') is not None:
+            line += f'   Δ {row[key + "_pct"]:+8.2f} %  (×{row[key + "_ratio"]:.3f})'
+        out.append(line)
+    shares = sorted({k[6:-2] for k in row if k.startswith('share_') and k.endswith('_A')})
+    if shares:
+        out.append('  소산 분담 (전류를 어느 상이 나르나):')
+        for ph in shares:
+            a, b = row.get(f'share_{ph}_A'), row.get(f'share_{ph}_B')
+            if (a or 0) < 1e-4 and (b or 0) < 1e-4:
+                continue
+            d = (f'{(b - a) * 100:+6.2f} %p' if isinstance(a, (int, float)) and isinstance(b, (int, float)) else '')
+            out.append(f'    {ph:14s} A {a!s:>8s}   B {b!s:>8s}   {d}')
+    out.append('─' * 78)
+    if isinstance(sa, (int, float)) and isinstance(sb, (int, float)) and sa:
+        pct = (sb / sa - 1.0) * 100.0
+        if abs(pct) < 1.0:
+            verdict = ('점 스탬프 아티팩트가 σ_e 를 **거의 안 움직인다** (|Δ| < 1 %). '
+                       '끊긴 섬유가 전도 백본이 아니었다는 뜻 — 기하 단절률(20~76 %)이 '
+                       'σ 로 전이되지 않는다.')
+        elif pct > 0:
+            verdict = (f'선분 스탬프가 σ_e 를 **{pct:+.1f} % 올린다** → 현행 점 스탬프는 '
+                       '탄소 백본을 끊어 σ_e 를 **과소평가**하고 있었다.')
+        else:
+            verdict = (f'선분 스탬프가 σ_e 를 **{pct:+.1f} % 내린다** → 점 스탬프의 조각남이 '
+                       '오히려 σ_e 를 **과대평가**하고 있었다 (조각이 만든 여분 도통 경로 · '
+                       '스탬프 부피 인플레).')
+        out.append('  판정: ' + verdict)
+    for w in warn:
+        out.append('  ⚠ ' + w)
+    if not warn:
+        out.append('  (두 팔의 vox·스탬프 매니페스트 확인됨 — Δ 는 래스터화 탓이다)')
+    return '\n'.join(out)
+
+
+# ───────────────────────────── selftest ─────────────────────────────
+
+def _mk(sig, stamp, applied=True, n_dof=1000, vox=0.4, share=None):
+    """★ 실제 payload 의 **중첩 그대로** 짓는다 (metrics.step3.manifest.fibre_stamp).
+    평평하게 지으면 판독기가 도장을 못 찾는 것을 selftest 가 놓친다 — 실제로 처음
+    구현이 한 단계 얕아서 stamp_of 가 항상 None 이었다 (2026-08-11)."""
+    return {'metrics': {'step3': {
+        'sigma_e_eff_S_cm': sig, 'vox_um': vox, 'n_dof': n_dof,
+        'n_floating_dropped': 7, 'cg_resid': 1e-9,
+        'manifest': {'schema_version': 2, 'status': 'complete',
+                     'fibre_stamp': stamp, 'fibre_stamp_applied': applied},
+        'dissipation_share': share or {'AM_S': 0.6, 'VGCF': 0.4}}}}
+
+
+def _selftest():
+    ok = fail = 0
+
+    def chk(c, m):
+        nonlocal ok, fail
+        ok, fail = (ok + 1, fail) if c else (ok, fail + 1)
+        print(('  PASS  ' if c else '  FAIL  ') + m)
+
+    a, b = _mk(0.010, 'point'), _mk(0.012, 'segment', n_dof=1200)
+    row, warn = compare(a, b)
+    chk(abs(row['sigma_e_eff_S_cm_pct'] - 20.0) < 1e-9, '1) Δ% 산술 (0.010→0.012 = +20 %)')
+    chk(abs(row['sigma_e_eff_S_cm_ratio'] - 1.2) < 1e-12, '2) 비 1.200')
+    chk(not warn, '3) 정상 쌍은 경고 없음')
+    chk('올린다' in render(row, warn), '4) 판정 문장이 부호를 말한다')
+
+    # ★ 가장 중요한 함정: 플래그는 줬는데 --fibre 가 없어 조용히 되돌아간 경우
+    _, w2 = compare(a, _mk(0.0100001, 'point', applied=False))
+    chk(any('point' in x or 'segment' in x for x in w2), '5) B 가 point 면 경고')
+    _, w2b = compare(a, _mk(0.01, 'segment', applied=False))
+    chk(any('applied=False' in x for x in w2b), '6) ★ applied=False 를 잡는다 (Δ≈0 오독 방지)')
+    # ★ 도장 자리가 실제 payload 중첩(manifest 밑)과 맞는가 — 여기가 한 번 틀렸던 자리
+    chk(stamp_of(a['metrics']['step3']) == ('point', True), '6b) ★ manifest 밑 도장을 읽는다')
+    chk(stamp_of({'sigma_e_eff_S_cm': 1.0}) == (None, None), '6c) 도장 없으면 None (거짓 확신 금지)')
+    _, w2c = compare({'metrics': {'step3': {'sigma_e_eff_S_cm': 0.01, 'vox_um': 0.4}}},
+                     {'metrics': {'step3': {'sigma_e_eff_S_cm': 0.02, 'vox_um': 0.4}}})
+    chk(any('확인 불가' in x for x in w2c), '6d) 도장 없는 쌍은 "인용하지 말라" 경고')
+
+    # 공통모드가 깨진 쌍 (vox 가 다름) — Δ 를 스탬프 탓으로 읽으면 안 된다
+    _, w3 = compare(a, _mk(0.012, 'segment', vox=0.2))
+    chk(any('vox_um' in x for x in w3), '7) vox 불일치 경고 (공통모드 상쇄 깨짐)')
+
+    # 부호 반대 / 무변화 문장
+    chk('내린다' in render(*compare(a, _mk(0.008, 'segment'))), '8) 감소 판정')
+    chk('거의 안 움직인다' in render(*compare(a, _mk(0.01002, 'segment'))), '9) |Δ|<1 % 판정')
+
+    # step3 없는 payload 는 조용히 0 을 만들지 말고 멈춘다
+    try:
+        compare({'metrics': {}}, b)
+        chk(False, '10) step3 없으면 중단')
+    except SystemExit:
+        chk(True, '10) step3 없으면 중단')
+
+    # 분담 차이 %p
+    r4, _ = compare(_mk(0.01, 'point', share={'AM_S': 0.7, 'VGCF': 0.3}),
+                    _mk(0.01, 'segment', share={'AM_S': 0.5, 'VGCF': 0.5}))
+    txt = render(r4, [])
+    chk('+20.00 %p' in txt and '-20.00 %p' in txt, '11) 소산 분담 %p 표기')
+
+    # σ_e = 0 (비퍼콜) 인 A 에서 0 나눗셈으로 안 죽는가
+    r5, _ = compare(_mk(0.0, 'point'), _mk(0.005, 'segment'))
+    chk(r5.get('sigma_e_eff_S_cm_pct') is None, '12) σ_A=0 → Δ% 는 None (0 나눗셈 금지)')
+    chk(isinstance(render(r5, []), str) and 'A          0.0' in render(r5, []),
+        '12b) σ_A=0 여도 렌더가 죽지 않고 0 을 보여준다')
+    chk(r5['sigma_e_eff_S_cm_B'] == 0.005, '13) σ_A=0 여도 B 값은 보존')
+
+    print(f'\nsr01_stamp_compare selftest: {ok}/{ok + fail} PASS')
+    return 0 if fail == 0 else 1
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument('a', nargs='?', help='arm A payload (점 스탬프 = 현행 기본)')
+    ap.add_argument('b', nargs='?', help='arm B payload (선분 스탬프)')
+    ap.add_argument('--label', default='', help='CSV/출력에 붙일 이름 (예: kit_ps_7_3)')
+    ap.add_argument('--csv', default='', help='한 줄 append (헤더 자동)')
+    ap.add_argument('--selftest', action='store_true')
+    x = ap.parse_args(argv)
+    if x.selftest:
+        return _selftest()
+    if not x.a or not x.b:
+        ap.error('payload 두 개가 필요합니다 (또는 --selftest).')
+    row, warn = compare(json.load(open(x.a, encoding='utf-8')),
+                        json.load(open(x.b, encoding='utf-8')))
+    row['label'] = x.label or os.path.basename(os.path.dirname(os.path.abspath(x.a)))
+    print(render(row, warn))
+    if x.csv:
+        new = not os.path.exists(x.csv)
+        with open(x.csv, 'a', newline='', encoding='utf-8') as fh:
+            w = csv.DictWriter(fh, fieldnames=list(row))
+            if new:
+                w.writeheader()
+            w.writerow(row)
+        print(f'\n  → {x.csv}')
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())

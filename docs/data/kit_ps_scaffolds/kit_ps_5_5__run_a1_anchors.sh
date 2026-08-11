@@ -37,6 +37,7 @@ if [ -z "${A1_DETACHED:-}" ]; then
   exit 0
 fi
 COMMON=(--am-scaffold "$KIT/am_scaffold.csv" --se-dump "$KIT/se_scaffold.csv" --periodic
+        --allow-fast-platen
         --lateral-box 0.05 --n-grid 256 --arch cuda --gpu-mem 28 --frames 150
         --e-se 1.53 --nu-se 0.49)
 STATE="$OUT/fab_state.npz"

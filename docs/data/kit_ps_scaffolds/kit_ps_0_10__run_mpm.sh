@@ -70,10 +70,28 @@ if [ "${MPM_FRACTURE:-0}" = "1" ] && [ -f "$KIT/fracture_scaffold.csv" ]; then
   echo "[run_mpm] ★ MPM_FRACTURE=1 → 취성 crack-void 적용 (ASSUMED-FORM void; DEM 취성 위치 기반)"
 fi
 PSIG=(); [ "${MPM_PERIODIC_SIGMA:-0}" = "1" ] && { PSIG=(--periodic); echo "[run_mpm] ★ MPM_PERIODIC_SIGMA=1 → STEP3 σ 주기BC (bulk-RVE)"; }
+# ── 준정적 재하율 규약 (2026-08-11 소급 배선; scripts/patch_kit_quasistatic.py) ──────────
+#   mpm3d 는 V/c_P > 0.01 이면 **거부**한다 (docs/mpm_platen_kinematic_stop_defect.md §7-2).
+#   기존 코퍼스는 전부 기하 규칙 vmax=0.008·(WALL0−FLOOR) — 두꺼운 침대에서 V/c_P≈0.105 라
+#   그대로 두면 이 킷은 시작조차 못 한다.  기본값 = 그 규약 유지 + **명시 승인**.
+#   게이트의 목적은 그대로: 위반이 mpm_metrics.json 의 quasistatic_violation /
+#   platen_mach_VcP 에 박혀 나온다 (등급 B — 같은 마하 상대비교는 유효, 절대값은 아래 처방).
+#   MPM_QUASISTATIC=1 → --platen-mach 0.01 (⚠ 프레임 ~10×, 런타임 ~10×,
+#   ⚠⚠ 기존 코퍼스와 재하율이 다른 **별도 트랙** — 섞어 쓰지 말 것).
+QS=(--allow-fast-platen)
+if [ "${MPM_QUASISTATIC:-0}" = "1" ]; then
+  QS=(--platen-mach 0.01 --frames "${MPM_QS_FRAMES:-1500}")
+  echo "[run_mpm] ★ MPM_QUASISTATIC=1 → --platen-mach 0.01 --frames ${MPM_QS_FRAMES:-1500} (준정적 처방)"
+  echo "[run_mpm]   런타임 ~10×.  ⚠ 기존 코퍼스(기하 규칙)와 재하율이 달라 직접 비교 금지 — 별도 트랙."
+else
+  echo "[run_mpm] 준정적: 기하 규칙 유지 + --allow-fast-platen (등급 B — 위반이 mpm_metrics.json 의"
+  echo "[run_mpm]   quasistatic_violation/platen_mach_VcP 에 기록됨).  절대값용 처방은 MPM_QUASISTATIC=1."
+fi
 # 1) plastic compaction of the REAL SE around the fixed AM scaffold (periodic x,y RVE = DEM 'boundary p p f')
 python3 "$SCR/mpm3d_compaction.py" \
   --am-scaffold "$KIT/am_scaffold.csv" --se-dump "$KIT/se_scaffold.csv" --periodic \
   --lateral-box 0.05 --n-grid 256 --arch cuda --gpu-mem 28 --protocol hold --frames 150 \
+  "${QS[@]}" \
   --e-se 1.53 --nu-se 0.49 --target-gpa 0.3 \
   --save-se se_dump.npy --save-dg se_dump_dg.npy --save-eps se_dump_eps.npy --save-metrics mpm_metrics.json \
   --add-recipe "VGCF:PTFE=1:1" --add-l-cv 0.4 --mixing thinky --coh-ptfe 0.10 --binder-opt-wt 1.5 --fibre-buckle --fibre-align 0.692 --dilate-z 1.0214 --save-phase phase.npy --save-fibre fibre.npy --save-fibre-dia fibre_dia.npy "${FRAC[@]}" \
