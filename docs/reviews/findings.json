@@ -1,216 +1,230 @@
 {
- "note": "리뷰 finding 단일 원장.  산문으로 상태를 적으면 다시 새어나간다 — scripts/check_review_findings.py 가 자기일관성을 강제하고 열린 항목을 뽑는다. ⚠ status=verified 는 **구현자와 다른 검증자**가 있어야 한다.",
- "findings": [
-  {
-   "id": "RC6-01",
-   "severity": "P1",
-   "title": "11-key schema 가 NaN·잘못된 타입을 통과 + valid_null 계약 충돌",
-   "status": "claimed_fixed",
-   "owner": "claude",
-   "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
-   "claimed_fixed_sha": "7a3c44e3",
-   "evidence_tests": [
-    "webapp/test_pipeline_provenance.py::43-51"
-   ],
-   "verification_note": "Codex 미검증: null_ok_keys 가 production 호출에 **미배선** + electronic status producer 부재 → all-SE 경로가 failed_no_active_generation."
-  },
-  {
-   "id": "RC6-02",
-   "severity": "P1",
-   "title": "thermal 판정 전에 새 세대를 active success 로 게시 (stash 이미 폐기)",
-   "status": "verified",
-   "owner": "claude",
-   "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
-   "claimed_fixed_sha": "0726edcb",
-   "evidence_tests": [
-    "webapp/test_pipeline_provenance.py::RC6-02",
-    "webapp/test_pipeline_provenance.py::RC6-02c"
-   ],
-   "verified_sha": "449b83aa3199bd0b07faac9452ab92df7e79c9e1",
-   "verified_by": "codex",
-   "verified_in": "docs/reviews/codex_rc6_verification_20260811.md"
-  },
-  {
-   "id": "RC6-03",
-   "severity": "P1",
-   "title": "Physics mode 상태 미검사 — Physics 실패가 H 성공에 가림",
-   "status": "verified",
-   "owner": "claude",
-   "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
-   "claimed_fixed_sha": "0726edcb",
-   "evidence_tests": [
-    "webapp/test_pipeline_provenance.py::RC6-03"
-   ],
-   "verified_sha": "449b83aa3199bd0b07faac9452ab92df7e79c9e1",
-   "verified_by": "codex",
-   "verified_in": "docs/reviews/codex_rc6_verification_20260811.md",
-   "verified_scope": "Physics-thermal masking 범위만.  mode×channel 전체 계약은 RC7-02 로 분리."
-  },
-  {
-   "id": "RC6-04",
-   "severity": "P1",
-   "title": "Stage E 가 성공 경로에서 network 소유 raw thermal 을 덮어씀 (이중 소유)",
-   "status": "verified",
-   "owner": "claude",
-   "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
-   "claimed_fixed_sha": "496bd99d",
-   "evidence_tests": [
-    "webapp/test_pipeline_provenance.py::52-54"
-   ],
-   "verified_sha": "449b83aa3199bd0b07faac9452ab92df7e79c9e1",
-   "verified_by": "codex",
-   "verified_in": "docs/reviews/codex_rc6_verification_20260811.md"
-  },
-  {
-   "id": "RC6-04b",
-   "severity": "P1",
-   "title": "live pre-purge window — parent crash 시 purge 상태가 영구 active",
-   "status": "claimed_fixed",
-   "owner": "claude",
-   "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
-   "claimed_fixed_sha": "ac35f5a2",
-   "evidence_tests": [
-    "webapp/test_pipeline_provenance.py"
-   ],
-   "partial_note": "candidate publish 로 crash window 를 닫았다 (SIGKILL 실증). Stage E per-run manifest·composite pointer 는 여전히 최종형 과제."
-  },
-  {
-   "id": "RC6-05",
-   "severity": "P1",
-   "title": "fresh 가 부분 쓰기를 통과 + main/archive 배선 없음",
-   "status": "claimed_fixed",
-   "owner": "claude",
-   "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
-   "claimed_fixed_sha": "496bd99d",
-   "evidence_tests": [
-    "webapp/test_pipeline_provenance.py::RC6-05a",
-    "webapp/test_pipeline_provenance.py::RC6-05b"
-   ],
-   "verification_note": "Codex 미검증: metadata-only touch 로 바이트 전부 옛것인데 ok=True (RC7-03)."
-  },
-  {
-   "id": "RC6-06",
-   "severity": "P1",
-   "title": "STEP3 electronic/ionic/pore/PNM/전체 실패가 무상태",
-   "status": "claimed_fixed",
-   "owner": "claude",
-   "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
-   "claimed_fixed_sha": "a31afe31",
-   "evidence_tests": [
-    "webapp/test_pipeline_provenance.py::55-58"
-   ],
-   "verification_note": "Codex 반증: happy path 는 정상이나 pore/PNM 실패·disabled·ionic-zero 에서 top=complete false-green 재현 (RC7-01)."
-  },
-  {
-   "id": "RC6-07",
-   "severity": "P1",
-   "title": "Windows CP949 에서 실제 solver 가 첫 non-ASCII 로그에 종료",
-   "status": "verified",
-   "owner": "claude",
-   "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
-   "claimed_fixed_sha": "0726edcb",
-   "evidence_tests": [
-    "webapp/test_pipeline_provenance.py::RC6-07a-e"
-   ],
-   "verified_sha": "449b83aa3199bd0b07faac9452ab92df7e79c9e1",
-   "verified_by": "codex",
-   "verified_in": "docs/reviews/codex_rc6_verification_20260811.md"
-  },
-  {
-   "id": "RC6-08",
-   "severity": "P2",
-   "title": "--step3-gpu 가 CPU 로 fallback 돼도 실제 backend 미기록",
-   "status": "verified",
-   "owner": "claude",
-   "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
-   "claimed_fixed_sha": "a31afe31",
-   "evidence_tests": [
-    "webapp/test_pipeline_provenance.py::59-60"
-   ],
-   "verified_sha": "449b83aa3199bd0b07faac9452ab92df7e79c9e1",
-   "verified_by": "codex",
-   "verified_in": "docs/reviews/codex_rc6_verification_20260811.md",
-   "verified_scope": "CuPy 부재 → CPU fallback provenance 범위만.  전역 LAST_BACKEND 문제는 RC7-05."
-  },
-  {
-   "id": "RC6-Q7",
-   "severity": "P2",
-   "title": "projection clear 의 코퍼스 영향 미측정 (preflight scanner 없음)",
-   "status": "claimed_fixed",
-   "owner": "claude",
-   "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
-   "claimed_fixed_sha": "ce6741b2",
-   "evidence_tests": [
-    "scripts/network_projection_preflight.py"
-   ],
-   "partial_note": "스캐너는 만들었으나 이 리포에는 tracked corpus 가 0 이라 실제 비율은 배포 머신에서 돌려야 나온다."
-  },
-  {
-   "id": "RC6-Q8",
-   "severity": "P2",
-   "title": "리뷰 finding 이 큐에서 사라지는 프로세스 결함 (5회차 4일 누락)",
-   "status": "claimed_fixed",
-   "owner": "claude",
-   "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
-   "claimed_fixed_sha": "2713a0e8",
-   "evidence_tests": [
-    "scripts/check_review_findings.py --selftest"
-   ],
-   "decision_note": "원장·검사기는 만들었지만 \"정말 새어나가지 않는가\" 는 다음 라운드에서 이 원장이 실제로 참조될 때 증명된다.",
-   "verification_note": "Codex 미검증: --open 이 Windows CP949 에서 중간 종료 + case 변형 자기검증·가짜 SHA·유령 evidence 통과 (RC7-04)."
-  },
-  {
-   "id": "RC7-01",
-   "severity": "P1",
-   "title": "STEP3 manifest 가 실패·미실행 component 를 누락하고도 complete (+ bare NaN)",
-   "status": "open",
-   "owner": "claude",
-   "opened_in": "docs/reviews/codex_rc6_verification_20260811.md"
-  },
-  {
-   "id": "RC7-02",
-   "severity": "P1",
-   "title": "network 게시 gate 가 thermal 만 검사 — ionic/electronic 실패가 게시됨",
-   "status": "open",
-   "owner": "claude",
-   "opened_in": "docs/reviews/codex_rc6_verification_20260811.md"
-  },
-  {
-   "id": "RC7-03",
-   "severity": "P1",
-   "title": "contact fresh 가 metadata-only touch 를 성공으로 판정 (빈 candidate 필요)",
-   "status": "open",
-   "owner": "claude",
-   "opened_in": "docs/reviews/codex_rc6_verification_20260811.md"
-  },
-  {
-   "id": "RC7-04",
-   "severity": "P2",
-   "title": "원장 검사기가 CP949·identity case·가짜 SHA·유령 evidence 에서 강제력 상실",
-   "status": "claimed_fixed",
-   "owner": "claude",
-   "opened_in": "docs/reviews/codex_rc6_verification_20260811.md",
-   "claimed_fixed_sha": "556db89f",
-   "evidence_tests": [
-    "scripts/check_review_findings.py"
-   ],
-   "partial_note": "identity·SHA 실재·evidence 파일 실재·CP949 는 닫았다.  남은 것: evidence **selector 실행 가능성** 미검사 (우리 테스트가 pytest 가 아니라 자체 main() 형식) + 구현자가 verified_by 를 쓰는 것 자체는 branch protection/CODEOWNERS 몫."
-  },
-  {
-   "id": "RC7-05",
-   "severity": "P2",
-   "title": "STEP3 backend 가 전역 LAST_BACKEND 라 마지막 solve 하나만 표현",
-   "status": "open",
-   "owner": "claude",
-   "opened_in": "docs/reviews/codex_rc6_verification_20260811.md"
-  },
-  {
-   "id": "RC7-06",
-   "severity": "P2",
-   "title": "Stage E estimate provenance 가 is_stage_e_key 관리 대상이 아니라 stale 잔존",
-   "status": "open",
-   "owner": "claude",
-   "opened_in": "docs/reviews/codex_rc6_verification_20260811.md"
-  }
- ]
+  "note": "리뷰 finding 단일 원장.  산문으로 상태를 적으면 다시 새어나간다 — scripts/check_review_findings.py 가 자기일관성을 강제하고 열린 항목을 뽑는다. ⚠ status=verified 는 **구현자와 다른 검증자**가 있어야 한다.",
+  "findings": [
+    {
+      "id": "RC6-01",
+      "severity": "P1",
+      "title": "11-key schema 가 NaN·잘못된 타입을 통과 + valid_null 계약 충돌",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
+      "claimed_fixed_sha": "7a3c44e3",
+      "evidence_tests": [
+        "webapp/test_pipeline_provenance.py::43-51"
+      ],
+      "verification_note": "Codex 미검증: null_ok_keys 가 production 호출에 **미배선** + electronic status producer 부재 → all-SE 경로가 failed_no_active_generation."
+    },
+    {
+      "id": "RC6-02",
+      "severity": "P1",
+      "title": "thermal 판정 전에 새 세대를 active success 로 게시 (stash 이미 폐기)",
+      "status": "verified",
+      "owner": "claude",
+      "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
+      "claimed_fixed_sha": "0726edcb",
+      "evidence_tests": [
+        "webapp/test_pipeline_provenance.py::RC6-02",
+        "webapp/test_pipeline_provenance.py::RC6-02c"
+      ],
+      "verified_sha": "449b83aa3199bd0b07faac9452ab92df7e79c9e1",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_rc6_verification_20260811.md"
+    },
+    {
+      "id": "RC6-03",
+      "severity": "P1",
+      "title": "Physics mode 상태 미검사 — Physics 실패가 H 성공에 가림",
+      "status": "verified",
+      "owner": "claude",
+      "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
+      "claimed_fixed_sha": "0726edcb",
+      "evidence_tests": [
+        "webapp/test_pipeline_provenance.py::RC6-03"
+      ],
+      "verified_sha": "449b83aa3199bd0b07faac9452ab92df7e79c9e1",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_rc6_verification_20260811.md",
+      "verified_scope": "Physics-thermal masking 범위만.  mode×channel 전체 계약은 RC7-02 로 분리."
+    },
+    {
+      "id": "RC6-04",
+      "severity": "P1",
+      "title": "Stage E 가 성공 경로에서 network 소유 raw thermal 을 덮어씀 (이중 소유)",
+      "status": "verified",
+      "owner": "claude",
+      "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
+      "claimed_fixed_sha": "496bd99d",
+      "evidence_tests": [
+        "webapp/test_pipeline_provenance.py::52-54"
+      ],
+      "verified_sha": "449b83aa3199bd0b07faac9452ab92df7e79c9e1",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_rc6_verification_20260811.md"
+    },
+    {
+      "id": "RC6-04b",
+      "severity": "P1",
+      "title": "live pre-purge window — parent crash 시 purge 상태가 영구 active",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
+      "claimed_fixed_sha": "ac35f5a2",
+      "evidence_tests": [
+        "webapp/test_pipeline_provenance.py"
+      ],
+      "partial_note": "candidate publish 로 crash window 를 닫았다 (SIGKILL 실증). Stage E per-run manifest·composite pointer 는 여전히 최종형 과제."
+    },
+    {
+      "id": "RC6-05",
+      "severity": "P1",
+      "title": "fresh 가 부분 쓰기를 통과 + main/archive 배선 없음",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
+      "claimed_fixed_sha": "496bd99d",
+      "evidence_tests": [
+        "webapp/test_pipeline_provenance.py::RC6-05a",
+        "webapp/test_pipeline_provenance.py::RC6-05b"
+      ],
+      "verification_note": "Codex 미검증: metadata-only touch 로 바이트 전부 옛것인데 ok=True (RC7-03)."
+    },
+    {
+      "id": "RC6-06",
+      "severity": "P1",
+      "title": "STEP3 electronic/ionic/pore/PNM/전체 실패가 무상태",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
+      "claimed_fixed_sha": "a31afe31",
+      "evidence_tests": [
+        "webapp/test_pipeline_provenance.py::55-58"
+      ],
+      "verification_note": "Codex 반증: happy path 는 정상이나 pore/PNM 실패·disabled·ionic-zero 에서 top=complete false-green 재현 (RC7-01)."
+    },
+    {
+      "id": "RC6-07",
+      "severity": "P1",
+      "title": "Windows CP949 에서 실제 solver 가 첫 non-ASCII 로그에 종료",
+      "status": "verified",
+      "owner": "claude",
+      "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
+      "claimed_fixed_sha": "0726edcb",
+      "evidence_tests": [
+        "webapp/test_pipeline_provenance.py::RC6-07a-e"
+      ],
+      "verified_sha": "449b83aa3199bd0b07faac9452ab92df7e79c9e1",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_rc6_verification_20260811.md"
+    },
+    {
+      "id": "RC6-08",
+      "severity": "P2",
+      "title": "--step3-gpu 가 CPU 로 fallback 돼도 실제 backend 미기록",
+      "status": "verified",
+      "owner": "claude",
+      "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
+      "claimed_fixed_sha": "a31afe31",
+      "evidence_tests": [
+        "webapp/test_pipeline_provenance.py::59-60"
+      ],
+      "verified_sha": "449b83aa3199bd0b07faac9452ab92df7e79c9e1",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_rc6_verification_20260811.md",
+      "verified_scope": "CuPy 부재 → CPU fallback provenance 범위만.  전역 LAST_BACKEND 문제는 RC7-05."
+    },
+    {
+      "id": "RC6-Q7",
+      "severity": "P2",
+      "title": "projection clear 의 코퍼스 영향 미측정 (preflight scanner 없음)",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
+      "claimed_fixed_sha": "ce6741b2",
+      "evidence_tests": [
+        "scripts/network_projection_preflight.py"
+      ],
+      "partial_note": "스캐너는 만들었으나 이 리포에는 tracked corpus 가 0 이라 실제 비율은 배포 머신에서 돌려야 나온다."
+    },
+    {
+      "id": "RC6-Q8",
+      "severity": "P2",
+      "title": "리뷰 finding 이 큐에서 사라지는 프로세스 결함 (5회차 4일 누락)",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "opened_in": "docs/reviews/codex_rc6_crosscheck_20260811.md",
+      "claimed_fixed_sha": "2713a0e8",
+      "evidence_tests": [
+        "scripts/check_review_findings.py --selftest"
+      ],
+      "decision_note": "원장·검사기는 만들었지만 \"정말 새어나가지 않는가\" 는 다음 라운드에서 이 원장이 실제로 참조될 때 증명된다.",
+      "verification_note": "Codex 미검증: --open 이 Windows CP949 에서 중간 종료 + case 변형 자기검증·가짜 SHA·유령 evidence 통과 (RC7-04)."
+    },
+    {
+      "id": "RC7-01",
+      "severity": "P1",
+      "title": "STEP3 manifest 가 실패·미실행 component 를 누락하고도 complete (+ bare NaN)",
+      "status": "open",
+      "owner": "claude",
+      "opened_in": "docs/reviews/codex_rc6_verification_20260811.md"
+    },
+    {
+      "id": "RC7-02",
+      "severity": "P1",
+      "title": "network 게시 gate 가 thermal 만 검사 — ionic/electronic 실패가 게시됨",
+      "status": "open",
+      "owner": "claude",
+      "opened_in": "docs/reviews/codex_rc6_verification_20260811.md"
+    },
+    {
+      "id": "RC7-03",
+      "severity": "P1",
+      "title": "contact fresh 가 metadata-only touch 를 성공으로 판정 (빈 candidate 필요)",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "opened_in": "docs/reviews/codex_rc6_verification_20260811.md",
+      "fixed_by": "PENDING",
+      "evidence": "webapp/test_pipeline_provenance.py",
+      "note": "run_stage(causal=True) — 실행 전에 계약 산출물을 stash 로 치워 빈 자리에서 실행 → 존재 자체가 인과 증거.  contact 네 경로(batch·bimodal·standard·archive) 전부 배선.  재현: metadata-only touch 가 fresh 는 통과(RC7-03a) / causal 은 실패(RC7-03b) + 옛 세대 복구(RC7-03c)."
+    },
+    {
+      "id": "RC7-04",
+      "severity": "P2",
+      "title": "원장 검사기가 CP949·identity case·가짜 SHA·유령 evidence 에서 강제력 상실",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "opened_in": "docs/reviews/codex_rc6_verification_20260811.md",
+      "claimed_fixed_sha": "556db89f",
+      "evidence_tests": [
+        "scripts/check_review_findings.py"
+      ],
+      "partial_note": "identity·SHA 실재·evidence 파일 실재·CP949 는 닫았다.  남은 것: evidence **selector 실행 가능성** 미검사 (우리 테스트가 pytest 가 아니라 자체 main() 형식) + 구현자가 verified_by 를 쓰는 것 자체는 branch protection/CODEOWNERS 몫."
+    },
+    {
+      "id": "RC7-05",
+      "severity": "P2",
+      "title": "STEP3 backend 가 전역 LAST_BACKEND 라 마지막 solve 하나만 표현",
+      "status": "open",
+      "owner": "claude",
+      "opened_in": "docs/reviews/codex_rc6_verification_20260811.md"
+    },
+    {
+      "id": "RC7-06",
+      "severity": "P2",
+      "title": "Stage E estimate provenance 가 is_stage_e_key 관리 대상이 아니라 stale 잔존",
+      "status": "open",
+      "owner": "claude",
+      "opened_in": "docs/reviews/codex_rc6_verification_20260811.md"
+    },
+    {
+      "id": "RC7-07",
+      "severity": "P1",
+      "title": "main 두 경로만 contact 실패 후에도 network·Stage E 를 계속 돌렸다",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "opened_in": "docs/reviews/codex_rc6_verification_20260811.md",
+      "fixed_by": "PENDING",
+      "evidence": "webapp/test_pipeline_provenance.py",
+      "note": "RC7-03 작업 중 발견 (Codex 지적 아님).  batch 는 continue, archive 는 return 으로 contact 실패 시 멈추는데 main 의 bimodal·standard 두 호출부만 결과를 append 만 하고 그대로 진행했다 → causal 로 복구된 **옛** full_metrics 위에 새 network·Stage E 가 돌아 세대가 섞인다.  세 경로 계약을 동일하게 맞췄다."
+    }
+  ]
 }

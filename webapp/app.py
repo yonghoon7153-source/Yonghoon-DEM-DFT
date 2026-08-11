@@ -3223,7 +3223,8 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
                             expects=('atoms.csv', 'contacts.csv', ), results_dir=results_dir)
         stages.append(_st); log.append(_st)
         if not _st.ok:
-            return {'error': f'Parse failed: {_st["stderr"]}', 'status': 'failed', 'log': log,
+            return {'error': f'Parse failed: {_st["stderr"]}', 'success': False,
+                    'status': 'failed', 'log': log,
                     'failed_stages': [_st['step']]}
     elif has_pre_atoms_only and contact_files:
         # Hybrid: atoms.csv (pre-copied into results_dir above) + contact_*.liggghts.
@@ -3234,7 +3235,7 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
                             expects=('atoms.csv', 'contacts.csv', ), results_dir=results_dir)
         stages.append(_st); log.append(_st)
         if not _st.ok:
-            return {'error': f'Hybrid parse failed: {_st["stderr"]}', 'status': 'failed',
+            return {'error': f'Hybrid parse failed: {_st["stderr"]}', 'success': False, 'status': 'failed',
                     'log': log, 'failed_stages': [_st['step']]}
     else:
         # CSV fallback: copy pre-parsed CSVs into results_dir
@@ -3251,14 +3252,20 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
                atoms_csv, contacts_csv, '-o', results_dir,
                '-t', type_map, '-s', str(scale)]
         _st = _ps.run_stage('Bimodal Contact Analysis', cmd, required=True,
-                                                        # ★ RC6-05 (Codex 6회차): batch 에만 fresh 를 걸었는데,
-                            #   main·archive 도 **results 를 지우지 않고 재실행**될 수 있어
-                            #   같은 stale 위험이 있다.  fresh-dir 에서는 before 가 비어
-                            #   거짓 실패가 나지 않는다 (실측 확인).
-                            fresh=True,
+                            # ★ RC7-03 (Codex 7회차): fresh 지문은 metadata-only touch 로
+                            #   통과한다 = 인과 증거가 아니다.  causal 은 실행 전에 계약
+                            #   산출물을 치워 **빈 자리**에서 돌리므로, 실행 후 존재 자체가
+                            #   증거다.  실패하면 옛 성공 세대가 그대로 되돌아온다.
+                            causal=True,
                             expects=('full_metrics.json', 'atoms_analyzed.csv', 'contacts_analyzed.csv',
                                      'network_summary.csv'), results_dir=results_dir)
         stages.append(_st); log.append(_st)
+        # ★ RC7-07: batch·archive 는 contact 실패 시 아래를 건너뛰는데 **main 두 경로만
+        #   그냥 통과**했다 → 실패로 되돌아온 옛 full_metrics 위에 network·Stage E 가
+        #   돌아 세대가 섞였다.  세 경로의 계약을 같게 맞춘다.
+        if not _st.ok:
+            return {'error': f'Contact analysis failed: {_st["stderr"][-300:]}',
+                    'success': False, 'status': 'failed', 'log': log, 'failed_stages': [_st['step']]}
 
         # Step 2b: Dual-mode coverage + AM-SE/SE-SE totals (Hertzian vs Physics).
         # Writes coverage_AM_*_mean_physics, area_AM전체_SE_total_physics,
@@ -3325,14 +3332,15 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
                atoms_csv, contacts_csv, '-o', results_dir,
                '-t', type_map, '-s', str(scale)]
         _st = _ps.run_stage('Contact Analysis', cmd, required=True,
-                                                        # ★ RC6-05 (Codex 6회차): batch 에만 fresh 를 걸었는데,
-                            #   main·archive 도 **results 를 지우지 않고 재실행**될 수 있어
-                            #   같은 stale 위험이 있다.  fresh-dir 에서는 before 가 비어
-                            #   거짓 실패가 나지 않는다 (실측 확인).
-                            fresh=True,
+                            # ★ RC7-03: 위 bimodal 과 같은 인과 계약 (fresh → causal).
+                            causal=True,
                             expects=('full_metrics.json', 'atoms_analyzed.csv', 'contacts_analyzed.csv',
                                      'network_summary.csv'), results_dir=results_dir)
         stages.append(_st); log.append(_st)
+        # ★ RC7-07: main 경로도 batch·archive 와 같게 — 실패하면 여기서 멈춘다.
+        if not _st.ok:
+            return {'error': f'Contact analysis failed: {_st["stderr"][-300:]}',
+                    'success': False, 'status': 'failed', 'log': log, 'failed_stages': [_st['step']]}
 
         # Dual-mode coverage + AM-SE/SE-SE totals (Hertzian vs Physics).
         # Populates *_mean_physics and area_*_total_physics keys in
@@ -5518,13 +5526,12 @@ def batch_rerun_physics():
                      '-t', type_map, '-s', scale],
                     required=True, results_dir=c['results_dir'],
                     # ★ RR3-04 (Codex): batch 는 results 를 지우지 않으므로 **존재 확인만**
-                    #   하면 옛 산출물이 새 성공으로 재도장된다.  Codex 가 재현기를 현재
-                    #   4-산출물 계약에 맞추자 network 1회·Stage E 1회가 다시 실행됐다 =
-                    #   본질 미수정.  fresh=True 로 실행 전후 지문을 비교해 **실제로 새로
-                    #   쓰였는지**를 본다 (RV-02 에서 구현해 놓고 어디에도 배선하지 않았던
-                    #   기능이다 — 구현과 배선은 다르다).
-                    #   ⚠ 최종형은 Codex 권고대로 **빈 candidate 에서만 실행**하는 것.
-                    fresh=True,
+                    #   하면 옛 산출물이 새 성공으로 재도장된다.
+                    # ★ RC7-03 (Codex 7회차): 그 자리를 fresh 지문으로 막아 뒀고, 주석에
+                    #   "최종형은 빈 candidate 에서만 실행" 이라고 **적어만 두고 배선하지
+                    #   않았다**.  이제 실제로 그 최종형(causal stash)으로 바꾼다 —
+                    #   metadata-only touch 로는 더 이상 통과할 수 없다.
+                    causal=True,
                     expects=('full_metrics.json', 'atoms_analyzed.csv',
                              'contacts_analyzed.csv', 'network_summary.csv'))
                 _bstages.append(_cst)
@@ -9593,8 +9600,9 @@ def archive_reanalyze(folder):
             [sys.executable, os.path.join(scripts, script), atoms_csv, contacts_csv,
              '-o', target, '-t', type_map, '-s', str(scale)],
             required=True, results_dir=target,
-            # ★ RC6-05: archive 재분석도 기존 target 위에 다시 돈다 → fresh 필요.
-            fresh=True,
+            # ★ RC6-05 → RC7-03: archive 재분석도 기존 target 위에 다시 돈다.  지문이 아니라
+            #   인과(빈 자리 실행)로 판정한다.
+            causal=True,
             expects=('full_metrics.json', 'atoms_analyzed.csv', 'contacts_analyzed.csv',
                      'network_summary.csv'))
         stages.append(st); log.append(st)

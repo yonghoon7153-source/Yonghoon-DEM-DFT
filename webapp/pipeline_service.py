@@ -44,6 +44,7 @@ import hashlib
 import json
 import math
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -407,29 +408,43 @@ def read_network_provenance(results_dir):
                 'provenance_state': 'invalid', 'note': f'provenance 손상: {e}'}
 
 
-def stash_network(results_dir, case_id=''):
-    """기존 network 산출물을 **옆으로 치운다** → solver 가 빈 자리에 쓴다.  → stash dir | None
+#: 단계 산출물을 치워두는 디렉터리 이름 앞머리.  results_dir **안**에 만든다 —
+#:   같은 파일시스템이라 move 가 atomic rename 이 되고, 부모가 죽어도 케이스 옆에
+#:   남아 복구할 수 있다 (/tmp 에 두면 copy+delete + 재부팅 시 소실).
+STAGE_STASH_PREFIX = '.stage_stash_'
+
+
+def stash_outputs(results_dir, patterns, tag=''):
+    """지정 산출물을 **옆으로 치운다** → 단계가 빈 자리에 쓴다.  → stash dir | None
 
     ★ RR2-02 (Codex 2회차): `fresh=(mtime_ns, size)` 는 인과 증거가 아니다.
       metadata-only touch 만으로 통과하고(내용 불변인데 success), 반대로 결정론적 solver 가
       byte-identical 결과를 다시 써도 stale 로 **거부**한다(가용성 문제).
       해시도 단독으로는 안 된다 — 정상 재계산이 같은 해시를 내면 구별할 수 없다.
 
-    그래서 판정을 stat/해시 비교가 아니라 **인과**로 바꾼다: lock 안에서 기존 산출물을
-    치우고 빈 자리에 실행시키면, 실행 후 파일이 **존재한다는 사실 자체**가 "이번 실행이
-    만들었다" 는 증거다.  실패하면 치워둔 것을 되돌려 **이전 성공 세대를 그대로 보존**한다.
-    (최종형인 per-run 임시 디렉터리 + manifest + atomic publish 로 가는 중간 단계이고,
-     Codex 가 제안한 그 중간형이다.)
+    그래서 판정을 stat/해시 비교가 아니라 **인과**로 바꾼다: 기존 산출물을 치우고 빈 자리에
+    실행시키면, 실행 후 파일이 **존재한다는 사실 자체**가 "이번 실행이 만들었다" 는 증거다.
+    실패하면 치워둔 것을 되돌려 **이전 성공 세대를 그대로 보존**한다.
+
+    ★ RC7-03 (Codex 7회차): network 는 이 인과 판정을 쓰고 있었지만 **contact 네 경로는
+      지문 비교(fresh)에 머물러 있었다** — 그 자리의 주석이 스스로 "최종형은 빈 candidate
+      에서만 실행하는 것" 이라고 적어놓고 배선하지 않은 채였다.  그래서 network 전용이던
+      stash 를 여기서 일반화해 contact 에도 같은 계약을 건다.
     """
     items = []
-    for pat in NETWORK_ARTIFACT_GLOBS:
+    for pat in patterns:
         items += glob.glob(os.path.join(results_dir, pat))
     if not items:
         return None
-    st = tempfile.mkdtemp(prefix=f'net_stash_{case_id}_')
+    st = tempfile.mkdtemp(prefix=f'{STAGE_STASH_PREFIX}{tag}_', dir=results_dir)
     for src in items:
         shutil.move(src, os.path.join(st, os.path.basename(src)))
     return st
+
+
+def stash_network(results_dir, case_id=''):
+    """기존 network 산출물을 옆으로 치운다 → solver 가 빈 자리에 쓴다.  → stash dir | None"""
+    return stash_outputs(results_dir, NETWORK_ARTIFACT_GLOBS, tag=f'net_{case_id}')
 
 
 def restore_stash(stash_dir, results_dir):
@@ -451,6 +466,40 @@ def drop_stash(stash_dir):
     """치워둔 것을 버린다 (실행 성공 시)."""
     if stash_dir:
         shutil.rmtree(stash_dir, ignore_errors=True)
+
+
+def recover_stale_stashes(results_dir, max_age_s=6 * 3600):
+    """부모가 죽어 남은 stash 를 **복구**한다 → (복구한 파일 수, 치운 stash 수).
+
+    ★ candidate(=사본) 와 달리 stash 는 **원본을 들고 있다** — 그래서 청소기가 지우면
+      마지막 성공 세대가 사라진다.  그러므로 stash 는 지우는 게 아니라 복구한다:
+        · results_dir 에 그 이름이 **없으면** → 이번 실행이 못 만든 것 → 되돌린다
+        · 이미 **있으면** → 더 새 세대가 자리를 잡았다 → stash 쪽을 버린다
+      (restore_stash 는 무조건 덮어쓰므로 크래시 복구에는 쓸 수 없다.)
+    """
+    restored = swept = 0
+    try:
+        names = os.listdir(results_dir)
+    except OSError:
+        return 0, 0
+    for name in names:
+        if not name.startswith(STAGE_STASH_PREFIX):
+            continue
+        p = os.path.join(results_dir, name)
+        try:
+            if not os.path.isdir(p) or time.time() - os.path.getmtime(p) <= max_age_s:
+                continue
+            for fn in os.listdir(p):
+                dst = os.path.join(results_dir, fn)
+                if os.path.exists(dst):
+                    continue                       # 더 새 세대가 있다 → stash 는 버린다
+                shutil.move(os.path.join(p, fn), dst)
+                restored += 1
+            shutil.rmtree(p, ignore_errors=True)
+            swept += 1
+        except OSError:
+            pass
+    return restored, swept
 
 
 #: Stage E 실패 시도 기록 — active 필드가 아니라 별도 파일 (RC5-02, network 와 같은 규약).
@@ -774,22 +823,32 @@ def _stat_sig(results_dir, patterns):
 
 
 def run_stage(name, cmd, *, cwd=None, required=False, expects=(), results_dir=None,
-              runner=None, fresh=False, verify=None):
+              runner=None, fresh=False, causal=False, verify=None):
     """subprocess 한 단계를 계약과 함께 실행한다.
 
     required : 실패하면 파이프라인 전체가 failed
     expects  : 이 단계가 만들어야 하는 파일들 (results_dir 기준 상대경로).
                rc 가 0 이어도 이게 없으면 실패로 본다 — network CLI 는 물리망이
                없을 때 **파일을 안 쓰고도 exit 0** 이 될 수 있다 (리뷰 F-05/F-12).
-    fresh    : ★ RV-02.  expects 의 **존재**만 보면, results 를 지우지 않는 경로
-               (retry/batch)에서 solver 가 rc=0 으로 아무것도 안 써도 **옛 산출물이
-               새 성공 세대로 재도장**된다 (Codex 재검증에서 동적 재현).  fresh=True 면
-               실행 전후의 (mtime_ns, size) 지문을 비교해 **실제로 새로 쓰였는지**를 본다.
+    causal   : ★ RC7-03 (Codex 7회차).  **권장 형태.**  실행 전에 expects 를 stash 로
+               치워 **빈 자리**에서 실행한다 → 실행 후 존재한다는 사실 자체가 "이번 실행이
+               만들었다" 는 인과 증거다.  실패하면 되돌려 이전 성공 세대를 보존한다.
+               fresh 의 지문 비교와 달리 **metadata-only touch 로 통과할 수 없고**,
+               결정론적 재실행이 byte-identical 결과를 내도 거짓 실패가 나지 않는다.
+               (causal 이 켜지면 fresh 지문 비교는 하지 않는다 — 더 약한 판정이고
+                byte-identical 재계산에서 거짓 실패를 낼 수 있다.)
+    fresh    : ★ RV-02.  causal 을 쓸 수 없는 자리(산출물을 치우면 그것이 곧 입력인 단계)의
+               약한 대체재.  실행 전후의 (mtime_ns, size) 지문을 비교한다.
+               ⚠ metadata-only touch 로 통과한다 — 인과 증거가 아니다.
     verify   : ★ RV-01.  파일 존재만으로는 증거가 안 되는 단계용 (Stage E 는 별도 파일이
                아니라 full_metrics.json **안의 키**를 만든다).  `verify(results_dir)` 가
                False 를 돌리면 실패로 본다.
     runner   : 테스트에서 가짜 실행기를 주입하기 위한 훅.
     """
+    stash = None
+    if causal and results_dir and expects:
+        stash = stash_outputs(results_dir, expects, tag=re.sub(r'\W+', '', name)[:24])
+        fresh = False                       # 빈 자리에서 도니 지문 비교는 무의미하다
     before = _stat_sig(results_dir, expects) if (fresh and results_dir) else None
     try:
         res = (runner or _RUNNER)(cmd, capture_output=True, timeout=None, cwd=cwd,
@@ -819,6 +878,11 @@ def run_stage(name, cmd, *, cwd=None, required=False, expects=(), results_dir=No
         except Exception:                                   # noqa: BLE001
             verify_failed = True
     ok = (rc == 0) and not missing and not stale and not verify_failed
+    if stash is not None:
+        # 성공이면 옛 세대를 버리고, 실패면 **부분 산출물을 걷어내고** 되돌린다.
+        #   (restore_stash 가 이름별로 덮어쓰므로, 이번 실행이 만든 부분 파일은
+        #    같은 이름이면 교체되고 다른 이름이면 남는다 — 계약 파일은 전부 교체된다.)
+        drop_stash(stash) if ok else restore_stash(stash, results_dir)
     return StageOutcome(step=name, stdout=out, stderr=err, rc=rc, ok=ok,
                         required=required, missing_outputs=missing,
                         stale_outputs=stale, verify_failed=verify_failed)

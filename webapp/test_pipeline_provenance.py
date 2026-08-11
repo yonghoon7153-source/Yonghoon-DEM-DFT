@@ -621,17 +621,110 @@ def main():
         chk('RC6-05a) ★ 부분 쓰기(1/4)가 실패하고 낡은 파일 3개를 지목한다',
             _st_p.ok is False and len(_st_p['stale_outputs']) == 3
             and 'full_metrics.json' not in _st_p['stale_outputs'])
-        # main·archive 경로도 배선됐는가 (batch 만 걸려 있던 것이 RC6-05 의 절반이다)
+        # ══ RC7-03 (Codex 7회차): fresh 지문은 **metadata-only touch 로 통과한다** ══
+        #   = 인과 증거가 아니다.  causal(빈 자리 실행)은 같은 상황을 잡아야 한다.
+        for _f in ('full_metrics.json', 'atoms_analyzed.csv',
+                   'contacts_analyzed.csv', 'network_summary.csv'):
+            open(os.path.join(rd, _f), 'w').write('GEN-OLD\n')
+        _EXP = ('full_metrics.json', 'atoms_analyzed.csv',
+                'contacts_analyzed.csv', 'network_summary.csv')
+
+        def _toucher(cmd, **kw):
+            """아무것도 쓰지 않고 mtime 만 바꾼다 (rc=0)."""
+            _t = _time.time() + 10
+            for _f in _EXP:
+                os.utime(os.path.join(rd, _f), (_t, _t))
+            return subprocess.CompletedProcess(cmd, 0, '', '')
+
+        _st_touch = ps.run_stage('c', ['x'], required=True, results_dir=rd,
+                                 runner=_toucher, fresh=True, expects=_EXP)
+        chk('RC7-03a) ★ 결함 재현: metadata-only touch 가 fresh 를 통과한다 (무산출인데 success)',
+            _st_touch.ok is True)
+        _bodies = {f: open(os.path.join(rd, f)).read() for f in _EXP}
+        chk('RC7-03a2) ★ 그런데 내용은 옛 세대 그대로다 (= 거짓 성공의 실체)',
+            all(v == 'GEN-OLD\n' for v in _bodies.values()))
+
+        _st_c = ps.run_stage('c', ['x'], required=True, results_dir=rd,
+                             runner=_toucher, causal=True, expects=_EXP)
+        chk('RC7-03b) ★ causal 은 같은 touch 실행을 실패로 잡는다 (빈 자리에 아무것도 안 씀)',
+            _st_c.ok is False and sorted(_st_c['missing_outputs']) == sorted(_EXP))
+        chk('RC7-03c) ★ 실패해도 옛 성공 세대가 그대로 복구된다 (내용 보존)',
+            all(os.path.exists(os.path.join(rd, f)) for f in _EXP)
+            and all(open(os.path.join(rd, f)).read() == 'GEN-OLD\n' for f in _EXP))
+        chk('RC7-03c2) stash 디렉터리가 남지 않는다',
+            not [n for n in os.listdir(rd) if n.startswith(ps.STAGE_STASH_PREFIX)])
+
+        def _real_writer(cmd, **kw):
+            for _f in _EXP:
+                open(os.path.join(rd, _f), 'w').write('GEN-NEW\n')
+            return subprocess.CompletedProcess(cmd, 0, '', '')
+        _st_ok = ps.run_stage('c', ['x'], required=True, results_dir=rd,
+                              runner=_real_writer, causal=True, expects=_EXP)
+        chk('RC7-03d) 실제로 쓰면 causal 이 통과한다 (거짓 실패 없음)',
+            _st_ok.ok is True
+            and open(os.path.join(rd, 'full_metrics.json')).read() == 'GEN-NEW\n')
+
+        # ★ causal 은 byte-identical 재계산에서 **거짓 실패를 내지 않는다** (fresh 의 약점)
+        _st_same = ps.run_stage('c', ['x'], required=True, results_dir=rd,
+                                runner=_real_writer, causal=True, expects=_EXP)
+        chk('RC7-03e) ★ 결정론적 재실행(byte-identical)도 통과 — fresh 가 못 하던 것',
+            _st_same.ok is True)
+
+        # 부분 쓰기(1/4)는 causal 에서도 실패하고 옛 세대가 돌아와야 한다
+        for _f in _EXP:
+            open(os.path.join(rd, _f), 'w').write('GEN-KEEP\n')
+
+        def _partial2(cmd, **kw):
+            open(os.path.join(rd, 'full_metrics.json'), 'w').write('PARTIAL\n')
+            return subprocess.CompletedProcess(cmd, 0, '', '')
+        _st_p2 = ps.run_stage('c', ['x'], required=True, results_dir=rd,
+                              runner=_partial2, causal=True, expects=_EXP)
+        chk('RC7-03f) ★ 부분 쓰기(1/4)는 실패하고, 부분 산출물이 옛 세대로 교체된다',
+            _st_p2.ok is False
+            and open(os.path.join(rd, 'full_metrics.json')).read() == 'GEN-KEEP\n')
+
+        # ★ 크래시 복구: stash 는 원본을 들고 있으므로 **지우면 안 되고 되돌려야** 한다
+        _rd2 = os.path.join(tmp, 'r2'); os.makedirs(_rd2)
+        for _f in _EXP:
+            open(os.path.join(_rd2, _f), 'w').write('ORIG\n')
+        _orphan = ps.stash_outputs(_rd2, _EXP, tag='crash')
+        os.utime(_orphan, (0, 0))                     # 오래된 것으로 위장
+        chk('RC7-03g) stash 직후 results 는 비어 있다 (빈 자리 실행 전제)',
+            all(not os.path.exists(os.path.join(_rd2, f)) for f in _EXP))
+        _restored, _swept = ps.recover_stale_stashes(_rd2)
+        chk('RC7-03h) ★ 고아 stash 는 삭제가 아니라 복구된다 (마지막 성공 세대 보존)',
+            _restored == 4 and _swept == 1
+            and all(open(os.path.join(_rd2, f)).read() == 'ORIG\n' for f in _EXP))
+        # 더 새 세대가 이미 자리를 잡았으면 stash 쪽을 버린다
+        _orphan2 = ps.stash_outputs(_rd2, _EXP, tag='crash2')
+        for _f in _EXP:
+            open(os.path.join(_rd2, _f), 'w').write('NEWER\n')
+        os.utime(_orphan2, (0, 0))
+        _r2, _s2 = ps.recover_stale_stashes(_rd2)
+        chk('RC7-03i) ★ 더 새 세대가 있으면 stash 가 그것을 덮지 않는다',
+            _r2 == 0 and _s2 == 1
+            and open(os.path.join(_rd2, 'full_metrics.json')).read() == 'NEWER\n')
+
+        # 네 경로 배선 확인 (구현만 하고 배선 안 한 전례가 있다)
         _apy3 = open(os.path.join(os.path.dirname(os.path.abspath(webapp.__file__)),
                                   'app.py'), encoding='utf-8').read()
-        chk('RC6-05b) ★ contact 네 경로 전부 fresh 배선 (batch·bimodal·standard·archive)',
-            _apy3.count('fresh=True') >= 4)
-        # batch 호출부가 실제로 그것을 쓰는지 (구현만 하고 배선 안 한 전례가 있다)
-        _apy = open(os.path.join(os.path.dirname(os.path.abspath(webapp.__file__)),
-                                 'app.py'), encoding='utf-8').read()
-        _i = _apy.index("'Contact Analysis (batch)'")
-        chk('RR3-04d) ★ batch 호출부가 실제로 fresh=True 를 넘긴다 (배선 확인)',
-            'fresh=True' in _apy[_i:_i + 1200])
+        chk('RC7-03j) ★ contact 네 경로 전부 causal 배선 (batch·bimodal·standard·archive)',
+            _apy3.count('causal=True') >= 4)
+        for _tag, _win in (("'Contact Analysis (batch)'", 1400),
+                           ("'Contact Analysis (archive)'", 900),
+                           ("'Bimodal Contact Analysis'", 900)):
+            _i = _apy3.index(_tag)
+            chk(f'RC7-03k) ★ {_tag} 호출부가 실제로 causal=True 를 넘긴다',
+                'causal=True' in _apy3[_i:_i + _win])
+        chk('RC7-03l) ★ contact 경로에 fresh=True 가 남아 있지 않다 (약한 계약 잔존 금지)',
+            _apy3.count('fresh=True') == 0)
+        # ★ RC7-07: main 두 경로도 contact 실패 시 network·StageE 를 건너뛰는가
+        for _tag in ("'Bimodal Contact Analysis'", "'Contact Analysis'"):
+            _i = _apy3.index(_tag)
+            _seg = _apy3[_i:_i + 1400]
+            chk(f'RC7-07) ★ {_tag} 실패 시 즉시 중단한다 (batch·archive 와 같은 계약)',
+                'if not _st.ok:' in _seg and _seg.index('if not _st.ok:')
+                < (_seg.index('_network_and_stage_e') if '_network_and_stage_e' in _seg else 10 ** 9))
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 
