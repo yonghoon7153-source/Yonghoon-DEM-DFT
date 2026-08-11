@@ -68,7 +68,10 @@ FRAGMENTS: Dict[str, Dict[str, Any]] = {
     "sdcp_neutral": {
         "path": STRUCT / "sdcp_v7c_neutral.xyz",
         "counts": {"C": 11, "H": 16, "O": 6, "S": 2},
-        "sha256": None,  # gabia 회수 후 고정
+        # 2026-08-11 gabia 회수본으로 고정. 원본:
+        #   /data/work/runs/sdcp_linio2_binding/inputs/sdcp_v7c/sdcp_v7c_neutral.xyz (ORCA r2SCAN-3c)
+        # ⚠ 파일이 아직 repo 에 커밋되지 않았다 — 등재 전까지 inputs 가 MISSING 을 보고한다.
+        "sha256": "fc5ed6da243b33923aecd7c3c5781f98366da6dba48c222ca76b9f4ba67039e0",
         "electrons": "closed-shell singlet (charge 0)",
         "cap": (),
         "anchor_tag": {"sulfonate_down": "SO3", "thiophene_down": "thiophene_S"},
@@ -77,7 +80,8 @@ FRAGMENTS: Dict[str, Dict[str, Any]] = {
     "sdcp_doped": {
         "path": STRUCT / "sdcp_v7c_doped.xyz",
         "counts": {"C": 11, "H": 15, "O": 6, "S": 2},
-        "sha256": None,
+        # 원본: .../inputs/sdcp_v7c/sdcp_v7c_doped.xyz (ORCA r2SCAN-3c, doublet)
+        "sha256": "4d0ca2ac299fb14d231bb900f1228efe43ed7fbe28d5044607d172771a847620",
         "electrons": "OPEN-SHELL DOUBLET, net charge 0 (acidic H removed homolytically)",
         "cap": (),
         "anchor_tag": {"sulfonate_down": "SO3", "thiophene_down": "thiophene_S"},
@@ -561,14 +565,20 @@ def extraction_check(cx: Atoms, clean: Atoms, nslab: int) -> Dict[str, Any]:
     Dc = mic_matrix(clean.positions[:nslab], clean.positions[:nslab], cell)
     Dx = mic_matrix(cx.positions[:nslab], cx.positions[:nslab], cell)
     oidx = [j for j in range(nslab) if sym[j] == "O"]
-    lost = []
+    lost, hop = [], []
     for i in surf:
         if sym[i] not in CATIONS:
             continue
-        had = {j for j in oidx if Dc[i, j] < rc}
-        keep = {j for j in had if Dx[i, j] < rc}
-        if len(had) - len(keep) >= GATE["extract_coord_loss_n"]:
-            lost.append((i, sym[i], len(had), len(keep)))
+        # ⚠ Round-2 지적 (채택): 이전 이웃의 **identity** 상실로 세면, 면내로 hop 하면서
+        #   새 O 를 같은 수만큼 얻은 Li 도 '뽑혔다'가 된다. **배위수(count)** 차로 센다.
+        cn_before = sum(1 for j in oidx if Dc[i, j] < rc)
+        cn_after = sum(1 for j in oidx if Dx[i, j] < rc)
+        same_id = len({j for j in oidx if Dc[i, j] < rc} & {j for j in oidx if Dx[i, j] < rc})
+        if cn_before - cn_after >= GATE["extract_coord_loss_n"]:
+            lost.append((i, sym[i], cn_before, cn_after))
+        elif cn_before - same_id >= GATE["extract_coord_loss_n"]:
+            # 이웃이 바뀌었지만 배위수는 유지 — 면내 hop / 재배열이지 추출이 아니다
+            hop.append((i, sym[i], cn_before, cn_after, same_id))
 
     # 분자 접촉 — **보조 증거만**. 단독으로는 절대 탈락시키지 않는다.
     Dm = mic_matrix(cx.positions[:nslab], cx.positions[nslab:], cell)
@@ -582,9 +592,13 @@ def extraction_check(cx: Atoms, clean: Atoms, nslab: int) -> Dict[str, Any]:
 
     moved_ids = {i for i, _, _ in moved}
     lost_ids = {i for i, _, _, _ in lost}
-    extracted = sorted(moved_ids & lost_ids)          # 움직였**고** 배위를 잃었다
+    # 추출은 **바깥으로** 나가는 것이다 — 면내 이동은 hop 이지 추출이 아니다.
+    outward = {i for i in surf if dv[i][2] > 0.0}
+    extracted = sorted(moved_ids & lost_ids & outward)
     if extracted:
         verdict = "EXTRACTION_CANDIDATE"
+    elif hop or (moved_ids & lost_ids):
+        verdict = "LATERAL_HOP_OR_RECONSTRUCTION"      # 배위수 유지 · 또는 안쪽으로 이동
     elif moved or lost:
         verdict = "RECONSTRUCTION_REVIEW"
     else:
@@ -594,10 +608,11 @@ def extraction_check(cx: Atoms, clean: Atoms, nslab: int) -> Dict[str, Any]:
         "max_surface_disp_A": round(float(max([disp[i] for i in surf], default=0.0)), 3),
         "z_top_shift_A": round(float(cx.positions[:nslab, 2].max() - zc.max()), 3),
         "moved_surface_atoms": moved,
-        "lost_substrate_O_neighbors": lost,
-        "cation_near_molecule": contact,     # 증거일 뿐 — 판정에 단독으로 못 쓴다
+        "lost_substrate_O_coordination": lost,   # (idx, el, CN_before, CN_after)
+        "neighbor_swap_no_CN_loss": hop,         # 면내 hop — 추출로 세지 않는다
+        "cation_near_molecule": contact,         # 증거일 뿐 — 판정에 단독으로 못 쓴다
         "extracted_indices": extracted,
-        "flag": bool(extracted),             # 탈락은 EXTRACTION_CANDIDATE 뿐
+        "flag": bool(extracted),                 # 탈락은 EXTRACTION_CANDIDATE 뿐
     }
 
 
@@ -911,11 +926,17 @@ def cluster_basins(rows: Sequence[Dict[str, Any]], struct_dir: Optional[Path] = 
         placed = False
         for cl in clusters:
             head = cl[0]
-            if same_basin(head, r):
-                cl.append(r); placed = True; break
+            # ⚠ Round-2 지적 (채택): 초판은 `서술자 OR RMSD` 였다 — RMSD 경로가 registry 검사를
+            #   통째로 우회해서 Li 접촉과 Ni 접촉이 합쳐질 수 있었다. **AND** 로 조인다.
+            if head.get("nearest_cation") != r.get("nearest_cation"):
+                continue                                  # 최종 registry 가 다르면 같은 basin 이 아니다
+            if not same_basin(head, r):
+                continue
             A, B = load(head), load(r)
-            if A is not None and B is not None and molecule_rmsd_A(A, B, nslab) <= BASIN_TOL["rmsd_A"]:
-                cl.append(r); placed = True; break
+            if A is not None and B is not None:
+                if molecule_rmsd_A(A, B, nslab) > BASIN_TOL["rmsd_A"]:
+                    continue                              # 서술자는 같아도 구조가 멀면 다른 basin
+            cl.append(r); placed = True; break
         if not placed:
             clusters.append([r])
     return clusters
@@ -1038,12 +1059,25 @@ def cmd_gate(a) -> int:
     return 0
 
 
+def gate_version() -> str:
+    """게이트 규약의 지문. **계산 지문과 분리한다.**
+
+    이전에는 fingerprint 안에 GATE 를 넣었는데, 그러면 임계를 한 글자만 고쳐도 GPU 이완을
+    전부 다시 돌아야 했다(2026-08-11 실제로 두 번 그랬다). 게이트는 저장된 이완 구조에
+    **사후 적용**할 수 있는 후처리다 — 재계산 대상이 아니다.
+    계산을 바꾸는 것(model·task·gap·fmax·steps·freeze·슬랩)만 fingerprint 에 넣는다.
+    """
+    return hashlib.sha256(json.dumps({"gates": GATE, "bonds": BOND_LIMITS,
+                                      "basin": BASIN_TOL}, sort_keys=True).encode()).hexdigest()[:12]
+
+
 def _protocol(a, stage: str) -> Dict[str, Any]:
     p = {"tool": "site_screen.py", "stage": stage, "model": a.model, "task": a.task,
          "gap_A": a.gap, "fmax": a.fmax, "steps": a.steps,
-         "freeze_frac": getattr(a, "freeze", None), "gates": GATE,
+         "freeze_frac": getattr(a, "freeze", None),
          "slab_sha256": SLAB["sha256"]}
     p["fingerprint"] = hashlib.sha256(json.dumps(p, sort_keys=True).encode()).hexdigest()[:16]
+    p["gate_version"] = gate_version()      # 기록만 — 재개 판정에는 안 쓴다
     return p
 
 
@@ -1264,9 +1298,13 @@ def cmd_verdict(a) -> int:
             rows += payload if isinstance(payload, list) else [payload]
     if not rows:
         sys.exit("⛔ 입력 행이 없다")
+    # ⚠ Round-2 지적 (채택): 경고만 하고 계속 계산하면 서로 다른 프로토콜이 한 표에 섞인다.
+    #   pair key 에도 freeze·지문이 없어서 같은 (site, dir, roll) 행이 덮어써졌다. 이제 막는다.
     fz = sorted({r.get("freeze_frac") for r in rows if r.get("freeze_frac") is not None})
-    if len(fz) > 1:
-        print(f"⚠ freeze_frac 이 섞여 있다 {fz} — 프로토콜이 다르면 같은 표에 놓지 않는다.\n")
+    fp = sorted({r.get("fingerprint") for r in rows if r.get("fingerprint")})
+    if len(fz) > 1 or len(fp) > 1:
+        sys.exit(f"⛔ 프로토콜이 섞였다 — freeze {fz} · 지문 {fp}\n"
+                 "   서로 다른 구속·게이트로 낸 값을 한 표에 놓을 수 없다. 하나씩 따로 돌릴 것.")
     scored = [r for r in rows if r.get("ranking_eligible") and r.get("E_pose_eV") is not None]
     frags = sorted({r["fragment"] for r in rows})
     print("자리 선호 판정 (같은 조각 안에서만 유효)\n")
@@ -1297,11 +1335,14 @@ def cmd_verdict(a) -> int:
         # 같은 조각 안 순위에는 무해하지만(E_mol 이 상수), **부호를 '결합 안 됨'으로 읽으면 안 된다.**
         lo = min(r["E_pose_eV"] for r in fs)
         if lo > 0:
-            print(f"   ⚠ E_pose 최저가 양수({lo:+.3f}) — 이건 '결합 안 됨'이 아니라 **분자 변형 몫이"
-                  f" 상호작용보다 크다**는 뜻이다.")
-            print(f"     E_pose = E_complex − E_slab − E_mol(기체상 ORCA 기하) 이라 이완 중 분자가 휜"
-                  f" 대가가 함께 실린다.")
-            print(f"     같은 조각 안 순위·대조쌍 Δ 에는 상쇄돼 무해하다. **부호는 인용하지 말 것.**")
+            # ★ 2026-08-11 정정 (Round-2 지적) — 앞서 "변형 몫은 상쇄돼 무해하다"고 적었는데 틀렸다.
+            #   상쇄되는 건 상수인 E_mol·E_slab 기준뿐이고, **변형 에너지는 자세마다 달라
+            #   E_complex 안에 남는다.** 그리고 그건 오염이 아니라 흡착 안정성의 일부다.
+            print(f"   ⚠ E_pose 최저가 양수({lo:+.3f}) — 기준상태(고정 슬랩 + 기체상 ORCA 기하 분자)")
+            print(f"     대비 불리하다는 뜻이지 **국소 상호작용이 없다는 뜻이 아니다.**")
+            print(f"     E_ads = E_interaction + E_deform(분자) + E_deform(표면) 이고, 변형 몫은"
+                  f" **자세마다 달라 상쇄되지 않는다** — 순위의 일부다.")
+            print(f"     분해하려면 이완된 조각·슬랩을 각각 따로 재야 한다(현재 안 함).")
         print(f"   {'자리':16s} {'n':>4s} {'최저':>9s} {'중앙값':>9s} {'폭':>8s}")
         for s in sorted(by_site, key=lambda s: min(x["E_pose_eV"] for x in by_site[s])):
             E = sorted(x["E_pose_eV"] for x in by_site[s])
@@ -1341,17 +1382,34 @@ def cmd_verdict(a) -> int:
                 print("        자리 선호가 아니라 '어느 쪽이 더 많이 검열됐나'를 재고 있을 수 있다.")
                 print("        검열 사유가 물리적으로 정당해도(예: Li 추출) **비교의 근거는 되지 못한다** —")
                 print("        같은 자세로 짝지은 대조쌍으로만 판정할 것.")
-        # 대조쌍
-        pairs = []
-        idx = {(r["site"], r["down_dir"], r["roll_deg"]): r for r in fs}
-        for (s, d, ro), r in idx.items():
+        # 대조쌍 — 시작 자리로 짝짓되, **최종 registry 로 자격을 검사**한다.
+        #   Li 시작이 Ni 접촉으로 끝나거나(이주), 두 끝점이 같은 자리로 합쳐지면(붕괴)
+        #   그 쌍의 ΔE 는 '자리 차'가 아니다. 내지 않는다. (Round-2 지적, 채택)
+        pairs, bad_pairs = [], []
+        idx = {(r["site"], r["down_dir"], r["roll_deg"], r.get("freeze_frac"),
+                r.get("fingerprint")): r for r in fs}
+        for key, r in idx.items():
+            s, d, ro, ff, fp = key
             if s != "Li_top":
                 continue
-            q = idx.get(("Ni_top", d, ro))
-            if q:
-                pairs.append((d, ro, r["E_pose_eV"], q["E_pose_eV"], q["E_pose_eV"] - r["E_pose_eV"]))
+            q = idx.get(("Ni_top", d, ro, ff, fp))
+            if not q:
+                continue
+            lc, nc = r.get("nearest_cation"), q.get("nearest_cation")
+            if lc is None or nc is None:
+                bad_pairs.append((d, ro, "NO_CATION_CONTACT", lc, nc)); continue
+            if lc == nc:
+                bad_pairs.append((d, ro, "PAIR_SITE_COLLAPSED", lc, nc)); continue
+            if lc != "Li" or nc != "Ni":
+                bad_pairs.append((d, ro, "PAIR_MIGRATED", lc, nc)); continue
+            pairs.append((d, ro, r["E_pose_eV"], q["E_pose_eV"], q["E_pose_eV"] - r["E_pose_eV"]))
+        if bad_pairs:
+            print(f"   ⛔ 자격 미달 대조쌍 {len(bad_pairs)}개 — ΔE 를 내지 않는다:")
+            for d, ro, why, lc, nc in bad_pairs[:8]:
+                print(f"      {why:22s} {d}/r{int(ro):03d} · Li시작→{lc} · Ni시작→{nc}")
         if pairs:
             dl = [p[4] for p in pairs]
+            print(f"   자격 있는 대조쌍 {len(pairs)}개 (Li 시작→Li 접촉 · Ni 시작→Ni 접촉 유지)")
             print(f"   Li_top↔Ni_top 짝지은 대조쌍 {len(pairs)}개 · "
                   f"ΔE(Ni−Li) 중앙값 {np.median(dl):+.3f} eV · 범위 {min(dl):+.3f}…{max(dl):+.3f}")
             floor = max(GATE["decision_floor_eV"], float(np.std(dl)))
@@ -1394,6 +1452,9 @@ def cmd_crosscheck(a) -> int:
     """Codex ptfe_linio2_uma 레코드와 자세별 기하 대조 (GPU 불필요, 순수 기하)."""
     slab = load_slab()
     d = Path(a.codex)
+    clean = read(a.clean) if getattr(a, "clean", None) else None
+    if clean is None:
+        print("⚠ --clean 없음 → 추출 검사를 못 한다. 이 대조는 **기하 게이트 한정**이다.")
     recs = sorted(d.glob("**/*.json"))
     if not recs:
         sys.exit(f"⛔ {d} 에 json 레코드가 없다")
@@ -1428,7 +1489,7 @@ def cmd_crosscheck(a) -> int:
         mol_ref, _ = load_fragment(frag)
         cx = read(sfile)
         cx.set_cell(slab.cell.array); cx.set_pbc(True)
-        g = apply_gates(cx, len(slab), mol_ref, frag, relaxed=relaxed_flag)
+        g = apply_gates(cx, len(slab), mol_ref, frag, clean=clean, relaxed=relaxed_flag)
         theirs = bool(r.get("ranking_eligible"))
         if theirs == g["ranking_eligible"]:
             n_ok += 1
@@ -1559,26 +1620,41 @@ def cmd_selftest(a) -> int:
               f"· 접촉증거={len(g.get('extraction',{}).get('cation_near_molecule',[]))}건")
 
     #   변위 경계 — Li 0.80 Å 아래는 정상, 위이면서 배위를 잃어야 추출
-    for d, want_norm in ((0.60, True), (1.20, False)):
+    #   변위 경계는 **정확한 판정**으로 본다 (Round-2: 'NORMAL 아님'은 검사가 아니다)
+    for d, want in ((0.79, "NORMAL_COORDINATION"), (0.81, None), (1.20, "EXTRACTION_CANDIDATE")):
         c = make_pose(slab, mol, anc["Li_top"]["xyz"], down, 0, 3.2)
         c.positions[li, 2] += d
-        g = apply_gates(c, n, mol, "ptfe_c10", clean=slab, relaxed=True, bonds=bonds)
-        v = g["extraction"]["verdict"]
-        good = (v == "NORMAL_COORDINATION") if want_norm else (v != "NORMAL_COORDINATION")
+        v = apply_gates(c, n, mol, "ptfe_c10", clean=slab, relaxed=True,
+                        bonds=bonds)["extraction"]["verdict"]
+        good = (v == want) if want else (v != "NORMAL_COORDINATION")
         ok &= good
-        print(f"   {'✔' if good else '⛔'} 표면 Li +{d:.2f} Å → {v}"
-              f" (기대 {'NORMAL' if want_norm else 'NORMAL 아님'})")
+        print(f"   {'✔' if good else '⛔'} 표면 Li +{d:.2f} Å → {v} (기대 {want or 'NORMAL 아님'})")
 
-    # 9) 고정 원자 drift 검사가 **실제 구속 인덱스**를 보는가 (연속 가정은 틀렸다)
+    #   면내 hop 은 추출이 아니다 — 배위수를 유지하며 옆으로 움직인 Li
+    c = make_pose(slab, mol, anc["Li_top"]["xyz"], down, 0, 3.2)
+    c.positions[li] += slab.cell.array[1] / 4.0        # b/4 = 등가 자리로 병진
+    v = apply_gates(c, n, mol, "ptfe_c10", clean=slab, relaxed=True,
+                    bonds=bonds)["extraction"]["verdict"]
+    good = v != "EXTRACTION_CANDIDATE"
+    ok &= good
+    print(f"   {'✔' if good else '⛔'} 면내 hop (Li 를 b/4 병진) → {v} (추출이면 안 된다)")
+
+    # 9) 고정 원자 drift 검사가 **실제 구속 인덱스**를 보는가 — 진짜 assert 로
     cons, nfix, _z = _freeze_mask(n, slab, 0.85)
     fixed = np.asarray(cons.index, dtype=int)
-    contiguous = np.array_equal(np.sort(fixed), np.arange(fixed.size))
-    ok &= not contiguous or True     # 연속이든 아니든 아래 주장이 핵심
     free_in_prefix = sorted(set(range(nfix)) - set(fixed.tolist()))
-    print(f"   {'✔' if free_in_prefix else '·'} freeze 0.85 고정 인덱스는 "
-          f"{'비연속' if free_in_prefix else '연속'} — 앞 {nfix}개 중 자유 원자 {len(free_in_prefix)}개")
-    if free_in_prefix:
-        print("     └ positions[:nfix] 로 drift 를 재면 전부 오탈락한다 (그래서 cons.index 를 쓴다)")
+    ok &= bool(free_in_prefix)          # 이 슬랩에서 비연속이 아니면 회귀시험 전제가 깨진 것
+    print(f"   {'✔' if free_in_prefix else '⛔'} freeze 0.85 고정 인덱스 비연속 — "
+          f"앞 {nfix}개 중 자유 원자 {len(free_in_prefix)}개")
+    #   자유 원자만 흔들었을 때: cons.index 로 재면 0, positions[:nfix] 로 재면 0 이 아니어야 한다
+    probe = slab.copy()
+    probe.positions[free_in_prefix[0], 2] += 0.5
+    d_right = float(np.abs(probe.positions[fixed] - slab.positions[fixed]).max())
+    d_wrong = float(np.abs(probe.positions[:nfix] - slab.positions[:nfix]).max())
+    good = d_right < GATE["frozen_drift_A"] <= d_wrong
+    ok &= good
+    print(f"   {'✔' if good else '⛔'}   └ 자유 원자 하나를 0.5 Å 흔들면 "
+          f"cons.index 기준 drift {d_right:.4f} · positions[:nfix] 기준 {d_wrong:.4f}")
 
     # 9) 거울상 방지 — 반평행 정렬이 카이랄성을 뒤집지 않는지
     try:
@@ -1591,6 +1667,112 @@ def cmd_selftest(a) -> int:
 
     print(f"\n{'✔ 전부 통과' if ok else '⛔ 실패 있음'}")
     return 0 if ok else 1
+
+
+def cmd_regate(a) -> int:
+    """저장된 이완 구조에 **게이트만 다시 적용**한다 — GPU 재계산 없이.
+
+    게이트는 후처리다. 임계를 고쳤다고 몇 시간짜리 이완을 다시 돌 이유가 없다.
+    에너지(E_pose)는 그대로 두고 판정 필드만 갈아끼운다.
+    """
+    slab = load_slab()
+    nslab = a.nslab
+    d = Path(a.dir)
+    jsons = [p for p in sorted(d.glob("*.json")) if not p.name.startswith("_")]
+    if not jsons:
+        sys.exit(f"⛔ {d} 에 자세 JSON 이 없다")
+    clean_path = a.clean or (d / "_clean_slab.vasp")
+    clean = read(clean_path) if Path(clean_path).is_file() else None
+    if clean is None:
+        print(f"⚠ 깨끗한 슬랩이 없다 ({clean_path}) — 추출 검사는 '미실시'로 기록된다")
+    gv = gate_version()
+    n_chg, n_same, n_nostruct = 0, 0, 0
+    for p in jsons:
+        r = json.loads(p.read_text())
+        frag = r.get("fragment")
+        xyz = d / f"{r.get('label')}.xyz"
+        if not frag or not xyz.is_file():
+            n_nostruct += 1
+            continue
+        mol, info = load_fragment(frag)
+        if mol is None:
+            n_nostruct += 1
+            continue
+        cx = read(xyz)
+        cx.set_cell(slab.cell.array); cx.set_pbc(True)
+        g = apply_gates(cx, nslab, mol, frag, clean=clean, relaxed=True)
+        was = bool(r.get("ranking_eligible"))
+        r.update({k: v for k, v in g.items() if k != "bond"})
+        r["bond_changes"] = g["bond"]["n_changes"]
+        r["gate_version"] = gv
+        # 계산 단계에서 붙은 판정(수렴·고정드리프트)은 게이트가 지우면 안 된다
+        for extra, cond in (("NOT_CONVERGED", r.get("converged") is False),
+                            ("FROZEN_DRIFT", (r.get("frozen_drift_A") or 0) > GATE["frozen_drift_A"])):
+            if cond and not any(x.startswith(extra) for x in r["gate_reasons"]):
+                r["gate_reasons"].append(extra); r["ranking_eligible"] = False
+        p.write_text(json.dumps(r, indent=1, ensure_ascii=False))
+        n_chg += (was != bool(r["ranking_eligible"]))
+        n_same += (was == bool(r["ranking_eligible"]))
+    print(f"{d.name}: {len(jsons)}개 · 판정 바뀜 {n_chg} · 그대로 {n_same} · 구조 없음 {n_nostruct}")
+    print(f"   게이트 버전 {gv}")
+    return 0
+
+
+def cmd_bundle(a) -> int:
+    """실행 결과를 **독립 재감사 가능한 묶음**으로 내보낸다.
+
+    Round-2 지적: 회답에 적은 수치를 남이 검증할 machine-readable 근거가 repo 에 없었다.
+    manifest 에 commit·모델/task·프로토콜 지문·파일별 sha256 을 전부 박는다.
+    """
+    import subprocess
+    import tarfile
+    run = Path(a.run)
+    out = Path(a.out)
+    if not run.is_dir():
+        sys.exit(f"⛔ {run} 이 없다")
+    try:
+        commit = subprocess.run(["git", "-C", str(REPO), "rev-parse", "HEAD"],
+                                capture_output=True, text=True).stdout.strip()
+        dirty = bool(subprocess.run(["git", "-C", str(REPO), "status", "--porcelain"],
+                                    capture_output=True, text=True).stdout.strip())
+    except FileNotFoundError:
+        commit, dirty = "unknown", True
+
+    files, manifest = [], {
+        "tool": "site_screen.py", "repo_commit": commit, "repo_dirty": dirty,
+        "run_dir": str(run), "slab": {k: str(v) for k, v in SLAB.items()},
+        "fragments": {}, "files": {},
+    }
+    for name, spec in FRAGMENTS.items():
+        p: Path = spec["path"]
+        manifest["fragments"][name] = {
+            "path": str(p), "declared_sha256": spec["sha256"],
+            "actual_sha256": sha256(p) if p.is_file() else None,
+            "present": p.is_file(), "electrons": spec["electrons"],
+        }
+    for pat in ("**/*.json", "**/*.xyz", "**/*.vasp", "**/*.txt", "**/*.log", "**/*.csv"):
+        for f in run.glob(pat):
+            if f.is_file() and f.stat().st_size < a.max_mb * (1 << 20):
+                files.append(f)
+                manifest["files"][str(f.relative_to(run))] = {
+                    "sha256": sha256(f), "bytes": f.stat().st_size}
+    mpath = run / "BUNDLE_MANIFEST.json"
+    mpath.write_text(json.dumps(manifest, indent=1, ensure_ascii=False))
+    with tarfile.open(out, "w:gz") as tf:
+        tf.add(mpath, arcname="BUNDLE_MANIFEST.json")
+        for f in files:
+            tf.add(f, arcname=str(f.relative_to(run)))
+    mb = out.stat().st_size / (1 << 20)
+    print(f"→ {out}  ({len(files)}개 파일 · {mb:.1f} MB)")
+    print(f"   commit {commit[:12]}{' ⚠ dirty' if dirty else ''}")
+    miss = [k for k, v in manifest["fragments"].items() if not v["present"]]
+    bad = [k for k, v in manifest["fragments"].items()
+           if v["present"] and v["declared_sha256"] and v["declared_sha256"] != v["actual_sha256"]]
+    if miss:
+        print(f"   ⛔ 조각 파일 없음: {miss} — 이 묶음만으로는 재현이 안 된다")
+    if bad:
+        print(f"   ⛔ sha 불일치: {bad}")
+    return 0 if not (miss or bad) else 2
 
 
 def cmd_bond_limits(a) -> int:
@@ -1665,8 +1847,20 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("verdict", help="자리 선호 판정표")
     p.add_argument("rows", nargs="+", help="atlas_rows.json 또는 점수가 붙은 rows json")
 
-    p = sub.add_parser("crosscheck", help="Codex 레코드와 게이트 대조")
+    p = sub.add_parser("crosscheck", help="Codex 레코드와 **기하 게이트만** 대조 (전체 프로토콜 대조 아님)")
     p.add_argument("--codex", required=True)
+    p.add_argument("--clean", default=None,
+                   help="깨끗한 슬랩 — 없으면 추출 검사를 못 하므로 대조 범위가 좁아진다")
+
+    p = sub.add_parser("regate", help="저장된 이완 구조에 게이트만 재적용 (GPU 재계산 없음)")
+    p.add_argument("dir", help="relax_f*.* 디렉터리")
+    p.add_argument("--nslab", type=int, default=192)
+    p.add_argument("--clean", default=None, help="기본: <dir>/_clean_slab.vasp")
+
+    p = sub.add_parser("bundle", help="독립 재감사용 실행 묶음 내보내기")
+    p.add_argument("--run", required=True)
+    p.add_argument("--out", required=True, help="예: /tmp/site_screen_bundle.tar.gz")
+    p.add_argument("--max-mb", type=float, default=20.0)
     return ap
 
 
@@ -1676,6 +1870,7 @@ def main() -> int:
         "inputs": cmd_inputs, "sites": cmd_sites, "atlas": cmd_atlas,
         "gate": cmd_gate, "verdict": cmd_verdict, "crosscheck": cmd_crosscheck,
         "bond-limits": cmd_bond_limits, "selftest": cmd_selftest, "score": cmd_score,
+        "bundle": cmd_bundle, "regate": cmd_regate,
     }[a.cmd](a)
 
 

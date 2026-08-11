@@ -1,3 +1,23 @@
 # journal 은 append-only JSONL — 양쪽에서 줄이 늘면 union 병합이 정답 (2026-08-05)
 #   로컬 webapp 로그와 원격 세션 로그가 같은 파일 끝에 쌓여 충돌하던 것 방지.
 webapp/journal.jsonl merge=union
+
+# 구조·데이터 파일은 **LF 고정** (2026-08-11 Codex 교차검증 Round 2)
+#   Windows checkout 에서 core.autocrlf=true 가 .vasp/.xyz 를 CRLF 로 바꾸면 working-tree
+#   바이트가 달라져 site_screen.py 의 sha256 hard-check 가 실패한다.
+#   실제로 "원격 정본 hash 가 틀렸다"는 오보가 여기서 나왔다 (raw blob 은 멀쩡했다).
+*.vasp   text eol=lf
+*.xyz    text eol=lf
+*.cube   text eol=lf
+*.poscar text eol=lf
+*.UPF    text eol=lf
+
+# VESTA 는 반대다 — CLAUDE.md 규약상 ASCII + **CRLF** 여야 IMPORT_DENSITY 가 안 깨진다.
+*.vesta  text eol=crlf
+
+# 바이너리는 손대지 않는다
+*.pptx   binary
+*.png    binary
+*.pdf    binary
+*.gz     binary
+*.opju   binary

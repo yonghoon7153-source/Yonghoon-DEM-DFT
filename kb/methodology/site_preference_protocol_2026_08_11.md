@@ -272,7 +272,8 @@ azimuth 를 손으로 고르지 않는다. **이미지 게이트가 자동으로
 | DETACHED | 분자–슬랩 최단 > 4.00 Å | — | 탈락 | 흡착이 아니다 |
 | REACTIVE_CONTACT | 원소쌍 최단 < **0.80 × Σr_cov** | 탈락 | 탈락 | 융합급만 |
 | short_contact | 0.80–**0.92 × Σr_cov** | 태그 | 태그 | 짧은 배위 — DFT 확인 대상 |
-| **EXTRACTION** | 표면 변위 > 0.50 Å 또는 슬랩 양이온이 분자 O/F/S 에 < 2.20 Å | — | 탈락(격리) | **freeze 0.6 의 −1.465 eV** |
+| **EXTRACTION_CANDIDATE** | 변위(Li>0.80 / Ni,O>0.50 Å) **AND** 기판 O **배위수** 2 이상 감소 **AND** 바깥쪽(+z) 이동 | — | 탈락(격리) | **freeze 0.6 의 −1.465 eV** |
+| LATERAL_HOP_OR_RECONSTRUCTION | 크게 움직였으나 배위수 유지 또는 면내 이동 | — | 경고 태그 | 정상 표면 이완을 안 자르려고 |
 
 ### 6.1 ★ 거리 게이트 재교정 (2026-08-11, 데이터가 반증했다)
 
@@ -382,7 +383,8 @@ python3 tools/sdcp/site_screen.py crosscheck --codex <codex_run_dir>
 
 Codex 쪽이 갖고 있고 우리가 참고해야 할 것:
 - 자세별 원자적 JSON + 프로토콜 지문 기반 재개 (우리도 같은 방식 채택)
-- basin 클러스터링(주기 RMSD ≤ 0.75 Å) — 우리는 아직 없음. **다음 판에 붙일 것**
+- ~~basin 클러스터링(주기 RMSD ≤ 0.75 Å) — 아직 없음~~ → **이식 완료** (b/4 병진 검증, §5).
+  단 병합 조건은 Round-2 지적대로 `최종 registry AND 서술자 AND RMSD` 로 조였다(초판은 OR 였다).
 - VASP 단계 구현(`vasp_stage.py`) — 5단계에서 그대로 쓸 수 있는지 검토
 
 ⚠ Codex 패키지 `tools/sdcp/ptfe_linio2_uma/` 는 `origin/Codex/friendly-meitner-lldvar` 에만 있고
