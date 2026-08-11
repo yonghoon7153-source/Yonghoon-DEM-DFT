@@ -1,0 +1,77 @@
+{
+  "property": "nd_gap_reference_mp",
+  "purpose": "frozen-4f 재계산의 **검증 표적**. 우리 값이 이 표를 재현해야 설정이 맞다. 재현되면 우리 계산으로 대체하고, 안 되면 원인을 찾을 때까지 MP 를 인용한다.",
+  "warning": "⚠ MP 는 VASP PAW `Nd_3`(frozen-4f, 11 valence) + PBE(+U) 다. 우리 QE 계산과 **범함수·PP 계열이 달라 완전 일치는 기대하지 않는다** — 판정 기준은 '같은 자릿수·같은 순위' 다. ⛔ 이 값을 우리 db 갭 표에 섞어 넣지 말 것 (문헌·db 분리 규율).",
+  "phases": {
+    "Nd2O3": {
+      "material_id": "mp-2763",
+      "spacegroup": "P-3m1",
+      "band_gap_eV": 3.8117999999999994,
+      "nsites": 5,
+      "e_above_hull": 0.005659960499999173,
+      "theoretical": false,
+      "pinned_to_our_structure": true,
+      "mp_most_stable": {
+        "material_id": "mp-1045",
+        "spacegroup": "Ia-3",
+        "band_gap_eV": 3.708,
+        "nsites": 40,
+        "e_above_hull": 0.0
+      }
+    },
+    "Nd2S3": {
+      "material_id": "mp-438",
+      "spacegroup": "Pnma",
+      "band_gap_eV": 0.7604000000000002,
+      "nsites": 20,
+      "e_above_hull": 0.0,
+      "theoretical": false,
+      "pinned_to_our_structure": true
+    },
+    "LiNdO2": {
+      "material_id": "mp-1222355",
+      "spacegroup": "P2_1/c",
+      "band_gap_eV": 4.212199999999999,
+      "nsites": 16,
+      "e_above_hull": 0.008336155312497873,
+      "theoretical": true,
+      "pinned_to_our_structure": true
+    },
+    "NdPO4": {
+      "material_id": "mp-3584",
+      "spacegroup": "P2_1/c",
+      "band_gap_eV": 5.678800000000001,
+      "nsites": 24,
+      "e_above_hull": 0.0,
+      "theoretical": false,
+      "pinned_to_our_structure": false
+    },
+    "NdOCl": {
+      "material_id": "mp-23058",
+      "spacegroup": "P4/nmm",
+      "band_gap_eV": 4.769299999999999,
+      "nsites": 6,
+      "e_above_hull": 0.055633395277777886,
+      "theoretical": false,
+      "pinned_to_our_structure": false
+    },
+    "NdCl3": {
+      "material_id": "mp-23183",
+      "spacegroup": "P6_3/m",
+      "band_gap_eV": 4.2998,
+      "nsites": 8,
+      "e_above_hull": 0.0,
+      "theoretical": false,
+      "pinned_to_our_structure": false
+    },
+    "NdS": {
+      "material_id": "mp-1748",
+      "spacegroup": "Fm-3m",
+      "band_gap_eV": 0.0,
+      "nsites": 2,
+      "e_above_hull": 0.0,
+      "theoretical": false,
+      "pinned_to_our_structure": false
+    }
+  }
+}

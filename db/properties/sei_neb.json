@@ -1,0 +1,72 @@
+{
+  "property": "sei_li_migration_barrier_neb",
+  "method": "QE CI-NEB (neb.x). 공공 매개 Li 홉, tot_charge=+1 (Li⁺ 공공, jellium). ecutwfc 60 / ecutrho 480 Ry — 갭 계산과 같은 사양.",
+  "warning": "⚠ jellium 보정은 유한 셀 근사다 — 절대값은 셀 수렴 확인 뒤 인용할 것. **상 사이 비교**가 이 값의 용도다. ⛔ BVSE 프록시 값과 같은 표에 놓지 말 것(단위는 같아도 다른 양이다).",
+  "results": {
+    "li2s": {
+      "tag": "li2s",
+      "status": "converged",
+      "n_path_steps": 18,
+      "Ea_forward_eV": 0.272161,
+      "Ea_backward_eV": 0.272161,
+      "num_of_images": 7,
+      "CI_scheme": "auto",
+      "tot_charge": "+1 (Li+ vacancy)",
+      "endpoints_symmetry_equivalent": true,
+      "li_orbits": {
+        "spacegroup": "Fm-3m",
+        "n_li_orbits": 1,
+        "wyckoffs": [
+          "c"
+        ]
+      },
+      "supercell": [
+        2,
+        2,
+        2
+      ],
+      "min_cell_A": 8.02,
+      "asymmetry_eV": 0.0,
+      "Ea_effective_eV": 0.272161,
+      "site_energy_diff_eV": null,
+      "symmetric": true,
+      "blocking_checks": [],
+      "citable": true
+    },
+    "li3p": {
+      "tag": "li3p",
+      "status": "converged",
+      "n_path_steps": 38,
+      "Ea_forward_eV": 0.0,
+      "Ea_backward_eV": -0.0,
+      "num_of_images": 7,
+      "CI_scheme": "auto",
+      "tot_charge": "+1 (Li+ vacancy)",
+      "endpoints_symmetry_equivalent": false,
+      "li_orbits": {
+        "spacegroup": "P6_3/mmc",
+        "n_li_orbits": 2,
+        "wyckoffs": [
+          "b",
+          "f"
+        ]
+      },
+      "supercell": [
+        2,
+        2,
+        2
+      ],
+      "min_cell_A": 8.44,
+      "asymmetry_eV": 0.0,
+      "Ea_effective_eV": 0.0,
+      "site_energy_diff_eV": 0.0,
+      "symmetric": null,
+      "blocking_checks": [],
+      "citable": true
+    },
+    "li3po4g": {
+      "tag": "li3po4g",
+      "status": "not_started"
+    }
+  }
+}
