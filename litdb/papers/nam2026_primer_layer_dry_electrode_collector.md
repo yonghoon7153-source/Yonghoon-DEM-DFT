@@ -825,7 +825,7 @@ Trevisanello 는 NCM(r) GB **방향**만 지지하고 크기는 지지하지 않
 | P-9 | **R_collector 크기 판정** (SI 로 가능해짐) | `docs/rint_reference_growthlaw_design.md` | ✅ 본 카드 §SI-4 — 우리 ASR_e 의 **2.3 %**, ASR_ion 의 **0.05 %** |
 | P-5 | `additives.py` 에 `surface_roughness_contribution` / `elastic_recovery` **훅 필드**(배수 미제시, §F1) | `scripts/additives.py` | 제안 |
 | P-6 | **MPM primer 순응 해석** — AM(140 GPa) 고정 scaffold + primer(E 50–150 MPa, 회복 61–93 %) 소성 → 접촉면적 예측 → 그들 1.00/1.54/1.72 와 대조 (**frame[4] 새 교차검증**) | `mpm3d_compaction.py` | ★ **가장 유망** |
-| P-7 | 우리 STEP3 σ_e 필드에서 **j_peak/j̄ vs 접촉면적** 을 뽑아 **A^(−0.5)** 성립 확인 | `voxel_conductivity.py` | ★ 즉시 가능 |
+| P-7 | 우리 STEP3 σ_e 필드에서 **j vs 접촉면적** 을 뽑아 **A^(−0.5)** 성립 확인 | `scripts/holm_exponent_from_field.py` | 🔶 **도구 완성 2026-08-11 (selftest 17/17)**, 실행만 남음 — `--payload <mpm_payload.json>` (WSL/V100).  ★ 설계 요점 = **크기 교란 통제**: log A = log cov + 2 log r 이라 순진한 회귀는 크기효과를 지수로 착각한다 → `partial_slope` (log j ~ log A + log r) 가 정본, naive 는 문헌 3-점 집계와 같은 형태라는 이유로만 병기. ⚠ payload 의 `je` 는 **평균** \|J_z\| 이지 peak 이 아니라 (Nam 은 peak) 결과는 **하한** |
 | P-8 | `cho2024_conflicting_roles_conductive_additive` 카드와 **상호 링크** (도전재 상충역할의 벌크판/계면판) | litdb | 제안 |
 
 ---
