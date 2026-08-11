@@ -182,9 +182,11 @@
       "status": "claimed_fixed",
       "owner": "claude",
       "opened_in": "docs/reviews/codex_rc6_verification_20260811.md",
-      "fixed_by": "PENDING",
-      "evidence": "webapp/test_pipeline_provenance.py",
-      "note": "run_stage(causal=True) — 실행 전에 계약 산출물을 stash 로 치워 빈 자리에서 실행 → 존재 자체가 인과 증거.  contact 네 경로(batch·bimodal·standard·archive) 전부 배선.  재현: metadata-only touch 가 fresh 는 통과(RC7-03a) / causal 은 실패(RC7-03b) + 옛 세대 복구(RC7-03c)."
+      "note": "run_stage(causal=True) — 실행 전에 계약 산출물을 stash 로 치워 빈 자리에서 실행 → 존재 자체가 인과 증거.  contact 네 경로(batch·bimodal·standard·archive) 전부 배선.  재현: metadata-only touch 가 fresh 는 통과(RC7-03a) / causal 은 실패(RC7-03b) + 옛 세대 복구(RC7-03c).",
+      "claimed_fixed_sha": "e2960f1f",
+      "evidence_tests": [
+        "webapp/test_pipeline_provenance.py::RC7-03a-l"
+      ]
     },
     {
       "id": "RC7-04",
@@ -222,9 +224,11 @@
       "status": "claimed_fixed",
       "owner": "claude",
       "opened_in": "docs/reviews/codex_rc6_verification_20260811.md",
-      "fixed_by": "PENDING",
-      "evidence": "webapp/test_pipeline_provenance.py",
-      "note": "RC7-03 작업 중 발견 (Codex 지적 아님).  batch 는 continue, archive 는 return 으로 contact 실패 시 멈추는데 main 의 bimodal·standard 두 호출부만 결과를 append 만 하고 그대로 진행했다 → causal 로 복구된 **옛** full_metrics 위에 새 network·Stage E 가 돌아 세대가 섞인다.  세 경로 계약을 동일하게 맞췄다."
+      "note": "RC7-03 작업 중 발견 (Codex 지적 아님).  batch 는 continue, archive 는 return 으로 contact 실패 시 멈추는데 main 의 bimodal·standard 두 호출부만 결과를 append 만 하고 그대로 진행했다 → causal 로 복구된 **옛** full_metrics 위에 새 network·Stage E 가 돌아 세대가 섞인다.  세 경로 계약을 동일하게 맞췄다.",
+      "claimed_fixed_sha": "e2960f1f",
+      "evidence_tests": [
+        "webapp/test_pipeline_provenance.py::RC7-07"
+      ]
     }
   ]
 }
