@@ -176,7 +176,7 @@ tools/neb_diffusion/
 └── plot_neb.py               # NEB path plot (E vs reaction coord)
 
 kb/projects/li_neb_anode_free.md    # this file
-kb/results/li_neb_diffusion_report.md (TODO)
+kb/results/li_neb_anode_free_report.md  # 보고서 (이 이름으로 작성됨)
 ```
 
 ## 8. 주의사항 (도출)

@@ -2,7 +2,8 @@
 title: "SDCP Binder Anchoring on LiNiO₂ (104)"
 tags: [project/sdcp-linio2, results, mlip, binder, cathode-interface]
 date: 2026-06-01
-status: phase-A-B-C-complete-dft-pending
+updated: 2026-08-11
+status: 역사 문서 — 계면 결합값 전면 재계산 대상 (2026-08-03 슬랩 깨짐 확정, kb/reports/sdcp_preliminary_final_2026_08_03.md §6.4)
 ---
 
 # SDCP Binder Anchoring on LiNiO₂ (104) — Phase A–C 결과 보고서
@@ -288,13 +289,13 @@ doped가 0.5 Å 더 가까이 + 1.77 eV 더 강함 → **자기-도핑이 표면
 - `figs/heatmap_*.png` — 시각화
 - `best_doped_oc20.xyz`, `best_neutral_oc20.xyz` — VESTA 확인용
 
-### Repo (Yonghoon-DEM-DFT)
-- `tools/sdcp_binding/build_linio2_slab.py` — LiNiO₂ (104) slab builder
-- `tools/sdcp_binding/build_linio2_dft_input.py` — QE PBE+U+AFM input gen
-- `tools/sdcp_binding/run_linio2_dft.sh` — gabia QE launcher
-- `tools/sdcp_binding/scan_binding_rigid.py` — Phase A rigid scan
-- `tools/sdcp_binding/phase_bc.py` — Phase B/C local relax + orientation
-- `tools/sdcp_binding/plot_binding_heatmap.py` — heatmap 시각화
+### Repo (Yonghoon-DEM-DFT) — ⚠ 아래 스크립트는 끝내 커밋되지 않았다 (git 이력에 없음; 현세대 도구는 tools/sdcp/ 에 별도 구현)
+- `tools/sdcp_binding/build_linio2_slab.py` — LiNiO₂ (104) slab builder <!-- lint-skip-path -->
+- `tools/sdcp_binding/build_linio2_dft_input.py` — QE PBE+U+AFM input gen <!-- lint-skip-path -->
+- `tools/sdcp_binding/run_linio2_dft.sh` — gabia QE launcher <!-- lint-skip-path -->
+- `tools/sdcp_binding/scan_binding_rigid.py` — Phase A rigid scan <!-- lint-skip-path -->
+- `tools/sdcp_binding/phase_bc.py` — Phase B/C local relax + orientation <!-- lint-skip-path -->
+- `tools/sdcp_binding/plot_binding_heatmap.py` — heatmap 시각화 <!-- lint-skip-path -->
 - `kb/projects/sdcp_linio2_binding.md` — 워크플로우 + method 정의
 
 ## 12. References

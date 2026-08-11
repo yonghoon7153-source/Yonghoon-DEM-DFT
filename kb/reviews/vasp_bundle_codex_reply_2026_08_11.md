@@ -17,7 +17,7 @@ Codex 종합: "현재 번들은 relax-only pilot 로는 쓸 수 있지만 final 
 | # | Codex 지적 | v2 조치 | 출처 |
 |---|---|---|---|
 | 1 | relax 마지막 에너지(LREAL=Auto·EDIFF 1e-5)를 최종값으로 씀 | **4상 러너**: pre-SCF → relax(2×3×1) → final static(3×4×1·LREAL=.FALSE.·EDIFF 1e-6·ISTART=0/ICHARG=1) → 민감도(4×6×1 대표쌍+clean) | Codex INCAR 템플릿 §2.2 |
-| 2 | afm_balanced 가 정본 AFM 계보가 아님 | `vasp_stage.py ni_afm_signs()` 12-Ni 패턴 ×4 = qe_afm24_24_pm1 기본. magbias_net2 · contactNi 추가, afm_net4 는 exploratory 로 강등 | tools/sdcp/ptfe_linio2_uma/vasp_stage.py |
+| 2 | afm_balanced 가 정본 AFM 계보가 아님 | `vasp_stage.py ni_afm_signs()` 12-Ni 패턴 ×4 = qe_afm24_24_pm1 기본. magbias_net2 · contactNi 추가, afm_net4 는 exploratory 로 강등 | tools/sdcp/ptfe_linio2_uma/vasp_stage.py | <!-- lint-skip-path: Codex 가 인용한 이 파일은 repo 에 없다 — v2 재리뷰 요청 §2 에서 정정 -->
 | 3 | 탐침 1쌍으로는 coverage 부족 + **독립 min 이 ΔE 를 오염** | tier1 전 끝점 2 seed (pose 32) · **seed-매칭 ΔE** · \|ΔE_s1−ΔE_s2\|≤10 meV · 실패 → BLOCKED_MAGNETIC_SENSITIVITY | §4.3 |
 | 4 | 기체상 쌍극자/스핀 | IDIPOL=4+DIPOL(COM)·AMIN=0.01 · doped NUPDOWN=1 / closed 0 · 상자 span+20/+24 Å 2종(≤10 meV) | §3.2–3.3 |
 | 5 | 최근접 하나로는 기하 감사 부족 | `geometry_audit()`/`magnetic_audit()` 재사용 — 결합 그래프 변화·PAIR_COLLAPSED·탈착·drift·Ni 모멘트·LDAU 점유 | §5.2–5.3 |

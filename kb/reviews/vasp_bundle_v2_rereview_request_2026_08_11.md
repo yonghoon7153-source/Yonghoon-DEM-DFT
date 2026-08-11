@@ -42,7 +42,7 @@ headline 은 pm1, \|ΔE_pm1 − ΔE_net4\| > 10 meV 면 `BLOCKED_MAGNETIC_SENSIT
 
 # §2. ⚠ 계보 사실관계 정정 — 확인 요청
 
-당신 회신의 §2.3/§11 은 canonical AFM 을 `tools/sdcp/ptfe_linio2_uma/vasp_stage.py` 의
+당신 회신의 §2.3/§11 은 canonical AFM 을 `tools/sdcp/ptfe_linio2_uma/vasp_stage.py` 의 <!-- lint-skip-path: 존재하지 않는 경로의 인용 -->
 `ni_afm_signs()` "12-Ni primitive pattern `[-,+,+,+,-,-,-,+,+,-,-,+]` ×4" 로 인용했다.
 
 **그 파일은 이 repo 에 존재하지 않는다** (`find . -name vasp_stage.py` → 0건,

@@ -57,3 +57,11 @@
 - kb/templates/manuscript_prompts.md 의 템플릿 사용 (figure 단위 요청, Wiley 스타일 R&D, 학술 5문장 재번역,
   로컬 PDF 기반 reference list).
 - 레퍼런스는 링크가 아니라 **로컬 PDF/litdb digest 기준**으로 작성, 인용 역할 확인 후 삽입(2026-07 Kim/Cui 교훈).
+
+## kb 위키 규율 (2026-08-11 채택)
+- kb 문서를 만들거나 크게 고치기 전에 **kb/SCHEMA.md 를 읽는다** (규칙 원본).
+- 새 문서는 `python3 tools/kb_wiki.py new <dir> <slug>` 로 생성 (frontmatter 필수 — 기존 문서 소급 없음).
+- 답이 안 난 반복 질문 → `kb/questions/` 카드, 논지 방어 → `kb/syntheses/` 카드 (반론 절 삭제 금지).
+- `explored:` 는 **사람만** true 로 바꾼다. 근거가 하나뿐이면 `confidence: high` 금지.
+- 마무리: `python3 tools/kb_wiki.py index` 재생성 + `lint` **0 errors** (kb/index.md 손편집 금지).
+- 채택 배경: kb/methodology/llm_wiki_adoption_2026_08_11.md.

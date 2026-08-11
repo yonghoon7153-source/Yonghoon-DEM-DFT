@@ -262,11 +262,11 @@ $$
 - `li3n_001_neb_path_final.xyz` — Path A 7-image animation (VESTA)
 - `li3n_001_neb_energies.json` — Path A 결과
 
-### Repo (Yonghoon-DEM-DFT)
-- `tools/neb_diffusion/build_li3n_slab.py` — Li₃N (001) slab builder
-- `tools/neb_diffusion/build_lic6_slab.py` — LiC₆ (0001) slab builder
-- `tools/neb_diffusion/build_lino3_slab.py` — LiNO₃ (broken)
-- `tools/neb_diffusion/run_neb_uma.py` — ASE NEB + UMA driver (waypoint + FIRE options)
+### Repo (Yonghoon-DEM-DFT) — ⚠ 아래 스크립트는 끝내 커밋되지 않았다 (git 이력에 없음, 당시 작업트리 전용)
+- `tools/neb_diffusion/build_li3n_slab.py` — Li₃N (001) slab builder <!-- lint-skip-path -->
+- `tools/neb_diffusion/build_lic6_slab.py` — LiC₆ (0001) slab builder <!-- lint-skip-path -->
+- `tools/neb_diffusion/build_lino3_slab.py` — LiNO₃ (broken) <!-- lint-skip-path -->
+- `tools/neb_diffusion/run_neb_uma.py` — ASE NEB + UMA driver (waypoint + FIRE options) <!-- lint-skip-path -->
 - `kb/projects/li_neb_anode_free.md` — workflow + method note
 
 ## 12. References

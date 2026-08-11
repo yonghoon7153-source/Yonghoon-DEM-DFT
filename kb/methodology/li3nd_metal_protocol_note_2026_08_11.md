@@ -2,8 +2,8 @@
 title: "Li₃Nd 독자 계산 — 착수 전 프로토콜 점검 (금속 · frozen-4f)"
 tags: [methodology/sei, methodology/nd, neb, metal, protocol]
 date: 2026-08-11
-status: 코드 반영 완료(dbec05fb) · **재리뷰 대기** · PP 블로커로 착수 대기
-관련: kb/reviews/site_screen_codex_round3_request_2026_08_11.md · db/properties/li_nd_alloy_check.json
+status: 종결 — 코드 반영 + PP 확보 + 금속 실측 완료, NEB 파일럿 진행 (§7)
+관련: kb/reviews/site_screen_codex_round3_request_2026_08_11.md · db/properties/sei_electronic_class.json
 ---
 
 # 왜 이 문서가 먼저인가
@@ -13,7 +13,8 @@ Xu 2026 의 "Li–Nd alloy 계면상" 주장에 대해 **우리가 직접 Li₃N
 그럴듯한 숫자가 나오는데 전부 무의미하다. 착수 전에 세 곳을 고쳐야 한다.
 
 대상: `mp-976264` Li₃Nd (Fm-3m) · hull **+0.197 eV/atom** · **theoretical=True**
-(우리 P2 판정: Li–Nd 껍질 위 안정상 0개 — `db/properties/li_nd_alloy_check.json`)
+(우리 P2 판정: Li–Nd 껍질 위 안정상 0개 — hull 근거는 `db/properties/sei_electronic_class.json`
+li3nd 블록과 kb/reviews/sei_neb_li3nd_rereview_request_2026_08_11.md 에 등재)
 
 ---
 
@@ -129,3 +130,11 @@ Li₃Nd 는 `metal · declared` 라서 **DOS 로 E_F 상태를 확인하기 전�
    `python3 tools/sei/nd_frozen4f.py --plan` 의 경로 A(기성품)/B(ld1.x)/C(VASP 외주).
    우리 것이 Topsakal–Wentzcovitch RE PAW 계열이므로 **같은 세트의 z≈11 짝이 있는지**를
    먼저 확인하는 게 A 의 첫 수다.
+
+## 7. ✅ 종결 (2026-08-11 당일 해소)
+
+경로 A 성공 — `Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF` (z=11, 4f-in-core) 확보, 검증 사다리
+3상 통과. §4 의 ③ 실행 결과 **금속 실측**: N(E_F)=5.324 states/eV, 채널 Li s/p +
+Nd s/p/d (db/properties/sei_electronic_class.json — `metal · measured` 로 승격).
+④ 는 금속 프로토콜로 sei_neb_v2 파일럿에 포함되어 진행 중. 이 문서의 함정 A/B/C 는
+전부 코드 게이트로 봉인됐다 (tools/sei/build_neb_inputs.py · tools/sei/collect_neb.py).
