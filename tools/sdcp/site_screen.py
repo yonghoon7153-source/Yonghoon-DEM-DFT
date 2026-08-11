@@ -1389,8 +1389,33 @@ def shortlist_with_matched_pairs(rigid: List[Dict[str, Any]], top_per_site: int,
             continue
         q = idx.get(("Ni_top", d, ro))
         if q:
-            pairs.append((min(r["E_pose_eV"], q["E_pose_eV"]), r, q))
-    for _, r, q in sorted(pairs, key=lambda t: t[0])[:n_pairs]:
+            # ★ 2026-08-11 (Codex Round-3, 채택) — `min(E_Li, E_Ni)` 로 정렬하면 **한쪽 끝점만
+            #   매우 깊은 쌍**이 먼저 뽑힌다. DFT handoff 에서만 고쳤는데, relax 에 보낼
+            #   방향부터 이미 편향돼 있었다. 여기서는 **쌍 균형 순위**로 고른다:
+            #   두 끝점의 (자리 안 순위) 중 나쁜 쪽 = max — 양쪽 다 괜찮은 쌍이 먼저 온다.
+            pairs.append((d, ro, r, q))
+    # 자리별 순위(0 = 그 자리에서 가장 깊음)를 만든 뒤 쌍의 대표 순위를 max 로 잡는다
+    rank: Dict[str, int] = {}
+    for s in ("Li_top", "Ni_top"):
+        v = sorted([r for r in ok if r["site"] == s], key=lambda x: x["E_pose_eV"])
+        for k, r in enumerate(v):
+            rank[r["label"]] = k
+    # ★ 방향 quota — roll 변형은 독립 표본이 아니다. 같은 down_dir 에서 최대 1쌍만 먼저 채우고,
+    #   방향을 다 쓰면 그때 두 번째 roll 을 채운다 (Codex: direction-level 집계 요구).
+    pairs.sort(key=lambda t: max(rank.get(t[2]["label"], 1 << 20), rank.get(t[3]["label"], 1 << 20)))
+    chosen, used_dir = [], set()
+    for d, ro, r, q in pairs:
+        if d in used_dir:
+            continue
+        chosen.append((d, ro, r, q)); used_dir.add(d)
+        if len(chosen) >= n_pairs:
+            break
+    for d, ro, r, q in pairs:                     # 방향을 다 썼으면 남은 자리를 채운다
+        if len(chosen) >= n_pairs:
+            break
+        if (d, ro) not in {(x[0], x[1]) for x in chosen}:
+            chosen.append((d, ro, r, q))
+    for d, ro, r, q in chosen:
         picked[r["label"]] = r
         picked[q["label"]] = q
     by_site = defaultdict(list)
@@ -1527,8 +1552,24 @@ def cmd_verdict(a) -> int:
             for d, ro, why, lc, nc in bad_pairs[:8]:
                 print(f"      {why:22s} {d}/r{int(ro):03d} · Li시작→{lc} · Ni시작→{nc}")
         if pairs:
-            dl = [p[4] for p in pairs]
-            print(f"   자격 있는 대조쌍 {len(pairs)}개 (Li 시작→Li 접촉 · Ni 시작→Ni 접촉 유지)")
+            # ★ Codex Round-3 (채택) — roll 변형은 독립 표본이 아니다. **방향 단위로 먼저
+            #   접고**, 그 방향 중앙값들로 판정한다. 쌍 개수로 통계를 내면 같은 방향을
+            #   n 번 센 셈이 된다 (sdcp_doped f0.85 가 정확히 그 경우였다: 3쌍 = 1방향).
+            by_dir: Dict[str, List[float]] = defaultdict(list)
+            for d, ro, _el, _en, de in pairs:
+                by_dir[d].append(de)
+            dir_med = {d: float(np.median(v)) for d, v in by_dir.items()}
+            dl = sorted(dir_med.values())          # ← 판정 입력을 방향 중앙값으로 바꾼다
+            print(f"   자격 있는 대조쌍 {len(pairs)}개 · **독립 방향 {len(by_dir)}개** "
+                  f"(roll 변형은 한 표본으로 접음)")
+            for d in sorted(by_dir, key=lambda k: dir_med[k]):
+                n = len(by_dir[d])
+                print(f"     {d:8s} ΔE {dir_med[d]:+.3f}" + (f"  (roll {n}개 중앙값)" if n > 1 else ""))
+            if len(by_dir) == 1:
+                print("     ⛔ **독립 방향이 1개다** — 이 조각의 자리 비교는 분자 방향 하나에 "
+                      "얹혀 있다. 표본 1개짜리로 읽을 것(중앙값·편차 모두 의미 없음).")
+            elif len(by_dir) < 3:
+                print(f"     ⚠ 독립 방향 {len(by_dir)}개 — 방향 의존성을 가릴 표본이 부족하다.")
             # ΔE 산포가 **어느 쪽에서** 오는지 — 중앙값 비교는 이 비대칭을 지운다
             li_e = [p[2] for p in pairs]; ni_e = [p[3] for p in pairs]
             sl, sn = max(li_e) - min(li_e), max(ni_e) - min(ni_e)
