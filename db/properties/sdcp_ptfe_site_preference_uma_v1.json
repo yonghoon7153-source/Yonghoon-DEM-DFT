@@ -1,59 +1,185 @@
 {
-  "property": "sdcp_ptfe_site_preference_uma_v1",
-  "date": "2026-08-11",
-  "question": "LiNiO2(104) 표면에서 조각이 Li 자리와 Ni 자리 중 어디를 선호하는가",
-  "method": "UMA-s-1p1 / omat · 192원자 LiNiO2(104) · FIRE fmax 0.05 steps 300 · gap 2.4 A · 피보나치 12방향(+화학태그) x roll 4 x 자리 7 · rigid SP 전수 -> 자리별 상위 2 + Li/Ni 대조쌍 상위 5쌍 이완",
-  "tool": "tools/sdcp/site_screen.py",
-  "protocol_doc": "kb/methodology/site_preference_protocol_2026_08_11.md",
-  "run_dir": "gabia:/data/work/runs/sdcp_v4_sitescreen",
-  "gate_version": "60f63b8265d9",
-
-  "decision_rule": "같은 down_dir·roll·gap 으로 짝지은 Li_top/Ni_top 시작쌍이 둘 다 게이트를 통과하고, **최종 접촉 registry 가 시작 자리를 유지**해야 자격이 있다. 자격쌍 ΔE 중앙값이 판정바닥 max(30 meV, 쌍 표준편차)를 넘어야 '가려졌다'.",
-
-  "results": {
-    "sdcp_neutral": {
-      "freeze_1.00": {"pairs_qualified": 5, "pairs_total": 5, "dE_Ni_minus_Li_eV": -0.017,
-                      "range_eV": [-0.056, 0.019], "floor_eV": 0.030, "verdict": "NOT_RESOLVED"},
-      "freeze_0.85": {"pairs_qualified": 5, "pairs_total": 5, "dE_Ni_minus_Li_eV": -0.017,
-                      "range_eV": [-0.057, 0.024], "floor_eV": 0.030, "verdict": "NOT_RESOLVED"}
-    },
-    "sdcp_doped": {
-      "freeze_1.00": {"pairs_qualified": 5, "pairs_total": 5, "dE_Ni_minus_Li_eV": -0.131,
-                      "range_eV": [-0.152, 0.165], "floor_eV": 0.146, "verdict": "NOT_RESOLVED",
-                      "note": "쌍마다 부호가 뒤집힌다 — 고정 슬랩이 만든 산포"},
-      "freeze_0.85": {"pairs_qualified": 3, "pairs_total": 5, "dE_Ni_minus_Li_eV": 0.025,
-                      "range_eV": [0.002, 0.036], "floor_eV": 0.030, "verdict": "NOT_RESOLVED",
-                      "disqualified": ["PAIR_MIGRATED fib10/r090 (Li시작→Ni · Ni시작→Li)",
-                                       "PAIR_MIGRATED fib10/r270 (Li시작→Ni · Ni시작→Li)"],
-                      "note": "자격검사 없이 5쌍을 다 쓰면 Δ=+0.008 이 나온다 — 자격검사가 17 meV 를 움직인다"}
-    },
-    "ptfe_dimer": {
-      "freeze_1.00": {"pairs_qualified": 5, "pairs_total": 5, "dE_Ni_minus_Li_eV": 0.016,
-                      "range_eV": [0.001, 0.025], "floor_eV": 0.030, "verdict": "NOT_RESOLVED"},
-      "freeze_0.85": {"pairs_qualified": 5, "pairs_total": 5, "dE_Ni_minus_Li_eV": 0.030,
-                      "range_eV": [0.008, 0.039], "floor_eV": 0.030, "verdict": "NOT_RESOLVED",
-                      "note": "Δ 가 판정바닥과 같다 — 경계값이라 어느 쪽으로도 못 읽는다"}
-    },
-    "ptfe_c10": {
-      "freeze_1.00": {"pairs_qualified": 5, "pairs_total": 5, "dE_Ni_minus_Li_eV": 0.023,
-                      "range_eV": [-0.024, 0.046], "floor_eV": 0.030, "verdict": "NOT_RESOLVED"},
-      "freeze_0.85": {"pairs_qualified": 5, "pairs_total": 5, "dE_Ni_minus_Li_eV": 0.041,
-                      "range_eV": [-0.037, 0.052], "floor_eV": 0.033, "verdict": "LI_FAVORED_WEAK",
-                      "note": "8/8 중 유일하게 바닥을 넘는다. 다만 여유가 8 meV 이고 5쌍 중 최소 1쌍은 부호가 반대다 — 가장 약한 형태의 신호. DFT+U 1순위 후보."}
-    }
+ "property": "sdcp_ptfe_site_preference_uma_v1",
+ "date": "2026-08-11",
+ "question": "LiNiO2(104) 표면에서 조각이 Li 자리와 Ni 자리 중 어디를 선호하는가",
+ "method": "UMA-s-1p1 / omat · 192원자 LiNiO2(104) · FIRE fmax 0.05 steps 300 · gap 2.4 A · 피보나치 12방향(+화학태그) x roll 4 x 자리 7 · rigid SP 전수 -> 자리별 상위 2 + Li/Ni 대조쌍 상위 5쌍 이완",
+ "tool": "tools/sdcp/site_screen.py",
+ "protocol_doc": "kb/methodology/site_preference_protocol_2026_08_11.md",
+ "run_dir": "gabia:/data/work/runs/sdcp_v4_sitescreen",
+ "gate_version": "60f63b8265d9",
+ "decision_rule": "같은 down_dir·roll·gap 으로 짝지은 Li_top/Ni_top 시작쌍이 둘 다 게이트를 통과하고, **최종 접촉 registry 가 시작 자리를 유지**해야 자격이 있다. 자격쌍 ΔE 중앙값이 판정바닥 max(30 meV, 쌍 표준편차)를 넘어야 '가려졌다'.",
+ "results": {
+  "sdcp_neutral": {
+   "freeze_1.00": {
+    "pairs_qualified": 5,
+    "pairs_total": 5,
+    "dE_Ni_minus_Li_eV": -0.017,
+    "range_eV": [
+     -0.056,
+     0.019
+    ],
+    "floor_eV": 0.03,
+    "verdict": "NOT_RESOLVED"
+   },
+   "freeze_0.85": {
+    "pairs_qualified": 5,
+    "pairs_total": 5,
+    "dE_Ni_minus_Li_eV": -0.017,
+    "range_eV": [
+     -0.057,
+     0.024
+    ],
+    "floor_eV": 0.03,
+    "verdict": "NOT_RESOLVED"
+   }
   },
-
-  "summary": "8개 (조각 x freeze) 조합 중 **7개가 NOT_RESOLVED**. 유일한 판정은 ptfe_c10 freeze 0.85 의 Li 우세 +0.041 eV 이고 그것도 판정바닥을 8 meV 넘는 수준이다.",
-
-  "key_findings": [
-    "PAIR_MIGRATED 실물 관측 — sdcp_doped freeze 0.85 의 fib10/r090·r270 두 쌍에서 Li 시작이 Ni 접촉으로, Ni 시작이 Li 접촉으로 **서로 자리를 바꿨다**. 시작 자리로 짝지은 ΔE 가 자리 차가 아닐 수 있다는 Codex Round-2 지적의 직접 증거다. freeze 1.0 에서는 안 나온다 — 표면이 풀려야 분자가 옆 양이온으로 미끄러진다.",
-    "고정 슬랩(freeze 1.0)은 Ni 를 불리하게 미는 게 아니라 **쌍마다 제멋대로 흔든다**. sdcp_doped 에서 f1.0 은 중앙값 -0.131 에 범위가 부호를 넘나들었고(-0.152…+0.165), f0.85 는 +0.025 에 범위 +0.002…+0.036 으로 좁아졌다.",
-    "regate(게이트 재적용) 결과 8개 조합 모두 **판정 바뀜 0** — 이완 자세 중 새 추출 규칙(배위수 감소 + 바깥 이동)에 걸린 것이 하나도 없다. sdcp_doped f0.85 의 넓은 Li_contact 폭(0.564 eV)은 추출 혼입이 아니라 자세 다양성이다."
-  ],
-
-  "do_not_cite": "E_pose 는 결합에너지가 아니다. E_pose = E_complex − E_slab − E_mol(기체상 ORCA 기하) 이라 분자·표면 변형 몫이 함께 실리고, 그 몫은 자세마다 달라 상쇄되지 않는다. 부호(SDCP 는 freeze 1.0 에서 양수)를 '결합 안 됨'으로 읽으면 오독이다. 조각 사이 비교(dimer vs C10, doped vs neutral)도 금지. sdcp_doped 는 doublet 라디칼인데 UMA 에 다중도 입력이 없다.",
-
-  "next": "자리 선호의 실제 판정은 DFT+U 몫이다. 최소 단위 = 조각 1개 x 자격쌍 1개(Li/Ni) x 자기 초기값 2개 = 4런. 1순위는 ptfe_c10 freeze 0.85 의 자격쌍(유일하게 바닥을 넘은 신호), 2순위는 sdcp_doped 의 PAIR_MIGRATED 쌍(자리가 바뀌는 이유를 DFT 가 재현하는지).",
-
-  "caveat_basin": "basin 병합을 Round-2 지적대로 AND(최종 registry + 서술자 + 주기 RMSD 0.75 A)로 조인 결과, 20자세 -> 19골짜기처럼 거의 병합이 일어나지 않는다. 이완 대상이 애초에 다양성 보존으로 뽑은 20여 개라 당연한 결과이고, 이 크기에서는 basin 클러스터링이 정보를 주지 못한다. 더 큰 이완 집합에서 다시 볼 것."
+  "sdcp_doped": {
+   "freeze_1.00": {
+    "pairs_qualified": 5,
+    "pairs_total": 5,
+    "dE_Ni_minus_Li_eV": -0.131,
+    "range_eV": [
+     -0.152,
+     0.165
+    ],
+    "floor_eV": 0.146,
+    "verdict": "NOT_RESOLVED",
+    "note": "쌍마다 부호가 뒤집힌다 — 고정 슬랩이 만든 산포"
+   },
+   "freeze_0.85": {
+    "pairs_qualified": 3,
+    "pairs_total": 5,
+    "dE_Ni_minus_Li_eV": 0.025,
+    "range_eV": [
+     0.002,
+     0.036
+    ],
+    "floor_eV": 0.03,
+    "verdict": "NOT_RESOLVED",
+    "disqualified": [
+     "PAIR_MIGRATED fib10/r090 (Li시작→Ni · Ni시작→Li)",
+     "PAIR_MIGRATED fib10/r270 (Li시작→Ni · Ni시작→Li)"
+    ],
+    "note": "자격검사 없이 5쌍을 다 쓰면 Δ=+0.008 이 나온다 — 자격검사가 17 meV 를 움직인다",
+    "qualified_pairs_detail": [
+     {
+      "pair": "fib07/r270",
+      "dE": 0.002,
+      "E_Li": -0.007,
+      "E_Ni": -0.005
+     },
+     {
+      "pair": "fib07/r090",
+      "dE": 0.025,
+      "E_Li": -0.018,
+      "E_Ni": 0.007,
+      "note": "중앙값 대표 — DFT 2순위"
+     },
+     {
+      "pair": "fib07/r180",
+      "dE": 0.036,
+      "E_Li": -0.026,
+      "E_Ni": 0.009
+     }
+    ],
+    "coverage_caveat": "⚠ 자격쌍 3개가 **전부 같은 방향 fib07 의 roll 변형**이다 — 독립 표본은 사실상 1개다. 자격 미달로 빠진 두 쌍(PAIR_MIGRATED)은 fib10 이라, 자격검사 후 doped 의 자리 비교는 분자 방향 하나에 얹혀 있다. '3쌍'을 독립 3표본으로 읽으면 안 된다."
+   }
+  },
+  "ptfe_dimer": {
+   "freeze_1.00": {
+    "pairs_qualified": 5,
+    "pairs_total": 5,
+    "dE_Ni_minus_Li_eV": 0.016,
+    "range_eV": [
+     0.001,
+     0.025
+    ],
+    "floor_eV": 0.03,
+    "verdict": "NOT_RESOLVED"
+   },
+   "freeze_0.85": {
+    "pairs_qualified": 5,
+    "pairs_total": 5,
+    "dE_Ni_minus_Li_eV": 0.03,
+    "range_eV": [
+     0.008,
+     0.039
+    ],
+    "floor_eV": 0.03,
+    "verdict": "NOT_RESOLVED",
+    "note": "Δ 가 판정바닥과 같다 — 경계값이라 어느 쪽으로도 못 읽는다"
+   }
+  },
+  "ptfe_c10": {
+   "freeze_1.00": {
+    "pairs_qualified": 5,
+    "pairs_total": 5,
+    "dE_Ni_minus_Li_eV": 0.023,
+    "range_eV": [
+     -0.024,
+     0.046
+    ],
+    "floor_eV": 0.03,
+    "verdict": "NOT_RESOLVED"
+   },
+   "freeze_0.85": {
+    "pairs_qualified": 5,
+    "pairs_total": 5,
+    "dE_Ni_minus_Li_eV": 0.041,
+    "range_eV": [
+     -0.037,
+     0.052
+    ],
+    "floor_eV": 0.033,
+    "verdict": "LI_FAVORED_WEAK",
+    "note": "8/8 중 유일하게 바닥을 넘는다. 다만 여유가 8 meV 이고 5쌍 중 최소 1쌍은 부호가 반대다 — 가장 약한 형태의 신호. DFT+U 1순위 후보.",
+    "qualified_pairs_detail": [
+     {
+      "pair": "fib05/r270",
+      "dE": -0.037,
+      "E_Li": -0.229,
+      "E_Ni": -0.266,
+      "note": "중앙값과 부호 반대 — Ni 가 더 깊은 자리를 찾은 유일한 방향"
+     },
+     {
+      "pair": "fib04/r090",
+      "dE": 0.013,
+      "E_Li": -0.227,
+      "E_Ni": -0.214
+     },
+     {
+      "pair": "fib04/r270",
+      "dE": 0.041,
+      "E_Li": -0.227,
+      "E_Ni": -0.186,
+      "note": "중앙값 대표 — DFT 1순위"
+     },
+     {
+      "pair": "fib07/r000",
+      "dE": 0.045,
+      "E_Li": -0.226,
+      "E_Ni": -0.181
+     },
+     {
+      "pair": "fib07/r180",
+      "dE": 0.052,
+      "E_Li": -0.233,
+      "E_Ni": -0.181
+     }
+    ],
+    "asymmetry": "★ ΔE 산포가 거의 전부 Ni 쪽에서 온다: Li 끝점 폭 0.007 eV vs Ni 끝점 폭 0.085 eV. Li 접촉은 5개 방향 전부에서 −0.226…−0.233 으로 사실상 같은 값에 안착하고(방향 둔감), Ni 접촉만 −0.181…−0.266 으로 흩어진다(방향 민감). 중앙값 비교는 이 비대칭을 지운다. 화학적으로는 F⁻···Li⁺ 정전기 접촉이 등방적이고 Ni 접촉은 기하/오비탈 의존적이라는 그림과 맞는다 — 다만 UMA 기준이므로 가설이다."
+   }
+  }
+ },
+ "summary": "8개 (조각 x freeze) 조합 중 **7개가 NOT_RESOLVED**. 유일한 판정은 ptfe_c10 freeze 0.85 의 Li 우세 +0.041 eV 이고 그것도 판정바닥을 8 meV 넘는 수준이다.",
+ "key_findings": [
+  "PAIR_MIGRATED 실물 관측 — sdcp_doped freeze 0.85 의 fib10/r090·r270 두 쌍에서 Li 시작이 Ni 접촉으로, Ni 시작이 Li 접촉으로 **서로 자리를 바꿨다**. 시작 자리로 짝지은 ΔE 가 자리 차가 아닐 수 있다는 Codex Round-2 지적의 직접 증거다. freeze 1.0 에서는 안 나온다 — 표면이 풀려야 분자가 옆 양이온으로 미끄러진다.",
+  "고정 슬랩(freeze 1.0)은 Ni 를 불리하게 미는 게 아니라 **쌍마다 제멋대로 흔든다**. sdcp_doped 에서 f1.0 은 중앙값 -0.131 에 범위가 부호를 넘나들었고(-0.152…+0.165), f0.85 는 +0.025 에 범위 +0.002…+0.036 으로 좁아졌다.",
+  "regate(게이트 재적용) 결과 8개 조합 모두 **판정 바뀜 0** — 이완 자세 중 새 추출 규칙(배위수 감소 + 바깥 이동)에 걸린 것이 하나도 없다. sdcp_doped f0.85 의 넓은 Li_contact 폭(0.564 eV)은 추출 혼입이 아니라 자세 다양성이다.",
+  "ΔE 산포의 출처가 조각마다 다르다 — ptfe_c10 은 Ni 쪽에서만 온다(Li 0.007 vs Ni 0.085 eV). Li 접촉은 방향에 둔감하고 Ni 접촉만 방향 민감하다. 중앙값 하나로 비교하면 이 비대칭이 지워진다.",
+  "sdcp_doped 의 자격쌍 3개는 전부 fib07 의 roll 변형이라 독립 표본이 1개다. 자격 미달로 빠진 fib10 두 쌍이 유일한 다른 방향이었다."
+ ],
+ "do_not_cite": "E_pose 는 결합에너지가 아니다. E_pose = E_complex − E_slab − E_mol(기체상 ORCA 기하) 이라 분자·표면 변형 몫이 함께 실리고, 그 몫은 자세마다 달라 상쇄되지 않는다. 부호(SDCP 는 freeze 1.0 에서 양수)를 '결합 안 됨'으로 읽으면 오독이다. 조각 사이 비교(dimer vs C10, doped vs neutral)도 금지. sdcp_doped 는 doublet 라디칼인데 UMA 에 다중도 입력이 없다.",
+ "next": "자리 선호의 실제 판정은 DFT+U 몫이다. 최소 단위 = 조각 1개 x 자격쌍 1개(Li/Ni) x 자기 초기값 2개 = 4런. 1순위는 ptfe_c10 freeze 0.85 의 자격쌍(유일하게 바닥을 넘은 신호), 2순위는 sdcp_doped 의 PAIR_MIGRATED 쌍(자리가 바뀌는 이유를 DFT 가 재현하는지). 추가로 ptfe_c10 의 fib05/r270(--select extreme)도 보내면 'Ni 가 더 깊은 자리를 찾는 방향이 실재하나'를 DFT 가 직접 답한다 — 그게 참이면 'Li 우세'는 방향 표본의 산물이다.",
+ "caveat_basin": "basin 병합을 Round-2 지적대로 AND(최종 registry + 서술자 + 주기 RMSD 0.75 A)로 조인 결과, 20자세 -> 19골짜기처럼 거의 병합이 일어나지 않는다. 이완 대상이 애초에 다양성 보존으로 뽑은 20여 개라 당연한 결과이고, 이 크기에서는 basin 클러스터링이 정보를 주지 못한다. 더 큰 이완 집합에서 다시 볼 것."
 }

@@ -1410,6 +1410,20 @@ def cmd_verdict(a) -> int:
         if pairs:
             dl = [p[4] for p in pairs]
             print(f"   자격 있는 대조쌍 {len(pairs)}개 (Li 시작→Li 접촉 · Ni 시작→Ni 접촉 유지)")
+            # ΔE 산포가 **어느 쪽에서** 오는지 — 중앙값 비교는 이 비대칭을 지운다
+            li_e = [p[2] for p in pairs]; ni_e = [p[3] for p in pairs]
+            sl, sn = max(li_e) - min(li_e), max(ni_e) - min(ni_e)
+            print(f"     Li 끝점 폭 {sl:.3f} eV · Ni 끝점 폭 {sn:.3f} eV")
+            if max(sl, sn) > 3 * max(min(sl, sn), 1e-3):
+                side = "Ni" if sn > sl else "Li"
+                print(f"     ⚠ ΔE 산포가 거의 전부 **{side} 쪽**에서 온다 — "
+                      f"{'Li' if side == 'Ni' else 'Ni'} 접촉은 방향에 둔감하고 "
+                      f"{side} 접촉만 방향 민감하다는 뜻이다. 한쪽만 대표로 재는 셈이 아닌지 볼 것")
+            # 방향 다양성 — 같은 down_dir 의 roll 변형만 남으면 '쌍 n개' 가 과대평가다
+            dirs = {p[0] for p in pairs}
+            if len(dirs) == 1 and len(pairs) > 1:
+                print(f"     ⚠ 자격쌍 {len(pairs)}개가 **전부 같은 방향({next(iter(dirs))})의 roll 변형**이다 "
+                      f"— 독립 표본 {len(dirs)}개짜리로 읽을 것")
             print(f"   Li_top↔Ni_top 짝지은 대조쌍 {len(pairs)}개 · "
                   f"ΔE(Ni−Li) 중앙값 {np.median(dl):+.3f} eV · 범위 {min(dl):+.3f}…{max(dl):+.3f}")
             floor = max(GATE["decision_floor_eV"], float(np.std(dl)))
