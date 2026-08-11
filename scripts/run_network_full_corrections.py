@@ -501,11 +501,16 @@ def _run_solver(case_dir: Path, contacts_modified: pd.DataFrame, type_map_str: s
             return None
         if cp.returncode != 0:
             return None
-        net_json_p = tmp / 'network_conductivity.json'
-        if not net_json_p.exists():
-            return None
-        with open(net_json_p) as f:
-            return json.load(f)
+        return _collect_modes(tmp)
+
+
+#: RC5-04 — per-mode JSON 병합은 `scripts/network_mode_io.py` 가 소유한다.
+#: 이 파일이 pandas 를 import 하는 바람에 그 함수 하나를 회귀로 검증할 수 없었고,
+#: 그것이 버그가 오래 숨은 이유 중 하나였다 → **검증 가능한 자리로** 옮겼다.
+#: ⚠ 다른 cwd 에서 이 파일을 **모듈로** import 할 때를 대비해 자기 디렉터리를 보장한다
+#:   (직접 실행하면 자동으로 들어가지만, import 경로에서는 아니다).
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from network_mode_io import collect_modes as _collect_modes            # noqa: E402
 
 
 # ── Self-report card ─────────────────────────────────────────────────
@@ -711,8 +716,11 @@ def run_one(case_dir: Path, temp_c=None, ea_ion_ev=None) -> tuple[str, bool, str
     sigma_th_e    = (fm.get('thermal_sigma_full_mScm') if skip_kappa else
                      (res_kappa.get('thermal_sigma_full_mScm') if res_kappa else None))
 
-    # --- Physics-mode parallel: solver returned both modes via --contact-mode
-    # both, so the same JSON has *_physics counterparts. Stage E factors
+    # --- Physics-mode parallel.  ★ RC5-04 정정: `--contact-mode both` 은 **파일을 나눠**
+    # 쓰고(network_conductivity_{hertzian,physics}.json) 키에는 접미사가 없다.  옛 주석은
+    # "같은 JSON 에 *_physics 짝이 있다"고 적었지만 _run_solver 가 legacy(=hertzian 복사본)
+    # 하나만 읽어서 아래 조회는 **항상 None** 이었다 → Physics Stage E 가 매번 fallback.
+    # 이제 _collect_modes 가 physics 채널을 `<key>_physics` 로 실제로 채워 준다. Stage E factors
     # (Lawn fracture × Cronau / Trev / Wang) are grain-level corrections
     # that apply equally to both contact-area models. Reading the *_physics
     # variants here lets the UI display Stage E for Hertzian AND Physics

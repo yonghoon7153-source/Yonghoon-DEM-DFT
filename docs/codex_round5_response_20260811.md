@@ -54,7 +54,86 @@ Codex 의 네 동적 재현을 그대로 회귀로 고정 (24~30):
 깨졌다** (FakeRunner 가 키 하나만 썼다).  이것이 RR3-04 의 false-green 과 같은
 fixture-drift 다 — fixture 를 실제 `run_one` 계약에 맞춰 고쳤다.
 
-## 2. 고치지 않은 것 — 상태와 이유
+## 2. 2차 (같은 날) — 남은 것 전부 처리
+
+사용자가 "시간은 많다" 고 해서 미뤄 뒀던 넷을 이어서 했다.
+
+### RC5-04 — Physics 재솔브 결과 유실 (값이 틀리던 유일한 항목)
+
+원인이 **이름 규약의 오해**였다.  `--contact-mode both` 은 접미사를 **키가 아니라
+파일명**에 붙인다:
+
+```
+network_conductivity_hertzian.json → {'sigma_full_mScm': …}
+network_conductivity_physics.json  → {'sigma_full_mScm': …}   ← 같은 키!
+network_conductivity.json          → hertzian 의 복사본 (하위호환)
+```
+
+`_run_solver` 는 legacy 하나만 읽었는데 호출부는 `res.get('sigma_full_mScm_physics')`
+를 조회했고 — "같은 JSON 에 `*_physics` 짝이 있다"는 **틀린 주석까지** 달려 있었다 —
+그 값은 항상 None 이라 매번 fallback 으로 샜다.
+
+→ `scripts/network_mode_io.py` (신규, selftest 11/11) 로 두 모드를 다 읽어
+`<key>` / `<key>_physics` 로 합친다.  구조화(`{hertzian, physics}`)가 더 깔끔하지만
+호출부 전체를 건드려야 해서 **값이 틀리는 문제부터 최소 변경**으로 닫았다.
+
+★ **별도 모듈로 뽑은 이유**: 원래 자리(`run_network_full_corrections.py`)가 pandas 를
+import 해서 이 함수 하나를 회귀로 검증할 수 없었다.  버그가 오래 숨은 이유 중 하나가
+"테스트할 수 없는 자리에 있었다" 는 것이므로 검증 가능한 자리로 옮겼다.  결손 채널은
+`_modes_missing_channels` 로 반드시 드러낸다 (조용한 결손이 이 버그를 숨겼다).
+
+### RC5-02 — 실패 복원이 overlay 뿐이던 것
+
+Codex 권고 5단계를 그대로 구현했다: ① 현재 관리 키 **전수 제거** → ② 이전 active
+overlay → ③ raw thermal `{present, value}` rollback (`snapshot_keys`/`restore_keys`
+— 없던 키를 None 으로 되살리지 않는다) → ④ 이전 active 가 없으면
+`failed_no_active_generation` → ⑤ 시도는 `stage_e_attempt.json` 별도 파일
+(`record_stage_e_attempt`, network 의 RR2-01 과 같은 규약).
+
+반증 확인: purge/rollback 을 옛 overlay 로 되돌리니 정확히 두 회귀가 FAIL 한다.
+
+### RC5-03 — 누락 채널이 옛 값으로 메워지던 것
+
+merge 가 `if k in net_data and net_data[k] is not None` 이라 새 세대가 못 낸 채널은
+옛 값이 **새 run_id 아래** 살아남았다.  → merge 전에 network-owned projection 을
+**전부 걷어내고** 새 세대로만 채운다.  걷힌 채널은 `network_projection_dropped` 에
+기록하고 로그에 찍는다.
+
+⚠ "thermal 누락 = network 실패인가" 는 **여기서 결정하지 않았다** — 채널이 필수인지에
+대한 판단이 필요하다.  다만 누락을 조용히 옛 값으로 메우는 것만은 확실히 막았다.
+(사용자 결정 대기 항목으로 남긴다.)
+
+★ 부수 발견: 이 수정이 RC5-02 회귀 하나와 충돌했는데, **새 동작이 옳았다** —
+preserve=False 경로는 새 network 세대가 먼저 돌므로 옛 thermal 이 사라지는 것이 맞고,
+RC5-02 가 보장할 것은 "Stage E 가 쓴 값이 남지 않는다" 였다.  회귀 문구를 정정했다.
+
+### RR3-04 — batch contact 존재-확인
+
+★ **더 큰 것이 나왔다**: `run_stage(fresh=True)` 는 RV-02 에서 **구현만 하고 어느
+호출부에도 배선되지 않았다** (`grep fresh=True webapp/app.py` → 0건).  batch contact 에
+배선했다.  회귀에 **배선 자체를 검사하는 항목**(RR3-04d)을 넣었다 — 구현과 배선이
+다르다는 것을 이번에 두 번 겪었다 (alias 를 파일에 쓴 것, 패키지를 깐 것).
+
+⚠ 최종형은 Codex 권고대로 **빈 candidate 에서만 실행**하는 것이다.  `fresh` 는 전체
+지문 비교라 **부분 쓰기**(4개 중 1개만 새로 씀)는 여전히 통과한다.
+
+### SyntaxWarning ×2 — 정리
+
+`figure1_panels.py:333` 의 LaTeX `$\sigma$` 를 raw string 으로,
+`step4_rint_ladder.py` 모듈 docstring 을 raw 로 (셸 예시의 `\ ` 이스케이프).
+리포 전수 재확인: **409 files · SyntaxWarning 0 · SyntaxError 0**.
+
+## 3. 남은 것 (2차 후)
+
+| 항목 | 상태 |
+|---|---|
+| "thermal 누락 = network 실패인가" | **사용자 결정 대기** |
+| Stage E per-run manifest (최종형) | 스크립트 인터페이스 변경 — 별도 작업 |
+| batch contact 빈-candidate 실행 (최종형) | `fresh` 로 false-green 은 닫았으나 부분 쓰기는 남음 |
+| `scripts/` bare python3 ×3 | CLI 도구, webapp 500 과는 무관 |
+| PD-02 sentinel · PD-04 압력 네 축 · grid convergence gate | 미착수 |
+
+## 4. (1차 기록, 참고) 그때 미뤘던 이유 — 전부 §2 에서 해소됨
 
 | ID | 상태 | 확인한 현재 코드 | 왜 이번에 안 했나 |
 |---|---|---|---|
@@ -65,22 +144,25 @@ fixture-drift 다 — fixture 를 실제 `run_one` 계약에 맞춰 고쳤다.
 | SyntaxWarning ×2 | 열림 | `figure1_panels.py:333` `\s`, `step4_rint_ladder.py:12` `\ ` | 사소 |
 | scripts bare python3 ×3 | 신규 등재 | 위 §1 | webapp route 아님 |
 
-## 3. 다음 우선순위 (Codex §10 을 우리 사정에 맞춰)
-
-1. **RC5-04** — Physics 결과 유실은 **값이 틀리게 나오는** 유일한 항목이다 (나머지는
-   세대/도장 무결성).  `_run_solver` 반환 구조화 + 호출부.  ★ 먼저.
-2. **RC5-03** — 그 전에 "thermal 누락 = network 실패인가" 결정 필요.
-3. **RC5-02** — 실패 경로 전수 purge/rollback + attempt 분리.
-4. **RR3-04** — batch contact 를 빈 candidate 에서 실행.
-5. PD-02 sentinel · PD-04 압력 네 축 · grid convergence gate.
-
-## 4. 검증 기록
+## 5. 검증 기록 (최종)
 
 ```
-webapp/test_pipeline_provenance.py   55/55 PASS   (43 → 55; RC5-01 7건 + F-18 1건 추가)
+webapp/test_pipeline_provenance.py   65/65 PASS   (43 → 65)
 webapp/test_security_phase_a.py      28/28 PASS
+scripts/network_mode_io.py           11/11 PASS   (신규)
 scripts/press_units.py               14/14 PASS
-compile (app, pipeline_service)      OK
-F-18 회귀 반증 확인                   되돌리면 FAIL, 복원하면 PASS
-11-키 무조건성                        run_one 소스에서 들여쓰기로 확인 (조건부 아님)
+scripts/summarize_jam_sweep.py       10/10 PASS
+scripts/heckel_analysis.py           20/20 PASS
+scripts/unpack_kit_scaffolds.py      13/13 PASS
+리포 전수 compile                     409 files · SyntaxWarning 0 · SyntaxError 0
 ```
+
+**반증(falsification) 확인** — 회귀가 실제로 결함을 잡는지 되돌려 본 것:
+
+| 회귀 | 되돌린 것 | 결과 |
+|---|---|---|
+| F-18 (31) | `sys.executable` → `'python3'` | FAIL ✓ |
+| RC5-02 (a, b) | purge/rollback → 옛 overlay | 정확히 2건 FAIL ✓ |
+| RR3-04 (a vs b) | `fresh=True` 유무 | 존재확인만이면 통과, fresh 면 실패 ✓ |
+
+11-키 무조건성은 `run_one` 소스의 들여쓰기로 확인(조건부 블록 밖).

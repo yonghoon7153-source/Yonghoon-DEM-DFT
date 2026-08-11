@@ -477,7 +477,10 @@ def main():
                    'stage_e_source': 'OLD', 'validation_flags': {'x': 1},
                    'stage_e_temperature_provenance': '60C',
                    'stage_e_parent_network_run_id': 'OLDRUN-0001',
-                   'stage_e_run_id': 'OLDSE', 'stage_e_status': 'success'})
+                   'stage_e_run_id': 'OLDSE', 'stage_e_status': 'success',
+                   # raw thermal = network 소유.  Stage E 가 heal 로 덮을 수 있어
+                   # 실패 시 정확히 되돌아와야 한다 (RC5-02 ③).
+                   'thermal_sigma_full_mScm': 111.125})
         json.dump(d0, open(fmp, 'w'))
         # contact 가 쓴 summary (network 소유가 아니다)
         open(os.path.join(res, 'network_summary.csv'), 'w').write('a,b\n')
@@ -486,7 +489,14 @@ def main():
             def __call__(self, cmd, **kw):
                 if os.path.basename(str(cmd[1])) == 'run_network_full_corrections.py':
                     self.calls.append(cmd)
-                    return subprocess.CompletedProcess(cmd, 0, '', '')   # rc=0, 무산출
+                    # ★ RC5-02 재현: 실패(무산출) 실행이라도 **부분 쓰기**는 남긴다 —
+                    #   Codex 가 동적으로 재현한 그 상황(관리 키 신규 + raw thermal 변경).
+                    _p = os.path.join(self.results_dir, 'full_metrics.json')
+                    _d = json.load(open(_p)) if os.path.exists(_p) else {}
+                    _d['future_metric_stage_e'] = 999
+                    _d['thermal_sigma_full_mScm'] = 777
+                    json.dump(_d, open(_p, 'w'))
+                    return subprocess.CompletedProcess(cmd, 0, '', '')   # rc=0, 무산출(불완전)
                 return super().__call__(cmd, **kw)
 
         fr = NetOkStageENoWrite(res)
@@ -502,9 +512,73 @@ def main():
         chk('RC4-01) ★ Stage E 실패 시 wrapper provenance 도 옛 것을 유지한다',
             fm.get('stage_e_parent_network_run_id') == 'OLDRUN-0001'
             and fm.get('stage_e_run_id') == 'OLDSE'
-            and fm.get('stage_e_status') == 'failed_restored_previous'
-            and fm.get('stage_e_attempt_parent_network_run_id') not in (None, 'OLDRUN-0001'))
+            and fm.get('stage_e_status') == 'failed_restored_previous')
         chk('RC4-01b) 옛 보정값도 그대로', fm.get('sigma_full_mScm_stage_e') == 2.0)
+        # ★ RC5-02 ①③ (Codex 5회차 실측): 옛 복원은 overlay 만 해서 **실패 후보가 새로
+        #   만든** 관리 키(future_metric_stage_e=999)와 raw thermal 변경(777)이 잔존했다.
+        chk('RC5-02a) ★ 실패 후보가 새로 만든 관리 키가 남지 않는다 (전수 purge)',
+            'future_metric_stage_e' not in fm)
+        #   ⚠ 여기서 111.125 로 돌아오지 **않는** 것이 맞다: 이 경로는 preserve=False 라
+        #     새 network 세대가 먼저 돌았고, RC5-03 이 옛 세대의 thermal 을 걷어냈다.
+        #     RC5-02 가 보장하는 것은 "Stage E 가 쓴 777 이 남지 않는다" 이고, 되돌아갈
+        #     지점은 **Stage E 직전 상태**(= 새 network 세대의 상태)다.
+        chk('RC5-02b) ★ 실패한 Stage E 가 쓴 raw thermal(777) 이 남지 않는다',
+            fm.get('thermal_sigma_full_mScm') != 777)
+        chk('RC5-03) ★ 새 network 세대가 못 낸 thermal 을 옛 값(111.125)으로 메우지 않는다',
+            fm.get('thermal_sigma_full_mScm') != 111.125
+            and 'thermal_sigma_full_mScm' in (fm.get('network_projection_dropped') or []))
+        # ★ RC5-02 ⑤: 실패 시도는 **active 필드가 아니라 별도 파일**에 (network 와 같은 규약)
+        _att_p = os.path.join(res, ps.STAGE_E_ATTEMPT_FILE)
+        _att = json.load(open(_att_p)) if os.path.exists(_att_p) else {}
+        #   attempt 의 parent 는 **실패한 시도가 상대한 세대**(= 이 경로에선 새 network)
+        #   이고, 복원된 active 의 parent 는 옛 세대다 → 둘은 달라야 한다.
+        chk('RC5-02e) ★ 실패 시도가 active 필드를 차지하지 않고 별도 record 로 간다',
+            'stage_e_attempt_parent_network_run_id' not in fm
+            and _att.get('status') == 'failed'
+            and _att.get('stage_e_attempt_parent_network_run_id') not in (None, 'OLDRUN-0001')
+            and fm.get('stage_e_parent_network_run_id') == 'OLDRUN-0001')
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+    # ══ 3e) ★ RR3-04 (Codex): batch contact 가 옛 산출물을 새 성공으로 재도장 ══
+    #   Codex 가 재현기를 **현재 4-산출물 계약**에 맞추자(옛 network_summary.csv 까지 심자)
+    #   contact 가 통과하고 network·Stage E 가 다시 돌았다 = 존재-확인 계약의 false-green.
+    tmp = tempfile.mkdtemp(prefix='rr304_')
+    try:
+        rd = os.path.join(tmp, 'r')
+        os.makedirs(rd)
+        for f in ('full_metrics.json', 'atoms_analyzed.csv',
+                  'contacts_analyzed.csv', 'network_summary.csv'):
+            open(os.path.join(rd, f), 'w').write('{}' if f.endswith('.json') else 'a\n')
+        _noop = lambda cmd, **kw: subprocess.CompletedProcess(cmd, 0, '', '')   # rc=0, 무산출
+        _st_old = ps.run_stage('c', ['x', 'y'], required=True, results_dir=rd,
+                               runner=_noop,
+                               expects=('full_metrics.json', 'atoms_analyzed.csv',
+                                        'contacts_analyzed.csv', 'network_summary.csv'))
+        chk('RR3-04a) ★ 존재 확인만 하면 무산출 실행이 통과한다 (= 옛 계약의 결함)',
+            _st_old.ok is True)
+        _st_new = ps.run_stage('c', ['x', 'y'], required=True, results_dir=rd,
+                               runner=_noop, fresh=True,
+                               expects=('full_metrics.json', 'atoms_analyzed.csv',
+                                        'contacts_analyzed.csv', 'network_summary.csv'))
+        chk('RR3-04b) ★ fresh=True 면 같은 상황이 실패한다 (stale 로 잡힌다)',
+            _st_new.ok is False and _st_new.get('stale_outputs'))
+        # 실제로 쓰면 통과해야 한다 (거짓 실패가 아님을 확인)
+        def _writer(cmd, **kw):
+            open(os.path.join(rd, 'full_metrics.json'), 'w').write('{"a":1}')
+            return subprocess.CompletedProcess(cmd, 0, '', '')
+        _st_w = ps.run_stage('c', ['x', 'y'], required=True, results_dir=rd,
+                             runner=_writer, fresh=True,
+                             expects=('full_metrics.json', 'atoms_analyzed.csv',
+                                      'contacts_analyzed.csv', 'network_summary.csv'))
+        chk('RR3-04c) 실제로 새로 쓰면 통과한다 (fresh 가 거짓 실패를 내지 않는다)',
+            _st_w.ok is True)
+        # batch 호출부가 실제로 그것을 쓰는지 (구현만 하고 배선 안 한 전례가 있다)
+        _apy = open(os.path.join(os.path.dirname(os.path.abspath(webapp.__file__)),
+                                 'app.py'), encoding='utf-8').read()
+        _i = _apy.index("'Contact Analysis (batch)'")
+        chk('RR3-04d) ★ batch 호출부가 실제로 fresh=True 를 넘긴다 (배선 확인)',
+            'fresh=True' in _apy[_i:_i + 1200])
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 
@@ -561,6 +635,29 @@ def main():
                 _bare.append(_n.lineno)
         chk('31) ★ webapp 이 subprocess 를 bare python3 로 띄우지 않는다 (F-18, Windows 500)',
             not _bare or print(f'    bare python3 at lines {_bare}') )
+
+        # ══ RC5-04 (Codex 5회차): Stage E 가 Physics 재솔브 결과를 버리던 것 ══
+        #   상세 회귀는 scripts/network_mode_io.py --selftest (11건).  여기서는 그 모듈이
+        #   실제로 존재하고 계약을 지키는지만 확인한다 (pandas 없이 import 되는 것 포함 —
+        #   버그가 오래 숨은 이유가 "검증할 수 없는 자리에 있었다" 였다).
+        sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(
+            os.path.abspath(webapp.__file__))), 'scripts'))
+        import network_mode_io as _nmio
+        _md = tempfile.mkdtemp(prefix='modes_')
+        try:
+            json.dump({'sigma_full_mScm': 1.0},
+                      open(os.path.join(_md, _nmio.MODE_FILES['hertzian']), 'w'))
+            json.dump({'sigma_full_mScm': 101.0},
+                      open(os.path.join(_md, _nmio.MODE_FILES['physics']), 'w'))
+            _r = _nmio.collect_modes(_md, warn=lambda _m: None)
+            chk('32) ★ Physics 재솔브 값이 살아 돌아온다 (옛 코드는 항상 None → fallback)',
+                _r.get('sigma_full_mScm_physics') == 101.0 and _r.get('sigma_full_mScm') == 1.0)
+            chk('33) Stage E 가 그 모듈을 실제로 쓴다 (인라인 사본이 아니라)',
+                'network_mode_io' in open(os.path.join(os.path.dirname(os.path.dirname(
+                    os.path.abspath(webapp.__file__))), 'scripts',
+                    'run_network_full_corrections.py'), encoding='utf-8').read())
+        finally:
+            shutil.rmtree(_md, ignore_errors=True)
 
         # ══ T10 (Codex 실측 이관): Windows `os.replace` 간헐 PermissionError ══
         # Codex 가 DFT 대시보드에서 12 프로세스 × 100 건 × 10 회를 돌려 992/1000 만

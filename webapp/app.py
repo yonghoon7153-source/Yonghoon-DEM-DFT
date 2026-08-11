@@ -2944,10 +2944,30 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
                 net_data = json.load(_f)
             with open(fm_json) as _f:
                 fm_data = json.load(_f)
+            # ★ RC5-03 (Codex 5회차): 옛 merge 는 **새 JSON 에 있는 키만** 덮어썼다.
+            #   그래서 새 solver 가 thermal 을 못 내면 **옛 세대의 thermal 값이 새
+            #   network_run_id·새 Stage E parent 아래 그대로 남았다** (실측: 111.125/222.25
+            #   가 새 ID 밑에서 살아남음).  값과 도장이 다른 세대를 가리키는 것은
+            #   network/Stage E 세대 분리 작업 전체가 막으려던 바로 그 상태다.
+            #   ⇒ merge 전에 **network 소유 projection 을 전부 걷어내고** 새 세대로만 채운다.
+            #   ⚠ 이것은 "thermal 누락 = network 실패" 판정과는 **별개**다.  그 판정은
+            #     채널이 필수인지에 대한 결정이 필요해 여기서 하지 않는다 — 다만 누락을
+            #     조용히 옛 값으로 메우는 것만은 확실히 막는다.  누락된 키는 기록한다.
+            _had_keys = {k for k in _NET_MERGE_KEYS if fm_data.get(k) is not None}
+            for k in _NET_MERGE_KEYS:
+                fm_data.pop(k, None)
             for k in _NET_MERGE_KEYS:
                 if k in net_data and net_data[k] is not None:
                     fm_data[k] = net_data[k]
             fm_data = _merge_dual_into_metrics(results_dir, fm_data)
+            _dropped = sorted(k for k in _had_keys if fm_data.get(k) is None)
+            if _dropped:
+                fm_data['network_projection_dropped'] = _dropped
+                log.append({'step': 'Network Merge', 'rc': 0, 'stderr': '',
+                            'stdout': f'⚠ 새 세대가 못 낸 채널 {len(_dropped)}개를 옛 값으로 '
+                                      f'메우지 않고 비웠다: ' + ', '.join(_dropped[:8])})
+            else:
+                fm_data.pop('network_projection_dropped', None)
             fm_data = _refresh_post_network_warnings(fm_data)
             fm_data['network_solver_status'] = 'success'
             fm_data['network_run_id'] = prov.get('network_run_id')          # 하위호환
@@ -2988,7 +3008,7 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
     #   실패하면 걷어낸 키를 되돌려 이전 세대를 보존한다.
     #   ⚠ 최종형은 Stage E 스크립트 자신이 per-run manifest 를 쓰는 것 — 키 집합이 늘면
     #     이 격리도 drift 한다.  그것은 스크립트 인터페이스 변경이라 별도 작업이다.
-    _se_saved = {}
+    _se_saved, _raw_saved, _had_active = {}, {}, False
     try:
         if os.path.exists(fm_json):
             with open(fm_json) as _f:
@@ -2997,12 +3017,17 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
             #   (stage_e_source · stage_e_factors_used · validation_flags · 온도
             #    provenance · wrapper provenance 등이 전부 새고 있었다).
             _se_saved = {k: v for k, v in _fmd.items() if _ps.is_stage_e_key(k)}
+            _had_active = bool(_se_saved)
+            # ★ RC5-02: raw thermal 은 격리하지 않는다 (Stage E 의 baseline 입력이므로)
+            #   — 하지만 Stage E 가 heal 로 덮어쓸 수 있어 **rollback 대상에는 넣는다**.
+            #   `{present, value}` 로 떠서 "원래 없던 키" 를 None 으로 되살리지 않는다.
+            _raw_saved = _ps.snapshot_keys(_fmd, _ps.RAW_THERMAL_KEYS)
             if _se_saved:
                 for k in _se_saved:
                     _fmd.pop(k, None)
                 _ps.atomic_write_json(fm_json, _fmd)
     except Exception:                                              # noqa: BLE001
-        _se_saved = {}
+        _se_saved, _raw_saved, _had_active = {}, {}, False
 
     st = _ps.run_stage('Stage E (literature-grounded grain corrections)',
                        [sys.executable, os.path.join(scripts, 'run_network_full_corrections.py'),
@@ -3021,11 +3046,25 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
                 # ★ RC4-01: 실패 시에는 값만 되돌리는 게 아니라 **wrapper provenance 도**
                 #   옛 것을 유지한다.  옛 코드는 값은 옛 세대인데 parent/run/code 를 새
                 #   시도로 바꿔, 게시된 값과 도장이 다른 세대를 가리켰다.
-                for _k, _v in _se_saved.items():
-                    fm_data[_k] = _v
-                fm_data['stage_e_status'] = 'failed_restored_previous'
-                fm_data['stage_e_attempt_parent_network_run_id'] = prov.get('network_run_id')
+                # ★ RC5-02 (Codex 5회차): 옛 복원은 `_se_saved` 를 **overlay 만** 해서
+                #   실패 후보가 **새로 만든** 관리 키가 그대로 남았다 (실측: 실패 실행이
+                #   쓴 `future_metric_stage_e = 999` 가 잔존).  "실패 전 상태의 정확한
+                #   복원" 이 아니었다.  순서를 Codex 권고대로 바로잡는다:
+                #     ① 현재 관리 키 **전수 제거**  ② 이전 active overlay
+                #     ③ raw thermal `{present, value}` rollback
+                #     ④ 이전 active 가 없으면 상태명을 달리  ⑤ 시도는 별도 파일
+                for _k in [k for k in fm_data if _ps.is_stage_e_key(k)]:
+                    fm_data.pop(_k, None)                                  # ①
+                fm_data.update(_se_saved)                                  # ②
+                _ps.restore_keys(fm_data, _raw_saved)                      # ③
+                # ④ 이전 세대가 애초에 없었으면 '이전 것으로 복원했다' 는 거짓이다.
+                fm_data['stage_e_status'] = ('failed_restored_previous' if _had_active
+                                             else 'failed_no_active_generation')
                 _ps.atomic_write_json(fm_json, fm_data)
+                # ⑤ 실패 시도는 active 필드가 아니라 별도 record 로 (network 와 같은 규약)
+                _ps.record_stage_e_attempt(results_dir, prov.get('network_run_id'),
+                                           reason='stage_e_verify_failed',
+                                           restored=_had_active)
                 return stages, prov.get('network_run_id')   # st 는 위에서 stages 에 들어갔다
             fm_data['stage_e_parent_network_run_id'] = prov.get('network_run_id')
             fm_data['stage_e_status'] = 'success'
@@ -5381,6 +5420,14 @@ def batch_rerun_physics():
                      c['atoms'], c['contacts'], '-o', c['results_dir'],
                      '-t', type_map, '-s', scale],
                     required=True, results_dir=c['results_dir'],
+                    # ★ RR3-04 (Codex): batch 는 results 를 지우지 않으므로 **존재 확인만**
+                    #   하면 옛 산출물이 새 성공으로 재도장된다.  Codex 가 재현기를 현재
+                    #   4-산출물 계약에 맞추자 network 1회·Stage E 1회가 다시 실행됐다 =
+                    #   본질 미수정.  fresh=True 로 실행 전후 지문을 비교해 **실제로 새로
+                    #   쓰였는지**를 본다 (RV-02 에서 구현해 놓고 어디에도 배선하지 않았던
+                    #   기능이다 — 구현과 배선은 다르다).
+                    #   ⚠ 최종형은 Codex 권고대로 **빈 candidate 에서만 실행**하는 것.
+                    fresh=True,
                     expects=('full_metrics.json', 'atoms_analyzed.csv',
                              'contacts_analyzed.csv', 'network_summary.csv'))
                 _bstages.append(_cst)

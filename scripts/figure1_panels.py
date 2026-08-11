@@ -330,7 +330,7 @@ def panel_f():
 
     # ── Final output (bottom-right)
     _box(7.5, 0.5, 2.2, 1.4,
-         '★ Robust $\sigma_{eff}$\n'
+         r'★ Robust $\sigma_{eff}$' '\n'
          r'($\sigma_{ionic}, \sigma_e, \kappa$)',
          color='#d4f0d4', fontweight='bold', fontsize=11,
          text_color=COL_OK)

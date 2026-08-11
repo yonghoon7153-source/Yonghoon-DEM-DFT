@@ -385,6 +385,54 @@ def drop_stash(stash_dir):
         shutil.rmtree(stash_dir, ignore_errors=True)
 
 
+#: Stage E 실패 시도 기록 — active 필드가 아니라 별도 파일 (RC5-02, network 와 같은 규약).
+STAGE_E_ATTEMPT_FILE = 'stage_e_attempt.json'
+
+#: ★ raw thermal 은 `is_stage_e_key()` 가 **일부러 제외**한다 — Stage E 가 baseline 으로
+#:   읽기 때문에 실행 전에 걷어내면 입력을 지우게 된다.  그런데 Stage E 는 그 값을
+#:   heal(덮어쓰기)하기도 해서, 실패했을 때 **되돌리지 않으면 network 산출물이 오염된 채
+#:   남는다** (Codex RC5-02 실측: thermal 777 로 바뀐 것이 실패 후에도 남았다).
+#:   ⇒ 격리는 안 하되 **snapshot/rollback 대상에는 넣는다**.
+RAW_THERMAL_KEYS = ('thermal_sigma_full_mScm', 'thermal_sigma_full_mScm_physics')
+
+
+def snapshot_keys(d, keys):
+    """{key: {'present': bool, 'value': v}} — **없었다는 사실**까지 보존한다.
+
+    단순히 값만 저장하면 "원래 없던 키" 를 복원할 때 `None` 으로 되살려 놓게 된다.
+    없던 것은 없는 상태로 되돌려야 정확한 rollback 이다.
+    """
+    d = d if isinstance(d, dict) else {}
+    return {k: ({'present': True, 'value': d[k]} if k in d else {'present': False})
+            for k in keys}
+
+
+def restore_keys(d, snap):
+    """`snapshot_keys` 의 기록대로 정확히 되돌린다 (없었으면 삭제)."""
+    for k, rec in (snap or {}).items():
+        if rec.get('present'):
+            d[k] = rec.get('value')
+        else:
+            d.pop(k, None)
+    return d
+
+
+def record_stage_e_attempt(results_dir, parent_run_id, reason='', restored=True):
+    """Stage E **실패 시도**를 active 필드와 분리해 남긴다 (RC5-02).
+
+    옛 코드는 `stage_e_status` / `stage_e_attempt_parent_network_run_id` 를 active
+    full_metrics 에 썼다.  실패 시도의 흔적이 게시된 세대의 필드를 차지하는 것은
+    network 쪽에서 이미 RR2-01 로 고친 것과 같은 문제다.
+    """
+    atomic_write_json(os.path.join(results_dir, STAGE_E_ATTEMPT_FILE), {
+        'stage_e_attempt_parent_network_run_id': parent_run_id,
+        'status': 'failed', 'reason': reason,
+        'previous_generation_restored': bool(restored),
+        'code_sha': code_sha(),
+        'attempted_at': time.strftime('%Y-%m-%dT%H:%M:%S'),
+    })
+
+
 def record_network_attempt(results_dir, run_id, status, reason='', argv=None):
     """**실패 시도**를 active provenance 와 **분리해** 기록한다 (RR2-01).
 

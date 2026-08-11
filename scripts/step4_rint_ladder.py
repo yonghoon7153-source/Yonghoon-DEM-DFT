@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""STEP4 R_int 사다리 비교 — 여러 step4 npz(같은 전극·rate, 다른 집전체 R_int)를 한 그림에.
+r"""STEP4 R_int 사다리 비교 — 여러 step4 npz(같은 전극·rate, 다른 집전체 R_int)를 한 그림에.
 
 풀셀 축(R_int Phase 2): 같은 베드/그리드에 R_int만 바꾼 단일변수 실험 → delivered vs R_int.
 V_term = V_cell − I·R_int → R_int↑ 시 CC 조기종료·용량 압축.  전극-내부(R_int=0)가 상한.
