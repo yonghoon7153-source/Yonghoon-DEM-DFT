@@ -1,0 +1,345 @@
+{
+ "element": "Ni",
+ "supercell_matrix": [
+  [
+   1,
+   0,
+   0
+  ],
+  [
+   0,
+   4,
+   0
+  ],
+  [
+   0,
+   0,
+   1
+  ]
+ ],
+ "n_replicas": 4,
+ "counts": {
+  "Ni1": 24,
+  "Ni2": 24
+ },
+ "max_residual_A": 0.1372,
+ "sign_convention": {
+  "Ni1": 1.0,
+  "Ni2": -1.0
+ },
+ "net_moment_muB": 0.0,
+ "sign_by_slab_index": {
+  "1": -1.0,
+  "5": 1.0,
+  "9": 1.0,
+  "13": 1.0,
+  "17": -1.0,
+  "21": -1.0,
+  "25": -1.0,
+  "29": 1.0,
+  "33": 1.0,
+  "37": -1.0,
+  "41": -1.0,
+  "45": 1.0,
+  "49": -1.0,
+  "53": 1.0,
+  "57": 1.0,
+  "61": 1.0,
+  "65": -1.0,
+  "69": -1.0,
+  "73": -1.0,
+  "77": 1.0,
+  "81": 1.0,
+  "85": -1.0,
+  "89": -1.0,
+  "93": 1.0,
+  "97": -1.0,
+  "101": 1.0,
+  "105": 1.0,
+  "109": 1.0,
+  "113": -1.0,
+  "117": -1.0,
+  "121": -1.0,
+  "125": 1.0,
+  "129": 1.0,
+  "133": -1.0,
+  "137": -1.0,
+  "141": 1.0,
+  "145": -1.0,
+  "149": 1.0,
+  "153": 1.0,
+  "157": 1.0,
+  "161": -1.0,
+  "165": -1.0,
+  "169": -1.0,
+  "173": 1.0,
+  "177": 1.0,
+  "181": -1.0,
+  "185": -1.0,
+  "189": 1.0
+ },
+ "rows": [
+  {
+   "slab_index": 1,
+   "sublattice": "Ni2",
+   "residual_A": 0.0
+  },
+  {
+   "slab_index": 5,
+   "sublattice": "Ni1",
+   "residual_A": 0.0
+  },
+  {
+   "slab_index": 9,
+   "sublattice": "Ni1",
+   "residual_A": 0.0
+  },
+  {
+   "slab_index": 13,
+   "sublattice": "Ni1",
+   "residual_A": 0.0
+  },
+  {
+   "slab_index": 17,
+   "sublattice": "Ni2",
+   "residual_A": 0.0
+  },
+  {
+   "slab_index": 21,
+   "sublattice": "Ni2",
+   "residual_A": 0.0
+  },
+  {
+   "slab_index": 25,
+   "sublattice": "Ni2",
+   "residual_A": 0.0815
+  },
+  {
+   "slab_index": 29,
+   "sublattice": "Ni1",
+   "residual_A": 0.0839
+  },
+  {
+   "slab_index": 33,
+   "sublattice": "Ni1",
+   "residual_A": 0.078
+  },
+  {
+   "slab_index": 37,
+   "sublattice": "Ni2",
+   "residual_A": 0.1372
+  },
+  {
+   "slab_index": 41,
+   "sublattice": "Ni2",
+   "residual_A": 0.1266
+  },
+  {
+   "slab_index": 45,
+   "sublattice": "Ni1",
+   "residual_A": 0.1325
+  },
+  {
+   "slab_index": 49,
+   "sublattice": "Ni2",
+   "residual_A": 0.0
+  },
+  {
+   "slab_index": 53,
+   "sublattice": "Ni1",
+   "residual_A": 0.0
+  },
+  {
+   "slab_index": 57,
+   "sublattice": "Ni1",
+   "residual_A": 0.0
+  },
+  {
+   "slab_index": 61,
+   "sublattice": "Ni1",
+   "residual_A": 0.0
+  },
+  {
+   "slab_index": 65,
+   "sublattice": "Ni2",
+   "residual_A": 0.0
+  },
+  {
+   "slab_index": 69,
+   "sublattice": "Ni2",
+   "residual_A": 0.0
+  },
+  {
+   "slab_index": 73,
+   "sublattice": "Ni2",
+   "residual_A": 0.0815
+  },
+  {
+   "slab_index": 77,
+   "sublattice": "Ni1",
+   "residual_A": 0.0839
+  },
+  {
+   "slab_index": 81,
+   "sublattice": "Ni1",
+   "residual_A": 0.078
+  },
+  {
+   "slab_index": 85,
+   "sublattice": "Ni2",
+   "residual_A": 0.1372
+  },
+  {
+   "slab_index": 89,
+   "sublattice": "Ni2",
+   "residual_A": 0.1266
+  },
+  {
+   "slab_index": 93,
+   "sublattice": "Ni1",
+   "residual_A": 0.1325
+  },
+  {
+   "slab_index": 97,
+   "sublattice": "Ni2",
+   "residual_A": 0.0
+  },
+  {
+   "slab_index": 101,
+   "sublattice": "Ni1",
+   "residual_A": 0.0
+  },
+  {
+   "slab_index": 105,
+   "sublattice": "Ni1",
+   "residual_A": 0.0
+  },
+  {
+   "slab_index": 109,
+   "sublattice": "Ni1",
+   "residual_A": 0.0
+  },
+  {
+   "slab_index": 113,
+   "sublattice": "Ni2",
+   "residual_A": 0.0
+  },
+  {
+   "slab_index": 117,
+   "sublattice": "Ni2",
+   "residual_A": 0.0
+  },
+  {
+   "slab_index": 121,
+   "sublattice": "Ni2",
+   "residual_A": 0.0815
+  },
+  {
+   "slab_index": 125,
+   "sublattice": "Ni1",
+   "residual_A": 0.0839
+  },
+  {
+   "slab_index": 129,
+   "sublattice": "Ni1",
+   "residual_A": 0.078
+  },
+  {
+   "slab_index": 133,
+   "sublattice": "Ni2",
+   "residual_A": 0.1372
+  },
+  {
+   "slab_index": 137,
+   "sublattice": "Ni2",
+   "residual_A": 0.1266
+  },
+  {
+   "slab_index": 141,
+   "sublattice": "Ni1",
+   "residual_A": 0.1325
+  },
+  {
+   "slab_index": 145,
+   "sublattice": "Ni2",
+   "residual_A": 0.0
+  },
+  {
+   "slab_index": 149,
+   "sublattice": "Ni1",
+   "residual_A": 0.0
+  },
+  {
+   "slab_index": 153,
+   "sublattice": "Ni1",
+   "residual_A": 0.0
+  },
+  {
+   "slab_index": 157,
+   "sublattice": "Ni1",
+   "residual_A": 0.0
+  },
+  {
+   "slab_index": 161,
+   "sublattice": "Ni2",
+   "residual_A": 0.0
+  },
+  {
+   "slab_index": 165,
+   "sublattice": "Ni2",
+   "residual_A": 0.0
+  },
+  {
+   "slab_index": 169,
+   "sublattice": "Ni2",
+   "residual_A": 0.0815
+  },
+  {
+   "slab_index": 173,
+   "sublattice": "Ni1",
+   "residual_A": 0.0839
+  },
+  {
+   "slab_index": 177,
+   "sublattice": "Ni1",
+   "residual_A": 0.078
+  },
+  {
+   "slab_index": 181,
+   "sublattice": "Ni2",
+   "residual_A": 0.1372
+  },
+  {
+   "slab_index": 185,
+   "sublattice": "Ni2",
+   "residual_A": 0.1266
+  },
+  {
+   "slab_index": 189,
+   "sublattice": "Ni1",
+   "residual_A": 0.1325
+  }
+ ],
+ "source_qe": "/home/user/Yonghoon-DEM-DFT/db/inputs/sdcp_v2/slab_relax/relax.in",
+ "source_slab": "/home/user/Yonghoon-DEM-DFT/db/structures/linio2_104_sym_1x4L4_relaxed.vasp",
+ "qe_sublattice_order": [
+  "Ni2",
+  "Ni1",
+  "Ni1",
+  "Ni1",
+  "Ni2",
+  "Ni2",
+  "Ni2",
+  "Ni1",
+  "Ni1",
+  "Ni2",
+  "Ni2",
+  "Ni1"
+ ],
+ "naive_block_halves": {
+  "n": 48,
+  "agree": 24,
+  "agree_flipped": 24,
+  "verdict": "다른 자기 topology"
+ }
+}
