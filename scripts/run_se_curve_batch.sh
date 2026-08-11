@@ -71,6 +71,28 @@ mkdir -p "$OUT"; cd "$OUT" || exit 1
 echo "venv: $ACT  ·  python: $(command -v python3)"
 echo "설정: n_grid $NGRID · sub $SUB · mach $MACH · gpu-mem $GPUMEM · φ $PHI"
 
+# ── 실행 이력 (2026-08-11 사고 후 추가) ───────────────────────────────────────
+#   ★ 이 배치는 **시작 시점에 한 번** QSFLAG 를 계산하는데, mpm3d 는 **매 런마다 새로
+#     읽힌다**.  그래서 배치 중간에 `git pull` 하면 둘이 어긋난다.
+#     실측 사고(2026-08-11, kit_ps_7_3 g288): 13:19 에 게이트 없던 코드로 시작 →
+#     1·2번(ε 14.97·11.73) 통과 → 중간에 pull → mpm3d 가 준정적 게이트를 얻음 →
+#     3번(ε 7.42)만 144초 만에 거부(EXIT=1).  화면 어디에도 "코드가 바뀌었다" 는
+#     신호가 없어 원인 파악에 왕복이 필요했다.  ⇒ **첫 줄에 박고, 바뀌면 그때도 알린다.**
+_MPM="$REPO/scripts/mpm3d_compaction.py"
+_sha()  { git -C "$REPO" rev-parse --short HEAD 2>/dev/null || echo "no-git"; }
+_mpmh() { md5sum "$_MPM" 2>/dev/null | cut -c1-8 || echo "????????"; }
+HEAD0=$(_sha); MPM0=$(_mpmh)
+_gate=$(grep -c 'allow_fast_platen' "$_MPM" 2>/dev/null || true); _gate=${_gate:-0}
+echo "── 실행 이력 ────────────────────────────────────────────────"
+echo "   repo HEAD : $HEAD0"
+echo "   mpm3d     : md5 $MPM0  ·  준정적 게이트 $([ "$_gate" -gt 0 ] && echo 있음 || echo 없음)"
+echo "   QSFLAG    : ${QSFLAG[*]:-(없음)}   ← ★ 배치 시작 시점에 고정 (중간 pull 시 어긋남)"
+if [ "$_gate" -gt 0 ] && [ ${#QSFLAG[@]} -eq 0 ]; then
+  echo "   ★★ 경고: mpm3d 에 게이트가 있는데 QSFLAG 가 비어 있다."
+  echo "      mach $MACH 가 준정적 한계(0.01)를 넘으면 **모든 런이 거부**된다."
+fi
+echo "─────────────────────────────────────────────────────────────"
+
 rc_all=0
 IFS=',' read -r -a KIT_ARR <<< "$KITS"
 for K in "${KIT_ARR[@]}"; do
@@ -90,6 +112,14 @@ for K in "${KIT_ARR[@]}"; do
     t0=$SECONDS
     python3 -u "$REPO/scripts/mpm3d_compaction.py" --arch cuda --gpu-mem "$GPUMEM" --am-scaffold "$KDIR/am_scaffold.csv" --se-dump "$KDIR/se_scaffold.csv" --n-grid "$NGRID" --sub "$SUB" --print-every 20 --protocol hold --periodic --platen-mach "$MACH" "${QSFLAG[@]}" --compact-to "$E" --save-metrics "xfer_${NAME}.json" > "xfer_${NAME}.log" 2>&1
     rc=$?; echo "  EXIT=$rc  wall=$((SECONDS-t0))s"
+    # 배치 도중 코드가 바뀌었으면 **그 자리에서** 알린다 (위 사고의 조기 신호).
+    _now=$(_mpmh)
+    if [ "$_now" != "$MPM0" ]; then
+      echo "  ★★ mpm3d 가 배치 도중 바뀌었다: md5 $MPM0 → $_now  (HEAD $HEAD0 → $(_sha))"
+      echo "     QSFLAG 는 시작 시점 값(${QSFLAG[*]:-없음})으로 **고정**돼 있어 새 코드와"
+      echo "     어긋날 수 있다.  실패가 나면 배치를 다시 띄우세요 (2026-08-11 사고)."
+      MPM0="$_now"; HEAD0=$(_sha)
+    fi
     if [ "$rc" -ne 0 ]; then
       rc_all=$rc; echo "  ── 실패 꼬리 ──"; tail -5 "xfer_${NAME}.log" | sed 's/^/  | /'
     fi
