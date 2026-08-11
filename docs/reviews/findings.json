@@ -257,9 +257,10 @@
       "status": "open",
       "owner": "claude",
       "opened_in": "docs/reviews/selfreview_synthesis_vgcf_ptfe_se_grad_20260811.md",
-      "note": "자체 3각 리뷰 물리 X3 → **Codex 독립 재현 완료** (91.23% 단절·평균 4.21 components; 내 재현 95.7%/4.92 — box 크기 의존). ★ 원인 verified, **정확한 91.7%는 straight-fibre toy protocol 값**이고 production 정량은 pending (box 10→20→50µm 에서 86.6→91.2→94.6% 변동). ★★ Codex CR-02: '동일 설정 상대비교는 공통모드 생존' 은 **범위가 너무 넓다** — 공통모드는 **같은 fibre geometry 고정 + σ scalar 만 변경** 정도이고, grade 변경·P3 proximity·n_grid·curl/clipping·SBE↔DBE(VGCF 섬유 vs SDCP 입자)·raster origin 변경에서는 raster 오차가 **직접 달라진다** ⇒ grade/P3/첨가제 headline 비교의 **P1 blocker** 로 승격. ★ 해결책: point 재샘플링은 **원리적으로 불가**(0.35·vox 97.5% · 0.02·vox 30.7% 단절 — 대각 셀은 face 를 공유하지 않는다).  필요한 것은 ① polyline segment supercover + face bridge ② 직경-aware connected-tube rasterizer ③ (권장) 1D 섬유 G=σA/L + 3D AM 복셀 mixed-dimensional solver.  26-conn 라벨 변경은 답이 아니다(솔버는 6-face conductance).",
+      "note": "자체 3각 리뷰 물리 X3 → **Codex 독립 재현 완료** (91.23% 단절·평균 4.21 components; 내 재현 95.7%/4.92 — box 크기 의존). ★ 원인 verified, **정확한 91.7%는 straight-fibre toy protocol 값**이고 production 정량은 pending (box 10→20→50µm 에서 86.6→91.2→94.6% 변동). ★★ Codex CR-02: '동일 설정 상대비교는 공통모드 생존' 은 **범위가 너무 넓다** — 공통모드는 **같은 fibre geometry 고정 + σ scalar 만 변경** 정도이고, grade 변경·P3 proximity·n_grid·curl/clipping·SBE↔DBE(VGCF 섬유 vs SDCP 입자)·raster origin 변경에서는 raster 오차가 **직접 달라진다** ⇒ grade/P3/첨가제 headline 비교의 **P1 blocker** 로 승격. ★ 해결책: point 재샘플링은 **원리적으로 불가**(0.35·vox 97.5% · 0.02·vox 30.7% 단절 — 대각 셀은 face 를 공유하지 않는다).  필요한 것은 ① polyline segment supercover + face bridge ② 직경-aware connected-tube rasterizer ③ (권장) 1D 섬유 G=σA/L + 3D AM 복셀 mixed-dimensional solver.  26-conn 라벨 변경은 답이 아니다(솔버는 6-face conductance). ★ 2026-08-11 진전: scripts/fibre_segment_raster.py (Amanatides-Woo 선분 순회) 프로토타입 완성, selftest 17/17.  A/B (직선섬유 400, 점간격 0.0987µm 고정): vox 0.4 점-스탬프 96.0% 단절(4.66성분) → 선분 0.0%(1.00), 셀 +11.3% · vox 0.2 99.8%(14.8) → 0.0%, 셀 +24.7% · vox 0.141 100%(27.2) → 0.0%, 셀 +37.5%. ⚠ 아직 (i) 실침대 미적용 (ii) 직경-aware 단면 미반영(스탬프 인플레 9-20x 잔존) (iii) production STEP3 미배선 — 연결성 문제만 푼 v1.",
       "evidence_tests": [
-        "docs/reviews/codex_review_verdict_20260811.md"
+        "docs/reviews/codex_review_verdict_20260811.md",
+        "scripts/fibre_segment_raster.py::selftest"
       ]
     },
     {

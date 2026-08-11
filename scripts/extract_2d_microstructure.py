@@ -961,6 +961,11 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
     # ★ A7 graded-z 메타: K=8 z-밴드별 실측 porosity 프로파일 (+ carbon:binder 설계-프로파일).
     #   cb는 2D synth에 carbon/binder 픽셀이 없으므로 DESIGN PROFILE(설계 스펙)로만 출력 — Phase-5
     #   layered synth / additives seeding(#20 Bak)이 소비.  grad=0(uniform, #20) vs 경사(#286 Yoo)
+    #   ★★ Phase-5 z-stacking 규약 (2026-08-11, G4): **날카로운 조성 계단은 비물리다.**
+    #     Luan 2025 Fig 6d — 롤프레스 후 층 사이에 뚜렷한 계면이 없고 PTFE fibril 이 층을
+    #     가로지른다.  ⇒ 층을 쌓을 때 step 이 아니라 **수 µm 혼합대(interface width)** 를
+    #     둬야 하고, 현행 2D synth 에는 그 규약이 **없다** (계면 폭 파라미터 미구현).
+    #     구현 전까지 layered 산출물은 'sharp step = limiting control' 로만 읽을 것.
     #   중 optimum은 재료-의존 → 둘 다 knob으로 노출, 여기서 안 고름 (backlog A7 규약).
     _K8 = 8
     _be = np.linspace(0, ny, _K8 + 1).astype(int)
@@ -1280,13 +1285,16 @@ def main():
     ap.add_argument('--seed', type=int, default=0, help='procedural RNG seed')
     ap.add_argument('--poro-grad', type=float, default=0.0,
                     help='★A7 graded-z: porosity(z) 선형 경사 [−1..1].  >0 = 상단(분리막)쪽 더 다공, '
-                         '0 = uniform(기본).  총 porosity는 고정(프로파일만 이동, #286 Yoo)')
+                         '0 = uniform(기본).  총 porosity는 고정(프로파일만 이동, #286 Yoo) ★★ 이것은 **porosity(공극) 구배**다 (출처 #286 Yoo — 흑연/액체계). Luan 2025 류 **조성 φ_SE 구배**와는 다른 물리다 — 그쪽은 --se-grad (미구현, docs/plan_se_grad_20260811.md).  ASSB 조성구배 질문에 --poro-grad 를 대신 쓰지 말 것.')
     ap.add_argument('--cb-ratio', type=float, default=None,
                     help='★A7: carbon:binder 기준비 — K=8 밴드 설계-프로파일을 meta로 출력 '
                          '(2D 픽셀 아님; Phase-5 layered/additives 소비용)')
     ap.add_argument('--cb-grad', type=float, default=0.0,
                     help='★A7: carbon:binder z-경사 [−1..1] (#20 Bak 방향; 0=uniform — optimum은 '
-                         '재료의존이라 둘 다 노출)')
+                         '재료의존이라 둘 다 노출).  ★ Luan 2025(AFM, 황화물 ASSB): 도전재 구배는 '
+                         'reverse(집전체-rich)가 최적이나 이득 ≈2%%이고 **COMSOL 전용**(실험 대조 '
+                         '없음) → 기본값 불변.  ⚠ 그들 노브는 carbon:**총량**, 우리는 carbon:'
+                         '**binder** 비라 직접 매핑 불가')
     ap.add_argument('--out-png', default='docs/figures/microstructure_2d')
     ap.add_argument('--out-npy', default='docs/data/microstructure_2d')
     args = ap.parse_args()

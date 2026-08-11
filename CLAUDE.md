@@ -1753,6 +1753,16 @@ on the current n=76 fit corpus.
 ΔLOOCV = -0.008 (marginal, accepts measurable loss).  Stage 22.5 8-LIVE
 is the bias-variance sweet spot for this corpus.
 
+⚠⚠ **VALIDITY RANGE — φ_AM < 0.3 외삽 금지 (2026-08-11, G4 문서 가드.  폼 변경 아님)**
+Stage 22.5 는 `φ_AM⁴` 를 쓰지만 **퍼콜레이션 문턱항이 없다** — 우리 코퍼스가 φ_AM
+0.37–0.88 로 전부 문턱 위에 있어 필요가 없었기 때문이다.  그런데 Luan 2025 (AFM, 황화물
+ASSB, SE 10→60 wt% 스윕) 은 **σ_e 가 6 자릿수 붕괴**하고 용량이 동반 붕괴하는 지점을
+**DERIVED φ_AM(고체기준) ≈ 0.28 → 0.20** 에서 보고한다 (litdb
+`luan2025_graded_cathode_400whkg_pouch`).  φ_AM⁴ 는 그 붕괴를 **표현할 수 없다**
+(멱함수는 문턱에서 유한).  ⇒ **φ_AM < 0.3 에서 Stage 22.5 를 쓰지 말 것** — 예측이
+"작지만 유한" 으로 나오는데 실제는 **끊긴다**.  코퍼스 밖이므로 폼은 그대로 동결하고,
+그 영역이 필요해지면 문턱항을 **새로** 세운다 (기존 폼에 끼워넣지 않는다).
+
 LOCKED-EXPONENT VALIDATION (2026-06-03, scripts/electronic_locked_exponent_screen.py):
 All 5 literature-anchored locked exponents independently validated against
 the n=76 corpus.  Pure validation — 0 additional DOF per test (adjusts
