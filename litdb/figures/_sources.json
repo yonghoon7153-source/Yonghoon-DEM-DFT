@@ -531,6 +531,13 @@
    "DFT 먹인 논문/04. Sup) Tailoring argyrodite electrolyte for enhanced interface compatibility with lithium anode.pdf"
   ]
  },
+ "luan2025_graded_cathode_400whkg_pouch": {
+  "figures": 7,
+  "generated": "2026-08-11",
+  "pdfs": [
+   "1b324395-56._Adv_Funct_Materials__2025__Luan__Electrode_Engineering_Strategy_for_400_Wh_kg_1_All_Solid_State_Pouch_Cells__Spatial.pdf"
+  ]
+ },
  "luding2008_cohesive_frictional_contact_models": {
   "figures": 5,
   "generated": "2026-08-05",
@@ -606,10 +613,9 @@
   "figures": 33,
   "generated": "2026-08-11",
   "pdfs": [
-   "이용민 교수님/3. Revisiting Primer Layer Design for Robust Dry Electrode-Current Collector Interfaces in Lithium-Ion Batteries.pdf",
-   "이용민 교수님/23. Sup) Revisiting Primer Layer Design for Robust Dry Electrode-Current Collector Interfaces in Lithium-Ion Batteries.pdf"
-  ],
-  "note": "세션 업로드본에서 추출 (본문 11p + SI 38p).  위 경로는 사용자 로컬 라이브러리 기준 표기이며 번호(3./23.)는 업로드 파일명에서 온 것이다 — 로컬 번호와 다르면 고칠 것."
+   "e8080c51-3._____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
+   "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf"
+  ]
  },
  "ngandjong2021_dem_calendering_digital_twin": {
   "figures": 10,
