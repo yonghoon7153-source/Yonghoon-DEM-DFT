@@ -45,12 +45,13 @@
       "source": "sei_electronic.json:li3po4g_mp-2878"
     },
     "lindo2": {
-      "class": "undetermined",
-      "evidence": "blocked",
+      "class": "insulator",
+      "evidence": "declared",
       "gap_eV": null,
-      "blocker": "Nd 4f 를 원자가에 둔 PP (z_valence=14) 로는 E_F 에 평평한 f 다중항이 얹혀 갭이 정의되지 않는다. 우리 실측 −0.0284 eV 는 **금속성이 아니라 방법의 실패**다 (E_F ±0.5 eV DOS 의 95–96% 가 Nd_f).",
-      "unblock": "frozen-4f PP (z≈11) 확보 — todo #27, tools/sei/nd_frozen4f.py",
-      "note": "⛔ 이 상을 `metal` 로 선언하면 안 된다. LiNdO₂ 는 실제로는 갭이 열린 산화물이고, MP frozen-4f 참조값이 그 근거다 (db/properties/nd_gap_reference_mp.json)."
+      "basis": "LiNdO₂ 는 갭이 열린 산화물 — MP frozen-4f 참조값 기준 (db/properties/nd_gap_reference_mp.json).",
+      "history_2026_08_11": "이전 판정 undetermined/blocked — 4f-in-valence PP(z=14)로는 갭이 정의되지 않았다. Nd 4f 를 원자가에 둔 PP (z_valence=14) 로는 E_F 에 평평한 f 다중항이 얹혀 갭이 정의되지 않는다. 우리 실측 −0.0284 eV 는 **금속성이 아니라 방법의 실패**다 (E_F ±0.5 eV DOS 의 95–96% 가 Nd_f).",
+      "unblocked_by": "frozen-4f PP 확보: Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (z=11, sha256 18a3835e…35101) — PP_PIN 으로 파일명 고정 (tools/sei/build_*_inputs.py)",
+      "must_confirm": "fixed-occ nscf 로 갭을 실측하면 evidence 를 measured 로 올린다. ⚠ frozen-4f 검증 1단계(Nd₂O₃ 5원자)가 그 실측이다 — **새 WORK 디렉터리에서** 돌 것 (옛 z=14 산출물이 남은 폴더에서는 러너가 '이미 완료'로 건너뛴다)."
     },
     "li3nd": {
       "class": "metal",
@@ -66,16 +67,22 @@
       "cite_with": "⚠ 장벽을 단독으로 내면 우리 P2 판정(Li–Nd 안정 ordered 상 0개, hull +0.197 eV/atom · theoretical)과 모순돼 보인다. 반드시 '설령 동역학적으로 생겼다 치더라도' 조건절과 hull 거리를 같이 쓴다."
     },
     "nd2o3": {
-      "class": "undetermined",
-      "evidence": "blocked",
+      "class": "insulator",
+      "evidence": "declared",
       "gap_eV": null,
-      "blocker": "같은 4f 문제 (실측 −6.46 eV 는 ↑/↓ 점유수 불일치까지 겹친 값이라 더 무의미하다)."
+      "basis": "Nd₂O₃ 는 실험적으로 잘 알려진 넓은 갭 절연체이고 MP frozen-4f 참조값도 갭이 열려 있다 (db/properties/nd_gap_reference_mp.json).",
+      "history_2026_08_11": "이전 판정 undetermined/blocked — 4f-in-valence PP(z=14)로는 갭이 정의되지 않았다. 같은 4f 문제 (실측 −6.46 eV 는 ↑/↓ 점유수 불일치까지 겹친 값이라 더 무의미하다).",
+      "unblocked_by": "frozen-4f PP 확보: Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (z=11, sha256 18a3835e…35101) — PP_PIN 으로 파일명 고정 (tools/sei/build_*_inputs.py)",
+      "must_confirm": "fixed-occ nscf 로 갭을 실측하면 evidence 를 measured 로 올린다. ⚠ frozen-4f 검증 1단계(Nd₂O₃ 5원자)가 그 실측이다 — **새 WORK 디렉터리에서** 돌 것 (옛 z=14 산출물이 남은 폴더에서는 러너가 '이미 완료'로 건너뛴다)."
     },
     "nd2s3": {
-      "class": "undetermined",
-      "evidence": "blocked",
+      "class": "insulator",
+      "evidence": "declared",
       "gap_eV": null,
-      "blocker": "같은 4f 문제 (실측 −0.0213 eV)."
+      "basis": "Nd₂S₃ 는 좁은 갭 절연체 — MP frozen-4f 참조 0.760 eV (db/properties/nd_gap_reference_mp.json).",
+      "history_2026_08_11": "이전 판정 undetermined/blocked — 4f-in-valence PP(z=14)로는 갭이 정의되지 않았다. 같은 4f 문제 (실측 −0.0213 eV).",
+      "unblocked_by": "frozen-4f PP 확보: Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (z=11, sha256 18a3835e…35101) — PP_PIN 으로 파일명 고정 (tools/sei/build_*_inputs.py)",
+      "must_confirm": "fixed-occ nscf 로 갭을 실측하면 evidence 를 measured 로 올린다. ⚠ frozen-4f 검증 1단계(Nd₂O₃ 5원자)가 그 실측이다 — **새 WORK 디렉터리에서** 돌 것 (옛 z=14 산출물이 남은 폴더에서는 러너가 '이미 완료'로 건너뛴다)."
     }
   },
   "provenance": {

@@ -292,7 +292,8 @@ def main():
             # 입력을 지우고 사유를 남긴다 — 옛 입력이 남아 있으면 러너가 그걸 돌린다
             if os.path.isfile(gap_in):
                 os.remove(gap_in)
-            json.dump({"tag": tag, "gap": "NOT_APPLICABLE",
+            # ⚠ gap 은 None 으로 — 문자열을 넣으면 결산의 :9.3f 포맷이 죽는다 (2026-08-11 실측)
+            json.dump({"tag": tag, "gap": None, "verdict": "NOT_APPLICABLE",
                        "electronic_class": ecl,
                        "reason": skip_reason or "electronic_class 게이트",
                        "electronic_class_evidence": ecls.get("evidence"),
@@ -313,7 +314,13 @@ def main():
             f"&PROJWFC\n  prefix = '{tag}'\n  outdir = './tmp'\n"
             f"  filpdos = '{tag}'\n  degauss = 0.007\n  ngauss = 0\n/\n")
         note = ""
-        if has_nd:
+        # ⚠ 2026-08-11 — 경고문이 PP 를 안 보고 찍혔다. frozen-4f(z≈11)로 갈아끼운 뒤에도
+        #   "4f 가 valence 다" 라고 말해 사람을 헷갈리게 한다. z_valence 로 분기한다.
+        nd_frozen = has_nd and (zval(os.path.join(a.pseudo_dir, pool["Nd"])) or 99) <= 12
+        if has_nd and nd_frozen:
+            note = ("  ★ Nd frozen-4f PP 다 (z≈11, 4f 가 core) — 스핀분극·U 가 필요 없다. "
+                    "갭은 fixed-occ 규율 그대로.")
+        elif has_nd:
             note = "  ⚠ Nd 4f 가 valence 다 — "
             if spinpol and a.nd_u > 0:
                 note += (f"nspin=2 · M_tot={3 * n_nd} μB · U(Nd 4f)={a.nd_u} eV. "

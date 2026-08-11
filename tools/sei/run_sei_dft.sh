@@ -92,7 +92,7 @@ print(f"  {'상':26s} {'VBM':>8s} {'CBM':>8s} {'gap(eV)':>9s}  판정")
 for d in rows:
     # ⚠ P1-7 — metal 은 gap.json 에 vbm/cbm 이 **없다**(NOT_APPLICABLE). 옛 코드는
     #   KeyError 로 죽어 그 WORK 의 **모든** 상에 대한 결산 표가 통째로 날아갔다.
-    if d.get('gap') is None:
+    if not isinstance(d.get('gap'), (int, float)):   # None 도 문자열 sentinel 도 잡는다
         print(f"  {d.get('tag','?'):26s} {'—':>8s} {'—':>8s} {'—':>9s}  "
               f"{d.get('verdict', 'NOT_APPLICABLE')}")
         continue
