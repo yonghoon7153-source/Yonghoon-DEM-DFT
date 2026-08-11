@@ -52,7 +52,8 @@ if command -v nvidia-smi >/dev/null; then
 fi
 
 # 싼 것부터 — 원자 수 순서를 코드에 박아 둔다(알파벳 순이면 li3po4g 가 먼저 온다)
-ORDER=(li2s li3p li3po4g)
+# 2026-08-11 6종으로 확장. lindo2 는 frozen-4f PP 게이트가 열려야 입력이 생긴다(todo #27).
+ORDER=(li2s li2o licl li3p li3po4g lindo2)
 TARGETS=("$@"); [ ${#TARGETS[@]} -eq 0 ] && TARGETS=("${ORDER[@]}")
 
 for t in "${TARGETS[@]}"; do

@@ -38,11 +38,17 @@ import numpy as np
 WORK = os.environ.get("WORK", "/data/work/runs/sei_neb")
 # 갭 계산과 **같은 사양**을 쓴다 — 다른 축과 섞어 쓸 수 있어야 한다
 ECUTWFC, ECUTRHO = 60.0, 480.0
-TARGETS = {                       # tag → (구조 파일 glob, 표시명)
+TARGETS = {                       # tag → (구조 파일, 표시명)
     "li2s":    ("db/structures/sei_li2s_mp-1153.vasp", "Li2S"),
     "li3p":    ("db/structures/sei_li3p_mp-736.vasp", "Li3P"),
     "li3po4g": ("db/structures/sei_li3po4g_mp-2878.vasp", "Li3PO4-gamma"),
+    # 2026-08-11 협업자 요청 확장 — 확산장벽 6종 채우기 (li2s 는 이미 citable)
+    "li2o":    ("db/structures/sei_li2o_mp-1960.vasp", "Li2O"),
+    "licl":    ("db/structures/sei_licl_mp-22905.vasp", "LiCl"),
+    # lindo2 는 Nd PP 가 frozen-4f 일 때만 열린다 (아래 게이트, todo #27)
+    "lindo2":  ("db/structures/sei_lindo2_mp-1222355.vasp", "LiNdO2"),
 }
+DFT_WORK = "/data/work/runs/sei_dft"      # run_sei_dft.sh 의 vc-relax 산출물 (이완본 출처)
 
 
 def zval(upf):
@@ -127,9 +133,76 @@ def pick_hop(at, min_sep=None):
     return {"d": float(d), "vac": A, "hop": B, "vec": np.asarray(vec, float)}
 
 
+def load_relaxed(tag, path, relaxed_from):
+    """vc-relax 이완본에서 벌크를 읽는다. 없으면 (None, 이유).
+
+    ★ 2026-08-11 — li3p Ea=0 사고의 절반이 여기다: 비이완 MP 구조로 끝점을 만들면
+      끝점이 경로에서 가장 높은 점이 되고, NEB 은 끝점을 고정하므로 내리막만 남아
+      max(E)−E_first = 0 이 나온다. NEB 은 **이완본에서 출발해야** 한다.
+    """
+    import re
+    from ase import Atoms
+    cands = sorted(glob.glob(os.path.join(relaxed_from, f"{tag}_mp-*"))) \
+        or ([os.path.join(relaxed_from, tag)] if os.path.isdir(os.path.join(relaxed_from, tag)) else [])
+    if not cands:
+        return None, f"{relaxed_from}/{tag}_mp-* 없음"
+    outp = os.path.join(cands[0], "01_vcrelax.out")
+    if not os.path.isfile(outp):
+        return None, f"{outp} 없음"
+    txt = open(outp, errors="ignore").read()
+    if "JOB DONE" not in txt:
+        return None, f"{outp} 미완료 (JOB DONE 없음)"
+    i = txt.rfind("Begin final coordinates")
+    if i < 0:
+        return None, f"{outp} 에 final coordinates 블록 없음"
+    blk = txt[i:txt.find("End final coordinates", i)]
+    mc = re.search(r"CELL_PARAMETERS\s*\(?(\w+)[^\n]*\n((?:\s*[-\d.eE+]+\s+[-\d.eE+]+\s+[-\d.eE+]+\n){3})", blk)
+    ma = re.search(r"ATOMIC_POSITIONS\s*\(?(\w+)", blk)
+    if not mc or not ma:
+        return None, f"{outp} final 블록 파싱 실패"
+    cunit = mc.group(1).lower()
+    cell = np.array([[float(x) for x in l.split()] for l in mc.group(2).strip().splitlines()])
+    if cunit == "bohr":
+        cell *= 0.529177210903
+    elif cunit not in ("angstrom",):
+        return None, f"CELL_PARAMETERS 단위 미지원: {cunit} (alat 는 splice 불가)"
+    punit = ma.group(1).lower()
+    rows = []
+    for l in blk[ma.end():].splitlines():
+        p = l.split()
+        if len(p) >= 4 and re.match(r"^[A-Z][a-z]?$", p[0]):
+            rows.append((p[0], [float(p[1]), float(p[2]), float(p[3])]))
+    if not rows:
+        return None, f"{outp} 좌표 없음"
+    pos = np.array([r[1] for r in rows])
+    if punit == "crystal":
+        pos = pos @ cell
+    elif punit == "bohr":
+        pos = pos * 0.529177210903
+    elif punit != "angstrom":
+        return None, f"ATOMIC_POSITIONS 단위 미지원: {punit}"
+    at = Atoms(symbols=[r[0] for r in rows], positions=pos, cell=cell, pbc=True)
+    # 검증된 승계(verified-carry): 원본과 조성이 같아야 한다 — 다르면 파싱이 틀린 것
+    from ase.io import read as _read
+    ref = _read(path)
+    if sorted(at.get_chemical_symbols()) != sorted(ref.get_chemical_symbols()):
+        return None, f"{outp} 조성 불일치 — 파싱 오류로 간주"
+    return at, outp
+
+
 def build(tag, path, disp, a, pool):
     from ase.io import read
-    at0 = read(path)
+    # ── 이완본 출발 (기본). --allow_unrelaxed 는 계획/디버그 전용 탈출구다 ──────
+    relaxed_out = None
+    if a.allow_unrelaxed:
+        at0 = read(path)
+    else:
+        at0, why = load_relaxed(tag, path, a.relaxed_from)
+        if at0 is None:
+            return {"tag": tag,
+                    "skip": f"이완본 없음({why}) — run_sei_dft.sh 먼저. "
+                            f"(비이완으로 강행하려면 --allow_unrelaxed · li3p Ea=0 사고 참조)"}
+        relaxed_out = why                      # 성공 시 why 자리에 출처 경로가 온다
     L = at0.cell.lengths()
     rep = tuple(max(1, int(np.ceil(a.min_l / x))) for x in L)
     at = at0.repeat(rep)
@@ -137,6 +210,15 @@ def build(tag, path, disp, a, pool):
     miss = [e for e in els if e not in pool]
     if miss:
         return {"tag": tag, "skip": f"pseudo 없음: {','.join(miss)}"}
+
+    # ⛔ Nd 는 frozen-4f PP 일 때만 연다 — 4f 를 원자가에 두면 SCF 가 안 붙고,
+    #    붙어도 안장점을 믿을 수 없다 (todo #27 · Nd 판정).
+    if "Nd" in els:
+        zn = zval(os.path.join(a.pseudo_dir, pool["Nd"]))
+        if zn is None or zn > 12:
+            return {"tag": tag,
+                    "skip": f"Nd PP 가 frozen-4f 가 아니다 (z_valence={zn}) — "
+                            f"frozen-4f(z≈11) 확보 후 열 것 (todo #27)"}
 
     hop = pick_hop(at)
     if hop is None:
@@ -158,7 +240,9 @@ def build(tag, path, disp, a, pool):
             "hop_d": hop["d"], "nelec": nelec_vac,
             "L": at.cell.lengths().round(2).tolist(),
             "kpts": kmesh(at.cell.array, a.kdens),
-            "li_orbits": orb}
+            "li_orbits": orb,
+            "geometry_source": ("UNRELAXED (--allow_unrelaxed)" if a.allow_unrelaxed
+                                else relaxed_out)}
     if a.plan:
         return info
 
@@ -238,6 +322,7 @@ def build(tag, path, disp, a, pool):
              "li_orbits": orb,
              "endpoints_symmetry_equivalent": (orb or {}).get("n_li_orbits") == 1,
              "arrival_err_A": info["arrival_err"],
+             "geometry_source": info["geometry_source"],
              "_note": ("endpoints_symmetry_equivalent=false 면 정·역 장벽이 다른 게 정상이다 "
                        "— 그 차이는 두 Li 자리의 에너지 차다. 장거리 수송에 걸리는 유효 장벽은 "
                        "max(정, 역) 이다(가장 낮은 자리에서 안장점까지).")},
@@ -265,6 +350,10 @@ def main():
     ap.add_argument("--kdens", type=float, default=0.04,
                     help="k 밀도 [Å⁻¹] — 슈퍼셀이라 성기게 잡는다")
     ap.add_argument("--only", nargs="*", help="일부만")
+    ap.add_argument("--relaxed_from", default=DFT_WORK,
+                    help="vc-relax 산출물 뿌리 (기본: run_sei_dft.sh 의 WORK)")
+    ap.add_argument("--allow_unrelaxed", action="store_true",
+                    help="⚠ 비이완 MP 구조로 강행 — li3p Ea=0 사고의 원인. 디버그 전용")
     ap.add_argument("--plan", action="store_true",
                     help="⚠ 비용만 보고 **입력을 만들지 않는다** (돌리기 전에 이걸 먼저)")
     a = ap.parse_args()
