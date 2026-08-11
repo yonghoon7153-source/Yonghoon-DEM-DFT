@@ -123,6 +123,24 @@ def stamp_of(step3):
     return None, None
 
 
+def backend_of(step3):
+    """이 팔이 실제로 쓴 solve backend ('gpu'|'cpu'|None).
+
+    ★ 왜 검사하는가 (2026-08-11, arm A 실행 중 발견): STEP3 는 `--step3-gpu` 를 줘도
+    cupy 가 없으면 **조용히 CPU 로 폴백**한다 (수 분→수십 분).  느린 것 자체는 무해하고
+    수치도 같다 (같은 행렬·같은 rtol 1e-8 = backend swap only).  위험한 것은 **두 팔이
+    다른 backend 로 도는 것** — arm A 가 도는 동안 답답해서 cupy 를 깔면 arm B 만 GPU 가
+    되고, 그러면 "스탬프만 다르다" 는 A/B 의 전제가 깨진다.  수치가 같아야 마땅하지만
+    그것은 **가정**이고, 이 스크립트의 일은 가정을 검사하는 것이다."""
+    if not isinstance(step3, dict):
+        return None
+    for p in (('manifest', 'backend_last_solve'), ('manifest', 'backend')):
+        got = dig(step3, p)
+        if isinstance(got, dict) and got.get('used'):
+            return str(got['used'])
+    return None
+
+
 def compare(pa, pb):
     """→ (행 dict, 경고 리스트).  A = 점(기준), B = 선분."""
     warn = []
@@ -149,9 +167,19 @@ def compare(pa, pb):
     for k in ('vox_um',):
         if sa.get(k) != sb.get(k):
             warn.append(f'{k} 가 두 팔에서 다릅니다 ({sa.get(k)} vs {sb.get(k)}) — 공통모드 상쇄 깨짐')
+    # ★ backend 가 갈리면 "스탬프만 다르다" 가 아니다 (arm A 도는 중 cupy 설치 시나리오)
+    bea, beb = backend_of(sa), backend_of(sb)
+    if bea and beb and bea != beb:
+        warn.append(f'solve backend 가 두 팔에서 다릅니다 ({bea} vs {beb}) — 같은 행렬·같은 rtol 이라 '
+                    '수치는 같아야 하지만 그건 **가정**입니다.  한쪽 팔을 같은 backend 로 다시 도세요')
+    # 수렴 실패는 값 자체가 못 쓰는 것 — Δ 계산 전에 알린다
+    for lab, s in (('A', sa), ('B', sb)):
+        if s.get('unconverged') or (isinstance(s.get('cg_info'), int) and s.get('cg_info')):
+            warn.append(f'{lab} 팔 CG 미수렴 (cg_info={s.get("cg_info")}, resid={s.get("cg_resid")}) '
+                        '— 그 σ 는 UNRELIABLE, Δ 인용 금지')
 
     row = {'label': '', 'stamp_A': ka or 'point?', 'stamp_B': kb or '?',
-           'vox_um': sa.get('vox_um')}
+           'vox_um': sa.get('vox_um'), 'backend_A': bea, 'backend_B': beb}
     for key, _lab, rel in _FIELDS:
         va, vb = sa.get(key), sb.get(key)
         row[key + '_A'] = va
@@ -213,15 +241,17 @@ def render(row, warn):
 
 # ───────────────────────────── selftest ─────────────────────────────
 
-def _mk(sig, stamp, applied=True, n_dof=1000, vox=0.4, share=None):
+def _mk(sig, stamp, applied=True, n_dof=1000, vox=0.4, share=None, backend='cpu', cg_info=0):
     """★ 실제 payload 의 **중첩 그대로** 짓는다 (metrics.step3.manifest.fibre_stamp).
     평평하게 지으면 판독기가 도장을 못 찾는 것을 selftest 가 놓친다 — 실제로 처음
     구현이 한 단계 얕아서 stamp_of 가 항상 None 이었다 (2026-08-11)."""
     return {'metrics': {'step3': {
         'sigma_e_eff_S_cm': sig, 'vox_um': vox, 'n_dof': n_dof,
         'n_floating_dropped': 7, 'cg_resid': 1e-9,
+        'cg_info': cg_info,
         'manifest': {'schema_version': 2, 'status': 'complete',
-                     'fibre_stamp': stamp, 'fibre_stamp_applied': applied},
+                     'fibre_stamp': stamp, 'fibre_stamp_applied': applied,
+                     'backend_last_solve': {'requested': 'gpu', 'used': backend}},
         'dissipation_share': share or {'AM_S': 0.6, 'VGCF': 0.4}}}}
 
 
@@ -255,6 +285,12 @@ def _selftest():
     # 공통모드가 깨진 쌍 (vox 가 다름) — Δ 를 스탬프 탓으로 읽으면 안 된다
     _, w3 = compare(a, _mk(0.012, 'segment', vox=0.2))
     chk(any('vox_um' in x for x in w3), '7) vox 불일치 경고 (공통모드 상쇄 깨짐)')
+    # ★ backend 갈림 — arm A 도는 중 cupy 를 깔면 생기는 실제 시나리오
+    chk(backend_of(a['metrics']['step3']) == 'cpu', '7b) backend 도장을 읽는다')
+    _, w3b = compare(a, _mk(0.012, 'segment', backend='gpu'))
+    chk(any('backend' in x for x in w3b), '7c) ★ backend 불일치 경고 (cpu vs gpu)')
+    _, w3c = compare(a, _mk(0.012, 'segment', cg_info=1))
+    chk(any('미수렴' in x for x in w3c), '7d) ★ CG 미수렴이면 Δ 인용 금지 경고')
 
     # 부호 반대 / 무변화 문장
     chk('내린다' in render(*compare(a, _mk(0.008, 'segment'))), '8) 감소 판정')
