@@ -121,8 +121,54 @@ def audit_file(f):
     return rec, None
 
 
-def cmd_audit(show_all=False):
+#: 인용처로 볼 트리
+CITE_TREES = ("tools", "kb", "webapp", "docs", "litdb")
+#: **강한 인용** = 그 숫자가 독자에게 도달하는 경로. 여기 걸리면 provenance 가 필수다.
+#:   · 그림 생성기 (tools/figures/, plot_*.py) — 논문·발표 그림이 된다
+#:   · webapp/canonical.py 레지스트리 — 화면의 정본 앵커
+#:   · 원고/세미나 문서
+#: kb 노트의 단순 언급은 **약한 인용**이다. 68/77 이 걸려 필터가 무의미해진다.
+HARD_CITE = ("tools/figures/", "webapp/canonical.py", "webapp/data.py",
+             "docs/manuscript", "kb/seminars/", "kb/reports/")
+
+
+def _is_hard(where):
+    return (any(where.startswith(h) for h in HARD_CITE)
+            or "/plot_" in where or where.endswith("_origin.py"))
+
+
+def build_citation_index():
+    """db/properties/<파일> 을 참조하는 repo 내 위치를 센다.
+
+    ⚠ 파일명만으로 센다 (경로 표기가 제각각이라). 흔한 단어가 파일명이면 과다검출될
+      수 있으므로 **stem 이 6자 이상**인 것만 신뢰한다 — 짧은 것은 별도 표시.
+    """
+    names = {}
+    for f in PROPS.rglob("*.json"):
+        names[f.name] = str(f.relative_to(REPO))
+    for f in PROPS.rglob("*.csv"):
+        names[f.name] = str(f.relative_to(REPO))
+    idx = {v: [] for v in names.values()}
+    for tree in CITE_TREES:
+        d = REPO / tree
+        if not d.is_dir():
+            continue
+        for f in d.rglob("*"):
+            if not f.is_file() or f.suffix not in (".py", ".md", ".html", ".sh", ".json"):
+                continue
+            try:
+                txt = f.read_text(encoding="utf-8", errors="ignore")
+            except OSError:
+                continue
+            for nm, rel in names.items():
+                if nm in txt:
+                    idx[rel].append(str(f.relative_to(REPO)))
+    return idx
+
+
+def cmd_audit(show_all=False, cited_only=False):
     """db/properties 전체 신선도 감사 — 요약이 기본, 목록은 --audit_all."""
+    cites = build_citation_index()
     files = sorted(PROPS.rglob("*.json"))
     recs, broken = [], []
     for f in files:
@@ -130,14 +176,22 @@ def cmd_audit(show_all=False):
         if err:
             broken.append((str(f.relative_to(REPO)), err))
         else:
+            r["cited_by"] = cites.get(r["file"], [])
+            r["hard_cited_by"] = [w for w in r["cited_by"] if _is_hard(w)]
+            r["short_name"] = len(pathlib.Path(r["file"]).stem) < 6
             recs.append(r)
+    if cited_only:
+        recs = [r for r in recs if r.get("hard_cited_by")]
     nodate = [r for r in recs if not r.get("date")]
     dead = [r for r in recs if r.get("dead_sources")]
     nulls = [r for r in recs if r.get("nulls")]
     sup = [r for r in recs if r.get("superseded")]
     unmarked = [r for r in recs if r.get("superseded_unmarked")]
     nosrc = [r for r in recs if r.get("kind") == "dict" and not r.get("sources")]
-    print(f"=== db 신선도 감사 ===  json {len(files)}개 (읽기 실패 {len(broken)})")
+    ncited = sum(1 for r in recs if r.get("cited_by"))
+    print(f"=== db 신선도 감사 ===  json {len(files)}개 (읽기 실패 {len(broken)})"
+          + (f" · **강한 인용만** {len(recs)}개 (그림/원고/정본 앵커)" if cited_only
+             else f" · 인용됨 {ncited} / 미인용 {len(recs) - ncited}"))
     print(f"  ① 날짜 없음        {len(nodate):3d}  — 최신인지 판단 불가")
     print(f"  ② 출처 경로 없음    {len(nosrc):3d}  — 원자료를 못 따라간다")
     print(f"  ③ 죽은 출처 경로    {len(dead):3d}  — 적힌 경로가 사라졌다")
@@ -163,6 +217,14 @@ def cmd_audit(show_all=False):
         print(f"\n── ④ 채울 자리 후보 (상위 {'전부' if show_all else 12}) ──")
         for r in (nulls if show_all else nulls[:12]):
             print(f"  {r['file']:52s} {', '.join(r['nulls'][:3])}")
+    if cited_only:
+        gap = [r for r in recs if not r.get("date") or not r.get("sources")]
+        print(f"\n── provenance 가 빈 강한-인용 파일 {len(gap)}건 (여기부터 채운다) ──")
+        for r in sorted(gap, key=lambda x: -len(x["hard_cited_by"])):
+            miss = ("날짜" if not r.get("date") else "") + \
+                   (" 출처" if not r.get("sources") else "")
+            print(f"  {r['file']:50s} [{miss.strip()}]  ← {r['hard_cited_by'][0]}"
+                  + (f" 외 {len(r['hard_cited_by']) - 1}" if len(r["hard_cited_by"]) > 1 else ""))
     if not show_all:
         print("\n  (전체 목록은 --audit_all · 날짜/출처 없는 파일 목록도 거기에)")
     if unmarked:
@@ -243,12 +305,16 @@ def main():
     ap.add_argument("--audit", action="store_true",
                     help="db/properties **전체** 신선도 감사 (날짜·출처·null·구판)")
     ap.add_argument("--audit_all", action="store_true", help="--audit 의 전체 목록판")
+    ap.add_argument("--cited", action="store_true",
+                    help="**실제로 참조되는** db 파일만 감사한다 (tools/kb/webapp/docs/litdb "
+                         "에서 파일명이 나오는 것). 안 쓰이는 파일의 provenance 를 지금 채워도 "
+                         "검증할 방법이 없다 — 인용되는 것부터 채우는 게 값이 된다.")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
-    if a.audit or a.audit_all:
-        return cmd_audit(show_all=a.audit_all)
+    if a.audit or a.audit_all or a.cited:
+        return cmd_audit(show_all=a.audit_all, cited_only=a.cited)
 
     reg = C.load_registry()
     ents = reg.get("entries", [])
