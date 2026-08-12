@@ -314,7 +314,8 @@ exit $rc
 def discover_pairs(run_dir: Path, audit: Optional[Dict[str, Any]] = None,
                    allow_stale_gate: bool = False,
                    top_n: Optional[int] = None,
-                   champion: bool = False) -> List[Dict[str, Any]]:
+                   champion: bool = False,
+                   cross: bool = False) -> List[Dict[str, Any]]:
     """자격 있는 Li_top↔Ni_top 대조쌍. audit 을 주면 **왜 빠졌는지**를 채워 준다.
 
     ⚠ down_dir 수 ≠ 대조쌍 수. site-screen 은 일부 방향에서 자리 **종류**를 훑는다
@@ -385,9 +386,27 @@ def discover_pairs(run_dir: Path, audit: Optional[Dict[str, Any]] = None,
                 "dE_uma": round(rn["E_pose_eV"] - rl["E_pose_eV"], 4), "n_rolls": 1,
                 "dir_median_uma": round(rn["E_pose_eV"] - rl["E_pose_eV"], 4),
                 "champion_dirs": {"Li": rl["down_dir"], "Ni": rn["down_dir"]}}]
+        # ★ 교차 끝점 (Codex 5차 결정 ②) — 두 챔피언의 배향이 다르면 ΔE 에 자리 효과와
+        #   배향 효과가 섞인다. 각 배향에서 **고정배향 대비**를 하나씩 얻으려면
+        #   Li@(Ni 배향) 과 Ni@(Li 배향) 이 필요하다. 그러면 2×2 가 완성되고
+        #   상호작용 I = Δ(Ni배향) − Δ(Li배향) 을 분리할 수 있다.
+        #   ⚠ Ni 쪽이 UMA 배향 산포가 커서(0.085 eV) Ni@(Li 배향) 이 특히 중요하다.
+        out[0]["cross"] = {}
+        if cross and rl["down_dir"] != rn["down_dir"]:
+            for tag, pool, want_dir in (("Li_at_Ni_dir", li, rn["down_dir"]),
+                                        ("Ni_at_Li_dir", ni, rl["down_dir"])):
+                cand = [r for r in pool if r["down_dir"] == want_dir]
+                if cand:
+                    # 같은 roll 을 우선하고, 없으면 그 방향에서 가장 안정한 자세
+                    same = [r for r in cand if abs(float(r.get("roll_deg", -1))
+                                                   - float(rl["roll_deg"])) < 1e-6]
+                    out[0]["cross"][tag] = min(same or cand,
+                                               key=lambda r: r["E_pose_eV"])
         if audit is not None:
             audit["n_down_dirs"] = len({str(r.get("down_dir")) for r in rows})
             audit["n_contrast_pairs"] = 1
+            audit["cross_endpoints"] = {k: v["label"]
+                                        for k, v in (out[0].get("cross") or {}).items()}
             audit["excluded_dirs"] = {}
             audit["mode"] = ("champion — Li 위 최선 vs Ni 위 최선. 두 챔피언이 다른 "
                              "방향이면 ΔE 에 배향 효과가 섞인다(matched=False).")
@@ -1810,7 +1829,9 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             aud: Dict[str, Any] = {}
             pairs = discover_pairs(run, audit=aud,
                                    allow_stale_gate=a.allow_stale_gate,
-                                   top_n=a.top_n, champion=a.champion)
+                                   top_n=a.top_n, champion=a.champion,
+                                   cross=(a.cross_endpoints or ()) and
+                                   frag in a.cross_endpoints)
             man["pair_audit"][frag] = aud
             if not pairs:
                 bad(f"{frag}: 자격 쌍 0개")
@@ -1870,6 +1891,35 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                              "fragment": frag, "source_pose": rec["label"],
                              "uma_E_pose_eV": rec["E_pose_eV"]},
                             ledger, zcut=zcut, dense=dense and sd == SEED_MAIN,
+                            prescf=not a.no_prescf, single_point=a.single_point,
+                            kmesh_over=kover)
+                        slab_metas.append(m)
+                        plan(rel, m["phases"], req)
+                        n_jobs += 1
+                # ── 교차 끝점 방출 (2×2 완성) ──
+                for tag, rec in (p.get("cross") or {}).items():
+                    xp = run / f"{rec['label']}.xyz"
+                    if not xp.is_file():
+                        bad(f"{pid}: 교차 끝점 {tag} 의 xyz 없음 ({rec['label']})")
+                        continue
+                    cx = ase_read(xp); cx.set_cell(slab.cell.array); cx.set_pbc(True)
+                    _assert_slab_lineage(cx, nslab, slab, f"{pid}/{tag}", man)
+                    used_els |= set(cx.get_chemical_symbols())
+                    role = "Li" if tag.startswith("Li") else "Ni"
+                    pm.setdefault("cross", {})[tag] = {
+                        "prefix": f"{tier}/{pid}__cross_{tag}",
+                        "down_dir": rec["down_dir"], "roll_deg": rec.get("roll_deg"),
+                        "role": role, "source_pose": rec["label"]}
+                    for sd in seeds:
+                        rel = f"{tier}/{pid}__cross_{tag}__{sd}"
+                        m = _emit_slab_job(
+                            out / rel, cx, nslab, a.freeze, frag,
+                            f"{pid} cross {tag} {sd}", sd,
+                            {"kind": "cross", "role": role, "pair_id": pid,
+                             "cross_tag": tag, "fragment": frag,
+                             "source_pose": rec["label"],
+                             "uma_E_pose_eV": rec["E_pose_eV"]},
+                            ledger, zcut=zcut, dense=False,
                             prescf=not a.no_prescf, single_point=a.single_point,
                             kmesh_over=kover)
                         slab_metas.append(m)
@@ -2158,7 +2208,7 @@ def selftest() -> int:
     a0 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_short"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True)
+                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None)
     try:
         build_bundle(a0, ledger=led)
         chk(False, "N0 xyz 누락 → **번들이 만들어졌다** (축소 정본 = fail-open)")
@@ -2174,7 +2224,7 @@ def selftest() -> int:
     ab = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_nofp"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True)
+                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None)
     try:
         build_bundle(ab, ledger=led)
         chk(False, "N0b 지문 없는 소스 → **번들이 만들어졌다**")
@@ -2198,7 +2248,7 @@ def selftest() -> int:
     at3 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_top3"),
                              freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                              qe="(none)", expect=None, allow_partial=False,
-                             no_prescf=False, allow_stale_gate=False, top_n=3, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True)
+                             no_prescf=False, allow_stale_gate=False, top_n=3, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None)
     o3 = build_bundle(at3, ledger=led)
     m3 = json.loads((o3 / "MANIFEST.json").read_text())
     kept = sorted({v["dir"] for v in m3["pairs"].values()})
@@ -2215,7 +2265,7 @@ def selftest() -> int:
     a = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle"),
                            freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                            qe="(none)", expect=None, allow_partial=False,
-                           no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True)
+                           no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None)
     out = build_bundle(a, ledger=led)
     man = json.loads((out / "MANIFEST.json").read_text())
     n_pre = sum(1 for p in man["planned"].values() if "pre" in (p.get("phases") or []))
@@ -2414,6 +2464,10 @@ def main():
                     help="Ni1/Ni2 라벨이 있는 QE 입력 (부격자 원장의 원본)")
     ap.add_argument("--expect", nargs="*", default=None,
                     help="계약 방향 수 재정의: ptfe_c10=5 ptfe_dimer=3 ...")
+    ap.add_argument("--cross_endpoints", nargs="*", default=None,
+                    help="이 조각들은 챔피언 배향이 다를 때 **교차 끝점**도 만든다 "
+                         "(예: ptfe_c10). Li@(Ni배향)·Ni@(Li배향) 이 추가돼 2×2 가 완성되고 "
+                         "site×orientation 상호작용이 분리된다. 조각당 +2쌍(2 seed 면 +4잡).")
     ap.add_argument("--refs", action="store_true",
                     help="clean 슬랩 + 기체 분자 기준계를 포함한다 (절대 E_ads 용). "
                          "기본은 **미포함** — 자리 대비 ΔE 에서는 정확히 소거되므로 "
