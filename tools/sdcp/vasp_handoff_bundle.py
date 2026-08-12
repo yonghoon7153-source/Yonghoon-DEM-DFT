@@ -487,7 +487,28 @@ def discover_pairs(run_dir: Path, audit: Optional[Dict[str, Any]] = None,
                     sys.exit(f"⛔ PAIR_POOL_CONTRACT_BROKEN {run_dir.name}/{tag}: "
                              f"짝 자세키 {(rec['down_dir'], rec['roll_deg'])} ≠ {want} — "
                              f"discover_pairs 의 짝 구성이 깨졌다. 번들을 만들지 않는다")
+        # ★ 짝 풀 제한의 **대가**를 수치로 남긴다 (2026-08-12).
+        #   챔피언은 "전역 최선" 이 아니라 **짝도 있는 배향 중 최선** 이다. 전역 최선
+        #   자세가 짝 없는 배향에 있으면 쓰지 않는다. 더 잘 정의된 양(배향일치 대비)
+        #   이지만 다른 양이므로, 얼마나 위인지 적어 두지 않으면 나중에 "가장 안정한
+        #   자세" 로 인용된다.
+        g_li = min((r["E_pose_eV"] for r in fs
+                    if r["site"] == "Li_top" and r.get("nearest_cation") == "Li"),
+                   default=None)
+        g_ni = min((r["E_pose_eV"] for r in fs
+                    if r["site"] == "Ni_top" and r.get("nearest_cation") == "Ni"),
+                   default=None)
+        restr = {"Li_meV": (None if g_li is None
+                            else round((rl["E_pose_eV"] - g_li) * 1000, 1)),
+                 "Ni_meV": (None if g_ni is None
+                            else round((rn["E_pose_eV"] - g_ni) * 1000, 1)),
+                 "meaning": ("짝 풀 챔피언이 **전역 최선보다 얼마나 위인가** (UMA). "
+                             "0 이면 전역 최선이 마침 짝도 있었다는 뜻이다. "
+                             "0 이 아니면 이 ΔE 는 '가장 안정한 자세끼리' 가 아니라 "
+                             "'짝이 있는 배향 중 최선끼리' 다.")}
+        out[0]["pool_restriction"] = restr
         if audit is not None:
+            audit["pool_restriction"] = restr
             audit["n_contrast_pairs"] = 1
             audit["cross_endpoints"] = {k: v["label"]
                                         for k, v in out[0]["cross"].items()}
@@ -2765,6 +2786,11 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         "fixed-geometry site contrast (ΔE = E_Ni − E_Li, 같은 조각·같은 슬랩). "
         "clean/gas 기준계가 없으므로 **절대 E_ads 를 만들 수 없다** — 흡착의 열역학적 "
         "유불리·조각 간 결합 세기 비교·결합에너지 절대값은 이 번들로 주장 금지."
+        + (" ⚠ champion 은 **전역 최선이 아니다**: 짝(같은 배향의 반대 자리)이 있는 "
+           "자세 중 최선이다. 전역 최선 자세가 짝 없는 배향에 있으면 쓰지 않는다. "
+           "'가장 안정한 자세' 가 아니라 '배향일치 대비가 가능한 자세 중 최선' 이며, "
+           "그 대가는 pair_audit[*].pool_restriction 에 meV 로 적혀 있다."
+           if a.champion else "")
         if not a.refs else
         "site contrast + absolute E_ads (기준계 포함). E_ads 는 UMA 기하 위 단일점이라 "
         "완전 이완 흡착에너지가 아니다.")
@@ -3378,6 +3404,13 @@ def selftest() -> int:
         f"불일치 → 교차 2개 **자동** 생성 ({list((pm_sp.get('cross') or {}))})")
     chk(not pm_sp.get("orientation_confounded"),
         "교차가 있으므로 혼입 표시 없음")
+    # ★ 짝 풀 제한의 대가 — 챔피언은 "전역 최선" 이 아니라 "짝 있는 배향 중 최선" 이다
+    pr = (m_sp.get("pair_audit") or {}).get("ptfe_dimer", {}).get("pool_restriction")
+    chk(pr and pr.get("Li_meV") is not None and pr.get("Ni_meV") is not None,
+        f"짝 풀 제한 대가를 기록 (Li {(pr or {}).get('Li_meV')} · "
+        f"Ni {(pr or {}).get('Ni_meV')} meV)")
+    chk(pr and pr["Li_meV"] >= 0 and pr["Ni_meV"] >= 0,
+        "제한 대가는 **음수일 수 없다** (풀은 전체의 부분집합이다)")
     # ★ 음성: --no_cross 면 혼입 상태를 **명시**해야 한다 (조용히 나가면 안 된다)
     a_nc = argparse.Namespace(**{**vars(a_sp), "out": str(td / "bundle_nocross"),
                                  "no_cross": True})
