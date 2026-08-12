@@ -233,3 +233,100 @@ SuperP 는 체인이라 같은 결함을 타지만 점 간격·기하가 VGCF �
   24 · SDCP pellet ×5.1 · koo2026 0.20) **규칙으로 승격하지 않았다.**
 - **⑤ 문턱 근처에서 등급 B 무효**: 공통모드 상쇄는 1차 논증.  퍼콜/파괴/접촉 개폐 같은
   **문턱 통과 양**에는 별도 게이트 (φ/φ_c ≤ 2 면 상대비교 전용도 못 쓴다).
+
+
+---
+
+# 16. Codex 외부 리뷰 (2026-08-12, `@5fc7dc31` 읽기 전용) — 수렴·신규·불일치
+
+## 16-1. 4중 수렴 (내부 3렌즈와 같은 결론)
+- **E-01** = 내부 최우선 항목과 동일 (fid 무차별 폴리라인) → ✅ `POLYLINE_PHASES` 로 조치됨.
+- **E-05** = econn/carbon clusters 가 **다른 그래프**(0.30 µm·26-연결) → STEP3 백본 지표 아님.
+- **Q5 단면 인플레** = `h²/A_f = 9.054`, `‖u‖₁` 보정으로 **5.23–9.05×**, 등방 대표 **6.04×**
+  — 물리 렌즈와 **독립 재현**.
+
+## 16-2. ★ Codex 만 잡은 것
+
+**(a) ★★ 소산분담과 σ_SDCP 스윕은 독립 증거가 아니다 (E-04).**
+harmonic face conductance 에서 코드가 상 a 에 주는 가중치
+`w_a = σ_b/(σ_a+σ_b) = ∂ln g/∂ln σ_a` 는 **정확히 phase-conductivity elasticity** 다.
+고정 topology 선형 Dirichlet 문제에 envelope 정리를 적용하면
+`∂ln σ_eff/∂ln σ_phase ≈ 보고된 dissipation share` (⚠ plate-coupling 항을 분모에서 빼므로
+**엄밀 항등식이 아니라 plate 항이 작을 때의 근사**).  실제 스윕이 그대로 따라간다:
+
+| 구간 | Δln σ_eff/Δln σ_SDCP | 양끝 share |
+|---|---|---|
+| 15→50 | 18.4 % | 19.6 → 16.3 % |
+| 50→150 | 13.2 % | 16.3 → 10.0 % |
+| 150→250 | 8.5 % | 10.0 → 7.3 % |
+
+⇒ **"분담 역행 + 스윕 단조 = 직렬 브리지를 독립 확인"은 같은 해의 국소 민감도를 두 번 센 것.**
+`VGCF 92.5 %` 도 `∂lnσ_eff/∂lnσ_VGCF ≈ 0.925` 를 뜻할 뿐 **백본 관통의 증명이 아니다.**
+⚠ 단 전기화학 렌즈의 "스윕이 **강한** 아티팩트 가설(개방 단절 치유)을 기각한다"는 별개로 유효
+(σ_SDCP=15 에서 +0.8 % 밖에 안 나온 것) — 기각에는 쓰이고 **입증에는 못 쓰인다**.
+
+**(b) PTFE 는 열 격자에도 없다 (E-02).**  세 solve 가 같은 `sid3` 를 공유하므로
+`thermal_k_table()` 의 PTFE 값은 production 에서 **dead parameter**.  κ +2.4 % 는 "전상 열전도"가
+아니라 늘어난 carbon label 효과.  (내부 렌즈는 전자·이온만 잡았다.)
+
+**(c) `segment_cells` 음방향 경계 (E-06).**  음의 방향 진행 중 끝점이 복셀 경계에 **정확히**
+놓이면 한 셀을 지나쳤다 `endc=floor(p1/vox)` 로 되돌아오는 backtrack/여분 셀 가능.
+현재 selftest 의 음방향 사례는 **정확한 경계 끝점이 아니라** 이 경로를 안 탄다.
+또 `_fibre_segment_ijk` 는 edge list 대신 `2×median` 휴리스틱을 쓴다 — median 이 0 이면 큰 gap 도
+이어지고, 실제 연속 섬유가 국소적으로 늘어나면 거짓 단절.
+
+**(d) ★ 제 브리핑의 오류 (E-03).**  요청서가 `σ(VGCF)/σ(AM) ~ 2e5` 라고 적었는데 기본값은
+VGCF 100 · AM_S 0.010 · AM_P 0.005 → 대비는 **1e4 ~ 2e4**.  **10배 부풀렸다.**  → 요청서 정정함.
+
+**(e) 부하 의존이 단조일 이유가 없다 (Q3).**  낮은 부하에서 양쪽 미퍼콜(비 ≈1) → 중간에서
+segment 만 퍼콜(비 폭발) → 높은 부하에서 둘 다 퍼콜(비 축소) 하는 **문턱 봉우리**가 가능하다.
+⇒ 물리 렌즈의 "부하의 함수" 프레이밍을 **단조 가정 없이** 다시 써야 한다.
+
+**(f) 원시 fold-change 를 primary 로 쓰면 안 된다.**  point 가 0 에 가까우면 비가 임의로 커지고
+0 이면 정의되지 않는다.  primary = `Δlog10 σ_e` · **절대** Δσ_e · percolation probability ·
+**loading×stamp 교호작용**.
+
+**(g) grid-origin screen 은 최소 4 origin** — `(0,0,0)·(h/2,0,0)·(0,h/2,0)·(0,0,h/2)`.
+half-diagonal 하나만으로는 **축별 alias 를 놓친다**.
+
+**(h) 내 화이트리스트 수정은 부분적이다.**  phase 로는 부족하다 — **SuperP-bulk 는 진짜
+ordered chain 이고 SuperP-coat 는 아닌데 둘 다 phase 3** 이다.  보수적 선택이 진짜 체인까지
+점으로 떨어뜨린다.  **진짜 해법은 시더가 `object_kind` + seed-time edge list 를 manifest 에
+남기는 것.**  (현 조치는 지뢰 제거용 임시방편으로 라벨한다.)
+
+## 16-3. ⚠ 판정 불일치 — Q1 의 수치 범위
+
+| | 내부 3렌즈 | Codex |
+|---|---|---|
+| +52 % 의 운명 | 보정 후 **범위를 계산** (+46…+74 / +57.9 / +42…+55 %) | **범위 제시 = 날조**.  `재산출 대기` 로 내려야 |
+
+**Codex 논거 (타당)**: 필요한 것은 **차등** 보정 `m_DBE/m_SBE` 인데, SR-01 의 ×35.79 는
+**다른 1 wt% 베드의 `m` 하나**라 그 비를 **전혀 구속하지 않는다**.
+
+**해소**: 내부 범위들은 이미 **사전등록 예측**(§14)으로 등록돼 있다 = 결과가 아니라 반증 대상.
+⇒ **규칙 확정: 그 범위는 사전등록 문서에만 살고 원고·발표에는 쓰지 않는다.**
+원고에 쓸 수 있는 최대치는 Codex 문장 수준:
+> The point-rasterized model produced a 52 % increase; its magnitude is pending a phase-safe,
+> diameter-controlled rasterization cross-check.
+
+## 16-4. Codex 가 고정한 작업 순서 (채택)
+
+```
+1 phase/object-kind routing + seed-time edge manifest   ← 현 화이트리스트는 임시방편
+2 SDCP/coat non-path invariance 회귀
+3 segment_cells 음방향 경계 + gap 회귀
+4 point legacy parity (bitwise)
+5 SBE/DBE 2×2  (primary estimand I = Δln비, 사전등록)
+6 diameter-controlled 제3 arm
+7 그 뒤에만 원고 +52 % 의 유지·축소·철회 판정
+```
+★ **제3 arm 이 필수인 이유**: point 와 segment-v1 만 비교하면 "단절"과 "1-셀 단면 과대" 중
+어느 쪽이 물리에 더 가까운지 **알 수 없다**.
+
+## 16-5. Codex 최종 상태표
+- point fragmentation 기전: **verified**
+- 한 invalid 베드의 ×35.79: **verified, 단 algorithm-conditional**
+- "point 가 물리 σ_e 를 35.79배 과소평가": **not verified**
+- "segment-v1 이 물리적으로 정상": **not verified**
+- SDCP +52 % 정량 headline: **blocked** (phase-safe 재검증 전)
+- 현 segment 를 SDCP 원고 재산출에 사용: **금지**
