@@ -99,6 +99,12 @@ def read_gap(path):
         return None, f"읽기 실패: {type(e).__name__}"
     if not isinstance(d, dict):
         return None, f"dict 가 아님: {type(d).__name__}"
+    # ⚠ NOT_APPLICABLE 은 손상이 아니라 **판정**이다 — 4f 를 원자가에 둔 PP 로는
+    #   SCF 해가 금속이라 fixed-occ 갭이라는 양이 성립하지 않는다 (Nd 계열).
+    #   손상으로 찍고 "nscf 를 다시 돌려라" 고 하면 틀린 조언이다.
+    if str(d.get("gap")).upper() in ("NOT_APPLICABLE", "N/A", "NA", "METAL"):
+        return None, ("금속 해 — 갭 미정의 (손상 아님). Nd 계열은 frozen-4f PP 가 "
+                      "있어야 갭이 성립한다: tools/sei/nd_frozen4f.py --plan")
     try:
         for k in ("vbm", "cbm", "gap"):
             d[k] = float(d[k])
@@ -277,8 +283,12 @@ def selftest():
                                '"verdict":"절연체"}'))
     chk(r is not None and abs(r["gap"] - 3.4) < 1e-9, "정상 gap.json → 레코드")
     # 음성 ⑥: gap 이 문자열 — 실측 크래시 재현. 정렬 가능한 float 이거나 손상이거나 둘 중 하나
-    r, why = read_gap(gj("strgap", '{"tag":"nd2o3","vbm":"?","cbm":"?","gap":"n/a"}'))
+    r, why = read_gap(gj("strgap", '{"tag":"x","vbm":"?","cbm":"?","gap":"oops"}'))
     chk(r is None and "손상" in why, f"gap 이 문자열 → 손상 처리 ({why})")
+    # ★ NOT_APPLICABLE 은 판정이지 손상이 아니다 — 재실행 조언을 하면 안 된다
+    r, why = read_gap(gj("na", '{"tag":"nd2o3","gap":"NOT_APPLICABLE"}'))
+    chk(r is None and "금속 해" in why and "수치 필드 손상" not in why,
+        f"NOT_APPLICABLE → 금속 해 판정 (재실행 조언 아님)")
     # 음성 ⑦: 깨진 JSON / 필드 누락 / 리스트
     chk(read_gap(gj("brk", "{oops"))[0] is None, "깨진 JSON → 손상 처리")
     chk(read_gap(gj("nofield", '{"tag":"x"}'))[0] is None, "필드 누락 → 손상 처리")
@@ -368,8 +378,10 @@ if gaps or gaps_bad:
         print(f"   {tag:26s} {'—':>8s} {'—':>8s} {'—':>9s}  ⛔ {why}")
     if gaps:
         print("   ⚠ PBE 갭은 넓은 갭 절연체에서 30–50% 과소 — 실험값과 나란히 놓지 말 것")
-    if gaps_bad:
+    if any("손상" in w for _t, w in gaps_bad):
         print("   ⛔ 손상된 gap.json 은 03 단계(nscf)를 다시 돌려야 한다 — extract_gap.py 재실행")
+    if any("금속 해" in w for _t, w in gaps_bad):
+        print("   🟡 금속 해는 재실행으로 안 풀린다 — PP 문제다 (kb/open_items.md §O)")
 else:
     print("② 갭 — 아직 gap.json 이 없다")
 
