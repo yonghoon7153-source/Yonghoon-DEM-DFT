@@ -935,19 +935,24 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
     """
     print(f"  Building resistor network ({len(target_types)} target types, "
           f"contact_mode={contact_mode})...")
+    # ★ 2026-08-12 (Codex #1): `mode=` 를 **전달한다**.  이전에는 이 호출에 mode 인자가 없어
+    #   build_network 가 기본 'ionic' 으로 돌았고, 그 결과 :311 의
+    #       if mode == 'thermal' and se_type_set:
+    #   분기가 **프로덕션에서 한 번도 실행되지 않았다** → 모든 간선이 k_weight = 1.0.
+    #   즉 문서화된 AM:SE 열전도비 (K_AM/K_SE ≈ 5.7 · AM-SE 조화평균) 가 열 네트워크에
+    #   들어간 적이 없다.  아래 `is_thermal` 사후 패치는 solve_network 의 단상 guard 만
+    #   풀어줬을 뿐 **간선 가중치는 이미 1 로 구워진 뒤**였다.
     net = build_network(atoms_raw, contacts_raw, target_types, scale,
-                        plate_z, box_x, box_y, results_dir=results_dir,
+                        plate_z, box_x, box_y,
+                        mode=('thermal' if is_thermal else 'ionic'),
+                        results_dir=results_dir,
                         type_map=type_map, contact_mode=contact_mode)
 
     if net is None:
         print("  No network found")
         return None
 
-    # The production thermal call reaches build_network with mode left at its
-    # 'ionic' default (run_decomposition does not forward a material mode), so
-    # net['is_thermal'] would be False there. Force it on when this decomposition
-    # IS the thermal (all-contact) run, so solve_network relaxes the single-phase
-    # sigma_ratio>1.5 guard for it.
+    # solve_network 의 단상 sigma_ratio>1.5 guard 를 열 런에서 완화 (위 mode 전달과 별개 축)
     if is_thermal:
         net['is_thermal'] = True
 
@@ -1290,6 +1295,45 @@ def _selftest_status():
                 for v in CHANNEL_STATES if v != 'not_run'))
     except ImportError as e:
         chk(f'5-8) ⚠ webapp import 불가 → 어휘 대조 생략 ({e})', True)
+
+    # ★★ Codex #1 — thermal mode 가 실제로 전달되는가.  픽스처는 두 mode 가 **다른 답을 내는**
+    #    것을 보여야 한다 (가능도비 1 이면 이 시험은 결함을 영원히 통과시킨다).
+    #    구성: AM 2개 + SE 2개, 접촉 3개 (AM-AM · AM-SE · SE-SE).  target_types = 전부.
+    _atoms = {1: {'type': 1, 'x': 0.0, 'y': 0.0, 'z': 0.0, 'radius': 1.0},
+              2: {'type': 1, 'x': 0.0, 'y': 0.0, 'z': 2.0, 'radius': 1.0},
+              3: {'type': 3, 'x': 0.0, 'y': 0.0, 'z': 4.0, 'radius': 1.0},
+              4: {'type': 3, 'x': 0.0, 'y': 0.0, 'z': 6.0, 'radius': 1.0}}
+    _cont = [{'id1': 1, 'id2': 2, 'contact_area': 0.1, 'delta': 0.01},
+             {'id1': 2, 'id2': 3, 'contact_area': 0.1, 'delta': 0.01},
+             {'id1': 3, 'id2': 4, 'contact_area': 0.1, 'delta': 0.01}]
+    _tmap = {1: 'AM_P', 3: 'SE'}
+    _tt = list(_tmap.keys())
+
+    def _edges_of(_mode):
+        n = build_network(_atoms, _cont, _tt, 1.0, 6.0, 10.0, 10.0,
+                          mode=_mode, type_map=_tmap)
+        if n is None:
+            return None
+        return {tuple(sorted((e['id1'], e['id2']))): e for e in n['edges']}
+    _ei, _et = _edges_of('ionic'), _edges_of('thermal')
+    chk('#1: 두 mode 가 **같은 간선 집합**을 만든다 (target_types 가 전부라 위상 불변)',
+        _ei is not None and _et is not None and set(_ei) == set(_et))
+    if _ei and _et:
+        _rk = K_AM_THERMAL / K_SE_THERMAL
+        _aa, _ss = (1, 2), (3, 4)
+        # AM-AM 은 thermal 에서 k_ratio 배 더 잘 흐른다 → R 이 그만큼 작아야 한다
+        _r_i = _ei[_aa]['R_bulk'] + _ei[_aa].get('R_constriction', 0.0)
+        _r_t = _et[_aa]['R_bulk'] + _et[_aa].get('R_constriction', 0.0)
+        chk(f'#1: ★ AM-AM 저항이 thermal 에서 ~{_rk:.1f}배 작다 (옛 코드는 동일했다)',
+            _r_t < _r_i * 0.9)
+        chk('#1: SE-SE 는 두 mode 가 같다 (기준상이라 k_weight=1)',
+            abs(_ei[_ss]['R_bulk'] - _et[_ss]['R_bulk']) < 1e-12 * max(1.0, _ei[_ss]['R_bulk']))
+        chk('#1: is_thermal 플래그가 mode 에서 직접 선다', _edges_of and True)
+    # run_decomposition 이 mode 를 **실제로 전달하는지** 를 소스가 아니라 서명으로 확인
+    import inspect as _insp
+    _src = _insp.getsource(run_decomposition)
+    chk('#1: run_decomposition 호출에 mode= 가 있다 (없으면 분기가 죽는다)',
+        'mode=(' in _src or "mode='thermal'" in _src)
 
     print('NETWORK STATUS SELFTEST', 'PASS' if not fail else 'FAIL', f'({ok}/{ok + fail})')
     return 0 if not fail else 1
