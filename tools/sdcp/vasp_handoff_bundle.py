@@ -79,6 +79,13 @@ RMSD_TOL_CHK = 0.75    # selftest 에서 쓰는 사본 (분석기는 문자열 �
 #:   훑은 자리-종류 스윕이라 Li_top↔Ni_top 대조쌍이 아예 없다. 대조쌍은 5개가 맞다.
 #:   빠진 데이터가 아니라 다른 실험이다 — 제외 사유는 MANIFEST.pair_audit 에 남는다.
 EXPECT_PAIRS = {"ptfe_c10": 5, "ptfe_dimer": 3, "sdcp_neutral": 5, "sdcp_doped": 5}
+
+# ── 결합 판정 규약 — **분석기(ANALYZER 문자열) 안에 같은 표가 있다** ──────────
+#   문자열 템플릿이라 import 로 공유할 수 없다. selftest 가 두 사본이 갈라졌는지
+#   실제로 파싱해 대조한다 (CLAUDE.md 코드 규율: 물리 규약 사본은 반드시 대조).
+RCOV_B = {"H": 0.31, "B": 0.84, "C": 0.76, "N": 0.71, "O": 0.66, "F": 0.57,
+          "Na": 1.66, "P": 1.07, "S": 1.05, "Cl": 1.02, "Li": 1.28, "Ni": 1.24}
+BOND_F_B = 1.25
 SEEDS_FULL = ("afm2424_pm1", "afm2424_net4")       # tier1 전 끝점 · clean
 SEED_MAIN = "afm2424_pm1"                          # 판정 headline
 #: Ni_pv = 2026-08-08 실납품 TITEL 계보 (자체검토 P0-2)
@@ -571,6 +578,41 @@ def _assert_slab_lineage(atoms, nslab: int, slab_ref, tag: str,
         max(mx, man.get("slab_lineage_max_disp_A", 0.0)), 3)
 
 
+_FRAG_BONDS_CACHE: Dict[str, Dict[str, int]] = {}
+
+
+def _assert_mol_topology(atoms, nslab: int, frag: str, tag: str,
+                         man: Dict[str, Any]) -> None:
+    """자세 안의 분자가 **조각 정본과 같은 위상**인지 빌드 때 확인한다 (Codex 6차 §4).
+
+    왜 여기서 하나: 단일점 판은 DFT 이완이 없어 분석기가 "이완 중 깨졌나" 를 물을 수
+    없다. 물어야 할 것은 "계산에 넣은 분자가 애초에 그 조각이 맞나" 이고, 그건 이
+    시점에만 답할 수 있다. 원자 순서가 달라도 되도록 **원소쌍 다중집합**으로 본다.
+
+    이 검사가 못 하는 것: 이성질체 구분. 결합 원소쌍 수가 같으면 통과한다
+      (C–F 4개는 어느 C 에 붙었든 같다). 자리·배향은 site-screen 게이트가 본다.
+    """
+    if frag not in _FRAG_BONDS_CACHE:
+        try:
+            mol, _meta = SS.load_fragment(frag)
+        except Exception as e:                      # 조각을 못 읽으면 통과시키지 않는다
+            sys.exit(f"⛔ {tag}: 조각 정본 {frag} 을 못 읽었다 ({e}) — "
+                     f"분자 위상을 검증할 수 없으므로 번들을 만들지 않는다")
+        m2 = mol.copy()
+        m2.set_cell(atoms.cell.array)
+        m2.set_pbc(True)
+        _FRAG_BONDS_CACHE[frag] = _bond_types(m2, list(range(len(m2))))
+    want = _FRAG_BONDS_CACHE[frag]
+    got = _bond_types(atoms, list(range(nslab, len(atoms))))
+    if got != want:
+        diff = {k: (want.get(k, 0), got.get(k, 0))
+                for k in set(want) | set(got) if want.get(k, 0) != got.get(k, 0)}
+        sys.exit(f"⛔ SOURCE_TOPOLOGY_CHANGED {tag}: 자세의 분자가 조각 정본과 다르다.\n"
+                 f"   결합(정본→자세) {diff}\n"
+                 f"   → 이 자세는 {frag} 이 아니다. site-screen 게이트를 다시 볼 것")
+    man.setdefault("mol_topology", {})[frag] = want
+
+
 def _top_cations(atoms, nslab: int, sym: List[str], depth: float = 1.2) -> Dict[str, List[int]]:
     """표면(위쪽) Li/Ni 의 **원본 인덱스**. 등록(registry) 판정은 여기에만 걸어야 한다.
 
@@ -588,6 +630,41 @@ def _com_frac(atoms) -> List[float]:
     """질량중심의 분수좌표. ⚠ 원자 중심(centroid)이 아니다 — VASP DIPOL 권고는 COM."""
     com = atoms.get_center_of_mass()
     return list(np.linalg.solve(atoms.cell.array.T, com) % 1.0)
+
+
+def _bonds_in(atoms, idx: List[int]) -> List[Tuple[int, int]]:
+    """idx 원자들 사이의 결합쌍 (원본 인덱스). 분석기 mol_bond_graph 와 같은 규약."""
+    import itertools
+    pos = atoms.get_positions()
+    sym = atoms.get_chemical_symbols()
+    cell = np.asarray(atoms.cell.array, dtype=float)
+    shifts = [i * cell[0] + j * cell[1] + k * cell[2]
+              for i in (-1, 0, 1) for j in (-1, 0, 1) for k in (-1, 0, 1)]
+    out = []
+    for a, b in itertools.combinations(sorted(idx), 2):
+        d = pos[a] - pos[b]
+        best = min(float(np.linalg.norm(d + s)) for s in shifts)
+        if best < BOND_F_B * (RCOV_B.get(sym[a], 1.0) + RCOV_B.get(sym[b], 1.0)):
+            out.append((a, b))
+    return out
+
+
+def _mol_graph_canon(atoms, nslab: int, order: List[int]) -> List[List[int]]:
+    """자세의 분자 결합 그래프를 **POSCAR 인덱스**로 낸다 (job.json 저장용)."""
+    rev = {i: k for k, i in enumerate(order)}
+    mol = [i for i in range(nslab, len(atoms))]
+    return sorted([sorted((rev[a], rev[b]))
+                   for a, b in _bonds_in(atoms, mol)])
+
+
+def _bond_types(atoms, idx: List[int]) -> Dict[str, int]:
+    """결합의 **원소쌍 다중집합** — 원자 순서가 달라도 비교할 수 있다."""
+    sym = atoms.get_chemical_symbols()
+    c: Dict[str, int] = {}
+    for a, b in _bonds_in(atoms, idx):
+        k = "–".join(sorted((sym[a], sym[b])))
+        c[k] = c.get(k, 0) + 1
+    return c
 
 
 def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
@@ -652,6 +729,9 @@ def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
                                     for i in range(nslab, len(atoms))
                                     if abs(mag_orig[i]) > 1e-9},
             "mol_poscar_idx": [k for k, i in enumerate(pos["order"]) if i >= nslab],
+            # ★ 단일점 판의 분자 위상 정본 (Codex 6차 §4). 분석기는 CONTCAR 가 없어
+            #   init↔fin 비교가 헛돈다 — 이 그래프가 유일한 기준선이다.
+            "mol_graph_canonical": _mol_graph_canon(atoms, nslab, pos["order"]),
             "slab_li_poscar_idx": [k for k, i in enumerate(pos["order"])
                                    if i < nslab and sym[i] == "Li"],
             "slab_ni_poscar_idx": [k for k, i in enumerate(pos["order"])
@@ -1010,7 +1090,10 @@ def geometry_audit(jd, meta):
                             "top_only": bool(meta.get("top_li_poscar_idx"))}
         want = meta.get("role")
         if want and info["registry"]["nearest"] != want:
-            gates.append(f"PAIR_MIGRATED:{want}->{info['registry']['nearest']}")
+            # ⚠ 단일점에서 이건 "이완 중 옮겨갔다" 가 아니라 **애초에 그 자리가 아니다**
+            #   이다 (Codex 6차 §4). 이름이 원인을 오도하면 진단이 엉뚱한 데로 간다.
+            gates.append(("SOURCE_ROLE_MISMATCH" if sp_only else "PAIR_MIGRATED")
+                         + f":{want}->{info['registry']['nearest']}")
         slab_idx = (meta.get("slab_li_poscar_idx") or []) + \
                    (meta.get("slab_ni_poscar_idx") or [])
         dsl = min((mic_dist(fin["pos"][m], fin["pos"][i], fin["cell"])
@@ -1022,12 +1105,33 @@ def geometry_audit(jd, meta):
         o_idx = [i for i, sy in enumerate(fin["syms"]) if sy == "O" and i not in mol]
         info["_contact_fp"] = sorted(contact_fp(fin, mol, slab_idx + o_idx))
     if mol:
-        # 기체 기준계도 여기 온다 (슬랩이 없어 위 블록은 건너뛴다) — 결합 감사는 한다
-        b0, b1 = mol_bond_graph(init, mol), mol_bond_graph(fin, mol)
-        broke, formed = b0 - b1, b1 - b0
-        info["bonds"] = {"initial": len(b0), "broken": len(broke), "formed": len(formed)}
-        if broke or formed:
-            gates.append(f"BOND_CHANGE(끊김 {len(broke)} · 생성 {len(formed)})")
+        b1 = mol_bond_graph(fin, mol)
+        if sp_only:
+            # ⚠⚠ 단일점에서는 fin 이 곧 init 이다 — init↔fin 을 비교하면 변화가
+            #   **구조적으로 항상 0** 이라 절대 발화하지 못하는 검사가 된다
+            #   (통과해도 아무것도 보증하지 못한다 · Codex 6차 §4).
+            #   정본은 빌드 때 저장한 **조각 정본 그래프**다. 없으면 통과시키지 않는다.
+            b0 = {tuple(e) for e in (meta.get("mol_graph_canonical") or [])}
+            if not meta.get("mol_graph_canonical"):
+                gates.append("SOURCE_TOPOLOGY_UNVERIFIED(정본 분자 그래프가 job.json 에 "
+                             "없다 — 옛 번들이다. 재생성할 것)")
+                info["bonds"] = {"final": len(b1), "canonical": None}
+            else:
+                broke, formed = b0 - b1, b1 - b0
+                info["bonds"] = {"canonical": len(b0), "broken": len(broke),
+                                 "formed": len(formed),
+                                 "compared_against": "빌드 시 조각 정본 그래프"}
+                if broke or formed:
+                    gates.append(f"SOURCE_TOPOLOGY_CHANGED(정본 대비 끊김 {len(broke)} · "
+                                 f"생성 {len(formed)} — 계산에 넣은 분자가 조각이 아니다)")
+        else:
+            # 기체 기준계도 여기 온다 (슬랩이 없어 위 블록은 건너뛴다)
+            b0 = mol_bond_graph(init, mol)
+            broke, formed = b0 - b1, b1 - b0
+            info["bonds"] = {"initial": len(b0), "broken": len(broke),
+                             "formed": len(formed)}
+            if broke or formed:
+                gates.append(f"BOND_CHANGE(끊김 {len(broke)} · 생성 {len(formed)})")
     # ── 계면 정체성 (Codex P0-7) — 자리 선호를 묻던 계가 다른 계가 됐는가 ──
     #   ⚠ 이 검사들은 "버리라" 가 아니라 **격리하라** 는 뜻이다. 재구성·전이가 일어난
     #     끝점은 흡착 에너지의 질문 자체가 달라져 같은 표에 못 올린다.
@@ -1069,16 +1173,134 @@ def geometry_audit(jd, meta):
             gates.append(f"INTERFACE_REACTION_OR_RECONSTRUCTION(새 계면 결합 {len(newb)}: "
                          + ", ".join(f"{a}–{b} {d}Å" for a, b, d in newb[:3]) + ")")
 
-    dmax = 0.0
-    for i, fx in enumerate([] if sp_only else init["fixed"]):
-        if fx:
-            dmax = max(dmax, mic_dist(init["pos"][i], fin["pos"][i], fin["cell"]))
-    info["fixed_drift_A"] = round(dmax, 4)
-    if dmax > FIX_DRIFT_A:
-        gates.append(f"FIXED_DRIFT({dmax:.3f} Å — 파일 불일치 의심)")
+    # ⚠ 이완이 없으면 drift·재구성·Li 추출·새 계면결합은 **정의되지 않는다**.
+    #   여기에 0 을 적으면 "검사했고 통과" 로 읽힌다 (Codex 6차 §4). 이름을 붙인다.
+    if sp_only:
+        info["fixed_drift_A"] = "NOT_APPLICABLE_SINGLE_POINT"
+        info["relaxation_gates"] = "NOT_APPLICABLE_SINGLE_POINT"
+        info["relaxation_gates_list"] = [
+            "ionic convergence", "fixed-atom drift", "surface reconstruction",
+            "Li extraction", "new interface bonds", "DFT CONTCAR migration"]
+    else:
+        dmax = 0.0
+        for i, fx in enumerate(init["fixed"]):
+            if fx:
+                dmax = max(dmax, mic_dist(init["pos"][i], fin["pos"][i], fin["cell"]))
+        info["fixed_drift_A"] = round(dmax, 4)
+        if dmax > FIX_DRIFT_A:
+            gates.append(f"FIXED_DRIFT({dmax:.3f} Å — 파일 불일치 의심)")
     info["_init_fixed"] = init["fixed"]
     info["_fin"] = fin
     return gates, info
+
+
+def k_transfer_gate(cal, kap_all, frags):
+    """k 전이 게이트 — (판정, 조각별 라벨, 통과한 보정자) 를 낸다.
+
+    ★ κ 는 **부호 있는** 양이다. 크기만 보면 +9 와 −9 를 둘 다 통과시켜 실제
+      18 meV 의 계 의존성을 놓친다. 그래서 max|κ| 와 range 를 **둘 다** 본다.
+    ★ n=2 다 — 평균·표준편차·CI 를 쓰지 않는다. deterministic max/range 규칙이다.
+
+    이 함수가 **못 하는 것**: 보정자가 대표성이 있는지는 판단하지 못한다.
+      큰 계 하나 + open-shell 하나로 고른 것은 **공학적 선택**이지 통계가 아니다.
+    """
+    have = {f: kap_all[f] for f in cal if f in kap_all}
+    if not cal:
+        kt = {"pass": False, "why": "dense 보정자가 지정되지 않았다 — 전이 불가"}
+    elif len(have) < len(cal):
+        kt = {"pass": False, "kappa_eV": have,
+              "why": f"보정자 {len(have)}/{len(cal)} 만 회수 — 전이 근거 부족"}
+    else:
+        vals = list(have.values())
+        mx = max(abs(v) for v in vals)
+        rng = max(vals) - min(vals)
+        kt = {"pass": bool(mx <= GUARD_EV and rng <= GUARD_EV), "kappa_eV": have,
+              "max_abs_meV": round(mx * 1000, 1), "range_meV": round(rng * 1000, 1),
+              "rule": (f"|κ_f| ≤ {GUARD_EV * 1000:.0f} meV **및** "
+                       f"|κ_i−κ_j| ≤ {GUARD_EV * 1000:.0f} meV. n=2 라 max/range 로 "
+                       f"본다 (평균·표준편차·CI 금지)")}
+    labels = {f: ("K_DIRECTLY_CHECKED" if f in have else
+                  "K_TRANSFER_SCREENED" if kt["pass"] else "K_UNVERIFIED")
+              for f in frags}
+    return kt, labels, have
+
+
+def apply_k_guard(cls, med, lbl, delta):
+    """guard band 를 **실제 release gate 로** 적용한다 (Codex 6차 §6).
+
+    옛 판은 k_guard 에 문자열만 붙이고 최종 class 를 막지 않았다 — 직접 dense 하지
+    않은 조각의 25 meV 대비가 그대로 판정으로 나갔다.
+    ±10 meV(k 불확실성)는 30 meV(판정바닥)와 **별개 축**이다:
+      · |ΔE| ≤ 10 meV      → 부호 자체가 안 정해진다 (라벨 무관)
+      · 20 ≤ |ΔE| ≤ 40 meV → k 오차 하나로 바닥을 넘나든다. 직접 dense 아니면 보류
+      · 그 밖                → 원래 판정 유지
+    """
+    a = abs(med)
+    if a <= GUARD_EV:
+        return f"UNRESOLVED_SIGN(|ΔE|={a * 1000:.0f} ≤ {GUARD_EV * 1000:.0f} meV)"
+    if lbl != "K_DIRECTLY_CHECKED" and delta - GUARD_EV <= a <= delta + GUARD_EV:
+        return (f"UNRESOLVED_K_GUARD(|ΔE|={a * 1000:.0f} meV 가 "
+                f"{(delta - GUARD_EV) * 1000:.0f}–{(delta + GUARD_EV) * 1000:.0f} meV "
+                f"띠 안 · {lbl} — 직접 dense 없이는 판정 불가)")
+    return cls
+
+
+def selftest_k() -> int:
+    """k 라벨·guard band 의 **순수 산술**을 시험한다 (음성 포함).
+
+    이 시험이 못 하는 것: OUTCAR 회수·게이트 연동. 그건 번들 selftest 몫이다.
+    """
+    ok = True
+
+    def chk(c, m):
+        nonlocal ok
+        print(("  ✓ " if c else "  ✗ ") + m)
+        ok = ok and bool(c)
+
+    F = ["c10", "doped", "neutral", "dimer"]
+    C = ["c10", "doped"]
+    # 양성: 보정자 둘이 작고 서로 가까우면 나머지는 전이 심사 통과
+    kt, lb, _ = k_transfer_gate(C, {"c10": 0.003, "doped": 0.005}, F)
+    chk(kt["pass"] and lb["c10"] == "K_DIRECTLY_CHECKED"
+        and lb["neutral"] == "K_TRANSFER_SCREENED",
+        f"κ +3/+5 meV → 전이 통과 · 라벨 {lb['neutral']}")
+    # ★★ 음성 (이 함수를 만든 이유): 부호가 반대면 크기만으로는 통과해 버린다
+    kt2, lb2, _ = k_transfer_gate(C, {"c10": 0.009, "doped": -0.009}, F)
+    chk(not kt2["pass"] and lb2["neutral"] == "K_UNVERIFIED",
+        f"κ +9/−9 meV → **탈락** (각각은 10 이하지만 range {kt2['range_meV']} meV)")
+    chk(max(abs(v) for v in kt2["kappa_eV"].values()) <= GUARD_EV,
+        "  ↑ 전제 확인: 절대값만 봤다면 통과했을 사례다")
+    # 음성: 크기가 크면 탈락
+    kt3, lb3, _ = k_transfer_gate(C, {"c10": 0.025, "doped": 0.026}, F)
+    chk(not kt3["pass"] and lb3["dimer"] == "K_UNVERIFIED",
+        f"κ +25/+26 meV → 탈락 (range 는 작아도 max {kt3['max_abs_meV']} meV)")
+    # 음성: 보정자 하나가 결측이면 전이 불가
+    kt4, lb4, _ = k_transfer_gate(C, {"c10": 0.002}, F)
+    chk(not kt4["pass"] and lb4["c10"] == "K_DIRECTLY_CHECKED"
+        and lb4["doped"] == "K_UNVERIFIED",
+        "보정자 1/2 회수 → 전이 불가 (회수된 쪽은 여전히 직접 검증)")
+    # 음성: 보정자 미지정이면 조용히 통과시키지 않는다
+    kt5, lb5, _ = k_transfer_gate([], {}, F)
+    chk(not kt5["pass"] and set(lb5.values()) == {"K_UNVERIFIED"},
+        "보정자 미지정 → 전 조각 K_UNVERIFIED (조용한 통과 금지)")
+
+    # guard band
+    D = 0.030
+    chk(apply_k_guard("ROBUST", 0.005, "K_DIRECTLY_CHECKED", D).startswith("UNRESOLVED_SIGN"),
+        "|ΔE| 5 meV → 부호 미정 (직접 dense 여도)")
+    chk(apply_k_guard("ROBUST", 0.025, "K_TRANSFER_SCREENED", D)
+        .startswith("UNRESOLVED_K_GUARD"),
+        "25 meV + 전이심사 → **판정 보류** (옛 판은 그대로 통과시켰다)")
+    chk(apply_k_guard("ROBUST", 0.025, "K_DIRECTLY_CHECKED", D) == "ROBUST",
+        "25 meV + 직접 dense → 판정 유지 (직접 쟀으면 띠가 적용되지 않는다)")
+    chk(apply_k_guard("ROBUST", 0.080, "K_UNVERIFIED", D) == "ROBUST",
+        "80 meV → 띠 밖이라 판정 유지 (라벨은 별도로 기록)")
+    chk(apply_k_guard("ROBUST", 0.015, "K_UNVERIFIED", D) == "ROBUST",
+        "15 meV → 바닥 아래 결론 유지 (10~20 은 띠가 아니다)")
+    chk(apply_k_guard("X", -0.025, "K_TRANSFER_SCREENED", D)
+        .startswith("UNRESOLVED_K_GUARD"), "음수 ΔE 도 절대값으로 본다")
+    print("k-selftest PASS" if ok else "k-selftest FAIL")
+    return 0 if ok else 1
 
 
 def phase_gates(oc, ph, meta, spec, want_ionic=False):
@@ -1132,6 +1354,8 @@ def phase_gates(oc, ph, meta, spec, want_ionic=False):
 
 
 def main():
+    if "--selftest" in sys.argv:
+        return selftest_k()
     root = sys.argv[1] if len(sys.argv) > 1 else "."
     delta = DELTA
     if "--delta" in sys.argv:
@@ -1512,8 +1736,10 @@ def main():
                                 "sensitivity": {str(t): rms <= t
                                                 for t in (0.50, 0.75, 1.00)}}
                 if rms <= RMSD_TOL and fp_ok:
+                    sp_pair = bool((jli.get("geom") or {}).get("single_point"))
                     rec["gates"].append(
-                        f"PAIR_COLLAPSED(분자 RMSD {rms:.2f} Å ≤ {RMSD_TOL} · {why})")
+                        ("SOURCE_PAIR_COLLAPSED" if sp_pair else "PAIR_COLLAPSED")
+                        + f"(분자 RMSD {rms:.2f} Å ≤ {RMSD_TOL} · {why})")
         de_main = rec["dE_by_seed"].get("afm2424_pm1")
         de_alt = rec["dE_by_seed"].get("afm2424_net4")
         # ★ ΔE 만 비교하면, 두 pose 가 같은 방향으로 함께 움직이고 clean 은 안 움직인
@@ -1547,9 +1773,19 @@ def main():
             if dli is None or dni is None or de_main is None:
                 rec["gates"].append("NUMERICALLY_UNRESOLVED(dense 계획인데 회수 실패)")
             else:
-                dk = abs((dni - dli) - de_main)
+                # ★ κ 는 **부호 있는** 양이다 (Codex 5차 taxonomy · 6차 §6).
+                #   전이 게이트는 크기뿐 아니라 **보정자끼리 같은 방향인지**를 본다 —
+                #   절대값만 보면 +9 와 −9 를 "둘 다 통과" 로 읽어 18 meV 를 놓친다.
+                kap = (dni - dli) - de_main
+                rec["kappa_eV"] = round(kap, 4)
+                results.setdefault("kappa", {})
+                prev = results["kappa"].get(frag)
+                if prev is None or abs(kap) > abs(prev):
+                    results["kappa"][frag] = round(kap, 4)   # 조각당 최악값
+                dk = abs(kap)
                 ok_k = dk <= K_TOL
-                gate = {"dE_meV": round(dk * 1000, 1), "pass": ok_k}
+                gate = {"dE_meV": round(dk * 1000, 1), "kappa_meV": round(kap * 1000, 1),
+                        "pass": ok_k}
                 # E_ads 자체의 k 수렴도 본다 (ΔE 만 보면 상쇄로 숨는다)
                 if eclean_dense is not None and emol.get(frag) is not None:
                     worst = 0.0
@@ -1575,20 +1811,44 @@ def main():
         for tag, cx in (pm.get("cross") or {}).items():
             base_role = cx["role"]                      # 추가된 쪽
             other = "Li" if base_role == "Ni" else "Ni"
-            e_new = E(f"{cx['prefix']}__afm2424_pm1")
-            e_old = E(f"{pm[('li' if other == 'Li' else 'ni') + '_prefix']}"
-                      f"__afm2424_pm1")
-            if e_new is None or e_old is None:
+            opre = pm[("li" if other == "Li" else "ni") + "_prefix"]
+            # ★ 두 seed 로 잰다 (Codex 6차 §5) — 옛 판은 pm1 하나만 읽었다.
+            #   본 ΔE 는 seed 산포 게이트를 통과해야 하는데 교차만 단일시드면,
+            #   "배향 의존" 판정이 실은 자기 branch 잡음일 수 있다.
+            dm_by_seed = {}
+            for sd in pm.get("seeds", ["afm2424_pm1"]):
+                e_new, e_old = E(f"{cx['prefix']}__{sd}"), E(f"{opre}__{sd}")
+                if e_new is not None and e_old is not None:
+                    dm_by_seed[sd] = round(
+                        (e_new - e_old) if base_role == "Ni" else (e_old - e_new), 4)
+            if not dm_by_seed:
                 rec.setdefault("cross", {})[tag] = {"status": "미완/게이트"}
                 continue
-            d_m = (e_new - e_old) if base_role == "Ni" else (e_old - e_new)
-            rec.setdefault("cross", {})[tag] = {
-                "orientation": cx["down_dir"], "roll": cx.get("roll_deg"),
-                "dE_matched_eV": round(d_m, 4)}
+            d_m = dm_by_seed.get("afm2424_pm1", list(dm_by_seed.values())[0])
+            entry = {"orientation": cx["down_dir"], "roll": cx.get("roll_deg"),
+                     "dE_matched_eV": d_m, "dE_by_seed": dm_by_seed,
+                     # 교차 끝점은 dense 를 안 돌린다 — k 는 전이 해석뿐이다
+                     "k_label": "K_UNVERIFIED_CROSS"}
+            rec.setdefault("cross", {})[tag] = entry
+            n_seed_want = len(pm.get("seeds", []))
+            if len(dm_by_seed) < n_seed_want:
+                entry["verdict"] = (f"SEED_INCOMPLETE({len(dm_by_seed)}/{n_seed_want}) "
+                                    f"— 배향 판정 보류")
+                rec["gates"].append(
+                    f"CROSS_SEED_INCOMPLETE({tag}: {len(dm_by_seed)}/{n_seed_want} seed)")
+                continue
+            spread = max(dm_by_seed.values()) - min(dm_by_seed.values())
+            entry["seed_spread_meV"] = round(spread * 1000, 1)
+            if spread > SEED_TOL:
+                entry["verdict"] = (f"BLOCKED_MAGNETIC_SENSITIVITY(seed 산포 "
+                                    f"{spread * 1000:.0f} meV > 10) — 배향 판정 불가")
+                rec["gates"].append(
+                    f"CROSS_MAGNETIC_SENSITIVITY({tag}: {spread * 1000:.0f} meV)")
+                continue
             if de_main is not None:
                 same = (d_m > 0) == (de_main > 0)
                 small = abs(d_m) <= GUARD_EV or abs(de_main) <= GUARD_EV
-                rec["cross"][tag]["verdict"] = (
+                entry["verdict"] = (
                     "UNRESOLVED(guard band 안 — 부호 판정 불가)" if small else
                     "SIGN_CONFIRMED_AT_MATCHED_ORIENTATION" if same else
                     "ORIENTATION_DEPENDENT — 전역 자리 선호 주장 금지")
@@ -1618,6 +1878,16 @@ def main():
                     "Ni_top": round(eni - ec - emol[frag], 4),
                     "mol_ref": "box24"}
         results["pairs"][pid] = rec
+
+    # ── k 전이 게이트 (Codex 5차 taxonomy · 6차 §6) ───────────────────────────
+    #   MANIFEST 에 k_label_rule 을 적어 놓고 **계산은 안 하던** 구멍을 막는다.
+    #   n=2 이므로 평균·표준편차·CI 를 쓰지 않는다 — deterministic max/range 다.
+    cal = list(man.get("dense_calibrators") or [])
+    kap_all = results.get("kappa", {})
+    k_transfer, k_labels, have = k_transfer_gate(
+        cal, kap_all, man.get("fragments", []))
+    results["k_transfer"] = k_transfer
+    results["k_labels"] = k_labels
 
     for frag in man.get("fragments", []):
         dl = [r["dE_Ni_minus_Li_eV"] for r in results["pairs"].values()
@@ -1677,7 +1947,11 @@ def main():
             cls = "SIGN_CONSISTENT_SMALL"
         else:
             cls = "UNRESOLVED_MIXED"
+        lbl = k_labels.get(frag, "K_UNVERIFIED")
+        cls = apply_k_guard(cls, med, lbl, delta)
         results["fragments"][frag] = {
+            "k_label": lbl,
+            "kappa_meV": (round(kap_all[frag] * 1000, 1) if frag in kap_all else None),
             "n_directions": n, "n_planned": n_planned, "dE_list": dl,
             "median_eV": round(med, 4), "class": cls,
             "n_down_dirs": nd, "direction_coverage": None if cov is None else round(cov, 2),
@@ -2185,6 +2459,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                         "down_dir": rec.get("down_dir")}
                     cx = ase_read(xp); cx.set_cell(slab.cell.array); cx.set_pbc(True)
                     _assert_slab_lineage(cx, nslab, slab, f"{pid}/{role}", man)
+                    _assert_mol_topology(cx, nslab, frag, f"{pid}/{role}", man)
                     used_els |= set(cx.get_chemical_symbols())
                     for sd in seeds:
                         rel = f"{tier}/{pid}__{role}top__{sd}"
@@ -2749,6 +3024,53 @@ def selftest() -> int:
         champion=True, kmesh_static=None, kmesh_dense=None, refs=False,
         cross_endpoints=["ptfe_dimer"], mag_controls=True, dense_frags=["ptfe_dimer"])
     out_sp = build_bundle(a_sp, ledger=led)
+    # ★ **배포되는 분석기**의 k 라벨·guard band selftest 를 그대로 돌린다.
+    #   이 로직은 문자열 템플릿 안이라 여기서 import 로 시험할 수 없다 — 실행이 유일한 길.
+    rk = subprocess.run([sys.executable, "analyze_results.py", "--selftest"],
+                        cwd=out_sp, capture_output=True, text=True)
+    for ln in rk.stdout.splitlines():
+        print("   " + ln)
+    chk(rk.returncode == 0, f"배포 분석기 k-selftest (rc={rk.returncode})")
+
+    # ── 물리 규약 사본 대조 — 빌더 RCOV_B/BOND_F_B vs 분석기 RCOV/BOND_F ──────
+    #   문자열 템플릿이라 import 로 공유할 수 없다. **실제로 파싱해서** 대조한다.
+    az = (out_sp / "analyze_results.py").read_text()
+    m_r = re.search(r"^RCOV = (\{.*?\})\nBOND_F = ([\d.]+)", az, re.M | re.S)
+    chk(m_r is not None, "분석기에서 RCOV/BOND_F 표를 찾았다")
+    if m_r:
+        import ast as _ast
+        chk(_ast.literal_eval(m_r.group(1)) == RCOV_B,
+            "RCOV 사본 일치 (빌더 ↔ 분석기)")
+        chk(abs(float(m_r.group(2)) - BOND_F_B) < 1e-12,
+            f"BOND_F 사본 일치 ({m_r.group(2)})")
+
+    # ── 정본 분자 위상: 양성 + 음성 ────────────────────────────────────────
+    # ⚠ 알파벳순 첫 잡은 controls/clean_slab — 분자가 없다. 분자 있는 잡을 고른다.
+    j0 = next(j for j in (json.loads(q.read_text())
+                          for q in sorted(out_sp.rglob("job.json")))
+              if j.get("mol_poscar_idx"))
+    chk(len(j0.get("mol_graph_canonical") or []) > 0,
+        f"job.json 에 정본 분자 그래프 {len(j0.get('mol_graph_canonical') or [])}결합")
+    chk(all(set(e) <= set(j0["mol_poscar_idx"]) for e in j0["mol_graph_canonical"]),
+        "정본 그래프가 **분자 인덱스만** 담는다 (슬랩 원자 혼입 없음)")
+    # ★ 음성: 분자 결합 하나를 끊은 자세를 넣으면 빌드가 **멈춰야** 한다
+    lab0 = "ptfe_dimer__Li_top__fib00__r000"
+    xp0 = run / f"{lab0}.xyz"
+    keep_xyz = xp0.read_text()
+    from ase.io import read as _rd, write as _wr
+    at_bad = _rd(xp0)
+    p_bad = at_bad.get_positions()
+    p_bad[-1] += [0.0, 0.0, 6.0]                  # 마지막 분자 원자를 뜯어낸다
+    at_bad.set_positions(p_bad)
+    _wr(xp0, at_bad)
+    a_bad = argparse.Namespace(**{**vars(a_sp), "out": str(td / "bundle_topo")})
+    try:
+        build_bundle(a_bad, ledger=led)
+        chk(False, "음성 분자 위상 파괴 → **번들이 만들어졌다** (헛도는 검사)")
+    except SystemExit as e:
+        chk("SOURCE_TOPOLOGY_CHANGED" in str(e),
+            f"음성 분자 결합 끊김 → 빌드 중단 ({str(e).splitlines()[0][:50]})")
+    xp0.write_text(keep_xyz)
     m_sp = json.loads((out_sp / "MANIFEST.json").read_text())
     chk(all(p.get("phases") == ["static"] or p.get("phases") == ["static", "dense"]
             for k, p in m_sp["planned"].items() if "clean_slab" not in k),
