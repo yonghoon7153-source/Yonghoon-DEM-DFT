@@ -3198,6 +3198,10 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         "fixed-geometry site contrast (ΔE = E_Ni − E_Li, 같은 조각·같은 슬랩). "
         "clean/gas 기준계가 없으므로 **절대 E_ads 를 만들 수 없다** — 흡착의 열역학적 "
         "유불리·조각 간 결합 세기 비교·결합에너지 절대값은 이 번들로 주장 금지."
+        + (" ⚠ open-shell 조각(sdcp_doped)은 **시드한 라디칼 스핀 basin 조건부**다 — "
+           "반대 커플링 초기값을 넣지 않았으므로 'open-shell 바닥상태 자리 선호' 로 "
+           "일반화하지 말 것. 'tested seeded radical-spin basin 에서의 대비' 로 서술한다."
+           if any("doped" in f for f in man.get("fragments", [])) else "")
         + (" ⚠ champion 은 **전역 최선이 아니다**: 짝(같은 배향의 반대 자리)이 있는 "
            "자세 중 최선이다. 전역 최선 자세가 짝 없는 배향에 있으면 쓰지 않는다. "
            "'가장 안정한 자세' 가 아니라 '배향일치 대비가 가능한 자세 중 최선' 이며, "
