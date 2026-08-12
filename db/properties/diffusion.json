@@ -232,7 +232,7 @@
    "system": "Li3N",
    "facet": "(001)",
    "path": "p0 site pair: UMA-suggested min xy vs saddle-region xy (on-N atop family)",
-   "method": "DFT PBE/USPP constrained relaxations (QE 7.4.1-GPU, kgy RTX3090): adatom xy pinned / z free, 3x3 slab 136 at (bottom 2 bilayers frozen), ecut 60/480 Ry, k 2x2x1, MV 0.01 Ry, forc 1e-3 Ry/bohr",
+   "method": "DFT PBE/USPP constrained relaxations (QE 7.4.1-GPU, kgy RTX3090): adatom xy pinned / z free, 3x3 slab 136 at (bottom 2 bilayers frozen), ecut 60/480 Ry, k 2x2x1, MV degauss 0.01 Ry, conv_thr 1e-6 Ry; etot_conv_thr/forc_conv_thr left at QE defaults (1e-4 Ry / 1e-3 Ry/bohr)",
    "E_min_Ry": -2176.44473796,
    "E_saddle_Ry": -2176.43605123,
    "barrier_eV": 0.1182,
@@ -244,7 +244,9 @@
     "cui_reference_meV": 133,
     "uma_pes_meV": 171,
     "drag_profile": "in_progress_kisti_llm2"
-   }
+   },
+   "cell": "a=b=10.95 A, c=28.545 A, gamma=120 deg; slab thickness 12.80 A -> 15.75 A vacuum between periodic images",
+   "input_verified_2026-08-12": "kgy:~/work/li3n_dft/{p0_min4.in,p0_saddle3.in} grep: ecutwfc=60.0 ecutrho=480.0 degauss=0.01 conv_thr=1.0e-6; NO etot_conv_thr / forc_conv_thr lines -> QE defaults. Corrects an earlier repo-tool-default assumption of conv_thr 1e-8 / etot 1e-5."
   }
  ],
  "headline_comparison_DFT_SCF": {
