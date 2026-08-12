@@ -670,6 +670,40 @@ def read_moments(t):
     return out or None
 
 
+def read_ldau(t):
+    """LDAUPRINT=2 의 onsite density matrix → {원자: [n_up, n_dn]}. 없으면 None.
+
+    ⚠ 모멘트 projector 하나에 자기상태 판정을 맡기지 않으려고 둔다 (Codex P0-2).
+      **판정용이 아니라 기록용**이다 — 절대값은 PAW sphere 규약에 의존한다.
+    """
+    out = {}
+    for m in re.finditer(r"atom\s*=\s*(\d+)\s+type\s*=\s*\d+\s+l\s*=\s*(\d+)", t):
+        a, l = int(m.group(1)), int(m.group(2))
+        n = 2 * l + 1
+        seg = t[m.end():m.end() + 6000]
+        traces = []
+        for sm in re.finditer(r"spin component\s+\d+", seg):
+            rows = []
+            for ln in seg[sm.end():].splitlines()[1:]:
+                v = ln.split()
+                if len(v) == n:
+                    try:
+                        rows.append([float(x) for x in v])
+                    except ValueError:
+                        break
+                elif rows:
+                    break
+                if len(rows) == n:
+                    break
+            if len(rows) == n:
+                traces.append(round(sum(rows[i][i] for i in range(n)), 4))
+            if len(traces) == 2:
+                break
+        if len(traces) == 2:
+            out[a] = traces          # 뒤에 나온 이온스텝이 앞을 덮는다 = 최종값
+    return out or None
+
+
 def read_outcar(p):
     t = _read_text(p)
     if t is None:
@@ -712,6 +746,7 @@ def read_outcar(p):
             "vasp_version": ver.group(1) if ver else None,
             "mag_total": float(mag[-1]) if mag else None,
             "moments": read_moments(t), "forces": forces,
+            "ldau": read_ldau(t),
             "incar_echo": {k2: (re.search(k2 + r"\s*=\s*([-\w.]+)", t).group(1)
                                 if re.search(k2 + r"\s*=\s*([-\w.]+)", t) else None)
                            for k2 in ("ISTART", "ICHARG", "LDIPOL", "IVDW", "LREAL",
@@ -972,6 +1007,7 @@ def main():
             integrity["changed"].append(rel)
 
     jobs = {}
+    results_ldau_missing = []
     for jd in sorted(glob(os.path.join(root, "*", "*", ""))):
         jp = os.path.join(jd, "job.json")
         if not os.path.isfile(jp):
@@ -1065,6 +1101,46 @@ def main():
                             f"안 뒤집혔다 — 표면·라디칼 상대 스핀이 달라졌다)")
                     else:
                         rec["geom"]["magnetic"]["note"] = "전역 반전 — 시간반전이라 같은 상태"
+                # ── LDAU occupation + total M 기록 (Codex P0-2 ③) ──
+                #   판정용이 아니라 **기록용**이다 — 절대값은 PAW sphere 규약 의존.
+                ld = st.get("ldau")
+                if ld:
+                    ups = sorted(ld.items())
+                    mm = [round(v[0] - v[1], 3) for _k, v in ups]
+                    rec["geom"]["magnetic"]["ldau"] = {
+                        "n_atoms": len(ld),
+                        "mean_n_up_dn": [round(sum(v[0] for _k, v in ups) / len(ups), 3),
+                                         round(sum(v[1] for _k, v in ups) / len(ups), 3)],
+                        "moment_from_occ_mean_abs": round(
+                            sum(abs(x) for x in mm) / len(mm), 3),
+                        "fingerprint": hashlib.sha256(
+                            json.dumps(ups, sort_keys=True).encode()).hexdigest()[:12]}
+                else:
+                    rec["geom"]["magnetic"]["ldau"] = None
+                    results_ldau_missing.append(rel)
+
+                # ── 상별 자기 branch — k 를 바꾸며 상태가 넘어가면 'k 오차'가 아니다 ──
+                sig = {}
+                for ph2 in phases:
+                    o2 = ocs.get(ph2)
+                    if not o2 or not o2.get("moments"):
+                        continue
+                    mo = o2["moments"]
+                    if max(ni) < len(mo):
+                        sig[ph2] = "".join("+" if mo[i] > 0 else "-" for i in sorted(ni))
+                rec["geom"]["magnetic"]["phase_sign_sig"] = {
+                    k2: hashlib.sha256(v.encode()).hexdigest()[:8] for k2, v in sig.items()}
+                uniq = {v for v in sig.values()}
+                # 전역 반전끼리는 같은 상태다 — 반전본도 같이 넣어 비교한다
+                if len(uniq) > 1:
+                    base = sorted(sig)[0]
+                    flip = sig[base].translate(str.maketrans("+-", "-+"))
+                    if not all(v in (sig[base], flip) for v in sig.values()):
+                        rec["gates"].append(
+                            f"MAGNETIC_BRANCH_CHANGED(상별 Ni 부호 topology 가 다르다 "
+                            f"{ {k2: v[:8] for k2, v in sig.items()} } — k 오차가 아니라 "
+                            f"spin-state 차이를 재게 된다)")
+
                 # ⚠ MOM_MIN 단독 문턱은 보편적이지 않다 (Codex Q7). LORBIT local moment 는
                 #   PAW sphere/projector 의존 정성 지표라 표면 Ni 가 물리적으로 0.3 아래로
                 #   갈 수 있다. 집단 지표 Q(부호 정규화 평균)와 f_small 을 clean 기준으로
@@ -1145,6 +1221,12 @@ def main():
                             "geom": r.get("geom")} for j, r in jobs.items()}}
     if potcar_warn:
         results["warnings"].append(potcar_warn)
+    if results_ldau_missing:
+        results["warnings"].append(
+            f"LDAU occupation matrix 가 없는 잡 {len(results_ldau_missing)}개 "
+            f"(LDAUPRINT=2 인데 OUTCAR 에 onsite density matrix 없음) — "
+            f"자기상태를 모멘트 하나로만 보게 된다: "
+            + ", ".join(results_ldau_missing[:4]))
     if integrity["changed"]:
         results["warnings"].append(
             f"⛔ 번들 입력 {len(integrity['changed'])}개가 바뀌었다 (INCAR/POSCAR 변조?): "
@@ -1764,6 +1846,19 @@ def _fake_phase(jd: Path, meta: Dict[str, Any], e_static: float,
     mom = ("\n magnetization (x)\n\n# of ion       s       p       d       tot\n"
            "------------------------------------------\n" + "\n".join(mom_rows)
            + "\n--------------------------------------------------\n")
+    # LDAUPRINT=2 의 onsite density matrix (Ni 만). 없으면 LDAU 기록 경로가 안 돈다.
+    occ = []
+    for k, v in sorted(sign.items(), key=lambda kv: int(kv[0])):
+        nu, nd = (0.9, 0.1) if float(v) > 0 else (0.1, 0.9)
+        occ.append(f" atom =  {int(k) + 1}   type =   2   l =   2")
+        for sp, val in ((1, nu), (2, nd)):
+            occ.append("\n onsite density matrix\n")
+            occ.append(f" spin component  {sp}")
+            occ.append("")
+            for r in range(5):
+                occ.append("  " + "  ".join(f"{val if c == r else 0.0:.4f}"
+                                            for c in range(5)))
+    mom += "\n".join(occ) + "\n"
     end = " General timing and accounting\n"
     for ph in meta.get("phases", ["relax", "static"]):
         (jd / ph).mkdir(exist_ok=True)
@@ -2011,6 +2106,24 @@ def selftest() -> int:
     p = out / mc_job / "static" / "OUTCAR"
     p.write_text(_re.sub(r"(\d+\s+0\.000\s+0\.000\s+)(-?[\d.]+)(\s+)(-?[\d.]+)",
                          r"\g<1>0.000\g<3>0.000", p.read_text()))
+    # N11 LDAU occupation matrix 가 없다 (LDAUPRINT=2 인데) — 기록 불가로 잡혀야
+    ld_job = "tier1/ptfe_dimer__fib01_r000__Litop__afm2424_pm1"
+    q = out / ld_job / "static" / "OUTCAR"
+    q.write_text(_re.sub(r" atom =.*?(?=\n magnetization|\Z)", "", q.read_text(),
+                         flags=_re.S))
+    # N12 dense 에서만 Ni **일부**가 뒤집혔다 = 다른 자기 basin (전역 반전은 같은 상태)
+    br_job = "tier1/ptfe_dimer__fib03_r000__Nitop__afm2424_pm1"
+    q = out / br_job / "dense" / "OUTCAR"
+    if q.is_file():
+        lines = q.read_text().splitlines()
+        flipped = 0
+        for i, ln in enumerate(lines):
+            v = ln.split()
+            if len(v) == 5 and v[0].isdigit() and abs(float(v[4])) > 0.5 and flipped < 2:
+                lines[i] = f"{v[0]:>5s}     0.000   0.000   {-float(v[3]):7.3f}   " \
+                           f"{-float(v[4]):7.3f}"
+                flipped += 1
+        q.write_text("\n".join(lines) + "\n")
     # N10 dense 에 static 산출을 복사 — NKPTS 가 안 늘어야 잡힌다 (Codex P0-5)
     dc_job = "tier1/ptfe_dimer__fib02_r000__Nitop__afm2424_pm1"
     if (out / dc_job / "dense").is_dir():
@@ -2055,6 +2168,12 @@ def selftest() -> int:
     chk(not res["e_ads"], "상자 게이트 실패 → E_ads 를 만들지 않는다")
     chk(bool(res["required_missing"]), f"N8 필수 누락 기록 {len(res['required_missing'])}건")
     # ── PAIR_COLLAPSED 양성/음성 (새 basin 판정) ──
+    chk(any("LDAU" in str(w) for w in res["warnings"]),
+        f"N11 LDAU occupation 없음 → 경고 기록")
+    chk((res["jobs"][br_job]["geom"].get("magnetic") or {}).get("ldau") is not None,
+        "정상 잡은 LDAU 지문이 기록된다")
+    chk(any("MAGNETIC_BRANCH_CHANGED" in g for g in res["jobs"][br_job]["gates"]),
+        f"N12 dense 에서만 부분 반전 → MAGNETIC_BRANCH_CHANGED")
     chk(any("KMESH_NOT_DENSER" in g for g in res["jobs"][dc_job]["gates"]),
         f"N10 dense 에 static 복사 → KMESH_NOT_DENSER ({res['jobs'][dc_job]['gates'][:1]})")
     chk(any("PAIR_COLLAPSED" in g for g in res["pairs"]["ptfe_dimer__fib01_r000"]["gates"]),
