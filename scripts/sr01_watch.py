@@ -64,12 +64,18 @@ def resolve_run(arg):
         if os.path.exists(os.path.join(c, BED[0])):
             return None, os.path.realpath(c), '런 폴더 직접 지정'
         lr = os.path.join(c, 'latest_run')
-        if os.path.exists(lr):
+        if os.path.isdir(lr):
             return os.path.realpath(c), os.path.realpath(lr), 'latest_run'
-        runs = sorted(glob.glob(os.path.join(c, 'run_*')), key=os.path.getmtime)
+        # ★ 디렉터리만, 그리고 **압밀 산출물을 가진** 것만.  2026-08-12 실사고: 글롭이
+        #   `run_mpm.sh` (파일!) 를 런 폴더로 집어 "압밀 없음 → 먼저 run_mpm.sh" 라는
+        #   정반대 안내를 냈다 — 러너에서 막 고친 것과 같은 종류의 오진.
+        runs = [p for p in glob.glob(os.path.join(c, 'run_*'))
+                if os.path.isdir(p) and os.path.exists(os.path.join(p, BED[0]))]
         if runs:
+            runs.sort(key=os.path.getmtime)
             return os.path.realpath(c), os.path.realpath(runs[-1]), '최신 run_* (latest_run 없음)'
-    return None, None, ('킷/런 폴더를 못 찾음' if cands else 'cwd 에 kit_* 가 없음')
+    return None, None, ('킷 폴더는 있는데 압밀된 run_* 이 없음 — 경로가 맞는지 확인하세요 '
+                        f'(본 것: {", ".join(cands[:3])})' if cands else 'cwd 에 kit_* 가 없음')
 
 
 def has_ab_banner(path, tail=256 * 1024):
@@ -289,6 +295,17 @@ def _selftest():
         kit = os.path.join(td, 'kit_ps_7_3'); os.makedirs(kit)
         os.symlink(run, os.path.join(kit, 'latest_run'))
         chk('13) 킷 → latest_run 해석', resolve_run(kit)[1] == os.path.realpath(run))
+        # ★ 2026-08-12 실사고: 글롭이 `run_mpm.sh`(파일)를 런 폴더로 집어
+        #   "압밀 없음 → 먼저 run_mpm.sh" 라는 정반대 안내를 냈다.
+        kit2 = os.path.join(td, 'kit_bogus'); os.makedirs(kit2)
+        open(os.path.join(kit2, 'run_mpm.sh'), 'w').close()
+        k, r, how = resolve_run(kit2)
+        chk('16) ★ run_mpm.sh(파일)를 런 폴더로 집지 않는다', r is None and 'run_*' in how)
+        empty = os.path.join(kit2, 'run_empty'); os.makedirs(empty)
+        chk('17) ★ 압밀 산출물 없는 run_* 도 고르지 않는다', resolve_run(kit2)[1] is None)
+        open(os.path.join(empty, BED[0]), 'w').close()
+        chk('18) se_dump.npy 가 생기면 그때 고른다',
+            resolve_run(kit2)[1] == os.path.realpath(empty))
     print(f'\nsr01_watch selftest: {ok}/{ok + fail} PASS')
     return 0 if fail == 0 else 1
 
