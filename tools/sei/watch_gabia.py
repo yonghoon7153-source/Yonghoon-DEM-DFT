@@ -356,6 +356,22 @@ else:
         print("       tmux new -s seidft -d \"bash tools/sei/run_sei_dft.sh 2>&1 "
               "| tee -a ~/logs/sei_dft.log\"")
 
+    # ★ 환경 상태는 **기록해 두면 낡는다** — 화면에 상시 띄워야 5일 뒤에 안 속는다.
+    #   (2026-08-12: kb 가 "frozen-4f 없음" 이라 5일간 막힌 줄 알았는데 이미 있었다.)
+    nd = sorted(glob.glob("/data/work/pseudo/Nd*.[uU][pP][fF]"))
+    if nd:
+        for f in nd:
+            z = None
+            try:
+                t = open(f, errors="ignore").read(400000)
+                m = re.search(r'z_valence\s*=\s*"?\s*([\d.eE+-]+)', t, re.I)
+                z = float(m.group(1)) if m else None
+            except OSError:
+                pass
+            kind = ("frozen-4f ✓" if z and 10.0 <= z <= 12.5 else
+                    "4f-in-valence ⛔ 갭 불가" if z and 13.0 <= z <= 16.0 else "?")
+            print(f"   Nd PP  {os.path.basename(f):44s} z={z}  {kind}")
+
 print(BAR)
 
 # ── 2) 갭 결산 ─────────────────────────────────────────────────────────────

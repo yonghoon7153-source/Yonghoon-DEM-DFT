@@ -32,12 +32,35 @@ for t in "${TARGETS[@]}"; do
   ts "═══ $t ═══"
   cd "$d" || continue
 
+  # ⛔⛔ 2026-08-12 사고 — Nd PP 를 frozen-4f 로 바꿔 입력을 새로 만들었는데, 옛 .out 이
+  #   'JOB DONE' 이라 **전 단계를 건너뛰고 옛 결과(전자 46·spin-polarized)를 판정에 썼다.**
+  #   PP·전자수·스핀이 통째로 달랐다. NEB 러너엔 이 가드가 있는데(P0-3) 여기엔 없었다.
+  #   → 입력 지문을 옆에 박아 두고, 다르면 **건너뛰지 않고 멈춘다**.
   run(){  # $1=입력 $2=출력 $3=실행파일
     local in=$1 out=$2 exe=${3:-$QE}
-    grep -aq "JOB DONE" "$out" 2>/dev/null && { ts "  ✓ $in 이미 완료"; return 0; }
+    local fp="${in}.sha256" now
+    now=$(sha256sum "$in" 2>/dev/null | cut -c1-16)
+    if grep -aq "JOB DONE" "$out" 2>/dev/null; then
+      if [ ! -f "$fp" ]; then
+        # 지문 없는 옛 산출 — 지금 시점 입력으로 박아 둔다(소급 보증은 못 한다)
+        echo "$now" > "$fp"
+        ts "  ✓ $in 이미 완료  ⚠ 지문 없던 옛 산출 — 지금 입력 기준으로 지문을 박았다"
+        return 0
+      fi
+      if [ "$(cat "$fp")" != "$now" ]; then
+        ts "  ⛔ $in 이 **바뀌었는데** 옛 $out 이 있다 (지문 $(cat "$fp") → $now)."
+        ts "     옛 결과를 그대로 쓰면 다른 계를 판정하게 된다. 이 조성은 멈춘다."
+        ts "     다시 돌리려면:  TAG=$t bash tools/sei/redo_stages.sh 01 02 03 04 05 06"
+        return 1
+      fi
+      ts "  ✓ $in 이미 완료"; return 0
+    fi
     ts "  ▶ $in"
     $MPIRUN -np 1 --oversubscribe "$exe" -in "$in" > "$out" 2>&1
-    if grep -aq "JOB DONE" "$out"; then return 0; fi
+    if grep -aq "JOB DONE" "$out"; then
+      sha256sum "$in" 2>/dev/null | cut -c1-16 > "${in}.sha256"
+      return 0
+    fi
     ts "  ✗ $in 실패 — 꼬리:"; tail -6 "$out"; return 1
   }
 
