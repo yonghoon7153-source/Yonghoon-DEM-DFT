@@ -265,17 +265,40 @@ def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_
     return sid, pid
 
 
-def _fibre_segment_ijk(add_pts, add_phase, add_fid, lo, vox, n, gap_tol=2.0):
+#: ★ fid 가 **경로(폴리라인)** 를 뜻하는 상(相)만.  phase 2=VGCF · 4=PTFE · 6=SWCNT sheath.
+#
+#   ⚠⚠ 나머지(3=SuperP · 5=SDCP)의 fid 는 **경로가 아니다** — `additives.seed_coat` 계열이
+#   `return_ids=True` 로 돌려주는 값이 **AM 구 index** 라, 한 구 표면에 흩어진 수십 점이 같은
+#   fid 를 공유한다.  그것을 폴리라인으로 이어 구우면 **구 표면을 무작위 순서로 헤집는 선분**이
+#   되고, 실측(구 R=3 µm·47점·vox 0.4)에서 셀이 **45 → 582 (×12.9)** 로 터지며 그중 **87 % 가
+#   AM 구 내부**를 채운다 = 탄소를 활물질 안에 그리는 것.
+#   ⚠ `gap_tol` 가드는 여기서 **구조적으로 발화하지 않는다** — 간격이 전부 R 스케일로 균일해
+#   중앙값의 2배를 넘는 점프가 생기지 않는다 (실측 파단 0 건).
+#   ★ 같은 판별이 이미 리포에 있었다: `mpm_webapp_payload` 의 뷰어 폴리라인 마스크
+#   (`fib_mask = np.isin(phase, POLYLINE_PHASES) & (fid >= 0)`, 주석까지 달려 있었다).
+#   두 번째로 구현하면서 그 가드를 잃은 것이 이 결함이다 → **여기가 단일 소스**이고 payload 가
+#   이것을 import 한다.
+#   ⚠ 보수적 선택: SuperP-ballmill 의 랜덤워크 **체인**은 진짜 경로지만, fid 만으로는
+#   thinky(coat) 와 구분되지 않아 **점 스탬프로 남긴다** (틀린 연결을 만드는 것보다 덜 잇는
+#   쪽이 안전).  구분하려면 시더가 per-fid 경로 플래그를 남겨야 한다 — 미착수.
+POLYLINE_PHASES = (2, 4, 6)
+
+
+def _fibre_segment_ijk(add_pts, add_phase, add_fid, lo, vox, n, gap_tol=2.0,
+                       polyline_phases=POLYLINE_PHASES):
     """섬유 점열 → **선분이 지나는 셀** (6-face 연결 보장).  → (ijk, phase)
 
     ★ 같은 fid 의 연속 점을 경로로 보고 Amanatides–Woo 로 굽는다.  ⚠ 시더가 **AM 안 점을
       드랍**하므로 간격이 `gap_tol·(중앙값 간격)` 을 넘으면 **끊는다** — 안 그러면 폴리라인이
       AM 을 관통해 탄소를 AM 내부에 넣는다 (실측: 셀 수 1.7배 팽창).  남는 단절은 물리다.
+    ★ `polyline_phases` 밖의 상은 **점 스탬프로 남긴다** — 그 fid 는 경로가 아니다
+      (위 POLYLINE_PHASES 주석 참조).
     """
     from fibre_segment_raster import segment_cells          # 같은 scripts/ 안
     P = np.asarray(add_pts, np.float64)
     F = np.asarray(add_fid)
     PH = np.asarray(add_phase)
+    poly = set(int(p) for p in polyline_phases)
     out_ijk, out_ph = [], []
     for f in np.unique(F):
         m = F == f
@@ -283,6 +306,9 @@ def _fibre_segment_ijk(add_pts, add_phase, add_fid, lo, vox, n, gap_tol=2.0):
         if len(Q) == 0:
             continue
         ph_f = PH[m][0]
+        if int(ph_f) not in poly:                           # ★ 경로가 아닌 fid → 점 스탬프
+            cc = np.floor((Q - lo) / vox).astype(int)
+            out_ijk.append(cc); out_ph.append(np.full(len(cc), ph_f)); continue
         if len(Q) == 1:
             out_ijk.append(np.floor((Q - lo) / vox).astype(int)); out_ph.append([ph_f]); continue
         d = np.linalg.norm(np.diff(Q, axis=0), axis=1)
@@ -1211,6 +1237,38 @@ def _selftest_segstamp():
             and "'fibre_stamp_applied'" in _src)
     except OSError as _e:
         chk(f'7-9) ⚠ payload 배선 확인 생략 ({_e})', True)
+
+    # ── ★★ 회귀 10-12: **경로가 아닌 fid** (coat id = AM 구 index) ──────────────────────
+    #   적대리뷰(코드 렌즈, 2026-08-12)가 재현: `additives.seed_coat(return_ids=True)` 는
+    #   **AM 구 index** 를 fid 로 준다 (SDCP thinky·SuperP thinky).  한 구 표면에 흩어진
+    #   수십 점이 같은 fid 를 공유하므로 폴리라인으로 이으면 구 표면을 헤집는 선분이 되고,
+    #   실측 셀 45 → 582 (×12.9), 그중 87 % 가 **AM 구 내부**.  gap_tol 은 간격이 균일해
+    #   **발화하지 않는다**(파단 0 건).  → POLYLINE_PHASES 화이트리스트로 막는다.
+    rng = np.random.default_rng(0)
+    u = rng.normal(size=(47, 3)); u /= np.linalg.norm(u, axis=1)[:, None]
+    coat = np.array([10.0, 10.0, 10.0]) + 3.0 * u             # 구 표면 산포 47점, 1 fid
+    lo3 = np.array([0.0, 0.0, 0.0]); n3 = np.array([64, 64, 64])
+    fid1 = np.zeros(len(coat), np.int32)
+    for ph_code, name, is_poly in ((5, 'SDCP', False), (3, 'SuperP', False), (2, 'VGCF', True)):
+        ijk_s, _ = _fibre_segment_ijk(coat, np.full(len(coat), ph_code, np.int8), fid1,
+                                      lo3, 0.4, n3)
+        n_pt = len(np.unique(np.floor((coat - lo3) / 0.4).astype(int), axis=0))
+        ratio = len(np.unique(ijk_s, axis=0)) / max(n_pt, 1)
+        if not is_poly:
+            chk(f'10-{ph_code}) ★ {name}(coat id)는 경로가 아니다 → 점 스탬프 유지 '
+                f'(셀 비 {ratio:.2f}× ≤ 1.0)', ratio <= 1.0 + 1e-9)
+        else:
+            chk(f'10-{ph_code}) 대조: {name}는 폴리라인이라 선분이 걸린다 (셀 비 {ratio:.1f}×)',
+                ratio > 1.6)
+    # 화이트리스트가 뷰어 가드와 **같은 소스**인가 (두 번째 구현이 이 결함의 원인이었다)
+    try:
+        _src2 = open(_pp, encoding='utf-8').read()
+        chk('11) ★ payload 뷰어 폴리라인 마스크가 step3 의 POLYLINE_PHASES 를 쓴다 (단일 소스)',
+            'POLYLINE_PHASES' in _src2)
+    except OSError:
+        pass
+    chk('12) POLYLINE_PHASES = (2,4,6) — VGCF·PTFE·SWCNT 만 경로',
+        tuple(POLYLINE_PHASES) == (2, 4, 6))
     print(f'\nstep3 segment-stamp selftest: {ok}/{ok + fail} PASS')
     return 0 if not fail else 1
 

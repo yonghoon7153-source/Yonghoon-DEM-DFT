@@ -1597,7 +1597,10 @@ def main():
         if len(fid) != len(se):
             print(f'  ⚠ fibre length {len(fid)} != SE {len(se)} — ignoring --fibre')
         else:
-            fib_mask = np.isin(phase, (2, 4, 6)) & (fid >= 0)   # rod/chain phases — coat ids (SuperP-thinky/SDCP shells) are
+            fib_mask = np.isin(phase, _s3.POLYLINE_PHASES) & (fid >= 0)   # ★ step3 와 **단일 소스**
+        #   (2026-08-12: 같은 판별이 step3 `_fibre_segment_ijk` 에 없어 SDCP/SuperP-thinky 의
+        #    coat id 가 폴리라인으로 구워질 뻔했다 — 셀 ×12.9, 87 % 가 AM 내부.)
+        #   rod/chain phases — coat ids (SuperP-thinky/SDCP shells) are
             #   NOT polylines; SWCNT(6) sheath chains ARE (fid=chain, along-chain order preserved by the stable sort below)
             n_fib_total = len(np.unique(fid[fib_mask]))
             # subsample fibres PER PHASE so a high-count phase (SuperP — ~40k carbon-black chains) doesn't
