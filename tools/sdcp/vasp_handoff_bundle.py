@@ -741,6 +741,34 @@ def _bond_types(atoms, idx: List[int]) -> Dict[str, int]:
     return c
 
 
+def _write_potcar_asm(jd: Path, species_order: List[str]) -> None:
+    """그 잡 전용 POTCAR 조립기. **슬랩·기체 공통**이다.
+
+    ⚠ 처음엔 슬랩에만 넣었다. 기체 8잡에는 없어서 제출 본문(`bash POTCAR_ASSEMBLE.sh`)
+      이 exit 127 로 죽었고, E_ads 를 하나도 못 만드는 상태였다 (Codex 4차 감사 P0-1).
+      잡을 만드는 자리가 두 곳이면 배포물도 두 곳에서 만들어야 한다 — 한 함수로 뺀다.
+    """
+    pv = [POTCAR_SPEC.get(e, e) for e in species_order]
+    (jd / "POTCAR_ASSEMBLE.sh").write_text(
+        "#!/usr/bin/env bash\n"
+        "# 이 잡의 POTCAR 를 만든다. PBE PAW 5.4 세트 경로를 PP 로 준다.\n"
+        "#   PP=/path/to/potpaw_PBE.54 bash POTCAR_ASSEMBLE.sh\n"
+        "# ⚠ 종 순서는 이 잡 POSCAR 전용이다 — 다른 잡에 복사하지 말 것.\n"
+        "set -e\n"
+        f'ORDER="{" ".join(pv)}"\n'
+        ': "${PP:?PP 를 지정하세요 (PBE PAW 5.4 세트 루트)}"\n'
+        'rm -f POTCAR\n'
+        'for v in $ORDER; do\n'
+        '  f="$PP/$v/POTCAR"\n'
+        '  [ -f "$f" ] || { echo "⛔ 없음: $f"; exit 1; }\n'
+        '  cat "$f" >> POTCAR\n'
+        'done\n'
+        'n=$(grep -ac TITEL POTCAR)\n'
+        f'[ "$n" = {len(pv)} ] || {{ echo "⛔ TITEL {len(pv)}개여야 하는데 $n개"; exit 1; }}\n'
+        'grep -a TITEL POTCAR\n'
+        f'echo "✔ 조립 완료 — 종 순서 {" ".join(species_order)}"\n')
+
+
 def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
                    system: str, seed_name: str, extra_meta: Dict[str, Any],
                    ledger: Dict[str, Any], zcut=None, dense: bool = False,
@@ -804,27 +832,9 @@ def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
         incar_exp["dense_cand"] = {k: m.group(1) for k in AUDIT_KEYS
                                    for m in [re.search(rf"^{k}\s*=\s*(\S+)", txt, re.M)]
                                    if m}
+    _write_potcar_asm(jd, pos["species_order"])
     # ★ POTCAR 는 **잡마다 다르다** (Codex 7차 §11) — POSCAR 종 순서가 조각마다
     #   다르므로 하나의 concatenated POTCAR 를 공용할 수 없다. 조립 명령을 잡 안에 둔다.
-    _pv = [POTCAR_SPEC.get(e, e) for e in pos["species_order"]]
-    (jd / "POTCAR_ASSEMBLE.sh").write_text(
-        "#!/usr/bin/env bash\n"
-        "# 이 잡의 POTCAR 를 만든다. PBE PAW 5.4 세트 경로를 PP 로 준다.\n"
-        "#   PP=/path/to/potpaw_PBE.54 bash POTCAR_ASSEMBLE.sh\n"
-        "# ⚠ 종 순서는 이 잡 POSCAR 전용이다 — 다른 잡에 복사하지 말 것.\n"
-        "set -e\n"
-        f'ORDER="{" ".join(_pv)}"\n'
-        ': "${PP:?PP 를 지정하세요 (PBE PAW 5.4 세트 루트)}"\n'
-        'rm -f POTCAR\n'
-        'for v in $ORDER; do\n'
-        '  f="$PP/$v/POTCAR"\n'
-        '  [ -f "$f" ] || { echo "⛔ 없음: $f"; exit 1; }\n'
-        '  cat "$f" >> POTCAR\n'
-        'done\n'
-        'n=$(grep -ac TITEL POTCAR)\n'
-        f'[ "$n" = {len(_pv)} ] || {{ echo "⛔ TITEL {len(_pv)}개여야 하는데 $n개"; exit 1; }}\n'
-        'grep -a TITEL POTCAR\n'
-        f'echo "✔ 조립 완료 — 종 순서 {" ".join(pos["species_order"])}"\n')
     (jd / "run_job.sh").write_text(RUN_JOB)
     top = _top_cations(atoms, nslab, sym)
     rev = {i: k for k, i in enumerate(pos["order"])}      # 원본 → POSCAR 위치
@@ -902,6 +912,7 @@ def _emit_mol_job(jd: Path, frag: str, mol, margin: float) -> Dict[str, Any]:
         kmesh[ph] = "1 1 1"
         incar_exp[ph] = {k: m.group(1) for k in AUDIT_KEYS
                          for m in [re.search(rf"^{k}\s*=\s*(\S+)", txt, re.M)] if m}
+    _write_potcar_asm(jd, seen)
     (jd / "run_job.sh").write_text(RUN_JOB)
     meta = {"kind": "mol_ref", "fragment": frag, "species_order": seen, "counts": counts,
             "kmesh": kmesh, "incar_expected": incar_exp,
@@ -2063,8 +2074,12 @@ def main():
             "Wave 1: clean/gas 기준계 없음 — **의도된 범위**다. ΔE 만 인용하고 "
             "흡착 열역학·조각 간 결합 세기·E_ads 절대값은 주장하지 말 것")
     for f in (man.get("fragments", []) if has_refs else []):
-        e20 = E(os.path.join("refs", f"mol__{f}__box20"))
-        e24 = E(os.path.join("refs", f"mol__{f}__box24"))
+        # ⚠ job key 는 _pk() 로 POSIX 정규화돼 있다. 여기서 os.path.join 을 쓰면
+        #   Windows 에서 `refs\mol__...` 가 되어 **한 건도 안 맞는다** — 그런데
+        #   gas job 자체는 ok 라 required_missing 이 비고 exit 0 이 났다.
+        #   "계산 완료, E_ads 만 없음" 으로 조용히 끝나는 최악의 모양이었다.
+        e20 = E(f"refs/mol__{f}__box20")
+        e24 = E(f"refs/mol__{f}__box24")
         ok = e20 is not None and e24 is not None and abs(e20 - e24) <= BOX_TOL
         mol_ok[f] = ok
         emol[f] = e24 if ok else None          # 실패하면 E_ads 를 만들지 않는다
@@ -2080,9 +2095,9 @@ def main():
             results["numerical_gates"][f"box_{f}"] = {"dE_meV": None, "pass": False}
             results["warnings"].append(f"mol__{f}: 상자 2종 중 하나가 없다 — E_ads 불가")
 
-    eclean = {s: E(os.path.join("refs", f"clean_slab__{s}"))
+    eclean = {s: E(f"refs/clean_slab__{s}")
               for s in man.get("seeds_full", ["afm2424_pm1", "afm2424_net4"])}
-    eclean_dense = E_dense(os.path.join("refs", "clean_slab__afm2424_pm1"))
+    eclean_dense = E_dense("refs/clean_slab__afm2424_pm1")
 
     for pid, pm in man.get("pairs", {}).items():
         frag = pm["fragment"]
@@ -2613,6 +2628,15 @@ def main():
               f"{len(integrity.get('runtime_poscar_mismatch') or [])} · 기하 미검증 "
               f"{len(integrity.get('geometry_unverified') or [])} — exit 2 "
               f"(삭제도 변조이고, **검증 못 한 것도 통과가 아니다**)")
+        return 2
+    # ⚠ 기준계를 선언해 놓고 E_ads 가 하나도 안 나오면 **조용한 실패**다.
+    #   경로 키가 안 맞아도 gas job 자체는 ok 라 exit 0 이 났다 (Codex 4차 P0-2).
+    if has_refs and not results["e_ads"]:
+        print("\n⛔ **기준계를 선언했는데 E_ads 가 0개다** — refs 조회가 안 맞거나 "
+              "상자 게이트가 전부 실패했다. exit 2")
+        for k2, v2 in results["numerical_gates"].items():
+            if k2.startswith("box_"):
+                print(f"   {k2}: {v2}")
         return 2
     if missing:
         print(f"\n⛔ **필수 산출 미완 {len(missing)}건** (tier1/refs) — fail-closed, exit 2:")
@@ -3365,8 +3389,13 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         "adaptive_dense": ("enabled (dense_cand/ + --plan_dense + run_dense_selected.sh)"
                            if a.adaptive_dense else
                            "DISABLED — 이 번들에 dense_cand/ 도 run_dense_selected.sh 도 "
-                           "없다. 자기 branch 가 20 meV 안에서 경합하면 "
-                           "MAGNETIC_K_UNRESOLVED 로 닫는다"),
+                           "없다. ⚠ branch 경합은 **게이트로 막지 않는다** — headline 이 "
+                           "branch-minimum 이 아니라 같은 seed(pm1) 대비이기 때문이다. "
+                           "경합은 pairs[*].branch_tie 에 기록만 하고, 실제 보호막은 "
+                           "seed 산포 게이트(≤10 meV)다"),
+        "branch_policy": ("pm1 same-seed conditional — **branch minimum 미주장**. "
+                          "어느 자기 branch 가 바닥인지 말하려면 각 끝점의 최저 branch 에 "
+                          "dense 가 필요한데 이 판엔 없다"),
         "max_optional_dense": (MAX_OPTIONAL_DENSE_B if a.adaptive_dense else 0),
         "estimator": "tools/sdcp/vasp_cost_estimate.py --manifest MANIFEST.json",
         "estimator_baseline": ("runs/sdcp_phaseB_vasp_v1_2026_08_08/slab/OUTCAR.gz "
@@ -3375,6 +3404,45 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         "runner_note": ("run_all.sh 는 **직렬 디버그용**이다. 실제 제출은 "
                         "SUBMIT_CONTRACT.md 의 배열 잡으로."),
     }
+    # ── release assertion: 계획된 **모든** 잡에 조립기가 있는가 ─────────────
+    #   제출 본문이 30잡 전부에서 POTCAR_ASSEMBLE.sh 를 부른다. 하나라도 없으면
+    #   그 잡은 exit 127 로 죽는다 (2026-08-12: 기체 8잡이 그 상태로 나갔다).
+    _noasm = [k for k in man["planned"]
+              if not (out / k / "POTCAR_ASSEMBLE.sh").is_file()]
+    if _noasm:
+        sys.exit(f"⛔ POTCAR 조립기가 없는 잡 {len(_noasm)}개 — 제출 본문이 "
+                 f"exit 127 로 죽는다: {_noasm[:5]}")
+    # ── 비용을 MANIFEST 에 **동결**한다 (ZIP 만으로 재현되게) ────────────────
+    try:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import vasp_cost_estimate as CE   # noqa: E402
+        _repo = Path(__file__).resolve().parents[2]
+        _base = CE.outcar_baseline(
+            str(_repo / "runs/sdcp_phaseB_vasp_v1_2026_08_08/slab/OUTCAR.gz")) \
+            or dict(CE.BASE)
+        _jh = []
+        for _jp in sorted(out.rglob("job.json")):
+            _m = json.loads(_jp.read_text())
+            _n = len(_m.get("magmom_poscar") or []) or sum(_m.get("counts") or [0]) or 222
+            _ni = CE.N_IONIC if _n > 60 else 25
+            _jh.append(sum(
+                CE.phase_hours(ph if ph in CE.ESTEP else "static", _n,
+                               (_m.get("kmesh") or {}).get(ph, "3 4 1"), _base,
+                               str(((_m.get("incar_expected") or {}).get(ph) or {})
+                                   .get("LREAL", ".TRUE.")).upper().startswith(".F"), _ni)
+                for ph in (_m.get("phases") or [])))
+        man["cost_frozen"] = {
+            "total_wall_h": round(sum(_jh), 1),
+            "core_h": round(sum(_jh) * a.cores),
+            "longest_job_h": round(max(_jh), 1) if _jh else None,
+            "makespan_d": {str(m): round(CE.schedule_makespan(_jh, m) / 24, 2)
+                           for m in (4, 8, 12, 20)},
+            "estimator": "tools/sdcp/vasp_cost_estimate.py",
+            "estimator_baseline_sha256": _base.get("source"),
+            "repo_commit": man.get("repo_commit"),
+            "uncertainty": "±2배 (모형이지 벤치마크가 아니다)"}
+    except Exception as _e:
+        man["cost_frozen"] = {"error": f"{type(_e).__name__}: {_e}"}
     man["files_sha256"] = files
     (out / "MANIFEST.json").write_text(json.dumps(man, indent=1, ensure_ascii=False))
 
@@ -4026,6 +4094,25 @@ def selftest() -> int:
         "claim_scope 가 pm1 branch 조건부임을 명시")
     chk("branch_tie" in az0 and "MAGNETIC_K_UNRESOLVED_for_branch_minimum" in az0,
         "branch 경합을 **기본 경로**에서 기록한다 (--plan_dense 밖)")
+    # ── Codex 4차 감사 ────────────────────────────────────────────────────
+    _noasm = [k for k in m_sp["planned"]
+              if not (out_sp / k / "POTCAR_ASSEMBLE.sh").is_file()]
+    chk(not _noasm, f"**모든** 잡에 POTCAR 조립기 (없는 잡 {_noasm[:3]})")
+    _mol = [k for k in m_sp["planned"] if "mol__" in k]
+    if _mol:
+        _asm = (out_sp / _mol[0] / "POTCAR_ASSEMBLE.sh").read_text()
+        chk("ORDER=" in _asm and "TITEL" in _asm,
+            f"기체 잡 조립기도 종 순서·TITEL 검증을 한다 ({_mol[0]})")
+    chk('os.path.join("refs"' not in az0 and 'E(f"refs/mol__' in az0,
+        "refs 조회가 POSIX 리터럴 (os.path.join 은 Windows 에서 키가 안 맞는다)")
+    chk("기준계를 선언했는데 E_ads 가 0개다" in az0,
+        "refs 선언 + E_ads 0개 → exit 2 (조용한 완주 차단)")
+    chk(isinstance(m_sp.get("cost_frozen"), dict)
+        and m_sp["cost_frozen"].get("total_wall_h"),
+        f"비용이 MANIFEST 에 동결됐다 ({(m_sp.get('cost_frozen') or {}).get('total_wall_h')} h)")
+    chk("branch_policy" in (m_sp.get("submission") or {})
+        and "미주장" in m_sp["submission"]["branch_policy"],
+        "branch policy 가 MANIFEST 에 명시 (게이트로 막는다는 옛 문구 제거)")
     chk("E_ads(static target mesh)" in az0,
         "E_ads headline 이 coarse 임을 명시 (dense 는 게이트 전용)")
     chk(all(p.get("phases") == ["static"] or p.get("phases") == ["static", "dense"]
