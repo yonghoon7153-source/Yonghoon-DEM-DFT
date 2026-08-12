@@ -356,6 +356,18 @@ else:
         print("       tmux new -s seidft -d \"bash tools/sei/run_sei_dft.sh 2>&1 "
               "| tee -a ~/logs/sei_dft.log\"")
 
+    # ★ 실행 바이너리 — kb 에 "미설치" 라고 적어 두고 낡은 사례가 있다
+    #   (neb.x: 2026-06-01 "미설치" → 실제로는 있고 지금 돌고 있다. 그 기록이
+    #    "UMA NEB 로 전체 대체" 라는 설계 결정의 근거였다.)
+    qb = sorted(glob.glob("/data/apps/qe-*/bin")) or sorted(glob.glob("/data/work/apps/qe-*/bin"))
+    if qb:
+        have = {os.path.basename(x) for x in glob.glob(os.path.join(qb[-1], "*"))}
+        want = ("pw.x", "neb.x", "ph.x", "dos.x", "projwfc.x", "ld1.x", "pp.x")
+        print(f"   QE {os.path.dirname(qb[-1]).split('/')[-1]}  "
+              + " ".join(f"{w}{'✓' if w in have else '✗'}" for w in want))
+    else:
+        print("   ⚠ QE 빌드 디렉터리를 못 찾았다 (/data/apps/qe-* · /data/work/apps/qe-*)")
+
     # ★ 환경 상태는 **기록해 두면 낡는다** — 화면에 상시 띄워야 5일 뒤에 안 속는다.
     #   (2026-08-12: kb 가 "frozen-4f 없음" 이라 5일간 막힌 줄 알았는데 이미 있었다.)
     nd = sorted(glob.glob("/data/work/pseudo/Nd*.[uU][pP][fF]"))

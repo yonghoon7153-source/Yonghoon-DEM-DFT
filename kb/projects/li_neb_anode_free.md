@@ -49,6 +49,11 @@ status: setup
 
 ### 4.1 NEB 인프라
 - **QE neb.x**: 미설치 (확인됨, 2026-06-01)
+
+> ⛔ **낡음 (2026-08-12 정정)** — gabia 에 `neb.x` 는 **있다**. `/data/apps/qe-7.4.1-gpu/bin/neb.x` 로 2026-08-11~12 li2s·li3nd NEB 를 실제로 돌렸고, `tools/sei/run_sei_neb.sh` 의 기본 경로가 그것이다.
+> 위 '미설치' 기록에 근거한 판단(특히 UMA NEB 로의 대체)은 **그 시점 근거**로만 읽을 것.
+> 환경 상태는 기록해 두면 낡는다 — 확인은 `python3 tools/sei/watch_gabia.py` 의 QE 바이너리 줄로.
+
 - **대안 (실제 사용)**: **ASE NEB module + calculator**
   - Fast: ASE NEB + FAIRChemCalculator (UMA-oc20) → ~분 단위
   - DFT 검증: ASE NEB + Espresso calc (pw.x for each image) → ~수일

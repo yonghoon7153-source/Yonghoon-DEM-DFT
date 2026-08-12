@@ -96,6 +96,11 @@ status: dft-scf-on-uma-confirmed_full-dft-neb-running
 - **ASE** 3.28 (uses `ase.mep.NEB` — required since 3.23+, old `ase.neb` removed)
 - **UMA-s-1p1** FAIRChem MLIP, `task='oc20'` (Open Catalyst — surface adsorbate 전용 학습)
 - **QE neb.x**: gabia에 미설치 → ASE NEB driving UMA로 전체 대체
+
+> ⛔ **낡음 (2026-08-12 정정)** — gabia 에 `neb.x` 는 **있다**. `/data/apps/qe-7.4.1-gpu/bin/neb.x` 로 2026-08-11~12 li2s·li3nd NEB 를 실제로 돌렸고, `tools/sei/run_sei_neb.sh` 의 기본 경로가 그것이다.
+> 위 '미설치' 기록에 근거한 판단(특히 UMA NEB 로의 대체)은 **그 시점 근거**로만 읽을 것.
+> 환경 상태는 기록해 두면 낡는다 — 확인은 `python3 tools/sei/watch_gabia.py` 의 QE 바이너리 줄로.
+
 - **합리화**: oc20는 정확히 우리 use-case (adsorbate on surface) 학습
 
 ### 5.2 NEB Protocol

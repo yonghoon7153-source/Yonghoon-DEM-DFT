@@ -166,7 +166,7 @@ which mpifort                       # hpcx 경로여야 한다
 mpifort --version | head -1         # nvfortran 이어야 한다
 ```
 
-⚠ **QE-GPU 빌드에 `neb.x` 가 처음부터 없다.** `bin/` 은 `PW/src`·`PP/src` 로 가는
+⚠ ~~**QE-GPU 빌드에 `neb.x` 가 처음부터 없다.**~~ **(2026-08-12 정정: 지금은 있다 — `/data/apps/qe-7.4.1-gpu/bin/neb.x`. 그 뒤 빌드된 것으로 보인다. 아래는 당시 기록.)** `bin/` 은 `PW/src`·`PP/src` 로 가는
 심볼릭 링크 모음인데 NEB 은 빌드 대상에 안 들어 있었다. `libpw.a` 는 이미 있으므로
 `make neb` 는 NEB 모듈만 컴파일한다(2~5분).
 
