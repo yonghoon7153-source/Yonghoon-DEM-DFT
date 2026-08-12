@@ -154,7 +154,12 @@ def long_verdict(b):
 def section_long():
     print("⑥ lpsocl 600 K × 800 ps — (B) 진짜 멱함수 vs (C) 느린 전이 판정")
     up = "lpsocl800" in sh("tmux ls")
+    # ⚠ 러너 쉘이 살아 있는 건 **python 이 돈다는 증거가 아니다**. 드라이버를 직접 본다.
     nproc = len([x for x in sh("pgrep -f '[r]un_arrhenius_6pt.sh'").split() if x])
+    ndrv = len([x for x in sh("pgrep -f '[d]isorder_ensemble_diffusion.py'").split() if x])
+    gpu = sh("nvidia-smi --query-gpu=utilization.gpu,memory.used "
+             "--format=csv,noheader,nounits").strip().splitlines()
+    gpu = gpu[0] if gpu else "?"
     base = os.path.join(LONG, "lpsocl", "T600_s2")
     mj = next(iter(sorted(glob.glob(os.path.join(base, "**", "msd.json"),
                                     recursive=True))), None)
@@ -175,14 +180,26 @@ def section_long():
         tail = lines[-3:]
         for ln in lines:
             if "prod=800" in ln and "▶" in ln:
-                m = re.search(r"(\d{2}):(\d{2}):(\d{2})", ln)
+                m = re.search(r"\[([\d-]+\s+)?(\d{2}:\d{2}:\d{2})\]", ln)
                 if m:
-                    t0 = m.group(0)
+                    t0 = m.group(2)
     el = os.path.getmtime(LONG_LOG) if os.path.isfile(LONG_LOG) else None
     age = (datetime.now().timestamp() - el) / 60.0 if el else None
     st = "✅ 완료" if mj else ("▶ 진행" if (up or nproc) else "⛔ 죽음/미착수")
     print(f"   상태 {st} · tmux {'있음' if up else '없음'} · 러너 {nproc} · "
-          f"시작 {t0 or '?'} · 예상 {LONG_TARGET_PS / 200 * LONG_HOURS_PER_200PS:.1f} h")
+          f"**드라이버 {ndrv}** · GPU {gpu} · 시작 {t0 or '?'} · "
+          f"예상 {LONG_TARGET_PS / 200 * LONG_HOURS_PER_200PS:.1f} h")
+    if not mj and ndrv == 0:
+        print("   ⛔ 드라이버 python 이 없다 — 쉘만 살아 있고 계산은 안 돈다")
+    # MD 는 진행 로그를 거의 안 찍는다 — 출력 폴더가 크는지가 더 나은 생존 신호다
+    tot = 0
+    for r2, _d, fs2 in os.walk(os.path.join(LONG, "lpsocl", "T600_s2")):
+        for f2 in fs2:
+            try:
+                tot += os.path.getsize(os.path.join(r2, f2))
+            except OSError:
+                pass
+    print(f"   출력 {tot / 1e6:.1f} MB (traj 는 종료 시 한 번에 쓰인다 — 0 이어도 정상)")
     if age is not None:
         print(f"   로그 마지막 갱신 {age:.0f}분 전"
               + ("   ⚠ 30분 넘게 조용하다 — 살아 있는지 확인" if age > 30 and not mj else ""))
