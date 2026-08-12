@@ -91,11 +91,19 @@ def audit_file(f):
         rec["notes"] = ["dict 가 아님 — 메타 필드를 못 단다"]
         return rec, None
     rec["date"] = next((str(d[k]) for k in DATE_KEYS if k in d), None)
+    # ⚠ 2026-08-12 정정 — 처음엔 최상위 SRC_KEYS 만 봤다. 그랬더니 정본 앵커 28건이
+    #   전부 "사슬 끊김" 으로 나왔는데 **오탐**이었다: electronic.json 도 eos.json 도
+    #   경로를 갖고 있고, 다만 블록 안쪽에 중첩돼 있었다. 둘을 갈라서 본다.
+    #     declared : 최상위 출처 필드 — 기계가 믿고 따라갈 수 있다
+    #     any      : 문서 어디든 있는 경로 문자열 — 사람은 따라갈 수 있다
     ps = set()
     for k in SRC_KEYS:
         if k in d:
             _paths_in(d[k], ps)
-    rec["sources"] = sorted(ps)[:6]
+    rec["sources_declared"] = sorted(ps)[:6]
+    pa = set()
+    _paths_in(d, pa)
+    rec["sources"] = sorted(pa)[:8]
     rec["dead_sources"] = [s for s in rec["sources"]
                            if s.startswith(("db/", "runs/", "tools/"))
                            and not (REPO / s).exists()]
@@ -166,6 +174,30 @@ def build_citation_index():
     return idx
 
 
+def chain_check(recs):
+    """정본 앵커의 **두 번째 고리**를 본다 (2026-08-12).
+
+    ⚠ 기존 검증은 `앵커 값 == db 파일 값` 만 본다. 그래서 "28/28 일치" 가 나와도
+      그 db 파일이 **원자료에 닿는지**는 아무도 안 묻는다. 실제로 ICOHP P–S 정본
+      두 개(−5.938 / −5.9997)가 원자료 경로 없는 파일을 가리키고 있었다.
+      사슬은  앵커 → db 파일 → 원자료  인데 첫 고리만 검사해 온 셈이다.
+    """
+    reg = C.load_registry()
+    by_file = {r["file"]: r for r in recs}
+    out = []
+    for e in reg.get("entries", []):
+        sp = str(e.get("source_path") or "")
+        if not sp:
+            out.append((e, "앵커에 source_path 가 없다"))
+            continue
+        r = by_file.get(sp)
+        if r is None:
+            out.append((e, f"가리키는 파일이 감사 대상에 없다: {sp}"))
+        elif not r.get("sources"):
+            out.append((e, f"{sp} 에 원자료 경로가 **아예 없다** — 사슬이 끊긴다"))
+    return out
+
+
 def cmd_audit(show_all=False, cited_only=False):
     """db/properties 전체 신선도 감사 — 요약이 기본, 목록은 --audit_all."""
     cites = build_citation_index()
@@ -188,12 +220,16 @@ def cmd_audit(show_all=False, cited_only=False):
     sup = [r for r in recs if r.get("superseded")]
     unmarked = [r for r in recs if r.get("superseded_unmarked")]
     nosrc = [r for r in recs if r.get("kind") == "dict" and not r.get("sources")]
+    nodecl = [r for r in recs if r.get("kind") == "dict"
+              and r.get("sources") and not r.get("sources_declared")]
     ncited = sum(1 for r in recs if r.get("cited_by"))
     print(f"=== db 신선도 감사 ===  json {len(files)}개 (읽기 실패 {len(broken)})"
           + (f" · **강한 인용만** {len(recs)}개 (그림/원고/정본 앵커)" if cited_only
              else f" · 인용됨 {ncited} / 미인용 {len(recs) - ncited}"))
     print(f"  ① 날짜 없음        {len(nodate):3d}  — 최신인지 판단 불가")
-    print(f"  ② 출처 경로 없음    {len(nosrc):3d}  — 원자료를 못 따라간다")
+    print(f"  ② 출처 경로 아예 없음 {len(nosrc):3d}  — 원자료를 못 따라간다")
+    print(f"  ②' 경로는 있으나 **선언 안 됨** {len(nodecl):3d}  — 사람은 찾지만 "
+          f"기계는 못 따라간다")
     print(f"  ③ 죽은 출처 경로    {len(dead):3d}  — 적힌 경로가 사라졌다")
     print(f"  ④ null 값 있음      {len(nulls):3d}  — **채울 자리** 후보")
     print(f"  ⑤ 구판/신판 공존    {len(sup):3d}  (그중 **표시 없음** {len(unmarked)} "
@@ -217,6 +253,17 @@ def cmd_audit(show_all=False, cited_only=False):
         print(f"\n── ④ 채울 자리 후보 (상위 {'전부' if show_all else 12}) ──")
         for r in (nulls if show_all else nulls[:12]):
             print(f"  {r['file']:52s} {', '.join(r['nulls'][:3])}")
+    chain = chain_check(recs)
+    if chain:
+        print(f"\n── ⑥ 정본 앵커의 **끊긴 사슬** {len(chain)}건 ──")
+        print("   (앵커→db파일 은 검증되지만 db파일→원자료 가 끊겨 있다)")
+        seen = set()
+        for e, why in chain:
+            k = (str(e.get("value")), why)
+            if k in seen:
+                continue
+            seen.add(k)
+            print(f"  값 {e.get('value')}  status={e.get('status')}\n     {why}")
     if cited_only:
         gap = [r for r in recs if not r.get("date") or not r.get("sources")]
         print(f"\n── provenance 가 빈 강한-인용 파일 {len(gap)}건 (여기부터 채운다) ──")
@@ -293,6 +340,21 @@ def selftest():
         {"source": "tools/db/validate_canonical.py"}), encoding="utf-8")
     lv, _ = audit_file(td / "live.json")
     chk(lv["dead_sources"] == [], f"살아 있는 경로는 안 잡는다 ({lv['sources']})")
+    # ── declared vs any (2026-08-12) ──
+    #   ★ 처음엔 최상위 SRC_KEYS 만 봐서 정본 앵커 28건이 전부 "사슬 끊김" 으로 나왔다.
+    #     **오탐**이었다 — 경로가 블록 안쪽에 중첩돼 있었을 뿐이다. 그 재발을 막는다.
+    (td / "nested.json").write_text(json.dumps({
+        "band_gaps": {"comp1": {"note": "from runs/comp1_v3/k444/V0_dos_summary.json",
+                                "gap": 2.066}}}), encoding="utf-8")
+    nz, _ = audit_file(td / "nested.json")
+    chk(nz["sources"] and "comp1_v3" in nz["sources"][0],
+        f"**중첩된** 경로도 찾는다 ({nz['sources'][:1]}) — 최상위만 보면 오탐이 난다")
+    chk(nz["sources_declared"] == [],
+        "다만 '선언된 출처' 는 아니다 (기계가 따라갈 수 없다)")
+    (td / "decl.json").write_text(json.dumps(
+        {"source": "runs/x/y.out", "results": {}}), encoding="utf-8")
+    dc, _ = audit_file(td / "decl.json")
+    chk(dc["sources_declared"] == ["runs/x/y.out"], "최상위 source 는 declared 로 잡는다")
     import shutil
     shutil.rmtree(td, ignore_errors=True)
     print("selftest PASS" if ok else "selftest FAIL")
