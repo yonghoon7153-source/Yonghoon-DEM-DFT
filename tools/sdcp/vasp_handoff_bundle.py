@@ -53,6 +53,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -288,10 +289,14 @@ echo "✅ $(basename "$PWD") 완료"
 """
 
 RUN_ALL = """#!/usr/bin/env bash
-# 전체 실행: tier1 → refs → tier2.  VASP_CMD 환경변수로 실행 명령을 지정.
+# ⚠⚠ 이건 **직렬 디버그 러너**다 — 병렬 제출기가 아니다.
+#   이대로 돌리면 잡을 하나씩 순서대로 돈다 (Wave 1 기준 20일 규모).
+#   실제 제출은 SUBMIT_CONTRACT.md 의 배열 잡/스케줄러로 할 것.
+#   여기서는 계약(상 의존성·종료코드 전파)을 보여 주고, 소수 잡을 손으로 돌릴 때 쓴다.
+# 전체 실행 순서: controls → tier1 → refs → tier2.  VASP_CMD 로 실행 명령 지정.
 set -u
 fail=0
-for grp in tier1 refs tier2; do
+for grp in controls tier1 refs tier2; do
   [ -d "$grp" ] || continue
   for j in "$grp"/*/; do
     [ -f "$j/run_job.sh" ] || continue
@@ -369,56 +374,94 @@ def discover_pairs(run_dir: Path, audit: Optional[Dict[str, Any]] = None,
         out.append({"dir": dd, "roll": int(ro), "li": r, "ni": q,
                     "dE_uma": round(de, 4), "n_rolls": len(lst),
                     "dir_median_uma": round(med, 4)})
+
+    # ── 방향 감사 — champion·folded **공통** (Codex 6차 P0-3) ────────────────
+    #   옛 구현은 champion 분기에서 excluded_dirs 를 {} 로 덮어써 CAP_ARTIFACT 를 비롯한
+    #   검열 원장을 통째로 날렸다. 감사는 선택 방식과 무관한 사실이므로 먼저 채운다.
+    def _fill_dir_audit() -> None:
+        if audit is None:
+            return
+        seen: Dict[str, Dict[str, int]] = {}
+        for r in rows:
+            d = str(r.get("down_dir"))
+            key = str(r.get("site")) + ("" if r.get("ranking_eligible") else "(부적격)")
+            seen.setdefault(d, {})[key] = seen.setdefault(d, {}).get(key, 0) + 1
+        why: Dict[str, Dict[str, int]] = {}
+        for r in rows:
+            if r.get("ranking_eligible"):
+                continue
+            d = str(r.get("down_dir"))
+            for g in (r.get("gate_reasons") or ["(사유 미기록)"]):
+                why.setdefault(d, {})[str(g)] = why.setdefault(d, {}).get(str(g), 0) + 1
+        audit["n_down_dirs"] = len(seen)
+        audit["excluded_dirs"] = {d: c for d, c in sorted(seen.items())
+                                  if d not in by_dir}
+        # ★ 사유를 같이 남긴다 — 없으면 "왜 빠졌나" 를 볼 때마다 진단을 다시 돌려야 한다
+        audit["excluded_reasons"] = {d: why[d] for d in audit["excluded_dirs"] if d in why}
+        audit["note"] = ("제외된 방향은 Li_top↔Ni_top 대조쌍이 없는 것이다 — 자리 종류를 "
+                         "훑은 방향이거나(O_top·hollow·*_bridge) 한쪽이 부적격인 경우다. "
+                         "누락이 아니라 대조쌍 정의 밖이다.")
+
+    _fill_dir_audit()
     # ── 챔피언 모드 (2026-08-12) ────────────────────────────────────────────
     #   "Li 위 최선 vs Ni 위 최선" 을 직접 비교한다. 흡착에서 계는 제일 좋은 자리를
     #   찾아가므로 이게 물리적으로 자연스러운 비교다.
     #   ⚠ 두 챔피언이 **다른 방향**일 수 있다 — 그러면 ΔE 에 자리 효과와 배향 효과가
     #     섞인다. 그래서 matched=False 로 표시하고 분석기가 그렇게 읽게 한다.
     if champion:
-        li = [r for r in fs if r["site"] == "Li_top" and r.get("nearest_cation") == "Li"]
-        ni = [r for r in fs if r["site"] == "Ni_top" and r.get("nearest_cation") == "Ni"]
-        if not li or not ni:
+        # ★★ 챔피언은 **짝이 확인된 자세 풀**에서만 고른다 (Codex 6차 P0-3).
+        #   옛 구현은 전체 자격 행 fs 에서 Li·Ni 를 따로 최소화했다. 그러면 짝 없는
+        #   자세가 챔피언이 될 수 있고, 뒤이어 "교차 끝점을 못 만든다" 는 결과가 나온다 —
+        #   그건 **물리가 아니라 선택 규약의 산물**이다 (C10 cross_missing 이 그 사례).
+        #   짝 풀에서 고르면 각 챔피언의 exact counterpart 가 정의상 존재한다.
+        pool = [{"key": (dd, float(ro)), "li": r, "ni": q}
+                for dd, lst in by_dir.items() for ro, _de, r, q in lst]
+        if not pool:
             return []
-        rl = min(li, key=lambda r: r["E_pose_eV"])
-        rn = min(ni, key=lambda r: r["E_pose_eV"])
+        cl = min(pool, key=lambda p: p["li"]["E_pose_eV"])   # Li 위 최선 (짝 보유)
+        cn = min(pool, key=lambda p: p["ni"]["E_pose_eV"])   # Ni 위 최선 (짝 보유)
+        rl, rn = cl["li"], cn["ni"]
+        matched = cl["key"] == cn["key"]                     # (down_dir, roll) 완전일치
+        pose = {"Li": {"down_dir": rl["down_dir"], "roll_deg": float(rl["roll_deg"])},
+                "Ni": {"down_dir": rn["down_dir"], "roll_deg": float(rn["roll_deg"])}}
         out = [{"dir": f"{rl['down_dir']}v{rn['down_dir']}", "roll": int(rl["roll_deg"]),
-                "li": rl, "ni": rn, "matched": False,
+                "li": rl, "ni": rn, "matched": matched,
                 "dE_uma": round(rn["E_pose_eV"] - rl["E_pose_eV"], 4), "n_rolls": 1,
                 "dir_median_uma": round(rn["E_pose_eV"] - rl["E_pose_eV"], 4),
+                "champion_pose": pose,
                 "champion_dirs": {"Li": rl["down_dir"], "Ni": rn["down_dir"]}}]
-        # ★ 교차 끝점 (Codex 5차 결정 ②) — 두 챔피언의 배향이 다르면 ΔE 에 자리 효과와
-        #   배향 효과가 섞인다. 각 배향에서 **고정배향 대비**를 하나씩 얻으려면
-        #   Li@(Ni 배향) 과 Ni@(Li 배향) 이 필요하다. 그러면 2×2 가 완성되고
-        #   상호작용 I = Δ(Ni배향) − Δ(Li배향) 을 분리할 수 있다.
-        #   ⚠ Ni 쪽이 UMA 배향 산포가 커서(0.085 eV) Ni@(Li 배향) 이 특히 중요하다.
+        # ★ 교차 끝점 (Codex 5차 ② · 6차 P0-4) — 두 챔피언의 **자세키**(down_dir, roll)가
+        #   다르면 ΔE 에 자리 효과와 배향 효과가 섞인다. 각 배향에서 고정배향 대비를
+        #   하나씩 얻으려면 Li@(Ni 자세) 와 Ni@(Li 자세) 가 필요하다 → 2×2 완성,
+        #   상호작용 I = Δ(Ni자세) − Δ(Li자세) 분리 가능.
+        #   ⚠ 방향만 맞추고 roll 이 다르면 2×2 가 아니다 — exact 자세키로 잡는다.
+        #     짝 풀에서 뽑았으므로 **대체 검색이 필요 없다**: 상대는 이미 손에 있다.
         out[0]["cross"] = {}
-        if cross and rl["down_dir"] != rn["down_dir"]:
-            for tag, pool, want_dir in (("Li_at_Ni_dir", li, rn["down_dir"]),
-                                        ("Ni_at_Li_dir", ni, rl["down_dir"])):
-                cand = [r for r in pool if r["down_dir"] == want_dir]
-                if not cand:
-                    # ⚠ 조용히 한쪽만 만들면 "2×2 완성" 으로 오해한다. 왜 못 만드는지
-                    #   남긴다 — 그 방향에 그 자리의 자세가 **애초에 없다**는 뜻이고,
-                    #   채우려면 UMA 자세 생성부터 다시 해야 한다 (이 번들 밖이다).
-                    out[0].setdefault("cross_missing", {})[tag] = (
-                        f"{want_dir} 에 {'Li' if tag.startswith('Li') else 'Ni'}_top "
-                        f"자격 자세가 없다 — 2×2 미완. 채우려면 site-screen 부터")
-                if cand:
-                    # 같은 roll 을 우선하고, 없으면 그 방향에서 가장 안정한 자세
-                    same = [r for r in cand if abs(float(r.get("roll_deg", -1))
-                                                   - float(rl["roll_deg"])) < 1e-6]
-                    out[0]["cross"][tag] = min(same or cand,
-                                               key=lambda r: r["E_pose_eV"])
+        if cross and not matched:
+            out[0]["cross"]["Li_at_Ni_pose"] = cn["li"]   # Ni 챔피언 자세의 Li_top
+            out[0]["cross"]["Ni_at_Li_pose"] = cl["ni"]   # Li 챔피언 자세의 Ni_top
+            # fail-closed 불변식: 짝 풀 계약이 깨지면 조용히 다른 자세를 계산하게 된다
+            for tag, rec, want in (("Li_at_Ni_pose", cn["li"], cn["key"]),
+                                   ("Ni_at_Li_pose", cl["ni"], cl["key"])):
+                if (rec["down_dir"], float(rec["roll_deg"])) != want:
+                    sys.exit(f"⛔ PAIR_POOL_CONTRACT_BROKEN {run_dir.name}/{tag}: "
+                             f"짝 자세키 {(rec['down_dir'], rec['roll_deg'])} ≠ {want} — "
+                             f"discover_pairs 의 짝 구성이 깨졌다. 번들을 만들지 않는다")
         if audit is not None:
-            audit["n_down_dirs"] = len({str(r.get("down_dir")) for r in rows})
             audit["n_contrast_pairs"] = 1
             audit["cross_endpoints"] = {k: v["label"]
-                                        for k, v in (out[0].get("cross") or {}).items()}
-            audit["cross_missing"] = out[0].get("cross_missing") or {}
-            audit["excluded_dirs"] = {}
-            audit["mode"] = ("champion — Li 위 최선 vs Ni 위 최선. 두 챔피언이 다른 "
-                             "방향이면 ΔE 에 배향 효과가 섞인다(matched=False).")
+                                        for k, v in out[0]["cross"].items()}
+            audit["cross_missing"] = {}          # 짝 풀 선택 → 정의상 결측이 없다
+            audit["mode"] = ("champion — **짝 확인 풀**에서 Li 위 최선 vs Ni 위 최선. "
+                             "두 챔피언의 자세키가 다르면 ΔE 에 배향 효과가 섞인다"
+                             "(matched=False) → 교차 2개로 2×2 완성.")
+            audit["champion_pose"] = pose
             audit["champion_dirs"] = out[0]["champion_dirs"]
+            audit["exact_matched_pose"] = matched
+            audit["pair_pool_size"] = len(pool)
+            # ★ 챔피언이 **의도적으로** 버린 방향 — 부적격 탈락과 다른 범주다
+            audit["champion_dropped_dirs"] = sorted(
+                d for d in by_dir if d not in {rl["down_dir"], rn["down_dir"]})
         return out
 
     # ── top_n 선별 (2026-08-12) ─────────────────────────────────────────────
@@ -434,31 +477,11 @@ def discover_pairs(run_dir: Path, audit: Optional[Dict[str, Any]] = None,
         out = out[:top_n]
         out.sort(key=lambda p: p["dir"])
     if audit is not None:
-        seen: Dict[str, Dict[str, int]] = {}
-        for r in rows:
-            d = str(r.get("down_dir"))
-            key = str(r.get("site")) + ("" if r.get("ranking_eligible") else "(부적격)")
-            seen.setdefault(d, {})[key] = seen.setdefault(d, {}).get(key, 0) + 1
-        why: Dict[str, Dict[str, int]] = {}
-        for r in rows:
-            if r.get("ranking_eligible"):
-                continue
-            d = str(r.get("down_dir"))
-            for g in (r.get("gate_reasons") or ["(사유 미기록)"]):
-                why.setdefault(d, {})[str(g)] = why.setdefault(d, {}).get(str(g), 0) + 1
-        audit["n_down_dirs"] = len(seen)
         audit["n_contrast_pairs"] = len(out)
-        audit["excluded_dirs"] = {d: c for d, c in sorted(seen.items())
-                                  if d not in by_dir}
-        # ★ 사유를 같이 남긴다 — 없으면 "왜 빠졌나" 를 볼 때마다 진단을 다시 돌려야 한다
-        audit["excluded_reasons"] = {d: why[d] for d in audit["excluded_dirs"] if d in why}
         # ⚠ top_n 로 **의도적으로** 뺀 방향은 부적격 탈락과 다른 범주다. 섞으면
         #   DIRECTION_CENSORED 가 오작동하고, 숨기면 coverage 가 부풀어 보인다.
         audit["topn_dropped"] = dropped_topn
         audit["topn_rank_key"] = "UMA E_pose 두 끝점 평균 (안정도)" if dropped_topn else None
-        audit["note"] = ("제외된 방향은 Li_top↔Ni_top 대조쌍이 없는 것이다 — 자리 종류를 "
-                         "훑은 방향이거나(O_top·hollow·*_bridge) 한쪽이 부적격인 경우다. "
-                         "누락이 아니라 대조쌍 정의 밖이다.")
     return out
 
 
@@ -1128,6 +1151,26 @@ def main():
         if got != want:
             integrity["changed"].append(rel)
 
+    # ── 실행시 POSCAR 가 루트 POSCAR 와 같은가 (Codex 6차 §8) ─────────────────
+    #   단일점 판의 주장은 "UMA 가 고른 **그 기하** 위의 DFT 에너지" 다. 외주처가
+    #   다른 기하를 넣었으면 무결성 해시(배포 파일)는 통과해도 계산은 다른 계다.
+    #   상 폴더의 POSCAR 는 배포물이 아니라 **러너가 만든 것**이라 files_sha256 에 없다.
+    integrity["runtime_poscar_mismatch"] = []
+    for jd in sorted(glob(os.path.join(root, "*", "*", ""))):
+        rp = os.path.join(jd, "POSCAR")
+        if not os.path.isfile(rp):
+            continue
+        rh = hashlib.sha256(open(rp, "rb").read()).hexdigest()
+        for ph in ("static", "dense"):
+            pp = os.path.join(jd, ph, "POSCAR")
+            if not os.path.isfile(pp):
+                continue
+            if os.path.isdir(os.path.join(jd, "relax")):
+                continue          # 이완판은 CONTCAR 승계가 정상 — 달라야 맞다
+            if hashlib.sha256(open(pp, "rb").read()).hexdigest() != rh:
+                integrity["runtime_poscar_mismatch"].append(
+                    os.path.relpath(pp, root))
+
     jobs = {}
     results_ldau_missing = []
     for jd in sorted(glob(os.path.join(root, "*", "*", ""))):
@@ -1279,23 +1322,53 @@ def main():
     # ── 자기 붕괴는 **clean seed 분포 기준**으로 판정한다 (Codex Q7) ──────────
     #   숫자(0.5·0.25)는 초기 민감도일 뿐이다. clean 두 seed 의 Q 를 기준으로 보고,
     #   기준이 없으면 판정을 보류한다(임의 문턱으로 죽이지 않는다).
-    q_clean = [r["geom"]["magnetic"]["Q_muB"] for j, r in jobs.items()
-               if "clean_slab" in j and (r.get("geom") or {}).get("magnetic", {}).get("Q_muB")]
-    q_ref = max(q_clean) if q_clean else None
+    #   ★ 2026-08-12 (Codex 6차) 세 가지를 고친다:
+    #     (a) `... .get("Q_muB")` 진리값 검사 → **Q=0 인 clean 을 결측으로 버린다**.
+    #         Q=0 은 "완전 붕괴한 기준" 이라는 중요한 사실이다. is not None 으로 본다.
+    #     (b) 두 seed 중 max 하나를 모든 pose 에 공통 적용 → seed 별 branch 차이가 섞인다.
+    #         **같은 seed 의 clean** 과 비교한다.
+    #     (c) clean 자체가 무자격(게이트 걸림·Q 결측)이면 조용히 통과시키지 말고
+    #         MAGNETIC_REFERENCE_INVALID 로 남긴다.
+    q_by_seed: Dict[str, Optional[float]] = {}
+    ref_bad: Dict[str, str] = {}
+    for sd in (man.get("seeds_full") or ["afm2424_pm1", "afm2424_net4"]):
+        cj = [(j, r) for j, r in jobs.items() if "clean_slab" in j and j.endswith(sd)]
+        if not cj:
+            ref_bad[sd] = "clean 대조군 없음"
+            continue
+        j, r = cj[0]
+        q = ((r.get("geom") or {}).get("magnetic") or {}).get("Q_muB")
+        if q is None:
+            ref_bad[sd] = f"{j}: Ni moment 미완 — Q 없음"
+        elif r.get("gates"):
+            ref_bad[sd] = f"{j}: 기준 자체가 게이트 걸림 ({r['gates'][0][:40]})"
+        else:
+            q_by_seed[sd] = float(q)
     for j, r in jobs.items():
         mg = (r.get("geom") or {}).get("magnetic")
         if not mg or "Q_muB" not in mg:
             continue
+        sd = r["meta"].get("seed")
+        q_ref = q_by_seed.get(sd)
         mg["Q_clean_ref"] = q_ref
+        mg["Q_clean_ref_seed"] = sd
         if q_ref is None:
-            mg["verdict"] = "clean 기준 없음 — 자기 붕괴 판정 보류"
+            mg["verdict"] = "clean 기준 없음/무효 — 자기 붕괴 판정 보류"
+            if "clean_slab" not in j:
+                r["gates"].append(
+                    f"MAGNETIC_REFERENCE_INVALID({sd}: "
+                    f"{ref_bad.get(sd, '기준 없음')} — 자기 붕괴를 판정할 수 없다)")
+                r["ok"] = not r["gates"]
             continue
-        ratio = mg["Q_muB"] / q_ref if q_ref else None
+        ratio = (mg["Q_muB"] / q_ref) if abs(q_ref) > 1e-9 else None
         mg["Q_ratio"] = None if ratio is None else round(ratio, 3)
-        if ratio is not None and (ratio < Q_RATIO_MIN or mg["f_small"] > F_SMALL_MAX):
+        if ratio is None:
+            mg["verdict"] = "clean 기준 Q≈0 — 비율 정의 불가, 판정 보류"
+            continue
+        if ratio < Q_RATIO_MIN or mg["f_small"] > F_SMALL_MAX:
             r["gates"].append(
-                f"MAGNETIC_COLLAPSE(Q/Q_clean={ratio:.2f} · f_small={mg['f_small']:.2f} "
-                f"— clean 대비 집단 붕괴)")
+                f"MAGNETIC_COLLAPSE(Q/Q_clean[{sd}]={ratio:.2f} · "
+                f"f_small={mg['f_small']:.2f} — 같은 seed clean 대비 집단 붕괴)")
             r["ok"] = not r["gates"]
 
     # ── POTCAR 변형: 준중심 차이는 일관돼도 치명 (Codex P0-C) ────────────────
@@ -1349,6 +1422,12 @@ def main():
             f"(LDAUPRINT=2 인데 OUTCAR 에 onsite density matrix 없음) — "
             f"자기상태를 모멘트 하나로만 보게 된다: "
             + ", ".join(results_ldau_missing[:4]))
+    if integrity.get("runtime_poscar_mismatch"):
+        results["warnings"].append(
+            f"⛔ 실행시 POSCAR 가 루트와 다른 상 "
+            f"{len(integrity['runtime_poscar_mismatch'])}개 — **다른 기하를 계산했다** "
+            f"(단일점 주장 무효): "
+            + ", ".join(integrity["runtime_poscar_mismatch"][:6]))
     if integrity["changed"]:
         results["warnings"].append(
             f"⛔ 번들 입력 {len(integrity['changed'])}개가 바뀌었다 (INCAR/POSCAR 변조?): "
@@ -1568,13 +1647,20 @@ def main():
         # ★ 번들 이전에 방향을 잃었으면 **무조건 검열 등급**이다. n=3·계획=3 이라
         #   coverage 100% 로 보여 ROBUST 까지 올라가던 경로를 막는다 (Codex P0-6).
         champ = [p for p in man["pairs"].values()
-                 if p["fragment"] == frag and p.get("matched") is False]
+                 if p["fragment"] == frag and p.get("champion_pose")]
         if champ:
             # 챔피언 비교는 "Li 위 최선 vs Ni 위 최선" 이다 — 방향 통계가 아니라
             # **설계상 1쌍**이므로 n<3 로 거부하지 않는다. 대신 무엇을 비교했는지 적는다.
-            cd = champ[0].get("champion_dirs") or {}
-            same = cd.get("Li") == cd.get("Ni")
-            cls = ("CHAMPION_SAME_DIR" if same else "CHAMPION_MIXED_ORIENTATION")
+            # ★ 판정 기준은 방향이 아니라 **자세키**(down_dir, roll) 다 (Codex 6차 P0-4).
+            cp = champ[0].get("champion_pose") or {}
+            same = champ[0].get("matched") is True
+            ncross = len(champ[0].get("cross") or {})
+            got = sum(1 for t, c in (results["pairs"].get(
+                f"{frag}__{champ[0]['dir']}_r{champ[0]['roll']:03d}", {})
+                .get("cross") or {}).items() if "dE_matched_eV" in c)
+            cls = ("CHAMPION_MATCHED_POSE" if same else
+                   "CHAMPION_MIXED_ORIENTATION_2x2" if ncross == 2 and got == 2 else
+                   "THREE_CORNER_PARTIAL(교차 %d/2 완료 — 배향 미해결)" % got)
         elif lost:
             cls = "DIRECTION_CENSORED_%d_OF_%d" % (n_planned, nd or n_planned)
         elif expect_dirs and n_planned != expect_dirs:
@@ -1599,6 +1685,8 @@ def main():
             "read_as": ("Li 위 최선이 더 안정" if med > 0 else "Ni 위 최선이 더 안정")
             if champ else ("Li 우세 경향" if med > 0 else "Ni 우세 경향"),
             "champion_dirs": (champ[0].get("champion_dirs") if champ else None),
+            "champion_pose": (champ[0].get("champion_pose") if champ else None),
+            "exact_matched_pose": (champ[0].get("matched") if champ else None),
             "note": ("PBE+U(6.2)+D3-zero fixed-protocol tendency — UMA 값과 같은 표 금지. "
                      "δ=%.3f eV." % delta)}
         if lost:
@@ -1661,9 +1749,12 @@ def main():
     for w in results["warnings"]:
         print(f"  ⚠ {w}")
     print(f"\n→ {out}")
-    if integrity["changed"] or integrity["missing"]:
+    if integrity["changed"] or integrity["missing"] or \
+            integrity.get("runtime_poscar_mismatch"):
         print(f"\n⛔ **입력 무결성 실패** — 변경 {len(integrity['changed'])} · "
-              f"사라짐 {len(integrity['missing'])} — exit 2 (삭제도 변조다)")
+              f"사라짐 {len(integrity['missing'])} · 실행시 기하 불일치 "
+              f"{len(integrity.get('runtime_poscar_mismatch') or [])} — exit 2 "
+              f"(삭제도 변조다)")
         return 2
     if missing:
         print(f"\n⛔ **필수 산출 미완 {len(missing)}건** (tier1/refs) — fail-closed, exit 2:")
@@ -1676,6 +1767,146 @@ def main():
 if __name__ == "__main__":
     sys.exit(main())
 '''
+
+
+def _readme_sp(man: Dict[str, Any], a, zcut: float, n_jobs: int,
+               n_st: int, n_dn: int) -> str:
+    """단일점 Wave 1 전용 README — **실제 계획에서 숫자를 뽑는다** (Codex 6차 §8).
+
+    옛 README 를 재사용하면 82계·259상·relax 반송·refs 표가 그대로 나가, 외주처가
+    있지도 않은 relax/CONTCAR 를 찾다가 멈춘다. 이 도구가 못 하는 것: 실행 시간 보장
+    (SUBMIT_CONTRACT.md 의 추정은 ±2배 불확실성을 가진 모델값이다).
+    """
+    dc = man.get("dense_calibrators") or []
+    mc = man.get("magnetic_controls") or []
+    ks = (man.get("kmesh_override") or {}).get("static") or KMESH["static"]
+    kd = (man.get("kmesh_override") or {}).get("dense") or KMESH["dense"]
+    return f"""# VASP 외주 요청 — SDCP/PTFE **Wave 1 (단일점 자리 대비)**
+
+## 한 줄 요약
+**UMA(MLIP)로 이완한 기하 위의 PBE+U 단일점 에너지**만 계산합니다.
+DFT 기하 이완은 **하지 않습니다**. 낼 수 있는 값은 같은 조각 안의 자리 대비
+ΔE = E(Ni_top) − E(Li_top) 뿐이고, **절대 흡착에너지는 이 판의 범위 밖**입니다.
+
+## 규모 — 실제 계획값
+| 항목 | 값 |
+|---|---:|
+| 잡 폴더 | {n_jobs} |
+| static 상 (coarse k {ks}) | {n_st} |
+| dense 상 (k {kd}) | {n_dn} |
+| **VASP 실행 총 횟수** | **{n_st + n_dn}** |
+
+dense 는 **k 보정자**로 지정한 조각에만 켭니다: {dc or '(없음)'}.
+나머지 조각은 이 보정자에서 잰 k 이동을 전이해 해석합니다 —
+`K_TRANSFER_SCREENED` 이지 `K_CONVERGED` 가 아닙니다.
+
+## 잡 구조 — 상이 **static (+dense)** 뿐입니다
+각 잡 폴더: `POSCAR` + `static/` (+ 일부 `dense/`) + `run_job.sh` + `job.json`.
+- `static` 은 루트 `POSCAR` 를 그대로 씁니다. `ISTART=0 · ICHARG=2`(원자중첩 시작) —
+  **승계할 CHGCAR 가 없습니다.** relax 폴더는 애초에 없습니다.
+- `dense` 는 **같은 루트 POSCAR** + `static/CHGCAR` 를 승계합니다 (`ICHARG=1`).
+```
+cd <잡폴더> && cp <POTCAR> POTCAR && VASP_CMD="mpirun -np 64 vasp_std" bash run_job.sh
+```
+⚠ `run_all.sh` 는 **직렬 디버그 러너**입니다 — 병렬 제출기가 아닙니다.
+실제 제출 계약은 `SUBMIT_CONTRACT.md` 를 보세요.
+
+## 실행 순서
+1. `controls/` — clean 슬랩 2 seed. **자기 붕괴 판정의 기준**입니다.
+   빠지면 모든 잡이 "판정 보류" 로 통과해 버립니다 ({len(mc)}개)
+2. `tier1/` — 이번 판의 목적
+3. `tier2/` — 나머지 조각
+자기 seed 는 **전 끝점 2종(pm1/net4)**입니다. 하나만 돌리면 그 쌍은 판정에서 빠집니다.
+
+## 반송물 (잡마다)
+- **`static/OUTCAR` — 필수** (`.gz` 그대로 가능)
+- **`dense/OUTCAR` — 있는 잡은 필수**. 빠지면 그 조각이 `K_UNVERIFIED` 로 내려갑니다
+- `CONTCAR` 는 필요 없습니다 (기하가 안 변합니다). vasprun.xml 선택.
+- CHGCAR/WAVECAR 반송 불필요
+- ⚠ **INCAR/KPOINTS/POSCAR 를 고치지 마세요.** 분석기가 MANIFEST 의 sha256 과 대조하고,
+  상 폴더의 실행시 POSCAR 가 루트 POSCAR 와 **byte 단위로 같은지**도 확인합니다.
+
+## ⚠ 지켜야 결과가 성립하는 것
+- **INCAR 수정 금지.** 예외 ①: NCORE/KPAR/NSIM 등 병렬 자유.
+  예외 ② — SCF 가 안 붙을 때만, 순서대로: 1) `ALGO = All`
+  2) `AMIX=0.1 · BMIX=0.0001 · AMIX_MAG=0.2 · BMIX_MAG=0.0001` — 쓴 것을 그 잡의
+  `NOTES.txt` 에 남기고, 그래도 안 되면 그 잡은 중단 후 알려 주세요.
+- 발산/미수렴 잡은 그대로 두고 알려 주세요.
+
+POTCAR 는 미포함(라이선스) — `POTCAR_SPEC.txt` 변형 그대로. **Ni 는 Ni_pv**
+(2026-08-08 납품과 동일). VASP 5.4.4 또는 6.x + PBE PAW 5.4 세트.
+
+## 완주 후
+```
+python3 analyze_results.py .
+```
+필수 산출이 빠지면 exit 2 입니다. `RESULTS.json` + 반송물을 보내 주세요.
+
+## 프로토콜 (요약)
+PBE+U(Ni d 6.2 Dudarev) · D3 zero damping(IVDW=11) · ENCUT 520 · ISMEAR=0/0.05 ·
+ISYM=0 · LASPH · ADDGRID · LDIPOL/IDIPOL=3+DIPOL(COM) ·
+static k {ks} · dense k {kd} · 고정 평면 z ≤ {zcut:.3f} Å (아래 {int(a.freeze * 100)}%) ·
+자기 seed = 2026-08-08 납품 계보 부격자 원장(Ni 24/24 ±1 μB).
+근거는 `MANIFEST.json`.
+
+## 이 번들로 **주장할 수 없는 것**
+- DFT 이완 기준의 자리 선호 (기하가 UMA 것입니다)
+- 절대 흡착에너지 E_ads · "흡착이 유리하다" · 조각 간 결합 세기 비교
+  (clean/기체 기준계가 없습니다 — `controls/` 는 자기 대조군이지 E_ads 기준계가 아닙니다)
+- 전역/배향 무관 자리 선호 (배향은 교차 끝점이 있는 조각에서만 분리됩니다)
+"""
+
+
+def _submit_contract(man: Dict[str, Any], a) -> str:
+    """제출 계약 — 병렬도·의존성·비용 추정의 **출처**를 못 박는다 (Codex 6차 §7).
+
+    이 파일이 없으면 "2.4일" 이 어떤 병렬도의 산술 하한인지 아무도 모른다.
+    이 도구가 못 하는 것: 실제 대기열 지연·노드 성능 차이 반영.
+    """
+    n_st = sum(1 for p in man["planned"].values()
+               if "static" in (p.get("phases") or []))
+    n_dn = sum(1 for p in man["planned"].values()
+               if "dense" in (p.get("phases") or []))
+    return f"""# 제출 계약 (SUBMIT_CONTRACT)
+
+## 상 의존성
+```
+static  (독립 — 잡끼리 완전 병렬)
+   └─ dense   (같은 잡의 static/CHGCAR 필요 → **그 잡 안에서는 직렬**)
+```
+잡 사이에는 의존성이 없습니다. 한 잡의 `run_job.sh` 가 그 잡의 상 순서를 강제합니다.
+
+## 규모
+| | |
+|---|---:|
+| 잡 | {man.get('n_jobs', '?')} |
+| static 실행 | {n_st} |
+| dense 실행 | {n_dn} |
+| 총 VASP 실행 | {n_st + n_dn} |
+
+## 병렬 제출 (권장)
+`run_all.sh` 는 **직렬 디버그용**입니다. 실제로는 잡 목록을 배열로 던지세요:
+```bash
+ls -d tier1/*/ tier2/*/ controls/*/ > JOBS.txt
+# Slurm 예시 — 동시 8개
+sbatch --array=1-$(wc -l < JOBS.txt)%8 --wrap='
+  j=$(sed -n "${{SLURM_ARRAY_TASK_ID}}p" JOBS.txt)
+  cd "$j" && cp /path/to/POTCAR . && VASP_CMD="srun vasp_std" bash run_job.sh'
+```
+
+## 비용 추정의 출처
+- 모델: `tools/sdcp/vasp_cost_estimate.py` — 2026-08-08 납품 `slab/OUTCAR.gz`
+  (192원자 · NKPTS 4 · 48코어 · 30,438 s / 58 전자스텝 = **525 s/스텝**)
+- **±2배 불확실성**을 인정하는 모델입니다. 계약값이 아니라 계획용 수치입니다.
+- `python3 tools/sdcp/vasp_cost_estimate.py --manifest MANIFEST.json --concurrency 8`
+  로 이 번들의 실제 계획에서 다시 계산하세요.
+- ⚠ **aggregate 시간 ÷ 동시 실행 수**는 산술 하한입니다. 한 잡의
+  static→dense 임계경로가 그 하한보다 길면 하한에 도달할 수 없습니다.
+
+## 코어 수
+비용 모델의 기준은 **48 코어/잡**입니다. README 예시의 `-np 64` 와 다르면
+추정이 그만큼 어긋납니다 — 실제 코어 수를 알려 주시면 다시 계산합니다.
+"""
 
 
 README = """# VASP 외주 요청 v3 — SDCP/PTFE 자리 선호 + 흡착에너지 (원샷)
@@ -1808,6 +2039,17 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     if a.kmesh_dense:
         kover["dense"] = a.kmesh_dense
     man["kmesh_override"] = kover or None
+    # ⚠ 오타 하나면 dense 가 0개가 되고 (조각 이름이 안 맞으니) 아무 경고 없이
+    #   "k 검증 없는 번들" 이 나간다. fail-closed 로 잡는다 (Codex 6차 §8).
+    known = {f for fs in TIERS.values() for f in fs}
+    if a.dense_frags is not None:
+        if not a.dense_frags:
+            sys.exit("⛔ --dense_frags 가 비었다 — 지정하지 않을 거면 플래그를 빼라 "
+                     "(빈 목록은 'dense 0개' 를 조용히 만든다)")
+        unknown = [f for f in a.dense_frags if f not in known]
+        if unknown:
+            sys.exit(f"⛔ --dense_frags 에 모르는 조각 {unknown} — 아는 조각: "
+                     f"{sorted(known)}. 오타면 dense 가 0개가 된다")
     man["dense_calibrators"] = list(a.dense_frags) if a.dense_frags else None
     if a.dense_frags:
         man["k_label_rule"] = (
@@ -1922,6 +2164,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                 pm = {"fragment": frag, "dir": p["dir"], "roll": p["roll"],
                       "matched": p.get("matched", True),
                       "champion_dirs": p.get("champion_dirs"),
+                      "champion_pose": p.get("champion_pose"),
                       "uma_dE": p["dE_uma"], "uma_dir_median": p["dir_median_uma"],
                       "n_rolls_folded": p["n_rolls"], "seeds": seeds,
                       "dense_probe": dense,
@@ -1935,7 +2178,11 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                         "json": (hashlib.sha256(jp.read_bytes()).hexdigest()
                                  if jp.is_file() else None),
                         "fingerprint": rec.get("fingerprint"),
-                        "gate_version": rec.get("gate_version")}
+                        # ⚠ gate_version 은 **protocol 안**에 있다. 최상위에서 읽으면
+                        #   조용히 None 이 박혀 provenance 가 빈 채로 납품된다.
+                        "gate_version": (rec.get("protocol") or {}).get("gate_version"),
+                        "roll_deg": rec.get("roll_deg"),
+                        "down_dir": rec.get("down_dir")}
                     cx = ase_read(xp); cx.set_cell(slab.cell.array); cx.set_pbc(True)
                     _assert_slab_lineage(cx, nslab, slab, f"{pid}/{role}", man)
                     used_els |= set(cx.get_chemical_symbols())
@@ -1963,10 +2210,19 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                     _assert_slab_lineage(cx, nslab, slab, f"{pid}/{tag}", man)
                     used_els |= set(cx.get_chemical_symbols())
                     role = "Li" if tag.startswith("Li") else "Ni"
+                    jpx = xp.with_suffix(".json")
                     pm.setdefault("cross", {})[tag] = {
                         "prefix": f"{tier}/{pid}__cross_{tag}",
                         "down_dir": rec["down_dir"], "roll_deg": rec.get("roll_deg"),
-                        "role": role, "source_pose": rec["label"]}
+                        "role": role, "source_pose": rec["label"],
+                        # ★ 교차 끝점도 main 과 **같은 provenance** 를 남긴다 (Codex 6차 §8).
+                        #   없으면 "어느 프로토콜 산출인가" 를 교차만 확인할 수 없다.
+                        "source_sha256": {
+                            "xyz": hashlib.sha256(xp.read_bytes()).hexdigest(),
+                            "json": (hashlib.sha256(jpx.read_bytes()).hexdigest()
+                                     if jpx.is_file() else None),
+                            "fingerprint": rec.get("fingerprint"),
+                            "gate_version": (rec.get("protocol") or {}).get("gate_version")}}
                     for sd in seeds:
                         rel = f"{tier}/{pid}__cross_{tag}__{sd}"
                         m = _emit_slab_job(
@@ -1999,18 +2255,30 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     #   결합할 수 있다 — 데이터 손실이 아니라 **주장 순서의 변경**이다.
     #   ⚠ 기준계 없이는 절대 E_ads 를 만들 수 없다 → "흡착이 유리하다"·"A 가 B 보다
     #     세게 결합한다"·"결합이 몇 eV 다" 는 이번 판에서 주장 금지.
-    for sd in (SEEDS_FULL if a.refs else ()):
-        rel = f"refs/clean_slab__{sd}"
+    # ★★ clean slab 은 **두 목적**이 있고, refs 를 끄면 둘 다 사라진다 (Codex 6차).
+    #   ① E_ads 기준계 (기체 분자와 짝) — Wave 2 로 미뤄도 된다
+    #   ② **자기 대조군** — pose 의 Ni 자기질서 붕괴를 재는 기준. 이게 없으면
+    #      분석기의 q_ref 가 None 이 되어 전 잡이 "판정 보류" 로 **통과**한다.
+    #   ②는 Wave 1 에 남긴다. dense 없이 coarse static 2 seed = 약 29 h.
+    mag_ctl = a.mag_controls and not a.refs
+    for sd in (SEEDS_FULL if (a.refs or mag_ctl) else ()):
+        rel = (f"refs/clean_slab__{sd}" if a.refs else f"controls/clean_slab__{sd}")
         m = _emit_slab_job(out / rel, clean, len(clean), a.freeze, man["fragments"][0],
-                           f"clean slab {sd}", sd, {"kind": "clean_ref"},
-                           ledger, zcut=zcut, dense=sd == SEED_MAIN,
+                           f"clean slab {sd}", sd,
+                           {"kind": "clean_ref" if a.refs else "clean_magnetic_control"},
+                           ledger, zcut=zcut, dense=(a.refs and sd == SEED_MAIN),
                            prescf=not a.no_prescf, single_point=a.single_point,
                            kmesh_over=kover)
         slab_metas.append(m)
         plan(rel, m["phases"], True)
         n_jobs += 1
+    # ⚠ refs 가 아닌 대조군을 man["refs"] 에 넣으면 has_refs 가 참이 되어 분석기가
+    #   E_ads 를 만들려 든다 (기체 분자가 없는데). 별도 키로 등록한다.
     man["refs"]["clean_slab"] = ([f"refs/clean_slab__{s}" for s in SEEDS_FULL]
                                  if a.refs else [])
+    man["magnetic_controls"] = ([f"controls/clean_slab__{s}" for s in SEEDS_FULL]
+                                if mag_ctl else
+                                (man["refs"]["clean_slab"] if a.refs else []))
     man["wave"] = 1 if not a.refs else "1+refs"
     man["claim_scope"] = (
         "fixed-geometry site contrast (ΔE = E_Ni − E_Li, 같은 조각·같은 슬랩). "
@@ -2054,42 +2322,21 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     man["potcar_spec"] = {e: POTCAR_SPEC.get(e, e) for e in sorted(used_els)}
     (out / "analyze_results.py").write_text(ANALYZER)
     (out / "run_all.sh").write_text(RUN_ALL)
-    sp_note = ("""
-> ## ⚠ 이 번들은 **단일점(single-point)** 입니다
-> 기하는 MLIP(UMA)로 이완한 것이고 DFT 는 **에너지만** 냅니다.
-> 슬랩 잡에 `relax/` 상이 없습니다 — `static/` 하나만 돌리면 됩니다.
->
-> ### 무엇이 UMA 기하이고 무엇이 DFT 이완인가
->
-> | 항목 | 기하 | 에너지 |
-> |---|---|---|
-> | 복합체 (슬랩+분자) | **UMA 이완** | DFT 단일점 |
-> | clean 슬랩 | **UMA 이완** (복합체와 동일 슬랩) | DFT 단일점 |
-> | 기체 분자 기준계 | **DFT 이완** (`relax/` + `static/`) | DFT |
->
-> ⚠ 오차 구조 (과장하지 않고 적습니다)
->
-> · 복합체의 슬랩은 **분자와 함께** UMA 이완된 것이라 clean 슬랩과 좌표가 다릅니다
->   (실측 최대 변위 ~0.6 Å). 그 차이는 **물리적인 표면 변형에너지**라 E_ads 에
->   들어가는 게 맞습니다 — 상쇄 대상이 아닙니다.
-> · 상쇄되는 것은 "같은 물질을 같은 MLIP 으로 기술한 **계통** 오차" 의 일부뿐이고,
->   **부분 상쇄**입니다. 하필 분자가 만든 왜곡이 MLIP 이 가장 약한 지점이라
->   그 부분은 덜 상쇄됩니다.
-> · 분자 쪽은 방향이 분명합니다 — 흡착 분자는 UMA 기하, 기준 분자는 DFT 최소점이므로
->   그 항만 보면 E_ads 가 **덜 결합하는 쪽**(덜 음수)으로 치우칩니다.
->
-> 종합하면 E_ads 는 **DFT 이완값보다 덜 음수일 가능성이 높지만 엄밀한 상한은 아닙니다**
-> (슬랩 왜곡 항의 MLIP 오차가 반대 부호일 수 있습니다). 인용 시 이 문장을 함께 적고,
-> 필요하면 대표 1~2 자세를 DFT 이완해 그 차이를 직접 재는 것이 가장 확실합니다.
->
-> ⚠ 기체 분자를 DFT 로 이완하는 것은 실수가 아니라 **정의**입니다 —
-> 흡착에너지의 기준은 자유 상태의 이완된 분자입니다.
-
-"""
-               if a.single_point else "")
-    (out / "README_REQUEST.md").write_text(sp_note + README.format(
-        freeze_pct=int(a.freeze * 100), zcut_note=f"{zcut:.3f} Å",
-        k_relax=KMESH["relax"], k_static=KMESH["static"]))
+    # ★ 모드별 README (Codex 6차 §8) — 옛 README 는 82계·259상·relax 반송·refs 표를
+    #   그대로 담고 있어 **단일점 Wave 1 과 정면으로 모순**된다. 실행 계약과 provenance
+    #   문서를 옛 판으로 내보내는 것은 문구 문제가 아니라 반송 계약 위반이다.
+    if a.single_point:
+        n_st = sum(1 for p in man["planned"].values()
+                   if "static" in (p.get("phases") or []))
+        n_dn = sum(1 for p in man["planned"].values()
+                   if "dense" in (p.get("phases") or []))
+        (out / "README_REQUEST.md").write_text(_readme_sp(
+            man, a, zcut, n_jobs, n_st, n_dn))
+    else:
+        (out / "README_REQUEST.md").write_text(README.format(
+            freeze_pct=int(a.freeze * 100), zcut_note=f"{zcut:.3f} Å",
+            k_relax=KMESH["relax"], k_static=KMESH["static"]))
+    (out / "SUBMIT_CONTRACT.md").write_text(_submit_contract(man, a))
     (out / "POTCAR_SPEC.txt").write_text(
         "# 원소 → POTCAR 변형 (PBE PAW 5.4). 각 잡 POSCAR 의 종 순서대로 이어붙일 것.\n"
         "# Ni_pv 는 2026-08-08 납품과 동일 계보다 — 바꾸지 말 것.\n"
@@ -2178,6 +2425,167 @@ def _fake_phase(jd: Path, meta: Dict[str, Any], e_static: float,
         (jd / ph / "OUTCAR").write_text(body + ("" if truncate == ph else end))
     if "relax" in meta.get("phases", []):
         shutil.copy(jd / "POSCAR", jd / "relax" / "CONTCAR")
+
+
+STUB_VASP = r"""#!/usr/bin/env bash
+# 가짜 vasp_std — **러너 계약만** 시험한다 (물리 없음).
+#   · POSCAR/INCAR/POTCAR 가 CWD 에 없으면 실패 (러너가 복사를 빠뜨렸는지)
+#   · ICHARG=1 인데 CHGCAR 가 없으면 실패 (진짜 VASP 와 같은 계약)
+#   · STUB_FAIL="<phase>:crash|truncate" 로 실패 경로를 주입
+#   · STUB_LOG 에 실행된 상을 순서대로 적는다 (재개가 진짜 건너뛰는지)
+set -u
+ph=$(basename "$PWD")
+[ -n "${STUB_LOG:-}" ] && echo "$ph" >> "$STUB_LOG"
+[ -s POSCAR ] || { echo "STUB: POSCAR 없음 ($ph)"; exit 3; }
+[ -s INCAR ]  || { echo "STUB: INCAR 없음 ($ph)";  exit 3; }
+[ -s POTCAR ] || { echo "STUB: POTCAR 없음 ($ph)"; exit 3; }
+if grep -qE '^ICHARG[[:space:]]*=[[:space:]]*1' INCAR && [ ! -s CHGCAR ]; then
+  echo "STUB: ICHARG=1 인데 CHGCAR 가 없다 ($ph)"; exit 4
+fi
+chg_in="(none)"
+[ -s CHGCAR ] && chg_in=$(cksum < CHGCAR | awk '{print $1}')
+cp POSCAR CONTCAR
+echo "stub-chg $ph" > CHGCAR
+echo "stub-wav $ph" > WAVECAR
+{ echo "  POSCAR_CKSUM = $(cksum < POSCAR | awk '{print $1}')"
+  echo "  CHGCAR_IN_CKSUM = $chg_in"
+  echo "  energy(sigma->0) =     -123.456789"; } > OUTCAR
+case "${STUB_FAIL:-}" in
+  "$ph:crash")    echo "STUB: 강제 실패 ($ph)"; exit 1 ;;
+  "$ph:truncate") echo "STUB: 잘린 출력 ($ph)"; exit 0 ;;   # General timing 없이 끝
+esac
+echo " General timing and accounting informations for this job" >> OUTCAR
+exit 0
+"""
+
+
+def _runner_regression(out: Path, chk) -> None:
+    """★ P0-2 — run_job.sh 를 **실제로 실행**한다 (Codex 4차·6차).
+
+    왜 필요한가: 이 도구의 다른 selftest 는 전부 가짜 OUTCAR 를 파이썬이 직접 써 넣는다.
+    그래서 러너 자체는 **한 번도 안 돌았고**, 단일점 모드에서 러너가 relax/CONTCAR 를
+    요구해 VASP 를 시작조차 못 하는 버그(P0-1)를 통째로 놓쳤다. 여기서는 stub vasp_std 를
+    PATH 에 놓고 러너를 그대로 돌린다.
+
+    이 시험이 **못 하는 것**: 물리·수렴·VASP 실제 동작. 오직 상 사슬(입력 복사·승계·
+    중단·재개·종료코드)만 본다. 기대 상 목록은 하드코딩하지 않고 job.json 에서 읽는다.
+    """
+    sp = [p.parent for p in sorted(out.rglob("job.json"))
+          if "dense" in (json.loads(p.read_text()).get("phases") or [])
+          and json.loads(p.read_text()).get("phases", [])[0] == "static"]
+    if not sp:
+        chk(False, "P0-2: 단일점+dense 잡이 번들에 없다 — 러너 회귀를 못 돌린다")
+        return
+    src = sp[0]
+    stub_dir = out.parent / "_stub_bin"
+    stub_dir.mkdir(exist_ok=True)
+    (stub_dir / "vasp_std").write_text(STUB_VASP)
+    (stub_dir / "vasp_std").chmod(0o755)
+
+    def run(tag: str, fail: str = "", prep=None):
+        jd = out.parent / f"_run_{tag}"
+        shutil.rmtree(jd, ignore_errors=True)
+        shutil.copytree(src, jd)
+        (jd / "POTCAR").write_text("stub POTCAR\n")
+        log = jd / "_phases.log"
+        if prep:
+            prep(jd)
+        env = {**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH', '')}",
+               "VASP_CMD": "vasp_std", "STUB_LOG": str(log)}
+        if fail:
+            env["STUB_FAIL"] = fail
+        r = subprocess.run(["bash", "run_job.sh"], cwd=jd, env=env,
+                           capture_output=True, text=True)
+        ran = log.read_text().split() if log.is_file() else []
+        return jd, r, ran
+
+    # ── R1 정상 경로: 단일점 static → dense 가 **실제로 돈다** ──────────────
+    jd, r, ran = run("ok")
+    chk(r.returncode == 0, f"R1 단일점 러너 완주 rc=0 (실행 상 {ran}) "
+                           f"{'' if r.returncode == 0 else '| ' + r.stdout.strip()[-90:]}")
+    chk(ran == ["static", "dense"], f"R1b 상 순서 static→dense ({ran})")
+    root = (jd / "POSCAR").read_bytes()
+    chk((jd / "static" / "POSCAR").read_bytes() == root,
+        "R2 static/POSCAR == 루트 POSCAR (byte 일치 — 다른 기하를 계산하지 않았다)")
+    chk((jd / "dense" / "POSCAR").read_bytes() == root,
+        "R3 dense/POSCAR == 루트 POSCAR (단일점이라 기하가 안 변한다)")
+    si = (jd / "static" / "INCAR").read_text()
+    di = (jd / "dense" / "INCAR").read_text()
+    chk(re.search(r"^ICHARG\s*=\s*2", si, re.M) is not None,
+        "R4 static ICHARG=2 (원자중첩 시작 — 승계할 CHGCAR 가 없다)")
+    chk(re.search(r"^ICHARG\s*=\s*1", di, re.M) is not None,
+        "R5 dense ICHARG=1 (**static 의 CHGCAR 를 실제로 쓴다**)")
+    # ⚠ 실행 **후** 두 CHGCAR 를 비교하면 안 된다 — VASP 는 CHGCAR 를 출력으로
+    #   덮어쓰므로 정상이어도 달라진다. dense 가 **읽은** 지문을 본다.
+    cin = re.search(r"CHGCAR_IN_CKSUM = (\S+)", (jd / "dense" / "OUTCAR").read_text())
+    chk(cin is not None and cin.group(1) not in ("(none)", ""),
+        f"R6 dense 가 CHGCAR 를 **입력으로 받았다** (지문 {cin.group(1) if cin else '없음'})")
+    sin = re.search(r"CHGCAR_IN_CKSUM = (\S+)", (jd / "static" / "OUTCAR").read_text())
+    chk(sin is not None and sin.group(1) == "(none)",
+        "R6b static 은 CHGCAR 를 안 받았다 (ISTART=0/ICHARG=2 단일점이 맞다)")
+
+    # ── R7 재개: 다 끝난 잡을 다시 돌리면 **아무 상도 안 돈다** ──────────────
+    log2 = jd / "_phases.log"
+    log2.unlink()
+    r2 = subprocess.run(["bash", "run_job.sh"], cwd=jd, capture_output=True, text=True,
+                        env={**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
+                             "VASP_CMD": "vasp_std", "STUB_LOG": str(log2)})
+    ran2 = log2.read_text().split() if log2.is_file() else []
+    chk(r2.returncode == 0 and ran2 == [],
+        f"R7 완주 잡 재실행 → 전 상 건너뜀 rc={r2.returncode} 실행 {ran2}")
+
+    # ── R8 부분 재개: dense 산출만 지우면 dense 만 다시 돈다 ────────────────
+    (jd / "dense" / "OUTCAR").unlink()
+    log2.unlink(missing_ok=True)
+    r3 = subprocess.run(["bash", "run_job.sh"], cwd=jd, capture_output=True, text=True,
+                        env={**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
+                             "VASP_CMD": "vasp_std", "STUB_LOG": str(log2)})
+    ran3 = log2.read_text().split() if log2.is_file() else []
+    chk(r3.returncode == 0 and ran3 == ["dense"],
+        f"R8 dense 만 재개 rc={r3.returncode} 실행 {ran3}")
+
+    # ── R9 음성: static 이 죽으면 dense 를 **시작하지 않는다** ───────────────
+    jd9, r9, ran9 = run("crash", fail="static:crash")
+    chk(r9.returncode != 0 and ran9 == ["static"] and not (jd9 / "dense" / "OUTCAR").is_file(),
+        f"R9 static 실패 → 중단·dense 미시작 rc={r9.returncode} 실행 {ran9}")
+
+    # ── R10 음성: 잘린 출력(General timing 없음)도 성공으로 안 본다 ──────────
+    jd10, r10, ran10 = run("trunc", fail="static:truncate")
+    chk(r10.returncode != 0 and ran10 == ["static"]
+        and not (jd10 / "dense" / "OUTCAR").is_file(),
+        f"R10 잘린 static → 중단 (exit0 이어도) rc={r10.returncode} 실행 {ran10}")
+
+    # ── R11 음성: static 이 완료로 보이는데 CHGCAR 가 비면 dense 를 못 시작 ──
+    def _kill_chg(j: Path):
+        (j / "static").mkdir(exist_ok=True)
+        (j / "static" / "OUTCAR").write_text(
+            "  energy(sigma->0) =     -1.0\n General timing and accounting\n")
+        (j / "static" / "CHGCAR").write_text("")          # 0바이트
+    jd11, r11, ran11 = run("nochg", prep=_kill_chg)
+    chk(r11.returncode != 0 and ran11 == []
+        and not (jd11 / "dense" / "OUTCAR").is_file(),
+        f"R11 빈 static/CHGCAR → dense 시작 전 중단 rc={r11.returncode} 실행 {ran11}")
+
+    # ── R12 음성: POTCAR 가 없으면 아예 시작하지 않는다 ─────────────────────
+    jd12 = out.parent / "_run_nopot"
+    shutil.rmtree(jd12, ignore_errors=True)
+    shutil.copytree(src, jd12)
+    r12 = subprocess.run(["bash", "run_job.sh"], cwd=jd12, capture_output=True, text=True,
+                         env={**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
+                              "VASP_CMD": "vasp_std"})
+    chk(r12.returncode != 0 and not (jd12 / "static" / "OUTCAR").is_file(),
+        f"R12 POTCAR 없음 → 시작 거부 rc={r12.returncode}")
+
+    # ── R13 러너 자체 sanity: stub 이 없으면 시험이 통과해선 안 된다 ─────────
+    #   (양성만 있는 selftest 의 재발 방지 — 시험 장치 자체를 시험한다)
+    jd13 = out.parent / "_run_nostub"
+    shutil.rmtree(jd13, ignore_errors=True)
+    shutil.copytree(src, jd13)
+    (jd13 / "POTCAR").write_text("stub POTCAR\n")
+    r13 = subprocess.run(["bash", "run_job.sh"], cwd=jd13, capture_output=True, text=True,
+                         env={**os.environ, "VASP_CMD": "definitely_not_a_real_binary_xyz"})
+    chk(r13.returncode != 0,
+        f"R13 실행파일이 없으면 러너가 실패한다 (시험 장치 검증) rc={r13.returncode}")
 
 
 def _synth_ledger(atoms, nslab: int) -> Dict[str, Any]:
@@ -2269,7 +2677,7 @@ def selftest() -> int:
     a0 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_short"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, dense_frags=None)
+                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None)
     try:
         build_bundle(a0, ledger=led)
         chk(False, "N0 xyz 누락 → **번들이 만들어졌다** (축소 정본 = fail-open)")
@@ -2285,7 +2693,7 @@ def selftest() -> int:
     ab = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_nofp"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, dense_frags=None)
+                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None)
     try:
         build_bundle(ab, ledger=led)
         chk(False, "N0b 지문 없는 소스 → **번들이 만들어졌다**")
@@ -2309,7 +2717,7 @@ def selftest() -> int:
     at3 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_top3"),
                              freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                              qe="(none)", expect=None, allow_partial=False,
-                             no_prescf=False, allow_stale_gate=False, top_n=3, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, dense_frags=None)
+                             no_prescf=False, allow_stale_gate=False, top_n=3, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None)
     o3 = build_bundle(at3, ledger=led)
     m3 = json.loads((o3 / "MANIFEST.json").read_text())
     kept = sorted({v["dir"] for v in m3["pairs"].values()})
@@ -2326,12 +2734,31 @@ def selftest() -> int:
     a = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle"),
                            freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                            qe="(none)", expect=None, allow_partial=False,
-                           no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, dense_frags=None)
+                           no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None)
     out = build_bundle(a, ledger=led)
     man = json.loads((out / "MANIFEST.json").read_text())
     n_pre = sum(1 for p in man["planned"].values() if "pre" in (p.get("phases") or []))
     chk(n_pre == len([p for p in man["planned"] if "mol__" not in p]),
         f"dipole-off pre-SCF 상이 전 슬랩 잡에 있다 ({n_pre}개)")
+
+    # ── P0-2 러너 회귀: stub VASP 로 run_job.sh 를 **실제 실행** (Codex 4·6차) ──
+    a_sp = argparse.Namespace(
+        runs=str(td / "runs"), out=str(td / "bundle_sp"), freeze=0.85, nslab=nslab,
+        frags=["ptfe_dimer"], qe="(none)", expect=None, allow_partial=False,
+        no_prescf=False, allow_stale_gate=False, top_n=None, single_point=True,
+        champion=True, kmesh_static=None, kmesh_dense=None, refs=False,
+        cross_endpoints=["ptfe_dimer"], mag_controls=True, dense_frags=["ptfe_dimer"])
+    out_sp = build_bundle(a_sp, ledger=led)
+    m_sp = json.loads((out_sp / "MANIFEST.json").read_text())
+    chk(all(p.get("phases") == ["static"] or p.get("phases") == ["static", "dense"]
+            for k, p in m_sp["planned"].items() if "clean_slab" not in k),
+        "SP: pose 잡에 relax/pre 가 없다 (단일점)")
+    chk(m_sp.get("magnetic_controls") and len(m_sp["magnetic_controls"]) == 2,
+        f"SP: clean 자기 대조군 2 seed 포함 ({m_sp.get('magnetic_controls')})")
+    chk(all("dense" not in (m_sp["planned"][c].get("phases") or [])
+            for c in m_sp["magnetic_controls"]),
+        "SP: 자기 대조군은 dense 없음 (coarse static 만 — 예산)")
+    _runner_regression(out_sp, chk)
 
     E = {"clean": -500.0, "mol": -50.0}
     truth = dict(DIRS)
@@ -2537,6 +2964,10 @@ def main():
                     help="clean 슬랩 + 기체 분자 기준계를 포함한다 (절대 E_ads 용). "
                          "기본은 **미포함** — 자리 대비 ΔE 에서는 정확히 소거되므로 "
                          "Wave 2 로 미룬다 (Codex 5차).")
+    ap.add_argument("--no_mag_controls", dest="mag_controls", action="store_false",
+                    help="clean 자기 대조군(2 seed coarse static)을 빼 버린다. ⚠ 빼면 "
+                         "분석기의 Q 기준이 없어져 **자기 붕괴 판정이 전 잡에서 보류**된다 "
+                         "= 조용히 통과. --refs 를 켰으면 refs 의 clean 이 그 역할을 한다.")
     ap.add_argument("--kmesh_static", default=None,
                     help="static k 를 덮는다 (예: '2 3 1'). ΔE 에서 k 오차는 대부분 "
                          "상쇄되므로 예산이 빠듯할 때 여기부터 푼다 — 대신 dense 검사로 크기를 잰다.")
