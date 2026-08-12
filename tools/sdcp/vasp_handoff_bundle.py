@@ -1435,10 +1435,13 @@ def k_transfer_gate(cal, kap_all, frags):
     이 함수가 **못 하는 것**: 보정자가 대표성이 있는지는 판단하지 못한다.
       큰 계 하나 + open-shell 하나로 고른 것은 **공학적 선택**이지 통계가 아니다.
     """
-    have = {f: kap_all[f] for f in cal if f in kap_all}
-    if not cal:
-        kt = {"pass": False, "why": "dense 보정자가 지정되지 않았다 — 전이 불가"}
-    elif len(have) < len(cal):
+    # ★ 라벨은 **선언이 아니라 데이터**를 따른다 (2026-08-12). κ 를 실제로 잰 조각은
+    #   dense_calibrators 에 안 적혀 있어도 직접 검증된 것이다 — 선언만 보면 dense 를
+    #   돌리고도 K_UNVERIFIED 가 되어 headline 이 막힌다.
+    have = {f: kap_all[f] for f in (cal or list(kap_all)) if f in kap_all}
+    if not cal and not have:
+        kt = {"pass": False, "why": "dense 를 돌린 조각이 없다 — 전이 불가"}
+    elif cal and len(have) < len(cal):
         kt = {"pass": False, "kappa_eV": have,
               "why": f"보정자 {len(have)}/{len(cal)} 만 회수 — 전이 근거 부족"}
     else:
@@ -1469,6 +1472,12 @@ def apply_k_guard(cls, med, lbl, delta):
     a = abs(med)
     if a <= GUARD_EV:
         return f"UNRESOLVED_SIGN(|ΔE|={a * 1000:.0f} ≤ {GUARD_EV * 1000:.0f} meV)"
+    # ★★ K_UNVERIFIED 는 **유한한 k 오차 경계가 없다** (Codex zip 감사).
+    #   전이 게이트가 실패했다는 건 "10 meV 안" 이라고 말할 근거가 사라졌다는 뜻이다.
+    #   그런데 옛 판은 |ΔE| 가 크면 그냥 통과시켰다 — 경계 없는 값에 판정을 붙인 셈이다.
+    if lbl == "K_UNVERIFIED":
+        return (f"UNRESOLVED_K(|ΔE|={a * 1000:.0f} meV 이지만 k 오차에 **유한한 경계가 "
+                f"없다** — 전이 게이트 실패. 직접 dense 없이는 판정 불가)")
     if lbl != "K_DIRECTLY_CHECKED" and delta - GUARD_EV <= a <= delta + GUARD_EV:
         return (f"UNRESOLVED_K_GUARD(|ΔE|={a * 1000:.0f} meV 가 "
                 f"{(delta - GUARD_EV) * 1000:.0f}–{(delta + GUARD_EV) * 1000:.0f} meV "
@@ -1513,7 +1522,11 @@ def selftest_k() -> int:
     # 음성: 보정자 미지정이면 조용히 통과시키지 않는다
     kt5, lb5, _ = k_transfer_gate([], {}, F)
     chk(not kt5["pass"] and set(lb5.values()) == {"K_UNVERIFIED"},
-        "보정자 미지정 → 전 조각 K_UNVERIFIED (조용한 통과 금지)")
+        "보정자 미지정 + κ 도 없음 → 전 조각 K_UNVERIFIED")
+    # ★ 라벨은 **선언이 아니라 데이터**를 따른다 — dense 를 돌렸으면 직접 검증이다
+    kt6, lb6, _ = k_transfer_gate([], {"c10": 0.004, "doped": 0.006}, F)
+    chk(lb6["c10"] == "K_DIRECTLY_CHECKED" and lb6["neutral"] == "K_TRANSFER_SCREENED",
+        "보정자 미선언이어도 κ 를 잰 조각은 직접 검증 (선언만 보면 headline 이 막힌다)")
 
     # guard band
     D = 0.030
@@ -1524,10 +1537,17 @@ def selftest_k() -> int:
         "25 meV + 전이심사 → **판정 보류** (옛 판은 그대로 통과시켰다)")
     chk(apply_k_guard("ROBUST", 0.025, "K_DIRECTLY_CHECKED", D) == "ROBUST",
         "25 meV + 직접 dense → 판정 유지 (직접 쟀으면 띠가 적용되지 않는다)")
-    chk(apply_k_guard("ROBUST", 0.080, "K_UNVERIFIED", D) == "ROBUST",
-        "80 meV → 띠 밖이라 판정 유지 (라벨은 별도로 기록)")
-    chk(apply_k_guard("ROBUST", 0.015, "K_UNVERIFIED", D) == "ROBUST",
-        "15 meV → 바닥 아래 결론 유지 (10~20 은 띠가 아니다)")
+    # ★ K_UNVERIFIED 는 **크기와 무관하게** 막는다 (Codex zip 감사) — 전이 게이트가
+    #   실패했으면 k 오차에 유한한 경계가 없다. 크니까 괜찮다는 논리는 성립 안 한다.
+    chk(apply_k_guard("ROBUST", 0.080, "K_UNVERIFIED", D).startswith("UNRESOLVED_K"),
+        "80 meV 라도 K_UNVERIFIED 면 막는다 (경계 없는 값에 판정을 붙이지 않는다)")
+    chk(apply_k_guard("ROBUST", 0.015, "K_UNVERIFIED", D).startswith("UNRESOLVED_K"),
+        "15 meV 도 마찬가지")
+    # ★ 대조: 전이 심사를 **통과한** 라벨은 띠 밖이면 판정이 유지돼야 한다
+    chk(apply_k_guard("ROBUST", 0.080, "K_TRANSFER_SCREENED", D) == "ROBUST",
+        "80 meV + 전이 통과 → 판정 유지 (막는 건 UNVERIFIED 뿐)")
+    chk(apply_k_guard("ROBUST", 0.015, "K_TRANSFER_SCREENED", D) == "ROBUST",
+        "15 meV + 전이 통과 → 바닥 아래 결론 유지")
     chk(apply_k_guard("X", -0.025, "K_TRANSFER_SCREENED", D)
         .startswith("UNRESOLVED_K_GUARD"), "음수 ΔE 도 절대값으로 본다")
     print("k-selftest PASS" if ok else "k-selftest FAIL")
@@ -2201,6 +2221,11 @@ def main():
                 # ★ 이름을 정확히 (Codex 7차 §1.4) — 이건 **UMA 가 고른** 전역 챔피언
                 #   대비다. DFT 재랭킹도, DFT 이완 최소점도, 흡착 자유에너지도 아니다.
                 rec["dE_UMA_selected_global_champ_eV"] = round(dg, 4)
+                rec["global_k_status"] = (
+                    "K_DIRECTLY_CHECKED_GLOBAL" if E_dense(
+                        f"{(gb.get('Ni') or {}).get('prefix', pm['ni_prefix'])}"
+                        f"__afm2424_pm1") is not None
+                    else "K_UNVERIFIED_GLOBAL — 전역 끝점은 coarse only")
                 rec["dE_global_eV"] = round(dg, 4)      # 하위호환(폐기 예정)
                 if de_main is not None:
                     rec["orientation_term_eV"] = round(dg - de_main, 4)
@@ -2297,6 +2322,9 @@ def main():
                 dl, dn = m["dE_match_pL"], m["dE_match_pN"]
                 both_big = min(abs(dl), abs(dn)) > GUARD_EV
                 same = (dl > 0) == (dn > 0)
+                rec["two_by_two_k_status"] = ("K_UNVERIFIED_CROSS — 교차 끝점은 "
+                                              "dense 를 안 돌렸다. 아래 부호 결론은 "
+                                              "coarse 값 기준이다")
                 rec["two_by_two_verdict"] = (
                     "UNRESOLVED(한쪽이 guard band 안 — 부호 비교 불가)" if not both_big else
                     "SIGN_AGREES_AT_BOTH_SAMPLED_POSES — **두 표본 자세에서** 부호 일치 "
