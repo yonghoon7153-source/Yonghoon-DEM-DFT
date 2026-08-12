@@ -432,19 +432,17 @@ def selftest():
     chk("read_gap(gj)" in _sec1 and "json.load(open(gj))" not in _sec1,
         "① 도 read_gap() 을 쓴다 (② 와 같은 판정)")
     # ── 설명된 런에는 낡은 조언을 반복하지 않는다 ─────────────────────────────
-    _nb = os.path.join(td, "notedrun")
-    os.makedirs(os.path.join(_nb, "li3nd"), exist_ok=True)
-    open(os.path.join(_nb, "_NOTE.txt"), "w").write("c→b — 일어나지 않는 홉\n")
-    for ep, e in (("ep_initial", -100.0), ("ep_final", -102.072)):
-        os.makedirs(os.path.join(_nb, "li3nd", ep), exist_ok=True)
-        open(os.path.join(_nb, "li3nd", ep, "relax.out"), "w").write(
-            f"!    total energy = {e / RY_EV:.8f} Ry\nbfgs converged\nJOB DONE.\n")
-    open(os.path.join(_nb, "li3nd", "meta.json"), "w").write(
-        json.dumps({"endpoints_symmetry_equivalent": False}))
-    _s = neb_status(os.path.join(_nb, "li3nd"))
-    chk(any("설명돼 있다" in a for a in _s["alerts"])
-        and not any("확인" in a for a in _s["alerts"]),
-        f"_NOTE 있는 런 → 낡은 '확인할 것' 대신 설명을 띄운다 ({_s['alerts'][:1]})")
+    #   ⚠ 첫 판은 fixture 를 손으로 만들다 BFGS 미완 경고가 먼저 걸려 **헛통과**했다.
+    #     기존 mk() 를 써서 정상 이완 + 큰 비대칭이라는 조건을 정확히 만든다.
+    _big = mk("noteme", False, -100.0, -102.072, body)     # 2072 meV 비대칭, 이완 완주
+    _a0 = neb_status(_big)["alerts"]
+    chk(any("확인" in a for a in _a0),
+        f"전제: _NOTE 없으면 '확인' 조언이 뜬다 ({[x[-24:] for x in _a0]})")
+    open(os.path.join(td, "_NOTE.txt"), "w").write("c→b — 일어나지 않는 홉\n")
+    _a1 = neb_status(_big)["alerts"]
+    chk(any("설명돼 있다" in a for a in _a1) and not any("확인" in a for a in _a1),
+        f"_NOTE 있으면 조언 대신 설명 ({[x[-30:] for x in _a1]})")
+    os.remove(os.path.join(td, "_NOTE.txt"))
     shutil.rmtree(td, ignore_errors=True)
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
