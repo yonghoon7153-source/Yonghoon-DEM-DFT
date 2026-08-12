@@ -72,12 +72,38 @@ def resolve_run(arg):
     return None, None, ('킷/런 폴더를 못 찾음' if cands else 'cwd 에 kit_* 가 없음')
 
 
+def has_ab_banner(path, tail=256 * 1024):
+    """이 로그가 **A/B 러너의 것**인가 (배너 포함).  꼬리만 본다."""
+    try:
+        size = os.path.getsize(path)
+        with open(path, 'rb') as fh:
+            fh.seek(max(0, size - tail))
+            return ARM_BANNER.encode() in fh.read()
+    except Exception:                              # noqa: BLE001
+        return False
+
+
 def find_log(run, explicit=None):
-    """런 폴더에서 가장 최근에 쓰인 로그.  없으면 None."""
+    """A/B 로그를 찾는다 — 런 폴더 **와 킷 폴더** 둘 다.  없으면 None.
+
+    ★ 킷 폴더도 보는 이유 (2026-08-12 실측): 러너를 detach 로 띄울 때 로그를 킷 폴더에
+    두는 게 자연스럽다 (`> kit_ps_7_3/sr01_ab.log`).  런 폴더만 뒤지면 어제 압밀이 남긴
+    mpm_run.log 를 집어 "채널 대기" 로 보고한다 — 실제로는 A/B 가 잘 돌고 있는데도.
+    ★ 최신순이 아니라 **A/B 배너가 있는 것**을 먼저 고른다.  압밀 로그가 더 최근일 수도
+    있고(재압밀), 그때 최신순은 엉뚱한 파일을 집는다."""
     if explicit:
         return explicit if os.path.exists(explicit) else None
-    logs = [p for p in glob.glob(os.path.join(run, '*.log')) if os.path.getsize(p) > 0]
-    return max(logs, key=os.path.getmtime) if logs else None
+    seen, logs = set(), []
+    for d in (run, os.path.dirname(run)):
+        for p in glob.glob(os.path.join(d, '*.log')):
+            rp = os.path.realpath(p)
+            if rp in seen or os.path.getsize(p) <= 0:
+                continue
+            seen.add(rp)
+            logs.append(p)
+    if not logs:
+        return None
+    return max(logs, key=lambda p: (has_ab_banner(p), os.path.getmtime(p)))
 
 
 def scan_log(text):
@@ -244,6 +270,20 @@ def _selftest():
             fh.write(log)
         out = '\n'.join(status(run))
         chk('11) 로그를 찾아 채널을 표시', '전자✓' in out)
+        # ★ 킷 폴더의 A/B 로그를 런 폴더의 압밀 로그보다 먼저 고른다 (2026-08-12 실사고)
+        kitd = os.path.dirname(run)
+        ab = os.path.join(kitd, 'sr01_ab.log')
+        with open(ab, 'w', encoding='utf-8') as fh:
+            fh.write(log)
+        os.utime(os.path.join(run, 'x.log'), (time.time() + 60, time.time() + 60))  # 압밀 로그를 더 최신으로
+        chk('14) ★ 킷 폴더의 A/B 로그를 찾는다 (런 폴더만 보면 압밀 로그를 집는다)',
+            os.path.realpath(find_log(run)) == os.path.realpath(ab)
+            or has_ab_banner(find_log(run)))
+        with open(os.path.join(run, 'x.log'), 'w', encoding='utf-8') as fh:
+            fh.write('압밀 로그 — A/B 배너 없음\n')
+        chk('15) ★ 배너 없는 최신 로그보다 배너 있는 로그가 우선',
+            has_ab_banner(find_log(run)))
+        os.remove(ab)
         r2 = resolve_run(os.path.join(td, 'nope'))
         chk('12) 없는 경로는 조용히 실패', r2[1] is None)
         kit = os.path.join(td, 'kit_ps_7_3'); os.makedirs(kit)
