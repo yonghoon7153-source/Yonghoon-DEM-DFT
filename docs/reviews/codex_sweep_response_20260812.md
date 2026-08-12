@@ -98,16 +98,29 @@
 
 ---
 
-## 5. 아직 남은 것
+## 5. 아직 남은 것  (갱신 2026-08-12 저녁 — #1·#2·#3·#7·#9 전부 수정 완료)
+
+### 5-1. 닫힌 것
+
+| | 커밋 | 무엇을 쟀나 |
+|---|---|---|
+| **#9** fail-closed | `196cbe10` | import 실패·unknown 프로브·AST 해석 실패를 전부 **오류**로.  ★ 그 과정에서 더 큰 결함 발견 — `probe_adjacency` 가 selftest 에서만 돌고 **등록부 검사에는 한 번도 안 쓰였다** = 모든 `adjacency` 가 검증되지 않는 문자열이었다.  `label_fn`(거동 프로브) / `label_site`(AST 대조) 필수화.  selftest 24→35 |
+| **#1** thermal mode | `27258c77` | `mode=` 미전달로 `k_weight` 분기가 죽어 **AM:SE 5.7× 가 한 번도 안 들어갔다**.  실측: 같은 원자·같은 접촉에서 AM-AM 저항이 두 mode 간 5.7배 차 (간선 집합은 동일).  파급 → CL-12 (`af837876`) |
+| **#2** either/both-plate | `1ed6fd73` | `eps_connected_pct` 는 **한쪽 플레이트에라도 닿음**이었다.  `n_through_dof`(교집합) · `eps_through_pct` · `eps_connected_basis` 병기.  판별 픽스처: 막다른 5복셀 → reachable 45 vs through 40 |
+| **#3** coverage wrap | `0ba10d17` | 세 축 무조건 `np.roll` → 바닥 AM 이 천장을 이웃으로 봤다.  `coverage_fraction()` 분리 + `coverage_boundary` 태그.  selftest 110→116 |
+| **#7** 주기 진단 5종 | `fb1695bf` `e37081bd` | `phase_current_share`(해가 `periodic_xy` 를 들고 다니게 + 없으면 거부) · `carbon_se_contact_area` · `_voxel_jmag` · `am_surface_patches` 는 seam 면 포함, `pore_pnm` 은 주기화 불가를 `boundary`/`periodic_caveat` 로 **표시**(§F1).  ★ 길이-1 주기축에서 셀이 자기 이웃이 되는 엣지케이스를 픽스처가 잡아 가드 추가 |
+| **#8** segment_cells 영향 | `3d9665e5` | 재수정이 5킷 스윕을 **전혀 안 바꾼다**는 것을 측정 — CSV 바이트 동일 + 폴리라인 210,598 구간 차이 0.  기전: 생산 `step/vox = 0.304` 라 버그 경로가 도달 불가 (Codex 반례는 1.9).  ⇒ CL-05/CL-08 hold 해제 |
+
+### 5-2. 남은 것
 
 | | |
 |---|---|
-| **#3** mpm3d coverage `np.roll` 무조건 wrap | 미수정.  같은 원칙(비주기 zero-pad · 주기 x/y only · z 항상 zero-pad) 적용 + 기존 coverage 숫자 영향범위 재계산 필요 |
-| **#7** STEP3 periodic 진단 5종 | 미수정 |
-| **#9** import 실패·unknown adjacency 가 warns | 미수정 (rung 예외는 이미 오류) |
-| **#2** `pore_tau` either/both-plate | needs-runtime — 격자 픽스처 1개로 판정 가능 |
-| checker 강화 | `symbol+output` 단위 registry · solver 양방향 검사 · grid/origin/BC/periodicity/phase/stamp 구조화 비교 · `--selftest` 가 실제 RUNGS 실행 · schema validation 과 `expected_violations` 분리 |
-| claims 병합 | `claims_codex_sweep_additions_20260812.json` 17건 — 기존 CL-01~08 과 **ID 충돌 없음**(CDX-* 계열) 확인 후 병합 판정 |
+| **#8 잔여** | 적대 감사의 조밀 오라클 미스 **22/10,001** — 특성화 미완.  생산 샘플링에서는 도달 불가(위)이나 `step/vox` 가 큰 경로(서브샘플)에서는 유효 |
+| **검사기 강화** | 남은 축: grid/origin/BC/periodicity/phase/stamp **구조화 비교** · `--selftest` 가 실제 RUNGS 실행 · schema validation 과 `expected_violations` 분리 |
+| **claims 병합** | Codex `CL-09~CL-25` 17건 — `CDX-` 접두로 병합 판정 (내 CL-09 는 `CLP-01` 로 개명 완료) |
+| **R1 원자료** | time-series/state/command provenance 미커밋 (CL-04 `artifact_state`) |
+| **σ_thermal 재실행** | #1 수정 후 타깃이 얼마나·어느 방향으로 바뀌는지 미측정 (DEM 덤프 필요, 이 컨테이너 밖) — CL-12 |
+| **coverage 재계산** | #3 수정 후 기존 coverage 숫자 (real_14 49.6/48.2 등) 재산출 — GPU 필요 |
 
 ---
 
