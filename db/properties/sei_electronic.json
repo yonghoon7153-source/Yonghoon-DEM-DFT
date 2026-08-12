@@ -216,7 +216,11 @@
     "O_p",
     "O_s"
    ],
-   "status": "rejected"
+   "status": "DEPRECATED",
+   "superseded_by": "nd2o3_mp-2763_frozen4f",
+   "deprecated_on": "2026-08-12",
+   "reason": "4f 를 원자가에 둔 PP(z=14)의 SCF 해가 금속이라 fixed-occ 갭이라는 양이 성립하지 않는다. 아래 gap/vbm/cbm 은 **갭이 아니다** — 어떤 형태로도 갭으로 인용 금지. 경위 보존용으로만 남긴다.",
+   "canonical": false
   },
   "lindo2_mp-1222355": {
    "tag": "lindo2_mp-1222355",
@@ -248,8 +252,12 @@
     "O_s"
    ],
    "dos_chain_complete": true,
-   "status": "rejected",
-   "not_in_this_run": "이번 회수에서 작업폴더에 gap.json 이 없었다 — 옛 기록을 그대로 보존한다(지우지 않음)."
+   "status": "DEPRECATED",
+   "not_in_this_run": "이번 회수에서 작업폴더에 gap.json 이 없었다 — 옛 기록을 그대로 보존한다(지우지 않음).",
+   "superseded_by": "lindo2_mp-1222355_frozen4f",
+   "deprecated_on": "2026-08-12",
+   "reason": "4f 를 원자가에 둔 PP(z=14)의 SCF 해가 금속이라 fixed-occ 갭이라는 양이 성립하지 않는다. 아래 gap/vbm/cbm 은 **갭이 아니다** — 어떤 형태로도 갭으로 인용 금지. 경위 보존용으로만 남긴다.",
+   "canonical": false
   },
   "nd2s3_mp-438": {
    "tag": "nd2s3_mp-438",
@@ -279,8 +287,12 @@
     "S_s"
    ],
    "dos_chain_complete": true,
-   "status": "rejected",
-   "not_in_this_run": "이번 회수에서 작업폴더에 gap.json 이 없었다 — 옛 기록을 그대로 보존한다(지우지 않음)."
+   "status": "DEPRECATED",
+   "not_in_this_run": "이번 회수에서 작업폴더에 gap.json 이 없었다 — 옛 기록을 그대로 보존한다(지우지 않음).",
+   "superseded_by": "nd2s3_mp-438_frozen4f",
+   "deprecated_on": "2026-08-12",
+   "reason": "4f 를 원자가에 둔 PP(z=14)의 SCF 해가 금속이라 fixed-occ 갭이라는 양이 성립하지 않는다. 아래 gap/vbm/cbm 은 **갭이 아니다** — 어떤 형태로도 갭으로 인용 금지. 경위 보존용으로만 남긴다.",
+   "canonical": false
   },
   "nd2o3_mp-2763_frozen4f": {
    "tag": "nd2o3_mp-2763_frozen4f",
@@ -309,7 +321,8 @@
     "delta_pct": 3.6,
     "verdict": "합격 — 같은 자릿수·같은 구조. 완전 일치는 기대하지 않음(코드 QE vs VASP · PP 계열 상이)"
    },
-   "supersedes_note": "옛 nd2o3_mp-2763 항목(artifact_4f, z=14)은 방법 실패의 역사 기록으로 보존한다 — 인용은 이 frozen-4f 항목으로."
+   "supersedes_note": "옛 nd2o3_mp-2763 항목(artifact_4f, z=14)은 방법 실패의 역사 기록으로 보존한다 — 인용은 이 frozen-4f 항목으로.",
+   "canonical": true
   },
   "lindo2_mp-1222355_frozen4f": {
    "tag": "lindo2_mp-1222355_frozen4f",
@@ -329,7 +342,8 @@
    "comparison_group_warning": "⚠ Nd 축은 Li 계 6종과 PP 계열이 다르다 — 같은 표에 놓을 때 method_id 명시. 옛 z=14 항목(artifact_4f)은 역사 기록으로 보존.",
    "spin_polarized": false,
    "hubbard_u": 0,
-   "nd_spin_note": "4f 가 core 라 스핀분극·U 불필요 — 그래서 5원자 30분/16원자 수십 분"
+   "nd_spin_note": "4f 가 core 라 스핀분극·U 불필요 — 그래서 5원자 30분/16원자 수십 분",
+   "canonical": true
   },
   "nd2s3_mp-438_frozen4f": {
    "tag": "nd2s3_mp-438_frozen4f",
@@ -349,9 +363,11 @@
    "comparison_group_warning": "⚠ Nd 축은 Li 계 6종과 PP 계열이 다르다 — 같은 표에 놓을 때 method_id 명시. 옛 z=14 항목(artifact_4f)은 역사 기록으로 보존.",
    "spin_polarized": false,
    "hubbard_u": 0,
-   "nd_spin_note": "4f 가 core 라 스핀분극·U 불필요 — 그래서 5원자 30분/16원자 수십 분"
+   "nd_spin_note": "4f 가 core 라 스핀분극·U 불필요 — 그래서 5원자 30분/16원자 수십 분",
+   "canonical": true
   }
  },
  "nd_verdict_2026_08_11": "★ frozen-4f 경로 개통: Nd.pbe-spdn-kjpaw_psl.1.0.0(z=11) 로 Nd₂O₃ 갭 3.948 eV 실측 — MP 같은 구조 3.812 eV 와 3.6% 차로 검증 합격. 2026-08-07 판정('우리 계산으로 정의되지 않는다')은 4f-in-valence PP 에 한정된 진술로 격하된다. 나머지 Nd 상은 같은 경로로 재계산 중.",
- "nd_frozen4f_update_2026_08_11": "frozen-4f PP 검증 3종 완료: Nd₂O₃ 3.948(MP 3.812, +3.6%) · LiNdO₂ 3.698(4.212, −12.2%) · Nd₂S₃ 0.770(0.760, +1.3%). ⚠ 상위 2종의 순위가 MP 와 뒤집힘(차 0.25 eV, 교차코드 산포 안) — 인용 시 명시. 2026-08-07 의 'Nd 갭은 우리 계산으로 정의되지 않는다' 는 4f-in-valence PP 에 한정된 진술로 격하. Li₃Nd 는 금속(N(E_F) 5.32)이라 갭 없음(NOT_APPLICABLE) — sei_electronic_class.json."
+ "nd_frozen4f_update_2026_08_11": "frozen-4f PP 검증 3종 완료: Nd₂O₃ 3.948(MP 3.812, +3.6%) · LiNdO₂ 3.698(4.212, −12.2%) · Nd₂S₃ 0.770(0.760, +1.3%). ⚠ 상위 2종의 순위가 MP 와 뒤집힘(차 0.25 eV, 교차코드 산포 안) — 인용 시 명시. 2026-08-07 의 'Nd 갭은 우리 계산으로 정의되지 않는다' 는 4f-in-valence PP 에 한정된 진술로 격하. Li₃Nd 는 금속(N(E_F) 5.32)이라 갭 없음(NOT_APPLICABLE) — sei_electronic_class.json.",
+ "_deprecation_note": "nd2o3/lindo2/nd2s3 의 접미사 없는 항목은 4f-in-valence 산출이라 DEPRECATED 다. 정본은 `*_frozen4f` (z=11). kb/projects/sei_products_2026_08_06.md ✅해소 절 참조."
 }

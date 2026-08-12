@@ -121,7 +121,8 @@
    "reduction_products": "+ 4.625 Li -> 0.1 Nd2S3 + 3.8 Li2S + 0.075 Li3PO4 + 1.6 LiCl + 0.925 P",
    "oxidation_V": 1.92,
    "oxidation_products": "0.02 Nd10S19 + 0.925 Li3PS4 + 0.02 Li2S + 0.075 Li3PO4 + 1.6 LiCl + 0.16 Li",
-   "intrinsic_window_V": 0.4
+   "intrinsic_window_V": 0.4,
+   "n_breakpoints_declared": 21
   },
   "modelc_sameHull": {
    "breakpoints": [
@@ -187,7 +188,9 @@
    "reduction_products": "+ 5 Li -> 4.4 Li2S + 1.6 LiCl + P",
    "oxidation_V": 2.14,
    "oxidation_products": "Li3PS4 + 0.1 LiS4 + 1.6 LiCl + 0.7 Li",
-   "intrinsic_window_V": 0.9
+   "intrinsic_window_V": 0.9,
+   "n_breakpoints_declared": 11
   }
- }
+ },
+ "_parse_check": "파싱한 breakpoint 수를 원본이 선언한 수와 대조했다 — 정규식이 조용히 몇 줄을 흘리면 여기서 걸린다."
 }
