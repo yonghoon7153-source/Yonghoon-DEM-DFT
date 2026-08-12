@@ -1,0 +1,111 @@
+{
+ "_schema": "claims_v1",
+ "_why": "수를 증거로 인용하려면 경쟁 가설이 예측하는 값을 같은 줄에 둔다 (D1).  h0 와 h1 이 같은 값을 예측하면 가능도비 1 = 증거량 0 이다.  그리고 세는 양으로 귀결을 주장하려면 bridge 를 명시한다 (규칙 D).  검사 = scripts/check_method_discipline.py",
+ "_status_vocab": {
+  "live": "지금 인용 중인 주장",
+  "retired": "닫혔거나 대체됨 (기록 보존)",
+  "rejected": "★ 역사적 실패 표본 — 검사가 **반드시 거부해야 한다**.  통과하면 규칙이 이빨 빠진 것이므로 검사가 오류를 낸다."
+ },
+ "claims": [
+  {
+   "id": "CL-01",
+   "date": "2026-08-11",
+   "status": "rejected",
+   "claim": "arm A 의 VGCF 는 잘 배선돼 있다",
+   "measured": {"metric": "dissipation_share", "value": 0.04, "unit": "fraction"},
+   "asserted": "VGCF 가 σ_e 에 정상적으로 기여한다",
+   "h0": "점 스탬프가 VGCF 를 끊어 기여가 없다",
+   "h1": "VGCF 는 원래 이 조성에서 기여가 작다",
+   "h0_predicts": "분담 ≈ 4 %",
+   "h1_predicts": "분담 ≈ 4 %",
+   "bridge": null,
+   "verdict": "가능도비 1.  두 가설이 같은 값을 예측하는데 안심 신호로 읽었다.  실제로는 4 % 가 결함의 크기였다."
+  },
+  {
+   "id": "CL-02",
+   "date": "2026-08-12",
+   "status": "rejected",
+   "claim": "MPM 이 f_AM 을 스스로 측정했다 (R2.5)",
+   "measured": {"metric": "f_am_volume_sum", "value": 0.496, "unit": "fraction"},
+   "asserted": "AM 이 하중분담의 절반을 진다",
+   "h0": "AM 이 실제로 절반을 진다",
+   "h1": "전부피 구속임펄스 합이 벽 주입량과 같은 보존 항등식이다",
+   "h0_predicts": "0.50",
+   "h1_predicts": "0.50",
+   "bridge": null,
+   "verdict": "가능도비 1.  가른 것은 값이 아니라 **압력 감도**였다 — 하중 ×7.9 에도 비가 1.00±0.015 로 붙어 있고 DEM 은 같은 구간에서 +30 % 움직인다.  → R2.5-v2 (z-슬라이스) 로 대체."
+  },
+  {
+   "id": "CL-03",
+   "date": "2026-08-11",
+   "status": "rejected",
+   "claim": "점 스탬프가 탄소를 전기적으로 끊는다",
+   "measured": {"metric": "n_components", "value": 23914, "unit": "6-face components"},
+   "asserted": "탄소가 회로에서 단절됐다",
+   "h0": "조각들이 회로에서 고립됐다",
+   "h1": "조각들이 각각 AM 에 꽂혀 있다 (국소 션트)",
+   "h0_predicts": "성분 수가 크다",
+   "h1_predicts": "성분 수가 크다",
+   "bridge": null,
+   "verdict": "개수→귀결 비약 + 가능도비 1.  성분 수는 두 가설이 똑같이 예측한다.  갈리는 축은 **AM 면-인접**이었고 재보니 0.944 = h1.  → CL-06 으로 대체."
+  },
+
+  {
+   "id": "CL-04",
+   "date": "2026-08-12",
+   "status": "live",
+   "claim": "얼린-AM scaffold MPM 은 준정적 극한에서 실험 대비 과압축한다",
+   "measured": {"metric": "porosity_eps_sphere_at_target", "value": 9.27, "unit": "%"},
+   "asserted": "scaffold 는 ~6.3 %p 과압축하며 옛 15.93 % 앵커는 플래튼 결함의 우연한 상쇄였다",
+   "h0": "플래튼 결함이 과압축을 가리고 있었다 (정본 rev4 §22)",
+   "h1": "scaffold 는 정상이고 15.93 % 가 이 모델의 답이다",
+   "h0_predicts": "ε_sphere 8.0 ~ 10.5 %",
+   "h1_predicts": "ε_sphere ≈ 15.6 %",
+   "bridge": "응력-정지(wallP ≥ target)로 멈춘 프레임에서 읽었고, MPM union 관례를 §0-1 의 ε_sphere 로 −1.251 %p 환산했다.",
+   "prereg": "docs/reviews/fam_platen_prereg_20260812.md §2 R1-a",
+   "verdict": "h0 채택.  ⚠ 하강 중 관측 — 정착으로 확정 필요 (R1-b/c/d 미채점)."
+  },
+  {
+   "id": "CL-05",
+   "date": "2026-08-12",
+   "status": "live",
+   "claim": "SR-01 의 기전은 전기적 단절이 아니라 경로 강제다",
+   "measured": {"metric": "plugged_frac + largest_mass_frac", "value": "0.944 / 0.375 (point) vs 0.995 / 0.859 (segment)", "unit": "fraction of carbon mass"},
+   "asserted": "점 스탬프에서 탄소는 회로에 꽂혀 있으나 자기 자신과 끊겨 전류가 AM 을 우회한다",
+   "h0": "점 스탬프가 탄소를 회로에서 고립시킨다 (단절설)",
+   "h1": "탄소는 AM 에 꽂혀 있고 장거리 연결만 깨진다 (경로 강제설)",
+   "h0_predicts": "plugged_frac 이 작다 (≲0.3) · 최대성분이 z 를 관통하지 못한다",
+   "h1_predicts": "plugged_frac ≈ 1 · 최대성분 질량몫만 크게 줄어든다",
+   "bridge": "성분 수(세는 양)가 아니라 AM 면-인접 질량몫을 **별도로** 측정했다 — 이것이 CL-03 에 없던 다리다.",
+   "verdict": "h1 채택 (plugged 0.944, 최대성분 0.375→0.859).  ⚠ 기하 측정이다 — 수송 귀결과 배수 크기는 STEP3 (게이트 ⑤⑥) 몫."
+  },
+  {
+   "id": "CL-06",
+   "date": "2026-08-12",
+   "status": "live",
+   "claim": "econn 은 STEP3 스탬프 규약에 구조적으로 눈멀었다",
+   "measured": {"metric": "code_object_introspection", "value": "co_names 에 rasterize/step3_sigma 없음; 인자에 스탬프 변수 없음; 26-conn @0.30 µm", "unit": "static"},
+   "asserted": "econn 은 point/segment 를 증언할 수 없다 (측정이 아니라 정의에 의해)",
+   "h0": "econn 이 스탬프 차이를 볼 수 있다",
+   "h1": "econn 의 입력에 스탬프 변수가 없다",
+   "h0_predicts": "econn 이 래스터를 참조하거나 스탬프 인자를 받는다",
+   "h1_predicts": "econn 은 재료 점만 받고 자체 26-conn 격자로 재복셀화한다",
+   "bridge": "소스 문자열이 아니라 코드 객체(co_names)로 판정했다 — 첫 판은 docstring 의 'STEP3 Kirchhoff' 언급에 오탐했다.",
+   "verdict": "h1 확정.  econn 은 자기 목적(이진 퍼콜/dead-AM)에는 유효하며 must_not_certify 로 증언 범위를 제한한다."
+  },
+  {
+   "id": "CL-07",
+   "date": "2026-08-12",
+   "status": "live",
+   "claim": "DEM↔MPM porosity 일치는 정당성 증거가 아니다 (순환)",
+   "measured": {"metric": "seed_provenance", "value": "SE 씨앗 = atom_2060000 (DEM 압축 종료 좌표); solid_vol 은 씨앗 시점 고정 상수", "unit": "static"},
+   "asserted": "플래튼을 DEM 높이에 두면 ε_sphere 는 산술적으로 DEM porosity 를 돌려준다",
+   "h0": "일치는 두 모델의 독립적 수렴이다",
+   "h1": "일치는 씨앗이 정답을 인코딩한 결과다",
+   "h0_predicts": "운동학적 정지에서는 DEM 과 어긋나야 한다",
+   "h1_predicts": "운동학적 정지에서도 DEM ±1 %p 에 착지한다",
+   "bridge": "반례가 P:S 1차 런 자신이다 — 운동학 정지 확정인데 |gap| ≤ 0.7 %p.",
+   "verdict": "h1 채택.  ⇒ 증명서 역할을 판별력 있는 검사로 이전: 갭-예측 정지 프레임 · 정착 wallP vs target · 속도 사다리 수렴."
+  }
+ ]
+}
