@@ -31,6 +31,16 @@
 
 ## 4. ε∞(유전율) 상태 — 두 경로 모두 KISTI서 막힘 (별개 이슈)
 - **ph.x DFPT epsil**: KISTI qe-cpu 빌드에서 hang(384-rep setup 후 멈춤, trans=.false. 무시). GPU 빌드엔 ph.x 없음.
+
+> ✅ **2026-08-12 실측 정정** — gabia 에 **QE 7.4.1 CPU 빌드**가 따로 있다:
+> `/data/apps/qe-7.4.1-cpu/bin/` 에 **ph.x · epsilon.x · ld1.x** 가 전부 있다
+> (GPU 빌드 `/data/apps/qe-7.4.1-gpu/bin/` 에는 neb.x·pw.x 는 있고 ph.x 는 없다).
+> 즉 위에서 '막힘' 으로 적은 근거 중 **'ph.x 가 없다' 는 GPU 빌드에 한정**이고,
+> 제안됐던 우회로 (a) epsilon.x · (b) 다른 CPU 빌드의 ph.x 가 **둘 다 실행 가능**하다.
+> ⚠ 단 KISTI CPU 빌드는 hang 이었다 — 빌드가 다르니 재시도 가치가 있다는 뜻이지
+>   된다는 뜻이 아니다. 시도 전 이 구분을 유지할 것.
+> 확인: `python3 tools/kb_wiki.py env --script > /tmp/c.sh && bash /tmp/c.sh`
+
 - **epsilon.x (nscf→ε(ω))**: nscf(GPU)는 완주했으나 epsilon.x가 **`USPP are not implemented`** 로 stop — **epsilon.x는 NC pseudo만 지원**하는데 b2o3는 USPP+PAW.
 - → ε∞ 경로 옵션: (a) **NC(ONCV) pseudo로 SCF/nscf 재계산 후 epsilon.x**, (b) **ph.x epsil을 kgy 서버 QE-CPU 빌드에서**(USPP 지원, 빌드 다르니 hang 안 할 수도), (c) **lelfield 유한장**(pw.x, USPP 가능). ε∞은 secondary라 보류 가능.
 

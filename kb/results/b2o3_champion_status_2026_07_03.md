@@ -21,7 +21,7 @@
 | 안정성 | 산화창 ESW | ✅ | **0.31 V** (ox 2.03 / red 1.72) | 0.90 V |
 | 안정성 | **anode 계면 (동역학 MD)** | ✅ campaign 확정 | **분해 ≈ 무도핑**(통제쌍 PS손실 22±9 vs 26±0%, 전 채널 동등) — 예비 "6× 억제"는 **얇은 1× 슬랩 artifact, 철회**. 견고: **BS₃ 온전(B–S 3.00 전 시드)·금속 LiB 없음** → 평형 worst-case 미실현 = **악화 없음** | modelc2x 26±0% / modelc62(1×) 48±8%(artifact 스케일) |
 | 구조 | 결합길이/배위 | ✅ | **B–S 1.83Å(삼각 BS3)**, P–O 1.56Å(phosphate PS2O2/PS3O), **B–O 없음**; Voronoi disorder ×1.3–4 | — |
-| 광학 | ε∞ (분극률) | ⛔ 접음 | **Shelved (secondary).** 3경로 모두 막힘: ph.x DFPT epsil hang(GPU 빌드 없음) · lelfield ×2 hang(826870은 ecutrho600+PAW addusdens 15GB → iter1 stall, scancel) · epsilon.x는 NC pseudo 필요. **향후 과제**: ONCV NC pseudo로 SCF/nscf 재계산 후 epsilon.x. **논문은 4축으로 진행** | — |
+| 광학 | ε∞ (분극률) | ⛔ 접음 | **Shelved (secondary).** ~~3경로 모두 막힘~~ **⚠ 2026-08-12: gabia 에 QE-CPU 빌드(ph.x·epsilon.x)가 생겼다 — 경로 (a)(b) 미시도 상태. 접힘 근거가 약해졌다.** 당시 기록:: ph.x DFPT epsil hang(GPU 빌드 없음) · lelfield ×2 hang(826870은 ecutrho600+PAW addusdens 15GB → iter1 stall, scancel) · epsilon.x는 NC pseudo 필요. **향후 과제**: ONCV NC pseudo로 SCF/nscf 재계산 후 epsilon.x. **논문은 4축으로 진행** | — |
 | 이온 | Li density (MD 궤적) | ✅ 완료 | gabia 600K MD 궤적(400프레임)→ `b2o3_T600_Li.cube` (셀 검증 2436 Å³ = V0). BVSE(정적)와 짝 = 실제 Li 점유 | — |
 
 ## 진행 상태 (2026-07-03 갱신)

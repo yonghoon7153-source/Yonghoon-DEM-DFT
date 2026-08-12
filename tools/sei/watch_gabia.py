@@ -359,12 +359,15 @@ else:
     # ★ 실행 바이너리 — kb 에 "미설치" 라고 적어 두고 낡은 사례가 있다
     #   (neb.x: 2026-06-01 "미설치" → 실제로는 있고 지금 돌고 있다. 그 기록이
     #    "UMA NEB 로 전체 대체" 라는 설계 결정의 근거였다.)
-    qb = sorted(glob.glob("/data/apps/qe-*/bin")) or sorted(glob.glob("/data/work/apps/qe-*/bin"))
+    # ⚠ 빌드가 **여러 개**다 (gpu/cpu). 하나만 보면 "ph.x 없음" 으로 또 속는다 —
+    #   실제로 ph.x·epsilon.x·ld1.x 는 CPU 빌드에만 있다 (2026-08-12 실측).
+    qb = sorted(glob.glob("/data/apps/qe-*/bin")) + sorted(glob.glob("/data/work/apps/qe-*/bin"))
+    want = ("pw.x", "neb.x", "ph.x", "epsilon.x", "dos.x", "projwfc.x", "ld1.x")
     if qb:
-        have = {os.path.basename(x) for x in glob.glob(os.path.join(qb[-1], "*"))}
-        want = ("pw.x", "neb.x", "ph.x", "dos.x", "projwfc.x", "ld1.x", "pp.x")
-        print(f"   QE {os.path.dirname(qb[-1]).split('/')[-1]}  "
-              + " ".join(f"{w}{'✓' if w in have else '✗'}" for w in want))
+        for b in qb:
+            have = {os.path.basename(x) for x in glob.glob(os.path.join(b, "*"))}
+            print(f"   QE {os.path.basename(os.path.dirname(b)):16s} "
+                  + " ".join(f"{w}{'✓' if w in have else '✗'}" for w in want))
     else:
         print("   ⚠ QE 빌드 디렉터리를 못 찾았다 (/data/apps/qe-* · /data/work/apps/qe-*)")
 
