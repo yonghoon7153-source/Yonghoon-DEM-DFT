@@ -45,17 +45,56 @@ from sr01_realbed_ab import seed_carbon_on_kit, point_cells_from    # noqa: E402
 KITS = ('kit_ps_0_10', 'kit_ps_3_7', 'kit_ps_5_5', 'kit_ps_7_3', 'kit_ps_10_0')
 
 
-def _label6(mask):
+def _label6(mask, periodic_xy=False):
     """6-face 연결성분 라벨 (솔버와 **같은 인접 규약**).
 
     ⚠ D4(두-그래프 합의 불변식): 진단 지표는 솔버와 같은 인접 규약·같은 격자에서 재야 한다.
     econn 의 26-conn/0.30 µm 이 6-face/0.4 µm 결함에 눈먼 것이 정확히 이 규율의 위반이었다.
     """
     from scipy import ndimage
-    return ndimage.label(mask, structure=ndimage.generate_binary_structure(3, 1))
+    lab, n = ndimage.label(mask, structure=ndimage.generate_binary_structure(3, 1))
+    if not periodic_xy:
+        return lab, n
+    # x/y seam 을 가로질러 이어진 성분을 병합 (z 는 병합하지 않는다)
+    par = np.arange(n + 1)
+    def find(i):
+        while par[i] != i:
+            par[i] = par[par[i]]; i = int(par[i])
+        return i
+    for ax in (0, 1):
+        A = np.take(lab, 0, axis=ax); B = np.take(lab, -1, axis=ax)
+        m = (A > 0) & (B > 0)
+        for u, v in set(zip(A[m].tolist(), B[m].tolist())):
+            ru, rv = find(u), find(v)
+            if ru != rv:
+                par[ru] = rv
+    roots = np.array([find(i) for i in range(n + 1)])
+    uniq = {r: k + 1 for k, r in enumerate(sorted(set(roots[1:].tolist())))}
+    remap = np.zeros(n + 1, np.int64)
+    for i in range(1, n + 1):
+        remap[i] = uniq[roots[i]]
+    return remap[lab], len(uniq)
 
 
-def carbon_network_stats(cells, shape, am_mask=None):
+def _shift(mask, axis, sh, periodic):
+    """축별 이웃 이동.  주기축은 wrap, **비주기축은 zero-padding**.
+
+    ★ 왜 (2026-08-12, Codex intentional error #5 — 내 코드다):
+      첫 판은 `np.roll` 하나로 xyz 를 **전부 toroidal 로** 감았다.  그런데 성분 라벨은
+      `ndimage.label` = **비주기 6-face** 였다 ⇒ **같은 그림 위에서 두 규약을 섞었다**.
+      z 는 어떤 경우에도 감으면 안 된다 (솔버가 위·아래 플레이트로 막는 축).
+    """
+    out = np.roll(mask, sh, axis=axis)
+    if not periodic:                       # zero-padding: 넘어온 면을 지운다
+        sl = [slice(None)] * mask.ndim
+        sl[axis] = slice(0, sh) if sh > 0 else slice(mask.shape[axis] + sh, None)
+        out = out.copy()
+        out[tuple(sl)] = False
+    return out
+
+
+def carbon_network_stats(cells, shape, am_mask=None, periodic_xy=False,
+                         plate_bot=None, plate_top=None):
     """탄소 셀 집합 → 전역 망 통계.
 
     cells    : (N,3) int 복셀 좌표 (중복 허용 — 내부에서 unique)
@@ -79,7 +118,7 @@ def carbon_network_stats(cells, shape, am_mask=None):
            'span_mass_frac': None, 'plugged_frac': None, 'plugged_components_frac': None}
     if n_cells == 0:
         return out
-    lab, ncomp = _label6(g)
+    lab, ncomp = _label6(g, periodic_xy=periodic_xy)   # AM-touch 판정과 **같은** periodicity
     sizes = np.bincount(lab.ravel())[1:]                    # 성분별 셀 수 (0 = 배경)
     out['n_components'] = int(ncomp)
     out['largest_cells'] = int(sizes.max())
@@ -88,8 +127,16 @@ def carbon_network_stats(cells, shape, am_mask=None):
     # z 를 관통하는 성분 (STEP3 는 두께 방향으로 전위차를 건다).
     # ★ z 범위는 **격자에 실제로 남은** 탄소에서 뽑는다 — 입력 좌표에서 뽑으면 격자 밖으로
     #   버려진 셀이 인덱스를 넘겨 터진다 (selftest '격자 밖 셀은 무시' 가 잡았다).
-    zc = np.nonzero(g.any(axis=(0, 1)))[0]
-    z0, z1 = int(zc.min()), int(zc.max())
+    # ★ 솔버의 실제 plate 를 쓴다.  첫 판은 **탄소 점유 범위**의 양 끝을 썼는데, 그러면
+    #   탄소가 어디에 있든 "관통" 이 되기 쉬워 판별력이 거의 없다 (Codex #5).
+    if plate_bot is None or plate_top is None:
+        zc = np.nonzero(g.any(axis=(0, 1)))[0]
+        z0, z1 = int(zc.min()), int(zc.max())
+        out['spans_z_basis'] = 'carbon_envelope (LEGACY — 판별력 낮음)'
+    else:
+        z0, z1 = int(plate_bot), int(plate_top)
+        out['spans_z_basis'] = f'solver_plates z={z0}..{z1}'
+    z0 = max(0, min(z0, g.shape[2] - 1)); z1 = max(0, min(z1, g.shape[2] - 1))
     top = set(np.unique(lab[:, :, z1][lab[:, :, z1] > 0]).tolist())
     bot = set(np.unique(lab[:, :, z0][lab[:, :, z0] > 0]).tolist())
     spanning = sorted(top & bot)
@@ -99,8 +146,9 @@ def carbon_network_stats(cells, shape, am_mask=None):
         # 성분이 AM 에 **면-인접**하면 그 성분 전체가 전류를 흘릴 수 있다 (6-face 솔버)
         touch = np.zeros(ncomp + 1, bool)
         for ax in range(3):
+            per = bool(periodic_xy) and ax in (0, 1)     # z 는 절대 wrap 하지 않는다
             for sh in (1, -1):
-                nb = np.roll(am_mask, sh, axis=ax)
+                nb = _shift(am_mask, ax, sh, per)
                 touch[np.unique(lab[g & nb])] = True
         touch[0] = False
         out['plugged_frac'] = float(sizes[touch[1:]].sum() / n_cells)
@@ -126,7 +174,7 @@ def _am_voxel_mask(am_c, am_r, lo, vox, shape):
 
 
 def run(kit='kit_ps_7_3', n_grid=288, vox=0.4, vgcf_wt=1.0, seed=0, max_fibres=0,
-        gap_tol=2.0, with_am=True, verbose=True):
+        gap_tol=2.0, with_am=True, verbose=True, periodic_xy=False, legacy=False):
     S = seed_carbon_on_kit(kit, n_grid, vgcf_wt, seed, max_fibres=max_fibres)
     pts, fid, step = S['pts'], S['fid'], S['step']
     lat, thick = S['lat'], S['thick']
@@ -156,9 +204,17 @@ def run(kit='kit_ps_7_3', n_grid=288, vox=0.4, vgcf_wt=1.0, seed=0, max_fibres=0
             print(f"  [{kit}] AM {len(S['am_r']):,} 구를 복셀로 …")
         am_mask = _am_voxel_mask(S['am_c'], S['am_r'], lo, vox, shape)
 
-    A = carbon_network_stats(pt_c, shape, am_mask)           # arm A = 점 스탬프 (현 기본값)
-    B = carbon_network_stats(sg_c, shape, am_mask)           # arm B = 선분 스탬프
+    # ★ 경계 규약을 **타깃 STEP3 실행과 통일**한다 (2026-08-12, Codex #5).
+    #   생산 STEP3 기본은 비주기(`MPM_PERIODIC_SIGMA` 미설정) → periodic_xy=False.
+    #   z 는 어떤 경우에도 wrap 하지 않는다 — 솔버가 위·아래 플레이트로 막는 축이다.
+    #   plate 는 솔버 규약(z_bot=0, z_top=thickness, band=vox)의 셀 인덱스.
+    pb, pt_ = (None, None) if legacy else (0, int(round(thick / vox)) - 1)
+    kw = {} if legacy else dict(periodic_xy=periodic_xy, plate_bot=pb, plate_top=pt_)
+    A = carbon_network_stats(pt_c, shape, am_mask, **kw)     # arm A = 점 스탬프 (현 기본값)
+    B = carbon_network_stats(sg_c, shape, am_mask, **kw)     # arm B = 선분 스탬프
     r = {'kit': kit, 'n_grid': n_grid, 'vox_um': vox, 'vgcf_wt_pct': vgcf_wt,
+         'boundary': 'LEGACY_xyz_toroidal' if legacy else
+                     f'corrected(periodic_xy={periodic_xy}, z=zero-pad, plates={pb}..{pt_})',
          'n_fibres': S['nobj'], 'n_fibres_recipe': S['nobj_full'], 'n_points': int(len(pts)),
          'am_voxels': int(am_mask.sum()) if am_mask is not None else None}
     for tag, d in (('point', A), ('segment', B)):
@@ -267,7 +323,29 @@ def _selftest():
     # 6) 격자 밖 좌표는 조용히 버린다 (경계에서 IndexError 로 죽지 않게)
     chk('격자 밖 셀은 무시', carbon_network_stats(
         np.array([[99, 99, 99], [1, 1, 1]], np.int64), sh)['n_cells'] == 1)
-    # 7) #8 econn 구조적 맹목
+    # 7) ★ 경계 규약 (Codex #5) — 같은 그림에서 두 규약을 섞지 않는다
+    sh2 = (6, 6, 6)
+    am_e = np.zeros(sh2, bool); am_e[0, 2, 2] = True          # x=0 벽
+    c_e = np.array([[5, 2, 2]], np.int64)                     # x=nx-1 — seam 건너 인접
+    chk('#5: 비주기면 seam 건너 AM 은 plugged 아님 (zero-pad)',
+        carbon_network_stats(c_e, sh2, am_e, periodic_xy=False)['plugged_frac'] == 0.0)
+    chk('#5: periodic_xy 면 seam 건너 AM 이 plugged',
+        carbon_network_stats(c_e, sh2, am_e, periodic_xy=True)['plugged_frac'] == 1.0)
+    am_z = np.zeros(sh2, bool); am_z[2, 2, 0] = True
+    c_z = np.array([[2, 2, 5]], np.int64)
+    chk('#5: ★z 는 periodic_xy 라도 절대 wrap 하지 않는다',
+        carbon_network_stats(c_z, sh2, am_z, periodic_xy=True)['plugged_frac'] == 0.0)
+    two = np.array([[0, 2, 2], [5, 2, 2]], np.int64)
+    chk('#5: 라벨도 같은 periodicity — 비주기 2성분 / 주기 1성분',
+        carbon_network_stats(two, sh2)['n_components'] == 2
+        and carbon_network_stats(two, sh2, periodic_xy=True)['n_components'] == 1)
+    col = np.array([[2, 2, k] for k in range(1, 5)], np.int64)
+    chk('#5: spans_z 가 solver plate 기준이면 짧은 기둥은 관통 아님',
+        carbon_network_stats(col, sh2, plate_bot=0, plate_top=5)['spans_z'] is False)
+    chk('#5: legacy(carbon envelope) 는 같은 기둥을 관통으로 본다 = 판별력 낮음',
+        carbon_network_stats(col, sh2)['spans_z'] is True)
+
+    # 8) #8 econn 구조적 맹목
     try:
         eb = econn_blindness()
         chk('econn 은 스탬프 인자를 받지 않는다 (구조적 맹목)', not eb['takes_stamp_arg'])
@@ -294,6 +372,11 @@ def main():
     ap.add_argument('--max-fibres', type=int, default=0,
                     help='0 = 레시피 전량 (기본).  ⚠ 표본을 줄이면 per-fibre 통계는 살아도 '
                          '**퍼콜레이션은 무의미**해진다 — 네트워크 측정은 전량으로.')
+    ap.add_argument('--periodic-xy', action='store_true',
+                    help='타깃 STEP3 가 --periodic 일 때만.  z 는 어떤 경우에도 wrap 안 함')
+    ap.add_argument('--legacy', action='store_true',
+                    help='⚠ 옛 혼합 규약 재현 전용 (xyz toroidal + carbon-envelope spans_z). '
+                         '기전 증거로 쓰지 말 것 — 보존용.')
     ap.add_argument('--no-am', action='store_true', help='AM 복셀화 생략 (plugged_* 는 null)')
     ap.add_argument('--csv', default='')
     ap.add_argument('--selftest', action='store_true')
@@ -304,7 +387,8 @@ def main():
     print(econn_blindness()['verdict'] + '\n')
     rows = []
     for kit in (KITS if a.all_kits else [a.kit]):
-        r = run(kit, a.n_grid, a.vox, a.vgcf_wt, a.seed, a.max_fibres, with_am=not a.no_am)
+        r = run(kit, a.n_grid, a.vox, a.vgcf_wt, a.seed, a.max_fibres, with_am=not a.no_am,
+                periodic_xy=a.periodic_xy, legacy=a.legacy)
         rows.append(r)
         print(_fmt(r) + '\n')
     if a.csv and rows:

@@ -40,6 +40,24 @@ import sys
 import numpy as np
 
 
+def cell_of(p, vox, eps=1e-9):
+    """점 → 복셀 인덱스.  **경계에 놓인 좌표를 정수로 스냅한 뒤** floor 한다.
+
+    ★ 왜 (2026-08-12, Codex rung `fibre_segment_reversal_boundary` 가 잡음):
+      `2.4 / 0.4 = 5.999999999999999` 이라 맨 `floor` 는 6 이 아니라 **5** 를 준다.
+      그 한 줄이 `segment_cells` 의 **방향반전 불변성을 깬다** — 같은 선분을 p0→p1 로
+      굽느냐 p1→p0 로 굽느냐에 따라 셀 집합이 달라졌다 (실측 forward 14 · reverse 12 ·
+      대칭차 4).  더 나쁘게, 끝점 보장 루프가 **뒤로 걸어가** 선분 위에 없는 셀
+      (2,3,6)·(2,3,5) 을 만들어 냈다 = 비단조 경로.
+    ⚠ 내 게이트 ③ 회귀는 "끝점이 정확히 경계" 를 시험했지만 **음의 방향**을 안 밟아
+      통과시켰다 — 같은 병(시험이 쉬운 경로만)의 세 번째 재발.
+    """
+    q = np.asarray(p, np.float64) / float(vox)
+    qr = np.round(q)
+    q = np.where(np.abs(q - qr) < eps, qr, q)
+    return np.floor(q).astype(np.int64)
+
+
 def segment_cells(p0, p1, vox, eps=1e-12):
     """선분 p0→p1 이 지나는 복셀 인덱스를 **순서대로** → (N,3) int64.
 
@@ -47,9 +65,17 @@ def segment_cells(p0, p1, vox, eps=1e-12):
     """
     p0 = np.asarray(p0, np.float64)
     p1 = np.asarray(p1, np.float64)
+    # ★ 방향 정규화 (2026-08-12).  모서리·꼭짓점을 정확히 지나는 선분에서 `argmin(tmax)`
+    #   의 동률 규칙("낮은 축부터")이 **방향 의존**이라, 정규화 없이는 반전 불변성이
+    #   원리적으로 성립하지 않는다 (스냅만으로는 4000 무작위 중 1686 위반).
+    #   항상 사전식으로 작은 끝점에서 굽고 필요하면 뒤집어 돌려준다 ⇒ 불변성이 **구성상** 참.
+    _swap = tuple(p1) < tuple(p0)
+    if _swap:
+        p0, p1 = p1, p0
     d = p1 - p0
     L = float(np.linalg.norm(d))
-    cur = np.floor(p0 / vox).astype(np.int64)
+    cur = cell_of(p0, vox)
+    endc = cell_of(p1, vox)
     if L < eps:
         return cur[None, :]
     u = d / L
@@ -68,9 +94,9 @@ def segment_cells(p0, p1, vox, eps=1e-12):
             tdel[a] = vox / abs(u[a])
     guard = 0
     guard_max = int(4 * (L / vox + 3)) + 16
-    while True:
+    while not np.array_equal(cur, endc):   # ★ 끝 셀에 닿으면 즉시 종료 (지나치지 않는다)
         a = int(np.argmin(tmax))          # 동률이면 낮은 축부터 = 한 번에 한 축만 전진
-        if tmax[a] > L or guard > guard_max:
+        if tmax[a] > L * (1.0 + 1e-12) + eps or guard > guard_max:
             break
         cur = cur.copy()
         cur[a] += step[a]
@@ -81,7 +107,6 @@ def segment_cells(p0, p1, vox, eps=1e-12):
     #   (예 5.2 = 13×0.4) 마지막 경계 통과의 tmax 가 부동소수에서 L 을 아주 살짝 넘어
     #   잘린다 → floor(p1) 셀이 빠진다.  일반 끝점은 루프가 이미 포함하지만, 계약을
     #   "p1 을 담는 셀은 **항상** 방문" 으로 못박는다.  한 축씩 걸어가므로 face-연결 유지.
-    endc = np.floor(p1 / vox).astype(np.int64)
     while not np.array_equal(cur, endc):
         diff = endc - cur
         nz = np.nonzero(diff)[0]
@@ -92,7 +117,7 @@ def segment_cells(p0, p1, vox, eps=1e-12):
         cur[a] += 1 if diff[a] > 0 else -1
         out.append(cur)
         guard += 1
-    return np.asarray(out, np.int64)
+    return np.asarray(out[::-1] if _swap else out, np.int64)
 
 
 def polyline_cells(pts, vox):

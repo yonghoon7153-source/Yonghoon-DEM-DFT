@@ -83,8 +83,13 @@ def rasterize_from_scaffold(am_csv, se_csv, vox, tol_am_um=0.10):
     am_c -= lo
     se_c -= lo
     box_hi = tuple((hi - lo))
-    # AM type: r 기준 poly/SC (2µm=SC/AM_S, 6µm=poly/AM_P — step3 SID 1=AM_S,2=AM_P)
-    am_t = np.where(am_r >= 3.5, 2, 1)
+    # AM type: r 기준 poly/SC.  ★ `rasterize` 는 **DEM type 규약**을 받는다 —
+    #   step3_sigma.py:233 `2 if am_t[i] == 1 else 1` = **type 1 → sid 2(AM_P)**, type 2 → sid 1.
+    #   즉 인자는 sid 가 아니라 type 이고 **반전**된다.
+    # ⚠ 2026-08-12 (Codex intentional error #5) 이전 판은 `where(r>=3.5, 2, 1)` 로 큰 입자에
+    #   2 를 넣었고, rasterize 가 그것을 sid 1(AM_S)로 구워 **AM_P/AM_S 가 뒤집혀** 그려졌다.
+    #   주석이 sid 규약을 인용하면서 type 인자를 채운 것이 원인이다.
+    am_t = np.where(am_r >= 3.5, 1, 2)          # 큰 = DEM type 1 (AM_P) · 작은 = type 2 (AM_S)
     sid, _pid = s3.rasterize(am_c, am_r, am_t, None, None, (0.0, 0.0, 0.0), box_hi, vox, se_pts=se_c)
     return sid, vox
 

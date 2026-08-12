@@ -98,7 +98,14 @@
    "h1_predicts": "plugged_frac ≈ 1 · 최대성분 질량몫만 크게 줄어든다",
    "bridge": "성분 수(세는 양)가 아니라 AM 면-인접 질량몫을 **별도로** 측정했다 — 이것이 CL-03 에 없던 다리다.",
    "verdict": "h1 채택 — plugged_frac 이 **5/5 킷 전부 0.92~0.97** 로 탄소는 어디서나 회로에 꽂혀 있다.  ⚠⚠ 단 최초 서술('점 팔도 z 를 관통하므로 문턱 아래가 아니다')은 kit_ps_7_3 **한 킷**에서 본 것이라 **과일반화였다** — 5킷 스윕에서 0_10/3_7/5_5 는 관통 질량이 **정확히 0.0000** 이다.  경로 강제(기전)는 보편이고, 고속도로 생존 여부는 **조성 의존**이다 → CL-08.  ⚠ 기하 측정이다 — 수송 귀결과 배수 크기는 STEP3 (게이트 ⑤⑥) 몫.",
-   "must_recheck": "⚠ plugged_frac 은 sr01_carbon_network.py:103 의 np.roll 이 xyz 를 **toroidal 로 감아** 잰 값이다 (성분 라벨은 비주기 6-face) = 규약 혼합. Codex intentional error #5 확인됨 → 비주기로 재측정 필요."
+   "must_recheck": "corrected 5킷 스윕 완료 전까지 `evidence_state=hold`.  생산 STEP3 기본이 비주기이므로 corrected 는 모든 축 zero-padding (z 포함).  kit_ps_7_3 선행 결과로는 결론(경로 강제) 불변, Δ 0.16 %p.",
+   "evidence_state": "hold",
+   "legacy_measurement": {
+    "metric": "plugged_frac (LEGACY mixed-boundary)",
+    "value": "0.944 (point) / 0.995 (segment)",
+    "why_held": "xyz toroidal AM-touch + 비주기 6-face 라벨 + carbon-envelope spans_z = 세 규약 혼합 (Codex intentional error #6, CONFIRMED).  **철회하지 않고 보존**하되 기전 증거로 사용 금지.",
+    "corrected_partial": "kit_ps_7_3 corrected: point 0.9420 / segment 0.9941 (Δ −0.0016) — 결론 불변"
+   }
   },
   {
    "id": "CL-08",
