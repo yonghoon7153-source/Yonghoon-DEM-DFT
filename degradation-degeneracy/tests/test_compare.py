@@ -2719,9 +2719,11 @@ def test_reproduce_block_covers_every_rendered_section(tmp_path):
         "기준 곡선 비교 절을 만드는 report --compare 가 없다"
 
 
-def test_reproduce_block_commands_parse_and_target_canonical_paths(tmp_path):
+def test_reproduce_block_wrapper_parser_smoke_and_canonical_paths(tmp_path):
     """★ 14차 3차 발견 1·2 — 재현 명령이 **실제 wrapper 를 통과**하고 정본
-    경로를 가리켜야 한다.
+    경로를 가리켜야 한다. (★ 14차 4차 발견 5 — 범위는 **parser smoke** 다:
+    wrapper 옵션 존재·정본 경로 문자열·옵션명만 증명하고, 인자 전달·하류
+    argparse·실제 계산은 strict smoke 가 담당한다.)
 
     두 오류가 문자열 존재 검사(`"--mode wsweep" in text`)를 빠져나갔다.
       · sweep 출력이 `<main-fit>/wsweep` 이 아니라 `<main-fit>` 자체 —
@@ -2782,7 +2784,12 @@ def test_reproduce_block_commands_parse_and_target_canonical_paths(tmp_path):
         r = subprocess.run(["bash", str(repo / "run.sh"), *argv, "--help"],
                            cwd=repo, capture_output=True, text=True,
                            env={**os.environ})
+        # ★ 14차 4차 발견 5 — 문구뿐 아니라 **종료 코드**까지 본다.
+        #   다만 이것은 wrapper **parser smoke** 다: token 이 wrapper 옵션으로
+        #   존재하는지만 증명하며, mode 별 인자 전달·하류 argparse·실제 출력
+        #   디렉터리·숫자 생성은 증명하지 않는다 (그건 strict smoke 담당).
         assert "알 수 없는 인자" not in r.stderr, (line, r.stderr[:200])
+        assert r.returncode == 0, (line, r.returncode, r.stderr[:200])
 
 
 def test_halfcell_reproduce_command_carries_nondefault_flags(tmp_path):
@@ -2828,3 +2835,37 @@ def test_halfcell_reproduce_command_carries_nondefault_flags(tmp_path):
     assert "--no-adaptive" in hc_line, hc_line
     assert "--no-warm-start" in hc_line, hc_line
     assert "--clean" in hc_line, hc_line
+
+
+def test_halfcell_prep_command_uses_signed_method(tmp_path):
+    """★ 14차 4차 발견 4 — half-cell 준비 명령의 `--method` 도 서명값이어야 한다.
+
+    `run_spec.halfcell_recipe.method` 가 `sim` 인 artifact 를 렌더하면서
+    준비 명령은 `--method ocp` 기본값을 출력했다 — 그 문서의 Case 1 절을
+    명령대로 재현하면 다른 기준 곡선으로 계산된다.
+    """
+    import yaml
+
+    from tools.compare_cases import compare
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d, _ = _complete_artifact(tmp_path,
+                              objectives=("pocv_dvdq", "pocv_dvdq_dqdv"))
+    h, _ = _complete_artifact(tmp_path / "h",
+                              objectives=("pocv_dvdq", "pocv_dvdq_dqdv"))
+    hm = h / "manifest.yaml"
+    m = yaml.safe_load(hm.read_text(encoding="utf-8"))
+    m["run_spec"] = {**m["run_spec"], "halfcell_recipe": {"method": "sim"}}
+    hm.write_text(yaml.safe_dump(m, allow_unicode=True, sort_keys=False),
+                  encoding="utf-8")
+
+    res = compare(d / "fits.parquet", h / "fits.parquet")
+    (d / "case_comparison.yaml").write_text(
+        yaml.safe_dump(res, allow_unicode=True), encoding="utf-8")
+    run_compare(d, d)
+    text = build(d, tmp_path / "R.md", repo_root=tmp_path).read_text(
+        encoding="utf-8")
+    prep = next(ln for ln in text.split("## 재현")[1].splitlines()
+                if "src.halfcell" in ln)
+    assert "--method sim" in prep, prep

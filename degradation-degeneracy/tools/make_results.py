@@ -1167,13 +1167,16 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     _hc_dir = (((case.get("provenance") or {}).get("halfcell") or {}
                 ).get("run_dir") if _case_rendered else None)
     if _hc_dir:
-        P.append("python -m src.halfcell --config configs/base.yaml "
-                 "--method ocp --force --verify")
         # ★ 14차 3차 발견 4 — half-cell 도 **그 artifact 의 서명된 run_spec** 에서
         #   플래그를 만든다. `--reference halfcell` 만 붙이면 nondefault
         #   protocol(restart 수·clean target·adaptive/warm off)이 복원되지 않아
         #   Case 1 절이 다른 설정으로 다시 계산된다.
         _hrs = (_load(Path(_hc_dir) / "manifest.yaml") or {}).get("run_spec") or {}
+        # ★ 14차 4차 발견 4 — 기준 곡선을 만든 방법(ocp/sim)도 서명값이다.
+        #   기본값을 박으면 `method=sim` artifact 가 다른 기준으로 재계산된다.
+        _hc_method = (_hrs.get("halfcell_recipe") or {}).get("method") or "ocp"
+        P.append(f"python -m src.halfcell --config configs/base.yaml "
+                 f"--method {_hc_method} --force --verify")
         _hfit = [f"./run.sh --mode fit   --in {_curves_dir} --out {_hc_dir} "
                  f"--nproc $(nproc)",
                  *(_fit_flags({**_hrs, "reference": "halfcell"}))]
@@ -1183,6 +1186,16 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     else:
         P.append(f"./run.sh --mode report --in {in_dir}")
     P.append("```\n")
+    # ★ 14차 4차 발견 4 — 재현 범위를 문서가 스스로 한정한다. 위 명령은 이
+    #   artifact 의 서명값에서 만들지만, 아직 명령으로 내보내지 않는 축이 있다.
+    #   "전 절 재현"이라고 읽히면 비기본 실행에서 다른 수치가 나온다.
+    P.append("> **재현 범위**: 위 명령은 이 산출물의 서명된 fit·sweep·half-cell "
+             "설정(objective·restart·clean/noisy·adaptive·warm start·reference·"
+             "bounds preset·half-cell method·sweep w_grid/stride)을 복원합니다. "
+             "아직 명령으로 내보내지 않는 축은 sweep 의 bounds/reference/tol·"
+             "optimizer method 와 비기본 `eps` 의 추가 Hessian 입니다 — 이 "
+             "artifact 들이 기본값으로 돌았다면 그대로 재현되고, 아니면 해당 "
+             "절은 `manifest.yaml` 의 `run_spec` 을 직접 보고 맞춰야 합니다.\n")
     P.append("관련 문서: `docs/06_REVIEW_DECISIONS.md`(해석 규칙), "
              "`docs/07_LAM_LLI.md`(열화모드 정의), `docs/GPU_NOTES.md`(GPU 판정)\n")
 

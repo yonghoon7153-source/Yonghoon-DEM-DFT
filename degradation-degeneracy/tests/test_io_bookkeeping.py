@@ -261,3 +261,35 @@ def test_scope_exclusion_helper_is_shared():
     for p in ("configs/model.pyconfig", "src/pycache_helper.py",
               "tools/pyc_writer.py", "configs/ipynb_checkpoints_note.yaml"):
         assert not is_scope_excluded(p), p
+
+
+def test_tracked_dirty_is_conservative_for_excluded_paths(tmp_path):
+    """★ 14차 4차 발견 3 — tracked 변경은 제외 규칙을 **적용하지 않는다** (의도).
+
+    digest 는 캐시·바이트코드를 제외하지만, tracked 파일이 바뀐 사실 자체는
+    막는 쪽이 안전하다 (false-clean 이 아니라 false-dirty). 저장소 규칙상
+    validator 는 느슨하게 만들지 않으므로 이 비대칭을 **고정**한다 —
+    "digest 와 dirty 가 같은 제외 규칙"이라는 서술 대신 "untracked/ignored 와
+    digest 가 제외 규칙을 공유한다"가 정확하다.
+    """
+    import subprocess
+
+    from src.io import git_info, source_digest
+
+    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True)
+    d = tmp_path / "src" / ".ipynb_checkpoints"
+    d.mkdir(parents=True)
+    (d / "note.py").write_text("x = 1\n", encoding="utf-8")
+    (tmp_path / "src" / "a.py").write_text("y = 1\n", encoding="utf-8")
+    subprocess.run(["git", "-C", str(tmp_path), "add", "-A", "-f"], check=True)
+    subprocess.run(["git", "-C", str(tmp_path), "-c", "user.email=t@t",
+                    "-c", "user.name=t", "commit", "-qm", "init"], check=True)
+
+    d0 = source_digest(root=tmp_path)
+    assert git_info(tmp_path)["git_dirty"] is False
+
+    (d / "note.py").write_text("x = 2\n", encoding="utf-8")
+    assert source_digest(root=tmp_path) == d0, \
+        "제외 경로는 digest 에 들어가면 안 된다"
+    assert git_info(tmp_path)["git_dirty"] is True, \
+        "tracked 변경은 제외 경로라도 dirty 로 센다 (보수적, 의도)"

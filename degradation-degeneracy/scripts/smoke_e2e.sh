@@ -426,7 +426,22 @@ for run in sys.argv[2:]:
         print(f"   {'✅' if not left else '❌'} 격리 복원 검증[{tag}]: "
               + ("통과" if not left else f"실패 — {left}"))
         bad += 0 if not left else 1
-sys.exit(1 if bad else 0)
+# ★ 14차 4차 발견 1 — 이 subprocess 는 **모든 validator 판정이 끝난 뒤**
+#   interpreter finalization 에서 간헐적으로 SIGABRT 한다 (측정: 변경 전
+#   커밋에서도 1/7 재현 — 이 저장소 diff 의 회귀가 아니다). 판정은 이미
+#   확정됐고 이 프로세스는 **연구 산출물을 쓰지 않는** read-only 검증이며,
+#   격리 복원 디렉터리 삭제도 shell 이 뒤에서 한다. 그래서 종료 코드를 먼저
+#   확정하고 두 스트림을 flush 한 뒤 native finalization 만 건너뛴다.
+#   검증 중의 예외·실패는 여전히 nonzero 다 (아래 rc 는 bad 에서만 나온다).
+#   flush 실패도 nonzero 로 만든다 — 출력이 잘린 채 통과로 읽히면 안 된다.
+#   이 완화는 `scripts/smoke_e2e.sh` 의 이 read-only validator 하나에만 둔다.
+rc = 1 if bad else 0
+try:
+    sys.stdout.flush()
+    sys.stderr.flush()
+except Exception:  # noqa: BLE001
+    rc = 1
+os._exit(rc)
 PYEOF
 [[ $? -eq 0 ]] || bad "격리 복원본이 검증을 통과하지 못했다"
 

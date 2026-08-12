@@ -807,7 +807,16 @@ terminate called without an active exception
 ```
 
 **검사 3건이 모두 `통과` 를 출력한 뒤** 인터프리터 종료 시점에 죽는다 — 검증
-실패가 아니라 PyBaMM/CasADi 를 import 한 프로세스의 native teardown 크래시다.
+실패가 아니라 **모든 validator 판정이 끝난 뒤 발생하는 native interpreter
+teardown flake** 다. **정확한 library 원인은 미확정이다.**
+
+> **정정 (14차 4차 발견 2)**: 위 문단은 처음에 "PyBaMM/CasADi 를 import 한
+> 프로세스"라고 적었으나 **틀렸다**. 이 validator 경로를 실측하면
+> `pybamm_loaded=False`, `casadi_loaded=False`, `pyarrow_loaded=True` 다 —
+> pandas/Parquet 의 native extension 은 쓰지만 PyBaMM·CasADi 를 직접 로드하지
+> 않는다. PyArrow 를 원인으로 확정할 근거도 아직 없다. 원인 규명은 artifact 별
+> validator·producer 재검·Parquet/fits seal 단계를 분리하고 core/backtrace 로
+> 어느 native finalizer 가 죽는지 보는 후속 조사로 남긴다.
 
 변경 전후 분리 측정 (각각 **새 worktree**, 캐시 상태 통제):
 
