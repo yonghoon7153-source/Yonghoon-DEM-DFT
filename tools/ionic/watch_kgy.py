@@ -22,11 +22,19 @@ import math
 import os
 import re
 import subprocess
+import sys
 from datetime import datetime
 
 H = os.path.expanduser("~")
 NOW = datetime.now()
 BAR = "-" * 68
+#: watch_all.py 의 --only 관례를 따른다 (단독 화면)
+ONLY = ""
+for _i, _a in enumerate(sys.argv):
+    if _a == "--only" and _i + 1 < len(sys.argv):
+        ONLY = sys.argv[_i + 1]
+    elif _a.startswith("--only="):
+        ONLY = _a.split("=", 1)[1]
 kB = 8.617333262e-5
 TS = (600, 800, 1000)
 PROD_PS, EQ_PS = 200.0, 5.0
@@ -115,6 +123,121 @@ def _beta_series(t, y, lo=2.0, hi=50.0):
     sxx = sum(q[0] ** 2 for q in pts); sxy = sum(q[0] * q[1] for q in pts)
     den = n * sxx - sx * sx
     return (n * sxy - sx * sy) / den if abs(den) > 1e-30 else None
+
+
+# ═══ ⑥ lpsocl 600 K × 800 ps — (B) vs (C) 판정 런 ═══════════════════════════
+#   2026-08-12. 홉 통계가 (C) 느린 전이/통계 부족 쪽으로 기울였고, 그 예측을 검정한다.
+#   실측 홉 7.3/이온(200 ps) → ~29/이온(800 ps) 로 문턱 10 을 넘는다.
+#   ★ 정지 규칙을 **미리** 박아 둔다 — 결과를 보고 기준을 고치지 않기 위해서다
+#     (kb/methodology/beta_gate_seed_policy.md: '통과할 때까지 다시' 금지).
+LONG = os.environ.get("LONGDIR") or os.path.join(H, "work", "runs", "lpsocl_600_long")
+LONG_LOG = os.path.join(H, "logs", "lpsocl800.log")
+LONG_TARGET_PS = 800.0
+LONG_HOURS_PER_200PS = 3.42          # 실측 (arrhenius_6pt 21런)
+BETA_PASS, BETA_FAIL = 0.80, 0.75    # 사이면 경계 → 시드 추가
+
+
+def long_verdict(b):
+    """선언한 정지 규칙. 이 함수가 판정의 유일한 출처다."""
+    if b is None:
+        return "—", "아직 msd.json 없음"
+    if b >= BETA_PASS:
+        return "✅ (C) 확정", ("통계 부족이었다 — lpsocl 600 K 를 아레니우스에 **복귀**시킨다. "
+                             "처방은 창/시간 연장이 맞았다.")
+    if b < BETA_FAIL:
+        return "⛔ (B) 확정", ("홉이 4배로 늘어도 안 살아났다 — 진짜 멱함수다. "
+                             "이 점은 D 인용 금지, 아레니우스에서 뺀다.")
+    return "△ 경계", (f"{BETA_FAIL}–{BETA_PASS} 사이 — 여기서만 시드 추가(s3·s4)를 건다. "
+                     f"단일 시드로 판정하지 않는다.")
+
+
+def section_long():
+    print("⑥ lpsocl 600 K × 800 ps — (B) 진짜 멱함수 vs (C) 느린 전이 판정")
+    up = "lpsocl800" in sh("tmux ls")
+    nproc = len([x for x in sh("pgrep -f '[r]un_arrhenius_6pt.sh'").split() if x])
+    base = os.path.join(LONG, "lpsocl", "T600_s2")
+    mj = next(iter(sorted(glob.glob(os.path.join(base, "**", "msd.json"),
+                                    recursive=True))), None)
+    if not os.path.isdir(LONG) and not up:
+        print("   · 미착수. 걸려면:")
+        print("     tmux new -s lpsocl800 -d \"ONLY=lpsocl "
+              "OUTROOT=$HOME/work/runs/lpsocl_600_long \\")
+        print("       SEEDS=2 TEMP_PROD='' LPSOCL_EXTRA='600:800' \\")
+        print("       bash tools/ionic/run_arrhenius_6pt.sh 2>&1 | tee -a ~/logs/lpsocl800.log\"")
+        return
+    # 시작 시각 = 러너의 ▶ 줄
+    t0, tail = None, []
+    if os.path.isfile(LONG_LOG):
+        try:
+            lines = open(LONG_LOG, errors="ignore").read().splitlines()
+        except OSError:
+            lines = []
+        tail = lines[-3:]
+        for ln in lines:
+            if "prod=800" in ln and "▶" in ln:
+                m = re.search(r"(\d{2}):(\d{2}):(\d{2})", ln)
+                if m:
+                    t0 = m.group(0)
+    el = os.path.getmtime(LONG_LOG) if os.path.isfile(LONG_LOG) else None
+    age = (datetime.now().timestamp() - el) / 60.0 if el else None
+    st = "✅ 완료" if mj else ("▶ 진행" if (up or nproc) else "⛔ 죽음/미착수")
+    print(f"   상태 {st} · tmux {'있음' if up else '없음'} · 러너 {nproc} · "
+          f"시작 {t0 or '?'} · 예상 {LONG_TARGET_PS / 200 * LONG_HOURS_PER_200PS:.1f} h")
+    if age is not None:
+        print(f"   로그 마지막 갱신 {age:.0f}분 전"
+              + ("   ⚠ 30분 넘게 조용하다 — 살아 있는지 확인" if age > 30 and not mj else ""))
+    b = None
+    if mj:
+        try:
+            j = json.load(open(mj))
+            b = _beta_series(j.get("times_ps_mto") or j.get("times_ps"),
+                             j.get("msd_Li_A2_mto") or j.get("msd_Li_A2"))
+        except (OSError, ValueError, KeyError):
+            print("   ⛔ msd.json 손상")
+    v, why = long_verdict(b)
+    print(f"   β(창 2–50) = {b if b is None else round(b, 3)}  →  **{v}**")
+    print(f"     {why}")
+    print(f"   선언한 규칙: β≥{BETA_PASS} (C) · β<{BETA_FAIL} (B) · 사이면 시드 추가")
+    if mj:
+        print("   확정 판정은 창 스캔으로:")
+        print(f"     python3 tools/ionic/msd_diffusive_check.py --scan --average --mto \\")
+        print(f"       --glob '{LONG}/*/T*_s*/**/msd.json'")
+    for ln in tail:
+        print(f"   │ {ln[:96]}")
+
+
+def selftest_long():
+    """선언한 정지 규칙의 시험. 여기 버그는 **과학적 판정을 조용히 바꾼다**."""
+    ok = True
+
+    def chk(c, m):
+        nonlocal ok
+        print(("  ✓ " if c else "  ✗ ") + m)
+        ok &= bool(c)
+
+    cases = [(0.90, "(C)"), (0.80, "(C)"), (0.799, "경계"), (0.76, "경계"),
+             (0.75, "경계"), (0.749, "(B)"), (0.61, "(B)")]
+    for b, want in cases:
+        v, _ = long_verdict(b)
+        chk(want in v, f"β={b} → {v}  (기대 {want})")
+    chk(long_verdict(None)[0] == "—", "msd.json 없음 → 판정 보류")
+    # 음성: 경계 구간이 비면 안 된다 (둘 다 안 걸리는 β 가 없어야 한다)
+    holes = [round(x / 1000, 3) for x in range(600, 1000)
+             if long_verdict(x / 1000)[0] == "—"]
+    chk(not holes, f"0.60~1.00 에 판정 구멍 없음 (구멍 {holes[:3]})")
+    # 음성: PASS 와 FAIL 이 뒤집혀 있으면 안 된다
+    chk(BETA_FAIL < BETA_PASS, f"문턱 순서 {BETA_FAIL} < {BETA_PASS}")
+    chk("복귀" in long_verdict(0.9)[1] and "뺀다" in long_verdict(0.7)[1],
+        "처방이 판정과 반대로 붙지 않았다")
+    print("selftest PASS" if ok else "selftest FAIL")
+    return 0 if ok else 1
+
+if "--selftest" in sys.argv:
+    sys.exit(selftest_long())
+
+if ONLY == "long":
+    section_long()
+    sys.exit(0)
 
 
 def _ens_beta(mjs, lo=2.0, hi=50.0):
@@ -612,3 +735,7 @@ if br and br != "claude/friendly-meitner-lldvar":
     print(f"⚠ kgy 브랜치 = {br} (우리 브랜치 아님). git pull 로는 우리 코드가 안 온다:")
     print("   git fetch origin claude/friendly-meitner-lldvar && \\")
     print("   git checkout FETCH_HEAD -- <필요한 경로>")
+
+if ONLY == "":
+    print(BAR)
+    section_long()
