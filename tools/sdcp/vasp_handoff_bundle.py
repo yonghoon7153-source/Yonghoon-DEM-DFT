@@ -396,6 +396,13 @@ def discover_pairs(run_dir: Path, audit: Optional[Dict[str, Any]] = None,
             for tag, pool, want_dir in (("Li_at_Ni_dir", li, rn["down_dir"]),
                                         ("Ni_at_Li_dir", ni, rl["down_dir"])):
                 cand = [r for r in pool if r["down_dir"] == want_dir]
+                if not cand:
+                    # ⚠ 조용히 한쪽만 만들면 "2×2 완성" 으로 오해한다. 왜 못 만드는지
+                    #   남긴다 — 그 방향에 그 자리의 자세가 **애초에 없다**는 뜻이고,
+                    #   채우려면 UMA 자세 생성부터 다시 해야 한다 (이 번들 밖이다).
+                    out[0].setdefault("cross_missing", {})[tag] = (
+                        f"{want_dir} 에 {'Li' if tag.startswith('Li') else 'Ni'}_top "
+                        f"자격 자세가 없다 — 2×2 미완. 채우려면 site-screen 부터")
                 if cand:
                     # 같은 roll 을 우선하고, 없으면 그 방향에서 가장 안정한 자세
                     same = [r for r in cand if abs(float(r.get("roll_deg", -1))
@@ -407,6 +414,7 @@ def discover_pairs(run_dir: Path, audit: Optional[Dict[str, Any]] = None,
             audit["n_contrast_pairs"] = 1
             audit["cross_endpoints"] = {k: v["label"]
                                         for k, v in (out[0].get("cross") or {}).items()}
+            audit["cross_missing"] = out[0].get("cross_missing") or {}
             audit["excluded_dirs"] = {}
             audit["mode"] = ("champion — Li 위 최선 vs Ni 위 최선. 두 챔피언이 다른 "
                              "방향이면 ΔE 에 배향 효과가 섞인다(matched=False).")
@@ -1925,6 +1933,10 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                         slab_metas.append(m)
                         plan(rel, m["phases"], req)
                         n_jobs += 1
+                if p.get("cross_missing"):
+                    pm["cross_missing"] = p["cross_missing"]
+                    for t2, why in p["cross_missing"].items():
+                        print(f"    ⚠ {pid}: 교차 끝점 {t2} 없음 — {why}")
                 man["pairs"][pid] = pm
 
     if not man["pairs"]:
