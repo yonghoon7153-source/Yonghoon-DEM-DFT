@@ -32,9 +32,33 @@ set -uo pipefail
 KIT_IN="${1:-}"
 [ -n "$KIT_IN" ] || { echo "사용: bash scripts/sr01_stamp_ab.sh <KIT_DIR> [RUN_DIR]"; exit 2; }
 KIT="$(cd "$KIT_IN" 2>/dev/null && pwd)" || { echo "ABORT — 킷 폴더 없음: $KIT_IN"; exit 1; }
-RUN_IN="${2:-$KIT/latest_run}"
-[ -e "$RUN_IN" ] || { echo "ABORT — 런 폴더가 없습니다: $RUN_IN"; \
-                      echo "        먼저 압밀을 돌리세요:  bash $KIT/run_mpm.sh   (~2h)"; exit 1; }
+# ── 런 폴더 결정.  ⚠ latest_run 심링크가 **없어도 압밀은 끝나 있을 수 있다** ──────────
+#   2026-08-11 실사고: 옛 코드가 그 경우 "먼저 압밀을 돌리세요 (~2h)" 라고 안내했는데
+#   베드(se_dump.npy)는 멀쩡히 있었다 — 안내대로 했으면 2시간을 헛되이 다시 돌았다.
+#   심링크의 부재는 **압밀의 부재가 아니다**.  압밀 산출물 자체로 판정한다.
+if [ -n "${2:-}" ]; then
+  RUN_IN="$2"
+elif [ -e "$KIT/latest_run" ]; then
+  RUN_IN="$KIT/latest_run"
+else
+  CAND=""; NCAND=0; CANDLIST=""
+  for d in "$KIT"/run_*; do
+    [ -f "$d/se_dump.npy" ] || continue
+    CAND="$d"; NCAND=$((NCAND + 1)); CANDLIST="$CANDLIST        $d
+"
+  done
+  if [ "$NCAND" = 0 ]; then
+    echo "ABORT — 압밀된 런이 없습니다 ($KIT/run_*/se_dump.npy 를 못 찾음)."
+    echo "        먼저 압밀을 돌리세요:  bash $KIT/run_mpm.sh   (~2h)"; exit 1
+  elif [ "$NCAND" = 1 ]; then
+    RUN_IN="$CAND"
+    echo "[sr01] latest_run 심링크가 없어 압밀된 런을 직접 씁니다: $(basename "$CAND")"
+  else
+    echo "ABORT — 압밀된 런이 $NCAND 개입니다.  어느 것인지 두 번째 인자로 주세요:"
+    printf '%s' "$CANDLIST"; exit 1
+  fi
+fi
+[ -e "$RUN_IN" ] || { echo "ABORT — 런 폴더가 없습니다: $RUN_IN"; exit 1; }
 RUN="$(cd "$RUN_IN" && pwd)"
 SCR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
