@@ -118,11 +118,72 @@ SCENARIOS = {
            "phases": ("static",), "dense_jobs": 4,
            "static_mesh": "3 4 1", "dense_mesh": "4 6 1", "lreal_false": True,
            "n_ionic": 0, "n_slab": 74},
+    "champion": {"desc": "Wave 1 (현행) — 조각당 챔피언 1쌍 · 단일점 · dense 는 보정자 조각만 "
+                         "· clean 자기 대조군 2 · 기체 기준계 없음",
+                 "phases": ("static",), "dense_jobs": 4,
+                 "static_mesh": "2 3 1", "dense_mesh": "3 4 1", "lreal_false": False,
+                 "n_ionic": 0, "n_slab": 22},
     "tier1": {"desc": "tier1 만 — PTFE 8쌍 + refs (SDCP 는 다음 판으로)",
               "phases": ("pre", "relax", "static"), "dense_jobs": 16,
               "static_mesh": "3 4 1", "dense_mesh": "4 6 1", "lreal_false": True,
               "n_ionic": N_IONIC, "n_slab": 34},
 }
+
+
+def schedule_makespan(job_hours, m):
+    """LPT 리스트 스케줄링으로 makespan [h] 을 낸다.
+
+    ★ 왜 "총시간 ÷ 동시실행" 이 아닌가 (Codex 6차 §7)
+      한 잡 안의 상(static→dense)은 **직렬**이다 — dense 가 static 의 CHGCAR 를
+      승계하므로 쪼갤 수 없다. 그래서 잡 하나는 '분할 불가 작업 하나' 이고,
+      전체는 고전적인 P||Cmax 문제가 된다. 산술 하한(총÷m)은 **도달 불가능한**
+      경우가 흔하다: 가장 긴 잡보다 짧아질 수 없기 때문이다.
+    """
+    m = max(1, int(m))
+    free = [0.0] * m
+    for h in sorted(job_hours, reverse=True):      # LPT — 긴 것부터
+        i = min(range(m), key=lambda k: free[k])
+        free[i] += h
+    return max(free) if free else 0.0
+
+
+def manifest_jobs(path, base, atoms_fallback):
+    """MANIFEST.json(+같은 폴더의 job.json)에서 **실제 계획**을 회수한다.
+
+    반환 [(상대경로, 총시간h, {상: h})]. job.json 이 있으면 원자수·k·LREAL 을
+    잡마다 정확히 읽고, 없으면 planned 의 상 목록 + --atoms 가정으로 후퇴한다
+    (그때는 후퇴했다고 **말한다** — 조용히 가정하지 않는다).
+    """
+    from glob import glob
+    with open(path) as fh:
+        man = json.load(fh)
+    root = os.path.dirname(os.path.abspath(path))
+    jps = sorted(glob(os.path.join(root, "*", "*", "job.json")))
+    out, mode = [], "job.json (정확)"
+    if jps:
+        for jp in jps:
+            with open(jp) as fh:
+                meta = json.load(fh)
+            n_at = len(meta.get("magmom_poscar") or []) or atoms_fallback
+            km = meta.get("kmesh") or {}
+            inc = meta.get("incar_expected") or {}
+            ph_h = {}
+            for ph in meta.get("phases") or []:
+                lr = str((inc.get(ph) or {}).get("LREAL", ".TRUE.")).upper()
+                ph_h[ph] = phase_hours(
+                    ph if ph in ESTEP else "static", n_at,
+                    km.get(ph, "3 4 1"), base,
+                    lr.startswith(".F"), N_IONIC)
+            out.append((os.path.relpath(os.path.dirname(jp), root),
+                        sum(ph_h.values()), ph_h))
+    else:
+        mode = f"planned 만 (원자수 {atoms_fallback} **가정**)"
+        for rel, p in (man.get("planned") or {}).items():
+            ph_h = {ph: phase_hours(ph if ph in ESTEP else "static", atoms_fallback,
+                                    "3 4 1", base, True, N_IONIC)
+                    for ph in (p.get("phases") or [])}
+            out.append((rel, sum(ph_h.values()), ph_h))
+    return man, out, mode
 
 
 def estimate(sc, atoms, base, concurrent):
@@ -152,12 +213,19 @@ def main() -> int:
     ap.add_argument("--n_ionic", type=int, default=None,
                     help="이온스텝 수를 전 시나리오에 강제 (기본: 시나리오별 값)")
     ap.add_argument("--scenario", default="all")
+    ap.add_argument("--manifest", default=None,
+                    help="번들 MANIFEST.json — **실제 계획**에서 비용을 낸다 "
+                         "(같은 폴더의 job.json 이 있으면 원자수·k·LREAL 을 잡마다 정확히 읽음)")
+    ap.add_argument("--cores", type=int, default=None,
+                    help="잡당 코어 수 (기본: 기준선과 동일). README 예시가 64 면 여기도 64.")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
 
     base = outcar_baseline(a.outcar) or dict(BASE)
+    if a.manifest:
+        return report_manifest(a, base)
     print(f"기준선: {base['atoms']}원자 · NKPTS {base['nkpts']} · {base['cores']}코어 · "
           f"전자스텝당 {base['sec_per_estep']:.0f} s")
     print(f"  출처 {base['source']}")
@@ -192,6 +260,59 @@ def main() -> int:
     print("\n★ 확정하는 법 — 대표 잡 **하나**를 4상 전부 돌려 실측한 뒤 곱한다:")
     print("     tier1/ptfe_c10__fib00_r090__Litop__afm2424_pm1 (탐침·dense 포함)")
     print("     외주처에 이 잡만 먼저 돌려 상별 Elapsed time 을 달라고 하면 된다.")
+    return 0
+
+
+def report_manifest(a, base) -> int:
+    """실제 번들 계획 기반 보고 — 산술 하한과 **스케줄링 makespan** 을 같이 낸다."""
+    if not os.path.isfile(a.manifest):
+        print(f"⛔ MANIFEST 가 없다: {a.manifest}")
+        return 2
+    man, jobs, mode = manifest_jobs(a.manifest, base, a.atoms)
+    if not jobs:
+        print(f"⛔ {a.manifest} 에 계획된 잡이 0개 — 비용을 낼 수 없다")
+        return 2
+    cores = a.cores or base["cores"]
+    hs = [h for _r, h, _p in jobs]
+    total = sum(hs)
+    lo = max(total / max(1, a.concurrent), max(hs))     # 도달 가능한 하한
+    mk = schedule_makespan(hs, a.concurrent)            # LPT 근사
+    n_ph = sum(len(p) for _r, _h, p in jobs)
+    by_ph: dict = {}
+    for _r, _h, p in jobs:
+        for k, v in p.items():
+            by_ph[k] = by_ph.get(k, 0.0) + v
+    print(f"기준선: {base['atoms']}원자 · NKPTS {base['nkpts']} · {base['cores']}코어 · "
+          f"전자스텝당 {base['sec_per_estep']:.0f} s")
+    print(f"  출처 {base['source']}")
+    print(f"MANIFEST: {a.manifest}")
+    print(f"  회수 방식 {mode} · 잡 {len(jobs)} · VASP 실행 {n_ph}회 · "
+          f"모드 {man.get('contract_mode', '(기본)')} · wave {man.get('wave', '?')}")
+    print(f"  dense 보정자 {man.get('dense_calibrators') or '(없음)'}")
+    print()
+    print(f"  상별 합계   " + "  ".join(f"{k} {v:.0f}h" for k, v in sorted(by_ph.items())))
+    print(f"  총 벽시계   {total:.0f} h        (모든 상을 한 줄로 세운 값)")
+    print(f"  코어시간    {total * cores:.0f}  ({cores} 코어/잡 가정)")
+    print(f"  가장 긴 잡  {max(hs):.1f} h      ← **이보다 짧아질 수 없다** (상이 직렬)")
+    print(f"  산술 하한   {total / max(1, a.concurrent) / 24:.2f} 일  "
+          f"(총 ÷ 동시 {a.concurrent})")
+    print(f"  도달 하한   {lo / 24:.2f} 일  (max(산술하한, 가장 긴 잡))")
+    print(f"  ★ 추정      {mk / 24:.2f} 일  (LPT 스케줄링 · 동시 {a.concurrent}잡)")
+    if mk > total / max(1, a.concurrent) * 1.05:
+        print(f"     ⚠ 산술 하한보다 {mk / (total / max(1, a.concurrent)):.2f}배 — "
+              f"잡 길이가 고르지 않아 하한에 도달하지 못한다")
+    print()
+    print("  동시 실행별:")
+    for m in (4, 8, 12, 20, 40):
+        print(f"     {m:3d}잡 → {schedule_makespan(hs, m) / 24:5.2f} 일"
+              + ("   (여기부터는 가장 긴 잡이 지배)"
+                 if schedule_makespan(hs, m) <= max(hs) * 1.001 else ""))
+    print("\n  가장 비싼 잡 5개:")
+    for rel, h, p in sorted(jobs, key=lambda t: -t[1])[:5]:
+        print(f"     {h:6.1f} h  {rel}  "
+              + " ".join(f"{k}:{v:.0f}" for k, v in sorted(p.items())))
+    print("\n⚠ 이건 모형이다 — **±2배는 예상 범위**다. 계약값이 아니라 계획용 수치다.")
+    print("   확정하려면 대표 잡 하나를 전 상 돌려 실측한 뒤 곱한다.")
     return 0
 
 
@@ -244,6 +365,55 @@ def selftest() -> int:
     # 음성: OUTCAR 가 없으면 조용히 0 을 내면 안 된다
     chk(outcar_baseline("/nonexistent/OUTCAR") is None, "없는 OUTCAR → None (기본값 후퇴)")
     chk(outcar_baseline(__file__) is None, "OUTCAR 아닌 파일 → None")
+
+    # ── 스케줄링 (Codex 6차 §7) ─────────────────────────────────────────────
+    chk(abs(schedule_makespan([10.0] * 8, 8) - 10.0) < 1e-9, "고른 8잡/8슬롯 → 10 h")
+    chk(abs(schedule_makespan([10.0] * 8, 4) - 20.0) < 1e-9, "고른 8잡/4슬롯 → 20 h")
+    # ★ 음성: **산술 하한은 도달 불가능할 수 있다** — 이게 이 함수를 만든 이유다.
+    #   긴 잡 하나 + 짧은 잡 여럿이면 총÷m 보다 반드시 길어진다.
+    uneven = [100.0] + [1.0] * 20
+    lb = sum(uneven) / 8
+    chk(schedule_makespan(uneven, 8) > lb * 1.5,
+        f"불균등 부하 → 산술 하한 {lb:.0f} h 도달 불가 "
+        f"(실제 {schedule_makespan(uneven, 8):.0f} h — 가장 긴 잡이 지배)")
+    chk(schedule_makespan(uneven, 1000) >= max(uneven) - 1e-9,
+        "슬롯이 아무리 많아도 **가장 긴 잡보다 짧아질 수 없다**")
+    chk(schedule_makespan([], 8) == 0.0, "잡 0개 → 0 h (예외 아님)")
+
+    # ── --manifest 회수 (있다고 광고만 하고 없던 기능) ────────────────────────
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        jd = os.path.join(td, "tier1", "j1")
+        os.makedirs(jd)
+        with open(os.path.join(jd, "job.json"), "w") as fh:
+            json.dump({"phases": ["static", "dense"],
+                       "magmom_poscar": [0.0] * 222,
+                       "kmesh": {"static": "2 3 1", "dense": "3 4 1"},
+                       "incar_expected": {"static": {"LREAL": "Auto"},
+                                          "dense": {"LREAL": "Auto"}}}, fh)
+        mp = os.path.join(td, "MANIFEST.json")
+        with open(mp, "w") as fh:
+            json.dump({"planned": {"tier1/j1": {"phases": ["static", "dense"]}},
+                       "contract_mode": "champion"}, fh)
+        _man, jl, mode = manifest_jobs(mp, b, 222)
+        chk(len(jl) == 1 and "job.json" in mode, f"MANIFEST → 잡 1개 회수 ({mode})")
+        chk(set(jl[0][2]) == {"static", "dense"}, f"상 2개 회수 {sorted(jl[0][2])}")
+        chk(jl[0][2]["dense"] > jl[0][2]["static"],
+            "dense 가 static 보다 비싸다 (k 가 촘촘하다)")
+        # ★ 음성: job.json 이 없으면 **후퇴했다고 말해야** 한다 (조용한 가정 금지)
+        os.remove(os.path.join(jd, "job.json"))
+        _m2, jl2, mode2 = manifest_jobs(mp, b, 222)
+        chk(len(jl2) == 1 and "가정" in mode2,
+            f"job.json 없음 → planned 후퇴를 **명시** ({mode2})")
+        # ★ 음성: 없는 MANIFEST 는 0 이 아니라 exit 2
+        class _A:
+            manifest, atoms, concurrent, cores = "/nonexistent/MANIFEST.json", 222, 8, None
+        chk(report_manifest(_A(), b) == 2, "없는 MANIFEST → exit 2 (조용한 0 아님)")
+        with open(mp, "w") as fh:
+            json.dump({"planned": {}}, fh)
+        class _B:
+            manifest, atoms, concurrent, cores = mp, 222, 8, None
+        chk(report_manifest(_B(), b) == 2, "계획 0잡 → exit 2 (0 h 를 내지 않는다)")
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
 
