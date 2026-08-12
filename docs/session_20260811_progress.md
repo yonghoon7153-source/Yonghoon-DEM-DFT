@@ -227,3 +227,23 @@ cuBLAS 를 안 건드린다).  결과: `--step3-gpu` 를 주고도 8/8 솔브가
 (`gpu_solver_ok` / `probe_backend`) + `nvidia-{cublas,cusparse,cusolver,nvjitlink,cuda-runtime,
 cuda-nvrtc}-cu12` 를 함께 설치.  = scipy→pandas→networkx→skimage 드립과 **같은 뿌리**
 (설치 성공 ≠ 능력 확보).
+
+## 9. 다음 작업 큐 (2026-08-12, 사용자 지시로 등재)
+
+GPU 가 살아나 payload 재실행이 **팔당 ~21분**(옛 ~4h)이라 아래 셋 다 현실적 비용이 됐다.
+
+1. **래스터 충실도 리뷰** — `docs/reviews/sr01_raster_fidelity_review_request_20260812.md`
+   (Codex 외부 + 내부 3각 동시).  판정 대상: SDCP +52 % 가 점-스탬프 아티팩트에 의존하는가 ·
+   다른 첨가제 결론의 오염 범위 · ×35.8 의 일반화 한계 · **선분 스탬프의 반대편 편향**
+   (vox 0.4 µm 가 VGCF 직경 아래를 해상 못 해 단면적이 1 복셀로 양자화 → 과대평가 여지).
+2. **f_AM 하중분담 — 안 닫힘, 이어서 갈 것.**  코너 케이스용 보정에 두 운용 규약이 있고
+   (contact-network `σzz^AM-AM/σzz^total` vs symmetric phase virial = 전자 + 0.5·share_AM-SE)
+   **어느 쪽도 진짜 플래튼 반력으로 검증되지 않았다**.  실측 4점: AM-AM 0.517/0.598/0.675/0.620 ·
+   phase 0.726/0.768/0.794/0.763 (P=100/200/300/600).  ⚠ Hertz 재구성 추정기는 실측 대비
+   1.30–1.36× 과대 → 사용 금지; 실측엔 contact dump(`pair/gran/local`) 또는 atom dump c_strs[3] 필요.
+   → **_10 corner 런을 0 / AM-AM / phase 세 팔로** 돌려 판정.
+3. **플래튼 운동학적 정지 결함 — 해결할 것.**  오늘 베드가 그 결함의 재현이다: 플래튼이
+   목표 300 MPa 도달이 아니라 **갭 산술이 정한 걸음 수**로 멈춰 wallP 0.0148 GPa (목표 0.3),
+   V/c_P 0.428 (준정적 게이트 0.01 위반).  ⇒ 그 베드의 절대값은 전부 `relative-only`.
+   정본: `docs/mpm_platen_kinematic_stop_defect.md`.  고치면 **절대값 등급이 B→A 로 올라가고**
+   SR-01 재측정도 절대값으로 인용 가능해진다.
