@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""kb_wiki.py — kb 위키 하네스: lint | index | new  (stdlib 전용).
+"""kb_wiki.py — kb 위키 하네스: lint | index | new | env  (stdlib 전용).
 
 kb/SCHEMA.md (2026-08-11 채택) 의 기계 검사기. llm-wiki-kit 의 lint.py 를 이 repo 에
 번안한 것 — [[wikilink]] 대신 **repo-상대경로 존재 검사**, 수동 index 대신 **생성 index**.
@@ -8,6 +8,8 @@ kb/SCHEMA.md (2026-08-11 채택) 의 기계 검사기. llm-wiki-kit 의 lint.py 
   python3 tools/kb_wiki.py index         # kb/index.md 재생성
   python3 tools/kb_wiki.py new results my_slug        # frontmatter 스캐폴드
   python3 tools/kb_wiki.py new questions my_question  # RQ 카드 스캐폴드
+  python3 tools/kb_wiki.py env           # **낡을 수 있는 환경 주장** 목록 + 검증 스크립트
+  python3 tools/kb_wiki.py env --script > /tmp/chk.sh   # 서버에서 돌릴 검사 스크립트
 
 설계 결정 (kb/methodology/llm_wiki_adoption_2026_08_11.md):
   · frontmatter 는 **새 문서부터** — 있는 문서만 깊이 검사, 레거시 199개는 소급 없음.
@@ -304,14 +306,131 @@ def cmd_new(d, slug):
     return 0
 
 
+
+# ── env: 낡을 수 있는 환경 주장 ──────────────────────────────────────────────
+#   왜 필요한가 (2026-08-12): kb 가 "Nd frozen-4f PP 없음"·"gabia 에 neb.x 미설치" 라고
+#   적고 있었는데 둘 다 **있었다**. 후자는 "UMA NEB 로 전체 대체" 라는 설계 결정의
+#   근거였다. 판정·논거는 안 낡지만 **환경 상태는 낡는다** — 그걸 골라내 검증 가능하게 한다.
+#
+#   이 검사가 **못 하는 것**: 문장의 뜻을 이해하지 못한다. 패턴으로 후보를 고를 뿐이라
+#   오탐이 섞인다. 사람이 목록을 보고 고르라고 만든 것이지 자동 판정기가 아니다.
+EXIST_WORDS = ("미설치", "설치", "없다", "없음", "있다", "존재", "빌드에", "하나뿐",
+               "처음부터 없", "안 들어", "못 찾", "빠져")
+ART_RE = re.compile(r"(/(?:data|scratch|home|opt|usr)/[\w./+-]+|~/[\w./+-]+|"
+                    r"\b\w+\.x\b|\b[\w.+-]+\.UPF\b|\bconda\b|\bpseudo\b)")
+#: 검증 명령이 근처에 있으면 "재확인 가능" 으로 본다
+VERIFY_HINT = re.compile(r"(ls |which |pgrep|--inventory|watch_|nvidia-smi|test -[fdx])")
+
+
+def scan_env(root=None):
+    """(파일, 줄번호, 문장, 아티팩트들, 검증힌트있음) 목록."""
+    hits = []
+    for f in sorted((root or KB).rglob("*.md")):
+        if f.name in ("index.md", "SCHEMA.md"):
+            continue
+        try:
+            lines = f.read_text(encoding="utf-8").splitlines()
+        except (OSError, UnicodeDecodeError):
+            continue
+        for i, ln in enumerate(lines, 1):
+            if not any(w in ln for w in EXIST_WORDS):
+                continue
+            arts = sorted(set(ART_RE.findall(ln)))
+            if not arts:
+                continue
+            near = "\n".join(lines[max(0, i - 4):i + 3])
+            try:
+                rel = str(f.relative_to(REPO))
+            except ValueError:
+                rel = str(f)                      # selftest 의 임시 경로
+            hits.append((rel, i, ln.strip()[:150], arts,
+                         bool(VERIFY_HINT.search(near))))
+    return hits
+
+
+def cmd_env(as_script=False):
+    hits = scan_env()
+    arts = {}
+    for f, i, _ln, aa, _v in hits:
+        for a in aa:
+            arts.setdefault(a, []).append(f"{f}:{i}")
+    if as_script:
+        print("#!/usr/bin/env bash")
+        print("# kb 의 환경 주장 검증 — 서버에서 돌리고 출력을 그대로 회수한다.")
+        print("# (kb_wiki.py env --script 로 생성. 손으로 고치지 말 것)")
+        for a in sorted(arts):
+            if a in ("conda", "pseudo"):
+                continue
+            # ⚠ `(ls ... | head -1) || echo MISSING` 은 종료코드가 head 것이라
+            #   **MISSING 이 절대 안 찍힌다**. 변수에 받아 비어 있는지로 판정한다.
+            if a.endswith(".x") and "/" not in a:
+                print(f'p=$(ls -d /data/apps/qe-*/bin/{a} /data/work/apps/qe-*/bin/{a} '
+                      f'/scratch/*/kgy/apps/qe-*/bin/{a} 2>/dev/null | head -1); '
+                      f'printf "%-42s %s\\n" "{a}" "${{p:-MISSING}}"')
+            else:
+                print(f'printf "%-42s %s\\n" "{a}" '
+                      f'"$([ -e \'{a}\' ] && echo OK || echo MISSING)"')
+        return 0
+    noverify = [h for h in hits if not h[4]]
+    print(f"환경 주장 후보 {len(hits)}건 · 아티팩트 {len(arts)}종 · "
+          f"검증 명령이 근처에 **없는** 것 {len(noverify)}건")
+    print("\n── 아티팩트별 (많이 언급된 순) ──")
+    for a, where in sorted(arts.items(), key=lambda kv: -len(kv[1]))[:18]:
+        print(f"  {a:38s} {len(where):2d}곳  {', '.join(where[:3])}"
+              + (" …" if len(where) > 3 else ""))
+    print("\n── 검증 명령이 없는 주장 (여기부터 낡는다) ──")
+    for f, i, ln, aa, _v in noverify[:20]:
+        print(f"  {f}:{i}\n     {ln}")
+    if len(noverify) > 20:
+        print(f"  … 외 {len(noverify) - 20}건")
+    print("\n검증 스크립트:  python3 tools/kb_wiki.py env --script > /tmp/chk.sh"
+          "  → 서버에서 bash /tmp/chk.sh")
+    return 0
+
+
+def selftest_env():
+    import tempfile
+    td = Path(tempfile.mkdtemp(prefix="kbenv_"))
+    ok = True
+
+    def chk(c, m):
+        nonlocal ok
+        print(("  ✓ " if c else "  ✗ ") + m)
+        ok &= bool(c)
+
+    (td / "a.md").write_text("- **QE neb.x**: 미설치 (확인됨, 2026-06-01)\n")
+    (td / "b.md").write_text("갭은 fixed-occ nscf 고유값이 정본이다. DOS 문턱 판독 금지.\n")
+    (td / "c.md").write_text("확인:  ls /data/apps/qe/bin/ph.x\n\nph.x 가 빌드에 없다.\n")
+    (td / "d.md").write_text("Nd UPF 가 /data/work/pseudo 에 하나뿐이고 z=14.0 이다.\n")
+    h = scan_env(td)
+    files = {x[0].split("/")[-1] for x in h}
+    chk("a.md" in files, "존재 주장 + 바이너리 → 잡는다")
+    chk("d.md" in files, "존재 주장 + 경로 → 잡는다")
+    # 음성: 판정·논거 문장은 잡으면 안 된다 (그건 안 낡는다)
+    chk("b.md" not in files, "판정 문장(환경 아님)은 **안 잡는다**")
+    # 검증 명령이 근처에 있으면 '없는 것' 목록에서 빠져야 한다
+    cc = [x for x in h if x[0].endswith("c.md")]
+    chk(bool(cc) and cc[0][4], "근처에 ls 가 있으면 '검증 가능' 으로 표시")
+    aa = [x for x in h if x[0].endswith("a.md")]
+    chk(bool(aa) and not aa[0][4], "검증 명령 없으면 '없음' 으로 표시")
+    import shutil
+    shutil.rmtree(td, ignore_errors=True)
+    print("selftest PASS" if ok else "selftest FAIL")
+    return 0 if ok else 1
+
+
 def main():
-    if len(sys.argv) < 2 or sys.argv[1] not in ("lint", "index", "new"):
+    if "--selftest" in sys.argv:
+        return selftest_env()
+    if len(sys.argv) < 2 or sys.argv[1] not in ("lint", "index", "new", "env"):
         print(__doc__)
         return 1
     if sys.argv[1] == "lint":
         return cmd_lint()
     if sys.argv[1] == "index":
         return cmd_index()
+    if sys.argv[1] == "env":
+        return cmd_env("--script" in sys.argv)
     if len(sys.argv) != 4:
         sys.exit("쓰기: python3 tools/kb_wiki.py new <dir> <slug>")
     return cmd_new(sys.argv[2], sys.argv[3])

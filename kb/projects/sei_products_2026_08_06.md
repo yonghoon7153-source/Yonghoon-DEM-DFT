@@ -334,6 +334,10 @@ U 를 키우면 언젠가 4f 다중항이 갈라져 갭이 열린다. 하지만 
 
 표준 해법은 **frozen-4f**(4f 를 core 에 넣은 pseudopotential)이고 MP 가 그 방식을 쓴다.
 우리 pseudo(`Nd.paw.z_14.atompaw.wentzcovitch.v1.2.upf`)는 z_valence 14 로 4f 가 원자가에 있다.
+
+> ⛔ **낡음 (2026-08-12)** — `/data/work/pseudo` 의 Nd UPF 가 바뀌었다: `Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF` **z_valence 11.0 = frozen-4f**. 위 진단(4f-in-valence → 금속 해)은 **그 시점 PP 에 대해서는 맞다**. 지금 PP 로는 다시 재 봐야 하고, 재측정 중이다(kb/open_items.md §O).
+> 확인: `python3 tools/sei/nd_frozen4f.py --inventory` · 상시 표시는 watch_gabia ①
+
 frozen-4f UPF 를 새로 확보해 다시 도는 비용 대비, **필요한 건 Nd 상의 갭 숫자 하나**다.
 
 → **Nd 상 갭은 MP frozen-4f 값을 인용한다.** 우리 계산은 "왜 PBE(+U)로는 안 되는지"의
