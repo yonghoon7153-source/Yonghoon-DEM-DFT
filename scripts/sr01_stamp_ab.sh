@@ -82,14 +82,26 @@ cd "$RUN"
 PSIG=(); [ "${MPM_PERIODIC_SIGMA:-0}" = "1" ] && PSIG=(--periodic)
 echo "[sr01] PSIG=${PSIG[*]:-（없음）}   (두 팔에 **동일**하게 적용됨)"
 
-# ── 지금 돌면 실제로 어느 backend 인가.  import 성공 ≠ 동작이라 작은 연산까지 해 본다 ──
+# ── 지금 돌면 실제로 어느 backend 인가 ────────────────────────────────────────────────
+#   ⚠ 탐지는 **솔버가 쓰는 경로 그대로** 찔러야 한다.  2026-08-12 실사고: 처음엔
+#   `cp.zeros(1).sum()` 으로 쟀는데 그건 cuBLAS/cuSPARSE 를 건드리지 않는다 → "gpu" 라고
+#   답했지만 실제 솔브는 `ImportError: Failure finding "libcublasLt.so"` 로 **매번 CPU 로
+#   폴백**했다 (cupy 는 깔렸지만 CUDA 수치 라이브러리가 없는 상태).  "import 되니 되겠지"
+#   에서 한 걸음 더 갔을 뿐, 여전히 가정이었다.  이제 cupyx sparse CG 를 실제로 1회 돈다.
 probe_backend() {
   grep -q -- '--step3-gpu' "$KIT/run_mpm.sh" || { echo cpu; return; }
   local out
   out=$(python3 -c "
 try:
     import cupy as cp
-    cp.zeros(1).sum().item()          # CUDA 초기화까지 (import 만으로는 모른다)
+    import cupyx.scipy.sparse as cxs
+    from cupyx.scipy.sparse.linalg import cg          # ← step3_sigma._solve_cg 와 동일 경로
+    A = cxs.diags(cp.ones(4, dtype='float64')).tocsr()
+    b = cp.ones(4, dtype='float64')
+    try:
+        cg(A, b, rtol=1e-8, maxiter=2)
+    except TypeError:
+        cg(A, b, tol=1e-8, maxiter=2)
     print('gpu')
 except Exception:
     print('cpu')" 2>/dev/null)

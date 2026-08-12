@@ -141,3 +141,41 @@ cpu/cpu 인데 Jacobi↔AMG 인 경우가 통과한다).  회귀: step3_sigma `-
 amg-inv), sr01_stamp_compare 31→35.
 ⚠ **SR-01 A/B 진행 중에는 켜지 말 것** — 두 팔이 같은 전처리여야 한다.
 남은 것: 실침대 재확인(위는 합성 침대) · GPU V-cycle 미러 필요성 측정.
+
+## 7. SR-01 재실행 (2026-08-12) — arm A 삼중항 + ★결정론 확인
+
+어제 터미널이 끊겨 arm B 가 시작조차 못 했고, 남아 있던 arm A payload 는
+`--check-arm` 판정 결과 **step3 블록이 없는 불완전본**이었다 (파일은 있었다 — 그래서
+"파일 존재 = 완료" 로 보던 옛 상태판이 "✓ 완료" 라고 잘못 말했다).  옛 파일은
+`mpm_payload_pointstamp.superseded.json` 으로 보존.
+
+### backend — GPU 를 못 썼다 (그러나 **일관되게** 못 썼다)
+```
+GPU solve unavailable (ImportError: Failure finding "libcublasLt.so") → CPU fallback
+solve 시작 7 + 반응 1 = 폴백 8   ⇒ 모든 솔브가 CPU
+```
+cupy 14.1.1 은 깔렸고 `cp.zeros(1).sum()` 도 되지만 **cuBLAS/cuSPARSE 가 없다**.
+⚠ 내 backend 탐지기가 바로 그 이유로 "gpu" 라고 잘못 답했다 — `cp.zeros(1).sum()` 은
+솔버가 쓰는 라이브러리를 건드리지 않는다.  탐지는 **솔버가 쓰는 경로 그대로**(cupyx
+sparse CG) 찔러야 한다.  고침: `sr01_stamp_ab.sh: probe_backend`.
+⚠ **A/B 진행 중에는 cupy 라이브러리를 깔지 말 것** — STEP3 는 `import cupy` 를 **솔브마다**
+하므로, 도중에 깔면 남은 채널만 GPU 가 되어 **한 팔 안에서 backend 가 섞인다**.
+A/B 종료 후: `pip install nvidia-cublas-cu12 nvidia-cusparse-cu12` → probe 로 검증.
+
+### arm A (점 스탬프, CPU, **60 °C**) — 삼중항
+| 채널 | 값 | dof | resid | 시간 |
+|---|---|---|---|---|
+| σ_e | **0.005122 S/cm** (share AM_S 39 / AM_P 57 / **VGCF 4** / SE 0 %) | 2,713,168 | 1.0e-08 | 3,715 s |
+| σ_ion | **0.001982 S/cm** (share SE 100 %) | 1,597,970 | 9.9e-09 | 239 s |
+| κ | **1.963 W/m·K** | — | 9.9e-09 | — |
+
+⚠ 이 런은 **60 °C** 조건이다 (`[T] sigma_ion x4.785 @ 60 °C, Ea=0.41 eV, Ea-band
+×2.929–5.871`).  절대값을 인용할 때 온도와 밴드를 함께 적을 것.  ⚠ 베드 자체가
+rate-오염(V/c_P 0.428)이라 절대값은 여전히 인용 금지 — Δ 만 유효(§1).
+
+### ★ 결정론 확인 (덤으로 얻은 것)
+어제와 오늘은 **독립 실행**인데 σ_e_eff 가 `0.005122` 로 같고 dof·resid·share 도 같다.
+⇒ 파이프라인이 결정론적이다 = A/B 에서 Δ 가 나오면 **그것이 스탬프 탓임이 보장**된다.
+지금까지 "두 팔은 같은 npy 를 읽으니 교란변수 0" 은 **논증**이었는데, 이제 같은 팔을 두 번
+돌려 **측정**으로 확인됐다.  (CPU↔CPU 재현이므로 backend 무해성은 아직 미측정 — 그건
+cupy 를 고친 뒤 CPU-A vs GPU-A 로 따로 잰다.)
