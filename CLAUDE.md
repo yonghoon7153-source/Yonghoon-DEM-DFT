@@ -1,5 +1,24 @@
 # Project conventions for Claude Code sessions
 
+## ★★ 어디에 무엇이 있나 (2026-08-12 정리 — 층이 늘어 산만해진 것에 대한 답)
+
+| 층 | 자리 | 무엇 |
+|---|---|---|
+| **규범·정본** | 이 파일 · `docs/*.md` | 판정·규약·이력.  **충돌 시 이 파일이 이긴다** |
+| **지도** | `wiki/index.md` | 요약+포인터.  "X 가 뭐더라" 의 시작점 (정본을 **대체하지 않는다**) |
+| **열린 항목 원장** | `docs/reviews/findings.json` | SR/RC 번호가 붙은 결함.  `check_review_findings.py` 가 자기일관 강제 |
+| **진행 중 세션** | `docs/session_<날짜>_progress.md` | 오늘의 수치·판정 (압축 전 대피소) |
+| **실행 계약** | `docs/reviews/*_prereg_*.md` | 런 **전에** 등록한 예측.  결과 보고 창을 옮기면 무효 |
+| **불변 증거** | `docs/data/` · git 이력 · litdb 정본 브랜치 | 측정 원자료 |
+
+⚠ **지금 살아있는 트랙 3개** (2026-08-12):
+1. **SR-01 종결** — 점→선분 래스터로 σ_e **×35.8** (탄소 소산분담 4 %→95 %).  파급 판정 중:
+   `docs/reviews/sr01_raster_fidelity_review_request_20260812.md` (외부+내부 리뷰 진행).
+2. **플래튼 정지 결함 ③ × AM 하중분담 ②** — 정본 `docs/mpm_platen_kinematic_stop_defect.md`
+   (rev1–6), 실행 계약 `docs/reviews/fam_platen_prereg_20260812.md`.  ⚠ **정지만 고치면 더
+   나빠진다** (9.4 % vs 실험 15.6 %) — ②없이 ③ 못 감.
+3. **d_h 288 프로토콜 대등화** (8런) — `docs/se_curve_transfer_verdict_20260806.md` §⑩.
+
 ## ★ 지식 내비게이션 — `wiki/` (2026-08-11 신설)
 
 반복 참조 지식(개념·시스템·열린질문·논지)의 **항목화된 지도**.  "X 가 뭐더라" 는
@@ -892,6 +911,16 @@ the SE = the 36–41 % problem); (3) fixing forces the SE to bear the load and d
   (rigid-sphere+overlap-proxy DEM vs plastic-continuum MPM @300 MPa), so the ~1 %p frame[4]
   agreement is grid-INDEPENDENT — the STRONGER cross-validation: 1.2 %p IS the model-trust
   bound, not a res artifact.  (se_frac=0.27 = real φ_SE → keep it, report the honest gap.)
+  ★★ **정정 2026-08-12 — 위 "model-trust bound" 는 반증됐다** (플래튼 정본 rev6 §31,
+  `docs/mpm_platen_kinematic_stop_defect.md`).  그 1.2 %p 는 구성모델 차이가 아니라 **관례
+  오프셋**이다: scaffold CSV 에서 렌즈 겹침을 쌍별로 계산하면 SE–SE 0.402 %p + AM–SE
+  0.848 %p = **1.251 %p** 이고, `MPM관례(16.877) − ε_sphere(15.626) = 1.251 %p` 로 **소수
+  셋째 자리까지 일치**한다 (DEM 은 ε_sphere = 구 부피 합, MPM 은 union 부기).  격자수렴
+  시험은 이것을 원리적으로 못 잡는다 — 관례 오프셋은 **정의상 격자 무관**이라 384↔512 가
+  같이 나오는 것이 당연하다.  ⇒ "격자 무관 = 구성모델 차이" 추론이 무효.
+  ⚠ 또한 512 런은 **플래튼 속도를 맞추지 않고** 얻었다 (rev5 §28(a): n_grid>391 에서 CFL 이
+  dt 를 물어 512 가 384 보다 **31 % 빠르게** 내려찍는다) → 수렴 주장 자체를 `--platen-mach`
+  로 속도를 맞춰 **재확인해야 한다**.  **모든 porosity 는 ε_sphere 로 통일해 보고할 것.**
 - REAL-PHYSICS knobs (not target fudges): `--protocol {servo=const-pressure dwell ≈ real
   press, hold=LIGGGHTS displacement-stop+relax}`, `--coh` (SE cold-weld+vdW adhesion =
   attractive σ in compression → changes wallP but NOT porosity: porosity is pinned by
@@ -917,6 +946,21 @@ instead of uniform cell-fill → SE volume·distribution REAL → porosity·thic
   (15.9→9.5 %).  hold = descend-to-first-300MPa + FIX plate (real LIGGGHTS displacement-stop)
   → locks porosity.  RESULT (n_grid=384, hold, ZERO targeting): porosity **15.93 %** (real 15.6 ✓),
   thickness **29.95 µm** (30.28 ✓), SE/solid 25.9 % (≈27 ✓), ρ_bulk 3.27 g/cm³.
+  ★★ **정정 2026-08-12 — "EMERGE (no targeting)" 는 하향 조정됐다** (플래튼 정본 rev3 §17 ·
+  rev4 §22 · rev6 §31).  세 겹으로 무너진다:
+  ① **porosity 는 정지 프레임의 함수일 뿐이다.**  속도 사다리(`--sub` 40/80/160, 변형 이력
+     동일)에서 porosity 14.38 → 12.76 → **11.08 %** 로 계속 내려가고 수렴하지 않는다.
+     sub=80 궤적의 frame 15 가 **정확히 15.93 %**, frame 17 이 14.38 % — 앵커값은 물리가
+     아니라 **정지 시점**이 정한 값이었다.
+  ② **이 모델의 정직한 준정적 답은 ~9.4 %** 다 (독립 외삽 3개 일치: 정착응력 · porosity ·
+     servo 기록 15.9→9.5).  실험은 15.6 % ⇒ 얼린-AM scaffold MPM 은 **~6 %p 과압축**하며,
+     "첫 접촉에서 얼어붙는" 플래튼 결함이 그것을 **우연히 상쇄**하고 있었다.
+  ③ 공통 관례(ε_sphere)로 읽으면 15.93 이 아니라 **14.70 vs DEM 15.63 = 0.93 %p 과압축**이다
+     (관례 오프셋 1.251 %p, 위 정정 참조) — "0.3 %p 일치" 는 **두 오차의 상쇄**였다.
+  ⇒ scaffold 런에서 **porosity 는 독립 정보를 담지 않는다**: `solid_vol` 은 씨앗 시점에 DEM
+     dump 로 고정된 상수이고 MPM 의 유일한 출력은 `wall_z` 다.  플래튼을 DEM 높이에 두면
+     ε_sphere 는 DEM porosity 를 **반드시** 돌려준다(산술).  **진짜 반증 가능한 MPM 산출물은
+     응력-정지 두께 하나**다 (29.95 vs 30.28 µm).  실행 계약: `docs/reviews/fam_platen_prereg_20260812.md`.
 - COVERAGE ground-truth (geometric, MPM-independent — Fibonacci AM-surface + SE-centre KDTree):
   SE touching AM (gap≤0)=**16 %≈Hertz 18**; within 0.14 µm (1 vox)=**49 %≈Tabor 52**.  BOTH DEM
   values validated (contact vs plastic-spread).  ⇒ cell-fill 52 % was NOT inflated (= geometric
@@ -943,6 +987,14 @@ DEM 32.8%) → "다른 MPM porosity 믿을 수 있나 / porosity lock은 신뢰�
   8mAh mono-large는 gap~0(일치), thin만 분기 → 두께(AM-obstruction)+DEM-loose가 판별.
 - **porosity lock/clamp = 신뢰성 0 (조작).**  정답은 clamp가 아니라 **regime-gate**(옳은 모델 선택)+
   **DEM↔MPM 일치(|gap|≤4)를 validity 증명서로 노출**.  gap 부호로 어느 모델이 무너졌는지 진단.
+  ★★ **정정 2026-08-12 — "일치 = validity 증명서" 는 hold 시대에 성립하지 않는다** (플래튼 정본
+  rev6 §31, §8 "왜 지금까지 안 보였나").  **씨앗이 정답을 인코딩한다**: SE 씨앗은 `atom_2060000`
+  = DEM 압축이 **끝난** 좌표이고 `solid_vol` 은 그 시점에 고정된 상수다.  스트로크가 갭+슬랙
+  규모라 **운동학적 정지도 DEM ±1 %p 에 착지**한다 — 반례가 P:S 1차 런 자신(운동학 정지 확정인데
+  |gap| ≤ 0.7 %p).  ⇒ **일치를 증명서로 쓰면 순환**이다.  `clamp 금지`·`regime-gate` 는 유지하되,
+  증명서 역할은 **판별력 있는 검사**로 옮긴다: 갭-예측 정지 프레임 N · **정착 wallP vs target** ·
+  속도 사다리 수렴.  (servo 양방향 경로는 정지 근방 왕복으로 자기보정하므로 이 진단의 직접
+  사정권 밖 — 등급이 다르다.)
 - **트랜드**: 중간 robust; SE-poor/mono-large 끝은 DEM 트랜드(Furnas rebound), SE-rich 끝은 MPM.  raw-MPM
   전구간 사용 금지(mono-large rebound를 과압축이 지움).  ★정정: a9_50 p10 MPM 9.31%는 over-compression
   CONFOUND → frame[3] "plastic erases dip"의 깨끗한 증거는 standalone 2D champion이지 scaffold p10 아님
