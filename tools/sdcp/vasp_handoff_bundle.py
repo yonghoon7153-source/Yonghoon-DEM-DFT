@@ -278,7 +278,8 @@ exit $rc
 # 쌍 발견 — verdict 와 같은 자격 규칙 + 지문 균질성 (v1 승계)
 # ─────────────────────────────────────────────────────────────────────────────
 def discover_pairs(run_dir: Path, audit: Optional[Dict[str, Any]] = None,
-                   allow_stale_gate: bool = False) -> List[Dict[str, Any]]:
+                   allow_stale_gate: bool = False,
+                   top_n: Optional[int] = None) -> List[Dict[str, Any]]:
     """자격 있는 Li_top↔Ni_top 대조쌍. audit 을 주면 **왜 빠졌는지**를 채워 준다.
 
     ⚠ down_dir 수 ≠ 대조쌍 수. site-screen 은 일부 방향에서 자리 **종류**를 훑는다
@@ -332,6 +333,18 @@ def discover_pairs(run_dir: Path, audit: Optional[Dict[str, Any]] = None,
         out.append({"dir": dd, "roll": int(ro), "li": r, "ni": q,
                     "dE_uma": round(de, 4), "n_rolls": len(lst),
                     "dir_median_uma": round(med, 4)})
+    # ── top_n 선별 (2026-08-12) ─────────────────────────────────────────────
+    #   "MLIP 로 훑고 상위만 DFT" 는 표준 흐름이다. 다만 **#1 하나로는 판정이 안 된다** —
+    #   ΔE 는 짝이 있어야 정의되고, 방향에 따라 부호가 뒤집히는 경우가 있어
+    #   분석기가 n<3 이면 판정을 거부한다. 그래서 기본 권장은 3 이다.
+    #   ⚠ 순위 기준은 **자세 안정도**(UMA E_pose 두 끝점 평균)다 —
+    #     |ΔE| 로 고르면 큰 효과만 뽑는 cherry-picking 이 된다.
+    dropped_topn: List[str] = []
+    if top_n is not None and len(out) > top_n:
+        out.sort(key=lambda p: 0.5 * (p["li"]["E_pose_eV"] + p["ni"]["E_pose_eV"]))
+        dropped_topn = [p["dir"] for p in out[top_n:]]
+        out = out[:top_n]
+        out.sort(key=lambda p: p["dir"])
     if audit is not None:
         seen: Dict[str, Dict[str, int]] = {}
         for r in rows:
@@ -351,6 +364,10 @@ def discover_pairs(run_dir: Path, audit: Optional[Dict[str, Any]] = None,
                                   if d not in by_dir}
         # ★ 사유를 같이 남긴다 — 없으면 "왜 빠졌나" 를 볼 때마다 진단을 다시 돌려야 한다
         audit["excluded_reasons"] = {d: why[d] for d in audit["excluded_dirs"] if d in why}
+        # ⚠ top_n 로 **의도적으로** 뺀 방향은 부적격 탈락과 다른 범주다. 섞으면
+        #   DIRECTION_CENSORED 가 오작동하고, 숨기면 coverage 가 부풀어 보인다.
+        audit["topn_dropped"] = dropped_topn
+        audit["topn_rank_key"] = "UMA E_pose 두 끝점 평균 (안정도)" if dropped_topn else None
         audit["note"] = ("제외된 방향은 Li_top↔Ni_top 대조쌍이 없는 것이다 — 자리 종류를 "
                          "훑은 방향이거나(O_top·hollow·*_bridge) 한쪽이 부적격인 경우다. "
                          "누락이 아니라 대조쌍 정의 밖이다.")
@@ -1679,12 +1696,15 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                 continue
             aud: Dict[str, Any] = {}
             pairs = discover_pairs(run, audit=aud,
-                                   allow_stale_gate=a.allow_stale_gate)
+                                   allow_stale_gate=a.allow_stale_gate,
+                                   top_n=a.top_n)
             man["pair_audit"][frag] = aud
             if not pairs:
                 bad(f"{frag}: 자격 쌍 0개")
                 continue
             want = expect.get(frag)
+            if want is not None and a.top_n is not None:
+                want = min(want, a.top_n)
             if want is not None and len(pairs) != want:
                 bad(f"{frag}: 대조쌍 {len(pairs)}개 — 계약은 {want}개 "
                     f"(down_dir {aud.get('n_down_dirs')}개 · 제외 "
@@ -1975,7 +1995,7 @@ def selftest() -> int:
     a0 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_short"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False)
+                            no_prescf=False, allow_stale_gate=False, top_n=None)
     try:
         build_bundle(a0, ledger=led)
         chk(False, "N0 xyz 누락 → **번들이 만들어졌다** (축소 정본 = fail-open)")
@@ -1991,7 +2011,7 @@ def selftest() -> int:
     ab = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_nofp"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False)
+                            no_prescf=False, allow_stale_gate=False, top_n=None)
     try:
         build_bundle(ab, ledger=led)
         chk(False, "N0b 지문 없는 소스 → **번들이 만들어졌다**")
@@ -2009,10 +2029,30 @@ def selftest() -> int:
         chk("gate_version" in str(e), f"N0c 옛 gate_version → 중단 (regate 안내)")
     jp0.write_text(keep)
 
+    # ── top_n 선별: 안정도 상위 N 쌍만 남기고, 뺀 것을 기록하는가 ──
+    #   심은 E_pose: Li 전부 -0.20 · Ni -0.20+de (de = fib00 .045 · fib01 .040 ·
+    #   fib02 .055 · fib03 .050 · fib04 .048) → 평균 안정도 순 fib01 < fib00 < fib04
+    at3 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_top3"),
+                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
+                             qe="(none)", expect=None, allow_partial=False,
+                             no_prescf=False, allow_stale_gate=False, top_n=3)
+    o3 = build_bundle(at3, ledger=led)
+    m3 = json.loads((o3 / "MANIFEST.json").read_text())
+    kept = sorted({v["dir"] for v in m3["pairs"].values()})
+    aud3 = m3["pair_audit"]["ptfe_dimer"]
+    chk(kept == ["fib00", "fib01", "fib04"],
+        f"top_n=3 → 안정도 상위 3쌍 {kept} (기대 fib00/01/04)")
+    chk(sorted(aud3.get("topn_dropped") or []) == ["fib02", "fib03"],
+        f"뺀 방향을 기록 {aud3.get('topn_dropped')}")
+    chk(aud3.get("topn_rank_key") and "안정도" in aud3["topn_rank_key"],
+        "순위 기준을 명시 (|ΔE| cherry-pick 아님)")
+    chk(m3["contract_expected_pairs"]["ptfe_dimer"] == 3,
+        "계약이 top_n 을 반영 (5 를 요구해 막지 않는다)")
+
     a = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle"),
                            freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                            qe="(none)", expect=None, allow_partial=False,
-                           no_prescf=False, allow_stale_gate=False)
+                           no_prescf=False, allow_stale_gate=False, top_n=None)
     out = build_bundle(a, ledger=led)
     man = json.loads((out / "MANIFEST.json").read_text())
     n_pre = sum(1 for p in man["planned"].values() if "pre" in (p.get("phases") or []))
@@ -2211,6 +2251,9 @@ def main():
                     help="Ni1/Ni2 라벨이 있는 QE 입력 (부격자 원장의 원본)")
     ap.add_argument("--expect", nargs="*", default=None,
                     help="계약 방향 수 재정의: ptfe_c10=5 ptfe_dimer=3 ...")
+    ap.add_argument("--top_n", type=int, default=None,
+                    help="조각마다 **자세 안정도 상위 N 쌍**만 (MLIP 스크린 → DFT 확인). "
+                         "권장 3 — 분석기가 n<3 이면 판정을 거부한다. 1 은 판정 불가.")
     ap.add_argument("--allow_stale_gate", action="store_true",
                     help="옛 gate_version 산출을 그대로 쓴다 (기본은 중단 — regate 를 권함)")
     ap.add_argument("--allow_partial", action="store_true",
