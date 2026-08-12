@@ -163,7 +163,7 @@ def orbit_map(at0):
         return None
 
 
-def pick_hop(at, nat0=None, omap=None):
+def pick_hop(at, nat0=None, omap=None, want_shell=None):
     """공공 자리 A 와 그리로 뛸 Li B 를 고른다.
 
     최근접 Li–Li 쌍을 쓴다 = **기본 홉**. 더 긴 경로는 이것들의 조합이므로 먼저 이걸 잰다.
@@ -175,22 +175,43 @@ def pick_hop(at, nat0=None, omap=None):
       옛 코드는 전역 orbit 수만 보고 비등가로 판정해 `site_energy_diff==0` 차단을
       false positive 로 걸었다. 이제 쌍 자체의 orbit 을 본다.
       (ASE repeat 는 블록 타일링이라 supercell index % nat0 = 원본 index.)
+
+    ★★ 2026-08-12 — **전역 최단이 전도 경로가 아닐 수 있다.** li3nd 실측:
+      b–c 3.176 Å(최단) 을 골랐는데 그 홉은 공공을 c(안정)에서 b(불안정, +2.05 eV)로
+      밀어낸다. 즉 애초에 갈 일이 없는 경로를 잰 것이다. 실제 전도는 공공이 c 부격자에
+      머무는 c–c 3.667 Å 이다. `want_shell="c-c"` 로 shell 을 지정할 수 있다.
+      (kb/results/li3nd_endpoint_asymmetry_2026_08_12.md)
     """
     sym = at.get_chemical_symbols()
     li = [i for i, s in enumerate(sym) if s == "Li"]
     if len(li) < 2:
         return None
     D = at.get_all_distances(mic=True)
+    def shell_of(i, j):
+        if not (omap and nat0):
+            return None
+        oi, oj = omap.get(i % nat0), omap.get(j % nat0)
+        if oi is None or oj is None:
+            return None
+        return "-".join(sorted((oi[1], oj[1])))
+
     best = None
     for n, i in enumerate(li):
         for j in li[n + 1:]:
+            if want_shell and shell_of(i, j) != want_shell:
+                continue
             d = D[i][j]
             if best is None or d < best[0]:
                 best = (d, i, j)
+    if best is None:
+        raise SystemExit(f"⛔ shell '{want_shell}' 인 Li–Li 쌍이 없다 — "
+                         f"neighbor_shells 를 먼저 볼 것 (--hop_shell 없이 한 번 돌리면 "
+                         f"meta.json 에 목록이 남는다). 추정해서 다른 쌍을 쓰지 않는다")
     d, A, B = best
     vec = at.get_distance(B, A, mic=True, vector=True)
     out = {"d": float(d), "vac": A, "hop": B, "vec": np.asarray(vec, float),
-           "pair_orbits": None, "pair_equivalent": None}
+           "pair_orbits": None, "pair_equivalent": None,
+           "requested_shell": want_shell, "shell": shell_of(A, B)}
     if omap and nat0:
         oa, ob = omap.get(A % nat0), omap.get(B % nat0)
         out["pair_orbits"] = {"vac": list(oa) if oa else None,
@@ -339,7 +360,9 @@ def build(tag, path, disp, a, pool):
                             f"frozen-4f(z≈11) 확보 후 열 것 (todo #27)"}
 
     omap = orbit_map(at0)
-    hop = pick_hop(at, nat0=len(at0), omap=omap)
+    hop = pick_hop(at, nat0=len(at0), omap=omap,
+                   want_shell=(a.hop_shell or {}).get(lab)
+                   if isinstance(a.hop_shell, dict) else a.hop_shell)
     if hop is None:
         return {"tag": tag, "skip": "Li 가 2개 미만"}
 
@@ -562,7 +585,8 @@ def build(tag, path, disp, a, pool):
     # ★ 회수기가 대칭 게이트를 켤지 말지 여기서 판단한다 (위 li_orbits 주석 참조).
     _j = json
     _j.dump({"tag": tag, "disp": disp, "supercell": list(rep), "nat": nat,
-             "hop_distance_A": hop["d"], "nelec": nelec_vac,
+             "hop_distance_A": hop["d"], "hop_shell": hop.get("shell"),
+             "hop_shell_requested": hop.get("requested_shell"), "nelec": nelec_vac,
              "protocol_hash": protocol_hash(tag, a, q, info["kpts"], nat, at.cell.array,
                                             smear=smear, degauss=degauss, ecls=ecls,
                                             pps={e: pool[e] for e in els}),
@@ -610,6 +634,10 @@ def main():
     ap.add_argument("--images", type=int, default=7, help="NEB 이미지 수 (끝 2개 포함)")
     ap.add_argument("--nstep", type=int, default=100)
     ap.add_argument("--path_thr", type=float, default=0.05, help="경로 수렴 [eV/Å]")
+    ap.add_argument("--hop_shell", default=None,
+                    help="홉을 Wyckoff shell 로 지정 (예: 'c-c'). 기본은 전역 최단인데, "
+                         "그게 공공을 불안정 자리로 미는 경로일 수 있다 (li3nd 실측 +2.05 eV). "
+                         "먼저 --hop_shell 없이 돌려 meta.json 의 neighbor_shells 를 볼 것.")
     ap.add_argument("--kdens", type=float, default=0.04,
                     help="k 밀도 [Å⁻¹] — 슈퍼셀이라 성기게 잡는다")
     ap.add_argument("--only", nargs="*", help="일부만")
