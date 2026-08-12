@@ -1326,8 +1326,18 @@ def main():
             + ", ".join(integrity["changed"][:8]))
 
     # ── 기체상 — 상자 게이트. **정본은 큰 상자(box24)** ──────────────────────
+    #   ⚠ Wave 1(기준계 미포함)은 기준계가 **의도적으로** 없다 — 실패가 아니다.
+    #     그걸 "상자 게이트 실패" 로 찍으면 정상 실행을 고장으로 읽게 된다.
     emol, mol_ok = {}, {}
-    for f in man.get("fragments", []):
+    has_refs = bool(man.get("refs", {}).get("clean_slab"))
+    if not has_refs:
+        results["e_ads_status"] = ("NOT_APPLICABLE — Wave 1 은 기준계를 안 돌린다. "
+                                  "자리 대비 ΔE 는 기준계 없이 성립하지만 절대 E_ads 는 "
+                                  "만들 수 없다 (MANIFEST.claim_scope 참조).")
+        results["warnings"].append(
+            "Wave 1: clean/gas 기준계 없음 — **의도된 범위**다. ΔE 만 인용하고 "
+            "흡착 열역학·조각 간 결합 세기·E_ads 절대값은 주장하지 말 것")
+    for f in (man.get("fragments", []) if has_refs else []):
         e20 = E(os.path.join("refs", f"mol__{f}__box20"))
         e24 = E(os.path.join("refs", f"mol__{f}__box24"))
         ok = e20 is not None and e24 is not None and abs(e20 - e24) <= BOX_TOL
@@ -1872,7 +1882,13 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         sys.exit("⛔ 자격 쌍이 0개다 — 번들을 만들지 않는다 "
                  "(--runs/--freeze 경로와 relax 산출물을 확인할 것)")
 
-    for sd in SEEDS_FULL:
+    # ★ Wave 1 (2026-08-12 Codex 5차) — clean/gas 기준계는 **같은 조각의 Li/Ni 차에서
+    #   정확히 소거된다**. 이번 판의 headline 은 자리 대비(ΔE)이므로 기준계를 Wave 2 로
+    #   미루고 그 자원을 C10 2×2 에 쓴다. complex 총에너지를 보존하면 나중에 그대로
+    #   결합할 수 있다 — 데이터 손실이 아니라 **주장 순서의 변경**이다.
+    #   ⚠ 기준계 없이는 절대 E_ads 를 만들 수 없다 → "흡착이 유리하다"·"A 가 B 보다
+    #     세게 결합한다"·"결합이 몇 eV 다" 는 이번 판에서 주장 금지.
+    for sd in (SEEDS_FULL if a.refs else ()):
         rel = f"refs/clean_slab__{sd}"
         m = _emit_slab_job(out / rel, clean, len(clean), a.freeze, man["fragments"][0],
                            f"clean slab {sd}", sd, {"kind": "clean_ref"},
@@ -1882,9 +1898,18 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         slab_metas.append(m)
         plan(rel, m["phases"], True)
         n_jobs += 1
-    man["refs"]["clean_slab"] = [f"refs/clean_slab__{s}" for s in SEEDS_FULL]
+    man["refs"]["clean_slab"] = ([f"refs/clean_slab__{s}" for s in SEEDS_FULL]
+                                 if a.refs else [])
+    man["wave"] = 1 if not a.refs else "1+refs"
+    man["claim_scope"] = (
+        "fixed-geometry site contrast (ΔE = E_Ni − E_Li, 같은 조각·같은 슬랩). "
+        "clean/gas 기준계가 없으므로 **절대 E_ads 를 만들 수 없다** — 흡착의 열역학적 "
+        "유불리·조각 간 결합 세기 비교·결합에너지 절대값은 이 번들로 주장 금지."
+        if not a.refs else
+        "site contrast + absolute E_ads (기준계 포함). E_ads 는 UMA 기하 위 단일점이라 "
+        "완전 이완 흡착에너지가 아니다.")
 
-    for frag in man["fragments"]:
+    for frag in (man["fragments"] if a.refs else []):
         mol, info = SS.load_fragment(frag)
         # ⚠ 분자 ref 가 빠지면 그 조각의 E_ads 를 만들 수 없다 — 조용히 건너뛰지 않는다.
         if mol is None or info.get("status") != "OK":
@@ -2133,7 +2158,7 @@ def selftest() -> int:
     a0 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_short"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None)
+                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True)
     try:
         build_bundle(a0, ledger=led)
         chk(False, "N0 xyz 누락 → **번들이 만들어졌다** (축소 정본 = fail-open)")
@@ -2149,7 +2174,7 @@ def selftest() -> int:
     ab = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_nofp"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None)
+                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True)
     try:
         build_bundle(ab, ledger=led)
         chk(False, "N0b 지문 없는 소스 → **번들이 만들어졌다**")
@@ -2173,7 +2198,7 @@ def selftest() -> int:
     at3 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_top3"),
                              freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                              qe="(none)", expect=None, allow_partial=False,
-                             no_prescf=False, allow_stale_gate=False, top_n=3, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None)
+                             no_prescf=False, allow_stale_gate=False, top_n=3, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True)
     o3 = build_bundle(at3, ledger=led)
     m3 = json.loads((o3 / "MANIFEST.json").read_text())
     kept = sorted({v["dir"] for v in m3["pairs"].values()})
@@ -2190,7 +2215,7 @@ def selftest() -> int:
     a = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle"),
                            freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                            qe="(none)", expect=None, allow_partial=False,
-                           no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None)
+                           no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True)
     out = build_bundle(a, ledger=led)
     man = json.loads((out / "MANIFEST.json").read_text())
     n_pre = sum(1 for p in man["planned"].values() if "pre" in (p.get("phases") or []))
@@ -2389,6 +2414,10 @@ def main():
                     help="Ni1/Ni2 라벨이 있는 QE 입력 (부격자 원장의 원본)")
     ap.add_argument("--expect", nargs="*", default=None,
                     help="계약 방향 수 재정의: ptfe_c10=5 ptfe_dimer=3 ...")
+    ap.add_argument("--refs", action="store_true",
+                    help="clean 슬랩 + 기체 분자 기준계를 포함한다 (절대 E_ads 용). "
+                         "기본은 **미포함** — 자리 대비 ΔE 에서는 정확히 소거되므로 "
+                         "Wave 2 로 미룬다 (Codex 5차).")
     ap.add_argument("--kmesh_static", default=None,
                     help="static k 를 덮는다 (예: '2 3 1'). ΔE 에서 k 오차는 대부분 "
                          "상쇄되므로 예산이 빠듯할 때 여기부터 푼다 — 대신 dense 검사로 크기를 잰다.")
