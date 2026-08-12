@@ -533,8 +533,10 @@ def _com_frac(atoms) -> List[float]:
 def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
                    system: str, seed_name: str, extra_meta: Dict[str, Any],
                    ledger: Dict[str, Any], zcut=None, dense: bool = False,
-                   prescf: bool = True, single_point: bool = False) -> Dict[str, Any]:
+                   prescf: bool = True, single_point: bool = False,
+                   kmesh_over: Optional[Dict[str, str]] = None) -> Dict[str, Any]:
     """슬랩 잡 v3 — POSCAR(루트) + pre/ + relax/ + static/ (+dense/). MAGMOM 재매핑·검산."""
+    kmesh_over = kmesh_over or {}
     jd.mkdir(parents=True, exist_ok=True)
     pos = SS._write_poscar(jd / "POSCAR", atoms, nslab, freeze, zcut=zcut)
     mag_orig = seed_configs(atoms, nslab, frag, ledger)[seed_name]
@@ -566,7 +568,7 @@ def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
         (jd / ph).mkdir(exist_ok=True)
         txt = tpls[ph].format(**fmt)
         (jd / ph / "INCAR").write_text(txt)
-        km = KMESH["relax"] if ph == "pre" else KMESH[ph]
+        km = KMESH["relax"] if ph == "pre" else kmesh_over.get(ph, KMESH[ph])
         (jd / ph / "KPOINTS").write_text(f"auto\n0\nGamma\n{km}\n0 0 0\n")
         kmesh[ph] = km
         # ⚠ 기대값을 손으로 적지 않고 **배포한 INCAR 을 되읽는다** — 손으로 적으면
@@ -1707,6 +1709,14 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                                      "단일점) · LREAL static .FALSE.(납품 Auto). "
                                      "승계: U 6.2 · IVDW 11 · ENCUT 520 · Ni_pv."),
     }
+    # k 를 밖에서 덮을 수 있게 한다 — ΔE 에서 k 오차는 대부분 상쇄되므로, 예산이
+    # 빠듯하면 **상쇄되는 정밀도**를 풀고 상쇄 안 되는 것(자기 seed)을 지키는 게 맞다.
+    kover = {}
+    if a.kmesh_static:
+        kover["static"] = a.kmesh_static
+    if a.kmesh_dense:
+        kover["dense"] = a.kmesh_dense
+    man["kmesh_override"] = kover or None
     used_els: set = set()
     n_jobs = 0
 
@@ -1831,7 +1841,8 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                              "fragment": frag, "source_pose": rec["label"],
                              "uma_E_pose_eV": rec["E_pose_eV"]},
                             ledger, zcut=zcut, dense=dense and sd == SEED_MAIN,
-                            prescf=not a.no_prescf, single_point=a.single_point)
+                            prescf=not a.no_prescf, single_point=a.single_point,
+                            kmesh_over=kover)
                         slab_metas.append(m)
                         plan(rel, m["phases"], req)
                         n_jobs += 1
@@ -1847,7 +1858,8 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         m = _emit_slab_job(out / rel, clean, len(clean), a.freeze, man["fragments"][0],
                            f"clean slab {sd}", sd, {"kind": "clean_ref"},
                            ledger, zcut=zcut, dense=sd == SEED_MAIN,
-                           prescf=not a.no_prescf, single_point=a.single_point)
+                           prescf=not a.no_prescf, single_point=a.single_point,
+                           kmesh_over=kover)
         slab_metas.append(m)
         plan(rel, m["phases"], True)
         n_jobs += 1
@@ -2074,7 +2086,7 @@ def selftest() -> int:
     a0 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_short"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False)
+                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None)
     try:
         build_bundle(a0, ledger=led)
         chk(False, "N0 xyz 누락 → **번들이 만들어졌다** (축소 정본 = fail-open)")
@@ -2090,7 +2102,7 @@ def selftest() -> int:
     ab = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_nofp"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False)
+                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None)
     try:
         build_bundle(ab, ledger=led)
         chk(False, "N0b 지문 없는 소스 → **번들이 만들어졌다**")
@@ -2114,7 +2126,7 @@ def selftest() -> int:
     at3 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_top3"),
                              freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                              qe="(none)", expect=None, allow_partial=False,
-                             no_prescf=False, allow_stale_gate=False, top_n=3, single_point=False, champion=False)
+                             no_prescf=False, allow_stale_gate=False, top_n=3, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None)
     o3 = build_bundle(at3, ledger=led)
     m3 = json.loads((o3 / "MANIFEST.json").read_text())
     kept = sorted({v["dir"] for v in m3["pairs"].values()})
@@ -2131,7 +2143,7 @@ def selftest() -> int:
     a = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle"),
                            freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                            qe="(none)", expect=None, allow_partial=False,
-                           no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False)
+                           no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None)
     out = build_bundle(a, ledger=led)
     man = json.loads((out / "MANIFEST.json").read_text())
     n_pre = sum(1 for p in man["planned"].values() if "pre" in (p.get("phases") or []))
@@ -2330,6 +2342,10 @@ def main():
                     help="Ni1/Ni2 라벨이 있는 QE 입력 (부격자 원장의 원본)")
     ap.add_argument("--expect", nargs="*", default=None,
                     help="계약 방향 수 재정의: ptfe_c10=5 ptfe_dimer=3 ...")
+    ap.add_argument("--kmesh_static", default=None,
+                    help="static k 를 덮는다 (예: '2 3 1'). ΔE 에서 k 오차는 대부분 "
+                         "상쇄되므로 예산이 빠듯할 때 여기부터 푼다 — 대신 dense 검사로 크기를 잰다.")
+    ap.add_argument("--kmesh_dense", default=None, help="dense k 를 덮는다 (예: '3 4 1')")
     ap.add_argument("--champion", action="store_true",
                     help="조각마다 **Li 위 최선 · Ni 위 최선** 한 쌍만 (방향 무관). "
                          "두 챔피언이 다른 방향이면 ΔE 에 배향 효과가 섞인다 — 표시된다.")
