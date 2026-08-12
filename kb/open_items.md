@@ -622,6 +622,27 @@ Li 추출 격리 · 판정 바닥 max(30 meV, 쌍 편차) · 검열(못 잼)과 
 자동 탈락) / 표면 자리 등가성 결론 동일. 우리가 추가한 것 = 추출격리·이중 freeze·SDCP 지원·
 카이랄성 불변식·게이트 회귀시험. 아직 없는 것 = **basin 클러스터링(주기 RMSD)** — Codex 쪽을 이식할 것.
 
+### Q. 🔴 **Li₃N(001) 6층 243원자 2점 테스트 — 원고 리비전의 유일한 진짜 구멍** (2026-08-12 신설)
+
+방어 카드: `kb/syntheses/li3n_barrier_revision_defense_2026_08_12.md` (반론 C2·C3 가 여기에 걸려 있다).
+
+- **무엇이 비었나**: 우리 Li₃N 장벽은 전부 **4층 슬랩**(Li₂N 4면 + Li 3면, 135+1 = 136 atoms)에서
+  나왔다. 문헌 [54] Kim/Cui 는 6층. 계산 논문 리비전에 거의 반드시 오는
+  "slab-thickness convergence?" 질문에 **지금 답이 없다.**
+- **동시에 닫히는 두 번째 구멍**: 4층 슬랩에는 보고 최소점보다 **0.085 eV 낮은 2N-bridge pocket**
+  이 있다 (drag p0, E_ads −3.073 vs −2.988 eV). 이게 얇은 슬랩 artifact 면 6층에서 사라지고
+  문헌의 on-N 우물 순서와 일치하게 된다. `db/properties/diffusion.json` 의
+  `li3n_drag_p0_site_identity_2026-07-17` 이 이 실험을 **결정 실험으로 지정해놓고 미실행**.
+- **실행 방법**: 6층 3×3 N-노출 슬랩(243원자) 생성 →
+  `tools/neb_diffusion/li3n_uma_investigate.py sites --layers 6 --supercell 3 3`
+  (빌더 `build_li3n_001` 은 `tools/neb_diffusion/li3n_mlneb_gpaw.py`).
+  구속이완 **2점만** (on-N xy · pocket xy, z 자유). kgy·gabia 한 대씩 나누면 병렬.
+- **비용**: 243/136 → SCF 스텝당 5–6배. 며칠 규모.
+- **왜 지금인가**: 리비전은 통상 2–3개월 뒤에 온다. 지금 걸면 질문이 올 때 답이 손에 있고,
+  안 오면 안 쓰면 된다. 결과가 어떻게 나오든 우리에게 불리하지 않다
+  (값 유지 → 수렴 확인 / pocket 소멸 → 문헌 일치 / 값 변동 → 투고 중에 알게 된 것).
+- **상태**: 미착수. 입력 미생성.
+
 ---
 
 ## 📄 PDF 확보 대기 (원전 미보유 — 웹/재인용 딱지 상태)
