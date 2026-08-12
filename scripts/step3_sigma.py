@@ -530,7 +530,14 @@ def per_particle_current(res, sid, pid, sigma_of_sid, n_am):
 
 
 def phase_current_share(res, sid, sigma_of_sid, periodic_xy=None):
-    """Fraction of total dissipation per σ-id (where the current actually flows).
+    """σ-id 별 **줄손실(J²R) 분담** — 저항-가중 반쪽 배분.
+
+    ⚠ 2026-08-12 (SR-01 리뷰 게이트 4): 옛 한 줄 "where the current actually flows" 는
+    **오답**이다.  이 함수가 내는 것은 전류가 흐르는 곳이 아니라 **소산이 일어나는 곳**이고,
+    둘은 직렬 회로에서 정반대로 갈린다 — 저저항 브릿지는 전류를 다 받으면서 소산 분담은
+    작게 잡힌다 (면당 소산을 각 변의 **저항**에 비례해 나누므로 구조적으로 그렇다).
+    또한 이 분담은 변분(포락선) 정리로 `w_a = ∂ln σ_eff/∂ln σ_a` 와 **같은 양**이라
+    σ 스윕과 독립 증거가 아니다 (CL-11).  개명 예정(`dissipation_share`) — 호출부 정리 필요.
 
     ⚠ 2026-08-12 (Codex #7): 예전에는 **내부 면 3쌍만** 더했다.  주기 런에서 솔버는
     `:442-446` 에서 x/y seam 을 커플링하는데 이 진단이 그 면을 분자·분모 양쪽에서 빼면서

@@ -253,6 +253,492 @@
       "shared_input": "두 호출은 동일한 atoms_raw/contacts_raw/target_types/type_map 을 받는다.  차이는 `mode` 인자 하나뿐.",
       "verdict": "h1 채택 — AM-AM 저항비 ≈ 1/5.7, SE-SE 는 동일(기준상), 간선 집합 동일.  ⇒ `network_conductivity.py:311` 분기가 프로덕션에서 죽어 있었다.  수정 커밋 27258c77 (mode 전달), selftest 18→23.\n★ **파급**: CLAUDE.md σ_thermal Stage T1 절이 compact form 실패의 **원인**으로 든 '다중경로 k_weight (k_ratio=5.7)' 가 타깃에 없었다.  Ridge 0.90 vs power-law 0.59 vs EMT 음수라는 **관측 비교는 유효**(같은 타깃 위) 하지만 그 격차의 **설명은 무효**.\n⚠ **아직 측정 안 됨**: 수정 후 타깃이 얼마나·어느 방향으로 바뀌는지.  DEM 덤프 재실행 필요(이 컨테이너 밖).  방향조차 선험적으로 정해지지 않는다 — AM-AM 을 5.7배 열어주면 AM 골격이 지배해 **compact form 이 되레 성립**할 수도 있고(그러면 T1 자체가 불필요), 조성 의존이 강해져 Ridge 가 더 필요해질 수도 있다.\n⇒ 'compact form 시도 금지' DO-NOT 은 **보류**.  그 실험들은 전부 가중 없는 타깃 위에서 돌았다.",
       "provenance": "scripts/network_conductivity.py:938-943 (호출) · :311-324 (죽어 있던 분기) · selftest `--selftest-status` 의 #1 5건 · 커밋 27258c77"
+    },
+    {
+      "id": "CDX-09",
+      "date": "2026-08-12",
+      "status": "rejected",
+      "claim": "Stage 22.5 case-level post-selection LOOCV 0.9531 certifies external or family-level generalization",
+      "measured": {
+        "metric": "case_level_post_selection_LOOCV_R2",
+        "value": 0.9531,
+        "unit": "dimensionless"
+      },
+      "asserted": "the frozen electronic form is independently validated beyond the selected corpus",
+      "h0": "the form generalizes to unseen recipe families",
+      "h1": "case-level folds plus form, ablation and exclusion selection retain family information and selection optimism",
+      "h0_predicts": "LOOCV R2 = 0.9531 on the same selected case-level corpus",
+      "h1_predicts": "LOOCV R2 = 0.9531 on the same selected case-level corpus",
+      "bridge": null,
+      "verdict": "REJECT as external-validation evidence. Require recipe/family-blocked outer nested CV with form, ablation and exclusion decisions inside each outer fold.",
+      "location": [
+        "CLAUDE.md:1142-1148",
+        "CLAUDE.md:1769-1810"
+      ],
+      "expected_violations": [
+        "C_EQUAL_PREDICTION"
+      ],
+      "origin": "Codex 적대 스윕 2026-08-12 (원본 id CL-09 — 내 원장과 충돌해 CDX- 접두)"
+    },
+    {
+      "id": "CDX-10",
+      "date": "2026-08-12",
+      "status": "rejected",
+      "claim": "Thermal T1 LOOCV 0.9028 independently certifies a general thermal law",
+      "measured": {
+        "metric": "case_level_post_selection_LOOCV_R2",
+        "value": 0.9028,
+        "unit": "dimensionless"
+      },
+      "asserted": "the 14-feature Ridge form is independently validated beyond the selected corpus",
+      "h0": "the feature set and alpha generalize to unseen families",
+      "h1": "greedy feature choice, shared exclusions, target choice and alpha refinement make the reported score optimistic",
+      "h0_predicts": "LOOCV R2 = 0.9028 on the same selected case-level corpus",
+      "h1_predicts": "LOOCV R2 = 0.9028 on the same selected case-level corpus",
+      "bridge": null,
+      "verdict": "REJECT as independent generalization evidence. Require outer family-blocked CV that repeats target, exclusion, feature and alpha selection.",
+      "location": [
+        "CLAUDE.md:1187-1191",
+        "CLAUDE.md:1629-1678"
+      ],
+      "expected_violations": [
+        "C_EQUAL_PREDICTION"
+      ],
+      "origin": "Codex 적대 스윕 2026-08-12 (원본 id CL-10 — 내 원장과 충돌해 CDX- 접두)"
+    },
+    {
+      "id": "CDX-11",
+      "date": "2026-08-12",
+      "status": "rejected",
+      "claim": "Ionic final LOOCV 0.9752 certifies unbiased family-level prediction after sibling-tail deletion",
+      "measured": {
+        "metric": "case_level_post_selection_LOOCV_R2",
+        "value": 0.9752,
+        "unit": "dimensionless"
+      },
+      "asserted": "the five-parameter ionic form is at an information-theoretic ceiling and independently validated",
+      "h0": "the final form generalizes to unseen recipe families",
+      "h1": "form selection and sibling-tail deletion were informed by the same corpus; ordinary final LOOCV is optimistic",
+      "h0_predicts": "LOOCV R2 = 0.9752 on the post-exclusion n=88 corpus",
+      "h1_predicts": "LOOCV R2 = 0.9752 on the post-exclusion n=88 corpus",
+      "bridge": null,
+      "verdict": "REJECT the 0.9752 value as unbiased external evidence. The separately reported nested score is a different estimand; family-blocked nested selection is required.",
+      "location": [
+        "CLAUDE.md:1140-1142",
+        "CLAUDE.md:1360-1402"
+      ],
+      "expected_violations": [
+        "C_EQUAL_PREDICTION"
+      ],
+      "origin": "Codex 적대 스윕 2026-08-12 (원본 id CL-11 — 내 원장과 충돌해 CDX- 접두)"
+    },
+    {
+      "id": "CDX-12",
+      "date": "2026-08-12",
+      "status": "rejected",
+      "claim": "E_SE=1.35 GPa and 1.5 GPa are an identical physical regime",
+      "measured": {
+        "metric": "single_seed_vs_three_seed_structure_mechanics_transport_comparison",
+        "value": "overlap 1.75 vs 1.74%; mean delta 0.0739 vs 0.0743 um; porosity 13.47 vs 12.77+/-0.31%",
+        "unit": "mixed"
+      },
+      "asserted": "1.35 and 1.5 GPa are physically equivalent rather than merely unresolved by this seed design",
+      "h0": "the parameter change is practically equivalent under a preregistered equivalence margin",
+      "h1": "one 1.35 seed lying within three 1.5 seeds is insufficient to separate modulus effect from seed noise",
+      "h0_predicts": "the documented single-seed 1.35 values lie inside the documented three-seed 1.5 spread",
+      "h1_predicts": "the documented single-seed 1.35 values lie inside the documented three-seed 1.5 spread",
+      "bridge": null,
+      "verdict": "REJECT equivalence language. KEEP 1.35 may remain a continuity/calibration policy; equivalence needs paired seeds and predeclared margins per output.",
+      "location": [
+        "CLAUDE.md:504-523"
+      ],
+      "expected_violations": [
+        "C_EQUAL_PREDICTION"
+      ],
+      "origin": "Codex 적대 스윕 2026-08-12 (원본 id CL-12 — 내 원장과 충돌해 CDX- 접두)"
+    },
+    {
+      "id": "CDX-13",
+      "date": "2026-08-12",
+      "status": "rejected",
+      "claim": "The four-pressure DEM Heckel fit establishes granular yield pressure P_y=137.8 MPa and effective yield strength 46 MPa as physical material quantities",
+      "measured": {
+        "metric": "four_point_Heckel_fit",
+        "value": {
+          "R2": 0.9653,
+          "P_y": 137.8,
+          "sigma_y_eff": 46.0
+        },
+        "unit": "R2 dimensionless; pressures MPa"
+      },
+      "asserted": "the softened contact model has a measured granular yield strength of 46 MPa",
+      "h0": "the pressure-density curve contains a stable Heckel yield scale",
+      "h1": "a smooth four-point softened-contact compaction curve over the sampled interval also fits a line and P_y/3 is only a derived convention",
+      "h0_predicts": "R2=0.9653, P_y=137.8 MPa and P_y/3 approximately 46 MPa on these four points",
+      "h1_predicts": "R2=0.9653, P_y=137.8 MPa and P_y/3 approximately 46 MPa on these four points",
+      "bridge": null,
+      "verdict": "REJECT as direct material-yield proof; retain as a descriptive four-point model fit. Experimental multi-pressure powder data and pressure/point sensitivity are required.",
+      "location": [
+        "CLAUDE.md:94-108",
+        "docs/am_load_balance_and_se_curve_20260805.md:148-155"
+      ],
+      "expected_violations": [
+        "C_EQUAL_PREDICTION"
+      ],
+      "origin": "Codex 적대 스윕 2026-08-12 (원본 id CL-13 — 내 원장과 충돌해 CDX- 접두)"
+    },
+    {
+      "id": "CDX-14",
+      "date": "2026-08-12",
+      "status": "rejected",
+      "claim": "d_h collapse R2=0.926 establishes a one-parameter transferable collapse",
+      "measured": {
+        "metric": "five_bed_dh_collapse_fit",
+        "value": {
+          "R2": 0.926,
+          "phi": 0.75,
+          "LOO": 0.155,
+          "interpolated": 1,
+          "extrapolated": 4
+        },
+        "unit": "mixed"
+      },
+      "asserted": "the collapse is strengthened and transferable at n_grid=288",
+      "h0": "a physical one-parameter collapse governs held-out beds",
+      "h1": "the common phi choice, resolution dependence and four extrapolated beds can generate a high in-sample R2 without transfer",
+      "h0_predicts": "R2=0.926 at phi=0.75 on the same five beds",
+      "h1_predicts": "R2=0.926 at phi=0.75 on the same five beds",
+      "bridge": null,
+      "verdict": "REJECT established/transferable wording; retain exploratory fit until a frozen phi predicts new beds and grid levels.",
+      "location": [
+        "CLAUDE.md:354-381",
+        "docs/se_curve_transfer_verdict_20260806.md:590-604"
+      ],
+      "expected_violations": [
+        "C_EQUAL_PREDICTION"
+      ],
+      "origin": "Codex 적대 스윕 2026-08-12 (원본 id CL-14 — 내 원장과 충돌해 CDX- 접두)"
+    },
+    {
+      "id": "CDX-15",
+      "date": "2026-08-12",
+      "status": "rejected",
+      "claim": "SDCP raises electronic conductivity to 3.002 S/cm, +52.0%, as a physical quantitative headline",
+      "measured": {
+        "metric": "legacy_point_stamp_STEP3_sigma_e",
+        "value": {
+          "sigma_e": 3.002,
+          "gain_pct": 52.0
+        },
+        "unit": "S/cm and %"
+      },
+      "asserted": "the +52.0% magnitude is verified and may support the manuscript mechanism",
+      "h0": "SDCP physically bridges distinct conductive paths",
+      "h1": "recipe-by-raster interaction and point/segment phase routing produce the legacy difference",
+      "h0_predicts": "legacy point-stamp result sigma_e=3.002 S/cm and gain=+52.0%",
+      "h1_predicts": "legacy point-stamp result sigma_e=3.002 S/cm and gain=+52.0%",
+      "bridge": null,
+      "verdict": "REJECT quantitative headline pending phase-safe, diameter/volume-controlled rerasterization. No correction range is inferred.",
+      "location": [
+        "CLAUDE.md:489",
+        "docs/sdcp_318_base_sbe_dbe_comparison.md:40-49",
+        "docs/reviews/sr01_raster_review_verdict_20260812.md:301-331"
+      ],
+      "expected_violations": [
+        "C_EQUAL_PREDICTION"
+      ],
+      "origin": "Codex 적대 스윕 2026-08-12 (원본 id CL-15 — 내 원장과 충돌해 CDX- 접두)"
+    },
+    {
+      "id": "CDX-16",
+      "date": "2026-08-12",
+      "status": "rejected",
+      "claim": "MPM coverage 49.6/48.2% agreeing with DEM Physics 48.3/51.8% is independent DEM-MPM cross-validation",
+      "measured": {
+        "metric": "shared_scaffold_coverage_pair",
+        "value": {
+          "MPM_AM_P": 49.6,
+          "MPM_AM_S": 48.2,
+          "DEM_AM_P": 48.3,
+          "DEM_AM_S": 51.8
+        },
+        "unit": "%"
+      },
+      "asserted": "two independently calibrated models converge on AM coverage",
+      "h0": "independent mechanics predict the same coverage",
+      "h1": "the compared coverage is largely a shared DEM scaffold/SE-centre distance calculation with the same bands",
+      "h0_predicts": "the documented 49.6/48.2 versus 48.3/51.8 values",
+      "h1_predicts": "the documented 49.6/48.2 versus 48.3/51.8 values",
+      "bridge": null,
+      "verdict": "REJECT independent cross-validation label; retain same-geometry consistency only. Discriminate with deformed MPM positions or external tomography under matched definitions.",
+      "location": [
+        "CLAUDE.md:894-896",
+        "CLAUDE.md:964-1018",
+        "docs/mpm_coverage_plastic_vs_rigid.md:124-127"
+      ],
+      "expected_violations": [
+        "C_EQUAL_PREDICTION"
+      ],
+      "origin": "Codex 적대 스윕 2026-08-12 (원본 id CL-16 — 내 원장과 충돌해 CDX- 접두)"
+    },
+    {
+      "id": "CDX-17",
+      "date": "2026-08-12",
+      "status": "rejected",
+      "claim": "The same 18x softening is independently required by DEM and true-plastic MPM",
+      "measured": {
+        "metric": "DEM_to_MPM_softening_comparison",
+        "value": {
+          "dense_E_GPa": 24.0,
+          "DEM_E_eff_GPa": 1.35,
+          "MPM_E_GPa": 1.53,
+          "MPM_nu": 0.49
+        },
+        "unit": "GPa and dimensionless"
+      },
+      "asserted": "MPM independently confirms the exact DEM softening factor",
+      "h0": "separately calibrated constitutive models independently require the same exact softening",
+      "h1": "the MPM kit shares the DEM scaffold, target porosity and currently maps DEM e_se_eff_gpa into MPM shear",
+      "h0_predicts": "the documented DEM 1.35 GPa and MPM 1.53 GPa softened inputs on the shared scaffold",
+      "h1_predicts": "the documented DEM 1.35 GPa and MPM 1.53 GPa softened inputs on the shared scaffold",
+      "bridge": null,
+      "verdict": "REJECT exact independent confirmation. Retain the weaker result that dense E=24 GPa is too stiff and O(1.5 GPa) effective softening is operationally useful.",
+      "location": [
+        "CLAUDE.md:551-577",
+        "scripts/mpm_input_from_case.py:502-529",
+        "scripts/mpm_input_from_case.py:672-676"
+      ],
+      "expected_violations": [
+        "C_EQUAL_PREDICTION"
+      ],
+      "origin": "Codex 적대 스윕 2026-08-12 (원본 id CL-17 — 내 원장과 충돌해 CDX- 접두)"
+    },
+    {
+      "id": "CDX-18",
+      "date": "2026-08-12",
+      "status": "rejected",
+      "claim": "The porosity-vs-AM composition dip is cross-validated by two independent tools and therefore physically real",
+      "measured": {
+        "metric": "qualitative_composition_dip_agreement",
+        "value": null,
+        "unit": null,
+        "reason": "the cited load-bearing statement gives no single frozen scalar"
+      },
+      "asserted": "analytical packing and MPM agreement independently prove the Furnas-dip mechanism",
+      "h0": "the dip is a physical packing transition",
+      "h1": "shared PSD, recipe and hard-particle packing assumptions create correlated agreement",
+      "h0_predicts": "the same qualitative composition dip in both tools",
+      "h1_predicts": "the same qualitative composition dip in both tools",
+      "bridge": null,
+      "verdict": "REJECT the word independent and the proof claim. Retain implementation/representation consistency; use an external composition sweep or an independently generated morphology for physical validation.",
+      "location": [
+        "CLAUDE.md:94-106",
+        "CLAUDE.md:633-649",
+        "docs/mpm_dip_resolution_invariance.md"
+      ],
+      "expected_violations": [
+        "C_EQUAL_PREDICTION"
+      ],
+      "origin": "Codex 적대 스윕 2026-08-12 (원본 id CL-18 — 내 원장과 충돌해 CDX- 접두)"
+    },
+    {
+      "id": "CDX-19",
+      "date": "2026-08-12",
+      "status": "live",
+      "claim": "The DEM AM-AM load fraction is pressure-sensitive on the audited four-pressure bed",
+      "measured": {
+        "metric": "DEM_AM_AM_load_fraction_pressure_series",
+        "value": [
+          0.517,
+          0.598,
+          0.675,
+          0.62
+        ],
+        "unit": "fraction at 100/200/300/600 MPa"
+      },
+      "asserted": "pressure sensitivity, rather than a plausible single value, discriminates this DEM readout from the f_am_mpm conservation identity",
+      "h0": "the DEM contact-network load partition changes with pressure",
+      "h1": "the readout is a conservation identity fixed near 0.5",
+      "h0_predicts": "100 to 300 MPa rises from 0.517 to 0.675, with the measured 600 MPa value 0.620",
+      "h1_predicts": "all four values remain approximately constant near 0.5",
+      "bridge": "Love-Weber AM-AM contact stress was recomputed from separate pressure states; no MPM value was fitted to it.",
+      "verdict": "KEEP for this bed as a discriminating pressure series. Do not transfer the absolute fractions to real_14 or use them to tune MPM.",
+      "location": [
+        "CLAUDE.md:1013",
+        "docs/mpm_wallP_conditional_troubleshooting.md:671-676"
+      ],
+      "origin": "Codex 적대 스윕 2026-08-12 (원본 id CL-19 — 내 원장과 충돌해 CDX- 접두)"
+    },
+    {
+      "id": "CDX-20",
+      "date": "2026-08-12",
+      "status": "rejected",
+      "claim": "Any MPM f_am_cut in [0.60,0.95] agreeing with DEM real_14 value 0.847 establishes cross-validation",
+      "measured": {
+        "metric": "broad_acceptance_band_contains_DEM_value",
+        "value": {
+          "band": [
+            0.6,
+            0.95
+          ],
+          "DEM": 0.847
+        },
+        "unit": "fraction"
+      },
+      "asserted": "membership in the broad band is an independent agreement certificate",
+      "h0": "two independently defined load partitions agree physically",
+      "h1": "the acceptance band was chosen broad enough to contain the known DEM value and the observables are not identical",
+      "h0_predicts": "any f_am_cut in [0.60,0.95], including 0.847, passes",
+      "h1_predicts": "any f_am_cut in [0.60,0.95], including 0.847, passes",
+      "bridge": null,
+      "verdict": "REJECT band-membership cross-validation. Keep pressure response as the discriminator and compare matched definitions without tuning.",
+      "location": [
+        "docs/reviews/fam_platen_prereg_20260812.md:245-265"
+      ],
+      "expected_violations": [
+        "C_EQUAL_PREDICTION"
+      ],
+      "origin": "Codex 적대 스윕 2026-08-12 (원본 id CL-20 — 내 원장과 충돌해 CDX- 접두)"
+    },
+    {
+      "id": "CDX-21",
+      "date": "2026-08-12",
+      "status": "rejected",
+      "claim": "Three independent extrapolations agreeing at porosity 9.4-9.5% establish the scaffold MPM quasi-static answer",
+      "measured": {
+        "metric": "three_readouts_same_scaffold_trajectory",
+        "value": "9.4-9.5",
+        "unit": "% porosity"
+      },
+      "asserted": "stress extrapolation, porosity extrapolation and servo record are three independent confirmations",
+      "h0": "three independent estimators converge",
+      "h1": "the estimators share the same scaffold, loading trajectory and readouts and therefore have correlated error",
+      "h0_predicts": "all three documented estimates fall at 9.4-9.5%",
+      "h1_predicts": "all three documented estimates fall at 9.4-9.5%",
+      "bridge": null,
+      "verdict": "REJECT the count of independent confirmations; retain 9.4-9.5% as provisional until a held-out direct settled run completes.",
+      "location": [
+        "CLAUDE.md:946-956",
+        "docs/reviews/fam_platen_prereg_20260812.md:18",
+        "docs/mpm_platen_kinematic_stop_defect.md:575-619"
+      ],
+      "expected_violations": [
+        "C_EQUAL_PREDICTION"
+      ],
+      "origin": "Codex 적대 스윕 2026-08-12 (원본 id CL-21 — 내 원장과 충돌해 CDX- 접두)"
+    },
+    {
+      "id": "CDX-22",
+      "date": "2026-08-12",
+      "status": "rejected",
+      "claim": "f_AM estimates 0.847, 0.809 and 0.880 are three independent confirmations",
+      "measured": {
+        "metric": "same_bed_load_partition_estimates",
+        "value": [
+          0.847,
+          0.809,
+          0.88
+        ],
+        "unit": "fraction"
+      },
+      "asserted": "contact stress, virial and MPM inversion independently confirm one load fraction",
+      "h0": "three independent observables identify one physical fraction",
+      "h1": "all estimates share the same real_14 scaffold or target and use non-equivalent conventions",
+      "h0_predicts": "the documented estimates are 0.847, 0.809 and 0.880",
+      "h1_predicts": "the documented estimates are 0.847, 0.809 and 0.880",
+      "bridge": null,
+      "verdict": "REJECT triple-independent language. Preserve each convention separately; require a direct boundary traction observable for a matched comparison.",
+      "location": [
+        "docs/reviews/fam_platen_prereg_20260812.md:21-28",
+        "docs/mpm_platen_kinematic_stop_defect.md:801-802"
+      ],
+      "expected_violations": [
+        "C_EQUAL_PREDICTION"
+      ],
+      "origin": "Codex 적대 스윕 2026-08-12 (원본 id CL-22 — 내 원장과 충돌해 CDX- 접두)"
+    },
+    {
+      "id": "CDX-23",
+      "date": "2026-08-12",
+      "status": "rejected",
+      "claim": "Voxel electronic extrapolation 11.76 mS/cm matching DEM 11.75 mS/cm independently validates both solvers",
+      "measured": {
+        "metric": "same_case_cross_discretization_sigma_e",
+        "value": {
+          "voxel_extrapolated": 11.76,
+          "DEM": 11.75
+        },
+        "unit": "mS/cm"
+      },
+      "asserted": "one same-scaffold agreement is an independent physical cross-validation",
+      "h0": "two correct discretizations independently recover the physical conductivity",
+      "h1": "the same scaffold, materials and a target-informed three-point extrapolation can agree without external validity",
+      "h0_predicts": "voxel extrapolation 11.76 mS/cm and DEM 11.75 mS/cm on input_1mAh_8_AMS_S1",
+      "h1_predicts": "voxel extrapolation 11.76 mS/cm and DEM 11.75 mS/cm on input_1mAh_8_AMS_S1",
+      "bridge": null,
+      "verdict": "REJECT as independent physical validation; retain as one-case representation/code consistency. Require preregistered multiple cases, grid origins and untargeted convergence.",
+      "location": [
+        "docs/voxel_conductivity_crossvalidation.md:1-36",
+        "docs/positioning_in_dt_lineage.md:363"
+      ],
+      "expected_violations": [
+        "C_EQUAL_PREDICTION"
+      ],
+      "origin": "Codex 적대 스윕 2026-08-12 (원본 id CL-23 — 내 원장과 충돌해 CDX- 접두)"
+    },
+    {
+      "id": "CDX-24",
+      "date": "2026-08-12",
+      "status": "rejected",
+      "claim": "Voxel/DEM ionic ratio 5.7 independently reproduces dashboard contact-free/full ratio 5.8 and confirms constriction physics",
+      "measured": {
+        "metric": "same_case_contact_free_ratio_agreement",
+        "value": {
+          "voxel_over_DEM": 5.7,
+          "dashboard": 5.8
+        },
+        "unit": "ratio"
+      },
+      "asserted": "the two ratios are independent confirmation of the contact-constriction decomposition",
+      "h0": "an independent continuum calculation recovers the constriction overhead",
+      "h1": "both ratios use the same scaffold and contact-free/full construction and therefore share the target decomposition",
+      "h0_predicts": "the documented ratios are 5.7 and 5.8",
+      "h1_predicts": "the documented ratios are 5.7 and 5.8",
+      "bridge": null,
+      "verdict": "REJECT independent-confirmation wording; retain a same-case consistency observation and the explicit warning that voxel ionic is an upper bound.",
+      "location": [
+        "docs/voxel_conductivity_crossvalidation.md:12-36"
+      ],
+      "expected_violations": [
+        "C_EQUAL_PREDICTION"
+      ],
+      "origin": "Codex 적대 스윕 2026-08-12 (원본 id CL-24 — 내 원장과 충돌해 CDX- 접두)"
+    },
+    {
+      "id": "CDX-25",
+      "date": "2026-08-12",
+      "status": "rejected",
+      "claim": "A 2D synthetic slice matching the supplied 3D coverage validates the synthesis model",
+      "measured": {
+        "metric": "coverage_2d_after_target_promotion",
+        "value": null,
+        "unit": "%",
+        "reason": "no single frozen current scalar is cited; the code path is the evidence"
+      },
+      "asserted": "2D/3D coverage agreement is an independent prediction",
+      "h0": "the 2D generator independently predicts the 3D coverage",
+      "h1": "uncovered pixels are promoted until the supplied 3D target count is reached",
+      "h0_predicts": "coverage_2d approaches the supplied coverage target",
+      "h1_predicts": "coverage_2d approaches the supplied coverage target",
+      "bridge": null,
+      "verdict": "REJECT as validation; label it target-conditioned rendering and validate with an untargeted held-out metric.",
+      "location": [
+        "scripts/extract_2d_microstructure.py:484-501"
+      ],
+      "expected_violations": [
+        "C_EQUAL_PREDICTION"
+      ],
+      "origin": "Codex 적대 스윕 2026-08-12 (원본 id CL-25 — 내 원장과 충돌해 CDX- 접두)"
     }
   ],
   "_id_policy": "CL-01~CL-09 는 이 리포 계열.  Codex 스윕 추가안(claims_codex_sweep_additions_20260812.json)의 ID 도 CL-09~CL-25 라 **충돌한다** — 병합 시 그쪽을 CDX-* 로 접두어를 붙여 넣는다 (내 CL-09 는 CLP-01 로 이미 개명)."

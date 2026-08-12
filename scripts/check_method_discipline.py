@@ -467,7 +467,7 @@ def _reject_reasons(c):
     h0p, h1p = c.get('h0_predicts'), c.get('h1_predicts')
     # C-1 표기 정규화 동등
     if _norm(h0p) == _norm(h1p):
-        out.append(f'**가능도비 1** — h0 와 h1 이 똑같이 "{h0p}" 를 예측한다 (D1)')
+        out.append(f'C_EQUAL_PREDICTION| **가능도비 1** — h0 와 h1 이 똑같이 "{h0p}" 를 예측한다 (D1)')
     else:
         # C-2 분해능: 차이가 측정 산포보다 작으면 증거량은 CL-01 과 같다
         n0, n1 = _nums(h0p), _nums(h1p)
@@ -482,12 +482,12 @@ def _reject_reasons(c):
         res = c.get('resolution')
         if res is not None and len(n0) == 1 and len(n1) == 1:
             if abs(n0[0] - n1[0]) < float(res):
-                out.append(f'두 예측의 차이 {abs(n0[0]-n1[0]):.4g} 가 분해능 {res} 미만 '
+                out.append(f'C_SUB_RESOLUTION| 두 예측의 차이 {abs(n0[0]-n1[0]):.4g} 가 분해능 {res} 미만 '
                            f'— 분해능 아래의 판별력은 가능도비 1 과 같다')
         # C-3 구간 겹침
         if len(n0) == 2 and len(n1) == 2:
             if min(n0[1], n1[1]) >= max(n0[0], n1[0]):
-                out.append(f'두 예측 구간이 겹친다 {n0} ∩ {n1} — 관측이 양쪽에 든다')
+                out.append(f'C_INTERVAL_OVERLAP| 두 예측 구간이 겹친다 {n0} ∩ {n1} — 관측이 양쪽에 든다')
     # C-4 measured ↔ verdict 정합
     mv = _nums((c.get('measured') or {}).get('value'))
     vd = _norm(c.get('verdict'))
@@ -496,7 +496,7 @@ def _reject_reasons(c):
             other = h1p if tag == 'h0채택' else h0p
             if tag in vd and _nums(other) and _nums(pred):
                 if abs(mv[0] - _nums(other)[0]) < abs(mv[0] - _nums(pred)[0]):
-                    out.append(f'측정 {mv[0]} 이 채택하지 않은 가설에 더 가까운데 '
+                    out.append(f'C_VERDICT_INCONSISTENT| 측정 {mv[0]} 이 채택하지 않은 가설에 더 가까운데 '
                                f'verdict 가 "{c.get("verdict")}" 다')
     # 규칙 D — 개수 ≠ 귀결.  scan 대상을 claim+asserted+verdict 로 (S0 D-3)
     metric = str((c.get('measured') or {}).get('metric', ''))
@@ -507,19 +507,29 @@ def _reject_reasons(c):
     br_ok = isinstance(br, dict) or (isinstance(br, str) and len(_norm(br)) >= 12) \
         or c.get('parity_certified')                      # D-6 과잉차단 해소
     if _COUNT_RE.search(metric) and hit_t and not br_ok:
-        out.append(f'`{metric}` 은 **세는 양**인데 귀결({hit_t[:2]})을 주장하면서 쓸 만한 '
+        out.append(f'D_COUNT_NOT_CONSEQUENCE| `{metric}` 은 **세는 양**인데 귀결({hit_t[:2]})을 주장하면서 쓸 만한 '
                    f'bridge 가 없다 (규칙 D)')
     # ★ 검증-귀결 갈래는 count 가 아니어도 shared_input 을 요구 (S4 흡수)
     if hit_v and 'shared_input' not in c:
-        out.append(f'검증-귀결 어휘({hit_v[:2]})를 쓰면서 `shared_input` 이 없다 — '
+        out.append(f'D_VERIF_NO_SHARED_INPUT| 검증-귀결 어휘({hit_v[:2]})를 쓰면서 `shared_input` 이 없다 — '
                    f'A 와 B 가 입력을 공유해 일치가 강제되는 경로를 적어야 한다 (없으면 null)')
     # 규칙 E — 량 패리티 (S0 X-1)
     q = c.get('quantity')
     qa = c.get('compared_to_quantity')
     if q and qa and _QUANTITY_ALIASES.get(q, q) != _QUANTITY_ALIASES.get(qa, qa):
-        out.append(f'**량 범주 오류** — {q} 를 {qa} 와 비교한다 (규칙 E). '
+        out.append(f'E_QUANTITY_MISMATCH| **량 범주 오류** — {q} 를 {qa} 와 비교한다 (규칙 E). '
                    f'K 25.5 vs 영률 24 가 이 형태였다')
     return out
+
+
+def _codes(reasons):
+    """거부 사유 문자열들에서 기계 코드 집합을 뽑는다."""
+    return {r.split('|', 1)[0].strip() for r in reasons if '|' in r.split(' ', 1)[0] or '| ' in r[:32]}
+
+
+def _msg(reason):
+    """인쇄용 — 코드 접두를 뗀다."""
+    return reason.split('| ', 1)[1] if '| ' in reason[:32] else reason
 
 
 _REQUIRED = ('id', 'claim', 'measured', 'asserted', 'status')
@@ -577,14 +587,26 @@ def check_claims_ledger(path=LEDGER, verbose=True):
             if st == 'rejected' and not bad:
                 errs.append(f'{c.get("id")}: rejected 인데 검사를 **통과했다** — 규칙이 이 '
                             f'역사적 실패를 못 잡는다 (연극이 됐다)')
-            elif verbose and st == 'rejected':
-                print(f'  거부됨  {c["id"]}: {bad[0].split(": ", 1)[-1][:76]}')
+            # ★ 2026-08-12 — **규칙 귀속**까지 검사한다.  "잡히긴 했다" 로는 부족하다:
+            #   다른 이유로 잡히면 기대한 규칙은 여전히 이빨이 없는데 초록불이 뜬다
+            #   (= 커버리지 구멍이 우연에 가려진다).  `expected_violations` 가 있으면
+            #   실제로 발동한 코드가 그것을 **포함**해야 한다.
+            exp = c.get('expected_violations')
+            if st == 'rejected' and exp and bad:
+                got = _codes(bad)
+                miss = set(exp) - got
+                if miss:
+                    errs.append(f'{c["id"]}: 거부되긴 했으나 **기대한 규칙이 아니다** — '
+                                f'기대 {sorted(exp)} · 실제 {sorted(got)}.  '
+                                f'{sorted(miss)} 는 여전히 검증되지 않았다')
+            if verbose and st == 'rejected' and bad:
+                print(f'  거부됨  {c["id"]}: {_msg(bad[0]).split(": ", 1)[-1][:70]}')
             continue
         if c.get('evidence_state') not in _EVIDENCE_OK:
             errs.append(f'{c["id"]}: evidence_state={c.get("evidence_state")!r} 인데 status='
                         f'{st!r} 다 — 인용차단이 안 된다.  status 를 "hold" 로 내릴 것')
         n_live += 1
-        errs.extend(bad)
+        errs.extend(_msg(x) for x in bad)
         if not bad and verbose:
             print(f'  OK      {c["id"]}: {str(c["claim"])[:68]}')
     if verbose:
