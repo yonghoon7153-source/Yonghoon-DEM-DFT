@@ -71,6 +71,8 @@ SOLVERS = {
         'vox_um': 0.4,
         'periodic': True,                      # periodic_xy 인자를 받는다
         'why': '유한체적 ∇·(σ∇φ)=0 은 면을 공유하는 셀 사이에서만 플럭스를 정의한다',
+        # ★ 선언을 **코드에 대조**한다 (아래 `verify_declared_adjacency`).
+        'label_site': ('step3_sigma', 'solve_sigma_z'),
     },
 }
 
@@ -89,6 +91,7 @@ DIAGNOSTICS = {
         # S1b P1-①: cKDTree 에 boxsize 가 없어 seam 접촉을 놓친다.  실측 seam 전용 AM-AM
         #   접촉 = real14 10.2 % · kit 3.6~16.1 % (조성 의존 4.5배) → 공통모드 상쇄 안 됨.
         'periodic_waiver': '주기 seam 을 보지 않는다 — 경계 근방 입자의 연결 판정은 증언 불가',
+        'label_site': ('mpm_webapp_payload', 'electronic_connectivity'),
     },
     'sr01_carbon_network.carbon_network_stats': {
         'relation': 'diagnoses', 'target': 'step3_sigma.solve_sigma_z',
@@ -98,6 +101,9 @@ DIAGNOSTICS = {
         # ⚠ S1a: AM 마스크가 솔버 AM 상의 **진부분집합**(접촉 브릿지 볼 미포함) → plugged 는 하한
         'must_not_certify': ['plugged_frac 의 절대값 (하한만)', 'periodic 런의 성분 수'],
         'periodic_waiver': '기본(비주기) 런 전용 — 주기 런의 성분 수는 증언하지 않는다',
+        # 이쪽은 이름 있는 라벨러가 있어 **거동 프로브**까지 간다 (정적 대조보다 강하다)
+        'label_fn': 'sr01_carbon_network._label6',
+        'label_site': ('sr01_carbon_network', 'carbon_network_stats'),
     },
 }
 
@@ -135,8 +141,107 @@ def probe_adjacency(fn_label):
     return {2: '6-face', 1: '26-conn'}.get(n)
 
 
+#  ② 선언된 `adjacency` 를 **코드에 대조**한다.
+#     계기: v2 까지 `probe_adjacency` 는 selftest 에서만 돌고 등록부 검사에는 한 번도 쓰이지
+#     않았다 — 즉 SOLVERS/DIAGNOSTICS 의 `adjacency` 는 전부 **검증되지 않은 문자열**이었고,
+#     이 파일 자신이 솔버 **이름**에 대해서는 "검증되지 않는 선언" 이라며 오류로 막고 있었다.
+#     등록부가 틀리면 규칙 A 전체가 조용히 무의미해진다 (D4 의 뿌리).
+#  두 경로:
+#     (a) `label_fn` — 이름 있는 라벨러 → **거동 프로브** (가장 강함)
+#     (b) `label_site` — 함수 안의 `ndimage.label(...)` 호출을 **AST 로** 읽는다.
+#         정규식이 아니다 (S0 A-2 에서 문자열 시그니처는 19종 중 16종을 오탐/미탐했다).
+#         `structure` 없음 = scipy 기본 = 6-face · `np.ones((3,3,3))` = 26-conn.
+_CONN_OF_STRUCT = {None: '6-face', '3x3x3': '26-conn'}
+
+
+def _ast_label_conns(module_name, func_name):
+    """`module.func` 안의 ndimage.label 호출들이 쓰는 인접 규약 집합을 돌려준다."""
+    import ast
+    import importlib
+    mod = importlib.import_module(module_name)
+    src = open(mod.__file__, encoding='utf-8').read()
+    tree = ast.parse(src)
+    target = None
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name == func_name:
+            target = node
+            break
+    if target is None:
+        raise LookupError(f'{module_name}.{func_name} 를 AST 에서 못 찾았다')
+    conns = set()
+    for node in ast.walk(target):
+        if not isinstance(node, ast.Call):
+            continue
+        f = node.func
+        if not (isinstance(f, ast.Attribute) and f.attr == 'label'):
+            continue
+        st = next((k.value for k in node.keywords if k.arg == 'structure'), None)
+        if st is None and len(node.args) >= 2:
+            st = node.args[1]
+        if st is None:
+            conns.add('6-face')
+        elif '3, 3, 3' in ast.unparse(st) or '3,3,3' in ast.unparse(st):
+            conns.add('26-conn')
+        else:
+            conns.add(f'UNKNOWN({ast.unparse(st)})')
+    return conns
+
+
+def verify_declared_adjacency(name, spec):
+    """선언 ≠ 코드 이면 오류 문자열, 확인되면 근거 문자열, 확인 불가면 오류 문자열."""
+    decl = spec.get('adjacency')
+    if 'label_fn' not in spec and 'label_site' not in spec:
+        return False, (f'{name}: `adjacency` 가 **검증되지 않는 선언**이다 — `label_fn`(거동 '
+                       f'프로브) 또는 `label_site`(AST 대조) 중 하나는 필수.  등록부가 틀리면 '
+                       f'규칙 A 전체가 조용히 무의미해진다')
+    if 'label_fn' in spec:
+        try:
+            fn = _resolve(spec['label_fn'])
+        except Exception as e:
+            return False, (f'{name}: label_fn `{spec["label_fn"]}` 를 불러올 수 없다 '
+                           f'({type(e).__name__}) — fail-closed 로 오류 처리한다')
+        got = probe_adjacency(fn)
+        if got is None:
+            return False, (f'{name}: label_fn 프로브가 규약을 판정하지 못했다 (unknown) '
+                           f'— fail-closed.  모르면 통과가 아니라 오류다')
+        if got != decl:
+            return False, (f'{name}: 선언 {decl} 인데 **거동은 {got}** (대각 두 셀 프로브)')
+        return True, f'{name}: {decl} — 거동 프로브로 확인'
+    try:
+        conns = _ast_label_conns(*spec['label_site'])
+    except Exception as e:
+        return False, (f'{name}: label_site AST 대조 실패 ({type(e).__name__}: {e}) '
+                       f'— fail-closed')
+    if not conns:
+        return False, (f'{name}: {spec["label_site"][1]} 안에서 라벨 호출을 찾지 못했다 '
+                       f'— 규약을 코드로 확인할 수 없으므로 fail-closed')
+    bad = [c for c in conns if c.startswith('UNKNOWN')]
+    if bad:
+        return False, f'{name}: 라벨 structure 를 해석하지 못했다 {sorted(bad)} — fail-closed'
+    if conns != {decl}:
+        return False, (f'{name}: 선언 {decl} 인데 **코드는 {sorted(conns)}** '
+                       f'({".".join(spec["label_site"])})')
+    return True, f'{name}: {decl} — AST 대조로 확인 ({len(conns)} 규약 일치)'
+
+
 def check_convention_parity(verbose=True):
     errs, warns = [], []
+    # ★ 등록부의 adjacency 를 먼저 **검증**한다 — 이 검사가 없으면 아래 패리티는
+    #   틀린 선언끼리 맞춰보는 것이 된다.
+    for _reg, _kind in ((SOLVERS, 'SOLVER'), (DIAGNOSTICS, 'DIAG')):
+        for _n, _s in _reg.items():
+            ok, msg = verify_declared_adjacency(_n, _s)
+            if not ok:
+                errs.append(msg)
+            elif verbose:
+                print(f'  verify  {msg}')
+    # ★ 진단도 **불러올 수 있어야** 한다 (v2 는 SOLVERS 만 확인했다 — Codex #9 fail-closed)
+    for dname in DIAGNOSTICS:
+        try:
+            _resolve(dname)
+        except Exception as e:
+            errs.append(f'DIAGNOSTICS 키 `{dname}` 를 불러올 수 없다 ({type(e).__name__}) '
+                        f'— 진단 규약이 **검증되지 않는 선언**이 된다 (fail-closed)')
     if len(DIAGNOSTICS) < _DIAG_MIN:                      # ③ 비우면 오류
         errs.append(f'DIAGNOSTICS 가 {len(DIAGNOSTICS)}개 — 최소 {_DIAG_MIN}.  '
                     f'등록부를 비우면 규칙 A 가 조용히 사라진다')
@@ -526,6 +631,55 @@ def _selftest():
     DIAGNOSTICS.update(_save_d)
     chk('A: 등록부를 비우면 오류 (v1 은 통과했다)', any('비우면' in x for x in e_a))
 
+    # ★★ v3 — 선언된 adjacency 를 **검증**하는가.  v2 까지 probe_adjacency 는 selftest 에서만
+    #    돌고 등록부에는 안 쓰였다 = 모든 `adjacency` 가 검증되지 않는 문자열이었다.
+    #    아래 5개는 전부 "검증기가 **틀린 선언을 실제로 잡는가**" 를 묻는다 (가능도비 ≠ 1).
+    chk('A3: 선언 6-face ↔ 거동 26-conn 이면 오류',
+        verify_declared_adjacency('X', {'adjacency': '6-face',
+                                        'label_fn': 'numpy.ndarray'})[0] is False)
+
+    import types as _ty
+    _m = _ty.ModuleType('_probe_mod')
+    _m.__file__ = __file__
+    sys.modules['_probe_mod'] = _m
+    _m.good6 = lambda g: ndimage.label(g)
+    _m.bad26 = lambda g: ndimage.label(g, structure=np.ones((3, 3, 3), bool))
+    chk('A3: label_fn 이 26-conn 인데 6-face 로 선언 → 오류',
+        verify_declared_adjacency('X', {'adjacency': '6-face',
+                                        'label_fn': '_probe_mod.bad26'})[0] is False)
+    chk('A3: label_fn 이 6-face 이고 선언도 6-face → 통과',
+        verify_declared_adjacency('X', {'adjacency': '6-face',
+                                        'label_fn': '_probe_mod.good6'})[0] is True)
+    chk('A3: label_fn/label_site 가 아예 없으면 오류 (검증되지 않는 선언)',
+        verify_declared_adjacency('X', {'adjacency': '6-face'})[0] is False)
+    chk('A3: label_fn 이 안 불러와지면 fail-closed (warn 아님)',
+        verify_declared_adjacency('X', {'adjacency': '6-face',
+                                        'label_fn': 'no_such_mod.nope'})[0] is False)
+    chk('A3: 프로브가 unknown 이면 fail-closed',
+        verify_declared_adjacency('X', {'adjacency': '6-face',
+                                        'label_fn': '_probe_mod.__class__'})[0] is False)
+    # AST 경로 — 실제 리포 코드로 대조 (픽스처가 아니라 생산 함수)
+    chk('A3: AST 가 econn 의 26-conn 을 읽는다',
+        _ast_label_conns('mpm_webapp_payload', 'electronic_connectivity') == {'26-conn'})
+    chk('A3: AST 가 STEP3 솔버의 6-face 를 읽는다',
+        _ast_label_conns('step3_sigma', 'solve_sigma_z') == {'6-face'})
+    chk('A3: AST 대조가 틀린 선언을 잡는다 (econn 을 6-face 로 선언)',
+        verify_declared_adjacency('X', {
+            'adjacency': '6-face',
+            'label_site': ('mpm_webapp_payload', 'electronic_connectivity')})[0] is False)
+    chk('A3: 없는 함수를 가리키면 fail-closed',
+        verify_declared_adjacency('X', {'adjacency': '6-face',
+                                        'label_site': ('step3_sigma', 'no_such_fn')})[0] is False)
+    # 진단 자체가 안 불러와져도 fail-closed 여야 한다 (Codex #9)
+    DIAGNOSTICS['zz_missing.nope'] = {'relation': 'diagnoses',
+                                      'target': 'step3_sigma.solve_sigma_z',
+                                      'adjacency': '6-face', 'vox_um': 0.4,
+                                      'label_fn': '_probe_mod.good6'}
+    e_a2, _ = check_convention_parity(verbose=False)
+    DIAGNOSTICS.pop('zz_missing.nope')
+    chk('A3: 진단이 import 안 되면 오류 (v2 는 SOLVERS 만 봤다)',
+        any('불러올 수 없다' in x for x in e_a2))
+
     P = np.stack([np.linspace(0.3, 6.3, 60)] * 3, axis=1)
     chk('B: 동상 대각은 판별력 있다', assert_stamp_discriminating(P, 0.4, 'd'))
     S = _staggered_blind_fixture()
@@ -596,7 +750,7 @@ def _selftest():
                          asserted='탄소가 고립되지 않는다', h1_predicts='성분 수 = 1',
                          parity_certified='sr01_carbon_network.carbon_network_stats')) == [])
 
-    print(f'\ncheck_method_discipline v2 selftest: {ok}/{ok + len(fail)} PASS'
+    print(f'\ncheck_method_discipline v3 selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
 
