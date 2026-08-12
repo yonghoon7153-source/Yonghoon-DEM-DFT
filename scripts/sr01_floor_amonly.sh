@@ -79,14 +79,42 @@ echo "[floor] 주입 확인 OK — --sigma-vgcf 1e-9 · --out $OUT · stamp segm
 
 bash payload_amonly.sh || { echo "[floor] FAILED — 위 트레이스"; exit 1; }
 
-python3 - "$OUT" <<'PY'
-import json, sys
-d = json.load(open(sys.argv[1]))
-s3 = d.get('step3') or (d.get('mpm_metrics') or {}).get('step3') or {}
+python3 - "$OUT" mpm_payload_segstamp.json <<'PY'
+import json, os, sys
+
+
+def s3_of(path):
+    d = json.load(open(path))
+    return d.get('step3') or (d.get('mpm_metrics') or {}).get('step3') or {}
+
+
+s3 = s3_of(sys.argv[1])
 print()
 print('── AM-only 바닥 ──────────────────────────────────────────')
 print('  sigma_e_eff_S_cm :', s3.get('sigma_e_eff_S_cm'))
 print('  sigma_ion_eff    :', s3.get('sigma_ion_eff_S_cm'))
-print('  n_dof(e)         :', (s3.get('electronic') or {}).get('n_dof'))
+nd = (s3.get('electronic') or {}).get('n_dof')
+print('  n_dof(e)         :', nd)
+
+# ★ 코드 드리프트 검사 — 이 런은 기존 두 팔보다 나중 코드로 돈다.
+#   σ 값만 바꿨으므로 **전도 마스크는 같아야 한다** (--sigma-vgcf 1e-9 는 여전히 >0).
+#   n_dof 가 선분 팔과 다르면 σ 아닌 무언가가 바뀐 것 = 브래킷이 오염됐다.
+ref = sys.argv[2]
+if os.path.exists(ref):
+    r3 = s3_of(ref)
+    rnd = (r3.get('electronic') or {}).get('n_dof')
+    print()
+    if nd is not None and rnd is not None and nd == rnd:
+        print(f'  ✓ n_dof 일치 (선분 팔 {rnd:,}) — 격자·마스크 불변, σ 만 달랐다.')
+        print(f'    선분 팔 σ_e = {r3.get("sigma_e_eff_S_cm")}  ⇒ 바닥 대비 배수 = '
+              f'{(r3.get("sigma_e_eff_S_cm") or 0) / (s3.get("sigma_e_eff_S_cm") or 1):.4g}×')
+    else:
+        print(f'  ⚠⚠ n_dof 불일치: 바닥 {nd} vs 선분 팔 {rnd}')
+        print('     σ 만 바꿨는데 전도 마스크가 달라졌다 = 그 사이 코드가 솔브 경로를 바꿨다.')
+        print('     **브래킷에 쓰지 말 것** — 선분 팔을 같은 코드로 다시 돌려야 한다.')
+else:
+    print()
+    print(f'  ⚠ 대조군 {ref} 이 없어 코드-드리프트 검사를 못 했다 (n_dof 비교 불가).')
+print()
 print('  ⇒ 이 값이 σ_e(참) 의 **하한**이다.  점/선분 팔과 나란히 놓아 ×35.79 를 브래킷할 것.')
 PY
