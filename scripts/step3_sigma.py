@@ -634,35 +634,56 @@ def solve_thermal(sid, vox, z_top_um, z_bot_um=0.0, k_table=None, field_sids=Non
     return out
 
 
-def carbon_se_contact_area(sid, vox):
+def carbon_se_contact_area(sid, vox, periodic_xy=False):
     """탄소(VGCF 3·SuperP 4·SWCNT 8) ↔ SE(6) 복셀-면 접촉 면적 (µm²).
     kim2024 Fig3b: NCM–SE–carbon 3상 계면이 sulfide SE 전기화학 분해를 촉매 → 이 면적이
-    STEP5 VGCF-촉매 화학열화(carbon_se_area)의 구조 입력.  phase_current_share 면-순회와 동일 규약."""
+    STEP5 VGCF-촉매 화학열화(carbon_se_area)의 구조 입력.  phase_current_share 면-순회와 동일 규약.
+
+    ⚠ 2026-08-12 (Codex #7): 내부 면만 세면 주기 런에서 **seam 을 가로지르는 3상 계면이
+    누락**된다 (섬유는 길어 seam 을 자주 넘는다).  `periodic_xy` 면 wrap 면쌍을 더한다.
+    z 는 어떤 경우에도 감지 않는다 — 플레이트로 막힌 축이다."""
     carb = np.isin(sid, (3, 4, 8)); se = (sid == 6)
     faces = 0
-    for a, b in ((np.s_[:-1, :, :], np.s_[1:, :, :]),
-                 (np.s_[:, :-1, :], np.s_[:, 1:, :]),
-                 (np.s_[:, :, :-1], np.s_[:, :, 1:])):
+    pairs = [(np.s_[:-1, :, :], np.s_[1:, :, :]),
+             (np.s_[:, :-1, :], np.s_[:, 1:, :]),
+             (np.s_[:, :, :-1], np.s_[:, :, 1:])]
+    if periodic_xy:                       # 길이 1인 축은 감지 않는다 (셀이 자기 이웃이 된다)
+        if sid.shape[0] > 1:
+            pairs.append((np.s_[-1:, :, :], np.s_[:1, :, :]))
+        if sid.shape[1] > 1:
+            pairs.append((np.s_[:, -1:, :], np.s_[:, :1, :]))
+    for a, b in pairs:
         faces += int((carb[a] & se[b]).sum()) + int((se[a] & carb[b]).sum())
     return float(faces) * vox * vox
 
 
-def _voxel_jmag(P, cond, sig):
+def _voxel_jmag(P, cond, sig, periodic_xy=False):
     """Cell-centred |J| proxy (∝ σ·Δφ, run-relative) — per_particle_current 와 동일 규약.
     각 축의 양면 전류 |g·Δφ|(g=조화평균 컨덕턴스)를 셀에 반씩 배분 → |J|=√(ΣJ축²).
-    field_point_cloud·joule_hotspot 공유(단일 소스, 중복 제거)."""
+    field_point_cloud·joule_hotspot 공유(단일 소스, 중복 제거).
+
+    ⚠ 2026-08-12 (Codex #7): 주기 런에서 seam 면의 전류가 빠지면 **경계 셀의 |J| 가 과소**로
+    나오고, 그것이 joule_hotspot 의 hot-spot 선정을 경계에서 체계적으로 놓치게 만든다.
+    `periodic_xy` 면 x/y wrap 면을 포함한다.  z 는 감지 않는다."""
     jmag = np.zeros(sig.shape, np.float64)
     for axis in (0, 1, 2):
         sa_sl = [slice(None)] * 3; sb_sl = [slice(None)] * 3
         sa_sl[axis] = slice(0, -1); sb_sl[axis] = slice(1, None)
         sa_sl, sb_sl = tuple(sa_sl), tuple(sb_sl)
-        both = cond[sa_sl] & cond[sb_sl]
-        sa, sb = sig[sa_sl], sig[sb_sl]
-        g = np.where(both, 2.0 * sa * sb / np.maximum(sa + sb, 1e-30), 0.0)
-        f = np.abs(g * (P[sa_sl] - P[sb_sl]))               # face current ∝ σ·Δφ (per face area)
         comp = np.zeros(sig.shape, np.float64)
-        comp[sa_sl] += f * 0.5
-        comp[sb_sl] += f * 0.5
+
+        def _accum(a, b, _comp=comp):
+            both = cond[a] & cond[b]
+            sa, sb = sig[a], sig[b]
+            g = np.where(both, 2.0 * sa * sb / np.maximum(sa + sb, 1e-30), 0.0)
+            f = np.abs(g * (P[a] - P[b]))                   # face current ∝ σ·Δφ (per face area)
+            _comp[a] += f * 0.5
+            _comp[b] += f * 0.5
+        _accum(sa_sl, sb_sl)
+        if periodic_xy and axis in (0, 1):                  # seam 면 (마지막 층 ↔ 첫 층)
+            wa = [slice(None)] * 3; wb = [slice(None)] * 3
+            wa[axis] = slice(-1, None); wb[axis] = slice(0, 1)
+            _accum(tuple(wa), tuple(wb))
         jmag += comp * comp
     return np.sqrt(jmag)
 
@@ -679,7 +700,7 @@ def joule_hotspot(res, sid, sigma_of_sid, vox, sel_sids, box_lo=(0.0, 0.0, 0.0),
         return None
     P, cond = res['phi'], res['cond']
     sig = sigma_of_sid[sid]
-    jmag = _voxel_jmag(P, cond, sig)
+    jmag = _voxel_jmag(P, cond, sig, periodic_xy=bool(res.get('periodic_xy')))
     q = np.where(cond, jmag * jmag / np.maximum(sig, 1e-30), 0.0)     # 발열밀도 (run-relative, W/cm³ 스케일 전)
     sel = np.isin(sid, np.asarray(list(sel_sids), np.int64)) & cond & (q > 0)
     ii, jj, kk = np.where(sel)
@@ -726,7 +747,7 @@ def field_point_cloud(res, sid, sigma_of_sid, vox, sel_sids, box_lo=(0.0, 0.0, 0
         return None, None
     P, cond = res['phi'], res['cond']
     sig = sigma_of_sid[sid]
-    jmag = _voxel_jmag(P, cond, sig)
+    jmag = _voxel_jmag(P, cond, sig, periodic_xy=bool(res.get('periodic_xy')))
     sel = np.isin(sid, np.asarray(list(sel_sids), np.int64)) & cond
     ii, jj, kk = np.where(sel)
     if not len(ii):
@@ -827,7 +848,8 @@ def pore_tau(sid, vox, z_top_um, extra_solid_pts=None, box_lo=(0.0, 0.0, 0.0), p
     return out
 
 
-def pore_pnm(sid, vox, z_top_um, extra_solid_pts=None, box_lo=(0.0, 0.0, 0.0)):
+def pore_pnm(sid, vox, z_top_um, extra_solid_pts=None, box_lo=(0.0, 0.0, 0.0),
+             periodic_xy=False):
     """A13 — pore-network TOPOLOGY descriptors (nearest-seed pore-body partition; A6 확장).
 
     Same crop + PTFE-stamp preamble as pore_tau (conventions inherited), then:
@@ -935,6 +957,16 @@ def pore_pnm(sid, vox, z_top_um, extra_solid_pts=None, box_lo=(0.0, 0.0, 0.0)):
         out['throat_r_eq_um'] = _st(throat_r)
     if fallback:
         out['fallback'] = 'components (no EDT>1 seed — ultra-thin pore)'
+    # ★ 2026-08-12 (Codex #7): 이 함수는 EDT · maximum_filter · watershed_ift · 6-conn label 을
+    #   전부 **비주기**로 돈다.  주기 런에서 그 넷을 주기화하려면 x/y 로 한 주기 타일링이
+    #   필요해 (메모리 ×9) 여기서는 하지 않는다.  대신 **값을 지어내지 않고 한계를 기계
+    #   판독 가능하게 표시**한다 (§F1) — 소비자가 주기 런의 PNM 을 비주기 근사로 읽게.
+    out['boundary'] = 'nonperiodic'
+    if periodic_xy:
+        out['boundary'] = 'nonperiodic_approximation_of_periodic_solve'
+        out['periodic_caveat'] = ('솔버는 x/y seam 을 커플링했으나 PNM 은 비주기로 분할했다 — '
+                                  'seam 을 가로지르는 공극체가 **둘로 쪼개져** n_pores 는 과대, '
+                                  'r_eq/pore_cn 은 경계 근방에서 과소.  seam 근방 통계 인용 금지.')
     return out
 
 
@@ -1212,6 +1244,42 @@ def _selftest():
     except ValueError:
         e = True
     ok &= e; print(f"seam-fail-closed: 경계조건 없는 res 는 **거부**한다  {'OK' if e else 'FAIL'}")
+    # ★ Codex #7 (나머지 3종) — 주기 인자가 **실제로 답을 바꾸는가**.
+    #    seam 을 사이에 둔 탄소↔SE 쌍 / seam 이웃이 SE 인 AM 을 각각 배치한다.
+    sid_s = np.zeros((4, 1, 4), np.int8)
+    sid_s[0, 0, 1] = 3; sid_s[3, 0, 1] = 6            # VGCF | ... | SE — seam 으로만 인접
+    a_np = carbon_se_contact_area(sid_s, 0.4, periodic_xy=False)
+    a_pp = carbon_se_contact_area(sid_s, 0.4, periodic_xy=True)
+    e = a_np == 0.0 and a_pp > 0.0
+    ok &= e; print(f"seam-csa:  탄소-SE 면적 비주기 {a_np:.4g} → 주기 {a_pp:.4g} µm² "
+                   f"(seam 3상 계면)  {'OK' if e else 'FAIL'}")
+    sid_a = np.zeros((4, 3, 4), np.int8)
+    sid_a[0, 1, 1] = 1; sid_a[3, 1, 1] = 6            # AM_S | ... | SE — seam 으로만 인접
+    pid_a = -np.ones(sid_a.shape, np.int64); pid_a[0, 1, 1] = 0
+    p_np = am_surface_patches(sid_a, pid_a, 1, periodic_xy=False)
+    p_pp = am_surface_patches(sid_a, pid_a, 1, periodic_xy=True)
+    e = p_np['f_reaction'][0] == 0.0 and p_pp['f_reaction'][0] > 0.0 \
+        and p_pp['f_void'][0] < p_np['f_void'][0]
+    ok &= e; print(f"seam-patch: AM f_reaction 비주기 {p_np['f_reaction'][0]:.3f} → 주기 "
+                   f"{p_pp['f_reaction'][0]:.3f} (f_void {p_np['f_void'][0]:.3f}→"
+                   f"{p_pp['f_void'][0]:.3f})  {'OK' if e else 'FAIL'}")
+    e = p_np['n_face'][0] == p_pp['n_face'][0]
+    ok &= e; print(f"seam-patch-den: 총 face 수는 불변 {p_np['n_face'][0]} == {p_pp['n_face'][0]} "
+                   f"(분류만 바뀐다)  {'OK' if e else 'FAIL'}")
+    # z 는 주기여도 감지 않는다 (플레이트 축) — 위·아래 끝에 놓은 쌍은 어느 규약에서도 0
+    sid_z = np.zeros((2, 1, 4), np.int8); sid_z[0, 0, 0] = 3; sid_z[0, 0, 3] = 6
+    e = carbon_se_contact_area(sid_z, 0.4, periodic_xy=True) == 0.0
+    ok &= e; print(f"seam-z:    z 는 주기여도 안 감는다  {'OK' if e else 'FAIL'}")
+    _sp = np.ones((6, 6, 8), np.int8) * 6; _sp[2:4, 2:4, :] = 0     # 진짜 공극이 있어야 PNM 이 돈다
+    _pnm_n = pore_pnm(_sp, 0.5, z_top_um=4.0, periodic_xy=False)
+    _pnm_p = pore_pnm(_sp, 0.5, z_top_um=4.0, periodic_xy=True)
+    e = (_pnm_n.get('reason') is None and _pnm_n.get('n_pores', 0) > 0            # 공허하지 않다
+         and _pnm_n['boundary'] == 'nonperiodic'
+         and _pnm_p['boundary'] == 'nonperiodic_approximation_of_periodic_solve'
+         and 'periodic_caveat' in _pnm_p and 'periodic_caveat' not in _pnm_n)
+    ok &= e; print(f"seam-pnm:  PNM(n_pores={_pnm_n.get('n_pores')}) 은 주기화 못 하는 것을 "
+                   f"**표시**한다: {_pnm_n.get('boundary')} → {_pnm_p.get('boundary')}"
+                   f"  {'OK' if e else 'FAIL'}")
     print('SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
 
@@ -1545,7 +1613,7 @@ def kdom_calibration(phi_full, tau_full, phi_geo, tau_geo):
 
 
 def am_surface_patches(sid, pid, n_am, reaction_sids=(5, 6), carbon_sids=(3, 4, 8),
-                       block_sids=(7,)):
+                       block_sids=(7,), periodic_xy=False):
     """AM 표면 face walk — 입자별 이웃-상 분류 (Track-B per-particle coverage 벡터).
 
     표면 face = AM 복셀(sid 1·2)과 비-AM 복셀이 맞닿는 격자면.  face 단위로 이웃 상을 세어
@@ -1569,13 +1637,21 @@ def am_surface_patches(sid, pid, n_am, reaction_sids=(5, 6), carbon_sids=(3, 4, 
     rxn, carb, blk = list(reaction_sids), list(carbon_sids), list(block_sids)
     for ax in range(3):
         for sgn in (+1, -1):
-            nb = np.zeros_like(sid)                       # 채우기 0 = 도메인 밖 → void
-            dst = [slice(None)] * 3; src = [slice(None)] * 3
-            if sgn > 0:
-                dst[ax], src[ax] = slice(0, -1), slice(1, None)
+            # ★ 2026-08-12 (Codex #7): 주기 런에서 x/y seam 이웃을 **0(void)** 으로 채우면
+            #   경계 AM 의 f_void 가 과대, f_reaction/f_carbon 이 과소로 나온다 (반응면적
+            #   과소계상 → STEP4 로 전파).  주기면 wrap 한 이웃을 쓴다.
+            #   z 는 절대 wrap 하지 않는다 — 도메인 밖이 플레이트인 축이다 (기존 0 채우기 유지;
+            #   "플레이트를 void 로 세는" 규약 자체는 별건이라 여기서 바꾸지 않는다).
+            if periodic_xy and ax in (0, 1) and sid.shape[ax] > 1:
+                nb = np.roll(sid, -sgn, ax)
             else:
-                dst[ax], src[ax] = slice(1, None), slice(0, -1)
-            nb[tuple(dst)] = sid[tuple(src)]
+                nb = np.zeros_like(sid)                   # 채우기 0 = 도메인 밖 → void
+                dst = [slice(None)] * 3; src = [slice(None)] * 3
+                if sgn > 0:
+                    dst[ax], src[ax] = slice(0, -1), slice(1, None)
+                else:
+                    dst[ax], src[ax] = slice(1, None), slice(0, -1)
+                nb[tuple(dst)] = sid[tuple(src)]
             m = am & ~((nb == 1) | (nb == 2))             # AM 복셀의 비-AM 이웃 face
             p, s = pid[m], nb[m]
             ok = (p >= 0) & (p < n_am)

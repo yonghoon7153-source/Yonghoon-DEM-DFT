@@ -1289,7 +1289,8 @@ def main():
                             # per-particle AM 표면 패치 (COMSOL 구면 f_cov 경계조건용).  n_am 은
                             # rasterize 입력 배열 길이를 명시 — pid.max()+1 추정 금지 (SuperP
                             # _fid.max()+1 전역오프셋 버그의 회귀 방지)
-                            _pp = _s3.am_surface_patches(sid3, pid3, len(_am_c))
+                            _pp = _s3.am_surface_patches(sid3, pid3, len(_am_c),
+                                                         periodic_xy=bool(a.periodic))
                             # isfinite 벨트 (리뷰 minor): 헬퍼가 den=max(n_face,1) 로 NaN 을 막지만
                             # ('bare NaN kills JSON.parse' — 이 파일의 확립 규약) 계약 변경에도
                             # payload JSON 이 죽지 않게 한 겹 더
@@ -1391,7 +1392,7 @@ def main():
                 # ★#30 — carbon(VGCF3/SuperP4/SWCNT8)↔SE(6) 3상 계면 면적 (kim2024 Fig3b: SE 분해 촉매면).
                 #   STEP5 VGCF-촉매 화학열화(b1_chem_fade carbon_se_area)의 구조 입력.  carbon 있을 때만 기록.
                 try:
-                    _csa = _s3.carbon_se_contact_area(sid3, a.step3_vox)
+                    _csa = _s3.carbon_se_contact_area(sid3, a.step3_vox, periodic_xy=bool(a.periodic))
                     if _csa > 0:
                         step3['carbon_se_area_um2'] = float(f"{_csa:.4g}")
                         print(f"  STEP3 carbon–SE 계면 {step3['carbon_se_area_um2']} µm² "
@@ -1429,7 +1430,8 @@ def main():
                     # ★ A13 — pore-PNM 위상지표 (nearest-seed 분할; τ와 같은 crop/PTFE-stamp 규약).
                     #   실패해도 pore-τ 결과는 유지 (내부 try).
                     try:
-                        _pnm = _s3.pore_pnm(sid3, a.step3_vox, z_top_um=_ztop, extra_solid_pts=_ppts)
+                        _pnm = _s3.pore_pnm(sid3, a.step3_vox, z_top_um=_ztop, extra_solid_pts=_ppts,
+                                        periodic_xy=bool(a.periodic))
                         _s3mark('pnm', 'complete')
                         step3['pore']['pnm'] = _pnm
                         if not _pnm.get('reason'):
