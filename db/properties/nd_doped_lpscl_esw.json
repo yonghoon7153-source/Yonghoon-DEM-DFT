@@ -1,0 +1,193 @@
+{
+ "property": "nd_doped_lpscl_esw",
+ "method": "Grand-potential ESW staircase — PhaseDiagram.get_element_profile (Mo/Ong/Ceder), MP GGA_GGA+U hull, Li 열림. 6원소 Cl-Li-Nd-O-P-S hull 321 엔트리. modelc 를 **같은 6원소 hull 에서 재실행**한 것이 대조군이다 (4원소 hull 결과와 정확히 재현 → hull 아티팩트가 아님을 증명).",
+ "source": "tools/oxidation/esw_nd_result.txt · esw_grand_potential.py · gabia 2026-06-24",
+ "composition_note": "nd 조성은 DFT 이완 120원자 셀 Li48Nd2P10O3S41Cl16 / 10 (net charge 0) 에서 왔다.",
+ "warning": "MP(PBE/PBE+U, MP 보정) 에너지다 — 우리 QE 값과 섞지 말 것. 한 DB 안에서 일관되므로 **상 사이 비교**에만 쓴다.",
+ "collected": "2026-08-12 (실행은 2026-06-24)",
+ "verdict": "Nd 도핑이 intrinsic ESW 를 **좁힌다**: nd 0.40 V (1.52–1.92) < modelc 0.90 V (1.24–2.14). 산화 onset 도 1.92 < 2.14 로 낮다. Nd-S/P/O redox 가 modelc 창 **안에서** 일어나기 때문이다.",
+ "results": {
+  "nd_Nd2O3_doped": {
+   "breakpoints": [
+    {
+     "V": 0.0,
+     "n_Li": 8.0,
+     "products": "0.3 Li2O + 0.8 Li3P + 4.1 Li2S + 0.2 NdP + 1.6 LiCl"
+    },
+    {
+     "V": 0.69,
+     "n_Li": 7.4,
+     "products": "0.725 Li3P + 4.1 Li2S + 0.2 NdP + 0.075 Li3PO4 + 1.6 LiCl"
+    },
+    {
+     "V": 0.87,
+     "n_Li": 5.95,
+     "products": "0.725 LiP + 4.1 Li2S + 0.2 NdP + 0.075 Li3PO4 + 1.6 LiCl"
+    },
+    {
+     "V": 0.93,
+     "n_Li": 5.536,
+     "products": "0.1036 Li3P7 + 4.1 Li2S + 0.2 NdP + 0.075 Li3PO4 + 1.6 LiCl"
+    },
+    {
+     "V": 1.11,
+     "n_Li": 5.225,
+     "products": "4.1 Li2S + 0.1812 NdP5 + 0.01875 NdP + 0.075 Li3PO4 + 1.6 LiCl"
+    },
+    {
+     "V": 1.21,
+     "n_Li": 5.188,
+     "products": "0.01875 NdPS + 4.081 Li2S + 0.1813 NdP5 + 0.075 Li3PO4 + 1.6 LiCl"
+    },
+    {
+     "V": 1.28,
+     "n_Li": 4.825,
+     "products": "0.2 NdPS + 3.9 Li2S + 0.075 Li3PO4 + 1.6 LiCl + 0.725 P"
+    },
+    {
+     "V": 1.52,
+     "n_Li": 4.625,
+     "products": "0.1 Nd2S3 + 3.8 Li2S + 0.075 Li3PO4 + 1.6 LiCl + 0.925 P"
+    },
+    {
+     "V": 1.72,
+     "n_Li": -0.0,
+     "products": "0.925 Li3PS4 + 0.1 Nd2S3 + 0.1 Li2S + 0.075 Li3PO4 + 1.6 LiCl"
+    },
+    {
+     "V": 1.92,
+     "n_Li": -0.16,
+     "products": "0.02 Nd10S19 + 0.925 Li3PS4 + 0.02 Li2S + 0.075 Li3PO4 + 1.6 LiCl + 0.16 Li"
+    },
+    {
+     "V": 2.0,
+     "n_Li": -0.2,
+     "products": "0.925 Li3PS4 + 0.2 NdS2 + 0.075 Li3PO4 + 1.6 LiCl + 0.2 Li"
+    },
+    {
+     "V": 2.3,
+     "n_Li": -0.7,
+     "products": "0.1 Li9Nd2(PS4)5 + 0.425 Li3PS4 + 0.1 LiS4 + 0.075 Li3PO4 + 1.6 LiCl + 0.7 Li"
+    },
+    {
+     "V": 2.36,
+     "n_Li": -1.922,
+     "products": "0.1 Li9Nd2(PS4)5 + 0.2125 P2S7 + 0.1531 LiS4 + 0.075 Li3PO4 + 1.6 LiCl + 1.922 Li"
+    },
+    {
+     "V": 2.36,
+     "n_Li": -2.784,
+     "products": "0.3625 P2S7 + 0.2 NdPS4 + 0.1906 LiS4 + 0.075 Li3PO4 + 1.6 LiCl + 2.784 Li"
+    },
+    {
+     "V": 2.45,
+     "n_Li": -3.0,
+     "products": "0.075 NdPO4 + 0.4 P2S7 + 0.125 NdPS4 + 0.2 LiS4 + 1.6 LiCl + 3 Li"
+    },
+    {
+     "V": 2.62,
+     "n_Li": -3.359,
+     "products": "0.075 NdPO4 + 0.4625 P2S7 + 0.2156 LiS4 + 0.125 NdCl3 + 1.225 LiCl + 3.359 Li"
+    },
+    {
+     "V": 3.06,
+     "n_Li": -3.575,
+     "products": "0.075 NdPO4 + 0.4625 P2S7 + 0.125 NdCl3 + 1.225 LiCl + 0.8625 S + 3.575 Li"
+    },
+    {
+     "V": 3.08,
+     "n_Li": -3.7,
+     "products": "0.45 P2S7 + 0.025 LiNd(PO3)4 + 0.175 NdCl3 + 1.075 LiCl + 0.95 S + 3.7 Li"
+    },
+    {
+     "V": 3.33,
+     "n_Li": -4.65,
+     "products": "0.95 SCl + 0.45 P2S7 + 0.025 LiNd(PO3)4 + 0.175 NdCl3 + 0.125 LiCl + 4.65 Li"
+    },
+    {
+     "V": 3.39,
+     "n_Li": -4.775,
+     "products": "1.001 SCl + 0.01471 PCl5 + 0.4426 P2S7 + 0.025 LiNd(PO3)4 + 0.175 NdCl3 + 4.775 Li"
+    },
+    {
+     "V": 3.66,
+     "n_Li": -4.8,
+     "products": "1.012 SCl + 0.01765 PCl5 + 0.03333 Nd(PO3)3 + 0.4412 P2S7 + 0.1667 NdCl3 + 4.8 Li"
+    }
+   ],
+   "ocv_V": 1.72,
+   "ocv_products": "0.925 Li3PS4 + 0.1 Nd2S3 + 0.1 Li2S + 0.075 Li3PO4 + 1.6 LiCl",
+   "reduction_V": 1.52,
+   "reduction_products": "+ 4.625 Li -> 0.1 Nd2S3 + 3.8 Li2S + 0.075 Li3PO4 + 1.6 LiCl + 0.925 P",
+   "oxidation_V": 1.92,
+   "oxidation_products": "0.02 Nd10S19 + 0.925 Li3PS4 + 0.02 Li2S + 0.075 Li3PO4 + 1.6 LiCl + 0.16 Li",
+   "intrinsic_window_V": 0.4
+  },
+  "modelc_sameHull": {
+   "breakpoints": [
+    {
+     "V": 0.0,
+     "n_Li": 8.0,
+     "products": "Li3P + 4.4 Li2S + 1.6 LiCl"
+    },
+    {
+     "V": 0.87,
+     "n_Li": 6.0,
+     "products": "LiP + 4.4 Li2S + 1.6 LiCl"
+    },
+    {
+     "V": 0.93,
+     "n_Li": 5.429,
+     "products": "0.1429 Li3P7 + 4.4 Li2S + 1.6 LiCl"
+    },
+    {
+     "V": 1.18,
+     "n_Li": 5.143,
+     "products": "0.1429 LiP7 + 4.4 Li2S + 1.6 LiCl"
+    },
+    {
+     "V": 1.24,
+     "n_Li": 5.0,
+     "products": "4.4 Li2S + 1.6 LiCl + P"
+    },
+    {
+     "V": 1.72,
+     "n_Li": -0.0,
+     "products": "Li3PS4 + 0.4 Li2S + 1.6 LiCl"
+    },
+    {
+     "V": 2.14,
+     "n_Li": -0.7,
+     "products": "Li3PS4 + 0.1 LiS4 + 1.6 LiCl + 0.7 Li"
+    },
+    {
+     "V": 2.36,
+     "n_Li": -3.575,
+     "products": "0.5 P2S7 + 0.225 LiS4 + 1.6 LiCl + 3.575 Li"
+    },
+    {
+     "V": 3.06,
+     "n_Li": -3.8,
+     "products": "0.5 P2S7 + 1.6 LiCl + 0.9 S + 3.8 Li"
+    },
+    {
+     "V": 3.33,
+     "n_Li": -4.7,
+     "products": "0.9 SCl + 0.5 P2S7 + 0.7 LiCl + 4.7 Li"
+    },
+    {
+     "V": 3.39,
+     "n_Li": -5.4,
+     "products": "1.188 SCl + 0.08235 PCl5 + 0.4588 P2S7 + 5.4 Li"
+    }
+   ],
+   "ocv_V": 1.72,
+   "ocv_products": "Li3PS4 + 0.4 Li2S + 1.6 LiCl",
+   "reduction_V": 1.24,
+   "reduction_products": "+ 5 Li -> 4.4 Li2S + 1.6 LiCl + P",
+   "oxidation_V": 2.14,
+   "oxidation_products": "Li3PS4 + 0.1 LiS4 + 1.6 LiCl + 0.7 Li",
+   "intrinsic_window_V": 0.9
+  }
+ }
+}
