@@ -99,7 +99,10 @@ _ADJ_SIG = {
                 'generate_binary_structure(3, 3)'),
     '6-face': ('generate_binary_structure(3, 1)', '_label6', 'n_components_6face',
                'np.s_[:-1, :, :]', 'np.s_[:, :-1, :]', 'np.s_[:, :, :-1]',
-               'ndimage.label(cond', 'ndimage.label(pore', 'ndimage.label(uni'),
+               '_dilate6', 'ndimage.label(cond', 'ndimage.label(pore', 'ndimage.label(uni'),
+    #  격자가 아예 없는 **거리 밴드** 계열 (coverage).  솔버의 face 규약과 비교 불가라
+    #  같은 물리량을 재도 다른 종(種)이다 — 그것이 판정에 드러나야 한다.
+    'kdtree-band': ('bands_um', 'r_pt', 'gap = d - r_se', 'query_ball_point'),
 }
 #  주기 wrap 은 **별도 축**이다.  솔버가 x/y 를 감아 전류를 흘리는데 진단이 그 face 를
 #  합에서 빼면, 둘은 같은 인접 규약을 쓰면서도 **다른 그래프**를 본다.

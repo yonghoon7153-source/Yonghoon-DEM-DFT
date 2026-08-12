@@ -261,7 +261,8 @@ def write_am_spheres(out, rows):
         f.write('# comsol_pkg v1.0 am_spheres — cls ∈ {AM_P,AM_S} (스캐폴드 type 1=AM_P/2=AM_S; '
                 '⚠ 복셀 sid 1=AM_S/2=AM_P 와 반대), f_cov_source ∈ {mpm_facewalk,class_mean_fallback}\n')
         f.write(f"# sigma_e_S_cm = step3_sigma.SIGMA_DEFAULT (AM_P {SIGMA_DEFAULT['AM_P']} / "
-                f"AM_S {SIGMA_DEFAULT['AM_S']} S/cm, A1-locked Trevisanello 5/10 mS/cm)\n")
+                f"AM_S {SIGMA_DEFAULT['AM_S']} S/cm — corpus-fit endpoints, NOT a literature "
+                f"measurement; order-of-magnitude hook, see docs/a1_sigma_e_direction_closeout.md)\n")
         f.write('# id = am_scaffold.csv 행 순서 (per_particle facewalk 의 index 규약과 동일)\n')
         w = csv.writer(f)
         w.writerow(['id', 'x_um', 'y_um', 'z_um', 'r_um', 'cls', 'sigma_e_S_cm',

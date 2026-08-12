@@ -18,7 +18,14 @@ DESIGN / TRUST (docs/step3_sigma_network.md):
     solver simplicity — identical for all compared runs, so the relative Δσ is unaffected to first
     order (documented).
   · σ table (S/cm), every value overridable:
-      AM_S 0.010 / AM_P 0.005   ✅ A1-locked (Trevisanello 10/5 mS/cm)
+      AM_S 0.010 / AM_P 0.005   ⚠ **corpus-fit endpoints**, NOT a Trevisanello measurement.
+                                  A1 close-out (2026-06-30, docs/a1_sigma_e_direction_closeout.md)
+                                  RETRACTED that attribution: Trevisanello 2021 measured Li⁺ chemical
+                                  diffusion / BET / R_ct and supports the NCM(r) GB **direction** only.
+                                  10/5 = our σ_e scaling-law fit endpoints (live 9.13/4.14) rounded.
+                                  ⚠ scale transplant: those endpoints are coefficients of a MACROSCOPIC
+                                  effective form; using them as a voxel **phase** σ has an unknown
+                                  multiplier (§F1 → null).  Treat as an order-of-magnitude hook.
       VGCF 100 · SuperP 10      ⚠ literature order-of-magnitude hooks (graphitic fibre / CB compact)
                                   ⚠ voxel_conductivity.py(레거시·미사용)는 500/100 — 생산 정본은 이 100/10
       SDCP 250                  USER anchor (2026-07-16; 진성호계 S-PEDOT, interim 150 대체 — code L43).
