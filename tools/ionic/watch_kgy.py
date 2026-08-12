@@ -503,7 +503,14 @@ else:
         print("      · β(MTO) 가 β(STO) 와 **거의 같으면** → 게이트 탈락은 잡음이 아니었다")
         print("      · 크게 다르면 → 단일원점 추정이 문제였다. 21런 전체를 재판정해야 한다")
         print("      · 어느 쪽이든 traj 가 남았으니 홉 통계로 기구를 분해할 수 있다:")
-        print(f"        python3 tools/ionic/hops_per_ion.py --glob '{MTO}/*/**/traj.xyz'")
+        # ⚠ hops_per_ion.py 는 **해석적 예측기**(n_hop=6Dt/d²)라 궤적을 안 읽는다.
+        #   궤적에서 기구를 보는 건 aimd_jump_stats.py 다 (van Hove + 케이지간 홉).
+        print(f"        T=$(ls -d {MTO}/lpsocl/T600_s2 2>/dev/null); "
+              f"f=$(find $T -name traj.xyz | head -1)")
+        print(f"        python3 tools/ionic/aimd_jump_stats.py --traj $f \\")
+        print(f"            --label lpsocl_T600_s2 --out_dir {MTO}/_jumpstats")
+        print(f"        # 통계 부족 여부는 궤적 없이도 예측된다:")
+        print(f"        python3 tools/ionic/hops_per_ion.py --prod_ps 200")
     print("   ⚠ traj 열이 ⛔ 면 --save_traj 가 안 걸린 것 — 러너를 다시 받을 것")
 print(BAR)
 
