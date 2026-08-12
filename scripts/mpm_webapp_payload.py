@@ -1409,8 +1409,13 @@ def main():
                              if (phase is not None and (phase == 4).any()) else None)
                     _rp = _s3.pore_tau(sid3, a.step3_vox, z_top_um=_ztop, extra_solid_pts=_ppts,
                                        periodic_xy=a.periodic)
+                    # ⚠ eps_connected_pct 는 either-plate 규약이다 (Codex #2) — 관통 공극률로
+                    #   읽히지 않도록 basis 와 eps_through_pct 를 **함께** 실어 보낸다.
                     step3['pore'] = {k: _rp[k] for k in ('eps_total_pct', 'eps_connected_pct',
-                                                         'D_rel', 'tau', 'n_dof') if k in _rp}
+                                                         'eps_connected_basis', 'eps_through_pct',
+                                                         'D_rel', 'tau', 'n_dof',
+                                                         'n_plate_reachable_dof', 'n_through_dof')
+                                     if k in _rp}
                     _s3mark('pore', 'not_solvable' if _rp.get('reason') else 'complete',
                             _rp.get('reason', ''))
                     if _rp.get('reason'):

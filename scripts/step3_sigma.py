@@ -416,10 +416,20 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     _ii, _jj = np.where(top_m); _lt = lab[_ii, _jj, k_last[top_m]]
     plate = np.unique(np.concatenate([_lb, _lt]))
     plate = plate[plate > 0]
+    # ★ 2026-08-12 (Codex #2): `plate` 는 **합집합** = "한쪽 플레이트에라도 닿는" 성분이다.
+    #   솔브에는 옳다 — 한쪽만 닿는 성분은 Dirichlet 이 걸려 특이하지 않고 net through-flux 가
+    #   0 이라 σ_eff 에 기여하지 않는다.  그러나 그 n_dof 로 만든 `eps_connected_pct` 를
+    #   "관통 공극률" 로 읽으면 **과대**다.  ⇒ 교집합(양쪽 다 닿음)을 **따로 세어** 병기한다.
+    #   솔브 경로는 그대로 (측정만 추가).
+    _sb = set(np.unique(_lb[_lb > 0]).tolist())
+    _st = set(np.unique(_lt[_lt > 0]).tolist())
+    _through = np.array(sorted(_sb & _st), dtype=lab.dtype)
+    n_through_dof = int(np.isin(lab, _through).sum()) if len(_through) else 0
     n_float = int(cond.sum())
     cond &= np.isin(lab, plate)
     n_float -= int(cond.sum())
     n_dof = int(cond.sum())
+    n_plate_reachable_dof = n_dof                          # = 합집합 (이름을 정직하게)
     if n_dof == 0:
         return {'sigma_eff': 0.0, 'n_dof': 0, 'n_floating_dropped': n_float, 'cg_info': 0,
                 'resid': 0.0, 'unconverged': False, 'reason': 'all_floating_dropped'}
@@ -483,6 +493,9 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     # σ_eff = I·L/(A·ΔV): L = plate gap (µm), A = nx·ny·vox² → σ_eff in the σ-table unit (S/cm)
     sigma_eff = max(0.0, I * (z_plate - z_b) / (nx * ny * vox * vox))
     out = {'sigma_eff': float(sigma_eff), 'n_dof': n_dof, 'n_floating_dropped': n_float,
+           # ★ n_dof 는 **합집합**(한쪽 플레이트에라도 닿음).  아래 둘을 병기해 이름을 정직하게.
+           'n_plate_reachable_dof': n_plate_reachable_dof,      # ≡ n_dof (legacy: either_plate)
+           'n_through_dof': n_through_dof,                      # 교집합 = 양 플레이트 관통
            'plate_z_um': (round(z_b, 3), round(z_plate, 3)), 'n_plate_vox': (n_pb, n_pt),
            'k_plates': (k_bot, k_top_ref), 'cg_info': int(info) if info else 0, 'resid': resid,
            'unconverged': unconv}
@@ -773,11 +786,20 @@ def pore_tau(sid, vox, z_top_um, extra_solid_pts=None, box_lo=(0.0, 0.0, 0.0), p
     out = {'eps_total_pct': round(100.0 * eps, 2),
            # on early-return paths n_dof counts ALL pore voxels (floating filter never ran) —
            # connected fraction is then UNKNOWN, not "everything" (review m2)
+           # ⚠ 2026-08-12 (Codex #2): 이 값은 **either-plate**(한쪽에라도 닿음)이다.  "관통
+           #   공극률" 이 아니다 — 그 뜻으로 쓰려면 아래 `eps_through_pct` 를 쓸 것.
+           #   이름은 하위호환을 위해 유지하고 규약을 `eps_connected_basis` 에 적는다.
            'eps_connected_pct': (None if res.get('reason')
                                  else round(100.0 * res['n_dof'] / s.size, 2)),
+           'eps_connected_basis': 'legacy:either_plate',
+           'eps_through_pct': (None if res.get('reason') or res.get('n_through_dof') is None
+                               else round(100.0 * res['n_through_dof'] / s.size, 2)),
            'D_rel': float(f'{d_rel:.4g}'),
            'tau': (float(f'{eps / d_rel:.4g}') if d_rel > 1e-12 else None),
-           'n_dof': res['n_dof'], 'resid': res['resid'], 'unconverged': res['unconverged']}
+           'n_dof': res['n_dof'],
+           'n_plate_reachable_dof': res.get('n_plate_reachable_dof'),
+           'n_through_dof': res.get('n_through_dof'),
+           'resid': res['resid'], 'unconverged': res['unconverged']}
     if res.get('reason'):
         out['reason'] = res['reason']
     return out
@@ -1185,6 +1207,29 @@ def _selftest_pore():
     e = r['tau'] is None and r['D_rel'] < 1e-9 and bool(r.get('reason'))
     ok &= e; print(f"roof:     τ={r['tau']}  D_rel={r['D_rel']:.1e}  reason={r.get('reason')}"
                    f"  (expect sealed — old band read τ<1 through the roof)  {'OK' if e else 'FAIL'}")
+    # 7) ★ Codex #2 — `eps_connected_pct` 는 either-plate 다.  **한쪽 플레이트에만 닿는 막다른
+    #    공극**(dead-end)을 넣으면 두 계수가 갈려야 한다.  갈리지 않으면 이 시험은 가능도비 1
+    #    이고 결함을 영원히 통과시킨다 → 여기서 **차이를 강제로 요구**한다.
+    sid = np.ones((6, 6, 10), np.int8)
+    sid[2:4, 2:4, :] = 0                                    # 관통 채널 (양 플레이트)
+    sid[0, 0, 0:5] = 0                                      # 바닥에만 닿는 막다른 공극
+    r = pore_tau(sid, 0.5, z_top_um=5.0)
+    e = (r['n_through_dof'] is not None
+         and r['n_plate_reachable_dof'] == r['n_dof']
+         and r['n_through_dof'] < r['n_plate_reachable_dof']      # ★ 판별력: 갈려야 한다
+         and r['n_plate_reachable_dof'] - r['n_through_dof'] == 5  # 막다른 5 복셀 정확히
+         and r['eps_through_pct'] < r['eps_connected_pct']
+         and r['eps_connected_basis'] == 'legacy:either_plate')
+    ok &= e; print(f"deadend:  reachable={r['n_plate_reachable_dof']} through={r['n_through_dof']} "
+                   f"(expect Δ=5: 바닥만 닿는 공극) ε_conn={r['eps_connected_pct']}% > "
+                   f"ε_through={r['eps_through_pct']}%  {'OK' if e else 'FAIL'}")
+    # 8) 관통만 있으면 둘이 같아야 한다 (위 시험이 항상 갈리는 것은 아님을 보이는 대조군)
+    sid = np.ones((6, 6, 10), np.int8); sid[2:4, 2:4, :] = 0
+    r = pore_tau(sid, 0.5, z_top_um=5.0)
+    e = r['n_through_dof'] == r['n_plate_reachable_dof'] and \
+        r['eps_through_pct'] == r['eps_connected_pct']
+    ok &= e; print(f"control:  reachable={r['n_plate_reachable_dof']} == through={r['n_through_dof']}"
+                   f"  (막다른 공극 없으면 동일)  {'OK' if e else 'FAIL'}")
     print('PORE SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
 
