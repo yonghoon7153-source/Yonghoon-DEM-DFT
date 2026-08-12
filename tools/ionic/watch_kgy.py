@@ -178,17 +178,42 @@ def section_long():
         except OSError:
             lines = []
         tail = lines[-3:]
+        # ▶ 줄을 먼저 찾고, 없으면 **로그의 첫 타임스탬프**로 후퇴한다.
+        #   (러너 출력이 버퍼링되면 ▶ 가 늦게 나타난다 — 그때 "시작 ?" 로 비면
+        #    경과·잔여를 못 보여 준다. 근사라도 있는 게 낫고, 어느 쪽인지 표시한다.)
         for ln in lines:
             if "prod=800" in ln and "▶" in ln:
                 m = re.search(r"\[([\d-]+\s+)?(\d{2}:\d{2}:\d{2})\]", ln)
                 if m:
                     t0 = m.group(2)
+        if t0 is None:
+            for ln in lines:
+                m = re.search(r"\[([\d-]+\s+)?(\d{2}:\d{2}:\d{2})\]", ln)
+                if m:
+                    t0 = m.group(2) + "~"      # ~ = 로그 시작 시각(근사)
+                    break
+        if t0 is None and os.path.isfile(LONG_LOG):
+            t0 = datetime.fromtimestamp(
+                os.path.getmtime(LONG_LOG)).strftime("%H:%M:%S") + "?"
     el = os.path.getmtime(LONG_LOG) if os.path.isfile(LONG_LOG) else None
     age = (datetime.now().timestamp() - el) / 60.0 if el else None
     st = "✅ 완료" if mj else ("▶ 진행" if (up or nproc) else "⛔ 죽음/미착수")
     print(f"   상태 {st} · tmux {'있음' if up else '없음'} · 러너 {nproc} · "
           f"**드라이버 {ndrv}** · GPU {gpu} · 시작 {t0 or '?'} · "
           f"예상 {LONG_TARGET_PS / 200 * LONG_HOURS_PER_200PS:.1f} h")
+    if t0 and not mj:
+        try:
+            hh, mm, ss = (int(x) for x in t0.rstrip("~?").split(":"))
+            now = datetime.now()
+            el_h = ((now.hour - hh) * 3600 + (now.minute - mm) * 60
+                    + (now.second - ss)) / 3600.0
+            if el_h < 0:
+                el_h += 24
+            tgt = LONG_TARGET_PS / 200 * LONG_HOURS_PER_200PS
+            print(f"   경과 {el_h:.1f} h / {tgt:.1f} h  ({100 * el_h / tgt:.0f}%) · "
+                  f"남은 {max(0.0, tgt - el_h):.1f} h")
+        except ValueError:
+            pass
     if not mj and ndrv == 0:
         print("   ⛔ 드라이버 python 이 없다 — 쉘만 살아 있고 계산은 안 돈다")
     # MD 는 진행 로그를 거의 안 찍는다 — 출력 폴더가 크는지가 더 나은 생존 신호다
