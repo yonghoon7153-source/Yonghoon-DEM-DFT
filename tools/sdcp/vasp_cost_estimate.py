@@ -164,16 +164,25 @@ def manifest_jobs(path, base, atoms_fallback):
         for jp in jps:
             with open(jp) as fh:
                 meta = json.load(fh)
-            n_at = len(meta.get("magmom_poscar") or []) or atoms_fallback
+            # ⚠ 기체 기준계 잡에는 magmom_poscar 가 없다(슬랩 전용 필드). 그러면
+            #   조용히 atoms_fallback(=222)로 후퇴해 **분자를 슬랩처럼 계상**한다.
+            #   2026-08-12: 기체 8잡이 96 h 로 잡혀 총액이 570 → 714 h 로 부풀었다.
+            n_at = (len(meta.get("magmom_poscar") or [])
+                    or sum((meta.get("counts") or {}).values())
+                    or len(meta.get("species_order") or [])
+                    or atoms_fallback)
             km = meta.get("kmesh") or {}
             inc = meta.get("incar_expected") or {}
             ph_h = {}
             for ph in meta.get("phases") or []:
                 lr = str((inc.get(ph) or {}).get("LREAL", ".TRUE.")).upper()
+                # ⚠ 이온스텝 수는 계 크기에 크게 의존한다. 기체 분자(수십 원자)를
+                #   슬랩과 같은 60 스텝으로 잡으면 과대계상된다.
+                _ni = N_IONIC if n_at > 60 else 25
                 ph_h[ph] = phase_hours(
                     ph if ph in ESTEP else "static", n_at,
                     km.get(ph, "3 4 1"), base,
-                    lr.startswith(".F"), N_IONIC)
+                    lr.startswith(".F"), _ni)
             out.append((os.path.relpath(os.path.dirname(jp), root),
                         sum(ph_h.values()), ph_h))
     else:
@@ -400,11 +409,28 @@ def selftest() -> int:
         chk(set(jl[0][2]) == {"static", "dense"}, f"상 2개 회수 {sorted(jl[0][2])}")
         chk(jl[0][2]["dense"] > jl[0][2]["static"],
             "dense 가 static 보다 비싸다 (k 가 촘촘하다)")
+        # ★ 음성: 기체 잡(magmom_poscar 없음)을 **슬랩으로 계상하지 않는지**
+        #   2026-08-12: 이것 때문에 기체 8잡이 96 h 로 잡혀 총액이 25% 부풀었다.
+        gd = os.path.join(td, "refs", "mol__x")
+        os.makedirs(gd, exist_ok=True)
+        with open(os.path.join(gd, "job.json"), "w") as fh:
+            json.dump({"phases": ["relax", "static"], "counts": {"C": 2, "F": 4},
+                       "kmesh": {"relax": "1 1 1", "static": "1 1 1"},
+                       "incar_expected": {"relax": {"LREAL": "Auto"},
+                                          "static": {"LREAL": ".FALSE."}}}, fh)
+        with open(mp, "w") as fh:
+            json.dump({"planned": {"tier1/j1": {"phases": ["static", "dense"]},
+                                   "refs/mol__x": {"phases": ["relax", "static"]}}}, fh)
+        _m3, jl3, _md3 = manifest_jobs(mp, b, 222)
+        _gas = [x for x in jl3 if "mol__" in x[0]][0]
+        chk(_gas[1] < 1.0,
+            f"기체 6원자 잡이 1 h 미만 ({_gas[1]:.2f} h) — 슬랩(222원자)으로 안 센다")
+        os.remove(os.path.join(gd, "job.json"))
         # ★ 음성: job.json 이 없으면 **후퇴했다고 말해야** 한다 (조용한 가정 금지)
         os.remove(os.path.join(jd, "job.json"))
         _m2, jl2, mode2 = manifest_jobs(mp, b, 222)
-        chk(len(jl2) == 1 and "가정" in mode2,
-            f"job.json 없음 → planned 후퇴를 **명시** ({mode2})")
+        chk(len(jl2) == len(json.load(open(mp))["planned"]) and "가정" in mode2,
+            f"job.json 없음 → planned 후퇴를 **명시** ({mode2}, {len(jl2)}잡)")
         # ★ 음성: 없는 MANIFEST 는 0 이 아니라 exit 2
         class _A:
             manifest, atoms, concurrent, cores = "/nonexistent/MANIFEST.json", 222, 8, None
