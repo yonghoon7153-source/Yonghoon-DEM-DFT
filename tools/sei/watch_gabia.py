@@ -27,7 +27,40 @@ from datetime import datetime
 
 SEI = os.environ.get("SEI", "/data/work/runs/sei_dft")
 SDCP_VASP = "/data/work/runs/sdcp_v2/phaseB_vasp"
-NEBW = os.environ.get("NEBW", "/data/work/runs/sei_neb_v2")
+#: NEB 작업 루트 — **여러 개**를 콜론/쉼표로 준다. 같은 상(li3nd)이 경로마다
+#:  다른 홉을 뜻할 수 있어(b→c vs c→c) 루트를 갈라 보여 준다.
+NEBW = os.environ.get("NEBW",
+                      "/data/work/runs/sei_neb_v2:/data/work/runs/sei_neb_v2_ccpath")
+
+
+def neb_roots(spec=None):
+    """콜론/쉼표 목록 → 존재하는 디렉터리만. 없는 경로는 조용히 버리지 않고 돌려준다."""
+    out, missing = [], []
+    for x in re.split(r"[:,]", spec if spec is not None else NEBW):
+        x = x.strip()
+        if not x:
+            continue
+        (out if os.path.isdir(x) else missing).append(x)
+    return out, missing
+
+
+def root_label(d):
+    """루트 짧은 이름 — sei_neb_v2 → v2 · sei_neb_v2_ccpath → v2_ccpath."""
+    b = os.path.basename(d.rstrip("/"))
+    return b[len("sei_neb_"):] if b.startswith("sei_neb_") else b
+
+
+def run_note(d):
+    """작업 폴더의 _NOTE.txt — 이미 판정된 건에 대해 낡은 조언을 반복하지 않기 위해.
+
+    ⚠ 판정 자체는 kb 에 있다. 여기 두는 건 **이 실행 폴더가 무엇인지** 한 줄이다
+      (환경 상태). 파일이 없으면 아무것도 안 한다.
+    """
+    p = os.path.join(d, "_NOTE.txt")
+    try:
+        return open(p, encoding="utf-8").read().strip().splitlines()[0][:88]
+    except (OSError, IndexError):
+        return None
 STAGES = [("01_vcrelax", "vc-rlx"), ("02_scf", "scf"), ("03_nscf_gap", "gap"),
           ("04_nscf_dos", "dos-k"), ("05_dos", "dos"), ("06_projwfc", "pdos")]
 BAR = "─" * 76
@@ -112,6 +145,25 @@ def read_gap(path):
         return None, f"수치 필드 손상: gap={d.get('gap')!r}"
     d.setdefault("tag", tag)
     return d, None
+
+
+def _neb_rows(ss):
+    """NEB 표의 행들을 찍는다. 루트마다 호출한다 (같은 상이 루트별로 다른 홉이다)."""
+    for s in ss:
+        # 대칭 동등이면 Δ끝점이 0 이어야 한다 / 비대칭이면 두 자리 에너지 차라 정상
+        if s["ep_dE_meV"] is None:
+            dep = "—"
+        elif s["eqv"] is True:
+            dep = f"{s['ep_dE_meV']:+.0f}mV{'✓' if abs(s['ep_dE_meV']) <= EP_TOL_MEV else '⛔'}"
+        else:
+            dep = f"{s['ep_dE_meV']:+.0f}mV·"          # · = 비대칭이라 검사 안 함
+        err = f"{s['err']:.3f}→{s['thr'] or 0.05:.2f}" if s["err"] is not None else "—"
+        it = (f"{s['state']}it{s['it']}" if s["it"]
+              else {"◦": "◦SCF", "✗": "✗", " ": "—"}.get(s["state"], s["state"]))
+        ea = f"{s['ea']:.3f}" if s["ea"] is not None else "—"
+        age = f"{s['age_min']:.0f}분" if s["age_min"] is not None else "—"
+        print(f"   {s['tag']:11s}{s['ep_mark']:>5s} {dep:>11s}  "
+              f"{it:>5s} {err:>13s} {ea:>9s} {age:>7s}")
 
 
 def neb_status(d):
@@ -301,6 +353,29 @@ def selftest():
         chk(srt == ["a", "b"], f"정렬 통과 (내림차순 {srt})")
     except TypeError as e:
         chk(False, f"정렬에서 TypeError — 실측 크래시 재발: {e}")
+    # ── 다중 NEB 루트 (2026-08-12) ─────────────────────────────────────────
+    #   같은 상 이름이 루트마다 **다른 홉**이다 (sei_neb_v2 = b→c ·
+    #   sei_neb_v2_ccpath = c→c). 한 표에 섞으면 어느 쪽 숫자인지 알 수 없다.
+    r1 = os.path.join(td, "nebA"); r2 = os.path.join(td, "nebB")
+    os.makedirs(os.path.join(r1, "li3nd")); os.makedirs(os.path.join(r2, "li3nd"))
+    got, miss = neb_roots(f"{r1}:{r2}")
+    chk(got == [r1, r2] and not miss, f"콜론 목록 → 루트 2개 ({len(got)})")
+    got2, miss2 = neb_roots(f"{r1}, {r2}")
+    chk(got2 == [r1, r2], "쉼표+공백 목록도 받는다")
+    # ★ 음성: 없는 경로를 **조용히 버리지 않는다** (오타를 눈치채야 한다)
+    got3, miss3 = neb_roots(f"{r1}:/nope/xyz")
+    chk(got3 == [r1] and miss3 == ["/nope/xyz"],
+        f"없는 루트는 missing 으로 돌려준다 ({miss3})")
+    chk(neb_roots("")[0] == [] and neb_roots(":  :")[0] == [],
+        "빈 목록/구분자만 → 빈 결과 (예외 아님)")
+    chk(root_label("/a/b/sei_neb_v2_ccpath") == "v2_ccpath"
+        and root_label("/a/b/other") == "other", "루트 짧은 이름")
+    # ★ 음성: 두 루트의 같은 상이 **섞이지 않는지** — 태그가 아니라 루트로 갈린다
+    lbl = [root_label(x) for x in got]
+    chk(len(set(lbl)) == 2, f"같은 상이 있어도 루트 라벨로 구분된다 ({lbl})")
+    chk(run_note(r1) is None, "_NOTE.txt 없으면 아무것도 안 한다")
+    open(os.path.join(r1, "_NOTE.txt"), "w").write("c→c 진짜 경로\n둘째 줄은 무시\n")
+    chk(run_note(r1) == "c→c 진짜 경로", f"_NOTE.txt 첫 줄만 ({run_note(r1)})")
     shutil.rmtree(td, ignore_errors=True)
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
@@ -450,31 +525,26 @@ else:
 print(BAR)
 
 # ── 4) SEI NEB ─────────────────────────────────────────────────────────────
-nebs = [neb_status(d) for d in
-        sorted(glob.glob(os.path.join(NEBW, "*"))) if os.path.isdir(d)]
+roots, missing_roots = neb_roots()
 neb_pid = len([x for x in sh(r"pgrep -f '[n]eb\.x'").split() if x])
+by_root = [(d, [neb_status(x) for x in sorted(glob.glob(os.path.join(d, "*")))
+                if os.path.isdir(x)]) for d in roots]
+nebs = [s for _d, ss in by_root for s in ss]
+for m in missing_roots:
+    print(f"④ ⚠ NEB 루트 없음: {m}")
 if not nebs:
-    print(f"④ SEI NEB — {NEBW} 에 상 폴더가 없다 (build_neb_inputs.py 부터)")
+    print(f"④ SEI NEB — {roots or NEBW} 에 상 폴더가 없다 (build_neb_inputs.py 부터)")
 else:
-    print(f"④ SEI NEB — {NEBW}  · neb.x 프로세스 {neb_pid}"
+    print(f"④ SEI NEB — 루트 {len(by_root)}개 · neb.x 프로세스 {neb_pid}"
           f"   (✓수렴 ▸진행 ◦SCF중 ✗오류 공백 미착수)")
     print(f"   {'상':11s}{'끝점':>5s} {'Δ끝점':>11s}  {'경로':>5s} {'오차→문턱':>13s}"
           f" {'Ea→(eV)':>9s} {'갱신':>7s}")
-    for s in nebs:
-        # 대칭 동등이면 Δ끝점이 0 이어야 한다 / 비대칭이면 두 자리 에너지 차라 정상
-        if s["ep_dE_meV"] is None:
-            dep = "—"
-        elif s["eqv"] is True:
-            dep = f"{s['ep_dE_meV']:+.0f}mV{'✓' if abs(s['ep_dE_meV']) <= EP_TOL_MEV else '⛔'}"
-        else:
-            dep = f"{s['ep_dE_meV']:+.0f}mV·"          # · = 비대칭이라 검사 안 함
-        err = f"{s['err']:.3f}→{s['thr'] or 0.05:.2f}" if s["err"] is not None else "—"
-        it = (f"{s['state']}it{s['it']}" if s["it"]
-              else {"◦": "◦SCF", "✗": "✗", " ": "—"}.get(s["state"], s["state"]))
-        ea = f"{s['ea']:.3f}" if s["ea"] is not None else "—"
-        age = f"{s['age_min']:.0f}분" if s["age_min"] is not None else "—"
-        print(f"   {s['tag']:11s}{s['ep_mark']:>5s} {dep:>11s}  "
-              f"{it:>5s} {err:>13s} {ea:>9s} {age:>7s}")
+    for _d, _ss in by_root:
+        note = run_note(_d)
+        print(f"   ┌ {root_label(_d)}"
+              + (f"  — {note}" if note else "")
+              + ("" if _ss else "   (상 폴더 없음)"))
+        _neb_rows(_ss)
     alerts = [a for s in nebs for a in s["alerts"]]
     if alerts:
         print()
