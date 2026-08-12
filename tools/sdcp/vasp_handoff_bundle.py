@@ -2106,7 +2106,10 @@ def main():
                 .get("cross") or {}).items() if "dE_matched_eV" in c)
             cls = ("CHAMPION_MATCHED_POSE" if same else
                    "CHAMPION_MIXED_ORIENTATION_2x2" if ncross == 2 and got == 2 else
-                   "THREE_CORNER_PARTIAL(교차 %d/2 완료 — 배향 미해결)" % got)
+                   # 교차 0 = 대각선 두 모서리뿐. 자리와 배향을 **분리할 수 없다**.
+                   "CHAMPION_ORIENTATION_CONFOUNDED(교차 없음 — 자리·배향 분리 불가)"
+                   if ncross == 0 else
+                   "THREE_CORNER_PARTIAL(교차 %d/%d 완료 — 배향 미해결)" % (got, ncross))
         elif lost:
             cls = "DIRECTION_CENSORED_%d_OF_%d" % (n_planned, nd or n_planned)
         elif expect_dirs and n_planned != expect_dirs:
@@ -2591,8 +2594,9 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             pairs = discover_pairs(run, audit=aud,
                                    allow_stale_gate=a.allow_stale_gate,
                                    top_n=a.top_n, champion=a.champion,
-                                   cross=(a.cross_endpoints or ()) and
-                                   frag in a.cross_endpoints)
+                                   cross=(a.champion and not a.no_cross and
+                                          (frag in a.cross_endpoints
+                                           if a.cross_endpoints else True)))
             man["pair_audit"][frag] = aud
             if not pairs:
                 bad(f"{frag}: 자격 쌍 0개")
@@ -2705,6 +2709,16 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                         slab_metas.append(m)
                         plan(rel, m["phases"], req)
                         n_jobs += 1
+                # ★ 자세키가 다른데 교차가 없으면 ΔE 는 **자리+배향 혼합값**이다.
+                #   조용히 내보내면 나중에 자리 선호로 인용된다.
+                if p.get("matched") is False and not p.get("cross"):
+                    pm["orientation_confounded"] = True
+                    print(f"    ⚠⚠ {pid}: 챔피언 자세키가 다른데 교차 끝점이 없다 "
+                          f"(Li {p['champion_pose']['Li']} vs Ni {p['champion_pose']['Ni']}) "
+                          f"— ΔE 에 자리와 배향이 섞인다. 분리 불가.")
+                elif p.get("matched") is False:
+                    print(f"    ↳ {pid}: 자세키 불일치 → 교차 {len(p['cross'])}개 추가 "
+                          f"(2×2 완성 · 배향 분리)")
                 if p.get("cross_missing"):
                     pm["cross_missing"] = p["cross_missing"]
                     for t2, why in p["cross_missing"].items():
@@ -3168,7 +3182,7 @@ def selftest() -> int:
     a0 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_short"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8)
+                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False)
     try:
         build_bundle(a0, ledger=led)
         chk(False, "N0 xyz 누락 → **번들이 만들어졌다** (축소 정본 = fail-open)")
@@ -3184,7 +3198,7 @@ def selftest() -> int:
     ab = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_nofp"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8)
+                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False)
     try:
         build_bundle(ab, ledger=led)
         chk(False, "N0b 지문 없는 소스 → **번들이 만들어졌다**")
@@ -3208,7 +3222,7 @@ def selftest() -> int:
     at3 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_top3"),
                              freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                              qe="(none)", expect=None, allow_partial=False,
-                             no_prescf=False, allow_stale_gate=False, top_n=3, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8)
+                             no_prescf=False, allow_stale_gate=False, top_n=3, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False)
     o3 = build_bundle(at3, ledger=led)
     m3 = json.loads((o3 / "MANIFEST.json").read_text())
     kept = sorted({v["dir"] for v in m3["pairs"].values()})
@@ -3225,7 +3239,7 @@ def selftest() -> int:
     a = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle"),
                            freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                            qe="(none)", expect=None, allow_partial=False,
-                           no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8)
+                           no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False)
     out = build_bundle(a, ledger=led)
     man = json.loads((out / "MANIFEST.json").read_text())
     n_pre = sum(1 for p in man["planned"].values() if "pre" in (p.get("phases") or []))
@@ -3238,7 +3252,7 @@ def selftest() -> int:
         frags=["ptfe_dimer"], qe="(none)", expect=None, allow_partial=False,
         no_prescf=False, allow_stale_gate=False, top_n=None, single_point=True,
         champion=True, kmesh_static=None, kmesh_dense=None, refs=False,
-        cross_endpoints=["ptfe_dimer"], mag_controls=True, dense_frags=["ptfe_dimer"], cores=48, concurrency=8)
+        cross_endpoints=["ptfe_dimer"], mag_controls=True, dense_frags=["ptfe_dimer"], cores=48, concurrency=8, no_cross=False)
     out_sp = build_bundle(a_sp, ledger=led)
     # ★ **배포되는 분석기**의 k 라벨·guard band selftest 를 그대로 돌린다.
     #   이 로직은 문자열 템플릿 안이라 여기서 import 로 시험할 수 없다 — 실행이 유일한 길.
@@ -3354,6 +3368,30 @@ def selftest() -> int:
             f"음성 분자 결합 끊김 → 빌드 중단 ({str(e).splitlines()[0][:50]})")
     xp0.write_text(keep_xyz)
     m_sp = json.loads((out_sp / "MANIFEST.json").read_text())
+    # ── 교차 끝점 auto (2026-08-12 실빌드에서 발각) ──────────────────────────
+    #   --cross_endpoints 로 한 조각만 켰는데 그 조각은 자세키가 일치했고, 정작
+    #   불일치인 다른 조각이 **조용히 배향 혼입 상태로** 나갔다. 기본을 auto 로 뒤집었다.
+    pm_sp = list(m_sp["pairs"].values())[0]
+    chk(pm_sp.get("matched") is False,
+        f"selftest 전제: 챔피언 자세키 불일치 (Li {(pm_sp.get('champion_pose') or {}).get('Li')})")
+    chk(len(pm_sp.get("cross") or {}) == 2,
+        f"불일치 → 교차 2개 **자동** 생성 ({list((pm_sp.get('cross') or {}))})")
+    chk(not pm_sp.get("orientation_confounded"),
+        "교차가 있으므로 혼입 표시 없음")
+    # ★ 음성: --no_cross 면 혼입 상태를 **명시**해야 한다 (조용히 나가면 안 된다)
+    a_nc = argparse.Namespace(**{**vars(a_sp), "out": str(td / "bundle_nocross"),
+                                 "no_cross": True})
+    m_nc = json.loads((build_bundle(a_nc, ledger=led) / "MANIFEST.json").read_text())
+    p_nc = list(m_nc["pairs"].values())[0]
+    chk(p_nc.get("orientation_confounded") is True and not p_nc.get("cross"),
+        "--no_cross + 불일치 → orientation_confounded 기록 (조용한 통과 금지)")
+    # ★ 음성: 제한 목록에 없는 조각은 교차가 안 생긴다 (제한이 실제로 먹는지)
+    a_lim = argparse.Namespace(**{**vars(a_sp), "out": str(td / "bundle_limit"),
+                                  "cross_endpoints": ["sdcp_neutral"]})
+    m_lim = json.loads((build_bundle(a_lim, ledger=led) / "MANIFEST.json").read_text())
+    chk(not list(m_lim["pairs"].values())[0].get("cross"),
+        "--cross_endpoints 제한이 실제로 먹는다 (목록 밖 조각은 교차 없음)")
+
     chk(all(p.get("phases") == ["static"] or p.get("phases") == ["static", "dense"]
             for k, p in m_sp["planned"].items() if "clean_slab" not in k),
         "SP: pose 잡에 relax/pre 가 없다 (단일점)")
@@ -3561,9 +3599,12 @@ def main():
                          "권장 'ptfe_c10 sdcp_doped' (큰 계 + 유일한 open-shell). "
                          "나머지는 K_TRANSFER_SCREENED 로만 해석할 것 (K_CONVERGED 아님).")
     ap.add_argument("--cross_endpoints", nargs="*", default=None,
-                    help="이 조각들은 챔피언 배향이 다를 때 **교차 끝점**도 만든다 "
-                         "(예: ptfe_c10). Li@(Ni배향)·Ni@(Li배향) 이 추가돼 2×2 가 완성되고 "
-                         "site×orientation 상호작용이 분리된다. 조각당 +2쌍(2 seed 면 +4잡).")
+                    help="교차 끝점을 만들 조각을 **제한**한다 (기본: 필요한 조각 전부). "
+                         "챔피언 자세키가 다른 조각에만 실제로 생긴다 — 같으면 0개다. "
+                         "제한하면 나머지 불일치 조각은 배향 혼입 상태로 남는다(경고).")
+    ap.add_argument("--no_cross", action="store_true",
+                    help="교차 끝점을 아예 안 만든다. ⚠ 챔피언 자세키가 다른 조각의 ΔE 는 "
+                         "자리 효과와 배향 효과가 섞인 값이 되고 분리할 방법이 없어진다.")
     ap.add_argument("--refs", action="store_true",
                     help="clean 슬랩 + 기체 분자 기준계를 포함한다 (절대 E_ads 용). "
                          "기본은 **미포함** — 자리 대비 ΔE 에서는 정확히 소거되므로 "
