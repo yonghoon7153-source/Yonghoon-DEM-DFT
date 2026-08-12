@@ -161,6 +161,27 @@
    "bridge": "반례가 P:S 1차 런 자신이다 — 운동학 정지 확정인데 |gap| ≤ 0.7 %p.",
    "verdict": "h1 채택.  ⇒ 증명서 역할을 판별력 있는 검사로 이전: 갭-예측 정지 프레임 · 정착 wallP vs target · 속도 사다리 수렴.",
    "shared_input": "SE 씨앗 좌표 = DEM dump atom_2060000 (압축 종료 상태).  solid_vol 이 그 시점에 고정되므로 MPM 의 자유도는 wall_z 하나뿐이고, 그 wall_z 는 강체 AM 골격에 1 µm 창(31.312↔30.28 µm)으로 갇힌다 — S4 CDX-S4-08."
+  },
+  {
+   "id": "CL-09",
+   "date": "2026-08-12",
+   "status": "live",
+   "kind": "hypothesis",
+   "claim": "σ_e EXCL 목록의 일부가 Stage-E 간선 가지치기와 상관한다",
+   "measured": {
+    "metric": "edge_drop_ratio_e (EXCL 평균 / non-EXCL 평균)",
+    "value": "0.0472 / 0.0123 = 3.83×  (n 17 vs 146, 순열검정 p = 0.0038)",
+    "unit": "ratio"
+   },
+   "asserted": "아웃라이어로 제외된 케이스가 **솔버 그래프와 특징 그래프의 괴리가 큰 쪽**에 몰려 있다",
+   "h0": "제외는 per-seed 노이즈·marginal percolation 때문이고 간선 가지치기와 무관하다",
+   "h1": "Stage-E 가 factor<0.05 간선을 솔버 입력에서 버리는데 특징(f_perc·CN·cov·τ)은 원 그래프에서 읽으므로, 괴리가 큰 케이스가 잔차로 나타나 제외됐다",
+   "h0_predicts": "비 = 1.0",
+   "h1_predicts": "비 >= 2.0",
+   "bridge": "`validation_flags.edge_drop_ratio_e` 는 이미 원장에 계산돼 있다 (case_master.csv 163행). 간선이 실제로 잘린 케이스가 **69/163 = 42 %** 로 드물지 않다.",
+   "shared_input": "EXCL 소속은 |err| 로 결정됐고 edge_drop 은 같은 런의 산출이다 — 둘 다 같은 침대에서 나온다.",
+   "verdict": "h0(무관) **기각** — 관측 비 3.83, 순열검정 p 0.0038.  ⚠ 그러나 **h1 을 채택하지 않는다**: 경쟁 가설 h2(성긴/marginal 망이 edge_drop 과 σ 산포를 **둘 다** 키운다)가 같은 방향·같은 크기를 예측하므로 h1 vs h2 의 가능도비는 ≈ 1.  **판별 검사**: 특징(f_perc·CN·cov·τ)을 `contacts_modified.csv`(가지친 그래프)에서 **재계산**해 잔차가 줄어드는지.  줄면 h1, 안 줄면 h2.  GPU 불요.  그때까지 '아웃라이어의 원인'으로 인용 금지 — 확정된 것은 **상관 존재 + 42 % 케이스에서 그래프가 실제로 다름** 뿐.",
+   "resolution": 0.5
   }
  ]
 }
