@@ -507,8 +507,28 @@ def discover_pairs(run_dir: Path, audit: Optional[Dict[str, Any]] = None,
                              "0 이 아니면 이 ΔE 는 '가장 안정한 자세끼리' 가 아니라 "
                              "'짝이 있는 배향 중 최선끼리' 다.")}
         out[0]["pool_restriction"] = restr
+        # ★★ 두 질문은 **다른 답을 낼 수 있다** (2026-08-12 실빌드에서 발각).
+        #   (a) 배향일치 대비  ΔE(pool) = E_Ni(pool) − E_Li(pool)   — 우리가 재는 것
+        #   (b) 전역 자리 선호 ΔE(global) = E_Ni(g) − E_Li(g)       — 문헌이 읽는 것
+        #   ΔE(global) = ΔE(pool) − restr_Ni + restr_Li 이므로 shift = restr_Li − restr_Ni.
+        #   ptfe_c10 은 restr_Ni = 51.8 meV → shift −51.8 → UMA 부호가 뒤집힌다.
+        #   (a)만 재고 (b)로 읽히게 두면 안 되므로, shift 가 판정을 움직일 만하면
+        #   전역 최선 자세도 끝점으로 넣어 **둘 다 DFT 로 잰다**.
+        if g_li is not None and g_ni is not None:
+            shift = (restr["Li_meV"] or 0.0) - (restr["Ni_meV"] or 0.0)
+            out[0]["global_shift_meV"] = round(shift, 1)
+            out[0]["global_best"] = {}
+            for role, rec_pool, gE in (("Li", rl, g_li), ("Ni", rn, g_ni)):
+                if abs(rec_pool["E_pose_eV"] - gE) <= 1e-9:
+                    continue                    # 풀 챔피언이 곧 전역 최선
+                cand = [r for r in fs if r["site"] == f"{role}_top"
+                        and r.get("nearest_cation") == role
+                        and abs(r["E_pose_eV"] - gE) <= 1e-9]
+                if cand:
+                    out[0]["global_best"][role] = cand[0]
         if audit is not None:
             audit["pool_restriction"] = restr
+            audit["global_shift_meV"] = out[0].get("global_shift_meV")
             audit["n_contrast_pairs"] = 1
             audit["cross_endpoints"] = {k: v["label"]
                                         for k, v in out[0]["cross"].items()}
@@ -2002,6 +2022,40 @@ def main():
                 if not ok_k:
                     rec["gates"].append(f"NUMERICALLY_UNRESOLVED(dense-k {gate})")
 
+        # ── 전역 자리 선호 vs 배향일치 대비 (2026-08-12) ────────────────────
+        #   ΔE(matched) = 같은 배향에서 Li 위 vs Ni 위  — 배향 혼입 없음
+        #   ΔE(global)  = 각자 최선을 다했을 때        — 문헌의 "site preference"
+        #   둘의 차가 **배향 항**이다. 부호가 다르면 어느 질문인지 반드시 밝혀야 한다.
+        gb = pm.get("global_best") or {}
+        if gb:
+            eg = {}
+            for role, pre in (("Li", pm["li_prefix"]), ("Ni", pm["ni_prefix"])):
+                p2 = gb[role]["prefix"] if role in gb else pre
+                eg[role] = E(f"{p2}__afm2424_pm1")
+            if eg["Li"] is not None and eg["Ni"] is not None:
+                dg = eg["Ni"] - eg["Li"]
+                rec["dE_global_eV"] = round(dg, 4)
+                if de_main is not None:
+                    rec["orientation_term_eV"] = round(dg - de_main, 4)
+                    flip = (dg > 0) != (de_main > 0)
+                    rec["global_vs_matched"] = (
+                        "SIGN_DIFFERS — 배향일치 대비와 전역 자리 선호가 **반대**다. "
+                        "어느 질문인지 밝히지 않고 인용 금지."
+                        if flip and min(abs(dg), abs(de_main)) > GUARD_EV else
+                        "SIGN_AGREES" if not flip else
+                        "UNRESOLVED(한쪽이 guard band 안)")
+                    if flip and min(abs(dg), abs(de_main)) > GUARD_EV:
+                        rec["gates"].append(
+                            f"SITE_QUESTION_DEPENDENT(배향일치 {de_main:+.3f} vs "
+                            f"전역 {dg:+.3f} eV — 부호가 다르다. 전역 자리 선호를 "
+                            f"주장하려면 전역 값을, 배향 효과를 배제하려면 배향일치 값을 "
+                            f"쓰되 **둘을 섞지 말 것**)")
+            else:
+                rec["dE_global_eV"] = None
+                rec["global_vs_matched"] = "전역 끝점 미완/게이트 — 전역 대비 불가"
+        elif pm.get("global_unmeasured"):
+            rec["global_unmeasured"] = pm["global_unmeasured"]
+
         # ── 교차 끝점: 배향이 맞춰진 대비 (Codex 5차 결정 ②) ──────────────
         #   챔피언 ΔE 는 두 배향이 다르면 자리 효과와 배향 효과가 섞인다.
         #   같은 배향에서 잰 Δ 와 **부호가 같은지**가 배향 인공물 여부를 가른다.
@@ -2692,6 +2746,61 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                         slab_metas.append(m)
                         plan(rel, m["phases"], req)
                         n_jobs += 1
+                # ── 전역 챔피언 끝점 (2026-08-12) ──────────────────────────
+                #   풀 제한 때문에 (a)배향일치 대비와 (b)전역 자리 선호가 갈리면,
+                #   둘 다 DFT 로 재야 "어느 질문에 답했는지" 를 말할 수 있다.
+                gshift = abs(p.get("global_shift_meV") or 0.0)
+                if gshift >= a.global_champion_meV:
+                    for role, rec in (p.get("global_best") or {}).items():
+                        xg = run / f"{rec['label']}.xyz"
+                        if not xg.is_file():
+                            bad(f"{pid}: 전역 챔피언 {role} 의 xyz 없음 ({rec['label']})")
+                            continue
+                        cg = ase_read(xg); cg.set_cell(slab.cell.array); cg.set_pbc(True)
+                        _assert_slab_lineage(cg, nslab, slab, f"{pid}/global_{role}", man)
+                        _assert_mol_topology(cg, nslab, frag, f"{pid}/global_{role}", man)
+                        used_els |= set(cg.get_chemical_symbols())
+                        jg = xg.with_suffix(".json")
+                        pm.setdefault("global_best", {})[role] = {
+                            "prefix": f"{tier}/{pid}__global_{role}",
+                            "down_dir": rec["down_dir"], "roll_deg": rec.get("roll_deg"),
+                            "role": role, "source_pose": rec["label"],
+                            "uma_E_pose_eV": rec["E_pose_eV"],
+                            "source_sha256": {
+                                "xyz": hashlib.sha256(xg.read_bytes()).hexdigest(),
+                                "json": (hashlib.sha256(jg.read_bytes()).hexdigest()
+                                         if jg.is_file() else None),
+                                "fingerprint": rec.get("fingerprint"),
+                                "gate_version": (rec.get("protocol")
+                                                 or {}).get("gate_version")}}
+                        for sd in seeds:
+                            rel = f"{tier}/{pid}__global_{role}__{sd}"
+                            m = _emit_slab_job(
+                                out / rel, cg, nslab, a.freeze, frag,
+                                f"{pid} global-{role} {sd}", sd,
+                                {"kind": "global_champion", "role": role,
+                                 "pair_id": pid, "fragment": frag,
+                                 "source_pose": rec["label"],
+                                 "uma_E_pose_eV": rec["E_pose_eV"]},
+                                ledger, zcut=zcut, dense=False,
+                                prescf=not a.no_prescf, single_point=a.single_point,
+                                kmesh_over=kover)
+                            slab_metas.append(m)
+                            plan(rel, m["phases"], req)
+                            n_jobs += 1
+                    if p.get("global_best"):
+                        print(f"    ↳ {pid}: 전역 shift {p['global_shift_meV']:+.1f} meV "
+                              f"→ 전역 챔피언 {list(p['global_best'])} 끝점 추가 "
+                              f"(배향일치 대비와 **다른 질문**이라 둘 다 잰다)")
+                elif p.get("global_best"):
+                    pm["global_unmeasured"] = {
+                        "shift_meV": p.get("global_shift_meV"),
+                        "why": (f"|shift| < {a.global_champion_meV} meV 문턱 — 전역 최선 "
+                                f"자세를 DFT 로 재지 않았다. ΔE(global) ≈ ΔE(matched) "
+                                f"− shift 는 **UMA 추정**이다.")}
+                    print(f"    ⚠ {pid}: 전역 shift {p['global_shift_meV']:+.1f} meV "
+                          f"(문턱 {a.global_champion_meV} 미만) — 전역 대비는 UMA 추정만")
+
                 # ── 교차 끝점 방출 (2×2 완성) ──
                 for tag, rec in (p.get("cross") or {}).items():
                     xp = run / f"{rec['label']}.xyz"
@@ -3186,6 +3295,20 @@ def selftest() -> int:
                 "protocol": {"fingerprint": "stfp0001",
                              "gate_version": SS.gate_version()}}))
 
+    # ★ 짝 **없는** 저에너지 Ni 자세 — 전역 최선은 여기인데 Li 짝이 없어 풀에 못 든다.
+    #   실빌드의 ptfe_c10 이 정확히 이 모양이었다(Ni 전역 최선이 51.8 meV 아래).
+    #   이게 없으면 전역 챔피언 경로가 selftest 에서 한 번도 안 돈다.
+    _lab_g = "ptfe_dimer__Ni_top__fib99__r000"
+    ase_write(run / f"{_lab_g}.xyz",
+              Atoms(symbols=symb + mol_syms, positions=pos + mol_at(5.0),
+                    cell=cell, pbc=True))
+    (run / f"{_lab_g}.json").write_text(json.dumps({
+        "label": _lab_g, "site": "Ni_top", "down_dir": "fib99", "roll_deg": 0,
+        "fragment": "ptfe_dimer", "E_pose_eV": -0.30,          # 풀 최선보다 낮다
+        "nearest_cation": "Ni", "ranking_eligible": True,
+        "fingerprint": "stfp0001",
+        "protocol": {"fingerprint": "stfp0001", "gate_version": SS.gate_version()}}))
+
     SS.load_slab = lambda: slab_at
     SS.load_fragment = lambda f: (Atoms(symbols=mol_syms, positions=mol_at(3.0)),
                                   {"status": "OK"})
@@ -3208,7 +3331,7 @@ def selftest() -> int:
     a0 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_short"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False)
+                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0)
     try:
         build_bundle(a0, ledger=led)
         chk(False, "N0 xyz 누락 → **번들이 만들어졌다** (축소 정본 = fail-open)")
@@ -3224,7 +3347,7 @@ def selftest() -> int:
     ab = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_nofp"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False)
+                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0)
     try:
         build_bundle(ab, ledger=led)
         chk(False, "N0b 지문 없는 소스 → **번들이 만들어졌다**")
@@ -3248,7 +3371,7 @@ def selftest() -> int:
     at3 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_top3"),
                              freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                              qe="(none)", expect=None, allow_partial=False,
-                             no_prescf=False, allow_stale_gate=False, top_n=3, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False)
+                             no_prescf=False, allow_stale_gate=False, top_n=3, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0)
     o3 = build_bundle(at3, ledger=led)
     m3 = json.loads((o3 / "MANIFEST.json").read_text())
     kept = sorted({v["dir"] for v in m3["pairs"].values()})
@@ -3265,7 +3388,7 @@ def selftest() -> int:
     a = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle"),
                            freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                            qe="(none)", expect=None, allow_partial=False,
-                           no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False)
+                           no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0)
     out = build_bundle(a, ledger=led)
     man = json.loads((out / "MANIFEST.json").read_text())
     n_pre = sum(1 for p in man["planned"].values() if "pre" in (p.get("phases") or []))
@@ -3278,7 +3401,7 @@ def selftest() -> int:
         frags=["ptfe_dimer"], qe="(none)", expect=None, allow_partial=False,
         no_prescf=False, allow_stale_gate=False, top_n=None, single_point=True,
         champion=True, kmesh_static=None, kmesh_dense=None, refs=False,
-        cross_endpoints=["ptfe_dimer"], mag_controls=True, dense_frags=["ptfe_dimer"], cores=48, concurrency=8, no_cross=False)
+        cross_endpoints=["ptfe_dimer"], mag_controls=True, dense_frags=["ptfe_dimer"], cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0)
     out_sp = build_bundle(a_sp, ledger=led)
     # ★ **배포되는 분석기**의 k 라벨·guard band selftest 를 그대로 돌린다.
     #   이 로직은 문자열 템플릿 안이라 여기서 import 로 시험할 수 없다 — 실행이 유일한 길.
@@ -3411,6 +3534,23 @@ def selftest() -> int:
         f"Ni {(pr or {}).get('Ni_meV')} meV)")
     chk(pr and pr["Li_meV"] >= 0 and pr["Ni_meV"] >= 0,
         "제한 대가는 **음수일 수 없다** (풀은 전체의 부분집합이다)")
+    # ── 전역 챔피언: (a)배향일치 대비와 (b)전역 자리 선호가 갈릴 때 ──────────
+    chk(pr["Ni_meV"] > 20, f"selftest 전제: 짝 없는 Ni 전역 최선 ({pr['Ni_meV']} meV 아래)")
+    gb_sp = pm_sp.get("global_best") or {}
+    chk(set(gb_sp) == {"Ni"},
+        f"전역 최선이 다른 쪽(Ni)만 끝점 추가 ({list(gb_sp)}) — Li 는 풀=전역이라 불필요")
+    chk(any("global_Ni" in k for k in m_sp["planned"]),
+        "전역 챔피언 잡이 planned 에 있다")
+    # ★ 음성: 문턱을 크게 잡으면 **재지 않았다고 적어야** 한다 (조용히 빠지면 안 된다)
+    a_gt = argparse.Namespace(**{**vars(a_sp), "out": str(td / "bundle_gthr"),
+                                 "global_champion_meV": 1e9})
+    m_gt = json.loads((build_bundle(a_gt, ledger=led) / "MANIFEST.json").read_text())
+    p_gt = list(m_gt["pairs"].values())[0]
+    chk(not p_gt.get("global_best") and p_gt.get("global_unmeasured"),
+        f"문턱 초과 → global_unmeasured 로 명시 "
+        f"({(p_gt.get('global_unmeasured') or {}).get('shift_meV')} meV)")
+    chk(not any("global_" in k for k in m_gt["planned"]),
+        "그때는 전역 잡도 안 만든다 (비용을 안 쓴다)")
     # ★ 음성: --no_cross 면 혼입 상태를 **명시**해야 한다 (조용히 나가면 안 된다)
     a_nc = argparse.Namespace(**{**vars(a_sp), "out": str(td / "bundle_nocross"),
                                  "no_cross": True})
@@ -3635,6 +3775,12 @@ def main():
                     help="교차 끝점을 만들 조각을 **제한**한다 (기본: 필요한 조각 전부). "
                          "챔피언 자세키가 다른 조각에만 실제로 생긴다 — 같으면 0개다. "
                          "제한하면 나머지 불일치 조각은 배향 혼입 상태로 남는다(경고).")
+    ap.add_argument("--global_champion_meV", type=float, default=20.0,
+                    help="풀 제한으로 ΔE 가 이만큼(meV) 이상 움직이면 **전역 최선 자세도** "
+                         "끝점으로 넣는다. 배향일치 대비(재는 것)와 전역 자리 선호"
+                         "(문헌이 읽는 것)가 다른 답을 낼 수 있기 때문이다. "
+                         "기본 20 = 30 meV 판정바닥이 ±10 k 오차로 움직이는 폭. "
+                         "0 이면 항상, 1e9 면 절대 안 넣는다.")
     ap.add_argument("--no_cross", action="store_true",
                     help="교차 끝점을 아예 안 만든다. ⚠ 챔피언 자세키가 다른 조각의 ΔE 는 "
                          "자리 효과와 배향 효과가 섞인 값이 되고 분리할 방법이 없어진다.")
