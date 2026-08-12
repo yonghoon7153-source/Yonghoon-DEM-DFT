@@ -25,7 +25,11 @@ import subprocess
 import sys
 from datetime import datetime
 
-SEI = os.environ.get("SEI", "/data/work/runs/sei_dft")
+#: SEI DFT 작업 루트 — **여러 개**. frozen-4f 재계산은 별도 폴더라
+#:  한 곳만 보면 "미착수" 로 보인다 (2026-08-12 실제로 그랬다: LiNdO₂·Nd₂S₃ 는
+#:  이미 6단계 완주였는데 화면은 vc-rlx 만 ✓ 로 찍고 있었다).
+SEI = os.environ.get("SEI",
+                     "/data/work/runs/sei_dft:/data/work/runs/sei_dft_frozen4f")
 SDCP_VASP = "/data/work/runs/sdcp_v2/phaseB_vasp"
 #: NEB 작업 루트 — **여러 개**를 콜론/쉼표로 준다. 같은 상(li3nd)이 경로마다
 #:  다른 홉을 뜻할 수 있어(b→c vs c→c) 루트를 갈라 보여 준다.
@@ -33,10 +37,10 @@ NEBW = os.environ.get("NEBW",
                       "/data/work/runs/sei_neb_v2:/data/work/runs/sei_neb_v2_ccpath")
 
 
-def neb_roots(spec=None):
+def split_roots(spec):
     """콜론/쉼표 목록 → 존재하는 디렉터리만. 없는 경로는 조용히 버리지 않고 돌려준다."""
     out, missing = [], []
-    for x in re.split(r"[:,]", spec if spec is not None else NEBW):
+    for x in re.split(r"[:,]", spec or ""):
         x = x.strip()
         if not x:
             continue
@@ -358,15 +362,15 @@ def selftest():
     #   sei_neb_v2_ccpath = c→c). 한 표에 섞으면 어느 쪽 숫자인지 알 수 없다.
     r1 = os.path.join(td, "nebA"); r2 = os.path.join(td, "nebB")
     os.makedirs(os.path.join(r1, "li3nd")); os.makedirs(os.path.join(r2, "li3nd"))
-    got, miss = neb_roots(f"{r1}:{r2}")
+    got, miss = split_roots(f"{r1}:{r2}")
     chk(got == [r1, r2] and not miss, f"콜론 목록 → 루트 2개 ({len(got)})")
-    got2, miss2 = neb_roots(f"{r1}, {r2}")
+    got2, miss2 = split_roots(f"{r1}, {r2}")
     chk(got2 == [r1, r2], "쉼표+공백 목록도 받는다")
     # ★ 음성: 없는 경로를 **조용히 버리지 않는다** (오타를 눈치채야 한다)
-    got3, miss3 = neb_roots(f"{r1}:/nope/xyz")
+    got3, miss3 = split_roots(f"{r1}:/nope/xyz")
     chk(got3 == [r1] and miss3 == ["/nope/xyz"],
         f"없는 루트는 missing 으로 돌려준다 ({miss3})")
-    chk(neb_roots("")[0] == [] and neb_roots(":  :")[0] == [],
+    chk(split_roots("")[0] == [] and split_roots(":  :")[0] == [],
         "빈 목록/구분자만 → 빈 결과 (예외 아님)")
     chk(root_label("/a/b/sei_neb_v2_ccpath") == "v2_ccpath"
         and root_label("/a/b/other") == "other", "루트 짧은 이름")
@@ -398,16 +402,29 @@ print(f"가동 {up}")
 print(BAR)
 
 # ── 1) SEI DFT 단계 매트릭스 ────────────────────────────────────────────────
-tags = sorted(os.path.basename(x) for x in glob.glob(os.path.join(SEI, "*"))
-              if os.path.isdir(x))
-if not tags:
-    print(f"⛔ {SEI} 에 작업 폴더가 없다 — build_dft_inputs.py 부터.")
+sei_roots, sei_missing = split_roots(SEI)
+for m in sei_missing:
+    print(f"① ⚠ SEI 루트 없음: {m}")
+# (루트, 태그) 목록 — 같은 태그가 여러 루트에 있으면 **둘 다** 보여 준다.
+#   덮어쓰면 어느 폴더의 결과인지 모르게 되고, 오늘 그것 때문에 완주한 계산을
+#   미착수로 읽었다.
+pairs = [(r, os.path.basename(x)) for r in sei_roots
+         for x in sorted(glob.glob(os.path.join(r, "*"))) if os.path.isdir(x)]
+tags = [t for _r, t in pairs]
+multi = len(sei_roots) > 1
+if not pairs:
+    print(f"⛔ {sei_roots or SEI} 에 작업 폴더가 없다 — build_dft_inputs.py 부터.")
 else:
-    print(f"① SEI DFT — {len(tags)}종 × 6단계   (✓ 완료 · ▸ 중단 · ✗ 오류 · 공백 미착수)")
+    print(f"① SEI DFT — {len(pairs)}종 × 6단계   (✓ 완료 · ▸ 중단 · ✗ 오류 · 공백 미착수)")
     print("   " + " " * 26 + "  ".join(f"{s:>6s}" for _, s in STAGES))
     ndone = 0
-    for t in tags:
-        d = os.path.join(SEI, t)
+    _cur = None
+    for _root, t in pairs:
+        if multi and _root != _cur:
+            _cur = _root
+            _n = run_note(_root)
+            print(f"   ┌ {root_label(_root)}" + (f"  — {_n}" if _n else ""))
+        d = os.path.join(_root, t)
         marks = [done(d, stem) for stem, _ in STAGES]
         gj = os.path.join(d, "gap.json")
         g = ""
@@ -423,8 +440,8 @@ else:
     print(f"\n   완주 {ndone}/{len(tags)}")
 
     # 끊긴 것 = 재부팅 피해. 러너가 resume-safe 라 그냥 다시 걸면 된다.
-    broken = [t for t in tags
-              if any(done(os.path.join(SEI, t), s) == "▸" for s, _ in STAGES)]
+    broken = [t for r, t in pairs
+              if any(done(os.path.join(r, t), s) == "▸" for s, _ in STAGES)]
     if broken and pw == 0:
         print(f"\n   ⚠ 중단된 조성 {len(broken)}개: {', '.join(broken)}")
         print("     러너는 resume-safe 다 — 끝난 단계는 건너뛰므로 그냥 다시 걸면 된다:")
@@ -469,7 +486,8 @@ print(BAR)
 #   상황판 전체를 죽였다(③④ 가 아예 안 나옴). 감시 화면이 나쁜 데이터 한 줄에 죽으면
 #   안 된다 — 숫자가 아닌 레코드는 **버리지 말고 '손상' 로 따로 세워** 보여 준다.
 gaps, gaps_bad = [], []
-for j in sorted(glob.glob(os.path.join(SEI, "*", "gap.json"))):
+for j in sorted(g for r in sei_roots
+                for g in glob.glob(os.path.join(r, "*", "gap.json"))):
     rec, why = read_gap(j)
     (gaps if rec else gaps_bad).append(rec or (os.path.basename(os.path.dirname(j)), why))
 if gaps or gaps_bad:
@@ -525,7 +543,7 @@ else:
 print(BAR)
 
 # ── 4) SEI NEB ─────────────────────────────────────────────────────────────
-roots, missing_roots = neb_roots()
+roots, missing_roots = split_roots(NEBW)
 neb_pid = len([x for x in sh(r"pgrep -f '[n]eb\.x'").split() if x])
 by_root = [(d, [neb_status(x) for x in sorted(glob.glob(os.path.join(d, "*")))
                 if os.path.isdir(x)]) for d in roots]

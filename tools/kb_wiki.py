@@ -322,8 +322,13 @@ ART_RE = re.compile(r"(/(?:data|scratch|home|opt|usr)/[\w./+-]+|~/[\w./+-]+|"
 VERIFY_HINT = re.compile(r"(ls |which |pgrep|--inventory|watch_|nvidia-smi|test -[fdx])")
 
 
+#: 바로 아래에 이 표시가 붙은 주장은 **이미 정정/해소**된 것이다. 계속 띄우면
+#:  도구가 늑대소년이 되고 아무도 안 읽는다 (2026-08-12: neb.x 2건이 그랬다).
+CORRECTED_RE = re.compile(r"낡음|정정|해소|폐기|superseded|⛔|✅")
+
+
 def scan_env(root=None):
-    """(파일, 줄번호, 문장, 아티팩트들, 검증힌트있음) 목록."""
+    """(파일, 줄번호, 문장, 아티팩트들, 검증힌트있음, 정정됨) 목록."""
     hits = []
     for f in sorted((root or KB).rglob("*.md")):
         if f.name in ("index.md", "SCHEMA.md"):
@@ -339,19 +344,22 @@ def scan_env(root=None):
             if not arts:
                 continue
             near = "\n".join(lines[max(0, i - 4):i + 3])
+            # 아래 4줄 안에 정정 표시가 있으면 이미 손본 주장이다
+            below = "\n".join(lines[i:i + 4])
+            corrected = bool(CORRECTED_RE.search(below))
             try:
                 rel = str(f.relative_to(REPO))
             except ValueError:
                 rel = str(f)                      # selftest 의 임시 경로
             hits.append((rel, i, ln.strip()[:150], arts,
-                         bool(VERIFY_HINT.search(near))))
+                         bool(VERIFY_HINT.search(near)), corrected))
     return hits
 
 
 def cmd_env(as_script=False):
     hits = scan_env()
     arts = {}
-    for f, i, _ln, aa, _v in hits:
+    for f, i, _ln, aa, _v, _c in hits:
         for a in aa:
             arts.setdefault(a, []).append(f"{f}:{i}")
     if as_script:
@@ -371,15 +379,21 @@ def cmd_env(as_script=False):
                 print(f'printf "%-42s %s\\n" "{a}" '
                       f'"$([ -e \'{a}\' ] && echo OK || echo MISSING)"')
         return 0
-    noverify = [h for h in hits if not h[4]]
+    fixed = [h for h in hits if h[5]]
+    noverify = [h for h in hits if not h[4] and not h[5]]
     print(f"환경 주장 후보 {len(hits)}건 · 아티팩트 {len(arts)}종 · "
-          f"검증 명령이 근처에 **없는** 것 {len(noverify)}건")
+          f"이미 정정됨 {len(fixed)}건 · 검증 명령도 정정도 **없는** 것 "
+          f"{len(noverify)}건" + ("  (정정본 목록은 --corrected)" if fixed else ""))
     print("\n── 아티팩트별 (많이 언급된 순) ──")
     for a, where in sorted(arts.items(), key=lambda kv: -len(kv[1]))[:18]:
         print(f"  {a:38s} {len(where):2d}곳  {', '.join(where[:3])}"
               + (" …" if len(where) > 3 else ""))
-    print("\n── 검증 명령이 없는 주장 (여기부터 낡는다) ──")
-    for f, i, ln, aa, _v in noverify[:20]:
+    if fixed and "--corrected" in sys.argv:
+        print("\n── 이미 정정된 주장 (참고) ──")
+        for f, i, ln, _aa, _v, _c in fixed[:20]:
+            print(f"  {f}:{i}\n     {ln[:100]}")
+    print("\n── 검증 명령도 정정도 없는 주장 (여기부터 낡는다) ──")
+    for f, i, ln, aa, _v, _c in noverify[:20]:
         print(f"  {f}:{i}\n     {ln}")
     if len(noverify) > 20:
         print(f"  … 외 {len(noverify) - 20}건")
@@ -413,6 +427,21 @@ def selftest_env():
     chk(bool(cc) and cc[0][4], "근처에 ls 가 있으면 '검증 가능' 으로 표시")
     aa = [x for x in h if x[0].endswith("a.md")]
     chk(bool(aa) and not aa[0][4], "검증 명령 없으면 '없음' 으로 표시")
+    # ── 정정 감지 (2026-08-12) ──
+    #   이미 손본 주장을 계속 띄우면 도구가 늑대소년이 되고 아무도 안 읽는다.
+    #   실제로 neb.x 2건이 정정 주석까지 붙었는데 매번 최상위로 올라왔다.
+    chk(bool(aa) and not aa[0][5], "정정 주석 없으면 corrected=False")
+    (td / "e.md").write_text(
+        "- **QE neb.x**: 미설치 (확인됨, 2026-06-01)\n\n"
+        "> ⛔ **낡음 (2026-08-12 정정)** — 있다. /data/apps/qe-7.4.1-gpu/bin/neb.x\n")
+    ee = [x for x in scan_env(td) if x[0].endswith("e.md") and "미설치" in x[2]]
+    chk(bool(ee) and ee[0][5], "바로 아래 정정 주석 → corrected=True")
+    # ★ 음성: **멀리 떨어진** 정정은 그 주장의 것이 아니다 (4줄 창 밖)
+    (td / "f.md").write_text(
+        "- **QE neb.x**: 미설치\n" + "\n" * 8 + "> ⛔ 낡음 — 다른 얘기\n")
+    ff = [x for x in scan_env(td) if x[0].endswith("f.md")]
+    chk(bool(ff) and not ff[0][5],
+        "멀리 있는 정정은 안 세어 준다 (아무 ⛔ 나 있으면 통과가 아니다)")
     import shutil
     shutil.rmtree(td, ignore_errors=True)
     print("selftest PASS" if ok else "selftest FAIL")
