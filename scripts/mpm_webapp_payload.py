@@ -1570,7 +1570,13 @@ def main():
             #   CPU 로 떨어져도 결과는 정상 수치라 로그 없이는 구분 불가였다.
             # ★ RC7-05: 이 전역 필드는 **마지막 solve** 만 담는다 → component 별
             #   `components[c]['backend']` 가 정본이고 여기는 하위호환 요약이다.
-            'fibre_stamp': a.step3_fibre_stamp,          # ★SR-01: point(현행) | segment
+            # ★ 2026-08-12: 이 필드는 **실제로 적용된** 규약이다 (요청값이 아니다).
+            #   실사고 — amonly 런이 --fibre 로드 실패로 점-스탬프로 내려앉았는데도 도장은
+            #   `segment` 였다 (요청값을 적고 있었다).  `sr01_stamp_compare --check-arm` 이
+            #   이 필드로 팔을 검증하므로, 조용히 강등된 런이 검사를 통과했다.
+            #   ⇒ 기록은 **일어난 일**을 적는다.  요청값은 별 필드로 보존.
+            'fibre_stamp': ('segment' if _afid is not None else 'point'),
+            'fibre_stamp_requested': a.step3_fibre_stamp,
             'fibre_stamp_applied': bool(_afid is not None),
             'backend_last_solve': dict(getattr(_s3, 'LAST_BACKEND', {}) or {}),
             'backend': dict(getattr(_s3, 'LAST_BACKEND', {}) or {}),   # 하위호환 별칭

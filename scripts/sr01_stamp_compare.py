@@ -192,6 +192,14 @@ def check_arm(path, want, expect_backend=None):
         return f'스탬프가 {k} — 원한 것은 {want}'
     if want == 'segment' and applied is False:
         return '선분 요청이 적용되지 않음 (fibre_stamp_applied=False)'
+    # ★ 2026-08-12: 요청 ≠ 적용 이면 `want` 가 무엇이든 **강등된 런**이다.
+    #   실사고 — 선분을 요청했는데 --fibre 로드 실패로 점이 됐고, 옛 코드는 도장에
+    #   요청값(segment)을 적어 검사를 통과시켰다.  이제 도장은 적용값이라 `k != want`
+    #   로도 걸리지만, "점 팔로 재활용" 하는 경로까지 막으려면 요청값도 본다.
+    _req = (s.get('manifest') or {}).get('fibre_stamp_requested')
+    if _req is not None and _req != k:
+        return (f'요청({_req}) ≠ 적용({k}) — 조용히 강등된 런이다.  '
+                f'다른 팔로 재활용하지 말 것 (같은 규약이라도 그 런은 실패를 겪었다)')
     if s.get('unconverged'):
         return 'CG 미수렴 (σ UNRELIABLE) — 다시 돌아야 한다'
     v = s.get('sigma_e_eff_S_cm')
@@ -454,6 +462,17 @@ def _selftest():
             return p
         good = w('a.json', _mk(0.0051, 'point'))
         chk(check_arm(good, 'point') is None, '8a) 완전한 팔은 통과')
+        # ★ 강등 런 (실사고 재현): 선분을 요청했는데 --fibre 로드 실패로 점이 됐다.
+        #   옛 코드는 도장에 **요청값**(segment)을 적어 검사를 통과시켰다.
+        _deg = _mk(0.0051, 'point', applied=False)
+        _deg['metrics']['step3']['manifest']['fibre_stamp_requested'] = 'segment'
+        _degp = w('deg.json', _deg)
+        chk(check_arm(_degp, 'segment') is not None, '8a2) 강등 런은 segment 팔로 거부')
+        chk('요청' in (check_arm(_degp, 'point') or ''),
+            '8a3) ★ 강등 런은 **point 팔로도** 거부 (요청≠적용 — 그 런은 실패를 겪었다)')
+        # 대조군: 요청=적용이면 통과해야 한다 (과잉차단 아님)
+        _ok = _mk(0.0051, 'point'); _ok['metrics']['step3']['manifest']['fibre_stamp_requested'] = 'point'
+        chk(check_arm(w('ok.json', _ok), 'point') is None, '8a4) 요청=적용이면 통과 (대조군)')
         chk('point' in (check_arm(good, 'segment') or ''), '8b) ★ 스탬프가 다르면 거부 (A 를 B 로 착각하지 않는다)')
         chk(check_arm(os.path.join(td, 'no.json'), 'point') == '파일 없음', '8c) 없는 파일')
         chk('JSON 읽기 실패' in (check_arm(w('t.json', '{"metr'), 'point') or ''), '8d) ★ 잘린 JSON (중단된 런)')
