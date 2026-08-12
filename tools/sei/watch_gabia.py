@@ -400,9 +400,27 @@ for j in sorted(glob.glob(os.path.join(SEI, "*", "gap.json"))):
 if gaps or gaps_bad:
     print("② 갭 (fixed-occ nscf 고유값 — DOS 문턱 아님)")
     print(f"   {'상':26s} {'VBM':>8s} {'CBM':>8s} {'gap(eV)':>9s}  판정")
+    # ⚠ 2026-08-12 — 태그에 Nd 가 있으면 무조건 "4f valence 진단용" 을 붙이고 있었다.
+    #   PP 가 frozen-4f 로 바뀐 뒤에도 그대로 붙어 **멀쩡한 값을 진단용으로 깎았다**.
+    #   화면이 낡은 주장을 재생산한 사례다 — 라벨은 **실제 PP 의 z_valence** 로 정한다.
+    ndz = None
+    for f in sorted(glob.glob("/data/work/pseudo/Nd*.[uU][pP][fF]")):
+        try:
+            m = re.search(r'z_valence\s*=\s*"?\s*([\d.eE+-]+)',
+                          open(f, errors="ignore").read(400000), re.I)
+            ndz = float(m.group(1)) if m else ndz
+        except OSError:
+            pass
     for d in sorted(gaps, key=lambda x: -x["gap"]):
         nd = "Nd" in str(d["tag"]) or "nd2" in str(d["tag"])
-        flag = "  ⚠ 4f valence — 진단용" if nd else ""
+        if not nd:
+            flag = ""
+        elif ndz is None:
+            flag = "  ⚠ Nd PP 를 못 읽었다 — 4f 취급 미상"
+        elif 10.0 <= ndz <= 12.5:
+            flag = "  · frozen-4f (z=%.0f)" % ndz
+        else:
+            flag = "  ⚠ 4f valence (z=%.0f) — 진단용" % ndz
         print(f"   {str(d['tag']):26s} {d['vbm']:8.3f} {d['cbm']:8.3f} "
               f"{d['gap']:9.3f}  {d.get('verdict', '?')}{flag}")
     for tag, why in gaps_bad:
