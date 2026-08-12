@@ -12,11 +12,21 @@
 #   베드·섬유 시딩·난수가 바이트로 동일하다.
 #   run_mpm.sh 의 원본 mpm_payload.json 은 **건드리지 않는다** (production 산출물 보존).
 #
+# ★ 재개 가능 (2026-08-11 실사고: arm A 가 5h55m 걸려 끝난 **직후** 터미널이 끊겨 arm B 가
+#   시작조차 못 했다).  이미 **완전한** 팔은 건너뛴다 — 완전함은 파일 존재가 아니라
+#   sr01_stamp_compare --check-arm 이 판정한다 (스탬프 도장 일치 · CG 수렴 · σ_e>0 ·
+#   **backend 일치**).  느슨하면 불완전한 팔을 SKIP 해 Δ 가 조용히 거짓이 된다.
+#   ⚠⚠ backend 를 왜 보는가: 킷 run_mpm.sh 는 이미 `--step3-gpu` 를 넘긴다 → cupy 를 깔면
+#   다음 팔이 **자동으로 GPU** 가 되고, 그러면 "CPU 로 끝난 A 를 SKIP 하고 B 만 GPU" 라는
+#   최악의 재개가 **기본 동작**이 된다.  그래서 지금 쓸 backend 를 먼저 탐지해 비교한다.
+#
 # 사용:
 #   bash scripts/sr01_stamp_ab.sh <KIT_DIR> [RUN_DIR]
-# 예 (V100):
+# 예 (V100) — ★ 반드시 터미널과 분리해서 돌린다 (한 팔이 몇 시간이다):
 #   cd ~/Yonghoon-DEM-DFT/se_curve
-#   bash ~/Yonghoon-DEM-DFT/scripts/sr01_stamp_ab.sh kit_ps_7_3
+#   setsid nohup bash ~/dem-sk/scripts/sr01_stamp_ab.sh kit_ps_7_3 \
+#     > kit_ps_7_3/sr01_ab.log 2>&1 &
+#   python3 ~/dem-sk/scripts/sr01_watch.py kit_ps_7_3        # 진행 확인
 set -uo pipefail
 
 KIT_IN="${1:-}"
@@ -48,8 +58,37 @@ cd "$RUN"
 PSIG=(); [ "${MPM_PERIODIC_SIGMA:-0}" = "1" ] && PSIG=(--periodic)
 echo "[sr01] PSIG=${PSIG[*]:-（없음）}   (두 팔에 **동일**하게 적용됨)"
 
+# ── 지금 돌면 실제로 어느 backend 인가.  import 성공 ≠ 동작이라 작은 연산까지 해 본다 ──
+probe_backend() {
+  grep -q -- '--step3-gpu' "$KIT/run_mpm.sh" || { echo cpu; return; }
+  local out
+  out=$(python3 -c "
+try:
+    import cupy as cp
+    cp.zeros(1).sum().item()          # CUDA 초기화까지 (import 만으로는 모른다)
+    print('gpu')
+except Exception:
+    print('cpu')" 2>/dev/null)
+  case "$out" in gpu) echo gpu ;; *) echo cpu ;; esac
+}
+EXPECT="$(probe_backend)"
+echo "[sr01] backend 예상: $EXPECT   (두 팔에 **동일**하게 적용된다)"
+
 run_arm() {                       # $1 = point|segment   $2 = out 파일명
-  local stamp="$1" out="$2" sh="payload_${1}stamp.sh"
+  local stamp="$1" out="$2" sh="payload_${1}stamp.sh" why=""
+  # ── 재개: 이미 완전하고 backend 도 같은 팔은 건너뛴다 (6시간을 다시 돌지 않는다) ──
+  if [ -s "$out" ]; then
+    if why=$(python3 "$SCR/sr01_stamp_compare.py" --check-arm "$out" --stamp "$stamp" \
+                     --expect-backend "$EXPECT"); then
+      echo "[sr01] ── arm ${stamp} SKIP (재개) — 이미 완전합니다: $out"
+      return 0
+    fi
+    local keep="${out%.json}.superseded.json" n=1
+    while [ -e "$keep" ]; do keep="${out%.json}.superseded${n}.json"; n=$((n + 1)); done
+    mv -f "$out" "$keep"          # ★ 덮어쓰지 않는다 — 옛 팔도 교차검증에 쓸 수 있다
+    echo "[sr01] ── arm ${stamp} 다시 돕니다 — $why"
+    echo "[sr01]    옛 결과 보존: $(basename "$keep")"
+  fi
   python3 "$SCR/sr01_stamp_compare.py" --extract-payload "$KIT/run_mpm.sh" \
           --stamp "$stamp" --out-name "$out" > "_$sh" || return 1
   { echo 'set -uo pipefail'; echo "KIT=\"$KIT\""; echo "SCR=\"$SCR\"";

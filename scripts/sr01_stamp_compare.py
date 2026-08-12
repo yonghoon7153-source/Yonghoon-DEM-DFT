@@ -158,6 +158,51 @@ def precond_of(step3):
     return None
 
 
+def check_arm(path, want, expect_backend=None):
+    """→ None(완전) 또는 **왜 불완전한지** 문자열.  러너 재개(`SKIP`) 판정용.
+
+    ★ 여기서 느슨하면 불완전한 팔을 "이미 됐다" 고 건너뛰어 Δ 가 조용히 거짓이 된다.
+    그래서 파일 존재가 아니라 **쓸 수 있는 결과인지**를 본다: step3 블록 · 스탬프 도장이
+    원한 것과 일치 · (선분이면) 실제 적용 · CG 수렴 · σ_e 가 양수.
+    계기 (2026-08-11): arm A 가 5h55m 걸려 끝난 직후 터미널이 끊겨 arm B 가 시작조차 못 했다.
+    러너를 그냥 다시 돌리면 **A 를 6시간 다시 돈다** — 그래서 재개가 필요하고, 재개는
+    "이미 완전한가" 를 엄격히 물어야만 안전하다.
+
+    ★★ expect_backend — 재개의 **가장 위험한 구멍**을 막는다.  킷 run_mpm.sh 는 이미
+    `--step3-gpu` 를 넘기므로(mpm_input_from_case.py:688) cupy 를 깔기만 하면 다음 팔은
+    **자동으로 GPU** 가 된다.  그러면 "CPU 로 끝난 arm A 를 SKIP 하고 arm B 만 GPU 로"
+    라는 최악의 재개가 기본 동작이 된다.  지금 돌 backend 를 넘기면, 기존 팔이 다른
+    backend 로 돌았을 때 **SKIP 하지 않고 다시 돌게** 한다."""
+    if not os.path.exists(path):
+        return '파일 없음'
+    try:
+        with open(path, encoding='utf-8') as fh:
+            p = json.load(fh)
+    except Exception as e:                         # noqa: BLE001 — 잘린 JSON 도 여기로 온다
+        return f'JSON 읽기 실패 ({type(e).__name__})'
+    s = step3_of(p)
+    if s is None:
+        return 'step3 블록 없음 (--no-step3 였거나 중단)'
+    k, applied = stamp_of(s)
+    if k is None:
+        return '스탬프 도장 없음'
+    if k != want:
+        return f'스탬프가 {k} — 원한 것은 {want}'
+    if want == 'segment' and applied is False:
+        return '선분 요청이 적용되지 않음 (fibre_stamp_applied=False)'
+    if s.get('unconverged'):
+        return 'CG 미수렴 (σ UNRELIABLE) — 다시 돌아야 한다'
+    v = s.get('sigma_e_eff_S_cm')
+    if not isinstance(v, (int, float)) or isinstance(v, bool) or not v > 0:
+        return f'σ_e 가 없거나 0 ({v!r})'
+    if expect_backend:
+        got = backend_of(s)
+        if got and got != expect_backend:
+            return (f'backend 가 {got} 인데 지금 돌면 {expect_backend} — 두 팔이 갈린다. '
+                    '재개 대신 다시 돌아야 한다')
+    return None
+
+
 def compare(pa, pb):
     """→ (행 dict, 경고 리스트).  A = 점(기준), B = 선분."""
     warn = []
@@ -385,6 +430,33 @@ def _selftest():
     else:
         print('  SKIP  14-20) 킷 fixture 없음 (docs/data/kit_ps_scaffolds/)')
 
+    # ── check_arm (러너 재개) — 느슨하면 불완전한 팔을 SKIP 해 Δ 가 조용히 거짓이 된다 ──
+    import tempfile as _tf
+    with _tf.TemporaryDirectory() as td:
+        def w(name, obj):
+            p = os.path.join(td, name)
+            with open(p, 'w', encoding='utf-8') as fh:
+                json.dump(obj, fh) if not isinstance(obj, str) else fh.write(obj)
+            return p
+        good = w('a.json', _mk(0.0051, 'point'))
+        chk(check_arm(good, 'point') is None, '8a) 완전한 팔은 통과')
+        chk('point' in (check_arm(good, 'segment') or ''), '8b) ★ 스탬프가 다르면 거부 (A 를 B 로 착각하지 않는다)')
+        chk(check_arm(os.path.join(td, 'no.json'), 'point') == '파일 없음', '8c) 없는 파일')
+        chk('JSON 읽기 실패' in (check_arm(w('t.json', '{"metr'), 'point') or ''), '8d) ★ 잘린 JSON (중단된 런)')
+        chk('step3 블록 없음' in (check_arm(w('e.json', {'metrics': {}}), 'point') or ''), '8e) step3 블록 없음')
+        bad = _mk(0.0051, 'point'); bad['metrics']['step3']['unconverged'] = True
+        chk('CG 미수렴' in (check_arm(w('u.json', bad), 'point') or ''), '8f) ★ 미수렴은 재개 대상이 아니라 재실행 대상')
+        z = _mk(0.0, 'point')
+        chk('σ_e' in (check_arm(w('z.json', z), 'point') or ''), '8g) σ_e 가 0 이면 거부')
+        na = _mk(0.0051, 'segment', applied=False)
+        chk('적용되지 않음' in (check_arm(w('n.json', na), 'segment') or ''), '8h) ★ 선분 요청이 적용 안 된 팔은 거부 (조용한 점-되돌아감)')
+        chk(main([good, '--check-arm', good, '--stamp', 'point']) == 0, '8i) CLI: 완전하면 exit 0')
+        chk(main(['--check-arm', good, '--stamp', 'segment']) == 1, '8j) CLI: 불완전하면 exit 1')
+        chk(check_arm(good, 'point', 'cpu') is None, '8k) backend 가 같으면 재개 허용 (cpu ≡ cpu)')
+        chk('backend 가 cpu 인데' in (check_arm(good, 'point', 'gpu') or ''),
+            '8l) ★★ cupy 를 깔면 다음 팔이 자동 GPU — CPU 로 끝난 팔을 SKIP 하지 않는다')
+        chk(main(['--check-arm', good, '--stamp', 'point', '--expect-backend', 'gpu']) == 1,
+            '8m) CLI: backend 불일치는 exit 1 (러너가 다시 돈다)')
     print(f'\nsr01_stamp_compare selftest: {ok}/{ok + fail} PASS')
     return 0 if fail == 0 else 1
 
@@ -401,10 +473,20 @@ def main(argv=None):
     ap.add_argument('--out-name', default='mpm_payload_segstamp.json', help='--extract-payload 의 --out')
     ap.add_argument('--stamp', default='segment', choices=('point', 'segment'),
                     help='--extract-payload 가 박을 --step3-fibre-stamp')
+    ap.add_argument('--check-arm', default='',
+                    help='payload 하나가 **쓸 수 있는 팔 결과인지** 검사 (러너 재개용).  '
+                         '완전하면 exit 0, 아니면 이유를 찍고 exit 1.  --stamp 로 어느 팔인지 지정.')
+    ap.add_argument('--expect-backend', default='', choices=('', 'cpu', 'gpu'),
+                    help='--check-arm 과 함께: 지금 돌면 쓸 backend.  기존 팔이 다른 backend 로 '
+                         '돌았으면 SKIP 하지 않는다 (cupy 를 깔면 다음 팔이 자동 GPU 가 되므로).')
     ap.add_argument('--selftest', action='store_true')
     x = ap.parse_args(argv)
     if x.selftest:
         return _selftest()
+    if x.check_arm:
+        why = check_arm(x.check_arm, x.stamp, x.expect_backend or None)
+        print(why if why else f'완전 ({x.stamp})')
+        return 1 if why else 0
     if x.extract_payload:
         sys.stdout.write(extract_payload_cmd(
             open(x.extract_payload, encoding='utf-8').read(), x.out_name, x.stamp))
