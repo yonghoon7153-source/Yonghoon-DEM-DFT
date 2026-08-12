@@ -14,7 +14,7 @@
 - `kb/concepts/md.md` — MD (MLIP) / MSD / Arrhenius — 분자동역학 이온수송
 - `kb/concepts/neb.md` — NEB / CI-NEB — 최소에너지경로 (Nudged Elastic Band)
 - `kb/concepts/ordered_vs_disordered.md` — Ordered vs Disordered — 어떤 LPSCl 구조로 계산할 것인가
-- `kb/concepts/oxidation_vs_mechanical.md` — 산화안정성과 기계적물성 — 정의·공통점·차이점과 DFT 계산법 ○미열람
+- `kb/concepts/oxidation_vs_mechanical.md` — 산화안정성과 기계적물성 — 정의부터 DFT 계산까지 ○미열람
 
 ## physics/ (6)
 - `kb/physics/260617_Nd2O3_doping_bandgap_narrowing_mechanism.md` — Nd₂O₃ 도핑 LPSCl 밴드갭: 왜 O 도핑인데 갭이 좁아지나
