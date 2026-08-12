@@ -11,6 +11,12 @@
 #
 #   bash tools/sei/run_sei_neb.sh              # 전부 (싼 것부터)
 #   bash tools/sei/run_sei_neb.sh li2s         # 하나만
+#
+#   --after <경로>   그 폴더의 neb.x 가 끝날 때까지 **기다렸다가** 시작한다.
+#     GPU 가 하나뿐이라 두 NEB 를 겹쳐 돌리면 둘 다 느려진다(VRAM 이 아니라 SM 경합).
+#     예) c→b 를 완주시킨 뒤 c→c 를 자동으로 잇기:
+#       WORK=/data/work/runs/sei_neb_v2_ccpath \
+#       bash tools/sei/run_sei_neb.sh --after /data/work/runs/sei_neb_v2 li3nd
 # =============================================================================
 set -uo pipefail; set +H
 REPO="$(cd "$(dirname "$0")/../.." && pwd)"
@@ -28,7 +34,54 @@ ts(){ echo "[$(date +%H:%M:%S)] $*"; }
 #   러너는 'convergence achieved' 가 없다는 이유로 "경로 미수렴" 이라고 보고했다.
 #   → 2시간을 아무것도 안 돌고 흘려보냈다. 없는 건 없다고 즉시 말해야 한다.
 MODE=neb
-case "${1:-}" in endpoints) MODE=endpoints; shift;; ci) MODE=ci; shift;; esac
+AFTER=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --after) AFTER="${2:?--after 뒤에 기다릴 작업 폴더를 주세요}"; shift 2 ;;
+    endpoints) MODE=endpoints; shift ;;
+    ci) MODE=ci; shift ;;
+    *) break ;;
+  esac
+done
+
+# ── 중복 실행 가드 (CLAUDE.md 규율) ─────────────────────────────────────────
+#   ⚠ WORK 는 **환경변수**라 cmdline 에 안 나온다 — 프로세스 이름으로 매칭하려 들면
+#     못 잡는다(첫 판이 그랬다). 작업 폴더에 락을 둔다: 그게 실제로 겹치는 단위다.
+mkdir -p "$WORK" 2>/dev/null || true
+LOCK="$WORK/.run_sei_neb.lock"
+if [ -f "$LOCK" ] && kill -0 "$(cat "$LOCK" 2>/dev/null)" 2>/dev/null; then
+  ts "⛔ 이 작업 폴더가 이미 돌고 있다 (pid $(cat "$LOCK")) — 중복 실행하지 않는다"
+  ts "   $WORK"
+  exit 1
+fi
+echo $$ > "$LOCK"
+trap 'rm -f "$LOCK"' EXIT
+
+# ── --after: 앞 작업이 끝날 때까지 기다린다 ─────────────────────────────────
+if [ -n "$AFTER" ]; then
+  [ -d "$AFTER" ] || { ts "⛔ --after 경로가 없다: $AFTER"; exit 1; }
+  # ⚠ **기다리기 전에** 내 입력이 준비됐는지 먼저 본다. 몇 시간 기다린 뒤
+  #   "입력이 없다" 로 죽으면 그 시간이 통째로 날아간다.
+  n_in=$(ls "$WORK"/*/neb.in 2>/dev/null | wc -l)
+  if [ "$n_in" = 0 ]; then
+    ts "⛔ $WORK 에 neb.in 이 없다 — 기다려도 돌릴 게 없다"
+    ts "   먼저: python3 tools/sei/build_neb_inputs.py --work $WORK ..."
+    exit 1
+  fi
+  ts "⏳ $AFTER 의 neb.x 가 끝나기를 기다린다 (내 입력 ${n_in}개 확인됨)"
+  # ⚠ 조건을 단순하게 둔다: **이 기계에 neb.x 가 하나도 없으면** 앞 작업이 끝난 것이다.
+  #   GPU 가 하나뿐이라 NEB 를 겹쳐 돌리지 않기 때문이다. 프로세스 이름에서 작업
+  #   폴더를 파싱하려 들면(neb.x 는 인자에 폴더를 안 싣는다) 조용히 틀린다.
+  waited=0
+  while pgrep -f "[n]eb\.x" >/dev/null; do
+    sleep 300; waited=$((waited+5))
+    [ $((waited % 60)) = 0 ] && ts "   ... ${waited}분째 대기 (neb.x $(pgrep -cf '[n]eb\.x')개)"
+  done
+  ts "✔ 앞 작업이 끝났다 (${waited}분 대기) — 이어서 시작한다"
+  for f in "$AFTER"/*/neb.out; do
+    [ -f "$f" ] && ts "   $(basename "$(dirname "$f")"): $(grep -ac 'convergence achieved' "$f" >/dev/null && echo 수렴 || echo 미수렴)"
+  done
+fi
 if [ "$MODE" = neb ] && [ ! -x "$NEB" ]; then
   ts "⛔ neb.x 를 찾을 수 없거나 실행 권한이 없다: $NEB"
   ts "   QE-GPU 빌드에 neb.x 가 안 들어간 경우가 흔하다(pw.x/dos.x/projwfc.x 만 빌드)."
