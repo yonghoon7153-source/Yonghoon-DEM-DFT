@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-12 · managed-files: 201
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-12 · managed-files: 202
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -59,7 +59,7 @@
 - `kb/methodology/site_preference_protocol_2026_08_11.md` — LiNiO₂(104) 자리 선호 · 자세 스크리닝 프로토콜 v1
 - `kb/methodology/terminology_register.md` — 🗣 용어 대장 — 우리 말 → 필드 표준어 → 근거
 
-## results/ (74)
+## results/ (75)
 - `kb/results/MASTER_structure_property_logic_2026_06_21.md` — Structure–Property Relationship of Argyrodite SEs — 통합 논리 (MASTER)
 - `kb/results/adhesion_100seeds_analysis.md` — Adhesion Energy — Complete Analysis (2026-04-17)
 - `kb/results/adhesion_final.md` — Adhesion Energy — Final Results (2026-04-14, CONFIRMED)
@@ -101,6 +101,7 @@
 - `kb/results/ionic_cage_descriptors_comp1_modelc.md` — LPSCl vs LPSCl1.6 — ionic conductivity, NEB-free geometric descriptors
 - `kb/results/ionic_conductivity_full_explained_2026_06_21.md` — 이온전도도 완전 정리 — LPSCl(comp1) vs LPSCl₁.₆(modelc)
 - `kb/results/ionic_conductivity_synthesis_comp1_modelc.md` — Ionic conductivity: LPSCl (comp1) vs LPSCl1.6 (modelC) — full synthesis
+- `kb/results/li3nd_endpoint_asymmetry_2026_08_12.md` — li3nd NEB 끝점 2.07 eV — 수치 인공물이 아니라 실제 자리 차이 ○미열람
 - `kb/results/li_interface_md_takeaways_2026_07_08.md` — Li|전해질 계면 MD — 이 시뮬레이션에서 우리가 얻은 것
 - `kb/results/li_neb_anode_free_report.md` — Li Adatom Diffusion on Anode-Free SSB Interphases — Li3N vs LiC6
 - `kb/results/litdb_aimd_survey_2026_08_04.md` — litdb AIMD 전수 조사 — "문헌 AIMD는 몇 ps를 돌았나" (2026-08-04)
