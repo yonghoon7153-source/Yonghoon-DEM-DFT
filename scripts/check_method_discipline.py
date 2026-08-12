@@ -366,6 +366,14 @@ def _reject_reasons(c):
     else:
         # C-2 분해능: 차이가 측정 산포보다 작으면 증거량은 CL-01 과 같다
         n0, n1 = _nums(h0p), _nums(h1p)
+        # ★ 상보 부등호는 **완벽히 판별적**이다 (`< X` vs `>= X`) — 같은 수를 쓴다고 가능도비 1
+        #   이 아니다.  2026-08-12 CL-10 등록 때 이 과잉차단이 실제로 발생했다 (S0 가 경고한 류).
+        _LO = ('<', '≤', '미만', '이하', '작다', '보다 작')
+        _HI = ('>', '≥', '이상', '초과', '크다', '보다 크')
+        _a, _b = str(h0p), str(h1p)
+        if (any(t in _a for t in _LO) and any(t in _b for t in _HI)) or \
+           (any(t in _a for t in _HI) and any(t in _b for t in _LO)):
+            return out                                    # 문턱 양쪽 = 판별적
         res = c.get('resolution')
         if res is not None and len(n0) == 1 and len(n1) == 1:
             if abs(n0[0] - n1[0]) < float(res):
@@ -551,6 +559,9 @@ def _selftest():
     chk('C: ★분해능 아래 차이를 거부 (E_SE 1.35≡1.5 형태)',
         any('분해능' in x for x in check_claim(dict(
             base, h0_predicts='overlap 1.75', h1_predicts='overlap 1.74', resolution=0.31))))
+    chk('C: ★상보 부등호(< X vs >= X)는 판별적 — 과잉차단 안 함 (CL-10 때 발생)',
+        check_claim(dict(base, h0_predicts='|Δ| < 4.0 %p', h1_predicts='|Δ| >= 4.0 %p',
+                         resolution=1.0)) == [])
     chk('C: ★구간 겹침을 거부', any('구간이 겹친다' in x for x in check_claim(dict(
         base, h0_predicts='8.0 ~ 16.0', h1_predicts='9.0 ~ 15.6'))))
     # ★★ S0 C-5 — 같은 실패를 새 id·live 로 넣어도 물어야 한다
