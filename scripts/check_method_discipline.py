@@ -84,7 +84,11 @@ DIAGNOSTICS = {
                    '한 도체" 를 만들기 위한 **의도된 선택**이며 함수 주석이 그렇게 적는다.'),
         'must_not_certify': ['fibre_stamp', 'raster fidelity', 'STEP3 connectivity',
                              'point vs segment', 'n_carbon_clusters 절대값',
-                             'connected_pct 침대 간 비교', 'DEM 접촉 기준과 동일'],
+                             'connected_pct 침대 간 비교', 'DEM 접촉 기준과 동일',
+                             'seam 근방 AM 의 dead-AM 판정'],
+        # S1b P1-①: cKDTree 에 boxsize 가 없어 seam 접촉을 놓친다.  실측 seam 전용 AM-AM
+        #   접촉 = real14 10.2 % · kit 3.6~16.1 % (조성 의존 4.5배) → 공통모드 상쇄 안 됨.
+        'periodic_waiver': '주기 seam 을 보지 않는다 — 경계 근방 입자의 연결 판정은 증언 불가',
     },
     'sr01_carbon_network.carbon_network_stats': {
         'relation': 'diagnoses', 'target': 'step3_sigma.solve_sigma_z',

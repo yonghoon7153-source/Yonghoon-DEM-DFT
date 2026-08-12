@@ -12,7 +12,11 @@
    "date": "2026-08-11",
    "status": "rejected",
    "claim": "arm A 의 VGCF 는 잘 배선돼 있다",
-   "measured": {"metric": "dissipation_share", "value": 0.04, "unit": "fraction"},
+   "measured": {
+    "metric": "dissipation_share",
+    "value": 0.04,
+    "unit": "fraction"
+   },
    "asserted": "VGCF 가 σ_e 에 정상적으로 기여한다",
    "h0": "점 스탬프가 VGCF 를 끊어 기여가 없다",
    "h1": "VGCF 는 원래 이 조성에서 기여가 작다",
@@ -26,7 +30,11 @@
    "date": "2026-08-12",
    "status": "rejected",
    "claim": "MPM 이 f_AM 을 스스로 측정했다 (R2.5)",
-   "measured": {"metric": "f_am_volume_sum", "value": 0.496, "unit": "fraction"},
+   "measured": {
+    "metric": "f_am_volume_sum",
+    "value": 0.496,
+    "unit": "fraction"
+   },
    "asserted": "AM 이 하중분담의 절반을 진다",
    "h0": "AM 이 실제로 절반을 진다",
    "h1": "전부피 구속임펄스 합이 벽 주입량과 같은 보존 항등식이다",
@@ -40,7 +48,11 @@
    "date": "2026-08-11",
    "status": "rejected",
    "claim": "점 스탬프가 탄소를 전기적으로 끊는다",
-   "measured": {"metric": "n_components", "value": 23914, "unit": "6-face components"},
+   "measured": {
+    "metric": "n_components",
+    "value": 23914,
+    "unit": "6-face components"
+   },
    "asserted": "탄소가 회로에서 단절됐다",
    "h0": "조각들이 회로에서 고립됐다",
    "h1": "조각들이 각각 AM 에 꽂혀 있다 (국소 션트)",
@@ -49,42 +61,55 @@
    "bridge": null,
    "verdict": "개수→귀결 비약 + 가능도비 1.  성분 수는 두 가설이 똑같이 예측한다.  갈리는 축은 **AM 면-인접**이었고 재보니 0.944 = h1.  → CL-06 으로 대체."
   },
-
   {
    "id": "CL-04",
    "date": "2026-08-12",
    "status": "live",
    "claim": "얼린-AM scaffold MPM 은 준정적 극한에서 실험 대비 과압축한다",
-   "measured": {"metric": "porosity_eps_sphere_at_target", "value": 9.27, "unit": "%"},
+   "measured": {
+    "metric": "porosity_eps_sphere_settled",
+    "value": 1.13,
+    "unit": "%"
+   },
    "asserted": "scaffold 는 ~6.3 %p 과압축하며 옛 15.93 % 앵커는 플래튼 결함의 우연한 상쇄였다",
    "h0": "플래튼 결함이 과압축을 가리고 있었다 (정본 rev4 §22)",
    "h1": "scaffold 는 정상이고 15.93 % 가 이 모델의 답이다",
    "h0_predicts": "ε_sphere 8.0 ~ 10.5 %",
    "h1_predicts": "ε_sphere ≈ 15.6 %",
-   "bridge": "응력-정지(wallP ≥ target)로 멈춘 프레임에서 읽었고, MPM union 관례를 §0-1 의 ε_sphere 로 −1.251 %p 환산했다.",
+   "bridge": "응력-정지 정착(50 프레임 0.3003±0.0002 유지)에서 읽고, §10-2 의 1/h 오프셋(1.4654 %p @h=25.84)으로 ε_sphere 환산.  ⚠ 첫 인용 9.27 %는 **하강 중** 값이었다.",
    "prereg": "docs/reviews/fam_platen_prereg_20260812.md §2 R1-a",
-   "verdict": "h0 채택.  ⚠ 하강 중 관측 — 정착으로 확정 필요 (R1-b/c/d 미채점)."
+   "verdict": "⚠ **h0·h1 둘 다 빗나갔다** — 정착 실측 1.13 %는 h0 창(8.0~10.5) 아래로 7 %p, h1(15.6)과는 14.5 %p.  §7 에 따라 창은 옮기지 않고 **둘 다 기각**으로 기록한다.  방향(과압축)은 h0 쪽이나 크기가 등록 예측의 밖이므로 \"h0 채택\"으로 셀 수 없다.  원인은 규명됨: σ_y(0.30) = target(0.30) 이라 SE 가 항복면 위에서 부피보존 흐름을 계속해 기하학적 잼까지 간다 — 얼린 AM 이 하중을 0 지기 때문.  ⇒ rev4 §22 의 \"독립 외삽 3개 → 9.4 %\" 는 CDX-S3b-16 대로 1.5중이었고 **틀렸다**.",
+   "resolution": 0.5
   },
   {
    "id": "CL-05",
    "date": "2026-08-12",
    "status": "live",
    "claim": "SR-01 의 기전은 전기적 단절이 아니라 경로 강제다",
-   "measured": {"metric": "plugged_frac + largest_mass_frac", "value": "0.944 / 0.375 (point) vs 0.995 / 0.859 (segment)", "unit": "fraction of carbon mass"},
+   "measured": {
+    "metric": "plugged_frac + largest_mass_frac",
+    "value": "0.944 / 0.375 (point) vs 0.995 / 0.859 (segment)",
+    "unit": "fraction of carbon mass"
+   },
    "asserted": "점 스탬프에서 탄소는 회로에 꽂혀 있으나 자기 자신과 끊겨 전류가 AM 을 우회한다",
    "h0": "점 스탬프가 탄소를 회로에서 고립시킨다 (단절설)",
    "h1": "탄소는 AM 에 꽂혀 있고 장거리 연결만 깨진다 (경로 강제설)",
    "h0_predicts": "plugged_frac 이 작다 (≲0.3) · 최대성분이 z 를 관통하지 못한다",
    "h1_predicts": "plugged_frac ≈ 1 · 최대성분 질량몫만 크게 줄어든다",
    "bridge": "성분 수(세는 양)가 아니라 AM 면-인접 질량몫을 **별도로** 측정했다 — 이것이 CL-03 에 없던 다리다.",
-   "verdict": "h1 채택 — plugged_frac 이 **5/5 킷 전부 0.92~0.97** 로 탄소는 어디서나 회로에 꽂혀 있다.  ⚠⚠ 단 최초 서술('점 팔도 z 를 관통하므로 문턱 아래가 아니다')은 kit_ps_7_3 **한 킷**에서 본 것이라 **과일반화였다** — 5킷 스윕에서 0_10/3_7/5_5 는 관통 질량이 **정확히 0.0000** 이다.  경로 강제(기전)는 보편이고, 고속도로 생존 여부는 **조성 의존**이다 → CL-08.  ⚠ 기하 측정이다 — 수송 귀결과 배수 크기는 STEP3 (게이트 ⑤⑥) 몫."
+   "verdict": "h1 채택 — plugged_frac 이 **5/5 킷 전부 0.92~0.97** 로 탄소는 어디서나 회로에 꽂혀 있다.  ⚠⚠ 단 최초 서술('점 팔도 z 를 관통하므로 문턱 아래가 아니다')은 kit_ps_7_3 **한 킷**에서 본 것이라 **과일반화였다** — 5킷 스윕에서 0_10/3_7/5_5 는 관통 질량이 **정확히 0.0000** 이다.  경로 강제(기전)는 보편이고, 고속도로 생존 여부는 **조성 의존**이다 → CL-08.  ⚠ 기하 측정이다 — 수송 귀결과 배수 크기는 STEP3 (게이트 ⑤⑥) 몫.",
+   "must_recheck": "⚠ plugged_frac 은 sr01_carbon_network.py:103 의 np.roll 이 xyz 를 **toroidal 로 감아** 잰 값이다 (성분 라벨은 비주기 6-face) = 규약 혼합. Codex intentional error #5 확인됨 → 비주기로 재측정 필요."
   },
   {
    "id": "CL-08",
    "date": "2026-08-12",
    "status": "live",
    "claim": "점 스탬프의 손상 크기는 침대 조성의 함수다 (알고리즘-조건부일 뿐 아니라 침대-조건부)",
-   "measured": {"metric": "largest_mass_frac_ratio_point_over_segment", "value": "0.023 / 0.104 / 0.145 / 0.436 / 0.753 (P:S 0:10 → 10:0)", "unit": "fraction"},
+   "measured": {
+    "metric": "largest_mass_frac_ratio_point_over_segment",
+    "value": "0.023 / 0.104 / 0.145 / 0.436 / 0.753 (P:S 0:10 → 10:0)",
+    "unit": "fraction"
+   },
    "asserted": "손상이 1.3× ~ 43.6× 로 벌어지므로 ×35.79 를 단일 보정으로 인용할 수 없다",
    "h0": "손상은 래스터 규약의 성질이라 침대에 무관하게 일정하다",
    "h1": "AM 이 섬유를 먼저 자르고 점 스탬프가 그 조각을 또 잘라 손상이 복합된다",
@@ -98,7 +123,11 @@
    "date": "2026-08-12",
    "status": "live",
    "claim": "econn 은 STEP3 스탬프 규약에 구조적으로 눈멀었다",
-   "measured": {"metric": "code_object_introspection", "value": "co_names 에 rasterize/step3_sigma 없음; 인자에 스탬프 변수 없음; 26-conn @0.30 µm", "unit": "static"},
+   "measured": {
+    "metric": "code_object_introspection",
+    "value": "co_names 에 rasterize/step3_sigma 없음; 인자에 스탬프 변수 없음; 26-conn @0.30 µm",
+    "unit": "static"
+   },
    "asserted": "econn 은 point/segment 를 증언할 수 없다 (측정이 아니라 정의에 의해)",
    "h0": "econn 이 스탬프 차이를 볼 수 있다",
    "h1": "econn 의 입력에 스탬프 변수가 없다",
@@ -112,14 +141,19 @@
    "date": "2026-08-12",
    "status": "live",
    "claim": "DEM↔MPM porosity 일치는 정당성 증거가 아니다 (순환)",
-   "measured": {"metric": "seed_provenance", "value": "SE 씨앗 = atom_2060000 (DEM 압축 종료 좌표); solid_vol 은 씨앗 시점 고정 상수", "unit": "static"},
+   "measured": {
+    "metric": "seed_provenance",
+    "value": "SE 씨앗 = atom_2060000 (DEM 압축 종료 좌표); solid_vol 은 씨앗 시점 고정 상수",
+    "unit": "static"
+   },
    "asserted": "플래튼을 DEM 높이에 두면 ε_sphere 는 산술적으로 DEM porosity 를 돌려준다",
    "h0": "일치는 두 모델의 독립적 수렴이다",
    "h1": "일치는 씨앗이 정답을 인코딩한 결과다",
    "h0_predicts": "운동학적 정지에서는 DEM 과 어긋나야 한다",
    "h1_predicts": "운동학적 정지에서도 DEM ±1 %p 에 착지한다",
    "bridge": "반례가 P:S 1차 런 자신이다 — 운동학 정지 확정인데 |gap| ≤ 0.7 %p.",
-   "verdict": "h1 채택.  ⇒ 증명서 역할을 판별력 있는 검사로 이전: 갭-예측 정지 프레임 · 정착 wallP vs target · 속도 사다리 수렴."
+   "verdict": "h1 채택.  ⇒ 증명서 역할을 판별력 있는 검사로 이전: 갭-예측 정지 프레임 · 정착 wallP vs target · 속도 사다리 수렴.",
+   "shared_input": "SE 씨앗 좌표 = DEM dump atom_2060000 (압축 종료 상태).  solid_vol 이 그 시점에 고정되므로 MPM 의 자유도는 wall_z 하나뿐이고, 그 wall_z 는 강체 AM 골격에 1 µm 창(31.312↔30.28 µm)으로 갇힌다 — S4 CDX-S4-08."
   }
  ]
 }
