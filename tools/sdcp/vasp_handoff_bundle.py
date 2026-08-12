@@ -965,6 +965,12 @@ GUARD_EV = 0.010          # ±10 meV — k 전이 불확실성. **30 meV 판정�
 RMSD_TOL = 0.75           # Å — 두 끝점이 같은 basin 인가 (0.50/1.00 민감도도 같이 뽑는다)
 CONTACT_A = 3.0           # Å — 접촉 지문 반경
 FP_JACCARD = 0.80         # 접촉 지문 겹침 — 경계 원자 하나로 뒤집히지 않게 완전일치 대신
+#: 실행 INCAR echo 로 대조할 키. 생성부의 AUDIT_KEYS 와 **같은 목록이어야 한다** —
+#:  둘이 따로 적혀 있어 한쪽만 늘리면 조용히 갈린다 (Codex 5차 P1-3).
+#:  물리 규약 키(LASPH/ADDGRID/ISYM/NUPDOWN/LDAUU)도 넣어 외주처의 우발적 수정을 잡는다.
+AUDIT_KEYS_RUNTIME = ("ENCUT", "ISMEAR", "IVDW", "LREAL", "ISTART", "ICHARG", "LDIPOL",
+                      "LASPH", "ADDGRID", "ISYM", "NUPDOWN", "LDAUU", "LDAUTYPE", "IDIPOL")
+
 RCOV = {"H": 0.31, "B": 0.84, "C": 0.76, "N": 0.71, "O": 0.66, "F": 0.57,
         "Na": 1.66, "P": 1.07, "S": 1.05, "Cl": 1.02, "Li": 1.28, "Ni": 1.24}
 BOND_F = 1.25             # 결합 = d < BOND_F × (r_i + r_j)
@@ -991,6 +997,24 @@ def _read_text(path):
     except OSError:
         pass
     return None
+
+
+def global_sign(moments, want):
+    """시드 부호 want 에 대해 관측 모멘트의 **전역 부호**를 정한다.
+
+    ⚠ 전역 반전은 시간반전이라 **같은 상태**다. 그래서 부호를 정규화한 뒤
+      *부분* 반전만 문제 삼아야 한다. static 과 dense 가 이 규칙을 따로 구현하면
+      갈린다 — 실제로 dense 가 static 의 부호를 재사용해, dense 가 완전한
+      시간반전으로 수렴했을 때 전부 불일치로 잡는 **거짓 차단**이 났다
+      (Codex 5차 P1-2). 한 함수로 둔다.
+
+    반환 (sg, 불일치 인덱스). want/moments 는 {인덱스: 값} 이다.
+    """
+    ag = {s: sum(1 for i, v in want.items() if moments.get(i, 0.0) * s * v > 0)
+          for s in (1.0, -1.0)}
+    sg = 1.0 if ag[1.0] >= ag[-1.0] else -1.0
+    bad = [i for i, v in want.items() if moments.get(i, 0.0) * sg * v <= 0]
+    return sg, bad
 
 
 def read_moments(t):
@@ -1116,8 +1140,7 @@ def read_outcar(p):
             "ldau": read_ldau(t),
             "incar_echo": {k2: (re.search(k2 + r"\s*=\s*([-\w.]+)", t).group(1)
                                 if re.search(k2 + r"\s*=\s*([-\w.]+)", t) else None)
-                           for k2 in ("ISTART", "ICHARG", "LDIPOL", "IVDW", "LREAL",
-                                      "ENCUT", "ISMEAR")}}
+                           for k2 in AUDIT_KEYS_RUNTIME}}
 
 
 def read_poscar(p):
@@ -1553,6 +1576,25 @@ def selftest_k() -> int:
     chk(lb6["c10"] == "K_DIRECTLY_CHECKED" and lb6["neutral"] == "K_TRANSFER_SCREENED",
         "보정자 미선언이어도 κ 를 잰 조각은 직접 검증 (선언만 보면 headline 이 막힌다)")
 
+    # ── 전역 부호 정규화 (Codex 5차 P1-2) ────────────────────────────────
+    #   static 과 dense 가 이 규칙을 따로 구현해서, dense 가 **완전한 시간반전**으로
+    #   수렴하면 전부 불일치로 잡는 거짓 차단이 났다. 한 함수로 두고 여기서 시험한다.
+    _w = {0: 1.0, 1: -1.0, 2: 1.0, 3: -1.0}
+    _same = {0: 1.2, 1: -1.2, 2: 1.2, 3: -1.2}
+    chk(global_sign(_same, _w) == (1.0, []), "시드와 같은 배치 → sg=+1, 불일치 0")
+    _rev = {k: -v for k, v in _same.items()}
+    chk(global_sign(_rev, _w) == (-1.0, []),
+        "**완전한 시간반전** → sg=−1, 불일치 0 (같은 상태다)")
+    _part = dict(_same); _part[1] = +1.2          # 하나만 뒤집힘
+    _sg, _bad = global_sign(_part, _w)
+    chk(_bad == [1], f"부분 반전 하나 → 그것만 잡는다 ({_bad})")
+    _half = {0: 1.2, 1: 1.2, 2: -1.2, 3: -1.2}    # 절반 반전 (모호)
+    _sg2, _bad2 = global_sign(_half, _w)
+    chk(len(_bad2) == 2, f"절반 반전 → 어느 부호로 봐도 2개 불일치 ({_bad2})")
+    _zero = {k: 0.0 for k in _w}
+    chk(len(global_sign(_zero, _w)[1]) == len(_w),
+        "모멘트 전부 0 → 전부 불일치 (붕괴를 통과시키지 않는다)")
+
     # guard band
     D = 0.030
     chk(apply_k_guard("ROBUST", 0.005, "K_DIRECTLY_CHECKED", D).startswith("UNRESOLVED_SIGN"),
@@ -1782,10 +1824,7 @@ def main():
                 got = {i: mom[i] for i in ni}
                 # ★ 전역 반전은 시간반전이라 **같은 상태**다 — 부호를 정규화해 비교하고,
                 #   진짜 문제인 **부분 반전**을 잡는다 (옛 판은 정반대였다).
-                agree = {sg: sum(1 for i, v in ni.items() if got[i] * sg * v > 0)
-                         for sg in (1.0, -1.0)}
-                sg = 1.0 if agree[1.0] >= agree[-1.0] else -1.0
-                flip = [i for i, v in ni.items() if got[i] * sg * v < 0]
+                sg, flip = global_sign(got, ni)
                 small = [i for i, m in got.items() if abs(m) < MOM_MIN]
                 rec["geom"]["magnetic"] = {
                     "n_ni": len(ni), "global_sign": sg, "n_partial_flip": len(flip),
@@ -1854,10 +1893,19 @@ def main():
                             f"표 길이 {len(dm)})")
                     else:
                         miss = [i for i in ni if i >= len(dm)]
-                        dq = sum(sg * ni[i] * dm[i] for i in ni) / len(ni)
+                        # ★★ dense 는 **자기 전역부호를 스스로** 구한다 (Codex 5차 P1-2).
+                        #   옛 판은 static 의 sg 를 재사용해서, dense 가 완전한 시간반전
+                        #   상태(Ni·라디칼·총 M 이 **함께** 뒤집힘)로 수렴하면 물리적으로
+                        #   같은 상태인데도 전부 부호 불일치로 잡아 거짓 차단했다.
+                        #   바로 아래 phase_sign_sig 는 전역반전을 같은 상태로 인정하는데
+                        #   여기만 규칙이 달랐다 — 한 기능이 두 규칙을 쓰고 있었다.
+                        sg_d, _dflip = global_sign({i: dm[i] for i in ni}, ni)
+                        dq = sum(sg_d * ni[i] * dm[i] for i in ni) / len(ni)
                         dsmall = [i for i in ni if abs(dm[i]) < MOM_MIN]
                         rec["geom"]["magnetic"]["dense"] = {
                             "n_ni_found": len(ni) - len(miss),
+                            "global_sign": sg_d,
+                            "global_flip_vs_static": (sg_d != sg),
                             "Q_muB": round(dq, 3),
                             "f_small": round(len(dsmall) / len(ni), 3),
                             "total_muB": dn.get("mag_total")}
@@ -1867,7 +1915,8 @@ def main():
                         if mol_sign:
                             _ms = {int(k2): float(v2) for k2, v2 in mol_sign.items()
                                    if int(k2) < len(dm)}
-                            _bad = [i for i, v2 in _ms.items() if dm[i] * sg * v2 <= 0]
+                            # dense 자기 부호로 정규화한 뒤 **상대** 스핀을 본다
+                            _bad = [i for i, v2 in _ms.items() if dm[i] * sg_d * v2 <= 0]
                             _gone = [i for i in _ms if abs(dm[i]) < MOM_MIN]
                             rec["geom"]["magnetic"]["dense"]["radical"] = {
                                 "n": len(_ms), "sign_mismatch": len(_bad),
@@ -1878,6 +1927,8 @@ def main():
                                     f"DENSE_RADICAL_BRANCH_CHANGED(부호 불일치 {len(_bad)} · "
                                     f"소실 {len(_gone)}/{len(_ms)} — Ni 는 유지됐지만 "
                                     f"라디칼 상대 스핀이 달라졌다. κ 에 쓸 수 없다)")
+                            # ⚠ 총 M 도 **절대값**으로 본다 — 전역 시간반전이면 부호가
+                            #   같이 뒤집히는 게 정상이다.
                             _tm, _td = st.get("mag_total"), dn.get("mag_total")
                             if _tm is not None and _td is not None and \
                                     abs(abs(_tm) - abs(_td)) > 0.5:
@@ -3438,7 +3489,13 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             "makespan_d": {str(m): round(CE.schedule_makespan(_jh, m) / 24, 2)
                            for m in (4, 8, 12, 20)},
             "estimator": "tools/sdcp/vasp_cost_estimate.py",
-            "estimator_baseline_sha256": _base.get("source"),
+            # ⚠ 이건 hash 가 아니라 **경로**다. 이름을 그렇게 부르면 안 된다.
+            "estimator_baseline_source": _base.get("source"),
+            "estimator_baseline_sha256": (
+                hashlib.sha256(open(_base["source"], "rb").read()).hexdigest()
+                if isinstance(_base.get("source"), str)
+                and os.path.isfile(_base["source"]) else None),
+            "estimator_baseline_sec_per_estep": round(_base.get("sec_per_estep", 0), 4),
             "repo_commit": man.get("repo_commit"),
             "uncertainty": "±2배 (모형이지 벤치마크가 아니다)"}
     except Exception as _e:
@@ -3995,6 +4052,16 @@ def selftest() -> int:
             "RCOV 사본 일치 (빌더 ↔ 분석기)")
         chk(abs(float(m_r.group(2)) - BOND_F_B) < 1e-12,
             f"BOND_F 사본 일치 ({m_r.group(2)})")
+    m_ak = re.search(r"^AUDIT_KEYS_RUNTIME = \((.*?)\)", az, re.M | re.S)
+    if m_ak:
+        _rk = {x.strip().strip('"') for x in m_ak.group(1).split(",") if x.strip()}
+        chk(set(AUDIT_KEYS) <= _rk,
+            f"생성부 AUDIT_KEYS 가 분석기 실행 감사 목록에 **전부 포함** "
+            f"(빠진 것 {sorted(set(AUDIT_KEYS) - _rk)})")
+        chk({"LASPH", "ISYM", "NUPDOWN"} <= _rk,
+            "물리 규약 키도 실행 감사 대상 (외주처 우발 수정 탐지)")
+    else:
+        chk(False, "분석기에서 AUDIT_KEYS_RUNTIME 을 못 찾았다")
     m_o = re.search(r"^MAX_OPTIONAL_DENSE = (\d+)", az, re.M)
     chk(m_o and int(m_o.group(1)) == MAX_OPTIONAL_DENSE_B,
         f"조건부 dense 상한 사본 일치 ({m_o.group(1) if m_o else '없음'})")
@@ -4176,6 +4243,32 @@ def selftest() -> int:
                     head + "\n General timing and accounting informations for this job\n")
                 dm_job = str(dj.parent.relative_to(out))
                 break
+
+    # ★ P1-2 (Codex 5차) — dense 가 **완전한 시간반전**으로 수렴하면 물리적으로 같은
+    #   상태다. Ni·라디칼·총 M 을 전부 뒤집어도 통과해야 한다. 옛 판은 static 의 sg 를
+    #   재사용해 전부 부호 불일치로 잡았다(거짓 차단).
+    tr_job = None
+    for dj in sorted(out.rglob("dense")):
+        # ⚠ N13 이 이미 모멘트 표를 지운 잡을 고르면 **헛통과**한다 (다른 게이트가
+        #   먼저 걸려 내 assertion 이 공허하게 참이 된다). 그 잡을 명시적으로 뺀다.
+        if (dj.is_dir() and (dj / "OUTCAR").is_file()
+                and str(dj.parent.relative_to(out)) != (dm_job or "")
+                and "magnetization (x)" in (dj / "OUTCAR").read_text()
+                and "Nitop" in dj.parent.name):
+            txt = (dj / "OUTCAR").read_text()
+            # 모멘트 표는 `# of ion  s  p  d  tot` — 5열이고 마지막이 tot 다.
+            def _neg(m):
+                return f"{m.group(1)}{-float(m.group(2)):9.3f}"
+            _k0 = txt.rfind("magnetization (x)")
+            head, tail = txt[:_k0], txt[_k0:]
+            tail = _re.sub(r"(?m)^(\s*\d+(?:\s+-?[\d.]+){3}\s+)(-?[\d.]+)\s*$",
+                           _neg, tail)
+            txt2 = head + tail
+            txt2 = _re.sub(r"(magnetization\s+)(-?[\d.]+)",
+                           lambda m: f"{m.group(1)}{-float(m.group(2)):.4f}", txt2)
+            (dj / "OUTCAR").write_text(txt2)
+            tr_job = str(dj.parent.relative_to(out))
+            break
     chk(n_dense >= 2 * len(DIRS), f"tier1 전 pm1 끝점에 dense 상 ({n_dense}개)")
 
     # ── 음성 케이스 심기 ────────────────────────────────────────────────────
@@ -4290,6 +4383,18 @@ def selftest() -> int:
             f"N13 dense 모멘트 표만 삭제 → 게이트 발화 ({[g[:34] for g in gts]})")
     else:
         chk(False, "N13 전제 실패: 모멘트 표 있는 dense 잡을 못 찾았다")
+    if tr_job:
+        _g = res["jobs"].get(tr_job, {}).get("gates", [])
+        _mg = ((res["jobs"].get(tr_job, {}).get("geom") or {}).get("magnetic") or {})
+        chk(bool((_mg.get("dense") or {}).get("global_sign") is not None),
+            f"N14 전제: 그 잡의 dense 모멘트가 실제로 읽혔다 ({tr_job})")
+        _d = ((res["jobs"].get(tr_job, {}).get("geom") or {})
+              .get("magnetic") or {}).get("dense") or {}
+        chk(not any("RADICAL_BRANCH_CHANGED" in x or "DENSE_MAGNETIC_COLLAPSE" in x
+                    for x in _g),
+            f"N14 dense 전역 시간반전 → **거짓 차단 없음** ({[x[:28] for x in _g]})")
+        chk(_d.get("global_sign") is not None,
+            f"N14b dense 가 **자기 전역부호**를 기록한다 ({_d.get('global_sign')})")
     chk(len(res["integrity"]["changed"]) == 1, f"N9 INCAR 변조 → 무결성 1건 감지")
 
     # ── 양성: 게이트에 안 걸린 쌍은 값이 **정확히** 복원돼야 한다 ──
