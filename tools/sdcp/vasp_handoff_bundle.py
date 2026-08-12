@@ -1808,6 +1808,12 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     if a.kmesh_dense:
         kover["dense"] = a.kmesh_dense
     man["kmesh_override"] = kover or None
+    man["dense_calibrators"] = list(a.dense_frags) if a.dense_frags else None
+    if a.dense_frags:
+        man["k_label_rule"] = (
+            "직접 dense 한 조각만 K_DIRECTLY_CHECKED. 전이 게이트(|κ|≤10 · |Δκ|≤10 meV)를 "
+            "통과한 나머지는 K_TRANSFER_SCREENED — **K_CONVERGED 아님**. 게이트 실패 시 "
+            "K_UNVERIFIED.")
     used_els: set = set()
     n_jobs = 0
 
@@ -1903,7 +1909,10 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                 #   seed 1종 쌍은 seed 산포를 ΔE 에서 못 걷어내 최종 판정에 못 쓴다.
                 seeds = list(SEEDS_FULL)
                 # dense-k: tier1 은 **전 pm1 끝점**, tier2 는 탐침쌍만 (2026-08-12 결정)
-                dense = tier1 or (p is probe)
+                # ★ dense 는 **k 보정자(calibrator)** 로 지정한 조각에만 (Codex 5차 ①).
+                #   champion 모드에선 조각당 쌍이 하나뿐이라 `probe` 조건이 전부 참이 되어
+                #   4조각 전부 켜졌다 = 8 dense = 3.2일 (예산 초과). 명시 지정으로 바꾼다.
+                dense = (frag in a.dense_frags) if a.dense_frags else (tier1 or p is probe)
                 xyzs = {role: (run / f"{rec['label']}.xyz", rec)
                         for role, rec in (("Li", p["li"]), ("Ni", p["ni"]))}
                 miss = [r for r, (xp, _) in xyzs.items() if not xp.is_file()]
@@ -2260,7 +2269,7 @@ def selftest() -> int:
     a0 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_short"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None)
+                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, dense_frags=None)
     try:
         build_bundle(a0, ledger=led)
         chk(False, "N0 xyz 누락 → **번들이 만들어졌다** (축소 정본 = fail-open)")
@@ -2276,7 +2285,7 @@ def selftest() -> int:
     ab = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_nofp"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None)
+                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, dense_frags=None)
     try:
         build_bundle(ab, ledger=led)
         chk(False, "N0b 지문 없는 소스 → **번들이 만들어졌다**")
@@ -2300,7 +2309,7 @@ def selftest() -> int:
     at3 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_top3"),
                              freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                              qe="(none)", expect=None, allow_partial=False,
-                             no_prescf=False, allow_stale_gate=False, top_n=3, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None)
+                             no_prescf=False, allow_stale_gate=False, top_n=3, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, dense_frags=None)
     o3 = build_bundle(at3, ledger=led)
     m3 = json.loads((o3 / "MANIFEST.json").read_text())
     kept = sorted({v["dir"] for v in m3["pairs"].values()})
@@ -2317,7 +2326,7 @@ def selftest() -> int:
     a = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle"),
                            freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                            qe="(none)", expect=None, allow_partial=False,
-                           no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None)
+                           no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, dense_frags=None)
     out = build_bundle(a, ledger=led)
     man = json.loads((out / "MANIFEST.json").read_text())
     n_pre = sum(1 for p in man["planned"].values() if "pre" in (p.get("phases") or []))
@@ -2516,6 +2525,10 @@ def main():
                     help="Ni1/Ni2 라벨이 있는 QE 입력 (부격자 원장의 원본)")
     ap.add_argument("--expect", nargs="*", default=None,
                     help="계약 방향 수 재정의: ptfe_c10=5 ptfe_dimer=3 ...")
+    ap.add_argument("--dense_frags", nargs="*", default=None,
+                    help="dense(k 검증)를 켤 조각 — **k 보정자**. 지정하면 그 조각에만 켠다. "
+                         "권장 'ptfe_c10 sdcp_doped' (큰 계 + 유일한 open-shell). "
+                         "나머지는 K_TRANSFER_SCREENED 로만 해석할 것 (K_CONVERGED 아님).")
     ap.add_argument("--cross_endpoints", nargs="*", default=None,
                     help="이 조각들은 챔피언 배향이 다를 때 **교차 끝점**도 만든다 "
                          "(예: ptfe_c10). Li@(Ni배향)·Ni@(Li배향) 이 추가돼 2×2 가 완성되고 "
