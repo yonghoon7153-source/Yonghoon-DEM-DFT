@@ -596,5 +596,15 @@
   "anode_interface_mechanism": "I-rich forms a LiI-based SEI -> uniform Li+/e- distribution -> suppresses dendrites, lowers interfacial resistance growth (R_i-3 +49% over 100 cyc for Cl0.8I0.6 vs +216% in 40 cyc for I1.4). Low E -> conformal Li contact. XPS/ToF-SIMS: framework P-/PS-/S- decrease, byproducts Li3P-/LiS-/LiI- increase on cycling.",
   "relevance_to_group": "An ALTERNATIVE low-modulus route (Cl->I, larger halide) to the group's NdO-doping coating strategy. Confirms the design lever 'larger halide / more free volume -> softer E' for the Hyundai low-modulus coating layer. NOTE: I-substitution lowers E AND targets the ANODE (Li-metal/LiI SEI), whereas the group's NdO-LPSC coating targets the CATHODE side (low E + high oxidation stability). Different interface, same low-E design principle.",
   "vs_our_modelc": "Their pure-Cl end LMA-Cl1.4 (Li5.4PS4.6Cl1.4) is close to our modelc (Li5.4PS4.4Cl1.6); both are the STIFFEST of the halide series (E ~16 GPa pellet, since E falls with I). Consistent with our Cl-rich = stiffer (E/G) finding."
+ },
+ "_provenance_audit": {
+  "audited": "2026-08-12",
+  "audited_by": "db provenance sweep (tools/db/validate_canonical.py --cited 로 대상 선정)",
+  "generator": "(없음 — 손으로 유지하는 집계 레지스트리)",
+  "source": "container:comp1_v3/v3_post/elastic_static/ · modelC_v3/elastic_static/ · gabia:/data/work/runs/lpsocl_dft/elastic/ 외",
+  "collected": "2026-06-11",
+  "confidence": "high",
+  "note": "조성별 pseudo/ecut/k 가 달라 교차비교 전 방법론 카드 확인",
+  "caveat": "이 블록은 **사후 추적** 결과다. 원본 계산 시점에 기록된 것이 아니라 repo·git·파일 내용에서 역추적했다. confidence 를 같이 보라."
  }
 }

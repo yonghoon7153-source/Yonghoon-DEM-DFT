@@ -77,5 +77,15 @@
   }
  },
  "_SUPERSEDED_sigma_ratio_2026_07_09": "The 1.33x sigma300 ratio (and any 'b2o3 raises sigma' wording) is SUPERSEDED: 멀티시드(3-seed×3-T) σ비율 1.08/0.82/1.15 = 동등; 단일시드 1.33×는 시드 노이즈로 철회(SEMIFINAL 2026-07-09); Ea 0.199±0.034 vs 0.197±0.032 eV. Correct claim: B2O3 PRESERVES sigma (O Li-trap offset by +45% BVSE channel opening). Source: kb/results/b2o3_SEMIFINAL_report_2026_07_09.md. Ea/D values kept for traceability.",
- "⚠_DIFFUSIVE_GATE_2026_08_01": "⚠⚠ 확산영역 게이트 미통과/미검사 (2026-08-01). MSD 창 2-50 ps 의 log-log 기울기 β 가 0.8 미만이면 케이지 진동을 확산으로 오독한 것이다. comp1 seeds 6/6, comp2 d=1.0 8/9 가 케이지로 판정됐고 **창 변경·시드 평균 어느 쪽으로도 구제되지 않았다**(200 ps 부족). 같은 프로토콜로 낸 Ea 는 tools/ionic/msd_diffusive_check.py 게이트를 통과하기 전까지 **인용 보류**. 근거: kb/results/mlip_md_diffusive_gate_2026_08_01.md"
+ "⚠_DIFFUSIVE_GATE_2026_08_01": "⚠⚠ 확산영역 게이트 미통과/미검사 (2026-08-01). MSD 창 2-50 ps 의 log-log 기울기 β 가 0.8 미만이면 케이지 진동을 확산으로 오독한 것이다. comp1 seeds 6/6, comp2 d=1.0 8/9 가 케이지로 판정됐고 **창 변경·시드 평균 어느 쪽으로도 구제되지 않았다**(200 ps 부족). 같은 프로토콜로 낸 Ea 는 tools/ionic/msd_diffusive_check.py 게이트를 통과하기 전까지 **인용 보류**. 근거: kb/results/mlip_md_diffusive_gate_2026_08_01.md",
+ "_provenance_audit": {
+  "audited": "2026-08-12",
+  "audited_by": "db provenance sweep (tools/db/validate_canonical.py --cited 로 대상 선정)",
+  "generator": "(없음 — 손으로 누적)",
+  "source": "gabia:/data/work/b2o3md/b2o3_unified/d0.00_cfg0/T{600,800,1000}/ · runs/b2o3_600_reseed/s{2,3,4}/",
+  "collected": "2026-06-29",
+  "confidence": "high",
+  "note": "헤드라인 3회 교체 — FINAL_for_paper.Ea_eV_PAPER 만 인용",
+  "caveat": "이 블록은 **사후 추적** 결과다. 원본 계산 시점에 기록된 것이 아니라 repo·git·파일 내용에서 역추적했다. confidence 를 같이 보라."
+ }
 }

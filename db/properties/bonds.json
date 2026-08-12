@@ -1,472 +1,482 @@
 {
-  "property": "bond_lengths",
-  "description": "DFT relaxed V0 coordinates, PBC distance calculation",
-  "results": {
-    "comp2": {
-      "Li-Cl": 2.51,
-      "Li-Br": 2.71,
-      "P-S": 2.06
-    },
-    "comp5_A": {
-      "Li-Cl": 2.466,
-      "Li-Br": 2.713,
-      "Li-S": 2.463,
-      "P-S": 2.066
-    },
-    "comp5_B": {
-      "Li-Cl": 2.466,
-      "Li-Br": 2.725,
-      "Li-S": 2.469,
-      "P-S": 2.067
-    },
-    "comp1_v3": {
-      "Li-Cl": 2.607,
-      "Li-S": 2.461,
-      "P-S": 2.073,
-      "S-S": 3.595
-    },
-    "modelc_v3": {
-      "Li-Cl": 2.532,
-      "Li-S": 2.465,
-      "P-S": 2.064,
-      "S-S": 3.519,
-      "Li-Cl_4a": 2.551,
-      "Li-Cl_4d": 2.359,
-      "_note": "Li-Cl split by Cl site: 4a (n=36) vs 4d anti-site (n=4). 4d-Cl 0.19 A shorter."
-    }
+ "property": "bond_lengths",
+ "description": "DFT relaxed V0 coordinates, PBC distance calculation",
+ "results": {
+  "comp2": {
+   "Li-Cl": 2.51,
+   "Li-Br": 2.71,
+   "P-S": 2.06
   },
-  "bader_charges_PAW_AE_plot_num_17": {
-    "_method": "Henkelman bader v1.05 on QE pp.x plot_num=17 AE charge density. PAW kjpaw_psl 1.0.0 pseudo, same SCF as LOBSTER ext basis (ecutwfc=70 Ry). Convention: q_atom = N_valence_electron - N_bader_basin.",
-    "_k_mesh_provenance": "comp1_v3 k=4x4x4 (2026-06-04 k-fix; values Li+0.874 P+3.27 S-1.52 Cl-0.925 — within <0.02 e of pre-fix, Bader k-robust), modelc_v3 k=6x6x3. Regenerated via analyze_per_bond_icohp.py. Raw: db/properties/per_bond_json/.",
-    "_paw_valence_electrons": {
-      "Li": 3,
-      "P": 5,
-      "S": 6,
-      "Cl": 7
-    },
-    "comp1_v3": {
-      "Li": {
-        "q_e": 0.874,
-        "std": 0.0046,
-        "n": 24
-      },
-      "P": {
-        "q_e": 3.2383,
-        "std": 0.0,
-        "n": 4
-      },
-      "S": {
-        "q_e": -1.5142,
-        "std": 0.3625,
-        "n": 20,
-        "_note": "high σ because of PS4-S vs 4d-S²⁻ environment split"
-      },
-      "Cl": {
-        "q_e": -0.9406,
-        "std": 0.0,
-        "n": 4,
-        "_note": "all Cl at 4a (no anti-site)"
-      },
-      "n_electrons_total_recovered": 240.118,
-      "n_electrons_ideal": 240,
-      "PS4_sum_q_e": -2.82,
-      "PS4_formal_q_e": -3
-    },
-    "modelc_v3": {
-      "Li": {
-        "q_e": 0.8817,
-        "std": 0.0095,
-        "n": 27
-      },
-      "P": {
-        "q_e": 4.4286,
-        "std": 0.4149,
-        "n": 5,
-        "_note": "large σ from 4d-Cl anti-site distorting PS4 basin shape"
-      },
-      "S": {
-        "q_e": -1.7556,
-        "std": 0.2443,
-        "n": 22
-      },
-      "Cl": {
-        "q_e": -0.9158,
-        "std": 0.0054,
-        "n": 8,
-        "_note": "includes 4a (Z=6) and 4d (Z=4) sites"
-      },
-      "PS4_sum_q_e": -2.6,
-      "PS4_formal_q_e": -3
-    },
-    "wilkening_ionic_potential_eV_A": {
-      "_formula": "|q(Li) × q(X)| / d(Li-X) — proxy for cation-anion Coulomb attraction (Wilkening 2019, Zhang 2024)",
-      "comp1_v3": {
-        "Li-S": {
-          "value": 0.538,
-          "components": "0.874 × 1.514 / 2.461"
-        },
-        "Li-Cl": {
-          "value": 0.316,
-          "components": "0.874 × 0.941 / 2.607"
-        },
-        "ratio_LiS_over_LiCl": 1.7
-      },
-      "modelc_v3": {
-        "Li-S": {
-          "value": 0.628,
-          "components": "0.882 × 1.756 / 2.465"
-        },
-        "Li-Cl": {
-          "value": 0.319,
-          "components": "0.882 × 0.916 / 2.532"
-        },
-        "ratio_LiS_over_LiCl": 1.97
-      },
-      "delta_LPSCl_to_LPSCl16": {
-        "Li-S": "+16.8% (stronger ionic glue from S-charge increase + slightly shorter Li-S)",
-        "Li-Cl": "+1.1% (~unchanged — vacancy effect cancels with anti-site shift)",
-        "interpretation": "Li-S ionic potential dominates in BOTH systems. LPSCl1.6 boost is concentrated in Li-S; Li-Cl is barely affected by composition. Consistent with ICOHP showing all bonds stronger in LPSCl1.6, with Bader pinpointing the Li-S channel as primary contributor."
-      }
-    }
+  "comp5_A": {
+   "Li-Cl": 2.466,
+   "Li-Br": 2.713,
+   "Li-S": 2.463,
+   "P-S": 2.066
   },
-  "icohp_distance_correlation_eV_per_Angstrom": {
-    "_method": "Per-bond ICOHP from LOBSTER ICOHPLIST.lobster (ext basis) regressed vs bond distance d (Å). Slope dICOHP/dd (eV/Å) measures bond stiffness: large slope = covalent (length-sensitive), small slope = ionic (length-flat).",
-    "comp1_v3": {
-      "P-S": {
-        "r": 1.0,
-        "slope_eV_per_A": 12.45,
-        "_note": "Steepest — classical covalent backbone signature"
-      },
-      "Cl-Li(4a)": {
-        "r": 1.0,
-        "slope_eV_per_A": 4.94,
-        "_note": "Linear in d; ICOHP σ = d_σ × slope = 0.129 × 4.94 ≈ 0.638"
-      },
-      "Li-S(4d)": {
-        "r": 0.985,
-        "slope_eV_per_A": 9.12,
-        "_note": "Steeper than Li-Cl due to S²⁻ deeper potential"
-      },
-      "Li-S(PS4)": {
-        "r": 0.976,
-        "slope_eV_per_A": 1.79
-      },
-      "S-S": {
-        "r": 0.595,
-        "slope_eV_per_A": 0.16,
-        "_note": "Near-flat — cage S-S essentially distance-independent"
-      }
-    },
-    "modelc_v3": {
-      "P-S": {
-        "r": 0.829,
-        "slope_eV_per_A": 11.5,
-        "_note": "Similar to comp1 — PS4 backbone robust"
-      },
-      "Cl-Li(4a)": {
-        "r": 0.964,
-        "slope_eV_per_A": 2.12,
-        "_note": "2.3× FLATTER than comp1 4a — ionic softening from Cl-rich field"
-      },
-      "Cl-Li(4d)": {
-        "r": 0.904,
-        "slope_eV_per_A": "n=4 only"
-      },
-      "Li-S(4d)": {
-        "r": 0.904,
-        "slope_eV_per_A": 3.73,
-        "_note": "2.4× flatter than comp1 4d"
-      },
-      "Li-S(PS4)": {
-        "r": 0.986,
-        "slope_eV_per_A": 2.09
-      },
-      "S-S": {
-        "r": 0.866,
-        "slope_eV_per_A": 0.21
-      }
-    },
-    "interpretation": "LPSCl1.6 ionic bonds (Li-Cl, Li-S) have 2-3× flatter ICOHP-distance slopes than LPSCl. Flatter slope = bond becomes less sensitive to length variation = more ionic character = lower vibrational stiffness. This is a QUANTITATIVE measure of why finite-T motion is easier in LPSCl1.6 (relevant to AIMD higher D). PS4 covalent backbone slope unchanged (+11-12 eV/Å) — PS4 robust to composition. Independent confirmation of the 'ionic-glue strengthening + bond softening' duality observed in static ICOHP averages."
+  "comp5_B": {
+   "Li-Cl": 2.466,
+   "Li-Br": 2.725,
+   "Li-S": 2.469,
+   "P-S": 2.067
   },
-  "wilkening_ICOHP_3way_correlation": {
-    "_method": "Per-bond Bader-derived Wilkening ionic potential |q_Li × q_X|/d vs LOBSTER ICOHP regression. Tests whether the ionic potential framework (Wilkening 2019, Zhang 2024) predicts LOBSTER ICOHP at the single-bond level.",
-    "_key_finding": "Wilkening potential PERFECTLY predicts Li-Cl ICOHP: r=-1.000 (comp1) and r=-0.988 (modelc). Single-metric (Bader q) and single-metric (distance) combination directly reproduces a fundamentally different method (LOBSTER projected COHP). Strongest single quantitative validation of the ionic potential framework for argyrodites.",
-    "comp1_v3": {
-      "Cl-Li(4a)": {
-        "r": -1.0,
-        "slope_eV_A_per_e2": -35.56,
-        "n_bonds": 24,
-        "_note": "Perfect Wilkening prediction"
-      },
-      "Li-S(4d)": {
-        "r": 0.928,
-        "slope_eV_A_per_e2": 173.48,
-        "n_bonds": 24,
-        "_note": "Anomalous +slope is artifact of very narrow range (d=2.35-2.38, ICOHP=-2.43 to -2.69)"
-      },
-      "Li-S(PS4)": {
-        "r": -0.367,
-        "slope_eV_A_per_e2": -4.59,
-        "n_bonds": 96,
-        "_note": "Weaker correlation due to wide d range incorporating very long bonds at edge of cutoff"
-      }
-    },
-    "modelc_v3": {
-      "Cl-Li(4a)": {
-        "r": -0.988,
-        "slope_eV_A_per_e2": -21.58,
-        "n_bonds": 38,
-        "_note": "Excellent Wilkening prediction; 1.6× gentler slope than comp1 = softer bonds"
-      },
-      "Li-S(4d)": {
-        "r": -0.891,
-        "slope_eV_A_per_e2": -16.04,
-        "n_bonds": 12
-      },
-      "Li-S(PS4)": {
-        "r": -0.778,
-        "slope_eV_A_per_e2": -8.03,
-        "n_bonds": 101,
-        "_note": "Stronger correlation than comp1 — Li-S(PS4) more consistently ionic in vacancy structure"
-      }
-    },
-    "paper_message": "The Wilkening ionic potential is the underlying physics. LOBSTER ICOHP, Bader charges, and bond distances are not independent descriptors — they are three projections of the same Coulombic attraction. This explains why all three metrics shift in the same direction between LPSCl and LPSCl1.6 (all stronger ionic in LPSCl1.6).",
-    "_figure_files": {
-      "icohp_vs_distance_6panel": "container:/home/ubuntu/work/runs/per_bond_ICOHP_scatter_6panel.png",
-      "wilkening_vs_icohp_2panel": "container:/home/ubuntu/work/runs/wilkening_vs_ICOHP_scatter.png"
-    }
+  "comp1_v3": {
+   "Li-Cl": 2.607,
+   "Li-S": 2.461,
+   "P-S": 2.073,
+   "S-S": 3.595
   },
-  "strongest_bonds_per_system_top5": {
-    "_method": "Per-bond ICOHP ranked (most negative first), top 5 per system",
-    "comp1_v3": [
-      {
-        "atoms": "P1-S5",
-        "pair": "P-S",
-        "d_A": 2.036,
-        "icohp_eV": -6.403
-      },
-      {
-        "atoms": "P3-S19",
-        "pair": "P-S",
-        "d_A": 2.036,
-        "icohp_eV": -6.4
-      },
-      {
-        "atoms": "P2-S6",
-        "pair": "P-S",
-        "d_A": 2.036,
-        "icohp_eV": -6.394
-      },
-      {
-        "atoms": "P1-S17",
-        "pair": "P-S",
-        "d_A": 2.036,
-        "icohp_eV": -6.393
-      },
-      {
-        "atoms": "P4-S20",
-        "pair": "P-S",
-        "d_A": 2.036,
-        "icohp_eV": -6.392
-      }
-    ],
-    "modelc_v3": [
-      {
-        "atoms": "P29-S34",
-        "pair": "P-S",
-        "d_A": 2.043,
-        "icohp_eV": -6.283
-      },
-      {
-        "atoms": "P30-S35",
-        "pair": "P-S",
-        "d_A": 2.042,
-        "icohp_eV": -6.262
-      },
-      {
-        "atoms": "P31-S51",
-        "pair": "P-S",
-        "d_A": 2.047,
-        "icohp_eV": -6.189
-      },
-      {
-        "atoms": "P28-S48",
-        "pair": "P-S",
-        "d_A": 2.069,
-        "icohp_eV": -6.136
-      },
-      {
-        "atoms": "P30-S50",
-        "pair": "P-S",
-        "d_A": 2.052,
-        "icohp_eV": -6.12
-      }
-    ],
-    "_note": "Top 5 in both systems are all P-S covalent backbone bonds, ~-6.4 eV at d≈2.04 Å — textbook argyrodite PS4³⁻ signature."
-  },
-  "bader_q_vs_n_Cl_correlation_modelc_v3": {
-    "_method": "Li Bader charge grouped by number of Cl neighbors within 3.4 Å cutoff",
-    "n_Cl=0": {
-      "q_mean_e": 0.8673,
-      "q_std_e": 0.0,
-      "n_Li": 1
-    },
-    "n_Cl=1": {
-      "q_mean_e": 0.8747,
-      "q_std_e": 0.006,
-      "n_Li": 12
-    },
-    "n_Cl=2": {
-      "q_mean_e": 0.8888,
-      "q_std_e": 0.006,
-      "n_Li": 14
-    },
-    "linear_fit_dq_per_dnCl_e": 0.011,
-    "interpretation": "Each Cl neighbor adds approximately +0.011 e to Li Bader charge — linear, predictable. Li ionicity is composition-tunable via anion environment. Combined with the ICOHP-distance slope finding, this gives two independent metrics for the 'Cl-rich field strengthens Li ionicity' effect."
-  },
-  "icohp_LOBSTER_ext_basis_eV_per_bond": {
-    "_method": "LOBSTER 5.1.1, PAW kjpaw_psl 1.0.0 pseudo, ecutwfc=70 Ry, wf_collect, nosym. Extended basis: Li 1s 2s 2p, P/S/Cl 3s 3p 3d. Charge spilling < 1.5% for both. Paper-grade absolute values.",
-    "_k_mesh_provenance": "comp1_v3 k=4x4x4 (kxL=40 Å; 2026-06-04 redo after k=2x2x1 contamination found) | modelc_v3 k=6x6x3 (kxL=42 Å). Each at its OWN converged mesh (kxL~40-42 equivalent — comp1 cubic 10.05 Å, modelc rhombo a=7/c=35). ICOHP is a LOCAL bonding measure → k-robust (comp1 2x2x1→4x4x4 ICOHP shifted <0.006 eV), so cross-system comparison valid despite different meshes. Both regenerated 2026-06-05 via tools/comp1_v3/analyze_per_bond_icohp.py (identical tool). Raw: db/properties/per_bond_json/.",
-    "_convention": "ICOHP < 0 = bonding. Per-bond average over all bonds within 4.0 Å cutoff (cohpGenerator).",
-    "comp1_v3": {
-      "P-S": {
-        "icohp_eV": -5.9381,
-        "n_bonds": 16,
-        "_note": "PS4 covalent backbone"
-      },
-      "Li-Cl": {
-        "icohp_eV": -1.855,
-        "n_bonds": 24,
-        "_note": "Cl all at 4a (no anti-site)"
-      },
-      "Li-S": {
-        "icohp_eV": -1.592,
-        "n_bonds": 120,
-        "_note": "PS4-S + 4d-S²⁻ Li interactions"
-      },
-      "S-S": {
-        "icohp_eV": -0.107,
-        "n_bonds": 56,
-        "_note": "cage, weak"
-      },
-      "spilling_pct": 1.46,
-      "electrons_recovered": "239.9974 / 240",
-      "Li_S_per_site_split": {
-        "Li-S(PS4)": {
-          "icohp_eV": -1.348,
-          "std_eV": 1.224,
-          "n_bonds": 96,
-          "_note": "PS4-bound S, baseline LPSCl"
-        },
-        "Li-S(4d)": {
-          "icohp_eV": -2.566,
-          "std_eV": 0.098,
-          "n_bonds": 24,
-          "_note": "Free S²⁻ at 4d; universal anchor (≈ same in modelc_v3)"
-        },
-        "delta_eV": -1.218,
-        "ratio_4d_over_PS4": 1.9,
-        "headline": "Same Li-S(4d) ICOHP as modelc_v3 (-2.57 vs -2.52, <2% difference) → 4d S²⁻ universal Li anchor confirmed independent of composition."
-      }
-    },
-    "modelc_v3": {
-      "P-S": {
-        "icohp_eV": -6.0,
-        "n_bonds": 20
-      },
-      "Li-Cl": {
-        "icohp_eV": -2.103,
-        "n_bonds": 42,
-        "_note": "Includes both 4a-Cl (7) and 4d-Cl anti-site (1)"
-      },
-      "Li-S": {
-        "icohp_eV": -1.717,
-        "n_bonds": 113
-      },
-      "S-S": {
-        "icohp_eV": -0.11,
-        "n_bonds": 58
-      },
-      "spilling_pct": 1.16,
-      "electrons_recovered": "294.0000 / 294",
-      "Li_Cl_per_site_split": {
-        "Li-Cl(4a)": {
-          "icohp_eV": -2.026,
-          "std_eV": 0.532,
-          "n_bonds": 38,
-          "_note": "Normal 4a octahedral Cl[Li6→Li5 with vacancy]; large σ from Li-vacancy environment heterogeneity"
-        },
-        "Li-Cl(4d)": {
-          "icohp_eV": -2.836,
-          "std_eV": 0.115,
-          "n_bonds": 4,
-          "_note": "Anti-site tet Cl[Li4]; tight σ from well-defined environment (single Cl, 4 Li neighbors)"
-        },
-        "delta_eV": -0.809,
-        "ratio_4d_over_4a": 1.4,
-        "headline": "4d-Cl anti-site forms 40% stronger Li-Cl bonds than 4a-Cl. Despite being only 12.5% of Cl (1/8), it contributes substantially to mean ICOHP (-2.103 avg vs -2.026 if 4a-only). Direct quantitative origin of the deeper second peak in Li-Cl pCOHP panel."
-      },
-      "Li_Cl_vacancy_antisite_decomposition": {
-        "_method": "Compare comp1 4a-only ICOHP (no vacancy) with modelc 4a (with vacancy) to isolate vacancy effect, then compare modelc 4a with modelc 4d to isolate anti-site effect.",
-        "comp1_4a_baseline_eV": -1.855,
-        "modelc_4a_eV": -2.026,
-        "modelc_4d_eV": -2.836,
-        "vacancy_effect_eV_per_bond": -0.171,
-        "_vacancy_effect_pct": "+9.2% per bond (comp1 -1.855 → modelc 4a -2.026)",
-        "antisite_effect_eV_per_bond": -0.809,
-        "_antisite_effect_pct": "+39.9% per bond (modelc 4a -2.026 → 4d -2.836)",
-        "total_LPSCl_to_LPSCl16_eV": -0.249,
-        "vacancy_total_contribution_eV": -0.171,
-        "antisite_total_contribution_eV": -0.077,
-        "vacancy_pct_of_total": 68.7,
-        "antisite_pct_of_total": 31.3,
-        "headline": "Vacancy/Cl-rich field is the MAIN driver of Li-Cl strengthening (69% of total), affecting all 90% of Cl atoms uniformly. Anti-site provides INTENSE per-bond enhancement (40% stronger) but on only 10% of Cl, contributing 31% to total. The two effects together explain the +13.4% overall Li-Cl ICOHP increase."
-      },
-      "Li_S_per_site_split": {
-        "Li-S(PS4)": {
-          "icohp_eV": -1.622,
-          "std_eV": 1.266,
-          "n_bonds": 101,
-          "_note": "PS4-bound S; ionic glue varies by Li env"
-        },
-        "Li-S(4d)": {
-          "icohp_eV": -2.516,
-          "std_eV": 0.098,
-          "n_bonds": 12,
-          "_note": "Free S²⁻ at 4d site; tight σ → universal Li-S anchor"
-        },
-        "delta_eV": -0.894,
-        "ratio_4d_over_PS4": 1.55,
-        "headline": "Free 4d S²⁻ forms 55% stronger and 13× more uniform Li-S bonds than PS4-bound S. 4d-S²⁻ is a universal Li anchor invariant to composition (cf. comp1 4d-S²⁻ ICOHP = -2.566, only 2% different)."
-      }
-    },
-    "headline_comparison": {
-      "Li-Cl_delta_pct": "+13.4% (LPSCl1.6 stronger; driven by short 4d-Cl Li-Cl bonds and overall Cl-rich ionic field)",
-      "Li-S_delta_pct": "+7.9% (LPSCl1.6 stronger; vacancy concentrates remaining Li-S bonds)",
-      "P-S_delta_pct": "+0.9% (~unchanged; PS4 backbone robust to Cl substitution)",
-      "S-S_delta_pct": "+2.8% (~unchanged; cage geometry preserved)",
-      "paper_message": "Vacancy + Cl substitution STRENGTHENS rather than weakens ionic bonding in LPSCl1.6. Wilkening ionic potential framework (q·|q|/r) consistent: shorter Li-Cl(4d) bonds = larger ICOHP magnitude."
-    },
-    "_data_paths": {
-      "comp1": "container:/home/ubuntu/work/runs/comp1_v3/v3_post/lobster_ext/",
-      "modelc": "container:/home/ubuntu/work/runs/modelC_v3/lobster_ext/"
-    }
-  },
-  "trends": {
-    "Li-Br_vs_Li-Cl": "Li-Br 0.10-0.26 A longer in all compositions",
-    "P-S_constant": "~2.06 A across all compositions (PS4 framework invariant)",
-    "basin_effect": "Li-Br differs by 0.012 A between basins (comp5)"
-  },
-  "physics": {
-    "ionic_radii": {
-      "Cl-": 1.81,
-      "Br-": 1.96,
-      "S2-": 1.84
-    },
-    "source": "Shannon (1976)",
-    "longer_bond_weaker": "Longer Li-Br -> weaker ionic interaction -> lower B0/E"
-  },
-  "_corrections": {
-    "2026-08-07_comp1_icohp": "comp1 P-S ICOHP 를 -5.944 → -5.9381 로 정정. -5.944 는 2026-06-03 요약값이고 직접 산출(2026-06-05)은 db/properties/per_bond_json/bonds_comp1_k444.json 의 -5.9381 이다. cutoff 규약 차이가 아니라 drift 였다 (Codex 3라운드 추적). 정본은 canonical_registry.json 의 ICOHP_PS/comp1 항목."
+  "modelc_v3": {
+   "Li-Cl": 2.532,
+   "Li-S": 2.465,
+   "P-S": 2.064,
+   "S-S": 3.519,
+   "Li-Cl_4a": 2.551,
+   "Li-Cl_4d": 2.359,
+   "_note": "Li-Cl split by Cl site: 4a (n=36) vs 4d anti-site (n=4). 4d-Cl 0.19 A shorter."
   }
+ },
+ "bader_charges_PAW_AE_plot_num_17": {
+  "_method": "Henkelman bader v1.05 on QE pp.x plot_num=17 AE charge density. PAW kjpaw_psl 1.0.0 pseudo, same SCF as LOBSTER ext basis (ecutwfc=70 Ry). Convention: q_atom = N_valence_electron - N_bader_basin.",
+  "_k_mesh_provenance": "comp1_v3 k=4x4x4 (2026-06-04 k-fix; values Li+0.874 P+3.27 S-1.52 Cl-0.925 — within <0.02 e of pre-fix, Bader k-robust), modelc_v3 k=6x6x3. Regenerated via analyze_per_bond_icohp.py. Raw: db/properties/per_bond_json/.",
+  "_paw_valence_electrons": {
+   "Li": 3,
+   "P": 5,
+   "S": 6,
+   "Cl": 7
+  },
+  "comp1_v3": {
+   "Li": {
+    "q_e": 0.874,
+    "std": 0.0046,
+    "n": 24
+   },
+   "P": {
+    "q_e": 3.2383,
+    "std": 0.0,
+    "n": 4
+   },
+   "S": {
+    "q_e": -1.5142,
+    "std": 0.3625,
+    "n": 20,
+    "_note": "high σ because of PS4-S vs 4d-S²⁻ environment split"
+   },
+   "Cl": {
+    "q_e": -0.9406,
+    "std": 0.0,
+    "n": 4,
+    "_note": "all Cl at 4a (no anti-site)"
+   },
+   "n_electrons_total_recovered": 240.118,
+   "n_electrons_ideal": 240,
+   "PS4_sum_q_e": -2.82,
+   "PS4_formal_q_e": -3
+  },
+  "modelc_v3": {
+   "Li": {
+    "q_e": 0.8817,
+    "std": 0.0095,
+    "n": 27
+   },
+   "P": {
+    "q_e": 4.4286,
+    "std": 0.4149,
+    "n": 5,
+    "_note": "large σ from 4d-Cl anti-site distorting PS4 basin shape"
+   },
+   "S": {
+    "q_e": -1.7556,
+    "std": 0.2443,
+    "n": 22
+   },
+   "Cl": {
+    "q_e": -0.9158,
+    "std": 0.0054,
+    "n": 8,
+    "_note": "includes 4a (Z=6) and 4d (Z=4) sites"
+   },
+   "PS4_sum_q_e": -2.6,
+   "PS4_formal_q_e": -3
+  },
+  "wilkening_ionic_potential_eV_A": {
+   "_formula": "|q(Li) × q(X)| / d(Li-X) — proxy for cation-anion Coulomb attraction (Wilkening 2019, Zhang 2024)",
+   "comp1_v3": {
+    "Li-S": {
+     "value": 0.538,
+     "components": "0.874 × 1.514 / 2.461"
+    },
+    "Li-Cl": {
+     "value": 0.316,
+     "components": "0.874 × 0.941 / 2.607"
+    },
+    "ratio_LiS_over_LiCl": 1.7
+   },
+   "modelc_v3": {
+    "Li-S": {
+     "value": 0.628,
+     "components": "0.882 × 1.756 / 2.465"
+    },
+    "Li-Cl": {
+     "value": 0.319,
+     "components": "0.882 × 0.916 / 2.532"
+    },
+    "ratio_LiS_over_LiCl": 1.97
+   },
+   "delta_LPSCl_to_LPSCl16": {
+    "Li-S": "+16.8% (stronger ionic glue from S-charge increase + slightly shorter Li-S)",
+    "Li-Cl": "+1.1% (~unchanged — vacancy effect cancels with anti-site shift)",
+    "interpretation": "Li-S ionic potential dominates in BOTH systems. LPSCl1.6 boost is concentrated in Li-S; Li-Cl is barely affected by composition. Consistent with ICOHP showing all bonds stronger in LPSCl1.6, with Bader pinpointing the Li-S channel as primary contributor."
+   }
+  }
+ },
+ "icohp_distance_correlation_eV_per_Angstrom": {
+  "_method": "Per-bond ICOHP from LOBSTER ICOHPLIST.lobster (ext basis) regressed vs bond distance d (Å). Slope dICOHP/dd (eV/Å) measures bond stiffness: large slope = covalent (length-sensitive), small slope = ionic (length-flat).",
+  "comp1_v3": {
+   "P-S": {
+    "r": 1.0,
+    "slope_eV_per_A": 12.45,
+    "_note": "Steepest — classical covalent backbone signature"
+   },
+   "Cl-Li(4a)": {
+    "r": 1.0,
+    "slope_eV_per_A": 4.94,
+    "_note": "Linear in d; ICOHP σ = d_σ × slope = 0.129 × 4.94 ≈ 0.638"
+   },
+   "Li-S(4d)": {
+    "r": 0.985,
+    "slope_eV_per_A": 9.12,
+    "_note": "Steeper than Li-Cl due to S²⁻ deeper potential"
+   },
+   "Li-S(PS4)": {
+    "r": 0.976,
+    "slope_eV_per_A": 1.79
+   },
+   "S-S": {
+    "r": 0.595,
+    "slope_eV_per_A": 0.16,
+    "_note": "Near-flat — cage S-S essentially distance-independent"
+   }
+  },
+  "modelc_v3": {
+   "P-S": {
+    "r": 0.829,
+    "slope_eV_per_A": 11.5,
+    "_note": "Similar to comp1 — PS4 backbone robust"
+   },
+   "Cl-Li(4a)": {
+    "r": 0.964,
+    "slope_eV_per_A": 2.12,
+    "_note": "2.3× FLATTER than comp1 4a — ionic softening from Cl-rich field"
+   },
+   "Cl-Li(4d)": {
+    "r": 0.904,
+    "slope_eV_per_A": "n=4 only"
+   },
+   "Li-S(4d)": {
+    "r": 0.904,
+    "slope_eV_per_A": 3.73,
+    "_note": "2.4× flatter than comp1 4d"
+   },
+   "Li-S(PS4)": {
+    "r": 0.986,
+    "slope_eV_per_A": 2.09
+   },
+   "S-S": {
+    "r": 0.866,
+    "slope_eV_per_A": 0.21
+   }
+  },
+  "interpretation": "LPSCl1.6 ionic bonds (Li-Cl, Li-S) have 2-3× flatter ICOHP-distance slopes than LPSCl. Flatter slope = bond becomes less sensitive to length variation = more ionic character = lower vibrational stiffness. This is a QUANTITATIVE measure of why finite-T motion is easier in LPSCl1.6 (relevant to AIMD higher D). PS4 covalent backbone slope unchanged (+11-12 eV/Å) — PS4 robust to composition. Independent confirmation of the 'ionic-glue strengthening + bond softening' duality observed in static ICOHP averages."
+ },
+ "wilkening_ICOHP_3way_correlation": {
+  "_method": "Per-bond Bader-derived Wilkening ionic potential |q_Li × q_X|/d vs LOBSTER ICOHP regression. Tests whether the ionic potential framework (Wilkening 2019, Zhang 2024) predicts LOBSTER ICOHP at the single-bond level.",
+  "_key_finding": "Wilkening potential PERFECTLY predicts Li-Cl ICOHP: r=-1.000 (comp1) and r=-0.988 (modelc). Single-metric (Bader q) and single-metric (distance) combination directly reproduces a fundamentally different method (LOBSTER projected COHP). Strongest single quantitative validation of the ionic potential framework for argyrodites.",
+  "comp1_v3": {
+   "Cl-Li(4a)": {
+    "r": -1.0,
+    "slope_eV_A_per_e2": -35.56,
+    "n_bonds": 24,
+    "_note": "Perfect Wilkening prediction"
+   },
+   "Li-S(4d)": {
+    "r": 0.928,
+    "slope_eV_A_per_e2": 173.48,
+    "n_bonds": 24,
+    "_note": "Anomalous +slope is artifact of very narrow range (d=2.35-2.38, ICOHP=-2.43 to -2.69)"
+   },
+   "Li-S(PS4)": {
+    "r": -0.367,
+    "slope_eV_A_per_e2": -4.59,
+    "n_bonds": 96,
+    "_note": "Weaker correlation due to wide d range incorporating very long bonds at edge of cutoff"
+   }
+  },
+  "modelc_v3": {
+   "Cl-Li(4a)": {
+    "r": -0.988,
+    "slope_eV_A_per_e2": -21.58,
+    "n_bonds": 38,
+    "_note": "Excellent Wilkening prediction; 1.6× gentler slope than comp1 = softer bonds"
+   },
+   "Li-S(4d)": {
+    "r": -0.891,
+    "slope_eV_A_per_e2": -16.04,
+    "n_bonds": 12
+   },
+   "Li-S(PS4)": {
+    "r": -0.778,
+    "slope_eV_A_per_e2": -8.03,
+    "n_bonds": 101,
+    "_note": "Stronger correlation than comp1 — Li-S(PS4) more consistently ionic in vacancy structure"
+   }
+  },
+  "paper_message": "The Wilkening ionic potential is the underlying physics. LOBSTER ICOHP, Bader charges, and bond distances are not independent descriptors — they are three projections of the same Coulombic attraction. This explains why all three metrics shift in the same direction between LPSCl and LPSCl1.6 (all stronger ionic in LPSCl1.6).",
+  "_figure_files": {
+   "icohp_vs_distance_6panel": "container:/home/ubuntu/work/runs/per_bond_ICOHP_scatter_6panel.png",
+   "wilkening_vs_icohp_2panel": "container:/home/ubuntu/work/runs/wilkening_vs_ICOHP_scatter.png"
+  }
+ },
+ "strongest_bonds_per_system_top5": {
+  "_method": "Per-bond ICOHP ranked (most negative first), top 5 per system",
+  "comp1_v3": [
+   {
+    "atoms": "P1-S5",
+    "pair": "P-S",
+    "d_A": 2.036,
+    "icohp_eV": -6.403
+   },
+   {
+    "atoms": "P3-S19",
+    "pair": "P-S",
+    "d_A": 2.036,
+    "icohp_eV": -6.4
+   },
+   {
+    "atoms": "P2-S6",
+    "pair": "P-S",
+    "d_A": 2.036,
+    "icohp_eV": -6.394
+   },
+   {
+    "atoms": "P1-S17",
+    "pair": "P-S",
+    "d_A": 2.036,
+    "icohp_eV": -6.393
+   },
+   {
+    "atoms": "P4-S20",
+    "pair": "P-S",
+    "d_A": 2.036,
+    "icohp_eV": -6.392
+   }
+  ],
+  "modelc_v3": [
+   {
+    "atoms": "P29-S34",
+    "pair": "P-S",
+    "d_A": 2.043,
+    "icohp_eV": -6.283
+   },
+   {
+    "atoms": "P30-S35",
+    "pair": "P-S",
+    "d_A": 2.042,
+    "icohp_eV": -6.262
+   },
+   {
+    "atoms": "P31-S51",
+    "pair": "P-S",
+    "d_A": 2.047,
+    "icohp_eV": -6.189
+   },
+   {
+    "atoms": "P28-S48",
+    "pair": "P-S",
+    "d_A": 2.069,
+    "icohp_eV": -6.136
+   },
+   {
+    "atoms": "P30-S50",
+    "pair": "P-S",
+    "d_A": 2.052,
+    "icohp_eV": -6.12
+   }
+  ],
+  "_note": "Top 5 in both systems are all P-S covalent backbone bonds, ~-6.4 eV at d≈2.04 Å — textbook argyrodite PS4³⁻ signature."
+ },
+ "bader_q_vs_n_Cl_correlation_modelc_v3": {
+  "_method": "Li Bader charge grouped by number of Cl neighbors within 3.4 Å cutoff",
+  "n_Cl=0": {
+   "q_mean_e": 0.8673,
+   "q_std_e": 0.0,
+   "n_Li": 1
+  },
+  "n_Cl=1": {
+   "q_mean_e": 0.8747,
+   "q_std_e": 0.006,
+   "n_Li": 12
+  },
+  "n_Cl=2": {
+   "q_mean_e": 0.8888,
+   "q_std_e": 0.006,
+   "n_Li": 14
+  },
+  "linear_fit_dq_per_dnCl_e": 0.011,
+  "interpretation": "Each Cl neighbor adds approximately +0.011 e to Li Bader charge — linear, predictable. Li ionicity is composition-tunable via anion environment. Combined with the ICOHP-distance slope finding, this gives two independent metrics for the 'Cl-rich field strengthens Li ionicity' effect."
+ },
+ "icohp_LOBSTER_ext_basis_eV_per_bond": {
+  "_method": "LOBSTER 5.1.1, PAW kjpaw_psl 1.0.0 pseudo, ecutwfc=70 Ry, wf_collect, nosym. Extended basis: Li 1s 2s 2p, P/S/Cl 3s 3p 3d. Charge spilling < 1.5% for both. Paper-grade absolute values.",
+  "_k_mesh_provenance": "comp1_v3 k=4x4x4 (kxL=40 Å; 2026-06-04 redo after k=2x2x1 contamination found) | modelc_v3 k=6x6x3 (kxL=42 Å). Each at its OWN converged mesh (kxL~40-42 equivalent — comp1 cubic 10.05 Å, modelc rhombo a=7/c=35). ICOHP is a LOCAL bonding measure → k-robust (comp1 2x2x1→4x4x4 ICOHP shifted <0.006 eV), so cross-system comparison valid despite different meshes. Both regenerated 2026-06-05 via tools/comp1_v3/analyze_per_bond_icohp.py (identical tool). Raw: db/properties/per_bond_json/.",
+  "_convention": "ICOHP < 0 = bonding. Per-bond average over all bonds within 4.0 Å cutoff (cohpGenerator).",
+  "comp1_v3": {
+   "P-S": {
+    "icohp_eV": -5.9381,
+    "n_bonds": 16,
+    "_note": "PS4 covalent backbone"
+   },
+   "Li-Cl": {
+    "icohp_eV": -1.855,
+    "n_bonds": 24,
+    "_note": "Cl all at 4a (no anti-site)"
+   },
+   "Li-S": {
+    "icohp_eV": -1.592,
+    "n_bonds": 120,
+    "_note": "PS4-S + 4d-S²⁻ Li interactions"
+   },
+   "S-S": {
+    "icohp_eV": -0.107,
+    "n_bonds": 56,
+    "_note": "cage, weak"
+   },
+   "spilling_pct": 1.46,
+   "electrons_recovered": "239.9974 / 240",
+   "Li_S_per_site_split": {
+    "Li-S(PS4)": {
+     "icohp_eV": -1.348,
+     "std_eV": 1.224,
+     "n_bonds": 96,
+     "_note": "PS4-bound S, baseline LPSCl"
+    },
+    "Li-S(4d)": {
+     "icohp_eV": -2.566,
+     "std_eV": 0.098,
+     "n_bonds": 24,
+     "_note": "Free S²⁻ at 4d; universal anchor (≈ same in modelc_v3)"
+    },
+    "delta_eV": -1.218,
+    "ratio_4d_over_PS4": 1.9,
+    "headline": "Same Li-S(4d) ICOHP as modelc_v3 (-2.57 vs -2.52, <2% difference) → 4d S²⁻ universal Li anchor confirmed independent of composition."
+   }
+  },
+  "modelc_v3": {
+   "P-S": {
+    "icohp_eV": -6.0,
+    "n_bonds": 20
+   },
+   "Li-Cl": {
+    "icohp_eV": -2.103,
+    "n_bonds": 42,
+    "_note": "Includes both 4a-Cl (7) and 4d-Cl anti-site (1)"
+   },
+   "Li-S": {
+    "icohp_eV": -1.717,
+    "n_bonds": 113
+   },
+   "S-S": {
+    "icohp_eV": -0.11,
+    "n_bonds": 58
+   },
+   "spilling_pct": 1.16,
+   "electrons_recovered": "294.0000 / 294",
+   "Li_Cl_per_site_split": {
+    "Li-Cl(4a)": {
+     "icohp_eV": -2.026,
+     "std_eV": 0.532,
+     "n_bonds": 38,
+     "_note": "Normal 4a octahedral Cl[Li6→Li5 with vacancy]; large σ from Li-vacancy environment heterogeneity"
+    },
+    "Li-Cl(4d)": {
+     "icohp_eV": -2.836,
+     "std_eV": 0.115,
+     "n_bonds": 4,
+     "_note": "Anti-site tet Cl[Li4]; tight σ from well-defined environment (single Cl, 4 Li neighbors)"
+    },
+    "delta_eV": -0.809,
+    "ratio_4d_over_4a": 1.4,
+    "headline": "4d-Cl anti-site forms 40% stronger Li-Cl bonds than 4a-Cl. Despite being only 12.5% of Cl (1/8), it contributes substantially to mean ICOHP (-2.103 avg vs -2.026 if 4a-only). Direct quantitative origin of the deeper second peak in Li-Cl pCOHP panel."
+   },
+   "Li_Cl_vacancy_antisite_decomposition": {
+    "_method": "Compare comp1 4a-only ICOHP (no vacancy) with modelc 4a (with vacancy) to isolate vacancy effect, then compare modelc 4a with modelc 4d to isolate anti-site effect.",
+    "comp1_4a_baseline_eV": -1.855,
+    "modelc_4a_eV": -2.026,
+    "modelc_4d_eV": -2.836,
+    "vacancy_effect_eV_per_bond": -0.171,
+    "_vacancy_effect_pct": "+9.2% per bond (comp1 -1.855 → modelc 4a -2.026)",
+    "antisite_effect_eV_per_bond": -0.809,
+    "_antisite_effect_pct": "+39.9% per bond (modelc 4a -2.026 → 4d -2.836)",
+    "total_LPSCl_to_LPSCl16_eV": -0.249,
+    "vacancy_total_contribution_eV": -0.171,
+    "antisite_total_contribution_eV": -0.077,
+    "vacancy_pct_of_total": 68.7,
+    "antisite_pct_of_total": 31.3,
+    "headline": "Vacancy/Cl-rich field is the MAIN driver of Li-Cl strengthening (69% of total), affecting all 90% of Cl atoms uniformly. Anti-site provides INTENSE per-bond enhancement (40% stronger) but on only 10% of Cl, contributing 31% to total. The two effects together explain the +13.4% overall Li-Cl ICOHP increase."
+   },
+   "Li_S_per_site_split": {
+    "Li-S(PS4)": {
+     "icohp_eV": -1.622,
+     "std_eV": 1.266,
+     "n_bonds": 101,
+     "_note": "PS4-bound S; ionic glue varies by Li env"
+    },
+    "Li-S(4d)": {
+     "icohp_eV": -2.516,
+     "std_eV": 0.098,
+     "n_bonds": 12,
+     "_note": "Free S²⁻ at 4d site; tight σ → universal Li-S anchor"
+    },
+    "delta_eV": -0.894,
+    "ratio_4d_over_PS4": 1.55,
+    "headline": "Free 4d S²⁻ forms 55% stronger and 13× more uniform Li-S bonds than PS4-bound S. 4d-S²⁻ is a universal Li anchor invariant to composition (cf. comp1 4d-S²⁻ ICOHP = -2.566, only 2% different)."
+   }
+  },
+  "headline_comparison": {
+   "Li-Cl_delta_pct": "+13.4% (LPSCl1.6 stronger; driven by short 4d-Cl Li-Cl bonds and overall Cl-rich ionic field)",
+   "Li-S_delta_pct": "+7.9% (LPSCl1.6 stronger; vacancy concentrates remaining Li-S bonds)",
+   "P-S_delta_pct": "+0.9% (~unchanged; PS4 backbone robust to Cl substitution)",
+   "S-S_delta_pct": "+2.8% (~unchanged; cage geometry preserved)",
+   "paper_message": "Vacancy + Cl substitution STRENGTHENS rather than weakens ionic bonding in LPSCl1.6. Wilkening ionic potential framework (q·|q|/r) consistent: shorter Li-Cl(4d) bonds = larger ICOHP magnitude."
+  },
+  "_data_paths": {
+   "comp1": "container:/home/ubuntu/work/runs/comp1_v3/v3_post/lobster_ext/",
+   "modelc": "container:/home/ubuntu/work/runs/modelC_v3/lobster_ext/"
+  }
+ },
+ "trends": {
+  "Li-Br_vs_Li-Cl": "Li-Br 0.10-0.26 A longer in all compositions",
+  "P-S_constant": "~2.06 A across all compositions (PS4 framework invariant)",
+  "basin_effect": "Li-Br differs by 0.012 A between basins (comp5)"
+ },
+ "physics": {
+  "ionic_radii": {
+   "Cl-": 1.81,
+   "Br-": 1.96,
+   "S2-": 1.84
+  },
+  "source": "Shannon (1976)",
+  "longer_bond_weaker": "Longer Li-Br -> weaker ionic interaction -> lower B0/E"
+ },
+ "_corrections": {
+  "2026-08-07_comp1_icohp": "comp1 P-S ICOHP 를 -5.944 → -5.9381 로 정정. -5.944 는 2026-06-03 요약값이고 직접 산출(2026-06-05)은 db/properties/per_bond_json/bonds_comp1_k444.json 의 -5.9381 이다. cutoff 규약 차이가 아니라 drift 였다 (Codex 3라운드 추적). 정본은 canonical_registry.json 의 ICOHP_PS/comp1 항목."
+ },
+ "_provenance_audit": {
+  "audited": "2026-08-12",
+  "audited_by": "db provenance sweep (tools/db/validate_canonical.py --cited 로 대상 선정)",
+  "generator": "tools/comp1_v3/analyze_per_bond_icohp.py",
+  "source": "container:/home/ubuntu/work/runs/comp1_v3/v3_post/lobster_ext/ · modelC_v3/lobster_ext/",
+  "collected": "2026-06-11",
+  "confidence": "high",
+  "note": "per_bond_json/ 의 요약 파생본 — 어긋나면 원자료 쪽이 맞다",
+  "caveat": "이 블록은 **사후 추적** 결과다. 원본 계산 시점에 기록된 것이 아니라 repo·git·파일 내용에서 역추적했다. confidence 를 같이 보라."
+ }
 }

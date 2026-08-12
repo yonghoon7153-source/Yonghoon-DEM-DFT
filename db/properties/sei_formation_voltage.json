@@ -1,135 +1,145 @@
 {
-  "property": "sei_formation_voltage",
-  "method": "Grand-potential phase diagram (pymatgen) over Materials Project entries (**thermo_types=GGA_GGA+U 로 고정** — 혼합 R2SCAN 껍질에서 E_hull 이 터무니없이 나왔다). μ_Li 를 훑으며 그 상이 볼록껍질 위에 있는 전위 구간을 찾는다. V(vs Li/Li+) = −(μ_Li − μ_Li⁰)/e.",
-  "warning": "에너지는 **MP(PBE/PBE+U, MP 보정)** 값이다 — 우리 QE 계산과 섞지 말 것. 한 데이터베이스 안에서 일관되므로 상들 사이 비교에만 쓴다.",
-  "grid_V": 0.05,
-  "vmax_V": 5.0,
-  "results": {
-    "Li2O": {
-      "status": "ok",
-      "material_id": "mp-1960",
-      "stable_segments_V": [
-        [
-          0.0,
-          2.85
-        ]
-      ],
-      "decomposition_products_above_window": [
-        "Li2O2"
-      ],
-      "stable_V_min": 0.0,
-      "stable_V_max": 2.85,
-      "e_above_hull_eV_per_atom": 0.0,
-      "chemsys": "Li-O"
-    },
-    "Li2S": {
-      "status": "ok",
-      "material_id": "mp-1153",
-      "stable_segments_V": [
-        [
-          0.0,
-          2.1
-        ]
-      ],
-      "decomposition_products_above_window": [
-        "LiS4"
-      ],
-      "stable_V_min": 0.0,
-      "stable_V_max": 2.1,
-      "e_above_hull_eV_per_atom": 0.0,
-      "chemsys": "Li-S"
-    },
-    "LiCl": {
-      "status": "ok",
-      "material_id": "mp-22905",
-      "stable_segments_V": [
-        [
-          0.0,
-          4.25
-        ]
-      ],
-      "decomposition_products_above_window": [
-        "Cl2"
-      ],
-      "stable_V_min": 0.0,
-      "stable_V_max": 4.25,
-      "e_above_hull_eV_per_atom": 0.0,
-      "chemsys": "Cl-Li"
-    },
-    "Li3P": {
-      "status": "ok",
-      "material_id": "mp-736",
-      "stable_segments_V": [
-        [
-          0.0,
-          0.8500000000000001
-        ]
-      ],
-      "decomposition_products_above_window": [
-        "LiP"
-      ],
-      "stable_V_min": 0.0,
-      "stable_V_max": 0.8500000000000001,
-      "e_above_hull_eV_per_atom": 0.0,
-      "chemsys": "Li-P"
-    },
-    "Li3PO4": {
-      "status": "ok",
-      "material_id": "mp-13725",
-      "stable_segments_V": [
-        [
-          0.7000000000000001,
-          4.15
-        ]
-      ],
-      "decomposition_products_above_window": [
-        "Li4P2O7",
-        "O2"
-      ],
-      "stable_V_min": 0.7000000000000001,
-      "stable_V_max": 4.15,
-      "e_above_hull_eV_per_atom": 0.0,
-      "chemsys": "Li-O-P"
-    },
-    "Li3PO4g": {
-      "status": "ok",
-      "material_id": "mp-2878",
-      "stable_segments_V": [
-        [
-          0.7000000000000001,
-          4.15
-        ]
-      ],
-      "decomposition_products_above_window": [
-        "Li4P2O7",
-        "O2"
-      ],
-      "stable_V_min": 0.7000000000000001,
-      "stable_V_max": 4.15,
-      "e_above_hull_eV_per_atom": 0.0,
-      "chemsys": "Li-O-P"
-    },
-    "LiNdO2": {
-      "status": "metastable_everywhere",
-      "material_id": "mp-1222355",
-      "e_above_hull_closed_eV_per_atom": 0.008336155312499649,
-      "min_decomp_energy_eV_per_atom": 0.011114873749997756,
-      "V_at_min_decomp": 0.0,
-      "decomposition_products_at_min": [
-        "Li2O",
-        "Nd2O3"
-      ],
-      "decomp_energy_at_0V": 0.011114873749997756,
-      "decomp_energy_at_vmax": 0.6553510563888887,
-      "chemsys": "Li-Nd-O"
-    },
-    "Nd2O3": {
-      "status": "skipped",
-      "reason": "no Li in phase"
-    },
-    "Nd2S3": {
-      "status": "skipped",
-      "reason": "no Li in phase"
-    }
+ "property": "sei_formation_voltage",
+ "method": "Grand-potential phase diagram (pymatgen) over Materials Project entries (**thermo_types=GGA_GGA+U 로 고정** — 혼합 R2SCAN 껍질에서 E_hull 이 터무니없이 나왔다). μ_Li 를 훑으며 그 상이 볼록껍질 위에 있는 전위 구간을 찾는다. V(vs Li/Li+) = −(μ_Li − μ_Li⁰)/e.",
+ "warning": "에너지는 **MP(PBE/PBE+U, MP 보정)** 값이다 — 우리 QE 계산과 섞지 말 것. 한 데이터베이스 안에서 일관되므로 상들 사이 비교에만 쓴다.",
+ "grid_V": 0.05,
+ "vmax_V": 5.0,
+ "results": {
+  "Li2O": {
+   "status": "ok",
+   "material_id": "mp-1960",
+   "stable_segments_V": [
+    [
+     0.0,
+     2.85
+    ]
+   ],
+   "decomposition_products_above_window": [
+    "Li2O2"
+   ],
+   "stable_V_min": 0.0,
+   "stable_V_max": 2.85,
+   "e_above_hull_eV_per_atom": 0.0,
+   "chemsys": "Li-O"
+  },
+  "Li2S": {
+   "status": "ok",
+   "material_id": "mp-1153",
+   "stable_segments_V": [
+    [
+     0.0,
+     2.1
+    ]
+   ],
+   "decomposition_products_above_window": [
+    "LiS4"
+   ],
+   "stable_V_min": 0.0,
+   "stable_V_max": 2.1,
+   "e_above_hull_eV_per_atom": 0.0,
+   "chemsys": "Li-S"
+  },
+  "LiCl": {
+   "status": "ok",
+   "material_id": "mp-22905",
+   "stable_segments_V": [
+    [
+     0.0,
+     4.25
+    ]
+   ],
+   "decomposition_products_above_window": [
+    "Cl2"
+   ],
+   "stable_V_min": 0.0,
+   "stable_V_max": 4.25,
+   "e_above_hull_eV_per_atom": 0.0,
+   "chemsys": "Cl-Li"
+  },
+  "Li3P": {
+   "status": "ok",
+   "material_id": "mp-736",
+   "stable_segments_V": [
+    [
+     0.0,
+     0.8500000000000001
+    ]
+   ],
+   "decomposition_products_above_window": [
+    "LiP"
+   ],
+   "stable_V_min": 0.0,
+   "stable_V_max": 0.8500000000000001,
+   "e_above_hull_eV_per_atom": 0.0,
+   "chemsys": "Li-P"
+  },
+  "Li3PO4": {
+   "status": "ok",
+   "material_id": "mp-13725",
+   "stable_segments_V": [
+    [
+     0.7000000000000001,
+     4.15
+    ]
+   ],
+   "decomposition_products_above_window": [
+    "Li4P2O7",
+    "O2"
+   ],
+   "stable_V_min": 0.7000000000000001,
+   "stable_V_max": 4.15,
+   "e_above_hull_eV_per_atom": 0.0,
+   "chemsys": "Li-O-P"
+  },
+  "Li3PO4g": {
+   "status": "ok",
+   "material_id": "mp-2878",
+   "stable_segments_V": [
+    [
+     0.7000000000000001,
+     4.15
+    ]
+   ],
+   "decomposition_products_above_window": [
+    "Li4P2O7",
+    "O2"
+   ],
+   "stable_V_min": 0.7000000000000001,
+   "stable_V_max": 4.15,
+   "e_above_hull_eV_per_atom": 0.0,
+   "chemsys": "Li-O-P"
+  },
+  "LiNdO2": {
+   "status": "metastable_everywhere",
+   "material_id": "mp-1222355",
+   "e_above_hull_closed_eV_per_atom": 0.008336155312499649,
+   "min_decomp_energy_eV_per_atom": 0.011114873749997756,
+   "V_at_min_decomp": 0.0,
+   "decomposition_products_at_min": [
+    "Li2O",
+    "Nd2O3"
+   ],
+   "decomp_energy_at_0V": 0.011114873749997756,
+   "decomp_energy_at_vmax": 0.6553510563888887,
+   "chemsys": "Li-Nd-O"
+  },
+  "Nd2O3": {
+   "status": "skipped",
+   "reason": "no Li in phase"
+  },
+  "Nd2S3": {
+   "status": "skipped",
+   "reason": "no Li in phase"
   }
+ },
+ "_provenance_audit": {
+  "audited": "2026-08-12",
+  "audited_by": "db provenance sweep (tools/db/validate_canonical.py --cited 로 대상 선정)",
+  "generator": "tools/sei/formation_voltage.py",
+  "source": "(우리 계산 아님 — MP API) · 입력 db/properties/sei_structures_provenance.json",
+  "collected": "2026-08-07",
+  "confidence": "high",
+  "note": "Nd 2종 status=skipped 는 결함이 아니라 Li 미포함이라 정의 불가",
+  "caveat": "이 블록은 **사후 추적** 결과다. 원본 계산 시점에 기록된 것이 아니라 repo·git·파일 내용에서 역추적했다. confidence 를 같이 보라."
+ }
 }

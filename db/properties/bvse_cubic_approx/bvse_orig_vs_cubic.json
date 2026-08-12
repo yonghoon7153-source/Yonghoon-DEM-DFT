@@ -221,5 +221,15 @@
   "perc_cubic": {
    "note": "box crop of the true map - no box-PBC percolation defined"
   }
+ },
+ "_provenance_audit": {
+  "audited": "2026-08-12",
+  "audited_by": "db provenance sweep (tools/db/validate_canonical.py --cited 로 대상 선정)",
+  "generator": "tools/comp1_v3/bvse_faithful_cubic.py",
+  "source": "db/properties/bvse_modelc/modelc_bvse.cube · db/structures/{b2o3_relaxV0,lpsocl_v0}.vasp",
+  "collected": "2026-07-16",
+  "confidence": "high",
+  "note": "perc_orig 는 bvse_onset_canonical_modelc.json 이 supersede",
+  "caveat": "이 블록은 **사후 추적** 결과다. 원본 계산 시점에 기록된 것이 아니라 repo·git·파일 내용에서 역추적했다. confidence 를 같이 보라."
  }
 }

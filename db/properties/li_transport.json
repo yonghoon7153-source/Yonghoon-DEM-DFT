@@ -314,5 +314,15 @@
   "what_to_quote_in_paper": "(1) Robust observed fact: modelc D > comp1 D at 600-1000 K (matches experimental sigma). (2) Mechanism (preliminary, MLIP): at matched DISORDER level our comp1 reproduces literature Ea=0.18 eV (vs the artifactual 1.17 for the frozen ordered cell); the modelc disorder run determines whether the Cl-rich gain is Ea-down (Minafra/Kraft narrative) or prefactor-driven (our earlier reading) -> will update when modelc disorder finishes.",
   "caveats": "(a) UMA absolute D overestimates ~3-5x vs experiment. (b) d=0.00 Ea=1.17 is an artifact (low-T statistics), NOT the physical ordered Ea. (c) Arrhenius from 600-1000 K extrapolated to 300 K has large uncertainty - quote the 600-1000 K values + Ea."
  },
- "⚠_DIFFUSIVE_GATE_2026_08_01": "⚠⚠ 확산영역 게이트 미통과/미검사 (2026-08-01). MSD 창 2-50 ps 의 log-log 기울기 β 가 0.8 미만이면 케이지 진동을 확산으로 오독한 것이다. comp1 seeds 6/6, comp2 d=1.0 8/9 가 케이지로 판정됐고 **창 변경·시드 평균 어느 쪽으로도 구제되지 않았다**(200 ps 부족). 같은 프로토콜로 낸 Ea 는 tools/ionic/msd_diffusive_check.py 게이트를 통과하기 전까지 **인용 보류**. 근거: kb/results/mlip_md_diffusive_gate_2026_08_01.md"
+ "⚠_DIFFUSIVE_GATE_2026_08_01": "⚠⚠ 확산영역 게이트 미통과/미검사 (2026-08-01). MSD 창 2-50 ps 의 log-log 기울기 β 가 0.8 미만이면 케이지 진동을 확산으로 오독한 것이다. comp1 seeds 6/6, comp2 d=1.0 8/9 가 케이지로 판정됐고 **창 변경·시드 평균 어느 쪽으로도 구제되지 않았다**(200 ps 부족). 같은 프로토콜로 낸 Ea 는 tools/ionic/msd_diffusive_check.py 게이트를 통과하기 전까지 **인용 보류**. 근거: kb/results/mlip_md_diffusive_gate_2026_08_01.md",
+ "_provenance_audit": {
+  "audited": "2026-08-12",
+  "audited_by": "db provenance sweep (tools/db/validate_canonical.py --cited 로 대상 선정)",
+  "generator": "(없음 — 손으로 누적)",
+  "source": "gabia:/data/work/runs/mlmd_4fu_comp1/ (PRIMARY) · container:modelC_v3/aimd/ · v100:~/v100_stage/nd/",
+  "collected": "2026-06-11",
+  "confidence": "high",
+  "note": "⚠_DIFFUSIVE_GATE_2026_08_01 — Ea 인용 주의",
+  "caveat": "이 블록은 **사후 추적** 결과다. 원본 계산 시점에 기록된 것이 아니라 repo·git·파일 내용에서 역추적했다. confidence 를 같이 보라."
+ }
 }

@@ -840,5 +840,15 @@
    "date": "2026-08-05",
    "what": "`peer_reviewed_anchors` 신설 — 역학 축(Famprikis19·Miao23)과 공기/가수분해 축(Zhu20). 역학은 이 파일에 **축 자체가 없었다**. 핵심 소득 3개: (1) thiophosphate glass E≈20/G≈7 GPa 가 우리 relaxed-ion 과 같은 자리 → clamped-ion 배제의 외부 앵커, (2) K_IC 는 [Famprikis19] 도 숫자를 안 준다 + '실험 결정 물성' 판정 → 우리 공백이 방법론적 경계임을 확인, (3) Monroe–Newman 무기 SE 부적용 판정. 덤: Zhu20 chloride 시트의 HCl 1 ppm 보정 누락(우리가 전사 중 발견)."
   }
- ]
+ ],
+ "_provenance_audit": {
+  "audited": "2026-08-12",
+  "audited_by": "db provenance sweep (tools/db/validate_canonical.py --cited 로 대상 선정)",
+  "generator": "(없음 — 외부 발표 소환값)",
+  "source": "litdb/talks/lee2026_skku_*.md · moon2026_cau_*.md",
+  "collected": "2026-07-28",
+  "confidence": "high",
+  "note": "우리 db 절대값과 같은 표/플롯 금지",
+  "caveat": "이 블록은 **사후 추적** 결과다. 원본 계산 시점에 기록된 것이 아니라 repo·git·파일 내용에서 역추적했다. confidence 를 같이 보라."
+ }
 }

@@ -1,30 +1,63 @@
 {
-  "property": "sdcp_phaseB_dftu_v1",
-  "date_received": "2026-08-08",
-  "date_registered": "2026-08-10",
-  "source": "runs/sdcp_phaseB_vasp_v1_2026_08_08/ (RESULTS.txt + INCAR/OSZICAR/OUTCAR.gz x6)",
-  "method": "VASP PBE+U(Ni 6.2, Dudarev) + D3(IVDW=11), single points on UMA(freeze_frac 0.85, phaseA_top1free) geometries. AFM via MAGMOM. ENCUT 520, EDIFF 1e-5, k 2x2x1 (surface jobs).",
-  "toten_eV": {
-    "mol_doped": -200.22266034,
-    "mol_neutral": -205.30024260,
-    "slab": -935.34667506,
-    "complex_doped": -1135.88975326,
-    "complex_doped_extr": -1135.55410602,
-    "complex_neutral": -1140.93494363
+ "property": "sdcp_phaseB_dftu_v1",
+ "date_received": "2026-08-08",
+ "date_registered": "2026-08-10",
+ "source": "runs/sdcp_phaseB_vasp_v1_2026_08_08/ (RESULTS.txt + INCAR/OSZICAR/OUTCAR.gz x6)",
+ "method": "VASP PBE+U(Ni 6.2, Dudarev) + D3(IVDW=11), single points on UMA(freeze_frac 0.85, phaseA_top1free) geometries. AFM via MAGMOM. ENCUT 520, EDIFF 1e-5, k 2x2x1 (surface jobs).",
+ "toten_eV": {
+  "mol_doped": -200.22266034,
+  "mol_neutral": -205.3002426,
+  "slab": -935.34667506,
+  "complex_doped": -1135.88975326,
+  "complex_doped_extr": -1135.55410602,
+  "complex_neutral": -1140.93494363
+ },
+ "total_magnetization_signed": {
+  "mol_doped": 0.1753184,
+  "mol_neutral": 0.0015407,
+  "slab": -4.9e-05,
+  "complex_doped": 2.3783404,
+  "complex_doped_extr": 0.5177677,
+  "complex_neutral": 0.0191172
+ },
+ "dE_extract_eV": 0.3356,
+ "dE_extract_sigma0_eV": 0.3395,
+ "dE_extract_verdict": "양수 = Li 추출은 열역학적으로 불리. UMA freeze_frac 0.6 의 -1.465 eV 'Li 추출 안정화'는 MLIP 아티팩트로 판정 (champion_report.py 의 사전등록 규칙 'UMA는 전하분리를 판정할 수 없다'가 강제한 재검). 정확한 이름: 고정 MLIP 끝점(r0_g20 vs r180_g20) 두 개의 전자에너지 차 - 장벽/자유에너지/전극전위 아님.",
+ "E_ads_eV": {
+  "doped": -0.3204,
+  "neutral": -0.288,
+  "delta": -0.0324
+ },
+ "do_not_cite_E_ads": "자세 불일치(doped r0_g20 vs neutral r180_g22) + 분자 ISMEAR=1/SIGMA=0.2 + 쌍극자 보정 없음 + LASPH 없음 + 자기 초기값 1개. 판독 열만 바꿔도 delta 32->26 meV. v2 프로토콜 재계산으로만 대체 가능.",
+ "geometry_audit": {
+  "complex_doped_nearest_contact_A": {
+   "pair": "O...Li",
+   "d": 3.077,
+   "verdict": "no coordination"
   },
-  "total_magnetization_signed": {
-    "mol_doped": 0.1753184, "mol_neutral": 0.0015407, "slab": -0.000049,
-    "complex_doped": 2.3783404, "complex_doped_extr": 0.5177677, "complex_neutral": 0.0191172
+  "complex_neutral_nearest_contact_A": {
+   "pair": "O...Li",
+   "d": 2.094,
+   "verdict": "real Li-O coordination - 'physisorbed' label wrong for neutral"
   },
-  "dE_extract_eV": 0.3356,
-  "dE_extract_sigma0_eV": 0.3395,
-  "dE_extract_verdict": "양수 = Li 추출은 열역학적으로 불리. UMA freeze_frac 0.6 의 -1.465 eV 'Li 추출 안정화'는 MLIP 아티팩트로 판정 (champion_report.py 의 사전등록 규칙 'UMA는 전하분리를 판정할 수 없다'가 강제한 재검). 정확한 이름: 고정 MLIP 끝점(r0_g20 vs r180_g20) 두 개의 전자에너지 차 - 장벽/자유에너지/전극전위 아님.",
-  "E_ads_eV": {"doped": -0.3204, "neutral": -0.2880, "delta": -0.0324},
-  "do_not_cite_E_ads": "자세 불일치(doped r0_g20 vs neutral r180_g22) + 분자 ISMEAR=1/SIGMA=0.2 + 쌍극자 보정 없음 + LASPH 없음 + 자기 초기값 1개. 판독 열만 바꿔도 delta 32->26 meV. v2 프로토콜 재계산으로만 대체 가능.",
-  "geometry_audit": {
-    "complex_doped_nearest_contact_A": {"pair": "O...Li", "d": 3.077, "verdict": "no coordination"},
-    "complex_neutral_nearest_contact_A": {"pair": "O...Li", "d": 2.094, "verdict": "real Li-O coordination - 'physisorbed' label wrong for neutral"},
-    "complex_doped_extr_nearest_contact_A": {"pair": "O...Li", "d": 1.935, "verdict": "Li-transfer endpoint; slab z_max 18.59 -> 20.35 (Li pulled 1.76 A)"}
-  },
-  "seminar_ledger_rows": [7, 8]
+  "complex_doped_extr_nearest_contact_A": {
+   "pair": "O...Li",
+   "d": 1.935,
+   "verdict": "Li-transfer endpoint; slab z_max 18.59 -> 20.35 (Li pulled 1.76 A)"
+  }
+ },
+ "seminar_ledger_rows": [
+  7,
+  8
+ ],
+ "_provenance_audit": {
+  "audited": "2026-08-12",
+  "audited_by": "db provenance sweep (tools/db/validate_canonical.py --cited 로 대상 선정)",
+  "generator": "(없음 — 손으로 작성)",
+  "source": "runs/sdcp_phaseB_vasp_v1_2026_08_08/ (**repo 안에 실재**)",
+  "collected": "2026-08-10",
+  "confidence": "high",
+  "note": "do_not_cite_E_ads — dE_extract(+0.3356 eV)만 유효",
+  "caveat": "이 블록은 **사후 추적** 결과다. 원본 계산 시점에 기록된 것이 아니라 repo·git·파일 내용에서 역추적했다. confidence 를 같이 보라."
+ }
 }

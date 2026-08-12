@@ -1,43 +1,92 @@
 {
-  "method": "open-Li get_element_profile(Li, SE); decomposition at each anode reservoir V (Li metal 0 V, Li-In ~0.62 V). leaky = MP gap < 2.0 eV (electron-conducting interphase). MP GGA/GGA+U.",
-  "mu_Li_metal_eV": -2.3867,
-  "leaky_threshold_eV": 2.0,
-  "anode_voltages": [0.0, 0.62],
-  "results": {
-    "b2o3": {
-      "composition": "Li58P8S41Cl16B2O3",
-      "by_anode": {
-        "0.00": {
-          "anode": "Li-metal", "V_vs_Li": 0.0,
-          "reaction": "Li58B2P8S41Cl16O3 -> 2 LiB + 3 Li2O + 8 Li3P + 16 LiCl + 41 S + 10 Li",
-          "product_gaps_eV": {"LiB": 0.0, "Li2O": 4.9, "Li3P": 0.7, "LiCl": 6.65, "S": 2.61},
-          "leaky_products": ["Li3P(0.7)", "LiB(0.0)"], "min_product_gap_eV": 0.0
-        },
-        "0.62": {
-          "anode": "Li-In", "V_vs_Li": 0.62,
-          "reaction": "Li58B2P8S41Cl16O3 -> 0.1667 B6P + Li3BO3 + 7.833 Li3P + 16 LiCl + 41 S + 15.5 Li",
-          "product_gaps_eV": {"Li3P": 0.7, "Li3BO3": 5.15, "LiCl": 6.65, "S": 2.61},
-          "leaky_products": ["Li3P(0.7)"], "min_product_gap_eV": 0.7
-        }
-      }
+ "method": "open-Li get_element_profile(Li, SE); decomposition at each anode reservoir V (Li metal 0 V, Li-In ~0.62 V). leaky = MP gap < 2.0 eV (electron-conducting interphase). MP GGA/GGA+U.",
+ "mu_Li_metal_eV": -2.3867,
+ "leaky_threshold_eV": 2.0,
+ "anode_voltages": [
+  0.0,
+  0.62
+ ],
+ "results": {
+  "b2o3": {
+   "composition": "Li58P8S41Cl16B2O3",
+   "by_anode": {
+    "0.00": {
+     "anode": "Li-metal",
+     "V_vs_Li": 0.0,
+     "reaction": "Li58B2P8S41Cl16O3 -> 2 LiB + 3 Li2O + 8 Li3P + 16 LiCl + 41 S + 10 Li",
+     "product_gaps_eV": {
+      "LiB": 0.0,
+      "Li2O": 4.9,
+      "Li3P": 0.7,
+      "LiCl": 6.65,
+      "S": 2.61
+     },
+     "leaky_products": [
+      "Li3P(0.7)",
+      "LiB(0.0)"
+     ],
+     "min_product_gap_eV": 0.0
     },
-    "LPSCl1.6": {
-      "composition": "Li5.4PS4.4Cl1.6",
-      "by_anode": {
-        "0.00": {
-          "anode": "Li-metal", "V_vs_Li": 0.0,
-          "reaction": "Li5.4P1S4.4Cl1.6 -> Li3P + 1.6 LiCl + 4.4 S + 0.8 Li",
-          "product_gaps_eV": {"Li3P": 0.7, "LiCl": 6.65, "S": 2.61},
-          "leaky_products": ["Li3P(0.7)"], "min_product_gap_eV": 0.7
-        },
-        "0.62": {
-          "anode": "Li-In", "V_vs_Li": 0.62,
-          "reaction": "Li5.4P1S4.4Cl1.6 -> 0.5 P2S7 + 1.6 LiCl + 0.9 S + 3.8 Li",
-          "product_gaps_eV": {"P2S7": 1.89, "LiCl": 6.65, "S": 2.61},
-          "leaky_products": ["P2S7(1.89)"], "min_product_gap_eV": 1.89
-        }
-      }
+    "0.62": {
+     "anode": "Li-In",
+     "V_vs_Li": 0.62,
+     "reaction": "Li58B2P8S41Cl16O3 -> 0.1667 B6P + Li3BO3 + 7.833 Li3P + 16 LiCl + 41 S + 15.5 Li",
+     "product_gaps_eV": {
+      "Li3P": 0.7,
+      "Li3BO3": 5.15,
+      "LiCl": 6.65,
+      "S": 2.61
+     },
+     "leaky_products": [
+      "Li3P(0.7)"
+     ],
+     "min_product_gap_eV": 0.7
     }
+   }
   },
-  "interpretation": "vs BARE Li METAL (0 V): b2o3 is WORSE than undoped -- the B dopant forms METALLIC LiB (gap 0) -> min gap 0.0 vs undoped 0.7 (Li3P). BUT vs Li-In (~0.62 V, the standard sulfide-ASSB lab anode): the metallic LiB does NOT form (B -> B6P + Li3BO3) -> b2o3 min gap 0.7 (Li3P only), same leaky tier as undoped-at-Li-metal; undoped at Li-In is even milder (1.89, P2S7, no Li3P). => b2o3's worst anode liability (metallic LiB) is specific to bare Li metal and is AVOIDED with a Li-In anode -> practically manageable (which is why sulfide ASSBs use Li-In). Thermodynamic products only; morphology/kinetics not modeled."
+  "LPSCl1.6": {
+   "composition": "Li5.4PS4.4Cl1.6",
+   "by_anode": {
+    "0.00": {
+     "anode": "Li-metal",
+     "V_vs_Li": 0.0,
+     "reaction": "Li5.4P1S4.4Cl1.6 -> Li3P + 1.6 LiCl + 4.4 S + 0.8 Li",
+     "product_gaps_eV": {
+      "Li3P": 0.7,
+      "LiCl": 6.65,
+      "S": 2.61
+     },
+     "leaky_products": [
+      "Li3P(0.7)"
+     ],
+     "min_product_gap_eV": 0.7
+    },
+    "0.62": {
+     "anode": "Li-In",
+     "V_vs_Li": 0.62,
+     "reaction": "Li5.4P1S4.4Cl1.6 -> 0.5 P2S7 + 1.6 LiCl + 0.9 S + 3.8 Li",
+     "product_gaps_eV": {
+      "P2S7": 1.89,
+      "LiCl": 6.65,
+      "S": 2.61
+     },
+     "leaky_products": [
+      "P2S7(1.89)"
+     ],
+     "min_product_gap_eV": 1.89
+    }
+   }
+  }
+ },
+ "interpretation": "vs BARE Li METAL (0 V): b2o3 is WORSE than undoped -- the B dopant forms METALLIC LiB (gap 0) -> min gap 0.0 vs undoped 0.7 (Li3P). BUT vs Li-In (~0.62 V, the standard sulfide-ASSB lab anode): the metallic LiB does NOT form (B -> B6P + Li3BO3) -> b2o3 min gap 0.7 (Li3P only), same leaky tier as undoped-at-Li-metal; undoped at Li-In is even milder (1.89, P2S7, no Li3P). => b2o3's worst anode liability (metallic LiB) is specific to bare Li metal and is AVOIDED with a Li-In anode -> practically manageable (which is why sulfide ASSBs use Li-In). Thermodynamic products only; morphology/kinetics not modeled.",
+ "_provenance_audit": {
+  "audited": "2026-08-12",
+  "audited_by": "db provenance sweep (tools/db/validate_canonical.py --cited 로 대상 선정)",
+  "generator": "tools/oxidation/anode_interface_stability.py",
+  "source": "(로컬 원자료 없음 — Materials Project API 직접 조회)",
+  "collected": "2026-06-30",
+  "confidence": "high",
+  "note": "⚠ MP 스냅샷 버전 미기록 — 지금 재실행하면 다른 값이 나올 수 있다",
+  "caveat": "이 블록은 **사후 추적** 결과다. 원본 계산 시점에 기록된 것이 아니라 repo·git·파일 내용에서 역추적했다. confidence 를 같이 보라."
+ }
 }

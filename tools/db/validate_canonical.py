@@ -90,7 +90,15 @@ def audit_file(f):
         rec["date"] = None
         rec["notes"] = ["dict 가 아님 — 메타 필드를 못 단다"]
         return rec, None
-    rec["date"] = next((str(d[k]) for k in DATE_KEYS if k in d), None)
+    # ★ provenance 는 최상위에도, `_provenance_audit` 블록 안에도 올 수 있다.
+    #   감사기가 **자기가 요구한 규약**을 못 읽으면 고쳐도 계속 운다 (2026-08-12).
+    pa = d.get("_provenance_audit") if isinstance(d.get("_provenance_audit"), dict) else {}
+    rec["date"] = next((str(d[k]) for k in DATE_KEYS if k in d),
+                       next((str(pa[k]) for k in DATE_KEYS if k in pa), None))
+    if rec["date"] in ("불명", "unknown", "None"):
+        rec["date"] = None
+    rec["audited"] = bool(pa)
+    rec["confidence"] = pa.get("confidence")
     # ⚠ 2026-08-12 정정 — 처음엔 최상위 SRC_KEYS 만 봤다. 그랬더니 정본 앵커 28건이
     #   전부 "사슬 끊김" 으로 나왔는데 **오탐**이었다: electronic.json 도 eos.json 도
     #   경로를 갖고 있고, 다만 블록 안쪽에 중첩돼 있었다. 둘을 갈라서 본다.
@@ -100,6 +108,8 @@ def audit_file(f):
     for k in SRC_KEYS:
         if k in d:
             _paths_in(d[k], ps)
+        if k in pa:
+            _paths_in(pa[k], ps)
     rec["sources_declared"] = sorted(ps)[:6]
     pa = set()
     _paths_in(d, pa)
@@ -232,6 +242,10 @@ def cmd_audit(show_all=False, cited_only=False):
           f"기계는 못 따라간다")
     print(f"  ③ 죽은 출처 경로    {len(dead):3d}  — 적힌 경로가 사라졌다")
     print(f"  ④ null 값 있음      {len(nulls):3d}  — **채울 자리** 후보")
+    aud = [r for r in recs if r.get("audited")]
+    lowc = [r for r in recs if r.get("confidence") in ("medium", "low")]
+    print(f"  ★ provenance 감사 완료 {len(aud):3d}  (그중 confidence medium/low "
+          f"{len(lowc)} — 추적이 확정 안 된 것)")
     print(f"  ⑤ 구판/신판 공존    {len(sup):3d}  (그중 **표시 없음** {len(unmarked)} "
           f"← 옛 값이 정본으로 읽힌다)")
     for r in broken:

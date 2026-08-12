@@ -1,0 +1,127 @@
+{
+ "property": "citation_hazards",
+ "purpose": "db 파일마다 붙어 있는 **인용 금지·보류·조건부** 단서를 한 곳에 모은다. 각 파일 안에 흩어져 있어 원고·그림을 쓸 때 놓친다 — 2026-08-12 provenance 전수조사에서 파일을 열어 보고서야 발견한 것들이다.",
+ "how_to_use": "원고나 그림에 db 값을 넣기 전에 이 표를 먼저 본다. level=BLOCKED 는 어떤 형태로도 인용 금지, CONDITIONAL 은 단서와 함께만.",
+ "collected": "2026-08-12",
+ "hazards": [
+  {
+   "file": "db/properties/sei_neb.json",
+   "level": "BLOCKED",
+   "what": "전량 철회 (retracted=true, n_citable=0)",
+   "why": "tot_charge=+1 부호 오류 + 끝점 미이완",
+   "fix": "tools/sei/build_neb_inputs.py 로 재계산"
+  },
+  {
+   "file": "db/properties/doping_cascade_verified.json",
+   "level": "BLOCKED",
+   "what": "Sc2O3_x002 · Al2O3_x005 두 행 + '최연질=Sc2O3 18.7' 헤드라인 + softness 순위",
+   "why": "doping_cascade_trivalent_M3.json 과 값 충돌 미해소 (E 18.7 vs 42.1)",
+   "fix": "gabia FINAL_RANKING.json 두 행으로 승자 확정"
+  },
+  {
+   "file": "db/properties/sdcp_phaseB_dftu_v1.json",
+   "level": "BLOCKED",
+   "what": "E_ads 델타 (−32 meV)",
+   "why": "자세 불일치 + 보정 누락",
+   "fix": "dE_extract(+0.3356 eV)만 인용"
+  },
+  {
+   "file": "db/properties/vgcf_hbn_binding_matrix.json",
+   "level": "BLOCKED",
+   "what": "headline 의 '1L 모델로 NEB 정당' 절",
+   "why": "CI-NEB 결과가 뒤집음 (2026-07-27 자기철회)",
+   "fix": "vgcf_hbn_neb.json 참조"
+  },
+  {
+   "file": "db/properties/lpsocl_md_arrhenius.json",
+   "level": "HOLD",
+   "what": "Ea",
+   "why": "⚠_DIFFUSIVE_GATE_2026_08_01 — 확산영역 β 게이트 미통과",
+   "fix": "tools/ionic/msd_diffusive_check.py 통과 후 해제"
+  },
+  {
+   "file": "db/properties/li_transport.json",
+   "level": "HOLD",
+   "what": "Ea",
+   "why": "같은 확산영역 게이트",
+   "fix": "동일"
+  },
+  {
+   "file": "db/properties/b2o3_md_arrhenius.json",
+   "level": "CONDITIONAL",
+   "what": "Ea — 헤드라인이 3회 교체됨 (0.207 → 0.2234 단일시드 → 0.199±0.034)",
+   "why": "중간판이 아직 파일에 남아 있다",
+   "fix": "FINAL_for_paper.Ea_eV_PAPER 만 인용"
+  },
+  {
+   "file": "db/properties/vgcf_hbn_neb.json",
+   "level": "CONDITIONAL",
+   "what": "표면 확산 배리어 7 meV",
+   "why": "수치 분해능(20–46 meV) **아래**다",
+   "fix": "'< 0.01 eV, 사실상 barrierless' 로만 서술 — 숫자로 인용 금지"
+  },
+  {
+   "file": "db/properties/nd_icohp.json · bonds.json",
+   "level": "CONDITIONAL",
+   "what": "comp1 P–S ICOHP −5.944",
+   "why": "2026-06-03 낡은 요약값 (drift)",
+   "fix": "정본 −5.9381 (per_bond_json/bonds_comp1_k444.json)"
+  },
+  {
+   "file": "db/properties/nd_gap_reference_mp.json",
+   "level": "CONDITIONAL",
+   "what": "Nd 상 갭",
+   "why": "우리 계산 아님 (MP 소환값)",
+   "fix": "우리 db 갭 표와 같은 표/플롯에 섞지 말 것. Nd 3종은 sei_electronic 의 *_frozen4f 가 우리 값"
+  },
+  {
+   "file": "db/properties/external_benchmarks_symposium_2026.json",
+   "level": "CONDITIONAL",
+   "what": "전 항목",
+   "why": "외부 발표 소환값",
+   "fix": "우리 db 절대값과 같은 표/플롯 금지"
+  },
+  {
+   "file": "db/properties/cascade_v23_themes.json",
+   "level": "CONDITIONAL",
+   "what": "gap_lit_eV · 가격등급 · air_stability",
+   "why": "문헌 전형값 큐레이션 — 우리 계산 아님",
+   "fix": "curation_disclaimer 와 함께만"
+  },
+  {
+   "file": "db/properties/anode_interface_b2o3.json",
+   "level": "CONDITIONAL",
+   "what": "전 항목",
+   "why": "MP API 직접 조회인데 **스냅샷 버전 미기록** — 재현 불가",
+   "fix": "재실행 시 값이 달라도 어느 쪽이 맞는지 알 수 없다. 앞으로 MP 치는 도구는 버전 기록 필수"
+  },
+  {
+   "file": "db/properties/eos.json",
+   "level": "CONDITIONAL",
+   "what": "V0_A3",
+   "why": "extensive 량",
+   "fix": "셀 크기 다른 계끼리 직접 비교 금지"
+  },
+  {
+   "file": "db/properties/elastic.json",
+   "level": "CONDITIONAL",
+   "what": "조성 간 비교",
+   "why": "조성별 pseudo/ecut/k 가 다르다",
+   "fix": "kb/methodology/elastic_constants.md 확인 후"
+  },
+  {
+   "file": "db/properties/cascade_v23_eos_refit.json",
+   "level": "CONDITIONAL",
+   "what": "MnO_x002",
+   "why": "r²=0.946 — 파일 자체가 low-confidence 표시",
+   "fix": "등급 표기와 함께만"
+  },
+  {
+   "file": "db/properties/li3n_adsorption.json",
+   "level": "CONDITIONAL",
+   "what": "v1 값 (−3.439 / −3.321)",
+   "why": "미수렴 bare slab — 파일이 SUPERSEDES 로 철회",
+   "fix": "v2 값만 유효"
+  }
+ ]
+}

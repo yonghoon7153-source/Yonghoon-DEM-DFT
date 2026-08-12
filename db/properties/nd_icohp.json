@@ -1,150 +1,160 @@
 {
-  "property": "nd ICOHP (LOBSTER)",
-  "system": "modelc_nd_doped (Li48P10Nd2S41O3Cl16, 120 atoms)",
-  "date": "2026-06-18",
-  "method": "LOBSTER 5.1.1 on QE PAW(kjpaw) SCF+NSCF, k661, nspin2 AFM; ICOHP total = spin1+spin2",
-  "spilling_pct": 1.34,
-  "raw": "db/raw/nd_lobster/ICOHPLIST.lobster",
-  "bonds": {
-    "P-S": {
-      "N": 37,
-      "d_mean_A": 2.064,
-      "ICOHP_total_eV_per_bond": -5.976,
-      "ICOHP_per_spin": -2.988,
-      "ICOHP_min": -6.555,
-      "ICOHP_max": -5.498
-    },
-    "Li-S": {
-      "N": 125,
-      "d_mean_A": 2.521,
-      "ICOHP_total_eV_per_bond": -2.493,
-      "ICOHP_per_spin": -1.247,
-      "ICOHP_min": -3.528,
-      "ICOHP_max": -0.581
-    },
-    "Li-Cl": {
-      "N": 74,
-      "d_mean_A": 2.52,
-      "ICOHP_total_eV_per_bond": -2.265,
-      "ICOHP_per_spin": -1.133,
-      "ICOHP_min": -3.153,
-      "ICOHP_max": -0.572
-    },
-    "P-O": {
-      "N": 3,
-      "d_mean_A": 1.571,
-      "ICOHP_total_eV_per_bond": -8.43,
-      "ICOHP_per_spin": -4.215,
-      "ICOHP_min": -8.843,
-      "ICOHP_max": -7.771
-    },
-    "Li-O": {
-      "N": 5,
-      "d_mean_A": 2.13,
-      "ICOHP_total_eV_per_bond": -2.384,
-      "ICOHP_per_spin": -1.192,
-      "ICOHP_min": -3.302,
-      "ICOHP_max": -0.785
-    },
-    "Nd-O": {
-      "N": 2,
-      "d_mean_A": 2.545,
-      "ICOHP_total_eV_per_bond": -0.42,
-      "ICOHP_per_spin": -0.21,
-      "ICOHP_min": -0.476,
-      "ICOHP_max": -0.364
-    },
-    "Nd-S": {
-      "N": 8,
-      "d_mean_A": 2.898,
-      "ICOHP_total_eV_per_bond": -0.436,
-      "ICOHP_per_spin": -0.218,
-      "ICOHP_min": -0.614,
-      "ICOHP_max": -0.203
-    },
-    "Nd-Cl": {
-      "N": 2,
-      "d_mean_A": 2.772,
-      "ICOHP_total_eV_per_bond": -0.571,
-      "ICOHP_per_spin": -0.286,
-      "ICOHP_min": -0.572,
-      "ICOHP_max": -0.571
-    }
+ "property": "nd ICOHP (LOBSTER)",
+ "system": "modelc_nd_doped (Li48P10Nd2S41O3Cl16, 120 atoms)",
+ "date": "2026-06-18",
+ "method": "LOBSTER 5.1.1 on QE PAW(kjpaw) SCF+NSCF, k661, nspin2 AFM; ICOHP total = spin1+spin2",
+ "spilling_pct": 1.34,
+ "raw": "db/raw/nd_lobster/ICOHPLIST.lobster",
+ "bonds": {
+  "P-S": {
+   "N": 37,
+   "d_mean_A": 2.064,
+   "ICOHP_total_eV_per_bond": -5.976,
+   "ICOHP_per_spin": -2.988,
+   "ICOHP_min": -6.555,
+   "ICOHP_max": -5.498
   },
-  "headline": {
-    "P-O_vs_P-S": "P-O -8.43 vs P-S -5.98 eV/bond -> P-O ~41% stronger (covalent), but more polar (ELF P-O 0.838 < P-S 0.870)",
-    "host_PS4_unchanged": "nd P-S -5.98 ~= modelc -6.00 -> O-doping does not disturb surrounding PS4 backbone",
-    "Nd_ionic": "Nd-O/S/Cl weak (-0.42/-0.44/-0.57) -> Nd3+ ionic aliovalent dopant, not covalent",
-    "speciation_consistent": "P-S N=37 (8 PS4x4 + PS3O 3 + PS2O2 2), P-O N=3 (PS3O 1 + PS2O2 2)"
+  "Li-S": {
+   "N": 125,
+   "d_mean_A": 2.521,
+   "ICOHP_total_eV_per_bond": -2.493,
+   "ICOHP_per_spin": -1.247,
+   "ICOHP_min": -3.528,
+   "ICOHP_max": -0.581
   },
-  "caveat": "Absolute Li-X differs from comp1/modelc runs (PAW vs USPP basis); trust WITHIN-nd comparisons. P-S cross-run match (-5.98 vs -6.00) reassuring.",
-  "_CORRECTION_2026_06_18": "Re-parsed at 4.0 A cutoff to MATCH comp1/modelc (PAW kjpaw_psl 1.0.0). Previous Li-S -2.49/+45% & Li-Cl -2.27/+7.7% were CUTOFF ARTIFACTS (3.2/3.4 A). Correct values below; host bonding ~UNCHANGED by Nd2O3.",
-  "bonds_4.0A_cutoff_for_comparison": {
-    "P-S": {
-      "icohp_eV": -5.976,
-      "n_bonds": 37
-    },
-    "Li-S": {
-      "icohp_eV": -1.647,
-      "n_bonds": 199
-    },
-    "Li-Cl": {
-      "icohp_eV": -2.132,
-      "n_bonds": 79
-    },
-    "S-S": {
-      "icohp_eV": -0.101,
-      "n_bonds": 117
-    },
-    "P-O": {
-      "icohp_eV": -8.43,
-      "n_bonds": 3
-    },
-    "Nd-O": {
-      "icohp_eV": -0.42,
-      "n_bonds": 2
-    },
-    "Nd-S": {
-      "icohp_eV": -0.436,
-      "n_bonds": 8
-    },
-    "Nd-Cl": {
-      "icohp_eV": -0.571,
-      "n_bonds": 2
-    }
+  "Li-Cl": {
+   "N": 74,
+   "d_mean_A": 2.52,
+   "ICOHP_total_eV_per_bond": -2.265,
+   "ICOHP_per_spin": -1.133,
+   "ICOHP_min": -3.153,
+   "ICOHP_max": -0.572
   },
-  "comparison_vs_modelc_comp1_PAW_4.0A": {
-    "P-S": {
-      "comp1": -5.9381,
-      "modelc": -6.0,
-      "nd": -5.976,
-      "nd_vs_modelc_pct": 0.4
-    },
-    "Li-Cl": {
-      "comp1": -1.855,
-      "modelc": -2.103,
-      "nd": -2.132,
-      "nd_vs_modelc_pct": -1.4
-    },
-    "Li-S": {
-      "comp1": -1.592,
-      "modelc": -1.717,
-      "nd": -1.647,
-      "nd_vs_modelc_pct": 4.1
-    },
-    "S-S": {
-      "comp1": -0.107,
-      "modelc": -0.11,
-      "nd": -0.101
-    }
+  "P-O": {
+   "N": 3,
+   "d_mean_A": 1.571,
+   "ICOHP_total_eV_per_bond": -8.43,
+   "ICOHP_per_spin": -4.215,
+   "ICOHP_min": -8.843,
+   "ICOHP_max": -7.771
   },
-  "headline_CORRECTED": {
-    "host_unchanged": "Nd2O3 leaves host bonding ~unchanged: P-S +0.4%, Li-Cl -1.4%, Li-S +4.1%, S-S~0 (all within +-4%)",
-    "O_adds_PO": "only new strong bond = P-O -8.43 (41% stronger than P-S) -- an O effect",
-    "Nd_ionic": "Nd-O/S/Cl -0.42/-0.44/-0.57 = weak ionic; Nd is a bonding spectator (ionic dopant)",
-    "verdict": "bonding-wise: O is the actor (P-O), Nd is ionic carrier, host network untouched"
+  "Li-O": {
+   "N": 5,
+   "d_mean_A": 2.13,
+   "ICOHP_total_eV_per_bond": -2.384,
+   "ICOHP_per_spin": -1.192,
+   "ICOHP_min": -3.302,
+   "ICOHP_max": -0.785
   },
-  "_corrections": {
-    "2026-08-07_comp1_icohp": "comp1 P-S ICOHP 를 -5.944 → -5.9381 로 정정. -5.944 는 2026-06-03 요약값이고 직접 산출(2026-06-05)은 db/properties/per_bond_json/bonds_comp1_k444.json 의 -5.9381 이다. cutoff 규약 차이가 아니라 drift 였다 (Codex 3라운드 추적). 정본은 canonical_registry.json 의 ICOHP_PS/comp1 항목."
+  "Nd-O": {
+   "N": 2,
+   "d_mean_A": 2.545,
+   "ICOHP_total_eV_per_bond": -0.42,
+   "ICOHP_per_spin": -0.21,
+   "ICOHP_min": -0.476,
+   "ICOHP_max": -0.364
+  },
+  "Nd-S": {
+   "N": 8,
+   "d_mean_A": 2.898,
+   "ICOHP_total_eV_per_bond": -0.436,
+   "ICOHP_per_spin": -0.218,
+   "ICOHP_min": -0.614,
+   "ICOHP_max": -0.203
+  },
+  "Nd-Cl": {
+   "N": 2,
+   "d_mean_A": 2.772,
+   "ICOHP_total_eV_per_bond": -0.571,
+   "ICOHP_per_spin": -0.286,
+   "ICOHP_min": -0.572,
+   "ICOHP_max": -0.571
   }
+ },
+ "headline": {
+  "P-O_vs_P-S": "P-O -8.43 vs P-S -5.98 eV/bond -> P-O ~41% stronger (covalent), but more polar (ELF P-O 0.838 < P-S 0.870)",
+  "host_PS4_unchanged": "nd P-S -5.98 ~= modelc -6.00 -> O-doping does not disturb surrounding PS4 backbone",
+  "Nd_ionic": "Nd-O/S/Cl weak (-0.42/-0.44/-0.57) -> Nd3+ ionic aliovalent dopant, not covalent",
+  "speciation_consistent": "P-S N=37 (8 PS4x4 + PS3O 3 + PS2O2 2), P-O N=3 (PS3O 1 + PS2O2 2)"
+ },
+ "caveat": "Absolute Li-X differs from comp1/modelc runs (PAW vs USPP basis); trust WITHIN-nd comparisons. P-S cross-run match (-5.98 vs -6.00) reassuring.",
+ "_CORRECTION_2026_06_18": "Re-parsed at 4.0 A cutoff to MATCH comp1/modelc (PAW kjpaw_psl 1.0.0). Previous Li-S -2.49/+45% & Li-Cl -2.27/+7.7% were CUTOFF ARTIFACTS (3.2/3.4 A). Correct values below; host bonding ~UNCHANGED by Nd2O3.",
+ "bonds_4.0A_cutoff_for_comparison": {
+  "P-S": {
+   "icohp_eV": -5.976,
+   "n_bonds": 37
+  },
+  "Li-S": {
+   "icohp_eV": -1.647,
+   "n_bonds": 199
+  },
+  "Li-Cl": {
+   "icohp_eV": -2.132,
+   "n_bonds": 79
+  },
+  "S-S": {
+   "icohp_eV": -0.101,
+   "n_bonds": 117
+  },
+  "P-O": {
+   "icohp_eV": -8.43,
+   "n_bonds": 3
+  },
+  "Nd-O": {
+   "icohp_eV": -0.42,
+   "n_bonds": 2
+  },
+  "Nd-S": {
+   "icohp_eV": -0.436,
+   "n_bonds": 8
+  },
+  "Nd-Cl": {
+   "icohp_eV": -0.571,
+   "n_bonds": 2
+  }
+ },
+ "comparison_vs_modelc_comp1_PAW_4.0A": {
+  "P-S": {
+   "comp1": -5.9381,
+   "modelc": -6.0,
+   "nd": -5.976,
+   "nd_vs_modelc_pct": 0.4
+  },
+  "Li-Cl": {
+   "comp1": -1.855,
+   "modelc": -2.103,
+   "nd": -2.132,
+   "nd_vs_modelc_pct": -1.4
+  },
+  "Li-S": {
+   "comp1": -1.592,
+   "modelc": -1.717,
+   "nd": -1.647,
+   "nd_vs_modelc_pct": 4.1
+  },
+  "S-S": {
+   "comp1": -0.107,
+   "modelc": -0.11,
+   "nd": -0.101
+  }
+ },
+ "headline_CORRECTED": {
+  "host_unchanged": "Nd2O3 leaves host bonding ~unchanged: P-S +0.4%, Li-Cl -1.4%, Li-S +4.1%, S-S~0 (all within +-4%)",
+  "O_adds_PO": "only new strong bond = P-O -8.43 (41% stronger than P-S) -- an O effect",
+  "Nd_ionic": "Nd-O/S/Cl -0.42/-0.44/-0.57 = weak ionic; Nd is a bonding spectator (ionic dopant)",
+  "verdict": "bonding-wise: O is the actor (P-O), Nd is ionic carrier, host network untouched"
+ },
+ "_corrections": {
+  "2026-08-07_comp1_icohp": "comp1 P-S ICOHP 를 -5.944 → -5.9381 로 정정. -5.944 는 2026-06-03 요약값이고 직접 산출(2026-06-05)은 db/properties/per_bond_json/bonds_comp1_k444.json 의 -5.9381 이다. cutoff 규약 차이가 아니라 drift 였다 (Codex 3라운드 추적). 정본은 canonical_registry.json 의 ICOHP_PS/comp1 항목."
+ },
+ "_provenance_audit": {
+  "audited": "2026-08-12",
+  "audited_by": "db provenance sweep (tools/db/validate_canonical.py --cited 로 대상 선정)",
+  "generator": "(없음 — 손으로 작성)",
+  "source": "db/raw/nd_lobster/ICOHPLIST.lobster (**repo 안에 실재**, 39 KB)",
+  "collected": "2026-06-18",
+  "confidence": "high",
+  "note": "⚠ comp1 P-S −5.944 는 낡은 요약 — 정본은 −5.9381",
+  "caveat": "이 블록은 **사후 추적** 결과다. 원본 계산 시점에 기록된 것이 아니라 repo·git·파일 내용에서 역추적했다. confidence 를 같이 보라."
+ }
 }

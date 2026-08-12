@@ -1,22 +1,32 @@
 {
-  "LPSCl1.6": {
-    "reduction_V": 1.24,
-    "oxidation_V": 2.14,
-    "ocv_V": 1.72,
-    "window_V": 0.9
-  },
-  "b2o3": {
-    "reduction_V": 1.72,
-    "oxidation_V": 2.03,
-    "ocv_V": 1.77,
-    "window_V": 0.31,
-    "ocv_decomp": "0.25 Li3BS3 + 8.25 Li2S + 8 Li3PS4 + 0.25 Li3B7O12 + 16 LiCl",
-    "new_B_reactions": {
-      "2.03": "Li2B2S5 thioborate",
-      "2.75": "B2O3",
-      "3.24": "BCl3/BPO4",
-      "1.72_red": "BP"
-    }
-  },
-  "note": "grand-potential ESW (Mo/Ong), MP GGA_GGA+U hull, 346 entries. B2O3 narrows ESW both sides."
+ "LPSCl1.6": {
+  "reduction_V": 1.24,
+  "oxidation_V": 2.14,
+  "ocv_V": 1.72,
+  "window_V": 0.9
+ },
+ "b2o3": {
+  "reduction_V": 1.72,
+  "oxidation_V": 2.03,
+  "ocv_V": 1.77,
+  "window_V": 0.31,
+  "ocv_decomp": "0.25 Li3BS3 + 8.25 Li2S + 8 Li3PS4 + 0.25 Li3B7O12 + 16 LiCl",
+  "new_B_reactions": {
+   "2.03": "Li2B2S5 thioborate",
+   "2.75": "B2O3",
+   "3.24": "BCl3/BPO4",
+   "1.72_red": "BP"
+  }
+ },
+ "note": "grand-potential ESW (Mo/Ong), MP GGA_GGA+U hull, 346 entries. B2O3 narrows ESW both sides.",
+ "_provenance_audit": {
+  "audited": "2026-08-12",
+  "audited_by": "db provenance sweep (tools/db/validate_canonical.py --cited 로 대상 선정)",
+  "generator": "(없음 — 손으로 압축한 요약)",
+  "source": "불명 — MP GGA_GGA+U hull 346 entries 라고만 기록",
+  "collected": "2026-06-29",
+  "confidence": "medium",
+  "note": "재현에 필요한 MP 엔트리 셋/제외상 목록이 없다",
+  "caveat": "이 블록은 **사후 추적** 결과다. 원본 계산 시점에 기록된 것이 아니라 repo·git·파일 내용에서 역추적했다. confidence 를 같이 보라."
+ }
 }

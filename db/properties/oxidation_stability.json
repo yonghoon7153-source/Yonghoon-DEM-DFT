@@ -1,188 +1,210 @@
 {
-  "property": "oxidation_reduction_electrochemical_stability_window",
-  "description": "Intrinsic electrochemical stability window (ESW) of comp1 (LPSCl) vs modelc (LPSCl1.6) from the grand-potential phase-diagram method (Mo/Ong/Ceder 2012). Real ESW (Li reservoir opened, μ_Li scanned) — NOT the qualitative competing-phase-span hint from tools/doping/esw_check.py.",
-  "nd2o3_interface_reactivity_2026_06_17": {
-    "_run": "tools/oxidation/run_nd_interface.sh on kserver116 (MP GGA_GGA+U; chemsys C-Cl-Co-Li-Nd-O-P-S, 1385 entries)",
-    "method": "pymatgen InterfacialReactivity use_hull_energy vs LiCoO2 + C",
-    "min_dE_rxn_eV_per_atom_vs_LiCoO2": {"comp1": -0.3227, "modelc": -0.3308, "nd_doped": -0.3285},
-    "vs_carbon": "comp1/modelc/nd ALL 0.000 (no spontaneous SE/C reaction at OCV)",
-    "products_vs_LiCoO2": "all -> Co9S8 + Li3PO4 + Li2S + LiCl + Li2SO4 (O for Li3PO4 comes from the CATHODE, so phosphate CEI forms regardless of doping); nd additionally forms Nd2SO2.",
-    "reading": "nd cathode reactivity ~= modelc (only 0.0023 eV/atom less negative = marginal/noise); comp1 least reactive. Nd2O3 partially offsets modelc's Cl-induced higher reactivity but the effect is SMALL. => the experimental cycling improvement is NOT explained by reduced cathode (thermodynamic) reactivity; it points to the ELECTRONIC-conductivity drop (mechanism 1: dendrite/self-discharge suppression, Han 2019) as the driver. Cathode compatibility is maintained (not worsened).",
-    "caveats": "LiCoO2 proxy (experiment may use NCM); thermodynamic reaction energy only (kinetic CEI passivation not captured); reactivity differences are small.",
-    "files": "tools/oxidation/interface_reactivity_nd.json (commit from kserver116)"
+ "property": "oxidation_reduction_electrochemical_stability_window",
+ "description": "Intrinsic electrochemical stability window (ESW) of comp1 (LPSCl) vs modelc (LPSCl1.6) from the grand-potential phase-diagram method (Mo/Ong/Ceder 2012). Real ESW (Li reservoir opened, μ_Li scanned) — NOT the qualitative competing-phase-span hint from tools/doping/esw_check.py.",
+ "nd2o3_interface_reactivity_2026_06_17": {
+  "_run": "tools/oxidation/run_nd_interface.sh on kserver116 (MP GGA_GGA+U; chemsys C-Cl-Co-Li-Nd-O-P-S, 1385 entries)",
+  "method": "pymatgen InterfacialReactivity use_hull_energy vs LiCoO2 + C",
+  "min_dE_rxn_eV_per_atom_vs_LiCoO2": {
+   "comp1": -0.3227,
+   "modelc": -0.3308,
+   "nd_doped": -0.3285
   },
-  "method": {
-    "approach": "pymatgen PhaseDiagram.get_element_profile(Li, composition) over the MP GGA_GGA+U corrected Li-P-S-Cl convex hull (108 entries). Needs only the COMPOSITION + MP hull, so comp1 (in MP) and modelc (Li5.4PS4.4Cl1.6, non-stoichiometric, NOT in MP) are handled on identical footing.",
-    "tool": "tools/oxidation/esw_grand_potential.py",
-    "voltage_convention": "V (vs Li/Li+) = mu_Li(metal) - mu_Li ; e=1; 0 V = Li metal. evolution>0 = Li taken up (reduction); evolution<0 = Li released (oxidation); evolution~0 = neutral self-decomposition at OCV.",
-    "mu_Li_ref_eV": -1.9089,
-    "run_machine": "gabia (kserver116-27), MP_API_KEY set",
-    "run_date": "2026-06-08",
-    "mp_thermo_type": "GGA_GGA+U (pinned; avoids R2SCAN mixing noise, matches Mo/Ong literature numbers)"
+  "vs_carbon": "comp1/modelc/nd ALL 0.000 (no spontaneous SE/C reaction at OCV)",
+  "products_vs_LiCoO2": "all -> Co9S8 + Li3PO4 + Li2S + LiCl + Li2SO4 (O for Li3PO4 comes from the CATHODE, so phosphate CEI forms regardless of doping); nd additionally forms Nd2SO2.",
+  "reading": "nd cathode reactivity ~= modelc (only 0.0023 eV/atom less negative = marginal/noise); comp1 least reactive. Nd2O3 partially offsets modelc's Cl-induced higher reactivity but the effect is SMALL. => the experimental cycling improvement is NOT explained by reduced cathode (thermodynamic) reactivity; it points to the ELECTRONIC-conductivity drop (mechanism 1: dendrite/self-discharge suppression, Han 2019) as the driver. Cathode compatibility is maintained (not worsened).",
+  "caveats": "LiCoO2 proxy (experiment may use NCM); thermodynamic reaction energy only (kinetic CEI passivation not captured); reactivity differences are small.",
+  "files": "tools/oxidation/interface_reactivity_nd.json (commit from kserver116)"
+ },
+ "method": {
+  "approach": "pymatgen PhaseDiagram.get_element_profile(Li, composition) over the MP GGA_GGA+U corrected Li-P-S-Cl convex hull (108 entries). Needs only the COMPOSITION + MP hull, so comp1 (in MP) and modelc (Li5.4PS4.4Cl1.6, non-stoichiometric, NOT in MP) are handled on identical footing.",
+  "tool": "tools/oxidation/esw_grand_potential.py",
+  "voltage_convention": "V (vs Li/Li+) = mu_Li(metal) - mu_Li ; e=1; 0 V = Li metal. evolution>0 = Li taken up (reduction); evolution<0 = Li released (oxidation); evolution~0 = neutral self-decomposition at OCV.",
+  "mu_Li_ref_eV": -1.9089,
+  "run_machine": "gabia (kserver116-27), MP_API_KEY set",
+  "run_date": "2026-06-08",
+  "mp_thermo_type": "GGA_GGA+U (pinned; avoids R2SCAN mixing noise, matches Mo/Ong literature numbers)"
+ },
+ "results": {
+  "comp1": {
+   "composition": "Li6PS5Cl",
+   "in_MP": true,
+   "ocv_self_decomposition_V": 1.72,
+   "ocv_self_decomposition_rxn": "Li6PS5Cl -> Li3PS4 + Li2S + LiCl",
+   "reduction_limit_V": 1.24,
+   "oxidation_limit_V": 2.14,
+   "oxidation_onset_rxn": "Li6PS5Cl -> Li3PS4 + 0.25 LiS4 + LiCl + 1.75 Li",
+   "key_breakpoints_V": {
+    "0.00": "Li6PS5Cl + 8 Li -> Li3P + 5 Li2S + LiCl (full reduction at Li metal)",
+    "1.24": "Li6PS5Cl + 5 Li -> 5 Li2S + LiCl + P",
+    "1.72": "Li6PS5Cl -> Li3PS4 + Li2S + LiCl (neutral, no Li flux)",
+    "2.14": "-> Li3PS4 + 0.25 LiS4 + LiCl + 1.75 Li (S2- -> polysulfide, FIRST oxidation)",
+    "2.36": "-> 0.5 P2S7 + 0.375 LiS4 + LiCl + 1.75 Li (P-S oxidation)",
+    "3.06": "-> 0.5 P2S7 + LiCl + 1.5 S + 5 Li (elemental S)",
+    "3.33": "-> 0.5 P2S7 + 0.5 S + SCl + 6 Li (Cl oxidation finally)"
+   }
   },
-  "results": {
-    "comp1": {
-      "composition": "Li6PS5Cl",
-      "in_MP": true,
-      "ocv_self_decomposition_V": 1.72,
-      "ocv_self_decomposition_rxn": "Li6PS5Cl -> Li3PS4 + Li2S + LiCl",
-      "reduction_limit_V": 1.24,
-      "oxidation_limit_V": 2.14,
-      "oxidation_onset_rxn": "Li6PS5Cl -> Li3PS4 + 0.25 LiS4 + LiCl + 1.75 Li",
-      "key_breakpoints_V": {
-        "0.00": "Li6PS5Cl + 8 Li -> Li3P + 5 Li2S + LiCl (full reduction at Li metal)",
-        "1.24": "Li6PS5Cl + 5 Li -> 5 Li2S + LiCl + P",
-        "1.72": "Li6PS5Cl -> Li3PS4 + Li2S + LiCl (neutral, no Li flux)",
-        "2.14": "-> Li3PS4 + 0.25 LiS4 + LiCl + 1.75 Li (S2- -> polysulfide, FIRST oxidation)",
-        "2.36": "-> 0.5 P2S7 + 0.375 LiS4 + LiCl + 1.75 Li (P-S oxidation)",
-        "3.06": "-> 0.5 P2S7 + LiCl + 1.5 S + 5 Li (elemental S)",
-        "3.33": "-> 0.5 P2S7 + 0.5 S + SCl + 6 Li (Cl oxidation finally)"
-      }
-    },
-    "modelc": {
-      "composition": "Li5.4PS4.4Cl1.6",
-      "in_MP": false,
-      "ocv_self_decomposition_V": 1.72,
-      "ocv_self_decomposition_rxn": "Li5.4PS4.4Cl1.6 -> Li3PS4 + 0.4 Li2S + 1.6 LiCl",
-      "reduction_limit_V": 1.24,
-      "oxidation_limit_V": 2.14,
-      "oxidation_onset_rxn": "Li5.4PS4.4Cl1.6 -> Li3PS4 + 0.1 LiS4 + 1.6 LiCl + 0.7 Li",
-      "key_breakpoints_V": {
-        "0.00": "Li5.4PS4.4Cl1.6 + 8 Li -> Li3P + 4.4 Li2S + 1.6 LiCl",
-        "1.24": "+ 5 Li -> 4.4 Li2S + 1.6 LiCl + P",
-        "1.72": "-> Li3PS4 + 0.4 Li2S + 1.6 LiCl (neutral)",
-        "2.14": "-> Li3PS4 + 0.1 LiS4 + 1.6 LiCl + 0.7 Li (S2- -> polysulfide, FIRST oxidation)",
-        "2.36": "-> 0.5 P2S7 + 0.225 LiS4 + 1.6 LiCl + 3.575 Li",
-        "3.06": "-> 0.5 P2S7 + 1.6 LiCl + 0.9 S + 3.8 Li",
-        "3.33": "-> 0.5 P2S7 + 0.7 LiCl + 0.9 SCl + 4.7 Li",
-        "3.39": "-> 0.4588 P2S7 + 0.08235 PCl5 + 1.188 SCl + 5.4 Li (Cl oxidation: SCl + PCl5)"
-      }
-    },
-    "nd_doped": {
-      "composition": "Li4.8Nd0.2PS4.1O0.3Cl1.6",
-      "_source_cell": "DFT-relaxed 120-atom Li48Nd2P10O3S41Cl16 / 10 (net charge 0); main-track Nd->Li, x=0.20",
-      "in_MP": false,
-      "_run": "gabia kserver116-27 2026-06-24, esw_grand_potential.py, 6-element Cl-Li-Nd-O-P-S hull (321 entries). Full log: tools/oxidation/esw_nd_result.txt",
-      "ocv_self_decomposition_V": 1.72,
-      "ocv_self_decomposition_rxn": "Li4.8Nd0.2PS4.1O0.3Cl1.6 -> 0.925 Li3PS4 + 0.1 Nd2S3 + 0.1 Li2S + 0.075 Li3PO4 + 1.6 LiCl",
-      "reduction_limit_V": 1.52,
-      "oxidation_limit_V": 1.92,
-      "oxidation_onset_rxn": "Li4.8Nd0.2PS4.1O0.3Cl1.6 -> 0.02 Nd10S19 + 0.925 Li3PS4 + 0.02 Li2S + 0.075 Li3PO4 + 1.6 LiCl + 0.16 Li",
-      "intrinsic_ESW_width_V": 0.40,
-      "key_breakpoints_V": {
-        "0.00": "+ 8 Li -> 0.3 Li2O + 0.8 Li3P + 4.1 Li2S + 0.2 NdP + 1.6 LiCl (ANODE: O->Li2O wide-gap 5.24; Li3P 0.8 still dominant=conductive; Nd->NdP conductive)",
-        "0.69": "+ 7.4 Li -> 0.725 Li3P + 4.1 Li2S + 0.2 NdP + 0.075 Li3PO4 + 1.6 LiCl (Li3PO4 5.73 appears, persists upward)",
-        "1.52": "+ 4.625 Li -> 0.1 Nd2S3 + 3.8 Li2S + 0.075 Li3PO4 + 1.6 LiCl + 0.925 P (reduction limit)",
-        "1.72": "-> 0.925 Li3PS4 + 0.1 Nd2S3 + 0.1 Li2S + 0.075 Li3PO4 + 1.6 LiCl (neutral OCV; Nd2S3 1.79 conductive + Li3PO4 wide-gap)",
-        "1.92": "-> 0.02 Nd10S19 + 0.925 Li3PS4 + 0.02 Li2S + 0.075 Li3PO4 + 1.6 LiCl + 0.16 Li (oxidation onset = Nd-sulfide, BELOW modelc 2.14)",
-        "2.30": "-> 0.1 Li9Nd2(PS4)5 + 0.425 Li3PS4 + 0.1 LiS4 + 0.075 Li3PO4 + 1.6 LiCl + 0.7 Li (polysulfide LiS4 starts)",
-        "2.45": "-> 0.075 NdPO4 + 0.4 P2S7 + 0.125 NdPS4 + 0.2 LiS4 + 1.6 LiCl + 3 Li (NdPO4 5.55 wide-gap APPEARS @2.45 V)",
-        "2.62": "-> 0.075 NdPO4 + 0.4625 P2S7 + 0.2156 LiS4 + 0.125 NdCl3 + 1.225 LiCl + 3.359 Li (NdCl3 4.30 wide-gap APPEARS @2.62 V)",
-        "3.08": "-> 0.45 P2S7 + 0.025 LiNd(PO3)4 + 0.175 NdCl3 + 1.075 LiCl + 0.95 S + 3.7 Li (LiNd(PO3)4 phosphate)",
-        "3.39": "-> 1.001 SCl + 0.01471 PCl5 + 0.4426 P2S7 + 0.025 LiNd(PO3)4 + 0.175 NdCl3 + 4.775 Li (Cl oxidation SCl+PCl5 same as modelc)",
-        "3.66": "-> 1.012 SCl + 0.01765 PCl5 + 0.03333 Nd(PO3)3 + 0.4412 P2S7 + 0.1667 NdCl3 + 4.8 Li (full ox)"
-      },
-      "interpretation_vs_modelc": {
-        "CONTROL_valid": "modelc re-run on the SAME 6-element hull reproduces the 4-element-hull modelc breakpoint-for-breakpoint -> every nd-vs-modelc difference is REAL chemistry (O/Nd), not a hull artifact.",
-        "CONFIRMED_SEI_story": "Direct convex-hull proof of the anode/cathode passivation claim: O->Li2O (5.24) at V=0 [anode]; Li3PO4 (5.73) persistent [bulk/GB]; NdPO4 (5.55)@2.45 + NdCl3 (4.30)@2.62 + LiNd(PO3)4@3.08 + Nd(PO3)3@3.66 [cathode]. modelc gives ONLY conductive P2S7/LiS4/S/SCl/PCl5. Nd anode-bad(NdP/Nd2S3 conductive)/cathode-good(NdPO4/NdCl3 wide-gap) split confirmed.",
-        "CORRECTION_window_narrows": "nd intrinsic ESW is NARROWER (0.40 V; 1.52-1.92) than modelc (0.90 V; 1.24-2.14), NOT wider. Nd-S/Nd-P/Nd-O redox is active inside modelc's window -> nd is intrinsically LESS stable (both ends move inward). The benefit is product electron-blocking (kinetic passivation), not a wider thermodynamic window -- parallel to the bulk-gap narrowing.",
-        "CORRECTION_O_dilute": "At x=0.2, O is too dilute to fully replace Li3P: V=0 gives 0.3 Li2O + 0.8 Li3P (Li3P still dominant). The wide-gap conversion is PARTIAL/ADDITIVE and scales with O; it is a GB/interphase percolation-breaking effect, not a bulk-fraction replacement.",
-        "CORRECTION_polysulfides_remain": "nd does NOT remove the polysulfides; P2S7/SCl/PCl5 still form at high V with NdPO4/NdCl3/Li3PO4 ALONGSIDE. NdPO4 first appears at 2.45 V; the 1.92-2.45 V band oxidizes to non-wide-gap products (Nd10S19/NdS2/Li9Nd2(PS4)5/LiS4). The passivation is a >=2.45 V (cathode operating) effect."
-      },
-      "caveat": "Nd-bearing hull energies are GGA+U(4f) -> product IDENTITY robust, absolute voltages +/-. DFT x=0.2 (10x experimental x=0.02) -> trend robust, dilute limit even more additive."
-    }
+  "modelc": {
+   "composition": "Li5.4PS4.4Cl1.6",
+   "in_MP": false,
+   "ocv_self_decomposition_V": 1.72,
+   "ocv_self_decomposition_rxn": "Li5.4PS4.4Cl1.6 -> Li3PS4 + 0.4 Li2S + 1.6 LiCl",
+   "reduction_limit_V": 1.24,
+   "oxidation_limit_V": 2.14,
+   "oxidation_onset_rxn": "Li5.4PS4.4Cl1.6 -> Li3PS4 + 0.1 LiS4 + 1.6 LiCl + 0.7 Li",
+   "key_breakpoints_V": {
+    "0.00": "Li5.4PS4.4Cl1.6 + 8 Li -> Li3P + 4.4 Li2S + 1.6 LiCl",
+    "1.24": "+ 5 Li -> 4.4 Li2S + 1.6 LiCl + P",
+    "1.72": "-> Li3PS4 + 0.4 Li2S + 1.6 LiCl (neutral)",
+    "2.14": "-> Li3PS4 + 0.1 LiS4 + 1.6 LiCl + 0.7 Li (S2- -> polysulfide, FIRST oxidation)",
+    "2.36": "-> 0.5 P2S7 + 0.225 LiS4 + 1.6 LiCl + 3.575 Li",
+    "3.06": "-> 0.5 P2S7 + 1.6 LiCl + 0.9 S + 3.8 Li",
+    "3.33": "-> 0.5 P2S7 + 0.7 LiCl + 0.9 SCl + 4.7 Li",
+    "3.39": "-> 0.4588 P2S7 + 0.08235 PCl5 + 1.188 SCl + 5.4 Li (Cl oxidation: SCl + PCl5)"
+   }
   },
-  "comparison_and_interpretation": {
-    "headline": "comp1 and modelc have essentially IDENTICAL intrinsic ESW (reduction ~1.2-1.7 V, OCV self-decomposition 1.72 V, oxidation onset 2.14 V). Cl-enrichment does NOT improve the oxidation limit because oxidation is S2- -> polysulfide LIMITED in both — S2- oxidizes at ~2.1 V, far below Cl- (~3.3 V).",
-    "oxidation_limit_identical": "Both oxidize first at 2.14 V via S2- -> LiS4 (polysulfide). Cl- is electrochemically inert until ~3.3 V (SCl) / ~3.4 V (PCl5, modelc only). Since S is present and is the VBM in both (S 3p), the oxidation onset is set by S, not Cl.",
-    "consistency_with_electronic_structure": "Fully consistent with the electronic/bonding inventory: S 3p is the VBM in BOTH (DOS/bands), ICOHP(P-S) -5.94 (comp1) vs -6.0 (modelc), ELF(P-S bridge) 0.946 vs 0.944. Same oxidation-susceptible species (S2-) and near-identical P-S covalency -> same oxidation onset.",
-    "quantitative_differences": {
-      "more_inert_LiCl": "modelc retains 1.6 LiCl vs comp1's 1.0 LiCl in the decomposition products — double the electrochemically inert halide fraction (LiCl stable to ~4 V).",
-      "milder_oxidation_extent": "At the 2.14 V oxidation onset, modelc releases only 0.7 Li vs comp1's 1.75 Li — the oxidative decomposition EXTENT (Li capacity reacted) is ~2.5x smaller in modelc, even though the onset VOLTAGE is identical. modelc has less oxidizable S per formula (4.4 vs 5 S; 1 P vs 1 P) and more of the S is locked behind the stable Li3PS4 + LiCl assemblage.",
-      "high_voltage_Cl_chemistry": "Only at >3.3 V does the higher Cl content of modelc manifest (SCl at 3.33 V, PCl5 at 3.39 V) — far above the operative S-limited window, so not relevant to practical stability."
-    },
-    "both_metastable_at_OCV": "BOTH decompose at OCV (~1.72 V) to Li3PS4 + Li2S + LiCl with NO Li exchange — i.e. neither has a true thermodynamic stability plateau; the as-synthesized argyrodite is metastable. Practical stability is kinetic (sluggish decomposition). This is the well-known limitation of sulfide solid electrolytes (Zhu/He/Mo 2015).",
-    "reduction_identical": "Below ~1.7 V both reduce identically: P5+ -> P3-/P0 (Li3PS4 -> P -> LiP -> Li3P) and S2- stays as Li2S, plus LiCl. At Li-metal contact (0 V): Li3P + Li2S + LiCl (the known SEI). Cl-enrichment does not change reduction chemistry.",
-    "_LITERATURE_RECONCILIATION_2026_06_08_rev2": {
-      "_correction_note": "REV2 (after reading the group's weekly report 2026-06-08): my first pass mischaracterized Zuo 2023 as 'Cl-rich simply worse'. The accurate, NUANCED finding is below. My grand-potential 'milder extent / more inert LiCl' result actually ALIGNS with the beneficial part of Zuo, not against it.",
-      "zuo_2023_FULL_PAPER_READ": {
-        "_paper": "Zuo, Walther, Teo, Rueß, Wang, Rohnke, Schröder, Nazar, Janek (Janek group, Giessen + Nazar, Waterloo), Angew. Chem. Int. Ed. 2023, 62, e202213228, 'Impact of the Chlorination of Lithium Argyrodites on the Electrolyte/Cathode Interface in Solid-State Batteries'. DOI 10.1002/anie.202213228. FULL PDF read 2026-06-08. NOTE their Cl-rich = Li5.5PS4.5Cl1.5 (LPSCl1.5); our modelc = Li5.4PS4.4Cl1.6 (close).",
-        "their_decomposition_reactions": "Eq(1) Li6PS5Cl -> LiCl + Li3PS4 + S + 2Li+ + 2e- (5e- per f.u. at full oxidation incl. Eq3). Eq(2) Li5.5PS4.5Cl1.5 -> 1.5 LiCl + Li3PS4 + 0.5 S + Li+ + e- (4e- per f.u.). Eq(3) Li3PS4 -> 0.5 P2S5 + 1.5 S + 3Li+ + 3e- (further oxidation). KEY: Cl-rich releases FEWER electrons/Li at first oxidation (1 vs 2) and makes MORE LiCl (1.5 vs 1.0).",
-        "VALIDATES_our_grand_potential": "Our 0-pressure ESW oxidation onset reactions REPRODUCE Zuo's Eq(1)/(2) almost exactly: comp1 -> Li3PS4 + LiCl + S(as 0.25 LiS4) + 1.75 Li (~Zuo Eq1's 2 Li + LiCl + Li3PS4 + S); modelc -> Li3PS4 + 1.6 LiCl + S(as 0.1 LiS4) + 0.7 Li (~Zuo Eq2's 1 Li + 1.5 LiCl + Li3PS4 + 0.5 S). Our 'modelc releases fewer Li (0.7 vs 1.75) and 2x more LiCl' = Zuo's electron count (1 vs 2 e-) and LiCl (1.5 vs 1.0). STRONG cross-validation of our grand-potential decomposition chemistry.",
-        "experiments": {
-          "conductivity_mScm": "Li6PS5Cl 2.9 ; Li5.5PS4.5Cl1.5 7.0 (Cl-rich higher).",
-          "CV": "Li5.5PS4.5Cl1.5/C shows ~2x higher current density than Li6PS5Cl/C, maxima at the SAME potentials -> (a) Cl-rich MORE susceptible to electrochemical decomposition / lower oxidation onset, (b) oxidation MECHANISM is the same. Correlates with DSC/TGA: Cl-rich melt/crystallization shifts lower (523/493C vs 535/532C), mass loss onset 315C -> thermodynamically less stable.",
-          "interface_resistance_R_cat": "vs NCM85, held 3.7 V: Li6PS5Cl steep sqrt(t) increase, rate const 13.2 Ohm*h^-0.5 ; Li5.5PS4.5Cl1.5 parabolic, rate const 8.9 Ohm*h^-0.5 -> Cl-rich interface degradation SLOWER.",
-          "cell_performance_NCM85": "Initial charge/discharge: Li6PS5Cl 215/165 (CE 77%) ; Li5.5PS4.5Cl1.5 215/170 (CE 79%). After 50 cycles: 133 vs 145 mAh/g. Cl-rich BETTER.",
-          "ToF_SIMS_after_aging_3.7V_60h": "S- and Cl- increase strongly for BOTH (decomposition). Oxygen-involving solid byproducts phosphate (PO2-/PO3-) and sulfate/sulfite (SO2-/SO3-): HIGHER for Li6PS5Cl, LOWER for Li5.5PS4.5Cl1.5. Polysulfides (S4+S5+S6): HIGHER for Cl-rich. => Cl-rich forms LESS solid oxygenated (resistive) species, MORE gas/polysulfide.",
-          "DEMS_gas": "O2 evolution similar (6.7 vs 6.8 umol/g_NCM, from NCM lattice at SOC>80%); Cl-rich evolves more SO2 gas.",
-          "mechanism_Fig7": "< 4.2 V vs Li/Li+: electrochemical decomposition (delithiation) of the argyrodite dominates. >= 4.2 V vs Li/Li+: OXYGEN-INVOLVING degradation dominates (O2 released from NCM lattice reacts with the SE -> SO2 gas + solid sulfate/phosphate at interface). Cl-rich routes more to gas/polysulfide, less to solid sulfate/phosphate -> thinner/more-homogeneous Li-phosphate/sulfate layer -> lower R_int -> better cell."
-        },
-        "net_message": "Cl-rich decomposes MORE easily (CV 2x, DSC/TGA less stable, lower onset) BUT its decomposition is MILDER in solid-resistive-byproduct terms (fewer electrons/Li released per f.u., more inert LiCl, more gas/polysulfide, less solid sulfate/phosphate) -> lower interface resistance growth (8.9 vs 13.2) -> BETTER cell performance (CE 79 vs 77, 50cyc 145 vs 133). NOT simply 'Cl-rich worse'."
-      },
-      "our_interface_reactivity_calc_2026_06_08": "tools/oxidation/interface_reactivity.py (pymatgen InterfacialReactivity, use_hull_energy, MP GGA_GGA+U). vs LiCoO2: comp1 min dE_rxn = -0.3227 eV/atom, modelc = -0.3308 (modelc +2.5% MORE reactive) -> matches Zuo CV 'Cl-rich decomposes more easily'. Products: both give the SAME solid OXYGENATED set Co9S8 + 0.1134 Li2SO4 (sulfate) + 0.2577 Li3PO4 (phosphate); modelc only trades 0.155 Li2S for 0.155 extra inert LiCl. vs carbon: BOTH 0.0 (C->C inert) -> Zuo's carbon-interface decomposition is electrochemical (bias-driven), NOT a chemical reaction. KEY LIMITATION (now precisely characterized by Zuo): the real divergence is that Cl-rich routes MORE to SO2 GAS + polysulfide and LESS to solid sulfate (SO_x) / phosphate (PO_x) [Zuo ToF-SIMS Fig4: PO2-/PO3-, SO2-/SO3- LOWER for Cl-rich]. Our closed SOLID-hull calc forces the SAME Li2SO4/Li3PO4 solids for both (no SO2 gas phase in MP, and the sulfate/phosphate need O from NCM = oxygen-involving >4.2V regime) -> it captures 'more reactive' but NOT the beneficial gas-diversion that lowers Cl-rich R_int. To model that one would need gas-phase (SO2/O2) chempots + the NCM O-release at >4.2V.",
-      "reading_of_our_extent_result_CORRECTED": "Our grand-potential finding that modelc releases LESS Li at the oxidation onset (0.7 vs 1.75) and makes 2x more inert LiCl ALIGNS WITH the BENEFICIAL side of Zuo 2023 (milder / more-inert solid decomposition -> lower R_int -> better cell). My earlier (first-pass) claim that this 'is why the interface keeps decomposing / a disadvantage' was WRONG and is retracted.",
-      "gil_gonzalez_2022_FULL_PAPER_READ": {
-        "_paper": "Gil-González, Ye, Wang, Shadike, Xu, Hu, Li (X. Li group, Harvard), Energy Storage Mater. 2022, 45, 484-493, 'Synergistic effects of chlorine substitution in sulfide electrolyte solid state battery'. DOI 10.1016/j.ensm.2021.12.008. FULL PDF + SI read 2026-06-08.",
-        "method_constrained_ensemble": "CONSTRAINED-ENSEMBLE voltage window (NOT plain grand-potential). Eq(1): d_sD G' = (G_D - G_SE) + V*eps_RXN*K_eff, where (G_D - G_SE) = chemical grand-potential decomposition energy (same as our get_element_profile), and V*eps_RXN*K_eff = STRAIN penalty (V molar volume, eps_RXN = reaction volumetric strain = (V_products - V_SE)/V_SE, K_eff = effective bulk modulus = mechanical-constriction level). Solved by Fitzhugh et al. Lagrange minimization (Small 2019, 1901470) at K_eff = 0, 10, 20 GPa. A volume-EXPANDING decomposition (eps_RXN>0) is penalized under constriction -> raises decomposition energy -> stabilizes the SE -> WIDENS the window. AIMD: VASP PAW 300 eV, Gamma-only, NVT Nose-Hoover, 100 ps / 2 fs for conductivity.",
-        "phase_set_exclusions": "They EXCLUDE LiS4 (mp-995393), SCl3 (mp-1186934), Li5PS4Cl2 (mp-1040450) from MP as non-physical / unlikely. OUR esw_grand_potential.py INCLUDED LiS4 (it appeared as '0.25 LiS4' at our 2.14 V onset). Excluding LiS4 should shift our oxidation onset UP toward their 2.40 V -> better 0-pressure agreement (TODO: add --exclude_phases).",
-        "their_numbers": {
-          "LPSCl1.5_Keff0_stable_window_V": "1.70 - 2.40 V (Table S1). Just above 2.40 V: S + LiCl + P2S7 (Cl-bearing SCl/PCl3 appear at higher V). Below 1.70 V: P / LiP / Li3P + LiCl + Li2S (Cl-rich reduction route).",
-          "LPSCl1.5_Keff20_stable_window_V": "0.80 - 4.30 V (Table S1). Constriction widens ~+1.9 V anodic, ~-0.9 V cathodic. High-V products SCl4 + Li2PS3 + S (Cl-bearing, high molar volume = bigger strain penalty).",
-          "LPS_Cl_free_Keff20_anodic_limit_V": "~3.70 V (Table S2) — LOWER than LPSCl1.5's 4.30 V. => Cl-rich is MORE stabilized by constriction (its Cl-bearing decomposition products PCl3 / SCl / SCl4 have higher molar volume -> higher reaction strain -> bigger strain penalty).",
-          "experimental_windows_intro": "LPSCl1.5 ~1.8 - 2.5 V; LPSCl1.0 (= Li6PS5Cl = comp1) ~1.3 - 2.3 V (their cells: 125 MPa formation + 38 MPa during test). Cl-rich window slightly higher / wider experimentally too."
-        },
-        "validation_of_our_calc": "Our grand-potential ESW (0 pressure): modelc OCV self-decomp 1.72 V, oxidation onset 2.14 V; comp1 the same. Gil-González K_eff=0 LPSCl1.5 stable window = 1.70 - 2.40 V. AGREEMENT IS EXCELLENT on the cathodic / OCV edge (1.72 vs 1.70) and good on the anodic edge (2.14 vs 2.40 — the 0.26 V gap is entirely the LiS4 inclusion). => our 0-pressure calc CORRECTLY reproduces the UNCONSTRICTED (K_eff=0) limit; the 'identical comp1 vs modelc onset' we found is the genuine 0-pressure physics, matching their flat 0-GPa curve (Fig 1a).",
-        "unified_picture": "The Cl-rich oxidation-stability ADVANTAGE is a MECHANICAL-CONSTRICTION effect: at K_eff=0 the windows are similar across Cl (our calc + their 0 GPa), but under K_eff = 10 - 20 GPa the Cl-rich window widens MORE because Cl-bearing decomposition products (PCl3, SCl, SCl4) have larger molar volume -> larger reaction strain -> larger strain penalty -> stronger metastable stabilization. This UNIFIES Paper#1's mechanical and oxidation stories: the SAME volume / strain physics that governs elastic response gates the constrained electrochemical window.",
-        "reconciles_zuo_vs_gilgonzalez": "Zuo 2023 (Cl-rich decomposes MORE easily, CV) and Gil-González 2022 (Cl-rich MORE stable under constriction) are NOT contradictory: the deciding variable is MECHANICAL CONSTRICTION K_eff. Weakly-constrained / intrinsic (Zuo CV, our K_eff=0): Cl-rich onset is equal-or-slightly-lower. Strongly-constrained (Gil-González 38 MPa cell -> high local K_eff at particle contacts): Cl-rich window widens more = more stable. Both captured by the K_eff axis."
-      },
-      "wu_2026_calendar_aging_FULL_PAPER_READ": {
-        "_paper": "Wu, Zhang, Wu, Xu, Zhou, H. Li, L. Chen, Fan Wu (IOP-CAS Beijing), Nano Energy 2026, 147, 111576, 'Calendar aging of sulfide all-solid-state batteries'. DOI 10.1016/j.nanoen.2025.111576. FULL PDF read 2026-06-08. THIS COMPLETES the oxidation-stability literature set.",
-        "design": "Calendar aging (open-circuit storage, 90 / 30 / -20 C, 5 days). Cathodes NCM811 vs LCO; SEs L6=Li6PS5Cl, L55=Li5.5PS4.5Cl1.5, L53=Li5.3PS4.3Cl1.7; anodes Li vs LiIn; SOC 0 vs 100. Capacity retention before/after storage (Table 1).",
-        "Table1_retention_after_90C": {
-          "NCM811/LiIn_100SOC": "L6 68% > L53 59% > L55 48% (Cl-poor L6 BEST; Cl-rich worse).",
-          "NCM811/LiIn_0SOC": "L6 98% > L55 93% > L53 88% (monotone: more Cl -> worse).",
-          "NCM811/Li_100SOC": "L6 48% (Li metal much worse than LiIn 68% due to dead-Li + side reactions).",
-          "NCM811/Li_0SOC": "L6 96%.",
-          "LCO/LiIn": "L6 100SOC 92%, 0SOC 100% (LCO far more stable than NCM811: no H2-H3 / lattice-O release).",
-          "LCO/Li": "L6 100SOC 87%, 0SOC 98%."
-        },
-        "key_findings": "(1) Cl content: L6 (lowest Cl) has BEST calendar/thermal stability; Cl-rich (L55/L53) WORSE -> genuine Cl-rich penalty for shelf life. (2) SOC dominates: 100 SOC (charged) >> 0 SOC -> high SOC drives self-discharge parasitic electrode-electrolyte reactions. (3) Cathode: NCM811 H2-H3 transition >4.15 V releases lattice O -> accelerates degradation; LCO suppresses it (LCO 92% vs NCM811 68%); suppressing H3 improves retention >=21%. (4) Anode: Li metal worse than LiIn (dead Li). (5) XPS after 90C: PS4^3- -> polysulfides(-S0-)/SOx/POx/Li2S/Li3P; lattice-O & metal-oxide impurities appear.",
-        "their_DFT_decomposition_consistent_with_ours": "Their MP-based prediction (Table S1/Fig S5): NCM811-L6 interface decomposes at high T to Li2SO4, Li3PO4, polysulfides, NiO, Ni3S2, TM sulfides/oxides; self-decomposition -> polysulfides. CONSISTENT with our interface_reactivity vs LiCoO2 (Co9S8 + Li2SO4 + Li3PO4 + Li2S + LiCl) — same sulfate/phosphate/TM-sulfide chemistry.",
-        "axis": "THERMAL / CALENDAR (shelf life) axis — DISTINCT from the electrochemical-window (Gil-González) and interface-cycling (Zuo) axes. On THIS axis Cl-rich LOSES. Plus SOC and cathode (H3/lattice-O) are stronger levers than Cl content. Motivates O-doping (Paper#2) and cathode/anode choice."
-      }
-    },
-    "MULTI_AXIS_CAPSTONE_oxidation_stability_DONE": {
-      "_status": "Oxidation-stability literature set COMPLETE (Gil-González 2022 + Zuo 2023 + Wu 2026, all full-text read 2026-06-08). The Cl-rich (modelc/LPSCl1.6) vs Cl-poor (comp1/Li6PS5Cl) 'stability' question is NOT one number — it is FOUR distinct axes, and Cl-rich wins on some, loses on others:",
-      "axis_1_intrinsic_0pressure_window": "DRAW. Our grand-potential ESW: oxidation onset ~identical (~2.1 V, S2--limited; S 3p VBM unchanged). Validated by Gil-González K_eff=0 (LPSCl1.5 1.70-2.40 V vs our 1.72-2.14). Cl does not move the bulk redox onset.",
-      "axis_2_mechanically_constrained_window": "Cl-rich WINS. Under K_eff=10-20 GPa the Cl-rich window widens MORE (Gil-González: LPSCl1.5 0.80-4.30 V vs Cl-free LPS 3.70 V) because Cl-bearing decomposition products (PCl3/SCl/SCl4) have higher molar volume -> bigger strain penalty. UNIFIES with our elastic/volume analysis (same strain physics).",
-      "axis_3_cathode_interface_cycling": "Cl-rich WINS (in cell). Zuo: Cl-rich decomposes more easily (CV 2x) BUT releases fewer e-/Li (Eq2 1 vs Eq1 2) + more inert LiCl + more SO2 gas/polysulfide + LESS solid sulfate/phosphate -> lower R_int growth (8.9 vs 13.2 Ohm h^-0.5) -> better cell (CE 79 vs 77, 50cyc 145 vs 133). Our grand-potential reproduces the fewer-Li/more-LiCl chemistry.",
-      "axis_4_thermal_calendar_aging": "Cl-rich LOSES. Wu 2026: 90C 5-day calendar retention NCM811/LiIn 100SOC L6 68% > L53 59% > L55 48% (more Cl -> worse shelf life). Also SOC (100>>0) and cathode (LCO>NCM811, H3/lattice-O) are STRONGER levers than Cl. Plus Cl-rich worse moisture stability (general). -> motivates O-doping (Paper#2).",
-      "bottom_line": "modelc (Cl-rich) gains conductivity (2.9->7.0 mS/cm) and, in a real constrained cell, equal-or-better oxidative interface behavior (axes 2,3); its genuine costs are calendar/thermal shelf life and moisture (axis 4). The intrinsic bulk redox onset is unchanged (axis 1, our calc). Do NOT say 'Cl-rich more/less oxidation-stable' without naming the axis."
-    },
-    "seminar_message_rev3": "Paper#1 conductivity-vs-stability, FINAL framing (oxidation literature complete): the Cl-rich 'stability' answer is FOUR axes. (1) Intrinsic 0-pressure redox onset: DRAW (~2.1 V, S2--limited; our grand-potential = Gil-González K_eff=0). (2) Mechanically-constrained window: Cl-rich WINS (Gil-González K_eff=20: 0.80-4.30 V; Cl-products high molar volume -> strain stabilization -> unifies with our elastic story). (3) Cathode-interface cycling: Cl-rich WINS in-cell (Zuo: fewer e-/Li + more inert LiCl + gas diversion -> lower R_int -> better cell; our grand-potential reproduces the chemistry). (4) Calendar/thermal/moisture: Cl-rich LOSES (Wu: L6 68% > L55 48% at 100SOC/90C), and SOC+cathode are bigger levers. Headline: modelc's conductivity gain comes WITHOUT an oxidation-window penalty (axes 1-3 neutral-to-favorable); the real cost is shelf life/moisture -> the explicit motivation for Paper#2 O-doping. Never state a Cl-stability trend without naming the axis.",
-    "_next_calc_TODO": "Implement constrained-ensemble ESW (method now fully known from Gil-González 2022 SI): extend tools/oxidation/esw_grand_potential.py to (1) --exclude_phases LiS4(mp-995393),SCl3(mp-1186934),Li5PS4Cl2(mp-1040450) to match their phase set [this alone should move our anodic onset 2.14 -> ~2.4 V = their K_eff=0]; (2) compute reaction volumetric strain eps_RXN=(V_products - V_SE)/V_SE from MP molar volumes (SE volume from our EOS V0: comp1 1016.62/52, modelc V0/n_atoms) and add the strain penalty V*eps_RXN*K_eff to each candidate decomposition, re-minimizing the grand-potential hull at K_eff=0/10/20 GPa (leading-order: penalize the K_eff=0 pathway; rigorous: Fitzhugh Lagrange re-min so the optimal product set itself changes with K_eff, as their Table S1 shows PCl3/P2S7/SCl at 0 GPa -> SCl4/Li2PS3/S at 20 GPa). Expected: comp1 vs modelc windows ~equal at K_eff=0, modelc widens MORE at 20 GPa (Cl-products higher molar volume) -> reproduces Gil-González with OUR cells. This closes the oxidation tension with our own calc AND unifies with the elastic analysis."
-  },
-  "caveats": [
-    "Closed-system SOLID-hull thermodynamics: NO gas phases (SO2/O2/Sx) -> cannot capture gas-evolution-driven interphase differences (Zuo's lower-R_int mechanism for Cl-rich).",
-    "0-pressure ESW only: the Cl-rich stability advantage is a mechanical-constriction (10-20 GPa) effect per Gil-González 2022 — needs a constrained-decomposition calc (TODO).",
-    "Intrinsic (bulk thermodynamic) ESW only — does NOT include electrochemical (bias-driven) interface decomposition; our InterfacialReactivity is CHEMICAL (zero-bias) only, hence carbon shows 0 reaction.",
-    "MP GGA_GGA+U energies; argyrodite ordered phase is ~tens meV/atom metastable in MP. The composition-based get_element_profile gives the window of the composition's hull-equilibrium assemblage (standard for non-MP / metastable phases).",
-    "modelc Li5.4PS4.4Cl1.6 treated as a composition (no MP entry, no MP-scale total energy of its own); window derived from MP hull phases at that composition — consistent with comp1's treatment."
-  ],
-  "constrained_esw_OUR_CALC": {
-    "_status": "AXIS 2 CLOSED WITH OUR OWN CALCULATION (2026-06-09). tools/oxidation/constrained_esw.py, strain-explicit Fitzhugh leading-order on MP GGA_GGA+U hull (LiS4/SCl3/Li5PS4Cl2 excluded). Reproduces Gil-González's Cl-rich-widens-more result for OUR comp1/modelc cells.",
-    "method": "Per composition, get the K_eff=0 oxidation/reduction onset reaction; compute reaction volume change DeltaV = V_products(solids) - V_SE from MP molar volumes (released/consumed Li -> anode reservoir, excluded from solid volume); apply Fitzhugh Eq.1 edge shift phi_ox += K_eff*DeltaV_ox/n_e (anodic up if products EXPAND), phi_red -= K_eff*DeltaV_red/n_e. V_SE from our EOS V0 (comp1 254.16, modelc 243.29 A^3/fu).",
-    "key_result_oxidation_reaction_strain": {
-      "comp1": "onset 2.26 V, Li6PS5Cl -> Li3PS4 + LiCl + S + 2 Li ; n_e=2.0, DeltaV=-9.2 A^3, eps_RXN=-0.036 (oxidation products SHRINK -> constriction does NOT suppress oxidation).",
-      "modelc": "onset 2.26 V, Li5.4PS4.4Cl1.6 -> Li3PS4 + 1.6 LiCl + 0.4 S + 0.8 Li ; n_e=0.8, DeltaV=+5.5 A^3, eps_RXN=+0.023 (oxidation products EXPAND, bulky 1.6 LiCl -> constriction SUPPRESSES oxidation -> anodic limit RISES)."
-    },
-    "window_vs_K_eff": {
-      "comp1": {"0": "1.24-2.26 (w 1.01)", "10": "0.63-1.97 (w 1.34)", "20": "0.02-1.68 (w 1.66)"},
-      "modelc": {"0": "1.24-2.26 (w 1.01)", "10": "0.53-2.69 (w 2.16)", "20": "-0.18-3.11 (w 3.30)"}
-    },
-    "headline": "At K_eff=0 comp1 and modelc are identical (1.24-2.26 V; matches Gil-González K_eff=0 ~1.7-2.4 and our 0-pressure grand-potential). Under constriction modelc WIDENS ~2x MORE than comp1 (w 3.30 vs 1.66 V at 20 GPa), and crucially modelc's ANODIC (oxidation) limit RISES 2.26->3.11 V while comp1's drops 2.26->1.68 V. Cause: modelc's Cl-rich oxidation decomposition EXPANDS (eps_RXN +0.023, bulky LiCl) so the strain penalty suppresses it, whereas comp1's oxidation products are denser (eps_RXN -0.036). Reproduces Gil-González's mechanism (Cl-bearing products higher molar volume -> larger reaction strain -> stronger constriction stabilization) with OUR cells -> Cl-rich (modelc) MORE oxidation-stable under mechanical constriction.",
-    "caveats": "Leading-order edge shift (not full Fitzhugh Lagrange re-minimisation); absolute voltages differ from Gil-González (different reference / linearization) but the comp1-vs-modelc trend, the anodic-rise mechanism, and the eps_RXN sign difference are robust. comp1's anodic DROP under constriction comes from its specific dense onset products (Li3PS4+LiCl+S); comp1 still net-widens via the reduction side.",
-    "data_path": "gabia:/data/work/repo/constrained_esw_results.json ; tool tools/oxidation/constrained_esw.py"
+  "nd_doped": {
+   "composition": "Li4.8Nd0.2PS4.1O0.3Cl1.6",
+   "_source_cell": "DFT-relaxed 120-atom Li48Nd2P10O3S41Cl16 / 10 (net charge 0); main-track Nd->Li, x=0.20",
+   "in_MP": false,
+   "_run": "gabia kserver116-27 2026-06-24, esw_grand_potential.py, 6-element Cl-Li-Nd-O-P-S hull (321 entries). Full log: tools/oxidation/esw_nd_result.txt",
+   "ocv_self_decomposition_V": 1.72,
+   "ocv_self_decomposition_rxn": "Li4.8Nd0.2PS4.1O0.3Cl1.6 -> 0.925 Li3PS4 + 0.1 Nd2S3 + 0.1 Li2S + 0.075 Li3PO4 + 1.6 LiCl",
+   "reduction_limit_V": 1.52,
+   "oxidation_limit_V": 1.92,
+   "oxidation_onset_rxn": "Li4.8Nd0.2PS4.1O0.3Cl1.6 -> 0.02 Nd10S19 + 0.925 Li3PS4 + 0.02 Li2S + 0.075 Li3PO4 + 1.6 LiCl + 0.16 Li",
+   "intrinsic_ESW_width_V": 0.4,
+   "key_breakpoints_V": {
+    "0.00": "+ 8 Li -> 0.3 Li2O + 0.8 Li3P + 4.1 Li2S + 0.2 NdP + 1.6 LiCl (ANODE: O->Li2O wide-gap 5.24; Li3P 0.8 still dominant=conductive; Nd->NdP conductive)",
+    "0.69": "+ 7.4 Li -> 0.725 Li3P + 4.1 Li2S + 0.2 NdP + 0.075 Li3PO4 + 1.6 LiCl (Li3PO4 5.73 appears, persists upward)",
+    "1.52": "+ 4.625 Li -> 0.1 Nd2S3 + 3.8 Li2S + 0.075 Li3PO4 + 1.6 LiCl + 0.925 P (reduction limit)",
+    "1.72": "-> 0.925 Li3PS4 + 0.1 Nd2S3 + 0.1 Li2S + 0.075 Li3PO4 + 1.6 LiCl (neutral OCV; Nd2S3 1.79 conductive + Li3PO4 wide-gap)",
+    "1.92": "-> 0.02 Nd10S19 + 0.925 Li3PS4 + 0.02 Li2S + 0.075 Li3PO4 + 1.6 LiCl + 0.16 Li (oxidation onset = Nd-sulfide, BELOW modelc 2.14)",
+    "2.30": "-> 0.1 Li9Nd2(PS4)5 + 0.425 Li3PS4 + 0.1 LiS4 + 0.075 Li3PO4 + 1.6 LiCl + 0.7 Li (polysulfide LiS4 starts)",
+    "2.45": "-> 0.075 NdPO4 + 0.4 P2S7 + 0.125 NdPS4 + 0.2 LiS4 + 1.6 LiCl + 3 Li (NdPO4 5.55 wide-gap APPEARS @2.45 V)",
+    "2.62": "-> 0.075 NdPO4 + 0.4625 P2S7 + 0.2156 LiS4 + 0.125 NdCl3 + 1.225 LiCl + 3.359 Li (NdCl3 4.30 wide-gap APPEARS @2.62 V)",
+    "3.08": "-> 0.45 P2S7 + 0.025 LiNd(PO3)4 + 0.175 NdCl3 + 1.075 LiCl + 0.95 S + 3.7 Li (LiNd(PO3)4 phosphate)",
+    "3.39": "-> 1.001 SCl + 0.01471 PCl5 + 0.4426 P2S7 + 0.025 LiNd(PO3)4 + 0.175 NdCl3 + 4.775 Li (Cl oxidation SCl+PCl5 same as modelc)",
+    "3.66": "-> 1.012 SCl + 0.01765 PCl5 + 0.03333 Nd(PO3)3 + 0.4412 P2S7 + 0.1667 NdCl3 + 4.8 Li (full ox)"
+   },
+   "interpretation_vs_modelc": {
+    "CONTROL_valid": "modelc re-run on the SAME 6-element hull reproduces the 4-element-hull modelc breakpoint-for-breakpoint -> every nd-vs-modelc difference is REAL chemistry (O/Nd), not a hull artifact.",
+    "CONFIRMED_SEI_story": "Direct convex-hull proof of the anode/cathode passivation claim: O->Li2O (5.24) at V=0 [anode]; Li3PO4 (5.73) persistent [bulk/GB]; NdPO4 (5.55)@2.45 + NdCl3 (4.30)@2.62 + LiNd(PO3)4@3.08 + Nd(PO3)3@3.66 [cathode]. modelc gives ONLY conductive P2S7/LiS4/S/SCl/PCl5. Nd anode-bad(NdP/Nd2S3 conductive)/cathode-good(NdPO4/NdCl3 wide-gap) split confirmed.",
+    "CORRECTION_window_narrows": "nd intrinsic ESW is NARROWER (0.40 V; 1.52-1.92) than modelc (0.90 V; 1.24-2.14), NOT wider. Nd-S/Nd-P/Nd-O redox is active inside modelc's window -> nd is intrinsically LESS stable (both ends move inward). The benefit is product electron-blocking (kinetic passivation), not a wider thermodynamic window -- parallel to the bulk-gap narrowing.",
+    "CORRECTION_O_dilute": "At x=0.2, O is too dilute to fully replace Li3P: V=0 gives 0.3 Li2O + 0.8 Li3P (Li3P still dominant). The wide-gap conversion is PARTIAL/ADDITIVE and scales with O; it is a GB/interphase percolation-breaking effect, not a bulk-fraction replacement.",
+    "CORRECTION_polysulfides_remain": "nd does NOT remove the polysulfides; P2S7/SCl/PCl5 still form at high V with NdPO4/NdCl3/Li3PO4 ALONGSIDE. NdPO4 first appears at 2.45 V; the 1.92-2.45 V band oxidizes to non-wide-gap products (Nd10S19/NdS2/Li9Nd2(PS4)5/LiS4). The passivation is a >=2.45 V (cathode operating) effect."
+   },
+   "caveat": "Nd-bearing hull energies are GGA+U(4f) -> product IDENTITY robust, absolute voltages +/-. DFT x=0.2 (10x experimental x=0.02) -> trend robust, dilute limit even more additive."
   }
+ },
+ "comparison_and_interpretation": {
+  "headline": "comp1 and modelc have essentially IDENTICAL intrinsic ESW (reduction ~1.2-1.7 V, OCV self-decomposition 1.72 V, oxidation onset 2.14 V). Cl-enrichment does NOT improve the oxidation limit because oxidation is S2- -> polysulfide LIMITED in both — S2- oxidizes at ~2.1 V, far below Cl- (~3.3 V).",
+  "oxidation_limit_identical": "Both oxidize first at 2.14 V via S2- -> LiS4 (polysulfide). Cl- is electrochemically inert until ~3.3 V (SCl) / ~3.4 V (PCl5, modelc only). Since S is present and is the VBM in both (S 3p), the oxidation onset is set by S, not Cl.",
+  "consistency_with_electronic_structure": "Fully consistent with the electronic/bonding inventory: S 3p is the VBM in BOTH (DOS/bands), ICOHP(P-S) -5.94 (comp1) vs -6.0 (modelc), ELF(P-S bridge) 0.946 vs 0.944. Same oxidation-susceptible species (S2-) and near-identical P-S covalency -> same oxidation onset.",
+  "quantitative_differences": {
+   "more_inert_LiCl": "modelc retains 1.6 LiCl vs comp1's 1.0 LiCl in the decomposition products — double the electrochemically inert halide fraction (LiCl stable to ~4 V).",
+   "milder_oxidation_extent": "At the 2.14 V oxidation onset, modelc releases only 0.7 Li vs comp1's 1.75 Li — the oxidative decomposition EXTENT (Li capacity reacted) is ~2.5x smaller in modelc, even though the onset VOLTAGE is identical. modelc has less oxidizable S per formula (4.4 vs 5 S; 1 P vs 1 P) and more of the S is locked behind the stable Li3PS4 + LiCl assemblage.",
+   "high_voltage_Cl_chemistry": "Only at >3.3 V does the higher Cl content of modelc manifest (SCl at 3.33 V, PCl5 at 3.39 V) — far above the operative S-limited window, so not relevant to practical stability."
+  },
+  "both_metastable_at_OCV": "BOTH decompose at OCV (~1.72 V) to Li3PS4 + Li2S + LiCl with NO Li exchange — i.e. neither has a true thermodynamic stability plateau; the as-synthesized argyrodite is metastable. Practical stability is kinetic (sluggish decomposition). This is the well-known limitation of sulfide solid electrolytes (Zhu/He/Mo 2015).",
+  "reduction_identical": "Below ~1.7 V both reduce identically: P5+ -> P3-/P0 (Li3PS4 -> P -> LiP -> Li3P) and S2- stays as Li2S, plus LiCl. At Li-metal contact (0 V): Li3P + Li2S + LiCl (the known SEI). Cl-enrichment does not change reduction chemistry.",
+  "_LITERATURE_RECONCILIATION_2026_06_08_rev2": {
+   "_correction_note": "REV2 (after reading the group's weekly report 2026-06-08): my first pass mischaracterized Zuo 2023 as 'Cl-rich simply worse'. The accurate, NUANCED finding is below. My grand-potential 'milder extent / more inert LiCl' result actually ALIGNS with the beneficial part of Zuo, not against it.",
+   "zuo_2023_FULL_PAPER_READ": {
+    "_paper": "Zuo, Walther, Teo, Rueß, Wang, Rohnke, Schröder, Nazar, Janek (Janek group, Giessen + Nazar, Waterloo), Angew. Chem. Int. Ed. 2023, 62, e202213228, 'Impact of the Chlorination of Lithium Argyrodites on the Electrolyte/Cathode Interface in Solid-State Batteries'. DOI 10.1002/anie.202213228. FULL PDF read 2026-06-08. NOTE their Cl-rich = Li5.5PS4.5Cl1.5 (LPSCl1.5); our modelc = Li5.4PS4.4Cl1.6 (close).",
+    "their_decomposition_reactions": "Eq(1) Li6PS5Cl -> LiCl + Li3PS4 + S + 2Li+ + 2e- (5e- per f.u. at full oxidation incl. Eq3). Eq(2) Li5.5PS4.5Cl1.5 -> 1.5 LiCl + Li3PS4 + 0.5 S + Li+ + e- (4e- per f.u.). Eq(3) Li3PS4 -> 0.5 P2S5 + 1.5 S + 3Li+ + 3e- (further oxidation). KEY: Cl-rich releases FEWER electrons/Li at first oxidation (1 vs 2) and makes MORE LiCl (1.5 vs 1.0).",
+    "VALIDATES_our_grand_potential": "Our 0-pressure ESW oxidation onset reactions REPRODUCE Zuo's Eq(1)/(2) almost exactly: comp1 -> Li3PS4 + LiCl + S(as 0.25 LiS4) + 1.75 Li (~Zuo Eq1's 2 Li + LiCl + Li3PS4 + S); modelc -> Li3PS4 + 1.6 LiCl + S(as 0.1 LiS4) + 0.7 Li (~Zuo Eq2's 1 Li + 1.5 LiCl + Li3PS4 + 0.5 S). Our 'modelc releases fewer Li (0.7 vs 1.75) and 2x more LiCl' = Zuo's electron count (1 vs 2 e-) and LiCl (1.5 vs 1.0). STRONG cross-validation of our grand-potential decomposition chemistry.",
+    "experiments": {
+     "conductivity_mScm": "Li6PS5Cl 2.9 ; Li5.5PS4.5Cl1.5 7.0 (Cl-rich higher).",
+     "CV": "Li5.5PS4.5Cl1.5/C shows ~2x higher current density than Li6PS5Cl/C, maxima at the SAME potentials -> (a) Cl-rich MORE susceptible to electrochemical decomposition / lower oxidation onset, (b) oxidation MECHANISM is the same. Correlates with DSC/TGA: Cl-rich melt/crystallization shifts lower (523/493C vs 535/532C), mass loss onset 315C -> thermodynamically less stable.",
+     "interface_resistance_R_cat": "vs NCM85, held 3.7 V: Li6PS5Cl steep sqrt(t) increase, rate const 13.2 Ohm*h^-0.5 ; Li5.5PS4.5Cl1.5 parabolic, rate const 8.9 Ohm*h^-0.5 -> Cl-rich interface degradation SLOWER.",
+     "cell_performance_NCM85": "Initial charge/discharge: Li6PS5Cl 215/165 (CE 77%) ; Li5.5PS4.5Cl1.5 215/170 (CE 79%). After 50 cycles: 133 vs 145 mAh/g. Cl-rich BETTER.",
+     "ToF_SIMS_after_aging_3.7V_60h": "S- and Cl- increase strongly for BOTH (decomposition). Oxygen-involving solid byproducts phosphate (PO2-/PO3-) and sulfate/sulfite (SO2-/SO3-): HIGHER for Li6PS5Cl, LOWER for Li5.5PS4.5Cl1.5. Polysulfides (S4+S5+S6): HIGHER for Cl-rich. => Cl-rich forms LESS solid oxygenated (resistive) species, MORE gas/polysulfide.",
+     "DEMS_gas": "O2 evolution similar (6.7 vs 6.8 umol/g_NCM, from NCM lattice at SOC>80%); Cl-rich evolves more SO2 gas.",
+     "mechanism_Fig7": "< 4.2 V vs Li/Li+: electrochemical decomposition (delithiation) of the argyrodite dominates. >= 4.2 V vs Li/Li+: OXYGEN-INVOLVING degradation dominates (O2 released from NCM lattice reacts with the SE -> SO2 gas + solid sulfate/phosphate at interface). Cl-rich routes more to gas/polysulfide, less to solid sulfate/phosphate -> thinner/more-homogeneous Li-phosphate/sulfate layer -> lower R_int -> better cell."
+    },
+    "net_message": "Cl-rich decomposes MORE easily (CV 2x, DSC/TGA less stable, lower onset) BUT its decomposition is MILDER in solid-resistive-byproduct terms (fewer electrons/Li released per f.u., more inert LiCl, more gas/polysulfide, less solid sulfate/phosphate) -> lower interface resistance growth (8.9 vs 13.2) -> BETTER cell performance (CE 79 vs 77, 50cyc 145 vs 133). NOT simply 'Cl-rich worse'."
+   },
+   "our_interface_reactivity_calc_2026_06_08": "tools/oxidation/interface_reactivity.py (pymatgen InterfacialReactivity, use_hull_energy, MP GGA_GGA+U). vs LiCoO2: comp1 min dE_rxn = -0.3227 eV/atom, modelc = -0.3308 (modelc +2.5% MORE reactive) -> matches Zuo CV 'Cl-rich decomposes more easily'. Products: both give the SAME solid OXYGENATED set Co9S8 + 0.1134 Li2SO4 (sulfate) + 0.2577 Li3PO4 (phosphate); modelc only trades 0.155 Li2S for 0.155 extra inert LiCl. vs carbon: BOTH 0.0 (C->C inert) -> Zuo's carbon-interface decomposition is electrochemical (bias-driven), NOT a chemical reaction. KEY LIMITATION (now precisely characterized by Zuo): the real divergence is that Cl-rich routes MORE to SO2 GAS + polysulfide and LESS to solid sulfate (SO_x) / phosphate (PO_x) [Zuo ToF-SIMS Fig4: PO2-/PO3-, SO2-/SO3- LOWER for Cl-rich]. Our closed SOLID-hull calc forces the SAME Li2SO4/Li3PO4 solids for both (no SO2 gas phase in MP, and the sulfate/phosphate need O from NCM = oxygen-involving >4.2V regime) -> it captures 'more reactive' but NOT the beneficial gas-diversion that lowers Cl-rich R_int. To model that one would need gas-phase (SO2/O2) chempots + the NCM O-release at >4.2V.",
+   "reading_of_our_extent_result_CORRECTED": "Our grand-potential finding that modelc releases LESS Li at the oxidation onset (0.7 vs 1.75) and makes 2x more inert LiCl ALIGNS WITH the BENEFICIAL side of Zuo 2023 (milder / more-inert solid decomposition -> lower R_int -> better cell). My earlier (first-pass) claim that this 'is why the interface keeps decomposing / a disadvantage' was WRONG and is retracted.",
+   "gil_gonzalez_2022_FULL_PAPER_READ": {
+    "_paper": "Gil-González, Ye, Wang, Shadike, Xu, Hu, Li (X. Li group, Harvard), Energy Storage Mater. 2022, 45, 484-493, 'Synergistic effects of chlorine substitution in sulfide electrolyte solid state battery'. DOI 10.1016/j.ensm.2021.12.008. FULL PDF + SI read 2026-06-08.",
+    "method_constrained_ensemble": "CONSTRAINED-ENSEMBLE voltage window (NOT plain grand-potential). Eq(1): d_sD G' = (G_D - G_SE) + V*eps_RXN*K_eff, where (G_D - G_SE) = chemical grand-potential decomposition energy (same as our get_element_profile), and V*eps_RXN*K_eff = STRAIN penalty (V molar volume, eps_RXN = reaction volumetric strain = (V_products - V_SE)/V_SE, K_eff = effective bulk modulus = mechanical-constriction level). Solved by Fitzhugh et al. Lagrange minimization (Small 2019, 1901470) at K_eff = 0, 10, 20 GPa. A volume-EXPANDING decomposition (eps_RXN>0) is penalized under constriction -> raises decomposition energy -> stabilizes the SE -> WIDENS the window. AIMD: VASP PAW 300 eV, Gamma-only, NVT Nose-Hoover, 100 ps / 2 fs for conductivity.",
+    "phase_set_exclusions": "They EXCLUDE LiS4 (mp-995393), SCl3 (mp-1186934), Li5PS4Cl2 (mp-1040450) from MP as non-physical / unlikely. OUR esw_grand_potential.py INCLUDED LiS4 (it appeared as '0.25 LiS4' at our 2.14 V onset). Excluding LiS4 should shift our oxidation onset UP toward their 2.40 V -> better 0-pressure agreement (TODO: add --exclude_phases).",
+    "their_numbers": {
+     "LPSCl1.5_Keff0_stable_window_V": "1.70 - 2.40 V (Table S1). Just above 2.40 V: S + LiCl + P2S7 (Cl-bearing SCl/PCl3 appear at higher V). Below 1.70 V: P / LiP / Li3P + LiCl + Li2S (Cl-rich reduction route).",
+     "LPSCl1.5_Keff20_stable_window_V": "0.80 - 4.30 V (Table S1). Constriction widens ~+1.9 V anodic, ~-0.9 V cathodic. High-V products SCl4 + Li2PS3 + S (Cl-bearing, high molar volume = bigger strain penalty).",
+     "LPS_Cl_free_Keff20_anodic_limit_V": "~3.70 V (Table S2) — LOWER than LPSCl1.5's 4.30 V. => Cl-rich is MORE stabilized by constriction (its Cl-bearing decomposition products PCl3 / SCl / SCl4 have higher molar volume -> higher reaction strain -> bigger strain penalty).",
+     "experimental_windows_intro": "LPSCl1.5 ~1.8 - 2.5 V; LPSCl1.0 (= Li6PS5Cl = comp1) ~1.3 - 2.3 V (their cells: 125 MPa formation + 38 MPa during test). Cl-rich window slightly higher / wider experimentally too."
+    },
+    "validation_of_our_calc": "Our grand-potential ESW (0 pressure): modelc OCV self-decomp 1.72 V, oxidation onset 2.14 V; comp1 the same. Gil-González K_eff=0 LPSCl1.5 stable window = 1.70 - 2.40 V. AGREEMENT IS EXCELLENT on the cathodic / OCV edge (1.72 vs 1.70) and good on the anodic edge (2.14 vs 2.40 — the 0.26 V gap is entirely the LiS4 inclusion). => our 0-pressure calc CORRECTLY reproduces the UNCONSTRICTED (K_eff=0) limit; the 'identical comp1 vs modelc onset' we found is the genuine 0-pressure physics, matching their flat 0-GPa curve (Fig 1a).",
+    "unified_picture": "The Cl-rich oxidation-stability ADVANTAGE is a MECHANICAL-CONSTRICTION effect: at K_eff=0 the windows are similar across Cl (our calc + their 0 GPa), but under K_eff = 10 - 20 GPa the Cl-rich window widens MORE because Cl-bearing decomposition products (PCl3, SCl, SCl4) have larger molar volume -> larger reaction strain -> larger strain penalty -> stronger metastable stabilization. This UNIFIES Paper#1's mechanical and oxidation stories: the SAME volume / strain physics that governs elastic response gates the constrained electrochemical window.",
+    "reconciles_zuo_vs_gilgonzalez": "Zuo 2023 (Cl-rich decomposes MORE easily, CV) and Gil-González 2022 (Cl-rich MORE stable under constriction) are NOT contradictory: the deciding variable is MECHANICAL CONSTRICTION K_eff. Weakly-constrained / intrinsic (Zuo CV, our K_eff=0): Cl-rich onset is equal-or-slightly-lower. Strongly-constrained (Gil-González 38 MPa cell -> high local K_eff at particle contacts): Cl-rich window widens more = more stable. Both captured by the K_eff axis."
+   },
+   "wu_2026_calendar_aging_FULL_PAPER_READ": {
+    "_paper": "Wu, Zhang, Wu, Xu, Zhou, H. Li, L. Chen, Fan Wu (IOP-CAS Beijing), Nano Energy 2026, 147, 111576, 'Calendar aging of sulfide all-solid-state batteries'. DOI 10.1016/j.nanoen.2025.111576. FULL PDF read 2026-06-08. THIS COMPLETES the oxidation-stability literature set.",
+    "design": "Calendar aging (open-circuit storage, 90 / 30 / -20 C, 5 days). Cathodes NCM811 vs LCO; SEs L6=Li6PS5Cl, L55=Li5.5PS4.5Cl1.5, L53=Li5.3PS4.3Cl1.7; anodes Li vs LiIn; SOC 0 vs 100. Capacity retention before/after storage (Table 1).",
+    "Table1_retention_after_90C": {
+     "NCM811/LiIn_100SOC": "L6 68% > L53 59% > L55 48% (Cl-poor L6 BEST; Cl-rich worse).",
+     "NCM811/LiIn_0SOC": "L6 98% > L55 93% > L53 88% (monotone: more Cl -> worse).",
+     "NCM811/Li_100SOC": "L6 48% (Li metal much worse than LiIn 68% due to dead-Li + side reactions).",
+     "NCM811/Li_0SOC": "L6 96%.",
+     "LCO/LiIn": "L6 100SOC 92%, 0SOC 100% (LCO far more stable than NCM811: no H2-H3 / lattice-O release).",
+     "LCO/Li": "L6 100SOC 87%, 0SOC 98%."
+    },
+    "key_findings": "(1) Cl content: L6 (lowest Cl) has BEST calendar/thermal stability; Cl-rich (L55/L53) WORSE -> genuine Cl-rich penalty for shelf life. (2) SOC dominates: 100 SOC (charged) >> 0 SOC -> high SOC drives self-discharge parasitic electrode-electrolyte reactions. (3) Cathode: NCM811 H2-H3 transition >4.15 V releases lattice O -> accelerates degradation; LCO suppresses it (LCO 92% vs NCM811 68%); suppressing H3 improves retention >=21%. (4) Anode: Li metal worse than LiIn (dead Li). (5) XPS after 90C: PS4^3- -> polysulfides(-S0-)/SOx/POx/Li2S/Li3P; lattice-O & metal-oxide impurities appear.",
+    "their_DFT_decomposition_consistent_with_ours": "Their MP-based prediction (Table S1/Fig S5): NCM811-L6 interface decomposes at high T to Li2SO4, Li3PO4, polysulfides, NiO, Ni3S2, TM sulfides/oxides; self-decomposition -> polysulfides. CONSISTENT with our interface_reactivity vs LiCoO2 (Co9S8 + Li2SO4 + Li3PO4 + Li2S + LiCl) — same sulfate/phosphate/TM-sulfide chemistry.",
+    "axis": "THERMAL / CALENDAR (shelf life) axis — DISTINCT from the electrochemical-window (Gil-González) and interface-cycling (Zuo) axes. On THIS axis Cl-rich LOSES. Plus SOC and cathode (H3/lattice-O) are stronger levers than Cl content. Motivates O-doping (Paper#2) and cathode/anode choice."
+   }
+  },
+  "MULTI_AXIS_CAPSTONE_oxidation_stability_DONE": {
+   "_status": "Oxidation-stability literature set COMPLETE (Gil-González 2022 + Zuo 2023 + Wu 2026, all full-text read 2026-06-08). The Cl-rich (modelc/LPSCl1.6) vs Cl-poor (comp1/Li6PS5Cl) 'stability' question is NOT one number — it is FOUR distinct axes, and Cl-rich wins on some, loses on others:",
+   "axis_1_intrinsic_0pressure_window": "DRAW. Our grand-potential ESW: oxidation onset ~identical (~2.1 V, S2--limited; S 3p VBM unchanged). Validated by Gil-González K_eff=0 (LPSCl1.5 1.70-2.40 V vs our 1.72-2.14). Cl does not move the bulk redox onset.",
+   "axis_2_mechanically_constrained_window": "Cl-rich WINS. Under K_eff=10-20 GPa the Cl-rich window widens MORE (Gil-González: LPSCl1.5 0.80-4.30 V vs Cl-free LPS 3.70 V) because Cl-bearing decomposition products (PCl3/SCl/SCl4) have higher molar volume -> bigger strain penalty. UNIFIES with our elastic/volume analysis (same strain physics).",
+   "axis_3_cathode_interface_cycling": "Cl-rich WINS (in cell). Zuo: Cl-rich decomposes more easily (CV 2x) BUT releases fewer e-/Li (Eq2 1 vs Eq1 2) + more inert LiCl + more SO2 gas/polysulfide + LESS solid sulfate/phosphate -> lower R_int growth (8.9 vs 13.2 Ohm h^-0.5) -> better cell (CE 79 vs 77, 50cyc 145 vs 133). Our grand-potential reproduces the fewer-Li/more-LiCl chemistry.",
+   "axis_4_thermal_calendar_aging": "Cl-rich LOSES. Wu 2026: 90C 5-day calendar retention NCM811/LiIn 100SOC L6 68% > L53 59% > L55 48% (more Cl -> worse shelf life). Also SOC (100>>0) and cathode (LCO>NCM811, H3/lattice-O) are STRONGER levers than Cl. Plus Cl-rich worse moisture stability (general). -> motivates O-doping (Paper#2).",
+   "bottom_line": "modelc (Cl-rich) gains conductivity (2.9->7.0 mS/cm) and, in a real constrained cell, equal-or-better oxidative interface behavior (axes 2,3); its genuine costs are calendar/thermal shelf life and moisture (axis 4). The intrinsic bulk redox onset is unchanged (axis 1, our calc). Do NOT say 'Cl-rich more/less oxidation-stable' without naming the axis."
+  },
+  "seminar_message_rev3": "Paper#1 conductivity-vs-stability, FINAL framing (oxidation literature complete): the Cl-rich 'stability' answer is FOUR axes. (1) Intrinsic 0-pressure redox onset: DRAW (~2.1 V, S2--limited; our grand-potential = Gil-González K_eff=0). (2) Mechanically-constrained window: Cl-rich WINS (Gil-González K_eff=20: 0.80-4.30 V; Cl-products high molar volume -> strain stabilization -> unifies with our elastic story). (3) Cathode-interface cycling: Cl-rich WINS in-cell (Zuo: fewer e-/Li + more inert LiCl + gas diversion -> lower R_int -> better cell; our grand-potential reproduces the chemistry). (4) Calendar/thermal/moisture: Cl-rich LOSES (Wu: L6 68% > L55 48% at 100SOC/90C), and SOC+cathode are bigger levers. Headline: modelc's conductivity gain comes WITHOUT an oxidation-window penalty (axes 1-3 neutral-to-favorable); the real cost is shelf life/moisture -> the explicit motivation for Paper#2 O-doping. Never state a Cl-stability trend without naming the axis.",
+  "_next_calc_TODO": "Implement constrained-ensemble ESW (method now fully known from Gil-González 2022 SI): extend tools/oxidation/esw_grand_potential.py to (1) --exclude_phases LiS4(mp-995393),SCl3(mp-1186934),Li5PS4Cl2(mp-1040450) to match their phase set [this alone should move our anodic onset 2.14 -> ~2.4 V = their K_eff=0]; (2) compute reaction volumetric strain eps_RXN=(V_products - V_SE)/V_SE from MP molar volumes (SE volume from our EOS V0: comp1 1016.62/52, modelc V0/n_atoms) and add the strain penalty V*eps_RXN*K_eff to each candidate decomposition, re-minimizing the grand-potential hull at K_eff=0/10/20 GPa (leading-order: penalize the K_eff=0 pathway; rigorous: Fitzhugh Lagrange re-min so the optimal product set itself changes with K_eff, as their Table S1 shows PCl3/P2S7/SCl at 0 GPa -> SCl4/Li2PS3/S at 20 GPa). Expected: comp1 vs modelc windows ~equal at K_eff=0, modelc widens MORE at 20 GPa (Cl-products higher molar volume) -> reproduces Gil-González with OUR cells. This closes the oxidation tension with our own calc AND unifies with the elastic analysis."
+ },
+ "caveats": [
+  "Closed-system SOLID-hull thermodynamics: NO gas phases (SO2/O2/Sx) -> cannot capture gas-evolution-driven interphase differences (Zuo's lower-R_int mechanism for Cl-rich).",
+  "0-pressure ESW only: the Cl-rich stability advantage is a mechanical-constriction (10-20 GPa) effect per Gil-González 2022 — needs a constrained-decomposition calc (TODO).",
+  "Intrinsic (bulk thermodynamic) ESW only — does NOT include electrochemical (bias-driven) interface decomposition; our InterfacialReactivity is CHEMICAL (zero-bias) only, hence carbon shows 0 reaction.",
+  "MP GGA_GGA+U energies; argyrodite ordered phase is ~tens meV/atom metastable in MP. The composition-based get_element_profile gives the window of the composition's hull-equilibrium assemblage (standard for non-MP / metastable phases).",
+  "modelc Li5.4PS4.4Cl1.6 treated as a composition (no MP entry, no MP-scale total energy of its own); window derived from MP hull phases at that composition — consistent with comp1's treatment."
+ ],
+ "constrained_esw_OUR_CALC": {
+  "_status": "AXIS 2 CLOSED WITH OUR OWN CALCULATION (2026-06-09). tools/oxidation/constrained_esw.py, strain-explicit Fitzhugh leading-order on MP GGA_GGA+U hull (LiS4/SCl3/Li5PS4Cl2 excluded). Reproduces Gil-González's Cl-rich-widens-more result for OUR comp1/modelc cells.",
+  "method": "Per composition, get the K_eff=0 oxidation/reduction onset reaction; compute reaction volume change DeltaV = V_products(solids) - V_SE from MP molar volumes (released/consumed Li -> anode reservoir, excluded from solid volume); apply Fitzhugh Eq.1 edge shift phi_ox += K_eff*DeltaV_ox/n_e (anodic up if products EXPAND), phi_red -= K_eff*DeltaV_red/n_e. V_SE from our EOS V0 (comp1 254.16, modelc 243.29 A^3/fu).",
+  "key_result_oxidation_reaction_strain": {
+   "comp1": "onset 2.26 V, Li6PS5Cl -> Li3PS4 + LiCl + S + 2 Li ; n_e=2.0, DeltaV=-9.2 A^3, eps_RXN=-0.036 (oxidation products SHRINK -> constriction does NOT suppress oxidation).",
+   "modelc": "onset 2.26 V, Li5.4PS4.4Cl1.6 -> Li3PS4 + 1.6 LiCl + 0.4 S + 0.8 Li ; n_e=0.8, DeltaV=+5.5 A^3, eps_RXN=+0.023 (oxidation products EXPAND, bulky 1.6 LiCl -> constriction SUPPRESSES oxidation -> anodic limit RISES)."
+  },
+  "window_vs_K_eff": {
+   "comp1": {
+    "0": "1.24-2.26 (w 1.01)",
+    "10": "0.63-1.97 (w 1.34)",
+    "20": "0.02-1.68 (w 1.66)"
+   },
+   "modelc": {
+    "0": "1.24-2.26 (w 1.01)",
+    "10": "0.53-2.69 (w 2.16)",
+    "20": "-0.18-3.11 (w 3.30)"
+   }
+  },
+  "headline": "At K_eff=0 comp1 and modelc are identical (1.24-2.26 V; matches Gil-González K_eff=0 ~1.7-2.4 and our 0-pressure grand-potential). Under constriction modelc WIDENS ~2x MORE than comp1 (w 3.30 vs 1.66 V at 20 GPa), and crucially modelc's ANODIC (oxidation) limit RISES 2.26->3.11 V while comp1's drops 2.26->1.68 V. Cause: modelc's Cl-rich oxidation decomposition EXPANDS (eps_RXN +0.023, bulky LiCl) so the strain penalty suppresses it, whereas comp1's oxidation products are denser (eps_RXN -0.036). Reproduces Gil-González's mechanism (Cl-bearing products higher molar volume -> larger reaction strain -> stronger constriction stabilization) with OUR cells -> Cl-rich (modelc) MORE oxidation-stable under mechanical constriction.",
+  "caveats": "Leading-order edge shift (not full Fitzhugh Lagrange re-minimisation); absolute voltages differ from Gil-González (different reference / linearization) but the comp1-vs-modelc trend, the anodic-rise mechanism, and the eps_RXN sign difference are robust. comp1's anodic DROP under constriction comes from its specific dense onset products (Li3PS4+LiCl+S); comp1 still net-widens via the reduction side.",
+  "data_path": "gabia:/data/work/repo/constrained_esw_results.json ; tool tools/oxidation/constrained_esw.py"
+ },
+ "_provenance_audit": {
+  "audited": "2026-08-12",
+  "audited_by": "db provenance sweep (tools/db/validate_canonical.py --cited 로 대상 선정)",
+  "generator": "(없음 — 종합 대장. 값은 tools/oxidation/esw_grand_potential.py 계보)",
+  "source": "(MP GGA_GGA+U hull 질의) · 로그 tools/oxidation/esw_nd_result.txt",
+  "collected": "2026-06-08",
+  "confidence": "high",
+  "note": "참조된 interface_reactivity_nd.json 은 repo 에 없다(미회수)",
+  "caveat": "이 블록은 **사후 추적** 결과다. 원본 계산 시점에 기록된 것이 아니라 repo·git·파일 내용에서 역추적했다. confidence 를 같이 보라."
+ }
 }

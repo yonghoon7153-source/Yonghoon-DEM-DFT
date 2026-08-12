@@ -73,5 +73,15 @@
    "verdict": "약함 = 바닥 Cu→VGCF; 차별점: VGCF가 Cu 구조역할하되 과잉 lithiophilic 앵커 없이"
   }
  },
- "cdd_planned": "graphene / hbn / gallery_2L2L 3종 CDD (ρ_complex − ρ_host − ρ_Li) — Liu (f)(g) 대응 비교그림. VGCF가 전자받개(Cu역할), h-BN 수동캡 시각화."
+ "cdd_planned": "graphene / hbn / gallery_2L2L 3종 CDD (ρ_complex − ρ_host − ρ_Li) — Liu (f)(g) 대응 비교그림. VGCF가 전자받개(Cu역할), h-BN 수동캡 시각화.",
+ "_provenance_audit": {
+  "audited": "2026-08-12",
+  "audited_by": "db provenance sweep (tools/db/validate_canonical.py --cited 로 대상 선정)",
+  "generator": "(없음 — 손으로 작성)",
+  "source": "kgy:~/work/vgcf_hbn/ (tools/vgcf_hbn/run_qe_kgy.sh WORK 기본값에서 유추)",
+  "collected": "2026-07-22",
+  "confidence": "medium",
+  "note": "headline 이 사후 자기철회 — CI-NEB 결과가 '1L 모델 정당' 절을 뒤집었다",
+  "caveat": "이 블록은 **사후 추적** 결과다. 원본 계산 시점에 기록된 것이 아니라 repo·git·파일 내용에서 역추적했다. confidence 를 같이 보라."
+ }
 }

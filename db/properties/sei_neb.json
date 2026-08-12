@@ -1,80 +1,90 @@
 {
-  "property": "sei_li_migration_barrier_neb",
-  "retracted": true,
-  "retraction_date": "2026-08-11",
-  "retraction_reason": "⛔ 이 파일의 **모든 값을 인용하지 않는다.** 두 가지가 겹쳤다:\n① 전하 규약 오류 — 입력이 tot_charge=+1 이었다. QE 규약에서 +1 은 전자 **부족**이므로 V_Li⁻(닫힌 껍질)를 만들려던 의도와 반대다. 전자 수 검산(Li₂S 216전자 셀): 우리 212(정공 2개) vs 의도 214(정공 0). 올바른 값은 tot_charge=−1 이다.\n② 끝점 미이완 — 벌크만 vc-relax 하고 Li 공공 끝점은 이완하지 않은 채 NEB 에 넣었다. 미이완 끝점이 경로 최고점이 되면 NEB 은 끝점을 고정하므로 내리막만 남아 Ea 가 0 으로 붕괴한다 (li3p 의 Ea=0 이 그 사례).\n→ 두 결함 모두 2026-08-11 에 수정됐고, 재계산 전까지 이 값들은 무효다.",
-  "superseded_by": "재계산 예정 — tools/sei/build_neb_inputs.py (tot_charge=−1 · 끝점 이완 · no-CI→CI 2단계)",
-  "method_OLD_INVALID": "QE CI-NEB (neb.x). 공공 매개 Li 홉, tot_charge=+1 (Li⁺ 공공, jellium). ecutwfc 60 / ecutrho 480 Ry — 갭 계산과 같은 사양.",
-  "warning": "⚠ jellium 보정은 유한 셀 근사다 — 절대값은 셀 수렴 확인 뒤 인용할 것. **상 사이 비교**가 이 값의 용도다. ⛔ BVSE 프록시 값과 같은 표에 놓지 말 것(단위는 같아도 다른 양이다).",
-  "n_citable": 0,
-  "results_OLD_INVALID": {
-    "li2s": {
-      "tag": "li2s",
-      "status": "converged",
-      "n_path_steps": 18,
-      "Ea_forward_eV": 0.272161,
-      "Ea_backward_eV": 0.272161,
-      "num_of_images": 7,
-      "CI_scheme": "auto",
-      "tot_charge": "+1 (Li+ vacancy)",
-      "endpoints_symmetry_equivalent": true,
-      "li_orbits": {
-        "spacegroup": "Fm-3m",
-        "n_li_orbits": 1,
-        "wyckoffs": [
-          "c"
-        ]
-      },
-      "supercell": [
-        2,
-        2,
-        2
-      ],
-      "min_cell_A": 8.02,
-      "asymmetry_eV": 0.0,
-      "Ea_effective_eV": 0.272161,
-      "site_energy_diff_eV": null,
-      "symmetric": true,
-      "blocking_checks": [],
-      "citable": true
-    },
-    "li3p": {
-      "tag": "li3p",
-      "status": "converged",
-      "n_path_steps": 38,
-      "Ea_forward_eV": 0.0,
-      "Ea_backward_eV": -0.0,
-      "num_of_images": 7,
-      "CI_scheme": "auto",
-      "tot_charge": "+1 (Li+ vacancy)",
-      "endpoints_symmetry_equivalent": false,
-      "li_orbits": {
-        "spacegroup": "P6_3/mmc",
-        "n_li_orbits": 2,
-        "wyckoffs": [
-          "b",
-          "f"
-        ]
-      },
-      "supercell": [
-        2,
-        2,
-        2
-      ],
-      "min_cell_A": 8.44,
-      "asymmetry_eV": 0.0,
-      "Ea_effective_eV": 0.0,
-      "site_energy_diff_eV": 0.0,
-      "symmetric": null,
-      "blocking_checks": [
-        "유효 장벽이 0.0000 eV — **0 은 측정이 아니다.** 경로 붕괴를 의심할 것: ① 끝점 두 개가 같은 구조인가 ② 움직이는 Li 가 실제로 이동했나 ③ 이미지 사이 최대 변위가 0 이 아닌가. neb.dat 와 끝점 좌표를 직접 볼 것",
-        "비등가 Li 자리(Wyckoff 2종)인데 자리 에너지 차가 0 이다 — 끝점 생성이 실제로 두 자리를 잡았는지 확인할 것"
-      ],
-      "citable": false
-    },
-    "li3po4g": {
-      "tag": "li3po4g",
-      "status": "not_started"
-    }
+ "property": "sei_li_migration_barrier_neb",
+ "retracted": true,
+ "retraction_date": "2026-08-11",
+ "retraction_reason": "⛔ 이 파일의 **모든 값을 인용하지 않는다.** 두 가지가 겹쳤다:\n① 전하 규약 오류 — 입력이 tot_charge=+1 이었다. QE 규약에서 +1 은 전자 **부족**이므로 V_Li⁻(닫힌 껍질)를 만들려던 의도와 반대다. 전자 수 검산(Li₂S 216전자 셀): 우리 212(정공 2개) vs 의도 214(정공 0). 올바른 값은 tot_charge=−1 이다.\n② 끝점 미이완 — 벌크만 vc-relax 하고 Li 공공 끝점은 이완하지 않은 채 NEB 에 넣었다. 미이완 끝점이 경로 최고점이 되면 NEB 은 끝점을 고정하므로 내리막만 남아 Ea 가 0 으로 붕괴한다 (li3p 의 Ea=0 이 그 사례).\n→ 두 결함 모두 2026-08-11 에 수정됐고, 재계산 전까지 이 값들은 무효다.",
+ "superseded_by": "재계산 예정 — tools/sei/build_neb_inputs.py (tot_charge=−1 · 끝점 이완 · no-CI→CI 2단계)",
+ "method_OLD_INVALID": "QE CI-NEB (neb.x). 공공 매개 Li 홉, tot_charge=+1 (Li⁺ 공공, jellium). ecutwfc 60 / ecutrho 480 Ry — 갭 계산과 같은 사양.",
+ "warning": "⚠ jellium 보정은 유한 셀 근사다 — 절대값은 셀 수렴 확인 뒤 인용할 것. **상 사이 비교**가 이 값의 용도다. ⛔ BVSE 프록시 값과 같은 표에 놓지 말 것(단위는 같아도 다른 양이다).",
+ "n_citable": 0,
+ "results_OLD_INVALID": {
+  "li2s": {
+   "tag": "li2s",
+   "status": "converged",
+   "n_path_steps": 18,
+   "Ea_forward_eV": 0.272161,
+   "Ea_backward_eV": 0.272161,
+   "num_of_images": 7,
+   "CI_scheme": "auto",
+   "tot_charge": "+1 (Li+ vacancy)",
+   "endpoints_symmetry_equivalent": true,
+   "li_orbits": {
+    "spacegroup": "Fm-3m",
+    "n_li_orbits": 1,
+    "wyckoffs": [
+     "c"
+    ]
+   },
+   "supercell": [
+    2,
+    2,
+    2
+   ],
+   "min_cell_A": 8.02,
+   "asymmetry_eV": 0.0,
+   "Ea_effective_eV": 0.272161,
+   "site_energy_diff_eV": null,
+   "symmetric": true,
+   "blocking_checks": [],
+   "citable": true
+  },
+  "li3p": {
+   "tag": "li3p",
+   "status": "converged",
+   "n_path_steps": 38,
+   "Ea_forward_eV": 0.0,
+   "Ea_backward_eV": -0.0,
+   "num_of_images": 7,
+   "CI_scheme": "auto",
+   "tot_charge": "+1 (Li+ vacancy)",
+   "endpoints_symmetry_equivalent": false,
+   "li_orbits": {
+    "spacegroup": "P6_3/mmc",
+    "n_li_orbits": 2,
+    "wyckoffs": [
+     "b",
+     "f"
+    ]
+   },
+   "supercell": [
+    2,
+    2,
+    2
+   ],
+   "min_cell_A": 8.44,
+   "asymmetry_eV": 0.0,
+   "Ea_effective_eV": 0.0,
+   "site_energy_diff_eV": 0.0,
+   "symmetric": null,
+   "blocking_checks": [
+    "유효 장벽이 0.0000 eV — **0 은 측정이 아니다.** 경로 붕괴를 의심할 것: ① 끝점 두 개가 같은 구조인가 ② 움직이는 Li 가 실제로 이동했나 ③ 이미지 사이 최대 변위가 0 이 아닌가. neb.dat 와 끝점 좌표를 직접 볼 것",
+    "비등가 Li 자리(Wyckoff 2종)인데 자리 에너지 차가 0 이다 — 끝점 생성이 실제로 두 자리를 잡았는지 확인할 것"
+   ],
+   "citable": false
+  },
+  "li3po4g": {
+   "tag": "li3po4g",
+   "status": "not_started"
   }
+ },
+ "_provenance_audit": {
+  "audited": "2026-08-12",
+  "audited_by": "db provenance sweep (tools/db/validate_canonical.py --cited 로 대상 선정)",
+  "generator": "tools/sei/collect_neb.py",
+  "source": "/data/work/runs/sei_neb/<tag>/neb.out",
+  "collected": "2026-08-11",
+  "confidence": "high",
+  "note": "⛔ 전량 철회(retracted, n_citable 0) — tot_charge 부호 + 끝점 미이완",
+  "caveat": "이 블록은 **사후 추적** 결과다. 원본 계산 시점에 기록된 것이 아니라 repo·git·파일 내용에서 역추적했다. confidence 를 같이 보라."
+ }
 }

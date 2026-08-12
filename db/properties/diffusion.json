@@ -344,5 +344,15 @@
   "decisive_test": "2 constrained relaxes (on-N xy vs pocket xy, z free) on the 243-atom 6-layer N-exposed slab (the li3n_001_uma_v2_proper_slab geometry) -- settles thin-slab artifact vs real site ordering. Only 2 points, affordable.",
   "figure": "docs/figures/li3n/li3n_barrier_v2.png (labels corrected 07-17: drag p0 = pocket)",
   "data_source": "KISTI /scratch/x3430a02/kgy/li3n_drag_dft/drag_p0.out coord analysis 2026-07-17 10:2x KST"
+ },
+ "_provenance_audit": {
+  "audited": "2026-08-12",
+  "audited_by": "db provenance sweep (tools/db/validate_canonical.py --cited 로 대상 선정)",
+  "generator": "(없음 — 손으로 누적)",
+  "source": "gabia:/data/work/runs/li_neb_diffusion/li3n_001/dft_neb/ 외",
+  "collected": "2026-06-21",
+  "confidence": "high",
+  "note": "철회 이력 보존(thin-slab 5.9x → 2.4x)",
+  "caveat": "이 블록은 **사후 추적** 결과다. 원본 계산 시점에 기록된 것이 아니라 repo·git·파일 내용에서 역추적했다. confidence 를 같이 보라."
  }
 }

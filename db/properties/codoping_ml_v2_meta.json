@@ -436,5 +436,15 @@
   "ml_score 절대값은 무의미(z 단위 합성) — 순위와 ±만 사용",
   "농축배수(sendek2017_small_sample_defenses)는 **v1 휴리스틱 라벨 재현 농축**이지 물성 적중률이 아니다. 우리 47 도펀트는 큐레이션 후보군 — 대규모 발견 깔때기(Sendek 12,831 등)와 직접 비교 금지",
   "pair-CV(현행) 대비 leave-one-dopant-out/leave-both-dopants-out 성능차 = 같은 도펀트를 공유하는 쌍의 비독립성이 만든 낙관 편의 — 배포 순위 신뢰도는 LODO/L2DO 값을 기준으로 볼 것"
- ]
+ ],
+ "_provenance_audit": {
+  "audited": "2026-08-12",
+  "audited_by": "db provenance sweep (tools/db/validate_canonical.py --cited 로 대상 선정)",
+  "generator": "tools/cascade/codoping_ml.py",
+  "source": "cascade_v23_* 표 5종 (파생, 새 계산 없음)",
+  "collected": "2026-07-27",
+  "confidence": "high",
+  "note": "R²_loo 0.9998 은 항등식 복원 — 파일이 스스로 경고",
+  "caveat": "이 블록은 **사후 추적** 결과다. 원본 계산 시점에 기록된 것이 아니라 repo·git·파일 내용에서 역추적했다. confidence 를 같이 보라."
+ }
 }

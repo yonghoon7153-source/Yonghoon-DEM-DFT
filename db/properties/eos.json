@@ -1,76 +1,219 @@
 {
-  "property": "equation_of_state",
-  "method": "3rd_order_Birch_Murnaghan",
-  "description": "Bulk modulus B0 from DFT E-V curve fitting",
-  "equation": "E(V) = E0 + (9*V0*B0/16) * {[(V0/V)^(2/3)-1]^2 * [6 + B0'*((V0/V)^(2/3)-1) - 4*(V0/V)^(2/3)]}",
-
-  "_version_legend": {
-    "v1": "Original Pipeline v1 — ordered-Li 0K structures, DFT BM-EOS over 8-11 volume points",
-    "v2": "Annealed Li (champion config from MLIP 500K Langevin) → DFT BM-EOS at the deeper basin",
-    "v3": "Pipeline v2 §8d: stress-strain finite-strain Cij (no separate BM-EOS run); K = B_VRH derived from 12 strain SCFs. Cross-validated against v1/v2 BM K."
+ "property": "equation_of_state",
+ "method": "3rd_order_Birch_Murnaghan",
+ "description": "Bulk modulus B0 from DFT E-V curve fitting",
+ "equation": "E(V) = E0 + (9*V0*B0/16) * {[(V0/V)^(2/3)-1]^2 * [6 + B0'*((V0/V)^(2/3)-1) - 4*(V0/V)^(2/3)]}",
+ "_version_legend": {
+  "v1": "Original Pipeline v1 — ordered-Li 0K structures, DFT BM-EOS over 8-11 volume points",
+  "v2": "Annealed Li (champion config from MLIP 500K Langevin) → DFT BM-EOS at the deeper basin",
+  "v3": "Pipeline v2 §8d: stress-strain finite-strain Cij (no separate BM-EOS run); K = B_VRH derived from 12 strain SCFs. Cross-validated against v1/v2 BM K."
+ },
+ "_normalization_warning": "B0 / B0' / R² are intensive — direct cross-system comparison is OK. V0_A3 is EXTENSIVE (scales with supercell size). Li6 family (comp1, comp2) uses 4 fu = 52 atoms cubic; Li5.4 family (comp3, comp4, comp5, modelc, modelc_v3) uses 5 fu = 62 atoms rhombohedral. To compare V0 across systems, ALWAYS normalize: V/atom = V0/atoms or V/fu = V0/formula_units (atoms + formula_units recorded in db/compositions/*.json). Example: raw V0(LPSCl)=1016.62 vs V0(LPSCl1.6)=1216.44 looks like +20% expansion but is actually +0.4% V/atom (framework preserved) and −4.3% V/fu (vacancy + Cl→S substitution → fu shrinks, matches experiment).",
+ "results": [
+  {
+   "id": "comp1",
+   "version": "v1",
+   "B0_GPa": 26.2,
+   "B0_prime": 4.17,
+   "pts": 8,
+   "R2": 1.0,
+   "status": "confirmed"
   },
-
-  "_normalization_warning": "B0 / B0' / R² are intensive — direct cross-system comparison is OK. V0_A3 is EXTENSIVE (scales with supercell size). Li6 family (comp1, comp2) uses 4 fu = 52 atoms cubic; Li5.4 family (comp3, comp4, comp5, modelc, modelc_v3) uses 5 fu = 62 atoms rhombohedral. To compare V0 across systems, ALWAYS normalize: V/atom = V0/atoms or V/fu = V0/formula_units (atoms + formula_units recorded in db/compositions/*.json). Example: raw V0(LPSCl)=1016.62 vs V0(LPSCl1.6)=1216.44 looks like +20% expansion but is actually +0.4% V/atom (framework preserved) and −4.3% V/fu (vacancy + Cl→S substitution → fu shrinks, matches experiment).",
-  "results": [
-    {"id": "comp1",            "version": "v1", "B0_GPa": 26.2, "B0_prime": 4.17, "pts": 8,  "R2": 1.000000, "status": "confirmed"},
-    {"id": "comp1_v2",         "version": "v2", "B0_GPa": 26.5, "B0_prime": 4.61, "pts": 11, "R2": 0.999998, "status": "confirmed",          "notes": "Annealing Li. Delta vs v1: +0.3 GPa"},
-    {"id": "comp2",            "version": "v1", "B0_GPa": 25.8, "B0_prime": 4.22, "pts": 11, "R2": 1.000000, "status": "confirmed"},
-    {"id": "comp3",            "version": "v1", "B0_GPa": 20.8, "B0_prime": 6.79, "pts": 10, "R2": 0.999993, "status": "confirmed"},
-    {"id": "comp4",            "version": "v1", "B0_GPa": 20.8, "B0_prime": 6.33, "pts": 10, "R2": 0.999996, "status": "confirmed"},
-    {"id": "comp5",            "version": "v1", "B0_GPa": 22.9, "B0_prime": 5.21, "pts": 10, "R2": 0.999995, "status": "confirmed",          "basin": "A", "notes": "Basin B: 21.8 GPa"},
-    {"id": "modelc",           "version": "v1", "B0_GPa": 21.7, "B0_prime": 4.31, "pts": 10, "R2": 0.999988, "status": "confirmed",          "basin": "A", "notes": "ordered Li 0K. Basin B found: 16.6 meV more stable but EOS unstable. Superseded by modelc_v3 for paper values."},
-    {"id": "modelc_v2_mlip",   "version": "v2_mlip", "B0_GPa": 20.0, "B0_prime": 7.50, "pts": 15, "R2": 0.999289, "status": "mlip_preliminary","notes": "Annealing champion -258.2051 eV. Delta vs v1 DFT: -1.7 GPa. DFT BM-EOS pending (v2). DFT stress-strain K available (v3)."},
-    {"id": "modelc_nd_doped_mlip", "version": "v7_mlip_ens", "B0_GPa": 18.9, "B0_prime": null, "V0_A3": 2401, "pts": 100, "R2": null, "status": "mlip_preliminary", "notes": "Nd2O3-doped modelc (Li48P10Nd2S41O3Cl16, 120 atoms, x=0.20, Track1 Nd->Li). UMA-omat EOS ensemble, 100 members, source pair_00_reference (= run5 v0_champion). HEADLINE B0=18.9+/-1.4 GPa over the 72 members with physical B0'>0; full 100-member 18.6+/-3.0. B0' poorly constrained / MULTIMODAL: dominant cluster B0'~11 @ B0 18.4; physical-B0' cluster (~6) @ B0 ~20; garbage B0'<0 cluster @ B0 16.8. Classic few-point BM B0-B0' covariance. f-electron (Nd) -> UMA reliability LOW, absolute value DIRECTIONAL ONLY. DFT EOS pending (KISTI 3_dft_eos_v7; run5 = V0 point, E=-3566.2095 Ry, geometry converged force<5e-3). Same-method vs undoped modelc UMA 20.0 -> ~-1.1 GPa softening (Nd3+ size, +2.6% V/atom)."},
-    {"id": "comp1_v3", "version": "v3", "B0_GPa": 26.233, "B0_prime": 4.171, "V0_A3": 1016.62, "pts": 8, "R2": 1.000000, "status": "PRIMARY_paper_value",
-                                "B0_std": 0.004, "V0_std": 0.0037, "B0_prime_std": 0.011,
-                                "fit_protocol": "scipy.optimize.curve_fit free-fit BM3 (4 params), tools/modelc_v3/fit_bm_eos.py, 2026-06-03",
-                                "data_source": "comp1_lpsc10/eos/restart/comp1_r2_v{096,097,098,099,100,102,104,106}.out — 8 pts (v101/v103/v105 not in restart)",
-                                "fit_result_json": "container:/home/ubuntu/work/runs/comp1_v3/comp1_BM_EOS_results.json",
-                                "fit_plot_png": "container:/home/ubuntu/work/runs/comp1_v3/comp1_BM_EOS_fit.png",
-                                "AUTHORITATIVE_structure": "db/structures/comp1_V0_k444.cif (+.xyz) — FINAL comp1 V0. Source: container /home/ubuntu/work/runs/comp1_v3/v3_post/k444_redo/relax_k444.out (4x4x4 relax, kxL=40). PS4 intact P-S 2.072±0.036, V0=1016.62, a=10.0551, ordered (Cl & free-S2- on distinct sites, no mixing). E0=-13917.8916 eV matches EOS E0 -13917.8927. USE THIS for figures AND property cross-checks.",
-                                "DEPRECATED_structure": "db/structures/lpscl_relaxed_conv_52atoms.cif.BROKEN_PS4_dissociated — DO NOT USE. conventional-cell export was corrupted (each P had only 1-2 S within 2.5 Å, rest at 4.3 Å = PS4 dissociated). NOT a k-mesh effect; bad CIF conversion. Superseded by comp1_V0_k444.",
-                                "vs_db_v2_value": "26.5 (v2 BM-EOS DFT, 11 pts) vs 26.23 (this re-fit, 8 pts) → 1% agreement, both legitimate",
-                                "k_mesh_note": "B0 is k-robust (EOS = isotropic-volume energy curvature; systematic k-errors cancel). Unlike gap/elastic, B0=26.2 is consistent across v1/v2/v3 (26.2/26.5/26.23, ~1%) so no k444 EOS re-run needed.",
-                                "stress_strain_K_VRH_GPa_aside": 46.21,
-                                "notes": "PRIMARY for paper. Free-fit BM3 on 8 DFT volume points. Perfect R²=1.000 with tight B0' = 4.17 (vs modelc_v3 which had B0'=7.01 ± 1.4 = noisier). Comparison clean."
-    },
-    {"id": "modelc_v3", "version": "v3", "B0_GPa": 21.71, "B0_prime": 7.01, "V0_A3": 1216.44, "pts": 11, "R2": 0.999012, "status": "PRIMARY_paper_value",
-                                "fit_protocol": "scipy.optimize.curve_fit free-fit BM3 (4 params V0/E0/B0/B0'), tools/modelc_v3/fit_bm_eos.py, 2026-06-03",
-                                "data_source": "lpscl16_verify_20260520/modelC_v2_eos_v{096..106}.out (11 DFT relax points, JOB DONE)",
-                                "B0_std": 0.27, "V0_std": 0.52, "B0_prime_std": 1.37,
-                                "fit_result_json": "container:/home/ubuntu/work/runs/modelC_v3/V0_BM_EOS_results.json",
-                                "fit_plot_png": "container:/home/ubuntu/work/runs/modelC_v3/V0_BM_EOS_fit.png",
-                                "notes": "PRIMARY value for paper. Free-fit BM3 on the 11 DFT volume points. NOT the same as the legacy entry below (different fitter / fit protocol gave slightly different B0 / B0' for the same underlying points)."
-    },
-    {"id": "modelc_v3_legacy_v2_fit", "version": "v3_legacy_backup", "B0_GPa": 19.59, "B0_prime_used": 4.31, "B0_prime_free": 2.92, "V0_A3": 1214.5, "pts": 11, "R2": 0.998, "status": "LEGACY_kept_for_history_only",
-                                "fit_protocol": "v2 KISTI dft_eos pipeline (likely BM3 with B0'_constr 4.31 + free; multi-model: BM3/Vinet/Murnaghan, all B0 in [19.58, 19.59])",
-                                "data_source": "Same 11 .out files as PRIMARY above",
-                                "kisti_path": "/scratch/x3430a02/kgy/manuscript_support/pipeline_v2/modelC_lpsc16/dft_eos/",
-                                "_why_kept": "Reproducibility / methodology audit. Do NOT use for paper headline — superseded by PRIMARY (re-fit 2026-06-03 with curve_fit on same data).",
-                                "_warning": "Different B0 (19.59 vs primary 21.71) and B0' (2.92 free vs primary 7.01) come from fitter / B0' constraint choice, not different data. Both R²≈0.999. Free fit has large B0-B0' covariance — see fit_plot_png for visualization.",
-                                "stress_strain_K_VRH_GPa_aside": 44.47,
-                                "stress_strain_aside_note": "K_VRH from clamped-ion stress-strain Cij is a DIFFERENT physical quantity from BM-EOS B0; reported in db/properties/elastic.json dft_0K_clamped_ion_stress_strain_full_Cij section."}
-  ],
-
-  "trends": {
-    "Li6_family": "comp1(26.2) > comp2(25.8) -> Br up, B0 down",
-    "Li5.4_family": "comp5(22.9) > modelc(21.7) > comp3(20.8) = comp4(20.8)",
-    "cross_family": "Li6(~26) > Li5.4(~21) -> vacancy + S reduction -> B0 down by ~5 GPa",
-    "Br_effect": "Br increase -> B0 decrease (⚠ Li6 계열에서만 성립. Li5.4 계열은 Br 3->4->5 에서 20.8->20.8->22.9 로 마지막 구간이 증가한다 — 2026-07-29 정정)"
+  {
+   "id": "comp1_v2",
+   "version": "v2",
+   "B0_GPa": 26.5,
+   "B0_prime": 4.61,
+   "pts": 11,
+   "R2": 0.999998,
+   "status": "confirmed",
+   "notes": "Annealing Li. Delta vs v1: +0.3 GPa"
   },
-
-  "v1_vs_v2_comparison": {
-    "comp1": {"v1_DFT": 26.2, "v2_DFT": 26.5, "delta": 0.3, "family": "Li6", "li_spread_meV": 1162, "annealing_gain_meV": 65},
-    "modelc": {"v1_DFT": 21.7, "v2_MLIP": 20.0, "delta_mlip": -1.7, "v2_DFT": "pending", "family": "Li5.4", "li_spread_meV": 0.1, "annealing_gain_meV": 114},
-    "modelc_nd_doped": {"mlip_ens_B0": 18.9, "mlip_spread": 1.4, "mlip_ens_full": "18.6+/-3.0 (n=100)", "vs_undoped_mlip": -1.1, "v7_DFT": "pending", "family": "Li5.4+Nd2O3", "atoms": 120, "note": "x=0.20 Nd->Li. f-electron, UMA LOW-confidence (multimodal B0', absolute value uncertain ~18.4-20). DFT EOS in progress 3_dft_eos_v7, run5=V0."},
-    "interpretation": "Li6: v1≈v2 (0.3 GPa, annealing optional). Li5.4: v1≠v2 (1.7 GPa, annealing essential). Flat Li landscape + hidden deep basin = 0K methods fail for Li5.4.",
-    "implication": "comp3/4/5 (Li5.4+Br) should be recalculated with v2 pipeline"
+  {
+   "id": "comp2",
+   "version": "v1",
+   "B0_GPa": 25.8,
+   "B0_prime": 4.22,
+   "pts": 11,
+   "R2": 1.0,
+   "status": "confirmed"
   },
-
-  "physics": {
-    "B0_meaning": "Resistance to uniform compression (volume elasticity)",
-    "Br_weakening": ["Larger ionic radius (1.96 vs 1.81 A)", "Lower charge density", "Longer Li-Br bonds (2.71 vs 2.51 A)"],
-    "vacancy_effect": "Compositional vacancy reduces bond density -> B0 down ~5.4 GPa",
-    "Li_ordering_effect": "Same composition, different Li arrangement: comp5 DB0=1.3 GPa (basin A vs B), Model C DB0=1.7 GPa (v1 vs v2 annealing)"
+  {
+   "id": "comp3",
+   "version": "v1",
+   "B0_GPa": 20.8,
+   "B0_prime": 6.79,
+   "pts": 10,
+   "R2": 0.999993,
+   "status": "confirmed"
+  },
+  {
+   "id": "comp4",
+   "version": "v1",
+   "B0_GPa": 20.8,
+   "B0_prime": 6.33,
+   "pts": 10,
+   "R2": 0.999996,
+   "status": "confirmed"
+  },
+  {
+   "id": "comp5",
+   "version": "v1",
+   "B0_GPa": 22.9,
+   "B0_prime": 5.21,
+   "pts": 10,
+   "R2": 0.999995,
+   "status": "confirmed",
+   "basin": "A",
+   "notes": "Basin B: 21.8 GPa"
+  },
+  {
+   "id": "modelc",
+   "version": "v1",
+   "B0_GPa": 21.7,
+   "B0_prime": 4.31,
+   "pts": 10,
+   "R2": 0.999988,
+   "status": "confirmed",
+   "basin": "A",
+   "notes": "ordered Li 0K. Basin B found: 16.6 meV more stable but EOS unstable. Superseded by modelc_v3 for paper values."
+  },
+  {
+   "id": "modelc_v2_mlip",
+   "version": "v2_mlip",
+   "B0_GPa": 20.0,
+   "B0_prime": 7.5,
+   "pts": 15,
+   "R2": 0.999289,
+   "status": "mlip_preliminary",
+   "notes": "Annealing champion -258.2051 eV. Delta vs v1 DFT: -1.7 GPa. DFT BM-EOS pending (v2). DFT stress-strain K available (v3)."
+  },
+  {
+   "id": "modelc_nd_doped_mlip",
+   "version": "v7_mlip_ens",
+   "B0_GPa": 18.9,
+   "B0_prime": null,
+   "V0_A3": 2401,
+   "pts": 100,
+   "R2": null,
+   "status": "mlip_preliminary",
+   "notes": "Nd2O3-doped modelc (Li48P10Nd2S41O3Cl16, 120 atoms, x=0.20, Track1 Nd->Li). UMA-omat EOS ensemble, 100 members, source pair_00_reference (= run5 v0_champion). HEADLINE B0=18.9+/-1.4 GPa over the 72 members with physical B0'>0; full 100-member 18.6+/-3.0. B0' poorly constrained / MULTIMODAL: dominant cluster B0'~11 @ B0 18.4; physical-B0' cluster (~6) @ B0 ~20; garbage B0'<0 cluster @ B0 16.8. Classic few-point BM B0-B0' covariance. f-electron (Nd) -> UMA reliability LOW, absolute value DIRECTIONAL ONLY. DFT EOS pending (KISTI 3_dft_eos_v7; run5 = V0 point, E=-3566.2095 Ry, geometry converged force<5e-3). Same-method vs undoped modelc UMA 20.0 -> ~-1.1 GPa softening (Nd3+ size, +2.6% V/atom)."
+  },
+  {
+   "id": "comp1_v3",
+   "version": "v3",
+   "B0_GPa": 26.233,
+   "B0_prime": 4.171,
+   "V0_A3": 1016.62,
+   "pts": 8,
+   "R2": 1.0,
+   "status": "PRIMARY_paper_value",
+   "B0_std": 0.004,
+   "V0_std": 0.0037,
+   "B0_prime_std": 0.011,
+   "fit_protocol": "scipy.optimize.curve_fit free-fit BM3 (4 params), tools/modelc_v3/fit_bm_eos.py, 2026-06-03",
+   "data_source": "comp1_lpsc10/eos/restart/comp1_r2_v{096,097,098,099,100,102,104,106}.out — 8 pts (v101/v103/v105 not in restart)",
+   "fit_result_json": "container:/home/ubuntu/work/runs/comp1_v3/comp1_BM_EOS_results.json",
+   "fit_plot_png": "container:/home/ubuntu/work/runs/comp1_v3/comp1_BM_EOS_fit.png",
+   "AUTHORITATIVE_structure": "db/structures/comp1_V0_k444.cif (+.xyz) — FINAL comp1 V0. Source: container /home/ubuntu/work/runs/comp1_v3/v3_post/k444_redo/relax_k444.out (4x4x4 relax, kxL=40). PS4 intact P-S 2.072±0.036, V0=1016.62, a=10.0551, ordered (Cl & free-S2- on distinct sites, no mixing). E0=-13917.8916 eV matches EOS E0 -13917.8927. USE THIS for figures AND property cross-checks.",
+   "DEPRECATED_structure": "db/structures/lpscl_relaxed_conv_52atoms.cif.BROKEN_PS4_dissociated — DO NOT USE. conventional-cell export was corrupted (each P had only 1-2 S within 2.5 Å, rest at 4.3 Å = PS4 dissociated). NOT a k-mesh effect; bad CIF conversion. Superseded by comp1_V0_k444.",
+   "vs_db_v2_value": "26.5 (v2 BM-EOS DFT, 11 pts) vs 26.23 (this re-fit, 8 pts) → 1% agreement, both legitimate",
+   "k_mesh_note": "B0 is k-robust (EOS = isotropic-volume energy curvature; systematic k-errors cancel). Unlike gap/elastic, B0=26.2 is consistent across v1/v2/v3 (26.2/26.5/26.23, ~1%) so no k444 EOS re-run needed.",
+   "stress_strain_K_VRH_GPa_aside": 46.21,
+   "notes": "PRIMARY for paper. Free-fit BM3 on 8 DFT volume points. Perfect R²=1.000 with tight B0' = 4.17 (vs modelc_v3 which had B0'=7.01 ± 1.4 = noisier). Comparison clean."
+  },
+  {
+   "id": "modelc_v3",
+   "version": "v3",
+   "B0_GPa": 21.71,
+   "B0_prime": 7.01,
+   "V0_A3": 1216.44,
+   "pts": 11,
+   "R2": 0.999012,
+   "status": "PRIMARY_paper_value",
+   "fit_protocol": "scipy.optimize.curve_fit free-fit BM3 (4 params V0/E0/B0/B0'), tools/modelc_v3/fit_bm_eos.py, 2026-06-03",
+   "data_source": "lpscl16_verify_20260520/modelC_v2_eos_v{096..106}.out (11 DFT relax points, JOB DONE)",
+   "B0_std": 0.27,
+   "V0_std": 0.52,
+   "B0_prime_std": 1.37,
+   "fit_result_json": "container:/home/ubuntu/work/runs/modelC_v3/V0_BM_EOS_results.json",
+   "fit_plot_png": "container:/home/ubuntu/work/runs/modelC_v3/V0_BM_EOS_fit.png",
+   "notes": "PRIMARY value for paper. Free-fit BM3 on the 11 DFT volume points. NOT the same as the legacy entry below (different fitter / fit protocol gave slightly different B0 / B0' for the same underlying points)."
+  },
+  {
+   "id": "modelc_v3_legacy_v2_fit",
+   "version": "v3_legacy_backup",
+   "B0_GPa": 19.59,
+   "B0_prime_used": 4.31,
+   "B0_prime_free": 2.92,
+   "V0_A3": 1214.5,
+   "pts": 11,
+   "R2": 0.998,
+   "status": "LEGACY_kept_for_history_only",
+   "fit_protocol": "v2 KISTI dft_eos pipeline (likely BM3 with B0'_constr 4.31 + free; multi-model: BM3/Vinet/Murnaghan, all B0 in [19.58, 19.59])",
+   "data_source": "Same 11 .out files as PRIMARY above",
+   "kisti_path": "/scratch/x3430a02/kgy/manuscript_support/pipeline_v2/modelC_lpsc16/dft_eos/",
+   "_why_kept": "Reproducibility / methodology audit. Do NOT use for paper headline — superseded by PRIMARY (re-fit 2026-06-03 with curve_fit on same data).",
+   "_warning": "Different B0 (19.59 vs primary 21.71) and B0' (2.92 free vs primary 7.01) come from fitter / B0' constraint choice, not different data. Both R²≈0.999. Free fit has large B0-B0' covariance — see fit_plot_png for visualization.",
+   "stress_strain_K_VRH_GPa_aside": 44.47,
+   "stress_strain_aside_note": "K_VRH from clamped-ion stress-strain Cij is a DIFFERENT physical quantity from BM-EOS B0; reported in db/properties/elastic.json dft_0K_clamped_ion_stress_strain_full_Cij section."
   }
+ ],
+ "trends": {
+  "Li6_family": "comp1(26.2) > comp2(25.8) -> Br up, B0 down",
+  "Li5.4_family": "comp5(22.9) > modelc(21.7) > comp3(20.8) = comp4(20.8)",
+  "cross_family": "Li6(~26) > Li5.4(~21) -> vacancy + S reduction -> B0 down by ~5 GPa",
+  "Br_effect": "Br increase -> B0 decrease (⚠ Li6 계열에서만 성립. Li5.4 계열은 Br 3->4->5 에서 20.8->20.8->22.9 로 마지막 구간이 증가한다 — 2026-07-29 정정)"
+ },
+ "v1_vs_v2_comparison": {
+  "comp1": {
+   "v1_DFT": 26.2,
+   "v2_DFT": 26.5,
+   "delta": 0.3,
+   "family": "Li6",
+   "li_spread_meV": 1162,
+   "annealing_gain_meV": 65
+  },
+  "modelc": {
+   "v1_DFT": 21.7,
+   "v2_MLIP": 20.0,
+   "delta_mlip": -1.7,
+   "v2_DFT": "pending",
+   "family": "Li5.4",
+   "li_spread_meV": 0.1,
+   "annealing_gain_meV": 114
+  },
+  "modelc_nd_doped": {
+   "mlip_ens_B0": 18.9,
+   "mlip_spread": 1.4,
+   "mlip_ens_full": "18.6+/-3.0 (n=100)",
+   "vs_undoped_mlip": -1.1,
+   "v7_DFT": "pending",
+   "family": "Li5.4+Nd2O3",
+   "atoms": 120,
+   "note": "x=0.20 Nd->Li. f-electron, UMA LOW-confidence (multimodal B0', absolute value uncertain ~18.4-20). DFT EOS in progress 3_dft_eos_v7, run5=V0."
+  },
+  "interpretation": "Li6: v1≈v2 (0.3 GPa, annealing optional). Li5.4: v1≠v2 (1.7 GPa, annealing essential). Flat Li landscape + hidden deep basin = 0K methods fail for Li5.4.",
+  "implication": "comp3/4/5 (Li5.4+Br) should be recalculated with v2 pipeline"
+ },
+ "physics": {
+  "B0_meaning": "Resistance to uniform compression (volume elasticity)",
+  "Br_weakening": [
+   "Larger ionic radius (1.96 vs 1.81 A)",
+   "Lower charge density",
+   "Longer Li-Br bonds (2.71 vs 2.51 A)"
+  ],
+  "vacancy_effect": "Compositional vacancy reduces bond density -> B0 down ~5.4 GPa",
+  "Li_ordering_effect": "Same composition, different Li arrangement: comp5 DB0=1.3 GPa (basin A vs B), Model C DB0=1.7 GPa (v1 vs v2 annealing)"
+ },
+ "_provenance_audit": {
+  "audited": "2026-08-12",
+  "audited_by": "db provenance sweep (tools/db/validate_canonical.py --cited 로 대상 선정)",
+  "generator": "(없음 — 요약표. 피팅은 tools/modelc_v3/fit_bm_eos.py)",
+  "source": "container:/home/ubuntu/work/runs/comp1_v3/comp1_BM_EOS_results.json · modelC_v3/V0_BM_EOS_results.json",
+  "collected": "2026-06-03",
+  "confidence": "high",
+  "note": "V0_A3 는 extensive — 셀 크기 다른 계끼리 직접 비교 금지",
+  "caveat": "이 블록은 **사후 추적** 결과다. 원본 계산 시점에 기록된 것이 아니라 repo·git·파일 내용에서 역추적했다. confidence 를 같이 보라."
+ }
 }

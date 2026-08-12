@@ -153,5 +153,15 @@
    "Li_on_graphene_1L": 14,
    "Li_on_graphene_2L": 12
   }
+ },
+ "_provenance_audit": {
+  "audited": "2026-08-12",
+  "audited_by": "db provenance sweep (tools/db/validate_canonical.py --cited 로 대상 선정)",
+  "generator": "(없음 — 손으로 작성)",
+  "source": "esp-Z590:~/work/vgcf_hbn/neb/<case>/{neb.out,*.dat}",
+  "collected": "2026-07-27",
+  "confidence": "high",
+  "note": "7 meV 는 수치 분해능(20–46 meV) 아래 — '<0.01 eV, 사실상 barrierless' 로만 인용",
+  "caveat": "이 블록은 **사후 추적** 결과다. 원본 계산 시점에 기록된 것이 아니라 repo·git·파일 내용에서 역추적했다. confidence 를 같이 보라."
  }
 }
