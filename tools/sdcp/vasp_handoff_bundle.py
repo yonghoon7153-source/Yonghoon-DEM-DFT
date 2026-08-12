@@ -1597,6 +1597,23 @@ def main():
                 rec["geom"]["free_fmax_eVA"] = round(fmax, 3)
                 if fmax > FORCE_TOL:
                     rec["gates"].append(f"FORCE_HIGH({fmax:.3f} eV/Å)")
+        # ── 단일점의 static 힘: **진단값**이지 수렴 판정이 아니다 (Codex 6차 §4) ──
+        #   MLIP 기하가 DFT 최소점에서 얼마나 먼지를 보여 준다. 큰 잔류힘은
+        #   "그 자세만 DFT 이완으로 넘길까" 를 결정하는 trigger 로 쓴다.
+        #   ⚠ 힘 하나로 단일점 에너지 오차의 부호나 상한을 만들 수 없다 — 게이트 아님.
+        st0 = ocs.get("static")
+        if rx is None and st0 is not None and st0.get("forces") and \
+                info.get("_init_fixed") and \
+                len(st0["forces"]) == len(info["_init_fixed"]):
+            fr = [math.sqrt(sum(c * c for c in f))
+                  for f, fx in zip(st0["forces"], info["_init_fixed"]) if not fx]
+            if fr:
+                rec["geom"]["uma_geometry_residual_force"] = {
+                    "fmax_eVA": round(max(fr), 3),
+                    "frms_eVA": round(math.sqrt(sum(x * x for x in fr) / len(fr)), 3),
+                    "meaning": ("MLIP 기하의 DFT 잔류힘 — **진단값**. 수렴 판정도, "
+                                "에너지 오차 상한도 아니다. 크면 그 자세만 DFT 이완 검토."),
+                    "trigger_hint_eVA": FORCE_TOL}
         # ── 자기상태 감사 (Codex P0-E · 2026-08-12 재작성) ──
         st = ocs.get("static")
         want_sign = meta.get("ni_sign_poscar_idx") or {}
@@ -2344,8 +2361,9 @@ sbatch --array=1-$(wc -l < JOBS.txt)%8 --wrap='
   static→dense 임계경로가 그 하한보다 길면 하한에 도달할 수 없습니다.
 
 ## 코어 수
-비용 모델의 기준은 **48 코어/잡**입니다. README 예시의 `-np 64` 와 다르면
-추정이 그만큼 어긋납니다 — 실제 코어 수를 알려 주시면 다시 계산합니다.
+이 번들은 **{a.cores} 코어/잡 · 동시 {a.concurrency}잡**으로 계획했습니다
+(MANIFEST.json 의 `submission`). 실제와 다르면 추정이 그만큼 어긋납니다 —
+알려 주시면 `--manifest` 로 다시 계산합니다.
 """
 
 
@@ -2466,10 +2484,17 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             "⚠ 2026-08-12 정정 — v2 초판의 '파일 순서 앞 24 / 뒤 24' seed 는 실제 부격자와 "
             "24/48(동전 던지기) 일치라 **다른 자기 배치**였다. 그 seed 로 만든 번들은 무효."),
         "afm_ledger": ledger,
-        "protocol_delta_vs_phaseB": ("의도된 개선: LASPH T(납품 F) · LDIPOL T(납품 F) · "
-                                     "ISMEAR 0/0.05(납품 1/0.2) · pre+relax+static+dense 다상(납품 "
-                                     "단일점) · LREAL static .FALSE.(납품 Auto). "
-                                     "승계: U 6.2 · IVDW 11 · ENCUT 520 · Ni_pv."),
+        # ⚠ 모드에 따라 **사실이 다르다**. 단일점 판에 "다상·LREAL=F" 를 적어 두면
+        #   외주처와 나중의 우리가 다른 프로토콜을 돌았다고 읽는다 (Codex 6차 §8).
+        "protocol_delta_vs_phaseB": (
+            ("의도된 개선: LASPH T(납품 F) · LDIPOL T(납품 F) · ISMEAR 0/0.05"
+             "(납품 1/0.2). **상 구성은 납품과 같은 단일점**이고 LREAL 도 Auto 로 "
+             "같다 — 이번 판이 바꾼 것은 기하 출처(UMA 이완)와 자기 seed 2종이다. "
+             "승계: U 6.2 · IVDW 11 · ENCUT 520 · Ni_pv.")
+            if a.single_point else
+            ("의도된 개선: LASPH T(납품 F) · LDIPOL T(납품 F) · ISMEAR 0/0.05"
+             "(납품 1/0.2) · pre+relax+static+dense 다상(납품 단일점) · "
+             "LREAL static .FALSE.(납품 Auto). 승계: U 6.2 · IVDW 11 · ENCUT 520 · Ni_pv.")),
     }
     # k 를 밖에서 덮을 수 있게 한다 — ΔE 에서 k 오차는 대부분 상쇄되므로, 예산이
     # 빠듯하면 **상쇄되는 정밀도**를 풀고 상쇄 안 되는 것(자기 seed)을 지키는 게 맞다.
@@ -2790,6 +2815,29 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         if p.is_file() and p.name != "MANIFEST.json":
             files[str(p.relative_to(out))] = hashlib.sha256(p.read_bytes()).hexdigest()
     man["n_jobs"] = n_jobs
+    # ── 제출 계약을 MANIFEST 에 못 박는다 (Codex 6차 §7) ─────────────────────
+    #   "2.4일" 이 어떤 코어 수·병렬도의 값인지 기록이 없으면 나중에 아무도 모른다.
+    n_st = sum(1 for p in man["planned"].values()
+               if "static" in (p.get("phases") or []))
+    n_dn = sum(1 for p in man["planned"].values()
+               if "dense" in (p.get("phases") or []))
+    n_cd = len(list(out.rglob("dense_cand/INCAR")))
+    man["submission"] = {
+        "cores_per_job": a.cores,
+        "max_concurrency": a.concurrency,
+        "phase_dependencies": ("잡 사이 의존 없음. 한 잡 안에서 dense 는 static 의 "
+                               "CHGCAR 를 승계하므로 **직렬** — 잡 하나가 분할 불가 "
+                               "작업 하나다 (P||Cmax)."),
+        "n_static": n_st, "n_dense_mandatory": n_dn,
+        "n_dense_candidates_packaged": n_cd,
+        "max_optional_dense": MAX_OPTIONAL_DENSE_B,
+        "estimator": "tools/sdcp/vasp_cost_estimate.py --manifest MANIFEST.json",
+        "estimator_baseline": ("runs/sdcp_phaseB_vasp_v1_2026_08_08/slab/OUTCAR.gz "
+                               "— 192원자·NKPTS 4·48코어·525 s/전자스텝"),
+        "estimator_uncertainty": "±2배 (모형이지 벤치마크가 아니다)",
+        "runner_note": ("run_all.sh 는 **직렬 디버그용**이다. 실제 제출은 "
+                        "SUBMIT_CONTRACT.md 의 배열 잡으로."),
+    }
     man["files_sha256"] = files
     (out / "MANIFEST.json").write_text(json.dumps(man, indent=1, ensure_ascii=False))
 
@@ -3120,7 +3168,7 @@ def selftest() -> int:
     a0 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_short"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None)
+                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8)
     try:
         build_bundle(a0, ledger=led)
         chk(False, "N0 xyz 누락 → **번들이 만들어졌다** (축소 정본 = fail-open)")
@@ -3136,7 +3184,7 @@ def selftest() -> int:
     ab = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_nofp"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None)
+                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8)
     try:
         build_bundle(ab, ledger=led)
         chk(False, "N0b 지문 없는 소스 → **번들이 만들어졌다**")
@@ -3160,7 +3208,7 @@ def selftest() -> int:
     at3 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_top3"),
                              freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                              qe="(none)", expect=None, allow_partial=False,
-                             no_prescf=False, allow_stale_gate=False, top_n=3, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None)
+                             no_prescf=False, allow_stale_gate=False, top_n=3, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8)
     o3 = build_bundle(at3, ledger=led)
     m3 = json.loads((o3 / "MANIFEST.json").read_text())
     kept = sorted({v["dir"] for v in m3["pairs"].values()})
@@ -3177,7 +3225,7 @@ def selftest() -> int:
     a = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle"),
                            freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                            qe="(none)", expect=None, allow_partial=False,
-                           no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None)
+                           no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8)
     out = build_bundle(a, ledger=led)
     man = json.loads((out / "MANIFEST.json").read_text())
     n_pre = sum(1 for p in man["planned"].values() if "pre" in (p.get("phases") or []))
@@ -3190,7 +3238,7 @@ def selftest() -> int:
         frags=["ptfe_dimer"], qe="(none)", expect=None, allow_partial=False,
         no_prescf=False, allow_stale_gate=False, top_n=None, single_point=True,
         champion=True, kmesh_static=None, kmesh_dense=None, refs=False,
-        cross_endpoints=["ptfe_dimer"], mag_controls=True, dense_frags=["ptfe_dimer"])
+        cross_endpoints=["ptfe_dimer"], mag_controls=True, dense_frags=["ptfe_dimer"], cores=48, concurrency=8)
     out_sp = build_bundle(a_sp, ledger=led)
     # ★ **배포되는 분석기**의 k 라벨·guard band selftest 를 그대로 돌린다.
     #   이 로직은 문자열 템플릿 안이라 여기서 import 로 시험할 수 없다 — 실행이 유일한 길.
@@ -3520,6 +3568,12 @@ def main():
                     help="clean 슬랩 + 기체 분자 기준계를 포함한다 (절대 E_ads 용). "
                          "기본은 **미포함** — 자리 대비 ΔE 에서는 정확히 소거되므로 "
                          "Wave 2 로 미룬다 (Codex 5차).")
+    ap.add_argument("--cores", type=int, default=48,
+                    help="잡당 코어 수 — MANIFEST·SUBMIT_CONTRACT 에 기록된다 "
+                         "(비용 모형 기준선과 같아야 추정이 맞는다)")
+    ap.add_argument("--concurrency", type=int, default=8,
+                    help="외주처가 동시에 돌릴 잡 수 — MANIFEST 에 기록. "
+                         "⚠ 한 잡의 static→dense 사슬보다 짧아질 수 없다")
     ap.add_argument("--no_mag_controls", dest="mag_controls", action="store_false",
                     help="clean 자기 대조군(2 seed coarse static)을 빼 버린다. ⚠ 빼면 "
                          "분석기의 Q 기준이 없어져 **자기 붕괴 판정이 전 잡에서 보류**된다 "
