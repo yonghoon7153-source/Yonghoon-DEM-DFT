@@ -1753,6 +1753,15 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         for kv in a.expect:
             k, _, v = kv.partition("=")
             expect[k] = int(v)
+    # ⚠ 선별 모드는 **기대값 자체를 바꾼다**. 검사에만 반영하고 MANIFEST 에는 원래 수를
+    #   적으면, 나중에 읽는 사람이 "계약 5인데 1개뿐" 으로 오해한다 (분석기의
+    #   CONTRACT_SHORT 도 오작동한다). 유효 계약을 기록한다.
+    if a.champion:
+        expect = {k: 1 for k in expect}
+        man["contract_mode"] = "champion — 조각당 Li 위 최선·Ni 위 최선 1쌍"
+    elif a.top_n is not None:
+        expect = {k: min(v, a.top_n) for k, v in expect.items()}
+        man["contract_mode"] = f"top_n={a.top_n} — 자세 안정도 상위 N 쌍"
     man["contract_expected_pairs"] = expect
     man["allow_partial"] = bool(a.allow_partial)
     man["pair_audit"] = {}
@@ -1783,10 +1792,6 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                 bad(f"{frag}: 자격 쌍 0개")
                 continue
             want = expect.get(frag)
-            if a.champion:
-                want = 1
-            elif want is not None and a.top_n is not None:
-                want = min(want, a.top_n)
             if want is not None and len(pairs) != want:
                 bad(f"{frag}: 대조쌍 {len(pairs)}개 — 계약은 {want}개 "
                     f"(down_dir {aud.get('n_down_dirs')}개 · 제외 "
