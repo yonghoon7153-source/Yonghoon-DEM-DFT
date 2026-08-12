@@ -13,10 +13,11 @@
   },
   {
    "file": "db/properties/doping_cascade_verified.json",
-   "level": "BLOCKED",
-   "what": "Sc2O3_x002 · Al2O3_x005 두 행 + '최연질=Sc2O3 18.7' 헤드라인 + softness 순위",
+   "level": "RESOLVED",
+   "what": "[해소] Sc2O3_x002 · Al2O3_x005 5개 값 — gabia FINAL_RANKING.json 으로 trivalent_M3 가 전부 맞음이 확정. verified 파일을 정정했다.",
    "why": "doping_cascade_trivalent_M3.json 과 값 충돌 미해소 (E 18.7 vs 42.1)",
-   "fix": "gabia FINAL_RANKING.json 두 행으로 승자 확정"
+   "fix": "⚠ 남은 것: '최연질 = Sc2O3 18.7 GPa' 는 실제 **42.082** 이므로 E_VRH 순위표를 다시 매겨야 한다 (2.2배 오차).",
+   "resolved": "2026-08-12"
   },
   {
    "file": "db/properties/sdcp_phaseB_dftu_v1.json",
@@ -122,6 +123,16 @@
    "what": "v1 값 (−3.439 / −3.321)",
    "why": "미수렴 bare slab — 파일이 SUPERSEDES 로 철회",
    "fix": "v2 값만 유효"
+  },
+  {
+   "file": "db/properties/doping_cascade_verified.json",
+   "level": "HOLD",
+   "what": "coating_candidates_ranked_by_E_VRH 순위표",
+   "why": "rank1 의 E_VRH 가 18.7 → 42.082 로 정정돼 **순위 자체가 무효**",
+   "fix": "gabia FINAL_RANKING.json 로 14 dopant × 3 농도 전체를 다시 정렬"
   }
+ ],
+ "_history": [
+  "2026-08-12: doping_cascade 값 충돌 해소 (BLOCKED→RESOLVED). 순위표 재계산이 새 HOLD 로 승계."
  ]
 }

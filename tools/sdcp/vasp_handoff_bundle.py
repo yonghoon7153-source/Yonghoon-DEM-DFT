@@ -1798,7 +1798,14 @@ def main():
         ratio = (mg["Q_muB"] / q_ref) if abs(q_ref) > 1e-9 else None
         mg["Q_ratio"] = None if ratio is None else round(ratio, 3)
         if ratio is None:
-            mg["verdict"] = "clean 기준 Q≈0 — 비율 정의 불가, 판정 보류"
+            # ⛔ 완전히 붕괴한 clean 은 **유효한 기준이 아니다** (Codex 7차 §9).
+            #   "판정 보류" 로 pose 를 통과시키면 fail-open 이다.
+            mg["verdict"] = "⛔ clean 기준 Q≈0 — 기준 자체가 무효"
+            if "clean_slab" not in j:
+                r["gates"].append(
+                    f"MAGNETIC_REFERENCE_INVALID({sd}: clean Q≈0 — 기준이 붕괴했다. "
+                    f"이 seed 의 headline 에서 제외)")
+                r["ok"] = not r["gates"]
             continue
         if ratio < Q_RATIO_MIN or mg["f_small"] > F_SMALL_MAX:
             r["gates"].append(
@@ -1957,7 +1964,18 @@ def main():
                     rec["gates"].append(
                         ("SOURCE_PAIR_COLLAPSED" if sp_pair else "PAIR_COLLAPSED")
                         + f"(분자 RMSD {rms:.2f} Å ≤ {RMSD_TOL} · {why})")
+        # ★★ 추정량 이름 (Codex 7차 §1) — 자세키 p=(down_dir, roll) 에 대해
+        #   ΔE_match(p) = E_Ni(p) − E_Li(p)          ← 배향 혼입 없는 자리 대비
+        #   D_pool      = E_Ni(p_N*) − E_Li(p_L*)    ← 짝 풀 챔피언 **대각선** 대비
+        #   p_L* == p_N* 이면 둘이 같지만, 다르면 D_pool 에 자리와 자세가 섞인다.
+        #   그러므로 de_main 을 무조건 "matched" 라 부르면 안 된다.
         de_main = rec["dE_by_seed"].get("afm2424_pm1")
+        _pose_matched = pm.get("matched") is True
+        rec["estimand"] = ("dE_match(p*)  — 같은 자세키에서 잰 자리 대비 (배향 혼입 없음)"
+                           if _pose_matched else
+                           "D_pool  — 짝 풀 챔피언 **대각선** 대비 (자리+자세 혼합). "
+                           "matched 라 부르지 말 것")
+        rec["pose_matched"] = _pose_matched
         de_alt = rec["dE_by_seed"].get("afm2424_net4")
         # ★ ΔE 만 비교하면, 두 pose 가 같은 방향으로 함께 움직이고 clean 은 안 움직인
         #   경우 ΔE 는 그대로인데 E_ads 만 달라진다 (Codex P0-2).
@@ -2028,13 +2046,37 @@ def main():
         #   둘의 차가 **배향 항**이다. 부호가 다르면 어느 질문인지 반드시 밝혀야 한다.
         gb = pm.get("global_best") or {}
         if gb:
+            # ★ 두 seed 전부 읽는다 (Codex 7차 §5). 본 ΔE 는 seed 산포 게이트를 통과해야
+            #   하는데 global 만 단일시드면 부호가 자기 branch 잡음일 수 있다.
+            dg_seed = {}
+            for sd in pm.get("seeds", ["afm2424_pm1"]):
+                e2 = {}
+                for role, pre in (("Li", pm["li_prefix"]), ("Ni", pm["ni_prefix"])):
+                    p2 = gb[role]["prefix"] if role in gb else pre
+                    e2[role] = E(f"{p2}__{sd}")
+                if e2["Li"] is not None and e2["Ni"] is not None:
+                    dg_seed[sd] = round(e2["Ni"] - e2["Li"], 4)
+            rec["dE_global_by_seed"] = dg_seed
+            n_want = len(pm.get("seeds", []))
+            if len(dg_seed) < n_want:
+                rec["gates"].append(
+                    f"GLOBAL_SEED_INCOMPLETE({len(dg_seed)}/{n_want}) — 전역 대비 보류")
+            elif len(dg_seed) > 1:
+                sp = max(dg_seed.values()) - min(dg_seed.values())
+                rec["global_seed_spread_meV"] = round(sp * 1000, 1)
+                if sp > SEED_TOL:
+                    rec["gates"].append(
+                        f"GLOBAL_MAGNETIC_SENSITIVITY(seed 산포 {sp*1000:.0f} meV > 10)")
             eg = {}
             for role, pre in (("Li", pm["li_prefix"]), ("Ni", pm["ni_prefix"])):
                 p2 = gb[role]["prefix"] if role in gb else pre
                 eg[role] = E(f"{p2}__afm2424_pm1")
             if eg["Li"] is not None and eg["Ni"] is not None:
                 dg = eg["Ni"] - eg["Li"]
-                rec["dE_global_eV"] = round(dg, 4)
+                # ★ 이름을 정확히 (Codex 7차 §1.4) — 이건 **UMA 가 고른** 전역 챔피언
+                #   대비다. DFT 재랭킹도, DFT 이완 최소점도, 흡착 자유에너지도 아니다.
+                rec["dE_UMA_selected_global_champ_eV"] = round(dg, 4)
+                rec["dE_global_eV"] = round(dg, 4)      # 하위호환(폐기 예정)
                 if de_main is not None:
                     rec["orientation_term_eV"] = round(dg - de_main, 4)
                     flip = (dg > 0) != (de_main > 0)
@@ -2045,11 +2087,13 @@ def main():
                         "SIGN_AGREES" if not flip else
                         "UNRESOLVED(한쪽이 guard band 안)")
                     if flip and min(abs(dg), abs(de_main)) > GUARD_EV:
-                        rec["gates"].append(
-                            f"SITE_QUESTION_DEPENDENT(배향일치 {de_main:+.3f} vs "
-                            f"전역 {dg:+.3f} eV — 부호가 다르다. 전역 자리 선호를 "
-                            f"주장하려면 전역 값을, 배향 효과를 배제하려면 배향일치 값을 "
-                            f"쓰되 **둘을 섞지 말 것**)")
+                        # ⚠ 이건 계산 실패가 아니다 — 각 추정량은 유효하다.
+                        #   금지되는 건 **하나의 site preference 숫자로 합치는 것**뿐이다.
+                        #   그래서 gates(=값 무효화)가 아니라 해석 라벨로 남긴다.
+                        rec["ESTIMAND_DEPENDENT_NO_SINGLE_SITE_PREFERENCE"] = (
+                            f"D_pool {de_main:+.3f} vs UMA-selected global {dg:+.3f} eV — "
+                            f"부호가 다르다. 두 값 **각각은 유효**하다. 하나의 '자리 선호' "
+                            f"숫자로 합치지 말고 추정량을 밝혀 따로 보고할 것.")
             else:
                 rec["dE_global_eV"] = None
                 rec["global_vs_matched"] = "전역 끝점 미완/게이트 — 전역 대비 불가"
@@ -2096,17 +2140,52 @@ def main():
                 rec["gates"].append(
                     f"CROSS_MAGNETIC_SENSITIVITY({tag}: {spread * 1000:.0f} meV)")
                 continue
-            if de_main is not None:
-                same = (d_m > 0) == (de_main > 0)
-                small = abs(d_m) <= GUARD_EV or abs(de_main) <= GUARD_EV
-                entry["verdict"] = (
-                    "UNRESOLVED(guard band 안 — 부호 판정 불가)" if small else
-                    "SIGN_CONFIRMED_AT_MATCHED_ORIENTATION" if same else
-                    "ORIENTATION_DEPENDENT — 전역 자리 선호 주장 금지")
-                if not same and not small:
+            entry["quantity"] = f"dE_match({cx['down_dir']}/r{cx.get('roll_deg')})"
+            entry["k_note"] = "coarse only — dense 없음"
+        # ── 2×2: **두 고정자세 대비끼리** 비교한다 (Codex 7차 §1.3) ────────────
+        #   ΔE_match(p_L*) = E_Ni(p_L*) − E_Li(p_L*)
+        #   ΔE_match(p_N*) = E_Ni(p_N*) − E_Li(p_N*)
+        #   I = ΔE_match(p_N*) − ΔE_match(p_L*) = O_N − O_L
+        #   ⚠ 옛 판은 각 교차를 **대각선** de_main 과 비교했다. 그러면 I 가 안 나온다.
+        #   ⚠ I 는 모집단 상호작용이 아니라 **이 두 자세에서의 유한설계 대비**다.
+        cr = rec.get("cross") or {}
+        if not _pose_matched and len(cr) == 2:
+            eL = {}
+            for sd in pm.get("seeds", ["afm2424_pm1"]):
+                # p_L* 자세: Li 는 본 끝점, Ni 는 교차(Ni_at_Li_pose)
+                a1 = E(f"{pm['li_prefix']}__{sd}")
+                b1 = E(f"{(cr.get('Ni_at_Li_pose') or {}).get('prefix', '')}__{sd}") \
+                    if "Ni_at_Li_pose" in cr else None
+                # p_N* 자세: Ni 는 본 끝점, Li 는 교차(Li_at_Ni_pose)
+                a2 = E(f"{(cr.get('Li_at_Ni_pose') or {}).get('prefix', '')}__{sd}") \
+                    if "Li_at_Ni_pose" in cr else None
+                b2 = E(f"{pm['ni_prefix']}__{sd}")
+                if None not in (a1, b1, a2, b2):
+                    eL[sd] = {"dE_match_pL": round(b1 - a1, 4),
+                              "dE_match_pN": round(b2 - a2, 4),
+                              "I": round((b2 - a2) - (b1 - a1), 4),
+                              "O_Li": round(a2 - a1, 4), "O_Ni": round(b2 - b1, 4)}
+            if eL:
+                rec["two_by_two"] = eL
+                m = eL.get("afm2424_pm1") or list(eL.values())[0]
+                dl, dn = m["dE_match_pL"], m["dE_match_pN"]
+                both_big = min(abs(dl), abs(dn)) > GUARD_EV
+                same = (dl > 0) == (dn > 0)
+                rec["two_by_two_verdict"] = (
+                    "UNRESOLVED(한쪽이 guard band 안 — 부호 비교 불가)" if not both_big else
+                    "SIGN_AGREES_AT_BOTH_SAMPLED_POSES — **두 표본 자세에서** 부호 일치 "
+                    "(모집단 배향 무관성 주장 아님)" if same else
+                    "POSE_DEPENDENT_SIGN — 자세에 따라 부호가 다르다. 자세 무관 자리 선호 금지")
+                if both_big and not same:
                     rec["gates"].append(
-                        f"ORIENTATION_DEPENDENT(챔피언 {de_main:+.3f} vs 배향일치 "
-                        f"{d_m:+.3f} eV — 부호가 다르다)")
+                        f"POSE_DEPENDENT_SIGN(ΔE_match(p_L*)={dl:+.3f} vs "
+                        f"ΔE_match(p_N*)={dn:+.3f} eV)")
+                if len(eL) > 1:
+                    sp = max(x["I"] for x in eL.values()) - min(x["I"] for x in eL.values())
+                    rec["two_by_two"]["I_seed_spread_meV"] = round(sp * 1000, 1)
+                    if sp > SEED_TOL:
+                        rec["gates"].append(
+                            f"TWO_BY_TWO_MAGNETIC_SENSITIVITY(I seed 산포 {sp*1000:.0f} meV)")
         if pm.get("cross_missing"):
             rec["cross_missing"] = pm["cross_missing"]
 
@@ -2796,8 +2875,13 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                     pm["global_unmeasured"] = {
                         "shift_meV": p.get("global_shift_meV"),
                         "why": (f"|shift| < {a.global_champion_meV} meV 문턱 — 전역 최선 "
-                                f"자세를 DFT 로 재지 않았다. ΔE(global) ≈ ΔE(matched) "
-                                f"− shift 는 **UMA 추정**이다.")}
+                                f"자세를 DFT 로 재지 않았다.\n"
+                                f"⚠ 부호 규약: shift = restr_Li − restr_Ni 이므로 "
+                                f"**D_global = D_pool + shift** 다 (2026-08-12 정정 — "
+                                f"−shift 로 적혀 있었다).\n"
+                                f"⚠ 그리고 이 항등식은 **UMA 안에서만** 성립한다. DFT 값에 "
+                                f"더해 DFT global 을 추정하면 안 된다 — 자세마다 UMA→DFT "
+                                f"보정이 같다는 보장이 없다.")}
                     print(f"    ⚠ {pid}: 전역 shift {p['global_shift_meV']:+.1f} meV "
                           f"(문턱 {a.global_champion_meV} 미만) — 전역 대비는 UMA 추정만")
 
