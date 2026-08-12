@@ -891,6 +891,48 @@ def am_load_split_profile(absorb_z, trac_se_z, wallp, k_floor, k_wall, band=None
     return out
 
 
+def _shift_nb(a, s, ax, wrap, fill=0):
+    """(ax, s) 방향 이웃 배열과 **유효 마스크**를 돌려준다.
+
+    ⚠ 2026-08-12 (Codex #3): 이전 코드는 `np.roll` 로 **세 축 전부 무조건 wrap** 했다.
+      · z 를 감으면 바닥 AM 이 천장 복셀을 이웃으로 본다 — 침대는 위·아래가 플레이트로
+        막혀 있어 물리적으로 이웃이 아니다.  솔버(step3 solve_sigma_z)도 z 는 절대 안 감는다.
+      · 비주기 런에서는 x/y 도 감으면 안 된다.
+    감지 않는 축의 바깥 이웃은 **측정이 아니다** → 0 으로 채우고 `valid` 에서 제외한다
+    (경계 슬래브를 분자·분모 양쪽에서 빼므로 비율이 편향되지 않는다).
+    """
+    if wrap:
+        return np.roll(a, s, ax), np.ones(a.shape, bool)
+    out = np.full(a.shape, fill, a.dtype)
+    valid = np.zeros(a.shape, bool)
+    src = [slice(None)] * a.ndim
+    dst = [slice(None)] * a.ndim
+    if s > 0:                       # roll(+1) 은 dst[i] = src[i-1]
+        dst[ax] = slice(s, None); src[ax] = slice(None, -s)
+    else:
+        dst[ax] = slice(None, s); src[ax] = slice(-s, None)
+    out[tuple(dst)] = a[tuple(src)]
+    valid[tuple(dst)] = True
+    return out, valid
+
+
+def coverage_fraction(pin_c, occ_c, amt, periodic_xy=False):
+    """AM_t 표면 복셀 중 occ_c 를 마주보는 비율 [%], (cov, tot) 동봉.
+
+    경계 규약: x/y 는 `periodic_xy` 일 때만 wrap · **z 는 어떤 경우에도 wrap 하지 않는다**.
+    """
+    tot = 0; cov = 0
+    for ax in range(3):
+        wrap = bool(periodic_xy) and ax in (0, 1)
+        for s in (1, -1):
+            pin_sh, valid = _shift_nb(pin_c, s, ax, wrap)
+            iface = amt & (pin_sh == 0) & valid
+            tot += int(iface.sum())
+            occ_sh, _ = _shift_nb(occ_c.astype(np.int8), s, ax, wrap)
+            cov += int((iface & occ_sh.astype(bool)).sum())
+    return (100.0 * cov / tot if tot else 0.0), cov, tot
+
+
 def _selftest():
     """--selftest: pure-numpy checks of the restart state layer (no taichi / no GPU needed)."""
     import json as _json
@@ -1296,6 +1338,41 @@ def _selftest():
         max(abs(x - 0.5) for x in _f) < 0.015)
     chk('R2.5-v2: 하중 ×7.9 에도 f 변동 < DEM 의 1/10 (DEM 은 0.517→0.675)',
         (max(_f) - min(_f)) < 0.1 * (0.675 - 0.517))
+
+    # (H) ★ Codex #3 — coverage 경계 규약.  픽스처는 옛 규약(무조건 3축 wrap)과 새 규약이
+    #     **실제로 다른 답을 내는** 것을 보여야 한다 (가능도비 1 이면 시험이 아니다).
+    #     구성: 바닥층 AM 하나 · 천장층에 SE 하나.  z 를 감으면 둘이 이웃이 되어
+    #     "천장 SE 가 바닥 AM 을 덮는다" 는 **가짜 커버리지**가 잡힌다.
+    _pin = np.zeros((3, 3, 4), np.int8); _pin[1, 1, 0] = 1          # AM_P at k=0 (바닥)
+    _occ = np.zeros((3, 3, 4), bool);    _occ[1, 1, 3] = True       # SE at k=3 (천장)
+    _amt = (_pin == 1)
+
+    def _old_cov(pin_c, occ_c, amt):                                # 옛 코드 그대로 재현
+        tot = 0; cov = 0
+        for ax in range(3):
+            for s in (1, -1):
+                ifc = amt & (np.roll(pin_c, s, ax) == 0)
+                tot += int(ifc.sum()); cov += int((ifc & np.roll(occ_c, s, ax)).sum())
+        return (100.0 * cov / tot if tot else 0.0)
+    _old = _old_cov(_pin, _occ, _amt)
+    _new = coverage_fraction(_pin, _occ, _amt, periodic_xy=False)[0]
+    chk('#3: 옛 규약은 z-wrap 으로 가짜 커버리지를 만든다 (판별 픽스처)', _old > 0.0)
+    chk('#3: 새 규약은 z 를 안 감아 그 가짜가 사라진다', _new == 0.0)
+    # x 방향 진짜 이웃은 두 규약 모두 잡아야 한다 (과잉차단 아님을 보이는 대조군)
+    _occ2 = np.zeros((3, 3, 4), bool); _occ2[2, 1, 0] = True
+    chk('#3: 진짜 면-이웃은 여전히 잡힌다 (대조군)',
+        coverage_fraction(_pin, _occ2, _amt, periodic_xy=False)[0] > 0.0)
+    # 비주기에서 x/y 도 안 감는다: 경계 AM 이 반대쪽 벽 SE 를 이웃으로 보면 안 된다
+    _pin3 = np.zeros((3, 3, 4), np.int8); _pin3[0, 1, 1] = 1
+    _occ3 = np.zeros((3, 3, 4), bool);    _occ3[2, 1, 1] = True
+    chk('#3: 비주기면 x seam 도 안 감는다',
+        coverage_fraction(_pin3, _occ3, (_pin3 == 1), periodic_xy=False)[0] == 0.0)
+    chk('#3: 주기면 x seam 을 감는다 (규약이 인자를 실제로 따른다)',
+        coverage_fraction(_pin3, _occ3, (_pin3 == 1), periodic_xy=True)[0] > 0.0)
+    # 감지 않는 축의 바깥 이웃은 분자·분모에서 **함께** 빠져야 편향이 없다
+    _pinF = np.ones((3, 3, 3), np.int8); _occF = np.ones((3, 3, 3), bool)
+    chk('#3: 전부 AM 이면 표면 0 → 0 % (0 나눗셈 안전)',
+        coverage_fraction(_pinF, _occF, (_pinF == 1), periodic_xy=False)[2] == 0)
 
     print(f"selftest: {ok}/{ok + len(fail)} PASS" + (f"   FAILED: {fail}" if fail else ""))
     return 1 if fail else 0
@@ -3224,13 +3301,9 @@ def main(argv):
             pin_c, se_c2 = pin_np, se_occ
             add_c = add_occ
         def _cov_frac(occ_c, amt):                            # fraction of AM_t surface voxels facing occ_c
-            tot = 0; cov = 0
-            for ax in range(3):
-                for s in (1, -1):
-                    iface = amt & (np.roll(pin_c, s, ax) == 0)   # AM_t voxel with a non-AM neighbour
-                    tot += int(iface.sum())
-                    cov += int((iface & np.roll(occ_c, s, ax)).sum())
-            return (100.0 * cov / tot if tot else 0.0), cov, tot
+            # ★ 경계 규약을 솔버와 통일 (Codex #3): x/y 는 PERIODIC 일 때만 wrap, **z 는 절대 안 감음**.
+            #   옛 코드는 세 축 전부 무조건 np.roll 이라 바닥 AM 이 천장을 이웃으로 봤다.
+            return coverage_fraction(pin_c, occ_c, amt, periodic_xy=bool(PERIODIC))
         for t, nm in ((1, 'AM_P'), (2, 'AM_S')):
             amt = (pin_c == t)
             pct, cov, tot = _cov_frac(se_c2, amt)
@@ -3318,6 +3391,9 @@ def main(argv):
             # additive(carbon/soft-fibre)-on-AM coverage (σ_e contact), SEPARATE from SE coverage above;
             # None for carbon-free runs.  SE keys are now SE-ONLY (were SE+additive conflated pre-2026-07-03).
             'coverage_AM_P_add_pct': cov_out.get('AM_P_add'), 'coverage_AM_S_add_pct': cov_out.get('AM_S_add'),
+            # ★ 산출물이 자기 경계규약을 밝힌다 (Codex #3).  2026-08-12 이전 런은 세 축을
+            #   무조건 wrap 했으므로 이 키가 없으면 `legacy:wrap_xyz` 로 읽을 것.
+            'coverage_boundary': ('periodic_xy+z_open' if PERIODIC else 'open_xyz'),
             'n_grid': int(n_grid), 'nz': int(nz), 'n_pts': int(n),
             'E_SE_GPa': _E_rep, 'nu_SE': _nu_rep,
             'sigma_y_GPa': _sy_rep, 'K_SE_GPa': _K_rep,
