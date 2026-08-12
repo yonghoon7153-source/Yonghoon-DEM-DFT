@@ -737,6 +737,8 @@ DELTA = 0.030
 SEED_TOL = 0.010          # eV — seed-매칭 ΔE 게이트
 BOX_TOL = 0.010           # eV — 기체상 상자 수렴
 K_TOL = 0.010             # eV — dense-k 민감도
+GUARD_EV = 0.010          # ±10 meV — k 전이 불확실성. **30 meV 판정바닥과 별개다**
+                          #   (Codex 5차: 두 숫자를 하나로 합치면 경계 결과를 오판한다)
 RMSD_TOL = 0.75           # Å — 두 끝점이 같은 basin 인가 (0.50/1.00 민감도도 같이 뽑는다)
 CONTACT_A = 3.0           # Å — 접촉 지문 반경
 FP_JACCARD = 0.80         # 접촉 지문 겹침 — 경계 원자 하나로 뒤집히지 않게 완전일치 대신
@@ -1488,8 +1490,46 @@ def main():
                 if not ok_k:
                     rec["gates"].append(f"NUMERICALLY_UNRESOLVED(dense-k {gate})")
 
+        # ── 교차 끝점: 배향이 맞춰진 대비 (Codex 5차 결정 ②) ──────────────
+        #   챔피언 ΔE 는 두 배향이 다르면 자리 효과와 배향 효과가 섞인다.
+        #   같은 배향에서 잰 Δ 와 **부호가 같은지**가 배향 인공물 여부를 가른다.
+        for tag, cx in (pm.get("cross") or {}).items():
+            base_role = cx["role"]                      # 추가된 쪽
+            other = "Li" if base_role == "Ni" else "Ni"
+            e_new = E(f"{cx['prefix']}__afm2424_pm1")
+            e_old = E(f"{pm[('li' if other == 'Li' else 'ni') + '_prefix']}"
+                      f"__afm2424_pm1")
+            if e_new is None or e_old is None:
+                rec.setdefault("cross", {})[tag] = {"status": "미완/게이트"}
+                continue
+            d_m = (e_new - e_old) if base_role == "Ni" else (e_old - e_new)
+            rec.setdefault("cross", {})[tag] = {
+                "orientation": cx["down_dir"], "roll": cx.get("roll_deg"),
+                "dE_matched_eV": round(d_m, 4)}
+            if de_main is not None:
+                same = (d_m > 0) == (de_main > 0)
+                small = abs(d_m) <= GUARD_EV or abs(de_main) <= GUARD_EV
+                rec["cross"][tag]["verdict"] = (
+                    "UNRESOLVED(guard band 안 — 부호 판정 불가)" if small else
+                    "SIGN_CONFIRMED_AT_MATCHED_ORIENTATION" if same else
+                    "ORIENTATION_DEPENDENT — 전역 자리 선호 주장 금지")
+                if not same and not small:
+                    rec["gates"].append(
+                        f"ORIENTATION_DEPENDENT(챔피언 {de_main:+.3f} vs 배향일치 "
+                        f"{d_m:+.3f} eV — 부호가 다르다)")
+        if pm.get("cross_missing"):
+            rec["cross_missing"] = pm["cross_missing"]
+
         if de_main is not None and not rec["gates"]:
             rec["dE_Ni_minus_Li_eV"] = de_main
+            # ±10 meV k guard band — 30 meV 판정바닥과 **합치지 않는다**
+            a_de = abs(de_main)
+            rec["k_guard"] = ("판정 유지 (>40 meV)" if a_de > delta + GUARD_EV else
+                              "바닥 아래 결론 유지 (<20 meV)" if a_de < delta - GUARD_EV else
+                              "⚠ 20–40 meV — k 오차로 판정이 뒤집힐 수 있다: "
+                              "직접 dense 아니면 UNRESOLVED")
+            if abs(de_main) <= GUARD_EV:
+                rec["k_guard"] = "⛔ |ΔE| ≤ 10 meV — 부호 자체가 안 정해진다"
             ec = eclean.get("afm2424_pm1")
             if ec is not None and emol.get(frag) is not None:
                 eli = E(f"{pm['li_prefix']}__afm2424_pm1")
