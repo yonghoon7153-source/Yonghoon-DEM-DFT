@@ -68,6 +68,7 @@ def run_note(d):
 STAGES = [("01_vcrelax", "vc-rlx"), ("02_scf", "scf"), ("03_nscf_gap", "gap"),
           ("04_nscf_dos", "dos-k"), ("05_dos", "dos"), ("06_projwfc", "pdos")]
 BAR = "─" * 76
+FULL = "--full" in sys.argv        # 완주한 상까지 전부 펼친다 (기본은 접음)
 RY_EV = 13.605693122994
 #: 대칭 동등 끝점이 이보다 벌어지면 둘 중 하나가 미수렴이다 (실측: 미수렴 시 57 meV).
 #: etot_conv_thr 1e-4 Ry(=1.4 meV)·forc 여유를 감안한 값.
@@ -397,6 +398,21 @@ def selftest():
     d2, e2 = read_gap(gj("broke", json.dumps({"gap": "abc", "vbm": 1, "cbm": 2})))
     chk(d2 is None and e2 and "손상" in e2 and "아님" not in e2,
         f"파싱 불가 값은 여전히 **손상** ({str(e2)[:36]})")
+    # ── 줄수 예산 (2026-08-12) ─────────────────────────────────────────────
+    #   ⚠ 화면이 넘치면 ④ NEB 가 잘려 **감시가 안 된다** — 실제로 두 번 그랬다.
+    #     기본 출력은 48줄 안에 들어와야 한다 (보통 터미널 50줄).
+    #     이 시험은 자기 자신을 서브프로세스로 돌려 실제 줄수를 센다.
+    import subprocess as _sp
+    _r = _sp.run([sys.executable, os.path.abspath(__file__)],
+                 capture_output=True, text=True, timeout=180,
+                 env={**os.environ, "PYTHONIOENCODING": "utf-8"})
+    _n = len(_r.stdout.splitlines())
+    chk(_n <= 48, f"기본 출력 {_n}줄 ≤ 48 (넘치면 ④ 가 잘린다)")
+    _rf = _sp.run([sys.executable, os.path.abspath(__file__), "--full"],
+                  capture_output=True, text=True, timeout=180,
+                  env={**os.environ, "PYTHONIOENCODING": "utf-8"})
+    chk(len(_rf.stdout.splitlines()) >= _n, "--full 은 더 길다 (접기가 실제로 접는다)")
+    chk("④" in _r.stdout, "기본 출력에 ④ NEB 절이 **있다**")
     shutil.rmtree(td, ignore_errors=True)
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
@@ -457,10 +473,19 @@ else:
                 g = f"  gap {j['gap']:6.3f} eV  {j['verdict']}"
             except Exception:
                 g = "  (gap.json 손상)"
-        if all(m == "✓" for m in marks) and os.path.isfile(gj):
+        _ok = all(m == "✓" for m in marks) and os.path.isfile(gj)
+        if _ok:
             ndone += 1
-        print(f"   {t:26s}" + "  ".join(f"{m:>6s}" for m in marks) + g)
-    print(f"\n   완주 {ndone}/{len(tags)}")
+        # ⚠ 감시 화면은 **손볼 것**을 보여 주는 곳이다. 완주하고 갭도 정상인 상은
+        #   한 줄로 접는다 — 안 그러면 ④ NEB 가 화면 밖으로 밀린다 (실제로 밀렸다).
+        if _ok and "손상" not in g and not FULL:
+            _folded.setdefault(_root, []).append(t.split("_mp")[0])
+        else:
+            print(f"   {t:26s}" + "  ".join(f"{m:>6s}" for m in marks) + g)
+    if _cur is not None and _folded.get(_cur):
+        print(f"     ✓ 완주 {len(_folded[_cur])}: " + " · ".join(_folded[_cur]))
+    print(f"   완주 {ndone}/{len(pairs)}"
+          + ("" if FULL else "   (전부 펼치려면 --full)"))
 
     # 끊긴 것 = 재부팅 피해. 러너가 resume-safe 라 그냥 다시 걸면 된다.
     broken = [t for r, t in pairs
@@ -533,7 +558,20 @@ if gaps or gaps_bad:
             ndz = float(m.group(1)) if m else ndz
         except OSError:
             pass
-    for d in sorted(gaps, key=lambda x: -x["gap"]):
+    # ⚠ 기본은 **요약**이다 (CLAUDE.md 출력 규율). 갭 표는 안 바뀌는 정보라
+    #   매번 10줄을 찍으면 ④ NEB 가 밀린다. 전체는 --full.
+    _gs = sorted(gaps, key=lambda x: -x["gap"])
+    if not FULL and len(_gs) > 3:
+        _ins = [x for x in _gs if (x.get("verdict") or "").startswith("절연")]
+        _nar = [x for x in _gs if x not in _ins]
+        print(f"   절연체 {len(_ins)}: "
+              + " · ".join(f"{x['tag'].split('_mp')[0]} {x['gap']:.2f}" for x in _ins))
+        if _nar:
+            print(f"   ⚠ 좁은 갭 {len(_nar)}: "
+                  + " · ".join(f"**{x['tag'].split('_mp')[0]} {x['gap']:.2f}**" for x in _nar)
+                  + "   ← 전자 차단 안 됨")
+        _gs = []
+    for d in _gs:
         nd = "Nd" in str(d["tag"]) or "nd2" in str(d["tag"])
         if not nd:
             flag = ""
@@ -546,13 +584,17 @@ if gaps or gaps_bad:
         print(f"   {str(d['tag']):26s} {d['vbm']:8.3f} {d['cbm']:8.3f} "
               f"{d['gap']:9.3f}  {d.get('verdict', '?')}{flag}")
     for tag, why in gaps_bad:
-        print(f"   {tag:26s} {'—':>8s} {'—':>8s} {'—':>9s}  ⛔ {why}")
+        print(f"   {tag:26s} {'—':>8s} {'—':>8s} {'—':>9s}  ⛔ {why[:58]}")
     if gaps:
         print("   ⚠ PBE 갭은 넓은 갭 절연체에서 30–50% 과소 — 실험값과 나란히 놓지 말 것")
-    if any("손상" in w for _t, w in gaps_bad):
-        print("   ⛔ 손상된 gap.json 은 03 단계(nscf)를 다시 돌려야 한다 — extract_gap.py 재실행")
+    # ⚠ "손상 아님" 안에 "손상" 이 들어 있어 부분일치로 조언이 발화했다 (2026-08-12).
+    if any(("손상" in w and "손상 아님" not in w) for _t, w in gaps_bad):
+        print("   ⛔ 손상된 gap.json 은 03 단계(nscf)를 다시 돌려야 한다 — extract_gap.py")
     if any("금속 해" in w for _t, w in gaps_bad):
-        print("   🟡 금속 해는 재실행으로 안 풀린다 — PP 문제다 (kb/open_items.md §O)")
+        # ⚠ 옛 문구는 "PP 문제다" 였다. Nd 계열은 frozen-4f 로 해결됐고, li3nd 는
+        #   **진짜 금속**이다(db/properties/sei_electronic_class.json 선언). 갭이 없는 게 답이다.
+        print("   🟡 금속 해는 결함이 아니다 — 갭이 정의되지 않는 상이다 "
+              "(sei_electronic_class.json). DOS/PDOS 로 E_F 상태를 본다")
 else:
     print("② 갭 — 아직 gap.json 이 없다")
 
@@ -573,7 +615,7 @@ if _bd:
               f"잡 {_mm.get('n_jobs','?')} · static {_sub.get('n_static','?')} + "
               f"dense {_sub.get('n_dense_mandatory','?')}"
               + (f" · zip {os.path.getsize(_z)//1024} KB" if os.path.isfile(_z) else ""))
-        print(f"   범위: {str(_mm.get('claim_scope',''))[:88]}")
+        print(f"   범위: {str(_mm.get('claim_scope','')).split('.')[0][:76]}")
     except (OSError, ValueError) as e:
         print(f"③ SDCP 외주 번들 — MANIFEST 읽기 실패 ({type(e).__name__})")
 elif os.path.isfile(SDCP_VASP + ".zip"):
