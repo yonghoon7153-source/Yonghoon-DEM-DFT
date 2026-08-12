@@ -213,9 +213,18 @@ def neb_status(d):
         # 비대칭이라도 크기는 본다 — 두 Li 자리의 에너지 차가 이 정도로 벌어지는 일은
         # 드물다. 보통은 이완 미완이거나 끝점 구성이 잘못된 것이다 (판정이 아니라 확인 요청).
         elif r["eqv"] is not True and ad > EP_BIG_MEV:
-            r["alerts"].append(
-                f"{r['tag']}: 비대칭이라 끝점 차는 정상이지만 {r['ep_dE_meV']:+.0f} meV 는 "
-                f"두 Li 자리 차로는 크다 (>{EP_BIG_MEV:.0f}) — 이완 완료·자리 배정을 확인할 것")
+            # ⚠ 이 런이 무엇인지 _NOTE.txt 가 설명하고 있으면 **낡은 조언을 반복하지
+            #   않는다** — 이미 판정된 건에 "확인할 것" 을 매번 띄우면 화면이 늑대소년이
+            #   된다 (li3nd c→b: 안 일어나는 홉이라는 게 kb 카드로 확정돼 있다).
+            _rn = run_note(os.path.dirname(os.path.abspath(d)))
+            if _rn:
+                r["alerts"].append(
+                    f"{r['tag']}: 끝점 차 {r['ep_dE_meV']:+.0f} meV — 이 런은 설명돼 있다 "
+                    f"({_rn[:44]})")
+            else:
+                r["alerts"].append(
+                    f"{r['tag']}: 비대칭이라 끝점 차는 정상이지만 {r['ep_dE_meV']:+.0f} meV 는 "
+                    f"두 Li 자리 차로는 크다 (>{EP_BIG_MEV:.0f}) — 이완 완료·자리 배정 확인")
 
     # ── 경로 ──
     out = os.path.join(d, "neb.out")
@@ -413,6 +422,29 @@ def selftest():
                   env={**os.environ, "PYTHONIOENCODING": "utf-8"})
     chk(len(_rf.stdout.splitlines()) >= _n, "--full 은 더 길다 (접기가 실제로 접는다)")
     chk("④" in _r.stdout, "기본 출력에 ④ NEB 절이 **있다**")
+    # ── ① 과 ② 가 같은 파일을 두고 다르게 말하면 안 된다 (2026-08-12) ─────────
+    #   ① 만 자기 json.load 를 써서 gap:null 을 "손상" 으로, ② 는 read_gap 으로
+    #   "금속 판정" 으로 찍고 있었다. 같은 read_gap 을 쓰는지 확인한다.
+    _src = open(os.path.abspath(__file__), encoding="utf-8").read()
+    # ⚠ 이 문자열이 **이 시험 코드 안에도** 있다 — 앞에서 찾으면 자기 자신을 잡는다.
+    #   실제 절은 파일 뒤쪽이므로 rindex 로 찾는다.
+    _sec1 = _src[_src.rindex("# ── 1) SEI DFT"):_src.rindex("# ── 2)")]
+    chk("read_gap(gj)" in _sec1 and "json.load(open(gj))" not in _sec1,
+        "① 도 read_gap() 을 쓴다 (② 와 같은 판정)")
+    # ── 설명된 런에는 낡은 조언을 반복하지 않는다 ─────────────────────────────
+    _nb = os.path.join(td, "notedrun")
+    os.makedirs(os.path.join(_nb, "li3nd"), exist_ok=True)
+    open(os.path.join(_nb, "_NOTE.txt"), "w").write("c→b — 일어나지 않는 홉\n")
+    for ep, e in (("ep_initial", -100.0), ("ep_final", -102.072)):
+        os.makedirs(os.path.join(_nb, "li3nd", ep), exist_ok=True)
+        open(os.path.join(_nb, "li3nd", ep, "relax.out"), "w").write(
+            f"!    total energy = {e / RY_EV:.8f} Ry\nbfgs converged\nJOB DONE.\n")
+    open(os.path.join(_nb, "li3nd", "meta.json"), "w").write(
+        json.dumps({"endpoints_symmetry_equivalent": False}))
+    _s = neb_status(os.path.join(_nb, "li3nd"))
+    chk(any("설명돼 있다" in a for a in _s["alerts"])
+        and not any("확인" in a for a in _s["alerts"]),
+        f"_NOTE 있는 런 → 낡은 '확인할 것' 대신 설명을 띄운다 ({_s['alerts'][:1]})")
     shutil.rmtree(td, ignore_errors=True)
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
@@ -468,11 +500,15 @@ else:
         gj = os.path.join(d, "gap.json")
         g = ""
         if os.path.isfile(gj):
-            try:
-                j = json.load(open(gj))
-                g = f"  gap {j['gap']:6.3f} eV  {j['verdict']}"
-            except Exception:
-                g = "  (gap.json 손상)"
+            # ⚠ ② 는 read_gap() 을 쓰는데 ① 만 자기 json.load 를 써서, 같은 파일을
+            #   두고 "손상"(①) 과 "금속 판정"(②) 으로 **서로 다르게** 말했다.
+            _jd, _je = read_gap(gj)
+            if _jd:
+                g = f"  gap {_jd['gap']:6.3f} eV  {_jd.get('verdict', '?')}"
+            elif _je and "손상 아님" in _je:
+                g = "  (금속 — 갭 미정의)"
+            else:
+                g = f"  ({_je or 'gap.json 손상'})"[:34]
         _ok = all(m == "✓" for m in marks) and os.path.isfile(gj)
         if _ok:
             ndone += 1
