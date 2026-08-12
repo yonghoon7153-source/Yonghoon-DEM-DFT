@@ -83,14 +83,22 @@ def segment_cells(p0, p1, vox, eps=1e-12):
     out = [cur.copy()]
     tmax = np.empty(3)
     tdel = np.empty(3)
+    # ★ DDA 도 **스냅된 좌표**를 쓴다 (2026-08-12 재수정, Codex 독립 재검증).
+    #   `cell_of` 만 스냅하고 tmax 는 원 좌표로 계산하면 둘이 어긋나 경계를 한 칸 넘고,
+    #   끝점 보정이 되돌아온다 = backtrack.  실측 반례 p0=[0.1,1.0,0.1] p1=[0.8,0.8,0.8]
+    #   vox 0.4 → y 가 2→2→2→2→1→1→2 (y-cell 1 은 선분 밖).
+    p0s = np.where(np.abs(p0 / vox - np.round(p0 / vox)) < 1e-9,
+                   np.round(p0 / vox) * vox, p0)
     for a in range(3):
-        if abs(u[a]) < eps:
+        if abs(u[a]) < eps or cur[a] == endc[a]:
+            # ★ 이미 끝 셀에 도달한 축은 후보에서 **영구 제외**한다.  남겨두면 그 축이
+            #   계속 전진해 선분 밖 셀을 만든다 (위 반례의 y 축이 정확히 그것).
             tmax[a] = math.inf
             tdel[a] = math.inf
         else:
             # 다음 경계까지의 파라미터 거리
             nxt = (cur[a] + (1 if step[a] > 0 else 0)) * vox
-            tmax[a] = (nxt - p0[a]) / u[a]
+            tmax[a] = (nxt - p0s[a]) / u[a]
             tdel[a] = vox / abs(u[a])
     guard = 0
     guard_max = int(4 * (L / vox + 3)) + 16
@@ -101,7 +109,10 @@ def segment_cells(p0, p1, vox, eps=1e-12):
         cur = cur.copy()
         cur[a] += step[a]
         out.append(cur)
-        tmax[a] += tdel[a]
+        if cur[a] == endc[a]:              # ★ 그 축은 끝 — 더 전진하면 선분 밖이다
+            tmax[a] = math.inf
+        else:
+            tmax[a] += tdel[a]
         guard += 1
     # ★ 끝점 셀 보장 (2026-08-11 디버깅): 끝점이 복셀 경계에 **정확히** 놓이면
     #   (예 5.2 = 13×0.4) 마지막 경계 통과의 tmax 가 부동소수에서 L 을 아주 살짝 넘어

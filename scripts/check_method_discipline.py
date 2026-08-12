@@ -298,7 +298,10 @@ def check_oblique_rungs(verbose=True):
 # 규칙 C·D·E — 판별력 / 개수≠귀결 / 량 패리티
 # ═══════════════════════════════════════════════════════════════════════════
 _KINDS = ('hypothesis', 'convention', 'measurement_record')
-_STATUS = ('live', 'retired', 'rejected', 'retrospective')
+_STATUS = ('live', 'retired', 'rejected', 'retrospective', 'hold')
+#  ★ evidence_state (2026-08-12, Codex 재검증 P1 §4): v2 는 `evidence_state` 를 **읽지 않아**
+#    문서상 hold 가 실제 인용차단이 아니었다.  active 가 아닌 live 주장은 **오류**로 만든다.
+_EVIDENCE_OK = ('active', None)
 
 #  ① 이름 화이트리스트 → **패턴**.  v1 의 10개 어휘는 리포의 세는-양 440종 중 18종(4 %)만
 #    덮었다 — `se_se_cn`(118회)·`f_perc`(101)·`percolation_pct`(109), 심지어 현행 live
@@ -453,6 +456,10 @@ def check_claims_ledger(path=LEDGER, verbose=True):
     for c in claims:
         bad = check_claim(c)
         st = c.get('status')
+        if st == 'hold':                                   # ★ 실제 인용차단 (Codex P1 §4)
+            if verbose:
+                print(f'  HOLD    {c["id"]}: {str(c.get("hold_reason", ""))[:66]}')
+            continue
         if st in ('rejected', 'retired'):                  # C-7 과잉차단 해소: retired 도 면제
             if st == 'rejected' and not bad:
                 errs.append(f'{c.get("id")}: rejected 인데 검사를 **통과했다** — 규칙이 이 '
@@ -460,6 +467,9 @@ def check_claims_ledger(path=LEDGER, verbose=True):
             elif verbose and st == 'rejected':
                 print(f'  거부됨  {c["id"]}: {bad[0].split(": ", 1)[-1][:76]}')
             continue
+        if c.get('evidence_state') not in _EVIDENCE_OK:
+            errs.append(f'{c["id"]}: evidence_state={c.get("evidence_state")!r} 인데 status='
+                        f'{st!r} 다 — 인용차단이 안 된다.  status 를 "hold" 로 내릴 것')
         n_live += 1
         errs.extend(bad)
         if not bad and verbose:

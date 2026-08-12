@@ -94,7 +94,7 @@ def _shift(mask, axis, sh, periodic):
 
 
 def carbon_network_stats(cells, shape, am_mask=None, periodic_xy=False,
-                         plate_bot=None, plate_top=None):
+                         plate_bot=None, plate_top=None, legacy_z_wrap=False):
     """탄소 셀 집합 → 전역 망 통계.
 
     cells    : (N,3) int 복셀 좌표 (중복 허용 — 내부에서 unique)
@@ -146,7 +146,8 @@ def carbon_network_stats(cells, shape, am_mask=None, periodic_xy=False,
         # 성분이 AM 에 **면-인접**하면 그 성분 전체가 전류를 흘릴 수 있다 (6-face 솔버)
         touch = np.zeros(ncomp + 1, bool)
         for ax in range(3):
-            per = bool(periodic_xy) and ax in (0, 1)     # z 는 절대 wrap 하지 않는다
+            #  legacy_z_wrap 은 **옛 결함 재현 전용** — 프로덕션 경로에서 절대 쓰지 말 것
+            per = bool(legacy_z_wrap) or (bool(periodic_xy) and ax in (0, 1))
             for sh in (1, -1):
                 nb = _shift(am_mask, ax, sh, per)
                 touch[np.unique(lab[g & nb])] = True
@@ -208,8 +209,12 @@ def run(kit='kit_ps_7_3', n_grid=288, vox=0.4, vgcf_wt=1.0, seed=0, max_fibres=0
     #   생산 STEP3 기본은 비주기(`MPM_PERIODIC_SIGMA` 미설정) → periodic_xy=False.
     #   z 는 어떤 경우에도 wrap 하지 않는다 — 솔버가 위·아래 플레이트로 막는 축이다.
     #   plate 는 솔버 규약(z_bot=0, z_top=thickness, band=vox)의 셀 인덱스.
+    # ⚠ 2026-08-12 재수정 (Codex 재검증 P1 §3-B): 첫 판은 legacy 에 `kw={}` 를 넘겨
+    #   **현재 기본(zero-pad)** 을 쓰면서 결과에는 `LEGACY_xyz_toroidal` 이라 적었다 = 거짓 라벨.
+    #   진짜 옛 규약은 xyz **전축 toroidal** 이므로 periodic_xy=True + z-wrap 을 함께 켜야 한다.
     pb, pt_ = (None, None) if legacy else (0, int(round(thick / vox)) - 1)
-    kw = {} if legacy else dict(periodic_xy=periodic_xy, plate_bot=pb, plate_top=pt_)
+    kw = (dict(periodic_xy=True, legacy_z_wrap=True) if legacy
+          else dict(periodic_xy=periodic_xy, plate_bot=pb, plate_top=pt_))
     A = carbon_network_stats(pt_c, shape, am_mask, **kw)     # arm A = 점 스탬프 (현 기본값)
     B = carbon_network_stats(sg_c, shape, am_mask, **kw)     # arm B = 선분 스탬프
     r = {'kit': kit, 'n_grid': n_grid, 'vox_um': vox, 'vgcf_wt_pct': vgcf_wt,
