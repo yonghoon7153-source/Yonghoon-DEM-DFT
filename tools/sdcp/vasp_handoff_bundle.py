@@ -2112,7 +2112,10 @@ def selftest() -> int:
     q.write_text(_re.sub(r" atom =.*?(?=\n magnetization|\Z)", "", q.read_text(),
                          flags=_re.S))
     # N12 dense 에서만 Ni **일부**가 뒤집혔다 = 다른 자기 basin (전역 반전은 같은 상태)
-    br_job = "tier1/ptfe_dimer__fib03_r000__Nitop__afm2424_pm1"
+    # ⚠ fib03 은 N3(seed 불일치)가 쓰는 쌍이다 — 여기에 심으면 pm1 에너지가 죽어
+    #   seed 비교 자체가 안 돈다. 이미 죽은 fib01(N1 migration) 쪽에 심는다.
+    #   음성끼리 서로를 가리는 사고가 이번 라운드에서 두 번째다.
+    br_job = "tier1/ptfe_dimer__fib01_r000__Nitop__afm2424_pm1"
     q = out / br_job / "dense" / "OUTCAR"
     if q.is_file():
         lines = q.read_text().splitlines()
@@ -2144,6 +2147,13 @@ def selftest() -> int:
         "N1 migration → PAIR_MIGRATED")
     chk(any("BOND_CHANGE" in g for g in res["jobs"][bb_job]["gates"]),
         "N2 F 이탈 → BOND_CHANGE")
+    # ★ 음성끼리 서로를 가리는 사고가 두 번 났다 (N7·N12 가 N3 의 pm1 을 죽였다).
+    #   N3 은 fib03 의 **pm1 쌍이 살아 있어야** 성립한다 — 그걸 먼저 확인해
+    #   실패했을 때 "왜" 가 바로 보이게 한다.
+    live = [j for j in (f"tier1/ptfe_dimer__fib03_r000__{r}top__afm2424_pm1"
+                        for r in ("Li", "Ni"))]
+    blocked = {j: res["jobs"][j]["gates"] for j in live if res["jobs"][j]["gates"]}
+    chk(not blocked, f"N3 전제: fib03 pm1 쌍이 게이트 없이 살아 있다 ({blocked})")
     chk(any("BLOCKED_MAGNETIC" in g for g in res["pairs"]
             ["ptfe_dimer__fib03_r000"]["gates"]),
         "N3 seed 50 meV 불일치 → BLOCKED_MAGNETIC_SENSITIVITY")
