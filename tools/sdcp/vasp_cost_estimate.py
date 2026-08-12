@@ -457,16 +457,21 @@ def selftest() -> int:
     _real = sorted(_g.glob(os.path.join(
         os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
         "bundles", "*", "MANIFEST.json")))
-    if _real:
+    # ⚠ 하나만 집으면 어느 판인지 운에 맡기게 된다 (알파벳순 [-1] 이 옛 번들을
+    #   집었다). **있는 것 전부** 돌린다 — 판마다 job.json 모양이 다를 수 있다.
+    for _mf in _real:
+        _nm = os.path.basename(os.path.dirname(_mf))
         try:
-            _mm, _jl, _md = manifest_jobs(_real[-1], b, 222)
+            _mm, _jl, _md = manifest_jobs(_mf, b, 222)
             _gasj = [x for x in _jl if "mol__" in x[0]]
-            chk(bool(_jl), f"실물 번들 회수 {len(_jl)}잡 ({os.path.basename(os.path.dirname(_real[-1]))})")
+            chk(bool(_jl), f"실물 {_nm}: {len(_jl)}잡 회수"
+                + (f" · 기체 {len(_gasj)}잡 최대 {max(x[1] for x in _gasj):.2f} h"
+                   if _gasj else " · 기체 없음"))
             if _gasj:
                 chk(max(x[1] for x in _gasj) < 2.0,
-                    f"실물 기체 잡 최대 {max(x[1] for x in _gasj):.2f} h < 2 h")
+                    f"실물 {_nm}: 기체 잡이 슬랩으로 안 계상된다")
         except Exception as e:
-            chk(False, f"실물 번들에서 예외 — {type(e).__name__}: {e}")
+            chk(False, f"실물 {_nm} 에서 예외 — {type(e).__name__}: {e}")
     else:
         print("  · 실물 번들 없음 (bundles/*/MANIFEST.json) — 합성만 시험함")
     print("selftest PASS" if ok else "selftest FAIL")
