@@ -834,3 +834,36 @@ teardown flake** 다. **정확한 library 원인은 미확정이다.**
 teardown) 규명. (a) 는 결정적이지만 **10시간 실행을 게이트하는 스크립트에서
 크래시를 가리는** 변경이라 리뷰 판단 없이 넣지 않았다. 게이트 증거로는 clean
 통과 실행을 쓰되, 이 flake 는 공개해 둔다.
+
+---
+
+## 19. 14차 4차 리뷰 회답 (2026-08-12, 대상 `36fdad2` → 수정 `3a5b8c5`)
+
+4차 판정: 수치 pipeline 은 GO 수준, 남은 차단점은 strict smoke 의 **종료
+비결정성** 하나. 리뷰가 지정한 6개 사전 조건을 전부 충족했다.
+
+| # | 발견 | 대응 |
+|---|---|---|
+| 1 | 격리 복원 validator 가 판정 완료 뒤 간헐 SIGABRT → exact gate 가 non-deterministic | 리뷰 지정 형태 그대로: `rc` 를 **먼저 확정** → `stdout`·`stderr` flush (flush 실패도 `rc=1`) → `os._exit(rc)`. 적용 범위는 `scripts/smoke_e2e.sh` 의 **read-only validator subprocess 하나**. 이 프로세스는 연구 산출물을 쓰지 않고 격리 디렉터리 삭제는 shell 이 한다 → 판정·수치 불변, native finalization 만 생략. 검증 중 예외·실패는 여전히 nonzero |
+| 2 | "PyBaMM/CasADi teardown" 원인 단정이 근거와 불일치 | **정정.** 실측 `pybamm_loaded=False`, `casadi_loaded=False`, `pyarrow_loaded=True`. 원장 문구를 "모든 validator 판정이 끝난 뒤 발생하는 native interpreter teardown flake, **정확한 library 원인은 미확정**"으로 낮췄다. PyArrow 단정도 하지 않는다. 근본 원인은 후속 조사(단계 분리 + core/backtrace) |
+| 3 | exclusion helper 가 tracked dirty 에는 미적용 → "완전 공유" 서술이 과함 | 리뷰가 준 두 선택지 중 **현재 동작 유지 + 서술 축소**. 이 비대칭은 false-clean 이 아니라 **보수적 false-dirty** 이고, 저장소 규칙(validator 를 느슨하게 만들지 않는다)에 따라 완화하지 않는다. 대신 의도를 회귀 테스트로 **고정**했다 (`test_tracked_dirty_is_conservative_for_excluded_paths`) |
+| 4 | 일부 signed nondefault 설정이 재현 명령에서 유실 | half-cell `--method` 를 서명값(`run_spec.halfcell_recipe.method`)에서 낸다. 아직 명령으로 내보내지 않는 축(sweep bounds/reference/tol·optimizer method, 비기본 `eps` Hessian)은 보고서가 **재현 범위 블록**으로 스스로 한정한다 |
+| 5 | 신규 wrapper 회귀는 parser smoke 이지 end-to-end 가 아님 | 테스트 이름을 `..._wrapper_parser_smoke_and_canonical_paths` 로 바꾸고 docstring 에 범위를 명시. 종료 코드까지 단언하도록 강화 |
+
+### 게이트 증거 (커밋 `3a5b8c5239711257d8801f2e17db63adb5d64406`, clean)
+
+```
+python -m pytest tests -q                → 304 passed          (신규 2)
+strict smoke — 사전 선언 10회, 재시도 없음 → 10 / 10 통과
+                                            terminate called 총 0회
+source_digest()                          → d50295f980ccaa81    (새 canonical)
+git ls-files --eol … | grep -cv "w/lf"   → 0
+python -m src.baseline --config configs/grid_fine.yaml --force
+   → ne_primary 36.64970365755636 / ne_secondary 3446.0841935664557
+     pe 58439.873864492365   (기존 서명값과 일치)
+python -m src.halfcell --config configs/base.yaml --method ocp --force --verify
+   → 구조검사 true / 구조검사_실패 [] / 재생성_배열일치 true
+```
+
+10회는 **실행 전에 횟수를 고정**했고 실패분을 버리고 재시도하지 않았다
+(셸 시간 제한 때문에 5+3+2 로 나눠 실행했으나 같은 커밋의 연속 10회다).
