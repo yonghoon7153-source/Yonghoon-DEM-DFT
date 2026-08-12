@@ -2160,6 +2160,25 @@ def main():
             if spread > SEED_TOL:
                 rec["gates"].append(
                     f"BLOCKED_MAGNETIC_SENSITIVITY(E_ads seed 산포 {spread * 1000:.0f} meV > 10)")
+        # ★ 두 seed 끝점 에너지가 20 meV 안에서 경합하면 **어느 branch 가 바닥인지
+        #   k 보정(±10)으로 뒤집힐 수 있다**. adaptive dense 가 꺼져 있으면 확인할
+        #   방법이 없으므로 그 사실을 판정에 남긴다 (Codex 3차 감사).
+        #   MANIFEST 는 이 규약을 적어 놓고 정작 --plan_dense 에서만 계산하고 있었다.
+        for _role, _pre in (("Li", pm["li_prefix"]), ("Ni", pm["ni_prefix"])):
+            _e = {s: E(f"{_pre}__{s}") for s in pm.get("seeds", [])}
+            _v = [x for x in _e.values() if x is not None]
+            if len(_v) > 1 and abs(_v[0] - _v[1]) <= BRANCH_TIE_EV:
+                rec.setdefault("branch_tie", {})[_role] = {
+                    "gap_meV": round(abs(_v[0] - _v[1]) * 1000, 1),
+                    "note": (f"두 seed 가 {BRANCH_TIE_EV*1000:.0f} meV 안에서 경합 — "
+                             f"k 보정 ±{GUARD_EV*1000:.0f} 으로 순서가 뒤집힐 수 있다")}
+                # ⚠ **게이트로 막지 않는다.** 우리 headline 은 branch-minimum 이 아니라
+                #   같은 seed(pm1) 대비다 — 어느 branch 가 바닥인지 주장하지 않으므로
+                #   경합 자체는 결함이 아니다. 실제 보호막은 seed 산포 게이트(≤10 meV)다.
+                #   (Codex 3차 감사가 준 두 선택지 중 'pm1 조건부로 명시' 쪽.)
+                rec["branch_tie"][_role]["claim"] = (
+                    "MAGNETIC_K_UNRESOLVED_for_branch_minimum — 이 값은 "
+                    "**pm1 branch 조건부**다. '자기 바닥상태에서의' 로 서술 금지")
         if de_main is not None and de_alt is not None \
                 and abs(de_main - de_alt) > SEED_TOL:
             rec["gates"].append(
@@ -2408,7 +2427,12 @@ def main():
                 results["e_ads"][pid] = {
                     "Li_top": round(eli - ec - emol[frag], 4),
                     "Ni_top": round(eni - ec - emol[frag], 4),
-                    "mol_ref": "box24"}
+                    "mol_ref": "box24",
+                    # ⚠ headline 은 **static(coarse) 값**이다. dense 는 별도 k 게이트로만
+                    #   쓰고 값을 교체하지 않는다 (Codex 3차 감사 P0-4). 명시하지 않으면
+                    #   "dense 로 검증된 E_ads" 로 오독된다.
+                    "estimand": "E_ads(static target mesh) — dense 는 k 게이트 전용",
+                    "k_check": "관측된 dense 보정이 게이트 안이면 통과. 값 교체 아님"}
         results["pairs"][pid] = rec
 
     # ── k 전이 게이트 (Codex 5차 taxonomy · 6차 §6) ───────────────────────────
@@ -2604,7 +2628,7 @@ if __name__ == "__main__":
 
 
 def _readme_sp(man: Dict[str, Any], a, zcut: float, n_jobs: int,
-               n_st: int, n_dn: int) -> str:
+               n_st: int, n_dn: int, n_all: int = 0, by_ph: Optional[dict] = None) -> str:
     """단일점 Wave 1 전용 README — **실제 계획에서 숫자를 뽑는다** (Codex 6차 §8).
 
     옛 README 를 재사용하면 82계·259상·relax 반송·refs 표가 그대로 나가, 외주처가
@@ -2616,10 +2640,14 @@ def _readme_sp(man: Dict[str, Any], a, zcut: float, n_jobs: int,
     ks = (man.get("kmesh_override") or {}).get("static") or KMESH["static"]
     kd = (man.get("kmesh_override") or {}).get("dense") or KMESH["dense"]
     longest = 56          # h — C10 static→dense 사슬 (비용 모형 중앙 추정, ±2배)
+    groups = "` · `".join(sorted({k.split("/")[0] for k in man["planned"]}))
+    ph_line = " · ".join(f"{k} {v}" for k, v in sorted((by_ph or {}).items()))
     return f"""# VASP 계산 요청 — LiNiO₂(104) 위 분자 조각 단일점
 
-바쁘신 중에 부탁드려 죄송합니다. **VASP 단일점 SCF {n_st + n_dn}회**입니다.
-구조 최적화는 저희가 MLIP 으로 끝냈고, DFT 는 에너지만 필요합니다.
+바쁘신 중에 부탁드려 죄송합니다. **VASP 실행 {n_all or (n_st + n_dn)}회**입니다
+({ph_line}).
+슬랩 쪽은 구조 최적화를 저희가 MLIP 으로 끝내서 단일점만 돌리면 되고,
+기체 분자 기준계만 DFT 이완이 필요합니다 (잡당 몇 분).
 
 ## 하실 일
 
@@ -2629,7 +2657,7 @@ PP=/path/to/potpaw_PBE.54 bash POTCAR_ASSEMBLE.sh     # 그 잡 전용 POTCAR �
 VASP_CMD="mpirun -np {a.cores} vasp_std" bash run_job.sh
 ```
 
-잡 폴더 {n_jobs}개가 `controls/` · `tier1/` · `tier2/` 에 있습니다.
+잡 폴더 {n_jobs}개가 `{groups}` 에 있습니다.
 서로 **완전히 독립**이라 원하시는 만큼 동시에 돌리셔도 됩니다.
 
 ## 미리 아셔야 할 것 두 가지
@@ -2642,7 +2670,12 @@ VASP_CMD="mpirun -np {a.cores} vasp_std" bash run_job.sh
 ## 보내 주실 것
 
 각 잡의 **`static/OUTCAR`** (있는 잡은 `dense/OUTCAR` 도). `.gz` 그대로 좋습니다.
-`CONTCAR`·`CHGCAR`·`WAVECAR` 는 필요 없습니다.
+
+⚠ **`refs/mol__*` 잡만은 `relax/OUTCAR` 와 `relax/CONTCAR` 도 함께** 보내 주세요.
+   분자가 이완 중에 깨지지 않았는지 좌표로 확인합니다. 이게 없으면 그 조각의
+   결합에너지를 못 만듭니다.
+
+슬랩 잡의 `CONTCAR`·`CHGCAR`·`WAVECAR` 는 필요 없습니다.
 
 ## 부탁
 
@@ -2685,6 +2718,13 @@ def _submit_contract(man: Dict[str, Any], a) -> str:
                if "static" in (p.get("phases") or []))
     n_dn = sum(1 for p in man["planned"].values()
                if "dense" in (p.get("phases") or []))
+    # ⚠ 기체 기준계는 relax 상이 있다 — static+dense 만 세면 실제보다 적다
+    by = {}
+    for _p in man["planned"].values():
+        for _ph in (_p.get("phases") or []):
+            by[_ph] = by.get(_ph, 0) + 1
+    n_all = sum(by.values())
+    ph_line = " · ".join(f"{k} {v}" for k, v in sorted(by.items()))
     return f"""# 제출 계약 (SUBMIT_CONTRACT)
 
 ## 상 의존성
@@ -2700,12 +2740,18 @@ static  (독립 — 잡끼리 완전 병렬)
 | 잡 | {man.get('n_jobs', '?')} |
 | static 실행 | {n_st} |
 | dense 실행 | {n_dn} |
-| 총 VASP 실행 | {n_st + n_dn} |
+| 총 VASP 실행 | **{n_all}** |
+| 상별 | {ph_line} |
 
 ## 병렬 제출 (권장)
 `run_all.sh` 는 **직렬 디버그용**입니다. 실제로는 잡 목록을 배열로 던지세요:
 ```bash
-ls -d tier1/*/ tier2/*/ controls/*/ > JOBS.txt
+# ⚠ 폴더 이름을 손으로 적지 않는다 — refs/ 냐 controls/ 냐가 모드에 따라 다르다.
+#   2026-08-12: controls/ 로 적어 두는 바람에 기준계 10잡이 통째로 빠질 뻔했다.
+find . -mindepth 2 -maxdepth 2 -type d -name '*__*' -o \
+     -mindepth 2 -maxdepth 2 -type d -path './refs/*' | sed 's|^\./||' | sort > JOBS.txt
+n=$(wc -l < JOBS.txt)
+[ "$n" = {man.get("n_jobs", 0)} ] || {{ echo "⛔ 잡 {man.get("n_jobs", 0)}개여야 하는데 $n 개"; exit 1; }}
 # Slurm 예시 — 동시 8개
 sbatch --array=1-$(wc -l < JOBS.txt)%{a.concurrency} \
   --ntasks={a.cores} --time=120:00:00 --wrap='
@@ -3194,8 +3240,26 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                                 if mag_ctl else
                                 (man["refs"]["clean_slab"] if a.refs else []))
     man["wave"] = 1 if not a.refs else "1+refs"
+    # ★ 조각마다 주장 범위가 다르다 (2026-08-12 설계 변경). 공통 mode 문장 하나로
+    #   두면 PTFE 에도 "2×2 완성" 이 적혀 오독된다.
+    man["claim_policy"] = {
+        f: ({"quantities": ["E_ads", "dE_site"],
+             "not_claimed": ["배향 분해(2×2 없음)", "전역 자리 선호"],
+             "note": ("cap 인공물이 있는 짧은 모델 — C10 의 대조군으로만, 단독 인용 금지"
+                      if f == "ptfe_dimer" else "결합에너지 중심")}
+            if f.startswith("ptfe") else
+            {"quantities": ["E_ads", "dE_site"]
+             + (["2x2 배향 분해"] if any(p.get("cross") for p in man["pairs"].values()
+                                       if p["fragment"] == f) else []),
+             "not_claimed": (["open-shell 바닥상태 일반화 — 시드 basin 조건부"]
+                             if f == "sdcp_doped" else []),
+             "note": "자리 선호 중심"})
+        for f in man.get("fragments", [])}
     man["claim_scope"] = (
         "fixed-geometry site contrast (ΔE = E_Ni − E_Li, 같은 조각·같은 슬랩). "
+        "⚠ 값은 **pm1 자기 branch 조건부**다 — 두 seed 중 어느 쪽이 바닥인지 주장하지 "
+        "않는다(그러려면 각 끝점의 최저 branch에 dense가 필요하다). 보호막은 seed 산포 "
+        "게이트(≤10 meV)이고, 넘으면 그 쌍을 막는다. "
         "clean/gas 기준계가 없으므로 **절대 E_ads 를 만들 수 없다** — 흡착의 열역학적 "
         "유불리·조각 간 결합 세기 비교·결합에너지 절대값은 이 번들로 주장 금지."
         + (" ⚠ open-shell 조각(sdcp_doped)은 **시드한 라디칼 스핀 basin 조건부**다 — "
@@ -3250,6 +3314,11 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     # ⚠ 문서가 잡 수를 읽으므로 **문서보다 먼저** 확정한다 (Codex 7차 §11 —
     #   지금은 SUBMIT_CONTRACT 가 '?' 를 찍고 있었다).
     man["n_jobs"] = n_jobs
+    n_by_ph = {}
+    for _p in man["planned"].values():
+        for _ph in (_p.get("phases") or []):
+            n_by_ph[_ph] = n_by_ph.get(_ph, 0) + 1
+    n_ph_all = sum(n_by_ph.values())
     # ★ 모드별 README (Codex 6차 §8) — 옛 README 는 82계·259상·relax 반송·refs 표를
     #   그대로 담고 있어 **단일점 Wave 1 과 정면으로 모순**된다. 실행 계약과 provenance
     #   문서를 옛 판으로 내보내는 것은 문구 문제가 아니라 반송 계약 위반이다.
@@ -3259,7 +3328,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         n_dn = sum(1 for p in man["planned"].values()
                    if "dense" in (p.get("phases") or []))
         (out / "README_REQUEST.md").write_text(_readme_sp(
-            man, a, zcut, n_jobs, n_st, n_dn))
+            man, a, zcut, n_jobs, n_st, n_dn, n_ph_all, n_by_ph))
     else:
         (out / "README_REQUEST.md").write_text(README.format(
             freeze_pct=int(a.freeze * 100), zcut_note=f"{zcut:.3f} Å",
@@ -3280,6 +3349,8 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                if "static" in (p.get("phases") or []))
     n_dn = sum(1 for p in man["planned"].values()
                if "dense" in (p.get("phases") or []))
+    # ⚠ 기체 기준계는 relax 상이 있다. static+dense 만 세면 실제 실행 횟수보다 적다
+    #   (2026-08-12: 35 라고 적었는데 실제 43 이었다).
     n_cd = len(list(out.rglob("dense_cand/INCAR")))
     man["submission"] = {
         "cores_per_job": a.cores,
@@ -3288,6 +3359,8 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                                "CHGCAR 를 승계하므로 **직렬** — 잡 하나가 분할 불가 "
                                "작업 하나다 (P||Cmax)."),
         "n_static": n_st, "n_dense_mandatory": n_dn,
+        "n_vasp_executions_total": n_ph_all,
+        "n_by_phase": n_by_ph,
         "n_dense_candidates_packaged": n_cd,
         "adaptive_dense": ("enabled (dense_cand/ + --plan_dense + run_dense_selected.sh)"
                            if a.adaptive_dense else
@@ -3934,6 +4007,27 @@ def selftest() -> int:
     chk(not list(m_lim["pairs"].values())[0].get("cross"),
         "--cross_endpoints 제한이 실제로 먹는다 (목록 밖 조각은 교차 없음)")
 
+    # ── Codex 3차 감사 ────────────────────────────────────────────────────
+    _sub = (out_sp / "SUBMIT_CONTRACT.md").read_text()
+    _rd = (out_sp / "README_REQUEST.md").read_text()
+    chk("controls/*/" not in _sub and "JOBS.txt" in _sub and "find " in _sub,
+        "제출 예시가 폴더를 **실제로 찾는다** (controls/ 하드코딩 제거)")
+    _dirs = sorted({k.split("/")[0] for k in m_sp["planned"]})
+    chk(all(d in _rd for d in _dirs),
+        f"README 의 폴더 목록이 실제와 같다 ({_dirs})")
+    _nall = m_sp["submission"]["n_vasp_executions_total"]
+    _nreal = sum(len(p.get("phases") or []) for p in m_sp["planned"].values())
+    chk(_nall == _nreal, f"실행 횟수가 **모든 상**을 센다 ({_nall} == {_nreal})")
+    chk(f"VASP 실행 {_nall}회" in _rd, f"README 도 같은 수를 쓴다 ({_nall})")
+    chk(isinstance(m_sp.get("claim_policy"), dict)
+        and all(f in m_sp["claim_policy"] for f in m_sp["fragments"]),
+        f"조각별 claim_policy 가 있다 ({list((m_sp.get('claim_policy') or {}))})")
+    chk("pm1 자기 branch 조건부" in str(m_sp.get("claim_scope", "")),
+        "claim_scope 가 pm1 branch 조건부임을 명시")
+    chk("branch_tie" in az0 and "MAGNETIC_K_UNRESOLVED_for_branch_minimum" in az0,
+        "branch 경합을 **기본 경로**에서 기록한다 (--plan_dense 밖)")
+    chk("E_ads(static target mesh)" in az0,
+        "E_ads headline 이 coarse 임을 명시 (dense 는 게이트 전용)")
     chk(all(p.get("phases") == ["static"] or p.get("phases") == ["static", "dense"]
             for k, p in m_sp["planned"].items() if "clean_slab" not in k),
         "SP: pose 잡에 relax/pre 가 없다 (단일점)")
