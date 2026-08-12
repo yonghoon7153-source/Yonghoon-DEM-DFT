@@ -2161,6 +2161,22 @@ def main(argv):
     grid_v = ti.Vector.field(3, ti.f32, (n_grid, n_grid, nz)); grid_m = ti.field(ti.f32, (n_grid, n_grid, nz))
     wall_z = ti.field(ti.f32, ()); wall_vel = ti.field(ti.f32, ()); szz = ti.field(ti.f32, ())
     wallf = ti.field(ti.f32, ())                                # platen reaction impulse Σ m·Δv (per substep)
+    # ── ★ R2.5 (2026-08-12): 얼린 AM 이 **받아낸 하중** 을 잰다 ─────────────────────────────
+    #   결함의 뿌리는 "AM 이 wallP 에 기여 0" 인데(rev5 §28(b) 계측: 이동·정지 두 체제 모두
+    #   정확히 0.0 %), 그것은 정보가 **없어서**가 아니라 **버려져서**다: am_mask 셀은
+    #   `grid_v[I] = 0` 으로 영점화되고 그때의 운동량이 사라진다.  그런데 플래튼은 정확히 같은
+    #   양(Σ m·Δv)을 **두 줄 아래에서** 반력으로 읽는다.
+    #   ⇒ 영점화 **직전**에 그 z-운동량을 누산하면 f_AM 을 **DEM 에서 수입하지 않고 MPM 이
+    #     스스로 낸다** — 순환 위험 소멸, 베드별 재측정 불요, 그리고 DEM 의 0.847 은 투입값이
+    #     아니라 **예측 대상**이 되어 frame[4] 교차검증이 성립한다.
+    #   ⚠ **측정 전용**이다: 영점화 동작은 그대로라 해·정지 판정은 **비트 동일**.
+    #   ⚠ 하강 중에는 이 값에도 관성이 섞인다 — ⓐ(동결 프로브)·ⓒ(감속)를 대체하지 않는다.
+    #   ⚠ 얼린 AM 은 절대공간에 못박혀 하중을 **흡수만** 하고 전달하지 않는다.  이 값을
+    #     플래튼에 더하는 것이 옳으려면 **AM 골격이 바닥까지 퍼콜**해야 한다 (검사 항목).
+    #   ⚠ DEM f_AM 은 **AM-AM 접촉망** 하중 몫이고 이 값은 **SE→AM 전달** 몫이다.  같아야 할
+    #     의무는 없다 — 어긋나면 frame[5] 경계의 정량화다.
+    amf_dn = ti.field(ti.f32, ())                               # 위에서 눌러 들어온 몫 (v_z<0)
+    amf_up = ti.field(ti.f32, ())                               # 아래에서 밀어올린 몫 (v_z>0)
     scaffold_on = bool(args.am_scaffold)                        # fixed-AM grid obstacle (real skeleton)
     SE_AM_DRAG = float(args.se_am_drag) if scaffold_on else 0.0   # ★ SE-AM confinement drag coef (compile-time const)
     am_mask = ti.field(ti.i32, (n_grid, n_grid, nz) if scaffold_on else (1, 1, 1))
@@ -2264,6 +2280,7 @@ def main(argv):
         for I in ti.grouped(grid_m):
             grid_v[I] = ti.Vector.zero(ti.f32, 3); grid_m[I] = 0.0
         szz[None] = 0.0; wallf[None] = 0.0
+        amf_dn[None] = 0.0; amf_up[None] = 0.0        # ★R2.5 측정 전용
         for p in range(n):
             if ti.static(FIBRE_ROD):
                 x_pre[p] = x[p]                                  # fibre position before advection (→ rod velocity)
@@ -2293,6 +2310,12 @@ def main(argv):
                 grid_v[I] /= grid_m[I]
                 if ti.static(scaffold_on):                              # fixed AM = rigid obstacle (v=0)
                     if am_mask[I] > 0:
+                        # ★R2.5: 버려지던 구속 임펄스 = 얼린 AM 이 받아낸 하중 (측정 전용)
+                        _mz = grid_m[I] * grid_v[I][2]
+                        if _mz < 0.0:
+                            amf_dn[None] += _mz
+                        else:
+                            amf_up[None] += _mz
                         grid_v[I] = ti.Vector.zero(ti.f32, 3)
                     else:
                         if ti.static(SE_AM_DRAG > 0.0):                  # ★ SE-AM confinement: damp SE flow near AM
@@ -2532,7 +2555,7 @@ def main(argv):
     _UNLOAD_DZ_MIN = 0.02 / max(n_grid, 1)   # bracket narrower than 1/50 cell → refining is meaningless
     _unload_step0 = 0.05 * vmax              # START SMALL — the elastic unload branch is stiff
     for frame in range(args.frames):
-        sacc = 0.0; wacc = 0.0
+        sacc = 0.0; wacc = 0.0; amdn = 0.0; amup = 0.0          # ★R2.5
         for _ in range(args.sub):
             substep()
             if FIBRE_ROD:                                    # Tier-2: rods buckle emergently under the press
@@ -2541,8 +2564,13 @@ def main(argv):
                 rod_setv()
             sacc += szz[None] / n                            # volume-mean Cauchy σzz (GPa)
             wacc += wallf[None] / (dt * area)                # platen reaction stress (GPa), resolution-invariant
+            amdn += amf_dn[None] / (dt * area)               # ★R2.5 AM 구속반력 (같은 정규화)
+            amup += amf_up[None] / (dt * area)
         sig_mean = sacc / args.sub
         wallp = wacc / args.sub
+        am_dn = amdn / args.sub; am_up = amup / args.sub        # ★R2.5 (GPa, 부호 그대로)
+        am_net = abs(am_dn) - abs(am_up)                        # 순 전달 = 위에서 받은 − 아래로 흘린
+        f_am_mpm = (abs(am_net) / (abs(am_net) + abs(wallp))) if (abs(am_net) + abs(wallp)) > 1e-30 else 0.0
         p = wallp if args.readout == 'wallP' else sig_mean   # servo signal
         height = wall_z[None] - FLOOR
         por = max(0.0, 1.0 - solid_vol / (area * height)) * 100.0
@@ -2911,7 +2939,8 @@ def main(argv):
                       else 'unload' if (_unload and not reached)
                       else 'descend' if not reached else 'servo')
             print(f"  frame {frame:3d} [{_phase}]  "
-                  f"{args.readout}={p:7.4f} GPa (wallP={wallp:.4f} σzz_vol={sig_mean:.4f})  "
+                  f"{args.readout}={p:7.4f} GPa (wallP={wallp:.4f} σzz_vol={sig_mean:.4f}"
+                  + (f" AMr={am_net:+.4f} f_AM_mpm={f_am_mpm:.3f}" if scaffold_on else "") + ")  "
                   f"porosity={por:6.2f}%  wall_z={wall_z[None]:.3f}{thick}", flush=True)
         if conv >= _conv_need and frame > 20:
             if not args.quiet:
