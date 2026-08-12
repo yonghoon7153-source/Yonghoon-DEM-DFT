@@ -1904,10 +1904,29 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     man["potcar_spec"] = {e: POTCAR_SPEC.get(e, e) for e in sorted(used_els)}
     (out / "analyze_results.py").write_text(ANALYZER)
     (out / "run_all.sh").write_text(RUN_ALL)
-    sp_note = ("\n> ## ⚠ 이 번들은 **단일점(single-point)** 입니다\n"
-               "> 기하는 MLIP(UMA)로 이완한 것이고 DFT 는 **결합에너지만** 냅니다.\n"
-               "> `relax/` 상이 없습니다 — `static/` 하나만 돌리면 됩니다.\n"
-               "> 인용 시 반드시 함께 적을 것: *기하는 DFT 최소점이 아니다*.\n\n"
+    sp_note = ("""
+> ## ⚠ 이 번들은 **단일점(single-point)** 입니다
+> 기하는 MLIP(UMA)로 이완한 것이고 DFT 는 **에너지만** 냅니다.
+> 슬랩 잡에 `relax/` 상이 없습니다 — `static/` 하나만 돌리면 됩니다.
+>
+> ### 무엇이 UMA 기하이고 무엇이 DFT 이완인가
+>
+> | 항목 | 기하 | 에너지 |
+> |---|---|---|
+> | 복합체 (슬랩+분자) | **UMA 이완** | DFT 단일점 |
+> | clean 슬랩 | **UMA 이완** (복합체와 동일 슬랩) | DFT 단일점 |
+> | 기체 분자 기준계 | **DFT 이완** (`relax/` + `static/`) | DFT |
+>
+> 복합체와 clean 이 같은 UMA 슬랩을 쓰므로 **슬랩 기하 오차는 E_ads 에서 상쇄**됩니다.
+> 남는 것은 분자 하나입니다 — 흡착 분자는 UMA 기하, 기준 분자는 DFT 최소점.
+> 따라서 E_ads 는 **한쪽으로만** 치우칩니다: 실제보다 **덜 결합하는 쪽**(덜 음수).
+> 즉 우리 값은 결합 세기의 **보수적 하한**입니다. 부호를 아는 편향이라 그대로 인용하되
+> 이 문장을 함께 적어 주세요.
+>
+> ⚠ 기체 분자를 DFT 로 이완하는 것은 실수가 아니라 **정의**입니다 —
+> 흡착에너지의 기준은 자유 상태의 이완된 분자입니다.
+
+"""
                if a.single_point else "")
     (out / "README_REQUEST.md").write_text(sp_note + README.format(
         freeze_pct=int(a.freeze * 100), zcut_note=f"{zcut:.3f} Å",
