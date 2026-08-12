@@ -78,6 +78,7 @@ RMSD_TOL_CHK = 0.75    # selftest 에서 쓰는 사본 (분석기는 문자열 �
 #:   7개지만 fib08·fib11 은 **다른 자리 종류**(LiNi/LiO/NiO_bridge · O_top · hollow)를
 #:   훑은 자리-종류 스윕이라 Li_top↔Ni_top 대조쌍이 아예 없다. 대조쌍은 5개가 맞다.
 #:   빠진 데이터가 아니라 다른 실험이다 — 제외 사유는 MANIFEST.pair_audit 에 남는다.
+MAX_OPTIONAL_DENSE_B = 2   # 분석기 MAX_OPTIONAL_DENSE 사본 — selftest 가 대조
 EXPECT_PAIRS = {"ptfe_c10": 5, "ptfe_dimer": 3, "sdcp_neutral": 5, "sdcp_doped": 5}
 
 # ── 결합 판정 규약 — **분석기(ANALYZER 문자열) 안에 같은 표가 있다** ──────────
@@ -293,6 +294,38 @@ for ph in pre relax static dense; do
   [ "$ph" = relax ] && rm -f pre/WAVECAR relax/WAVECAR
 done
 echo "✅ $(basename "$PWD") 완료"
+"""
+
+RUN_DENSE_SEL = """#!/usr/bin/env bash
+# 조건부 dense — **DENSE_PLAN.json 에 있는 것만** 돈다.
+#
+#   1) coarse static 을 전부 반송받은 뒤:  python3 analyze_results.py . --plan_dense
+#   2) DENSE_PLAN.json 의 promote 를 확인하고:  bash run_dense_selected.sh
+#
+# promote 가 비어 있으면 **아무것도 안 돈다** — 보고할 branch 를 이미 dense 한 것이다.
+# ⚠ 계획 없이 dense_cand 를 손으로 돌리지 말 것. 어느 branch 를 왜 골랐는지가
+#   DENSE_PLAN.json 에만 남는다 (그게 근거다).
+set -u
+[ -f DENSE_PLAN.json ] || { echo "⛔ DENSE_PLAN.json 없음 — 먼저 --plan_dense"; exit 1; }
+jobs=$(python3 - <<'PY'
+import json
+p = json.load(open("DENSE_PLAN.json"))
+print("\\n".join(x["job"] for x in p.get("promote") or []))
+PY
+)
+[ -z "$jobs" ] && { echo "✅ 승격 0건 — 추가 dense 없음"; exit 0; }
+fail=0
+while read -r j; do
+  [ -z "$j" ] && continue
+  echo "═══ $j (조건부 dense) ═══"
+  [ -d "$j/dense_cand" ] || { echo "⛔ $j/dense_cand 없음"; fail=1; continue; }
+  [ -d "$j/dense" ] && { echo "⚠ $j/dense 가 이미 있다 — 건너뜀"; continue; }
+  cp -r "$j/dense_cand" "$j/dense"
+  ( cd "$j" && bash run_job.sh ) || { echo "⚠ $j 실패"; fail=1; }
+done <<< "$jobs"
+[ "$fail" = 1 ] && echo "⚠ 실패한 잡이 있다"
+python3 analyze_results.py .
+exit $?
 """
 
 RUN_ALL = """#!/usr/bin/env bash
@@ -671,7 +704,8 @@ def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
                    system: str, seed_name: str, extra_meta: Dict[str, Any],
                    ledger: Dict[str, Any], zcut=None, dense: bool = False,
                    prescf: bool = True, single_point: bool = False,
-                   kmesh_over: Optional[Dict[str, str]] = None) -> Dict[str, Any]:
+                   kmesh_over: Optional[Dict[str, str]] = None,
+                   dense_cand: bool = False) -> Dict[str, Any]:
     """슬랩 잡 v3 — POSCAR(루트) + pre/ + relax/ + static/ (+dense/). MAGMOM 재매핑·검산."""
     kmesh_over = kmesh_over or {}
     jd.mkdir(parents=True, exist_ok=True)
@@ -716,6 +750,19 @@ def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
         #   템플릿을 고쳤을 때 조용히 어긋난다 (Codex P0-5).
         incar_exp[ph] = {k: m.group(1) for k in AUDIT_KEYS
                          for m in [re.search(rf"^{k}\s*=\s*(\S+)", txt, re.M)] if m}
+    # ★ 조건부 dense 후보 (Codex 6차 §3) — 입력만 만들고 **run_job.sh 는 안 본다**
+    #   (러너는 pre/relax/static/dense 만 돈다). coarse 를 보고 승격되면
+    #   run_dense_selected.sh 가 dense_cand → dense 로 옮겨 같은 러너로 돌린다.
+    if dense_cand and "dense" not in phases:
+        (jd / "dense_cand").mkdir(exist_ok=True)
+        txt = tpls["dense"].format(**fmt)
+        (jd / "dense_cand" / "INCAR").write_text(txt)
+        km = kmesh_over.get("dense", KMESH["dense"])
+        (jd / "dense_cand" / "KPOINTS").write_text(f"auto\n0\nGamma\n{km}\n0 0 0\n")
+        kmesh["dense_cand"] = km
+        incar_exp["dense_cand"] = {k: m.group(1) for k in AUDIT_KEYS
+                                   for m in [re.search(rf"^{k}\s*=\s*(\S+)", txt, re.M)]
+                                   if m}
     (jd / "run_job.sh").write_text(RUN_JOB)
     top = _top_cations(atoms, nslab, sym)
     rev = {i: k for k, i in enumerate(pos["order"])}      # 원본 → POSCAR 위치
@@ -1194,6 +1241,112 @@ def geometry_audit(jd, meta):
     return gates, info
 
 
+BRANCH_TIE_EV = 0.020     # 두 branch 차가 이 아래면 k 보정(각 ±10)으로 순서가 뒤집힌다
+MAX_OPTIONAL_DENSE = 2    # 예산 상한 — 넘으면 전이를 주장하지 않는다
+
+
+def plan_dense(root, man, jobs, E, E_dense):
+    """coarse static 을 보고 **어느 branch 에 dense 를 걸어야 하는지** 정한다.
+
+    설계 (Codex 6차 §3 을 예산에 맞게 조정)
+      · 기본 dense 는 pm1 에 **이미 사슬로 붙어 있다** — 아무것도 발동 안 하면 추가 0
+      · 발동 조건은 두 가지뿐이다
+          ① pm1 이 무효 (게이트/미완)          → net4 후보를 승격
+          ② net4 가 pm1 보다 {BRANCH_TIE_EV*1000:.0f} meV 넘게 낮다 → net4 승격
+        (둘 다 아니면 우리가 보고하는 branch 를 이미 dense 한 것이다)
+      · 승격은 최대 {MAX_OPTIONAL_DENSE} 건. 넘으면 **한 조각만 완결**하고 나머지는
+        MAX_OPTIONAL_DENSE 를 넘겼다고 적는다 — 임의의 둘로 전체를 주장하지 않는다.
+
+    이 함수가 **못 하는 것**: 어느 branch 가 진짜 바닥인지 보장하지 못한다.
+      두 seed 는 시도한 초기값 두 개일 뿐이고, 더 낮은 자기배치가 있을 수 있다.
+    """
+    seeds = man.get("seeds_full") or ["afm2424_pm1", "afm2424_net4"]
+    main, alt = seeds[0], (seeds[1] if len(seeds) > 1 else seeds[0])
+    cal = list(man.get("dense_calibrators") or [])
+    plan = {"parent_manifest_sha256": hashlib.sha256(
+                open(os.path.join(root, "MANIFEST.json"), "rb").read()).hexdigest(),
+            "rule": {"branch_tie_eV": BRANCH_TIE_EV,
+                     "max_optional": MAX_OPTIONAL_DENSE,
+                     "why": (f"두 branch 의 k 보정이 각각 최대 ±10 meV 면 차가 "
+                             f"{BRANCH_TIE_EV * 1000:.0f} meV 안일 때 순서가 뒤집힐 수 "
+                             f"있다. 30 meV 판정바닥과는 다른 축이다.")},
+            "calibrators": cal, "endpoints": {}, "promote": [], "notes": []}
+    if not cal:
+        plan["notes"].append("dense 보정자가 지정되지 않았다 — 계획할 대상이 없다")
+    cand = []
+    for pid, pm in man.get("pairs", {}).items():
+        if pm["fragment"] not in cal:
+            continue
+        for role in ("li", "ni"):
+            pre = pm[f"{role}_prefix"]
+            ent = {"fragment": pm["fragment"], "role": role.capitalize(),
+                   "E_by_seed": {}, "valid": {}, "static_sha256": {}}
+            for sd in seeds:
+                j = f"{pre}__{sd}"
+                r = jobs.get(j)
+                ent["valid"][sd] = bool(r and r.get("ok"))
+                ent["E_by_seed"][sd] = E(j)
+                for ext in ("", ".gz"):
+                    p = os.path.join(root, j, "static", "OUTCAR" + ext)
+                    if os.path.isfile(p):
+                        ent["static_sha256"][sd] = hashlib.sha256(
+                            open(p, "rb").read()).hexdigest()
+                        break
+                if r and not r.get("ok"):
+                    ent.setdefault("gates", {})[sd] = r.get("gates", [])[:3]
+            em, ea = ent["E_by_seed"].get(main), ent["E_by_seed"].get(alt)
+            have_dense = E_dense(f"{pre}__{main}") is not None
+            ent["dense_done_on"] = main if have_dense else None
+            if em is None and ea is None:
+                ent["decision"] = "NO_VALID_BRANCH — 이 끝점은 k 검증 불가"
+            elif em is None:
+                ent["decision"] = f"PROMOTE_{alt}(주 branch 무효)"
+                cand.append((0, pid, role, alt, ent))          # 우선순위 0 = 최상
+            elif ea is not None and ea < em - BRANCH_TIE_EV:
+                ent["decision"] = (f"PROMOTE_{alt}(coarse 에서 "
+                                   f"{(em - ea) * 1000:.0f} meV 더 낮다)")
+                cand.append((1, pid, role, alt, ent))
+            elif ea is not None and abs(em - ea) <= BRANCH_TIE_EV:
+                ent["decision"] = (f"TIE({abs(em - ea) * 1000:.0f} meV ≤ "
+                                   f"{BRANCH_TIE_EV * 1000:.0f}) — 보고 branch 를 이미 "
+                                   f"dense 함. 추가 없음(원하면 optional 후보)")
+            else:
+                ent["decision"] = (f"OK({main} 이 {(ea - em) * 1000:.0f} meV 낮다 — "
+                                   f"보고 branch = dense 한 branch)")
+            if not have_dense:
+                ent["decision"] += " ⚠ 주 branch dense 산출이 없다(미완/게이트)"
+            plan["endpoints"][f"{pid}/{role}"] = ent
+    cand.sort(key=lambda t: (t[0], t[1], t[2]))
+    for pr, pid, role, sd, ent in cand[:MAX_OPTIONAL_DENSE]:
+        rel = f"{man['pairs'][pid][role + '_prefix']}__{sd}"
+        plan["promote"].append({"job": rel, "seed": sd, "priority": pr,
+                                "reason": ent["decision"],
+                                "candidate_dir": "dense_cand"})
+    if len(cand) > MAX_OPTIONAL_DENSE:
+        drop = [f"{p}/{r}" for _x, p, r, _s, _e in cand[MAX_OPTIONAL_DENSE:]]
+        plan["notes"].append(
+            f"⛔ 승격 후보 {len(cand)}건 > 상한 {MAX_OPTIONAL_DENSE} — "
+            f"{drop} 는 MAGNETIC_K_UNRESOLVED 다. 임의의 둘로 전체 전이를 "
+            f"주장하지 않는다 (예산을 늘리든지 주장 범위를 줄이든지 골라야 한다)")
+    plan["estimated_extra_dense_runs"] = len(plan["promote"])
+    op = os.path.join(root, "DENSE_PLAN.json")
+    with open(op, "w") as fh:
+        json.dump(plan, fh, indent=1, ensure_ascii=False)
+    print(f"=== dense 계획 ===  보정자 {cal} · 끝점 {len(plan['endpoints'])}")
+    for k, v in plan["endpoints"].items():
+        print(f"  {k:44s} {v['decision']}")
+    print(f"\n승격 {len(plan['promote'])}건"
+          + ("  (추가 계산 없음 — 보고 branch 를 이미 dense 했다)"
+             if not plan["promote"] else ""))
+    for p in plan["promote"]:
+        print(f"   ▶ {p['job']}  ({p['reason']})")
+    for n in plan["notes"]:
+        print(f"  ⚠ {n}")
+    print(f"\n→ {op}")
+    print("   실행: bash run_dense_selected.sh   (이 계획에 있는 것만 돈다)")
+    return 0
+
+
 def k_transfer_gate(cal, kap_all, frags):
     """k 전이 게이트 — (판정, 조각별 라벨, 통과한 보정자) 를 낸다.
 
@@ -1631,6 +1784,12 @@ def main():
         if oc is None or not oc["normal_end"] or oc["nelm_hit"] or oc["E0"] is None:
             return None
         return oc["E0"]
+
+    # ── --plan_dense : 조건부 dense 선택 (Codex 6차 §3) ──────────────────────
+    #   왜 분석기 안인가: OUTCAR 회수·자기 게이트·유효성 판정을 **그대로 재사용**한다.
+    #   별도 스크립트로 빼면 그 로직이 두 벌이 되고, 갈라지면 아무도 모른다.
+    if "--plan_dense" in sys.argv:
+        return plan_dense(root, man, jobs, E, E_dense)
 
     results = {"delta_eV": delta, "pairs": {}, "fragments": {}, "e_ads": {},
                "numerical_gates": {}, "warnings": [], "integrity": integrity,
@@ -2110,11 +2269,18 @@ cd <잡폴더> && cp <POTCAR> POTCAR && VASP_CMD="mpirun -np 64 vasp_std" bash r
 POTCAR 는 미포함(라이선스) — `POTCAR_SPEC.txt` 변형 그대로. **Ni 는 Ni_pv**
 (2026-08-08 납품과 동일). VASP 5.4.4 또는 6.x + PBE PAW 5.4 세트.
 
-## 완주 후
+## 완주 후 — **2단계**입니다
 ```
-python3 analyze_results.py .
+python3 analyze_results.py . --plan_dense    # ① 어느 자기 branch 를 더 재야 하는지 판정
+bash run_dense_selected.sh                   # ② 계획에 있는 것만 실행 (보통 0건)
+python3 analyze_results.py .                 # ③ 최종
 ```
-필수 산출이 빠지면 exit 2 입니다. `RESULTS.json` + 반송물을 보내 주세요.
+①은 coarse static 을 보고 **보고할 branch 를 이미 dense 했는지** 확인합니다.
+보통은 그렇고, 그러면 ②는 아무것도 안 돌고 즉시 끝납니다 (추가 비용 0).
+주 seed 가 무효이거나 다른 seed 가 20 meV 넘게 낮을 때만 최대 2건이 추가됩니다
+(`dense_cand/` 에 입력이 이미 들어 있습니다 — 새로 만들 것 없습니다).
+근거는 `DENSE_PLAN.json` 에 남습니다. 필수 산출이 빠지면 exit 2 입니다.
+`RESULTS.json` + `DENSE_PLAN.json` + 반송물을 보내 주세요.
 
 ## 프로토콜 (요약)
 PBE+U(Ni d 6.2 Dudarev) · D3 zero damping(IVDW=11) · ENCUT 520 · ISMEAR=0/0.05 ·
@@ -2471,7 +2637,8 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                              "uma_E_pose_eV": rec["E_pose_eV"]},
                             ledger, zcut=zcut, dense=dense and sd == SEED_MAIN,
                             prescf=not a.no_prescf, single_point=a.single_point,
-                            kmesh_over=kover)
+                            kmesh_over=kover,
+                            dense_cand=dense and sd != SEED_MAIN)
                         slab_metas.append(m)
                         plan(rel, m["phases"], req)
                         n_jobs += 1
@@ -2597,6 +2764,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     man["potcar_spec"] = {e: POTCAR_SPEC.get(e, e) for e in sorted(used_els)}
     (out / "analyze_results.py").write_text(ANALYZER)
     (out / "run_all.sh").write_text(RUN_ALL)
+    (out / "run_dense_selected.sh").write_text(RUN_DENSE_SEL)
     # ★ 모드별 README (Codex 6차 §8) — 옛 README 는 82계·259상·relax 반송·refs 표를
     #   그대로 담고 있어 **단일점 Wave 1 과 정면으로 모순**된다. 실행 계약과 provenance
     #   문서를 옛 판으로 내보내는 것은 문구 문제가 아니라 반송 계약 위반이다.
@@ -3032,6 +3200,69 @@ def selftest() -> int:
         print("   " + ln)
     chk(rk.returncode == 0, f"배포 분석기 k-selftest (rc={rk.returncode})")
 
+    # ── 조건부 dense: 후보 입력이 러너에 **안 걸리는지** + 계획 두 경로 ──────
+    cands = sorted(out_sp.rglob("dense_cand/INCAR"))
+    chk(len(cands) == 2, f"dense 후보 입력 {len(cands)}개 (보정자 끝점 × net4)")
+    if cands:
+        chk(re.search(r"^ICHARG\s*=\s*1", cands[0].read_text(), re.M) is not None,
+            "후보 INCAR 도 ICHARG=1 (static CHGCAR 승계)")
+        jm = json.loads((cands[0].parent.parent / "job.json").read_text())
+        chk("dense_cand" not in (jm.get("phases") or []),
+            "후보는 phases 에 없다 — run_job.sh 가 **자동 실행하지 않는다**")
+        chk("dense_cand" in (jm.get("kmesh") or {}),
+            "그래도 k 는 기록된다 (무엇이 준비됐는지 남는다)")
+
+    def _plan(tag, mangle=None):
+        bd = out.parent / f"_plan_{tag}"
+        shutil.rmtree(bd, ignore_errors=True)
+        shutil.copytree(out_sp, bd)
+        for jp in sorted(bd.rglob("job.json")):
+            m = json.loads(jp.read_text())
+            _fake_phase(jp.parent, m, -500.0 + (0.02 if "net4" in jp.parent.name else 0.0),
+                        POTCAR_SPEC)
+        if mangle:
+            mangle(bd)
+        r = subprocess.run([sys.executable, "analyze_results.py", ".", "--plan_dense"],
+                           cwd=bd, capture_output=True, text=True)
+        pl = json.loads((bd / "DENSE_PLAN.json").read_text()) \
+            if (bd / "DENSE_PLAN.json").is_file() else None
+        return bd, r, pl
+
+    # 양성(비발동): pm1 이 유효하고 더 낮으면 **추가 계산 0**
+    _bd, r_a, pl_a = _plan("none")
+    chk(r_a.returncode == 0 and pl_a is not None, f"--plan_dense 실행 rc={r_a.returncode}")
+    chk(pl_a and pl_a["promote"] == [],
+        f"pm1 이 낮음 → 승격 0건 (추가 계산 없음) {[e['decision'][:18] for e in (pl_a or {}).get('endpoints', {}).values()]}")
+    chk(pl_a and pl_a.get("parent_manifest_sha256"),
+        "계획에 부모 MANIFEST 해시가 박힌다 (어느 판의 계획인지)")
+    # ★ 음성 ①: net4 가 20 meV 넘게 낮으면 **승격돼야** 한다
+    def _flip(bd):
+        for jp in sorted(bd.rglob("job.json")):
+            if "net4" not in jp.parent.name:
+                continue
+            m = json.loads(jp.read_text())
+            _fake_phase(jp.parent, m, -500.100, POTCAR_SPEC)     # 100 meV 더 낮게
+    _bd2, _r2, pl_b = _plan("lower", _flip)
+    chk(pl_b and len(pl_b["promote"]) > 0 and
+        all("net4" in p["job"] for p in pl_b["promote"]),
+        f"net4 가 100 meV 낮음 → 승격 {len((pl_b or {}).get('promote', []))}건")
+    # ★ 음성 ②: 상한을 넘으면 조용히 자르지 말고 **못 한다고 적어야** 한다
+    chk(not pl_b or len(pl_b["promote"]) <= MAX_OPTIONAL_DENSE_B,
+        f"승격이 상한 {MAX_OPTIONAL_DENSE_B} 이하로 잘린다")
+    # ★ 음성 ③: 계획 없이 run_dense_selected.sh 를 돌리면 실패해야 한다
+    bd3 = out.parent / "_plan_noplan"
+    shutil.rmtree(bd3, ignore_errors=True)
+    shutil.copytree(out_sp, bd3)
+    r3 = subprocess.run(["bash", "run_dense_selected.sh"], cwd=bd3,
+                        capture_output=True, text=True)
+    chk(r3.returncode != 0 and "DENSE_PLAN" in r3.stdout + r3.stderr,
+        f"계획 없이 조건부 dense 실행 → 거부 rc={r3.returncode}")
+    # ★ 음성 ④: 승격 0건이면 아무것도 안 돌고 **성공으로 끝난다**
+    shutil.copy(_bd / "DENSE_PLAN.json", bd3 / "DENSE_PLAN.json")
+    r4 = subprocess.run(["bash", "run_dense_selected.sh"], cwd=bd3,
+                        capture_output=True, text=True)
+    chk("승격 0건" in r4.stdout, f"승격 0건 → 즉시 종료 ({r4.stdout.strip()[:40]})")
+
     # ── 물리 규약 사본 대조 — 빌더 RCOV_B/BOND_F_B vs 분석기 RCOV/BOND_F ──────
     #   문자열 템플릿이라 import 로 공유할 수 없다. **실제로 파싱해서** 대조한다.
     az = (out_sp / "analyze_results.py").read_text()
@@ -3043,6 +3274,9 @@ def selftest() -> int:
             "RCOV 사본 일치 (빌더 ↔ 분석기)")
         chk(abs(float(m_r.group(2)) - BOND_F_B) < 1e-12,
             f"BOND_F 사본 일치 ({m_r.group(2)})")
+    m_o = re.search(r"^MAX_OPTIONAL_DENSE = (\d+)", az, re.M)
+    chk(m_o and int(m_o.group(1)) == MAX_OPTIONAL_DENSE_B,
+        f"조건부 dense 상한 사본 일치 ({m_o.group(1) if m_o else '없음'})")
 
     # ── 정본 분자 위상: 양성 + 음성 ────────────────────────────────────────
     # ⚠ 알파벳순 첫 잡은 controls/clean_slab — 분자가 없다. 분자 있는 잡을 고른다.
