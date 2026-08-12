@@ -69,25 +69,70 @@ python3 -c "import numpy, scipy, pandas, networkx, matplotlib, pyamg, taichi, sk
   # shellcheck disable=SC2086
   pip install -q $PKGS || fail "pip install 실패"
 }
-# ── ★ cupy — optional 이지만 **없으면 비싸다** (2026-08-11 실사고) ───────────────────
-#   STEP3 σ 는 cupy 가 없으면 조용히 CPU 로 폴백한다.  답은 같지만 실측 2.7M dof 전자
-#   솔브가 **3,485 s (58분)/채널** 이다.  더 나쁜 것은 타이밍 — A/B 실험이 이미 돌기
-#   시작하면 두 팔이 같은 backend 여야 해서 **중간에 바꿀 수 없다**.  그래서 셋업 때 깐다.
-#   ⚠ 실패해도 셋업을 멈추지 않는다 (CPU 폴백이 정상 경로이므로).
-if ! python3 -c "import cupy" 2>/dev/null; then
+# ── ★ cupy — optional 이지만 **없으면 비싸고, 깔았다고 되는 게 아니다** ────────────────
+#   왜 깔아야 하나 (2026-08-11): STEP3 σ 는 cupy 가 없으면 조용히 CPU 로 폴백한다.  답은
+#   같지만 실측 2.7M dof 전자 솔브가 **3,485 s (58분)/채널**.  더 나쁜 건 타이밍 — A/B 가
+#   이미 돌기 시작하면 두 팔이 같은 backend 여야 해서 **중간에 바꿀 수 없다**.
+#   ★★ 왜 검증을 이렇게 하나 (2026-08-12 실사고): `pip install cupy-cuda12x` 가 성공하고
+#   `import cupy` 도 되고 `cp.zeros(1).sum()` 까지 됐는데, 정작 STEP3 솔브는
+#       ImportError: Failure finding "libcublasLt.so"
+#   로 **매번 CPU 폴백**했다 (한 런에서 8/8).  cupy 휠은 CUDA 수치 라이브러리(cuBLAS/
+#   cuSPARSE)를 **포함하지 않는다** — 시스템 CUDA 나 nvidia-*-cu1x 휠에서 찾는다.
+#   그때 이 스크립트의 옛 검증(`import cupy`)은 **통과했다**.  그래서 이제
+#     ① 수치 라이브러리도 같이 깔고
+#     ② **솔버가 쓰는 경로 그대로**(cupyx sparse CG) 능력을 검증한다.
+#   = scipy/pandas/networkx/skimage 드립과 같은 교훈의 GPU 판: **설치 성공 ≠ 능력 확보**.
+#   ⚠ 실패해도 셋업을 멈추지 않는다 (CPU 폴백이 정상 경로).  단 **조용히 넘어가지 않는다**.
+gpu_solver_ok() {                      # step3_sigma._solve_cg 가 쓰는 그 경로를 1회 돈다
+  python3 - >/dev/null 2>&1 <<'PY'
+import cupy as cp
+import cupyx.scipy.sparse as cxs
+from cupyx.scipy.sparse.linalg import cg
+A = cxs.diags(cp.ones(4, dtype='float64')).tocsr()
+b = cp.ones(4, dtype='float64')
+try:
+    cg(A, b, rtol=1e-8, maxiter=2)
+except TypeError:                      # 옛 CuPy 는 tol
+    cg(A, b, tol=1e-8, maxiter=2)
+PY
+}
+if gpu_solver_ok; then
+  echo "  ✓ STEP3 GPU 솔브 경로 동작 ($(python3 -c 'import cupy;print("cupy",cupy.__version__)'))"
+else
   CUDA_MAJ=$(nvidia-smi 2>/dev/null | sed -n 's/.*CUDA Version: *\([0-9]*\).*/\1/p' | head -1)
   case "$CUDA_MAJ" in
-    12|13) CUPY_PKG=cupy-cuda12x ;;
-    11)    CUPY_PKG=cupy-cuda11x ;;
-    *)     CUPY_PKG="" ;;
+    12|13) CUPY_PKG=cupy-cuda12x
+           CULIBS="nvidia-cuda-runtime-cu12 nvidia-cublas-cu12 nvidia-cusparse-cu12 \
+                   nvidia-cusolver-cu12 nvidia-nvjitlink-cu12 nvidia-cuda-nvrtc-cu12" ;;
+    11)    CUPY_PKG=cupy-cuda11x
+           CULIBS="nvidia-cuda-runtime-cu11 nvidia-cublas-cu11 nvidia-cusparse-cu11 \
+                   nvidia-cusolver-cu11 nvidia-cuda-nvrtc-cu11" ;;
+    *)     CUPY_PKG="" ; CULIBS="" ;;
   esac
   if [ -n "$CUPY_PKG" ]; then
-    echo "  cupy 설치 시도: $CUPY_PKG  (CUDA $CUDA_MAJ.x — 없으면 STEP3 가 채널당 ~1h)"
-    pip install -q "$CUPY_PKG" || echo "  ⚠ cupy 설치 실패 — CPU 폴백으로 진행 (STEP3 느림)"
+    echo "  cupy + CUDA 수치 라이브러리 설치 시도 (CUDA $CUDA_MAJ.x)"
+    # shellcheck disable=SC2086
+    pip install -q "$CUPY_PKG" $CULIBS || echo "  ⚠ pip 설치 실패"
   else
-    echo "  ⚠ nvidia-smi 에서 CUDA 버전을 못 읽음 → cupy 건너뜀 (STEP3 는 CPU 폴백, 채널당 ~1h)"
+    echo "  ⚠ nvidia-smi 에서 CUDA 버전을 못 읽음 → cupy 건너뜀"
   fi
-  python3 -c "import cupy; print('  cupy', cupy.__version__, 'OK — STEP3 GPU 경로 활성')" 2>/dev/null || true
+  if gpu_solver_ok; then
+    echo "  ✓ STEP3 GPU 솔브 경로 동작"
+  else
+    echo "  ⚠⚠ GPU 솔브 경로가 서지 않는다 → STEP3 는 **CPU 폴백** (채널당 ~1h).  실제 오류:"
+    python3 - 2>&1 <<'PY' | sed 's/^/       /' | head -4
+try:
+    import cupy as cp
+    import cupyx.scipy.sparse as cxs
+    from cupyx.scipy.sparse.linalg import cg
+    cg(cxs.diags(cp.ones(4, dtype='float64')).tocsr(), cp.ones(4, dtype='float64'), maxiter=2)
+except Exception as e:
+    print(f'{type(e).__name__}: {e}')
+PY
+    echo "       (CPU 로도 결과는 같다 — 느릴 뿐.  ⚠ A/B 실험 중이라면 **고치지 말 것**:"
+    echo "        STEP3 는 import cupy 를 솔브마다 하므로 도중에 고치면 한 팔 안에서"
+    echo "        backend 가 섞인다.  실험이 끝난 뒤에 고칠 것.)"
+  fi
 fi
 ln -sfn "$DATA/venv" "$REPO/venv"                       # 러너 프리플라이트 1순위 경로
 echo "  $(python3 -c "import numpy, scipy, pandas, networkx, taichi as t; print('numpy', numpy.__version__, '· scipy', scipy.__version__, '· pandas', pandas.__version__, '· networkx', networkx.__version__, '· taichi', t.__version__)")"
