@@ -1652,6 +1652,25 @@ KEY DESIGN CHOICES (different from σ_ionic / σ_e):
      Ridge regularizes against feature collinearity (Bruggeman ratios
      correlate with porosity etc.).
 
+⚠⚠ **정정 배너 2026-08-12 — 이 절의 "왜 compact form 이 안 되나" 근거가 데이터에 없었다**
+(Codex #1, 커밋 27258c77, 클레임 CL-12).  `run_decomposition` 이 `build_network` 에
+`mode=` 를 **전달하지 않아** 기본 `'ionic'` 으로 돌았고, 그래서
+`network_conductivity.py:311` 의 `if mode == 'thermal' and se_type_set:` 분기가
+**프로덕션에서 한 번도 실행되지 않았다** → 모든 간선 `k_weight = 1.0`.
+⇒ 아래가 근거로 든 **"composition-dependent k_weights (k_ratio=5.7)"** 는 캐시된
+σ_thermal 타깃에 **들어간 적이 없다**.  Stage T1 Ridge (LOOCV 0.90, n=82) 는
+**가중이 없는 네트워크**에 적합된 것이다.
+- **살아있는 것**: Ridge 가 그 타깃에 대해 0.90 이고 power-law 0.59 / EMT 음수라는
+  **관측 사실**.  타깃이 무엇이든 그 비교는 같은 타깃 위에서 이뤄졌다.
+- **무너진 것**: 그 격차의 **설명**("다중경로 k_weight 때문") — 데이터에 그 물리가 없었다.
+  ⇒ "Ridge is the irreducible representation" 의 **논거**는 재수립 필요.
+- **미측정**: 수정 후 타깃이 얼마나 바뀌는지 (DEM 덤프 재실행 필요).  방향조차 미상 —
+  AM-AM 을 5.7배 잘 흐르게 하면 AM-rich 침대가 유리해지고 조성 의존이 **강해질** 수도,
+  단일 backbone(AM) 이 지배해 **compact form 이 되레 될** 수도 있다.  후자면 T1 자체가
+  불필요해진다.  ⇒ 재실행 전까지 이 절의 인과 서술은 **인용 금지**, 수치는 유효.
+- ⚠ DO-NOT 세 줄("Hertz 로 되돌리지 마라 / EXCL 빼지 마라 / compact form 시도하지 마라")
+  중 **셋째는 보류**한다 — 그 실험들은 전부 가중 없는 타깃 위에서 돌았다.
+
 WHY NOT COMPACT PHYSICS FORM (unlike σ_ionic T1 / σ_e Stage 22.5)?
   σ_ionic: SE percolating backbone — single-phase, captured by
     σ_grain·Cronau·√φ·CN²·√cov·f_p³·C(τ).  LOOCV 0.975 with 5 OLS.
